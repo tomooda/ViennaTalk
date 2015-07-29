@@ -1,3 +1,3 @@
 running
 setUp
-	process := VDMJProcess new
+	process := ViennaVDMJ new

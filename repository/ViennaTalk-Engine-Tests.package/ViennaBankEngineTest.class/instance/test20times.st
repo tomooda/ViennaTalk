@@ -2,7 +2,7 @@ tests
 test20times
 	| bank sem count |
 	bank := ViennaBankEngine new.
-	5 timesRepeat: [ bank add: VDMJProcess new ].
+	5 timesRepeat: [ bank add: ViennaVDMJ new ].
 	sem := Semaphore forMutualExclusion.
 	count := 0.
 	20
