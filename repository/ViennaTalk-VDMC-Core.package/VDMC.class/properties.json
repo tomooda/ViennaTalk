@@ -1,0 +1,18 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "ViennaTalk-VDMC-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"lock",
+		"engine",
+		"specification",
+		"state",
+		"reader",
+		"writer"
+	],
+	"name" : "VDMC",
+	"type" : "normal"
+}
