@@ -1,3 +1,3 @@
 adding/removing
 add: aViennaBankEngine
-	^ engines add: aViennaBankEngine
+	lock critical: [ ^ engines add: aViennaBankEngine ]
