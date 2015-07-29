@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "TestCase",
+	"category" : "ViennaTalk-VDMC-Tests",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"vdmc"
+	],
+	"name" : "VDMCTest",
+	"type" : "normal"
+}
