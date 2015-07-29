@@ -1,0 +1,15 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "ViennaTalk-Html-Core",
+	"classinstvars" : [
+		"current"
+	],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"parser"
+	],
+	"name" : "VDMValue2HtmlDiagram",
+	"type" : "normal"
+}
