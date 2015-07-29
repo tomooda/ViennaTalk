@@ -1,0 +1,19 @@
+{
+	"commentStamp" : "",
+	"super" : "ViennaEngine",
+	"category" : "ViennaTalk-Engine-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [
+		"Registry"
+	],
+	"instvars" : [
+		"process",
+		"reader",
+		"writer",
+		"lock",
+		"executor"
+	],
+	"name" : "VDMJProcess",
+	"type" : "normal"
+}

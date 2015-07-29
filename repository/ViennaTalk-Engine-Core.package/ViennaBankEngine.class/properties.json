@@ -1,0 +1,14 @@
+{
+	"commentStamp" : "",
+	"super" : "ViennaEngine",
+	"category" : "ViennaTalk-Engine-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"engines",
+		"ringBufferIndex"
+	],
+	"name" : "ViennaBankEngine",
+	"type" : "normal"
+}

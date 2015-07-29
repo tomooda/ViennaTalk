@@ -1,0 +1,3 @@
+finalizing
+actAsExecutor
+	lock := nil

@@ -1,0 +1,3 @@
+accessing
+vdmpadPath
+	^ 'VDMPad.jar'

@@ -1,0 +1,3 @@
+finalizing
+finalize
+	self close

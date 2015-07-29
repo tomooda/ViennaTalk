@@ -1,0 +1,18 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "ViennaTalk-Engine-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"lock",
+		"http",
+		"specification",
+		"state",
+		"reader",
+		"writer"
+	],
+	"name" : "ViennaModel",
+	"type" : "normal"
+}

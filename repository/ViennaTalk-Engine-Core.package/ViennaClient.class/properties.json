@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "ViennaEngine",
+	"category" : "ViennaTalk-Engine-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"http"
+	],
+	"name" : "ViennaClient",
+	"type" : "normal"
+}
