@@ -1,0 +1,16 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "ViennaTalk-VDMPad-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [
+		"Server"
+	],
+	"instvars" : [
+		"handlerMap",
+		"engine"
+	],
+	"name" : "VDMPad",
+	"type" : "normal"
+}
