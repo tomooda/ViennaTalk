@@ -1,4 +1,4 @@
-accessing
+servicing
 server
 	^ Server
 		ifNil: [ 

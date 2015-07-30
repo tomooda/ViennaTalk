@@ -8,7 +8,6 @@ handleRequest: aZnRequest
 			source := json at: 'source' ifAbsent: [ String new ].
 			expression := json at: 'expression' ifAbsent: [ String new ].
 			preStates := Dictionary new: json size.
-			json inspect.
 			json
 				keysAndValuesDo: [ :key :value | 
 					(key includes: $`)
