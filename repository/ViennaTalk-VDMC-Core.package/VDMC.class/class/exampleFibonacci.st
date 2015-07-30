@@ -3,7 +3,7 @@ exampleFibonacci
 	"VDMC exampleFibonacci"
 
 	| vdmc |
-	vdmc := VDMC on: ViennaClient default.
+	vdmc := VDMC default.
 	vdmc
 		specification:
 			'
