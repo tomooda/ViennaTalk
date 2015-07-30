@@ -40,11 +40,13 @@ baseline01: spec
 			package: #'ViennaTalk-Value-Tests' with: [
 				spec requires: #(#'ViennaTalk-Value-Core' ). ];
 			package: 'ViennaTalk-Html-Core' with: [
-				spec requires: #('PetitParser' ). ].
+				spec requires: #('PetitParser' ). ];
+			package: #'ViennaTalk-VDMPad-Core' with: [
+				spec requires: #(#'ViennaTalk-Engine-Core' 'NeoJSON' 'ZincHTTPComponents' ). ].
 		spec 
 			group: 'core' with: #(#'ViennaTalk-Engine-Core' );
 			group: 'VDMC' with: #('core' #'ViennaTalk-VDMC-Core' );
-			group: 'VDMPad' with: #('core' 'ViennaTalk-Html-Core' );
+			group: 'VDMPad' with: #('core' 'ViennaTalk-Html-Core' #'ViennaTalk-VDMPad-Core' );
 			group: 'tests' with: #(#'ViennaTalk-Engine-Tests' #'ViennaTalk-VDMC-Tests' #'ViennaTalk-Value-Tests' );
 			group: 'full' with: #('core' 'VDMC' 'VDMPad' 'tests' );
 			group: 'default' with: #('full' ). ].
