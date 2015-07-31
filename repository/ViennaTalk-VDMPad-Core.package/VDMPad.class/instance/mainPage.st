@@ -1,4 +1,4 @@
-pages
+request handling-html
 mainPage
 	| page |
 	page := String new writeStream.
@@ -49,4 +49,4 @@ mainPage
 	page cr; nextPutAll: '<script>VDMPad.loadFromLocalStorage();</script>'.
 	page cr; nextPutAll: '</body>'.
 	page cr; nextPutAll: '</html>'.
-	^ page contents
+	^ self responseHtml: page contents

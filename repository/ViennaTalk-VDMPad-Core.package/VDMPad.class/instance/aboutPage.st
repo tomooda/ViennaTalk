@@ -1,4 +1,4 @@
-pages
+request handling-html
 aboutPage
 	| page|
 	page := String new writeStream.
@@ -53,4 +53,4 @@ THE SOFTWARE.</pre>'.
 	page cr; nextPutAll: '</div>'.
 	page cr; nextPutAll: '</body>'.
 	page cr; nextPutAll: '</html>'.
-	^ page contents
+	^ self responseHtml: page contents

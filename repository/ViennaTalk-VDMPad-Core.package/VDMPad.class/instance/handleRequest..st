@@ -8,8 +8,11 @@ handleRequest: aZnRequest
 	path
 		do: [ :name | 
 			map := map at: name ifAbsent: [ ^ self responseNotFound: aZnRequest uri ].
-			map isClosure
-				ifTrue: [ ^ map cull: aZnRequest ].
 			map isSymbol
-				ifTrue: [ ^ self perform: map with: aZnRequest ] ].
+				ifTrue: [ 
+					^ map numArgs = 0
+						ifTrue: [ self perform: map ]
+						ifFalse: [ self perform: map with: aZnRequest ] ].
+			map isClosure
+				ifTrue: [ ^ map cull: aZnRequest ] ].
 	^ self responseNotFound: aZnRequest uri

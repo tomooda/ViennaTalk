@@ -1,19 +1,19 @@
-pages-api
+request handling-api
 eval: aZnRequest
 	| vdm10 rtc params source expression states triple json |
-	params := aZnRequest contentType = 'application/json'
+	params := aZnRequest contentType = ZnMimeType applicationJson
 		ifTrue: [ NeoJSONReader fromString: aZnRequest entity ]
 		ifFalse: [ aZnRequest mergedFields ].
 	vdm10 := (params at: 'classic' ifAbsent: [  ]) isNil.
 	rtc := (params at: 'ignoreRuntimeChecking' ifAbsent: [  ]) isNil.
-	source := (params at: 'source' ifAbsent: [ String new ]) withBlanksTrimmed.
+	source := (params at: 'source' ifAbsent: [ String new ]) trimmed.
 	states := Dictionary new.
 	params
 		keysAndValuesDo: [ :k :v | 
 			| key value |
 			key := k.
 			value := v.
-			((key includes: $`) and: [ value withBlanksTrimmed notEmpty ])
+			((key includes: $`) and: [ value trimmed notEmpty ])
 				ifTrue: [ 
 					(states at: (key copyFrom: 1 to: (key indexOf: $`) - 1) ifAbsentPut: [ Dictionary new ])
 						at: (key copyFrom: (key indexOf: $`) + 1 to: key size)

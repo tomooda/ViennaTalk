@@ -1,3 +1,3 @@
 private
 responseBinary: aByteArray
-	^ ZnByteArrayEntity with: aByteArray type: ZnMimeType applicationOctetStream 
+	^ ZnResponse ok: (ZnByteArrayEntity with: aByteArray type: ZnMimeType applicationOctetStream)

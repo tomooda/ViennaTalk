@@ -1,4 +1,4 @@
-pages
+request handling-html
 vdmjCopyrightPage
 	| page|
 	page := String new writeStream.
@@ -42,4 +42,4 @@ vdmjCopyrightPage
 	page cr; nextPutAll: '</div>'.
 	page cr; nextPutAll: '</body>'.
 	page cr; nextPutAll: '</html>'.
-	^ page contents
+	^ self responseHtml: page contents

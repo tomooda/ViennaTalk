@@ -1,3 +1,3 @@
 private
 responsePNG: aByteArray
-	^ ZnByteArrayEntity with: aByteArray type: ZnMimeType imagePng 
+	^ ZnResponse ok: (ZnByteArrayEntity with: aByteArray type: ZnMimeType imagePng)
