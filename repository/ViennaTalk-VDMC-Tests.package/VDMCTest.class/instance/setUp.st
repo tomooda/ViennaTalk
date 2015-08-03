@@ -1,3 +1,3 @@
 running
 setUp
-	vdmc := VDMC new
+	vdmc := VDMC default
