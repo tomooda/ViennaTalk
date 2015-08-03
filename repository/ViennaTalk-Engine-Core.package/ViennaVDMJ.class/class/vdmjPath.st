@@ -1,3 +1,3 @@
 accessing
 vdmjPath
-	^ 'vdmj-3.0.1.jar'
+	^ FileSystem workingDirectory / 'vdmj-3.0.1.jar'

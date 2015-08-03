@@ -1,8 +1,10 @@
 private
-forkProcess: desc 
+forkProcess: desc
 	^ UnixProcess
 		forkJob: self javaPath
-		arguments: {'-Dfile.encoding=whatever'. '-jar'.
-				(FileStream fullName: 'VDMPad.jar')}
+		arguments:
+			{'-Dfile.encoding=whatever'.
+			'-jar'.
+			(self vdmpadPath fullName)}
 		environment: nil
 		descriptors: desc

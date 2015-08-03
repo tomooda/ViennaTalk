@@ -1,3 +1,3 @@
 testing
 vdmjInstalled
-	^ FileStream isAFileNamed: ViennaVDMJ vdmjPath
+	^ FileStream isAFileNamed: self vdmjPath

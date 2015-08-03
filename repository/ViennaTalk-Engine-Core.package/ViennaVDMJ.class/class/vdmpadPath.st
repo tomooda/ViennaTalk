@@ -1,3 +1,3 @@
 accessing
 vdmpadPath
-	^ 'VDMPad.jar'
+	^ FileSystem workingDirectory / 'VDMPad.jar'
