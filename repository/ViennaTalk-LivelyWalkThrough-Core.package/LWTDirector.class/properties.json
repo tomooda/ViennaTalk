@@ -1,0 +1,17 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "ViennaTalk-LivelyWalkThrough-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"actions",
+		"engine",
+		"frames",
+		"lastFrame",
+		"cuts"
+	],
+	"name" : "LWTDirector",
+	"type" : "normal"
+}
