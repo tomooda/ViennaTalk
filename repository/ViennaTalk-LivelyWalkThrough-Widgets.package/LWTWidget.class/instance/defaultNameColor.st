@@ -1,0 +1,3 @@
+defaults
+defaultNameColor
+	^ self subclassResponsibility

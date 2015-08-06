@@ -1,0 +1,3 @@
+private
+edgePrecision
+	^ 10

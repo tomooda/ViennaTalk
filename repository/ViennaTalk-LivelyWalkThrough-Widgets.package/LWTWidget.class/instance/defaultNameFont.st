@@ -1,0 +1,3 @@
+defaults
+defaultNameFont
+	^ self subclassResponsibility

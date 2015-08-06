@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "LWTWidget",
+	"category" : "ViennaTalk-LivelyWalkThrough-Widgets",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "LWTFieldWidget",
+	"type" : "normal"
+}

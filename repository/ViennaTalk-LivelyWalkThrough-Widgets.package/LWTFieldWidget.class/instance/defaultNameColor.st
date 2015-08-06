@@ -1,0 +1,3 @@
+defaults
+defaultNameColor
+	^ Color lightGray

@@ -1,0 +1,3 @@
+events
+availableEventSelectors
+	^ self subclassResponsibility

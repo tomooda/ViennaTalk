@@ -1,0 +1,17 @@
+{
+	"commentStamp" : "",
+	"super" : "Morph",
+	"category" : "ViennaTalk-LivelyWalkThrough-Widgets",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"name",
+		"nameFont",
+		"nameColor",
+		"eventActionDict",
+		"resizing"
+	],
+	"name" : "LWTWidget",
+	"type" : "normal"
+}
