@@ -5,7 +5,13 @@
 	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [ ],
-	"instvars" : [ ],
+	"instvars" : [
+		"contents",
+		"textFont",
+		"textMorph",
+		"showsName",
+		"showsDiagram"
+	],
 	"name" : "LWTFieldWidget",
 	"type" : "normal"
 }

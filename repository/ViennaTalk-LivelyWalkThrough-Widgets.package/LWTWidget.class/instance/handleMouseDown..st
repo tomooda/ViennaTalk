@@ -1,12 +1,15 @@
 event handling
 handleMouseDown: aMouseEvent
+	aMouseEvent wasHandled: true.
 	aMouseEvent yellowButtonPressed
 		ifTrue: [ 
 			self menu
 				setInvokingView: self;
 				invokeModal.
-			aMouseEvent wasHandled: true.
 			^ true ].
 	(self edgeName: aMouseEvent position)
-		ifNotEmpty: [ :edge | self perform: ('resize' , edge , ':') asSymbol with: aMouseEvent ].
-	^ super handleMouseDown: aMouseEvent
+		ifNotEmpty: [ :edge | 
+			self perform: ('resize' , edge , ':') asSymbol with: aMouseEvent.
+			^ true ].
+	self currentHand grabMorph: self from: self owner.
+	^ true

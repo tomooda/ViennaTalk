@@ -1,0 +1,3 @@
+defaults
+defaultContents
+	^ String new

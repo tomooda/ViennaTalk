@@ -1,0 +1,3 @@
+testing
+showsDiagram
+	^ showsDiagram = true

@@ -1,6 +1,9 @@
 accessing
 name: aString
 	World
-		findDeepSubmorphThat: [ :m | (m isKindOf: LWTWidget) and: [ m name = aString ] ]
-		ifAbsent: [ ^ self name: aString ].
-	UIManager default inform: 'The name "' , aString , '" is already used.'
+		findDeepSubmorphThat: [ :m | (m isKindOf: LWTWidget) and: [ m ~~ self and: [ m name = aString ] ] ]
+		ifAbsent: [ 
+			name := aString.
+			self changed.
+			^ self ].
+	self changeName
