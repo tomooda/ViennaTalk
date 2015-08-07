@@ -8,6 +8,6 @@
 	"instvars" : [
 		"process"
 	],
-	"name" : "VDMJProcessTest",
+	"name" : "ViennaVDMJTest",
 	"type" : "normal"
 }
