@@ -1,6 +1,9 @@
 commands
-default: aString ifError: errorBlock 
+default: aString ifError: errorBlock
 	^ self
 		send: 'default ' , aString
-		responseDo: [:module | module]
-		ifError: errorBlock
+		responseDo: [ :module | module ]
+		ifError: [ 
+			aString = 'DEFAULT'
+				ifTrue: [ aString ]
+				ifFalse: [ errorBlock value ] ]
