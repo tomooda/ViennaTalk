@@ -1,0 +1,3 @@
+testing
+isVDMCallFrame
+	^ true

@@ -1,0 +1,23 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "ViennaTalk-LivelyWalkThrough-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"parser",
+		"numberLiteral",
+		"stringLiteral",
+		"identifier",
+		"morphName",
+		"actionName",
+		"vdmcall",
+		"expression",
+		"arrow",
+		"dialog",
+		"step"
+	],
+	"name" : "LWTLivetalkCompiler",
+	"type" : "normal"
+}

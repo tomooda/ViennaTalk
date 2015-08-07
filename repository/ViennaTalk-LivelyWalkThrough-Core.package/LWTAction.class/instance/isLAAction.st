@@ -1,0 +1,3 @@
+testing
+isLAAction
+	^ true

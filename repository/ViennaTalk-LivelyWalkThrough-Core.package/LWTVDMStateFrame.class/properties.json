@@ -1,17 +1,13 @@
 {
 	"commentStamp" : "",
-	"super" : "Morph",
+	"super" : "LWTFrame",
 	"category" : "ViennaTalk-LivelyWalkThrough-Core",
 	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
-		"actions",
-		"vdmc",
-		"frames",
-		"lastFrame",
-		"cuts"
+		"states"
 	],
-	"name" : "LWTDirector",
+	"name" : "LWTVDMStateFrame",
 	"type" : "normal"
 }

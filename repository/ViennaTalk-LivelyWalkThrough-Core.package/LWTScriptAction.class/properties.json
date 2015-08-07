@@ -1,17 +1,13 @@
 {
 	"commentStamp" : "",
-	"super" : "Morph",
+	"super" : "LWTAction",
 	"category" : "ViennaTalk-LivelyWalkThrough-Core",
 	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
-		"actions",
-		"vdmc",
-		"frames",
-		"lastFrame",
-		"cuts"
+		"source"
 	],
-	"name" : "LWTDirector",
+	"name" : "LWTScriptAction",
 	"type" : "normal"
 }
