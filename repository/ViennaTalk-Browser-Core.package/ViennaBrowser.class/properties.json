@@ -1,0 +1,21 @@
+{
+	"commentStamp" : "",
+	"super" : "Model",
+	"category" : "ViennaTalk-Browser-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"vdmc",
+		"modules",
+		"state",
+		"fieldListPane",
+		"valuePane",
+		"codePane",
+		"selectedModule",
+		"selectedField",
+		"timeOfLastStateUpdate"
+	],
+	"name" : "ViennaBrowser",
+	"type" : "normal"
+}

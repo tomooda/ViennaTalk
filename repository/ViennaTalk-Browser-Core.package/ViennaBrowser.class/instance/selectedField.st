@@ -1,0 +1,3 @@
+field list
+selectedField
+	^ selectedField

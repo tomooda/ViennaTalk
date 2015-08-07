@@ -1,0 +1,3 @@
+instance creation
+openOn: aVDMC 
+	^ self openOn: aVDMC withLabel: 'VDM Browser'
