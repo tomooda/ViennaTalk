@@ -1,3 +1,3 @@
 value pane menu
 valuePaneAccept
-	^ self accept: valuePane text asString
+	^ self acceptValue: valuePane text asString

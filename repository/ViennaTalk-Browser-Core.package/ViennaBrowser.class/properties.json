@@ -15,7 +15,6 @@
 		"codePane",
 		"selectedModule",
 		"selectedField",
-		"timeOfLastStateUpdate",
 		"codeSelection",
 		"valueSelection"
 	],
