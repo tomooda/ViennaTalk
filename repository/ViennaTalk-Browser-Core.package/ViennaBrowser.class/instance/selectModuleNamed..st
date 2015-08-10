@@ -4,8 +4,8 @@ selectModuleNamed: aString
 				ifTrue: [aString].
 	self updateState.
 	selectedField := nil.
-	self updateContents.
+	self changed: #moduleSelectionIndex.
 	self changed: #fieldList.
 	self changed: #fieldSelectionIndex.
 	self changed: #code.
-	self changed: #moduleSelectionIndex
+	self changed: #value

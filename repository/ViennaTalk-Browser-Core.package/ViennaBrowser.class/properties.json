@@ -7,14 +7,17 @@
 	"classvars" : [ ],
 	"instvars" : [
 		"vdmc",
-		"modules",
-		"state",
+		"cachedSpec",
+		"cachedModulePositions",
+		"moduleListPane",
 		"fieldListPane",
 		"valuePane",
 		"codePane",
 		"selectedModule",
 		"selectedField",
-		"timeOfLastStateUpdate"
+		"timeOfLastStateUpdate",
+		"codeSelection",
+		"valueSelection"
 	],
 	"name" : "ViennaBrowser",
 	"type" : "normal"
