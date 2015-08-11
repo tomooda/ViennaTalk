@@ -9,7 +9,7 @@ installVDMJ
 		https;
 		followRedirects: true;
 		get: self vdmjUrl.
-	http code = 200
+	http response code = 200
 		ifFalse: [ 
 			UIManager default
 				abort:
