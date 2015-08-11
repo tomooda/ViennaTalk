@@ -1,6 +1,6 @@
 user interface
 buildCodePane
-	^ (PluggableTextMorph
+	^ (ViennaPluggableTextMorph
 		on: self
 		text: #code
 		accept: #acceptCode:

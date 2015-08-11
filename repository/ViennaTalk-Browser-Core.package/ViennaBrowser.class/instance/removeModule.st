@@ -1,9 +1,8 @@
 module list menu
 removeModule
 	self selectedModule
-		in: [ :moduleName | 
+		ifNotNil: [ :moduleName | 
 			| position newSpecification oldSpecification |
-			moduleName ifNil: [ ^ false ].
 			position := ((self modulePositionsFrom: vdmc specification)
 				detect: [ :assoc | assoc key = moduleName ]
 				ifNone: [ ^ false ]) value.
@@ -16,4 +15,7 @@ removeModule
 				ifError: [ :msg | 
 					vdmc specification: oldSpecification.
 					UIManager default abort: msg title: 'VDM Error'.
-					^ false ] ]
+					^ false ].
+			self changed: #moduleList.
+			self selectModuleNamed: nil.
+			^ true ]

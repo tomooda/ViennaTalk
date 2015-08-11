@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "TextMorphForEditView",
+	"category" : "ViennaTalk-Browser-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "ViennaTextMorphForEditView",
+	"type" : "normal"
+}

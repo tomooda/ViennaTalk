@@ -1,14 +1,14 @@
 module list menu
 moduleListMenu: aMenu 
 	| referenceSubMenu |
-	aMenu add: 'remove module' translated action: #removeModule.
+	aMenu add: 'remove module' translated selector: #removeModule.
 	aMenu addLine.
 	referenceSubMenu := MenuMorph new defaultTarget: self.
-	self referringModules
+	self importerModules
 		do: [:name | referenceSubMenu
 				add: name
 				selector: #selectModuleNamed:
 				argument: name].
 	referenceSubMenu hasItems
-		ifTrue: [aMenu add: 'referring modules...' translated subMenu: referenceSubMenu].
+		ifTrue: [aMenu add: 'imported by...' translated subMenu: referenceSubMenu].
 	^ aMenu

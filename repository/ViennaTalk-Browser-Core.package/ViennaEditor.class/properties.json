@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "TextEditor",
+	"category" : "ViennaTalk-Browser-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "ViennaEditor",
+	"type" : "normal"
+}

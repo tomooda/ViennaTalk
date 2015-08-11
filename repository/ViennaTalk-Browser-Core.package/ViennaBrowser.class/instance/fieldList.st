@@ -6,5 +6,5 @@ fieldList
 			| m |
 			m := module , '`'.
 			(vdmc state keys
-				select: [ :name | (name copyFrom: 1 to: m size) = m ]
+				select: [ :name | name size > m size and: [(name copyFrom: 1 to: m size) = m ]]
 				thenCollect: [ :name | name copyFrom: m size + 1 to: name size ]) asSortedCollection asArray ]

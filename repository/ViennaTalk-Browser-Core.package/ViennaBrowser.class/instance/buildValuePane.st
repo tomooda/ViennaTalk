@@ -1,11 +1,12 @@
 user interface
 buildValuePane
-	^ (PluggableTextMorph
+	^ (ViennaPluggableTextMorph
 		on: self
 		text: #value
 		accept: #acceptValue:
 		readSelection: #valueSelection
 		menu: #valuePaneMenu:shifted:
 		setSelection: #valueSelection:)
-		askBeforeDiscardingEdits: true;
+		askBeforeDiscardingEdits: false;
+		alwaysAccept: true;
 		yourself

@@ -12,4 +12,5 @@ printItIn: aPluggableTextMorph
 				handleEdit: [editor afterSelectionInsertAndSelect: result].
 			selectionInterval := editor selectionInterval.
 			aPluggableTextMorph textMorph editor selectFrom: selectionInterval first to: selectionInterval last.
-			aPluggableTextMorph scrollSelectionIntoView]
+			aPluggableTextMorph scrollSelectionIntoView.
+			self changed: #value]

@@ -1,5 +1,5 @@
 module list menu
-referringModules
+importerModules
 	| parser |
 	self selectedModule isNil
 		ifTrue: [ ^ Array new ].

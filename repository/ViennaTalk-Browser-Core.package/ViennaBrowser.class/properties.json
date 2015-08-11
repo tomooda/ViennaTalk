@@ -16,7 +16,8 @@
 		"selectedModule",
 		"selectedField",
 		"codeSelection",
-		"valueSelection"
+		"valueSelection",
+		"announcer"
 	],
 	"name" : "ViennaBrowser",
 	"type" : "normal"

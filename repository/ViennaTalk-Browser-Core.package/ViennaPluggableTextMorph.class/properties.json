@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "PluggableTextMorph",
+	"category" : "ViennaTalk-Browser-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "ViennaPluggableTextMorph",
+	"type" : "normal"
+}

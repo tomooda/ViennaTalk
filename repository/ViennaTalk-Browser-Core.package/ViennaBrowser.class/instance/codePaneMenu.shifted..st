@@ -1,5 +1,6 @@
 code pane menu
 codePaneMenu: aMenu shifted: aBoolean
+	aMenu target: self.
 	aMenu
 		addList:
 			{{('copy (c)' translated).

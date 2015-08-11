@@ -19,7 +19,7 @@ value
 							(',' , String cr
 								join:
 									(vdmc state keys
-										select: [ :key | (key copyFrom: 1 to: prefix size) = prefix ]
+										select: [ :key | key size > prefix size and: [(key copyFrom: 1 to: prefix size) = prefix ]]
 										thenCollect: [ :key | (key copyFrom: prefix size + 1 to: key size) , ' |-> ' , (vdmc plainAt: key) ])
 										asSortedCollection) , '}' ]
 				ifNotNil: [ :field | vdmc plainAt: module , '`' , field ifAbsent: [ String new ] ] ]
