@@ -13,5 +13,5 @@ accept: aString var: varName
 						afterSelectionInsertAndSelect: msg ].
 			vdmc plainAt: varName put: oldValue.
 			^ false ].
-	self changed: #value.
+	vdmc changed: #state.
 	^ true

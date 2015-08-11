@@ -14,5 +14,5 @@ accept: aString var: varName in: moduleName
 						afterSelectionInsertAndSelect: msg ].
 			vdmc plainAt: key put: oldValue.
 			^ false ].
-	self changed: #value.
+	vdmc changed: #state.
 	^ true

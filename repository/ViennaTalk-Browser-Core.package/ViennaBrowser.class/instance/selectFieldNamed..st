@@ -1,6 +1,10 @@
 field list
-selectFieldNamed: aString 
+selectFieldNamed: aString
+	| oldSelection |
+	oldSelection := selectedField.
 	selectedField := (self fieldList includes: aString)
-				ifTrue: [aString].
-	self changed: #fieldSelectionIndex.
-	self changed: #value
+		ifTrue: [ aString ].
+	selectedField ~= oldSelection
+		ifTrue: [ 
+			self changed: #fieldSelectionIndex.
+			self changed: #value ]

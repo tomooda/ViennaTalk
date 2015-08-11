@@ -3,7 +3,7 @@ acceptCode: aStringOrText
 	vdmc
 		ifNotNil: [ 
 			| code oldModulePositions oldModuleNames newModulePositions newModuleDict oldSpec newSpec |
-			code := aStringOrText asString.
+			code := aStringOrText asString trimmed copyWith: Character cr.
 			oldSpec := vdmc specification.
 			oldModulePositions := self modulePositionsFrom: oldSpec.
 			oldModuleNames := (oldModulePositions collect: #key) asSet.
@@ -24,20 +24,18 @@ acceptCode: aStringOrText
 						do: [ :assoc | 
 							(oldModuleNames includes: assoc key)
 								ifFalse: [ stream nextPutAll: (code copyFrom: assoc value first to: assoc value last) ] ] ].
-			vdmc specification: newSpec.
-			[ vdmc plainEvaluate: 'nil' ]
-				on: Error
-				do: [ :ex | 
-					vdmc specification: oldSpec.
+			codePane hasUnacceptedEdits: false.
+			vdmc
+				specification: newSpec
+				ifError: [ :msg | 
+					codePane hasUnacceptedEdits: true.
 					codePane
 						handleEdit: [ 
 							codePane textMorph editor
 								in: [ :editor | 
 									editor selectFrom: editor caret to: editor caret - 1.
-									editor afterSelectionInsertAndSelect: ex messageText ] ].
+									editor afterSelectionInsertAndSelect: msg ] ].
 					^ false ].
-			codePane hasUnacceptedEdits: false.
-			self changed: #moduleList.
 			self selectModuleNamed: newModulePositions first key.
 			^ true ].
 	^ false

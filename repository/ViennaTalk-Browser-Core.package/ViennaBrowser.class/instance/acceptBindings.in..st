@@ -23,5 +23,5 @@ acceptBindings: aString in: moduleName
 						afterSelectionInsertAndSelect: msg ].
 			oldBindings keysAndValuesDo: [ :key :value | vdmc plainAt: key put: value ].
 			^ false ].
-	self changed: #value.
+	vdmc changed: #state.
 	^ true
