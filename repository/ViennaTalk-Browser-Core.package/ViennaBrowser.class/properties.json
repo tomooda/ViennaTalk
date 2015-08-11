@@ -13,11 +13,13 @@
 		"fieldListPane",
 		"valuePane",
 		"codePane",
+		"workspace",
+		"workspacePane",
 		"selectedModule",
 		"selectedField",
 		"codeSelection",
 		"valueSelection",
-		"announcer"
+		"workspaceSelection"
 	],
 	"name" : "ViennaBrowser",
 	"type" : "normal"
