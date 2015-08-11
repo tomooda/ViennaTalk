@@ -12,8 +12,8 @@ init
 						keysAndValuesDo: [ :var :value | 
 							postState
 								at:
-									(var = 'DEFAULT'
+									(var = self defaultModule
 										ifTrue: [ var ]
 										ifFalse: [ module , '`' , var ])
 								put: value ] ].
-			state := postState]
+			state := postState ]
