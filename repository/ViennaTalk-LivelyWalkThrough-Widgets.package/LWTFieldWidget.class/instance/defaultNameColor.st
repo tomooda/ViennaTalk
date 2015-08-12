@@ -1,3 +1,0 @@
-defaults
-defaultNameColor
-	^ Color lightGray

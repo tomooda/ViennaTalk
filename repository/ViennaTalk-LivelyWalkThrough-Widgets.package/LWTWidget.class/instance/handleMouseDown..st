@@ -7,9 +7,11 @@ handleMouseDown: aMouseEvent
 				setInvokingView: self;
 				invokeModal.
 			^ true ].
-	(self edgeName: aMouseEvent position)
-		ifNotEmpty: [ :edge | 
-			self perform: ('resize' , edge , ':') asSymbol with: aMouseEvent.
-			^ true ].
-	self currentHand grabMorph: self from: self owner.
+	self moveable = true
+		ifTrue: [ 
+			(self edgeName: aMouseEvent position)
+				ifNotEmpty: [ :edge | 
+					self perform: ('resize' , edge , ':') asSymbol with: aMouseEvent.
+					^ true ].
+			self currentHand grabMorph: self from: self owner ].
 	^ true

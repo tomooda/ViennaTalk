@@ -6,11 +6,10 @@
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
-		"contents",
-		"textFont",
-		"textMorph",
-		"showsDiagram"
+		"point",
+		"borderColor",
+		"borderWidth"
 	],
-	"name" : "LWTFieldWidget",
+	"name" : "LWTMouseSensor",
 	"type" : "normal"
 }

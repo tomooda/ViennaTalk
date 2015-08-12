@@ -1,5 +1,4 @@
 operations
 hideName
-	showsName := false.
-	textMorph ifNotNil: [ textMorph layoutFrame: self layoutFrameForTextPane ].
-	self changed
+	super hideName.
+	textMorph ifNotNil: [ textMorph layoutFrame: self layoutFrameForTextPane ]

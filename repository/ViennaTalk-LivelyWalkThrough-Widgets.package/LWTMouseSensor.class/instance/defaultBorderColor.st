@@ -1,0 +1,3 @@
+defaults
+defaultBorderColor
+	^ Color blue

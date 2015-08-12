@@ -10,7 +10,8 @@
 		"nameFont",
 		"nameColor",
 		"eventActionDict",
-		"resizing"
+		"moveable",
+		"showsName"
 	],
 	"name" : "LWTWidget",
 	"type" : "normal"

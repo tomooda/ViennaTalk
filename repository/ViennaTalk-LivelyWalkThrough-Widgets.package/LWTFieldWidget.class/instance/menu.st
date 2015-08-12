@@ -1,24 +1,8 @@
 menus
 menu
 	| menu |
-	menu := MenuMorph new.
-	menu
-		defaultTarget: self;
-		add: 'change name' translated target: self selector: #changeName;
-		add: 'delete' translated target: self selector: #delete;
-		add: 'duplicate' translated target: self selector: #duplicateAndPlace;
-		addLine.
-	self showsName
-		ifTrue: [ 
-			menu
-				add: 'change name font' translated target: self selector: #changeNameFont;
-				add: 'change name color' translated target: self selector: #changeNameColor;
-				add: 'hide name' translated target: self selector: #hideName ]
-		ifFalse: [ menu add: 'show name' translated target: self selector: #showName ].
-	menu
-		addLine;
-		add: 'change text font' translated target: self selector: #changeTextFont;
-		addLine.
+	menu := super menu.
+	menu add: 'change text font' translated target: self selector: #changeTextFont.
 	self showsDiagram
 		ifTrue: [ 
 			menu

@@ -1,3 +1,3 @@
 defaults
 defaultNameColor
-	^ self subclassResponsibility
+	^ Color lightGray

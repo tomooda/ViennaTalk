@@ -2,7 +2,7 @@ drawing
 drawOn: aCanvas
 	aCanvas
 		frameAndFillRectangle: self bounds
-		fillColor: Color white
-		borderWidth: 1
-		borderColor: Color lightGray.
+		fillColor: self color
+		borderWidth: self borderWidth
+		borderColor: self borderColor.
 	super drawOn: aCanvas

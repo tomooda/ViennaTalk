@@ -1,3 +1,3 @@
 defaults
 defaultNameFont
-	^ self subclassResponsibility
+	^ TextStyle default defaultFont
