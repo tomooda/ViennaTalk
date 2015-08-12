@@ -4,5 +4,4 @@ initialize
 	actions := Dictionary new.
 	frames := Array new writeStream.
 	lastFrame := nil.
-	cuts := Dictionary new.
-	vdmc := VDMC vdmj
+	cuts := Dictionary new

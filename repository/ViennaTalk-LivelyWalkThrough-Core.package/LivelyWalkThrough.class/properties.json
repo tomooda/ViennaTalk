@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "Model",
+	"category" : "ViennaTalk-LivelyWalkThrough-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"director"
+	],
+	"name" : "LivelyWalkThrough",
+	"type" : "normal"
+}

@@ -1,3 +1,3 @@
 accessing
 specification: aString
-	vdmc specification: aString
+	self vdmc specification: aString

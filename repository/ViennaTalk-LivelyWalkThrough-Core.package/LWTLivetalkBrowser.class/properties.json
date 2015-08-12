@@ -1,0 +1,16 @@
+{
+	"commentStamp" : "",
+	"super" : "Model",
+	"category" : "ViennaTalk-LivelyWalkThrough-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"director",
+		"codePane",
+		"selectedActionSelector",
+		"codeSelection"
+	],
+	"name" : "LWTLivetalkBrowser",
+	"type" : "normal"
+}

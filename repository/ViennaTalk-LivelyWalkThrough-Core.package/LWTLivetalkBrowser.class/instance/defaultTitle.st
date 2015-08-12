@@ -1,0 +1,3 @@
+defaults
+defaultTitle
+	^ 'Livetalk Browser'

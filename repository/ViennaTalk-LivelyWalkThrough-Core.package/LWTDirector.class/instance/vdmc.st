@@ -1,3 +1,3 @@
 accessing
 vdmc
-	^ vdmc
+	^ vdmc ifNil: [ vdmc := self defaultVDMC ]

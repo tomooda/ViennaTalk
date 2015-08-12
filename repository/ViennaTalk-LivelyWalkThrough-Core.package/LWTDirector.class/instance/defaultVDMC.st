@@ -1,0 +1,3 @@
+defaults
+defaultVDMC
+	^ VDMC vdmj

@@ -1,7 +1,7 @@
 dialogs
-error: aString actionName: nameString
+abort: aString
 	| context |
-	UIManager default abort: aString title: 'Lively Walk-Through: ' , nameString.
 	context := thisContext.
 	[ context receiver isKindOf: LWTAction ] whileFalse: [ context := context sender ].
+	UIManager default abort: aString title: 'Lively Walk-Through: ' , context receiver name.
 	context return: nil
