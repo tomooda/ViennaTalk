@@ -20,7 +20,7 @@ build
 	lower addLazyPage: codePane label: 'Specification'.
 	lower addLazyPage: workspacePane label: 'Workspace'.
 	lower selectedPageIndex: 1.
-	pane addMorph: upper fullFrame: ((0 @ 0 corner: 1 @ 0.5) asLayoutFrame bottomRightOffset: 0 @ -2).
-	pane addMorph: lower fullFrame: ((0 @ 0.5 corner: 1 @ 1) asLayoutFrame topLeftOffset: 0 @ 2).
+	pane addMorph: upper fullFrame: ((0 @ 0 corner: 1 @ 0.4) asLayoutFrame bottomRightOffset: 0 @ -2).
+	pane addMorph: lower fullFrame: ((0 @ 0.4 corner: 1 @ 1) asLayoutFrame topLeftOffset: 0 @ 2).
 	pane addPaneSplitters.
 	^ pane

@@ -33,12 +33,5 @@ codePaneMenu: aMenu shifted: aBoolean
 			#cancel}.
 			#-.
 			{('save contents to file...' translated).
-			#saveContentsInFile}.
-			#-.
-			{('set font... (k)' translated).
-			#offerFontMenu}.
-			{('set style... (K)' translated).
-			#changeStyle}.
-			{('set alignment... (u)' translated).
-			#chooseAlignment}}.
+			#saveContentsInFile}}.
 	^ aMenu

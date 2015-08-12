@@ -22,4 +22,4 @@ operations
 	pre <precondition>
 	post <postcondition>;
 end <module name>
-'
+' asText makeAllColor: Color gray

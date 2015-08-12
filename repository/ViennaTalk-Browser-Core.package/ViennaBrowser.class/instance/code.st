@@ -7,4 +7,4 @@ code
 	section := ((self modulePositionsFrom: vdmc specification)
 		detect: [ :assoc | assoc key = module ]
 		ifNone: [ ^ self specificationTemplate ]) value.
-	^ vdmc specification copyFrom: section first to: section last
+	^ (vdmc specification copyFrom: section first to: section last) asText makeAllColor: Color black

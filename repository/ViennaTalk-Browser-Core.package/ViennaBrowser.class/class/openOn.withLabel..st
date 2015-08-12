@@ -1,5 +1,3 @@
 instance creation
 openOn: aVDMC withLabel: label
-	^ self new
-		vdmc: aVDMC;
-		openLabel: label
+	^ (self on: aVDMC) openLabel: label
