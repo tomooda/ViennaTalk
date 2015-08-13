@@ -8,6 +8,7 @@ build
 		yourself.
 	utilsPane := LazyTabGroupMorph new.
 	utilsPane
+		addLazyPage: self buildWidgetDispenserPane label: 'Widgets';
 		addLazyPage: self buildVDMBrowserPane label: 'VDM';
 		addLazyPage: self buildLivetalkBrowserPane label: 'Livetalk'.
 	utilsPane selectedPageIndex: 1.

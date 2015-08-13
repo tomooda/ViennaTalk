@@ -4,8 +4,10 @@ initialize
 	self color: Color white.
 	self
 		changeTableLayout;
-		listDirection: #topToBottom.
-	self addMorph: self fieldWidget.
-	self addMorph: self buttonWidget.
-	self addMorph: self padWidget.
-	self addMorph: self areaWidget
+		listDirection: #topToBottom;
+		cellInset: 3.
+	self addMorphBack: self fieldWidget.
+	self addMorphBack: self imageWidget.
+	self addMorphBack: self buttonWidget.
+	self addMorphBack: self padWidget.
+	self addMorphBack: self areaWidget

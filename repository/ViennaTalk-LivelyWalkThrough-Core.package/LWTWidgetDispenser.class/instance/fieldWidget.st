@@ -2,6 +2,7 @@ accessing
 fieldWidget
 	^ fieldWidget
 		ifNil: [ 
-			LWTFieldWidget new
-				name: 'FieldWidget';
+			fieldWidget := LWTFieldWidget new
+				freeze;
+				name: 'Field';
 				yourself ]
