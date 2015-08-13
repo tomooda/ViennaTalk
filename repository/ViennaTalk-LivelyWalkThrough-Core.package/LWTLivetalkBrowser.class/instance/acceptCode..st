@@ -5,18 +5,16 @@ acceptCode: aStringOrText
 			| codeStream selector |
 			codeStream := aStringOrText asString readStream.
 			selector := (codeStream upTo: Character cr) trimmed.
-			(LWTLivetalkScriptAction
+			(LWTLivetalkScript
 				named: selector
 				on: self director
 				source: codeStream upToEnd
-				notifying: codePane
 				ifFail: [ 
 					codePane flash.
-					nil ])
-				ifNil: [ ^ false ]
-				ifNotNil: [ :action | 
-					self director actionAt: selector asSymbol put: action.
+					^ false ])
+				ifNotNil: [ :script | 
+					self director addScript: script.
 					codePane hasUnacceptedEdits: false.
-					self changed: #actionList.
-					self selectActionNamed: selector.
+					self changed: #scriptList.
+					self selectScriptNamed: selector.
 					^ true ] ]

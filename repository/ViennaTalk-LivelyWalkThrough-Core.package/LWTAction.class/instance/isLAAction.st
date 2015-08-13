@@ -1,3 +1,0 @@
-testing
-isLAAction
-	^ true

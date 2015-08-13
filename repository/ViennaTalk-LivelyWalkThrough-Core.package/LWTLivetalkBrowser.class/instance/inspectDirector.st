@@ -1,3 +1,3 @@
-action list menu
+script list menu
 inspectDirector
 	self director inspect

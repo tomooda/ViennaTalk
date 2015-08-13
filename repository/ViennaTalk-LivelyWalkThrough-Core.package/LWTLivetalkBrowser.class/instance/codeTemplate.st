@@ -1,6 +1,5 @@
 code pane
 codeTemplate
-	^ 'ScriptName
+	^ 'WidgetName`event
 	VDM`operation(arg) -> [UI]
-	<ScriptName>
 	!"dialogMessage"' asText makeAllColor: Color gray

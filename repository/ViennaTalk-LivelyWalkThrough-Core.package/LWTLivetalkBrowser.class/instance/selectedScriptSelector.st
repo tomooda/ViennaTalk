@@ -1,0 +1,3 @@
+script list
+selectedScriptSelector
+	^ selectedScriptSelector

@@ -1,6 +1,6 @@
 interpreting
 execVDM: aString withArguments: anArray
-	^ aString , '(' , (',' join: anArray)
+	^ aString , '(' , (',' join: anArray), ')'
 		in: [ :expression | 
 			| value |
 			value := self vdmc plainEvaluate: expression.

@@ -2,13 +2,10 @@ initialize-release
 initialize
 	| quote escapes |
 	super initialize.
-	numberLiteral := [ :stream | 
-	| position |
-	position := stream position.
-	[ (Number readFrom: stream) printString ]
-		ifError: [ 
-			stream position: position.
-			PPFailure message: 'expected a number' at: stream position ] ] asParser.
+	numberLiteral := ($- asParser optional , ($0 asParser / #digit asParser plus)
+		, ($. asParser , #digit asParser plus) optional
+		, ($e asParser / $E asParser , ($- asParser / $+ asParser) optional , #digit asParser plus) optional) trim flatten
+		==> [ :str | '''' , str trim , '''' ].
 	quote := $" asParser.
 	escapes := Dictionary new
 		at: $n put: Character cr;
@@ -68,7 +65,7 @@ initialize
 			stream nextPutAll: ')'.
 			stream contents ].
 	dialog := ($! asParser trim , expression) ==> [ :pair | 'self execDialog: (' , pair second , ')' ].
-	step := ((actionName ==> [ :name | 'self execCall: (' , name storeString , ')' ]) / arrow / dialog / expression) trim.
+	step := (arrow / dialog / expression) trim.
 	parser := step star end
 		==> [ :exprs | 
 			| stream |

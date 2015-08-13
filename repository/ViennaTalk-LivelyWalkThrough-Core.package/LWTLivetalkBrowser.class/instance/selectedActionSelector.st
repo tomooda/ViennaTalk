@@ -1,3 +1,0 @@
-action list
-selectedActionSelector
-	^ selectedActionSelector

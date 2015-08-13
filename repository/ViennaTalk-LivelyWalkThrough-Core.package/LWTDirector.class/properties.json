@@ -6,11 +6,11 @@
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
-		"actions",
 		"vdmc",
 		"frames",
 		"lastFrame",
-		"cuts"
+		"cuts",
+		"scripts"
 	],
 	"name" : "LWTDirector",
 	"type" : "normal"

@@ -1,16 +1,17 @@
 {
 	"commentStamp" : "",
-	"super" : "Model",
+	"super" : "Object",
 	"category" : "ViennaTalk-LivelyWalkThrough-Core",
 	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
-		"director",
-		"codePane",
-		"codeSelection",
-		"selectedScriptSelector"
+		"widgetName",
+		"event",
+		"source",
+		"performer",
+		"compiledMethod"
 	],
-	"name" : "LWTLivetalkBrowser",
+	"name" : "LWTLivetalkScript",
 	"type" : "normal"
 }

@@ -1,8 +1,8 @@
 code pane
 code
-	^ self selectedActionSelector
-		ifNotNilDo: [ :selector | 
-			(self director actionAt: selector ifAbsent: [  ])
-				ifNotNilDo: [ :action | (selector , String cr , action source) asText makeAllColor: Color black ]
+	^ self selectedScriptSelector
+		ifNotNil: [ :selector | 
+			(self director scriptAt: selector ifAbsent: [  ])
+				ifNotNil: [ :script | (selector , String cr , script source) asText makeAllColor: Color black ]
 				ifNil: [ self codeTemplate ] ]
 		ifNil: [ self codeTemplate ]

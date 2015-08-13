@@ -1,4 +1,4 @@
-action list menu
+script list menu
 inspectIt
-	self selectedAction
-		ifNotNilDo: [:action | action value inspect]
+	self selectedScript
+		ifNotNilDo: [:script | script value inspect]

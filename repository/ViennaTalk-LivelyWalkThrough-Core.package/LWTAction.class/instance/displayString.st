@@ -1,3 +1,0 @@
-printing
-displayString
-	^ self subclassResponsibility

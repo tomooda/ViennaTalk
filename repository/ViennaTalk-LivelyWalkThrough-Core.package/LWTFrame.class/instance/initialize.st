@@ -1,4 +1,4 @@
 initialize-release
 initialize
 	super initialize.
-	timestamp := TimeStamp now
+	timestamp := DateAndTime now
