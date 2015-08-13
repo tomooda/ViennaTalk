@@ -1,0 +1,3 @@
+private
+freeze
+	frozen := true

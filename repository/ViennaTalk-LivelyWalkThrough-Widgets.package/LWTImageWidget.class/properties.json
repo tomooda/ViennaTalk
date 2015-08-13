@@ -6,11 +6,9 @@
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
-		"basename",
-		"point",
-		"borderColor",
-		"borderWidth"
+		"form",
+		"path"
 	],
-	"name" : "LWTMouseSensor",
+	"name" : "LWTImageWidget",
 	"type" : "normal"
 }

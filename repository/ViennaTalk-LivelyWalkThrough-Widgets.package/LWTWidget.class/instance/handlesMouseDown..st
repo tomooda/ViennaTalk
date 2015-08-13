@@ -1,3 +1,3 @@
 event handling
 handlesMouseDown: anEvent
-	^true
+	^ frozen not

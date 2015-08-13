@@ -10,7 +10,8 @@
 		"nameFont",
 		"nameColor",
 		"moveable",
-		"showsName"
+		"showsName",
+		"frozen"
 	],
 	"name" : "LWTWidget",
 	"type" : "normal"

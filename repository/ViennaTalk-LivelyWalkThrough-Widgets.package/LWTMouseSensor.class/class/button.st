@@ -1,7 +1,8 @@
 instance creation
 button
 	^ self new
-		extent: 200@30;
+		basename: 'Button';
+		extent: 200 @ 30;
 		color: Color lightGray;
 		nameColor: Color black;
 		borderColor: Color darkGray;
