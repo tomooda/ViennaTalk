@@ -9,7 +9,6 @@
 		"name",
 		"nameFont",
 		"nameColor",
-		"eventActionDict",
 		"moveable",
 		"showsName"
 	],

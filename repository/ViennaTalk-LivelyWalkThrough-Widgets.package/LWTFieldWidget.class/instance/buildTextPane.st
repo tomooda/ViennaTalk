@@ -7,6 +7,8 @@ buildTextPane
 		readSelection: nil
 		menu: #textPaneMenu:shifted:.
 	textMorph
+		acceptOnCR: true;
+		acceptOnFocusChange: true;
 		borderColor: Color black;
 		borderWidth: 1;
 		font: self textFont;

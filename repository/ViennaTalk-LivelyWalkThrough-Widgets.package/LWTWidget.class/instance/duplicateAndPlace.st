@@ -1,6 +1,10 @@
 operations
 duplicateAndPlace
-	self duplicate
-		changeName;
-		top: self bottom;
-		openInWorld
+	^ (UIManager default request: 'Enter a new name' initialAnswer: self name)
+		ifNotNil: [ :newName | 
+			| duplicate |
+			duplicate := self duplicate
+				name: newName;
+				top: self bottom.
+			self director addMorph: duplicate.
+			duplicate ]
