@@ -7,7 +7,7 @@ build
 	codePane := self buildCodePane.
 	workspacePane := self buildWorkspacePane.
 	pane := BorderedMorph new.
-	pane extent: 400 @ 300.
+	pane extent: 600 @ 400.
 	pane color: Color transparent.
 	pane changeProportionalLayout.
 	upper := BorderedMorph new.

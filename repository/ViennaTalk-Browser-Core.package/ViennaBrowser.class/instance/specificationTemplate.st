@@ -10,16 +10,17 @@ values
 functions
 	<funcname> : <arg type> -> <return type>
 	<funcname>(<arg>) == <expression>
-	pre <precondition>
-	post <postcondition>;
+	pre <boolean expression>
+	post <boolean expression>;
 state <State> of
 	<varname> : <type expression>
 init s == s = mk_<State>(<initial value>)
+inv mk_<State>(<varname>) == <boolean expression>
 end
 operations
 	<operation name> : <arg type> ==> <return type or ()>
 	<operation name>(<arg>) == <statement>
-	pre <precondition>
-	post <postcondition>;
+	pre <boolean expression>
+	post <boolean expression>;
 end <module name>
 ' asText makeAllColor: Color gray
