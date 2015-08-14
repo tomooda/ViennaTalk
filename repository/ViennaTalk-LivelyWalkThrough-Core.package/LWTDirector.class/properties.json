@@ -10,7 +10,8 @@
 		"frames",
 		"lastFrame",
 		"cuts",
-		"scripts"
+		"scripts",
+		"dependents"
 	],
 	"name" : "LWTDirector",
 	"type" : "normal"

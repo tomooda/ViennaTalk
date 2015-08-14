@@ -2,7 +2,7 @@ user interface
 build
 	| pane utilsPane |
 	pane := BorderedMorph new
-		extent: 800 @ 400;
+		extent: 900 @ 600;
 		color: Color transparent;
 		changeProportionalLayout;
 		yourself.

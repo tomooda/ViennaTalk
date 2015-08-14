@@ -5,6 +5,8 @@ imageWidget
 			imageWidget := LWTImageWidget new
 				freeze;
 				name: 'Image';
+				nameColor: Color black;
+				nameFont: self nameFontForWidgets;
 				extent: 80 @ 80;
-				value: 'Pharo.png'
+				value: 'Pharo.png';
 				yourself ]
