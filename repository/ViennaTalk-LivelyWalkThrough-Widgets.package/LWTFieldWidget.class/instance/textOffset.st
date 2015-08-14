@@ -1,6 +1,6 @@
 geometry
 textOffset
-	^ 0
+	^ 3
 		@
 			(self nameOffset y
 				+

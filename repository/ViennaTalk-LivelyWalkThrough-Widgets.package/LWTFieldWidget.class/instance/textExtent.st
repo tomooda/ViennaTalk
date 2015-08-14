@@ -1,3 +1,3 @@
 geometry
 textExtent
-	^ self width @ 50
+	^ self width - 6 @ 50

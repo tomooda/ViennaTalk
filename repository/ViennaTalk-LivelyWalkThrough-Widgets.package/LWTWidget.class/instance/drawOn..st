@@ -6,4 +6,5 @@ drawOn: aCanvas
 				drawString: self name
 				at: self position + self nameOffset
 				font: self nameFont
-				color: self nameColor ]
+				color: self nameColor ].
+	self drawHighlightedOn: aCanvas
