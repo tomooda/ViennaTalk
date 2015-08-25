@@ -1,5 +1,5 @@
 instance creation
 default
 	^ self new
-		engine: ViennaClient default;
+		engine: ViennaEngine default;
 		yourself
