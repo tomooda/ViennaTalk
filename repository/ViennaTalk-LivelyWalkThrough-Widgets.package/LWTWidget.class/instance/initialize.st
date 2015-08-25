@@ -3,4 +3,5 @@ initialize
 	super initialize.
 	moveable := self defaultMoveable.
 	showsName := self defaultShowsName.
-	frozen := false
+	frozen := false.
+	self extent: self defaultExtent

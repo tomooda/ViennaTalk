@@ -1,0 +1,3 @@
+defaults
+defaultLineWidth
+	^ 3

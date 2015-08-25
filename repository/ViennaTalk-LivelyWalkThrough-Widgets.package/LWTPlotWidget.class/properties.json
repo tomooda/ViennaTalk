@@ -1,0 +1,17 @@
+{
+	"commentStamp" : "",
+	"super" : "LWTWidget",
+	"category" : "ViennaTalk-LivelyWalkThrough-Widgets",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"value",
+		"data",
+		"textFont",
+		"lineWidth",
+		"dotRadius"
+	],
+	"name" : "LWTPlotWidget",
+	"type" : "normal"
+}
