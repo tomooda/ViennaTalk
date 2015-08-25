@@ -5,6 +5,6 @@ forkProcess: desc
 		arguments:
 			{'-Dfile.encoding=whatever'.
 			'-jar'.
-			(self vdmpadPath fullName)}
+			(self json4vdmjPath fullName)}
 		environment: nil
 		descriptors: desc

@@ -1,6 +1,8 @@
 copyright notice
 aboutVDMJ
-	^ 'ViennaVDMJ uses VDMJ as an execution engine. Please note that VDMJ is copyrighted and licensed independent of ViennaTalk. Please visit the link below and the copyright notice for details.
+	^ 'ViennaVDMJ uses VDMJ as an execution engine. 
+Please note that VDMJ is copyrighted and licensed independent of ViennaTalk. 
+Please visit the link below and the copyright notice for details.
 
 VDMJ homepage: https://github.com/nickbattle/vdmj
 /*******************************************************************************
