@@ -5,6 +5,8 @@ handleMouseDown: aMouseEvent
 	point := aMouseEvent position.
 	(fieldWidget bounds containsPoint: point)
 		ifTrue: [ LWTFieldWidget new openInHand ].
+	(plotWidget bounds containsPoint: point)
+		ifTrue: [ LWTPlotWidget new openInHand ].
 	(imageWidget bounds containsPoint: point)
 		ifTrue: [ LWTImageWidget new openInHand ].
 	(buttonWidget bounds containsPoint: point)

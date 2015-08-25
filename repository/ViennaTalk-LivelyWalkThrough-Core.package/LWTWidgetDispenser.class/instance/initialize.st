@@ -7,6 +7,7 @@ initialize
 		listDirection: #topToBottom;
 		cellInset: 3.
 	self addMorphBack: self fieldWidget.
+	self addMorphBack: self plotWidget.
 	self addMorphBack: self imageWidget.
 	self addMorphBack: self buttonWidget.
 	self addMorphBack: self padWidget.
