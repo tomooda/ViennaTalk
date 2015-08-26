@@ -2,4 +2,4 @@ instance creation
 open
 	"ViennaBrowser open"
 
-	^ self openOn: VDMC vdmj
+	^ self openOn: VDMC default
