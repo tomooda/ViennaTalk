@@ -20,4 +20,4 @@ Gofer new smalltalkhubUser: 'tomooda' project: 'ViennaTalk';
 
 How to use
 ---
-Please see wiki page.
+Please see [wiki page](https://github.com/tomooda/ViennaTalk-doc/wiki).
