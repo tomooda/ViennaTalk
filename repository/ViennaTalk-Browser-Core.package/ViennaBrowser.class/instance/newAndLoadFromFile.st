@@ -5,7 +5,9 @@ newAndLoadFromFile
 		do: [ :stream | 
 			stream contents
 				in: [ :source | 
-					[ self vdmc specification: source ]
+					[ 
+					vdmc specification: source ifError: [ :msg | self error: msg ].
+					self selectModuleNamed: nil ]
 						on: Error
 						do: [ :ex | 
 							codePane setText: source.
