@@ -36,6 +36,6 @@ acceptCode: aStringOrText
 									editor selectFrom: editor caret to: editor caret - 1.
 									editor afterSelectionInsertAndSelect: msg ] ].
 					^ false ].
-			self selectModuleNamed: newModulePositions first key.
+			self selectModuleNamed: nil.
 			^ true ].
 	^ false

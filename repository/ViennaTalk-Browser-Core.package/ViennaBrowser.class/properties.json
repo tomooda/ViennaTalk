@@ -19,7 +19,8 @@
 		"selectedField",
 		"codeSelection",
 		"valueSelection",
-		"workspaceSelection"
+		"workspaceSelection",
+		"directory"
 	],
 	"name" : "ViennaBrowser",
 	"type" : "normal"

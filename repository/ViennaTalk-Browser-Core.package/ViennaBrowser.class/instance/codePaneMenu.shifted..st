@@ -30,8 +30,5 @@ codePaneMenu: aMenu shifted: aBoolean
 			{('accept (s)' translated).
 			#accept}.
 			{('cancel (l)' translated).
-			#cancel}.
-			#-.
-			{('save contents to file...' translated).
-			#saveContentsInFile}}.
+			#cancel}}.
 	^ aMenu
