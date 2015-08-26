@@ -1,7 +1,7 @@
 request handling-api
 id: anHttpRequest
 	| params source states expression result message json |
-	params := anHttpRequest fields.
+	params := anHttpRequest mergedFields.
 	source := (params at: 'source' ifAbsent: [ String new ]) trimmed.
 	states := Dictionary new.
 	params
