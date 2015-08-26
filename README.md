@@ -10,6 +10,10 @@ Platform
 ViennaTalk works on [Pharo 4.0](http://pharo.org/) .
 MacOSX and Linux is supported. Windows platforms are partially supported; a local VDMJ process does not work on Widnows due to limitation of piping feature of OSProcess.
 
+License
+---
+ViennaTalk is distributed under [the MIT license](https://github.com/tomooda/ViennaTalk-doc/blob/master/LICENSE).
+
 Repository
 ---
 The monticello repository is available at http://smalltalkhub.com/#!/~tomooda/ViennaTalk.
