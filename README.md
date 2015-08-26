@@ -8,7 +8,7 @@ ViennaTalk is a Smalltalk library to handle VDM-SL specifications.
 Platform
 ---
 ViennaTalk works on [Pharo 4.0](http://pharo.org/) .
-MacOSX and Linux is supported. Windows platforms are partially supported; a local VDMJ process does not work on Widnows due to limitation of piping feature of OSProcess.
+MacOSX and Linux is supported. Windows platforms are partially supported; a local VDMJ process does not work on Widnows due to limitation of OSProcess'es piping functions.
 
 License
 ---
