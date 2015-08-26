@@ -29,3 +29,7 @@ Gofer new smalltalkhubUser: 'tomooda' project: 'ViennaTalk';
 How to use
 ---
 Please see [wiki page](https://github.com/tomooda/ViennaTalk-doc/wiki).
+
+Acknowledgement
+---
+Part of the ViennaTalk project is supported by Grant-in-Aid for Scientific Research (S) 24220001 from the Japan Society for the Promotion of Science.
