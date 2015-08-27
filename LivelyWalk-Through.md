@@ -79,8 +79,7 @@ The syntax is simple.
 <expression> ::=
     <operation name>(<expression>,...) |  /* call a VDM operation */
     [<widget name>]                       /* read the value that the widget holds */
-    "string" |                            /* string literal */
-    <number>                              /* number literal */
+    "string" |                            /* all values are string of valid VDM expressions */
 ```
 
 For the simple calculator, the below script will compute the total.
