@@ -3,6 +3,13 @@ menu
 	| menu |
 	menu := super menu.
 	menu
+		add: 'data bounds' translated
+			subMenu:
+				(MenuMorph new
+						defaultTarget: self;
+						add: 'set data bounds...' translated target: self selector: #setDataBounds;
+						add: 'unset data bounds' translated target: self selector: #unsetDataBounds;
+						yourself);
 		add: 'change color' translated target: self selector: #changeColor;
 		add: 'line' translated
 			subMenu:
