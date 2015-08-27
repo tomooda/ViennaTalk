@@ -1,4 +1,4 @@
 accessing
 value: aStringOrText
-	self acceptContents: aStringOrText.
+	self acceptContents: (self valueToContents: aStringOrText).
 	self changed: #contents

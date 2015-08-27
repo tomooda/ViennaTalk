@@ -1,0 +1,3 @@
+operations
+changeVDMType
+	type := #vdm

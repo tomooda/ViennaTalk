@@ -1,0 +1,3 @@
+operations
+changeStringType
+	type := #string

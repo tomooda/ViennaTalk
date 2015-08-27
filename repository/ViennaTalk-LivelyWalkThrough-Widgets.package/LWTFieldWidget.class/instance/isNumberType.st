@@ -1,0 +1,3 @@
+testing
+isNumberType
+	^ type = #number

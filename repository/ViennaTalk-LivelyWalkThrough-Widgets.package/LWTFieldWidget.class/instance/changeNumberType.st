@@ -1,0 +1,3 @@
+operations
+changeNumberType
+	type := #number

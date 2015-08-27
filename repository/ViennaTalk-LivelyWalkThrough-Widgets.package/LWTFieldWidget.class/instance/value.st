@@ -1,3 +1,3 @@
 accessing
 value
-	^ self contents
+	^ self contentsToValue: self contents

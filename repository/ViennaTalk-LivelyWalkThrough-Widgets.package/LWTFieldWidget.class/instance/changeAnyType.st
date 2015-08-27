@@ -1,0 +1,3 @@
+operations
+changeAnyType
+	type := #any
