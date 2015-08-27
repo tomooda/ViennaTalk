@@ -98,4 +98,4 @@ Testdriving the prototype
 ---
 Your prototype is ready to go.
 Fill the <tt>UnitPrice</tt> and <tt>Amount</tt> in and then click on the <tt>Calc</tt> button.
-The result will hopefully displayed as you expect :smile:
+The result will hopefully be displayed as you expect :smile:
