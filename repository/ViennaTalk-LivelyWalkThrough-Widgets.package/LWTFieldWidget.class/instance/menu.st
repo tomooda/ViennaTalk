@@ -2,7 +2,6 @@ menus
 menu
 	| menu |
 	menu := super menu.
-	menu add: 'change text font' translated target: self selector: #changeTextFont.
 	menu
 		add: 'type' translated
 		subMenu:
@@ -16,7 +15,7 @@ menu
 					target: self
 					selector: #changeStringType
 					getStateSelector: #isStringType;
-				addToggle: 'vdm' translated
+				addToggle: 'vdm value' translated
 					target: self
 					selector: #changeVDMType
 					getStateSelector: #isVDMType;
@@ -25,6 +24,7 @@ menu
 					selector: #changeAnyType
 					getStateSelector: #isAnyType;
 				yourself).
+	menu add: 'change text font' translated target: self selector: #changeTextFont.
 	self showsDiagram
 		ifTrue: [ 
 			menu

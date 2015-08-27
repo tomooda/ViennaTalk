@@ -5,13 +5,13 @@ validate: aString do: aBlock ifError: errorBlock
 			| vdm |
 			vdm := [ ViennaWriter new stringify: (ViennaReader new parseNumberOn: aString trim readStream) ]
 				on: Error
-				do: [ :ex | ^ errorBlock value: 'Cannot convert to VDM number' ].
+				do: [ :ex | ^ errorBlock cull: 'Cannot convert to VDM number' ].
 			^ aBlock value: vdm ].
 	type = #vdm
 		ifTrue: [ 
 			| vdm |
 			vdm := [ ViennaWriter new stringify: (ViennaReader new parse: aString) ]
 				on: Error
-				do: [ :ex | ^ errorBlock value: 'Cannot convert to VDM value' ].
+				do: [ :ex | ^ errorBlock cull: 'Cannot convert to VDM value' ].
 			^ aBlock value: vdm ].
 	^ aBlock value: aString
