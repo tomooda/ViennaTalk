@@ -94,7 +94,7 @@ The script will evaluate a VDM operation call with the arguments from the two fi
 
 ![Livetalk Browser](https://github.com/tomooda/ViennaTalk-doc/blob/master/images/Lively-Livetalk2.png)
 
-Playing with the prototype
+Testdriving the prototype
 ---
 Your prototype is ready to go.
 Fill the <tt>UnitPrice</tt> and <tt>Amount</tt> in and then click on the <tt>Calc</tt> button.
