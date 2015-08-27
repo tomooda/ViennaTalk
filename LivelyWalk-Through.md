@@ -106,12 +106,13 @@ The result will hopefully be displayed as you expect :smile:
 
 Drawing charts
 ---
-The plot widget can be used to plot data given either
+The plot widget can be used to plot data given either of the followings.
 
 * a number
 * a sequence of numbers
 * a point (real*real)
 * a sequence of points (seq (real*real))
+* a mapping from number to number (map real to real)
 
 ![plot widget](https://github.com/tomooda/ViennaTalk-doc/blob/master/images/Lively-graph.png)
 
