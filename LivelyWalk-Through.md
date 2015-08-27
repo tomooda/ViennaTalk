@@ -103,3 +103,15 @@ Fill the <tt>UnitPrice</tt> and <tt>Amount</tt> in and then click on the <tt>Cal
 The result will hopefully be displayed as you expect :smile:
 
 ![result](https://github.com/tomooda/ViennaTalk-doc/blob/master/images/Lively-run2.png)
+
+Drawing charts
+---
+The plot widget can be used to plot data given either
+
+* a number
+* a sequence of numbers
+* a point (real*real)
+* a sequence of points (seq (real*real))
+
+![plot widget](https://github.com/tomooda/ViennaTalk-doc/blob/master/images/Lively-graph.png)
+
