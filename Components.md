@@ -6,7 +6,7 @@ By installing ViennaTalk, the following menu will be available.
 
 Table of Major Components of ViennaTalk
 
-* [VDMBrowser](VDMBrowser)
+* [VDMBrowser](VDMBrowser.md)
 * VDMPad
 * VDMC
 * Lively Walk-Through
