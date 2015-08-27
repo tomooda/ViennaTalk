@@ -28,7 +28,23 @@ Gofer new smalltalkhubUser: 'tomooda' project: 'ViennaTalk';
 
 How to use
 ---
-Please see [Components.md](Components.md).
+By installing ViennaTalk, the following menu will be available.
+
+![World->Tools menu items for ViennaTalk](https://github.com/tomooda/ViennaTalk-doc/blob/master/images/ViennaTalk-menu.png)
+
+Table of Major Components of ViennaTalk
+
+* [VDMBrowser](VDMBrowser.md)
+* VDMPad
+* VDMC
+* Lively Walk-Through
+* ViennaEngine
+   - ViennaVDMJ
+   - ViennaServer
+   - ViennaClient
+   - ViennaBankEngine
+
+
 
 Acknowledgement
 ---
