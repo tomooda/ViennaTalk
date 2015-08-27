@@ -28,7 +28,7 @@ Gofer new smalltalkhubUser: 'tomooda' project: 'ViennaTalk';
 
 How to use
 ---
-Please see [wiki page](https://github.com/tomooda/ViennaTalk-doc/wiki).
+Please see [Components.md](Components.md).
 
 Acknowledgement
 ---
