@@ -98,4 +98,9 @@ Testdriving the prototype
 ---
 Your prototype is ready to go.
 Fill the <tt>UnitPrice</tt> and <tt>Amount</tt> in and then click on the <tt>Calc</tt> button.
+
+![using the prototype](https://github.com/tomooda/ViennaTalk-doc/blob/master/images/Lively-run1.png)
+
 The result will hopefully be displayed as you expect :smile:
+
+![result](https://github.com/tomooda/ViennaTalk-doc/blob/master/images/Lively-run2.png)
