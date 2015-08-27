@@ -2,10 +2,6 @@ initialize-release
 initialize
 	| quote escapes |
 	super initialize.
-	numberLiteral := ($- asParser optional , ($0 asParser / #digit asParser plus)
-		, ($. asParser , #digit asParser plus) optional
-		, ($e asParser / $E asParser , ($- asParser / $+ asParser) optional , #digit asParser plus) optional) trim flatten
-		==> [ :str | '''' , str trim , '''' ].
 	quote := $" asParser.
 	escapes := Dictionary new
 		at: $n put: Character cr;
@@ -33,7 +29,7 @@ initialize
 				==> [ :args | Array with: args first with: args third ].
 	expression
 		def:
-			numberLiteral / (stringLiteral ==> [ :str | str storeString ])
+			(stringLiteral ==> [ :str | str storeString ])
 				/ (morphName ==> [ :name | 'self execValueOf: (' , name storeString , ')' ])
 				/
 					(vdmcall
