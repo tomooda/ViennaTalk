@@ -11,7 +11,8 @@
 		"imageWidget",
 		"buttonWidget",
 		"padWidget",
-		"areaWidget"
+		"areaWidget",
+		"remoteWidget"
 	],
 	"name" : "LWTWidgetDispenser",
 	"type" : "normal"

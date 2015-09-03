@@ -11,4 +11,5 @@ initialize
 	self addMorphBack: self imageWidget.
 	self addMorphBack: self buttonWidget.
 	self addMorphBack: self padWidget.
-	self addMorphBack: self areaWidget
+	self addMorphBack: self areaWidget.
+	self addMorphBack: self remoteWidget

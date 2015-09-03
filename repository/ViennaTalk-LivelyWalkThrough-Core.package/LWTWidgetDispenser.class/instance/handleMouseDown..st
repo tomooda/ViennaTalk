@@ -14,4 +14,6 @@ handleMouseDown: aMouseEvent
 	(padWidget bounds containsPoint: point)
 		ifTrue: [ LWTMouseSensor pad openInHand ].
 	(areaWidget bounds containsPoint: point)
-		ifTrue: [ LWTMouseSensor area openInHand ]
+		ifTrue: [ LWTMouseSensor area openInHand ].
+	(remoteWidget bounds containsPoint: point)
+		ifTrue: [ LWTRemoteWidget new openInHand ].

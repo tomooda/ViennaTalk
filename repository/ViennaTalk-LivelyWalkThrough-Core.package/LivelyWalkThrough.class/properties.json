@@ -4,7 +4,9 @@
 	"category" : "ViennaTalk-LivelyWalkThrough-Core",
 	"classinstvars" : [ ],
 	"pools" : [ ],
-	"classvars" : [ ],
+	"classvars" : [
+		"Server"
+	],
 	"instvars" : [
 		"director"
 	],

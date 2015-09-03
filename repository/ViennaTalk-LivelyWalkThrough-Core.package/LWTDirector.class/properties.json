@@ -4,7 +4,9 @@
 	"category" : "ViennaTalk-LivelyWalkThrough-Core",
 	"classinstvars" : [ ],
 	"pools" : [ ],
-	"classvars" : [ ],
+	"classvars" : [
+		"Server"
+	],
 	"instvars" : [
 		"vdmc",
 		"selectedWidgets",
@@ -12,7 +14,8 @@
 		"lastFrame",
 		"cuts",
 		"scripts",
-		"dependents"
+		"dependents",
+		"urlPrefix"
 	],
 	"name" : "LWTDirector",
 	"type" : "normal"

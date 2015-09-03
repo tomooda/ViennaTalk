@@ -10,7 +10,8 @@ build
 	utilsPane
 		addLazyPage: self buildWidgetDispenserPane label: 'Widgets';
 		addLazyPage: self buildVDMBrowserPane label: 'VDM';
-		addLazyPage: self buildLivetalkBrowserPane label: 'Livetalk'.
+		addLazyPage: self buildLivetalkBrowserPane label: 'Livetalk';
+		addLazyPage: self buildSettingsPane label: 'Settings'.
 	utilsPane selectedPageIndex: 1.
 	pane
 		addMorph: self director
