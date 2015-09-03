@@ -1,0 +1,3 @@
+accessing
+basicContents
+	^ super contents
