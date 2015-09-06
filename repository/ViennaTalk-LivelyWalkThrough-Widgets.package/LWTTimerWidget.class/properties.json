@@ -1,0 +1,15 @@
+{
+	"commentStamp" : "",
+	"super" : "LWTWidget",
+	"category" : "ViennaTalk-LivelyWalkThrough-Widgets",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"value",
+		"stepTime",
+		"stepping"
+	],
+	"name" : "LWTTimerWidget",
+	"type" : "normal"
+}

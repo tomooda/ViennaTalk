@@ -1,3 +1,3 @@
-testing
+accessing
 showsDiagram
-	^ showsDiagram = true
+	^ showsDiagram

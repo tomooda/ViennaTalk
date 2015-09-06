@@ -1,5 +1,7 @@
 accessing
-acceptContents: aString
-	super acceptContents: aString.
-	ZnEasy put: self url asUrl data: (ZnEntity text: aString).
+acceptContents: aStringOrText
+	contents ~= aStringOrText asString trim
+		ifTrue: [ 
+			super acceptContents: aStringOrText.
+			ZnEasy put: self url asUrl data: (ZnEntity text: aStringOrText) ].
 	^ true

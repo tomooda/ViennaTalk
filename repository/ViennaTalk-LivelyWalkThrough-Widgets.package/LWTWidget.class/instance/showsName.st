@@ -1,3 +1,3 @@
-testing
+accessing
 showsName
-	^ showsName = true
+	^ showsName
