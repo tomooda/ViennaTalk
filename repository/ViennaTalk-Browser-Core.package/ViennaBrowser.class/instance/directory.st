@@ -1,3 +1,3 @@
 private
 directory
-	^ directory ifNil: [ directory := FileSystem root parent ]
+	^ directory ifNil: [ directory := FileSystem workingDirectory parent parent parent ]
