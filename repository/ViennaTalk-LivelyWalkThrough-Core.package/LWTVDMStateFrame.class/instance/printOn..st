@@ -6,10 +6,10 @@ printOn: aStream
 		do: [:module | 
 			aStream nextPutAll: module;
 				 nextPutAll: ': {'.
-			(states at: module)
-				do: [:binding | aStream nextPutAll: binding key;
+			states associations do: [:bind|
+				aStream nextPutAll: bind key;
 						 nextPut: $:;
-						 nextPutAll: binding value]
+						 nextPutAll: bind value]
 				separatedBy: [aStream nextPut: $,].
 			aStream nextPutAll: '}']
 		separatedBy: [aStream nextPutAll: ', '].

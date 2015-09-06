@@ -15,7 +15,8 @@
 		"cuts",
 		"scripts",
 		"dependents",
-		"urlPrefix"
+		"urlPrefix",
+		"filepath"
 	],
 	"name" : "LWTDirector",
 	"type" : "normal"

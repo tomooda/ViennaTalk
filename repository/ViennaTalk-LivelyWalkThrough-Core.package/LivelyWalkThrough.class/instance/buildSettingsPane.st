@@ -1,19 +1,19 @@
 user interface
 buildSettingsPane
-	| pane item |
+	| pane urlPrefixPane |
 	pane := Morph new.
 	pane
 		color: Color white;
 		changeTableLayout;
-		listDirection: #toToBottom.
-	item := Morph new.
-	item
+		listDirection: #topToBottom.
+	urlPrefixPane := Morph new.
+	urlPrefixPane
 		color: Color white;
 		changeTableLayout;
 		listDirection: #leftToRight;
 		hResizing: #spaceFill;
 		vResizing: #shrinkWrap.
-	item
+	urlPrefixPane
 		addMorphBack:
 				(' name ' asMorph
 						hResizing: #rigid;
@@ -24,5 +24,5 @@ buildSettingsPane
 						extent: 100 @ (TextStyle default defaultFont height * 2);
 						hResizing: #spaceFill;
 						yourself).
-	pane addMorphBack: item.
+	pane addMorphBack: urlPrefixPane.
 	^ pane
