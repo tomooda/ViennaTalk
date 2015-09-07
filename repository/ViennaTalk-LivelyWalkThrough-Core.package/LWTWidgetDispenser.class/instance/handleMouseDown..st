@@ -9,6 +9,8 @@ handleMouseDown: aMouseEvent
 		ifTrue: [ LWTPlotWidget new openInHand ].
 	(imageWidget bounds containsPoint: point)
 		ifTrue: [ LWTImageWidget new openInHand ].
+	(variableImageWidget bounds containsPoint: point)
+		ifTrue: [ LWTVariableImageWidget new openInHand ].
 	(buttonWidget bounds containsPoint: point)
 		ifTrue: [ LWTMouseSensor button openInHand ].
 	(padWidget bounds containsPoint: point)
@@ -16,4 +18,4 @@ handleMouseDown: aMouseEvent
 	(areaWidget bounds containsPoint: point)
 		ifTrue: [ LWTMouseSensor area openInHand ].
 	(remoteWidget bounds containsPoint: point)
-		ifTrue: [ LWTRemoteWidget new openInHand ].
+		ifTrue: [ LWTRemoteWidget new openInHand ]

@@ -9,6 +9,7 @@ initialize
 	self addMorphBack: self fieldWidget.
 	self addMorphBack: self plotWidget.
 	self addMorphBack: self imageWidget.
+	self addMorphBack: self variableImageWidget.
 	self addMorphBack: self buttonWidget.
 	self addMorphBack: self padWidget.
 	self addMorphBack: self areaWidget.
