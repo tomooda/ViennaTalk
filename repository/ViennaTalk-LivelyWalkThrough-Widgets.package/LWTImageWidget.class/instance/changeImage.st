@@ -1,4 +1,7 @@
 operations
 changeImage
-	(UIManager default chooseFullFileNameMatching: nil label: 'Select an image file')
-		ifNotNil: [ :filename | self value: filename asString ]
+	(LivelyWalkThrough
+		fileOpen: 'Select an image file'
+		extensions: #('png' 'jpg' 'jpeg')
+		path: path
+		preview: #image) ifNotNil: [ :filename | self value: filename fullName ]

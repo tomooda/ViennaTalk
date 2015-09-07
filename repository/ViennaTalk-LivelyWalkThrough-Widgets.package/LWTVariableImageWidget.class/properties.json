@@ -1,0 +1,16 @@
+{
+	"commentStamp" : "",
+	"super" : "LWTWidget",
+	"category" : "ViennaTalk-LivelyWalkThrough-Widgets",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"form",
+		"path",
+		"value",
+		"map"
+	],
+	"name" : "LWTVariableImageWidget",
+	"type" : "normal"
+}
