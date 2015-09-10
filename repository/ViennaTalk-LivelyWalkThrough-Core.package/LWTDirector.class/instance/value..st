@@ -8,11 +8,8 @@ value: aZnRequest
 				ifNotNil: [ :morph | 
 					aZnRequest entity
 						ifNotNil: [ :entity | 
-							ZnResponse
-								ok:
-									(ZnEntity
-										text:
-											(morph
-												value: entity contents;
-												value)) ]
+							[ morph value: entity contents ]
+								on: Error
+								do: [ :ex | ^ ZnResponse serverError: ex messageText ].
+							ZnResponse ok: entity ]
 						ifNil: [ ZnResponse ok: (ZnEntity text: morph value) ] ] ]
