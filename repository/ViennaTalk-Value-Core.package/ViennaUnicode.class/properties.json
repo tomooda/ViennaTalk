@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "Unicode",
+	"category" : "ViennaTalk-Value-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "ViennaUnicode",
+	"type" : "normal"
+}
