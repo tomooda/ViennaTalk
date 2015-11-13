@@ -1,3 +1,11 @@
 parsers-expressions
 defExpression
-	^ PPFailingParser new
+	^ ((self reserved: 'def')
+		,
+			((patternBind , (self operator: $=) , expression)
+				==> [ :triple | 
+					{(triple first).
+					(triple third)} ] delimitedBy: (self operator: $;)) withoutSeparators , (self reserved: 'in') , expression)
+		==> [ :quatro | 
+			{(quatro second).
+			(quatro fourth)} ]

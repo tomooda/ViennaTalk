@@ -1,3 +1,3 @@
 parsers-types
 optionalType
-	^ PPFailingParser new
+	^ ((self operator: $[) , type , (self operator: $])) ==> [ :triple | triple second ]

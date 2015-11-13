@@ -1,9 +1,10 @@
 parsers-types
 productType
-	^ (type , ($* asParser trim , type) plus)
-		==> [ :pair | 
+	^ (type3 , (self operator: $*) , (type3 separatedBy: (self operator: $*)) withoutSeparators)
+		==> [ :triple | 
 			Array
-				new: pair second size + 1
+				new: triple third size + 1
 				streamContents: [ :stream | 
-					stream nextPut: pair first.
-					pair second do: [ :second | stream nextPut: second second ] ] ]
+					stream
+						nextPut: triple first;
+						nextPutAll: triple third ] ]

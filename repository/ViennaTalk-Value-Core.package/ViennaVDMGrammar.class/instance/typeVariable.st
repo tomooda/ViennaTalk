@@ -1,3 +1,3 @@
 parsers-types
 typeVariable
-	^ PPFailingParser new
+	^ typeVariableIdentifier

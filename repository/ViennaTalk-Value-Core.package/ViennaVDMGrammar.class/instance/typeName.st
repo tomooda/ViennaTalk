@@ -1,3 +1,3 @@
 parsers-types
 typeName
-	^ PPFailingParser new
+	^ name

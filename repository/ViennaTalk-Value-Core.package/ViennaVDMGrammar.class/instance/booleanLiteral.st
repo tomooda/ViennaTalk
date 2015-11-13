@@ -1,3 +1,3 @@
 parsers-literals
 booleanLiteral
-	^ 'true' asParser trim / 'false' asParser trim
+	^ self reserved: 'true' asParser / 'false' asParser

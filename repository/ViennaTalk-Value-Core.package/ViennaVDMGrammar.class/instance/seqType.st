@@ -1,3 +1,3 @@
 parsers-types
 seqType
-	^ PPFailingParser new
+	^ ((self reserved: 'seq') , (self reserved: 'of') , type3) ==> #third

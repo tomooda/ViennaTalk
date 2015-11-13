@@ -1,3 +1,3 @@
 parsers-literals
 quoteLiteral
-	^ ($< asParser , identifier , $> asParser) flatten trim
+	^ self operator: ($< asParser , identifier , $> asParser) flatten

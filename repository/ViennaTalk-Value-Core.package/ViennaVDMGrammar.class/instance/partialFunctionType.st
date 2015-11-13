@@ -1,3 +1,6 @@
 parsers-types
 partialFunctionType
-	^ PPFailingParser new
+	^ (type1 , (self operator: '->') , type)
+		==> [ :triple | 
+			{(triple first).
+			(triple third)} ]

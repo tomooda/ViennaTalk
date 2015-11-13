@@ -1,3 +1,3 @@
 parsers-literals
 nilLiteral
-	^ 'nil' asParser trim
+	^ self reserved: 'nil'

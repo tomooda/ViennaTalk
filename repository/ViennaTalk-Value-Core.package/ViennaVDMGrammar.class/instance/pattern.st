@@ -1,3 +1,3 @@
 parsers-patterns
 pattern
-	^ PPFailingParser new
+	^ setUnionPattern / seqConcPattern / mapMunionPattern / pattern1

@@ -1,6 +1,9 @@
 parsers-types
 identifiedField
-	^ (identifier , $: asParser trim , type)
+	^ (identifier , (self operator: $:) , type)
 		==> [ :triple | 
+			Transcript
+				cr;
+				show: triple printString.
 			{(triple first).
 			(triple third)} ]
