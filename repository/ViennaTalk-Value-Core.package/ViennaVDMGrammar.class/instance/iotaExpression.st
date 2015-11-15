@@ -1,3 +1,6 @@
 parsers-expressions
 iotaExpression
-	^ PPFailingParser new
+	^ ((self reserved: 'iota') , bind , (self operator: $&) , expression)
+		==> [ :quatro | 
+			{(quatro second).
+			(quatro fourth)} ]

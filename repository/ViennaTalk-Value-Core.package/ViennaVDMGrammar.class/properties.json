@@ -25,7 +25,6 @@
 		"tupleConstructor",
 		"recordConstructor",
 		"recordModifier",
-		"tupleSelect",
 		"lambdaExpression",
 		"newExpression",
 		"selfExpression",
@@ -99,6 +98,7 @@
 		"patternList",
 		"patternBind",
 		"bind",
+		"bindList",
 		"setBind",
 		"typeBind"
 	],

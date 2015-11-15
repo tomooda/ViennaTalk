@@ -1,3 +1,3 @@
 parsers-expressions
 quantifiedExpression
-	^ PPFailingParser new
+	^ self forallExpression / self existsExpression / self exists1Expression

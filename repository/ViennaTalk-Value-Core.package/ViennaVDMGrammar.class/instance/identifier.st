@@ -1,3 +1,4 @@
 parsers-symbols
 identifier
-	^ (initialLetter , followingLetter star) flatten
+	^ ('mk_' asParser not , 'pre_' asParser not , 'post_' asParser not , 'is_' asParser not , 'obj_' asParser not
+		, 'lambda' not , 'mu' not , initialLetter , followingLetter star) flatten
