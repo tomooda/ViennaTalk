@@ -1,10 +1,10 @@
-parsers-expressions
+parsers-expressions-basics
 mapEnumeration
-	^ ((self operator: ${)
+	^ (lbrace
 		,
-			(((self operator: '|->') ==> [ :single | Array new ])
+			((maplet ==> [ :single | Array new ])
 				/
-					((expression , (self operator: '|->') , expression)
+					((expression , maplet , expression)
 						==> [ :triple | 
 							{(triple first).
-							(triple third)} ] separatedBy: (self operator: $,)) withoutSeparators) , (self operator: $})) ==> #second
+							(triple third)} ] separatedBy: comma) withoutSeparators) , rbrace) ==> #second

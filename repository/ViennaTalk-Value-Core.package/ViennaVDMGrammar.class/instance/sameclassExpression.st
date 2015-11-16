@@ -1,3 +1,6 @@
-parsers-expressions
+parsers-expressions-type discriminations
 sameclassExpression
-	^ PPFailingParser new
+	^ ((self reserved: 'sameclass') , lparen , expression , comma , expression , rparen)
+		==> [ :array | 
+			{(array third).
+			(array fifth)} ]

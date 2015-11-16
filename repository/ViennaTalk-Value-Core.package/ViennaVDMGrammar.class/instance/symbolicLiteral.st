@@ -1,3 +1,3 @@
 parsers-literals
 symbolicLiteral
-	^ numericLiteral / booleanLiteral / nilLiteral / characterLiteral / textLiteral / quoteLiteral
+	^ self numericLiteral / self booleanLiteral / self nilLiteral / self characterLiteral / self textLiteral / self quoteLiteral

@@ -1,3 +1,3 @@
 parsers-types
 type
-	^ partialFunctionType / totalFunctionType / type1
+	^ self partialFunctionType / self totalFunctionType / type1

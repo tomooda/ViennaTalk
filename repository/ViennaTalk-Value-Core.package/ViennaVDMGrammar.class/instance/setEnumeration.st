@@ -1,5 +1,4 @@
-parsers-expressions
+parsers-expressions-basics
 setEnumeration
-	^ ((self operator: ${)
-		, ((expression separatedBy: (self operator: $,)) withoutSeparators optional ==> [ :opt | opt ifNil: [ Array new ] ])
-		, (self operator: $})) ==> #second
+	^ (lbrace , ((expression separatedBy: comma) withoutSeparators optional ==> [ :opt | opt ifNil: [ Array new ] ])
+		, rbrace) ==> #second

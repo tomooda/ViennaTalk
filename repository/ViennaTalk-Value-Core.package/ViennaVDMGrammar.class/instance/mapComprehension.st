@@ -1,7 +1,6 @@
-parsers-expressions
+parsers-expressions-basics
 mapComprehension
-	^ ((self operator: ${) , expression , (self operator: '|->') , expression , (self operator: $|) , bindList
-		, (((self operator: $&) , expression) ==> #second) optional , (self operator: $}))
+	^ (lbrace , expression , maplet , expression , bar , bindList , ((amp , expression) ==> #second) optional , rbrace)
 		==> [ :array | 
 			{(array second).
 			(array fourth).

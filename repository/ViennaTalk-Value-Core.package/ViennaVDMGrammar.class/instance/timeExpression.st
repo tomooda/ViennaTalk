@@ -1,3 +1,3 @@
-parsers-expressions
+parsers-expressions-threads and histories
 timeExpression
-	^ PPFailingParser new
+	^ (self reserved: 'time') ==> [ :t |  ]

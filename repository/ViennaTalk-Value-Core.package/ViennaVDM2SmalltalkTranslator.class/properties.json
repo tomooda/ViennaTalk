@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "ViennaVDMGrammar",
+	"category" : "ViennaTalk-Value-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "ViennaVDM2SmalltalkTranslator",
+	"type" : "normal"
+}

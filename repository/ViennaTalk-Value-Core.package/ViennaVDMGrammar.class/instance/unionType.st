@@ -1,6 +1,6 @@
 parsers-types
 unionType
-	^ (type2 , (self operator: $|) , (type2 separatedBy: (self operator: $|)) withoutSeparators)
+	^ (type2 , bar , (type2 separatedBy: bar) withoutSeparators)
 		==> [ :triple | 
 			Array
 				new: triple third size + 1

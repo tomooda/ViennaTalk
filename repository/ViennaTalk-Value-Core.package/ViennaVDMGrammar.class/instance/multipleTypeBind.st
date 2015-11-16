@@ -1,6 +1,6 @@
 parsers-patterns
 multipleTypeBind
-	^ (patternList , (self operator: $:) , type)
+	^ (patternList , colon , type)
 		==> [ :triple | 
 			{(triple first).
 			(triple third)} ]

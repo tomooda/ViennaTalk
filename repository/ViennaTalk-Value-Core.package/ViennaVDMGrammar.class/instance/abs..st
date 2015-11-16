@@ -1,3 +1,3 @@
-parsers-expressions
+parsers-expressions-operators
 abs: arg
 	^ arg

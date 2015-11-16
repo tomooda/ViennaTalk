@@ -1,3 +1,3 @@
 parsers-types
 quoteType
-	^ quoteLiteral
+	^ self quoteLiteral

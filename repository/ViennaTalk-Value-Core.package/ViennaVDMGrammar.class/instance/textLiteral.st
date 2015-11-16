@@ -1,3 +1,3 @@
 parsers-literals
 textLiteral
-	^ PPFailingParser new
+	^ (($" asParser , (char star ==> [ :chars | String withAll: chars ]) , $" asParser) ==> #second) trim

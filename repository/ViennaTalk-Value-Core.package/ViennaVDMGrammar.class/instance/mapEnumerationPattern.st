@@ -1,11 +1,9 @@
 parsers-patterns
 mapEnumerationPattern
 	| mapletPattern |
-	mapletPattern := (pattern , (self operator: '|->') , pattern)
+	mapletPattern := (pattern , maplet , pattern)
 		==> [ :triple | 
 			{(triple first).
 			(triple third)} ].
-	^ ((self operator: ${)
-		,
-			(((self operator: '|->') ==> [ :single | Array new ])
-				/ (mapletPattern separatedBy: (self operator: $,)) withoutSeparators) , (self operator: $})) ==> #second
+	^ (lbrace , ((maplet ==> [ :single | Array new ]) / (mapletPattern separatedBy: comma) withoutSeparators) , rbrace)
+		==> #second

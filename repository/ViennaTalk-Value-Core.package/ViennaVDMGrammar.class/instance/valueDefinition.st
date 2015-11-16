@@ -1,6 +1,6 @@
 parsers-definitions
 valueDefinition
-	^ (pattern , ((self operator: $:) , type) optional , (self operator: $=) , expression)
+	^ (pattern , (colon , type) optional , eq , expression)
 		==> [ :quatro | 
 			{(quatro first).
 			(quatro second ifNotNil: [ :second | second second ]).

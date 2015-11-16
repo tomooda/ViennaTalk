@@ -1,3 +1,3 @@
-parsers-expressions
+parsers-expressions-basics
 undefinedExpression
-	^ PPFailingParser new
+	^ (self reserved: 'undefined') ==> [ :t |  ]

@@ -1,7 +1,6 @@
-parsers-expressions
+parsers-expressions-basics
 setRangeExpression
-	^ ((self operator: ${) , expression , (self operator: $,) , (self operator: '...') , (self operator: $,) , expression
-		, (self operator: $}))
+	^ (lbrace , expression , comma , (self operator: '...') , comma , expression , rbrace)
 		==> [ :array | 
 			{(array second).
 			(array sixth)} ]

@@ -1,8 +1,7 @@
-parsers-expressions
+parsers-expressions-basics
 recordConstructor
-	^ ('mk_' asParser , name , (self operator: $()
-		, ((expression delimitedBy: (self operator: $,)) withoutSeparators optional ==> [ :args | args ifNil: [ Array new ] ])
-		, (self operator: $)))
+	^ ('mk_' asParser , name , lparen
+		, ((expression separatedBy: comma) withoutSeparators optional ==> [ :args | args ifNil: [ Array new ] ]) , rparen)
 		==> [ :array | 
 			{(array second).
 			(array fourth)} ]

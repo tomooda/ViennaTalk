@@ -1,7 +1,6 @@
-parsers-expressions
+parsers-expressions-basics
 sequenceComprehension
-	^ ((self operator: $[) , expression , (self operator: $|) , setBind
-		, (((self operator: $&) , expression) ==> #second) optional , (self operator: $]))
+	^ (lbracket , expression , bar , setBind , ((amp , expression) ==> #second) optional , rbracket)
 		==> [ :six | 
 			{(six second).
 			(six fourth).

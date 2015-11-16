@@ -1,3 +1,3 @@
 parsers-literals
 nilLiteral
-	^ self reserved: 'nil'
+	^ (self reserved: 'nil') ==> [ :t |  ]

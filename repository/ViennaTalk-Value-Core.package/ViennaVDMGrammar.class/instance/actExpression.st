@@ -1,3 +1,3 @@
-parsers-expressions
+parsers-expressions-threads and histories
 actExpression
-	^ PPFailingParser new
+	^ ((self reserved: '#act') , lparen , (name separatedBy: comma) withoutSeparators , rparen) ==> #third

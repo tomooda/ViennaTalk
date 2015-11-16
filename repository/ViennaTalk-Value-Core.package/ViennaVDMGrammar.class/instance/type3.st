@@ -1,4 +1,4 @@
 parsers-types
 type3
-	^ mapType / inmapType / setType / seqType / seq1Type / basicType / quoteType / compositeType / optionalType / typeName
-		/ typeVariable / (($( asParser trim , type , $) asParser trim) ==> [ :triple | triple second ])
+	^ self mapType / self inmapType / self setType / self seqType / self seq1Type / self basicType / self quoteType / self compositeType / self optionalType / self typeName
+		/ self typeVariable / ((lparen , type , rparen) ==> #second)

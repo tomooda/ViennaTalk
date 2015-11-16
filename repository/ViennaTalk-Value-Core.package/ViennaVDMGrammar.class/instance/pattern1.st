@@ -1,4 +1,4 @@
 parsers-patterns
 pattern1
-	^ matchValue / setEnumPattern / seqEnumPattern / mapEnumerationPattern / tuplePattern / objectPattern / recordPattern
-		/ patternIdentifier
+	^ self matchValue / self setEnumPattern / self seqEnumPattern / self mapEnumerationPattern / self tuplePattern / self objectPattern / self recordPattern
+		/ self patternIdentifier

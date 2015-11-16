@@ -1,13 +1,10 @@
 parsers-patterns
 tuplePattern
-	^ (((self reserved: 'mk_') , (self operator: $()) ==> [ :pair |  ]
-		,
-			((pattern , (self operator: $,)
-				, ((pattern separatedBy: (self operator: $,)) withoutSeparators ==> [ :single | single ifNil: [ Array new ] ]))
-				==> [ :triple | 
-					Array
-						new: triple third size + 1
-						streamContents: [ :stream | 
-							stream
-								nextPut: triple first;
-								nextPutAll: triple third ] ]) , (self operator: $))) ==> #second
+	^ ((self reserved: 'mk_') , lparen , pattern , comma , (pattern separatedBy: comma) withoutSeparators , rparen)
+		==> [ :array | 
+			Array
+				new: array fifth size + 1
+				streamContents: [ :stream | 
+					stream
+						nextPut: array third;
+						nextPutAll: array fifth ] ]

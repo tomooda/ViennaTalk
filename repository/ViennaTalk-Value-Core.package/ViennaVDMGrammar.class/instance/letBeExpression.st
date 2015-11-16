@@ -1,4 +1,4 @@
-parsers-expressions
+parsers-expressions-basics
 letBeExpression
 	^ ((self reserved: 'let') , multipleBind
 		, (((self reserved: 'be') , (self reserved: 'st') , expression) ==> #third) optional , (self reserved: 'in')

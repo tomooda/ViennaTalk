@@ -1,3 +1,3 @@
 parsers-literals
 characterLiteral
-	^ PPFailingParser new
+	^ (($' asParser , self char , $' asParser) ==> #second) trim

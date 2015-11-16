@@ -1,3 +1,3 @@
-parsers-expressions
+parsers-expressions-threads and histories
 threadidExpression
-	^ PPFailingParser new
+	^ self reserved: 'threadid'

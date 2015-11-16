@@ -1,4 +1,4 @@
-parsers-expressions
+parsers-expressions-basics
 name
 	^ (identifier , ((self operator: $`) , identifier) optional)
 		==> [ :pair | 

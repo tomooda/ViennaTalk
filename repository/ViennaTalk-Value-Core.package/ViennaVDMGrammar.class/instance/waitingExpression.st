@@ -1,3 +1,3 @@
-parsers-expressions
+parsers-expressions-threads and histories
 waitingExpression
-	^ PPFailingParser new
+	^ ((self reserved: '#waiting') , lparen , (name separatedBy: comma) withoutSeparators , rparen) ==> #third

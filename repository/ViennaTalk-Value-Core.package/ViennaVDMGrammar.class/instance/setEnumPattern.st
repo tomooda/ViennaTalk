@@ -1,6 +1,4 @@
 parsers-patterns
 setEnumPattern
-	^ ((self operator: ${)
-		,
-			((pattern separatedBy: (self operator: $,)) withoutSeparators optional ==> [ :single | single ifNil: [ Array new ] ])
-		, (self operator: $})) ==> #second
+	^ (lbrace , ((pattern separatedBy: comma) withoutSeparators optional ==> [ :single | single ifNil: [ Array new ] ])
+		, rbrace) ==> #second

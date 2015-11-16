@@ -1,11 +1,11 @@
-parsers-expressions
+parsers-expressions-basics
 recordModifier
-	^ ((self reserved: 'mu') , (self operator: $() , expression , (self operator: $,)
+	^ ((self reserved: 'mu') , lparen , expression , comma
 		,
-			((identifier , (self operator: '|->') , expression)
+			((identifier , maplet , expression)
 				==> [ :triple | 
 					{(triple first).
-					(triple third)} ] separatedBy: (self operator: $,)) withoutSeparators , (self operator: $)))
+					(triple third)} ] separatedBy: comma) withoutSeparators , rparen)
 		==> [ :array | 
 			{(array third).
 			(array fifth)} ]

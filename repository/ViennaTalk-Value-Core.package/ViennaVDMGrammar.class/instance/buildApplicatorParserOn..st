@@ -1,20 +1,17 @@
 parsers-expressions
 buildApplicatorParserOn: anExpressionParser
 	| applyArgs subsequenceArgs functionTypeInstantiationArgs fieldSelector tupleSelector actions |
-	applyArgs := ((self operator: $()
-		, ((expression separatedBy: (self operator: $,)) withoutSeparators optional ==> [ :args | args ifNil: [ Array new ] ])
-		, (self operator: $)))
+	applyArgs := (lparen
+		, ((expression separatedBy: comma) withoutSeparators optional ==> [ :args | args ifNil: [ Array new ] ]) , rparen)
 		==> [ :triple | 
 			{#apply.
 			(triple second)} ].
-	subsequenceArgs := ((self operator: $() , expression , (self operator: $,) , (self operator: '...')
-		, (self operator: ',') , expression , (self operator: $)))
+	subsequenceArgs := (lparen , expression , comma , (self operator: '...') , comma , expression , rparen)
 		==> [ :array | 
 			{#subsequence.
 			(array second).
 			(array sixth)} ].
-	functionTypeInstantiationArgs := ((self operator: $[) , (type separatedBy: (self operator: $,)) withoutSeparators
-		, (self operator: $]))
+	functionTypeInstantiationArgs := (lbracket , (type separatedBy: comma) withoutSeparators , rbracket)
 		==> [ :triple | 
 			{#instantiation.
 			(triple second)} ].

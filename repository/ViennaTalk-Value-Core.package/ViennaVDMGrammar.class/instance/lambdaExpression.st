@@ -1,3 +1,6 @@
-parsers-expressions
+parsers-expressions-basics
 lambdaExpression
-	^ PPFailingParser new
+	^ ((self reserved: 'lambda') , (typeBind separatedBy: comma) withoutSeparators , amp , expression)
+		==> [ :quatro | 
+			{(quatro second).
+			(quatro fourth)} ]

@@ -1,3 +1,3 @@
 parsers-types
 type1
-	^ unionType / type2
+	^ self unionType / type2

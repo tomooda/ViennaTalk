@@ -1,11 +1,11 @@
-parsers-expressions
+parsers-expressions-basics
 defExpression
 	^ ((self reserved: 'def')
 		,
-			((patternBind , (self operator: $=) , expression)
+			((patternBind , eq , expression)
 				==> [ :triple | 
 					{(triple first).
-					(triple third)} ] delimitedBy: (self operator: $;)) withoutSeparators , (self reserved: 'in') , expression)
+					(triple third)} ] delimitedBy: semicolon) withoutSeparators , (self reserved: 'in') , expression)
 		==> [ :quatro | 
 			{(quatro second).
 			(quatro fourth)} ]

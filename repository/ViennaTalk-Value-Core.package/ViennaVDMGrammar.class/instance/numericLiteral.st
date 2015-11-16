@@ -1,3 +1,3 @@
 parsers-literals
 numericLiteral
-	^ PPFailingParser new
+	^ self hexadecimalLiteral / self decimalLiteral

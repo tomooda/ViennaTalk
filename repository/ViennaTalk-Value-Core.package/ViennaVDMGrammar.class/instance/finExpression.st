@@ -1,3 +1,3 @@
-parsers-expressions
+parsers-expressions-threads and histories
 finExpression
-	^ PPFailingParser new
+	^ ((self reserved: '#fin') , lparen , (name separatedBy: comma) withoutSeparators , rparen) ==> #third

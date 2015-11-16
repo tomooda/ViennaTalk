@@ -1,3 +1,3 @@
 parsers-definitions
 functionDefinition
-	^ PPFailingParser new
+	^ self explicitFunctionDefinition / self implicitFunctionDefinition / self extendedExplicitFunctionDefinition

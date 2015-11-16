@@ -1,6 +1,6 @@
 parsers-types
 identifiedField
-	^ (identifier , (self operator: $:) , type)
+	^ (identifier , colon , type)
 		==> [ :triple | 
 			Transcript
 				cr;

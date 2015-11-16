@@ -6,7 +6,9 @@
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
-		"typeName"
+		"typeName",
+		"namedFields",
+		"equalityFields"
 	],
 	"name" : "VDMComposite",
 	"type" : "variable"

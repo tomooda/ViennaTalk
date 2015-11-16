@@ -1,3 +1,3 @@
 parsers-types
 optionalType
-	^ ((self operator: $[) , type , (self operator: $])) ==> [ :triple | triple second ]
+	^ (lbracket , type , rbracket) ==> #second

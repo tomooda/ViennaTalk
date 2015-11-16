@@ -1,3 +1,3 @@
-parsers-expressions
+parsers-expressions-basics
 generalIsExpr
-	^ PPFailingParser new
+	^ self isExpression / self typeJudgement

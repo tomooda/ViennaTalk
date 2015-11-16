@@ -1,3 +1,6 @@
-parsers-expressions
+parsers-expressions-type discriminations
 isofbaseclassExpression
-	^ PPFailingParser new
+	^ ((self reserved: 'isofbaseclass') , lparen , name , comma , expression , rparen)
+		==> [ :array | 
+			{(array third).
+			(array fifth)} ]

@@ -1,3 +1,3 @@
-parsers-expressions
+parsers-expressions-basics
 oldName
-	^ PPFailingParser new
+	^ (identifier , (self operator: $~)) ==> #first

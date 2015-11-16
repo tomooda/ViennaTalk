@@ -1,7 +1,6 @@
-parsers-expressions
+parsers-expressions-basics
 tupleConstructor
-	^ ((self reserved: 'mk_') , (self operator: $() , expression , (self operator: $,)
-		, (expression delimitedBy: (self operator: $,)) withoutSeparators , (self operator: $)))
+	^ ((self reserved: 'mk_') , lparen , expression , comma , (expression delimitedBy: comma) withoutSeparators , rparen)
 		==> [ :array | 
 			Array
 				new: array fifth size + 1

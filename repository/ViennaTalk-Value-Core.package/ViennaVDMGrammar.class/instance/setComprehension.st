@@ -1,7 +1,6 @@
-parsers-expressions
+parsers-expressions-basics
 setComprehension
-	^ ((self operator: ${) , expression , (self operator: $|) , bindList
-		, (((self operator: $&) , expression) ==> #second) optional , (self operator: $}))
+	^ (lbrace , expression , bar , bindList , ((amp , expression) ==> #second) optional , rbrace)
 		==> [ :six | 
 			{(six second).
 			(six fourth).

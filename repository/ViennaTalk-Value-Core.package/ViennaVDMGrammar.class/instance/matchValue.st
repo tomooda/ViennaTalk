@@ -1,3 +1,3 @@
 parsers-patterns
 matchValue
-	^ (((self operator: $() , expression , (self operator: $))) ==> #second) / symbolicLiteral
+	^ ((lparen , expression , rparen) ==> #second) / symbolicLiteral

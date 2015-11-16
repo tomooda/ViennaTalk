@@ -1,3 +1,3 @@
 parsers-patterns
 pattern
-	^ setUnionPattern / seqConcPattern / mapMunionPattern / pattern1
+	^ self setUnionPattern / self seqConcPattern / self mapMunionPattern / pattern1

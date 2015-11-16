@@ -1,6 +1,6 @@
-parsers-expressions
+parsers-expressions-basics
 existsExpression
-	^ ((self reserved: 'exists') , bindList , (self operator: $&) , expression)
+	^ ((self reserved: 'exists') , bindList , amp , expression)
 		==> [ :quatro | 
 			{(quatro second).
 			(quatro fourth)} ]

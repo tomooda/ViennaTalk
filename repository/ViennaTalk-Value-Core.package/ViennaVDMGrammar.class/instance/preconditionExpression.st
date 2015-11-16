@@ -1,3 +1,3 @@
-parsers-expressions
+parsers-expressions-basics
 preconditionExpression
-	^ PPFailingParser new
+	^ ((self reserved: 'pre_') , lparen , (expression separatedBy: comma) withoutSeparators , rparen) ==> #third

@@ -1,3 +1,3 @@
-parsers-expressions
+parsers-expressions-basics
 selfExpression
-	^ PPFailingParser new
+	^ (self reserved: 'self') ==> [ :s |  ]
