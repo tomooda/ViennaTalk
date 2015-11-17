@@ -1,0 +1,15 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "ViennaTalk-Value-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"typeName",
+		"namedFields",
+		"equalityFields"
+	],
+	"name" : "ViennaComposite",
+	"type" : "variable"
+}

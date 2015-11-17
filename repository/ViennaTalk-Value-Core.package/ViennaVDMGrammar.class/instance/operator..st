@@ -1,3 +1,0 @@
-utilities
-operator: aStringOrCharacterOrParser
-	^ aStringOrCharacterOrParser asParser trim

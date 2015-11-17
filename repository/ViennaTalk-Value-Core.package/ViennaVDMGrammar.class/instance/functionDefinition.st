@@ -1,3 +1,0 @@
-parsers-definitions
-functionDefinition
-	^ self explicitFunctionDefinition / self implicitFunctionDefinition / self extendedExplicitFunctionDefinition

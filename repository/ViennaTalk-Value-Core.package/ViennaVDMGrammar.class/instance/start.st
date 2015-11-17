@@ -1,3 +1,0 @@
-parsing
-start
-	^ expression end
