@@ -3,7 +3,7 @@ testComposite3
 	self
 		assert: (reader parse: 'mk_foo(1,2,3)')
 		equals:
-			(VDMComposite
+			(ViennaComposite
 				type: #foo
 				with: 1
 				with: 2
