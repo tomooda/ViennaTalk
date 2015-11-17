@@ -246,14 +246,13 @@ VDMPad.init = function () {
         queryOptions += "unittest=&";
     }
     req.open("POST", "/eval"+queryOptions.substring(0,queryOptions.length-1));
-    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    var query = [];
-    query.push("source="+encodeURIComponent(VDMPad.sourceNode.getValue()));
-    query.push("expression="+encodeURIComponent(""));
-    query.push("value="+encodeURIComponent(value));
-    query.push("message="+encodeURIComponent(VDMPad.messageNode.textElement || VDMPad.messageNode.textContent));
-    query = query.join("&");
-    req.send(query);
+    req.setRequestHeader("Content-Type", "application/json");
+    var query = {};
+    query.source=VDMPad.sourceNode.getValue();
+    query.expression="";
+    query.value=value;
+    query.message=VDMPad.messageNode.textElement || VDMPad.messageNode.textContent;
+    req.send(JSON.stringify(query));
 };
 
 VDMPad.eval = function () {
@@ -309,28 +308,27 @@ VDMPad.eval = function () {
         queryOptions += "unittest=&";
     }
     req.open("POST", "/eval"+queryOptions.substring(0,queryOptions.length-1));
-    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    var query = [];
+    req.setRequestHeader("Content-Type", "application/json");
     var expression = VDMPad.expressionNode.getSelection();
     if (!expression)
         expression = VDMPad.expressionNode.getValue();
     protoTestcase["source"] = VDMPad.sourceNode.getValue();
     protoTestcase["expression"] = expression;
     protoTestcase["prestates"] = {};
-    query.push("source="+encodeURIComponent(VDMPad.sourceNode.getValue()));
-    query.push("expression="+encodeURIComponent(expression));
-    query.push("value="+encodeURIComponent(VDMPad.valueNode.value));
-    query.push("message="+encodeURIComponent(VDMPad.messageNode.textElement || VDMPad.messageNode.textContent));
+    var query = {};
+    query.source=VDMPad.sourceNode.getValue();
+    query.expression=expression;
+    query.value=VDMPad.valueNode.value;
+    query.message=VDMPad.messageNode.textElement || VDMPad.messageNode.textContent;
     var inputs = document.getElementsByTagName("textarea");
     for (var inputIndex = 0; inputIndex < inputs.length; inputIndex++) {
         var input = inputs[inputIndex];
         if (input.id && input.id.indexOf("`") >= 0) {
-            query.push(input.id+"="+encodeURIComponent(input.value));
+            query[input.id]=input.value;
             protoTestcase["prestates"][input.id] = input.value;
         }
     }
-    query = query.join("&");
-    req.send(query);
+    req.send(JSON.stringify(query));
 };
 
 VDMPad.loadJson = function(snapshotString) {
@@ -482,21 +480,20 @@ VDMPad.saveAs= function (name, export_flag) {
         }
     };
     req.open("POST", "/id");
-    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    var query = [];
-    query.push("source="+encodeURIComponent(VDMPad.sourceNode.getValue()));
-    query.push("expression="+encodeURIComponent(VDMPad.expressionNode.getValue()));
-    query.push("value="+encodeURIComponent(VDMPad.valueNode.value));
-    query.push("message="+encodeURIComponent(VDMPad.messageNode.textElement || VDMPad.messageNode.textContent || ""));
+    req.setRequestHeader("Content-Type", "application/json");
+    var query = {};
+    query.source=VDMPad.sourceNode.getValue();
+    query.expression=VDMPad.expressionNode.getValue();
+    query.value=VDMPad.valueNode.value;
+    query.message=VDMPad.messageNode.textElement || VDMPad.messageNode.textContent || "";
     var inputs = document.getElementsByTagName("textarea");
     for (var inputIndex = 0; inputIndex < inputs.length; inputIndex++) {
         var input = inputs[inputIndex];
         if (input.id && input.id.indexOf("`") >= 0) {
-            query.push(input.id+"="+encodeURIComponent(input.value));
+            query[input.id]=input.value;
         }
     }
-    query = query.join("&");
-    req.send(query);
+    req.send(JSON.stringify(query));
 };
 
 VDMPad.remove = function (name) {
