@@ -1,0 +1,15 @@
+{
+	"commentStamp" : "",
+	"super" : "ComposableModel",
+	"category" : "ViennaTalk-Parser-UI",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"sourceText",
+		"targetText",
+		"translator"
+	],
+	"name" : "ViennaLiveTranslationEditor",
+	"type" : "normal"
+}
