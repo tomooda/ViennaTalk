@@ -2,13 +2,48 @@ parsers-expressions-basics
 sequenceComprehension
 	^ super sequenceComprehension
 		==> [ :triple | 
-			| seq |
-			seq := '_seq'.
-			[ 
-			(triple first findString: seq) > 0
-				or: [ (triple second second findString: seq) > 0 or: [ triple third notNil and: [ (triple third findString: seq) > 0 ] ] ] ]
-				whileTrue: [ seq := seq , '_' ].
-			'(Array new: 1024 streamContents: [ :' , seq , ' | ' , triple second second , ' asSortedCollection do: [:'
-				, triple second first , '|' , (triple third ifNil: [ '' ] ifNotNil: [ triple third , ' ifTrue: [' ]) , seq
-				, ' nextPut: ' , triple first
-				, (triple third ifNil: [ ']]) asOrderedCollection' ] ifNotNil: [ ']]]) asOrderedCollection' ]) ]
+			| expr setBinding pat vars binder set guard varGenerator seq |
+			expr := triple first.
+			setBinding := triple second.
+			pat := setBinding first.
+			vars := pat first .
+			binder := pat second.
+			set := setBinding second.
+			guard := triple third.
+			varGenerator := self
+				varNameGenerator: 'seq'
+				uniqueIn:
+					{expr.
+					binder.
+					set.
+					(guard ifNil: [ '' ])}.
+			seq := varGenerator value.
+			String
+				new: 1024
+				streamContents: [ :stream | 
+					stream
+						nextPutAll: '[|';
+						nextPutAll: seq;
+						nextPutAll: '|';
+						nextPutAll: seq;
+						nextPutAll: ':= OrderedCollection new.';
+						nextPutAll:
+								(self
+										generatorCodeFromVar: vars
+										binder: binder
+										set: set , ' asSortedCollection'
+										varGenerator: varGenerator).
+					guard
+						ifNotNil: [ 
+							stream
+								nextPutAll: guard;
+								nextPutAll: ' ifTrue: [' ].
+					stream
+						nextPutAll: seq;
+						nextPutAll: ' add: ';
+						nextPutAll: expr.
+					guard ifNotNil: [ stream nextPutAll: ']' ].
+					stream
+						nextPutAll: ']. ';
+						nextPutAll: seq;
+						nextPutAll: '] value' ] ]

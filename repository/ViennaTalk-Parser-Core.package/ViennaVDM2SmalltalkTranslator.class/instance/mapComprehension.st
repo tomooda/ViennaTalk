@@ -2,39 +2,39 @@ parsers-expressions-basics
 mapComprehension
 	^ super mapComprehension
 		==> [ :quatro | 
+			| keyExpr valueExpr binds guard varGenerator map |
+			keyExpr := quatro first.
+			valueExpr := quatro second.
+			binds := quatro third.
+			guard := quatro fourth.
+			varGenerator := self
+				varNameGenerator: 'map'
+				uniqueIn:
+					{keyExpr.
+					valueExpr} , (binds collect: #second) , {(guard ifNil: [ '' ])}.
+			map := varGenerator value.
 			String
 				new: 1024
 				streamContents: [ :stream | 
-					| map |
-					map := '_map'.
-					[ 
-					(quatro first findString: map) > 0
-						or: [ 
-							(quatro second findString: map) > 0
-								or: [ 
-									(quatro third contains: [ :_multibind | (_multibind second findString: map) > 0 ])
-										or: [ quatro fourth notNil and: [ (quatro fourth findString: map) > 0 ] ] ] ] ]
-						whileTrue: [ map := map , '_' ].
-					stream nextPutAll: '[ | ' , map , ' | ' , map , ' := Dictionary new.'.
-					quatro third
-						do: [ :_multibind | 
-							_multibind first
-								do: [ :_var | 
-									stream
-										nextPutAll: _multibind second;
-										nextPutAll: ' do: [:';
-										nextPutAll: _var;
-										nextPut: $| ] ].
-					quatro fourth
-						ifNotNil: [ :cond | 
+					stream nextPutAll: '[ | ' , map , ' | ' , map , ' :=Dictionary new.'.
+					self
+						generatorCodeFromBindList: binds
+						varGenerator: varGenerator
+						do: [ :generatorScript | stream nextPutAll: generatorScript ].
+					guard
+						ifNotNil: [ 
 							stream
-								nextPutAll: cond;
+								nextPutAll: guard;
 								nextPutAll: ' ifTrue: [' ].
 					stream
-						nextPutAll: map , ' at: ';
-						nextPutAll: quatro first;
+						nextPutAll: map;
+						nextPutAll: ' at: ';
+						nextPutAll: keyExpr;
 						nextPutAll: ' put: ';
-						nextPutAll: quatro second.
-					quatro fourth ifNotNil: [ stream nextPut: $] ].
-					quatro third do: [ :_multibind | _multibind first do: [ :_var | stream nextPut: $] ] ].
-					stream nextPutAll: '. ' , map , '] value' ] ]
+						nextPutAll: valueExpr.
+					guard ifNotNil: [ stream nextPut: $] ].
+					self generatorCodeFromBindList: binds varGenerator: varGenerator do: [ :generatorScript | stream nextPut: $] ].
+					stream
+						nextPut: $.;
+						nextPutAll: map;
+						nextPutAll: '] value' ] ]

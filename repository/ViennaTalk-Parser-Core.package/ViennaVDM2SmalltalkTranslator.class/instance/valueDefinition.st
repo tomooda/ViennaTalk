@@ -2,5 +2,10 @@ parsers-definitions
 valueDefinition
 	^ super valueDefinition
 		==> [ :triple | 
-			{(triple first).
-			(triple third)} ]
+			| pat body vars binder |
+			pat := triple first.
+			body := triple third.
+			vars := pat first.
+			binder := pat second.
+			{vars.
+			('(' , binder , ' value: ' , body , ')')} ]

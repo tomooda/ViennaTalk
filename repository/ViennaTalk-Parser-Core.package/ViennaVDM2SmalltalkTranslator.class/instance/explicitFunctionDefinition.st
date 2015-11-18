@@ -2,18 +2,46 @@ parsers-definitions
 explicitFunctionDefinition
 	^ super explicitFunctionDefinition
 		==> [ :array | 
-			{(array first).
+			| funcName paramSets body varGenerator |
+			funcName := array first.
+			paramSets := array fifth.
+			body := array sixth.
+			varGenerator := self
+				varNameGenerator: 'func'
+				uniqueIn:
+					{funcName.
+					body}.
+			{(Array with: funcName).
 			(String
 				new: 1024
 				streamContents: [ :stream | 
-					array fifth
-						do: [ :args | 
-							stream nextPut: $[.
-							args
-								do: [ :arg | 
+					stream
+						nextPutAll: funcName;
+						nextPutAll: ' := '.
+					paramSets
+						do: [ :params | 
+							| vars |
+							vars := params collect: [ :p | varGenerator value ].
+							stream
+								nextPut: $[;
+								nextPutAll: (' ' join: (vars collect: [ :v | ' :' , v ]));
+								nextPutAll: '||'.
+							params
+								with: vars
+								do: [ :p :v | 
+									p first
+										do: [ :pv | 
+											stream
+												nextPutAll: pv;
+												nextPut: Character space ] ].
+							stream nextPut: $|.
+							params
+								with: vars
+								do: [ :p :v | 
 									stream
-										nextPutAll: ' :';
-										nextPutAll: arg ].
-							stream nextPut: $| ].
-					stream nextPutAll: array sixth.
-					array fifth do: [ :args | stream nextPut: $] ] ])} ]
+										nextPutAll: p second;
+										nextPutAll: ' value: ';
+										nextPutAll: v;
+										nextPut: $. ] ].
+					stream nextPutAll: body.
+					paramSets do: [ :args | stream nextPut: $] ] ])} ]
