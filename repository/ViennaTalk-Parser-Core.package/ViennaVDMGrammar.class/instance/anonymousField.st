@@ -1,0 +1,3 @@
+parsers-types
+anonymousField
+	^ type

@@ -1,0 +1,3 @@
+parsers-definitions
+extendedExplicitFunctionDefinition
+	^ PPFailingParser new
