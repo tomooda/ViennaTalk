@@ -1,0 +1,14 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "ViennaTalk-Value-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"fun",
+		"n"
+	],
+	"name" : "ViennaIteration",
+	"type" : "variable"
+}
