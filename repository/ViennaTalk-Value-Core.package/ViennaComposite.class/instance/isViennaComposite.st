@@ -1,0 +1,3 @@
+testing
+isViennaComposite
+	^ true
