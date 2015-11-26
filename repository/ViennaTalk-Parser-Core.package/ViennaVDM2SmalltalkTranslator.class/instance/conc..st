@@ -1,3 +1,3 @@
 parsers-expressions-operators
 conc: arg
-	^ arg , ' concatenation'
+	^ arg , ' concatenation asOrderedCollection'

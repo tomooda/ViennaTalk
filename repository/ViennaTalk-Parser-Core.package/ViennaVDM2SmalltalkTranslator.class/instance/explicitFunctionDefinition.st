@@ -39,9 +39,7 @@ explicitFunctionDefinition
 								with: vars
 								do: [ :p :v | 
 									stream
-										nextPutAll: p second;
-										nextPutAll: ' value: ';
-										nextPutAll: v;
+										nextPutAll: (ViennaRuntimeUtil binder: p second with: v vars: p first);
 										nextPut: $. ] ].
 					stream nextPutAll: body.
 					paramSets do: [ :args | stream nextPut: $] ] ])} ]

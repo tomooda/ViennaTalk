@@ -7,13 +7,13 @@ generatorCodeFromBindList: aCollectionOfMultipleBind varGenerator: aVarGenerator
 			set := pair second.
 			patterns
 				do: [ :pat | 
-					| vars binder |
+					| vars matcher |
 					vars := pat first.
-					binder := pat second.
+					matcher := pat second.
 					aBlock
 						value:
 							(self
 								generatorCodeFromVar: vars
-								binder: binder
+								matcher: matcher
 								set: set
 								varGenerator: aVarGeneratorBlock) ] ]

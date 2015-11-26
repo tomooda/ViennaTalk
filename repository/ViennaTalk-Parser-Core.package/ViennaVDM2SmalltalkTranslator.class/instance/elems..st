@@ -1,3 +1,3 @@
 parsers-expressions-operators
 elems: arg
-	^ arg asSet
+	^ arg , ' asSet'

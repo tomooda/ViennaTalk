@@ -1,10 +1,10 @@
 parsers-patterns
-seqEnumPattern
-	^ super seqEnumPattern
+setEnumPattern
+	^ super setEnumPattern
 		==> [ :elementPatterns | 
 			| vars elements |
 			vars := (Array new: 10 streamContents: [ :stream | elementPatterns do: [ :pat | stream nextPutAll: pat first ] ])
 				asSet asArray.
 			elements := elementPatterns collect: #second.
 			{vars.
-			('(ViennaRuntimeUtil matchSequenceEnumeration: {' , (' . ' join: elements) , '})')} ]
+			('(ViennaRuntimeUtil matchSetEnumeration: {' , (' . ' join: elements) , '})')} ]

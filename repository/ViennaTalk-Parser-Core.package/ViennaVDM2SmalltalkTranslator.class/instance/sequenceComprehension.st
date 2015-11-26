@@ -2,19 +2,19 @@ parsers-expressions-basics
 sequenceComprehension
 	^ super sequenceComprehension
 		==> [ :triple | 
-			| expr setBinding pat vars binder set guard varGenerator seq |
+			| expr setBinding pat vars matcher set guard varGenerator seq |
 			expr := triple first.
 			setBinding := triple second.
 			pat := setBinding first.
 			vars := pat first .
-			binder := pat second.
+			matcher := pat second.
 			set := setBinding second.
 			guard := triple third.
 			varGenerator := self
 				varNameGenerator: 'seq'
 				uniqueIn:
 					{expr.
-					binder.
+					matcher.
 					set.
 					(guard ifNil: [ '' ])}.
 			seq := varGenerator value.
@@ -30,7 +30,7 @@ sequenceComprehension
 						nextPutAll:
 								(self
 										generatorCodeFromVar: vars
-										binder: binder
+										matcher: matcher
 										set: set , ' asSortedCollection'
 										varGenerator: varGenerator).
 					guard

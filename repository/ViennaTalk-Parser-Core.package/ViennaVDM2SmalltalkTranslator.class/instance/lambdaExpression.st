@@ -16,22 +16,15 @@ lambdaExpression
 							stream
 								nextPut: $:;
 								nextPutAll: var ].
-					stream nextPutAll: '||'.
-					patterns
-						do: [ :pat | 
-							pat first
-								do: [ :v | 
-									stream
-										nextPutAll: v;
-										nextPut: $  ] ].
-					stream nextPut: $|.
+					stream
+						nextPutAll: '||';
+						nextPutAll: (' ' join: (patterns collect: [ :pat | ' ' join: pat first ]));
+						nextPut: $|.
 					patterns
 						with: vars
 						do: [ :pat :var | 
 							stream
-								nextPutAll: pat second;
-								nextPutAll: ' value: ';
-								nextPutAll: var;
+								nextPutAll: (ViennaRuntimeUtil binder: pat second with: var vars: pat first);
 								nextPut: $. ].
 					stream nextPutAll: body.
 					patterns do: [ :pat | stream nextPut: $] ] ] ]

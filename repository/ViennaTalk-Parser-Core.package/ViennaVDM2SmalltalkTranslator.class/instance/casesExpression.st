@@ -37,16 +37,14 @@ casesExpression
 								do: [ :pat | 
 									| vars binder |
 									vars := pat first.
-									binder := pat second.
+									binder := ViennaRuntimeUtil binder: pat second with: valueVar vars: vars.
 									stream
 										nextPutAll: foundVar;
 										nextPutAll: ' ifFalse: [|';
 										nextPutAll: (' ' join: vars);
-										nextPutAll: '|(';
+										nextPutAll: '| ';
 										nextPutAll: binder;
-										nextPutAll: ' value: ';
-										nextPutAll: valueVar;
-										nextPutAll: ') ifTrue: [';
+										nextPutAll: ' ifTrue: [';
 										nextPutAll: foundVar;
 										nextPutAll: ' := true.';
 										nextPutAll: resultVar;

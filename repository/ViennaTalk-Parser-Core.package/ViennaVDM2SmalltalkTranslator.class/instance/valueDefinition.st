@@ -6,6 +6,6 @@ valueDefinition
 			pat := triple first.
 			body := triple third.
 			vars := pat first.
-			binder := pat second.
+			binder := ViennaRuntimeUtil binder: pat second with: body vars: vars.
 			{vars.
-			('(' , binder , ' value: ' , body , ')')} ]
+			binder} ]
