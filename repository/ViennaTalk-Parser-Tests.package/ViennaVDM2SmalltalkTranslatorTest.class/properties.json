@@ -5,9 +5,7 @@
 	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [ ],
-	"instvars" : [
-		"translator"
-	],
+	"instvars" : [ ],
 	"name" : "ViennaVDM2SmalltalkTranslatorTest",
 	"type" : "normal"
 }
