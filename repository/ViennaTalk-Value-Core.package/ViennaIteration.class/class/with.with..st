@@ -1,5 +1,5 @@
 instance creation
-with: aDictionaryOrBlock with: anInteger
+with: aBlock with: anInteger
 	^ self new
-		setFun: aDictionaryOrBlock n: anInteger;
+		setBlock: aBlock n: anInteger;
 		yourself

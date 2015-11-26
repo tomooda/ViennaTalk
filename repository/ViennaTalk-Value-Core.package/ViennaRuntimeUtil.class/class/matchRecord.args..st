@@ -1,5 +1,5 @@
 pattern matching
-matchComposite: aString args: anArrayOfBlock
+matchRecord: aString args: anArrayOfBlock
 	^ [ :value | 
 	(value isViennaComposite and: [ value size = anArrayOfBlock size and: [ value typeName = aString ] ])
 		ifTrue: [ 

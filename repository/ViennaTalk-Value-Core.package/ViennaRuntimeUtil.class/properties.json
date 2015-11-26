@@ -6,6 +6,6 @@
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [ ],
-	"name" : "ViennaUtil",
+	"name" : "ViennaRuntimeUtil",
 	"type" : "normal"
 }

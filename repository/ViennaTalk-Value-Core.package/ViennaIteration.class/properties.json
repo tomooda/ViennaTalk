@@ -6,7 +6,7 @@
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
-		"fun",
+		"block",
 		"n"
 	],
 	"name" : "ViennaIteration",
