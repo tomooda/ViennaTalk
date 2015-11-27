@@ -2,11 +2,11 @@ parsers-patterns
 recordPattern
 	^ super recordPattern
 		==> [ :tuple | 
-			| typeName argPatterns vars args |
-			typeName := tuple first.
+			| constructorName argPatterns vars args |
+			constructorName := tuple first.
 			argPatterns := tuple second.
 			vars := OrderedCollection new.
 			argPatterns do: [ :arg | vars addAll: arg first ].
 			args := (argPatterns collect: #second) asSet asArray.
 			{vars.
-			('(ViennaRuntimeUtil matchRecord: ' , typeName storeString , ' args: {' , (' . ' join: args) , '})')} ]
+			('(ViennaRuntimeUtil matchRecord: ' , constructorName storeString , ' args: {' , (' . ' join: args) , '})')} ]

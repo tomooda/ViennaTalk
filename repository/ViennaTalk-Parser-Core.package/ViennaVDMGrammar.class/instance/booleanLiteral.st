@@ -1,3 +1,3 @@
 parsers-literals
 booleanLiteral
-	^ self reserved: 'true' asParser / 'false' asParser
+	^ (self reserved: 'true' asParser ==> [ :t | true ]) / ('false' asParser ==> [ :t | false ])

@@ -1,3 +1,3 @@
 parsers-literals
 nilLiteral
-	^ super nilLiteral ==> [ :t |  ]
+	^ super nilLiteral ==> [ :t | 'nil' ]

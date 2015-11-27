@@ -1,8 +1,8 @@
 parsers-expressions-basics
 recordConstructor
 	^ super recordConstructor
-		==> [ :typeAndArgs | 
-			| typeName args |
-			typeName := typeAndArgs first.
-			args := typeAndArgs second.
-			'(ViennaComposite type: ' , typeName storeString , ' withAll: {' , (' . ' join: args) , '})' ]
+		==> [ :constructorAndArgs | 
+			| constructorName args |
+			constructorName := constructorAndArgs first.
+			args := constructorAndArgs second.
+			'(ViennaComposite type: ' , constructorName storeString , ' withAll: {' , (' . ' join: args) , '})' ]
