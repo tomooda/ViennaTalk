@@ -1,0 +1,3 @@
+accessing
+numFields
+	^ self basicSize
