@@ -6,9 +6,9 @@
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
-		"typeName",
 		"namedFields",
-		"equalityFields"
+		"equalityFields",
+		"constructorName"
 	],
 	"name" : "ViennaComposite",
 	"type" : "variable"

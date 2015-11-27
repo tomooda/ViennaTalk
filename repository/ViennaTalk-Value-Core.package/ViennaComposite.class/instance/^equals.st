@@ -2,7 +2,7 @@ comparing
 = anObject
 	self == anObject
 		ifTrue: [ ^ true ].
-	typeName = anObject typeName
+	constructorName = anObject constructorName
 		ifFalse: [ ^ false ].
 	self size = anObject size
 		ifFalse: [ ^ false ].

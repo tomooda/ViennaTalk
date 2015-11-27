@@ -1,7 +1,7 @@
 pattern matching
 matchRecord: aString args: anArrayOfBlock
 	^ [ :value | 
-	(value isViennaComposite and: [ value size = anArrayOfBlock size and: [ value typeName = aString ] ])
+	(value isViennaComposite and: [ value size = anArrayOfBlock size and: [ value constructorName = aString ] ])
 		ifTrue: [ 
 			(1 to: anArrayOfBlock size)
 				inject: (Array with: Dictionary new)
