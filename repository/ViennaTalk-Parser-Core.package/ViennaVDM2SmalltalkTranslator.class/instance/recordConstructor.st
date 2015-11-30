@@ -5,4 +5,4 @@ recordConstructor
 			| constructorName args |
 			constructorName := constructorAndArgs first.
 			args := constructorAndArgs second.
-			'(ViennaComposite type: ' , constructorName storeString , ' withAll: {' , (' . ' join: args) , '})' ]
+			'(ViennaComposite constructorName: ' , constructorName storeString , ' withAll: {' , (' . ' join: args) , '})' ]

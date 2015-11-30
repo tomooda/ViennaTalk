@@ -1,3 +1,3 @@
 parsers-expressions-basics
 oldName
-	^ (identifier , (self operator: $~)) ==> #first
+	^ (identifier , (self operator: $~)) ==> [ :pair | pair first , pair second ]

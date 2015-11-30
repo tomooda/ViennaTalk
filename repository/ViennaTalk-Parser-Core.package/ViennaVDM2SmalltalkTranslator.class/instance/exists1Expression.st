@@ -8,4 +8,4 @@ exists1Expression
 			exprPart := pair second.
 			var := (self varNameGenerator: 'exists1' uniqueIn: (Array with: exprPart)) value.
 			'(' , setOrType , ' onlyOneSatisfy: [ :' , var , '||' , (' ' join: pat first) , '|'
-				, (ViennaRuntimeUtil binder: pat second with: var vars: pat first) , '.' , exprPart , '])' ]
+				, (ViennaRuntimeUtil binder: pat second with: var vars: pat first) , ' ifFalse: [ViennaNoMatch signal].' , exprPart , '])' ]

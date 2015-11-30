@@ -27,7 +27,7 @@ forallExpression
 										nextPutAll: (' ' join: pat first);
 										nextPutAll: '|';
 										nextPutAll: (ViennaRuntimeUtil binder: pat second with: loopVar vars: pat first);
-										nextPut: $. ] ].
+										nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ] ].
 					stream nextPutAll: expr.
 					multibinds do: [ :multibind | multibind first do: [ :pat | stream nextPut: $] ] ].
 					stream nextPutAll: ')' ] ]

@@ -8,4 +8,4 @@ valueDefinition
 			vars := pat first.
 			binder := ViennaRuntimeUtil binder: pat second with: body vars: vars.
 			{vars.
-			binder} ]
+			'(', binder, '  ifFalse: [ViennaNoMatch signal])'} ]

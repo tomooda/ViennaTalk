@@ -40,6 +40,6 @@ explicitFunctionDefinition
 								do: [ :p :v | 
 									stream
 										nextPutAll: (ViennaRuntimeUtil binder: p second with: v vars: p first);
-										nextPut: $. ] ].
+										nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ] ].
 					stream nextPutAll: body.
 					paramSets do: [ :args | stream nextPut: $] ] ])} ]

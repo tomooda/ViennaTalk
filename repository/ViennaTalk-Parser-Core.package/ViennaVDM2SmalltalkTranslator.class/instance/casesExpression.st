@@ -56,7 +56,7 @@ casesExpression
 						nextPutAll: ' ifFalse: [';
 						nextPutAll: resultVar;
 						nextPutAll: ' := ';
-						nextPutAll: (defaultExpression ifNil: [ valueVar , ' error: '' did not match.''' ]);
+						nextPutAll: (defaultExpression ifNil: [ 'ViennaNoMatch signal' ]);
 						nextPutAll: '].';
 						nextPutAll: resultVar;
 						nextPutAll: '])' ] ]

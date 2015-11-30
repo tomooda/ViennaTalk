@@ -15,4 +15,4 @@ defExpression
 									| left right |
 									left := def first.
 									right := def second.
-									ViennaRuntimeUtil binder: left second with: right vars: left first ])) , '.' , expr , '] value' ]
+									ViennaRuntimeUtil binder: left second with: right vars: left first ])) , ' ifFalse: [ViennaNoMatch signal].' , expr , '] value' ]
