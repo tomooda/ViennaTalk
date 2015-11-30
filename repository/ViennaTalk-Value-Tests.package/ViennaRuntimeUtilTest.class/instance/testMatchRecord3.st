@@ -6,5 +6,5 @@ testMatchRecord3
 				matchRecord: 't'
 				args:
 					{(ViennaRuntimeUtil matchValue: 1).
-					(ViennaRuntimeUtil matchValue: 2)}) value: (ViennaComposite type: 't' with: 1 with: 2))
+					(ViennaRuntimeUtil matchValue: 2)}) value: (ViennaComposite constructorName: 't' with: 1 with: 2))
 		equals: {(Dictionary new)}

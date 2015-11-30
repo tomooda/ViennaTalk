@@ -4,7 +4,7 @@ testComposite3
 		assert: (reader parse: 'mk_foo(1,2,3)')
 		equals:
 			(ViennaComposite
-				type: #foo
+				constructorName: #foo
 				with: 1
 				with: 2
 				with: 3)
