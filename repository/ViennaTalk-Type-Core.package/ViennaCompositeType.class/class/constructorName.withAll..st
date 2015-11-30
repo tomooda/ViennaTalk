@@ -1,5 +1,5 @@
 instance creation
-constructor: aString withAll: anArrayOfFieldNameAndEqualityAbstractionAndType
+constructorName: aString withAll: anArrayOfFieldNameAndEqualityAbstractionAndType
 	| composite |
 	composite := self new: anArrayOfFieldNameAndEqualityAbstractionAndType size.
 	composite setConstructorName: aString.

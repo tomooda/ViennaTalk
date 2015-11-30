@@ -1,3 +1,3 @@
-enumerating
+private
 fieldsDo: aBlock
-	1 to: self basicSize do: [ :index | aBlock valueWithArguments: (self at: index) ]
+	1 to: self size do: [ :index | aBlock valueWithArguments: (self at: index) ]

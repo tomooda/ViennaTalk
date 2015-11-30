@@ -1,3 +1,3 @@
 accessing
 numFields
-	^ self basicSize
+	^ self size

@@ -1,3 +1,3 @@
-enumerating
+private
 fieldsCollect: aBlock
-	^ (1 to: self basicSize) collect: [ :index | aBlock valueWithArguments: (self at: index) ]
+	^ (1 to: self size) collect: [ :index | aBlock valueWithArguments: (self at: index) ]
