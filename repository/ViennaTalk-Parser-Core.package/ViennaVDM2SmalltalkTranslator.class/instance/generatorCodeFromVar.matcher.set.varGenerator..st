@@ -3,4 +3,4 @@ generatorCodeFromVar: vars matcher: matcherString set: set varGenerator: aVarGen
 	| tmp |
 	tmp := aVarGeneratorBlock value.
 	^ set , ' do: [:' , tmp , '||' , (' ' join: vars) , '|'
-		, (ViennaRuntimeUtil binder: matcherString with: tmp vars: vars) , ' ifFalse: [ViennaNoMatch signal].'
+		, (self binder: matcherString with: tmp vars: vars) , ' ifFalse: [ViennaNoMatch signal].'

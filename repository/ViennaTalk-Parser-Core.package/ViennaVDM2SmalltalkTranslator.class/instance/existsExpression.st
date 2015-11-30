@@ -26,7 +26,7 @@ existsExpression
 										nextPutAll: '||';
 										nextPutAll: (' ' join: pat first);
 										nextPutAll: '|';
-										nextPutAll: (ViennaRuntimeUtil binder: pat second with: loopVar vars: pat first);
+										nextPutAll: (self binder: pat second with: loopVar vars: pat first);
 										nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ] ].
 					stream nextPutAll: expr.
 					multibinds do: [ :multibind | multibind first do: [ :pat | stream nextPut: $] ] ].

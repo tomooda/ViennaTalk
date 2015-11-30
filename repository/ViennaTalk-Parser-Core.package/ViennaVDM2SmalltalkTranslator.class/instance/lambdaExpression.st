@@ -24,7 +24,7 @@ lambdaExpression
 						with: vars
 						do: [ :pat :var | 
 							stream
-								nextPutAll: (ViennaRuntimeUtil binder: pat second with: var vars: pat first);
+								nextPutAll: (self binder: pat second with: var vars: pat first);
 								nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ].
 					stream nextPutAll: body.
 					patterns do: [ :pat | stream nextPut: $] ] ] ]

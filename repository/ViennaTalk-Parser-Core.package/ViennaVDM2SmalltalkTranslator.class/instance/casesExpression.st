@@ -37,7 +37,7 @@ casesExpression
 								do: [ :pat | 
 									| vars binder |
 									vars := pat first.
-									binder := ViennaRuntimeUtil binder: pat second with: valueVar vars: vars.
+									binder := self binder: pat second with: valueVar vars: vars.
 									stream
 										nextPutAll: foundVar;
 										nextPutAll: ' ifFalse: [|';
