@@ -1,0 +1,14 @@
+{
+	"commentStamp" : "",
+	"super" : "TestCase",
+	"category" : "ViennaTalk-Type-Tests",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"natBool",
+		"quoteBool"
+	],
+	"name" : "ViennaUnionTypeTest",
+	"type" : "normal"
+}

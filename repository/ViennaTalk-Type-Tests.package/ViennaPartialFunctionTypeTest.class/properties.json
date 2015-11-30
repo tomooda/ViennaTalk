@@ -1,0 +1,16 @@
+{
+	"commentStamp" : "",
+	"super" : "TestCase",
+	"category" : "ViennaTalk-Type-Tests",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"bool",
+		"nat",
+		"nat1",
+		"int"
+	],
+	"name" : "ViennaPartialFunctionTypeTest",
+	"type" : "normal"
+}
