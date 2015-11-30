@@ -8,7 +8,8 @@
 	"instvars" : [
 		"sourceText",
 		"targetText",
-		"translator"
+		"translator",
+		"process"
 	],
 	"name" : "ViennaLiveTranslationEditor",
 	"type" : "normal"
