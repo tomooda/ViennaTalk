@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "ViennaType",
+	"category" : "ViennaTalk-Type-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [
+		"Current"
+	],
+	"instvars" : [ ],
+	"name" : "ViennaCharType",
+	"type" : "variable"
+}

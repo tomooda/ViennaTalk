@@ -1,3 +1,3 @@
 testing
 includes: anObject
-	^ symbol == anObject
+	^ anObject isCharacter
