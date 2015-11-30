@@ -1,5 +1,5 @@
 instance creation
-type: aString withAll: anArray
+constructorName: aString withAll: anArray
 	| composite |
 	composite := self new: anArray size.
 	composite setConstructorName: aString.

@@ -6,6 +6,6 @@
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [ ],
-	"name" : "ViennaUndefined",
+	"name" : "ViennaUndefinedEvaluationError",
 	"type" : "normal"
 }
