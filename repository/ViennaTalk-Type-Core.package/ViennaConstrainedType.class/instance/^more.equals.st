@@ -1,0 +1,3 @@
+comparing
+>= aViennaType
+	^ false

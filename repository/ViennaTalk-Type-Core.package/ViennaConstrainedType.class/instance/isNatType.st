@@ -1,0 +1,3 @@
+testing
+isNatType
+	^ basetype isNatType

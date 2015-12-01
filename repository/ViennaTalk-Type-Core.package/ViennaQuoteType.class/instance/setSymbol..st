@@ -1,3 +1,3 @@
 private
 setSymbol: aSymbol
-	symbol := aSymbol
+	symbol := aSymbol asSymbol
