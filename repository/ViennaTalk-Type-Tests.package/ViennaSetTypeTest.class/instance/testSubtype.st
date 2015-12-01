@@ -1,5 +1,5 @@
 tests
-testSubset
+testSubtype
 	self assert: setofbool <= setofbool.
 	self deny: setofbool <= setofnat.
 	self assert: setofbool <= (ViennaType setOf: ViennaType bool | ViennaType nat).

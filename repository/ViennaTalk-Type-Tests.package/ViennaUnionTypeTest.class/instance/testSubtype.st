@@ -1,5 +1,5 @@
 tests
-testSubset
+testSubtype
 	self assert: natBool <= natBool.
 	self assert: ViennaType nat <= natBool.
 	self assert: ViennaType bool <= natBool.

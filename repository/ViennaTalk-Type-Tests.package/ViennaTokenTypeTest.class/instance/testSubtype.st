@@ -1,3 +1,3 @@
 tests
-testSubset
+testSubtype
 	self assert: token <= token

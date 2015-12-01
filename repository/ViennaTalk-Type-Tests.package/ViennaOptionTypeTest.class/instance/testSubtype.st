@@ -1,5 +1,5 @@
 tests
-testSubset
+testSubtype
 	self assert: optionNat <= optionNat.
 	self deny: optionNat <= optionQuote.
 	self assert: ViennaType nat <= optionNat.
