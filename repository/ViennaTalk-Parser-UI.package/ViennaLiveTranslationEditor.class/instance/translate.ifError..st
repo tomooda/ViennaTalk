@@ -4,4 +4,4 @@ translate: aTextOrString ifError: errorBlock
 		in: [ :result | 
 			result isPetitFailure
 				ifTrue: [ errorBlock value: result ]
-				ifFalse: [ (RBParser parseExpression: result) formattedCode ] ]
+				ifFalse: [ self format: result ] ]

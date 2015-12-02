@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "ViennaLiveTranslationEditor",
+	"category" : "ViennaTalk-Parser-UI",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "ViennaLiveASTTranslationEditor",
+	"type" : "normal"
+}

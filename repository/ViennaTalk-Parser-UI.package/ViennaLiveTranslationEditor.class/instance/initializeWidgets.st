@@ -19,4 +19,4 @@ initializeWidgets
 				on: Error
 				do: [ :ex |  ] ] forkAt: Processor userBackgroundPriority ].
 	targetText := self newText.
-	self title: 'VDM->Smalltalk'
+	self title: self defaultTitle
