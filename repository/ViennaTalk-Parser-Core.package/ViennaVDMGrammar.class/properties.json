@@ -49,6 +49,7 @@
 		"symbolicLiteral",
 		"pattern",
 		"type",
+		"discretionaryType",
 		"functionDefinition",
 		"type1",
 		"type2",

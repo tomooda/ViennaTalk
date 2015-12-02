@@ -1,6 +1,6 @@
 parsers-types
 totalFunctionType
-	^ (type1 , (self operator: '+>') , type)
+	^ (self discretionaryType1 , (self operator: '+>') , type)
 		==> [ :triple | 
 			{(triple first).
 			(triple third)} ]

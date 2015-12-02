@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "ViennaVDMGrammar",
+	"category" : "ViennaTalk-Parser-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "ViennaVDMParser",
+	"type" : "normal"
+}
