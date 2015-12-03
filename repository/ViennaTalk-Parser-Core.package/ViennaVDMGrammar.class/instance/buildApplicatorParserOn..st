@@ -2,7 +2,7 @@ parsers-expressions
 buildApplicatorParserOn: anExpressionParser
 	| applyArgs subsequenceArgs functionTypeInstantiationArgs fieldSelector tupleSelector actions |
 	applyArgs := (lparen
-		, ((expression separatedBy: comma) withoutSeparators optional ==> [ :args | args ifNil: [ Array new ] ]) , rparen)
+		, (expressionList) , rparen)
 		==> [ :triple | 
 			{#apply.
 			(triple second)} ].

@@ -1,3 +1,3 @@
 parsers-expressions-threads
 waitingExpression
-	^ super waitingExpression ==> [ :array | ViennaNode label: 'WaitingExpression' with: array ]
+	^ super waitingExpression ==> [ :nameNode | ViennaNode label: 'WaitingExpression' with: nameNode ]

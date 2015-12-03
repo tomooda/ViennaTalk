@@ -2,7 +2,7 @@ parsers-expressions-basics
 recordModifier
 	^ ((self reserved: 'mu') , lparen , expression , comma
 		,
-			((identifier , maplet , expression)
+			((identifier , mapletArrow , expression)
 				==> [ :triple | 
 					{(triple first).
 					(triple third)} ] separatedBy: comma) withoutSeparators , rparen)

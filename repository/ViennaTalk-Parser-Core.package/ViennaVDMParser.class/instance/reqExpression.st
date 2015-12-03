@@ -1,3 +1,3 @@
 parsers-expressions-threads
 reqExpression
-	^ super reqExpression ==> [ :array | ViennaNode label: 'ReqExpression' with: array ]
+	^ super reqExpression ==> [ :nameNode | ViennaNode label: 'ReqExpression' with: nameNode ]

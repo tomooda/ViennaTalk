@@ -4,7 +4,7 @@ explicitFunctionDefinition
 		,
 			(((lbracket , (self typeVariableIdentifier separatedBy: comma) withoutSeparators , rbracket) ==> #second) optional
 				==> [ :vars | vars ifNil: [ Array new ] ]) , colon , (self partialFunctionType / self totalFunctionType) trim
-		, identifier , ((lparen , (patternList optional ==> [ :ps | ps ifNil: [ Array new ] ]) , rparen) ==> #second) plus
+		, identifier , ((lparen , (optionalPatternList) , rparen) ==> #second) plus
 		, (self operator: '==')
 		,
 			(expression / ((self reserved: 'is') , (self reserved: 'subclass') , (self reserved: 'responsibility'))

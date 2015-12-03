@@ -1,3 +1,3 @@
 parsers-patterns
 bindList
-	^ super bindList ==> [ :array | ViennaNode label: 'BindList' with: array ]
+	^ super bindList ==> [ :array | ViennaNode label: 'BindList' withAll: array ]

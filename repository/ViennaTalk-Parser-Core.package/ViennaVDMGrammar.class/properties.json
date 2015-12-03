@@ -8,6 +8,7 @@
 	"instvars" : [
 		"expression",
 		"expressionExceptEquality",
+		"expressionList",
 		"letExpression",
 		"letBeExpression",
 		"defExpression",
@@ -67,6 +68,7 @@
 		"multipleSetBind",
 		"multipleTypeBind",
 		"patternList",
+		"optionalPatternList",
 		"patternBind",
 		"bind",
 		"bindList",
@@ -82,12 +84,12 @@
 		"amp",
 		"colon",
 		"semicolon",
-		"maplet",
 		"eq",
 		"bar",
 		"prefix",
 		"keyword",
-		"char"
+		"char",
+		"mapletArrow"
 	],
 	"name" : "ViennaVDMGrammar",
 	"type" : "normal"

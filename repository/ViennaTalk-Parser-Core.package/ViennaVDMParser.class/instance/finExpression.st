@@ -1,3 +1,3 @@
 parsers-expressions-threads
 finExpression
-	^ super finExpression ==> [ :array | ViennaNode label: 'FinExpression' with: array ]
+	^ super finExpression ==> [ :nameNode | ViennaNode label: 'FinExpression' with: nameNode ]

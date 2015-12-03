@@ -1,3 +1,6 @@
-parsers-symbols
+parsers-expressions-basics
 maplet
-	^ self operator: '|->'
+	^ (expression , mapletArrow , expression)
+		==> [ :triple | 
+			{(triple first).
+			(triple third)} ]

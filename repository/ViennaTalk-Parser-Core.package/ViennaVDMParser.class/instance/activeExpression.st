@@ -1,3 +1,3 @@
 parsers-expressions-threads
 activeExpression
-	^ super activeExpression ==> [ :array | ViennaNode label: 'ActiveExpression' with: array ]
+	^ super activeExpression ==> [ :nameNode | ViennaNode label: 'ActiveExpression' with: nameNode ]
