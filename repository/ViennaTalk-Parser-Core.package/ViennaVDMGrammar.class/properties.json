@@ -6,6 +6,13 @@
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
+		"document",
+		"definitionBlock",
+		"typeDefinitions",
+		"valueDefinitions",
+		"typeDefinition",
+		"valueDefinition",
+		"functionDefinition",
 		"expression",
 		"expressionExceptEquality",
 		"expressionList",
@@ -51,7 +58,6 @@
 		"pattern",
 		"type",
 		"discretionaryType",
-		"functionDefinition",
 		"type1",
 		"type2",
 		"type3",
@@ -64,7 +70,6 @@
 		"objectPattern",
 		"recordPattern",
 		"multipleBind",
-		"valueDefinition",
 		"multipleSetBind",
 		"multipleTypeBind",
 		"patternList",
@@ -89,7 +94,10 @@
 		"prefix",
 		"keyword",
 		"char",
-		"mapletArrow"
+		"mapletArrow",
+		"invariant",
+		"fieldList",
+		"access"
 	],
 	"name" : "ViennaVDMGrammar",
 	"type" : "normal"
