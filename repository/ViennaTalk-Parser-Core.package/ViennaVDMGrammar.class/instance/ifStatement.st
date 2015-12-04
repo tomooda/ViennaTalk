@@ -1,9 +1,9 @@
-parsers-expressions-basics
-ifExpression
-	^ (((self reserved: 'if') , expression , (self reserved: 'then') , expression)
+parsers-statements
+ifStatement
+	^ (((self reserved: 'if') , expression , (self reserved: 'then') , statement)
 		==> [ :quatro | 
 			{(quatro second).
-			(quatro fourth)} ] , self elseifExpression star , (((self reserved: 'else') , expression) ==> #second))
+			(quatro fourth)} ] , self elseifStatement star , (((self reserved: 'else') , statement) ==> #second))
 		==> [ :triple | 
 			{(Array
 				new: triple second size + 1
