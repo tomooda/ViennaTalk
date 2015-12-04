@@ -1,3 +1,3 @@
 parsers-expressions-operators
 rng: arg
-	^ ViennaNode label: 'Range' with: arg
+	^ ViennaNode label: 'MapRange' with: arg

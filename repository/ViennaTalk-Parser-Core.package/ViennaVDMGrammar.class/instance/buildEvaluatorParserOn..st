@@ -5,7 +5,7 @@ buildEvaluatorParserOn: anExpressionParser
 					p6
 						prefix: (self operator: $+) do: [ :op :arg | self unaryPlus: arg ];
 						prefix: (self operator: $-) do: [ :op :arg | self unaryMinus: arg ].
-					#('abs' 'floor' 'card' 'power' 'dinter' 'dunion' 'dom' 'rng' 'merge' 'len' 'elems' 'hd' 'tl' 'conc' 'inds')
+					#('abs' 'floor' 'card' 'power' 'dinter' 'dunion' 'dom' 'rng' 'merge' 'len' 'elems' 'hd' 'tl' 'conc' 'inds' 'reverse')
 						do: [ :operator | p6 prefix: (self reserved: operator) do: [ :op :arg | self perform: (op , ':') asSymbol with: arg ] ] ];
 		group: [ :p5 | 
 					p5 left: (self operator: ':>') do: [ :arg1 :op :arg2 | self map: arg1 rangeRestrictedTo: arg2 ].

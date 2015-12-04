@@ -1,3 +1,3 @@
 parsers-expressions-operators
 elems: arg
-	^ ViennaNode label: 'Elements' with: arg
+	^ ViennaNode label: 'SequenceElements' with: arg

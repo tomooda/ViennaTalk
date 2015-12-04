@@ -1,3 +1,3 @@
 parsers-expressions-operators
 not: arg
-	^ ViennaNode label: 'Negation' with: arg
+	^ ViennaNode label: 'Not' with: arg

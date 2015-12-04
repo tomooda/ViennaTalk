@@ -1,3 +1,3 @@
 parsers-expressions-operators
 len: arg
-	^ ViennaNode label: 'Length' with: arg
+	^ ViennaNode label: 'SequenceLength' with: arg

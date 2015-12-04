@@ -1,3 +1,3 @@
 parsers-expressions-operators
 inds: arg
-	^ ViennaNode label: 'Indexes' with: arg
+	^ ViennaNode label: 'SequenceIndices' with: arg

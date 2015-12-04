@@ -1,3 +1,3 @@
 parsers-expressions-operators
 merge: arg
-	^ ViennaNode label: 'DistributedMerge' with: arg
+	^ ViennaNode label: 'DistributedMapMerge' with: arg

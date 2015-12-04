@@ -1,8 +1,7 @@
 parsers-expressions-basics
 letExpression
-	| localDefinition |
-	localDefinition := valueDefinition / functionDefinition.
-	^ ((self reserved: 'let') , (localDefinition separatedBy: comma) withoutSeparators , (self reserved: 'in') , expression)
+	^ ((self reserved: 'let') , (self localDefinition separatedBy: comma) withoutSeparators , (self reserved: 'in')
+		, expression)
 		==> [ :quatro | 
 			{(quatro second).
 			(quatro fourth)} ]

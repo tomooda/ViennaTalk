@@ -14,6 +14,7 @@
 		"valueDefinition",
 		"functionDefinition",
 		"expression",
+		"statement",
 		"expressionExceptEquality",
 		"expressionList",
 		"letExpression",
@@ -89,6 +90,7 @@
 		"amp",
 		"colon",
 		"semicolon",
+		"colonEq",
 		"eq",
 		"bar",
 		"prefix",
@@ -97,7 +99,8 @@
 		"mapletArrow",
 		"invariant",
 		"fieldList",
-		"access"
+		"access",
+		"stateDesignator"
 	],
 	"name" : "ViennaVDMGrammar",
 	"type" : "normal"
