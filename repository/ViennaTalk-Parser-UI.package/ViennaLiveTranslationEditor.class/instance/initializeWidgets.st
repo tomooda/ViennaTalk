@@ -18,6 +18,9 @@ initializeWidgets
 			failure
 				ifNotNil: [ sourceText text: (source addAttribute: TextColor red from: failure position + 1 to: source size) ] ]
 				on: Error
-				do: [ :ex |  ] ].
+				do: [ :ex | 
+					Transcript
+						cr;
+						show: ex printString ] ].
 	targetText := self newText.
 	self title: self defaultTitle
