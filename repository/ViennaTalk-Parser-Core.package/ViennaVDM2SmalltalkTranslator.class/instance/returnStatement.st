@@ -1,3 +1,3 @@
 parsers-statements
 returnStatement
-	^ super returnStatement ==> [ :expr | 'thisContext return: ' , expr ]
+	^ super returnStatement ==> [ :expr | 'thisContext viennaReturn: ' , expr ]

@@ -1,0 +1,3 @@
+parsers-definitions
+operationDefinition
+	^ self explicitOperationDefinition / self implicitOperationDefinition / self extendedExplicitOperationDefinition

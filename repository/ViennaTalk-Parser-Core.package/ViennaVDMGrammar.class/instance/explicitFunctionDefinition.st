@@ -4,8 +4,7 @@ explicitFunctionDefinition
 		,
 			(((lbracket , (self typeVariableIdentifier separatedBy: comma) withoutSeparators , rbracket) ==> #second) optional
 				==> [ :vars | vars ifNil: [ Array new ] ]) , colon , (self partialFunctionType / self totalFunctionType) trim
-		, identifier , ((lparen , (optionalPatternList) , rparen) ==> #second) plus
-		, (self operator: '==')
+		, identifier , self parametersList , (self operator: '==')
 		,
 			(expression / ((self reserved: 'is') , (self reserved: 'subclass') , (self reserved: 'responsibility'))
 				/ ((self reserved: 'is') / (self reserved: 'not') , (self reserved: 'yet') , (self reserved: 'specified')))
@@ -13,12 +12,15 @@ explicitFunctionDefinition
 		, (((self reserved: 'post') , expression) ==> #second) optional
 		, (((self reserved: 'measure') , name) ==> #second) optional)
 		==> [ :array | 
-			{(array first).
-			(array second).
-			(array fourth).
-			(array fifth).
-			(array sixth).
-			(array eighth).
-			(array ninth).
-			(array at: 10).
-			(array at: 11)} ]
+			array first = array fifth
+				ifTrue: [ 
+					{(array first).
+					(array second).
+					(array fourth).
+					(array fifth).
+					(array sixth).
+					(array eighth).
+					(array ninth).
+					(array at: 10).
+					(array at: 11)} ]
+				ifFalse: [ PPFailure message: 'function name mismatch: ' , array first , ', ' , array fifth ] ]

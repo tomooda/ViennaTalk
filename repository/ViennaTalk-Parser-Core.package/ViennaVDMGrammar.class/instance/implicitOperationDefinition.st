@@ -1,0 +1,3 @@
+parsers-definitions
+implicitOperationDefinition
+	^ PPFailingParser new

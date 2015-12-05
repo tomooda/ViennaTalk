@@ -1,3 +1,3 @@
 parsers-definitions
 definitionBlock
-	^ typeDefinitions / valueDefinitions
+	^ typeDefinitions / valueDefinitions / functionDefinitions / operationDefinitions
