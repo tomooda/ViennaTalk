@@ -2,7 +2,9 @@
 	"commentStamp" : "",
 	"super" : "Object",
 	"category" : "ViennaTalk-Value-Core",
-	"classinstvars" : [ ],
+	"classinstvars" : [
+		"random"
+	],
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [ ],
