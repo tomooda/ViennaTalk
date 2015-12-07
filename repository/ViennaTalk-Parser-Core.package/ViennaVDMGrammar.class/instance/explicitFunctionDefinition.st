@@ -1,9 +1,6 @@
 parsers-definitions
 explicitFunctionDefinition
-	^ (identifier
-		,
-			(((lbracket , (self typeVariableIdentifier separatedBy: comma) withoutSeparators , rbracket) ==> #second) optional
-				==> [ :vars | vars ifNil: [ Array new ] ]) , colon , (self partialFunctionType / self totalFunctionType) trim
+	^ (identifier , self typeVariableList optional , colon , (self partialFunctionType / self totalFunctionType) trim
 		, identifier , self parametersList , (self operator: '==')
 		,
 			(expression / ((self reserved: 'is') , (self reserved: 'subclass') , (self reserved: 'responsibility'))

@@ -1,7 +1,7 @@
 parsers-definitions
 explicitOperationDefinition
-	^ (identifier , colon , self operationType , identifier , self parameters , (self operator: '==') , self operationBody
-		, (((self reserved: 'pre') , expression) ==> #second) optional
+	^ (identifier , colon , self operationType , identifier trim , self parameters , (self operator: '==')
+		, self operationBody , (((self reserved: 'pre') , expression) ==> #second) optional
 		, (((self reserved: 'post') , expression) ==> #second) optional)
 		==> [ :array | 
 			array first = array fourth

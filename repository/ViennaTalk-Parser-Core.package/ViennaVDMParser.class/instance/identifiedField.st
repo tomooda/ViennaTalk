@@ -5,4 +5,6 @@ identifiedField
 			| fieldName fieldType |
 			fieldName := pair first.
 			fieldType := pair second.
-			'{' , fieldName storeString , '. false. ' , pair second , '}' ]
+			{fieldName.
+			false.
+			fieldType} ]

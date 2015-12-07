@@ -1,6 +1,6 @@
 parsers-types
 operationType
-	^ (self discretionaryType , (self operator: '==>') , self discretionaryType)
+	^ (discretionaryType , (self operator: '==>') , discretionaryType)
 		==> [ :triple | 
 			{(triple first).
 			(triple third)} ]
