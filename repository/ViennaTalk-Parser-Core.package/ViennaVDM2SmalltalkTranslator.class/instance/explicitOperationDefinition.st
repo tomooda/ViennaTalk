@@ -22,14 +22,17 @@ explicitOperationDefinition
 						nextPutAll: opname;
 						nextPutAll: ' := ['.
 					vars
-						do: [ :v | 
-							stream
-								nextPutAll: ' :';
-								nextPutAll: v ].
+						ifNotEmpty: [ 
+							vars
+								do: [ :v | 
+									stream
+										nextPutAll: ' :';
+										nextPutAll: v ].
+							stream nextPutAll: ' |' ].
 					stream
-						nextPutAll: ' ||';
+						nextPutAll: ' | ';
 						nextPutAll: (' ' join: (params inject: #() into: [ :vs :pat | vs , pat first ]));
-						nextPutAll: ' | '.
+						nextPutAll: ' _opContext | _opContext := thisContext. '.
 					params
 						with: vars
 						do: [ :p :v | 

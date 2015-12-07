@@ -8,6 +8,7 @@
 	"instvars" : [
 		"document",
 		"definitionBlock",
+		"stateDefinition",
 		"typeDefinitions",
 		"valueDefinitions",
 		"operationDefinitions",
@@ -101,6 +102,7 @@
 		"char",
 		"mapletArrow",
 		"invariant",
+		"initialisation",
 		"fieldList",
 		"access",
 		"stateDesignator"
