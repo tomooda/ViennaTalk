@@ -12,6 +12,11 @@ codeTextMenuOn: aBuilder
 		keyText: 'p';
 		selector: #viennaItInCodeText;
 		help: nil;
+		icon: Smalltalk ui icons smallPrintItIcon.
+	(aBuilder item: #'Translate it' translated)
+		keyText: 't';
+		selector: #translateIt;
+		help: nil;
 		icon: Smalltalk ui icons smallPrintItIcon;
 		withSeparatorAfter.
 	(aBuilder item: #'Find...' translated)

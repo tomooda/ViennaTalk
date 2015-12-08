@@ -11,4 +11,5 @@ initializeWidgets
 		autoAccept: true;
 		isCodeCompletionAllowed: false;
 		menuHolder: [ self codeTextMenu ];
-		bindKeyCombination: $p command toAction: [ self viennaItInCodeText ]
+		bindKeyCombination: $p command toAction: [ self viennaItInCodeText ];
+		bindKeyCombination: $t command toAction: [ self translateIt ]
