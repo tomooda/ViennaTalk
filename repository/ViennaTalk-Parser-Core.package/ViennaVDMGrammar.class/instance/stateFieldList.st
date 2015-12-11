@@ -1,6 +1,6 @@
 parsers-definitions
 stateFieldList
-	^ (identifier , colon , type) star
+	^ (identifier trim , colon , type trim) star
 		==> [ :array | 
 			array
 				collect: [ :triple | 
