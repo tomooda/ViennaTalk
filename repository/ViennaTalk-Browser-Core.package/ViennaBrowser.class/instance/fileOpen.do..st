@@ -7,4 +7,4 @@ fileOpen: title do: aBlock
 		preview: #text)
 		ifNotNil: [ :stream | 
 			directory := stream name asFileReference parent.
-			aBlock value: stream ]
+			aBlock value: (stream contents copyReplaceAll: String lf with: String cr) readStream ]

@@ -36,6 +36,10 @@ acceptCode: aStringOrText
 									editor selectFrom: editor caret to: editor caret - 1.
 									editor afterSelectionInsertAndSelect: msg ] ].
 					^ false ].
-			self selectModuleNamed: nil.
+			self
+				selectModuleNamed:
+					((newModulePositions asSortedCollection: [ :less :more | less value first <= more value first])
+						ifEmpty: [ nil ]
+						ifNotEmpty: [ :sorted | sorted first key ]).
 			^ true ].
 	^ false
