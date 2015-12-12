@@ -10,6 +10,7 @@ initializeWidgets
 		help: 'VDM expression/statement/type to evaluate';
 		autoAccept: true;
 		isCodeCompletionAllowed: false;
+		wantsVisualFeedback: true;
 		menuHolder: [ self codeTextMenu ];
 		bindKeyCombination: $p command toAction: [ self viennaItInCodeText ];
 		bindKeyCombination: $t command toAction: [ self translateIt ]

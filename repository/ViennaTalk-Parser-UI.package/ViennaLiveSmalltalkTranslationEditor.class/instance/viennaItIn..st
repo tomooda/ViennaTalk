@@ -1,11 +1,8 @@
 evaluating
 viennaItIn: aTextModel
-	| compiler source codeFromSource editor codeFromSelection result |
+	| compiler codeFromSource editor codeFromSelection result |
 	compiler := ViennaVDM2SmalltalkTranslator new.
-	source := sourceText text asString.
-	codeFromSource := compiler document parse: source.
-	codeFromSource isPetitFailure
-		ifTrue: [ ^ sourceText notify: codeFromSource message at: codeFromSource position + 1 in: source ].
+	codeFromSource := targetText text asString.
 	editor := aTextModel widget widget textMorph editor.
 	editor lineSelectAndEmptyCheck: [ ^ '' ].
 	codeFromSelection := compiler expression end / compiler statement end / compiler type end
@@ -13,4 +10,9 @@ viennaItIn: aTextModel
 	codeFromSelection isPetitFailure
 		ifTrue: [ ^ aTextModel notify: codeFromSelection message at: codeFromSelection position + 1 in: aTextModel text ].
 	result := (Compiler evaluate: codeFromSource , '.' , codeFromSelection) viennaString.
-	editor afterSelectionInsertAndSelect: result
+	editor afterSelectionInsertAndSelect: result.
+	aTextModel widget widget
+		selectFrom: editor startIndex to: editor stopIndex;
+		textChanged;
+		scrollSelectionIntoView.
+	^ true

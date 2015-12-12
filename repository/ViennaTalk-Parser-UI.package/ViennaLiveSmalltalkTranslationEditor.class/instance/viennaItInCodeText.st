@@ -1,3 +1,3 @@
 evaluating
 viennaItInCodeText
-	self viennaItIn: codeText
+	^ self viennaItIn: codeText
