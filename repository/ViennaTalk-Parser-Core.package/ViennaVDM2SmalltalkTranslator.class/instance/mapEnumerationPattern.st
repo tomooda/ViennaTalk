@@ -15,6 +15,6 @@ mapEnumerationPattern
 				collect: [ :pair | 
 					{(pair first second).
 					(pair second second)} ].
-			{vars.
+			{(vars reject: #isNil).
 			('(ViennaRuntimeUtil matchMapEnumeration: {'
 				, (' . ' join: (maplets collect: [ :pair | '{' , pair first , ' . ' , pair second , '}' ])) , '})')} ]

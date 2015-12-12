@@ -7,5 +7,5 @@ tuplePattern
 			argPatterns do: [ :arg | vars addAll: arg first ].
 			vars := vars asArray.
 			args := argPatterns collect: #second.
-			{vars.
+			{(vars reject: #isNil).
 			('(ViennaRuntimeUtil matchTuple: {' , (' . ' join: args) , '})')} ]

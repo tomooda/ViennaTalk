@@ -10,5 +10,5 @@ binder: aBlockString with: aString vars: anArrayOfString
 				nextPutAll: aString;
 				nextPutAll: ') ifEmpty: [false] ifNotEmpty: [:binds | ';
 				nextPutAll:
-						('.' join: (anArrayOfString collect: [ :varName | varName , ' := binds first at: ' , varName storeString ]));
+						('.' join: (anArrayOfString select: #notNil thenCollect: [ :varName | varName , ' := binds first at: ' , varName storeString ]));
 				nextPutAll: '. true])' ]

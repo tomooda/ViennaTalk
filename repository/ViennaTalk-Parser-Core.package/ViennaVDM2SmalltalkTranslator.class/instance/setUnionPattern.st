@@ -6,5 +6,5 @@ setUnionPattern
 			vars := (pair first first , pair second first) asSet asArray.
 			pat1 := pair first second.
 			pat2 := pair second second.
-			{vars.
+			{(vars reject: #isNil).
 			('(ViennaRuntimeUtil match: ' , pat1 , ' union: ' , pat2 , ')')} ]
