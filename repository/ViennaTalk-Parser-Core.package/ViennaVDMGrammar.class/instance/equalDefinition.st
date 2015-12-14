@@ -1,4 +1,4 @@
-parsers-expressions-basics
+parsers-definitions
 equalDefinition
 	^ (patternBind , eq , expression)
 		==> [ :triple | 

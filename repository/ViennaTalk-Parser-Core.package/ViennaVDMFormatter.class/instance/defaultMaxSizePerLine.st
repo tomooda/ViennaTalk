@@ -1,0 +1,3 @@
+defaults
+defaultMaxSizePerLine
+	^ 30
