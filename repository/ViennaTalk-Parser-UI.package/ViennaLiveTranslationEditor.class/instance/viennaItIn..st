@@ -12,7 +12,7 @@ viennaItIn: aTextModel
 	result := (Compiler evaluate: codeFromSource , '.' , codeFromSelection) viennaString.
 	editor afterSelectionInsertAndSelect: result.
 	aTextModel widget widget
-		selectFrom: editor startIndex to: editor stopIndex;
+		selectFrom: editor startIndex to: editor stopIndex - 1;
 		textChanged;
 		scrollSelectionIntoView.
 	^ true

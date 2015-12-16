@@ -4,7 +4,10 @@ initializeWidgets
 	sourceText
 		help: 'VDM source';
 		autoAccept: true;
-		isCodeCompletionAllowed: false.
+		isCodeCompletionAllowed: false;
+		menuHolder: [ self sourceTextMenu ];
+		bindKeyCombination: $f shift command toAction: [ self formatSourceText ];
+		bindKeyCombination: $p command toAction: [ self viennaItInSourceText ].
 	sourceText
 		whenTextChanged: [ :source | 
 			[ 

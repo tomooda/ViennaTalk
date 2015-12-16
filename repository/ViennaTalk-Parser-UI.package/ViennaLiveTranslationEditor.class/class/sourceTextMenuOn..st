@@ -8,6 +8,10 @@ sourceTextMenuOn: aBuilder
 
 	<contextMenu>
 	<viennaSourceTextMenu>
+	(aBuilder item: #Format translated)
+		keyText: 'F';
+		selector: #formatSourceText;
+		help: 'Pretty print VDM source'.
 	(aBuilder item: #'Evaluate it' translated)
 		keyText: 'p';
 		selector: #viennaItInSourceText;

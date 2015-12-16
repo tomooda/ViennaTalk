@@ -8,6 +8,10 @@ codeTextMenuOn: aBuilder
 
 	<contextMenu>
 	<viennaCodeTextMenu>
+	(aBuilder item: #'Format it' translated)
+		keyText: 'F';
+		selector: #formatSelectionInCodeText;
+		help: 'Pretty print the selected expression/statement/type'.
 	(aBuilder item: #'Evaluate it' translated)
 		keyText: 'p';
 		selector: #viennaItInCodeText;
