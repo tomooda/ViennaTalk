@@ -1,5 +1,9 @@
 formatting
 format: aViennaNode
+	| string |
 	aViennaNode isString
 		ifTrue: [ ^ aViennaNode ].
-	^ self perform: (aViennaNode label uncapitalized , ':') asSymbol with: aViennaNode
+	string := self perform: (aViennaNode label uncapitalized , ':') asSymbol with: aViennaNode.
+	self needsParen
+		ifTrue: [ string := '(' , string , ')' ].
+	^ string

@@ -1,4 +1,5 @@
 class initialization
 initialize
 	super initialize.
-	self initializeOperatorPrecedence
+	self initializeOperatorPrecedence.
+	self initializeOperatorGrouping

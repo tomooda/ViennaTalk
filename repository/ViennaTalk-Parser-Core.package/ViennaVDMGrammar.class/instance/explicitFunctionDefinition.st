@@ -1,10 +1,8 @@
 parsers-definitions
 explicitFunctionDefinition
-	^ (identifier , self typeVariableList optional , colon , (self partialFunctionType / self totalFunctionType) trim
+	^ (identifier , self typeVariableList  , colon , (self partialFunctionType / self totalFunctionType) trim
 		, identifier , self parametersList , (self operator: '==')
-		,
-			(expression / ((self reserved: 'is') , (self reserved: 'subclass') , (self reserved: 'responsibility'))
-				/ ((self reserved: 'is') / (self reserved: 'not') , (self reserved: 'yet') , (self reserved: 'specified')))
+		, (expression / self isSubclassResponsibility / self isNotYetSpecified)
 		, (((self reserved: 'pre') , expression) ==> #second) optional
 		, (((self reserved: 'post') , expression) ==> #second) optional
 		, (((self reserved: 'measure') , name) ==> #second) optional)
@@ -12,7 +10,7 @@ explicitFunctionDefinition
 			array first = array fifth
 				ifTrue: [ 
 					{(array first).
-					(array second ifNil: [ #() ]).
+					(array second ).
 					(array fourth).
 					(array fifth).
 					(array sixth).

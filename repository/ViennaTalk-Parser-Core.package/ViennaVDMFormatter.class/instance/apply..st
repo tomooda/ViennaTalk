@@ -1,3 +1,10 @@
 formatting-expressions
 apply: aViennaNode
-	^ (self print: (self format: aViennaNode first) , '(' withChildren: {self format: aViennaNode second}) , ')'
+	| expression args |
+	expression := self format: aViennaNode first.
+	args := self format: aViennaNode second.
+	^ expression , '('
+		,
+			((self needsIndent: expression , args)
+				ifTrue: [ String cr , indent , (self indentString: args) ]
+				ifFalse: [ args ]) , ')'

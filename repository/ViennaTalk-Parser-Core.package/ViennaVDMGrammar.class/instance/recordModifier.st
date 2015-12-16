@@ -1,11 +1,6 @@
 parsers-expressions-basics
 recordModifier
-	^ ((self reserved: 'mu') , lparen , expression , comma
-		,
-			((identifier , mapletArrow , expression)
-				==> [ :triple | 
-					{(triple first).
-					(triple third)} ] separatedBy: comma) withoutSeparators , rparen)
+	^ ((self reserved: 'mu') , lparen , expression , comma , self mapletList , rparen)
 		==> [ :array | 
 			{(array third).
 			(array fifth)} ]

@@ -1,3 +1,5 @@
 formatting-expressions
 symbolicLiteral: aViennaNode
-	^ self format: aViennaNode first
+	| literal |
+	literal := aViennaNode first.
+	^ literal

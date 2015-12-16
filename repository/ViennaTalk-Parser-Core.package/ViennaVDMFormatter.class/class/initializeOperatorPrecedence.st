@@ -57,4 +57,13 @@ initializeOperatorPrecedence
 		at: 'Or' put: 13;
 		at: 'Imply' put: 12;
 		at: 'LogicalEquivalence' put: 11;
+		at: 'SetType' put: 5;
+		at: 'SeqType' put: 5;
+		at: 'Seq1Type' put: 5;
+		at: 'MapType' put: 4;
+		at: 'InmapType' put: 4;
+		at: 'ProductType' put: 3;
+		at: 'UnionType' put: 2;
+		at: 'PartialFunctionType' put: 1;
+		at: 'TotalFunctionType' put: 1;
 		yourself

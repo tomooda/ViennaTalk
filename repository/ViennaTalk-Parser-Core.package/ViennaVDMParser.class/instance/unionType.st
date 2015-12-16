@@ -1,3 +1,3 @@
 parsers-types
 unionType
-	^ super unionType ==> [ :array | ViennaNode label: 'UnionType' with: array ]
+	^ super unionType ==> [ :array | ViennaNode label: 'UnionType' withAll: array ]
