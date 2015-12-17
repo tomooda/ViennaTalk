@@ -1,5 +1,5 @@
 formatting-expressions
 symbolicLiteral: aViennaNode
 	| literal |
-	literal := aViennaNode first.
+	literal := aViennaNode first trim.
 	^ literal

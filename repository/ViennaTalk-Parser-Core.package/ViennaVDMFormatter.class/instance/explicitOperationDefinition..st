@@ -6,8 +6,8 @@ explicitOperationDefinition: aViennaNode
 	identifier2 := self format: aViennaNode third.
 	parameters := self format: aViennaNode fourth.
 	expression := self format: aViennaNode fifth.
-	pre := aViennaNode sixth ifNotNil: [ self format: aViennaNode seventh ] ifNil: [ '' ].
-	post := aViennaNode seventh ifNotNil: [ self format: aViennaNode eighth ] ifNil: [ '' ].
+	pre := aViennaNode sixth ifNotNil: [ self format: aViennaNode sixth ] ifNil: [ '' ].
+	post := aViennaNode seventh ifNotNil: [ self format: aViennaNode seventh ] ifNil: [ '' ].
 	^ identifier1 , ' : ' , operationType , String cr , identifier2 , parameters , ' =='
 		,
 			((self needsIndent: expression)

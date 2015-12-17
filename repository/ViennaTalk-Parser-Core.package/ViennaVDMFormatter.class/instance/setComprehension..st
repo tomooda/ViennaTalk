@@ -3,7 +3,7 @@ setComprehension: aViennaNode
 	| expression bindList guard |
 	expression := self format: aViennaNode first.
 	bindList := self format: aViennaNode second.
-	guard := aViennaNode third ifNotNil: [ self format: aViennaNode fourth ] ifNil: [ '' ].
+	guard := aViennaNode third ifNotNil: [ self format: aViennaNode third ] ifNil: [ '' ].
 	(self needsIndent: expression , bindList , guard)
 		ifFalse: [ ^ '{' , expression , ' | ' , bindList , ' & ' , guard , '}' ].
 	^ '{' , expression , String cr , '| '

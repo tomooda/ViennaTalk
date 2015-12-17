@@ -4,7 +4,7 @@ recordTypeDefinition: aViennaNode
 	identifier := self format: aViennaNode first.
 	fieldList := self format: aViennaNode second.
 	invariant := aViennaNode third
-		ifNotNil: [ String cr , indent , 'inv ' , (self indentString: (self format: aViennaNode third)) ]
+		ifNotNil: [ String cr , indent , (self indentString: (self format: aViennaNode third)) ]
 		ifNil: [ '' ].
 	^ identifier , ' ::'
 		,

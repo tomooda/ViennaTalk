@@ -1,7 +1,7 @@
 formatting-expressions
 sequenceEnumeration: aViennaNode
 	|  lines |
-	aViennaNode size = 0
+	aViennaNode first size = 0
 		ifTrue: [ ^ '[]' ].
 		
 	lines := Array
@@ -23,10 +23,17 @@ sequenceEnumeration: aViennaNode
 						stream nextPut: element.
 						line := '' ]
 					ifFalse: [ 
+						| origLine |
+						origLine := line.
 						line := line , (line ifNotEmpty: [ ', ' ]) , element.
 						(self needsIndent: line)
 							ifTrue: [ 
-								stream nextPut: line.
-								line := '' ] ] ].
+								origLine
+									ifEmpty: [ 
+										stream nextPut: line.
+										line := '' ]
+									ifNotEmpty: [ 
+										stream nextPut: origLine.
+										line := element ] ] ] ].
 			line ifNotEmpty: [ stream nextPut: line ] ].
 	^ '[' , (',' , String cr join: lines) , ']'

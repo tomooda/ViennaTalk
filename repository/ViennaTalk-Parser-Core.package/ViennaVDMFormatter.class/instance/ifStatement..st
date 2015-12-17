@@ -1,4 +1,4 @@
-formatting-expressions
+formatting-statements
 ifStatement: aViennaNode
 	| cond expr default |
 	cond := self format: aViennaNode first first first.

@@ -1,3 +1,3 @@
 formatting-patterns and binds
 patternIdentifier: aViennaNode
-	^ self format: aViennaNode first
+	^ aViennaNode first ifNil: ['-'] ifNotNil: [:identifier | self format:identifier]
