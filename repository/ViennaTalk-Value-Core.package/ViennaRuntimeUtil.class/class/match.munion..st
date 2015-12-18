@@ -7,7 +7,7 @@ match: aBlock1 munion: aBlock2
 				new: 16
 				streamContents: [ :stream | 
 					self
-						nonEmptyPowersetOf: value keys asArray
+						powersetOf: value keys asArray
 						withComplementsDo: [ :keys1 :keys2 | 
 							| dict1 dict2 |
 							dict1 := Dictionary new: keys1 size.

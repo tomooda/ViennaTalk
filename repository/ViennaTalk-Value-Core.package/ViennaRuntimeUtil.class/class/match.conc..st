@@ -6,7 +6,7 @@ match: aBlock1 conc: aBlock2
 			Array
 				new: 16
 				streamContents: [ :stream | 
-					1 to: value size - 1 do: [ :index | 
+					0 to: value size do: [ :index | 
 						| seq1 seq2 |
 						seq1 := value copyFrom: 1 to: index.
 						seq2 := value copyFrom: index + 1 to: value size.

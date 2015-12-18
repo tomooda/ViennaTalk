@@ -7,7 +7,7 @@ match: aBlock1 union: aBlock2
 				new: 16
 				streamContents: [ :stream | 
 					self
-						nonEmptyPowersetOf: value asArray
+						powersetOf: value asArray
 						withComplementsDo: [ :union1 :union2 | 
 							(aBlock1 value: union1 asSet)
 								ifNotEmpty: [ :bindings1 | 
