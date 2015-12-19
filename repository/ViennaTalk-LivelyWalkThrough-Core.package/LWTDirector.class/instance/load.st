@@ -3,7 +3,7 @@ load
 	(LivelyWalkThrough
 		fileOpen: (self urlPrefix ifEmpty: [ 'Lively Walk-Through' ])
 		extensions: #('lwt')
-		path: (filepath ifNil: [ FileSystem workingDirectory parent parent ]) parent
+		path: (filepath ifNil: [ FileSystem workingDirectory parent parent ]) 
 		preview: nil)
 		ifNotNil: [ :reference | 
 			filepath := reference.
