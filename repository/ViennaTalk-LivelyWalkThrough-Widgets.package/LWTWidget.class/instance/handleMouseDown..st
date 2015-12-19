@@ -3,7 +3,9 @@ handleMouseDown: aMouseEvent
 	aMouseEvent wasHandled: true.
 	aMouseEvent yellowButtonPressed
 		ifTrue: [ 
-			self menu
+			(aMouseEvent shiftPressed
+				ifTrue: [ self smalltalkMenu ]
+				ifFalse: [ self menu ])
 				setInvokingView: self;
 				invokeModal.
 			^ true ].
