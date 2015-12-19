@@ -1,3 +1,3 @@
 parsing
 start
-	^ expression end
+	^ document end

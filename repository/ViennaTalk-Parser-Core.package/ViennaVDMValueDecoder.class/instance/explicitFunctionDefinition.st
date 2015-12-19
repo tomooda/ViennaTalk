@@ -1,0 +1,3 @@
+parsers-definitions
+explicitFunctionDefinition
+	^ PPFailingParser new
