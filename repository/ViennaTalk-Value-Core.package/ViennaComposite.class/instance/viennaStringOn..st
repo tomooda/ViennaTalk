@@ -4,5 +4,5 @@ viennaStringOn: aStream
 		nextPutAll: 'mk_';
 		nextPutAll: constructorName;
 		nextPutAll: '('.
-	self do: [ :obj | obj viennaStringOn: aStream ] separatedBy: [ aStream nextPutAll: ', ' ].
+	(1 to: self size) do: [ :index | (self at: index) viennaStringOn: aStream ] separatedBy: [ aStream nextPutAll: ', ' ].
 	aStream nextPutAll: ')'
