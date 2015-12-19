@@ -11,5 +11,5 @@ fileOpen: title extensions: exts path: path preview: preview
 		title: title;
 		answerPathName.
 	exts ifNotNil: [ fd validExtensions: exts ].
-	path ifNotNil: [ fd selectPathName: (FileSystem disk pathFromString: path) parent asFileReference fullName ].
+	path ifNotNil: [ fd selectPathName: (FileSystem disk pathFromString: path asString) parent asFileReference fullName ].
 	^ (ui openModal: fd) answer ifNotNil: [ :ans | ans asFileReference ]
