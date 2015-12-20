@@ -18,6 +18,9 @@
 		"typeDefinition",
 		"valueDefinition",
 		"expression",
+		"atomicExpression",
+		"combinatorExpression",
+		"applicatorExpression",
 		"statement",
 		"expressionExceptEquality",
 		"expressionList",
@@ -105,7 +108,10 @@
 		"initialisation",
 		"fieldList",
 		"access",
-		"stateDesignator"
+		"stateDesignator",
+		"evaluatorExpression",
+		"connectiveExpression",
+		"relationExpression"
 	],
 	"name" : "ViennaVDMGrammar",
 	"type" : "normal"

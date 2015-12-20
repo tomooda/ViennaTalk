@@ -6,8 +6,8 @@ setComprehension: aViennaNode
 	guard := aViennaNode third ifNotNil: [ self format: aViennaNode third ] ifNil: [ '' ].
 	(self needsIndent: expression , bindList , guard)
 		ifFalse: [ ^ '{' , expression , ' | ' , bindList , ' & ' , guard , '}' ].
-	^ '{' , expression , String cr , '| '
+	^ '{' , expression , String cr , indent , '| '
 		,
 			((self needsIndent: bindList , guard)
-				ifTrue: [ (self indentString: bindList) , (guard ifNotEmpty: [ String cr , '& ' , (self indentString: guard) ]) ]
+				ifTrue: [ (self indentString: bindList) , (guard ifNotEmpty: [ String cr , indent , '& ' , (self indentString: guard) ]) ]
 				ifFalse: [ (self indentString: bindList) , (guard ifNotEmpty: [ ' & ' , guard ]) ]) , '}'

@@ -6,8 +6,8 @@ sequenceComprehension: aViennaNode
 	guard := aViennaNode third ifNotNil: [ self format: aViennaNode fourth ] ifNil: [ '' ].
 	(self needsIndent: expression , setBind , guard)
 		ifFalse: [ ^ '[' , expression , ' | ' , setBind , ' & ' , guard , ']' ].
-	^ '[' , expression , String cr , '| '
+	^ '[' , expression , String cr , indent , '| '
 		,
 			((self needsIndent: setBind , guard)
-				ifTrue: [ (self indentString: setBind) , (guard ifNotEmpty: [ String cr , '& ' , (self indentString: guard) ]) ]
+				ifTrue: [ (self indentString: setBind) , (guard ifNotEmpty: [ String cr , indent , '& ' , (self indentString: guard) ]) ]
 				ifFalse: [ (self indentString: setBind) , (guard ifNotEmpty: [ ' & ' , guard ]) ]) , ']'

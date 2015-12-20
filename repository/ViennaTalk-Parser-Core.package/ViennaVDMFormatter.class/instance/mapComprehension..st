@@ -11,8 +11,8 @@ mapComprehension: aViennaNode
 		,
 			((self needsIndent: keyExpression , valueExpression)
 				ifTrue: [ keyExpression , String cr , '|-> ' , (self indentString: valueExpression) ]
-				ifFalse: [ keyExpression , ' |-> ' , valueExpression ]) , String cr , '| '
+				ifFalse: [ keyExpression , ' |-> ' , valueExpression ]) , String cr , indent , '| '
 		,
 			((self needsIndent: bindList , guard)
-				ifTrue: [ (self indentString: bindList) , (guard ifNotEmpty: [ String cr , '& ' , (self indentString: guard) ]) ]
+				ifTrue: [ (self indentString: bindList) , (guard ifNotEmpty: [ String cr , indent , '& ' , (self indentString: guard) ]) ]
 				ifFalse: [ (self indentString: bindList) , (guard ifNotEmpty: [ ' & ' , guard ]) ]) , '}'
