@@ -1,10 +1,10 @@
 tests-definitions
-testDocument
+testFlatDocument
 	self
 		assert:
 			(Compiler
 				evaluate:
-					(ViennaVDM2SmalltalkTranslator new document trim end
+					(ViennaVDM2SmalltalkTranslator new flatDocument trim end
 						parse:
 							'
 				types T = nat; 
