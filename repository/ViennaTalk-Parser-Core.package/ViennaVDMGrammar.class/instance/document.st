@@ -1,3 +1,3 @@
 parsers-definitions
 document
-	^ definitionBlock star
+	^ self moduledDocument / self flatDocument

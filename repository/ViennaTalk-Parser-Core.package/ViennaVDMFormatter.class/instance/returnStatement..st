@@ -1,3 +1,3 @@
 formatting-statements
 returnStatement: aViennaNode
-	^ 'return ' , (self format: aViennaNode first)
+	^ 'return ' , (self indentString: (self format: aViennaNode first))

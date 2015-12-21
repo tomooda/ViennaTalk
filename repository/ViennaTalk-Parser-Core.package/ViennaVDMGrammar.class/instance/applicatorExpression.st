@@ -1,6 +1,6 @@
 parsers-expressions
 applicatorExpression
-	^ (combinatorExpression
+	^ (self combinatorExpression
 		,
 			(((lparen , expression , comma , (self operator: '...') , comma , expression , rparen)
 				==> [ :array | 

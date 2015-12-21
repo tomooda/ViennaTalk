@@ -6,7 +6,7 @@ evaluatorExpression
 		/ (self reserved: 'card') / (self reserved: 'power') / (self reserved: 'dinter') / (self reserved: 'dunion')
 		/ (self reserved: 'dom') / (self reserved: 'rng') / (self reserved: 'merge') / (self reserved: 'len')
 		/ (self reserved: 'elems') / (self reserved: 'hd') / (self reserved: 'tl') / (self reserved: 'conc')
-		/ (self reserved: 'inds') / (self reserved: 'reverse')) star , applicatorExpression)
+		/ (self reserved: 'inds') / (self reserved: 'reverse')) star , self applicatorExpression)
 		==> [ :pair | pair first reverse inject: pair second into: [ :expr :sel | self perform: (sel , ':') asSymbol with: expr ] ].
 	precedence5 := (precedence6
 		,

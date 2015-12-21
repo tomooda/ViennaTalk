@@ -1,6 +1,6 @@
 parsers-definitions
-document
-	^ super document
+flatDocument
+	^ super flatDocument
 		==> [ :array | 
 			| vars bodies |
 			vars := array inject: #() into: [ :vs :def | vs , def first ].

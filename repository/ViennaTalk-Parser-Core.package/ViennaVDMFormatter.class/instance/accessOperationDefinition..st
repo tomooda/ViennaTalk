@@ -1,3 +1,3 @@
 formatting-definitions
 accessOperationDefinition: aViennaNode
-	^ ' ' join: (self formatAll: aViennaNode)
+	^ ' ' join: ((self formatAll: aViennaNode) reject: #isEmpty)

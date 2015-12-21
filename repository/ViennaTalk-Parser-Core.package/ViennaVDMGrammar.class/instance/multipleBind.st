@@ -1,3 +1,3 @@
 parsers-patterns
 multipleBind
-	^ multipleSetBind / multipleTypeBind
+	^ self multipleSetBind / self multipleTypeBind

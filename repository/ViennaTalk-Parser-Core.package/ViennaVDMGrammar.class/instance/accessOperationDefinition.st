@@ -11,7 +11,7 @@ accessOperationDefinition
 					((access optional , static optional)
 						==> [ :pair | 
 							{(pair second).
-							(pair first)} ])) , operationDefinition)
+							(pair first)} ])) , self operationDefinition)
 		==> [ :quatro | 
 			{({(quatro first).
 			(quatro second).

@@ -1,3 +1,3 @@
 parsers-definitions
 localDefinition
-	^ valueDefinition / functionDefinition
+	^ self valueDefinition / self functionDefinition

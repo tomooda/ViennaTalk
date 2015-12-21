@@ -1,7 +1,8 @@
 parsers-expressions
 combinatorExpression
-	| precedence2 precedence1 |
-	precedence2 := (atomicExpression , ((self operator: '**') , atomicExpression) star)
+	| atomicExpr precedence2 precedence1 |
+	atomicExpr := self atomicExpression.
+	precedence2 := (atomicExpr , ((self operator: '**') , atomicExpr) star)
 		==> [ :pair | 
 			pair second
 				ifEmpty: [ pair first ]

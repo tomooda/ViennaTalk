@@ -1,3 +1,3 @@
 parsers-definitions
 definitionBlock
-	^ (typeDefinitions / valueDefinitions / functionDefinitions / operationDefinitions / stateDefinition) trim
+	^ (self typeDefinitions / self valueDefinitions / self functionDefinitions / self operationDefinitions / self stateDefinition) trim

@@ -1,7 +1,7 @@
 parsers-definitions
 stateDefinition
 	^ ((self reserved: 'state') , identifier , (self reserved: 'of') , self stateFieldList , invariant optional
-		, initialisation optional , (self reserved: 'end') , semicolon optional)
+		, self initialisation optional , (self reserved: 'end') , semicolon optional)
 		==> [ :array | 
 			{(array second).
 			(array fourth).

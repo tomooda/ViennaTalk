@@ -1,6 +1,6 @@
 parsers-definitions
 accessValueDefinition
-	^ (access optional , valueDefinition)
+	^ (access optional , self valueDefinition)
 		==> [ :pair | 
 			{({(pair first)} reject: #isNil).
 			(pair second)} ]

@@ -1,6 +1,6 @@
 parsers-symbols
 identifier
-	^ (initialLetter , followingLetter star) flatten
+	^ (self initialLetter , followingLetter star) flatten
 		==> [ :str | 
 			((self prefixes
 				anySatisfy: [ :p | str size >= p size and: [ (1 to: p size) allSatisfy: [ :i | (str at: i) = (p at: i) ] ] ])
