@@ -1,10 +1,6 @@
 formatting-statements
 casesStatementAlternative: aViennaNode
-	| patternList expression |
+	| patternList statement |
 	patternList := self format: aViennaNode first.
-	expression := self format: aViennaNode second.
-	^ patternList , ' ->'
-		,
-			((self needsIndent: patternList , expression)
-				ifTrue: [ self newlineIndentString: expression ]
-				ifFalse: [ String space , expression ])
+	statement := self format: aViennaNode second.
+	^ self indentString: patternList , ' ->' insertCrIfNeeded: statement
