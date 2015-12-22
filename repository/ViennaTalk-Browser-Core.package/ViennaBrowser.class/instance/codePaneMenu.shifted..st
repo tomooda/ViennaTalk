@@ -22,6 +22,9 @@ codePaneMenu: aMenu shifted: aBoolean
 			{('undo (z)' translated).
 			#undo}.
 			#-.
+			{('format (F)' translated).
+			#codePaneFormat}.
+			#-.
 			{('do it (d)' translated).
 			#codePaneDoIt}.
 			{('print it (p)' translated).

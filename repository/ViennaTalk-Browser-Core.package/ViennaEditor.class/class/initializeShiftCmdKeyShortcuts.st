@@ -12,7 +12,7 @@ initializeShiftCmdKeyShortcuts
 	self initializeBasicShiftCmdKeyShortcuts.
 	self shiftCmdActions at: 45 + 1 put: #changeEmphasis:.	"cmd-sh-minus"
 	self shiftCmdActions at: 61 + 1 put: #changeEmphasis:.	"cmd-sh-plus"
-	cmds := #($k #changeStyle:).
+	cmds := #($f #format: $k #changeStyle:).
 	1 to: cmds size by: 2 do: [ :i | 
 		self shiftCmdActions at: (cmds at: i) asciiValue + 1 put: (cmds at: i + 1).	"plain keys"
 		self shiftCmdActions at: (cmds at: i) asciiValue - 32 + 1 put: (cmds at: i + 1).	"shifted keys"
