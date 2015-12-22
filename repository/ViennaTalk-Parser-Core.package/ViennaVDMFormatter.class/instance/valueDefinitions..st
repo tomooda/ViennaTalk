@@ -1,3 +1,3 @@
 formatting-definitions
 valueDefinitions: aViennaNode
-	^ 'values' , String cr , indent , (self indentAllStrings: (self formatAll: aViennaNode) withTerminator: ';')
+	^ self indentString: 'values' insertCr: (';' , String cr join: (self formatAll: aViennaNode)) , ';' , String cr

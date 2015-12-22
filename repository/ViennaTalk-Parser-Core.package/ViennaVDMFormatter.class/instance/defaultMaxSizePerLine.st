@@ -1,3 +1,3 @@
 defaults
 defaultMaxSizePerLine
-	^ 60
+	^ 65

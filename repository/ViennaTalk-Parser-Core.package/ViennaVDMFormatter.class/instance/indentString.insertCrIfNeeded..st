@@ -3,10 +3,8 @@ indentString: aString insertCrIfNeeded: anotherString
 	^ anotherString
 		ifEmpty: [ aString ]
 		ifNotEmpty: [ 
-			self
-				indentString:
-					aString
-						,
-							((self needsIndent: aString , anotherString)
-								ifTrue: [ String cr ]
-								ifFalse: [ String space ]) , anotherString ]
+			aString
+				,
+					((self needsIndent: aString , anotherString)
+						ifTrue: [ String cr , indent , (self indentString: anotherString) ]
+						ifFalse: [ String space , anotherString ]) ]

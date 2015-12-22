@@ -9,4 +9,4 @@ subsequence: aViennaNode
 	(self needsIndent: start , end)
 		ifFalse: [ ^ sequence , '(' , String cr , indent , (self indentString: start , ',..., ' , end , ')') ].
 	^ sequence , '(' , String cr , indent
-		, (self indentString: start , ',' , String cr , indent , '..., ' , (self indentString: end , ')'))
+		, ((self indentString: start , ',') , String cr , indent , '..., ' , (self indentString: end , ')'))

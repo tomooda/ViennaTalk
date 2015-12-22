@@ -1,4 +1,5 @@
 formatting-definitions
 functionDefinitions: aViennaNode
-	^ 'functions' , String cr , indent
-		, (self indentAllStrings: (self formatAll: aViennaNode) withTerminator: ';' , String cr)
+	^ self
+		indentString: 'functions'
+		insertCr: (';' , String cr , String cr join: (self formatAll: aViennaNode)) , ';' , String cr

@@ -3,8 +3,4 @@ samebaseclassExpression: aViennaNode
 	| cls expression |
 	cls := self format: aViennaNode first.
 	expression := self format: aViennaNode second.
-	^ 'samebaseclass(' , cls , ','
-		,
-			((self needsIndent: expression)
-				ifTrue: [ String cr , indent , (self indentString: expression) ]
-				ifFalse: [ String space , expression ]) , ')'
+	^ self indentString: 'samebaseclass(' , cls , ',' insertCrIfNeeded: expression , ')'

@@ -7,12 +7,8 @@ explicitFunctionDefinition: aViennaNode
 	identifier2 := self format: aViennaNode fourth.
 	parametersList := self format: aViennaNode fifth.
 	expression := self format: aViennaNode sixth.
-	pre := aViennaNode seventh ifNotNil: [ self format: aViennaNode seventh ] ifNil: [ '' ].
-	post := aViennaNode eighth ifNotNil: [ self format: aViennaNode eighth ] ifNil: [ '' ].
-	measure := aViennaNode ninth ifNotNil: [ self format: aViennaNode ninth ] ifNil: [ '' ].
-	^ identifier1 , typeVariableList , ' : ' , functionType , String cr , identifier2 , parametersList , ' =='
-		,
-			((self needsIndent: expression)
-				ifTrue: [ String cr , indent , (self indentString: expression) ]
-				ifFalse: [ String space , expression ]) , (pre ifNotEmpty: [ String cr , 'pre ' , pre ])
-		, (post ifNotEmpty: [ String cr , 'post ' , post ]) , (measure ifNotEmpty: [ String cr , 'measure ' , measure ])
+	pre := aViennaNode seventh ifNotNil: [ :node | String cr , 'pre ' , (self format: node) ] ifNil: [ '' ].
+	post := aViennaNode eighth ifNotNil: [ :node | String cr , 'post ' , (self format: node) ] ifNil: [ '' ].
+	measure := aViennaNode ninth ifNotNil: [ :node | String cr , 'measure ' , (self format: node) ] ifNil: [ '' ].
+	^ identifier1 , typeVariableList , ' : ' , functionType , String cr
+		, (self indentString: identifier2 , parametersList , ' ==' insertCrIfNeeded: expression) , pre , post , measure

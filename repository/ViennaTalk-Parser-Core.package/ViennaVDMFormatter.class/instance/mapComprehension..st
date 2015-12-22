@@ -4,15 +4,11 @@ mapComprehension: aViennaNode
 	keyExpression := self format: aViennaNode first.
 	valueExpression := self format: aViennaNode second.
 	bindList := self format: aViennaNode third.
-	guard := aViennaNode fourth ifNotNil: [ self format: aViennaNode fourth ] ifNil: [ '' ].
+	guard := aViennaNode fourth ifNil: [ '' ] ifNotNil: [ :node | '& ' , (self format: node) ].
 	(self needsIndent: keyExpression , valueExpression , bindList , guard)
 		ifFalse: [ ^ '{' , keyExpression , ' |-> ' , valueExpression , ' | ' , bindList , ' & ' , guard , '}' ].
 	^ '{'
 		,
-			((self needsIndent: keyExpression , valueExpression)
-				ifTrue: [ keyExpression , String cr , '|-> ' , (self indentString: valueExpression) ]
-				ifFalse: [ keyExpression , ' |-> ' , valueExpression ]) , String cr , indent , '| '
-		,
-			((self needsIndent: bindList , guard)
-				ifTrue: [ (self indentString: bindList) , (guard ifNotEmpty: [ String cr , indent , '& ' , (self indentString: guard) ]) ]
-				ifFalse: [ (self indentString: bindList) , (guard ifNotEmpty: [ ' & ' , guard ]) ]) , '}'
+			(self
+				noIndentString: (self noIndentString: keyExpression insertCrIfNeeded: '|-> ' , valueExpression)
+				insertCrIfNeeded: (self noIndentString: '| ' , bindList insertCrIfNeeded: guard)) , '}'

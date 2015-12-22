@@ -1,4 +1,5 @@
 formatting-definitions
 operationDefinitions: aViennaNode
-	^ 'operations' , String cr , indent
-		, (self indentAllStrings: (self formatAll: aViennaNode) withTerminator: ';' , String cr)
+	^ self
+		indentString: 'operations'
+		insertCr: (';' , String cr , String cr join: (self formatAll: aViennaNode)) , ';' , String cr

@@ -1,3 +1,3 @@
 formatting-statements
 assignStatement: aViennaNode
-	^ self print: (self format: aViennaNode first) withChildren: {(':= ' , (self format: aViennaNode second))}
+	^ self indentString: (self format: aViennaNode first) insertCrIfNeeded: ':= ' , (self format: aViennaNode second)

@@ -1,3 +1,5 @@
 formatting-types
 mapType: aViennaNode
-	^ 'map ' , (self format: aViennaNode first) , ' to ' , (self format: aViennaNode second)
+	^ self
+		noIndentString: (self indentString: 'map' insertCrIfNeeded: (self format: aViennaNode first))
+		insertCrIfNeeded: (self indentString: 'to' insertCrIfNeeded: (self format: aViennaNode second))

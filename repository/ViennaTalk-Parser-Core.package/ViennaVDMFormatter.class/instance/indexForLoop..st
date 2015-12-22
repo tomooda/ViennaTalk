@@ -4,13 +4,13 @@ indexForLoop: aViennaNode
 	identifier := self format: aViennaNode first.
 	start := self format: aViennaNode second.
 	end := self format: aViennaNode third.
-	step := aViennaNode fourth ifNotNil: [ self format: aViennaNode fourth ] ifNil: [ '' ].
+	step := aViennaNode fourth
+		ifNotNil: [ :node | self indentString: 'by ' insertCrIfNeeded: (self format: node) ]
+		ifNil: [ '' ].
 	statement := self format: aViennaNode fifth.
-	(self needsIndent: identifier , start , end , step , statement)
-		ifFalse: [ ^ 'for ' , identifier , ' = ' , start , ' to ' , end , (step ifNotEmpty: [ ' by ' , step ]) , ' do ' , statement ].
-	(self needsIndent: identifier , start , end , step)
-		ifFalse: [ 
-			^ 'for ' , identifier , ' = ' , start , ' to ' , end , (step ifNotEmpty: [ ' by ' , step ]) , String cr , ' do '
-				, (self indentString: statement) ].
-	^ 'for ' , identifier , ' = ' , (self indentString: start) , String cr , 'to ' , (self indentString: end)
-		, (step ifNotEmpty: [ String cr , 'by ' , (self indent: step) ]) , String cr , 'do ' , (self indentString: statement)
+	^ self
+		noIndentString:
+			(self
+				noIndentString: (self indentString: 'for ' , identifier insertCrIfNeeded: '= ' , start)
+				insertCrIfNeeded: (self noIndentString: (self indentString: 'to ' insertCrIfNeeded: end) insertCrIfNeeded: step))
+		insertCrIfNeeded: (self indentString: 'do' insertCrIfNeeded: statement)
