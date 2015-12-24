@@ -1,14 +1,13 @@
 VDM manipulations
 formatSelectionInCodeText
-	| parser editor ast result |
+	| parser editor result |
 	parser := ViennaVDMParser new.
 	editor := codeText widget widget textMorph editor.
 	editor lineSelectAndEmptyCheck: [ ^ '' ].
-	ast := parser expression end / parser statement end / parser type end
+	result := parser expression end / parser statement end / parser type end
 		parse: (codeText text asString copyFrom: editor startIndex to: editor stopIndex - 1) trim.
-	ast isPetitFailure
-		ifTrue: [ ^ codeText notify: ast message at: ast position + 1 in: codeText text ].
-	result := ast format.
+	result isPetitFailure
+		ifTrue: [ ^ codeText notify: result message at: result position + 1 in: codeText text ].
 	editor replaceSelectionWith: result.
 	codeText widget widget
 		selectFrom: editor startIndex to: editor stopIndex - 1;
