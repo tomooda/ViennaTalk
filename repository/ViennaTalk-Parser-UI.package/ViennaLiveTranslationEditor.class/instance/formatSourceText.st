@@ -1,3 +1,3 @@
 VDM manipulations
 formatSourceText
-	^ sourceText text: (ViennaVDMParser new document end parse: sourceText text asString) 
+	^ sourceText text: (ViennaVDMParser new format: sourceText text asString) 
