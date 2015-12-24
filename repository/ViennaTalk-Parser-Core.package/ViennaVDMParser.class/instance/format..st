@@ -1,7 +1,7 @@
 parsing
-parse: aString
+format: aString
 	| ast |
-	ast := super parse: aString.
+	ast := self parse: aString.
 	^ ast isPetitFailure
 		ifTrue: [ ast ]
 		ifFalse: [ 
