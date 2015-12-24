@@ -49,7 +49,8 @@
 		"evaluatorExpression",
 		"connectiveExpression",
 		"relationExpression",
-		"nameList"
+		"nameList",
+		"comment"
 	],
 	"name" : "ViennaVDMGrammar",
 	"type" : "normal"

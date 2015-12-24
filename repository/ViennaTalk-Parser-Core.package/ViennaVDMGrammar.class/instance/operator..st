@@ -1,3 +1,3 @@
 utilities
 operator: aStringOrCharacterOrParser
-	^ aStringOrCharacterOrParser asParser trim
+	^ (comment star , aStringOrCharacterOrParser asParser trim , comment star) ==> #second

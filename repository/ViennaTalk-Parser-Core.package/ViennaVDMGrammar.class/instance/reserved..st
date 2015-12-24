@@ -1,3 +1,4 @@
 utilities
 reserved: aStringOrParser
-	^ (aStringOrParser asParser , followingLetter not) trim ==> [ :pair | pair first ]
+	^ (comment star , (aStringOrParser asParser , followingLetter not) trim , comment star)
+		==> [ :triple | triple second first ]
