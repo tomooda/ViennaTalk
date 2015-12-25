@@ -1,9 +1,7 @@
 request handling-api
 eval: aZnRequest
 	| vdm10 rtc params source module expression states triple json |
-	params := aZnRequest contentType = ZnMimeType applicationJson
-		ifTrue: [ NeoJSONReader fromString: aZnRequest entity ]
-		ifFalse: [ aZnRequest mergedFields ].
+	params := self getParamsFrom: aZnRequest.
 	vdm10 := (params at: 'classic' ifAbsent: [  ]) isNil.
 	rtc := (params at: 'ignoreRuntimeChecking' ifAbsent: [  ]) isNil.
 	source := (params at: 'source' ifAbsent: [ String new ]) trimmed.

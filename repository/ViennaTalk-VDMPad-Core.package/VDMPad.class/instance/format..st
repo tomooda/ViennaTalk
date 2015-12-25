@@ -1,9 +1,7 @@
 request handling-api
 format: aZnRequest
 	| params source formattedSource message json |
-	params := aZnRequest contentType = ZnMimeType applicationJson
-		ifTrue: [ NeoJSONReader fromString: aZnRequest entity ]
-		ifFalse: [ aZnRequest mergedFields ].
+	params := self getParamsFrom: aZnRequest.
 	source := (params at: 'source' ifAbsent: [ String new ]) trimmed copyReplaceAll: String lf with: String cr.
 	message := String new.
 	formattedSource := [ ViennaVDMParser new format: source width: 70 ]

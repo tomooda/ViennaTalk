@@ -1,7 +1,7 @@
 request handling-api
-id: anHttpRequest
+id: aZnRequest
 	| params source states expression result message json |
-	params := anHttpRequest mergedFields.
+	params := self getParamsFrom: aZnRequest.
 	source := (params at: 'source' ifAbsent: [ String new ]) trimmed.
 	states := Dictionary new.
 	params
