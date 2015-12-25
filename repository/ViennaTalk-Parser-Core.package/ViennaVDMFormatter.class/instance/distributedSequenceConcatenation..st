@@ -1,3 +1,3 @@
 formatting-expressions
 distributedSequenceConcatenation: aViennaNode
-	^ 'conc' arg: (self format: aViennaNode first)
+	^ 'conc ' , (self format: aViennaNode first)

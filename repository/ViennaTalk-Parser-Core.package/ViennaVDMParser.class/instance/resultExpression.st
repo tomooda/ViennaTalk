@@ -1,3 +1,3 @@
 parsers-expressions-basics
 resultExpression
-	^ super recordModifier ==> [ :array | ViennaNode label: 'ResultExpression' ]
+	^ super resultExpression ==> [ :array | ViennaNode label: 'ResultExpression' ]
