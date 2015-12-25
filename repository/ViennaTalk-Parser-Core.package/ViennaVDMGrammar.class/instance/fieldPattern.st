@@ -1,6 +1,6 @@
 parsers-patterns
 fieldPattern
-	^ (identifier , mapletArrow , pattern)
+	^ (identifier trim , mapletArrow , pattern)
 		==> [ :triple | 
 			{(triple first).
 			(triple third)} ]

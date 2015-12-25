@@ -1,6 +1,6 @@
 parsers-statements
 fieldReferenceArg
-	^ ((self operator: $.) , identifier)
+	^ ((self operator: $.) , identifier trim)
 		==> [ :pair | 
 			{#fieldReference:with:.
 			(pair second)} ]

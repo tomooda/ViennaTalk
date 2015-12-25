@@ -1,6 +1,6 @@
 parsers-types
 identifiedField
-	^ (identifier , colon , type)
+	^ (identifier trim , colon , type)
 		==> [ :triple | 
 			{(triple first).
 			(triple third)} ]

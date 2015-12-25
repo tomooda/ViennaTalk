@@ -1,3 +1,3 @@
 parsers-patterns
 patternIdentifier
-	^ identifier / ((self operator: $-) ==> [ :op |  nil])
+	^ identifier trim / ((self operator: $-) ==> [ :op |  nil])

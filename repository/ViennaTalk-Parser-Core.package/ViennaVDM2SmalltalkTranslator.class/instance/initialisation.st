@@ -1,6 +1,6 @@
 parsers-definitions
 initialisation
-	^ ((self reserved: 'init') , identifier , (self operator: '==') , identifier , eq , 'mk_' asParser , identifier
+	^ ((self reserved: 'init') , identifier trim, (self operator: '==') , identifier , eq , 'mk_' asParser , identifier
 		, lparen , ((expression separatedBy: comma) withoutSeparators optional ==> [ :opt | opt ifNil: [ Array new ] ])
 		, rparen)
 		==> [ :array | 

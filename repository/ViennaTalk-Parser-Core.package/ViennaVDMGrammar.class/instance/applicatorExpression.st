@@ -18,7 +18,7 @@ applicatorExpression
 							{#functionTypeInstantiation:args:.
 							(array second)} ])
 				/
-					(((self operator: $.) , identifier)
+					(((self operator: $.) , identifier trim)
 						==> [ :array | 
 							{#fieldSelect:with:.
 							(array second)} ])

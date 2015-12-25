@@ -1,6 +1,6 @@
 parsers-definitions
 explicitFunctionDefinition
-	^ (identifier , self typeVariableList , colon , self functionType trim , identifier , self parametersList
+	^ (identifier trim , self typeVariableList , colon , self functionType trim , identifier trim , self parametersList
 		, (self operator: '==') , (expression / self isSubclassResponsibility / self isNotYetSpecified)
 		, (((self reserved: 'pre') , expression) ==> #second) optional
 		, (((self reserved: 'post') , expression) ==> #second) optional

@@ -1,6 +1,6 @@
 parsers-statements
 assignmentDefinition
-	^ (identifier , colon , type , (colonEq , expression) optional)
+	^ (identifier trim , colon , type , (colonEq , expression) optional)
 		==> [ :quatro | 
 			| ident varType initialValue |
 			ident := quatro first.

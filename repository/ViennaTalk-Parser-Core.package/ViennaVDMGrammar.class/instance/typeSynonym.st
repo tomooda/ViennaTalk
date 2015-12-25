@@ -1,6 +1,6 @@
 parsers-definitions
 typeSynonym
-	^ (identifier , eq , type , invariant optional)
+	^ (identifier trim , eq , type , invariant optional)
 		==> [ :quatro | 
 			{(quatro first).
 			(quatro third).

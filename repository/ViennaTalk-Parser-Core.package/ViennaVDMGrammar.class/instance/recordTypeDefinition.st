@@ -1,6 +1,6 @@
 parsers-definitions
 recordTypeDefinition
-	^ (identifier , (self operator: '::') , fieldList , invariant optional)
+	^ (identifier trim , (self operator: '::') , fieldList , invariant optional)
 		==> [ :quatro | 
 			| ident flist inv |
 			ident := quatro first.
