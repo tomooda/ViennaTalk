@@ -16,6 +16,7 @@ initialize
 		at: 'eval' put: #eval:;
 		at: 'id' put: #id:;
 		at: 'test' put: #test:;
+		at: 'format' put: #format:;
 		at: 'vdm2html' put: #vdm2html:;
 		at: 'rootMenuOn.png' put: #rootMenuOn;
 		at: 'rootMenuOff.png' put: #rootMenuOff;

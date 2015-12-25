@@ -255,6 +255,54 @@ VDMPad.init = function () {
     req.send(JSON.stringify(query));
 };
 
+VDMPad.format = function () {
+    VDMPad.messageNode.style.color = "white";
+    var value = VDMPad.valueNode.value;
+    var req = new XMLHttpRequest();
+    req.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            var resultJson = JSON.parse(this.responseText);
+            resultJson.expression = VDMPad.expressionNode.getValue();
+            resultJson.value = value;
+            resultJson.testcases = VDMPad.testcases;
+            VDMPad.loadJson(JSON.stringify(resultJson));
+            VDMPad.messageNode.style.color = "black";
+            VDMPad.disableMakeItATestcaseButton();
+        }
+    };
+    var queryOptions = "?";
+    if (VDMPad.vdmClassicEnabled) {
+        queryOptions += "classic=&";
+    }
+    if (VDMPad.invExceptionsEnabled) {
+        queryOptions += "exceptions=&";
+    }
+    if (!VDMPad.runtimeCheckingEnabled) {
+        queryOptions += "ignoreRuntimeChecking=&";
+    }
+    if (VDMPad.visualEnabled) {
+        queryOptions += "visual=&";
+    }
+    if (VDMPad.unittestEnabled) {
+        queryOptions += "unittest=&";
+    }
+    req.open("POST", "/format"+queryOptions.substring(0,queryOptions.length-1));
+    req.setRequestHeader("Content-Type", "application/json");
+    var query = {};
+    query.source=VDMPad.sourceNode.getValue();
+    query.expression="";
+    query.value=value;
+    query.message=VDMPad.messageNode.textElement || VDMPad.messageNode.textContent;
+    var inputs = document.getElementsByTagName("textarea");
+    for (var inputIndex = 0; inputIndex < inputs.length; inputIndex++) {
+        var input = inputs[inputIndex];
+        if (input.id && input.id.indexOf("`") >= 0) {
+            query[input.id]=input.value;
+        }
+    }
+    req.send(JSON.stringify(query));
+};
+
 VDMPad.eval = function () {
     VDMPad.disableMakeItATestcaseButton();
     var protoTestcase = {};
