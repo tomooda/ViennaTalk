@@ -1,0 +1,3 @@
+accessing
+memberMatchers: anArrayOfWWTTranslationMatcher
+	memberMatchers := anArrayOfWWTTranslationMatcher

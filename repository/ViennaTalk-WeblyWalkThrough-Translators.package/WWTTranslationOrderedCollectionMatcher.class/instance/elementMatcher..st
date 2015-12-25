@@ -1,0 +1,3 @@
+accessing
+elementMatcher: aWWTTranslationMatcher
+	elementMatcher := aWWTTranslationMatcher

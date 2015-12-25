@@ -1,0 +1,3 @@
+translating
+emit: aDictionary
+	^ object

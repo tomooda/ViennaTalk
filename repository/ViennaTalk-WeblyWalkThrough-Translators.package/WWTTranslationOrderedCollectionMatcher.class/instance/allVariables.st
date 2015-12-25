@@ -1,0 +1,3 @@
+accessing
+allVariables
+	^ elementMatcher allVariables
