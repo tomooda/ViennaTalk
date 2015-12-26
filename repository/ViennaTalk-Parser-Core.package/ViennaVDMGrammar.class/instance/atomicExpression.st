@@ -8,4 +8,4 @@ atomicExpression
 		/ self generalIsExpr / self undefinedExpression / self preconditionExpression / self isofbaseclassExpression
 		/ self isofclassExpression / self samebaseclassExpression / self sameclassExpression / self actExpression
 		/ self finExpression / self activeExpression / self reqExpression / self waitingExpression / self timeExpression
-		/ name / self oldName / symbolicLiteral / ((lparen , expression , rparen) ==> [ :triple | triple second ])
+		/ self oldName / name / symbolicLiteral / ((lparen , expression , rparen) ==> [ :triple | triple second ])
