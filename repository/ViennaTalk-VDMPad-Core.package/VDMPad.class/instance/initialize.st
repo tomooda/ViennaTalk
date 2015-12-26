@@ -30,5 +30,6 @@ initialize
 		at: 'deleteS.png' put: #deleteSelectedIcon;
 		at: 'saveT.png' put: #saveTransparentIcon;
 		at: 'vdmj-3.0.1.jar' put: #binaryFileService:;
+		at: 'vdmj-3.1.1.jar' put: #binaryFileService:;
 		at: 'Json4VDMJ.jar' put: #binaryFileService:;
 		yourself
