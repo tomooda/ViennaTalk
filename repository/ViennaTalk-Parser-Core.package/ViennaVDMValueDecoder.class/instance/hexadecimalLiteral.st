@@ -1,3 +1,3 @@
 parsers-expressions
 hexadecimalLiteral
-	^ super hexadecimalLiteral ==> [ :hex | Integer readFrom: hex radix: 16 ]
+	^ ($- asParser optional , super hexadecimalLiteral) flatten trim ==> [ :hex | Integer readFrom: hex radix: 16 ]

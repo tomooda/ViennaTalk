@@ -1,9 +1,5 @@
 {
-	"commentStamp" : "",
-	"super" : "PPCompositeParser",
-	"category" : "ViennaTalk-Parser-Core",
-	"classinstvars" : [ ],
-	"pools" : [ ],
+	"classtraitcomposition" : "TViennaVDMLiteralParser classTrait",
 	"classvars" : [ ],
 	"instvars" : [
 		"document",
@@ -53,5 +49,11 @@
 		"comment"
 	],
 	"name" : "ViennaVDMGrammar",
-	"type" : "normal"
+	"commentStamp" : "",
+	"super" : "PPCompositeParser",
+	"traitcomposition" : "TViennaVDMLiteralParser @ {#basicSymbolicLiteral->#symbolicLiteral}",
+	"type" : "normal",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "ViennaTalk-Parser-Core"
 }

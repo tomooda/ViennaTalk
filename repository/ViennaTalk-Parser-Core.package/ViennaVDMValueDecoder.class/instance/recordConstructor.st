@@ -1,3 +1,8 @@
 parsers-expressions
 recordConstructor
-	^ super tokenConstructor ==> [ :arg | ViennaToken with: arg ]
+	^ super recordConstructor
+		==> [ :constructorAndArgs | 
+			| constructorName args |
+			constructorName := constructorAndArgs first.
+			args := constructorAndArgs second.
+			ViennaComposite constructorName: constructorName withAll: args ]

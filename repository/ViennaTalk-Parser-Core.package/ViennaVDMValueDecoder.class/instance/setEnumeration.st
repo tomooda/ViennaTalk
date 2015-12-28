@@ -1,3 +1,3 @@
 parsers-expressions
 setEnumeration
-	^ super sequenceEnumeration ==> [ :elems | elems asSet ]
+	^ super setEnumeration ==> [ :elems | elems asSet ]

@@ -1,3 +1,3 @@
 parsers-expressions
 decimalLiteral
-	^ super decimalLiteral ==> [ :str | str asNumber ]
+	^ ($- asParser optional , super decimalLiteral) flatten trim ==> [ :str | str trim asNumber ]

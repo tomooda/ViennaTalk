@@ -1,6 +1,6 @@
 parsers-expressions-basics
 name
-	^ (identifier trim , ((self operator: $`) , identifier trim) optional)
+	^ (identifier , ((self operator: $`) , identifier trim) optional)
 		==> [ :pair | 
 			pair second
 				ifNil: [ pair first ]
