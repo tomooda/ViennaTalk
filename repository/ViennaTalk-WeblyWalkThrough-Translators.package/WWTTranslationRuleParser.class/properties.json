@@ -1,0 +1,26 @@
+{
+	"commentStamp" : "",
+	"super" : "PPCompositeParser",
+	"category" : "ViennaTalk-WeblyWalkThrough-Translators",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"vdmSet",
+		"vdmSeq",
+		"vdmMap",
+		"vdmTuple",
+		"vdmComposite",
+		"vdmValue",
+		"vdmPattern",
+		"jsonList",
+		"jsonObj1",
+		"jsonObj2",
+		"jsonValue",
+		"jsonPattern",
+		"var",
+		"rule"
+	],
+	"name" : "WWTTranslationRuleParser",
+	"type" : "normal"
+}

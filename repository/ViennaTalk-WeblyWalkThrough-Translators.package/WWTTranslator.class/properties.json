@@ -1,0 +1,15 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "ViennaTalk-WeblyWalkThrough-Translators",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"matcherPairs",
+		"vdmDecoder",
+		"source"
+	],
+	"name" : "WWTTranslator",
+	"type" : "normal"
+}

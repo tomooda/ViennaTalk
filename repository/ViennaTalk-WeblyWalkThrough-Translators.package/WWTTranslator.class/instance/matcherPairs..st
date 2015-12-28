@@ -1,0 +1,3 @@
+accessing
+matcherPairs: anArrayOfPairOfWWTTranslationMatcher
+	matcherPairs := anArrayOfPairOfWWTTranslationMatcher
