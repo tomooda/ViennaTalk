@@ -20,7 +20,8 @@
 		"codeSelection",
 		"valueSelection",
 		"workspaceSelection",
-		"directory"
+		"directory",
+		"lowerTabPane"
 	],
 	"name" : "ViennaBrowser",
 	"type" : "normal"

@@ -1,0 +1,3 @@
+defaults
+defaultLabel
+	^ 'VDM Browser'
