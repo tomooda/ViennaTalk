@@ -1,0 +1,14 @@
+{
+	"commentStamp" : "",
+	"super" : "ViennaBrowser",
+	"category" : "ViennaTalk-WeblyWalkThrough-Server",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"translationRuleSelection",
+		"translationRulePane"
+	],
+	"name" : "WeblyBrowser",
+	"type" : "normal"
+}
