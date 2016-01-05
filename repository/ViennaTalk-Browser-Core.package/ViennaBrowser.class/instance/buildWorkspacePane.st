@@ -7,5 +7,6 @@ buildWorkspacePane
 		readSelection: #workspaceSelection
 		menu: #workspacePaneMenu:shifted:
 		setSelection: #workspaceSelection:)
+		setBalloonText: 'workspace';
 		askBeforeDiscardingEdits: true;
 		yourself

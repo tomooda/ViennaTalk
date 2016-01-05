@@ -7,5 +7,6 @@ buildCodePane
 		readSelection: #codeSelection
 		menu: #codePaneMenu:shifted:
 		setSelection: #codeSelection:)
+		setBalloonText: 'VDM specification';
 		askBeforeDiscardingEdits: true;
 		yourself
