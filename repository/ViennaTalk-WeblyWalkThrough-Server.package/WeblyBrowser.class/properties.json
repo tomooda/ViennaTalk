@@ -7,7 +7,9 @@
 	"classvars" : [ ],
 	"instvars" : [
 		"translationRuleSelection",
-		"translationRulePane"
+		"translationRulePane",
+		"portField",
+		"publishButton"
 	],
 	"name" : "WeblyBrowser",
 	"type" : "normal"

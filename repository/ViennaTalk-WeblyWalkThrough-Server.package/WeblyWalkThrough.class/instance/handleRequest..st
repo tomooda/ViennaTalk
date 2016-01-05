@@ -11,7 +11,10 @@ handleRequest: aZnRequest
 	args := Array new.
 	method := aZnRequest method asLowercase.
 	method = 'get'
-		ifTrue: [ args := aZnRequest uri query values collect: [ :arg | translator jsonToVdm: arg ] ].
+		ifTrue: [ 
+			args := aZnRequest uri query
+				ifNil: [ #() ]
+				ifNotNil: [ :query | query values collect: [ :arg | translator jsonToVdm: arg ] ] ].
 	method = 'post'
 		ifTrue: [ 
 			(aZnRequest contentType main = 'application' and: [ aZnRequest contentType sub asLowercase = 'json' ])
@@ -25,5 +28,9 @@ handleRequest: aZnRequest
 		ifError: [ :msg | ^ ZnResponse serverError: evalString , String cr , String cr , msg ].
 	resultJson := translator vdmToJson: result.
 	resultJson isPetitFailure
-		ifTrue: [ self halt ].
-	^ ZnResponse ok: (ZnEntity json: resultJson)
+		ifTrue: [ ^ ZnResponse serverError: resultJson printString , ' : ' , result asString ].
+	^ ZnResponse
+		ok:
+			((ZnStringEntity type: ZnMimeType applicationJson)
+				string: resultJson;
+				yourself)

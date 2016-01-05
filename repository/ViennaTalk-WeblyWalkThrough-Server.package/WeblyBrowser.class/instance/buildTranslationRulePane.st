@@ -7,5 +7,6 @@ buildTranslationRulePane
 		readSelection: #translationRuleSelection
 		menu: #translationRulePaneMenu:shifted:
 		setSelection: #translationRuleSelection:)
+		setBalloonText: 'VDM - JSON translation rule';
 		askBeforeDiscardingEdits: true;
 		yourself

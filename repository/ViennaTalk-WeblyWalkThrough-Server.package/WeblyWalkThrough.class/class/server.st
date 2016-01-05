@@ -4,5 +4,4 @@ server
 		ifNil: [ 
 			Server := (ZnMultiThreadedServer on: self defaultPort)
 				register;
-				start;
 				yourself ]

@@ -1,3 +1,3 @@
 accessing
 current
-	^ Current ifNil: [ Current := self new ]
+	^ Current ifNil: [ Current := self default ]
