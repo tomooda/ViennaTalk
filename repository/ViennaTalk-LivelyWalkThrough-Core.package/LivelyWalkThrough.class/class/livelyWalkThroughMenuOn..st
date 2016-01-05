@@ -6,5 +6,4 @@ livelyWalkThroughMenuOn: aBuilder
 		order: 0.481;
 		parent: #Tools;
 		help: 'Lively Walk-Through, a UI prototyping environment using VDM-SL';
-		icon: nil.
-	aBuilder withSeparatorAfter
+		icon: nil
