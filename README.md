@@ -33,7 +33,7 @@ By installing ViennaTalk, the following menu will be available.
 Table of Major Components of ViennaTalk
 
 * [VDMBrowser](VDMBrowser.md)
-* VDMPad
+* [VDMPad](VDMPad.md)
 * VDMC
 * [Lively Walk-Through](LivelyWalk-Through.md)
 * ViennaEngine
