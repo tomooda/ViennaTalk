@@ -1,9 +1,5 @@
 translating
-vdmToJson: aString
-	| vdmObj |
-	vdmObj := vdmDecoder parse: aString.
-	vdmObj isPetitFailure
-		ifTrue: [ ^ aString ].
+vdmToJson: vdmObj
 	matcherPairs
 		do: [ :pair | 
 			| vdmMatcher jsonMatcher |
@@ -14,5 +10,5 @@ vdmToJson: aString
 					| translatedBinds |
 					translatedBinds := Dictionary new.
 					binds keysAndValuesDo: [ :var :val | translatedBinds at: var put: (self vdmToJson: val) ].
-					^ NeoJSONWriter toString: (jsonMatcher emit: translatedBinds) ] ].
-	^ NeoJSONWriter toString: vdmObj
+					^ jsonMatcher emit: translatedBinds ] ].
+	^ vdmObj

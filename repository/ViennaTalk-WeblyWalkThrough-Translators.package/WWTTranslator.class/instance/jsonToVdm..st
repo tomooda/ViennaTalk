@@ -1,9 +1,5 @@
 translating
-jsonToVdm: aString
-	| jsonObj |
-	jsonObj := (NeoJSONReader on: aString readStream)
-		listClass: OrderedCollection;
-		next.
+jsonToVdm: jsonObj
 	matcherPairs
 		do: [ :pair | 
 			| vdmMatcher jsonMatcher |
@@ -14,5 +10,5 @@ jsonToVdm: aString
 					| translatedBinds |
 					translatedBinds := Dictionary new.
 					binds keysAndValuesDo: [ :var :val | translatedBinds at: var put: (self jsonToVdm: val) ].
-					^ (vdmMatcher emit: translatedBinds) viennaString ] ].
-	^ jsonObj viennaString
+					^ (vdmMatcher emit: translatedBinds)  ] ].
+	^ jsonObj 
