@@ -36,7 +36,7 @@ Table of Major Components of ViennaTalk
 * [VDMPad](VDMPad.md)
 * VDMC
 * [Lively Walk-Through](LivelyWalk-Through.md)
-* [Webly Walk-Through](WeblyWalk-Through.md)
+* [Webly Walk-Through](WeblyWalkThrough.md)
 * ViennaEngine
    - ViennaVDMJ
    - ViennaServer
