@@ -14,19 +14,19 @@ handleRequest: aZnRequest
 		ifTrue: [ 
 			args := aZnRequest uri query
 				ifNil: [ #() ]
-				ifNotNil: [ :query | query values collect: [ :arg | translator jsonToVdm: arg ] ] ].
+				ifNotNil: [ :query | query values collect: [ :arg | translator jsonToVdmString: arg ] ] ].
 	method = 'post'
 		ifTrue: [ 
 			(aZnRequest contentType main = 'application' and: [ aZnRequest contentType sub asLowercase = 'json' ])
-				ifTrue: [ args := Array with: (translator jsonToVdm: aZnRequest entity) ].
+				ifTrue: [ args := Array with: (translator jsonToVdmString: aZnRequest entity) ].
 			(aZnRequest contentType main = 'application'
 				and: [ aZnRequest contentType sub asLowercase = 'x-www-form-urlencoded' ])
-				ifTrue: [ args := aZnRequest entity fields values collect: [ :arg | translator jsonToVdm: arg ] ] ].
+				ifTrue: [ args := aZnRequest entity fields values collect: [ :arg | translator jsonToVdmString: arg ] ] ].
 	evalString := ('`' join: path) , '(' , (', ' join: args) , ')'.
 	result := self
 		plainEvaluate: evalString
 		ifError: [ :msg | ^ ZnResponse serverError: evalString , String cr , String cr , msg ].
-	resultJson := translator vdmToJson: result.
+	resultJson := translator vdmToJsonString: result.
 	resultJson isPetitFailure
 		ifTrue: [ ^ ZnResponse serverError: resultJson printString , ' : ' , result asString ].
 	^ ZnResponse
