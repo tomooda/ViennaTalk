@@ -9,7 +9,18 @@ testMatchMunion2
 						at: 2 put: 3;
 						yourself)) asSet
 		equals:
-			{(Dictionary new
+			{Dictionary new
+				at: 'map1'
+					put:
+						(Dictionary new);
+				at: 'map2'
+					put:
+						(Dictionary new
+								at: 1 put: 2;
+								at: 2 put: 3;
+								yourself);
+				yourself.
+				(Dictionary new
 				at: 'map1'
 					put:
 						(Dictionary new
@@ -32,4 +43,15 @@ testMatchMunion2
 						(Dictionary new
 								at: 1 put: 2;
 								yourself);
-				yourself)} asSet
+				yourself).
+				Dictionary new
+				at: 'map1'
+					put:
+						(Dictionary new
+								at: 1 put: 2;
+								at: 2 put: 3;
+								yourself);
+				at: 'map2'
+					put:
+						(Dictionary new);
+				yourself} asSet
