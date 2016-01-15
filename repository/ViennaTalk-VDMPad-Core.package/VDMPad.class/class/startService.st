@@ -1,0 +1,3 @@
+servicing
+startService
+	self installHandler
