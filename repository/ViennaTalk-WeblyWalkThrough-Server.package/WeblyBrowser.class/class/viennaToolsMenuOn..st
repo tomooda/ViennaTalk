@@ -1,8 +1,7 @@
 menus
-WeblyBrowserMenuOn: aBuilder
-	<worldMenu>
+viennaToolsMenuOn: aBuilder
+	<ViennaTools>
 	(aBuilder item: #'Webly WalkThrough')
-		parent: #ViennaTalk;
 		order: 0.3;
 		action: [ self open ];
 		help: 'open Webly Walk-Through';
