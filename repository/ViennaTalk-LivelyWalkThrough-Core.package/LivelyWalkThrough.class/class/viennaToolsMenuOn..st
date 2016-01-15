@@ -1,6 +1,6 @@
 world menu
 viennaToolsMenuOn: aBuilder
-	<ViennaTools>
+	<ViennaToolsMenu>
 	(aBuilder item: #'Lively WalkThrough')
 		action: [ self openVDMJ ];
 		order: 0.2;
