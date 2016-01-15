@@ -1,3 +1,5 @@
+![ViennaTalk logo](images/ViennaTalk-logo.png)
+
 Documentation for ViennaTalk
 ===
 ViennaTalk is a Smalltalk library to handle VDM-SL specifications.
