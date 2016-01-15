@@ -4,7 +4,7 @@ initialize
 	super initialize.
 	self title: self defaultTitle.
 	toolsMenu := self newMenu
-		addAllFromPragma: #ViennaTools target: self;
+		addAllFromPragma: #ViennaToolsMenu target: self;
 		addLine;
 		add: 'reopen' target: self selector: #reopen;
 		add: 'close' target: self selector: #close;
