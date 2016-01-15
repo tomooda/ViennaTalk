@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "StandardWindow",
+	"category" : "ViennaTalk-Launcher-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [
+		"Current"
+	],
+	"instvars" : [ ],
+	"name" : "ViennaLauncher",
+	"type" : "normal"
+}
