@@ -1,9 +1,8 @@
 world menu
-livelyWalkThroughMenuOn: aBuilder
-	<worldMenu>
+viennaToolsMenuOn: aBuilder
+	<ViennaTools>
 	(aBuilder item: #'Lively WalkThrough')
 		action: [ self openVDMJ ];
 		order: 0.2;
-		parent: #ViennaTalk;
 		help: 'Lively Walk-Through, a UI prototyping environment using VDM-SL';
 		icon: nil
