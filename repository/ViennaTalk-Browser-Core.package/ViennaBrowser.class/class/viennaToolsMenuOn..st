@@ -1,9 +1,8 @@
 world menu
-VDMBrowserMenuOn: aBuilder
-	<worldMenu>
+viennaToolsMenuOn: aBuilder
+	<ViennaTools>
 	(aBuilder item: #'VDM Browser')
 		action: [ self open ];
 		order: 0.1;
-		parent: #ViennaTalk;
 		help: 'VDM-SL browser';
 		icon: nil
