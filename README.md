@@ -28,7 +28,15 @@ Gofer new smalltalkhubUser: 'tomooda' project: 'ViennaTalk';
 
 How to use
 ---
-By installing ViennaTalk, the following menu will be available.
+The ViennaTalk Launcher provides quick access.
+
+![ViennaLauncher](images/ViennaLauncher.png)
+
+The tools menu provies shortcuts to the tools, such as VDM Browser, Lively Walk-Through and so on.
+
+![ViennaLauncher tools menu](images/ViennaLauncher-menu.png)
+
+The *ViennaTalk* menu will be available in the World menu.
 
 ![World->Tools menu items for ViennaTalk](https://github.com/tomooda/ViennaTalk-doc/blob/master/images/ViennaTalk-menu.png)
 
