@@ -1,8 +1,10 @@
 user interface
 buildFieldList
-	^ PluggableListMorph
+	^ (PluggableListMorph
 		on: self
 		list: #fieldList
 		selected: #fieldSelectionIndex
 		changeSelected: #fieldSelectionIndex:
-		menu: #fieldListMenu:
+		menu: #fieldListMenu:)
+		font: ViennaLauncher font;
+		yourself
