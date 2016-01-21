@@ -8,4 +8,7 @@ buildCodePane
 		menu: #codePaneMenu:shifted:
 		setSelection: #codeSelection:)
 		askBeforeDiscardingEdits: true;
+		bindKeyCombination: $d command toAction: [  ];
+		bindKeyCombination: $p command toAction: [  ];
+		font: ViennaLauncher font;
 		yourself

@@ -1,8 +1,10 @@
 user interface
 buildScriptList
-	^ PluggableListMorph
+	^ (PluggableListMorph
 		on: self
 		list: #scriptList
 		selected: #scriptListIndex
 		changeSelected: #scriptListIndex:
-		menu: #scriptListMenu:shifted:
+		menu: #scriptListMenu:shifted:)
+		font: ViennaLauncher font;
+		yourself
