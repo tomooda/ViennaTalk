@@ -6,6 +6,8 @@ initialize
 	toolsMenu := self newMenu
 		addAllFromPragma: #ViennaToolsMenu target: self;
 		addLine;
+		add: 'settings...' target: self selector: #showSettingBrowser;
+		addLine;
 		add: 'reopen' target: self selector: #reopen;
 		add: 'close' target: self selector: #close;
 		yourself.

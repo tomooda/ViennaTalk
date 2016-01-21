@@ -5,7 +5,8 @@
 	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [
-		"Current"
+		"Current",
+		"Font"
 	],
 	"instvars" : [ ],
 	"name" : "ViennaLauncher",
