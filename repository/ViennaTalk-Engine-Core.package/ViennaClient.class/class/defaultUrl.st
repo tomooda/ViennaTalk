@@ -1,3 +1,3 @@
 defaults
 defaultUrl
-	^ 'http://vdmpad.csce.kyushu-u.ac.jp/' asUrl
+	^ DefaultUrl ifNil: [ DefaultUrl := 'http://vdmpad.csce.kyushu-u.ac.jp/' asUrl ]
