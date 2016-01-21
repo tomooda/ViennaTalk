@@ -1,3 +1,3 @@
 defaults
 defaultNameFont
-	^ TextStyle default defaultFont
+	^ ViennaLauncher font
