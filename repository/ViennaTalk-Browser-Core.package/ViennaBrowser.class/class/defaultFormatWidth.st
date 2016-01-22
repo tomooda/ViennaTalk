@@ -1,0 +1,3 @@
+defaults
+defaultFormatWidth
+	^ 65

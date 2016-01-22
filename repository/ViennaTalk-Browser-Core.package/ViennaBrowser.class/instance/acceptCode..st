@@ -1,14 +1,20 @@
 code pane
 acceptCode: aStringOrText
-	self autoFormat
-		ifTrue: [ self formatIn: codePane ].
 	vdmc
 		ifNotNil: [ 
-			| code oldModulePositions newModuleNames oldSpec newSpec |
-			code := aStringOrText asString trimmed copyWith: Character cr.
+			| code oldModulePositions newModulePositions newModuleNames oldSpec newSpec |
+			code := (self autoFormat
+				ifTrue: [ 
+					(ViennaVDMParser new format: aStringOrText)
+						in: [ :formatted | 
+							formatted isPetitFailure
+								ifTrue: [ aStringOrText ]
+								ifFalse: [ formatted ] ] ]
+				ifFalse: [ aStringOrText ]) asString trimmed copyWith: Character cr.
 			oldSpec := vdmc specification.
 			oldModulePositions := self modulePositionsFrom: oldSpec.
-			newModuleNames := ((self modulePositionsFrom: code) collect: #key) asSet.
+			newModulePositions := self modulePositionsFrom: code.
+			newModuleNames := (newModulePositions collect: #key) asSet.
 			newSpec := String
 				new: 1024
 				streamContents: [ :stream | 
@@ -17,6 +23,7 @@ acceptCode: aStringOrText
 						do: [ :assoc | 
 							(newModuleNames includes: assoc key)
 								ifFalse: [ stream nextPutAll: (oldSpec copyFrom: assoc value first to: assoc value last) ] ] ].
+			codePane hasUnacceptedEdits: false.
 			vdmc
 				specification: newSpec
 				ifError: [ :msg | 
@@ -41,6 +48,6 @@ acceptCode: aStringOrText
 										ifTrue: [ charPos := (((lines copyFrom: 1 to: linePos - 1) collect: #size) + 1) sum + colPos ] ] ].
 					^ codePane handleEdit: [ codePane notify: message at: charPos in: code readStream ] ].
 			codePane hasUnacceptedEdits: false.
-			self selectModuleNamed: (newModuleNames ifEmpty: [ nil ] ifNotEmpty: [ newModuleNames first ]).
+			self selectModuleNamed: (newModulePositions ifEmpty: [ nil ] ifNotEmpty: [ newModulePositions first key ]).
 			^ true ].
 	^ false
