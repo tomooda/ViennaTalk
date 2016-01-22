@@ -44,7 +44,24 @@ The *ViennaTalk* menu will be available in the World menu.
 
 ![World->Tools menu items for ViennaTalk](https://github.com/tomooda/ViennaTalk-doc/blob/master/images/ViennaTalk-menu.png)
 
+Settings
+---
+You can open the Settings dialog from either Tools>>settings... menu of ViennaLauncher or System>>Settings menu of the World menu.
+
+![settings menu of ViennaLauncher](images/SettingsMenu.png)
+
+Then the Settings Browser opens.
+
+![SettingsBrowser](images/SettingsBrowser.png)
+
+If you want to setup the font for VDM sources, you can click on the font to open a font chooser dialog.
+
+![FontChooser dialog](images/SettingsFont.png)
+
+The update button will read all available fonts in the system. You can then choose the font family and point size, and press OK.
+
 Table of Major Components of ViennaTalk
+---
 
 * [VDMBrowser](VDMBrowser.md)
 * [VDMPad](VDMPad.md)
