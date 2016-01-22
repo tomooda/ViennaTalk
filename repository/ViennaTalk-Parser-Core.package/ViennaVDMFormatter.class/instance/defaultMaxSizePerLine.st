@@ -1,3 +1,3 @@
 defaults
 defaultMaxSizePerLine
-	^ 65
+	^ self class defaultMaxSizePerLine

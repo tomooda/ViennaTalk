@@ -5,6 +5,7 @@
 	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [
+		"DefaultMaxSizePerLine",
 		"OperatorGrouping",
 		"OperatorPrecedence"
 	],
