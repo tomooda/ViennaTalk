@@ -1,3 +1,3 @@
 running
 setUp
-	fixture := ViennaClient default
+	fixture := ViennaClient on: 'http://localhost:8088/'
