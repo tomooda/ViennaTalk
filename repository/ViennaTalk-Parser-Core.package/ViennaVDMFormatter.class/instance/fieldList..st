@@ -1,4 +1,4 @@
-formatting-expressions
+formatting-types
 fieldList: aViennaNode
 	| fields |
 	fields := self formatAll: aViennaNode.

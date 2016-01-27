@@ -1,4 +1,4 @@
-formatting-expressions
+formatting-types
 field: aViennaNode
 	| name equalityAbstraction type |
 	name := aViennaNode first.
