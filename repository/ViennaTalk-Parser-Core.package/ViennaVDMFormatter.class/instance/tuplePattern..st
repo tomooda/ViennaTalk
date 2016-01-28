@@ -1,9 +1,9 @@
 formatting-patterns and binds
 tuplePattern: aViennaNode
-	| expressionList |
-	expressionList := self format: aViennaNode first.
+	| patternList |
+	patternList := self format: aViennaNode first.
 	^ 'mk_('
 		,
-			((self needsIndent: expressionList)
-				ifTrue: [ String cr , indent , (self indentString: expressionList) ]
-				ifFalse: [ expressionList ]) , ')'
+			((self needsIndent: patternList)
+				ifTrue: [ String cr , indent , (self indentString: patternList) ]
+				ifFalse: [ patternList ]) , ')'

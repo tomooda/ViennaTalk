@@ -1,4 +1,4 @@
-variables
+free variables
 freeVariables: aViennaNode boundVars: aSet into: free
 	(aViennaNode isString or: [ aViennaNode isNil ])
 		ifFalse: [ 

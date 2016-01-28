@@ -1,10 +1,10 @@
 formatting-patterns and binds
 recordPattern: aViennaNode
-	| constructor expressionList |
+	| constructor patternList |
 	constructor := self format: aViennaNode first.
-	expressionList := self format: aViennaNode second.
+	patternList := self format: aViennaNode second.
 	^ 'mk_' , constructor , '('
 		,
-			((self needsIndent: constructor , expressionList)
-				ifTrue: [ String cr , indent , (self indentString: expressionList) ]
-				ifFalse: [ expressionList ]) , ')'
+			((self needsIndent: constructor , patternList)
+				ifTrue: [ String cr , indent , (self indentString: patternList) ]
+				ifFalse: [ patternList ]) , ')'
