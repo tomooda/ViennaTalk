@@ -1,4 +1,4 @@
-test-bound variables-types
+tests-bound variables-types
 testBoundVariablesFieldInto
 	| node binds |
 	node := ViennaVDMParser new field end parse: 'f : t'.

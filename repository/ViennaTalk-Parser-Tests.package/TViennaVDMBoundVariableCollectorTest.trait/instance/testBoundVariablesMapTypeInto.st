@@ -1,13 +1,13 @@
 tests-bound variables-types
-testBoundVariablesFieldListInto
+testBoundVariablesMapTypeInto
 	| node binds |
-	node := ViennaVDMParser new fieldList end parse: 'f1 : t1 f2 :- t2 t3'.
+	node := ViennaVDMParser new mapType end parse: 'map t1 to t2'.
 	self deny: node isPetitFailure.
-	self assert: node label = 'FieldList'.
+	self assert: node label = 'MapType'.
 	binds := Set new.
 	ViennaVDM2Smalltalk new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
-			{'f1'.
-			'f2'} asSet
+			{'t1'.
+			't2'} asSet
