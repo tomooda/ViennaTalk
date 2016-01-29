@@ -1,5 +1,7 @@
 {
-	"name" : "TViennaVDMFreeVariableCollector",
 	"commentStamp" : "",
-	"category" : "ViennaTalk-Parser-Core"
+	"traitcomposition" : "TViennaVDMBoundVariableCollector",
+	"classtraitcomposition" : "TViennaVDMBoundVariableCollector classTrait",
+	"category" : "ViennaTalk-Parser-Core",
+	"name" : "TViennaVDMFreeVariableCollector"
 }

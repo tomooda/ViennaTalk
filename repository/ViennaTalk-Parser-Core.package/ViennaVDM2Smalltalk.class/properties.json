@@ -1,13 +1,15 @@
 {
-	"commentStamp" : "",
-	"super" : "Object",
-	"category" : "ViennaTalk-Parser-Core",
-	"classinstvars" : [ ],
-	"pools" : [ ],
+	"classtraitcomposition" : "TViennaVDMFreeVariableCollector classTrait",
 	"classvars" : [ ],
 	"instvars" : [
 		"decoder"
 	],
 	"name" : "ViennaVDM2Smalltalk",
-	"type" : "normal"
+	"commentStamp" : "",
+	"super" : "Object",
+	"traitcomposition" : "TViennaVDMFreeVariableCollector",
+	"type" : "normal",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "ViennaTalk-Parser-Core"
 }

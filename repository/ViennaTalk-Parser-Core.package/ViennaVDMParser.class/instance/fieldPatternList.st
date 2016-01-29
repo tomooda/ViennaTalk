@@ -1,3 +1,3 @@
 parsers-patterns
 fieldPatternList
-	^ super fieldPattern ==> [ :array | ViennaNode label: 'FieldPatternList' withAll: array ]
+	^ super fieldPatternList ==> [ :array | ViennaNode label: 'FieldPatternList' withAll: array ]

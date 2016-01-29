@@ -8,4 +8,4 @@ boundVariablesStateDefinition: aViennaNode into: aSet
 	aSet add: identifier.
 	invariant ifNotNil: [ aSet add: 'inv_' , identifier ].
 	initialisation ifNotNil: [ aSet add: 'init_' , identifier ].
-	stateFieldList boundVariables: aViennaNode into: aSet
+	self boundVariables: stateFieldList into: aSet
