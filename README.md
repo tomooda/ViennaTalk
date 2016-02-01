@@ -4,6 +4,19 @@ Documentation for ViennaTalk
 ===
 ViennaTalk is a Smalltalk library to handle VDM-SL specifications.
 
+Table of Major Components of ViennaTalk
+---
+
+* [VDMBrowser](VDMBrowser.md) - A VDM-SL browser inspired by Smalltalk's class browsers and inspectors
+* [VDMPad](VDMPad.md) - A lightweight web IDE for VDM-SL with animation and diagram presentation of data
+* VDMC - A Smalltalk wrapper of VDM-SL animation
+* [Lively Walk-Through](LivelyWalk-Through.md) - A UI prototyping environment to animate UI prototype by VDM-SL specification
+* [Webly Walk-Through](WeblyWalkThrough.md) - A Web API server to publish VDM-SL specifications of web APIs.
+* ViennaEngine - Animation engine wrapper
+   - ViennaVDMJ - Animation engine by local VDMJ process
+   - ViennaServer - Web server to publish animation engines
+   - ViennaClient - Client module of ViennaServer/VDMPad
+   - ViennaBankEngine - Aggregated animation engine
 
 Platform
 ---
@@ -59,22 +72,6 @@ If you want to setup the font for VDM sources, you can click on the font to open
 ![FontChooser dialog](images/SettingsFont.png)
 
 The update button will read all available fonts in the system. You can then choose the font family and point size, and press OK.
-
-Table of Major Components of ViennaTalk
----
-
-* [VDMBrowser](VDMBrowser.md)
-* [VDMPad](VDMPad.md)
-* VDMC
-* [Lively Walk-Through](LivelyWalk-Through.md)
-* [Webly Walk-Through](WeblyWalkThrough.md)
-* ViennaEngine
-   - ViennaVDMJ
-   - ViennaServer
-   - ViennaClient
-   - ViennaBankEngine
-
-
 
 Acknowledgement
 ---
