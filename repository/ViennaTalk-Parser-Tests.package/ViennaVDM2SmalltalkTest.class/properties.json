@@ -1,11 +1,11 @@
 {
-	"classtraitcomposition" : "TViennaVDMBoundVariableCollectorTest classTrait",
+	"classtraitcomposition" : "TViennaVDMBoundVariableCollectorTest classTrait + TViennaVDMFreeVariableCollectorTest classTrait",
 	"classvars" : [ ],
 	"instvars" : [ ],
 	"name" : "ViennaVDM2SmalltalkTest",
 	"commentStamp" : "",
 	"super" : "TestCase",
-	"traitcomposition" : "TViennaVDMBoundVariableCollectorTest",
+	"traitcomposition" : "TViennaVDMBoundVariableCollectorTest + TViennaVDMFreeVariableCollectorTest",
 	"type" : "normal",
 	"classinstvars" : [ ],
 	"pools" : [ ],
