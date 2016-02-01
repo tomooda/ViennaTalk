@@ -1,5 +1,5 @@
 free variables-expressions
-freeVariablesLambda: aViennaNode boundVars: boundVars into: freeVars
+freeVariablesLambdaExpression: aViennaNode boundVars: boundVars into: freeVars
 	| binds typeBindList expressionBody |
 	binds := boundVars copy.
 	typeBindList := aViennaNode first.
