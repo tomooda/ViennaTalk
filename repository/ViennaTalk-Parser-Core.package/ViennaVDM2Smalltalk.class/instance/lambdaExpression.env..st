@@ -1,7 +1,7 @@
 code generation-expressions
 lambdaExpression: aViennaNode env: aDictionary
 	| patterns body varGenerator vars |
-	patterns := (self generate: aViennaNode first env: aDictionary) collect: #first.
+	patterns := (self generate: aViennaNode first env: aDictionary).
 	body := self generate: aViennaNode second env: aDictionary.
 	varGenerator := self varNameGenerator: 'lmd' uniqueIn: (Array with: body).
 	vars := patterns collect: [ :p | varGenerator value ].
