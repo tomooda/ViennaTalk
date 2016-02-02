@@ -1,7 +1,8 @@
 code generation-expressions
 defExpression: aViennaNode env: aDictionary
-	| defs expr vars |
-	defs := self generate: aViennaNode first env: aDictionary.
+	| definitionList defs expr vars |
+	definitionList := ViennaNode label: aViennaNode first label withAll: (self reorderDefinitions: aViennaNode first).
+	defs := self generate: definitionList env: aDictionary.
 	expr := self generate: aViennaNode second env: aDictionary.
 	vars := Array new: defs size streamContents: [ :stream | defs do: [ :def | stream nextPutAll: def first first ] ].
 	^ '[|' , (' ' join: vars) , '|'
