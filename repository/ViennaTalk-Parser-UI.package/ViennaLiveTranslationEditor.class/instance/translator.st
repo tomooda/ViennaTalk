@@ -1,3 +1,3 @@
 accessing
 translator
-	^ translator ifNil: [ translator := self translatorClass new document end ]
+	^ translator ifNil: [ translator := self createTranslator ]

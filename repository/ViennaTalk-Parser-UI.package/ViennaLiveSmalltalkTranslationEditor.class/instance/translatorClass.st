@@ -1,3 +1,0 @@
-class access
-translatorClass
-	^ ViennaVDM2SmalltalkTranslator

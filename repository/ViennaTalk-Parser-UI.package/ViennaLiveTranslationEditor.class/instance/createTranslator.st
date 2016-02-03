@@ -1,3 +1,3 @@
-accessing
-translatorClass
+private
+createTranslator
 	^ self subclassResponsibility
