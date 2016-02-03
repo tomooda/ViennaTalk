@@ -6,10 +6,10 @@ testIfExpressionEnv
 	self assert: node label = 'IfExpression'.
 	self
 		assert: (Compiler evaluate: (ViennaVDM2Smalltalk new generate: node env: {('x' -> '1')} asDictionary))
-		equals: #'<positive>'.
+		equals: #positive.
 	self
 		assert: (Compiler evaluate: (ViennaVDM2Smalltalk new generate: node env: {('x' -> '0')} asDictionary))
-		equals: #'<zero>'.
+		equals: #zero.
 	self
 		assert: (Compiler evaluate: (ViennaVDM2Smalltalk new generate: node env: {('x' -> '-1')} asDictionary))
-		equals: #'<negative>'
+		equals: #negative

@@ -1,0 +1,66 @@
+tests-code generation-expressions
+testLogicalEquivalenceEnv
+	| node |
+	node := ViennaVDMParser new expression end parse: 'x <=> y'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'LogicalEquivalence'.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2Smalltalk new
+						generate: node
+						env:
+							{('x' -> 'true').
+							('y' -> 'true')} asDictionary))
+		equals: true.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2Smalltalk new
+						generate: node
+						env:
+							{('x' -> 'true').
+							('y' -> 'false')} asDictionary))
+		equals: false.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2Smalltalk new
+						generate: node
+						env:
+							{('x' -> 'false').
+							('y' -> 'true')} asDictionary))
+		equals: false.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2Smalltalk new
+						generate: node
+						env:
+							{('x' -> 'false').
+							('y' -> 'false')} asDictionary))
+		equals: true.
+	self
+		should: [ 
+			Compiler
+				evaluate:
+					(ViennaVDM2Smalltalk new
+						generate: node
+						env:
+							{('x' -> 'false').
+							('y' -> self undefined)} asDictionary) ]
+		raise: ViennaUndefinedEvaluationError.
+	self
+		should: [ 
+			Compiler
+				evaluate:
+					(ViennaVDM2Smalltalk new
+						generate: node
+						env:
+							{('x' -> 'true').
+							('y' -> self undefined)} asDictionary) ]
+		raise: ViennaUndefinedEvaluationError
