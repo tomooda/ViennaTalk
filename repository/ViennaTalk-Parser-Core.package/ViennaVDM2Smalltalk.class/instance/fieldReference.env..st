@@ -1,8 +1,8 @@
 code generation-statements
-mapOrSequenceReference: aViennaNode env: aDictionary
-	| stateDesig expr ident path |
+fieldReference: aViennaNode env: aDictionary
+	| stateDesig field ident path |
 	stateDesig := self generate: aViennaNode first env: aDictionary.
-	expr := self generate: aViennaNode second env: aDictionary.
+	field := self generate: aViennaNode second env: aDictionary.
 	stateDesig isString
 		ifTrue: [ 
 			ident := stateDesig.
@@ -11,4 +11,4 @@ mapOrSequenceReference: aViennaNode env: aDictionary
 			ident := stateDesig first.
 			path := stateDesig second ].
 	^ {ident.
-	(path copyWith: expr)}
+	(path copyWith: field storeString)}

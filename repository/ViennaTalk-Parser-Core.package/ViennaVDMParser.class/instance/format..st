@@ -1,7 +1,7 @@
 parsing
 format: aString
 	| ast |
-	ast := self parse: aString.
+	ast := self document end / self statement end / self expression end parse: aString.
 	^ ast isPetitFailure
 		ifTrue: [ ast ]
 		ifFalse: [ 
