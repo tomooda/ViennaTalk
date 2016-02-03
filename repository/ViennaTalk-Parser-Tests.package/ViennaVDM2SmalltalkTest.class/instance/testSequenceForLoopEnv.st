@@ -1,0 +1,7 @@
+tests-code generation-statements
+testSequenceForLoopEnv
+	| node |
+	node := ViennaVDMParser new statement end parse: 'for i in [5,6,7] do x := x + i'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SequenceForLoop'.
+	self assert: (Compiler evaluate: '|x|x:=0.' , (ViennaVDM2Smalltalk new generate: node) , '. x') equals: 18
