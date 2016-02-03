@@ -1,3 +1,3 @@
 code generation-expressions
 floor: aViennaNode env: aDictionary
-	^ (self generate: aViennaNode env: aDictionary) , ' floor'
+	^ (self generate: aViennaNode first env: aDictionary) , ' floor'

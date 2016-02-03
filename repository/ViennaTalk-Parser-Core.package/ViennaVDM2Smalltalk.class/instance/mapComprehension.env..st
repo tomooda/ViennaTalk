@@ -4,7 +4,7 @@ mapComprehension: aViennaNode env: aDictionary
 	keyExpr := self generate: aViennaNode first env: aDictionary.
 	valueExpr := self generate: aViennaNode second env: aDictionary.
 	binds := self generate: aViennaNode third env: aDictionary.
-	guard := self generate: ViennaNode fourth env: aDictionary.
+	guard := self generate: aViennaNode fourth env: aDictionary.
 	varGenerator := self
 		varNameGenerator: 'map'
 		uniqueIn:

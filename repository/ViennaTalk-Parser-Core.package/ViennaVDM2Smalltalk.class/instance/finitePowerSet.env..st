@@ -1,3 +1,3 @@
 code generation-expressions
 finitePowerSet: aViennaNode env: aDictionary
-	^ (self generate: aViennaNode env: aDictionary) , ' power'
+	^ (self generate: aViennaNode first env: aDictionary) , ' power'
