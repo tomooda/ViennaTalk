@@ -1,10 +1,15 @@
 code generation-statements
 setForLoop: aViennaNode env: aDictionary
-	| pat setExpr body varGenerator |
+	| pat setExpr body vars varGenerator |
 	pat := self generate: aViennaNode first env: aDictionary.
-	setExpr := self generate: aViennaNode second env: aDictionary.
+	setExpr := aViennaNode second label = 'SetRangeExpression'
+		ifTrue: [ self intervalExpression: aViennaNode second env: aDictionary ]
+		ifFalse: [ self generate: aViennaNode second env: aDictionary ].
 	body := self generate: aViennaNode third env: aDictionary.
-	varGenerator := self varNameGenerator: 'for' uniqueIn: (Array with: setExpr with: body) , pat first.
+	aViennaNode first label = 'PatternIdentifier'
+		ifTrue: [ ^ setExpr , ' do: [:' , aViennaNode first first , ' | ' , body , ']' ].
+	vars := (self boundVariables: aViennaNode first) asArray.
+	varGenerator := self varNameGenerator: 'for' uniqueIn: (Array with: setExpr with: body) , vars.
 	^ String
 		new: 1024
 		streamContents: [ :stream | 
@@ -12,12 +17,12 @@ setForLoop: aViennaNode env: aDictionary
 			loopVar := varGenerator value.
 			stream
 				nextPutAll: setExpr;
-				nextPutAll: ' asSortedCollection do: [:';
+				nextPutAll: ' do: [:';
 				nextPutAll: loopVar;
 				nextPutAll: '||';
-				nextPutAll: (' ' join: pat first);
+				nextPutAll: (' ' join: vars);
 				nextPutAll: '|';
-				nextPutAll: (self binder: pat second with: loopVar vars: pat first);
+				nextPutAll: (self binder: pat with: loopVar vars: vars);
 				nextPutAll: ' ifFalse: [ViennaNoMatch signal].'.
 			stream nextPutAll: body.
 			stream nextPutAll: ']' ]

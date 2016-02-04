@@ -1,20 +1,26 @@
 code generation-expressions
 sequenceComprehension: aViennaNode env: aDictionary
-	| expr setBinding pat vars matcher set guard varGenerator seq |
+	| patternNode typeOrSetNode expr guard varGenerator seq |
 	expr := self generate: aViennaNode first env: aDictionary.
-	setBinding := self generate: aViennaNode second env: aDictionary.
+	patternNode := aViennaNode second first.
+	typeOrSetNode := aViennaNode second second.
 	guard := self generate: aViennaNode third env: aDictionary.
-	pat := setBinding first.
-	vars := pat first.
-	matcher := pat second.
-	set := setBinding second.
 	varGenerator := self
 		varNameGenerator: 'seq'
 		uniqueIn:
 			{expr.
-			matcher.
-			set.
 			(guard ifNil: [ '' ])}.
+	patternNode label = 'PatternIdentifier'
+		ifTrue: [ 
+			| set var |
+			set := typeOrSetNode label = 'SetRangeExpression'
+				ifTrue: [ 
+					'(' , (self generate: typeOrSetNode first env: aDictionary) , ' to: '
+						, (self generate: typeOrSetNode second env: aDictionary) , ')' ]
+				ifFalse: [ (self generate: typeOrSetNode env: aDictionary) , ' asSortedCollection asOrderedCollection' ].
+			var := patternNode first.
+			^ '(' , set , (guard ifNotNil: [ ' select: [ :' , var , '|' , guard , '] thenCollect:' ] ifNil: [ ' collect:' ])
+				, ' [:' , var , '|' , expr , ']) asOrderedCollection' ].
 	seq := varGenerator value.
 	^ String
 		new: 1024
@@ -27,10 +33,11 @@ sequenceComprehension: aViennaNode env: aDictionary
 				nextPutAll: ':= OrderedCollection new.';
 				nextPutAll:
 						(self
-								generatorCodeFromVar: vars
-								matcher: matcher
-								set: set , ' asSortedCollection'
-								varGenerator: varGenerator).
+								generatorCodePattern: patternNode
+								typeOrSet: typeOrSetNode
+								needsSort: true
+								varGenerator: varGenerator
+								env: aDictionary).
 			guard
 				ifNotNil: [ 
 					stream

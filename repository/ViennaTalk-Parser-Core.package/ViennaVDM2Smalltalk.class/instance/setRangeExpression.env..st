@@ -1,6 +1,3 @@
 code generation-expressions
 setRangeExpression: aViennaNode env: aDictionary
-	| arg1 arg2 |
-	arg1 := self generate: aViennaNode first env: aDictionary.
-	arg2 := self generate: aViennaNode second env: aDictionary.
-	^ '(' , arg1 , ' to: ' , arg2 , ') asSet'
+	^ '(', (self intervalExpression: aViennaNode env: aDictionary) , ') asSet'

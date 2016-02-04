@@ -4,15 +4,5 @@ defExpression: aViennaNode env: aDictionary
 	definitionList := ViennaNode label: aViennaNode first label withAll: (self reorderDefinitions: aViennaNode first).
 	defs := self generate: definitionList env: aDictionary.
 	expr := self generate: aViennaNode second env: aDictionary.
-	vars := Array new: defs size streamContents: [ :stream | defs do: [ :def | stream nextPutAll: def first first ] ].
-	^ '[|' , (' ' join: vars) , '|'
-		,
-			('.'
-				join:
-					(defs
-						collect: [ :def | 
-							| left right |
-							left := def first.
-							right := def second.
-							self binder: left second with: right vars: left first ])) , ' ifFalse: [ViennaNoMatch signal].' , expr
-		, '] value'
+	vars := (self boundVariables: aViennaNode first) asArray.
+	^ '[|' , (' ' join: vars) , '|' , ('.' join: defs) , ' ifFalse: [ViennaNoMatch signal].' , expr , '] value'

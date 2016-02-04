@@ -1,28 +1,46 @@
 code generation-expressions
 lambdaExpression: aViennaNode env: aDictionary
-	| patterns body varGenerator vars |
-	patterns := (self generate: aViennaNode first env: aDictionary) collect: #first.
+	| patterns body varGenerator |
 	body := self generate: aViennaNode second env: aDictionary.
 	varGenerator := self varNameGenerator: 'lmd' uniqueIn: (Array with: body).
-	vars := patterns collect: [ :p | varGenerator value ].
+	patterns := aViennaNode first
+		collect: [ :typeBind | 
+			typeBind first label = 'PatternIdentifier'
+				ifTrue: [ typeBind first first -> nil ]
+				ifFalse: [ 
+					(self boundVariables: typeBind) asArray
+						->
+							{(varGenerator value).
+							typeBind} ] ].
 	^ String
 		new: 1024
 		streamContents: [ :stream | 
 			stream nextPut: $[.
-			vars
-				do: [ :var | 
+			patterns
+				do: [ :assoc | 
 					stream
 						nextPut: $:;
-						nextPutAll: var ].
-			stream
-				nextPutAll: '||';
-				nextPutAll: (' ' join: (patterns collect: [ :pat | ' ' join: pat first ]));
-				nextPut: $|.
+						nextPutAll: (assoc value ifNil: [ assoc key ] ifNotNil: [ assoc value first ]);
+						nextPut: Character space ].
+			stream nextPutAll: '||'.
 			patterns
-				with: vars
-				do: [ :pat :var | 
-					stream
-						nextPutAll: (self binder: pat second with: var vars: pat first);
-						nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ].
+				do: [ :assoc | 
+					assoc value
+						ifNotNil: [ 
+							stream
+								nextPutAll: (' ' join: assoc key);
+								nextPut: Character space ] ].
+			stream nextPut: $|.
+			patterns
+				do: [ :assoc | 
+					assoc value
+						ifNotNil: [ :pair | 
+							| vars value typeBindNode |
+							vars := assoc key.
+							value := pair first.
+							typeBindNode := pair second.
+							stream
+								nextPutAll: (self binder: (self generate: typeBindNode first env: aDictionary) with: value vars: vars);
+								nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ] ].
 			stream nextPutAll: body.
-			patterns do: [ :pat | stream nextPut: $] ] ]
+			stream nextPut: $] ]

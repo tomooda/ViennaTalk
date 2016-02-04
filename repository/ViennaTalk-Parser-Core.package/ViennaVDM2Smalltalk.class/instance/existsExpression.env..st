@@ -9,22 +9,25 @@ existsExpression: aViennaNode env: aDictionary
 		streamContents: [ :stream | 
 			stream nextPutAll: '('.
 			multibinds
-				do: [ :multibind | 
+				with: aViennaNode first asArray
+				do: [ :multibind :multibindNode | 
 					| patterns set |
 					patterns := multibind first.
 					set := multibind second.
 					patterns
-						do: [ :pat | 
-							| loopVar |
+						with: multibindNode first asArray
+						do: [ :pat :patternNode | 
+							| loopVar boundVars |
 							loopVar := varGenerator value.
+							boundVars := self boundVariables: patternNode.
 							stream
 								nextPutAll: set;
 								nextPutAll: ' anySatisfy: [:';
 								nextPutAll: loopVar;
 								nextPutAll: '||';
-								nextPutAll: (' ' join: pat first);
+								nextPutAll: (' ' join: boundVars);
 								nextPutAll: '|';
-								nextPutAll: (self binder: pat second with: loopVar vars: pat first);
+								nextPutAll: (self binder: pat with: loopVar vars: boundVars);
 								nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ] ].
 			stream nextPutAll: expr.
 			multibinds do: [ :multibind | multibind first do: [ :pat | stream nextPut: $] ] ].

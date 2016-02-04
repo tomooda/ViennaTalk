@@ -1,6 +1,8 @@
 code generation-definitions
 equalDefinition: aViennaNode env: aDictionary
-	| leftAndRight |
-	leftAndRight := self generateAll: aViennaNode env: aDictionary.
-	^ {(leftAndRight first first).
-	(leftAndRight second)}
+	| left right |
+	left := self generate: aViennaNode first env: aDictionary.
+	(#('TypeBind' 'SetBind') includes: aViennaNode first label)
+		ifTrue: [ left := left first ].
+	right := self generate: aViennaNode second env: aDictionary.
+	^ self binder: left with: right vars: (self boundVariables: aViennaNode) asArray

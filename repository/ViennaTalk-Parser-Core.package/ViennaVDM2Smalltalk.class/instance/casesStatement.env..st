@@ -26,15 +26,17 @@ casesStatement: aViennaNode env: aDictionary
 				nextPutAll: foundVar;
 				nextPutAll: ' := false.'.
 			patternListAndStatements
-				do: [ :patternListAndStatement | 
+				with: aViennaNode second asArray
+				do: [ :patternListAndStatement :alternativeNode | 
 					| patList expr |
 					patList := patternListAndStatement first.
 					expr := patternListAndStatement second.
 					patList
-						do: [ :pat | 
+						with: alternativeNode first asArray
+						do: [ :pat :patternNode | 
 							| vars binder |
-							vars := pat first.
-							binder := self binder: pat second with: valueVar vars: vars.
+							vars := (self boundVariables: patternNode) asArray.
+							binder := self binder: pat with: valueVar vars: vars.
 							stream
 								nextPutAll: foundVar;
 								nextPutAll: ' ifFalse: [|';

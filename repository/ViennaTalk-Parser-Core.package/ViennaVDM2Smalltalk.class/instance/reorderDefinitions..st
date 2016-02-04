@@ -3,12 +3,7 @@ reorderDefinitions: aCollectionOfViennaNode
 	| originalDefs env boundVars freeVars newDefs |
 	originalDefs := Array withAll: aCollectionOfViennaNode.
 	env := Dictionary new.
-	boundVars := (originalDefs
-		collect: [ :def | 
-			| binds |
-			binds := Set new.
-			self boundVariables: def into: binds.
-			def -> binds asArray ]) asDictionary.
+	boundVars := (originalDefs collect: [ :def | def -> (self boundVariables: def) asArray ]) asDictionary.
 	freeVars := (originalDefs collect: [ :def | def -> (self freeVariables: def env: env) asArray ]) asDictionary.
 	newDefs := OrderedCollection new: originalDefs size.
 	[ originalDefs notEmpty ]

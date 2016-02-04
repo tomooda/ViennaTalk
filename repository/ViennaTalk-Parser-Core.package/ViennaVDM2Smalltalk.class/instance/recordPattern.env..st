@@ -1,10 +1,9 @@
 code generation-patterns
 recordPattern: aViennaNode env: aDictionary
-	| constructorName argPatterns vars args |
-	constructorName := self generate: aViennaNode first env: aDictionary.
+	| constructorName argPatterns |
+	constructorName := aViennaNode first.
+	constructorName label = 'LocalName'
+		ifTrue: [ constructorName := constructorName first ]
+		ifFalse: [ constructorName := constructorName first , '`' , constructorName second ].
 	argPatterns := self generate: aViennaNode second env: aDictionary.
-	vars := OrderedCollection new.
-	argPatterns do: [ :arg | vars addAll: arg first ].
-	args := (argPatterns collect: #second) asSet asArray.
-	^ {(vars reject: #isNil).
-	('(ViennaRuntimeUtil matchRecord: ' , constructorName storeString , ' args: {' , (' . ' join: args) , '})')}
+	^ '(ViennaRuntimeUtil matchRecord: ' , constructorName storeString , ' args: {' , (' . ' join: argPatterns) , '})'

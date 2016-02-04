@@ -1,10 +1,13 @@
 code generation-statements
 sequenceForLoop: aViennaNode env: aDictionary
-	| pat seqExpr body varGenerator |
+	| pat seqExpr body vars varGenerator |
 	pat := self generate: aViennaNode first env: aDictionary.
 	seqExpr := self generate: aViennaNode second env: aDictionary.
 	body := self generate: aViennaNode third env: aDictionary.
-	varGenerator := self varNameGenerator: 'for' uniqueIn: (Array with: seqExpr with: body) , pat first.
+	aViennaNode first label = 'PatternIdentifier'
+		ifTrue: [ ^ seqExpr , ' do: [:' , aViennaNode first first , ' | ' , body , ']' ].
+	vars := (self boundVariables: aViennaNode first) asArray.
+	varGenerator := self varNameGenerator: 'for' uniqueIn: (Array with: seqExpr with: body) , vars.
 	^ String
 		new: 1024
 		streamContents: [ :stream | 
@@ -15,9 +18,9 @@ sequenceForLoop: aViennaNode env: aDictionary
 				nextPutAll: ' do: [:';
 				nextPutAll: loopVar;
 				nextPutAll: '||';
-				nextPutAll: (' ' join: pat first);
+				nextPutAll: (' ' join: vars);
 				nextPutAll: '|';
-				nextPutAll: (self binder: pat second with: loopVar vars: pat first);
+				nextPutAll: (self binder: pat with: loopVar vars: vars);
 				nextPutAll: ' ifFalse: [ViennaNoMatch signal].'.
 			stream nextPutAll: body.
 			stream nextPutAll: ']' ]

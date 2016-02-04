@@ -11,13 +11,14 @@ letBeExpression: aViennaNode env: aDictionary
 			| patterns set vars |
 			patterns := multibind first.
 			set := multibind second.
-			vars := patterns inject: #() into: [ :vs :pat | vs , pat first ].
+			vars := (self boundVariables: aViennaNode first) asArray.
 			stream
 				nextPutAll: '[|';
 				nextPutAll: (' ' join: vars);
 				nextPutAll: '|('.
 			patterns
-				do: [ :pat | 
+				with: aViennaNode first first asArray
+				do: [ :pat :patternNode | 
 					| loopVar |
 					loopVar := varGenerator value.
 					stream
@@ -25,7 +26,7 @@ letBeExpression: aViennaNode env: aDictionary
 						nextPutAll: ' anySatisfy: [:';
 						nextPutAll: loopVar;
 						nextPutAll: '|';
-						nextPutAll: (self binder: pat second with: loopVar vars: pat first);
+						nextPutAll: (self binder: pat with: loopVar vars: (self boundVariables: patternNode) asArray);
 						nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ].
 			stream nextPutAll: guard.
 			multibind first do: [ :pat | stream nextPut: $] ].

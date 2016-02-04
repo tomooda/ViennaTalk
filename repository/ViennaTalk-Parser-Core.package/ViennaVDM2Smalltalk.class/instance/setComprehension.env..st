@@ -1,20 +1,19 @@
 code generation-expressions
 setComprehension: aViennaNode env: aDictionary
-	| expr binds guard varGenerator set |
+	| expr bindListNode guard varGenerator set |
 	expr := self generate: aViennaNode first env: aDictionary.
-	binds := self generate: aViennaNode second env: aDictionary.
+	bindListNode := aViennaNode second.
 	guard := self generate: aViennaNode third env: aDictionary.
-	varGenerator := self
-		varNameGenerator: 'set'
-		uniqueIn: (Array with: expr) , (binds collect: #second) , (Array with: (guard ifNil: [ '' ])).
+	varGenerator := self varNameGenerator: 'set' uniqueIn: (Array with: expr) , (Array with: (guard ifNil: [ '' ])).
 	set := varGenerator value.
 	^ String
 		new: 1024
 		streamContents: [ :stream | 
 			stream nextPutAll: '[ | ' , set , ' | ' , set , ' :=Set new.'.
 			self
-				generatorCodeFromBindList: binds
+				generatorCodeBindList: bindListNode
 				varGenerator: varGenerator
+				env: aDictionary
 				do: [ :generatorScript | stream nextPutAll: generatorScript ].
 			guard
 				ifNotNil: [ 
@@ -26,7 +25,7 @@ setComprehension: aViennaNode env: aDictionary
 				nextPutAll: ' add: ';
 				nextPutAll: expr.
 			guard ifNotNil: [ stream nextPut: $] ].
-			self generatorCodeFromBindList: binds varGenerator: varGenerator do: [ :generatorScript | stream nextPut: $] ].
+			bindListNode do: [ :multiBindNode | multiBindNode first do: [ :generatorScript | stream nextPut: $] ] ].
 			stream
 				nextPut: $.;
 				nextPutAll: set;
