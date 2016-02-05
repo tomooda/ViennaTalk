@@ -1,7 +1,7 @@
 *ViennaTalk-Value-Core
 power
 	| power |
-	power := self species new: 2 << self size.
+	power := self species new: 1 << self size.
 	0 to: (1 << self size) - 1 do: [ :index | 
 		| i member |
 		i := 0.
