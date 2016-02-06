@@ -17,7 +17,7 @@ mk_(e1, ..., en} | {e1 . ... . en}
 "string" | 'string'
 'c' | $c
 lambda x:t & exp | [:x \| exp]
-<quote> | #quote
+\<quote\> | #quote
 mk_T(v1, ..., vn) | ViennaComposite constructorName: 'T' withAll: {v1 . ... . vn}
 mk_token(v) | ViennaToken with: v
 
