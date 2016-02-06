@@ -4,7 +4,7 @@ ViennaTalk mapps VDM values to Smalltalk objects as well as provides classes for
 
 ## Values mapped to Smalltalk objects
 
- VDM value | Smalltalk objects
+ VDM values | Smalltalk objects
  ---|---
  true, false | true, false
  ..., -1,  0, 1, ... | ..., -1, 0, 1, ...
