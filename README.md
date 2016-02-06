@@ -4,6 +4,9 @@ Documentation for ViennaTalk
 ===
 ViennaTalk is a Smalltalk library to handle VDM-SL specifications.
 
+[![Introduction to VDM Browser](http://img.youtube.com/vi/ZIR3fFPeTz0/1.jpg)](http://www.youtube.com/watch?v=ZIR3fFPeTz0)
+[![ViennaTalk: Types, Values and Objects](http://img.youtube.com/vi/anZoWeA5vd0/1.jpg)](http://www.youtube.com/watch?v=anZoWeA5vd0)
+
 Table of Major Components of ViennaTalk
 ---
 
