@@ -21,7 +21,7 @@ Table of Major Components of ViennaTalk
    - ViennaClient - Client module of ViennaServer/VDMPad
    - ViennaBankEngine - Aggregated animation engine
 * ViennaType - Smalltalk classes for VDM types
-* ViennaTalk-Values - Smalltalk objects for VDM values
+* [ViennaTalk-Values](ViennaTalk-Values.md) - Smalltalk objects for VDM values
 * ViennaTalk-Parsers - VDM parsers, Smalltalk code generators and VDM source formatter.
 
 Platform
