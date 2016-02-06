@@ -65,7 +65,7 @@ ViennaComposition | | The result of function or map composition
  | value:, value:value:, value:value:value: | Evaluates the receiver by the given argument(s)
  | valueWithArguments: | Evaluates the receiver with the arguments in the given array
  | applyTo: | Equivalent to valueWithArguments (for compatibility with BlockClosure, Dictionary, SequenceableCollection and Array
-ViennaIteration | | THe result of function or map iteration
+ViennaIteration | | The result of function or map iteration
  | ** | further iteration
  | comp: | function composition with the given function or map
  | value:, value:value:, value:value:value: | Evaluates the receiver by the given argument(s)
