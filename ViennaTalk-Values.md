@@ -12,7 +12,7 @@ ViennaTalk mapps VDM values to Smalltalk objects as well as provides classes for
  nil | nil
 {e1, ..., en} | {e1 . ... . en} asSet
 [e1, ..., en} | {e1 . ... . en} asOrderedCollection
-{k1 \|->v1, ..., kn \|->vn} | {k1 -> v1 . ... . kn -> kn} asOrderedCollection
+{k1 \|->v1, ..., kn \|->vn} | {k1 -> v1 . ... . kn -> kn} asDictionary
 mk_(e1, ..., en} | {e1 . ... . en}
 "string" | 'string'
 'c' | $c
