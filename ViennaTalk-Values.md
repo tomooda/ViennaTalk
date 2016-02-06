@@ -35,7 +35,7 @@ Collection | onlyOneSatisfy | answers if the reciever has the only one member th
  | powerDo | iterates over all possible subcollections
 Array | applyTo: | answers the member with the given index
 SequenceableCollection | applyTo: | answers the member with the given index
- tail | answers the copy of collection without the 1st member.
+ | tail | answers the copy of collection without the 1st member.
 Dictionary | ** | iteration
   | applyTo | answers the value corresponds to the given key
   | comp | function composition
@@ -60,12 +60,12 @@ ViennaToken | The class for token values
 Class | major protocol | comment
 ---|---|---
 ViennaComposition | | The result of function or map composition
- value:, value:value:, value:value:value: | Evaluates the receiver by the given argument(s)
- valueWithArguments: | Evaluates the receiver with the arguments in the given array
- applyTo: | Equivalent to valueWithArguments (for compatibility with BlockClosure, Dictionary, SequenceableCollection and Array
+ | value:, value:value:, value:value:value: | Evaluates the receiver by the given argument(s)
+ | valueWithArguments: | Evaluates the receiver with the arguments in the given array
+ | applyTo: | Equivalent to valueWithArguments (for compatibility with BlockClosure, Dictionary, SequenceableCollection and Array
 ViennaIteration | | THe result of function or map iteration
- ** | further iteration
- comp: | function composition with the given function or map
- value:, value:value:, value:value:value: | Evaluates the receiver by the given argument(s)
- valueWithArguments: | Evaluates the receiver with the arguments in the given array
- applyTo: | Equivalent to valueWithArguments (for compatibility with BlockClosure, Dictionary, SequenceableCollection and Array
+ | ** | further iteration
+ | comp: | function composition with the given function or map
+ | value:, value:value:, value:value:value: | Evaluates the receiver by the given argument(s)
+ | valueWithArguments: | Evaluates the receiver with the arguments in the given array
+ | applyTo: | Equivalent to valueWithArguments (for compatibility with BlockClosure, Dictionary, SequenceableCollection and Array
