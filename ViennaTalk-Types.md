@@ -1,5 +1,7 @@
 # VDM types as Smalltalk objects
 
+[![ViennaTalk: Types, Values and Objects](http://img.youtube.com/vi/anZoWeA5vd0/1.jpg)](http://www.youtube.com/watch?v=anZoWeA5vd0)
+
 Although types are not the first class objects in VDM-family, ViennaTalk provides classes to prepresent VDM types.
 The following table shows mapping from VDM types to corresponding Smalltalk expressions.
 
