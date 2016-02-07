@@ -22,7 +22,7 @@ Table of Major Components of ViennaTalk
    - ViennaBankEngine - Aggregated animation engine
 * ViennaType - Smalltalk classes for VDM types
 * [ViennaTalk-Values](ViennaTalk-Values.md) - Smalltalk objects for VDM values
-* ViennaTalk-Parsers - VDM parsers, Smalltalk code generators and VDM source formatter.
+* [ViennaTalk-Parsers](EmulsifyingVDMandSmalltalk.md) - VDM parsers, Smalltalk code generators and VDM source formatter.
 
 Platform
 ---
