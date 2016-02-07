@@ -101,4 +101,4 @@ t := ViennaType
 t applyTo: { 1 . nil }
 ```
 
-returns a composite value that represents VDM <tt>mk_T(1, nil)</tt>.
+returns a composite value that represents <tt>mk_T(1, nil)</tt>.
