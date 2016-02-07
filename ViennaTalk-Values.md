@@ -1,5 +1,7 @@
 # Objects for VDM values
 
+[![ViennaTalk: Types, Values and Objects](http://img.youtube.com/vi/anZoWeA5vd0/1.jpg)](http://www.youtube.com/watch?v=anZoWeA5vd0)
+
 ViennaTalk mapps VDM values to Smalltalk objects as well as provides classes for those of particular types.
 
 ## Values mapped to Smalltalk objects
