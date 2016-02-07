@@ -88,3 +88,17 @@ t isEnumerable
 
 returns <tt>false</tt> because <tt>nat</tt> is infinite set.
 
+## Composing a value
+
+A composite type can create a value by sending the <tt>applyTo:</tt> message.
+
+```
+| t |
+t := ViennaType
+	compose: 'T' 
+	of: { { 'f' . false . ViennaType nat}. 
+		{ nil . false . ViennaType bool optional } }.
+t applyTo: { 1 . nil }
+```
+
+returns a composite value that represents VDM <tt>mk_T(1, nil)</tt>.
