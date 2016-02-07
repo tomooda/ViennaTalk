@@ -1,5 +1,8 @@
 VDM Browser
 ===
+
+[![Introduction to VDM Browser](http://img.youtube.com/vi/ZIR3fFPeTz0/1.jpg)](http://www.youtube.com/watch?v=ZIR3fFPeTz0)
+
 VDM Browser is a browser for VDM-SL specifications that incorporates a flavor of Smalltalk's live environment.
 
 You can open a VDM Browser by selecting <tt>VDMBrowser</tt> in the World -> Tools menu, or simply evaluate <tt>VDMBrowser open</tt>.
