@@ -1,4 +1,4 @@
-# Emulsifying VDM-SL and Smalltalk
+# VDM-SL in Smalltalk
 
 ViennaTalk defines three messages <tt>asViennaExpression</tt>, <tt>asViennaStatement</tt> and <tt>viennaString</tt> to evaluate and compose VDM expressions and/or statements om Smalltalk so that you can
 
