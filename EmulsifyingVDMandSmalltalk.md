@@ -22,7 +22,7 @@ In the code above, the first line declares the variable <tt>succ</tt>.
 
 In the second line, <tt>'lambda n:nat & n + 1'</tt> is a String object.
 By sending the <tt>asViennaExpression</tt> message, its content VDM expression is translated into a Smalltalk code and evaluated in the program context.
-The resulting object, which is in this case a closure object, is assigned to <tt>succ</tt>.
+The resulting object, which is in this case a closure object <tt>[:n | n + 1]</tt>, is assigned to <tt>succ</tt>.
 
 The third line sends the <tt>value:</tt> message with actual parameter <tt>2</tt> to evaluate the closure object, resulting <tt>3</tt> (see the below screenshot).
 
