@@ -1,5 +1,7 @@
 # VDM-SL in Smalltalk
 
+[![ViennaTalk: Types, Values and Objects](http://img.youtube.com/vi/anZoWeA5vd0/1.jpg)](http://www.youtube.com/watch?v=anZoWeA5vd0)
+
 ViennaTalk defines three messages <tt>asViennaExpression</tt>, <tt>asViennaStatement</tt> and <tt>viennaString</tt> to evaluate and compose VDM expressions and/or statements om Smalltalk so that you can
 
 1. start with a VDM specification,
