@@ -1,9 +1,10 @@
 # Emulsifying VDM-SL and Smalltalk
 
 ViennaTalk defines three messages <tt>asViennaExpression</tt>, <tt>asViennaStatement</tt> and <tt>viennaString</tt> to evaluate and compose VDM expressions and/or statements om Smalltalk so that you can
+
 1. start with a VDM specification,
 2. implement a small fraction of it in Smalltalk,
-3. gradually increase Smalltalk code that still contains some pieces of VDM expressions and/or statements,
+3. gradually increase Smalltalk code that still contains some pieces of VDM expressions and/or statements, and then
 4. finally you have a full implementation in Smalltalk
 
 ViennaTalk also provides the <tt>asViennaExpressionAst</tt> and <tt>asViennaStatementAst</tt> messages to generate a VDM-SL's abstract syntax tree (AST).
@@ -19,11 +20,9 @@ succ value: 2
 ```
 
 In the code above, the first line declares the variable <tt>succ</tt>.
-
-In the second line, <tt>'lambda n:nat & n + 1'</tt> is a String object.
-By sending the <tt>asViennaExpression</tt> message, its content VDM expression is translated into a Smalltalk code and evaluated in the program context.
+In the second line, the <tt>asViennaExpression</tt> message is sent to the string object <tt>'lambda n:nat & n + 1'</tt>.
+By sending the message, its content VDM expression is translated into a Smalltalk code and evaluated in the program context.
 The resulting object, which is in this case a closure object <tt>[:n | n + 1]</tt>, is assigned to <tt>succ</tt>.
-
 The third line sends the <tt>value:</tt> message with actual parameter <tt>2</tt> to evaluate the closure object, resulting <tt>3</tt> (see the below screenshot).
 
 ![asViennaExpression example1](images/asViennaExpression-1.png)
@@ -91,7 +90,7 @@ The result is
 ![sending viennaString to a dictionary object](images/viennaString-dic-2.png)
 
 # Generate AST
-VDM expressions and statements in a String object can be parsed into ASTs by sending the <tt>asViennaExpressionAst</tt> message and the <tt>asViennaExpressionAst</tt> message in order..
+VDM expressions and statements in a String object can be parsed into ASTs by sending the <tt>asViennaExpressionAst</tt> message and the <tt>asViennaExpressionAst</tt> message in order.
 
 For example,
 
@@ -102,3 +101,7 @@ For example,
 will returns its AST below.
 
 ![generating an AST](images/asViennaExpressionAst.png)
+
+Please note that the resulting AST is not a string object, but an instance of the <tt>ViennaNode</tt> class.
+A <tt>ViennaNode</tt> object is a simple tree node with a label and arbitrary number of children.
+Tool developers can use this API to build their own tools that requires generating and manipulating ASTs.
