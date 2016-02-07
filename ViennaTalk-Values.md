@@ -36,6 +36,8 @@ Collection | onlyOneSatisfy | answers if the reciever has the only one member th
 Array | applyTo: | answers the member with the given index
 SequenceableCollection | applyTo: | answers the member with the given index
  | tail | answers the copy of collection without the 1st member.
+String | asViennaExpression | answers a BlockClosure that reproduce a Smalltalk object that corresponds to the VDM expression
+ | asViennaStatement | answers a BlockClosure that reproduce a Smalltalk object that corresponds to the VDM statement
 Dictionary | ** | iteration
   | applyTo | answers the value corresponds to the given key
   | comp | function composition
