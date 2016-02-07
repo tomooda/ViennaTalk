@@ -103,5 +103,5 @@ will returns its AST below.
 ![generating an AST](images/asViennaExpressionAst.png)
 
 Please note that the resulting AST is not a string object, but an instance of the <tt>ViennaNode</tt> class.
-A <tt>ViennaNode</tt> object is a simple tree node with a label and arbitrary number of children.
+The <tt>ViennaNode</tt> class represents a simple tree node with a label and arbitrary number of children.
 Tool developers can use this API to build their own tools that requires generating and manipulating ASTs.
