@@ -1,8 +1,36 @@
 code generation-expressions
 existsExpression: aViennaNode env: aDictionary
-	| multibinds expr varGenerator |
-	multibinds := self generate: aViennaNode first env: aDictionary.
+	| multibindsNode multibinds expr varGenerator |
+	multibindsNode := aViennaNode first.
 	expr := self generate: aViennaNode second env: aDictionary.
+	(multibindsNode
+		allSatisfy: [ :multibindNode | multibindNode first allSatisfy: [ :patternNode | patternNode label = 'PatternIdentifier' ] ])
+		ifTrue: [ 
+			| names |
+			names := Array
+				new: multibindsNode size * 2
+				streamContents: [ :namesStream | multibindsNode do: [ :multibindNode | multibindNode do: [ :patternNode | namesStream nextPut: patternNode first ] ] ].
+			names size = names asSet size
+				ifTrue: [ 
+					^ String
+						new: 1024
+						streamContents: [ :stream | 
+							stream nextPutAll: '('.
+							multibindsNode
+								do: [ :multibindNode | 
+									| set |
+									set := self generate: multibindNode second env: aDictionary.
+									multibindNode first
+										do: [ :patternNode | 
+											stream
+												nextPutAll: set;
+												nextPutAll: ' anySatisfy: [:';
+												nextPutAll: patternNode first;
+												nextPutAll: '|' ] ].
+							stream nextPutAll: expr.
+							multibindsNode do: [ :multibindNode | multibindNode first do: [ :pat | stream nextPut: $] ] ].
+							stream nextPutAll: ')' ] ] ].
+	multibinds := self generate: multibindsNode env: aDictionary.
 	varGenerator := self varNameGenerator: 'exists' uniqueIn: (Array with: expr) , (multibinds collect: #second).
 	^ String
 		new: 1024
@@ -28,7 +56,7 @@ existsExpression: aViennaNode env: aDictionary
 								nextPutAll: (' ' join: boundVars);
 								nextPutAll: '|';
 								nextPutAll: (self binder: pat with: loopVar vars: boundVars);
-								nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ] ].
+								nextPutAll: ' and:  [' ] ].
 			stream nextPutAll: expr.
-			multibinds do: [ :multibind | multibind first do: [ :pat | stream nextPut: $] ] ].
+			multibinds do: [ :multibind | multibind first do: [ :pat | stream nextPutAll: ']]' ] ].
 			stream nextPutAll: ')' ]
