@@ -1,8 +1,11 @@
 code generation-definitions
 equalDefinition: aViennaNode env: aDictionary
-	| left right |
-	left := self generate: aViennaNode first env: aDictionary.
-	(#('TypeBind' 'SetBind') includes: aViennaNode first label)
-		ifTrue: [ left := left first ].
+	| leftNode left right |
+	leftNode := aViennaNode first.
+	(#('TypeBind' 'SetBind') includes: leftNode label)
+		ifTrue: [ leftNode := leftNode first ].
+	left := self generate: leftNode env: aDictionary.
 	right := self generate: aViennaNode second env: aDictionary.
-	^ self binder: left with: right vars: (self boundVariables: aViennaNode) asArray
+	^ leftNode label = 'PatternIdentifier'
+		ifTrue: [ '[' , leftNode first , ' := ' , right , '. true] value' ]
+		ifFalse: [ self binder: left with: right vars: (self boundVariables: aViennaNode) asArray ]

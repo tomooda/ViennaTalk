@@ -1,54 +1,38 @@
 code generation-expressions
 sequenceComprehension: aViennaNode env: aDictionary
-	| patternNode typeOrSetNode expr guard varGenerator seq |
+	| expr bindNode setNode guard varGenerator seq set |
 	expr := self generate: aViennaNode first env: aDictionary.
-	patternNode := aViennaNode second first.
-	typeOrSetNode := aViennaNode second second.
+	bindNode := aViennaNode second.
+	setNode := bindNode second.
 	guard := self generate: aViennaNode third env: aDictionary.
 	varGenerator := self
 		varNameGenerator: 'seq'
 		uniqueIn:
 			{expr.
 			(guard ifNil: [ '' ])}.
-	patternNode label = 'PatternIdentifier'
-		ifTrue: [ 
-			| set var |
-			set := typeOrSetNode label = 'SetRangeExpression'
-				ifTrue: [ 
-					'(' , (self generate: typeOrSetNode first env: aDictionary) , ' to: '
-						, (self generate: typeOrSetNode second env: aDictionary) , ')' ]
-				ifFalse: [ (self generate: typeOrSetNode env: aDictionary) , ' asSortedCollection asOrderedCollection' ].
-			var := patternNode first.
-			^ '(' , set , (guard ifNotNil: [ ' select: [ :' , var , '|' , guard , '] thenCollect:' ] ifNil: [ ' collect:' ])
-				, ' [:' , var , '|' , expr , ']) asOrderedCollection' ].
 	seq := varGenerator value.
+	set := varGenerator value.
 	^ String
 		new: 1024
 		streamContents: [ :stream | 
+			| body |
+			body := seq , ' add: ' , expr.
+			guard ifNotNil: [ body := guard , ' ifTrue: [' , body , ']' ].
 			stream
-				nextPutAll: '[|';
-				nextPutAll: seq;
-				nextPutAll: '|';
-				nextPutAll: seq;
-				nextPutAll: ':= OrderedCollection new.';
+				nextPutAll: '([ :' , set , ' | | ' , seq , ' | ' , seq , ' :=OrderedCollection new.';
 				nextPutAll:
 						(self
-								generatorCodePattern: patternNode
-								typeOrSet: typeOrSetNode
-								needsSort: true
+								generatorFromFlatBinds:
+									{{(bindNode first).
+									(ViennaNode label: 'LocalName' with: set)}}
+								body: body
 								varGenerator: varGenerator
-								env: aDictionary).
-			guard
-				ifNotNil: [ 
-					stream
-						nextPutAll: guard;
-						nextPutAll: ' ifTrue: [' ].
-			stream
+								env: aDictionary);
+				nextPutAll: '. ';
 				nextPutAll: seq;
-				nextPutAll: ' add: ';
-				nextPutAll: expr.
-			guard ifNotNil: [ stream nextPutAll: ']' ].
-			stream
-				nextPutAll: ']. ';
-				nextPutAll: seq;
-				nextPutAll: '] value' ]
+				nextPutAll: '] value: ';
+				nextPutAll:
+						(setNode label = 'SetRangeExpression'
+								ifTrue: [ '(' , (self intervalExpression: setNode env: aDictionary) , ')' ]
+								ifFalse: [ (self generate: setNode env: aDictionary) , ' asSortedCollection' ]);
+				nextPut: $) ]

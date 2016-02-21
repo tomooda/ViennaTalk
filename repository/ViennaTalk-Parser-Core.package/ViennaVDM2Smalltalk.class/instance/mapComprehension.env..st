@@ -1,8 +1,9 @@
 code generation-expressions
 mapComprehension: aViennaNode env: aDictionary
-	| keyExpr valueExpr guard varGenerator map |
+	| keyExpr valueExpr bindListNode guard varGenerator map pair flatBinds setsAndVars |
 	keyExpr := self generate: aViennaNode first env: aDictionary.
 	valueExpr := self generate: aViennaNode second env: aDictionary.
+	bindListNode := aViennaNode third.
 	guard := self generate: aViennaNode fourth env: aDictionary.
 	varGenerator := self
 		varNameGenerator: 'map'
@@ -10,29 +11,35 @@ mapComprehension: aViennaNode env: aDictionary
 			{keyExpr.
 			valueExpr} , {(guard ifNil: [ '' ])}.
 	map := varGenerator value.
+	pair := self flattenBindList: bindListNode varGenerator: varGenerator env: aDictionary.
+	flatBinds := pair first.
+	setsAndVars := pair second.
 	^ String
 		new: 1024
 		streamContents: [ :stream | 
-			stream nextPutAll: '[ | ' , map , ' | ' , map , ' :=Dictionary new.'.
-			self
-				generatorCodeBindList: aViennaNode third
-				varGenerator: varGenerator
-				env: aDictionary
-				do: [ :generatorScript | stream nextPutAll: generatorScript ].
-			guard
-				ifNotNil: [ 
+			| body |
+			body := map , ' at: ' , keyExpr , ' put: ' , valueExpr.
+			guard ifNotNil: [ body := guard , ' ifTrue: [' , body , ']' ].
+			stream nextPutAll: '(['.
+			setsAndVars
+				do: [ :setAndVar | 
 					stream
-						nextPutAll: guard;
-						nextPutAll: ' ifTrue: [' ].
+						nextPutAll: ' :';
+						nextPutAll: setAndVar second ].
 			stream
+				nextPutAll: ' | | ' , map , ' | ' , map , ' :=Dictionary new.';
+				nextPutAll:
+						(self
+								generatorFromFlatBinds: flatBinds
+								body: body
+								varGenerator: varGenerator
+								env: aDictionary);
+				nextPutAll: '. ';
 				nextPutAll: map;
-				nextPutAll: ' at: ';
-				nextPutAll: keyExpr;
-				nextPutAll: ' put: ';
-				nextPutAll: valueExpr.
-			guard ifNotNil: [ stream nextPut: $] ].
-			aViennaNode third do: [ :multiBindNode | multiBindNode first do: [ :patternNode | stream nextPut: $] ] ].
-			stream
-				nextPut: $.;
-				nextPutAll: map;
-				nextPutAll: '] value' ]
+				nextPutAll: ']'.
+			setsAndVars
+				do: [ :setAndVar | 
+					stream
+						nextPutAll: ' value: ';
+						nextPutAll: setAndVar first ].
+			stream nextPut: $) ]

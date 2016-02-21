@@ -1,19 +1,6 @@
 utilities
-flattenAndCheckBindList: bindListNode env: aDictionary do: aBlock
-	| patternsAndSets boundVariables |
-	patternsAndSets := Array
-		new: 16
-		streamContents: [ :stream | 
-			bindListNode
-				do: [ :multipleBindNode | 
-					| typeOrSetNode |
-					typeOrSetNode := multipleBindNode second.
-					multipleBindNode first
-						do: [ :patternNode | 
-							stream
-								nextPut:
-									{patternNode.
-									typeOrSetNode} ] ] ].
+fromFlatBinds: patternsAndSets patternNodeAndSetOrTypeNodeAndBindTypesDo: aBlock
+	| boundVariables |
 	boundVariables := patternsAndSets collect: [ :pair | self boundVariables: pair first ].
 	1 to: patternsAndSets size do: [ :index | 
 		| bindNode patternNode |
@@ -27,5 +14,5 @@ flattenAndCheckBindList: bindListNode env: aDictionary do: aBlock
 					and: [ 
 						(1 to: patternsAndSets size)
 							allSatisfy: [ :i | i = index or: [ ((boundVariables at: i) includes: patternNode first) not ] ] ])
-					ifTrue: [ #direct ]
-					ifFalse: [ #complex ]) ]
+					ifTrue: [ #identifier ]
+					ifFalse: [ #compound ]) ]

@@ -1,44 +1,29 @@
 code generation-definitions
 explicitOperationDefinition: aViennaNode env: aDictionary
-	| opname opType opname2 paramsNode params opbody varGenerator vars |
+	| opname typeNode paramsNode body varGenerator argTypeNode binds |
 	opname := aViennaNode first.
-	opType := self generate: aViennaNode second env: aDictionary.
-	opname2 := self generate: aViennaNode third env: aDictionary.
-	paramsNode := self generate: aViennaNode fourth env: aDictionary.
-	opbody := self generate: aViennaNode fifth env: aDictionary.
-	(paramsNode allSatisfy: [ :patternNode | patternNode label = 'PatternIdentifier' ])
-		ifTrue: [  ].
-	params := self generate: paramsNode env: aDictionary.
+	typeNode := aViennaNode second.
+	paramsNode := aViennaNode fourth.
+	body := self generate: aViennaNode fifth env: aDictionary.
 	varGenerator := self
 		varNameGenerator: 'op'
 		uniqueIn:
 			{opname.
-			opbody}.
-	vars := params collect: [ :p | varGenerator value ].
-	^ String
-		new: 1024
-		streamContents: [ :stream | 
-			stream
-				nextPutAll: opname;
-				nextPutAll: ' := ['.
-			vars
-				ifNotEmpty: [ 
-					vars
-						do: [ :v | 
-							stream
-								nextPutAll: ' :';
-								nextPutAll: v ].
-					stream nextPutAll: ' |' ].
-			stream
-				nextPutAll: ' | ';
-				nextPutAll: (' ' join: (params inject: #() into: [ :vs :pat | vs , pat first ]));
-				nextPutAll: ' _opContext | _opContext := thisContext. '.
-			params
-				with: vars
-				do: [ :p :v | 
-					stream
-						nextPutAll: (self binder: p second with: v vars: p first);
-						nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ].
-			stream
-				nextPutAll: opbody;
-				nextPutAll: ']' ]
+			body}.
+	argTypeNode := typeNode first.
+	binds := argTypeNode label = 'UnitType' ifTrue: [{}] ifFalse: [argTypeNode label = 'ProductType'
+		ifTrue: [ 
+			(1 to: argTypeNode size)
+				collect: [ :index | 
+					{(paramsNode at: index).
+					(argTypeNode at: index)} ] ]
+		ifFalse: [ 
+			{{(paramsNode first).
+			argTypeNode}} ]].
+	^ opname , ' := '
+		,
+			(self
+				closureFromFlatBinds: binds
+				body: body
+				varGenerator: varGenerator
+				env: aDictionary)
