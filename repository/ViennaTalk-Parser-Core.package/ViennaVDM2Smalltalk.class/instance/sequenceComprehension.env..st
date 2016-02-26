@@ -12,6 +12,22 @@ sequenceComprehension: aViennaNode env: aDictionary
 			(guard ifNil: [ '' ])}.
 	seq := varGenerator value.
 	set := varGenerator value.
+	bindNode first label = 'PatternIdentifier'
+		ifTrue: [ 
+			| var |
+			var := bindNode first first.
+			^ '('
+				,
+					(setNode label = 'SetRangeExpression'
+						ifTrue: [ '(' , (self intervalExpression: setNode env: aDictionary) , ')' ]
+						ifFalse: [ 
+							setNode label = 'SequenceIndices'
+								ifTrue: [ '(' , (self indicesExpression: setNode env: aDictionary) , ')' ]
+								ifFalse: [ (self generate: setNode env: aDictionary) , ' asSortedCollection' ] ])
+				,
+					(guard
+						ifNotNil: [ ' select: [:' , var , ' | ' , guard , '] thenCollect: [:' , var , ' | ' ]
+						ifNil: [ ' collect: [:' , var , ' | ' ]) , expr , ']) asOrderedCollection' ].
 	^ String
 		new: 1024
 		streamContents: [ :stream | 

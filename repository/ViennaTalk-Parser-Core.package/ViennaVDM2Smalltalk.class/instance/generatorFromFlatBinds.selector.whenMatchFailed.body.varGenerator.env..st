@@ -21,7 +21,17 @@ generatorFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode selector: aSymbol whe
 													(aSymbol = #do:
 														ifTrue: [ '' ]
 														ifFalse: [ ')' ]) ]
-										ifFalse: [ self generate: setNode env: aDictionary ]);
+										ifFalse: [ 
+											setNode label = 'SequenceIndices'
+												ifTrue: [ 
+													(aSymbol = #do:
+														ifTrue: [ '' ]
+														ifFalse: [ '(' ]) , (self indicesExpression: setNode env: aDictionary)
+														,
+															(aSymbol = #do:
+																ifTrue: [ '' ]
+																ifFalse: [ ')' ]) ]
+												ifFalse: [ self generate: setNode env: aDictionary ] ]);
 						nextPut: Character space;
 						nextPutAll: aSymbol;
 						nextPutAll: ' [ :'.
