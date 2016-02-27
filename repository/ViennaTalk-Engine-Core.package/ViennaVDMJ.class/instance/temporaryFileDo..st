@@ -1,7 +1,7 @@
 private
 temporaryFileDo: aBlock
 	| random file stream |
-	random := Random new.
+	random := self random.
 	self
 		globalLock: [ 
 			[ 

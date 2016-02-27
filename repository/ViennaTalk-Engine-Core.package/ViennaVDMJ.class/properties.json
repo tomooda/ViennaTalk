@@ -6,6 +6,7 @@
 	"pools" : [ ],
 	"classvars" : [
 		"GlobalLock",
+		"RandomGenerator",
 		"Registry"
 	],
 	"instvars" : [
