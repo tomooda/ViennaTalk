@@ -15,7 +15,10 @@ flattenBindList: bindListNode varGenerator: varGenerator env: aDictionary
 						add:
 							{(typeOrSetNode label = 'SetRangeExpression'
 								ifTrue: [ '(' , (self intervalExpression: typeOrSetNode env: aDictionary) , ')' ]
-								ifFalse: [ self generate: typeOrSetNode env: aDictionary ]).
+								ifFalse: [ 
+									typeOrSetNode label = 'SequenceIndices'
+										ifTrue: [ '(' , (self indicesExpression: typeOrSetNode env: aDictionary) , ')' ]
+										ifFalse: [ self generate: typeOrSetNode env: aDictionary ] ]).
 							varName}.
 					multipleBindNode first
 						do: [ :patternNode | 

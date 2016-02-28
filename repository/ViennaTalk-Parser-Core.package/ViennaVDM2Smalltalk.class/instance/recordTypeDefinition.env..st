@@ -1,9 +1,9 @@
-code generation-types
+code generation-definitions
 recordTypeDefinition: aViennaNode env: aDictionary
-	| constructorName fields |
-	constructorName := self generate: aViennaNode first env: aDictionary.
-	fields := aViennaNode second
-		collect: [ :field | 
-			'{' , field first storeString , ' . ' , field second storeString , ' . ' , (self generate: field third env: aDictionary)
-				, '}' ].
-	^ '(ViennaType compose: ' , constructorName storeString , ' of: {' , (' . ' join: fields) , '})'
+	| identifier fieldList type |
+	identifier := aViennaNode first.
+	fieldList := self generate: aViennaNode second env: aDictionary.
+	type := 'ViennaCompositeType constructorName: ' , identifier storeString , ' withAll: {' , (' . ' join: fieldList)
+		, '}'.
+	(self generate: aViennaNode third env: aDictionary) ifNotNil: [ :inv | type := '(' , type , ') inv: ' , inv ].
+	^ identifier , ' := ' , type
