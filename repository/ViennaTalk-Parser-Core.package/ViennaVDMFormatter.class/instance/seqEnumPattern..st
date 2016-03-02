@@ -1,3 +1,3 @@
 formatting-patterns and binds
 seqEnumPattern: aViennaNode
-	^ '[' , (self formatEnumerate: (self formatAll: aViennaNode first) ifEmpty: [ '' ]) , ']'
+	^ '[' , (self formatEnumerate: (self formatAll: aViennaNode) ifEmpty: [ '' ]) , ']'
