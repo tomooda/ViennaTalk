@@ -1,9 +1,4 @@
 updating
 updateImage
-	form := (map at: value ifAbsent: [ path ])
-		ifNotNil: [ :imagePath | 
-			Transcript cr; show: 'displaying ', imagePath.
-			[ ImageReadWriter formFromFileNamed: imagePath ]
-				on: Error
-				do: [ :ex | nil ] ].
+	form := forms at: value ifAbsent: [ forms at: nil ifAbsent: [ nil ] ].
 	self changed

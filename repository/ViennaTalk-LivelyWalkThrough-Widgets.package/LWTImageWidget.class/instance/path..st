@@ -1,7 +1,6 @@
 private
 path: aString
-	path := aString.
-	form := [ ImageReadWriter formFromFileNamed: path ]
+	form := [ ImageReadWriter formFromFileNamed: aString ]
 		on: Error
 		do: [ :ex | nil ].
 	self changed

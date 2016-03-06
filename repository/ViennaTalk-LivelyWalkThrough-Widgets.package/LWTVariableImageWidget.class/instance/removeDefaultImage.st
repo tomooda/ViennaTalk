@@ -1,4 +1,4 @@
 operations
 removeDefaultImage
-	path := nil.
+	forms at: nil put: nil.
 	self updateImage

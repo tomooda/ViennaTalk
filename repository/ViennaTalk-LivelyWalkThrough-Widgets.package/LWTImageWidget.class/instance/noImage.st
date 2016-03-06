@@ -1,3 +1,3 @@
 operations
 noImage
-	self value: nil
+	form := nil

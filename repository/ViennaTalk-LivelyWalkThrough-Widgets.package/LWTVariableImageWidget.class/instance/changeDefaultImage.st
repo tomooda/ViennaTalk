@@ -3,8 +3,10 @@ changeDefaultImage
 	(LivelyWalkThrough
 		fileOpen: 'Select an image file'
 		extensions: #('png' 'jpg' 'jpeg')
-		path: path
+		path: nil
 		preview: #image)
 		ifNotNil: [ :filename | 
-			path := filename fullName.
+			[ forms at: nil put: (Form fromFileNamed: filename fullName) ]
+				on: Error
+				do: [ :ex |  ].
 			self updateImage ]

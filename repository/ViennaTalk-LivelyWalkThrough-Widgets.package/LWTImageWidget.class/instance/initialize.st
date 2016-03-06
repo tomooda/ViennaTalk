@@ -1,4 +1,4 @@
 initialize-release
 initialize
 	super initialize.
-	forms := Dictionary new
+	value := String new

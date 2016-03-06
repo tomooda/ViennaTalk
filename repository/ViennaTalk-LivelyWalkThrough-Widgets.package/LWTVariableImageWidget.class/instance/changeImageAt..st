@@ -3,8 +3,10 @@ changeImageAt: key
 	(LivelyWalkThrough
 		fileOpen: 'Select an image file'
 		extensions: #('png' 'jpg' 'jpeg')
-		path: path
+		path: nil
 		preview: #image)
 		ifNotNil: [ :filename | 
-			map at: key put: filename fullName.
+			[ forms at: key put: (Form fromFileNamed: filename fullName) ]
+				on: Error
+				do: [ :ex |  ].
 			self updateImage ]

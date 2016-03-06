@@ -1,11 +1,8 @@
 accessing
 value: aString
-	path ~= aString
+	value ~= aString
 		ifTrue: [ 
-			path := aString.
-			form := [ ImageReadWriter formFromFileNamed: path ]
-				on: Error
-				do: [ :ex | nil ].
+			value := aString.
 			self changed.
 			self event: #assigned.
 			self event: #changed ]

@@ -3,7 +3,7 @@ menu
 	| menu |
 	menu := super menu.
 	menu addLine.
-	map
+	forms
 		keysDo: [ :key | 
 			menu
 				add: key

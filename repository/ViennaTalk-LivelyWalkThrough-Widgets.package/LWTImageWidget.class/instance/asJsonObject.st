@@ -1,5 +1,5 @@
 json
 asJsonObject
 	^ super asJsonObject
-		at: 'path' put: self path;
+		at: 'base64Form' put: self base64Form;
 		yourself

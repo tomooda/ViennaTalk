@@ -1,7 +1,6 @@
 json
 asJsonObject
 	^ super asJsonObject
-		at: 'path' put: self path;
-		at: 'map' put: self map;
+		at: 'base64Forms' put: self base64Forms;
 		at: '_rawValue' put: self rawValue;
 		yourself
