@@ -7,16 +7,14 @@ blockStatement: aViennaNode env: aDictionary
 	^ String
 		new: 1024
 		streamContents: [ :stream | 
-			stream nextPut: $[.
 			vars
 				ifNotEmpty: [ 
-					stream nextPutAll: '| '.
+					stream nextPutAll: '[| '.
 					vars
 						do: [ :var | 
 							stream
 								nextPutAll: var;
 								nextPut: Character space ].
 					stream nextPutAll: '| ' ].
-			stream
-				nextPutAll: ('.' join: statements);
-				nextPutAll: '] value.' ]
+			stream nextPutAll: ('.' join: statements).
+			vars ifNotEmpty: [ stream nextPutAll: '] value.' ] ]

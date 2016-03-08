@@ -11,19 +11,20 @@ explicitOperationDefinition: aViennaNode env: aDictionary
 			{opname.
 			body}.
 	argTypeNode := typeNode first.
-	binds := argTypeNode label = 'UnitType' ifTrue: [{}] ifFalse: [argTypeNode label = 'ProductType'
-		ifTrue: [ 
-			(1 to: argTypeNode size)
-				collect: [ :index | 
-					{(paramsNode at: index).
-					(argTypeNode at: index)} ] ]
+	binds := argTypeNode label = 'UnitType'
+		ifTrue: [ {} ]
 		ifFalse: [ 
-			{{(paramsNode first).
-			argTypeNode}} ]].
-	^ opname , ' := '
-		,
-			(self
-				closureFromFlatBinds: binds
-				body: body
-				varGenerator: varGenerator
-				env: aDictionary)
+			argTypeNode label = 'ProductType'
+				ifTrue: [ 
+					(1 to: argTypeNode size)
+						collect: [ :index | 
+							{(paramsNode at: index).
+							(argTypeNode at: index)} ] ]
+				ifFalse: [ 
+					{{(paramsNode first).
+					argTypeNode}} ] ].
+	^ opname , ' := ' , (self
+		closureFromFlatBinds: binds
+		body: body
+		varGenerator: varGenerator
+		env: aDictionary)

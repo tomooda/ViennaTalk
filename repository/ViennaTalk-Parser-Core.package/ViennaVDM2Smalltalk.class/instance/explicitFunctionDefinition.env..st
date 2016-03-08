@@ -10,8 +10,8 @@ explicitFunctionDefinition: aViennaNode env: aDictionary
 		uniqueIn:
 			{funcName.
 			body}.
-	parametersListNode
-		do: [ :parametersNode | 
+	parametersListNode asArray
+		reverseDo: [ :parametersNode | 
 			| argType binds |
 			argType := typeNode first.
 			typeNode := typeNode second.

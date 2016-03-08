@@ -1,3 +1,3 @@
 code generation-definitions
-operationDefinitions: aViennaNode env: aDictionary
+flatDocument: aViennaNode env: aDictionary
 	^ self subclassResponsibility

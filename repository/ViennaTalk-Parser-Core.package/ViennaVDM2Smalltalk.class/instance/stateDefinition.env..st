@@ -18,7 +18,7 @@ stateDefinition: aViennaNode env: aDictionary
 					'Number of state variables and number of arguments must agree: ' , vars size printString , ', '
 						, expressionListNode size printString ].
 	vals := expressionListNode collect: [ :node | self generate: node env: aDictionary ].
-	^ String
+	^ {(String
 		new: 1024
 		streamContents: [ :stream | 
 			vars
@@ -28,17 +28,23 @@ stateDefinition: aViennaNode env: aDictionary
 						nextPutAll: var;
 						nextPutAll: ' := ';
 						nextPutAll: val;
-						nextPutAll: '.' , String cr ].
+						nextPutAll: '.' , String cr ] ]).
+	(String
+		new: 1024
+		streamContents: [ :stream | 
 			stream
 				nextPutAll: initConstructor;
 				nextPutAll: ' := ViennaCompositeType constructorName: ';
 				nextPutAll: initConstructor storeString;
 				nextPutAll: ' withAll: {';
 				nextPutAll: (' . ' join: (self generate: fieldListNode env: aDictionary));
-				nextPutAll: '}.' , String cr.
+				nextPutAll: '}' ]).
+	(String
+		new: 1024
+		streamContents: [ :stream | 
 			patternVar := initNode first first first.
 			stream
 				nextPutAll: 'init_';
 				nextPutAll: initConstructor;
 				nextPutAll: ' := ';
-				nextPutAll: (self generate: initNode first) ]
+				nextPutAll: (self generate: initNode first) ])}
