@@ -1,6 +1,6 @@
 accessing
 translate: aTextOrString ifError: errorBlock
-	^ (self translator parse: aTextOrString asString)
+	^ (self translator value: aTextOrString asString)
 		in: [ :result | 
 			result isPetitFailure
 				ifTrue: [ errorBlock value: result ]

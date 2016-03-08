@@ -2,4 +2,4 @@ private
 createTranslator
 	| parser |
 	parser := ViennaVDMParser new.
-	^ parser document end / parser statement end / parser expression end
+	^ [ :string | parser document end / parser statement end / parser expression end parse: string ]
