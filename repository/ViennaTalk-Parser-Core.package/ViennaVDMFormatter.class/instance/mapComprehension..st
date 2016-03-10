@@ -6,7 +6,7 @@ mapComprehension: aViennaNode
 	bindList := self format: aViennaNode third.
 	guard := aViennaNode fourth ifNil: [ '' ] ifNotNil: [ :node | '& ' , (self format: node) ].
 	(self needsIndent: keyExpression , valueExpression , bindList , guard)
-		ifFalse: [ ^ '{' , keyExpression , ' |-> ' , valueExpression , ' | ' , bindList , ' & ' , guard , '}' ].
+		ifFalse: [ ^ '{' , keyExpression , ' |-> ' , valueExpression , ' | ' , bindList , guard , '}' ].
 	^ '{'
 		,
 			(self
