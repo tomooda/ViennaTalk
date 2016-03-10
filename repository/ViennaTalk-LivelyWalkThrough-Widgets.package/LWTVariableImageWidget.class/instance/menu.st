@@ -5,6 +5,7 @@ menu
 	menu addLine.
 	forms
 		keysDo: [ :key | 
+			key ifNotNil: [ 
 			menu
 				add: key
 				subMenu:
@@ -17,7 +18,7 @@ menu
 							target: self
 							selector: #removeImageAt:
 							argument: key;
-						yourself) ].
+						yourself) ]].
 	menu
 		add: 'DEFAULT'
 		subMenu:

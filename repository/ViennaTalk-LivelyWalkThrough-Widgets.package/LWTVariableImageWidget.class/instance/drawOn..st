@@ -11,11 +11,6 @@ drawOn: aCanvas
 			| scale |
 			scale := self extent / form extent.
 			aCanvas
-				frameAndFillRectangle: self bounds
-				fillColor: Color white
-				borderWidth: 0
-				borderColor: Color transparent.
-			aCanvas
 				paintImage:
 					(form
 						magnifyBy:
