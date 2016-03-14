@@ -1,0 +1,578 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<style>
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote {
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", Arial, sans-serif;
+    font-size: 13px;
+    line-height: 18px;
+    color: #737373;
+    background-color: white;
+    margin: 10px 13px 10px 13px;
+}
+table {
+	margin: 10px 0 15px 0;
+	border-collapse: collapse;
+}
+td,th {	
+	border: 1px solid #ddd;
+	padding: 3px 10px;
+}
+th {
+	padding: 5px 10px;	
+}
+
+a {
+    color: #0069d6;
+}
+a:hover {
+    color: #0050a3;
+    text-decoration: none;
+}
+a img {
+    border: none;
+}
+p {
+    margin-bottom: 9px;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #404040;
+    line-height: 36px;
+}
+h1 {
+    margin-bottom: 18px;
+    font-size: 30px;
+}
+h2 {
+    font-size: 24px;
+}
+h3 {
+    font-size: 18px;
+}
+h4 {
+    font-size: 16px;
+}
+h5 {
+    font-size: 14px;
+}
+h6 {
+    font-size: 13px;
+}
+hr {
+    margin: 0 0 19px;
+    border: 0;
+    border-bottom: 1px solid #ccc;
+}
+blockquote {
+    padding: 13px 13px 21px 15px;
+    margin-bottom: 18px;
+    font-family:georgia,serif;
+    font-style: italic;
+}
+blockquote:before {
+    content:"\201C";
+    font-size:40px;
+    margin-left:-10px;
+    font-family:georgia,serif;
+    color:#eee;
+}
+blockquote p {
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 18px;
+    margin-bottom: 0;
+    font-style: italic;
+}
+code, pre {
+    font-family: Monaco, Andale Mono, Courier New, monospace;
+}
+code {
+    background-color: #fee9cc;
+    color: rgba(0, 0, 0, 0.75);
+    padding: 1px 3px;
+    font-size: 12px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+pre {
+    display: block;
+    padding: 14px;
+    margin: 0 0 18px;
+    line-height: 16px;
+    font-size: 11px;
+    border: 1px solid #d9d9d9;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+pre code {
+    background-color: #fff;
+    color:#737373;
+    font-size: 11px;
+    padding: 0;
+}
+sup {
+    font-size: 0.83em;
+    vertical-align: super;
+    line-height: 0;
+}
+* {
+	-webkit-print-color-adjust: exact;
+}
+@media screen and (min-width: 914px) {
+    body {
+        width: 854px;
+        margin:10px auto;
+    }
+}
+@media print {
+	body,code,pre code,h1,h2,h3,h4,h5,h6 {
+		color: black;
+	}
+	table, pre {
+		page-break-inside: avoid;
+	}
+}
+</style>
+<title>Lively Walk-Through チュートリアル: Tic-Tac-Toe</title>
+
+</head>
+<body>
+<h1>Lively Walk-Through チュートリアル: Tic-Tac-Toe</h1>
+
+<h2>目次</h2>
+
+<ul>
+<li><a href="#abstract">概要</a></li>
+<li><a href="#preparation">準備</a></li>
+<li><a href="#launch-LivelyWalkThrough">Lively Walk-Through を起動する</a></li>
+<li><a href="#read-spec">VDM-SL仕様を読み込む</a></li>
+<li><a href="#board">Tic Tac Toe ゲームの盤面を配置する</a></li>
+<li><a href="#C11">升目を表示するウィジェットを1つ配置する</a></li>
+<li><a href="#script">LiveTalk スクリプトで石の表示を切り替える仕組みを作る</a></li>
+<li><a href="#3x3">C11を複製して3x3の升目を作る</a></li>
+<li><a href="#start">ゲーム開始ボタンを作る</a></li>
+<li><a href="#fix-position">UIの配置を固定する</a></li>
+<li><a href="#play">Tic Tac Toe をプレイしてみる</a></li>
+<li><a href="#save">UIプロトタイプをファイルに保存する</a></li>
+</ul>
+
+
+<p><a name="abstract"></a></p>
+
+<h2>概要</h2>
+
+<p>Tic Tac Toe は2人で遊ぶゲームで、3x3の格子状の升目に2人のプレーヤーが交互に石を置き、自分の石が縦、横、または斜めに3つ並んだら勝ち、3つ並ばずに全ての升目が埋まったら引き分けとなるゲームです。</p>
+
+<p>このチュートリアルでは、コンピュータを相手に遊ぶ Tic Tac Toe ゲームの仕様を使って、ゲームの UI プロトタイプを Lively Walk-Through 上に作成することを通して、Lively Walk-through の使い方を学びます。</p>
+
+<p><a name="preparation"></a></p>
+
+<h2>準備</h2>
+
+<h3>ViennaTalk</h3>
+
+<p>ViennaTalkを <a href="https://github.com/tomooda/ViennaTalk-doc/releases">ViennaTalk リリースページ</a>から入手してください。</p>
+
+<h3>チュートリアル用リソース</h3>
+
+<p>このチュートリアルには以下のファイルが必要です。
+このチュートリアルのResourcesディレクトリから入手してください。</p>
+
+<ul>
+<li>TicTacToe.vdmsl (Tic Tac Toe ゲームの VDM-SL仕様)</li>
+<li>board.png (盤面の画像、紙の上に「＃」が描かれています)</li>
+<li>O.png (プレーヤーの石の画像、透明な背景に「○」が描かれています)</li>
+<li>X.png (コンピュータの石の画像、透明な背景に「×」が描かれています)</li>
+<li>empty.png (空升の画像、透明な画像です)</li>
+</ul>
+
+
+<p><a name="make-ui"/></p>
+
+<h2>UIプロトタイプを作る</h2>
+
+<p><a name="launch-LivelyWalkThrough"></a></p>
+
+<h2>Lively Walk-Through を起動する</h2>
+
+<p>まず、ViennaTalkを起動してください。</p>
+
+<p>MacならばViennaTalkアイコンをダブルクリック、Windowsならば ViennaTalk\pharo.exe、Linuxならば ViennaTalk/pharo を実行してください。</p>
+
+<p><img src="images/001-open-ViennaTalk.png" width="400" alt="ViennaTalk" /></p>
+
+<p>続いて、ViennaTalk Launcher の Toolsメニューから、「Lively Walk-Through」を開きます。</p>
+
+<p><img src="images/002-open-LivelyWalkThrough.png" width="400" alt="Lively Walk-Through menu" /></p>
+
+<p><img src="images/003-LivelyWalkThrough.png" width="400" alt="Lively Walk-Through window" /></p>
+
+<p>これで Lively Walk-Through が起動しました。
+これから Lively Walk-Through 上に Tic-Tac-Toe ゲームのUI プロトタイプを作成します。</p>
+
+<p><a name="read-spec"></a></p>
+
+<h2>VDM-SL仕様を読み込む</h2>
+
+<p>Tic Tac ToeゲームのVDM-SL仕様を Lively Walk-Through に読み込みます。</p>
+
+<p>Lively Walk-Throughの上部右側のタブから「VDM Browser」を選択してください。</p>
+
+<p><img src="images/004-open-VDMBrowser.png" width="400" alt="VDMBrowser" /></p>
+
+<p>上段左側の「DEFAULT」と書いてあるリスト上で右クリックして、「New and load...」を選んでください。</p>
+
+<p><img src="images/005-newAndLoad.png" width="400" alt="new and load" /></p>
+
+<p>ファイルを選択するダイアログが開くので、TicTacToe.vdmsl を選んでください。</p>
+
+<p><img src="images/006-TicTacToe.vdmsl.png" width="400" alt="Tic Tac Toe" /></p>
+
+<p>Tic Tac Toe ゲームの VDM-SL 仕様が読み込まれました。</p>
+
+<p><a name="board"></a></p>
+
+<h2>Tic Tac Toe ゲームの盤面を配置する</h2>
+
+<p>Tic Tac Toeで遊ぶためのUIプロトタイプを作成します。</p>
+
+<p>まずは盤面の画像を配置します。
+Lively Walk-Throughの上部右側のタブからWidgetsを選択してウィジェットパレットからImageウィジェットをドラッグして左側のプロトタイプスペースに置いてください。</p>
+
+<p><img src="images/007-ImageWidget.png" width="400" alt="Widgets pallette" /></p>
+
+<p><img src="images/008-placed-ImageWidget.png" width="400" alt="Image widget" /></p>
+
+<p>Imageウィジェットに盤面の画像ファイル(board.png =400x)を表示するよう設定します。
+プロトタイプスペースのImageウィジェット上で右クリックでメニューを出し、「change image...」を選択してください。</p>
+
+<p><img src="images/009-ChangeImage.png" width="400" alt="chagne image" /></p>
+
+<p>ファイルダイアログが開きます。 board.png を選択してください。</p>
+
+<p><img src="images/010-choose-ImageFile.png" width="400" alt="choose image" /></p>
+
+<p>するとImageウィジェットに盤面画像が表示されます。</p>
+
+<p><img src="images/011-ImageWidget.png" width="400" alt="image widget" /></p>
+
+<p>十分に大きなサイズになるよう、画像の右下をドラッグして調整してください。</p>
+
+<p><img src="images/012-resize-ImageWidget.png" width="400" alt="resize widget" /></p>
+
+<p>これで Tic Tac Toeを遊ぶための盤面の画像を配置できました。</p>
+
+<p><a name="C11"></a></p>
+
+<h2>升目を表示するウィジェットを1つ配置する</h2>
+
+<p>ゲーム画面として、石を表示するための仕組みを作ります。</p>
+
+<p>Lively Walk-ThroughにはVariableImageウィジェットがあります。
+VariableImageウィジェットは、保持する値に応じて表示する画像をあらかじめ定義することで、保持する値をグラフィカルに表現するためのウィジェットです。
+Tic Tac Toe の仕様では、get操作を呼び出すと、引数で指定された位置の升目の値として「○」が置かれていたら &lt;O&gt;、「×」が置かれていたら &lt;X&gt;、何も置かれていなければ nil が得られます。
+VariableImageウィジェットにそれら3つの値に対応する画像を指定しておいて、get操作の結果をVariableImageウィジェットに渡すことで、Tic Tac Toe の盤面を更新することができます。</p>
+
+<p>まずは 3x3 の升目のうち左上の升目を作ります。</p>
+
+<p>Lively Walk-Through の右側のウィジェットパレットからVariableImageウィジェットを盤面の左上に配置します。</p>
+
+<p><img src="images/013-VariableImageWidget.png" width="400" alt="VariableImage widget" /></p>
+
+<p><img src="images/014-placed-VariableImageWidget.png" width="400" alt="VariableImage widget placed" /></p>
+
+<p>置いたVariableImageウィジェットは左上の升目を表します。
+名前を C11 に変更します。
+置いたVariableImageウィジェット上で右クリックメニューから change nameを選択してください。</p>
+
+<p><img src="images/015-ChangeName.png" width="400" alt="change name" /></p>
+
+<p>そして、ウィジェット名として「C11」と入力してください。</p>
+
+<p><img src="images/016-ChangeName-C11.png" width="400" alt="enter C11" /></p>
+
+<p>次に、升目の状態ごとに表示する画像を設定します。
+まずは、「&lt;O&gt;」に対応する画像として、images/O.pngを指定します。
+右クリックメニューで、「add mapping」を選択してください。</p>
+
+<p><img src="images/017-AddMapping.png" width="400" alt="add mapping" /></p>
+
+<p>対応させる値を指定します。「&lt;O&gt;」と入力してください。</p>
+
+<p><img src="images/018-AddMapping-O.png" width="400" alt="add mapping key O" /></p>
+
+<p>次に、「&lt;O&gt;」に対応させる画像を指定します。ファイルダイアログが開くので、このチュートリアルに同梱されている images/O.png を指定してください。</p>
+
+<p><img src="images/019-AddMapping-image.png" width="400" alt="assign image to O" /></p>
+
+<p>同様にして、「&lt;X&gt;」に images/X.png を対応させてください。</p>
+
+<p><img src="images/022-AddMapping-image.png" width="400" alt="assign image to X" /></p>
+
+<p>最後に、デフォルトの画像として、 images/empty.png を指定してください。</p>
+
+<p><img src="images/023-ChangeDefaultImage.png" width="400" alt="change default image" /></p>
+
+<p>これで左上の升目を表すウィジェットの設定ができました。</p>
+
+<p><a name="script"></a></p>
+
+<h2>LiveTalk スクリプトで石の表示を切り替える仕組みを作る</h2>
+
+<p>画面を更新する仕組みを作ります。</p>
+
+<p>Lively Walk-Throughでは、VDM-SL仕様と画面を連動させる仕組みとして、LiveTalkというミニ言語を使います。
+LiveTalkでは、ウィジェットに発生したイベントに対するアクションを定義します。
+イベントには、「clicked」のように直接ユーザの操作によって発生するイベントと、
+「assigned」のようにウィジェットに対する操作によっても発生するイベントがあります。
+今回は升目を表すウィジェットの「clicked」イベントを使ってプレーヤーが入力した「手」をVDM-SL仕様に伝え、
+入力フィールドウィジェットの「assigned」イベントを使って画面を更新する仕組みをLiveTalkを使って記述します。</p>
+
+<p>まずは、「assigned」イベントを使って画面を更新する仕組みを記述します。
+ウィジェットパレットからFieldウィジェットをドラッグして、左側の盤面外のどこかに配置してください。</p>
+
+<p><img src="images/024-Field.png" width="400" alt="field widget" /></p>
+
+<p><img src="images/025-placed-Field.png" width="400" alt="placed field widget" /></p>
+
+<p>Fieldウィジェットのウィジェット名を「Status」に設定します。
+配置したFieldウィジェットの右クリックメニューで「change name」を選んでください。</p>
+
+<p><img src="images/026-ChangeName-Field.png" width="400" alt="change name" /></p>
+
+<p>ウィジェット名として「Status」と入力してください。</p>
+
+<p><img src="images/027-ChangeName-Status.png" width="400" alt="change name to Status" /></p>
+
+<p>この「Status」ウィジェットの「assigned」イベントに対するアクションを定義します。
+画面上端右のタブから「LiveTalk」をクリックしてください。
+すると、ウィンドウの右半分がウィジェットパレットからLiveTalkブラウザに切り替わります。</p>
+
+<p><img src="images/028-open-LiveTalkBrowser.png" width="400" alt="LiveTalk tab" /></p>
+
+<p>「Status」ウィジェットのassignedイベントに対するアクションとして、VDM-SL仕様の<code>get(1,1)</code>を呼び出して、結果を「C11」ウィジェットに渡しなさい、という動作を定義します。</p>
+
+<p>以下の内容をLiveTalkブラウザの下半分に入力して、右クリックメニューから「Accept」を選択してください。</p>
+
+<pre><code>Status`assigned
+    get(1,1) -&gt; [C11]
+</code></pre>
+
+<p><img src="images/029-StatusScript.png" width="400" alt="Status script" /></p>
+
+<p>文法に誤りがなければ、LiveTalkブラウザの上側のリストにさきほど定義したスクリプトが「Status`assigned」として追加されます。</p>
+
+<p><img src="images/030-added-StatusScript.png" width="400" alt="script added" /></p>
+
+<p>次に、プレーヤーの手をVDM-SLに伝えるスクリプトを作成します。
+C11が押されたら左上の升目に石を置くように、以下の内容をLiveTalkブラウザの下半分に入力し、右クリックメニューから「Accept」を選択してください。</p>
+
+<pre><code>C11`clicked
+    play(1,1) -&gt; [Status]
+</code></pre>
+
+<p><img src="images/031-added-C11Script.png" width="400" alt="C11 script" /></p>
+
+<p>これで、</p>
+
+<ol>
+<li>ユーザが「C11」ウィジェット上でクリックすると、VDM-SL仕様で<code>play(1,1)</code>を実行し、その結果を「Status」ウィジェットに渡す。</li>
+<li>「Status」ウィジェットが値を渡されたら、VDM-SL仕様で<code>get(1,1)</code>を実行し、その結果を「C11」ウィジェットに渡す。</li>
+<li>「C11」ウィジェットは渡された値に応じて表示する画像を切り替える。「&lt;O&gt;」ならば○、「&lt;X&gt;」ならばX、それ以外 (nil を含む) ならば透明な画像を表示する。</li>
+</ol>
+
+
+<p>という動作を行う仕組みができました。</p>
+
+<p>テストとして、「C11」ウィジェットをクリックしてみてください。</p>
+
+<p><img src="images/032-click-C11.png" width="400" alt="C11" /></p>
+
+<p>以下のように、「○」が表示されます。</p>
+
+<p><img src="images/033-clicked-C11.png" width="400" alt="clicked at C11" /></p>
+
+<p>動作することを確認してください。</p>
+
+<p><a name="3x3"></a></p>
+
+<h2>C11を複製して3x3の升目を作る</h2>
+
+<p>動作することを確認した左上の升目を複製して、3x3の升目を作ります。
+C11の右クリックメニューから「duplicate」を選択してください。</p>
+
+<p><img src="images/034-duplicate-C11.png" width="400" alt="duplicate" /></p>
+
+<p>複製されたウィジェットの名前を指定します。
+「C12」と入力してください。</p>
+
+<p><img src="images/035-duplicate-C12.png" width="400" alt="C12" /></p>
+
+<p>「C12」ウィジェットが複製されました。</p>
+
+<p><img src="images/036-duplicated-C12.png" width="400" alt="C12" /></p>
+
+<p>「C12」ウィジェットをドラッグして上段中央の升目に入れてください。</p>
+
+<p><img src="images/037-moved-C12.png" width="400" alt="move C12" /></p>
+
+<p>これを繰り返して、全ての升目を埋めてください。</p>
+
+<p><img src="images/038-duplicateAndMoveAll.png" width="400" alt="C12-C33" /></p>
+
+<p>LiveTalkブラウザでC12からC33までのスクリプトを作成します。
+LiveTalkブラウザ上部のリストで LiveC11`clicked を選択してください。
+LiveTalkブラウザ下部に C11`clicked のスクリプトが表示されるので、以下のように編集して、右クリックメニューでAcceptしてください。</p>
+
+<pre><code>C12`clicked
+    play(1,2) -&gt; [Status]
+</code></pre>
+
+<p><img src="images/039-C12Script.png" width="400" alt="C12 script" /></p>
+
+<p>同様に、C13`clicked から C33`clicked まで定義してください。</p>
+
+<p><img src="images/040-added-CScripts.png" width="400" alt="C12 script" /></p>
+
+<p>Status`assigned スクリプトを以下のように修正してください。</p>
+
+<pre><code>Status`assigned
+    get(1,1) -&gt; [C11]
+    get(1,2) -&gt; [C12]
+    get(1,3) -&gt; [C13]
+    get(2,1) -&gt; [C21]
+    get(2,2) -&gt; [C22]
+    get(2,3) -&gt; [C23]
+    get(3,1) -&gt; [C31]
+    get(3,2) -&gt; [C32]
+    get(3,3) -&gt; [C33]
+</code></pre>
+
+<p><img src="images/041-extend-StatusScript.png" width="400" alt="Status script" /></p>
+
+<p><a name="start"></a></p>
+
+<h2>ゲーム開始ボタンを作る</h2>
+
+<p>最後に、盤面を初期化して Tic Tac Toe ゲームを開始するボタンを作成します。</p>
+
+<p>ウィジェットパレットからButtonウィジェットをドラッグして、盤面の画像の下に置きます。</p>
+
+<p><img src="images/042-button.png" width="400" alt="Button" /></p>
+
+<p><img src="images/042-placed-Button.png" width="400" alt="Button placed" /></p>
+
+<p>Buttonウィジェットの名前を「Start」に設定します。
+右クリックメニューの「change name」を選択してください。</p>
+
+<p><img src="images/043-ChangeName-Button.png" width="400" alt="change name" /></p>
+
+<p>新しいウィジェット名として「Start」と入力してください。</p>
+
+<p><img src="images/044-ChangeName-Start.png" width="400" alt="Start" /></p>
+
+<p><img src="images/045-changed-Start.png" width="400" alt="Start" /></p>
+
+<p><img src="images/046-added-StartScript.png" width="400" alt="Start script" /></p>
+
+<p>Startボタンを押した時のアクションを定義します。</p>
+
+<p>「LiveTalk」タブをクリックしてLiveTalkブラウザに切り替えてください。
+LiveTalkブラウザ下部に以下のスクリプトを入力して、右クリックメニューから「Accept」してください。</p>
+
+<pre><code>Start`clicked
+    reset()
+    "" -&gt; [Status]
+</code></pre>
+
+<p>これでUIの配置とスクリプトの定義が完了しました。</p>
+
+<p><a name="fix-position"></a></p>
+
+<h2>UIの配置を固定する</h2>
+
+<p>UIの配置が決まったら、配置を固定します。</p>
+
+<p>C11ウィジェットの右クリックメニューで「fix position」を選択してください。
+もしまた修正したい場合には、右クリックメニューで「make movable」を選択すると、固定が解除されるので、
+修正して、再度「fix position」をしてください。</p>
+
+<p><img src="images/047-fixposition-widgets.png" width="400" alt="fixposition" /></p>
+
+<p><a name="play"></a></p>
+
+<h2>Tic Tac Toe をプレイしてみる</h2>
+
+<p>では、「Start」ボタンを押して、Tic Tac Toeで遊んでみましょう。</p>
+
+<p><img src="images/048-click-Start.png" width="400" alt="start" /></p>
+
+<p><img src="images/049-click-C22.png" width="400" alt="play" /></p>
+
+<p><img src="images/050-computerMove.png" width="400" alt="play" /></p>
+
+<p><img src="images/051-player-move.png" width="400" alt="play" /></p>
+
+<p><img src="images/052-playout.png" width="400" alt="play" /></p>
+
+<p><img src="images/053-draw.png" width="400" alt="play" /></p>
+
+<p>引き分けました。Startボタンを押してリセットしてください。</p>
+
+<p><img src="images/054-click-Start.png" width="400" alt="play" /></p>
+
+<p>盤面が初期化されました。
+一通り遊ぶことができる UIプロトタイプ が完成しました。</p>
+
+<p>UIプロトタイプが完成したことで、</p>
+
+<ul>
+<li>この通りの VDM-SL仕様は Tic Tac Toe ゲームに必要な機能を一通り備えていること</li>
+<li>この通りの UIデザインは Tic Tac Toe ゲームに必要な UI を一通り備えていること</li>
+<li>VDM-SL仕様 と UIデザインはお互いに想定が食い違っておらず、整合していること</li>
+</ul>
+
+
+<p>が確認できました。
+さらに洗練された VDM-SL仕様 と UIデザイン を得るために、VDM-SL技術者と UIデザイナがこのUIプロトタイプ上で議論して、
+問題点、課題、改善できる点、設計として合意した点をまとめて、お互いに持ち帰りましょう。</p>
+
+<h2>UIプロトタイプをファイルに保存する</h2>
+
+<p>作成した UIプロトタイプをファイルに保存します。</p>
+
+<p>上端右側の「File」タブをクリックしてください。</p>
+
+<p><img src="images/055-clicked-Start.png" width="400" alt="play" /></p>
+
+<p>「Save as...」ボタンを押してください。</p>
+
+<p><img src="images/056-open-FileTag.png" width="400" alt="play" /></p>
+
+<p>ファイルダイアログが開くので、保存先のファイルを指定してください。</p>
+
+<p><img src="images/057-SaveAs-TicTacToe-lwt.png" width="400" alt="play" /></p>
+
+<p>これでファイルに保存することができました。
+開く時には、同じく「File」タブの「Load...」ボタンで、同じファイルを指定してください。</p>
+</body>
+</html>

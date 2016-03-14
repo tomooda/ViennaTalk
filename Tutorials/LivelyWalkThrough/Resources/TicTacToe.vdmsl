@@ -1,0 +1,79 @@
+types
+     Player = <O>;
+     Computer = <X>;
+     Position :: row : nat1 column : nat1
+        inv mk_Position(r, c) == r in set {1, ..., 3} and c in set {1, ..., 3};
+     Board = map Position to (Player| Computer);
+     Status ::
+        <WonByPlayer>| <WonByComputer>| <Draw>| <Playing>| <Invalid> Board;
+
+values
+     player = <O>;
+     computer = <X>;
+     allPositions =
+        {mk_Position(row, column) | row, column in set {1, ..., 3}};
+     magic : inmap Position to nat1 =
+        {mk_Position(1, 1) |-> 2, mk_Position(1, 2) |-> 7,
+        mk_Position(1, 3) |-> 6, mk_Position(2, 1) |-> 9,
+        mk_Position(2, 2) |-> 5, mk_Position(2, 3) |-> 1,
+        mk_Position(3, 1) |-> 4, mk_Position(3, 2) |-> 3,
+        mk_Position(3, 3) |-> 8};
+     victory = 15;
+
+functions
+    winner : (Player| Computer)* Board -> bool
+    winner(p, b) ==
+        exists x, y, z in set dom (b :> {p}) &
+            card {x, y, z} = 3 and magic(x) + magic(y) + magic(z) = victory;
+    
+    legalMoves : Board -> set of Position
+    legalMoves(board) == allPositions \ dom board;
+
+state State of
+    board : Board
+init s == s = mk_State({|->})
+end
+
+operations
+    reset : () ==> ()
+    reset() == board := {|->};
+    
+    get : nat1* nat1 ==> [Player| Computer]
+    get(row, column) ==
+        let position = mk_Position(row, column)
+        in
+            if position in set dom board then return board(position) else return nil;
+    
+    move : (Player| Computer)* Position ==> ()
+    move(p, position) ==
+        if position not in set dom board then board(position) := p;
+    
+    play : nat1* nat1 ==> Status
+    play(row, column) ==
+        (let position = mk_Position(row, column)
+        in
+            (if
+                position not in set legalMoves(board)
+            then
+                return mk_Status(<Invalid>, board)
+            ;
+            move(player, position));
+        if winner(player, board) then return mk_Status(<WonByPlayer>, board);
+        let moves = legalMoves(board)
+        in
+            (if card moves = 0 then return mk_Status(<Draw>, board);
+            if exists position in set moves &
+                winner(computer, board ++ {position |-> computer})
+                then let position in set moves
+                be st winner(computer, board ++ {position |-> computer})
+                in
+                    (move(computer, position);
+                    return mk_Status(<WonByComputer>, board))
+            elseif exists position in set moves &
+                    winner(player, board ++ {position |-> player})
+                then let position in set moves
+                be st winner(player, board ++ {position |-> player})
+                in move(computer, position)
+            else
+                let position in set moves be st true in move(computer, position));
+        return mk_Status(if card legalMoves(board) = 0 then <Draw> else <Playing>, board));
