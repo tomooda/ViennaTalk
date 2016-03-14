@@ -5,7 +5,7 @@ base64Forms
 	forms
 		keysAndValuesDo: [ :key :image | 
 			base64Forms
-				at: key
+				at: (key ifNil: [ '' ])
 				put:
 					(Base64MimeConverter
 						mimeEncode:
