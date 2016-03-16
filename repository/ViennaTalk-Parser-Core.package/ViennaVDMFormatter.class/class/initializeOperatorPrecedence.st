@@ -24,6 +24,7 @@ initializeOperatorPrecedence
 		at: 'SequenceTail' put: 36;
 		at: 'DistributedSequenceConcatenation' put: 36;
 		at: 'SequenceIndices' put: 36;
+		at: 'SequenceReverse' put: 36;
 		at: 'MapRangeRestrictedBy' put: 35;
 		at: 'MapRangeRestrictedTo' put: 35;
 		at: 'MapDomainRestrictedBy' put: 34;
