@@ -1,0 +1,419 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<style>
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote {
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", Arial, sans-serif;
+    font-size: 13px;
+    line-height: 18px;
+    color: #737373;
+    background-color: white;
+    margin: 10px 13px 10px 13px;
+}
+table {
+	margin: 10px 0 15px 0;
+	border-collapse: collapse;
+}
+td,th {	
+	border: 1px solid #ddd;
+	padding: 3px 10px;
+}
+th {
+	padding: 5px 10px;	
+}
+
+a {
+    color: #0069d6;
+}
+a:hover {
+    color: #0050a3;
+    text-decoration: none;
+}
+a img {
+    border: none;
+}
+p {
+    margin-bottom: 9px;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #404040;
+    line-height: 36px;
+}
+h1 {
+    margin-bottom: 18px;
+    font-size: 30px;
+}
+h2 {
+    font-size: 24px;
+}
+h3 {
+    font-size: 18px;
+}
+h4 {
+    font-size: 16px;
+}
+h5 {
+    font-size: 14px;
+}
+h6 {
+    font-size: 13px;
+}
+hr {
+    margin: 0 0 19px;
+    border: 0;
+    border-bottom: 1px solid #ccc;
+}
+blockquote {
+    padding: 13px 13px 21px 15px;
+    margin-bottom: 18px;
+    font-family:georgia,serif;
+    font-style: italic;
+}
+blockquote:before {
+    content:"\201C";
+    font-size:40px;
+    margin-left:-10px;
+    font-family:georgia,serif;
+    color:#eee;
+}
+blockquote p {
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 18px;
+    margin-bottom: 0;
+    font-style: italic;
+}
+code, pre {
+    font-family: Monaco, Andale Mono, Courier New, monospace;
+}
+code {
+    background-color: #fee9cc;
+    color: rgba(0, 0, 0, 0.75);
+    padding: 1px 3px;
+    font-size: 12px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+pre {
+    display: block;
+    padding: 14px;
+    margin: 0 0 18px;
+    line-height: 16px;
+    font-size: 11px;
+    border: 1px solid #d9d9d9;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+pre code {
+    background-color: #fff;
+    color:#737373;
+    font-size: 11px;
+    padding: 0;
+}
+sup {
+    font-size: 0.83em;
+    vertical-align: super;
+    line-height: 0;
+}
+* {
+	-webkit-print-color-adjust: exact;
+}
+@media screen and (min-width: 914px) {
+    body {
+        width: 854px;
+        margin:10px auto;
+    }
+}
+@media print {
+	body,code,pre code,h1,h2,h3,h4,h5,h6 {
+		color: black;
+	}
+	table, pre {
+		page-break-inside: avoid;
+	}
+}
+</style>
+<title>Webly Walk-Through チュートリアル: Blahサーバ</title>
+
+</head>
+<body>
+<h1>Webly Walk-Through チュートリアル: Blahサーバ</h1>
+
+<h2>目次</h2>
+
+<ul>
+<li><a href="#abstract">概要</a></li>
+<li><a href="#preparation">準備</a></li>
+<li><a href="#launch-LivelyWalkThrough">Webly Walk-Through を起動する</a></li>
+<li><a href="#read-spec">VDM-SL仕様を読み込む</a></li>
+<li><a href="#workspace">Workspace上でテストする</a></li>
+<li><a href="#translation">JSON-VDM 間の変換規則を定義する</a></li>
+<li><a href="#start">Web API サーバを起動する</a></li>
+<li><a href="#api-access">ウェブブラウザで Blah API をテストする</a></li>
+<li><a href="#client">ウェブブラウザから Blah を利用する</a></li>
+<li><a href="#summary">まとめ</a></li>
+</ul>
+
+
+<p><a name="abstract"></a></p>
+
+<h2>概要</h2>
+
+<p>このチュートリアルでは、Blah サーバという架空のウェブサービスを行うサーバのWeb API仕様を使って、Blahサーバのプロトタイプを構築することで、Webly Walk-Throughの使い方を学びます。</p>
+
+<p>Blah(どうでもいい話)サーバは友人達とどうでもいい話をするためのウェブサーバです。
+各ユーザは友達リストを持っていて、画面にはその友達が書き込んだBlah(どうでもいい話)が時系列で表示されます。
+友達関係は非対称です。つまり、一方が他方の友達であると相手の同意なしに宣言することができ、相手は自分を友達リストに入れる必要はありません。</p>
+
+<p><a name="preparation"></a></p>
+
+<h2>準備</h2>
+
+<h3>ViennaTalk</h3>
+
+<p>ViennaTalkを <a href="https://github.com/tomooda/ViennaTalk-doc/releases">ViennaTalk リリースページ</a>から入手してください。</p>
+
+<h3>チュートリアル用リソース</h3>
+
+<p>このチュートリアルには以下のファイルが必要です。
+このチュートリアルのResourcesディレクトリから入手してください。</p>
+
+<ul>
+<li>Blah.vdmsl (Blah API の VDM-SL仕様)</li>
+<li>Blah.html (Blah のWeb画面)</li>
+</ul>
+
+
+<p><a name="launch-LivelyWalkThrough"></a></p>
+
+<h2>Webly Walk-Through を起動する</h2>
+
+<p>まず、ViennaTalkを起動してください。</p>
+
+<p>MacならばViennaTalkアイコンをダブルクリック、Windowsならば ViennaTalk\pharo.exe、Linuxならば ViennaTalk/pharo を実行してください。</p>
+
+<p><img src="images/001-open-ViennaTalk.png" width="400" alt="ViennaTalk" /></p>
+
+<p>続いて、ViennaTalk Launcher の Toolsメニューから、「Webly Walk-Through」を開きます。</p>
+
+<p><img src="images/002-open-webly.png" width="400" alt="Webly Walk-Through menu" /></p>
+
+<p><img src="images/003-webly.png" width="400" alt="Webly Walk-Through window" /></p>
+
+<p>これで Webly Walk-Through が起動しました。
+Webly Walk-Through のほとんどの機能は VDM Browser と同じです。
+UI 上の違いは、ブラウザ中央の Web API タブです。
+Webly Walk-Through の Web API サーバとしての機能の管理をこの Web API タブで行います。</p>
+
+<p>これから Webly Walk-Through 上で Blah WebAPIサーバ プロトタイプを作成し、ウェブブラウザからアクセスしていきます。</p>
+
+<p><a name="read-spec"></a></p>
+
+<h2>VDM-SL仕様を読み込む</h2>
+
+<p>Blah API のVDM-SL仕様を Webly Walk-Through に読み込みます。</p>
+
+<p>上段左側の「DEFAULT」と書いてあるリスト上で右クリックして、「New and load...」を選んでください。</p>
+
+<p><img src="images/004-newAndLoad.png" width="400" alt="Webly" /></p>
+
+<p>ファイルを選択するダイアログが開くので、このチュートリアルに添付されている Resources/Blah.vdmsl を選んでください。</p>
+
+<p><img src="images/005-open-spec.png" width="400" alt="new and load" /></p>
+
+<p>Blah API の VDM-SL 仕様が読み込まれました。</p>
+
+<p><img src="images/006-spec-loaded.png" width="400" alt="Blah API" /></p>
+
+<p>この仕様が定義しているAPIのうち、このAPIサーバプロトタイプでは</p>
+
+<ul>
+<li>getBlah : getBlah : Name ==> seq of Message</li>
+<li>sayBlah : Name* Contents ==> ()</li>
+<li>addFriend : Name* Name ==> bool</li>
+<li>removeFriend : Name* Name ==> bool</li>
+</ul>
+
+
+<p>の4つの操作を使います。
+なお、Name、Contents および Message は以下の通り定義されています。</p>
+
+<ul>
+<li>Name = seq1 of char</li>
+<li>Contents = seq of char</li>
+<li>Message :: name : Name content : Contents</li>
+</ul>
+
+
+<p>getBlah 操作は引数で指定されたユーザの友達の書き込み最新10件を返します。</p>
+
+<p>sayBlah 操作は引数で指定されたユーザとして同じく引数で指定された文字列を書き込みます。</p>
+
+<p>addFriend 操作および removeFriend 操作は、引数で指定されたユーザの友達を追加および削除します。</p>
+
+<p>簡単のため、いずれもユーザ認証は行いません。
+未知のユーザからのアクセスに対して自動的に新規アカウントを作成します。</p>
+
+<p><a name="workspace"></a></p>
+
+<h2>Workspace上でテストする</h2>
+
+<p>読み込んだ Blah API の VDM-SL仕様を Webly Walk-Through ブラウザ上で動かしてみます。</p>
+
+<p><img src="images/008-webly-workspace.png" width="400" alt="workspace" /></p>
+
+<p>ユーザ Alice が「Hello」と書き込むには、</p>
+
+<pre><code>sayBlah("Alice", "Hello")
+</code></pre>
+
+<p>と Workspace 上に入力して、その行を選択した状態で右クリックメニューの「Do it」を選択します。</p>
+
+<p><img src="images/009-webly-eval.png" width="400" alt="eval" /></p>
+
+<p>状態変数 <code>messages</code> に <code>mk_Message("Alice", "Hello")</code> が追加されたことを確認してください。</p>
+
+<p>さらに、<code>addFriend("Bob", "Alice")</code>を「Do it」し、<code>getBlah("Bob")</code>を「Print it」して、Aliceの「Hello」が得られるかテストしてみてください。</p>
+
+<p><a name="translation"></a></p>
+
+<h2>JSON-VDM 間の変換規則を定義する</h2>
+
+<p><code>getBlah("Bob")</code>の返り値は<code>[mk_Message("Alice", "Hello")]</code>でした。
+このVDM-SLの値の表現は Web API として標準的ではありません。
+Webly Walk-Throughでは API のデータ形式として JSON を使い、VDM-SLの値をJSON形式に相互変換して Web API クライアントとデータの受け渡しをします。</p>
+
+<p>Webly Walk-Throughでは 関数値を除く VDM-SL の値を自動的にJSON形式に相互変換する変換規則が標準で定義されています。
+例えば <code>[mk_Message("Alice", "Hello")]</code> は、<code>[{"Message":["Alice","Hello"]}]</code> と表現されます。
+この標準規則のままでもよいのですが、より使い勝手のよい Web API にするために、変換規則をユーザ定義することができます。
+ここでは、<code>[mk_Message("Alice", "Hello")]</code>が <code>[{"content":"Hello","name":"Alice"}]</code>となるように変換規則を定義します。</p>
+
+<p>Webly Walk-Thorugh 中央の Web APIタブをクリックしてください。
+Web API タブ
+Webly Walk-Thorugh 下部のテキスト領域に以下の内容を入力して、右クリックメニューの「Accept」を選んでください。</p>
+
+<pre><code>[mk_Message($name, $content)] &lt;=&gt; [{"name":$name, "content":$content}]
+</code></pre>
+
+<p>変換規則は一種のテンプレートとして定義されます。
+<code>&lt;=&gt;</code>の左にVDM-SLの値の表現、右にJSON表現のテンプレートを記述します。
+<code>$</code>が先頭についている部分が任意の値表現にマッチし、名前がつけられて<code>&lt;=&gt;</code>の左右で対応付けられます。</p>
+
+<p>例えば <code>[mk_Message("Alice", "Hello")]</code> は $name は <code>"alice"</code> に、$content は <code>"Hello"</code> に束縛され、<code>[{"content":"Hello","name":"Alice"}]</code> に変換されます。
+逆方向で、<code>[{"content":"Hello","name":"Alice"}]</code> でも $name は <code>"alice"</code> に、$content は <code>"Hello"</code> に束縛され、<code>[mk_Message("Alice", "Hello")]</code> に変換されます。</p>
+
+<p>これで seq of Message 型の値に対する変換規則が定義されました。</p>
+
+<p><img src="images/010-webly-translation.png" width="400" alt="translation" /></p>
+
+<p><a name="start"></a></p>
+
+<h2>Web API サーバを起動する</h2>
+
+<p>Webly Walk-Through の Web API サーバを起動します。</p>
+
+<p>「Web API」タブを押してください。
+サーバが使用するポート番号を 最下段の入力フィールドに入力します。
+デフォルトは8087で、今回はそのまま8087番ポートを使用します。</p>
+
+<p>サーバを起動します。
+最下段右端の「Publish」ボタンを押してください。</p>
+
+<p><img src="images/011-webly-startbutton.png" width="400" alt="startbutton" /></p>
+
+<p>これで Web API サーバが起動しました。</p>
+
+<p>「Publish」ボタンが「Stop」ボタンに変化しました。
+これを押すと、Web API サーバが停止します。</p>
+
+<p><img src="images/012-webly-started.png" width="400" alt="started" /></p>
+
+<p><a name="api-access"></a></p>
+
+<h2>ウェブブラウザで Blah API をテストする</h2>
+
+<p>ウェブブラウザから Blah API サーバに直接アクセスします。</p>
+
+<p>Firefoxブラウザを開いてください。Google Chromeでも動作します。</p>
+
+<p><img src="images/013-firefox.png" width="400" alt="firefox" /></p>
+
+<p>URLとして、<code>http://localhost:8087/Blah/getBlah?name="Bob"</code>を開いてください。</p>
+
+<p><img src="images/014-firefox-api.png" width="400" alt="API" /></p>
+
+<p>VDM-SLの値からJSONへの変換規則で指定した通りの形式でJSONデータを受け取りました。</p>
+
+<p><a name="client"></a></p>
+
+<h2>ウェブブラウザから Blah を利用する</h2>
+
+<p>では Blah を使ってみます。</p>
+
+<p>ブラウザで、このチュートリアルに添付されている Resources/Blah.html を開いてください。</p>
+
+<p><img src="images/015-firefox-html.png" width="400" alt="open html" /></p>
+
+<p>最上段にユーザ名を入力します。
+今回は、「Bob」と入力してください。</p>
+
+<p>Bob の友達 (Alice) の 書き込みを表示します。
+「Update」ボタンを押してください。
+「Update」ボタンを押さなくても10秒毎に自動的に更新します。</p>
+
+<p><img src="images/016-firefox-Bob.png" width="400" alt="Bob" /></p>
+
+<p>Bob から書き込みをしてみます。
+2段目のテキスト領域に「Hi」と入力して、「Blah!」ボタンを押してください。</p>
+
+<p><img src="images/017-firefox-Bob-Hi.png" width="400" alt="Bob blahs hi" /></p>
+
+<p>さらに別のユーザからの視点で Alice と Bob の書き込みを見てみます。
+新規ウィンドウまたは新規タブで Resources/Blah.html を開いて、
+ユーザ名として「Ce」と入力して、「Add」ボタンを押してください。</p>
+
+<p>プロンプトダイアログが表示されるので、「Alice」と入力して「OK」してください。</p>
+
+<p><img src="images/018-firefox-Ce-Alice.png" width="400" alt="Ce adds Alice and Bob to his friend list" /></p>
+
+<p>同様に「Add」ボタンで「Bob」を友達リストに追加してください。
+Alice と Bob の書き込みが時系列で表示されます。</p>
+
+<p><img src="images/019-firefox-Ce.png" width="400" alt="Ce's blah view" /></p>
+
+<p>書き込みリスト中の「Alice」をクリックすると、Alice を友達リストから削除します。</p>
+
+<p><img src="images/020-firefox-Ce-Alice.png" width="400" alt="Ce removes Alice from the list" /></p>
+
+<p>Alice の書き込みが Ce から見えなくなりました。</p>
+
+<p><img src="images/021-firefox-Ce.png" width="400" alt="Ce's blah view" /></p>
+
+<p><a name="summary"></a></p>
+
+<h2>まとめ</h2>
+
+<p>このチュートリアルでは、あらかじめ用意されたVDM-SL仕様とJavaScriptを含むhtmlファイルを使って、簡単なソーシャルメッセージングシステムのプロトタイプ を構築しました。まずは VDM-SL で記述された WebAPI を VDM インタプリタを使って利用し、JSONフォーマットとの変換ルールを記述し、WebAPI サーバを立ち上げました。その Web API サーバを利用する JavaScript プログラムを含む HTML ページをウェブブラウザ上で表示することで、Web API の VDM-SL 仕様の妥当性を確認しました。</p>
+
+<p>Webly Walk-Through を使って WebAPI の仕様をプロトタイプサーバ化することで、ウェブアプリケーションの開発でサーバサイドの開発中にもクライアントを動作させることができると同時にサーバサイドの開発のテストオラクルとして利用することができます。また、ウェブアプリケーションに限らず、VDM-SL 仕様のプロトタイプとしてウェブ UI を簡単に実装することができます。</p>
+</body>
+</html>

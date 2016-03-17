@@ -1,6 +1,6 @@
 # Lively Walk-Through チュートリアル: Tic-Tac-Toe
 
-##目次
+## 目次
 
 * [概要](#abstract)
 * [準備](#preparation)
@@ -14,6 +14,7 @@
 * [UIの配置を固定する](#fix-position)
 * [Tic Tac Toe をプレイしてみる](#play)
 * [UIプロトタイプをファイルに保存する](#save)
+* [まとめ](#summary)
 
   
 <a name="abstract"></a>
@@ -21,7 +22,7 @@
 
 Tic Tac Toe は2人で遊ぶゲームで、3x3の格子状の升目に2人のプレーヤーが交互に石を置き、自分の石が縦、横、または斜めに3つ並んだら勝ち、3つ並ばずに全ての升目が埋まったら引き分けとなるゲームです。
 
-このチュートリアルでは、コンピュータを相手に遊ぶ Tic Tac Toe ゲームの仕様を使って、ゲームの UI プロトタイプを Lively Walk-Through 上に作成することを通して、Lively Walk-through の使い方を学びます。
+このチュートリアルでは、コンピュータを相手に遊ぶ Tic Tac Toe ゲームの仕様を使ってゲームの UI プロトタイプを Lively Walk-Through 上に作成することを通して、Lively Walk-through の使い方を学びます。
 
 <a name="preparation"></a>
 ## 準備
@@ -37,9 +38,6 @@ ViennaTalkを [ViennaTalk リリースページ](https://github.com/tomooda/Vien
 * O.png (プレーヤーの石の画像、透明な背景に「○」が描かれています)
 * X.png (コンピュータの石の画像、透明な背景に「×」が描かれています)
 * empty.png (空升の画像、透明な画像です)
-
-<a name="make-ui"/>
-## UIプロトタイプを作る
 
 <a name="launch-LivelyWalkThrough"></a>
 ## Lively Walk-Through を起動する
@@ -75,6 +73,17 @@ Lively Walk-Throughの上部右側のタブから「VDM Browser」を選択し�
 ![Tic Tac Toe](images/006-TicTacToe.vdmsl.png =400x)
 
 Tic Tac Toe ゲームの VDM-SL 仕様が読み込まれました。
+
+この仕様が定義しているAPIのうち、このUIプロトタイプでは
+
+* get : nat * nat ==> [&lt;O&gt; | &lt;X&gt;]
+* play : nat * nat ==> Status
+
+の2つの操作を使います。
+
+get操作は引数で指定された升目の石を返します。ユーザが置いた石があれば&lt;O&gt;、コンピュータが置いた石があrば&lt;X&gt;、石がなければnilを返します。
+
+play操作は引数で指定された升目にユーザの石を置きます。返り値はゲームの状態を表しますが、このUIプロトタイプではその内容にあまり意味はありません。
 
 <a name="board"></a>
 ## Tic Tac Toe ゲームの盤面を配置する
@@ -156,6 +165,7 @@ Lively Walk-Through の右側のウィジェットパレットからVariableImag
 
 ![change default image](images/023-ChangeDefaultImage.png =400x)
 
+升目を表すウィジェットの大きさを盤面の画像での升目にあうように大きさや位置を調整してください。
 これで左上の升目を表すウィジェットの設定ができました。
 
 <a name="script"></a>
@@ -365,6 +375,8 @@ C11ウィジェットの右クリックメニューで「fix position」を選�
 盤面が初期化されました。
 一通り遊ぶことができる UIプロトタイプ が完成しました。
 
+![play](images/055-clicked-Start.png =400x)
+
 UIプロトタイプが完成したことで、
 
 * この通りの VDM-SL仕様は Tic Tac Toe ゲームに必要な機能を一通り備えていること
@@ -375,15 +387,12 @@ UIプロトタイプが完成したことで、
 さらに洗練された VDM-SL仕様 と UIデザイン を得るために、VDM-SL技術者と UIデザイナがこのUIプロトタイプ上で議論して、
 問題点、課題、改善できる点、設計として合意した点をまとめて、お互いに持ち帰りましょう。
 
+<a name="save"></a>
 ## UIプロトタイプをファイルに保存する
 
 作成した UIプロトタイプをファイルに保存します。
 
-上端右側の「File」タブをクリックしてください。
-
-![play](images/055-clicked-Start.png =400x)
-
-「Save as...」ボタンを押してください。
+上端右側の「File」タブをクリックして「Save as...」ボタンを押してください。
 
 ![play](images/056-open-FileTag.png =400x)
 
@@ -393,3 +402,9 @@ UIプロトタイプが完成したことで、
 
 これでファイルに保存することができました。
 開く時には、同じく「File」タブの「Load...」ボタンで、同じファイルを指定してください。
+
+<a name="summary"></a>
+## まとめ
+このチュートリアルでは、あらかじめ用意されたVDM-SL仕様と盤面や石のUIデザインの素材を使って、コンピュータを相手に遊ぶ Tic Tac Toe ゲームの UI を構築し、VDM-SL仕様とUIを連携させることでプロトタイプを作成し、VDM-SL仕様についてUIデザイン上の妥当性と、UIデザインの機能上の妥当性を確認しました。
+
+実際にシステムを開発する場合には、VDM-SL仕様の記述やUIデザインをそれぞれの専門の作業者が行う場合が多く、それぞれが前提としていることが食い違っていることもあります。Lively Walk-Through上で実際に動作する UIプロトタイプを作成し実際に使ってみることで、VDM-SL仕様とUIデザインが整合していることを確認し、それぞれVDM-SL仕様からプログラムの実装をする作業とUIデザインを完成させていきます。
