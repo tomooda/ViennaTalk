@@ -39,13 +39,13 @@ ViennaTalkを [ViennaTalk リリースページ](https://github.com/tomooda/Vien
 
 MacならばViennaTalkアイコンをダブルクリック、Windowsならば ViennaTalk\pharo.exe、Linuxならば ViennaTalk/pharo を実行してください。
 
-![ViennaTalk](images/001-open-ViennaTalk.png =400x)
+![ViennaTalk](images/001-open-ViennaTalk.png)
 
 続いて、ViennaTalk Launcher の Toolsメニューから、「Webly Walk-Through」を開きます。
 
-![Webly Walk-Through menu](images/002-open-webly.png =400x)
+![Webly Walk-Through menu](images/002-open-webly.png)
 
-![Webly Walk-Through window](images/003-webly.png =400x)
+![Webly Walk-Through window](images/003-webly.png)
 
 これで Webly Walk-Through が起動しました。
 Webly Walk-Through のほとんどの機能は VDM Browser と同じです。
@@ -60,15 +60,15 @@ Blah API のVDM-SL仕様を Webly Walk-Through に読み込みます。
 
 上段左側の「DEFAULT」と書いてあるリスト上で右クリックして、「New and load...」を選んでください。
 
-![Webly](images/004-newAndLoad.png =400x)
+![Webly](images/004-newAndLoad.png)
 
 ファイルを選択するダイアログが開くので、このチュートリアルに添付されている Resources/Blah.vdmsl を選んでください。
 
-![new and load](images/005-open-spec.png =400x)
+![new and load](images/005-open-spec.png)
 
 Blah API の VDM-SL 仕様が読み込まれました。
 
-![Blah API](images/006-spec-loaded.png =400x)
+![Blah API](images/006-spec-loaded.png)
 
 
 この仕様が定義しているAPIのうち、このAPIサーバプロトタイプでは
@@ -99,7 +99,7 @@ addFriend 操作および removeFriend 操作は、引数で指定されたユ�
 
 読み込んだ Blah API の VDM-SL仕様を Webly Walk-Through ブラウザ上で動かしてみます。
 
-![workspace](images/008-webly-workspace.png =400x)
+![workspace](images/008-webly-workspace.png)
 
 ユーザ Alice が「Hello」と書き込むには、
 
@@ -109,7 +109,7 @@ sayBlah("Alice", "Hello")
 
 と Workspace 上に入力して、その行を選択した状態で右クリックメニューの「Do it」を選択します。
 
-![eval](images/009-webly-eval.png =400x)
+![eval](images/009-webly-eval.png)
 
 状態変数 `messages` に `mk_Message("Alice", "Hello")` が追加されたことを確認してください。
 
@@ -143,7 +143,7 @@ Webly Walk-Thorugh 下部のテキスト領域に以下の内容を入力して�
 
 これで seq of Message 型の値に対する変換規則が定義されました。
 
-![translation](images/010-webly-translation.png =400x)
+![translation](images/010-webly-translation.png)
 
 <a name="start"></a>
 ## Web API サーバを起動する
@@ -156,14 +156,14 @@ Webly Walk-Through の Web API サーバを起動します。
 サーバを起動します。
 最下段右端の「Publish」ボタンを押してください。
 
-![startbutton](images/011-webly-startbutton.png =400x)
+![startbutton](images/011-webly-startbutton.png)
 
 これで Web API サーバが起動しました。
 
 「Publish」ボタンが「Stop」ボタンに変化しました。
 これを押すと、Web API サーバが停止します。
 
-![started](images/012-webly-started.png =400x)
+![started](images/012-webly-started.png)
 
 <a name="api-access"></a>
 ## ウェブブラウザで Blah API をテストする
@@ -172,11 +172,11 @@ Webly Walk-Through の Web API サーバを起動します。
 
 Firefoxブラウザを開いてください。Google Chromeでも動作します。
 
-![firefox](images/013-firefox.png =400x)
+![firefox](images/013-firefox.png)
 
 URLとして、`http://localhost:8087/Blah/getBlah?name="Bob"`を開いてください。
 
-![API](images/014-firefox-api.png =400x)
+![API](images/014-firefox-api.png)
 
 VDM-SLの値からJSONへの変換規則で指定した通りの形式でJSONデータを受け取りました。
 
@@ -187,7 +187,7 @@ VDM-SLの値からJSONへの変換規則で指定した通りの形式でJSONデ
 
 ブラウザで、このチュートリアルに添付されている Resources/Blah.html を開いてください。
 
-![open html](images/015-firefox-html.png =400x)
+![open html](images/015-firefox-html.png)
 
 最上段にユーザ名を入力します。
 今回は、「Bob」と入力してください。
@@ -196,12 +196,12 @@ Bob の友達 (Alice) の 書き込みを表示します。
 「Update」ボタンを押してください。
 「Update」ボタンを押さなくても10秒毎に自動的に更新します。
 
-![Bob](images/016-firefox-Bob.png =400x)
+![Bob](images/016-firefox-Bob.png)
 
 Bob から書き込みをしてみます。
 2段目のテキスト領域に「Hi」と入力して、「Blah!」ボタンを押してください。
 
-![Bob blahs hi](images/017-firefox-Bob-Hi.png =400x)
+![Bob blahs hi](images/017-firefox-Bob-Hi.png)
 
 さらに別のユーザからの視点で Alice と Bob の書き込みを見てみます。
 新規ウィンドウまたは新規タブで Resources/Blah.html を開いて、
@@ -209,20 +209,20 @@ Bob から書き込みをしてみます。
 
 プロンプトダイアログが表示されるので、「Alice」と入力して「OK」してください。
 
-![Ce adds Alice and Bob to his friend list](images/018-firefox-Ce-Alice.png =400x)
+![Ce adds Alice and Bob to his friend list](images/018-firefox-Ce-Alice.png)
 
 同様に「Add」ボタンで「Bob」を友達リストに追加してください。
 Alice と Bob の書き込みが時系列で表示されます。
 
-![Ce's blah view](images/019-firefox-Ce.png =400x)
+![Ce's blah view](images/019-firefox-Ce.png)
 
 書き込みリスト中の「Alice」をクリックすると、Alice を友達リストから削除します。
 
-![Ce removes Alice from the list](images/020-firefox-Ce-Alice.png =400x)
+![Ce removes Alice from the list](images/020-firefox-Ce-Alice.png)
 
 Alice の書き込みが Ce から見えなくなりました。
 
-![Ce's blah view](images/021-firefox-Ce.png =400x)
+![Ce's blah view](images/021-firefox-Ce.png)
 
 <a name="summary"></a>
 ## まとめ
