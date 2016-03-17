@@ -211,13 +211,13 @@ sup {
 
 <p>MacならばViennaTalkアイコンをダブルクリック、Windowsならば ViennaTalk\pharo.exe、Linuxならば ViennaTalk/pharo を実行してください。</p>
 
-<p><img src="images/001-open-ViennaTalk.png" width="400" alt="ViennaTalk" /></p>
+<p><img src="images/001-open-ViennaTalk.png" alt="ViennaTalk" /></p>
 
 <p>続いて、ViennaTalk Launcher の Toolsメニューから、「Webly Walk-Through」を開きます。</p>
 
-<p><img src="images/002-open-webly.png" width="400" alt="Webly Walk-Through menu" /></p>
+<p><img src="images/002-open-webly.png" alt="Webly Walk-Through menu" /></p>
 
-<p><img src="images/003-webly.png" width="400" alt="Webly Walk-Through window" /></p>
+<p><img src="images/003-webly.png" alt="Webly Walk-Through window" /></p>
 
 <p>これで Webly Walk-Through が起動しました。
 Webly Walk-Through のほとんどの機能は VDM Browser と同じです。
@@ -234,15 +234,15 @@ Webly Walk-Through の Web API サーバとしての機能の管理をこの Web
 
 <p>上段左側の「DEFAULT」と書いてあるリスト上で右クリックして、「New and load...」を選んでください。</p>
 
-<p><img src="images/004-newAndLoad.png" width="400" alt="Webly" /></p>
+<p><img src="images/004-newAndLoad.png" alt="Webly" /></p>
 
 <p>ファイルを選択するダイアログが開くので、このチュートリアルに添付されている Resources/Blah.vdmsl を選んでください。</p>
 
-<p><img src="images/005-open-spec.png" width="400" alt="new and load" /></p>
+<p><img src="images/005-open-spec.png" alt="new and load" /></p>
 
 <p>Blah API の VDM-SL 仕様が読み込まれました。</p>
 
-<p><img src="images/006-spec-loaded.png" width="400" alt="Blah API" /></p>
+<p><img src="images/006-spec-loaded.png" alt="Blah API" /></p>
 
 <p>この仕様が定義しているAPIのうち、このAPIサーバプロトタイプでは</p>
 
@@ -279,7 +279,7 @@ Webly Walk-Through の Web API サーバとしての機能の管理をこの Web
 
 <p>読み込んだ Blah API の VDM-SL仕様を Webly Walk-Through ブラウザ上で動かしてみます。</p>
 
-<p><img src="images/008-webly-workspace.png" width="400" alt="workspace" /></p>
+<p><img src="images/008-webly-workspace.png" alt="workspace" /></p>
 
 <p>ユーザ Alice が「Hello」と書き込むには、</p>
 
@@ -288,7 +288,7 @@ Webly Walk-Through の Web API サーバとしての機能の管理をこの Web
 
 <p>と Workspace 上に入力して、その行を選択した状態で右クリックメニューの「Do it」を選択します。</p>
 
-<p><img src="images/009-webly-eval.png" width="400" alt="eval" /></p>
+<p><img src="images/009-webly-eval.png" alt="eval" /></p>
 
 <p>状態変数 <code>messages</code> に <code>mk_Message("Alice", "Hello")</code> が追加されたことを確認してください。</p>
 
@@ -323,7 +323,7 @@ Webly Walk-Thorugh 下部のテキスト領域に以下の内容を入力して�
 
 <p>これで seq of Message 型の値に対する変換規則が定義されました。</p>
 
-<p><img src="images/010-webly-translation.png" width="400" alt="translation" /></p>
+<p><img src="images/010-webly-translation.png" alt="translation" /></p>
 
 <p><a name="start"></a></p>
 
@@ -338,14 +338,14 @@ Webly Walk-Thorugh 下部のテキスト領域に以下の内容を入力して�
 <p>サーバを起動します。
 最下段右端の「Publish」ボタンを押してください。</p>
 
-<p><img src="images/011-webly-startbutton.png" width="400" alt="startbutton" /></p>
+<p><img src="images/011-webly-startbutton.png" alt="startbutton" /></p>
 
 <p>これで Web API サーバが起動しました。</p>
 
 <p>「Publish」ボタンが「Stop」ボタンに変化しました。
 これを押すと、Web API サーバが停止します。</p>
 
-<p><img src="images/012-webly-started.png" width="400" alt="started" /></p>
+<p><img src="images/012-webly-started.png" alt="started" /></p>
 
 <p><a name="api-access"></a></p>
 
@@ -355,11 +355,11 @@ Webly Walk-Thorugh 下部のテキスト領域に以下の内容を入力して�
 
 <p>Firefoxブラウザを開いてください。Google Chromeでも動作します。</p>
 
-<p><img src="images/013-firefox.png" width="400" alt="firefox" /></p>
+<p><img src="images/013-firefox.png" alt="firefox" /></p>
 
 <p>URLとして、<code>http://localhost:8087/Blah/getBlah?name="Bob"</code>を開いてください。</p>
 
-<p><img src="images/014-firefox-api.png" width="400" alt="API" /></p>
+<p><img src="images/014-firefox-api.png" alt="API" /></p>
 
 <p>VDM-SLの値からJSONへの変換規則で指定した通りの形式でJSONデータを受け取りました。</p>
 
@@ -371,7 +371,7 @@ Webly Walk-Thorugh 下部のテキスト領域に以下の内容を入力して�
 
 <p>ブラウザで、このチュートリアルに添付されている Resources/Blah.html を開いてください。</p>
 
-<p><img src="images/015-firefox-html.png" width="400" alt="open html" /></p>
+<p><img src="images/015-firefox-html.png" alt="open html" /></p>
 
 <p>最上段にユーザ名を入力します。
 今回は、「Bob」と入力してください。</p>
@@ -380,12 +380,12 @@ Webly Walk-Thorugh 下部のテキスト領域に以下の内容を入力して�
 「Update」ボタンを押してください。
 「Update」ボタンを押さなくても10秒毎に自動的に更新します。</p>
 
-<p><img src="images/016-firefox-Bob.png" width="400" alt="Bob" /></p>
+<p><img src="images/016-firefox-Bob.png" alt="Bob" /></p>
 
 <p>Bob から書き込みをしてみます。
 2段目のテキスト領域に「Hi」と入力して、「Blah!」ボタンを押してください。</p>
 
-<p><img src="images/017-firefox-Bob-Hi.png" width="400" alt="Bob blahs hi" /></p>
+<p><img src="images/017-firefox-Bob-Hi.png" alt="Bob blahs hi" /></p>
 
 <p>さらに別のユーザからの視点で Alice と Bob の書き込みを見てみます。
 新規ウィンドウまたは新規タブで Resources/Blah.html を開いて、
@@ -393,20 +393,20 @@ Webly Walk-Thorugh 下部のテキスト領域に以下の内容を入力して�
 
 <p>プロンプトダイアログが表示されるので、「Alice」と入力して「OK」してください。</p>
 
-<p><img src="images/018-firefox-Ce-Alice.png" width="400" alt="Ce adds Alice and Bob to his friend list" /></p>
+<p><img src="images/018-firefox-Ce-Alice.png" alt="Ce adds Alice and Bob to his friend list" /></p>
 
 <p>同様に「Add」ボタンで「Bob」を友達リストに追加してください。
 Alice と Bob の書き込みが時系列で表示されます。</p>
 
-<p><img src="images/019-firefox-Ce.png" width="400" alt="Ce's blah view" /></p>
+<p><img src="images/019-firefox-Ce.png" alt="Ce's blah view" /></p>
 
 <p>書き込みリスト中の「Alice」をクリックすると、Alice を友達リストから削除します。</p>
 
-<p><img src="images/020-firefox-Ce-Alice.png" width="400" alt="Ce removes Alice from the list" /></p>
+<p><img src="images/020-firefox-Ce-Alice.png" alt="Ce removes Alice from the list" /></p>
 
 <p>Alice の書き込みが Ce から見えなくなりました。</p>
 
-<p><img src="images/021-firefox-Ce.png" width="400" alt="Ce's blah view" /></p>
+<p><img src="images/021-firefox-Ce.png" alt="Ce's blah view" /></p>
 
 <p><a name="summary"></a></p>
 

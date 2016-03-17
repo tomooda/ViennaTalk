@@ -45,13 +45,13 @@ ViennaTalkを [ViennaTalk リリースページ](https://github.com/tomooda/Vien
 
 MacならばViennaTalkアイコンをダブルクリック、Windowsならば ViennaTalk\pharo.exe、Linuxならば ViennaTalk/pharo を実行してください。
 
-![ViennaTalk](images/001-open-ViennaTalk.png =400x)
+![ViennaTalk](images/001-open-ViennaTalk.png)
 
 続いて、ViennaTalk Launcher の Toolsメニューから、「Lively Walk-Through」を開きます。
 
-![Lively Walk-Through menu](images/002-open-LivelyWalkThrough.png =400x)
+![Lively Walk-Through menu](images/002-open-LivelyWalkThrough.png)
 
-![Lively Walk-Through window](images/003-LivelyWalkThrough.png =400x)
+![Lively Walk-Through window](images/003-LivelyWalkThrough.png)
 
 これで Lively Walk-Through が起動しました。
 これから Lively Walk-Through 上に Tic-Tac-Toe ゲームのUI プロトタイプを作成します。
@@ -62,15 +62,15 @@ Tic Tac ToeゲームのVDM-SL仕様を Lively Walk-Through に読み込みます
 
 Lively Walk-Throughの上部右側のタブから「VDM Browser」を選択してください。
 
-![VDMBrowser](images/004-open-VDMBrowser.png =400x)
+![VDMBrowser](images/004-open-VDMBrowser.png)
 
 上段左側の「DEFAULT」と書いてあるリスト上で右クリックして、「New and load...」を選んでください。
 
-![new and load](images/005-newAndLoad.png =400x)
+![new and load](images/005-newAndLoad.png)
 
 ファイルを選択するダイアログが開くので、TicTacToe.vdmsl を選んでください。
 
-![Tic Tac Toe](images/006-TicTacToe.vdmsl.png =400x)
+![Tic Tac Toe](images/006-TicTacToe.vdmsl.png)
 
 Tic Tac Toe ゲームの VDM-SL 仕様が読み込まれました。
 
@@ -92,26 +92,26 @@ Tic Tac Toeで遊ぶためのUIプロトタイプを作成します。
 まずは盤面の画像を配置します。
 Lively Walk-Throughの上部右側のタブからWidgetsを選択してウィジェットパレットからImageウィジェットをドラッグして左側のプロトタイプスペースに置いてください。
 
-![Widgets pallette](images/007-ImageWidget.png =400x)
+![Widgets pallette](images/007-ImageWidget.png)
 
-![Image widget](images/008-placed-ImageWidget.png =400x)
+![Image widget](images/008-placed-ImageWidget.png)
 
-Imageウィジェットに盤面の画像ファイル(board.png =400x)を表示するよう設定します。
+Imageウィジェットに盤面の画像ファイル(board.png)を表示するよう設定します。
 プロトタイプスペースのImageウィジェット上で右クリックでメニューを出し、「change image...」を選択してください。
 
-![chagne image](images/009-ChangeImage.png =400x)
+![chagne image](images/009-ChangeImage.png)
 
 ファイルダイアログが開きます。 board.png を選択してください。
 
-![choose image](images/010-choose-ImageFile.png =400x)
+![choose image](images/010-choose-ImageFile.png)
 
 するとImageウィジェットに盤面画像が表示されます。
 
-![image widget](images/011-ImageWidget.png =400x)
+![image widget](images/011-ImageWidget.png)
 
 十分に大きなサイズになるよう、画像の右下をドラッグして調整してください。
 
-![resize widget](images/012-resize-ImageWidget.png =400x)
+![resize widget](images/012-resize-ImageWidget.png)
 
 これで Tic Tac Toeを遊ぶための盤面の画像を配置できました。
 
@@ -129,41 +129,41 @@ VariableImageウィジェットにそれら3つの値に対応する画像を指
 
 Lively Walk-Through の右側のウィジェットパレットからVariableImageウィジェットを盤面の左上に配置します。
 
-![VariableImage widget](images/013-VariableImageWidget.png =400x)
+![VariableImage widget](images/013-VariableImageWidget.png)
 
-![VariableImage widget placed](images/014-placed-VariableImageWidget.png =400x)
+![VariableImage widget placed](images/014-placed-VariableImageWidget.png)
 
 置いたVariableImageウィジェットは左上の升目を表します。
 名前を C11 に変更します。
 置いたVariableImageウィジェット上で右クリックメニューから change nameを選択してください。
 
-![change name](images/015-ChangeName.png =400x)
+![change name](images/015-ChangeName.png)
 
 そして、ウィジェット名として「C11」と入力してください。
 
-![enter C11](images/016-ChangeName-C11.png =400x)
+![enter C11](images/016-ChangeName-C11.png)
 
 次に、升目の状態ごとに表示する画像を設定します。
 まずは、「&lt;O&gt;」に対応する画像として、images/O.pngを指定します。
 右クリックメニューで、「add mapping」を選択してください。
 
-![add mapping](images/017-AddMapping.png =400x)
+![add mapping](images/017-AddMapping.png)
 
 対応させる値を指定します。「&lt;O&gt;」と入力してください。
 
-![add mapping key O](images/018-AddMapping-O.png =400x)
+![add mapping key O](images/018-AddMapping-O.png)
 
 次に、「&lt;O&gt;」に対応させる画像を指定します。ファイルダイアログが開くので、このチュートリアルに同梱されている images/O.png を指定してください。
 
-![assign image to O](images/019-AddMapping-image.png =400x)
+![assign image to O](images/019-AddMapping-image.png)
 
 同様にして、「&lt;X&gt;」に images/X.png を対応させてください。
 
-![assign image to X](images/022-AddMapping-image.png =400x)
+![assign image to X](images/022-AddMapping-image.png)
 
 最後に、デフォルトの画像として、 images/empty.png を指定してください。
 
-![change default image](images/023-ChangeDefaultImage.png =400x)
+![change default image](images/023-ChangeDefaultImage.png)
 
 升目を表すウィジェットの大きさを盤面の画像での升目にあうように大きさや位置を調整してください。
 これで左上の升目を表すウィジェットの設定ができました。
@@ -182,24 +182,24 @@ LiveTalkでは、ウィジェットに発生したイベントに対するアク
 まずは、「assigned」イベントを使って画面を更新する仕組みを記述します。
 ウィジェットパレットからFieldウィジェットをドラッグして、左側の盤面外のどこかに配置してください。
 
-![field widget](images/024-Field.png =400x)
+![field widget](images/024-Field.png)
 
-![placed field widget](images/025-placed-Field.png =400x)
+![placed field widget](images/025-placed-Field.png)
 
 Fieldウィジェットのウィジェット名を「Status」に設定します。
 配置したFieldウィジェットの右クリックメニューで「change name」を選んでください。
 
-![change name](images/026-ChangeName-Field.png =400x)
+![change name](images/026-ChangeName-Field.png)
 
 ウィジェット名として「Status」と入力してください。
 
-![change name to Status](images/027-ChangeName-Status.png =400x)
+![change name to Status](images/027-ChangeName-Status.png)
 
 この「Status」ウィジェットの「assigned」イベントに対するアクションを定義します。
 画面上端右のタブから「LiveTalk」をクリックしてください。
 すると、ウィンドウの右半分がウィジェットパレットからLiveTalkブラウザに切り替わります。
 
-![LiveTalk tab](images/028-open-LiveTalkBrowser.png =400x)
+![LiveTalk tab](images/028-open-LiveTalkBrowser.png)
 
 「Status」ウィジェットのassignedイベントに対するアクションとして、VDM-SL仕様の`get(1,1)`を呼び出して、結果を「C11」ウィジェットに渡しなさい、という動作を定義します。
 
@@ -210,11 +210,11 @@ Status`assigned
     get(1,1) -> [C11]
 ```
 
-![Status script](images/029-StatusScript.png =400x)
+![Status script](images/029-StatusScript.png)
 
 文法に誤りがなければ、LiveTalkブラウザの上側のリストにさきほど定義したスクリプトが「Status`assigned」として追加されます。
 
-![script added](images/030-added-StatusScript.png =400x)
+![script added](images/030-added-StatusScript.png)
 
 次に、プレーヤーの手をVDM-SLに伝えるスクリプトを作成します。
 C11が押されたら左上の升目に石を置くように、以下の内容をLiveTalkブラウザの下半分に入力し、右クリックメニューから「Accept」を選択してください。
@@ -224,7 +224,7 @@ C11`clicked
     play(1,1) -> [Status]
 ```
 
-![C11 script](images/031-added-C11Script.png =400x)
+![C11 script](images/031-added-C11Script.png)
 
 これで、
 
@@ -236,11 +236,11 @@ C11`clicked
 
 テストとして、「C11」ウィジェットをクリックしてみてください。
 
-![C11](images/032-click-C11.png =400x)
+![C11](images/032-click-C11.png)
 
 以下のように、「○」が表示されます。
 
-![clicked at C11](images/033-clicked-C11.png =400x)
+![clicked at C11](images/033-clicked-C11.png)
 
 動作することを確認してください。
 
@@ -250,24 +250,24 @@ C11`clicked
 動作することを確認した左上の升目を複製して、3x3の升目を作ります。
 C11の右クリックメニューから「duplicate」を選択してください。
 
-![duplicate](images/034-duplicate-C11.png =400x)
+![duplicate](images/034-duplicate-C11.png)
 
 複製されたウィジェットの名前を指定します。
 「C12」と入力してください。
 
-![C12](images/035-duplicate-C12.png =400x)
+![C12](images/035-duplicate-C12.png)
 
 「C12」ウィジェットが複製されました。
 
-![C12](images/036-duplicated-C12.png =400x)
+![C12](images/036-duplicated-C12.png)
 
 「C12」ウィジェットをドラッグして上段中央の升目に入れてください。
 
-![move C12](images/037-moved-C12.png =400x)
+![move C12](images/037-moved-C12.png)
 
 これを繰り返して、全ての升目を埋めてください。
 
-![C12-C33](images/038-duplicateAndMoveAll.png =400x)
+![C12-C33](images/038-duplicateAndMoveAll.png)
 
 LiveTalkブラウザでC12からC33までのスクリプトを作成します。
 LiveTalkブラウザ上部のリストで LiveC11\`clicked を選択してください。
@@ -278,11 +278,11 @@ C12`clicked
     play(1,2) -> [Status]
 ```
 
-![C12 script](images/039-C12Script.png =400x)
+![C12 script](images/039-C12Script.png)
 
 同様に、C13\`clicked から C33\`clicked まで定義してください。
 
-![C12 script](images/040-added-CScripts.png =400x)
+![C12 script](images/040-added-CScripts.png)
 
 Status\`assigned スクリプトを以下のように修正してください。
 
@@ -299,7 +299,7 @@ Status`assigned
     get(3,3) -> [C33]
 ```
 
-![Status script](images/041-extend-StatusScript.png =400x)
+![Status script](images/041-extend-StatusScript.png)
 
 <a name="start"></a>
 ## ゲーム開始ボタンを作る
@@ -308,24 +308,24 @@ Status`assigned
 
 ウィジェットパレットからButtonウィジェットをドラッグして、盤面の画像の下に置きます。
 
-![Button](images/042-button.png =400x)
+![Button](images/042-button.png)
 
-![Button placed](images/042-placed-Button.png =400x)
+![Button placed](images/042-placed-Button.png)
 
 Buttonウィジェットの名前を「Start」に設定します。
 右クリックメニューの「change name」を選択してください。
 
-![change name](images/043-ChangeName-Button.png =400x)
+![change name](images/043-ChangeName-Button.png)
 
 新しいウィジェット名として「Start」と入力してください。
 
-![Start](images/044-ChangeName-Start.png =400x)
+![Start](images/044-ChangeName-Start.png)
 
-![Start](images/045-changed-Start.png =400x)
+![Start](images/045-changed-Start.png)
 
 
 
-![Start script](images/046-added-StartScript.png =400x)
+![Start script](images/046-added-StartScript.png)
 
 Startボタンを押した時のアクションを定義します。
 
@@ -349,33 +349,33 @@ C11ウィジェットの右クリックメニューで「fix position」を選�
 もしまた修正したい場合には、右クリックメニューで「make movable」を選択すると、固定が解除されるので、
 修正して、再度「fix position」をしてください。
 
-![fixposition](images/047-fixposition-widgets.png =400x)
+![fixposition](images/047-fixposition-widgets.png)
 
 <a name="play"></a>
 ## Tic Tac Toe をプレイしてみる
 
 では、「Start」ボタンを押して、Tic Tac Toeで遊んでみましょう。
 
-![start](images/048-click-Start.png =400x)
+![start](images/048-click-Start.png)
 
-![play](images/049-click-C22.png =400x)
+![play](images/049-click-C22.png)
 
-![play](images/050-computerMove.png =400x)
+![play](images/050-computerMove.png)
 
-![play](images/051-player-move.png =400x)
+![play](images/051-player-move.png)
 
-![play](images/052-playout.png =400x)
+![play](images/052-playout.png)
 
-![play](images/053-draw.png =400x)
+![play](images/053-draw.png)
 
 引き分けました。Startボタンを押してリセットしてください。
 
-![play](images/054-click-Start.png =400x)
+![play](images/054-click-Start.png)
 
 盤面が初期化されました。
 一通り遊ぶことができる UIプロトタイプ が完成しました。
 
-![play](images/055-clicked-Start.png =400x)
+![play](images/055-clicked-Start.png)
 
 UIプロトタイプが完成したことで、
 
@@ -394,11 +394,11 @@ UIプロトタイプが完成したことで、
 
 上端右側の「File」タブをクリックして「Save as...」ボタンを押してください。
 
-![play](images/056-open-FileTag.png =400x)
+![play](images/056-open-FileTag.png)
 
 ファイルダイアログが開くので、保存先のファイルを指定してください。
 
-![play](images/057-SaveAs-TicTacToe-lwt.png =400x)
+![play](images/057-SaveAs-TicTacToe-lwt.png)
 
 これでファイルに保存することができました。
 開く時には、同じく「File」タブの「Load...」ボタンで、同じファイルを指定してください。
