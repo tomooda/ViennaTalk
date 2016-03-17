@@ -1,0 +1,61 @@
+module Blah
+exports all
+definitions
+types
+     Name = seq1 of char;
+     Contents = seq of char;
+     Message :: name : Name content : Contents;
+     User :: friends : set of Name messageIds : seq of nat;
+
+values
+     blahLength = 10;
+
+state State of
+    users : map Name to User
+    messages : seq of Message
+init s == s = mk_State({|->}, [])
+end
+
+operations
+    ensureUser : Name ==> ()
+    ensureUser(name) ==
+        if
+            name not in set dom users
+        then
+            users := users munion {name |-> mk_User({}, [])};
+    
+    getBlah : Name ==> seq of Message
+    getBlah(name) ==
+        (ensureUser(name);
+        return let
+                messageIds =
+                    {elems users(fname).messageIds | fname in set users(name).friends}
+            in
+                reverse (reverse [messages(id) | id in set dunion messageIds])(1,...,blahLength));
+    
+    getFriends : Name ==> set of Name
+    getFriends(name) ==
+        (ensureUser(name);
+        return users(name).friends);
+    
+    sayBlah : Name* Contents ==> ()
+    sayBlah(name, contents) ==
+        (ensureUser(name);
+        messages := messages ^ [mk_Message(name, contents)];
+        users(name) .messageIds := users(name).messageIds ^ [len messages]);
+    
+    addFriend : Name* Name ==> bool
+    addFriend(name, fname) ==
+        (ensureUser(name);
+        if fname not in set dom users then return false;
+        users(name) .friends := users(name).friends union {fname};
+        return true);
+    
+    removeFriend : Name* Name ==> bool
+    removeFriend(name, fname) ==
+        (ensureUser(name);
+        if fname not in set users(name).friends then return false;
+        users(name) .friends := users(name).friends \ {fname};
+        return true);
+
+end Blah

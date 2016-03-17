@@ -1,0 +1,83 @@
+<html>
+<body>
+<input id="username" type="text" />
+<button onclick="getBlah()">Update</button>
+<button onclick="addFriend()">Add</button>
+<br><br>
+<textarea id="blah"></textarea>
+<br>
+<button onclick="sayBlah()">Blah!</button>
+<hr>
+<dl id="contents">
+</dl>
+<script type="text/javascript">
+var username = document.getElementById("username");
+var contents = document.getElementById("contents");
+var blah = document.getElementById("blah");
+function getBlah() {
+  req = new XMLHttpRequest();
+  req.onreadystatechange = function () {
+    if (req.readyState == 4 && req.status == 200) {
+      while (contents.firstChild) contents.removeChild(contents.firstChild);
+      var json = JSON.parse(req.responseText);
+      for (var i = 0; i < json.length; i++) {
+        var message = json[i];
+        var namenode = document.createElement("dt");
+        namenode.innerText = message.name;
+        namenode.textContent = message.name;
+        namenode.onclick=function(friend){
+          return function(){removeFriend(friend);};}(message.name);
+        contents.appendChild(namenode);
+        var messagenode = document.createElement("dd");
+        messagenode.innerText = message.content;
+        messagenode.textContent = message.content;
+        contents.appendChild(messagenode);
+      }
+    }
+  }
+  req.open("POST", "http://localhost:8087/Blah/getBlah", true);
+  req.setRequestHeader('Content-Type', 'application/json');
+  req.send(JSON.stringify([username.value]));
+}
+function sayBlah() {
+  req = new XMLHttpRequest();
+  req.onreadystatechange = function () {
+    if (req.readyState == 4 && req.status == 200) {
+      blah.value = "";
+      getBlah();
+    }
+  }
+  req.open("POST", "http://localhost:8087/Blah/sayBlah", true);
+  req.setRequestHeader('Content-Type', 'application/json');
+  req.send(JSON.stringify([username.value, blah.value]));
+}
+function addFriend() {
+  var friend = prompt("Name");
+  if (!friend) return;
+  req = new XMLHttpRequest();
+  req.onreadystatechange = function () {
+    if (req.readyState == 4 && req.status == 200) {
+      getBlah();
+    }
+  }
+  req.open("POST", "http://localhost:8087/Blah/addFriend", true);
+  req.setRequestHeader('Content-Type', 'application/json');
+  req.send(JSON.stringify([username.value, friend]));
+}
+function removeFriend(friend) {
+  if (!friend) return;
+  req = new XMLHttpRequest();
+  req.onreadystatechange = function () {
+    if (req.readyState == 4 && req.status == 200) {
+      getBlah();
+    }
+  }
+  req.open("POST", "http://localhost:8087/Blah/removeFriend", true);
+  req.setRequestHeader('Content-Type', 'application/json');
+  req.send(JSON.stringify([username.value, friend]));
+}
+
+setInterval(getBlah, 10000);
+</script>
+</body>
+</html>
