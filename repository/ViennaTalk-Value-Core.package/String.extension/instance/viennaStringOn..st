@@ -4,9 +4,15 @@ viennaStringOn: aStream
 	self
 		do: [ :char | 
 			char = Character cr
-				ifTrue: [ aStream nextPutAll: '\n' ]
+				ifTrue: [ aStream nextPutAll: '\r' ]
 				ifFalse: [ 
-					(char = $" or: [ char = $' ])
-						ifTrue: [ aStream nextPut: $\ ].
-					aStream nextPut: char ] ].
+					char = Character lf
+						ifTrue: [ aStream nextPutAll: '\n' ]
+						ifFalse: [ 
+							char = $\
+								ifTrue: [ aStream nextPutAll: '\\' ]
+								ifFalse: [ 
+									(char = $" or: [ char = $' ])
+										ifTrue: [ aStream nextPut: $\ ].
+									aStream nextPut: char ] ] ] ].
 	aStream nextPutAll: '"'
