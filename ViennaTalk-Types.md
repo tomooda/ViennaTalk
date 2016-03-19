@@ -23,7 +23,7 @@ map *t1* to *t2* | *t1* mapTo: *t2* | ViennaMapType | Dictionary
 inmap *t1* to *t2* |*t1* inmapTo: *t2* | ViennaInmapType | Dictionary
 *t1* -> *t2* | *t1* -> *t2* | ViennaPartialFunctionType | BlockClosure
 *t1* +> *t2* | *t1* +> *t2* | ViennaTotalFunctionType | BlockClosure
-compose *t* of <br> *f1* : *t1* <br> *f2* : *t2* <br> *t3* end | ViennaType compose: '*t*' of: <br>{{*f1* . false . *t1*}.<br>{*f2* . true . *t2*}.<br>{nil . false . *t3*}}| ViennaCompositeType | ViennaComposite
+compose *t* of <br> *f1* : *t1* <br> *f2* :- *t2* <br> *t3* end | ViennaType compose: '*t*' of: <br>{{*f1* . false . *t1*}.<br>{*f2* . true . *t2*}.<br>{nil . false . *t3*}}| ViennaCompositeType | ViennaComposite
 *t* inv *pattern*==*expr* | *t* inv: [:*v*| *expr*] | ViennaConstrainedType | the class of *t*'s value
 
 ## Functionality of VDM types
