@@ -34,15 +34,15 @@ Object | viennaString | answers a VDM expression that reproduce the receiver
  | isViennaComposite | answers if the receiver is a composite value
 Collection | onlyOneSatisfy | answers if the reciever has the only one member that satisfies the given block be true
  | power | answers a collection of all possible subcollections
- | powerDo | iterates over all possible subcollections
+ | powerDo: | iterates over all possible subcollections
 Array | applyTo: | answers the member with the given index
 SequenceableCollection | applyTo: | answers the member with the given index
  | tail | answers the copy of collection without the 1st member.
 String | asViennaExpression | answers a BlockClosure that reproduce a Smalltalk object that corresponds to the VDM expression
  | asViennaStatement | answers a BlockClosure that reproduce a Smalltalk object that corresponds to the VDM statement
 Dictionary | ** | iteration
-  | applyTo | answers the value corresponds to the given key
-  | comp | function composition
+  | applyTo: | answers the value corresponds to the given key
+  | comp: | function composition
   | inversed | answers the dictionary with flipped keys and values
 BlockClosure | ** | iteration
  | applyTo: | equivalent to valueWithArguments:
