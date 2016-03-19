@@ -56,7 +56,7 @@ ViennaComposite | | The class for composite or record values
  | at: , at:put: | read/write access to the field by given index or field name
  | constructorName | answers the constructor name
  | asArray | answers the array of all fields
-ViennaToken | The class for token values
+ViennaToken | | The class for token values
  | value | read the content value of the token
 
 # Auxiliary classes
