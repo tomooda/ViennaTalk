@@ -1,5 +1,5 @@
 tests-matching-set
-testMatchUnion1
+testMatchUnionLeftRight
 	self
 		assert:
 			((ViennaRuntimeUtil
@@ -12,7 +12,9 @@ testMatchUnion1
 					(ViennaRuntimeUtil
 						matchSetEnumeration:
 							{(ViennaRuntimeUtil matchIdentifier: 'member2').
-							(ViennaRuntimeUtil matchValue: 4)})) value: #(1 2 3 4) asSet) asSet
+							(ViennaRuntimeUtil matchValue: 4)})
+				left: 2
+				right: 2) value: #(1 2 3 4) asSet) asSet
 		equals:
 			{(Dictionary new
 				at: 'member1' put: 1;

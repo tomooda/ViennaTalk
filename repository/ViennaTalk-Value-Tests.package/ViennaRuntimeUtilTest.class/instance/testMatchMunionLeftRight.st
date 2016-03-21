@@ -1,5 +1,5 @@
 tests-matching-map
-testMatchMunion1
+testMatchMunionLeftRight
 	self
 		assert:
 			((ViennaRuntimeUtil
@@ -8,7 +8,9 @@ testMatchMunion1
 						matchMapEnumeration:
 							{{(ViennaRuntimeUtil matchIdentifier: 'key').
 							(ViennaRuntimeUtil matchValue: 2)}})
-				munion: (ViennaRuntimeUtil matchIdentifier: 'rest'))
+				munion: (ViennaRuntimeUtil matchIdentifier: 'rest')
+				left: 1
+				right: 1)
 				value:
 					(Dictionary new
 						at: 1 put: 2;
