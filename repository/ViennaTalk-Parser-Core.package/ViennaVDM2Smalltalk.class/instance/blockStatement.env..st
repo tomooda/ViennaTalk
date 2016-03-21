@@ -2,7 +2,8 @@ code generation-statements
 blockStatement: aViennaNode env: aDictionary
 	| statements vars |
 	statements := OrderedCollection new: aViennaNode size.
-	vars := self boundVariables: aViennaNode.
+	vars := Set new.
+	aViennaNode do: [:statement | statement label = 'DclStatement' ifTrue:[self boundVariables: statement into: vars]].
 	aViennaNode do: [ :node | (self generate: node env: aDictionary) ifNotNil: [ :statement | statements add: statement ] ].
 	^ String
 		new: 1024

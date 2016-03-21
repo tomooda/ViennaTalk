@@ -12,6 +12,10 @@ module: aViennaNode env: aDictionary
 		ifNotNil: [ :importDefinitionListNode | importDefinitionListNode collect: [ :importDefinitionNode | importDefinitionNode first ] ].
 	importClassNames := importModuleNames
 		collect: [ :importModuleName | env at: importModuleName first ifAbsent: [ importModuleName ] ].
+	moduleBodyNode
+		do: [ :definitionBlock | 
+			definitionBlock first label = 'StateDefinition'
+				ifFalse: [(self boundVariables: definitionBlock) do: [ :ident | env at: ident put: 'self ', ident ] ] ].
 	instVars := (self boundVariables: moduleBodyNode) asArray.
 	newClass := Object subclass: className instanceVariableNames: (' ' join: importClassNames , instVars).
 	importModuleNames

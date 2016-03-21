@@ -8,5 +8,4 @@ functionDefinitions: aViennaNode env: aDictionary in: aClass
 						defineLazyMethodNamed: identifier
 						initializer: (self generate: node env: aDictionary)
 						in: aClass
-						protocol: 'functions'.
-					aDictionary at: identifier put: 'self ' , identifier ] ]
+						protocol: 'functions' ] ]

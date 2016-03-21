@@ -27,4 +27,5 @@ explicitOperationDefinition: aViennaNode env: aDictionary
 		closureFromFlatBinds: binds
 		body: body
 		varGenerator: varGenerator
-		env: aDictionary)
+		env: aDictionary
+		op: true)

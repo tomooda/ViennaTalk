@@ -8,5 +8,4 @@ operationDefinitions: aViennaNode env: aDictionary in: aClass
 						defineLazyMethodNamed: identifier
 						initializer: (self generate: node env: aDictionary)
 						in: aClass
-						protocol: 'operations'.
-					aDictionary at: identifier put: 'self ' , identifier ] ]
+						protocol: 'operations' ] ]
