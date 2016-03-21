@@ -7,8 +7,8 @@ match: aBlock1 conc: aBlock2 left: anInteger1 right: anInteger2
 				new: 16
 				streamContents: [ :stream | 
 					| seq1 seq2 |
-					seq1 := value copyFrom: 1 to: value size - anInteger1.
-					seq2 := value copyFrom: value size - anInteger1 + 1 to: value size.
+					seq1 := value copyFrom: 1 to: anInteger1.
+					seq2 := value copyFrom: anInteger1 + 1 to: value size.
 					(aBlock1 value: seq1)
 						ifNotEmpty: [ :bindings1 | 
 							(aBlock2 value: seq2)
