@@ -47,4 +47,4 @@ stateDefinition: aViennaNode env: aDictionary
 				nextPutAll: 'init_';
 				nextPutAll: initConstructor;
 				nextPutAll: ' := ';
-				nextPutAll: (self generate: initNode first) ])}
+				nextPutAll: (self generate: initNode first env: aDictionary) ])}
