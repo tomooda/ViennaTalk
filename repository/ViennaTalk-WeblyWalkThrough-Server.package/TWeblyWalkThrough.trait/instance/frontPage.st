@@ -1,7 +1,7 @@
 request handling
 frontPage
-	^ ZnResponse
-		ok:
+	^ self
+		responseOk:
 			(ZnStringEntity
 				html:
 					'<!DOCTYPE html>

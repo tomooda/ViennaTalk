@@ -1,9 +1,5 @@
 {
-	"commentStamp" : "",
-	"super" : "VDMC",
-	"category" : "ViennaTalk-WeblyWalkThrough-Server",
-	"classinstvars" : [ ],
-	"pools" : [ ],
+	"classtraitcomposition" : "TWeblyWalkThrough classTrait",
 	"classvars" : [
 		"Current",
 		"Server"
@@ -13,5 +9,11 @@
 		"translator"
 	],
 	"name" : "WeblyWalkThrough",
-	"type" : "normal"
+	"commentStamp" : "",
+	"super" : "VDMC",
+	"traitcomposition" : "TWeblyWalkThrough",
+	"type" : "normal",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "ViennaTalk-WeblyWalkThrough-Server"
 }
