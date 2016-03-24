@@ -8,8 +8,8 @@ initialize
 		addLine;
 		add: 'settings...' target: self selector: #showSettingBrowser;
 		addLine;
-		add: 'update to the latest stable' target: self selector: #updateStable;
-		add: 'update to the bleeding edge' target: self selector: #updateDevelopment;
+		add: 'update to the latest stable' target: self selector: #loadStable;
+		add: 'update to the bleeding edge' target: self selector: #loadDevelopment;
 		addLine;
 		add: 'reopen' target: self selector: #reopen;
 		add: 'close' target: self selector: #close;
