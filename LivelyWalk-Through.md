@@ -70,8 +70,8 @@ The syntax is simple.
 ```
 <livetalk> ::= 
   <widget name>`<event name><cr>        /* widget and event that triggers the actions defined below */
-    <action><cr>                        /* actions are separated by <cr> */
-    ...
+    [<action>(<cr><action>)*]<cr>*      /* actions are separated by <cr> */
+    
 <action> ::= 
     <expression> |                        /* evaluate the expression */
     <expression> -> [<widget name>] |     /* feed the value of the expression to the widget */
@@ -79,7 +79,7 @@ The syntax is simple.
 <expression> ::=
     <operation name>(<expression>,...) |  /* call a VDM operation */
     [<widget name>]                       /* read the value that the widget holds */
-    "string" |                            /* string of valid VDM expressions */
+    "string"                              /* string of valid VDM expressions */
 ```
 
 For the simple calculator, the below script will compute the total.
