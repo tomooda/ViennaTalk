@@ -1,7 +1,4 @@
 menu operations
 loadDevelopment
-	Gofer new
-		smalltalkhubUser: 'tomooda' project: 'ViennaTalk';
-		configurationOf: #ViennaTalk;
-		load.
-	(Smalltalk at: #ConfigurationOfViennaTalk) loadDevelopment
+	self updateConfiguration.
+	Smalltalk at: #ConfigurationOfViennaTalk ifPresent: [ :config | config loadDevelopment ]

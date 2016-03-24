@@ -1,7 +1,4 @@
 menu operations
 loadStable
-	Gofer new
-		smalltalkhubUser: 'tomooda' project: 'ViennaTalk';
-		configurationOf: #ViennaTalk;
-		load.
-	(Smalltalk at: #ConfigurationOfViennaTalk) load
+	self updateConfiguration.
+	Smalltalk at: #ConfigurationOfViennaTalk ifPresent: [ :config | config load ]
