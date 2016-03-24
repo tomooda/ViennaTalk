@@ -7,7 +7,7 @@ argsFrom: aZnRequest
 			args := aZnRequest uri query
 				ifNil: [ #() ]
 				ifNotNil: [ :query | query values collect: [ :arg | self translateFromJson: arg ] ] ].
-	aZnRequest method asLowercase = 'post'
+	aZnRequest method asLowercase= 'post'
 		ifTrue: [ 
 			(aZnRequest contentType main = 'application' and: [ aZnRequest contentType sub asLowercase = 'json' ])
 				ifTrue: [ 
