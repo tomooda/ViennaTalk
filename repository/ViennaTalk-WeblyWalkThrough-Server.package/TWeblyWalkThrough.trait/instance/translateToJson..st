@@ -1,3 +1,3 @@
 translating
-translateToJson: aString
+translateToJson: anObject
 	^ self subclassResponsibility
