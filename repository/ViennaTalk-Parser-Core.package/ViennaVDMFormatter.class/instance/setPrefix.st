@@ -1,3 +1,3 @@
 symbol access
 setPrefix
-	^ 'set of'
+	^ 'set of '
