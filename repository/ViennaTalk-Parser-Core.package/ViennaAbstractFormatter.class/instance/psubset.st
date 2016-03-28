@@ -1,0 +1,3 @@
+symbol access
+psubset
+	self subclassResponsibility

@@ -6,6 +6,6 @@
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [ ],
-	"name" : "ViennaVDMFormatter",
+	"name" : "ViennaVDMSymbolFormatter",
 	"type" : "normal"
 }

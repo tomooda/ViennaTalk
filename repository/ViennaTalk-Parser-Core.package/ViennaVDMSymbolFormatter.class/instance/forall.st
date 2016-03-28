@@ -1,0 +1,3 @@
+symbol access
+forall
+	^ '∀'

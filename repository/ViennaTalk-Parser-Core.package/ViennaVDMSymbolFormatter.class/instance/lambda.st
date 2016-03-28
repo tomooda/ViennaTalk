@@ -1,0 +1,3 @@
+symbol access
+lambda
+	^ '𝜆'

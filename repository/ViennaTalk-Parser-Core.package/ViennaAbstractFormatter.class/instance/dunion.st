@@ -1,0 +1,3 @@
+symbol access
+dunion
+	self subclassResponsibility

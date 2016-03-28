@@ -1,0 +1,3 @@
+symbol access
+exists1
+	self subclassResponsibility

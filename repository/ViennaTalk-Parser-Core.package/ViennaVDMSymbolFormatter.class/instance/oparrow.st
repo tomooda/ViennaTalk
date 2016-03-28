@@ -1,0 +1,3 @@
+symbol access
+oparrow
+	^ 'o⃯'

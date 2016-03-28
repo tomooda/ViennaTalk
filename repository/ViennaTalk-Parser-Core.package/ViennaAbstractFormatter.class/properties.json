@@ -1,0 +1,18 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "ViennaTalk-Parser-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [
+		"DefaultMaxSizePerLine",
+		"OperatorGrouping",
+		"OperatorPrecedence"
+	],
+	"instvars" : [
+		"maxSizePerLine",
+		"indent"
+	],
+	"name" : "ViennaAbstractFormatter",
+	"type" : "normal"
+}

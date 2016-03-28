@@ -1,0 +1,3 @@
+symbol access
+notInSet
+	self subclassResponsibility

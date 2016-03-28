@@ -1,0 +1,3 @@
+symbol access
+dinter
+	self subclassResponsibility

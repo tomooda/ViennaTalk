@@ -1,0 +1,3 @@
+symbol access
+iterate
+	self subclassResponsibility

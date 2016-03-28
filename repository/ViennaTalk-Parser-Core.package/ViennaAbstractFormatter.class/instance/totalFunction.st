@@ -1,0 +1,3 @@
+symbol access
+totalFunction
+	self subclassResponsibility

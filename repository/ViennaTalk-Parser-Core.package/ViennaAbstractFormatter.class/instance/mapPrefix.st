@@ -1,0 +1,3 @@
+symbol access
+mapPrefix
+	self subclassResponsibility
