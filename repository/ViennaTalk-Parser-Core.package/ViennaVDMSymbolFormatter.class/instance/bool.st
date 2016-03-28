@@ -1,3 +1,3 @@
 symbol access
 bool
-	^ '𝔹'
+	^ String with: (Character codePoint: 16r1D539)

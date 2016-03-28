@@ -1,3 +1,3 @@
 symbol access
 iota
-	^ 'ι'
+	^ String with: (Character codePoint: 16r3B9)

@@ -1,3 +1,3 @@
 symbol access
 power
-	^ 'ℱ'
+	^ String with: (Character codePoint: 16r2131)

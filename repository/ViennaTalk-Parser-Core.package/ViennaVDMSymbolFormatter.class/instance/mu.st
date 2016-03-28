@@ -1,3 +1,3 @@
 symbol access
 mu
-	^ '𝜇'
+	^ String with: (Character codePoint: 16r1D707)

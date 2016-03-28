@@ -1,3 +1,3 @@
 symbol access
 lambda
-	^ '𝜆'
+	^ String with: (Character codePoint: 16r1D706)

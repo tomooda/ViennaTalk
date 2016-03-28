@@ -1,3 +1,3 @@
 symbol access
 oparrow
-	^ 'o⃯'
+	^ String with: (Character codePoint: 16r6F) with: (Character codePoint: 16r20EF)
