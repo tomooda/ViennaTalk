@@ -5,7 +5,7 @@ setForLoop: aViennaNode
 	expression := self format: aViennaNode second.
 	statement := self format: aViennaNode third.
 	(self needsIndent: pattern , expression , statement)
-		ifFalse: [ ^ 'for all ' , pattern , ' in set ' , expression , ' do ' , statement ].
+		ifFalse: [ ^ 'for all ' , pattern , ' ', self inset, ' ' , expression , ' do ' , statement ].
 	(self needsIndent: pattern , expression)
 		ifFalse: [ ^ 'for all ' , pattern , ' in set ' , expression , ' do' , String cr , indent , (self indentString: statement) ].
 	^ self

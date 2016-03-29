@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "ViennaAbstractFormatter",
+	"category" : "ViennaTalk-Parser-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "ViennaVDMJapaneseSymbolFormatter",
+	"type" : "normal"
+}

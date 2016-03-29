@@ -3,4 +3,4 @@ fieldPattern: aViennaNode
 	| identifier pattern |
 	identifier := self format: aViennaNode first.
 	pattern := self format: aViennaNode second.
-	^ identifier , ' |-> ' , pattern
+	^ identifier , ' ', self maplet, ' ', pattern

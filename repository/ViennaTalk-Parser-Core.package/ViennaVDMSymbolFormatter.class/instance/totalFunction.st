@@ -1,3 +1,3 @@
 symbol access
 totalFunction
-	^ Character value: 16r21f8
+	^ String with: (Character value: 16r21f8)
