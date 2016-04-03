@@ -1,3 +1,3 @@
 symbol access
 bool
-	self subclassResponsibility
+	^ 'bool'

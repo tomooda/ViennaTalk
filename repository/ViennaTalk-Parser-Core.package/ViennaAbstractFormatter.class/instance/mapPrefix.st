@@ -1,3 +1,3 @@
 symbol access
 mapPrefix
-	self subclassResponsibility
+	^ 'map '

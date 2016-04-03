@@ -1,3 +1,3 @@
 symbol access
 inmapPrefix
-	self subclassResponsibility
+	^ 'inmap '

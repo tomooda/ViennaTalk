@@ -1,3 +1,3 @@
 symbol access
 setPrefix
-	self subclassResponsibility
+	^ 'set of '

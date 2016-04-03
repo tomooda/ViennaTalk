@@ -1,3 +1,3 @@
 symbol access
 inset
-	self subclassResponsibility
+	^ 'in set'

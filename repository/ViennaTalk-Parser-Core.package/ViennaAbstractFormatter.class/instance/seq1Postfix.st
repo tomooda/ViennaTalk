@@ -1,3 +1,3 @@
 symbol access
 seq1Postfix
-	self subclassResponsibility
+	^ ''

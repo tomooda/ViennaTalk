@@ -1,3 +1,3 @@
 symbol access
 iota
-	self subclassResponsibility
+	^ 'iota'

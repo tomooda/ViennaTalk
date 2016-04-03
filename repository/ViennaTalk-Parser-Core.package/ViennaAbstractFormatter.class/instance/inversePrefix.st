@@ -1,3 +1,3 @@
 symbol access
 inversePrefix
-	self subclassResponsibility
+	^ 'inverse '

@@ -1,3 +1,3 @@
 symbol access
 psubset
-	self subclassResponsibility
+	^ 'psubset'

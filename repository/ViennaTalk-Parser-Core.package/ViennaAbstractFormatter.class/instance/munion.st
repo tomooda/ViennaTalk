@@ -1,3 +1,3 @@
 symbol access
 munion
-	self subclassResponsibility
+	^ 'munion'

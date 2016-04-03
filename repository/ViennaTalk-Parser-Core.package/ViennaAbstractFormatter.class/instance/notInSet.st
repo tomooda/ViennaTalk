@@ -1,3 +1,3 @@
 symbol access
 notInSet
-	self subclassResponsibility
+	^ 'not in set'

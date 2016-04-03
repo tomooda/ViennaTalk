@@ -1,3 +1,3 @@
 symbol access
 power
-	self subclassResponsibility
+	^ 'power'

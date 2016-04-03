@@ -1,3 +1,3 @@
 symbol access
 maplet
-	self subclassResponsibility
+	^ '|->'

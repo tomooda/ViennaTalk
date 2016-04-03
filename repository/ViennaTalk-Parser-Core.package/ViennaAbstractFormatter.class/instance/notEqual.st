@@ -1,3 +1,3 @@
 symbol access
 notEqual
-	self subclassResponsibility
+	^ '<>'

@@ -1,3 +1,3 @@
 formatting-expressions
 actExpression: aViennaNode
-	^ '#act(' , ', ' join: (self formatAll: aViennaNode) , ')'
+	^ self act, '(' , ', ' join: (self formatAll: aViennaNode) , ')'

@@ -1,3 +1,3 @@
 symbol access
 lambda
-	self subclassResponsibility
+	^ 'lambda'

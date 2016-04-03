@@ -1,3 +1,3 @@
 symbol access
 dunion
-	self subclassResponsibility
+	^ 'dunion'

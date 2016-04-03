@@ -1,3 +1,3 @@
 symbol access
 exists1
-	self subclassResponsibility
+	^ 'exists1'

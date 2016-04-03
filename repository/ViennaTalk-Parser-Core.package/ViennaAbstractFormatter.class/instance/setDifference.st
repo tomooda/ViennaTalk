@@ -1,3 +1,3 @@
 symbol access
 setDifference
-	self subclassResponsibility
+	^ '\'

@@ -1,3 +1,3 @@
 symbol access
 int
-	self subclassResponsibility
+	^ 'int'

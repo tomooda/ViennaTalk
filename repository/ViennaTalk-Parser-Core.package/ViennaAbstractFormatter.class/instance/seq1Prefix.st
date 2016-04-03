@@ -1,3 +1,3 @@
 symbol access
 seq1Prefix
-	self subclassResponsibility
+	^ 'seq1 of '

@@ -1,3 +1,3 @@
 symbol access
 and
-	self subclassResponsibility
+	^ 'and'

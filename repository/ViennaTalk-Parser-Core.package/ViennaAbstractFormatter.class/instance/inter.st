@@ -1,3 +1,3 @@
 symbol access
 inter
-	self subclassResponsibility
+	^ 'inter'
