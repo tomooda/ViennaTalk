@@ -5,7 +5,10 @@
 	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [ ],
-	"instvars" : [ ],
+	"instvars" : [
+		"highlighter",
+		"wantsHighlighting"
+	],
 	"name" : "ViennaPluggableTextMorph",
 	"type" : "normal"
 }

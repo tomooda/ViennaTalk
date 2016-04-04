@@ -1,0 +1,3 @@
+enabling/disabling
+enableHighlighting
+	self highlightingEnabled: true

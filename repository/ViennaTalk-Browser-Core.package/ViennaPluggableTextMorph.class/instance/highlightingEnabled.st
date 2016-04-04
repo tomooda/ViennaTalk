@@ -1,0 +1,3 @@
+accessing
+highlightingEnabled
+	^ highlighter notNil
