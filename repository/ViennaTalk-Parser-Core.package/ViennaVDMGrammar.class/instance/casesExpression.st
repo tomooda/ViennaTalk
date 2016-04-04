@@ -1,7 +1,7 @@
 parsers-expressions-basics
 casesExpression
-	^ (((self reserved: 'cases') , expression , colon) ==> #second , self casesExpressionAlternatives
-		, ((comma , self othersExpression) ==> #second) optional , (self reserved: 'end'))
+	^ ((self cases , expression , colon) ==> #second , self casesExpressionAlternatives
+		, ((comma , self othersExpression) ==> #second) optional , self endKeyword)
 		==> [ :quatro | 
 			| expr alternatives othersExpr |
 			expr := quatro first.

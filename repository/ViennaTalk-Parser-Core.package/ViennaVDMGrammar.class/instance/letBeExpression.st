@@ -1,8 +1,6 @@
 parsers-expressions-basics
 letBeExpression
-	^ ((self reserved: 'let') , multipleBind
-		, (((self reserved: 'be') , (self reserved: 'st') , expression) ==> #third) optional , (self reserved: 'in')
-		, expression)
+	^ ((self reserved: 'let') , multipleBind , ((self best , expression) ==> #second) optional , self in , expression)
 		==> [ :quin | 
 			{(quin second).
 			(quin third).

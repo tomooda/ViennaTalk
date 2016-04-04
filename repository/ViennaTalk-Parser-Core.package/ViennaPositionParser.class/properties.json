@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "PPActionParser",
+	"category" : "ViennaTalk-Parser-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "ViennaPositionParser",
+	"type" : "normal"
+}

@@ -1,6 +1,6 @@
 parsers-statements
 elseifStatement
-	^ ((self reserved: 'elseif') , expression , (self reserved: 'then') , statement)
+	^ (self elseif , expression , self then , statement)
 		==> [ :quatro | 
 			{(quatro second).
 			(quatro fourth)} ]

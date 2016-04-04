@@ -1,0 +1,19 @@
+{
+	"commentStamp" : "",
+	"super" : "ViennaVDMGrammar",
+	"category" : "ViennaTalk-Parser-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"text",
+		"identifierAttribute",
+		"keywordAttribute",
+		"operatorAttribute",
+		"literalAttribute",
+		"typeAttribute",
+		"commentAttribute"
+	],
+	"name" : "ViennaVDMHighlighter",
+	"type" : "normal"
+}

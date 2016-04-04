@@ -1,6 +1,6 @@
 parsers-statements
 letStatement
-	^ ((self reserved: 'let') , self localDefinitionList , (self reserved: 'in') , statement)
+	^ (self let , self localDefinitionList , self in , statement)
 		==> [ :quatro | 
 			| localDefs bodyStatement |
 			localDefs := quatro second.

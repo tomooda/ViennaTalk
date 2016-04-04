@@ -1,3 +1,9 @@
 parsers-definitions
 access
-	^ super access ==> [ :string | ViennaNode label: 'Access' with: string ]
+	^ super access
+		=>> [ :start :end :string | 
+			ViennaNode
+				label: 'Access'
+				start: start
+				end: end
+				with: string ]

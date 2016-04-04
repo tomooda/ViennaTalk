@@ -1,6 +1,6 @@
 parsers-statements
 defStatement
-	^ ((self reserved: 'def') , self equalDefinitionList , (self reserved: 'in') , statement)
+	^ (self def , self equalDefinitionList , (self reserved: 'in') , statement)
 		==> [ :quatro | 
 			| defs bodyStatement |
 			defs := quatro second.

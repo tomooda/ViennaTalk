@@ -1,8 +1,6 @@
 parsers-statements
 letBeStatement
-	^ ((self reserved: 'let') , multipleBind
-		, (((self reserved: 'be') , (self reserved: 'st') , expression) ==> #third) optional , (self reserved: 'in')
-		, statement)
+	^ (self let , multipleBind , ((self best , expression) ==> #second) optional , self in , statement)
 		==> [ :quin | 
 			| binds guardExpr bodyStatement |
 			binds := quin second.

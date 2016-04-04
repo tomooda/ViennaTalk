@@ -1,7 +1,6 @@
 parsers-expressions-basics
 letExpression
-	^ ((self reserved: 'let') , self localDefinitionList, (self reserved: 'in')
-		, expression)
+	^ (self let , self localDefinitionList , self in , expression)
 		==> [ :quatro | 
 			{(quatro second).
 			(quatro fourth)} ]

@@ -6,7 +6,9 @@
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
-		"label"
+		"label",
+		"start",
+		"end"
 	],
 	"name" : "ViennaNode",
 	"type" : "variable"

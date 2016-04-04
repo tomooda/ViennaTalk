@@ -1,3 +1,3 @@
 parsers-definitions
 moduleBody
-	^ ((self reserved: 'definitions') , self definitionBlock plus) ==> #second
+	^ (self definitions , self definitionBlock plus) ==> #second

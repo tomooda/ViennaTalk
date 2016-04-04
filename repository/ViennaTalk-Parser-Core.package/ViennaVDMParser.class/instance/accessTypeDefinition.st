@@ -1,4 +1,10 @@
 parsers-definitions
 accessTypeDefinition
 	^ super accessTypeDefinition
-		==> [ :array | ViennaNode label: 'AccessTypeDefinition' with: (ViennaNode label: 'Access' withAll: array first) with: array second ]
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'AccessTypeDefinition'
+				start: start
+				end: end
+				with: (ViennaNode label: 'Access' withAll: array first)
+				with: array second ]

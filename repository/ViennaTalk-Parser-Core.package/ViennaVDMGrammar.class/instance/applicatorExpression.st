@@ -2,7 +2,7 @@ parsers-expressions
 applicatorExpression
 	^ (self combinatorExpression
 		,
-			(((lparen , expression , comma , (self operator: '...') , comma , expression , rparen)
+			(((lparen , expression , comma , self dots , comma , expression , rparen)
 				==> [ :array | 
 					{#subsequence:from:to:.
 					(array second).

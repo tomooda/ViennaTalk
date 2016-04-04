@@ -1,3 +1,3 @@
 parsers-expressions-basics
 othersExpression
-	^ ((self reserved: 'others') , (self operator: '->') , expression) ==> #third
+	^ (self others , self arrow , expression) ==> #third

@@ -2,52 +2,52 @@ parsers-expressions
 relationExpression
 	^ (evaluatorExpression
 		,
-			((((self operator: '=') , evaluatorExpression)
+			(((self eqOp , evaluatorExpression)
 				==> [ :pair | 
 					{#equal:and:.
 					(pair second)} ])
 				/
-					(((self operator: '<>') , evaluatorExpression)
+					((self notEq , evaluatorExpression)
 						==> [ :pair | 
 							{#notEqual:and:.
 							(pair second)} ])
 				/
-					(((self operator: '<=') , evaluatorExpression)
+					((self lessOrEqual , evaluatorExpression)
 						==> [ :pair | 
 							{#lessEq:and:.
 							(pair second)} ])
 				/
-					(((self operator: '<') , evaluatorExpression)
+					((self less , evaluatorExpression)
 						==> [ :pair | 
 							{#less:and:.
 							(pair second)} ])
 				/
-					(((self operator: '>=') , evaluatorExpression)
+					((self greaterOrEqual , evaluatorExpression)
 						==> [ :pair | 
 							{#greaterEq:and:.
 							(pair second)} ])
 				/
-					(((self operator: '>') , evaluatorExpression)
+					((self greater , evaluatorExpression)
 						==> [ :pair | 
 							{#greater:and:.
 							(pair second)} ])
 				/
-					(((self reserved: 'subset') , evaluatorExpression)
+					((self subset , evaluatorExpression)
 						==> [ :pair | 
 							{#subset:and:.
 							(pair second)} ])
 				/
-					(((self reserved: 'psubset') , evaluatorExpression)
+					((self psubset , evaluatorExpression)
 						==> [ :pair | 
 							{#psubset:and:.
 							(pair second)} ])
 				/
-					((((self reserved: 'in') , (self reserved: 'set')) ==> [ :op |  ] , evaluatorExpression)
+					((self inset ==> [ :op |  ] , evaluatorExpression)
 						==> [ :pair | 
 							{#inSet:and:.
 							(pair second)} ])
 				/
-					((((self reserved: 'not') , (self reserved: 'in') , (self reserved: 'set')) ==> [ :op |  ] , evaluatorExpression)
+					(((self notOp , (self reserved: 'in') , (self reserved: 'set')) ==> [ :op |  ] , evaluatorExpression)
 						==> [ :pair | 
 							{#notInSet:and:.
 							(pair second)} ])) star)

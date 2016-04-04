@@ -1,4 +1,10 @@
 parsers-definitions
 accessOperationDefinition
 	^ super accessOperationDefinition
-		==> [ :array | ViennaNode label: 'AccessOperationDefinition' with: (ViennaNode label: 'Access' withAll: array first) with: array second ]
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'AccessOperationDefinition'
+				start: start
+				end: end
+				with: (ViennaNode label: 'Access' withAll: array first)
+				with: array second ]

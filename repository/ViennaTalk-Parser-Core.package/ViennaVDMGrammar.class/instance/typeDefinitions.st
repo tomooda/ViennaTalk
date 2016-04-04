@@ -1,4 +1,3 @@
 parsers-definitions
 typeDefinitions
-	^ ((self reserved: 'types') , (self accessTypeDefinition separatedBy: semicolon) withoutSeparators , semicolon optional)
-		==> #second
+	^ (self types , (self accessTypeDefinition separatedBy: semicolon) withoutSeparators , semicolon optional) ==> #second
