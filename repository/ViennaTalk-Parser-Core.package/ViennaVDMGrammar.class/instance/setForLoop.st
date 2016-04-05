@@ -1,8 +1,7 @@
 parsers-statements
 setForLoop
-	^ ((self reserved: 'for') , (self reserved: 'all') , pattern , (self reserved: 'in') , (self reserved: 'set')
-		, expression , (self reserved: 'do') , statement)
+	^ (self for , self all , pattern , self inset , expression , self do , statement)
 		==> [ :array | 
 			{(array third).
-			(array sixth).
-			(array eighth)} ]
+			(array fifth).
+			(array seventh)} ]

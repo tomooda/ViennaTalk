@@ -1,6 +1,6 @@
 parsers-statements
 sequenceForLoop
-	^ ((self reserved: 'for') , patternBind , (self reserved: 'in') , expression , (self reserved: 'do') , statement)
+	^ (self for , patternBind , self in , expression , self do , statement)
 		==> [ :array | 
 			{(array second).
 			(array fourth).

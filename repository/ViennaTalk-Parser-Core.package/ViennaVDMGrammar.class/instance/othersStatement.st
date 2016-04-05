@@ -1,3 +1,3 @@
 parsers-statements
 othersStatement
-	^ ((self reserved: 'others') , (self operator: '->') , statement) ==> #third
+	^ (self others , self arrow , statement) ==> #third

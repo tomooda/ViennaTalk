@@ -1,3 +1,3 @@
 parsers-definitions
 initialisation
-	^ ((self reserved: 'init') , self invariantFunction) ==> #second
+	^ (self init , self invariantFunction) ==> #second

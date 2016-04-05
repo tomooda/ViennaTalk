@@ -62,6 +62,7 @@ initializeOperatorPrecedence
 		at: 'Or' put: 13;
 		at: 'Imply' put: 12;
 		at: 'LogicalEquivalence' put: 11;
+		at: 'LambdaExpression' put: 10;
 		at: 'LetExpression' put: 10;
 		at: 'LetBeExpression' put: 10;
 		at: 'DefExpression' put: 10;
