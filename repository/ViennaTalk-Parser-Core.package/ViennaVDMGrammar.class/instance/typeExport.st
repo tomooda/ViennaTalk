@@ -1,3 +1,3 @@
 parsers-interfaces
 typeExport
-	^ self struct optional , self typeName
+	^ self struct optional , name

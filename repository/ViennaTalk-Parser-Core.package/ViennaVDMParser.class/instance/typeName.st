@@ -1,7 +1,10 @@
 parsers-types
 typeName
-	^ super name
+	^ super typeName
 		==> [ :array | 
-			array isString
-				ifTrue: [ ViennaNode label: 'LocalName' with: array ]
-				ifFalse: [ ViennaNode label: 'GlobalName' withAll: array ] ]
+			ViennaNode
+				label: 'TypeName'
+				with:
+					(array isString
+						ifTrue: [ ViennaNode label: 'LocalName' with: array ]
+						ifFalse: [ ViennaNode label: 'GlobalName' withAll: array ]) ]
