@@ -1,6 +1,6 @@
 parsers-symbols
 typeVariableIdentifier
-	^ ((self operator: $@) , identifier) trim
+	^ ((self operator: $@) , self typeIdentifier) trim
 		==> [ :pair | 
 			String
 				new: pair second size + 1

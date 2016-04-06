@@ -1,4 +1,4 @@
 parsers-interfaces
 typeImport
-	^ (self typeDefinition , (((self reserved: 'renamed') , name) ==> #second) optional)
-		/ (name , (((self reserved: 'renamed') , name) ==> #second) optional)
+	^ (self typeDefinition , ((self renamed , self typeName) ==> #second) optional)
+		/ (self typeName , ((self renamed , self typeName) ==> #second) optional)

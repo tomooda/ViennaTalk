@@ -12,7 +12,8 @@
 		"operatorAttribute",
 		"literalAttribute",
 		"typeAttribute",
-		"commentAttribute"
+		"commentAttribute",
+		"moduleAttribute"
 	],
 	"name" : "ViennaVDMHighlighter",
 	"type" : "normal"

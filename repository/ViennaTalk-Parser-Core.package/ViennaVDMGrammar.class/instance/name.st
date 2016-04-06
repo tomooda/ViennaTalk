@@ -1,9 +1,6 @@
 parsers-expressions-basics
 name
-	^ (identifier , ((self operator: $`) , identifier trim) optional)
+	^ ((self moduleIdentifier , (self operator: $`) , identifier trim)
 		==> [ :pair | 
-			pair second
-				ifNil: [ pair first ]
-				ifNotNil: [ 
-					{(pair first).
-					(pair second second)} ] ]
+			{(pair first).
+			(pair third)} ]) / identifier trim

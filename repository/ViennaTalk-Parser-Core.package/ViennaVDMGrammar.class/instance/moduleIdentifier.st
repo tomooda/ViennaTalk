@@ -1,0 +1,3 @@
+parsers-symbols
+moduleIdentifier
+	^ identifier

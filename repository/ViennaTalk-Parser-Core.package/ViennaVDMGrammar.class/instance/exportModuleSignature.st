@@ -1,3 +1,3 @@
 parsers-interfaces
 exportModuleSignature
-	^ (self reserved: 'all') / self exportSignature plus
+	^ self all / self exportSignature plus

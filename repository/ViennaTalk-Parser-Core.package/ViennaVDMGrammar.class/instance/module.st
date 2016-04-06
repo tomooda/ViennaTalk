@@ -1,6 +1,7 @@
 parsers-definitions
 module
-	^ (self moduleKeyword , identifier trim , self interface , self moduleBody optional , self endKeyword , identifier)
+	^ (self moduleKeyword , self moduleIdentifier trim , self interface , self moduleBody optional , self endKeyword
+		, self moduleIdentifier)
 		==> [ :array | 
 			array second = array sixth
 				ifTrue: [ 

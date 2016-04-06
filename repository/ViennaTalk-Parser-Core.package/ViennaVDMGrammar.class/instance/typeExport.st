@@ -1,3 +1,3 @@
 parsers-interfaces
 typeExport
-	^ (self reserved: 'struct') optional , name
+	^ self struct optional , self typeName

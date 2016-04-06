@@ -1,3 +1,3 @@
 parsers-interfaces
 exportDefinition
-	^ ((self reserved: 'exports') , self exportModuleSignature) ==> #second
+	^ (self exports , self exportModuleSignature) ==> #second

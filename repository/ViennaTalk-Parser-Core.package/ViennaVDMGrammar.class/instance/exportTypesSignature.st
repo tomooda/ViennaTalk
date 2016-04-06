@@ -1,4 +1,3 @@
 parsers-interfaces
 exportTypesSignature
-	^ ((self reserved: 'types') , (self typeExport separatedBy: semicolon) withoutSeparators , semicolon optional)
-		==> #second
+	^ (self types , (self typeExport separatedBy: semicolon) withoutSeparators , semicolon optional) ==> #second
