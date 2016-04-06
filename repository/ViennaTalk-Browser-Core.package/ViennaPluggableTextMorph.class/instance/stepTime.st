@@ -1,3 +1,3 @@
 stepping and presenter
 stepTime
-	^ 2000
+	^ 1000
