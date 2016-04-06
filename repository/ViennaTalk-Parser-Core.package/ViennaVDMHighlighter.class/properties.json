@@ -9,11 +9,11 @@
 		"text",
 		"identifierAttribute",
 		"keywordAttribute",
-		"operatorAttribute",
 		"literalAttribute",
 		"typeAttribute",
 		"commentAttribute",
-		"moduleAttribute"
+		"moduleAttribute",
+		"declAttribute"
 	],
 	"name" : "ViennaVDMHighlighter",
 	"type" : "normal"

@@ -1,6 +1,6 @@
 parsers-statements
-stateDesignator
-	^ ((self decl: name) , (self fieldReferenceArg / self mapOrSequenceReferenceArg) star)
+basicStateDesignator
+	^ (( name) , (self fieldReferenceArg / self mapOrSequenceReferenceArg) star)
 		==> [ :pair | 
 			| nameDesig pairs |
 			nameDesig := pair first.

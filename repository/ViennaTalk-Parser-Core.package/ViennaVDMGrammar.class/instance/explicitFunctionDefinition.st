@@ -1,7 +1,7 @@
 parsers-definitions
 explicitFunctionDefinition
-	^ (identifier trim , self typeVariableList , colon , self functionType trim , identifier trim , self parametersList
-		, (self operator: '==') , (expression / self isSubclassResponsibility / self isNotYetSpecified)
+	^ (identifier trim , self typeVariableList , colon , self functionType trim , (self decl: identifier) trim
+		, self parametersList , (self operator: '==') , (expression / self isSubclassResponsibility / self isNotYetSpecified)
 		, ((self pre , expression) ==> #second) optional , ((self post , expression) ==> #second) optional
 		, ((self measure , name) ==> #second) optional)
 		==> [ :array | 

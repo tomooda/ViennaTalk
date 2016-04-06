@@ -1,6 +1,6 @@
 parsers-types
 equalityAbstractionField
-	^ (identifier trim , (self operator: ':-') , type)
+	^ ((self decl: identifier) trim , (self operator: ':-') , type)
 		==> [ :triple | 
 			{(triple first).
 			(triple third)} ]
