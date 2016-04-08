@@ -11,7 +11,8 @@ buildCodePane
 		askBeforeDiscardingEdits: true;
 		bindKeyCombination: $d command toAction: [ self doItIn: codePane ];
 		bindKeyCombination: $p command toAction: [ self printItIn: codePane ];
-		bindKeyCombination: $f shift command toAction: [ self formatIn: codePane ];
+		bindKeyCombination: $f shift command toAction: [ codePane prettyPrint ];
+		bindKeyCombination: $t command toAction: [ codePane template ];
 		font: ViennaLauncher font;
 		highlightingEnabled: true;
 		yourself

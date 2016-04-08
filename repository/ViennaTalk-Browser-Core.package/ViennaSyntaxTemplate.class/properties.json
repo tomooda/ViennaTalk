@@ -1,13 +1,15 @@
 {
 	"commentStamp" : "",
-	"super" : "TextEditor",
+	"super" : "Object",
 	"category" : "ViennaTalk-Browser-Core",
-	"classinstvars" : [ ],
+	"classinstvars" : [
+		"current"
+	],
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
-		"template"
+		"candidates"
 	],
-	"name" : "ViennaEditor",
+	"name" : "ViennaSyntaxTemplate",
 	"type" : "normal"
 }

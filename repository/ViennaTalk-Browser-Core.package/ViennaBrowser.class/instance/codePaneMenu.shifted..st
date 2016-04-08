@@ -23,7 +23,9 @@ codePaneMenu: aMenu shifted: aBoolean
 			#undo}.
 			#-.
 			{('format (F)' translated).
-			#codePaneFormat}.
+			#prettyPrint}.
+			{('template (T)' translated).
+			#template}.
 			#-.
 			{('do it (d)' translated).
 			#codePaneDoIt}.

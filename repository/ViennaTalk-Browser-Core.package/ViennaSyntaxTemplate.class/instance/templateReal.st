@@ -1,0 +1,3 @@
+templates-types
+templateReal
+	^ 'real'

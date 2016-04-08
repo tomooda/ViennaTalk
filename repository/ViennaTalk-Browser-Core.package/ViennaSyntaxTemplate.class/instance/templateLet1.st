@@ -1,0 +1,6 @@
+templates-expressions
+templateLet1
+	^ 'let
+    IDENTIFIER1 : TYPE1 = EXPRESSION1,
+    IDENTIFIER2  = EXPRESSION2
+in EXPRESSION_OR_STATEMENT'

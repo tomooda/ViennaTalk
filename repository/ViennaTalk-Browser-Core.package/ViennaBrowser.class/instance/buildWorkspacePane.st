@@ -11,6 +11,5 @@ buildWorkspacePane
 		askBeforeDiscardingEdits: true;
 		bindKeyCombination: $d command toAction: [ self doItIn: workspacePane ];
 		bindKeyCombination: $p command toAction: [ self printItIn: workspacePane ];
-		bindKeyCombination: $f shift command toAction: [ self formatIn: workspacePane ];
 		font: ViennaLauncher font;
 		yourself

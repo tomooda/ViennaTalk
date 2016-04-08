@@ -11,6 +11,5 @@ buildValuePane
 		alwaysAccept: true;
 		bindKeyCombination: $d command toAction: [ self doItIn: valuePane ];
 		bindKeyCombination: $p command toAction: [ self printItIn: valuePane ];
-		bindKeyCombination: $f shift command toAction: [ self formatIn: valuePane ];
 		font: ViennaLauncher font;
 		yourself

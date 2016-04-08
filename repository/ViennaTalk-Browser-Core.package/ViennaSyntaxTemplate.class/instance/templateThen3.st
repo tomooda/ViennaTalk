@@ -1,0 +1,6 @@
+templates-expressions
+templateThen3
+	^ 'then EXPRESSION_OR_STATEMENT1 
+elseif BOOL_EXPRESSION
+    then EXPRESSION_OR_STATEMENT2
+else EXPRESSION_OR_STATEMENT3'

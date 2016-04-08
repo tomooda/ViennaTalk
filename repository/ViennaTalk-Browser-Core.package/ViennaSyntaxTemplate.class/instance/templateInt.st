@@ -1,0 +1,3 @@
+templates-types
+templateInt
+	^ 'int'

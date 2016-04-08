@@ -1,0 +1,7 @@
+templates-expressions
+templateIf3
+	^ 'if BOOL_EXPRESSION1
+    then EXPRESSION_OR_STATEMENT1
+elseif BOOL_EXPRESSION2
+    then EXPRESSION_OR_STATEMENT2
+else EXPRESSION_OR_STATEMENT3'

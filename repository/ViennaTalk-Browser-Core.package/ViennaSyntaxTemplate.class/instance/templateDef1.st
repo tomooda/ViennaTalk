@@ -1,0 +1,7 @@
+templates-expressions
+templateDef1
+	^ 'def
+    PATTERN1 = EXPRESSION1;
+    PATTERN2 : TYPE  = EXPRESSION2;
+    PATTERN3 in set EXPRESSION3 = EXPRESSION4;
+in EXPRESSION_OR_STATEMENT'
