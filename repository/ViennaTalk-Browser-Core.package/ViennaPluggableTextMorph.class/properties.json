@@ -4,7 +4,9 @@
 	"category" : "ViennaTalk-Browser-Core",
 	"classinstvars" : [ ],
 	"pools" : [ ],
-	"classvars" : [ ],
+	"classvars" : [
+		"DefaultHighlightingEnabled"
+	],
 	"instvars" : [
 		"highlighter",
 		"wantsHighlighting"

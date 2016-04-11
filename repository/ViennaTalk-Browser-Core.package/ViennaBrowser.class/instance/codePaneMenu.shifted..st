@@ -23,7 +23,17 @@ codePaneMenu: aMenu shifted: aBoolean
 			#undo}.
 			#-.
 			{('format (F)' translated).
+			#prettyPrint}}.
+	aMenu
+		addToggle: 'syntax highlighting'
+		target: codePane
+		selector: #toggleHighlighting
+		getStateSelector: #highlightingEnabled.
+	aMenu
+		addList:
+			{{('format (F)' translated).
 			#prettyPrint}.
+			#-.
 			{('template (T)' translated).
 			#template}.
 			#-.

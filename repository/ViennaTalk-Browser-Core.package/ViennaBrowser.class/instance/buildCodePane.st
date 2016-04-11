@@ -14,5 +14,4 @@ buildCodePane
 		bindKeyCombination: $f shift command toAction: [ codePane prettyPrint ];
 		bindKeyCombination: $t command toAction: [ codePane template ];
 		font: ViennaLauncher font;
-		highlightingEnabled: true;
 		yourself
