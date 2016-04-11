@@ -1,3 +1,0 @@
-bound variables-interfaces
-boundVariablesExportModuleSignatureAll: aViennaNode into: aSet
-	self notYetImplemented

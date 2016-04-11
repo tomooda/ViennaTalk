@@ -1,3 +1,0 @@
-formatting-types
-unitType: aViennaNode
-	^ '()'

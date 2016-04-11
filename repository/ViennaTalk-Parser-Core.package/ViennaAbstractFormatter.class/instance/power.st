@@ -1,3 +1,0 @@
-symbol access
-power
-	^ 'power'
