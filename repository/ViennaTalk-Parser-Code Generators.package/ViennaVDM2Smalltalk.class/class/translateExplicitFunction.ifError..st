@@ -1,0 +1,3 @@
+utilities
+translateExplicitFunction: aString ifError: aBlock
+	self subclassResponsibility

@@ -1,0 +1,15 @@
+{
+	"classtraitcomposition" : "TViennaVDMFreeVariableCollector classTrait",
+	"classvars" : [ ],
+	"instvars" : [
+		"decoder"
+	],
+	"name" : "ViennaVDM2Smalltalk",
+	"commentStamp" : "",
+	"super" : "Object",
+	"traitcomposition" : "TViennaVDMFreeVariableCollector",
+	"type" : "normal",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "ViennaTalk-Parser-Code Generators"
+}
