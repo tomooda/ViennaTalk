@@ -1,3 +1,3 @@
 converting
-asArrayFrom: start to: end
-	^ (start to: end) collect: [ :i | self at: i ]
+asArrayFrom: anInteger1 to: anInteger2
+	^ (anInteger1 to: anInteger2) collect: [ :i | self at: i ]

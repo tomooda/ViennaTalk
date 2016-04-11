@@ -5,7 +5,9 @@
 	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [ ],
-	"instvars" : [ ],
+	"instvars" : [
+		"classes"
+	],
 	"name" : "ViennaVDM2SmalltalkClass",
 	"type" : "normal"
 }

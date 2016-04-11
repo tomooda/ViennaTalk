@@ -1,3 +1,3 @@
 code generation-definitions
 valueDefinitions: aViennaNode env: aDictionary
-	self subclassResponsibility
+	aViennaNode do: [ :node | self generate: node env: aDictionary ]

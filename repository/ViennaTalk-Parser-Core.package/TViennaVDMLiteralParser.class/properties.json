@@ -1,0 +1,18 @@
+{
+	"classvars" : [
+		"uses:"
+	],
+	"instvars" : [
+		"named:"
+	],
+	"name" : "TViennaVDMLiteralParser",
+	"commentStamp" : "",
+	"super" : "Trait",
+	"traitcomposition" : "{}\r\tcategory: 'ViennaTalk-Parser-Core'",
+	"type" : "normal",
+	"classinstvars" : [ ],
+	"pools" : [
+		"}"
+	],
+	"category" : "ViennaTalk-Parser-Core"
+}

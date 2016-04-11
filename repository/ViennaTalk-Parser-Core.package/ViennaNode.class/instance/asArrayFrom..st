@@ -1,3 +1,3 @@
 converting
-asArrayFrom: start
-	^ self asArrayFrom: start to: self size
+asArrayFrom: anInteger
+	^ self asArrayFrom: anInteger to: self size

@@ -1,0 +1,21 @@
+{
+	"classtraitcomposition" : "TViennaVDMBoundVariableCollector classTrait",
+	"classvars" : [
+		"TViennaVDMFreeVariableCollector"
+	],
+	"instvars" : [
+		"Trait"
+	],
+	"name" : "TViennaVDMFreeVariableCollector",
+	"commentStamp" : "",
+	"super" : "Trait",
+	"traitcomposition" : "TViennaVDMBoundVariableCollector\r\tcategory: 'ViennaTalk-Parser-Core'",
+	"type" : "normal",
+	"classinstvars" : [
+		"classTrait"
+	],
+	"pools" : [
+		"TViennaVDMBoundVariableCollector"
+	],
+	"category" : "ViennaTalk-Parser-Core"
+}

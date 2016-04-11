@@ -18,6 +18,7 @@ module: aViennaNode env: aDictionary
 				ifFalse: [(self boundVariables: definitionBlock) do: [ :ident | env at: ident put: 'self ', ident ] ] ].
 	instVars := (self boundVariables: moduleBodyNode) asArray.
 	newClass := Object subclass: className instanceVariableNames: (' ' join: importClassNames , instVars).
+	classes at: moduleName put: newClass.
 	importModuleNames
 		with: importClassNames
 		do: [ :importModuleName :importClassName | 
@@ -27,6 +28,6 @@ module: aViennaNode env: aDictionary
 						, importClassName capitalized
 				in: newClass
 				protocol: 'imports' ].
-	moduleBodyNode do: [ :definitionBlock | self definitionBlock: definitionBlock env: env in: newClass ].
+	moduleBodyNode do: [ :definitionBlock | self definitionBlock: definitionBlock env: env ].
 	(newClass includesSelector: #init)
 		ifFalse: [ self defineMethod: 'init' in: newClass protocol: 'state' ]
