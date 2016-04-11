@@ -1,0 +1,3 @@
+private
+escapeString: aString
+	^ aString
