@@ -1,5 +1,5 @@
 {
-	"name" : "TViennaVDMBoundVariableCollectorTest",
+	"name" : "TViennaVDMFreeVariableCollectorTestCase",
 	"commentStamp" : "",
 	"category" : "ViennaTalk-Parser-Tests"
 }
