@@ -10,6 +10,7 @@ moduleListMenu: aMenu
 	aMenu addLine.
 	aMenu add: 'generate a Smalltalk script (single module)...' translated selector: #generateSmalltalkScript.
 	aMenu add: 'generate classes (all modules)...' translated selector: #generateSmalltalkClasses.
+	aMenu add: 'generate object (all modules)...' translated selector: #generateSmalltalkObject.
 	referenceSubMenu := MenuMorph new defaultTarget: self.
 	self importerModules do: [ :name | referenceSubMenu add: name selector: #selectModuleNamed: argument: name ].
 	referenceSubMenu hasItems
