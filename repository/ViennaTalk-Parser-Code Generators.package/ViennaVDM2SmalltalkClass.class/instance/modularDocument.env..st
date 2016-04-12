@@ -1,9 +1,8 @@
 code generation-definitions
 modularDocument: aViennaNode env: aDictionary
-	| documentClassName moduleNames classNames documentClass |
-	documentClassName := self requestClassName: ''.
-	documentClassName ifNil: [ ^ nil ].
+	| moduleNames classNames documentClass |
 	moduleNames := aViennaNode collect: #first.
+	documentClass := self createDocumentClassWithInstVars: (moduleNames collect: #uncapitalized).
 	classNames := moduleNames
 		collect: [ :moduleName | 
 			(self requestClassName: moduleName)
@@ -12,9 +11,6 @@ modularDocument: aViennaNode env: aDictionary
 					aDictionary at: moduleName put: name.
 					name ] ].
 	aViennaNode do: [ :node | self generate: node env: aDictionary ].
-	documentClass := Object
-		subclass: documentClassName
-		instanceVariableNames: (' ' join: (moduleNames collect: #uncapitalized)).
 	self
 		defineMethod:
 			(String

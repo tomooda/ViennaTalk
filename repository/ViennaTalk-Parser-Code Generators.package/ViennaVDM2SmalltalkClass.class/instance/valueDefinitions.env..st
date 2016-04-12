@@ -5,7 +5,7 @@ valueDefinitions: aViennaNode env: aDictionary
 	aViennaNode
 		do: [ :node | 
 			initializer := self generate: node env: aDictionary.
-			(self boundVariables: aViennaNode)
+			(self boundVariables: node)
 				do: [ :identifier | 
 					self
 						defineLazyMethodNamed: identifier
