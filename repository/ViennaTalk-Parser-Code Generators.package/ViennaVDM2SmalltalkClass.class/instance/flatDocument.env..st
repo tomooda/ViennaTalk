@@ -1,8 +1,16 @@
 code generation-definitions
 flatDocument: aViennaNode env: aDictionary
-	| env newClass |
+	| env instVars stateVars newClass |
 	env := aDictionary copy.
-	newClass := self createDocumentClassWithInstVars: (self boundVariables: aViennaNode).
+	stateVars := #().
+	aViennaNode
+		do: [ :definitionBlock | 
+			definitionBlock first label = 'StateDefinition'
+				ifTrue: [ stateVars := definitionBlock first second collect: #first ] ].
+	instVars := (self boundVariables: aViennaNode)
+		removeAll: stateVars;
+		asArray.
+	newClass := self createDocumentClassWithInstVars: instVars stateVars: stateVars.
 	classes at: nil put: newClass.
 	aViennaNode
 		do: [ :definitionBlock | 

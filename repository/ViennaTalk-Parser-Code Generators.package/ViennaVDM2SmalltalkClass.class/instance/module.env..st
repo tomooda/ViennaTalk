@@ -1,6 +1,6 @@
 code generation-definitions
 module: aViennaNode env: aDictionary
-	| env moduleName interfaceNode moduleBodyNode importModuleNames importClassNames instVars newClass |
+	| env moduleName interfaceNode moduleBodyNode importModuleNames importClassNames instVars stateVars newClass |
 	env := aDictionary copy.
 	self generate: aViennaNode second env: env.
 	moduleName := aViennaNode first.
@@ -11,12 +11,20 @@ module: aViennaNode env: aDictionary
 		ifNotNil: [ :importDefinitionListNode | importDefinitionListNode collect: [ :importDefinitionNode | importDefinitionNode first ] ].
 	importClassNames := importModuleNames
 		collect: [ :importModuleName | env at: importModuleName first ifAbsent: [ importModuleName ] ].
+	stateVars := #().
 	moduleBodyNode
 		do: [ :definitionBlock | 
 			definitionBlock first label = 'StateDefinition'
+				ifTrue: [ stateVars := definitionBlock first second collect: #first ]
 				ifFalse: [ (self boundVariables: definitionBlock) do: [ :ident | env at: ident put: 'self ' , ident ] ] ].
-	instVars := (self boundVariables: moduleBodyNode) asArray.
-	newClass := self createModuleClassWithInstVars: importClassNames , instVars forModule: moduleName env: env.
+	instVars := (self boundVariables: moduleBodyNode)
+		removeAll: stateVars;
+		asArray.
+	newClass := self
+		createModuleClassWithInstVars: importClassNames , instVars
+		stateVars: stateVars
+		forModule: moduleName
+		env: env.
 	classes at: moduleName put: newClass.
 	importModuleNames
 		with: importClassNames
