@@ -6,6 +6,6 @@
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [ ],
-	"name" : "ViennaInvariantViolation",
+	"name" : "ViennaStateInvariantViolation",
 	"type" : "normal"
 }
