@@ -1,7 +1,7 @@
 accessing
 parentLabelled: aString ifAbsent: errorBlock
 	self
-		ぱparentsDo: [ :node | 
+		parentsDo: [ :node | 
 			node label = aString
 				ifTrue: [ ^ node ] ].
 	^ errorBlock value
