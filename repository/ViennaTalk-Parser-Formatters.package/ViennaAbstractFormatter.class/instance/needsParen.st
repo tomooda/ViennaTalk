@@ -17,8 +17,8 @@ needsParen
 	parentPrecedence < childPrecedence
 		ifTrue: [ ^ false ].
 	^ OperatorGrouping
-		at: parentNode label
+		at: parentNode label asString
 		ifPresent: [ :grouping | 
 			(grouping = #left and: [ parentNode first ~= childNode ])
 				or: [ grouping = #right and: [ parentNode second ~= childNode ] ] ]
-		ifAbsent: [ false ]
+		ifAbsent: [ true ]
