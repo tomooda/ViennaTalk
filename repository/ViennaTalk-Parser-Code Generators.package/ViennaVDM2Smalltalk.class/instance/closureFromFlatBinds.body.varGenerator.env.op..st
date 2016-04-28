@@ -14,7 +14,7 @@ closureFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode body: aString varGenera
 						ifTrue: [ 
 							stream
 								nextPutAll: ' :';
-								nextPutAll: patternNode first ].
+								nextPutAll: (patternNode first ifNil: [varGenerator value])].
 					bindType = #compound
 						ifTrue: [ 
 							| tmpVar |
