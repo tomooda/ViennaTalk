@@ -1,6 +1,6 @@
 code generation-statements
 casesStatement: aViennaNode env: aDictionary
-	| valueExpr patternListAndStatements defaultStatement varGenerator valueVar foundVar resultVar |
+	| valueExpr patternListAndStatements defaultStatement varGenerator valueVar foundVar |
 	valueExpr := self generate: aViennaNode first env: aDictionary.
 	patternListAndStatements := self generate: aViennaNode second env: aDictionary.
 	defaultStatement := self generate: aViennaNode third env: aDictionary.
@@ -9,7 +9,6 @@ casesStatement: aViennaNode env: aDictionary
 		uniqueIn: (Array with: valueExpr with: (defaultStatement ifNil: [ '' ])) , (patternListAndStatements collect: #second).
 	valueVar := varGenerator value.
 	foundVar := varGenerator value.
-	resultVar := varGenerator value.
 	^ String
 		new: 1024
 		streamContents: [ :stream | 
@@ -20,8 +19,6 @@ casesStatement: aViennaNode env: aDictionary
 				nextPutAll: valueVar;
 				nextPutAll: '||';
 				nextPutAll: foundVar;
-				nextPutAll: ' ';
-				nextPutAll: resultVar;
 				nextPutAll: '| ';
 				nextPutAll: foundVar;
 				nextPutAll: ' := false.'.
@@ -46,16 +43,11 @@ casesStatement: aViennaNode env: aDictionary
 								nextPutAll: ' ifTrue: [';
 								nextPutAll: foundVar;
 								nextPutAll: ' := true.';
-								nextPutAll: resultVar;
-								nextPutAll: ' := ';
 								nextPutAll: expr;
 								nextPutAll: ']].' ] ].
 			stream
 				nextPutAll: foundVar;
 				nextPutAll: ' ifFalse: [';
-				nextPutAll: resultVar;
-				nextPutAll: ' := ';
 				nextPutAll: (defaultStatement ifNil: [ 'ViennaNoMatch signal' ]);
 				nextPutAll: '].';
-				nextPutAll: resultVar;
 				nextPutAll: '])' ]
