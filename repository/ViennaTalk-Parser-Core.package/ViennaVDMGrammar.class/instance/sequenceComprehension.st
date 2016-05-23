@@ -1,6 +1,6 @@
 parsers-expressions-basics
 sequenceComprehension
-	^ (lbracket , expression , bar , setBind , ((amp , expression) ==> #second) optional , rbracket)
+	^ (lbracket , expression , bar , (setBind / self seqBind) , ((amp , expression) ==> #second) optional , rbracket)
 		==> [ :six | 
 			{(six second).
 			(six fourth).
