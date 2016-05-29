@@ -1,7 +1,7 @@
 utilities
 createDocumentClassWithInstVars: anArrayOfString1 stateVars: anArrayOfString2
 	| documentClassName |
-	documentClassName := self requestClassName: ''.
+	documentClassName := self requestClassName: '' for: 'Document'.
 	documentClassName ifNil: [ ^ nil ].
 	^ PharoClassInstaller
 		make: [ :builder | 

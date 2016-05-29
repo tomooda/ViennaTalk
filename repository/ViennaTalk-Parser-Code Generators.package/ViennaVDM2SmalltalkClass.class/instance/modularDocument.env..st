@@ -5,7 +5,7 @@ modularDocument: aViennaNode env: aDictionary
 	documentClass := self createDocumentClassWithInstVars: (moduleNames collect: #uncapitalized).
 	classNames := moduleNames
 		collect: [ :moduleName | 
-			(self requestClassName: moduleName)
+			(self requestClassName: moduleName for: moduleName, ' module')
 				ifNil: [ ^ nil ]
 				ifNotNil: [ :name | 
 					aDictionary at: moduleName put: name.

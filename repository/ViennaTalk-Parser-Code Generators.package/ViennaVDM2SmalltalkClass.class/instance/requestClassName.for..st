@@ -1,10 +1,10 @@
 utilities
-requestClassName: defaultClassName
+requestClassName: defaultClassName for: aString
 	| className |
 	className := defaultClassName.
 	[ 
 	className := UIManager default
-		request: 'Enter a class name to generate.'
+		request: 'Enter a class name to generate for ', aString, '.'
 		initialAnswer: className
 		title: 'ViennaTalk code generator'.
 	className ifNil: [ ^ nil ].
