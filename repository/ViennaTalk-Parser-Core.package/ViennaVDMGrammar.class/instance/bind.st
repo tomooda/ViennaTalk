@@ -1,3 +1,3 @@
 parsers-patterns
 bind
-	^ setBind / typeBind
+	^ self setSeqBind / typeBind

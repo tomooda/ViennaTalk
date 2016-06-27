@@ -24,6 +24,7 @@
 		"bind",
 		"bindList",
 		"setBind",
+		"seqBind",
 		"typeBind",
 		"comma",
 		"lparen",
