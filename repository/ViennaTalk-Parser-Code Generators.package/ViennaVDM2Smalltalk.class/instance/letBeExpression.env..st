@@ -2,7 +2,7 @@ code generation-expressions
 letBeExpression: aViennaNode env: aDictionary
 	| multibind guard expr varGenerator |
 	multibind := self generate: aViennaNode first env: aDictionary.
-	guard := self generate: aViennaNode second env: aDictionary.
+	guard := (self generate: aViennaNode second env: aDictionary) ifNil: [ 'true' ].
 	expr := self generate: aViennaNode third env: aDictionary.
 	varGenerator := self varNameGenerator: 'letbe' uniqueIn: (Array with: multibind second with: guard with: expr).
 	^ String
