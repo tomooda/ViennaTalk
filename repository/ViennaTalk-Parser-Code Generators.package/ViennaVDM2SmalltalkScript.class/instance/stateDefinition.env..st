@@ -1,6 +1,6 @@
 code generation-definitions
 stateDefinition: aViennaNode env: aDictionary
-	| quatro |
-	quatro := super stateDefinition: aViennaNode env: aDictionary.
-	^ quatro first , quatro second , '.' , String cr , quatro third
-		, (quatro fourth ifNil: [ '' ] ifNotNil: [ :inv | '.' , String cr , inv ])
+	| quin |
+	quin := super stateDefinition: aViennaNode env: aDictionary.
+	^ quin first , quin second , '.' , String cr , quin third
+		, (quin fourth ifNil: [ '' ] ifNotNil: [ :inv | '.' , String cr , inv ]) , '. state := [' , quin fifth , ']'

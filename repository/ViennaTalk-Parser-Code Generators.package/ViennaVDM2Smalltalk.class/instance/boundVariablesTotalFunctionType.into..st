@@ -1,3 +1,0 @@
-bound variables-types
-boundVariablesTotalFunctionType: aViennaNode into: aSet
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]

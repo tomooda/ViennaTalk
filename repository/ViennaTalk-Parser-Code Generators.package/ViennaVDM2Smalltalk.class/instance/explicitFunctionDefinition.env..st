@@ -1,10 +1,18 @@
 code generation-definitions
 explicitFunctionDefinition: aViennaNode env: aDictionary
-	| funcName typeNode parametersListNode body varGenerator |
+	| funcName typeNode preNode postNode parametersListNode body varGenerator |
 	funcName := aViennaNode first.
 	typeNode := aViennaNode third.
+	preNode := aViennaNode seventh.
+	postNode := aViennaNode eighth.
 	parametersListNode := aViennaNode fifth.
 	body := self generate: aViennaNode sixth env: aDictionary.
+	preNode
+		ifNotNil: [ body := (self generate: preNode env: aDictionary) , 'ifFalse: [ViennaPreconditionViolation signal]. ' , body ].
+	postNode
+		ifNotNil: [ 
+			body := '[|RESULT| RESULT := [' , body , '] value. (' , (self generate: postNode env: aDictionary)
+				, ') ifFalse: [ViennaPostconditionViolation signal]. RESULT] value' ].
 	varGenerator := self
 		varNameGenerator: 'func'
 		uniqueIn:

@@ -1,10 +1,18 @@
 code generation-definitions
 explicitOperationDefinition: aViennaNode env: aDictionary
-	| opname typeNode paramsNode body varGenerator argTypeNode binds |
+	| opname typeNode paramsNode preNode postNode body varGenerator argTypeNode binds |
 	opname := aViennaNode first.
 	typeNode := aViennaNode second.
 	paramsNode := aViennaNode fourth.
-	body := self generate: aViennaNode fifth env: aDictionary.
+	preNode := aViennaNode sixth.
+	postNode := aViennaNode seventh.
+	body := '[|_opContext| _opContext := thisContext. ' , (self generate: aViennaNode fifth env: aDictionary) , '] value'.
+	preNode
+		ifNotNil: [ body := (self generate: preNode env: aDictionary) , 'ifFalse: [ViennaPreconditionViolation signal]. ' , body ].
+	postNode
+		ifNotNil: [ 
+			body := '[|_oldState RESULT| _oldState := ' , self getStateCode , '. RESULT := [' , body , '] value. ('
+				, (self generate: postNode env: aDictionary) , ') ifFalse: [ViennaPostconditionViolation signal]. RESULT] value' ].
 	varGenerator := self
 		varNameGenerator: 'op'
 		uniqueIn:
@@ -23,9 +31,10 @@ explicitOperationDefinition: aViennaNode env: aDictionary
 				ifFalse: [ 
 					{{(paramsNode first).
 					argTypeNode}} ] ].
-	^ opname , ' := ' , (self
-		closureFromFlatBinds: binds
-		body: body
-		varGenerator: varGenerator
-		env: aDictionary
-		op: true)
+	^ opname , ' := '
+		,
+			(self
+				closureFromFlatBinds: binds
+				body: body
+				varGenerator: varGenerator
+				env: aDictionary)
