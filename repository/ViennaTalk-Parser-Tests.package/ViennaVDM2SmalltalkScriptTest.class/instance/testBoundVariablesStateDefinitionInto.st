@@ -14,4 +14,5 @@ testBoundVariablesStateDefinitionInto
 			'v1'.
 			'v2'.
 			'inv_S'.
-			'init_S'} asSet
+			'init_S'.
+			'state'} asSet
