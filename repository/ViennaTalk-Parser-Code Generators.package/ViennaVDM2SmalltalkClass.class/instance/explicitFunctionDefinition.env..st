@@ -8,4 +8,18 @@ explicitFunctionDefinition: aViennaNode env: aDictionary
 		defineLazyMethodNamed: identifier
 		initializer: initializer
 		in: theClass
-		protocol: 'functions'
+		protocol: 'functions'.
+	aViennaNode seventh
+		ifNotNil: [ 
+			self
+				defineLazyMethodNamed: 'pre_' , identifier
+				initializer: initializer
+				in: theClass
+				protocol: 'functions' ].
+	aViennaNode eighth
+		ifNotNil: [ 
+			self
+				defineLazyMethodNamed: 'post_' , identifier
+				initializer: initializer
+				in: theClass
+				protocol: 'functions' ]
