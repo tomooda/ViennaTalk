@@ -33,8 +33,18 @@ explicitOperationDefinition: aViennaNode env: aDictionary
 		protocol: 'operations'
 		fromFlatBinds: binds
 		body: body
-		pre: (preNode ifNotNil: [ self generate: preNode env: aDictionary ])
-		post: (postNode ifNotNil: [ self generate: postNode env: aDictionary ])
+		pre:
+			(preNode
+				ifNotNil: [ 
+					runtimeAssertionCheck = true
+						ifTrue: [ self generate: preNode env: aDictionary ]
+						ifFalse: [ nil ] ])
+		post:
+			(postNode
+				ifNotNil: [ 
+					runtimeAssertionCheck = true
+						ifTrue: [ self generate: postNode env: aDictionary ]
+						ifFalse: [ nil ] ])
 		varGenerator: varGenerator
 		env: aDictionary.
 	self

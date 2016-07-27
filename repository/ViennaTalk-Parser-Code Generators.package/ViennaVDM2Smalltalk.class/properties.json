@@ -2,7 +2,9 @@
 	"classtraitcomposition" : "TViennaVDMFreeVariableCollector classTrait",
 	"classvars" : [ ],
 	"instvars" : [
-		"decoder"
+		"decoder",
+		"runtimeAssertionCheck",
+		"runtimeTypeCheck"
 	],
 	"name" : "ViennaVDM2Smalltalk",
 	"commentStamp" : "",

@@ -10,12 +10,15 @@ explicitOperationDefinition: aViennaNode env: aDictionary
 	preNode
 		ifNotNil: [ 
 			preBody := self generate: preNode env: aDictionary.
-			body := preBody , ' ifFalse: [ViennaPreconditionViolation signal]. ' , body ].
+			runtimeAssertionCheck = true
+				ifTrue: [ body := preBody , ' ifFalse: [ViennaPreconditionViolation signal]. ' , body ] ].
 	postNode
 		ifNotNil: [ 
 			postBody := self generate: postNode env: aDictionary.
-			body := '[|_oldState RESULT| _oldState := ' , self getStateCode , '. RESULT := [' , body , '] value. (' , postBody
-				, ') ifFalse: [ViennaPostconditionViolation signal]. RESULT] value' ].
+			runtimeAssertionCheck = true
+				ifTrue: [ 
+					body := '[|_oldState RESULT| _oldState := ' , self getStateCode , '. RESULT := [' , body , '] value. (' , postBody
+						, ') ifFalse: [ViennaPostconditionViolation signal]. RESULT] value' ] ].
 	varGenerator := self
 		varNameGenerator: 'op'
 		uniqueIn:
