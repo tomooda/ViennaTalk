@@ -1,3 +1,4 @@
 class initialization
 install
-	(FileSystem / 'codemirror') exists ifFalse: [ self installCodemirror ]
+	(FileSystem workingDirectory / 'codemirror') exists
+		ifFalse: [ self installCodemirror ]
