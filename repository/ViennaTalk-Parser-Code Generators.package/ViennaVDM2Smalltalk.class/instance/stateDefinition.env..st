@@ -49,7 +49,16 @@ stateDefinition: aViennaNode env: aDictionary
 				nextPutAll: initConstructor;
 				nextPutAll: ' := ';
 				nextPutAll: (self generate: initNode first env: aDictionary) ]).
-	(invNode ifNotNil: [ self generate: invNode first env: aDictionary ]).
+	(invNode
+		ifNotNil: [ 
+			String
+				new: 1024
+				streamContents: [ :stream | 
+					stream
+						nextPutAll: 'inv_';
+						nextPutAll: constructor;
+						nextPutAll: ' := ';
+						nextPutAll: (self generate: invNode first env: aDictionary) ] ]).
 	(String
 		new: 1024
 		streamContents: [ :stream | 

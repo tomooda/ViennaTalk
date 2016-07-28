@@ -5,4 +5,4 @@ letExpression: aViennaNode env: aDictionary
 	localDefinitions := self generate: definitionList env: aDictionary.
 	body := self generate: aViennaNode second env: aDictionary.
 	vars := (self boundVariables: definitionList) asArray.
-	^ '[|' , (' ' join: vars) , '|' , ('.' join: localDefinitions) , '.' , body , '] value'
+	^ '[|' , (' ' join: vars) , '|' , ('. ' join: localDefinitions) , '. ' , body , '] value'

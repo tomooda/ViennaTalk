@@ -3,10 +3,16 @@ equalDefinition: aViennaNode env: aDictionary
 	| leftNode right guard |
 	leftNode := aViennaNode first.
 	guard := nil.
-	(#('TypeBind' 'SetBind' 'SeqBind') includes: leftNode label)
+	(#('SetBind' 'SeqBind') includes: leftNode label)
 		ifTrue: [ 
 			guard := self generate: leftNode second env: aDictionary.
-			leftNode := leftNode first ].
+			leftNode := leftNode first ]
+		ifFalse: [ 
+			leftNode label = 'TypeBind'
+				ifTrue: [ 
+					runtimeTypeCheck = true
+						ifTrue: [ guard := self generate: leftNode second env: aDictionary ].
+					leftNode := leftNode first ] ].
 	right := self generate: aViennaNode second env: aDictionary.
 	^ leftNode label = 'PatternIdentifier'
 		ifTrue: [ 
@@ -18,10 +24,10 @@ equalDefinition: aViennaNode env: aDictionary
 				, 'true ] value' ]
 		ifFalse: [ 
 			| left rightVar |
-			rightVar := (self varNameGenerator: 'cases' uniqueIn: {right}) value.
+			rightVar := (self varNameGenerator: 'equalDef' uniqueIn: {right}) value.
 			left := self generate: leftNode env: aDictionary.
 			guard
 				ifNil: [ self binder: left with: right vars: (self boundVariables: aViennaNode) asArray ]
-				ifNotNil:[
+				ifNotNil: [ 
 					'([:' , rightVar , ' | (' , guard , ' includes: ' , rightVar , ') ifFalse: [ViennaBindingViolation signal]. '
-						, (self binder: left with: rightVar vars: (self boundVariables: aViennaNode) asArray) , '] value: ' , right , ')' ]]
+						, (self binder: left with: rightVar vars: (self boundVariables: aViennaNode) asArray) , '] value: ' , right , ')' ] ]
