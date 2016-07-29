@@ -45,6 +45,7 @@ explicitOperationDefinition: aViennaNode env: aDictionary
 					runtimeAssertionCheck = true
 						ifTrue: [ self generate: postNode env: aDictionary ]
 						ifFalse: [ nil ] ])
+		retType: retTypeNode
 		varGenerator: varGenerator
 		env: aDictionary.
 	self

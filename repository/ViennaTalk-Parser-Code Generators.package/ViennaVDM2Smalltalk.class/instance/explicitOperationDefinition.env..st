@@ -7,6 +7,8 @@ explicitOperationDefinition: aViennaNode env: aDictionary
 	preNode := aViennaNode sixth.
 	postNode := aViennaNode seventh.
 	body := '[|_opContext| _opContext := thisContext. ' , (self generate: aViennaNode fifth env: aDictionary) , '] value'.
+	argTypeNode := typeNode first.
+	retTypeNode := typeNode second.
 	preNode
 		ifNotNil: [ 
 			preBody := self generate: preNode env: aDictionary.
@@ -17,15 +19,30 @@ explicitOperationDefinition: aViennaNode env: aDictionary
 			postBody := self generate: postNode env: aDictionary.
 			runtimeAssertionCheck = true
 				ifTrue: [ 
-					body := '[|_oldState RESULT| _oldState := ' , self getStateCode , '. RESULT := [' , body , '] value. (' , postBody
-						, ') ifFalse: [ViennaPostconditionViolation signal]. RESULT] value' ] ].
+					runtimeTypeCheck = true
+						ifTrue: [ 
+							body := '[|_oldState RESULT| _oldState := ' , self getStateCode , '. RESULT := [' , body , '] value. ('
+								, (self generate: retTypeNode env: aDictionary)
+								, ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. (' , postBody
+								, ') ifFalse: [ViennaPostconditionViolation signal]. RESULT] value' ]
+						ifFalse: [ 
+							body := '[|_oldState RESULT| _oldState := ' , self getStateCode , '. RESULT := [' , body , '] value. (' , postBody
+								, ') ifFalse: [ViennaPostconditionViolation signal]. RESULT] value' ] ]
+				ifFalse: [ 
+					runtimeTypeCheck = true
+						ifTrue: [ 
+							body := '[|RESULT| RESULT := [' , body , '] value. (' , (self generate: retTypeNode env: aDictionary)
+								, ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. RESULT] value' ] ] ]
+		ifNil: [ 
+			runtimeTypeCheck = true
+				ifTrue: [ 
+					body := '[|RESULT| RESULT := [' , body , '] value. (' , (self generate: retTypeNode env: aDictionary)
+						, ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. RESULT] value' ] ].
 	varGenerator := self
 		varNameGenerator: 'op'
 		uniqueIn:
 			{opname.
 			body}.
-	argTypeNode := typeNode first.
-	retTypeNode := typeNode second.
 	binds := argTypeNode label = 'UnitType'
 		ifTrue: [ {} ]
 		ifFalse: [ 

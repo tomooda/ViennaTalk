@@ -7,6 +7,13 @@ explicitFunctionDefinition: aViennaNode env: aDictionary
 	postNode := aViennaNode eighth.
 	parametersListNode := aViennaNode fifth.
 	body := self generate: aViennaNode sixth env: aDictionary.
+	argTypes := parametersListNode
+		collect: [ :node | 
+			| t |
+			t := typeNode first.
+			typeNode := typeNode second.
+			t ].
+	retType := typeNode.
 	preNode
 		ifNotNil: [ 
 			preBody := self generate: preNode env: aDictionary.
@@ -17,20 +24,29 @@ explicitFunctionDefinition: aViennaNode env: aDictionary
 			postBody := self generate: postNode env: aDictionary.
 			runtimeAssertionCheck = true
 				ifTrue: [ 
-					body := '[|RESULT| RESULT := [' , body , '] value. (' , postBody
-						, ') ifFalse: [ViennaPostconditionViolation signal]. RESULT] value' ] ].
+					runtimeTypeCheck = true
+						ifTrue: [ 
+							body := '[|RESULT| RESULT := [' , body , '] value. (' , (self generate: retType env: aDictionary)
+								, ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. (' , postBody
+								, ') ifFalse: [ViennaPostconditionViolation signal]. RESULT] value' ]
+						ifFalse: [ 
+							body := '[|RESULT| RESULT := [' , body , '] value. (' , postBody
+								, ') ifFalse: [ViennaPostconditionViolation signal]. RESULT] value' ] ]
+				ifFalse: [ 
+					runtimeTypeCheck = true
+						ifTrue: [ 
+							body := '[|RESULT| RESULT := [' , body , '] value. (' , (self generate: retType env: aDictionary)
+								, ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. RESULT] value' ] ] ]
+		ifNil: [ 
+			runtimeTypeCheck = true
+				ifTrue: [ 
+					body := '[|RESULT| RESULT := [' , body , '] value. (' , (self generate: retType env: aDictionary)
+						, ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. RESULT] value' ] ].
 	varGenerator := self
 		varNameGenerator: 'func'
 		uniqueIn:
 			{funcName.
 			body}.
-	argTypes := parametersListNode
-		collect: [ :node | 
-			| t |
-			t := typeNode first.
-			typeNode := typeNode second.
-			t ].
-	retType := typeNode.
 	parametersListNode size to: 1 by: -1 do: [ :level | 
 		| parametersNode argType binds |
 		parametersNode := parametersListNode at: level.

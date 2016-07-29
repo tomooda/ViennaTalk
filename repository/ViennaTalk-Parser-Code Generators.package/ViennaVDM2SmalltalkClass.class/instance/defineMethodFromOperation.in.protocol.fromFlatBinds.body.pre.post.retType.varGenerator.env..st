@@ -1,5 +1,5 @@
 utilities
-defineMethodFromOperation: opName in: theClass protocol: protocolString fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode body: bodyString pre: preString post: postString varGenerator: varGenerator env: aDictionary
+defineMethodFromOperation: opName in: theClass protocol: protocolString fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode body: bodyString pre: preString post: postString retType: typeNode varGenerator: varGenerator env: aDictionary
 	| tmpVars matchPatternNodes isFirstArg tuplePattern matchVars argVars |
 	tmpVars := OrderedCollection new.
 	matchPatternNodes := OrderedCollection new.
@@ -9,8 +9,7 @@ defineMethodFromOperation: opName in: theClass protocol: protocolString fromFlat
 			(String
 				new: 1024
 				streamContents: [ :stream | 
-					stream
-						nextPutAll: opName.
+					stream nextPutAll: opName.
 					anArrayOfPatternNodeAndTypeSetNode isEmpty
 						ifTrue: [ stream nextPutAll: ': ' , varGenerator value ].
 					isFirstArg := true.
@@ -71,6 +70,12 @@ defineMethodFromOperation: opName in: theClass protocol: protocolString fromFlat
 								nextPutAll: var;
 								nextPutAll: ' ' ].
 					stream nextPutAll: '.'.
+					(runtimeTypeCheck = true and: [ typeNode label ~= 'UnitType' ])
+						ifTrue: [ 
+							stream
+								nextPutAll: '(';
+								nextPutAll: (self generate: typeNode env: aDictionary);
+								nextPutAll: ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError singal].' ].
 					postString
 						ifNotNil: [ 
 							stream
