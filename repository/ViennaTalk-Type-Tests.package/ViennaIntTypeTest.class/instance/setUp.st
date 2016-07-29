@@ -1,4 +1,4 @@
 running
 setUp
 	super setUp.
-	int := ViennaIntType current
+	int := ViennaIntType new

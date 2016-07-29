@@ -1,4 +1,4 @@
 running
 setUp
 	super setUp.
-	token := ViennaTokenType current
+	token := ViennaTokenType new

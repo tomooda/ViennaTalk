@@ -1,4 +1,4 @@
 running
 setUp
 	super setUp.
-	nat1 := ViennaNat1Type current
+	nat1 := ViennaNat1Type new
