@@ -1,0 +1,3 @@
+testing
+basicIsEnumerable
+	^ self subclassResponsibility

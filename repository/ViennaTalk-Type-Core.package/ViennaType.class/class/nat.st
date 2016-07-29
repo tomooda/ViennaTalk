@@ -1,3 +1,3 @@
 instance creation
 nat
-	^ ViennaNatType current
+	^ ViennaNatType new

@@ -1,3 +1,3 @@
 testing
 includes: anObject
-	^ self subclassResponsibility
+	^ runtimeSet ifNotNil: [ runtimeSet includes: anObject ] ifNil: [ self basicIncludes: anObject ]

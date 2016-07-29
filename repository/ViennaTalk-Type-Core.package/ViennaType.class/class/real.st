@@ -1,3 +1,3 @@
 instance creation
 real
-	^ ViennaRealType current
+	^ ViennaRealType new

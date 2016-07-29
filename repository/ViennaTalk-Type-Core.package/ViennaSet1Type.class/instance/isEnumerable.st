@@ -1,3 +1,0 @@
-testing
-isEnumerable
-	^ basetype isEnumerable

@@ -10,5 +10,5 @@
 		"argtypes"
 	],
 	"name" : "ViennaTotalFunctionType",
-	"type" : "variable"
+	"type" : "normal"
 }

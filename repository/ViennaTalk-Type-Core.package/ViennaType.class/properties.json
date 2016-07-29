@@ -5,7 +5,9 @@
 	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [ ],
-	"instvars" : [ ],
+	"instvars" : [
+		"runtimeSet"
+	],
 	"name" : "ViennaType",
-	"type" : "variable"
+	"type" : "normal"
 }

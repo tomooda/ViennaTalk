@@ -1,3 +1,3 @@
 instance creation
 token
-	^ ViennaTokenType
+	^ ViennaTokenType new

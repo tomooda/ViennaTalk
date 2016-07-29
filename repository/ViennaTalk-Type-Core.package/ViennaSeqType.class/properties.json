@@ -9,5 +9,5 @@
 		"basetype"
 	],
 	"name" : "ViennaSeqType",
-	"type" : "variable"
+	"type" : "normal"
 }

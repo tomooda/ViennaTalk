@@ -9,5 +9,5 @@
 	],
 	"instvars" : [ ],
 	"name" : "ViennaTokenType",
-	"type" : "variable"
+	"type" : "normal"
 }

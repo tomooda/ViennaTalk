@@ -4,10 +4,8 @@
 	"category" : "ViennaTalk-Type-Core",
 	"classinstvars" : [ ],
 	"pools" : [ ],
-	"classvars" : [
-		"Current"
-	],
+	"classvars" : [ ],
 	"instvars" : [ ],
 	"name" : "ViennaRealType",
-	"type" : "variable"
+	"type" : "normal"
 }

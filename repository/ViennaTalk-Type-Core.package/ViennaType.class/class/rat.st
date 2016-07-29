@@ -1,3 +1,3 @@
 instance creation
 rat
-	^ ViennaRealType current
+	^ ViennaRealType new

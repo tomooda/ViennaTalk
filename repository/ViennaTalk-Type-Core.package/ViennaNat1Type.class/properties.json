@@ -4,12 +4,8 @@
 	"category" : "ViennaTalk-Type-Core",
 	"classinstvars" : [ ],
 	"pools" : [ ],
-	"classvars" : [
-		"Current"
-	],
-	"instvars" : [
-		"Current"
-	],
+	"classvars" : [ ],
+	"instvars" : [ ],
 	"name" : "ViennaNat1Type",
-	"type" : "variable"
+	"type" : "normal"
 }

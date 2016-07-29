@@ -9,5 +9,5 @@
 		"basetypes"
 	],
 	"name" : "ViennaProductType",
-	"type" : "variable"
+	"type" : "normal"
 }

@@ -1,3 +1,3 @@
 testing
 isEnumerable
-	^ self subclassResponsibility
+	^ runtimeSet notNil or: [ self basicIsEnumerable ]

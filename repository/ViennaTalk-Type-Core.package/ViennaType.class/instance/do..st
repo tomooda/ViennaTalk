@@ -1,3 +1,3 @@
 enumerating
 do: aBlock
-	^ self subclassResponsibility
+	runtimeSet ifNotNil: [ runtimeSet do: aBlock ] ifNil: [ self basicDo: aBlock ]

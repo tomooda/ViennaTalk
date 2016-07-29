@@ -1,3 +1,3 @@
 instance creation
 bool
-	^ ViennaBoolType current
+	^ ViennaBoolType new

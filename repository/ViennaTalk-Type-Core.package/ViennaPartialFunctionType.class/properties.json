@@ -10,5 +10,5 @@
 		"argtypes"
 	],
 	"name" : "ViennaPartialFunctionType",
-	"type" : "variable"
+	"type" : "normal"
 }
