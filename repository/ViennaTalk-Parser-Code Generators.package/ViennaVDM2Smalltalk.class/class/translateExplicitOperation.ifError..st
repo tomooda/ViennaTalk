@@ -1,3 +1,0 @@
-utilities
-translateExplicitOperation: aString ifError: aBlock
-	self subclassResponsibility
