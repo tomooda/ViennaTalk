@@ -6,6 +6,11 @@ defaultSpec
 					c
 						newRow: [ :row | 
 									row
+										add: #runtimeTypeCheck;
+										add: #runtimeAssertionCheck ]
+							height: 12;
+						newRow: [ :row | 
+									row
 										add: #sourceText;
 										addSplitter;
 										add: #targetText ];

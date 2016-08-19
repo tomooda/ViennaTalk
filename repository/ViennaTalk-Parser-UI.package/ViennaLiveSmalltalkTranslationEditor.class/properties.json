@@ -6,7 +6,9 @@
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
-		"codeText"
+		"codeText",
+		"runtimeTypeCheck",
+		"runtimeAssertionCheck"
 	],
 	"name" : "ViennaLiveSmalltalkTranslationEditor",
 	"type" : "normal"

@@ -12,4 +12,14 @@ initializeWidgets
 		bindKeyCombination: $f shift command toAction: [ self formatSelectionInCodeText ];
 		bindKeyCombination: $p command toAction: [ self viennaItInCodeText ];
 		bindKeyCombination: $t command toAction: [ self translateIt ];
-		whenBuiltDo: [ codeText widget font: ViennaLauncher font ]
+		whenBuiltDo: [ codeText widget font: ViennaLauncher font ].
+	runtimeTypeCheck := self newCheckBox.
+	runtimeTypeCheck
+		label: 'runtime type check';
+		state: true;
+		whenChangedDo: [ self translate ].
+	runtimeAssertionCheck := self newCheckBox.
+	runtimeAssertionCheck
+		label: 'runtime assertion check';
+		state: true;
+		whenChangedDo: [ self translate ]
