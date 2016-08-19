@@ -6,6 +6,8 @@ generateSmalltalkScript
 				ifNotNil: [ :assoc | 
 					| ast |
 					ast := ViennaVDMParser new parse: (vdmc specification copyFrom: assoc value first to: assoc value last).
+					ast isPetitFailure
+						ifTrue: [ ^ UIManager default alert: 'Failed to generate a code : ' , ast message title: 'ViennaTalk' ].
 					ast first label = 'Module'
 						ifTrue: [ 
 							ast := ast first third copy
