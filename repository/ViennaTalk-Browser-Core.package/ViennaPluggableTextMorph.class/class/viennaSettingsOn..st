@@ -6,6 +6,6 @@ viennaSettingsOn: aBuilder
 		target: self;
 		getSelector: #defaultHighlightingEnabled;
 		setSelector: #defaultHighlightingEnabled:;
-		description: 'If checked, then VDM source will be syntax-highlighted by default.';
-		label: 'Syntax highlighting enabled by default';
+		description: 'If checked, then VDM source will be syntax-highlighted.';
+		label: 'Syntax highlighting';
 		order: 0.6
