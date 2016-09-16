@@ -14,6 +14,5 @@ viennaItIn: aTextModel
 	editor afterSelectionInsertAndSelect: result.
 	aTextModel widget widget
 		selectFrom: editor startIndex to: editor stopIndex - 1;
-		textChanged;
-		scrollSelectionIntoView.
+		textChanged.
 	^ true
