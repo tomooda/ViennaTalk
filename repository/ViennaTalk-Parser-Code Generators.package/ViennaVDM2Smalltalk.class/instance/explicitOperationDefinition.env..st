@@ -34,7 +34,7 @@ explicitOperationDefinition: aViennaNode env: aDictionary
 							body := '[|RESULT| RESULT := [' , body , '] value. (' , (self generate: retTypeNode env: aDictionary)
 								, ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. RESULT] value' ] ] ]
 		ifNil: [ 
-			runtimeTypeCheck = true
+			(runtimeTypeCheck = true and: [ retTypeNode label ~= 'UnitType' ])
 				ifTrue: [ 
 					body := '[|RESULT| RESULT := [' , body , '] value. (' , (self generate: retTypeNode env: aDictionary)
 						, ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. RESULT] value' ] ].
