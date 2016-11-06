@@ -5,6 +5,6 @@ ifStatement: aViennaNode env: aDictionary
 	default := self generate: aViennaNode second env: aDictionary.
 	^ '('
 		,
-			(conditionals
+			(conditionals reverse
 				inject: (default ifNil: [ String new ])
 				into: [ :else :cond | cond first , ' ifTrue: [' , cond second , '] ifFalse: [' , else , ']' ]) , ')'

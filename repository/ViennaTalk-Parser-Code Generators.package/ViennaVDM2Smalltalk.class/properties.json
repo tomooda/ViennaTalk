@@ -1,6 +1,9 @@
 {
 	"classtraitcomposition" : "TViennaVDMFreeVariableCollector classTrait",
-	"classvars" : [ ],
+	"classvars" : [
+		"DefaultRuntimeAssertionCheck",
+		"DefaultRuntimeTypeCheck"
+	],
 	"instvars" : [
 		"decoder",
 		"runtimeAssertionCheck",
