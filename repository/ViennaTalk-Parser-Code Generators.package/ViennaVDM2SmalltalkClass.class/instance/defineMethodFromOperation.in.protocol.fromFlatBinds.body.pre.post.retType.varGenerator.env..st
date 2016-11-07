@@ -1,9 +1,10 @@
 utilities
 defineMethodFromOperation: opName in: theClass protocol: protocolString fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode body: bodyString pre: preString post: postString retType: typeNode varGenerator: varGenerator env: aDictionary
-	| tmpVars matchPatternNodes isFirstArg tuplePattern matchVars argVars |
+	| tmpVars matchPatternNodes isFirstArg tuplePattern matchVars argVars formalArgs |
 	tmpVars := OrderedCollection new.
 	matchPatternNodes := OrderedCollection new.
 	argVars := OrderedCollection new.
+	formalArgs := OrderedCollection new.
 	self
 		defineMethod:
 			(String
@@ -17,19 +18,19 @@ defineMethodFromOperation: opName in: theClass protocol: protocolString fromFlat
 						fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode
 						patternNodeAndSetOrTypeNodeAndBindTypesDo: [ :patternNode :setNode :bindType | 
 							bindType = #identifier
-								ifTrue: [ 
-									argVars add: patternNode first.
+								ifTrue: [ argVars add: patternNode first.
 									isFirstArg
 										ifFalse: [ stream nextPutAll: ' _' ].
+									formalArgs add: patternNode first -> setNode.
 									stream
 										nextPutAll: ':';
 										nextPutAll: patternNode first ].
 							bindType = #compound
-								ifTrue: [ 
-									| tmpVar |
+								ifTrue: [ | tmpVar |
 									argVars addAll: (self boundVariables: patternNode).
 									tmpVar := varGenerator value.
 									tmpVars add: tmpVar.
+									formalArgs add: tmpVar -> setNode.
 									matchPatternNodes add: patternNode.
 									isFirstArg
 										ifFalse: [ stream nextPutAll: ' _' ].
@@ -42,8 +43,7 @@ defineMethodFromOperation: opName in: theClass protocol: protocolString fromFlat
 					stream cr.
 					matchVars
 						ifEmpty: [ stream nextPutAll: '| _oldState RESULT |' ]
-						ifNotEmpty: [ 
-							stream nextPutAll: ' | _oldState RESULT '.
+						ifNotEmpty: [ stream nextPutAll: ' | _oldState RESULT '.
 							matchVars
 								do: [ :var | 
 									stream
@@ -51,12 +51,19 @@ defineMethodFromOperation: opName in: theClass protocol: protocolString fromFlat
 										nextPut: Character space ].
 							stream
 								nextPutAll: '| ';
-								nextPutAll:
-										(self binder: (self generate: tuplePattern env: aDictionary) with: '{' , (' . ' join: tmpVars) , '}' vars: matchVars);
+								nextPutAll: (self binder: (self generate: tuplePattern env: aDictionary) with: '{' , (' . ' join: tmpVars) , '}' vars: matchVars);
 								nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ].
+					runtimeTypeCheck = true
+						ifTrue: [ formalArgs
+								do: [ :assoc | 
+									stream
+										nextPutAll: '((';
+										nextPutAll: (self generate: assoc value env: aDictionary);
+										nextPutAll: ') includes: ';
+										nextPutAll: assoc key;
+										nextPutAll: ') ifFalse: [ViennaRuntimeTypeError signal].' ] ].
 					preString
-						ifNotNil: [ 
-							stream
+						ifNotNil: [ stream
 								nextPutAll: '(';
 								nextPutAll: preString;
 								nextPutAll: ') ifFalse: [ViennaPreconditionViolation signal].' ].
@@ -71,14 +78,12 @@ defineMethodFromOperation: opName in: theClass protocol: protocolString fromFlat
 								nextPutAll: ' ' ].
 					stream nextPutAll: '.'.
 					(runtimeTypeCheck = true and: [ typeNode label ~= 'UnitType' ])
-						ifTrue: [ 
-							stream
+						ifTrue: [ stream
 								nextPutAll: '(';
 								nextPutAll: (self generate: typeNode env: aDictionary);
 								nextPutAll: ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError singal].' ].
 					postString
-						ifNotNil: [ 
-							stream
+						ifNotNil: [ stream
 								nextPutAll: '(';
 								nextPutAll: postString;
 								nextPutAll: ') ifFalse: [ViennaPostconditionViolation signal].' ].
