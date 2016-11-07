@@ -12,6 +12,5 @@ translateIt
 	editor afterSelectionInsertAndSelect: codeFromSelection.
 	codeText widget widget
 		selectFrom: editor startIndex to: editor stopIndex;
-		textChanged;
-		scrollSelectionIntoView.
+		textChanged.
 	^ true
