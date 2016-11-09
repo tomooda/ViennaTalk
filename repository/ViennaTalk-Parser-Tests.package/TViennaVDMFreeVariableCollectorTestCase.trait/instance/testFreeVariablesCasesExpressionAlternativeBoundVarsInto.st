@@ -5,4 +5,4 @@ testFreeVariablesCasesExpressionAlternativeBoundVarsInto
 	self deny: node isPetitFailure.
 	self assert: node label = 'CasesStatementAlternative'.
 	binds := Set new.
-	self assert: (ViennaVDM2Smalltalk new freeVariables: node env: Dictionary new) equals: {'op'} asSet
+	self assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new) equals: {'op'} asSet

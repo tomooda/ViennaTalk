@@ -5,7 +5,7 @@ testFreeVariablesIndexForLoopBoundVarsInto
 	self deny: node isPetitFailure.
 	self assert: node label = 'IndexForLoop'.
 	self
-		assert: (ViennaVDM2Smalltalk new freeVariables: node env: Dictionary new)
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
 		equals:
 			{'e1'.
 			'e2'.

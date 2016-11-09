@@ -5,13 +5,13 @@ testBoundVariablesExportDefinitionInto
 	self deny: node isPetitFailure.
 	self assert: node label = 'ExportDefinition'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
 			{'t1'.
 			't2'.
-			'v1'.
 			't3'.
-			'v2'.
-			't4'} asSet
+			't4'.
+			'v1'.
+			'v2'} asSet

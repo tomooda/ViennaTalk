@@ -6,7 +6,7 @@ testFreeVariablesLetStatementBoundVarsInto
 	self assert: node label = 'LetStatement'.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2Smalltalk new freeVariables: node env: Dictionary new)
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
 		equals:
 			{'t1'.
 			'f'.

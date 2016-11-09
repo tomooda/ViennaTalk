@@ -6,7 +6,7 @@ testFreeVariablesAssignmentDefinitionBoundVarsInto
 	self assert: node label = 'AssignmentDefinition'.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2Smalltalk new freeVariables: node env: Dictionary new)
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
 		equals:
 			{'t1'.
 			'e1'} asSet

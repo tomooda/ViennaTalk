@@ -5,7 +5,7 @@ testBoundVariablesObjectPatternInto
 	self deny: node isPetitFailure.
 	self assert: node label = 'ObjectPattern'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:

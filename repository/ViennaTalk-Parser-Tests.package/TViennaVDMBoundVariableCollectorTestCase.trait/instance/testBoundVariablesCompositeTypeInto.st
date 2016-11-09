@@ -5,11 +5,8 @@ testBoundVariablesCompositeTypeInto
 	self deny: node isPetitFailure.
 	self assert: node label = 'CompositeType'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
-			{'T'.
-			't1'.
-			't2'.
-			't3'} asSet
+			{'T'} asSet

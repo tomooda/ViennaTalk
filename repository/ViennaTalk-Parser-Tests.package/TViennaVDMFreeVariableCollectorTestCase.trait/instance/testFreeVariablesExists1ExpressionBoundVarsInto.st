@@ -6,7 +6,7 @@ testFreeVariablesExists1ExpressionBoundVarsInto
 	self assert: node label = 'Exists1Expression'.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2Smalltalk new freeVariables: node env: Dictionary new)
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
 		equals:
 			{'t'.
 			'p'.

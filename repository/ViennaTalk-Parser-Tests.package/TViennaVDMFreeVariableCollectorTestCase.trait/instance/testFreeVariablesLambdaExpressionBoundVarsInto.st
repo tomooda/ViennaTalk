@@ -6,7 +6,7 @@ testFreeVariablesLambdaExpressionBoundVarsInto
 	self assert: node label = 'LambdaExpression'.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2Smalltalk new freeVariables: node env: Dictionary new)
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
 		equals:
 			{'t'.
 			'f'} asSet

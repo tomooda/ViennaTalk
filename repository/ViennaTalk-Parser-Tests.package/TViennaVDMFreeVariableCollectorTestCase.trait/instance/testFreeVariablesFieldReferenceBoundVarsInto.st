@@ -6,7 +6,7 @@ testFreeVariablesFieldReferenceBoundVarsInto
 	self assert: node label = 'IndexForLoop'.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2Smalltalk new freeVariables: node env: Dictionary new)
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
 		equals:
 			{'e1'.
 			'e2'.

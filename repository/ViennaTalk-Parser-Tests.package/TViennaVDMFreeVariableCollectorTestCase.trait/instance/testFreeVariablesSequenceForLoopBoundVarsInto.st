@@ -5,7 +5,7 @@ testFreeVariablesSequenceForLoopBoundVarsInto
 	self deny: node isPetitFailure.
 	self assert: node label = 'SequenceForLoop'.
 	self
-		assert: (ViennaVDM2Smalltalk new freeVariables: node env: Dictionary new)
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
 		equals:
 			{'s'.
 			'op'} asSet

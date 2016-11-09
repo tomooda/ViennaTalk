@@ -5,4 +5,4 @@ testFreeVariablesFieldSelectBoundVarsInto
 	self deny: node isPetitFailure.
 	self assert: node label = 'FieldSelect'.
 	binds := Set new.
-	self assert: (ViennaVDM2Smalltalk new freeVariables: node env: Dictionary new) equals: {'record'} asSet
+	self assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new) equals: {'record'} asSet

@@ -5,4 +5,4 @@ testFreeVariablesLocalNameBoundVarsInto
 	self deny: node isPetitFailure.
 	self assert: node label = 'LocalName'.
 	binds := Set new.
-	self assert: (ViennaVDM2Smalltalk new freeVariables: node env: Dictionary new) equals: {'v'} asSet
+	self assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new) equals: {'v'} asSet
