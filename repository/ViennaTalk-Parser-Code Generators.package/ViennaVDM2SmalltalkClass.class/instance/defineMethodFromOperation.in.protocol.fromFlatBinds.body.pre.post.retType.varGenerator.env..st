@@ -81,7 +81,7 @@ defineMethodFromOperation: opName in: theClass protocol: protocolString fromFlat
 						ifTrue: [ stream
 								nextPutAll: '(';
 								nextPutAll: (self generate: typeNode env: aDictionary);
-								nextPutAll: ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError singal].' ].
+								nextPutAll: ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal].' ].
 					postString
 						ifNotNil: [ stream
 								nextPutAll: '(';

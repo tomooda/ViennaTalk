@@ -11,13 +11,15 @@ stateDefinition: aViennaNode env: aDictionary
 	initConstructor := recordNode first first.
 	expressionListNode := recordNode second.
 	initConstructor = constructor
-		ifFalse: [ ^ self error: 'Constructor must be the same name as state definition: ' , constructor , ', ' , initConstructor ].
-	vars size = expressionListNode size
-		ifFalse: [ 
-			^ self
+		ifFalse: [ ^ self
 				error:
-					'Number of state variables and number of arguments must agree: ' , vars size printString , ', '
-						, expressionListNode size printString ].
+					'Constructor must be the same name as state definition: ' , constructor , ', '
+						, initConstructor ].
+	vars size = expressionListNode size
+		ifFalse: [ ^ self
+				error:
+					'Number of state variables and number of arguments must agree: ' , vars size printString
+						, ', ' , expressionListNode size printString ].
 	vals := expressionListNode collect: [ :node | self generate: node env: aDictionary ].
 	^ {(String
 		new: 1024
@@ -50,8 +52,7 @@ stateDefinition: aViennaNode env: aDictionary
 				nextPutAll: ' := ';
 				nextPutAll: (self generate: initNode first env: aDictionary) ]).
 	(invNode
-		ifNotNil: [ 
-			String
+		ifNotNil: [ String
 				new: 1024
 				streamContents: [ :stream | 
 					stream
@@ -62,6 +63,9 @@ stateDefinition: aViennaNode env: aDictionary
 	(String
 		new: 1024
 		streamContents: [ :stream | 
-			stream nextPutAll: 'Dictionary new '.
-			vars do: [ :var | stream nextPutAll: 'at: ' , var storeString , ' put: ' , var , '; ' ].
-			stream nextPutAll: 'yourself' ])}
+			stream
+				nextPutAll: 'self ';
+				nextPutAll: constructor;
+				nextPutAll: ' applyTo: {';
+				nextPutAll: (' . ' join: vars);
+				nextPutAll: '}' ])}

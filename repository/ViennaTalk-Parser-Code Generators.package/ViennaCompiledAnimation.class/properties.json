@@ -1,0 +1,15 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "ViennaTalk-Parser-Code Generators",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"specification",
+		"object",
+		"env"
+	],
+	"name" : "ViennaCompiledAnimation",
+	"type" : "normal"
+}
