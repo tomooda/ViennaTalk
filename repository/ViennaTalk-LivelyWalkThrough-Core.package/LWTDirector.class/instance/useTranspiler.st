@@ -1,0 +1,3 @@
+accessing
+useTranspiler
+	self vdmc becomeTranspiledAnimation 
