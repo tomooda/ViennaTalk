@@ -1,0 +1,3 @@
+private
+becomeTranspiledAnimation
+	self become: self asTranspiledAnimation
