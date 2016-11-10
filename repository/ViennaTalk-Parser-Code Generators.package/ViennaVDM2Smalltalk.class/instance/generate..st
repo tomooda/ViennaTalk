@@ -1,3 +1,3 @@
 code generation
 generate: aViennaNode
-	^ self generate: aViennaNode env: Dictionary new
+	^ self generate: aViennaNode env: defaultEnv

@@ -3,13 +3,14 @@ createDocumentClassWithInstVars: anArrayOfString1 stateVars: anArrayOfString2
 	^ AnonymousClassInstaller
 		make: [ :builder | 
 			builder
-				superclass: Object;
+				superclass: ViennaTranspiledObject ;
 				slots:
-						(anArrayOfString1 asArray collect: [ :instVarName | InstanceVariableSlot named: instVarName asSymbol ])
-								,
-									(anArrayOfString2 asArray
-										collect: [ :instVarName | 
-											(runtimeAssertionCheck = true
-												ifTrue: [ ViennaStateSlot ]
-												ifFalse: [ InstanceVariableSlot ]) named: instVarName asSymbol ]);
+					(anArrayOfString1 asArray
+						collect: [ :instVarName | InstanceVariableSlot named: instVarName asSymbol ])
+						,
+							(anArrayOfString2 asArray
+								collect: [ :instVarName | 
+									(runtimeAssertionCheck = true
+										ifTrue: [ ViennaStateSlot ]
+										ifFalse: [ InstanceVariableSlot ]) named: instVarName asSymbol ]);
 				category: 'Auto Generated from VDM' ]

@@ -1,9 +1,12 @@
 utilities
 buildEnv: aViennaNode
-	| env |
-	env := Dictionary new.
+	| envs |
+	envs := Dictionary new.
+	envs at: 'DEFAULT' put: Dictionary new.
 	aViennaNode first label = 'DefinitionBlock'
-		ifTrue: [ aViennaNode
+		ifTrue: [ | env |
+			env := envs at: 'DEFAULT'.
+			aViennaNode
 				do: [ :definitionBlock | 
 					definitionBlock first label = 'StateDefinition'
 						ifFalse: [ (self boundVariables: definitionBlock)
@@ -12,12 +15,14 @@ buildEnv: aViennaNode
 				do: [ :moduleNode | 
 					| moduleName |
 					moduleName := moduleNode first.
+					envs at: moduleName put: Dictionary new.
 					moduleNode third
 						do: [ :definitionBlock | 
 							definitionBlock first label = 'StateDefinition'
 								ifFalse: [ (self boundVariables: definitionBlock)
 										do: [ :ident | 
-											env
+											(envs at: moduleName) at: ident put: 'self ' , ident.
+											(envs at: 'DEFAULT')
 												at: moduleName , '`' , ident
 												put: '(self at: ' , moduleName storeString , ') ' , ident ] ] ] ] ].
-							^env
+	^ envs

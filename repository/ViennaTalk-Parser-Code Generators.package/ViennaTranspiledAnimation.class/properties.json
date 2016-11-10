@@ -8,8 +8,12 @@
 	"instvars" : [
 		"specification",
 		"object",
-		"env"
+		"parser",
+		"transpiler",
+		"envs",
+		"reader",
+		"writer"
 	],
-	"name" : "ViennaCompiledAnimation",
+	"name" : "ViennaTranspiledAnimation",
 	"type" : "normal"
 }
