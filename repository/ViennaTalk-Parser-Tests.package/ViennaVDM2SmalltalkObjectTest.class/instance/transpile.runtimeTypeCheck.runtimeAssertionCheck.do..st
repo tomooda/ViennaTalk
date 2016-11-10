@@ -1,6 +1,6 @@
 private
 transpile: aString runtimeTypeCheck: aBoolean1 runtimeAssertionCheck: aBoolean2 do: aBlock
-	| ast transpiler |
+	| ast transpiler obj |
 	ast := ViennaVDMParser new parse: aString.
 	ast isPetitFailure
 		ifTrue: [ ^ Error signal: 'syntax error' ].
@@ -8,4 +8,6 @@ transpile: aString runtimeTypeCheck: aBoolean1 runtimeAssertionCheck: aBoolean2 
 	transpiler
 		runtimeTypeCheck: aBoolean1;
 		runtimeAssertionCheck: aBoolean2.
-	aBlock value: (transpiler generate: ast) value: (transpiler buildEnv: ast) value: transpiler
+	obj := transpiler generate: ast.
+	transpiler defaultEnv: ((transpiler buildEnv: ast) at: 'DEFAULT').
+	^ aBlock value: obj value: transpiler
