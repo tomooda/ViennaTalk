@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "ViennaWriter",
+	"category" : "ViennaTalk-Value-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "ViennaUnquoteWriter",
+	"type" : "variable"
+}
