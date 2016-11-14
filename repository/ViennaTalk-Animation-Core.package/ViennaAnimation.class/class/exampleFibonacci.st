@@ -1,10 +1,10 @@
 examples
 exampleFibonacci
-	"VDMC exampleFibonacci"
+	"ViennaAnimation exampleFibonacci"
 
-	| vdmc |
-	vdmc := ViennaAnimation default.
-	vdmc
+	| animation |
+	animation := ViennaAnimation default.
+	animation
 		specification:
 			'
 state State of
@@ -15,4 +15,4 @@ end
 operations
 	next : () ==> nat
 	next() == (dcl n : nat := n1 + n2; n1 := n2; n2 := n; return n);'.
-	^ (Array streamContents: [ :stream | 10 timesRepeat: [ stream nextPut: (vdmc evaluate: 'next()') ] ]) inspect; yourself
+	^ (Array streamContents: [ :stream | 10 timesRepeat: [ stream nextPut: (animation evaluate: 'next()') ] ]) inspect; yourself

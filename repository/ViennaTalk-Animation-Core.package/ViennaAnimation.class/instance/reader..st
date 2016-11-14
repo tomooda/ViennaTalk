@@ -1,3 +1,3 @@
 accessing
-reader: aVDMCReader
-	reader := aVDMCReader
+reader: aViennaReader
+	reader := aViennaReader

@@ -1,3 +1,3 @@
 accessing
-writer: aVDMCWriter
-	writer := aVDMCWriter
+writer: aViennaWriter
+	writer := aViennaWriter
