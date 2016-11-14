@@ -1,3 +1,0 @@
-evaluating
-init
-	object init
