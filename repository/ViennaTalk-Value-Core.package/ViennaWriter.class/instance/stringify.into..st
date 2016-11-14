@@ -6,8 +6,8 @@ stringify: anObject into: aStream
 			^ printer isSymbol
 				ifTrue: [ self perform: printer with: anObject with: aStream ]
 				ifFalse: [ printer value: anObject value: aStream ] ].
-	(anObject respondsTo: #vdmcStringOn:)
-		ifTrue: [ ^ anObject vdmcStringOn: aStream ].
+	(anObject respondsTo: #viennaStringOn:)
+		ifTrue: [ ^ anObject viennaStringOn: aStream ].
 	anObject isCharacter
 		ifTrue: [ ^ self stringifyToChar: anObject into: aStream ].
 	anObject isArray
