@@ -25,20 +25,21 @@ buildSettingsPane
 				hResizing: #spaceFill;
 				yourself).
 	pane addMorphBack: urlPrefixPane.
-	animationPane := Morph new.
-	animationPane
-		color: Color white;
-		changeTableLayout;
-		listDirection: #leftToRight;
-		hResizing: #spaceFill;
-		vResizing: #shrinkWrap.
-	animationPane
-		addMorphBack:
-			((CheckboxMorph
-				on: self director
-				selected: #usesTranspiler
-				changeSelected: #usesTranspiler:)
-				label: 'use transpiler';
-				yourself).
-	pane addMorphBack: animationPane.
+	(Smalltalk includesKey: ViennaTranspiledAnimation)
+		ifTrue: [ animationPane := Morph new.
+			animationPane
+				color: Color white;
+				changeTableLayout;
+				listDirection: #leftToRight;
+				hResizing: #spaceFill;
+				vResizing: #shrinkWrap.
+			animationPane
+				addMorphBack:
+					((CheckboxMorph
+						on: self director
+						selected: #usesTranspiler
+						changeSelected: #usesTranspiler:)
+						label: 'use transpiler';
+						yourself).
+			pane addMorphBack: animationPane ].
 	^ pane
