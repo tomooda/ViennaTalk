@@ -1,3 +1,3 @@
 translation pane
 translationRule
-	^ vdmc translator source
+	^ animation translator source

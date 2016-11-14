@@ -1,3 +1,3 @@
 web api services
 isPublished
-	^ vdmc isPublished
+	^ animation isPublished

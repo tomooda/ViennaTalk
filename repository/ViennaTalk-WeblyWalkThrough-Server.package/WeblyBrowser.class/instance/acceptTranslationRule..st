@@ -4,5 +4,5 @@ acceptTranslationRule: aString
 	newTranslator := WWTTranslationRuleParser new parse: aString asString.
 	newTranslator isPetitFailure
 		ifTrue: [ ^ false ].
-	vdmc translator: newTranslator.
+	animation translator: newTranslator.
 	^ true
