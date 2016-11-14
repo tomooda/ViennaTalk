@@ -11,7 +11,7 @@ moduleListMenu: aBuilder
 	(aBuilder item: #'remove module' translated)
 		selector: #removeModulel;
 		withSeparatorAfter.
-	aBuilder model vdmc class = ViennaTranspiledAnimation
+	aBuilder model animation class = ViennaTranspiledAnimation
 		ifTrue: [ (aBuilder item: #'use interpreter' translated)
 				selector: #useInterpreter;
 				withSeparatorAfter ]

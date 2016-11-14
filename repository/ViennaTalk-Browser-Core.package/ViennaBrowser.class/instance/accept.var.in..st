@@ -2,9 +2,9 @@ value pane
 accept: aString var: varName in: moduleName
 	| key oldValue |
 	key := moduleName , '`' , varName.
-	oldValue := vdmc plainAt: key ifAbsent: [ ^ false ].
-	vdmc plainAt: key put: aString.
-	vdmc
+	oldValue := animation plainAt: key ifAbsent: [ ^ false ].
+	animation plainAt: key put: aString.
+	animation
 		plainEvaluate: 'nil'
 		ifError: [ :msg | 
 			valuePane
@@ -12,7 +12,7 @@ accept: aString var: varName in: moduleName
 					valuePane textMorph editor
 						selectFrom: aString size to: aString size - 1;
 						afterSelectionInsertAndSelect: msg ].
-			vdmc plainAt: key put: oldValue.
+			animation plainAt: key put: oldValue.
 			^ false ].
-	vdmc changed: #state.
+	animation changed: #state.
 	^ true

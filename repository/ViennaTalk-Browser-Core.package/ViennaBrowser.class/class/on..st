@@ -1,3 +1,3 @@
 instance creation
-on: aVDMC
-	^ self new vdmc: aVDMC
+on: aViennaAnimation
+	^ self new animation: aViennaAnimation

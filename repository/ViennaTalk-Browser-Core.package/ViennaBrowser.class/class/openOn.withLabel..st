@@ -1,3 +1,3 @@
 instance creation
-openOn: aVDMC withLabel: label
-	^ (self on: aVDMC) openLabel: label
+openOn: aViennaAnimation withLabel: label
+	^ (self on: aViennaAnimation) openLabel: label

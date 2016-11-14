@@ -3,17 +3,17 @@ removeModule
 	self selectedModule
 		ifNotNil: [ :moduleName | 
 			| position newSpecification oldSpecification |
-			position := ((self modulePositionsFrom: vdmc specification)
+			position := ((self modulePositionsFrom: animation specification)
 				detect: [ :assoc | assoc key = moduleName ]
 				ifNone: [ ^ false ]) value.
-			newSpecification := (vdmc specification copyFrom: 1 to: position first - 1)
-				, (vdmc specification copyFrom: position last + 1 to: vdmc specification size).
-			oldSpecification := vdmc specification.
-			vdmc specification: newSpecification.
-			vdmc
+			newSpecification := (animation specification copyFrom: 1 to: position first - 1)
+				, (animation specification copyFrom: position last + 1 to: animation specification size).
+			oldSpecification := animation specification.
+			animation specification: newSpecification.
+			animation
 				plainEvaluate: 'nil'
 				ifError: [ :msg | 
-					vdmc specification: oldSpecification.
+					animation specification: oldSpecification.
 					UIManager default abort: msg title: 'VDM Error'.
 					^ false ].
 			self changed: #moduleList.

@@ -1,6 +1,6 @@
 code pane
 acceptCode: aStringOrText
-	vdmc
+	animation
 		ifNotNil: [ 
 			| code oldModulePositions newModulePositions newModuleNames oldSpec newSpec |
 			code := (self autoFormat
@@ -11,7 +11,7 @@ acceptCode: aStringOrText
 								ifTrue: [ aStringOrText ]
 								ifFalse: [ formatted ] ] ]
 				ifFalse: [ aStringOrText ]) asString trimmed copyWith: Character cr.
-			oldSpec := vdmc specification.
+			oldSpec := animation specification.
 			oldModulePositions := self modulePositionsFrom: oldSpec.
 			newModulePositions := self modulePositionsFrom: code.
 			newModuleNames := (newModulePositions collect: #key) asSet.
@@ -24,7 +24,7 @@ acceptCode: aStringOrText
 							(newModuleNames includes: assoc key)
 								ifFalse: [ stream nextPutAll: (oldSpec copyFrom: assoc value first to: assoc value last) ] ] ].
 			codePane hasUnacceptedEdits: false.
-			vdmc
+			animation
 				specification: newSpec
 				ifError: [ :msg | 
 					| posStrIndex charPos message |

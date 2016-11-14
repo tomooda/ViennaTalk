@@ -8,7 +8,6 @@
 		"AutoFormat"
 	],
 	"instvars" : [
-		"vdmc",
 		"cachedSpec",
 		"cachedModulePositions",
 		"moduleListPane",
@@ -23,7 +22,8 @@
 		"valueSelection",
 		"workspaceSelection",
 		"directory",
-		"lowerTabPane"
+		"lowerTabPane",
+		"animation"
 	],
 	"name" : "ViennaBrowser",
 	"type" : "normal"

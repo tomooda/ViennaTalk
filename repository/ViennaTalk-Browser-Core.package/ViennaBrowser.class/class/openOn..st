@@ -1,3 +1,3 @@
 instance creation
-openOn: aVDMC
-	^ self openOn: aVDMC withLabel: self defaultLabel
+openOn: aViennaAnimation
+	^ self openOn: aViennaAnimation withLabel: self defaultLabel

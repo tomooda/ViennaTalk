@@ -10,10 +10,10 @@ acceptBindings: aString in: moduleName
 						selectFrom: pos to: pos - 1;
 						afterSelectionInsertAndSelect: msg ].
 			^ false ].
-	oldBindings := vdmc state copy.
+	oldBindings := animation state copy.
 	prefix := moduleName , '`'.
-	newBindings do: [ :assoc | vdmc plainAt: prefix , assoc key put: assoc value ].
-	vdmc
+	newBindings do: [ :assoc | animation plainAt: prefix , assoc key put: assoc value ].
+	animation
 		plainEvaluate: 'nil'
 		ifError: [ :msg | 
 			valuePane
@@ -21,7 +21,7 @@ acceptBindings: aString in: moduleName
 					valuePane textMorph editor
 						selectFrom: aString size to: aString size - 1;
 						afterSelectionInsertAndSelect: msg ].
-			oldBindings keysAndValuesDo: [ :key :value | vdmc plainAt: key put: value ].
+			oldBindings keysAndValuesDo: [ :key :value | animation plainAt: key put: value ].
 			^ false ].
-	vdmc changed: #state.
+	animation changed: #state.
 	^ true

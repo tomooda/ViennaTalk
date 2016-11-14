@@ -1,3 +1,3 @@
 module list menu
 useInterpreter
-	self vdmc: self vdmc asInterpretedAnimation 
+	self animation: self animation asInterpretedAnimation 

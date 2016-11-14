@@ -10,9 +10,9 @@ acceptGlobalBindings: aString
 						selectFrom: pos to: pos -1;
 						afterSelectionInsertAndSelect: msg ].
 			^ false ].
-	oldBindings := vdmc state copy.
-	newBindings do: [ :assoc | vdmc plainAt: assoc key put: assoc value ].
-	vdmc
+	oldBindings := animation state copy.
+	newBindings do: [ :assoc | animation plainAt: assoc key put: assoc value ].
+	animation
 		plainEvaluate: 'nil'
 		ifError: [ :msg | 
 			valuePane
@@ -20,7 +20,7 @@ acceptGlobalBindings: aString
 					valuePane textMorph editor
 						selectFrom: aString size to: aString size - 1;
 						afterSelectionInsertAndSelect: msg ].
-			oldBindings keysAndValuesDo: [ :key :value | vdmc plainAt: key put: value ].
+			oldBindings keysAndValuesDo: [ :key :value | animation plainAt: key put: value ].
 			^ false ].
-	vdmc changed: #state.
+	animation changed: #state.
 	^ true

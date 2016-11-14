@@ -4,5 +4,5 @@ saveAllModulesToFile
 		fileSave: 'Save all modules to...'
 		do: [ :stream | 
 			stream
-				nextPutAll: vdmc specification;
+				nextPutAll: animation specification;
 				close ]

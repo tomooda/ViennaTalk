@@ -1,9 +1,9 @@
 value pane
 accept: aString var: varName
 	| oldValue |
-	oldValue := vdmc plainAt: varName ifAbsent: [ ^ false ].
-	vdmc plainAt: varName put: aString.
-	vdmc
+	oldValue := animation plainAt: varName ifAbsent: [ ^ false ].
+	animation plainAt: varName put: aString.
+	animation
 		plainEvaluate: 'nil'
 		ifError: [ :msg | 
 			valuePane
@@ -11,7 +11,7 @@ accept: aString var: varName
 					valuePane textMorph editor
 						selectFrom: aString size to: aString size - 1;
 						afterSelectionInsertAndSelect: msg ].
-			vdmc plainAt: varName put: oldValue.
+			animation plainAt: varName put: oldValue.
 			^ false ].
-	vdmc changed: #state.
+	animation changed: #state.
 	^ true
