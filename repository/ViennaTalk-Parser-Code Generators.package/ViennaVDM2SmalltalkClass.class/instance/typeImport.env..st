@@ -5,4 +5,4 @@ typeImport: aViennaNode env: aDictionary
 		ifNotNil: [ :importDefinition | importDefinition first ]
 		ifNil: [ ^ self error: 'Malformed AST: TypeImport must appear under ImportDefinition' ].
 	aViennaNode second
-		ifNotNil: [ :renameNode | aDictionary at: renameNode first put: moduleName , String space , aViennaNode first first ]
+		ifNotNil: [ :renameNode | aDictionary at: renameNode first put: moduleName , String space , aViennaNode first first first ]
