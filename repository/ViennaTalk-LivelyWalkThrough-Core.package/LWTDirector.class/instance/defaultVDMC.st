@@ -1,3 +1,3 @@
 defaults
 defaultVDMC
-	^ VDMC vdmj
+	^ ViennaAnimation vdmj

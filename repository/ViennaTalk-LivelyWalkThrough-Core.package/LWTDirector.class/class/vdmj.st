@@ -1,3 +1,3 @@
 instance creation
 vdmj
-	^ self on: VDMC vdmj
+	^ self on: ViennaAnimation vdmj

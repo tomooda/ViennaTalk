@@ -1,3 +1,3 @@
 instance creation
 default
-	^ self on: VDMC default
+	^ self on: ViennaAnimation default
