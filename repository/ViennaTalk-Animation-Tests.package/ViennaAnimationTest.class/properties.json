@@ -6,8 +6,8 @@
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
-		"vdmc"
+		"animation"
 	],
-	"name" : "VDMCTest",
+	"name" : "ViennaAnimationTest",
 	"type" : "normal"
 }
