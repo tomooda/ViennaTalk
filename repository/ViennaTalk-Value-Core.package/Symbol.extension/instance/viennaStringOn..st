@@ -1,3 +1,3 @@
 *ViennaTalk-Value-Core
 viennaStringOn: aStream
-	aStream nextPutAll: self
+	aStream nextPut: $<; nextPutAll: self; nextPut: $>
