@@ -1,3 +1,3 @@
 accessing
 usesTranspiler
-	^ vdmc class == ViennaTranspiledAnimation 
+	^ animation class == ViennaTranspiledAnimation 

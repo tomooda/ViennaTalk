@@ -1,3 +1,3 @@
 accessing
 specification
-	^ self vdmc specification
+	^ self animation specification

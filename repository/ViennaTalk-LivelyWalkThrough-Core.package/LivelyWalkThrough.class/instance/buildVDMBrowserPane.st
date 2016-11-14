@@ -1,3 +1,3 @@
 user interface
 buildVDMBrowserPane
-	^ (ViennaBrowser on: self director vdmc) build
+	^ (ViennaBrowser on: self director animation) build

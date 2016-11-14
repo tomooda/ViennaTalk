@@ -1,3 +1,3 @@
 accessing
 useInterpreter
-	self vdmc becomeInterpretedAnimation 
+	self animation becomeInterpretedAnimation 

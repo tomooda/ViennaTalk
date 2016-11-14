@@ -8,7 +8,6 @@
 		"Server"
 	],
 	"instvars" : [
-		"vdmc",
 		"selectedWidgets",
 		"frames",
 		"lastFrame",
@@ -16,7 +15,8 @@
 		"scripts",
 		"dependents",
 		"urlPrefix",
-		"filepath"
+		"filepath",
+		"animation"
 	],
 	"name" : "LWTDirector",
 	"type" : "normal"

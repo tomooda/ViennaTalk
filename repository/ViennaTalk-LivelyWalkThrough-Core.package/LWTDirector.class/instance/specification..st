@@ -1,3 +1,3 @@
 accessing
 specification: aString
-	self vdmc specification: aString
+	self animation specification: aString
