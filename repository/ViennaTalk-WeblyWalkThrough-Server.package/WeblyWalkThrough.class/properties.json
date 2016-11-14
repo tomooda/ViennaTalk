@@ -10,7 +10,7 @@
 	],
 	"name" : "WeblyWalkThrough",
 	"commentStamp" : "",
-	"super" : "VDMC",
+	"super" : "ViennaAnimation",
 	"traitcomposition" : "TWeblyWalkThrough",
 	"type" : "normal",
 	"classinstvars" : [ ],
