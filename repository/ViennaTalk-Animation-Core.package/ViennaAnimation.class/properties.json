@@ -1,0 +1,18 @@
+{
+	"commentStamp" : "",
+	"super" : "Model",
+	"category" : "ViennaTalk-Animation-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"lock",
+		"engine",
+		"specification",
+		"state",
+		"reader",
+		"writer"
+	],
+	"name" : "ViennaAnimation",
+	"type" : "normal"
+}
