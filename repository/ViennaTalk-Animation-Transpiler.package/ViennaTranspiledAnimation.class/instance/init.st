@@ -1,0 +1,3 @@
+evaluating
+init
+	object init

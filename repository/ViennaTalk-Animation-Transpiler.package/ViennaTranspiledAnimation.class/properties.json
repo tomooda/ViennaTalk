@@ -1,0 +1,19 @@
+{
+	"commentStamp" : "",
+	"super" : "Model",
+	"category" : "ViennaTalk-Animation-Transpiler",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"specification",
+		"object",
+		"parser",
+		"transpiler",
+		"envs",
+		"reader",
+		"writer"
+	],
+	"name" : "ViennaTranspiledAnimation",
+	"type" : "normal"
+}
