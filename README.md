@@ -13,7 +13,7 @@ Table of Major Components of ViennaTalk
 
 * [VDMBrowser](VDMBrowser.md) - A VDM-SL browser inspired by Smalltalk's class browsers and inspectors
 * [VDMPad](VDMPad.md) - A lightweight web IDE for VDM-SL with animation and diagram presentation of data
-* VDMC - A Smalltalk wrapper of VDM-SL animation
+* ViennaAnimation - Animation manager that encapsulate execution engine
 * [Lively Walk-Through](LivelyWalk-Through.md) - A UI prototyping environment to animate UI prototype by VDM-SL specification
 * [Webly Walk-Through](WeblyWalkThrough.md) - A Web API server to publish VDM-SL specifications of web APIs.
 * ViennaEngine - Animation engine wrapper
@@ -24,6 +24,17 @@ Table of Major Components of ViennaTalk
 * [ViennaTalk-Types](ViennaTalk-Types.md) - Smalltalk classes for VDM types
 * [ViennaTalk-Values](ViennaTalk-Values.md) - Smalltalk objects for VDM values
 * [ViennaTalk-Parsers](ViennaTalk-Parser.md) - VDM parsers, Smalltalk code generators and VDM source formatter.
+
+What's new in the latest release
+---
+* Codename Cyprus has been released. (Nov 16, 2016)
+  - Dropping a .vdmsl file will open a VDMBrowser.
+  - Dropping a .lwt file will open a Lively Walk-Through window.
+  - VDMC is renamed to ViennaAnimation
+  - ViennaAnimation-Transpiler, which uses the code generator as an execution engine, is added.
+  - Settings has Code Generator section to turn on/off runtime type checking and runtime assertion checking.
+  - "use transpiler" and "use interpreter" is added to the VDMBrowser's module menu.
+  - In Lively Walk-Through, the "use transpiler" option is added to the settings tab.
 
 Platform
 ---
