@@ -1,6 +1,4 @@
 class initialization
-initialize
-	super initialize.
-	Smalltalk addToStartUpList: self.
+startUp: resume
 	Smalltalk isHeadless
 		ifFalse: [ self install ]
