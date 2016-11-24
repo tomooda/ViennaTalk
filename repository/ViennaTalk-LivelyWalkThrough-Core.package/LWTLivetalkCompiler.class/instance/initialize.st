@@ -11,7 +11,7 @@ initialize
 	int := $- asParser optional , nat.
 	decimal := int , ($. asParser , nat) optional.
 	numberLiteral := (decimal , ($e asParser / $E asParser , decimal) optional) flatten trim
-		==> [ :str | '''' , str trim , '''' ].
+		==> [ :str |  ' ', str trim, ' ' ].
 	stringLiteral := (quote
 		,
 			((quote not
