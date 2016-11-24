@@ -4,7 +4,10 @@ stateDefinition: aViennaNode env: aDictionary
 	theClass := classes at: (aViennaNode module ifNotNil: #first).
 	stateConstructor := aViennaNode first.
 	quin := super stateDefinition: aViennaNode env: aDictionary.
-	self defineMethod: 'init' , String cr , quin first in: theClass protocol: 'state'.
+	self
+		defineMethod: 'init' , String cr , 'self viennaAtomic: [' , quin first , ']'
+		in: theClass
+		protocol: 'state'.
 	self
 		defineLazyMethodNamed: stateConstructor
 		initializer: quin second
@@ -43,10 +46,11 @@ stateDefinition: aViennaNode env: aDictionary
 												nextPutAll: '((';
 												nextPutAll: (self generate: triple third env: aDictionary);
 												nextPutAll: ') includes: (';
-												nextPutAll: triple first ;
+												nextPutAll: triple first;
 												nextPutAll: ')) ifFalse: [ViennaRuntimeTypeError signal].' ] ] ])
 				in: theClass
-				protocol: 'state' ].	self
+				protocol: 'state' ].
+	self
 		defineMethod: 'state' , String cr , '    ^' , quin fifth
 		in: theClass
 		protocol: 'state'
