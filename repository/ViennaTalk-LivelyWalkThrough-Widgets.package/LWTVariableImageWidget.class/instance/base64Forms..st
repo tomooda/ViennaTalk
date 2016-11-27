@@ -7,4 +7,5 @@ base64Forms: aDictionary
 			newForms
 				at: (key ifEmpty: [ nil ])
 				put: (PNGReadWriter formFromStream: (Base64MimeConverter mimeDecodeToBytes: base64 readStream)) ].
-	forms := newForms
+	forms := newForms.
+	self updateImage
