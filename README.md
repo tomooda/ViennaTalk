@@ -27,6 +27,12 @@ Table of Major Components of ViennaTalk
 
 What's new in the latest release
 ---
+* Codename Cyprus has been updated. (Dec 20, 2016)
+  - A bug in formatter is fixed.
+  - A bug in Lively Walk-Through loader is fixed.
+  - A bug in Livetalk compiler is fixed.
+  - Code generators produce init methods that assign state variables atomically.
+  
 * Codename Cyprus has been released. (Nov 16, 2016)
   - Dropping a .vdmsl file will open a VDMBrowser.
   - Dropping a .lwt file will open a Lively Walk-Through window.
