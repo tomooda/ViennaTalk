@@ -1,3 +1,5 @@
 parsers-definitions
 implicitFunctionDefinition
-	^ PPFailingParser new
+	^ identifier trim , self typeVariableList , self parameterTypes
+		, self identifierTypePairList , ((self pre , expression) ==> #second) optional
+		, ((self post , expression) ==> #second)

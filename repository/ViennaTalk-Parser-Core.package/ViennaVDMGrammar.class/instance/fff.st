@@ -1,7 +1,7 @@
 parsers-definitions
-extendedExplicitOperationDefinition
+fff
 	^ identifier trim , self parameterTypes
 		, (self identifierTypePairList optional ==> [ :list | list ifNil: [ Array new ] ])
-		, (((self operator: '==') , self operationBody) ==> #second) , self externals optional
+		, (((self operator: '==') , self operationBody) ==> #second)
 		, ((self pre , expression) ==> #second) optional , ((self post , expression) ==> #second)
-		, self exceptions optional
+		, ((self errs , self exceptions) ==> #second) optional
