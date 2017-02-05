@@ -12,4 +12,6 @@ basicType: aViennaNode
 		ifTrue: [ ^ self int ].
 	type = 'real'
 		ifTrue: [ ^ self real ].
+	type = 'any'
+		ifTrue: [ ^ self anyType ].
 	^ type
