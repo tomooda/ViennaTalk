@@ -6,7 +6,10 @@ flatDocument: aViennaNode env: aDictionary
 	aViennaNode
 		do: [ :definitionBlock | 
 			definitionBlock first label = 'StateDefinition'
-				ifTrue: [ stateVars := definitionBlock first second collect: #first ] ].
+				ifTrue: [ | stateDefinition |
+					stateDefinition := definitionBlock first.
+					stateVars := stateDefinition second collect: #first.
+					env at: stateDefinition first put: 'self ' , stateDefinition first ] ].
 	instVars := (self boundVariables: aViennaNode)
 		removeAll: stateVars;
 		asArray.
@@ -15,8 +18,12 @@ flatDocument: aViennaNode env: aDictionary
 	aViennaNode
 		do: [ :definitionBlock | 
 			definitionBlock first label = 'StateDefinition'
-				ifFalse: [ (self boundVariables: definitionBlock) do: [ :ident | env at: ident put: 'self ' , ident ] ] ].
-	self defineMethod: 'initialize super initialize. self init' in: newClass protocol: 'initialize-release'.
+				ifFalse: [ (self boundVariables: definitionBlock)
+						do: [ :ident | env at: ident put: 'self ' , ident ] ] ].
+	self
+		defineMethod: 'initialize super initialize. self init'
+		in: newClass
+		protocol: 'initialize-release'.
 	aViennaNode do: [ :definitionBlock | self definitionBlock: definitionBlock env: env ].
 	(newClass includesSelector: #init)
 		ifFalse: [ self defineMethod: 'init' in: newClass protocol: 'state' ].

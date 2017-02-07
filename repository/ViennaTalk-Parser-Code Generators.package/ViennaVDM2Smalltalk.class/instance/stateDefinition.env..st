@@ -64,8 +64,7 @@ stateDefinition: aViennaNode env: aDictionary
 		new: 1024
 		streamContents: [ :stream | 
 			stream
-				nextPutAll: 'self ';
-				nextPutAll: constructor;
+				nextPutAll: (aDictionary at: constructor ifAbsent: [ constructor ]);
 				nextPutAll: ' applyTo: {';
 				nextPutAll: (' . ' join: vars);
 				nextPutAll: '}' ])}

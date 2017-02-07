@@ -2,7 +2,7 @@ code generation-definitions
 extendedExplicitFunctionDefinition: aViennaNode env: aDictionary
 	| funcName patternTypePairList identifierTypePairList preNode postNode body varGenerator preBody postBody retType argType retValue binds |
 	funcName := aViennaNode first.
-	patternTypePairList := aViennaNode third first.
+	patternTypePairList := aViennaNode third first ifNil: [ Array new ].
 	identifierTypePairList := aViennaNode fourth.
 	body := self generate: aViennaNode fifth env: aDictionary.
 	preNode := aViennaNode sixth.

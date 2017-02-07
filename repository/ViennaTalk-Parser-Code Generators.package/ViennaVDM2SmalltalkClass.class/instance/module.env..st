@@ -8,15 +8,20 @@ module: aViennaNode env: aDictionary
 	moduleBodyNode := aViennaNode third.
 	importModuleNames := interfaceNode first
 		ifNil: [ Array new ]
-		ifNotNil: [ :importDefinitionListNode | importDefinitionListNode collect: [ :importDefinitionNode | importDefinitionNode first ] ].
+		ifNotNil:
+			[ :importDefinitionListNode | importDefinitionListNode collect: [ :importDefinitionNode | importDefinitionNode first ] ].
 	importClassNames := importModuleNames
 		collect: [ :importModuleName | env at: importModuleName first ifAbsent: [ importModuleName ] ].
 	stateVars := #().
 	moduleBodyNode
 		do: [ :definitionBlock | 
 			definitionBlock first label = 'StateDefinition'
-				ifTrue: [ stateVars := definitionBlock first second collect: #first ]
-				ifFalse: [ (self boundVariables: definitionBlock) do: [ :ident | env at: ident put: 'self ' , ident ] ] ].
+				ifTrue: [ | stateDefinition |
+					stateDefinition := definitionBlock first.
+					stateVars := stateDefinition second collect: #first.
+					env at: stateDefinition first put: 'self ' , stateDefinition first ]
+				ifFalse: [ (self boundVariables: definitionBlock)
+						do: [ :ident | env at: ident put: 'self ' , ident ] ] ].
 	instVars := (self boundVariables: moduleBodyNode)
 		removeAll: stateVars;
 		asArray.
@@ -31,8 +36,8 @@ module: aViennaNode env: aDictionary
 		do: [ :importModuleName :importClassName | 
 			self
 				defineMethod:
-					importModuleName , ':' , 'a' , importClassName capitalized , String cr , importModuleName , ' := ' , 'a'
-						, importClassName capitalized
+					importModuleName , ':' , 'a' , importClassName capitalized , String cr , importModuleName
+						, ' := ' , 'a' , importClassName capitalized
 				in: newClass
 				protocol: 'imports' ].
 	moduleBodyNode do: [ :definitionBlock | self definitionBlock: definitionBlock env: env ].

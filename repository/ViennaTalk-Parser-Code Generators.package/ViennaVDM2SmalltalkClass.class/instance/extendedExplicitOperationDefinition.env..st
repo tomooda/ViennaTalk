@@ -2,9 +2,11 @@ code generation-definitions
 extendedExplicitOperationDefinition: aViennaNode env: aDictionary
 	| opname patternTypePairListNode retVar retTypeNode body preNode postNode varGenerator binds theClass |
 	opname := aViennaNode first.
-	patternTypePairListNode := aViennaNode second first.
-	retVar := aViennaNode third first.
-	retTypeNode := aViennaNode third second.
+	patternTypePairListNode := aViennaNode second first ifNil: [ Array new ].
+	retVar := aViennaNode third ifNil: [ 'RESULT' ] ifNotNil: [ :node | node first ].
+	retTypeNode := aViennaNode third
+		ifNil: [ ViennaNode label: 'UnitType' ]
+		ifNotNil: [ :node | node second ].
 	body := self generate: aViennaNode fourth.
 	preNode := aViennaNode sixth.
 	postNode := aViennaNode seventh.

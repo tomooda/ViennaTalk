@@ -1,9 +1,13 @@
 code generation-definitions
 extendedExplicitOperationDefinition: aViennaNode env: aDictionary
-	| funcName patternTypePairList identifierTypePairList preNode postNode body varGenerator preBody postBody retType argType retValue binds |
-	funcName := aViennaNode first.
+	| opName patternTypePairList identifierTypePairList retVarName retTypeNode preNode postNode body varGenerator preBody postBody retType argType retValue binds |
+	opName := aViennaNode first.
 	patternTypePairList := aViennaNode second first.
-	identifierTypePairList := aViennaNode third.
+	identifierTypePairList := aViennaNode third
+		ifNil: [ {'RESULT'.
+			(ViennaNode label: 'UnitType')} ].
+	retVarName := identifierTypePairList first.
+	retTypeNode := identifierTypePairList second.
 	body := '[|_opContext| _opContext := thisContext. '
 		, (self generate: aViennaNode fourth env: aDictionary) , '] value'.
 	preNode := aViennaNode sixth.
@@ -42,7 +46,7 @@ extendedExplicitOperationDefinition: aViennaNode env: aDictionary
 	varGenerator := self
 		varNameGenerator: 'func'
 		uniqueIn:
-			{funcName.
+			{opName.
 			body}.
 	binds := Array
 		new: 10
@@ -83,19 +87,50 @@ extendedExplicitOperationDefinition: aViennaNode env: aDictionary
 	^ String
 		new: 1024
 		streamContents: [ :stream | 
-			preBody
+			| env |
+			env := aDictionary copy.
+			aViennaNode
+				stateVariablesDo: [ :var | env at: var put: '(_State at: ' , var storeString , ')' ].
+			preNode
 				ifNotNil: [ stream
-						nextPutAll: 'pre_' , funcName;
+						nextPutAll: 'pre_';
+						nextPutAll: opName;
 						nextPutAll: ' := ';
-						nextPutAll: preBody;
+						nextPutAll:
+							(self
+								closureFromFlatBinds:
+									binds
+										,
+											{{(ViennaNode label: 'PatternIdentifier' with: '_State').
+											nil}}
+								body: (self generate: preNode env: env)
+								varGenerator: varGenerator
+								env: env);
 						nextPutAll: '. ' ].
-			postBody
+			postNode
 				ifNotNil: [ stream
-						nextPutAll: 'post_' , funcName;
+						nextPutAll: 'post_';
+						nextPutAll: opName;
 						nextPutAll: ' := ';
-						nextPutAll: postBody;
+						nextPutAll:
+							(self
+								closureFromFlatBinds:
+									binds
+										,
+											(retTypeNode label = 'UnitType'
+												ifTrue: [ {} ]
+												ifFalse: [ {{(ViennaNode label: 'PatternIdentifier' with: retVarName).
+													retTypeNode}} ])
+										,
+											{{(ViennaNode label: 'PatternIdentifier' with: '_State').
+											nil}.
+											{(ViennaNode label: 'PatternIdentifier' with: '_oldState').
+											nil}}
+								body: (self generate: postNode env: env)
+								varGenerator: varGenerator
+								env: env);
 						nextPutAll: '. ' ].
 			stream
-				nextPutAll: funcName;
+				nextPutAll: opName;
 				nextPutAll: ' := ';
 				nextPutAll: body ]

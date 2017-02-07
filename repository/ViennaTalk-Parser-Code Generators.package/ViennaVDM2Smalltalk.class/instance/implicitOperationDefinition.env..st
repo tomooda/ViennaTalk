@@ -1,9 +1,13 @@
 code generation-definitions
 implicitOperationDefinition: aViennaNode env: aDictionary
-	| opName patternTypePairListNode identifierTypePairListNode preNode postNode body binds varGenerator preBody postBody |
+	| opName patternTypePairListNode identifierTypePairListNode retVarName retTypeNode preNode postNode body binds varGenerator preBody postBody |
 	opName := aViennaNode first.
-	patternTypePairListNode := aViennaNode second first.
-	identifierTypePairListNode := aViennaNode third.
+	patternTypePairListNode := aViennaNode second first ifNil: [ Array new ].
+	identifierTypePairListNode := aViennaNode third
+		ifNil: [ {'RESULT'.
+			(ViennaNode label: 'UnitType')} ].
+	retVarName := identifierTypePairListNode first.
+	retTypeNode := identifierTypePairListNode second.
 	preNode := aViennaNode fourth second.
 	postNode := aViennaNode fourth third.
 	body := 'ViennaImplicitEvaluationError signal: '
@@ -57,17 +61,48 @@ implicitOperationDefinition: aViennaNode env: aDictionary
 	^ String
 		new: 1024
 		streamContents: [ :stream | 
-			preBody
+			| env |
+			env := aDictionary copy.
+			aViennaNode
+				stateVariablesDo: [ :var | env at: var put: '(_State at: ' , var storeString , ')' ].
+			preNode
 				ifNotNil: [ stream
-						nextPutAll: 'pre_' , opName;
+						nextPutAll: 'pre_';
+						nextPutAll: opName;
 						nextPutAll: ' := ';
-						nextPutAll: preBody;
+						nextPutAll:
+							(self
+								closureFromFlatBinds:
+									binds
+										,
+											{{(ViennaNode label: 'PatternIdentifier' with: '_State').
+											nil}}
+								body: (self generate: preNode env: env)
+								varGenerator: varGenerator
+								env: env);
 						nextPutAll: '. ' ].
-			postBody
+			postNode
 				ifNotNil: [ stream
-						nextPutAll: 'post_' , opName;
+						nextPutAll: 'post_';
+						nextPutAll: opName;
 						nextPutAll: ' := ';
-						nextPutAll: postBody;
+						nextPutAll:
+							(self
+								closureFromFlatBinds:
+									binds
+										,
+											(retTypeNode label = 'UnitType'
+												ifTrue: [ {} ]
+												ifFalse: [ {{(ViennaNode label: 'PatternIdentifier' with: retVarName).
+													retTypeNode}} ])
+										,
+											{{(ViennaNode label: 'PatternIdentifier' with: '_State').
+											nil}.
+											{(ViennaNode label: 'PatternIdentifier' with: '_oldState').
+											nil}}
+								body: (self generate: postNode env: env)
+								varGenerator: varGenerator
+								env: env);
 						nextPutAll: '. ' ].
 			stream
 				nextPutAll: opName;
