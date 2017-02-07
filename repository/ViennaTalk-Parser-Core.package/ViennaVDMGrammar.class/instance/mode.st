@@ -1,3 +1,3 @@
 parsers-definitions
 mode
-	^ self rd / self wt
+	^ self rd / self wr
