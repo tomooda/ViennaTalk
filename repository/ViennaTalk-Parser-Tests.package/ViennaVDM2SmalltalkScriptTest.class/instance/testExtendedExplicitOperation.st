@@ -14,12 +14,12 @@ testExtendedExplicitOperation
 	self
 		assert:
 			(Compiler
-				evaluate: code , '. post_succ value: 0 value: 1'
+				evaluate: code , '. post_succ value: 0 value: 1 value: nil value: nil'
 				for: nil
 				logged: false).
 	self
 		deny:
 			(Compiler
-				evaluate: code , '. post_succ value: 0 value: 2'
+				evaluate: code , '. post_succ value: 0 value: 2 value: nil value: nil'
 				for: nil
 				logged: false)
