@@ -1,3 +1,7 @@
 formatting-definitions
 parameterTypes: aViennaNode
-	^ '(' , (self format: aViennaNode first) , ')'
+	^ '('
+		,
+			(aViennaNode first
+				ifNil: [ '' ]
+				ifNotNil: [ :node | self format: node ]) , ')'
