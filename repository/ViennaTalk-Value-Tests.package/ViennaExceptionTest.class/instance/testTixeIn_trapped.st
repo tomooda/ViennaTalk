@@ -4,8 +4,8 @@ testTixeIn_trapped
 		assert:
 			(ViennaException
 				tixe:
-					{([ :v | nil ] -> [ :binds | nil ]).
-					([ :v | {('p' -> (v + 2))} asDictionary ]
+					{([ :v | {} ] -> [ :binds | nil ]).
+					([ :v | {{('p' -> (v + 2))} asDictionary} ]
 						-> [ :binds | 
 							| p |
 							p := binds at: 'p'.

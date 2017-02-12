@@ -4,16 +4,15 @@ testTixeIn_trapped_then_trapped
 		assert:
 			(ViennaException
 				tixe:
-					{([ :v | nil ] -> [ :binds | nil ]).
+					{([ :v | {} ] -> [ :binds | nil ]).
 					([ :v | 
 					v isInteger
-						ifTrue: [ Dictionary new ]
-						ifFalse: [ nil ] ]
-						-> [ :binds | ViennaException expression: 'fatal' ]).
+						ifTrue: [ {Dictionary new} ]
+						ifFalse: [ {} ] ] -> [ :binds | ViennaException expression: 'fatal' ]).
 					([ :v | 
 					v isString
-						ifTrue: [ {('p' -> (v , ' handled'))} asDictionary ]
-						ifFalse: [ nil ] ]
+						ifTrue: [ {{('p' -> (v , ' handled'))} asDictionary} ]
+						ifFalse: [ {} ] ]
 						-> [ :binds | 
 							| p |
 							p := binds at: 'p'.
