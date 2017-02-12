@@ -1,3 +1,3 @@
 parsers-statements
 identityStatement
-	^ (self reserved: 'skip') ==> [ :string | nil ]
+	^ self skip ==> [ :string | nil ]

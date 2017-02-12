@@ -1,3 +1,3 @@
-parsers-symbols
+parsers-keywords
 in
 	^ self reserved: 'in'
