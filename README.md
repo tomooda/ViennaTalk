@@ -27,6 +27,10 @@ Table of Major Components of ViennaTalk
 
 What's new in the latest release
 ---
+* Codename Ito has been released. (Feb 12, 2017)
+  - Implicit/extended explicit functions/operations are supported by the pretty printer and code generators.
+  - Exception statements (exit, always, trap and tixe statements) are supported by the pretty printer and code generators.
+  
 * Codename Cyprus has been updated. (Dec 20, 2016)
   - A bug in formatter is fixed.
   - A bug in Lively Walk-Through loader is fixed.
