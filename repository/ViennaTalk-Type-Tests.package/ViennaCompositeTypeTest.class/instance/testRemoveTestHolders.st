@@ -13,7 +13,7 @@ testRemoveTestHolders
 					ViennaType nat asTypeHolder}.
 					{'f3'.
 					false.
-					(ViennaType quote: '<QUOTE>')}}) removeTypeHolders
+					(ViennaType quote: 'QUOTE') asTypeHolder}}) removeTypeHolders
 		equals:
 			(ViennaCompositeType
 				constructorName: 'T'
@@ -26,4 +26,4 @@ testRemoveTestHolders
 					ViennaType nat}.
 					{'f3'.
 					false.
-					(ViennaType quote: '<QUOTE>')}})
+					(ViennaType quote: 'QUOTE')}})
