@@ -1,0 +1,3 @@
+testing
+isTypeHolder
+	^ false
