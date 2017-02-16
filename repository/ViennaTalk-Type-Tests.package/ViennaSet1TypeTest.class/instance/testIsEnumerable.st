@@ -1,4 +1,4 @@
-as yet unclassified
+tests
 testIsEnumerable
 	self deny: set1ofnat isEnumerable.
 	self assert: set1ofbool isEnumerable

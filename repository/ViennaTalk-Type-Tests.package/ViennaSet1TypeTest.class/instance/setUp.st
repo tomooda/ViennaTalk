@@ -1,4 +1,4 @@
-as yet unclassified
+running
 setUp
 	super setUp.
 	set1ofnat := ViennaSet1Type with: ViennaType nat.

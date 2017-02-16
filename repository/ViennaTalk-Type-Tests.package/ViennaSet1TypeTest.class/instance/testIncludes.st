@@ -1,4 +1,4 @@
-as yet unclassified
+tests
 testIncludes
 	self deny: (set1ofnat includes: {} asSet).
 	self assert: (set1ofnat includes: {1} asSet).

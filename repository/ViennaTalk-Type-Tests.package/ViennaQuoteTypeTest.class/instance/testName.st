@@ -1,3 +1,3 @@
 tests
 testName
-	self assert: quote name equals: 'QUOTE'
+	self assert: quote name equals: '<QUOTE>'

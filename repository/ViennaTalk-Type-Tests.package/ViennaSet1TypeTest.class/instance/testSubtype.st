@@ -1,4 +1,4 @@
-as yet unclassified
+tests
 testSubtype
 	self assert: set1ofbool <= set1ofbool.
 	self deny: set1ofbool <= set1ofnat.

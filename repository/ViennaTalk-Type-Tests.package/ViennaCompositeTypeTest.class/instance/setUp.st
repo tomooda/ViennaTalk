@@ -12,4 +12,4 @@ setUp
 			(ViennaType nat)}.
 			{'f3'.
 			false.
-			(ViennaType quote: '<QUOTE>')}}
+			(ViennaType quote: 'QUOTE')}}

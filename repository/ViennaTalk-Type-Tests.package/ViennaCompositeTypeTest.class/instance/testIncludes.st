@@ -8,5 +8,5 @@ testIncludes
 						constructorName: 'T'
 						with: -1
 						with: 1
-						with: #'<QUOTE>')).
+						with: #QUOTE)).
 	self deny: (composite includes: 1)

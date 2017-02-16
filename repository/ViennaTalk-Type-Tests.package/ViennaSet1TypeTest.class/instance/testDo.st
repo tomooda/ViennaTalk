@@ -1,4 +1,4 @@
-as yet unclassified
+tests
 testDo
 	self should: [ set1ofnat do: [ :i |  ] ] raise: ShouldNotImplement.
 	self
