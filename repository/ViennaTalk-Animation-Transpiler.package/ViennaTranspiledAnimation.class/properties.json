@@ -10,7 +10,6 @@
 		"object",
 		"parser",
 		"transpiler",
-		"envs",
 		"reader",
 		"writer"
 	],
