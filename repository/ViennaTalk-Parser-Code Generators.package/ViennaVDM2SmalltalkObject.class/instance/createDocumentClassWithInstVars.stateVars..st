@@ -3,7 +3,7 @@ createDocumentClassWithInstVars: anArrayOfString1 stateVars: anArrayOfString2
 	^ AnonymousClassInstaller
 		make: [ :builder | 
 			builder
-				superclass: ViennaTranspiledObject ;
+				superclass: ViennaTranspiledObject;
 				slots:
 					(anArrayOfString1 asArray
 						collect: [ :instVarName | InstanceVariableSlot named: instVarName asSymbol ])

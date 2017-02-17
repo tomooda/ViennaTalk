@@ -1,13 +1,13 @@
 {
 	"commentStamp" : "",
-	"super" : "Object",
+	"super" : "Dictionary",
 	"category" : "ViennaTalk-Parser-Code Generators",
-	"classinstvars" : [
-		"viennaEnv"
-	],
+	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [ ],
-	"instvars" : [ ],
-	"name" : "ViennaTranspiledObject",
+	"instvars" : [
+		"viennaEnv"
+	],
+	"name" : "ViennaTranspiledModularDocument",
 	"type" : "normal"
 }

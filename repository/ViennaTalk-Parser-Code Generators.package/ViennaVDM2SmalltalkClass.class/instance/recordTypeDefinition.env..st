@@ -7,8 +7,8 @@ recordTypeDefinition: aViennaNode env: aDictionary
 		, (' . ' join: fieldList) , '}'.
 	(self generate: aViennaNode third env: aDictionary)
 		ifNotNil: [ :inv | type := '(' , type , ') inv: ' , inv ].
-	initializer := identifier , ' := ViennaTypeHolder new. ' , identifier , ' type: (' , type
-		, '). ' , identifier.
+	initializer := identifier , ' := ViennaTypeHolder new. ' , identifier , ' type: ('
+		, type , ')'.
 	theClass := classes at: (aViennaNode module ifNotNil: #first).
 	self
 		defineLazyMethodNamed: identifier

@@ -35,4 +35,5 @@ flatDocument: aViennaNode env: aDictionary
 		protocol: 'initialize-release'.
 	(newClass includesSelector: #init)
 		ifFalse: [ self defineMethod: 'init' in: newClass protocol: 'state' ].
+	newClass viennaEnv: env.
 	^ newClass
