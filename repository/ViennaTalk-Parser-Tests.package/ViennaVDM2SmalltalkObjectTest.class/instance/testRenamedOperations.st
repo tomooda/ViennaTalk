@@ -1,6 +1,7 @@
 tests-imports
 testRenamedOperations
-	self
+	| obj |
+	obj := self
 		transpile:
 			'
 		module T
@@ -23,19 +24,6 @@ testRenamedOperations
 			next() == return successor()
 		end M'
 		runtimeTypeCheck: true
-		runtimeAssertionCheck: true
-		do: [ :obj :transpiler | 
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`next()'))
-						for: obj
-						logged: false)
-				equals: 1.
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`next()'))
-						for: obj
-						logged: false)
-				equals: 2 ]
+		runtimeAssertionCheck: true.
+	self assert: (obj evaluateExpression: 'M`next()') equals: 1.
+	self assert: (obj evaluateExpression: 'M`next()') equals: 2

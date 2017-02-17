@@ -1,6 +1,7 @@
 tests-imports
 testImportsFunctions
-	self
+	| obj |
+	obj := self
 		transpile:
 			'
 		module T
@@ -19,18 +20,8 @@ testImportsFunctions
 			next(x) == T`succ(x)
 		end M'
 		runtimeTypeCheck: true
-		runtimeAssertionCheck: true
-		do: [ :obj :transpiler | 
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`next(1)'))
-						for: obj
-						logged: false)
-				equals: 2.
-			self
-				should: [ Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`next(-1)'))
-						for: obj
-						logged: false ]
-				raise: ViennaRuntimeTypeError ]
+		runtimeAssertionCheck: true.
+	self assert: (obj evaluateExpression: 'M`next(1)' ifError: [  ]) equals: 2.
+	self
+		should: [ obj evaluateExpression: 'M`next(-1)' ifError: [  ] ]
+		raise: ViennaRuntimeTypeError

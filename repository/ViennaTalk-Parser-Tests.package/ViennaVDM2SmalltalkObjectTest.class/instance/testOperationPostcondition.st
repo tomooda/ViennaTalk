@@ -1,6 +1,7 @@
 tests-postconditions
 testOperationPostcondition
-	self
+	| obj |
+	obj := self
 		transpile:
 			'
 	state State of 
@@ -12,18 +13,6 @@ testOperationPostcondition
 	sub(x) == (count := count - x; return count)
 	post count >= 0;'
 		runtimeTypeCheck: true
-		runtimeAssertionCheck: true
-		do: [ :obj :transpiler | 
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'sub(9)') )
-						for: obj
-						logged: false)
-				equals: 1.
-			self
-				should: [ Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'sub(9)') )
-						for: obj
-						logged: false ]
-				raise: ViennaPostconditionViolation ]
+		runtimeAssertionCheck: true.
+	self assert: (obj evaluateExpression: 'sub(9)') equals: 1.
+	self should: [ obj evaluateExpression: 'sub(9)' ] raise: ViennaPostconditionViolation

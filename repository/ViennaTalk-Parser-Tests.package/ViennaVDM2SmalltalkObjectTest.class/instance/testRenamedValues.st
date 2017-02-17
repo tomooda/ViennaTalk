@@ -1,6 +1,7 @@
 tests-imports
 testRenamedValues
-	self
+	| obj |
+	obj := self
 		transpile:
 			'
 		module T
@@ -18,19 +19,6 @@ testRenamedValues
 			isZero(x) == x = z
 		end M'
 		runtimeTypeCheck: true
-		runtimeAssertionCheck: true
-		do: [ :obj :transpiler | 
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`isZero(1)'))
-						for: obj
-						logged: false)
-				equals: false.
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`isZero(0)'))
-						for: obj
-						logged: false)
-				equals: true ]
+		runtimeAssertionCheck: true.
+	self assert: (obj evaluateExpression: 'M`isZero(1)') equals: false.
+	self assert: (obj evaluateExpression: 'M`isZero(0)') equals: true

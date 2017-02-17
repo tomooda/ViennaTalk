@@ -1,6 +1,7 @@
 tests-invariants
 testTypeInvariant
-	self
+	| obj |
+	obj := self
 		transpile:
 			'
 	types
@@ -13,32 +14,8 @@ testTypeInvariant
 	sub : int ==> int 
 	sub(x) == (count := count - x; return count);'
 		runtimeTypeCheck: true
-		runtimeAssertionCheck: true
-		do: [ :obj :transpiler | 
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'sub(9)'))
-						for: obj
-						logged: false)
-				equals: 1.
-			self
-				should: [ Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'sub(9)'))
-						for: obj
-						logged: false ]
-				raise: ViennaRuntimeTypeError.
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'is_N0(1)') )
-						for: obj
-						logged: false)
-				equals: true.
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'is_N0(-1)') )
-						for: obj
-						logged: false)
-				equals: false ]
+		runtimeAssertionCheck: true.
+	self assert: (obj evaluateExpression: 'sub(9)') equals: 1.
+	self should: [ obj evaluateExpression: 'sub(9)' ] raise: ViennaRuntimeTypeError.
+	self assert: (obj evaluateExpression: 'is_N0(1)') equals: true.
+	self assert: (obj evaluateExpression: 'is_N0(-1)') equals: false

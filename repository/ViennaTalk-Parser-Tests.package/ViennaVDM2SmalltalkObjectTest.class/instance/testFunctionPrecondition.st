@@ -1,6 +1,7 @@
 tests-preconditions
 testFunctionPrecondition
-	self
+	| obj |
+	obj := self
 		transpile:
 			'
 	functions 
@@ -8,18 +9,6 @@ testFunctionPrecondition
 	pred(x) == x - 1
 	pre x > 0;'
 		runtimeTypeCheck: true
-		runtimeAssertionCheck: true
-		do: [ :obj :transpiler | 
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'pred(9)'))
-						for: obj
-						logged: false)
-				equals: 8.
-			self
-				should: [ Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'pred(-1)'))
-						for: obj
-						logged: false ]
-				raise: ViennaPreconditionViolation ]
+		runtimeAssertionCheck: true.
+	self assert: (obj evaluateExpression: 'pred(9)') equals: 8.
+	self should: [ obj evaluateExpression: 'pred(-1)' ] raise: ViennaPreconditionViolation

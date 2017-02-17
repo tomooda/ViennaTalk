@@ -1,30 +1,14 @@
 tests-type checking
 testFunctionTypecheck
-	self
+	| obj |
+	obj := self
 		transpile:
 			'
 	functions 
 	pred : nat -> nat 
 	pred(x) == x - 1;'
 		runtimeTypeCheck: true
-		runtimeAssertionCheck: true
-		do: [ :obj :transpiler | 
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'pred(9)') )
-						for: obj
-						logged: false)
-				equals: 8.
-			self
-				should: [ Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'pred(0)') )
-						for: obj
-						logged: false ]
-				raise: ViennaRuntimeTypeError.
-			self
-				should: [ Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'pred(-1)') )
-						for: obj
-						logged: false ]
-				raise: ViennaRuntimeTypeError ]
+		runtimeAssertionCheck: true.
+	self assert: (obj evaluateExpression: 'pred(9)') equals: 8.
+	self should: [ obj evaluateExpression: 'pred(0)' ] raise: ViennaRuntimeTypeError.
+	self should: [ obj evaluateExpression: 'pred(-1)' ] raise: ViennaRuntimeTypeError
