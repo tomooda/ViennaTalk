@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "InstanceVariableSlot",
+	"category" : "ViennaTalk-Value-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "ViennaStateSlot",
+	"type" : "normal"
+}
