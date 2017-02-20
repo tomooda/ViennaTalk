@@ -15,10 +15,6 @@ modularDocument: aViennaNode env: aDictionary
 							| importedModuleName importedModuleObject |
 							importedModuleName := importDefinitionNode first.
 							importedModuleObject := objects at: importedModuleName.
-							moduleObject
-								perform: (importedModuleName , ':') asSymbol
-								with: importedModuleObject ] ] ].
+							moduleObject perform: (importedModuleName , ':') asSymbol with: importedModuleObject ] ] ].
 	objects valuesDo: [ :moduleObject | moduleObject init ].
-	^ (ViennaTranspiledModularDocument from: objects)
-		buildViennaEnv;
-		yourself
+	^ objects

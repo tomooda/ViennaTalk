@@ -1,13 +1,8 @@
 code generation-definitions
 typeDefinition: aViennaNode env: aDictionary
-	| identifier type inv initializer theClass |
+	| identifier initializer theClass |
 	identifier := aViennaNode first.
-	type := self generate: aViennaNode second env: aDictionary.
-	inv := (self generate: aViennaNode third env: aDictionary)
-		ifNil: [ '' ]
-		ifNotNil: [ :str | ' inv: ' , str ].
-	initializer := identifier , ' := ViennaTypeHolder new. ' , identifier , ' type: (' , type
-		, inv , ')'.
+	initializer := super typeDefinition: aViennaNode env: aDictionary.
 	theClass := classes at: (aViennaNode module ifNotNil: #first).
 	self
 		defineLazyMethodNamed: identifier

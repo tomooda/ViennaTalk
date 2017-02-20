@@ -58,5 +58,4 @@ modularDocument: aViennaNode env: aDictionary
 		protocol: 'initialize-release'.
 	moduleNames
 		do: [ :moduleName | self defineMethod: moduleName , ' ^' , moduleName uncapitalized in: documentClass protocol: 'accessing' ].
-	documentClass viennaEnv: aDictionary.
 	^ documentClass
