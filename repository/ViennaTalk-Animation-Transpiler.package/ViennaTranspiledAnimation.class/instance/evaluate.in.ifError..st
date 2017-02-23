@@ -6,6 +6,7 @@ evaluate: aString in: moduleName ifError: errorBlock
 				ifTrue: [ object ]
 				ifFalse: [ object at: moduleName ifAbsent: [ ^ errorBlock value: 'unknown module name' ] ])
 				evaluateExpression: aString
+				with: transpiler
 				ifError: [ :msg | ^ errorBlock cull: msg ] ]
 				on: Error
 				do: [ :ex | 
