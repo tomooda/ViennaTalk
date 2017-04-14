@@ -4,6 +4,7 @@ moduleListMenu: aBuilder
 	<viennaBrowserModuleListMenu>
 	(aBuilder item: #'new and load...' translated) selector: #newAndLoadFromFile.
 	(aBuilder item: #'load and merge...' translated) selector: #loadAndMergeFromFile.
+	(aBuilder item: #'save snapshot...' translated) selector: #saveSnapshotToFile.
 	(aBuilder item: #'save all modules...' translated) selector: #saveAllModulesToFile.
 	aBuilder model selectedModule
 		ifNotNil: [ (aBuilder item: #'save the module...' translated) selector: #saveAModuleToFile ].

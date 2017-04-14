@@ -1,6 +1,6 @@
 private
-fileSave: title do: aBlock
-	(UIManager default fileSave: title extensions: #('vdm' 'vdmsl') path: self directory)
+fileSave: title extensions: anArrayOfString do: aBlock
+	(UIManager default fileSave: title extensions: anArrayOfString path: self directory)
 		ifNotNil: [ :reference | 
 			directory := reference parent.
 			reference

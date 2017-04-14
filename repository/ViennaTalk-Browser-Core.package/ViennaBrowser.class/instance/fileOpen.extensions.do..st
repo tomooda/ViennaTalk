@@ -1,8 +1,8 @@
 private
-fileOpen: title do: aBlock
+fileOpen: title extensions: anArrayOfString do: aBlock
 	(UIManager default
 		fileOpen: title
-		extensions: #('vdm' 'vdmsl')
+		extensions: anArrayOfString
 		path: self directory
 		preview: #text)
 		ifNotNil: [ :stream | 

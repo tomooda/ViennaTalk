@@ -2,11 +2,11 @@ module list menu
 newAndLoadFromFile
 	self
 		fileOpen: 'New and load from...'
+		extensions: #('vdm' 'vdmsl')
 		do: [ :stream | 
 			stream contents
 				in: [ :source | 
-					[ 
-					animation specification: source ifError: [ :msg | self error: msg ].
+					[ animation specification: source ifError: [ :msg | self error: msg ].
 					self selectModuleNamed: nil ]
 						on: Error
 						do: [ :ex | 
