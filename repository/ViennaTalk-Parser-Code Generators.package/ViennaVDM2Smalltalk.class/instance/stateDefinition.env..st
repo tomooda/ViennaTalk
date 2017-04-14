@@ -28,9 +28,7 @@ stateDefinition: aViennaNode env: aDictionary
 				with: vals
 				do: [ :var :val | 
 					stream
-						nextPutAll: var;
-						nextPutAll: ' := ';
-						nextPutAll: val;
+						nextPutAll: (self noCheckAssignment: var be: val);
 						nextPutAll: '.' , String cr ] ]).
 	(String
 		new: 1024
