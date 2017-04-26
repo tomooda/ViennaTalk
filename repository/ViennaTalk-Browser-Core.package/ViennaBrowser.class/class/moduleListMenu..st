@@ -10,7 +10,7 @@ moduleListMenu: aBuilder
 		ifNotNil: [ (aBuilder item: #'save the module...' translated) selector: #saveAModuleToFile ].
 	aBuilder items last withSeparatorAfter.
 	(aBuilder item: #'remove module' translated)
-		selector: #removeModulel;
+		selector: #removeModule;
 		withSeparatorAfter.
 	aBuilder model animation class = ViennaTranspiledAnimation
 		ifTrue: [ (aBuilder item: #'use interpreter' translated)
