@@ -1,3 +1,4 @@
 formatting-statements
 returnStatement: aViennaNode
-	^ 'return ' , (self indentString: (self format: aViennaNode first))
+	^ 'return '
+		, (aViennaNode first ifNil: [ '' ] ifNotNil: [ :arg | self indentString: (self format: arg) ])
