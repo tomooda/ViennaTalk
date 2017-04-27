@@ -1,3 +1,3 @@
 parsers-statements
 returnStatement
-	^ (self return , expression) ==> #second
+	^ (self return , expression optional) ==> #second
