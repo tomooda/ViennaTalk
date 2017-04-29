@@ -1,3 +1,4 @@
 parsers-literals
 symbolicLiteral
-	^ super symbolicLiteral  ==> [ :string | ViennaNode label: 'SymbolicLiteral' with: string trim ]
+	^ super symbolicLiteral flatten
+		==> [ :string | ViennaNode label: 'SymbolicLiteral' with: string trim ]

@@ -1,3 +1,3 @@
 parsers-literals
 symbolicLiteral
-	^ self basicSymbolicLiteral flatten
+	^ self basicSymbolicLiteral 
