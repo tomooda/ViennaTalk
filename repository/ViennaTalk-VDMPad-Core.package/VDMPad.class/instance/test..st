@@ -1,7 +1,7 @@
 request handling-api
 test: anHttpRequest
 	| json vdm10 rtc source prestates expression expectedPoststates expectedValue states triple actualValue actualPoststates diff |
-	json := NeoJSONReader fromString: anHttpRequest content.
+	json := NeoJSONReader fromString: anHttpRequest contents.
 	vdm10 := (json at: 'classic' ifAbsent: [ false ]) = false.
 	rtc := (json at: 'ignoreRuntimeChecking' ifAbsent: [ false ]) = false.
 	source := json at: 'source'.
