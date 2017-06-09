@@ -14,7 +14,7 @@ test: anHttpRequest
 	states := Dictionary new.
 	prestates
 		keysAndValuesDo: [ :key :value | 
-			((key includes: $`) and: [ value withBlanksTrimmed notEmpty ])
+			((key includes: $`) and: [ value trim notEmpty ])
 				ifTrue: [ 
 					(states at: (key copyFrom: 1 to: (key indexOf: $`) - 1) ifAbsentPut: [ Dictionary new ])
 						at: (key copyFrom: (key indexOf: $`) + 1 to: key size)
