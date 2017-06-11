@@ -6,4 +6,6 @@ generateSmalltalkObject
 		ifTrue: [ ^ UIManager default
 				alert: 'Failed to generate a code : ' , ast message
 				title: 'ViennaTalk' ].
-	(ViennaVDM2SmalltalkObject new generate: ast) ifNotNil: [ :object | object inspect ]
+	(ViennaVDM2SmalltalkObject new
+		source: animation specification;
+		generate: ast) ifNotNil: [ :object | object inspect ]
