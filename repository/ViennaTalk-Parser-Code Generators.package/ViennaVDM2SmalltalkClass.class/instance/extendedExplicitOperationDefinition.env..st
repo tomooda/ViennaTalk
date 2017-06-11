@@ -2,8 +2,11 @@ code generation-definitions
 extendedExplicitOperationDefinition: aViennaNode env: aDictionary
 	| opname patternTypePairListNode retVar retTypeNode body preNode postNode varGenerator binds theClass |
 	opname := aViennaNode first.
-	patternTypePairListNode := aViennaNode second first ifNil: [ Array new ].
-	retVar := aViennaNode third ifNil: [ 'RESULT' ] ifNotNil: [ :node | node first ].
+	patternTypePairListNode := aViennaNode second first
+		ifNil: [ Array new ].
+	retVar := aViennaNode third
+		ifNil: [ 'RESULT' ]
+		ifNotNil: [ :node | node first ].
 	retTypeNode := aViennaNode third
 		ifNil: [ ViennaNode label: 'UnitType' ]
 		ifNotNil: [ :node | node second ].
@@ -48,7 +51,7 @@ extendedExplicitOperationDefinition: aViennaNode env: aDictionary
 		retVar: retVar
 		retType: retTypeNode
 		varGenerator: varGenerator
-		env: aDictionary.
+		env: aDictionary node: aViennaNode.
 	self
 		defineLazyMethodNamed: opname
 		initializer:
@@ -76,7 +79,8 @@ extendedExplicitOperationDefinition: aViennaNode env: aDictionary
 											space ] ].
 							stream nextPut: $] ])
 		in: theClass
-		protocol: 'operations'.
+		protocol: 'operations'
+		node: aViennaNode.
 	preNode
 		ifNotNil: [ | env |
 			env := aDictionary copy.
@@ -103,7 +107,8 @@ extendedExplicitOperationDefinition: aViennaNode env: aDictionary
 										varGenerator: varGenerator
 										env: env) ])
 				in: theClass
-				protocol: 'operations' ].
+				protocol: 'operations'
+				node: preNode ].
 	postNode
 		ifNotNil: [ | env |
 			env := aDictionary copy.
@@ -137,4 +142,5 @@ extendedExplicitOperationDefinition: aViennaNode env: aDictionary
 										varGenerator: varGenerator
 										env: env) ])
 				in: theClass
-				protocol: 'operations' ]
+				protocol: 'operations'
+				node: postNode ]

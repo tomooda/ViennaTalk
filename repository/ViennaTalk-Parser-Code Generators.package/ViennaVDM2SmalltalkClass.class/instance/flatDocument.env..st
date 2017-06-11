@@ -27,13 +27,15 @@ flatDocument: aViennaNode env: aDictionary
 	self
 		defineMethod: 'initialize super initialize. self initTypes. self init'
 		in: newClass
-		protocol: 'initialize-release'.
+		protocol: 'initialize-release'
+		node: nil.
 	aViennaNode do: [ :definitionBlock | self definitionBlock: definitionBlock env: env ].
 	self
 		defineInitTypeMethodForTypeNames: typeNames
 		in: newClass
-		protocol: 'initialize-release'.
+		protocol: 'initialize-release'
+		node: nil.
 	(newClass includesSelector: #init)
-		ifFalse: [ self defineMethod: 'init' in: newClass protocol: 'state' ].
+		ifFalse: [ self defineMethod: 'init' in: newClass protocol: 'state' node: nil ].
 	newClass viennaEnv: env.
 	^ newClass

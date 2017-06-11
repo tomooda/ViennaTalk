@@ -13,4 +13,4 @@ typeDefinition: aViennaNode env: aDictionary
 		defineLazyMethodNamed: identifier
 		initializer: initializer
 		in: theClass
-		protocol: 'types'
+		protocol: 'types' node: aViennaNode

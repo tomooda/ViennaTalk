@@ -2,10 +2,11 @@ code generation-definitions
 modularDocument: aViennaNode env: aDictionary
 	| moduleNames classNames documentClass |
 	moduleNames := aViennaNode collect: #first.
-	documentClass := self createDocumentClassWithInstVars: (moduleNames collect: #uncapitalized).
+	documentClass := self
+		createDocumentClassWithInstVars: (moduleNames collect: #uncapitalized).
 	classNames := moduleNames
 		collect: [ :moduleName | 
-			(self requestClassName: moduleName for: moduleName, ' module')
+			(self requestClassName: moduleName for: moduleName , ' module')
 				ifNil: [ ^ nil ]
 				ifNotNil: [ :name | 
 					aDictionary at: moduleName put: name.
@@ -55,8 +56,14 @@ modularDocument: aViennaNode env: aDictionary
 								nextPutAll: ' init.';
 								cr ] ])
 		in: documentClass
-		protocol: 'initialize-release'.
+		protocol: 'initialize-release'
+		node: nil.
 	moduleNames
-		do: [ :moduleName | self defineMethod: moduleName , ' ^' , moduleName uncapitalized in: documentClass protocol: 'accessing' ].
+		do: [ :moduleName | 
+			self
+				defineMethod: moduleName , ' ^' , moduleName uncapitalized
+				in: documentClass
+				protocol: 'accessing'
+				node: nil ].
 	documentClass viennaEnv: aDictionary.
 	^ documentClass

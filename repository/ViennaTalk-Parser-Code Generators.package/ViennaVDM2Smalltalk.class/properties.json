@@ -8,7 +8,8 @@
 		"decoder",
 		"runtimeAssertionCheck",
 		"runtimeTypeCheck",
-		"defaultEnv"
+		"defaultEnv",
+		"source"
 	],
 	"name" : "ViennaVDM2Smalltalk",
 	"commentStamp" : "",

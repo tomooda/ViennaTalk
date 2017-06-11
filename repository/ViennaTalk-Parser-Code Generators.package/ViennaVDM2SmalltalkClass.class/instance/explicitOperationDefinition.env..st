@@ -16,15 +16,12 @@ explicitOperationDefinition: aViennaNode env: aDictionary
 	retTypeNode := typeNode second.
 	binds := argTypeNode label = 'UnitType'
 		ifTrue: [ {} ]
-		ifFalse: [ 
-			argTypeNode label = 'ProductType'
-				ifTrue: [ 
-					(1 to: argTypeNode size)
+		ifFalse: [ argTypeNode label = 'ProductType'
+				ifTrue: [ (1 to: argTypeNode size)
 						collect: [ :index | 
 							{(paramsNode at: index).
 							(argTypeNode at: index)} ] ]
-				ifFalse: [ 
-					{{(paramsNode first).
+				ifFalse: [ {{paramsNode first.
 					argTypeNode}} ] ].
 	theClass := classes at: (aViennaNode module ifNotNil: #first).
 	self
@@ -35,19 +32,18 @@ explicitOperationDefinition: aViennaNode env: aDictionary
 		body: body
 		pre:
 			(preNode
-				ifNotNil: [ 
-					runtimeAssertionCheck = true
+				ifNotNil: [ runtimeAssertionCheck = true
 						ifTrue: [ self generate: preNode env: aDictionary ]
 						ifFalse: [ nil ] ])
 		post:
 			(postNode
-				ifNotNil: [ 
-					runtimeAssertionCheck = true
+				ifNotNil: [ runtimeAssertionCheck = true
 						ifTrue: [ self generate: postNode env: aDictionary ]
 						ifFalse: [ nil ] ])
 		retType: retTypeNode
 		varGenerator: varGenerator
-		env: aDictionary.
+		env: aDictionary
+		node: aViennaNode.
 	self
 		defineLazyMethodNamed: opname
 		initializer:
@@ -67,8 +63,7 @@ explicitOperationDefinition: aViennaNode env: aDictionary
 								nextPutAll: opname.
 							binds
 								ifEmpty: [ stream nextPutAll: ': nil' ]
-								ifNotEmpty: [ 
-									stream nextPutAll: ': arg1 '.
+								ifNotEmpty: [ stream nextPutAll: ': arg1 '.
 									2 to: binds size do: [ :i | 
 										stream
 											nextPutAll: '_: arg';
@@ -76,12 +71,13 @@ explicitOperationDefinition: aViennaNode env: aDictionary
 											space ] ].
 							stream nextPut: $] ])
 		in: theClass
-		protocol: 'operations'.
+		protocol: 'operations'
+		node: aViennaNode.
 	preNode
-		ifNotNil: [ 
-			| env |
+		ifNotNil: [ | env |
 			env := aDictionary copy.
-			aViennaNode stateVariablesDo: [ :var | env at: var put: '(_State at: ' , var storeString , ')' ].
+			aViennaNode
+				stateVariablesDo: [ :var | env at: var put: '(_State at: ' , var storeString , ')' ].
 			self
 				defineLazyMethodNamed: 'pre_' , opname
 				initializer:
@@ -93,22 +89,23 @@ explicitOperationDefinition: aViennaNode env: aDictionary
 								nextPutAll: opname;
 								nextPutAll: ' := ';
 								nextPutAll:
-										(self
-												closureFromFlatBinds:
-													binds
-														,
-															{{(ViennaNode label: 'PatternIdentifier' with: '_State').
-															nil}}
-												body: (self generate: preNode env: env)
-												varGenerator: varGenerator
-												env: env) ])
+									(self
+										closureFromFlatBinds:
+											binds
+												,
+													{{(ViennaNode label: 'PatternIdentifier' with: '_State').
+													nil}}
+										body: (self generate: preNode env: env)
+										varGenerator: varGenerator
+										env: env) ])
 				in: theClass
-				protocol: 'operations' ].
+				protocol: 'operations'
+				node: preNode ].
 	postNode
-		ifNotNil: [ 
-			| env |
+		ifNotNil: [ | env |
 			env := aDictionary copy.
-			aViennaNode stateVariablesDo: [ :var | env at: var put: '(_State at: ' , var storeString , ')' ].
+			aViennaNode
+				stateVariablesDo: [ :var | env at: var put: '(_State at: ' , var storeString , ')' ].
 			self
 				defineLazyMethodNamed: 'post_' , opname
 				initializer:
@@ -120,22 +117,22 @@ explicitOperationDefinition: aViennaNode env: aDictionary
 								nextPutAll: opname;
 								nextPutAll: ' := ';
 								nextPutAll:
-										(self
-												closureFromFlatBinds:
-													binds
-														,
-															{{(ViennaNode label: 'PatternIdentifier' with: '_State').
-															nil}.
-															{(ViennaNode label: 'PatternIdentifier' with: '_oldState').
-															nil}}
-														,
-															(retTypeNode label = 'UnitType'
-																ifTrue: [ {} ]
-																ifFalse: [ 
-																	{{(ViennaNode label: 'PatternIdentifier' with: 'RESULT').
-																	retTypeNode}} ])
-												body: (self generate: postNode env: env)
-												varGenerator: varGenerator
-												env: env) ])
+									(self
+										closureFromFlatBinds:
+											binds
+												,
+													{{(ViennaNode label: 'PatternIdentifier' with: '_State').
+													nil}.
+													{(ViennaNode label: 'PatternIdentifier' with: '_oldState').
+													nil}}
+												,
+													(retTypeNode label = 'UnitType'
+														ifTrue: [ {} ]
+														ifFalse: [ {{(ViennaNode label: 'PatternIdentifier' with: 'RESULT').
+															retTypeNode}} ])
+										body: (self generate: postNode env: env)
+										varGenerator: varGenerator
+										env: env) ])
 				in: theClass
-				protocol: 'operations' ]
+				protocol: 'operations'
+				node: postNode ]

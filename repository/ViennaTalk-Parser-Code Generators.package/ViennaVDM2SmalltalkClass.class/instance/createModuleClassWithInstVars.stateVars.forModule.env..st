@@ -18,4 +18,5 @@ createModuleClassWithInstVars: anArrayOfString1 stateVars: anArrayOfString2 forM
 								ifFalse: [ InstanceVariableSlot ]) named: instVarName asSymbol ]);
 		category: 'Auto Generated from VDM' ])
 		viennaEnv: aDictionary;
+		specification: source;
 		yourself

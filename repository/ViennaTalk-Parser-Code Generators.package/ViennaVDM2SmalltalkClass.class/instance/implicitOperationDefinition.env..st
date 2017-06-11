@@ -47,7 +47,8 @@ implicitOperationDefinition: aViennaNode env: aDictionary
 		retVar: retVar
 		retType: retTypeNode
 		varGenerator: varGenerator
-		env: aDictionary.
+		env: aDictionary
+		node: aViennaNode.
 	self
 		defineLazyMethodNamed: opname
 		initializer:
@@ -75,7 +76,8 @@ implicitOperationDefinition: aViennaNode env: aDictionary
 											space ] ].
 							stream nextPut: $] ])
 		in: theClass
-		protocol: 'operations'.
+		protocol: 'operations'
+		node: aViennaNode.
 	preNode
 		ifNotNil: [ | env |
 			env := aDictionary copy.
@@ -102,7 +104,8 @@ implicitOperationDefinition: aViennaNode env: aDictionary
 										varGenerator: varGenerator
 										env: env) ])
 				in: theClass
-				protocol: 'operations' ].
+				protocol: 'operations'
+				node: preNode ].
 	postNode
 		ifNotNil: [ | env |
 			env := aDictionary copy.
@@ -136,4 +139,5 @@ implicitOperationDefinition: aViennaNode env: aDictionary
 										varGenerator: varGenerator
 										env: env) ])
 				in: theClass
-				protocol: 'operations' ]
+				protocol: 'operations'
+				node: postNode ]

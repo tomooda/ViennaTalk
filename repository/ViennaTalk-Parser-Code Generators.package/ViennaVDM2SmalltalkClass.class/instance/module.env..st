@@ -8,10 +8,12 @@ module: aViennaNode env: aDictionary
 	moduleBodyNode := aViennaNode third.
 	importModuleNames := interfaceNode first
 		ifNil: [ Array new ]
-		ifNotNil:
-			[ :importDefinitionListNode | importDefinitionListNode collect: [ :importDefinitionNode | importDefinitionNode first ] ].
+		ifNotNil: [ :importDefinitionListNode | 
+			importDefinitionListNode
+				collect: [ :importDefinitionNode | importDefinitionNode first ] ].
 	importClassNames := importModuleNames
-		collect: [ :importModuleName | env at: importModuleName first ifAbsent: [ importModuleName ] ].
+		collect:
+			[ :importModuleName | env at: importModuleName first ifAbsent: [ importModuleName ] ].
 	stateVars := #().
 	typeNames := Array new writeStream.
 	moduleBodyNode
@@ -40,18 +42,26 @@ module: aViennaNode env: aDictionary
 		do: [ :importModuleName :importClassName | 
 			self
 				defineMethod:
-					importModuleName , ':' , 'a' , importClassName capitalized , String cr , importModuleName
-						, ' := ' , 'a' , importClassName capitalized
+					importModuleName , ':' , 'a' , importClassName capitalized , String cr
+						, importModuleName , ' := ' , 'a' , importClassName capitalized
 				in: newClass
-				protocol: 'imports' ].
-	moduleBodyNode do: [ :definitionBlock | self definitionBlock: definitionBlock env: env ].
+				protocol: 'imports'
+				node: (interfaceNode first detect: [ :node | node first = importModuleName ]) ].
+	moduleBodyNode
+		do: [ :definitionBlock | self definitionBlock: definitionBlock env: env ].
 	self
 		defineMethod: 'initialize super initialize. self initTypes'
 		in: newClass
-		protocol: 'initialize-release'.
+		protocol: 'initialize-release'
+		node: nil.
 	self
 		defineInitTypeMethodForTypeNames: typeNames
 		in: newClass
-		protocol: 'initialize-release'.
+		protocol: 'initialize-release'
+		node: nil.
 	(newClass includesSelector: #init)
-		ifFalse: [ self defineMethod: 'init' in: newClass protocol: 'state' ]
+		ifFalse: [ self
+				defineMethod: 'init'
+				in: newClass
+				protocol: 'state'
+				node: nil ]

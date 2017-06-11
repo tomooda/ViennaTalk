@@ -1,5 +1,5 @@
 utilities
-defineMethodFromOperation: opName in: theClass protocol: protocolString fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode body: bodyString pre: preString post: postString retVar: retVarName retType: typeNode varGenerator: varGenerator env: aDictionary
+defineMethodFromOperation: opName in: theClass protocol: protocolString fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode body: bodyString pre: preString post: postString retVar: retVarName retType: typeNode varGenerator: varGenerator env: aDictionary node: aViennaNode
 	| tmpVars matchPatternNodes isFirstArg tuplePattern matchVars argVars formalArgs |
 	tmpVars := OrderedCollection new.
 	matchPatternNodes := OrderedCollection new.
@@ -96,8 +96,9 @@ defineMethodFromOperation: opName in: theClass protocol: protocolString fromFlat
 								nextPutAll: ') ifFalse: [ViennaPostconditionViolation signal].' ].
 					stream nextPutAll: '^ ' , retVarName ])
 		in: theClass
-		protocol: protocolString.
-	self
+		protocol: protocolString
+		node: aViennaNode.
+	^ self
 		defineMethod:
 			(String
 				new: 1024
@@ -116,3 +117,4 @@ defineMethodFromOperation: opName in: theClass protocol: protocolString fromFlat
 						nextPutAll: bodyString ])
 		in: theClass
 		protocol: protocolString
+		node: aViennaNode fifth

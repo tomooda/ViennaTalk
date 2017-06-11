@@ -11,4 +11,5 @@ valueDefinitions: aViennaNode env: aDictionary
 						defineLazyMethodNamed: identifier
 						initializer: initializer , '. ' , identifier
 						in: theClass
-						protocol: 'values' ] ]
+						protocol: 'values'
+						node: node ] ]
