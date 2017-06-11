@@ -1,3 +1,9 @@
 parsers-definitions
 operationBody
-	^ super operationBody ==> [ :body | ViennaNode label: 'OperationBody' with: body ]
+	^ super operationBody
+		=>> [ :start :end :body | 
+			ViennaNode
+				label: 'OperationBody'
+				start: start
+				end: end
+				with: body ]

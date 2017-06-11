@@ -1,3 +1,9 @@
 parsers-statements
 nondeterministicStatement
-	^ super nondeterministicStatement ==> [ :array | ViennaNode label: 'NondeterministicStatement' withAll: array ]
+	^ super nondeterministicStatement
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'NondeterministicStatement'
+				start: start
+				end: end
+				withAll: array ]

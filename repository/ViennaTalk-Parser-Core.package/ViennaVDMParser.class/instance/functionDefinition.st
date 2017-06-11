@@ -1,3 +1,9 @@
 parsers-definitions
 functionDefinition
-	^ super functionDefinition ==> [ :body | ViennaNode label: 'FunctionDefinition' with: body ]
+	^ super functionDefinition
+		=>> [ :start :end :body | 
+			ViennaNode
+				label: 'FunctionDefinition'
+				start: start
+				end: end
+				with: body ]

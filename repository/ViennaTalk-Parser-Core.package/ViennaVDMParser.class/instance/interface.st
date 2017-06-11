@@ -1,3 +1,9 @@
 parsers-interfaces
 interface
-	^ super interface ==> [ :array | ViennaNode label: 'Interface' withAll: array ]
+	^ super interface
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'Interface'
+				start: start
+				end: end
+				withAll: array ]

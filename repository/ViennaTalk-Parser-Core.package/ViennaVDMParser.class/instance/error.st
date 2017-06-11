@@ -1,3 +1,9 @@
 parsers-definitions
 error
-	^ super error ==> [ :array | ViennaNode label: 'Error' withAll: array ]
+	^ super error
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'Error'
+				start: start
+				end: end
+				withAll: array ]

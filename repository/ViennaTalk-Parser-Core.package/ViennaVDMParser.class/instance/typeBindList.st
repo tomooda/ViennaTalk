@@ -1,3 +1,9 @@
 parsers-patterns
 typeBindList
-	^ super typeBindList ==> [ :array | ViennaNode label: 'TypeBindList' withAll: array ]
+	^ super typeBindList
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'TypeBindList'
+				start: start
+				end: end
+				withAll: array ]

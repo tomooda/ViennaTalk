@@ -1,3 +1,9 @@
 parsers-statements
 casesStatementAlternative
-	^ super casesStatementAlternative ==> [ :array | ViennaNode label: 'CasesStatementAlternative' withAll: array ]
+	^ super casesStatementAlternative
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'CasesStatementAlternative'
+				start: start
+				end: end
+				withAll: array ]

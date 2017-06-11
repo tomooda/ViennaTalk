@@ -1,3 +1,9 @@
 parsers-definitions
 implicitFunctionDefinition
-	^ super implicitFunctionDefinition ==> [ :array | ViennaNode label: 'ImplicitFunctionDefinition' withAll: array ]
+	^ super implicitFunctionDefinition
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'ImplicitFunctionDefinition'
+				start: start
+				end: end
+				withAll: array ]

@@ -1,3 +1,9 @@
 parsers-patterns
 seqConcPattern
-	^ super seqConcPattern ==> [ :array | ViennaNode label: 'SeqConcPattern' withAll: array ]
+	^ super seqConcPattern
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'SeqConcPattern'
+				start: start
+				end: end
+				withAll: array ]

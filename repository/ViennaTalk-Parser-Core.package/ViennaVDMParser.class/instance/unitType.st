@@ -1,3 +1,4 @@
 parsers-types
 unitType
-	^ super unitType ==> [ :ignore | ViennaNode label: 'UnitType' ]
+	^ super unitType
+		=>> [ :start :end :ignore | ViennaNode label: 'UnitType' start: start end: end ]

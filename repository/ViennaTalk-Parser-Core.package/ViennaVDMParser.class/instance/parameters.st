@@ -1,3 +1,9 @@
 parsers-definitions
 parameters
-	^ super parameters ==> [ :array | ViennaNode label: 'Parameters' withAll: array ]
+	^ super parameters
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'Parameters'
+				start: start
+				end: end
+				withAll: array ]

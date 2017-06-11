@@ -1,3 +1,9 @@
 parsers-statements
 othersStatement
-	^ super othersStatement ==> [ :bodyStatement | ViennaNode label: 'OthersStatement' with: bodyStatement ]
+	^ super othersStatement
+		=>> [ :start :end :bodyStatement | 
+			ViennaNode
+				label: 'OthersStatement'
+				start: start
+				end: end
+				with: bodyStatement ]

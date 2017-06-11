@@ -1,3 +1,9 @@
 parsers-patterns
 objectPattern
-	^ super objectPattern ==> [ :array | ViennaNode label: 'ObjectPattern' withAll: array ]
+	^ super objectPattern
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'ObjectPattern'
+				start: start
+				end: end
+				withAll: array ]

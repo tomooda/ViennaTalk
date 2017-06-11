@@ -1,3 +1,9 @@
 parsers-interfaces
 exportDefinition
-	^ super exportDefinition ==> [ :moduleSignature | ViennaNode label: 'ExportDefinition' with: moduleSignature ]
+	^ super exportDefinition
+		=>> [ :start :end :moduleSignature | 
+			ViennaNode
+				label: 'ExportDefinition'
+				start: start
+				end: end
+				with: moduleSignature ]

@@ -1,7 +1,9 @@
 parsers-types
 anonymousField
 	^ super anonymousField
-		==> [ :typeNode | 
+		=>> [ :start :end :typeNode | 
 			{nil.
 			false.
-			typeNode} ]
+			(typeNode
+				start: start end: end;
+				yourself)} ]

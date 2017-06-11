@@ -1,3 +1,9 @@
 parsers-types
 quoteType
-	^ super quoteType ==> [ :string | ViennaNode label: 'QuoteType' with: string ]
+	^ super quoteType
+		=>> [ :start :end :string | 
+			ViennaNode
+				label: 'QuoteType'
+				start: start
+				end: end
+				with: string ]

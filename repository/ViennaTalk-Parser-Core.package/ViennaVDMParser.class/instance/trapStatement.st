@@ -1,3 +1,9 @@
 parsers-statements
 trapStatement
-	^ super trapStatement ==> [ :pair | ViennaNode label: 'TrapStatement' withAll: pair ]
+	^ super trapStatement
+		=>> [ :start :end :pair | 
+			ViennaNode
+				label: 'TrapStatement'
+				start: start
+				end: end
+				withAll: pair ]

@@ -1,3 +1,9 @@
 parsers-definitions
 moduleBody
-	^ super moduleBody ==> [ :array | ViennaNode label: 'ModuleBody' withAll: array ]
+	^ super moduleBody
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'ModuleBody'
+				start: start
+				end: end
+				withAll: array ]

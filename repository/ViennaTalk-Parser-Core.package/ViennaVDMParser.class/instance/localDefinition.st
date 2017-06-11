@@ -1,3 +1,9 @@
 parsers-definitions
 localDefinition
-	^ super localDefinition ==> [ :def | ViennaNode label: 'LocalDefinition' with: def ]
+	^ super localDefinition
+		=>> [ :start :end :def | 
+			ViennaNode
+				label: 'LocalDefinition'
+				start: start
+				end: end
+				with: def ]

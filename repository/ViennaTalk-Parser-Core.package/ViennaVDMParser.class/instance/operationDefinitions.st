@@ -1,3 +1,9 @@
 parsers-definitions
 operationDefinitions
-	^ super operationDefinitions ==> [ :array | ViennaNode label: 'OperationDefinitions' withAll: array ]
+	^ super operationDefinitions
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'OperationDefinitions'
+				start: start
+				end: end
+				withAll: array ]

@@ -1,3 +1,9 @@
 parsers-statements
 letStatement
-	^ super letStatement ==> [ :array | ViennaNode label: 'LetStatement' withAll: array ]
+	^ super letStatement
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'LetStatement'
+				start: start
+				end: end
+				withAll: array ]

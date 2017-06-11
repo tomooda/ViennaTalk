@@ -1,3 +1,9 @@
 parsers-statements
 dclStatement
-	^ super dclStatement ==> [ :array | ViennaNode label: 'DclStatement' withAll: array ]
+	^ super dclStatement
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'DclStatement'
+				start: start
+				end: end
+				withAll: array ]

@@ -1,3 +1,9 @@
 parsers-patterns
 mapletPattern
-	^ super mapletPattern ==> [ :array | ViennaNode label: 'MapletPattern' withAll: array ]
+	^ super mapletPattern
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'MapletPattern'
+				start: start
+				end: end
+				withAll: array ]

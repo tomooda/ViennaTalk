@@ -1,3 +1,9 @@
 parsers-patterns
 seqBind
-	^ super seqBind ==> [ :array | ViennaNode label: 'SeqBind' withAll: array ]
+	^ super seqBind
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'SeqBind'
+				start: start
+				end: end
+				withAll: array ]

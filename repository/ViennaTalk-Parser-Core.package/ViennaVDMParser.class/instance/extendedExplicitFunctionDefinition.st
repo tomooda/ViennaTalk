@@ -1,4 +1,9 @@
 parsers-definitions
 extendedExplicitFunctionDefinition
 	^ super extendedExplicitFunctionDefinition
-		==> [ :array | ViennaNode label: 'ExtendedExplicitFunctionDefinition' withAll: array ]
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'ExtendedExplicitFunctionDefinition'
+				start: start
+				end: end
+				withAll: array ]

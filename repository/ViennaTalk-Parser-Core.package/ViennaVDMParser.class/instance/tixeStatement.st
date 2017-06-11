@@ -1,3 +1,9 @@
 parsers-statements
 tixeStatement
-	^ super tixeStatement ==> [ :pair | ViennaNode label: 'TixeStatement' withAll: pair ]
+	^ super tixeStatement
+		=>> [ :start :end :pair | 
+			ViennaNode
+				label: 'TixeStatement'
+				start: start
+				end: end
+				withAll: pair ]

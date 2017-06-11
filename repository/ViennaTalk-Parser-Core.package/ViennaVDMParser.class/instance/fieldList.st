@@ -1,3 +1,9 @@
 parsers-types
 fieldList
-	^ super fieldList ==> [ :array | ViennaNode label: 'FieldList' withAll: array ]
+	^ super fieldList
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'FieldList'
+				start: start
+				end: end
+				withAll: array ]

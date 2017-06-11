@@ -1,3 +1,9 @@
 parsers-definitions
 typeVariable
-	^ super typeVariable ==> [ :string | ViennaNode label: 'TypeVariable' with: string ]
+	^ super typeVariable
+		=>> [ :start :end :string | 
+			ViennaNode
+				label: 'TypeVariable'
+				start: start
+				end: end
+				with: string ]

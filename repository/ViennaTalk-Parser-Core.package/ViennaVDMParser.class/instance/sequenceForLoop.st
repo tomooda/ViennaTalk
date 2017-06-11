@@ -1,3 +1,9 @@
 parsers-statements
 sequenceForLoop
-	^ super sequenceForLoop ==> [ :array | ViennaNode label: 'SequenceForLoop' withAll: array ]
+	^ super sequenceForLoop
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'SequenceForLoop'
+				start: start
+				end: end
+				withAll: array ]

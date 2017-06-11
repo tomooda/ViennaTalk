@@ -1,3 +1,9 @@
 parsers-types
 seqType
-	^ super seqType ==> [ :ast | ViennaNode label: 'SeqType' with: ast ]
+	^ super seqType
+		=>> [ :start :end :ast | 
+			ViennaNode
+				label: 'SeqType'
+				start: start
+				end: end
+				with: ast ]

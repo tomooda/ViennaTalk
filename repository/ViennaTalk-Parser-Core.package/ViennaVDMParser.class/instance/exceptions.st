@@ -1,3 +1,9 @@
 parsers-definitions
 exceptions
-	^ super exceptions ==> [ :errorList | ViennaNode label: 'Exceptions' with: errorList ]
+	^ super exceptions
+		=>> [ :start :end :errorList | 
+			ViennaNode
+				label: 'Exceptions'
+				start: start
+				end: end
+				with: errorList ]

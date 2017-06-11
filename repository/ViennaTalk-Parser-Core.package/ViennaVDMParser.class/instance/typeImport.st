@@ -1,3 +1,9 @@
 parsers-interfaces
 typeImport
-	^ super typeImport ==> [ :array | ViennaNode label: 'TypeImport' withAll: array ]
+	^ super typeImport
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'TypeImport'
+				start: start
+				end: end
+				withAll: array ]

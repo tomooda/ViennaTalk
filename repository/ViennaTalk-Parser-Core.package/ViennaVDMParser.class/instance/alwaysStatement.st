@@ -1,3 +1,9 @@
 parsers-statements
 alwaysStatement
-	^ super alwaysStatement ==> [ :pair | ViennaNode label: 'AlwaysStatement' withAll: pair ]
+	^ super alwaysStatement
+		=>> [ :start :end :pair | 
+			ViennaNode
+				label: 'AlwaysStatement'
+				start: start
+				end: end
+				withAll: pair ]

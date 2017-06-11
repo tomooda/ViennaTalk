@@ -1,7 +1,11 @@
 parsers-interfaces
 importModuleSignature
 	^ super importModuleSignature
-		==> [ :array | 
+		=>> [ :start :end :array | 
 			array = 'all'
-				ifTrue: [ ViennaNode label: 'ImportModuleSignatureAll' ]
-				ifFalse: [ ViennaNode label: 'ImportModuleSignature' withAll: array ] ]
+				ifTrue: [ ViennaNode label: 'ImportModuleSignatureAll' start: start end: end ]
+				ifFalse: [ ViennaNode
+						label: 'ImportModuleSignature'
+						start: start
+						end: end
+						withAll: array ] ]

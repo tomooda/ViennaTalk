@@ -1,3 +1,9 @@
 parsers-definitions
 externals
-	^ super externals ==> [ :array | ViennaNode label: 'Externals' withAll: array ]
+	^ super externals
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'Externals'
+				start: start
+				end: end
+				withAll: array ]

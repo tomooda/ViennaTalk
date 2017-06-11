@@ -1,3 +1,4 @@
 parsers-statements
 identityStatement
-	^ super identityStatement ==> [ :ignore | ViennaNode label: 'IdentityStatement' ]
+	^ super identityStatement
+		=>> [ :start :end :ignore | ViennaNode label: 'IdentityStatement' start: start end: end ]

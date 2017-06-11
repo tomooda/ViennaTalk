@@ -1,3 +1,9 @@
 parsers-types
 basicType
-	^ super basicType ==> [ :ast | ViennaNode label: 'BasicType' with: ast ]
+	^ super basicType
+		=>> [ :start :end :ast | 
+			ViennaNode
+				label: 'BasicType'
+				start: start
+				end: end
+				with: ast ]

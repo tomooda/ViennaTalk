@@ -1,9 +1,11 @@
 parsers-statements
 ifStatement
 	^ super ifStatement
-		==> [ :array | 
+		=>> [ :start :end :array | 
 			ViennaNode
 				label: 'IfStatement'
+				start: start
+				end: end
 				with:
 					(ViennaNode
 						label: 'ConditionaStatementList'

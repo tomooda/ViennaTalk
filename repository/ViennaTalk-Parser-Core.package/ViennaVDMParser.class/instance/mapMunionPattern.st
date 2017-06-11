@@ -1,3 +1,9 @@
 parsers-patterns
 mapMunionPattern
-	^ super mapMunionPattern ==> [ :array | ViennaNode label: 'MapMunionPattern' withAll: array ]
+	^ super mapMunionPattern
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'MapMunionPattern'
+				start: start
+				end: end
+				withAll: array ]

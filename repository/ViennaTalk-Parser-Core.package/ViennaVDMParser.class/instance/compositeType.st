@@ -1,3 +1,9 @@
 parsers-types
 compositeType
-	^ super compositeType ==> [ :array | ViennaNode label: 'CompositeType' withAll: array ]
+	^ super compositeType
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'CompositeType'
+				start: start
+				end: end
+				withAll: array ]

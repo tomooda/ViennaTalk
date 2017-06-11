@@ -1,3 +1,9 @@
 parsers-definitions
 functionDefinitions
-	^ super functionDefinitions ==> [ :array | ViennaNode label: 'FunctionDefinitions' withAll: array ]
+	^ super functionDefinitions
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'FunctionDefinitions'
+				start: start
+				end: end
+				withAll: array ]

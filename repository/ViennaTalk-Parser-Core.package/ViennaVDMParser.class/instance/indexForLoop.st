@@ -1,3 +1,9 @@
 parsers-statements
 indexForLoop
-	^ super indexForLoop ==> [ :array | ViennaNode label: 'IndexForLoop' withAll: array ]
+	^ super indexForLoop
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'IndexForLoop'
+				start: start
+				end: end
+				withAll: array ]

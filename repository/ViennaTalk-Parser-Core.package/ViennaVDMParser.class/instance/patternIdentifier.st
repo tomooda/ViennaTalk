@@ -1,3 +1,9 @@
 parsers-patterns
 patternIdentifier
-	^ super patternIdentifier ==> [ :stringOrNil | ViennaNode label: 'PatternIdentifier' with: stringOrNil ]
+	^ super patternIdentifier
+		=>> [ :start :end :stringOrNil | 
+			ViennaNode
+				label: 'PatternIdentifier'
+				start: start
+				end: end
+				with: stringOrNil ]

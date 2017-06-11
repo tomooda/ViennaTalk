@@ -1,3 +1,9 @@
 parsers-interfaces
 importTypesSignature
-	^ super importTypesSignature ==> [ :array | ViennaNode label: 'ImportTypesSignature' withAll: array ]
+	^ super importTypesSignature
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'ImportTypesSignature'
+				start: start
+				end: end
+				withAll: array ]

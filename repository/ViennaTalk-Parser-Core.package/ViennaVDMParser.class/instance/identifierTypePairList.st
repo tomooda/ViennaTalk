@@ -1,4 +1,9 @@
 parsers-definitions
 identifierTypePairList
 	^ super identifierTypePairList
-		==> [ :array | ViennaNode label: 'IdentifierTypePairList' withAll: array ]
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'IdentifierTypePairList'
+				start: start
+				end: end
+				withAll: array ]

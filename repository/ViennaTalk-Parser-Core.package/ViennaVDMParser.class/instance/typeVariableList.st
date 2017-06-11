@@ -1,3 +1,9 @@
 parsers-definitions
 typeVariableList
-	^ super typeVariableList ==> [ :array | ViennaNode label: 'TypeVariableList' withAll: array ]
+	^ super typeVariableList
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'TypeVariableList'
+				start: start
+				end: end
+				withAll: array ]

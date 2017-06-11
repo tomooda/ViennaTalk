@@ -1,3 +1,9 @@
 parsers-definitions
 typeDefinitions
-	^ super typeDefinitions ==> [ :array | ViennaNode label: 'TypeDefinitions' withAll: array ]
+	^ super typeDefinitions
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'TypeDefinitions'
+				start: start
+				end: end
+				withAll: array ]

@@ -1,4 +1,9 @@
 parsers-definitions
 patternTypePairList
 	^ super patternTypePairList
-		==> [ :array | ViennaNode label: 'PatternTypePairList' withAll: array ]
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'PatternTypePairList'
+				start: start
+				end: end
+				withAll: array ]

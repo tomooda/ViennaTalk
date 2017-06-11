@@ -1,3 +1,9 @@
 parsers-statements
 elseifStatement
-	^ super elseifStatement ==> [ :array | ViennaNode label: 'ElseifStatement' withAll: array ]
+	^ super elseifStatement
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'ElseifStatement'
+				start: start
+				end: end
+				withAll: array ]

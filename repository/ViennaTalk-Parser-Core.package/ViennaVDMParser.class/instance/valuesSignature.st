@@ -1,3 +1,9 @@
 parsers-interfaces
 valuesSignature
-	^ super valuesSignature ==> [ :array | ViennaNode label: 'ValuesSignature' withAll: array ]
+	^ super valuesSignature
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'ValuesSignature'
+				start: start
+				end: end
+				withAll: array ]

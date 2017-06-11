@@ -1,3 +1,9 @@
 parsers-interfaces
 importDefinitionList
-	^ super importDefinitionList ==> [ :array | ViennaNode label: 'ImportDefinitionList' withAll: array ]
+	^ super importDefinitionList
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'ImportDefinitionList'
+				start: start
+				end: end
+				withAll: array ]

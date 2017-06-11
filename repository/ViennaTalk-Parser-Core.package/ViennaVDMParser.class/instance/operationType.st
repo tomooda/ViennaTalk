@@ -1,3 +1,9 @@
 parsers-types
 operationType
-	^ super operationType ==> [ :array | ViennaNode label: 'OperationType' withAll: array ]
+	^ super operationType
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'OperationType'
+				start: start
+				end: end
+				withAll: array ]

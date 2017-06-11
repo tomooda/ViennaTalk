@@ -1,3 +1,9 @@
 parsers-types
 totalFunctionType
-	^ super totalFunctionType ==> [ :array | ViennaNode label: 'TotalFunctionType' withAll: array ]
+	^ super totalFunctionType
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'TotalFunctionType'
+				start: start
+				end: end
+				withAll: array ]

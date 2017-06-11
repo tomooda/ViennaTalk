@@ -1,3 +1,9 @@
 parsers-definitions
 varInformation
-	^ super varInformation ==> [ :array | ViennaNode label: 'VarInformation' withAll: array ]
+	^ super varInformation
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'VarInformation'
+				start: start
+				end: end
+				withAll: array ]

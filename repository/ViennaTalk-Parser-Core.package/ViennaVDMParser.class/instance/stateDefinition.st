@@ -1,3 +1,9 @@
 parsers-definitions
 stateDefinition
-	^ super stateDefinition ==> [ :array | ViennaNode label: 'StateDefinition' withAll: array ]
+	^ super stateDefinition
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'StateDefinition'
+				start: start
+				end: end
+				withAll: array ]

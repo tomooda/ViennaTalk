@@ -1,3 +1,9 @@
 parsers-types
 setType
-	^ super setType ==> [ :ast | ViennaNode label: 'SetType' with: ast ]
+	^ super setType
+		=>> [ :start :end :ast | 
+			ViennaNode
+				label: 'SetType'
+				start: start
+				end: end
+				with: ast ]

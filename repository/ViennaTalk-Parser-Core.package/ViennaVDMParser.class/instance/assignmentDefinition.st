@@ -1,3 +1,9 @@
 parsers-statements
 assignmentDefinition
-	^ super assignmentDefinition ==> [ :array | ViennaNode label: 'AssignmentDefinition' withAll: array ]
+	^ super assignmentDefinition
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'AssignmentDefinition'
+				start: start
+				end: end
+				withAll: array ]

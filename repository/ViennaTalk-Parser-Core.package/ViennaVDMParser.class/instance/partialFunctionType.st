@@ -1,3 +1,9 @@
 parsers-types
 partialFunctionType
-	^ super partialFunctionType ==> [ :array | ViennaNode label: 'PartialFunctionType' withAll: array ]
+	^ super partialFunctionType
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'PartialFunctionType'
+				start: start
+				end: end
+				withAll: array ]

@@ -1,3 +1,9 @@
 parsers-definitions
 operationDefinition
-	^ super operationDefinition ==> [ :def | ViennaNode label: 'OperationDefinition' with: def ]
+	^ super operationDefinition
+		=>> [ :start :end :def | 
+			ViennaNode
+				label: 'OperationDefinition'
+				start: start
+				end: end
+				with: def ]

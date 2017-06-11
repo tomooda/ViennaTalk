@@ -1,4 +1,9 @@
 parsers-definitions
 extendedExplicitOperationDefinition
 	^ super extendedExplicitOperationDefinition
-		==> [ :array | ViennaNode label: 'ExtendedExplicitOperationDefinition' withAll: array ]
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'ExtendedExplicitOperationDefinition'
+				start: start
+				end: end
+				withAll: array ]

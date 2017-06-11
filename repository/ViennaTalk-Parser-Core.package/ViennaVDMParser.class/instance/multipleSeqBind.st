@@ -1,3 +1,9 @@
 parsers-patterns
 multipleSeqBind
-	^ super multipleSeqBind ==> [ :array | ViennaNode label: 'MultipleSeqBind' withAll: array ]
+	^ super multipleSeqBind
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'MultipleSeqBind'
+				start: start
+				end: end
+				withAll: array ]

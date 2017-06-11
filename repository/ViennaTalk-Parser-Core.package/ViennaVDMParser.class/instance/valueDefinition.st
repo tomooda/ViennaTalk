@@ -1,3 +1,9 @@
 parsers-definitions
 valueDefinition
-	^ super valueDefinition ==> [ :array | ViennaNode label: 'ValueDefinition' withAll: array ]
+	^ super valueDefinition
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'ValueDefinition'
+				start: start
+				end: end
+				withAll: array ]

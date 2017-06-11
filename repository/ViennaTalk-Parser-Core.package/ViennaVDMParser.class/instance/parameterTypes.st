@@ -1,3 +1,9 @@
 parsers-definitions
 parameterTypes
-	^ super parameterTypes ==> [ :n | ViennaNode label: 'ParameterTypes' with: n ]
+	^ super parameterTypes
+		=>> [ :start :end :n | 
+			ViennaNode
+				label: 'ParameterTypes'
+				start: start
+				end: end
+				with: n ]

@@ -1,4 +1,9 @@
 parsers-definitions
 identifierTypePair
 	^ super identifierTypePair
-		==> [ :pair | ViennaNode label: 'IdentifierTypePair' withAll: pair ]
+		=>> [ :start :end :pair | 
+			ViennaNode
+				label: 'IdentifierTypePair'
+				start: start
+				end: end
+				withAll: pair ]

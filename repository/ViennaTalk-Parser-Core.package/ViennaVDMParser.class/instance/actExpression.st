@@ -1,3 +1,9 @@
 parsers-expressions-threads
 actExpression
-	^ super actExpression ==> [ :nameNode | ViennaNode label: 'ActExpression' with: nameNode ]
+	^ super actExpression
+		=>> [ :start :end :nameNode | 
+			ViennaNode
+				label: 'ActExpression'
+				start: start
+				end: end
+				with: nameNode ]

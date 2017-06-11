@@ -1,3 +1,9 @@
 parsers-definitions
 document
-	^ super document ==> [ :array | ViennaNode label: 'Document' withAll: array ]
+	^ super document
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'Document'
+				start: start
+				end: end
+				withAll: array ]

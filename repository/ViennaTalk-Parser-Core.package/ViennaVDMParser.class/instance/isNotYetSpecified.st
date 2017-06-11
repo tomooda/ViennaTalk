@@ -1,3 +1,4 @@
 parsers-definitions
 isNotYetSpecified
-	^ super isNotYetSpecified ==> [ :ignore | ViennaNode label: 'IsNotYetSpecified' ]
+	^ super isNotYetSpecified
+		=>> [ :start :end :ignore | ViennaNode label: 'IsNotYetSpecified' start: start end: end ]

@@ -1,3 +1,9 @@
 parsers-patterns
 recordPattern
-	^ super recordPattern ==> [ :array | ViennaNode label: 'RecordPattern' withAll: array ]
+	^ super recordPattern
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'RecordPattern'
+				start: start
+				end: end
+				withAll: array ]

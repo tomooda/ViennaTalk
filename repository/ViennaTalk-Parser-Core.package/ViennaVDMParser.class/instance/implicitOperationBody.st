@@ -1,3 +1,9 @@
 parsers-definitions
 implicitOperationBody
-	^ super implicitOperationBody ==> [ :array | ViennaNode label: 'ImplicitOperationBody' withAll: array ]
+	^ super implicitOperationBody
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'ImplicitOperationBody'
+				start: start
+				end: end
+				withAll: array ]

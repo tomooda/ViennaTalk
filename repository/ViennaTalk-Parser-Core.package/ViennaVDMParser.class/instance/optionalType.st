@@ -1,3 +1,9 @@
 parsers-types
 optionalType
-	^ super optionalType ==> [ :ast | ViennaNode label: 'OptionalType' with: ast ]
+	^ super optionalType
+		=>> [ :start :end :ast | 
+			ViennaNode
+				label: 'OptionalType'
+				start: start
+				end: end
+				with: ast ]

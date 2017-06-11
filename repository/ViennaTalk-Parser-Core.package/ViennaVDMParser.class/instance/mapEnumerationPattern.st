@@ -1,3 +1,8 @@
 parsers-patterns
 mapEnumerationPattern
-	^ super mapEnumerationPattern ==> [ :array | ViennaNode label: 'MapEnumerationPattern' withAll: array ]
+	^ super mapEnumerationPattern
+		=>> [:start :end :array | 
+			ViennaNode
+				label: 'MapEnumerationPattern'
+				 start: start end: end 
+				withAll: array ]

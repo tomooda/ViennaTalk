@@ -1,3 +1,5 @@
 parsers-definitions
 isSubclassResponsibility
-	^ super isSubclassResponsibility ==> [ :ignore | ViennaNode label: 'IsSubclassResponsibility' ]
+	^ super isSubclassResponsibility
+		=>>
+			[ :start :end :ignore | ViennaNode label: 'IsSubclassResponsibility' start: start end: end ]

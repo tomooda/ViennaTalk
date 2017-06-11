@@ -1,3 +1,9 @@
 parsers-definitions
 localDefinitionList
-	^ super localDefinitionList ==> [ :array | ViennaNode label: 'LocalDefinitionList' withAll: array ]
+	^ super localDefinitionList
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'LocalDefinitionList'
+				start: start
+				end: end
+				withAll: array ]

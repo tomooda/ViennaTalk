@@ -1,3 +1,9 @@
 parsers-types
 inmapType
-	^ super inmapType ==> [ :array | ViennaNode label: 'InmapType' withAll: array ]
+	^ super inmapType
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'InmapType'
+				start: start
+				end: end
+				withAll: array ]

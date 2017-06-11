@@ -1,3 +1,9 @@
 parsers-definitions
 equalDefinitionList
-	^ super equalDefinitionList ==> [ :array | ViennaNode label: 'EqualDefinitionList' withAll: array ]
+	^ super equalDefinitionList
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'EqualDefinitionList'
+				start: start
+				end: end
+				withAll: array ]

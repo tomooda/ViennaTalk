@@ -1,3 +1,9 @@
 parsers-statements
 returnStatement
-	^ super returnStatement ==> [ :expr | ViennaNode label: 'ReturnStatement' with: expr ]
+	^ super returnStatement
+		=>> [ :start :end :expr | 
+			ViennaNode
+				label: 'ReturnStatement'
+				start: start
+				end: end
+				with: expr ]

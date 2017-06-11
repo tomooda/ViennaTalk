@@ -1,3 +1,9 @@
 parsers-statements
 traps
-	^ super traps ==> [ :array | ViennaNode label: 'Traps' withAll: array ]
+	^ super traps
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'Traps'
+				start: start
+				end: end
+				withAll: array ]

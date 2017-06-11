@@ -1,3 +1,9 @@
 parsers-patterns
 setBind
-	^ super setBind ==> [ :array | ViennaNode label: 'SetBind' withAll: array ]
+	^ super setBind
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'SetBind'
+				start: start
+				end: end
+				withAll: array ]

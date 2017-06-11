@@ -1,3 +1,9 @@
 parsers-statements
 whileLoop
-	^ super whileLoop ==> [ :array | ViennaNode label: 'WhileLoop' withAll: array ]
+	^ super whileLoop
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'WhileLoop'
+				start: start
+				end: end
+				withAll: array ]

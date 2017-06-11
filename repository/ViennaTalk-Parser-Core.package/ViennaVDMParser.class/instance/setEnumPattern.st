@@ -1,3 +1,9 @@
 parsers-patterns
 setEnumPattern
-	^ super setEnumPattern ==> [ :array | ViennaNode label: 'SetEnumPattern' withAll: array ]
+	^ super setEnumPattern
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'SetEnumPattern'
+				start: start
+				end: end
+				withAll: array ]

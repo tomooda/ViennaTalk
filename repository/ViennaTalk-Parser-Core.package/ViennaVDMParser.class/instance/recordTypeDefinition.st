@@ -1,3 +1,9 @@
 parsers-definitions
 recordTypeDefinition
-	^ super recordTypeDefinition ==> [ :array | ViennaNode label: 'RecordTypeDefinition' withAll: array ]
+	^ super recordTypeDefinition
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'RecordTypeDefinition'
+				start: start
+				end: end
+				withAll: array ]

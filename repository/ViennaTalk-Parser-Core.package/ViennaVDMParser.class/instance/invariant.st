@@ -1,3 +1,9 @@
 parsers-definitions
 invariant
-	^ super invariant ==> [ :inv | ViennaNode label: 'Invariant' with: inv ]
+	^ super invariant
+		=>> [ :start :end :inv | 
+			ViennaNode
+				label: 'Invariant'
+				start: start
+				end: end
+				with: inv ]

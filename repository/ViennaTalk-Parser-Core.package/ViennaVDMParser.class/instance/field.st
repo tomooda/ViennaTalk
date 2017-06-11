@@ -1,3 +1,9 @@
 parsers-types
 field
-	^ super field ==> [ :array | ViennaNode label: 'Field' withAll: array ]
+	^ super field
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'Field'
+				start: start
+				end: end
+				withAll: array ]

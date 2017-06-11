@@ -1,3 +1,9 @@
 parsers-patterns
 tuplePattern
-	^ super tuplePattern ==> [ :array | ViennaNode label: 'TuplePattern' with: (ViennaNode label: 'PatternList' withAll: array) ]
+	^ super tuplePattern
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'TuplePattern'
+				start: start
+				end: end
+				with: (ViennaNode label: 'PatternList' withAll: array) ]
