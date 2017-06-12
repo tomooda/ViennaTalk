@@ -117,4 +117,4 @@ defineMethodFromOperation: opName in: theClass protocol: protocolString fromFlat
 						nextPutAll: bodyString ])
 		in: theClass
 		protocol: protocolString
-		node: aViennaNode fifth
+		node: aViennaNode fourth
