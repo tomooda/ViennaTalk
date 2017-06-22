@@ -3,9 +3,9 @@
 	"super" : "Object",
 	"category" : "ViennaTalk-Parser-Code Generators",
 	"classinstvars" : [
-		"viennaEnv",
+		"specificationDict",
 		"specification",
-		"nodeDict"
+		"viennaEnv"
 	],
 	"pools" : [ ],
 	"classvars" : [ ],

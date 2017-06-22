@@ -2,16 +2,19 @@ code generation-statements
 casesStatement: aViennaNode env: aDictionary
 	| valueExpr patternListAndStatements defaultStatement varGenerator valueVar foundVar |
 	valueExpr := self generate: aViennaNode first env: aDictionary.
-	patternListAndStatements := self generate: aViennaNode second env: aDictionary.
+	patternListAndStatements := self
+		generate: aViennaNode second
+		env: aDictionary.
 	defaultStatement := self generate: aViennaNode third env: aDictionary.
 	varGenerator := self
 		varNameGenerator: 'cases'
-		uniqueIn: (Array with: valueExpr with: (defaultStatement ifNil: [ '' ])) , (patternListAndStatements collect: #second).
+		uniqueIn:
+			(Array with: valueExpr with: (defaultStatement ifNil: [ '' ]))
+				, (patternListAndStatements collect: #second).
 	valueVar := varGenerator value.
 	foundVar := varGenerator value.
-	^ String
-		new: 1024
-		streamContents: [ :stream | 
+	^ self
+		stringStreamContents: [ :stream | 
 			stream
 				nextPutAll: '(';
 				nextPutAll: valueExpr;

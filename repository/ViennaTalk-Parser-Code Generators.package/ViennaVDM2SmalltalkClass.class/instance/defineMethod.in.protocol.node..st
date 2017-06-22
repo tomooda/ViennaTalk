@@ -2,6 +2,6 @@ utilities
 defineMethod: aString in: aClass protocol: protocol node: aViennaNode
 	| selector |
 	selector := aClass
-		compile: (RBParser parseMethod: aString) formattedCode
+		compile: (RBParser parseMethod: aString asString) formattedCode
 		classified: protocol.
-	aClass nodeAt: selector put: aViennaNode
+	aClass specificationAt: selector put: aViennaNode

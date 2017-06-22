@@ -35,9 +35,8 @@ stateDefinition: aViennaNode env: aDictionary
 	(quin fourth notNil or: [ runtimeTypeCheck = true ])
 		ifTrue: [ self
 				defineMethod:
-					(String
-						new: 1024
-						streamContents: [ :stream | 
+					(self
+						stringStreamContents: [ :stream | 
 							stream
 								nextPutAll: 'inv';
 								cr.

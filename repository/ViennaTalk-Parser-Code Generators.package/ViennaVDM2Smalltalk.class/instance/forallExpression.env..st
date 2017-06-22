@@ -3,13 +3,17 @@ forallExpression: aViennaNode env: aDictionary
 	| bindListNode expr varGenerator pair flatBinds setsAndVars |
 	bindListNode := aViennaNode first.
 	expr := self generate: aViennaNode second env: aDictionary.
-	varGenerator := self varNameGenerator: 'forall' uniqueIn: (Array with: expr).
-	pair := self flattenBindList: bindListNode varGenerator: varGenerator env: aDictionary.
+	varGenerator := self
+		varNameGenerator: 'forall'
+		uniqueIn: (Array with: expr).
+	pair := self
+		flattenBindList: bindListNode
+		varGenerator: varGenerator
+		env: aDictionary.
 	flatBinds := pair first.
 	setsAndVars := pair second.
-	^ String
-		new: 1024
-		streamContents: [ :stream | 
+	^ self
+		stringStreamContents: [ :stream | 
 			stream nextPutAll: '(['.
 			setsAndVars
 				do: [ :setAndVar | 
@@ -19,13 +23,13 @@ forallExpression: aViennaNode env: aDictionary
 			stream
 				nextPutAll: ' | ';
 				nextPutAll:
-						(self
-								generatorFromFlatBinds: flatBinds
-								selector: #allSatisfy:
-								whenMatchFailed: 'true'
-								body: expr
-								varGenerator: varGenerator
-								env: aDictionary);
+					(self
+						generatorFromFlatBinds: flatBinds
+						selector: #allSatisfy:
+						whenMatchFailed: 'true'
+						body: expr
+						varGenerator: varGenerator
+						env: aDictionary);
 				nextPutAll: ']'.
 			setsAndVars
 				do: [ :setAndVar | 

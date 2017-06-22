@@ -5,9 +5,8 @@ trapStatement: aViennaNode env: aDictionary
 	pattern := self generate: aViennaNode first env: aDictionary.
 	handler := self generate: aViennaNode second env: aDictionary.
 	statement := self generate: aViennaNode third env: aDictionary.
-	^ String
-		new: 1024
-		streamContents: [ :stream | 
+	^ self
+		stringStreamContents: [ :stream | 
 			stream
 				nextPutAll: '(ViennaException trap: ';
 				nextPutAll: pattern;
@@ -20,7 +19,9 @@ trapStatement: aViennaNode env: aDictionary
 								nextPutAll: var;
 								space ].
 					stream nextPutAll: '| ' ].
-			stream nextPutAll: 'trap ifEmpty: [ViennaNoMatch signal] ifNotEmpty: [ | with | with := trap first.'.
+			stream
+				nextPutAll:
+					'trap ifEmpty: [ViennaNoMatch signal] ifNotEmpty: [ | with | with := trap first.'.
 			matchVars
 				do: [ :var | 
 					stream

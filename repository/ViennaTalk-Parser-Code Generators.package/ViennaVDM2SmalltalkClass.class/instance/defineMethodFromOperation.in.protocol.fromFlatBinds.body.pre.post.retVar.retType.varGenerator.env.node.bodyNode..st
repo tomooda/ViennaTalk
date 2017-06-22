@@ -1,5 +1,5 @@
 utilities
-defineMethodFromOperation: opName in: theClass protocol: protocolString fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode body: bodyString pre: preString post: postString retVar: retVarName retType: typeNode varGenerator: varGenerator env: aDictionary node: aViennaNode
+defineMethodFromOperation: opName in: theClass protocol: protocolString fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode body: bodyString pre: preString post: postString retVar: retVarName retType: typeNode varGenerator: varGenerator env: aDictionary node: aViennaNode bodyNode: aViennaNode2
 	| tmpVars matchPatternNodes isFirstArg tuplePattern matchVars argVars formalArgs |
 	tmpVars := OrderedCollection new.
 	matchPatternNodes := OrderedCollection new.
@@ -7,9 +7,8 @@ defineMethodFromOperation: opName in: theClass protocol: protocolString fromFlat
 	formalArgs := OrderedCollection new.
 	self
 		defineMethod:
-			(String
-				new: 1024
-				streamContents: [ :stream | 
+			(self
+				stringStreamContents: [ :stream | 
 					stream nextPutAll: opName.
 					anArrayOfPatternNodeAndTypeSetNode isEmpty
 						ifTrue: [ stream nextPutAll: ': ' , varGenerator value ].
@@ -88,7 +87,9 @@ defineMethodFromOperation: opName in: theClass protocol: protocolString fromFlat
 						ifTrue: [ stream
 								nextPutAll: '(';
 								nextPutAll: (self generate: typeNode env: aDictionary);
-								nextPutAll: ' includes: ' , retVarName , ') ifFalse: [ViennaRuntimeTypeError signal].' ].
+								nextPutAll:
+									' includes: ' , retVarName
+										, ') ifFalse: [ViennaRuntimeTypeError signal].' ].
 					postString
 						ifNotNil: [ stream
 								nextPutAll: '(';
@@ -100,9 +101,8 @@ defineMethodFromOperation: opName in: theClass protocol: protocolString fromFlat
 		node: aViennaNode.
 	^ self
 		defineMethod:
-			(String
-				new: 1024
-				streamContents: [ :stream | 
+			(self
+				stringStreamContents: [ :stream | 
 					stream
 						nextPut: $_;
 						nextPutAll: opName.
@@ -117,4 +117,4 @@ defineMethodFromOperation: opName in: theClass protocol: protocolString fromFlat
 						nextPutAll: bodyString ])
 		in: theClass
 		protocol: protocolString
-		node: aViennaNode fourth
+		node: aViennaNode2

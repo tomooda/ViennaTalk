@@ -1,0 +1,4 @@
+building actions
+vdmSourceActionsPragmas
+
+	^ #( vdmSourceDebuggingAction )

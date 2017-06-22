@@ -4,14 +4,18 @@ setComprehension: aViennaNode env: aDictionary
 	expr := self generate: aViennaNode first env: aDictionary.
 	bindListNode := aViennaNode second.
 	guard := self generate: aViennaNode third env: aDictionary.
-	varGenerator := self varNameGenerator: 'set' uniqueIn: (Array with: expr) , (Array with: (guard ifNil: [ '' ])).
+	varGenerator := self
+		varNameGenerator: 'set'
+		uniqueIn: (Array with: expr) , (Array with: (guard ifNil: [ '' ])).
 	set := varGenerator value.
-	pair := self flattenBindList: bindListNode varGenerator: varGenerator env: aDictionary.
+	pair := self
+		flattenBindList: bindListNode
+		varGenerator: varGenerator
+		env: aDictionary.
 	flatBinds := pair first.
 	setsAndVars := pair second.
-	^ String
-		new: 1024
-		streamContents: [ :stream | 
+	^ self
+		stringStreamContents: [ :stream | 
 			| body |
 			body := set , ' add: ' , expr.
 			guard ifNotNil: [ body := guard , ' ifTrue: [' , body , ']' ].
@@ -24,11 +28,11 @@ setComprehension: aViennaNode env: aDictionary
 			stream
 				nextPutAll: ' | | ' , set , ' | ' , set , ' :=Set new.';
 				nextPutAll:
-						(self
-								generatorFromFlatBinds: flatBinds
-								body: body
-								varGenerator: varGenerator
-								env: aDictionary);
+					(self
+						generatorFromFlatBinds: flatBinds
+						body: body
+						varGenerator: varGenerator
+						env: aDictionary);
 				nextPutAll: '. ';
 				nextPutAll: set;
 				nextPutAll: ']'.

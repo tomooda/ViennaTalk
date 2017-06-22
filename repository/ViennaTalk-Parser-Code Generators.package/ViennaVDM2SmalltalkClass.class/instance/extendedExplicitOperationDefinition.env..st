@@ -1,6 +1,6 @@
 code generation-definitions
 extendedExplicitOperationDefinition: aViennaNode env: aDictionary
-	| opname patternTypePairListNode retVar retTypeNode body preNode postNode varGenerator binds theClass |
+	| opname patternTypePairListNode retVar retTypeNode bodyNode body preNode postNode varGenerator binds theClass |
 	opname := aViennaNode first.
 	patternTypePairListNode := aViennaNode second first
 		ifNil: [ Array new ].
@@ -10,7 +10,8 @@ extendedExplicitOperationDefinition: aViennaNode env: aDictionary
 	retTypeNode := aViennaNode third
 		ifNil: [ ViennaNode label: 'UnitType' ]
 		ifNotNil: [ :node | node second ].
-	body := self generate: aViennaNode fourth.
+	bodyNode := aViennaNode fourth.
+	body := self generate: bodyNode.
 	preNode := aViennaNode sixth.
 	postNode := aViennaNode seventh.
 	varGenerator := self
@@ -51,15 +52,16 @@ extendedExplicitOperationDefinition: aViennaNode env: aDictionary
 		retVar: retVar
 		retType: retTypeNode
 		varGenerator: varGenerator
-		env: aDictionary node: aViennaNode.
+		env: aDictionary
+		node: aViennaNode
+		bodyNode: bodyNode.
 	self
 		defineLazyMethodNamed: opname
 		initializer:
 			opname , ' := '
 				,
-					(String
-						new: 1024
-						streamContents: [ :stream | 
+					(self
+						stringStreamContents: [ :stream | 
 							stream nextPut: $[.
 							1 to: binds size do: [ :i | 
 								stream
@@ -89,9 +91,8 @@ extendedExplicitOperationDefinition: aViennaNode env: aDictionary
 			self
 				defineLazyMethodNamed: 'pre_' , opname
 				initializer:
-					(String
-						new: 1024
-						streamContents: [ :stream | 
+					(self
+						stringStreamContents: [ :stream | 
 							stream
 								nextPutAll: 'pre_';
 								nextPutAll: opname;
@@ -117,9 +118,8 @@ extendedExplicitOperationDefinition: aViennaNode env: aDictionary
 			self
 				defineLazyMethodNamed: 'post_' , opname
 				initializer:
-					(String
-						new: 1024
-						streamContents: [ :stream | 
+					(self
+						stringStreamContents: [ :stream | 
 							stream
 								nextPutAll: 'post_';
 								nextPutAll: opname;

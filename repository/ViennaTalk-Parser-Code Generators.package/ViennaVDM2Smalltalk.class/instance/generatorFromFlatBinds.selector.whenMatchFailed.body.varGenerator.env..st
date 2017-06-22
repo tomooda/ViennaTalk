@@ -1,8 +1,7 @@
 utilities
 generatorFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode selector: aSymbol whenMatchFailed: failString body: aString varGenerator: varGenerator env: aDictionary
-	^ String
-		new: 1024
-		streamContents: [ :stream | 
+	^ self
+		stringStreamContents: [ :stream | 
 			| numParens tmpVars matchPatternNodes tuplePattern matchVars |
 			numParens := 0.
 			tmpVars := OrderedCollection new.
@@ -12,45 +11,44 @@ generatorFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode selector: aSymbol whe
 				patternNodeAndSetOrTypeNodeAndBindTypesDo: [ :patternNode :setNode :bindType | 
 					stream
 						nextPutAll:
-								(setNode label = 'SetRangeExpression'
-										ifTrue: [ 
+							(setNode label = 'SetRangeExpression'
+								ifTrue: [ (aSymbol = #do:
+										ifTrue: [ '' ]
+										ifFalse: [ '(' ])
+										, (self intervalExpression: setNode env: aDictionary)
+										,
 											(aSymbol = #do:
 												ifTrue: [ '' ]
-												ifFalse: [ '(' ]) , (self intervalExpression: setNode env: aDictionary)
+												ifFalse: [ ')' ]) ]
+								ifFalse: [ setNode label = 'SequenceIndices'
+										ifTrue: [ (aSymbol = #do:
+												ifTrue: [ '' ]
+												ifFalse: [ '(' ])
+												, (self indicesExpression: setNode env: aDictionary)
 												,
 													(aSymbol = #do:
 														ifTrue: [ '' ]
 														ifFalse: [ ')' ]) ]
-										ifFalse: [ 
-											setNode label = 'SequenceIndices'
-												ifTrue: [ 
-													(aSymbol = #do:
-														ifTrue: [ '' ]
-														ifFalse: [ '(' ]) , (self indicesExpression: setNode env: aDictionary)
-														,
-															(aSymbol = #do:
-																ifTrue: [ '' ]
-																ifFalse: [ ')' ]) ]
-												ifFalse: [ self generate: setNode env: aDictionary ] ]);
+										ifFalse: [ self generate: setNode env: aDictionary ] ]);
 						nextPut: Character space;
 						nextPutAll: aSymbol;
 						nextPutAll: ' [ :'.
 					bindType = #identifier
 						ifTrue: [ stream nextPutAll: patternNode first ].
 					bindType = #compound
-						ifTrue: [ 
-							| tmpVar |
+						ifTrue: [ | tmpVar |
 							tmpVar := varGenerator value.
 							tmpVars add: tmpVar.
 							matchPatternNodes add: patternNode.
 							stream nextPutAll: tmpVar ].
 					stream nextPutAll: ' | '.
 					numParens := numParens + 1 ].
-			tuplePattern := ViennaNode label: 'TuplePattern' with: (ViennaNode label: 'PatternList' withAll: matchPatternNodes).
+			tuplePattern := ViennaNode
+				label: 'TuplePattern'
+				with: (ViennaNode label: 'PatternList' withAll: matchPatternNodes).
 			matchVars := (self boundVariables: tuplePattern) asArray.
 			matchVars notEmpty
-				ifTrue: [ 
-					stream nextPutAll: ' | '.
+				ifTrue: [ stream nextPutAll: ' | '.
 					matchVars
 						do: [ :var | 
 							stream
@@ -59,10 +57,12 @@ generatorFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode selector: aSymbol whe
 					stream
 						nextPutAll: '| ';
 						nextPutAll:
-								(self binder: (self generate: tuplePattern env: aDictionary) with: '{' , (' . ' join: tmpVars) , '}' vars: matchVars).
+							(self
+								binder: (self generate: tuplePattern env: aDictionary)
+								with: '{' , (' . ' join: tmpVars) , '}'
+								vars: matchVars).
 					failString
-						ifNotNil: [ 
-							stream
+						ifNotNil: [ stream
 								nextPutAll: ' ifFalse: [';
 								nextPutAll: failString;
 								nextPutAll: ']' ].

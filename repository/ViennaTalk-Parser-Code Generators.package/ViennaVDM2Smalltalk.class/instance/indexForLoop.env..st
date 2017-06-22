@@ -6,17 +6,15 @@ indexForLoop: aViennaNode env: aDictionary
 	end := self generate: aViennaNode third env: aDictionary.
 	step := self generate: aViennaNode fourth env: aDictionary.
 	body := self generate: aViennaNode fifth env: aDictionary.
-	^ String
-		new: 1024
-		streamContents: [ :stream | 
+	^ self
+		stringStreamContents: [ :stream | 
 			stream
 				nextPut: Character space;
 				nextPutAll: start;
 				nextPutAll: ' to: ';
 				nextPutAll: end.
 			step
-				ifNotNil: [ 
-					stream
+				ifNotNil: [ stream
 						nextPutAll: ' by: ';
 						nextPutAll: step ].
 			stream

@@ -25,7 +25,7 @@ explicitOperationDefinition: aViennaNode env: aDictionary
 					argTypeNode}} ] ].
 	theClass := classes at: (aViennaNode module ifNotNil: #first).
 	self
-		defineMethodFromOperation: opname
+		defineMethodFromExplicitOperation: opname
 		in: theClass
 		protocol: 'operations'
 		fromFlatBinds: binds
@@ -49,9 +49,8 @@ explicitOperationDefinition: aViennaNode env: aDictionary
 		initializer:
 			opname , ' := '
 				,
-					(String
-						new: 1024
-						streamContents: [ :stream | 
+					(self
+						stringStreamContents: [ :stream | 
 							stream nextPut: $[.
 							1 to: binds size do: [ :i | 
 								stream
@@ -81,9 +80,8 @@ explicitOperationDefinition: aViennaNode env: aDictionary
 			self
 				defineLazyMethodNamed: 'pre_' , opname
 				initializer:
-					(String
-						new: 1024
-						streamContents: [ :stream | 
+					(self
+						stringStreamContents: [ :stream | 
 							stream
 								nextPutAll: 'pre_';
 								nextPutAll: opname;
@@ -109,9 +107,8 @@ explicitOperationDefinition: aViennaNode env: aDictionary
 			self
 				defineLazyMethodNamed: 'post_' , opname
 				initializer:
-					(String
-						new: 1024
-						streamContents: [ :stream | 
+					(self
+						stringStreamContents: [ :stream | 
 							stream
 								nextPutAll: 'post_';
 								nextPutAll: opname;

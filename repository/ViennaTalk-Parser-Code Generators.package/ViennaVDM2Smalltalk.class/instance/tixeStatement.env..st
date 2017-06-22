@@ -3,9 +3,8 @@ tixeStatement: aViennaNode env: aDictionary
 	| patternHandlersNode statementNode |
 	patternHandlersNode := aViennaNode first.
 	statementNode := aViennaNode second.
-	^ String
-		new: 1024
-		streamContents: [ :stream | 
+	^ self
+		stringStreamContents: [ :stream | 
 			stream nextPutAll: '(ViennaException tixe: {'.
 			1 to: aViennaNode first size by: 2 do: [ :index | 
 				| patternNode handlerNode matchVars |

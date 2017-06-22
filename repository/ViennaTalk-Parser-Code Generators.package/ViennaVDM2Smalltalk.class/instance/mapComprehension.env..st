@@ -11,12 +11,14 @@ mapComprehension: aViennaNode env: aDictionary
 			{keyExpr.
 			valueExpr} , {(guard ifNil: [ '' ])}.
 	map := varGenerator value.
-	pair := self flattenBindList: bindListNode varGenerator: varGenerator env: aDictionary.
+	pair := self
+		flattenBindList: bindListNode
+		varGenerator: varGenerator
+		env: aDictionary.
 	flatBinds := pair first.
 	setsAndVars := pair second.
-	^ String
-		new: 1024
-		streamContents: [ :stream | 
+	^ self
+		stringStreamContents: [ :stream | 
 			| body |
 			body := map , ' at: ' , keyExpr , ' put: ' , valueExpr.
 			guard ifNotNil: [ body := guard , ' ifTrue: [' , body , ']' ].
@@ -29,11 +31,11 @@ mapComprehension: aViennaNode env: aDictionary
 			stream
 				nextPutAll: ' | | ' , map , ' | ' , map , ' :=Dictionary new.';
 				nextPutAll:
-						(self
-								generatorFromFlatBinds: flatBinds
-								body: body
-								varGenerator: varGenerator
-								env: aDictionary);
+					(self
+						generatorFromFlatBinds: flatBinds
+						body: body
+						varGenerator: varGenerator
+						env: aDictionary);
 				nextPutAll: '. ';
 				nextPutAll: map;
 				nextPutAll: ']'.

@@ -2,12 +2,14 @@ code generation-expressions
 letBeExpression: aViennaNode env: aDictionary
 	| multibind guard expr varGenerator |
 	multibind := self generate: aViennaNode first env: aDictionary.
-	guard := (self generate: aViennaNode second env: aDictionary) ifNil: [ 'true' ].
+	guard := (self generate: aViennaNode second env: aDictionary)
+		ifNil: [ 'true' ].
 	expr := self generate: aViennaNode third env: aDictionary.
-	varGenerator := self varNameGenerator: 'letbe' uniqueIn: (Array with: multibind second with: guard with: expr).
-	^ String
-		new: 1024
-		streamContents: [ :stream | 
+	varGenerator := self
+		varNameGenerator: 'letbe'
+		uniqueIn: (Array with: multibind second with: guard with: expr).
+	^ self
+		stringStreamContents: [ :stream | 
 			| patterns set vars |
 			patterns := multibind first.
 			set := multibind second.
@@ -26,7 +28,11 @@ letBeExpression: aViennaNode env: aDictionary
 						nextPutAll: ' anySatisfy: [:';
 						nextPutAll: loopVar;
 						nextPutAll: '|';
-						nextPutAll: (self binder: pat with: loopVar vars: (self boundVariables: patternNode) asArray);
+						nextPutAll:
+							(self
+								binder: pat
+								with: loopVar
+								vars: (self boundVariables: patternNode) asArray);
 						nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ].
 			stream nextPutAll: guard.
 			multibind first do: [ :pat | stream nextPut: $] ].

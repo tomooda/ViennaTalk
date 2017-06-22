@@ -2,7 +2,8 @@ code generation-definitions
 implicitOperationDefinition: aViennaNode env: aDictionary
 	| opName patternTypePairListNode identifierTypePairListNode retVarName retTypeNode preNode postNode body binds varGenerator preBody postBody |
 	opName := aViennaNode first.
-	patternTypePairListNode := aViennaNode second first ifNil: [ Array new ].
+	patternTypePairListNode := aViennaNode second first
+		ifNil: [ Array new ].
 	identifierTypePairListNode := aViennaNode third
 		ifNil: [ {'RESULT'.
 			(ViennaNode label: 'UnitType')} ].
@@ -15,7 +16,8 @@ implicitOperationDefinition: aViennaNode env: aDictionary
 	preNode
 		ifNotNil: [ preBody := self generate: preNode env: aDictionary.
 			runtimeAssertionCheck = true
-				ifTrue: [ body := preBody , 'ifFalse: [ViennaPreconditionViolation signal]. ' , body ] ].
+				ifTrue: [ body := preBody , 'ifFalse: [ViennaPreconditionViolation signal]. '
+						, body ] ].
 	postBody := self generate: postNode env: aDictionary.
 	varGenerator := self
 		varNameGenerator: 'func'
@@ -53,14 +55,15 @@ implicitOperationDefinition: aViennaNode env: aDictionary
 						,
 							((1 to: identifierTypePairListNode size by: 2)
 								collect: [ :index | 
-									{(ViennaNode label: 'PatternIdentifier' with: (identifierTypePairListNode at: index)).
+									{(ViennaNode
+										label: 'PatternIdentifier'
+										with: (identifierTypePairListNode at: index)).
 									(identifierTypePairListNode at: index + 1)} ])
 				body: postBody
 				varGenerator: varGenerator
 				env: aDictionary ].
-	^ String
-		new: 1024
-		streamContents: [ :stream | 
+	^ self
+		stringStreamContents: [ :stream | 
 			| env |
 			env := aDictionary copy.
 			aViennaNode

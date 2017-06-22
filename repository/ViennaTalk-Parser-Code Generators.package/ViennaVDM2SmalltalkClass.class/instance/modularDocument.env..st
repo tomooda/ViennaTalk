@@ -14,9 +14,8 @@ modularDocument: aViennaNode env: aDictionary
 	aViennaNode do: [ :node | self generate: node env: aDictionary ].
 	self
 		defineMethod:
-			(String
-				new: 1024
-				streamContents: [ :stream | 
+			(self
+				stringStreamContents: [ :stream | 
 					stream
 						nextPutAll: 'initialize';
 						cr;

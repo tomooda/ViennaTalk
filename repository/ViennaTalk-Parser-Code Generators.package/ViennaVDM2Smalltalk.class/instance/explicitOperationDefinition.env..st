@@ -13,26 +13,31 @@ explicitOperationDefinition: aViennaNode env: aDictionary
 	preNode
 		ifNotNil: [ preBody := self generate: preNode env: aDictionary.
 			runtimeAssertionCheck = true
-				ifTrue: [ body := preBody , ' ifFalse: [ViennaPreconditionViolation signal]. ' , body ] ].
+				ifTrue: [ body := preBody , ' ifFalse: [ViennaPreconditionViolation signal]. '
+						, body ] ].
 	postNode
 		ifNotNil: [ postBody := self generate: postNode env: aDictionary.
 			runtimeAssertionCheck = true
 				ifTrue: [ runtimeTypeCheck = true
-						ifTrue: [ body := '[|_oldState RESULT| _oldState := ' , self getStateCode , '. RESULT := ['
-								, body , '] value. (' , (self generate: retTypeNode env: aDictionary)
-								, ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. (' , postBody
+						ifTrue: [ body := '[|_oldState RESULT| _oldState := ' , self getStateCode
+								, '. RESULT := [' , body , '] value. ('
+								, (self generate: retTypeNode env: aDictionary)
+								, ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. ('
+								, postBody
 								, ') ifFalse: [ViennaPostconditionViolation signal]. RESULT] value' ]
-						ifFalse: [ body := '[|_oldState RESULT| _oldState := ' , self getStateCode , '. RESULT := ['
-								, body , '] value. (' , postBody
+						ifFalse: [ body := '[|_oldState RESULT| _oldState := ' , self getStateCode
+								, '. RESULT := [' , body , '] value. (' , postBody
 								, ') ifFalse: [ViennaPostconditionViolation signal]. RESULT] value' ] ]
 				ifFalse: [ runtimeTypeCheck = true
 						ifTrue: [ body := '[|RESULT| RESULT := [' , body , '] value. ('
 								, (self generate: retTypeNode env: aDictionary)
-								, ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. RESULT] value' ] ] ]
+								,
+									' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. RESULT] value' ] ] ]
 		ifNil: [ (runtimeTypeCheck = true and: [ retTypeNode label ~= 'UnitType' ])
 				ifTrue: [ body := '[|RESULT| RESULT := [' , body , '] value. ('
 						, (self generate: retTypeNode env: aDictionary)
-						, ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. RESULT] value' ] ].
+						,
+							' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. RESULT] value' ] ].
 	varGenerator := self
 		varNameGenerator: 'op'
 		uniqueIn:
@@ -47,9 +52,8 @@ explicitOperationDefinition: aViennaNode env: aDictionary
 							(argTypeNode at: index)} ] ]
 				ifFalse: [ {{paramsNode first.
 					argTypeNode}} ] ].
-	^ String
-		new: 1024
-		streamContents: [ :stream | 
+	^ self
+		stringStreamContents: [ :stream | 
 			| env |
 			env := aDictionary copy.
 			aViennaNode

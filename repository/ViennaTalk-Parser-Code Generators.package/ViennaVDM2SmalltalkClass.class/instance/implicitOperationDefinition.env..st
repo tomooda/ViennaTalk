@@ -1,10 +1,11 @@
 code generation-definitions
 implicitOperationDefinition: aViennaNode env: aDictionary
-	| opname patternTypePairListNode retVar retTypeNode body preNode postNode varGenerator binds theClass |
+	| opname patternTypePairListNode retVar retTypeNode bodyNode body preNode postNode varGenerator binds theClass |
 	opname := aViennaNode first.
 	patternTypePairListNode := aViennaNode second first.
 	retVar := aViennaNode third first.
 	retTypeNode := aViennaNode third second.
+	bodyNode := aViennaNode.
 	body := 'ViennaImplicitEvaluationError signal: '
 		, (opname , ' is implicitly defined.') storeString.
 	preNode := aViennaNode fourth second.
@@ -48,15 +49,15 @@ implicitOperationDefinition: aViennaNode env: aDictionary
 		retType: retTypeNode
 		varGenerator: varGenerator
 		env: aDictionary
-		node: aViennaNode.
+		node: aViennaNode
+		bodyNode: bodyNode.
 	self
 		defineLazyMethodNamed: opname
 		initializer:
 			opname , ' := '
 				,
-					(String
-						new: 1024
-						streamContents: [ :stream | 
+					(self
+						stringStreamContents: [ :stream | 
 							stream nextPut: $[.
 							1 to: binds size do: [ :i | 
 								stream
@@ -86,9 +87,8 @@ implicitOperationDefinition: aViennaNode env: aDictionary
 			self
 				defineLazyMethodNamed: 'pre_' , opname
 				initializer:
-					(String
-						new: 1024
-						streamContents: [ :stream | 
+					(self
+						stringStreamContents: [ :stream | 
 							stream
 								nextPutAll: 'pre_';
 								nextPutAll: opname;
@@ -114,9 +114,8 @@ implicitOperationDefinition: aViennaNode env: aDictionary
 			self
 				defineLazyMethodNamed: 'post_' , opname
 				initializer:
-					(String
-						new: 1024
-						streamContents: [ :stream | 
+					(self
+						stringStreamContents: [ :stream | 
 							stream
 								nextPutAll: 'post_';
 								nextPutAll: opname;

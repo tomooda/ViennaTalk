@@ -2,18 +2,20 @@ code generation-expressions
 casesExpression: aViennaNode env: aDictionary
 	| valueExpr patternListAndExpressions defaultExpression varGenerator valueVar foundVar resultVar |
 	valueExpr := self generate: aViennaNode first env: aDictionary.
-	patternListAndExpressions := self generate: aViennaNode second env: aDictionary.
+	patternListAndExpressions := self
+		generate: aViennaNode second
+		env: aDictionary.
 	defaultExpression := self generate: aViennaNode third env: aDictionary.
 	varGenerator := self
 		varNameGenerator: 'cases'
 		uniqueIn:
-			(Array with: valueExpr with: (defaultExpression ifNil: [ '' ])) , (patternListAndExpressions collect: #second).
+			(Array with: valueExpr with: (defaultExpression ifNil: [ '' ]))
+				, (patternListAndExpressions collect: #second).
 	valueVar := varGenerator value.
 	foundVar := varGenerator value.
 	resultVar := varGenerator value.
-	^ String
-		new: 1024
-		streamContents: [ :stream | 
+	^ self
+		stringStreamContents: [ :stream | 
 			stream
 				nextPutAll: '(';
 				nextPutAll: valueExpr;

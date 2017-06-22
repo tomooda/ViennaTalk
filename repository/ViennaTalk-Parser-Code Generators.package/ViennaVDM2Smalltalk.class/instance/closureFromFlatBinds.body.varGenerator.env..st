@@ -1,8 +1,7 @@
 utilities
 closureFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode body: aString varGenerator: varGenerator env: aDictionary
-	^ String
-		new: 1024
-		streamContents: [ :stream | 
+	^ self
+		stringStreamContents: [ :stream | 
 			| tmpVars argVars matchPatternNodes tuplePattern matchVars |
 			tmpVars := OrderedCollection new.
 			argVars := OrderedCollection new.
@@ -12,13 +11,11 @@ closureFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode body: aString varGenera
 				fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode
 				patternNodeAndSetOrTypeNodeAndBindTypesDo: [ :patternNode :setNode :bindType | 
 					bindType = #identifier
-						ifTrue: [ 
-							stream
+						ifTrue: [ stream
 								nextPutAll: ' :';
 								nextPutAll: (argVars add: (patternNode first ifNil: [ varGenerator value ])) ].
 					bindType = #compound
-						ifTrue: [ 
-							| tmpVar |
+						ifTrue: [ | tmpVar |
 							tmpVar := varGenerator value.
 							tmpVars add: tmpVar.
 							argVars add: tmpVar.
@@ -26,12 +23,14 @@ closureFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode body: aString varGenera
 							stream
 								nextPutAll: ' :';
 								nextPutAll: tmpVar ] ].
-			tuplePattern := ViennaNode label: 'TuplePattern' with: (ViennaNode label: 'PatternList' withAll: matchPatternNodes).
+			tuplePattern := ViennaNode
+				label: 'TuplePattern'
+				with: (ViennaNode label: 'PatternList' withAll: matchPatternNodes).
 			matchVars := (self boundVariables: tuplePattern) asArray.
-			anArrayOfPatternNodeAndTypeSetNode ifNotEmpty: [ stream nextPutAll: ' | ' ].
+			anArrayOfPatternNodeAndTypeSetNode
+				ifNotEmpty: [ stream nextPutAll: ' | ' ].
 			matchVars notEmpty
-				ifTrue: [ 
-					stream nextPutAll: ' | '.
+				ifTrue: [ stream nextPutAll: ' | '.
 					matchVars
 						do: [ :var | 
 							stream
@@ -43,12 +42,15 @@ closureFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode body: aString varGenera
 				arg := argVars at: index.
 				type := (anArrayOfPatternNodeAndTypeSetNode at: index) second.
 				(type notNil and: [ runtimeTypeCheck = true ])
-					ifTrue: [ stream nextPutAll: (self generateCheck: arg type: (self generate: type env: aDictionary)) ] ].
+					ifTrue: [ stream
+							nextPutAll: (self generateCheck: arg type: (self generate: type env: aDictionary)) ] ].
 			matchVars notEmpty
-				ifTrue: [ 
-					stream
+				ifTrue: [ stream
 						nextPutAll:
-								(self binder: (self generate: tuplePattern env: aDictionary) with: '{' , (' . ' join: tmpVars) , '}' vars: matchVars);
+							(self
+								binder: (self generate: tuplePattern env: aDictionary)
+								with: '{' , (' . ' join: tmpVars) , '}'
+								vars: matchVars);
 						nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ].
 			stream
 				nextPutAll: aString;

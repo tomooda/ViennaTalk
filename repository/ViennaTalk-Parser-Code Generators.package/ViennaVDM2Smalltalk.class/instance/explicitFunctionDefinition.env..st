@@ -15,33 +15,31 @@ explicitFunctionDefinition: aViennaNode env: aDictionary
 			t ].
 	retType := typeNode.
 	preNode
-		ifNotNil: [ 
-			preBody := self generate: preNode env: aDictionary.
+		ifNotNil: [ preBody := self generate: preNode env: aDictionary.
 			runtimeAssertionCheck = true
-				ifTrue: [ body := preBody , 'ifFalse: [ViennaPreconditionViolation signal]. ' , body ] ].
+				ifTrue: [ body := preBody , 'ifFalse: [ViennaPreconditionViolation signal]. '
+						, body ] ].
 	postNode
-		ifNotNil: [ 
-			postBody := self generate: postNode env: aDictionary.
+		ifNotNil: [ postBody := self generate: postNode env: aDictionary.
 			runtimeAssertionCheck = true
-				ifTrue: [ 
-					runtimeTypeCheck = true
-						ifTrue: [ 
-							body := '[|RESULT| RESULT := [' , body , '] value. (' , (self generate: retType env: aDictionary)
-								, ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. (' , postBody
+				ifTrue: [ runtimeTypeCheck = true
+						ifTrue: [ body := '[|RESULT| RESULT := [' , body , '] value. ('
+								, (self generate: retType env: aDictionary)
+								, ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. ('
+								, postBody
 								, ') ifFalse: [ViennaPostconditionViolation signal]. RESULT] value' ]
-						ifFalse: [ 
-							body := '[|RESULT| RESULT := [' , body , '] value. (' , postBody
+						ifFalse: [ body := '[|RESULT| RESULT := [' , body , '] value. (' , postBody
 								, ') ifFalse: [ViennaPostconditionViolation signal]. RESULT] value' ] ]
-				ifFalse: [ 
-					runtimeTypeCheck = true
-						ifTrue: [ 
-							body := '[|RESULT| RESULT := [' , body , '] value. (' , (self generate: retType env: aDictionary)
-								, ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. RESULT] value' ] ] ]
-		ifNil: [ 
-			runtimeTypeCheck = true
-				ifTrue: [ 
-					body := '[|RESULT| RESULT := [' , body , '] value. (' , (self generate: retType env: aDictionary)
-						, ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. RESULT] value' ] ].
+				ifFalse: [ runtimeTypeCheck = true
+						ifTrue: [ body := '[|RESULT| RESULT := [' , body , '] value. ('
+								, (self generate: retType env: aDictionary)
+								,
+									' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. RESULT] value' ] ] ]
+		ifNil: [ runtimeTypeCheck = true
+				ifTrue: [ body := '[|RESULT| RESULT := [' , body , '] value. ('
+						, (self generate: retType env: aDictionary)
+						,
+							' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. RESULT] value' ] ].
 	varGenerator := self
 		varNameGenerator: 'func'
 		uniqueIn:
@@ -52,13 +50,11 @@ explicitFunctionDefinition: aViennaNode env: aDictionary
 		parametersNode := parametersListNode at: level.
 		argType := argTypes at: level.
 		binds := argType label = 'ProductType'
-			ifTrue: [ 
-				(1 to: parametersNode size)
+			ifTrue: [ (1 to: parametersNode size)
 					collect: [ :index | 
 						{(parametersNode at: index).
 						(argType at: index)} ] ]
-			ifFalse: [ 
-				{{(parametersNode first).
+			ifFalse: [ {{parametersNode first.
 				argType}} ].
 		body := self
 			closureFromFlatBinds: binds
@@ -66,19 +62,16 @@ explicitFunctionDefinition: aViennaNode env: aDictionary
 			varGenerator: varGenerator
 			env: aDictionary.
 		preBody
-			ifNotNil: [ 
-				preBody := self
+			ifNotNil: [ preBody := self
 					closureFromFlatBinds: binds
 					body: preBody
 					varGenerator: varGenerator
 					env: aDictionary ].
 		postBody
-			ifNotNil: [ 
-				postBody := self
+			ifNotNil: [ postBody := self
 					closureFromFlatBinds:
 						(level = parametersListNode size
-							ifTrue: [ 
-								binds
+							ifTrue: [ binds
 									,
 										{{(ViennaNode label: 'PatternIdentifier' with: 'RESULT').
 										typeNode}} ]
@@ -86,19 +79,16 @@ explicitFunctionDefinition: aViennaNode env: aDictionary
 					body: postBody
 					varGenerator: varGenerator
 					env: aDictionary ] ].
-	^ String
-		new: 1024
-		streamContents: [ :stream | 
+	^ self
+		stringStreamContents: [ :stream | 
 			preBody
-				ifNotNil: [ 
-					stream
+				ifNotNil: [ stream
 						nextPutAll: 'pre_' , funcName;
 						nextPutAll: ' := ';
 						nextPutAll: preBody;
 						nextPutAll: '. ' ].
 			postBody
-				ifNotNil: [ 
-					stream
+				ifNotNil: [ stream
 						nextPutAll: 'post_' , funcName;
 						nextPutAll: ' := ';
 						nextPutAll: postBody;

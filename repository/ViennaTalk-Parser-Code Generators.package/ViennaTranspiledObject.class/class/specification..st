@@ -1,3 +1,3 @@
 specification
-specification: aStringOrText
-	specification := aStringOrText
+specification: aViennaNode
+	specification := aViennaNode

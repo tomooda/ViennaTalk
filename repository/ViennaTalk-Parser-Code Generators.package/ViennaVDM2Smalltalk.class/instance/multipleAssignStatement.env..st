@@ -6,13 +6,15 @@ multipleAssignStatement: aViennaNode env: aDictionary
 			{(self generate: assign first env: aDictionary).
 			(self generate: assign second env: aDictionary)} ].
 	^ assigns size < 2
-		ifTrue: [ PPFailure message: 'atom statement should have more than one statements' ]
+		ifTrue: [ PPFailure
+				message: 'atom statement should have more than one statements' ]
 		ifFalse: [ | varGenerator tmps |
-			varGenerator := self varNameGenerator: 'atom' uniqueIn: (assigns collect: #second).
+			varGenerator := self
+				varNameGenerator: 'atom'
+				uniqueIn: (assigns collect: #second).
 			tmps := assigns collect: [ :assign | varGenerator value ].
-			String
-				new: 1024
-				streamContents: [ :stream | 
+			self
+				stringStreamContents: [ :stream | 
 					stream nextPutAll: '[| '.
 					tmps
 						do: [ :tmp | 

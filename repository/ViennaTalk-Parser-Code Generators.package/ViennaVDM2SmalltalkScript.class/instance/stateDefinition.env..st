@@ -2,9 +2,8 @@ code generation-definitions
 stateDefinition: aViennaNode env: aDictionary
 	| quin |
 	quin := super stateDefinition: aViennaNode env: aDictionary.
-	^ String
-		new: 1024
-		streamContents: [ :stream | 
+	^ self
+		stringStreamContents: [ :stream | 
 			stream
 				nextPutAll: quin first;
 				nextPutAll: quin second;

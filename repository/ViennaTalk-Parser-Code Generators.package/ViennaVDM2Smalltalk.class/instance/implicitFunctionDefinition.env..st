@@ -11,7 +11,8 @@ implicitFunctionDefinition: aViennaNode env: aDictionary
 	preNode
 		ifNotNil: [ preBody := self generate: preNode env: aDictionary.
 			runtimeAssertionCheck = true
-				ifTrue: [ body := preBody , 'ifFalse: [ViennaPreconditionViolation signal]. ' , body ] ].
+				ifTrue: [ body := preBody , 'ifFalse: [ViennaPreconditionViolation signal]. '
+						, body ] ].
 	postBody := self generate: postNode env: aDictionary.
 	varGenerator := self
 		varNameGenerator: 'func'
@@ -49,14 +50,15 @@ implicitFunctionDefinition: aViennaNode env: aDictionary
 						,
 							((1 to: identifierTypePairListNode size by: 2)
 								collect: [ :index | 
-									{(ViennaNode label: 'PatternIdentifier' with: (identifierTypePairListNode at: index)).
+									{(ViennaNode
+										label: 'PatternIdentifier'
+										with: (identifierTypePairListNode at: index)).
 									(identifierTypePairListNode at: index + 1)} ])
 				body: postBody
 				varGenerator: varGenerator
 				env: aDictionary ].
-	^ String
-		new: 1024
-		streamContents: [ :stream | 
+	^ self
+		stringStreamContents: [ :stream | 
 			preBody
 				ifNotNil: [ stream
 						nextPutAll: 'pre_' , funcName;

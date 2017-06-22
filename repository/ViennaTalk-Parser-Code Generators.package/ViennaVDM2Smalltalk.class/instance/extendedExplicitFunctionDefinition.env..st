@@ -19,25 +19,34 @@ extendedExplicitFunctionDefinition: aViennaNode env: aDictionary
 	preNode
 		ifNotNil: [ preBody := self generate: preNode env: aDictionary.
 			runtimeAssertionCheck = true
-				ifTrue: [ body := preBody , 'ifFalse: [ViennaPreconditionViolation signal]. ' , body ] ].
+				ifTrue: [ body := preBody , 'ifFalse: [ViennaPreconditionViolation signal]. '
+						, body ] ].
 	postNode
 		ifNotNil: [ postBody := self generate: postNode env: aDictionary.
 			runtimeAssertionCheck = true
 				ifTrue: [ runtimeTypeCheck = true
-						ifTrue: [ body := '[|' , retValue , '| ' , retValue , ' := [' , body , '] value. ('
-								, (self generate: retType env: aDictionary) , ' includes: ' , retValue
+						ifTrue: [ body := '[|' , retValue , '| ' , retValue , ' := [' , body
+								, '] value. (' , (self generate: retType env: aDictionary)
+								, ' includes: ' , retValue
 								, ') ifFalse: [ViennaRuntimeTypeError signal]. (' , postBody
-								, ') ifFalse: [ViennaPostconditionViolation signal]. ' , retValue , '] value' ]
-						ifFalse: [ body := '[|' , retValue , '| ' , retValue , ' := [' , body , '] value. (' , postBody
-								, ') ifFalse: [ViennaPostconditionViolation signal]. ' , retValue , '] value' ] ]
+								, ') ifFalse: [ViennaPostconditionViolation signal]. '
+								, retValue , '] value' ]
+						ifFalse: [ body := '[|' , retValue , '| ' , retValue , ' := [' , body
+								, '] value. (' , postBody
+								, ') ifFalse: [ViennaPostconditionViolation signal]. '
+								, retValue , '] value' ] ]
 				ifFalse: [ runtimeTypeCheck = true
-						ifTrue: [ body := '[|' , retValue , '| ' , retValue , ' := [' , body , '] value. ('
-								, (self generate: retType env: aDictionary) , ' includes: ' , retValue
-								, ') ifFalse: [ViennaRuntimeTypeError signal]. ' , retValue , '] value' ] ] ]
+						ifTrue: [ body := '[|' , retValue , '| ' , retValue , ' := [' , body
+								, '] value. (' , (self generate: retType env: aDictionary)
+								, ' includes: ' , retValue
+								, ') ifFalse: [ViennaRuntimeTypeError signal]. ' , retValue
+								, '] value' ] ] ]
 		ifNil: [ runtimeTypeCheck = true
-				ifTrue: [ body := '[|' , retValue , '| ' , retValue , ' := [' , body , '] value. ('
-						, (self generate: retType env: aDictionary) , ' includes: ' , retValue
-						, ') ifFalse: [ViennaRuntimeTypeError signal]. ' , retValue , '] value' ] ].
+				ifTrue: [ body := '[|' , retValue , '| ' , retValue , ' := [' , body
+						, '] value. (' , (self generate: retType env: aDictionary)
+						, ' includes: ' , retValue
+						, ') ifFalse: [ViennaRuntimeTypeError signal]. ' , retValue
+						, '] value' ] ].
 	varGenerator := self
 		varNameGenerator: 'func'
 		uniqueIn:
@@ -74,14 +83,15 @@ extendedExplicitFunctionDefinition: aViennaNode env: aDictionary
 						,
 							((1 to: identifierTypePairList size by: 2)
 								collect: [ :index | 
-									{(ViennaNode label: 'PatternIdentifier' with: (identifierTypePairList at: index)).
+									{(ViennaNode
+										label: 'PatternIdentifier'
+										with: (identifierTypePairList at: index)).
 									(identifierTypePairList at: index + 1)} ])
 				body: postBody
 				varGenerator: varGenerator
 				env: aDictionary ].
-	^ String
-		new: 1024
-		streamContents: [ :stream | 
+	^ self
+		stringStreamContents: [ :stream | 
 			preBody
 				ifNotNil: [ stream
 						nextPutAll: 'pre_' , funcName;
