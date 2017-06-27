@@ -4,6 +4,7 @@
 	"category" : "ViennaTalk-Parser-Code Generators",
 	"classinstvars" : [
 		"specificationDict",
+		"debuggerNodeMapDict",
 		"specification",
 		"viennaEnv"
 	],
