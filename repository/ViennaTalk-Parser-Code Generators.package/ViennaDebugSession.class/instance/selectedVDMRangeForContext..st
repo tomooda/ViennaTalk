@@ -1,3 +1,3 @@
 accessing
-selectedCodeRangeForContext: selectedContext
+selectedVDMRangeForContext: selectedContext
 	^ self vdmRangeForContext: selectedContext

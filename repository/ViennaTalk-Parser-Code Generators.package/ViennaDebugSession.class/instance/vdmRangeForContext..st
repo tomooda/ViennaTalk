@@ -14,9 +14,10 @@ vdmRangeForContext: aContext
 			(sNode = smalltalkNode and: [ sNode start = smalltalkNode start ])
 				ifTrue: [ currentNode := vNode ] ].
 	currentNode ifNil: [ ^ 1 to: 0 ].
-	formattedSource := ViennaVDMFormatter new format: vdmNode.
+	[formattedSource := ViennaVDMFormatter new format: vdmNode.
 	formattedSource asViennaTracingString sources
 		do: [ :assoc | 
 			assoc value == currentNode
 				ifTrue: [ ^ assoc key ] ].
+	currentNode isMethod] whileFalse: [ currentNode := currentNode parent ].
 	^ 1 to: 0
