@@ -1,17 +1,17 @@
 accessing
 close
 	process
-		ifNotNilDo: [:p | 
+		ifNotNil: [ :p | 
 			process := nil.
 			p sigterm.
 			p sigkill.
-			p terminate].
+			p terminate ].
 	reader
-		ifNotNilDo: [:r | 
+		ifNotNil: [ :r | 
 			reader := nil.
-			r close].
+			r close ].
 	writer
-		ifNotNilDo: [:w | 
+		ifNotNil: [ :w | 
 			writer := nil.
-			w close].
-	executor ifNotNil: [self updateExecutor]
+			w close ].
+	executor ifNotNil: [ self updateExecutor ]
