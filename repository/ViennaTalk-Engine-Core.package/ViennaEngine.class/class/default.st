@@ -1,5 +1,6 @@
 defaults
 default
-	^ (Smalltalk os isWindows not and: [ ViennaVDMJ isInstalled ])
-		ifTrue: [ ViennaVDMJ new ]
-		ifFalse: [ ViennaClient default ]
+	^ (self alwaysUsesViennaServerAsDefault
+		or: [ Smalltalk os isWindows or: [ ViennaVDMJ isInstalled not ] ])
+		ifTrue: [ ViennaClient default ]
+		ifFalse: [ ViennaVDMJ new ]

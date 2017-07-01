@@ -4,7 +4,9 @@
 	"category" : "ViennaTalk-Engine-Core",
 	"classinstvars" : [ ],
 	"pools" : [ ],
-	"classvars" : [ ],
+	"classvars" : [
+		"AlwaysUsesViennaServerAsDefault"
+	],
 	"instvars" : [ ],
 	"name" : "ViennaEngine",
 	"type" : "normal"
