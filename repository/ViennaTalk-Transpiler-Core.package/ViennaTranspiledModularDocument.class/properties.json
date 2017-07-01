@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "Dictionary",
+	"category" : "ViennaTalk-Transpiler-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"viennaEnv"
+	],
+	"name" : "ViennaTranspiledModularDocument",
+	"type" : "normal"
+}

@@ -1,0 +1,16 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "ViennaTalk-Transpiler-Core",
+	"classinstvars" : [
+		"specificationDict",
+		"debuggerNodeMapDict",
+		"specification",
+		"viennaEnv"
+	],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "ViennaTranspiledObject",
+	"type" : "normal"
+}
