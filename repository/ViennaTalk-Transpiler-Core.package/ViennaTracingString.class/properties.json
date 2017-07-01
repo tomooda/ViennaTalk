@@ -1,0 +1,14 @@
+{
+	"commentStamp" : "",
+	"super" : "String",
+	"category" : "ViennaTalk-Transpiler-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"string",
+		"sources"
+	],
+	"name" : "ViennaTracingString",
+	"type" : "normal"
+}

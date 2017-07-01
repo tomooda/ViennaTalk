@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "ViennaVDM2Smalltalk",
+	"category" : "ViennaTalk-Transpiler-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "ViennaVDM2SmalltalkScript",
+	"type" : "normal"
+}

@@ -1,0 +1,7 @@
+{
+	"commentStamp" : "",
+	"traitcomposition" : "TViennaVDMBoundVariableCollector",
+	"classtraitcomposition" : "TViennaVDMBoundVariableCollector classTrait",
+	"category" : "ViennaTalk-Transpiler-Core",
+	"name" : "TViennaVDMFreeVariableCollector"
+}
