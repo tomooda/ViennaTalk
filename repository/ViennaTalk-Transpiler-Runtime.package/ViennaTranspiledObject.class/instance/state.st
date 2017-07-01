@@ -1,3 +1,0 @@
-private
-state
-	^ (ViennaComposite constructorName: '')

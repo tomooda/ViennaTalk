@@ -1,3 +1,0 @@
-*ViennaTalk-Transpiler-Runtime
-stateInvariantViolation
-	^ ViennaStateInvariantViolation signal
