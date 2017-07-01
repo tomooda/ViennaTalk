@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "ViennaVDMFormatter",
+	"category" : "ViennaTalk-Transpiler-Debugger",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "ViennaVDMTracingFormatter",
+	"type" : "normal"
+}
