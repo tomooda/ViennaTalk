@@ -1,0 +1,13 @@
+{
+	"classtraitcomposition" : "TViennaVDMBoundVariableCollectorTestCase classTrait + TViennaVDMFreeVariableCollectorTestCase classTrait",
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "ViennaVDM2SmalltalkObjectTest",
+	"commentStamp" : "",
+	"super" : "TestCase",
+	"traitcomposition" : "TViennaVDMBoundVariableCollectorTestCase + TViennaVDMFreeVariableCollectorTestCase",
+	"type" : "normal",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "ViennaTalk-Transpiler-Test"
+}
