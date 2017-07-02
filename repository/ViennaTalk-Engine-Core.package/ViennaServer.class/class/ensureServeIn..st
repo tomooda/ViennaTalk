@@ -3,8 +3,9 @@ ensureServeIn: aBlock
 	| isRunning |
 	isRunning := self isRunning.
 	isRunning
-		ifFalse: [ self installHandler ].
+		ifFalse: [ self
+				flushServer;
+				installHandler ].
 	aBlock
-		ensure: [ 
-			isRunning
+		ensure: [ isRunning
 				ifFalse: [ self flushServer ] ]

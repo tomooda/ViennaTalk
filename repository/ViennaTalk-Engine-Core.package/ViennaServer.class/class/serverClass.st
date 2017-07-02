@@ -1,3 +1,0 @@
-class access
-serverClass
-	^ ZnManagingMultiThreadedServer
