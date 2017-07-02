@@ -1,6 +1,7 @@
 request handling
 handleRequest: aZnRequest
 	| json |
+	Transcript cr; show: 'received a request'.
 	aZnRequest entity
 		ifNotNil: [ :jsonString | 
 			| source expression preStates result |
