@@ -33,12 +33,12 @@ explicitOperationDefinition: aViennaNode env: aDictionary
 		pre:
 			(preNode
 				ifNotNil: [ runtimeAssertionCheck = true
-						ifTrue: [ self generate: preNode env: aDictionary ]
+						ifTrue: [ (self generate: preNode env: aDictionary) asViennaTracingString: preNode ]
 						ifFalse: [ nil ] ])
 		post:
 			(postNode
 				ifNotNil: [ runtimeAssertionCheck = true
-						ifTrue: [ self generate: postNode env: aDictionary ]
+						ifTrue: [ (self generate: postNode env: aDictionary) asViennaTracingString: postNode ]
 						ifFalse: [ nil ] ])
 		retType: retTypeNode
 		varGenerator: varGenerator

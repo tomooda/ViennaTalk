@@ -17,29 +17,36 @@ explicitFunctionDefinition: aViennaNode env: aDictionary
 	preNode
 		ifNotNil: [ preBody := self generate: preNode env: aDictionary.
 			runtimeAssertionCheck = true
-				ifTrue: [ body := preBody , 'ifFalse: [ViennaPreconditionViolation signal]. '
-						, body ] ].
+				ifTrue: [ body := preBody , 'ifFalse: [ViennaPreconditionViolation signal]. ' , body
+						asViennaTracingString: preNode ] ].
 	postNode
 		ifNotNil: [ postBody := self generate: postNode env: aDictionary.
 			runtimeAssertionCheck = true
 				ifTrue: [ runtimeTypeCheck = true
-						ifTrue: [ body := '[|RESULT| RESULT := [' , body , '] value. ('
-								, (self generate: retType env: aDictionary)
-								, ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. ('
-								, postBody
-								, ') ifFalse: [ViennaPostconditionViolation signal]. RESULT] value' ]
-						ifFalse: [ body := '[|RESULT| RESULT := [' , body , '] value. (' , postBody
-								, ') ifFalse: [ViennaPostconditionViolation signal]. RESULT] value' ] ]
-				ifFalse: [ runtimeTypeCheck = true
-						ifTrue: [ body := '[|RESULT| RESULT := [' , body , '] value. ('
-								, (self generate: retType env: aDictionary)
+						ifTrue: [ body := '[|RESULT| RESULT := [' , body , '] value.'
 								,
-									' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. RESULT] value' ] ] ]
+									(' (' , (self generate: retType env: aDictionary)
+										, ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal].'
+										asViennaTracingString: retType)
+								,
+									('(' , postBody , ') ifFalse: [ViennaPostconditionViolation signal]. RESULT] value'
+										asViennaTracingString: postNode) ]
+						ifFalse: [ body := '[|RESULT| RESULT := [' , body , '] value.'
+								,
+									('(' , postBody , ') ifFalse: [ViennaPostconditionViolation signal].'
+										asViennaTracingString: postNode) , ' RESULT] value' ] ]
+				ifFalse: [ runtimeTypeCheck = true
+						ifTrue: [ body := '[|RESULT| RESULT := [' , body , '] value.'
+								,
+									('(' , (self generate: retType env: aDictionary)
+										, ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal].'
+										asViennaTracingString: retType) , 'RESULT] value' ] ] ]
 		ifNil: [ runtimeTypeCheck = true
-				ifTrue: [ body := '[|RESULT| RESULT := [' , body , '] value. ('
-						, (self generate: retType env: aDictionary)
+				ifTrue: [ body := '[|RESULT| RESULT := [' , body , '] value.'
 						,
-							' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. RESULT] value' ] ].
+							('(' , (self generate: retType env: aDictionary)
+								, ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal].'
+								asViennaTracingString: retType) , 'RESULT] value' ] ].
 	varGenerator := self
 		varNameGenerator: 'func'
 		uniqueIn:

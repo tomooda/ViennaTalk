@@ -69,9 +69,12 @@ defineMethodFromOperation: opName in: theClass protocol: protocolString fromFlat
 												asViennaTracingString: triple second) ] ].
 					preString
 						ifNotNil: [ stream
-								nextPutAll: '(';
-								nextPutAll: preString;
-								nextPutAll: ') ifFalse: [ViennaPreconditionViolation signal].' ].
+								nextPutAll:
+									('(' , preString , ') ifFalse: [ViennaPreconditionViolation signal].'
+										asViennaTracingString:
+											(preString asViennaTracingString sources
+												ifNotEmpty: [ :sources | sources last value ]
+												ifEmpty: [ aViennaNode ])) ].
 					stream
 						nextPutAll: '_oldState := self state. ';
 						nextPutAll:
@@ -85,9 +88,12 @@ defineMethodFromOperation: opName in: theClass protocol: protocolString fromFlat
 										, ') ifFalse: [ViennaRuntimeTypeError signal].' asViennaTracingString: typeNode) ].
 					postString
 						ifNotNil: [ stream
-								nextPutAll: '(';
-								nextPutAll: postString;
-								nextPutAll: ') ifFalse: [ViennaPostconditionViolation signal].' ].
+								nextPutAll:
+									('(' , postString , ') ifFalse: [ViennaPostconditionViolation signal].'
+										asViennaTracingString:
+											(postString asViennaTracingString sources
+												ifNotEmpty: [ :sources | sources last value ]
+												ifEmpty: [ aViennaNode ])) ].
 					stream nextPutAll: '^ ' , retVarName ])
 		in: theClass
 		protocol: protocolString
