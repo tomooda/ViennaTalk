@@ -22,14 +22,24 @@ stateDefinition: aViennaNode env: aDictionary
 		in: theClass
 		protocol: 'state'
 		node: aViennaNode fourth.
+	aDictionary at: 'inv_' , stateConstructor put: 'self inv_' , stateConstructor.
+	self
+		defineLazyMethodNamed: 'inv_' , stateConstructor
+		initializer: quin fourth
+		in: theClass
+		protocol: 'state'
+		node: aViennaNode third.
 	aDictionary at: 'init_' , stateConstructor put: 'self init_' , stateConstructor.
 	self
 		defineMethod:
-			'state' , String cr , '    ^ self ' , stateConstructor , ' applyTo: {'
-				, (' . ' join: (aViennaNode second collect: #first)) , '}'
+			'state' , String cr
+				,
+					('^ self ' , stateConstructor , ' applyTo: {'
+						, (' . ' join: (aViennaNode second collect: #first)) , '}'
+						asViennaTracingString: aViennaNode fourth)
 		in: theClass
 		protocol: 'state'
-		node: nil.
+		node: aViennaNode.
 	(quin fourth notNil or: [ runtimeTypeCheck = true ])
 		ifTrue: [ self
 				defineMethod:
@@ -40,22 +50,24 @@ stateDefinition: aViennaNode env: aDictionary
 								cr.
 							quin fourth
 								ifNotNil: [ stream
-										nextPutAll: '    ((' , quin fourth , ') value: self state) ifFalse: [self stateInvariantViolation].';
+										nextPutAll:
+											('(self inv_' , stateConstructor
+												, ' value: self state) ifFalse: [self stateInvariantViolation].'
+												asViennaTracingString: aViennaNode third);
 										cr ].
 							runtimeTypeCheck = true
 								ifTrue: [ aViennaNode second
 										do: [ :triple | 
 											stream
-												nextPutAll: '((';
-												nextPutAll: (self generate: triple third env: aDictionary);
-												nextPutAll: ') includes: (';
-												nextPutAll: triple first;
-												nextPutAll: ')) ifFalse: [ViennaRuntimeTypeError signal].' ] ] ])
+												nextPutAll:
+													('((' , (self generate: triple third env: aDictionary) , ') includes: (' , triple first
+														, ')) ifFalse: [ViennaRuntimeTypeError signal].'
+														asViennaTracingString: triple third) ] ] ])
 				in: theClass
 				protocol: 'state'
-				node: nil ].
+				node: aViennaNode ].
 	self
 		defineMethod: 'state' , String cr , '    ^' , quin fifth
 		in: theClass
 		protocol: 'state'
-		node: nil
+		node: aViennaNode

@@ -6,33 +6,30 @@ stateDefinition: aViennaNode env: aDictionary
 	invNode := aViennaNode third.
 	initNode := aViennaNode fourth.
 	vars := fieldListNode collect: #first.
-	initNode
-		ifNil: [ ^ self error: 'initalisation is required in state definition' ].
+	initNode ifNil: [ ^ self error: 'initalisation is required in state definition' ].
 	recordNode := initNode first second second.
 	initConstructor := recordNode first first.
 	expressionListNode := recordNode second.
 	initConstructor = constructor
 		ifFalse: [ ^ self
 				error:
-					'Constructor must be the same name as state definition: ' , constructor
-						, ', ' , initConstructor ].
+					'Constructor must be the same name as state definition: ' , constructor , ', '
+						, initConstructor ].
 	vars size = expressionListNode size
 		ifFalse: [ ^ self
 				error:
-					'Number of state variables and number of arguments must agree: '
-						, vars size printString , ', '
-						, expressionListNode size printString ].
-	vals := expressionListNode
-		collect: [ :node | self generate: node env: aDictionary ].
-	^ {(self
+					'Number of state variables and number of arguments must agree: ' , vars size printString
+						, ', ' , expressionListNode size printString ].
+	vals := expressionListNode collect: [ :node | self generate: node env: aDictionary ].
+	^ {((self
 		stringStreamContents: [ :stream | 
 			vars
 				with: vals
 				do: [ :var :val | 
 					stream
 						nextPutAll: (self noCheckAssignment: var be: val);
-						nextPutAll: '.' , String cr ] ]).
-	(String
+						nextPutAll: '.' , String cr ] ]) asViennaTracingString: initNode).
+	((String
 		new: 1024
 		streamContents: [ :stream | 
 			stream
@@ -41,8 +38,8 @@ stateDefinition: aViennaNode env: aDictionary
 				nextPutAll: initConstructor storeString;
 				nextPutAll: ' withAll: {';
 				nextPutAll: (' . ' join: (self generate: fieldListNode env: aDictionary));
-				nextPutAll: '}' ]).
-	(String
+				nextPutAll: '}' ]) asViennaTracingString: aViennaNode).
+	((String
 		new: 1024
 		streamContents: [ :stream | 
 			patternVar := initNode first first first.
@@ -50,16 +47,18 @@ stateDefinition: aViennaNode env: aDictionary
 				nextPutAll: 'init_';
 				nextPutAll: initConstructor;
 				nextPutAll: ' := ';
-				nextPutAll: (self generate: initNode first env: aDictionary) ]).
+				nextPutAll: (self generate: initNode first env: aDictionary) ])
+		asViennaTracingString: initNode).
 	(invNode
-		ifNotNil: [ String
+		ifNotNil: [ (String
 				new: 1024
 				streamContents: [ :stream | 
 					stream
 						nextPutAll: 'inv_';
 						nextPutAll: constructor;
 						nextPutAll: ' := ';
-						nextPutAll: (self generate: invNode first env: aDictionary) ] ]).
+						nextPutAll: (self generate: invNode first env: aDictionary) ])
+				asViennaTracingString: invNode ]).
 	(String
 		new: 1024
 		streamContents: [ :stream | 
