@@ -23,20 +23,20 @@ stateDefinition: aViennaNode env: aDictionary
 		protocol: 'state'
 		node: aViennaNode fourth.
 	aDictionary at: 'inv_' , stateConstructor put: 'self inv_' , stateConstructor.
-	self
-		defineLazyMethodNamed: 'inv_' , stateConstructor
-		initializer: quin fourth
-		in: theClass
-		protocol: 'state'
-		node: aViennaNode third.
+	quin fourth
+		ifNotNil: [ self
+				defineLazyMethodNamed: 'inv_' , stateConstructor
+				initializer: quin fourth
+				in: theClass
+				protocol: 'state'
+				node: aViennaNode third ].
 	aDictionary at: 'init_' , stateConstructor put: 'self init_' , stateConstructor.
 	self
 		defineMethod:
 			'state' , String cr
 				,
-					('^ self ' , stateConstructor , ' applyTo: {'
-						, (' . ' join: (aViennaNode second collect: #first)) , '}'
-						asViennaTracingString: aViennaNode fourth)
+					('^ self ' , stateConstructor , ' applyTo: {' , (' . ' join: (aViennaNode second collect: #first))
+						, '}' asViennaTracingString: aViennaNode fourth)
 		in: theClass
 		protocol: 'state'
 		node: aViennaNode.
@@ -51,8 +51,7 @@ stateDefinition: aViennaNode env: aDictionary
 							quin fourth
 								ifNotNil: [ stream
 										nextPutAll:
-											('(self inv_' , stateConstructor
-												, ' value: self state) ifFalse: [self stateInvariantViolation].'
+											('(self inv_' , stateConstructor , ' value: self state) ifFalse: [self stateInvariantViolation].'
 												asViennaTracingString: aViennaNode third);
 										cr ].
 							runtimeTypeCheck = true
@@ -61,8 +60,7 @@ stateDefinition: aViennaNode env: aDictionary
 											stream
 												nextPutAll:
 													('((' , (self generate: triple third env: aDictionary) , ') includes: (' , triple first
-														, ')) ifFalse: [ViennaRuntimeTypeError signal].'
-														asViennaTracingString: triple third) ] ] ])
+														, ')) ifFalse: [ViennaRuntimeTypeError signal].' asViennaTracingString: triple third) ] ] ])
 				in: theClass
 				protocol: 'state'
 				node: aViennaNode ].
