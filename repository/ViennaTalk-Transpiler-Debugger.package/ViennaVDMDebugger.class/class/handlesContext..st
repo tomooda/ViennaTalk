@@ -1,3 +1,4 @@
 testing
 handlesContext: aContext
-	^ aContext specificationContext notNil
+	"^ aContext specificationContext notNil"
+	^ true

@@ -1,19 +1,10 @@
 context
 vdmRangeForContext: aContext
-	| smalltalkNode specificationContext vdmNode map currentNode formattedSource |
-	specificationContext := aContext specificationContext.
-	specificationContext ifNil: [ ^ 1 to: 0 ].
-	smalltalkNode := specificationContext method
-		sourceNodeForPC: specificationContext neighborPCWithCorrectMapping.
-	vdmNode := specificationContext specification.
-	map := specificationContext methodClass debuggerNodeMapAt: specificationContext selector.
-	currentNode := nil.
-	map
-		keysAndValuesDo: [ :sNode :vNode | 
-			(sNode = smalltalkNode and: [ sNode start = smalltalkNode start ])
-				ifTrue: [ currentNode := vNode ] ].
+	| currentNode formattedSource |
+	currentNode := self vdmPcNodeForContext: aContext.
 	currentNode ifNil: [ ^ 1 to: 0 ].
-	[ formattedSource := ViennaVDMTracingFormatter new format: vdmNode.
+	[ formattedSource := ViennaVDMTracingFormatter new
+		format: aContext specificationContext specification.
 	formattedSource asViennaTracingString sources
 		do: [ :assoc | 
 			assoc value == currentNode
