@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "StepIntoDebugAction",
+	"category" : "ViennaTalk-Transpiler-Debugger",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "ViennaStepIntoDebugAction",
+	"type" : "normal"
+}

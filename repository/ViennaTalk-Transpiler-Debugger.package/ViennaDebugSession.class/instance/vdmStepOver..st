@@ -1,5 +1,5 @@
 debugging actions
-stepOver: aContext
+vdmStepOver: aContext
 	"Send the selected message in selectedContext, and regain control 
 	after the invoked method returns."
 
@@ -9,7 +9,7 @@ stepOver: aContext
 	aContext isDead
 		ifTrue: [ ^ self ].
 	specificationContext := aContext specificationContext.
-	specificationContext ifNil: [ ^ super stepOver: aContext ].
+	specificationContext ifNil: [ ^ self ].
 	node := self vdmPcNodeForContext: aContext.
 	[ newContext := interruptedProcess completeStep: aContext.
 	newContext == aContext
