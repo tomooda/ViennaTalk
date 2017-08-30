@@ -27,6 +27,11 @@ Table of Major Components of ViennaTalk
 
 What's new in the latest release
 ---
+* Codename Maribor has been released. (Aug 28, 2017)
+ - VDMDebugger integrated with Pharo's moldable debugger
+ - migrated to Pharo 6.1 (32bit)
+ You can debug an auto-generated Smalltalk code with its source VDM specification on Smalltalk debugger, and step-execute by granularity of the source VDM specification.
+
 * Codename Ito has been released. (Feb 12, 2017)
   - Implicit/extended explicit functions/operations are supported by the pretty printer and code generators.
   - Exception statements (exit, always, trap and tixe statements) are supported by the pretty printer and code generators.
