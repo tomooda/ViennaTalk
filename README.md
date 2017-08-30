@@ -27,6 +27,10 @@ Table of Major Components of ViennaTalk
 
 What's new in the latest release
 ---
+* Urgent update for Maribor has been released. (Aug 30, 2017)
+ - The base Pharo version is back to 5.0 due to unstability of Pharo 6.1 (32bit)
+ - You can still manually configure ViennaTalk "Maribor" on Pharo 6.1 (64bit) with a limitation that use of VDMJ is limited only via remote site (default http://vdmpad.csce.kyushu-u.ac.jp). This limitation is from the OSSubprocess package that ViennaTalk uses to execute VDMJ process.
+ 
 * Codename Maribor has been released. (Aug 28, 2017)
  - VDMDebugger integrated with Pharo's moldable debugger
  - migrated to Pharo 6.1 (32bit)
