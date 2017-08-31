@@ -2,5 +2,5 @@ accessing-morphs
 morphsNamed: aString do: aBlock
 	self
 		allMorphsDo: [ :submorph | 
-			submorph name = aString
+			((submorph isKindOf: LWTWidget) and: [ submorph name = aString ])
 				ifTrue: [ aBlock value: submorph ] ]
