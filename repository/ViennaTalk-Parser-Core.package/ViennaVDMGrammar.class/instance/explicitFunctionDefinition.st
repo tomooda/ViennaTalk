@@ -1,19 +1,17 @@
 parsers-definitions
 explicitFunctionDefinition
-	^ (identifier trim , self typeVariableList , colon , self functionType trim , (self decl: identifier) trim
-		, self parametersList , (self operator: '==') , (expression / self isSubclassResponsibility / self isNotYetSpecified)
-		, ((self pre , expression) ==> #second) optional , ((self post , expression) ==> #second) optional
-		, ((self measure , name) ==> #second) optional)
+	^ (identifier trim , self typeVariableList , colon , self functionType trim , (self decl: identifier) trim , self parametersList , (self operator: '==')
+		, (expression / self isSubclassResponsibility / self isNotYetSpecified) , ((self pre , expression) ==> #second) optional , ((self post , expression) ==> #second) optional
+		, ((self measure , expression) ==> #second) optional)
 		==> [ :array | 
 			array first = array fifth
-				ifTrue: [ 
-					{(array first).
-					(array second).
-					(array fourth).
-					(array fifth).
-					(array sixth).
-					(array eighth).
-					(array ninth).
+				ifTrue: [ {array first.
+					array second.
+					array fourth.
+					array fifth.
+					array sixth.
+					array eighth.
+					array ninth.
 					(array at: 10).
 					(array at: 11)} ]
 				ifFalse: [ PPFailure message: 'function name mismatch: ' , array first , ', ' , array fifth ] ]
