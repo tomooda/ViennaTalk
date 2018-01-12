@@ -11,8 +11,4 @@ saveAModuleToFile
 						extensions: #('vdm' 'vdmsl')
 						do: [ :stream | 
 							stream
-								nextPutAll:
-									(animation specification
-										copyFrom: assoc value first
-										to: assoc value last);
-								close ] ] ]
+								nextPutAll: (animation specification copyFrom: assoc value first to: assoc value last) close ] ] ]

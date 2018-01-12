@@ -1,3 +1,3 @@
 code pane
-acceptCode: aStringOrText
+basicAcceptCode: aStringOrText
 	^ self acceptCode: aStringOrText newModuleAndSourceDo: nil

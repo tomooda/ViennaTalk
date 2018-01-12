@@ -1,0 +1,15 @@
+{
+	"commentStamp" : "tomooda 1/12/2018 17:28",
+	"super" : "ViennaBrowser",
+	"category" : "ViennaTalk-Browser-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [
+		"DefaultBasePath"
+	],
+	"instvars" : [
+		"basePath"
+	],
+	"name" : "ViennaDirectoryBrowser",
+	"type" : "normal"
+}

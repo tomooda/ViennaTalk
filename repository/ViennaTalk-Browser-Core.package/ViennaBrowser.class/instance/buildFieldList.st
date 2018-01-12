@@ -5,6 +5,6 @@ buildFieldList
 		list: #fieldList
 		selected: #fieldSelectionIndex
 		changeSelected: #fieldSelectionIndex:
-		menu: #fieldListMenu:)
+		menu: nil)
 		font: ViennaLauncher font;
 		yourself
