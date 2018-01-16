@@ -52,6 +52,12 @@ modularDocument: aViennaNode env: aDictionary
 						do: [ :moduleName | 
 							stream
 								nextPutAll: moduleName uncapitalized;
+								nextPutAll: ' initTypes.';
+								cr ].
+					moduleNames
+						do: [ :moduleName | 
+							stream
+								nextPutAll: moduleName uncapitalized;
 								nextPutAll: ' init.';
 								cr ] ])
 		in: documentClass

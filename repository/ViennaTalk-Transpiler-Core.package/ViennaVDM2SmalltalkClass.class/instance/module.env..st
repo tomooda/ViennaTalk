@@ -49,11 +49,11 @@ module: aViennaNode env: aDictionary
 				node: (interfaceNode first detect: [ :node | node first = importModuleName ]) ].
 	moduleBodyNode
 		do: [ :definitionBlock | self definitionBlock: definitionBlock env: env ].
-	self
+	"self
 		defineMethod: 'initialize super initialize. self initTypes'
 		in: newClass
 		protocol: 'initialize-release'
-		node: nil.
+		node: nil."
 	self
 		defineInitTypeMethodForTypeNames: typeNames
 		in: newClass

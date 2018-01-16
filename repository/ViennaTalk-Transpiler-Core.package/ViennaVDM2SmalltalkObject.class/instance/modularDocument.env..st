@@ -18,6 +18,7 @@ modularDocument: aViennaNode env: aDictionary
 							moduleObject
 								perform: (importedModuleName , ':') asSymbol
 								with: importedModuleObject ] ] ].
+	objects valuesDo: [ :moduleObject | moduleObject initTypes ].
 	objects valuesDo: [ :moduleObject | moduleObject init ].
 	^ (ViennaTranspiledModularDocument from: objects)
 		buildViennaEnv;
