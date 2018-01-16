@@ -16,14 +16,20 @@
 		"codePane",
 		"workspace",
 		"workspacePane",
+		"testTab",
+		"testButton",
+		"testPane",
 		"selectedModule",
 		"selectedField",
 		"codeSelection",
 		"valueSelection",
 		"workspaceSelection",
+		"testSelectionIndex",
 		"directory",
 		"lowerTabPane",
-		"animation"
+		"animation",
+		"modulesToTest",
+		"testResult"
 	],
 	"name" : "ViennaBrowser",
 	"type" : "normal"
