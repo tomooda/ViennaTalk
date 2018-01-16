@@ -1,3 +1,3 @@
-as yet unclassified
+accessing
 state: aDictionary
 	state := aDictionary copy

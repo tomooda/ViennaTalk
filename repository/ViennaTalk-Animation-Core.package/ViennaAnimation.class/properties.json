@@ -11,7 +11,8 @@
 		"specification",
 		"state",
 		"reader",
-		"writer"
+		"writer",
+		"usesExceptionForExit"
 	],
 	"name" : "ViennaAnimation",
 	"type" : "normal"
