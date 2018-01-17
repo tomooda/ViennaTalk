@@ -1,0 +1,3 @@
+accessing
+iconColor
+	^ Color red

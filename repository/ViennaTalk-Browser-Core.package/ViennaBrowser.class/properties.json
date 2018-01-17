@@ -28,7 +28,6 @@
 		"directory",
 		"lowerTabPane",
 		"animation",
-		"modulesToTest",
 		"testResult"
 	],
 	"name" : "ViennaBrowser",

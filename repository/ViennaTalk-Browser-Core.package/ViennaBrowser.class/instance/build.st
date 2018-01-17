@@ -6,6 +6,7 @@ build
 	valuePane := self buildValuePane.
 	codePane := self buildCodePane.
 	workspacePane := self buildWorkspacePane.
+	testPane := self buildTestPane.
 	pane := BorderedMorph new.
 	pane extent: 600 @ 400.
 	pane color: Color transparent.
@@ -19,6 +20,7 @@ build
 	lowerTabPane := LazyTabGroupMorph new.
 	lowerTabPane addLazyPage: codePane label: 'Specification'.
 	lowerTabPane addLazyPage: workspacePane label: 'Workspace'.
+	lowerTabPane addLazyPage: testPane label: 'UnitTests'.
 	lowerTabPane selectedPageIndex: 1.
 	pane addMorph: upper fullFrame: ((0 @ 0 corner: 1 @ 0.4) asLayoutFrame bottomRightOffset: 0 @ -2).
 	pane addMorph: lowerTabPane fullFrame: ((0 @ 0.4 corner: 1 @ 1) asLayoutFrame topLeftOffset: 0 @ 2).

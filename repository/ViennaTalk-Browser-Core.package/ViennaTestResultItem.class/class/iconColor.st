@@ -1,0 +1,3 @@
+accessing
+iconColor
+	^ self subclassResponsibility

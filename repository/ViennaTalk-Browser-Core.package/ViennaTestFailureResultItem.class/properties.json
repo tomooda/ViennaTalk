@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "ViennaTestResultItem",
+	"category" : "ViennaTalk-Browser-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "ViennaTestFailureResultItem",
+	"type" : "normal"
+}

@@ -1,0 +1,3 @@
+accessing
+flushIcon
+	icon := nil

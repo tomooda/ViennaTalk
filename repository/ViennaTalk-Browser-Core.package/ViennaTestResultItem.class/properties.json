@@ -1,0 +1,17 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "ViennaTalk-Browser-Core",
+	"classinstvars" : [
+		"icon"
+	],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"module",
+		"operation",
+		"message"
+	],
+	"name" : "ViennaTestResultItem",
+	"type" : "normal"
+}
