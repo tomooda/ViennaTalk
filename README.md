@@ -27,6 +27,11 @@ Table of Major Components of ViennaTalk
 
 What's new in the latest release
 ---
+
+* Codename Harajuku has been released. (Jan 18, 2018)
+  - VDM Directory Browser is a VDM browser for file-based management. The browser loads all .vdmsl files and writes into files when a spec is accepted on the specification pane.
+  - ViennaUnit is a testing framework for VDM Browser. It runs all operations with the 'test' prefix in all modules with the 'Test' postfix.
+
 * Urgent update for Maribor has been released. (Aug 30, 2017)
   - The base Pharo version is back to 5.0 due to unstability of Pharo 6.1 (32bit)
 
