@@ -1,7 +1,7 @@
 test pane menu
 runAllTests
 	| ast |
-	testResult := OrderedCollection new.
+	testResult := Array new.
 	self changed: #testList.
 	ast := ViennaVDMParser new parse: animation specification.
 	ast isPetitFailure

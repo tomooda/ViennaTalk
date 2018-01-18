@@ -7,5 +7,5 @@ createIcon
 		fillOval: (0 @ 0 extent: self iconExtent)
 			color: self iconColor
 			borderWidth: 1
-			borderColor: Color black.
+			borderColor: self iconColor darker.
 	^ form
