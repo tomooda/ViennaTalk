@@ -1,5 +1,6 @@
 printing
 printOn: aStream
+	aStream space.
 	module
 		ifNotNil: [ aStream
 				nextPutAll: module;

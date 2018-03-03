@@ -44,8 +44,14 @@ acceptCode: aStringOrText newModuleAndSourceDo: aBlock
 										ifTrue: [ charPos := (((lines copyFrom: 1 to: linePos - 1) collect: #size) + 1) sum + colPos ] ] ].
 					^ codePane handleEdit: [ codePane notify: message at: charPos in: code readStream ] ].
 			codePane hasUnacceptedEdits: false.
-			self selectModuleNamed: (newModulePositions ifEmpty: [ nil ] ifNotEmpty: [ newModulePositions first key ]).
+			self
+				selectModuleNamed: (newModulePositions ifEmpty: [ nil ] ifNotEmpty: [ newModulePositions first key ]).
 			aBlock
-				ifNotNil: [ newModulePositions do: [ :assoc | aBlock cull: assoc key cull: (code copyFrom: assoc value first to: assoc value last) ] ].
+				ifNotNil: [ newModulePositions
+						do: [ :assoc | aBlock cull: assoc key cull: (code copyFrom: assoc value first to: assoc value last) ] ].
+			self autoTest
+				ifTrue: [ self autoFullTest
+						ifTrue: [ self runAllTests ]
+						ifFalse: [ self runTestModule ] ].
 			^ true ].
 	^ false

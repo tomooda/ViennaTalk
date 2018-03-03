@@ -18,25 +18,33 @@ basicRunTestModule: module operation: operation
 			exception expression
 				in: [ :expr | 
 					(expr isViennaComposite and: [ expr constructorName = 'AssertFailure' ])
-						ifTrue: [ ^ ViennaTestFailureResultItem
+						ifTrue: [ ^ (ViennaTestFailureResultItem
 								module: module
 								operation: operation
-								message: 'assertion failed: ' , (expr at: 1) asString ].
+								message: 'assertion failed: ' , (expr at: 1) asString)
+								inform;
+								yourself ].
 					(expr isViennaComposite and: [ expr constructorName = 'AssertEqualsFailure' ])
-						ifTrue: [ ^ ViennaTestFailureResultItem
+						ifTrue: [ ^ (ViennaTestFailureResultItem
 								module: module
 								operation: operation
 								message:
-									'assertion failed: ' , (expr at: 3) asString , ' expected: ' , (expr at: 2) viennaString
-										, ' actual: ' , (expr at: 1) viennaString ].
-					^ ViennaTestErrorResultItem
+								'assertion failed: ' , (expr at: 3) asString , ' expected: ' , (expr at: 2) viennaString
+								, ' actual: ' , (expr at: 1) viennaString)
+								inform;
+								yourself ].
+					^ (ViennaTestErrorResultItem
 						module: module
 						operation: operation
-						message: expr viennaString ] ] ]
+						message: expr viennaString)
+						inform;
+						yourself ] ] ]
 		on: Error
 		do: [ :exception | 
-			^ ViennaTestErrorResultItem
+			^ (ViennaTestErrorResultItem
 				module: module
 				operation: operation
-				message: exception messageText ].
+				message: exception messageText)
+				inform;
+				yourself ].
 	^ ViennaTestSuccessResultItem module: module operation: operation message: 'OK'

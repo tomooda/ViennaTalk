@@ -1,5 +1,9 @@
 test pane menu
-runAllTests
+runTestModule: aString
+	| testModuleName |
+	testModuleName := aString.
+	(testModuleName endsWith: 'Test')
+		ifFalse: [ testModuleName := testModuleName , 'Test' ].
 	testProcess ifNotNil: [ testProcess terminate ].
 	testProcess := [ | ast |
 	testResult := Array new.
@@ -14,7 +18,7 @@ runAllTests
 				do: [ :moduleNode | 
 					| moduleName |
 					moduleName := moduleNode first.
-					(moduleName endsWith: 'Test')
+					moduleName = testModuleName
 						ifTrue: [ moduleNode third
 								do: [ :definitionBlockNode | 
 									definitionBlockNode first label = 'OperationDefinitions'

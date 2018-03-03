@@ -5,7 +5,9 @@
 	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [
-		"AutoFormat"
+		"AutoFormat",
+		"AutoFullTest",
+		"AutoTest"
 	],
 	"instvars" : [
 		"cachedSpec",
@@ -16,8 +18,6 @@
 		"codePane",
 		"workspace",
 		"workspacePane",
-		"testTab",
-		"testButton",
 		"testPane",
 		"selectedModule",
 		"selectedField",
@@ -28,7 +28,8 @@
 		"directory",
 		"lowerTabPane",
 		"animation",
-		"testResult"
+		"testResult",
+		"testProcess"
 	],
 	"name" : "ViennaBrowser",
 	"type" : "normal"
