@@ -44,7 +44,7 @@ basicRunTestModule: module operation: operation
 			^ (ViennaTestErrorResultItem
 				module: module
 				operation: operation
-				message: exception messageText)
+				message: exception printString)
 				inform;
 				yourself ].
 	^ ViennaTestSuccessResultItem module: module operation: operation message: 'OK'
