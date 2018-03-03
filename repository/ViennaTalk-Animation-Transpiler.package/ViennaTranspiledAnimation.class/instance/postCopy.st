@@ -4,6 +4,5 @@ postCopy
 	oldState := self state.
 	oldSpec := self specification.
 	super postCopy.
-	self initialize.
-	self specification: oldSpec.
+	object := object copy.
 	self state: oldState
