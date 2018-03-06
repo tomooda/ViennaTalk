@@ -1,3 +1,7 @@
 code generation-statements
 returnStatement: aViennaNode env: aDictionary
-	^ '^ ' , (self generate: aViennaNode first env: aDictionary)
+	^ '^ '
+		,
+			(aViennaNode first
+				ifNil: [ ' self' ]
+				ifNotNil: [ :arg | self generate: arg env: aDictionary ])
