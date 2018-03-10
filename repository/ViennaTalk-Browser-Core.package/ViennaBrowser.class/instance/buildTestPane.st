@@ -5,7 +5,7 @@ buildTestPane
 		list: #testList
 		selected: #testSelectionIndex
 		changeSelected: #testSelectionIndex:
-		menu: nil)
+		menu: #testPaneMenu:)
 		getIconSelector: #testResultIconFor:;
 		font: ViennaLauncher font;
 		yourself

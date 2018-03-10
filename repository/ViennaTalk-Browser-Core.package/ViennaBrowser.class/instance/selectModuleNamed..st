@@ -9,4 +9,5 @@ selectModuleNamed: aString
 			self changed: #moduleSelectionIndex.
 			self changed: #fieldList.
 			self selectFieldNamed: nil.
-			self changed: #code ]
+			self changed: #code.
+			self changed: #value ]
