@@ -39,6 +39,16 @@ codePaneMenu: aBuilder
 		selector: #pasteRecent;
 		icon: Smalltalk ui icons smallPasteIcon;
 		withSeparatorAfter.
+	aBuilder model otherModules
+		ifNotEmpty: [ :modules | 
+			(aBuilder
+				item: #'Insert module...' translated;
+				withSeparatorAfter)
+				with: [ modules
+						do: [ :module | 
+							(aBuilder item: module asSymbol)
+								selector: #insertModuleSource:;
+								arguments: (Array with: module asString) ] ] ].
 	(aBuilder item: #Format translated)
 		keyText: 'F';
 		selector: #prettyPrint;
