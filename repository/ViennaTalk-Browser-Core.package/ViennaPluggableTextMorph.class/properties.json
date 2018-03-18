@@ -9,7 +9,8 @@
 	],
 	"instvars" : [
 		"highlighter",
-		"wantsHighlighting"
+		"wantsHighlighting",
+		"highlighterProcess"
 	],
 	"name" : "ViennaPluggableTextMorph",
 	"type" : "normal"

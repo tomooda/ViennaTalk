@@ -1,5 +1,5 @@
 stepping and presenter
 step
 	self wantsHighlighting
-		ifTrue: [ self highlight ].
-	self changed
+		ifTrue: [ self highlight  ].
+	
