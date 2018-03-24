@@ -9,6 +9,8 @@ moduleListMenu: aBuilder
 	aBuilder model selectedModule
 		ifNotNil: [ (aBuilder item: #'save the module...' translated) selector: #saveAModuleToFile ].
 	aBuilder items last withSeparatorAfter.
+	(aBuilder item: #'import UnitTesting module' translated)
+		selector: #importUnitTestingModule.
 	(aBuilder item: #'remove module' translated)
 		selector: #removeModule;
 		withSeparatorAfter.
