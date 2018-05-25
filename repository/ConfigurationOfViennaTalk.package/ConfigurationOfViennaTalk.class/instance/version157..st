@@ -9,7 +9,7 @@ version157: spec
 		spec timestamp: '1/18/2018 14:07'.
 		spec 
 			project: 'NeoJSON' with: '2-baseline';
-			project: 'OSSubprocess' with: '0.2.4';
+			project: 'OSSubprocess' with: '1.0.0';
 			project: 'PetitParser' with: '1.14';
 			project: 'ZincHTTPComponents' with: '2.6.2'.
 		spec 
