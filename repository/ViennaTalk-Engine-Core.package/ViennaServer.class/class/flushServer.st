@@ -3,7 +3,8 @@ flushServer
 	"ViennaServer flushServer"
 
 	Server
-		ifNotNil: [ 
-			Server stop.
-			Server unregister.
+		ifNotNil: [ (Server
+				stop;
+				unregister;
+				yourself) delegate prefixMap at: 'eval' ifPresent: #close.
 			Server := nil ]

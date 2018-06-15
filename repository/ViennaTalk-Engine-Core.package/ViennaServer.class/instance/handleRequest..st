@@ -11,8 +11,7 @@ handleRequest: aZnRequest
 			json
 				keysAndValuesDo: [ :key :value | 
 					(key includes: $`)
-						ifTrue: [ 
-							| index module var |
+						ifTrue: [ | index module var |
 							index := key indexOf: $`.
 							module := key copyFrom: 1 to: index - 1.
 							var := key copyFrom: index + 1 to: key size.
@@ -30,6 +29,9 @@ handleRequest: aZnRequest
 				at: 'value' put: (result first ifNil: [ String new ]);
 				at: 'message' put: result third.
 			result second
-				keysAndValuesDo: [ :moduleName :bindings | bindings keysAndValuesDo: [ :varName :value | json at: moduleName , '`' , varName put: value ] ].
-			^ ZnResponse ok: (ZnEntity with: (self stringify: json) type: ZnMimeType applicationJson) ].
+				keysAndValuesDo: [ :moduleName :bindings | 
+					bindings
+						keysAndValuesDo: [ :varName :value | json at: moduleName , '`' , varName put: value ] ].
+			^ ZnResponse
+				ok: (ZnEntity with: (self stringify: json) type: ZnMimeType applicationJson) ].
 	^ ZnResponse notFound: aZnRequest url

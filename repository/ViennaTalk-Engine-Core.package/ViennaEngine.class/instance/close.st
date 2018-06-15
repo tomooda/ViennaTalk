@@ -1,0 +1,3 @@
+accessing
+close
+	^ self subclassResponsibility
