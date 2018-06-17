@@ -15,4 +15,4 @@ startupProcess
 	process := self forkProcess.
 	reader := process stdoutStream.
 	writer := process stdinStream.
-	self updateExecutor
+	self register

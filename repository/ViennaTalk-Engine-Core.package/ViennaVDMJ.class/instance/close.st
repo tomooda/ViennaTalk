@@ -14,4 +14,4 @@ close
 		ifNotNil: [ :w | 
 			writer := nil.
 			w close ].
-	executor ifNotNil: [ self updateExecutor ]
+	self unregister

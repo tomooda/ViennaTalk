@@ -1,3 +1,5 @@
 accessing
 close
-	engine ifNotNil: #close
+	engine
+		ifNotNil: [ engine close.
+			engine := nil ]

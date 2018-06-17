@@ -13,8 +13,7 @@
 		"process",
 		"reader",
 		"writer",
-		"lock",
-		"executor"
+		"lock"
 	],
 	"name" : "ViennaVDMJ",
 	"type" : "normal"
