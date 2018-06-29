@@ -15,7 +15,12 @@ ViennaDebugSession >> vdmPcNodeForContext: aContext [
 	specificationContext := aContext specificationContext.
 	specificationContext ifNil: [ ^ nil ].
 	smalltalkNode := specificationContext method
-		sourceNodeForPC: specificationContext neighborPCWithCorrectMapping.
+		sourceNodeForPC:
+			(specificationContext neighborPCWithCorrectMapping
+				in: [ :pc | 
+					(self isLatestContext: aContext)
+						ifTrue: [ pc ]
+						ifFalse: [ pc - 1 ] ]).
 	vdmNode := specificationContext specification.
 	map := specificationContext methodClass debuggerNodeMapAt: specificationContext selector.
 	currentNode := nil.
