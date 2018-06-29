@@ -16,6 +16,18 @@ ViennaServer class >> defaultPort [
 ]
 
 { #category : #servicing }
+ViennaServer class >> ensureServeIn: aBlock [
+	| isRunning |
+	isRunning := self isRunning.
+	isRunning
+		ifFalse: [ self installHandler ].
+	aBlock
+		ensure: [ 
+			isRunning
+				ifFalse: [ self flushServer ] ]
+]
+
+{ #category : #servicing }
 ViennaServer class >> flushServer [
 	"ViennaServer flushServer"
 
@@ -31,6 +43,11 @@ ViennaServer class >> installHandler [
 	"ViennaServer installHandler"
 
 	self server delegate map: 'eval' to: self new
+]
+
+{ #category : #testing }
+ViennaServer class >> isRunning [
+	^ Server notNil and: [ Server isRunning ]
 ]
 
 { #category : #'instance creation' }
