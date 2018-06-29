@@ -99,6 +99,13 @@ ViennaVDMJ class >> bank: anInteger [
 ]
 
 { #category : #'class initialization' }
+ViennaVDMJ class >> initialize [
+	super initialize.
+	Smalltalk isHeadless
+		ifFalse: [ self install ]
+]
+
+{ #category : #'class initialization' }
 ViennaVDMJ class >> install [
 	Smalltalk os isWindows
 		ifFalse: [ 
