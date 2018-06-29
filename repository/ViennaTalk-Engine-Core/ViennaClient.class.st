@@ -4,6 +4,9 @@ Class {
 	#instVars : [
 		'http'
 	],
+	#classVars : [
+		'DefaultUrl'
+	],
 	#category : 'ViennaTalk-Engine-Core'
 }
 
@@ -14,7 +17,22 @@ ViennaClient class >> default [
 
 { #category : #defaults }
 ViennaClient class >> defaultUrl [
-	^ 'http://vdmpad.csce.kyushu-u.ac.jp/' asUrl
+	^ DefaultUrl ifNil: [ DefaultUrl := 'http://vdmpad.csce.kyushu-u.ac.jp/' asUrl ]
+]
+
+{ #category : #defaults }
+ViennaClient class >> defaultUrl: aString [
+	DefaultUrl := aString
+]
+
+{ #category : #defaults }
+ViennaClient class >> defaultUrlString [
+	^ self defaultUrl printString
+]
+
+{ #category : #defaults }
+ViennaClient class >> defaultUrlString: aString [
+	self defaultUrl: aString asZnUrl
 ]
 
 { #category : #'instance creation' }
@@ -29,6 +47,18 @@ ViennaClient class >> on: aUrlOfVDMPadServer [
 	^ self new
 		url: aUrlOfVDMPadServer;
 		yourself
+]
+
+{ #category : #settings }
+ViennaClient class >> viennaSettingsOn: aBuilder [
+	<systemsettings>
+	(aBuilder setting: #defaultViennaServerUrl)
+		parent: #ViennaTalk;
+		target: self;
+		getSelector: #defaultUrlString;
+		setSelector: #defaultUrlString:;
+		description: 'The default ViennaServer url (used by ViennaClient)';
+		label: 'default Vienna server URL'
 ]
 
 { #category : #evaluating }
