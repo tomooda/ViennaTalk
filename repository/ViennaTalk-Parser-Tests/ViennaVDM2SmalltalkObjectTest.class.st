@@ -8,7 +8,8 @@ Class {
 
 { #category : #'tests-postconditions' }
 ViennaVDM2SmalltalkObjectTest >> testExplicitFunctionPostcondition [
-	self
+	| obj |
+	obj := self
 		transpile:
 			'
 	functions 
@@ -16,52 +17,30 @@ ViennaVDM2SmalltalkObjectTest >> testExplicitFunctionPostcondition [
 	pred(x) == x - 1
 	post RESULT >= 0;'
 		runtimeTypeCheck: true
-		runtimeAssertionCheck: true
-		do: [ :obj :transpiler | 
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'pred(10)') )
-						for: obj
-						logged: false)
-				equals: 9.
-			self
-				should: [ Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'pred(0)') )
-						for: obj
-						logged: false ]
-				raise: ViennaPostconditionViolation ]
+		runtimeAssertionCheck: true.
+	self assert: (obj evaluateExpression: 'pred(10)') equals: 9.
+	self should: [ obj evaluateExpression: 'pred(0)' ] raise: ViennaPostconditionViolation
 ]
 
 { #category : #'tests-postconditions' }
 ViennaVDM2SmalltalkObjectTest >> testExtendedExplicitFunctionPostcondition [
-	self
+	| obj |
+	obj := self
 		transpile:
 			'
 	functions 
 	pred(x:int) res:int == x - 1
 	post res >= 0;'
 		runtimeTypeCheck: true
-		runtimeAssertionCheck: true
-		do: [ :obj :transpiler | 
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'pred(10)') )
-						for: obj
-						logged: false)
-				equals: 9.
-			self
-				should: [ Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'pred(0)') )
-						for: obj
-						logged: false ]
-				raise: ViennaPostconditionViolation ]
+		runtimeAssertionCheck: true.
+	self assert: (obj evaluateExpression: 'pred(10)') equals: 9.
+	self should: [ obj evaluateExpression: 'pred(0)' ] raise: ViennaPostconditionViolation
 ]
 
 { #category : #'tests-type checking' }
 ViennaVDM2SmalltalkObjectTest >> testExtendedExplicitOperation [
-	self
+	| obj |
+	obj := self
 		transpile:
 			'
 	state State of 
@@ -72,30 +51,18 @@ ViennaVDM2SmalltalkObjectTest >> testExtendedExplicitOperation [
 	sub(x:nat) res:nat == (count := count - x; return count)
 	post count + x = count~ and count = res;'
 		runtimeTypeCheck: true
-		runtimeAssertionCheck: true
-		do: [ :obj :transpiler | 
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'sub(9)'))
-						for: obj
-						logged: false)
-				equals: 1.
-			self assert: (obj instVarNamed: 'count') equals: 1.
-			self
-				assert:
-					(Compiler
-						evaluate:
-							(transpiler
-								generate: (ViennaVDMParser new expression parse: 'post_sub(1, mk_State(9), mk_State(10), 9)'))
-						for: obj
-						logged: false)
-				equals: true ]
+		runtimeAssertionCheck: true.
+	self assert: (obj evaluateExpression: 'sub(9)') equals: 1.
+	self assert: (obj instVarNamed: 'count') equals: 1.
+	self
+		assert: (obj evaluateExpression: 'post_sub(1, mk_State(9), mk_State(10), 9)')
+		equals: true
 ]
 
 { #category : #'tests-postconditions' }
 ViennaVDM2SmalltalkObjectTest >> testFunctionPostcondition [
-	self
+	| obj |
+	obj := self
 		transpile:
 			'
 	functions 
@@ -103,26 +70,15 @@ ViennaVDM2SmalltalkObjectTest >> testFunctionPostcondition [
 	pred(x) == x - 1
 	post RESULT >= 0;'
 		runtimeTypeCheck: true
-		runtimeAssertionCheck: true
-		do: [ :obj :transpiler | 
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'pred(10)') )
-						for: obj
-						logged: false)
-				equals: 9.
-			self
-				should: [ Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'pred(0)') )
-						for: obj
-						logged: false ]
-				raise: ViennaPostconditionViolation ]
+		runtimeAssertionCheck: true.
+	self assert: (obj evaluateExpression: 'pred(10)') equals: 9.
+	self should: [ obj evaluateExpression: 'pred(0)' ] raise: ViennaPostconditionViolation
 ]
 
 { #category : #'tests-preconditions' }
 ViennaVDM2SmalltalkObjectTest >> testFunctionPrecondition [
-	self
+	| obj |
+	obj := self
 		transpile:
 			'
 	functions 
@@ -130,91 +86,47 @@ ViennaVDM2SmalltalkObjectTest >> testFunctionPrecondition [
 	pred(x) == x - 1
 	pre x > 0;'
 		runtimeTypeCheck: true
-		runtimeAssertionCheck: true
-		do: [ :obj :transpiler | 
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'pred(9)'))
-						for: obj
-						logged: false)
-				equals: 8.
-			self
-				should: [ Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'pred(-1)'))
-						for: obj
-						logged: false ]
-				raise: ViennaPreconditionViolation ]
+		runtimeAssertionCheck: true.
+	self assert: (obj evaluateExpression: 'pred(9)') equals: 8.
+	self should: [ obj evaluateExpression: 'pred(-1)' ] raise: ViennaPreconditionViolation
 ]
 
 { #category : #'tests-type checking' }
 ViennaVDM2SmalltalkObjectTest >> testFunctionTypecheck [
-	self
+	| obj |
+	obj := self
 		transpile:
 			'
 	functions 
 	pred : nat -> nat 
 	pred(x) == x - 1;'
 		runtimeTypeCheck: true
-		runtimeAssertionCheck: true
-		do: [ :obj :transpiler | 
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'pred(9)') )
-						for: obj
-						logged: false)
-				equals: 8.
-			self
-				should: [ Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'pred(0)') )
-						for: obj
-						logged: false ]
-				raise: ViennaRuntimeTypeError.
-			self
-				should: [ Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'pred(-1)') )
-						for: obj
-						logged: false ]
-				raise: ViennaRuntimeTypeError ]
+		runtimeAssertionCheck: true.
+	self assert: (obj evaluateExpression: 'pred(9)') equals: 8.
+	self should: [ obj evaluateExpression: 'pred(0)' ] raise: ViennaRuntimeTypeError.
+	self should: [ obj evaluateExpression: 'pred(-1)' ] raise: ViennaRuntimeTypeError
 ]
 
 { #category : #'tests-postconditions' }
 ViennaVDM2SmalltalkObjectTest >> testImplilcitFunctionPostcondition [
-	self
+	| obj |
+	obj := self
 		transpile:
 			'
 	functions 
 	pred(x:int) res:int
 	post res - x = 1;'
 		runtimeTypeCheck: true
-		runtimeAssertionCheck: true
-		do: [ :obj :transpiler | 
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'post_pred(10, 11)'))
-						for: obj
-						logged: false)
-				equals: true.
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'post_pred(10, 9)'))
-						for: obj
-						logged: false)
-				equals: false.
-			self
-				should: [ Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'pred(0)'))
-						for: obj
-						logged: false ]
-				raise: ViennaImplicitEvaluationError ]
+		runtimeAssertionCheck: true.
+	self assert: (obj evaluateExpression: 'post_pred(10, 11)') equals: true.
+	self assert: (obj evaluateExpression: 'post_pred(10, 9)') equals: false.
+	self should: [ obj evaluateExpression: 'pred(0)' ] raise: ViennaImplicitEvaluationError
 ]
 
 { #category : #'tests-postconditions' }
 ViennaVDM2SmalltalkObjectTest >> testImplilcitOperationPostcondition [
-	self
+	| obj |
+	obj := self
 		transpile:
 			'
 	operations 
@@ -222,43 +134,17 @@ ViennaVDM2SmalltalkObjectTest >> testImplilcitOperationPostcondition [
 	pre x > 0
 	post res - x = 1;'
 		runtimeTypeCheck: true
-		runtimeAssertionCheck: true
-		do: [ :obj :transpiler | 
-			self
-				assert:
-					(Compiler
-						evaluate:
-							(transpiler
-								generate: (ViennaVDMParser new expression parse: 'post_pred(10, nil, nil, 11)'))
-						for: obj
-						logged: false)
-				equals: true.
-			self
-				assert:
-					(Compiler
-						evaluate:
-							(transpiler
-								generate: (ViennaVDMParser new expression parse: 'post_pred(10, nil, nil, 9)'))
-						for: obj
-						logged: false)
-				equals: false.
-			self
-				should: [ Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'pred(10)'))
-						for: obj
-						logged: false ]
-				raise: ViennaImplicitEvaluationError.
-			self
-				should: [ Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'pred(0)'))
-						for: obj
-						logged: false ]
-				raise: ViennaPreconditionViolation ]
+		runtimeAssertionCheck: true.
+	self assert: (obj evaluateExpression: 'post_pred(10, nil, nil, 11)') equals: true.
+	self assert: (obj evaluateExpression: 'post_pred(10, nil, nil, 9)') equals: false.
+	self should: [ obj evaluateExpression: 'pred(10)' ] raise: ViennaImplicitEvaluationError.
+	self should: [ obj evaluateExpression: 'pred(0)' ] raise: ViennaPreconditionViolation
 ]
 
 { #category : #'tests-imports' }
 ViennaVDM2SmalltalkObjectTest >> testImportsFunctions [
-	self
+	| obj |
+	obj := self
 		transpile:
 			'
 		module T
@@ -277,26 +163,17 @@ ViennaVDM2SmalltalkObjectTest >> testImportsFunctions [
 			next(x) == T`succ(x)
 		end M'
 		runtimeTypeCheck: true
-		runtimeAssertionCheck: true
-		do: [ :obj :transpiler | 
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`next(1)'))
-						for: obj
-						logged: false)
-				equals: 2.
-			self
-				should: [ Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`next(-1)'))
-						for: obj
-						logged: false ]
-				raise: ViennaRuntimeTypeError ]
+		runtimeAssertionCheck: true.
+	self assert: (obj evaluateExpression: 'M`next(1)' ifError: [  ]) equals: 2.
+	self
+		should: [ obj evaluateExpression: 'M`next(-1)' ifError: [  ] ]
+		raise: ViennaRuntimeTypeError
 ]
 
 { #category : #'tests-imports' }
 ViennaVDM2SmalltalkObjectTest >> testImportsOperations [
-	self
+	| obj |
+	obj := self
 		transpile:
 			'
 		module T
@@ -319,27 +196,15 @@ ViennaVDM2SmalltalkObjectTest >> testImportsOperations [
 			next() == return T`succ()
 		end M'
 		runtimeTypeCheck: true
-		runtimeAssertionCheck: true
-		do: [ :obj :transpiler | 
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`next()'))
-						for: obj
-						logged: false)
-				equals: 1.
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`next()'))
-						for: obj
-						logged: false)
-				equals: 2 ]
+		runtimeAssertionCheck: true.
+	self assert: (obj evaluateExpression: 'M`next()' ifError: [  ]) equals: 1.
+	self assert: (obj evaluateExpression: 'M`next()' ifError: [  ]) equals: 2
 ]
 
 { #category : #'tests-imports' }
 ViennaVDM2SmalltalkObjectTest >> testImportsTypes [
-	self
+	| obj |
+	obj := self
 		transpile:
 			'
 		module T
@@ -357,26 +222,15 @@ ViennaVDM2SmalltalkObjectTest >> testImportsTypes [
 			succ(x) == x + 1
 		end M'
 		runtimeTypeCheck: true
-		runtimeAssertionCheck: true
-		do: [ :obj :transpiler | 
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`succ(1)'))
-						for: obj
-						logged: false)
-				equals: 2.
-			self
-				should: [ Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`succ(-1)'))
-						for: obj
-						logged: false ]
-				raise: ViennaRuntimeTypeError ]
+		runtimeAssertionCheck: true.
+	self assert: (obj evaluateExpression: 'M`succ(1)') equals: 2.
+	self should: [ obj evaluateExpression: 'M`succ(-1)' ] raise: ViennaRuntimeTypeError
 ]
 
 { #category : #'tests-imports' }
 ViennaVDM2SmalltalkObjectTest >> testImportsValues [
-	self
+	| obj |
+	obj := self
 		transpile:
 			'
 		module T
@@ -394,26 +248,15 @@ ViennaVDM2SmalltalkObjectTest >> testImportsValues [
 			isZero(x) == x = T`zero
 		end M'
 		runtimeTypeCheck: true
-		runtimeAssertionCheck: true
-		do: [ :obj :transpiler | 
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`isZero(1)'))
-						for: obj
-						logged: false)
-				equals: false.
-			self
-				assert: ( Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`isZero(0)'))
-						for: obj
-						logged: false )
-				equals: true ]
+		runtimeAssertionCheck: true.
+	self assert: (obj evaluateExpression: 'M`isZero(1)') equals: false.
+	self assert: (obj evaluateExpression: 'M`isZero(0)') equals: true
 ]
 
 { #category : #'tests-postconditions' }
 ViennaVDM2SmalltalkObjectTest >> testOperationPostcondition [
-	self
+	| obj |
+	obj := self
 		transpile:
 			'
 	state State of 
@@ -425,26 +268,15 @@ ViennaVDM2SmalltalkObjectTest >> testOperationPostcondition [
 	sub(x) == (count := count - x; return count)
 	post count >= 0;'
 		runtimeTypeCheck: true
-		runtimeAssertionCheck: true
-		do: [ :obj :transpiler | 
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'sub(9)') )
-						for: obj
-						logged: false)
-				equals: 1.
-			self
-				should: [ Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'sub(9)') )
-						for: obj
-						logged: false ]
-				raise: ViennaPostconditionViolation ]
+		runtimeAssertionCheck: true.
+	self assert: (obj evaluateExpression: 'sub(9)') equals: 1.
+	self should: [ obj evaluateExpression: 'sub(9)' ] raise: ViennaPostconditionViolation
 ]
 
 { #category : #'tests-preconditions' }
 ViennaVDM2SmalltalkObjectTest >> testOperationPrecondition [
-	self
+	| obj |
+	obj := self
 		transpile:
 			'
 	state State of 
@@ -456,26 +288,15 @@ ViennaVDM2SmalltalkObjectTest >> testOperationPrecondition [
 	sub(x) == (count := count - x; return count)
 	pre count >= x;'
 		runtimeTypeCheck: true
-		runtimeAssertionCheck: true
-		do: [ :obj  :transpiler | 
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'sub(9)') )
-						for: obj
-						logged: false)
-				equals: 1.
-			self
-				should: [ Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'sub(9)') )
-						for: obj
-						logged: false ]
-				raise: ViennaPreconditionViolation ]
+		runtimeAssertionCheck: true.
+	self assert: (obj evaluateExpression: 'sub(9)') equals: 1.
+	self should: [ obj evaluateExpression: 'sub(9)' ] raise: ViennaPreconditionViolation
 ]
 
 { #category : #'tests-type checking' }
 ViennaVDM2SmalltalkObjectTest >> testOperationTypecheck [
-	self
+	| obj |
+	obj := self
 		transpile:
 			'
 	state State of 
@@ -487,32 +308,16 @@ ViennaVDM2SmalltalkObjectTest >> testOperationTypecheck [
 	sub(x) == (count := count - x; return count)
 	post count >= 0;'
 		runtimeTypeCheck: true
-		runtimeAssertionCheck: true
-		do: [ :obj :transpiler | 
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'sub(9)'))
-						for: obj
-						logged: false)
-				equals: 1.
-			self
-				should: [ Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'sub(-9)'))
-						for: obj
-						logged: false ]
-				raise: ViennaRuntimeTypeError.
-			self
-				should: [ Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'sub(9)'))
-						for: obj
-						logged: false ]
-				raise: ViennaRuntimeTypeError ]
+		runtimeAssertionCheck: true.
+	self assert: (obj evaluateExpression: 'sub(9)') equals: 1.
+	self should: [ obj evaluateExpression: 'sub(-9)' ] raise: ViennaRuntimeTypeError.
+	self should: [ obj evaluateExpression: 'sub(9)' ] raise: ViennaRuntimeTypeError
 ]
 
 { #category : #'tests-imports' }
 ViennaVDM2SmalltalkObjectTest >> testRenamedFunctions [
-	self
+	| obj |
+	obj := self
 		transpile:
 			'
 		module T
@@ -531,26 +336,15 @@ ViennaVDM2SmalltalkObjectTest >> testRenamedFunctions [
 			next(x) == successor(x)
 		end M'
 		runtimeTypeCheck: true
-		runtimeAssertionCheck: true
-		do: [ :obj :transpiler | 
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`next(1)'))
-						for: obj
-						logged: false)
-				equals: 2.
-			self
-				should: [ Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`next(-1)'))
-						for: obj
-						logged: false ]
-				raise: ViennaRuntimeTypeError ]
+		runtimeAssertionCheck: true.
+	self assert: (obj evaluateExpression: 'M`next(1)') equals: 2.
+	self should: [ obj evaluateExpression: 'M`next(-1)' ] raise: ViennaRuntimeTypeError
 ]
 
 { #category : #'tests-imports' }
 ViennaVDM2SmalltalkObjectTest >> testRenamedOperations [
-	self
+	| obj |
+	obj := self
 		transpile:
 			'
 		module T
@@ -573,27 +367,15 @@ ViennaVDM2SmalltalkObjectTest >> testRenamedOperations [
 			next() == return successor()
 		end M'
 		runtimeTypeCheck: true
-		runtimeAssertionCheck: true
-		do: [ :obj :transpiler | 
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`next()'))
-						for: obj
-						logged: false)
-				equals: 1.
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`next()'))
-						for: obj
-						logged: false)
-				equals: 2 ]
+		runtimeAssertionCheck: true.
+	self assert: (obj evaluateExpression: 'M`next()') equals: 1.
+	self assert: (obj evaluateExpression: 'M`next()') equals: 2
 ]
 
 { #category : #'tests-imports' }
 ViennaVDM2SmalltalkObjectTest >> testRenamedTypes [
-	self
+	| obj |
+	obj := self
 		transpile:
 			'
 		module T
@@ -611,26 +393,15 @@ ViennaVDM2SmalltalkObjectTest >> testRenamedTypes [
 			succ(x) == x + 1
 		end M'
 		runtimeTypeCheck: true
-		runtimeAssertionCheck: true
-		do: [ :obj :transpiler | 
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`succ(1)'))
-						for: obj
-						logged: false)
-				equals: 2.
-			self
-				should: [ Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`succ(-1)'))
-						for: obj
-						logged: false ]
-				raise: ViennaRuntimeTypeError ]
+		runtimeAssertionCheck: true.
+	self assert: (obj evaluateExpression: 'M`succ(1)') equals: 2.
+	self should: [ obj evaluateExpression: 'M`succ(-1)' ] raise: ViennaRuntimeTypeError
 ]
 
 { #category : #'tests-imports' }
 ViennaVDM2SmalltalkObjectTest >> testRenamedValues [
-	self
+	| obj |
+	obj := self
 		transpile:
 			'
 		module T
@@ -648,27 +419,15 @@ ViennaVDM2SmalltalkObjectTest >> testRenamedValues [
 			isZero(x) == x = z
 		end M'
 		runtimeTypeCheck: true
-		runtimeAssertionCheck: true
-		do: [ :obj :transpiler | 
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`isZero(1)'))
-						for: obj
-						logged: false)
-				equals: false.
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`isZero(0)'))
-						for: obj
-						logged: false)
-				equals: true ]
+		runtimeAssertionCheck: true.
+	self assert: (obj evaluateExpression: 'M`isZero(1)') equals: false.
+	self assert: (obj evaluateExpression: 'M`isZero(0)') equals: true
 ]
 
 { #category : #'tests-invariants' }
 ViennaVDM2SmalltalkObjectTest >> testStateInvariant [
-	self
+	| obj |
+	obj := self
 		transpile:
 			'
 	state State of 
@@ -681,26 +440,15 @@ ViennaVDM2SmalltalkObjectTest >> testStateInvariant [
 	sub(x) == (count := count - x; return count)
 	post count >= 0;'
 		runtimeTypeCheck: true
-		runtimeAssertionCheck: true
-		do: [ :obj :transpiler | 
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'sub(9)') )
-						for: obj
-						logged: false)
-				equals: 1.
-			self
-				should: [ Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'sub(9)'))
-						for: obj
-						logged: false ]
-				raise: ViennaStateInvariantViolation ]
+		runtimeAssertionCheck: true.
+	self assert: (obj evaluateExpression: 'sub(9)') equals: 1.
+	self should: [ obj evaluateExpression: 'sub(9)' ] raise: ViennaStateInvariantViolation
 ]
 
 { #category : #'tests-invariants' }
 ViennaVDM2SmalltalkObjectTest >> testTypeInvariant [
-	self
+	| obj |
+	obj := self
 		transpile:
 			'
 	types
@@ -713,40 +461,16 @@ ViennaVDM2SmalltalkObjectTest >> testTypeInvariant [
 	sub : int ==> int 
 	sub(x) == (count := count - x; return count);'
 		runtimeTypeCheck: true
-		runtimeAssertionCheck: true
-		do: [ :obj :transpiler | 
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'sub(9)'))
-						for: obj
-						logged: false)
-				equals: 1.
-			self
-				should: [ Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'sub(9)'))
-						for: obj
-						logged: false ]
-				raise: ViennaRuntimeTypeError.
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'is_N0(1)') )
-						for: obj
-						logged: false)
-				equals: true.
-			self
-				assert:
-					(Compiler
-						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'is_N0(-1)') )
-						for: obj
-						logged: false)
-				equals: false ]
+		runtimeAssertionCheck: true.
+	self assert: (obj evaluateExpression: 'sub(9)') equals: 1.
+	self should: [ obj evaluateExpression: 'sub(9)' ] raise: ViennaRuntimeTypeError.
+	self assert: (obj evaluateExpression: 'is_N0(1)') equals: true.
+	self assert: (obj evaluateExpression: 'is_N0(-1)') equals: false
 ]
 
 { #category : #private }
-ViennaVDM2SmalltalkObjectTest >> transpile: aString runtimeTypeCheck: aBoolean1 runtimeAssertionCheck: aBoolean2 do: aBlock [
-	| ast transpiler obj |
+ViennaVDM2SmalltalkObjectTest >> transpile: aString runtimeTypeCheck: aBoolean1 runtimeAssertionCheck: aBoolean2 [
+	| ast transpiler |
 	ast := ViennaVDMParser new parse: aString.
 	ast isPetitFailure
 		ifTrue: [ ^ Error signal: 'syntax error' ].
@@ -754,7 +478,5 @@ ViennaVDM2SmalltalkObjectTest >> transpile: aString runtimeTypeCheck: aBoolean1 
 	transpiler
 		runtimeTypeCheck: aBoolean1;
 		runtimeAssertionCheck: aBoolean2.
-	obj := transpiler generate: ast.
-	transpiler defaultEnv: ((transpiler buildEnv: ast) at: 'DEFAULT').
-	^ aBlock value: obj value: transpiler
+	^ transpiler generate: ast
 ]
