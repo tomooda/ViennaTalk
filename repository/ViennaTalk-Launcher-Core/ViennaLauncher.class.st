@@ -137,6 +137,9 @@ ViennaLauncher >> initialize [
 		addLine;
 		add: 'settings...' target: self selector: #showSettingBrowser;
 		addLine;
+		add: 'update to the latest stable' target: self selector: #updateStable;
+		add: 'update to the bleeding edge' target: self selector: #updateDevelopment;
+		addLine;
 		add: 'reopen' target: self selector: #reopen;
 		add: 'close' target: self selector: #close;
 		yourself.
@@ -180,6 +183,24 @@ ViennaLauncher >> initialize [
 		maximumExtent: extent;
 		minimumExtent: extent;
 		themeChanged
+]
+
+{ #category : #'menu operations' }
+ViennaLauncher >> loadDevelopment [
+	Gofer new
+		smalltalkhubUser: 'tomooda' project: 'ViennaTalk';
+		configurationOf: #ViennaTalk;
+		load.
+	(Smalltalk at: #ConfigurationOfViennaTalk) loadDevelopment
+]
+
+{ #category : #'menu operations' }
+ViennaLauncher >> loadStable [
+	Gofer new
+		smalltalkhubUser: 'tomooda' project: 'ViennaTalk';
+		configurationOf: #ViennaTalk;
+		load.
+	(Smalltalk at: #ConfigurationOfViennaTalk) load
 ]
 
 { #category : #'interface opening' }
