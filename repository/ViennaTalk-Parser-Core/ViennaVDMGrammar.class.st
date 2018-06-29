@@ -4,6 +4,7 @@ Class {
 	#instVars : [
 		'document',
 		'definitionBlock',
+		'stateDefinition',
 		'typeDefinitions',
 		'valueDefinitions',
 		'operationDefinitions',
@@ -97,6 +98,7 @@ Class {
 		'char',
 		'mapletArrow',
 		'invariant',
+		'initialisation',
 		'fieldList',
 		'access',
 		'stateDesignator'
@@ -518,7 +520,7 @@ ViennaVDMGrammar >> defStatement [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> definitionBlock [
-	^ typeDefinitions / valueDefinitions / functionDefinitions / operationDefinitions
+	^ (typeDefinitions / valueDefinitions / functionDefinitions / operationDefinitions / stateDefinition) trim
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -988,6 +990,11 @@ ViennaVDMGrammar >> initialLetter [
 	^ PPPredicateObjectParser on: [ :c | ViennaUnicode isInitialLetter: c ] message: 'identifier expected'
 ]
 
+{ #category : #'parsers-definitions' }
+ViennaVDMGrammar >> initialisation [
+	^ ((self reserved: 'init') , self invariantFunction) ==> #second
+]
+
 { #category : #'parsers-types' }
 ViennaVDMGrammar >> inmapType [
 	^ ((self reserved: 'inmap') , type3 , (self reserved: 'to') , type3)
@@ -1002,7 +1009,7 @@ ViennaVDMGrammar >> inter: arg1 and: arg2 [
 	arg2}
 ]
 
-{ #category : #'parsers-types' }
+{ #category : #'parsers-definitions' }
 ViennaVDMGrammar >> invariant [
 	^ ((self reserved: 'inv') , self invariantFunction) ==> #second
 ]
@@ -1838,6 +1845,17 @@ ViennaVDMGrammar >> start [
 	^ expression end
 ]
 
+{ #category : #'parsers-definitions' }
+ViennaVDMGrammar >> stateDefinition [
+	^ ((self reserved: 'state') , identifier , (self reserved: 'of') , self stateFieldList , invariant optional
+		, initialisation optional , (self reserved: 'end') , semicolon optional)
+		==> [ :array | 
+			{(array second).
+			(array fourth).
+			(array fifth).
+			(array sixth)} ]
+]
+
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> stateDesignator [
 	^ (name , (self fieldReferenceArg / self mapOrSequenceReferenceArg) star)
@@ -1852,6 +1870,16 @@ ViennaVDMGrammar >> stateDesignator [
 					selector := selectorAndArg first.
 					refArg := selectorAndArg second.
 					self perform: selector with: designator with: refArg ] ]
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMGrammar >> stateFieldList [
+	^ (identifier , colon , type) star
+		==> [ :array | 
+			array
+				collect: [ :triple | 
+					{(triple first).
+					(triple third)} ] ]
 ]
 
 { #category : #'parsers-statements' }

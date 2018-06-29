@@ -520,14 +520,17 @@ ViennaVDM2SmalltalkTranslator >> explicitOperationDefinition [
 						nextPutAll: opname;
 						nextPutAll: ' := ['.
 					vars
-						do: [ :v | 
-							stream
-								nextPutAll: ' :';
-								nextPutAll: v ].
+						ifNotEmpty: [ 
+							vars
+								do: [ :v | 
+									stream
+										nextPutAll: ' :';
+										nextPutAll: v ].
+							stream nextPutAll: ' |' ].
 					stream
-						nextPutAll: ' ||';
+						nextPutAll: ' | ';
 						nextPutAll: (' ' join: (params inject: #() into: [ :vs :pat | vs , pat first ]));
-						nextPutAll: ' | '.
+						nextPutAll: ' _opContext | _opContext := thisContext. '.
 					params
 						with: vars
 						do: [ :p :v | 
@@ -745,6 +748,24 @@ ViennaVDM2SmalltalkTranslator >> indexForLoop [
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> inds: arg [
 	^ '(1 to: ' , arg , ' size) asSet'
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDM2SmalltalkTranslator >> initialisation [
+	^ ((self reserved: 'init') , identifier , (self operator: '==') , identifier , eq , 'mk_' asParser , identifier
+		, lparen , ((expression separatedBy: comma) withoutSeparators optional ==> [ :opt | opt ifNil: [ Array new ] ])
+		, rparen)
+		==> [ :array | 
+			| patVar patVar2 constructor values |
+			patVar := array second.
+			patVar2 := array fourth.
+			patVar = patVar2
+				ifTrue: [ 
+					constructor := array seventh.
+					values := array ninth.
+					{constructor.
+					values} ]
+				ifFalse: [ PPFailure message: 'init pattern mismatch: ' , patVar , ', ' , patVar2 ] ]
 ]
 
 { #category : #'parsers-types' }
@@ -1538,6 +1559,37 @@ ViennaVDM2SmalltalkTranslator >> setUnionPattern [
 			pat2 := pair second second.
 			{vars.
 			('(ViennaRuntimeUtil match: ' , pat1 , ' union: ' , pat2 , ')')} ]
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDM2SmalltalkTranslator >> stateDefinition [
+	^ super stateDefinition
+		==> [ :quatro | 
+			| constructor fields init vars |
+			constructor := quatro first.
+			fields := quatro second.
+			init := quatro fourth.
+			vars := fields collect: #first.
+			init
+				ifNil: [ PPFailure message: 'initalisation is required in state definition' ]
+				ifNotNil: [ 
+					| initConstructor values |
+					initConstructor := init first.
+					values := init second.
+					initConstructor = constructor
+						ifTrue: [ 
+							vars size = values size
+								ifTrue: [ 
+									{vars.
+									((1 to: vars size)
+										inject: ''
+										into: [ :code :index | code , (vars at: index) , ' := ' , (values at: index) , '.' ])} ]
+								ifFalse: [ 
+									PPFailure
+										message:
+											'Number of state variables and number of arguments must agree: ' , vars size printString , ', '
+												, values size printString ] ]
+						ifFalse: [ PPFailure message: 'Constructor must be the same name as state definition: ' , constructor , ', ' , initConstructor ] ] ]
 ]
 
 { #category : #'parsers-expressions-operators' }

@@ -389,6 +389,11 @@ ViennaVDMParser >> inds: arg [
 	^ ViennaNode label: 'SequenceIndices' with: arg
 ]
 
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> initialisation [
+	^ super initialisation ==> [ :invFunc | ViennaNode label: 'Initialisation' with: invFunc ]
+]
+
 { #category : #'parsers-types' }
 ViennaVDMParser >> inmapType [
 	^ super inmapType ==> [ :array | ViennaNode label: 'InmapType' withAll: array ]
@@ -397,6 +402,11 @@ ViennaVDMParser >> inmapType [
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> inter: arg1 and: arg2 [
 	^ ViennaNode label: 'SetIntersection' with: arg1 with: arg2
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> invariant [
+	^ super invariant ==> [ :inv | ViennaNode label: 'Invariant' with: inv ]
 ]
 
 { #category : #'parsers-types' }
@@ -871,6 +881,11 @@ ViennaVDMParser >> setType [
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> setUnionPattern [
 	^ super setUnionPattern ==> [ :array | ViennaNode label: 'SetUnionPattern' withAll: array ]
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> stateDefinition [
+	^ super stateDefinition ==> [ :array | ViennaNode label: 'StateDefinition' withAll: array ]
 ]
 
 { #category : #'parsers-expressions-operators' }
