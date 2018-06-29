@@ -34,6 +34,33 @@ ViennaVDM2SmalltalkTranslator >> apply: func args: args [
 	^ '(' , func , ' applyTo: {' , (' . ' join: args) , '})'
 ]
 
+{ #category : #'parsers-statements' }
+ViennaVDM2SmalltalkTranslator >> assignStatement [
+	^ super assignStatement
+		==> [ :pair | 
+			| desig expr |
+			desig := pair first.
+			expr := pair second.
+			desig isString
+				ifTrue: [ desig , ' := ' , expr ]
+				ifFalse: [ 
+					| ident path |
+					ident := desig first.
+					path := desig second.
+					ident , ' := ' , ident , ' copyAtPath: {' , (' . ' join: path) , '} put: ' , expr ] ]
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDM2SmalltalkTranslator >> assignmentDefinition [
+	^ super assignmentDefinition
+		==> [ :triple | 
+			| ident value |
+			ident := triple first.
+			value := triple third.
+			{{ident}.
+			(value ifNil: [ '' ] ifNotNil: [ ident , ' := ' , value ])} ]
+]
+
 { #category : #'parsers-types' }
 ViennaVDM2SmalltalkTranslator >> basicType [
 	^ super basicType ==> [ :typename | 'ViennaType ' , typename ]
@@ -53,6 +80,17 @@ ViennaVDM2SmalltalkTranslator >> binder: aBlockString with: aString vars: anArra
 				nextPutAll:
 						('.' join: (anArrayOfString collect: [ :varName | varName , ' := binds first at: ' , varName storeString ]));
 				nextPutAll: '. true])' ]
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDM2SmalltalkTranslator >> blockStatement [
+	^ super blockStatement
+		==> [ :array | 
+			| decls statements vars |
+			decls := array first.
+			statements := array second.
+			vars := decls inject: #() into: [ :vs :decl | vs , decl first ].
+			'[|' , (' ' join: vars) , '|' , ('.' join: (decls collect: #second) , statements) , '] value.' ]
 ]
 
 { #category : #'parsers-literals' }
@@ -163,6 +201,14 @@ ViennaVDM2SmalltalkTranslator >> concat: arg1 and: arg2 [
 	^ '(' , arg1 , ' , ' , arg2 , ')'
 ]
 
+{ #category : #'parsers-statements' }
+ViennaVDM2SmalltalkTranslator >> dclStatement [
+	^ super dclStatement
+		==> [ :defs | 
+			{(defs inject: #() into: [ :vars :def | vars , def first ]).
+			('.' join: (defs collect: #second))} ]
+]
+
 { #category : #'parsers-literals' }
 ViennaVDM2SmalltalkTranslator >> decimalLiteral [
 	^ super decimalLiteral
@@ -186,6 +232,27 @@ ViennaVDM2SmalltalkTranslator >> defExpression [
 									left := def first.
 									right := def second.
 									self binder: left second with: right vars: left first ])) , ' ifFalse: [ViennaNoMatch signal].' , expr , '] value' ]
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDM2SmalltalkTranslator >> defStatement [
+	^ super defStatement
+		==> [ :pair | 
+			| defs expr vars |
+			defs := pair first.
+			expr := pair second.
+			vars := Array new: defs size streamContents: [ :stream | defs do: [ :def | stream nextPutAll: def first first ] ].
+			'[|' , (' ' join: vars) , '|'
+				,
+					('.'
+						join:
+							(defs
+								collect: [ :def | 
+									| left right |
+									left := def first.
+									right := def second.
+									self binder: left second with: right vars: left first ])) , ' ifFalse: [ViennaNoMatch signal].' , expr
+				, '] value' ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -345,6 +412,20 @@ ViennaVDM2SmalltalkTranslator >> explicitFunctionDefinition [
 					paramSets do: [ :args | stream nextPut: $] ] ])} ]
 ]
 
+{ #category : #'parsers-statements' }
+ViennaVDM2SmalltalkTranslator >> fieldReference: stateDesig with: field [
+	| ident path |
+	stateDesig isString
+		ifTrue: [ 
+			ident := stateDesig.
+			path := Array new ]
+		ifFalse: [ 
+			ident := stateDesig first.
+			path := stateDesig second ].
+	^ {ident.
+	(path copyWith: field storeString)}
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> fieldSelect: record with: field [
 	^ '(' , record , ' at: ''' , field , ''')'
@@ -457,6 +538,11 @@ ViennaVDM2SmalltalkTranslator >> identifiedField [
 			fieldName := pair first.
 			fieldType := pair second.
 			'{' , fieldName storeString , '. false. ' , pair second , '}' ]
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDM2SmalltalkTranslator >> identityStatement [
+	^ super identityStatement ==> [ :ignore | '' ]
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -639,9 +725,59 @@ ViennaVDM2SmalltalkTranslator >> letBeExpression [
 						nextPutAll: '] value' ] ]
 ]
 
+{ #category : #'parsers-statements' }
+ViennaVDM2SmalltalkTranslator >> letBeStatement [
+	^ super letBeStatement
+		==> [ :pair | 
+			| multibind guard expr varGenerator |
+			multibind := pair first.
+			guard := pair second.
+			expr := pair third.
+			varGenerator := self varNameGenerator: 'letbe' uniqueIn: (Array with: multibind second with: guard with: expr).
+			String
+				new: 1024
+				streamContents: [ :stream | 
+					| patterns set vars |
+					patterns := multibind first.
+					set := multibind second.
+					vars := patterns inject: #() into: [ :vs :pat | vs , pat first ].
+					stream
+						nextPutAll: '[|';
+						nextPutAll: (' ' join: vars);
+						nextPutAll: '|('.
+					patterns
+						do: [ :pat | 
+							| loopVar |
+							loopVar := varGenerator value.
+							stream
+								nextPutAll: set;
+								nextPutAll: ' anySatisfy: [:';
+								nextPutAll: loopVar;
+								nextPutAll: '|';
+								nextPutAll: (self binder: pat second with: loopVar vars: pat first);
+								nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ].
+					stream nextPutAll: guard.
+					multibind first do: [ :pat | stream nextPut: $] ].
+					stream
+						nextPutAll: ') ifFalse: [NotFound signal].';
+						nextPutAll: expr;
+						nextPutAll: '] value' ] ]
+]
+
 { #category : #'parsers-expressions-basics' }
 ViennaVDM2SmalltalkTranslator >> letExpression [
 	^ super letExpression
+		==> [ :pair | 
+			| localDefinitions body vars |
+			localDefinitions := pair first.
+			body := pair second.
+			vars := Array new: 10 streamContents: [ :stream | localDefinitions do: [ :def | stream nextPutAll: def first ] ].
+			'[|' , (' ' join: vars) , '|' , ('.' join: (localDefinitions collect: #second)) , '.' , body , '] value' ]
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDM2SmalltalkTranslator >> letStatement [
+	^ super letStatement
 		==> [ :pair | 
 			| localDefinitions body vars |
 			localDefinitions := pair first.
@@ -758,6 +894,20 @@ ViennaVDM2SmalltalkTranslator >> mapMunionPattern [
 			('(ViennaRuntimeUtil match: ' , pat1 , ' munion: ' , pat2 , ')')} ]
 ]
 
+{ #category : #'parsers-statements' }
+ViennaVDM2SmalltalkTranslator >> mapOrSequenceReference: stateDesig with: expr [
+	| ident path |
+	stateDesig isString
+		ifTrue: [ 
+			ident := stateDesig.
+			path := Array new ]
+		ifFalse: [ 
+			ident := stateDesig first.
+			path := stateDesig second ].
+	^ {ident.
+	(path copyWith: expr)}
+]
+
 { #category : #'parsers-types' }
 ViennaVDM2SmalltalkTranslator >> mapType [
 	^ super mapType
@@ -809,9 +959,23 @@ ViennaVDM2SmalltalkTranslator >> mul: arg1 and: arg2 [
 	^ '(' , arg1 , ' * ' , arg2 , ')'
 ]
 
+{ #category : #'parsers-statements' }
+ViennaVDM2SmalltalkTranslator >> multipleAssignStatement [
+	^ super multipleAssignStatement ==> [ :array | '.' join: array ]
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> munion: arg1 and: arg2 [
 	^ '(Dictionary new addAll: ' , arg1 , '; addAll: ' , arg2 , '; yourself)'
+]
+
+{ #category : #'parsers-expressions-basics' }
+ViennaVDM2SmalltalkTranslator >> name [
+	^ super name
+		==> [ :stringOrPair | 
+			stringOrPair isString
+				ifTrue: [ stringOrPair ]
+				ifFalse: [ '(' , stringOrPair first , ' at: ' , stringOrPair second storeString , ')' ] ]
 ]
 
 { #category : #'parsers-literals' }

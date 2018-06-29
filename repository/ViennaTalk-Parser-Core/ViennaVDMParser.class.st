@@ -6,7 +6,7 @@ Class {
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> abs: arg [
-	^ ViennaNode label: 'AbsoluteValue' with: arg
+	^ ViennaNode label: 'ArithmeticAbs' with: arg
 ]
 
 { #category : #'parsers-definitions' }
@@ -53,6 +53,11 @@ ViennaVDMParser >> apply: func args: args [
 	^ ViennaNode label: 'Apply' with: func with: args
 ]
 
+{ #category : #'parsers-statements' }
+ViennaVDMParser >> assignmentDefinition [
+	^ super assignmentDefinition ==> [ :array | ViennaNode label: 'AssignmentDefinition' withAll: array ]
+]
+
 { #category : #'parsers-types' }
 ViennaVDMParser >> basicType [
 	^ super basicType ==> [ :ast | ViennaNode label: 'BasicType' with: ast ]
@@ -63,9 +68,14 @@ ViennaVDMParser >> bindList [
 	^ super bindList ==> [ :array | ViennaNode label: 'BindList' withAll: array ]
 ]
 
+{ #category : #'parsers-statements' }
+ViennaVDMParser >> blockStatement [
+	^ super blockStatement ==> [ :array | ViennaNode label: 'BlockStatement' withAll: array first , array second ]
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> card: arg [
-	^ ViennaNode label: 'Card' with: arg
+	^ ViennaNode label: 'SetCardinality' with: arg
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -95,17 +105,27 @@ ViennaVDMParser >> compositionExpression: expr1 and: expr2 [
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> conc: arg [
-	^ ViennaNode label: 'DistributedConcatenation' with: arg
+	^ ViennaNode label: 'DistributedSequenceConcatenation' with: arg
 ]
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> concat: arg1 and: arg2 [
-	^ ViennaNode label: 'Concatenation' with: arg1 with: arg2
+	^ ViennaNode label: 'SequenceConcatenate' with: arg1 with: arg2
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDMParser >> dclStatement [
+	^ super dclStatement ==> [ :array | ViennaNode label: 'DclStatement' withAll: array ]
 ]
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMParser >> defExpression [
 	^ super defExpression ==> [ :array | ViennaNode label: 'DefExpression' withAll: array ]
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDMParser >> defStatement [
+	^ super defStatement ==> [ :array | ViennaNode label: 'DefStatement' withAll: array ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -120,12 +140,12 @@ ViennaVDMParser >> diff: arg1 and: arg2 [
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> dinter: arg [
-	^ ViennaNode label: 'DistributedIntersection' with: arg
+	^ ViennaNode label: 'DistributedSetIntersection' with: arg
 ]
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> div: arg1 and: arg2 [
-	^ ViennaNode label: 'IntegerDivision' with: arg1 with: arg2
+	^ ViennaNode label: 'ArithmeticIntegerDivision' with: arg1 with: arg2
 ]
 
 { #category : #'parsers-definitions' }
@@ -135,22 +155,27 @@ ViennaVDMParser >> document [
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> dom: arg [
-	^ ViennaNode label: 'Domain' with: arg
+	^ ViennaNode label: 'MapDomain' with: arg
 ]
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> dunion: arg [
-	^ ViennaNode label: 'DistributedUnion' with: arg
+	^ ViennaNode label: 'DistributedSetUnion' with: arg
 ]
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> elems: arg [
-	^ ViennaNode label: 'Elements' with: arg
+	^ ViennaNode label: 'SequenceElements' with: arg
 ]
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> equal: arg1 and: arg2 [
-	^ ViennaNode label: 'Equality' with: arg1 with: arg2
+	^ ViennaNode label: 'Equal' with: arg1 with: arg2
+]
+
+{ #category : #'parsers-expressions-basics' }
+ViennaVDMParser >> equalDefinition [
+	^ super equalDefinition ==> [ :array | ViennaNode label: 'EqualDefinition' withAll: array ]
 ]
 
 { #category : #'parsers-types' }
@@ -165,7 +190,7 @@ ViennaVDMParser >> equalityAbstractionField [
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> equiv: arg1 and: arg2 [
-	^ ViennaNode label: 'Biimplication' with: arg1 with: arg2
+	^ ViennaNode label: 'LogicalEquivalence' with: arg1 with: arg2
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -209,6 +234,11 @@ ViennaVDMParser >> fieldPatternList [
 	^ super fieldPattern ==> [ :array | ViennaNode label: 'FieldPatternList' withAll: array ]
 ]
 
+{ #category : #'parsers-statements' }
+ViennaVDMParser >> fieldReference: stateDesig with: field [
+	^ ViennaNode label: 'FeildReference' with: stateDesig with: field
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> fieldSelect: record with: field [
 	^ ViennaNode label: 'FieldSelect' with: record with: field
@@ -231,7 +261,7 @@ ViennaVDMParser >> forallExpression [
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> fraction: arg1 and: arg2 [
-	^ ViennaNode label: 'Division' with: arg1 with: arg2
+	^ ViennaNode label: 'ArithmeticDivide' with: arg1 with: arg2
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -246,12 +276,12 @@ ViennaVDMParser >> greater: arg1 and: arg2 [
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> greaterEq: arg1 and: arg2 [
-	^ ViennaNode label: 'GreaterOrEqual' with: arg1 with: arg2
+	^ ViennaNode label: 'GreaterThanOrEqual' with: arg1 with: arg2
 ]
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> hd: arg [
-	^ ViennaNode label: 'Head' with: arg
+	^ ViennaNode label: 'SequenceHead' with: arg
 ]
 
 { #category : #'parsers-types' }
@@ -264,6 +294,11 @@ ViennaVDMParser >> identifiedField [
 			'{' , fieldName storeString , '. false. ' , pair second , '}' ]
 ]
 
+{ #category : #'parsers-statements' }
+ViennaVDMParser >> identityStatement [
+	^ super identityStatement ==> [ :ignore | ViennaNode label: 'IdentityStatement' ]
+]
+
 { #category : #'parsers-expressions-basics' }
 ViennaVDMParser >> ifExpression [
 	^ super ifExpression ==> [ :array | ViennaNode label: 'IfExpression' withAll: array ]
@@ -271,7 +306,7 @@ ViennaVDMParser >> ifExpression [
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> imp: arg1 and: arg2 [
-	^ ViennaNode label: 'Implication' with: arg1 with: arg2
+	^ ViennaNode label: 'Imply' with: arg1 with: arg2
 ]
 
 { #category : #'parsers-definitions' }
@@ -281,12 +316,12 @@ ViennaVDMParser >> implicitFunctionDefinition [
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> inSet: arg1 and: arg2 [
-	^ ViennaNode label: 'Membership' with: arg1 with: arg2
+	^ ViennaNode label: 'InSet' with: arg1 with: arg2
 ]
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> inds: arg [
-	^ ViennaNode label: 'Indexes' with: arg
+	^ ViennaNode label: 'SequenceIndices' with: arg
 ]
 
 { #category : #'parsers-types' }
@@ -296,7 +331,7 @@ ViennaVDMParser >> inmapType [
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> inter: arg1 and: arg2 [
-	^ ViennaNode label: 'Intersection' with: arg1 with: arg2
+	^ ViennaNode label: 'SetIntersection' with: arg1 with: arg2
 ]
 
 { #category : #'parsers-types' }
@@ -336,7 +371,7 @@ ViennaVDMParser >> isofclassExpression [
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> iterateExpression: expr1 and: expr2 [
-	^ ViennaNode label: 'IterateExpression' with: expr1 with: expr2
+	^ ViennaNode label: 'Iterate' with: expr1 with: expr2
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -346,7 +381,7 @@ ViennaVDMParser >> lambdaExpression [
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> len: arg [
-	^ ViennaNode label: 'Length' with: arg
+	^ ViennaNode label: 'SequenceLength' with: arg
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -356,7 +391,7 @@ ViennaVDMParser >> less: arg1 and: arg2 [
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> lessEq: arg1 and: arg2 [
-	^ ViennaNode label: 'LessOrEqual' with: arg1 with: arg2
+	^ ViennaNode label: 'LessThanOrEqual' with: arg1 with: arg2
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -364,29 +399,39 @@ ViennaVDMParser >> letBeExpression [
 	^ super letBeExpression ==> [ :array | ViennaNode label: 'LetBeExpression' withAll: array ]
 ]
 
+{ #category : #'parsers-statements' }
+ViennaVDMParser >> letBeStatement [
+	^ super letBeStatement ==> [ :array | ViennaNode label: 'LetBeStatement' withAll: array ]
+]
+
 { #category : #'parsers-expressions-basics' }
 ViennaVDMParser >> letExpression [
 	^ super letExpression ==> [ :array | ViennaNode label: 'LetExpression' withAll: array ]
 ]
 
+{ #category : #'parsers-statements' }
+ViennaVDMParser >> letStatement [
+	^ super letStatement ==> [ :array | ViennaNode label: 'LetStatement' withAll: array ]
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> map: arg1 domainRestrictedBy: arg2 [
-	^ ViennaNode label: 'DomainRestrictedBy' with: arg1 with: arg2
+	^ ViennaNode label: 'MapDomainRestrictedBy' with: arg1 with: arg2
 ]
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> map: arg1 domainRestrictedTo: arg2 [
-	^ ViennaNode label: 'DomainRestrictedTo' with: arg1 with: arg2
+	^ ViennaNode label: 'MapDomainRestrictedTo' with: arg1 with: arg2
 ]
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> map: arg1 rangeRestrictedBy: arg2 [
-	^ ViennaNode label: 'RangeRestrictedBy' with: arg1 with: arg2
+	^ ViennaNode label: 'MapRangeRestrictedBy' with: arg1 with: arg2
 ]
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> map: arg1 rangeRestrictedTo: arg2 [
-	^ ViennaNode label: 'RangeRestrictedTo' with: arg1 with: arg2
+	^ ViennaNode label: 'MapRangeRestrictedTo' with: arg1 with: arg2
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -407,6 +452,11 @@ ViennaVDMParser >> mapEnumerationPattern [
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> mapMunionPattern [
 	^ super mapMunionPattern ==> [ :array | ViennaNode label: 'MapMunionPattern' withAll: array ]
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDMParser >> mapOrSequenceReference: stateDesig with: expr [
+	^ ViennaNode label: 'MapOrSequenceReference' with: stateDesig with: expr
 ]
 
 { #category : #'parsers-types' }
@@ -431,27 +481,27 @@ ViennaVDMParser >> matchValue [
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> mconcat: arg1 and: arg2 [
-	^ ViennaNode label: 'Override' with: arg1 with: arg2
+	^ ViennaNode label: 'MapOrSequenceModify' with: arg1 with: arg2
 ]
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> merge: arg [
-	^ ViennaNode label: 'DistributedMerge' with: arg
+	^ ViennaNode label: 'DistributedMapMerge' with: arg
 ]
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> minus: arg1 and: arg2 [
-	^ ViennaNode label: 'Difference' with: arg1 with: arg2
+	^ ViennaNode label: 'ArithmeticMinus' with: arg1 with: arg2
 ]
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> mod: arg1 and: arg2 [
-	^ ViennaNode label: 'Modulus' with: arg1 with: arg2
+	^ ViennaNode label: 'ArithmeticMod' with: arg1 with: arg2
 ]
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> mul: arg1 and: arg2 [
-	^ ViennaNode label: 'Product' with: arg1 with: arg2
+	^ ViennaNode label: 'ArithmeticMultiplication' with: arg1 with: arg2
 ]
 
 { #category : #'parsers-patterns' }
@@ -466,7 +516,7 @@ ViennaVDMParser >> multipleTypeBind [
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> munion: arg1 and: arg2 [
-	^ ViennaNode label: 'Merge' with: arg1 with: arg2
+	^ ViennaNode label: 'MapMerge' with: arg1 with: arg2
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -490,17 +540,17 @@ ViennaVDMParser >> newExpression [
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> not: arg [
-	^ ViennaNode label: 'Negation' with: arg
+	^ ViennaNode label: 'Not' with: arg
 ]
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> notEqual: arg1 and: arg2 [
-	^ ViennaNode label: 'Inequality' with: arg1 with: arg2
+	^ ViennaNode label: 'NotEqual' with: arg1 with: arg2
 ]
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> notInSet: arg1 and: arg2 [
-	^ ViennaNode label: 'NotMembership' with: arg1 with: arg2
+	^ ViennaNode label: 'NotInSet' with: arg1 with: arg2
 ]
 
 { #category : #'parsers-patterns' }
@@ -520,7 +570,7 @@ ViennaVDMParser >> optionalType [
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> or: arg1 and: arg2 [
-	^ ViennaNode label: 'Disjunction' with: arg1 with: arg2
+	^ ViennaNode label: 'Or' with: arg1 with: arg2
 ]
 
 { #category : #'parsers-types' }
@@ -540,12 +590,12 @@ ViennaVDMParser >> patternList [
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> plus: arg1 and: arg2 [
-	^ ViennaNode label: 'Sum' with: arg1 with: arg2
+	^ ViennaNode label: 'ArithmeticPlus' with: arg1 with: arg2
 ]
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> power: arg [
-	^ ViennaNode label: 'PowerSet' with: arg
+	^ ViennaNode label: 'FinitePowerSet' with: arg
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -585,7 +635,7 @@ ViennaVDMParser >> recordTypeDefinition [
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> rem: arg1 and: arg2 [
-	^ ViennaNode label: 'Remainder' with: arg1 with: arg2
+	^ ViennaNode label: 'ArithmeticRem' with: arg1 with: arg2
 ]
 
 { #category : #'parsers-expressions-threads' }
@@ -599,8 +649,13 @@ ViennaVDMParser >> resultExpression [
 ]
 
 { #category : #'parsers-expressions-operators' }
+ViennaVDMParser >> reverse: arg [
+	^ ViennaNode label: 'SequenceReverse' with: arg
+]
+
+{ #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> rng: arg [
-	^ ViennaNode label: 'Range' with: arg
+	^ ViennaNode label: 'MapRange' with: arg
 ]
 
 { #category : #'parsers-expressions-type discriminations' }
@@ -714,7 +769,7 @@ ViennaVDMParser >> timeExpression [
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> tl: arg [
-	^ ViennaNode label: 'Tail' with: arg
+	^ ViennaNode label: 'SequenceTail' with: arg
 ]
 
 { #category : #'parsers-types' }
@@ -784,7 +839,7 @@ ViennaVDMParser >> undefinedExpression [
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> union: arg1 and: arg2 [
-	^ ViennaNode label: 'Union' with: arg1 with: arg2
+	^ ViennaNode label: 'SetUnion' with: arg1 with: arg2
 ]
 
 { #category : #'parsers-types' }
