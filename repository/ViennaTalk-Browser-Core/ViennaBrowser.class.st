@@ -141,6 +141,7 @@ ViennaBrowser class >> moduleListMenu: aBuilder [
 	<viennaBrowserModuleListMenu>
 	(aBuilder item: #'new and load...' translated) selector: #newAndLoadFromFile.
 	(aBuilder item: #'load and merge...' translated) selector: #loadAndMergeFromFile.
+	(aBuilder item: #'save snapshot...' translated) selector: #saveSnapshotToFile.
 	(aBuilder item: #'save all modules...' translated) selector: #saveAllModulesToFile.
 	aBuilder model selectedModule
 		ifNotNil: [ (aBuilder item: #'save the module...' translated) selector: #saveAModuleToFile ].
@@ -722,10 +723,10 @@ ViennaBrowser >> fieldSelectionIndex: anInteger [
 ]
 
 { #category : #private }
-ViennaBrowser >> fileOpen: title do: aBlock [
+ViennaBrowser >> fileOpen: title extensions: anArrayOfString do: aBlock [
 	(UIManager default
 		fileOpen: title
-		extensions: #('vdm' 'vdmsl')
+		extensions: anArrayOfString
 		path: self directory
 		preview: #text)
 		ifNotNil: [ :stream | 
@@ -734,8 +735,8 @@ ViennaBrowser >> fileOpen: title do: aBlock [
 ]
 
 { #category : #private }
-ViennaBrowser >> fileSave: title do: aBlock [
-	(UIManager default fileSave: title extensions: #('vdm' 'vdmsl') path: self directory)
+ViennaBrowser >> fileSave: title extensions: anArrayOfString do: aBlock [
+	(UIManager default fileSave: title extensions: anArrayOfString path: self directory)
 		ifNotNil: [ :reference | 
 			directory := reference parent.
 			reference
@@ -801,7 +802,33 @@ ViennaBrowser >> importerModules [
 
 { #category : #'module list menu' }
 ViennaBrowser >> loadAndMergeFromFile [
-	self fileOpen: 'Load and merge ...' do: [ :stream | self acceptCode: stream contents ]
+	self
+		fileOpen: 'Load and merge ...'
+		extensions: #('vdm' 'vdmsl')
+		do: [ :stream | self acceptCode: stream contents ]
+]
+
+{ #category : #'module list menu' }
+ViennaBrowser >> loadSnapshotFromFile [
+	self
+		fileOpen: 'Open snapshot...'
+		extensions: #('vdmim')
+		do: [ :stream | 
+			| json |
+			json := (NeoJSONReader on: stream) next.
+			animation := (json at: 'engineType' ifAbsent: [ nil ]) asSymbol
+				in:
+					[ :type | type = #transpiler and: [ Smalltalk hasClassNamed: #ViennaTranspiledAnimation ] ].
+			[ animation
+				specification: (json at: 'specification' ifAbsent: [ '' ])
+				ifError: [ :msg | self error: msg ].
+			self selectModuleNamed: nil ]
+				on: Error
+				do: [ :ex | 
+					codePane setText: (json at: 'specification').
+					codePane hasUnacceptedEdits: true ].
+			animation state: (json at: 'state' ifAbsent: [Dictionary new]).
+			self acceptWorkspace: (json at: 'workspace' ifAbsent: [ '' ]) ]
 ]
 
 { #category : #'module list' }
@@ -888,11 +915,11 @@ ViennaBrowser >> moduleSelectionIndex: anInteger [
 ViennaBrowser >> newAndLoadFromFile [
 	self
 		fileOpen: 'New and load from...'
+		extensions: #('vdm' 'vdmsl')
 		do: [ :stream | 
 			stream contents
 				in: [ :source | 
-					[ 
-					animation specification: source ifError: [ :msg | self error: msg ].
+					[ animation specification: source ifError: [ :msg | self error: msg ].
 					self selectModuleNamed: nil ]
 						on: Error
 						do: [ :ex | 
@@ -987,13 +1014,19 @@ ViennaBrowser >> removeModule [
 ViennaBrowser >> saveAModuleToFile [
 	self selectedModule
 		ifNotNil: [ :module | 
-			((self modulePositionsFrom: animation specification) detect: [ :assoc | assoc key = module ] ifNone: [  ])
+			((self modulePositionsFrom: animation specification)
+				detect: [ :assoc | assoc key = module ]
+				ifNone: [  ])
 				ifNotNil: [ :assoc | 
 					self
 						fileSave: 'Save the "' , module , '" modules to...'
+						extensions: #('vdm' 'vdmsl')
 						do: [ :stream | 
 							stream
-								nextPutAll: (animation specification copyFrom: assoc value first to: assoc value last);
+								nextPutAll:
+									(animation specification
+										copyFrom: assoc value first
+										to: assoc value last);
 								close ] ] ]
 ]
 
@@ -1001,10 +1034,25 @@ ViennaBrowser >> saveAModuleToFile [
 ViennaBrowser >> saveAllModulesToFile [
 	self
 		fileSave: 'Save all modules to...'
+		extensions: #('vdm' 'vdmsl')
 		do: [ :stream | 
 			stream
 				nextPutAll: animation specification;
 				close ]
+]
+
+{ #category : #'module list menu' }
+ViennaBrowser >> saveSnapshotToFile [
+	| json |
+	json := Dictionary new.
+	json at: 'engineType' put: self animation engineType.
+	json at: 'specification' put: self animation specification.
+	json at: 'state' put: self animation state.
+	json at: 'workspace' put: self workspace.
+	self
+		fileSave: 'Save snapshot to...'
+		extensions: #('vdmim')
+		do: [ :stream | (NeoJSONWriter on: stream) nextPut: json ]
 ]
 
 { #category : #'field list' }
