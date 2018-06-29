@@ -967,6 +967,22 @@ THE SOFTWARE.</pre>'.
 	^ self responseHtml: page contents
 ]
 
+{ #category : #'request handling-file' }
+VDMPad >> binaryFileService: aZnRequest [
+	| url |
+	url := aZnRequest uri path.
+	url first = $/
+		ifTrue: [ url := url copyFrom: 2 to: url size ].
+	(FileStream isAFileNamed: url)
+		ifTrue: [ 
+			FileStream
+				readOnlyFileNamed: url
+				do: [ :stream | 
+					stream binary.
+					^ self responseBinary: stream contents mimeType: (ZnMimeType applicationOctetStream ) ] ]
+		ifFalse: [ self responseNotFound: aZnRequest uri ]
+]
+
 { #category : #'request handling-javascript' }
 VDMPad >> blob [
 	^ self
@@ -1852,6 +1868,8 @@ VDMPad >> initialize [
 		at: 'exportS.png' put: #exportSelectedIcon;
 		at: 'deleteS.png' put: #deleteSelectedIcon;
 		at: 'saveT.png' put: #saveTransparentIcon;
+		at: 'vdmj-3.0.1.jar' put: #binaryFileService:;
+		at: 'Json4VDMJ.jar' put: #binaryFileService:;
 		yourself
 ]
 
