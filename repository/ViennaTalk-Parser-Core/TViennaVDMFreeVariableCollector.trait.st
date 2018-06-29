@@ -131,6 +131,14 @@ TViennaVDMFreeVariableCollector >> freeVariablesForallExpression: aViennaNode bo
 	self freeVariables: expressionBody boundVars: binds into: freeVars
 ]
 
+{ #category : #'free variables-expressions' }
+TViennaVDMFreeVariableCollector >> freeVariablesGlobalName: aViennaNode boundVars: boundVars into: freeVars [
+	| name |
+	name := aViennaNode first , '`' , aViennaNode second.
+	(boundVars includes: name)
+		ifFalse: [ freeVars add: name ]
+]
+
 { #category : #'free variables-statements' }
 TViennaVDMFreeVariableCollector >> freeVariablesIndexForLoop: aViennaNode boundVars: boundVars into: freeVars [
 	| binds |

@@ -776,6 +776,11 @@ ViennaVDMFormatter >> functionsSignature: aViennaNode [
 ]
 
 { #category : #'formatting-expressions' }
+ViennaVDMFormatter >> globalName: aViennaNode [
+	^ aViennaNode first , '`' , aViennaNode second
+]
+
+{ #category : #'formatting-expressions' }
 ViennaVDMFormatter >> greaterThan: aViennaNode [
 	^ self print: (self format: aViennaNode first) infix: '>' arg: (self format: aViennaNode second)
 ]

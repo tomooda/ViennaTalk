@@ -10,13 +10,28 @@ Class {
 }
 
 { #category : #utilities }
-ViennaVDM2Smalltalk class >> translateExplicitFunction: aString [
-	^ self new generate: (ViennaVDMParser new explicitFunctionDefinition end parse: aString)
+ViennaVDM2Smalltalk class >> translate: aString ifError: aBlock [
+	self subclassResponsibility
 ]
 
 { #category : #utilities }
-ViennaVDM2Smalltalk class >> translateExplicitOperation: aString [
-	^ self new generate: (ViennaVDMParser new explicitOperationDefinition end parse: aString)
+ViennaVDM2Smalltalk class >> translateExplicitFunction: aString ifError: aBlock [
+	self subclassResponsibility
+]
+
+{ #category : #utilities }
+ViennaVDM2Smalltalk class >> translateExplicitOperation: aString ifError: aBlock [
+	self subclassResponsibility
+]
+
+{ #category : #utilities }
+ViennaVDM2Smalltalk class >> translateExpression: aString ifError: aBlock [
+	self subclassResponsibility
+]
+
+{ #category : #utilities }
+ViennaVDM2Smalltalk class >> translateStatement: aString ifError: aBlock [
+	self subclassResponsibility
 ]
 
 { #category : #'code generation-definitions' }
@@ -182,19 +197,17 @@ ViennaVDM2Smalltalk >> blockStatement: aViennaNode env: aDictionary [
 	^ String
 		new: 1024
 		streamContents: [ :stream | 
-			stream nextPut: $[.
 			vars
 				ifNotEmpty: [ 
-					stream nextPutAll: '| '.
+					stream nextPutAll: '[| '.
 					vars
 						do: [ :var | 
 							stream
 								nextPutAll: var;
 								nextPut: Character space ].
 					stream nextPutAll: '| ' ].
-			stream
-				nextPutAll: ('.' join: statements);
-				nextPutAll: '] value.' ]
+			stream nextPutAll: ('.' join: statements).
+			vars ifNotEmpty: [ stream nextPutAll: '] value.' ] ]
 ]
 
 { #category : #'code generation-statements' }
@@ -507,22 +520,9 @@ ViennaVDM2Smalltalk >> distributedSetUnion: aViennaNode env: aDictionary [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2Smalltalk >> document: aViennaNode env: aDictionary [
-	| vars lazyDefs eagerDefs |
-	aViennaNode first label = 'DefinitionBlock'
-		ifFalse: [ ^ self error: 'This is not a flat spec.' ].
-	vars := self boundVariables: aViennaNode.
-	lazyDefs := OrderedCollection new.
-	eagerDefs := OrderedCollection new.
-	self
-		definitions: aViennaNode
-		do: [ :node | 
-			((#('AccessOperationDefinition' 'AccessFunctionDefinition') includes: node label)
-				ifTrue: [ lazyDefs ]
-				ifFalse: [ eagerDefs ]) add: node ].
-	^ '| ' , (' ' join: vars) , ' |' , String cr
-		,
-			('.' , String cr
-				join: (lazyDefs , (self reorderDefinitions: eagerDefs) collect: [ :node | self generate: node env: aDictionary ]))
+	^ aViennaNode first label = 'DefinitionBlock'
+		ifTrue: [ self flatDocument: aViennaNode env: aDictionary ]
+		ifFalse: [ self modularDocument: aViennaNode env: aDictionary ]
 ]
 
 { #category : #'code generation-expressions' }
@@ -619,8 +619,8 @@ ViennaVDM2Smalltalk >> explicitFunctionDefinition: aViennaNode env: aDictionary 
 		uniqueIn:
 			{funcName.
 			body}.
-	parametersListNode
-		do: [ :parametersNode | 
+	parametersListNode asArray
+		reverseDo: [ :parametersNode | 
 			| argType binds |
 			argType := typeNode first.
 			typeNode := typeNode second.
@@ -654,22 +654,23 @@ ViennaVDM2Smalltalk >> explicitOperationDefinition: aViennaNode env: aDictionary
 			{opname.
 			body}.
 	argTypeNode := typeNode first.
-	binds := argTypeNode label = 'UnitType' ifTrue: [{}] ifFalse: [argTypeNode label = 'ProductType'
-		ifTrue: [ 
-			(1 to: argTypeNode size)
-				collect: [ :index | 
-					{(paramsNode at: index).
-					(argTypeNode at: index)} ] ]
+	binds := argTypeNode label = 'UnitType'
+		ifTrue: [ {} ]
 		ifFalse: [ 
-			{{(paramsNode first).
-			argTypeNode}} ]].
-	^ opname , ' := '
-		,
-			(self
-				closureFromFlatBinds: binds
-				body: body
-				varGenerator: varGenerator
-				env: aDictionary)
+			argTypeNode label = 'ProductType'
+				ifTrue: [ 
+					(1 to: argTypeNode size)
+						collect: [ :index | 
+							{(paramsNode at: index).
+							(argTypeNode at: index)} ] ]
+				ifFalse: [ 
+					{{(paramsNode first).
+					argTypeNode}} ] ].
+	^ opname , ' := ' , (self
+		closureFromFlatBinds: binds
+		body: body
+		varGenerator: varGenerator
+		env: aDictionary)
 ]
 
 { #category : #'code generation-expressions' }
@@ -727,6 +728,11 @@ ViennaVDM2Smalltalk >> finExpression: aViennaNode env: aDictionary [
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> finitePowerSet: aViennaNode env: aDictionary [
 	^ (self generate: aViennaNode first env: aDictionary) , ' power'
+]
+
+{ #category : #'code generation-definitions' }
+ViennaVDM2Smalltalk >> flatDocument: aViennaNode env: aDictionary [
+	^ self subclassResponsibility
 ]
 
 { #category : #utilities }
@@ -829,7 +835,7 @@ ViennaVDM2Smalltalk >> functionDefinition: aViennaNode env: aDictionary [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2Smalltalk >> functionDefinitions: aViennaNode env: aDictionary [
-	^ '.' , String cr join: (aViennaNode collect: [ :node | self generate: node env: aDictionary ])
+	self subclassResponsibility
 ]
 
 { #category : #'code generation-expressions' }
@@ -1479,6 +1485,11 @@ ViennaVDM2Smalltalk >> matchValue: aViennaNode env: aDictionary [
 	^ '(ViennaRuntimeUtil matchValue: ' , literal , ')'
 ]
 
+{ #category : #'code generation-definitions' }
+ViennaVDM2Smalltalk >> modularDocument: aViennaNode env: aDictionary [
+	^ self subclassResponsibility
+]
+
 { #category : #'code generation-statements' }
 ViennaVDM2Smalltalk >> multipleAssignStatement: aViennaNode env: aDictionary [
 	| assigns |
@@ -1599,7 +1610,7 @@ ViennaVDM2Smalltalk >> operationDefinition: aViennaNode env: aDictionary [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2Smalltalk >> operationDefinitions: aViennaNode env: aDictionary [
-	^ '.' , String cr join: (aViennaNode collect: [ :node | self generate: node env: aDictionary ])
+	^ self subclassResponsibility
 ]
 
 { #category : #'code generation-types' }
@@ -2104,7 +2115,7 @@ ViennaVDM2Smalltalk >> stateDefinition: aViennaNode env: aDictionary [
 					'Number of state variables and number of arguments must agree: ' , vars size printString , ', '
 						, expressionListNode size printString ].
 	vals := expressionListNode collect: [ :node | self generate: node env: aDictionary ].
-	^ String
+	^ {(String
 		new: 1024
 		streamContents: [ :stream | 
 			vars
@@ -2114,20 +2125,26 @@ ViennaVDM2Smalltalk >> stateDefinition: aViennaNode env: aDictionary [
 						nextPutAll: var;
 						nextPutAll: ' := ';
 						nextPutAll: val;
-						nextPutAll: '.' , String cr ].
+						nextPutAll: '.' , String cr ] ]).
+	(String
+		new: 1024
+		streamContents: [ :stream | 
 			stream
 				nextPutAll: initConstructor;
 				nextPutAll: ' := ViennaCompositeType constructorName: ';
 				nextPutAll: initConstructor storeString;
 				nextPutAll: ' withAll: {';
 				nextPutAll: (' . ' join: (self generate: fieldListNode env: aDictionary));
-				nextPutAll: '}.' , String cr.
+				nextPutAll: '}' ]).
+	(String
+		new: 1024
+		streamContents: [ :stream | 
 			patternVar := initNode first first first.
 			stream
 				nextPutAll: 'init_';
 				nextPutAll: initConstructor;
 				nextPutAll: ' := ';
-				nextPutAll: (self generate: initNode first) ]
+				nextPutAll: (self generate: initNode first) ])}
 ]
 
 { #category : #'code generation-expressions' }
@@ -2216,8 +2233,7 @@ ViennaVDM2Smalltalk >> typeDefinition: aViennaNode env: aDictionary [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2Smalltalk >> typeDefinitions: aViennaNode env: aDictionary [
-	^ '.' , String cr
-		join: ((self reorderDefinitions: aViennaNode) collect: [ :node | self generate: node env: aDictionary ])
+	self subclassResponsibility
 ]
 
 { #category : #'code generation-expressions' }
@@ -2280,8 +2296,7 @@ ViennaVDM2Smalltalk >> valueDefinition: aViennaNode env: aDictionary [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2Smalltalk >> valueDefinitions: aViennaNode env: aDictionary [
-	^ '.' , String cr
-		join: ((self reorderDefinitions: aViennaNode) collect: [ :node | self generate: node env: aDictionary ])
+	self subclassResponsibility
 ]
 
 { #category : #utilities }

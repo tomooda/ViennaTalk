@@ -262,6 +262,11 @@ TViennaVDMBoundVariableCollector >> boundVariablesModule: aViennaNode into: aSet
 	aSet add: aViennaNode first
 ]
 
+{ #category : #'bound variables-definitions' }
+TViennaVDMBoundVariableCollector >> boundVariablesModuleBody: aViennaNode into: aSet [
+	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
+]
+
 { #category : #'bound variables-patterns and binds' }
 TViennaVDMBoundVariableCollector >> boundVariablesMultipleSetBind: aViennaNode into: aSet [
 	self boundVariables: aViennaNode first into: aSet
