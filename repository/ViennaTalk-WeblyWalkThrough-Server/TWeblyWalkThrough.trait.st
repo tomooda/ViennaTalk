@@ -12,12 +12,12 @@ TWeblyWalkThrough >> apiCall: apiName in: moduleName withArguments: args [
 TWeblyWalkThrough >> argsFrom: aZnRequest [
 	| args |
 	args := Array new.
-	aZnRequest method = 'get'
+	aZnRequest method asLowercase = 'get'
 		ifTrue: [ 
 			args := aZnRequest uri query
 				ifNil: [ #() ]
 				ifNotNil: [ :query | query values collect: [ :arg | self translateFromJson: arg ] ] ].
-	aZnRequest method = 'post'
+	aZnRequest method asLowercase = 'post'
 		ifTrue: [ 
 			(aZnRequest contentType main = 'application' and: [ aZnRequest contentType sub asLowercase = 'json' ])
 				ifTrue: [ 
