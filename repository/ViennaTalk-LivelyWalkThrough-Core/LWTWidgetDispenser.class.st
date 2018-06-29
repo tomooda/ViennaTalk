@@ -5,6 +5,7 @@ Class {
 		'fieldWidget',
 		'plotWidget',
 		'imageWidget',
+		'variableImageWidget',
 		'buttonWidget',
 		'padWidget',
 		'areaWidget',
