@@ -385,6 +385,60 @@ ViennaVDM2SmalltalkScriptTest >> testExistsExpressionEnv [
 	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: false
 ]
 
+{ #category : #'tests-code generation-definitions' }
+ViennaVDM2SmalltalkScriptTest >> testExtendedExplicitFunction [
+	| code |
+	code := ViennaVDM2SmalltalkScript new
+		translate:
+			'
+	functions 
+	succ(x:int) res:int == x + 1
+	post res = x + 1;'
+		ifError: [ self fail ].
+	self
+		assert: (Compiler evaluate: code , '. succ value: 0' for: nil logged: false)
+		equals: 1.
+	self
+		assert:
+			(Compiler
+				evaluate: code , '. post_succ value: 0 value: 1'
+				for: nil
+				logged: false).
+	self
+		deny:
+			(Compiler
+				evaluate: code , '. post_succ value: 0 value: 2'
+				for: nil
+				logged: false)
+]
+
+{ #category : #'tests-code generation-definitions' }
+ViennaVDM2SmalltalkScriptTest >> testExtendedExplicitOperation [
+	| code |
+	code := ViennaVDM2SmalltalkScript new
+		translate:
+			'
+	operations 
+	succ(x:int) res:int == return x + 1
+	post res = x + 1;'
+		ifError: [ self fail ].
+	self
+		assert: (Compiler evaluate: code , '. succ value: 0' for: nil logged: false)
+		equals: 1.
+	self
+		assert:
+			(Compiler
+				evaluate: code , '. post_succ value: 0 value: 1'
+				for: nil
+				logged: false).
+	self
+		deny:
+			(Compiler
+				evaluate: code , '. post_succ value: 0 value: 2'
+				for: nil
+				logged: false)
+]
+
 { #category : #'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testFieldReferenceEnv [
 	| node |
@@ -525,6 +579,44 @@ ViennaVDM2SmalltalkScriptTest >> testIfStatementEnv [
 	self deny: node isPetitFailure.
 	self assert: node label = 'IfStatement'.
 	self assert: (Compiler evaluate: '|x|' , (ViennaVDM2SmalltalkScript new generate: node) , '.x') equals: 2
+]
+
+{ #category : #'tests-code generation-definitions' }
+ViennaVDM2SmalltalkScriptTest >> testImplicitFunctionPostcondition [
+	| code |
+	code := ViennaVDM2SmalltalkScript new
+		translate:
+			'
+	functions 
+	succ(x:int) res:int
+	post res = x + 1;'
+		ifError: [ self fail ].
+	self
+		should: [ Compiler evaluate: code , '. succ value: 1' for: nil logged: false ]
+		raise: ViennaImplicitEvaluationError.
+	self
+		assert: (Compiler evaluate: code , '. post_succ value: 0 value: 1' for: nil logged: false).
+	self
+		deny: (Compiler evaluate: code , '. post_succ value: 0 value: 2' for: nil logged: false)
+]
+
+{ #category : #'tests-code generation-definitions' }
+ViennaVDM2SmalltalkScriptTest >> testImplicitOperationPostcondition [
+	| code |
+	code := ViennaVDM2SmalltalkScript new
+		translate:
+			'
+	operations 
+	succ(x:int) res:int
+	post res = x + 1;'
+		ifError: [ self fail ].
+	self
+		should: [ Compiler evaluate: code , '. succ value: 1' for: nil logged: false ]
+		raise: ViennaImplicitEvaluationError.
+	self
+		assert: (Compiler evaluate: code , '. post_succ value: 0 value: 1' for: nil logged: false).
+	self
+		deny: (Compiler evaluate: code , '. post_succ value: 0 value: 2' for: nil logged: false)
 ]
 
 { #category : #'tests-code generation-expressions' }

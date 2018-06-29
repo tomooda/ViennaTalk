@@ -7,6 +7,93 @@ Class {
 }
 
 { #category : #'tests-postconditions' }
+ViennaVDM2SmalltalkObjectTest >> testExplicitFunctionPostcondition [
+	self
+		transpile:
+			'
+	functions 
+	pred : int -> int 
+	pred(x) == x - 1
+	post RESULT >= 0;'
+		runtimeTypeCheck: true
+		runtimeAssertionCheck: true
+		do: [ :obj :transpiler | 
+			self
+				assert:
+					(Compiler
+						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'pred(10)') )
+						for: obj
+						logged: false)
+				equals: 9.
+			self
+				should: [ Compiler
+						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'pred(0)') )
+						for: obj
+						logged: false ]
+				raise: ViennaPostconditionViolation ]
+]
+
+{ #category : #'tests-postconditions' }
+ViennaVDM2SmalltalkObjectTest >> testExtendedExplicitFunctionPostcondition [
+	self
+		transpile:
+			'
+	functions 
+	pred(x:int) res:int == x - 1
+	post res >= 0;'
+		runtimeTypeCheck: true
+		runtimeAssertionCheck: true
+		do: [ :obj :transpiler | 
+			self
+				assert:
+					(Compiler
+						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'pred(10)') )
+						for: obj
+						logged: false)
+				equals: 9.
+			self
+				should: [ Compiler
+						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'pred(0)') )
+						for: obj
+						logged: false ]
+				raise: ViennaPostconditionViolation ]
+]
+
+{ #category : #'tests-type checking' }
+ViennaVDM2SmalltalkObjectTest >> testExtendedExplicitOperation [
+	self
+		transpile:
+			'
+	state State of 
+		count : int
+		init s == s = mk_State(10) 
+	end
+	operations 
+	sub(x:nat) res:nat == (count := count - x; return count)
+	post count + x = count~ and count = res;'
+		runtimeTypeCheck: true
+		runtimeAssertionCheck: true
+		do: [ :obj :transpiler | 
+			self
+				assert:
+					(Compiler
+						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'sub(9)'))
+						for: obj
+						logged: false)
+				equals: 1.
+			self assert: (obj instVarNamed: 'count') equals: 1.
+			self
+				assert:
+					(Compiler
+						evaluate:
+							(transpiler
+								generate: (ViennaVDMParser new expression parse: 'post_sub(1, mk_State(9), mk_State(10), 9)'))
+						for: obj
+						logged: false)
+				equals: true ]
+]
+
+{ #category : #'tests-postconditions' }
 ViennaVDM2SmalltalkObjectTest >> testFunctionPostcondition [
 	self
 		transpile:
@@ -90,6 +177,83 @@ ViennaVDM2SmalltalkObjectTest >> testFunctionTypecheck [
 						for: obj
 						logged: false ]
 				raise: ViennaRuntimeTypeError ]
+]
+
+{ #category : #'tests-postconditions' }
+ViennaVDM2SmalltalkObjectTest >> testImplilcitFunctionPostcondition [
+	self
+		transpile:
+			'
+	functions 
+	pred(x:int) res:int
+	post res - x = 1;'
+		runtimeTypeCheck: true
+		runtimeAssertionCheck: true
+		do: [ :obj :transpiler | 
+			self
+				assert:
+					(Compiler
+						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'post_pred(10, 11)'))
+						for: obj
+						logged: false)
+				equals: true.
+			self
+				assert:
+					(Compiler
+						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'post_pred(10, 9)'))
+						for: obj
+						logged: false)
+				equals: false.
+			self
+				should: [ Compiler
+						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'pred(0)'))
+						for: obj
+						logged: false ]
+				raise: ViennaImplicitEvaluationError ]
+]
+
+{ #category : #'tests-postconditions' }
+ViennaVDM2SmalltalkObjectTest >> testImplilcitOperationPostcondition [
+	self
+		transpile:
+			'
+	operations 
+	pred(x:int) res:int
+	pre x > 0
+	post res - x = 1;'
+		runtimeTypeCheck: true
+		runtimeAssertionCheck: true
+		do: [ :obj :transpiler | 
+			self
+				assert:
+					(Compiler
+						evaluate:
+							(transpiler
+								generate: (ViennaVDMParser new expression parse: 'post_pred(10, nil, nil, 11)'))
+						for: obj
+						logged: false)
+				equals: true.
+			self
+				assert:
+					(Compiler
+						evaluate:
+							(transpiler
+								generate: (ViennaVDMParser new expression parse: 'post_pred(10, nil, nil, 9)'))
+						for: obj
+						logged: false)
+				equals: false.
+			self
+				should: [ Compiler
+						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'pred(10)'))
+						for: obj
+						logged: false ]
+				raise: ViennaImplicitEvaluationError.
+			self
+				should: [ Compiler
+						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'pred(0)'))
+						for: obj
+						logged: false ]
+				raise: ViennaPreconditionViolation ]
 ]
 
 { #category : #'tests-imports' }

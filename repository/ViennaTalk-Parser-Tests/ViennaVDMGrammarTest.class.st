@@ -491,6 +491,36 @@ ViennaVDMGrammarTest >> testExportTypesSignature [
 	self assert: (grammar exportTypesSignature end parse: 'types t1; struct t2;') equals: #(#(nil 't1') #('struct' 't2'))
 ]
 
+{ #category : #'tests-definitions' }
+ViennaVDMGrammarTest >> testExtendedExplicitFunctionDefinition [
+	self
+		assert: (grammar functionDefinition end parse: 'f[@t](x:t1) res:t2 == y pre b1 post b2')
+		equals: #('f' #('@t') #(('x') 't1') #('res' 't2') 'y' 'b1' 'b2' ).
+	self
+		assert: (grammar functionDefinition end parse: 'f(x:t1) res:t2 == y post b2')
+		equals: #('f' #() #(('x') 't1') #('res' 't2') 'y' nil 'b2' ).
+	self
+		assert: (grammar functionDefinition end parse: 'f(x:t1) res:t2 == y') isPetitFailure
+]
+
+{ #category : #'tests-definitions' }
+ViennaVDMGrammarTest >> testExtendedExplicitOperationDefinition [
+	self
+		assert:
+			(grammar operationDefinition end
+				parse: 'op(p1:t1, p2:t2) i1:t3 == skip ext rd v1:t4 wt v2:t5 pre b1 post b2 errs i2:e1->e2')
+		equals:
+			#('op' #(#('p1') 't1' #('p2') 't2') #('i1' 't3') nil #(#('rd' #('v1') 't4') #('wt' #('v2') 't5')) 'b1' 'b2' #(#('i2' 'e1' 'e2'))).
+	self
+		assert: (grammar operationDefinition end parse: 'op(p1:t1, p2:t2) i1:t3 == skip post b2')
+		equals: #('op' #(#('p1') 't1' #('p2') 't2') #('i1' 't3') nil nil nil 'b2' nil).
+	self
+		assert:
+			(grammar operationDefinition end
+				parse: 'op(p1:t1, p2:t2) i1:t3 == skip ext rd v1:t4 wt v2:t5 pre b1  errs i2:e1->e2')
+				isPetitFailure
+]
+
 { #category : #'tests-types' }
 ViennaVDMGrammarTest >> testFieldSelect1 [
 	self assert: (grammar expression end parse: 'r1.f1') equals: #('r1' 'f1')
@@ -657,6 +687,37 @@ ViennaVDMGrammarTest >> testIfStatement [
 			(grammar statement end parse: 'if cond1 then return e1 elseif cond2 then return e2 elseif cond3 then return e3 else return e4')
 		equals: #(#(#('cond1' 'e1') #('cond2' 'e2') #('cond3' 'e3')) 'e4').
 	self assert: (grammar statement end parse: 'if cond1 then return e1') equals: #(#(#('cond1' 'e1')) nil)
+]
+
+{ #category : #'tests-definitions' }
+ViennaVDMGrammarTest >> testImplicitFunctionDefinition [
+	self
+		assert: (grammar functionDefinition end parse: 'f[@t](p1:t1, p2:t2) i1:t3 pre b1 post b2')
+		equals: #('f' #('@t') #(#('p1') 't1' #('p2') 't2') #('i1' 't3') 'b1' 'b2').
+	self
+		assert: (grammar functionDefinition end parse: 'f[@t](p1:t1, p2:t2) i1:t3 post b2')
+		equals: #('f' #('@t') #(#('p1') 't1' #('p2') 't2') #('i1' 't3') nil 'b2').
+	self
+		assert:
+			(grammar functionDefinition end parse: 'f[@t](p1:t1, p2:t2) i1:t3 pre b1') isPetitFailure
+]
+
+{ #category : #'tests-definitions' }
+ViennaVDMGrammarTest >> testImplicitOperationDefinition [
+	self
+		assert:
+			(grammar operationDefinition end
+				parse: 'op(p1:t1, p2:t2) i1:t3 ext rd v1:t4 wt v2:t5 pre b1 post b2 errs i2:e1->e2')
+		equals:
+			#('op' #(#('p1') 't1' #('p2') 't2') #('i1' 't3') #(#(#('rd' #('v1') 't4') #('wt' #('v2') 't5')) 'b1' 'b2' #(#('i2' 'e1' 'e2')))).
+	self
+		assert: (grammar operationDefinition end parse: 'op(p1:t1, p2:t2) i1:t3 post b2')
+		equals: #('op' #(#('p1') 't1' #('p2') 't2') #('i1' 't3') #(nil nil 'b2' nil)).
+	self
+		assert:
+			(grammar operationDefinition end
+				parse: 'op(p1:t1, p2:t2) i1:t3 ext rd v1:t4 wt v2:t5 pre b1 errs i2:e1->e2')
+				isPetitFailure
 ]
 
 { #category : #'tests-interfaces' }
