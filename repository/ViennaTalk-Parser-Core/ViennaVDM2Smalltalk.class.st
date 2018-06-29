@@ -156,11 +156,25 @@ ViennaVDM2Smalltalk >> binder: aBlockString with: aString vars: anArrayOfString 
 { #category : #'code generation-statements' }
 ViennaVDM2Smalltalk >> blockStatement: aViennaNode env: aDictionary [
 	| statements vars |
-	statements := OrderedCollection new:aViennaNode size.
-	vars :=self boundVariables: aViennaNode.
-	aViennaNode do: [: node |
-		(self generate: node env: aDictionary) ifNotNil: [:statement | statements add: statement]].
-	^ '[|' , (' ' join: vars asArray) , '|' , ('.' join: statements) , '] value.'
+	statements := OrderedCollection new: aViennaNode size.
+	vars := self boundVariables: aViennaNode.
+	aViennaNode do: [ :node | (self generate: node env: aDictionary) ifNotNil: [ :statement | statements add: statement ] ].
+	^ String
+		new: 1024
+		streamContents: [ :stream | 
+			stream nextPut: $[.
+			vars
+				ifNotEmpty: [ 
+					stream nextPutAll: '| '.
+					vars
+						do: [ :var | 
+							stream
+								nextPutAll: var;
+								nextPut: Character space ].
+					stream nextPutAll: '| ' ].
+			stream
+				nextPutAll: ('.' join: statements);
+				nextPutAll: '] value.' ]
 ]
 
 { #category : #'code generation-statements' }
@@ -326,6 +340,53 @@ ViennaVDM2Smalltalk >> casesStatementAlternatives: aViennaNode env: aDictionary 
 	^ self generateAll: aViennaNode env: aDictionary
 ]
 
+{ #category : #utilities }
+ViennaVDM2Smalltalk >> closureFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode body: aString varGenerator: varGenerator env: aDictionary [
+	^ String
+		new: 1024
+		streamContents: [ :stream | 
+			| tmpVars matchPatternNodes tuplePattern matchVars |
+			tmpVars := OrderedCollection new.
+			matchPatternNodes := OrderedCollection new.
+			stream nextPutAll: '['.
+			self
+				fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode
+				patternNodeAndSetOrTypeNodeAndBindTypesDo: [ :patternNode :setNode :bindType | 
+					bindType = #identifier
+						ifTrue: [ 
+							stream
+								nextPutAll: ' :';
+								nextPutAll: patternNode first ].
+					bindType = #compound
+						ifTrue: [ 
+							| tmpVar |
+							tmpVar := varGenerator value.
+							tmpVars add: tmpVar.
+							matchPatternNodes add: patternNode.
+							stream
+								nextPutAll: ' :';
+								nextPutAll: tmpVar ] ].
+			tuplePattern := ViennaNode label: 'TuplePattern' with: (ViennaNode label: 'PatternList' withAll: matchPatternNodes).
+			matchVars := (self boundVariables: tuplePattern) asArray.
+			anArrayOfPatternNodeAndTypeSetNode ifNotEmpty: [stream nextPutAll: ' | '].
+			matchVars notEmpty
+				ifTrue: [ 
+					stream nextPutAll: ' | '.
+					matchVars
+						do: [ :var | 
+							stream
+								nextPutAll: var;
+								nextPut: Character space ].
+					stream
+						nextPutAll: '| ';
+						nextPutAll:
+								(self binder: (self generate: tuplePattern env: aDictionary) with: '{' , (' . ' join: tmpVars) , '}' vars: matchVars);
+						nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ].
+			stream
+				nextPutAll: aString;
+				nextPutAll: ']' ]
+]
+
 { #category : #'code generation-types' }
 ViennaVDM2Smalltalk >> compositeType: aViennaNode env: aDictionary [
 	| constructorName fields |
@@ -416,12 +477,15 @@ ViennaVDM2Smalltalk >> equal: aViennaNode env: aDictionary [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2Smalltalk >> equalDefinition: aViennaNode env: aDictionary [
-	| left right |
-	left := self generate: aViennaNode first env: aDictionary.
-	(#('TypeBind' 'SetBind') includes: aViennaNode first label)
-		ifTrue: [ left := left first ].
+	| leftNode left right |
+	leftNode := aViennaNode first.
+	(#('TypeBind' 'SetBind') includes: leftNode label)
+		ifTrue: [ leftNode := leftNode first ].
+	left := self generate: leftNode env: aDictionary.
 	right := self generate: aViennaNode second env: aDictionary.
-	^ self binder: left with: right vars: (self boundVariables: aViennaNode) asArray
+	^ leftNode label = 'PatternIdentifier'
+		ifTrue: [ '[' , leftNode first , ' := ' , right , '. true] value' ]
+		ifFalse: [ self binder: left with: right vars: (self boundVariables: aViennaNode) asArray ]
 ]
 
 { #category : #'code generation-definitions' }
@@ -431,179 +495,123 @@ ViennaVDM2Smalltalk >> equalDefinitionList: aViennaNode env: aDictionary [
 
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> exists1Expression: aViennaNode env: aDictionary [
-	| bind pat setOrType expr var boundVars |
-	bind := self generate: aViennaNode first env: aDictionary.
-	pat := bind first.
-	setOrType := bind second.
+	| bindNode expr varGenerator |
+	bindNode := aViennaNode first.
 	expr := self generate: aViennaNode second env: aDictionary.
-	aViennaNode first first label = 'PatternIdentifier'
-		ifTrue: [ ^ '(' , setOrType , ' onlyOneSatisfy: [ :' , aViennaNode first first first , '|' , expr , '])' ].
-	var := (self varNameGenerator: 'exists1' uniqueIn: (Array with: expr)) value.
-	boundVars := (self boundVariables: aViennaNode first) asArray.
-	^ '(' , setOrType , ' onlyOneSatisfy: [ :' , var , '||' , (' ' join: boundVars) , '|'
-		, (self binder: pat with: var vars: boundVars) , ' and: [' , expr , ']])'
+	varGenerator := self varNameGenerator: 'exists1' uniqueIn: (Array with: expr).
+	^ '('
+		,
+			(self
+				generatorFromFlatBinds:
+					{{(bindNode first).
+					(bindNode second)}}
+				selector: #onlyOneSatisfy:
+				whenMatchFailed: 'false'
+				body: expr
+				varGenerator: varGenerator
+				env: aDictionary) , ')'
 ]
 
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> existsExpression: aViennaNode env: aDictionary [
-	| multibindsNode multibinds expr varGenerator |
-	multibindsNode := aViennaNode first.
+	| bindListNode expr varGenerator pair flatBinds setsAndVars |
+	bindListNode := aViennaNode first.
 	expr := self generate: aViennaNode second env: aDictionary.
-	(multibindsNode
-		allSatisfy: [ :multibindNode | multibindNode first allSatisfy: [ :patternNode | patternNode label = 'PatternIdentifier' ] ])
-		ifTrue: [ 
-			| names |
-			names := Array
-				new: multibindsNode size * 2
-				streamContents: [ :namesStream | multibindsNode do: [ :multibindNode | multibindNode do: [ :patternNode | namesStream nextPut: patternNode first ] ] ].
-			names size = names asSet size
-				ifTrue: [ 
-					^ String
-						new: 1024
-						streamContents: [ :stream | 
-							stream nextPutAll: '('.
-							multibindsNode
-								do: [ :multibindNode | 
-									| set |
-									set := self generate: multibindNode second env: aDictionary.
-									multibindNode first
-										do: [ :patternNode | 
-											stream
-												nextPutAll: set;
-												nextPutAll: ' anySatisfy: [:';
-												nextPutAll: patternNode first;
-												nextPutAll: '|' ] ].
-							stream nextPutAll: expr.
-							multibindsNode do: [ :multibindNode | multibindNode first do: [ :pat | stream nextPut: $] ] ].
-							stream nextPutAll: ')' ] ] ].
-	multibinds := self generate: multibindsNode env: aDictionary.
-	varGenerator := self varNameGenerator: 'exists' uniqueIn: (Array with: expr) , (multibinds collect: #second).
+	varGenerator := self varNameGenerator: 'exists' uniqueIn: (Array with: expr).
+	pair := self flattenBindList: bindListNode varGenerator: varGenerator env: aDictionary.
+	flatBinds := pair first.
+	setsAndVars := pair second.
 	^ String
 		new: 1024
 		streamContents: [ :stream | 
-			stream nextPutAll: '('.
-			multibinds
-				with: aViennaNode first asArray
-				do: [ :multibind :multibindNode | 
-					| patterns set |
-					patterns := multibind first.
-					set := multibind second.
-					patterns
-						with: multibindNode first asArray
-						do: [ :pat :patternNode | 
-							| loopVar boundVars |
-							loopVar := varGenerator value.
-							boundVars := self boundVariables: patternNode.
-							stream
-								nextPutAll: set;
-								nextPutAll: ' anySatisfy: [:';
-								nextPutAll: loopVar;
-								nextPutAll: '||';
-								nextPutAll: (' ' join: boundVars);
-								nextPutAll: '|';
-								nextPutAll: (self binder: pat with: loopVar vars: boundVars);
-								nextPutAll: ' and:  [' ] ].
-			stream nextPutAll: expr.
-			multibinds do: [ :multibind | multibind first do: [ :pat | stream nextPutAll: ']]' ] ].
-			stream nextPutAll: ')' ]
+			stream nextPutAll: '(['.
+			setsAndVars
+				do: [ :setAndVar | 
+					stream
+						nextPutAll: ' :';
+						nextPutAll: setAndVar second ].
+			stream
+				nextPutAll: ' | ';
+				nextPutAll:
+						(self
+								generatorFromFlatBinds: flatBinds
+								selector: #anySatisfy:
+								whenMatchFailed: 'false'
+								body: expr
+								varGenerator: varGenerator
+								env: aDictionary);
+				nextPutAll: ']'.
+			setsAndVars
+				do: [ :setAndVar | 
+					stream
+						nextPutAll: ' value: ';
+						nextPutAll: setAndVar first ].
+			stream nextPut: $) ]
 ]
 
 { #category : #'code generation-definitions' }
 ViennaVDM2Smalltalk >> explicitFunctionDefinition: aViennaNode env: aDictionary [
-	| funcName paramSetsNode paramSets body varGenerator |
+	| funcName typeNode parametersListNode body varGenerator |
 	funcName := aViennaNode first.
-	paramSetsNode := aViennaNode fifth.
-	paramSets := self generate: paramSetsNode env: aDictionary.
+	typeNode := aViennaNode third.
+	parametersListNode := aViennaNode fifth.
 	body := self generate: aViennaNode sixth env: aDictionary.
 	varGenerator := self
 		varNameGenerator: 'func'
 		uniqueIn:
 			{funcName.
 			body}.
-	^ String
-		new: 1024
-		streamContents: [ :stream | 
-			stream
-				nextPutAll: funcName;
-				nextPutAll: ' := '.
-			paramSets
-				with: paramSetsNode asArray
-				do: [ :params :paramsNode | 
-					((paramsNode allSatisfy: [ :n | n label = 'PatternIdentifier' ])
-						and: [ (paramsNode collect: [ :node | node first ]) asSet size = paramsNode size ])
-						ifTrue: [ 
-							stream nextPut: $[.
-							paramsNode
-								do: [ :node | 
-									stream
-										nextPutAll: ' :';
-										nextPutAll: node first ].
-							stream nextPut: $| ]
-						ifFalse: [ 
-							| vars |
-							vars := params collect: [ :p | varGenerator value ].
-							stream
-								nextPut: $[;
-								nextPutAll: (' ' join: (vars collect: [ :v | ' :' , v ]));
-								nextPutAll: '||';
-								nextPutAll: (' ' join: (self boundVariables: paramsNode) asArray);
-								nextPut: $|.
-							1 to: params size do: [ :index | 
-								| p v n |
-								p := params at: index.
-								v := vars at: index.
-								n := paramsNode at: index.
-								stream
-									nextPutAll: (self binder: p with: v vars: (self boundVariables: n) asArray);
-									nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ] ] ].
-			stream nextPutAll: body.
-			paramSets do: [ :args | stream nextPut: $] ] ]
+	parametersListNode
+		do: [ :parametersNode | 
+			| argType binds |
+			argType := typeNode first.
+			typeNode := typeNode second.
+			binds := argType label = 'ProductType'
+				ifTrue: [ 
+					(1 to: parametersNode size)
+						collect: [ :index | 
+							{(parametersNode at: index).
+							(argType at: index)} ] ]
+				ifFalse: [ 
+					{{(parametersNode first).
+					argType}} ].
+			body := self
+				closureFromFlatBinds: binds
+				body: body
+				varGenerator: varGenerator
+				env: aDictionary ].
+	^ funcName , ' := ' , body
 ]
 
 { #category : #'code generation-definitions' }
 ViennaVDM2Smalltalk >> explicitOperationDefinition: aViennaNode env: aDictionary [
-	| opname opType opname2 paramsNode params opbody varGenerator vars |
+	| opname typeNode paramsNode body varGenerator argTypeNode binds |
 	opname := aViennaNode first.
-	opType := self generate: aViennaNode second env: aDictionary.
-	opname2 := self generate: aViennaNode third env: aDictionary.
-	paramsNode := self generate: aViennaNode fourth env: aDictionary.
-	opbody := self generate: aViennaNode fifth env: aDictionary.
-	(paramsNode allSatisfy: [ :patternNode | patternNode label = 'PatternIdentifier' ])
-		ifTrue: [  ].
-	params := self generate: paramsNode env: aDictionary.
+	typeNode := aViennaNode second.
+	paramsNode := aViennaNode fourth.
+	body := self generate: aViennaNode fifth env: aDictionary.
 	varGenerator := self
 		varNameGenerator: 'op'
 		uniqueIn:
 			{opname.
-			opbody}.
-	vars := params collect: [ :p | varGenerator value ].
-	^ String
-		new: 1024
-		streamContents: [ :stream | 
-			stream
-				nextPutAll: opname;
-				nextPutAll: ' := ['.
-			vars
-				ifNotEmpty: [ 
-					vars
-						do: [ :v | 
-							stream
-								nextPutAll: ' :';
-								nextPutAll: v ].
-					stream nextPutAll: ' |' ].
-			stream
-				nextPutAll: ' | ';
-				nextPutAll: (' ' join: (params inject: #() into: [ :vs :pat | vs , pat first ]));
-				nextPutAll: ' _opContext | _opContext := thisContext. '.
-			params
-				with: vars
-				do: [ :p :v | 
-					stream
-						nextPutAll: (self binder: p second with: v vars: p first);
-						nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ].
-			stream
-				nextPutAll: opbody;
-				nextPutAll: ']' ]
+			body}.
+	argTypeNode := typeNode first.
+	binds := argTypeNode label = 'UnitType' ifTrue: [{}] ifFalse: [argTypeNode label = 'ProductType'
+		ifTrue: [ 
+			(1 to: argTypeNode size)
+				collect: [ :index | 
+					{(paramsNode at: index).
+					(argTypeNode at: index)} ] ]
+		ifFalse: [ 
+			{{(paramsNode first).
+			argTypeNode}} ]].
+	^ opname , ' := '
+		,
+			(self
+				closureFromFlatBinds: binds
+				body: body
+				varGenerator: varGenerator
+				env: aDictionary)
 ]
 
 { #category : #'code generation-expressions' }
@@ -656,9 +664,8 @@ ViennaVDM2Smalltalk >> finitePowerSet: aViennaNode env: aDictionary [
 ]
 
 { #category : #utilities }
-ViennaVDM2Smalltalk >> flattenAndCheckBindList: bindListNode env: aDictionary do: aBlock [
-	| patternsAndSets boundVariables |
-	patternsAndSets := Array
+ViennaVDM2Smalltalk >> flattenBindList: bindListNode env: aDictionary [
+	^ Array
 		new: 16
 		streamContents: [ :stream | 
 			bindListNode
@@ -670,7 +677,82 @@ ViennaVDM2Smalltalk >> flattenAndCheckBindList: bindListNode env: aDictionary do
 							stream
 								nextPut:
 									{patternNode.
-									typeOrSetNode} ] ] ].
+									typeOrSetNode} ] ] ]
+]
+
+{ #category : #utilities }
+ViennaVDM2Smalltalk >> flattenBindList: bindListNode varGenerator: varGenerator env: aDictionary [
+	| setsAndVars |
+	setsAndVars := OrderedCollection new: bindListNode size.
+	^ {(Array
+		new: 16
+		streamContents: [ :stream | 
+			bindListNode
+				do: [ :multipleBindNode | 
+					| typeOrSetNode varName localNameNode |
+					typeOrSetNode := multipleBindNode second.
+					varName := varGenerator value.
+					localNameNode := ViennaNode label: 'LocalName' with: varName.
+					setsAndVars
+						add:
+							{(typeOrSetNode label = 'SetRangeExpression'
+								ifTrue: [ '(' , (self intervalExpression: typeOrSetNode env: aDictionary) , ')' ]
+								ifFalse: [ self generate: typeOrSetNode env: aDictionary ]).
+							varName}.
+					multipleBindNode first
+						do: [ :patternNode | 
+							stream
+								nextPut:
+									{patternNode.
+									localNameNode} ] ] ]).
+	setsAndVars}
+]
+
+{ #category : #'code generation-expressions' }
+ViennaVDM2Smalltalk >> floor: aViennaNode env: aDictionary [
+	^ (self generate: aViennaNode first env: aDictionary) , ' floor'
+]
+
+{ #category : #'code generation-expressions' }
+ViennaVDM2Smalltalk >> forallExpression: aViennaNode env: aDictionary [
+	| bindListNode expr varGenerator pair flatBinds setsAndVars |
+	bindListNode := aViennaNode first.
+	expr := self generate: aViennaNode second env: aDictionary.
+	varGenerator := self varNameGenerator: 'forall' uniqueIn: (Array with: expr).
+	pair := self flattenBindList: bindListNode varGenerator: varGenerator env: aDictionary.
+	flatBinds := pair first.
+	setsAndVars := pair second.
+	^ String
+		new: 1024
+		streamContents: [ :stream | 
+			stream nextPutAll: '(['.
+			setsAndVars
+				do: [ :setAndVar | 
+					stream
+						nextPutAll: ' :';
+						nextPutAll: setAndVar second ].
+			stream
+				nextPutAll: ' | ';
+				nextPutAll:
+						(self
+								generatorFromFlatBinds: flatBinds
+								selector: #allSatisfy:
+								whenMatchFailed: 'true'
+								body: expr
+								varGenerator: varGenerator
+								env: aDictionary);
+				nextPutAll: ']'.
+			setsAndVars
+				do: [ :setAndVar | 
+					stream
+						nextPutAll: ' value: ';
+						nextPutAll: setAndVar first ].
+			stream nextPut: $) ]
+]
+
+{ #category : #utilities }
+ViennaVDM2Smalltalk >> fromFlatBinds: patternsAndSets patternNodeAndSetOrTypeNodeAndBindTypesDo: aBlock [
+	| boundVariables |
 	boundVariables := patternsAndSets collect: [ :pair | self boundVariables: pair first ].
 	1 to: patternsAndSets size do: [ :index | 
 		| bindNode patternNode |
@@ -684,77 +766,8 @@ ViennaVDM2Smalltalk >> flattenAndCheckBindList: bindListNode env: aDictionary do
 					and: [ 
 						(1 to: patternsAndSets size)
 							allSatisfy: [ :i | i = index or: [ ((boundVariables at: i) includes: patternNode first) not ] ] ])
-					ifTrue: [ #direct ]
-					ifFalse: [ #complex ]) ]
-]
-
-{ #category : #'code generation-expressions' }
-ViennaVDM2Smalltalk >> floor: aViennaNode env: aDictionary [
-	^ (self generate: aViennaNode first env: aDictionary) , ' floor'
-]
-
-{ #category : #'code generation-expressions' }
-ViennaVDM2Smalltalk >> forallExpression: aViennaNode env: aDictionary [
-	| multibindsNode multibinds expr varGenerator |
-	multibindsNode := aViennaNode first.
-	expr := self generate: aViennaNode second env: aDictionary.
-	(multibindsNode
-		allSatisfy: [ :multibindNode | multibindNode first allSatisfy: [ :patternNode | patternNode label = 'PatternIdentifier' ] ])
-		ifTrue: [ 
-			| names |
-			names := Array
-				new: multibindsNode size * 2
-				streamContents: [ :namesStream | multibindsNode do: [ :multibindNode | multibindNode do: [ :patternNode | namesStream nextPut: patternNode first ] ] ].
-			names size = names asSet size
-				ifTrue: [ 
-					^ String
-						new: 1024
-						streamContents: [ :stream | 
-							stream nextPutAll: '('.
-							multibindsNode
-								do: [ :multibindNode | 
-									| set |
-									set := self generate: multibindNode second env: aDictionary.
-									multibindNode first
-										do: [ :patternNode | 
-											stream
-												nextPutAll: set;
-												nextPutAll: ' allSatisfy: [:';
-												nextPutAll: patternNode first;
-												nextPutAll: '|' ] ].
-							stream nextPutAll: expr.
-							multibindsNode do: [ :multibindNode | multibindNode first do: [ :pat | stream nextPut: $] ] ].
-							stream nextPutAll: ')' ] ] ].
-	multibinds := self generate: multibindsNode env: aDictionary.
-	varGenerator := self varNameGenerator: 'forall' uniqueIn: (Array with: expr) , (multibinds collect: #second).
-	^ String
-		new: 1024
-		streamContents: [ :stream | 
-			stream nextPutAll: '('.
-			multibinds
-				with: aViennaNode first asArray
-				do: [ :multibind :multibindNode | 
-					| patterns set |
-					patterns := multibind first.
-					set := multibind second.
-					patterns
-						with: multibindNode first asArray
-						do: [ :pat :patternNode | 
-							| loopVar boundVars |
-							loopVar := varGenerator value.
-							boundVars := self boundVariables: patternNode.
-							stream
-								nextPutAll: set;
-								nextPutAll: ' allSatisfy: [:';
-								nextPutAll: loopVar;
-								nextPutAll: '||';
-								nextPutAll: (' ' join: boundVars);
-								nextPutAll: '|';
-								nextPutAll: (self binder: pat with: loopVar vars: boundVars);
-								nextPutAll: ' and:  [' ] ].
-			stream nextPutAll: expr.
-			multibinds do: [ :multibind | multibind first do: [ :pat | stream nextPutAll: ']]' ] ].
-			stream nextPutAll: ')' ]
+					ifTrue: [ #identifier ]
+					ifFalse: [ #compound ]) ]
 ]
 
 { #category : #'code generation-definitions' }
@@ -823,6 +836,81 @@ ViennaVDM2Smalltalk >> generatorCodePattern: patternNode typeOrSet: typeOrSetNod
 		ifTrue: [ typeOrSet := typeOrSet , ' asSortedCollection' ].
 	^ typeOrSet , ' do: [:' , tmpVar , ' || ' , (' ' join: vars) , ' | ' , (self binder: pattern with: tmpVar vars: vars)
 		, ' ifFalse: [ViennaNoMatch signal].'
+]
+
+{ #category : #utilities }
+ViennaVDM2Smalltalk >> generatorFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode body: aString varGenerator: varGenerator env: aDictionary [
+	^ self
+		generatorFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode
+		selector: #do:
+		whenMatchFailed: nil
+		body: aString
+		varGenerator: varGenerator
+		env: aDictionary
+]
+
+{ #category : #utilities }
+ViennaVDM2Smalltalk >> generatorFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode selector: aSymbol whenMatchFailed: failString body: aString varGenerator: varGenerator env: aDictionary [
+	^ String
+		new: 1024
+		streamContents: [ :stream | 
+			| numParens tmpVars matchPatternNodes tuplePattern matchVars |
+			numParens := 0.
+			tmpVars := OrderedCollection new.
+			matchPatternNodes := OrderedCollection new.
+			self
+				fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode
+				patternNodeAndSetOrTypeNodeAndBindTypesDo: [ :patternNode :setNode :bindType | 
+					stream
+						nextPutAll:
+								(setNode label = 'SetRangeExpression'
+										ifTrue: [ 
+											(aSymbol = #do:
+												ifTrue: [ '' ]
+												ifFalse: [ '(' ]) , (self intervalExpression: setNode env: aDictionary)
+												,
+													(aSymbol = #do:
+														ifTrue: [ '' ]
+														ifFalse: [ ')' ]) ]
+										ifFalse: [ self generate: setNode env: aDictionary ]);
+						nextPut: Character space;
+						nextPutAll: aSymbol;
+						nextPutAll: ' [ :'.
+					bindType = #identifier
+						ifTrue: [ stream nextPutAll: patternNode first ].
+					bindType = #compound
+						ifTrue: [ 
+							| tmpVar |
+							tmpVar := varGenerator value.
+							tmpVars add: tmpVar.
+							matchPatternNodes add: patternNode.
+							stream nextPutAll: tmpVar ].
+					stream nextPutAll: ' | '.
+					numParens := numParens + 1 ].
+			tuplePattern := ViennaNode label: 'TuplePattern' with: (ViennaNode label: 'PatternList' withAll: matchPatternNodes).
+			matchVars := (self boundVariables: tuplePattern) asArray.
+			matchVars notEmpty
+				ifTrue: [ 
+					stream nextPutAll: ' | '.
+					matchVars
+						do: [ :var | 
+							stream
+								nextPutAll: var;
+								nextPut: Character space ].
+					stream
+						nextPutAll: '| ';
+						nextPutAll:
+								(self binder: (self generate: tuplePattern env: aDictionary) with: '{' , (' . ' join: tmpVars) , '}' vars: matchVars).
+					failString
+						ifNotNil: [ 
+							stream
+								nextPutAll: ' ifFalse: [';
+								nextPutAll: failString;
+								nextPutAll: ']' ].
+					stream nextPutAll: ' ifTrue: [ '.
+					numParens := numParens + 1 ].
+			stream nextPutAll: aString.
+			numParens timesRepeat: [ stream nextPut: $] ] ]
 ]
 
 { #category : #'code generation-expressions' }
@@ -939,16 +1027,21 @@ ViennaVDM2Smalltalk >> intervalExpression: aViennaNode env: aDictionary [
 
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> iotaExpression: aViennaNode env: aDictionary [
-	| bind boundVars pat setOrType expr var |
-	bind := self generate: aViennaNode first env: aDictionary.
-	boundVars := (self boundVariables: aViennaNode first) asArray.
-	pat := bind first.
-	setOrType := bind second.
+	| bindNode expr varGenerator |
+	bindNode := aViennaNode first.
 	expr := self generate: aViennaNode second env: aDictionary.
-	var := (self varNameGenerator: 'iota' uniqueIn: (Array with: expr)) value.
-	^ '(' , setOrType , ' detect: [ :' , var , '||' , (' ' join: boundVars) , '|'
-		, (self binder: pat with: var vars: boundVars) , ' ifFalse: [ViennaNoMatch signal].' , expr
-		, '] ifNone: [ViennaNoMatch signal])'
+	varGenerator := self varNameGenerator: 'iota' uniqueIn: (Array with: expr).
+	^ '('
+		,
+			(self
+				generatorFromFlatBinds:
+					{{(bindNode first).
+					(bindNode second)}}
+				selector: #detect:
+				whenMatchFailed: 'false'
+				body: expr
+				varGenerator: varGenerator
+				env: aDictionary) , ' ifNone: [ViennaNoMatch signal])'
 ]
 
 { #category : #'code generation-expressions' }
@@ -997,50 +1090,14 @@ ViennaVDM2Smalltalk >> iterate: aViennaNode env: aDictionary [
 
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> lambdaExpression: aViennaNode env: aDictionary [
-	| patterns body varGenerator |
+	| body varGenerator |
 	body := self generate: aViennaNode second env: aDictionary.
 	varGenerator := self varNameGenerator: 'lmd' uniqueIn: (Array with: body).
-	patterns := aViennaNode first
-		collect: [ :typeBind | 
-			typeBind first label = 'PatternIdentifier'
-				ifTrue: [ typeBind first first -> nil ]
-				ifFalse: [ 
-					(self boundVariables: typeBind) asArray
-						->
-							{(varGenerator value).
-							typeBind} ] ].
-	^ String
-		new: 1024
-		streamContents: [ :stream | 
-			stream nextPut: $[.
-			patterns
-				do: [ :assoc | 
-					stream
-						nextPut: $:;
-						nextPutAll: (assoc value ifNil: [ assoc key ] ifNotNil: [ assoc value first ]);
-						nextPut: Character space ].
-			stream nextPutAll: '||'.
-			patterns
-				do: [ :assoc | 
-					assoc value
-						ifNotNil: [ 
-							stream
-								nextPutAll: (' ' join: assoc key);
-								nextPut: Character space ] ].
-			stream nextPut: $|.
-			patterns
-				do: [ :assoc | 
-					assoc value
-						ifNotNil: [ :pair | 
-							| vars value typeBindNode |
-							vars := assoc key.
-							value := pair first.
-							typeBindNode := pair second.
-							stream
-								nextPutAll: (self binder: (self generate: typeBindNode first env: aDictionary) with: value vars: vars);
-								nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ] ].
-			stream nextPutAll: body.
-			stream nextPut: $] ]
+	^ self
+		closureFromFlatBinds: aViennaNode first asArray
+		body: body
+		varGenerator: varGenerator
+		env: aDictionary
 ]
 
 { #category : #'code generation-expressions' }
@@ -1182,9 +1239,10 @@ ViennaVDM2Smalltalk >> logicalEquivalence: aViennaNode env: aDictionary [
 
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> mapComprehension: aViennaNode env: aDictionary [
-	| keyExpr valueExpr guard varGenerator map |
+	| keyExpr valueExpr bindListNode guard varGenerator map pair flatBinds setsAndVars |
 	keyExpr := self generate: aViennaNode first env: aDictionary.
 	valueExpr := self generate: aViennaNode second env: aDictionary.
+	bindListNode := aViennaNode third.
 	guard := self generate: aViennaNode fourth env: aDictionary.
 	varGenerator := self
 		varNameGenerator: 'map'
@@ -1192,32 +1250,38 @@ ViennaVDM2Smalltalk >> mapComprehension: aViennaNode env: aDictionary [
 			{keyExpr.
 			valueExpr} , {(guard ifNil: [ '' ])}.
 	map := varGenerator value.
+	pair := self flattenBindList: bindListNode varGenerator: varGenerator env: aDictionary.
+	flatBinds := pair first.
+	setsAndVars := pair second.
 	^ String
 		new: 1024
 		streamContents: [ :stream | 
-			stream nextPutAll: '[ | ' , map , ' | ' , map , ' :=Dictionary new.'.
-			self
-				generatorCodeBindList: aViennaNode third
-				varGenerator: varGenerator
-				env: aDictionary
-				do: [ :generatorScript | stream nextPutAll: generatorScript ].
-			guard
-				ifNotNil: [ 
+			| body |
+			body := map , ' at: ' , keyExpr , ' put: ' , valueExpr.
+			guard ifNotNil: [ body := guard , ' ifTrue: [' , body , ']' ].
+			stream nextPutAll: '(['.
+			setsAndVars
+				do: [ :setAndVar | 
 					stream
-						nextPutAll: guard;
-						nextPutAll: ' ifTrue: [' ].
+						nextPutAll: ' :';
+						nextPutAll: setAndVar second ].
 			stream
+				nextPutAll: ' | | ' , map , ' | ' , map , ' :=Dictionary new.';
+				nextPutAll:
+						(self
+								generatorFromFlatBinds: flatBinds
+								body: body
+								varGenerator: varGenerator
+								env: aDictionary);
+				nextPutAll: '. ';
 				nextPutAll: map;
-				nextPutAll: ' at: ';
-				nextPutAll: keyExpr;
-				nextPutAll: ' put: ';
-				nextPutAll: valueExpr.
-			guard ifNotNil: [ stream nextPut: $] ].
-			aViennaNode third do: [ :multiBindNode | multiBindNode first do: [ :patternNode | stream nextPut: $] ] ].
-			stream
-				nextPut: $.;
-				nextPutAll: map;
-				nextPutAll: '] value' ]
+				nextPutAll: ']'.
+			setsAndVars
+				do: [ :setAndVar | 
+					stream
+						nextPutAll: ' value: ';
+						nextPutAll: setAndVar first ].
+			stream nextPut: $) ]
 ]
 
 { #category : #'code generation-expressions' }
@@ -1672,58 +1736,42 @@ ViennaVDM2Smalltalk >> seqType: aViennaNode env: aDictionary [
 
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> sequenceComprehension: aViennaNode env: aDictionary [
-	| patternNode typeOrSetNode expr guard varGenerator seq |
+	| expr bindNode setNode guard varGenerator seq set |
 	expr := self generate: aViennaNode first env: aDictionary.
-	patternNode := aViennaNode second first.
-	typeOrSetNode := aViennaNode second second.
+	bindNode := aViennaNode second.
+	setNode := bindNode second.
 	guard := self generate: aViennaNode third env: aDictionary.
 	varGenerator := self
 		varNameGenerator: 'seq'
 		uniqueIn:
 			{expr.
 			(guard ifNil: [ '' ])}.
-	patternNode label = 'PatternIdentifier'
-		ifTrue: [ 
-			| set var |
-			set := typeOrSetNode label = 'SetRangeExpression'
-				ifTrue: [ 
-					'(' , (self generate: typeOrSetNode first env: aDictionary) , ' to: '
-						, (self generate: typeOrSetNode second env: aDictionary) , ')' ]
-				ifFalse: [ (self generate: typeOrSetNode env: aDictionary) , ' asSortedCollection asOrderedCollection' ].
-			var := patternNode first.
-			^ '(' , set , (guard ifNotNil: [ ' select: [ :' , var , '|' , guard , '] thenCollect:' ] ifNil: [ ' collect:' ])
-				, ' [:' , var , '|' , expr , ']) asOrderedCollection' ].
 	seq := varGenerator value.
+	set := varGenerator value.
 	^ String
 		new: 1024
 		streamContents: [ :stream | 
+			| body |
+			body := seq , ' add: ' , expr.
+			guard ifNotNil: [ body := guard , ' ifTrue: [' , body , ']' ].
 			stream
-				nextPutAll: '[|';
-				nextPutAll: seq;
-				nextPutAll: '|';
-				nextPutAll: seq;
-				nextPutAll: ':= OrderedCollection new.';
+				nextPutAll: '([ :' , set , ' | | ' , seq , ' | ' , seq , ' :=OrderedCollection new.';
 				nextPutAll:
 						(self
-								generatorCodePattern: patternNode
-								typeOrSet: typeOrSetNode
-								needsSort: true
+								generatorFromFlatBinds:
+									{{(bindNode first).
+									(ViennaNode label: 'LocalName' with: set)}}
+								body: body
 								varGenerator: varGenerator
-								env: aDictionary).
-			guard
-				ifNotNil: [ 
-					stream
-						nextPutAll: guard;
-						nextPutAll: ' ifTrue: [' ].
-			stream
+								env: aDictionary);
+				nextPutAll: '. ';
 				nextPutAll: seq;
-				nextPutAll: ' add: ';
-				nextPutAll: expr.
-			guard ifNotNil: [ stream nextPutAll: ']' ].
-			stream
-				nextPutAll: ']. ';
-				nextPutAll: seq;
-				nextPutAll: '] value' ]
+				nextPutAll: '] value: ';
+				nextPutAll:
+						(setNode label = 'SetRangeExpression'
+								ifTrue: [ '(' , (self intervalExpression: setNode env: aDictionary) , ')' ]
+								ifFalse: [ (self generate: setNode env: aDictionary) , ' asSortedCollection' ]);
+				nextPut: $) ]
 ]
 
 { #category : #'code generation-expressions' }
@@ -1809,36 +1857,44 @@ ViennaVDM2Smalltalk >> setCardinality: aViennaNode env: aDictionary [
 
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> setComprehension: aViennaNode env: aDictionary [
-	| expr bindListNode guard varGenerator set |
+	| expr bindListNode guard varGenerator set pair setsAndVars flatBinds |
 	expr := self generate: aViennaNode first env: aDictionary.
 	bindListNode := aViennaNode second.
 	guard := self generate: aViennaNode third env: aDictionary.
 	varGenerator := self varNameGenerator: 'set' uniqueIn: (Array with: expr) , (Array with: (guard ifNil: [ '' ])).
 	set := varGenerator value.
+	pair := self flattenBindList: bindListNode varGenerator: varGenerator env: aDictionary.
+	flatBinds := pair first.
+	setsAndVars := pair second.
 	^ String
 		new: 1024
 		streamContents: [ :stream | 
-			stream nextPutAll: '[ | ' , set , ' | ' , set , ' :=Set new.'.
-			self
-				generatorCodeBindList: bindListNode
-				varGenerator: varGenerator
-				env: aDictionary
-				do: [ :generatorScript | stream nextPutAll: generatorScript ].
-			guard
-				ifNotNil: [ 
+			| body |
+			body := set , ' add: ' , expr.
+			guard ifNotNil: [ body := guard , ' ifTrue: [' , body , ']' ].
+			stream nextPutAll: '(['.
+			setsAndVars
+				do: [ :setAndVar | 
 					stream
-						nextPutAll: guard;
-						nextPutAll: ' ifTrue: [' ].
+						nextPutAll: ' :';
+						nextPutAll: setAndVar second ].
 			stream
+				nextPutAll: ' | | ' , set , ' | ' , set , ' :=Set new.';
+				nextPutAll:
+						(self
+								generatorFromFlatBinds: flatBinds
+								body: body
+								varGenerator: varGenerator
+								env: aDictionary);
+				nextPutAll: '. ';
 				nextPutAll: set;
-				nextPutAll: ' add: ';
-				nextPutAll: expr.
-			guard ifNotNil: [ stream nextPut: $] ].
-			bindListNode do: [ :multiBindNode | multiBindNode first do: [ :generatorScript | stream nextPut: $] ] ].
-			stream
-				nextPut: $.;
-				nextPutAll: set;
-				nextPutAll: '] value' ]
+				nextPutAll: ']'.
+			setsAndVars
+				do: [ :setAndVar | 
+					stream
+						nextPutAll: ' value: ';
+						nextPutAll: setAndVar first ].
+			stream nextPut: $) ]
 ]
 
 { #category : #'code generation-expressions' }
@@ -2051,11 +2107,15 @@ ViennaVDM2Smalltalk >> unionType: aViennaNode env: aDictionary [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2Smalltalk >> valueDefinition: aViennaNode env: aDictionary [
-	| pat body binder |
-	pat := self generate: aViennaNode first env: aDictionary.
+	| patternNode pattern body binder |
+	patternNode := aViennaNode first.
+	pattern := self generate: patternNode env: aDictionary.
 	body := self generate: aViennaNode third env: aDictionary.
-	binder := self binder: pat with: body vars: (self boundVariables: aViennaNode first) asArray.
-	^ '(' , binder , '  ifFalse: [ViennaNoMatch signal])'
+	^ patternNode label = 'PatternIdentifier'
+		ifTrue: [ '(' , patternNode first , ' := ' , body , ')' ]
+		ifFalse: [ 
+			binder := self binder: pattern with: body vars: (self boundVariables: aViennaNode first) asArray.
+			'(' , binder , '  ifFalse: [ViennaNoMatch signal])' ]
 ]
 
 { #category : #utilities }
