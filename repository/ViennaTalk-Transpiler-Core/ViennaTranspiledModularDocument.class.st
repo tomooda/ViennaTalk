@@ -69,6 +69,18 @@ ViennaTranspiledModularDocument >> initialize [
 	viennaEnv := Dictionary new
 ]
 
+{ #category : #copying }
+ViennaTranspiledModularDocument >> postCopy [
+	super postCopy.
+	self keys do: [ :key | self at: key put: (self at: key) copy ].
+	self
+		valuesDo: [ :module | 
+			self
+				keysDo: [ :key | 
+					(module respondsTo: (key , ':') asSymbol)
+						ifTrue: [ module perform: (key , ':') asSymbol with: (self at: key) ] ] ]
+]
+
 { #category : #transpiling }
 ViennaTranspiledModularDocument >> transpileExpression: aString with: transpiler ifError: errorBlock [
 	| ast |

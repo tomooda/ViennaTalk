@@ -669,6 +669,11 @@ ViennaVDM2Smalltalk >> equalDefinitionList: aViennaNode env: aDictionary [
 	^ self generateAll: aViennaNode env: aDictionary
 ]
 
+{ #category : #'code generation-statements' }
+ViennaVDM2Smalltalk >> errorStatement: aViennaNode env: aDictionary [
+	^ 'ViennaError signal'
+]
+
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> exists1Expression: aViennaNode env: aDictionary [
 	| bindNode expr varGenerator |
