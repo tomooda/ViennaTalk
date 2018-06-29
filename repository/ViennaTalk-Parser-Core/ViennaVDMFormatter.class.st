@@ -1572,14 +1572,14 @@ ViennaVDMFormatter >> recordModifier: aViennaNode [
 
 { #category : #'formatting-patterns and binds' }
 ViennaVDMFormatter >> recordPattern: aViennaNode [
-	| constructor expressionList |
+	| constructor patternList |
 	constructor := self format: aViennaNode first.
-	expressionList := self format: aViennaNode second.
+	patternList := self format: aViennaNode second.
 	^ 'mk_' , constructor , '('
 		,
-			((self needsIndent: constructor , expressionList)
-				ifTrue: [ String cr , indent , (self indentString: expressionList) ]
-				ifFalse: [ expressionList ]) , ')'
+			((self needsIndent: constructor , patternList)
+				ifTrue: [ String cr , indent , (self indentString: patternList) ]
+				ifFalse: [ patternList ]) , ')'
 ]
 
 { #category : #'formatting-types' }
@@ -1890,13 +1890,13 @@ ViennaVDMFormatter >> tupleConstructor: aViennaNode [
 
 { #category : #'formatting-patterns and binds' }
 ViennaVDMFormatter >> tuplePattern: aViennaNode [
-	| expressionList |
-	expressionList := self format: aViennaNode first.
+	| patternList |
+	patternList := self format: aViennaNode first.
 	^ 'mk_('
 		,
-			((self needsIndent: expressionList)
-				ifTrue: [ String cr , indent , (self indentString: expressionList) ]
-				ifFalse: [ expressionList ]) , ')'
+			((self needsIndent: patternList)
+				ifTrue: [ String cr , indent , (self indentString: patternList) ]
+				ifFalse: [ patternList ]) , ')'
 ]
 
 { #category : #'formatting-expressions' }

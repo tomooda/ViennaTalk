@@ -391,50 +391,6 @@ ViennaVDM2Smalltalk >> forallExpression: aViennaNode env: aDictionary [
 			stream nextPutAll: ')' ]
 ]
 
-{ #category : #variables }
-ViennaVDM2Smalltalk >> freeVariables: aViennaNode boundVars: aSet into: free [
-	(aViennaNode isString or: [ aViennaNode isNil ])
-		ifFalse: [ 
-			| selector |
-			selector := ('freeVariables' , aViennaNode label , ':boundVars:into:') asSymbol.
-			(self respondsTo: selector)
-				ifTrue: [ 
-					self
-						perform: selector
-						with: aViennaNode
-						with: aSet
-						with: free ]
-				ifFalse: [ aViennaNode do: [ :node | self freeVariables: node boundVars: aSet into: free ] ] ]
-]
-
-{ #category : #variables }
-ViennaVDM2Smalltalk >> freeVariables: aViennaNode env: aDictionary [
-	| freeVars |
-	freeVars := Set new: 16.
-	self freeVariables: aViennaNode env: aDictionary keys asSet into: freeVars.
-	^ freeVars asArray
-]
-
-{ #category : #variables }
-ViennaVDM2Smalltalk >> freeVariablesLambda: aViennaNode boundVars: boundVars into: freeVars [
-	| binds |
-	binds := Set new: 16.
-	aViennaNode first
-		do: [ :bind | 
-			self freeVariables: bind first boundVars: boundVars into: binds.
-			self freeVariables: bind second boundVars: boundVars into: freeVars ].
-	binds addAll: boundVars.
-	self freeVariables: aViennaNode second boundVars: binds into: freeVars
-]
-
-{ #category : #variables }
-ViennaVDM2Smalltalk >> freeVariablesLocalName: aViennaNode boundVars: aSet into: free [
-	| name |
-	name := aViennaNode first.
-	(aSet includes: name)
-		ifFalse: [ free add: name ]
-]
-
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> functionTypeArgs: aViennaNode env: aDictionary [
 	^ self generateAll: aViennaNode env: aDictionary
