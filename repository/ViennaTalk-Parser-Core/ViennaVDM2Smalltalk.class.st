@@ -1732,7 +1732,7 @@ ViennaVDM2Smalltalk >> quoteType: aViennaNode env: aDictionary [
 ViennaVDM2Smalltalk >> recordConstructor: aViennaNode env: aDictionary [
 	| constructorName args |
 	constructorName := self generate: aViennaNode first env: aDictionary.
-	args := '{', (' . ' join: (self generate: aViennaNode second env: aDictionary)), '}'.
+	args := '{' , (' . ' join: (self generate: aViennaNode second env: aDictionary)) , '}'.
 	^ '(' , constructorName , ' applyTo: ' , args , ')'
 ]
 
@@ -1804,7 +1804,7 @@ ViennaVDM2Smalltalk >> resultExpression: aViennaNode env: aDictionary [
 
 { #category : #'code generation-statements' }
 ViennaVDM2Smalltalk >> returnStatement: aViennaNode env: aDictionary [
-	^ 'thisContext viennaReturn: ' , (self generate: aViennaNode first)
+	^ 'thisContext viennaReturn: ' , (self generate: aViennaNode first env: aDictionary)
 ]
 
 { #category : #'code generation-expressions' }
@@ -2195,7 +2195,7 @@ ViennaVDM2Smalltalk >> stateDefinition: aViennaNode env: aDictionary [
 				nextPutAll: 'init_';
 				nextPutAll: initConstructor;
 				nextPutAll: ' := ';
-				nextPutAll: (self generate: initNode first) ])}
+				nextPutAll: (self generate: initNode first env: aDictionary) ])}
 ]
 
 { #category : #'code generation-expressions' }
