@@ -379,6 +379,15 @@ ViennaVDMGrammarTest >> testDicimalLiteral7 [
 	self assert: (grammar expression end parse: '-1e-1') equals: '1e-1'
 ]
 
+{ #category : #'tests-definitions' }
+ViennaVDMGrammarTest >> testDocument [
+	self assert: (grammar document end parse: 'values v = 1') equals: #(#(#(#() #('v' nil '1')))).
+	self
+		assert:
+			(grammar document end parse: 'module m1 exports all definitions values v = 1 end m1 module m2 exports all  end m2')
+		equals: #(#('m1' #(nil 'all') #(#(#(#() #('v' nil '1'))))) #('m2' #(nil 'all') nil))
+]
+
 { #category : #'tests-expressions' }
 ViennaVDMGrammarTest >> testEvaluators1 [
 	#('abs' 'floor' 'card' 'power' 'dinter' 'dunion' 'dom' 'rng' 'merge' 'len' 'elems' 'hd' 'tl' 'conc' 'inds' 'inverse')
@@ -440,6 +449,48 @@ ViennaVDMGrammarTest >> testExplicitOperationDefinition [
 		equals: #('op' #('nat' nil) 'op' #('x') 'x' 'e1' 'e2')
 ]
 
+{ #category : #'tests-interfaces' }
+ViennaVDMGrammarTest >> testExportDefinition [
+	self assert: (grammar exportDefinition end parse: 'exports all') equals: 'all'.
+	self
+		assert: (grammar exportDefinition end parse: 'exports types t1; struct t2; values v1, v2 : nat; v3 : int')
+		equals: #(#(#(nil 't1') #('struct' 't2')) #(#(#('v1' 'v2') 'nat') #(#('v3') 'int')))
+]
+
+{ #category : #'tests-interfaces' }
+ViennaVDMGrammarTest >> testExportFunctionsSignature [
+	self
+		assert: (grammar exportFunctionsSignature end parse: 'functions f1, f2[@t] : @t -> bool; f3 : nat -> nat')
+		equals: #(#(#('f1' 'f2') #('@t') #('@t' 'bool')) #(#('f3') #() #('nat' 'nat')))
+]
+
+{ #category : #'tests-interfaces' }
+ViennaVDMGrammarTest >> testExportModuleSignature [
+	self assert: (grammar exportModuleSignature end parse: 'all') equals: 'all'.
+	self
+		assert: (grammar exportModuleSignature end parse: 'types t1; struct t2; values v1, v2 : nat; v3 : int')
+		equals: #(#(#(nil 't1') #('struct' 't2')) #(#(#('v1' 'v2') 'nat') #(#('v3') 'int')))
+]
+
+{ #category : #'tests-interfaces' }
+ViennaVDMGrammarTest >> testExportSignature [
+	self assert: (grammar exportSignature end parse: 'types t1; struct t2;') equals: #(#(nil 't1') #('struct' 't2')).
+	self
+		assert: (grammar exportSignature end parse: 'values v1, v2 : nat; v3 : int')
+		equals: #(#(#('v1' 'v2') 'nat') #(#('v3') 'int')).
+	self
+		assert: (grammar exportSignature end parse: 'functions f1, f2[@t] : @t -> bool; f3 : nat -> nat')
+		equals: #(#(#('f1' 'f2') #('@t') #('@t' 'bool')) #(#('f3') #() #('nat' 'nat'))).
+	self
+		assert: (grammar exportSignature end parse: 'operations op1, op2 : nat ==> (); op3 : () ==> nat;')
+		equals: #(#(#('op1' 'op2') #('nat' nil)) #(#('op3') #(nil 'nat')))
+]
+
+{ #category : #'tests-interfaces' }
+ViennaVDMGrammarTest >> testExportTypesSignature [
+	self assert: (grammar exportTypesSignature end parse: 'types t1; struct t2;') equals: #(#(nil 't1') #('struct' 't2'))
+]
+
 { #category : #'tests-types' }
 ViennaVDMGrammarTest >> testFieldSelect1 [
 	self assert: (grammar expression end parse: 'r1.f1') equals: #('r1' 'f1')
@@ -480,11 +531,38 @@ ViennaVDMGrammarTest >> testFinExpression3 [
 	self assert: (grammar expression end parse: '#fin()') isPetitFailure
 ]
 
+{ #category : #'tests-definitions' }
+ViennaVDMGrammarTest >> testFlatDocument [
+	self assert: (grammar flatDocument end parse: 'values v = 1') equals: #(#(#(#() #('v' nil '1'))))
+]
+
 { #category : #'tests-expressions' }
 ViennaVDMGrammarTest >> testForallExpression1 [
 	self
 		assert: (grammar expression end parse: 'forall v1,v2:t1, v3:t2 & e')
 		equals: #(#(#(#('v1' 'v2') 't1') #(#('v3') 't2')) 'e')
+]
+
+{ #category : #'tests-interfaces' }
+ViennaVDMGrammarTest >> testFunctionExport [
+	self
+		assert: (grammar functionExport end parse: 'f1, f2[@t] : @t -> bool')
+		equals: #(#('f1' 'f2') #('@t') #('@t' 'bool'))
+]
+
+{ #category : #'tests-interfaces' }
+ViennaVDMGrammarTest >> testFunctionImport [
+	self assert: (grammar functionImport end parse: 'f') equals: #('f' nil nil).
+	self assert: (grammar functionImport end parse: 'f[@t]: @t -> @t') equals: #('f' #(#('@t') #('@t' '@t')) nil).
+	self assert: (grammar functionImport end parse: 'f1 renamed f2') equals: #('f1' nil 'f2').
+	self
+		assert: (grammar functionImport end parse: 'f1[@t]: @t -> @t renamed f2')
+		equals: #('f1' #(#('@t') #('@t' '@t')) 'f2')
+]
+
+{ #category : #'tests-interfaces' }
+ViennaVDMGrammarTest >> testFunctionSignature [
+	self assert: (grammar functionSignature end parse: 'f1, f2 : nat -> nat') equals: #(#('f1' 'f2') #('nat' 'nat'))
 ]
 
 { #category : #'tests-expressions' }
@@ -505,6 +583,13 @@ ViennaVDMGrammarTest >> testFunctionTypeInstantiation3 [
 { #category : #'tests-expressions' }
 ViennaVDMGrammarTest >> testFunctionTypeInstantiation4 [
 	self assert: (grammar expression end parse: 'f[t1][t2]') equals: #(#('f' #('t1')) #('t2'))
+]
+
+{ #category : #'tests-interfaces' }
+ViennaVDMGrammarTest >> testFunctionsSignature [
+	self
+		assert: (grammar functionsSignature end parse: 'functions f1, f2 : nat -> nat; f3 : int +> int;')
+		equals: #(#(#('f1' 'f2') #('nat' 'nat')) #(#('f3') #('int' 'int')))
 ]
 
 { #category : #'tests-literals' }
@@ -574,6 +659,63 @@ ViennaVDMGrammarTest >> testIfStatement [
 	self assert: (grammar statement end parse: 'if cond1 then return e1') equals: #(#(#('cond1' 'e1')) nil)
 ]
 
+{ #category : #'tests-interfaces' }
+ViennaVDMGrammarTest >> testImportDefinition [
+	self
+		assert: (grammar importDefinition end parse: 'from m values v1; v2 functions f ; values v')
+		equals: #('m' #(#(#('v1' nil nil) #('v2' nil nil)) #(#('f' nil nil)) #(#('v' nil nil)))).
+	self assert: (grammar importDefinition end parse: 'from m all') equals: #('m' 'all')
+]
+
+{ #category : #'tests-interfaces' }
+ViennaVDMGrammarTest >> testImportDefinitionList [
+	self
+		assert: (grammar importDefinitionList end parse: 'imports from m1 values v1; v2 functions f ; values v, from m2 all')
+		equals: #(#('m1' #(#(#('v1' nil nil) #('v2' nil nil)) #(#('f' nil nil)) #(#('v' nil nil)))) #('m2' 'all'))
+]
+
+{ #category : #'tests-interfaces' }
+ViennaVDMGrammarTest >> testImportFunctionsSignature [
+	self
+		assert: (grammar importFunctionsSignature end parse: 'functions f1; f2 renamed f3')
+		equals: #(#('f1' nil nil) #('f2' nil 'f3'))
+]
+
+{ #category : #'tests-interfaces' }
+ViennaVDMGrammarTest >> testImportModuleSignature [
+	self
+		assert: (grammar importModuleSignature end parse: 'values v1; v2 functions f ; values v')
+		equals: #(#(#('v1' nil nil) #('v2' nil nil)) #(#('f' nil nil)) #(#('v' nil nil))).
+	self assert: (grammar importModuleSignature end parse: 'all') equals: 'all'
+]
+
+{ #category : #'tests-interfaces' }
+ViennaVDMGrammarTest >> testImportOperationsSignature [
+	self
+		assert: (grammar importOperationsSignature end parse: 'operations op1; op2 : () ==> () renamed op3')
+		equals: #(#('op1' nil nil) #('op2' #(nil nil) 'op3'))
+]
+
+{ #category : #'tests-interfaces' }
+ViennaVDMGrammarTest >> testImportSignature [
+	self assert: (grammar importSignature end parse: 'values v1; v2;') equals: #(#('v1' nil nil) #('v2' nil nil)).
+	self assert: (grammar importSignature end parse: 'functions f') equals: #(#('f' nil nil))
+]
+
+{ #category : #'tests-interfaces' }
+ViennaVDMGrammarTest >> testImportTypesSignature [
+	self
+		assert: (grammar importTypesSignature end parse: 'types t1; t2 renamed t3; t4 = t5 renamed t6; t7;')
+		equals: #(#('t1' nil) #('t2' 't3') #(#('t4' 't5' nil) 't6') #('t7' nil))
+]
+
+{ #category : #'tests-interfaces' }
+ViennaVDMGrammarTest >> testImportValuesSignature [
+	self
+		assert: (grammar importValuesSignature end parse: 'values v1; v2 renamed v3')
+		equals: #(#('v1' nil nil) #('v2' nil 'v3'))
+]
+
 { #category : #'tests-statements' }
 ViennaVDMGrammarTest >> testIndexForLoop [
 	self assert: (grammar statement end parse: 'for v = e1 to e2 by e3 do return e4') equals: #('v' 'e1' 'e2' 'e3' 'e4').
@@ -593,6 +735,14 @@ ViennaVDMGrammarTest >> testInmapType2 [
 { #category : #'tests-types' }
 ViennaVDMGrammarTest >> testInmapType3 [
 	self assert: (grammar type end parse: 'inmap inmap t1 to t2 to t3') equals: #(#('t1' 't2') 't3')
+]
+
+{ #category : #'tests-interfaces' }
+ViennaVDMGrammarTest >> testInterface [
+	self
+		assert: (grammar interface end parse: 'imports from m1 values v1; v2 functions f ; values v, from m2 all exports all')
+		equals: #(#(#('m1' #(#(#('v1' nil nil) #('v2' nil nil)) #(#('f' nil nil)) #(#('v' nil nil)))) #('m2' 'all')) 'all').
+	self assert: (grammar interface end parse: 'exports values v1:t1') equals: #(nil #(#(#(#('v1') 't1'))))
 ]
 
 { #category : #'tests-types' }
@@ -821,6 +971,28 @@ ViennaVDMGrammarTest >> testMatchValue2 [
 	self assert: (grammar pattern end parse: 'a') equals: 'a'
 ]
 
+{ #category : #'tests-definitions' }
+ViennaVDMGrammarTest >> testModule [
+	self
+		assert: (grammar module end parse: 'module m exports all definitions values v = 1 end m')
+		equals: #('m' #(nil 'all') #(#(#(#() #('v' nil '1'))))).
+	self assert: (grammar module end parse: 'module m1 exports all definitions values v = 1 end m2') isPetitFailure
+]
+
+{ #category : #'tests-definitions' }
+ViennaVDMGrammarTest >> testModuleBody [
+	self assert: (grammar moduleBody end parse: 'definitions values v = 1') equals: #(#(#(#() #('v' nil '1'))))
+]
+
+{ #category : #'tests-definitions' }
+ViennaVDMGrammarTest >> testModuledDocument [
+	self
+		assert:
+			(grammar moduledDocument end
+				parse: 'module m1 exports all definitions values v = 1 end m1 module m2 exports all  end m2')
+		equals: #(#('m1' #(nil 'all') #(#(#(#() #('v' nil '1'))))) #('m2' #(nil 'all') nil))
+]
+
 { #category : #'tests-patterns' }
 ViennaVDMGrammarTest >> testMultipleBind1 [
 	self assert: (grammar multipleBind end parse: 'v1,v2 in set e') equals: #(#('v1' 'v2') 'e')
@@ -904,6 +1076,28 @@ ViennaVDMGrammarTest >> testObjectPattern3 [
 { #category : #'tests-patterns' }
 ViennaVDMGrammarTest >> testObjectPattern4 [
 	self assert: (grammar pattern end parse: 'obj_T (f1 |-> - , f2 |-> v1 )') equals: #('T' #(#('f1' nil) #('f2' 'v1')))
+]
+
+{ #category : #'tests-interfaces' }
+ViennaVDMGrammarTest >> testOperationImport [
+	self assert: (grammar operationImport end parse: 'op') equals: #('op' nil nil).
+	self assert: (grammar operationImport end parse: 'op : () ==> ()') equals: #('op' #(nil nil) nil).
+	self assert: (grammar operationImport end parse: 'op1 renamed op2') equals: #('op1' nil 'op2').
+	self assert: (grammar operationImport end parse: 'op1: nat ==> nat renamed op2') equals: #('op1' #('nat' 'nat') 'op2')
+]
+
+{ #category : #'tests-interfaces' }
+ViennaVDMGrammarTest >> testOperationSignature [
+	self
+		assert: (grammar operationSignature end parse: 'op1, op2, op3 : nat ==> ()')
+		equals: #(#('op1' 'op2' 'op3') #('nat' nil))
+]
+
+{ #category : #'tests-interfaces' }
+ViennaVDMGrammarTest >> testOperationsSignature [
+	self
+		assert: (grammar operationsSignature end parse: 'operations op1, op2 : nat ==> (); op3 : () ==> nat;')
+		equals: #(#(#('op1' 'op2') #('nat' nil)) #(#('op3') #(nil 'nat')))
 ]
 
 { #category : #'tests-types' }
@@ -1442,6 +1636,20 @@ ViennaVDMGrammarTest >> testTupleSelect1 [
 	self assert: (grammar expression end parse: 'mk_(e1,e2,e3).#3') equals: #(#('e1' 'e2' 'e3') '3')
 ]
 
+{ #category : #'tests-interfaces' }
+ViennaVDMGrammarTest >> testTypeExport [
+	self assert: (grammar typeExport end parse: 't') equals: #(nil 't').
+	self assert: (grammar typeExport end parse: 'struct t') equals: #('struct' 't')
+]
+
+{ #category : #'tests-interfaces' }
+ViennaVDMGrammarTest >> testTypeImport [
+	self assert: (grammar typeImport end parse: 't') equals: #('t' nil).
+	self assert: (grammar typeImport end parse: 't = nat') equals: #(#('t' 'nat' nil) nil).
+	self assert: (grammar typeImport end parse: 't1 renamed t2') equals: #('t1' 't2').
+	self assert: (grammar typeImport end parse: 't1 = nat renamed t2') equals: #(#('t1' 'nat' nil) 't2')
+]
+
 { #category : #'tests-types' }
 ViennaVDMGrammarTest >> testTypeName1 [
 	self assert: (grammar type end parse: 't1') equals: 't1'
@@ -1555,6 +1763,26 @@ ViennaVDMGrammarTest >> testValueDefinition [
 	self assert: (grammar valueDefinition end parse: 'v=e') equals: #('v' nil 'e')
 ]
 
+{ #category : #'tests-interfaces' }
+ViennaVDMGrammarTest >> testValueImport [
+	self assert: (grammar valueImport end parse: 'v') equals: #('v' nil nil).
+	self assert: (grammar valueImport end parse: 'v :t') equals: #('v' 't' nil).
+	self assert: (grammar valueImport end parse: 'v1 renamed v2') equals: #('v1' nil 'v2').
+	self assert: (grammar valueImport end parse: 'v1 : t renamed v2') equals: #('v1' 't' 'v2')
+]
+
+{ #category : #'tests-interfaces' }
+ViennaVDMGrammarTest >> testValueSignature [
+	self assert: (grammar valueSignature end parse: 'v1, v2 : nat') equals: #(#('v1' 'v2') 'nat')
+]
+
+{ #category : #'tests-interfaces' }
+ViennaVDMGrammarTest >> testValuesSignature [
+	self
+		assert: (grammar valuesSignature end parse: 'values v1, v2 : nat; v3 : int')
+		equals: #(#(#('v1' 'v2') 'nat') #(#('v3') 'int'))
+]
+
 { #category : #'tests-expressions' }
 ViennaVDMGrammarTest >> testWaitingExpression2 [
 	self assert: (grammar expression end parse: '#waiting(o1, o2)') equals: #('o1' 'o2')
@@ -1573,4 +1801,12 @@ ViennaVDMGrammarTest >> testWatitingExpression1 [
 { #category : #'tests-statements' }
 ViennaVDMGrammarTest >> testWhileLoop [
 	self assert: (grammar statement end parse: 'while e1 do return e2') equals: #('e1' 'e2')
+]
+
+{ #category : #'tests-interfaces' }
+ViennaVDMGrammarTest >> testimportDefinition [
+	self
+		assert: (grammar importDefinition end parse: 'from m values v1; v2 functions f ; values v')
+		equals: #('m' #(#(#('v1' nil nil) #('v2' nil nil)) #(#('f' nil nil)) #(#('v' nil nil)))).
+	self assert: (grammar importDefinition end parse: 'from m all') equals: #('m' 'all')
 ]

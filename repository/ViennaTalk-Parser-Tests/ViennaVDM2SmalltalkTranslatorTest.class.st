@@ -279,30 +279,6 @@ ViennaVDM2SmalltalkTranslatorTest >> testDivAnd [
 	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '3 div 2')) equals: 1
 ]
 
-{ #category : #'tests-definitions' }
-ViennaVDM2SmalltalkTranslatorTest >> testDocument [
-	self
-		assert:
-			(Compiler
-				evaluate:
-					(ViennaVDM2SmalltalkTranslator new document trim end
-						parse:
-							'
-				types T = nat; 
-				values one:T = 1; 
-				functions
-					succ : T -> T
-					succ(x) == x + 1;
-				state S of
-					count : T
-					init s == s = mk_S(0)
-				end
-				operations 
-					inc : () ==> T
-					inc() == (count := succ(count); return count);') , '. inc value; value; value')
-		equals: 3
-]
-
 { #category : #'tests-operators' }
 ViennaVDM2SmalltalkTranslatorTest >> testDom [
 	self
@@ -443,6 +419,30 @@ ViennaVDM2SmalltalkTranslatorTest >> testFieldSelectWith [
 					' | type value | type := ViennaCompositeType constructorName: ''T'' withAll: {{ nil . false . ViennaType int} . {''f'' . false . ViennaType int}}. value := type valueWithArguments: #(10 20). '
 						, (ViennaVDM2SmalltalkTranslator new expression end parse: 'value.g') ]
 		raise: KeyNotFound
+]
+
+{ #category : #'tests-definitions' }
+ViennaVDM2SmalltalkTranslatorTest >> testFlatDocument [
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkTranslator new flatDocument trim end
+						parse:
+							'
+				types T = nat; 
+				values one:T = 1; 
+				functions
+					succ : T -> T
+					succ(x) == x + 1;
+				state S of
+					count : T
+					init s == s = mk_S(0)
+				end
+				operations 
+					inc : () ==> T
+					inc() == (count := succ(count); return count);') , '. inc value; value; value')
+		equals: 3
 ]
 
 { #category : #'tests-operators' }
