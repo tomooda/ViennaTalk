@@ -2706,6 +2706,11 @@ ViennaVDM2Smalltalk >> seq1Type: aViennaNode env: aDictionary [
 ]
 
 { #category : #'code generation-patterns' }
+ViennaVDM2Smalltalk >> seqBind: aViennaNode env: aDictionary [
+	^ self generateAll: aViennaNode env: aDictionary
+]
+
+{ #category : #'code generation-patterns' }
 ViennaVDM2Smalltalk >> seqConcPattern: aViennaNode env: aDictionary [
 	| pat1 pat2 |
 	pat1 := self generate: aViennaNode first env: aDictionary.
@@ -2759,18 +2764,26 @@ ViennaVDM2Smalltalk >> sequenceComprehension: aViennaNode env: aDictionary [
 		ifTrue: [ 
 			| var |
 			var := bindNode first first.
-			^ '('
-				,
-					(setNode label = 'SetRangeExpression'
-						ifTrue: [ '(' , (self intervalExpression: setNode env: aDictionary) , ')' ]
-						ifFalse: [ 
-							setNode label = 'SequenceIndices'
-								ifTrue: [ '(' , (self indicesExpression: setNode env: aDictionary) , ')' ]
-								ifFalse: [ (self generate: setNode env: aDictionary) , ' asSortedCollection' ] ])
-				,
-					(guard
-						ifNotNil: [ ' select: [:' , var , ' | ' , guard , '] thenCollect: [:' , var , ' | ' ]
-						ifNil: [ ' collect: [:' , var , ' | ' ]) , expr , ']) asOrderedCollection' ].
+			^ bindNode label = 'SeqBind'
+				ifTrue: [ 
+					'(' , (self generate: setNode env: aDictionary)
+						,
+							(guard
+								ifNotNil: [ ' select: [:' , var , ' | ' , guard , '] thenCollect: [:' , var , ' | ' ]
+								ifNil: [ ' collect: [:' , var , ' | ' ]) , expr , '])' ]
+				ifFalse: [ 
+					'('
+						,
+							(setNode label = 'SetRangeExpression'
+								ifTrue: [ '(' , (self intervalExpression: setNode env: aDictionary) , ')' ]
+								ifFalse: [ 
+									setNode label = 'SequenceIndices'
+										ifTrue: [ '(' , (self indicesExpression: setNode env: aDictionary) , ')' ]
+										ifFalse: [ (self generate: setNode env: aDictionary) , ' asSortedCollection' ] ])
+						,
+							(guard
+								ifNotNil: [ ' select: [:' , var , ' | ' , guard , '] thenCollect: [:' , var , ' | ' ]
+								ifNil: [ ' collect: [:' , var , ' | ' ]) , expr , ']) asOrderedCollection' ] ].
 	^ String
 		new: 1024
 		streamContents: [ :stream | 

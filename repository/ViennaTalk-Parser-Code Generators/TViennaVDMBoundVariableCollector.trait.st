@@ -374,6 +374,11 @@ TViennaVDMBoundVariableCollector >> boundVariablesSeq1Type: aViennaNode into: aS
 ]
 
 { #category : #'bound variables-patterns and binds' }
+TViennaVDMBoundVariableCollector >> boundVariablesSeqBind: aViennaNode into: aSet [
+	self boundVariables: aViennaNode first into: aSet
+]
+
+{ #category : #'bound variables-patterns and binds' }
 TViennaVDMBoundVariableCollector >> boundVariablesSeqConcPattern: aViennaNode into: aSet [
 	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
 ]
