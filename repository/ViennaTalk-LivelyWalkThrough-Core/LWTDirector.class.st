@@ -2,7 +2,6 @@ Class {
 	#name : #LWTDirector,
 	#superclass : #Morph,
 	#instVars : [
-		'vdmc',
 		'selectedWidgets',
 		'frames',
 		'lastFrame',
@@ -10,7 +9,8 @@ Class {
 		'scripts',
 		'dependents',
 		'urlPrefix',
-		'filepath'
+		'filepath',
+		'animation'
 	],
 	#classVars : [
 		'Server'
@@ -40,8 +40,8 @@ LWTDirector class >> flushServer [
 ]
 
 { #category : #'instance creation' }
-LWTDirector class >> on: aVDMC [
-	^ self new vdmc: aVDMC
+LWTDirector class >> on: aViennaAnimation [
+	^ self new animation: aViennaAnimation
 ]
 
 { #category : #servicing }
@@ -100,6 +100,19 @@ LWTDirector >> addScript: aLWTLivetalkScript [
 		put: aLWTLivetalkScript
 ]
 
+{ #category : #accessing }
+LWTDirector >> animation [
+	^ animation ifNil: [ animation := self defaultAnimation ]
+]
+
+{ #category : #accessing }
+LWTDirector >> animation: aViennaAnimation [
+	animation
+		ifNotNil: [ aViennaAnimation specification: animation specification.
+			animation state keysAndValuesDo: [ :key :value | aViennaAnimation plainAt: key put: value ] ].
+	animation := aViennaAnimation
+]
+
 { #category : #json }
 LWTDirector >> asJsonObject [
 	^ Dictionary new
@@ -150,7 +163,7 @@ LWTDirector >> cutNames [
 ]
 
 { #category : #defaults }
-LWTDirector >> defaultVDMC [
+LWTDirector >> defaultAnimation [
 	^ ViennaAnimation vdmj
 ]
 
@@ -191,10 +204,9 @@ LWTDirector >> execVDM: aString withArguments: anArray [
 	^ aString , '(' , (',' join: anArray) , ')'
 		in: [ :expression | 
 			| value |
-			value := [ self vdmc plainEvaluate: expression ]
+			value := [ self animation plainEvaluate: expression ]
 				on: Error
-				do: [ :ex | self abort: 'VDM error: ' , ex messageText ].	"self addFrame: (LWTVDMCallFrame callee: aString expression: expression value: value).
-			self addFrame: (LWTVDMStateFrame states: self vdmc state)."
+				do: [ :ex | self abort: 'VDM error: ' , ex messageText ].	
 			value ]
 ]
 
@@ -436,12 +448,12 @@ LWTDirector >> selectedWidgetsDo: aBlock [
 
 { #category : #accessing }
 LWTDirector >> specification [
-	^ self vdmc specification
+	^ self animation specification
 ]
 
 { #category : #accessing }
 LWTDirector >> specification: aString [
-	self vdmc specification: aString
+	self animation specification: aString
 ]
 
 { #category : #stepping }
@@ -482,17 +494,17 @@ LWTDirector >> urlPrefix: aString [
 
 { #category : #accessing }
 LWTDirector >> useInterpreter [
-	self vdmc becomeInterpretedAnimation 
+	self animation becomeInterpretedAnimation 
 ]
 
 { #category : #accessing }
 LWTDirector >> useTranspiler [
-	self vdmc becomeTranspiledAnimation 
+	self animation becomeTranspiledAnimation 
 ]
 
 { #category : #accessing }
 LWTDirector >> usesTranspiler [
-	^ vdmc class == ViennaTranspiledAnimation 
+	^ animation class == ViennaTranspiledAnimation 
 ]
 
 { #category : #accessing }
@@ -523,20 +535,6 @@ LWTDirector >> value: aZnRequest [
 LWTDirector >> valueOf: aString ifAbsent: errorBlock [
 	self morphsNamed: aString do: [ :morph | ^ morph value ].
 	^ errorBlock value
-]
-
-{ #category : #accessing }
-LWTDirector >> vdmc [
-	^ vdmc ifNil: [ vdmc := self defaultVDMC ]
-]
-
-{ #category : #accessing }
-LWTDirector >> vdmc: aVDMC [
-	vdmc
-		ifNotNil: [ 
-			aVDMC specification: vdmc specification.
-			vdmc state keysAndValuesDo: [ :key :value | aVDMC plainAt: key put: value ] ].
-	vdmc := aVDMC
 ]
 
 { #category : #'event handling' }
