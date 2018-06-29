@@ -5,7 +5,6 @@ Class {
 		'name',
 		'nameFont',
 		'nameColor',
-		'eventActionDict',
 		'moveable',
 		'showsName'
 	],
@@ -47,11 +46,6 @@ LWTWidget >> changeNameFont [
 				for: self
 				setSelector: #nameFont:
 				getSelector: #nameFont)
-]
-
-{ #category : #events }
-LWTWidget >> clearEvent: aSymbol [
-	self eventActionDict removeKey: aSymbol ifAbsent: [  ]
 ]
 
 { #category : #defaults }
@@ -100,10 +94,14 @@ LWTWidget >> drawOn: aCanvas [
 
 { #category : #operations }
 LWTWidget >> duplicateAndPlace [
-	self duplicate
-		changeName;
-		top: self bottom;
-		openInWorld
+	^ (UIManager default request: 'Enter a new name' initialAnswer: self name)
+		ifNotNil: [ :newName | 
+			| duplicate |
+			duplicate := self duplicate
+				name: newName;
+				top: self bottom.
+			self director addMorph: duplicate.
+			duplicate ]
 ]
 
 { #category : #private }
@@ -129,18 +127,8 @@ LWTWidget >> edgePrecision [
 ]
 
 { #category : #events }
-LWTWidget >> effectiveEventSelectors [
-	^ eventActionDict keys asArray
-]
-
-{ #category : #events }
 LWTWidget >> event: aSymbol [
-	self director
-		ifNotNil: [ :director | 
-			(eventActionDict includesKey: aSymbol)
-				ifFalse: [ ^ self ].
-			director recordEvent: aSymbol at: self.
-			self actionSelectorsForEvent: aSymbol do: [ :selector | director dispatchActionAt: selector ] ]
+	self director ifNotNil: [ :director | director dispatchEvent: aSymbol at: self name ]
 ]
 
 { #category : #'event handling' }
@@ -190,7 +178,6 @@ LWTWidget >> hideName [
 { #category : #'initialize-release' }
 LWTWidget >> initialize [
 	super initialize.
-	eventActionDict := Dictionary new.
 	moveable := self defaultMoveable.
 	showsName := self defaultShowsName
 ]
@@ -382,10 +369,4 @@ LWTWidget >> showsName [
 { #category : #operations }
 LWTWidget >> toggleMoveable [
 	self moveable: self moveable not
-]
-
-{ #category : #events }
-LWTWidget >> when: eventSymbol add: anActionSymbol beforeIndex: anInteger [
-	(eventActionDict at: eventSymbol ifAbsentPut: [ OrderedCollection new ])
-		in: [ :actions | actions add: anActionSymbol beforeIndex: (anInteger ifNil: [ actions size + 1 ]) ]
 ]

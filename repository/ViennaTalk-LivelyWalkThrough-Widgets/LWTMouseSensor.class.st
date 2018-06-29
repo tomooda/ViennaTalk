@@ -12,6 +12,7 @@ Class {
 { #category : #'instance creation' }
 LWTMouseSensor class >> area [
 	^ self new
+		extent: 100 @ 100;
 		color: Color transparent;
 		borderColor: Color gray;
 		thinBorder;
@@ -21,9 +22,10 @@ LWTMouseSensor class >> area [
 { #category : #'instance creation' }
 LWTMouseSensor class >> button [
 	^ self new
+		extent: 200@30;
 		color: Color lightGray;
 		nameColor: Color black;
-		borderColor: Color black;
+		borderColor: Color darkGray;
 		thickBorder;
 		yourself
 ]
@@ -31,6 +33,7 @@ LWTMouseSensor class >> button [
 { #category : #'instance creation' }
 LWTMouseSensor class >> pad [
 	^ self new
+		extent: 400 @ 400;
 		color: (Color lightGray alpha: 0.5);
 		borderColor: Color gray;
 		thinBorder;
