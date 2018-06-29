@@ -118,6 +118,12 @@ ViennaLiveSmalltalkTranslationEditor class >> defaultSpec [
 		yourself
 ]
 
+{ #category : #'class initialization' }
+ViennaLiveSmalltalkTranslationEditor class >> initialize [
+	super initialize.
+	Smalltalk at: #ViennaLauncher ifPresent: [ :launcherClass | launcherClass reopen ]
+]
+
 { #category : #menu }
 ViennaLiveSmalltalkTranslationEditor class >> viennaDevMenuOn: aBuilder [
 	<ViennaDev>

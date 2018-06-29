@@ -20,6 +20,12 @@ ViennaLiveASTTranslationEditor class >> VDM2SmalltalkTranslatorMenuOn: aBuilder 
 						icon: nil ]
 ]
 
+{ #category : #'class initialization' }
+ViennaLiveASTTranslationEditor class >> initialize [
+	super initialize.
+	Smalltalk at: #ViennaLauncher ifPresent: [ :launcherClass | launcherClass reopen ]
+]
+
 { #category : #menu }
 ViennaLiveASTTranslationEditor class >> viennaDevMenuOn: aBuilder [
 	<ViennaDev>
