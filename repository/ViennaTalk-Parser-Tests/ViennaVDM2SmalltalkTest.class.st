@@ -40,7 +40,7 @@ ViennaVDM2SmalltalkTest >> testAndEnv [
 						generate: node
 						env:
 							{('x' -> 'false').
-							('y' -> 'undefined')} asDictionary))
+							('y' -> self undefined)} asDictionary))
 		equals: false.
 	self
 		should: [ 
