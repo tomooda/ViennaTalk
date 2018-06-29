@@ -324,6 +324,11 @@ ViennaBrowser >> codePaneDoIt [
 ]
 
 { #category : #'code pane menu' }
+ViennaBrowser >> codePaneFormat [
+	self formatIn: codePane
+]
+
+{ #category : #'code pane menu' }
 ViennaBrowser >> codePaneMenu: aMenu shifted: aBoolean [
 	aMenu target: self.
 	aMenu
@@ -346,6 +351,9 @@ ViennaBrowser >> codePaneMenu: aMenu shifted: aBoolean [
 			#-.
 			{('undo (z)' translated).
 			#undo}.
+			#-.
+			{('format (F)' translated).
+			#codePaneFormat}.
 			#-.
 			{('do it (d)' translated).
 			#codePaneDoIt}.
@@ -459,6 +467,17 @@ ViennaBrowser >> fileSave: title do: aBlock [
 							((String new: 1024 streamContents: [ :stringStream | aBlock value: stringStream ])
 								copyReplaceAll: String cr
 								with: String lf) ] ]
+]
+
+{ #category : #private }
+ViennaBrowser >> formatIn: aPluggableTextMorph [
+	aPluggableTextMorph
+		handleEdit: [ 
+			[ 
+			aPluggableTextMorph textMorph newContents: (ViennaVDMParser new parse: aPluggableTextMorph text) format.
+			aPluggableTextMorph hasUnacceptedEdits: true ]
+				on: Error
+				do: [ :ex |  ] ]
 ]
 
 { #category : #'module list menu' }
