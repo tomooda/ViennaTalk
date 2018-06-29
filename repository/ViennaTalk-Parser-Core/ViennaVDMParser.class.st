@@ -420,7 +420,11 @@ ViennaVDMParser >> functionExport [
 
 { #category : #'parsers-interfaces' }
 ViennaVDMParser >> functionImport [
-	^ super functionImport ==> [ :array | ViennaNode label: 'FunctionImport' with: array first with: (ViennaNode label: 'FunctionImportType' withAll: array second) with: array third]
+	^ super functionImport
+		==> [ :array | 
+			ViennaNode
+				label: 'FunctionImport'
+				withAll: array ]
 ]
 
 { #category : #'parsers-interfaces' }
