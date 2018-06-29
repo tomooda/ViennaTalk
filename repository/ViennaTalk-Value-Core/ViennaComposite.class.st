@@ -66,17 +66,11 @@ ViennaComposite class >> consturctorName: aString with: anObject1 with: anObject
 
 { #category : #comparing }
 ViennaComposite >> = anObject [
-	self == anObject
-		ifTrue: [ ^ true ].
-	constructorName = anObject constructorName
-		ifFalse: [ ^ false ].
-	self size = anObject size
-		ifFalse: [ ^ false ].
-	equalityFields
-		do: [ :index | 
-			(self at: index) = (anObject at: index)
-				ifFalse: [ ^ false ] ].
-	^ true
+	^ self == anObject
+		or: [ anObject isViennaComposite
+				and: [ constructorName = anObject constructorName
+						and: [ self size = anObject size
+								and: [ equalityFields allSatisfy: [ :index | (self at: index) = (anObject at: index) ] ] ] ] ]
 ]
 
 { #category : #converting }
