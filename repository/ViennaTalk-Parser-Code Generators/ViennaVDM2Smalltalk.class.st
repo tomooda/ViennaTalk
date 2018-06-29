@@ -85,6 +85,14 @@ ViennaVDM2Smalltalk >> activeExpression: aViennaNode env: aDictionary [
 	^ self notYetImplemented
 ]
 
+{ #category : #'code generation-statements' }
+ViennaVDM2Smalltalk >> alwaysStatement: aViennaNode env: aDictionary [
+	| s1 s2 |
+	s1 := self generate: aViennaNode first env: aDictionary.
+	s2 := self generate: aViennaNode second env: aDictionary.
+	^ '[' , s2 , '] ensure: [' , s1 , ']'
+]
+
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> and: aViennaNode env: aDictionary [
 	| arg1 arg2 |
@@ -699,6 +707,13 @@ ViennaVDM2Smalltalk >> existsExpression: aViennaNode env: aDictionary [
 						nextPutAll: ' value: ';
 						nextPutAll: setAndVar first ].
 			stream nextPut: $) ]
+]
+
+{ #category : #'code generation-statements' }
+ViennaVDM2Smalltalk >> exitStatement: aViennaNode env: aDictionary [
+	| expr |
+	expr := self generate: aViennaNode first env: aDictionary.
+	^ '(ViennaException expression: ' , expr , ')'
 ]
 
 { #category : #'code generation-definitions' }
@@ -3024,6 +3039,48 @@ ViennaVDM2Smalltalk >> timeExpression: aViennaNode env: aDictionary [
 	^ self notYetImplemented
 ]
 
+{ #category : #'code generation-statements' }
+ViennaVDM2Smalltalk >> tixeStatement: aViennaNode env: aDictionary [
+	| patternHandlersNode statementNode |
+	patternHandlersNode := aViennaNode first.
+	statementNode := aViennaNode second.
+	^ String
+		new: 1024
+		streamContents: [ :stream | 
+			stream nextPutAll: '(ViennaException tixe: {'.
+			1 to: aViennaNode first size by: 2 do: [ :index | 
+				| patternNode handlerNode matchVars |
+				patternNode := patternHandlersNode at: index.
+				handlerNode := patternHandlersNode at: index + 1.
+				matchVars := (self boundVariables: patternNode) asArray.
+				stream
+					nextPutAll: '[:tixe | ';
+					nextPutAll: (self generate: patternNode);
+					nextPutAll: ' value: tixe] -> [:tixe | '.
+				matchVars
+					ifNotEmpty: [ stream nextPutAll: '| '.
+						matchVars
+							do: [ :var | 
+								stream
+									nextPutAll: var;
+									space ].
+						stream nextPutAll: '| '.
+						matchVars
+							do: [ :var | 
+								stream
+									nextPutAll: var;
+									nextPutAll: ' := tixe at: ';
+									nextPutAll: var storeString;
+									nextPutAll: '. ' ] ].
+				stream
+					nextPutAll: (self generate: handlerNode env: aDictionary);
+					nextPutAll: ']. ' ].
+			stream
+				nextPutAll: '} in: [';
+				nextPutAll: (self generate: statementNode env: aDictionary);
+				nextPutAll: '])' ]
+]
+
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> tokenConstructor: aViennaNode env: aDictionary [
 	^ '(ViennaToken with: ' , (self generate: aViennaNode first env: aDictionary) , ')'
@@ -3035,6 +3092,43 @@ ViennaVDM2Smalltalk >> totalFunctionType: aViennaNode env: aDictionary [
 	argType := self generate: aViennaNode first env: aDictionary.
 	returnType := self generate: aViennaNode second env: aDictionary.
 	^ '(' , argType , ' +> ' , returnType , ')'
+]
+
+{ #category : #'code generation-statements' }
+ViennaVDM2Smalltalk >> trapStatement: aViennaNode env: aDictionary [
+	| matchVars pattern handler statement |
+	matchVars := (self boundVariables: aViennaNode first) asArray.
+	pattern := self generate: aViennaNode first env: aDictionary.
+	handler := self generate: aViennaNode second env: aDictionary.
+	statement := self generate: aViennaNode third env: aDictionary.
+	^ String
+		new: 1024
+		streamContents: [ :stream | 
+			stream
+				nextPutAll: '(ViennaException trap: ';
+				nextPutAll: pattern;
+				nextPutAll: ' with: [:trap |'.
+			matchVars
+				ifNotEmpty: [ stream nextPutAll: ' | '.
+					matchVars
+						do: [ :var | 
+							stream
+								nextPutAll: var;
+								space ].
+					stream nextPutAll: '| ' ].
+			stream nextPutAll: 'trap ifEmpty: [ViennaNoMatch signal] ifNotEmpty: [ | with | with := trap first.'.
+			matchVars
+				do: [ :var | 
+					stream
+						nextPutAll: var;
+						nextPutAll: ' := with at: ';
+						nextPutAll: var storeString;
+						nextPutAll: ' ifAbsent: [ViennaNoMatch signal]. ' ].
+			stream
+				nextPutAll: handler;
+				nextPutAll: ']] in: [';
+				nextPutAll: statement;
+				nextPutAll: '])' ]
 ]
 
 { #category : #'code generation-expressions' }
