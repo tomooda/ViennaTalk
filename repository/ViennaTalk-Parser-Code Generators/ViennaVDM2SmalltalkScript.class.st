@@ -100,6 +100,11 @@ ViennaVDM2SmalltalkScript >> stateDefinition: aViennaNode env: aDictionary [
 ]
 
 { #category : #utilities }
+ViennaVDM2SmalltalkScript >> translate: aString [
+	^ self translate: aString ifError: [  ]
+]
+
+{ #category : #utilities }
 ViennaVDM2SmalltalkScript >> translate: aString ifError: aBlock [
 	| ast |
 	ast := ViennaVDMParser new parse: aString.
