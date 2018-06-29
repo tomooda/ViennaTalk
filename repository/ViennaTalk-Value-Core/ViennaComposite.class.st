@@ -159,6 +159,11 @@ ViennaComposite >> isViennaComposite [
 	^ true
 ]
 
+{ #category : #private }
+ViennaComposite >> namedFields [
+	^ namedFields
+]
+
 { #category : #printing }
 ViennaComposite >> neoJsonOn: neoJSONWriter [
 	(Dictionary new
