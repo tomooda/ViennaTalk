@@ -133,11 +133,6 @@ LWTVariableImageWidget >> drawOn: aCanvas [
 			| scale |
 			scale := self extent / form extent.
 			aCanvas
-				frameAndFillRectangle: self bounds
-				fillColor: Color white
-				borderWidth: 0
-				borderColor: Color transparent.
-			aCanvas
 				paintImage:
 					(form
 						magnifyBy:
@@ -194,6 +189,7 @@ LWTVariableImageWidget >> menu [
 	menu addLine.
 	forms
 		keysDo: [ :key | 
+			key ifNotNil: [ 
 			menu
 				add: key
 				subMenu:
@@ -206,7 +202,7 @@ LWTVariableImageWidget >> menu [
 							target: self
 							selector: #removeImageAt:
 							argument: key;
-						yourself) ].
+						yourself) ]].
 	menu
 		add: 'DEFAULT'
 		subMenu:
