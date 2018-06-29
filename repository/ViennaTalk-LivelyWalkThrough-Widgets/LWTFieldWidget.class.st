@@ -264,7 +264,6 @@ LWTFieldWidget >> layoutFrameForTextPane [
 LWTFieldWidget >> menu [
 	| menu |
 	menu := super menu.
-	menu add: 'change text font' translated target: self selector: #changeTextFont.
 	menu
 		add: 'type' translated
 		subMenu:
@@ -278,7 +277,7 @@ LWTFieldWidget >> menu [
 					target: self
 					selector: #changeStringType
 					getStateSelector: #isStringType;
-				addToggle: 'vdm' translated
+				addToggle: 'vdm value' translated
 					target: self
 					selector: #changeVDMType
 					getStateSelector: #isVDMType;
@@ -287,6 +286,7 @@ LWTFieldWidget >> menu [
 					selector: #changeAnyType
 					getStateSelector: #isAnyType;
 				yourself).
+	menu add: 'change text font' translated target: self selector: #changeTextFont.
 	self showsDiagram
 		ifTrue: [ 
 			menu
@@ -355,14 +355,14 @@ LWTFieldWidget >> validate: aString do: aBlock ifError: errorBlock [
 			| vdm |
 			vdm := [ ViennaWriter new stringify: (ViennaReader new parseNumberOn: aString trim readStream) ]
 				on: Error
-				do: [ :ex | ^ errorBlock value: 'Cannot convert to VDM number' ].
+				do: [ :ex | ^ errorBlock cull: 'Cannot convert to VDM number' ].
 			^ aBlock value: vdm ].
 	type = #vdm
 		ifTrue: [ 
 			| vdm |
 			vdm := [ ViennaWriter new stringify: (ViennaReader new parse: aString) ]
 				on: Error
-				do: [ :ex | ^ errorBlock value: 'Cannot convert to VDM value' ].
+				do: [ :ex | ^ errorBlock cull: 'Cannot convert to VDM value' ].
 			^ aBlock value: vdm ].
 	^ aBlock value: aString
 ]
