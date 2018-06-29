@@ -1422,7 +1422,9 @@ ViennaVDM2Smalltalk >> mapMunionPattern: aViennaNode env: aDictionary [
 	| pat1 pat2 |
 	pat1 := self generate: aViennaNode first env: aDictionary.
 	pat2 := self generate: aViennaNode second env: aDictionary.
-	^ '(ViennaRuntimeUtil match: ' , pat1 , ' munion: ' , pat2 , ')'
+	^ '(ViennaRuntimeUtil match: ' , pat1 , ' munion: ' , pat2
+		, ((self mapPatternSize: aViennaNode first) ifNotNil: [ :size | ' left: ' , size printString ] ifNil: [ '' ])
+		, ((self mapPatternSize: aViennaNode second) ifNotNil: [ :size | ' right: ' , size printString ] ifNil: [ '' ]) , ')'
 ]
 
 { #category : #'code generation-expressions' }
@@ -1449,6 +1451,20 @@ ViennaVDM2Smalltalk >> mapOrSequenceReference: aViennaNode env: aDictionary [
 			path := stateDesig second ].
 	^ {ident.
 	(path copyWith: expr)}
+]
+
+{ #category : #utilities }
+ViennaVDM2Smalltalk >> mapPatternSize: aViennaNode [
+	aViennaNode label = 'MapEnumerationPattern'
+		ifTrue: [ ^ aViennaNode size ].
+	aViennaNode label = 'MapMunionPattern'
+		ifTrue: [ 
+			| left right |
+			left := self mapPatternSize: aViennaNode first.
+			right := self mapPatternSize: aViennaNode second.
+			left ifNotNil: [ right ifNotNil: [ ^ left + right ] ].
+			^ nil ].
+	^ nil
 ]
 
 { #category : #'code generation-expressions' }
@@ -2088,6 +2104,20 @@ ViennaVDM2Smalltalk >> setIntersection: aViennaNode env: aDictionary [
 	^ '(' , arg1 , ' intersection: ' , arg2 , ')'
 ]
 
+{ #category : #utilities }
+ViennaVDM2Smalltalk >> setPatternSize: aViennaNode [
+	aViennaNode label = 'SetEnumPattern'
+		ifTrue: [ ^ aViennaNode size ].
+	aViennaNode label = 'SetUnionPattern'
+		ifTrue: [ 
+			| left right |
+			left := self setPatternSize: aViennaNode first.
+			right := self setPatternSize: aViennaNode second.
+			left ifNotNil: [ right ifNotNil: [ ^ left + right ] ].
+			^ nil ].
+	^ nil
+]
+
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> setRangeExpression: aViennaNode env: aDictionary [
 	^ '(', (self intervalExpression: aViennaNode env: aDictionary) , ') asSet'
@@ -2111,7 +2141,9 @@ ViennaVDM2Smalltalk >> setUnionPattern: aViennaNode env: aDictionary [
 	| pat1 pat2 |
 	pat1 := self generate: aViennaNode first env: aDictionary.
 	pat2 := self generate: aViennaNode second env: aDictionary.
-	^ '(ViennaRuntimeUtil match: ' , pat1 , ' union: ' , pat2 , ')'
+	^ '(ViennaRuntimeUtil match: ' , pat1 , ' union: ' , pat2 
+		, ((self setPatternSize: aViennaNode first) ifNotNil: [ :size | ' left: ' , size printString ] ifNil: [ '' ])
+		, ((self setPatternSize: aViennaNode second) ifNotNil: [ :size | ' right: ' , size printString ] ifNil: [ '' ]) , ')'
 ]
 
 { #category : #'code generation-definitions' }
