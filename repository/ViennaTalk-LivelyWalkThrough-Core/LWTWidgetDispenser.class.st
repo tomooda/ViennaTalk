@@ -3,6 +3,7 @@ Class {
 	#superclass : #Morph,
 	#instVars : [
 		'fieldWidget',
+		'plotWidget',
 		'imageWidget',
 		'buttonWidget',
 		'padWidget',
@@ -56,6 +57,8 @@ LWTWidgetDispenser >> handleMouseDown: aMouseEvent [
 	point := aMouseEvent position.
 	(fieldWidget bounds containsPoint: point)
 		ifTrue: [ LWTFieldWidget new openInHand ].
+	(plotWidget bounds containsPoint: point)
+		ifTrue: [ LWTPlotWidget new openInHand ].
 	(imageWidget bounds containsPoint: point)
 		ifTrue: [ LWTImageWidget new openInHand ].
 	(buttonWidget bounds containsPoint: point)
@@ -94,6 +97,7 @@ LWTWidgetDispenser >> initialize [
 		listDirection: #topToBottom;
 		cellInset: 3.
 	self addMorphBack: self fieldWidget.
+	self addMorphBack: self plotWidget.
 	self addMorphBack: self imageWidget.
 	self addMorphBack: self buttonWidget.
 	self addMorphBack: self padWidget.
@@ -120,5 +124,19 @@ LWTWidgetDispenser >> padWidget [
 				nameColor: Color black;
 				nameFont: self nameFontForWidgets;
 				extent: 80 @ 80;
+				yourself ]
+]
+
+{ #category : #accessing }
+LWTWidgetDispenser >> plotWidget [
+	^ plotWidget
+		ifNil: [ 
+			plotWidget := LWTPlotWidget new
+				freeze;
+				name: 'Plot';
+				nameColor: Color black;
+				nameFont: self nameFontForWidgets;
+				extent: 80 @ 80;
+				data: ((0 to: 4) collect: [ :t | t asFloat cos ]);
 				yourself ]
 ]
