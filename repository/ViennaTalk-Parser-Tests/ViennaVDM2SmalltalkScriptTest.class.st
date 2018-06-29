@@ -1028,7 +1028,8 @@ ViennaVDM2SmalltalkScriptTest >> testBoundVariablesStateDefinitionInto [
 			'v1'.
 			'v2'.
 			'inv_S'.
-			'init_S'} asSet
+			'init_S'.
+			'state'} asSet
 ]
 
 { #category : #'tests-bound variables-types' }
@@ -2500,7 +2501,7 @@ ViennaVDM2SmalltalkScriptTest >> testOldNameEnv [
 	node := ViennaVDMParser new expression end parse: 'x~'.
 	self deny: node isPetitFailure.
 	self assert: node label = 'OldName'.
-	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: {('x~' -> '1')} asDictionary)) equals: 1
+	self assert: (Compiler evaluate: '|_oldState|_oldState := {''x'' -> 1} asDictionary. ', (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: 1
 ]
 
 { #category : #'tests-code generation-types' }
