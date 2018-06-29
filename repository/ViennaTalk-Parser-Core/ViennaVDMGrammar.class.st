@@ -1895,7 +1895,7 @@ ViennaVDMGrammar >> stateDesignator [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> stateFieldList [
-	^ (identifier , colon , type) star
+	^ (identifier trim , colon , type trim) star
 		==> [ :array | 
 			array
 				collect: [ :triple | 

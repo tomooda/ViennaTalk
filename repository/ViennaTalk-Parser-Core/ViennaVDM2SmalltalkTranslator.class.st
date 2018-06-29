@@ -789,7 +789,7 @@ ViennaVDM2SmalltalkTranslator >> invariantFunction [
 		==> [ :pair | 
 			| pat patVars patMatcher expr valVar |
 			pat := pair first.
-			patVars := pat first.
+			patVars := pat first reject: #isNil.
 			patMatcher := pat second.
 			expr := pair second.
 			valVar := (self
@@ -797,8 +797,8 @@ ViennaVDM2SmalltalkTranslator >> invariantFunction [
 				uniqueIn:
 					{(pat second).
 					expr}) value.
-			'[:' , valVar , '||' , (' ' join: patVars) , '|' , (self binder: pat second with: valVar vars: pat first) , ' and: ['
-				, expr , ']]' ]
+			'[:' , valVar , '||' , (' ' join: patVars) , '|'
+				, (self binder: pat second with: valVar vars: (pat first reject: #isNil)) , ' and: [' , expr , ']]' ]
 ]
 
 { #category : #'parsers-expressions-operators' }
