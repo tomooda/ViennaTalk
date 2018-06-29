@@ -308,7 +308,7 @@ ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass proto
 						nextPutAll: bodyString ])
 		in: theClass
 		protocol: protocolString
-		node: aViennaNode fifth
+		node: aViennaNode fourth
 ]
 
 { #category : #'code generation-definitions' }
