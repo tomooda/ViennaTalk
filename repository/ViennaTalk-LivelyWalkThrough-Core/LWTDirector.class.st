@@ -3,6 +3,7 @@ Class {
 	#superclass : #Morph,
 	#instVars : [
 		'vdmc',
+		'selectedWidgets',
 		'frames',
 		'lastFrame',
 		'cuts',
@@ -261,6 +262,17 @@ LWTDirector >> scriptSelectors [
 { #category : #private }
 LWTDirector >> scriptsDo: aBlock [
 	scripts valuesDo: [ :scriptDict | scriptDict valuesDo: aBlock ]
+]
+
+{ #category : #'accessing-morphs' }
+LWTDirector >> selectedWidgets: aCollectionOfLWTWidget [
+	selectedWidgets := aCollectionOfLWTWidget.
+	self changed
+]
+
+{ #category : #'accessing-morphs' }
+LWTDirector >> selectedWidgetsDo: aBlock [
+	selectedWidgets ifNotNil: [ selectedWidgets do: aBlock ]
 ]
 
 { #category : #accessing }
