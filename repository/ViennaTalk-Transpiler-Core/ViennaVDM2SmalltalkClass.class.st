@@ -1086,7 +1086,7 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> noCheckAssignment: aVarName be: aValString [
-	^ 'self instVarNamed: ' , aVarName storeString , ' put: ' , aValString
+	^ 'self instVarNamed: ' , aVarName storeString , ' put: (' , aValString, ')'
 ]
 
 { #category : #'code generation-interfaces' }
