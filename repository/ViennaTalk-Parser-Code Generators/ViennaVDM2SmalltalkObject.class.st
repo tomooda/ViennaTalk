@@ -14,7 +14,7 @@ ViennaVDM2SmalltalkObject >> createDocumentClassWithInstVars: anArrayOfString1 s
 	^ AnonymousClassInstaller
 		make: [ :builder | 
 			builder
-				superclass: ViennaTranspiledObject;
+				superclass: ViennaTranspiledObject ;
 				slots:
 					(anArrayOfString1 asArray
 						collect: [ :instVarName | InstanceVariableSlot named: instVarName asSymbol ])
@@ -29,22 +29,20 @@ ViennaVDM2SmalltalkObject >> createDocumentClassWithInstVars: anArrayOfString1 s
 
 { #category : #utilities }
 ViennaVDM2SmalltalkObject >> createModuleClassWithInstVars: anArrayOfString1 stateVars: anArrayOfString2 forModule: aString env: aDictionary [
-	^ (AnonymousClassInstaller
+	^ AnonymousClassInstaller
 		make: [ :builder | 
-	builder
-		superclass: ViennaTranspiledObject;
-		slots:
-			(anArrayOfString1 asArray
-				collect: [ :instVarName | InstanceVariableSlot named: instVarName asSymbol ])
-				,
-					(anArrayOfString2 asArray
-						collect: [ :instVarName | 
-							(runtimeAssertionCheck = true
-								ifTrue: [ ViennaStateSlot ]
-								ifFalse: [ InstanceVariableSlot ]) named: instVarName asSymbol ]);
-		category: 'Auto Generated from VDM' ])
-		viennaEnv: aDictionary;
-		yourself
+			builder
+				superclass: ViennaTranspiledObject;
+				slots:
+					(anArrayOfString1 asArray
+						collect: [ :instVarName | InstanceVariableSlot named: instVarName asSymbol ])
+						,
+							(anArrayOfString2 asArray
+								collect: [ :instVarName | 
+									(runtimeAssertionCheck = true
+										ifTrue: [ ViennaStateSlot ]
+										ifFalse: [ InstanceVariableSlot ]) named: instVarName asSymbol ]);
+				category: 'Auto Generated from VDM' ]
 ]
 
 { #category : #'code generation-definitions' }
@@ -69,11 +67,7 @@ ViennaVDM2SmalltalkObject >> modularDocument: aViennaNode env: aDictionary [
 							| importedModuleName importedModuleObject |
 							importedModuleName := importDefinitionNode first.
 							importedModuleObject := objects at: importedModuleName.
-							moduleObject
-								perform: (importedModuleName , ':') asSymbol
-								with: importedModuleObject ] ] ].
+							moduleObject perform: (importedModuleName , ':') asSymbol with: importedModuleObject ] ] ].
 	objects valuesDo: [ :moduleObject | moduleObject init ].
-	^ (ViennaTranspiledModularDocument from: objects)
-		buildViennaEnv;
-		yourself
+	^ objects
 ]
