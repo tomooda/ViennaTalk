@@ -474,7 +474,7 @@ ViennaVDM2SmalltalkTranslator >> subset: arg1 and: arg2 [
 
 { #category : #'parsers-literals' }
 ViennaVDM2SmalltalkTranslator >> textLiteral [
-	^ super textLiteral ==> [ :text | text asArray storeString ]
+	^ super textLiteral ==> [ :text | text asOrderedCollection storeString ]
 ]
 
 { #category : #'parsers-expressions-operators' }
