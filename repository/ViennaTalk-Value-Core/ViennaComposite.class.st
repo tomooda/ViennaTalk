@@ -1,5 +1,5 @@
 Class {
-	#name : #VDMComposite,
+	#name : #ViennaComposite,
 	#superclass : #Object,
 	#type : #variable,
 	#instVars : [
@@ -11,27 +11,27 @@ Class {
 }
 
 { #category : #'instance creation' }
-VDMComposite class >> type: aString [
+ViennaComposite class >> type: aString [
 	^ self type: aString withAll: Array new
 ]
 
 { #category : #'instance creation' }
-VDMComposite class >> type: aString with: anObject [
+ViennaComposite class >> type: aString with: anObject [
 	^ self type: aString withAll: (Array with:anObject)
 ]
 
 { #category : #'instance creation' }
-VDMComposite class >> type: aString with: anObject1 with: anObject2 [
+ViennaComposite class >> type: aString with: anObject1 with: anObject2 [
 	^ self type: aString withAll: (Array with: anObject1 with: anObject2)
 ]
 
 { #category : #'instance creation' }
-VDMComposite class >> type: aString with: anObject1 with: anObject2 with: anObject3 [
+ViennaComposite class >> type: aString with: anObject1 with: anObject2 with: anObject3 [
 	^ self type: aString withAll: (Array with: anObject1 with: anObject2 with: anObject3)
 ]
 
 { #category : #'instance creation' }
-VDMComposite class >> type: aString with: anObject1 with: anObject2 with: anObject3 with: anObject4 [
+ViennaComposite class >> type: aString with: anObject1 with: anObject2 with: anObject3 with: anObject4 [
 	^ self
 		type: aString
 		withAll:
@@ -43,7 +43,7 @@ VDMComposite class >> type: aString with: anObject1 with: anObject2 with: anObje
 ]
 
 { #category : #'instance creation' }
-VDMComposite class >> type: aString with: anObject1 with: anObject2 with: anObject3 with: anObject4 with: anObject5 [
+ViennaComposite class >> type: aString with: anObject1 with: anObject2 with: anObject3 with: anObject4 with: anObject5 [
 	^ self
 		type: aString
 		withAll:
@@ -56,7 +56,7 @@ VDMComposite class >> type: aString with: anObject1 with: anObject2 with: anObje
 ]
 
 { #category : #'instance creation' }
-VDMComposite class >> type: aString withAll: anArray [
+ViennaComposite class >> type: aString withAll: anArray [
 	| composite |
 	composite := self new: anArray size.
 	composite setTypeName: aString.
@@ -65,7 +65,7 @@ VDMComposite class >> type: aString withAll: anArray [
 ]
 
 { #category : #comparing }
-VDMComposite >> = anObject [
+ViennaComposite >> = anObject [
 	self == anObject
 		ifTrue: [ ^ true ].
 	typeName = anObject typeName
@@ -80,7 +80,7 @@ VDMComposite >> = anObject [
 ]
 
 { #category : #accessing }
-VDMComposite >> at: anIntegerOrString [
+ViennaComposite >> at: anIntegerOrString [
 	^ super
 		at:
 			(anIntegerOrString isString
@@ -89,18 +89,18 @@ VDMComposite >> at: anIntegerOrString [
 ]
 
 { #category : #'accessing-field types' }
-VDMComposite >> equalityAbstractionFieldNameAt: anInteger put: aString [
+ViennaComposite >> equalityAbstractionFieldNameAt: anInteger put: aString [
 	namedFields at: aString put: anInteger.
 	equalityFields := equalityFields copyWithout: anInteger
 ]
 
 { #category : #'accessing-field types' }
-VDMComposite >> fieldNameAt: anInteger put: aString [
+ViennaComposite >> fieldNameAt: anInteger put: aString [
 	namedFields at: aString put: anInteger
 ]
 
 { #category : #comparing }
-VDMComposite >> hash [
+ViennaComposite >> hash [
 	| hash |
 	hash := typeName hash.
 	1 to: self size do: [ :i | hash := (hash + (self at: i) hash) hashMultiply ].
@@ -108,14 +108,14 @@ VDMComposite >> hash [
 ]
 
 { #category : #'initialize-release' }
-VDMComposite >> initialize [
+ViennaComposite >> initialize [
 	super initialize.
 	namedFields := Dictionary new.
 	equalityFields := (1 to: self size) asArray
 ]
 
 { #category : #printing }
-VDMComposite >> printOn: aStream [
+ViennaComposite >> printOn: aStream [
 	aStream nextPutAll: self class name.
 	aStream nextPut: $(.
 	self vdmcStringOn: aStream.
@@ -123,17 +123,17 @@ VDMComposite >> printOn: aStream [
 ]
 
 { #category : #private }
-VDMComposite >> setTypeName: aString [
+ViennaComposite >> setTypeName: aString [
 	typeName := aString
 ]
 
 { #category : #accessing }
-VDMComposite >> typeName [
+ViennaComposite >> typeName [
 	^ typeName
 ]
 
 { #category : #printing }
-VDMComposite >> vdmcStringOn: aStream [
+ViennaComposite >> vdmcStringOn: aStream [
 	aStream
 		nextPutAll: 'mk_';
 		nextPutAll: typeName;
