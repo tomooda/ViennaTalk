@@ -21,7 +21,7 @@ ViennaCompositeTypeTest >> setUp [
 			(ViennaType nat)}.
 			{'f3'.
 			false.
-			(ViennaType quote: '<QUOTE>')}}
+			(ViennaType quote: 'QUOTE')}}
 ]
 
 { #category : #tests }
@@ -61,7 +61,7 @@ ViennaCompositeTypeTest >> testIncludes [
 						constructorName: 'T'
 						with: -1
 						with: 1
-						with: #'<QUOTE>')).
+						with: #QUOTE)).
 	self deny: (composite includes: 1)
 ]
 
@@ -88,6 +88,37 @@ ViennaCompositeTypeTest >> testName [
 { #category : #tests }
 ViennaCompositeTypeTest >> testNumFields [
 	self assert: composite numFields equals: 3
+]
+
+{ #category : #running }
+ViennaCompositeTypeTest >> testRemoveTestHolders [
+	self
+		assert:
+			(ViennaCompositeType
+				constructorName: 'T'
+				withAll:
+					{{nil.
+					false.
+					ViennaType int asTypeHolder}.
+					{'f2'.
+					true.
+					ViennaType nat asTypeHolder}.
+					{'f3'.
+					false.
+					(ViennaType quote: '<QUOTE>')}}) removeTypeHolders
+		equals:
+			(ViennaCompositeType
+				constructorName: 'T'
+				withAll:
+					{{nil.
+					false.
+					ViennaType int}.
+					{'f2'.
+					true.
+					ViennaType nat}.
+					{'f3'.
+					false.
+					(ViennaType quote: '<QUOTE>')}})
 ]
 
 { #category : #tests }

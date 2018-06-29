@@ -12,15 +12,17 @@ Class {
 ViennaOptionTypeTest >> setUp [
 	super setUp.
 	optionNat := ViennaOptionType with: ViennaType nat.
-	optionQuote := ViennaOptionType with: (ViennaType quote: #'<QUOTE>')
+	optionQuote := ViennaOptionType with: (ViennaType quote: #QUOTE)
 ]
 
 { #category : #tests }
 ViennaOptionTypeTest >> testDo [
 	self should: [ optionNat do: [ :i |  ] ] raise: ShouldNotImplement.
 	self
-		assert: (Array new: 1 streamContents: [ :stream | optionQuote do: [ :v | stream nextPut: v ] ]) asSet
-		equals: #(#'<QUOTE>' nil) asSet
+		assert:
+			(Array new: 1 streamContents: [ :stream | optionQuote do: [ :v | stream nextPut: v ] ])
+				asSet
+		equals: #(#QUOTE nil) asSet
 ]
 
 { #category : #tests }
@@ -39,6 +41,13 @@ ViennaOptionTypeTest >> testIsEnumerable [
 ViennaOptionTypeTest >> testName [
 	self assert: optionNat name equals: '[nat]'.
 	self assert: optionQuote name equals: '[<QUOTE>]'
+]
+
+{ #category : #tests }
+ViennaOptionTypeTest >> testRemoveTypeHolders [
+	self
+		assert: ViennaType nat asTypeHolder optional removeTypeHolders
+		equals: ViennaType nat optional
 ]
 
 { #category : #tests }

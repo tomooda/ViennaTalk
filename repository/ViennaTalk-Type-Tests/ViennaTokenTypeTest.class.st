@@ -35,6 +35,11 @@ ViennaTokenTypeTest >> testName [
 ]
 
 { #category : #tests }
+ViennaTokenTypeTest >> testRemoveTypeHolders [
+	self assert: ViennaType token asTypeHolder removeTypeHolders equals: ViennaType token
+]
+
+{ #category : #tests }
 ViennaTokenTypeTest >> testSubtype [
 	self assert: token <= token
 ]

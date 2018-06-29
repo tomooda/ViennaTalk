@@ -38,6 +38,13 @@ ViennaSeq1TypeTest >> testName [
 ]
 
 { #category : #tests }
+ViennaSeq1TypeTest >> testRemoveTypeHolders [
+	self
+		assert: ViennaType nat asTypeHolder seq1 removeTypeHolders
+		equals: ViennaType nat seq1
+]
+
+{ #category : #tests }
 ViennaSeq1TypeTest >> testSubtype [
 	self assert: seq1ofnat <= seq1ofnat.
 	self assert: seq1ofnat < (ViennaType seqOf: ViennaType nat).

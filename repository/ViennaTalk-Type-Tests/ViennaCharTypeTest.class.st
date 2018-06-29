@@ -35,6 +35,11 @@ ViennaCharTypeTest >> testName [
 ]
 
 { #category : #tests }
+ViennaCharTypeTest >> testRemoveTestHolders [
+	self assert: char removeTypeHolders equals: char
+]
+
+{ #category : #tests }
 ViennaCharTypeTest >> testSubtype [
 	self assert: char <= char.
 	self deny: char <= ViennaType int

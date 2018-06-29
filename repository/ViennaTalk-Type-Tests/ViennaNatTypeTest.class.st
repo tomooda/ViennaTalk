@@ -38,6 +38,11 @@ ViennaNatTypeTest >> testName [
 ]
 
 { #category : #tests }
+ViennaNatTypeTest >> testRemoveTypeHolders [
+	self assert: nat asTypeHolder removeTypeHolders equals: nat
+]
+
+{ #category : #tests }
 ViennaNatTypeTest >> testSubtype [
 	self assert: nat <= nat.
 	self assert: nat <= ViennaType int

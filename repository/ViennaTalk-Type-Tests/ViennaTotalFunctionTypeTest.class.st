@@ -54,6 +54,13 @@ ViennaTotalFunctionTypeTest >> testName [
 ]
 
 { #category : #tests }
+ViennaTotalFunctionTypeTest >> testRemoveTypeHolders [
+	self
+		assert: (ViennaType nat asTypeHolder +> ViennaType int asTypeHolder) removeTypeHolders
+		equals: ViennaType nat +> ViennaType int
+]
+
+{ #category : #tests }
 ViennaTotalFunctionTypeTest >> testSubtype [
 	self assert: nat * nat -> nat <= (nat * nat -> nat).
 	self assert: int * nat -> nat <= (nat * nat -> nat).

@@ -84,6 +84,13 @@ ViennaMapTypeTest >> testName [
 ]
 
 { #category : #tests }
+ViennaMapTypeTest >> testRemoveTypeHolders [
+	self
+		assert: (ViennaType nat asTypeHolder mapTo: ViennaType int asTypeHolder) removeTypeHolders
+		equals: (ViennaType nat mapTo: ViennaType int)
+]
+
+{ #category : #tests }
 ViennaMapTypeTest >> testSubtype [
 	self assert: bool2optbool <= bool2optbool.
 	self deny: bool2optbool <= bool2nat.

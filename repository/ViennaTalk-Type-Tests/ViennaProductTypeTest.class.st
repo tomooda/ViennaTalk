@@ -12,7 +12,7 @@ Class {
 ViennaProductTypeTest >> setUp [
 	super setUp.
 	natBool := ViennaProductType with: ViennaType nat with: ViennaType bool.
-	quoteBool := ViennaProductType with: (ViennaType quote: #'<QUOTE>') with: ViennaType bool
+	quoteBool := ViennaProductType with: (ViennaType quote: #QUOTE) with: ViennaType bool
 ]
 
 { #category : #tests }
@@ -20,13 +20,13 @@ ViennaProductTypeTest >> testDo [
 	self should: [ natBool do: [ :i |  ] ] raise: ShouldNotImplement.
 	self
 		assert: (Array new: 1 streamContents: [ :stream | quoteBool do: [ :v | stream nextPut: v ] ]) asSet
-		equals: #(#(#'<QUOTE>' true) #(#'<QUOTE>' false)) asSet
+		equals: #(#(#QUOTE true) #(#QUOTE false)) asSet
 ]
 
 { #category : #tests }
 ViennaProductTypeTest >> testIncludes [
 	self assert: (natBool includes: #(1 true)).
-	self assert: (quoteBool includes: #(#'<QUOTE>' false))
+	self assert: (quoteBool includes: #(#QUOTE false))
 ]
 
 { #category : #tests }
@@ -39,6 +39,13 @@ ViennaProductTypeTest >> testIsEnumerable [
 ViennaProductTypeTest >> testName [
 	self assert: natBool name equals: 'nat*bool'.
 	self assert: quoteBool name equals: '<QUOTE>*bool'
+]
+
+{ #category : #tests }
+ViennaProductTypeTest >> testRemoveTypeHolders [
+	self
+		assert: (ViennaType nat asTypeHolder * ViennaType int asTypeHolder) removeTypeHolders
+		equals: ViennaType nat * ViennaType int
 ]
 
 { #category : #tests }

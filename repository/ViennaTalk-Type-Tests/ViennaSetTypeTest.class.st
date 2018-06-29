@@ -48,6 +48,11 @@ ViennaSetTypeTest >> testName [
 ]
 
 { #category : #tests }
+ViennaSetTypeTest >> testRemoveTypeHolders [
+	self assert: ViennaType nat asTypeHolder set removeTypeHolders equals: ViennaType nat set
+]
+
+{ #category : #tests }
 ViennaSetTypeTest >> testSubtype [
 	self assert: setofbool <= setofbool.
 	self deny: setofbool <= setofnat.

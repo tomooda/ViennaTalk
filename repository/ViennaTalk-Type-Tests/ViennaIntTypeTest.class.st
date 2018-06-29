@@ -38,6 +38,11 @@ ViennaIntTypeTest >> testName [
 ]
 
 { #category : #tests }
+ViennaIntTypeTest >> testRemoveTypeHolders [
+	self assert: int asTypeHolder removeTypeHolders equals: int
+]
+
+{ #category : #tests }
 ViennaIntTypeTest >> testSubtype [
 	self assert: int <= int.
 	self assert: int <= ViennaType real.

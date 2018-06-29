@@ -8,14 +8,14 @@ Class {
 	#category : 'ViennaTalk-Type-Tests'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #running }
 ViennaSet1TypeTest >> setUp [
 	super setUp.
 	set1ofnat := ViennaSet1Type with: ViennaType nat.
 	set1ofbool := ViennaSet1Type with: ViennaType bool
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 ViennaSet1TypeTest >> testDo [
 	self should: [ set1ofnat do: [ :i |  ] ] raise: ShouldNotImplement.
 	self
@@ -28,26 +28,33 @@ ViennaSet1TypeTest >> testDo [
 			false} asSet)} asSet
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 ViennaSet1TypeTest >> testIncludes [
 	self deny: (set1ofnat includes: {} asSet).
 	self assert: (set1ofnat includes: {1} asSet).
 	self deny: (set1ofnat includes: {1 . -1} asSet)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 ViennaSet1TypeTest >> testIsEnumerable [
 	self deny: set1ofnat isEnumerable.
 	self assert: set1ofbool isEnumerable
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 ViennaSet1TypeTest >> testName [
 	self assert: set1ofnat name equals: 'set1 of nat'.
 	self assert: set1ofbool name equals: 'set1 of bool'
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
+ViennaSet1TypeTest >> testRemoveTypeHolders [
+	self
+		assert: ViennaType nat asTypeHolder set1 removeTypeHolders
+		equals: ViennaType nat set1
+]
+
+{ #category : #tests }
 ViennaSet1TypeTest >> testSubtype [
 	self assert: set1ofbool <= set1ofbool.
 	self deny: set1ofbool <= set1ofnat.

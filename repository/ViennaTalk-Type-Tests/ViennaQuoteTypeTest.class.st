@@ -32,7 +32,14 @@ ViennaQuoteTypeTest >> testIsEnumerable [
 
 { #category : #tests }
 ViennaQuoteTypeTest >> testName [
-	self assert: quote name equals: 'QUOTE'
+	self assert: quote name equals: '<QUOTE>'
+]
+
+{ #category : #tests }
+ViennaQuoteTypeTest >> testRemoveTypeHolders [
+	self
+		assert: (ViennaType quote: #Q) asTypeHolder removeTypeHolders
+		equals: (ViennaType quote: #Q)
 ]
 
 { #category : #tests }

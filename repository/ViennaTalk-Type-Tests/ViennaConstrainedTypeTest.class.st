@@ -41,6 +41,13 @@ ViennaConstrainedTypeTest >> testName [
 ]
 
 { #category : #tests }
+ViennaConstrainedTypeTest >> testRemoveTypeHolders [
+	| inv |
+	inv := [ :i | true ].
+	self assert: (int asTypeHolder inv: inv) removeTypeHolders equals: (int inv: inv)
+]
+
+{ #category : #tests }
 ViennaConstrainedTypeTest >> testSubtype [
 	self assert: (int inv: [ :i | i < 0 ]) <= int.
 	self deny: int <= (int inv: [ :i | i < 0 ]).
