@@ -15,6 +15,16 @@ ViennaVDMParser >> access [
 ]
 
 { #category : #'parsers-definitions' }
+ViennaVDMParser >> accessFunctionDefinition [
+	^ super accessFunctionDefinition ==> [ :array | ViennaNode label: 'AccessFunctionDefinition' withAll: array ]
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> accessOperationDefinition [
+	^ super accessOperationDefinition ==> [ :array | ViennaNode label: 'AccessOperationDefinition' withAll: array ]
+]
+
+{ #category : #'parsers-definitions' }
 ViennaVDMParser >> accessTypeDefinition [
 	^ super accessTypeDefinition ==> [ :array | ViennaNode label: 'AccessTypeDefinition' withAll: array ]
 ]
@@ -71,6 +81,11 @@ ViennaVDMParser >> bindList [
 { #category : #'parsers-statements' }
 ViennaVDMParser >> blockStatement [
 	^ super blockStatement ==> [ :array | ViennaNode label: 'BlockStatement' withAll: array first , array second ]
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDMParser >> callStatement [
+	^ super callStatement ==> [ :array | ViennaNode label: 'CallStatement' withAll: array ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -234,6 +249,11 @@ ViennaVDMParser >> explicitFunctionDefinition [
 ]
 
 { #category : #'parsers-definitions' }
+ViennaVDMParser >> explicitOperationDefinition [
+	^ super explicitOperationDefinition ==> [ :array | ViennaNode label: 'ExplicitOperationDefinition' withAll: array ]
+]
+
+{ #category : #'parsers-definitions' }
 ViennaVDMParser >> extendedExplicitFunctionDefinition [
 	^ super extendedExplicitFunctionDefinition
 		==> [ :array | ViennaNode label: 'ExtendedExplicitFunctionDefinition' withAll: array ]
@@ -287,6 +307,16 @@ ViennaVDMParser >> forallExpression [
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> fraction: arg1 and: arg2 [
 	^ ViennaNode label: 'ArithmeticDivide' with: arg1 with: arg2
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> functionDefinition [
+	^ super functionDefinition ==> [ :body | ViennaNode label: 'FunctionDefinition' with: body ]
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> functionDefinitions [
+	^ super functionDefinitions ==> [ :array | ViennaNode label: 'FunctionDefinitions' withAll: array ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -349,6 +379,11 @@ ViennaVDMParser >> inSet: arg1 and: arg2 [
 	^ ViennaNode label: 'InSet' with: arg1 with: arg2
 ]
 
+{ #category : #'parsers-statements' }
+ViennaVDMParser >> indexForLoop [
+	^ super indexForLoop ==> [ :array | ViennaNode label: 'IndexForLoop' withAll: array ]
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> inds: arg [
 	^ ViennaNode label: 'SequenceIndices' with: arg
@@ -387,6 +422,16 @@ ViennaVDMParser >> isBasicExpression [
 { #category : #'parsers-expressions-type discriminations' }
 ViennaVDMParser >> isNameExpression [
 	^ super isNameExpression ==> [ :array | ViennaNode label: 'IsNameExpression' withAll: array ]
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> isNotYetSpecified [
+	^ super isNotYetSpecified ==> [ :ignore | ViennaNode label: 'IsNotYetSpecified' ]
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> isSubclassResponsibility [
+	^ super isSubclassResponsibility ==> [ :ignore | ViennaNode label: 'IsSubclassResponsibility' ]
 ]
 
 { #category : #'parsers-expressions-type discriminations' }
@@ -442,6 +487,11 @@ ViennaVDMParser >> letExpression [
 { #category : #'parsers-statements' }
 ViennaVDMParser >> letStatement [
 	^ super letStatement ==> [ :array | ViennaNode label: 'LetStatement' withAll: array ]
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> localDefinition [
+	^ super localDefinition ==> [ :def | ViennaNode label: 'LocalDefinition' with: def ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -568,6 +618,11 @@ ViennaVDMParser >> newExpression [
 	^ super newExpression ==> [ :array | ViennaNode label: 'NewExpression' withAll: array ]
 ]
 
+{ #category : #'parsers-statements' }
+ViennaVDMParser >> nondeterministicStatement [
+	^ super nondeterministicStatement ==> [ :array | ViennaNode label: 'NondeterministicStatement' withAll: array ]
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> not: arg [
 	^ ViennaNode label: 'Not' with: arg
@@ -593,6 +648,21 @@ ViennaVDMParser >> oldName [
 	^ super oldName ==> [ :string | ViennaNode label: 'OldName' with: (string copyFrom: 1 to: string size - 1) ]
 ]
 
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> operationBody [
+	^ super operationBody ==> [ :body | ViennaNode label: 'OperationBody' with: body ]
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> operationDefinition [
+	^ super operationDefinition == [ :def | ViennaNode label: 'OperationDefinition' with: def ]
+]
+
+{ #category : #'parsers-types' }
+ViennaVDMParser >> operationType [
+	^ super operationType ==> [ :array | ViennaNode label: 'OperationType' withAll: array ]
+]
+
 { #category : #'parsers-types' }
 ViennaVDMParser >> optionalType [
 	^ super optionalType ==> [ :ast | ViennaNode label: 'OptionalType' with: ast ]
@@ -611,6 +681,16 @@ ViennaVDMParser >> othersExpression [
 { #category : #'parsers-statements' }
 ViennaVDMParser >> othersStatement [
 	^ super othersStatement ==> [ :bodyStatement | ViennaNode label: 'OthersStatement' with: bodyStatement ]
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> parameters [
+	^ super parameters ==> [ :array | ViennaNode label: 'Parameters' withAll: array ]
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> parametersList [
+	^ super parametersList ==> [ :array | ViennaNode label: 'ParametersList' withAll: array ]
 ]
 
 { #category : #'parsers-types' }
@@ -748,6 +828,11 @@ ViennaVDMParser >> sequenceEnumeration [
 	^ super sequenceEnumeration ==> [ :array | ViennaNode label: 'SequenceEnumeration' with: array ]
 ]
 
+{ #category : #'parsers-statements' }
+ViennaVDMParser >> sequenceForLoop [
+	^ super sequenceForLoop ==> [ :array | ViennaNode label: 'SequenceForLoop' withAll: array ]
+]
+
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> setBind [
 	^ super setBind ==> [ :array | ViennaNode label: 'SetBind' withAll: array ]
@@ -766,6 +851,11 @@ ViennaVDMParser >> setEnumPattern [
 { #category : #'parsers-expressions-basics' }
 ViennaVDMParser >> setEnumeration [
 	^ super setEnumeration ==> [ :array | ViennaNode label: 'SetEnumeration' with: array ]
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDMParser >> setForLoop [
+	^ super setForLoop ==> [ :array | ViennaNode label: 'SetForLoop' withAll: array ]
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -905,4 +995,9 @@ ViennaVDMParser >> valueDefinitions [
 { #category : #'parsers-expressions-threads' }
 ViennaVDMParser >> waitingExpression [
 	^ super waitingExpression ==> [ :nameNode | ViennaNode label: 'WaitingExpression' with: nameNode ]
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDMParser >> whileLoop [
+	^ super whileLoop ==> [ :array | ViennaNode label: 'WhileLoop' withAll: array ]
 ]

@@ -10,6 +10,16 @@ ViennaVDM2SmalltalkTranslator >> abs: arg [
 ]
 
 { #category : #'parsers-definitions' }
+ViennaVDM2SmalltalkTranslator >> accessFunctionDefinition [
+	^ super accessFunctionDefinition ==> #second
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDM2SmalltalkTranslator >> accessOperationDefinition [
+	^ super accessOperationDefinition ==> #second
+]
+
+{ #category : #'parsers-definitions' }
 ViennaVDM2SmalltalkTranslator >> accessTypeDefinition [
 	^ super accessTypeDefinition ==> #second
 ]
@@ -100,6 +110,16 @@ ViennaVDM2SmalltalkTranslator >> booleanLiteral [
 			b
 				ifTrue: [ 'true' ]
 				ifFalse: [ 'false' ] ]
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDM2SmalltalkTranslator >> callStatement [
+	^ super callStatement
+		==> [ :pair | 
+			| callee args |
+			callee := pair first.
+			args := pair second.
+			callee , ' valueWithArguments: {' , (' . ' join: args) , '}' ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -476,6 +496,49 @@ ViennaVDM2SmalltalkTranslator >> explicitFunctionDefinition [
 					paramSets do: [ :args | stream nextPut: $] ] ])} ]
 ]
 
+{ #category : #'parsers-definitions' }
+ViennaVDM2SmalltalkTranslator >> explicitOperationDefinition [
+	^ super explicitOperationDefinition
+		==> [ :array | 
+			| opname opType opname2 params opbody varGenerator vars |
+			opname := array first.
+			opType := array second.
+			opname2 := array third.
+			params := array fourth.
+			opbody := array fifth.
+			varGenerator := self
+				varNameGenerator: 'op'
+				uniqueIn:
+					{opname.
+					opbody}.
+			vars := params collect: [ :p | varGenerator value ].
+			{{opname}.
+			(String
+				new: 1024
+				streamContents: [ :stream | 
+					stream
+						nextPutAll: opname;
+						nextPutAll: ' := ['.
+					vars
+						do: [ :v | 
+							stream
+								nextPutAll: ' :';
+								nextPutAll: v ].
+					stream
+						nextPutAll: ' ||';
+						nextPutAll: (' ' join: (params inject: #() into: [ :vs :pat | vs , pat first ]));
+						nextPutAll: ' | '.
+					params
+						with: vars
+						do: [ :p :v | 
+							stream
+								nextPutAll: (self binder: p second with: v vars: p first);
+								nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ].
+					stream
+						nextPutAll: opbody;
+						nextPutAll: ']' ])} ]
+]
+
 { #category : #'parsers-statements' }
 ViennaVDM2SmalltalkTranslator >> fieldReference: stateDesig with: field [
 	| ident path |
@@ -538,6 +601,16 @@ ViennaVDM2SmalltalkTranslator >> forallExpression [
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> fraction: arg1 and: arg2 [
 	^ '(' , arg1 , ' asFloat / ' , arg2 , ' asFloat)'
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDM2SmalltalkTranslator >> functionDefinitions [
+	^ super functionDefinitions
+		==> [ :array | 
+			| vars |
+			vars := array inject: #() into: [ :vs :def | vs , def first ].
+			{vars.
+			(array inject: '' into: [ :code :def | code , def second , '.' ])} ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -637,6 +710,36 @@ ViennaVDM2SmalltalkTranslator >> imp: arg1 and: arg2 [
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> inSet: arg1 and: arg2 [
 	^ '(' , arg2 , ' includes: ' , arg1 , ')'
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDM2SmalltalkTranslator >> indexForLoop [
+	^ super indexForLoop
+		==> [ :quin | 
+			| ident start end step body |
+			ident := quin first.
+			start := quin second.
+			end := quin third.
+			step := quin fourth.
+			body := quin fifth.
+			String
+				new: 1024
+				streamContents: [ :stream | 
+					stream
+						nextPutAll: start;
+						nextPutAll: ' to: ';
+						nextPutAll: end.
+					step
+						ifNotNil: [ 
+							stream
+								nextPutAll: ' by: ';
+								nextPutAll: step ].
+					stream
+						nextPutAll: ' do: [:';
+						nextPutAll: ident;
+						nextPutAll: '|';
+						nextPutAll: body;
+						nextPutAll: ']' ] ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -1056,6 +1159,12 @@ ViennaVDM2SmalltalkTranslator >> nilLiteral [
 	^ super nilLiteral ==> [ :t | 'nil' ]
 ]
 
+{ #category : #'parsers-statements' }
+ViennaVDM2SmalltalkTranslator >> nondeterministicStatement [
+	^ super nondeterministicStatement
+		==> [ :statements | 'ViennaRuntimeUtil shuffleDo: {' , ('.' join: (statements collect: [ :s | '[' , s , ']' ])) , '}' ]
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> not: arg [
 	^ arg , ' not'
@@ -1069,6 +1178,16 @@ ViennaVDM2SmalltalkTranslator >> notEqual: arg1 and: arg2 [
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> notInSet: arg1 and: arg2 [
 	^ '(' , arg2 , ' includes: ' , arg1 , ') not'
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDM2SmalltalkTranslator >> operationDefinitions [
+	^ super operationDefinitions
+		==> [ :array | 
+			| vars |
+			vars := array inject: #() into: [ :vs :def | vs , def first ].
+			{vars.
+			(array inject: '' into: [ :code :def | code , def second , '.' ])} ]
 ]
 
 { #category : #'parsers-types' }
@@ -1117,16 +1236,6 @@ ViennaVDM2SmalltalkTranslator >> power: set [
 { #category : #'parsers-types' }
 ViennaVDM2SmalltalkTranslator >> productType [
 	^ super productType ==> [ :basetypes | '(' , ('*' join: basetypes) , ')' ]
-]
-
-{ #category : #'parsers-definitions' }
-ViennaVDM2SmalltalkTranslator >> program [
-	^ super program
-		==> [ :array | 
-			| doc expr |
-			doc := array first.
-			expr := array second.
-			(doc , expr) ==> [ :pair | pair first , pair second ] ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -1203,7 +1312,7 @@ ViennaVDM2SmalltalkTranslator >> rem: arg1 and: arg2 [
 
 { #category : #'parsers-statements' }
 ViennaVDM2SmalltalkTranslator >> returnStatement [
-	^ super returnStatement ==> [ :expr | 'thisContext return: ' , expr ]
+	^ super returnStatement ==> [ :expr | 'thisContext viennaReturn: ' , expr ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -1301,6 +1410,33 @@ ViennaVDM2SmalltalkTranslator >> sequenceEnumeration [
 	^ super sequenceEnumeration ==> [ :elems | '{' , (' . ' join: elems) , '} asOrderedCollection' ]
 ]
 
+{ #category : #'parsers-statements' }
+ViennaVDM2SmalltalkTranslator >> sequenceForLoop [
+	^ super sequenceForLoop
+		==> [ :triple | 
+			| pat seqExpr body varGenerator |
+			pat := triple first.
+			seqExpr := triple second.
+			body := triple third.
+			varGenerator := self varNameGenerator: 'for' uniqueIn: (Array with: seqExpr with: body) , pat first.
+			String
+				new: 1024
+				streamContents: [ :stream | 
+					| loopVar |
+					loopVar := varGenerator value.
+					stream
+						nextPutAll: seqExpr;
+						nextPutAll: ' do: [:';
+						nextPutAll: loopVar;
+						nextPutAll: '||';
+						nextPutAll: (' ' join: pat first);
+						nextPutAll: '|';
+						nextPutAll: (self binder: pat second with: loopVar vars: pat first);
+						nextPutAll: ' ifFalse: [ViennaNoMatch signal].'.
+					stream nextPutAll: body.
+					stream nextPutAll: ']' ] ]
+]
+
 { #category : #'parsers-expressions-basics' }
 ViennaVDM2SmalltalkTranslator >> setComprehension [
 	^ super setComprehension
@@ -1353,6 +1489,33 @@ ViennaVDM2SmalltalkTranslator >> setEnumPattern [
 { #category : #'parsers-expressions-basics' }
 ViennaVDM2SmalltalkTranslator >> setEnumeration [
 	^ super setEnumeration ==> [ :elems | '{' , (' . ' join: elems) , '} asSet' ]
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDM2SmalltalkTranslator >> setForLoop [
+	^ super setForLoop
+		==> [ :triple | 
+			| pat setExpr body varGenerator |
+			pat := triple first.
+			setExpr := triple second.
+			body := triple third.
+			varGenerator := self varNameGenerator: 'for' uniqueIn: (Array with: setExpr with: body) , pat first.
+			String
+				new: 1024
+				streamContents: [ :stream | 
+					| loopVar |
+					loopVar := varGenerator value.
+					stream
+						nextPutAll: setExpr;
+						nextPutAll: ' asSortedCollection do: [:';
+						nextPutAll: loopVar;
+						nextPutAll: '||';
+						nextPutAll: (' ' join: pat first);
+						nextPutAll: '|';
+						nextPutAll: (self binder: pat second with: loopVar vars: pat first);
+						nextPutAll: ' ifFalse: [ViennaNoMatch signal].'.
+					stream nextPutAll: body.
+					stream nextPutAll: ']' ] ]
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -1530,4 +1693,14 @@ ViennaVDM2SmalltalkTranslator >> varsFromMultiPatternBind: multiPatternBind [
 			patterns := multiPattern first.
 			patterns do: [ :varAndBlockString | vars nextPut: varAndBlockString first ] ].
 	^ vars
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDM2SmalltalkTranslator >> whileLoop [
+	^ super whileLoop
+		==> [ :pair | 
+			| cond body |
+			cond := pair first.
+			body := pair second.
+			'[' , cond , '] whileTrue: [' , body , ']' ]
 ]
