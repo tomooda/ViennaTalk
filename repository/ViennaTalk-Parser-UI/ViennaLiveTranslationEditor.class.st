@@ -125,7 +125,7 @@ ViennaLiveTranslationEditor >> initializeWidgets [
 		menuHolder: [ self sourceTextMenu ];
 		bindKeyCombination: $f shift command toAction: [ self formatSourceText ];
 		bindKeyCombination: $p command toAction: [ self viennaItInSourceText ];
-		whenTextChanged: [ self translate ];
+		whenTextChanged: [ [self translate] forkAt: Processor userBackgroundPriority  ];
 		whenBuiltDo: [ sourceText widget font: ViennaLauncher font ].
 	targetText := self newText.
 	targetText
