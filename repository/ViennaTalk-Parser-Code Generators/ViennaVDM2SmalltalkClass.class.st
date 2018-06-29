@@ -104,6 +104,109 @@ ViennaVDM2SmalltalkClass >> defineMethod: aString in: aClass protocol: protocol 
 	aClass compile: (RBParser parseMethod: aString) formattedCode classified: protocol
 ]
 
+{ #category : #utilities }
+ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass protocol: protocolString fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode body: bodyString pre: preString post: postString varGenerator: varGenerator env: aDictionary [
+	| tmpVars matchPatternNodes isFirstArg tuplePattern matchVars argVars |
+	tmpVars := OrderedCollection new.
+	matchPatternNodes := OrderedCollection new.
+	argVars := OrderedCollection new.
+	self
+		defineMethod:
+			(String
+				new: 1024
+				streamContents: [ :stream | 
+					stream
+						nextPutAll: opName.
+					anArrayOfPatternNodeAndTypeSetNode isEmpty
+						ifTrue: [ stream nextPutAll: ': ' , varGenerator value ].
+					isFirstArg := true.
+					self
+						fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode
+						patternNodeAndSetOrTypeNodeAndBindTypesDo: [ :patternNode :setNode :bindType | 
+							bindType = #identifier
+								ifTrue: [ 
+									argVars add: patternNode first.
+									isFirstArg
+										ifFalse: [ stream nextPutAll: ' _' ].
+									stream
+										nextPutAll: ':';
+										nextPutAll: patternNode first ].
+							bindType = #compound
+								ifTrue: [ 
+									| tmpVar |
+									argVars addAll: (self boundVariables: patternNode).
+									tmpVar := varGenerator value.
+									tmpVars add: tmpVar.
+									matchPatternNodes add: patternNode.
+									isFirstArg
+										ifFalse: [ stream nextPutAll: ' _' ].
+									stream
+										nextPutAll: ':';
+										nextPutAll: tmpVar ].
+							isFirstArg := false ].
+					tuplePattern := ViennaNode label: 'TuplePattern' with: (ViennaNode label: 'PatternList' withAll: matchPatternNodes).
+					matchVars := (self boundVariables: tuplePattern) asArray.
+					stream cr.
+					matchVars
+						ifEmpty: [ stream nextPutAll: '| _oldState RESULT |' ]
+						ifNotEmpty: [ 
+							stream nextPutAll: ' | _oldState RESULT '.
+							matchVars
+								do: [ :var | 
+									stream
+										nextPutAll: var;
+										nextPut: Character space ].
+							stream
+								nextPutAll: '| ';
+								nextPutAll:
+										(self binder: (self generate: tuplePattern env: aDictionary) with: '{' , (' . ' join: tmpVars) , '}' vars: matchVars);
+								nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ].
+					preString
+						ifNotNil: [ 
+							stream
+								nextPutAll: '(';
+								nextPutAll: preString;
+								nextPutAll: ') ifFalse: [ViennaPreconditionViolation signal].' ].
+					stream
+						nextPutAll: 'RESULT := self _';
+						nextPutAll: opName.
+					argVars
+						do: [ :var | 
+							stream
+								nextPutAll: '_: ';
+								nextPutAll: var;
+								nextPutAll: ' ' ].
+					stream nextPutAll: '.'.
+					postString
+						ifNotNil: [ 
+							stream
+								nextPutAll: '(';
+								nextPutAll: postString;
+								nextPutAll: ') ifFalse: [ViennaPostconditionViolation signal].' ].
+					stream nextPutAll: '^ RESULT' ])
+		in: theClass
+		protocol: protocolString.
+	self
+		defineMethod:
+			(String
+				new: 1024
+				streamContents: [ :stream | 
+					stream
+						nextPut: $_;
+						nextPutAll: opName.
+					argVars
+						do: [ :var | 
+							stream
+								nextPutAll: '_: ';
+								nextPutAll: var;
+								nextPutAll: ' ' ].
+					stream
+						cr;
+						nextPutAll: bodyString ])
+		in: theClass
+		protocol: protocolString
+]
+
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> explicitFunctionDefinition: aViennaNode env: aDictionary [
 	| identifier initializer theClass |
@@ -119,11 +222,13 @@ ViennaVDM2SmalltalkClass >> explicitFunctionDefinition: aViennaNode env: aDictio
 
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> explicitOperationDefinition: aViennaNode env: aDictionary [
-	| method opname typeNode paramsNode body varGenerator argTypeNode binds theClass |
+	| opname typeNode paramsNode body pre post varGenerator argTypeNode binds theClass |
 	opname := aViennaNode first.
 	typeNode := aViennaNode second.
 	paramsNode := aViennaNode fourth.
 	body := self generate: aViennaNode fifth env: aDictionary.
+	pre := aViennaNode sixth ifNotNil: [ :preNode | self generate: preNode env: aDictionary ].
+	post := aViennaNode seventh ifNotNil: [ :postNode | self generate: postNode env: aDictionary ].
 	varGenerator := self
 		varNameGenerator: 'op'
 		uniqueIn:
@@ -142,17 +247,44 @@ ViennaVDM2SmalltalkClass >> explicitOperationDefinition: aViennaNode env: aDicti
 				ifFalse: [ 
 					{{(paramsNode first).
 					argTypeNode}} ] ].
-	method := self
-		methodFromOperation: opname
+	theClass := classes at: (aViennaNode module ifNotNil: #first).
+	self
+		defineMethodFromOperation: opname
+		in: theClass
+		protocol: 'operations'
 		fromFlatBinds: binds
 		body: body
+		pre: pre
+		post: post
 		varGenerator: varGenerator
 		env: aDictionary.
-	theClass := classes at: (aViennaNode module ifNotNil: #first).
-	self defineMethod: method in: theClass protocol: 'operations'.
 	self
 		defineLazyMethodNamed: opname
-		initializer: opname , ' := ' , (self closureFromMethodSource: method binds: binds)
+		initializer:
+			opname , ' := '
+				,
+					(String
+						new: 1024
+						streamContents: [ :stream | 
+							stream nextPut: $[.
+							1 to: binds size do: [ :i | 
+								stream
+									nextPutAll: ' :arg';
+									nextPutAll: i printString].
+							binds ifNotEmpty: [ stream nextPut: $| ].
+							stream
+								nextPutAll: 'self ';
+								nextPutAll: opname.
+							binds
+								ifEmpty: [ stream nextPutAll: ': nil' ]
+								ifNotEmpty: [ 
+									stream nextPutAll: ': arg1 '.
+									2 to: binds size do: [ :i | 
+										stream
+											nextPutAll: '_: arg';
+											nextPutAll: i printString;
+											space ] ].
+							stream nextPut: $] ])
 		in: theClass
 		protocol: 'operations'
 ]
@@ -192,6 +324,11 @@ ViennaVDM2SmalltalkClass >> functionImport: aViennaNode env: aDictionary [
 		ifNotNil: [ :renameNode | aDictionary at: renameNode first put: moduleName , String space , aViennaNode first first ]
 ]
 
+{ #category : #'code generation-definitions' }
+ViennaVDM2SmalltalkClass >> getStateCode [
+	^ 'self state'
+]
+
 { #category : #'code generation-expressions' }
 ViennaVDM2SmalltalkClass >> globalName: aViennaNode env: aDictionary [
 	^ aDictionary
@@ -211,62 +348,6 @@ ViennaVDM2SmalltalkClass >> importDefinition: aViennaNode env: aDictionary [
 ViennaVDM2SmalltalkClass >> initialize [
 	super initialize.
 	classes := Dictionary new
-]
-
-{ #category : #utilities }
-ViennaVDM2SmalltalkClass >> methodFromOperation: opName fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode body: aString varGenerator: varGenerator env: aDictionary [
-	^ String
-		new: 1024
-		streamContents: [ :stream | 
-			| tmpVars matchPatternNodes isFirstArg tuplePattern matchVars |
-			tmpVars := OrderedCollection new.
-			matchPatternNodes := OrderedCollection new.
-			stream nextPutAll: opName.
-			anArrayOfPatternNodeAndTypeSetNode isEmpty
-				ifTrue: [ stream nextPutAll: ': ' , varGenerator value ].
-			isFirstArg := true.
-			self
-				fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode
-				patternNodeAndSetOrTypeNodeAndBindTypesDo: [ :patternNode :setNode :bindType | 
-					bindType = #identifier
-						ifTrue: [ 
-							isFirstArg
-								ifFalse: [ stream nextPutAll: ' _' ].
-							stream
-								nextPutAll: ':';
-								nextPutAll: patternNode first ].
-					bindType = #compound
-						ifTrue: [ 
-							| tmpVar |
-							tmpVar := varGenerator value.
-							tmpVars add: tmpVar.
-							matchPatternNodes add: patternNode.
-							isFirstArg
-								ifFalse: [ stream nextPutAll: ' _' ].
-							stream
-								nextPutAll: ':';
-								nextPutAll: tmpVar ].
-					isFirstArg := false ].
-			tuplePattern := ViennaNode label: 'TuplePattern' with: (ViennaNode label: 'PatternList' withAll: matchPatternNodes).
-			matchVars := (self boundVariables: tuplePattern) asArray.
-			matchVars notEmpty
-				ifTrue: [ 
-					stream
-						cr;
-						nextPutAll: ' | '.
-					matchVars
-						do: [ :var | 
-							stream
-								nextPutAll: var;
-								nextPut: Character space ].
-					stream
-						nextPutAll: '| ';
-						nextPutAll:
-								(self binder: (self generate: tuplePattern env: aDictionary) with: '{' , (' . ' join: tmpVars) , '}' vars: matchVars);
-						nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ].
-			stream
-				cr;
-				nextPutAll: aString ]
 ]
 
 { #category : #'code generation-definitions' }
@@ -428,20 +509,20 @@ ViennaVDM2SmalltalkClass >> returnStatement: aViennaNode env: aDictionary [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> stateDefinition: aViennaNode env: aDictionary [
-	| theClass stateConstructor quatro |
+	| theClass stateConstructor quin |
 	theClass := classes at: (aViennaNode module ifNotNil: #first).
 	stateConstructor := aViennaNode first.
-	quatro := super stateDefinition: aViennaNode env: aDictionary.
-	self defineMethod: 'init' , String cr , quatro first in: theClass protocol: 'state'.
+	quin := super stateDefinition: aViennaNode env: aDictionary.
+	self defineMethod: 'init' , String cr , quin first in: theClass protocol: 'state'.
 	self
 		defineLazyMethodNamed: stateConstructor
-		initializer: quatro second
+		initializer: quin second
 		in: theClass
 		protocol: 'state'.
 	aDictionary at: stateConstructor put: 'self ' , stateConstructor.
 	self
 		defineLazyMethodNamed: 'init_' , stateConstructor
-		initializer: quatro third
+		initializer: quin third
 		in: theClass
 		protocol: 'state'.
 	aDictionary at: 'init_' , stateConstructor put: 'self init_' , stateConstructor.
@@ -451,12 +532,13 @@ ViennaVDM2SmalltalkClass >> stateDefinition: aViennaNode env: aDictionary [
 				, (' . ' join: (aViennaNode second collect: #first)) , '}'
 		in: theClass
 		protocol: 'state'.
-	quatro fourth
+	quin fourth
 		ifNotNil: [ :inv | 
 			self
 				defineMethod: 'inv' , String cr , '    (' , inv , ' value: self state) ifFalse: [self stateInvariantViolation]'
 				in: theClass
-				protocol: 'state' ]
+				protocol: 'state' ].
+	self defineMethod: 'state' , String cr , '    ^' , quin fifth in: theClass protocol: 'state'
 ]
 
 { #category : #'code generation-definitions' }

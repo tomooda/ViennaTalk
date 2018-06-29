@@ -211,522 +211,6 @@ ViennaVDM2Smalltalk >> blockStatement: aViennaNode env: aDictionary [
 			vars ifNotEmpty: [ stream nextPutAll: '] value.' ] ]
 ]
 
-{ #category : #'bound variables' }
-ViennaVDM2Smalltalk >> boundVariables: aViennaNode [
-	| boundVars |
-	boundVars := Set new.
-	self boundVariables: aViennaNode into: boundVars.
-	^ boundVars
-]
-
-{ #category : #'bound variables' }
-ViennaVDM2Smalltalk >> boundVariables: aViennaNode into: aSet [
-	(aViennaNode isString or: [ aViennaNode isNil ])
-		ifFalse: [ 
-			| selector |
-			selector := ('boundVariables' , aViennaNode label , ':into:') asSymbol.
-			(self respondsTo: selector)
-				ifTrue: [ self perform: selector with: aViennaNode with: aSet ] ]
-]
-
-{ #category : #'bound variables-definitions' }
-ViennaVDM2Smalltalk >> boundVariablesAccessFunctionDefinition: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-definitions' }
-ViennaVDM2Smalltalk >> boundVariablesAccessOperationDefinition: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-definitions' }
-ViennaVDM2Smalltalk >> boundVariablesAccessTypeDefinition: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-definitions' }
-ViennaVDM2Smalltalk >> boundVariablesAccessValueDefinition: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-definitions' }
-ViennaVDM2Smalltalk >> boundVariablesAssignmentDefinition: aViennaNode into: aSet [
-	aSet add: aViennaNode first
-]
-
-{ #category : #'bound variables-patterns and binds' }
-ViennaVDM2Smalltalk >> boundVariablesBindList: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-statements' }
-ViennaVDM2Smalltalk >> boundVariablesBlockStatement: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-types' }
-ViennaVDM2Smalltalk >> boundVariablesCompositeType: aViennaNode into: aSet [
-	| constructor fieldList |
-	constructor := aViennaNode first.
-	fieldList := aViennaNode second.
-	aSet add: constructor.
-	fieldList
-		do: [ :field | 
-			| type |
-			type := field third.
-			self boundVariables: type into: aSet ]
-]
-
-{ #category : #'bound variables-statements' }
-ViennaVDM2Smalltalk >> boundVariablesDclStatement: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-definitions' }
-ViennaVDM2Smalltalk >> boundVariablesDefinitionBlock: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-definitions' }
-ViennaVDM2Smalltalk >> boundVariablesDocument: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-definitions' }
-ViennaVDM2Smalltalk >> boundVariablesEqualDefinition: aViennaNode into: aSet [
-	self boundVariables: aViennaNode first into: aSet
-]
-
-{ #category : #'bound variables-definitions' }
-ViennaVDM2Smalltalk >> boundVariablesEqualDefinitionList: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-definitions' }
-ViennaVDM2Smalltalk >> boundVariablesExplicitFunctionDefinition: aViennaNode into: aSet [
-	aSet add: aViennaNode first
-]
-
-{ #category : #'bound variables-definitions' }
-ViennaVDM2Smalltalk >> boundVariablesExplicitOperationDefinition: aViennaNode into: aSet [
-	aSet add: aViennaNode first
-]
-
-{ #category : #'bound variables-interfaces' }
-ViennaVDM2Smalltalk >> boundVariablesExportDefinition: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-interfaces' }
-ViennaVDM2Smalltalk >> boundVariablesExportFunctionsSignature: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-interfaces' }
-ViennaVDM2Smalltalk >> boundVariablesExportModuleSignature: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-interfaces' }
-ViennaVDM2Smalltalk >> boundVariablesExportModuleSignatureAll: aViennaNode into: aSet [
-	self notYetImplemented
-]
-
-{ #category : #'bound variables-interfaces' }
-ViennaVDM2Smalltalk >> boundVariablesExportTypesSignature: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-types' }
-ViennaVDM2Smalltalk >> boundVariablesField: aViennaNode into: aSet [
-	aViennaNode first ifNotNil: [ :name | aSet add: name ]
-]
-
-{ #category : #'bound variables-types' }
-ViennaVDM2Smalltalk >> boundVariablesFieldList: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-patterns and binds' }
-ViennaVDM2Smalltalk >> boundVariablesFieldPattern: aViennaNode into: aSet [
-	self boundVariables: aViennaNode second into: aSet
-]
-
-{ #category : #'bound variables-patterns and binds' }
-ViennaVDM2Smalltalk >> boundVariablesFieldPatternList: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-definitions' }
-ViennaVDM2Smalltalk >> boundVariablesFunctionDefinition: aViennaNode into: aSet [
-	self boundVariables: aViennaNode first into: aSet
-]
-
-{ #category : #'bound variables-definitions' }
-ViennaVDM2Smalltalk >> boundVariablesFunctionDefinitions: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-interfaces' }
-ViennaVDM2Smalltalk >> boundVariablesFunctionExport: aViennaNode into: aSet [
-	aViennaNode first do: [ :localName | aSet add: localName first ].
-	self freeVariables: aViennaNode third boundVars: aSet into: aSet
-]
-
-{ #category : #'bound variables-interfaces' }
-ViennaVDM2Smalltalk >> boundVariablesFunctionImport: aViennaNode into: aSet [
-	aViennaNode first do: [ :localName | aSet add: localName first ].
-	self boundVariables: aViennaNode third into: aSet.
-	aViennaNode fourth ifNotNil: [ :rename | aSet add: rename first ]
-]
-
-{ #category : #'bound variables-interfaces' }
-ViennaVDM2Smalltalk >> boundVariablesFunctionSignature: aViennaNode into: aSet [
-	aViennaNode first do: [ :localName | aSet add: localName first ]
-]
-
-{ #category : #'bound variables-interfaces' }
-ViennaVDM2Smalltalk >> boundVariablesFunctionsSignature: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-interfaces' }
-ViennaVDM2Smalltalk >> boundVariablesImportDefinition: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-interfaces' }
-ViennaVDM2Smalltalk >> boundVariablesImportDefinitionList: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-interfaces' }
-ViennaVDM2Smalltalk >> boundVariablesImportFunctionsSignature: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-interfaces' }
-ViennaVDM2Smalltalk >> boundVariablesImportModuleSignature: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-interfaces' }
-ViennaVDM2Smalltalk >> boundVariablesImportModuleSignatureAll: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-interfaces' }
-ViennaVDM2Smalltalk >> boundVariablesImportOperationsSignature: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-interfaces' }
-ViennaVDM2Smalltalk >> boundVariablesImportTypesSignature: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-statements' }
-ViennaVDM2Smalltalk >> boundVariablesIndexForLoop: aViennaNode into: aSet [
-	aSet add: aViennaNode first
-]
-
-{ #category : #'bound variables-types' }
-ViennaVDM2Smalltalk >> boundVariablesInmapType: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-definitions' }
-ViennaVDM2Smalltalk >> boundVariablesLocalDefinition: aViennaNode into: aSet [
-	self boundVariables: aViennaNode first into: aSet
-]
-
-{ #category : #'bound variables-definitions' }
-ViennaVDM2Smalltalk >> boundVariablesLocalDefinitionList: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-patterns and binds' }
-ViennaVDM2Smalltalk >> boundVariablesMapEnumerationPattern: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-patterns and binds' }
-ViennaVDM2Smalltalk >> boundVariablesMapMunionPattern: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-types' }
-ViennaVDM2Smalltalk >> boundVariablesMapType: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-patterns and binds' }
-ViennaVDM2Smalltalk >> boundVariablesMapletPattern: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-definitions' }
-ViennaVDM2Smalltalk >> boundVariablesModule: aViennaNode into: aSet [
-	aSet add: aViennaNode first
-]
-
-{ #category : #'bound variables-definitions' }
-ViennaVDM2Smalltalk >> boundVariablesModuleBody: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-patterns and binds' }
-ViennaVDM2Smalltalk >> boundVariablesMultipleSetBind: aViennaNode into: aSet [
-	self boundVariables: aViennaNode first into: aSet
-]
-
-{ #category : #'bound variables-patterns and binds' }
-ViennaVDM2Smalltalk >> boundVariablesMultipleTypeBind: aViennaNode into: aSet [
-	self boundVariables: aViennaNode first into: aSet
-]
-
-{ #category : #'bound variables-patterns and binds' }
-ViennaVDM2Smalltalk >> boundVariablesObjectPattern: aViennaNode into: aSet [
-	self boundVariables: aViennaNode second into: aSet
-]
-
-{ #category : #'bound variables-definitions' }
-ViennaVDM2Smalltalk >> boundVariablesOperationDefinition: aViennaNode into: aSet [
-	self boundVariables: aViennaNode first into: aSet
-]
-
-{ #category : #'bound variables-definitions' }
-ViennaVDM2Smalltalk >> boundVariablesOperationDefinitions: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-interfaces' }
-ViennaVDM2Smalltalk >> boundVariablesOperationImport: aViennaNode into: aSet [
-	aViennaNode first do: [ :localName | aSet add: localName first ].
-	self boundVariables: aViennaNode second into: aSet.
-	aViennaNode third ifNotNil: [ :rename | aSet add: rename first ]
-]
-
-{ #category : #'bound variables-interfaces' }
-ViennaVDM2Smalltalk >> boundVariablesOperationSignature: aViennaNode into: aSet [
-	aViennaNode first do: [ :localName | aSet add: localName first ].
-	self boundVariables: aViennaNode second into: aSet
-]
-
-{ #category : #'bound variables-types' }
-ViennaVDM2Smalltalk >> boundVariablesOperationType: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-interfaces' }
-ViennaVDM2Smalltalk >> boundVariablesOperationsSignature: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-types' }
-ViennaVDM2Smalltalk >> boundVariablesOptionalType: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-definitions' }
-ViennaVDM2Smalltalk >> boundVariablesParameters: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-definitions' }
-ViennaVDM2Smalltalk >> boundVariablesParametersList: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-types' }
-ViennaVDM2Smalltalk >> boundVariablesPartialFunctionType: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-patterns and binds' }
-ViennaVDM2Smalltalk >> boundVariablesPatternIdentifier: aViennaNode into: aSet [
-	aViennaNode first ifNotNil: [ :string | aSet add: string ]
-]
-
-{ #category : #'bound variables-patterns and binds' }
-ViennaVDM2Smalltalk >> boundVariablesPatternList: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-types' }
-ViennaVDM2Smalltalk >> boundVariablesProductType: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-patterns and binds' }
-ViennaVDM2Smalltalk >> boundVariablesRecordPattern: aViennaNode into: aSet [
-	self boundVariables: aViennaNode second into: aSet
-]
-
-{ #category : #'bound variables-types' }
-ViennaVDM2Smalltalk >> boundVariablesRecordTypeDefinition: aViennaNode into: aSet [
-	| constructor fieldList |
-	constructor := aViennaNode first.
-	fieldList := aViennaNode second.
-	aSet add: constructor.
-	fieldList
-		do: [ :field | 
-			| type |
-			type := field third.
-			self boundVariables: type into: aSet ]
-]
-
-{ #category : #'bound variables-types' }
-ViennaVDM2Smalltalk >> boundVariablesSeq1Type: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-patterns and binds' }
-ViennaVDM2Smalltalk >> boundVariablesSeqConcPattern: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-patterns and binds' }
-ViennaVDM2Smalltalk >> boundVariablesSeqEnumPattern: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-types' }
-ViennaVDM2Smalltalk >> boundVariablesSeqType: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-statements' }
-ViennaVDM2Smalltalk >> boundVariablesSequenceForLoop: aViennaNode into: aSet [
-	self boundVariables: aViennaNode first into: aSet
-]
-
-{ #category : #'bound variables-patterns and binds' }
-ViennaVDM2Smalltalk >> boundVariablesSetBind: aViennaNode into: aSet [
-	self boundVariables: aViennaNode first into: aSet
-]
-
-{ #category : #'bound variables-patterns and binds' }
-ViennaVDM2Smalltalk >> boundVariablesSetEnumPattern: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-statements' }
-ViennaVDM2Smalltalk >> boundVariablesSetForLoop: aViennaNode into: aSet [
-	self boundVariables: aViennaNode first into: aSet
-]
-
-{ #category : #'bound variables-types' }
-ViennaVDM2Smalltalk >> boundVariablesSetType: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-patterns and binds' }
-ViennaVDM2Smalltalk >> boundVariablesSetUnionPattern: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-definitions' }
-ViennaVDM2Smalltalk >> boundVariablesStateDefinition: aViennaNode into: aSet [
-	| identifier stateFieldList invariant initialisation |
-	identifier := aViennaNode first.
-	stateFieldList := aViennaNode second.
-	invariant := aViennaNode third.
-	initialisation := aViennaNode fourth.
-	aSet add: identifier.
-	invariant ifNotNil: [ aSet add: 'inv_' , identifier ].
-	initialisation ifNotNil: [ aSet add: 'init_' , identifier ].
-	self boundVariables: stateFieldList into: aSet
-]
-
-{ #category : #'bound variables-types' }
-ViennaVDM2Smalltalk >> boundVariablesTotalFunctionType: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-patterns and binds' }
-ViennaVDM2Smalltalk >> boundVariablesTuplePattern: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-patterns and binds' }
-ViennaVDM2Smalltalk >> boundVariablesTypeBind: aViennaNode into: aSet [
-	self boundVariables: aViennaNode first into: aSet
-]
-
-{ #category : #'bound variables-patterns and binds' }
-ViennaVDM2Smalltalk >> boundVariablesTypeBindList: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-definitions' }
-ViennaVDM2Smalltalk >> boundVariablesTypeDefinition: aViennaNode into: aSet [
-	aSet add: aViennaNode first
-]
-
-{ #category : #'bound variables-definitions' }
-ViennaVDM2Smalltalk >> boundVariablesTypeDefinitions: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-interfaces' }
-ViennaVDM2Smalltalk >> boundVariablesTypeImport: aViennaNode into: aSet [
-	aSet add: aViennaNode first.
-	aViennaNode second ifNotNil: [ :rename | aSet add: rename first ]
-]
-
-{ #category : #'bound variables-interfaces' }
-ViennaVDM2Smalltalk >> boundVariablesTypeNameExport: aViennaNode into: aSet [
-	aSet add: aViennaNode first first
-]
-
-{ #category : #'bound variables-interfaces' }
-ViennaVDM2Smalltalk >> boundVariablesTypeStructExport: aViennaNode into: aSet [
-	aSet add: aViennaNode first first
-]
-
-{ #category : #'bound variables-definitions' }
-ViennaVDM2Smalltalk >> boundVariablesTypeVariableIdentifier: aViennaNode into: aSet [
-	aSet add: aViennaNode first
-]
-
-{ #category : #'bound variables-definitions' }
-ViennaVDM2Smalltalk >> boundVariablesTypeVariableList: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-types' }
-ViennaVDM2Smalltalk >> boundVariablesUnionType: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-definitions' }
-ViennaVDM2Smalltalk >> boundVariablesValueDefinition: aViennaNode into: aSet [
-	self boundVariables: aViennaNode first into: aSet
-]
-
-{ #category : #'bound variables-definitions' }
-ViennaVDM2Smalltalk >> boundVariablesValueDefinitions: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-interfaces' }
-ViennaVDM2Smalltalk >> boundVariablesValueImport: aViennaNode into: aSet [
-	aSet add: aViennaNode first.
-	self boundVariables: aViennaNode second into: aSet
-]
-
-{ #category : #'bound variables-interfaces' }
-ViennaVDM2Smalltalk >> boundVariablesValueSignature: aViennaNode into: aSet [
-	aViennaNode first do: [ :localName | aSet add: localName first ].
-	self freeVariables: aViennaNode second boundVars: aSet into: aSet
-]
-
-{ #category : #'bound variables-interfaces' }
-ViennaVDM2Smalltalk >> boundVariablesValuesSignature: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
 { #category : #'code generation-statements' }
 ViennaVDM2Smalltalk >> callStatement: aViennaNode env: aDictionary [
 	| callee args |
@@ -884,16 +368,6 @@ ViennaVDM2Smalltalk >> casesStatementAlternatives: aViennaNode env: aDictionary 
 
 { #category : #utilities }
 ViennaVDM2Smalltalk >> closureFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode body: aString varGenerator: varGenerator env: aDictionary [
-	^ self
-		closureFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode
-		body: aString
-		varGenerator: varGenerator
-		env: aDictionary
-		op: false
-]
-
-{ #category : #utilities }
-ViennaVDM2Smalltalk >> closureFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode body: aString varGenerator: varGenerator env: aDictionary op: aBoolean [
 	^ String
 		new: 1024
 		streamContents: [ :stream | 
@@ -921,11 +395,9 @@ ViennaVDM2Smalltalk >> closureFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode 
 			tuplePattern := ViennaNode label: 'TuplePattern' with: (ViennaNode label: 'PatternList' withAll: matchPatternNodes).
 			matchVars := (self boundVariables: tuplePattern) asArray.
 			anArrayOfPatternNodeAndTypeSetNode ifNotEmpty: [ stream nextPutAll: ' | ' ].
-			(matchVars notEmpty or: [ aBoolean ])
+			(matchVars notEmpty)
 				ifTrue: [ 
 					stream nextPutAll: ' | '.
-					aBoolean
-						ifTrue: [ stream nextPutAll: '_opContext ' ].
 					matchVars
 						do: [ :var | 
 							stream
@@ -936,11 +408,6 @@ ViennaVDM2Smalltalk >> closureFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode 
 						nextPutAll:
 								(self binder: (self generate: tuplePattern env: aDictionary) with: '{' , (' . ' join: tmpVars) , '}' vars: matchVars);
 						nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ].
-			aBoolean
-				ifTrue: [ 
-					stream
-						nextPutAll: '_opContext := thisContext.';
-						cr ].
 			stream
 				nextPutAll: aString;
 				nextPutAll: ']' ]
@@ -1151,11 +618,19 @@ ViennaVDM2Smalltalk >> existsExpression: aViennaNode env: aDictionary [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2Smalltalk >> explicitFunctionDefinition: aViennaNode env: aDictionary [
-	| funcName typeNode parametersListNode body varGenerator |
+	| funcName typeNode preNode postNode parametersListNode body varGenerator |
 	funcName := aViennaNode first.
 	typeNode := aViennaNode third.
+	preNode := aViennaNode seventh.
+	postNode := aViennaNode eighth.
 	parametersListNode := aViennaNode fifth.
 	body := self generate: aViennaNode sixth env: aDictionary.
+	preNode
+		ifNotNil: [ body := (self generate: preNode env: aDictionary) , 'ifFalse: [ViennaPreconditionViolation signal]. ' , body ].
+	postNode
+		ifNotNil: [ 
+			body := '[|RESULT| RESULT := [' , body , '] value. (' , (self generate: postNode env: aDictionary)
+				, ') ifFalse: [ViennaPostconditionViolation signal]. RESULT] value' ].
 	varGenerator := self
 		varNameGenerator: 'func'
 		uniqueIn:
@@ -1185,11 +660,19 @@ ViennaVDM2Smalltalk >> explicitFunctionDefinition: aViennaNode env: aDictionary 
 
 { #category : #'code generation-definitions' }
 ViennaVDM2Smalltalk >> explicitOperationDefinition: aViennaNode env: aDictionary [
-	| opname typeNode paramsNode body varGenerator argTypeNode binds |
+	| opname typeNode paramsNode preNode postNode body varGenerator argTypeNode binds |
 	opname := aViennaNode first.
 	typeNode := aViennaNode second.
 	paramsNode := aViennaNode fourth.
-	body := self generate: aViennaNode fifth env: aDictionary.
+	preNode := aViennaNode sixth.
+	postNode := aViennaNode seventh.
+	body := '[|_opContext| _opContext := thisContext. ' , (self generate: aViennaNode fifth env: aDictionary) , '] value'.
+	preNode
+		ifNotNil: [ body := (self generate: preNode env: aDictionary) , 'ifFalse: [ViennaPreconditionViolation signal]. ' , body ].
+	postNode
+		ifNotNil: [ 
+			body := '[|_oldState RESULT| _oldState := ' , self getStateCode , '. RESULT := [' , body , '] value. ('
+				, (self generate: postNode env: aDictionary) , ') ifFalse: [ViennaPostconditionViolation signal]. RESULT] value' ].
 	varGenerator := self
 		varNameGenerator: 'op'
 		uniqueIn:
@@ -1208,12 +691,13 @@ ViennaVDM2Smalltalk >> explicitOperationDefinition: aViennaNode env: aDictionary
 				ifFalse: [ 
 					{{(paramsNode first).
 					argTypeNode}} ] ].
-	^ opname , ' := ' , (self
-		closureFromFlatBinds: binds
-		body: body
-		varGenerator: varGenerator
-		env: aDictionary
-		op: true)
+	^ opname , ' := '
+		,
+			(self
+				closureFromFlatBinds: binds
+				body: body
+				varGenerator: varGenerator
+				env: aDictionary)
 ]
 
 { #category : #'code generation-expressions' }
@@ -1349,326 +833,6 @@ ViennaVDM2Smalltalk >> forallExpression: aViennaNode env: aDictionary [
 						nextPutAll: ' value: ';
 						nextPutAll: setAndVar first ].
 			stream nextPut: $) ]
-]
-
-{ #category : #'free variables' }
-ViennaVDM2Smalltalk >> freeVariables: aViennaNode boundVars: aSet into: free [
-	(aViennaNode isString or: [ aViennaNode isNil ])
-		ifFalse: [ 
-			| selector |
-			selector := ('freeVariables' , aViennaNode label , ':boundVars:into:') asSymbol.
-			(self respondsTo: selector)
-				ifTrue: [ 
-					self
-						perform: selector
-						with: aViennaNode
-						with: aSet
-						with: free ]
-				ifFalse: [ aViennaNode do: [ :node | self freeVariables: node boundVars: aSet into: free ] ] ]
-]
-
-{ #category : #'free variables' }
-ViennaVDM2Smalltalk >> freeVariables: aViennaNode env: aDictionary [
-	| freeVars |
-	freeVars := Set new: 16.
-	self freeVariables: aViennaNode boundVars: aDictionary keys asSet into: freeVars.
-	^ freeVars
-]
-
-{ #category : #'free variables-statements' }
-ViennaVDM2Smalltalk >> freeVariablesAssignmentDefinition: aViennaNode boundVars: boundVars into: freeVars [
-	| binds |
-	binds := boundVars copy.
-	self boundVariables: aViennaNode into: binds.
-	aViennaNode do: [ :node | self freeVariables: node boundVars: binds into: freeVars ]
-]
-
-{ #category : #'free variables-statements' }
-ViennaVDM2Smalltalk >> freeVariablesBlockStatement: aViennaNode boundVars: boundVars into: freeVars [
-	| binds |
-	binds := boundVars copy.
-	aViennaNode
-		do: [ :node | 
-			node label = 'DclStatement'
-				ifTrue: [ self boundVariables: node into: binds ] ].
-	aViennaNode do: [ :node | self freeVariables: node boundVars: binds into: freeVars ]
-]
-
-{ #category : #'free variables-expressions' }
-ViennaVDM2Smalltalk >> freeVariablesCasesExpressionAlternative: aViennaNode boundVars: boundVars into: freeVars [
-	| binds patterns expressionBody |
-	binds := boundVars copy.
-	patterns := aViennaNode first.
-	expressionBody := aViennaNode second.
-	self freeVariables: patterns boundVars: binds into: freeVars.
-	self boundVariables: patterns into: binds.
-	self freeVariables: expressionBody boundVars: binds into: freeVars
-]
-
-{ #category : #'free variables-statements' }
-ViennaVDM2Smalltalk >> freeVariablesCasesStatementAlternative: aViennaNode boundVars: boundVars into: freeVars [
-	| binds patterns bodyStatement |
-	binds := boundVars copy.
-	patterns := aViennaNode first.
-	bodyStatement := aViennaNode second.
-	self freeVariables: patterns boundVars: binds into: freeVars.
-	self boundVariables: patterns into: binds.
-	self freeVariables: bodyStatement boundVars: binds into: freeVars
-]
-
-{ #category : #'free variables-expressions' }
-ViennaVDM2Smalltalk >> freeVariablesDefExpression: aViennaNode boundVars: boundVars into: freeVars [
-	| binds equalDefinitionList bodyExpression |
-	binds := boundVars copy.
-	equalDefinitionList := aViennaNode first.
-	bodyExpression := aViennaNode second.
-	self boundVariables: equalDefinitionList into: binds.
-	self freeVariables: equalDefinitionList boundVars: binds into: freeVars.
-	self freeVariables: bodyExpression boundVars: binds into: freeVars
-]
-
-{ #category : #'free variables-expressions' }
-ViennaVDM2Smalltalk >> freeVariablesExists1Expression: aViennaNode boundVars: boundVars into: freeVars [
-	| binds typeBind expressionBody |
-	binds := boundVars copy.
-	typeBind := aViennaNode first.
-	expressionBody := aViennaNode second.
-	self freeVariables: typeBind boundVars: binds into: freeVars.
-	self boundVariables: typeBind into: binds.
-	self freeVariables: expressionBody boundVars: binds into: freeVars
-]
-
-{ #category : #'free variables-expressions' }
-ViennaVDM2Smalltalk >> freeVariablesExistsExpression: aViennaNode boundVars: boundVars into: freeVars [
-	| binds bindList expressionBody |
-	binds := boundVars copy.
-	bindList := aViennaNode first.
-	expressionBody := aViennaNode second.
-	self freeVariables: bindList boundVars: binds into: freeVars.
-	self boundVariables: bindList into: binds.
-	self freeVariables: expressionBody boundVars: binds into: freeVars
-]
-
-{ #category : #'free variables-definitions' }
-ViennaVDM2Smalltalk >> freeVariablesField: aViennaNode boundVars: boundVars into: freeVars [
-	| type |
-	type := aViennaNode third.
-	self freeVariables: type boundVars: boundVars into: freeVars
-]
-
-{ #category : #'free variables-statements' }
-ViennaVDM2Smalltalk >> freeVariablesFieldReference: aViennaNode boundVars: boundVars into: freeVars [
-	self freeVariables: aViennaNode first boundVars: boundVars into: freeVars
-]
-
-{ #category : #'free variables-expressions' }
-ViennaVDM2Smalltalk >> freeVariablesFieldSelect: aViennaNode boundVars: boundVars into: freeVars [
-	self freeVariables: aViennaNode first boundVars: boundVars into: freeVars
-]
-
-{ #category : #'free variables-expressions' }
-ViennaVDM2Smalltalk >> freeVariablesForallExpression: aViennaNode boundVars: boundVars into: freeVars [
-	| binds bindList expressionBody |
-	binds := boundVars copy.
-	bindList := aViennaNode first.
-	expressionBody := aViennaNode second.
-	self freeVariables: bindList boundVars: binds into: freeVars.
-	self boundVariables: bindList into: binds.
-	self freeVariables: expressionBody boundVars: binds into: freeVars
-]
-
-{ #category : #'free variables-expressions' }
-ViennaVDM2Smalltalk >> freeVariablesGlobalName: aViennaNode boundVars: boundVars into: freeVars [
-	| name |
-	name := aViennaNode first , '`' , aViennaNode second.
-	(boundVars includes: name)
-		ifFalse: [ freeVars add: name ]
-]
-
-{ #category : #'free variables-statements' }
-ViennaVDM2Smalltalk >> freeVariablesIndexForLoop: aViennaNode boundVars: boundVars into: freeVars [
-	| binds |
-	binds := boundVars copy.
-	self boundVariables: aViennaNode into: binds.
-	aViennaNode do: [ :node | self freeVariables: node boundVars: binds into: freeVars ]
-]
-
-{ #category : #'free variables-definitions' }
-ViennaVDM2Smalltalk >> freeVariablesInvariantInitialFunction: aViennaNode boundVars: boundVars into: freeVars [
-	| pattern expression binds |
-	pattern := aViennaNode first.
-	expression := aViennaNode second.
-	binds := boundVars copy.
-	self boundVariables: pattern into: binds.
-	self freeVariables: expression boundVars: binds into: freeVars
-]
-
-{ #category : #'free variables-expressions' }
-ViennaVDM2Smalltalk >> freeVariablesIotaExpression: aViennaNode boundVars: boundVars into: freeVars [
-	| binds typeBind expressionBody |
-	binds := boundVars copy.
-	typeBind := aViennaNode first.
-	expressionBody := aViennaNode second.
-	self freeVariables: typeBind boundVars: binds into: freeVars.
-	self boundVariables: typeBind into: binds.
-	self freeVariables: expressionBody boundVars: binds into: freeVars
-]
-
-{ #category : #'free variables-expressions' }
-ViennaVDM2Smalltalk >> freeVariablesLambdaExpression: aViennaNode boundVars: boundVars into: freeVars [
-	| binds typeBindList expressionBody |
-	binds := boundVars copy.
-	typeBindList := aViennaNode first.
-	expressionBody := aViennaNode second.
-	self freeVariables: typeBindList boundVars: binds into: freeVars.
-	self boundVariables: typeBindList into: binds.
-	self freeVariables: expressionBody boundVars: binds into: freeVars
-]
-
-{ #category : #'free variables-expressions' }
-ViennaVDM2Smalltalk >> freeVariablesLetBeExpression: aViennaNode boundVars: boundVars into: freeVars [
-	| binds multipleBind guardExpression bodyExpression |
-	binds := boundVars copy.
-	multipleBind := aViennaNode first.
-	guardExpression := aViennaNode second.
-	bodyExpression := aViennaNode third.
-	self freeVariables: multipleBind boundVars: binds into: freeVars.
-	self boundVariables: multipleBind into: binds.
-	self freeVariables: guardExpression boundVars: binds into: freeVars.
-	self freeVariables: bodyExpression boundVars: binds into: freeVars
-]
-
-{ #category : #'free variables-statements' }
-ViennaVDM2Smalltalk >> freeVariablesLetBeStatement: aViennaNode boundVars: boundVars into: freeVars [
-	| binds multipleBind guardExpression bodyStatement |
-	binds := boundVars copy.
-	multipleBind := aViennaNode first.
-	guardExpression := aViennaNode second.
-	bodyStatement := aViennaNode third.
-	self freeVariables: multipleBind boundVars: binds into: freeVars.
-	self boundVariables: multipleBind into: binds.
-	self freeVariables: guardExpression boundVars: binds into: freeVars.
-	self freeVariables: bodyStatement boundVars: binds into: freeVars
-]
-
-{ #category : #'free variables-expressions' }
-ViennaVDM2Smalltalk >> freeVariablesLetExpression: aViennaNode boundVars: boundVars into: freeVars [
-	| binds localDefinitionList bodyExpression |
-	binds := boundVars copy.
-	localDefinitionList := aViennaNode first.
-	bodyExpression := aViennaNode second.
-	self boundVariables: localDefinitionList into: binds.
-	self freeVariables: localDefinitionList boundVars: binds into: freeVars.
-	self freeVariables: bodyExpression boundVars: binds into: freeVars
-]
-
-{ #category : #'free variables-statements' }
-ViennaVDM2Smalltalk >> freeVariablesLetStatement: aViennaNode boundVars: boundVars into: freeVars [
-	| binds localDefinitionList bodyStatement |
-	binds := boundVars copy.
-	localDefinitionList := aViennaNode first.
-	bodyStatement := aViennaNode second.
-	self boundVariables: localDefinitionList into: binds.
-	self freeVariables: localDefinitionList boundVars: binds into: freeVars.
-	self freeVariables: bodyStatement boundVars: binds into: freeVars
-]
-
-{ #category : #'free variables-expressions' }
-ViennaVDM2Smalltalk >> freeVariablesLocalName: aViennaNode boundVars: boundVars into: freeVars [
-	| name |
-	name := aViennaNode first.
-	(boundVars includes: name)
-		ifFalse: [ freeVars add: name ]
-]
-
-{ #category : #'free variables-expressions' }
-ViennaVDM2Smalltalk >> freeVariablesMapComprehension: aViennaNode boundVars: boundVars into: freeVars [
-	| binds keyExpression valueExpression bindList guardExpression |
-	binds := boundVars copy.
-	keyExpression := aViennaNode first.
-	valueExpression := aViennaNode second.
-	bindList := aViennaNode third.
-	guardExpression := aViennaNode fourth.
-	self freeVariables: bindList boundVars: binds into: freeVars.
-	self boundVariables: bindList into: binds.
-	self freeVariables: keyExpression boundVars: binds into: freeVars.
-	self freeVariables: valueExpression boundVars: binds into: freeVars.
-	self freeVariables: guardExpression boundVars: binds into: freeVars
-]
-
-{ #category : #'free variables-expressions' }
-ViennaVDM2Smalltalk >> freeVariablesRecordModifier: aViennaNode boundVars: boundVars into: freeVars [
-	| record mapletList |
-	record := aViennaNode first.
-	mapletList := aViennaNode second.
-	self freeVariables: record boundVars: boundVars into: freeVars.
-	mapletList
-		do: [ :maplet | 
-			| valueExpression |
-			valueExpression := maplet second.
-			self freeVariables: valueExpression boundVars: boundVars into: freeVars ]
-]
-
-{ #category : #'free variables-definitions' }
-ViennaVDM2Smalltalk >> freeVariablesRecordTypeDefinitions: aViennaNode boundVars: boundVars into: freeVars [
-	| binds identifier fieldList inv |
-	binds := boundVars copy.
-	identifier := aViennaNode first.
-	fieldList := aViennaNode second.
-	inv := aViennaNode third.
-	binds add: identifier.
-	self freeVariables: fieldList boundVars: binds into: freeVars.
-	self freeVariables: inv boundVars: binds into: freeVars
-]
-
-{ #category : #'free variables-expressions' }
-ViennaVDM2Smalltalk >> freeVariablesSequenceComprehension: aViennaNode boundVars: boundVars into: freeVars [
-	| binds expression bindList guardExpression |
-	binds := boundVars copy.
-	expression := aViennaNode first.
-	bindList := aViennaNode second.
-	guardExpression := aViennaNode third.
-	self freeVariables: bindList boundVars: binds into: freeVars.
-	self boundVariables: bindList into: binds.
-	self freeVariables: expression boundVars: binds into: freeVars.
-	self freeVariables: guardExpression boundVars: binds into: freeVars
-]
-
-{ #category : #'free variables-statements' }
-ViennaVDM2Smalltalk >> freeVariablesSequenceForLoop: aViennaNode boundVars: boundVars into: freeVars [
-	| binds |
-	binds := boundVars copy.
-	self boundVariables: aViennaNode into: binds.
-	aViennaNode do: [ :node | self freeVariables: node boundVars: binds into: freeVars ]
-]
-
-{ #category : #'free variables-expressions' }
-ViennaVDM2Smalltalk >> freeVariablesSetComprehension: aViennaNode boundVars: boundVars into: freeVars [
-	| binds expression bindList guardExpression |
-	binds := boundVars copy.
-	expression := aViennaNode first.
-	bindList := aViennaNode second.
-	guardExpression := aViennaNode third.
-	self freeVariables: bindList boundVars: binds into: freeVars.
-	self boundVariables: bindList into: binds.
-	self freeVariables: expression boundVars: binds into: freeVars.
-	self freeVariables: guardExpression boundVars: binds into: freeVars
-]
-
-{ #category : #'free variables-statements' }
-ViennaVDM2Smalltalk >> freeVariablesSetForLoop: aViennaNode boundVars: boundVars into: freeVars [
-	| binds |
-	binds := boundVars copy.
-	self boundVariables: aViennaNode into: binds.
-	aViennaNode do: [ :node | self freeVariables: node boundVars: binds into: freeVars ]
-]
-
-{ #category : #'free variables-definitions' }
-ViennaVDM2Smalltalk >> freeVariablesStateDefinition: aViennaNode boundVars: boundVars into: aSet [
-	| binds |
-	binds := boundVars copy.
-	self boundVariables: aViennaNode into: binds.
-	aViennaNode do: [ :node | self freeVariables: node boundVars: binds into: aSet ]
 ]
 
 { #category : #utilities }
@@ -1817,6 +981,11 @@ ViennaVDM2Smalltalk >> generatorFromFlatBinds: anArrayOfPatternNodeAndTypeSetNod
 					numParens := numParens + 1 ].
 			stream nextPutAll: aString.
 			numParens timesRepeat: [ stream nextPut: $] ] ]
+]
+
+{ #category : #'code generation-definitions' }
+ViennaVDM2Smalltalk >> getStateCode [
+	^ self subclassResponsibility
 ]
 
 { #category : #'code generation-expressions' }
@@ -2522,9 +1691,7 @@ ViennaVDM2Smalltalk >> objectPattern: aViennaNode env: aDictionary [
 
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> oldName: aViennaNode env: aDictionary [
-	| name |
-	name := aViennaNode first , '~'.
-	^ aDictionary at: name ifAbsent: [ name ]
+	^ '(_oldState at: ', aViennaNode first storeString, ')'
 ]
 
 { #category : #'code generation-definitions' }
@@ -2605,6 +1772,17 @@ ViennaVDM2Smalltalk >> patternList: aViennaNode env: aDictionary [
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> preconditionExpression: aViennaNode env: aDictionary [
 	^ self notYetImplemented
+]
+
+{ #category : #utilities }
+ViennaVDM2Smalltalk >> prepareOldVarsIn: aViennaNode intoEnv: aDictionary [
+	| env |
+	env := aDictionary copy.
+	(self freeVariables: aViennaNode env: aDictionary)
+		do: [ :var | 
+			var last = $~
+				ifTrue: [ env at: var put: '(_oldState at: ' , (var copyFrom: 1 to: var size - 1) storeString , ')' ] ].
+	^ env
 ]
 
 { #category : #'code generation-types' }
@@ -3128,7 +2306,13 @@ ViennaVDM2Smalltalk >> stateDefinition: aViennaNode env: aDictionary [
 				nextPutAll: initConstructor;
 				nextPutAll: ' := ';
 				nextPutAll: (self generate: initNode first env: aDictionary) ]).
-	(invNode ifNotNil: [ self generate: invNode first env: aDictionary ])}
+	(invNode ifNotNil: [ self generate: invNode first env: aDictionary ]).
+	(String
+		new: 1024
+		streamContents: [ :stream | 
+			stream nextPutAll: 'Dictionary new '.
+			vars do: [ :var | stream nextPutAll: 'at: ' , var storeString , ' put: ' , var , '; ' ].
+			stream nextPutAll: 'yourself' ])}
 ]
 
 { #category : #'code generation-expressions' }

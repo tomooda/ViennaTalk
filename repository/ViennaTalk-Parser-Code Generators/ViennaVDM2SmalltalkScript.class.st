@@ -80,6 +80,11 @@ ViennaVDM2SmalltalkScript >> functionDefinitions: aViennaNode env: aDictionary [
 ]
 
 { #category : #'code generation-definitions' }
+ViennaVDM2SmalltalkScript >> getStateCode [
+	^ 'state value'
+]
+
+{ #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkScript >> modularDocument: aViennaNode env: aDictionary [
 	^ self notYetImplemented
 ]
@@ -91,10 +96,10 @@ ViennaVDM2SmalltalkScript >> operationDefinitions: aViennaNode env: aDictionary 
 
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkScript >> stateDefinition: aViennaNode env: aDictionary [
-	| quatro |
-	quatro := super stateDefinition: aViennaNode env: aDictionary.
-	^ quatro first , quatro second , '.' , String cr , quatro third
-		, (quatro fourth ifNil: [ '' ] ifNotNil: [ :inv | '.' , String cr , inv ])
+	| quin |
+	quin := super stateDefinition: aViennaNode env: aDictionary.
+	^ quin first , quin second , '.' , String cr , quin third
+		, (quin fourth ifNil: [ '' ] ifNotNil: [ :inv | '.' , String cr , inv ]) , '. state := [' , quin fifth , ']'
 ]
 
 { #category : #'code generation-definitions' }

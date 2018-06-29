@@ -443,6 +443,7 @@ TViennaVDMBoundVariableCollector >> boundVariablesStateDefinition: aViennaNode i
 	aSet add: identifier.
 	invariant ifNotNil: [ aSet add: 'inv_' , identifier ].
 	initialisation ifNotNil: [ aSet add: 'init_' , identifier ].
+	aSet add: 'state'.
 	self boundVariables: stateFieldList into: aSet
 ]
 
