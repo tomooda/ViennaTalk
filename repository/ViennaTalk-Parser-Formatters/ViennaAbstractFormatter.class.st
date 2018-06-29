@@ -198,6 +198,17 @@ ViennaAbstractFormatter >> activeExpression: aViennaNode [
 	^ '#active(' , ', ' join: (self formatAll: aViennaNode) , ')'
 ]
 
+{ #category : #'formatting-statements' }
+ViennaAbstractFormatter >> alwaysStatement: aViennaNode [
+	| handler statement |
+	handler := self format: aViennaNode first.
+	statement := self format: aViennaNode second.
+	^ (self needsIndent: handler)
+		ifTrue: [ (self indentString: 'always' insertCr: handler) , String cr
+				, (self indentString: 'in' insertCr: statement) ]
+		ifFalse: [ self indentString: 'always ' , handler , ' in' insertCrIfNeeded: statement ]
+]
+
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> and [
 	^ 'and'
@@ -604,6 +615,11 @@ ViennaAbstractFormatter >> existsExpression: aViennaNode [
 	^ self
 		indentString: (self indentString: self exists insertCrIfNeeded: bindList trim , ' ' , self dot)
 		insertCrIfNeeded: expression
+]
+
+{ #category : #'formatting-statements' }
+ViennaAbstractFormatter >> exitStatement: aViennaNode [
+	^ 'exit ' , (self indentString: (self format: aViennaNode first))
 ]
 
 { #category : #'formatting-definitions' }
@@ -2451,6 +2467,17 @@ ViennaAbstractFormatter >> timeExpression: aViennaNode [
 	^ 'time'
 ]
 
+{ #category : #'formatting-statements' }
+ViennaAbstractFormatter >> tixeStatement: aViennaNode [
+	| traps statement |
+	traps := self format: aViennaNode first.
+	statement := self format: aViennaNode second.
+	^ (self needsIndent: traps)
+		ifTrue: [ (self indentString: 'tixe' insertCr: traps) , String cr
+				, (self indentString: 'in' insertCr: statement) ]
+		ifFalse: [ self indentString: 'tixe ' , traps , ' in' insertCrIfNeeded: statement ]
+]
+
 { #category : #'formatting-expressions' }
 ViennaAbstractFormatter >> tokenConstructor: aViennaNode [
 	| expression |
@@ -2470,6 +2497,45 @@ ViennaAbstractFormatter >> totalFunction [
 { #category : #'formatting-types' }
 ViennaAbstractFormatter >> totalFunctionType: aViennaNode [
 	^ (self format: aViennaNode first) , ' ' , self totalFunction , ' ' , (self format: aViennaNode second)
+]
+
+{ #category : #'formatting-statements' }
+ViennaAbstractFormatter >> trapStatement: aViennaNode [
+	| pattern handler statement |
+	pattern := self format: aViennaNode first.
+	handler := self format: aViennaNode second.
+	statement := self format: aViennaNode third.
+	^ (self needsIndent: pattern)
+		ifTrue: [ (self indentString: 'trap' insertCr: pattern) , String cr
+				, (self indentString: 'with' insertCr: handler) , String cr
+				, (self indentString: 'in' insertCr: statement) ]
+		ifFalse: [ | trap |
+			trap := 'trap ' , pattern.
+			(self needsIndent: trap , handler)
+				ifTrue: [ trap , String cr , (self indentString: 'with' insertCr: handler) , String cr
+						, (self indentString: 'in' insertCr: statement) ]
+				ifFalse: [ trap := trap , ' with ' , handler.
+					(self needsIndent: trap , statement)
+						ifTrue: [ trap , String cr , (self indentString: 'in' insertCr: statement) ]
+						ifFalse: [ trap , ' in ' , statement ] ] ]
+]
+
+{ #category : #'formatting-statements' }
+ViennaAbstractFormatter >> traps: aViennaNode [
+	^ String
+		new: 1024
+		streamContents: [ :stream | 
+			stream nextPutAll: '{'.
+			aViennaNode
+				ifNotEmpty: [ stream
+						nextPutAll:
+							(',' , String cr
+								join:
+									((1 to: aViennaNode size by: 2)
+										collect: [ :index | 
+											(self format: (aViennaNode at: index)) , ' |-> '
+												, (self indentString: (self format: (aViennaNode at: index + 1))) ])) ].
+			stream nextPutAll: '}' ]
 ]
 
 { #category : #'formatting-expressions' }
