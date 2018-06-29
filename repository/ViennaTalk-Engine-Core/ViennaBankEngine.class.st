@@ -20,7 +20,7 @@ ViennaBankEngine >> enginesDo: aBlock [
 ]
 
 { #category : #evaluating }
-ViennaBankEngine >> evaluate: expression specification: specification states: states vdm10: vdm10 rtc: rtc [
+ViennaBankEngine >> evaluate: expression specification: specification states: states module: module vdm10: vdm10 rtc: rtc [
 	| engine |
 	lock
 		critical: [ 
@@ -31,6 +31,7 @@ ViennaBankEngine >> evaluate: expression specification: specification states: st
 		evaluate: expression
 		specification: specification
 		states: states
+		module: module
 		vdm10: vdm10
 		rtc: rtc
 ]

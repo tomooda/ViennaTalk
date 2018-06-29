@@ -10,6 +10,17 @@ ViennaEngine >> evaluate: expression specification: spec states: states [
 ]
 
 { #category : #evaluating }
-ViennaEngine >> evaluate: expression specification: specification states: states vdm10: vdm10 rtc: rtc [
+ViennaEngine >> evaluate: expression specification: specification states: states module: module vdm10: vdm10 rtc: rtc [
 	^ self subclassResponsibility
+]
+
+{ #category : #evaluating }
+ViennaEngine >> evaluate: expression specification: specification states: states vdm10: vdm10 rtc: rtc [
+	^ self
+		evaluate: expression
+		specification: specification
+		states: states
+		module: 'DEFAULT'
+		vdm10: vdm10
+		rtc: rtc
 ]

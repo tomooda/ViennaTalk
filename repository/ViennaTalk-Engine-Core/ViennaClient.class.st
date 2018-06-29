@@ -32,13 +32,14 @@ ViennaClient class >> on: aUrlOfVDMPadServer [
 ]
 
 { #category : #evaluating }
-ViennaClient >> evaluate: expression specification: specification states: states vdm10: vdm10 rtc: rtc [
+ViennaClient >> evaluate: expression specification: specification states: states module: moduleName vdm10: vdm10 rtc: rtc [
 	| json response |
 	json := Dictionary new.
 	states
 		keysAndValuesDo: [ :module :binds | binds keysAndValuesDo: [ :var :value | json at: module , '`' , var put: value ] ].
 	json at: 'source' put: specification.
 	json at: 'expression' put: expression.
+	json at: 'module' put: moduleName.
 	vdm10 = false
 		ifTrue: [ json at: 'classic' put: String new ].
 	rtc = false
