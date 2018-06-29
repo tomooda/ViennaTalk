@@ -74,6 +74,24 @@ ViennaNode class >> label: aString withAll: anArray [
 	^ node
 ]
 
+{ #category : #converting }
+ViennaNode >> asArray [
+	| array |
+	array := Array new: self size.
+	1 to: self size do: [ :i | array at: i put: (self at: i) ].
+	^ array
+]
+
+{ #category : #converting }
+ViennaNode >> asArrayFrom: start [
+	^ self asArrayFrom: start to: self size
+]
+
+{ #category : #converting }
+ViennaNode >> asArrayFrom: start to: end [
+	^ (start to: end) collect: [ :i | self at: i ]
+]
+
 { #category : #enumerating }
 ViennaNode >> collect: aBlock [
 	^ (1 to: self size) collect: [ :index | aBlock value: (self at: index) ]
@@ -82,6 +100,26 @@ ViennaNode >> collect: aBlock [
 { #category : #enumerating }
 ViennaNode >> do: aBlock [
 	1 to: self size do: [ :index | aBlock value: (self at: index) ]
+]
+
+{ #category : #accessing }
+ViennaNode >> fifth [
+	^ self at: 5
+]
+
+{ #category : #accessing }
+ViennaNode >> first [
+	^ self at: 1
+]
+
+{ #category : #converting }
+ViennaNode >> format [
+	^ ViennaVDMFormatter new format: self
+]
+
+{ #category : #accessing }
+ViennaNode >> fourth [
+	^ self at: 4
 ]
 
 { #category : #accessing }
@@ -112,6 +150,11 @@ ViennaNode >> printOn: aStream [
 	aStream nextPut: $)
 ]
 
+{ #category : #accessing }
+ViennaNode >> second [
+	^ self at: 2
+]
+
 { #category : #private }
 ViennaNode >> setLabel: aString [
 	label := aString
@@ -127,4 +170,9 @@ ViennaNode >> storeOn: aStream [
 	aStream nextPutAll: ' withAll: {'.
 	(1 to: self size) do: [ :index | (self at: index) storeOn: aStream ] separatedBy: [ aStream nextPutAll: ' . ' ].
 	aStream nextPutAll: '})'
+]
+
+{ #category : #accessing }
+ViennaNode >> third [
+	^ self at: 3
 ]

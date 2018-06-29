@@ -109,12 +109,12 @@ ViennaVDMParser >> casesExpression [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMParser >> casesExpressionAlternative [
-	^ super casesExpressionAlternative ==> [ :array | ViennaNode label: 'CaseExpressionAlternative' withAll: array ]
+	^ super casesExpressionAlternative ==> [ :array | ViennaNode label: 'CasesExpressionAlternative' withAll: array ]
 ]
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMParser >> casesExpressionAlternatives [
-	^ super casesExpressionAlternatives ==> [ :array | ViennaNode label: 'CaseExpressionAlternatives' withAll: array ]
+	^ super casesExpressionAlternatives ==> [ :array | ViennaNode label: 'CasesExpressionAlternatives' withAll: array ]
 ]
 
 { #category : #'parsers-statements' }
@@ -159,7 +159,12 @@ ViennaVDMParser >> dclStatement [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMParser >> defExpression [
-	^ super defExpression ==> [ :array | ViennaNode label: 'DefExpression' withAll: array ]
+	^ super defExpression
+		==> [ :array | 
+			ViennaNode
+				label: 'DefExpression'
+				with: (ViennaNode label: 'EqualDefinitionList' withAll: array first)
+				with: array second ]
 ]
 
 { #category : #'parsers-statements' }
@@ -222,7 +227,7 @@ ViennaVDMParser >> equal: arg1 and: arg2 [
 	^ ViennaNode label: 'Equal' with: arg1 with: arg2
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : #'parsers-definitions' }
 ViennaVDMParser >> equalDefinition [
 	^ super equalDefinition ==> [ :array | ViennaNode label: 'EqualDefinition' withAll: array ]
 ]
@@ -937,7 +942,14 @@ ViennaVDMParser >> subset: arg1 and: arg2 [
 
 { #category : #'parsers-literals' }
 ViennaVDMParser >> symbolicLiteral [
-	^ super symbolicLiteral ==> [ :string | ViennaNode label: 'SymbolicLiteral' with: string ]
+	^ super symbolicLiteral
+		==> [ :string | 
+			ViennaNode
+				label: 'SymbolicLiteral'
+				with:
+					(string isString
+						ifTrue: [ string ]
+						ifFalse: [ string printString ]) ]
 ]
 
 { #category : #'parsers-expressions-threads' }

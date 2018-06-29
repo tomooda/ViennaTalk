@@ -621,7 +621,7 @@ ViennaVDMGrammar >> equal: arg1 and: arg2 [
 	arg2}
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : #'parsers-definitions' }
 ViennaVDMGrammar >> equalDefinition [
 	^ (patternBind , eq , expression)
 		==> [ :triple | 
