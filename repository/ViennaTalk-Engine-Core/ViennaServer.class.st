@@ -12,15 +12,40 @@ Class {
 
 { #category : #defaults }
 ViennaServer class >> defaultPort [
-	^ 8085
+	^ 8088
+]
+
+{ #category : #servicing }
+ViennaServer class >> flushServer [
+	"ViennaServer flushServer"
+
+	Server
+		ifNotNil: [ 
+			Server stop.
+			Server unregister.
+			Server := nil ]
+]
+
+{ #category : #servicing }
+ViennaServer class >> installHandler [
+	"ViennaServer installHandler"
+
+	self server delegate map: 'eval' to: self new
 ]
 
 { #category : #'instance creation' }
 ViennaServer class >> new: anInteger [
-	^ self basicNew initialize: anInteger
+	^ self on: (ViennaVDMJ bank: anInteger)
 ]
 
-{ #category : #accessing }
+{ #category : #'instance creation' }
+ViennaServer class >> on: aViennaEngine [
+	^ self new
+		engine: aViennaEngine;
+		yourself
+]
+
+{ #category : #servicing }
 ViennaServer class >> server [
 	^ Server
 		ifNil: [ 
@@ -30,20 +55,24 @@ ViennaServer class >> server [
 				yourself ]
 ]
 
-{ #category : #servicing }
-ViennaServer class >> startUpServer [
-	"ViennaServer startUpServer"
-	self server delegate map: 'eval' to: self new
+{ #category : #defaults }
+ViennaServer >> defaultEngine [
+	^ ViennaVDMJ bank: 16
 ]
 
-{ #category : #defaults }
-ViennaServer >> defaultNumberOfProcesses [
-	^ 16
+{ #category : #accessing }
+ViennaServer >> engine [
+	^ engine ifNil: [ engine := self defaultEngine ]
+]
+
+{ #category : #accessing }
+ViennaServer >> engine: aViennaEngine [
+	engine := aViennaEngine
 ]
 
 { #category : #evaluating }
 ViennaServer >> evaluate: expression specification: specification states: states vdm10: vdm10 rtc: rtc [
-	^ engine
+	^ self engine
 		evaluate: expression
 		specification: specification
 		states: states
@@ -61,7 +90,6 @@ ViennaServer >> handleRequest: aZnRequest [
 			source := json at: 'source' ifAbsent: [ String new ].
 			expression := json at: 'expression' ifAbsent: [ String new ].
 			preStates := Dictionary new: json size.
-			json inspect.
 			json
 				keysAndValuesDo: [ :key :value | 
 					(key includes: $`)
@@ -87,17 +115,6 @@ ViennaServer >> handleRequest: aZnRequest [
 				keysAndValuesDo: [ :moduleName :bindings | bindings keysAndValuesDo: [ :varName :value | json at: moduleName , '`' , varName put: value ] ].
 			^ ZnResponse ok: (ZnEntity with: (self stringify: json) type: ZnMimeType applicationJson) ].
 	^ ZnResponse notFound: aZnRequest url
-]
-
-{ #category : #'initialize-release' }
-ViennaServer >> initialize [
-	self initialize: self defaultNumberOfProcesses 
-]
-
-{ #category : #'initialize-release' }
-ViennaServer >> initialize: anInteger [
-	super initialize.
-	engine := ViennaVDMJ bank: anInteger
 ]
 
 { #category : #private }
