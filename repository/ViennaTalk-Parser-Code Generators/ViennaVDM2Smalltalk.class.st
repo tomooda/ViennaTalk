@@ -719,7 +719,7 @@ ViennaVDM2Smalltalk >> explicitFunctionDefinition: aViennaNode env: aDictionary 
 
 { #category : #'code generation-definitions' }
 ViennaVDM2Smalltalk >> explicitOperationDefinition: aViennaNode env: aDictionary [
-	| opname typeNode paramsNode preNode postNode body varGenerator argTypeNode binds |
+	| opname typeNode paramsNode preNode postNode body varGenerator preBody postBody argTypeNode retTypeNode binds |
 	opname := aViennaNode first.
 	typeNode := aViennaNode second.
 	paramsNode := aViennaNode fourth.
@@ -727,17 +727,21 @@ ViennaVDM2Smalltalk >> explicitOperationDefinition: aViennaNode env: aDictionary
 	postNode := aViennaNode seventh.
 	body := '[|_opContext| _opContext := thisContext. ' , (self generate: aViennaNode fifth env: aDictionary) , '] value'.
 	preNode
-		ifNotNil: [ body := (self generate: preNode env: aDictionary) , 'ifFalse: [ViennaPreconditionViolation signal]. ' , body ].
+		ifNotNil: [ 
+			preBody := self generate: preNode env: aDictionary.
+			body := preBody , ' ifFalse: [ViennaPreconditionViolation signal]. ' , body ].
 	postNode
 		ifNotNil: [ 
-			body := '[|_oldState RESULT| _oldState := ' , self getStateCode , '. RESULT := [' , body , '] value. ('
-				, (self generate: postNode env: aDictionary) , ') ifFalse: [ViennaPostconditionViolation signal]. RESULT] value' ].
+			postBody := self generate: postNode env: aDictionary.
+			body := '[|_oldState RESULT| _oldState := ' , self getStateCode , '. RESULT := [' , body , '] value. (' , postBody
+				, ') ifFalse: [ViennaPostconditionViolation signal]. RESULT] value' ].
 	varGenerator := self
 		varNameGenerator: 'op'
 		uniqueIn:
 			{opname.
 			body}.
 	argTypeNode := typeNode first.
+	retTypeNode := typeNode second.
 	binds := argTypeNode label = 'UnitType'
 		ifTrue: [ {} ]
 		ifFalse: [ 
@@ -750,13 +754,63 @@ ViennaVDM2Smalltalk >> explicitOperationDefinition: aViennaNode env: aDictionary
 				ifFalse: [ 
 					{{(paramsNode first).
 					argTypeNode}} ] ].
-	^ opname , ' := '
-		,
-			(self
-				closureFromFlatBinds: binds
-				body: body
-				varGenerator: varGenerator
-				env: aDictionary)
+	^ String
+		new: 1024
+		streamContents: [ :stream | 
+			| env |
+			env := aDictionary copy.
+			aViennaNode stateVariablesDo: [ :var | env at: var put: '(_State at: ' , var storeString , ')' ].
+			preNode
+				ifNotNil: [ 
+					stream
+						nextPutAll: 'pre_';
+						nextPutAll: opname;
+						nextPutAll: ' := ';
+						nextPutAll:
+								(self
+										closureFromFlatBinds:
+											binds
+												,
+													{{(ViennaNode label: 'PatternIdentifier' with: '_State').
+													nil}}
+										body: (self generate: preNode env: env)
+										varGenerator: varGenerator
+										env: env);
+						nextPutAll: '. ' ].
+			postNode
+				ifNotNil: [ 
+					stream
+						nextPutAll: 'post_';
+						nextPutAll: opname;
+						nextPutAll: ' := ';
+						nextPutAll:
+								(self
+										closureFromFlatBinds:
+											binds
+												,
+													{{(ViennaNode label: 'PatternIdentifier' with: '_State').
+													nil}.
+													{(ViennaNode label: 'PatternIdentifier' with: '_oldState').
+													nil}}
+												,
+													(retTypeNode label = 'UnitType'
+														ifTrue: [ {} ]
+														ifFalse: [ 
+															{{(ViennaNode label: 'PatternIdentifier' with: 'RESULT').
+															retTypeNode}} ])
+										body: (self generate: preNode env: env)
+										varGenerator: varGenerator
+										env: env);
+						nextPutAll: '. ' ].
+			stream
+				nextPutAll: opname;
+				nextPutAll: ' := ';
+				nextPutAll:
+						(self
+								closureFromFlatBinds: binds
+								body: body
+								varGenerator: varGenerator
+								env: aDictionary) ]
 ]
 
 { #category : #'code generation-expressions' }
