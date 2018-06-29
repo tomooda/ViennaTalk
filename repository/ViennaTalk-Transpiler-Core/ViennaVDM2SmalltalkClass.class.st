@@ -1150,7 +1150,7 @@ ViennaVDM2SmalltalkClass >> stateDefinition: aViennaNode env: aDictionary [
 	stateConstructor := aViennaNode first.
 	quin := super stateDefinition: aViennaNode env: aDictionary.
 	self
-		defineMethod: 'init' , String cr , 'self viennaAtomic: [' , quin first , ']'
+		defineMethod: 'init' , String cr , quin first
 		in: theClass
 		protocol: 'state'
 		node: aViennaNode.
@@ -1167,9 +1167,7 @@ ViennaVDM2SmalltalkClass >> stateDefinition: aViennaNode env: aDictionary [
 		in: theClass
 		protocol: 'state'
 		node: aViennaNode fourth.
-	aDictionary
-		at: 'init_' , stateConstructor
-		put: 'self init_' , stateConstructor.
+	aDictionary at: 'init_' , stateConstructor put: 'self init_' , stateConstructor.
 	self
 		defineMethod:
 			'state' , String cr , '    ^ self ' , stateConstructor , ' applyTo: {'
@@ -1187,9 +1185,7 @@ ViennaVDM2SmalltalkClass >> stateDefinition: aViennaNode env: aDictionary [
 								cr.
 							quin fourth
 								ifNotNil: [ stream
-										nextPutAll:
-											'    (' , quin fourth
-												, ' value: self state) ifFalse: [self stateInvariantViolation].';
+										nextPutAll: '    ((' , quin fourth , ') value: self state) ifFalse: [self stateInvariantViolation].';
 										cr ].
 							runtimeTypeCheck = true
 								ifTrue: [ aViennaNode second
