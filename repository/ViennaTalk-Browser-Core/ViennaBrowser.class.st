@@ -10,8 +10,6 @@ Class {
 		'codePane',
 		'workspace',
 		'workspacePane',
-		'testTab',
-		'testButton',
 		'testPane',
 		'selectedModule',
 		'selectedField',
@@ -22,10 +20,13 @@ Class {
 		'directory',
 		'lowerTabPane',
 		'animation',
-		'testResult'
+		'testResult',
+		'testProcess'
 	],
 	#classVars : [
-		'AutoFormat'
+		'AutoFormat',
+		'AutoFullTest',
+		'AutoTest'
 	],
 	#category : 'ViennaTalk-Browser-Core'
 }
@@ -49,6 +50,26 @@ ViennaBrowser class >> autoFormat [
 { #category : #accessing }
 ViennaBrowser class >> autoFormat: aBoolean [
 	AutoFormat := aBoolean ~= false
+]
+
+{ #category : #accessing }
+ViennaBrowser class >> autoFullTest [
+	^ AutoFullTest ifNil: [ AutoFullTest := false ]
+]
+
+{ #category : #accessing }
+ViennaBrowser class >> autoFullTest: aBoolean [
+	AutoFullTest := true == aBoolean
+]
+
+{ #category : #accessing }
+ViennaBrowser class >> autoTest [
+	^ AutoTest ifNil: [ AutoTest := false ]
+]
+
+{ #category : #accessing }
+ViennaBrowser class >> autoTest: aBoolean [
+	AutoTest := true == aBoolean
 ]
 
 { #category : #menu }
@@ -168,6 +189,11 @@ ViennaBrowser class >> moduleListMenu: aBuilder [
 	(aBuilder item: #'generate object (all modules)...' translated)
 		selector: #generateSmalltalkObject;
 		withSeparatorAfter.
+	(aBuilder item: #'run module test' translated)
+		selector: #runTestModule.
+	(aBuilder item: #'run tests' translated)
+		selector: #runAllTests;
+		withSeparatorAfter.
 	aBuilder model importerModules
 		ifNotEmpty: [ :modules | 
 			(aBuilder item: #'imported by...' translated)
@@ -259,6 +285,23 @@ ViennaBrowser class >> valuePaneMenu: aBuilder [
 { #category : #settings }
 ViennaBrowser class >> viennaSettingsOn: aBuilder [
 	<systemsettings>
+	(aBuilder group: #ViennaTalkUnitTesting)
+		parent: #ViennaTalk;
+		label: 'Unit Testing';
+		with: [ (aBuilder setting: #autoTest)
+				target: self;
+				getSelector: #autoTest;
+				setSelector: #autoTest:;
+				description: 'If checked, then VDMBrowser will automatically run unit testing.';
+				label: 'Auto unit testing in VDM Browser';
+				order: 0.501;
+				with: [ (aBuilder setting: #autoFullTest)
+						target: self;
+						getSelector: #autoFullTest;
+						setSelector: #autoFullTest:;
+						description: 'If checked, then VDMBrowser will automatically run all test modules.';
+						label: 'full tests';
+						order: 0.501 ] ].
 	(aBuilder setting: #autoFormat)
 		parent: #ViennaTalkAppearances;
 		target: self;
@@ -454,9 +497,15 @@ ViennaBrowser >> acceptCode: aStringOrText newModuleAndSourceDo: aBlock [
 										ifTrue: [ charPos := (((lines copyFrom: 1 to: linePos - 1) collect: #size) + 1) sum + colPos ] ] ].
 					^ codePane handleEdit: [ codePane notify: message at: charPos in: code readStream ] ].
 			codePane hasUnacceptedEdits: false.
-			self selectModuleNamed: (newModulePositions ifEmpty: [ nil ] ifNotEmpty: [ newModulePositions first key ]).
+			self
+				selectModuleNamed: (newModulePositions ifEmpty: [ nil ] ifNotEmpty: [ newModulePositions first key ]).
 			aBlock
-				ifNotNil: [ newModulePositions do: [ :assoc | aBlock cull: assoc key cull: (code copyFrom: assoc value first to: assoc value last) ] ].
+				ifNotNil: [ newModulePositions
+						do: [ :assoc | aBlock cull: assoc key cull: (code copyFrom: assoc value first to: assoc value last) ] ].
+			self autoTest
+				ifTrue: [ self autoFullTest
+						ifTrue: [ self runAllTests ]
+						ifFalse: [ self runTestModule ] ].
 			^ true ].
 	^ false
 ]
@@ -527,6 +576,16 @@ ViennaBrowser >> autoFormat [
 	^ self class autoFormat
 ]
 
+{ #category : #accessing }
+ViennaBrowser >> autoFullTest [
+	^ self class autoFullTest
+]
+
+{ #category : #accessing }
+ViennaBrowser >> autoTest [
+	^ self class autoTest
+]
+
 { #category : #'test pane menu' }
 ViennaBrowser >> basicRunTestModule: module operation: operation [
 	| header testAnimation |
@@ -547,27 +606,35 @@ ViennaBrowser >> basicRunTestModule: module operation: operation [
 			exception expression
 				in: [ :expr | 
 					(expr isViennaComposite and: [ expr constructorName = 'AssertFailure' ])
-						ifTrue: [ ^ ViennaTestFailureResultItem
+						ifTrue: [ ^ (ViennaTestFailureResultItem
 								module: module
 								operation: operation
-								message: 'assertion failed: ' , (expr at: 1) asString ].
+								message: 'assertion failed: ' , (expr at: 1) asString)
+								inform;
+								yourself ].
 					(expr isViennaComposite and: [ expr constructorName = 'AssertEqualsFailure' ])
-						ifTrue: [ ^ ViennaTestFailureResultItem
+						ifTrue: [ ^ (ViennaTestFailureResultItem
 								module: module
 								operation: operation
 								message:
-									'assertion failed: ' , (expr at: 3) asString , ' expected: ' , (expr at: 2) viennaString
-										, ' actual: ' , (expr at: 1) viennaString ].
-					^ ViennaTestErrorResultItem
+								'assertion failed: ' , (expr at: 3) asString , ' expected: ' , (expr at: 2) viennaString
+								, ' actual: ' , (expr at: 1) viennaString)
+								inform;
+								yourself ].
+					^ (ViennaTestErrorResultItem
 						module: module
 						operation: operation
-						message: expr viennaString ] ] ]
+						message: expr viennaString)
+						inform;
+						yourself ] ] ]
 		on: Error
 		do: [ :exception | 
-			^ ViennaTestErrorResultItem
+			^ (ViennaTestErrorResultItem
 				module: module
 				operation: operation
-				message: exception messageText ].
+				message: exception messageText)
+				inform;
+				yourself ].
 	^ ViennaTestSuccessResultItem module: module operation: operation message: 'OK'
 ]
 
@@ -1091,7 +1158,8 @@ ViennaBrowser >> removeModule [
 
 { #category : #'test pane menu' }
 ViennaBrowser >> runAllTests [
-	| ast |
+	testProcess ifNotNil: [ testProcess terminate ].
+	testProcess := [ | ast |
 	testResult := Array new.
 	self changed: #testList.
 	ast := ViennaVDMParser new parse: animation specification.
@@ -1099,12 +1167,50 @@ ViennaBrowser >> runAllTests [
 		ifTrue: [ ^ nil ].
 	ast isEmpty
 		ifTrue: [ ^ self ].
-	[ (ast at: 1) label = 'Module'
+	(ast at: 1) label = 'Module'
 		ifTrue: [ ast
 				do: [ :moduleNode | 
 					| moduleName |
 					moduleName := moduleNode first.
 					(moduleName endsWith: 'Test')
+						ifTrue: [ moduleNode third
+								do: [ :definitionBlockNode | 
+									definitionBlockNode first label = 'OperationDefinitions'
+										ifTrue: [ definitionBlockNode first
+												do: [ :accessOperationDefinitionNode | 
+													| operationName |
+													operationName := accessOperationDefinitionNode second first first.
+													(operationName size > 4 and: [ (operationName copyFrom: 1 to: 4) = 'test' ])
+														ifTrue: [ self runTestModule: moduleName operation: operationName ] ] ] ] ] ] ]
+		ifFalse: [  ] ] forkAt: Processor userBackgroundPriority
+]
+
+{ #category : #'test pane menu' }
+ViennaBrowser >> runTestModule [
+	self runTestModule: self selectedModule
+]
+
+{ #category : #'test pane menu' }
+ViennaBrowser >> runTestModule: aString [
+	| testModuleName |
+	testModuleName := aString.
+	(testModuleName endsWith: 'Test')
+		ifFalse: [ testModuleName := testModuleName , 'Test' ].
+	testProcess ifNotNil: [ testProcess terminate ].
+	testProcess := [ | ast |
+	testResult := Array new.
+	self changed: #testList.
+	ast := ViennaVDMParser new parse: animation specification.
+	ast isPetitFailure
+		ifTrue: [ ^ nil ].
+	ast isEmpty
+		ifTrue: [ ^ self ].
+	(ast at: 1) label = 'Module'
+		ifTrue: [ ast
+				do: [ :moduleNode | 
+					| moduleName |
+					moduleName := moduleNode first.
+					moduleName = testModuleName
 						ifTrue: [ moduleNode third
 								do: [ :definitionBlockNode | 
 									definitionBlockNode first label = 'OperationDefinitions'

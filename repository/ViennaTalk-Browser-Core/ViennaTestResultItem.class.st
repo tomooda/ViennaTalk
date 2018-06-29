@@ -48,7 +48,7 @@ ViennaTestResultItem class >> iconColor [
 
 { #category : #accessing }
 ViennaTestResultItem class >> iconExtent [
-	^ ViennaLauncher font height asPoint
+	^ (ViennaLauncher font height * 0.7 max: 5) asPoint
 ]
 
 { #category : #'instance creation' }
@@ -63,6 +63,14 @@ ViennaTestResultItem class >> module: module operation: operation message: messa
 { #category : #accessing }
 ViennaTestResultItem >> icon [
 	^ self class icon
+]
+
+{ #category : #notification }
+ViennaTestResultItem >> inform [
+	GrowlMorph
+		openWithLabel: 'Failed: ' , module , '`' , operation
+		contents: (message lines first readStream next: 20)
+		color: (Color lightGray mixed: 0.5 with: self class iconColor)
 ]
 
 { #category : #testing }
@@ -112,6 +120,7 @@ ViennaTestResultItem >> operation: aString [
 
 { #category : #printing }
 ViennaTestResultItem >> printOn: aStream [
+	aStream space.
 	module
 		ifNotNil: [ aStream
 				nextPutAll: module;

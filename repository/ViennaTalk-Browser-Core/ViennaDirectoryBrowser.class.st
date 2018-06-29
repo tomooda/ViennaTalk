@@ -64,6 +64,8 @@ ViennaDirectoryBrowser class >> moduleListMenu: aBuilder [
 	(aBuilder item: #'generate object (all modules)...' translated)
 		selector: #generateSmalltalkObject;
 		withSeparatorAfter.
+	(aBuilder item: #'run module test' translated)
+		selector: #runTestModule.
 	(aBuilder item: #'run tests' translated)
 		selector: #runAllTests;
 		withSeparatorAfter.
