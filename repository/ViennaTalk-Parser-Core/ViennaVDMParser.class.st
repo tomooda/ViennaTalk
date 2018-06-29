@@ -371,6 +371,28 @@ ViennaVDMParser >> format: aString [
 							(source copyFrom: 1 to: index) , commentString , (source copyFrom: index + 1 to: source size) ] ] ]
 ]
 
+{ #category : #parsing }
+ViennaVDMParser >> format: aString width: anInteger [
+	| ast |
+	ast := self parse: aString.
+	^ ast isPetitFailure
+		ifTrue: [ ast ]
+		ifFalse: [ 
+			(self scanCommentsOn: aString)
+				inject: (ast formatWidth: anInteger)
+				into: [ :source :posAndComment | 
+					posAndComment key
+						ifNil: [ posAndComment value , source ]
+						ifNotNil: [ 
+							| char count commentString index |
+							char := posAndComment key key.
+							count := posAndComment key value.
+							commentString := posAndComment value.
+							index := 0.
+							count timesRepeat: [ index := source indexOf: char startingAt: index + 1 ].
+							(source copyFrom: 1 to: index) , commentString , (source copyFrom: index + 1 to: source size) ] ] ]
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> fraction: arg1 and: arg2 [
 	^ ViennaNode label: 'ArithmeticDivide' with: arg1 with: arg2
@@ -974,7 +996,7 @@ ViennaVDMParser >> reqExpression [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMParser >> resultExpression [
-	^ super recordModifier ==> [ :array | ViennaNode label: 'ResultExpression' ]
+	^ super resultExpression ==> [ :array | ViennaNode label: 'ResultExpression' ]
 ]
 
 { #category : #'parsers-statements' }
@@ -1159,6 +1181,11 @@ ViennaVDMParser >> tl: arg [
 	^ ViennaNode label: 'SequenceTail' with: arg
 ]
 
+{ #category : #'parsers-expressions-basics' }
+ViennaVDMParser >> tokenConstructor [
+	^ super tokenConstructor ==> [ :array | ViennaNode label: 'TokenConstructor' with: array ]
+]
+
 { #category : #'parsers-types' }
 ViennaVDMParser >> totalFunctionType [
 	^ super totalFunctionType ==> [ :array | ViennaNode label: 'TotalFunctionType' withAll: array ]
@@ -1182,6 +1209,11 @@ ViennaVDMParser >> tupleSelect: tuple with: index [
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> typeBind [
 	^ super typeBind ==> [ :array | ViennaNode label: 'TypeBind' withAll: array ]
+]
+
+{ #category : #'parsers-patterns' }
+ViennaVDMParser >> typeBindList [
+	^ super typeBindList ==> [ :array | ViennaNode label: 'TypeBindList' withAll: array ]
 ]
 
 { #category : #'parsers-definitions' }

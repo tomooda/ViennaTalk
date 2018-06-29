@@ -211,14 +211,15 @@ ViennaVDMGrammar >> assignmentDefinition [
 
 { #category : #'parsers-expressions' }
 ViennaVDMGrammar >> atomicExpression [
-	^ self letExpression / self letBeExpression / self defExpression / self ifExpression / self casesExpression / self quantifiedExpression
-		/ self iotaExpression / self mapEnumeration / self mapComprehension / self setEnumeration / self setComprehension / self setRangeExpression
-		/ self sequenceEnumeration / self sequenceComprehension / self tupleConstructor / self recordConstructor / self recordModifier
-		/ self lambdaExpression / self narrowExpression / self newExpression / self selfExpression / self threadidExpression / self generalIsExpr
-		/ self undefinedExpression / self preconditionExpression / self isofbaseclassExpression / self isofclassExpression
-		/ self samebaseclassExpression / self sameclassExpression / self actExpression / self finExpression / self activeExpression / self reqExpression
-		/ self waitingExpression / self timeExpression / name / self oldName / symbolicLiteral
-		/ ((lparen , expression , rparen) ==> [ :triple | triple second ])
+	^ self letExpression / self letBeExpression / self defExpression / self ifExpression / self casesExpression
+		/ self quantifiedExpression / self iotaExpression / self mapEnumeration / self mapComprehension / self setEnumeration
+		/ self setComprehension / self setRangeExpression / self sequenceEnumeration / self sequenceComprehension
+		/ self tupleConstructor / self recordConstructor / self tokenConstructor / self recordModifier / self lambdaExpression
+		/ self resultExpression / self narrowExpression / self newExpression / self selfExpression / self threadidExpression
+		/ self generalIsExpr / self undefinedExpression / self preconditionExpression / self isofbaseclassExpression
+		/ self isofclassExpression / self samebaseclassExpression / self sameclassExpression / self actExpression
+		/ self finExpression / self activeExpression / self reqExpression / self waitingExpression / self timeExpression
+		/ name / self oldName / symbolicLiteral / ((lparen , expression , rparen) ==> [ :triple | triple second ])
 ]
 
 { #category : #'parsers-symbols' }
@@ -340,7 +341,7 @@ ViennaVDMGrammar >> char [
 
 { #category : #'parsers-literals' }
 ViennaVDMGrammar >> characterLiteral [
-	^ (($' asParser , self char , $' asParser) ==> #second) trim
+	^ (($' asParser , (self char / $" asParser) , $' asParser) ==> #second) trim
 ]
 
 { #category : #'parsers-symbols' }
@@ -1153,7 +1154,7 @@ ViennaVDMGrammar >> initialisation [
 
 { #category : #'parsers-types' }
 ViennaVDMGrammar >> inmapType [
-	^ ((self reserved: 'inmap') , type3 , (self reserved: 'to') , type3)
+	^ ((self reserved: 'inmap') , type , (self reserved: 'to') , type3)
 		==> [ :quatro | 
 			{(quatro second).
 			(quatro fourth)} ]
@@ -1271,7 +1272,7 @@ ViennaVDMGrammar >> keywords [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> lambdaExpression [
-	^ ((self reserved: 'lambda') , (typeBind separatedBy: comma) withoutSeparators , amp , expression)
+	^ ((self reserved: 'lambda') , self typeBindList , amp , expression)
 		==> [ :quatro | 
 			{(quatro second).
 			(quatro fourth)} ]
@@ -1435,7 +1436,7 @@ ViennaVDMGrammar >> mapOrSequenceReferenceArg [
 
 { #category : #'parsers-types' }
 ViennaVDMGrammar >> mapType [
-	^ ((self reserved: 'map') , type3 , (self reserved: 'to') , type3)
+	^ ((self reserved: 'map') , type , (self reserved: 'to') , type3)
 		==> [ :quatro | 
 			{(quatro second).
 			(quatro fourth)} ]
@@ -1873,8 +1874,8 @@ ViennaVDMGrammar >> recordModifier [
 
 { #category : #'parsers-patterns' }
 ViennaVDMGrammar >> recordPattern [
-	^ (('mk_' asParser , identifier , lparen) ==> #second
-		, (patternList optional ==> [ :single | single ifNil: [ Array new ] ]) , rparen)
+	^ (('mk_' asParser , name , lparen) ==> #second , (patternList optional ==> [ :single | single ifNil: [ Array new ] ])
+		, rparen)
 		==> [ :triple | 
 			{(triple first).
 			(triple second)} ]
@@ -2210,7 +2211,8 @@ ViennaVDMGrammar >> symbolicLiteral [
 
 { #category : #'parsers-literals' }
 ViennaVDMGrammar >> textLiteral [
-	^ (($" asParser , (self char star ==> [ :chars | String withAll: chars ]) , $" asParser) ==> #second) trim
+	^ (($" asParser , ((self char / $' asParser) star ==> [ :chars | String withAll: chars ]) , $" asParser) ==> #second)
+		trim
 ]
 
 { #category : #'parsers-expressions-threads and histories' }
@@ -2226,6 +2228,11 @@ ViennaVDMGrammar >> timeExpression [
 { #category : #'parsers-expressions-operators' }
 ViennaVDMGrammar >> tl: arg [
 	^ arg
+]
+
+{ #category : #'parsers-expressions-basics' }
+ViennaVDMGrammar >> tokenConstructor [
+	^ ((self reserved: 'mk_token' asParser) , lparen , expression , rparen) ==> #third
 ]
 
 { #category : #'parsers-types' }
@@ -2304,6 +2311,11 @@ ViennaVDMGrammar >> typeBind [
 		==> [ :triple | 
 			{(triple first).
 			(triple third)} ]
+]
+
+{ #category : #'parsers-patterns' }
+ViennaVDMGrammar >> typeBindList [
+	^ (typeBind separatedBy: comma) withoutSeparators
 ]
 
 { #category : #'parsers-definitions' }

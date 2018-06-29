@@ -122,6 +122,13 @@ ViennaNode >> format [
 	^ ViennaVDMFormatter new format: self
 ]
 
+{ #category : #converting }
+ViennaNode >> formatWidth: anInteger [
+	^ ViennaVDMFormatter new
+		maxSizePerLine: anInteger;
+		format: self
+]
+
 { #category : #accessing }
 ViennaNode >> fourth [
 	^ self at: 4

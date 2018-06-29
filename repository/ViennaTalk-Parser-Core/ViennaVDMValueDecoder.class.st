@@ -56,7 +56,8 @@ ViennaVDMValueDecoder >> expression [
 	expressionParser
 		term:
 			self mapEnumeration / self setEnumeration / self sequenceEnumeration / self tupleConstructor / self recordConstructor
-				/ self undefinedExpression / symbolicLiteral / ((lparen , expression , rparen) ==> [ :triple | triple second ]).
+				/ self tokenConstructor / self undefinedExpression / symbolicLiteral
+				/ ((lparen , expression , rparen) ==> [ :triple | triple second ]).
 	^ expressionParser
 ]
 
@@ -102,12 +103,7 @@ ViennaVDMValueDecoder >> quoteLiteral [
 
 { #category : #'parsers-expressions' }
 ViennaVDMValueDecoder >> recordConstructor [
-	^ super recordConstructor
-		==> [ :constructorAndArgs | 
-			| constructorName args |
-			constructorName := constructorAndArgs first.
-			args := constructorAndArgs second.
-			ViennaComposite constructorName: constructorName withAll: args ]
+	^ super tokenConstructor ==> [ :arg | ViennaToken with: arg ]
 ]
 
 { #category : #'parsers-definitions' }

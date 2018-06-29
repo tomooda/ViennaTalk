@@ -393,12 +393,12 @@ ViennaVDMFormatter >> distributedMapMerge: aViennaNode [
 
 { #category : #'formatting-expressions' }
 ViennaVDMFormatter >> distributedSequenceConcatenation: aViennaNode [
-	^ 'conc' arg: (self format: aViennaNode first)
+	^ 'conc ' , (self format: aViennaNode first)
 ]
 
 { #category : #'formatting-expressions' }
 ViennaVDMFormatter >> distributedSetIntersection: aViennaNode [
-	^ self print: 'dinter ' , (self format: aViennaNode first)
+	^ 'dinter ' , (self format: aViennaNode first)
 ]
 
 { #category : #'formatting-expressions' }
@@ -1828,6 +1828,17 @@ ViennaVDMFormatter >> timeExpression: aViennaNode [
 	^ 'time'
 ]
 
+{ #category : #'formatting-expressions' }
+ViennaVDMFormatter >> tokenConstructor: aViennaNode [
+	| expression |
+	expression := self format: aViennaNode first.
+	^ 'mk_token('
+		,
+			((self needsIndent: expression)
+				ifTrue: [ String cr , indent , (self indentString: expression) ]
+				ifFalse: [ expression ]) , ')'
+]
+
 { #category : #'formatting-types' }
 ViennaVDMFormatter >> totalFunctionType: aViennaNode [
 	^ (self format: aViennaNode first) , ' +> ' , (self format: aViennaNode second)
@@ -1866,6 +1877,17 @@ ViennaVDMFormatter >> tupleSelect: aViennaNode [
 { #category : #'formatting-patterns and binds' }
 ViennaVDMFormatter >> typeBind: aViennaNode [
 	^ self print: (self format: aViennaNode first) infix: ':' arg: (self format: aViennaNode second)
+]
+
+{ #category : #'formatting-patterns and binds' }
+ViennaVDMFormatter >> typeBindList: aViennaNode [
+	| patterns |
+	patterns := self formatAll: aViennaNode.
+	^ ','
+		,
+			((self anyNeedsIndent: patterns)
+				ifTrue: [ String cr ]
+				ifFalse: [ String space ]) join: patterns
 ]
 
 { #category : #'formatting-definitions' }

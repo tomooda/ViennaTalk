@@ -1678,6 +1678,11 @@ ViennaVDM2SmalltalkTranslator >> tl: arg [
 	^ arg , ' tail'
 ]
 
+{ #category : #'parsers-expressions-basics' }
+ViennaVDM2SmalltalkTranslator >> tokenConstructor [
+	^ super tokenConstructor ==> [ :expr | '(ViennaToken with: ' , expr , ')' ]
+]
+
 { #category : #'parsers-types' }
 ViennaVDM2SmalltalkTranslator >> totalFunctionType [
 	^ super totalFunctionType
