@@ -149,7 +149,7 @@ ViennaVDMGrammar >> bindList [
 
 { #category : #'parsers-literals' }
 ViennaVDMGrammar >> booleanLiteral [
-	^ self reserved: 'true' asParser / 'false' asParser
+	^ (self reserved: 'true' asParser ==> [ :t | true ]) / ('false' asParser ==> [ :t | false ])
 ]
 
 { #category : #'parsers-expressions' }
@@ -351,6 +351,7 @@ ViennaVDMGrammar >> concat: arg1 and: arg2 [
 ViennaVDMGrammar >> decimalLiteral [
 	^ (#digit asParser plus , ((self operator: $.) , #digit asParser plus) optional
 		, ($e asParser / $E asParser , ($+ asParser / $- asParser) optional , #digit asParser plus) optional) flatten trim
+		==> #asLowercase
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -1481,7 +1482,7 @@ ViennaVDMGrammar >> unaryPlus: arg [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> undefinedExpression [
-	^ (self reserved: 'undefined') ==> [ :t |  ]
+	^ (self reserved: 'undefined') ==> [ :t | 'ViennaUndefined signal' ]
 ]
 
 { #category : #'parsers-expressions-operators' }

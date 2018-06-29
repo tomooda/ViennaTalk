@@ -22,6 +22,10 @@ ViennaVDM2SmalltalkTranslator >> apply: func args: args [
 { #category : #'parsers-literals' }
 ViennaVDM2SmalltalkTranslator >> booleanLiteral [
 	^ super booleanLiteral
+		==> [ :b | 
+			b
+				ifTrue: [ 'true' ]
+				ifFalse: [ 'false' ] ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -118,6 +122,26 @@ ViennaVDM2SmalltalkTranslator >> decimalLiteral [
 	^ super decimalLiteral
 ]
 
+{ #category : #'parsers-expressions-basics' }
+ViennaVDM2SmalltalkTranslator >> defExpression [
+	^ super defExpression
+		==> [ :pair | 
+			| defs expr vars |
+			defs := pair first.
+			expr := pair second.
+			vars := Array new: defs size streamContents: [ :stream | defs do: [ :def | stream nextPutAll: def first first ] ].
+			'[|' , (' ' join: vars) , '|'
+				,
+					('.'
+						join:
+							(defs
+								collect: [ :def | 
+									| left right |
+									left := def first.
+									right := def second.
+									ViennaRuntimeUtil binder: left second with: right vars: left first ])) , '.' , expr , '] value' ]
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> diff: arg1 and: arg2 [
 	^ '(' , arg1 , ' copyWithoutAll: ' , arg2 , ')'
@@ -158,6 +182,54 @@ ViennaVDM2SmalltalkTranslator >> equal: arg1 and: arg2 [
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> equiv: arg1 and: arg2 [
 	^ '(' , arg1 , ' = ' , arg2 , ')'
+]
+
+{ #category : #'parsers-expressions-basics' }
+ViennaVDM2SmalltalkTranslator >> exists1Expression [
+	^ super exists1Expression
+		==> [ :pair | 
+			| pat setOrType exprPart var |
+			pat := pair first first.
+			setOrType := pair first second.
+			exprPart := pair second.
+			var := (self varNameGenerator: 'exists1' uniqueIn: (Array with: exprPart)) value.
+			'(' , setOrType , ' onlyOneSatisfy: [ :' , var , '||' , (' ' join: pat first) , '|'
+				, (ViennaRuntimeUtil binder: pat second with: var vars: pat first) , '.' , exprPart , '])' ]
+]
+
+{ #category : #'parsers-expressions-basics' }
+ViennaVDM2SmalltalkTranslator >> existsExpression [
+	^ super existsExpression
+		==> [ :pair | 
+			| multibinds expr varGenerator |
+			multibinds := pair first.
+			expr := pair second.
+			varGenerator := self varNameGenerator: 'exists' uniqueIn: (Array with: expr) , (multibinds collect: #second).
+			String
+				new: 1024
+				streamContents: [ :stream | 
+					stream nextPutAll: '('.
+					multibinds
+						do: [ :multibind | 
+							| patterns set |
+							patterns := multibind first.
+							set := multibind second.
+							patterns
+								do: [ :pat | 
+									| loopVar |
+									loopVar := varGenerator value.
+									stream
+										nextPutAll: set;
+										nextPutAll: ' anySatisfy: [:';
+										nextPutAll: loopVar;
+										nextPutAll: '||';
+										nextPutAll: (' ' join: pat first);
+										nextPutAll: '|';
+										nextPutAll: (ViennaRuntimeUtil binder: pat second with: loopVar vars: pat first);
+										nextPut: $. ] ].
+					stream nextPutAll: expr.
+					multibinds do: [ :multibind | multibind first do: [ :pat | stream nextPut: $] ] ].
+					stream nextPutAll: ')' ] ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -215,6 +287,41 @@ ViennaVDM2SmalltalkTranslator >> fieldSelect: record with: field [
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> floor: arg [
 	^ arg , ' floor'
+]
+
+{ #category : #'parsers-expressions-basics' }
+ViennaVDM2SmalltalkTranslator >> forallExpression [
+	^ super forallExpression
+		==> [ :pair | 
+			| multibinds expr varGenerator |
+			multibinds := pair first.
+			expr := pair second.
+			varGenerator := self varNameGenerator: 'forall' uniqueIn: (Array with: expr) , (multibinds collect: #second).
+			String
+				new: 1024
+				streamContents: [ :stream | 
+					stream nextPutAll: '('.
+					multibinds
+						do: [ :multibind | 
+							| patterns set |
+							patterns := multibind first.
+							set := multibind second.
+							patterns
+								do: [ :pat | 
+									| loopVar |
+									loopVar := varGenerator value.
+									stream
+										nextPutAll: set;
+										nextPutAll: ' allSatisfy: [:';
+										nextPutAll: loopVar;
+										nextPutAll: '||';
+										nextPutAll: (' ' join: pat first);
+										nextPutAll: '|';
+										nextPutAll: (ViennaRuntimeUtil binder: pat second with: loopVar vars: pat first);
+										nextPut: $. ] ].
+					stream nextPutAll: expr.
+					multibinds do: [ :multibind | multibind first do: [ :pat | stream nextPut: $] ] ].
+					stream nextPutAll: ')' ] ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -312,6 +419,19 @@ ViennaVDM2SmalltalkTranslator >> inverse: arg [
 	^ arg , ' inversed'
 ]
 
+{ #category : #'parsers-expressions-basics' }
+ViennaVDM2SmalltalkTranslator >> iotaExpression [
+	^ super iotaExpression
+		==> [ :pair | 
+			| pat setOrType exprPart var |
+			pat := pair first first.
+			setOrType := pair first second.
+			exprPart := pair second.
+			var := (self varNameGenerator: 'exists1' uniqueIn: (Array with: exprPart)) value.
+			'(' , setOrType , ' detect: [ :' , var , '||' , (' ' join: pat first) , '|'
+				, (ViennaRuntimeUtil binder: pat second with: var vars: pat first) , '.' , exprPart , '])' ]
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> iterateExpression: expr1 and: expr2 [
 	^ '(' , expr1 , ' ** ' , expr2 , ')'
@@ -362,6 +482,45 @@ ViennaVDM2SmalltalkTranslator >> less: arg1 and: arg2 [
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> lessEq: arg1 and: arg2 [
 	^ '(' , arg1 , ' <= ' , arg2 , ')'
+]
+
+{ #category : #'parsers-expressions-basics' }
+ViennaVDM2SmalltalkTranslator >> letBeExpression [
+	^ super letBeExpression
+		==> [ :pair | 
+			| multibind guard expr varGenerator |
+			multibind := pair first.
+			guard := pair second.
+			expr := pair third.
+			varGenerator := self varNameGenerator: 'letbe' uniqueIn: (Array with: multibind second with: guard with: expr).
+			String
+				new: 1024
+				streamContents: [ :stream | 
+					| patterns set vars |
+					patterns := multibind first.
+					set := multibind second.
+					vars := patterns inject: #() into: [ :vs :pat | vs , pat first ].
+					stream
+						nextPutAll: '[|';
+						nextPutAll: (' ' join: vars);
+						nextPutAll: '|('.
+					patterns
+						do: [ :pat | 
+							| loopVar |
+							loopVar := varGenerator value.
+							stream
+								nextPutAll: set;
+								nextPutAll: ' anySatisfy: [:';
+								nextPutAll: loopVar;
+								nextPutAll: '|';
+								nextPutAll: (ViennaRuntimeUtil binder: pat second with: loopVar vars: pat first);
+								nextPut: $. ].
+					stream nextPutAll: guard.
+					multibind first do: [ :pat | stream nextPut: $] ].
+					stream
+						nextPutAll: ') ifFalse: [NotFound signal].';
+						nextPutAll: expr;
+						nextPutAll: '] value' ] ]
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -531,7 +690,7 @@ ViennaVDM2SmalltalkTranslator >> munion: arg1 and: arg2 [
 
 { #category : #'parsers-literals' }
 ViennaVDM2SmalltalkTranslator >> nilLiteral [
-	^ super nilLiteral ==> [ :t |  ]
+	^ super nilLiteral ==> [ :t | 'nil' ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -555,6 +714,11 @@ ViennaVDM2SmalltalkTranslator >> or: arg1 and: arg2 [
 ]
 
 { #category : #'parsers-patterns' }
+ViennaVDM2SmalltalkTranslator >> patternBind [
+	^ (bind ==> [ :pair | pair first ]) / pattern
+]
+
+{ #category : #'parsers-patterns' }
 ViennaVDM2SmalltalkTranslator >> patternIdentifier [
 	^ super patternIdentifier
 		==> [ :identifierOrNil | 
@@ -569,9 +733,7 @@ ViennaVDM2SmalltalkTranslator >> plus: arg1 and: arg2 [
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> power: set [
-	^ '(' , set
-		,
-			' asArray in: [:set | | power | power := Set new: 1<<set size. 0 to: 1<<(set size)-1 do: [ :i | | elem | elem := Set new:set size//2. 1 to: set size do: [ :b | (i bitAt: b) = 0 ifTrue: [ elem add: (set at: b) ] ]. power add: elem]. power])'
+	^ set , ' power'
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -587,25 +749,25 @@ ViennaVDM2SmalltalkTranslator >> quoteLiteral [
 { #category : #'parsers-expressions-basics' }
 ViennaVDM2SmalltalkTranslator >> recordConstructor [
 	^ super recordConstructor
-		==> [ :typeAndArgs | 
-			| typeName args |
-			typeName := typeAndArgs first.
-			args := typeAndArgs second.
-			'(ViennaComposite type: ' , typeName storeString , ' withAll: {' , (' . ' join: args) , '})' ]
+		==> [ :constructorAndArgs | 
+			| constructorName args |
+			constructorName := constructorAndArgs first.
+			args := constructorAndArgs second.
+			'(ViennaComposite type: ' , constructorName storeString , ' withAll: {' , (' . ' join: args) , '})' ]
 ]
 
 { #category : #'parsers-patterns' }
 ViennaVDM2SmalltalkTranslator >> recordPattern [
 	^ super recordPattern
 		==> [ :tuple | 
-			| typeName argPatterns vars args |
-			typeName := tuple first.
+			| constructorName argPatterns vars args |
+			constructorName := tuple first.
 			argPatterns := tuple second.
 			vars := OrderedCollection new.
 			argPatterns do: [ :arg | vars addAll: arg first ].
 			args := (argPatterns collect: #second) asSet asArray.
 			{vars.
-			('(ViennaRuntimeUtil matchRecord: ' , typeName storeString , ' args: {' , (' . ' join: args) , '})')} ]
+			('(ViennaRuntimeUtil matchRecord: ' , constructorName storeString , ' args: {' , (' . ' join: args) , '})')} ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -786,7 +948,7 @@ ViennaVDM2SmalltalkTranslator >> textLiteral [
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> tl: arg [
-	^ arg , ' copyWithoutFirst'
+	^ arg , ' tail'
 ]
 
 { #category : #'parsers-expressions-basics' }
