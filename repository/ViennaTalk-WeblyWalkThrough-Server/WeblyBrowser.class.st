@@ -26,6 +26,12 @@ WeblyBrowser class >> defaultLabel [
 	^ 'Webly Walk-Through'
 ]
 
+{ #category : #'class initialization' }
+WeblyBrowser class >> initialize [
+	super initialize.
+	Smalltalk at: #ViennaLauncher ifPresent: [ :launcherClass | launcherClass reopen ]
+]
+
 { #category : #'instance creation' }
 WeblyBrowser class >> open [
 	"WeblyBrowser open"
