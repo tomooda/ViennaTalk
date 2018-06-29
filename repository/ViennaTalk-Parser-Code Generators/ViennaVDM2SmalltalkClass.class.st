@@ -116,10 +116,11 @@ ViennaVDM2SmalltalkClass >> defineMethod: aString in: aClass protocol: protocol 
 
 { #category : #utilities }
 ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass protocol: protocolString fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode body: bodyString pre: preString post: postString retType: typeNode varGenerator: varGenerator env: aDictionary [
-	| tmpVars matchPatternNodes isFirstArg tuplePattern matchVars argVars |
+	| tmpVars matchPatternNodes isFirstArg tuplePattern matchVars argVars formalArgs |
 	tmpVars := OrderedCollection new.
 	matchPatternNodes := OrderedCollection new.
 	argVars := OrderedCollection new.
+	formalArgs := OrderedCollection new.
 	self
 		defineMethod:
 			(String
@@ -133,19 +134,19 @@ ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass proto
 						fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode
 						patternNodeAndSetOrTypeNodeAndBindTypesDo: [ :patternNode :setNode :bindType | 
 							bindType = #identifier
-								ifTrue: [ 
-									argVars add: patternNode first.
+								ifTrue: [ argVars add: patternNode first.
 									isFirstArg
 										ifFalse: [ stream nextPutAll: ' _' ].
+									formalArgs add: patternNode first -> setNode.
 									stream
 										nextPutAll: ':';
 										nextPutAll: patternNode first ].
 							bindType = #compound
-								ifTrue: [ 
-									| tmpVar |
+								ifTrue: [ | tmpVar |
 									argVars addAll: (self boundVariables: patternNode).
 									tmpVar := varGenerator value.
 									tmpVars add: tmpVar.
+									formalArgs add: tmpVar -> setNode.
 									matchPatternNodes add: patternNode.
 									isFirstArg
 										ifFalse: [ stream nextPutAll: ' _' ].
@@ -158,8 +159,7 @@ ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass proto
 					stream cr.
 					matchVars
 						ifEmpty: [ stream nextPutAll: '| _oldState RESULT |' ]
-						ifNotEmpty: [ 
-							stream nextPutAll: ' | _oldState RESULT '.
+						ifNotEmpty: [ stream nextPutAll: ' | _oldState RESULT '.
 							matchVars
 								do: [ :var | 
 									stream
@@ -167,12 +167,19 @@ ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass proto
 										nextPut: Character space ].
 							stream
 								nextPutAll: '| ';
-								nextPutAll:
-										(self binder: (self generate: tuplePattern env: aDictionary) with: '{' , (' . ' join: tmpVars) , '}' vars: matchVars);
+								nextPutAll: (self binder: (self generate: tuplePattern env: aDictionary) with: '{' , (' . ' join: tmpVars) , '}' vars: matchVars);
 								nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ].
+					runtimeTypeCheck = true
+						ifTrue: [ formalArgs
+								do: [ :assoc | 
+									stream
+										nextPutAll: '((';
+										nextPutAll: (self generate: assoc value env: aDictionary);
+										nextPutAll: ') includes: ';
+										nextPutAll: assoc key;
+										nextPutAll: ') ifFalse: [ViennaRuntimeTypeError signal].' ] ].
 					preString
-						ifNotNil: [ 
-							stream
+						ifNotNil: [ stream
 								nextPutAll: '(';
 								nextPutAll: preString;
 								nextPutAll: ') ifFalse: [ViennaPreconditionViolation signal].' ].
@@ -187,14 +194,12 @@ ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass proto
 								nextPutAll: ' ' ].
 					stream nextPutAll: '.'.
 					(runtimeTypeCheck = true and: [ typeNode label ~= 'UnitType' ])
-						ifTrue: [ 
-							stream
+						ifTrue: [ stream
 								nextPutAll: '(';
 								nextPutAll: (self generate: typeNode env: aDictionary);
 								nextPutAll: ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError singal].' ].
 					postString
-						ifNotNil: [ 
-							stream
+						ifNotNil: [ stream
 								nextPutAll: '(';
 								nextPutAll: postString;
 								nextPutAll: ') ifFalse: [ViennaPostconditionViolation signal].' ].
@@ -630,15 +635,31 @@ ViennaVDM2SmalltalkClass >> stateDefinition: aViennaNode env: aDictionary [
 		protocol: 'state'.
 	aDictionary at: 'init_' , stateConstructor put: 'self init_' , stateConstructor.
 	self
-		defineMethod:
-			'state' , String cr , '    ^ self ' , stateConstructor , ' applyTo: {'
-				, (' . ' join: (aViennaNode second collect: #first)) , '}'
+		defineMethod: 'state' , String cr , '    ^ self ' , stateConstructor , ' applyTo: {' , (' . ' join: (aViennaNode second collect: #first)) , '}'
 		in: theClass
 		protocol: 'state'.
-	quin fourth
-		ifNotNil: [ :inv | 
-			self
-				defineMethod: 'inv' , String cr , '    (' , inv , ' value: self state) ifFalse: [self stateInvariantViolation]'
+	(quin fourth notNil or: [ runtimeTypeCheck = true ])
+		ifTrue: [ self
+				defineMethod:
+					(String
+						new: 1024
+						streamContents: [ :stream | 
+							stream
+								nextPutAll: 'inv';
+								cr.
+							quin fourth
+								ifNotNil: [ stream
+										nextPutAll: '    (' , quin fourth , ' value: self state) ifFalse: [self stateInvariantViolation].';
+										cr ].
+							runtimeTypeCheck = true
+								ifTrue: [ aViennaNode second
+										do: [ :triple | 
+											stream
+												nextPutAll: '((';
+												nextPutAll: (self generate: triple third env: aDictionary);
+												nextPutAll: ') includes: (';
+												nextPutAll: triple first ;
+												nextPutAll: ')) ifFalse: [ViennaRuntimeTypeError signal].' ] ] ])
 				in: theClass
 				protocol: 'state' ].
 	self defineMethod: 'state' , String cr , '    ^' , quin fifth in: theClass protocol: 'state'
