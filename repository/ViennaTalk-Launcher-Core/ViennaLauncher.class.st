@@ -53,7 +53,6 @@ ViennaLauncher class >> fontSize [
 
 { #category : #'class initialization' }
 ViennaLauncher class >> initialize [
-	super initialize.
 	self open
 ]
 
