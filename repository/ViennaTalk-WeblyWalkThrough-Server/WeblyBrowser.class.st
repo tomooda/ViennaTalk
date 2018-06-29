@@ -55,7 +55,7 @@ WeblyBrowser >> acceptTranslationRule: aString [
 	newTranslator := WWTTranslationRuleParser new parse: aString asString.
 	newTranslator isPetitFailure
 		ifTrue: [ ^ false ].
-	vdmc translator: newTranslator.
+	animation translator: newTranslator.
 	^ true
 ]
 
@@ -134,17 +134,17 @@ WeblyBrowser >> buildTranslationRulePane [
 
 { #category : #'web api services' }
 WeblyBrowser >> isPublished [
-	^ vdmc isPublished
+	^ animation isPublished
 ]
 
 { #category : #'web api services' }
 WeblyBrowser >> port [
-	^ vdmc class server port
+	^ animation class server port
 ]
 
 { #category : #'web api services' }
 WeblyBrowser >> port: anInteger [
-	vdmc class server port: anInteger.
+	animation class server port: anInteger.
 	self changed: #port.
 	^ true
 ]
@@ -215,7 +215,7 @@ WeblyBrowser >> translationPaneMenu: aMenu shifted: aBoolean [
 
 { #category : #'translation pane' }
 WeblyBrowser >> translationRule [
-	^ vdmc translator source
+	^ animation translator source
 ]
 
 { #category : #'translation pane' }

@@ -4,7 +4,6 @@ Class {
 	#traits : 'TWeblyWalkThrough',
 	#classTraits : 'TWeblyWalkThrough classTrait',
 	#instVars : [
-		'vdmc',
 		'translator'
 	],
 	#classVars : [
