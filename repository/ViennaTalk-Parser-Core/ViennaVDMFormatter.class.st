@@ -173,7 +173,7 @@ ViennaVDMFormatter >> and: aViennaNode [
 { #category : #private }
 ViennaVDMFormatter >> anyNeedsIndent: anArrayOfString [
 	^ (anArrayOfString contains: [ :string | string includes: Character cr ])
-		or: [ (anArrayOfString collect: #size) sum > self maxSizePerLine ]
+		or: [ (anArrayOfString inject: 0 into: [ :len :str | len + (self strlen: str) ]) > self maxSizePerLine ]
 ]
 
 { #category : #'formatting-expressions' }
@@ -273,9 +273,14 @@ ViennaVDMFormatter >> callStatement: aViennaNode [
 
 { #category : #'formatting-expressions' }
 ViennaVDMFormatter >> casesExpression: aViennaNode [
-	^ 'cases ' , (self format: aViennaNode first) , ':' , (self newlineIndentString: (self format: aViennaNode second))
-		, (aViennaNode third ifNotNil: [ ',' , (self newlineIndentString: (self format: aViennaNode third)) ] ifNil: [ '' ])
-		, String cr , 'end'
+	| value alternatives others |
+	value := self format: aViennaNode first.
+	alternatives := self format: aViennaNode second.
+	others := aViennaNode third ifNil: [ '' ] ifNotNil: [ :node | ',' , String cr , (self format: node) ].
+	^ self
+		indentString:
+			'cases ' , (self format: aViennaNode first) , ':' , String cr , (self format: aViennaNode second) , others , String cr
+				, 'end'
 ]
 
 { #category : #'formatting-expressions' }
@@ -283,11 +288,7 @@ ViennaVDMFormatter >> casesExpressionAlternative: aViennaNode [
 	| patternList expression |
 	patternList := self format: aViennaNode first.
 	expression := self format: aViennaNode second.
-	^ patternList , ' ->'
-		,
-			((self needsIndent: patternList , expression)
-				ifTrue: [ self newlineIndentString: expression ]
-				ifFalse: [ String space , expression ])
+	^ self indentString: patternList , ' ->' insertCrIfNeeded: expression
 ]
 
 { #category : #'formatting-expressions' }
@@ -297,21 +298,22 @@ ViennaVDMFormatter >> casesExpressionAlternatives: aViennaNode [
 
 { #category : #'formatting-statements' }
 ViennaVDMFormatter >> casesStatement: aViennaNode [
-	^ 'cases ' , (self format: aViennaNode first) , ':' , (self newlineIndentString: (self format: aViennaNode second))
-		, (aViennaNode third ifNotNil: [ ',' , (self newlineIndentString: (self format: aViennaNode third)) ] ifNil: [ '' ])
-		, String cr , 'end'
+	| value alternatives others |
+	value := self format: aViennaNode first.
+	alternatives := self format: aViennaNode second.
+	others := aViennaNode third ifNil: [ '' ] ifNotNil: [ :node | ',' , String cr , (self format: node) ].
+	^ self
+		indentString:
+			'cases ' , (self format: aViennaNode first) , ':' , String cr , (self format: aViennaNode second) , others , String cr
+				, 'end'
 ]
 
 { #category : #'formatting-statements' }
 ViennaVDMFormatter >> casesStatementAlternative: aViennaNode [
-	| patternList expression |
+	| patternList statement |
 	patternList := self format: aViennaNode first.
-	expression := self format: aViennaNode second.
-	^ patternList , ' ->'
-		,
-			((self needsIndent: patternList , expression)
-				ifTrue: [ self newlineIndentString: expression ]
-				ifFalse: [ String space , expression ])
+	statement := self format: aViennaNode second.
+	^ self indentString: patternList , ' ->' insertCrIfNeeded: statement
 ]
 
 { #category : #'formatting-statements' }
@@ -364,7 +366,7 @@ ViennaVDMFormatter >> defaultIndent [
 
 { #category : #defaults }
 ViennaVDMFormatter >> defaultMaxSizePerLine [
-	^ 30
+	^ 60
 ]
 
 { #category : #'formatting-definitions' }
@@ -500,6 +502,39 @@ ViennaVDMFormatter >> explicitOperationDefinition: aViennaNode [
 		, (post ifNotEmpty: [ String cr , 'post ' , post ])
 ]
 
+{ #category : #'formatting-interfaces' }
+ViennaVDMFormatter >> exportDefinition: aViennaNode [
+	| exportSig |
+	exportSig := self format: aViennaNode first.
+	^ self indentString: 'exports' insertCrIfNeeded: exportSig
+]
+
+{ #category : #'formatting-interfaces' }
+ViennaVDMFormatter >> exportFunctionsSignature: aViennaNode [
+	| functionExports |
+	functionExports := self formatAll: aViennaNode.
+	^ self indentString: 'functions' insertCrIfNeeded: (';' , String cr join: functionExports) , ';'
+]
+
+{ #category : #'formatting-interfaces' }
+ViennaVDMFormatter >> exportModuleSignatrueAll: aViennaNode [
+	^ 'all'
+]
+
+{ #category : #'formatting-interfaces' }
+ViennaVDMFormatter >> exportModuleSignature: aViennaNode [
+	| exportSignatures |
+	exportSignatures := self formatAll: aViennaNode.
+	^ String cr join: exportSignatures
+]
+
+{ #category : #'formatting-interfaces' }
+ViennaVDMFormatter >> exportTypesSignature: aViennaNode [
+	| typeExports |
+	typeExports := self formatAll: aViennaNode.
+	^ self indentString: 'types' insertCrIfNeeded: (';' , String cr join: typeExports) , ';'
+]
+
 { #category : #'formatting-expressions' }
 ViennaVDMFormatter >> expressionList: aViennaNode [
 	| expressions |
@@ -630,6 +665,40 @@ ViennaVDMFormatter >> functionDefinitions: aViennaNode [
 		, (self indentAllStrings: (self formatAll: aViennaNode) withTerminator: ';' , String cr)
 ]
 
+{ #category : #'formatting-interfaces' }
+ViennaVDMFormatter >> functionExport: aViennaNode [
+	| nameList typeVarList functionType |
+	nameList := self format: aViennaNode first.
+	typeVarList := self format: aViennaNode second.
+	functionType := self format: aViennaNode third.
+	^ self indentString: nameList , typeVarList insertCrIfNeeded: ': ' , functionType
+]
+
+{ #category : #'formatting-interfaces' }
+ViennaVDMFormatter >> functionImport: aViennaNode [
+	| name type rename |
+	name := self format: aViennaNode first.
+	type := aViennaNode second ifNil: [ '' ] ifNotNil: [ :node | self format: node ].
+	rename := aViennaNode third ifNil: [ '' ] ifNotNil: [ :node | 'renamed ', (self format: node) ].
+	^ self indentString: name , type insertCrIfNeeded: rename
+]
+
+{ #category : #'formatting-interfaces' }
+ViennaVDMFormatter >> functionImportType: aViennaNode [
+	| typeVarList functionType |
+	typeVarList := self format: aViennaNode first.
+	functionType := self format: aViennaNode second.
+	^ typeVarList , ' : ' , functionType
+]
+
+{ #category : #'formatting-interfaces' }
+ViennaVDMFormatter >> functionSignature: aViennaNode [
+	| nameList functionType |
+	nameList := self format: aViennaNode first.
+	functionType := self format: aViennaNode second.
+	^ nameList , ' : ' , functionType
+]
+
 { #category : #'formatting-expressions' }
 ViennaVDMFormatter >> functionTypeArgs: aViennaNode [
 	^ '[' , (', ' join: (self formatAll: aViennaNode)) , ']'
@@ -641,6 +710,13 @@ ViennaVDMFormatter >> functionTypeInstantiation: aViennaNode [
 	function := self format: aViennaNode first.
 	typeArgs := self format: aViennaNode second.
 	^ function , typeArgs
+]
+
+{ #category : #'formatting-interfaces' }
+ViennaVDMFormatter >> functionsSignature: aViennaNode [
+	| signatures |
+	signatures := self formatAll: aViennaNode.
+	^ self indentString: 'functions' insertCrIfNeeded: (';' , String cr join: signatures) , ';'
 ]
 
 { #category : #'formatting-expressions' }
@@ -771,6 +847,61 @@ ViennaVDMFormatter >> imply: aViennaNode [
 	^ self print: (self format: aViennaNode first) infix: '=>' arg: (self format: aViennaNode second)
 ]
 
+{ #category : #'formatting-interfaces' }
+ViennaVDMFormatter >> importDefinition: aViennaNode [
+	| identifier moduleSignature |
+	identifier := self format: aViennaNode first.
+	moduleSignature := self format: aViennaNode second.
+	^ self indentString: 'from ' , identifier insertCrIfNeeded: moduleSignature
+]
+
+{ #category : #'formatting-interfaces' }
+ViennaVDMFormatter >> importDefinitionList: aViennaNode [
+	| definitions |
+	definitions := self formatAll: aViennaNode.
+	^ self indentString: 'imports' insertCrIfNeeded: (',' , String cr join: definitions)
+]
+
+{ #category : #'formatting-interfaces' }
+ViennaVDMFormatter >> importFunctionsSignature: aViennaNode [
+	| functionImport |
+	functionImport := self formatAll: aViennaNode.
+	^ self indentString: 'functions' insertCrIfNeeded: (';' , String cr join: functionImport) , ';'
+]
+
+{ #category : #'formatting-interfaces' }
+ViennaVDMFormatter >> importModuleSignature: aViennaNode [
+	| importSignatures |
+	importSignatures := self formatAll: aViennaNode.
+	^ String cr join: importSignatures
+]
+
+{ #category : #'formatting-interfaces' }
+ViennaVDMFormatter >> importModuleSignatureAll: aViennaNode [
+	^ 'all'
+]
+
+{ #category : #'formatting-interfaces' }
+ViennaVDMFormatter >> importOperationsSignature: aViennaNode [
+	| operationImports |
+	operationImports := self formatAll: aViennaNode.
+	^ self indentString: 'operations' insertCrIfNeeded: (';' , String cr join: operationImports) , ';'
+]
+
+{ #category : #'formatting-interfaces' }
+ViennaVDMFormatter >> importTypesSignature: aViennaNode [
+	| typeImports |
+	typeImports := self formatAll: aViennaNode.
+	^ self indentString: 'types' insertCrIfNeeded: (';' , String cr join: typeImports) , ';'
+]
+
+{ #category : #'formatting-interfaces' }
+ViennaVDMFormatter >> importValuesSignature: aViennaNode [
+	| valueImports |
+	valueImports := self formatAll: aViennaNode.
+	^ self indentString: 'values' insertCrIfNeeded: (';' , String cr join: valueImports) , ';'
+]
+
 { #category : #'formatting-expressions' }
 ViennaVDMFormatter >> inSet: aViennaNode [
 	^ self print: (self format: aViennaNode first) infix: 'in set' arg: (self format: aViennaNode second)
@@ -806,6 +937,20 @@ ViennaVDMFormatter >> indentString: aString [
 	^ String cr , indent join: aString lines
 ]
 
+{ #category : #private }
+ViennaVDMFormatter >> indentString: aString insertCrIfNeeded: anotherString [
+	^ anotherString
+		ifEmpty: [ aString ]
+		ifNotEmpty: [ 
+			self
+				indentString:
+					aString
+						,
+							((self needsIndent: aString , anotherString)
+								ifTrue: [ String cr ]
+								ifFalse: [ String space ]) , anotherString ]
+]
+
 { #category : #'formatting-statements' }
 ViennaVDMFormatter >> indexForLoop: aViennaNode [
 	| identifier start end step statement |
@@ -839,6 +984,14 @@ ViennaVDMFormatter >> initialize [
 { #category : #'formatting-types' }
 ViennaVDMFormatter >> inmapType: aViennaNode [
 	^ 'inmap ' , (self format: aViennaNode first) , ' to ' , (self format: aViennaNode second)
+]
+
+{ #category : #'formatting-interfaces' }
+ViennaVDMFormatter >> interface: aViennaNode [
+	| importDefinitionList exportDefinition |
+	importDefinitionList := aViennaNode first ifNil: [ '' ] ifNotNil: [ (self format: aViennaNode first) , String cr ].
+	exportDefinition := self format: aViennaNode second.
+	^ importDefinitionList , exportDefinition
 ]
 
 { #category : #'formatting-definitions' }
@@ -956,61 +1109,23 @@ ViennaVDMFormatter >> lessThanOrEqual: aViennaNode [
 { #category : #'formatting-expressions' }
 ViennaVDMFormatter >> letBeExpression: aViennaNode [
 	| multipleBind guard expression |
-	multipleBind := self format: aViennaNode first.
-	guard := self format: aViennaNode second.
-	expression := self format: aViennaNode third.
-	(self needsIndent: multipleBind , guard , expression)
-		ifFalse: [ ^ 'let ' , multipleBind , ' be st ' , guard , ' in ' , expression ].
-	(self needsIndent: multipleBind , guard)
-		ifFalse: [ 
-			^ 'let ' , multipleBind , ' be st ' , guard , String cr , 'in'
-				,
-					((self needsIndent: expression)
-						ifTrue: [ String cr , indent , (self indentString: expression) ]
-						ifFalse: [ String space , expression ]) ].
-	^ 'let'
-		,
-			((self needsIndent: multipleBind)
-				ifTrue: [ String cr , indent , (self indentString: multipleBind) ]
-				ifFalse: [ String space , multipleBind ]) , String cr , 'be st'
-		,
-			((self needsIndent: guard)
-				ifTrue: [ String cr , indent , (self indentString: guard) ]
-				ifFalse: [ String space , guard ]) , String cr , 'in'
-		,
-			((self needsIndent: expression)
-				ifTrue: [ String cr , indent , (self indentString: expression) ]
-				ifFalse: [ String space , expression ])
+	multipleBind := self indentString: 'let' insertCrIfNeeded: (self format: aViennaNode first).
+	guard := aViennaNode second
+		ifNil: [ '' ]
+		ifNotNil: [ :node | self indentString: 'be st' insertCrIfNeeded: (self format: node) ].
+	expression := self indentString: 'in' insertCrIfNeeded: (self format: aViennaNode third).
+	^ self noIndentString: (self noIndentString: multipleBind insertCrIfNeeded: guard) insertCrIfNeeded: expression
 ]
 
 { #category : #'formatting-statements' }
 ViennaVDMFormatter >> letBeStatement: aViennaNode [
 	| multipleBind guard statement |
-	multipleBind := self format: aViennaNode first.
-	guard := self format: aViennaNode second.
-	statement := self format: aViennaNode third.
-	(self needsIndent: multipleBind , guard , statement)
-		ifFalse: [ ^ 'let ' , multipleBind , ' be st ' , guard , ' in ' , statement ].
-	(self needsIndent: multipleBind , guard)
-		ifFalse: [ 
-			^ 'let ' , multipleBind , ' be st ' , guard , String cr , 'in'
-				,
-					((self needsIndent: statement)
-						ifTrue: [ String cr , indent , (self indentString: statement) ]
-						ifFalse: [ String space , statement ]) ].
-	^ 'let'
-		,
-			((self needsIndent: multipleBind)
-				ifTrue: [ String cr , indent , (self indentString: multipleBind) ]
-				ifFalse: [ String space , multipleBind ]) , String cr , 'be st'
-		,
-			((self needsIndent: guard)
-				ifTrue: [ String cr , indent , (self indentString: guard) ]
-				ifFalse: [ String space , guard ]) , String cr , 'in'
-		,
-			((self needsIndent: statement)
-				ifTrue: [ String cr , indent , (self indentString: statement) ]
-				ifFalse: [ String space , statement ])
+	multipleBind := self indentString: 'let' insertCrIfNeeded: (self format: aViennaNode first).
+	guard := aViennaNode second
+		ifNil: [ '' ]
+		ifNotNil: [ :node | self indentString: 'be st' insertCrIfNeeded: (self format: node) ].
+	statement := self indentString: 'in' insertCrIfNeeded: (self format: aViennaNode third).
+	^ self noIndentString: (self noIndentString: multipleBind insertCrIfNeeded: guard) insertCrIfNeeded: statement
 ]
 
 { #category : #'formatting-expressions' }
@@ -1274,6 +1389,22 @@ ViennaVDMFormatter >> maxSizePerLine: anInteger [
 	maxSizePerLine := anInteger
 ]
 
+{ #category : #'formatting-definitions' }
+ViennaVDMFormatter >> module: aViennaNode [
+	| identifier interface moduleBody |
+	identifier := self format: aViennaNode first.
+	interface := self format: aViennaNode second.
+	moduleBody := aViennaNode third ifNil: [ '' ] ifNotNil: [ :node | String cr , (self format: node) ].
+	^ 'module ' , identifier , String cr , interface , moduleBody , String cr , 'end ' , identifier
+]
+
+{ #category : #'formatting-definitions' }
+ViennaVDMFormatter >> moduleBody: aViennaNode [
+	| definitionBlocks |
+	definitionBlocks := self formatAll: aViennaNode.
+	^ 'definitions' , String cr , (String cr join: definitionBlocks)
+]
+
 { #category : #'formatting-patterns and binds' }
 ViennaVDMFormatter >> multipleSetBind: aViennaNode [
 	^ self print: (self format: aViennaNode first) infix: 'in set' arg: (self format: aViennaNode second)
@@ -1284,9 +1415,16 @@ ViennaVDMFormatter >> multipleTypeBind: aViennaNode [
 	^ self print: (self format: aViennaNode first) infix: ':' arg: (self format: aViennaNode second)
 ]
 
+{ #category : #'formatting-interfaces' }
+ViennaVDMFormatter >> nameList: aViennaNode [
+	| names |
+	names := self formatAll: aViennaNode.
+	^ ', ' join: names
+]
+
 { #category : #private }
 ViennaVDMFormatter >> needsIndent: aString [
-	^ (aString includes: Character cr) or: [ aString size > self maxSizePerLine ]
+	^ (aString includes: Character cr) or: [ (self strlen: aString) > self maxSizePerLine ]
 ]
 
 { #category : #private }
@@ -1323,6 +1461,18 @@ ViennaVDMFormatter >> newlineIndentAllStrings: anArrayOfString [
 { #category : #private }
 ViennaVDMFormatter >> newlineIndentString: aString [
 	^ String cr , indent , (self indentString: aString)
+]
+
+{ #category : #private }
+ViennaVDMFormatter >> noIndentString: aString insertCrIfNeeded: anotherString [
+	^ anotherString
+		ifEmpty: [ aString ]
+		ifNotEmpty: [ 
+			aString
+				,
+					((self needsIndent: aString , anotherString)
+						ifTrue: [ String cr ]
+						ifFalse: [ String space ]) , anotherString ]
 ]
 
 { #category : #'formatting-statements' }
@@ -1384,9 +1534,33 @@ ViennaVDMFormatter >> operationDefinitions: aViennaNode [
 		, (self indentAllStrings: (self formatAll: aViennaNode) withTerminator: ';' , String cr)
 ]
 
+{ #category : #'formatting-interfaces' }
+ViennaVDMFormatter >> operationImport: aViennaNode [
+	| name operationType rename |
+	name := self format: aViennaNode first.
+	operationType := aViennaNode second ifNil: [ '' ] ifNotNil: [ :node | ' : ' , (self format: node) ].
+	rename := aViennaNode third ifNil: [ '' ] ifNotNil: [ :node | 'renamed ' , (self format: node) ].
+	^ self indentString: name , operationType insertCrIfNeeded: rename
+]
+
+{ #category : #'formatting-interfaces' }
+ViennaVDMFormatter >> operationSignature: aViennaNode [
+	| name operationType |
+	name := self format: aViennaNode first.
+	operationType := aViennaNode second ifNil: [ '' ] ifNotNil: [ :node | ' : ' , (self format: node) ].
+	^ name , operationType
+]
+
 { #category : #'formatting-types' }
 ViennaVDMFormatter >> operationType: aViennaNode [
 	^ (self format: aViennaNode first) , ' ==> ' , (self format: aViennaNode second)
+]
+
+{ #category : #'formatting-interfaces' }
+ViennaVDMFormatter >> operationsSignature: aViennaNode [
+	| signatures |
+	signatures := self formatAll: aViennaNode.
+	^ self indentString: 'operations' insertCrIfNeeded: (';' , String cr join: signatures) , ';'
 ]
 
 { #category : #'formatting-types' }
@@ -1403,22 +1577,14 @@ ViennaVDMFormatter >> or: aViennaNode [
 ViennaVDMFormatter >> othersExpression: aViennaNode [
 	| expression |
 	expression := self format: aViennaNode first.
-	^ 'others ->'
-		,
-			((self needsIndent: expression)
-				ifTrue: [ String cr , indent ]
-				ifFalse: [ String space ]) , expression
+	^ self indentString: 'others ->' insertCrIfNeeded: expression
 ]
 
 { #category : #'formatting-statements' }
 ViennaVDMFormatter >> othersStatement: aViennaNode [
 	| statement |
 	statement := self format: aViennaNode first.
-	^ 'others ->'
-		,
-			((self needsIndent: statement)
-				ifTrue: [ String cr , indent ]
-				ifFalse: [ String space ]) , statement
+	^ self indentString: 'others ->' insertCrIfNeeded: statement
 ]
 
 { #category : #'formatting-definitions' }
@@ -1970,6 +2136,18 @@ ViennaVDMFormatter >> stateDefinition: aViennaNode [
 		, 'end'
 ]
 
+{ #category : #private }
+ViennaVDMFormatter >> strlen: aString [
+	^ aString
+		inject: 0
+		into: [ :len :char | 
+			len
+				+
+					(char charCode < 256
+						ifTrue: [ 1 ]
+						ifFalse: [ 2 ]) ]
+]
+
 { #category : #'formatting-expressions' }
 ViennaVDMFormatter >> subsequence: aViennaNode [
 	| sequence start end |
@@ -2071,6 +2249,14 @@ ViennaVDMFormatter >> typeDefinitions: aViennaNode [
 	^ 'types' , String cr , indent , (self indentAllStrings: (self formatAll: aViennaNode) withTerminator: ';')
 ]
 
+{ #category : #'formatting-interfaces' }
+ViennaVDMFormatter >> typeImport: aViennaNode [
+	| type rename |
+	type := self format: aViennaNode first.
+	rename := aViennaNode second ifNil: [ '' ] ifNotNil: [ :node | 'renamed ' , (self format: node) ].
+	^ self indentString: type insertCrIfNeeded: rename
+]
+
 { #category : #'formatting-expressions' }
 ViennaVDMFormatter >> typeJudgement: aViennaNode [
 	| type expression |
@@ -2088,6 +2274,20 @@ ViennaVDMFormatter >> typeJudgement: aViennaNode [
 { #category : #'formatting-types' }
 ViennaVDMFormatter >> typeName: aViennaNode [
 	^ self format: aViennaNode first
+]
+
+{ #category : #'formatting-interfaces' }
+ViennaVDMFormatter >> typeNameExport: aViennaNode [
+	| name |
+	name := self format: aViennaNode first.
+	^ name
+]
+
+{ #category : #'formatting-interfaces' }
+ViennaVDMFormatter >> typeStructExport: aViennaNode [
+	| name |
+	name := self format: aViennaNode first.
+	^ 'struct ' , name
 ]
 
 { #category : #'formatting-types' }
@@ -2180,6 +2380,30 @@ ViennaVDMFormatter >> valueDefinition: aViennaNode [
 { #category : #'formatting-definitions' }
 ViennaVDMFormatter >> valueDefinitions: aViennaNode [
 	^ 'values' , String cr , indent , (self indentAllStrings: (self formatAll: aViennaNode) withTerminator: ';')
+]
+
+{ #category : #'formatting-interfaces' }
+ViennaVDMFormatter >> valueImport: aViennaNode [
+	| name type rename |
+	name := self format: aViennaNode first.
+	type := aViennaNode second ifNil: [ '' ] ifNotNil: [ :node | ' : ' , (self format: node) ].
+	rename := aViennaNode third ifNil: [ '' ] ifNotNil: [ :node | 'renamed ' , (self format: node) ].
+	^ self indentString: name , type insertCrIfNeeded: rename
+]
+
+{ #category : #'formatting-interfaces' }
+ViennaVDMFormatter >> valueSignature: aViennaNode [
+	| nameList type |
+	nameList := self format: aViennaNode first.
+	type := aViennaNode second ifNil: [ '' ] ifNotNil: [ :node | ' : ' , (self format: node) ].
+	^ nameList , type
+]
+
+{ #category : #'formatting-interfaces' }
+ViennaVDMFormatter >> valuesSignature: aViennaNode [
+	| signatures |
+	signatures := self formatAll: aViennaNode.
+	^ self indentString: 'values' insertCrIfNeeded: (';' , String cr join: signatures) , ';'
 ]
 
 { #category : #'formatting-expressions' }

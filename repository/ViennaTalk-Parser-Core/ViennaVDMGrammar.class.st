@@ -774,7 +774,7 @@ ViennaVDMGrammar >> exportDefinition [
 
 { #category : #'parsers-interfaces' }
 ViennaVDMGrammar >> exportFunctionsSignature [
-	^ ((self reserved: 'functions') , (self functionExport separatedBy: semicolon) withoutSeparators) ==> #second
+	^ ((self reserved: 'functions') , (self functionExport separatedBy: semicolon) withoutSeparators, semicolon optional) ==> #second
 ]
 
 { #category : #'parsers-interfaces' }

@@ -371,7 +371,7 @@ ViennaVDMParser >> functionExport [
 
 { #category : #'parsers-interfaces' }
 ViennaVDMParser >> functionImport [
-	^ super functionImport ==> [ :array | ViennaNode label: 'FunctionImport' withAll: array ]
+	^ super functionImport ==> [ :array | ViennaNode label: 'FunctionImport' with: array first with: (ViennaNode label: 'FunctionImportType' withAll: array second) with: array third]
 ]
 
 { #category : #'parsers-interfaces' }
@@ -474,7 +474,11 @@ ViennaVDMParser >> importFunctionsSignature [
 
 { #category : #'parsers-interfaces' }
 ViennaVDMParser >> importModuleSignature [
-	^ super importModuleSignature ==> [ :array | ViennaNode label: 'ImportModuleSignature' withAll: array ]
+	^ super importModuleSignature
+		==> [ :array | 
+			array = 'all'
+				ifTrue: [ ViennaNode label: 'ImportModuleSignatureAll' ]
+				ifFalse: [ ViennaNode label: 'ImportModuleSignature' withAll: array ] ]
 ]
 
 { #category : #'parsers-interfaces' }
@@ -720,6 +724,11 @@ ViennaVDMParser >> minus: arg1 and: arg2 [
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> mod: arg1 and: arg2 [
 	^ ViennaNode label: 'ArithmeticMod' with: arg1 with: arg2
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> module [
+	^ super module ==> [ :array | ViennaNode label: 'Module' withAll: array ]
 ]
 
 { #category : #'parsers-definitions' }
