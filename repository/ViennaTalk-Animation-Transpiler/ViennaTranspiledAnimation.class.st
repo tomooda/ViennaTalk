@@ -185,8 +185,7 @@ ViennaTranspiledAnimation >> postCopy [
 	oldState := self state.
 	oldSpec := self specification.
 	super postCopy.
-	self initialize.
-	self specification: oldSpec.
+	object := object copy.
 	self state: oldState
 ]
 
@@ -239,5 +238,5 @@ ViennaTranspiledAnimation >> state [
 { #category : #private }
 ViennaTranspiledAnimation >> state: aDictionary [
 	object
-		viennaAtomic: [ aDictionary keysAndValuesDo: [ :var :val | [self at: var put: val] on: Error do: [ :ex | ex resume ] ] ]
+		viennaAtomic: [ aDictionary keysAndValuesDo: [ :var :val | [self at: var put: (reader parse: val)] on: Error do: [ :ex | ex resume ] ] ]
 ]
