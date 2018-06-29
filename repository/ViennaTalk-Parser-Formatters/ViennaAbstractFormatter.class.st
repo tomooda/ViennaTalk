@@ -1501,6 +1501,11 @@ ViennaAbstractFormatter >> multipleAssignStatement: aViennaNode [
 ]
 
 { #category : #'formatting-patterns and binds' }
+ViennaAbstractFormatter >> multipleSeqBind: aViennaNode [
+	^ self print: (self format: aViennaNode first) infix: self inseq arg: (self format: aViennaNode second)
+]
+
+{ #category : #'formatting-patterns and binds' }
 ViennaAbstractFormatter >> multipleSetBind: aViennaNode [
 	^ self print: (self format: aViennaNode first) infix: self inset arg: (self format: aViennaNode second)
 ]
