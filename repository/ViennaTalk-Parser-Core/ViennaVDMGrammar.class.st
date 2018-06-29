@@ -755,6 +755,11 @@ ViennaVDMGrammar >> errorList [
 	^ self error plus
 ]
 
+{ #category : #'parsers-statements' }
+ViennaVDMGrammar >> errorStatement [
+	^ (self reserved: 'error') flatten
+]
+
 { #category : #'parsers-keywords' }
 ViennaVDMGrammar >> errs [
 	^ self reserved: 'errs'
@@ -2726,7 +2731,7 @@ ViennaVDMGrammar >> stateFieldList [
 ViennaVDMGrammar >> statement [
 	^ self letStatement / self letBeStatement / self defStatement / self identityStatement / self blockStatement
 		/ self generalAssignStatement / self callStatement / self ifStatement / self casesStatement / self sequenceForLoop
-		/ self setForLoop / self indexForLoop / self whileLoop / self nondeterministicStatement / self returnStatement / self alwaysStatement / self exitStatement / self trapStatement / self tixeStatement
+		/ self setForLoop / self indexForLoop / self whileLoop / self nondeterministicStatement / self returnStatement / self alwaysStatement / self exitStatement / self errorStatement / self trapStatement / self tixeStatement
 ]
 
 { #category : #'parsers-keywords' }

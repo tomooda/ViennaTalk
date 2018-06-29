@@ -403,6 +403,11 @@ ViennaVDMParser >> errorList [
 				withAll: array ]
 ]
 
+{ #category : #'parsers-statements' }
+ViennaVDMParser >> errorStatement [
+	^ super errorStatement ==> [ :string | ViennaNode label: 'ErrorStatement' ]
+]
+
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> exceptions [
 	^ super exceptions
