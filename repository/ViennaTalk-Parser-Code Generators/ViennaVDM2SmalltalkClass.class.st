@@ -132,6 +132,18 @@ ViennaVDM2SmalltalkClass >> createModuleClassWithInstVars: anArrayOfString1 stat
 ]
 
 { #category : #utilities }
+ViennaVDM2SmalltalkClass >> defineInitTypeMethodForTypeNames: typeNames in: aClass protocol: protocol [
+	self
+		defineMethod:
+			'initTypes '
+				,
+					('. '
+						join: (typeNames collect: [ :typeName | typeName , ' := self ' , typeName , ' removeTypeHolders' ]))
+		in: aClass
+		protocol: protocol
+]
+
+{ #category : #utilities }
 ViennaVDM2SmalltalkClass >> defineLazyMethodNamed: selector initializer: initializer in: aClass protocol: protocol [
 	^ self
 		defineMethod:
@@ -623,16 +635,20 @@ ViennaVDM2SmalltalkClass >> extendedExplicitOperationDefinition: aViennaNode env
 
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> flatDocument: aViennaNode env: aDictionary [
-	| env instVars stateVars newClass |
+	| env instVars stateVars typeNames newClass |
 	env := aDictionary copy.
 	stateVars := #().
+	typeNames := Array new writeStream.
 	aViennaNode
 		do: [ :definitionBlock | 
 			definitionBlock first label = 'StateDefinition'
 				ifTrue: [ | stateDefinition |
 					stateDefinition := definitionBlock first.
 					stateVars := stateDefinition second collect: #first.
-					env at: stateDefinition first put: 'self ' , stateDefinition first ] ].
+					env at: stateDefinition first put: 'self ' , stateDefinition first ].
+			definitionBlock first label = 'TypeDefinitions'
+				ifTrue: [ typeNames nextPutAll: (self boundVariables: definitionBlock first) ] ].
+	typeNames := typeNames contents.
 	instVars := (self boundVariables: aViennaNode)
 		removeAll: stateVars;
 		asArray.
@@ -644,10 +660,14 @@ ViennaVDM2SmalltalkClass >> flatDocument: aViennaNode env: aDictionary [
 				ifFalse: [ (self boundVariables: definitionBlock)
 						do: [ :ident | env at: ident put: 'self ' , ident ] ] ].
 	self
-		defineMethod: 'initialize super initialize. self init'
+		defineMethod: 'initialize super initialize. self initTypes. self init'
 		in: newClass
 		protocol: 'initialize-release'.
 	aViennaNode do: [ :definitionBlock | self definitionBlock: definitionBlock env: env ].
+	self
+		defineInitTypeMethodForTypeNames: typeNames
+		in: newClass
+		protocol: 'initialize-release'.
 	(newClass includesSelector: #init)
 		ifFalse: [ self defineMethod: 'init' in: newClass protocol: 'state' ].
 	^ newClass
@@ -922,7 +942,7 @@ ViennaVDM2SmalltalkClass >> modularDocument: aViennaNode env: aDictionary [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
-	| env moduleName interfaceNode moduleBodyNode importModuleNames importClassNames instVars stateVars newClass |
+	| env moduleName interfaceNode moduleBodyNode importModuleNames importClassNames instVars stateVars typeNames newClass |
 	env := aDictionary copy.
 	self generate: aViennaNode second env: env.
 	moduleName := aViennaNode first.
@@ -935,6 +955,7 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 	importClassNames := importModuleNames
 		collect: [ :importModuleName | env at: importModuleName first ifAbsent: [ importModuleName ] ].
 	stateVars := #().
+	typeNames := Array new writeStream.
 	moduleBodyNode
 		do: [ :definitionBlock | 
 			definitionBlock first label = 'StateDefinition'
@@ -943,7 +964,10 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 					stateVars := stateDefinition second collect: #first.
 					env at: stateDefinition first put: 'self ' , stateDefinition first ]
 				ifFalse: [ (self boundVariables: definitionBlock)
-						do: [ :ident | env at: ident put: 'self ' , ident ] ] ].
+						do: [ :ident | env at: ident put: 'self ' , ident ] ].
+			definitionBlock first label = 'TypeDefinitions'
+				ifTrue: [ typeNames nextPutAll: (self boundVariables: definitionBlock first) ] ].
+	typeNames := typeNames contents.
 	instVars := (self boundVariables: moduleBodyNode)
 		removeAll: stateVars;
 		asArray.
@@ -963,6 +987,14 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 				in: newClass
 				protocol: 'imports' ].
 	moduleBodyNode do: [ :definitionBlock | self definitionBlock: definitionBlock env: env ].
+	self
+		defineMethod: 'initialize super initialize. self initTypes'
+		in: newClass
+		protocol: 'initialize-release'.
+	self
+		defineInitTypeMethodForTypeNames: typeNames
+		in: newClass
+		protocol: 'initialize-release'.
 	(newClass includesSelector: #init)
 		ifFalse: [ self defineMethod: 'init' in: newClass protocol: 'state' ]
 ]
@@ -979,9 +1011,15 @@ ViennaVDM2SmalltalkClass >> operationImport: aViennaNode env: aDictionary [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> recordTypeDefinition: aViennaNode env: aDictionary [
-	| identifier initializer theClass |
+	| identifier fieldList type initializer theClass |
 	identifier := aViennaNode first.
-	initializer := super recordTypeDefinition: aViennaNode env: aDictionary.
+	fieldList := self generate: aViennaNode second env: aDictionary.
+	type := 'ViennaCompositeType constructorName: ' , identifier storeString , ' withAll: {'
+		, (' . ' join: fieldList) , '}'.
+	(self generate: aViennaNode third env: aDictionary)
+		ifNotNil: [ :inv | type := '(' , type , ') inv: ' , inv ].
+	initializer := identifier , ' := ViennaTypeHolder new. ' , identifier , ' type: (' , type
+		, '). ' , identifier.
 	theClass := classes at: (aViennaNode module ifNotNil: #first).
 	self
 		defineLazyMethodNamed: identifier
@@ -1079,9 +1117,14 @@ ViennaVDM2SmalltalkClass >> stateDefinition: aViennaNode env: aDictionary [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> typeDefinition: aViennaNode env: aDictionary [
-	| identifier initializer theClass |
+	| identifier type inv initializer theClass |
 	identifier := aViennaNode first.
-	initializer := super typeDefinition: aViennaNode env: aDictionary.
+	type := self generate: aViennaNode second env: aDictionary.
+	inv := (self generate: aViennaNode third env: aDictionary)
+		ifNil: [ '' ]
+		ifNotNil: [ :str | ' inv: ' , str ].
+	initializer := identifier , ' := ViennaTypeHolder new. ' , identifier , ' type: (' , type
+		, inv , ')'.
 	theClass := classes at: (aViennaNode module ifNotNil: #first).
 	self
 		defineLazyMethodNamed: identifier
