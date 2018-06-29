@@ -241,7 +241,7 @@ LWTPlotWidget >> noLine [
 
 { #category : #operations }
 LWTPlotWidget >> smallDot [
-	dotRadius := 2
+	dotRadius := 2.
 	self changed
 ]
 
