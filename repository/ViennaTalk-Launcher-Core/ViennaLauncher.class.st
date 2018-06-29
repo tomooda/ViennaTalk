@@ -187,20 +187,14 @@ ViennaLauncher >> initialize [
 
 { #category : #'menu operations' }
 ViennaLauncher >> loadDevelopment [
-	Gofer new
-		smalltalkhubUser: 'tomooda' project: 'ViennaTalk';
-		configurationOf: #ViennaTalk;
-		load.
-	(Smalltalk at: #ConfigurationOfViennaTalk) loadDevelopment
+	self updateConfiguration.
+	Smalltalk at: #ConfigurationOfViennaTalk ifPresent: [ :config | config loadDevelopment ]
 ]
 
 { #category : #'menu operations' }
 ViennaLauncher >> loadStable [
-	Gofer new
-		smalltalkhubUser: 'tomooda' project: 'ViennaTalk';
-		configurationOf: #ViennaTalk;
-		load.
-	(Smalltalk at: #ConfigurationOfViennaTalk) load
+	self updateConfiguration.
+	Smalltalk at: #ConfigurationOfViennaTalk ifPresent: [ :config | config load ]
 ]
 
 { #category : #'interface opening' }
@@ -224,6 +218,15 @@ ViennaLauncher >> showSettingBrowser [
 					(RPackageOrganizer default packageNamed: #'ViennaTalk-VDMPad-Core').
 					(RPackageOrganizer default packageNamed: #'Network-Kernel')};
 		open
+]
+
+{ #category : #'menu operations' }
+ViennaLauncher >> updateConfiguration [
+	Smalltalk at: #ConfigurationOfViennaTalk ifPresent: [ :config | config possiblyNewerVersions ifEmpty: [ ^ self ] ].
+	Gofer new
+		smalltalkhubUser: 'tomooda' project: 'ViennaTalk';
+		configurationOf: #ViennaTalk;
+		load
 ]
 
 { #category : #resources }
