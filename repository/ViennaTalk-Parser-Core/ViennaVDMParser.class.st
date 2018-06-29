@@ -1280,7 +1280,11 @@ ViennaVDMParser >> typeJudgement [
 
 { #category : #'parsers-types' }
 ViennaVDMParser >> typeName [
-	^ super typeName ==> [ :ast | ViennaNode label: 'TypeName' with: ast ]
+	^ super name
+		==> [ :array | 
+			array isString
+				ifTrue: [ ViennaNode label: 'LocalName' with: array ]
+				ifFalse: [ ViennaNode label: 'GlobalName' withAll: array ] ]
 ]
 
 { #category : #'parsers-definitions' }

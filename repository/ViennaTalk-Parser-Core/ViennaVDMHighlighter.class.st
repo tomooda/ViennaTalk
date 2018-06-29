@@ -8,7 +8,8 @@ Class {
 		'operatorAttribute',
 		'literalAttribute',
 		'typeAttribute',
-		'commentAttribute'
+		'commentAttribute',
+		'moduleAttribute'
 	],
 	#category : 'ViennaTalk-Parser-Core'
 }
@@ -108,6 +109,11 @@ ViennaVDMHighlighter >> commentAttribute [
 { #category : #'parsers-symbols' }
 ViennaVDMHighlighter >> comp [
 	^ self op: super comp
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMHighlighter >> compose [
+	^ self keyword: super compose
 ]
 
 { #category : #'parsers-symbols' }
@@ -215,6 +221,11 @@ ViennaVDMHighlighter >> exists1 [
 	^ self keyword: super exists1
 ]
 
+{ #category : #'parsers-keywords' }
+ViennaVDMHighlighter >> exports [
+	^ self keyword: super exports
+]
+
 { #category : #'parsers-symbols' }
 ViennaVDMHighlighter >> floor [
 	^ self op: super floor
@@ -228,6 +239,11 @@ ViennaVDMHighlighter >> for [
 { #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> forall [
 	^ self keyword: super forall
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMHighlighter >> from [
+	^ self keyword: super from
 ]
 
 { #category : #'parsers-keywords' }
@@ -291,6 +307,11 @@ ViennaVDMHighlighter >> impOp [
 ]
 
 { #category : #'parsers-keywords' }
+ViennaVDMHighlighter >> imports [
+	^ self keyword: super imports
+]
+
+{ #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> in [
 	^ self keyword: super in
 ]
@@ -310,6 +331,11 @@ ViennaVDMHighlighter >> inter [
 	^ self op: super inter
 ]
 
+{ #category : #'parsers-keywords' }
+ViennaVDMHighlighter >> inv [
+	^ self keyword: super inv
+]
+
 { #category : #'parsers-symbols' }
 ViennaVDMHighlighter >> inverse [
 	^ self op: super inverse
@@ -326,6 +352,16 @@ ViennaVDMHighlighter >> isNameExpression [
 		==> [ :quin | 
 			{(quin second).
 			(quin fourth)} ]
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMHighlighter >> isNotYetSpecified [
+	^ self keyword: super isNotYetSpecified
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMHighlighter >> isSubclassResponsibility [
+	^ self keyword: super isSubclassResponsibility
 ]
 
 { #category : #utilities }
@@ -413,6 +449,21 @@ ViennaVDMHighlighter >> mod [
 	^ self op: super mod
 ]
 
+{ #category : #utilities }
+ViennaVDMHighlighter >> module: aParser [
+	^ self highlight: aParser with: self moduleAttribute
+]
+
+{ #category : #accessing }
+ViennaVDMHighlighter >> moduleAttribute [
+	^ moduleAttribute ifNil: [ moduleAttribute := TextColor color: Color red muchDarker ]
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMHighlighter >> moduleIdentifier [
+	^ self module: super moduleIdentifier
+]
+
 { #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> moduleKeyword [
 	^ self keyword: super moduleKeyword
@@ -431,6 +482,11 @@ ViennaVDMHighlighter >> notEq [
 { #category : #'parsers-symbols' }
 ViennaVDMHighlighter >> notOp [
 	^ self op: super notOp
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMHighlighter >> of [
+	^ self keyword: super of
 ]
 
 { #category : #utilities }
@@ -493,17 +549,19 @@ ViennaVDMHighlighter >> quoteType [
 	^ self type: super quoteType
 ]
 
-{ #category : #'parsers-expressions' }
-ViennaVDMHighlighter >> recordConstructor [
-	^ ('mk_' asParser , (self type: name) , lparen , expressionList , rparen)
-		==> [ :array | 
-			{(array second).
-			(array fourth)} ]
-]
-
 { #category : #'parsers-symbols' }
 ViennaVDMHighlighter >> rem [
 	^ self op: super rem
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMHighlighter >> renamed [
+	^ self keyword: super renamed
+]
+
+{ #category : #'parsers-expressions' }
+ViennaVDMHighlighter >> resultExpression [
+	^ self keyword: super resultExpression
 ]
 
 { #category : #'parsers-keywords' }
@@ -521,6 +579,11 @@ ViennaVDMHighlighter >> rng [
 	^ self op: super rng
 ]
 
+{ #category : #'parsers-expressions' }
+ViennaVDMHighlighter >> selfExpression [
+	^ self keyword: super selfExpression
+]
+
 { #category : #'parsers-symbols' }
 ViennaVDMHighlighter >> slash [
 	^ self op: super slash
@@ -534,6 +597,11 @@ ViennaVDMHighlighter >> starOp [
 { #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> state [
 	^ self keyword: super state
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMHighlighter >> struct [
+	^ self keyword: super struct
 ]
 
 { #category : #'parsers-symbols' }
@@ -582,8 +650,8 @@ ViennaVDMHighlighter >> typeAttribute [
 ]
 
 { #category : #'parsers-types' }
-ViennaVDMHighlighter >> typeName [
-	^ self type: super typeName
+ViennaVDMHighlighter >> typeIdentifier [
+	^ self type: super typeIdentifier
 ]
 
 { #category : #'parsers-keywords' }
@@ -591,9 +659,19 @@ ViennaVDMHighlighter >> types [
 	^ self keyword: super types
 ]
 
+{ #category : #'parsers-expressions' }
+ViennaVDMHighlighter >> undefinedExpression [
+	^ self keyword: super undefinedExpression
+]
+
 { #category : #'parsers-symbols' }
 ViennaVDMHighlighter >> union [
 	^ self op: super union
+]
+
+{ #category : #'parsers-types' }
+ViennaVDMHighlighter >> unitType [
+	^ self type: super unitType
 ]
 
 { #category : #'parsers-keywords' }

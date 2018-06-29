@@ -428,9 +428,14 @@ ViennaVDMGrammar >> comp [
 	^ self reserved: 'comp'
 ]
 
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> compose [
+	^ self reserved: 'compose'
+]
+
 { #category : #'parsers-types' }
 ViennaVDMGrammar >> compositeType [
-	^ ((self reserved: 'compose' ) , identifier trim , (self reserved: 'of') , fieldList , (self reserved: 'end'))
+	^ ((self reserved: 'compose') , self typeIdentifier trim , (self reserved: 'of') , fieldList , (self reserved: 'end'))
 		==> [ :quin | 
 			{(quin second).
 			(quin fourth)} ]
@@ -879,17 +884,17 @@ ViennaVDMGrammar >> explicitOperationDefinition [
 
 { #category : #'parsers-interfaces' }
 ViennaVDMGrammar >> exportDefinition [
-	^ ((self reserved: 'exports') , self exportModuleSignature) ==> #second
+	^ (self exports , self exportModuleSignature) ==> #second
 ]
 
 { #category : #'parsers-interfaces' }
 ViennaVDMGrammar >> exportFunctionsSignature [
-	^ ((self reserved: 'functions') , (self functionExport separatedBy: semicolon) withoutSeparators, semicolon optional) ==> #second
+	^ (self functions , (self functionExport separatedBy: semicolon) withoutSeparators , semicolon optional) ==> #second
 ]
 
 { #category : #'parsers-interfaces' }
 ViennaVDMGrammar >> exportModuleSignature [
-	^ (self reserved: 'all') / self exportSignature plus
+	^ self all / self exportSignature plus
 ]
 
 { #category : #'parsers-interfaces' }
@@ -899,8 +904,12 @@ ViennaVDMGrammar >> exportSignature [
 
 { #category : #'parsers-interfaces' }
 ViennaVDMGrammar >> exportTypesSignature [
-	^ ((self reserved: 'types') , (self typeExport separatedBy: semicolon) withoutSeparators , semicolon optional)
-		==> #second
+	^ (self types , (self typeExport separatedBy: semicolon) withoutSeparators , semicolon optional) ==> #second
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> exports [
+	^ self reserved: 'exports'
 ]
 
 { #category : #'parsers-expressions' }
@@ -1020,6 +1029,11 @@ ViennaVDMGrammar >> fraction: arg1 and: arg2 [
 	arg2}
 ]
 
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> from [
+	^ self reserved: 'from'
+]
+
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> functionDefinition [
 	^ self explicitFunctionDefinition / self implicitFunctionDefinition / self extendedExplicitFunctionDefinition
@@ -1047,7 +1061,7 @@ ViennaVDMGrammar >> functionImport [
 			((self typeVariableList , (self operator: ':') , self functionType)
 				==> [ :triple | 
 					{(triple first).
-					(triple third)} ]) optional , (((self reserved: 'renamed') , name) ==> #second) optional)
+					(triple third)} ]) optional , ((self renamed , name) ==> #second) optional)
 		==> [ :triple | 
 			{(triple first).
 			(triple second ifNotNil: [ :paramAndType | paramAndType first ]).
@@ -1081,8 +1095,7 @@ ViennaVDMGrammar >> functions [
 
 { #category : #'parsers-interfaces' }
 ViennaVDMGrammar >> functionsSignature [
-	^ ((self reserved: 'functions') , (self functionSignature separatedBy: semicolon) withoutSeparators
-		, semicolon optional) ==> #second
+	^ (self functions , (self functionSignature separatedBy: semicolon) withoutSeparators , semicolon optional) ==> #second
 ]
 
 { #category : #'parsers-statements' }
@@ -1221,7 +1234,7 @@ ViennaVDMGrammar >> implicitOperationDefinition [
 
 { #category : #'parsers-interfaces' }
 ViennaVDMGrammar >> importDefinition [
-	^ ((self reserved: 'from') , identifier trim , self importModuleSignature)
+	^ (self from , identifier trim , self importModuleSignature)
 		==> [ :triple | 
 			{(triple second).
 			(triple third)} ]
@@ -1229,24 +1242,22 @@ ViennaVDMGrammar >> importDefinition [
 
 { #category : #'parsers-interfaces' }
 ViennaVDMGrammar >> importDefinitionList [
-	^ ((self reserved: 'imports') , (self importDefinition separatedBy: comma) withoutSeparators) ==> #second
+	^ (self imports , (self importDefinition separatedBy: comma) withoutSeparators) ==> #second
 ]
 
 { #category : #'parsers-interfaces' }
 ViennaVDMGrammar >> importFunctionsSignature [
-	^ ((self reserved: 'functions') , (self functionImport separatedBy: semicolon) withoutSeparators , semicolon optional)
-		==> #second
+	^ (self functions , (self functionImport separatedBy: semicolon) withoutSeparators , semicolon optional) ==> #second
 ]
 
 { #category : #'parsers-interfaces' }
 ViennaVDMGrammar >> importModuleSignature [
-	^ (self reserved: 'all') / self importSignature plus
+	^ self all / self importSignature plus
 ]
 
 { #category : #'parsers-interfaces' }
 ViennaVDMGrammar >> importOperationsSignature [
-	^ ((self reserved: 'operations') , (self operationImport separatedBy: semicolon) withoutSeparators , semicolon optional)
-		==> #second
+	^ (self operations , (self operationImport separatedBy: semicolon) withoutSeparators , semicolon optional) ==> #second
 ]
 
 { #category : #'parsers-interfaces' }
@@ -1257,14 +1268,17 @@ ViennaVDMGrammar >> importSignature [
 
 { #category : #'parsers-interfaces' }
 ViennaVDMGrammar >> importTypesSignature [
-	^ ((self reserved: 'types') , (self typeImport separatedBy: semicolon) withoutSeparators , semicolon optional)
-		==> #second
+	^ (self types , (self typeImport separatedBy: semicolon) withoutSeparators , semicolon optional) ==> #second
 ]
 
 { #category : #'parsers-interfaces' }
 ViennaVDMGrammar >> importValuesSignature [
-	^ ((self reserved: 'values') , (self valueImport separatedBy: semicolon) withoutSeparators , semicolon optional)
-		==> #second
+	^ (self values , (self valueImport separatedBy: semicolon) withoutSeparators , semicolon optional) ==> #second
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> imports [
+	^ self reserved: 'imports'
 ]
 
 { #category : #'parsers-symbols' }
@@ -1349,9 +1363,14 @@ ViennaVDMGrammar >> interface [
 	^ self importDefinitionList optional , self exportDefinition
 ]
 
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> inv [
+	^ self reserved: 'inv'
+]
+
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> invariant [
-	^ ((self reserved: 'inv') , self invariantFunction) ==> #second
+	^ (self inv , self invariantFunction) ==> #second
 ]
 
 { #category : #'parsers-types' }
@@ -1755,7 +1774,8 @@ ViennaVDMGrammar >> mod: arg1 and: arg2 [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> module [
-	^ (self moduleKeyword , identifier trim , self interface , self moduleBody optional , self endKeyword , identifier)
+	^ (self moduleKeyword , self moduleIdentifier trim , self interface , self moduleBody optional , self endKeyword
+		, self moduleIdentifier)
 		==> [ :array | 
 			array second = array sixth
 				ifTrue: [ 
@@ -1768,6 +1788,11 @@ ViennaVDMGrammar >> module [
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> moduleBody [
 	^ (self definitions , self definitionBlock plus) ==> #second
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> moduleIdentifier [
+	^ identifier
 ]
 
 { #category : #'parsers-keywords' }
@@ -1839,13 +1864,10 @@ ViennaVDMGrammar >> munion: arg1 and: arg2 [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> name [
-	^ (identifier , ((self operator: $`) , identifier trim) optional)
+	^ ((self moduleIdentifier , (self operator: $`) , identifier trim)
 		==> [ :pair | 
-			pair second
-				ifNil: [ pair first ]
-				ifNotNil: [ 
-					{(pair first).
-					(pair second second)} ] ]
+			{(pair first).
+			(pair third)} ]) / identifier trim
 ]
 
 { #category : #'parsers-interfaces' }
@@ -1904,10 +1926,15 @@ ViennaVDMGrammar >> notOp [
 
 { #category : #'parsers-patterns' }
 ViennaVDMGrammar >> objectPattern [
-	^ ('obj_' asParser , identifier trim , lparen , self fieldPatternList , rparen)
+	^ ('obj_' asParser , self typeIdentifier trim , lparen , self fieldPatternList , rparen)
 		==> [ :quin | 
 			{(quin second).
 			(quin fourth)} ]
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> of [
+	^ self reserved: 'of'
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -1934,7 +1961,7 @@ ViennaVDMGrammar >> operationDefinitions [
 { #category : #'parsers-interfaces' }
 ViennaVDMGrammar >> operationImport [
 	^ name , (((self operator: ':') , self operationType) ==> #second) optional
-		, (((self reserved: 'renamed') , name) ==> #second) optional
+		, ((self renamed , name) ==> #second) optional
 ]
 
 { #category : #'parsers-interfaces' }
@@ -1962,8 +1989,8 @@ ViennaVDMGrammar >> operations [
 
 { #category : #'parsers-interfaces' }
 ViennaVDMGrammar >> operationsSignature [
-	^ ((self reserved: 'operations') , (self operationSignature separatedBy: semicolon) withoutSeparators
-		, semicolon optional) ==> #second
+	^ (self operations , (self operationSignature separatedBy: semicolon) withoutSeparators , semicolon optional)
+		==> #second
 ]
 
 { #category : #utilities }
@@ -2169,7 +2196,7 @@ ViennaVDMGrammar >> rbracket [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> recordConstructor [
-	^ ('mk_' asParser , name , lparen , expressionList , rparen)
+	^ ('mk_' asParser , self typeName , lparen , expressionList , rparen)
 		==> [ :array | 
 			{(array second).
 			(array fourth)} ]
@@ -2185,8 +2212,8 @@ ViennaVDMGrammar >> recordModifier [
 
 { #category : #'parsers-patterns' }
 ViennaVDMGrammar >> recordPattern [
-	^ (('mk_' asParser , name , lparen) ==> #second , (patternList optional ==> [ :single | single ifNil: [ Array new ] ])
-		, rparen)
+	^ (('mk_' asParser , self typeName , lparen) ==> #second
+		, (patternList optional ==> [ :single | single ifNil: [ Array new ] ]) , rparen)
 		==> [ :triple | 
 			{(triple first).
 			(triple second)} ]
@@ -2194,7 +2221,7 @@ ViennaVDMGrammar >> recordPattern [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> recordTypeDefinition [
-	^ (identifier trim , (self operator: '::') , fieldList , invariant optional)
+	^ (self typeIdentifier trim , (self operator: '::') , fieldList , invariant optional)
 		==> [ :quatro | 
 			| ident flist inv |
 			ident := quatro first.
@@ -2273,6 +2300,11 @@ ViennaVDMGrammar >> rem [
 ViennaVDMGrammar >> rem: arg1 and: arg2 [
 	^ {arg1.
 	arg2}
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> renamed [
+	^ self reserved: 'renamed'
 ]
 
 { #category : #'parsers-expressions-threads and histories' }
@@ -2488,8 +2520,8 @@ ViennaVDMGrammar >> state [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> stateDefinition [
-	^ (self state , identifier trim , (self reserved: 'of') , self stateFieldList , invariant optional
-		, self initialisation optional , self endKeyword , semicolon optional)
+	^ (self state , self typeIdentifier trim , self of , self stateFieldList , invariant optional , self initialisation optional
+		, self endKeyword , semicolon optional)
 		==> [ :array | 
 			{(array second).
 			(array fourth).
@@ -2531,6 +2563,11 @@ ViennaVDMGrammar >> statement [
 	^ self letStatement / self letBeStatement / self defStatement / self identityStatement / self blockStatement
 		/ self generalAssignStatement / self ifStatement / self casesStatement / self sequenceForLoop / self setForLoop
 		/ self indexForLoop / self whileLoop / self nondeterministicStatement / self callStatement / self returnStatement
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> struct [
+	^ self reserved: 'struct'
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -2686,13 +2723,18 @@ ViennaVDMGrammar >> typeDefinitions [
 
 { #category : #'parsers-interfaces' }
 ViennaVDMGrammar >> typeExport [
-	^ (self reserved: 'struct') optional , name
+	^ self struct optional , self typeName
+]
+
+{ #category : #'parsers-types' }
+ViennaVDMGrammar >> typeIdentifier [
+	^ identifier
 ]
 
 { #category : #'parsers-interfaces' }
 ViennaVDMGrammar >> typeImport [
-	^ (self typeDefinition , (((self reserved: 'renamed') , name) ==> #second) optional)
-		/ (name , (((self reserved: 'renamed') , name) ==> #second) optional)
+	^ (self typeDefinition , ((self renamed , self typeName) ==> #second) optional)
+		/ (self typeName , ((self renamed , self typeName) ==> #second) optional)
 ]
 
 { #category : #'parsers-expressions-type discriminations' }
@@ -2705,12 +2747,15 @@ ViennaVDMGrammar >> typeJudgement [
 
 { #category : #'parsers-types' }
 ViennaVDMGrammar >> typeName [
-	^ name
+	^ ((self moduleIdentifier , (self operator: $`) , self typeIdentifier trim)
+		==> [ :pair | 
+			{(pair first).
+			(pair third)} ]) / self typeIdentifier trim
 ]
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> typeSynonym [
-	^ (identifier trim , eq , type , invariant optional)
+	^ (self typeIdentifier trim , eq , type , invariant optional)
 		==> [ :quatro | 
 			{(quatro first).
 			(quatro third).
@@ -2724,7 +2769,7 @@ ViennaVDMGrammar >> typeVariable [
 
 { #category : #'parsers-symbols' }
 ViennaVDMGrammar >> typeVariableIdentifier [
-	^ ((self operator: $@) , identifier) trim
+	^ ((self operator: $@) , self typeIdentifier) trim
 		==> [ :pair | 
 			String
 				new: pair second size + 1
@@ -2804,8 +2849,7 @@ ViennaVDMGrammar >> valueDefinitions [
 
 { #category : #'parsers-interfaces' }
 ViennaVDMGrammar >> valueImport [
-	^ name , (((self operator: ':') , type) ==> #second) optional
-		, (((self reserved: 'renamed') , name) ==> #second) optional
+	^ name , (((self operator: ':') , type) ==> #second) optional , ((self renamed , name) ==> #second) optional
 ]
 
 { #category : #'parsers-interfaces' }
@@ -2823,8 +2867,7 @@ ViennaVDMGrammar >> values [
 
 { #category : #'parsers-interfaces' }
 ViennaVDMGrammar >> valuesSignature [
-	^ ((self reserved: 'values') , (self valueSignature separatedBy: semicolon) withoutSeparators , semicolon optional)
-		==> #second
+	^ (self values , (self valueSignature separatedBy: semicolon) withoutSeparators , semicolon optional) ==> #second
 ]
 
 { #category : #'parsers-expressions-threads and histories' }
