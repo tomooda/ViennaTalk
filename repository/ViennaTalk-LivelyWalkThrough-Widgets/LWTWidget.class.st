@@ -12,9 +12,60 @@ Class {
 	#category : 'ViennaTalk-LivelyWalkThrough-Widgets'
 }
 
+{ #category : #json }
+LWTWidget class >> attributeFromJsonObject: anObject [
+	anObject isDictionary
+		ifFalse: [ ^ anObject ].
+	anObject
+		at: 'storeString'
+		ifPresent: [ :storeString | 
+			[ ^ Compiler evaluate: storeString ]
+				on: Error
+				do: [ :ex | 
+					^ anObject
+						at: 'onError'
+						ifPresent: [ :alternative | 
+							[ Compiler evaluate: alternative ]
+								on: Error
+								do: [ :ex2 | nil ] ]
+						ifAbsent: [  ] ] ].
+	^ anObject
+]
+
+{ #category : #json }
+LWTWidget class >> fromJsonObject: aDictionary on: aLWTDirector [
+	| widget |
+	widget := (Smalltalk at: (aDictionary at: '_class') asSymbol) new.
+	aDictionary
+		keysAndValuesDo: [ :key :value | 
+			key first ~= $_
+				ifTrue: [ 
+					| selector |
+					selector := (key , ':') asSymbol.
+					(widget respondsTo: selector)
+						ifTrue: [ widget perform: selector with: (self attributeFromJsonObject: value) ] ] ].
+	aLWTDirector addMorphBack: widget.
+	widget position: (self attributeFromJsonObject: (aDictionary at: '_relativePosition')) + aLWTDirector position.
+	^ widget
+]
+
 { #category : #events }
 LWTWidget >> actionSelectorsForEvent: aSymbol do: aBlock [
 	self eventActionDict in: [ :actionDict | (actionDict at: aSymbol ifAbsent: [ #() ]) do: aBlock ]
+]
+
+{ #category : #json }
+LWTWidget >> asJsonObject [
+	^ Dictionary new
+		at: '_class' put: self class name asString;
+		at: '_relativePosition' put: (self pointToJsonObject: self position - self owner position);
+		at: 'extent' put: (self pointToJsonObject: self extent);
+		at: 'name' put: self name;
+		at: 'nameFont' put: (self fontToJsonObject: self nameFont);
+		at: 'nameColor' put: (self colorToJsonObject: self nameColor);
+		at: 'moveable' put: self moveable;
+		at: 'showsName' put: self showsName;
+		yourself
 ]
 
 { #category : #events }
@@ -52,6 +103,13 @@ LWTWidget >> changeNameFont [
 				for: self
 				setSelector: #nameFont:
 				getSelector: #nameFont)
+]
+
+{ #category : #json }
+LWTWidget >> colorToJsonObject: aColor [
+	^ Dictionary new
+		at: 'storeString' put: aColor storeString;
+		yourself
 ]
 
 { #category : #defaults }
@@ -153,6 +211,14 @@ LWTWidget >> event: aSymbol [
 	self director ifNotNil: [ :director | director execEvent: aSymbol at: self name ]
 ]
 
+{ #category : #json }
+LWTWidget >> fontToJsonObject: aFont [
+	^ Dictionary new
+		at: 'storeString' put: aFont storeString;
+		at: 'onError' put: 'TextStyle default defaultFont';
+		yourself
+]
+
 { #category : #private }
 LWTWidget >> freeze [
 	frozen := true
@@ -247,7 +313,7 @@ LWTWidget >> moveable [
 	^ moveable
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 LWTWidget >> moveable: aBoolean [
 	moveable := aBoolean = true
 ]
@@ -320,6 +386,13 @@ LWTWidget >> nameMenu [
 { #category : #geometry }
 LWTWidget >> nameOffset [
 	^ 3 @ 3
+]
+
+{ #category : #json }
+LWTWidget >> pointToJsonObject: aPoint [
+	^ Dictionary new
+		at: 'storeString' put: aPoint storeString;
+		yourself
 ]
 
 { #category : #private }
@@ -395,9 +468,14 @@ LWTWidget >> showName [
 	self changed
 ]
 
-{ #category : #testing }
+{ #category : #accessing }
 LWTWidget >> showsName [
-	^ showsName = true
+	^ showsName
+]
+
+{ #category : #private }
+LWTWidget >> showsName: aBoolean [
+	showsName := aBoolean = true
 ]
 
 { #category : #operations }

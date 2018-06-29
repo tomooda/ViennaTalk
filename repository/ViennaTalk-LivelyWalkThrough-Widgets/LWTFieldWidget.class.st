@@ -87,6 +87,16 @@ LWTFieldWidget >> acceptContents: aStringOrText [
 		ifError: [ false ]
 ]
 
+{ #category : #json }
+LWTFieldWidget >> asJsonObject [
+	^ super asJsonObject
+		at: 'contents' put: contents;
+		at: 'textFont' put: (self fontToJsonObject: self textFont);
+		at: 'showsDiagram' put: self showsDiagram;
+		at: 'type' put: type;
+		yourself
+]
+
 { #category : #events }
 LWTFieldWidget >> availableEventSelectors [
 	^ #(changed)
@@ -152,6 +162,12 @@ LWTFieldWidget >> changeVDMType [
 { #category : #accessing }
 LWTFieldWidget >> contents [
 	^ contents ifNil: [ self defaultContents ]
+]
+
+{ #category : #private }
+LWTFieldWidget >> contents: aStringOrText [
+	contents := aStringOrText.
+	self changed: #contents
 ]
 
 { #category : #validating }
@@ -310,9 +326,14 @@ LWTFieldWidget >> showName [
 	textMorph ifNotNil: [ textMorph layoutFrame: self layoutFrameForTextPane ]
 ]
 
-{ #category : #testing }
+{ #category : #accessing }
 LWTFieldWidget >> showsDiagram [
-	^ showsDiagram = true
+	^ showsDiagram
+]
+
+{ #category : #private }
+LWTFieldWidget >> showsDiagram: aBoolean [
+	showsDiagram := aBoolean = true
 ]
 
 { #category : #geometry }
@@ -346,6 +367,16 @@ LWTFieldWidget >> textOffset [
 { #category : #menus }
 LWTFieldWidget >> textPaneMenu: aMenu shifted: aBoolean [
 	^ aMenu addAllFrom: self class yellowButtonMenu
+]
+
+{ #category : #accessing }
+LWTFieldWidget >> type [
+	^ type
+]
+
+{ #category : #accessing }
+LWTFieldWidget >> type: aSymbol [
+	type := aSymbol
 ]
 
 { #category : #validating }

@@ -8,6 +8,13 @@ Class {
 	#category : 'ViennaTalk-LivelyWalkThrough-Widgets'
 }
 
+{ #category : #json }
+LWTImageWidget >> asJsonObject [
+	^ super asJsonObject
+		at: 'path' put: self path;
+		yourself
+]
+
 { #category : #events }
 LWTImageWidget >> availableEventSelectors [
 	^ #(#changed)
@@ -24,9 +31,19 @@ LWTImageWidget >> changeImage [
 		ifNotNil: [ :filename | self value: filename asString ]
 ]
 
+{ #category : #'event handling' }
+LWTImageWidget >> click: aMouseEvent [
+	self event: #clicked
+]
+
 { #category : #defaults }
 LWTImageWidget >> defaultExtent [
 	^ 200 @ 200
+]
+
+{ #category : #'event handling' }
+LWTImageWidget >> doubleClick: aMouseEvent [
+	self event: #doubleClicked
 ]
 
 { #category : #drawing }
@@ -52,6 +69,33 @@ LWTImageWidget >> drawOn: aCanvas [
 	super drawOn: aCanvas
 ]
 
+{ #category : #'event handling' }
+LWTImageWidget >> handleMouseDown: aMouseEvent [
+	aMouseEvent hand waitForClicksOrDrag: self event: aMouseEvent.
+	^ super handleMouseDown: aMouseEvent
+]
+
+{ #category : #'event handling' }
+LWTImageWidget >> handleMouseEnter: aMouseEvent [
+	self event: #entered
+]
+
+{ #category : #'event handling' }
+LWTImageWidget >> handleMouseLeave: aMouseEvent [
+	self event: #left
+]
+
+{ #category : #'event handling' }
+LWTImageWidget >> handleMouseMove: aMouseEvent [
+	self event: #moved.
+	^ super handleMouseMove: aMouseEvent
+]
+
+{ #category : #'event handling' }
+LWTImageWidget >> handleMouseUp: aMouseEvent [
+	self event: #up
+]
+
 { #category : #menu }
 LWTImageWidget >> menu [
 	| menu |
@@ -66,6 +110,20 @@ LWTImageWidget >> menu [
 { #category : #operations }
 LWTImageWidget >> noImage [
 	self value: nil
+]
+
+{ #category : #accessing }
+LWTImageWidget >> path [
+	^ path
+]
+
+{ #category : #private }
+LWTImageWidget >> path: aString [
+	path := aString.
+	form := [ ImageReadWriter formFromFileNamed: path ]
+		on: Error
+		do: [ :ex | nil ].
+	self changed
 ]
 
 { #category : #accessing }

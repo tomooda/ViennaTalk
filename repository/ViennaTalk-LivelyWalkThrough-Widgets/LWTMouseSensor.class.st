@@ -44,6 +44,17 @@ LWTMouseSensor class >> pad [
 		yourself
 ]
 
+{ #category : #json }
+LWTMouseSensor >> asJsonObject [
+	^ super asJsonObject
+		at: 'basename' put: self basename;
+		at: 'point' put: (self pointToJsonObject: self point);
+		at: 'color' put: (self colorToJsonObject: self color);
+		at: 'borderColor' put: (self colorToJsonObject: self borderColor);
+		at: 'borderWidth' put: self borderWidth;
+		yourself
+]
+
 { #category : #events }
 LWTMouseSensor >> availableEventSelectors [
 	^ #(clicked doubleClicked up entered left moved)
@@ -210,6 +221,16 @@ LWTMouseSensor >> menu [
 { #category : #operations }
 LWTMouseSensor >> noBorder [
 	self borderWidth: 0
+]
+
+{ #category : #private }
+LWTMouseSensor >> point [
+	^ point
+]
+
+{ #category : #private }
+LWTMouseSensor >> point: aPoint [
+	point := aPoint
 ]
 
 { #category : #operations }

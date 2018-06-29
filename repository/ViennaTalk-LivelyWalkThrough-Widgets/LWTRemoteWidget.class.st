@@ -8,10 +8,19 @@ Class {
 }
 
 { #category : #accessing }
-LWTRemoteWidget >> acceptContents: aString [
-	super acceptContents: aString.
-	ZnEasy put: self url asUrl data: (ZnEntity text: aString).
+LWTRemoteWidget >> acceptContents: aStringOrText [
+	contents ~= aStringOrText asString trim
+		ifTrue: [ 
+			super acceptContents: aStringOrText.
+			ZnEasy put: self url asUrl data: (ZnEntity text: aStringOrText) ].
 	^ true
+]
+
+{ #category : #json }
+LWTRemoteWidget >> asJsonObject [
+	^ super asJsonObject
+		at: 'url' put: self url;
+		yourself
 ]
 
 { #category : #accessing }

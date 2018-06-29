@@ -12,6 +12,16 @@ Class {
 	#category : 'ViennaTalk-LivelyWalkThrough-Widgets'
 }
 
+{ #category : #json }
+LWTPlotWidget >> asJsonObject [
+	^ super asJsonObject
+		at: 'rawData' put: self rawData;
+		at: 'textFont' put: (self fontToJsonObject: self textFont);
+		at: 'lineWidth' put: self lineWidth;
+		at: 'dotRadius' put: self dotRadius;
+		yourself
+]
+
 { #category : #accessing }
 LWTPlotWidget >> basename [
 	^ 'Plot' copy
@@ -161,6 +171,17 @@ LWTPlotWidget >> defaultValue [
 	^ String new
 ]
 
+{ #category : #accessing }
+LWTPlotWidget >> dotRadius [
+	^ dotRadius 
+]
+
+{ #category : #accessing }
+LWTPlotWidget >> dotRadius: aNumber [
+	dotRadius := aNumber.
+	self changed
+]
+
 { #category : #drawing }
 LWTPlotWidget >> drawOn: aCanvas [
 	| font dBounds originX originY scaleX scaleY offsetX offsetY x0 y0 x1 y1 p |
@@ -256,6 +277,17 @@ LWTPlotWidget >> initialize [
 	textFont := self defaultTextFont
 ]
 
+{ #category : #accessing }
+LWTPlotWidget >> lineWidth [
+	^ lineWidth
+]
+
+{ #category : #accessing }
+LWTPlotWidget >> lineWidth: aNumber [
+	lineWidth := aNumber.
+	self changed
+]
+
 { #category : #operations }
 LWTPlotWidget >> menu [
 	| menu |
@@ -299,6 +331,21 @@ LWTPlotWidget >> noDot [
 LWTPlotWidget >> noLine [
 	lineWidth := 0.
 	self changed
+]
+
+{ #category : #private }
+LWTPlotWidget >> rawData [
+	^ value
+]
+
+{ #category : #private }
+LWTPlotWidget >> rawData: aString [
+	value := aString.
+	self
+		data:
+			([ ViennaReader new parse: aString ]
+				on: Error
+				do: [ :ex | nil ])
 ]
 
 { #category : #operations }
