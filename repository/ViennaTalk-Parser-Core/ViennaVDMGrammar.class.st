@@ -2411,6 +2411,14 @@ ViennaVDMGrammar >> seq1Type [
 ]
 
 { #category : #'parsers-patterns' }
+ViennaVDMGrammar >> seqBind [
+	^ (pattern , (self reserved: 'in') , (self reserved: 'seq') , expressionExceptEquality)
+		==> [ :quatro | 
+			{(quatro first).
+			(quatro fourth)} ]
+]
+
+{ #category : #'parsers-patterns' }
 ViennaVDMGrammar >> seqConcPattern [
 	^ (pattern1 , (self operator: '^') , pattern1)
 		==> [ :triple | 
@@ -2430,7 +2438,7 @@ ViennaVDMGrammar >> seqType [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> sequenceComprehension [
-	^ (lbracket , expression , bar , setBind , ((amp , expression) ==> #second) optional , rbracket)
+	^ (lbracket , expression , bar , (setBind / self seqBind) , ((amp , expression) ==> #second) optional , rbracket)
 		==> [ :six | 
 			{(six second).
 			(six fourth).

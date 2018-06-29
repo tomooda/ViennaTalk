@@ -1101,6 +1101,11 @@ ViennaVDMParser >> seq1Type [
 ]
 
 { #category : #'parsers-patterns' }
+ViennaVDMParser >> seqBind [
+	^ super seqBind ==> [ :array | ViennaNode label: 'SeqBind' withAll: array ]
+]
+
+{ #category : #'parsers-patterns' }
 ViennaVDMParser >> seqConcPattern [
 	^ super seqConcPattern ==> [ :array | ViennaNode label: 'SeqConcPattern' withAll: array ]
 ]
