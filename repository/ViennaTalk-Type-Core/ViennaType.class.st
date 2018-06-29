@@ -8,6 +8,11 @@ Class {
 }
 
 { #category : #'instance creation' }
+ViennaType class >> any [
+	^ ViennaAnyType new
+]
+
+{ #category : #'instance creation' }
 ViennaType class >> bool [
 	^ ViennaBoolType new
 ]
