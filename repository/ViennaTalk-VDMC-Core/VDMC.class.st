@@ -1,6 +1,6 @@
 Class {
 	#name : #VDMC,
-	#superclass : #Object,
+	#superclass : #Model,
 	#instVars : [
 		'lock',
 		'engine',
@@ -115,6 +115,56 @@ VDMC >> at: aString put: anObject [
 	^ state at: aString put: (writer stringify: anObject)
 ]
 
+{ #category : #evaluating }
+VDMC >> basicPlainEvaluate: aString in: moduleName ifError: errorBlock [
+	| preState result postState |
+	preState := Dictionary new.
+	state
+		keysAndValuesDo: [ :key :value | 
+			| module var |
+			(key includes: $`)
+				ifTrue: [ 
+					| index |
+					index := key indexOf: $`.
+					module := key copyFrom: 1 to: index - 1.
+					var := key copyFrom: index + 1 to: key size ]
+				ifFalse: [ 
+					module := self defaultModule.
+					var := key ].
+			(preState at: module ifAbsentPut: [ Dictionary new ]) at: var put: value ].
+	result := engine
+		evaluate: aString
+		specification: self specification
+		states: preState
+		module: moduleName.
+	result third
+		ifNotEmpty: [ 
+			result := engine
+				evaluate: aString
+				specification: self specification
+				states: Dictionary new
+				module: moduleName.
+			result third ifNotEmpty: [ :msg | ^ errorBlock value: msg ] ].
+	postState := Dictionary new.
+	result second
+		keysAndValuesDo: [ :module :binds | 
+			binds
+				keysAndValuesDo: [ :var :value | 
+					postState
+						at:
+							(var = self defaultModule
+								ifTrue: [ var ]
+								ifFalse: [ module , '`' , var ])
+						put: value ] ].
+	state := postState.
+	^ result first
+]
+
+{ #category : #defaults }
+VDMC >> defaultModule [
+	^ 'DEFAULT'
+]
+
 { #category : #defaults }
 VDMC >> defaultUrl [
 	^ 'http://vdmpad.csce.kyushu-u.ac.jp/' asUrl
@@ -149,11 +199,11 @@ VDMC >> init [
 						keysAndValuesDo: [ :var :value | 
 							postState
 								at:
-									(var = 'DEFAULT'
+									(var = self defaultModule
 										ifTrue: [ var ]
 										ifFalse: [ module , '`' , var ])
 								put: value ] ].
-			state := postState]
+			state := postState ]
 ]
 
 { #category : #'initialize-release' }
@@ -205,74 +255,15 @@ VDMC >> plainEvaluate: aString [
 
 { #category : #evaluating }
 VDMC >> plainEvaluate: aString ifError: errorBlock [
-	lock
-		critical: [ 
-			| preState result postState |
-			preState := Dictionary new.
-			state
-				keysAndValuesDo: [ :key :value | 
-					| module var |
-					(key includes: $`)
-						ifTrue: [ 
-							| index |
-							index := key indexOf: $`.
-							module := key copyFrom: 1 to: index - 1.
-							var := key copyFrom: index + 1 to: key size ]
-						ifFalse: [ 
-							module := 'DEFAULT'.
-							var := key ].
-					(preState at: module ifAbsentPut: [ Dictionary new ]) at: var put: value ].
-			result := engine evaluate: aString specification: self specification states: preState.
-			result third ifNotEmpty: [ :msg | ^ errorBlock value: msg ].
-			postState := Dictionary new.
-			result second
-				keysAndValuesDo: [ :module :binds | 
-					binds
-						keysAndValuesDo: [ :var :value | 
-							postState
-								at:
-									(var = 'DEFAULT'
-										ifTrue: [ var ]
-										ifFalse: [ module , '`' , var ])
-								put: value ] ].
-			state := postState.
-			^ result first ]
+	^ self plainEvaluate: aString in: self defaultModule ifError: errorBlock
 ]
 
 { #category : #evaluating }
 VDMC >> plainEvaluate: aString in: moduleName ifError: errorBlock [
-	lock
-		critical: [ 
-			| preState result postState |
-			preState := Dictionary new.
-			state
-				keysAndValuesDo: [ :key :value | 
-					| module var |
-					(key includes: $`)
-						ifTrue: [ 
-							| index |
-							index := key indexOf: $`.
-							module := key copyFrom: 1 to: index - 1.
-							var := key copyFrom: index + 1 to: key size ]
-						ifFalse: [ 
-							module := 'DEFAULT'.
-							var := key ].
-					(preState at: module ifAbsentPut: [ Dictionary new ]) at: var put: value ].
-			result := engine evaluate: aString specification: self specification states: preState module: moduleName.
-			result third ifNotEmpty: [ :msg | ^ errorBlock value: msg ].
-			postState := Dictionary new.
-			result second
-				keysAndValuesDo: [ :module :binds | 
-					binds
-						keysAndValuesDo: [ :var :value | 
-							postState
-								at:
-									(var = 'DEFAULT'
-										ifTrue: [ var ]
-										ifFalse: [ module , '`' , var ])
-								put: value ] ].
-			state := postState.
-			^ result first ]
+	| result |
+	lock critical: [ result := self basicPlainEvaluate: aString in: moduleName ifError: [ :msg | ^ errorBlock cull: msg ] ].
+	self changed: #state.
+	^ result
 ]
 
 { #category : #accessing }
@@ -291,8 +282,31 @@ VDMC >> specification [
 ]
 
 { #category : #accessing }
-VDMC >> specification:aString [
-	specification := aString
+VDMC >> specification: aString [
+	specification := aString.
+	self changed: #specification
+]
+
+{ #category : #accessing }
+VDMC >> specification: aString ifError: errorBlock [
+	specification ~= aString
+		ifTrue: [ 
+			| oldState |
+			lock
+				critical: [ 
+					| oldSpec |
+					oldSpec := specification.
+					oldState := state copy.
+					specification := aString.
+					self
+						basicPlainEvaluate: 'nil'
+						in: self defaultModule
+						ifError: [ :msg | 
+							specification := oldSpec.
+							^ errorBlock cull: msg ] ].
+			self changed: #specification.
+			oldState ~= state
+				ifTrue: [ self changed: #state ] ]
 ]
 
 { #category : #private }
