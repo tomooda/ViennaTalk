@@ -1089,7 +1089,7 @@ ViennaBrowser >> removeModule [
 { #category : #'test pane menu' }
 ViennaBrowser >> runAllTests [
 	| ast |
-	testResult := OrderedCollection new.
+	testResult := Array new.
 	self changed: #testList.
 	ast := ViennaVDMParser new parse: animation specification.
 	ast isPetitFailure
@@ -1116,7 +1116,7 @@ ViennaBrowser >> runAllTests [
 
 { #category : #'test pane menu' }
 ViennaBrowser >> runTestModule: module operation: operation [
-	testResult addLast: (self basicRunTestModule: module operation: operation).
+	testResult := testResult copyWith: (self basicRunTestModule: module operation: operation).
 	self changed: #testList
 ]
 

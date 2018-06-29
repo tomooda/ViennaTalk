@@ -96,8 +96,10 @@ ViennaDirectoryBrowser >> acceptCode: aStringOrText [
 ViennaDirectoryBrowser >> acceptWorkspace: aStringOrText [
 	super acceptWorkspace: aStringOrText.
 	self basePath / '.workspace'
-		writeStreamDo:
-			[ :stream | stream nextPutAll: (aStringOrText asString replaceAll: Character cr with: Character lf) ]
+		writeStreamDo: [ :stream | 
+			stream
+				truncate;
+				nextPutAll: (aStringOrText asString replaceAll: Character cr with: Character lf) ]
 ]
 
 { #category : #accessing }

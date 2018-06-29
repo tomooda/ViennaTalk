@@ -21,7 +21,7 @@ ViennaTestResultItem class >> createIcon [
 		fillOval: (0 @ 0 extent: self iconExtent)
 			color: self iconColor
 			borderWidth: 1
-			borderColor: Color black.
+			borderColor: self iconColor darker.
 	^ form
 ]
 
@@ -32,6 +32,7 @@ ViennaTestResultItem class >> flushIcon [
 
 { #category : #accessing }
 ViennaTestResultItem class >> flushIcons [
+	<script: 'ViennaTestResultItem flushIcons'>
 	self allSubclassesDo: [ :c | c flushIcon ]
 ]
 
