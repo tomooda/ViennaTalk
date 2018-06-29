@@ -122,7 +122,7 @@ WeblyBrowser >> buildTranslationRulePane [
 		menu: #translationRulePaneMenu:shifted:
 		setSelection: #translationRuleSelection:)
 		setBalloonText: 'VDM - JSON translation rule';
-		askBeforeDiscardingEdits: true;
+		font: ViennaLauncher font;
 		yourself
 ]
 
