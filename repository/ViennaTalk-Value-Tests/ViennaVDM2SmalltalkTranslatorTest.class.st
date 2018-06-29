@@ -20,6 +20,44 @@ ViennaVDM2SmalltalkTranslatorTest >> test1 [
 ]
 
 { #category : #testing }
+ViennaVDM2SmalltalkTranslatorTest >> test10 [
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(translator expression
+						parse: '[(lambda x:int&if x = 0 then <zero> elseif x = 1 then <one> else <many>)(i)|i in set {0,...,3}]'))
+		equals: #('<zero>' '<one>' '<many>' '<many>')
+]
+
+{ #category : #testing }
+ViennaVDM2SmalltalkTranslatorTest >> test11 [
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(translator expression parse: '({1|-><one>, 2|-><two>, 3|-><three>} comp {<one>|->1, <two>|->2,<three>|->3})(<two>)'))
+		equals: #'<two>'
+]
+
+{ #category : #testing }
+ViennaVDM2SmalltalkTranslatorTest >> test12 [
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkTranslator new expression end
+						parse:
+							'
+	let
+		f : int * int -> int f(x,y)==x+y,
+		g : int -> int * int g(x) == mk_(x, x)
+	in
+		(f comp g)(1)'))
+		equals: 2
+]
+
+{ #category : #testing }
 ViennaVDM2SmalltalkTranslatorTest >> test2 [
 	self
 		assert: (Compiler evaluate: (translator expression parse: 'dom ({"one"|->1, "two"|->2, "three"|->3} :> {1,3})'))
@@ -75,5 +113,5 @@ ViennaVDM2SmalltalkTranslatorTest >> test9 [
 	self
 		assert:
 			(Compiler evaluate: (translator expression parse: '[ "0123456789abcdef"(i+1) |i in set {0,...,15} & i mod 2 = 0]'))
-		equals: #($0 $2 $4 $6 $8 $a $c $e)
+		equals: #($0 $2 $4 $6 $8 $a $c $e) asOrderedCollection
 ]

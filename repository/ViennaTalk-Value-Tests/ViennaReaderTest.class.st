@@ -34,12 +34,12 @@ ViennaReaderTest >> testChar4 [
 
 { #category : #tests }
 ViennaReaderTest >> testComposite1 [
-	self assert: (reader parse: 'mk_foo()') equals: (VDMComposite type: #foo)
+	self assert: (reader parse: 'mk_foo()') equals: (ViennaComposite type: #foo)
 ]
 
 { #category : #tests }
 ViennaReaderTest >> testComposite2 [
-	self assert: (reader parse: 'mk_foo(1)') equals: (VDMComposite type: #foo with: 1)
+	self assert: (reader parse: 'mk_foo(1)') equals: (ViennaComposite type: #foo with: 1)
 ]
 
 { #category : #tests }
@@ -47,7 +47,7 @@ ViennaReaderTest >> testComposite3 [
 	self
 		assert: (reader parse: 'mk_foo(1,2,3)')
 		equals:
-			(VDMComposite
+			(ViennaComposite
 				type: #foo
 				with: 1
 				with: 2
@@ -172,7 +172,7 @@ ViennaReaderTest >> testString4 [
 
 { #category : #tests }
 ViennaReaderTest >> testToken1 [
-	self assert: (reader parse: 'mk_token(1)') equals: (VDMComposite type: #token with: 1)
+	self assert: (reader parse: 'mk_token(1)') equals: (ViennaComposite type: #token with: 1)
 ]
 
 { #category : #tests }

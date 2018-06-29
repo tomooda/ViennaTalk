@@ -24,17 +24,17 @@ ViennaWriterTest >> testChar2 [
 
 { #category : #tests }
 ViennaWriterTest >> testComposite1 [
-	self assert: (writer stringify: (VDMComposite type: #foo)) equals: 'mk_foo()'
+	self assert: (writer stringify: (ViennaComposite type: #foo)) equals: 'mk_foo()'
 ]
 
 { #category : #tests }
 ViennaWriterTest >> testComposite2 [
-	self assert: (writer stringify: (VDMComposite type: #foo with: 1)) equals: 'mk_foo(1)'
+	self assert: (writer stringify: (ViennaComposite type: #foo with: 1)) equals: 'mk_foo(1)'
 ]
 
 { #category : #tests }
 ViennaWriterTest >> testComposite3 [
-	self assert: (writer stringify: (VDMComposite type: #foo with: 1 with: 2 with: 3)) equals: 'mk_foo(1,2,3)'
+	self assert: (writer stringify: (ViennaComposite type: #foo with: 1 with: 2 with: 3)) equals: 'mk_foo(1,2,3)'
 ]
 
 { #category : #tests }
