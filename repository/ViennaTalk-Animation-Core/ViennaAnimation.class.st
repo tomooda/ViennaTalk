@@ -290,6 +290,19 @@ ViennaAnimation >> plainEvaluate: aString in: moduleName ifError: errorBlock [
 	^ result
 ]
 
+{ #category : #copying }
+ViennaAnimation >> postCopy [
+	| oldSpec oldState |
+	super postCopy.
+	oldSpec := self specification.
+	oldState := self state.
+	announceur := nil.
+	dependents := nil.
+	self initialize.
+	self specification: oldSpec.
+	self state: oldState
+]
+
 { #category : #accessing }
 ViennaAnimation >> reader [
 	^ reader
