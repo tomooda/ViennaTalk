@@ -1061,15 +1061,31 @@ ViennaVDM2Smalltalk >> equal: aViennaNode env: aDictionary [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2Smalltalk >> equalDefinition: aViennaNode env: aDictionary [
-	| leftNode left right |
+	| leftNode right guard |
 	leftNode := aViennaNode first.
-	(#('TypeBind' 'SetBind') includes: leftNode label)
-		ifTrue: [ leftNode := leftNode first ].
-	left := self generate: leftNode env: aDictionary.
+	guard := nil.
+	(#('TypeBind' 'SetBind' 'SeqBind') includes: leftNode label)
+		ifTrue: [ 
+			guard := self generate: leftNode second env: aDictionary.
+			leftNode := leftNode first ].
 	right := self generate: aViennaNode second env: aDictionary.
 	^ leftNode label = 'PatternIdentifier'
-		ifTrue: [ '[' , leftNode first , ' := ' , right , '. true] value' ]
-		ifFalse: [ self binder: left with: right vars: (self boundVariables: aViennaNode) asArray ]
+		ifTrue: [ 
+			'[' , leftNode first , ' := ' , right , '. '
+				,
+					(guard
+						ifNil: [ '' ]
+						ifNotNil: [ '(' , guard , ' includes: ' , leftNode first , ') ifFalse: [ViennaBindingViolation signal].' ])
+				, 'true ] value' ]
+		ifFalse: [ 
+			| left rightVar |
+			rightVar := (self varNameGenerator: 'cases' uniqueIn: {right}) value.
+			left := self generate: leftNode env: aDictionary.
+			guard
+				ifNil: [ self binder: left with: right vars: (self boundVariables: aViennaNode) asArray ]
+				ifNotNil:[
+					'([:' , rightVar , ' | (' , guard , ' includes: ' , rightVar , ') ifFalse: [ViennaBindingViolation signal]. '
+						, (self binder: left with: rightVar vars: (self boundVariables: aViennaNode) asArray) , '] value: ' , right , ')' ]]
 ]
 
 { #category : #'code generation-definitions' }
@@ -2458,6 +2474,11 @@ ViennaVDM2Smalltalk >> multipleAssignStatement: aViennaNode env: aDictionary [
 ]
 
 { #category : #'code generation-patterns' }
+ViennaVDM2Smalltalk >> multipleSeqBind: aViennaNode env: aDictionary [
+	^ self generateAll: aViennaNode env: aDictionary
+]
+
+{ #category : #'code generation-patterns' }
 ViennaVDM2Smalltalk >> multipleSetBind: aViennaNode env: aDictionary [
 	^ self generateAll: aViennaNode env: aDictionary
 ]
@@ -2830,12 +2851,24 @@ ViennaVDM2Smalltalk >> sequenceEnumeration: aViennaNode env: aDictionary [
 
 { #category : #'code generation-statements' }
 ViennaVDM2Smalltalk >> sequenceForLoop: aViennaNode env: aDictionary [
-	| pat seqExpr body vars varGenerator |
-	pat := self generate: aViennaNode first env: aDictionary.
+	| guard patNode pat seqExpr body vars varGenerator |
+	guard := nil.
+	patNode := aViennaNode first.
+	(#('TypeBind' 'SetBind' 'SeqBind') includes: patNode label)
+		ifTrue: [ 
+			guard := self generate: patNode second env: aDictionary.
+			patNode := patNode first ].
+	pat := self generate: patNode env: aDictionary.
 	seqExpr := self generate: aViennaNode second env: aDictionary.
 	body := self generate: aViennaNode third env: aDictionary.
-	aViennaNode first label = 'PatternIdentifier'
-		ifTrue: [ ^ seqExpr , ' do: [:' , aViennaNode first first , ' | ' , body , ']' ].
+	patNode label = 'PatternIdentifier'
+		ifTrue: [ 
+			^ seqExpr , ' do: [:' , patNode first , ' | '
+				,
+					(guard
+						ifNil: [ '' ]
+						ifNotNil: [ '(' , guard , ' includes: ' , patNode first , ') ifFalse: [ViennaBindingViolation signal].' ]) , body
+				, ']' ].
 	vars := (self boundVariables: aViennaNode first) asArray.
 	varGenerator := self varNameGenerator: 'for' uniqueIn: (Array with: seqExpr with: body) , vars.
 	^ String
@@ -2850,6 +2883,8 @@ ViennaVDM2Smalltalk >> sequenceForLoop: aViennaNode env: aDictionary [
 				nextPutAll: '||';
 				nextPutAll: (' ' join: vars);
 				nextPutAll: '|';
+				nextPutAll:
+						(guard ifNil: [ '' ] ifNotNil: [ '(' , guard , ' includes: ' , loopVar , ') ifFalse: [ViennaBindingViolation signal].' ]);
 				nextPutAll: (self binder: pat with: loopVar vars: vars);
 				nextPutAll: ' ifFalse: [ViennaNoMatch signal].'.
 			stream nextPutAll: body.
