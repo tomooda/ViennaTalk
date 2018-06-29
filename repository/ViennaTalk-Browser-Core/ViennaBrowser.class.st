@@ -22,7 +22,6 @@ Class {
 		'directory',
 		'lowerTabPane',
 		'animation',
-		'modulesToTest',
 		'testResult'
 	],
 	#classVars : [
@@ -528,6 +527,47 @@ ViennaBrowser >> autoFormat [
 	^ self class autoFormat
 ]
 
+{ #category : #'test pane menu' }
+ViennaBrowser >> basicRunTestModule: module operation: operation [
+	| header |
+	header := 'Runtime: Error 4129: Exit '.
+	[ [ animation
+		plainEvaluate: operation , '()'
+		in: module
+		ifError: [ :msg | 
+			(msg size > header size and: [ (msg copyFrom: 1 to: header size) = header ])
+				ifTrue: [ ViennaException
+						expression: (ViennaReader new parse: (msg copyFrom: header size + 1 to: msg size)) ]
+				ifFalse: [ Error signal: msg ] ] ]
+		on: ViennaException
+		do: [ :exception | 
+			exception expression
+				in: [ :expr | 
+					(expr isViennaComposite and: [ expr constructorName = 'AssertFailure' ])
+						ifTrue: [ ^ ViennaTestFailureResultItem
+								module: module
+								operation: operation
+								message: 'assertion failed: ' , (expr at: 1) asString ].
+					(expr isViennaComposite and: [ expr constructorName = 'AssertEqualsFailure' ])
+						ifTrue: [ ^ ViennaTestFailureResultItem
+								module: module
+								operation: operation
+								message:
+									'assertion failed: ' , (expr at: 3) asString , ' expected: ' , (expr at: 2) viennaString
+										, ' actual: ' , (expr at: 1) viennaString ].
+					^ ViennaTestErrorResultItem
+						module: module
+						operation: operation
+						message: expr viennaString ] ] ]
+		on: Error
+		do: [ :exception | 
+			^ ViennaTestErrorResultItem
+				module: module
+				operation: operation
+				message: exception messageText ].
+	^ ViennaTestSuccessResultItem module: module operation: operation message: 'OK'
+]
+
 { #category : #'user interface' }
 ViennaBrowser >> build [
 	| pane upper |
@@ -536,6 +576,7 @@ ViennaBrowser >> build [
 	valuePane := self buildValuePane.
 	codePane := self buildCodePane.
 	workspacePane := self buildWorkspacePane.
+	testPane := self buildTestPane.
 	pane := BorderedMorph new.
 	pane extent: 600 @ 400.
 	pane color: Color transparent.
@@ -549,6 +590,7 @@ ViennaBrowser >> build [
 	lowerTabPane := LazyTabGroupMorph new.
 	lowerTabPane addLazyPage: codePane label: 'Specification'.
 	lowerTabPane addLazyPage: workspacePane label: 'Workspace'.
+	lowerTabPane addLazyPage: testPane label: 'UnitTests'.
 	lowerTabPane selectedPageIndex: 1.
 	pane addMorph: upper fullFrame: ((0 @ 0 corner: 1 @ 0.4) asLayoutFrame bottomRightOffset: 0 @ -2).
 	pane addMorph: lowerTabPane fullFrame: ((0 @ 0.4 corner: 1 @ 1) asLayoutFrame topLeftOffset: 0 @ 2).
@@ -601,12 +643,13 @@ ViennaBrowser >> buildModuleList [
 
 { #category : #'user interface' }
 ViennaBrowser >> buildTestPane [
-	^ (PluggableListMorph
+	^ (PluggableIconListMorph
 		on: self
 		list: #testList
 		selected: #testSelectionIndex
 		changeSelected: #testSelectionIndex:
 		menu: nil)
+		getIconSelector: #testResultIconFor:;
 		font: ViennaLauncher font;
 		yourself
 ]
@@ -1044,33 +1087,37 @@ ViennaBrowser >> removeModule [
 ]
 
 { #category : #'test pane menu' }
+ViennaBrowser >> runAllTests [
+	| ast |
+	testResult := OrderedCollection new.
+	self changed: #testList.
+	ast := ViennaVDMParser new parse: animation specification.
+	ast isPetitFailure
+		ifTrue: [ ^ nil ].
+	ast isEmpty
+		ifTrue: [ ^ self ].
+	[ (ast at: 1) label = 'Module'
+		ifTrue: [ ast
+				do: [ :moduleNode | 
+					| moduleName |
+					moduleName := moduleNode first.
+					(moduleName endsWith: 'Test')
+						ifTrue: [ moduleNode third
+								do: [ :definitionBlockNode | 
+									definitionBlockNode first label = 'OperationDefinitions'
+										ifTrue: [ definitionBlockNode first
+												do: [ :accessOperationDefinitionNode | 
+													| operationName |
+													operationName := accessOperationDefinitionNode second first first.
+													(operationName size > 4 and: [ (operationName copyFrom: 1 to: 4) = 'test' ])
+														ifTrue: [ self runTestModule: moduleName operation: operationName ] ] ] ] ] ] ]
+		ifFalse: [  ] ] forkAt: Processor userBackgroundPriority
+]
+
+{ #category : #'test pane menu' }
 ViennaBrowser >> runTestModule: module operation: operation [
-	| header |
-	header := 'Runtime: Error 4129: Exit '.
-	[ [ animation
-		plainEvaluate: operation , '()'
-		in: module
-		ifError: [ :msg | 
-			(msg size > header size and: [ (msg copyFrom: 1 to: header size) = header ])
-				ifTrue: [ ViennaException
-						expression: (ViennaReader new parse: (msg copyFrom: header size + 1 to: msg size)) ]
-				ifFalse: [ Error signal: msg ] ] ]
-		on: ViennaException
-		do: [ :exception | 
-			exception expression
-				in: [ :expr | 
-					(expr isViennaComposite and: [ expr constructor = 'UnitTesting`AssertFailure' ])
-						ifTrue: [ ^ {false.
-							('assertion failed: ' , (expr at: 1) asString)} ].
-					(expr isViennaComposite
-						and: [ expr constructor = 'UnitTesting`AssertEqualsFailure' ])
-						ifTrue: [ ^ {false.
-							('assertion failed: ' , (expr at: 3) asString , ' expected: '
-								, (expr at: 2) viennaString , ' actual: ' , (expr at: 1) viennaString)} ].
-					^ {(nil , 'assertion failed: error ' , expr viennaString)} ] ] ]
-		on: Error
-		do: [ :exception | ^ {(nil , exception messageText)} ].
-	^ {(true , 'OK')}
+	testResult addLast: (self basicRunTestModule: module operation: operation).
+	self changed: #testList
 ]
 
 { #category : #'module list menu' }
@@ -1179,13 +1226,36 @@ end <module name>
 ]
 
 { #category : #'test pane' }
+ViennaBrowser >> testList [
+	^ (testResult ifNil: [ Array new ]) copy
+]
+
+{ #category : #'test pane' }
+ViennaBrowser >> testResultIconFor: aViennaTestResultItem [
+	^ aViennaTestResultItem icon
+]
+
+{ #category : #'test pane' }
 ViennaBrowser >> testSelectionIndex [
 	^ testSelectionIndex ifNil: [ testSelectionIndex := 0 ]
 ]
 
 { #category : #'test pane' }
 ViennaBrowser >> testSelectionIndex: anInteger [
-	testSelectionIndex := anInteger
+	| results |
+	results := self testList.
+	testSelectionIndex := anInteger.
+	(anInteger between: 1 and: results size)
+		ifTrue: [ (results at: anInteger)
+				in: [ :result | 
+					self selectModuleNamed: result module.
+					(codePane textMorph text asString findString: result operation , '() ==')
+						in: [ :start | 
+							start > 0
+								ifTrue: [ codePane
+										selectFrom: start to: start + result operation size - 1;
+										scrollSelectionIntoView ] ].
+					lowerTabPane selectedPageIndex: 1 ] ]
 ]
 
 { #category : #updating }

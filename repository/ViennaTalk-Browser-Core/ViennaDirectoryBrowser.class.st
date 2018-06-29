@@ -64,6 +64,9 @@ ViennaDirectoryBrowser class >> moduleListMenu: aBuilder [
 	(aBuilder item: #'generate object (all modules)...' translated)
 		selector: #generateSmalltalkObject;
 		withSeparatorAfter.
+	(aBuilder item: #'run tests' translated)
+		selector: #runAllTests;
+		withSeparatorAfter.
 	aBuilder model importerModules
 		ifNotEmpty: [ :modules | 
 			(aBuilder item: #'imported by...' translated)
