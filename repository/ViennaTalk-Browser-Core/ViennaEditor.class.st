@@ -4,6 +4,11 @@ Class {
 	#category : 'ViennaTalk-Browser-Core'
 }
 
+{ #category : #'class initialization' }
+ViennaEditor class >> initialize [
+	super initialize
+]
+
 { #category : #notifying }
 ViennaEditor >> notify: aString at: anInteger in: aStream [
 	| pos |
