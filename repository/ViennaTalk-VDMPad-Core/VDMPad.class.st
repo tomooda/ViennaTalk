@@ -56,7 +56,8 @@ VDMPad class >> initialize [
 
 { #category : #'class initialization' }
 VDMPad class >> install [
-	(FileSystem / 'codemirror') exists ifFalse: [ self installCodemirror ]
+	(FileSystem workingDirectory / 'codemirror') exists
+		ifFalse: [ self installCodemirror ]
 ]
 
 { #category : #'class initialization' }
