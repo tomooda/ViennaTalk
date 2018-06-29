@@ -273,27 +273,35 @@ ViennaBrowser >> buildCodePane [
 		setSelection: #codeSelection:)
 		setBalloonText: 'VDM specification';
 		askBeforeDiscardingEdits: true;
+		bindKeyCombination: $d command toAction: [ self doItIn: codePane ];
+		bindKeyCombination: $p command toAction: [ self printItIn: codePane ];
+		bindKeyCombination: $f shift command toAction: [ self formatIn: codePane ];
+		font: ViennaLauncher font;
 		yourself
 ]
 
 { #category : #'user interface' }
 ViennaBrowser >> buildFieldList [
-	^ PluggableListMorph
+	^ (PluggableListMorph
 		on: self
 		list: #fieldList
 		selected: #fieldSelectionIndex
 		changeSelected: #fieldSelectionIndex:
-		menu: #fieldListMenu:
+		menu: #fieldListMenu:)
+		font: ViennaLauncher font;
+		yourself
 ]
 
 { #category : #'user interface' }
 ViennaBrowser >> buildModuleList [
-	^ PluggableListMorph
+	^ (PluggableListMorph
 		on: self
 		list: #moduleList
 		selected: #moduleSelectionIndex
 		changeSelected: #moduleSelectionIndex:
-		menu: #moduleListMenu:
+		menu: #moduleListMenu:)
+		font: ViennaLauncher font;
+		yourself
 ]
 
 { #category : #'user interface' }
@@ -307,6 +315,10 @@ ViennaBrowser >> buildValuePane [
 		setSelection: #valueSelection:)
 		askBeforeDiscardingEdits: false;
 		alwaysAccept: true;
+		bindKeyCombination: $d command toAction: [ self doItIn: valuePane ];
+		bindKeyCombination: $p command toAction: [ self printItIn: valuePane ];
+		bindKeyCombination: $f shift command toAction: [ self formatIn: valuePane ];
+		font: ViennaLauncher font;
 		yourself
 ]
 
@@ -321,6 +333,10 @@ ViennaBrowser >> buildWorkspacePane [
 		setSelection: #workspaceSelection:)
 		setBalloonText: 'workspace';
 		askBeforeDiscardingEdits: true;
+		bindKeyCombination: $d command toAction: [ self doItIn: workspacePane ];
+		bindKeyCombination: $p command toAction: [ self printItIn: workspacePane ];
+		bindKeyCombination: $f shift command toAction: [ self formatIn: workspacePane ];
+		font: ViennaLauncher font;
 		yourself
 ]
 
