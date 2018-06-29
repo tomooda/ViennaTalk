@@ -253,7 +253,7 @@ ConfigurationOfViennaTalk >> project [
 ConfigurationOfViennaTalk >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.3'.
+	spec for: #'common' version: '1.4'.
 
 ]
 
@@ -353,6 +353,33 @@ ConfigurationOfViennaTalk >> version13: spec [
 			project: 'PetitParser' with: '1.10'.
 		spec 
 			package: #'ViennaTalk-Engine-Core' with: 'ViennaTalk-Engine-Core-tomooda.10';
+			package: #'ViennaTalk-Engine-Tests' with: 'ViennaTalk-Engine-Tests-tomooda.4';
+			package: #'ViennaTalk-Value-Core' with: 'ViennaTalk-Value-Core-tomooda.3';
+			package: #'ViennaTalk-VDMC-Core' with: 'ViennaTalk-VDMC-Core-tomooda.6';
+			package: #'ViennaTalk-VDMC-Tests' with: 'ViennaTalk-VDMC-Tests-tomooda.2';
+			package: #'ViennaTalk-Value-Tests' with: 'ViennaTalk-Value-Tests-tomooda.2';
+			package: 'ViennaTalk-Html-Core' with: 'ViennaTalk-Html-Core-tomooda.4';
+			package: #'ViennaTalk-VDMPad-Core' with: 'ViennaTalk-VDMPad-Core-tomooda.6';
+			package: 'ViennaTalk-Browser-Core' with: 'ViennaTalk-Browser-Core-tomooda.7'. ].
+
+]
+
+{ #category : #versions }
+ConfigurationOfViennaTalk >> version14: spec [
+	<version: '1.4' imports: #('0.2-baseline' )>
+
+	spec for: #'common' do: [
+		spec blessing: #'stable'.
+		spec description: 'version 1.4'.
+		spec author: 'tomooda'.
+		spec timestamp: '8/11/2015 15:11'.
+		spec 
+			project: 'NeoJSON' with: '10';
+			project: 'OSProcess' with: '4.6.4';
+			project: 'ZincHTTPComponents' with: '2.6.3';
+			project: 'PetitParser' with: '1.10'.
+		spec 
+			package: #'ViennaTalk-Engine-Core' with: 'ViennaTalk-Engine-Core-tomooda.11';
 			package: #'ViennaTalk-Engine-Tests' with: 'ViennaTalk-Engine-Tests-tomooda.4';
 			package: #'ViennaTalk-Value-Core' with: 'ViennaTalk-Value-Core-tomooda.3';
 			package: #'ViennaTalk-VDMC-Core' with: 'ViennaTalk-VDMC-Core-tomooda.6';
