@@ -3,7 +3,9 @@ Class {
 	#superclass : #Object,
 	#type : #variable,
 	#instVars : [
-		'typeName'
+		'typeName',
+		'namedFields',
+		'equalityFields'
 	],
 	#category : 'ViennaTalk-Value-Core'
 }
@@ -70,10 +72,31 @@ VDMComposite >> = anObject [
 		ifFalse: [ ^ false ].
 	self size = anObject size
 		ifFalse: [ ^ false ].
-	1 to: self size do: [ :index | 
-		(self at: index) = (anObject at: index)
-			ifFalse: [ ^ false ] ].
+	equalityFields
+		do: [ :index | 
+			(self at: index) = (anObject at: index)
+				ifFalse: [ ^ false ] ].
 	^ true
+]
+
+{ #category : #accessing }
+VDMComposite >> at: anIntegerOrString [
+	^ super
+		at:
+			(anIntegerOrString isString
+				ifTrue: [ namedFields at: anIntegerOrString ]
+				ifFalse: [ anIntegerOrString ])
+]
+
+{ #category : #'accessing-field types' }
+VDMComposite >> equalityAbstractionFieldNameAt: anInteger put: aString [
+	namedFields at: aString put: anInteger.
+	equalityFields := equalityFields copyWithout: anInteger
+]
+
+{ #category : #'accessing-field types' }
+VDMComposite >> fieldNameAt: anInteger put: aString [
+	namedFields at: aString put: anInteger
 ]
 
 { #category : #comparing }
@@ -82,6 +105,13 @@ VDMComposite >> hash [
 	hash := typeName hash.
 	1 to: self size do: [ :i | hash := (hash + (self at: i) hash) hashMultiply ].
 	^ hash
+]
+
+{ #category : #'initialize-release' }
+VDMComposite >> initialize [
+	super initialize.
+	namedFields := Dictionary new.
+	equalityFields := (1 to: self size) asArray
 ]
 
 { #category : #printing }
