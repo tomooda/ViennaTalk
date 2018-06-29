@@ -29,10 +29,8 @@ ViennaTypeHolder >> precedence [
 	^ type ifNil: [ 0 ] ifNotNil: [ type precedence ]
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 ViennaTypeHolder >> removeTypeHolders: aSet [
-	(aSet includes: self) ifTrue: [ ^self ].
-	aSet add: self.
 	^ type removeTypeHolders: aSet
 ]
 
