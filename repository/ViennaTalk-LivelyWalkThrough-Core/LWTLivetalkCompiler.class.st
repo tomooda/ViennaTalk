@@ -36,13 +36,14 @@ LWTLivetalkCompiler >> initialize [
 	nat := ((1 to: 9) inject: $0 asParser into: [ :p :digit | p / digit asCharacterDigit asParser ]) plus flatten.
 	int := $- asParser optional , nat.
 	decimal := int , ($. asParser , nat) optional.
-	numberLiteral := (decimal , ($e asParser / $E asParser , decimal) optional) flatten trim ==> [ :str | str trim ].
+	numberLiteral := (decimal , ($e asParser / $E asParser , decimal) optional) flatten trim
+		==> [ :str | '''' , str trim , '''' ].
 	stringLiteral := (quote
 		,
 			((quote not
 				,
 					((($\ asParser , #any asParser) ==> [ :pair | escapes at: pair second ifAbsent: [ pair second ] ]) / #any asParser))
-				==> [ :pair | pair second ]) star , quote) ==> [ :triple | String withAll: triple second ].
+				==> [ :pair | pair second ]) star , quote) ==> [ :triple | (String withAll: triple second) viennaString ].
 	identifier := (#letter asParser / $` asParser / $_ asParser
 		, (#letter asParser / $` asParser / $_ asParser / #digit asParser) star) flatten.
 	morphName := ($[ asParser , (($] asParser not , #any asParser) ==> [ :pair | pair second ]) star flatten , $] asParser)

@@ -19,7 +19,8 @@ LivelyWalkThrough class >> default [
 LivelyWalkThrough class >> fileOpen: title extensions: exts path: path preview: preview [
 	"LivelyWalkThrough fileOpen: 'title' extensions: #('png' 'jpg') path: nil preview: #image"
 
-	| ui fd |
+	| ref ui fd |
+	ref := path isString ifTrue: [ (FileSystem disk pathFromString: path)  asFileReference ] ifFalse: [ path  ].
 	ui := UIManager default.
 	fd := FileDialogWindow basicNew
 		basicTheme: ui theme;
@@ -28,7 +29,7 @@ LivelyWalkThrough class >> fileOpen: title extensions: exts path: path preview: 
 		title: title;
 		answerPathName.
 	exts ifNotNil: [ fd validExtensions: exts ].
-	path ifNotNil: [ fd selectPathName: (FileSystem disk pathFromString: path asString) parent asFileReference fullName ].
+	path ifNotNil: [ fd selectPathName: ref parent  ].
 	^ (ui openModal: fd) answer ifNotNil: [ :ans | ans asFileReference ]
 ]
 
