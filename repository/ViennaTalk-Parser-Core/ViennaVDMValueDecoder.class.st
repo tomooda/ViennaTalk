@@ -63,7 +63,12 @@ ViennaVDMValueDecoder >> functionDefinitions [
 
 { #category : #'parsers-expressions' }
 ViennaVDMValueDecoder >> hexadecimalLiteral [
-	^ ($- asParser optional , super hexadecimalLiteral) flatten trim ==> [ :hex | Integer readFrom: hex radix: 16 ]
+	^ ($- asParser optional , super hexadecimalLiteral) trim
+		==> [ :pair | 
+			| nat |
+			nat := Integer readFrom: pair second radix: 16.
+			pair first ifNotNil: [ nat := nat negated ].
+			nat ]
 ]
 
 { #category : #'parsers-definitions' }
