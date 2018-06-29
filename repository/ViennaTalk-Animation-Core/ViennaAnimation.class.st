@@ -7,7 +7,8 @@ Class {
 		'specification',
 		'state',
 		'reader',
-		'writer'
+		'writer',
+		'usesExceptionForExit'
 	],
 	#category : 'ViennaTalk-Animation-Core'
 }
@@ -337,7 +338,7 @@ ViennaAnimation >> state [
 	^ state copy
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ViennaAnimation >> state: aDictionary [
 	state := aDictionary copy
 ]
