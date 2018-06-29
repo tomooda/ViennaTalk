@@ -9,6 +9,7 @@ Class {
 		'executor'
 	],
 	#classVars : [
+		'GlobalLock',
 		'Registry'
 	],
 	#category : 'ViennaTalk-Engine-Core'
@@ -96,6 +97,16 @@ ViennaVDMJ class >> bank: anInteger [
 	bank := ViennaBankEngine new.
 	anInteger timesRepeat: [ bank add: self new ].
 	^ bank
+]
+
+{ #category : #locking }
+ViennaVDMJ class >> globalLock [
+	^ GlobalLock ifNil: [ GlobalLock := Semaphore forMutualExclusion ]
+]
+
+{ #category : #locking }
+ViennaVDMJ class >> globalLock: aBlock [
+	self globalLock critical: [ ^ aBlock value ]
 ]
 
 { #category : #'class initialization' }
@@ -502,6 +513,11 @@ ViennaVDMJ >> forkProcess: desc [
 		descriptors: desc
 ]
 
+{ #category : #locking }
+ViennaVDMJ >> globalLock: aBlockClosure [ 
+	^ self class globalLock: aBlockClosure
+]
+
 { #category : #'initialize-release' }
 ViennaVDMJ >> initialize [
 	super initialize.
@@ -631,19 +647,21 @@ ViennaVDMJ >> statesDo: aBlock ifError: errorBlock [
 ]
 
 { #category : #private }
-ViennaVDMJ >> temporaryFileDo: aBlock [ 
+ViennaVDMJ >> temporaryFileDo: aBlock [
 	| random file stream |
 	random := Random new.
-	[file := FileSystem workingDirectory / 'VDMPad-spec-'
-					, (String
-							withAll: ((1 to: 8)
-									collect: [:i | '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-											at: (random nextInt: 36)])) , '.vdm'.
-	file exists] whileTrue.
-	stream := file writeStream.
-	[aBlock value: stream]
-		ensure: [stream close.
-			file deleteIfAbsent: []]
+	self
+		globalLock: [ 
+			[ 
+			file := FileSystem workingDirectory / 'VDMPad-spec-'
+				, (String withAll: ((1 to: 8) collect: [ :i | '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ' at: (random nextInt: 36) ]))
+				, '.vdm'.
+			file exists ] whileTrue.
+			stream := file writeStream.
+			[ aBlock value: stream ]
+				ensure: [ 
+					stream close.
+					file deleteIfAbsent: [  ] ] ]
 ]
 
 { #category : #finalizing }
