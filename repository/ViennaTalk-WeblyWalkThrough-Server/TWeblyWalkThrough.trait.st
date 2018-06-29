@@ -119,7 +119,7 @@ TWeblyWalkThrough >> translateFromJson: aString [
 ]
 
 { #category : #translating }
-TWeblyWalkThrough >> translateToJson: aString [
+TWeblyWalkThrough >> translateToJson: anObject [
 	^ self subclassResponsibility
 ]
 
