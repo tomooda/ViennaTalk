@@ -6,6 +6,7 @@ Class {
 		'engine'
 	],
 	#classVars : [
+		'LocalOnly',
 		'Server'
 	],
 	#category : 'ViennaTalk-VDMPad-Core'
@@ -24,6 +25,11 @@ VDMPad class >> default [
 { #category : #defaults }
 VDMPad class >> defaultEngine [
 	^ ViennaVDMJ bank: 8
+]
+
+{ #category : #defaults }
+VDMPad class >> defaultLocalOnly [
+	^ true
 ]
 
 { #category : #defaults }
@@ -74,6 +80,39 @@ VDMPad class >> isRunning [
 	^ Server notNil and: [ Server isRunning ]
 ]
 
+{ #category : #servicing }
+VDMPad class >> isRunning: aBoolean [
+	aBoolean = true
+		ifTrue: [ 
+			self isRunning
+				ifFalse: [ self startService ] ]
+		ifFalse: [ 
+			self isRunning
+				ifTrue: [ self stopService ] ]
+]
+
+{ #category : #servicing }
+VDMPad class >> localOnly [
+	^ LocalOnly ifNil: [ LocalOnly := self defaultLocalOnly ]
+]
+
+{ #category : #servicing }
+VDMPad class >> localOnly: aBoolean [
+	aBoolean ~= false
+		ifTrue: [ 
+			LocalOnly ~= false
+				ifTrue: [ ^ self ].
+			LocalOnly := true ]
+		ifFalse: [ 
+			LocalOnly = false
+				ifTrue: [ ^ self ].
+			LocalOnly := false ].
+	self isRunning
+		ifTrue: [ 
+			self stopService.
+			self startService ]
+]
+
 { #category : #'instance creation' }
 VDMPad class >> on: aViennaEngine [
 	^ self new
@@ -86,6 +125,10 @@ VDMPad class >> server [
 	^ Server
 		ifNil: [ 
 			Server := (ZnMultiThreadedServer on: self defaultPort)
+				bindingAddress:
+						(LocalOnly ~= false
+								ifTrue: [ #[127 0 0 1] ]
+								ifFalse: [ nil ]);
 				register;
 				start;
 				yourself ]
@@ -109,6 +152,23 @@ VDMPad class >> toggleStartStop [
 	self isRunning
 		ifTrue: [ self stopService ]
 		ifFalse: [ self startService ]
+]
+
+{ #category : #settings }
+VDMPad class >> viennaSettingsOn: aBuilder [
+	<systemsettings>
+	(aBuilder setting: #isRunning)
+		parent: #ViennaTalk;
+		target: self;
+		description:
+				'If checked then a VDMPad server will be up so that it can be accessed by web browsers and Vienna clients.';
+		label: 'VDMPad';
+		with: [ 
+					(aBuilder setting: #localOnly)
+						target: self;
+						description:
+								'If checked then a VDMPad server will serve only from localhost. Accesses from other hosts will be rejected.';
+						label: 'Serves for only localhost' ]
 ]
 
 { #category : #servicing }
