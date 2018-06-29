@@ -3034,9 +3034,10 @@ ViennaVDM2Smalltalk >> setUnionPattern: aViennaNode env: aDictionary [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2Smalltalk >> stateDefinition: aViennaNode env: aDictionary [
-	| constructor fieldListNode initNode vars vals recordNode initConstructor expressionListNode patternVar |
+	| constructor fieldListNode invNode initNode vars vals recordNode initConstructor expressionListNode patternVar |
 	constructor := aViennaNode first.
 	fieldListNode := aViennaNode second.
+	invNode := aViennaNode third.
 	initNode := aViennaNode fourth.
 	vars := fieldListNode collect: #first.
 	initNode ifNil: [ ^ self error: 'initalisation is required in state definition' ].
@@ -3081,7 +3082,8 @@ ViennaVDM2Smalltalk >> stateDefinition: aViennaNode env: aDictionary [
 				nextPutAll: 'init_';
 				nextPutAll: initConstructor;
 				nextPutAll: ' := ';
-				nextPutAll: (self generate: initNode first env: aDictionary) ])}
+				nextPutAll: (self generate: initNode first env: aDictionary) ]).
+	(invNode ifNotNil: [ self generate: invNode first env: aDictionary ])}
 ]
 
 { #category : #'code generation-expressions' }

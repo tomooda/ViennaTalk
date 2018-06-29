@@ -48,6 +48,11 @@ ViennaVDM2SmalltalkClass >> closureFromMethodSource: aString binds: binds [
 
 { #category : #utilities }
 ViennaVDM2SmalltalkClass >> createDocumentClassWithInstVars: anArrayOfString [
+	^ self createDocumentClassWithInstVars: anArrayOfString stateVars: #()
+]
+
+{ #category : #utilities }
+ViennaVDM2SmalltalkClass >> createDocumentClassWithInstVars: anArrayOfString1 stateVars: anArrayOfString2 [
 	| documentClassName |
 	documentClassName := self requestClassName: ''.
 	documentClassName ifNil: [ ^ nil ].
@@ -56,12 +61,23 @@ ViennaVDM2SmalltalkClass >> createDocumentClassWithInstVars: anArrayOfString [
 			builder
 				name: documentClassName asSymbol;
 				superclass: Object;
-				slots: (anArrayOfString asArray collect: [ :instVarName | InstanceVariableSlot named: instVarName asSymbol ]);
+				slots:
+						(anArrayOfString1 asArray collect: [ :instVarName | InstanceVariableSlot named: instVarName asSymbol ])
+								, (anArrayOfString2 asArray collect: [ :instVarName | ViennaStateSlot named: instVarName asSymbol ]);
 				category: 'Auto Generated from VDM' ]
 ]
 
 { #category : #utilities }
 ViennaVDM2SmalltalkClass >> createModuleClassWithInstVars: anArrayOfString forModule: aString env: aDictionary [
+	^ self
+		createModuleClassWithInstVars: anArrayOfString
+		stateVars: #()
+		forModule: aString
+		env: aDictionary
+]
+
+{ #category : #utilities }
+ViennaVDM2SmalltalkClass >> createModuleClassWithInstVars: anArrayOfString1 stateVars: anArrayOfString2 forModule: aString env: aDictionary [
 	| className |
 	className := aDictionary at: aString ifAbsent: [ aString ].
 	^ PharoClassInstaller
@@ -69,7 +85,9 @@ ViennaVDM2SmalltalkClass >> createModuleClassWithInstVars: anArrayOfString forMo
 			builder
 				name: className asSymbol;
 				superclass: Object;
-				slots: (anArrayOfString asArray collect: [ :instVarName | InstanceVariableSlot named: instVarName asSymbol ]);
+				slots:
+						(anArrayOfString1 asArray collect: [ :instVarName | InstanceVariableSlot named: instVarName asSymbol ])
+								, (anArrayOfString2 asArray collect: [ :instVarName | ViennaStateSlot named: instVarName asSymbol ]);
 				category: 'Auto Generated from VDM' ]
 ]
 
@@ -141,9 +159,17 @@ ViennaVDM2SmalltalkClass >> explicitOperationDefinition: aViennaNode env: aDicti
 
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> flatDocument: aViennaNode env: aDictionary [
-	| env newClass |
+	| env instVars stateVars newClass |
 	env := aDictionary copy.
-	newClass := self createDocumentClassWithInstVars: (self boundVariables: aViennaNode).
+	stateVars := #().
+	aViennaNode
+		do: [ :definitionBlock | 
+			definitionBlock first label = 'StateDefinition'
+				ifTrue: [ stateVars := definitionBlock first second collect: #first ] ].
+	instVars := (self boundVariables: aViennaNode)
+		removeAll: stateVars;
+		asArray.
+	newClass := self createDocumentClassWithInstVars: instVars stateVars: stateVars.
 	classes at: nil put: newClass.
 	aViennaNode
 		do: [ :definitionBlock | 
@@ -308,7 +334,7 @@ ViennaVDM2SmalltalkClass >> modularDocument: aViennaNode env: aDictionary [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
-	| env moduleName interfaceNode moduleBodyNode importModuleNames importClassNames instVars newClass |
+	| env moduleName interfaceNode moduleBodyNode importModuleNames importClassNames instVars stateVars newClass |
 	env := aDictionary copy.
 	self generate: aViennaNode second env: env.
 	moduleName := aViennaNode first.
@@ -319,12 +345,20 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 		ifNotNil: [ :importDefinitionListNode | importDefinitionListNode collect: [ :importDefinitionNode | importDefinitionNode first ] ].
 	importClassNames := importModuleNames
 		collect: [ :importModuleName | env at: importModuleName first ifAbsent: [ importModuleName ] ].
+	stateVars := #().
 	moduleBodyNode
 		do: [ :definitionBlock | 
 			definitionBlock first label = 'StateDefinition'
+				ifTrue: [ stateVars := definitionBlock first second collect: #first ]
 				ifFalse: [ (self boundVariables: definitionBlock) do: [ :ident | env at: ident put: 'self ' , ident ] ] ].
-	instVars := (self boundVariables: moduleBodyNode) asArray.
-	newClass := self createModuleClassWithInstVars: importClassNames , instVars forModule: moduleName env: env.
+	instVars := (self boundVariables: moduleBodyNode)
+		removeAll: stateVars;
+		asArray.
+	newClass := self
+		createModuleClassWithInstVars: importClassNames , instVars
+		stateVars: stateVars
+		forModule: moduleName
+		env: env.
 	classes at: moduleName put: newClass.
 	importModuleNames
 		with: importClassNames
@@ -394,23 +428,35 @@ ViennaVDM2SmalltalkClass >> returnStatement: aViennaNode env: aDictionary [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> stateDefinition: aViennaNode env: aDictionary [
-	| theClass stateConstructor triple |
+	| theClass stateConstructor quatro |
 	theClass := classes at: (aViennaNode module ifNotNil: #first).
 	stateConstructor := aViennaNode first.
-	triple := super stateDefinition: aViennaNode env: aDictionary.
-	self defineMethod: 'init' , String cr , triple first in: theClass protocol: 'state'.
+	quatro := super stateDefinition: aViennaNode env: aDictionary.
+	self defineMethod: 'init' , String cr , quatro first in: theClass protocol: 'state'.
 	self
 		defineLazyMethodNamed: stateConstructor
-		initializer: triple second
+		initializer: quatro second
 		in: theClass
 		protocol: 'state'.
 	aDictionary at: stateConstructor put: 'self ' , stateConstructor.
 	self
 		defineLazyMethodNamed: 'init_' , stateConstructor
-		initializer: triple third
+		initializer: quatro third
 		in: theClass
 		protocol: 'state'.
-	aDictionary at: 'init_' , stateConstructor put: 'self init_' , stateConstructor
+	aDictionary at: 'init_' , stateConstructor put: 'self init_' , stateConstructor.
+	self
+		defineMethod:
+			'state' , String cr , '    ^ self ' , stateConstructor , ' applyTo: {'
+				, (' . ' join: (aViennaNode second collect: #first)) , '}'
+		in: theClass
+		protocol: 'state'.
+	quatro fourth
+		ifNotNil: [ :inv | 
+			self
+				defineMethod: 'inv' , String cr , '    (' , inv , ' value: self state) ifFalse: [self stateInvariantViolation]'
+				in: theClass
+				protocol: 'state' ]
 ]
 
 { #category : #'code generation-definitions' }

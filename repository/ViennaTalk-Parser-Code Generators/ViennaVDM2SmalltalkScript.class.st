@@ -91,9 +91,10 @@ ViennaVDM2SmalltalkScript >> operationDefinitions: aViennaNode env: aDictionary 
 
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkScript >> stateDefinition: aViennaNode env: aDictionary [
-	| triple |
-	triple := super stateDefinition: aViennaNode env: aDictionary.
-	^ triple first , triple second , '.' , String cr , triple third
+	| quatro |
+	quatro := super stateDefinition: aViennaNode env: aDictionary.
+	^ quatro first , quatro second , '.' , String cr , quatro third
+		, (quatro fourth ifNil: [ '' ] ifNotNil: [ :inv | '.' , String cr , inv ])
 ]
 
 { #category : #'code generation-definitions' }
