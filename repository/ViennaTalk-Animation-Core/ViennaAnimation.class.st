@@ -70,6 +70,11 @@ operations
 ]
 
 { #category : #'instance creation' }
+ViennaAnimation class >> interpreter [
+	^ self default
+]
+
+{ #category : #'instance creation' }
 ViennaAnimation class >> on: aViennaEngine [
 	^ self new
 		engine: aViennaEngine;
@@ -191,6 +196,11 @@ ViennaAnimation >> engine [
 { #category : #accessing }
 ViennaAnimation >> engine: aViennaEngine [
 	engine := aViennaEngine
+]
+
+{ #category : #accessing }
+ViennaAnimation >> engineType [
+	^ #interpreter
 ]
 
 { #category : #evaluating }
@@ -325,6 +335,11 @@ ViennaAnimation >> specification: aString ifError: errorBlock [
 { #category : #private }
 ViennaAnimation >> state [
 	^ state copy
+]
+
+{ #category : #'as yet unclassified' }
+ViennaAnimation >> state: aDictionary [
+	state := aDictionary copy
 ]
 
 { #category : #private }
