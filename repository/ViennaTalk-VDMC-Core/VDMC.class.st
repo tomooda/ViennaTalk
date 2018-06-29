@@ -12,12 +12,19 @@ Class {
 	#category : 'ViennaTalk-VDMC-Core'
 }
 
+{ #category : #'instance creation' }
+VDMC class >> default [
+	^ self new
+		engine: ViennaClient default;
+		yourself
+]
+
 { #category : #examples }
 VDMC class >> exampleFibonacci [
 	"VDMC exampleFibonacci"
 
 	| vdmc |
-	vdmc := VDMC on: ViennaClient default.
+	vdmc := VDMC default.
 	vdmc
 		specification:
 			'
@@ -56,6 +63,13 @@ operations
 VDMC class >> on: aViennaEngine [
 	^ self new
 		engine: aViennaEngine;
+		yourself
+]
+
+{ #category : #'instance creation' }
+VDMC class >> url: aStringOrUrl [
+	^ self new
+		engine: (ViennaClient on: aStringOrUrl);
 		yourself
 ]
 
