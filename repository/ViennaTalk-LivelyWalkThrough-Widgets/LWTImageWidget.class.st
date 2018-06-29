@@ -17,7 +17,7 @@ LWTImageWidget >> asJsonObject [
 
 { #category : #events }
 LWTImageWidget >> availableEventSelectors [
-	^ #(#changed)
+	^ #(#changed #clicked #doubleClicked #entered #moved #left #up)
 ]
 
 { #category : #accessing }
@@ -27,8 +27,11 @@ LWTImageWidget >> basename [
 
 { #category : #operations }
 LWTImageWidget >> changeImage [
-	(UIManager default chooseFullFileNameMatching: nil label: 'Select an image file')
-		ifNotNil: [ :filename | self value: filename asString ]
+	(LivelyWalkThrough
+		fileOpen: 'Select an image file'
+		extensions: #('png' 'jpg' 'jpeg')
+		path: path
+		preview: #image) ifNotNil: [ :filename | self value: filename fullName ]
 ]
 
 { #category : #'event handling' }
