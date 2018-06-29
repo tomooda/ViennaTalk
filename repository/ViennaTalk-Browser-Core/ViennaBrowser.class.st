@@ -555,9 +555,16 @@ ViennaBrowser >> fileSave: title do: aBlock [
 
 { #category : #'module list menu' }
 ViennaBrowser >> generateSmalltalkClasses [
-	| ast |
+	| ast | 
 	ast := ViennaVDMParser new parse: vdmc specification.
 	(ViennaVDM2SmalltalkClass new generate: ast) ifNotNil: [ :class | class browse ]
+]
+
+{ #category : #'module list menu' }
+ViennaBrowser >> generateSmalltalkObject [
+	| ast |
+	ast := ViennaVDMParser new parse: vdmc specification.
+	(ViennaVDM2SmalltalkObject new generate: ast) ifNotNil: [ :object | object inspect ]
 ]
 
 { #category : #'module list menu' }
@@ -612,6 +619,7 @@ ViennaBrowser >> moduleListMenu: aMenu [
 	aMenu addLine.
 	aMenu add: 'generate a Smalltalk script (single module)...' translated selector: #generateSmalltalkScript.
 	aMenu add: 'generate classes (all modules)...' translated selector: #generateSmalltalkClasses.
+	aMenu add: 'generate object (all modules)...' translated selector: #generateSmalltalkObject.
 	referenceSubMenu := MenuMorph new defaultTarget: self.
 	self importerModules do: [ :name | referenceSubMenu add: name selector: #selectModuleNamed: argument: name ].
 	referenceSubMenu hasItems
