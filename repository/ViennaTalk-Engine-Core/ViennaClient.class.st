@@ -53,7 +53,7 @@ ViennaClient class >> on: aUrlOfVDMPadServer [
 ViennaClient class >> viennaSettingsOn: aBuilder [
 	<systemsettings>
 	(aBuilder setting: #defaultViennaServerUrl)
-		parent: #ViennaTalk;
+		parent: #ViennaTalkServices;
 		target: self;
 		getSelector: #defaultUrlString;
 		setSelector: #defaultUrlString:;
