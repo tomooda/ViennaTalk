@@ -19,6 +19,22 @@ ViennaVDM2SmalltalkTranslator >> apply: func args: args [
 	^ '(' , func , ' applyTo: {' , (' . ' join: args) , '})'
 ]
 
+{ #category : #utilities }
+ViennaVDM2SmalltalkTranslator >> binder: aBlockString with: aString vars: anArrayOfString [
+	^ String
+		new: 256
+		streamContents: [ :stream | 
+			stream
+				nextPutAll: '((';
+				nextPutAll: aBlockString;
+				nextPutAll: ' value: ';
+				nextPutAll: aString;
+				nextPutAll: ') ifEmpty: [false] ifNotEmpty: [:binds | ';
+				nextPutAll:
+						('.' join: (anArrayOfString collect: [ :varName | varName , ' := binds first at: ' , varName storeString ]));
+				nextPutAll: '. true])' ]
+]
+
 { #category : #'parsers-literals' }
 ViennaVDM2SmalltalkTranslator >> booleanLiteral [
 	^ super booleanLiteral
@@ -72,7 +88,7 @@ ViennaVDM2SmalltalkTranslator >> casesExpression [
 								do: [ :pat | 
 									| vars binder |
 									vars := pat first.
-									binder := ViennaRuntimeUtil binder: pat second with: valueVar vars: vars.
+									binder := self binder: pat second with: valueVar vars: vars.
 									stream
 										nextPutAll: foundVar;
 										nextPutAll: ' ifFalse: [|';
@@ -139,7 +155,7 @@ ViennaVDM2SmalltalkTranslator >> defExpression [
 									| left right |
 									left := def first.
 									right := def second.
-									ViennaRuntimeUtil binder: left second with: right vars: left first ])) , ' ifFalse: [ViennaNoMatch signal].' , expr , '] value' ]
+									self binder: left second with: right vars: left first ])) , ' ifFalse: [ViennaNoMatch signal].' , expr , '] value' ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -194,7 +210,7 @@ ViennaVDM2SmalltalkTranslator >> exists1Expression [
 			exprPart := pair second.
 			var := (self varNameGenerator: 'exists1' uniqueIn: (Array with: exprPart)) value.
 			'(' , setOrType , ' onlyOneSatisfy: [ :' , var , '||' , (' ' join: pat first) , '|'
-				, (ViennaRuntimeUtil binder: pat second with: var vars: pat first) , ' ifFalse: [ViennaNoMatch signal].' , exprPart , '])' ]
+				, (self binder: pat second with: var vars: pat first) , ' ifFalse: [ViennaNoMatch signal].' , exprPart , '])' ]
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -225,7 +241,7 @@ ViennaVDM2SmalltalkTranslator >> existsExpression [
 										nextPutAll: '||';
 										nextPutAll: (' ' join: pat first);
 										nextPutAll: '|';
-										nextPutAll: (ViennaRuntimeUtil binder: pat second with: loopVar vars: pat first);
+										nextPutAll: (self binder: pat second with: loopVar vars: pat first);
 										nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ] ].
 					stream nextPutAll: expr.
 					multibinds do: [ :multibind | multibind first do: [ :pat | stream nextPut: $] ] ].
@@ -273,7 +289,7 @@ ViennaVDM2SmalltalkTranslator >> explicitFunctionDefinition [
 								with: vars
 								do: [ :p :v | 
 									stream
-										nextPutAll: (ViennaRuntimeUtil binder: p second with: v vars: p first);
+										nextPutAll: (self binder: p second with: v vars: p first);
 										nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ] ].
 					stream nextPutAll: body.
 					paramSets do: [ :args | stream nextPut: $] ] ])} ]
@@ -317,7 +333,7 @@ ViennaVDM2SmalltalkTranslator >> forallExpression [
 										nextPutAll: '||';
 										nextPutAll: (' ' join: pat first);
 										nextPutAll: '|';
-										nextPutAll: (ViennaRuntimeUtil binder: pat second with: loopVar vars: pat first);
+										nextPutAll: (self binder: pat second with: loopVar vars: pat first);
 										nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ] ].
 					stream nextPutAll: expr.
 					multibinds do: [ :multibind | multibind first do: [ :pat | stream nextPut: $] ] ].
@@ -360,7 +376,7 @@ ViennaVDM2SmalltalkTranslator >> generatorCodeFromVar: vars matcher: matcherStri
 	| tmp |
 	tmp := aVarGeneratorBlock value.
 	^ set , ' do: [:' , tmp , '||' , (' ' join: vars) , '|'
-		, (ViennaRuntimeUtil binder: matcherString with: tmp vars: vars) , ' ifFalse: [ViennaNoMatch signal].'
+		, (self binder: matcherString with: tmp vars: vars) , ' ifFalse: [ViennaNoMatch signal].'
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -429,7 +445,7 @@ ViennaVDM2SmalltalkTranslator >> iotaExpression [
 			exprPart := pair second.
 			var := (self varNameGenerator: 'exists1' uniqueIn: (Array with: exprPart)) value.
 			'(' , setOrType , ' detect: [ :' , var , '||' , (' ' join: pat first) , '|'
-				, (ViennaRuntimeUtil binder: pat second with: var vars: pat first) , ' ifFalse: [ViennaNoMatch signal].' , exprPart , '])' ]
+				, (self binder: pat second with: var vars: pat first) , ' ifFalse: [ViennaNoMatch signal].' , exprPart , '])' ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -463,7 +479,7 @@ ViennaVDM2SmalltalkTranslator >> lambdaExpression [
 						with: vars
 						do: [ :pat :var | 
 							stream
-								nextPutAll: (ViennaRuntimeUtil binder: pat second with: var vars: pat first);
+								nextPutAll: (self binder: pat second with: var vars: pat first);
 								nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ].
 					stream nextPutAll: body.
 					patterns do: [ :pat | stream nextPut: $] ] ] ]
@@ -513,7 +529,7 @@ ViennaVDM2SmalltalkTranslator >> letBeExpression [
 								nextPutAll: ' anySatisfy: [:';
 								nextPutAll: loopVar;
 								nextPutAll: '|';
-								nextPutAll: (ViennaRuntimeUtil binder: pat second with: loopVar vars: pat first);
+								nextPutAll: (self binder: pat second with: loopVar vars: pat first);
 								nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ].
 					stream nextPutAll: guard.
 					multibind first do: [ :pat | stream nextPut: $] ].
@@ -1002,7 +1018,7 @@ ViennaVDM2SmalltalkTranslator >> valueDefinition [
 			pat := triple first.
 			body := triple third.
 			vars := pat first.
-			binder := ViennaRuntimeUtil binder: pat second with: body vars: vars.
+			binder := self binder: pat second with: body vars: vars.
 			{vars.
 			'(', binder, '  ifFalse: [ViennaNoMatch signal])'} ]
 ]
