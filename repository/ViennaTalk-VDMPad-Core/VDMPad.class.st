@@ -1050,6 +1050,10 @@ VDMPad >> aboutPage [
 	page
 		cr;
 		nextPutAll:
+				'<p>Part of the VDMPad project is supported by Grant-in-Aid for Scientific Research (S) 24220001 from the Japan Society for the Promotion of Science.</p>'.
+	page
+		cr;
+		nextPutAll:
 				'<hr><pre>Copyright (c) 2013-2016 Tomohiro Oda, Software Research Associates, Inc and Kyushu University.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
