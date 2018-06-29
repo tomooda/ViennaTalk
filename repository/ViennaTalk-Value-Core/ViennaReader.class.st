@@ -268,3 +268,25 @@ ViennaReader >> readCharOn: aStream [
 		ifTrue: [ ^ $' ].
 	^ self error: 'unexpected escape char: ' , char asString
 ]
+
+{ #category : #parsing }
+ViennaReader >> skipCommentOn: aStream [
+	(aStream nextMatchAll: '/*')
+		ifFalse: [ ^ self error: 'expected /*' ].
+	[ aStream atEnd ]
+		whileFalse: [ 
+			(aStream nextMatchAll: '*/')
+				ifTrue: [ ^ self ].
+			aStream next ].
+	^ self error: 'unexpected EOF before */'
+]
+
+{ #category : #parsing }
+ViennaReader >> skipLineCommentOn: aStream [
+	(aStream nextMatchAll: '--')
+		ifFalse: [ ^ self error: 'expected --' ].
+	[ aStream atEnd ]
+		whileFalse: [ 
+			('\n\r' includes: aStream next)
+				ifTrue: [ ^ self ] ]
+]
