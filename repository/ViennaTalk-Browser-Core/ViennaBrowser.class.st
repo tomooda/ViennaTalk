@@ -15,7 +15,8 @@ Class {
 		'selectedField',
 		'codeSelection',
 		'valueSelection',
-		'workspaceSelection'
+		'workspaceSelection',
+		'directory'
 	],
 	#category : 'ViennaTalk-Browser-Core'
 }
@@ -159,7 +160,7 @@ ViennaBrowser >> acceptCode: aStringOrText [
 									editor selectFrom: editor caret to: editor caret - 1.
 									editor afterSelectionInsertAndSelect: msg ] ].
 					^ false ].
-			self selectModuleNamed: newModulePositions first key.
+			self selectModuleNamed: nil.
 			^ true ].
 	^ false
 ]
@@ -350,10 +351,7 @@ ViennaBrowser >> codePaneMenu: aMenu shifted: aBoolean [
 			{('accept (s)' translated).
 			#accept}.
 			{('cancel (l)' translated).
-			#cancel}.
-			#-.
-			{('save contents to file...' translated).
-			#saveContentsInFile}}.
+			#cancel}}.
 	^ aMenu
 ]
 
@@ -370,6 +368,11 @@ ViennaBrowser >> codeSelection [
 { #category : #'code pane' }
 ViennaBrowser >> codeSelection: aSelection [
 	codeSelection := aSelection
+]
+
+{ #category : #private }
+ViennaBrowser >> directory [
+	^ directory ifNil: [ directory := FileSystem root parent ]
 ]
 
 { #category : #private }
@@ -428,6 +431,26 @@ ViennaBrowser >> fieldSelectionIndex: anInteger [
 	self selectFieldNamed: (self fieldList at: anInteger ifAbsent: [])
 ]
 
+{ #category : #private }
+ViennaBrowser >> fileOpen: title do: aBlock [
+	(UIManager default
+		fileOpen: title
+		extensions: #('vdm' 'vdmsl')
+		path: self directory
+		preview: #text)
+		ifNotNil: [ :stream | 
+			directory := stream name asFileReference parent.
+			aBlock value: stream ]
+]
+
+{ #category : #private }
+ViennaBrowser >> fileSave: title do: aBlock [
+	(UIManager default fileSave: title extensions: #('vdm' 'vdmsl') path: self directory)
+		ifNotNil: [ :reference | 
+			directory := reference parent.
+			reference writeStreamDo: aBlock ]
+]
+
 { #category : #'module list menu' }
 ViennaBrowser >> importerModules [
 	| parser |
@@ -441,24 +464,30 @@ ViennaBrowser >> importerModules [
 		collect: [ :assoc | assoc key ]
 ]
 
+{ #category : #'module list menu' }
+ViennaBrowser >> loadAndMergeFromFile [
+	self fileOpen: 'Load and merge ...' do: [ :stream | self acceptCode: stream contents ]
+]
+
 { #category : #'module list' }
 ViennaBrowser >> moduleList [
 	^ vdmc ifNil: [ Array new ] ifNotNil: [ (self modulePositionsFrom: vdmc specification) collect: #key ]
 ]
 
 { #category : #'module list menu' }
-ViennaBrowser >> moduleListMenu: aMenu [ 
+ViennaBrowser >> moduleListMenu: aMenu [
 	| referenceSubMenu |
+	aMenu add: 'new and load...' translated selector: #newAndLoadFromFile.
+	aMenu add: 'load and merge...' translated selector: #loadAndMergeFromFile.
+	aMenu add: 'save all modules...' translated selector: #saveAllModulesToFile.
+	self selectedModule ifNotNil: [ aMenu add: 'save the module...' translated selector: #saveAModuleToFile ].
+	aMenu addLine.
 	aMenu add: 'remove module' translated selector: #removeModule.
 	aMenu addLine.
 	referenceSubMenu := MenuMorph new defaultTarget: self.
-	self importerModules
-		do: [:name | referenceSubMenu
-				add: name
-				selector: #selectModuleNamed:
-				argument: name].
+	self importerModules do: [ :name | referenceSubMenu add: name selector: #selectModuleNamed: argument: name ].
 	referenceSubMenu hasItems
-		ifTrue: [aMenu add: 'imported by...' translated subMenu: referenceSubMenu].
+		ifTrue: [ aMenu add: 'imported by...' translated subMenu: referenceSubMenu ].
 	^ aMenu
 ]
 
@@ -530,6 +559,20 @@ ViennaBrowser >> moduleSelectionIndex: anInteger [
 		selectModuleNamed: (self moduleList
 				at: anInteger
 				ifAbsent: [])
+]
+
+{ #category : #'module list menu' }
+ViennaBrowser >> newAndLoadFromFile [
+	self
+		fileOpen: 'New and load from...'
+		do: [ :stream | 
+			stream contents
+				in: [ :source | 
+					[ self vdmc specification: source ]
+						on: Error
+						do: [ :ex | 
+							codePane setText: source.
+							codePane hasUnacceptedEdits: true ] ] ]
 ]
 
 { #category : #'user interface' }
@@ -613,6 +656,30 @@ ViennaBrowser >> removeModule [
 			self changed: #moduleList.
 			self selectModuleNamed: nil.
 			^ true ]
+]
+
+{ #category : #'module list menu' }
+ViennaBrowser >> saveAModuleToFile [
+	self selectedModule
+		ifNotNil: [ :module | 
+			((self modulePositionsFrom: vdmc specification) detect: [ :assoc | assoc key = module ] ifNone: [  ])
+				ifNotNil: [ :assoc | 
+					self
+						fileSave: 'Save the "' , module , '" modules to...'
+						do: [ :stream | 
+							stream
+								nextPutAll: (vdmc specification copyFrom: assoc value first to: assoc value last);
+								close ] ] ]
+]
+
+{ #category : #'module list menu' }
+ViennaBrowser >> saveAllModulesToFile [
+	self
+		fileSave: 'Save all modules to...'
+		do: [ :stream | 
+			stream
+				nextPutAll: vdmc specification;
+				close ]
 ]
 
 { #category : #'field list' }
