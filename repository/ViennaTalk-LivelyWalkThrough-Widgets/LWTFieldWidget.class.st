@@ -5,7 +5,8 @@ Class {
 		'contents',
 		'textFont',
 		'textMorph',
-		'showsDiagram'
+		'showsDiagram',
+		'type'
 	],
 	#category : 'ViennaTalk-LivelyWalkThrough-Widgets'
 }
@@ -76,9 +77,14 @@ LWTFieldWidget class >> yellowButtonMenu [
 LWTFieldWidget >> acceptContents: aStringOrText [
 	| oldContents |
 	oldContents := contents.
-	contents := aStringOrText asString.
-	contents ~= oldContents ifTrue: [ self event: #changed ].
-	^ true
+	^ self
+		validate: aStringOrText asString
+		do: [ :validString | 
+			contents := validString.
+			contents ~= oldContents
+				ifTrue: [ self event: #changed ].
+			true ]
+		ifError: [ false ]
 ]
 
 { #category : #events }
@@ -113,6 +119,21 @@ LWTFieldWidget >> buildTextPane [
 ]
 
 { #category : #operations }
+LWTFieldWidget >> changeAnyType [
+	type := #any
+]
+
+{ #category : #operations }
+LWTFieldWidget >> changeNumberType [
+	type := #number
+]
+
+{ #category : #operations }
+LWTFieldWidget >> changeStringType [
+	type := #string
+]
+
+{ #category : #operations }
 LWTFieldWidget >> changeTextFont [
 	self
 		openModal:
@@ -123,9 +144,21 @@ LWTFieldWidget >> changeTextFont [
 				getSelector: #textFont)
 ]
 
+{ #category : #operations }
+LWTFieldWidget >> changeVDMType [
+	type := #vdm
+]
+
 { #category : #accessing }
 LWTFieldWidget >> contents [
 	^ contents ifNil: [ self defaultContents ]
+]
+
+{ #category : #validating }
+LWTFieldWidget >> contentsToValue: aString [
+	type = #string
+		ifTrue: [ ^ ViennaWriter new stringify: aString ].
+	^ aString
 ]
 
 { #category : #defaults }
@@ -141,6 +174,11 @@ LWTFieldWidget >> defaultExtent [
 { #category : #defaults }
 LWTFieldWidget >> defaultTextFont [
 	^ TextStyle default defaultFont
+]
+
+{ #category : #defaults }
+LWTFieldWidget >> defaultType [
+	^ #any
 ]
 
 { #category : #drawing }
@@ -179,7 +217,28 @@ LWTFieldWidget >> hideName [
 LWTFieldWidget >> initialize [
 	super initialize.
 	showsDiagram := false.
+	type = self defaultType.
 	self buildTextPane
+]
+
+{ #category : #testing }
+LWTFieldWidget >> isAnyType [
+	^ type = #any
+]
+
+{ #category : #testing }
+LWTFieldWidget >> isNumberType [
+	^ type = #number
+]
+
+{ #category : #testing }
+LWTFieldWidget >> isStringType [
+	^ type = #string
+]
+
+{ #category : #testing }
+LWTFieldWidget >> isVDMType [
+	^ type = #vdm
 ]
 
 { #category : #geometry }
@@ -206,6 +265,28 @@ LWTFieldWidget >> menu [
 	| menu |
 	menu := super menu.
 	menu add: 'change text font' translated target: self selector: #changeTextFont.
+	menu
+		add: 'type' translated
+		subMenu:
+			(MenuMorph new
+				defaultTarget: self;
+				addToggle: 'number' translated
+					target: self
+					selector: #changeNumberType
+					getStateSelector: #isNumberType;
+				addToggle: 'string' translated
+					target: self
+					selector: #changeStringType
+					getStateSelector: #isStringType;
+				addToggle: 'vdm' translated
+					target: self
+					selector: #changeVDMType
+					getStateSelector: #isVDMType;
+				addToggle: 'any' translated
+					target: self
+					selector: #changeAnyType
+					getStateSelector: #isAnyType;
+				yourself).
 	self showsDiagram
 		ifTrue: [ 
 			menu
@@ -267,13 +348,39 @@ LWTFieldWidget >> textPaneMenu: aMenu shifted: aBoolean [
 	^ aMenu addAllFrom: self class yellowButtonMenu
 ]
 
+{ #category : #validating }
+LWTFieldWidget >> validate: aString do: aBlock ifError: errorBlock [
+	type = #number
+		ifTrue: [ 
+			| vdm |
+			vdm := [ ViennaWriter new stringify: (ViennaReader new parseNumberOn: aString trim readStream) ]
+				on: Error
+				do: [ :ex | ^ errorBlock value: 'Cannot convert to VDM number' ].
+			^ aBlock value: vdm ].
+	type = #vdm
+		ifTrue: [ 
+			| vdm |
+			vdm := [ ViennaWriter new stringify: (ViennaReader new parse: aString) ]
+				on: Error
+				do: [ :ex | ^ errorBlock value: 'Cannot convert to VDM value' ].
+			^ aBlock value: vdm ].
+	^ aBlock value: aString
+]
+
 { #category : #accessing }
 LWTFieldWidget >> value [
-	^ self contents
+	^ self contentsToValue: self contents
 ]
 
 { #category : #accessing }
 LWTFieldWidget >> value: aStringOrText [
-	self acceptContents: aStringOrText.
+	self acceptContents: (self valueToContents: aStringOrText).
 	self changed: #contents
+]
+
+{ #category : #validating }
+LWTFieldWidget >> valueToContents: aString [
+	type = #string
+		ifTrue: [ ^ ViennaReader new parseStringOn: aString trim readStream ].
+	^ aString
 ]
