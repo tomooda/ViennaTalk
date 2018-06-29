@@ -65,11 +65,10 @@ ViennaLiveSmalltalkTranslationEditor class >> codeTextMenuOn: aBuilder [
 		selector: #findAgain;
 		help: nil;
 		icon: Smalltalk ui icons smallFindIcon.
-	UserManager default canBrowse
-		ifTrue: [ 
+	 
 			(aBuilder item: #'Code search...' translated)
 				selector: #shiftedTextPaneMenuRequest;
-				withSeparatorAfter ].
+				withSeparatorAfter .
 	(aBuilder item: #'Do again' translated)
 		keyText: 'j';
 		selector: #again;
@@ -247,8 +246,7 @@ ViennaLiveSmalltalkTranslationEditor >> translateIt [
 	editor afterSelectionInsertAndSelect: codeFromSelection.
 	codeText widget widget
 		selectFrom: editor startIndex to: editor stopIndex;
-		textChanged;
-		scrollSelectionIntoView.
+		textChanged.
 	^ true
 ]
 
