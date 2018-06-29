@@ -568,7 +568,9 @@ ViennaBrowser >> newAndLoadFromFile [
 		do: [ :stream | 
 			stream contents
 				in: [ :source | 
-					[ self vdmc specification: source ]
+					[ 
+					vdmc specification: source ifError: [ :msg | self error: msg ].
+					self selectModuleNamed: nil ]
 						on: Error
 						do: [ :ex | 
 							codePane setText: source.
@@ -752,7 +754,8 @@ ViennaBrowser >> update: aSymbol [
 		ifTrue: [ 
 			self changed: #code.
 			self changed: #moduleList.
-			self changed: #fieldList ].
+			self changed: #fieldList.
+			self changed: #value ].
 	aSymbol = #state
 		ifTrue: [ self changed: #value ]
 ]
