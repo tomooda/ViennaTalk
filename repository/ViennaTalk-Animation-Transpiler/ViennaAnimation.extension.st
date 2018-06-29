@@ -17,3 +17,8 @@ ViennaAnimation >> becomeTranspiledAnimation [
 	self dependents do: [ :dependent | animation addDependent: dependent ].
 	self become: animation
 ]
+
+{ #category : #'*ViennaTalk-Animation-Transpiler' }
+ViennaAnimation class >> transpiler [
+	^ ViennaTranspiledAnimation new
+]

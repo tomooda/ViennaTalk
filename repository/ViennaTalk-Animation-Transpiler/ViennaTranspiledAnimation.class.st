@@ -93,6 +93,11 @@ ViennaTranspiledAnimation >> defaultModule [
 	^ 'DEFAULT'
 ]
 
+{ #category : #accessing }
+ViennaTranspiledAnimation >> engineType [
+	^ #transpiler
+]
+
 { #category : #evaluating }
 ViennaTranspiledAnimation >> evaluate: aString in: moduleName ifError: errorBlock [
 	Cursor wait
@@ -221,4 +226,10 @@ ViennaTranspiledAnimation >> state [
 						keysAndValuesDo:
 							[ :varName :varIndex | state at: self defaultModule, '`', varName put: (writer stringify: (moduleState at: varIndex)) ] ] ].
 	^ state
+]
+
+{ #category : #private }
+ViennaTranspiledAnimation >> state: aDictionary [
+	object
+		viennaAtomic: [ aDictionary keysAndValuesDo: [ :var :val | [self at: var put: val] on: Error do: [ :ex | ex resume ] ] ]
 ]
