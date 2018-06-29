@@ -1135,6 +1135,11 @@ ViennaVDMParser >> sequenceForLoop [
 	^ super sequenceForLoop ==> [ :array | ViennaNode label: 'SequenceForLoop' withAll: array ]
 ]
 
+{ #category : #'parsers-types' }
+ViennaVDMParser >> set1Type [
+	^ super set1Type ==> [ :ast | ViennaNode label: 'Set1Type' with: ast ]
+]
+
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> setBind [
 	^ super setBind ==> [ :array | ViennaNode label: 'SetBind' withAll: array ]

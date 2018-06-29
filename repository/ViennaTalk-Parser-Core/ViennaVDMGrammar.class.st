@@ -1494,7 +1494,7 @@ ViennaVDMGrammar >> keyword [
 
 { #category : #'parsers-symbols' }
 ViennaVDMGrammar >> keywords [
-	^ #('all' 'always' 'and' 'as' 'async' 'atomic' 'be' 'bool' 'by' 'card' 'cases' 'char' 'class' 'comp' 'compose' 'conc' 'cycles' 'dcl' 'def' 'definitions' 'dinter' 'div' 'dlmodule' 'do' 'dom' 'dunion' 'duration' 'elems' 'else' 'elseif' 'end' 'error' 'errs' 'exists' 'exists1' 'exit' 'exports' 'ext' 'false' 'floor' 'for' 'forall' 'from' 'functions' 'hd' 'if' 'in' 'inds' 'inmap' 'instance' 'int' 'inter' 'imports' 'init' 'inv' 'inverse' 'iota' 'is' 'isofbaseclass' 'isofclass' 'lambda' 'len' 'let' 'map' 'measure' 'merge' 'mod' 'module' 'mu' 'munion' 'mutex' 'nat' 'nat1' 'new' 'nil' 'not' 'of' 'operations' 'or' 'others' 'per' 'periodic' 'post' 'power' 'pre' 'private' 'protected' 'psubset' 'public' 'pure' 'rat' 'rd' 'real' 'rem' 'renamed' 'responsibility' 'return' 'reverse' 'rng' 'samebaseclass' 'sameclass' 'self' 'seq' 'seq1' 'set' 'skip' 'specified' 'sporadic' 'st' 'start' 'startlist' 'state' 'stop' 'stoplist' 'struct' 'subclass' 'subset' 'sync' 'system' 'then' 'thread' 'threadid' 'time' 'tixe' 'tl' 'to' 'token' 'traces' 'trap' 'true' 'types' 'undefined' 'union' 'uselib' 'values' 'variables' 'while' 'with' 'wr' 'yet' 'RESULT')
+	^ #('all' 'always' 'and' 'as' 'async' 'atomic' 'be' 'bool' 'by' 'card' 'cases' 'char' 'class' 'comp' 'compose' 'conc' 'cycles' 'dcl' 'def' 'definitions' 'dinter' 'div' 'dlmodule' 'do' 'dom' 'dunion' 'duration' 'elems' 'else' 'elseif' 'end' 'error' 'errs' 'exists' 'exists1' 'exit' 'exports' 'ext' 'false' 'floor' 'for' 'forall' 'from' 'functions' 'hd' 'if' 'in' 'inds' 'inmap' 'instance' 'int' 'inter' 'imports' 'init' 'inv' 'inverse' 'iota' 'is' 'isofbaseclass' 'isofclass' 'lambda' 'len' 'let' 'map' 'measure' 'merge' 'mod' 'module' 'mu' 'munion' 'mutex' 'nat' 'nat1' 'new' 'nil' 'not' 'of' 'operations' 'or' 'others' 'per' 'periodic' 'post' 'power' 'pre' 'private' 'protected' 'psubset' 'public' 'pure' 'rat' 'rd' 'real' 'rem' 'renamed' 'responsibility' 'return' 'reverse' 'rng' 'samebaseclass' 'sameclass' 'self' 'seq' 'seq1' 'set' 'set1' 'skip' 'specified' 'sporadic' 'st' 'start' 'startlist' 'state' 'stop' 'stoplist' 'struct' 'subclass' 'subset' 'sync' 'system' 'then' 'thread' 'threadid' 'time' 'tixe' 'tl' 'to' 'token' 'traces' 'trap' 'true' 'types' 'undefined' 'union' 'uselib' 'values' 'variables' 'while' 'with' 'wr' 'yet' 'RESULT')
 ]
 
 { #category : #'parsers-keywords' }
@@ -2459,6 +2459,11 @@ ViennaVDMGrammar >> sequenceForLoop [
 			(array sixth)} ]
 ]
 
+{ #category : #'parsers-types' }
+ViennaVDMGrammar >> set1Type [
+	^ ((self reserved: 'set1') , (self reserved: 'of') , type3) ==> #third
+]
+
 { #category : #'parsers-patterns' }
 ViennaVDMGrammar >> setBind [
 	^ (pattern , (self reserved: 'in') , (self reserved: 'set') , expressionExceptEquality)
@@ -2723,7 +2728,7 @@ ViennaVDMGrammar >> type2 [
 
 { #category : #'parsers-types' }
 ViennaVDMGrammar >> type3 [
-	^ self mapType / self inmapType / self setType / self seqType / self seq1Type / self basicType / self quoteType / self compositeType / self optionalType / self typeName
+	^ self mapType / self inmapType / self setType / self set1Type / self seqType / self seq1Type / self basicType / self quoteType / self compositeType / self optionalType / self typeName
 		/ self typeVariable / ((lparen , type , rparen) ==> #second)
 ]
 
