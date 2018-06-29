@@ -55,8 +55,8 @@ ViennaVDMValueDecoder >> expression [
 	expressionParser := PPExpressionParser new.
 	expressionParser
 		term:
-			mapEnumeration / setEnumeration / sequenceEnumeration / tupleConstructor / recordConstructor / undefinedExpression
-				/ symbolicLiteral / ((lparen , expression , rparen) ==> [ :triple | triple second ]).
+			self mapEnumeration / self setEnumeration / self sequenceEnumeration / self tupleConstructor / self recordConstructor
+				/ self undefinedExpression / symbolicLiteral / ((lparen , expression , rparen) ==> [ :triple | triple second ]).
 	^ expressionParser
 ]
 

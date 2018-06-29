@@ -137,12 +137,12 @@ ViennaVDMFormatter >> access: aViennaNode [
 
 { #category : #'formatting-definitions' }
 ViennaVDMFormatter >> accessFunctionDefinition: aViennaNode [
-	^ ' ' join: ((self formatAll: aViennaNode) reject: [ :str | str trim isEmpty ])
+	^ ' ' join: ((self formatAll: aViennaNode) reject: #isEmpty)
 ]
 
 { #category : #'formatting-definitions' }
 ViennaVDMFormatter >> accessOperationDefinition: aViennaNode [
-	^ ' ' join: (self formatAll: aViennaNode)
+	^ ' ' join: ((self formatAll: aViennaNode) reject: #isEmpty)
 ]
 
 { #category : #'formatting-definitions' }
@@ -607,7 +607,7 @@ ViennaVDMFormatter >> format: aViennaNode [
 		ifTrue: [ ^ aViennaNode ].
 	string := self perform: (aViennaNode label uncapitalized , ':') asSymbol with: aViennaNode.
 	self needsParen
-		ifTrue: [ string := '(' , string , ')' ].
+		ifTrue: [ string := '(' , (self indentString: string) , ')' ].
 	^ string
 ]
 
@@ -1587,7 +1587,7 @@ ViennaVDMFormatter >> resultExpression: aViennaNode [
 
 { #category : #'formatting-statements' }
 ViennaVDMFormatter >> returnStatement: aViennaNode [
-	^ 'return ' , (self format: aViennaNode first)
+	^ 'return ' , (self indentString: (self format: aViennaNode first))
 ]
 
 { #category : #'formatting-expressions' }

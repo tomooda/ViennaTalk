@@ -356,16 +356,6 @@ ViennaVDM2SmalltalkTranslator >> div: arg1 and: arg2 [
 	^ '(' , arg1 , ' asInteger // ' , arg2 , ' asInteger)'
 ]
 
-{ #category : #'parsers-definitions' }
-ViennaVDM2SmalltalkTranslator >> document [
-	^ super document
-		==> [ :array | 
-			| vars bodies |
-			vars := array inject: #() into: [ :vs :def | vs , def first ].
-			bodies := array collect: #second.
-			'|' , (' ' join: vars) , '|' , ('' join: bodies) ]
-]
-
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> dom: arg [
 	^ arg , ' keys asSet'
@@ -559,6 +549,16 @@ ViennaVDM2SmalltalkTranslator >> fieldReference: stateDesig with: field [
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> fieldSelect: record with: field [
 	^ '(' , record , ' at: ''' , field , ''')'
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDM2SmalltalkTranslator >> flatDocument [
+	^ super flatDocument
+		==> [ :array | 
+			| vars bodies |
+			vars := array inject: #() into: [ :vs :def | vs , def first ].
+			bodies := array collect: #second.
+			'|' , (' ' join: vars) , '|' , ('' join: bodies) ]
 ]
 
 { #category : #'parsers-expressions-operators' }
