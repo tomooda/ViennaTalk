@@ -33,6 +33,72 @@ ViennaVDM2SmalltalkTranslator >> card: arg [
 	^ arg , ' size'
 ]
 
+{ #category : #'parsers-expressions-basics' }
+ViennaVDM2SmalltalkTranslator >> casesExpression [
+	^ super casesExpression
+		==> [ :triple | 
+			| valueExpr patternListAndExpressions defaultExpression varGenerator valueVar foundVar resultVar |
+			valueExpr := triple first.
+			patternListAndExpressions := triple second.
+			defaultExpression := triple third.
+			varGenerator := self
+				varNameGenerator: 'cases'
+				uniqueIn:
+					(Array with: valueExpr with: (defaultExpression ifNil: [ '' ])) , (patternListAndExpressions collect: #second).
+			valueVar := varGenerator value.
+			foundVar := varGenerator value.
+			resultVar := varGenerator value.
+			String
+				new: 1024
+				streamContents: [ :stream | 
+					stream
+						nextPutAll: '(';
+						nextPutAll: valueExpr;
+						nextPutAll: ' in: [:';
+						nextPutAll: valueVar;
+						nextPutAll: '||';
+						nextPutAll: foundVar;
+						nextPutAll: ' ';
+						nextPutAll: resultVar;
+						nextPutAll: '| ';
+						nextPutAll: foundVar;
+						nextPutAll: ' := false.'.
+					patternListAndExpressions
+						do: [ :patternListAndExpression | 
+							| patList expr |
+							patList := patternListAndExpression first.
+							expr := patternListAndExpression second.
+							patList
+								do: [ :pat | 
+									| vars binder |
+									vars := pat first.
+									binder := pat second.
+									stream
+										nextPutAll: foundVar;
+										nextPutAll: ' ifFalse: [|';
+										nextPutAll: (' ' join: vars);
+										nextPutAll: '|(';
+										nextPutAll: binder;
+										nextPutAll: ' value: ';
+										nextPutAll: valueVar;
+										nextPutAll: ') ifTrue: [';
+										nextPutAll: foundVar;
+										nextPutAll: ' := true.';
+										nextPutAll: resultVar;
+										nextPutAll: ' := ';
+										nextPutAll: expr;
+										nextPutAll: ']].' ] ].
+					stream
+						nextPutAll: foundVar;
+						nextPutAll: ' ifFalse: [';
+						nextPutAll: resultVar;
+						nextPutAll: ' := ';
+						nextPutAll: (defaultExpression ifNil: [ valueVar , ' error: '' did not match.''' ]);
+						nextPutAll: '].';
+						nextPutAll: resultVar;
+						nextPutAll: '])' ] ]
+]
+
 { #category : #'parsers-literals' }
 ViennaVDM2SmalltalkTranslator >> characterLiteral [
 	^ super characterLiteral ==> [ :c | c storeString ]
@@ -398,6 +464,17 @@ ViennaVDM2SmalltalkTranslator >> mapEnumeration [
 				, '; yourself)' ]
 ]
 
+{ #category : #'parsers-patterns' }
+ViennaVDM2SmalltalkTranslator >> matchValueLiteral [
+	^ super matchValueLiteral
+		==> [ :literal | 
+			| varGenerator valVar |
+			varGenerator := self varNameGenerator: 'lit' uniqueIn: (Array with: literal).
+			valVar := varGenerator value.
+			{#().
+			('[:' , valVar , '|' , valVar , '=' , literal , ']')} ]
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> mconcat: arg1 and: arg2 [
 	^ '(Dictionary new addAll: ' , arg1 , '; addAll: ' , arg2 , '; yourself)'
@@ -483,6 +560,54 @@ ViennaVDM2SmalltalkTranslator >> quoteLiteral [
 	^ super quoteLiteral ==> [ :quote | '#''' , quote , '''' ]
 ]
 
+{ #category : #'parsers-expressions-basics' }
+ViennaVDM2SmalltalkTranslator >> recordConstructor [
+	^ super recordConstructor
+		==> [ :typeAndArgs | 
+			| typeName args |
+			typeName := typeAndArgs first.
+			args := typeAndArgs second.
+			'(ViennaComposite type: ' , typeName storeString , ' withAll: {' , (' . ' join: args) , '})' ]
+]
+
+{ #category : #'parsers-patterns' }
+ViennaVDM2SmalltalkTranslator >> recordPattern [
+	^ super recordPattern
+		==> [ :tuple | 
+			| typeName args vars varGenerator |
+			typeName := tuple first.
+			args := tuple second.
+			vars := OrderedCollection new.
+			args do: [ :arg | vars addAll: arg first ].
+			varGenerator := self varNameGenerator: 'var' uniqueIn: (args collect: #second).
+			{vars.
+			(String
+				new: 1024
+				streamContents: [ :stream | 
+					| var |
+					var := varGenerator value.
+					stream
+						nextPutAll: '[:';
+						nextPutAll: var;
+						nextPut: $|.
+					stream
+						nextPutAll: var;
+						nextPutAll: ' isViennaComposite and: [';
+						nextPutAll: var;
+						nextPutAll: ' typeName = ';
+						nextPutAll: typeName storeString;
+						nextPutAll: ' and: [';
+						nextPutAll: var;
+						nextPutAll: ' size = ';
+						nextPutAll: args size storeString;
+						nextPutAll: ' and: [';
+						nextPutAll:
+								((args size - 1 to: 1 by: -1)
+										inject: args last second , ' value: (' , var , ' at: ' , args size storeString , ')'
+										into: [ :expr :i | '(' , (args at: i) second , ' value: (' , var , ' at: ' , i storeString , ')) and: [' , expr , ']' ]).
+					stream nextPutAll: ']]]]' ])} ]
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> rem: arg1 and: arg2 [
 	^ '(' , arg1 , ' rem: ' , arg2 , ')'
@@ -491,6 +616,46 @@ ViennaVDM2SmalltalkTranslator >> rem: arg1 and: arg2 [
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> rng: arg [
 	^ arg , ' values asSet'
+]
+
+{ #category : #'parsers-patterns' }
+ViennaVDM2SmalltalkTranslator >> seqEnumPattern [
+	^ super seqEnumPattern
+		==> [ :elements | 
+			| varGenerator vars valueVar |
+			varGenerator := self varNameGenerator: 'seqEnum' uniqueIn: (elements collect: #second).
+			vars := Array new: 10 streamContents: [ :stream | elements do: [ :pat | stream nextPutAll: pat first ] ].
+			valueVar := varGenerator value.
+			{vars.
+			(String
+				new: 1024
+				streamContents: [ :stream | 
+					stream
+						nextPutAll: '[:';
+						nextPutAll: valueVar;
+						nextPutAll: '|';
+						nextPutAll: valueVar;
+						nextPutAll: ' isCollection and: [';
+						nextPutAll: valueVar;
+						nextPutAll: ' isSequenceable and: [';
+						nextPutAll: valueVar;
+						nextPutAll: ' isArray not and: [';
+						nextPutAll: valueVar;
+						nextPutAll: ' size = ';
+						nextPutAll: elements size storeString.
+					elements
+						keysAndValuesDo: [ :index :pat | 
+							| binder |
+							binder := pat second.
+							stream
+								nextPutAll: ' and: [(';
+								nextPutAll: binder;
+								nextPutAll: ' value: (';
+								nextPutAll: valueVar;
+								nextPutAll: ' at: ';
+								nextPutAll: index storeString;
+								nextPutAll: ')) ' ].
+					elements size + 4 timesRepeat: [ stream nextPut: $] ] ])} ]
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -640,11 +805,17 @@ ViennaVDM2SmalltalkTranslator >> tuplePattern [
 						nextPutAll: var;
 						nextPut: $|.
 					stream
+						nextPutAll: var;
+						nextPutAll: ' isArray and: [';
+						nextPutAll: var;
+						nextPutAll: ' size = ';
+						nextPutAll: args size storeString;
+						nextPutAll: ' and: [';
 						nextPutAll:
-							((args size - 1 to: 1 by: -1)
-								inject: args last second , ' value: (' , var , ' at: ' , args size storeString , ')'
-								into: [ :expr :i | '(' , (args at: i) second , ' value: (' , var , ' at: ' , i storeString , ')) and: [' , expr , ']' ]).
-					stream nextPut: $] ])} ]
+								((args size - 1 to: 1 by: -1)
+										inject: args last second , ' value: (' , var , ' at: ' , args size storeString , ')'
+										into: [ :expr :i | '(' , (args at: i) second , ' value: (' , var , ' at: ' , i storeString , ')) and: [' , expr , ']' ]).
+					stream nextPutAll: ']]]' ])} ]
 ]
 
 { #category : #'parsers-expressions-operators' }
