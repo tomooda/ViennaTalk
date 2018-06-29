@@ -86,6 +86,11 @@ LWTFieldWidget >> availableEventSelectors [
 	^ #(changed)
 ]
 
+{ #category : #accessing }
+LWTFieldWidget >> basename [
+	^ 'Field'
+]
+
 { #category : #'initialize-release' }
 LWTFieldWidget >> buildTextPane [
 	textMorph := PluggableTextMorph

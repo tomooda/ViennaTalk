@@ -2,6 +2,7 @@ Class {
 	#name : #LWTMouseSensor,
 	#superclass : #LWTWidget,
 	#instVars : [
+		'basename',
 		'point',
 		'borderColor',
 		'borderWidth'
@@ -12,6 +13,7 @@ Class {
 { #category : #'instance creation' }
 LWTMouseSensor class >> area [
 	^ self new
+		basename: 'Area';
 		extent: 100 @ 100;
 		color: Color transparent;
 		borderColor: Color gray;
@@ -22,7 +24,8 @@ LWTMouseSensor class >> area [
 { #category : #'instance creation' }
 LWTMouseSensor class >> button [
 	^ self new
-		extent: 200@30;
+		basename: 'Button';
+		extent: 200 @ 30;
 		color: Color lightGray;
 		nameColor: Color black;
 		borderColor: Color darkGray;
@@ -33,7 +36,8 @@ LWTMouseSensor class >> button [
 { #category : #'instance creation' }
 LWTMouseSensor class >> pad [
 	^ self new
-		extent: 400 @ 400;
+		basename: 'MousePad';
+		extent: 200 @ 200;
 		color: (Color lightGray alpha: 0.5);
 		borderColor: Color gray;
 		thinBorder;
@@ -43,6 +47,16 @@ LWTMouseSensor class >> pad [
 { #category : #events }
 LWTMouseSensor >> availableEventSelectors [
 	^ #(clicked doubleClicked up entered left moved)
+]
+
+{ #category : #accessing }
+LWTMouseSensor >> basename [
+	^ basename ifNil: [ basename := self defaultBasename ]
+]
+
+{ #category : #accessing }
+LWTMouseSensor >> basename: aString [
+	basename := aString
 ]
 
 { #category : #accessing }
@@ -93,6 +107,11 @@ LWTMouseSensor >> changeColor [
 LWTMouseSensor >> click: aMouseEvent [
 	point := aMouseEvent position.
 	self event: #clicked
+]
+
+{ #category : #defaults }
+LWTMouseSensor >> defaultBasename [
+	^ 'MouseSensor'
 ]
 
 { #category : #defaults }

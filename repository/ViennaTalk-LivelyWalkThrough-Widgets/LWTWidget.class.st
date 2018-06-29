@@ -6,7 +6,8 @@ Class {
 		'nameFont',
 		'nameColor',
 		'moveable',
-		'showsName'
+		'showsName',
+		'frozen'
 	],
 	#category : 'ViennaTalk-LivelyWalkThrough-Widgets'
 }
@@ -18,6 +19,11 @@ LWTWidget >> actionSelectorsForEvent: aSymbol do: aBlock [
 
 { #category : #events }
 LWTWidget >> availableEventSelectors [
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
+LWTWidget >> basename [
 	^ self subclassResponsibility
 ]
 
@@ -131,6 +137,11 @@ LWTWidget >> event: aSymbol [
 	self director ifNotNil: [ :director | director dispatchEvent: aSymbol at: self name ]
 ]
 
+{ #category : #private }
+LWTWidget >> freeze [
+	frozen := true
+]
+
 { #category : #'event handling' }
 LWTWidget >> handleMouseDown: aMouseEvent [
 	aMouseEvent wasHandled: true.
@@ -166,7 +177,7 @@ LWTWidget >> handleMouseMove: aMouseEvent [
 
 { #category : #'event handling' }
 LWTWidget >> handlesMouseDown: anEvent [
-	^true
+	^ frozen not
 ]
 
 { #category : #operations }
@@ -179,16 +190,17 @@ LWTWidget >> hideName [
 LWTWidget >> initialize [
 	super initialize.
 	moveable := self defaultMoveable.
-	showsName := self defaultShowsName
+	showsName := self defaultShowsName.
+	frozen := false
 ]
 
 { #category : #private }
 LWTWidget >> makeUniqueName [
-	| basename random uniqueName |
-	basename := self class name asString.
+	| prefix random uniqueName |
+	prefix := self basename.
 	random := Random new.
 	[ 
-	uniqueName := basename , (random nextInt: 999999) printString.
+	uniqueName := prefix , (random nextInt: 999999) printString.
 	(self director ifNil: [ World ])
 		findDeepSubmorphThat: [ :m | m ~~ self and: [ m name = uniqueName ] ]
 		ifAbsent: [ ^ uniqueName ] ] repeat
@@ -230,13 +242,18 @@ LWTWidget >> name [
 
 { #category : #accessing }
 LWTWidget >> name: aString [
-	World
-		findDeepSubmorphThat: [ :m | (m isKindOf: LWTWidget) and: [ m ~~ self and: [ m name = aString ] ] ]
-		ifAbsent: [ 
+	self director
+		ifNotNil: [ :director | 
+			director
+				findDeepSubmorphThat: [ :m | (m isKindOf: LWTWidget) and: [ m ~~ self and: [ m name = aString ] ] ]
+				ifAbsent: [ 
+					name := aString.
+					self changed.
+					^ self ].
+			self changeName ]
+		ifNil: [ 
 			name := aString.
-			self changed.
-			^ self ].
-	self changeName
+			self changed ]
 ]
 
 { #category : #accessing }
