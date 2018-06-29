@@ -130,7 +130,7 @@ ViennaBrowser class >> installEventHandlers [
 				type: nil
 				extension: 'vdmsl'
 				action: [ :stream :pasteUp :event | 
-					(ViennaBrowser on: VDMC default)
+					(ViennaBrowser on: ViennaAnimation default)
 						openLabel: stream name;
 						acceptCode: stream contents ])
 ]
@@ -181,7 +181,7 @@ ViennaBrowser class >> on: aVDMC [
 ViennaBrowser class >> open [
 	"ViennaBrowser open"
 
-	^ self openOn: VDMC default
+	^ self openOn: ViennaAnimation default
 ]
 
 { #category : #'instance creation' }
