@@ -134,7 +134,7 @@ LWTWidget >> edgePrecision [
 
 { #category : #events }
 LWTWidget >> event: aSymbol [
-	self director ifNotNil: [ :director | director dispatchEvent: aSymbol at: self name ]
+	self director ifNotNil: [ :director | director execEvent: aSymbol at: self name ]
 ]
 
 { #category : #private }
