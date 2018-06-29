@@ -480,6 +480,28 @@ LWTDirector >> urlPrefix: aString [
 			self changed: #urlPrefix ]
 ]
 
+{ #category : #accessing }
+LWTDirector >> useInterpreter [
+	self vdmc becomeInterpretedAnimation 
+]
+
+{ #category : #accessing }
+LWTDirector >> useTranspiler [
+	self vdmc becomeTranspiledAnimation 
+]
+
+{ #category : #accessing }
+LWTDirector >> usesTranspiler [
+	^ vdmc class == ViennaTranspiledAnimation 
+]
+
+{ #category : #accessing }
+LWTDirector >> usesTranspiler: aBoolean [
+	aBoolean = true
+		ifTrue: [ self useTranspiler ]
+		ifFalse: [ self useInterpreter ]
+]
+
 { #category : #'request handling' }
 LWTDirector >> value: aZnRequest [
 	^ (aZnRequest uri segments ifNotNil: [ :segments | segments at: 2 ifAbsent: [  ] ])
