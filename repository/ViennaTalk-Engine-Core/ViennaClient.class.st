@@ -58,7 +58,8 @@ ViennaClient class >> viennaSettingsOn: aBuilder [
 		getSelector: #defaultUrlString;
 		setSelector: #defaultUrlString:;
 		description: 'The default ViennaServer url (used by ViennaClient)';
-		label: 'default Vienna server URL'
+		label: 'default Vienna server URL';
+		order: 0.4
 ]
 
 { #category : #evaluating }

@@ -1,14 +1,41 @@
 Class {
 	#name : #ViennaEngine,
 	#superclass : #Object,
+	#classVars : [
+		'AlwaysUsesViennaServerAsDefault'
+	],
 	#category : 'ViennaTalk-Engine-Core'
 }
 
+{ #category : #settings }
+ViennaEngine class >> alwaysUsesViennaServerAsDefault [
+	^ AlwaysUsesViennaServerAsDefault ifNil: [ AlwaysUsesViennaServerAsDefault := false ]
+]
+
+{ #category : #settings }
+ViennaEngine class >> alwaysUsesViennaServerAsDefault: aBoolean [
+	^ AlwaysUsesViennaServerAsDefault := aBoolean = true
+]
+
 { #category : #defaults }
 ViennaEngine class >> default [
-	^ (Smalltalk os isWindows not and: [ ViennaVDMJ isInstalled ])
-		ifTrue: [ ViennaVDMJ new ]
-		ifFalse: [ ViennaClient default ]
+	^ (self alwaysUsesViennaServerAsDefault
+		or: [ Smalltalk os isWindows or: [ ViennaVDMJ isInstalled not ] ])
+		ifTrue: [ ViennaClient default ]
+		ifFalse: [ ViennaVDMJ new ]
+]
+
+{ #category : #settings }
+ViennaEngine class >> viennaSettingsOn: aBuilder [
+	<systemsettings>
+	(aBuilder setting: #viennaTalkAlwaysUseServer)
+		parent: #ViennaTalkServices;
+		target: self;
+		getSelector: #alwaysUsesViennaServerAsDefault;
+		setSelector: #alwaysUsesViennaServerAsDefault:;
+		description: 'If checked, "ViennaEngine default" always chooses the vienna server via HTTP even when a local VDMJ process is available.';
+		label: 'Always uses vienna Server via HTTP';
+		order: 0.5
 ]
 
 { #category : #evaluating }
