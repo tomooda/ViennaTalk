@@ -494,6 +494,6 @@ ViennaVDMHighlighter >> while [
 ]
 
 { #category : #'parsers-keywords' }
-ViennaVDMHighlighter >> wt [
-	^ self keyword: super wt
+ViennaVDMHighlighter >> wr [
+	^ self keyword: super wr
 ]
