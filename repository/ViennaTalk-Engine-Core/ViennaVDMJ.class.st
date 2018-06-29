@@ -330,20 +330,20 @@ ViennaVDMJ >> classicIfError: errorBlock [
 { #category : #accessing }
 ViennaVDMJ >> close [
 	process
-		ifNotNilDo: [:p | 
+		ifNotNil: [ :p | 
 			process := nil.
 			p sigterm.
 			p sigkill.
-			p terminate].
+			p terminate ].
 	reader
-		ifNotNilDo: [:r | 
+		ifNotNil: [ :r | 
 			reader := nil.
-			r close].
+			r close ].
 	writer
-		ifNotNilDo: [:w | 
+		ifNotNil: [ :w | 
 			writer := nil.
-			w close].
-	executor ifNotNil: [self updateExecutor]
+			w close ].
+	executor ifNotNil: [ self updateExecutor ]
 ]
 
 { #category : #commands }
@@ -515,16 +515,21 @@ ViennaVDMJ >> finalize [
 ]
 
 { #category : #private }
-ViennaVDMJ >> forkProcess: desc [
-	^ UnixProcess
-		forkJob: self javaPath
+ViennaVDMJ >> forkProcess [
+	^ OSSUnixSubprocess new
+		command: self javaPath;
 		arguments:
 			{'-Dfile.encoding=whatever'.
 			'-Xss2m'.
 			'-jar'.
-			(self json4vdmjPath fullName convertToEncoding: 'utf-8')}
-		environment: nil
-		descriptors: desc
+			(self json4vdmjPath fullName convertToEncoding: 'utf-8')};
+		defaultWriteStreamCreationBlock: [ OSSVMProcess vmProcess systemAccessor makeNonBlockingPipe ];
+		redirectStdout;
+		redirectStderr;
+		defaultReadStreamCreationBlock: [ OSSVMProcess vmProcess systemAccessor makeBlockingPipe ];
+		redirectStdin;
+		run;
+		yourself
 ]
 
 { #category : #locking }
@@ -625,9 +630,6 @@ ViennaVDMJ >> setWriter: aPipe [
 
 { #category : #private }
 ViennaVDMJ >> startupProcess [
-	| pipe1 pipe2 input output desc |
-	OSProcess accessor canAccessSystem
-		ifFalse: [ ^ nil ].
 	Smalltalk os isWindows
 		ifTrue: [ ^ self error: 'ViennaVDMJ can not run on Windows Platform. Use ViennaClient instead.' ]
 		ifFalse: [ 
@@ -640,16 +642,9 @@ ViennaVDMJ >> startupProcess [
 				ifFalse: [ self class installJson4VDMJ ].
 			self class jsonicPath exists
 				ifFalse: [ self class installJsonic ] ].
-	pipe1 := OSPipe blockingPipe.
-	pipe2 := OSPipe nonBlockingPipe.
-	input := pipe1 reader.
-	output := pipe2 writer.
-	writer := pipe1 writer.
-	reader := pipe2 reader.
-	desc := Array with: input with: output with: output.
-	process := self forkProcess: desc.
-	input close.
-	output close.
+	process := self forkProcess.
+	reader := process stdoutStream.
+	writer := process stdinStream.
 	self updateExecutor
 ]
 
