@@ -41,7 +41,7 @@ ViennaBrowser class >> on: aVDMC [
 ViennaBrowser class >> open [
 	"ViennaBrowser open"
 
-	^ self openOn: VDMC vdmj
+	^ self openOn: VDMC default
 ]
 
 { #category : #'instance creation' }
