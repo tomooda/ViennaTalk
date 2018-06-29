@@ -4,6 +4,11 @@ Class {
 	#category : 'ViennaTalk-Engine-Core'
 }
 
+{ #category : #defaults }
+ViennaEngine class >> default [
+	^ ViennaClient default
+]
+
 { #category : #evaluating }
 ViennaEngine >> evaluate: expression specification: spec states: states [ 
 	^ self evaluate: expression specification: spec states: states vdm10: true rtc: true 
