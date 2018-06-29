@@ -1466,6 +1466,7 @@ VDMPad >> eval: aZnRequest [
 	params := aZnRequest contentType = ZnMimeType applicationJson
 		ifTrue: [ NeoJSONReader fromString: aZnRequest entity ]
 		ifFalse: [ aZnRequest mergedFields ].
+	self halt.
 	vdm10 := (params at: 'classic' ifAbsent: [  ]) isNil.
 	rtc := (params at: 'ignoreRuntimeChecking' ifAbsent: [  ]) isNil.
 	source := (params at: 'source' ifAbsent: [ String new ]) trimmed.
@@ -1497,7 +1498,7 @@ VDMPad >> eval: aZnRequest [
 		at: 'source' put: source;
 		at: 'expression' put: expression;
 		at: 'value' put: (triple first ifNil: [ String new ]);
-		at: 'message' put: (self tailerErrorMessage: triple third).
+		at: 'message' put: (triple third).
 	triple second
 		keysAndValuesDo: [ :moduleName :bindings | bindings keysAndValuesDo: [ :varName :value | json at: moduleName , '`' , varName put: value ] ].
 	^ self responseJSON: json
