@@ -118,8 +118,21 @@ ViennaBrowser class >> defaultLabel [
 
 { #category : #'class initialization' }
 ViennaBrowser class >> initialize [
-	super initialize.
+	self installEventHandlers.
 	Smalltalk at: #ViennaLauncher ifPresent: [ :launcherClass | launcherClass reopen ]
+]
+
+{ #category : #'class initialization' }
+ViennaBrowser class >> installEventHandlers [
+	ExternalDropHandler
+		registerHandler:
+			(ExternalDropHandler
+				type: nil
+				extension: 'vdmsl'
+				action: [ :stream :pasteUp :event | 
+					(ViennaBrowser on: VDMC default)
+						openLabel: stream name;
+						acceptCode: stream contents ])
 ]
 
 { #category : #menu }
