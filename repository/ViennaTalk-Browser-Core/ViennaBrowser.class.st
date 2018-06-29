@@ -160,7 +160,11 @@ ViennaBrowser >> acceptCode: aStringOrText [
 									editor selectFrom: editor caret to: editor caret - 1.
 									editor afterSelectionInsertAndSelect: msg ] ].
 					^ false ].
-			self selectModuleNamed: nil.
+			self
+				selectModuleNamed:
+					((newModulePositions asSortedCollection: [ :less :more | less value first <= more value first])
+						ifEmpty: [ nil ]
+						ifNotEmpty: [ :sorted | sorted first key ]).
 			^ true ].
 	^ false
 ]
@@ -440,7 +444,7 @@ ViennaBrowser >> fileOpen: title do: aBlock [
 		preview: #text)
 		ifNotNil: [ :stream | 
 			directory := stream name asFileReference parent.
-			aBlock value: stream ]
+			aBlock value: (stream contents copyReplaceAll: String lf with: String cr) readStream ]
 ]
 
 { #category : #private }
@@ -448,7 +452,13 @@ ViennaBrowser >> fileSave: title do: aBlock [
 	(UIManager default fileSave: title extensions: #('vdm' 'vdmsl') path: self directory)
 		ifNotNil: [ :reference | 
 			directory := reference parent.
-			reference writeStreamDo: aBlock ]
+			reference
+				writeStreamDo: [ :stream | 
+					stream
+						nextPutAll:
+							((String new: 1024 streamContents: [ :stringStream | aBlock value: stringStream ])
+								copyReplaceAll: String cr
+								with: String lf) ] ]
 ]
 
 { #category : #'module list menu' }
