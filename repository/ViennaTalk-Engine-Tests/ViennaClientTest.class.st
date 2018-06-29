@@ -9,7 +9,7 @@ Class {
 
 { #category : #running }
 ViennaClientTest >> setUp [
-	fixture := ViennaClient default
+	fixture := ViennaClient on: 'http://localhost:8088/'
 ]
 
 { #category : #private }
@@ -42,17 +42,19 @@ ViennaClientTest >> testBadSpec [
 ]
 
 { #category : #private }
-ViennaClientTest >> testExpression: expression specification: specification states: states resultValue: resultValue resultStates: resultStates [ 
-	(fixture
-		evaluate: expression
-		specification: specification
-		states: states
-		vdm10: true
-		rtc: true)
-		in: [:triple | 
-			self assert: resultValue equals: triple first.
-			self assert: resultStates equals: triple second.
-			self assert: resultValue isNil equals: triple third notEmpty]
+ViennaClientTest >> testExpression: expression specification: specification states: states resultValue: resultValue resultStates: resultStates [
+	ViennaServer
+		ensureServeIn: [ 
+			(fixture
+				evaluate: expression
+				specification: specification
+				states: states
+				vdm10: true
+				rtc: true)
+				in: [ :triple | 
+					self assert: resultValue equals: triple first.
+					self assert: resultStates equals: triple second.
+					self assert: resultValue isNil equals: triple third notEmpty ] ]
 ]
 
 { #category : #tests }

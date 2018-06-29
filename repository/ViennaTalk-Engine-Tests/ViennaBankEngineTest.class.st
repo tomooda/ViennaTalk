@@ -25,17 +25,3 @@ ViennaBankEngineTest >> test20times [
 			sem critical: [ count := count + 1 ] ] forkAt: Processor userBackgroundPriority ].
 	[ count < 20 ] whileTrue: [ (Delay forMilliseconds: 100) wait ]
 ]
-
-{ #category : #private }
-ViennaBankEngineTest >> testExpression: expression specification: specification states: states resultValue: resultValue resultStates: resultStates [ 
-	(fixture
-		evaluate: expression
-		specification: specification
-		states: states
-		vdm10: true
-		rtc: true)
-		in: [:triple | 
-			self assert: resultValue equals: triple first.
-			self assert: resultStates equals: triple second.
-			self assert: resultValue isNil equals: triple third notEmpty]
-]
