@@ -50,7 +50,7 @@ ViennaBrowser >> accept: aString var: varName [
 						afterSelectionInsertAndSelect: msg ].
 			vdmc plainAt: varName put: oldValue.
 			^ false ].
-	self changed: #value.
+	vdmc changed: #state.
 	^ true
 ]
 
@@ -70,7 +70,7 @@ ViennaBrowser >> accept: aString var: varName in: moduleName [
 						afterSelectionInsertAndSelect: msg ].
 			vdmc plainAt: key put: oldValue.
 			^ false ].
-	self changed: #value.
+	vdmc changed: #state.
 	^ true
 ]
 
@@ -99,7 +99,7 @@ ViennaBrowser >> acceptBindings: aString in: moduleName [
 						afterSelectionInsertAndSelect: msg ].
 			oldBindings keysAndValuesDo: [ :key :value | vdmc plainAt: key put: value ].
 			^ false ].
-	self changed: #value.
+	vdmc changed: #state.
 	^ true
 ]
 
@@ -108,7 +108,7 @@ ViennaBrowser >> acceptCode: aStringOrText [
 	vdmc
 		ifNotNil: [ 
 			| code oldModulePositions oldModuleNames newModulePositions newModuleDict oldSpec newSpec |
-			code := aStringOrText asString.
+			code := aStringOrText asString trimmed copyWith: Character cr.
 			oldSpec := vdmc specification.
 			oldModulePositions := self modulePositionsFrom: oldSpec.
 			oldModuleNames := (oldModulePositions collect: #key) asSet.
@@ -129,20 +129,18 @@ ViennaBrowser >> acceptCode: aStringOrText [
 						do: [ :assoc | 
 							(oldModuleNames includes: assoc key)
 								ifFalse: [ stream nextPutAll: (code copyFrom: assoc value first to: assoc value last) ] ] ].
-			vdmc specification: newSpec.
-			[ vdmc plainEvaluate: 'nil' ]
-				on: Error
-				do: [ :ex | 
-					vdmc specification: oldSpec.
+			codePane hasUnacceptedEdits: false.
+			vdmc
+				specification: newSpec
+				ifError: [ :msg | 
+					codePane hasUnacceptedEdits: true.
 					codePane
 						handleEdit: [ 
 							codePane textMorph editor
 								in: [ :editor | 
 									editor selectFrom: editor caret to: editor caret - 1.
-									editor afterSelectionInsertAndSelect: ex messageText ] ].
+									editor afterSelectionInsertAndSelect: msg ] ].
 					^ false ].
-			codePane hasUnacceptedEdits: false.
-			self changed: #moduleList.
 			self selectModuleNamed: newModulePositions first key.
 			^ true ].
 	^ false
@@ -172,7 +170,7 @@ ViennaBrowser >> acceptGlobalBindings: aString [
 						afterSelectionInsertAndSelect: msg ].
 			oldBindings keysAndValuesDo: [ :key :value | vdmc plainAt: key put: value ].
 			^ false ].
-	self changed: #value.
+	vdmc changed: #state.
 	^ true
 ]
 
@@ -584,23 +582,29 @@ ViennaBrowser >> removeModule [
 ]
 
 { #category : #'field list' }
-ViennaBrowser >> selectFieldNamed: aString [ 
+ViennaBrowser >> selectFieldNamed: aString [
+	| oldSelection |
+	oldSelection := selectedField.
 	selectedField := (self fieldList includes: aString)
-				ifTrue: [aString].
-	self changed: #fieldSelectionIndex.
-	self changed: #value
+		ifTrue: [ aString ].
+	selectedField ~= oldSelection
+		ifTrue: [ 
+			self changed: #fieldSelectionIndex.
+			self changed: #value ]
 ]
 
 { #category : #'module list' }
-ViennaBrowser >> selectModuleNamed: aString [ 
+ViennaBrowser >> selectModuleNamed: aString [
+	| oldSelection |
+	oldSelection := selectedModule.
 	selectedModule := (self moduleList includes: aString)
-				ifTrue: [aString].
-	selectedField := nil.
-	self changed: #moduleSelectionIndex.
-	self changed: #fieldList.
-	self changed: #fieldSelectionIndex.
-	self changed: #code.
-	self changed: #value
+		ifTrue: [ aString ].
+	selectedModule ~= oldSelection
+		ifTrue: [ 
+			self changed: #moduleSelectionIndex.
+			self changed: #fieldList.
+			self selectFieldNamed: nil.
+			self changed: #code ]
 ]
 
 { #category : #'field list' }
@@ -638,6 +642,17 @@ operations
 	post <postcondition>;
 end <module name>
 '
+]
+
+{ #category : #updating }
+ViennaBrowser >> update: aSymbol [
+	aSymbol = #specification
+		ifTrue: [ 
+			self changed: #code.
+			self changed: #moduleList.
+			self changed: #fieldList ].
+	aSymbol = #state
+		ifTrue: [ self changed: #value ]
 ]
 
 { #category : #'value pane' }
@@ -741,5 +756,7 @@ ViennaBrowser >> vdmc [
 
 { #category : #accessing }
 ViennaBrowser >> vdmc: aVDMC [
-	vdmc := aVDMC
+	vdmc ifNotNil: [ vdmc removeDependent: self ].
+	vdmc := aVDMC.
+	aVDMC addDependent: self
 ]
