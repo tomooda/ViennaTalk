@@ -124,29 +124,31 @@ ViennaLiveTranslationEditor >> initializeWidgets [
 		isCodeCompletionAllowed: false;
 		menuHolder: [ self sourceTextMenu ];
 		bindKeyCombination: $f shift command toAction: [ self formatSourceText ];
-		bindKeyCombination: $p command toAction: [ self viennaItInSourceText ].
-	sourceText
+		bindKeyCombination: $p command toAction: [ self viennaItInSourceText ];
 		whenTextChanged: [ :source | 
-			[ 
-			| failure |
-			failure := nil.
-			targetText
-				accept:
-					(self
-						translate: source
-						ifError: [ :error | 
-							failure := error.
-							'' ])
-				notifying: nil.
-			failure
-				ifNotNil: [ sourceText text: (source addAttribute: TextColor red from: failure position + 1 to: source size) ] ]
-				on: Error
-				do: [ :ex | 
-					Transcript
-						cr;
-						show: ex printString ] ].
+					[ 
+					| failure |
+					failure := nil.
+					targetText
+						accept:
+							(self
+								translate: source
+								ifError: [ :error | 
+									failure := error.
+									'' ])
+						notifying: nil.
+					failure
+						ifNotNil: [ sourceText text: (source addAttribute: TextColor red from: failure position + 1 to: source size) ] ]
+						on: Error
+						do: [ :ex | 
+							Transcript
+								cr;
+								show: ex printString ] ];
+		whenBuiltDo: [ sourceText widget font: ViennaLauncher font ].
 	targetText := self newText.
-	targetText help: 'Translation output'.
+	targetText
+		help: 'Translation output';
+		whenBuiltDo: [ targetText widget font: ViennaLauncher font ].
 	self title: self defaultTitle
 ]
 
