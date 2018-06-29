@@ -7,10 +7,25 @@ Class {
 { #category : #menu }
 ViennaLiveASTTranslationEditor class >> VDM2SmalltalkTranslatorMenuOn: aBuilder [
 	<worldMenu>
+	((aBuilder item: #VienntaTalkDev)
+		parent: #ViennaTalk;
+		label: 'dev')
+		withSeparatorAfter;
+		with: [ 
+					(aBuilder item: #'VDM->AST translator')
+						action: [ self new openWithSpec ];
+						order: 0.1;
+						parent: #VienntaTalkDev;
+						help: 'VDM-SL to AST LIVE translating editor';
+						icon: nil ]
+]
+
+{ #category : #menu }
+ViennaLiveASTTranslationEditor class >> viennaDevMenuOn: aBuilder [
+	<ViennaDev>
 	(aBuilder item: #'VDM->AST translator')
 		action: [ self new openWithSpec ];
-		order: 0.471;
-		parent: #Tools;
+		order: 0.1;
 		help: 'VDM-SL to AST LIVE translating editor';
 		icon: nil
 ]

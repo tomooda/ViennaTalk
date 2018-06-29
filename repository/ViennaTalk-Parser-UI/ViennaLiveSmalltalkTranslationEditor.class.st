@@ -12,8 +12,8 @@ ViennaLiveSmalltalkTranslationEditor class >> VDM2SmalltalkTranslatorMenuOn: aBu
 	<worldMenu>
 	(aBuilder item: #'VDM->Smalltalk translator')
 		action: [ self new openWithSpec ];
-		order: 0.47;
-		parent: #Tools;
+		order: 0.2;
+		parent: #VienntaTalkDev;
 		help: 'VDM-SL to Smalltalk LIVE translating editor';
 		icon: nil
 ]
@@ -116,6 +116,16 @@ ViennaLiveSmalltalkTranslationEditor class >> defaultSpec [
 						newRow: [ :row | row add: #codeText ];
 						yourself ];
 		yourself
+]
+
+{ #category : #menu }
+ViennaLiveSmalltalkTranslationEditor class >> viennaDevMenuOn: aBuilder [
+	<ViennaDev>
+	(aBuilder item: #'VDM->Smalltalk translator')
+		action: [ self new openWithSpec ];
+		order: 0.2;
+		help: 'VDM-SL to Smalltalk LIVE translating editor';
+		icon: nil
 ]
 
 { #category : #accessing }
