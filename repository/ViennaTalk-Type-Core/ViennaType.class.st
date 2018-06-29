@@ -200,6 +200,15 @@ ViennaType >> detect: aBlock [
 ]
 
 { #category : #enumerating }
+ViennaType >> detect: aBlock ifNone: errorBlock [
+	self
+		do: [ :value | 
+			(aBlock value: value)
+				ifTrue: [ ^ value ] ].
+	^ errorBlock value
+]
+
+{ #category : #enumerating }
 ViennaType >> do: aBlock [
 	runtimeSet ifNotNil: [ runtimeSet do: aBlock ] ifNil: [ self basicDo: aBlock ]
 ]
