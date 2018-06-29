@@ -9,11 +9,13 @@ Class {
 		'fieldListPane',
 		'valuePane',
 		'codePane',
+		'workspace',
+		'workspacePane',
 		'selectedModule',
 		'selectedField',
 		'codeSelection',
 		'valueSelection',
-		'announcer'
+		'workspaceSelection'
 	],
 	#category : 'ViennaTalk-Browser-Core'
 }
@@ -187,10 +189,40 @@ ViennaBrowser >> acceptValue: aString [
 				ifNotNil: [ :field | self accept: aString asString var: field in: module ] ]
 ]
 
-{ #category : #accessing }
-ViennaBrowser >> announcer [
+{ #category : #'workspace pane' }
+ViennaBrowser >> acceptWorkspace: aStringOrText [
+	| oldWorkspace |
+	oldWorkspace := workspace.
+	workspace := aStringOrText.
+	oldWorkspace ~= workspace ifTrue: [ self changed: #workspace ]
+]
 
-	^ announcer ifNil: [ announcer := Announcer new ]
+{ #category : #'user interface' }
+ViennaBrowser >> build [
+	| pane upper lower |
+	moduleListPane := self buildModuleList.
+	fieldListPane := self buildFieldList.
+	valuePane := self buildValuePane.
+	codePane := self buildCodePane.
+	workspacePane := self buildWorkspacePane.
+	pane := BorderedMorph new.
+	pane extent: 400 @ 300.
+	pane color: Color transparent.
+	pane changeProportionalLayout.
+	upper := BorderedMorph new.
+	upper changeProportionalLayout.
+	upper addMorph: moduleListPane fullFrame: (0 @ 0 corner: 0.3 @ 1) asLayoutFrame.
+	upper addMorph: fieldListPane fullFrame: (0.3 @ 0 corner: 0.6 @ 1) asLayoutFrame.
+	upper addMorph: valuePane fullFrame: (0.6 @ 0 corner: 1 @ 1) asLayoutFrame.
+	upper addPaneSplitters.
+	lower := LazyTabGroupMorph new.
+	lower addLazyPage: codePane label: 'Specification'.
+	lower addLazyPage: workspacePane label: 'Workspace'.
+	lower selectedPageIndex: 1.
+	pane addMorph: upper fullFrame: ((0 @ 0 corner: 1 @ 0.5) asLayoutFrame bottomRightOffset: 0 @ -2).
+	pane addMorph: lower fullFrame: ((0 @ 0.5 corner: 1 @ 1) asLayoutFrame topLeftOffset: 0 @ 2).
+	pane addPaneSplitters.
+	^ pane
 ]
 
 { #category : #'user interface' }
@@ -237,6 +269,19 @@ ViennaBrowser >> buildValuePane [
 		setSelection: #valueSelection:)
 		askBeforeDiscardingEdits: false;
 		alwaysAccept: true;
+		yourself
+]
+
+{ #category : #'user interface' }
+ViennaBrowser >> buildWorkspacePane [
+	^ (ViennaPluggableTextMorph
+		on: self
+		text: #workspace
+		accept: #acceptWorkspace:
+		readSelection: #workspaceSelection
+		menu: #workspacePaneMenu:shifted:
+		setSelection: #workspaceSelection:)
+		askBeforeDiscardingEdits: true;
 		yourself
 ]
 
@@ -320,7 +365,7 @@ ViennaBrowser >> codeSelection: aSelection [
 
 { #category : #private }
 ViennaBrowser >> doItIn: aPluggableTextMorph [ 
-	valuePane
+	aPluggableTextMorph
 		handleEdit: [| editor error |
 			editor := aPluggableTextMorph textMorph editor.
 			editor
@@ -337,8 +382,7 @@ ViennaBrowser >> doItIn: aPluggableTextMorph [
 						handleEdit: [editor afterSelectionInsertAndSelect: error].
 					selectionInterval := editor selectionInterval.
 					aPluggableTextMorph textMorph editor selectFrom: selectionInterval first to: selectionInterval last.
-					aPluggableTextMorph scrollSelectionIntoView.
-					self changed: #value]]
+					aPluggableTextMorph scrollSelectionIntoView]]
 ]
 
 { #category : #private }
@@ -481,25 +525,7 @@ ViennaBrowser >> moduleSelectionIndex: anInteger [
 
 { #category : #'user interface' }
 ViennaBrowser >> openLabel: aString [
-	| pane upper |
-	moduleListPane := self buildModuleList.
-	fieldListPane := self buildFieldList.
-	valuePane := self buildValuePane.
-	codePane := self buildCodePane.
-	pane := BorderedMorph new.
-	pane extent: 400 @ 300.
-	pane color: Color transparent.
-	pane changeProportionalLayout.
-	upper := BorderedMorph new.
-	upper changeProportionalLayout.
-	upper addMorph: moduleListPane fullFrame: (0 @ 0 corner: 0.3 @ 1) asLayoutFrame.
-	upper addMorph: fieldListPane fullFrame: (0.3 @ 0 corner: 0.6 @ 1) asLayoutFrame.
-	upper addMorph: valuePane fullFrame: (0.6 @ 0 corner: 1 @ 1) asLayoutFrame.
-	upper addPaneSplitters.
-	pane addMorph: upper fullFrame: ((0 @ 0 corner: 1 @ 0.5) asLayoutFrame bottomRightOffset: 0 @ -2).
-	pane addMorph: codePane fullFrame: ((0 @ 0.5 corner: 1 @ 1) asLayoutFrame topLeftOffset: 0 @ 2).
-	pane addPaneSplitters.
-	pane openInWindowLabeled: aString
+	self build openInWindowLabeled: aString
 ]
 
 { #category : #'value pane' }
@@ -554,8 +580,7 @@ ViennaBrowser >> printItIn: aPluggableTextMorph [
 				handleEdit: [editor afterSelectionInsertAndSelect: result].
 			selectionInterval := editor selectionInterval.
 			aPluggableTextMorph textMorph editor selectFrom: selectionInterval first to: selectionInterval last.
-			aPluggableTextMorph scrollSelectionIntoView.
-			self changed: #value]
+			aPluggableTextMorph scrollSelectionIntoView]
 ]
 
 { #category : #'module list menu' }
@@ -759,4 +784,76 @@ ViennaBrowser >> vdmc: aVDMC [
 	vdmc ifNotNil: [ vdmc removeDependent: self ].
 	vdmc := aVDMC.
 	aVDMC addDependent: self
+]
+
+{ #category : #'workspace pane' }
+ViennaBrowser >> workspace [
+	^ workspace
+]
+
+{ #category : #'workspace pane menu' }
+ViennaBrowser >> workspacePaneAccept [
+	^ self acceptWorkspace: workspacePane text asString
+]
+
+{ #category : #'workspace pane menu' }
+ViennaBrowser >> workspacePaneDoIt [
+	self doItIn: workspacePane
+]
+
+{ #category : #'workspace pane menu' }
+ViennaBrowser >> workspacePaneMenu: aMenu shifted: aBoolean [
+	aMenu addList: (aBoolean = true 
+		ifTrue:[{
+			#-.
+			{'save contents to file...' translated.		#saveContentsInFile}.
+			{'send contents to printer' translated.		#sendContentsToPrinter}.
+			{'printer setup' translated.				#printerSetup}.
+			#-.
+		}.]
+		ifFalse:[{
+			{'set font... (k)' translated.				#offerFontMenu}.
+			{'set style... (K)' translated.				#changeStyle}.
+			{'set alignment... (u)' translated.		#chooseAlignment}.
+			#-.
+			{'make project link (P)' translated.	#makeProjectLink}.
+			#-.
+			{'find...(f)' translated.					#find}.
+			{'find again (g)' translated.				#findAgain}.
+			{'set search string (h)' translated.		#setSearchString}.
+			#-.
+			{'do again (j)' translated.				#again}.
+			{'undo (z)' translated.					#undo}.
+			#-.
+			{'copy (c)' translated.					#copySelection}.
+			{'cut (x)' translated.						#cut}.
+			{'paste (v)' translated.					#paste}.
+			{'paste...' translated.					#pasteRecent}.
+			#-.
+			{'do it (d)' translated.		#workspacePaneDoIt}.			     
+			{'print it (p)' translated.		#workspacePanePrintIt}.
+			#-.
+			{'accept (s)' translated.					#workspaceAccept}.
+			{'cancel (l)' translated.					#workspaceCancel}.
+			#-.
+			{'copy html' translated.					#copyHtml}.
+			#-.
+			{'more...' translated.					#shiftedTextPaneMenuRequest}.
+		}]).
+	^aMenu
+]
+
+{ #category : #'workspace pane menu' }
+ViennaBrowser >> workspacePanePrintIt [
+	self printItIn: workspacePane
+]
+
+{ #category : #'workspace pane' }
+ViennaBrowser >> workspaceSelection [
+	^ workspaceSelection ifNil: [ workspaceSelection := 1 to: 0 ]
+]
+
+{ #category : #'workspace pane' }
+ViennaBrowser >> workspaceSelection: anInterval [
+	workspaceSelection := anInterval
 ]
