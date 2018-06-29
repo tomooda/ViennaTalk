@@ -349,6 +349,28 @@ ViennaVDMParser >> forallExpression [
 	^ super forallExpression ==> [ :array | ViennaNode label: 'ForallExpression' withAll: array ]
 ]
 
+{ #category : #parsing }
+ViennaVDMParser >> format: aString [
+	| ast |
+	ast := self parse: aString.
+	^ ast isPetitFailure
+		ifTrue: [ ast ]
+		ifFalse: [ 
+			(self scanCommentsOn: aString)
+				inject: ast format
+				into: [ :source :posAndComment | 
+					posAndComment key
+						ifNil: [ posAndComment value , source ]
+						ifNotNil: [ 
+							| char count commentString index |
+							char := posAndComment key key.
+							count := posAndComment key value.
+							commentString := posAndComment value.
+							index := 0.
+							count timesRepeat: [ index := source indexOf: char startingAt: index + 1 ].
+							(source copyFrom: 1 to: index) , commentString , (source copyFrom: index + 1 to: source size) ] ] ]
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> fraction: arg1 and: arg2 [
 	^ ViennaNode label: 'ArithmeticDivide' with: arg1 with: arg2
@@ -873,28 +895,6 @@ ViennaVDMParser >> parameters [
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> parametersList [
 	^ super parametersList ==> [ :array | ViennaNode label: 'ParametersList' withAll: array ]
-]
-
-{ #category : #parsing }
-ViennaVDMParser >> parse: aString [
-	| ast |
-	ast := super parse: aString.
-	^ ast isPetitFailure
-		ifTrue: [ ast ]
-		ifFalse: [ 
-			(self scanCommentsOn: aString)
-				inject: ast format
-				into: [ :source :posAndComment | 
-					posAndComment key
-						ifNil: [ posAndComment value , source ]
-						ifNotNil: [ 
-							| char count commentString index |
-							char := posAndComment key key.
-							count := posAndComment key value.
-							commentString := posAndComment value.
-							index := 0.
-							count timesRepeat: [ index := source indexOf: char startingAt: index + 1 ].
-							(source copyFrom: 1 to: index) , commentString , (source copyFrom: index + 1 to: source size) ] ] ]
 ]
 
 { #category : #'parsers-types' }
