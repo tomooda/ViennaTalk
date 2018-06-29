@@ -9,7 +9,7 @@ Class {
 
 { #category : #running }
 ViennaClientTest >> setUp [
-	fixture := ViennaClient on: 'http://vdmpad.csce.kyushu-u.ac.jp/'
+	fixture := ViennaClient default
 ]
 
 { #category : #private }
