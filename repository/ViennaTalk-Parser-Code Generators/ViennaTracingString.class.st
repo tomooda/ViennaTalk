@@ -41,6 +41,11 @@ ViennaTracingString >> , aString [
 		ifFalse: [ self class string: string , aString sources: sources copy]
 ]
 
+{ #category : #comparing }
+ViennaTracingString >> = anObject [
+	^ anObject = string
+]
+
 { #category : #converting }
 ViennaTracingString >> asString [
 	^ string
@@ -66,6 +71,11 @@ ViennaTracingString >> at: anInteger put: aCharacter [
 	^ string at: anInteger put: aCharacter
 ]
 
+{ #category : #accessing }
+ViennaTracingString >> basicAt: anInteger [
+	^ (string at: anInteger) asciiValue
+]
+
 { #category : #copying }
 ViennaTracingString >> copyFrom: start to: end [
 	| newSources |
@@ -76,13 +86,18 @@ ViennaTracingString >> copyFrom: start to: end [
 			newStart := start max: assoc key first.
 			newEnd := end min: assoc key last.
 			newStart <= newEnd
-				ifTrue: [ newSources add: (newStart to: newEnd) -> assoc value ] ].
+				ifTrue: [ newSources add: (newStart - start + 1 to: newEnd - start + 1) -> assoc value ] ].
 	^ self class string: (string copyFrom: start to: end) sources: newSources
 ]
 
 { #category : #streaming }
 ViennaTracingString >> cr [
 	^ self nextPut: Character cr
+]
+
+{ #category : #comparing }
+ViennaTracingString >> hash [
+	^ string hash
 ]
 
 { #category : #'initialize-release' }
