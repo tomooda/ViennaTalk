@@ -79,6 +79,14 @@ ViennaComposite >> = anObject [
 	^ true
 ]
 
+{ #category : #converting }
+ViennaComposite >> asArray [
+	| array |
+	array := Array new: self size.
+	1 to: self size do: [ :index | array at: index put: (self at: index) ].
+	^ array
+]
+
 { #category : #accessing }
 ViennaComposite >> at: anIntegerOrString [
 	^ super
@@ -149,6 +157,13 @@ ViennaComposite >> initialize [
 { #category : #testing }
 ViennaComposite >> isViennaComposite [
 	^ true
+]
+
+{ #category : #printing }
+ViennaComposite >> neoJsonOn: neoJSONWriter [
+	(Dictionary new
+		at: constructorName put: self asArray;
+		yourself) neoJsonOn: neoJSONWriter
 ]
 
 { #category : #copying }

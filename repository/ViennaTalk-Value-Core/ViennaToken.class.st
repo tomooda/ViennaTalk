@@ -25,6 +25,22 @@ ViennaToken >> hash [
 	^ value hash
 ]
 
+{ #category : #printing }
+ViennaToken >> neoJsonOn: neoJSONWriter [
+	(Dictionary new
+		at: 'token' put: value;
+		yourself) neoJsonOn: neoJSONWriter
+]
+
+{ #category : #printing }
+ViennaToken >> printOn: aStream [
+	aStream
+		nextPutAll: self class name;
+		nextPutAll: '('.
+	value printOn: aStream.
+	aStream nextPutAll: ') '
+]
+
 { #category : #private }
 ViennaToken >> setValue: anObject [
 	value := anObject
@@ -33,4 +49,16 @@ ViennaToken >> setValue: anObject [
 { #category : #accessing }
 ViennaToken >> value [
 	^ value
+]
+
+{ #category : #printing }
+ViennaToken >> vdmcStringOn: aStream [
+	self viennaStringOn: aStream
+]
+
+{ #category : #printing }
+ViennaToken >> viennaStringOn: aStream [
+	aStream nextPutAll: 'mk_token('.
+	value viennaStringOn: aStream.
+	aStream nextPutAll: ')'
 ]
