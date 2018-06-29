@@ -30,13 +30,18 @@ ViennaVDM2SmalltalkClass >> definitionBlock: aViennaNode env: aDictionary in: aC
 
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> flatDocument: aViennaNode env: aDictionary [
-	| className instVars newClass |
+	| env className instVars newClass |
+	env := aDictionary copy.
 	className := self requestClassName: ''.
 	className ifNil: [ ^ nil ].
+	aViennaNode
+		do: [ :definitionBlock | 
+			definitionBlock first label = 'StateDefinition'
+				ifFalse: [ (self boundVariables: definitionBlock) do: [ :ident | env at: ident put: 'self ' , ident ] ] ].
 	instVars := self boundVariables: aViennaNode.
 	newClass := Object subclass: className instanceVariableNames: (' ' join: instVars).
 	self defineMethod: 'initialize super initialize. self init' in: newClass protocol: 'initialize-release'.
-	aViennaNode do: [ :definitionBlock | self definitionBlock: definitionBlock env: aDictionary in: newClass ].
+	aViennaNode do: [ :definitionBlock | self definitionBlock: definitionBlock env: env in: newClass ].
 	(newClass includesSelector: #init)
 		ifFalse: [ self defineMethod: 'init' in: newClass protocol: 'state' ].
 	^ newClass
@@ -52,8 +57,7 @@ ViennaVDM2SmalltalkClass >> functionDefinitions: aViennaNode env: aDictionary in
 						defineLazyMethodNamed: identifier
 						initializer: (self generate: node env: aDictionary)
 						in: aClass
-						protocol: 'functions'.
-					aDictionary at: identifier put: 'self ' , identifier ] ]
+						protocol: 'functions' ] ]
 ]
 
 { #category : #'code generation-definitions' }
@@ -199,6 +203,10 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 		ifNotNil: [ :importDefinitionListNode | importDefinitionListNode collect: [ :importDefinitionNode | importDefinitionNode first ] ].
 	importClassNames := importModuleNames
 		collect: [ :importModuleName | env at: importModuleName first ifAbsent: [ importModuleName ] ].
+	moduleBodyNode
+		do: [ :definitionBlock | 
+			definitionBlock first label = 'StateDefinition'
+				ifFalse: [(self boundVariables: definitionBlock) do: [ :ident | env at: ident put: 'self ', ident ] ] ].
 	instVars := (self boundVariables: moduleBodyNode) asArray.
 	newClass := Object subclass: className instanceVariableNames: (' ' join: importClassNames , instVars).
 	importModuleNames
@@ -225,8 +233,7 @@ ViennaVDM2SmalltalkClass >> operationDefinitions: aViennaNode env: aDictionary i
 						defineLazyMethodNamed: identifier
 						initializer: (self generate: node env: aDictionary)
 						in: aClass
-						protocol: 'operations'.
-					aDictionary at: identifier put: 'self ' , identifier ] ]
+						protocol: 'operations' ] ]
 ]
 
 { #category : #'code generation-definitions' }
@@ -289,8 +296,7 @@ ViennaVDM2SmalltalkClass >> typeDefinitions: aViennaNode env: aDictionary in: aC
 						defineLazyMethodNamed: identifier
 						initializer: (self generate: node env: aDictionary)
 						in: aClass
-						protocol: 'types'.
-					aDictionary at: identifier put: 'self ' , identifier ] ]
+						protocol: 'types' ] ]
 ]
 
 { #category : #'code generation-definitions' }
@@ -319,8 +325,7 @@ ViennaVDM2SmalltalkClass >> valueDefinitions: aViennaNode env: aDictionary in: a
 						defineLazyMethodNamed: identifier
 						initializer: (self generate: node env: aDictionary) , '. ' , identifier
 						in: aClass
-						protocol: 'values'.
-					aDictionary at: identifier put: 'self ' , identifier ] ]
+						protocol: 'values' ] ]
 ]
 
 { #category : #'code generation-definitions' }

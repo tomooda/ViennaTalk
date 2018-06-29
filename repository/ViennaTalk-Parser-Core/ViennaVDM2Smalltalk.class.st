@@ -192,7 +192,8 @@ ViennaVDM2Smalltalk >> binder: aBlockString with: aString vars: anArrayOfString 
 ViennaVDM2Smalltalk >> blockStatement: aViennaNode env: aDictionary [
 	| statements vars |
 	statements := OrderedCollection new: aViennaNode size.
-	vars := self boundVariables: aViennaNode.
+	vars := Set new.
+	aViennaNode do: [:statement | statement label = 'DclStatement' ifTrue:[self boundVariables: statement into: vars]].
 	aViennaNode do: [ :node | (self generate: node env: aDictionary) ifNotNil: [ :statement | statements add: statement ] ].
 	^ String
 		new: 1024
@@ -375,6 +376,16 @@ ViennaVDM2Smalltalk >> casesStatementAlternatives: aViennaNode env: aDictionary 
 
 { #category : #utilities }
 ViennaVDM2Smalltalk >> closureFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode body: aString varGenerator: varGenerator env: aDictionary [
+	^ self
+		closureFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode
+		body: aString
+		varGenerator: varGenerator
+		env: aDictionary
+		op: false
+]
+
+{ #category : #utilities }
+ViennaVDM2Smalltalk >> closureFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode body: aString varGenerator: varGenerator env: aDictionary op: aBoolean [
 	^ String
 		new: 1024
 		streamContents: [ :stream | 
@@ -401,10 +412,12 @@ ViennaVDM2Smalltalk >> closureFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode 
 								nextPutAll: tmpVar ] ].
 			tuplePattern := ViennaNode label: 'TuplePattern' with: (ViennaNode label: 'PatternList' withAll: matchPatternNodes).
 			matchVars := (self boundVariables: tuplePattern) asArray.
-			anArrayOfPatternNodeAndTypeSetNode ifNotEmpty: [stream nextPutAll: ' | '].
-			matchVars notEmpty
+			anArrayOfPatternNodeAndTypeSetNode ifNotEmpty: [ stream nextPutAll: ' | ' ].
+			(matchVars notEmpty or: [ aBoolean ])
 				ifTrue: [ 
 					stream nextPutAll: ' | '.
+					aBoolean
+						ifTrue: [ stream nextPutAll: '_opContext ' ].
 					matchVars
 						do: [ :var | 
 							stream
@@ -415,6 +428,11 @@ ViennaVDM2Smalltalk >> closureFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode 
 						nextPutAll:
 								(self binder: (self generate: tuplePattern env: aDictionary) with: '{' , (' . ' join: tmpVars) , '}' vars: matchVars);
 						nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ].
+			aBoolean
+				ifTrue: [ 
+					stream
+						nextPutAll: '_opContext := thisContext.';
+						cr ].
 			stream
 				nextPutAll: aString;
 				nextPutAll: ']' ]
@@ -670,7 +688,8 @@ ViennaVDM2Smalltalk >> explicitOperationDefinition: aViennaNode env: aDictionary
 		closureFromFlatBinds: binds
 		body: body
 		varGenerator: varGenerator
-		env: aDictionary)
+		env: aDictionary
+		op: true)
 ]
 
 { #category : #'code generation-expressions' }
