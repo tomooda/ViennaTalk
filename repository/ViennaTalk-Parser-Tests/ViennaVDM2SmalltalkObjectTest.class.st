@@ -92,6 +92,161 @@ ViennaVDM2SmalltalkObjectTest >> testFunctionTypecheck [
 				raise: ViennaRuntimeTypeError ]
 ]
 
+{ #category : #'tests-imports' }
+ViennaVDM2SmalltalkObjectTest >> testImportsFunctions [
+	self
+		transpile:
+			'
+		module T
+		exports all
+		definitions
+		functions 
+			succ : nat -> nat
+			succ(x) == x + 1;
+		end T
+		module M
+		imports from T functions succ
+		exports all
+		definitions
+		functions
+			next : int -> int
+			next(x) == T`succ(x)
+		end M'
+		runtimeTypeCheck: true
+		runtimeAssertionCheck: true
+		do: [ :obj :transpiler | 
+			self
+				assert:
+					(Compiler
+						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`next(1)'))
+						for: obj
+						logged: false)
+				equals: 2.
+			self
+				should: [ Compiler
+						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`next(-1)'))
+						for: obj
+						logged: false ]
+				raise: ViennaRuntimeTypeError ]
+]
+
+{ #category : #'tests-imports' }
+ViennaVDM2SmalltalkObjectTest >> testImportsOperations [
+	self
+		transpile:
+			'
+		module T
+		exports all
+		definitions
+		state S of
+			count : nat
+			init s == s = mk_S(0)
+		end
+		operations 
+			succ : () ==> nat
+			succ() == (count := count + 1; return count);
+		end T
+		module M
+		imports from T operations succ : () ==> nat
+		exports all
+		definitions
+		operations
+			next : () ==> nat
+			next() == return T`succ()
+		end M'
+		runtimeTypeCheck: true
+		runtimeAssertionCheck: true
+		do: [ :obj :transpiler | 
+			self
+				assert:
+					(Compiler
+						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`next()'))
+						for: obj
+						logged: false)
+				equals: 1.
+			self
+				assert:
+					(Compiler
+						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`next()'))
+						for: obj
+						logged: false)
+				equals: 2 ]
+]
+
+{ #category : #'tests-imports' }
+ViennaVDM2SmalltalkObjectTest >> testImportsTypes [
+	self
+		transpile:
+			'
+		module T
+		exports all
+		definitions
+		types 
+			n = int inv x == x >= 0
+		end T
+		module M
+		imports from T types n
+		exports all
+		definitions
+		functions
+			succ : T`n -> T`n
+			succ(x) == x + 1
+		end M'
+		runtimeTypeCheck: true
+		runtimeAssertionCheck: true
+		do: [ :obj :transpiler | 
+			self
+				assert:
+					(Compiler
+						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`succ(1)'))
+						for: obj
+						logged: false)
+				equals: 2.
+			self
+				should: [ Compiler
+						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`succ(-1)'))
+						for: obj
+						logged: false ]
+				raise: ViennaRuntimeTypeError ]
+]
+
+{ #category : #'tests-imports' }
+ViennaVDM2SmalltalkObjectTest >> testImportsValues [
+	self
+		transpile:
+			'
+		module T
+		exports all
+		definitions
+		values 
+			zero = 0
+		end T
+		module M
+		imports from T values zero
+		exports all
+		definitions
+		functions
+			isZero : int -> bool
+			isZero(x) == x = T`zero
+		end M'
+		runtimeTypeCheck: true
+		runtimeAssertionCheck: true
+		do: [ :obj :transpiler | 
+			self
+				assert:
+					(Compiler
+						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`isZero(1)'))
+						for: obj
+						logged: false)
+				equals: false.
+			self
+				assert: ( Compiler
+						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`isZero(0)'))
+						for: obj
+						logged: false )
+				equals: true ]
+]
+
 { #category : #'tests-postconditions' }
 ViennaVDM2SmalltalkObjectTest >> testOperationPostcondition [
 	self
@@ -189,6 +344,162 @@ ViennaVDM2SmalltalkObjectTest >> testOperationTypecheck [
 						for: obj
 						logged: false ]
 				raise: ViennaRuntimeTypeError ]
+]
+
+{ #category : #'tests-imports' }
+ViennaVDM2SmalltalkObjectTest >> testRenamedFunctions [
+	self
+		transpile:
+			'
+		module T
+		exports all
+		definitions
+		functions 
+			succ : nat -> nat
+			succ(x) == x + 1;
+		end T
+		module M
+		imports from T functions succ renamed successor
+		exports all
+		definitions
+		functions
+			next : int -> int
+			next(x) == successor(x)
+		end M'
+		runtimeTypeCheck: true
+		runtimeAssertionCheck: true
+		do: [ :obj :transpiler | 
+			self
+				assert:
+					(Compiler
+						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`next(1)'))
+						for: obj
+						logged: false)
+				equals: 2.
+			self
+				should: [ Compiler
+						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`next(-1)'))
+						for: obj
+						logged: false ]
+				raise: ViennaRuntimeTypeError ]
+]
+
+{ #category : #'tests-imports' }
+ViennaVDM2SmalltalkObjectTest >> testRenamedOperations [
+	self
+		transpile:
+			'
+		module T
+		exports all
+		definitions
+		state S of
+			count : nat
+			init s == s = mk_S(0)
+		end
+		operations 
+			succ : () ==> nat
+			succ() == (count := count + 1; return count);
+		end T
+		module M
+		imports from T operations succ : () ==> nat renamed successor
+		exports all
+		definitions
+		operations
+			next : () ==> nat
+			next() == return successor()
+		end M'
+		runtimeTypeCheck: true
+		runtimeAssertionCheck: true
+		do: [ :obj :transpiler | 
+			self
+				assert:
+					(Compiler
+						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`next()'))
+						for: obj
+						logged: false)
+				equals: 1.
+			self
+				assert:
+					(Compiler
+						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`next()'))
+						for: obj
+						logged: false)
+				equals: 2 ]
+]
+
+{ #category : #'tests-imports' }
+ViennaVDM2SmalltalkObjectTest >> testRenamedTypes [
+	self
+		transpile:
+			'
+		module T
+		exports all
+		definitions
+		types 
+			n = int inv x == x >= 0
+		end T
+		module M
+		imports from T types n renamed n0
+		exports all
+		definitions
+		functions
+			succ : n0 -> n0
+			succ(x) == x + 1
+		end M'
+		runtimeTypeCheck: true
+		runtimeAssertionCheck: true
+		do: [ :obj :transpiler | 
+			self
+				assert:
+					(Compiler
+						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`succ(1)'))
+						for: obj
+						logged: false)
+				equals: 2.
+			self
+				should: [ Compiler
+						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`succ(-1)'))
+						for: obj
+						logged: false ]
+				raise: ViennaRuntimeTypeError ]
+]
+
+{ #category : #'tests-imports' }
+ViennaVDM2SmalltalkObjectTest >> testRenamedValues [
+	self
+		transpile:
+			'
+		module T
+		exports all
+		definitions
+		values 
+			zero = 0
+		end T
+		module M
+		imports from T values zero renamed z
+		exports all
+		definitions
+		functions
+			isZero : int -> bool
+			isZero(x) == x = z
+		end M'
+		runtimeTypeCheck: true
+		runtimeAssertionCheck: true
+		do: [ :obj :transpiler | 
+			self
+				assert:
+					(Compiler
+						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`isZero(1)'))
+						for: obj
+						logged: false)
+				equals: false.
+			self
+				assert:
+					(Compiler
+						evaluate: (transpiler generate: (ViennaVDMParser new expression parse: 'M`isZero(0)'))
+						for: obj
+						logged: false)
+				equals: true ]
 ]
 
 { #category : #'tests-invariants' }
