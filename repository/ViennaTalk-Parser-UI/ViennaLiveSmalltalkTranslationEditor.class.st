@@ -220,6 +220,7 @@ ViennaLiveSmalltalkTranslationEditor >> initializeWidgets [
 		help: 'VDM expression/statement/type to evaluate';
 		autoAccept: true;
 		isCodeCompletionAllowed: false;
+		wantsVisualFeedback: true;
 		menuHolder: [ self codeTextMenu ];
 		bindKeyCombination: $p command toAction: [ self viennaItInCodeText ];
 		bindKeyCombination: $t command toAction: [ self translateIt ]
@@ -232,7 +233,7 @@ ViennaLiveSmalltalkTranslationEditor >> sourceTextMenu [
 
 { #category : #evaluating }
 ViennaLiveSmalltalkTranslationEditor >> translateIt [
-	| compiler   editor codeFromSelection  |
+	| compiler editor codeFromSelection |
 	compiler := ViennaVDM2SmalltalkTranslator new.
 	editor := codeText widget widget textMorph editor.
 	editor lineSelectAndEmptyCheck: [ ^ '' ].
@@ -240,7 +241,12 @@ ViennaLiveSmalltalkTranslationEditor >> translateIt [
 		parse: (codeText text asString copyFrom: editor startIndex to: editor stopIndex - 1) trim.
 	codeFromSelection isPetitFailure
 		ifTrue: [ ^ codeText notify: codeFromSelection message at: codeFromSelection position + 1 in: codeText text ].
-	editor afterSelectionInsertAndSelect: codeFromSelection
+	editor afterSelectionInsertAndSelect: codeFromSelection.
+	codeText widget widget
+		selectFrom: editor startIndex to: editor stopIndex;
+		textChanged;
+		scrollSelectionIntoView.
+	^ true
 ]
 
 { #category : #'class access' }
@@ -250,12 +256,9 @@ ViennaLiveSmalltalkTranslationEditor >> translatorClass [
 
 { #category : #evaluating }
 ViennaLiveSmalltalkTranslationEditor >> viennaItIn: aTextModel [
-	| compiler source codeFromSource editor codeFromSelection result |
+	| compiler codeFromSource editor codeFromSelection result |
 	compiler := ViennaVDM2SmalltalkTranslator new.
-	source := sourceText text asString.
-	codeFromSource := compiler document parse: source.
-	codeFromSource isPetitFailure
-		ifTrue: [ ^ sourceText notify: codeFromSource message at: codeFromSource position + 1 in: source ].
+	codeFromSource := targetText text asString.
 	editor := aTextModel widget widget textMorph editor.
 	editor lineSelectAndEmptyCheck: [ ^ '' ].
 	codeFromSelection := compiler expression end / compiler statement end / compiler type end
@@ -263,15 +266,20 @@ ViennaLiveSmalltalkTranslationEditor >> viennaItIn: aTextModel [
 	codeFromSelection isPetitFailure
 		ifTrue: [ ^ aTextModel notify: codeFromSelection message at: codeFromSelection position + 1 in: aTextModel text ].
 	result := (Compiler evaluate: codeFromSource , '.' , codeFromSelection) viennaString.
-	editor afterSelectionInsertAndSelect: result
+	editor afterSelectionInsertAndSelect: result.
+	aTextModel widget widget
+		selectFrom: editor startIndex to: editor stopIndex;
+		textChanged;
+		scrollSelectionIntoView.
+	^ true
 ]
 
 { #category : #evaluating }
 ViennaLiveSmalltalkTranslationEditor >> viennaItInCodeText [
-	self viennaItIn: codeText
+	^ self viennaItIn: codeText
 ]
 
 { #category : #evaluating }
 ViennaLiveSmalltalkTranslationEditor >> viennaItInSourceText [
-	self viennaItIn: sourceText
+	^ self viennaItIn: sourceText
 ]
