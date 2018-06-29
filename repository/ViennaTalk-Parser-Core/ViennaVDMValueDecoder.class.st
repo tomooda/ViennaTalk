@@ -31,7 +31,7 @@ ViennaVDMValueDecoder >> characterLiteral [
 
 { #category : #'parsers-expressions' }
 ViennaVDMValueDecoder >> decimalLiteral [
-	^ super decimalLiteral ==> [ :str | str asNumber ]
+	^ ($- asParser optional , super decimalLiteral) flatten trim ==> [ :str | str trim asNumber ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -51,14 +51,9 @@ ViennaVDMValueDecoder >> explicitOperationDefinition [
 
 { #category : #'parsers-expressions' }
 ViennaVDMValueDecoder >> expression [
-	| expressionParser |
-	expressionParser := PPExpressionParser new.
-	expressionParser
-		term:
-			self mapEnumeration / self setEnumeration / self sequenceEnumeration / self tupleConstructor / self recordConstructor
-				/ self tokenConstructor / self undefinedExpression / symbolicLiteral
-				/ ((lparen , expression , rparen) ==> [ :triple | triple second ]).
-	^ expressionParser
+	^ self mapEnumeration / self setEnumeration / self sequenceEnumeration / self tupleConstructor / self recordConstructor
+		/ self tokenConstructor / self undefinedExpression / symbolicLiteral
+		/ ((lparen , expression , rparen) ==> [ :triple | triple second ])
 ]
 
 { #category : #'parsers-definitions' }
@@ -68,7 +63,7 @@ ViennaVDMValueDecoder >> functionDefinitions [
 
 { #category : #'parsers-expressions' }
 ViennaVDMValueDecoder >> hexadecimalLiteral [
-	^ super hexadecimalLiteral ==> [ :hex | Integer readFrom: hex radix: 16 ]
+	^ ($- asParser optional , super hexadecimalLiteral) flatten trim ==> [ :hex | Integer readFrom: hex radix: 16 ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -103,7 +98,12 @@ ViennaVDMValueDecoder >> quoteLiteral [
 
 { #category : #'parsers-expressions' }
 ViennaVDMValueDecoder >> recordConstructor [
-	^ super tokenConstructor ==> [ :arg | ViennaToken with: arg ]
+	^ super recordConstructor
+		==> [ :constructorAndArgs | 
+			| constructorName args |
+			constructorName := constructorAndArgs first.
+			args := constructorAndArgs second.
+			ViennaComposite constructorName: constructorName withAll: args ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -118,7 +118,7 @@ ViennaVDMValueDecoder >> sequenceEnumeration [
 
 { #category : #'parsers-expressions' }
 ViennaVDMValueDecoder >> setEnumeration [
-	^ super sequenceEnumeration ==> [ :elems | elems asSet ]
+	^ super setEnumeration ==> [ :elems | elems asSet ]
 ]
 
 { #category : #parsing }
@@ -134,6 +134,11 @@ ViennaVDMValueDecoder >> stateDefinition [
 { #category : #'parsers-expressions' }
 ViennaVDMValueDecoder >> textLiteral [
 	^ super textLiteral
+]
+
+{ #category : #'parsers-expressions' }
+ViennaVDMValueDecoder >> tokenConstructor [
+	^ super tokenConstructor ==> [ :arg | ViennaToken with: arg ]
 ]
 
 { #category : #'parsers-expressions' }

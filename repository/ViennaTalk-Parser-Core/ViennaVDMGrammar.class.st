@@ -1,6 +1,8 @@
 Class {
 	#name : #ViennaVDMGrammar,
 	#superclass : #PPCompositeParser,
+	#traits : 'TViennaVDMLiteralParser @ {#basicSymbolicLiteral->#symbolicLiteral}',
+	#classTraits : 'TViennaVDMLiteralParser classTrait',
 	#instVars : [
 		'document',
 		'name',
@@ -256,11 +258,6 @@ ViennaVDMGrammar >> blockStatement [
 			statements} ]
 ]
 
-{ #category : #'parsers-literals' }
-ViennaVDMGrammar >> booleanLiteral [
-	^ (self reserved: 'true' asParser ==> [ :t | true ]) / ('false' asParser ==> [ :t | false ])
-]
-
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> callStatement [
 	^ (name , lparen , expressionList , rparen)
@@ -332,16 +329,6 @@ ViennaVDMGrammar >> casesStatementAlternative [
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> casesStatementAlternatives [
 	^ (self casesStatementAlternative separatedBy: comma) withoutSeparators
-]
-
-{ #category : #'parsers-literals' }
-ViennaVDMGrammar >> char [
-	^ self escapeSequence / (($" asParser not , $' asParser not , #any asParser) ==> #third)
-]
-
-{ #category : #'parsers-literals' }
-ViennaVDMGrammar >> characterLiteral [
-	^ (($' asParser , (self char / $" asParser) , $' asParser) ==> #second) trim
 ]
 
 { #category : #'parsers-symbols' }
@@ -446,13 +433,6 @@ ViennaVDMGrammar >> connectiveExpression [
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> dclStatement [
 	^ ((self reserved: 'dcl') , (self assignmentDefinition separatedBy: comma) withoutSeparators , semicolon) ==> #second
-]
-
-{ #category : #'parsers-literals' }
-ViennaVDMGrammar >> decimalLiteral [
-	^ (#digit asParser plus , ((self operator: $.) , #digit asParser plus) optional
-		, ($e asParser / $E asParser , ($+ asParser / $- asParser) optional , #digit asParser plus) optional) flatten trim
-		==> #asLowercase
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -582,31 +562,6 @@ ViennaVDMGrammar >> equalityAbstractionField [
 ViennaVDMGrammar >> equiv: arg1 and: arg2 [
 	^ {arg1.
 	arg2}
-]
-
-{ #category : #'parsers-literals' }
-ViennaVDMGrammar >> escapeSequence [
-	| octal |
-	octal := $0 asParser / $1 asParser / $2 asParser / $3 asParser / $4 asParser / $5 asParser / $6 asParser / $7 asParser.
-	^ ($\ asParser
-		,
-			(($\ asParser ==> [ :c | $\ ]) / ($r asParser ==> [ :c | Character cr ]) / ($n asParser ==> [ :c | Character lf ])
-				/ ($t asParser ==> [ :c | Character tab ]) / ($f asParser ==> [ :c | Character newPage ])
-				/ ($e asParser ==> [ :c | Character escape ]) / ($a asParser ==> [ :c | Character value: 7 ])
-				/
-					(($x asParser , #hex asParser , #hex asParser)
-						==> [ :triple | Character value: (triple second digitValue << 4) + triple third digitValue ])
-				/
-					(($u asParser , #hex asParser , #hex asParser , #hex asParser , #hex asParser)
-						==> [ :quin | 
-							Character
-								value:
-									(quin second digitValue << 12) + (quin third digitValue << 8) + (quin fourth digitValue << 4) + quin fifth digitValue ])
-				/ (($c asParser , #any asParser) ==> [ :pair | Character value: pair second asLowercase charCode - $a + 1 ])
-				/
-					((octal , octal , octal)
-						==> [ :triple | Character value: (triple first digitValue << 6) + (triple second digitValue << 3) + triple third digitValue ])
-				/ ($" asParser ==> [ :c | $" ]) / ($' asParser ==> [ :c | $' ]))) ==> #second
 ]
 
 { #category : #'parsers-expressions' }
@@ -986,11 +941,6 @@ ViennaVDMGrammar >> greaterEq: arg1 and: arg2 [
 { #category : #'parsers-expressions-operators' }
 ViennaVDMGrammar >> hd: arg [
 	^ arg
-]
-
-{ #category : #'parsers-literals' }
-ViennaVDMGrammar >> hexadecimalLiteral [
-	^ (('0x' asParser / '0X' asParser , #hex asParser plus flatten) ==> #second) trim
 ]
 
 { #category : #'parsers-types' }
@@ -1587,7 +1537,7 @@ ViennaVDMGrammar >> munion: arg1 and: arg2 [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> name [
-	^ (identifier trim , ((self operator: $`) , identifier trim) optional)
+	^ (identifier , ((self operator: $`) , identifier trim) optional)
 		==> [ :pair | 
 			pair second
 				ifNil: [ pair first ]
@@ -1618,11 +1568,6 @@ ViennaVDMGrammar >> newExpression [
 			(quin fourth)} ]
 ]
 
-{ #category : #'parsers-literals' }
-ViennaVDMGrammar >> nilLiteral [
-	^ (self reserved: 'nil') ==> [ :t |  ]
-]
-
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> nondeterministicStatement [
 	^ ((self operator: '||') , lparen , (statement separatedBy: comma) withoutSeparators , rparen) ==> #third
@@ -1643,11 +1588,6 @@ ViennaVDMGrammar >> notEqual: arg1 and: arg2 [
 ViennaVDMGrammar >> notInSet: arg1 and: arg2 [
 	^ {arg1.
 	arg2}
-]
-
-{ #category : #'parsers-literals' }
-ViennaVDMGrammar >> numericLiteral [
-	^ self hexadecimalLiteral / self decimalLiteral
 ]
 
 { #category : #'parsers-patterns' }
@@ -1838,11 +1778,6 @@ ViennaVDMGrammar >> psubset: arg1 and: arg2 [
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> quantifiedExpression [
 	^ self forallExpression / self existsExpression / self exists1Expression
-]
-
-{ #category : #'parsers-literals' }
-ViennaVDMGrammar >> quoteLiteral [
-	^ self operator: ($< asParser , identifier , $> asParser) flatten
 ]
 
 { #category : #'parsers-types' }
@@ -2207,16 +2142,7 @@ ViennaVDMGrammar >> subset: arg1 and: arg2 [
 
 { #category : #'parsers-literals' }
 ViennaVDMGrammar >> symbolicLiteral [
-	^ (comment star
-		,
-			(self numericLiteral / self booleanLiteral / self nilLiteral / self characterLiteral / self textLiteral
-				/ self quoteLiteral) , comment star) ==> #second
-]
-
-{ #category : #'parsers-literals' }
-ViennaVDMGrammar >> textLiteral [
-	^ (($" asParser , ((self char / $' asParser) star ==> [ :chars | String withAll: chars ]) , $" asParser) ==> #second)
-		trim
+	^ (comment star , self basicSymbolicLiteral , comment star) ==> #second
 ]
 
 { #category : #'parsers-expressions-threads and histories' }
