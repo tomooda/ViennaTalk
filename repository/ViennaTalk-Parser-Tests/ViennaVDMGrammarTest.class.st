@@ -13,16 +13,42 @@ ViennaVDMGrammarTest >> setUp [
 ]
 
 { #category : #'tests-definitions' }
+ViennaVDMGrammarTest >> testAccessFunctionDefinition [
+	self
+		assert: (grammar accessFunctionDefinition end parse: 'f : t1 -> t1 f(v)==e')
+		equals: #(#() #('f' #() #('t1' 't1') 'f' #(#('v')) 'e' nil nil nil)).
+	self
+		assert: (grammar accessFunctionDefinition end parse: 'private f : t1 -> t1 f(v)==e')
+		equals: #(#('private') #('f' #() #('t1' 't1') 'f' #(#('v')) 'e' nil nil nil))
+]
+
+{ #category : #'tests-definitions' }
+ViennaVDMGrammarTest >> testAccessOperationDefinition [
+	self
+		assert: (grammar accessOperationDefinition end parse: 'op : t1 ==> t2 op(v)==return e')
+		equals: #(#() #('op' #('t1' 't2') 'op' #('v') 'e' nil nil)).
+	self
+		assert: (grammar accessOperationDefinition end parse: 'pure async static public op : t1 ==> t2 op(v)==return e')
+		equals: #(#('pure' 'async' 'static' 'public') #('op' #('t1' 't2') 'op' #('v') 'e' nil nil))
+]
+
+{ #category : #'tests-definitions' }
 ViennaVDMGrammarTest >> testAccessTypeDefinition [
-	self assert: (grammar accessTypeDefinition end parse: 't = t1') equals: #(#(nil nil) #('t' 't1' nil)).
-	self assert: (grammar accessTypeDefinition end parse: 'public t = t1') equals: #(#('public' nil) #('t' 't1' nil)).
-	self assert: (grammar accessTypeDefinition end parse: 'static t = t1') equals: #(#(nil 'static') #('t' 't1' nil)).
+	self assert: (grammar accessTypeDefinition end parse: 't = t1') equals: #(#() #('t' 't1' nil)).
+	self assert: (grammar accessTypeDefinition end parse: 'public t = t1') equals: #(#('public') #('t' 't1' nil)).
+	self assert: (grammar accessTypeDefinition end parse: 'static t = t1') equals: #(#('static') #('t' 't1' nil)).
 	self
 		assert: (grammar accessTypeDefinition end parse: 'static protected t = t1')
-		equals: #(#('protected' 'static') #('t' 't1' nil)).
+		equals: #(#('static' 'protected') #('t' 't1' nil)).
 	self
 		assert: (grammar accessTypeDefinition end parse: 'private static t = t1')
-		equals: #(#('private' 'static') #('t' 't1' nil))
+		equals: #(#('static' 'private') #('t' 't1' nil))
+]
+
+{ #category : #'tests-definitions' }
+ViennaVDMGrammarTest >> testAccessValueDefinition [
+	self assert: (grammar accessValueDefinition end parse: 'v = 0') equals: #(#() #('v' nil '0')).
+	self assert: (grammar accessValueDefinition end parse: 'public v =0') equals: #(#('public') #('v' nil '0'))
 ]
 
 { #category : #'tests-expressions' }

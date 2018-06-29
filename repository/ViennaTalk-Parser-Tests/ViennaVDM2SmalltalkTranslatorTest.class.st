@@ -284,8 +284,23 @@ ViennaVDM2SmalltalkTranslatorTest >> testDocument [
 	self
 		assert:
 			(Compiler
-				evaluate: (ViennaVDM2SmalltalkTranslator new document end parse: 'types T = nat inv n == n < 10;') , 'T includes: 9')
-		equals: true
+				evaluate:
+					(ViennaVDM2SmalltalkTranslator new document trim end
+						parse:
+							'
+				types T = nat; 
+				values one:T = 1; 
+				functions
+					succ : T -> T
+					succ(x) == x + 1;
+				state S of
+					count : T
+					init s == s = mk_S(0)
+				end
+				operations 
+					inc : () ==> T
+					inc() == (count := succ(count); return count);') , '. inc value; value; value')
+		equals: 3
 ]
 
 { #category : #'tests-operators' }
@@ -1355,6 +1370,19 @@ ViennaVDM2SmalltalkTranslatorTest >> testSetUnionPattern [
 		equals:
 			{(#(1) asSet).
 			2}
+]
+
+{ #category : #'tests-definitions' }
+ViennaVDM2SmalltalkTranslatorTest >> testStateDefinition [
+	self
+		assert:
+			(Compiler
+				evaluate:
+					' | a b c |'
+						,
+							(ViennaVDM2SmalltalkTranslator new stateDefinition end
+								parse: 'state S of a : int b : nat c : nat1 init s == s = mk_S(0, 1, 2) end') second , '{a . b . c}')
+		equals: #(0 1 2)
 ]
 
 { #category : #'tests-operators' }
