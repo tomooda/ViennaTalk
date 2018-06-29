@@ -16,3 +16,12 @@ SequenceableCollection >> isSequence [
 SequenceableCollection >> tail [
 	^ self ifEmpty: [ SubscriptOutOfBounds signal ] ifNotEmpty: [ self copyFrom: 2 to: self size ]
 ]
+
+{ #category : #'*ViennaTalk-Value-Core' }
+SequenceableCollection >> viennaStringOn: aStream [
+	(self allSatisfy: #isCharacter)
+		ifTrue: [ (String withAll: self) viennaStringOn: aStream ].
+	aStream nextPutAll: '['.
+	self do: [ :obj | obj viennaStringOn: aStream ] separatedBy: [ aStream nextPutAll: ', ' ].
+	aStream nextPutAll: ']'
+]

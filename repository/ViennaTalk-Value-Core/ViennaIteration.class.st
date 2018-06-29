@@ -84,3 +84,10 @@ ViennaIteration >> value: anObject1 value: anObject2 value: anObject3 value: anO
 ViennaIteration >> valueWithArguments: anArray [
 	^ self applyTo: anArray
 ]
+
+{ #category : #printing }
+ViennaIteration >> viennaStringOn: aStream [
+	block viennaStringOn: aStream.
+	aStream nextPutAll: ' ** '.
+	n viennaStringOn: aStream
+]

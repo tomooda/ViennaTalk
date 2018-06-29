@@ -73,3 +73,10 @@ ViennaComposition >> value: anObject1 value: anObject2 value: anObject3 value: a
 ViennaComposition >> valueWithArguments: anArray [
 	^ self applyTo: anArray
 ]
+
+{ #category : #printing }
+ViennaComposition >> viennaStringOn: aStream [
+	arg1 viennaStringOn: aStream.
+	aStream nextPutAll: ' comp '.
+	arg2 viennaStringOn: aStream
+]

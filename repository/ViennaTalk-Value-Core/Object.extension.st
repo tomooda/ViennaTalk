@@ -19,3 +19,13 @@ Object >> isSet [
 Object >> isViennaComposite [
 	^ false
 ]
+
+{ #category : #'*ViennaTalk-Value-Core' }
+Object >> viennaString [
+	^ String new: 128 streamContents: [ :stream | self viennaStringOn: stream ]
+]
+
+{ #category : #'*ViennaTalk-Value-Core' }
+Object >> viennaStringOn: aStream [
+	self printOn: aStream
+]

@@ -179,3 +179,13 @@ ViennaComposite >> vdmcStringOn: aStream [
 	(1 to: self size) do: [ :index | (self at: index) printOn: aStream ] separatedBy: [ aStream nextPut: $, ].
 	aStream nextPut: $)
 ]
+
+{ #category : #printing }
+ViennaComposite >> viennaStringOn: aStream [
+	aStream
+		nextPutAll: 'mk_';
+		nextPutAll: constructorName;
+		nextPutAll: '('.
+	self do: [ :obj | obj viennaStringOn: aStream ] separatedBy: [ aStream nextPutAll: ', ' ].
+	aStream nextPutAll: ')'
+]

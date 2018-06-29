@@ -32,3 +32,18 @@ Dictionary >> inversed [
 	self keysAndValuesDo: [ :key :value | dict at: value put: key ].
 	^ dict
 ]
+
+{ #category : #'*ViennaTalk-Value-Core' }
+Dictionary >> viennaStringOn: aStream [
+	aStream nextPutAll: '{'.
+	self isEmpty
+		ifTrue: [ aStream nextPutAll: '|->' ]
+		ifFalse: [ 
+			self associations
+				do: [ :assoc | 
+					assoc key viennaStringOn: aStream.
+					aStream nextPutAll: ' |-> '.
+					assoc value viennaStringOn: aStream ]
+				separatedBy: [ aStream nextPutAll: ', ' ] ].
+	aStream nextPutAll: '}'
+]

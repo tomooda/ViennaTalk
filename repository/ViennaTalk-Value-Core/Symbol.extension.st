@@ -8,3 +8,8 @@ Symbol >> vdmcStringOn: aStream [
 	aStream nextPutAll: self.
 	aStream nextPut: $>
 ]
+
+{ #category : #'*ViennaTalk-Value-Core' }
+Symbol >> viennaStringOn: aStream [
+	aStream nextPutAll: self
+]

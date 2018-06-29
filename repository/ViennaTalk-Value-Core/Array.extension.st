@@ -44,3 +44,10 @@ Array >> powerDo: aBlock [
 				ifTrue: [ member at: (i := i + 1) put: (self at: bit) ] ].
 		aBlock value: member ]
 ]
+
+{ #category : #'*ViennaTalk-Value-Core' }
+Array >> viennaStringOn: aStream [
+	aStream nextPutAll: 'mk_('.
+	self do: [ :obj | obj viennaStringOn: aStream ] separatedBy: [ aStream nextPutAll: ', ' ].
+	aStream nextPutAll: ')'
+]
