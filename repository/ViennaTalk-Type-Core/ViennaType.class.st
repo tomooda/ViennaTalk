@@ -71,6 +71,11 @@ ViennaType class >> quote: aString [
 ]
 
 { #category : #'instance creation' }
+ViennaType class >> rat [
+	^ ViennaRealType current
+]
+
+{ #category : #'instance creation' }
 ViennaType class >> real [
 	^ ViennaRealType current
 ]
