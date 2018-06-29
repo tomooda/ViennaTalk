@@ -31,6 +31,15 @@ ViennaConstrainedType >> >= aViennaType [
 	^ false
 ]
 
+{ #category : #'instance creation' }
+ViennaConstrainedType >> applyTo: anArray [
+	| value |
+	value := basetype applyTo: anArray.
+	^ (invariant value: value)
+		ifTrue: [ value ]
+		ifFalse: [ ViennaInvariantViolation signal ]
+]
+
 { #category : #accessing }
 ViennaConstrainedType >> basetype [
 	^ basetype
