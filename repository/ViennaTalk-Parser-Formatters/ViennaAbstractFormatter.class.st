@@ -2150,7 +2150,8 @@ ViennaAbstractFormatter >> resultExpression: aViennaNode [
 
 { #category : #'formatting-statements' }
 ViennaAbstractFormatter >> returnStatement: aViennaNode [
-	^ 'return ' , (self indentString: (self format: aViennaNode first))
+	^ 'return '
+		, (aViennaNode first ifNil: [ '' ] ifNotNil: [ :arg | self indentString: (self format: arg) ])
 ]
 
 { #category : #'formatting-expressions' }
