@@ -6,82 +6,82 @@ Class {
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> and [
-	^ '∧'
+	^ String with: (Character codePoint:16r2227)
 ]
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> bool [
-	^ '𝔹'
+	^ String with: (Character codePoint: 16r1D539)
 ]
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> concat [
-	^ ' ⃕'
+	^ String with: Character space with: (Character codePoint: 16r20D5)
 ]
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> dinter [
-	^ '⋂'
+	^ String with: (Character codePoint: 16r22C2)
 ]
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> domainRestrictedBy [
-	^ '⩤'
+	^ String with: (Character codePoint: 16r2A64)
 ]
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> domainRestrictedTo [
-	^ '⊲'
+	^ String with: (Character codePoint: 16r22B2)
 ]
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> dot [
-	^ '⋅'
+	^ String with: (Character codePoint: 16r22C5)
 ]
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> dots [
-	^ '⋯'
+	^ String with: (Character codePoint: 16r22EF)
 ]
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> dunion [
-	^ '⋃'
+	^ String with: (Character codePoint: 16r22C3)
 ]
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> equiv [
-	^ '⇔'
+	^ String with: (Character codePoint: 16r21D4)
 ]
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> exists [
-	^ '∃'
+	^ String with: (Character codePoint: 16r2203)
 ]
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> exists1 [
-	^ '∃!'
+	^ String with: (Character codePoint: 16r2203) with: $!
 ]
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> forall [
-	^ '∀'
+	^ String with: (Character codePoint: 16r2200)
 ]
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> greaterThanOrEqual [
-	^ '≥'
+	^ Character codePoint: 16r2265
 ]
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> imply [
-	^ '⇒'
+	^ String with: (Character codePoint: 16r21D2)
 ]
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> inmapInfix [
-	^ '↔︎ͫ'
+	^ String with: (Character codePoint: 16r2194) with: (Character codePoint: 16rFE0E) with: (Character codePoint: 16r36B)
 ]
 
 { #category : #'symbol access' }
@@ -91,7 +91,7 @@ ViennaVDMSymbolFormatter >> inmapPrefix [
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> inset [
-	^ '∈'
+	^ String with: (Character codePoint: 16r2208)
 ]
 
 { #category : #'symbol access' }
@@ -101,7 +101,7 @@ ViennaVDMSymbolFormatter >> int [
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> inter [
-	^ '∩'
+	^ Character codePoint: 16r2229
 ]
 
 { #category : #'symbol access' }
@@ -116,27 +116,27 @@ ViennaVDMSymbolFormatter >> inversePrefix [
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> iota [
-	^ 'ι'
+	^ String with: (Character codePoint: 16r3B9)
 ]
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> iterate [
-	^ '↑'
+	^ String with: (Character codePoint: 16r2191)
 ]
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> lambda [
-	^ '𝜆'
+	^ String with: (Character codePoint: 16r1D706)
 ]
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> lessThanOrEqual [
-	^ '≤'
+	^ String with: (Character codePoint: 16r2264)
 ]
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> mapInfix [
-	^ '→ͫ'
+	^ String with: (Character codePoint: 16r2192) with: (Character codePoint: 16r36B)
 ]
 
 { #category : #'symbol access' }
@@ -146,12 +146,12 @@ ViennaVDMSymbolFormatter >> mapPrefix [
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> maplet [
-	^ '↦'
+	^ String with: (Character codePoint: 16r21A6)
 ]
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> mu [
-	^ '𝜇'
+	^ String with: (Character codePoint: 16r1D707)
 ]
 
 { #category : #'symbol access' }
@@ -161,7 +161,7 @@ ViennaVDMSymbolFormatter >> mul [
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> munion [
-	^ '∪ͫ'
+	^ String with: (Character codePoint: 16r222A) with: (Character codePoint: 16r36B)
 ]
 
 { #category : #'symbol access' }
@@ -171,7 +171,7 @@ ViennaVDMSymbolFormatter >> nat [
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> nat1 [
-	^ 'ℕ₁'
+	^ String with: (Character codePoint: 16r2115) with: (Character codePoint: 16r2081)
 ]
 
 { #category : #'symbol access' }
@@ -181,42 +181,42 @@ ViennaVDMSymbolFormatter >> not [
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> notEqual [
-	^ '≠'
+	^ String with: (Character codePoint: 16r2260)
 ]
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> notInSet [
-	^ '∉'
+	^ String with: (Character codePoint: 16r2209)
 ]
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> oparrow [
-	^ 'o⃯'
+	^ String with: (Character codePoint: 16r6F) with: (Character codePoint: 16r20EF)
 ]
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> or [
-	^ '∪'
+	^ String with: (Character codePoint: 16r222A)
 ]
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> override [
-	^ '†'
+	^ String with: (Character codePoint: 16r2020)
 ]
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> partialFunction [
-	^ '→'
+	^ String with: (Character codePoint: 16r2192)
 ]
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> power [
-	^ 'ℱ'
+	^ String with: (Character codePoint: 16r2131)
 ]
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> psubset [
-	^ '⊂'
+	^ String with: (Character codePoint: 16r2282)
 ]
 
 { #category : #'symbol access' }
@@ -226,7 +226,7 @@ ViennaVDMSymbolFormatter >> rangeRestrictedBy [
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> rangeRestrictedTo [
-	^ '⊳'
+	^ String with: (Character codePoint: 16r22B3)
 ]
 
 { #category : #'symbol access' }
@@ -276,7 +276,7 @@ ViennaVDMSymbolFormatter >> space [
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> subset [
-	^ '⊆'
+	^ String with: (Character codePoint: 16r2286)
 ]
 
 { #category : #'symbol access' }
@@ -286,5 +286,5 @@ ViennaVDMSymbolFormatter >> totalFunction [
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> union [
-	^ '∪'
+	^ String with: (Character codePoint: 16r222A)
 ]
