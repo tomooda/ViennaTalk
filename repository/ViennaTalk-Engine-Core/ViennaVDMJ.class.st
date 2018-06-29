@@ -99,17 +99,14 @@ ViennaVDMJ class >> bank: anInteger [
 ]
 
 { #category : #'class initialization' }
-ViennaVDMJ class >> initialize [
-	super initialize.
-	self install
-]
-
-{ #category : #'class initialization' }
 ViennaVDMJ class >> install [
 	Smalltalk os isWindows
 		ifFalse: [ 
 			self vdmjPath exists
-				ifFalse: [ self installVDMJ ].
+				ifFalse: [ 
+					self
+						installVDMJ;
+						installJson4VDMJ ].
 			self json4vdmjPath exists
 				ifFalse: [ self installJson4VDMJ ].
 			self jsonicPath exists
@@ -589,6 +586,18 @@ ViennaVDMJ >> startupProcess [
 	| pipe1 pipe2 input output desc |
 	OSProcess accessor canAccessSystem
 		ifFalse: [ ^ nil ].
+	Smalltalk os isWindows
+		ifTrue: [ ^ self error: 'ViennaVDMJ can not run on Windows Platform. Use ViennaClient instead.' ]
+		ifFalse: [ 
+			self vdmjPath exists
+				ifFalse: [ 
+					self
+						installVDMJ;
+						installJson4VDMJ ].
+			self json4vdmjPath exists
+				ifFalse: [ self installJson4VDMJ ].
+			self jsonicPath exists
+				ifFalse: [ self installJsonic ] ].
 	pipe1 := OSPipe blockingPipe.
 	pipe2 := OSPipe nonBlockingPipe.
 	input := pipe1 reader.
