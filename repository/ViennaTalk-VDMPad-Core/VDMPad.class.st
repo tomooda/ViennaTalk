@@ -348,6 +348,54 @@ VDMPad.init = function () {
     req.send(JSON.stringify(query));
 };
 
+VDMPad.format = function () {
+    VDMPad.messageNode.style.color = "white";
+    var value = VDMPad.valueNode.value;
+    var req = new XMLHttpRequest();
+    req.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            var resultJson = JSON.parse(this.responseText);
+            resultJson.expression = VDMPad.expressionNode.getValue();
+            resultJson.value = value;
+            resultJson.testcases = VDMPad.testcases;
+            VDMPad.loadJson(JSON.stringify(resultJson));
+            VDMPad.messageNode.style.color = "black";
+            VDMPad.disableMakeItATestcaseButton();
+        }
+    };
+    var queryOptions = "?";
+    if (VDMPad.vdmClassicEnabled) {
+        queryOptions += "classic=&";
+    }
+    if (VDMPad.invExceptionsEnabled) {
+        queryOptions += "exceptions=&";
+    }
+    if (!VDMPad.runtimeCheckingEnabled) {
+        queryOptions += "ignoreRuntimeChecking=&";
+    }
+    if (VDMPad.visualEnabled) {
+        queryOptions += "visual=&";
+    }
+    if (VDMPad.unittestEnabled) {
+        queryOptions += "unittest=&";
+    }
+    req.open("POST", "/format"+queryOptions.substring(0,queryOptions.length-1));
+    req.setRequestHeader("Content-Type", "application/json");
+    var query = {};
+    query.source=VDMPad.sourceNode.getValue();
+    query.expression="";
+    query.value=value;
+    query.message=VDMPad.messageNode.textElement || VDMPad.messageNode.textContent;
+    var inputs = document.getElementsByTagName("textarea");
+    for (var inputIndex = 0; inputIndex < inputs.length; inputIndex++) {
+        var input = inputs[inputIndex];
+        if (input.id && input.id.indexOf("`") >= 0) {
+            query[input.id]=input.value;
+        }
+    }
+    req.send(JSON.stringify(query));
+};
+
 VDMPad.eval = function () {
     VDMPad.disableMakeItATestcaseButton();
     var protoTestcase = {};
@@ -1782,6 +1830,29 @@ VDMPad >> fileService: aZnRequest [
 		ifFalse: [ self responseNotFound: aZnRequest uri ]
 ]
 
+{ #category : #'request handling-api' }
+VDMPad >> format: aZnRequest [
+	| params source formattedSource message json |
+	params := aZnRequest contentType = ZnMimeType applicationJson
+		ifTrue: [ NeoJSONReader fromString: aZnRequest entity ]
+		ifFalse: [ aZnRequest mergedFields ].
+	source := (params at: 'source' ifAbsent: [ String new ]) trimmed copyReplaceAll: String lf with: String cr.
+	message := String new.
+	formattedSource := [ ViennaVDMParser new format: source width: 70 ]
+		on: Error
+		do: [ :ex | source ].
+	formattedSource isPetitFailure
+		ifTrue: [ 
+			message := formattedSource printString.
+			formattedSource := source ].
+	json := params copy.
+	json
+		at: 'source' put: (formattedSource copyReplaceAll: String cr with: String lf);
+		at: 'message' put: message;
+		at: 'value' put: (params at: 'value' ifAbsent: [ String new ]).
+	^ self responseJSON: json
+]
+
 { #category : #'request handling' }
 VDMPad >> handleRequest: aZnRequest [
 	| path map |
@@ -1853,6 +1924,7 @@ VDMPad >> initialize [
 		at: 'eval' put: #eval:;
 		at: 'id' put: #id:;
 		at: 'test' put: #test:;
+		at: 'format' put: #format:;
 		at: 'vdm2html' put: #vdm2html:;
 		at: 'rootMenuOn.png' put: #rootMenuOn;
 		at: 'rootMenuOff.png' put: #rootMenuOff;
@@ -1888,53 +1960,158 @@ VDMPad >> loadSelectedIcon [
 VDMPad >> mainPage [
 	| page |
 	page := String new writeStream.
-	page nextPutAll: '<html ondragenter="return false;" ondragover="return false;" 
+	page
+		nextPutAll:
+			'<html ondragenter="return false;" ondragover="return false;" 
         ondrop="return VDMPad.acceptDroppedFile(event);">'.
-	page cr; nextPutAll: '<head>'.
-	page cr; nextPutAll: '<title>VDMPad</title>'.
-	page cr; nextPutAll: '<script src="/blob.js"></script>'.
-	page cr; nextPutAll: '<link rel="stylesheet" href="/codemirror/theme/vdmpad.css">'.
-	page cr; nextPutAll: '<link rel="stylesheet" href="/codemirror/lib/codemirror.css">'.
-	page cr; nextPutAll: '<script src="/codemirror/lib/codemirror.js"></script>'.
-	page cr; nextPutAll: '<script src="/codemirror/addon/edit/matchbrackets.js"></script>'.
-	page cr; nextPutAll: '<script src="/codemirror-vdm.js"></script>'.
-	page cr; nextPutAll: '<script src="/codemirror/addon/iOS/iOSkeyboard.js"></script>'.
-	page cr; nextPutAll: '<script src="/codemirror/addon/iOS/iOSselection.js"></script>'.
-	page cr; nextPutAll: '<script src="/tabIndent.js"></script>'.
-	page cr; nextPutAll: '<script src="/fileSaver.js"></script>'.
-	page cr; nextPutAll: '<script src="/VDMPad.js"></script>'.
-	page cr; nextPutAll: '</head>'.
-	page cr; nextPutAll: '<body>'.
-	page cr; nextPutAll: '<div id="all" style="width: 640px">'.
-	page cr; nextPutAll: '<div id="menu" style="float: left; width: 80px">'.
-	page cr; nextPutAll: '<div id="root_menu" style="margin-top: 40px" width: 100%><img id="rootMenuIcon" src="/rootMenuOff.png" alt="root menu"></div><div id="file_items" style="width: 100%"></div>'.
-	page cr; nextPutAll: '</div>'.
-	page cr; nextPutAll: '<div id="main" style="float: right; width: 560px">'.
-	page cr; nextPutAll: '<div id="title">'.
-	page cr; nextPutAll: '<div style="float: left; font-family: Helvetica, sans-serif; font-size:40px; font-weight: 100">VDMPad</div>  <div style="float: right; font-size: 10px; text-align: right">powered by Squeak Smalltalk with <a style="text-decoration: none" target="VDMJ" href="/VDMJcopyright.html">VDMJ</a><br><a style="text-decoration: none" target="aboutVDMPad" href="/about.html">about VDMPad</a></div>'.
-	page cr; nextPutAll: '</div>'.
-	page cr; nextPutAll: '<div id="ide" style="width: 100%; float: right">'.
-	page cr; nextPutAll: '<form method="POST" action="/eval">'.
-	page cr; nextPutAll: '<div style="border-width: 1px; border-style: solid; border-color: black"><textarea title="Enter a specificaton here." id="source" name="source"></textarea></div>'.
-	page cr; nextPutAll: '<div id="states" style="margin-top: 20px"></div>'.
-	page cr; nextPutAll: '<div align=right><input title="Initializes the states" type="button" onClick="VDMPad.init()" value="Initialize" style="cursor: pointer; background-color: white; width: 150px; height: 20px"></div>'.
-	page cr; nextPutAll: '<div id="workspace" align=right style="margin-top: 30px">'.
-	page cr; nextPutAll: '<div style="border-width: 1px; border-style: solid; border-color: black" align=left><textarea title="Write expressions to evaluate." id="expression"></textarea></div>'.
-	page cr; nextPutAll: '<input title="Evaluates the expression selected in the above textbox" type="button" onClick="VDMPad.eval()" value="evaluate" style="cursor: pointer; background-color: #f0f0f0; width: 200px; height: 30px"><br>'.
-	page cr; nextPutAll: '<input id="make it a testcase" title="Makes the previous evaluation as a testcase." type="button" onClick="VDMPad.addTestcase()" value="make it a testcase" style="visibility: hidden; cursor: pointer; background-color: #ffffff; width: 150px; height: 20px"><br>'.
-	page cr; nextPutAll: '<textarea  title="Displays the return value of the evaluation." id="value" name="value" readonly  style="width: 100%; height: 50px; resize: vertical"></textarea></div>'.
-	page cr; nextPutAll: '<div id="valueVisual"></div>'.
-	page cr; nextPutAll: '<hr>'.
-	page cr; nextPutAll: '<div title="Displays error messages"  id="message"></div>'.
-	page cr; nextPutAll: '<div id="unittest"></div>'.
-	page cr; nextPutAll: '</div>'.
-	page cr; nextPutAll: '</div>'.
-	page cr; nextPutAll: '</div>'.
-	page cr; nextPutAll: '<script>var elems = document.getElementsByTagName("textarea"); for (var i = 0; i < elems.length; i++) {var e = elems[i]; if (e.getAttribute("id") != "source") tabIndent.render(e)}; </script>'.
-	page cr; nextPutAll: '<script>VDMPad.setupIdeNodes();VDMPad.setupMenuNodes();</script>'.
-	page cr; nextPutAll: '<script>VDMPad.loadFromLocalStorage();</script>'.
-	page cr; nextPutAll: '</body>'.
-	page cr; nextPutAll: '</html>'.
+	page
+		cr;
+		nextPutAll: '<head>'.
+	page
+		cr;
+		nextPutAll: '<title>VDMPad</title>'.
+	page
+		cr;
+		nextPutAll: '<script src="/blob.js"></script>'.
+	page
+		cr;
+		nextPutAll: '<link rel="stylesheet" href="/codemirror/theme/vdmpad.css">'.
+	page
+		cr;
+		nextPutAll: '<link rel="stylesheet" href="/codemirror/lib/codemirror.css">'.
+	page
+		cr;
+		nextPutAll: '<script src="/codemirror/lib/codemirror.js"></script>'.
+	page
+		cr;
+		nextPutAll: '<script src="/codemirror/addon/edit/matchbrackets.js"></script>'.
+	page
+		cr;
+		nextPutAll: '<script src="/codemirror-vdm.js"></script>'.
+	page
+		cr;
+		nextPutAll: '<script src="/codemirror/addon/iOS/iOSkeyboard.js"></script>'.
+	page
+		cr;
+		nextPutAll: '<script src="/codemirror/addon/iOS/iOSselection.js"></script>'.
+	page
+		cr;
+		nextPutAll: '<script src="/tabIndent.js"></script>'.
+	page
+		cr;
+		nextPutAll: '<script src="/fileSaver.js"></script>'.
+	page
+		cr;
+		nextPutAll: '<script src="/VDMPad.js"></script>'.
+	page
+		cr;
+		nextPutAll: '</head>'.
+	page
+		cr;
+		nextPutAll: '<body>'.
+	page
+		cr;
+		nextPutAll: '<div id="all" style="width: 640px">'.
+	page
+		cr;
+		nextPutAll: '<div id="menu" style="float: left; width: 80px">'.
+	page
+		cr;
+		nextPutAll:
+				'<div id="root_menu" style="margin-top: 40px" width: 100%><img id="rootMenuIcon" src="/rootMenuOff.png" alt="root menu"></div><div id="file_items" style="width: 100%"></div>'.
+	page
+		cr;
+		nextPutAll: '</div>'.
+	page
+		cr;
+		nextPutAll: '<div id="main" style="float: right; width: 560px">'.
+	page
+		cr;
+		nextPutAll: '<div id="title">'.
+	page
+		cr;
+		nextPutAll:
+				'<div style="float: left; font-family: Helvetica, sans-serif; font-size:40px; font-weight: 100">VDMPad</div>  <div style="float: right; font-size: 10px; text-align: right">powered by Squeak Smalltalk with <a style="text-decoration: none" target="VDMJ" href="/VDMJcopyright.html">VDMJ</a><br><a style="text-decoration: none" target="aboutVDMPad" href="/about.html">about VDMPad</a></div>'.
+	page
+		cr;
+		nextPutAll: '</div>'.
+	page
+		cr;
+		nextPutAll: '<div id="ide" style="width: 100%; float: right">'.
+	page
+		cr;
+		nextPutAll: '<form method="POST" action="/eval">'.
+	page
+		cr;
+		nextPutAll:
+				'<div style="border-width: 1px; border-style: solid; border-color: black"><textarea title="Enter a specificaton here." id="source" name="source"></textarea></div>'.
+	page
+		cr;
+		nextPutAll:
+				'<div align=right><input title="Formats the source" type="button" onClick="VDMPad.format()" value="Format" style="cursor: pointer; background-color: white; width: 150px; height: 20px"></div>'.
+	page
+		cr;
+		nextPutAll: '<div id="states" style="margin-top: 20px"></div>'.
+	page
+		cr;
+		nextPutAll:
+				'<div align=right><input title="Initializes the states" type="button" onClick="VDMPad.init()" value="Initialize" style="cursor: pointer; background-color: white; width: 150px; height: 20px"></div>'.
+	page
+		cr;
+		nextPutAll: '<div id="workspace" align=right style="margin-top: 30px">'.
+	page
+		cr;
+		nextPutAll:
+				'<div style="border-width: 1px; border-style: solid; border-color: black" align=left><textarea title="Write expressions to evaluate." id="expression"></textarea></div>'.
+	page
+		cr;
+		nextPutAll:
+				'<input title="Evaluates the expression selected in the above textbox" type="button" onClick="VDMPad.eval()" value="evaluate" style="cursor: pointer; background-color: #f0f0f0; width: 200px; height: 30px"><br>'.
+	page
+		cr;
+		nextPutAll:
+				'<input id="make it a testcase" title="Makes the previous evaluation as a testcase." type="button" onClick="VDMPad.addTestcase()" value="make it a testcase" style="visibility: hidden; cursor: pointer; background-color: #ffffff; width: 150px; height: 20px"><br>'.
+	page
+		cr;
+		nextPutAll:
+				'<textarea  title="Displays the return value of the evaluation." id="value" name="value" readonly  style="width: 100%; height: 50px; resize: vertical"></textarea></div>'.
+	page
+		cr;
+		nextPutAll: '<div id="valueVisual"></div>'.
+	page
+		cr;
+		nextPutAll: '<hr>'.
+	page
+		cr;
+		nextPutAll: '<div title="Displays error messages"  id="message"></div>'.
+	page
+		cr;
+		nextPutAll: '<div id="unittest"></div>'.
+	page
+		cr;
+		nextPutAll: '</div>'.
+	page
+		cr;
+		nextPutAll: '</div>'.
+	page
+		cr;
+		nextPutAll: '</div>'.
+	page
+		cr;
+		nextPutAll:
+				'<script>var elems = document.getElementsByTagName("textarea"); for (var i = 0; i < elems.length; i++) {var e = elems[i]; if (e.getAttribute("id") != "source") tabIndent.render(e)}; </script>'.
+	page
+		cr;
+		nextPutAll: '<script>VDMPad.setupIdeNodes();VDMPad.setupMenuNodes();</script>'.
+	page
+		cr;
+		nextPutAll: '<script>VDMPad.loadFromLocalStorage();</script>'.
+	page
+		cr;
+		nextPutAll: '</body>'.
+	page
+		cr;
+		nextPutAll: '</html>'.
 	^ self responseHtml: page contents
 ]
 
