@@ -1615,7 +1615,7 @@ VDMPad >> codemirrorVDM [
           while (!stream.eol()) stream.next();
           return "comment";
       }
-      return words[cur] || "operator";
+      return (words.hasOwnProperty(cur) && typeof words[cur] === "string") ? words[cur] : "operator";
     }
     stream.eatWhile(/\w/);
     var cur = stream.current();
@@ -1624,7 +1624,7 @@ VDMPad >> codemirrorVDM [
     var cur5 = cur.substring(0, 5);
     if (cur3 == "mk_" || cur3 == "is_" || cur4 == "inv_" || cur4 == "pre_" || cur5 == "init_" || cur5 == "post_")
         return "variable-2"
-    return words[cur] || "variable";
+    return (words.hasOwnProperty(cur) && typeof words[cur] === "string") ? words[cur] : "variable";
   }
 
   function tokenString(stream, state) {
