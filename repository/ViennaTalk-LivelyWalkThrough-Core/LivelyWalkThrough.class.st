@@ -12,9 +12,26 @@ LivelyWalkThrough class >> default [
 	^ self on: LWTDirector default
 ]
 
+{ #category : #'world menu' }
+LivelyWalkThrough class >> livelyWalkThroughMenuOn: aBuilder [
+	<worldMenu>
+	(aBuilder item: #'Lively WalkThrough')
+		action: [ self openVDMJ ];
+		order: 0.481;
+		parent: #Tools;
+		help: 'Lively Walk-Through, a UI prototyping environment using VDM-SL';
+		icon: nil.
+	aBuilder withSeparatorAfter
+]
+
 { #category : #'instance creation' }
 LivelyWalkThrough class >> on: aLWTDirector [
 	^ self new director: aLWTDirector
+]
+
+{ #category : #'instance creation' }
+LivelyWalkThrough class >> openVDMJ [
+	^ self vdmj open
 ]
 
 { #category : #'instance creation' }
@@ -28,7 +45,7 @@ LivelyWalkThrough class >> vdmj [
 LivelyWalkThrough >> build [
 	| pane utilsPane |
 	pane := BorderedMorph new
-		extent: 800 @ 400;
+		extent: 900 @ 600;
 		color: Color transparent;
 		changeProportionalLayout;
 		yourself.

@@ -99,9 +99,13 @@ LWTLivetalkBrowser >> codeSelection: anInterval [
 
 { #category : #'code pane' }
 LWTLivetalkBrowser >> codeTemplate [
-	^ 'WidgetName`event
-	VDM`operation(arg) -> [UI]
-	!"dialogMessage"' asText makeAllColor: Color gray
+	^ '<widget name>`<event>
+	<number literal>
+	<string literal>
+	[<widget name>]
+	<vdm function or operation>(<args>)
+	<expression> -> [<widget name>]
+	! <expression>' asText makeAllColor: Color gray
 ]
 
 { #category : #defaults }

@@ -18,6 +18,9 @@ LWTWidgetDispenser >> areaWidget [
 			areaWidget := LWTMouseSensor area
 				freeze;
 				name: 'Area';
+				nameColor: Color black;
+				nameFont:
+						(self nameFontForWidgets);
 				extent: 80 @ 80;
 				yourself ]
 ]
@@ -29,6 +32,8 @@ LWTWidgetDispenser >> buttonWidget [
 			buttonWidget := LWTMouseSensor button
 				freeze;
 				name: 'Button';
+				nameColor: Color black;
+				nameFont: self nameFontForWidgets;
 				yourself ]
 ]
 
@@ -39,6 +44,8 @@ LWTWidgetDispenser >> fieldWidget [
 			fieldWidget := LWTFieldWidget new
 				freeze;
 				name: 'Field';
+				nameColor: Color black;
+				nameFont: self nameFontForWidgets;
 				yourself ]
 ]
 
@@ -71,8 +78,10 @@ LWTWidgetDispenser >> imageWidget [
 			imageWidget := LWTImageWidget new
 				freeze;
 				name: 'Image';
+				nameColor: Color black;
+				nameFont: self nameFontForWidgets;
 				extent: 80 @ 80;
-				value: 'Pharo.png'
+				value: 'Pharo.png';
 				yourself ]
 ]
 
@@ -92,12 +101,24 @@ LWTWidgetDispenser >> initialize [
 ]
 
 { #category : #accessing }
+LWTWidgetDispenser >> nameFontForWidgets [
+	^ LogicalFont
+		familyName: TextStyle default defaultFont familyName
+		pointSize: TextStyle default defaultFont pointSize
+		stretchValue: 5
+		weightValue: 700
+		slantValue: 0
+]
+
+{ #category : #accessing }
 LWTWidgetDispenser >> padWidget [
 	^ padWidget
 		ifNil: [ 
 			padWidget := LWTMouseSensor pad
 				freeze;
 				name: 'MousePad';
+				nameColor: Color black;
+				nameFont: self nameFontForWidgets;
 				extent: 80 @ 80;
 				yourself ]
 ]

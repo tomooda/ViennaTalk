@@ -6,7 +6,8 @@ Class {
 		'frames',
 		'lastFrame',
 		'cuts',
-		'scripts'
+		'scripts',
+		'dependents'
 	],
 	#category : 'ViennaTalk-LivelyWalkThrough-Core'
 }
@@ -33,6 +34,19 @@ LWTDirector >> abort: aString [
 	[ context receiver isKindOf: LWTAction ] whileFalse: [ context := context sender ].
 	UIManager default abort: aString title: 'Lively Walk-Through: ' , context receiver name.
 	context return: nil
+]
+
+{ #category : #dependents }
+LWTDirector >> actAsExecutor [
+	super actAsExecutor.
+	self breakDependents
+]
+
+{ #category : #dependents }
+LWTDirector >> addDependent: anObject [
+	(self dependents includes: anObject)
+		ifFalse: [ self myDependents: (self dependents copyWithDependent: anObject) ].
+	^ anObject
 ]
 
 { #category : #'accessing-frames and cuts' }
@@ -86,11 +100,6 @@ LWTDirector >> defaultVDMC [
 	^ VDMC vdmj
 ]
 
-{ #category : #'accessing-scripts' }
-LWTDirector >> dispatchEvent: eventName at: widgetName [
-	^ ((scripts at: widgetName ifAbsent: [ ^ self ]) at: eventName ifAbsent: [ ^ self ]) value
-]
-
 { #category : #drawing }
 LWTDirector >> drawOn: aCanvas [
 	aCanvas
@@ -103,6 +112,11 @@ LWTDirector >> drawOn: aCanvas [
 { #category : #interpreting }
 LWTDirector >> execDialog: aString [
 	self inform: aString
+]
+
+{ #category : #interpreting }
+LWTDirector >> execEvent: eventName at: widgetName [
+	^ ((scripts at: widgetName ifAbsent: [ ^ self ]) at: eventName ifAbsent: [ ^ self ]) value
 ]
 
 { #category : #interpreting }
@@ -192,6 +206,16 @@ LWTDirector >> morphsNamed: aString ifNotEmpty: aBlock ifEmpty: errorBlock [
 		ifFalse: [ errorBlock value ]
 ]
 
+{ #category : #private }
+LWTDirector >> myDependents [
+	^ dependents
+]
+
+{ #category : #private }
+LWTDirector >> myDependents: aCollectionOrNil [
+	dependents := aCollectionOrNil
+]
+
 { #category : #'accessing-frames and cuts' }
 LWTDirector >> recordEvent: aSymbol at: aMorph [
 	self addFrame: (LWTEventFrame morphName: aMorph name event: aSymbol)
@@ -200,6 +224,12 @@ LWTDirector >> recordEvent: aSymbol at: aMorph [
 { #category : #'accessing-frames and cuts' }
 LWTDirector >> removeCutAt: aString [
 	^ cuts removeKey: aString ifAbsent: [  ]
+]
+
+{ #category : #dependents }
+LWTDirector >> removeDependent: anObject [
+	self myDependents: ((self dependents reject: [ :each | each == anObject ]) ifNotEmpty: #yourself).
+	^ anObject
 ]
 
 { #category : #'accessing-scripts' }
