@@ -91,6 +91,7 @@ ViennaVDMFormatter class >> initializeOperatorPrecedence [
 		at: 'MapMerge' put: 31;
 		at: 'MapOrSequenceModify' put: 31;
 		at: 'SequenceConcatenate' put: 31;
+		at: 'IotaExpression' put: 30;
 		at: 'LessThanOrEqual' put: 21;
 		at: 'LessThan' put: 21;
 		at: 'GreaterThanOrEqual' put: 21;
@@ -101,11 +102,22 @@ ViennaVDMFormatter class >> initializeOperatorPrecedence [
 		at: 'ProperSubset' put: 21;
 		at: 'InSet' put: 21;
 		at: 'NotInSet' put: 21;
+		at: 'ForallExpression' put: 10;
+		at: 'ExistsExpression' put: 10;
+		at: 'Exists1Expression' put: 10;
 		at: 'Not' put: 15;
 		at: 'And' put: 14;
 		at: 'Or' put: 13;
 		at: 'Imply' put: 12;
 		at: 'LogicalEquivalence' put: 11;
+		at: 'LetExpression' put: 10;
+		at: 'LetBeExpression' put: 10;
+		at: 'DefExpression' put: 10;
+		at: 'ForallExpression' put: 10;
+		at: 'ExistsExpression' put: 10;
+		at: 'Exists1Expression' put: 10;
+		at: 'IfExpression' put: 10;
+		at: 'IotaExpression' put: 10;
 		at: 'SetType' put: 5;
 		at: 'SeqType' put: 5;
 		at: 'Seq1Type' put: 5;
@@ -352,7 +364,7 @@ ViennaVDMFormatter >> defaultIndent [
 
 { #category : #defaults }
 ViennaVDMFormatter >> defaultMaxSizePerLine [
-	^ 40
+	^ 30
 ]
 
 { #category : #'formatting-definitions' }
@@ -478,8 +490,8 @@ ViennaVDMFormatter >> explicitOperationDefinition: aViennaNode [
 	identifier2 := self format: aViennaNode third.
 	parameters := self format: aViennaNode fourth.
 	expression := self format: aViennaNode fifth.
-	pre := aViennaNode sixth ifNotNil: [ self format: aViennaNode seventh ] ifNil: [ '' ].
-	post := aViennaNode seventh ifNotNil: [ self format: aViennaNode eighth ] ifNil: [ '' ].
+	pre := aViennaNode sixth ifNotNil: [ self format: aViennaNode sixth ] ifNil: [ '' ].
+	post := aViennaNode seventh ifNotNil: [ self format: aViennaNode seventh ] ifNil: [ '' ].
 	^ identifier1 , ' : ' , operationType , String cr , identifier2 , parameters , ' =='
 		,
 			((self needsIndent: expression)
@@ -699,7 +711,7 @@ ViennaVDMFormatter >> ifExpression: aViennaNode [
 				nextPutAll: indent , (self indentString: default) ]
 ]
 
-{ #category : #'formatting-expressions' }
+{ #category : #'formatting-statements' }
 ViennaVDMFormatter >> ifStatement: aViennaNode [
 	| cond expr default |
 	cond := self format: aViennaNode first first first.
@@ -1112,7 +1124,7 @@ ViennaVDMFormatter >> mapEnumeration: aViennaNode [
 				ifTrue: [ 
 					stream nextPut: line.
 					line := '' ].
-			1 to: aViennaNode size do: [ :index | 
+			2 to: aViennaNode size do: [ :index | 
 				| element |
 				element := self format: (aViennaNode at: index).
 				(self needsIndent: element)
@@ -1121,11 +1133,18 @@ ViennaVDMFormatter >> mapEnumeration: aViennaNode [
 						stream nextPut: element.
 						line := '' ]
 					ifFalse: [ 
+						| origLine |
+						origLine := line.
 						line := line , (line ifNotEmpty: [ ', ' ]) , element.
 						(self needsIndent: line)
 							ifTrue: [ 
-								stream nextPut: line.
-								line := '' ] ] ].
+								origLine
+									ifEmpty: [ 
+										stream nextPut: line.
+										line := '' ]
+									ifNotEmpty: [ 
+										stream nextPut: origLine.
+										line := element ] ] ] ].
 			line ifNotEmpty: [ stream nextPut: line ] ].
 	^ '{' , (',' , String cr join: lines) , '}'
 ]
@@ -1133,7 +1152,7 @@ ViennaVDMFormatter >> mapEnumeration: aViennaNode [
 { #category : #'formatting-patterns and binds' }
 ViennaVDMFormatter >> mapEnumerationPattern: aViennaNode [
 	| lines |
-	aViennaNode size = 0
+	aViennaNode first size = 0
 		ifTrue: [ ^ '{|->}' ].
 	lines := Array
 		new: aViennaNode size
@@ -1145,7 +1164,7 @@ ViennaVDMFormatter >> mapEnumerationPattern: aViennaNode [
 				ifTrue: [ 
 					stream nextPut: line.
 					line := '' ].
-			1 to: node size do: [ :index | 
+			2 to: node size do: [ :index | 
 				| element |
 				element := self format: (node at: index).
 				(self needsIndent: element)
@@ -1154,11 +1173,18 @@ ViennaVDMFormatter >> mapEnumerationPattern: aViennaNode [
 						stream nextPut: element.
 						line := '' ]
 					ifFalse: [ 
+						| origLine |
+						origLine := line.
 						line := line , (line ifNotEmpty: [ ', ' ]) , element.
 						(self needsIndent: line)
 							ifTrue: [ 
-								stream nextPut: line.
-								line := '' ] ] ].
+								origLine
+									ifEmpty: [ 
+										stream nextPut: line.
+										line := '' ]
+									ifNotEmpty: [ 
+										stream nextPut: origLine.
+										line := element ] ] ] ].
 			line ifNotEmpty: [ stream nextPut: line ] ].
 	^ '{' , (',' , String cr join: lines) , '}'
 ]
@@ -1412,7 +1438,7 @@ ViennaVDMFormatter >> partialFunctionType: aViennaNode [
 
 { #category : #'formatting-patterns and binds' }
 ViennaVDMFormatter >> patternIdentifier: aViennaNode [
-	^ self format: aViennaNode first
+	^ aViennaNode first ifNil: ['-'] ifNotNil: [:identifier | self format:identifier]
 ]
 
 { #category : #'formatting-patterns and binds' }
@@ -1453,7 +1479,39 @@ ViennaVDMFormatter >> print: aString withChildren: anArrayOfString [
 
 { #category : #'formatting-types' }
 ViennaVDMFormatter >> productType: aViennaNode [
-	^ self print: (self format: aViennaNode first) infix: '*' arg: (self format: aViennaNode second)
+	| lines |
+	lines := Array
+		new: aViennaNode size
+		streamContents: [ :stream | 
+			| line |
+			line := self format: aViennaNode first.
+			(self needsIndent: line)
+				ifTrue: [ 
+					stream nextPut: line.
+					line := '' ].
+			2 to: aViennaNode size do: [ :index | 
+				| element |
+				element := self format: (aViennaNode at: index).
+				(self needsIndent: element)
+					ifTrue: [ 
+						line ifNotEmpty: [ stream nextPut: line ].
+						stream nextPut: element.
+						line := '' ]
+					ifFalse: [ 
+						| origLine |
+						origLine := line.
+						line := line , (line ifNotEmpty: [ ' * ' ]) , element.
+						(self needsIndent: line)
+							ifTrue: [ 
+								origLine
+									ifEmpty: [ 
+										stream nextPut: line.
+										line := '' ]
+									ifNotEmpty: [ 
+										stream nextPut: origLine.
+										line := element ] ] ] ].
+			line ifNotEmpty: [ stream nextPut: line ] ].
+	^ ' *' , String cr join: lines
 ]
 
 { #category : #'formatting-expressions' }
@@ -1508,7 +1566,7 @@ ViennaVDMFormatter >> recordTypeDefinition: aViennaNode [
 	identifier := self format: aViennaNode first.
 	fieldList := self format: aViennaNode second.
 	invariant := aViennaNode third
-		ifNotNil: [ String cr , indent , 'inv ' , (self indentString: (self format: aViennaNode third)) ]
+		ifNotNil: [ String cr , indent , (self indentString: (self format: aViennaNode third)) ]
 		ifNil: [ '' ].
 	^ identifier , ' ::'
 		,
@@ -1574,7 +1632,7 @@ ViennaVDMFormatter >> seqConcPattern: aViennaNode [
 { #category : #'formatting-patterns and binds' }
 ViennaVDMFormatter >> seqEnumPattern: aViennaNode [
 	| lines |
-	aViennaNode size = 0
+	aViennaNode first size = 0
 		ifTrue: [ ^ '[]' ].
 	lines := Array
 		new: aViennaNode size
@@ -1586,7 +1644,7 @@ ViennaVDMFormatter >> seqEnumPattern: aViennaNode [
 				ifTrue: [ 
 					stream nextPut: line.
 					line := '' ].
-			1 to: node size do: [ :index | 
+			2 to: node size do: [ :index | 
 				| element |
 				element := self format: (node at: index).
 				(self needsIndent: element)
@@ -1595,11 +1653,18 @@ ViennaVDMFormatter >> seqEnumPattern: aViennaNode [
 						stream nextPut: element.
 						line := '' ]
 					ifFalse: [ 
+						| origLine |
+						origLine := line.
 						line := line , (line ifNotEmpty: [ ', ' ]) , element.
 						(self needsIndent: line)
 							ifTrue: [ 
-								stream nextPut: line.
-								line := '' ] ] ].
+								origLine
+									ifEmpty: [ 
+										stream nextPut: line.
+										line := '' ]
+									ifNotEmpty: [ 
+										stream nextPut: origLine.
+										line := element ] ] ] ].
 			line ifNotEmpty: [ stream nextPut: line ] ].
 	^ '[' , (',' , String cr join: lines) , ']'
 ]
@@ -1637,7 +1702,7 @@ ViennaVDMFormatter >> sequenceElements: aViennaNode [
 { #category : #'formatting-expressions' }
 ViennaVDMFormatter >> sequenceEnumeration: aViennaNode [
 	|  lines |
-	aViennaNode size = 0
+	aViennaNode first size = 0
 		ifTrue: [ ^ '[]' ].
 		
 	lines := Array
@@ -1659,11 +1724,18 @@ ViennaVDMFormatter >> sequenceEnumeration: aViennaNode [
 						stream nextPut: element.
 						line := '' ]
 					ifFalse: [ 
+						| origLine |
+						origLine := line.
 						line := line , (line ifNotEmpty: [ ', ' ]) , element.
 						(self needsIndent: line)
 							ifTrue: [ 
-								stream nextPut: line.
-								line := '' ] ] ].
+								origLine
+									ifEmpty: [ 
+										stream nextPut: line.
+										line := '' ]
+									ifNotEmpty: [ 
+										stream nextPut: origLine.
+										line := element ] ] ] ].
 			line ifNotEmpty: [ stream nextPut: line ] ].
 	^ '[' , (',' , String cr join: lines) , ']'
 ]
@@ -1733,7 +1805,7 @@ ViennaVDMFormatter >> setComprehension: aViennaNode [
 	| expression bindList guard |
 	expression := self format: aViennaNode first.
 	bindList := self format: aViennaNode second.
-	guard := aViennaNode third ifNotNil: [ self format: aViennaNode fourth ] ifNil: [ '' ].
+	guard := aViennaNode third ifNotNil: [ self format: aViennaNode third ] ifNil: [ '' ].
 	(self needsIndent: expression , bindList , guard)
 		ifFalse: [ ^ '{' , expression , ' | ' , bindList , ' & ' , guard , '}' ].
 	^ '{' , expression , String cr , '| '
@@ -1751,7 +1823,7 @@ ViennaVDMFormatter >> setDifference: aViennaNode [
 { #category : #'formatting-patterns and binds' }
 ViennaVDMFormatter >> setEnumPattern: aViennaNode [
 	| lines |
-	aViennaNode size = 0
+	aViennaNode first size = 0
 		ifTrue: [ ^ '{}' ].
 	lines := Array
 		new: aViennaNode size
@@ -1763,7 +1835,7 @@ ViennaVDMFormatter >> setEnumPattern: aViennaNode [
 				ifTrue: [ 
 					stream nextPut: line.
 					line := '' ].
-			1 to: node size do: [ :index | 
+			2 to: node size do: [ :index | 
 				| element |
 				element := self format: (node at: index).
 				(self needsIndent: element)
@@ -1772,11 +1844,18 @@ ViennaVDMFormatter >> setEnumPattern: aViennaNode [
 						stream nextPut: element.
 						line := '' ]
 					ifFalse: [ 
+						| origLine |
+						origLine := line.
 						line := line , (line ifNotEmpty: [ ', ' ]) , element.
 						(self needsIndent: line)
 							ifTrue: [ 
-								stream nextPut: line.
-								line := '' ] ] ].
+								origLine
+									ifEmpty: [ 
+										stream nextPut: line.
+										line := '' ]
+									ifNotEmpty: [ 
+										stream nextPut: origLine.
+										line := element ] ] ] ].
 			line ifNotEmpty: [ stream nextPut: line ] ].
 	^ '{' , (',' , String cr join: lines) , '}'
 ]
@@ -1784,7 +1863,7 @@ ViennaVDMFormatter >> setEnumPattern: aViennaNode [
 { #category : #'formatting-expressions' }
 ViennaVDMFormatter >> setEnumeration: aViennaNode [
 	| lines |
-	aViennaNode size = 0
+	aViennaNode first size = 0
 		ifTrue: [ ^ '{}' ].
 	lines := Array
 		new: aViennaNode size
@@ -1796,7 +1875,7 @@ ViennaVDMFormatter >> setEnumeration: aViennaNode [
 				ifTrue: [ 
 					stream nextPut: line.
 					line := '' ].
-			1 to: node size do: [ :index | 
+			2 to: node size do: [ :index | 
 				| element |
 				element := self format: (node at: index).
 				(self needsIndent: element)
@@ -1805,11 +1884,18 @@ ViennaVDMFormatter >> setEnumeration: aViennaNode [
 						stream nextPut: element.
 						line := '' ]
 					ifFalse: [ 
+						| origLine |
+						origLine := line.
 						line := line , (line ifNotEmpty: [ ', ' ]) , element.
 						(self needsIndent: line)
 							ifTrue: [ 
-								stream nextPut: line.
-								line := '' ] ] ].
+								origLine
+									ifEmpty: [ 
+										stream nextPut: line.
+										line := '' ]
+									ifNotEmpty: [ 
+										stream nextPut: origLine.
+										line := element ] ] ] ].
 			line ifNotEmpty: [ stream nextPut: line ] ].
 	^ '{' , (',' , String cr join: lines) , '}'
 ]
@@ -1906,7 +1992,7 @@ ViennaVDMFormatter >> subset: aViennaNode [
 { #category : #'formatting-expressions' }
 ViennaVDMFormatter >> symbolicLiteral: aViennaNode [
 	| literal |
-	literal := aViennaNode first.
+	literal := aViennaNode first trim.
 	^ literal
 ]
 
@@ -2038,7 +2124,39 @@ ViennaVDMFormatter >> undefinedExpression: aViennaNode [
 
 { #category : #'formatting-types' }
 ViennaVDMFormatter >> unionType: aViennaNode [
-	^ self print: (self format: aViennaNode first) infix: '|' arg: (self format: aViennaNode second)
+	| lines |
+	lines := Array
+		new: aViennaNode size
+		streamContents: [ :stream | 
+			| line |
+			line := self format: aViennaNode first.
+			(self needsIndent: line)
+				ifTrue: [ 
+					stream nextPut: line.
+					line := '' ].
+			2 to: aViennaNode size do: [ :index | 
+				| element |
+				element := self format: (aViennaNode at: index).
+				(self needsIndent: element)
+					ifTrue: [ 
+						line ifNotEmpty: [ stream nextPut: line ].
+						stream nextPut: element.
+						line := '' ]
+					ifFalse: [ 
+						| origLine |
+						origLine := line.
+						line := line , (line ifNotEmpty: [ ' | ' ]) , element.
+						(self needsIndent: line)
+							ifTrue: [ 
+								origLine
+									ifEmpty: [ 
+										stream nextPut: line.
+										line := '' ]
+									ifNotEmpty: [ 
+										stream nextPut: origLine.
+										line := element ] ] ] ].
+			line ifNotEmpty: [ stream nextPut: line ] ].
+	^ ' |' , String cr join: lines
 ]
 
 { #category : #'formatting-types' }

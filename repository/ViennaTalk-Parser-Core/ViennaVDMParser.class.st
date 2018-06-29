@@ -302,7 +302,7 @@ ViennaVDMParser >> fieldPatternList [
 
 { #category : #'parsers-statements' }
 ViennaVDMParser >> fieldReference: stateDesig with: field [
-	^ ViennaNode label: 'FeildReference' with: stateDesig with: field
+	^ ViennaNode label: 'FieldReference' with: stateDesig with: field
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -973,7 +973,7 @@ ViennaVDMParser >> subset: arg1 and: arg2 [
 
 { #category : #'parsers-literals' }
 ViennaVDMParser >> symbolicLiteral [
-	^ super symbolicLiteral flatten ==> [ :string | ViennaNode label: 'SymbolicLiteral' with: string ]
+	^ super symbolicLiteral flatten ==> [ :string | ViennaNode label: 'SymbolicLiteral' with: string trim ]
 ]
 
 { #category : #'parsers-expressions-threads' }
