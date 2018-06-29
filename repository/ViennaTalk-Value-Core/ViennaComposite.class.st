@@ -172,12 +172,7 @@ ViennaComposite >> setConstructorName: aString [
 
 { #category : #printing }
 ViennaComposite >> vdmcStringOn: aStream [
-	aStream
-		nextPutAll: 'mk_';
-		nextPutAll: constructorName;
-		nextPut: $(.
-	(1 to: self size) do: [ :index | (self at: index) printOn: aStream ] separatedBy: [ aStream nextPut: $, ].
-	aStream nextPut: $)
+	self viennaStringOn: aStream
 ]
 
 { #category : #printing }
@@ -186,6 +181,6 @@ ViennaComposite >> viennaStringOn: aStream [
 		nextPutAll: 'mk_';
 		nextPutAll: constructorName;
 		nextPutAll: '('.
-	self do: [ :obj | obj viennaStringOn: aStream ] separatedBy: [ aStream nextPutAll: ', ' ].
+	(1 to: self size) do: [ :index | (self at: index) viennaStringOn: aStream ] separatedBy: [ aStream nextPutAll: ', ' ].
 	aStream nextPutAll: ')'
 ]
