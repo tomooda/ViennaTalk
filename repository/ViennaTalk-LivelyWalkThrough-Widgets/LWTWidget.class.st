@@ -229,7 +229,9 @@ LWTWidget >> handleMouseDown: aMouseEvent [
 	aMouseEvent wasHandled: true.
 	aMouseEvent yellowButtonPressed
 		ifTrue: [ 
-			self menu
+			(aMouseEvent shiftPressed
+				ifTrue: [ self smalltalkMenu ]
+				ifFalse: [ self menu ])
 				setInvokingView: self;
 				invokeModal.
 			^ true ].
@@ -476,6 +478,17 @@ LWTWidget >> showsName [
 { #category : #private }
 LWTWidget >> showsName: aBoolean [
 	showsName := aBoolean = true
+]
+
+{ #category : #menus }
+LWTWidget >> smalltalkMenu [
+	| menu |
+	menu := MenuMorph new
+		addTitle: self name;
+		defaultTarget: self;
+		add: 'inspect' translated target: self selector: #inspect;
+		yourself.
+	^ menu
 ]
 
 { #category : #operations }
