@@ -1146,7 +1146,11 @@ ViennaVDM2SmalltalkClass >> requestClassName: defaultClassName for: aString [
 
 { #category : #'code generation-statements' }
 ViennaVDM2SmalltalkClass >> returnStatement: aViennaNode env: aDictionary [
-	^ '^ ' , (self generate: aViennaNode first env: aDictionary)
+	^ '^ '
+		,
+			(aViennaNode first
+				ifNil: [ ' self' ]
+				ifNotNil: [ :arg | self generate: arg env: aDictionary ])
 ]
 
 { #category : #'code generation-definitions' }
