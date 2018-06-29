@@ -155,6 +155,11 @@ ViennaVDMHighlighter >> equalityAbstractionField [
 ]
 
 { #category : #'parsers-keywords' }
+ViennaVDMHighlighter >> errs [
+	^ self keyword: super errs
+]
+
+{ #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> exists [
 	^ self keyword: super exists
 ]
@@ -167,6 +172,11 @@ ViennaVDMHighlighter >> exists1 [
 { #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> exports [
 	^ self keyword: super exports
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMHighlighter >> ext [
+	^ self keyword: super ext
 ]
 
 { #category : #'parsers-keywords' }
@@ -355,6 +365,11 @@ ViennaVDMHighlighter >> quoteType [
 	^ self type: super quoteType
 ]
 
+{ #category : #'parsers-keywords' }
+ViennaVDMHighlighter >> rd [
+	^ self keyword: super rd
+]
+
 { #category : #'parsers-expressions' }
 ViennaVDMHighlighter >> recordConstructor [
 	^ ('mk_' asParser , self typeName , lparen , expressionList , rparen)
@@ -476,4 +491,9 @@ ViennaVDMHighlighter >> values [
 { #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> while [
 	^ self keyword: super while
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMHighlighter >> wt [
+	^ self keyword: super wt
 ]
