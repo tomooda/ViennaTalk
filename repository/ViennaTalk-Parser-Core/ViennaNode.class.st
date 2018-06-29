@@ -292,6 +292,14 @@ ViennaNode >> start: anInteger1 end: anInteger2 [
 	end := anInteger2
 ]
 
+{ #category : #accessing }
+ViennaNode >> stateVariablesDo: aBlock [
+	(self parentLabelled: 'DefinitionBlock' ifAbsent: [ ^ self ]) parent
+		do: [ :node | 
+			node first label = 'StateDefinition'
+				ifTrue: [ node first second do: [ :field | aBlock value: field first ] ] ]
+]
+
 { #category : #printing }
 ViennaNode >> storeOn: aStream [
 	aStream
