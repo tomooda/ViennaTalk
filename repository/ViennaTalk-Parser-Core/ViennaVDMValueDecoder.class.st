@@ -93,7 +93,7 @@ ViennaVDMValueDecoder >> operationDefinitions [
 
 { #category : #'parsers-expressions' }
 ViennaVDMValueDecoder >> quoteLiteral [
-	^ super quoteLiteral ==> [ :quote | quote asSymbol ]
+	^ super quoteLiteral ==> [ :quote | (quote copyFrom: 2 to: quote size - 1) asSymbol ]
 ]
 
 { #category : #'parsers-expressions' }

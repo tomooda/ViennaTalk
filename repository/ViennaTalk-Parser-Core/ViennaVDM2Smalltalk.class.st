@@ -200,6 +200,17 @@ ViennaVDM2Smalltalk >> casesExpressionAlternatives: aViennaNode env: aDictionary
 	^ self generateAll: aViennaNode env: aDictionary
 ]
 
+{ #category : #'code generation-types' }
+ViennaVDM2Smalltalk >> compositeType: aViennaNode env: aDictionary [
+	| constructorName fields |
+	constructorName := self generate: aViennaNode first env: aDictionary.
+	fields := aViennaNode second
+		collect: [ :field | 
+			'{' , field first storeString , ' . ' , field second storeString , ' . ' , (self generate: field third env: aDictionary)
+				, '}' ].
+	^ '(ViennaType compose: ' , constructorName storeString , ' of: {' , (' . ' join: fields) , '})'
+]
+
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> composition: aViennaNode env: aDictionary [
 	| arg1 arg2 |
@@ -270,7 +281,10 @@ ViennaVDM2Smalltalk >> equal: aViennaNode env: aDictionary [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2Smalltalk >> equalDefinition: aViennaNode env: aDictionary [
-	^ self generateAll: aViennaNode env: aDictionary
+	| leftAndRight |
+	leftAndRight := self generateAll: aViennaNode env: aDictionary.
+	^ {(leftAndRight first first).
+	(leftAndRight second)}
 ]
 
 { #category : #'code generation-definitions' }
@@ -353,12 +367,12 @@ ViennaVDM2Smalltalk >> finExpression: aViennaNode env: aDictionary [
 
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> finitePowerSet: aViennaNode env: aDictionary [
-	^ (self generate: aViennaNode env: aDictionary) , ' power'
+	^ (self generate: aViennaNode first env: aDictionary) , ' power'
 ]
 
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> floor: aViennaNode env: aDictionary [
-	^ (self generate: aViennaNode env: aDictionary) , ' floor'
+	^ (self generate: aViennaNode first env: aDictionary) , ' floor'
 ]
 
 { #category : #'code generation-expressions' }
@@ -501,6 +515,14 @@ ViennaVDM2Smalltalk >> initialize [
 	decoder := ViennaVDMValueDecoder new
 ]
 
+{ #category : #'code generation-types' }
+ViennaVDM2Smalltalk >> inmapType: aViennaNode env: aDictionary [
+	| domaintype rangetype |
+	domaintype := self generate: aViennaNode first env: aDictionary.
+	rangetype := self generate: aViennaNode second env: aDictionary.
+	^ '(' , domaintype , ' inmapTo: ' , rangetype , ')'
+]
+
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> iotaExpression: aViennaNode env: aDictionary [
 	| bind pat setOrType expr var |
@@ -510,7 +532,8 @@ ViennaVDM2Smalltalk >> iotaExpression: aViennaNode env: aDictionary [
 	expr := self generate: aViennaNode second env: aDictionary.
 	var := (self varNameGenerator: 'iota' uniqueIn: (Array with: expr)) value.
 	^ '(' , setOrType , ' detect: [ :' , var , '||' , (' ' join: pat first) , '|'
-		, (self binder: pat second with: var vars: pat first) , ' ifFalse: [ViennaNoMatch signal].' , expr , '])'
+		, (self binder: pat second with: var vars: pat first) , ' ifFalse: [ViennaNoMatch signal].' , expr
+		, '] ifNone: [ViennaNoMatch signal])'
 ]
 
 { #category : #'code generation-expressions' }
@@ -560,7 +583,7 @@ ViennaVDM2Smalltalk >> iterate: aViennaNode env: aDictionary [
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> lambdaExpression: aViennaNode env: aDictionary [
 	| patterns body varGenerator vars |
-	patterns := (self generate: aViennaNode first env: aDictionary).
+	patterns := (self generate: aViennaNode first env: aDictionary) collect: #first.
 	body := self generate: aViennaNode second env: aDictionary.
 	varGenerator := self varNameGenerator: 'lmd' uniqueIn: (Array with: body).
 	vars := patterns collect: [ :p | varGenerator value ].
@@ -642,8 +665,9 @@ ViennaVDM2Smalltalk >> letBeExpression: aViennaNode env: aDictionary [
 
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> letExpression: aViennaNode env: aDictionary [
-	| localDefinitions body vars |
-	localDefinitions := self generate: aViennaNode first env: aDictionary.
+	| definitionList localDefinitions body vars |
+	definitionList := ViennaNode label: aViennaNode first label withAll: (self reorderDefinitions: aViennaNode first).
+	localDefinitions := self generate: definitionList env: aDictionary.
 	body := self generate: aViennaNode second env: aDictionary.
 	vars := Array new: 10 streamContents: [ :stream | localDefinitions do: [ :def | stream nextPutAll: def first ] ].
 	^ '[|' , (' ' join: vars) , '|' , ('.' join: (localDefinitions collect: #second)) , '.' , body , '] value'
@@ -680,7 +704,7 @@ ViennaVDM2Smalltalk >> mapComprehension: aViennaNode env: aDictionary [
 	keyExpr := self generate: aViennaNode first env: aDictionary.
 	valueExpr := self generate: aViennaNode second env: aDictionary.
 	binds := self generate: aViennaNode third env: aDictionary.
-	guard := self generate: ViennaNode fourth env: aDictionary.
+	guard := self generate: aViennaNode fourth env: aDictionary.
 	varGenerator := self
 		varNameGenerator: 'map'
 		uniqueIn:
@@ -792,10 +816,12 @@ ViennaVDM2Smalltalk >> mapMunionPattern: aViennaNode env: aDictionary [
 
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> mapOrSequenceModify: aViennaNode env: aDictionary [
-	| arg1 arg2 |
+	| arg1 arg2 varGenerator |
 	arg1 := self generate: aViennaNode first env: aDictionary.
 	arg2 := self generate: aViennaNode second env: aDictionary.
-	^ '(Dictionary new addAll: ' , arg1 , '; addAll: ' , arg2 , '; yourself)'
+	varGenerator := self varNameGenerator: 'override' uniqueIn: (Array with: arg1 with: arg2).
+	^ '[:mapOrSeq :map | map keysAndValuesDo: [:k :v | mapOrSeq at: k put: v]. mapOrSeq] value: ' , arg1 , ' copy value: '
+		, arg2
 ]
 
 { #category : #'code generation-expressions' }
@@ -827,6 +853,14 @@ ViennaVDM2Smalltalk >> mapRangeRestrictedTo: aViennaNode env: aDictionary [
 	set := self generate: aViennaNode second env: aDictionary.
 	^ '([:map :set | map copy keysAndValuesRemove: [:k :v | (set includes: v) not]; yourself] value: ' , map , ' value: '
 		, set , ')'
+]
+
+{ #category : #'code generation-types' }
+ViennaVDM2Smalltalk >> mapType: aViennaNode env: aDictionary [
+	| domaintype rangetype |
+	domaintype := self generate: aViennaNode first env: aDictionary.
+	rangetype := self generate: aViennaNode second env: aDictionary.
+	^ '(' , domaintype , ' mapTo: ' , rangetype , ')'
 ]
 
 { #category : #'code generation-expressions' }
@@ -895,6 +929,13 @@ ViennaVDM2Smalltalk >> oldName: aViennaNode env: aDictionary [
 	^ aDictionary at: name ifAbsent: [ name ]
 ]
 
+{ #category : #'code generation-types' }
+ViennaVDM2Smalltalk >> optionalType: aViennaNode env: aDictionary [
+	| baseType |
+	baseType := self generate: aViennaNode first env: aDictionary.
+	^ baseType , ' optional'
+]
+
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> or: aViennaNode env: aDictionary [
 	| arg1 arg2 |
@@ -906,6 +947,14 @@ ViennaVDM2Smalltalk >> or: aViennaNode env: aDictionary [
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> othersExpression: aViennaNode env: aDictionary [
 	^ self generate: aViennaNode first env: aDictionary
+]
+
+{ #category : #'code generation-types' }
+ViennaVDM2Smalltalk >> partialFunctionType: aViennaNode env: aDictionary [
+	| argType returnType |
+	argType := self generate: aViennaNode first env: aDictionary.
+	returnType := self generate: aViennaNode second env: aDictionary.
+	^ '(' , argType , ' -> ' , returnType , ')'
 ]
 
 { #category : #'code generation-patterns' }
@@ -926,6 +975,11 @@ ViennaVDM2Smalltalk >> preconditionExpression: aViennaNode env: aDictionary [
 	^ self notYetImplemented
 ]
 
+{ #category : #'code generation-types' }
+ViennaVDM2Smalltalk >> productType: aViennaNode env: aDictionary [
+	^ '(' , ('*' join: (self generateAll: aViennaNode env: aDictionary)) , ')'
+]
+
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> properSubset: aViennaNode env: aDictionary [
 	| arg1 arg2 |
@@ -934,12 +988,19 @@ ViennaVDM2Smalltalk >> properSubset: aViennaNode env: aDictionary [
 	^ '([:set1 :set2 | set1 size < set2 size and: [ set2 includesAll: set1 ]] value: ' , arg1 , ' value: ' , arg2 , ')'
 ]
 
+{ #category : #'code generation-types' }
+ViennaVDM2Smalltalk >> quoteType: aViennaNode env: aDictionary [
+	| quote |
+	quote := aViennaNode first.
+	^ '(ViennaType quote: #' , (quote copyFrom: 2 to: quote size - 1) storeString , ')'
+]
+
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> recordConstructor: aViennaNode env: aDictionary [
 	| constructorName args |
 	constructorName := self generate: aViennaNode first env: aDictionary.
-	args := self generate: aViennaNode second env: aDictionary.
-	^ '(ViennaComposite constructorName: ' , constructorName storeString , ' withAll: {' , (' . ' join: args) , '})'
+	args := '{', (' . ' join: (self generate: aViennaNode second env: aDictionary)), '}'.
+	^ '(' , constructorName , ' applyTo: ' , args , ')'
 ]
 
 { #category : #'code generation-expressions' }
@@ -965,6 +1026,17 @@ ViennaVDM2Smalltalk >> recordPattern: aViennaNode env: aDictionary [
 	args := (argPatterns collect: #second) asSet asArray.
 	^ {(vars reject: #isNil).
 	('(ViennaRuntimeUtil matchRecord: ' , constructorName storeString , ' args: {' , (' . ' join: args) , '})')}
+]
+
+{ #category : #'code generation-types' }
+ViennaVDM2Smalltalk >> recordTypeDefinition: aViennaNode env: aDictionary [
+	| constructorName fields |
+	constructorName := self generate: aViennaNode first env: aDictionary.
+	fields := aViennaNode second
+		collect: [ :field | 
+			'{' , field first storeString , ' . ' , field second storeString , ' . ' , (self generate: field third env: aDictionary)
+				, '}' ].
+	^ '(ViennaType compose: ' , constructorName storeString , ' of: {' , (' . ' join: fields) , '})'
 ]
 
 { #category : #private }
@@ -1018,6 +1090,11 @@ ViennaVDM2Smalltalk >> selfExpression: aViennaNode env: aDictionary [
 	^ self notYetImplemented
 ]
 
+{ #category : #'code generation-types' }
+ViennaVDM2Smalltalk >> seq1Type: aViennaNode env: aDictionary [
+	^ (self generate: aViennaNode first env: aDictionary) , ' seq1'
+]
+
 { #category : #'code generation-patterns' }
 ViennaVDM2Smalltalk >> seqConcPattern: aViennaNode env: aDictionary [
 	| varsAndPat1 varsAndPat2 vars pat1 pat2 |
@@ -1039,6 +1116,11 @@ ViennaVDM2Smalltalk >> seqEnumPattern: aViennaNode env: aDictionary [
 	elements := elementPatterns collect: #second.
 	^ {(vars reject: #isNil).
 	('(ViennaRuntimeUtil matchSequenceEnumeration: {' , (' . ' join: elements) , '})')}
+]
+
+{ #category : #'code generation-types' }
+ViennaVDM2Smalltalk >> seqType: aViennaNode env: aDictionary [
+	^ (self generate: aViennaNode first env: aDictionary) , ' seq'
 ]
 
 { #category : #'code generation-expressions' }
@@ -1135,7 +1217,7 @@ ViennaVDM2Smalltalk >> sequenceTail: aViennaNode env: aDictionary [
 
 { #category : #'code generation-patterns' }
 ViennaVDM2Smalltalk >> setBind: aViennaNode env: aDictionary [
-	^ self generate: aViennaNode first env: aDictionary
+	^ self generateAll: aViennaNode env: aDictionary
 ]
 
 { #category : #'code generation-expressions' }
@@ -1218,6 +1300,11 @@ ViennaVDM2Smalltalk >> setRangeExpression: aViennaNode env: aDictionary [
 	^ '(' , arg1 , ' to: ' , arg2 , ') asSet'
 ]
 
+{ #category : #'code generation-types' }
+ViennaVDM2Smalltalk >> setType: aViennaNode env: aDictionary [
+	^ (self generate: aViennaNode first env: aDictionary) , ' set'
+]
+
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> setUnion: aViennaNode env: aDictionary [
 	| arg1 arg2 |
@@ -1275,6 +1362,14 @@ ViennaVDM2Smalltalk >> tokenConstructor: aViennaNode env: aDictionary [
 	^ '(ViennaToken with: ' , (self generate: aViennaNode first env: aDictionary) , ')'
 ]
 
+{ #category : #'code generation-types' }
+ViennaVDM2Smalltalk >> totalFunctionType: aViennaNode env: aDictionary [
+	| argType returnType |
+	argType := self generate: aViennaNode first env: aDictionary.
+	returnType := self generate: aViennaNode second env: aDictionary.
+	^ '(' , argType , ' +> ' , returnType , ')'
+]
+
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> tupleConstructor: aViennaNode env: aDictionary [
 	^ '{' , (' . ' join: (self generate: aViennaNode first env: aDictionary)) , '} '
@@ -1302,7 +1397,7 @@ ViennaVDM2Smalltalk >> tupleSelect: aViennaNode env: aDictionary [
 
 { #category : #'code generation-patterns' }
 ViennaVDM2Smalltalk >> typeBind: aViennaNode env: aDictionary [
-	^ self generate: aViennaNode first env: aDictionary
+	^ self generateAll: aViennaNode env: aDictionary
 ]
 
 { #category : #'code generation-patterns' }
@@ -1318,6 +1413,23 @@ ViennaVDM2Smalltalk >> typeJudgement: aViennaNode env: aDictionary [
 	^ '(' , type , ' includes: ' , expr , ')'
 ]
 
+{ #category : #'code generation-types' }
+ViennaVDM2Smalltalk >> typeName: aViennaNode env: aDictionary [
+	^ self generate: aViennaNode first env: aDictionary
+]
+
+{ #category : #'code generation-types' }
+ViennaVDM2Smalltalk >> typeVariable: aViennaNode env: aDictionary [
+	^ self generate: aViennaNode first env: aDictionary
+]
+
+{ #category : #'code generation-types' }
+ViennaVDM2Smalltalk >> typeVariableIdentifier: aViennaNode env: aDictionary [
+	| name |
+	name := aViennaNode first.
+	^ aDictionary at: name ifAbsent: [ name ]
+]
+
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> unaryMinus: aViennaNode env: aDictionary [
 	^ (self generate: aViennaNode first env: aDictionary) , ' negated'
@@ -1331,6 +1443,11 @@ ViennaVDM2Smalltalk >> unaryPlus: aViennaNode env: aDictionary [
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> undefinedExpression: aViennaNode env: aDictionary [
 	^ 'ViennaUndefinedEvaluationError signal'
+]
+
+{ #category : #'code generation-types' }
+ViennaVDM2Smalltalk >> unionType: aViennaNode env: aDictionary [
+	^ '(' , ('|' join: (self generateAll: aViennaNode env: aDictionary)) , ')'
 ]
 
 { #category : #'code generation-definitions' }
