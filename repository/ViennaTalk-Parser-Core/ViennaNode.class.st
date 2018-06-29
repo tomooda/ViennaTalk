@@ -74,6 +74,15 @@ ViennaNode class >> label: aString withAll: anArray [
 	^ node
 ]
 
+{ #category : #enumerating }
+ViennaNode >> allSatisfy: aBlock [
+	self
+		do: [ :node | 
+			(aBlock value: node)
+				ifFalse: [ ^ false ] ].
+	^ true
+]
+
 { #category : #converting }
 ViennaNode >> asArray [
 	| array |

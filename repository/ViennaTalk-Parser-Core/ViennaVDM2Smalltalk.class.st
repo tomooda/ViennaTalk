@@ -9,6 +9,16 @@ Class {
 	#category : 'ViennaTalk-Parser-Core'
 }
 
+{ #category : #utilities }
+ViennaVDM2Smalltalk class >> translateExplicitFunction: aString [
+	^ self new generate: (ViennaVDMParser new explicitFunctionDefinition end parse: aString)
+]
+
+{ #category : #utilities }
+ViennaVDM2Smalltalk class >> translateExplicitOperation: aString [
+	^ self new generate: (ViennaVDMParser new explicitOperationDefinition end parse: aString)
+]
+
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> actExpression: aViennaNode env: aDictionary [
 	^ self notYetImplemented
@@ -426,18 +436,47 @@ ViennaVDM2Smalltalk >> exists1Expression: aViennaNode env: aDictionary [
 	pat := bind first.
 	setOrType := bind second.
 	expr := self generate: aViennaNode second env: aDictionary.
+	aViennaNode first first label = 'PatternIdentifier'
+		ifTrue: [ ^ '(' , setOrType , ' onlyOneSatisfy: [ :' , aViennaNode first first first , '|' , expr , '])' ].
 	var := (self varNameGenerator: 'exists1' uniqueIn: (Array with: expr)) value.
 	boundVars := (self boundVariables: aViennaNode first) asArray.
 	^ '(' , setOrType , ' onlyOneSatisfy: [ :' , var , '||' , (' ' join: boundVars) , '|'
-		, (self binder: pat with: var vars: boundVars)
-		, ' ifFalse: [ViennaNoMatch signal].' , expr , '])'
+		, (self binder: pat with: var vars: boundVars) , ' and: [' , expr , ']])'
 ]
 
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> existsExpression: aViennaNode env: aDictionary [
-	| multibinds expr varGenerator |
-	multibinds := self generate: aViennaNode first env: aDictionary.
+	| multibindsNode multibinds expr varGenerator |
+	multibindsNode := aViennaNode first.
 	expr := self generate: aViennaNode second env: aDictionary.
+	(multibindsNode
+		allSatisfy: [ :multibindNode | multibindNode first allSatisfy: [ :patternNode | patternNode label = 'PatternIdentifier' ] ])
+		ifTrue: [ 
+			| names |
+			names := Array
+				new: multibindsNode size * 2
+				streamContents: [ :namesStream | multibindsNode do: [ :multibindNode | multibindNode do: [ :patternNode | namesStream nextPut: patternNode first ] ] ].
+			names size = names asSet size
+				ifTrue: [ 
+					^ String
+						new: 1024
+						streamContents: [ :stream | 
+							stream nextPutAll: '('.
+							multibindsNode
+								do: [ :multibindNode | 
+									| set |
+									set := self generate: multibindNode second env: aDictionary.
+									multibindNode first
+										do: [ :patternNode | 
+											stream
+												nextPutAll: set;
+												nextPutAll: ' anySatisfy: [:';
+												nextPutAll: patternNode first;
+												nextPutAll: '|' ] ].
+							stream nextPutAll: expr.
+							multibindsNode do: [ :multibindNode | multibindNode first do: [ :pat | stream nextPut: $] ] ].
+							stream nextPutAll: ')' ] ] ].
+	multibinds := self generate: multibindsNode env: aDictionary.
 	varGenerator := self varNameGenerator: 'exists' uniqueIn: (Array with: expr) , (multibinds collect: #second).
 	^ String
 		new: 1024
@@ -463,9 +502,9 @@ ViennaVDM2Smalltalk >> existsExpression: aViennaNode env: aDictionary [
 								nextPutAll: (' ' join: boundVars);
 								nextPutAll: '|';
 								nextPutAll: (self binder: pat with: loopVar vars: boundVars);
-								nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ] ].
+								nextPutAll: ' and:  [' ] ].
 			stream nextPutAll: expr.
-			multibinds do: [ :multibind | multibind first do: [ :pat | stream nextPut: $] ] ].
+			multibinds do: [ :multibind | multibind first do: [ :pat | stream nextPutAll: ']]' ] ].
 			stream nextPutAll: ')' ]
 ]
 
@@ -490,22 +529,33 @@ ViennaVDM2Smalltalk >> explicitFunctionDefinition: aViennaNode env: aDictionary 
 			paramSets
 				with: paramSetsNode asArray
 				do: [ :params :paramsNode | 
-					| vars |
-					vars := params collect: [ :p | varGenerator value ].
-					stream
-						nextPut: $[;
-						nextPutAll: (' ' join: (vars collect: [ :v | ' :' , v ]));
-						nextPutAll: '||';
-						nextPutAll: (' ' join: (self boundVariables: paramsNode) asArray);
-						nextPut: $|.
-					1 to: params size do: [ :index | 
-						| p v n |
-						p := params at: index.
-						v := vars at: index.
-						n := paramsNode at: index.
-						stream
-							nextPutAll: (self binder: p with: v vars: (self boundVariables: n) asArray);
-							nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ] ].
+					((paramsNode allSatisfy: [ :n | n label = 'PatternIdentifier' ])
+						and: [ (paramsNode collect: [ :node | node first ]) asSet size = paramsNode size ])
+						ifTrue: [ 
+							stream nextPut: $[.
+							paramsNode
+								do: [ :node | 
+									stream
+										nextPutAll: ' :';
+										nextPutAll: node first ].
+							stream nextPut: $| ]
+						ifFalse: [ 
+							| vars |
+							vars := params collect: [ :p | varGenerator value ].
+							stream
+								nextPut: $[;
+								nextPutAll: (' ' join: (vars collect: [ :v | ' :' , v ]));
+								nextPutAll: '||';
+								nextPutAll: (' ' join: (self boundVariables: paramsNode) asArray);
+								nextPut: $|.
+							1 to: params size do: [ :index | 
+								| p v n |
+								p := params at: index.
+								v := vars at: index.
+								n := paramsNode at: index.
+								stream
+									nextPutAll: (self binder: p with: v vars: (self boundVariables: n) asArray);
+									nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ] ] ].
 			stream nextPutAll: body.
 			paramSets do: [ :args | stream nextPut: $] ] ]
 ]
@@ -566,15 +616,44 @@ ViennaVDM2Smalltalk >> floor: aViennaNode env: aDictionary [
 
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> forallExpression: aViennaNode env: aDictionary [
-	| multibinds expr varGenerator |
-	multibinds := self generate: aViennaNode first env: aDictionary.
+	| multibindsNode multibinds expr varGenerator |
+	multibindsNode := aViennaNode first.
 	expr := self generate: aViennaNode second env: aDictionary.
+	(multibindsNode
+		allSatisfy: [ :multibindNode | multibindNode first allSatisfy: [ :patternNode | patternNode label = 'PatternIdentifier' ] ])
+		ifTrue: [ 
+			| names |
+			names := Array
+				new: multibindsNode size * 2
+				streamContents: [ :namesStream | multibindsNode do: [ :multibindNode | multibindNode do: [ :patternNode | namesStream nextPut: patternNode first ] ] ].
+			names size = names asSet size
+				ifTrue: [ 
+					^ String
+						new: 1024
+						streamContents: [ :stream | 
+							stream nextPutAll: '('.
+							multibindsNode
+								do: [ :multibindNode | 
+									| set |
+									set := self generate: multibindNode second env: aDictionary.
+									multibindNode first
+										do: [ :patternNode | 
+											stream
+												nextPutAll: set;
+												nextPutAll: ' allSatisfy: [:';
+												nextPutAll: patternNode first;
+												nextPutAll: '|' ] ].
+							stream nextPutAll: expr.
+							multibindsNode do: [ :multibindNode | multibindNode first do: [ :pat | stream nextPut: $] ] ].
+							stream nextPutAll: ')' ] ] ].
+	multibinds := self generate: multibindsNode env: aDictionary.
 	varGenerator := self varNameGenerator: 'forall' uniqueIn: (Array with: expr) , (multibinds collect: #second).
 	^ String
 		new: 1024
 		streamContents: [ :stream | 
 			stream nextPutAll: '('.
-			multibinds with: aViennaNode first asArray
+			multibinds
+				with: aViennaNode first asArray
 				do: [ :multibind :multibindNode | 
 					| patterns set |
 					patterns := multibind first.
@@ -584,7 +663,7 @@ ViennaVDM2Smalltalk >> forallExpression: aViennaNode env: aDictionary [
 						do: [ :pat :patternNode | 
 							| loopVar boundVars |
 							loopVar := varGenerator value.
-							boundVars := (self boundVariables: patternNode) asArray.
+							boundVars := self boundVariables: patternNode.
 							stream
 								nextPutAll: set;
 								nextPutAll: ' allSatisfy: [:';
@@ -593,9 +672,9 @@ ViennaVDM2Smalltalk >> forallExpression: aViennaNode env: aDictionary [
 								nextPutAll: (' ' join: boundVars);
 								nextPutAll: '|';
 								nextPutAll: (self binder: pat with: loopVar vars: boundVars);
-								nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ] ].
+								nextPutAll: ' and:  [' ] ].
 			stream nextPutAll: expr.
-			multibinds do: [ :multibind | multibind first do: [ :pat | stream nextPut: $] ] ].
+			multibinds do: [ :multibind | multibind first do: [ :pat | stream nextPutAll: ']]' ] ].
 			stream nextPutAll: ')' ]
 ]
 
@@ -1306,6 +1385,11 @@ ViennaVDM2Smalltalk >> oldName: aViennaNode env: aDictionary [
 	| name |
 	name := aViennaNode first , '~'.
 	^ aDictionary at: name ifAbsent: [ name ]
+]
+
+{ #category : #'code generation-definitions' }
+ViennaVDM2Smalltalk >> operationBody: aViennaNode env: aDictionary [
+	^ self generate: aViennaNode first env: aDictionary
 ]
 
 { #category : #'code generation-types' }
