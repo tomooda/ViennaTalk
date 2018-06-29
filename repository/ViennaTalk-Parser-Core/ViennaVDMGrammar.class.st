@@ -212,10 +212,10 @@ ViennaVDMGrammar >> arrow [
 
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> assignStatement [
-	^ ((self basicStateDesignator , colonEq) and , (self stateDesignator , colonEq) , expression)
+	^ ((self basicStateDesignator , colonEq) and , self stateDesignator , colonEq , expression)
 		==> [ :triple | 
-			{(triple first).
-			(triple third)} ]
+			{(triple second).
+			(triple fourth)} ]
 ]
 
 { #category : #'parsers-statements' }
@@ -1888,7 +1888,7 @@ ViennaVDMGrammar >> name [
 	^ ((self moduleIdentifier , (self operator: $`) , identifier trim)
 		==> [ :pair | 
 			{(pair first).
-			(pair third)} ]) / identifier trim
+			(pair third)} ]) / ((identifier , '' asParser trim) ==> #first)
 ]
 
 { #category : #'parsers-interfaces' }
@@ -2217,7 +2217,7 @@ ViennaVDMGrammar >> rbracket [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> recordConstructor [
-	^ ('mk_' asParser , self typeName , lparen , expressionList , rparen)
+	^ ('mk_' asParser , name , lparen , expressionList , rparen)
 		==> [ :array | 
 			{(array second).
 			(array fourth)} ]
@@ -2233,8 +2233,8 @@ ViennaVDMGrammar >> recordModifier [
 
 { #category : #'parsers-patterns' }
 ViennaVDMGrammar >> recordPattern [
-	^ (('mk_' asParser , self typeName , lparen) ==> #second
-		, (patternList optional ==> [ :single | single ifNil: [ Array new ] ]) , rparen)
+	^ (('mk_' asParser , name , lparen) ==> #second , (patternList optional ==> [ :single | single ifNil: [ Array new ] ])
+		, rparen)
 		==> [ :triple | 
 			{(triple first).
 			(triple second)} ]
@@ -2744,7 +2744,7 @@ ViennaVDMGrammar >> typeDefinitions [
 
 { #category : #'parsers-interfaces' }
 ViennaVDMGrammar >> typeExport [
-	^ self struct optional , self typeName
+	^ self struct optional , name
 ]
 
 { #category : #'parsers-types' }
@@ -2754,13 +2754,13 @@ ViennaVDMGrammar >> typeIdentifier [
 
 { #category : #'parsers-interfaces' }
 ViennaVDMGrammar >> typeImport [
-	^ (self typeDefinition , ((self renamed , (self decl: self typeName)) ==> #second) optional)
-		/ (self typeName , ((self renamed , (self decl: self typeName)) ==> #second) optional)
+	^ (self typeDefinition , ((self renamed , (self decl: name)) ==> #second) optional)
+		/ (self typeName , ((self renamed , (self decl: name)) ==> #second) optional)
 ]
 
 { #category : #'parsers-expressions-type discriminations' }
 ViennaVDMGrammar >> typeJudgement [
-	^ ((self reserved: 'is_') , lparen , expression , comma , type , rparen)
+	^ ('is_' asParser , lparen , expression , comma , type , rparen)
 		==> [ :array | 
 			{(array third).
 			(array fifth)} ]

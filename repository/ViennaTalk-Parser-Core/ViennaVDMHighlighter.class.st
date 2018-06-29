@@ -339,6 +339,23 @@ ViennaVDMHighlighter >> quoteType [
 	^ self type: super quoteType
 ]
 
+{ #category : #'parsers-expressions' }
+ViennaVDMHighlighter >> recordConstructor [
+	^ ('mk_' asParser , self typeName , lparen , expressionList , rparen)
+		==> [ :array | 
+			{(array second).
+			(array fourth)} ]
+]
+
+{ #category : #'parsers-patterns' }
+ViennaVDMHighlighter >> recordPattern [
+	^ (('mk_' asParser , self typeName , lparen) ==> #second
+		, (patternList optional ==> [ :single | single ifNil: [ Array new ] ]) , rparen)
+		==> [ :triple | 
+			{(triple first).
+			(triple second)} ]
+]
+
 { #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> renamed [
 	^ self keyword: super renamed
@@ -404,9 +421,20 @@ ViennaVDMHighlighter >> typeAttribute [
 	^ typeAttribute ifNil: [ typeAttribute := TextColor color: Color cyan muchDarker ]
 ]
 
+{ #category : #'parsers-interfaces' }
+ViennaVDMHighlighter >> typeExport [
+	^ self struct optional , (self type: name)
+]
+
 { #category : #'parsers-types' }
 ViennaVDMHighlighter >> typeIdentifier [
 	^ self type: super typeIdentifier
+]
+
+{ #category : #'parsers-interfaces' }
+ViennaVDMHighlighter >> typeImport [
+	^ (self typeDefinition , ((self renamed , (self decl: (self type: name))) ==> #second) optional)
+		/ (self typeName , ((self renamed , (self decl: (self type: name))) ==> #second) optional)
 ]
 
 { #category : #'parsers-keywords' }

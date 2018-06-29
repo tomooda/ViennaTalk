@@ -1264,8 +1264,8 @@ ViennaVDMParser >> typeExport [
 	^ super typeExport
 		==> [ :array | 
 			array first isNil
-				ifTrue: [ ViennaNode label: 'TypeNameExport' with: array second ]
-				ifFalse: [ ViennaNode label: 'TypeStructExport' with: array second ] ]
+				ifTrue: [ ViennaNode label: 'TypeNameExport' with: array second  ]
+				ifFalse: [ ViennaNode label: 'TypeStructExport' with: array second  ] ]
 ]
 
 { #category : #'parsers-interfaces' }
@@ -1280,11 +1280,14 @@ ViennaVDMParser >> typeJudgement [
 
 { #category : #'parsers-types' }
 ViennaVDMParser >> typeName [
-	^ super name
+	^ super typeName
 		==> [ :array | 
-			array isString
-				ifTrue: [ ViennaNode label: 'LocalName' with: array ]
-				ifFalse: [ ViennaNode label: 'GlobalName' withAll: array ] ]
+			ViennaNode
+				label: 'TypeName'
+				with:
+					(array isString
+						ifTrue: [ ViennaNode label: 'LocalName' with: array ]
+						ifFalse: [ ViennaNode label: 'GlobalName' withAll: array ]) ]
 ]
 
 { #category : #'parsers-definitions' }
