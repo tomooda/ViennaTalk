@@ -25,11 +25,7 @@ WWTTranslator >> initialize [
 ]
 
 { #category : #translating }
-WWTTranslator >> jsonToVdm: aString [
-	| jsonObj |
-	jsonObj := (NeoJSONReader on: aString readStream)
-		listClass: OrderedCollection;
-		next.
+WWTTranslator >> jsonToVdm: jsonObj [
 	matcherPairs
 		do: [ :pair | 
 			| vdmMatcher jsonMatcher |
@@ -40,8 +36,17 @@ WWTTranslator >> jsonToVdm: aString [
 					| translatedBinds |
 					translatedBinds := Dictionary new.
 					binds keysAndValuesDo: [ :var :val | translatedBinds at: var put: (self jsonToVdm: val) ].
-					^ (vdmMatcher emit: translatedBinds) viennaString ] ].
-	^ jsonObj viennaString
+					^ (vdmMatcher emit: translatedBinds)  ] ].
+	^ jsonObj 
+]
+
+{ #category : #translating }
+WWTTranslator >> jsonToVdmString: jsonString [
+	| jsonObj |
+	jsonObj := (NeoJSONReader on: jsonString readStream)
+		listClass: OrderedCollection;
+		next.
+	^ (self jsonToVdm: jsonObj) viennaString
 ]
 
 { #category : #accessing }
@@ -60,11 +65,7 @@ WWTTranslator >> source: aString [
 ]
 
 { #category : #translating }
-WWTTranslator >> vdmToJson: aString [
-	| vdmObj |
-	vdmObj := vdmDecoder parse: aString.
-	vdmObj isPetitFailure
-		ifTrue: [ ^ aString ].
+WWTTranslator >> vdmToJson: vdmObj [
 	matcherPairs
 		do: [ :pair | 
 			| vdmMatcher jsonMatcher |
@@ -75,6 +76,17 @@ WWTTranslator >> vdmToJson: aString [
 					| translatedBinds |
 					translatedBinds := Dictionary new.
 					binds keysAndValuesDo: [ :var :val | translatedBinds at: var put: (self vdmToJson: val) ].
-					^ NeoJSONWriter toString: (jsonMatcher emit: translatedBinds) ] ].
-	^ NeoJSONWriter toString: vdmObj
+					^ jsonMatcher emit: translatedBinds ] ].
+	^ vdmObj
+]
+
+{ #category : #translating }
+WWTTranslator >> vdmToJsonString: vdmString [
+	| vdmObj |
+	vdmString trim = '()'
+		ifTrue: [ ^ String new ].
+	vdmObj := vdmDecoder parse: vdmString.
+	vdmObj isPetitFailure
+		ifTrue: [ ^ vdmObj ].
+	^ NeoJSONWriter toString: (self vdmToJson: vdmObj)
 ]
