@@ -19,6 +19,8 @@ WWTTranslationOrderedCollectionMatcher >> accept: anObject [
 	| binds |
 	anObject isSequence
 		ifFalse: [ ^ nil ].
+	anObject isEmpty
+		ifTrue: [ ^ nil ].
 	binds := Dictionary new.
 	anObject
 		do: [ :element | 
