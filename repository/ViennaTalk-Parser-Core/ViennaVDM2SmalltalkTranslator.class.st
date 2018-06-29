@@ -701,7 +701,7 @@ ViennaVDM2SmalltalkTranslator >> ifStatement [
 	^ super ifStatement
 		==> [ :pair | 
 			pair first
-				inject: pair second
+				inject: (pair second ifNil: [ '' ])
 				into: [ :else :cond | cond first , ' ifTrue: [' , cond second , '] ifFalse: [' , else , ']' ] ]
 ]
 
