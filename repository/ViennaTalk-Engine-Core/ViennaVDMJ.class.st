@@ -259,12 +259,12 @@ ViennaVDMJ class >> unregister: aViennaVDMJ [
 
 { #category : #accessing }
 ViennaVDMJ class >> vdmjPath [
-	^ FileSystem workingDirectory / 'vdmj-3.0.1.jar'
+	^ FileSystem workingDirectory / 'vdmj-3.1.1.jar'
 ]
 
 { #category : #resources }
 ViennaVDMJ class >> vdmjUrl [
-	^ 'http://vdmpad.csce.kyushu-u.ac.jp/vdmj-3.0.1.jar' asUrl
+	^ 'http://vdmpad.csce.kyushu-u.ac.jp/vdmj-3.1.1.jar' asUrl
 ]
 
 { #category : #finalizing }
