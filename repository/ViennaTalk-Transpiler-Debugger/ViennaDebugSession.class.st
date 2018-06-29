@@ -29,6 +29,7 @@ ViennaDebugSession >> vdmRangeForContext: aContext [
 		do: [ :assoc | 
 			assoc value == currentNode
 				ifTrue: [ ^ assoc key ] ].
-	currentNode isMethod ] whileFalse: [ currentNode := currentNode parent ].
+	currentNode := currentNode parent.
+	currentNode notNil ] whileTrue.
 	^ 1 to: 0
 ]
