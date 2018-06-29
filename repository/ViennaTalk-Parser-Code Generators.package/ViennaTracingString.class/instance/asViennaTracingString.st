@@ -1,3 +1,0 @@
-converting
-asViennaTracingString
-	^ self

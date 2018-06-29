@@ -1,3 +1,0 @@
-converting
-asInterpretedAnimation
-	^ self

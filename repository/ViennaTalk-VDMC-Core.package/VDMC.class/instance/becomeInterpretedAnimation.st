@@ -1,3 +1,0 @@
-private
-becomeInterpretedAnimation
-	^ self

@@ -1,3 +1,0 @@
-enabling/disabling
-disableRuntimeAssertionCheck
-	runtimeAssertionCheck := false

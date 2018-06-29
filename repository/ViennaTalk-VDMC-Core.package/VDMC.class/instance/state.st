@@ -1,3 +1,0 @@
-private
-state
-	^ state copy

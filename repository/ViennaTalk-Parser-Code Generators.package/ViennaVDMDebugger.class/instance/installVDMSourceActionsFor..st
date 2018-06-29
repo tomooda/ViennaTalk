@@ -1,3 +1,0 @@
-building actions
-installVDMSourceActionsFor: aPresentation
-	self installActionsForRootPragmas: self vdmSourceActionsPragmas in: aPresentation
