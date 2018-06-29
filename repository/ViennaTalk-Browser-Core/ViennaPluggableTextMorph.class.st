@@ -18,6 +18,12 @@ ViennaPluggableTextMorph >> enableHighlighting [
 	self highlightingEnabled: true
 ]
 
+{ #category : #'as yet unclassified' }
+ViennaPluggableTextMorph >> handleEdit: aBlock [
+	^ [ super handleEdit: aBlock ]
+		ensure: [ wantsHighlighting := true ]
+]
+
 { #category : #'stepping and presenter' }
 ViennaPluggableTextMorph >> highlight [
 	| source |
@@ -71,7 +77,7 @@ ViennaPluggableTextMorph >> step [
 
 { #category : #'stepping and presenter' }
 ViennaPluggableTextMorph >> stepTime [
-	^ 2000
+	^ 1000
 ]
 
 { #category : #'class access' }
@@ -103,6 +109,11 @@ ViennaPluggableTextMorph >> update: aSymbol [
 { #category : #accessing }
 ViennaPluggableTextMorph >> wantsHighlighting [
 	^ wantsHighlighting = true
+]
+
+{ #category : #accessing }
+ViennaPluggableTextMorph >> wantsHighlighting: aBoolean [
+	wantsHighlighting := aBoolean = true
 ]
 
 { #category : #testing }
