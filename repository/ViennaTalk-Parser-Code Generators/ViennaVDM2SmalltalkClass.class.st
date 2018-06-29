@@ -282,13 +282,13 @@ ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass proto
 								nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ].
 					runtimeTypeCheck = true
 						ifTrue: [ formalArgs
-								do: [ :assoc | 
+								with: anArrayOfPatternNodeAndTypeSetNode
+								do: [ :assoc :triple | 
 									stream
-										nextPutAll: '((';
-										nextPutAll: (self generate: assoc value env: aDictionary);
-										nextPutAll: ') includes: ';
-										nextPutAll: assoc key;
-										nextPutAll: ') ifFalse: [ViennaRuntimeTypeError signal].' ] ].
+										nextPutAll:
+											('((' , (self generate: assoc value env: aDictionary) , ') includes: ' , assoc key
+												, ') ifFalse: [ViennaRuntimeTypeError signal].'
+												asViennaTracingString: triple second) ] ].
 					preString
 						ifNotNil: [ stream
 								nextPutAll: '(';
@@ -296,22 +296,15 @@ ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass proto
 								nextPutAll: ') ifFalse: [ViennaPreconditionViolation signal].' ].
 					stream
 						nextPutAll: '_oldState := self state. ';
-						nextPutAll: retVarName , ' := self _';
-						nextPutAll: opName.
-					argVars
-						do: [ :var | 
-							stream
-								nextPutAll: '_: ';
-								nextPutAll: var;
-								nextPutAll: ' ' ].
-					stream nextPutAll: '.'.
+						nextPutAll:
+							(retVarName , ' := self _' , opName
+								, ((' _: ' join: argVars) ifNotEmpty: [ :str | '_: ' , str ] ifEmpty: [ '' ])
+								, '.' asViennaTracingString: aViennaNode).
 					(runtimeTypeCheck = true and: [ typeNode label ~= 'UnitType' ])
 						ifTrue: [ stream
-								nextPutAll: '(';
-								nextPutAll: (self generate: typeNode env: aDictionary);
 								nextPutAll:
-									' includes: ' , retVarName
-										, ') ifFalse: [ViennaRuntimeTypeError signal].' ].
+									('(' , (self generate: typeNode env: aDictionary) , ' includes: ' , retVarName
+										, ') ifFalse: [ViennaRuntimeTypeError signal].' asViennaTracingString: typeNode) ].
 					postString
 						ifNotNil: [ stream
 								nextPutAll: '(';
@@ -323,7 +316,7 @@ ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass proto
 		node: aViennaNode.
 	^ self
 		defineMethod:
-			(self
+			((self
 				stringStreamContents: [ :stream | 
 					stream
 						nextPut: $_;
@@ -336,7 +329,7 @@ ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass proto
 								nextPutAll: ' ' ].
 					stream
 						cr;
-						nextPutAll: bodyString ])
+						nextPutAll: bodyString ]) asViennaTracingString: aViennaNode2)
 		in: theClass
 		protocol: protocolString
 		node: aViennaNode2
