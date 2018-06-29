@@ -529,9 +529,12 @@ ViennaBrowser >> autoFormat [
 
 { #category : #'test pane menu' }
 ViennaBrowser >> basicRunTestModule: module operation: operation [
-	| header |
+	| header testAnimation |
 	header := 'Runtime: Error 4129: Exit '.
-	[ [ animation
+	testAnimation := animation copy
+		state: Dictionary new;
+		yourself.
+	[ [ testAnimation
 		plainEvaluate: operation , '()'
 		in: module
 		ifError: [ :msg | 
