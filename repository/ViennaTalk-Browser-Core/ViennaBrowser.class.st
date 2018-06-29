@@ -16,7 +16,8 @@ Class {
 		'codeSelection',
 		'valueSelection',
 		'workspaceSelection',
-		'directory'
+		'directory',
+		'lowerTabPane'
 	],
 	#category : 'ViennaTalk-Browser-Core'
 }
@@ -32,6 +33,11 @@ ViennaBrowser class >> VDMBrowserMenuOn: aBuilder [
 		icon: nil
 ]
 
+{ #category : #defaults }
+ViennaBrowser class >> defaultLabel [
+	^ 'VDM Browser'
+]
+
 { #category : #'instance creation' }
 ViennaBrowser class >> on: aVDMC [
 	^ self new vdmc: aVDMC
@@ -45,8 +51,8 @@ ViennaBrowser class >> open [
 ]
 
 { #category : #'instance creation' }
-ViennaBrowser class >> openOn: aVDMC [ 
-	^ self openOn: aVDMC withLabel: 'VDM Browser'
+ViennaBrowser class >> openOn: aVDMC [
+	^ self openOn: aVDMC withLabel: self defaultLabel
 ]
 
 { #category : #'instance creation' }
@@ -220,7 +226,7 @@ ViennaBrowser >> acceptWorkspace: aStringOrText [
 
 { #category : #'user interface' }
 ViennaBrowser >> build [
-	| pane upper lower |
+	| pane upper |
 	moduleListPane := self buildModuleList.
 	fieldListPane := self buildFieldList.
 	valuePane := self buildValuePane.
@@ -236,12 +242,12 @@ ViennaBrowser >> build [
 	upper addMorph: fieldListPane fullFrame: (0.3 @ 0 corner: 0.6 @ 1) asLayoutFrame.
 	upper addMorph: valuePane fullFrame: (0.6 @ 0 corner: 1 @ 1) asLayoutFrame.
 	upper addPaneSplitters.
-	lower := LazyTabGroupMorph new.
-	lower addLazyPage: codePane label: 'Specification'.
-	lower addLazyPage: workspacePane label: 'Workspace'.
-	lower selectedPageIndex: 1.
+	lowerTabPane := LazyTabGroupMorph new.
+	lowerTabPane addLazyPage: codePane label: 'Specification'.
+	lowerTabPane addLazyPage: workspacePane label: 'Workspace'.
+	lowerTabPane selectedPageIndex: 1.
 	pane addMorph: upper fullFrame: ((0 @ 0 corner: 1 @ 0.4) asLayoutFrame bottomRightOffset: 0 @ -2).
-	pane addMorph: lower fullFrame: ((0 @ 0.4 corner: 1 @ 1) asLayoutFrame topLeftOffset: 0 @ 2).
+	pane addMorph: lowerTabPane fullFrame: ((0 @ 0.4 corner: 1 @ 1) asLayoutFrame topLeftOffset: 0 @ 2).
 	pane addPaneSplitters.
 	^ pane
 ]
