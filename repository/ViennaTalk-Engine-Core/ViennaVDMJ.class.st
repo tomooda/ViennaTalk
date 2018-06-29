@@ -51,7 +51,8 @@ ViennaVDMJ class >> installVDMJ [
 		ifFalse: [ 
 			UIManager default
 				abort:
-					'Failed to download VDMJ. Please download from https://github.com/nickbattle/vdmj/releases and place it at $PHARO/Contents/Resources/ .' ].
+					'Failed to download VDMJ. Please download from https://github.com/nickbattle/vdmj/releases and place it at $PHARO/Contents/Resources/ .'.
+			^ nil ].
 	(FileSystem workingDirectory / 'vdmj-3.0.1.jar') writeStream
 		nextPutAll: http entity bytes;
 		close
