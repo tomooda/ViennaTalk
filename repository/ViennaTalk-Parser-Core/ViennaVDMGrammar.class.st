@@ -14,6 +14,9 @@ Class {
 		'typeDefinition',
 		'valueDefinition',
 		'expression',
+		'atomicExpression',
+		'combinatorExpression',
+		'applicatorExpression',
 		'statement',
 		'expressionExceptEquality',
 		'expressionList',
@@ -101,7 +104,10 @@ Class {
 		'initialisation',
 		'fieldList',
 		'access',
-		'stateDesignator'
+		'stateDesignator',
+		'evaluatorExpression',
+		'connectiveExpression',
+		'relationExpression'
 	],
 	#category : 'ViennaTalk-Parser-Core'
 }
@@ -193,6 +199,50 @@ ViennaVDMGrammar >> anonymousField [
 	^ type
 ]
 
+{ #category : #'parsers-expressions' }
+ViennaVDMGrammar >> applicatorExpression [
+	^ (combinatorExpression
+		,
+			(((lparen , expression , comma , (self operator: '...') , comma , expression , rparen)
+				==> [ :array | 
+					{#subsequence:from:to:.
+					(array second).
+					(array sixth)} ])
+				/
+					((lparen , expressionList , rparen)
+						==> [ :array | 
+							{#apply:args:.
+							(array second)} ])
+				/
+					((lbracket , (type separatedBy: comma) withoutSeparators , rbracket)
+						==> [ :array | 
+							{#functionTypeInstantiation:args:.
+							(array second)} ])
+				/
+					(((self operator: $.) , identifier)
+						==> [ :array | 
+							{#fieldSelect:with:.
+							(array second)} ])
+				/
+					(((self operator: '.#') , #digit asParser plus flatten trim)
+						==> [ :array | 
+							{#tupleSelect:with:.
+							(array second)} ])) star)
+		==> [ :pair | 
+			| left array |
+			left := pair first.
+			array := pair second.
+			array
+				inject: left
+				into: [ :expr :selAndArg | 
+					self
+						perform: selAndArg first
+						withArguments:
+							(selAndArg copy
+								at: 1 put: expr;
+								yourself) ] ]
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMGrammar >> apply: func args: args [
 	^ {func.
@@ -218,6 +268,18 @@ ViennaVDMGrammar >> assignmentDefinition [
 			{ident.
 			varType.
 			initialValue} ]
+]
+
+{ #category : #'parsers-expressions' }
+ViennaVDMGrammar >> atomicExpression [
+	^ letExpression / letBeExpression / defExpression / ifExpression / casesExpression / quantifiedExpression
+		/ iotaExpression / mapEnumeration / mapComprehension / setEnumeration / setComprehension / setRangeExpression
+		/ sequenceEnumeration / sequenceComprehension / tupleConstructor / recordConstructor / recordModifier
+		/ lambdaExpression / narrowExpression / newExpression / selfExpression / threadidExpression / generalIsExpr
+		/ undefinedExpression / preconditionExpression / isofbaseclassExpression / isofclassExpression
+		/ samebaseclassExpression / sameclassExpression / actExpression / finExpression / activeExpression / reqExpression
+		/ waitingExpression / timeExpression / name / oldName / symbolicLiteral
+		/ ((lparen , expression , rparen) ==> [ :triple | triple second ])
 ]
 
 { #category : #'parsers-symbols' }
@@ -257,130 +319,6 @@ ViennaVDMGrammar >> blockStatement [
 { #category : #'parsers-literals' }
 ViennaVDMGrammar >> booleanLiteral [
 	^ (self reserved: 'true' asParser ==> [ :t | true ]) / ('false' asParser ==> [ :t | false ])
-]
-
-{ #category : #'parsers-expressions' }
-ViennaVDMGrammar >> buildApplicatorParserOn: anExpressionParser [
-	| applyArgs subsequenceArgs functionTypeInstantiationArgs fieldSelector tupleSelector actions |
-	applyArgs := (lparen
-		, (expressionList) , rparen)
-		==> [ :triple | 
-			{#apply.
-			(triple second)} ].
-	subsequenceArgs := (lparen , expression , comma , (self operator: '...') , comma , expression , rparen)
-		==> [ :array | 
-			{#subsequence.
-			(array second).
-			(array sixth)} ].
-	functionTypeInstantiationArgs := (lbracket , (type separatedBy: comma) withoutSeparators , rbracket)
-		==> [ :triple | 
-			{#instantiation.
-			(triple second)} ].
-	fieldSelector := ((self operator: $.) , identifier)
-		==> [ :pair | 
-			{#field.
-			(pair second)} ].
-	tupleSelector := ((self operator: '.#') , #digit asParser plus flatten trim)
-		==> [ :pair | 
-			{#tuple.
-			(pair second)} ].
-	actions := Dictionary new
-		at: #apply put: [ :left :right | self apply: left args: right second ];
-		at: #subsequence put: [ :left :right | self subsequence: left from: right second to: right third ];
-		at: #instantiation put: [ :left :right | self functionTypeInstantiation: left args: right second ];
-		at: #field put: [ :left :right | self fieldSelect: left with: right second ];
-		at: #tuple put: [ :left :right | self tupleSelect: left with: right second ];
-		yourself.
-	anExpressionParser
-		precedence: [ :expr | expr , (applyArgs / subsequenceArgs / functionTypeInstantiationArgs / tupleSelector / fieldSelector) plus ]
-		do: [ :pair | pair second inject: pair first into: [ :left :right | (actions at: right first) value: left value: right ] ]
-]
-
-{ #category : #'parsers-expressions' }
-ViennaVDMGrammar >> buildCombinatorParserOn: anExpressionParser [
-	anExpressionParser
-		group: [ :iterate | iterate right: (self operator: '**') do: [ :expr1 :op :expr2 | self iterateExpression: expr1 and: expr2 ] ];
-		group: [ :comp | comp right: (self reserved: 'comp') do: [ :expr1 :op :expr2 | self compositionExpression: expr1 and: expr2 ] ]
-]
-
-{ #category : #'parsers-expressions' }
-ViennaVDMGrammar >> buildConnectiveParserOn: anExpressionParser [
-	anExpressionParser
-		group: [ :p5 | p5 prefix: (self reserved: 'not') do: [ :op :arg | self not: arg ] ];
-		group: [ :p4 | p4 left: (self reserved: 'and') do: [ :arg1 :op :arg2 | self and: arg1 and: arg2 ] ];
-		group: [ :p3 | p3 left: (self reserved: 'or') do: [ :arg1 :op :arg2 | self or: arg1 and: arg2 ] ];
-		group: [ :p2 | p2 right: (self operator: '=>') do: [ :arg1 :op :arg2 | self imp: arg1 and: arg2 ] ];
-		group: [ :p1 | p1 left: (self operator: '<=>') do: [ :arg1 :op :arg2 | self equiv: arg1 and: arg2 ] ]
-]
-
-{ #category : #'parsers-expressions' }
-ViennaVDMGrammar >> buildEvaluatorParserOn: anExpressionParser [
-	anExpressionParser
-		group: [ :p6 | 
-					p6
-						prefix: (self operator: $+) do: [ :op :arg | self unaryPlus: arg ];
-						prefix: (self operator: $-) do: [ :op :arg | self unaryMinus: arg ].
-					#('abs' 'floor' 'card' 'power' 'dinter' 'dunion' 'dom' 'rng' 'merge' 'len' 'elems' 'hd' 'tl' 'conc' 'inds' 'reverse')
-						do: [ :operator | p6 prefix: (self reserved: operator) do: [ :op :arg | self perform: (op , ':') asSymbol with: arg ] ] ];
-		group: [ :p5 | 
-					p5 left: (self operator: ':>') do: [ :arg1 :op :arg2 | self map: arg1 rangeRestrictedTo: arg2 ].
-					p5 left: (self operator: ':->') do: [ :arg1 :op :arg2 | self map: arg1 rangeRestrictedBy: arg2 ] ];
-		group: [ :p4 | 
-					p4 right: (self operator: '<:') do: [ :arg1 :op :arg2 | self map: arg1 domainRestrictedTo: arg2 ].
-					p4 right: (self operator: '<-:') do: [ :arg1 :op :arg2 | self map: arg1 domainRestrictedBy: arg2 ] ];
-		group: [ :p3 | p3 prefix: (self reserved: 'inverse') do: [ :op :arg | self inverse: arg ] ];
-		group: [ :p2 | 
-					p2
-						left: (self operator: $*) do: [ :arg1 :op :arg2 | self mul: arg1 and: arg2 ];
-						left: (self operator: $/) do: [ :arg1 :op :arg2 | self fraction: arg1 and: arg2 ];
-						left: (self reserved: 'rem') do: [ :arg1 :op :arg2 | self rem: arg1 and: arg2 ];
-						left: (self reserved: 'mod') do: [ :arg1 :op :arg2 | self mod: arg1 and: arg2 ];
-						left: (self reserved: 'div') do: [ :arg1 :op :arg2 | self div: arg1 and: arg2 ];
-						left: (self reserved: 'inter') do: [ :arg1 :op :arg2 | self inter: arg1 and: arg2 ] ];
-		group: [ :p1 | 
-					p1
-						left: (self operator: $+) , $+ asParser not do: [ :arg1 :op :arg2 | self plus: arg1 and: arg2 ];
-						left: (self operator: $-) do: [ :arg1 :op :arg2 | self minus: arg1 and: arg2 ];
-						left: (self reserved: 'union') do: [ :arg1 :op :arg2 | self union: arg1 and: arg2 ];
-						left: (self operator: $\) do: [ :arg1 :op :arg2 | self diff: arg1 and: arg2 ];
-						left: (self reserved: 'munion') do: [ :arg1 :op :arg2 | self munion: arg1 and: arg2 ];
-						left: (self operator: '++') do: [ :arg1 :op :arg2 | self mconcat: arg1 and: arg2 ];
-						left: (self operator: '^') do: [ :arg1 :op :arg2 | self concat: arg1 and: arg2 ] ]
-]
-
-{ #category : #'parsers-expressions' }
-ViennaVDMGrammar >> buildRelationParserExceptEqualityOn: anExpressionParser [
-	anExpressionParser
-		group: [ :p1 | 
-			p1
-				left: (self operator: '<>') do: [ :arg1 :op :arg2 | self notEqual: arg1 and: arg2 ];
-				left: (self operator: '<=') do: [ :arg1 :op :arg2 | self lessEq: arg1 and: arg2 ];
-				left: (self operator: $< asParser , $= asParser not) do: [ :arg1 :op :arg2 | self less: arg1 and: arg2 ];
-				left: (self operator: '>=') do: [ :arg1 :op :arg2 | self greaterEq: arg1 and: arg2 ];
-				left: (self operator: $> asParser , $= asParser not) do: [ :arg1 :op :arg2 | self greater: arg1 and: arg2 ];
-				left: (self reserved: 'subset') do: [ :arg1 :op :arg2 | self subset: arg1 and: arg2 ];
-				left: (self reserved: 'psubset') do: [ :arg1 :op :arg2 | self psubset: arg1 and: arg2 ];
-				left: (self reserved: 'in') , (self reserved: 'set') do: [ :arg1 :op :arg2 | self inSet: arg1 and: arg2 ];
-				left: (self reserved: 'not') , (self reserved: 'in') , (self reserved: 'set')
-					do: [ :arg1 :op :arg2 | self notInSet: arg1 and: arg2 ] ]
-]
-
-{ #category : #'parsers-expressions' }
-ViennaVDMGrammar >> buildRelationParserOn: anExpressionParser [
-	anExpressionParser
-		group: [ :p1 | 
-			p1
-				left: (self operator: $=) do: [ :arg1 :op :arg2 | self equal: arg1 and: arg2 ];
-				left: (self operator: '<>') do: [ :arg1 :op :arg2 | self notEqual: arg1 and: arg2 ];
-				left: (self operator: '<=') do: [ :arg1 :op :arg2 | self lessEq: arg1 and: arg2 ];
-				left: (self operator: $< asParser , $= asParser not) do: [ :arg1 :op :arg2 | self less: arg1 and: arg2 ];
-				left: (self operator: '>=') do: [ :arg1 :op :arg2 | self greaterEq: arg1 and: arg2 ];
-				left: (self operator: $> asParser , $= asParser not) do: [ :arg1 :op :arg2 | self greater: arg1 and: arg2 ];
-				left: (self reserved: 'subset') do: [ :arg1 :op :arg2 | self subset: arg1 and: arg2 ];
-				left: (self reserved: 'psubset') do: [ :arg1 :op :arg2 | self psubset: arg1 and: arg2 ];
-				left: (self reserved: 'in') , (self reserved: 'set') do: [ :arg1 :op :arg2 | self inSet: arg1 and: arg2 ];
-				left: (self reserved: 'not') , (self reserved: 'in') , (self reserved: 'set')
-					do: [ :arg1 :op :arg2 | self notInSet: arg1 and: arg2 ] ]
 ]
 
 { #category : #'parsers-statements' }
@@ -476,6 +414,34 @@ ViennaVDMGrammar >> colonEq [
 	^ self operator: ':='
 ]
 
+{ #category : #'parsers-expressions' }
+ViennaVDMGrammar >> combinatorExpression [
+	| precedence2 precedence1 |
+	precedence2 := (atomicExpression , ((self operator: '**') , atomicExpression) star)
+		==> [ :pair | 
+			pair second
+				ifEmpty: [ pair first ]
+				ifNotEmpty: [ 
+					self
+						iterateExpression: pair first
+						and:
+							((pair second size to: 2 by: -1)
+								inject: pair second last second
+								into: [ :expr :index | self iterateExpression: (pair second at: index - 1) second and: expr ]) ] ].
+	precedence1 := (precedence2 , ((self reserved: 'comp') , precedence2) star)
+		==> [ :pair | 
+			pair second
+				ifEmpty: [ pair first ]
+				ifNotEmpty: [ 
+					self
+						compositionExpression: pair first
+						and:
+							((pair second size to: 2 by: -1)
+								inject: pair second last second
+								into: [ :expr :index | self compositionExpression: (pair second at: index - 1) second and: expr ]) ] ].
+	^ precedence1
+]
+
 { #category : #'parsers-symbols' }
 ViennaVDMGrammar >> comma [
 	^ self operator: $,
@@ -504,6 +470,31 @@ ViennaVDMGrammar >> conc: arg [
 ViennaVDMGrammar >> concat: arg1 and: arg2 [
 	^ {arg1.
 	arg2}
+]
+
+{ #category : #'parsers-expressions' }
+ViennaVDMGrammar >> connectiveExpression [
+	| precedence5 precedence4 precedence3 precedence2 precedence1 |
+	precedence5 := ((self reserved: 'not') star , relationExpression)
+		==> [ :pair | pair first inject: pair second into: [ :expr :op | self not: expr ] ].
+	precedence4 := (precedence5 , ((self reserved: 'and') , precedence5) star)
+		==> [ :pair | pair second inject: pair first into: [ :expr :and | self and: expr and: and second ] ].
+	precedence3 := (precedence4 , ((self reserved: 'or') , precedence4) star)
+		==> [ :pair | pair second inject: pair first into: [ :expr :or | self or: expr and: or second ] ].
+	precedence2 := (precedence3 , ((self operator: '=>') , precedence3) star)
+		==> [ :pair | 
+			pair second
+				ifEmpty: [ pair first ]
+				ifNotEmpty: [ 
+					self
+						imp: pair first
+						and:
+							((pair second size to: 2 by: -1)
+								inject: pair second last second
+								into: [ :expr :index | self imp: (pair second at: index - 1) second and: expr ]) ] ].
+	precedence1 := (precedence2 , ((self operator: '<=>') , precedence2) star)
+		==> [ :pair | pair second inject: pair first into: [ :expr :bool | self equiv: expr and: bool second ] ].
+	^ precedence1
 ]
 
 { #category : #'parsers-statements' }
@@ -668,6 +659,119 @@ ViennaVDMGrammar >> escapeSequence [
 				/ ($" asParser ==> [ :c | $" ]) / ($' asParser ==> [ :c | $' ]))) ==> #second
 ]
 
+{ #category : #'parsers-expressions' }
+ViennaVDMGrammar >> evaluatorExpression [
+	| precedence6 precedence5 precedence4 precedence3 precedence2 precedence1 |
+	precedence6 := ((((self operator: $+) ==> [ :plus | 'unaryPlus' ])
+		/ ((self operator: $-) ==> [ :minus | 'unaryMinus' ]) / (self reserved: 'abs') / (self reserved: 'floor')
+		/ (self reserved: 'card') / (self reserved: 'power') / (self reserved: 'dinter') / (self reserved: 'dunion')
+		/ (self reserved: 'dom') / (self reserved: 'rng') / (self reserved: 'merge') / (self reserved: 'len')
+		/ (self reserved: 'elems') / (self reserved: 'hd') / (self reserved: 'tl') / (self reserved: 'conc')
+		/ (self reserved: 'inds') / (self reserved: 'reverse')) star , applicatorExpression)
+		==> [ :pair | pair first reverse inject: pair second into: [ :expr :sel | self perform: (sel , ':') asSymbol with: expr ] ].
+	precedence5 := (precedence6
+		,
+			(((self operator: ':>') ==> [ :op | #map:rangeRestrictedTo: ])
+				/ ((self operator: ':->') ==> [ :op | #map:rangeRestrictedBy: ]) , precedence6) star)
+		==> [ :pair | 
+			pair second
+				inject: pair first
+				into: [ :expr :selAndArg | self perform: selAndArg first with: expr with: selAndArg second ] ].
+	precedence4 := (precedence5
+		,
+			(((self operator: '<:') ==> [ :op | #map:domainRestrictedTo: ])
+				/ ((self operator: '<-:') ==> [ :op | #map:domainRestrictedBy: ]) , precedence5) star)
+		==> [ :pair | 
+			pair second
+				ifEmpty: [ pair first ]
+				ifNotEmpty: [ 
+					self
+						perform: pair second first first
+						with: pair first
+						with:
+							((pair second size to: 2 by: -1)
+								inject: pair second last second
+								into: [ :expr :index | self perform: (pair second at: index) first with: (pair second at: index - 1) second with: expr ]) ] ].
+	precedence3 := ((self reserved: 'inverse') star , precedence4)
+		==> [ :pair | pair first inject: pair second into: [ :expr :inv | self inverse: expr ] ].
+	precedence2 := (precedence3
+		,
+			((((self operator: $*) , precedence3)
+				==> [ :pair | 
+					{#mul:and:.
+					(pair second)} ])
+				/
+					(((self operator: $/) , precedence3)
+						==> [ :pair | 
+							{#fraction:and:.
+							(pair second)} ])
+				/
+					(((self reserved: 'rem') , precedence3)
+						==> [ :pair | 
+							{#rem:and:.
+							(pair second)} ])
+				/
+					(((self reserved: 'mod') , precedence3)
+						==> [ :pair | 
+							{#mod:and:.
+							(pair second)} ])
+				/
+					(((self reserved: 'div') , precedence3)
+						==> [ :pair | 
+							{#div:and:.
+							(pair second)} ])
+				/
+					(((self reserved: 'inter') , precedence3)
+						==> [ :pair | 
+							{#inter:and:.
+							(pair second)} ])) star)
+		==> [ :pair | 
+			pair second
+				inject: pair first
+				into: [ :expr :selAndArg | self perform: selAndArg first with: expr with: selAndArg second ] ].
+	precedence1 := (precedence2
+		,
+			(((($+ asParser , $+ asParser not) trim , precedence2)
+				==> [ :pair | 
+					{#plus:and:.
+					(pair second)} ])
+				/
+					(((self operator: $-) , precedence2)
+						==> [ :pair | 
+							{#minus:and:.
+							(pair second)} ])
+				/
+					(((self reserved: 'union') , precedence2)
+						==> [ :pair | 
+							{#union:and:.
+							(pair second)} ])
+				/
+					(((self operator: $\) , precedence2)
+						==> [ :pair | 
+							{#diff:and:.
+							(pair second)} ])
+				/
+					(((self reserved: 'munion') , precedence2)
+						==> [ :pair | 
+							{#munion:and:.
+							(pair second)} ])
+				/
+					(((self operator: '++') , precedence2)
+						==> [ :pair | 
+							{#mconcat:and:.
+							(pair second)} ])
+				/
+					(((self operator: $^) , precedence2)
+						==> [ :pair | 
+							{#concat:and:.
+							(pair second)} ])) star)
+		==> [ :pair | 
+			pair second
+				inject: pair first
+				into: [ :expr :selAndArg | self perform: selAndArg first with: expr with: selAndArg second ] ].
+	^ precedence1
+]
+
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> exists1Expression [
 	^ ((self reserved: 'exists1') , bind , amp , expression)
@@ -725,48 +829,14 @@ ViennaVDMGrammar >> explicitOperationDefinition [
 				ifFalse: [ PPFailure message: 'operation name mismatch : ' , array first , ',' , array fourth ] ]
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : #'parsers-expressions' }
 ViennaVDMGrammar >> expression [
-	| expressionParser |
-	expressionParser := PPExpressionParser new.
-	expressionParser
-		term:
-			letExpression / letBeExpression / defExpression / ifExpression / casesExpression / quantifiedExpression / iotaExpression
-				/ mapEnumeration / mapComprehension / setEnumeration / setComprehension / setRangeExpression / sequenceEnumeration
-				/ sequenceComprehension / tupleConstructor / recordConstructor / recordModifier / lambdaExpression
-				/ narrowExpression / newExpression / selfExpression / threadidExpression / generalIsExpr / undefinedExpression
-				/ preconditionExpression / isofbaseclassExpression / isofclassExpression / samebaseclassExpression
-				/ sameclassExpression / actExpression / finExpression / activeExpression / reqExpression / waitingExpression
-				/ timeExpression / name / oldName / symbolicLiteral
-				/ ((lparen , expression , rparen) ==> [ :triple | triple second ]).
-	self buildCombinatorParserOn: expressionParser.
-	self buildApplicatorParserOn: expressionParser.
-	self buildEvaluatorParserOn: expressionParser.
-	self buildRelationParserOn: expressionParser.
-	self buildConnectiveParserOn: expressionParser.
-	^ expressionParser
+	^ connectiveExpression
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : #'parsers-expressions' }
 ViennaVDMGrammar >> expressionExceptEquality [
-	| expressionParser |
-	expressionParser := PPExpressionParser new.
-	expressionParser
-		term:
-			letExpression / letBeExpression / defExpression / ifExpression / casesExpression / quantifiedExpression / iotaExpression
-				/ setEnumeration / setComprehension / setRangeExpression / sequenceEnumeration / sequenceComprehension
-				/ mapEnumeration / mapComprehension / tupleConstructor / recordConstructor / recordModifier / lambdaExpression
-				/ narrowExpression / newExpression / selfExpression / threadidExpression / generalIsExpr / undefinedExpression
-				/ preconditionExpression / isofbaseclassExpression / isofclassExpression / samebaseclassExpression
-				/ sameclassExpression / actExpression / finExpression / activeExpression / reqExpression / waitingExpression
-				/ timeExpression / name / oldName / symbolicLiteral
-				/ ((lparen , expression , rparen) ==> [ :triple | triple second ]).
-	self buildCombinatorParserOn: expressionParser.
-	self buildApplicatorParserOn: expressionParser.
-	self buildEvaluatorParserOn: expressionParser.
-	self buildRelationParserExceptEqualityOn: expressionParser.
-	self buildConnectiveParserOn: expressionParser.
-	^ expressionParser
+	^ evaluatorExpression
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -915,7 +985,13 @@ ViennaVDMGrammar >> identifiedField [
 
 { #category : #'parsers-symbols' }
 ViennaVDMGrammar >> identifier [
-	^ (prefix not , keyword not , initialLetter , followingLetter star) flatten
+	^ (initialLetter , followingLetter star) flatten
+		==> [ :str | 
+			((self prefixes
+				anySatisfy: [ :p | str size >= p size and: [ (1 to: p size) allSatisfy: [ :i | (str at: i) = (p at: i) ] ] ])
+				or: [ self keywords includes: str ])
+				ifTrue: [ PPFailure message: 'a keyword or prefixed word can not be an identifier' ]
+				ifFalse: [ str ] ]
 ]
 
 { #category : #'parsers-statements' }
@@ -1119,9 +1195,12 @@ ViennaVDMGrammar >> iterateExpression: expr1 and: expr2 [
 
 { #category : #'parsers-symbols' }
 ViennaVDMGrammar >> keyword [
+	^ self keywords inject: (self reserved: 'abs') into: [ :p :t | p / (self reserved: t) ]
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> keywords [
 	^ #('all' 'always' 'and' 'as' 'async' 'atomic' 'be' 'bool' 'by' 'card' 'cases' 'char' 'class' 'comp' 'compose' 'conc' 'cycles' 'dcl' 'def' 'definitions' 'dinter' 'div' 'dlmodule' 'do' 'dom' 'dunion' 'duration' 'elems' 'else' 'elseif' 'end' 'error' 'errs' 'exists' 'exists1' 'exit' 'exports' 'ext' 'false' 'floor' 'for' 'forall' 'from' 'functions' 'hd' 'if' 'in' 'inds' 'inmap' 'instance' 'int' 'inter' 'imports' 'init' 'inv' 'inverse' 'iota' 'is' 'isofbaseclass' 'isofclass' 'lambda' 'len' 'let' 'map' 'measure' 'merge' 'mod' 'module' 'mu' 'munion' 'mutex' 'nat' 'nat1' 'new' 'nil' 'not' 'of' 'operations' 'or' 'others' 'per' 'periodic' 'post' 'power' 'pre' 'private' 'protected' 'psubset' 'public' 'pure' 'rat' 'rd' 'real' 'rem' 'renamed' 'responsibility' 'return' 'reverse' 'rng' 'samebaseclass' 'sameclass' 'self' 'seq' 'seq1' 'set' 'skip' 'specified' 'sporadic' 'st' 'start' 'startlist' 'state' 'stop' 'stoplist' 'struct' 'subclass' 'subset' 'sync' 'system' 'then' 'thread' 'threadid' 'time' 'tixe' 'tl' 'to' 'token' 'traces' 'trap' 'true' 'types' 'undefined' 'union' 'uselib' 'values' 'variables' 'while' 'with' 'wr' 'yet' 'RESULT')
-		inject: (self reserved: 'abs')
-		into: [ :p :t | p / (self reserved: t) ]
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -1600,6 +1679,11 @@ ViennaVDMGrammar >> prefix [
 	^ 'mk_' asParser / 'pre_' asParser / 'post_' asParser / 'is_' asParser / 'obj_' asParser / 'narrow_' asParser
 ]
 
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> prefixes [
+	^ #('mk_' 'pre_' 'post_' 'is_' 'obj_' 'narrow_')
+]
+
 { #category : #printing }
 ViennaVDMGrammar >> printOn: aStream [
 	aStream
@@ -1686,6 +1770,65 @@ ViennaVDMGrammar >> recordTypeDefinition [
 			{ident.
 			flist.
 			inv} ]
+]
+
+{ #category : #'parsers-expressions' }
+ViennaVDMGrammar >> relationExpression [
+	^ (evaluatorExpression
+		,
+			((((self operator: '=') , evaluatorExpression)
+				==> [ :pair | 
+					{#equal:and:.
+					(pair second)} ])
+				/
+					(((self operator: '<>') , evaluatorExpression)
+						==> [ :pair | 
+							{#notEqual:and:.
+							(pair second)} ])
+				/
+					(((self operator: '<=') , evaluatorExpression)
+						==> [ :pair | 
+							{#lessEq:and:.
+							(pair second)} ])
+				/
+					(((self operator: '<') , evaluatorExpression)
+						==> [ :pair | 
+							{#less:and:.
+							(pair second)} ])
+				/
+					(((self operator: '>=') , evaluatorExpression)
+						==> [ :pair | 
+							{#greaterEq:and:.
+							(pair second)} ])
+				/
+					(((self operator: '>') , evaluatorExpression)
+						==> [ :pair | 
+							{#greater:and:.
+							(pair second)} ])
+				/
+					(((self reserved: 'subset') , evaluatorExpression)
+						==> [ :pair | 
+							{#subset:and:.
+							(pair second)} ])
+				/
+					(((self reserved: 'psubset') , evaluatorExpression)
+						==> [ :pair | 
+							{#psubset:and:.
+							(pair second)} ])
+				/
+					((((self reserved: 'in') , (self reserved: 'set')) ==> [ :op |  ] , evaluatorExpression)
+						==> [ :pair | 
+							{#inSet:and:.
+							(pair second)} ])
+				/
+					((((self reserved: 'not') , (self reserved: 'in') , (self reserved: 'set')) ==> [ :op |  ] , evaluatorExpression)
+						==> [ :pair | 
+							{#notInSet:and:.
+							(pair second)} ])) star)
+		==> [ :pair | 
+			pair second
+				inject: pair first
+				into: [ :expr :selAndArg | self perform: selAndArg first with: expr with: selAndArg second ] ]
 ]
 
 { #category : #'parsers-expressions-operators' }

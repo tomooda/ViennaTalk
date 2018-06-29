@@ -1088,10 +1088,10 @@ ViennaVDMFormatter >> mapComprehension: aViennaNode [
 		,
 			((self needsIndent: keyExpression , valueExpression)
 				ifTrue: [ keyExpression , String cr , '|-> ' , (self indentString: valueExpression) ]
-				ifFalse: [ keyExpression , ' |-> ' , valueExpression ]) , String cr , '| '
+				ifFalse: [ keyExpression , ' |-> ' , valueExpression ]) , String cr , indent , '| '
 		,
 			((self needsIndent: bindList , guard)
-				ifTrue: [ (self indentString: bindList) , (guard ifNotEmpty: [ String cr , '& ' , (self indentString: guard) ]) ]
+				ifTrue: [ (self indentString: bindList) , (guard ifNotEmpty: [ String cr , indent , '& ' , (self indentString: guard) ]) ]
 				ifFalse: [ (self indentString: bindList) , (guard ifNotEmpty: [ ' & ' , guard ]) ]) , '}'
 ]
 
@@ -1682,10 +1682,10 @@ ViennaVDMFormatter >> sequenceComprehension: aViennaNode [
 	guard := aViennaNode third ifNotNil: [ self format: aViennaNode fourth ] ifNil: [ '' ].
 	(self needsIndent: expression , setBind , guard)
 		ifFalse: [ ^ '[' , expression , ' | ' , setBind , ' & ' , guard , ']' ].
-	^ '[' , expression , String cr , '| '
+	^ '[' , expression , String cr , indent , '| '
 		,
 			((self needsIndent: setBind , guard)
-				ifTrue: [ (self indentString: setBind) , (guard ifNotEmpty: [ String cr , '& ' , (self indentString: guard) ]) ]
+				ifTrue: [ (self indentString: setBind) , (guard ifNotEmpty: [ String cr , indent , '& ' , (self indentString: guard) ]) ]
 				ifFalse: [ (self indentString: setBind) , (guard ifNotEmpty: [ ' & ' , guard ]) ]) , ']'
 ]
 
@@ -1808,10 +1808,10 @@ ViennaVDMFormatter >> setComprehension: aViennaNode [
 	guard := aViennaNode third ifNotNil: [ self format: aViennaNode third ] ifNil: [ '' ].
 	(self needsIndent: expression , bindList , guard)
 		ifFalse: [ ^ '{' , expression , ' | ' , bindList , ' & ' , guard , '}' ].
-	^ '{' , expression , String cr , '| '
+	^ '{' , expression , String cr , indent , '| '
 		,
 			((self needsIndent: bindList , guard)
-				ifTrue: [ (self indentString: bindList) , (guard ifNotEmpty: [ String cr , '& ' , (self indentString: guard) ]) ]
+				ifTrue: [ (self indentString: bindList) , (guard ifNotEmpty: [ String cr , indent , '& ' , (self indentString: guard) ]) ]
 				ifFalse: [ (self indentString: bindList) , (guard ifNotEmpty: [ ' & ' , guard ]) ]) , '}'
 ]
 
