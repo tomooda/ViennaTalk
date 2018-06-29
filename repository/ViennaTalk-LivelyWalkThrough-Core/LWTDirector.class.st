@@ -206,7 +206,7 @@ LWTDirector >> execVDM: aString withArguments: anArray [
 			| value |
 			value := [ self animation plainEvaluate: expression ]
 				on: Error
-				do: [ :ex | self abort: 'VDM error: ' , ex messageText ].	
+				do: [ :ex | self halt. self abort: 'VDM error: ' , ex messageText ].	
 			value ]
 ]
 
@@ -367,8 +367,14 @@ LWTDirector >> removeScriptAt: aString ifAbsent: errorBlock [
 
 { #category : #operations }
 LWTDirector >> save [
-	(filepath notNil and: [ filepath isFile and: [ UIManager default proceed: 'OK to overwrite ' , filepath pathString ] ])
-		ifTrue: [ filepath writeStreamDo: [ :stream | (NeoJSONWriter on: stream) nextPut: self asJsonObject ] ]
+	(filepath notNil
+		and: [ filepath isFile
+				and: [ UIManager default proceed: 'OK to overwrite ' , filepath pathString ] ])
+		ifTrue: [ filepath
+				writeStreamDo: [ :stream | 
+					(NeoJSONWriter on: stream)
+						asciiOnly: true;
+						nextPut: self asJsonObject ] ]
 		ifFalse: [ self saveAs ]
 ]
 
@@ -379,14 +385,17 @@ LWTDirector >> saveAs [
 		extensions: #('lwt')
 		path: (filepath ifNil: [ FileSystem workingDirectory parent parent ]) parent)
 		ifNotNil: [ :reference | 
-			(reference exists not or: [ UIManager proceed: 'OK to overwrite ' , reference pathString ])
-				ifTrue: [ 
-					filepath := reference.
+			(reference exists not
+				or: [ UIManager proceed: 'OK to overwrite ' , reference pathString ])
+				ifTrue: [ filepath := reference.
 					reference
 						writeStreamDo: [ :stream | 
-							[ (NeoJSONWriter on: stream) nextPut: self asJsonObject ]
+							[ (NeoJSONWriter on: stream)
+								asciiOnly: true;
+								nextPut: self asJsonObject ]
 								on: Error
-								do: [ :ex | UIManager default alert: 'Can not write on ' , reference pathString ] ] ] ]
+								do:
+									[ :ex | UIManager default alert: 'Can not write on ' , reference pathString ] ] ] ]
 ]
 
 { #category : #'accessing-scripts' }
