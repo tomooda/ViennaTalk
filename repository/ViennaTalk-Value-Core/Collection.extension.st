@@ -44,3 +44,8 @@ Collection >> power [
 	powerSet addAll: power.
 	^ powerSet
 ]
+
+{ #category : #'*ViennaTalk-Value-Core' }
+Collection >> powerDo: aBlock [
+	self asArray powerDo: aBlock
+]
