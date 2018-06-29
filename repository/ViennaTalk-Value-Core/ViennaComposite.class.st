@@ -3,9 +3,9 @@ Class {
 	#superclass : #Object,
 	#type : #variable,
 	#instVars : [
-		'typeName',
 		'namedFields',
-		'equalityFields'
+		'equalityFields',
+		'constructorName'
 	],
 	#category : 'ViennaTalk-Value-Core'
 }
@@ -59,7 +59,7 @@ ViennaComposite class >> type: aString with: anObject1 with: anObject2 with: anO
 ViennaComposite class >> type: aString withAll: anArray [
 	| composite |
 	composite := self new: anArray size.
-	composite setTypeName: aString.
+	composite setConstructorName: aString.
 	1 to: anArray size do: [ :index | composite at: index put: (anArray at: index) ].
 	^ composite
 ]
@@ -68,7 +68,7 @@ ViennaComposite class >> type: aString withAll: anArray [
 ViennaComposite >> = anObject [
 	self == anObject
 		ifTrue: [ ^ true ].
-	typeName = anObject typeName
+	constructorName = anObject constructorName
 		ifFalse: [ ^ false ].
 	self size = anObject size
 		ifFalse: [ ^ false ].
@@ -88,6 +88,11 @@ ViennaComposite >> at: anIntegerOrString [
 				ifFalse: [ anIntegerOrString ])
 ]
 
+{ #category : #accessing }
+ViennaComposite >> constructorName [
+	^ constructorName
+]
+
 { #category : #'accessing-field types' }
 ViennaComposite >> equalityAbstractionFieldNameAt: anInteger put: aString [
 	namedFields at: aString put: anInteger.
@@ -102,7 +107,7 @@ ViennaComposite >> fieldNameAt: anInteger put: aString [
 { #category : #comparing }
 ViennaComposite >> hash [
 	| hash |
-	hash := typeName hash.
+	hash := constructorName hash.
 	1 to: self size do: [ :i | hash := (hash + (self at: i) hash) hashMultiply ].
 	^ hash
 ]
@@ -128,20 +133,15 @@ ViennaComposite >> printOn: aStream [
 ]
 
 { #category : #private }
-ViennaComposite >> setTypeName: aString [
-	typeName := aString
-]
-
-{ #category : #accessing }
-ViennaComposite >> typeName [
-	^ typeName
+ViennaComposite >> setConstructorName: aString [
+	constructorName := aString
 ]
 
 { #category : #printing }
 ViennaComposite >> vdmcStringOn: aStream [
 	aStream
 		nextPutAll: 'mk_';
-		nextPutAll: typeName;
+		nextPutAll: constructorName;
 		nextPut: $(.
 	(1 to: self size) do: [ :index | (self at: index) printOn: aStream ] separatedBy: [ aStream nextPut: $, ].
 	aStream nextPut: $)

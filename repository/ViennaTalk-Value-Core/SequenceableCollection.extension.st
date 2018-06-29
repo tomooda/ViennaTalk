@@ -11,3 +11,8 @@ SequenceableCollection >> applyTo: anArray [
 SequenceableCollection >> isSequence [
 	^ true
 ]
+
+{ #category : #'*ViennaTalk-Value-Core' }
+SequenceableCollection >> tail [
+	^ self ifEmpty: [ SubscriptOutOfBounds signal ] ifNotEmpty: [ self copyFrom: 2 to: self size ]
+]
