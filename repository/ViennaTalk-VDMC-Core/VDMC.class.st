@@ -15,7 +15,7 @@ Class {
 { #category : #'instance creation' }
 VDMC class >> default [
 	^ self new
-		engine: ViennaClient default;
+		engine: ViennaEngine default;
 		yourself
 ]
 
