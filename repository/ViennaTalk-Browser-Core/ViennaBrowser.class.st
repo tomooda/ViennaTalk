@@ -318,7 +318,8 @@ ViennaBrowser >> buildCodePane [
 		askBeforeDiscardingEdits: true;
 		bindKeyCombination: $d command toAction: [ self doItIn: codePane ];
 		bindKeyCombination: $p command toAction: [ self printItIn: codePane ];
-		bindKeyCombination: $f shift command toAction: [ self formatIn: codePane ];
+		bindKeyCombination: $f shift command toAction: [ codePane prettyPrint ];
+		bindKeyCombination: $t command toAction: [ codePane template ];
 		font: ViennaLauncher font;
 		highlightingEnabled: true;
 		yourself
@@ -361,7 +362,6 @@ ViennaBrowser >> buildValuePane [
 		alwaysAccept: true;
 		bindKeyCombination: $d command toAction: [ self doItIn: valuePane ];
 		bindKeyCombination: $p command toAction: [ self printItIn: valuePane ];
-		bindKeyCombination: $f shift command toAction: [ self formatIn: valuePane ];
 		font: ViennaLauncher font;
 		yourself
 ]
@@ -379,7 +379,6 @@ ViennaBrowser >> buildWorkspacePane [
 		askBeforeDiscardingEdits: true;
 		bindKeyCombination: $d command toAction: [ self doItIn: workspacePane ];
 		bindKeyCombination: $p command toAction: [ self printItIn: workspacePane ];
-		bindKeyCombination: $f shift command toAction: [ self formatIn: workspacePane ];
 		font: ViennaLauncher font;
 		yourself
 ]
@@ -399,11 +398,6 @@ ViennaBrowser >> code [
 { #category : #'code pane menu' }
 ViennaBrowser >> codePaneDoIt [
 	self doItIn: codePane
-]
-
-{ #category : #'code pane menu' }
-ViennaBrowser >> codePaneFormat [
-	self formatIn: codePane
 ]
 
 { #category : #'code pane menu' }
@@ -431,7 +425,9 @@ ViennaBrowser >> codePaneMenu: aMenu shifted: aBoolean [
 			#undo}.
 			#-.
 			{('format (F)' translated).
-			#codePaneFormat}.
+			#prettyPrint}.
+			{('template (T)' translated).
+			#template}.
 			#-.
 			{('do it (d)' translated).
 			#codePaneDoIt}.
@@ -545,21 +541,6 @@ ViennaBrowser >> fileSave: title do: aBlock [
 							((String new: 1024 streamContents: [ :stringStream | aBlock value: stringStream ])
 								copyReplaceAll: String cr
 								with: String lf) ] ]
-]
-
-{ #category : #private }
-ViennaBrowser >> formatIn: aPluggableTextMorph [
-	aPluggableTextMorph
-		handleEdit: [ 
-			[ 
-			| formattedSource |
-			formattedSource := ViennaVDMParser new format: aPluggableTextMorph text.
-			formattedSource isPetitFailure
-				ifFalse: [ 
-					aPluggableTextMorph textMorph newContents: formattedSource.
-					aPluggableTextMorph hasUnacceptedEdits: true ] ]
-				on: Error
-				do: [ :ex |  ] ]
 ]
 
 { #category : #'module list menu' }

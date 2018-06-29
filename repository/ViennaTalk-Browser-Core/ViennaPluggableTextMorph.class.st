@@ -18,7 +18,7 @@ ViennaPluggableTextMorph >> enableHighlighting [
 	self highlightingEnabled: true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'editor access' }
 ViennaPluggableTextMorph >> handleEdit: aBlock [
 	^ [ super handleEdit: aBlock ]
 		ensure: [ wantsHighlighting := true ]
@@ -78,6 +78,11 @@ ViennaPluggableTextMorph >> step [
 { #category : #'stepping and presenter' }
 ViennaPluggableTextMorph >> stepTime [
 	^ 1000
+]
+
+{ #category : #'menu commands' }
+ViennaPluggableTextMorph >> template [
+	self handleEdit: [ textMorph editor template ]
 ]
 
 { #category : #'class access' }
