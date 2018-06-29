@@ -43,11 +43,13 @@ ViennaAbstractFormatter class >> initializeOperatorGrouping [
 		at: 'MapRangeRestrictedTo' put: #left;
 		at: 'MapDomainRestrictedBy' put: #right;
 		at: 'MapDomainRestrictedTo' put: #right;
+		at: 'ArithmeticMultiplication' put: #left;
 		at: 'ArithmeticDivide' put: #left;
 		at: 'ArithmeticRem' put: #left;
 		at: 'ArithmeticMod' put: #left;
 		at: 'ArithmeticIntegerDivision' put: #left;
 		at: 'ArithmeticMinus' put: #left;
+		at: 'ArithmeticPlus' put: #left;
 		at: 'SetDifference' put: #left;
 		at: 'MapMerge' put: #left;
 		at: 'MapOrSequenceModify' put: #left;
@@ -1549,11 +1551,11 @@ ViennaAbstractFormatter >> needsParen [
 	parentPrecedence < childPrecedence
 		ifTrue: [ ^ false ].
 	^ OperatorGrouping
-		at: parentNode label
+		at: parentNode label asString
 		ifPresent: [ :grouping | 
 			(grouping = #left and: [ parentNode first ~= childNode ])
 				or: [ grouping = #right and: [ parentNode second ~= childNode ] ] ]
-		ifAbsent: [ false ]
+		ifAbsent: [ true ]
 ]
 
 { #category : #private }
