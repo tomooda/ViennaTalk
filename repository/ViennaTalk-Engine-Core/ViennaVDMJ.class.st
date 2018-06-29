@@ -113,6 +113,7 @@ ViennaVDMJ class >> globalLock: aBlock [
 { #category : #'class initialization' }
 ViennaVDMJ class >> initialize [
 	super initialize.
+	Smalltalk addToStartUpList: self.
 	Smalltalk isHeadless
 		ifFalse: [ self install ]
 ]
@@ -271,6 +272,12 @@ ViennaVDMJ class >> register: aViennaVDMJ [
 { #category : #registry }
 ViennaVDMJ class >> registry [
 	^ Registry ifNil: [Registry := WeakRegistry new]
+]
+
+{ #category : #'class initialization' }
+ViennaVDMJ class >> startUp: resume [
+	Smalltalk isHeadless
+		ifFalse: [ self install ]
 ]
 
 { #category : #registry }
