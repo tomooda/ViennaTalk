@@ -1,6 +1,11 @@
 Extension { #name : #Object }
 
 { #category : #'*ViennaTalk-Value-Core' }
+Object >> isFunction [
+	^ false
+]
+
+{ #category : #'*ViennaTalk-Value-Core' }
 Object >> isSequence [
 	^ false
 ]

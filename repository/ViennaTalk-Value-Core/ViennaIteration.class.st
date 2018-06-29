@@ -38,6 +38,16 @@ ViennaIteration >> comp: applicative [
 	^ ViennaComposition with: self with: applicative
 ]
 
+{ #category : #testing }
+ViennaIteration >> isFunction [
+	^ true
+]
+
+{ #category : #accessing }
+ViennaIteration >> numArgs [
+	^ block numArgs
+]
+
 { #category : #private }
 ViennaIteration >> setBlock: aBlock n: anInteger [
 	block := aBlock.

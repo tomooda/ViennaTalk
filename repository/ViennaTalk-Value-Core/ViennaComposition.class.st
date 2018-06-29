@@ -25,6 +25,18 @@ ViennaComposition >> applyTo: anArray [
 	^ arg1 applyTo: t
 ]
 
+{ #category : #testing }
+ViennaComposition >> isFunction [
+	^ arg1 isFunction or: [ arg2 isFunction ]
+]
+
+{ #category : #accessing }
+ViennaComposition >> numArgs [
+	^ arg2 isFunction
+		ifTrue: [ arg2 numArgs ]
+		ifFalse: [ 1 ]
+]
+
 { #category : #private }
 ViennaComposition >> setArg1: f arg2: g [
 	arg1 := f.

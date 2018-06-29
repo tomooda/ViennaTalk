@@ -19,22 +19,6 @@ ViennaRuntimeUtil class >> aggregateBinding: aDictionary1 with: aDictionary2 [
 ]
 
 { #category : #'pattern matching' }
-ViennaRuntimeUtil class >> binder: aBlockString with: aString vars: anArrayOfString [
-	^ String
-		new: 256
-		streamContents: [ :stream | 
-			stream
-				nextPutAll: '((';
-				nextPutAll: aBlockString;
-				nextPutAll: ' value: ';
-				nextPutAll: aString;
-				nextPutAll: ') ifEmpty: [false] ifNotEmpty: [:binds | ';
-				nextPutAll:
-						('.' join: (anArrayOfString collect: [ :varName | varName , ' := binds first at: ' , varName storeString ]));
-				nextPutAll: '. true])' ]
-]
-
-{ #category : #'pattern matching' }
 ViennaRuntimeUtil class >> match: aBlock1 conc: aBlock2 [
 	^ [ :value | 
 	(value isSequence and: [ value notEmpty ])

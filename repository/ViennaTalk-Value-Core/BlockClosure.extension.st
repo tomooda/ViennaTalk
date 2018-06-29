@@ -14,3 +14,8 @@ BlockClosure >> applyTo: anArray [
 BlockClosure >> comp: applicative [
 	^ ViennaComposition with: self with: applicative
 ]
+
+{ #category : #'*ViennaTalk-Value-Core' }
+BlockClosure >> isFunction [
+	^ true
+]
