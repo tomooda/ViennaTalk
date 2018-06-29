@@ -3,6 +3,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'parser',
+		'numberLiteral',
 		'stringLiteral',
 		'identifier',
 		'morphName',
@@ -25,13 +26,17 @@ LWTLivetalkCompiler >> compileToSmalltalk: aString ifError: errorBlock [
 
 { #category : #'initialize-release' }
 LWTLivetalkCompiler >> initialize [
-	| quote escapes |
+	| quote nat int decimal escapes |
 	super initialize.
 	quote := $" asParser.
 	escapes := Dictionary new
 		at: $n put: Character cr;
 		at: $t put: Character tab;
 		yourself.
+	nat := ((1 to: 9) inject: $0 asParser into: [ :p :digit | p / digit asCharacterDigit asParser ]) plus flatten.
+	int := $- asParser optional , nat.
+	decimal := int , ($. asParser , nat) optional.
+	numberLiteral := (decimal , ($e asParser / $E asParser , decimal) optional) flatten trim ==> [ :str | str trim ].
 	stringLiteral := (quote
 		,
 			((quote not
@@ -54,7 +59,7 @@ LWTLivetalkCompiler >> initialize [
 				==> [ :args | Array with: args first with: args third ].
 	expression
 		def:
-			(stringLiteral ==> [ :str | str storeString ])
+			(stringLiteral ==> [ :str | str storeString ]) / numberLiteral
 				/ (morphName ==> [ :name | 'self execValueOf: (' , name storeString , ')' ])
 				/
 					(vdmcall

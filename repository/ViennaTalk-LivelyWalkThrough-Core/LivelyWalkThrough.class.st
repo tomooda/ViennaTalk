@@ -28,7 +28,7 @@ LivelyWalkThrough class >> fileOpen: title extensions: exts path: path preview: 
 		title: title;
 		answerPathName.
 	exts ifNotNil: [ fd validExtensions: exts ].
-	path ifNotNil: [ fd selectPathName: path ].
+	path ifNotNil: [ fd selectPathName: (FileSystem disk pathFromString: path) parent asFileReference fullName ].
 	^ (ui openModal: fd) answer ifNotNil: [ :ans | ans asFileReference ]
 ]
 
