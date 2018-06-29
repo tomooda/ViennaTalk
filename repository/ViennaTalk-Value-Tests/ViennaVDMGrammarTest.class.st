@@ -13,6 +13,36 @@ ViennaVDMGrammarTest >> setUp [
 ]
 
 { #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testActExpression1 [
+	self assert: (grammar expression end parse: '#act(o)') equals: #('o')
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testActExpression2 [
+	self assert: (grammar expression end parse: '#act(o1, o2)') equals: #('o1' 'o2')
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testActExpression3 [
+	self assert: (grammar expression end parse: '#act()') isPetitFailure
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testActiveExpression1 [
+	self assert: (grammar expression end parse: '#active(o)') equals: #('o')
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testActiveExpression2 [
+	self assert: (grammar expression end parse: '#active(o1, o2)') equals: #('o1' 'o2')
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testActiveExpression3 [
+	self assert: (grammar expression end parse: '#active()') isPetitFailure
+]
+
+{ #category : #'tests-expressions' }
 ViennaVDMGrammarTest >> testApply1 [
 	self assert: (grammar expression end parse: 'f()') equals: #('f' #())
 ]
@@ -109,6 +139,56 @@ ViennaVDMGrammarTest >> testCasesExpression3 [
 	self assert: (grammar expression end parse: 'cases e:others->default end') isPetitFailure
 ]
 
+{ #category : #'tests-literals' }
+ViennaVDMGrammarTest >> testCharacterLiteral1 [
+	self assert: (grammar expression end parse: '''a''') equals: $a
+]
+
+{ #category : #'tests-literals' }
+ViennaVDMGrammarTest >> testCharacterLiteral10 [
+	self assert: (grammar expression end parse: '''\''''') equals: $'
+]
+
+{ #category : #'tests-literals' }
+ViennaVDMGrammarTest >> testCharacterLiteral2 [
+	self assert: (grammar expression end parse: '''ab''') isPetitFailure
+]
+
+{ #category : #'tests-literals' }
+ViennaVDMGrammarTest >> testCharacterLiteral3 [
+	self assert: (grammar expression end parse: '''\\''') equals: $\
+]
+
+{ #category : #'tests-literals' }
+ViennaVDMGrammarTest >> testCharacterLiteral4 [
+	self assert: (grammar expression end parse: '''\r''') equals: Character cr
+]
+
+{ #category : #'tests-literals' }
+ViennaVDMGrammarTest >> testCharacterLiteral5 [
+	self assert: (grammar expression end parse: '''\n''') equals: Character lf
+]
+
+{ #category : #'tests-literals' }
+ViennaVDMGrammarTest >> testCharacterLiteral6 [
+	self assert: (grammar expression end parse: '''\t''') equals: Character tab
+]
+
+{ #category : #'tests-literals' }
+ViennaVDMGrammarTest >> testCharacterLiteral7 [
+	self assert: (grammar expression end parse: '''\101''') equals: $A
+]
+
+{ #category : #'tests-literals' }
+ViennaVDMGrammarTest >> testCharacterLiteral8 [
+	self assert: (grammar expression end parse: '''\x41''') equals: $A
+]
+
+{ #category : #'tests-literals' }
+ViennaVDMGrammarTest >> testCharacterLiteral9 [
+	self assert: (grammar expression end parse: '''\u0041''') equals: $A
+]
+
 { #category : #'tests-types' }
 ViennaVDMGrammarTest >> testCompositeType1 [
 	self assert: (grammar type end parse: 'compose t of end') equals: #('t' #())
@@ -203,6 +283,41 @@ ViennaVDMGrammarTest >> testDefExpression3 [
 		equals: #(#(#(#('v1' 't1') 'e1') #(#('v2' 's') 'e2') #('v3' 'e3')) 'e')
 ]
 
+{ #category : #'tests-literals' }
+ViennaVDMGrammarTest >> testDicimalLiteral1 [
+	self assert: (grammar expression end parse: '0') equals: '0'
+]
+
+{ #category : #'tests-literals' }
+ViennaVDMGrammarTest >> testDicimalLiteral2 [
+	self assert: (grammar expression end parse: '-1') equals: '1'
+]
+
+{ #category : #'tests-literals' }
+ViennaVDMGrammarTest >> testDicimalLiteral3 [
+	self assert: (grammar expression end parse: '-1.0') equals: '1.0'
+]
+
+{ #category : #'tests-literals' }
+ViennaVDMGrammarTest >> testDicimalLiteral4 [
+	self assert: (grammar expression end parse: '-1.0e1') equals: '1.0e1'
+]
+
+{ #category : #'tests-literals' }
+ViennaVDMGrammarTest >> testDicimalLiteral5 [
+	self assert: (grammar expression end parse: '-1.0e+1') equals: '1.0e+1'
+]
+
+{ #category : #'tests-literals' }
+ViennaVDMGrammarTest >> testDicimalLiteral6 [
+	self assert: (grammar expression end parse: '-1.0e-1') equals: '1.0e-1'
+]
+
+{ #category : #'tests-literals' }
+ViennaVDMGrammarTest >> testDicimalLiteral7 [
+	self assert: (grammar expression end parse: '-1e-1') equals: '1e-1'
+]
+
 { #category : #'tests-expressions' }
 ViennaVDMGrammarTest >> testEvaluators1 [
 	#('abs' 'floor' 'card' 'power' 'dinter' 'dunion' 'dom' 'rng' 'merge' 'len' 'elems' 'hd' 'tl' 'conc' 'inds' 'inverse')
@@ -244,6 +359,27 @@ ViennaVDMGrammarTest >> testExistsExpression1 [
 		equals: #(#(#(#('v1' 'v2') 't1') #(#('v3') 't2')) 'e')
 ]
 
+{ #category : #'tests-definitions' }
+ViennaVDMGrammarTest >> testExplicitFunctionDefinition1 [
+	self
+		assert: (grammar functionDefinition end parse: 'f[@t] : t1 -> t2 f(x) == y pre b1 post b2 measure f2')
+		equals: #('f' #('@t') #('t1' 't2') 'f' #(#('x')) 'y' 'b1' 'b2' 'f2')
+]
+
+{ #category : #'tests-definitions' }
+ViennaVDMGrammarTest >> testExplicitFunctionDefinition2 [
+	self
+		assert: (grammar functionDefinition end parse: 'f[@t] : t1 -> t2 -> t3 f(x)(y) == z pre b1 post b2 measure f2')
+		equals: #('f' #('@t') #('t1' #('t2' 't3')) 'f' #(#('x') #('y')) 'z' 'b1' 'b2' 'f2')
+]
+
+{ #category : #'tests-definitions' }
+ViennaVDMGrammarTest >> testExplicitFunctionDefinition3 [
+	self
+		assert: (grammar functionDefinition end parse: 'f: t1->t2 f(x) == y')
+		equals: #('f' #() #('t1' 't2') 'f' #(#('x')) 'y' nil nil nil)
+]
+
 { #category : #'tests-types' }
 ViennaVDMGrammarTest >> testFieldSelect1 [
 	self assert: (grammar expression end parse: 'r1.f1') equals: #('r1' 'f1')
@@ -267,6 +403,21 @@ ViennaVDMGrammarTest >> testFieldSelect4 [
 { #category : #'tests-types' }
 ViennaVDMGrammarTest >> testFieldSelect5 [
 	self assert: (grammar expression end parse: 'f.f1()') equals: #(#('f' 'f1') #())
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testFinExpression1 [
+	self assert: (grammar expression end parse: '#fin(o)') equals: #('o')
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testFinExpression2 [
+	self assert: (grammar expression end parse: '#fin(o1, o2)') equals: #('o1' 'o2')
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testFinExpression3 [
+	self assert: (grammar expression end parse: '#fin()') isPetitFailure
 ]
 
 { #category : #'tests-expressions' }
@@ -296,6 +447,16 @@ ViennaVDMGrammarTest >> testFunctionTypeInstantiation4 [
 	self assert: (grammar expression end parse: 'f[t1][t2]') equals: #(#('f' #('t1')) #('t2'))
 ]
 
+{ #category : #'tests-literals' }
+ViennaVDMGrammarTest >> testHexadecimalLiteral1 [
+	self assert: (grammar expression end parse: '0x0') equals: '0'
+]
+
+{ #category : #'tests-literals' }
+ViennaVDMGrammarTest >> testHexadecimalLiteral2 [
+	self assert: (grammar expression end parse: '0X0') equals: '0'
+]
+
 { #category : #'tests-symbols' }
 ViennaVDMGrammarTest >> testIdentifier1 [
 	self assert: (grammar identifier end parse: 'v1v') equals: 'v1v'
@@ -304,6 +465,16 @@ ViennaVDMGrammarTest >> testIdentifier1 [
 { #category : #'tests-symbols' }
 ViennaVDMGrammarTest >> testIdentifier2 [
 	self assert: (grammar identifier end parse: '1v1') isPetitFailure
+]
+
+{ #category : #'tests-symbols' }
+ViennaVDMGrammarTest >> testIdentifier3 [
+	self assert: (grammar identifier end parse: 'mk_t') isPetitFailure
+]
+
+{ #category : #'tests-symbols' }
+ViennaVDMGrammarTest >> testIdentifier4 [
+	self assert: (grammar identifier end parse: 'lambda') isPetitFailure
 ]
 
 { #category : #'tests-expressions' }
@@ -351,6 +522,56 @@ ViennaVDMGrammarTest >> testIotaExpression2 [
 ]
 
 { #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testIsExpression1 [
+	self assert: (grammar expression end parse: 'is_t(e)') equals: #('t' 'e')
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testIsExpression2 [
+	self assert: (grammar expression end parse: 'is_t(e1, e2)') isPetitFailure
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testIsExpression3 [
+	self assert: (grammar expression end parse: 'is_ t(e1)') isPetitFailure
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testIsExpression4 [
+	self assert: (grammar expression end parse: 'is_bool(e)') equals: #('bool' 'e')
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testIsExpression5 [
+	self assert: (grammar expression end parse: 'is_bool(e1, e2)') isPetitFailure
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testIsExpression6 [
+	self assert: (grammar expression end parse: 'is_ bool(e)') isPetitFailure
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testIsExpression7 [
+	self assert: (grammar expression end parse: 'is_(e, t)') = #('e' 't')
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testIsExpression8 [
+	self assert: (grammar expression end parse: 'is_(e1, e2, e3)') isPetitFailure
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testIsofbaseclassExpression1 [
+	self assert: (grammar expression end parse: 'isofbaseclass(t, e)') equals: #('t' 'e')
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testIsofclassExpression1 [
+	self assert: (grammar expression end parse: 'isofclass(t, e)') equals: #('t' 'e')
+]
+
+{ #category : #'tests-expressions' }
 ViennaVDMGrammarTest >> testIterateExpression1 [
 	self assert: (grammar expression end parse: 'e1**e2') equals: #('e1' 'e2')
 ]
@@ -358,6 +579,16 @@ ViennaVDMGrammarTest >> testIterateExpression1 [
 { #category : #'tests-expressions' }
 ViennaVDMGrammarTest >> testIterateExpression2 [
 	self assert: (grammar expression end parse: 'e1 ** e2 ** e3') equals: #('e1' #('e2' 'e3'))
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testLambdaExpression1 [
+	self assert: (grammar expression end parse: 'lambda v1:t1,v2:t2&e') equals: #(#(#('v1' 't1') #('v2' 't2')) 'e')
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testLambdaExpression2 [
+	self assert: (grammar expression end parse: 'lambda v1,v2:t&e') isPetitFailure
 ]
 
 { #category : #'tests-expressions' }
@@ -397,6 +628,13 @@ ViennaVDMGrammarTest >> testLetExpression3 [
 	self
 		assert: (grammar expression end parse: 'let x:<ok> = <ok>, y=<ok> in <ok>')
 		equals: #(#(#('x' '<ok>' '<ok>') #('y' nil '<ok>')) '<ok>')
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testLetExpression4 [
+	self
+		assert: (grammar expression end parse: 'let f:t1->t2 f(x)==y in <ok>')
+		equals: #(#(#('f' #() #('t1' 't2') 'f' #(#('x')) 'y' nil nil nil)) '<ok>')
 ]
 
 { #category : #'tests-expressions' }
@@ -504,9 +742,39 @@ ViennaVDMGrammarTest >> testMultipleTypeBind2 [
 	self assert: (grammar multipleTypeBind end parse: 'v1 , v2 : e') equals: #(#('v1' 'v2') 'e')
 ]
 
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testNarrowExpression [
+	self assert: (grammar expression end parse: 'narrow_(e,t)') equals: #('e' 't')
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testNarrowExpression2 [
+	self assert: (grammar expression end parse: 'narrow_(e)') isPetitFailure
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testNarrowExpression3 [
+	self assert: (grammar expression end parse: 'narrow_()') isPetitFailure
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testNarrowExpression4 [
+	self assert: (grammar expression end parse: 'narrow_(e1,e2,e3)') isPetitFailure
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testNewExpression1 [
+	self assert: (grammar expression end parse: 'new t()') equals: #('t' #())
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testNewExpression2 [
+	self assert: (grammar expression end parse: 'new t(e1, e2, e3)') equals: #('t' #('e1' 'e2' 'e3'))
+]
+
 { #category : #'tests-literals' }
 ViennaVDMGrammarTest >> testNilLiteral [
-	self assert: (grammar symbolicLiteral end parse: 'nil') equals: 'nil'
+	self assert: (grammar symbolicLiteral end parse: 'nil') equals: nil
 ]
 
 { #category : #'tests-patterns' }
@@ -597,6 +865,21 @@ ViennaVDMGrammarTest >> testPatternList3 [
 { #category : #'tests-patterns' }
 ViennaVDMGrammarTest >> testPatternList4 [
 	self assert: (grammar patternList end parse: 'p1 , p2 , p3') equals: #('p1' 'p2' 'p3')
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testPreconditionExpression1 [
+	self assert: (grammar expression end parse: 'pre_(e)') equals: #('e')
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testPreconditionExpression2 [
+	self assert: (grammar expression end parse: 'pre_(e1, e2)') equals: #('e1' 'e2')
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testPreconditionExpression3 [
+	self assert: (grammar expression end parse: 'pre_()') isPetitFailure
 ]
 
 { #category : #'tests-types' }
@@ -698,6 +981,36 @@ ViennaVDMGrammarTest >> testRecordPattern4 [
 ViennaVDMGrammarTest >> testRelations1 [
 	#('=' '<>' '<=' '>=' 'subset' 'psubset' 'in set' 'not in set')
 		do: [ :op | self assert: (grammar expression end parse: 'e1 ' , op , ' e2') equals: #('e1' 'e2') ]
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testReqExpression1 [
+	self assert: (grammar expression end parse: '#req(o)') equals: #('o')
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testReqExpression2 [
+	self assert: (grammar expression end parse: '#req(o1, o2)') equals: #('o1' 'o2')
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testReqExpression3 [
+	self assert: (grammar expression end parse: '#req()') isPetitFailure
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testSamebaseclassExpression1 [
+	self assert: (grammar expression end parse: 'samebaseclass(e1, e2)') equals: #('e1' 'e2')
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testSameclassExpression1 [
+	self assert: (grammar expression end parse: 'sameclass(e1, e2)') equals: #('e1' 'e2')
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testSelfExpression [
+	self assert: (grammar expression parse: 'self') equals: nil
 ]
 
 { #category : #'tests-types' }
@@ -884,6 +1197,16 @@ ViennaVDMGrammarTest >> testSubsequence2 [
 	self assert: (grammar expression end parse: 's(i1,...,i2) ( i3 , ... , i4 )') equals: #(#('s' 'i1' 'i2') 'i3' 'i4')
 ]
 
+{ #category : #'tests-literals' }
+ViennaVDMGrammarTest >> testTextLiteral1 [
+	self assert: (grammar expression end parse: '"A\101\x41\u0041\""') equals: 'AAAA"'
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testTimeExpression [
+	self assert: (grammar expression parse: 'time') equals: nil
+]
+
 { #category : #'tests-types' }
 ViennaVDMGrammarTest >> testTotalFunctionType1 [
 	self assert: (grammar type end parse: 't1+>t2') equals: #('t1' 't2')
@@ -1024,6 +1347,11 @@ ViennaVDMGrammarTest >> testUnaryPlus2 [
 	self assert: (grammar expression end parse: '+ e') equals: 'e'
 ]
 
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testUndefined [
+	self assert: (grammar expression end parse: 'undefined') equals: nil
+]
+
 { #category : #'tests-types' }
 ViennaVDMGrammarTest >> testUnionType1 [
 	self assert: (grammar type end parse: 't1|t2') equals: #('t1' 't2')
@@ -1047,4 +1375,29 @@ ViennaVDMGrammarTest >> testUnionType4 [
 { #category : #'tests-types' }
 ViennaVDMGrammarTest >> testUnionType5 [
 	self assert: (grammar type end parse: 't1|t2*t3') equals: #('t1' #('t2' 't3'))
+]
+
+{ #category : #'tests-definitions' }
+ViennaVDMGrammarTest >> testValueDefinition1 [
+	self assert: (grammar valueDefinition end parse: 'v:t=e') equals: #('v' 't' 'e')
+]
+
+{ #category : #'tests-definitions' }
+ViennaVDMGrammarTest >> testValueDefinition2 [
+	self assert: (grammar valueDefinition end parse: 'v=e') equals: #('v' nil 'e')
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testWaitingExpression2 [
+	self assert: (grammar expression end parse: '#waiting(o1, o2)') equals: #('o1' 'o2')
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testWaitingExpression3 [
+	self assert: (grammar expression end parse: '#waiting()') isPetitFailure
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testWatitingExpression1 [
+	self assert: (grammar expression end parse: '#waiting(o)') equals: #('o')
 ]
