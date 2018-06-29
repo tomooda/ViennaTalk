@@ -563,7 +563,7 @@ ViennaVDMFormatter >> expressionList: aViennaNode [
 				ifFalse: [ String space ]) join: expressions
 ]
 
-{ #category : #'formatting-expressions' }
+{ #category : #'formatting-types' }
 ViennaVDMFormatter >> field: aViennaNode [
 	| name equalityAbstraction type |
 	name := aViennaNode first.
@@ -579,7 +579,7 @@ ViennaVDMFormatter >> field: aViennaNode [
 						ifFalse: [ ' : ' ]) ]) , type
 ]
 
-{ #category : #'formatting-expressions' }
+{ #category : #'formatting-types' }
 ViennaVDMFormatter >> fieldList: aViennaNode [
 	| fields |
 	fields := self formatAll: aViennaNode.
