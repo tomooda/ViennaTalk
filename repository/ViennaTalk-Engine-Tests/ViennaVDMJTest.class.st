@@ -1,5 +1,5 @@
 Class {
-	#name : #VDMJProcessTest,
+	#name : #ViennaVDMJTest,
 	#superclass : #TestCase,
 	#instVars : [
 		'process'
@@ -8,18 +8,18 @@ Class {
 }
 
 { #category : #running }
-VDMJProcessTest >> setUp [
+ViennaVDMJTest >> setUp [
 	process := ViennaVDMJ new
 ]
 
 { #category : #running }
-VDMJProcessTest >> shutDown [
+ViennaVDMJTest >> shutDown [
 	process ifNotNil: [process close].
 	process := nil
 ]
 
 { #category : #private }
-VDMJProcessTest >> stateFromArray: anArray [
+ViennaVDMJTest >> stateFromArray: anArray [
 	| state |
 	state := Dictionary new: anArray size.
 	anArray
@@ -32,7 +32,7 @@ VDMJProcessTest >> stateFromArray: anArray [
 ]
 
 { #category : #'testing-empty' }
-VDMJProcessTest >> test0 [
+ViennaVDMJTest >> test0 [
 	self
 		testExpression: ''
 		specification: ''
@@ -42,7 +42,7 @@ VDMJProcessTest >> test0 [
 ]
 
 { #category : #'testing-only expression' }
-VDMJProcessTest >> test1InvalidExpression [
+ViennaVDMJTest >> test1InvalidExpression [
 	self
 		testExpression: ' 1 +  '
 		specification: ''
@@ -52,7 +52,7 @@ VDMJProcessTest >> test1InvalidExpression [
 ]
 
 { #category : #'testing-only specification' }
-VDMJProcessTest >> test1InvalidSpecification [
+ViennaVDMJTest >> test1InvalidSpecification [
 	self
 		testExpression: ''
 		specification: 'state counter of count : nat init s == s = mk_counter(0) end operations inc : () ==> nat inc() == (count := count + "1"; return count);'
@@ -62,7 +62,7 @@ VDMJProcessTest >> test1InvalidSpecification [
 ]
 
 { #category : #'testing-only states' }
-VDMJProcessTest >> test1InvalidStates [
+ViennaVDMJTest >> test1InvalidStates [
 	self
 		testExpression: ''
 		specification: ''
@@ -78,7 +78,7 @@ VDMJProcessTest >> test1InvalidStates [
 ]
 
 { #category : #'testing-only expression' }
-VDMJProcessTest >> test1TypeErrorExpression [
+ViennaVDMJTest >> test1TypeErrorExpression [
 	self
 		testExpression: ' 1 +  "2"'
 		specification: ''
@@ -88,7 +88,7 @@ VDMJProcessTest >> test1TypeErrorExpression [
 ]
 
 { #category : #'testing-only expression' }
-VDMJProcessTest >> test1ValidExpression [
+ViennaVDMJTest >> test1ValidExpression [
 	self
 		testExpression: ' 1 + 2 '
 		specification: ''
@@ -98,7 +98,7 @@ VDMJProcessTest >> test1ValidExpression [
 ]
 
 { #category : #'testing-only specification' }
-VDMJProcessTest >> test1ValidSpecification [
+ViennaVDMJTest >> test1ValidSpecification [
 	self
 		testExpression: ''
 		specification: 'state counter of count : nat init s == s = mk_counter(0) end operations inc : () ==> nat inc() == (count := count + 1; return count);'
@@ -108,7 +108,7 @@ VDMJProcessTest >> test1ValidSpecification [
 ]
 
 { #category : #'testing-only states' }
-VDMJProcessTest >> test1ValidStates [
+ViennaVDMJTest >> test1ValidStates [
 	self
 		testExpression: ''
 		specification: ''
@@ -118,7 +118,7 @@ VDMJProcessTest >> test1ValidStates [
 ]
 
 { #category : #'testing-expression and specification' }
-VDMJProcessTest >> test2InvalidExpressionAndInvalidSpecification [
+ViennaVDMJTest >> test2InvalidExpressionAndInvalidSpecification [
 	self
 		testExpression: '1+'
 		specification: 'state counter of count : nat init s == s = mk_counter(0) end operations inc : () ==> nat inc() == (count := frq + 1; return count);'
@@ -128,7 +128,7 @@ VDMJProcessTest >> test2InvalidExpressionAndInvalidSpecification [
 ]
 
 { #category : #'testing-expression and state' }
-VDMJProcessTest >> test2InvalidExpressionAndInvalidState [
+ViennaVDMJTest >> test2InvalidExpressionAndInvalidState [
 	self
 		testExpression: '1+'
 		specification: ''
@@ -138,7 +138,7 @@ VDMJProcessTest >> test2InvalidExpressionAndInvalidState [
 ]
 
 { #category : #'testing-expression and specification' }
-VDMJProcessTest >> test2InvalidExpressionAndValidSpecification [
+ViennaVDMJTest >> test2InvalidExpressionAndValidSpecification [
 	self
 		testExpression: '1+"2"'
 		specification: 'state counter of count : nat init s == s = mk_counter(0) end operations inc : () ==> nat inc() == (count := count + 1; return count);'
@@ -148,7 +148,7 @@ VDMJProcessTest >> test2InvalidExpressionAndValidSpecification [
 ]
 
 { #category : #'testing-expression and state' }
-VDMJProcessTest >> test2InvalidExpressionAndValidState [
+ViennaVDMJTest >> test2InvalidExpressionAndValidState [
 	self
 		testExpression: '1+'
 		specification: ''
@@ -158,7 +158,7 @@ VDMJProcessTest >> test2InvalidExpressionAndValidState [
 ]
 
 { #category : #'testing-specification and state' }
-VDMJProcessTest >> test2InvalidSpecificationAndInvalidState [
+ViennaVDMJTest >> test2InvalidSpecificationAndInvalidState [
 	self
 		testExpression: ''
 		specification: 'state counter of count : nat init s == s = mk_counter(0) end operations inc : () ==> nat inc() == (count := frq + 1; return count);'
@@ -174,7 +174,7 @@ VDMJProcessTest >> test2InvalidSpecificationAndInvalidState [
 ]
 
 { #category : #'testing-specification and state' }
-VDMJProcessTest >> test2InvalidSpecificationAndValidState [
+ViennaVDMJTest >> test2InvalidSpecificationAndValidState [
 	self
 		testExpression: ''
 		specification: 'state counter of count : nat init s == s = mk_counter(0) end operations inc : () ==> nat inc() == (count := frq + 1; return count);'
@@ -190,7 +190,7 @@ VDMJProcessTest >> test2InvalidSpecificationAndValidState [
 ]
 
 { #category : #'testing-expression and specification' }
-VDMJProcessTest >> test2ValidExpressionAndInvalidSpecification [
+ViennaVDMJTest >> test2ValidExpressionAndInvalidSpecification [
 	self
 		testExpression: '1+2'
 		specification: 'state counter of count : nat init s == s = mk_counter(0) end operations inc : () ==> nat inc() == (count := frq + 1; return count);'
@@ -200,7 +200,7 @@ VDMJProcessTest >> test2ValidExpressionAndInvalidSpecification [
 ]
 
 { #category : #'testing-expression and state' }
-VDMJProcessTest >> test2ValidExpressionAndInvalidState [
+ViennaVDMJTest >> test2ValidExpressionAndInvalidState [
 	self
 		testExpression: '1+2'
 		specification: ''
@@ -210,7 +210,7 @@ VDMJProcessTest >> test2ValidExpressionAndInvalidState [
 ]
 
 { #category : #'testing-expression and specification' }
-VDMJProcessTest >> test2ValidExpressionAndValidSpecification [
+ViennaVDMJTest >> test2ValidExpressionAndValidSpecification [
 	self
 		testExpression: '1+2'
 		specification: 'state counter of count : nat init s == s = mk_counter(0) end operations inc : () ==> nat inc() == (count := count + 1; return count);'
@@ -220,7 +220,7 @@ VDMJProcessTest >> test2ValidExpressionAndValidSpecification [
 ]
 
 { #category : #'testing-expression and state' }
-VDMJProcessTest >> test2ValidExpressionAndValidState [
+ViennaVDMJTest >> test2ValidExpressionAndValidState [
 	self
 		testExpression: '1+2'
 		specification: ''
@@ -230,7 +230,7 @@ VDMJProcessTest >> test2ValidExpressionAndValidState [
 ]
 
 { #category : #'testing-specification and state' }
-VDMJProcessTest >> test2ValidSpecificationAndInvalidState [
+ViennaVDMJTest >> test2ValidSpecificationAndInvalidState [
 	self
 		testExpression: ''
 		specification: 'state counter of count : nat init s == s = mk_counter(0) end operations inc : () ==> nat inc() == (count := count + 1; return count);'
@@ -246,7 +246,7 @@ VDMJProcessTest >> test2ValidSpecificationAndInvalidState [
 ]
 
 { #category : #'testing-specification and state' }
-VDMJProcessTest >> test2ValidSpecificationAndValidState [
+ViennaVDMJTest >> test2ValidSpecificationAndValidState [
 	self
 		testExpression: ''
 		specification: 'state counter of count : nat init s == s = mk_counter(0) end operations inc : () ==> nat inc() == (count := count + 1; return count);'
@@ -262,7 +262,7 @@ VDMJProcessTest >> test2ValidSpecificationAndValidState [
 ]
 
 { #category : #'testing-all' }
-VDMJProcessTest >> test3InvalidExpressionAndInvalidSpecificationAndInvalidState [
+ViennaVDMJTest >> test3InvalidExpressionAndInvalidSpecificationAndInvalidState [
 	self
 		testExpression: ' inc ( 3 ) '
 		specification: 'state counter of count : nat init s == s = mk_counter(0) end operations inc : () ==> nat inc() == (count := frq + 1; return count);'
@@ -278,7 +278,7 @@ VDMJProcessTest >> test3InvalidExpressionAndInvalidSpecificationAndInvalidState 
 ]
 
 { #category : #'testing-all' }
-VDMJProcessTest >> test3InvalidExpressionAndInvalidSpecificationAndValidState [
+ViennaVDMJTest >> test3InvalidExpressionAndInvalidSpecificationAndValidState [
 	self
 		testExpression: ' inc ( 3 ) '
 		specification: 'state counter of count : nat init s == s = mk_counter(0) end operations inc : () ==> nat inc() == (count := frq + 1; return count);'
@@ -294,7 +294,7 @@ VDMJProcessTest >> test3InvalidExpressionAndInvalidSpecificationAndValidState [
 ]
 
 { #category : #'testing-all' }
-VDMJProcessTest >> test3InvalidExpressionAndValidSpecificationAndInvalidState [
+ViennaVDMJTest >> test3InvalidExpressionAndValidSpecificationAndInvalidState [
 	self
 		testExpression: ' inc ( 3 ) '
 		specification: 'state counter of count : nat init s == s = mk_counter(0) end operations inc : () ==> nat inc() == (count := count + 1; return count);'
@@ -310,7 +310,7 @@ VDMJProcessTest >> test3InvalidExpressionAndValidSpecificationAndInvalidState [
 ]
 
 { #category : #'testing-all' }
-VDMJProcessTest >> test3InvalidExpressionAndValidSpecificationAndValidState [
+ViennaVDMJTest >> test3InvalidExpressionAndValidSpecificationAndValidState [
 	self
 		testExpression: ' inc ( 3 ) '
 		specification: 'state counter of count : nat init s == s = mk_counter(0) end operations inc : () ==> nat inc() == (count := count + 1; return count);'
@@ -326,7 +326,7 @@ VDMJProcessTest >> test3InvalidExpressionAndValidSpecificationAndValidState [
 ]
 
 { #category : #'testing-all' }
-VDMJProcessTest >> test3ValidExpressionAndInvalidSpecificationAndInvalidState [
+ViennaVDMJTest >> test3ValidExpressionAndInvalidSpecificationAndInvalidState [
 	self
 		testExpression: ' inc ( ) '
 		specification: 'state counter of count : nat init s == s = mk_counter(0) end operations inc : () ==> nat inc() == (count := frq + 1; return count);'
@@ -342,7 +342,7 @@ VDMJProcessTest >> test3ValidExpressionAndInvalidSpecificationAndInvalidState [
 ]
 
 { #category : #'testing-all' }
-VDMJProcessTest >> test3ValidExpressionAndInvalidSpecificationAndValidState [
+ViennaVDMJTest >> test3ValidExpressionAndInvalidSpecificationAndValidState [
 	self
 		testExpression: ' inc ( ) '
 		specification: 'state counter of count : nat init s == s = mk_counter(0) end operations inc : () ==> nat inc() == (count := frq + 1; return count);'
@@ -358,7 +358,7 @@ VDMJProcessTest >> test3ValidExpressionAndInvalidSpecificationAndValidState [
 ]
 
 { #category : #'testing-all' }
-VDMJProcessTest >> test3ValidExpressionAndValidSpecificationAndInvalidState [
+ViennaVDMJTest >> test3ValidExpressionAndValidSpecificationAndInvalidState [
 	self
 		testExpression: ' inc ( ) '
 		specification: 'state counter of count : nat init s == s = mk_counter(0) end operations inc : () ==> nat inc() == (count := count + 1; return count);'
@@ -374,7 +374,7 @@ VDMJProcessTest >> test3ValidExpressionAndValidSpecificationAndInvalidState [
 ]
 
 { #category : #'testing-all' }
-VDMJProcessTest >> test3ValidExpressionAndValidSpecificationAndValidState [
+ViennaVDMJTest >> test3ValidExpressionAndValidSpecificationAndValidState [
 	self
 		testExpression: ' inc ( ) '
 		specification: 'state counter of count : nat init s == s = mk_counter(0) end operations inc : () ==> nat inc() == (count := count + 1; return count);'
@@ -390,7 +390,7 @@ VDMJProcessTest >> test3ValidExpressionAndValidSpecificationAndValidState [
 ]
 
 { #category : #testing }
-VDMJProcessTest >> testExpression: expression specification: specification states: states resultValue: resultValue resultStates: resultStates [ 
+ViennaVDMJTest >> testExpression: expression specification: specification states: states resultValue: resultValue resultStates: resultStates [ 
 	(process
 		evaluate: expression
 		specification: specification
