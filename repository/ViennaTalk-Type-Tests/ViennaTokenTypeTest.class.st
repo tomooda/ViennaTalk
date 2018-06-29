@@ -10,7 +10,7 @@ Class {
 { #category : #running }
 ViennaTokenTypeTest >> setUp [
 	super setUp.
-	token := ViennaTokenType current
+	token := ViennaTokenType new
 ]
 
 { #category : #tests }

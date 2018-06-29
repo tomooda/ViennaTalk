@@ -10,7 +10,7 @@ Class {
 { #category : #running }
 ViennaRealTypeTest >> setUp [
 	super setUp.
-	real := ViennaRealType current
+	real := ViennaRealType new
 ]
 
 { #category : #tests }

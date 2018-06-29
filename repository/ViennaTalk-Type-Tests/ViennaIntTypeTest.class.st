@@ -10,7 +10,7 @@ Class {
 { #category : #running }
 ViennaIntTypeTest >> setUp [
 	super setUp.
-	int := ViennaIntType current
+	int := ViennaIntType new
 ]
 
 { #category : #tests }

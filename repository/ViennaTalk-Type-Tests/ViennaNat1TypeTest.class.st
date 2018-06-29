@@ -10,7 +10,7 @@ Class {
 { #category : #running }
 ViennaNat1TypeTest >> setUp [
 	super setUp.
-	nat1 := ViennaNat1Type current
+	nat1 := ViennaNat1Type new
 ]
 
 { #category : #tests }
