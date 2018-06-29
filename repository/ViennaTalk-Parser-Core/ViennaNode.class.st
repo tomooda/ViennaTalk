@@ -171,6 +171,12 @@ ViennaNode >> collect: aBlock [
 ]
 
 { #category : #enumerating }
+ViennaNode >> detect: aBlock [
+	self do: [ :node | (aBlock value: node) ifTrue: [ ^node ] ].
+	^ NotFound signalFor: self
+]
+
+{ #category : #enumerating }
 ViennaNode >> do: aBlock [
 	1 to: self size do: [ :index | aBlock value: (self at: index) ]
 ]
