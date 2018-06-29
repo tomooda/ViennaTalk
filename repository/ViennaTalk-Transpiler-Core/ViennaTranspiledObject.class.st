@@ -146,3 +146,8 @@ ViennaTranspiledObject >> evaluateStatement: aString with: aViennaVDM2SmalltalkC
 ViennaTranspiledObject >> state [
 	^ (ViennaComposite constructorName: '')
 ]
+
+{ #category : #printing }
+ViennaTranspiledObject >> viennaStringOn: aStream [
+	aStream nextPutAll: '()'
+]
