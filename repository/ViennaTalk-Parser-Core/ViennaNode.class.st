@@ -126,6 +126,12 @@ ViennaNode class >> label: aString withAll: anArray [
 ]
 
 { #category : #enumerating }
+ViennaNode >> allDescendantsDo: aBlock [
+	aBlock value: self.
+	self do: [ :node | node allDescendantsDo: aBlock ]
+]
+
+{ #category : #enumerating }
 ViennaNode >> allSatisfy: aBlock [
 	self
 		do: [ :node | 
@@ -192,6 +198,12 @@ ViennaNode >> first [
 { #category : #accessing }
 ViennaNode >> fourth [
 	^ self at: 4
+]
+
+{ #category : #enumerating }
+ViennaNode >> hasDescendantSuchThat: aBlock [
+	self allDescendantsDo: [ :n | (aBlock value: n) ifTrue: [ ^true ] ].
+	^ false
 ]
 
 { #category : #accessing }
