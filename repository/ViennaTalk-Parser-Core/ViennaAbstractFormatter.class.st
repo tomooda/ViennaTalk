@@ -179,9 +179,14 @@ ViennaAbstractFormatter >> accessValueDefinition: aViennaNode [
 	^ ' ' join: (self formatAll: aViennaNode)
 ]
 
+{ #category : #'symbol access' }
+ViennaAbstractFormatter >> act [
+	^ '#act'
+]
+
 { #category : #'formatting-expressions' }
 ViennaAbstractFormatter >> actExpression: aViennaNode [
-	^ '#act(' , ', ' join: (self formatAll: aViennaNode) , ')'
+	^ self act, '(' , ', ' join: (self formatAll: aViennaNode) , ')'
 ]
 
 { #category : #'formatting-expressions' }
@@ -191,7 +196,7 @@ ViennaAbstractFormatter >> activeExpression: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> and [
-	self subclassResponsibility
+	^ 'and'
 ]
 
 { #category : #'formatting-expressions' }
@@ -259,7 +264,7 @@ ViennaAbstractFormatter >> arithmeticRem: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> arrow [
-	^ self subclassResponsibility
+	^ '->'
 ]
 
 { #category : #'formatting-statements' }
@@ -308,7 +313,7 @@ ViennaAbstractFormatter >> blockStatement: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> bool [
-	self subclassResponsibility
+	^ 'bool'
 ]
 
 { #category : #'formatting-statements' }
@@ -389,7 +394,7 @@ ViennaAbstractFormatter >> composition: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> concat [
-	self subclassResponsibility
+	^ '^'
 ]
 
 { #category : #'formatting-expressions' }
@@ -454,7 +459,7 @@ ViennaAbstractFormatter >> definitionBlock: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> dinter [
-	self subclassResponsibility
+	^ 'dinter'
 ]
 
 { #category : #'formatting-expressions' }
@@ -484,27 +489,27 @@ ViennaAbstractFormatter >> document: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> domainRestrictedBy [
-	self subclassResponsibility
+	^ '<-:'
 ]
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> domainRestrictedTo [
-	self subclassResponsibility
+	^ '<:'
 ]
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> dot [
-	self subclassResponsibility
+	^ '&'
 ]
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> dots [
-	self subclassResponsibility
+	^ '...'
 ]
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> dunion [
-	self subclassResponsibility
+	^ 'dunion'
 ]
 
 { #category : #'formatting-expressions' }
@@ -529,7 +534,7 @@ ViennaAbstractFormatter >> equalDefinitionList: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> equiv [
-	self subclassResponsibility
+	^ '<=>'
 ]
 
 { #category : #private }
@@ -539,12 +544,12 @@ ViennaAbstractFormatter >> escapeString: aString [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> exists [
-	self subclassResponsibility
+	^ 'exists'
 ]
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> exists1 [
-	self subclassResponsibility
+	^ 'exists1'
 ]
 
 { #category : #'formatting-expressions' }
@@ -722,7 +727,7 @@ ViennaAbstractFormatter >> floor: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> forall [
-	self subclassResponsibility
+	^ 'forall'
 ]
 
 { #category : #'formatting-expressions' }
@@ -876,7 +881,7 @@ ViennaAbstractFormatter >> greaterThan: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> greaterThanOrEqual [
-	self subclassResponsibility
+	^ '>='
 ]
 
 { #category : #'formatting-expressions' }
@@ -927,7 +932,7 @@ ViennaAbstractFormatter >> ifStatement: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> imply [
-	self subclassResponsibility
+	^ '=>'
 ]
 
 { #category : #'formatting-expressions' }
@@ -1074,12 +1079,12 @@ ViennaAbstractFormatter >> initialize [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> inmapInfix [
-	self subclassResponsibility
+	^ 'to'
 ]
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> inmapPrefix [
-	self subclassResponsibility
+	^ 'inmap '
 ]
 
 { #category : #'formatting-types' }
@@ -1089,17 +1094,17 @@ ViennaAbstractFormatter >> inmapType: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> inset [
-	self subclassResponsibility
+	^ 'in set'
 ]
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> int [
-	self subclassResponsibility
+	^ 'int'
 ]
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> inter [
-	self subclassResponsibility
+	^ 'inter'
 ]
 
 { #category : #'formatting-interfaces' }
@@ -1125,17 +1130,17 @@ ViennaAbstractFormatter >> invariantInitialFunction: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> inversePostfix [
-	self subclassResponsibility
+	^ ''
 ]
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> inversePrefix [
-	self subclassResponsibility
+	^ 'inverse '
 ]
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> iota [
-	self subclassResponsibility
+	^ 'iota'
 ]
 
 { #category : #'formatting-expressions' }
@@ -1198,7 +1203,7 @@ ViennaAbstractFormatter >> isofclassExpression: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> iterate [
-	self subclassResponsibility
+	^ '**'
 ]
 
 { #category : #'formatting-expressions' }
@@ -1208,7 +1213,7 @@ ViennaAbstractFormatter >> iterate: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> lambda [
-	self subclassResponsibility
+	^ 'lambda'
 ]
 
 { #category : #'formatting-expressions' }
@@ -1226,7 +1231,7 @@ ViennaAbstractFormatter >> lessThan: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> lessThanOrEqual [
-	self subclassResponsibility
+	^ '<='
 ]
 
 { #category : #'formatting-expressions' }
@@ -1345,7 +1350,7 @@ ViennaAbstractFormatter >> mapEnumerationPattern: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> mapInfix [
-	self subclassResponsibility
+	^ 'to'
 ]
 
 { #category : #'formatting-expressions' }
@@ -1380,7 +1385,7 @@ ViennaAbstractFormatter >> mapOrSequenceReference: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> mapPrefix [
-	self subclassResponsibility
+	^ 'map '
 ]
 
 { #category : #'formatting-expressions' }
@@ -1405,7 +1410,7 @@ ViennaAbstractFormatter >> mapType: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> maplet [
-	self subclassResponsibility
+	^ '|->'
 ]
 
 { #category : #'formatting-expressions' }
@@ -1466,12 +1471,12 @@ ViennaAbstractFormatter >> moduleBody: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> mu [
-	self subclassResponsibility
+	^ 'mu'
 ]
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> mul [
-	self subclassResponsibility
+	^ '*'
 ]
 
 { #category : #'formatting-statements' }
@@ -1497,7 +1502,7 @@ ViennaAbstractFormatter >> multipleTypeBind: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> munion [
-	self subclassResponsibility
+	^ 'munion'
 ]
 
 { #category : #'formatting-interfaces' }
@@ -1509,12 +1514,12 @@ ViennaAbstractFormatter >> nameList: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> nat [
-	self subclassResponsibility
+	^ 'nat'
 ]
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> nat1 [
-	self subclassResponsibility
+	^ 'nat1'
 ]
 
 { #category : #private }
@@ -1583,7 +1588,7 @@ ViennaAbstractFormatter >> nondeterministicStatement: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> not [
-	self subclassResponsibility
+	^ 'not'
 ]
 
 { #category : #'formatting-expressions' }
@@ -1593,7 +1598,7 @@ ViennaAbstractFormatter >> not: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> notEqual [
-	self subclassResponsibility
+	^ '<>'
 ]
 
 { #category : #'formatting-expressions' }
@@ -1603,7 +1608,7 @@ ViennaAbstractFormatter >> notEqual: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> notInSet [
-	self subclassResponsibility
+	^ 'not in set'
 ]
 
 { #category : #'formatting-expressions' }
@@ -1630,7 +1635,7 @@ ViennaAbstractFormatter >> oldName: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> oparrow [
-	self subclassResponsibility
+	^ '==>'
 ]
 
 { #category : #'formatting-definitions' }
@@ -1686,7 +1691,7 @@ ViennaAbstractFormatter >> optionalType: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> or [
-	self subclassResponsibility
+	^ 'or'
 ]
 
 { #category : #'formatting-expressions' }
@@ -1710,7 +1715,7 @@ ViennaAbstractFormatter >> othersStatement: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> override [
-	self subclassResponsibility
+	^ '++'
 ]
 
 { #category : #'formatting-definitions' }
@@ -1725,7 +1730,7 @@ ViennaAbstractFormatter >> parametersList: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> partialFunction [
-	self subclassResponsibility
+	^ '->'
 ]
 
 { #category : #'formatting-types' }
@@ -1751,7 +1756,7 @@ ViennaAbstractFormatter >> patternList: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> power [
-	self subclassResponsibility
+	^ 'power'
 ]
 
 { #category : #'formatting-expressions' }
@@ -1791,7 +1796,7 @@ ViennaAbstractFormatter >> properSubset: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> psubset [
-	self subclassResponsibility
+	^ 'psubset'
 ]
 
 { #category : #'formatting-types' }
@@ -1801,17 +1806,17 @@ ViennaAbstractFormatter >> quoteType: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> rangeRestrictedBy [
-	self subclassResponsibility
+	^ ':->'
 ]
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> rangeRestrictedTo [
-	self subclassResponsibility
+	^ ':>'
 ]
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> real [
-	self subclassResponsibility
+	^ 'real'
 ]
 
 { #category : #'formatting-expressions' }
@@ -1903,12 +1908,12 @@ ViennaAbstractFormatter >> selfExpression: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> seq1Postfix [
-	self subclassResponsibility
+	^ ''
 ]
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> seq1Prefix [
-	self subclassResponsibility
+	^ 'seq1 of '
 ]
 
 { #category : #'formatting-types' }
@@ -1928,12 +1933,12 @@ ViennaAbstractFormatter >> seqEnumPattern: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> seqPostfix [
-	self subclassResponsibility
+	^ ''
 ]
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> seqPrefix [
-	self subclassResponsibility
+	^ 'seq of '
 ]
 
 { #category : #'formatting-types' }
@@ -2029,7 +2034,7 @@ ViennaAbstractFormatter >> setComprehension: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> setDifference [
-	self subclassResponsibility
+	^ '\'
 ]
 
 { #category : #'formatting-expressions' }
@@ -2074,12 +2079,12 @@ ViennaAbstractFormatter >> setIntersection: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> setPostfix [
-	self subclassResponsibility
+	^ ''
 ]
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> setPrefix [
-	self subclassResponsibility
+	^ 'set of '
 ]
 
 { #category : #'formatting-expressions' }
@@ -2107,7 +2112,7 @@ ViennaAbstractFormatter >> setUnionPattern: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> space [
-	self subclassResponsibility
+	^ ' '
 ]
 
 { #category : #'formatting-definitions' }
@@ -2149,7 +2154,7 @@ ViennaAbstractFormatter >> subsequence: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> subset [
-	self subclassResponsibility
+	^ 'subset'
 ]
 
 { #category : #'formatting-expressions' }
@@ -2187,7 +2192,7 @@ ViennaAbstractFormatter >> tokenConstructor: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> totalFunction [
-	self subclassResponsibility
+	^ '+>'
 ]
 
 { #category : #'formatting-types' }
@@ -2330,7 +2335,7 @@ ViennaAbstractFormatter >> undefinedExpression: aViennaNode [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> union [
-	self subclassResponsibility
+	^ 'union'
 ]
 
 { #category : #'formatting-types' }

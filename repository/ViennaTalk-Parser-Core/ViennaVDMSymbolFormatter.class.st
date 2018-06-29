@@ -275,11 +275,6 @@ ViennaVDMSymbolFormatter >> setPrefix [
 ]
 
 { #category : #'symbol access' }
-ViennaVDMSymbolFormatter >> space [
-	^ ' '
-]
-
-{ #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> subset [
 	^ String with: (Character codePoint: 16r2286)
 ]
