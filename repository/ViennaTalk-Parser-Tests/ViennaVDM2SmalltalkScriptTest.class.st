@@ -1,0 +1,3259 @@
+Class {
+	#name : #ViennaVDM2SmalltalkScriptTest,
+	#superclass : #TestCase,
+	#traits : 'TViennaVDMBoundVariableCollectorTest + TViennaVDMFreeVariableCollectorTest',
+	#classTraits : 'TViennaVDMBoundVariableCollectorTest classTrait + TViennaVDMFreeVariableCollectorTest classTrait',
+	#category : 'ViennaTalk-Parser-Tests'
+}
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testAndEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'x and y'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'And'.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkScript new
+						generate: node
+						env:
+							{('x' -> 'true').
+							('y' -> 'false')} asDictionary))
+		equals: false.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkScript new
+						generate: node
+						env:
+							{('x' -> 'true').
+							('y' -> 'true')} asDictionary))
+		equals: true.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkScript new
+						generate: node
+						env:
+							{('x' -> 'false').
+							('y' -> self undefined)} asDictionary))
+		equals: false.
+	self
+		should: [ 
+			Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkScript new
+						generate: node
+						env:
+							{('x' -> 'true').
+							('y' -> self undefined)} asDictionary) ]
+		raise: ViennaUndefinedEvaluationError
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testApplyEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '{1|->2}(1)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'Apply'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node)) equals: 2
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testArithmeticAbsEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'abs -1'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ArithmeticAbs'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node)) equals: 1
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testArithmeticDivideEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '3 / 2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ArithmeticDivide'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node)) equals: 1.5
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testArithmeticIntegerDivisionEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '3 div 2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ArithmeticIntegerDivision'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node)) equals: 1
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testArithmeticMinusEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '3 - 2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ArithmeticMinus'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node)) equals: 1
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testArithmeticModEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '3 mod 2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ArithmeticMod'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node)) equals: 1
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testArithmeticMultiplicationEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '3 * 2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ArithmeticMultiplication'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node)) equals: 6
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testArithmeticPlusEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '3 + 2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ArithmeticPlus'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node)) equals: 5
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testArithmeticRemEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '3 rem 2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ArithmeticRem'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node)) equals: 1
+]
+
+{ #category : #'tests-code generation-statements' }
+ViennaVDM2SmalltalkScriptTest >> testAssignStatementEnv [
+	| node |
+	node := ViennaVDMParser new statement end parse: 'x := 1'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'AssignStatement'.
+	self assert: (Compiler evaluate: '|x|' , (ViennaVDM2SmalltalkScript new generate: node) , '. x') equals: 1
+]
+
+{ #category : #'tests-code generation-types' }
+ViennaVDM2SmalltalkScriptTest >> testBasicTypeEnv [
+	| node |
+	node := ViennaVDMParser new type end parse: 'int'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'BasicType'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node)) equals: ViennaType int
+]
+
+{ #category : #'tests-code generation-statements' }
+ViennaVDM2SmalltalkScriptTest >> testBlockStatementEnv [
+	| node |
+	node := ViennaVDMParser new statement end parse: '(dcl x:nat := 1, y:nat; y := 2; a := x + y)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'BlockStatement'.
+	self assert: (Compiler evaluate: '|a|' , (ViennaVDM2SmalltalkScript new generate: node) , '. a') equals: 3
+]
+
+{ #category : #'tests-bound variables-definitions' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesAccessFunctionDefinitionInto [
+	| node binds |
+	node := ViennaVDMParser new accessFunctionDefinition end parse: 'public fn : t1 -> t2 fn(x) == x'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'AccessFunctionDefinition'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self assert: binds equals: {'fn'} asSet
+]
+
+{ #category : #'tests-bound variables-definitions' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesAccessOperationDefinitionInto [
+	| node binds |
+	node := ViennaVDMParser new accessOperationDefinition end parse: 'public op : t1 ==> t2 op(x) == return x'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'AccessOperationDefinition'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self assert: binds equals: {'op'} asSet
+]
+
+{ #category : #'tests-bound variables-definitions' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesAccessTypeDefinitionInto [
+	| node binds |
+	node := ViennaVDMParser new accessTypeDefinition end parse: 'public t1 = t2 inv v == e'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'AccessTypeDefinition'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self assert: binds equals: {'t1'} asSet
+]
+
+{ #category : #'tests-bound variables-definitions' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesAccessValueDefinitionInto [
+	| node binds |
+	node := ViennaVDMParser new accessValueDefinition end parse: 'public v1 = e1'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'AccessValueDefinition'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self assert: binds equals: {'v1'} asSet
+]
+
+{ #category : #'tests-bound variables-definitions' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesAssignmentDefinitionInto [
+	| node binds |
+	node := ViennaVDMParser new assignmentDefinition end parse: 'v:t := e'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'AssignmentDefinition'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self assert: binds equals: {'v'} asSet
+]
+
+{ #category : #'tests-bound variables-patterns and binds' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesBindListInto [
+	| node binds |
+	node := ViennaVDMParser new bindList end parse: 'v1 : t1, v2 in set s1'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'BindList'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'v1'.
+			'v2'} asSet
+]
+
+{ #category : #'tests-bound variables-statements' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesBlockStatementInto [
+	| node binds |
+	node := ViennaVDMParser new blockStatement end
+		parse: '(dcl v1:t1 := e, v2:t1 := v1; dcl v3:t3 := f(v1, v2); op(v1, v2, v3))'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'BlockStatement'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'v1'.
+			'v2'.
+			'v3'} asSet
+]
+
+{ #category : #'tests-bound variables-types' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesCompositeTypeInto [
+	| node binds |
+	node := ViennaVDMParser new compositeType end parse: 'compose T of f1 : t1 f2 :- t2 t3 end'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'CompositeType'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'T'} asSet
+]
+
+{ #category : #'tests-bound variables-statements' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesDclStatementInto [
+	| node binds |
+	node := ViennaVDMParser new dclStatement end parse: 'dcl v1:t1 := e, v2:t := v1;'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'DclStatement'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'v1'.
+			'v2'} asSet
+]
+
+{ #category : #'tests-bound variables-definitions' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesDefinitionBlockInto [
+	| node binds |
+	node := ViennaVDMParser new definitionBlock end parse: 'values v1 = e1; v2 = e2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'DefinitionBlock'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'v1'.
+			'v2'} asSet
+]
+
+{ #category : #'tests-bound variables-definitions' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesDocumentInto [
+	| node binds |
+	node := ViennaVDMParser new document end parse: 'types t1 = t2; t3 = t4; values v1:t5 = e1; v2:t6 = e2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'Document'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'t1'.
+			't3'.
+			'v1'.
+			'v2'} asSet.
+	node := ViennaVDMParser new document end
+		parse:
+			'module m1 exports all definitions values v1 : t1 = e1 end m1 module m2 exports all definitions values v2 : t2 = e2 end m2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'Document'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'m1'.
+			'm2'} asSet
+]
+
+{ #category : #'tests-bound variables-definitions' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesEqualDefinitionInto [
+	| node binds |
+	node := ViennaVDMParser new equalDefinition end parse: 'v1 : t1 = e1'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'EqualDefinition'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self assert: binds equals: {'v1'} asSet
+]
+
+{ #category : #'tests-bound variables-definitions' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesEqualDefinitionListInto [
+	| node binds |
+	node := ViennaVDMParser new equalDefinitionList end parse: 'v1 : t1 = e1; v2 : t2 = e2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'EqualDefinitionList'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'v1'.
+			'v2'} asSet
+]
+
+{ #category : #'tests-bound variables-definitions' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesExplicitFunctionDefinitionInto [
+	| node binds |
+	node := ViennaVDMParser new explicitFunctionDefinition end parse: 'fn[@t] : t1 -> t2 fn(x) == e'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ExplicitFunctionDefinition'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self assert: binds equals: {'fn'} asSet
+]
+
+{ #category : #'tests-bound variables-definitions' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesExplicitOperationDefinitionInto [
+	| node binds |
+	node := ViennaVDMParser new explicitOperationDefinition end parse: 'op: t1 ==> t2 op(x) == return e'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ExplicitOperationDefinition'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self assert: binds equals: {'op'} asSet
+]
+
+{ #category : #'tests-bound variables-interfaces' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesExportDefinitionInto [
+	| node binds |
+	node := ViennaVDMParser new exportDefinition end parse: 'exports types t1; t2; values v1:t3; v2:t4'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ExportDefinition'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'t1'.
+			't2'.
+			't3'.
+			't4'.
+			'v1'.
+			'v2'} asSet
+]
+
+{ #category : #'tests-bound variables-interfaces' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesExportFunctionsSignatureInto [
+	| node binds |
+	node := ViennaVDMParser new exportFunctionsSignature end parse: 'functions f1[@t1,@t2]:t3->t4; f2[@t5,@t6]:t7->t8'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ExportFunctionsSignature'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'f1'.
+			't3'.
+			't4'.
+			'f2'.
+			't7'.
+			't8'} asSet
+]
+
+{ #category : #'tests-bound variables-interfaces' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesExportModuleSignatureInto [
+	| node binds |
+	node := ViennaVDMParser new exportModuleSignature end parse: 'values v1 : t1; types t2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ExportModuleSignature'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'v1'.
+			't1'.
+			't2'} asSet
+]
+
+{ #category : #'tests-bound variables-interfaces' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesExportTypesSignatureInto [
+	| node binds |
+	node := ViennaVDMParser new exportTypesSignature end parse: 'types t1; t2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ExportTypesSignature'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'t1'.
+			't2'} asSet
+]
+
+{ #category : #'tests-bound variables-types' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesFieldInto [
+	| node binds |
+	node := ViennaVDMParser new field end parse: 'f : t'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'Field'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self assert: binds equals: {'f'} asSet.
+	node := ViennaVDMParser new field end parse: 'f :- t'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'Field'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self assert: binds equals: {'f'} asSet.
+	node := ViennaVDMParser new field end parse: 't'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'Field'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self assert: binds equals: {} asSet
+]
+
+{ #category : #'tests-bound variables-types' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesFieldListInto [
+	| node binds |
+	node := ViennaVDMParser new fieldList end parse: 'f1 : t1 f2 :- t2 t3'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'FieldList'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'f1'.
+			'f2'} asSet
+]
+
+{ #category : #'tests-bound variables-patterns and binds' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesFieldPatternInto [
+	| node binds |
+	node := ViennaVDMParser new fieldPattern end parse: 'f1 |-> v'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'FieldPattern'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self assert: binds equals: {'v'} asSet
+]
+
+{ #category : #'tests-bound variables-patterns and binds' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesFieldPatternListInto [
+	| node binds |
+	node := ViennaVDMParser new fieldPatternList end parse: 'f1 |-> v1, f2 |-> v2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'FieldPatternList'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'v1'.
+			'v2'} asSet
+]
+
+{ #category : #'tests-bound variables-definitions' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesFunctionDefinitionInto [
+	| node binds |
+	node := ViennaVDMParser new functionDefinition end parse: 'fn[@t] : t1 -> t2 fn(x) == e'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'FunctionDefinition'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self assert: binds equals: {'fn'} asSet
+]
+
+{ #category : #'tests-bound variables-definitions' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesFunctionDefinitionsInto [
+	| node binds |
+	node := ViennaVDMParser new functionDefinitions end
+		parse: 'functions fn1[@t] : t1 -> t2 fn1(x) == e1; fn2[@t] : t3 -> t4 fn2(y) == e2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'FunctionDefinitions'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'fn1'.
+			'fn2'} asSet
+]
+
+{ #category : #'tests-bound variables-interfaces' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesFunctionExportInto [
+	| node binds |
+	node := ViennaVDMParser new functionExport end parse: 'f1[@t1,@t2]:t3->t4'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'FunctionExport'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'f1'.
+			't3'.
+			't4'} asSet
+]
+
+{ #category : #'tests-bound variables-statements' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesIndexForLoopInto [
+	| node binds |
+	node := ViennaVDMParser new indexForLoop end parse: 'for v = e1 to e2 by e3 do op(v)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'IndexForLoop'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self assert: binds equals: {'v'} asSet
+]
+
+{ #category : #'tests-bound variables-types' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesInmapTypeInto [
+	| node binds |
+	node := ViennaVDMParser new inmapType end parse: 'inmap t1 to t2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'InmapType'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{} asSet
+]
+
+{ #category : #'tests-bound variables-definitions' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesLocalDefinitionInto [
+	| node binds |
+	node := ViennaVDMParser new localDefinition end parse: 'v1 : t1 = e1'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'LocalDefinition'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self assert: binds equals: {'v1'} asSet
+]
+
+{ #category : #'tests-bound variables-definitions' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesLocalDefinitionListInto [
+	| node binds |
+	node := ViennaVDMParser new localDefinitionList end parse: 'v1 : t1 = e1, fn[@t] : t2 -> t3 fn(x) == e2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'LocalDefinitionList'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'v1'.
+			'fn'} asSet
+]
+
+{ #category : #'tests-bound variables-patterns and binds' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesMapEnumerationPatternInto [
+	| node binds |
+	node := ViennaVDMParser new mapEnumerationPattern end parse: '{k1 |-> v1, k2 |-> v2}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'MapEnumerationPattern'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'k1'.
+			'v1'.
+			'k2'.
+			'v2'} asSet
+]
+
+{ #category : #'tests-bound variables-patterns and binds' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesMapMunionPatternInto [
+	| node binds |
+	node := ViennaVDMParser new mapMunionPattern end parse: '{k1 |-> v1, k2 |-> v2} munion {k3 |-> v3}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'MapMunionPattern'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'k1'.
+			'v1'.
+			'k2'.
+			'v2'.
+			'k3'.
+			'v3'} asSet
+]
+
+{ #category : #'tests-bound variables-types' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesMapTypeInto [
+	| node binds |
+	node := ViennaVDMParser new mapType end parse: 'map t1 to t2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'MapType'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{} asSet
+]
+
+{ #category : #'tests-bound variables-patterns and binds' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesMapletPatternInto [
+	| node binds |
+	node := ViennaVDMParser new mapletPattern end parse: 'k |-> v'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'MapletPattern'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'k'.
+			'v'} asSet
+]
+
+{ #category : #'tests-bound variables-definitions' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesModuleInto [
+	| node binds |
+	node := ViennaVDMParser new module end parse: 'module m1 exports all definitions values v1 : t1 = e1 end m1'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'Module'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self assert: binds equals: {'m1'} asSet
+]
+
+{ #category : #'tests-bound variables-patterns and binds' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesMultipleSetBindInto [
+	| node binds |
+	node := ViennaVDMParser new multipleSetBind end parse: 'v1, v2 in set s'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'MultipleSetBind'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'v1'.
+			'v2'} asSet
+]
+
+{ #category : #'tests-bound variables-patterns and binds' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesMultipleTypeBindInto [
+	| node binds |
+	node := ViennaVDMParser new multipleTypeBind end parse: 'v1, v2 : t'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'MultipleTypeBind'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'v1'.
+			'v2'} asSet
+]
+
+{ #category : #'tests-bound variables-patterns and binds' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesObjectPatternInto [
+	| node binds |
+	node := ViennaVDMParser new objectPattern end parse: 'obj_T(f1 |-> v1, f2 |-> v2)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ObjectPattern'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'v1'.
+			'v2'} asSet
+]
+
+{ #category : #'tests-bound variables-definitions' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesOperationDefinitionInto [
+	| node binds |
+	node := ViennaVDMParser new operationDefinition end parse: 'op: t1 ==> t2 op(x) == return e'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'OperationDefinition'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self assert: binds equals: {'op'} asSet
+]
+
+{ #category : #'tests-bound variables-definitions' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesOperationDefinitionsInto [
+	| node binds |
+	node := ViennaVDMParser new operationDefinitions end
+		parse: 'operations op1: t1 ==> t2 op1(x) == return e1; op2: t3 ==> t4 op2(y) == return e2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'OperationDefinitions'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'op1'.
+			'op2'} asSet
+]
+
+{ #category : #'tests-bound variables-types' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesOperationTypeInto [
+	| node binds |
+	node := ViennaVDMParser new operationType end parse: 't1 ==> t2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'OperationType'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{} asSet
+]
+
+{ #category : #'tests-bound variables-types' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesOptionalTypeInto [
+	| node binds |
+	node := ViennaVDMParser new optionalType end parse: '[t]'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'OptionalType'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self assert: binds equals: {} asSet
+]
+
+{ #category : #'tests-bound variables-definitions' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesParametersInto [
+	| node binds |
+	node := ViennaVDMParser new parameters end parse: '(x, y)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'Parameters'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'x'.
+			'y'} asSet
+]
+
+{ #category : #'tests-bound variables-definitions' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesParametersListInto [
+	| node binds |
+	node := ViennaVDMParser new parametersList end parse: '(x, y)(z)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ParametersList'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'x'.
+			'y'.
+			'z'} asSet
+]
+
+{ #category : #'tests-bound variables-types' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesPartialFunctionTypeInto [
+	| node binds |
+	node := ViennaVDMParser new partialFunctionType end parse: 't1 -> t2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'PartialFunctionType'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{} asSet
+]
+
+{ #category : #'tests-bound variables-patterns and binds' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesPatternIdentifierInto [
+	| node binds |
+	node := ViennaVDMParser new patternIdentifier end parse: 'v'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'PatternIdentifier'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self assert: binds equals: {'v'} asSet
+]
+
+{ #category : #'tests-bound variables-patterns and binds' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesPatternListInto [
+	| node binds |
+	node := ViennaVDMParser new patternList end parse: 'v1, v2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'PatternList'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'v1'.
+			'v2'} asSet
+]
+
+{ #category : #'tests-bound variables-types' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesProductTypeInto [
+	| node binds |
+	node := ViennaVDMParser new productType end parse: 't1 * t2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ProductType'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{} asSet
+]
+
+{ #category : #'tests-bound variables-patterns and binds' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesRecordPatternInto [
+	| node binds |
+	node := ViennaVDMParser new recordPattern end parse: 'mk_T(v1, v2)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'RecordPattern'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'v1'.
+			'v2'} asSet
+]
+
+{ #category : #'tests-bound variables-types' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesRecordTypeDefinitionInto [
+	| node binds |
+	node := ViennaVDMParser new recordTypeDefinition end parse: 'T::f1:t1 f2:-t2 t3'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'RecordTypeDefinition'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'T'} asSet
+]
+
+{ #category : #'tests-bound variables-types' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesSeq1TypeInto [
+	| node binds |
+	node := ViennaVDMParser new seq1Type end parse: 'seq1 of t'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'Seq1Type'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self assert: binds equals: {} asSet
+]
+
+{ #category : #'tests-bound variables-patterns and binds' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesSeqConcPatternInto [
+	| node binds |
+	node := ViennaVDMParser new seqConcPattern  end parse: '[v1, v2] ^ [v3]'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SeqConcPattern'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'v1'.
+			'v2'.
+			'v3'} asSet
+]
+
+{ #category : #'tests-bound variables-patterns and binds' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesSeqEnumPatternInto [
+	| node binds |
+	node := ViennaVDMParser new seqEnumPattern end parse: '[v1, v2]'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SeqEnumPattern'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'v1'.
+			'v2'} asSet
+]
+
+{ #category : #'tests-bound variables-types' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesSeqTypeInto [
+	| node binds |
+	node := ViennaVDMParser new seqType end parse: 'seq of t'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SeqType'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self assert: binds equals: {} asSet
+]
+
+{ #category : #'tests-bound variables-statements' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesSequenceForLoopInto [
+	| node binds |
+	node := ViennaVDMParser new sequenceForLoop end parse: 'for v in s do op(v)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SequenceForLoop'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self assert: binds equals: {'v'} asSet
+]
+
+{ #category : #'tests-bound variables-patterns and binds' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesSetBindInto [
+	| node binds |
+	node := ViennaVDMParser new setBind end parse: 'v in set s'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SetBind'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self assert: binds equals: {'v'} asSet
+]
+
+{ #category : #'tests-bound variables-patterns and binds' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesSetEnumPatternInto [
+	| node binds |
+	node := ViennaVDMParser new setEnumPattern end parse: '{v1, v2}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SetEnumPattern'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'v1'.
+			'v2'} asSet
+]
+
+{ #category : #'tests-bound variables-statements' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesSetForLoopInto [
+	| node binds |
+	node := ViennaVDMParser new setForLoop end parse: 'for all v in set s do op(v)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SetForLoop'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self assert: binds equals: {'v'} asSet
+]
+
+{ #category : #'tests-bound variables-types' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesSetTypeInto [
+	| node binds |
+	node := ViennaVDMParser new setType end parse: 'set of t'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SetType'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self assert: binds equals: {} asSet
+]
+
+{ #category : #'tests-bound variables-patterns and binds' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesSetUnionPatternInto [
+	| node binds |
+	node := ViennaVDMParser new setUnionPattern end parse: '{v1, v2} union {v3}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SetUnionPattern'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'v1'.
+			'v2'.
+			'v3'} asSet
+]
+
+{ #category : #'tests-bound variables-definitions' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesStateDefinitionInto [
+	| node binds |
+	node := ViennaVDMParser new stateDefinition end
+		parse: 'state S of v1 : t1 v2 : t2 inv mk_S(inv1, inv2) == inv1 = inv2 init s == s = mk_S(e1, e2) end'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'StateDefinition'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'S'.
+			'v1'.
+			'v2'.
+			'inv_S'.
+			'init_S'} asSet
+]
+
+{ #category : #'tests-bound variables-types' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesTotalFunctionTypeInto [
+	| node binds |
+	node := ViennaVDMParser new totalFunctionType end parse: 't1 +> t2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'TotalFunctionType'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{} asSet
+]
+
+{ #category : #'tests-bound variables-patterns and binds' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesTuplePatternInto [
+	| node binds |
+	node := ViennaVDMParser new tuplePattern end parse: 'mk_(v1, v2)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'TuplePattern'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'v1'.
+			'v2'} asSet
+]
+
+{ #category : #'tests-bound variables-patterns and binds' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesTypeBindInto [
+	| node binds |
+	node := ViennaVDMParser new typeBind end parse: 'v : t'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'TypeBind'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self assert: binds equals: {'v'} asSet
+]
+
+{ #category : #'tests-bound variables-patterns and binds' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesTypeBindListInto [
+	| node binds |
+	node := ViennaVDMParser new typeBindList end parse: 'v1 : t1, v2 : t2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'TypeBindList'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'v1'.
+			'v2'} asSet
+]
+
+{ #category : #'tests-bound variables-definitions' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesTypeDefinitionInto [
+	| node binds |
+	node := ViennaVDMParser new typeDefinition end parse: 't1 = t2 inv v == e'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'TypeDefinition'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self assert: binds equals: {'t1'} asSet
+]
+
+{ #category : #'tests-bound variables-definitions' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesTypeDefinitionsInto [
+	| node binds |
+	node := ViennaVDMParser new typeDefinitions end parse: 'types public t1 = t2 inv v1 == e1; public t3 = t4 inv v2 == e2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'TypeDefinitions'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'t1'.
+			't3'} asSet
+]
+
+{ #category : #'tests-bound variables-definitions' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesTypeVariableIdentifierInto [
+	| node binds |
+	node := ViennaVDMParser new typeVariableIdentifier end parse: '@t'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'TypeVariableIdentifier'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self assert: binds equals: {'@t'} asSet
+]
+
+{ #category : #'tests-bound variables-definitions' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesTypeVariableListInto [
+	| node binds |
+	node := ViennaVDMParser new typeVariableList end parse: '[@t1, @t2]'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'TypeVariableList'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'@t1'.
+			'@t2'} asSet
+]
+
+{ #category : #'tests-bound variables-types' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesUnionTypeInto [
+	| node binds |
+	node := ViennaVDMParser new unionType end parse: 't1 | t2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'UnionType'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{} asSet
+]
+
+{ #category : #'tests-bound variables-definitions' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesValueDefinitionInto [
+	| node binds |
+	node := ViennaVDMParser new valueDefinition end parse: 'v : t = e'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ValueDefinition'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self assert: binds equals: {'v'} asSet
+]
+
+{ #category : #'tests-bound variables-definitions' }
+ViennaVDM2SmalltalkScriptTest >> testBoundVariablesValueDefinitionsInto [
+	| node binds |
+	node := ViennaVDMParser new valueDefinitions end parse: 'values public v1 : t1 = e1 ; public v2 : t2 = e2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ValueDefinitions'.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'v1'.
+			'v2'} asSet
+]
+
+{ #category : #'tests-code generation-statements' }
+ViennaVDM2SmalltalkScriptTest >> testCallStatementEnv [
+	| node |
+	node := ViennaVDMParser new statement end parse: 'op(1)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'CallStatement'.
+	self
+		assert: (Compiler evaluate: '|op x| x:= 0. op := [:a | x := a]. ' , (ViennaVDM2SmalltalkScript new generate: node) , '.x')
+		equals: 1
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testCasesExpressionEnv [
+	| node |
+	node := ViennaVDMParser new expression end
+		parse: 'cases 1: []^x -> <seq>, {}^x -> <set>, x -> x + 2, others -> undefined end'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'CasesExpression'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node)) equals: 3
+]
+
+{ #category : #'tests-code generation-statements' }
+ViennaVDM2SmalltalkScriptTest >> testCasesStatementEnv [
+	| node |
+	node := ViennaVDMParser new statement end
+		parse: 'cases 1: []^x -> a:=<seq>, {}^x -> a:=<set>, x -> a:=x + 2, others -> a:=undefined end'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'CasesStatement'.
+	self assert: (Compiler evaluate: '|a|' , (ViennaVDM2SmalltalkScript new generate: node) , '.a') equals: 3.
+	node := ViennaVDMParser new statement end parse: 'cases 1: []^x -> a:=<seq>, {}^x -> a:=<set>, others -> a:=1 end'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'CasesStatement'.
+	self assert: (Compiler evaluate: '|a|' , (ViennaVDM2SmalltalkScript new generate: node) , '.a') equals: 1.
+	node := ViennaVDMParser new statement end parse: 'cases 1: []^x -> a:=<seq>, {}^x -> a:=<set> end'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'CasesStatement'.
+	self should: [ Compiler evaluate: '|a|' , (ViennaVDM2SmalltalkScript new generate: node) , '.a' ] raise: ViennaNoMatch
+]
+
+{ #category : #'tests-code generation-types' }
+ViennaVDM2SmalltalkScriptTest >> testCompositeTypeEnv [
+	| node |
+	node := ViennaVDMParser new type end parse: 'compose T of x:nat y:-int char end'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'CompositeType'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node))
+		equals:
+			(ViennaType
+				compose: 'T'
+				of:
+					{{'x'.
+					false.
+					(ViennaType nat)}.
+					{'y'.
+					true.
+					(ViennaType int)}.
+					{nil.
+					false.
+					(ViennaType char)}})
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testCompositionEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '(lambda x:nat & x + 1) comp (lambda x:nat & x * 2)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'Composition'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node) , ' value: 3') equals: 7
+]
+
+{ #category : #'tests-code generation-statements' }
+ViennaVDM2SmalltalkScriptTest >> testDclStatementEnv [
+	| node |
+	node := ViennaVDMParser new statement end parse: '(dcl x:nat := 1, y:nat; y := 2; a := x + y)'.
+	self deny: node isPetitFailure.
+	self assert: node first label = 'DclStatement'.
+	self assert: (Compiler evaluate: '|a|' , (ViennaVDM2SmalltalkScript new generate: node) , '. a') equals: 3
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testDefExpressionEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'def  y : nat = x + 1; x : nat = 1 in x + y'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'DefExpression'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: 3.
+	node := ViennaVDMParser new expression end parse: 'def  mk_(x, y) = mk_(1, 2) in x + y'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'DefExpression'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: 3
+]
+
+{ #category : #'tests-code generation-statements' }
+ViennaVDM2SmalltalkScriptTest >> testDefStatementEnv [
+	| node |
+	node := ViennaVDMParser new statement end parse: 'def x : nat = 1; y : nat = x + 1 in a := x + y'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'DefStatement'.
+	self assert: (Compiler evaluate: '|a|' , (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new) , '.a') equals: 3
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testDistributedMapMergeEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'merge {{1|->2}, {2|->3}}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'DistributedMapMerge'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{(1 -> 2).
+			(2 -> 3)} asDictionary
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testDistributedSequenceConcatenationEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'conc [[1,2,3],[4,5,6]]'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'DistributedSequenceConcatenation'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{1.
+			2.
+			3.
+			4.
+			5.
+			6} asOrderedCollection
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testDistributedSetIntersectionEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'dinter {{1,2,3},{2,3,4}}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'DistributedSetIntersection'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{2.
+			3} asSet
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testDistributedSetUnionEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'dunion {{1,2,3},{2,3,4}}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'DistributedSetUnion'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{1.
+			2.
+			3.
+			4} asSet
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testEqualEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '1 = 1'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'Equal'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: true.
+	node := ViennaVDMParser new expression end parse: '1 = 2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'Equal'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: false
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testExists1ExpressionEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'exists1 x in set {1,2} & x mod 2 = 1'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'Exists1Expression'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: true.
+	node := ViennaVDMParser new expression end parse: 'exists1 x in set {1,2,3} & x mod 2 = 1'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'Exists1Expression'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: false.
+	node := ViennaVDMParser new expression end parse: 'exists1 x in set {1,2} & x = 3'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'Exists1Expression'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: false
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testExistsExpressionEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'exists x in set {1,2}, y in set { 2, 3 } & x = y'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ExistsExpression'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: true.
+	node := ViennaVDMParser new expression end parse: 'exists x in set {1,2,3}, y in set {2,3,4} & x = y'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ExistsExpression'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: true.
+	node := ViennaVDMParser new expression end parse: 'exists x in set {1,2}, y in set {3,4} & x = y'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ExistsExpression'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: false
+]
+
+{ #category : #'tests-code generation-statements' }
+ViennaVDM2SmalltalkScriptTest >> testFieldReferenceEnv [
+	| node |
+	node := ViennaVDMParser new statement end parse: 'x.f := 1'.
+	self deny: node isPetitFailure.
+	self assert: node first label = 'FieldReference'.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					'|x|x:=(ViennaComposite constructorName:''T'' with: nil with: 2) fieldNameAt: 1 put: ''f''; yourself.'
+						, (ViennaVDM2SmalltalkScript new generate: node) , '. {x at: 1. x at: 2}')
+		equals:
+			{1.
+			2}
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testFieldSelectEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'x.field'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'FieldSelect'.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkScript new
+						generate: node
+						env:
+							{('x'
+								->
+									((ViennaComposite constructorName: 'T' with: 1 with: 2)
+										fieldNameAt: 1 put: 'field';
+										fieldNameAt: 2 put: 'field2';
+										storeString))} asDictionary))
+		equals: 1
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testFinitePowerSetEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'power {1,2}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'FinitePowerSet'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			(Set
+				with: Set new
+				with: (Set with: 1)
+				with: (Set with: 2)
+				with: (Set with: 1 with: 2))
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testFloorEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'floor 1.5'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'Floor'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: 1
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testForallExpressionEnv [
+	| node |
+	node := ViennaVDMParser new expression end
+		parse: 'forall x in set {1, 3, 5}, y in set {2, 4, 6} & x mod 2 = y mod 2 + 1'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ForallExpression'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: true.
+	node := ViennaVDMParser new expression end parse: 'forall x in set {1, 2, 3} & x mod 2 = 1'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ForallExpression'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: false
+]
+
+{ #category : #'tests-free variables-statements' }
+ViennaVDM2SmalltalkScriptTest >> testFreeVariablesAssignmentDefinitionBoundVarsInto [
+	| node binds |
+	node := ViennaVDMParser new assignmentDefinition end parse: 'v1:t1 := e1'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'AssignmentDefinition'.
+	binds := Set new.
+	self
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
+		equals:
+			{'t1'.
+			'e1'} asSet
+]
+
+{ #category : #'tests-free variables-statements' }
+ViennaVDM2SmalltalkScriptTest >> testFreeVariablesBlockStatementBoundVarsInto [
+	| node binds |
+	node := ViennaVDMParser new blockStatement end parse: '(dcl v1:t1 := e1; dcl v2:t2 := f(v1); op(v1, v2))'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'BlockStatement'.
+	binds := Set new.
+	self
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
+		equals:
+			{'t1'.
+			'e1'.
+			't2'.
+			'f'.
+			'op'} asSet
+]
+
+{ #category : #'tests-free variables-statements' }
+ViennaVDM2SmalltalkScriptTest >> testFreeVariablesCasesExpressionAlternativeBoundVarsInto [
+	| node binds |
+	node := ViennaVDMParser new casesStatementAlternative end parse: 'p1 munion p2, p1 union p2 -> op(p1, p2)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'CasesStatementAlternative'.
+	binds := Set new.
+	self assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new) equals: {'op'} asSet
+]
+
+{ #category : #'tests-free variables-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testFreeVariablesDefExpressionBoundVarsInto [
+	| node binds |
+	node := ViennaVDMParser new defExpression end parse: 'def v1 : t1 = f(v2) ; v2 : t2 = e1 in f(v1, v2)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'DefExpression'.
+	binds := Set new.
+	self
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
+		equals:
+			{'t1'.
+			'f'.
+			't2'.
+			'e1'.
+			'f'} asSet
+]
+
+{ #category : #'tests-free variables-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testFreeVariablesExists1ExpressionBoundVarsInto [
+	| node binds |
+	node := ViennaVDMParser new exists1Expression end parse: 'exists1 v:t & p(v, e)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'Exists1Expression'.
+	binds := Set new.
+	self
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
+		equals:
+			{'t'.
+			'p'.
+			'e'} asSet
+]
+
+{ #category : #'tests-free variables-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testFreeVariablesExistsExpressionBoundVarsInto [
+	| node binds |
+	node := ViennaVDMParser new existsExpression end parse: 'exists v1:t, v2 in set s & p(v1, v2, e)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ExistsExpression'.
+	binds := Set new.
+	self
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
+		equals:
+			{'t'.
+			's'.
+			'p'.
+			'e'} asSet
+]
+
+{ #category : #'tests-free variables-statements' }
+ViennaVDM2SmalltalkScriptTest >> testFreeVariablesFieldReferenceBoundVarsInto [
+	| node binds |
+	node := ViennaVDMParser new indexForLoop end parse: 'for v = e1 to e2 by e3 do op(v)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'IndexForLoop'.
+	binds := Set new.
+	self
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
+		equals:
+			{'e1'.
+			'e2'.
+			'e3'.
+			'op'} asSet
+]
+
+{ #category : #'tests-free variables-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testFreeVariablesFieldSelectBoundVarsInto [
+	| node binds |
+	node := ViennaVDMParser new expression end parse: 'record.field'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'FieldSelect'.
+	binds := Set new.
+	self assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new) equals: {'record'} asSet
+]
+
+{ #category : #'tests-free variables-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testFreeVariablesForallExpressionBoundVarsInto [
+	| node binds |
+	node := ViennaVDMParser new forallExpression end parse: 'forall v1:t, v2 in set s & p(v1, v2, e)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ForallExpression'.
+	binds := Set new.
+	self
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
+		equals:
+			{'t'.
+			's'.
+			'p'.
+			'e'} asSet
+]
+
+{ #category : #'tests-free variables-statements' }
+ViennaVDM2SmalltalkScriptTest >> testFreeVariablesIndexForLoopBoundVarsInto [
+	| node |
+	node := ViennaVDMParser new indexForLoop end parse: 'for v = e1 to e2 by e3 do op(v)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'IndexForLoop'.
+	self
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
+		equals:
+			{'e1'.
+			'e2'.
+			'e3'.
+			'op'} asSet
+]
+
+{ #category : #'tests-free variables-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testFreeVariablesIotaExpressionBoundVarsInto [
+	| node binds |
+	node := ViennaVDMParser new iotaExpression end parse: 'iota v:t & p(v, e)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'IotaExpression'.
+	binds := Set new.
+	self
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
+		equals:
+			{'t'.
+			'p'.
+			'e'} asSet
+]
+
+{ #category : #'tests-free variables-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testFreeVariablesLambdaExpressionBoundVarsInto [
+	| node binds |
+	node := ViennaVDMParser new lambdaExpression end parse: 'lambda v : t & f(v)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'LambdaExpression'.
+	binds := Set new.
+	self
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
+		equals:
+			{'t'.
+			'f'} asSet
+]
+
+{ #category : #'tests-free variables-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testFreeVariablesLetBeExpressionBoundVarsInto [
+	| node binds |
+	node := ViennaVDMParser new letBeExpression end parse: 'let v in set s be st p(v) in f(v)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'LetBeExpression'.
+	binds := Set new.
+	self
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
+		equals:
+			{'s'.
+			'p'.
+			'f'} asSet
+]
+
+{ #category : #'tests-free variables-statements' }
+ViennaVDM2SmalltalkScriptTest >> testFreeVariablesLetBeStatementBoundVarsInto [
+	| node binds |
+	node := ViennaVDMParser new letBeStatement end parse: 'let v in set s be st p(v) in op(v)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'LetBeStatement'.
+	binds := Set new.
+	self
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
+		equals:
+			{'s'.
+			'p'.
+			'op'} asSet
+]
+
+{ #category : #'tests-free variables-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testFreeVariablesLetExpressionBoundVarsInto [
+	| node binds |
+	node := ViennaVDMParser new letExpression end parse: 'let v1 : t1 = f(v2), v2 : t2 = e in g(v1, v2)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'LetExpression'.
+	binds := Set new.
+	self
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
+		equals:
+			{'t1'.
+			'f'.
+			't2'.
+			'e'.
+			'g'} asSet
+]
+
+{ #category : #'tests-free variables-statements' }
+ViennaVDM2SmalltalkScriptTest >> testFreeVariablesLetStatementBoundVarsInto [
+	| node binds |
+	node := ViennaVDMParser new letStatement end parse: 'let v1 : t1 =e, v2 : t2 = f(v1) in op(v1, v2)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'LetStatement'.
+	binds := Set new.
+	self
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
+		equals:
+			{'t1'.
+			'f'.
+			't2'.
+			'e'.
+			'op'} asSet
+]
+
+{ #category : #'tests-free variables-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testFreeVariablesLocalNameBoundVarsInto [
+	| node binds |
+	node := ViennaVDMParser new name end parse: 'v'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'LocalName'.
+	binds := Set new.
+	self assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new) equals: {'v'} asSet
+]
+
+{ #category : #'tests-free variables-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testFreeVariablesMapComprehensionBoundVarsInto [
+	| node binds |
+	node := ViennaVDMParser new mapComprehension end parse: '{f(v1) |-> g(v2) | v1, v2 in set s & p(v1, v2)}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'MapComprehension'.
+	binds := Set new.
+	self
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
+		equals:
+			{'f'.
+			'g'.
+			's'.
+			'p'} asSet
+]
+
+{ #category : #'tests-free variables-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testFreeVariablesRecordConstructorBoundVarsInto [
+	| node binds |
+	node := ViennaVDMParser new recordConstructor end parse: 'mk_T(v)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'RecordConstructor'.
+	binds := Set new.
+	self
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
+		equals:
+			{'T'.
+			'v'} asSet
+]
+
+{ #category : #'tests-free variables-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testFreeVariablesSequenceComprehensionBoundVarsInto [
+	| node binds |
+	node := ViennaVDMParser new sequenceComprehension end parse: '[f(v) | v in set s & p(v)]'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SequenceComprehension'.
+	binds := Set new.
+	self
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
+		equals:
+			{'f'.
+			's'.
+			'p'} asSet
+]
+
+{ #category : #'tests-free variables-statements' }
+ViennaVDM2SmalltalkScriptTest >> testFreeVariablesSequenceForLoopBoundVarsInto [
+	| node |
+	node := ViennaVDMParser new sequenceForLoop end parse: 'for v in s do op(v)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SequenceForLoop'.
+	self
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
+		equals:
+			{'s'.
+			'op'} asSet
+]
+
+{ #category : #'tests-free variables-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testFreeVariablesSetComprehensionBoundVarsInto [
+	| node binds |
+	node := ViennaVDMParser new setComprehension end parse: '{f(v) | v in set s & p(v)}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SetComprehension'.
+	binds := Set new.
+	self
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
+		equals:
+			{'f'.
+			's'.
+			'p'} asSet
+]
+
+{ #category : #'tests-free variables-statements' }
+ViennaVDM2SmalltalkScriptTest >> testFreeVariablesSetForLoopBoundVarsInto [
+	| node |
+	node := ViennaVDMParser new setForLoop end parse: 'for all v in set s do op(v)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SetForLoop'.
+	self
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
+		equals:
+			{'s'.
+			'op'} asSet
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testGreaterThanEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '1 > 0'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'GreaterThan'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: true.
+	node := ViennaVDMParser new expression end parse: '1 > 1'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'GreaterThan'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: false.
+	node := ViennaVDMParser new expression end parse: '1 > 2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'GreaterThan'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: false
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testGreaterThanOrEqualEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '1 >= 0'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'GreaterThanOrEqual'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: true.
+	node := ViennaVDMParser new expression end parse: '1 >= 1'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'GreaterThanOrEqual'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: true.
+	node := ViennaVDMParser new expression end parse: '1 >= 2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'GreaterThanOrEqual'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: false
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testIfExpressionEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'if x > 0 then <positive> elseif x = 0 then <zero> else <negative>'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'IfExpression'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: {('x' -> '1')} asDictionary))
+		equals: #positive.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: {('x' -> '0')} asDictionary))
+		equals: #zero.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: {('x' -> '-1')} asDictionary))
+		equals: #negative
+]
+
+{ #category : #'tests-code generation-statements' }
+ViennaVDM2SmalltalkScriptTest >> testIfStatementEnv [
+	| node |
+	node := ViennaVDMParser new statement end parse: 'if true then x := x + 1'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'IfStatement'.
+	self assert: (Compiler evaluate: '|x| x:= 0.' , (ViennaVDM2SmalltalkScript new generate: node) , '.x') equals: 1.
+	node := ViennaVDMParser new statement end parse: 'if false then x := 1 elseif true then x := 2 else x := 3'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'IfStatement'.
+	self assert: (Compiler evaluate: '|x|' , (ViennaVDM2SmalltalkScript new generate: node) , '.x') equals: 2
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testImplyEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'x => y'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'Imply'.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkScript new
+						generate: node
+						env:
+							{('x' -> 'true').
+							('y' -> 'false')} asDictionary))
+		equals: false.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkScript new
+						generate: node
+						env:
+							{('x' -> 'true').
+							('y' -> 'true')} asDictionary))
+		equals: true.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkScript new
+						generate: node
+						env:
+							{('x' -> 'false').
+							('y' -> 'true')} asDictionary))
+		equals: true.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkScript new
+						generate: node
+						env:
+							{('x' -> 'false').
+							('y' -> 'false')} asDictionary))
+		equals: true.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkScript new
+						generate: node
+						env:
+							{('x' -> 'false').
+							('y' -> self undefined)} asDictionary))
+		equals: true.
+	self
+		should: [ 
+			Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkScript new
+						generate: node
+						env:
+							{('x' -> 'true').
+							('y' -> self undefined)} asDictionary) ]
+		raise: ViennaUndefinedEvaluationError
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testInSetEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '1 in set {1,2}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'InSet'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: true.
+	node := ViennaVDMParser new expression end parse: '0 in set {1,2}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'InSet'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: false
+]
+
+{ #category : #'tests-code generation-statements' }
+ViennaVDM2SmalltalkScriptTest >> testIndexForLoop [
+	| node |
+	node := ViennaVDMParser new statement end parse: 'for i = 1 to 10 by 2 do x := x + i'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'IndexForLoop'.
+	self
+		assert: (Compiler evaluate: '|x| x:= 0.' , (ViennaVDM2SmalltalkScript new generate: node) , '.x')
+		equals: 1 + 3 + 5 + 7 + 9
+]
+
+{ #category : #'tests-code generation-types' }
+ViennaVDM2SmalltalkScriptTest >> testInmapTypeEnv [
+	| node |
+	node := ViennaVDMParser new type end parse: 'inmap nat to int'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'InmapType'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node))
+		equals: (ViennaType nat inmapTo: ViennaType int)
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testIotaExpressionEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'iota x in set {3, 4} & x mod 2 = 1'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'IotaExpression'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: 3.
+	node := ViennaVDMParser new expression end parse: 'iota x in set {2, 4} & x mod 2 = 1'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'IotaExpression'.
+	self should: [ Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new) ] raise: ViennaNoMatch
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testIsBasicExpressionEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'is_nat(1)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'IsBasicExpression'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: true.
+	node := ViennaVDMParser new expression end parse: 'is_nat(-1)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'IsBasicExpression'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: false
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testIsNameExpressionEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'is_T(1)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'IsNameExpression'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: {('T' -> 'ViennaType nat')} asDictionary))
+		equals: true.
+	node := ViennaVDMParser new expression end parse: 'is_T(-1)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'IsNameExpression'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: {('T' -> 'ViennaType nat')} asDictionary))
+		equals: false
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testIsNotYetSpecifiedEnv [
+	| node |
+	node := ViennaVDMParser new explicitFunctionDefinition end parse: 'f:t1->t2 f(x) == is not yet specified'.
+	self deny: node isPetitFailure.
+	node := node at: 6.
+	self assert: node label = 'IsNotYetSpecified'.
+	self
+		should: [ Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new) ]
+		raise: NotYetImplemented
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testIsSubclassResponsibilityEnv [
+	| node |
+	node := ViennaVDMParser new explicitFunctionDefinition end parse: 'f:t1->t2 f(x) == is subclass responsibility'.
+	self deny: node isPetitFailure.
+	node := node at: 6.
+	self assert: node label = 'IsSubclassResponsibility'.
+	self
+		should: [ Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new) ]
+		raise: SubclassResponsibility
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testIterateEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '{1|->2, 2|->3, 3|->4, 4|->5, 5|->1} ** 3'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'Iterate'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{(1 -> 4).
+			(2 -> 5).
+			(3 -> 1).
+			(4 -> 2).
+			(5 -> 3)} asDictionary
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testLambdaExpressionEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'lambda x:nat, mk_(y, z):nat*nat & x + y + z'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'LambdaExpression'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node) , ' value: 1 value: {2 . 3}') equals: 6
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testLessThanEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '1 < 0'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'LessThan'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: false.
+	node := ViennaVDMParser new expression end parse: '1 < 1'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'LessThan'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: false.
+	node := ViennaVDMParser new expression end parse: '1 < 2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'LessThan'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: true
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testLessThanOrEqualEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '1 <= 0'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'LessThanOrEqual'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: false.
+	node := ViennaVDMParser new expression end parse: '1 <= 1'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'LessThanOrEqual'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: true.
+	node := ViennaVDMParser new expression end parse: '1 <= 2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'LessThanOrEqual'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: true
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testLetBeExpressionEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'let x in set {1,2} be st x mod 2 = 0 in x + 1'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'LetBeExpression'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: 3
+]
+
+{ #category : #'tests-code generation-statements' }
+ViennaVDM2SmalltalkScriptTest >> testLetBeStatementEnv [
+	| node |
+	node := ViennaVDMParser new statement end parse: 'let x in set {1,2} be st x mod 2 = 0 in a := x + 1'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'LetBeStatement'.
+	self
+		assert: (Compiler evaluate: '|a|' , (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new) , '. a')
+		equals: 3
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testLetExpressionEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'let x:nat = y+1, y:nat = 2, f:nat->nat f(n)==n+1 in f(x * y)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'LetExpression'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: 7
+]
+
+{ #category : #'tests-code generation-statements' }
+ViennaVDM2SmalltalkScriptTest >> testLetStatementEnv [
+	| node |
+	node := ViennaVDMParser new statement end parse: 'let x:nat = y+1, y:nat = 2, f:nat->nat f(n)==n+1 in a:=f(x * y)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'LetStatement'.
+	self assert: (Compiler evaluate: '|a|' , (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new) , '.a') equals: 7
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testLocalNameEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'x'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'LocalName'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: {('x' -> '1')} asDictionary)) equals: 1
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testLogicalEquivalenceEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'x <=> y'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'LogicalEquivalence'.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkScript new
+						generate: node
+						env:
+							{('x' -> 'true').
+							('y' -> 'true')} asDictionary))
+		equals: true.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkScript new
+						generate: node
+						env:
+							{('x' -> 'true').
+							('y' -> 'false')} asDictionary))
+		equals: false.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkScript new
+						generate: node
+						env:
+							{('x' -> 'false').
+							('y' -> 'true')} asDictionary))
+		equals: false.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkScript new
+						generate: node
+						env:
+							{('x' -> 'false').
+							('y' -> 'false')} asDictionary))
+		equals: true.
+	self
+		should: [ 
+			Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkScript new
+						generate: node
+						env:
+							{('x' -> 'false').
+							('y' -> self undefined)} asDictionary) ]
+		raise: ViennaUndefinedEvaluationError.
+	self
+		should: [ 
+			Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkScript new
+						generate: node
+						env:
+							{('x' -> 'true').
+							('y' -> self undefined)} asDictionary) ]
+		raise: ViennaUndefinedEvaluationError
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testMapComprehensionEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '{i |-> i mod 5 + 1 | i in set {1,...,10} & i <= 5}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'MapComprehension'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{(1 -> 2).
+			(2 -> 3).
+			(3 -> 4).
+			(4 -> 5).
+			(5 -> 1)} asDictionary
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testMapDomainEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'dom {1|-><one>, 2|-><two>, 3|-><three>}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'MapDomain'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{1.
+			2.
+			3} asSet
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testMapDomainRestrictedByEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '{3} <-: {1|-><one>, 2|-><two>, 3|-><three>}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'MapDomainRestrictedBy'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{(1 -> #one).
+			(2 -> #two)} asDictionary
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testMapDomainRestrictedToEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '{2, 3} <: {1|-><one>, 2|-><two>, 3|-><three>}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'MapDomainRestrictedTo'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{(2 -> #two).
+			(3 -> #three)} asDictionary
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testMapEnumerationEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '{1|-><one>, 2|-><two>, 3|-><three>}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'MapEnumeration'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{(1 -> #one).
+			(2 -> #two).
+			(3 -> #three)} asDictionary
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testMapEnumerationPatternEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'def  { x |-> 1, 2 |-> y } = { 1 |-> 1, 2 |-> 2 } in x + y'.
+	self deny: node isPetitFailure.
+	self assert: node first first first label = 'MapEnumerationPattern'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: 3
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testMapInverseEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'inverse {1|-><one>, 2|-><two>, 3|-><three>}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'MapInverse'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{(#one -> 1).
+			(#two -> 2).
+			(#three -> 3)} asDictionary
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testMapMergeEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '{1|-><one>, 2|-><two>} munion {3|-><three>}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'MapMerge'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{(1 -> #one).
+			(2 -> #two).
+			(3 -> #three)} asDictionary
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testMapMunionPatternEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'def  { x|->y } munion { 10|->20 } = { 1 |-> 2, 10 |-> 20} in x + y'.
+	self deny: node isPetitFailure.
+	self assert: node first first first label = 'MapMunionPattern'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: 3
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testMapOrSequenceModifyEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '{1|-><one>, 2|-><two>, 3|->3} ++ {3|-><three>}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'MapOrSequenceModify'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{(1 -> #one).
+			(2 -> #two).
+			(3 -> #three)} asDictionary.
+	node := ViennaVDMParser new expression end parse: '[<one>, <two>, <many>] ++ {3|-><three>}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'MapOrSequenceModify'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{#one.
+			#two.
+			#three} asOrderedCollection
+]
+
+{ #category : #'tests-code generation-statements' }
+ViennaVDM2SmalltalkScriptTest >> testMapOrSequenceReferenceEnv [
+	| node |
+	node := ViennaVDMParser new statement end parse: 'x("key") := 1'.
+	self deny: node isPetitFailure.
+	self assert: node first label = 'MapOrSequenceReference'.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					'|x|x:={''key''->nil. 2 -> 2} asDictionary.' , (ViennaVDM2SmalltalkScript new generate: node) , '. {x at: ''key''. x at: 2}')
+		equals:
+			{1.
+			2}.
+	node := ViennaVDMParser new statement end parse: 'x(1) := 1'.
+	self deny: node isPetitFailure.
+	self assert: node first label = 'MapOrSequenceReference'.
+	self
+		assert:
+			(Compiler
+				evaluate: '|x|x:={nil . 2} asOrderedCollection.' , (ViennaVDM2SmalltalkScript new generate: node) , '. {x at: 1. x at: 2}')
+		equals:
+			{1.
+			2}
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testMapRangeEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'rng {1|-><one>, 2|-><two>, 3|-><three>}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'MapRange'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{#one.
+			#two.
+			#three} asSet
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testMapRangeRestrictedByEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '{1|-><one>, 2|-><two>, 3|-><three>} :-> {<three>}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'MapRangeRestrictedBy'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{(1 -> #one).
+			(2 -> #two)} asDictionary
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testMapRangeRestrictedToEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '{1|-><one>, 2|-><two>, 3|-><three>} :> {<one>, <two>}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'MapRangeRestrictedTo'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{(1 -> #one).
+			(2 -> #two)} asDictionary
+]
+
+{ #category : #'tests-code generation-types' }
+ViennaVDM2SmalltalkScriptTest >> testMapTypeEnv [
+	| node |
+	node := ViennaVDMParser new type end parse: 'map nat to int'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'MapType'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node))
+		equals: (ViennaType nat mapTo: ViennaType int)
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testMatchValueEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'def  ({10|->20}) munion { x|->y } = { 1 |-> 2, 10 |-> 20} in x + y'.
+	self deny: node isPetitFailure.
+	self assert: node first first first first label = 'MatchValue'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: 3
+]
+
+{ #category : #'tests-code generation-statements' }
+ViennaVDM2SmalltalkScriptTest >> testMultipleAssignStatementEnv [
+	| node |
+	node := ViennaVDMParser new statement end parse: 'atomic(x:= y; y:= x)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'MultipleAssignStatement'.
+	self
+		assert: (Compiler evaluate: '|x y| x := 1. y := 2. ' , (ViennaVDM2SmalltalkScript new generate: node) , '. {x . y}')
+		equals:
+			{2.
+			1}
+]
+
+{ #category : #'tests-code generation-statements' }
+ViennaVDM2SmalltalkScriptTest >> testNondeterministicStatementEnv [
+	| node |
+	node := ViennaVDMParser new statement end parse: '||(a := a union {1}, a := a union {2}, a := a union {3})'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'NondeterministicStatement'.
+	self
+		assert: (Compiler evaluate: '|a| a := Set new.' , (ViennaVDM2SmalltalkScript new generate: node) , '. a')
+		equals: #(1 2 3) asSet
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testNotEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'not true'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'Not'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: false.
+	node := ViennaVDMParser new expression end parse: 'not false'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'Not'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: true
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testNotEqualEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '1 <> 1'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'NotEqual'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: false.
+	node := ViennaVDMParser new expression end parse: '1 <> 2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'NotEqual'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: true
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testNotInSetEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '1 not in set {1,2}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'NotInSet'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: false.
+	node := ViennaVDMParser new expression end parse: '0 not in set {1,2}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'NotInSet'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: true
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testOldNameEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'x~'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'OldName'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: {('x~' -> '1')} asDictionary)) equals: 1
+]
+
+{ #category : #'tests-code generation-types' }
+ViennaVDM2SmalltalkScriptTest >> testOptionalTypeEnv [
+	| node |
+	node := ViennaVDMParser new type end parse: '[nat]'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'OptionalType'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node)) equals: ViennaType nat optional
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testOrEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'x or y'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'Or'.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkScript new
+						generate: node
+						env:
+							{('x' -> 'true').
+							('y' -> 'true')} asDictionary))
+		equals: true.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkScript new
+						generate: node
+						env:
+							{('x' -> 'true').
+							('y' -> 'false')} asDictionary))
+		equals: true.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkScript new
+						generate: node
+						env:
+							{('x' -> 'false').
+							('y' -> 'true')} asDictionary))
+		equals: true.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkScript new
+						generate: node
+						env:
+							{('x' -> 'false').
+							('y' -> 'false')} asDictionary))
+		equals: false.
+	self
+		should: [ 
+			Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkScript new
+						generate: node
+						env:
+							{('x' -> 'false').
+							('y' -> self undefined)} asDictionary) ]
+		raise: ViennaUndefinedEvaluationError.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkScript new
+						generate: node
+						env:
+							{('x' -> 'true').
+							('y' -> self undefined)} asDictionary))
+		equals: true
+]
+
+{ #category : #'tests-code generation-types' }
+ViennaVDM2SmalltalkScriptTest >> testPartialFunctionTypeEnv [
+	| node |
+	node := ViennaVDMParser new type end parse: 'nat * int -> real'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'PartialFunctionType'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node))
+		equals: ViennaType nat * ViennaType int -> ViennaType real
+]
+
+{ #category : #'tests-code generation-types' }
+ViennaVDM2SmalltalkScriptTest >> testProductTypeEnv [
+	| node |
+	node := ViennaVDMParser new type end parse: 'nat * int'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ProductType'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node)) equals: ViennaType nat * ViennaType int
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testProperSubsetEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '{1,2} psubset {1,2,3}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ProperSubset'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: true.
+	node := ViennaVDMParser new expression end parse: '{1,2} psubset {1,2}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ProperSubset'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: false.
+	node := ViennaVDMParser new expression end parse: '{1,2,3} psubset {1,2}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ProperSubset'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: false
+]
+
+{ #category : #'tests-code generation-types' }
+ViennaVDM2SmalltalkScriptTest >> testQuoteTypeEnv [
+	| node |
+	node := ViennaVDMParser new type end parse: '<quote>'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'QuoteType'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node)) equals: (ViennaType quote: #quote)
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testRecordConstructorEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'mk_T(1,2)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'RecordConstructor'.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkScript new
+						generate: node
+						env:
+							{('T'
+								->
+									(ViennaCompositeType
+										constructorName: 'T'
+										withAll:
+											{{'f1'.
+											false.
+											(ViennaType nat)}.
+											{'f2'.
+											false.
+											(ViennaType nat)}}) storeString)} asDictionary))
+		equals:
+			((ViennaComposite constructorName: 'T' with: 1 with: 2)
+				fieldNameAt: 1 put: 'f1';
+				fieldNameAt: 2 put: 'f2';
+				yourself)
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testRecordModifierEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'mu(mk_T(1,2), f1|->11, f2|->12)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'RecordModifier'.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkScript new
+						generate: node
+						env:
+							{('T'
+								->
+									(ViennaCompositeType
+										constructorName: 'T'
+										withAll:
+											{{'f1'.
+											false.
+											(ViennaType nat)}.
+											{'f2'.
+											false.
+											(ViennaType nat)}}) storeString)} asDictionary))
+		equals:
+			((ViennaComposite constructorName: 'T' with: 11 with: 12)
+				fieldNameAt: 1 put: 'f1';
+				fieldNameAt: 2 put: 'f2';
+				yourself)
+]
+
+{ #category : #'tests-code generation-patterns' }
+ViennaVDM2SmalltalkScriptTest >> testRecordPatternEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'def  mk_T(x, y) = mk_T(1, 2) in x + y'.
+	self deny: node isPetitFailure.
+	self assert: node first first first label = 'RecordPattern'.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkScript new
+						generate: node
+						env:
+							{('T' -> '(ViennaType compose: ''T'' of: {{nil. false. (ViennaType nat)}. {nil. false. (ViennaType nat)}})')}
+								asDictionary))
+		equals: 3
+]
+
+{ #category : #'tests-code generation-types' }
+ViennaVDM2SmalltalkScriptTest >> testRecordTypeDefinitionEnv [
+	| node |
+	node := ViennaVDMParser new recordTypeDefinition end parse: 'T :: x:nat y:-int char'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'RecordTypeDefinition'.
+	self
+		assert: (Compiler evaluate: '| T |' , (ViennaVDM2SmalltalkScript new generate: node))
+		equals:
+			(ViennaType
+				compose: 'T'
+				of:
+					{{'x'.
+					false.
+					(ViennaType nat)}.
+					{'y'.
+					true.
+					(ViennaType int)}.
+					{nil.
+					false.
+					(ViennaType char)}})
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testResultExpressionEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'RESULT'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ResultExpression'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: {('RESULT' -> '1')} asDictionary))
+		equals: 1
+]
+
+{ #category : #'tests-code generation-statements' }
+ViennaVDM2SmalltalkScriptTest >> testReturnStatementEnv [
+	| node |
+	node := ViennaVDMParser new statement end parse: 'return 1'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ReturnStatement'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node)) equals: 1
+]
+
+{ #category : #'tests-code generation-types' }
+ViennaVDM2SmalltalkScriptTest >> testSeq1TypeEnv [
+	| node |
+	node := ViennaVDMParser new type end parse: 'seq1 of nat'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'Seq1Type'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node)) equals: ViennaType nat seq1
+]
+
+{ #category : #'tests-code generation-patterns' }
+ViennaVDM2SmalltalkScriptTest >> testSeqConcPatternEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'def  [x]^[y] = [1, 2] in x + y'.
+	self deny: node isPetitFailure.
+	self assert: node first first first label = 'SeqConcPattern'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: 3
+]
+
+{ #category : #'tests-code generation-patterns' }
+ViennaVDM2SmalltalkScriptTest >> testSeqEnumPatternEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'def  [x, y] = [1, 2] in x + y'.
+	self deny: node isPetitFailure.
+	self assert: node first first first label = 'SeqEnumPattern'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: 3
+]
+
+{ #category : #'tests-code generation-types' }
+ViennaVDM2SmalltalkScriptTest >> testSeqTypeEnv [
+	| node |
+	node := ViennaVDMParser new type end parse: 'seq of nat'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SeqType'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node)) equals: ViennaType nat seq
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testSequenceComprehensionEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '[i*2| i in set {1,...,5}]'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SequenceComprehension'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{2.
+			4.
+			6.
+			8.
+			10} asOrderedCollection.
+	node := ViennaVDMParser new expression end parse: '[i*2| i in set {1,...,5} & i mod 2 = 0]'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SequenceComprehension'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{4.
+			8} asOrderedCollection.
+	node := ViennaVDMParser new expression end parse: '[i*2| i in set {1,2,3,4,5}]'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SequenceComprehension'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{2.
+			4.
+			6.
+			8.
+			10} asOrderedCollection.
+	node := ViennaVDMParser new expression end parse: '[i*2| i in set {1,2,3,4,5} & i mod 2 = 0]'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SequenceComprehension'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{4.
+			8} asOrderedCollection
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testSequenceConcatenateEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '[1,2,3]^[4,5,6]'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SequenceConcatenate'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{1.
+			2.
+			3.
+			4.
+			5.
+			6} asOrderedCollection
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testSequenceElementsEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'elems [4,5,6]'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SequenceElements'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{4.
+			5.
+			6} asSet
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testSequenceEnumerationEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '[4,5,6]'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SequenceEnumeration'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{4.
+			5.
+			6} asOrderedCollection
+]
+
+{ #category : #'tests-code generation-statements' }
+ViennaVDM2SmalltalkScriptTest >> testSequenceForLoopEnv [
+	| node |
+	node := ViennaVDMParser new statement end parse: 'for i in [5,6,7] do x := x + i'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SequenceForLoop'.
+	self assert: (Compiler evaluate: '|x|x:=0.' , (ViennaVDM2SmalltalkScript new generate: node) , '. x') equals: 18.
+	node := ViennaVDMParser new statement end parse: 'for mk_(i,j) in [mk_(1, 2), mk_(2, 3)] do x := x + i*j'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SequenceForLoop'.
+	self assert: (Compiler evaluate: '|x|x:=0.' , (ViennaVDM2SmalltalkScript new generate: node) , '. x') equals: 8
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testSequenceHeadEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'hd [4,5,6]'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SequenceHead'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: 4
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testSequenceIndicesEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'inds [4,5,6]'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SequenceIndices'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{1.
+			2.
+			3} asSet
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testSequenceLengthEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'len [4,5,6]'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SequenceLength'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: 3
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testSequenceReverseEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'reverse [4,5,6]'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SequenceReverse'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{6.
+			5.
+			4} asOrderedCollection
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testSequenceTailEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'tl [4,5,6]'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SequenceTail'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{5.
+			6} asOrderedCollection
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testSetCardinalityEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'card {4, 5, 6}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SetCardinality'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: 3
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testSetComprehensionEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '{i*j| i, j in set {1,...,5} & i mod 2 = 0 and j mod 2 = 0}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SetComprehension'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{4.
+			8.
+			16} asSet.
+	node := ViennaVDMParser new expression end parse: '{i*j| mk_(i,j) in set { mk_(1, 2), mk_(2, 3), mk_(3, 4) } & i <= 2}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SetComprehension'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{2.
+			6} asSet
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testSetDifferenceEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '{1,2,3} \ {2, 3, 4}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SetDifference'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: {1} asSet
+]
+
+{ #category : #'tests-code generation-patterns' }
+ViennaVDM2SmalltalkScriptTest >> testSetEnumPatternEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'def  { x, y } = { 1, 2 } in x + y'.
+	self deny: node isPetitFailure.
+	self assert: node first first first label = 'SetEnumPattern'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: 3
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testSetEnumerationEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '{4,5,6}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SetEnumeration'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{4.
+			5.
+			6} asSet
+]
+
+{ #category : #'tests-code generation-statements' }
+ViennaVDM2SmalltalkScriptTest >> testSetForLoopEnv [
+	| node |
+	node := ViennaVDMParser new statement end parse: 'for all i in set {5,6,7} do x := x + i'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SetForLoop'.
+	self assert: (Compiler evaluate: '|x|x:=0.' , (ViennaVDM2SmalltalkScript new generate: node) , '. x') equals: 18.
+	node := ViennaVDMParser new statement end parse: 'for all mk_(i, j) in set {mk_(1, 2), mk_(2, 3)} do x := x + i*j'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SetForLoop'.
+	self assert: (Compiler evaluate: '|x|x:=0.' , (ViennaVDM2SmalltalkScript new generate: node) , '. x') equals: 8.
+	node := ViennaVDMParser new statement end parse: 'for all s in set power { 1,...,3 } do x := x + 1'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SetForLoop'.
+	self assert: (Compiler evaluate: '|x|x:=0.' , (ViennaVDM2SmalltalkScript new generate: node) , '. x') equals: 8
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testSetIntersectionEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '{1,2,3} inter {2, 3, 4}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SetIntersection'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{2.
+			3} asSet
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testSetRangeExpressionEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '{1,...,4}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SetRangeExpression'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{1.
+			2.
+			3.
+			4} asSet
+]
+
+{ #category : #'tests-code generation-types' }
+ViennaVDM2SmalltalkScriptTest >> testSetTypeEnv [
+	| node |
+	node := ViennaVDMParser new type end parse: 'set of nat'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SetType'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node)) equals: ViennaType nat set
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testSetUnionEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '{1,2,3} union {2, 3, 4}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SetUnion'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{1.
+			2.
+			3.
+			4} asSet
+]
+
+{ #category : #'tests-code generation-patterns' }
+ViennaVDM2SmalltalkScriptTest >> testSetUnionPatternEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'def  { x } union { y } = { 1, 2 } in x + y'.
+	self deny: node isPetitFailure.
+	self assert: node first first first label = 'SetUnionPattern'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: 3
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testSubsequenceEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '[4,5,6,7,8](2,...,4)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'Subsequence'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{5.
+			6.
+			7} asOrderedCollection
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testSubsetEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '{1,2} subset {1,2,3}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'Subset'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: true.
+	node := ViennaVDMParser new expression end parse: '{1,2} subset {1,2}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'Subset'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: true.
+	node := ViennaVDMParser new expression end parse: '{1,2,3} subset {1,2}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'Subset'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: false
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testTokenConstructorEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'mk_token(1)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'TokenConstructor'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals: (ViennaToken with: 1)
+]
+
+{ #category : #'tests-code generation-types' }
+ViennaVDM2SmalltalkScriptTest >> testTotalFunctionTypeEnv [
+	| node |
+	node := ViennaVDMParser new type end parse: 'nat * int +> real'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'TotalFunctionType'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node))
+		equals: ViennaType nat * ViennaType int +> ViennaType real
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testTupleConstructorEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'mk_(1,2,3)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'TupleConstructor'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{1.
+			2.
+			3}
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testTuplePatternEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'def  mk_(x, y) = mk_(1, 2) in x + y'.
+	self deny: node isPetitFailure.
+	self assert: node first first first label = 'TuplePattern'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: 3
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testTupleSelectEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'mk_(4, 5, 6).#2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'TupleSelect'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: 5
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testTypeJudgementEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'is_(1, nat)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'TypeJudgement'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: true.
+	node := ViennaVDMParser new expression end parse: 'is_(-1, nat)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'TypeJudgement'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: false
+]
+
+{ #category : #'tests-code generation-types' }
+ViennaVDM2SmalltalkScriptTest >> testTypeNameEnv [
+	| node |
+	node := ViennaVDMParser new type end parse: 't'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'TypeName'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: {('t' -> 'ViennaType nat')} asDictionary))
+		equals: ViennaType nat
+]
+
+{ #category : #'tests-code generation-types' }
+ViennaVDM2SmalltalkScriptTest >> testTypeVariableEnv [
+	| node |
+	node := ViennaVDMParser new type end parse: '@t'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'TypeVariable'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: {('@t' -> 'ViennaType nat')} asDictionary))
+		equals: ViennaType nat
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testUnaryMinusEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '-1'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'UnaryMinus'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: -1
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testUnaryPlusEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: '+1'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'UnaryPlus'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: 1
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkScriptTest >> testUndefinedExpressionEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'undefined'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'UndefinedExpression'.
+	self
+		should: [ Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new) ]
+		raise: ViennaUndefinedEvaluationError
+]
+
+{ #category : #'tests-code generation-types' }
+ViennaVDM2SmalltalkScriptTest >> testUnionTypeEnv [
+	| node |
+	node := ViennaVDMParser new type end parse: 'nat | int'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'UnionType'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node)) equals: ViennaType nat | ViennaType int
+]
+
+{ #category : #'tests-code generation-statements' }
+ViennaVDM2SmalltalkScriptTest >> testWhileLoopEnv [
+	| node |
+	node := ViennaVDMParser new statement end parse: 'while i <= 7 do (x := x + i; i := i + 1)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'WhileLoop'.
+	self assert: (Compiler evaluate: '|i x|i := 5. x:=0.' , (ViennaVDM2SmalltalkScript new generate: node) , '. x') equals: 18
+]
+
+{ #category : #private }
+ViennaVDM2SmalltalkScriptTest >> undefined [
+	^ ViennaVDM2SmalltalkScript new generate: (ViennaVDMParser new expression parse: 'undefined')
+]
