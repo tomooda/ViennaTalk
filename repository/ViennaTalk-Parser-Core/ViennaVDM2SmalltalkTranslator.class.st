@@ -315,7 +315,8 @@ ViennaVDM2SmalltalkTranslator >> defExpression [
 									| left right |
 									left := def first.
 									right := def second.
-									self binder: left second with: right vars: left first ])) , ' ifFalse: [ViennaNoMatch signal].' , expr , '] value' ]
+									self binder: left second with: right vars: left first ])) , ' ifFalse: [ViennaNoMatch signal].' , expr
+				, '] value' ]
 ]
 
 { #category : #'parsers-statements' }

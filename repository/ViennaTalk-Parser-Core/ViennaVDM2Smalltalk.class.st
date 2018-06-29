@@ -215,8 +215,9 @@ ViennaVDM2Smalltalk >> conditionalExpression: aViennaNode env: aDictionary [
 
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> defExpression: aViennaNode env: aDictionary [
-	| defs expr vars |
-	defs := self generate: aViennaNode first env: aDictionary.
+	| definitionList defs expr vars |
+	definitionList := ViennaNode label: aViennaNode first label withAll: (self reorderDefinitions: aViennaNode first).
+	defs := self generate: definitionList env: aDictionary.
 	expr := self generate: aViennaNode second env: aDictionary.
 	vars := Array new: defs size streamContents: [ :stream | defs do: [ :def | stream nextPutAll: def first first ] ].
 	^ '[|' , (' ' join: vars) , '|'
@@ -559,7 +560,7 @@ ViennaVDM2Smalltalk >> iterate: aViennaNode env: aDictionary [
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> lambdaExpression: aViennaNode env: aDictionary [
 	| patterns body varGenerator vars |
-	patterns := self generate: aViennaNode first env: aDictionary.
+	patterns := (self generate: aViennaNode first env: aDictionary) collect: #first.
 	body := self generate: aViennaNode second env: aDictionary.
 	varGenerator := self varNameGenerator: 'lmd' uniqueIn: (Array with: body).
 	vars := patterns collect: [ :p | varGenerator value ].
@@ -966,6 +967,32 @@ ViennaVDM2Smalltalk >> recordPattern: aViennaNode env: aDictionary [
 	('(ViennaRuntimeUtil matchRecord: ' , constructorName storeString , ' args: {' , (' . ' join: args) , '})')}
 ]
 
+{ #category : #private }
+ViennaVDM2Smalltalk >> reorderDefinitions: aCollectionOfViennaNode [
+	| originalDefs env boundVars freeVars newDefs |
+	originalDefs := Array withAll: aCollectionOfViennaNode.
+	env := Dictionary new.
+	boundVars := (originalDefs
+		collect: [ :def | 
+			| binds |
+			binds := Set new.
+			self boundVariables: def into: binds.
+			def -> binds asArray ]) asDictionary.
+	freeVars := (originalDefs collect: [ :def | def -> (self freeVariables: def env: env) asArray ]) asDictionary.
+	newDefs := OrderedCollection new: originalDefs size.
+	[ originalDefs notEmpty ]
+		whileTrue: [ 
+			| allBoundVars index |
+			allBoundVars := Set new: 1024.
+			originalDefs do: [ :def | allBoundVars addAll: (boundVars at: def) ].
+			index := (1 to: originalDefs size)
+				detect: [ :i | ((freeVars at: (originalDefs at: i)) contains: [ :var | allBoundVars includes: var ]) not ]
+				ifNone: [ ^ self error: 'Cyclic definition' ].
+			newDefs add: (originalDefs at: index).
+			originalDefs := originalDefs copyWithoutIndex: index ].
+	^ newDefs asArray
+]
+
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> reqExpression: aViennaNode env: aDictionary [
 	^ self notYetImplemented
@@ -1108,7 +1135,7 @@ ViennaVDM2Smalltalk >> sequenceTail: aViennaNode env: aDictionary [
 
 { #category : #'code generation-patterns' }
 ViennaVDM2Smalltalk >> setBind: aViennaNode env: aDictionary [
-	^ self generateAll: aViennaNode env: aDictionary
+	^ self generate: aViennaNode first env: aDictionary
 ]
 
 { #category : #'code generation-expressions' }
@@ -1275,7 +1302,7 @@ ViennaVDM2Smalltalk >> tupleSelect: aViennaNode env: aDictionary [
 
 { #category : #'code generation-patterns' }
 ViennaVDM2Smalltalk >> typeBind: aViennaNode env: aDictionary [
-	^ self generateAll: aViennaNode env: aDictionary
+	^ self generate: aViennaNode first env: aDictionary
 ]
 
 { #category : #'code generation-patterns' }
