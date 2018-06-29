@@ -548,6 +548,77 @@ ConfigurationOfViennaTalk >> baseline07: spec [
 
 ]
 
+{ #category : #baselines }
+ConfigurationOfViennaTalk >> baseline08: spec [
+	<version: '0.8-baseline'>
+
+	spec for: #'common' do: [
+		spec blessing: #'baseline'.
+		spec repository: 'http://smalltalkhub.com/mc/tomooda/ViennaTalk/main/'.
+		spec 
+			project: 'NeoJSON' with: [
+				spec
+					className: #ConfigurationOfNeoJSON;
+					versionString: #'stable';
+					repository: 'http://smalltalkhub.com/mc/Pharo/MetaRepoForPharo40/main/' ];
+			project: 'OSProcess' with: [
+				spec
+					className: #ConfigurationOfOSProcess;
+					versionString: #'stable';
+					repository: 'http://smalltalkhub.com/mc/Pharo/MetaRepoForPharo40/main/' ];
+			project: 'ZincHTTPComponents' with: [
+				spec
+					className: #ConfigurationOfZincHTTPComponents;
+					versionString: #'stable';
+					repository: 'http://smalltalkhub.com/mc/Pharo/Pharo40/main';
+					repository: 'http://smalltalkhub.com/mc/Pharo/Pharo40Inbox/main' ];
+			project: 'PetitParser' with: [
+				spec
+					className: #ConfigurationOfPetitParser;
+					versionString: #'stable';
+					repository: 'http://smalltalkhub.com/mc/Pharo/MetaRepoForPharo40/main/' ].
+		spec 
+			package: #'ViennaTalk-Engine-Core' with: [
+				spec requires: #('NeoJSON' 'OSProcess' 'ZincHTTPComponents' ). ];
+			package: #'ViennaTalk-Engine-Tests' with: [
+				spec requires: #(#'ViennaTalk-Engine-Core' ). ];
+			package: #'ViennaTalk-Value-Core';
+			package: #'ViennaTalk-VDMC-Core' with: [
+				spec requires: #(#'ViennaTalk-Engine-Core' #'ViennaTalk-Value-Core' ). ];
+			package: #'ViennaTalk-VDMC-Tests' with: [
+				spec requires: #(#'ViennaTalk-VDMC-Core' ). ];
+			package: #'ViennaTalk-Value-Tests' with: [
+				spec requires: #(#'ViennaTalk-Value-Core' ). ];
+			package: 'ViennaTalk-Html-Core' with: [
+				spec requires: #('PetitParser' ). ];
+			package: #'ViennaTalk-VDMPad-Core' with: [
+				spec requires: #(#'ViennaTalk-Engine-Core' 'NeoJSON' 'ZincHTTPComponents' ). ];
+			package: 'ViennaTalk-Browser-Core' with: [
+				spec requires: #(#'ViennaTalk-VDMC-Core' #'ViennaTalk-Value-Core' ). ];
+			package: 'ViennaTalk-LivelyWalkThrough-Widgets' with: [
+				spec requires: #(#'ViennaTalk-Value-Core' ). ];
+			package: 'ViennaTalk-LivelyWalkThrough-Core' with: [
+				spec requires: #('ViennaTalk-LivelyWalkThrough-Widgets' #'ViennaTalk-VDMC-Core' 'ViennaTalk-Browser-Core' ). ];
+			package: #'ViennaTalk-Type-Core';
+			package: #'ViennaTalk-Parser-Core' with: [
+				spec requires: #(#'ViennaTalk-Value-Core' #'ViennaTalk-Type-Core' ). ];
+			package: #'ViennaTalk-Parser-UI' with: [
+				spec requires: #(#'ViennaTalk-Parser-Core' ). ];
+			package: 'ViennaTalk-Parser-Tests' with: [
+				spec requires: #(#'ViennaTalk-Parser-Core' #'ViennaTalk-Parser-UI' ). ];
+			package: #'ViennaTalk-Type-Tests' with: [
+				spec requires: #(#'ViennaTalk-Type-Core' ). ].
+		spec 
+			group: 'core' with: #(#'ViennaTalk-Engine-Core' #'ViennaTalk-Parser-Core' #'ViennaTalk-Parser-UI' );
+			group: 'VDMC' with: #('core' #'ViennaTalk-VDMC-Core' 'ViennaTalk-Browser-Core' );
+			group: 'VDMPad' with: #('core' 'ViennaTalk-Html-Core' #'ViennaTalk-VDMPad-Core' );
+			group: 'tests' with: #(#'ViennaTalk-Engine-Tests' #'ViennaTalk-VDMC-Tests' #'ViennaTalk-Value-Tests' 'ViennaTalk-Parser-Tests' #'ViennaTalk-Type-Tests' );
+			group: 'full' with: #('core' 'VDMC' 'VDMPad' 'LivelyWalkThrough' 'tests' );
+			group: 'default' with: #('full' );
+			group: 'LivelyWalkThrough' with: #('ViennaTalk-LivelyWalkThrough-Core' 'ViennaTalk-LivelyWalkThrough-Widgets' ). ].
+
+]
+
 { #category : #accessing }
 ConfigurationOfViennaTalk >> customProjectAttributes [
 	 "Edit to return a collection of any custom attributes e.g. for conditional loading: Array with: #'Condition1' with: #'Condition2.
@@ -560,7 +631,7 @@ ConfigurationOfViennaTalk >> customProjectAttributes [
 ConfigurationOfViennaTalk >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '0.7-baseline'.
+	spec for: #'common' version: '0.8-baseline'.
 
 ]
 
@@ -581,7 +652,7 @@ ConfigurationOfViennaTalk >> project [
 ConfigurationOfViennaTalk >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.14'.
+	spec for: #'common' version: '1.15'.
 
 ]
 
@@ -762,6 +833,40 @@ ConfigurationOfViennaTalk >> version114: spec [
 			package: #'ViennaTalk-Parser-UI' with: 'ViennaTalk-Parser-UI-tomooda.1';
 			package: 'ViennaTalk-Parser-Tests' with: 'ViennaTalk-Parser-Tests-tomooda.3';
 			package: #'ViennaTalk-Type-Core' with: 'ViennaTalk-Type-Core-tomooda.1'. ].
+
+]
+
+{ #category : #versions }
+ConfigurationOfViennaTalk >> version115: spec [
+	<version: '1.15' imports: #('0.8-baseline' )>
+
+	spec for: #'common' do: [
+		spec blessing: #'stable'.
+		spec description: 'version 1.15'.
+		spec author: 'tomooda'.
+		spec timestamp: '11/30/2015 15:20'.
+		spec 
+			project: 'NeoJSON' with: '11';
+			project: 'OSProcess' with: '4.6.4';
+			project: 'ZincHTTPComponents' with: '2.6.3';
+			project: 'PetitParser' with: '1.10'.
+		spec 
+			package: #'ViennaTalk-Engine-Core' with: 'ViennaTalk-Engine-Core-tomooda.18';
+			package: #'ViennaTalk-Engine-Tests' with: 'ViennaTalk-Engine-Tests-tomooda.4';
+			package: #'ViennaTalk-Value-Core' with: 'ViennaTalk-Value-Core-tomooda.16';
+			package: #'ViennaTalk-VDMC-Core' with: 'ViennaTalk-VDMC-Core-tomooda.8';
+			package: #'ViennaTalk-VDMC-Tests' with: 'ViennaTalk-VDMC-Tests-tomooda.2';
+			package: #'ViennaTalk-Value-Tests' with: 'ViennaTalk-Value-Tests-tomooda.11';
+			package: 'ViennaTalk-Html-Core' with: 'ViennaTalk-Html-Core-tomooda.4';
+			package: #'ViennaTalk-VDMPad-Core' with: 'ViennaTalk-VDMPad-Core-tomooda.11';
+			package: 'ViennaTalk-Browser-Core' with: 'ViennaTalk-Browser-Core-tomooda.14';
+			package: 'ViennaTalk-LivelyWalkThrough-Widgets' with: 'ViennaTalk-LivelyWalkThrough-Widgets-tomooda.17';
+			package: 'ViennaTalk-LivelyWalkThrough-Core' with: 'ViennaTalk-LivelyWalkThrough-Core-tomooda.15';
+			package: #'ViennaTalk-Type-Core' with: 'ViennaTalk-Type-Core-tomooda.3';
+			package: #'ViennaTalk-Parser-Core' with: 'ViennaTalk-Parser-Core-tomooda.11';
+			package: #'ViennaTalk-Parser-UI' with: 'ViennaTalk-Parser-UI-tomooda.2';
+			package: 'ViennaTalk-Parser-Tests' with: 'ViennaTalk-Parser-Tests-tomooda.4';
+			package: #'ViennaTalk-Type-Tests' with: 'ViennaTalk-Type-Tests-tomooda.1'. ].
 
 ]
 
