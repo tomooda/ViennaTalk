@@ -278,6 +278,21 @@ ViennaVDMParser >> equiv: arg1 and: arg2 [
 	^ ViennaNode label: 'LogicalEquivalence' with: arg1 with: arg2
 ]
 
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> error [
+	^ super error ==> [ :array | ViennaNode label: 'Error' withAll: array ]
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> errorList [
+	^ super errorList ==> [ :array | ViennaNode label: 'ErrorList' withAll: array ]
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> exceptions [
+	^ super exceptions ==> [ :errorList | ViennaNode label: 'Exceptions' with: errorList ]
+]
+
 { #category : #'parsers-expressions-basics' }
 ViennaVDMParser >> exists1Expression [
 	^ super exists1Expression ==> [ :array | ViennaNode label: 'Exists1Expression' withAll: array ]
@@ -331,6 +346,17 @@ ViennaVDMParser >> expressionList [
 ViennaVDMParser >> extendedExplicitFunctionDefinition [
 	^ super extendedExplicitFunctionDefinition
 		==> [ :array | ViennaNode label: 'ExtendedExplicitFunctionDefinition' withAll: array ]
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> extendedExplicitOperationDefinition [
+	^ super extendedExplicitOperationDefinition
+		==> [ :array | ViennaNode label: 'ExtendedExplicitOperationDefinition' withAll: array ]
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> externals [
+	^ super externals ==> [ :array | ViennaNode label: 'Externals' withAll: array ]
 ]
 
 { #category : #'parsers-types' }
@@ -491,6 +517,18 @@ ViennaVDMParser >> identifiedField [
 			fieldType} ]
 ]
 
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> identifierTypePair [
+	^ super identifierTypePair
+		==> [ :pair | ViennaNode label: 'IdentifierTypePair' withAll: pair ]
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> identifierTypePairList [
+	^ super identifierTypePairList
+		==> [ :array | ViennaNode label: 'IdentifierTypePairList' withAll: array ]
+]
+
 { #category : #'parsers-statements' }
 ViennaVDMParser >> identityStatement [
 	^ super identityStatement ==> [ :ignore | ViennaNode label: 'IdentityStatement' ]
@@ -530,6 +568,16 @@ ViennaVDMParser >> imp: arg1 and: arg2 [
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> implicitFunctionDefinition [
 	^ super implicitFunctionDefinition ==> [ :array | ViennaNode label: 'ImplicitFunctionDefinition' withAll: array ]
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> implicitOperationBody [
+	^ super implicitOperationBody ==> [ :array | ViennaNode label: 'ImplicitOperationBody' withAll: array ]
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> implicitOperationDefinition [
+	^ super implicitOperationDefinition ==> [ :array | ViennaNode label: 'ImplicitOperationDefinition' withAll: array ]
 ]
 
 { #category : #'parsers-interfaces' }
@@ -951,6 +999,11 @@ ViennaVDMParser >> othersStatement [
 ]
 
 { #category : #'parsers-definitions' }
+ViennaVDMParser >> parameterTypes [
+	^ super parameterTypes ==> [ :n | ViennaNode label: 'ParameterTypes' with: n ]
+]
+
+{ #category : #'parsers-definitions' }
 ViennaVDMParser >> parameters [
 	^ super parameters ==> [ :array | ViennaNode label: 'Parameters' withAll: array ]
 ]
@@ -973,6 +1026,12 @@ ViennaVDMParser >> patternIdentifier [
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> patternList [
 	^ super patternList ==> [ :array | ViennaNode label: 'PatternList' withAll: array ]
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> patternTypePairList [
+	^ super patternTypePairList
+		==> [ :array | ViennaNode label: 'PatternTypePairList' withAll: array ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -1376,6 +1435,11 @@ ViennaVDMParser >> valueSignature [
 { #category : #'parsers-interfaces' }
 ViennaVDMParser >> valuesSignature [
 	^ super valuesSignature ==> [ :array | ViennaNode label: 'ValuesSignature' withAll: array ]
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> varInformation [
+	^ super varInformation ==> [ :array | ViennaNode label: 'VarInformation' withAll: array ]
 ]
 
 { #category : #'parsers-expressions-threads' }

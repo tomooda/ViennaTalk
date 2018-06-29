@@ -206,6 +206,25 @@ ViennaNode >> hasDescendantSuchThat: aBlock [
 	^ false
 ]
 
+{ #category : #controlling }
+ViennaNode >> ifEmpty: aBlock [
+	^ self isEmpty
+		ifTrue: [ aBlock cull: self ]
+		ifFalse: [ self ]
+]
+
+{ #category : #controlling }
+ViennaNode >> ifNotEmpty: aBlock [
+	^ self isEmpty
+		ifTrue: [ self ]
+		ifFalse: [ aBlock cull: self ]
+]
+
+{ #category : #testing }
+ViennaNode >> isEmpty [
+	^ self size = 0
+]
+
 { #category : #accessing }
 ViennaNode >> label [
 	^ label
@@ -219,6 +238,11 @@ ViennaNode >> module [
 { #category : #accessing }
 ViennaNode >> ninth [
 	^ self at: 9
+]
+
+{ #category : #testing }
+ViennaNode >> notEmpty [
+	^ self isEmpty not
 ]
 
 { #category : #accessing }
