@@ -2262,8 +2262,7 @@ ViennaVDM2Smalltalk >> multipleAssignStatement: aViennaNode env: aDictionary [
 			(self generate: assign second env: aDictionary)} ].
 	^ assigns size < 2
 		ifTrue: [ PPFailure message: 'atom statement should have more than one statements' ]
-		ifFalse: [ 
-			| varGenerator tmps |
+		ifFalse: [ | varGenerator tmps |
 			varGenerator := self varNameGenerator: 'atom' uniqueIn: (assigns collect: #second).
 			tmps := assigns collect: [ :assign | varGenerator value ].
 			String
@@ -2290,24 +2289,17 @@ ViennaVDM2Smalltalk >> multipleAssignStatement: aViennaNode env: aDictionary [
 							| desig |
 							desig := assign first.
 							desig isString
-								ifTrue: [ 
-									stream
-										nextPutAll: desig;
-										nextPutAll: ' := ';
-										nextPutAll: tmp;
+								ifTrue: [ stream
+										nextPutAll: (self noCheckAssignment: desig be: tmp);
 										nextPutAll: '. ' ]
-								ifFalse: [ 
-									| ident path |
+								ifFalse: [ | ident path |
 									ident := desig first.
 									path := desig second.
 									stream
-										nextPutAll: ident;
-										nextPutAll: ' := ';
-										nextPutAll: ident;
-										nextPutAll: ' copyAtPath: {';
-										nextPutAll: (' . ' join: path);
-										nextPutAll: '} put: ';
-										nextPutAll: tmp;
+										nextPutAll:
+											(self
+												noCheckAssignment: ident
+												be: ident , ' copyAtPath: {' , (' . ' join: path) , '} put: ' , tmp);
 										nextPutAll: '. ' ] ].
 					stream nextPutAll: '] value' ] ]
 ]
@@ -2325,6 +2317,11 @@ ViennaVDM2Smalltalk >> multipleSetBind: aViennaNode env: aDictionary [
 { #category : #'code generation-patterns' }
 ViennaVDM2Smalltalk >> multipleTypeBind: aViennaNode env: aDictionary [
 	^ self generateAll: aViennaNode env: aDictionary
+]
+
+{ #category : #'code generation-definitions' }
+ViennaVDM2Smalltalk >> noCheckAssignment: aVarName be: aValString [
+	^ self subclassResponsibility
 ]
 
 { #category : #'code generation-statements' }
@@ -2965,9 +2962,7 @@ ViennaVDM2Smalltalk >> stateDefinition: aViennaNode env: aDictionary [
 				with: vals
 				do: [ :var :val | 
 					stream
-						nextPutAll: var;
-						nextPutAll: ' := ';
-						nextPutAll: val;
+						nextPutAll: (self noCheckAssignment: var be: val);
 						nextPutAll: '.' , String cr ] ]).
 	(String
 		new: 1024

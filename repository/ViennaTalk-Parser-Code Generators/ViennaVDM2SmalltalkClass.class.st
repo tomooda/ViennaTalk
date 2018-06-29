@@ -1005,6 +1005,11 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 		ifFalse: [ self defineMethod: 'init' in: newClass protocol: 'state' ]
 ]
 
+{ #category : #'code generation-definitions' }
+ViennaVDM2SmalltalkClass >> noCheckAssignment: aVarName be: aValString [
+	^ 'self instVarNamed: ' , aVarName storeString , ' put: ' , aValString
+]
+
 { #category : #'code generation-interfaces' }
 ViennaVDM2SmalltalkClass >> operationImport: aViennaNode env: aDictionary [
 	| moduleName |

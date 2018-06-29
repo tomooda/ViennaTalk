@@ -70,6 +70,11 @@ ViennaVDM2SmalltalkScript >> modularDocument: aViennaNode env: aDictionary [
 ]
 
 { #category : #'code generation-definitions' }
+ViennaVDM2SmalltalkScript >> noCheckAssignment: aVarName be: aValString [
+	^ aVarName , ' := ', aValString
+]
+
+{ #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkScript >> operationDefinitions: aViennaNode env: aDictionary [
 	^ '.' , String cr join: (aViennaNode collect: [ :node | self generate: node env: aDictionary ])
 ]
