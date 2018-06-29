@@ -46,6 +46,66 @@ ViennaBrowser class >> autoFormat: aBoolean [
 	AutoFormat := aBoolean ~= false
 ]
 
+{ #category : #menu }
+ViennaBrowser class >> codePaneMenu: aBuilder [
+	<contextMenu>
+	<viennaBrowserCodePaneMenu>
+	(aBuilder item: #'Find...' translated)
+		keyText: 'f';
+		selector: #find;
+		icon: Smalltalk ui icons smallFindIcon.
+	(aBuilder item: #'Find again' translated)
+		keyText: 'g';
+		selector: #findAgain;
+		icon: Smalltalk ui icons smallFindIcon.
+	(aBuilder item: #'Set search string' translated)
+		keyText: 'h';
+		selector: #setSearchString;
+		withSeparatorAfter.
+	(aBuilder item: #'Do again' translated)
+		keyText: 'j';
+		selector: #again;
+		icon: Smalltalk ui icons smallRedoIcon.
+	(aBuilder item: #Undo translated)
+		keyText: 'z';
+		selector: #undo;
+		icon: Smalltalk ui icons smallUndoIcon;
+		withSeparatorAfter.
+	(aBuilder item: #Copy translated)
+		keyText: 'c';
+		selector: #copySelection;
+		icon: Smalltalk ui icons smallCopyIcon.
+	(aBuilder item: #Cut translated)
+		keyText: 'x';
+		selector: #cut;
+		icon: Smalltalk ui icons smallCutIcon.
+	(aBuilder item: #Paste translated)
+		keyText: 'v';
+		selector: #paste;
+		icon: Smalltalk ui icons smallPasteIcon.
+	(aBuilder item: #'Paste...' translated)
+		selector: #pasteRecent;
+		icon: Smalltalk ui icons smallPasteIcon;
+		withSeparatorAfter.
+	(aBuilder item: #Format translated)
+		keyText: 'F';
+		selector: #prettyPrint;
+		withSeparatorAfter.
+	(aBuilder item: #'Do it' translated)
+		keyText: 'd';
+		selector: #codePaneDoIt.
+	(aBuilder item: #'Print it' translated)
+		keyText: 'p';
+		selector: #codePanePrintIt;
+		withSeparatorAfter.
+	(aBuilder item: #Accept translated)
+		keyText: 's';
+		selector: #accept.
+	(aBuilder item: #Cancel translated)
+		keyText: 'l';
+		selector: #cancel
+]
+
 { #category : #defaults }
 ViennaBrowser class >> defaultFormatWidth [
 	^ 65
@@ -408,53 +468,7 @@ ViennaBrowser >> codePaneDoIt [
 
 { #category : #'code pane menu' }
 ViennaBrowser >> codePaneMenu: aMenu shifted: aBoolean [
-	aMenu target: self.
-	aMenu
-		addList:
-			{{('copy (c)' translated).
-			#copySelection}.
-			{('cut (x)' translated).
-			#cut}.
-			{('paste (v)' translated).
-			#paste}.
-			{('paste...' translated).
-			#pasteRecent}.
-			#-.
-			{('find...(f)' translated).
-			#find}.
-			{('find again (g)' translated).
-			#findAgain}.
-			{('set search string (h)' translated).
-			#setSearchString}.
-			#-.
-			{('undo (z)' translated).
-			#undo}.
-			#-.
-			{('format (F)' translated).
-			#prettyPrint}}.
-	aMenu
-		addToggle: 'syntax highlighting'
-		target: codePane
-		selector: #toggleHighlighting
-		getStateSelector: #highlightingEnabled.
-	aMenu
-		addList:
-			{{('format (F)' translated).
-			#prettyPrint}.
-			#-.
-			{('template (T)' translated).
-			#template}.
-			#-.
-			{('do it (d)' translated).
-			#codePaneDoIt}.
-			{('print it (p)' translated).
-			#codePanePrintIt}.
-			#-.
-			{('accept (s)' translated).
-			#accept}.
-			{('cancel (l)' translated).
-			#cancel}}.
-	^ aMenu
+	^ aMenu addAllFromPragma: 'viennaBrowserCodePaneMenu' target: self
 ]
 
 { #category : #'code pane menu' }
