@@ -88,6 +88,16 @@ LWTWidget >> director [
 ]
 
 { #category : #drawing }
+LWTWidget >> drawHighlightedOn: aCanvas [
+	self director
+		ifNotNil: [ :d | 
+			d
+				selectedWidgetsDo: [ :morph | 
+					self == morph
+						ifTrue: [ aCanvas frameRectangle: (self bounds insetBy: -1) width: 3 color: Color blue ] ] ]
+]
+
+{ #category : #drawing }
 LWTWidget >> drawOn: aCanvas [
 	self showsName
 		ifTrue: [ 
@@ -95,7 +105,8 @@ LWTWidget >> drawOn: aCanvas [
 				drawString: self name
 				at: self position + self nameOffset
 				font: self nameFont
-				color: self nameColor ]
+				color: self nameColor ].
+	self drawHighlightedOn: aCanvas
 ]
 
 { #category : #operations }
@@ -202,7 +213,7 @@ LWTWidget >> makeUniqueName [
 	[ 
 	uniqueName := prefix , (random nextInt: 999999) printString.
 	(self director ifNil: [ World ])
-		findDeepSubmorphThat: [ :m | m ~~ self and: [ m name = uniqueName ] ]
+		findDeepSubmorphThat: [ :m | m ~~ self and: [ (m isKindOf: LWTWidget) and: [ m name = uniqueName ] ] ]
 		ifAbsent: [ ^ uniqueName ] ] repeat
 ]
 

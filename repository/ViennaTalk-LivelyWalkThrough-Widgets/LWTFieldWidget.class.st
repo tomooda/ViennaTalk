@@ -135,7 +135,7 @@ LWTFieldWidget >> defaultContents [
 
 { #category : #defaults }
 LWTFieldWidget >> defaultExtent [
-	^ 200 @ 60
+	^ 200 @ 68
 ]
 
 { #category : #defaults }
@@ -188,12 +188,17 @@ LWTFieldWidget >> layoutFrameForTextPane [
 	^ self showsDiagram
 		ifTrue: [ 
 			(LayoutFrame fractions: (0 @ 0 corner: 1 @ 0))
+				leftOffset: 3;
+				rightOffset: -3;
 				topOffset: self textOffset y;
 				bottomOffset: self textOffset y + self textExtent y;
 				yourself ]
 		ifFalse: [ 
 			(LayoutFrame fractions: (0 @ 0 corner: 1 @ 1))
+				leftOffset: 3;
+				rightOffset: -3;
 				topOffset: self textOffset y;
+				bottomOffset: -3;
 				yourself ]
 ]
 
@@ -232,7 +237,7 @@ LWTFieldWidget >> showsDiagram [
 
 { #category : #geometry }
 LWTFieldWidget >> textExtent [
-	^ self width @ 50
+	^ self width - 6 @ 50
 ]
 
 { #category : #accessing }
@@ -249,7 +254,7 @@ LWTFieldWidget >> textFont: aFont [
 
 { #category : #geometry }
 LWTFieldWidget >> textOffset [
-	^ 0
+	^ 3
 		@
 			(self nameOffset y
 				+
