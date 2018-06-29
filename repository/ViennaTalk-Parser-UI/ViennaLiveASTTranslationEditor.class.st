@@ -30,6 +30,13 @@ ViennaLiveASTTranslationEditor class >> viennaDevMenuOn: aBuilder [
 		icon: nil
 ]
 
+{ #category : #private }
+ViennaLiveASTTranslationEditor >> createTranslator [
+	| parser |
+	parser := ViennaVDMParser new.
+	^ parser document end / parser statement end / parser expression end
+]
+
 { #category : #accessing }
 ViennaLiveASTTranslationEditor >> defaultTitle [
 	^ 'VDM -> AST'
@@ -44,9 +51,4 @@ ViennaLiveASTTranslationEditor >> format: aViennaNode [
 ViennaLiveASTTranslationEditor >> initializeWidgets [
 	super initializeWidgets.
 	targetText help: 'AST'
-]
-
-{ #category : #'class access' }
-ViennaLiveASTTranslationEditor >> translatorClass [
-	^ ViennaVDMParser
 ]

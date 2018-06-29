@@ -138,6 +138,11 @@ ViennaLiveSmalltalkTranslationEditor >> codeTextMenu [
 	^ self class codeTextMenuFor: self
 ]
 
+{ #category : #private }
+ViennaLiveSmalltalkTranslationEditor >> createTranslator [
+	^ ViennaVDM2SmalltalkTranslator new document end
+]
+
 { #category : #accessing }
 ViennaLiveSmalltalkTranslationEditor >> defaultTitle [
 	^ 'VDM -> Smalltalk'
@@ -200,11 +205,6 @@ ViennaLiveSmalltalkTranslationEditor >> translateIt [
 		textChanged;
 		scrollSelectionIntoView.
 	^ true
-]
-
-{ #category : #'class access' }
-ViennaLiveSmalltalkTranslationEditor >> translatorClass [
-	^ ViennaVDM2SmalltalkTranslator
 ]
 
 { #category : #evaluating }

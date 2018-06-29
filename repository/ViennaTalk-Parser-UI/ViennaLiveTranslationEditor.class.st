@@ -100,6 +100,11 @@ ViennaLiveTranslationEditor class >> sourceTextMenuOn: aBuilder [
 		withSeparatorAfter
 ]
 
+{ #category : #private }
+ViennaLiveTranslationEditor >> createTranslator [
+	^ self subclassResponsibility
+]
+
 { #category : #accessing }
 ViennaLiveTranslationEditor >> defaultTitle [
 	^ self subclassResponsibility
@@ -178,12 +183,7 @@ ViennaLiveTranslationEditor >> translate: aTextOrString ifError: errorBlock [
 
 { #category : #accessing }
 ViennaLiveTranslationEditor >> translator [
-	^ translator ifNil: [ translator := self translatorClass new document end ]
-]
-
-{ #category : #accessing }
-ViennaLiveTranslationEditor >> translatorClass [
-	^ self subclassResponsibility
+	^ translator ifNil: [ translator := self createTranslator ]
 ]
 
 { #category : #evaluating }
