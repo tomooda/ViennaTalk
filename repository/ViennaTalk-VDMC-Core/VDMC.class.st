@@ -13,6 +13,13 @@ Class {
 }
 
 { #category : #'instance creation' }
+VDMC class >> client [
+	^ self new
+		engine: ViennaClient default;
+		yourself
+]
+
+{ #category : #'instance creation' }
 VDMC class >> default [
 	^ self new
 		engine: ViennaEngine default;
