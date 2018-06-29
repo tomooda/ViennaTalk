@@ -2027,6 +2027,21 @@ ViennaAbstractFormatter >> sequenceTail: aViennaNode [
 	^ 'tl ' , (self format: aViennaNode first)
 ]
 
+{ #category : #'symbol access' }
+ViennaAbstractFormatter >> set1Postfix [
+	^ ''
+]
+
+{ #category : #'symbol access' }
+ViennaAbstractFormatter >> set1Prefix [
+	^ 'set1 of '
+]
+
+{ #category : #'formatting-types' }
+ViennaAbstractFormatter >> set1Type: aViennaNode [
+	^ self set1Prefix, (self format: aViennaNode first) , self set1Postfix
+]
+
 { #category : #'formatting-patterns and binds' }
 ViennaAbstractFormatter >> setBind: aViennaNode [
 	^ self print: (self format: aViennaNode first) infix: self inset arg: (self format: aViennaNode second)
