@@ -38,20 +38,21 @@ ViennaLiveTranslationEditor >> initializeWidgets [
 	sourceText autoAccept: true.
 	sourceText
 		whenTextChanged: [ :source | 
-			process ifNotNil: [ process terminate ].
-			process := [ 
 			[ 
+			| failure |
+			failure := nil.
 			targetText
 				accept:
 					(self
 						translate: source
 						ifError: [ :error | 
-							[ sourceText text: (sourceText text in: [ :t | t addAttribute: TextColor red from: error position + 1 to: t size ]) ]
-								fork.
+							failure := error.
 							'' ])
-				notifying: nil ]
+				notifying: nil.
+			failure
+				ifNotNil: [ sourceText text: (source addAttribute: TextColor red from: failure position + 1 to: source size) ] ]
 				on: Error
-				do: [ :ex |  ] ] forkAt: Processor userBackgroundPriority ].
+				do: [ :ex |  ] ].
 	targetText := self newText.
 	self title: self defaultTitle
 ]
