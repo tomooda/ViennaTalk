@@ -7,7 +7,8 @@ Class {
 		'imageWidget',
 		'buttonWidget',
 		'padWidget',
-		'areaWidget'
+		'areaWidget',
+		'remoteWidget'
 	],
 	#category : 'ViennaTalk-LivelyWalkThrough-Core'
 }
@@ -66,7 +67,10 @@ LWTWidgetDispenser >> handleMouseDown: aMouseEvent [
 	(padWidget bounds containsPoint: point)
 		ifTrue: [ LWTMouseSensor pad openInHand ].
 	(areaWidget bounds containsPoint: point)
-		ifTrue: [ LWTMouseSensor area openInHand ]
+		ifTrue: [ LWTMouseSensor area openInHand ].
+	(remoteWidget bounds containsPoint: point)
+		ifTrue: [ LWTRemoteWidget new openInHand ].
+
 ]
 
 { #category : #'event handling' }
@@ -101,7 +105,8 @@ LWTWidgetDispenser >> initialize [
 	self addMorphBack: self imageWidget.
 	self addMorphBack: self buttonWidget.
 	self addMorphBack: self padWidget.
-	self addMorphBack: self areaWidget
+	self addMorphBack: self areaWidget.
+	self addMorphBack: self remoteWidget
 ]
 
 { #category : #accessing }
@@ -138,5 +143,17 @@ LWTWidgetDispenser >> plotWidget [
 				nameFont: self nameFontForWidgets;
 				extent: 80 @ 80;
 				data: ((0 to: 5) collect: [ :t | t asFloat sin negated ]);
+				yourself ]
+]
+
+{ #category : #accessing }
+LWTWidgetDispenser >> remoteWidget [
+	^ remoteWidget
+		ifNil: [ 
+			remoteWidget := LWTRemoteWidget new
+				freeze;
+				name: 'Remote';
+				nameColor: Color black;
+				nameFont: self nameFontForWidgets;
 				yourself ]
 ]

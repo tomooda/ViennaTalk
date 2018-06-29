@@ -4,6 +4,9 @@ Class {
 	#instVars : [
 		'director'
 	],
+	#classVars : [
+		'Server'
+	],
 	#category : 'ViennaTalk-LivelyWalkThrough-Core'
 }
 
@@ -53,7 +56,8 @@ LivelyWalkThrough >> build [
 	utilsPane
 		addLazyPage: self buildWidgetDispenserPane label: 'Widgets';
 		addLazyPage: self buildVDMBrowserPane label: 'VDM';
-		addLazyPage: self buildLivetalkBrowserPane label: 'Livetalk'.
+		addLazyPage: self buildLivetalkBrowserPane label: 'Livetalk';
+		addLazyPage: self buildSettingsPane label: 'Settings'.
 	utilsPane selectedPageIndex: 1.
 	pane
 		addMorph: self director
@@ -74,6 +78,36 @@ LivelyWalkThrough >> build [
 { #category : #'user interface' }
 LivelyWalkThrough >> buildLivetalkBrowserPane [
 	^ (LWTLivetalkBrowser on: self director) build
+]
+
+{ #category : #'user interface' }
+LivelyWalkThrough >> buildSettingsPane [
+	| pane item |
+	pane := Morph new.
+	pane
+		color: Color white;
+		changeTableLayout;
+		listDirection: #toToBottom.
+	item := Morph new.
+	item
+		color: Color white;
+		changeTableLayout;
+		listDirection: #leftToRight;
+		hResizing: #spaceFill;
+		vResizing: #shrinkWrap.
+	item
+		addMorphBack:
+				(' name ' asMorph
+						hResizing: #rigid;
+						yourself);
+		addMorphBack:
+				((PluggableTextMorph on: self director text: #urlPrefix accept: #acceptUrlPrefix:)
+						autoAccept: true;
+						extent: 100 @ (TextStyle default defaultFont height * 2);
+						hResizing: #spaceFill;
+						yourself).
+	pane addMorphBack: item.
+	^ pane
 ]
 
 { #category : #'user interface' }

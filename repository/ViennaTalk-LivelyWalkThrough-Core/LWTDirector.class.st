@@ -8,7 +8,11 @@ Class {
 		'lastFrame',
 		'cuts',
 		'scripts',
-		'dependents'
+		'dependents',
+		'urlPrefix'
+	],
+	#classVars : [
+		'Server'
 	],
 	#category : 'ViennaTalk-LivelyWalkThrough-Core'
 }
@@ -18,9 +22,35 @@ LWTDirector class >> default [
 	^ self on: VDMC default
 ]
 
+{ #category : #servicing }
+LWTDirector class >> defaultPort [
+	^ 8086
+]
+
+{ #category : #servicing }
+LWTDirector class >> flushServer [
+	"LWTDirector flushServer"
+
+	Server
+		ifNotNil: [ 
+			Server stop.
+			Server unregister.
+			Server := nil ]
+]
+
 { #category : #'instance creation' }
 LWTDirector class >> on: aVDMC [
 	^ self new vdmc: aVDMC
+]
+
+{ #category : #servicing }
+LWTDirector class >> server [
+	^ Server
+		ifNil: [ 
+			Server := (ZnMultiThreadedServer on: self defaultPort)
+				register;
+				start;
+				yourself ]
 ]
 
 { #category : #'instance creation' }
@@ -35,6 +65,12 @@ LWTDirector >> abort: aString [
 	[ context receiver isKindOf: LWTAction ] whileFalse: [ context := context sender ].
 	UIManager default abort: aString title: 'Lively Walk-Through: ' , context receiver name.
 	context return: nil
+]
+
+{ #category : #accessing }
+LWTDirector >> acceptUrlPrefix: aTextOrString [
+	self urlPrefix: aTextOrString asString trim.
+	^ true
 ]
 
 { #category : #dependents }
@@ -99,6 +135,12 @@ LWTDirector >> cutNames [
 { #category : #defaults }
 LWTDirector >> defaultVDMC [
 	^ VDMC vdmj
+]
+
+{ #category : #private }
+LWTDirector >> delete [
+	super delete.
+	self releaseHandlers
 ]
 
 { #category : #drawing }
@@ -217,9 +259,20 @@ LWTDirector >> myDependents: aCollectionOrNil [
 	dependents := aCollectionOrNil
 ]
 
+{ #category : #private }
+LWTDirector >> privateDelete [
+	super privateDelete.
+	self releaseHandlers
+]
+
 { #category : #'accessing-frames and cuts' }
 LWTDirector >> recordEvent: aSymbol at: aMorph [
 	self addFrame: (LWTEventFrame morphName: aMorph name event: aSymbol)
+]
+
+{ #category : #'initialize-release' }
+LWTDirector >> releaseHandlers [
+	Server ifNotNil: [ Server delegate prefixMap keysAndValuesRemove: [ :key :value | value == self ] ]
 ]
 
 { #category : #'accessing-frames and cuts' }
@@ -283,6 +336,41 @@ LWTDirector >> specification [
 { #category : #accessing }
 LWTDirector >> specification: aString [
 	self vdmc specification: aString
+]
+
+{ #category : #accessing }
+LWTDirector >> urlPrefix [
+	^ urlPrefix ifNil: [ String new ]
+]
+
+{ #category : #accessing }
+LWTDirector >> urlPrefix: aString [
+	urlPrefix ~= aString
+		ifTrue: [ 
+			self releaseHandlers.
+			urlPrefix := aString.
+			urlPrefix ifNotEmpty: [ self class server delegate map: urlPrefix to: self ].
+			self changed: #urlPrefix ]
+]
+
+{ #category : #'request handling' }
+LWTDirector >> value: aZnRequest [
+	^ (aZnRequest uri segments ifNotNil: [ :segments | segments at: 2 ifAbsent: [  ] ])
+		ifNil: [ ZnResponse notFound: aZnRequest uri ]
+		ifNotNil: [ :widgetName | 
+			(self morphNamed: widgetName ifAbsent: [  ])
+				ifNil: [ ZnResponse notFound: aZnRequest uri ]
+				ifNotNil: [ :morph | 
+					aZnRequest entity
+						ifNotNil: [ :entity | 
+							ZnResponse
+								ok:
+									(ZnEntity
+										text:
+											(morph
+												value: entity contents;
+												value)) ]
+						ifNil: [ ZnResponse ok: (ZnEntity text: morph value) ] ] ]
 ]
 
 { #category : #'accessing-morphs' }
