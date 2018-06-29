@@ -903,7 +903,7 @@ ViennaVDM2Smalltalk >> explicitOperationDefinition: aViennaNode env: aDictionary
 											nil}.
 											{(ViennaNode label: 'PatternIdentifier' with: '_oldState').
 											nil}}
-								body: (self generate: preNode env: env)
+								body: (self generate: postNode env: env)
 								varGenerator: varGenerator
 								env: env);
 						nextPutAll: '. ' ].
