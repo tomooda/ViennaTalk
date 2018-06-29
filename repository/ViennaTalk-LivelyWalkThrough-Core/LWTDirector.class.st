@@ -20,7 +20,7 @@ Class {
 
 { #category : #'instance creation' }
 LWTDirector class >> default [
-	^ self on: VDMC default
+	^ self on: ViennaAnimation default
 ]
 
 { #category : #servicing }
@@ -56,7 +56,7 @@ LWTDirector class >> server [
 
 { #category : #'instance creation' }
 LWTDirector class >> vdmj [
-	^ self on: VDMC vdmj
+	^ self on: ViennaAnimation vdmj
 ]
 
 { #category : #dialogs }
@@ -151,7 +151,7 @@ LWTDirector >> cutNames [
 
 { #category : #defaults }
 LWTDirector >> defaultVDMC [
-	^ VDMC vdmj
+	^ ViennaAnimation vdmj
 ]
 
 { #category : #private }
