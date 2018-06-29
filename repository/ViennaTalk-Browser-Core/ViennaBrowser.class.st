@@ -11,7 +11,6 @@ Class {
 		'codePane',
 		'selectedModule',
 		'selectedField',
-		'timeOfLastStateUpdate',
 		'codeSelection',
 		'valueSelection'
 	],
@@ -33,15 +32,6 @@ ViennaBrowser class >> openOn: aVDMC withLabel: label [
 	^ self new
 		vdmc: aVDMC;
 		openLabel: label
-]
-
-{ #category : #'value pane menu' }
-ViennaBrowser >> accept: aTextOrString [
-	selectedModule
-		ifNil: [ ^ false ]
-		ifNotNil: [ :module | selectedField ifNil: [ ^ false ] ifNotNil: [ vdmc plainAt: module , '`' , selectedField put: aTextOrString asString ] ].
-	self updateContents.
-	^ true
 ]
 
 { #category : #'value pane' }
@@ -327,11 +317,6 @@ ViennaBrowser >> codeSelection: aSelection [
 	codeSelection := aSelection
 ]
 
-{ #category : #defaults }
-ViennaBrowser >> defaultBackgroundColor [
-	^ Color blue
-]
-
 { #category : #private }
 ViennaBrowser >> doItIn: aPluggableTextMorph [ 
 	valuePane
@@ -386,12 +371,6 @@ ViennaBrowser >> fieldSelectionIndex [
 { #category : #'field list' }
 ViennaBrowser >> fieldSelectionIndex: anInteger [
 	self selectFieldNamed: (self fieldList at: anInteger ifAbsent: [])
-]
-
-{ #category : #'initialize-release' }
-ViennaBrowser >> initialize [
-	super initialize.
-	timeOfLastStateUpdate := Time millisecondClockValue
 ]
 
 { #category : #'module list' }
@@ -605,7 +584,6 @@ ViennaBrowser >> selectFieldNamed: aString [
 ViennaBrowser >> selectModuleNamed: aString [ 
 	selectedModule := (self moduleList includes: aString)
 				ifTrue: [aString].
-	self updateState.
 	selectedField := nil.
 	self changed: #moduleSelectionIndex.
 	self changed: #fieldList.
@@ -622,54 +600,6 @@ ViennaBrowser >> selectedField [
 { #category : #'module list' }
 ViennaBrowser >> selectedModule [
 	^ selectedModule
-]
-
-{ #category : #stepping }
-ViennaBrowser >> stepAt: millisecondClockValue in: aWindow [
-	millisecondClockValue - self timeOfLastStateUpdate > (1000.0 / self updateFrequency)
-		ifTrue: [ 
-			self updateState.
-			self updateContents.
-			timeOfLastStateUpdate := millisecondClockValue ]
-]
-
-{ #category : #stepping }
-ViennaBrowser >> stepTime [
-	^ 10
-]
-
-{ #category : #stepping }
-ViennaBrowser >> stepTimeIn: aMorph [
-	^ self stepTime
-]
-
-{ #category : #stepping }
-ViennaBrowser >> timeOfLastStateUpdate [
-	^ timeOfLastStateUpdate
-		ifNil: [Time millisecondClockValue]
-]
-
-{ #category : #stepping }
-ViennaBrowser >> updateFrequency [
-	^ 10.0
-]
-
-{ #category : #private }
-ViennaBrowser >> updateState [
-	"| newState |
-	newState := (vdmj
-				ifNotNil: [selectedModule
-						ifNotNil: [vdmj stateAt: selectedModule]])
-				ifNil: [Array new].
-	newState ~= state
-		ifTrue: [state := newState.
-			self updateContents.
-			self changed: #moduleList.
-			self changed: #moduleSelectionIndex.
-			self changed: #fieldList.
-			self changed: #fieldSelectionIndex.
-			self changed: #contents.
-			self changed: #state]"
 ]
 
 { #category : #'value pane' }
@@ -701,7 +631,7 @@ ViennaBrowser >> value [
 
 { #category : #'value pane menu' }
 ViennaBrowser >> valuePaneAccept [
-	^ self accept: valuePane text asString
+	^ self acceptValue: valuePane text asString
 ]
 
 { #category : #'value pane menu' }
@@ -774,9 +704,4 @@ ViennaBrowser >> vdmc [
 { #category : #accessing }
 ViennaBrowser >> vdmc: aVDMC [
 	vdmc := aVDMC
-]
-
-{ #category : #stepping }
-ViennaBrowser >> wantsSteps [
-	^ true
 ]
