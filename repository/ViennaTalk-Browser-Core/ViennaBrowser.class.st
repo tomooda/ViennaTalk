@@ -122,6 +122,35 @@ ViennaBrowser class >> initialize [
 	Smalltalk at: #ViennaLauncher ifPresent: [ :launcherClass | launcherClass reopen ]
 ]
 
+{ #category : #menu }
+ViennaBrowser class >> moduleListMenu: aBuilder [
+	<contextMenu>
+	<viennaBrowserModuleListMenu>
+	(aBuilder item: #'new and load...' translated) selector: #newAndLoadFromFile.
+	(aBuilder item: #'load and merge...' translated) selector: #loadAndMergeFromFile.
+	(aBuilder item: #'save all modules...' translated) selector: #saveAllModulesToFile.
+	aBuilder model selectedModule
+		ifNotNil: [ (aBuilder item: #'save the module...' translated) selector: #saveAModuleToFile ].
+	aBuilder items last withSeparatorAfter.
+	(aBuilder item: #'remove module' translated)
+		selector: #removeModulel;
+		withSeparatorAfter.
+	(aBuilder item: #'generate a Smalltalk script (single module)...' translated) selector: #generateSmalltalkScript.
+	(aBuilder item: #'generate classes (all modules)...' translated) selector: #generateSmalltalkClasses.
+	(aBuilder item: #'generate object (all modules)...' translated)
+		selector: #generateSmalltalkObject;
+		withSeparatorAfter.
+	aBuilder model importerModules
+		ifNotEmpty: [ :modules | 
+			(aBuilder item: #'imported by...' translated)
+				with: [ 
+					modules
+						do: [ :module | 
+							(aBuilder item: module asSymbol)
+								selector: #selectModuleNamed:;
+								arguments: (Array with: module asString) ] ] ]
+]
+
 { #category : #'instance creation' }
 ViennaBrowser class >> on: aVDMC [
 	^ self new vdmc: aVDMC
@@ -635,25 +664,7 @@ ViennaBrowser >> moduleList [
 
 { #category : #'module list menu' }
 ViennaBrowser >> moduleListMenu: aMenu [
-	| referenceSubMenu |
-	aMenu add: 'new and load...' translated selector: #newAndLoadFromFile.
-	aMenu add: 'load and merge...' translated selector: #loadAndMergeFromFile.
-	aMenu add: 'save all modules...' translated selector: #saveAllModulesToFile.
-	self selectedModule ifNotNil: [ aMenu add: 'save the module...' translated selector: #saveAModuleToFile ].
-	aMenu addLine.
-	aMenu add: 'remove module' translated selector: #removeModule.
-	aMenu addLine.
-	aMenu add: 'generate a Smalltalk script (single module)...' translated selector: #generateSmalltalkScript.
-	aMenu add: 'generate classes (all modules)...' translated selector: #generateSmalltalkClasses.
-	aMenu add: 'generate object (all modules)...' translated selector: #generateSmalltalkObject.
-	referenceSubMenu := MenuMorph new defaultTarget: self.
-	self importerModules do: [ :name | referenceSubMenu add: name selector: #selectModuleNamed: argument: name ].
-	referenceSubMenu hasItems
-		ifTrue: [ 
-			aMenu
-				addLine;
-				add: 'imported by...' translated subMenu: referenceSubMenu ].
-	^ aMenu
+	^ aMenu addAllFromPragma: 'viennaBrowserModuleListMenu' target: self
 ]
 
 { #category : #private }
