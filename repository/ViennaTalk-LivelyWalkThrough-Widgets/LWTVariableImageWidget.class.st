@@ -9,13 +9,6 @@ Class {
 	#category : 'ViennaTalk-LivelyWalkThrough-Widgets'
 }
 
-{ #category : #json }
-LWTVariableImageWidget class >> fromJsonObject: aDictionary on: aLWTDirector [
-	^ (super fromJsonObject: aDictionary on: aLWTDirector)
-		rawValue: (aDictionary at: '_rawValue');
-		yourself
-]
-
 { #category : #operations }
 LWTVariableImageWidget >> addImage [
 	| key |
@@ -72,7 +65,8 @@ LWTVariableImageWidget >> base64Forms: aDictionary [
 			newForms
 				at: (key ifEmpty: [ nil ])
 				put: (PNGReadWriter formFromStream: (Base64MimeConverter mimeDecodeToBytes: base64 readStream)) ].
-	forms := newForms
+	forms := newForms.
+	self updateImage
 ]
 
 { #category : #accessing }
