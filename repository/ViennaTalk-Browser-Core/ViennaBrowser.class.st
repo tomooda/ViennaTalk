@@ -20,6 +20,17 @@ Class {
 	#category : 'ViennaTalk-Browser-Core'
 }
 
+{ #category : #'world menu' }
+ViennaBrowser class >> VDMBrowserMenuOn: aBuilder [
+	<worldMenu>
+	(aBuilder item: #'VDM Browser')
+		action: [ self open ];
+		order: 0.48;
+		parent: #Tools;
+		help: 'VDM-SL browser';
+		icon: nil
+]
+
 { #category : #'instance creation' }
 ViennaBrowser class >> on: aVDMC [
 	^ self new vdmc: aVDMC
@@ -211,7 +222,7 @@ ViennaBrowser >> build [
 	codePane := self buildCodePane.
 	workspacePane := self buildWorkspacePane.
 	pane := BorderedMorph new.
-	pane extent: 400 @ 300.
+	pane extent: 600 @ 400.
 	pane color: Color transparent.
 	pane changeProportionalLayout.
 	upper := BorderedMorph new.
@@ -652,17 +663,18 @@ values
 functions
 	<funcname> : <arg type> -> <return type>
 	<funcname>(<arg>) == <expression>
-	pre <precondition>
-	post <postcondition>;
+	pre <boolean expression>
+	post <boolean expression>;
 state <State> of
 	<varname> : <type expression>
 init s == s = mk_<State>(<initial value>)
+inv mk_<State>(<varname>) == <boolean expression>
 end
 operations
 	<operation name> : <arg type> ==> <return type or ()>
 	<operation name>(<arg>) == <statement>
-	pre <precondition>
-	post <postcondition>;
+	pre <boolean expression>
+	post <boolean expression>;
 end <module name>
 ' asText makeAllColor: Color gray
 ]
