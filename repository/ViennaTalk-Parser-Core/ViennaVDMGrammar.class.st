@@ -991,24 +991,16 @@ ViennaVDMGrammar >> extendedExplicitFunctionDefinition [
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> extendedExplicitOperationDefinition [
 	^ identifier trim , self parameterTypes
-		, (self identifierTypePairList optional ==> [ :list | list ifNil: [ Array new ] ])
-		, (((self operator: '==') , self operationBody) ==> #second) , self externals optional
-		, ((self pre , expression) ==> #second) optional , ((self post , expression) ==> #second)
-		, self exceptions optional
+		, self identifierTypePairList optional
+		, (((self operator: '==') , self operationBody) ==> #second)
+		, self externals optional
+		, ((self pre , expression) ==> #second) optional
+		, ((self post , expression) ==> #second) , self exceptions optional
 ]
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> externals [
 	^ (self ext , self varInformation plus) ==> #second
-]
-
-{ #category : #'parsers-definitions' }
-ViennaVDMGrammar >> fff [
-	^ identifier trim , self parameterTypes
-		, (self identifierTypePairList optional ==> [ :list | list ifNil: [ Array new ] ])
-		, (((self operator: '==') , self operationBody) ==> #second)
-		, ((self pre , expression) ==> #second) optional , ((self post , expression) ==> #second)
-		, ((self errs , self exceptions) ==> #second) optional
 ]
 
 { #category : #'parsers-types' }
@@ -1246,14 +1238,16 @@ ViennaVDMGrammar >> identifierTypePair [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> identifierTypePairList [
-	^ (identifier trim , colon , type separatedBy: comma) withoutSeparators
+	^ (identifier trim , colon , type separatedBy: comma) withoutSeparators optional
 		==> [ :triples | 
-			| array |
-			array := Array new: triples size * 2.
-			1 to: triples size do: [ :index | 
-				array at: index * 2 - 1 put: (triples at: index) first.
-				array at: index * 2 put: (triples at: index) third ].
-			array ]
+			triples
+				ifNil: [ Array new ]
+				ifNotNil: [ | array |
+					array := Array new: triples size * 2.
+					1 to: triples size do: [ :index | 
+						array at: index * 2 - 1 put: (triples at: index) first.
+						array at: index * 2 put: (triples at: index) third ].
+					array ] ]
 ]
 
 { #category : #'parsers-statements' }
@@ -1325,8 +1319,7 @@ ViennaVDMGrammar >> implicitOperationBody [
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> implicitOperationDefinition [
 	^ identifier trim , self parameterTypes
-		, (self identifierTypePairList optional ==> [ :list | list ifNil: [ Array new ] ])
-		, self implicitOperationBody
+		, self identifierTypePairList optional , self implicitOperationBody
 ]
 
 { #category : #'parsers-interfaces' }
@@ -1871,7 +1864,7 @@ ViennaVDMGrammar >> mod: arg1 and: arg2 [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> mode [
-	^ self rd / self wt
+	^ self rd / self wr
 ]
 
 { #category : #'parsers-definitions' }
@@ -2146,8 +2139,7 @@ ViennaVDMGrammar >> othersStatement [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> parameterTypes [
-	^ (lparen , self patternTypePairList optional , rparen)
-		==> [ :triple | triple second ifNil: [ Array new ] ]
+	^ (lparen , self patternTypePairList optional , rparen) ==> #second
 ]
 
 { #category : #'parsers-definitions' }
@@ -3041,6 +3033,6 @@ ViennaVDMGrammar >> whileLoop [
 ]
 
 { #category : #'parsers-keywords' }
-ViennaVDMGrammar >> wt [
-	^ self reserved: 'wt'
+ViennaVDMGrammar >> wr [
+	^ self reserved: 'wr'
 ]
