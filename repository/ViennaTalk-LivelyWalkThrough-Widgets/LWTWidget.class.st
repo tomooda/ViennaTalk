@@ -134,7 +134,7 @@ LWTWidget >> defaultNameColor [
 
 { #category : #defaults }
 LWTWidget >> defaultNameFont [
-	^ TextStyle default defaultFont
+	^ ViennaLauncher font
 ]
 
 { #category : #defaults }

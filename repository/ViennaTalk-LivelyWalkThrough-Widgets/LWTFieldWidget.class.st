@@ -191,7 +191,7 @@ LWTFieldWidget >> defaultExtent [
 
 { #category : #defaults }
 LWTFieldWidget >> defaultTextFont [
-	^ TextStyle default defaultFont
+	^ ViennaLauncher font
 ]
 
 { #category : #defaults }
