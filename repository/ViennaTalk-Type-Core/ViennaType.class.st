@@ -137,7 +137,7 @@ ViennaType >> > aViennaType [
 
 { #category : #comparing }
 ViennaType >> >= aViennaType [
-	^ self = aViennaType
+	^ self = aViennaType or: [ (aViennaType isKindOf: ViennaConstrainedType) and: [ self >= aViennaType basetype ] ]
 ]
 
 { #category : #enumerating }
@@ -185,6 +185,11 @@ ViennaType >> includes: anObject [
 { #category : #arithmetic }
 ViennaType >> inmapTo: aViennaType [
 	^ ViennaInmapType with: self with: aViennaType
+]
+
+{ #category : #arithmetic }
+ViennaType >> inv: aBlock [
+	^ ViennaConstrainedType with: self with: aBlock
 ]
 
 { #category : #testing }

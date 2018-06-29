@@ -22,6 +22,14 @@ ViennaCompositeType class >> precedence [
 	^ 6
 ]
 
+{ #category : #comparing }
+ViennaCompositeType >> = anObject [
+	^ self class = anObject class
+		and: [ 
+			constructorName = anObject constructorName
+				and: [ (1 to: self size) allSatisfy: [ :i | (self at: i) = (anObject at: i) ] ] ]
+]
+
 { #category : #'instance creation' }
 ViennaCompositeType >> applyTo: anArray [
 	^ self valueWithArguments: anArray
@@ -30,6 +38,11 @@ ViennaCompositeType >> applyTo: anArray [
 { #category : #accessing }
 ViennaCompositeType >> basetypeAt: anIndex [
 	^ (self at: anIndex) third
+]
+
+{ #category : #accessing }
+ViennaCompositeType >> constructorName [
+	^ constructorName
 ]
 
 { #category : #enumerating }
@@ -49,6 +62,11 @@ ViennaCompositeType >> fieldsCollect: aBlock [
 { #category : #private }
 ViennaCompositeType >> fieldsDo: aBlock [
 	1 to: self size do: [ :index | aBlock valueWithArguments: (self at: index) ]
+]
+
+{ #category : #comparing }
+ViennaCompositeType >> hash [
+	^ (1 to: self size) inject: constructorName hash into: [ :hash :field | hash bitXor: field hash ]
 ]
 
 { #category : #testing }

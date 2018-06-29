@@ -52,7 +52,7 @@ ViennaQuoteType >> name [
 
 { #category : #private }
 ViennaQuoteType >> setSymbol: aSymbol [
-	symbol := aSymbol
+	symbol := aSymbol asSymbol
 ]
 
 { #category : #private }
