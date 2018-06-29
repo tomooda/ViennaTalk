@@ -7,6 +7,72 @@ Class {
 	#category : 'ViennaTalk-Parser-Code Generators'
 }
 
+{ #category : #'code generation-statements' }
+ViennaVDM2SmalltalkClass >> callStatement: aViennaNode env: aDictionary [
+	| callee args |
+	callee := self generate: aViennaNode first env: aDictionary.
+	args := self generate: aViennaNode second env: aDictionary.
+	^ args
+		ifEmpty: [ callee , ': nil' ]
+		ifNotEmpty: [ callee , ': ' , args first , ('' join: ((2 to: args size) collect: [ :i | ' _: ' , (args at: i) ])) ]
+]
+
+{ #category : #utilities }
+ViennaVDM2SmalltalkClass >> closureFromMethodSource: aString binds: binds [
+	| header |
+	header := ((aString readStream upTo: Character cr) trim readStream upTo: $:) , ':'.
+	^ String
+		new: 1024
+		streamContents: [ :stream | 
+			stream nextPut: $[.
+			1 to: binds size do: [ :i | 
+				stream nextPutAll: ' :arg'.
+				i printOn: stream ].
+			stream space.
+			binds ifNotEmpty: [ stream nextPutAll: '| ' ].
+			stream nextPutAll: 'self '.
+			binds
+				ifEmpty: [ 
+					stream
+						nextPutAll: header;
+						nextPutAll: ' nil' ]
+				ifNotEmpty: [ 
+					stream
+						nextPutAll: header;
+						nextPutAll: ' arg1'.
+					2 to: binds size do: [ :i | 
+						stream nextPutAll: ' _: arg'.
+						i printOn: stream ] ].
+			stream nextPutAll: ']' ]
+]
+
+{ #category : #utilities }
+ViennaVDM2SmalltalkClass >> createDocumentClassWithInstVars: anArrayOfString [
+	| documentClassName |
+	documentClassName := self requestClassName: ''.
+	documentClassName ifNil: [ ^ nil ].
+	^ PharoClassInstaller
+		make: [ :builder | 
+			builder
+				name: documentClassName asSymbol;
+				superclass: Object;
+				slots: (anArrayOfString asArray collect: [ :instVarName | InstanceVariableSlot named: instVarName asSymbol ]);
+				category: 'Auto Generated from VDM' ]
+]
+
+{ #category : #utilities }
+ViennaVDM2SmalltalkClass >> createModuleClassWithInstVars: anArrayOfString forModule: aString env: aDictionary [
+	| className |
+	className := aDictionary at: aString ifAbsent: [ aString ].
+	^ PharoClassInstaller
+		make: [ :builder | 
+			builder
+				name: className asSymbol;
+				superclass: Object;
+				slots: (anArrayOfString asArray collect: [ :instVarName | InstanceVariableSlot named: instVarName asSymbol ]);
+				category: 'Auto Generated from VDM' ]
+]
+
 { #category : #utilities }
 ViennaVDM2SmalltalkClass >> defineLazyMethodNamed: selector initializer: initializer in: aClass protocol: protocol [
 	^ self
@@ -35,30 +101,54 @@ ViennaVDM2SmalltalkClass >> explicitFunctionDefinition: aViennaNode env: aDictio
 
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> explicitOperationDefinition: aViennaNode env: aDictionary [
-	| identifier initializer theClass |
-	identifier := aViennaNode first.
-	initializer := super explicitOperationDefinition: aViennaNode env: aDictionary.
+	| method opname typeNode paramsNode body varGenerator argTypeNode binds theClass |
+	opname := aViennaNode first.
+	typeNode := aViennaNode second.
+	paramsNode := aViennaNode fourth.
+	body := self generate: aViennaNode fifth env: aDictionary.
+	varGenerator := self
+		varNameGenerator: 'op'
+		uniqueIn:
+			{opname.
+			body}.
+	argTypeNode := typeNode first.
+	binds := argTypeNode label = 'UnitType'
+		ifTrue: [ {} ]
+		ifFalse: [ 
+			argTypeNode label = 'ProductType'
+				ifTrue: [ 
+					(1 to: argTypeNode size)
+						collect: [ :index | 
+							{(paramsNode at: index).
+							(argTypeNode at: index)} ] ]
+				ifFalse: [ 
+					{{(paramsNode first).
+					argTypeNode}} ] ].
+	method := self
+		methodFromOperation: opname
+		fromFlatBinds: binds
+		body: body
+		varGenerator: varGenerator
+		env: aDictionary.
 	theClass := classes at: (aViennaNode module ifNotNil: #first).
+	self defineMethod: method in: theClass protocol: 'operations'.
 	self
-		defineLazyMethodNamed: identifier
-		initializer: initializer
+		defineLazyMethodNamed: opname
+		initializer: opname , ' := ' , (self closureFromMethodSource: method binds: binds)
 		in: theClass
 		protocol: 'operations'
 ]
 
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> flatDocument: aViennaNode env: aDictionary [
-	| env className instVars newClass |
+	| env newClass |
 	env := aDictionary copy.
-	className := self requestClassName: ''.
-	className ifNil: [ ^ nil ].
+	newClass := self createDocumentClassWithInstVars: (self boundVariables: aViennaNode).
+	classes at: nil put: newClass.
 	aViennaNode
 		do: [ :definitionBlock | 
 			definitionBlock first label = 'StateDefinition'
 				ifFalse: [ (self boundVariables: definitionBlock) do: [ :ident | env at: ident put: 'self ' , ident ] ] ].
-	instVars := self boundVariables: aViennaNode.
-	newClass := Object subclass: className instanceVariableNames: (' ' join: instVars).
-	classes at: nil put: newClass.
 	self defineMethod: 'initialize super initialize. self init' in: newClass protocol: 'initialize-release'.
 	aViennaNode do: [ :definitionBlock | self definitionBlock: definitionBlock env: env ].
 	(newClass includesSelector: #init)
@@ -80,7 +170,7 @@ ViennaVDM2SmalltalkClass >> functionImport: aViennaNode env: aDictionary [
 ViennaVDM2SmalltalkClass >> globalName: aViennaNode env: aDictionary [
 	^ aDictionary
 		at: aViennaNode first , '`' , aViennaNode second
-		ifAbsent: [ aViennaNode first , String space , aViennaNode second ]
+		ifAbsent: [ (aDictionary at: aViennaNode first ifAbsent: [ aViennaNode first ]) , String space , aViennaNode second ]
 ]
 
 { #category : #'code generation-interfaces' }
@@ -97,12 +187,67 @@ ViennaVDM2SmalltalkClass >> initialize [
 	classes := Dictionary new
 ]
 
+{ #category : #utilities }
+ViennaVDM2SmalltalkClass >> methodFromOperation: opName fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode body: aString varGenerator: varGenerator env: aDictionary [
+	^ String
+		new: 1024
+		streamContents: [ :stream | 
+			| tmpVars matchPatternNodes isFirstArg tuplePattern matchVars |
+			tmpVars := OrderedCollection new.
+			matchPatternNodes := OrderedCollection new.
+			stream nextPutAll: opName.
+			anArrayOfPatternNodeAndTypeSetNode isEmpty
+				ifTrue: [ stream nextPutAll: ': ' , varGenerator value ].
+			isFirstArg := true.
+			self
+				fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode
+				patternNodeAndSetOrTypeNodeAndBindTypesDo: [ :patternNode :setNode :bindType | 
+					bindType = #identifier
+						ifTrue: [ 
+							isFirstArg
+								ifFalse: [ stream nextPutAll: ' _' ].
+							stream
+								nextPutAll: ':';
+								nextPutAll: patternNode first ].
+					bindType = #compound
+						ifTrue: [ 
+							| tmpVar |
+							tmpVar := varGenerator value.
+							tmpVars add: tmpVar.
+							matchPatternNodes add: patternNode.
+							isFirstArg
+								ifFalse: [ stream nextPutAll: ' _' ].
+							stream
+								nextPutAll: ':';
+								nextPutAll: tmpVar ].
+					isFirstArg := false ].
+			tuplePattern := ViennaNode label: 'TuplePattern' with: (ViennaNode label: 'PatternList' withAll: matchPatternNodes).
+			matchVars := (self boundVariables: tuplePattern) asArray.
+			matchVars notEmpty
+				ifTrue: [ 
+					stream
+						cr;
+						nextPutAll: ' | '.
+					matchVars
+						do: [ :var | 
+							stream
+								nextPutAll: var;
+								nextPut: Character space ].
+					stream
+						nextPutAll: '| ';
+						nextPutAll:
+								(self binder: (self generate: tuplePattern env: aDictionary) with: '{' , (' . ' join: tmpVars) , '}' vars: matchVars);
+						nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ].
+			stream
+				cr;
+				nextPutAll: aString ]
+]
+
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> modularDocument: aViennaNode env: aDictionary [
-	| documentClassName moduleNames classNames documentClass |
-	documentClassName := self requestClassName: ''.
-	documentClassName ifNil: [ ^ nil ].
+	| moduleNames classNames documentClass |
 	moduleNames := aViennaNode collect: #first.
+	documentClass := self createDocumentClassWithInstVars: (moduleNames collect: #uncapitalized).
 	classNames := moduleNames
 		collect: [ :moduleName | 
 			(self requestClassName: moduleName)
@@ -111,9 +256,6 @@ ViennaVDM2SmalltalkClass >> modularDocument: aViennaNode env: aDictionary [
 					aDictionary at: moduleName put: name.
 					name ] ].
 	aViennaNode do: [ :node | self generate: node env: aDictionary ].
-	documentClass := Object
-		subclass: documentClassName
-		instanceVariableNames: (' ' join: (moduleNames collect: #uncapitalized)).
 	self
 		defineMethod:
 			(String
@@ -166,13 +308,12 @@ ViennaVDM2SmalltalkClass >> modularDocument: aViennaNode env: aDictionary [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
-	| env moduleName interfaceNode moduleBodyNode importModuleNames importClassNames className instVars newClass |
+	| env moduleName interfaceNode moduleBodyNode importModuleNames importClassNames instVars newClass |
 	env := aDictionary copy.
 	self generate: aViennaNode second env: env.
 	moduleName := aViennaNode first.
 	interfaceNode := aViennaNode second.
 	moduleBodyNode := aViennaNode third.
-	className := env at: moduleName ifAbsent: [ moduleName ].
 	importModuleNames := interfaceNode first
 		ifNil: [ Array new ]
 		ifNotNil: [ :importDefinitionListNode | importDefinitionListNode collect: [ :importDefinitionNode | importDefinitionNode first ] ].
@@ -181,9 +322,9 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 	moduleBodyNode
 		do: [ :definitionBlock | 
 			definitionBlock first label = 'StateDefinition'
-				ifFalse: [(self boundVariables: definitionBlock) do: [ :ident | env at: ident put: 'self ', ident ] ] ].
+				ifFalse: [ (self boundVariables: definitionBlock) do: [ :ident | env at: ident put: 'self ' , ident ] ] ].
 	instVars := (self boundVariables: moduleBodyNode) asArray.
-	newClass := Object subclass: className instanceVariableNames: (' ' join: importClassNames , instVars).
+	newClass := self createModuleClassWithInstVars: importClassNames , instVars forModule: moduleName env: env.
 	classes at: moduleName put: newClass.
 	importModuleNames
 		with: importClassNames
@@ -244,6 +385,11 @@ ViennaVDM2SmalltalkClass >> requestClassName: defaultClassName [
 	(Smalltalk includesKey: className asSymbol) not
 		or: [ UIManager default confirm: className , ' already exists. Do you want to overwrite it?' ] ] whileFalse.
 	^ className
+]
+
+{ #category : #'code generation-statements' }
+ViennaVDM2SmalltalkClass >> returnStatement: aViennaNode env: aDictionary [
+	^ '^ ' , (self generate: aViennaNode first env: aDictionary)
 ]
 
 { #category : #'code generation-definitions' }
@@ -307,7 +453,7 @@ ViennaVDM2SmalltalkClass >> valueDefinitions: aViennaNode env: aDictionary [
 	aViennaNode
 		do: [ :node | 
 			initializer := self generate: node env: aDictionary.
-			(self boundVariables: aViennaNode)
+			(self boundVariables: node)
 				do: [ :identifier | 
 					self
 						defineLazyMethodNamed: identifier
