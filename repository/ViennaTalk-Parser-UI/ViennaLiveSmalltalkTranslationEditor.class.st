@@ -15,6 +15,16 @@ ViennaLiveSmalltalkTranslationEditor class >> VDM2SmalltalkTranslatorMenuOn: aBu
 		icon: nil
 ]
 
+{ #category : #accessing }
+ViennaLiveSmalltalkTranslationEditor >> defaultTitle [
+	^ 'VDM -> Smalltalk'
+]
+
+{ #category : #accessing }
+ViennaLiveSmalltalkTranslationEditor >> format: aString [
+	^ (RBParser parseExpression: aString) formattedCode
+]
+
 { #category : #'class access' }
 ViennaLiveSmalltalkTranslationEditor >> translatorClass [
 	^ ViennaVDM2SmalltalkTranslator

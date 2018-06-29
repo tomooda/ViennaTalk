@@ -22,6 +22,16 @@ ViennaLiveTranslationEditor class >> defaultSpec [
 		yourself
 ]
 
+{ #category : #accessing }
+ViennaLiveTranslationEditor >> defaultTitle [
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
+ViennaLiveTranslationEditor >> format: aString [
+	^ aString
+]
+
 { #category : #'initialize-release' }
 ViennaLiveTranslationEditor >> initializeWidgets [
 	sourceText := self newText.
@@ -43,7 +53,7 @@ ViennaLiveTranslationEditor >> initializeWidgets [
 				on: Error
 				do: [ :ex |  ] ] forkAt: Processor userBackgroundPriority ].
 	targetText := self newText.
-	self title: 'VDM->Smalltalk'
+	self title: self defaultTitle
 ]
 
 { #category : #accessing }
@@ -62,7 +72,7 @@ ViennaLiveTranslationEditor >> translate: aTextOrString ifError: errorBlock [
 		in: [ :result | 
 			result isPetitFailure
 				ifTrue: [ errorBlock value: result ]
-				ifFalse: [ (RBParser parseExpression: result) formattedCode ] ]
+				ifFalse: [ self format: result ] ]
 ]
 
 { #category : #accessing }
