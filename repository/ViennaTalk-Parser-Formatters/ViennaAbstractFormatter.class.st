@@ -214,6 +214,11 @@ ViennaAbstractFormatter >> anyNeedsIndent: anArrayOfString [
 		or: [ (anArrayOfString inject: 0 into: [ :len :str | len + (self strlen: str) ]) > self maxSizePerLine ]
 ]
 
+{ #category : #'symbol access' }
+ViennaAbstractFormatter >> anyType [
+	^ '?'
+]
+
 { #category : #'formatting-expressions' }
 ViennaAbstractFormatter >> apply: aViennaNode [
 	| expression args |
@@ -296,6 +301,8 @@ ViennaAbstractFormatter >> basicType: aViennaNode [
 		ifTrue: [ ^ self int ].
 	type = 'real'
 		ifTrue: [ ^ self real ].
+	type = 'any'
+		ifTrue: [ ^ self anyType ].
 	^ type
 ]
 
@@ -541,9 +548,32 @@ ViennaAbstractFormatter >> equiv [
 	^ '<=>'
 ]
 
+{ #category : #'formatting-definitions' }
+ViennaAbstractFormatter >> error: aViennaNode [
+	^ aViennaNode first , ':' , (self format: aViennaNode second) , '->'
+		, (self format: aViennaNode third)
+]
+
+{ #category : #'formatting-definitions' }
+ViennaAbstractFormatter >> errorList: aViennaNode [
+	^ String
+		new: 1024
+		streamContents: [ :stream | 
+			aViennaNode
+				do: [ :node | 
+					stream
+						space;
+						nextPutAll: (self format: node) ] ]
+]
+
 { #category : #private }
 ViennaAbstractFormatter >> escapeString: aString [
 	^ aString
+]
+
+{ #category : #'formatting-definitions' }
+ViennaAbstractFormatter >> exceptions: aViennaNode [
+	^ 'errs' , (self format: aViennaNode first)
 ]
 
 { #category : #'symbol access' }
@@ -652,6 +682,93 @@ ViennaAbstractFormatter >> expressionList: aViennaNode [
 			((self anyNeedsIndent: expressions)
 				ifTrue: [ String cr ]
 				ifFalse: [ String space ]) join: expressions
+]
+
+{ #category : #'formatting-definitions' }
+ViennaAbstractFormatter >> extendedExplicitFunctionDefinition: aViennaNode [
+	| identifier typeVariableList parameterTypes identifierTypePairList body pre post |
+	identifier := aViennaNode first.
+	typeVariableList := aViennaNode second.
+	parameterTypes := aViennaNode third.
+	identifierTypePairList := aViennaNode fourth.
+	body := aViennaNode fifth.
+	pre := aViennaNode sixth.
+	post := aViennaNode seventh.
+	^ String
+		new: 1024
+		streamContents: [ :stream | 
+			stream
+				nextPutAll: (self format: identifier);
+				nextPutAll: (self format: typeVariableList);
+				nextPutAll: (self format: parameterTypes);
+				nextPutAll: (self format: identifierTypePairList);
+				nextPutAll: ' ==';
+				cr;
+				nextPutAll: indent;
+				nextPutAll: (self indentString: (self format: body)).
+			pre
+				ifNotNil: [ stream
+						cr;
+						nextPutAll: 'pre ';
+						nextPutAll: (self format: pre) ].
+			stream
+				cr;
+				nextPutAll: 'post ';
+				nextPutAll: (self format: post) ]
+]
+
+{ #category : #'formatting-definitions' }
+ViennaAbstractFormatter >> extendedExplicitOperationDefinition: aViennaNode [
+	| identifier parameterTypes identifierTypePairList body externals pre post exceptions |
+	identifier := aViennaNode first.
+	parameterTypes := aViennaNode second.
+	identifierTypePairList := aViennaNode third.
+	body := aViennaNode fourth.
+	externals := aViennaNode fifth.
+	pre := aViennaNode sixth.
+	post := aViennaNode seventh.
+	exceptions := aViennaNode eighth.
+	^ String
+		new: 1024
+		streamContents: [ :stream | 
+			stream
+				nextPutAll: (self format: identifier);
+				nextPutAll: (self format: parameterTypes);
+				nextPutAll: (self format: identifierTypePairList);
+				nextPutAll: ' ==';
+				cr;
+				nextPutAll: indent;
+				nextPutAll: (self indentString: (self format: body)).
+			externals
+				ifNotNil: [ stream
+						cr;
+						nextPutAll: (self format: externals) ].
+			pre
+				ifNotNil: [ stream
+						cr;
+						nextPutAll: 'pre ';
+						nextPutAll: (self format: pre) ].
+			stream
+				cr;
+				nextPutAll: 'post ';
+				nextPutAll: (self format: post).
+			exceptions
+				ifNotNil: [ stream
+						cr;
+						nextPutAll: (self format: exceptions) ] ]
+]
+
+{ #category : #'formatting-definitions' }
+ViennaAbstractFormatter >> externals: aViennaNode [
+	^ String
+		new: 1024
+		streamContents: [ :stream | 
+			stream nextPutAll: 'ext'.
+			aViennaNode
+				do: [ :varInfo | 
+					stream
+						space;
+						nextPutAll: (self format: varInfo) ] ]
 ]
 
 { #category : #'formatting-types' }
@@ -894,6 +1011,24 @@ ViennaAbstractFormatter >> greaterThanOrEqual: aViennaNode [
 	^ self print: (self format: aViennaNode first) infix: self greaterThanOrEqual arg: (self format: aViennaNode second)
 ]
 
+{ #category : #'formatting-definitions' }
+ViennaAbstractFormatter >> identifierTypePairList: aViennaNode [
+	^ String
+		new: 1024
+		streamContents: [ :stream | 
+			aViennaNode
+				ifNotEmpty: [ 1 to: aViennaNode size - 2 by: 2 do: [ :index | 
+						stream
+							nextPutAll: (self format: (aViennaNode at: index));
+							nextPutAll: ':';
+							nextPutAll: (self format: (aViennaNode at: index + 1));
+							nextPutAll: ', ' ].
+					stream
+						nextPutAll: (self format: (aViennaNode at: aViennaNode size - 1));
+						nextPutAll: ':';
+						nextPutAll: (self format: (aViennaNode at: aViennaNode size)) ] ]
+]
+
 { #category : #'formatting-statements' }
 ViennaAbstractFormatter >> identityStatement: aViennaNode [
 	^ 'skip'
@@ -933,6 +1068,81 @@ ViennaAbstractFormatter >> ifStatement: aViennaNode [
 				ifFalse: [ 'if ' , cond , ' then ' , statement , (default ifNil: [ '' ] ifNotNil: [ ' else ' , default ]) ] ].
 	^ (self indentString: 'if ' , cond insertCr: 'then ' , statement) , String cr , (String cr join: elseifs)
 		, (default ifNil: [ '' ] ifNotNil: [ String cr , (self indentString: 'else' insertCr: default) ])
+]
+
+{ #category : #'formatting-definitions' }
+ViennaAbstractFormatter >> implicitFunctionDefinition: aViennaNode [
+	| identifier typeVariableList parameterTypes identifierTypePairList pre post |
+	identifier := aViennaNode first.
+	typeVariableList := aViennaNode second.
+	parameterTypes := aViennaNode third.
+	identifierTypePairList := aViennaNode fourth.
+	pre := aViennaNode fifth.
+	post := aViennaNode sixth.
+	^ String
+		new: 1024
+		streamContents: [ :stream | 
+			stream
+				nextPutAll: (self format: identifier);
+				nextPutAll: (self format: typeVariableList);
+				nextPutAll: (self format: parameterTypes);
+				nextPutAll: (self format: identifierTypePairList).
+			pre
+				ifNotNil: [ stream
+						cr;
+						nextPutAll: 'pre ';
+						nextPutAll: (self format: pre) ].
+			stream
+				cr;
+				nextPutAll: 'post ';
+				nextPutAll: (self format: post) ]
+]
+
+{ #category : #'formatting-definitions' }
+ViennaAbstractFormatter >> implicitOperationBody: aViennaNode [
+	^ String
+		new: 1024
+		streamContents: [ :stream | 
+			aViennaNode first
+				ifNotNil: [ :externals | 
+					stream
+						cr;
+						nextPutAll: (self format: externals) ].
+			aViennaNode second
+				ifNotNil: [ :pre | 
+					stream
+						cr;
+						nextPutAll: 'pre ';
+						nextPutAll: (self format: pre) ].
+			aViennaNode third
+				ifNotNil: [ :post | 
+					stream
+						cr;
+						nextPutAll: 'post ';
+						nextPutAll: (self format: post) ]
+				ifNil: [ String new ].
+			aViennaNode fourth
+				ifNotNil: [ :exceptions | 
+					stream
+						cr;
+						nextPutAll: (self format: exceptions) ] ]
+]
+
+{ #category : #'formatting-definitions' }
+ViennaAbstractFormatter >> implicitOperationDefinition: aViennaNode [
+	| identifier parameterTypes identifierTypePairList implicitOperationBody |
+	identifier := aViennaNode first.
+	parameterTypes := self format: aViennaNode second.
+	identifierTypePairList := self format: aViennaNode third.
+	implicitOperationBody := self format: aViennaNode fourth.
+	^ String
+		new: 1024
+		streamContents: [ :stream | 
+			stream
+				nextPutAll: identifier;
+				nextPutAll: parameterTypes;
+				nextPutAll: identifierTypePairList;
+				nextPutAll: implicitOperationBody ]
 ]
 
 { #category : #'symbol access' }
@@ -1734,6 +1944,11 @@ ViennaAbstractFormatter >> override [
 ]
 
 { #category : #'formatting-definitions' }
+ViennaAbstractFormatter >> parameterTypes: aViennaNode [
+	^ '(' , (self format: aViennaNode first) , ')'
+]
+
+{ #category : #'formatting-definitions' }
 ViennaAbstractFormatter >> parameters: aViennaNode [
 	^ '(' , (', ' join: (self formatAll: aViennaNode)) , ')'
 ]
@@ -1767,6 +1982,24 @@ ViennaAbstractFormatter >> patternList: aViennaNode [
 			((self anyNeedsIndent: patterns)
 				ifTrue: [ String cr ]
 				ifFalse: [ String space ]) join: patterns
+]
+
+{ #category : #'formatting-definitions' }
+ViennaAbstractFormatter >> patternTypePairList: aViennaNode [
+	^ String
+		new: 1024
+		streamContents: [ :stream | 
+			aViennaNode
+				ifNotEmpty: [ 1 to: aViennaNode size - 2 by: 2 do: [ :index | 
+						stream
+							nextPutAll: (self format: (aViennaNode at: index));
+							nextPutAll: ':';
+							nextPutAll: (self format: (aViennaNode at: index + 1));
+							nextPutAll: ', ' ].
+					stream
+						nextPutAll: (self format: (aViennaNode at: aViennaNode size - 1));
+						nextPutAll: ':';
+						nextPutAll: (self format: (aViennaNode at: aViennaNode size)) ] ]
 ]
 
 { #category : #'symbol access' }
@@ -2419,6 +2652,17 @@ ViennaAbstractFormatter >> valuesSignature: aViennaNode [
 	| signatures |
 	signatures := self formatAll: aViennaNode.
 	^ self indentString: 'values' insertCrIfNeeded: (';' , String cr join: signatures) , ';'
+]
+
+{ #category : #'formatting-definitions' }
+ViennaAbstractFormatter >> varInformation: aViennaNode [
+	| mode nameList type |
+	mode := aViennaNode first.
+	nameList := self format: aViennaNode second.
+	type := aViennaNode third
+		ifNotNil: [ :node | ':' , (self format: node) ]
+		ifNil: [ String new ].
+	^ mode , ' ' , nameList , type
 ]
 
 { #category : #'formatting-expressions' }
