@@ -38,11 +38,18 @@ Collection >> onlyOneSatisfy: aBlock [
 
 { #category : #'*ViennaTalk-Value-Core' }
 Collection >> power [
-	| power powerSet |
-	power := self asArray power.
-	powerSet := self species new: power size * 3 // 2.
-	powerSet addAll: power.
-	^ powerSet
+	| array size power |
+	array := self asArray.
+	size := array size.
+	power := self species new: 1 << size.
+	0 to: (1 << size) - 1 do: [ :index | 
+		| member |
+		member := self species new: size.
+		1 to: array size do: [ :bit | 
+			(index bitAt: bit) = 0
+				ifTrue: [ member add: (array at: bit) ] ].
+		power add: member ].
+	^ power
 ]
 
 { #category : #'*ViennaTalk-Value-Core' }
