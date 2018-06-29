@@ -17,12 +17,22 @@ ViennaComposition class >> with: aDictionaryOrBlock1 with: aDictionaryOrBlock2 [
 ]
 
 { #category : #accessing }
+ViennaComposition >> ** anInteger [
+	^ ViennaIteration with: self with: anInteger
+]
+
+{ #category : #accessing }
 ViennaComposition >> applyTo: anArray [
 	| t |
 	t := arg2 applyTo: anArray.
 	t isArray
 		ifFalse: [ t := Array with: t ].
 	^ arg1 applyTo: t
+]
+
+{ #category : #accessing }
+ViennaComposition >> comp: applicative [
+	^ ViennaComposition with: self with: applicative
 ]
 
 { #category : #testing }
