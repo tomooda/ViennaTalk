@@ -1481,7 +1481,7 @@ ViennaAbstractFormatter >> mu [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> mul [
-	^ '*'
+	^ ' *'
 ]
 
 { #category : #'formatting-statements' }
