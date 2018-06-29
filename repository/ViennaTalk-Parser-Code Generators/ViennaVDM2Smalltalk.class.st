@@ -6,7 +6,8 @@ Class {
 	#instVars : [
 		'decoder',
 		'runtimeAssertionCheck',
-		'runtimeTypeCheck'
+		'runtimeTypeCheck',
+		'defaultEnv'
 	],
 	#classVars : [
 		'DefaultRuntimeAssertionCheck',
@@ -505,6 +506,16 @@ ViennaVDM2Smalltalk >> defStatement: aViennaNode env: aDictionary [
 	statement := self generate: aViennaNode second env: aDictionary.
 	vars := (self boundVariables: aViennaNode first) asArray.
 	^ '[|' , (' ' join: vars) , '|' , ('.' join: defs) , ' ifFalse: [ViennaNoMatch signal].' , statement , '] value'
+]
+
+{ #category : #accessing }
+ViennaVDM2Smalltalk >> defaultEnv [
+	^ defaultEnv
+]
+
+{ #category : #accessing }
+ViennaVDM2Smalltalk >> defaultEnv: aDictionary [
+	defaultEnv := aDictionary
 ]
 
 { #category : #'code generation-definitions' }
@@ -1099,7 +1110,7 @@ ViennaVDM2Smalltalk >> functionTypeInstantiation: aViennaNode env: aDictionary [
 
 { #category : #'code generation' }
 ViennaVDM2Smalltalk >> generate: aViennaNode [
-	^ self generate: aViennaNode env: Dictionary new
+	^ self generate: aViennaNode env: defaultEnv
 ]
 
 { #category : #'code generation' }
@@ -1340,6 +1351,7 @@ ViennaVDM2Smalltalk >> indicesExpression: aViennaNode env: aDictionary [
 { #category : #'initialize-release' }
 ViennaVDM2Smalltalk >> initialize [
 	super initialize.
+	defaultEnv := Dictionary new.
 	decoder := ViennaVDMValueDecoder new.
 	runtimeAssertionCheck := self class defaultRuntimeAssertionCheck.
 	runtimeTypeCheck := self class defaultRuntimeAssertionCheck

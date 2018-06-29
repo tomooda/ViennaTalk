@@ -14,15 +14,16 @@ ViennaVDM2SmalltalkObject >> createDocumentClassWithInstVars: anArrayOfString1 s
 	^ AnonymousClassInstaller
 		make: [ :builder | 
 			builder
-				superclass: Object;
+				superclass: ViennaTranspiledObject ;
 				slots:
-						(anArrayOfString1 asArray collect: [ :instVarName | InstanceVariableSlot named: instVarName asSymbol ])
-								,
-									(anArrayOfString2 asArray
-										collect: [ :instVarName | 
-											(runtimeAssertionCheck = true
-												ifTrue: [ ViennaStateSlot ]
-												ifFalse: [ InstanceVariableSlot ]) named: instVarName asSymbol ]);
+					(anArrayOfString1 asArray
+						collect: [ :instVarName | InstanceVariableSlot named: instVarName asSymbol ])
+						,
+							(anArrayOfString2 asArray
+								collect: [ :instVarName | 
+									(runtimeAssertionCheck = true
+										ifTrue: [ ViennaStateSlot ]
+										ifFalse: [ InstanceVariableSlot ]) named: instVarName asSymbol ]);
 				category: 'Auto Generated from VDM' ]
 ]
 
@@ -31,15 +32,16 @@ ViennaVDM2SmalltalkObject >> createModuleClassWithInstVars: anArrayOfString1 sta
 	^ AnonymousClassInstaller
 		make: [ :builder | 
 			builder
-				superclass: Object;
+				superclass: ViennaTranspiledObject;
 				slots:
-						(anArrayOfString1 asArray collect: [ :instVarName | InstanceVariableSlot named: instVarName asSymbol ])
-								,
-									(anArrayOfString2 asArray
-										collect: [ :instVarName | 
-											(runtimeAssertionCheck = true
-												ifTrue: [ ViennaStateSlot ]
-												ifFalse: [ InstanceVariableSlot ]) named: instVarName asSymbol ]);
+					(anArrayOfString1 asArray
+						collect: [ :instVarName | InstanceVariableSlot named: instVarName asSymbol ])
+						,
+							(anArrayOfString2 asArray
+								collect: [ :instVarName | 
+									(runtimeAssertionCheck = true
+										ifTrue: [ ViennaStateSlot ]
+										ifFalse: [ InstanceVariableSlot ]) named: instVarName asSymbol ]);
 				category: 'Auto Generated from VDM' ]
 ]
 
