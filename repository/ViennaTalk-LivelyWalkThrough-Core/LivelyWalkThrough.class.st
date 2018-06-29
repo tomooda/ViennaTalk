@@ -35,7 +35,8 @@ LivelyWalkThrough class >> fileOpen: title extensions: exts path: path preview: 
 
 { #category : #'class initialization' }
 LivelyWalkThrough class >> initialize [
-	super initialize
+	super initialize.
+	Smalltalk at: #ViennaLauncher ifPresent: [ :launcherClass | launcherClass reopen ]
 ]
 
 { #category : #'world menu' }
