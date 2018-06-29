@@ -212,7 +212,7 @@ ViennaVDMGrammar >> arrow [
 
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> assignStatement [
-	^ (self stateDesignator , colonEq , expression)
+	^ ((self basicStateDesignator , colonEq) and , (self stateDesignator , colonEq) , expression)
 		==> [ :triple | 
 			{(triple first).
 			(triple third)} ]
@@ -220,7 +220,7 @@ ViennaVDMGrammar >> assignStatement [
 
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> assignmentDefinition [
-	^ (identifier trim , colon , type , (colonEq , expression) optional)
+	^ ((self decl: identifier) trim , colon , type , (colonEq , expression) optional)
 		==> [ :quatro | 
 			| ident varType initialValue |
 			ident := quatro first.
@@ -247,6 +247,22 @@ ViennaVDMGrammar >> atomicExpression [
 { #category : #'parsers-symbols' }
 ViennaVDMGrammar >> bar [
 	^ self operator: $|
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDMGrammar >> basicStateDesignator [
+	^ (( name) , (self fieldReferenceArg / self mapOrSequenceReferenceArg) star)
+		==> [ :pair | 
+			| nameDesig pairs |
+			nameDesig := pair first.
+			pairs := pair second.
+			pairs
+				inject: nameDesig
+				into: [ :designator :selectorAndArg | 
+					| selector refArg |
+					selector := selectorAndArg first.
+					refArg := selectorAndArg second.
+					self perform: selector with: designator with: refArg ] ]
 ]
 
 { #category : #'parsers-types' }
@@ -493,6 +509,11 @@ ViennaVDMGrammar >> dclStatement [
 	^ ((self reserved: 'dcl') , (self assignmentDefinition separatedBy: comma) withoutSeparators , semicolon) ==> #second
 ]
 
+{ #category : #utilities }
+ViennaVDMGrammar >> decl: aParser [
+	^ aParser
+]
+
 { #category : #'parsers-keywords' }
 ViennaVDMGrammar >> def [
 	^ self reserved: 'def'
@@ -689,7 +710,7 @@ ViennaVDMGrammar >> equalDefinitionList [
 
 { #category : #'parsers-types' }
 ViennaVDMGrammar >> equalityAbstractionField [
-	^ (identifier trim , (self operator: ':-') , type)
+	^ ((self decl: identifier) trim , (self operator: ':-') , type)
 		==> [ :triple | 
 			{(triple first).
 			(triple third)} ]
@@ -845,8 +866,8 @@ ViennaVDMGrammar >> existsExpression [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> explicitFunctionDefinition [
-	^ (identifier trim , self typeVariableList , colon , self functionType trim , identifier trim , self parametersList
-		, (self operator: '==') , (expression / self isSubclassResponsibility / self isNotYetSpecified)
+	^ (identifier trim , self typeVariableList , colon , self functionType trim , (self decl: identifier) trim
+		, self parametersList , (self operator: '==') , (expression / self isSubclassResponsibility / self isNotYetSpecified)
 		, ((self pre , expression) ==> #second) optional , ((self post , expression) ==> #second) optional
 		, ((self measure , name) ==> #second) optional)
 		==> [ :array | 
@@ -866,8 +887,8 @@ ViennaVDMGrammar >> explicitFunctionDefinition [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> explicitOperationDefinition [
-	^ (identifier trim , colon , self operationType , identifier trim , self parameters , (self operator: '==')
-		, self operationBody , (((self reserved: 'pre') , expression) ==> #second) optional
+	^ (identifier trim , colon , self operationType , (self decl: identifier) trim , self parameters
+		, (self operator: '==') , self operationBody , (((self reserved: 'pre') , expression) ==> #second) optional
 		, (((self reserved: 'post') , expression) ==> #second) optional)
 		==> [ :array | 
 			array first = array fourth
@@ -1061,7 +1082,7 @@ ViennaVDMGrammar >> functionImport [
 			((self typeVariableList , (self operator: ':') , self functionType)
 				==> [ :triple | 
 					{(triple first).
-					(triple third)} ]) optional , ((self renamed , name) ==> #second) optional)
+					(triple third)} ]) optional , ((self renamed , (self decl: name)) ==> #second) optional)
 		==> [ :triple | 
 			{(triple first).
 			(triple second ifNotNil: [ :paramAndType | paramAndType first ]).
@@ -1147,7 +1168,7 @@ ViennaVDMGrammar >> hd: arg [
 
 { #category : #'parsers-types' }
 ViennaVDMGrammar >> identifiedField [
-	^ (identifier trim , colon , type)
+	^ ((self decl: identifier) trim , colon , type)
 		==> [ :triple | 
 			{(triple first).
 			(triple third)} ]
@@ -1294,8 +1315,8 @@ ViennaVDMGrammar >> inSet: arg1 and: arg2 [
 
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> indexForLoop [
-	^ (self for , identifier trim , eq , expression , self to , expression , ((self by , expression) ==> #second) optional
-		, self do , statement)
+	^ (self for , (self decl: identifier) trim , eq , expression , self to , expression
+		, ((self by , expression) ==> #second) optional , self do , statement)
 		==> [ :array | 
 			{(array second).
 			(array fourth).
@@ -1774,8 +1795,8 @@ ViennaVDMGrammar >> mod: arg1 and: arg2 [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> module [
-	^ (self moduleKeyword , self moduleIdentifier trim , self interface , self moduleBody optional , self endKeyword
-		, self moduleIdentifier)
+	^ (self moduleKeyword , (self decl: self moduleIdentifier) trim , self interface , self moduleBody optional
+		, self endKeyword , self moduleIdentifier)
 		==> [ :array | 
 			array second = array sixth
 				ifTrue: [ 
@@ -1961,7 +1982,7 @@ ViennaVDMGrammar >> operationDefinitions [
 { #category : #'parsers-interfaces' }
 ViennaVDMGrammar >> operationImport [
 	^ name , (((self operator: ':') , self operationType) ==> #second) optional
-		, ((self renamed , name) ==> #second) optional
+		, ((self renamed , (self decl: name)) ==> #second) optional
 ]
 
 { #category : #'parsers-interfaces' }
@@ -2070,7 +2091,7 @@ ViennaVDMGrammar >> patternBind [
 
 { #category : #'parsers-patterns' }
 ViennaVDMGrammar >> patternIdentifier [
-	^ identifier trim / ((self operator: $-) ==> [ :op |  nil])
+	^ (self decl: identifier) trim / ((self operator: $-) ==> [ :op | nil ])
 ]
 
 { #category : #'parsers-patterns' }
@@ -2221,7 +2242,7 @@ ViennaVDMGrammar >> recordPattern [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> recordTypeDefinition [
-	^ (self typeIdentifier trim , (self operator: '::') , fieldList , invariant optional)
+	^ ((self decl: self typeIdentifier) trim , (self operator: '::') , fieldList , invariant optional)
 		==> [ :quatro | 
 			| ident flist inv |
 			ident := quatro first.
@@ -2520,8 +2541,8 @@ ViennaVDMGrammar >> state [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> stateDefinition [
-	^ (self state , self typeIdentifier trim , self of , self stateFieldList , invariant optional , self initialisation optional
-		, self endKeyword , semicolon optional)
+	^ (self state , (self decl: self typeIdentifier) trim , self of , self stateFieldList , invariant optional
+		, self initialisation optional , self endKeyword , semicolon optional)
 		==> [ :array | 
 			{(array second).
 			(array fourth).
@@ -2531,7 +2552,7 @@ ViennaVDMGrammar >> stateDefinition [
 
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> stateDesignator [
-	^ (name , (self fieldReferenceArg / self mapOrSequenceReferenceArg) star)
+	^ ((self decl: name) , (self fieldReferenceArg / self mapOrSequenceReferenceArg) star)
 		==> [ :pair | 
 			| nameDesig pairs |
 			nameDesig := pair first.
@@ -2547,7 +2568,7 @@ ViennaVDMGrammar >> stateDesignator [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> stateField [
-	^ (identifier trim , colon , type trim)
+	^ ((self decl: identifier) trim , colon , type trim)
 		==> [ :triple | 
 			{(triple first).
 			(triple third)} ]
@@ -2561,8 +2582,8 @@ ViennaVDMGrammar >> stateFieldList [
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> statement [
 	^ self letStatement / self letBeStatement / self defStatement / self identityStatement / self blockStatement
-		/ self generalAssignStatement / self ifStatement / self casesStatement / self sequenceForLoop / self setForLoop
-		/ self indexForLoop / self whileLoop / self nondeterministicStatement / self callStatement / self returnStatement
+		/ self generalAssignStatement / self callStatement / self ifStatement / self casesStatement / self sequenceForLoop
+		/ self setForLoop / self indexForLoop / self whileLoop / self nondeterministicStatement / self returnStatement
 ]
 
 { #category : #'parsers-keywords' }
@@ -2733,8 +2754,8 @@ ViennaVDMGrammar >> typeIdentifier [
 
 { #category : #'parsers-interfaces' }
 ViennaVDMGrammar >> typeImport [
-	^ (self typeDefinition , ((self renamed , self typeName) ==> #second) optional)
-		/ (self typeName , ((self renamed , self typeName) ==> #second) optional)
+	^ (self typeDefinition , ((self renamed , (self decl: self typeName)) ==> #second) optional)
+		/ (self typeName , ((self renamed , (self decl: self typeName)) ==> #second) optional)
 ]
 
 { #category : #'parsers-expressions-type discriminations' }
@@ -2755,7 +2776,7 @@ ViennaVDMGrammar >> typeName [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> typeSynonym [
-	^ (self typeIdentifier trim , eq , type , invariant optional)
+	^ ((self decl: self typeIdentifier) trim , eq , type , invariant optional)
 		==> [ :quatro | 
 			{(quatro first).
 			(quatro third).
@@ -2781,7 +2802,8 @@ ViennaVDMGrammar >> typeVariableIdentifier [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> typeVariableList [
-	^ (lbracket , (self typeVariableIdentifier separatedBy: comma) withoutSeparators , rbracket) optional ==> [:tripleOrNil | tripleOrNil ifNil: [#()] ifNotNil: [tripleOrNil second]]
+	^ (lbracket , ((self decl: self typeVariableIdentifier) separatedBy: comma) withoutSeparators , rbracket) optional
+		==> [ :tripleOrNil | tripleOrNil ifNil: [ #() ] ifNotNil: [ tripleOrNil second ] ]
 ]
 
 { #category : #'parsers-keywords' }
@@ -2849,7 +2871,7 @@ ViennaVDMGrammar >> valueDefinitions [
 
 { #category : #'parsers-interfaces' }
 ViennaVDMGrammar >> valueImport [
-	^ name , (((self operator: ':') , type) ==> #second) optional , ((self renamed , name) ==> #second) optional
+	^ name , (((self operator: ':') , type) ==> #second) optional , ((self renamed , (self decl: name)) ==> #second) optional
 ]
 
 { #category : #'parsers-interfaces' }

@@ -5,11 +5,11 @@ Class {
 		'text',
 		'identifierAttribute',
 		'keywordAttribute',
-		'operatorAttribute',
 		'literalAttribute',
 		'typeAttribute',
 		'commentAttribute',
-		'moduleAttribute'
+		'moduleAttribute',
+		'declAttribute'
 	],
 	#category : 'ViennaTalk-Parser-Core'
 }
@@ -19,11 +19,6 @@ ViennaVDMHighlighter class >> ignoredNames [
 	"Answer a collection of instance-variables that should not be automatically initialized with productions, but that are used internal to the composite parser."
 
 	^ super ignoredNames , ViennaVDMHighlighter instVarNames
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> abs [
-	^ self op: super abs
 ]
 
 { #category : #'parsers-definitions' }
@@ -39,11 +34,6 @@ ViennaVDMHighlighter >> all [
 { #category : #'parsers-symbols' }
 ViennaVDMHighlighter >> amp [
 	^ self keyword: super amp
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> andOp [
-	^ self op: super andOp
 ]
 
 { #category : #'parsers-keywords' }
@@ -64,11 +54,6 @@ ViennaVDMHighlighter >> best [
 { #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> by [
 	^ self keyword: super by
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> card [
-	^ self op: super card
 ]
 
 { #category : #'parsers-keywords' }
@@ -106,19 +91,19 @@ ViennaVDMHighlighter >> commentAttribute [
 	^ commentAttribute ifNil: [ commentAttribute := TextColor gray ]
 ]
 
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> comp [
-	^ self op: super comp
-]
-
 { #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> compose [
 	^ self keyword: super compose
 ]
 
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> conc [
-	^ self op: super conc
+{ #category : #utilities }
+ViennaVDMHighlighter >> decl: aParser [
+	^ self highlight: aParser with: self declAttribute
+]
+
+{ #category : #accessing }
+ViennaVDMHighlighter >> declAttribute [
+	^ declAttribute ifNil: [ declAttribute := TextEmphasis italic ]
 ]
 
 { #category : #'parsers-keywords' }
@@ -131,49 +116,14 @@ ViennaVDMHighlighter >> definitions [
 	^ self keyword: super definitions
 ]
 
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> diffOp [
-	^ self op: super diffOp
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> dinter [
-	^ self op: super dinter
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> div [
-	^ self op: super div
-]
-
 { #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> do [
 	^ self keyword: super do
 ]
 
 { #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> dom [
-	^ self op: super dom
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> dots [
-	^ self op: super dots
-]
-
-{ #category : #'parsers-symbols' }
 ViennaVDMHighlighter >> doublebar [
 	^ self keyword: super doublebar
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> dunion [
-	^ self op: super dunion
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> elems [
-	^ self op: super elems
 ]
 
 { #category : #'parsers-keywords' }
@@ -192,23 +142,8 @@ ViennaVDMHighlighter >> endKeyword [
 ]
 
 { #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> enumerate [
-	^ self op: super enumerate
-]
-
-{ #category : #'parsers-symbols' }
 ViennaVDMHighlighter >> eq [
 	^ self keyword: super eq
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> eqOp [
-	^ self op: super eqOp
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> equivOp [
-	^ self op: super equivOp
 ]
 
 { #category : #'parsers-keywords' }
@@ -224,11 +159,6 @@ ViennaVDMHighlighter >> exists1 [
 { #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> exports [
 	^ self keyword: super exports
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> floor [
-	^ self op: super floor
 ]
 
 { #category : #'parsers-keywords' }
@@ -249,26 +179,6 @@ ViennaVDMHighlighter >> from [
 { #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> functions [
 	^ self keyword: super functions
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> greater [
-	^ self op: super greater
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> greaterOrEqual [
-	^ self op: super greaterOrEqual
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> hatOp [
-	^ self op: super hatOp
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> hd [
-	^ self op: super hd
 ]
 
 { #category : #utilities }
@@ -301,11 +211,6 @@ ViennaVDMHighlighter >> if [
 	^ self keyword: super if
 ]
 
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> impOp [
-	^ self op: super impOp
-]
-
 { #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> imports [
 	^ self keyword: super imports
@@ -316,29 +221,14 @@ ViennaVDMHighlighter >> in [
 	^ self keyword: super in
 ]
 
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> inds [
-	^ self op: super inds
-]
-
 { #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> init [
 	^ self keyword: super init
 ]
 
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> inter [
-	^ self op: super inter
-]
-
 { #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> inv [
 	^ self keyword: super inv
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> inverse [
-	^ self op: super inverse
 ]
 
 { #category : #'parsers-keywords' }
@@ -379,21 +269,6 @@ ViennaVDMHighlighter >> lambda [
 	^ self keyword: super lambda
 ]
 
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> len [
-	^ self op: super len
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> less [
-	^ self op: super less
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> lessOrEqual [
-	^ self op: super lessOrEqual
-]
-
 { #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> let [
 	^ self keyword: super let
@@ -409,44 +284,9 @@ ViennaVDMHighlighter >> literalAttribute [
 	^ literalAttribute ifNil: [ literalAttribute := TextColor color: Color yellow muchDarker ]
 ]
 
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> mapDomainRestrictedBy [
-	^ self op: super mapDomainRestrictedBy
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> mapDomainRestrictedTo [
-	^ self op: super mapDomainRestrictedTo
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> mapRangeRestrictedBy [
-	^ self op: super mapRangeRestrictedBy
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> mapRangeRestrictedTo [
-	^ self op: super mapRangeRestrictedTo
-]
-
 { #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> measure [
 	^ self keyword: super measure
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> merge [
-	^ self op: super merge
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> minusOp [
-	^ self op: super minusOp
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> mod [
-	^ self op: super mod
 ]
 
 { #category : #utilities }
@@ -469,29 +309,9 @@ ViennaVDMHighlighter >> moduleKeyword [
 	^ self keyword: super moduleKeyword
 ]
 
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> munion [
-	^ self op: super munion
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> notEq [
-	^ self op: super notEq
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> notOp [
-	^ self op: super notOp
-]
-
 { #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> of [
 	^ self keyword: super of
-]
-
-{ #category : #utilities }
-ViennaVDMHighlighter >> op: aParser [
-	^ self highlight: aParser with: self operatorAttribute
 ]
 
 { #category : #'parsers-keywords' }
@@ -499,29 +319,9 @@ ViennaVDMHighlighter >> operations [
 	^ self keyword: super operations
 ]
 
-{ #category : #accessing }
-ViennaVDMHighlighter >> operatorAttribute [
-	^ operatorAttribute ifNil: [ operatorAttribute := {} ]
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> orOp [
-	^ self op: super orOp
-]
-
 { #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> others [
 	^ self keyword: super others
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> plusOp [
-	^ self op: super plusOp
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> plusPlusOp [
-	^ self op: super plusPlusOp
 ]
 
 { #category : #'parsers-keywords' }
@@ -529,29 +329,14 @@ ViennaVDMHighlighter >> post [
 	^ self keyword: super post
 ]
 
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> power [
-	^ self op: super power
-]
-
 { #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> pre [
 	^ self keyword: super pre
 ]
 
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> psubset [
-	^ self op: super psubset
-]
-
 { #category : #'parsers-types' }
 ViennaVDMHighlighter >> quoteType [
 	^ self type: super quoteType
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> rem [
-	^ self op: super rem
 ]
 
 { #category : #'parsers-keywords' }
@@ -569,29 +354,9 @@ ViennaVDMHighlighter >> return [
 	^ self keyword: super return
 ]
 
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> reverse [
-	^ self op: super reverse
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> rng [
-	^ self op: super rng
-]
-
 { #category : #'parsers-expressions' }
 ViennaVDMHighlighter >> selfExpression [
 	^ self keyword: super selfExpression
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> slash [
-	^ self op: super slash
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> starOp [
-	^ self op: super starOp
 ]
 
 { #category : #'parsers-keywords' }
@@ -602,11 +367,6 @@ ViennaVDMHighlighter >> state [
 { #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> struct [
 	^ self keyword: super struct
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> subset [
-	^ self op: super subset
 ]
 
 { #category : #'parsers-literals' }
@@ -627,11 +387,6 @@ ViennaVDMHighlighter >> text: aText [
 { #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> then [
 	^ self keyword: super then
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> tl [
-	^ self op: super tl
 ]
 
 { #category : #'parsers-keywords' }
@@ -662,11 +417,6 @@ ViennaVDMHighlighter >> types [
 { #category : #'parsers-expressions' }
 ViennaVDMHighlighter >> undefinedExpression [
 	^ self keyword: super undefinedExpression
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> union [
-	^ self op: super union
 ]
 
 { #category : #'parsers-types' }
