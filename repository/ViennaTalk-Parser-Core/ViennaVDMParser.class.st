@@ -93,6 +93,21 @@ ViennaVDMParser >> casesExpressionAlternatives [
 	^ super casesExpressionAlternatives ==> [ :array | ViennaNode label: 'CaseExpressionAlternatives' withAll: array ]
 ]
 
+{ #category : #'parsers-statements' }
+ViennaVDMParser >> casesStatement [
+	^ super casesStatement ==> [ :array | ViennaNode label: 'CasesStatement' withAll: array ]
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDMParser >> casesStatementAlternative [
+	^ super casesStatementAlternative ==> [ :array | ViennaNode label: 'CasesStatementAlternative' withAll: array ]
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDMParser >> casesStatementAlternatives [
+	^ super casesStatementAlternatives ==> [ :array | ViennaNode label: 'CasesStatementAlternatives' withAll: array ]
+]
+
 { #category : #'parsers-types' }
 ViennaVDMParser >> compositeType [
 	^ super compositeType ==> [ :array | ViennaNode label: 'CompositeType' withAll: array ]
@@ -166,6 +181,16 @@ ViennaVDMParser >> dunion: arg [
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> elems: arg [
 	^ ViennaNode label: 'SequenceElements' with: arg
+]
+
+{ #category : #'parsers-expressions-basics' }
+ViennaVDMParser >> elseifExpression [
+	^ super elseifExpression ==> [ :array | ViennaNode label: 'ElseifExpression' withAll: array ]
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDMParser >> elseifStatement [
+	^ super elseifStatement ==> [ :array | ViennaNode label: 'ElseifStatement' withAll: array ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -302,6 +327,11 @@ ViennaVDMParser >> identityStatement [
 { #category : #'parsers-expressions-basics' }
 ViennaVDMParser >> ifExpression [
 	^ super ifExpression ==> [ :array | ViennaNode label: 'IfExpression' withAll: array ]
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDMParser >> ifStatement [
+	^ super ifStatement ==> [ :array | ViennaNode label: 'IfStatement' withAll: array ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -573,6 +603,16 @@ ViennaVDMParser >> or: arg1 and: arg2 [
 	^ ViennaNode label: 'Or' with: arg1 with: arg2
 ]
 
+{ #category : #'parsers-expressions-basics' }
+ViennaVDMParser >> othersExpression [
+	^ super othersExpression ==> [ :expr | ViennaNode label: 'OthersExpression' with: expr ]
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDMParser >> othersStatement [
+	^ super othersStatement ==> [ :bodyStatement | ViennaNode label: 'OthersStatement' with: bodyStatement ]
+]
+
 { #category : #'parsers-types' }
 ViennaVDMParser >> partialFunctionType [
 	^ super partialFunctionType ==> [ :array | ViennaNode label: 'PartialFunctionType' withAll: array ]
@@ -646,6 +686,11 @@ ViennaVDMParser >> reqExpression [
 { #category : #'parsers-expressions-basics' }
 ViennaVDMParser >> resultExpression [
 	^ super recordModifier ==> [ :array | ViennaNode label: 'ResultExpression' ]
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDMParser >> returnStatement [
+	^ super returnStatement ==> [ :expr | ViennaNode label: 'ReturnStatement' with: expr ]
 ]
 
 { #category : #'parsers-expressions-operators' }

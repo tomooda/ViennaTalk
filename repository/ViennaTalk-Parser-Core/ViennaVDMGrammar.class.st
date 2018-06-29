@@ -351,11 +351,8 @@ ViennaVDMGrammar >> card: arg [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> casesExpression [
-	| others end |
-	others := self reserved: 'others'.
-	end := self reserved: 'end'.
 	^ (((self reserved: 'cases') , expression , colon) ==> #second , self casesExpressionAlternatives
-		, ((comma , others , (self operator: '->') , expression) ==> #fourth) optional , end)
+		, ((comma , self othersExpression) ==> #second) optional , (self reserved: 'end'))
 		==> [ :quatro | 
 			| expr alternatives othersExpr |
 			expr := quatro first.
@@ -368,10 +365,7 @@ ViennaVDMGrammar >> casesExpression [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> casesExpressionAlternative [
-	| others end |
-	others := self reserved: 'others'.
-	end := self reserved: 'end'.
-	^ ((others / end) not and , patternList , (self operator: '->') , expression)
+	^ (((self reserved: 'others') / (self reserved: 'end')) not and , patternList , (self operator: '->') , expression)
 		==> [ :quatro | 
 			| patlist expr |
 			patlist := quatro second.
@@ -383,6 +377,36 @@ ViennaVDMGrammar >> casesExpressionAlternative [
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> casesExpressionAlternatives [
 	^ (self casesExpressionAlternative separatedBy: comma) withoutSeparators
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDMGrammar >> casesStatement [
+	^ (((self reserved: 'cases') , expression , colon) ==> #second , self casesStatementAlternatives
+		, ((comma , self othersStatement) ==> #second) optional , (self reserved: 'end'))
+		==> [ :quatro | 
+			| expr alternatives othersExpr |
+			expr := quatro first.
+			alternatives := quatro second.
+			othersExpr := quatro third.
+			{expr.
+			alternatives.
+			othersExpr} ]
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDMGrammar >> casesStatementAlternative [
+	^ (((self reserved: 'others') / (self reserved: 'end')) not and , patternList , (self operator: '->') , statement)
+		==> [ :quatro | 
+			| patlist expr |
+			patlist := quatro second.
+			expr := quatro fourth.
+			{patlist.
+			expr} ]
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDMGrammar >> casesStatementAlternatives [
+	^ (self casesStatementAlternative separatedBy: comma) withoutSeparators
 ]
 
 { #category : #'parsers-literals' }
@@ -521,6 +545,22 @@ ViennaVDMGrammar >> dunion: arg [
 { #category : #'parsers-expressions-operators' }
 ViennaVDMGrammar >> elems: arg [
 	^ arg
+]
+
+{ #category : #'parsers-expressions-basics' }
+ViennaVDMGrammar >> elseifExpression [
+	^ ((self reserved: 'elseif') , expression , (self reserved: 'then') , expression)
+		==> [ :quatro | 
+			{(quatro second).
+			(quatro fourth)} ]
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDMGrammar >> elseifStatement [
+	^ ((self reserved: 'elseif') , expression , (self reserved: 'then') , statement)
+		==> [ :quatro | 
+			{(quatro second).
+			(quatro fourth)} ]
 ]
 
 { #category : #'parsers-symbols' }
@@ -815,12 +855,23 @@ ViennaVDMGrammar >> ifExpression [
 	^ (((self reserved: 'if') , expression , (self reserved: 'then') , expression)
 		==> [ :quatro | 
 			{(quatro second).
-			(quatro fourth)} ]
-		,
-			(((self reserved: 'elseif') , expression , (self reserved: 'then') , expression)
-				==> [ :quatro | 
-					{(quatro second).
-					(quatro fourth)} ]) star , (((self reserved: 'else') , expression) ==> #second))
+			(quatro fourth)} ] , self elseifExpression star , (((self reserved: 'else') , expression) ==> #second))
+		==> [ :triple | 
+			{(Array
+				new: triple second size + 1
+				streamContents: [ :stream | 
+					stream
+						nextPut: triple first;
+						nextPutAll: triple second ]).
+			(triple third)} ]
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDMGrammar >> ifStatement [
+	^ (((self reserved: 'if') , expression , (self reserved: 'then') , statement)
+		==> [ :quatro | 
+			{(quatro second).
+			(quatro fourth)} ] , self elseifStatement star , (((self reserved: 'else') , statement) ==> #second))
 		==> [ :triple | 
 			{(Array
 				new: triple second size + 1
@@ -1324,6 +1375,16 @@ ViennaVDMGrammar >> or: arg1 and: arg2 [
 	arg2}
 ]
 
+{ #category : #'parsers-expressions-basics' }
+ViennaVDMGrammar >> othersExpression [
+	^ ((self reserved: 'others') , (self operator: '->') , expression) ==> #third
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDMGrammar >> othersStatement [
+	^ ((self reserved: 'others') , (self operator: '->') , statement) ==> #third
+]
+
 { #category : #'parsers-types' }
 ViennaVDMGrammar >> partialFunctionType [
 	^ (self discretionaryType1 , (self operator: '->') , type)
@@ -1493,6 +1554,11 @@ ViennaVDMGrammar >> resultExpression [
 	^ (self reserved: 'RESULT') ==> [ :t |  ]
 ]
 
+{ #category : #'parsers-statements' }
+ViennaVDMGrammar >> returnStatement [
+	^ ((self reserved: 'return') , expression) ==> #second
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMGrammar >> reverse: arg [
 	^ arg
@@ -1643,7 +1709,7 @@ ViennaVDMGrammar >> stateDesignator [
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> statement [
 	^ self letStatement / self letBeStatement / self defStatement / self identityStatement / self blockStatement
-		/ self generalAssignStatement
+		/ self generalAssignStatement / self ifStatement / self casesStatement / self returnStatement
 ]
 
 { #category : #'parsers-expressions-operators' }
