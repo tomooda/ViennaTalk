@@ -137,6 +137,6 @@ LWTWidgetDispenser >> plotWidget [
 				nameColor: Color black;
 				nameFont: self nameFontForWidgets;
 				extent: 80 @ 80;
-				data: ((0 to: 4) collect: [ :t | t asFloat cos ]);
+				data: ((0 to: 5) collect: [ :t | t asFloat sin negated ]);
 				yourself ]
 ]
