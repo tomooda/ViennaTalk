@@ -159,7 +159,7 @@ VDMPad class >> toggleStartStop [
 VDMPad class >> viennaSettingsOn: aBuilder [
 	<systemsettings>
 	(aBuilder setting: #isRunning)
-		parent: #ViennaTalk;
+		parent: #ViennaTalkServices;
 		target: self;
 		description:
 				'If checked then a VDMPad server will be up so that it can be accessed by web browsers and Vienna clients.';
