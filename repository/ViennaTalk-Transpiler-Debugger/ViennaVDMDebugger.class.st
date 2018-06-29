@@ -63,8 +63,18 @@ ViennaVDMDebugger >> debuggerTransmissionsIn: browser [
 ]
 
 { #category : #'building actions' }
+ViennaVDMDebugger >> debuggingActionsPragmas [
+	^ super debuggingActionsPragmas , #(#vdmDebuggingAction)
+]
+
+{ #category : #'building actions' }
 ViennaVDMDebugger >> installVDMSourceActionsFor: aPresentation [
 	self installActionsForRootPragmas: self vdmSourceActionsPragmas in: aPresentation
+]
+
+{ #category : #'building actions' }
+ViennaVDMDebugger >> stackDebuggingActionsPragmas [
+	^ super stackDebuggingActionsPragmas , #(#vdmStackDebuggingAction)
 ]
 
 { #category : #'building actions' }
