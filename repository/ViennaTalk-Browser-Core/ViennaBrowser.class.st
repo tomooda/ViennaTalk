@@ -113,6 +113,16 @@ ViennaBrowser class >> codePaneMenu: aBuilder [
 		selector: #pasteRecent;
 		icon: Smalltalk ui icons smallPasteIcon;
 		withSeparatorAfter.
+	aBuilder model otherModules
+		ifNotEmpty: [ :modules | 
+			(aBuilder
+				item: #'Insert module...' translated;
+				withSeparatorAfter)
+				with: [ modules
+						do: [ :module | 
+							(aBuilder item: module asSymbol)
+								selector: #insertModuleSource:;
+								arguments: (Array with: module asString) ] ] ].
 	(aBuilder item: #Format translated)
 		keyText: 'F';
 		selector: #prettyPrint;
@@ -164,8 +174,44 @@ ViennaBrowser class >> installEventHandlers [
 { #category : #menu }
 ViennaBrowser class >> moduleListMenu: aBuilder [
 	<contextMenu>
-	<viennaBrowserTestPaneMenu>
-	(aBuilder item: #jump translated) selector: #jumpToSpec
+	<viennaBrowserModuleListMenu>
+	(aBuilder item: #'new and load...' translated) selector: #newAndLoadFromFile.
+	(aBuilder item: #'load and merge...' translated) selector: #loadAndMergeFromFile.
+	(aBuilder item: #'save snapshot...' translated) selector: #saveSnapshotToFile.
+	(aBuilder item: #'save all modules...' translated) selector: #saveAllModulesToFile.
+	aBuilder model selectedModule
+		ifNotNil: [ (aBuilder item: #'save the module...' translated) selector: #saveAModuleToFile ].
+	aBuilder items last withSeparatorAfter.
+	(aBuilder item: #'remove module' translated)
+		selector: #removeModule;
+		withSeparatorAfter.
+	aBuilder model animation class = ViennaTranspiledAnimation
+		ifTrue: [ (aBuilder item: #'use interpreter' translated)
+				selector: #useInterpreter;
+				withSeparatorAfter ]
+		ifFalse: [ (aBuilder item: #'use transpiler' translated)
+				selector: #useTranspiler;
+				withSeparatorAfter ].
+	(aBuilder item: #'generate a Smalltalk script (single module)...' translated)
+		selector: #generateSmalltalkScript.
+	(aBuilder item: #'generate classes (all modules)...' translated)
+		selector: #generateSmalltalkClasses.
+	(aBuilder item: #'generate object (all modules)...' translated)
+		selector: #generateSmalltalkObject;
+		withSeparatorAfter.
+	(aBuilder item: #'run module test' translated)
+		selector: #runTestModule.
+	(aBuilder item: #'run tests' translated)
+		selector: #runAllTests;
+		withSeparatorAfter.
+	aBuilder model importerModules
+		ifNotEmpty: [ :modules | 
+			(aBuilder item: #'imported by...' translated)
+				with: [ modules
+						do: [ :module | 
+							(aBuilder item: module asSymbol)
+								selector: #selectModuleNamed:;
+								arguments: (Array with: module asString) ] ] ]
 ]
 
 { #category : #'instance creation' }
@@ -188,6 +234,13 @@ ViennaBrowser class >> openOn: aViennaAnimation [
 { #category : #'instance creation' }
 ViennaBrowser class >> openOn: aViennaAnimation withLabel: label [
 	^ (self on: aViennaAnimation) openLabel: label
+]
+
+{ #category : #menu }
+ViennaBrowser class >> testPaneMenu: aBuilder [
+	<contextMenu>
+	<viennaBrowserTestPaneMenu>
+	(aBuilder item: #jump translated) selector: #jumpToSpec
 ]
 
 { #category : #menu }
@@ -904,6 +957,21 @@ ViennaBrowser >> importerModules [
 		collect: [ :assoc | assoc key ]
 ]
 
+{ #category : #'code pane menu' }
+ViennaBrowser >> insertModuleSource: moduleName [
+	| section moduleSource editor |
+	section := ((self modulePositionsFrom: animation specification)
+		detect: [ :assoc | assoc key = moduleName ]
+		ifNone: [ String new ]) value.
+	moduleSource := (animation specification copyFrom: section first to: section last) asText
+		makeAllColor: Color black.
+	codePane highlight.
+	editor := codePane textMorph editor.
+	editor replaceSelectionWith: moduleSource.
+	editor
+		selectInterval: (editor selectionInterval first to: editor selectionInterval first + moduleSource size - 1)
+]
+
 { #category : #'test pane menu' }
 ViennaBrowser >> jumpToSpec [
 	| results |
@@ -1057,6 +1125,11 @@ Do you want to discard it to close?' ]
 { #category : #'user interface' }
 ViennaBrowser >> openLabel: aString [
 	(self build openInWindowLabeled: aString) model: self
+]
+
+{ #category : #'module list' }
+ViennaBrowser >> otherModules [
+	^ self moduleList copyWithout: self selectedModule
 ]
 
 { #category : #'value pane' }
