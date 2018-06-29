@@ -400,18 +400,21 @@ ViennaBrowser >> acceptBindings: aString in: moduleName [
 
 { #category : #'code pane' }
 ViennaBrowser >> acceptCode: aStringOrText [
-	animation
-		ifNotNil: [ 
-			| code oldModulePositions newModulePositions newModuleNames oldSpec newSpec |
+	^ self acceptCode: aStringOrText newModuleAndSourceDo: nil
+]
+
+{ #category : #'code pane' }
+ViennaBrowser >> acceptCode: aStringOrText newModuleAndSourceDo: aBlock [
+	self animation
+		ifNotNil: [ | code oldModulePositions newModulePositions newModuleNames oldSpec newSpec |
 			code := (self autoFormat
-				ifTrue: [ 
-					(ViennaVDMParser new format: aStringOrText)
+				ifTrue: [ (ViennaVDMParser new format: aStringOrText)
 						in: [ :formatted | 
 							formatted isPetitFailure
 								ifTrue: [ aStringOrText ]
 								ifFalse: [ formatted ] ] ]
 				ifFalse: [ aStringOrText ]) asString trimmed copyWith: Character cr.
-			oldSpec := animation specification.
+			oldSpec := self animation specification.
 			oldModulePositions := self modulePositionsFrom: oldSpec.
 			newModulePositions := self modulePositionsFrom: code.
 			newModuleNames := (newModulePositions collect: #key) asSet.
@@ -424,7 +427,7 @@ ViennaBrowser >> acceptCode: aStringOrText [
 							(newModuleNames includes: assoc key)
 								ifFalse: [ stream nextPutAll: (oldSpec copyFrom: assoc value first to: assoc value last) ] ] ].
 			codePane hasUnacceptedEdits: false.
-			animation
+			self animation
 				specification: newSpec
 				ifError: [ :msg | 
 					| posStrIndex charPos message |
@@ -432,12 +435,10 @@ ViennaBrowser >> acceptCode: aStringOrText [
 					message := msg.
 					posStrIndex := msg findLastOccurrenceOfString: 'at line ' startingAt: 1.
 					posStrIndex > 0
-						ifTrue: [ 
-							| colonIndex |
+						ifTrue: [ | colonIndex |
 							colonIndex := msg indexOf: $: startingAt: posStrIndex + 9.
 							colonIndex > 0
-								ifTrue: [ 
-									| linePos colPos lines |
+								ifTrue: [ | linePos colPos lines |
 									message := msg copyFrom: 1 to: posStrIndex - 1.
 									(message includes: $()
 										ifTrue: [ message := message copyFrom: 1 to: (message findLastOccurrenceOfString: ' (' startingAt: 1) ].
@@ -449,6 +450,8 @@ ViennaBrowser >> acceptCode: aStringOrText [
 					^ codePane handleEdit: [ codePane notify: message at: charPos in: code readStream ] ].
 			codePane hasUnacceptedEdits: false.
 			self selectModuleNamed: (newModulePositions ifEmpty: [ nil ] ifNotEmpty: [ newModulePositions first key ]).
+			aBlock
+				ifNotNil: [ newModulePositions do: [ :assoc | aBlock cull: assoc key cull: (code copyFrom: assoc value first to: assoc value last) ] ].
 			^ true ].
 	^ false
 ]
@@ -573,7 +576,7 @@ ViennaBrowser >> buildFieldList [
 		list: #fieldList
 		selected: #fieldSelectionIndex
 		changeSelected: #fieldSelectionIndex:
-		menu: #fieldListMenu:)
+		menu: nil)
 		font: ViennaLauncher font;
 		yourself
 ]
@@ -839,7 +842,7 @@ ViennaBrowser >> loadSnapshotFromFile [
 
 { #category : #'module list' }
 ViennaBrowser >> moduleList [
-	^ animation ifNil: [ Array new ] ifNotNil: [ (self modulePositionsFrom: animation specification) collect: #key ]
+	^ animation ifNil: [ Array new ] ifNotNil: [ ((self modulePositionsFrom: animation specification) collect: #key) asSortedCollection asArray]
 ]
 
 { #category : #'module list menu' }
@@ -934,8 +937,14 @@ ViennaBrowser >> newAndLoadFromFile [
 ]
 
 { #category : #'user interface' }
+ViennaBrowser >> okToChange [
+	^ (codePane canDiscardEdits and: [ workspacePane canDiscardEdits ]) or: [ UIManager default confirm: 'Has unsaved changes.
+Do you want to discard it to close?' ]
+]
+
+{ #category : #'user interface' }
 ViennaBrowser >> openLabel: aString [
-	self build openInWindowLabeled: aString
+	(self build openInWindowLabeled: aString) model: self
 ]
 
 { #category : #'value pane' }
@@ -1029,11 +1038,7 @@ ViennaBrowser >> saveAModuleToFile [
 						extensions: #('vdm' 'vdmsl')
 						do: [ :stream | 
 							stream
-								nextPutAll:
-									(animation specification
-										copyFrom: assoc value first
-										to: assoc value last);
-								close ] ] ]
+								nextPutAll: (animation specification copyFrom: assoc value first to: assoc value last) close ] ] ]
 ]
 
 { #category : #'module list menu' }
