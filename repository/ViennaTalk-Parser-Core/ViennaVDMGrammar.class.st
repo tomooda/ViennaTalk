@@ -1029,7 +1029,7 @@ ViennaVDMGrammar >> objectPattern [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> oldName [
-	^ (identifier , (self operator: $~)) ==> #first
+	^ (identifier , (self operator: $~)) ==> [ :pair | pair first , pair second ]
 ]
 
 { #category : #utilities }
@@ -1482,7 +1482,7 @@ ViennaVDMGrammar >> unaryPlus: arg [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> undefinedExpression [
-	^ (self reserved: 'undefined') ==> [ :t | 'ViennaUndefined signal' ]
+	^ (self reserved: 'undefined') ==> [ :t | nil ]
 ]
 
 { #category : #'parsers-expressions-operators' }
