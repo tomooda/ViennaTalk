@@ -24,8 +24,8 @@ ViennaException class >> tixe: anArrayOfAssociations in: aBlock [
 			anArrayOfAssociations
 				do: [ :assoc | 
 					(assoc key value: ex expression)
-						ifNotNil: [ :binding | 
-							theBlock := [ assoc value value: binding ].
+						ifNotEmpty: [ :binding | 
+							theBlock := [ assoc value value: binding first ].
 							ex retry ] ].
 			ex pass ]
 ]
