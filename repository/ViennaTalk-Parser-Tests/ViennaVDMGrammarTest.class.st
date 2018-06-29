@@ -12,6 +12,19 @@ ViennaVDMGrammarTest >> setUp [
 	grammar := ViennaVDMGrammar new
 ]
 
+{ #category : #'tests-definitions' }
+ViennaVDMGrammarTest >> testAccessTypeDefinition [
+	self assert: (grammar accessTypeDefinition end parse: 't = t1') equals: #(#(nil nil) #('t' 't1' nil)).
+	self assert: (grammar accessTypeDefinition end parse: 'public t = t1') equals: #(#('public' nil) #('t' 't1' nil)).
+	self assert: (grammar accessTypeDefinition end parse: 'static t = t1') equals: #(#(nil 'static') #('t' 't1' nil)).
+	self
+		assert: (grammar accessTypeDefinition end parse: 'static protected t = t1')
+		equals: #(#('protected' 'static') #('t' 't1' nil)).
+	self
+		assert: (grammar accessTypeDefinition end parse: 'private static t = t1')
+		equals: #(#('private' 'static') #('t' 't1' nil))
+]
+
 { #category : #'tests-expressions' }
 ViennaVDMGrammarTest >> testActExpression1 [
 	self assert: (grammar expression end parse: '#act(o)') equals: #('o')
@@ -360,21 +373,13 @@ ViennaVDMGrammarTest >> testExistsExpression1 [
 ]
 
 { #category : #'tests-definitions' }
-ViennaVDMGrammarTest >> testExplicitFunctionDefinition1 [
+ViennaVDMGrammarTest >> testExplicitFunctionDefinition [
 	self
 		assert: (grammar functionDefinition end parse: 'f[@t] : t1 -> t2 f(x) == y pre b1 post b2 measure f2')
-		equals: #('f' #('@t') #('t1' 't2') 'f' #(#('x')) 'y' 'b1' 'b2' 'f2')
-]
-
-{ #category : #'tests-definitions' }
-ViennaVDMGrammarTest >> testExplicitFunctionDefinition2 [
+		equals: #('f' #('@t') #('t1' 't2') 'f' #(#('x')) 'y' 'b1' 'b2' 'f2').
 	self
 		assert: (grammar functionDefinition end parse: 'f[@t] : t1 -> t2 -> t3 f(x)(y) == z pre b1 post b2 measure f2')
-		equals: #('f' #('@t') #('t1' #('t2' 't3')) 'f' #(#('x') #('y')) 'z' 'b1' 'b2' 'f2')
-]
-
-{ #category : #'tests-definitions' }
-ViennaVDMGrammarTest >> testExplicitFunctionDefinition3 [
+		equals: #('f' #('@t') #('t1' #('t2' 't3')) 'f' #(#('x') #('y')) 'z' 'b1' 'b2' 'f2').
 	self
 		assert: (grammar functionDefinition end parse: 'f: t1->t2 f(x) == y')
 		equals: #('f' #() #('t1' 't2') 'f' #(#('x')) 'y' nil nil nil)
@@ -509,6 +514,15 @@ ViennaVDMGrammarTest >> testInmapType2 [
 { #category : #'tests-types' }
 ViennaVDMGrammarTest >> testInmapType3 [
 	self assert: (grammar type end parse: 'inmap inmap t1 to t2 to t3') equals: #(#('t1' 't2') 't3')
+]
+
+{ #category : #'tests-types' }
+ViennaVDMGrammarTest >> testInvariantInitialFunction [
+	self
+		assert: (ViennaVDMGrammar new invariantInitialFunction end parse: 'p == e')
+		equals:
+			{'p'.
+			'e'}
 ]
 
 { #category : #'tests-expressions' }
@@ -977,6 +991,31 @@ ViennaVDMGrammarTest >> testRecordPattern4 [
 	self assert: (grammar pattern end parse: 'mk_T ( f , - )') equals: #('T' #('f' nil))
 ]
 
+{ #category : #'tests-definitions' }
+ViennaVDMGrammarTest >> testRecordTypeDefinition [
+	self
+		assert: (grammar recordTypeDefinition end parse: 'T::t1 f2:t2 f3:-t3')
+		equals:
+			{'T'.
+			{'t1'.
+			{'f2'.
+			't2'}.
+			{'f3'.
+			't3'}}.
+			nil}.
+	self
+		assert: (grammar recordTypeDefinition end parse: 'T::t1 f2:t2 f3:-t3 inv p == e')
+		equals:
+			{'T'.
+			{'t1'.
+			{'f2'.
+			't2'}.
+			{'f3'.
+			't3'}}.
+			{'p'.
+			'e'}}
+]
+
 { #category : #'tests-expressions' }
 ViennaVDMGrammarTest >> testRelations1 [
 	#('=' '<>' '<=' '>=' 'subset' 'psubset' 'in set' 'not in set')
@@ -1302,6 +1341,23 @@ ViennaVDMGrammarTest >> testTypeName3 [
 	self assert: (grammar type end parse: 'm1 ` t1') equals: #('m1' 't1')
 ]
 
+{ #category : #'tests-definitions' }
+ViennaVDMGrammarTest >> testTypeSynonym [
+	self
+		assert: (grammar typeSynonym end parse: 't = t1')
+		equals:
+			{'t'.
+			't1'.
+			nil}.
+	self
+		assert: (grammar typeSynonym end parse: 't = t1 inv p == e')
+		equals:
+			{'t'.
+			't1'.
+			{'p'.
+			'e'}}
+]
+
 { #category : #'tests-types' }
 ViennaVDMGrammarTest >> testTypeVariable1 [
 	self assert: (grammar type end parse: '@t1') equals: '@t1'
@@ -1378,12 +1434,8 @@ ViennaVDMGrammarTest >> testUnionType5 [
 ]
 
 { #category : #'tests-definitions' }
-ViennaVDMGrammarTest >> testValueDefinition1 [
-	self assert: (grammar valueDefinition end parse: 'v:t=e') equals: #('v' 't' 'e')
-]
-
-{ #category : #'tests-definitions' }
-ViennaVDMGrammarTest >> testValueDefinition2 [
+ViennaVDMGrammarTest >> testValueDefinition [
+	self assert: (grammar valueDefinition end parse: 'v:t=e') equals: #('v' 't' 'e').
 	self assert: (grammar valueDefinition end parse: 'v=e') equals: #('v' nil 'e')
 ]
 

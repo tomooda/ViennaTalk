@@ -212,6 +212,15 @@ ViennaVDM2SmalltalkTranslatorTest >> testDivAnd [
 	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '3 div 2')) equals: 1
 ]
 
+{ #category : #'tests-definitions' }
+ViennaVDM2SmalltalkTranslatorTest >> testDocument [
+	self
+		assert:
+			(Compiler
+				evaluate: (ViennaVDM2SmalltalkTranslator new document end parse: 'types T = nat inv n == n < 10;') , 'T includes: 9')
+		equals: true
+]
+
 { #category : #'tests-operators' }
 ViennaVDM2SmalltalkTranslatorTest >> testDom [
 	self
@@ -495,6 +504,24 @@ ViennaVDM2SmalltalkTranslatorTest >> testInterAnd [
 	self
 		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '{1,2,3} inter {2,3,4}'))
 		equals: #(2 3) asSet
+]
+
+{ #category : #'tests-types' }
+ViennaVDM2SmalltalkTranslatorTest >> testInvariantFunction [
+	self
+		assert:
+			(Compiler
+				evaluate: (ViennaVDM2SmalltalkTranslator new invariantFunction end parse: 'mk_(a, b) == a > b') , ' value: {2 . 1}')
+		equals: true.
+	self
+		assert:
+			(Compiler
+				evaluate: (ViennaVDM2SmalltalkTranslator new invariantFunction end parse: 'mk_(a, b) == a > b') , ' value: {2 . 3}')
+		equals: false.
+	self
+		assert:
+			(Compiler evaluate: (ViennaVDM2SmalltalkTranslator new invariantFunction end parse: 'mk_(a, b) == a > b') , ' value: 1')
+		equals: false
 ]
 
 { #category : #'tests-operators' }
@@ -978,6 +1005,42 @@ ViennaVDM2SmalltalkTranslatorTest >> testRecordPattern [
 		equals: 1
 ]
 
+{ #category : #'tests-definitions' }
+ViennaVDM2SmalltalkTranslatorTest >> testRecordTypeDefinition [
+	self
+		assert:
+			(Compiler
+				evaluate:
+					'| T |' , (ViennaVDM2SmalltalkTranslator new recordTypeDefinition end parse: 'T::nat f2:int f3:-bool') , 'T')
+		equals:
+			(ViennaCompositeType
+				constructorName: 'T'
+				withAll:
+					{{nil.
+					false.
+					(ViennaType nat)}.
+					{'f2'.
+					false.
+					(ViennaType int)}.
+					{'f3'.
+					true.
+					(ViennaType bool)}}).
+	self
+		assert:
+			(Compiler
+				evaluate:
+					'| T |' , (ViennaVDM2SmalltalkTranslator new recordTypeDefinition end parse: 'T::nat inv mk_T(x) == x < 10')
+						, 'T includes: (T applyTo: #(1))')
+		equals: true.
+	self
+		should: [ 
+			Compiler
+				evaluate:
+					'| T |' , (ViennaVDM2SmalltalkTranslator new recordTypeDefinition end parse: 'T::nat inv mk_T(x) == x < 10')
+						, 'T applyTo: #(10)' ]
+		raise: ViennaInvariantViolation
+]
+
 { #category : #'tests-operators' }
 ViennaVDM2SmalltalkTranslatorTest >> testRemAnd [
 	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '5 rem 3')) equals: 2.
@@ -1164,6 +1227,27 @@ ViennaVDM2SmalltalkTranslatorTest >> testTypeJudgement [
 			(Compiler
 				evaluate: '| t | t := ViennaType int. ' , (ViennaVDM2SmalltalkTranslator new expression end parse: 'is_(1, t)'))
 		equals: true
+]
+
+{ #category : #'tests-definitions' }
+ViennaVDM2SmalltalkTranslatorTest >> testTypeSynonym [
+	self
+		assert:
+			(Compiler evaluate: ' | T |' , (ViennaVDM2SmalltalkTranslator new typeSynonym end parse: 'T = nat') second , 'T')
+		equals: ViennaType nat.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					' | T |' , (ViennaVDM2SmalltalkTranslator new typeSynonym end parse: 'T = nat inv n == n < 10') second , 'T includes: 9')
+		equals: true.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					' | T |' , (ViennaVDM2SmalltalkTranslator new typeSynonym end parse: 'T = nat inv n == n < 10') second
+						, 'T includes: 10')
+		equals: false
 ]
 
 { #category : #'tests-operators' }
