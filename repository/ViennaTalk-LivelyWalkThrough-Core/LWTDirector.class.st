@@ -11,6 +11,30 @@ Class {
 	#category : 'ViennaTalk-LivelyWalkThrough-Core'
 }
 
+{ #category : #'instance creation' }
+LWTDirector class >> default [
+	^ self on: VDMC default
+]
+
+{ #category : #'instance creation' }
+LWTDirector class >> on: aVDMC [
+	^ self new vdmc: aVDMC
+]
+
+{ #category : #'instance creation' }
+LWTDirector class >> vdmj [
+	^ self on: VDMC vdmj
+]
+
+{ #category : #dialogs }
+LWTDirector >> abort: aString [
+	| context |
+	context := thisContext.
+	[ context receiver isKindOf: LWTAction ] whileFalse: [ context := context sender ].
+	UIManager default abort: aString title: 'Lively Walk-Through: ' , context receiver name.
+	context return: nil
+]
+
 { #category : #'accessing-actions' }
 LWTDirector >> actionAt: aSymbol ifAbsent: errorBlock [
 	^ actions at: aSymbol asSymbol ifAbsent: errorBlock
@@ -65,6 +89,11 @@ LWTDirector >> cutNames [
 	^ cuts keys asSortedCollection
 ]
 
+{ #category : #defaults }
+LWTDirector >> defaultVDMC [
+	^ VDMC vdmj
+]
+
 { #category : #'accessing-actions' }
 LWTDirector >> dispatchActionAt: aSymbol ifAbsent: errorBlock [
 	^ (actions at: aSymbol asSymbol ifAbsent: [  ]) ifNotNilDo: [ :action | action value: self ] ifNil: errorBlock
@@ -79,36 +108,20 @@ LWTDirector >> drawOn: aCanvas [
 		borderColor: Color white
 ]
 
-{ #category : #dialogs }
-LWTDirector >> error: aString actionName: nameString [
-	| context |
-	UIManager default abort: aString title: 'Lively Walk-Through: ' , nameString.
-	context := thisContext.
-	[ context receiver isKindOf: LWTAction ] whileFalse: [ context := context sender ].
-	context return: nil
-]
-
 { #category : #interpreting }
 LWTDirector >> execCall: aString [
-	| name |
-	name := thisContext sender name.
-	^ self
-		dispatchActionAt: aString asSymbol
-		ifAbsent: [ self error: 'Can not read an undefined variable: ' , aString actionName: name ]
+	^ self dispatchActionAt: aString asSymbol ifAbsent: [ self abort: 'Can not read an undefined variable: ' , aString ]
 ]
 
 { #category : #interpreting }
 LWTDirector >> execDialog: aString [
-	self inform: aString actionName: thisContext sender receiver name
+	self inform: aString
 ]
 
 { #category : #interpreting }
 LWTDirector >> execLet: aString be: anObject [
-	| name |
-	name := thisContext sender name.
-	(self
-		morphNamed: aString
-		ifAbsent: [ self error: 'Can not assign to an undefined variable: ' , aString actionName: name ]) value: anObject.
+	(self morphNamed: aString ifAbsent: [ self abort: 'Can not assign to an undefined variable: ' , aString ])
+		value: anObject.
 	^ anObject
 ]
 
@@ -117,19 +130,15 @@ LWTDirector >> execVDM: aString withArguments: anArray [
 	^ aString , '(' , (',' join: anArray)
 		in: [ :expression | 
 			| value |
-			value := vdmc plainEvaluate: expression.
+			value := self vdmc plainEvaluate: expression.
 			self addFrame: (LWTVDMCallFrame callee: aString expression: expression value: value).
-			self addFrame: (LWTVDMStateFrame states: vdmc state).
+			self addFrame: (LWTVDMStateFrame states: self vdmc state).
 			value ]
 ]
 
 { #category : #interpreting }
 LWTDirector >> execValueOf: aString [
-	| name |
-	name := thisContext sender name.
-	^ (self
-		morphNamed: aString
-		ifAbsent: [ self error: 'Can not read an undefined variable: ' , aString actionName: name ]) value
+	^ (self morphNamed: aString ifAbsent: [ self abort: 'Can not read an undefined variable: ' , aString ]) value
 ]
 
 { #category : #'accessing-frames and cuts' }
@@ -148,8 +157,11 @@ LWTDirector >> hasProceededSince: anLWTFrame [
 ]
 
 { #category : #dialogs }
-LWTDirector >> inform: aString actionName: nameString [
-	UIManager default proceed: aString title: 'Lively Walk-Through: ' , nameString
+LWTDirector >> inform: aString [
+	| context |
+	context := thisContext.
+	[ context receiver isKindOf: LWTAction ] whileFalse: [ context := context sender ].
+	UIManager default alert: aString title: 'Lively Walk-Through: ' , context receiver name
 ]
 
 { #category : #'initialize-release' }
@@ -158,8 +170,7 @@ LWTDirector >> initialize [
 	actions := Dictionary new.
 	frames := Array new writeStream.
 	lastFrame := nil.
-	cuts := Dictionary new.
-	vdmc := VDMC vdmj
+	cuts := Dictionary new
 ]
 
 { #category : #'accessing-morphs' }
@@ -211,12 +222,12 @@ LWTDirector >> removeCutAt: aString [
 
 { #category : #accessing }
 LWTDirector >> specification [
-	^ vdmc specification
+	^ self vdmc specification
 ]
 
 { #category : #accessing }
 LWTDirector >> specification: aString [
-	vdmc specification: aString
+	self vdmc specification: aString
 ]
 
 { #category : #'accessing-morphs' }
@@ -227,7 +238,16 @@ LWTDirector >> valueOf: aString ifAbsent: errorBlock [
 
 { #category : #accessing }
 LWTDirector >> vdmc [
-	^ vdmc
+	^ vdmc ifNil: [ vdmc := self defaultVDMC ]
+]
+
+{ #category : #accessing }
+LWTDirector >> vdmc: aVDMC [
+	vdmc
+		ifNotNil: [ 
+			aVDMC specification: vdmc specification.
+			vdmc state keysAndValuesDo: [ :key :value | aVDMC plainAt: key put: value ] ].
+	vdmc := aVDMC
 ]
 
 { #category : #'event handling' }
