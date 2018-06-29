@@ -11,7 +11,7 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesAssignmentDefinition
 	self assert: node label = 'AssignmentDefinition'.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2Smalltalk new freeVariables: node env: Dictionary new)
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
 		equals:
 			{'t1'.
 			'e1'} asSet
@@ -25,7 +25,7 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesBlockStatementBoundV
 	self assert: node label = 'BlockStatement'.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2Smalltalk new freeVariables: node env: Dictionary new)
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
 		equals:
 			{'t1'.
 			'e1'.
@@ -41,7 +41,7 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesCasesExpressionAlter
 	self deny: node isPetitFailure.
 	self assert: node label = 'CasesStatementAlternative'.
 	binds := Set new.
-	self assert: (ViennaVDM2Smalltalk new freeVariables: node env: Dictionary new) equals: {'op'} asSet
+	self assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new) equals: {'op'} asSet
 ]
 
 { #category : #'tests-free variables-expressions' }
@@ -52,7 +52,7 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesDefExpressionBoundVa
 	self assert: node label = 'DefExpression'.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2Smalltalk new freeVariables: node env: Dictionary new)
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
 		equals:
 			{'t1'.
 			'f'.
@@ -69,7 +69,7 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesExists1ExpressionBou
 	self assert: node label = 'Exists1Expression'.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2Smalltalk new freeVariables: node env: Dictionary new)
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
 		equals:
 			{'t'.
 			'p'.
@@ -84,7 +84,7 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesExistsExpressionBoun
 	self assert: node label = 'ExistsExpression'.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2Smalltalk new freeVariables: node env: Dictionary new)
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
 		equals:
 			{'t'.
 			's'.
@@ -100,7 +100,7 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesFieldReferenceBoundV
 	self assert: node label = 'IndexForLoop'.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2Smalltalk new freeVariables: node env: Dictionary new)
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
 		equals:
 			{'e1'.
 			'e2'.
@@ -115,7 +115,7 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesFieldSelectBoundVars
 	self deny: node isPetitFailure.
 	self assert: node label = 'FieldSelect'.
 	binds := Set new.
-	self assert: (ViennaVDM2Smalltalk new freeVariables: node env: Dictionary new) equals: {'record'} asSet
+	self assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new) equals: {'record'} asSet
 ]
 
 { #category : #'tests-free variables-expressions' }
@@ -126,7 +126,7 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesForallExpressionBoun
 	self assert: node label = 'ForallExpression'.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2Smalltalk new freeVariables: node env: Dictionary new)
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
 		equals:
 			{'t'.
 			's'.
@@ -141,7 +141,7 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesIndexForLoopBoundVar
 	self deny: node isPetitFailure.
 	self assert: node label = 'IndexForLoop'.
 	self
-		assert: (ViennaVDM2Smalltalk new freeVariables: node env: Dictionary new)
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
 		equals:
 			{'e1'.
 			'e2'.
@@ -157,7 +157,7 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesIotaExpressionBoundV
 	self assert: node label = 'IotaExpression'.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2Smalltalk new freeVariables: node env: Dictionary new)
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
 		equals:
 			{'t'.
 			'p'.
@@ -172,7 +172,7 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesLambdaExpressionBoun
 	self assert: node label = 'LambdaExpression'.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2Smalltalk new freeVariables: node env: Dictionary new)
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
 		equals:
 			{'t'.
 			'f'} asSet
@@ -186,7 +186,7 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesLetBeExpressionBound
 	self assert: node label = 'LetBeExpression'.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2Smalltalk new freeVariables: node env: Dictionary new)
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
 		equals:
 			{'s'.
 			'p'.
@@ -201,7 +201,7 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesLetBeStatementBoundV
 	self assert: node label = 'LetBeStatement'.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2Smalltalk new freeVariables: node env: Dictionary new)
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
 		equals:
 			{'s'.
 			'p'.
@@ -216,7 +216,7 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesLetExpressionBoundVa
 	self assert: node label = 'LetExpression'.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2Smalltalk new freeVariables: node env: Dictionary new)
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
 		equals:
 			{'t1'.
 			'f'.
@@ -233,7 +233,7 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesLetStatementBoundVar
 	self assert: node label = 'LetStatement'.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2Smalltalk new freeVariables: node env: Dictionary new)
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
 		equals:
 			{'t1'.
 			'f'.
@@ -249,7 +249,7 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesLocalNameBoundVarsIn
 	self deny: node isPetitFailure.
 	self assert: node label = 'LocalName'.
 	binds := Set new.
-	self assert: (ViennaVDM2Smalltalk new freeVariables: node env: Dictionary new) equals: {'v'} asSet
+	self assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new) equals: {'v'} asSet
 ]
 
 { #category : #'tests-free variables-expressions' }
@@ -260,7 +260,7 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesMapComprehensionBoun
 	self assert: node label = 'MapComprehension'.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2Smalltalk new freeVariables: node env: Dictionary new)
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
 		equals:
 			{'f'.
 			'g'.
@@ -276,7 +276,7 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesRecordConstructorBou
 	self assert: node label = 'RecordConstructor'.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2Smalltalk new freeVariables: node env: Dictionary new)
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
 		equals:
 			{'T'.
 			'v'} asSet
@@ -290,7 +290,7 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesSequenceComprehensio
 	self assert: node label = 'SequenceComprehension'.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2Smalltalk new freeVariables: node env: Dictionary new)
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
 		equals:
 			{'f'.
 			's'.
@@ -304,7 +304,7 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesSequenceForLoopBound
 	self deny: node isPetitFailure.
 	self assert: node label = 'SequenceForLoop'.
 	self
-		assert: (ViennaVDM2Smalltalk new freeVariables: node env: Dictionary new)
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
 		equals:
 			{'s'.
 			'op'} asSet
@@ -318,7 +318,7 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesSetComprehensionBoun
 	self assert: node label = 'SetComprehension'.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2Smalltalk new freeVariables: node env: Dictionary new)
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
 		equals:
 			{'f'.
 			's'.
@@ -332,7 +332,7 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesSetForLoopBoundVarsI
 	self deny: node isPetitFailure.
 	self assert: node label = 'SetForLoop'.
 	self
-		assert: (ViennaVDM2Smalltalk new freeVariables: node env: Dictionary new)
+		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
 		equals:
 			{'s'.
 			'op'} asSet

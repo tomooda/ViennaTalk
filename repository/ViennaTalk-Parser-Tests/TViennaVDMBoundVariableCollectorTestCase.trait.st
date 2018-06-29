@@ -10,7 +10,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesAccessFunctionDefi
 	self deny: node isPetitFailure.
 	self assert: node label = 'AccessFunctionDefinition'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self assert: binds equals: {'fn'} asSet
 ]
 
@@ -21,7 +21,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesAccessOperationDef
 	self deny: node isPetitFailure.
 	self assert: node label = 'AccessOperationDefinition'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self assert: binds equals: {'op'} asSet
 ]
 
@@ -32,7 +32,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesAccessTypeDefiniti
 	self deny: node isPetitFailure.
 	self assert: node label = 'AccessTypeDefinition'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self assert: binds equals: {'t1'} asSet
 ]
 
@@ -43,7 +43,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesAccessValueDefinit
 	self deny: node isPetitFailure.
 	self assert: node label = 'AccessValueDefinition'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self assert: binds equals: {'v1'} asSet
 ]
 
@@ -54,7 +54,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesAssignmentDefiniti
 	self deny: node isPetitFailure.
 	self assert: node label = 'AssignmentDefinition'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self assert: binds equals: {'v'} asSet
 ]
 
@@ -65,7 +65,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesBindListInto [
 	self deny: node isPetitFailure.
 	self assert: node label = 'BindList'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
@@ -81,7 +81,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesBlockStatementInto
 	self deny: node isPetitFailure.
 	self assert: node label = 'BlockStatement'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
@@ -97,14 +97,11 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesCompositeTypeInto 
 	self deny: node isPetitFailure.
 	self assert: node label = 'CompositeType'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
-			{'T'.
-			't1'.
-			't2'.
-			't3'} asSet
+			{'T'} asSet
 ]
 
 { #category : #'tests-bound variables-statements' }
@@ -114,7 +111,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesDclStatementInto [
 	self deny: node isPetitFailure.
 	self assert: node label = 'DclStatement'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
@@ -129,7 +126,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesDefinitionBlockInt
 	self deny: node isPetitFailure.
 	self assert: node label = 'DefinitionBlock'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
@@ -144,7 +141,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesDocumentInto [
 	self deny: node isPetitFailure.
 	self assert: node label = 'Document'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
@@ -158,7 +155,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesDocumentInto [
 	self deny: node isPetitFailure.
 	self assert: node label = 'Document'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
@@ -173,7 +170,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesEqualDefinitionInt
 	self deny: node isPetitFailure.
 	self assert: node label = 'EqualDefinition'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self assert: binds equals: {'v1'} asSet
 ]
 
@@ -184,7 +181,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesEqualDefinitionLis
 	self deny: node isPetitFailure.
 	self assert: node label = 'EqualDefinitionList'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
@@ -199,7 +196,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesExplicitFunctionDe
 	self deny: node isPetitFailure.
 	self assert: node label = 'ExplicitFunctionDefinition'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self assert: binds equals: {'fn'} asSet
 ]
 
@@ -210,7 +207,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesExplicitOperationD
 	self deny: node isPetitFailure.
 	self assert: node label = 'ExplicitOperationDefinition'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self assert: binds equals: {'op'} asSet
 ]
 
@@ -221,16 +218,16 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesExportDefinitionIn
 	self deny: node isPetitFailure.
 	self assert: node label = 'ExportDefinition'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
 			{'t1'.
 			't2'.
-			'v1'.
 			't3'.
-			'v2'.
-			't4'} asSet
+			't4'.
+			'v1'.
+			'v2'} asSet
 ]
 
 { #category : #'tests-bound variables-interfaces' }
@@ -240,7 +237,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesExportFunctionsSig
 	self deny: node isPetitFailure.
 	self assert: node label = 'ExportFunctionsSignature'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
@@ -259,7 +256,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesExportModuleSignat
 	self deny: node isPetitFailure.
 	self assert: node label = 'ExportModuleSignature'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
@@ -275,7 +272,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesExportTypesSignatu
 	self deny: node isPetitFailure.
 	self assert: node label = 'ExportTypesSignature'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
@@ -290,19 +287,19 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesFieldInto [
 	self deny: node isPetitFailure.
 	self assert: node label = 'Field'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self assert: binds equals: {'f'} asSet.
 	node := ViennaVDMParser new field end parse: 'f :- t'.
 	self deny: node isPetitFailure.
 	self assert: node label = 'Field'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self assert: binds equals: {'f'} asSet.
 	node := ViennaVDMParser new field end parse: 't'.
 	self deny: node isPetitFailure.
 	self assert: node label = 'Field'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self assert: binds equals: {} asSet
 ]
 
@@ -313,7 +310,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesFieldListInto [
 	self deny: node isPetitFailure.
 	self assert: node label = 'FieldList'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
@@ -328,7 +325,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesFieldPatternInto [
 	self deny: node isPetitFailure.
 	self assert: node label = 'FieldPattern'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self assert: binds equals: {'v'} asSet
 ]
 
@@ -339,7 +336,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesFieldPatternListIn
 	self deny: node isPetitFailure.
 	self assert: node label = 'FieldPatternList'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
@@ -354,7 +351,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesFunctionDefinition
 	self deny: node isPetitFailure.
 	self assert: node label = 'FunctionDefinition'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self assert: binds equals: {'fn'} asSet
 ]
 
@@ -366,7 +363,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesFunctionDefinition
 	self deny: node isPetitFailure.
 	self assert: node label = 'FunctionDefinitions'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
@@ -381,7 +378,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesFunctionExportInto
 	self deny: node isPetitFailure.
 	self assert: node label = 'FunctionExport'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
@@ -397,7 +394,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesIndexForLoopInto [
 	self deny: node isPetitFailure.
 	self assert: node label = 'IndexForLoop'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self assert: binds equals: {'v'} asSet
 ]
 
@@ -408,12 +405,11 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesInmapTypeInto [
 	self deny: node isPetitFailure.
 	self assert: node label = 'InmapType'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
-			{'t1'.
-			't2'} asSet
+			{} asSet
 ]
 
 { #category : #'tests-bound variables-definitions' }
@@ -423,7 +419,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesLocalDefinitionInt
 	self deny: node isPetitFailure.
 	self assert: node label = 'LocalDefinition'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self assert: binds equals: {'v1'} asSet
 ]
 
@@ -434,7 +430,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesLocalDefinitionLis
 	self deny: node isPetitFailure.
 	self assert: node label = 'LocalDefinitionList'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
@@ -449,7 +445,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesMapEnumerationPatt
 	self deny: node isPetitFailure.
 	self assert: node label = 'MapEnumerationPattern'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
@@ -466,7 +462,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesMapMunionPatternIn
 	self deny: node isPetitFailure.
 	self assert: node label = 'MapMunionPattern'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
@@ -485,12 +481,11 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesMapTypeInto [
 	self deny: node isPetitFailure.
 	self assert: node label = 'MapType'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
-			{'t1'.
-			't2'} asSet
+			{} asSet
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
@@ -500,7 +495,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesMapletPatternInto 
 	self deny: node isPetitFailure.
 	self assert: node label = 'MapletPattern'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
@@ -515,7 +510,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesModuleInto [
 	self deny: node isPetitFailure.
 	self assert: node label = 'Module'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self assert: binds equals: {'m1'} asSet
 ]
 
@@ -526,7 +521,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesMultipleSetBindInt
 	self deny: node isPetitFailure.
 	self assert: node label = 'MultipleSetBind'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
@@ -541,7 +536,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesMultipleTypeBindIn
 	self deny: node isPetitFailure.
 	self assert: node label = 'MultipleTypeBind'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
@@ -556,7 +551,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesObjectPatternInto 
 	self deny: node isPetitFailure.
 	self assert: node label = 'ObjectPattern'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
@@ -571,7 +566,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesOperationDefinitio
 	self deny: node isPetitFailure.
 	self assert: node label = 'OperationDefinition'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self assert: binds equals: {'op'} asSet
 ]
 
@@ -583,7 +578,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesOperationDefinitio
 	self deny: node isPetitFailure.
 	self assert: node label = 'OperationDefinitions'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
@@ -598,12 +593,11 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesOperationTypeInto 
 	self deny: node isPetitFailure.
 	self assert: node label = 'OperationType'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
-			{'t1'.
-			't2'} asSet
+			{} asSet
 ]
 
 { #category : #'tests-bound variables-types' }
@@ -613,8 +607,8 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesOptionalTypeInto [
 	self deny: node isPetitFailure.
 	self assert: node label = 'OptionalType'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
-	self assert: binds equals: {'t'} asSet
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self assert: binds equals: {} asSet
 ]
 
 { #category : #'tests-bound variables-definitions' }
@@ -624,7 +618,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesParametersInto [
 	self deny: node isPetitFailure.
 	self assert: node label = 'Parameters'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
@@ -639,7 +633,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesParametersListInto
 	self deny: node isPetitFailure.
 	self assert: node label = 'ParametersList'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
@@ -655,12 +649,11 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesPartialFunctionTyp
 	self deny: node isPetitFailure.
 	self assert: node label = 'PartialFunctionType'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
-			{'t1'.
-			't2'} asSet
+			{} asSet
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
@@ -670,7 +663,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesPatternIdentifierI
 	self deny: node isPetitFailure.
 	self assert: node label = 'PatternIdentifier'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self assert: binds equals: {'v'} asSet
 ]
 
@@ -681,7 +674,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesPatternListInto [
 	self deny: node isPetitFailure.
 	self assert: node label = 'PatternList'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
@@ -696,12 +689,11 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesProductTypeInto [
 	self deny: node isPetitFailure.
 	self assert: node label = 'ProductType'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
-			{'t1'.
-			't2'} asSet
+			{} asSet
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
@@ -711,7 +703,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesRecordPatternInto 
 	self deny: node isPetitFailure.
 	self assert: node label = 'RecordPattern'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
@@ -726,14 +718,11 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesRecordTypeDefiniti
 	self deny: node isPetitFailure.
 	self assert: node label = 'RecordTypeDefinition'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
-			{'T'.
-			't1'.
-			't2'.
-			't3'} asSet
+			{'T'} asSet
 ]
 
 { #category : #'tests-bound variables-types' }
@@ -743,8 +732,8 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesSeq1TypeInto [
 	self deny: node isPetitFailure.
 	self assert: node label = 'Seq1Type'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
-	self assert: binds equals: {'t'} asSet
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self assert: binds equals: {} asSet
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
@@ -754,7 +743,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesSeqConcPatternInto
 	self deny: node isPetitFailure.
 	self assert: node label = 'SeqConcPattern'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
@@ -770,7 +759,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesSeqEnumPatternInto
 	self deny: node isPetitFailure.
 	self assert: node label = 'SeqEnumPattern'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
@@ -785,8 +774,8 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesSeqTypeInto [
 	self deny: node isPetitFailure.
 	self assert: node label = 'SeqType'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
-	self assert: binds equals: {'t'} asSet
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self assert: binds equals: {} asSet
 ]
 
 { #category : #'tests-bound variables-statements' }
@@ -796,7 +785,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesSequenceForLoopInt
 	self deny: node isPetitFailure.
 	self assert: node label = 'SequenceForLoop'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self assert: binds equals: {'v'} asSet
 ]
 
@@ -807,7 +796,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesSetBindInto [
 	self deny: node isPetitFailure.
 	self assert: node label = 'SetBind'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self assert: binds equals: {'v'} asSet
 ]
 
@@ -818,7 +807,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesSetEnumPatternInto
 	self deny: node isPetitFailure.
 	self assert: node label = 'SetEnumPattern'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
@@ -833,7 +822,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesSetForLoopInto [
 	self deny: node isPetitFailure.
 	self assert: node label = 'SetForLoop'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self assert: binds equals: {'v'} asSet
 ]
 
@@ -844,8 +833,8 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesSetTypeInto [
 	self deny: node isPetitFailure.
 	self assert: node label = 'SetType'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
-	self assert: binds equals: {'t'} asSet
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self assert: binds equals: {} asSet
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
@@ -872,7 +861,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesStateDefinitionInt
 	self deny: node isPetitFailure.
 	self assert: node label = 'StateDefinition'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
@@ -880,7 +869,8 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesStateDefinitionInt
 			'v1'.
 			'v2'.
 			'inv_S'.
-			'init_S'} asSet
+			'init_S'.
+			'state'} asSet
 ]
 
 { #category : #'tests-bound variables-types' }
@@ -890,12 +880,11 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTotalFunctionTypeI
 	self deny: node isPetitFailure.
 	self assert: node label = 'TotalFunctionType'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
-			{'t1'.
-			't2'} asSet
+			{} asSet
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
@@ -905,7 +894,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTuplePatternInto [
 	self deny: node isPetitFailure.
 	self assert: node label = 'TuplePattern'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
@@ -920,7 +909,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTypeBindInto [
 	self deny: node isPetitFailure.
 	self assert: node label = 'TypeBind'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self assert: binds equals: {'v'} asSet
 ]
 
@@ -931,7 +920,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTypeBindListInto [
 	self deny: node isPetitFailure.
 	self assert: node label = 'TypeBindList'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
@@ -946,7 +935,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTypeDefinitionInto
 	self deny: node isPetitFailure.
 	self assert: node label = 'TypeDefinition'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self assert: binds equals: {'t1'} asSet
 ]
 
@@ -957,7 +946,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTypeDefinitionsInt
 	self deny: node isPetitFailure.
 	self assert: node label = 'TypeDefinitions'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
@@ -972,7 +961,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTypeVariableIdenti
 	self deny: node isPetitFailure.
 	self assert: node label = 'TypeVariableIdentifier'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self assert: binds equals: {'@t'} asSet
 ]
 
@@ -983,7 +972,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTypeVariableListIn
 	self deny: node isPetitFailure.
 	self assert: node label = 'TypeVariableList'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
@@ -998,12 +987,11 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesUnionTypeInto [
 	self deny: node isPetitFailure.
 	self assert: node label = 'UnionType'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
-			{'t1'.
-			't2'} asSet
+			{} asSet
 ]
 
 { #category : #'tests-bound variables-definitions' }
@@ -1013,7 +1001,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesValueDefinitionInt
 	self deny: node isPetitFailure.
 	self assert: node label = 'ValueDefinition'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self assert: binds equals: {'v'} asSet
 ]
 
@@ -1024,7 +1012,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesValueDefinitionsIn
 	self deny: node isPetitFailure.
 	self assert: node label = 'ValueDefinitions'.
 	binds := Set new.
-	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
 		equals:
