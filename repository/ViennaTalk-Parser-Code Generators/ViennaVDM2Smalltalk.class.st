@@ -2548,7 +2548,7 @@ ViennaVDM2Smalltalk >> resultExpression: aViennaNode env: aDictionary [
 
 { #category : #'code generation-statements' }
 ViennaVDM2Smalltalk >> returnStatement: aViennaNode env: aDictionary [
-	^ 'thisContext viennaReturn: ' , (self generate: aViennaNode first env: aDictionary)
+	^ 'thisContext viennaReturn: ' , (aViennaNode first ifNil: ['nil'] ifNotNil: [:arg | (self generate: arg env: aDictionary)])
 ]
 
 { #category : #'enabling/disabling' }
