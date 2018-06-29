@@ -8,8 +8,51 @@ Class {
 		'runtimeAssertionCheck',
 		'runtimeTypeCheck'
 	],
+	#classVars : [
+		'DefaultRuntimeAssertionCheck',
+		'DefaultRuntimeTypeCheck'
+	],
 	#category : 'ViennaTalk-Parser-Code Generators'
 }
+
+{ #category : #accessing }
+ViennaVDM2Smalltalk class >> defaultRuntimeAssertionCheck [
+	^ DefaultRuntimeAssertionCheck ifNil: [ true ]
+]
+
+{ #category : #accessing }
+ViennaVDM2Smalltalk class >> defaultRuntimeAssertionCheck: aBoolean [
+	 DefaultRuntimeAssertionCheck := aBoolean ~= false
+]
+
+{ #category : #accessing }
+ViennaVDM2Smalltalk class >> defaultRuntimeTypeCheck [
+	^ DefaultRuntimeTypeCheck ifNil: [ true ]
+]
+
+{ #category : #accessing }
+ViennaVDM2Smalltalk class >> defaultRuntimeTypeCheck: aBoolean [
+	 DefaultRuntimeTypeCheck := aBoolean ~= false
+]
+
+{ #category : #menu }
+ViennaVDM2Smalltalk class >> viennaSettingsOn: aBuilder [
+	<systemsettings>
+	(aBuilder setting: #defaultRuntimeTypeCheck)
+		parent: #ViennaTalkCodeGenerator;
+		target: self;
+		getSelector: #defaultRuntimeTypeCheck;
+		setSelector: #defaultRuntimeTypeCheck:;
+		description: 'runtime type checking is on by default';
+		label: 'generate type check by default'.
+	(aBuilder setting: #defaultRuntimeAssertionCheck)
+		parent: #ViennaTalkCodeGenerator;
+		target: self;
+		getSelector: #defaultRuntimeAssertionCheck;
+		setSelector: #defaultRuntimeAssertionCheck:;
+		description: 'runtime assertion checking is on by default';
+		label: 'generate assertion check by default'
+]
 
 { #category : #'code generation-definitions' }
 ViennaVDM2Smalltalk >> accessFunctionDefinition: aViennaNode env: aDictionary [
@@ -1195,7 +1238,7 @@ ViennaVDM2Smalltalk >> ifExpression: aViennaNode env: aDictionary [
 	default := self generate: aViennaNode second env: aDictionary.
 	^ '('
 		,
-			(conditionals
+			(conditionals reverse
 				inject: default
 				into: [ :else :cond | cond first , ' ifTrue: [' , cond second , '] ifFalse: [' , else , ']' ]) , ')'
 ]
@@ -1207,7 +1250,7 @@ ViennaVDM2Smalltalk >> ifStatement: aViennaNode env: aDictionary [
 	default := self generate: aViennaNode second env: aDictionary.
 	^ '('
 		,
-			(conditionals
+			(conditionals reverse
 				inject: (default ifNil: [ String new ])
 				into: [ :else :cond | cond first , ' ifTrue: [' , cond second , '] ifFalse: [' , else , ']' ]) , ')'
 ]
@@ -1298,8 +1341,8 @@ ViennaVDM2Smalltalk >> indicesExpression: aViennaNode env: aDictionary [
 ViennaVDM2Smalltalk >> initialize [
 	super initialize.
 	decoder := ViennaVDMValueDecoder new.
-	runtimeAssertionCheck := true.
-	runtimeTypeCheck := true
+	runtimeAssertionCheck := self class defaultRuntimeAssertionCheck.
+	runtimeTypeCheck := self class defaultRuntimeAssertionCheck
 ]
 
 { #category : #'code generation-types' }
