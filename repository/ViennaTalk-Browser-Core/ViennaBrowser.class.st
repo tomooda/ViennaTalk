@@ -10,14 +10,20 @@ Class {
 		'codePane',
 		'workspace',
 		'workspacePane',
+		'testTab',
+		'testButton',
+		'testPane',
 		'selectedModule',
 		'selectedField',
 		'codeSelection',
 		'valueSelection',
 		'workspaceSelection',
+		'testSelectionIndex',
 		'directory',
 		'lowerTabPane',
-		'animation'
+		'animation',
+		'modulesToTest',
+		'testResult'
 	],
 	#classVars : [
 		'AutoFormat'
@@ -594,6 +600,18 @@ ViennaBrowser >> buildModuleList [
 ]
 
 { #category : #'user interface' }
+ViennaBrowser >> buildTestPane [
+	^ (PluggableListMorph
+		on: self
+		list: #testList
+		selected: #testSelectionIndex
+		changeSelected: #testSelectionIndex:
+		menu: nil)
+		font: ViennaLauncher font;
+		yourself
+]
+
+{ #category : #'user interface' }
 ViennaBrowser >> buildValuePane [
 	^ (ViennaPluggableTextMorph
 		on: self
@@ -1025,6 +1043,36 @@ ViennaBrowser >> removeModule [
 			^ true ]
 ]
 
+{ #category : #'test pane menu' }
+ViennaBrowser >> runTestModule: module operation: operation [
+	| header |
+	header := 'Runtime: Error 4129: Exit '.
+	[ [ animation
+		plainEvaluate: operation , '()'
+		in: module
+		ifError: [ :msg | 
+			(msg size > header size and: [ (msg copyFrom: 1 to: header size) = header ])
+				ifTrue: [ ViennaException
+						expression: (ViennaReader new parse: (msg copyFrom: header size + 1 to: msg size)) ]
+				ifFalse: [ Error signal: msg ] ] ]
+		on: ViennaException
+		do: [ :exception | 
+			exception expression
+				in: [ :expr | 
+					(expr isViennaComposite and: [ expr constructor = 'UnitTesting`AssertFailure' ])
+						ifTrue: [ ^ {false.
+							('assertion failed: ' , (expr at: 1) asString)} ].
+					(expr isViennaComposite
+						and: [ expr constructor = 'UnitTesting`AssertEqualsFailure' ])
+						ifTrue: [ ^ {false.
+							('assertion failed: ' , (expr at: 3) asString , ' expected: '
+								, (expr at: 2) viennaString , ' actual: ' , (expr at: 1) viennaString)} ].
+					^ {(nil , 'assertion failed: error ' , expr viennaString)} ] ] ]
+		on: Error
+		do: [ :exception | ^ {(nil , exception messageText)} ].
+	^ {(true , 'OK')}
+]
+
 { #category : #'module list menu' }
 ViennaBrowser >> saveAModuleToFile [
 	self selectedModule
@@ -1130,6 +1178,16 @@ end <module name>
 ' asText makeAllColor: Color gray
 ]
 
+{ #category : #'test pane' }
+ViennaBrowser >> testSelectionIndex [
+	^ testSelectionIndex ifNil: [ testSelectionIndex := 0 ]
+]
+
+{ #category : #'test pane' }
+ViennaBrowser >> testSelectionIndex: anInteger [
+	testSelectionIndex := anInteger
+]
+
 { #category : #updating }
 ViennaBrowser >> update: aSymbol [
 	aSymbol = #specification
@@ -1137,6 +1195,7 @@ ViennaBrowser >> update: aSymbol [
 			self changed: #code.
 			self changed: #moduleList.
 			self changed: #fieldList.
+			self changed: #testList.
 			self changed: #value ].
 	aSymbol = #state
 		ifTrue: [ self changed: #value ]
