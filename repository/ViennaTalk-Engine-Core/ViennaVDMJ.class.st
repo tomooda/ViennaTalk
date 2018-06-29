@@ -285,7 +285,7 @@ ViennaVDMJ class >> vdmjPath [
 
 { #category : #resources }
 ViennaVDMJ class >> vdmjUrl [
-	^ 'http://vdmpad.csce.kyushu-u.ac.jp/vdmj-3.1.1.jar' asUrl
+	^ 'http://vdmpad.csce.kyushu-u.ac.jp/vdmj-3.2.0.jar' asUrl
 ]
 
 { #category : #finalizing }
