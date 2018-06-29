@@ -1,11 +1,11 @@
 Class {
-	#name : #ViennaUtil,
+	#name : #ViennaRuntimeUtil,
 	#superclass : #Object,
 	#category : 'ViennaTalk-Value-Core'
 }
 
 { #category : #private }
-ViennaUtil class >> aggregateBinding: aDictionary1 with: aDictionary2 [
+ViennaRuntimeUtil class >> aggregateBinding: aDictionary1 with: aDictionary2 [
 	| dict |
 	dict := aDictionary1 copy.
 	aDictionary2
@@ -19,7 +19,23 @@ ViennaUtil class >> aggregateBinding: aDictionary1 with: aDictionary2 [
 ]
 
 { #category : #'pattern matching' }
-ViennaUtil class >> match: aBlock1 conc: aBlock2 [
+ViennaRuntimeUtil class >> binder: aBlockString with: aString vars: anArrayOfString [
+	^ String
+		new: 256
+		streamContents: [ :stream | 
+			stream
+				nextPutAll: '((';
+				nextPutAll: aBlockString;
+				nextPutAll: ' value: ';
+				nextPutAll: aString;
+				nextPutAll: ') ifEmpty: [false] ifNotEmpty: [:binds | ';
+				nextPutAll:
+						('.' join: (anArrayOfString collect: [ :varName | varName , ' := binds first at: ' , varName storeString ]));
+				nextPutAll: '. true])' ]
+]
+
+{ #category : #'pattern matching' }
+ViennaRuntimeUtil class >> match: aBlock1 conc: aBlock2 [
 	^ [ :value | 
 	(value isSequence and: [ value notEmpty ])
 		ifTrue: [ 
@@ -40,7 +56,7 @@ ViennaUtil class >> match: aBlock1 conc: aBlock2 [
 ]
 
 { #category : #'pattern matching' }
-ViennaUtil class >> match: aBlock1 munion: aBlock2 [
+ViennaRuntimeUtil class >> match: aBlock1 munion: aBlock2 [
 	^ [ :value | 
 	(value isDictionary and: [ value notEmpty ])
 		ifTrue: [ 
@@ -65,7 +81,7 @@ ViennaUtil class >> match: aBlock1 munion: aBlock2 [
 ]
 
 { #category : #'pattern matching' }
-ViennaUtil class >> match: aBlock1 union: aBlock2 [
+ViennaRuntimeUtil class >> match: aBlock1 union: aBlock2 [
 	^ [ :value | 
 	(value isSet and: [ value notEmpty ])
 		ifTrue: [ 
@@ -85,40 +101,20 @@ ViennaUtil class >> match: aBlock1 union: aBlock2 [
 ]
 
 { #category : #'pattern matching' }
-ViennaUtil class >> matchComposite: aString args: anArrayOfBlock [
+ViennaRuntimeUtil class >> matchIdentifier: aStringOrNil [
 	^ [ :value | 
-	(value isViennaComposite and: [ value size = anArrayOfBlock size and: [ value typeName = aString ] ])
-		ifTrue: [ 
-			(1 to: anArrayOfBlock size)
-				inject: (Array with: Dictionary new)
-				into: [ :bindings :index | 
-					bindings
-						ifEmpty: [ bindings ]
-						ifNotEmpty: [ 
-							((anArrayOfBlock at: index) value: (value at: index))
-								ifEmpty: [ Array new ]
-								ifNotEmpty: [ :newBinds | 
-									| nextBindings |
-									nextBindings := Array
-										new: bindings size * newBinds size
-										streamContents: [ :stream | 
-											bindings
-												do: [ :binding | newBinds do: [ :newBind | (self aggregateBinding: binding with: newBind) ifNotNil: [ :bind | stream nextPut: bind ] ] ] ] ] ] ] ]
-		ifFalse: [ Array new ] ]
+	aStringOrNil
+		ifNil: [ Array with: Dictionary new ]
+		ifNotNil: [ 
+			Array
+				with:
+					(Dictionary new
+						at: aStringOrNil put: value;
+						yourself) ] ]
 ]
 
 { #category : #'pattern matching' }
-ViennaUtil class >> matchIdentifier: aString [
-	^ [ :value | 
-	Array
-		with:
-			(Dictionary new
-				at: aString put: value;
-				yourself) ]
-]
-
-{ #category : #'pattern matching' }
-ViennaUtil class >> matchMapEnumeration: anArrayOfPairOfBlock [
+ViennaRuntimeUtil class >> matchMapEnumeration: anArrayOfPairOfBlock [
 	^ [ :value | 
 	(value isDictionary and: [ value size = anArrayOfPairOfBlock size ])
 		ifTrue: [ 
@@ -191,7 +187,30 @@ ViennaUtil class >> matchMapEnumeration: anArrayOfPairOfBlock [
 ]
 
 { #category : #'pattern matching' }
-ViennaUtil class >> matchSequenceEnumeration: anArrayOfBlock [
+ViennaRuntimeUtil class >> matchRecord: aString args: anArrayOfBlock [
+	^ [ :value | 
+	(value isViennaComposite and: [ value size = anArrayOfBlock size and: [ value typeName = aString ] ])
+		ifTrue: [ 
+			(1 to: anArrayOfBlock size)
+				inject: (Array with: Dictionary new)
+				into: [ :bindings :index | 
+					bindings
+						ifEmpty: [ bindings ]
+						ifNotEmpty: [ 
+							((anArrayOfBlock at: index) value: (value at: index))
+								ifEmpty: [ Array new ]
+								ifNotEmpty: [ :newBinds | 
+									| nextBindings |
+									nextBindings := Array
+										new: bindings size * newBinds size
+										streamContents: [ :stream | 
+											bindings
+												do: [ :binding | newBinds do: [ :newBind | (self aggregateBinding: binding with: newBind) ifNotNil: [ :bind | stream nextPut: bind ] ] ] ] ] ] ] ]
+		ifFalse: [ Array new ] ]
+]
+
+{ #category : #'pattern matching' }
+ViennaRuntimeUtil class >> matchSequenceEnumeration: anArrayOfBlock [
 	^ [ :value | 
 	(value isSequence and: [ value size = anArrayOfBlock size ])
 		ifTrue: [ 
@@ -213,7 +232,7 @@ ViennaUtil class >> matchSequenceEnumeration: anArrayOfBlock [
 ]
 
 { #category : #'pattern matching' }
-ViennaUtil class >> matchSetEnumeration: anArrayOfBlock [
+ViennaRuntimeUtil class >> matchSetEnumeration: anArrayOfBlock [
 	^ [ :value | 
 	(value isSet and: [ value size = anArrayOfBlock size ])
 		ifTrue: [ 
@@ -270,7 +289,7 @@ ViennaUtil class >> matchSetEnumeration: anArrayOfBlock [
 ]
 
 { #category : #'pattern matching' }
-ViennaUtil class >> matchTuple: anArrayOfBlock [
+ViennaRuntimeUtil class >> matchTuple: anArrayOfBlock [
 	^ [ :value | 
 	(value isArray and: [ value size = anArrayOfBlock size ])
 		ifTrue: [ 
@@ -293,7 +312,7 @@ ViennaUtil class >> matchTuple: anArrayOfBlock [
 ]
 
 { #category : #'pattern matching' }
-ViennaUtil class >> matchValue: anObject [
+ViennaRuntimeUtil class >> matchValue: anObject [
 	^ [ :value | 
 	anObject = value
 		ifTrue: [ Array with: Dictionary new ]
@@ -301,7 +320,7 @@ ViennaUtil class >> matchValue: anObject [
 ]
 
 { #category : #private }
-ViennaUtil class >> nonEmptyPowersetOf: anArray withComplementsDo: aBlock [
+ViennaRuntimeUtil class >> nonEmptyPowersetOf: anArray withComplementsDo: aBlock [
 	1 to: (1 << anArray size) - 2 do: [ :index | 
 		| array1 array2 |
 		array1 := (Array new: anArray size) writeStream.
@@ -314,7 +333,7 @@ ViennaUtil class >> nonEmptyPowersetOf: anArray withComplementsDo: aBlock [
 ]
 
 { #category : #private }
-ViennaUtil class >> powersetOf: anArray do: aBlock [
+ViennaRuntimeUtil class >> powersetOf: anArray do: aBlock [
 	0 to: (1 << anArray size) - 1 do: [ :index | 
 		aBlock
 			value:
@@ -327,7 +346,7 @@ ViennaUtil class >> powersetOf: anArray do: aBlock [
 ]
 
 { #category : #private }
-ViennaUtil class >> powersetOf: anArray withComplementsDo: aBlock [
+ViennaRuntimeUtil class >> powersetOf: anArray withComplementsDo: aBlock [
 	0 to: (1 << anArray size) - 1 do: [ :index | 
 		| array1 array2 |
 		array1 := (Array new: anArray size) writeStream.
