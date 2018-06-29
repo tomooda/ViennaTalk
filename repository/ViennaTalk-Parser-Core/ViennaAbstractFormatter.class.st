@@ -257,6 +257,11 @@ ViennaAbstractFormatter >> arithmeticRem: aViennaNode [
 	^ self print: (self format: aViennaNode first) infix: 'rem' arg: (self format: aViennaNode second)
 ]
 
+{ #category : #'symbol access' }
+ViennaAbstractFormatter >> arrow [
+	^ self subclassResponsibility
+]
+
 { #category : #'formatting-statements' }
 ViennaAbstractFormatter >> assignStatement: aViennaNode [
 	^ self indentString: (self format: aViennaNode first) insertCrIfNeeded: ':= ' , (self format: aViennaNode second)
@@ -334,7 +339,7 @@ ViennaAbstractFormatter >> casesExpressionAlternative: aViennaNode [
 	| patternList expression |
 	patternList := self format: aViennaNode first.
 	expression := self format: aViennaNode second.
-	^ self indentString: patternList , ' ->' insertCrIfNeeded: expression
+	^ self indentString: patternList , ' ', self arrow insertCrIfNeeded: expression
 ]
 
 { #category : #'formatting-expressions' }
@@ -359,7 +364,7 @@ ViennaAbstractFormatter >> casesStatementAlternative: aViennaNode [
 	| patternList statement |
 	patternList := self format: aViennaNode first.
 	statement := self format: aViennaNode second.
-	^ self indentString: patternList , ' ->' insertCrIfNeeded: statement
+	^ self indentString: patternList , ' ', self arrow insertCrIfNeeded: statement
 ]
 
 { #category : #'formatting-statements' }
@@ -670,7 +675,7 @@ ViennaAbstractFormatter >> fieldPattern: aViennaNode [
 	| identifier pattern |
 	identifier := self format: aViennaNode first.
 	pattern := self format: aViennaNode second.
-	^ identifier , ' |-> ' , pattern
+	^ identifier , ' ', self maplet, ' ', pattern
 ]
 
 { #category : #'formatting-patterns and binds' }
@@ -1335,7 +1340,7 @@ ViennaAbstractFormatter >> mapEnumeration: aViennaNode [
 
 { #category : #'formatting-patterns and binds' }
 ViennaAbstractFormatter >> mapEnumerationPattern: aViennaNode [
-	^ '{' , (self formatEnumerate: (self formatAll: aViennaNode) ifEmpty: [ '|->' ]) , '}'
+	^ '{' , (self formatEnumerate: (self formatAll: aViennaNode) ifEmpty: [ self maplet ]) , '}'
 ]
 
 { #category : #'symbol access' }
@@ -1355,7 +1360,7 @@ ViennaAbstractFormatter >> mapMerge: aViennaNode [
 
 { #category : #'formatting-patterns and binds' }
 ViennaAbstractFormatter >> mapMunionPattern: aViennaNode [
-	^ self print: (self format: aViennaNode first) infix: 'munion' arg: (self format: aViennaNode second)
+	^ self print: (self format: aViennaNode first) infix: self munion arg: (self format: aViennaNode second)
 ]
 
 { #category : #'formatting-expressions' }
@@ -1421,7 +1426,7 @@ ViennaAbstractFormatter >> mapletList: aViennaNode [
 
 { #category : #'formatting-patterns and binds' }
 ViennaAbstractFormatter >> mapletPattern: aViennaNode [
-	^ self print: (self format: aViennaNode first) infix: '|->' arg: (self format: aViennaNode second)
+	^ self print: (self format: aViennaNode first) infix: self maplet arg: (self format: aViennaNode second)
 ]
 
 { #category : #'formatting-patterns and binds' }
@@ -1482,7 +1487,7 @@ ViennaAbstractFormatter >> multipleAssignStatement: aViennaNode [
 
 { #category : #'formatting-patterns and binds' }
 ViennaAbstractFormatter >> multipleSetBind: aViennaNode [
-	^ self print: (self format: aViennaNode first) infix: 'in set' arg: (self format: aViennaNode second)
+	^ self print: (self format: aViennaNode first) infix: self inset arg: (self format: aViennaNode second)
 ]
 
 { #category : #'formatting-patterns and binds' }
@@ -1700,7 +1705,7 @@ ViennaAbstractFormatter >> othersExpression: aViennaNode [
 ViennaAbstractFormatter >> othersStatement: aViennaNode [
 	| statement |
 	statement := self format: aViennaNode first.
-	^ self indentString: 'others ->' insertCrIfNeeded: statement
+	^ self indentString: 'others ', self arrow insertCrIfNeeded: statement
 ]
 
 { #category : #'symbol access' }
@@ -1913,7 +1918,7 @@ ViennaAbstractFormatter >> seq1Type: aViennaNode [
 
 { #category : #'formatting-patterns and binds' }
 ViennaAbstractFormatter >> seqConcPattern: aViennaNode [
-	^ self print: (self format: aViennaNode first) infix: '^' arg: (self format: aViennaNode second)
+	^ self print: (self format: aViennaNode first) infix: self concat arg: (self format: aViennaNode second)
 ]
 
 { #category : #'formatting-patterns and binds' }
@@ -2004,7 +2009,7 @@ ViennaAbstractFormatter >> sequenceTail: aViennaNode [
 
 { #category : #'formatting-patterns and binds' }
 ViennaAbstractFormatter >> setBind: aViennaNode [
-	^ self print: (self format: aViennaNode first) infix: 'in set' arg: (self format: aViennaNode second)
+	^ self print: (self format: aViennaNode first) infix: self inset arg: (self format: aViennaNode second)
 ]
 
 { #category : #'formatting-expressions' }
@@ -2051,7 +2056,7 @@ ViennaAbstractFormatter >> setForLoop: aViennaNode [
 	expression := self format: aViennaNode second.
 	statement := self format: aViennaNode third.
 	(self needsIndent: pattern , expression , statement)
-		ifFalse: [ ^ 'for all ' , pattern , ' in set ' , expression , ' do ' , statement ].
+		ifFalse: [ ^ 'for all ' , pattern , ' ', self inset, ' ' , expression , ' do ' , statement ].
 	(self needsIndent: pattern , expression)
 		ifFalse: [ ^ 'for all ' , pattern , ' in set ' , expression , ' do' , String cr , indent , (self indentString: statement) ].
 	^ self
@@ -2097,7 +2102,7 @@ ViennaAbstractFormatter >> setUnion: aViennaNode [
 
 { #category : #'formatting-patterns and binds' }
 ViennaAbstractFormatter >> setUnionPattern: aViennaNode [
-	^ self print: (self format: aViennaNode first) infix: 'union' arg: (self format: aViennaNode second)
+	^ self print: (self format: aViennaNode first) infix: self union arg: (self format: aViennaNode second)
 ]
 
 { #category : #'symbol access' }

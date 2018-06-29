@@ -10,6 +10,11 @@ ViennaVDMSymbolFormatter >> and [
 ]
 
 { #category : #'symbol access' }
+ViennaVDMSymbolFormatter >> arrow [
+	^ String with: (Character codePoint: 16r2192)
+]
+
+{ #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> bool [
 	^ String with: (Character codePoint: 16r1D539)
 ]
@@ -196,7 +201,7 @@ ViennaVDMSymbolFormatter >> oparrow [
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> or [
-	^ String with: (Character codePoint: 16r222A)
+	^ String with: (Character codePoint: 16r2228)
 ]
 
 { #category : #'symbol access' }
@@ -281,7 +286,7 @@ ViennaVDMSymbolFormatter >> subset [
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> totalFunction [
-	^ Character value: 16r21f8
+	^ String with: (Character value: 16r21f8)
 ]
 
 { #category : #'symbol access' }

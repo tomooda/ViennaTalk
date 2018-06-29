@@ -10,6 +10,11 @@ ViennaVDMFormatter >> and [
 ]
 
 { #category : #'symbol access' }
+ViennaVDMFormatter >> arrow [
+	^ '->'
+]
+
+{ #category : #'symbol access' }
 ViennaVDMFormatter >> bool [
 	^ 'bool'
 ]
