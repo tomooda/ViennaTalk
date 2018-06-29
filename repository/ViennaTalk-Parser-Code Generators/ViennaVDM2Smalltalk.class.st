@@ -7,7 +7,8 @@ Class {
 		'decoder',
 		'runtimeAssertionCheck',
 		'runtimeTypeCheck',
-		'defaultEnv'
+		'defaultEnv',
+		'source'
 	],
 	#classVars : [
 		'DefaultRuntimeAssertionCheck',
@@ -2930,6 +2931,16 @@ ViennaVDM2Smalltalk >> setUnionPattern: aViennaNode env: aDictionary [
 	^ '(ViennaRuntimeUtil match: ' , pat1 , ' union: ' , pat2 
 		, ((self setPatternSize: aViennaNode first) ifNotNil: [ :size | ' left: ' , size printString ] ifNil: [ '' ])
 		, ((self setPatternSize: aViennaNode second) ifNotNil: [ :size | ' right: ' , size printString ] ifNil: [ '' ]) , ')'
+]
+
+{ #category : #accessing }
+ViennaVDM2Smalltalk >> source [
+	^ source
+]
+
+{ #category : #accessing }
+ViennaVDM2Smalltalk >> source: aString [
+	source := aString
 ]
 
 { #category : #'code generation-definitions' }
