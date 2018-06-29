@@ -106,12 +106,14 @@ ViennaVDMJ class >> initialize [
 
 { #category : #'class initialization' }
 ViennaVDMJ class >> install [
-	self vdmjPath exists
-		ifFalse: [ self installVDMJ ].
-	self json4vdmjPath exists
-		ifFalse: [ self installJson4VDMJ ].
-	self jsonicPath exists
-		ifFalse: [ self installJsonic ]
+	Smalltalk os isWindows
+		ifFalse: [ 
+			self vdmjPath exists
+				ifFalse: [ self installVDMJ ].
+			self json4vdmjPath exists
+				ifFalse: [ self installJson4VDMJ ].
+			self jsonicPath exists
+				ifFalse: [ self installJsonic ] ]
 ]
 
 { #category : #'class initialization' }
@@ -174,6 +176,11 @@ ViennaVDMJ class >> installVDMJ [
 						close ] ]
 ]
 
+{ #category : #testing }
+ViennaVDMJ class >> isInstalled [
+	^ self vdmjPath exists and: [ self json4vdmjPath exists and: [ self jsonicPath exists ] ]
+]
+
 { #category : #accessing }
 ViennaVDMJ class >> javaPath [
 	^ '/usr/bin/java'
@@ -202,6 +209,13 @@ ViennaVDMJ class >> jsonicPath [
 { #category : #'instance creation' }
 ViennaVDMJ class >> new [
 	| process |
+	Smalltalk os isWindows
+		ifTrue: [ ^ self error: 'ViennaVDMJ does not support windows platforms. Please use ViennaClient instead.' ].
+	self isInstalled
+		ifFalse: [ 
+			self install.
+			self isInstalled
+				ifFalse: [ ^ self error: 'ViennaVDMJ requires VDMJ, Json4VDMJ and jsonic.' ] ].
 	process := super new.
 	self register: process.
 	^ process
@@ -231,11 +245,6 @@ ViennaVDMJ class >> registry [
 { #category : #registry }
 ViennaVDMJ class >> unregister: aViennaVDMJ [
 	^ self registry remove: aViennaVDMJ ifAbsent: []
-]
-
-{ #category : #testing }
-ViennaVDMJ class >> vdmjInstalled [
-	^ FileStream isAFileNamed: self vdmjPath
 ]
 
 { #category : #accessing }
