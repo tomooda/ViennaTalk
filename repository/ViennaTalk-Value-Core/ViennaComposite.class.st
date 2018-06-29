@@ -114,6 +114,11 @@ ViennaComposite >> initialize [
 	equalityFields := (1 to: self size) asArray
 ]
 
+{ #category : #testing }
+ViennaComposite >> isViennaComposite [
+	^ true
+]
+
 { #category : #printing }
 ViennaComposite >> printOn: aStream [
 	aStream nextPutAll: self class name.

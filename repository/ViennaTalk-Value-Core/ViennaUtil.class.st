@@ -1,0 +1,340 @@
+Class {
+	#name : #ViennaUtil,
+	#superclass : #Object,
+	#category : 'ViennaTalk-Value-Core'
+}
+
+{ #category : #private }
+ViennaUtil class >> aggregateBinding: aDictionary1 with: aDictionary2 [
+	| dict |
+	dict := aDictionary1 copy.
+	aDictionary2
+		keysAndValuesDo: [ :key :value | 
+			(dict includesKey: key)
+				ifTrue: [ 
+					(dict at: key) = value
+						ifFalse: [ ^ nil ] ]
+				ifFalse: [ dict at: key put: value ] ].
+	^ dict
+]
+
+{ #category : #'pattern matching' }
+ViennaUtil class >> match: aBlock1 conc: aBlock2 [
+	^ [ :value | 
+	(value isSequence and: [ value notEmpty ])
+		ifTrue: [ 
+			Array
+				new: 16
+				streamContents: [ :stream | 
+					1 to: value size - 1 do: [ :index | 
+						| seq1 seq2 |
+						seq1 := value copyFrom: 1 to: index.
+						seq2 := value copyFrom: index + 1 to: value size.
+						(aBlock1 value: seq1)
+							ifNotEmpty: [ :bindings1 | 
+								(aBlock2 value: seq2)
+									ifNotEmpty: [ :bindings2 | 
+										bindings1
+											do: [ :bind1 | bindings2 do: [ :bind2 | (self aggregateBinding: bind1 with: bind2) ifNotNil: [ :bind | stream nextPut: bind ] ] ] ] ] ] ] ]
+		ifFalse: [ Array new ] ]
+]
+
+{ #category : #'pattern matching' }
+ViennaUtil class >> match: aBlock1 munion: aBlock2 [
+	^ [ :value | 
+	(value isDictionary and: [ value notEmpty ])
+		ifTrue: [ 
+			Array
+				new: 16
+				streamContents: [ :stream | 
+					self
+						nonEmptyPowersetOf: value keys asArray
+						withComplementsDo: [ :keys1 :keys2 | 
+							| dict1 dict2 |
+							dict1 := Dictionary new: keys1 size.
+							keys1 do: [ :key | dict1 at: key put: (value at: key) ].
+							dict2 := Dictionary new: keys2 size.
+							keys2 do: [ :key | dict2 at: key put: (value at: key) ].
+							(aBlock1 value: dict1)
+								ifNotEmpty: [ :bindings1 | 
+									(aBlock2 value: dict2)
+										ifNotEmpty: [ :bindings2 | 
+											bindings1
+												do: [ :bind1 | bindings2 do: [ :bind2 | (self aggregateBinding: bind1 with: bind2) ifNotNil: [ :bind | stream nextPut: bind ] ] ] ] ] ] ] ]
+		ifFalse: [ Array new ] ]
+]
+
+{ #category : #'pattern matching' }
+ViennaUtil class >> match: aBlock1 union: aBlock2 [
+	^ [ :value | 
+	(value isSet and: [ value notEmpty ])
+		ifTrue: [ 
+			Array
+				new: 16
+				streamContents: [ :stream | 
+					self
+						nonEmptyPowersetOf: value asArray
+						withComplementsDo: [ :union1 :union2 | 
+							(aBlock1 value: union1 asSet)
+								ifNotEmpty: [ :bindings1 | 
+									(aBlock2 value: union2 asSet)
+										ifNotEmpty: [ :bindings2 | 
+											bindings1
+												do: [ :bind1 | bindings2 do: [ :bind2 | (self aggregateBinding: bind1 with: bind2) ifNotNil: [ :bind | stream nextPut: bind ] ] ] ] ] ] ] ]
+		ifFalse: [ Array new ] ]
+]
+
+{ #category : #'pattern matching' }
+ViennaUtil class >> matchComposite: aString args: anArrayOfBlock [
+	^ [ :value | 
+	(value isViennaComposite and: [ value size = anArrayOfBlock size and: [ value typeName = aString ] ])
+		ifTrue: [ 
+			(1 to: anArrayOfBlock size)
+				inject: (Array with: Dictionary new)
+				into: [ :bindings :index | 
+					bindings
+						ifEmpty: [ bindings ]
+						ifNotEmpty: [ 
+							((anArrayOfBlock at: index) value: (value at: index))
+								ifEmpty: [ Array new ]
+								ifNotEmpty: [ :newBinds | 
+									| nextBindings |
+									nextBindings := Array
+										new: bindings size * newBinds size
+										streamContents: [ :stream | 
+											bindings
+												do: [ :binding | newBinds do: [ :newBind | (self aggregateBinding: binding with: newBind) ifNotNil: [ :bind | stream nextPut: bind ] ] ] ] ] ] ] ]
+		ifFalse: [ Array new ] ]
+]
+
+{ #category : #'pattern matching' }
+ViennaUtil class >> matchIdentifier: aString [
+	^ [ :value | 
+	Array
+		with:
+			(Dictionary new
+				at: aString put: value;
+				yourself) ]
+]
+
+{ #category : #'pattern matching' }
+ViennaUtil class >> matchMapEnumeration: anArrayOfPairOfBlock [
+	^ [ :value | 
+	(value isDictionary and: [ value size = anArrayOfPairOfBlock size ])
+		ifTrue: [ 
+			value
+				ifEmpty: [ Array with: Dictionary new ]
+				ifNotEmpty: [ 
+					| keys bindingsMatrix sizes |
+					keys := value keys asArray.
+					bindingsMatrix := anArrayOfPairOfBlock
+						collect: [ :pair | 
+							| keyBlock valueBlock |
+							keyBlock := pair first.
+							valueBlock := pair second.
+							Array
+								new: keys size
+								streamContents: [ :stream | 
+									1 to: keys size do: [ :memberIndex | 
+										(keyBlock value: (keys at: memberIndex))
+											ifNotEmpty: [ :keyBinds | 
+												(valueBlock value: (value at: (keys at: memberIndex)))
+													ifNotEmpty: [ :valueBinds | 
+														(Array
+															new: 4
+															streamContents: [ :stream0 | 
+																keyBinds
+																	do: [ :keyBind | 
+																		valueBinds
+																			do: [ :valueBind | (self aggregateBinding: keyBind with: valueBind) ifNotNil: [ :bind | stream0 nextPut: bind ] ] ] ])
+															ifNotEmpty: [ :binds | stream nextPut: memberIndex -> binds ] ] ] ] ] ].
+					sizes := bindingsMatrix collect: #size.
+					(sizes includes: 0)
+						ifTrue: [ Array new ]
+						ifFalse: [ 
+							Array
+								new: 16
+								streamContents: [ :stream | 
+									| decode |
+									decode := nil.
+									decode := [ :n :blockIndex | 
+									| p |
+									p := sizes at: blockIndex.
+									(blockIndex = sizes size
+										ifTrue: [ #() ]
+										ifFalse: [ decode value: n // p value: blockIndex + 1 ]) copyWithFirst: n \\ p + 1 ].
+									0 to: (sizes inject: 1 into: [ :p :s | p * s ]) - 1 do: [ :n | 
+										| indices |
+										indices := decode value: n value: 1.
+										((1 to: indices size)
+											collect: [ :blockIndex | ((bindingsMatrix at: blockIndex) at: (indices at: blockIndex)) key ]) asSet size
+											= indices size
+											ifTrue: [ 
+												stream
+													nextPutAll:
+														((1 to: indices size)
+															inject: (Array with: Dictionary new)
+															into: [ :bindings :blockIndex | 
+																bindings
+																	ifEmpty: [ bindings ]
+																	ifNotEmpty: [ 
+																		| assoc memberIndex binds nextBindings |
+																		assoc := (bindingsMatrix at: blockIndex) at: (indices at: blockIndex).
+																		memberIndex := assoc key.
+																		binds := assoc value.
+																		nextBindings := Array
+																			new: bindings size * binds size
+																			streamContents: [ :stream0 | 
+																				bindings
+																					do: [ :binding | binds do: [ :bind | (self aggregateBinding: binding with: bind) ifNotNil: [ :b | stream0 nextPut: b ] ] ] ] ] ]) ] ] ] ] ] ]
+		ifFalse: [ Array new ] ]
+]
+
+{ #category : #'pattern matching' }
+ViennaUtil class >> matchSequenceEnumeration: anArrayOfBlock [
+	^ [ :value | 
+	(value isSequence and: [ value size = anArrayOfBlock size ])
+		ifTrue: [ 
+			(1 to: anArrayOfBlock size)
+				inject: (Array with: Dictionary new)
+				into: [ :bindings :index | 
+					bindings
+						ifEmpty: [ bindings ]
+						ifNotEmpty: [ 
+							((anArrayOfBlock at: index) value: (value at: index))
+								ifEmpty: [ Array new ]
+								ifNotEmpty: [ :newBinds | 
+									Array
+										new: bindings size * newBinds size
+										streamContents: [ :stream | 
+											bindings
+												do: [ :binding | newBinds do: [ :newBind | (self aggregateBinding: binding with: newBind) ifNotNil: [ :bind | stream nextPut: bind ] ] ] ] ] ] ] ]
+		ifFalse: [ Array new ] ]
+]
+
+{ #category : #'pattern matching' }
+ViennaUtil class >> matchSetEnumeration: anArrayOfBlock [
+	^ [ :value | 
+	(value isSet and: [ value size = anArrayOfBlock size ])
+		ifTrue: [ 
+			value
+				ifEmpty: [ Array with: Dictionary new ]
+				ifNotEmpty: [ 
+					| members bindingsMatrix sizes |
+					members := value asArray.
+					bindingsMatrix := anArrayOfBlock
+						collect: [ :block | 
+							Array
+								new: members size
+								streamContents: [ :stream | 1 to: members size do: [ :memberIndex | (block value: (members at: memberIndex)) ifNotEmpty: [ :binds | stream nextPut: memberIndex -> binds ] ] ] ].
+					sizes := bindingsMatrix collect: #size.
+					(sizes includes: 0)
+						ifTrue: [ Array new ]
+						ifFalse: [ 
+							Array
+								new: 16
+								streamContents: [ :stream | 
+									| decode |
+									decode := nil.
+									decode := [ :n :blockIndex | 
+									| p |
+									p := sizes at: blockIndex.
+									(blockIndex = sizes size
+										ifTrue: [ #() ]
+										ifFalse: [ decode value: n // p value: blockIndex + 1 ]) copyWithFirst: n \\ p + 1 ].
+									0 to: (sizes inject: 1 into: [ :p :s | p * s ]) - 1 do: [ :n | 
+										| indices |
+										indices := decode value: n value: 1.
+										((1 to: indices size)
+											collect: [ :blockIndex | ((bindingsMatrix at: blockIndex) at: (indices at: blockIndex)) key ]) asSet size
+											= indices size
+											ifTrue: [ 
+												stream
+													nextPutAll:
+														((1 to: indices size)
+															inject: (Array with: Dictionary new)
+															into: [ :bindings :blockIndex | 
+																bindings
+																	ifEmpty: [ bindings ]
+																	ifNotEmpty: [ 
+																		| assoc memberIndex binds nextBindings |
+																		assoc := (bindingsMatrix at: blockIndex) at: (indices at: blockIndex).
+																		memberIndex := assoc key.
+																		binds := assoc value.
+																		nextBindings := Array
+																			new: bindings size * binds size
+																			streamContents: [ :stream0 | 
+																				bindings
+																					do: [ :binding | binds do: [ :bind | (self aggregateBinding: binding with: bind) ifNotNil: [ :b | stream0 nextPut: b ] ] ] ] ] ]) ] ] ] ] ] ]
+		ifFalse: [ Array new ] ]
+]
+
+{ #category : #'pattern matching' }
+ViennaUtil class >> matchTuple: anArrayOfBlock [
+	^ [ :value | 
+	(value isArray and: [ value size = anArrayOfBlock size ])
+		ifTrue: [ 
+			(1 to: anArrayOfBlock size)
+				inject: (Array with: Dictionary new)
+				into: [ :bindings :index | 
+					bindings
+						ifEmpty: [ bindings ]
+						ifNotEmpty: [ 
+							((anArrayOfBlock at: index) value: (value at: index))
+								ifEmpty: [ Array new ]
+								ifNotEmpty: [ :newBinds | 
+									| nextBindings |
+									nextBindings := Array
+										new: bindings size * newBinds size
+										streamContents: [ :stream | 
+											bindings
+												do: [ :binding | newBinds do: [ :newBind | (self aggregateBinding: binding with: newBind) ifNotNil: [ :bind | stream nextPut: bind ] ] ] ] ] ] ] ]
+		ifFalse: [ Array new ] ]
+]
+
+{ #category : #'pattern matching' }
+ViennaUtil class >> matchValue: anObject [
+	^ [ :value | 
+	anObject = value
+		ifTrue: [ Array with: Dictionary new ]
+		ifFalse: [ Array new ] ]
+]
+
+{ #category : #private }
+ViennaUtil class >> nonEmptyPowersetOf: anArray withComplementsDo: aBlock [
+	1 to: (1 << anArray size) - 2 do: [ :index | 
+		| array1 array2 |
+		array1 := (Array new: anArray size) writeStream.
+		array2 := (Array new: anArray size) writeStream.
+		1 to: anArray size do: [ :bit | 
+			((index bitAt: bit) = 0
+				ifTrue: [ array1 ]
+				ifFalse: [ array2 ]) nextPut: (anArray at: bit) ].
+		aBlock value: array1 contents value: array2 contents ]
+]
+
+{ #category : #private }
+ViennaUtil class >> powersetOf: anArray do: aBlock [
+	0 to: (1 << anArray size) - 1 do: [ :index | 
+		aBlock
+			value:
+				(Array
+					new: anArray size
+					streamContents: [ :stream | 
+						1 to: anArray size do: [ :bit | 
+							(index bitAt: bit) = 0
+								ifTrue: [ stream nextPut: (anArray at: bit) ] ] ]) ]
+]
+
+{ #category : #private }
+ViennaUtil class >> powersetOf: anArray withComplementsDo: aBlock [
+	0 to: (1 << anArray size) - 1 do: [ :index | 
+		| array1 array2 |
+		array1 := (Array new: anArray size) writeStream.
+		array2 := (Array new: anArray size) writeStream.
+		1 to: anArray size do: [ :bit | 
+			((index bitAt: bit) = 0
+				ifTrue: [ array1 ]
+				ifFalse: [ array2 ]) nextPut: (anArray at: bit) ].
+		aBlock value: array1 contents value: array2 contents ]
+]
