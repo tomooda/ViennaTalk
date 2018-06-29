@@ -6,7 +6,12 @@ Class {
 
 { #category : #comparing }
 ViennaAnyType >> = anObject [
-	^ self class = anObject class or: [ self class = anObject ]
+	^ self class = anObject class
+]
+
+{ #category : #comparing }
+ViennaAnyType >> >= anObject [
+	^ true
 ]
 
 { #category : #enumerating }

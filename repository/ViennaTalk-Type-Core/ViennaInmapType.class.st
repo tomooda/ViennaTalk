@@ -76,6 +76,14 @@ ViennaInmapType >> name [
 ]
 
 { #category : #private }
+ViennaInmapType >> removeTypeHolders: aSet [
+	(aSet includes: self) ifTrue: [ ^self ].
+	aSet add: self.
+	keytype := keytype removeTypeHolders: aSet.
+	valuetype := valuetype removeTypeHolders: aSet
+]
+
+{ #category : #private }
 ViennaInmapType >> setKeytype: aViennaType1 valuetype: aViennaType2 [
 	keytype := aViennaType1.
 	valuetype := aViennaType2

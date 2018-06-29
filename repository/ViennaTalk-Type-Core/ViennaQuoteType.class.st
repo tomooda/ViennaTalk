@@ -46,7 +46,7 @@ ViennaQuoteType >> hash [
 
 { #category : #accessing }
 ViennaQuoteType >> name [
-	^ symbol asString
+	^ '<', symbol asString, '>'
 ]
 
 { #category : #private }

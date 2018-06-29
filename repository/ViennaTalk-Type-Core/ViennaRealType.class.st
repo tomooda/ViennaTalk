@@ -11,7 +11,7 @@ ViennaRealType class >> precedence [
 
 { #category : #comparing }
 ViennaRealType >> = anObject [
-	^ self class = anObject class or: [ self class = anObject ]
+	^ self class = anObject class
 ]
 
 { #category : #comparing }

@@ -124,8 +124,23 @@ ViennaCompositeType >> numFields [
 ]
 
 { #category : #private }
+ViennaCompositeType >> removeTypeHolders: aSet [
+	(aSet includes: self) ifTrue: [ ^self ].
+	aSet add: self.
+	1 to: self size do: [ :index | 
+		| field |
+		field := self at: index.
+		field at: 3 put: ((field at: 3) removeTypeHolders: aSet) ]
+]
+
+{ #category : #private }
 ViennaCompositeType >> setConstructorName: aString [
 	constructorName := aString
+]
+
+{ #category : #accessing }
+ViennaCompositeType >> shortName [
+	^ constructorName
 ]
 
 { #category : #'instance creation' }

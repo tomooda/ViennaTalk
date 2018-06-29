@@ -66,6 +66,13 @@ ViennaOptionType >> optional [
 ]
 
 { #category : #private }
+ViennaOptionType >> removeTypeHolders: aSet [
+	(aSet includes: self) ifTrue: [ ^self ].
+	aSet add: self.
+	basetype := basetype removeTypeHolders: aSet
+]
+
+{ #category : #private }
 ViennaOptionType >> setBasetype: aViennaType [
 	basetype := aViennaType
 ]

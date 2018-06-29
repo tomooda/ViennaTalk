@@ -14,7 +14,7 @@ ViennaTokenType class >> precedence [
 
 { #category : #comparing }
 ViennaTokenType >> = anObject [
-	^ self class = anObject class or: [ self class = anObject ]
+	^ self class = anObject class
 ]
 
 { #category : #'instance creation' }

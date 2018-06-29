@@ -70,6 +70,13 @@ ViennaSetType >> name [
 ]
 
 { #category : #private }
+ViennaSetType >> removeTypeHolders: aSet [
+	(aSet includes: self) ifTrue: [ ^self ].
+	aSet add: self.
+	basetype := basetype removeTypeHolders: aSet
+]
+
+{ #category : #private }
 ViennaSetType >> setBasetype: aViennaType [
 	basetype := aViennaType
 ]

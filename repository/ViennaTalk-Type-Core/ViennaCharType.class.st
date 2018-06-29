@@ -19,7 +19,7 @@ ViennaCharType class >> precedence [
 
 { #category : #comparing }
 ViennaCharType >> = anObject [
-	^ self class = anObject class or: [ self class = anObject ]
+	^ self class = anObject class
 ]
 
 { #category : #enumerating }

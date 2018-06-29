@@ -11,7 +11,7 @@ ViennaBoolType class >> precedence [
 
 { #category : #comparing }
 ViennaBoolType >> = anObject [
-	^ self class = anObject class or: [ self class = anObject ]
+	^ self class = anObject class
 ]
 
 { #category : #enumerating }

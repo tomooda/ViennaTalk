@@ -175,6 +175,11 @@ ViennaType >> anySatisfy: aBlock [
 	^ false
 ]
 
+{ #category : #converting }
+ViennaType >> asTypeHolder [
+	^ ViennaTypeHolder on: self
+]
+
 { #category : #enumerating }
 ViennaType >> basicDo: aBlock [
 	^ self subclassResponsibility
@@ -258,6 +263,11 @@ ViennaType >> isRealType [
 	^ false
 ]
 
+{ #category : #testing }
+ViennaType >> isTypeHolder [
+	^ false
+]
+
 { #category : #arithmetic }
 ViennaType >> mapTo: aViennaType [
 	^ ViennaMapType with: self with: aViennaType
@@ -290,9 +300,9 @@ ViennaType >> name [
 
 { #category : #accessing }
 ViennaType >> nameInPrecedence: anInteger [
-	^ self class precedence < anInteger
-		ifTrue: [ '(' , self name , ')' ]
-		ifFalse: [ self name ]
+	^ self precedence < anInteger
+		ifTrue: [ '(' , self shortName , ')' ]
+		ifFalse: [ self shortName ]
 ]
 
 { #category : #enumerating }
@@ -318,9 +328,25 @@ ViennaType >> optional [
 	^ ViennaOptionType with: self
 ]
 
+{ #category : #accessing }
+ViennaType >> precedence [
+	^ self class precedence
+]
+
 { #category : #printing }
 ViennaType >> printOn: aStream [
 	aStream nextPutAll: self name
+]
+
+{ #category : #private }
+ViennaType >> removeTypeHolders [
+	^ self removeTypeHolders: IdentitySet new
+]
+
+{ #category : #private }
+ViennaType >> removeTypeHolders: aSet [
+	aSet add: self.
+	^ self
 ]
 
 { #category : #accessing }
@@ -362,6 +388,11 @@ ViennaType >> set [
 { #category : #arithmetic }
 ViennaType >> set1 [
 	^ ViennaSet1Type with: self
+]
+
+{ #category : #accessing }
+ViennaType >> shortName [
+	^ self name
 ]
 
 { #category : #arithmetic }
