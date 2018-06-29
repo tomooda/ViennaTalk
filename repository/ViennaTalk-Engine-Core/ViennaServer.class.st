@@ -20,10 +20,11 @@ ViennaServer class >> ensureServeIn: aBlock [
 	| isRunning |
 	isRunning := self isRunning.
 	isRunning
-		ifFalse: [ self installHandler ].
+		ifFalse: [ self
+				flushServer;
+				installHandler ].
 	aBlock
-		ensure: [ 
-			isRunning
+		ensure: [ isRunning
 				ifFalse: [ self flushServer ] ]
 ]
 
@@ -65,16 +66,11 @@ ViennaServer class >> on: aViennaEngine [
 { #category : #servicing }
 ViennaServer class >> server [
 	^ Server
-		ifNil: [ Server := (self serverClass on: self defaultPort)
-				bindingAddress: #[127 0 0 1];
+		ifNil: [ Server := (ZnMultiThreadedServer defaultOn: self defaultPort)
+				bindingAddress:  #[127 0 0 1] ;
 				register;
 				start;
 				yourself ]
-]
-
-{ #category : #'class access' }
-ViennaServer class >> serverClass [
-	^ ZnManagingMultiThreadedServer
 ]
 
 { #category : #defaults }
@@ -106,7 +102,6 @@ ViennaServer >> evaluate: expression specification: specification states: states
 { #category : #'request handling' }
 ViennaServer >> handleRequest: aZnRequest [
 	| json |
-	Transcript cr; show: 'received a request'.
 	aZnRequest entity
 		ifNotNil: [ :jsonString | 
 			| source expression preStates result |
