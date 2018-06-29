@@ -9,6 +9,16 @@ ViennaVDM2SmalltalkTranslator >> abs: arg [
 	^ arg , ' abs'
 ]
 
+{ #category : #'parsers-definitions' }
+ViennaVDM2SmalltalkTranslator >> accessTypeDefinition [
+	^ super accessTypeDefinition ==> #second
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDM2SmalltalkTranslator >> accessValueDefinition [
+	^ super accessValueDefinition ==> #second
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> and: arg1 and: arg2 [
 	^ '(' , arg1 , ' and: [' , arg2 , '])'
@@ -193,6 +203,16 @@ ViennaVDM2SmalltalkTranslator >> dinter: arg [
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> div: arg1 and: arg2 [
 	^ '(' , arg1 , ' asInteger // ' , arg2 , ' asInteger)'
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDM2SmalltalkTranslator >> document [
+	^ super document
+		==> [ :array | 
+			| vars bodies |
+			vars := array inject: #() into: [ :vs :def | vs , def first ].
+			bodies := array collect: #second.
+			'|' , (' ' join: vars) , '|' , ('' join: bodies) ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -478,6 +498,24 @@ ViennaVDM2SmalltalkTranslator >> inmapType [
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> inter: arg1 and: arg2 [
 	^ '(' , arg1 , ' intersection: ' , arg2 , ')'
+]
+
+{ #category : #'parsers-types' }
+ViennaVDM2SmalltalkTranslator >> invariantFunction [
+	^ super invariantFunction
+		==> [ :pair | 
+			| pat patVars patMatcher expr valVar |
+			pat := pair first.
+			patVars := pat first.
+			patMatcher := pat second.
+			expr := pair second.
+			valVar := (self
+				varNameGenerator: 'value'
+				uniqueIn:
+					{(pat second).
+					expr}) value.
+			'[:' , valVar , '||' , (' ' join: patVars) , '|' , (self binder: pat second with: valVar vars: pat first) , ' and: ['
+				, expr , ']]' ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -844,6 +882,16 @@ ViennaVDM2SmalltalkTranslator >> productType [
 	^ super productType ==> [ :basetypes | '(' , ('*' join: basetypes) , ')' ]
 ]
 
+{ #category : #'parsers-definitions' }
+ViennaVDM2SmalltalkTranslator >> program [
+	^ super program
+		==> [ :array | 
+			| doc expr |
+			doc := array first.
+			expr := array second.
+			(doc , expr) ==> [ :pair | pair first , pair second ] ]
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> psubset: arg1 and: arg2 [
 	^ '([:set1 :set2 | set1 size < set2 size and: [ set2 includesAll: set1 ]] value: ' , arg1 , ' value: ' , arg2 , ')'
@@ -896,6 +944,19 @@ ViennaVDM2SmalltalkTranslator >> recordPattern [
 			args := (argPatterns collect: #second) asSet asArray.
 			{vars.
 			('(ViennaRuntimeUtil matchRecord: ' , constructorName storeString , ' args: {' , (' . ' join: args) , '})')} ]
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDM2SmalltalkTranslator >> recordTypeDefinition [
+	^ super recordTypeDefinition
+		==> [ :array | 
+			| ident flist inv record |
+			ident := array first.
+			flist := array second.
+			inv := array third.
+			record := 'ViennaCompositeType constructorName: ' , ident storeString , ' withAll: {' , (' . ' join: flist) , '}'.
+			inv ifNotNil: [ record := '(' , record , ') inv: ' , inv ].
+			ident , ' := ' , record , '.' ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -1127,6 +1188,16 @@ ViennaVDM2SmalltalkTranslator >> tupleSelect: tuple with: index [
 	^ '(' , tuple , ' at: ' , index , ')'
 ]
 
+{ #category : #'parsers-definitions' }
+ViennaVDM2SmalltalkTranslator >> typeDefinitions [
+	^ super typeDefinitions
+		==> [ :array | 
+			| vars |
+			vars := array inject: #() into: [ :vs :typedef | vs , typedef first ].
+			{vars.
+			(array inject: '' into: [ :code :typedef | code , typedef second ])} ]
+]
+
 { #category : #'parsers-type discriminations' }
 ViennaVDM2SmalltalkTranslator >> typeJudgement [
 	^ super typeJudgement
@@ -1135,6 +1206,18 @@ ViennaVDM2SmalltalkTranslator >> typeJudgement [
 			t := pair second.
 			e := pair first.
 			'(' , t , ' includes: ' , e , ')' ]
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDM2SmalltalkTranslator >> typeSynonym [
+	^ super typeSynonym
+		==> [ :triple | 
+			| ident typeExpr inv |
+			ident := triple first.
+			typeExpr := triple second.
+			inv := triple third.
+			{{ident}.
+			(ident , ' := ' , typeExpr , (inv ifNotNil: [ ' inv: ' , inv ] ifNil: [ '' ]) , '.')} ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -1173,6 +1256,16 @@ ViennaVDM2SmalltalkTranslator >> valueDefinition [
 			binder := self binder: pat second with: body vars: vars.
 			{vars.
 			'(', binder, '  ifFalse: [ViennaNoMatch signal])'} ]
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDM2SmalltalkTranslator >> valueDefinitions [
+	^ super valueDefinitions
+		==> [ :array | 
+			| vars |
+			vars := array inject: #() into: [ :vs :valdef | vs , valdef first ].
+			{vars.
+			(array inject: '' into: [ :code :valdef | code , valdef second , '.' ])} ]
 ]
 
 { #category : #utilities }

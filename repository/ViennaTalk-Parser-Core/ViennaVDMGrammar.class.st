@@ -2,6 +2,13 @@ Class {
 	#name : #ViennaVDMGrammar,
 	#superclass : #PPCompositeParser,
 	#instVars : [
+		'document',
+		'definitionBlock',
+		'typeDefinitions',
+		'valueDefinitions',
+		'typeDefinition',
+		'valueDefinition',
+		'functionDefinition',
 		'expression',
 		'expressionExceptEquality',
 		'expressionList',
@@ -47,7 +54,6 @@ Class {
 		'pattern',
 		'type',
 		'discretionaryType',
-		'functionDefinition',
 		'type1',
 		'type2',
 		'type3',
@@ -60,7 +66,6 @@ Class {
 		'objectPattern',
 		'recordPattern',
 		'multipleBind',
-		'valueDefinition',
 		'multipleSetBind',
 		'multipleTypeBind',
 		'patternList',
@@ -85,7 +90,10 @@ Class {
 		'prefix',
 		'keyword',
 		'char',
-		'mapletArrow'
+		'mapletArrow',
+		'invariant',
+		'fieldList',
+		'access'
 	],
 	#category : 'ViennaTalk-Parser-Core'
 }
@@ -93,6 +101,28 @@ Class {
 { #category : #'parsers-expressions-operators' }
 ViennaVDMGrammar >> abs: arg [
 	^ arg
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMGrammar >> access [
+	^ (self reserved: 'public') / (self reserved: 'protected') / (self reserved: 'private')
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMGrammar >> accessTypeDefinition [
+	| static |
+	static := self reserved: 'static'.
+	^ (access , static optional)
+		/
+			((static optional , access optional)
+				==> [ :pair | 
+					{(pair second).
+					(pair first)} ]) , typeDefinition
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMGrammar >> accessValueDefinition [
+	^ access optional , valueDefinition
 ]
 
 { #category : #'parsers-expressions-threads and histories' }
@@ -342,9 +372,6 @@ ViennaVDMGrammar >> comma [
 
 { #category : #'parsers-types' }
 ViennaVDMGrammar >> compositeType [
-	| fieldList |
-	fieldList := ((('end' asParser , followingLetter not) not and
-		, (self identifiedField / self equalityAbstractionField / self anonymousField) trim) ==> #second) star.
 	^ ((self reserved: 'compose' asParser) , identifier , (self reserved: 'of') , fieldList , (self reserved: 'end'))
 		==> [ :quin | 
 			{(quin second).
@@ -388,6 +415,11 @@ ViennaVDMGrammar >> defExpression [
 			(quatro fourth)} ]
 ]
 
+{ #category : #'parsers-definitions' }
+ViennaVDMGrammar >> definitionBlock [
+	^ typeDefinitions / valueDefinitions
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMGrammar >> diff: arg1 and: arg2 [
 	^ {arg1.
@@ -413,6 +445,11 @@ ViennaVDMGrammar >> discretionaryType1 [
 ViennaVDMGrammar >> div: arg1 and: arg2 [
 	^ {arg1.
 	arg2}
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMGrammar >> document [
+	^ definitionBlock star
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -576,6 +613,16 @@ ViennaVDMGrammar >> extendedExplicitFunctionDefinition [
 	^ PPFailingParser new
 ]
 
+{ #category : #'parsers-types' }
+ViennaVDMGrammar >> field [
+	^ (self identifiedField / self equalityAbstractionField / self anonymousField) trim
+]
+
+{ #category : #'parsers-types' }
+ViennaVDMGrammar >> fieldList [
+	^ ((('end' asParser , followingLetter not) not and , self field) ==> #second) star
+]
+
 { #category : #'parsers-patterns' }
 ViennaVDMGrammar >> fieldPattern [
 	^ (identifier , mapletArrow , pattern)
@@ -718,6 +765,11 @@ ViennaVDMGrammar >> inds: arg [
 	^ arg
 ]
 
+{ #category : #'parsers-types' }
+ViennaVDMGrammar >> initialFunction [
+	^ self invariantInitialFunction
+]
+
 { #category : #'parsers-symbols' }
 ViennaVDMGrammar >> initialLetter [
 	^ PPPredicateObjectParser on: [ :c | ViennaUnicode isInitialLetter: c ] message: 'identifier expected'
@@ -735,6 +787,27 @@ ViennaVDMGrammar >> inmapType [
 ViennaVDMGrammar >> inter: arg1 and: arg2 [
 	^ {arg1.
 	arg2}
+]
+
+{ #category : #'parsers-types' }
+ViennaVDMGrammar >> invariant [
+	^ ((self reserved: 'inv') , self invariantFunction) ==> #second
+]
+
+{ #category : #'parsers-types' }
+ViennaVDMGrammar >> invariantFunction [
+	^ self invariantInitialFunction
+]
+
+{ #category : #'parsers-types' }
+ViennaVDMGrammar >> invariantInitialFunction [
+	^ (pattern , (self operator: '==') , expression)
+		==> [ :triple | 
+			| pat expr |
+			pat := triple first.
+			expr := triple third.
+			{pat.
+			expr} ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -1179,6 +1252,11 @@ ViennaVDMGrammar >> productType [
 						nextPutAll: triple third ] ]
 ]
 
+{ #category : #'parsers-definitions' }
+ViennaVDMGrammar >> program [
+	^ document , expression
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMGrammar >> psubset: arg1 and: arg2 [
 	^ {arg1.
@@ -1238,6 +1316,19 @@ ViennaVDMGrammar >> recordPattern [
 		==> [ :triple | 
 			{(triple first).
 			(triple second)} ]
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMGrammar >> recordTypeDefinition [
+	^ (identifier , (self operator: '::') , fieldList , invariant optional)
+		==> [ :quatro | 
+			| ident flist inv |
+			ident := quatro first.
+			flist := quatro third.
+			inv := quatro fourth.
+			{ident.
+			flist.
+			inv} ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -1492,6 +1583,17 @@ ViennaVDMGrammar >> typeBind [
 			(triple third)} ]
 ]
 
+{ #category : #'parsers-definitions' }
+ViennaVDMGrammar >> typeDefinition [
+	^ self typeSynonym / self recordTypeDefinition
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMGrammar >> typeDefinitions [
+	^ ((self reserved: 'types') , (self accessTypeDefinition separatedBy: semicolon) withoutSeparators , semicolon optional)
+		==> #second
+]
+
 { #category : #'parsers-expressions-type discriminations' }
 ViennaVDMGrammar >> typeJudgement [
 	^ ((self reserved: 'is_') , lparen , expression , comma , type , rparen)
@@ -1503,6 +1605,15 @@ ViennaVDMGrammar >> typeJudgement [
 { #category : #'parsers-types' }
 ViennaVDMGrammar >> typeName [
 	^ name
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMGrammar >> typeSynonym [
+	^ (identifier , eq , type , invariant optional)
+		==> [ :quatro | 
+			{(quatro first).
+			(quatro third).
+			(quatro fourth)} ]
 ]
 
 { #category : #'parsers-types' }
@@ -1562,6 +1673,12 @@ ViennaVDMGrammar >> valueDefinition [
 			{(quatro first).
 			(quatro second ifNotNil: [ :second | second second ]).
 			(quatro fourth)} ]
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMGrammar >> valueDefinitions [
+	^ ((self reserved: 'values') , (self accessValueDefinition separatedBy: semicolon) withoutSeparators
+		, semicolon optional) ==> #second
 ]
 
 { #category : #'parsers-expressions-threads and histories' }

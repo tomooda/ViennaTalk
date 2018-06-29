@@ -9,6 +9,11 @@ ViennaVDMParser >> abs: arg [
 	^ ViennaNode label: 'AbsoluteValue' with: arg
 ]
 
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> access [
+	^ super access ==> [ :string | ViennaNode label: 'Access' with: string ]
+]
+
 { #category : #'parsers-expressions-threads' }
 ViennaVDMParser >> actExpression [
 	^ super actExpression ==> [ :nameNode | ViennaNode label: 'ActExpression' with: nameNode ]
@@ -22,6 +27,15 @@ ViennaVDMParser >> activeExpression [
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> and: arg1 and: arg2 [
 	^ ViennaNode label: 'And' with: arg1 with: arg2
+]
+
+{ #category : #'parsers-types' }
+ViennaVDMParser >> anonymousField [
+	^ super anonymousField
+		==> [ :typeNode | 
+			{nil.
+			false.
+			typeNode} ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -119,6 +133,16 @@ ViennaVDMParser >> equal: arg1 and: arg2 [
 	^ ViennaNode label: 'Equality' with: arg1 with: arg2
 ]
 
+{ #category : #'parsers-types' }
+ViennaVDMParser >> equalityAbstractionField [
+	^ super equalityAbstractionField
+		==> [ :pair | 
+			| fieldName fieldType |
+			fieldName := pair first.
+			fieldType := pair second.
+			'{' , fieldName storeString , '. true. ' , pair second , '}' ]
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> equiv: arg1 and: arg2 [
 	^ ViennaNode label: 'Biimplication' with: arg1 with: arg2
@@ -143,6 +167,16 @@ ViennaVDMParser >> explicitFunctionDefinition [
 ViennaVDMParser >> extendedExplicitFunctionDefinition [
 	^ super extendedExplicitFunctionDefinition
 		==> [ :array | ViennaNode label: 'ExtendedExplicitFunctionDefinition' withAll: array ]
+]
+
+{ #category : #'parsers-types' }
+ViennaVDMParser >> field [
+	^ super field ==> [ :array | ViennaNode label: 'Field' withAll: array ]
+]
+
+{ #category : #'parsers-types' }
+ViennaVDMParser >> fieldList [
+	^ super fieldList ==> [ :array | ViennaNode label: 'FieldList' withAll: array ]
 ]
 
 { #category : #'parsers-patterns' }
@@ -200,6 +234,16 @@ ViennaVDMParser >> hd: arg [
 	^ ViennaNode label: 'Head' with: arg
 ]
 
+{ #category : #'parsers-types' }
+ViennaVDMParser >> identifiedField [
+	^ super identifiedField
+		==> [ :pair | 
+			| fieldName fieldType |
+			fieldName := pair first.
+			fieldType := pair second.
+			'{' , fieldName storeString , '. false. ' , pair second , '}' ]
+]
+
 { #category : #'parsers-expressions-basics' }
 ViennaVDMParser >> ifExpression [
 	^ super ifExpression ==> [ :array | ViennaNode label: 'IfExpression' withAll: array ]
@@ -233,6 +277,11 @@ ViennaVDMParser >> inmapType [
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> inter: arg1 and: arg2 [
 	^ ViennaNode label: 'Intersection' with: arg1 with: arg2
+]
+
+{ #category : #'parsers-types' }
+ViennaVDMParser >> invariantInitialFunction [
+	^ super invariantInitialFunction ==> [ :array | ViennaNode label: 'InvariantInitialFunction' withAll: array ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -509,6 +558,11 @@ ViennaVDMParser >> recordPattern [
 	^ super recordPattern ==> [ :array | ViennaNode label: 'RecordPattern' withAll: array ]
 ]
 
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> recordTypeDefinition [
+	^ super recordTypeDefinition ==> [ :array | ViennaNode label: 'RecordTypeDefinition' withAll: array ]
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> rem: arg1 and: arg2 [
 	^ ViennaNode label: 'Remainder' with: arg1 with: arg2
@@ -668,6 +722,11 @@ ViennaVDMParser >> typeBind [
 	^ super typeBind ==> [ :array | ViennaNode label: 'TypeBind' withAll: array ]
 ]
 
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> typeDefinitions [
+	^ super typeDefinitions ==> [ :array | ViennaNode label: 'TypeDefinitions' withAll: array ]
+]
+
 { #category : #'parsers-expressions-type discriminations' }
 ViennaVDMParser >> typeJudgement [
 	^ super typeJudgement ==> [ :array | ViennaNode label: 'TypeJudgement' withAll: array ]
@@ -676,6 +735,11 @@ ViennaVDMParser >> typeJudgement [
 { #category : #'parsers-types' }
 ViennaVDMParser >> typeName [
 	^ super typeName ==> [ :ast | ViennaNode label: 'TypeName' with: ast ]
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> typeSynonym [
+	^ super typeSynonym ==> [ :array | ViennaNode label: 'TypeDefinition' withAll: array ]
 ]
 
 { #category : #'parsers-types' }
