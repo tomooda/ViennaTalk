@@ -25,6 +25,12 @@ ViennaLiveASTTranslationEditor >> format: aViennaNode [
 	^ aViennaNode printString
 ]
 
+{ #category : #'initialize-release' }
+ViennaLiveASTTranslationEditor >> initializeWidgets [
+	super initializeWidgets.
+	targetText help: 'AST'
+]
+
 { #category : #'class access' }
 ViennaLiveASTTranslationEditor >> translatorClass [
 	^ ViennaVDMParser
