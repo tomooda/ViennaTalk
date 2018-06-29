@@ -22,6 +22,11 @@ LWTWidget >> availableEventSelectors [
 ]
 
 { #category : #operations }
+LWTWidget >> changeName [
+	(UIManager default request: 'Enter a new name' initialAnswer: self name) ifNotNil: [ :newName | self name: newName ]
+]
+
+{ #category : #operations }
 LWTWidget >> changeNameColor [
 	| dialog |
 	dialog := ColorSelectorDialogWindow new
@@ -63,6 +68,22 @@ LWTWidget >> defaultNameFont [
 	^ self subclassResponsibility
 ]
 
+{ #category : #accessing }
+LWTWidget >> director [
+	| director |
+	director := self.
+	[ director isNil or: [ director isKindOf: LWTDirector ] ] whileFalse: [ director := director owner ].
+	^ director
+]
+
+{ #category : #operations }
+LWTWidget >> duplicateAndPlace [
+	self duplicate
+		changeName;
+		top: self bottom;
+		openInWorld
+]
+
 { #category : #private }
 LWTWidget >> edgeName: aPoint [
 	| edge |
@@ -92,24 +113,29 @@ LWTWidget >> effectiveEventSelectors [
 
 { #category : #events }
 LWTWidget >> event: aSymbol [
-	(eventActionDict includesKey: aSymbol)
-		ifFalse: [ ^ self ].
-	LWTDirector current recordEvent: aSymbol at: self.
-	self actionSelectorsForEvent: aSymbol do: [ :selector | LWTDirector dispatchActionAt: selector ]
+	self director
+		ifNotNil: [ :director | 
+			(eventActionDict includesKey: aSymbol)
+				ifFalse: [ ^ self ].
+			director recordEvent: aSymbol at: self.
+			self actionSelectorsForEvent: aSymbol do: [ :selector | director dispatchActionAt: selector ] ]
 ]
 
 { #category : #'event handling' }
 LWTWidget >> handleMouseDown: aMouseEvent [
+	aMouseEvent wasHandled: true.
 	aMouseEvent yellowButtonPressed
 		ifTrue: [ 
 			self menu
 				setInvokingView: self;
 				invokeModal.
-			aMouseEvent wasHandled: true.
 			^ true ].
 	(self edgeName: aMouseEvent position)
-		ifNotEmpty: [ :edge | self perform: ('resize' , edge , ':') asSymbol with: aMouseEvent ].
-	^ super handleMouseDown: aMouseEvent
+		ifNotEmpty: [ :edge | 
+			self perform: ('resize' , edge , ':') asSymbol with: aMouseEvent.
+			^ true ].
+	self currentHand grabMorph: self from: self owner.
+	^ true
 ]
 
 { #category : #'event handling' }
@@ -126,10 +152,11 @@ LWTWidget >> handleMouseMove: aMouseEvent [
 
 { #category : #'event handling' }
 LWTWidget >> handlesMouseDown: anEvent [
-	anEvent yellowButtonPressed
+	"anEvent yellowButtonPressed
 		ifTrue: [ ^ true ].
 	(self edgeName: anEvent position) ifNotEmpty: [ :edge | ^ true ].
-	^ super handlesMouseDown: anEvent
+	^ super handlesMouseDown: anEvent"
+	^true
 ]
 
 { #category : #'initialize-release' }
@@ -145,7 +172,9 @@ LWTWidget >> makeUniqueName [
 	random := Random new.
 	[ 
 	uniqueName := basename , (random nextInt: 999999) printString.
-	World findDeepSubmorphThat: [ :m | m ~~ self and: [ m name = uniqueName ] ] ifAbsent: [ ^ uniqueName ] ] repeat
+	(self director ifNil: [ World ])
+		findDeepSubmorphThat: [ :m | m ~~ self and: [ m name = uniqueName ] ]
+		ifAbsent: [ ^ uniqueName ] ] repeat
 ]
 
 { #category : #menus }
@@ -153,6 +182,10 @@ LWTWidget >> menu [
 	| menu |
 	menu := MenuMorph new
 		defaultTarget: self;
+		add: 'change name' translated target: self selector: #changeName;
+		add: 'delete' translated target: self selector: #delete;
+		add: 'duplicate' translated target: self selector: #duplicateAndPlace;
+		addLine;
 		add: 'change name font' translated target: self selector: #changeNameFont;
 		add: 'change name color' translated target: self selector: #changeNameColor;
 		yourself.
@@ -167,9 +200,12 @@ LWTWidget >> name [
 { #category : #accessing }
 LWTWidget >> name: aString [
 	World
-		findDeepSubmorphThat: [ :m | (m isKindOf: LWTWidget) and: [ m name = aString ] ]
-		ifAbsent: [ ^ self name: aString ].
-	UIManager default inform: 'The name "' , aString , '" is already used.'
+		findDeepSubmorphThat: [ :m | (m isKindOf: LWTWidget) and: [ m ~~ self and: [ m name = aString ] ] ]
+		ifAbsent: [ 
+			name := aString.
+			self changed.
+			^ self ].
+	self changeName
 ]
 
 { #category : #accessing }
@@ -183,6 +219,11 @@ LWTWidget >> nameColor: aColor [
 	self changed
 ]
 
+{ #category : #geometry }
+LWTWidget >> nameExtent [
+	^ self nameFont in: [ :font | (font widthOfString: self name) @ font height ]
+]
+
 { #category : #accessing }
 LWTWidget >> nameFont [
 	^ nameFont ifNil: [ nameFont := self defaultNameFont ]
@@ -194,7 +235,7 @@ LWTWidget >> nameFont: aFont [
 	self changed
 ]
 
-{ #category : #accessing }
+{ #category : #geometry }
 LWTWidget >> nameOffset [
 	^ 3 @ 3
 ]
