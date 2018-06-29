@@ -72,6 +72,7 @@ VDMPad class >> installCodemirror [
 VDMPad class >> installHandler [
 	"VDMPad installHandler"
 
+	self install.
 	self server delegate: self default
 ]
 
@@ -2004,13 +2005,13 @@ VDMPad >> fileService: aZnRequest [
 	url := aZnRequest uri path.
 	url first = $/
 		ifTrue: [ url := url copyFrom: 2 to: url size ].
-	(FileStream isAFileNamed: url)
+	^ (FileStream isAFileNamed: url)
 		ifTrue: [ 
 			FileStream
 				readOnlyFileNamed: url
 				do: [ :stream | 
 					stream binary.
-					^ self responseBinary: stream contents mimeType: (self contentTypeFor: url) ] ]
+					self responseBinary: stream contents mimeType: (self contentTypeFor: url) ] ]
 		ifFalse: [ self responseNotFound: aZnRequest uri ]
 ]
 
