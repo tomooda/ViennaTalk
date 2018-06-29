@@ -6,11 +6,22 @@ Class {
 		'indent'
 	],
 	#classVars : [
+		'DefaultMaxSizePerLine',
 		'OperatorGrouping',
 		'OperatorPrecedence'
 	],
 	#category : 'ViennaTalk-Parser-Core'
 }
+
+{ #category : #accessing }
+ViennaVDMFormatter class >> defaultMaxSizePerLine [
+	^ DefaultMaxSizePerLine ifNil: [ DefaultMaxSizePerLine := 65 ]
+]
+
+{ #category : #accessing }
+ViennaVDMFormatter class >> defaultMaxSizePerLine: anInteger [
+	DefaultMaxSizePerLine := anInteger asInteger
+]
 
 { #category : #'class initialization' }
 ViennaVDMFormatter class >> initialize [
@@ -128,6 +139,18 @@ ViennaVDMFormatter class >> initializeOperatorPrecedence [
 		at: 'PartialFunctionType' put: 1;
 		at: 'TotalFunctionType' put: 1;
 		yourself
+]
+
+{ #category : #settings }
+ViennaVDMFormatter class >> viennaSettingsOn: aBuilder [
+	<systemsettings>
+	(aBuilder setting: #defaultFormatWidth)
+		parent: #ViennaTalk;
+		target: self;
+		getSelector: #defaultMaxSizePerLine;
+		setSelector: #defaultMaxSizePerLine:;
+		description: 'The default width to format VDM sources.';
+		label: 'Format width'
 ]
 
 { #category : #'formatting-definitions' }
@@ -388,7 +411,7 @@ ViennaVDMFormatter >> defaultIndent [
 
 { #category : #defaults }
 ViennaVDMFormatter >> defaultMaxSizePerLine [
-	^ 65
+	^ self class defaultMaxSizePerLine
 ]
 
 { #category : #'formatting-definitions' }
