@@ -51,6 +51,22 @@ ViennaVDM2SmalltalkTranslatorTest >> testApplyArgs [
 		equals: 3
 ]
 
+{ #category : #'tests-statements' }
+ViennaVDM2SmalltalkTranslatorTest >> testAssignStatement [
+	self
+		assert: (Compiler evaluate: '| a |' , (ViennaVDM2SmalltalkTranslator new statement end parse: 'a := 2') , '. a')
+		equals: 2.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					'| a b | a := #(0 0 0) asOrderedCollection. b := a. '
+						, (ViennaVDM2SmalltalkTranslator new statement end parse: 'a(1) := 2') , '.  { a . b}')
+		equals:
+			{(#(2 0 0) asOrderedCollection).
+			(#(0 0 0) asOrderedCollection)}
+]
+
 { #category : #'tests-types' }
 ViennaVDM2SmalltalkTranslatorTest >> testBasicType [
 	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new type end parse: 'bool')) equals: ViennaType bool.
@@ -60,6 +76,16 @@ ViennaVDM2SmalltalkTranslatorTest >> testBasicType [
 	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new type end parse: 'real')) equals: ViennaType real.
 	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new type end parse: 'char')) equals: ViennaType char.
 	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new type end parse: 'token')) equals: ViennaType token
+]
+
+{ #category : #'tests-statements' }
+ViennaVDM2SmalltalkTranslatorTest >> testBlockStatement [
+	self
+		assert:
+			(Compiler
+				evaluate:
+					'| a |' , (ViennaVDM2SmalltalkTranslator new statement end parse: '(dcl b : nat := 2 ; a := b + 3)') , '. a')
+		equals: 5
 ]
 
 { #category : #'tests-literals' }
@@ -191,6 +217,15 @@ ViennaVDM2SmalltalkTranslatorTest >> testDefExpression [
 			in
 				card s + a + b'))
 		equals: 11
+]
+
+{ #category : #'tests-statements' }
+ViennaVDM2SmalltalkTranslatorTest >> testDefStatement [
+	self
+		assert:
+			(Compiler
+				evaluate: '| a |' , (ViennaVDM2SmalltalkTranslator new statement end parse: 'def b : nat = 1 in a := b + 2') , '. a')
+		equals: 3
 ]
 
 { #category : #'tests-operators' }
@@ -437,6 +472,13 @@ ViennaVDM2SmalltalkTranslatorTest >> testHexadecimalLiteral [
 	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '0X10')) equals: 16
 ]
 
+{ #category : #'tests-statements' }
+ViennaVDM2SmalltalkTranslatorTest >> testIdentityStatement [
+	self
+		assert: (Compiler evaluate: '| a | a := 1.' , (ViennaVDM2SmalltalkTranslator new statement end parse: 'skip') , '. a')
+		equals: 1
+]
+
 { #category : #'tests-expressions' }
 ViennaVDM2SmalltalkTranslatorTest >> testIfExpression [
 	self
@@ -632,12 +674,32 @@ ViennaVDM2SmalltalkTranslatorTest >> testLetBeExpression [
 		raise: NotFound
 ]
 
+{ #category : #'tests-statements' }
+ViennaVDM2SmalltalkTranslatorTest >> testLetBeStatement [
+	self
+		assert:
+			(Compiler
+				evaluate:
+					'| a |' , (ViennaVDM2SmalltalkTranslator new statement end parse: 'let b in set {1, 2} be st b mod 2 = 0 in a := b')
+						, '. a')
+		equals: 2
+]
+
 { #category : #'tests-expressions' }
 ViennaVDM2SmalltalkTranslatorTest >> testLetExpression [
 	self
 		assert:
 			(Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression parse: 'let s = power {<a>, <b>, <c>} in card s'))
 		equals: 8
+]
+
+{ #category : #'tests-statements' }
+ViennaVDM2SmalltalkTranslatorTest >> testLetStatement [
+	self
+		assert:
+			(Compiler
+				evaluate: '| a |' , (ViennaVDM2SmalltalkTranslator new statement end parse: 'let b : nat = 1 in a := b') , '. a')
+		equals: 1
 ]
 
 { #category : #'tests-expressions' }
@@ -834,6 +896,16 @@ ViennaVDM2SmalltalkTranslatorTest >> testModAnd [
 { #category : #'tests-operators' }
 ViennaVDM2SmalltalkTranslatorTest >> testMulAnd [
 	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '2 * 3')) equals: 6
+]
+
+{ #category : #'tests-statements' }
+ViennaVDM2SmalltalkTranslatorTest >> testMultipleAssignStatement [
+	self
+		assert:
+			(Compiler
+				evaluate:
+					'| a b |' , (ViennaVDM2SmalltalkTranslator new statement end parse: 'atomic(a := 2 * 3; b := 4)') , '. {a. b}')
+		equals: #(6 4)
 ]
 
 { #category : #'tests-operators' }

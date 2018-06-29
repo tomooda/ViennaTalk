@@ -75,6 +75,11 @@ ViennaVDMGrammarTest >> testApply4 [
 	self assert: (grammar expression end parse: 'f(a1,a2)(a3)') equals: #(#('f' #('a1' 'a2')) #('a3'))
 ]
 
+{ #category : #'tests-statements' }
+ViennaVDMGrammarTest >> testAssignStatement [
+	self assert: (grammar statement end parse: 'a := e') equals: #('a' 'e')
+]
+
 { #category : #'tests-types' }
 ViennaVDMGrammarTest >> testBasicType1 [
 	self assert: (grammar type end parse: 'bool') equals: 'bool'
@@ -123,6 +128,15 @@ ViennaVDMGrammarTest >> testBind2 [
 { #category : #'tests-patterns' }
 ViennaVDMGrammarTest >> testBindList1 [
 	self assert: (grammar bindList end parse: 'v1,v2:t , v3 in set s') equals: #(#(#('v1' 'v2') 't') #(#('v3') 's'))
+]
+
+{ #category : #'tests-statements' }
+ViennaVDMGrammarTest >> testBlockStatement [
+	self
+		assert: (grammar statement end parse: '(dcl v1:t1 := e1,v2:t2:=e2; dcl v3:t3 := e3,v4:t4:=e4; skip; skip)')
+		equals: #(#(#(#('v1' 't1' 'e1') #('v2' 't2' 'e2')) #(#('v3' 't3' 'e3') #('v4' 't4' 'e4'))) #(nil nil)).
+	self assert: (grammar statement end parse: '(skip; skip;)') equals: #(#() #(nil nil)).
+	self assert: (grammar statement end parse: '(dcl v1:t1 := e1,v2:t2:=e2; dcl v3:t3 := e3,v4:t4:=e4)') isPetitFailure
 ]
 
 { #category : #'tests-literals' }
@@ -294,6 +308,11 @@ ViennaVDMGrammarTest >> testDefExpression3 [
 	self
 		assert: (grammar expression end parse: 'def v1 : t1 = e1 ; v2 in set s = e2 ; v3 = e3 in e')
 		equals: #(#(#(#('v1' 't1') 'e1') #(#('v2' 's') 'e2') #('v3' 'e3')) 'e')
+]
+
+{ #category : #'tests-statements' }
+ViennaVDMGrammarTest >> testDefStatement [
+	self assert: (grammar statement end parse: 'def v:t = e in skip') equals: #(#(#(#('v' 't') 'e')) nil)
 ]
 
 { #category : #'tests-literals' }
@@ -482,6 +501,11 @@ ViennaVDMGrammarTest >> testIdentifier4 [
 	self assert: (grammar identifier end parse: 'lambda') isPetitFailure
 ]
 
+{ #category : #'tests-statements' }
+ViennaVDMGrammarTest >> testIdentityStatement [
+	self assert: (grammar statement end parse: 'skip') equals: nil
+]
+
 { #category : #'tests-expressions' }
 ViennaVDMGrammarTest >> testIfExpression1 [
 	self assert: (grammar expression end parse: 'if cond1 then e1 else e2') equals: #(#(#('cond1' 'e1')) 'e2')
@@ -627,6 +651,12 @@ ViennaVDMGrammarTest >> testLetBeExpression4 [
 		equals: #(#(#('v1' 'v2') 't') 'e1' 'e2')
 ]
 
+{ #category : #'tests-statements' }
+ViennaVDMGrammarTest >> testLetBeStatement [
+	self assert: (grammar statement end parse: 'let v in set s be st e in skip') equals: #(#(#('v') 's') 'e' nil).
+	self assert: (grammar statement end parse: 'let v in set s in skip') equals: #(#(#('v') 's') nil nil)
+]
+
 { #category : #'tests-expressions' }
 ViennaVDMGrammarTest >> testLetExpression1 [
 	self assert: (grammar expression end parse: 'let x = <ok> in <ok>') equals: #(#(#('x' nil '<ok>')) '<ok>')
@@ -649,6 +679,11 @@ ViennaVDMGrammarTest >> testLetExpression4 [
 	self
 		assert: (grammar expression end parse: 'let f:t1->t2 f(x)==y in <ok>')
 		equals: #(#(#('f' #() #('t1' 't2') 'f' #(#('x')) 'y' nil nil nil)) '<ok>')
+]
+
+{ #category : #'tests-statements' }
+ViennaVDMGrammarTest >> testLetStatement [
+	self assert: (grammar statement end parse: 'let s:nat = 1 in skip') equals: #(#(#('s' 'nat' '1')) nil)
 ]
 
 { #category : #'tests-expressions' }
@@ -1224,6 +1259,12 @@ ViennaVDMGrammarTest >> testSetUnionPattern2 [
 { #category : #'tests-patterns' }
 ViennaVDMGrammarTest >> testSetUnionPattern3 [
 	self assert: (grammar pattern end parse: '{} union s1 union s2') isPetitFailure
+]
+
+{ #category : #'tests-statements' }
+ViennaVDMGrammarTest >> testStateDesignator [
+	self assert: (grammar stateDesignator end parse: 'n.f1(i).f2(j)') equals: #(#(#(#('n' 'f1') 'i') 'f2') 'j').
+	self assert: (grammar stateDesignator end parse: 'n') equals: 'n'
 ]
 
 { #category : #'tests-expressions' }
