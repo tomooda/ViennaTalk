@@ -230,7 +230,7 @@ ViennaVDMFormatter >> arithmeticRem: aViennaNode [
 
 { #category : #'formatting-statements' }
 ViennaVDMFormatter >> assignStatement: aViennaNode [
-	^ self print: (self format: aViennaNode first) withChildren: {(':= ' , (self format: aViennaNode second))}
+	^ self indentString: (self format: aViennaNode first) insertCrIfNeeded: ':= ' , (self format: aViennaNode second)
 ]
 
 { #category : #'formatting-definitions' }
@@ -326,16 +326,26 @@ ViennaVDMFormatter >> compositeType: aViennaNode [
 	| constructor fields |
 	constructor := self format: aViennaNode first.
 	fields := self format: aViennaNode second.
-	^ 'compose ' , constructor , ' of'
-		,
-			((self needsIndent: constructor , fields)
-				ifTrue: [ (self newlineIndentString: fields) , String cr ]
-				ifFalse: [ String space , fields , String space ]) , 'end'
+	^ self
+		noIndentString: (self indentString: 'compose ' , constructor , ' of' insertCrIfNeeded: fields)
+		insertCrIfNeeded: 'end'
 ]
 
 { #category : #'formatting-expressions' }
 ViennaVDMFormatter >> composition: aViennaNode [
 	^ self print: (self format: aViennaNode first) infix: 'comp' arg: (self format: aViennaNode second)
+]
+
+{ #category : #'formatting-expressions' }
+ViennaVDMFormatter >> conditionalExpression: aViennaNode [
+	^ 'elseif ' , (self indentString: (self format: aViennaNode first)) , String cr , indent , 'then '
+		, (self indentString: (self format: aViennaNode second))
+]
+
+{ #category : #'formatting-statements' }
+ViennaVDMFormatter >> conditionalStatement: aViennaNode [
+	^ 'elseif ' , (self indentString: (self format: aViennaNode first)) , String cr , indent , 'then '
+		, (self indentString: (self format: aViennaNode second))
 ]
 
 { #category : #'formatting-statements' }
@@ -356,7 +366,9 @@ ViennaVDMFormatter >> defExpression: aViennaNode [
 	| defs expression |
 	defs := self format: aViennaNode first.
 	expression := self format: aViennaNode second.
-	^ 'def ' , String cr , indent , (self indentString: defs) , String cr , 'in' , String cr , indent , expression
+	^ self
+		indentString: (self indentString: 'def' insertCrIfNeeded: defs)
+		insertCrIfNeeded: (self indentString: 'in' insertCrIfNeeded: expression)
 ]
 
 { #category : #defaults }
@@ -366,7 +378,7 @@ ViennaVDMFormatter >> defaultIndent [
 
 { #category : #defaults }
 ViennaVDMFormatter >> defaultMaxSizePerLine [
-	^ 60
+	^ 65
 ]
 
 { #category : #'formatting-definitions' }
@@ -400,16 +412,6 @@ ViennaVDMFormatter >> document: aViennaNode [
 ]
 
 { #category : #'formatting-expressions' }
-ViennaVDMFormatter >> elseifExpression: aViennaNode [
-	^ 'elseif ' , (self format: aViennaNode first) , ' then ' , (self indentString: (self format: aViennaNode second))
-]
-
-{ #category : #'formatting-statements' }
-ViennaVDMFormatter >> elseifStatement: aViennaNode [
-	^ 'elseif ' , (self format: aViennaNode first) , ' then ' , (self indentString: (self format: aViennaNode second))
-]
-
-{ #category : #'formatting-expressions' }
 ViennaVDMFormatter >> equal: aViennaNode [
 	^ self print: (self format: aViennaNode first) infix: '=' arg: (self format: aViennaNode second)
 ]
@@ -419,11 +421,7 @@ ViennaVDMFormatter >> equalDefinition: aViennaNode [
 	| patternBind expression |
 	patternBind := self format: aViennaNode first.
 	expression := self format: aViennaNode second.
-	^ patternBind
-		,
-			((self needsIndent: patternBind , expression)
-				ifTrue: [ String cr , indent ]
-				ifFalse: [ String space ]) , '= ' , expression
+	^ self indentString: patternBind , ' =' insertCrIfNeeded: expression
 ]
 
 { #category : #'formatting-definitions' }
@@ -443,11 +441,7 @@ ViennaVDMFormatter >> exists1Expression: aViennaNode [
 	| bind expression |
 	bind := self format: aViennaNode first.
 	expression := self format: aViennaNode second.
-	^ 'exists1 ' , bind , ' &'
-		,
-			((self needsIndent: bind , expression)
-				ifTrue: [ String cr , indent , (self indentString: expression) ]
-				ifFalse: [ String space , expression ])
+	^ self indentString: (self indentString: 'exists1' insertCrIfNeeded: bind , ' &') insertCrIfNeeded: expression
 ]
 
 { #category : #'formatting-expressions' }
@@ -455,13 +449,7 @@ ViennaVDMFormatter >> existsExpression: aViennaNode [
 	| bindList expression |
 	bindList := self format: aViennaNode first.
 	expression := self format: aViennaNode second.
-	(self needsIndent: bindList)
-		ifTrue: [ 
-			^ 'exists' , String cr , indent , (self indentString: bindList) , String cr , '&' , String cr , indent
-				, (self indentString: expression) ].
-	(self needsIndent: bindList , expression)
-		ifTrue: [ ^ 'exists ' , bindList , ' &' , String cr , indent , (self indentString: expression) ].
-	^ 'exists ' , bindList , ' & ' , expression
+	^ self indentString: (self indentString: 'exists' insertCrIfNeeded: bindList trim , ' &') insertCrIfNeeded: expression
 ]
 
 { #category : #'formatting-definitions' }
@@ -473,33 +461,29 @@ ViennaVDMFormatter >> explicitFunctionDefinition: aViennaNode [
 	identifier2 := self format: aViennaNode fourth.
 	parametersList := self format: aViennaNode fifth.
 	expression := self format: aViennaNode sixth.
-	pre := aViennaNode seventh ifNotNil: [ self format: aViennaNode seventh ] ifNil: [ '' ].
-	post := aViennaNode eighth ifNotNil: [ self format: aViennaNode eighth ] ifNil: [ '' ].
-	measure := aViennaNode ninth ifNotNil: [ self format: aViennaNode ninth ] ifNil: [ '' ].
-	^ identifier1 , typeVariableList , ' : ' , functionType , String cr , identifier2 , parametersList , ' =='
-		,
-			((self needsIndent: expression)
-				ifTrue: [ String cr , indent , (self indentString: expression) ]
-				ifFalse: [ String space , expression ]) , (pre ifNotEmpty: [ String cr , 'pre ' , pre ])
-		, (post ifNotEmpty: [ String cr , 'post ' , post ]) , (measure ifNotEmpty: [ String cr , 'measure ' , measure ])
+	pre := aViennaNode seventh ifNotNil: [ :node | String cr , 'pre ' , (self format: node) ] ifNil: [ '' ].
+	post := aViennaNode eighth ifNotNil: [ :node | String cr , 'post ' , (self format: node) ] ifNil: [ '' ].
+	measure := aViennaNode ninth ifNotNil: [ :node | String cr , 'measure ' , (self format: node) ] ifNil: [ '' ].
+	^ identifier1 , typeVariableList , ' : ' , functionType , String cr
+		, (self indentString: identifier2 , parametersList , ' ==' insertCrIfNeeded: expression) , pre , post , measure
 ]
 
 { #category : #'formatting-definitions' }
 ViennaVDMFormatter >> explicitOperationDefinition: aViennaNode [
-	| identifier1 operationType identifier2 parameters expression pre post  |
+	| identifier1 operationType identifier2 parameters expression pre post |
 	identifier1 := self format: aViennaNode first.
 	operationType := self format: aViennaNode second.
 	identifier2 := self format: aViennaNode third.
 	parameters := self format: aViennaNode fourth.
 	expression := self format: aViennaNode fifth.
-	pre := aViennaNode sixth ifNotNil: [ self format: aViennaNode sixth ] ifNil: [ '' ].
-	post := aViennaNode seventh ifNotNil: [ self format: aViennaNode seventh ] ifNil: [ '' ].
-	^ identifier1 , ' : ' , operationType , String cr , identifier2 , parameters , ' =='
-		,
-			((self needsIndent: expression)
-				ifTrue: [ String cr , indent , (self indentString: expression) ]
-				ifFalse: [ String space , expression ]) , (pre ifNotEmpty: [ String cr , 'pre ' , pre ])
-		, (post ifNotEmpty: [ String cr , 'post ' , post ])
+	pre := aViennaNode sixth
+		ifNotNil: [ :node | String cr , (self indentString: 'pre ' insertCrIfNeeded: (self format: node)) ]
+		ifNil: [ '' ].
+	post := aViennaNode seventh
+		ifNotNil: [ :node | String cr , (self indentString: 'post ' insertCrIfNeeded: (self format: node)) ]
+		ifNil: [ '' ].
+	^ identifier1 , ' : ' , operationType , String cr
+		, (self indentString: identifier2 , parameters , ' ==' insertCrIfNeeded: expression) , pre , post
 ]
 
 { #category : #'formatting-interfaces' }
@@ -595,7 +579,7 @@ ViennaVDMFormatter >> fieldReference: aViennaNode [
 	| stateDesignator field |
 	stateDesignator := self format: aViennaNode first.
 	field := self format: aViennaNode second.
-	^ stateDesignator , '.' , field
+	^ self indentString: stateDesignator insertCrIfNeeded: '.' , field
 ]
 
 { #category : #'formatting-expressions' }
@@ -626,13 +610,7 @@ ViennaVDMFormatter >> forallExpression: aViennaNode [
 	| bindList expression |
 	bindList := self format: aViennaNode first.
 	expression := self format: aViennaNode second.
-	(self needsIndent: bindList)
-		ifTrue: [ 
-			^ 'forall' , String cr , indent , (self indentString: bindList) , String cr , '&' , String cr , indent
-				, (self indentString: expression) ].
-	(self needsIndent: bindList , expression)
-		ifTrue: [ ^ 'forall ' , bindList , ' &' , String cr , indent , (self indentString: expression) ].
-	^ 'forall ' , bindList , ' & ' , expression
+	^ self indentString: (self indentString: 'forall' insertCrIfNeeded: bindList trim , ' &') insertCrIfNeeded: expression
 ]
 
 { #category : #formatting }
@@ -654,6 +632,50 @@ ViennaVDMFormatter >> formatAll: aViennaNodeOrArray [
 	^ array
 ]
 
+{ #category : #private }
+ViennaVDMFormatter >> formatEnumerate: anArrayOfString ifEmpty: aBlock [
+	^ self formatEnumerate: anArrayOfString separator: ',' ifEmpty: aBlock
+]
+
+{ #category : #private }
+ViennaVDMFormatter >> formatEnumerate: anArrayOfString separator: aString ifEmpty: aBlock [
+	| lines |
+	anArrayOfString size = 0
+		ifTrue: [ ^ aBlock value ].
+	lines := Array
+		new: anArrayOfString size
+		streamContents: [ :stream | 
+			| line |
+			line := anArrayOfString first.
+			(self needsIndent: line)
+				ifTrue: [ 
+					stream nextPut: line.
+					line := '' ].
+			2 to: anArrayOfString size do: [ :index | 
+				| element |
+				element := anArrayOfString at: index.
+				(self needsIndent: element)
+					ifTrue: [ 
+						line ifNotEmpty: [ stream nextPut: line ].
+						stream nextPut: element.
+						line := '' ]
+					ifFalse: [ 
+						| origLine |
+						origLine := line.
+						line := line , (line ifNotEmpty: [ aString , String space ]) , element.
+						(self needsIndent: line)
+							ifTrue: [ 
+								origLine
+									ifEmpty: [ 
+										stream nextPut: line.
+										line := '' ]
+									ifNotEmpty: [ 
+										stream nextPut: origLine.
+										line := element ] ] ] ].
+			line ifNotEmpty: [ stream nextPut: line ] ].
+	^ aString , String cr join: lines
+]
+
 { #category : #'formatting-definitions' }
 ViennaVDMFormatter >> functionDefinition: aViennaNode [
 	^ self format: aViennaNode first
@@ -661,8 +683,9 @@ ViennaVDMFormatter >> functionDefinition: aViennaNode [
 
 { #category : #'formatting-definitions' }
 ViennaVDMFormatter >> functionDefinitions: aViennaNode [
-	^ 'functions' , String cr , indent
-		, (self indentAllStrings: (self formatAll: aViennaNode) withTerminator: ';' , String cr)
+	^ self
+		indentString: 'functions'
+		insertCr: (';' , String cr , String cr join: (self formatAll: aViennaNode)) , ';' , String cr
 ]
 
 { #category : #'formatting-interfaces' }
@@ -736,110 +759,38 @@ ViennaVDMFormatter >> identityStatement: aViennaNode [
 
 { #category : #'formatting-expressions' }
 ViennaVDMFormatter >> ifExpression: aViennaNode [
-	| cond expr default |
+	| cond expr default elseifs |
 	cond := self format: aViennaNode first first first.
 	expr := self format: aViennaNode first first second.
 	default := self format: aViennaNode second.
-	(aViennaNode first size = 1 and: [ (self needsIndent: cond , expr , default) not ])
-		ifTrue: [ ^ 'if ' , cond , ' then ' , expr , ' else ' , default ].
-	^ String
-		new: 1024
-		streamContents: [ :stream | 
-			stream nextPutAll: 'if'.
-			(self needsIndent: cond)
+	elseifs := self formatAll: aViennaNode first asArray copyWithoutFirst.
+	aViennaNode first size = 1
+		ifTrue: [ 
+			^ (self needsIndent: cond , expr , default)
 				ifTrue: [ 
-					stream
-						nextPut: Character cr;
-						nextPutAll: indent , (self indentString: cond) ]
-				ifFalse: [ 
-					stream
-						nextPut: Character space;
-						nextPutAll: cond ].
-			stream
-				nextPutAll: ' then';
-				nextPut: Character cr;
-				nextPutAll: indent;
-				nextPutAll: (self indentString: expr).
-			2 to: aViennaNode first size do: [ :index | 
-				cond := self format: (aViennaNode first at: index) first.
-				expr := self format: (aViennaNode first at: index) second.
-				stream
-					nextPut: Character cr;
-					nextPutAll: 'elseif'.
-				(self needsIndent: cond)
-					ifTrue: [ 
-						stream
-							nextPut: Character cr;
-							nextPutAll: indent , (self indentString: cond) ]
-					ifFalse: [ 
-						stream
-							nextPut: Character space;
-							nextPutAll: cond ].
-				stream
-					nextPutAll: ' then';
-					nextPut: Character cr;
-					nextPutAll: indent;
-					nextPutAll: (self indentString: expr) ].
-			stream
-				nextPut: Character cr;
-				nextPutAll: 'else';
-				nextPut: Character cr;
-				nextPutAll: indent , (self indentString: default) ]
+					(self indentString: 'if' insertCr: cond) , String cr , (self indentString: 'then' insertCr: expr) , String cr
+						, (self indentString: 'else' insertCr: default) ]
+				ifFalse: [ 'if ' , cond , ' then ' , expr , ' else ' , default ] ].
+	^ (self indentString: 'if ' , cond insertCr: 'then ' , expr) , String cr , (String cr join: elseifs) , String cr
+		, (self indentString: 'else' insertCr: default)
 ]
 
 { #category : #'formatting-statements' }
 ViennaVDMFormatter >> ifStatement: aViennaNode [
-	| cond expr default |
+	| cond statement default elseifs |
 	cond := self format: aViennaNode first first first.
-	expr := self format: aViennaNode first first second.
-	default := aViennaNode second ifNil: [ '' ] ifNotNil: [ self format: aViennaNode second ].
-	(aViennaNode first size = 1 and: [ (self needsIndent: cond , expr , default) not ])
-		ifTrue: [ ^ 'if ' , cond , ' then ' , expr , (default ifNotEmpty: [ ' else ' , default ]) ].
-	^ String
-		new: 1024
-		streamContents: [ :stream | 
-			stream nextPutAll: 'if'.
-			(self needsIndent: cond)
+	statement := self format: aViennaNode first first second.
+	default := self format: aViennaNode second.
+	elseifs := self formatAll: aViennaNode first asArray copyWithoutFirst.
+	aViennaNode first size = 1
+		ifTrue: [ 
+			^ (self needsIndent: cond , statement , default)
 				ifTrue: [ 
-					stream
-						nextPut: Character cr;
-						nextPutAll: indent , (self indentString: cond) ]
-				ifFalse: [ 
-					stream
-						nextPut: Character space;
-						nextPutAll: cond ].
-			stream
-				nextPutAll: ' then';
-				nextPut: Character cr;
-				nextPutAll: indent;
-				nextPutAll: (self indentString: expr).
-			2 to: aViennaNode first size do: [ :index | 
-				cond := self format: (aViennaNode first at: index) first.
-				expr := self format: (aViennaNode first at: index) second.
-				stream
-					nextPut: Character cr;
-					nextPutAll: 'elseif'.
-				(self needsIndent: cond)
-					ifTrue: [ 
-						stream
-							nextPut: Character cr;
-							nextPutAll: indent , (self indentString: cond) ]
-					ifFalse: [ 
-						stream
-							nextPut: Character space;
-							nextPutAll: cond ].
-				stream
-					nextPutAll: ' then';
-					nextPut: Character cr;
-					nextPutAll: indent;
-					nextPutAll: (self indentString: expr) ].
-			default
-				ifNotEmpty: [ 
-					stream
-						nextPut: Character cr;
-						nextPutAll: 'else';
-						nextPut: Character cr;
-						nextPutAll: indent , (self indentString: default) ] ]
+					(self indentString: 'if' insertCr: cond) , String cr , (self indentString: 'then' insertCr: statement) , String cr
+						, (self indentString: 'else' insertCr: default) ]
+				ifFalse: [ 'if ' , cond , ' then ' , statement , ' else ' , default ] ].
+	^ (self indentString: 'if ' , cond insertCr: 'then ' , statement) , String cr , (String cr join: elseifs) , String cr
+		, (self indentString: 'else' insertCr: default)
 ]
 
 { #category : #'formatting-expressions' }
@@ -938,17 +889,20 @@ ViennaVDMFormatter >> indentString: aString [
 ]
 
 { #category : #private }
+ViennaVDMFormatter >> indentString: aString insertCr: anotherString [
+	^ anotherString ifEmpty: [ aString ] ifNotEmpty: [ aString , String cr , indent , (self indentString: anotherString) ]
+]
+
+{ #category : #private }
 ViennaVDMFormatter >> indentString: aString insertCrIfNeeded: anotherString [
 	^ anotherString
 		ifEmpty: [ aString ]
 		ifNotEmpty: [ 
-			self
-				indentString:
-					aString
-						,
-							((self needsIndent: aString , anotherString)
-								ifTrue: [ String cr ]
-								ifFalse: [ String space ]) , anotherString ]
+			aString
+				,
+					((self needsIndent: aString , anotherString)
+						ifTrue: [ String cr , indent , (self indentString: anotherString) ]
+						ifFalse: [ String space , anotherString ]) ]
 ]
 
 { #category : #'formatting-statements' }
@@ -957,16 +911,16 @@ ViennaVDMFormatter >> indexForLoop: aViennaNode [
 	identifier := self format: aViennaNode first.
 	start := self format: aViennaNode second.
 	end := self format: aViennaNode third.
-	step := aViennaNode fourth ifNotNil: [ self format: aViennaNode fourth ] ifNil: [ '' ].
+	step := aViennaNode fourth
+		ifNotNil: [ :node | self indentString: 'by ' insertCrIfNeeded: (self format: node) ]
+		ifNil: [ '' ].
 	statement := self format: aViennaNode fifth.
-	(self needsIndent: identifier , start , end , step , statement)
-		ifFalse: [ ^ 'for ' , identifier , ' = ' , start , ' to ' , end , (step ifNotEmpty: [ ' by ' , step ]) , ' do ' , statement ].
-	(self needsIndent: identifier , start , end , step)
-		ifFalse: [ 
-			^ 'for ' , identifier , ' = ' , start , ' to ' , end , (step ifNotEmpty: [ ' by ' , step ]) , String cr , ' do '
-				, (self indentString: statement) ].
-	^ 'for ' , identifier , ' = ' , (self indentString: start) , String cr , 'to ' , (self indentString: end)
-		, (step ifNotEmpty: [ String cr , 'by ' , (self indent: step) ]) , String cr , 'do ' , (self indentString: statement)
+	^ self
+		noIndentString:
+			(self
+				noIndentString: (self indentString: 'for ' , identifier insertCrIfNeeded: '= ' , start)
+				insertCrIfNeeded: (self noIndentString: (self indentString: 'to ' insertCrIfNeeded: end) insertCrIfNeeded: step))
+		insertCrIfNeeded: (self indentString: 'do' insertCrIfNeeded: statement)
 ]
 
 { #category : #'formatting-definitions' }
@@ -1004,9 +958,7 @@ ViennaVDMFormatter >> invariantInitialFunction: aViennaNode [
 	| pattern expression |
 	pattern := self format: aViennaNode first.
 	expression := self format: aViennaNode second.
-	^ (self needsIndent: pattern , expression)
-		ifTrue: [ pattern , ' ==' , String cr , indent , (self indentString: expression) ]
-		ifFalse: [ pattern , ' == ' , expression ]
+	^ self indentString: pattern , ' ==' insertCrIfNeeded: expression
 ]
 
 { #category : #'formatting-expressions' }
@@ -1014,11 +966,7 @@ ViennaVDMFormatter >> iotaExpression: aViennaNode [
 	| bind expression |
 	bind := self format: aViennaNode first.
 	expression := self format: aViennaNode second.
-	^ 'iota ' , bind , ' &'
-		,
-			((self needsIndent: bind , expression)
-				ifTrue: [ String cr , indent , (self indentString: expression) ]
-				ifFalse: [ String space , expression ])
+	^ self indentString: 'iota ' , bind , ' &' insertCrIfNeeded: expression
 ]
 
 { #category : #'formatting-expressions' }
@@ -1060,11 +1008,7 @@ ViennaVDMFormatter >> isofbaseclassExpression: aViennaNode [
 	| cls expression |
 	cls := self format: aViennaNode first.
 	expression := self format: aViennaNode second.
-	^ 'isofbaseclass(' , cls , ','
-		,
-			((self needsIndent: expression)
-				ifTrue: [ String cr , indent , (self indentString: expression) ]
-				ifFalse: [ String space , expression ]) , ')'
+	^ self indentString: 'isofbaseclass(' , cls , ',' insertCrIfNeeded: expression , ')'
 ]
 
 { #category : #'formatting-expressions' }
@@ -1072,11 +1016,7 @@ ViennaVDMFormatter >> isofclassExpression: aViennaNode [
 	| cls expression |
 	cls := self format: aViennaNode first.
 	expression := self format: aViennaNode second.
-	^ 'isofclass(' , cls , ','
-		,
-			((self needsIndent: expression)
-				ifTrue: [ String cr , indent , (self indentString: expression) ]
-				ifFalse: [ String space , expression ]) , ')'
+	^ self indentString: 'isofclass(' , cls , ',' insertCrIfNeeded: expression , ')'
 ]
 
 { #category : #'formatting-expressions' }
@@ -1089,11 +1029,7 @@ ViennaVDMFormatter >> lambdaExpression: aViennaNode [
 	| typeBind expression |
 	typeBind := self format: aViennaNode first.
 	expression := self format: aViennaNode second.
-	^ 'lambda ' , typeBind , ' &'
-		,
-			((self needsIndent: expression)
-				ifTrue: [ String cr , indent , (self indent: expression) ]
-				ifFalse: [ String space , expression ])
+	^ self indentString: 'lambda ' , typeBind , ' &' insertCrIfNeeded: expression
 ]
 
 { #category : #'formatting-expressions' }
@@ -1133,18 +1069,9 @@ ViennaVDMFormatter >> letExpression: aViennaNode [
 	| localDefinitionList expression |
 	localDefinitionList := self format: aViennaNode first.
 	expression := self format: aViennaNode second.
-	^ (self needsIndent: localDefinitionList , expression)
-		ifTrue: [ 
-			'let'
-				,
-					((self needsIndent: localDefinitionList)
-						ifTrue: [ String cr , indent , (self indentString: localDefinitionList) ]
-						ifFalse: [ String space , localDefinitionList ]) , String cr , 'in'
-				,
-					((self needsIndent: expression)
-						ifTrue: [ String cr , indent , (self indentString: expression) ]
-						ifFalse: [ String space , expression ]) ]
-		ifFalse: [ 'let ' , localDefinitionList , ' in ' , expression ]
+	^ self
+		noIndentString: (self indentString: 'let' insertCrIfNeeded: localDefinitionList)
+		insertCrIfNeeded: (self indentString: 'in' insertCrIfNeeded: expression)
 ]
 
 { #category : #'formatting-statements' }
@@ -1152,18 +1079,9 @@ ViennaVDMFormatter >> letStatement: aViennaNode [
 	| localDefinitionList statement |
 	localDefinitionList := self format: aViennaNode first.
 	statement := self format: aViennaNode second.
-	^ (self needsIndent: localDefinitionList , statement)
-		ifTrue: [ 
-			'let'
-				,
-					((self needsIndent: localDefinitionList)
-						ifTrue: [ String cr , indent , (self indentString: localDefinitionList) ]
-						ifFalse: [ String space , localDefinitionList ]) , String cr , 'in'
-				,
-					((self needsIndent: statement)
-						ifTrue: [ String cr , indent , (self indentString: statement) ]
-						ifFalse: [ String space , statement ]) ]
-		ifFalse: [ 'let ' , localDefinitionList , ' in ' , statement ]
+	^ self
+		noIndentString: (self indentString: 'let' insertCrIfNeeded: localDefinitionList)
+		insertCrIfNeeded: (self indentString: 'in' insertCrIfNeeded: statement)
 ]
 
 { #category : #'formatting-definitions' }
@@ -1196,18 +1114,14 @@ ViennaVDMFormatter >> mapComprehension: aViennaNode [
 	keyExpression := self format: aViennaNode first.
 	valueExpression := self format: aViennaNode second.
 	bindList := self format: aViennaNode third.
-	guard := aViennaNode fourth ifNotNil: [ self format: aViennaNode fourth ] ifNil: [ '' ].
+	guard := aViennaNode fourth ifNil: [ '' ] ifNotNil: [ :node | '& ' , (self format: node) ].
 	(self needsIndent: keyExpression , valueExpression , bindList , guard)
 		ifFalse: [ ^ '{' , keyExpression , ' |-> ' , valueExpression , ' | ' , bindList , ' & ' , guard , '}' ].
 	^ '{'
 		,
-			((self needsIndent: keyExpression , valueExpression)
-				ifTrue: [ keyExpression , String cr , '|-> ' , (self indentString: valueExpression) ]
-				ifFalse: [ keyExpression , ' |-> ' , valueExpression ]) , String cr , indent , '| '
-		,
-			((self needsIndent: bindList , guard)
-				ifTrue: [ (self indentString: bindList) , (guard ifNotEmpty: [ String cr , indent , '& ' , (self indentString: guard) ]) ]
-				ifFalse: [ (self indentString: bindList) , (guard ifNotEmpty: [ ' & ' , guard ]) ]) , '}'
+			(self
+				noIndentString: (self noIndentString: keyExpression insertCrIfNeeded: '|-> ' , valueExpression)
+				insertCrIfNeeded: (self noIndentString: '| ' , bindList insertCrIfNeeded: guard)) , '}'
 ]
 
 { #category : #'formatting-expressions' }
@@ -1227,81 +1141,14 @@ ViennaVDMFormatter >> mapDomainRestrictedTo: aViennaNode [
 
 { #category : #'formatting-expressions' }
 ViennaVDMFormatter >> mapEnumeration: aViennaNode [
-	| lines |
-	aViennaNode size = 0
-		ifTrue: [ ^ '{|->}' ].
-	lines := Array
-		new: aViennaNode size
-		streamContents: [ :stream | 
-			| line |
-			line := self format: aViennaNode first.
-			(self needsIndent: line)
-				ifTrue: [ 
-					stream nextPut: line.
-					line := '' ].
-			2 to: aViennaNode size do: [ :index | 
-				| element |
-				element := self format: (aViennaNode at: index).
-				(self needsIndent: element)
-					ifTrue: [ 
-						line ifNotEmpty: [ stream nextPut: line ].
-						stream nextPut: element.
-						line := '' ]
-					ifFalse: [ 
-						| origLine |
-						origLine := line.
-						line := line , (line ifNotEmpty: [ ', ' ]) , element.
-						(self needsIndent: line)
-							ifTrue: [ 
-								origLine
-									ifEmpty: [ 
-										stream nextPut: line.
-										line := '' ]
-									ifNotEmpty: [ 
-										stream nextPut: origLine.
-										line := element ] ] ] ].
-			line ifNotEmpty: [ stream nextPut: line ] ].
-	^ '{' , (',' , String cr join: lines) , '}'
+	| elements |
+	elements := self formatAll: aViennaNode.
+	^ '{' , (self formatEnumerate: elements ifEmpty: [ '|->' ]) , '}'
 ]
 
 { #category : #'formatting-patterns and binds' }
 ViennaVDMFormatter >> mapEnumerationPattern: aViennaNode [
-	| lines |
-	aViennaNode first size = 0
-		ifTrue: [ ^ '{|->}' ].
-	lines := Array
-		new: aViennaNode size
-		streamContents: [ :stream | 
-			| node line |
-			node := aViennaNode first.
-			line := self format: node first.
-			(self needsIndent: line)
-				ifTrue: [ 
-					stream nextPut: line.
-					line := '' ].
-			2 to: node size do: [ :index | 
-				| element |
-				element := self format: (node at: index).
-				(self needsIndent: element)
-					ifTrue: [ 
-						line ifNotEmpty: [ stream nextPut: line ].
-						stream nextPut: element.
-						line := '' ]
-					ifFalse: [ 
-						| origLine |
-						origLine := line.
-						line := line , (line ifNotEmpty: [ ', ' ]) , element.
-						(self needsIndent: line)
-							ifTrue: [ 
-								origLine
-									ifEmpty: [ 
-										stream nextPut: line.
-										line := '' ]
-									ifNotEmpty: [ 
-										stream nextPut: origLine.
-										line := element ] ] ] ].
-			line ifNotEmpty: [ stream nextPut: line ] ].
-	^ '{' , (',' , String cr join: lines) , '}'
+	^ '{' , (self formatEnumerate: (self formatAll: aViennaNode first) ifEmpty: [ '|->' ]) , '}'
 ]
 
 { #category : #'formatting-expressions' }
@@ -1326,7 +1173,12 @@ ViennaVDMFormatter >> mapOrSequenceModify: aViennaNode [
 
 { #category : #'formatting-expressions' }
 ViennaVDMFormatter >> mapOrSequenceReference: aViennaNode [
-	^ (self print: (self format: aViennaNode first) , '(' withChildren: {(self format: aViennaNode second)}) , ')'
+	| ref arg |
+	ref := self format: aViennaNode first.
+	arg := self format: aViennaNode second.
+	^ (self needsIndent: ref , arg)
+		ifTrue: [ ref , String cr , indent , (self indentString: '(' , arg , ')') ]
+		ifFalse: [ ref , '(' , arg , ')' ]
 ]
 
 { #category : #'formatting-expressions' }
@@ -1346,7 +1198,9 @@ ViennaVDMFormatter >> mapRangeRestrictedTo: aViennaNode [
 
 { #category : #'formatting-types' }
 ViennaVDMFormatter >> mapType: aViennaNode [
-	^ 'map ' , (self format: aViennaNode first) , ' to ' , (self format: aViennaNode second)
+	^ self
+		noIndentString: (self indentString: 'map' insertCrIfNeeded: (self format: aViennaNode first))
+		insertCrIfNeeded: (self indentString: 'to' insertCrIfNeeded: (self format: aViennaNode second))
 ]
 
 { #category : #'formatting-expressions' }
@@ -1530,8 +1384,9 @@ ViennaVDMFormatter >> operationDefinition: aViennaNode [
 
 { #category : #'formatting-definitions' }
 ViennaVDMFormatter >> operationDefinitions: aViennaNode [
-	^ 'operations' , String cr , indent
-		, (self indentAllStrings: (self formatAll: aViennaNode) withTerminator: ';' , String cr)
+	^ self
+		indentString: 'operations'
+		insertCr: (';' , String cr , String cr join: (self formatAll: aViennaNode)) , ';' , String cr
 ]
 
 { #category : #'formatting-interfaces' }
@@ -1645,39 +1500,7 @@ ViennaVDMFormatter >> print: aString withChildren: anArrayOfString [
 
 { #category : #'formatting-types' }
 ViennaVDMFormatter >> productType: aViennaNode [
-	| lines |
-	lines := Array
-		new: aViennaNode size
-		streamContents: [ :stream | 
-			| line |
-			line := self format: aViennaNode first.
-			(self needsIndent: line)
-				ifTrue: [ 
-					stream nextPut: line.
-					line := '' ].
-			2 to: aViennaNode size do: [ :index | 
-				| element |
-				element := self format: (aViennaNode at: index).
-				(self needsIndent: element)
-					ifTrue: [ 
-						line ifNotEmpty: [ stream nextPut: line ].
-						stream nextPut: element.
-						line := '' ]
-					ifFalse: [ 
-						| origLine |
-						origLine := line.
-						line := line , (line ifNotEmpty: [ ' * ' ]) , element.
-						(self needsIndent: line)
-							ifTrue: [ 
-								origLine
-									ifEmpty: [ 
-										stream nextPut: line.
-										line := '' ]
-									ifNotEmpty: [ 
-										stream nextPut: origLine.
-										line := element ] ] ] ].
-			line ifNotEmpty: [ stream nextPut: line ] ].
-	^ ' *' , String cr join: lines
+	^ self formatEnumerate: (self formatAll: aViennaNode) separator: '*' ifEmpty: [ '' ]
 ]
 
 { #category : #'formatting-expressions' }
@@ -1761,11 +1584,7 @@ ViennaVDMFormatter >> samebaseclassExpression: aViennaNode [
 	| cls expression |
 	cls := self format: aViennaNode first.
 	expression := self format: aViennaNode second.
-	^ 'samebaseclass(' , cls , ','
-		,
-			((self needsIndent: expression)
-				ifTrue: [ String cr , indent , (self indentString: expression) ]
-				ifFalse: [ String space , expression ]) , ')'
+	^ self indentString: 'samebaseclass(' , cls , ',' insertCrIfNeeded: expression , ')'
 ]
 
 { #category : #'formatting-expressions' }
@@ -1773,11 +1592,7 @@ ViennaVDMFormatter >> sameclassExpression: aViennaNode [
 	| cls expression |
 	cls := self format: aViennaNode first.
 	expression := self format: aViennaNode second.
-	^ 'sameclass(' , cls , ','
-		,
-			((self needsIndent: expression)
-				ifTrue: [ String cr , indent , (self indentString: expression) ]
-				ifFalse: [ String space , expression ]) , ')'
+	^ self indentString: 'sameclass(' , cls , ',' insertCrIfNeeded: expression , ')'
 ]
 
 { #category : #'formatting-expressions' }
@@ -1797,42 +1612,7 @@ ViennaVDMFormatter >> seqConcPattern: aViennaNode [
 
 { #category : #'formatting-patterns and binds' }
 ViennaVDMFormatter >> seqEnumPattern: aViennaNode [
-	| lines |
-	aViennaNode first size = 0
-		ifTrue: [ ^ '[]' ].
-	lines := Array
-		new: aViennaNode size
-		streamContents: [ :stream | 
-			| line node |
-			node := aViennaNode first.
-			line := self format: node first.
-			(self needsIndent: line)
-				ifTrue: [ 
-					stream nextPut: line.
-					line := '' ].
-			2 to: node size do: [ :index | 
-				| element |
-				element := self format: (node at: index).
-				(self needsIndent: element)
-					ifTrue: [ 
-						line ifNotEmpty: [ stream nextPut: line ].
-						stream nextPut: element.
-						line := '' ]
-					ifFalse: [ 
-						| origLine |
-						origLine := line.
-						line := line , (line ifNotEmpty: [ ', ' ]) , element.
-						(self needsIndent: line)
-							ifTrue: [ 
-								origLine
-									ifEmpty: [ 
-										stream nextPut: line.
-										line := '' ]
-									ifNotEmpty: [ 
-										stream nextPut: origLine.
-										line := element ] ] ] ].
-			line ifNotEmpty: [ stream nextPut: line ] ].
-	^ '[' , (',' , String cr join: lines) , ']'
+	^ '[' , (self formatEnumerate: (self formatAll: aViennaNode first) ifEmpty: [ '' ]) , ']'
 ]
 
 { #category : #'formatting-types' }
@@ -1845,14 +1625,9 @@ ViennaVDMFormatter >> sequenceComprehension: aViennaNode [
 	| expression setBind guard |
 	expression := self format: aViennaNode first.
 	setBind := self format: aViennaNode second.
-	guard := aViennaNode third ifNotNil: [ self format: aViennaNode fourth ] ifNil: [ '' ].
-	(self needsIndent: expression , setBind , guard)
-		ifFalse: [ ^ '[' , expression , ' | ' , setBind , ' & ' , guard , ']' ].
-	^ '[' , expression , String cr , indent , '| '
-		,
-			((self needsIndent: setBind , guard)
-				ifTrue: [ (self indentString: setBind) , (guard ifNotEmpty: [ String cr , indent , '& ' , (self indentString: guard) ]) ]
-				ifFalse: [ (self indentString: setBind) , (guard ifNotEmpty: [ ' & ' , guard ]) ]) , ']'
+	guard := aViennaNode third ifNotNil: [ :node | '& ' , (self format: node) ] ifNil: [ '' ].
+	^ '[' , (self indentString: expression insertCrIfNeeded: (self indentString: '| ' , setBind insertCrIfNeeded: guard))
+		, ']'
 ]
 
 { #category : #'formatting-expressions' }
@@ -1867,43 +1642,9 @@ ViennaVDMFormatter >> sequenceElements: aViennaNode [
 
 { #category : #'formatting-expressions' }
 ViennaVDMFormatter >> sequenceEnumeration: aViennaNode [
-	|  lines |
-	aViennaNode first size = 0
-		ifTrue: [ ^ '[]' ].
-		
-	lines := Array
-		new: aViennaNode first size
-		streamContents: [ :stream | 
-			| node line |
-			node := aViennaNode first.
-			line := self format: node first.
-			(self needsIndent: line)
-				ifTrue: [ 
-					stream nextPut: line.
-					line := '' ].
-			2 to: node size do: [ :index | 
-				| element |
-				element := self format: (node at: index).
-				(self needsIndent: element)
-					ifTrue: [ 
-						line ifNotEmpty: [ stream nextPut: line ].
-						stream nextPut: element.
-						line := '' ]
-					ifFalse: [ 
-						| origLine |
-						origLine := line.
-						line := line , (line ifNotEmpty: [ ', ' ]) , element.
-						(self needsIndent: line)
-							ifTrue: [ 
-								origLine
-									ifEmpty: [ 
-										stream nextPut: line.
-										line := '' ]
-									ifNotEmpty: [ 
-										stream nextPut: origLine.
-										line := element ] ] ] ].
-			line ifNotEmpty: [ stream nextPut: line ] ].
-	^ '[' , (',' , String cr join: lines) , ']'
+	| elements |
+	elements := self formatAll: aViennaNode first.
+	^ '[' , (self formatEnumerate: elements ifEmpty: [ '' ]) , ']'
 ]
 
 { #category : #'formatting-statements' }
@@ -1912,23 +1653,12 @@ ViennaVDMFormatter >> sequenceForLoop: aViennaNode [
 	patternBind := self format: aViennaNode first.
 	expression := self format: aViennaNode second.
 	statement := self format: aViennaNode third.
-	(self needsIndent: patternBind , expression , statement)
-		ifFalse: [ ^ 'for ' , patternBind , ' in ' , expression , ' do ' , statement ].
-	(self needsIndent: patternBind , expression)
-		ifFalse: [ ^ 'for ' , patternBind , ' in ' , expression , ' do' , String cr , indent , (self indentString: statement) ].
-	^ 'for'
-		,
-			((self needsIndent: patternBind)
-				ifTrue: [ String cr , indent , (self indentString: patternBind) ]
-				ifFalse: [ String space , patternBind ]) , String cr , 'in'
-		,
-			((self needsIndent: expression)
-				ifTrue: [ String cr , indent , (self indentString: expression) ]
-				ifFalse: [ String space , expression ]) , String cr , 'do'
-		,
-			((self needsIndent: statement)
-				ifTrue: [ String cr , indent , (self indentString: statement) ]
-				ifFalse: [ String space , statement ])
+	^ self
+		noIndentString:
+			(self
+				noIndentString: (self indentString: 'for' insertCrIfNeeded: patternBind)
+				insertCrIfNeeded: (self indentString: 'in' insertCrIfNeeded: expression))
+		insertCrIfNeeded: (self indentString: 'do' insertCrIfNeeded: statement)
 ]
 
 { #category : #'formatting-expressions' }
@@ -1971,14 +1701,9 @@ ViennaVDMFormatter >> setComprehension: aViennaNode [
 	| expression bindList guard |
 	expression := self format: aViennaNode first.
 	bindList := self format: aViennaNode second.
-	guard := aViennaNode third ifNotNil: [ self format: aViennaNode third ] ifNil: [ '' ].
-	(self needsIndent: expression , bindList , guard)
-		ifFalse: [ ^ '{' , expression , ' | ' , bindList , ' & ' , guard , '}' ].
-	^ '{' , expression , String cr , indent , '| '
-		,
-			((self needsIndent: bindList , guard)
-				ifTrue: [ (self indentString: bindList) , (guard ifNotEmpty: [ String cr , indent , '& ' , (self indentString: guard) ]) ]
-				ifFalse: [ (self indentString: bindList) , (guard ifNotEmpty: [ ' & ' , guard ]) ]) , '}'
+	guard := aViennaNode third ifNotNil: [ :node | '& ' , (self format: node) ] ifNil: [ '' ].
+	^ '{' , (self indentString: (self indentString: expression insertCrIfNeeded: '| ' , bindList) insertCrIfNeeded: guard)
+		, '}'
 ]
 
 { #category : #'formatting-expressions' }
@@ -1988,82 +1713,14 @@ ViennaVDMFormatter >> setDifference: aViennaNode [
 
 { #category : #'formatting-patterns and binds' }
 ViennaVDMFormatter >> setEnumPattern: aViennaNode [
-	| lines |
-	aViennaNode first size = 0
-		ifTrue: [ ^ '{}' ].
-	lines := Array
-		new: aViennaNode size
-		streamContents: [ :stream | 
-			| node line |
-			node := aViennaNode first.
-			line := self format: node first.
-			(self needsIndent: line)
-				ifTrue: [ 
-					stream nextPut: line.
-					line := '' ].
-			2 to: node size do: [ :index | 
-				| element |
-				element := self format: (node at: index).
-				(self needsIndent: element)
-					ifTrue: [ 
-						line ifNotEmpty: [ stream nextPut: line ].
-						stream nextPut: element.
-						line := '' ]
-					ifFalse: [ 
-						| origLine |
-						origLine := line.
-						line := line , (line ifNotEmpty: [ ', ' ]) , element.
-						(self needsIndent: line)
-							ifTrue: [ 
-								origLine
-									ifEmpty: [ 
-										stream nextPut: line.
-										line := '' ]
-									ifNotEmpty: [ 
-										stream nextPut: origLine.
-										line := element ] ] ] ].
-			line ifNotEmpty: [ stream nextPut: line ] ].
-	^ '{' , (',' , String cr join: lines) , '}'
+	^ '{' , (self formatEnumerate: (self formatAll: aViennaNode first) ifEmpty: [ '' ]) , '}'
 ]
 
 { #category : #'formatting-expressions' }
 ViennaVDMFormatter >> setEnumeration: aViennaNode [
-	| lines |
-	aViennaNode first size = 0
-		ifTrue: [ ^ '{}' ].
-	lines := Array
-		new: aViennaNode size
-		streamContents: [ :stream | 
-			| node line |
-			node := aViennaNode first.
-			line := self format: node first.
-			(self needsIndent: line)
-				ifTrue: [ 
-					stream nextPut: line.
-					line := '' ].
-			2 to: node size do: [ :index | 
-				| element |
-				element := self format: (node at: index).
-				(self needsIndent: element)
-					ifTrue: [ 
-						line ifNotEmpty: [ stream nextPut: line ].
-						stream nextPut: element.
-						line := '' ]
-					ifFalse: [ 
-						| origLine |
-						origLine := line.
-						line := line , (line ifNotEmpty: [ ', ' ]) , element.
-						(self needsIndent: line)
-							ifTrue: [ 
-								origLine
-									ifEmpty: [ 
-										stream nextPut: line.
-										line := '' ]
-									ifNotEmpty: [ 
-										stream nextPut: origLine.
-										line := element ] ] ] ].
-			line ifNotEmpty: [ stream nextPut: line ] ].
-	^ '{' , (',' , String cr join: lines) , '}'
+	| elements |
+	elements := self formatAll: aViennaNode first.
+	^ '{' , (self formatEnumerate: elements ifEmpty: [ '' ]) , '}'
 ]
 
 { #category : #'formatting-statements' }
@@ -2076,19 +1733,12 @@ ViennaVDMFormatter >> setForLoop: aViennaNode [
 		ifFalse: [ ^ 'for all ' , pattern , ' in set ' , expression , ' do ' , statement ].
 	(self needsIndent: pattern , expression)
 		ifFalse: [ ^ 'for all ' , pattern , ' in set ' , expression , ' do' , String cr , indent , (self indentString: statement) ].
-	^ 'for all'
-		,
-			((self needsIndent: pattern)
-				ifTrue: [ String cr , indent , (self indentString: pattern) ]
-				ifFalse: [ String space , pattern ]) , String cr , 'in set'
-		,
-			((self needsIndent: expression)
-				ifTrue: [ String cr , indent , (self indentString: expression) ]
-				ifFalse: [ String space , expression ]) , String cr , 'do'
-		,
-			((self needsIndent: statement)
-				ifTrue: [ String cr , indent , (self indentString: statement) ]
-				ifFalse: [ String space , statement ])
+	^ self
+		noIndentString:
+			(self
+				noIndentString: (self indentString: 'for all' insertCrIfNeeded: pattern)
+				insertCrIfNeeded: (self indentString: 'in set' insertCrIfNeeded: expression))
+		insertCrIfNeeded: (self indentString: 'do' insertCrIfNeeded: statement)
 ]
 
 { #category : #'formatting-expressions' }
@@ -2101,11 +1751,7 @@ ViennaVDMFormatter >> setRangeExpression: aViennaNode [
 	| start end |
 	start := self format: aViennaNode first.
 	end := self format: aViennaNode second.
-	^ '{' , start
-		,
-			((self needsIndent: start , end)
-				ifTrue: [ ',' , String cr , indent , '..., ' , (self indentString: end) ]
-				ifFalse: [ ',..., ' , end ]) , '}'
+	^ self noIndentString: '{' , start , ',' insertCrIfNeeded: '..., ' , end , '}'
 ]
 
 { #category : #'formatting-types' }
@@ -2128,12 +1774,10 @@ ViennaVDMFormatter >> stateDefinition: aViennaNode [
 	| identifier stateFieldList invariant initialisation |
 	identifier := self format: aViennaNode first.
 	stateFieldList := self format: aViennaNode second.
-	invariant := aViennaNode third ifNotNil: [ self format: aViennaNode third ].
-	initialisation := aViennaNode fourth ifNotNil: [ self format: aViennaNode fourth ].
-	^ 'state ' , identifier , ' of' , String cr , indent , (self indentString: stateFieldList)
-		, (invariant ifNil: [ '' ] ifNotNil: [ String cr , indent , (self indentString: invariant) ])
-		, (initialisation ifNil: [ '' ] ifNotNil: [ String cr , indent , (self indentString: initialisation) ]) , String cr
-		, 'end'
+	invariant := aViennaNode third ifNil: [ '' ] ifNotNil: [ :node | String cr , (self format: node) ].
+	initialisation := aViennaNode fourth ifNil: [ '' ] ifNotNil: [ :node | String cr , (self format: node) ].
+	^ 'state ' , identifier , ' of' , String cr , indent , (self indentString: stateFieldList) , invariant , initialisation
+		, String cr , 'end'
 ]
 
 { #category : #private }
@@ -2159,7 +1803,7 @@ ViennaVDMFormatter >> subsequence: aViennaNode [
 	(self needsIndent: start , end)
 		ifFalse: [ ^ sequence , '(' , String cr , indent , (self indentString: start , ',..., ' , end , ')') ].
 	^ sequence , '(' , String cr , indent
-		, (self indentString: start , ',' , String cr , indent , '..., ' , (self indentString: end , ')'))
+		, ((self indentString: start , ',') , String cr , indent , '..., ' , (self indentString: end , ')'))
 ]
 
 { #category : #'formatting-expressions' }
@@ -2229,24 +1873,13 @@ ViennaVDMFormatter >> typeDefinition: aViennaNode [
 	| typeName baseType invariant |
 	typeName := self format: aViennaNode first.
 	baseType := self format: aViennaNode second.
-	invariant := aViennaNode third ifNotNil: [ self format: aViennaNode third ].
-	^ typeName , ' = '
-		,
-			((self needsIndent: typeName , baseType)
-				ifTrue: [ self indentString: baseType ]
-				ifFalse: [ baseType ])
-		,
-			(invariant
-				ifNil: [ '' ]
-				ifNotNil: [ 
-					(self needsIndent: typeName , baseType , invariant)
-						ifTrue: [ String cr , indent , (self indentString: invariant) ]
-						ifFalse: [ String space , invariant ] ])
+	invariant := aViennaNode third ifNil: [ '' ] ifNotNil: [ :node | self format: node ].
+	^ self indentString: (self indentString: typeName , ' =' insertCrIfNeeded: baseType) insertCrIfNeeded: invariant
 ]
 
 { #category : #'formatting-definitions' }
 ViennaVDMFormatter >> typeDefinitions: aViennaNode [
-	^ 'types' , String cr , indent , (self indentAllStrings: (self formatAll: aViennaNode) withTerminator: ';')
+	^ self indentString: 'types' insertCr: (';' , String cr join: (self formatAll: aViennaNode)) , ';' , String cr
 ]
 
 { #category : #'formatting-interfaces' }
@@ -2324,39 +1957,7 @@ ViennaVDMFormatter >> undefinedExpression: aViennaNode [
 
 { #category : #'formatting-types' }
 ViennaVDMFormatter >> unionType: aViennaNode [
-	| lines |
-	lines := Array
-		new: aViennaNode size
-		streamContents: [ :stream | 
-			| line |
-			line := self format: aViennaNode first.
-			(self needsIndent: line)
-				ifTrue: [ 
-					stream nextPut: line.
-					line := '' ].
-			2 to: aViennaNode size do: [ :index | 
-				| element |
-				element := self format: (aViennaNode at: index).
-				(self needsIndent: element)
-					ifTrue: [ 
-						line ifNotEmpty: [ stream nextPut: line ].
-						stream nextPut: element.
-						line := '' ]
-					ifFalse: [ 
-						| origLine |
-						origLine := line.
-						line := line , (line ifNotEmpty: [ ' | ' ]) , element.
-						(self needsIndent: line)
-							ifTrue: [ 
-								origLine
-									ifEmpty: [ 
-										stream nextPut: line.
-										line := '' ]
-									ifNotEmpty: [ 
-										stream nextPut: origLine.
-										line := element ] ] ] ].
-			line ifNotEmpty: [ stream nextPut: line ] ].
-	^ ' |' , String cr join: lines
+	^ self formatEnumerate: (self formatAll: aViennaNode) separator: '|' ifEmpty: [ '' ]
 ]
 
 { #category : #'formatting-types' }
@@ -2368,18 +1969,14 @@ ViennaVDMFormatter >> unitType: aViennaNode [
 ViennaVDMFormatter >> valueDefinition: aViennaNode [
 	| identifier type expression |
 	identifier := self format: aViennaNode first.
-	type := aViennaNode second ifNotNil: [ self format: aViennaNode second ].
+	type := aViennaNode second ifNil: [ '' ] ifNotNil: [ :node | ' : ' , (self format: node) ].
 	expression := self format: aViennaNode third.
-	^ identifier , (type ifNil: [ '' ] ifNotNil: [ ' : ' , type ]) , ' ='
-		,
-			((self needsIndent: expression)
-				ifTrue: [ String cr , indent , (self indentString: expression) ]
-				ifFalse: [ String space , expression ])
+	^ self indentString: identifier , type , ' =' insertCrIfNeeded: expression
 ]
 
 { #category : #'formatting-definitions' }
 ViennaVDMFormatter >> valueDefinitions: aViennaNode [
-	^ 'values' , String cr , indent , (self indentAllStrings: (self formatAll: aViennaNode) withTerminator: ';')
+	^ self indentString: 'values' insertCr: (';' , String cr join: (self formatAll: aViennaNode)) , ';' , String cr
 ]
 
 { #category : #'formatting-interfaces' }
@@ -2416,15 +2013,7 @@ ViennaVDMFormatter >> whileLoop: aViennaNode [
 	| expression statement |
 	expression := self format: aViennaNode first.
 	statement := self format: aViennaNode second.
-	(self needsIndent: expression , statement)
-		ifFalse: [ ^ 'while ' , expression , ' do ' , statement ].
-	^ 'while'
-		,
-			((self needsIndent: expression)
-				ifTrue: [ String cr , indent , (self indentString: expression) ]
-				ifFalse: [ String space , expression ]) , String cr , 'do'
-		,
-			((self needsIndent: statement)
-				ifTrue: [ String cr , indent , (self indentString: statement) ]
-				ifFalse: [ String space , statement ])
+	^ self
+		noIndentString: (self indentString: 'while' insertCrIfNeeded: expression)
+		insertCrIfNeeded: (self indentString: 'do' insertCrIfNeeded: statement)
 ]

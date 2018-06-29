@@ -1335,8 +1335,7 @@ ViennaVDMGrammar >> letExpression [
 
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> letStatement [
-	^ ((self reserved: 'let') , (self localDefinition separatedBy: comma) withoutSeparators , (self reserved: 'in')
-		, statement)
+	^ ((self reserved: 'let') , self localDefinitionList , (self reserved: 'in') , statement)
 		==> [ :quatro | 
 			| localDefs bodyStatement |
 			localDefs := quatro second.
