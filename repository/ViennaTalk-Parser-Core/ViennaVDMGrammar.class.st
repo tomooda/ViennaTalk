@@ -560,12 +560,12 @@ ViennaVDMGrammar >> dinter: arg [
 
 { #category : #'parsers-types' }
 ViennaVDMGrammar >> discretionaryType [
-	^ type / (((self operator: $() , (self operator: $))) ==> [ :pair | nil ])
+	^ type / self unitType
 ]
 
 { #category : #'parsers-types' }
 ViennaVDMGrammar >> discretionaryType1 [
-	^ type1 / (((self operator: $() , (self operator: $))) ==> [ :pair | nil ])
+	^ type1 / self unitType
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -686,11 +686,9 @@ ViennaVDMGrammar >> existsExpression [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> explicitFunctionDefinition [
-	^ (identifier , self typeVariableList optional , colon , (self partialFunctionType / self totalFunctionType) trim
+	^ (identifier , self typeVariableList  , colon , (self partialFunctionType / self totalFunctionType) trim
 		, identifier , self parametersList , (self operator: '==')
-		,
-			(expression / ((self reserved: 'is') , (self reserved: 'subclass') , (self reserved: 'responsibility'))
-				/ ((self reserved: 'is') / (self reserved: 'not') , (self reserved: 'yet') , (self reserved: 'specified')))
+		, (expression / self isSubclassResponsibility / self isNotYetSpecified)
 		, (((self reserved: 'pre') , expression) ==> #second) optional
 		, (((self reserved: 'post') , expression) ==> #second) optional
 		, (((self reserved: 'measure') , name) ==> #second) optional)
@@ -698,7 +696,7 @@ ViennaVDMGrammar >> explicitFunctionDefinition [
 			array first = array fifth
 				ifTrue: [ 
 					{(array first).
-					(array second ifNil: [ #() ]).
+					(array second ).
 					(array fourth).
 					(array fifth).
 					(array sixth).
@@ -1189,7 +1187,7 @@ ViennaVDMGrammar >> letBeStatement [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> letExpression [
-	^ ((self reserved: 'let') , (self localDefinition separatedBy: comma) withoutSeparators , (self reserved: 'in')
+	^ ((self reserved: 'let') , self localDefinitionList, (self reserved: 'in')
 		, expression)
 		==> [ :quatro | 
 			{(quatro second).
@@ -1211,6 +1209,11 @@ ViennaVDMGrammar >> letStatement [
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> localDefinition [
 	^ valueDefinition / functionDefinition
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMGrammar >> localDefinitionList [
+	^ (self localDefinition separatedBy: comma) withoutSeparators
 ]
 
 { #category : #'parsers-symbols' }
@@ -1305,6 +1308,11 @@ ViennaVDMGrammar >> maplet [
 { #category : #'parsers-symbols' }
 ViennaVDMGrammar >> mapletArrow [
 	^ self operator: '|->'
+]
+
+{ #category : #'parsers-expressions-basics' }
+ViennaVDMGrammar >> mapletList [
+	^ (self maplet separatedBy: comma) withoutSeparators
 ]
 
 { #category : #'parsers-patterns' }
@@ -1652,12 +1660,7 @@ ViennaVDMGrammar >> recordConstructor [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> recordModifier [
-	^ ((self reserved: 'mu') , lparen , expression , comma
-		,
-			((identifier , mapletArrow , expression)
-				==> [ :triple | 
-					{(triple first).
-					(triple third)} ] separatedBy: comma) withoutSeparators , rparen)
+	^ ((self reserved: 'mu') , lparen , expression , comma , self mapletList , rparen)
 		==> [ :array | 
 			{(array third).
 			(array fifth)} ]
@@ -1666,7 +1669,7 @@ ViennaVDMGrammar >> recordModifier [
 { #category : #'parsers-patterns' }
 ViennaVDMGrammar >> recordPattern [
 	^ (('mk_' asParser , identifier , lparen) ==> #second
-		, ((pattern separatedBy: comma) withoutSeparators optional ==> [ :single | single ifNil: [ Array new ] ]) , rparen)
+		, (patternList optional ==> [ :single | single ifNil: [ Array new ] ]) , rparen)
 		==> [ :triple | 
 			{(triple first).
 			(triple second)} ]
@@ -1894,13 +1897,16 @@ ViennaVDMGrammar >> stateDesignator [
 ]
 
 { #category : #'parsers-definitions' }
+ViennaVDMGrammar >> stateField [
+	^ (identifier trim , colon , type trim)
+		==> [ :triple | 
+			{(triple first).
+			(triple third)} ]
+]
+
+{ #category : #'parsers-definitions' }
 ViennaVDMGrammar >> stateFieldList [
-	^ (identifier trim , colon , type trim) star
-		==> [ :array | 
-			array
-				collect: [ :triple | 
-					{(triple first).
-					(triple third)} ] ]
+	^ self stateField star
 ]
 
 { #category : #'parsers-statements' }
@@ -2067,7 +2073,7 @@ ViennaVDMGrammar >> typeVariableIdentifier [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> typeVariableList [
-	^ (lbracket , (self typeVariableIdentifier separatedBy: comma) withoutSeparators , rbracket) ==> #second
+	^ (lbracket , (self typeVariableIdentifier separatedBy: comma) withoutSeparators , rbracket) optional ==> [:tripleOrNil | tripleOrNil ifNil: [#()] ifNotNil: [tripleOrNil second]]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -2101,6 +2107,11 @@ ViennaVDMGrammar >> unionType [
 					stream
 						nextPut: triple first;
 						nextPutAll: triple third ] ]
+]
+
+{ #category : #'parsers-types' }
+ViennaVDMGrammar >> unitType [
+	^ ((self operator: $() , (self operator: $))) ==> [ :pair | nil ]
 ]
 
 { #category : #'parsers-definitions' }

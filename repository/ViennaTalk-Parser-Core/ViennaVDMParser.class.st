@@ -342,7 +342,7 @@ ViennaVDMParser >> functionDefinitions [
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> functionTypeInstantiation: func args: args [
-	^ ViennaNode label: 'FunctionTypeInstantiation' with: func with: args
+	^ ViennaNode label: 'FunctionTypeInstantiation' with: func with: (ViennaNode label: 'FunctionTypeArgs' withAll: args)
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -379,12 +379,28 @@ ViennaVDMParser >> identityStatement [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMParser >> ifExpression [
-	^ super ifExpression ==> [ :array | ViennaNode label: 'IfExpression' withAll: array ]
+	^ super ifExpression
+		==> [ :array | 
+			ViennaNode
+				label: 'IfExpression'
+				with:
+					(ViennaNode
+						label: 'ConditionaExpressionList'
+						withAll: (array first collect: [ :pair | ViennaNode label: 'ConditionalExpression' withAll: pair ]))
+				with: array second ]
 ]
 
 { #category : #'parsers-statements' }
 ViennaVDMParser >> ifStatement [
-	^ super ifStatement ==> [ :array | ViennaNode label: 'IfStatement' withAll: array ]
+	^ super ifStatement
+		==> [ :array | 
+			ViennaNode
+				label: 'IfStatement'
+				with:
+					(ViennaNode
+						label: 'ConditionaStatementList'
+						withAll: (array first collect: [ :pair | ViennaNode label: 'ConditionalStatement' withAll: pair ]))
+				with: array second ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -527,6 +543,11 @@ ViennaVDMParser >> localDefinition [
 	^ super localDefinition ==> [ :def | ViennaNode label: 'LocalDefinition' with: def ]
 ]
 
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> localDefinitionList [
+	^ super localDefinitionList ==> [ :array | ViennaNode label: 'LocalDefinitionList' withAll: array ]
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> map: arg1 domainRestrictedBy: arg2 [
 	^ ViennaNode label: 'MapDomainRestrictedBy' with: arg1 with: arg2
@@ -580,6 +601,11 @@ ViennaVDMParser >> mapType [
 { #category : #'parsers-expressions-basics' }
 ViennaVDMParser >> maplet [
 	^ super maplet ==> [ :array | ViennaNode label: 'Maplet' withAll: array ]
+]
+
+{ #category : #'parsers-expressions-basics' }
+ViennaVDMParser >> mapletList [
+	^ super mapletList ==> [ :array | ViennaNode label: 'MapletList' withAll: array ]
 ]
 
 { #category : #'parsers-patterns' }
@@ -763,7 +789,7 @@ ViennaVDMParser >> preconditionExpression [
 
 { #category : #'parsers-types' }
 ViennaVDMParser >> productType [
-	^ super productType ==> [ :array | ViennaNode label: 'ProductType' with: array ]
+	^ super productType ==> [ :array | ViennaNode label: 'ProductType' withAll: array ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -922,6 +948,11 @@ ViennaVDMParser >> stateDefinition [
 ]
 
 { #category : #'parsers-types' }
+ViennaVDMParser >> stateField [
+	^ super field ==> [ :array | ViennaNode label: 'Field' withAll: array ]
+]
+
+{ #category : #'parsers-types' }
 ViennaVDMParser >> stateFieldList [
 	^ super stateFieldList ==> [ :array | ViennaNode label: 'FieldList' withAll: array ]
 ]
@@ -942,14 +973,7 @@ ViennaVDMParser >> subset: arg1 and: arg2 [
 
 { #category : #'parsers-literals' }
 ViennaVDMParser >> symbolicLiteral [
-	^ super symbolicLiteral
-		==> [ :string | 
-			ViennaNode
-				label: 'SymbolicLiteral'
-				with:
-					(string isString
-						ifTrue: [ string ]
-						ifFalse: [ string printString ]) ]
+	^ super symbolicLiteral flatten ==> [ :string | ViennaNode label: 'SymbolicLiteral' with: string ]
 ]
 
 { #category : #'parsers-expressions-threads' }
@@ -1012,9 +1036,19 @@ ViennaVDMParser >> typeSynonym [
 	^ super typeSynonym ==> [ :array | ViennaNode label: 'TypeDefinition' withAll: array ]
 ]
 
-{ #category : #'parsers-types' }
+{ #category : #'parsers-definitions' }
 ViennaVDMParser >> typeVariable [
 	^ super typeVariable ==> [ :string | ViennaNode label: 'TypeVariable' with: string ]
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> typeVariableIdentifier [
+	^ super typeVariableIdentifier ==> [ :string | ViennaNode label: 'TypeVariableIdentifier' with: string ]
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> typeVariableList [
+	^ super typeVariableList ==> [ :array | ViennaNode label: 'TypeVariableList' withAll: array ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -1039,7 +1073,12 @@ ViennaVDMParser >> union: arg1 and: arg2 [
 
 { #category : #'parsers-types' }
 ViennaVDMParser >> unionType [
-	^ super unionType ==> [ :array | ViennaNode label: 'UnionType' with: array ]
+	^ super unionType ==> [ :array | ViennaNode label: 'UnionType' withAll: array ]
+]
+
+{ #category : #'parsers-types' }
+ViennaVDMParser >> unitType [
+	^ super unitType ==> [ :ignore | ViennaNode label: 'UnitType' ]
 ]
 
 { #category : #'parsers-definitions' }

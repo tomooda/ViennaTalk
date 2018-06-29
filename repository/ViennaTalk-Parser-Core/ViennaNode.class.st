@@ -103,6 +103,11 @@ ViennaNode >> do: aBlock [
 ]
 
 { #category : #accessing }
+ViennaNode >> eighth [
+	^ self at: 8
+]
+
+{ #category : #accessing }
 ViennaNode >> fifth [
 	^ self at: 5
 ]
@@ -125,6 +130,11 @@ ViennaNode >> fourth [
 { #category : #accessing }
 ViennaNode >> label [
 	^ label
+]
+
+{ #category : #accessing }
+ViennaNode >> ninth [
+	^ self at: 9
 ]
 
 { #category : #printing }
@@ -158,6 +168,16 @@ ViennaNode >> second [
 { #category : #private }
 ViennaNode >> setLabel: aString [
 	label := aString
+]
+
+{ #category : #accessing }
+ViennaNode >> seventh [
+	^ self at: 7
+]
+
+{ #category : #accessing }
+ViennaNode >> sixth [
+	^ self at: 6
 ]
 
 { #category : #printing }
