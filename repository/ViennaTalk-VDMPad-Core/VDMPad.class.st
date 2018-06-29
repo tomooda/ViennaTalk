@@ -1524,9 +1524,7 @@ VDMPad >> engine: aViennaEngine [
 { #category : #'request handling-api' }
 VDMPad >> eval: aZnRequest [
 	| vdm10 rtc params source module expression states triple json |
-	params := aZnRequest contentType = ZnMimeType applicationJson
-		ifTrue: [ NeoJSONReader fromString: aZnRequest entity ]
-		ifFalse: [ aZnRequest mergedFields ].
+	params := self getParamsFrom: aZnRequest.
 	vdm10 := (params at: 'classic' ifAbsent: [  ]) isNil.
 	rtc := (params at: 'ignoreRuntimeChecking' ifAbsent: [  ]) isNil.
 	source := (params at: 'source' ifAbsent: [ String new ]) trimmed.
@@ -1833,9 +1831,7 @@ VDMPad >> fileService: aZnRequest [
 { #category : #'request handling-api' }
 VDMPad >> format: aZnRequest [
 	| params source formattedSource message json |
-	params := aZnRequest contentType = ZnMimeType applicationJson
-		ifTrue: [ NeoJSONReader fromString: aZnRequest entity ]
-		ifFalse: [ aZnRequest mergedFields ].
+	params := self getParamsFrom: aZnRequest.
 	source := (params at: 'source' ifAbsent: [ String new ]) trimmed copyReplaceAll: String lf with: String cr.
 	message := String new.
 	formattedSource := [ ViennaVDMParser new format: source width: 70 ]
@@ -1851,6 +1847,13 @@ VDMPad >> format: aZnRequest [
 		at: 'message' put: message;
 		at: 'value' put: (params at: 'value' ifAbsent: [ String new ]).
 	^ self responseJSON: json
+]
+
+{ #category : #private }
+VDMPad >> getParamsFrom: aZnRequest [
+	^ (aZnRequest contentType main = 'application' and: [ aZnRequest contentType sub asLowercase = 'json' ])
+		ifTrue: [ NeoJSONReader fromString: aZnRequest entity ]
+		ifFalse: [ aZnRequest mergedFields ]
 ]
 
 { #category : #'request handling' }
@@ -1874,9 +1877,9 @@ VDMPad >> handleRequest: aZnRequest [
 ]
 
 { #category : #'request handling-api' }
-VDMPad >> id: anHttpRequest [
+VDMPad >> id: aZnRequest [
 	| params source states expression result message json |
-	params := anHttpRequest mergedFields.
+	params := self getParamsFrom: aZnRequest.
 	source := (params at: 'source' ifAbsent: [ String new ]) trimmed.
 	states := Dictionary new.
 	params
