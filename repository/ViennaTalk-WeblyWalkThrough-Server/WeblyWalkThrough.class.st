@@ -1,6 +1,6 @@
 Class {
 	#name : #WeblyWalkThrough,
-	#superclass : #VDMC,
+	#superclass : #ViennaAnimation,
 	#traits : 'TWeblyWalkThrough',
 	#classTraits : 'TWeblyWalkThrough classTrait',
 	#instVars : [
