@@ -71,8 +71,8 @@ ViennaRuntimeUtil class >> match: aBlock1 conc: aBlock2 left: anInteger1 right: 
 				new: 16
 				streamContents: [ :stream | 
 					| seq1 seq2 |
-					seq1 := value copyFrom: 1 to: value size - anInteger1.
-					seq2 := value copyFrom: value size - anInteger1 + 1 to: value size.
+					seq1 := value copyFrom: 1 to: anInteger1.
+					seq2 := value copyFrom: anInteger1 + 1 to: value size.
 					(aBlock1 value: seq1)
 						ifNotEmpty: [ :bindings1 | 
 							(aBlock2 value: seq2)
@@ -128,6 +128,108 @@ ViennaRuntimeUtil class >> match: aBlock1 munion: aBlock2 [
 ]
 
 { #category : #'pattern matching' }
+ViennaRuntimeUtil class >> match: aBlock1 munion: aBlock2 left: anInteger [
+	^ [ :dict | 
+	(dict isDictionary and: [ dict size >= anInteger ])
+		ifTrue: [ 
+			| value size generator |
+			value := dict keys asArray.
+			size := value size.
+			generator := [ :block | 1 to: size do: [ :i | block value: (Array with: i) ] ].
+			anInteger - 1
+				timesRepeat: [ 
+					generator := [ :g | [ :block | g value: [ :is | is last + 1 to: size do: [ :i | block value: (is copyWith: i) ] ] ] ]
+						value: generator ].
+			Array
+				new: 16
+				streamContents: [ :stream | 
+					generator
+						value: [ :is | 
+							| dict1 dict2 |
+							dict1 := Dictionary new: size.
+							dict2 := Dictionary new: size.
+							1 to: size do: [ :i | 
+								(is includes: i)
+									ifTrue: [ dict1 at: (value at: i) put: (dict at: (value at: i)) ]
+									ifFalse: [ dict2 at: (value at: i) put: (dict at: (value at: i)) ] ].
+							(aBlock1 value: dict1)
+								ifNotEmpty: [ :bindings1 | 
+									(aBlock2 value: dict2)
+										ifNotEmpty: [ :bindings2 | 
+											bindings1
+												do: [ :bind1 | bindings2 do: [ :bind2 | (self aggregateBinding: bind1 with: bind2) ifNotNil: [ :bind | stream nextPut: bind ] ] ] ] ] ] ] ]
+		ifFalse: [ Array new ] ]
+]
+
+{ #category : #'pattern matching' }
+ViennaRuntimeUtil class >> match: aBlock1 munion: aBlock2 left: anInteger1 right: anInteger2 [
+	^ [ :dict | 
+	(dict isDictionary and: [ dict size = (anInteger1 + anInteger2) ])
+		ifTrue: [ 
+			| value size generator |
+			value := dict keys asArray.
+			size := value size.
+			generator := [ :block | 1 to: size do: [ :i | block value: (Array with: i) ] ].
+			anInteger1 - 1
+				timesRepeat: [ 
+					generator := [ :g | [ :block | g value: [ :is | is last + 1 to: size do: [ :i | block value: (is copyWith: i) ] ] ] ]
+						value: generator ].
+			Array
+				new: 16
+				streamContents: [ :stream | 
+					generator
+						value: [ :is | 
+							| dict1 dict2 |
+							dict1 := Dictionary new: size.
+							dict2 := Dictionary new: size.
+							1 to: size do: [ :i | 
+								(is includes: i)
+									ifTrue: [ dict1 at: (value at: i) put: (dict at: (value at: i)) ]
+									ifFalse: [ dict2 at: (value at: i) put: (dict at: (value at: i)) ] ].
+							(aBlock1 value: dict1)
+								ifNotEmpty: [ :bindings1 | 
+									(aBlock2 value: dict2)
+										ifNotEmpty: [ :bindings2 | 
+											bindings1
+												do: [ :bind1 | bindings2 do: [ :bind2 | (self aggregateBinding: bind1 with: bind2) ifNotNil: [ :bind | stream nextPut: bind ] ] ] ] ] ] ] ]
+		ifFalse: [ Array new ] ]
+]
+
+{ #category : #'pattern matching' }
+ViennaRuntimeUtil class >> match: aBlock1 munion: aBlock2 right: anInteger [
+	^ [ :dict | 
+	(dict isDictionary and: [ dict size >= anInteger ])
+		ifTrue: [ 
+			| value size generator |
+			value := dict keys asArray.
+			size := value size.
+			generator := [ :block | 1 to: size do: [ :i | block value: (Array with: i) ] ].
+			anInteger - 1
+				timesRepeat: [ 
+					generator := [ :g | [ :block | g value: [ :is | is last + 1 to: size do: [ :i | block value: (is copyWith: i) ] ] ] ]
+						value: generator ].
+			Array
+				new: 16
+				streamContents: [ :stream | 
+					generator
+						value: [ :is | 
+							| dict1 dict2 |
+							dict1 := Dictionary new: size.
+							dict2 := Dictionary new: size.
+							1 to: size do: [ :i | 
+								(is includes: i)
+									ifTrue: [ dict2 at: (value at: i) put: (dict at: (value at: i)) ]
+									ifFalse: [ dict1 at: (value at: i) put: (dict at: (value at: i)) ] ].
+							(aBlock1 value: dict1)
+								ifNotEmpty: [ :bindings1 | 
+									(aBlock2 value: dict2)
+										ifNotEmpty: [ :bindings2 | 
+											bindings1
+												do: [ :bind1 | bindings2 do: [ :bind2 | (self aggregateBinding: bind1 with: bind2) ifNotNil: [ :bind | stream nextPut: bind ] ] ] ] ] ] ] ]
+		ifFalse: [ Array new ] ]
+]
+
+{ #category : #'pattern matching' }
 ViennaRuntimeUtil class >> match: aBlock1 union: aBlock2 [
 	^ [ :value | 
 	(value isSet and: [ value notEmpty ])
@@ -141,6 +243,108 @@ ViennaRuntimeUtil class >> match: aBlock1 union: aBlock2 [
 							(aBlock1 value: union1 asSet)
 								ifNotEmpty: [ :bindings1 | 
 									(aBlock2 value: union2 asSet)
+										ifNotEmpty: [ :bindings2 | 
+											bindings1
+												do: [ :bind1 | bindings2 do: [ :bind2 | (self aggregateBinding: bind1 with: bind2) ifNotNil: [ :bind | stream nextPut: bind ] ] ] ] ] ] ] ]
+		ifFalse: [ Array new ] ]
+]
+
+{ #category : #'pattern matching' }
+ViennaRuntimeUtil class >> match: aBlock1 union: aBlock2 left: anInteger [
+	^ [ :set | 
+	(set isSet and: [ set notEmpty ])
+		ifTrue: [ 
+			| value size generator |
+			value := set asArray.
+			size := value size.
+			generator := [ :block | 1 to: size do: [ :i | block value: (Array with: i) ] ].
+			anInteger - 1
+				timesRepeat: [ 
+					generator := [ :g | [ :block | g value: [ :is | is last + 1 to: size do: [ :i | block value: (is copyWith: i) ] ] ] ]
+						value: generator ].
+			Array
+				new: 16
+				streamContents: [ :stream | 
+					generator
+						value: [ :is | 
+							| set1 set2 |
+							set1 := Set new: size.
+							set2 := Set new: size.
+							1 to: size do: [ :i | 
+								(is includes: i)
+									ifTrue: [ set1 add: (value at: i) ]
+									ifFalse: [ set2 add: (value at: i) ] ].
+							(aBlock1 value: set1)
+								ifNotEmpty: [ :bindings1 | 
+									(aBlock2 value: set2)
+										ifNotEmpty: [ :bindings2 | 
+											bindings1
+												do: [ :bind1 | bindings2 do: [ :bind2 | (self aggregateBinding: bind1 with: bind2) ifNotNil: [ :bind | stream nextPut: bind ] ] ] ] ] ] ] ]
+		ifFalse: [ Array new ] ]
+]
+
+{ #category : #'pattern matching' }
+ViennaRuntimeUtil class >> match: aBlock1 union: aBlock2 left: anInteger1 right: anInteger2 [
+	^ [ :set | 
+	(set isSet and: [ set size = (anInteger1 + anInteger2) ])
+		ifTrue: [ 
+			| value size generator |
+			value := set asArray.
+			size := value size.
+			generator := [ :block | 1 to: size do: [ :i | block value: (Array with: i) ] ].
+			anInteger1 - 1
+				timesRepeat: [ 
+					generator := [ :g | [ :block | g value: [ :is | is last + 1 to: size do: [ :i | block value: (is copyWith: i) ] ] ] ]
+						value: generator ].
+			Array
+				new: 16
+				streamContents: [ :stream | 
+					generator
+						value: [ :is | 
+							| set1 set2 |
+							set1 := Set new: size.
+							set2 := Set new: size.
+							1 to: size do: [ :i | 
+								(is includes: i)
+									ifTrue: [ set1 add: (value at: i) ]
+									ifFalse: [ set2 add: (value at: i) ] ].
+							(aBlock1 value: set1)
+								ifNotEmpty: [ :bindings1 | 
+									(aBlock2 value: set2)
+										ifNotEmpty: [ :bindings2 | 
+											bindings1
+												do: [ :bind1 | bindings2 do: [ :bind2 | (self aggregateBinding: bind1 with: bind2) ifNotNil: [ :bind | stream nextPut: bind ] ] ] ] ] ] ] ]
+		ifFalse: [ Array new ] ]
+]
+
+{ #category : #'pattern matching' }
+ViennaRuntimeUtil class >> match: aBlock1 union: aBlock2 right: anInteger [
+	^ [ :set | 
+	(set isSet and: [ set notEmpty ])
+		ifTrue: [ 
+			| value size generator |
+			value := set asArray.
+			size := value size.
+			generator := [ :block | 1 to: size do: [ :i | block value: (Array with: i) ] ].
+			anInteger - 1
+				timesRepeat: [ 
+					generator := [ :g | [ :block | g value: [ :is | is last + 1 to: size do: [ :i | block value: (is copyWith: i) ] ] ] ]
+						value: generator ].
+			Array
+				new: 16
+				streamContents: [ :stream | 
+					generator
+						value: [ :is | 
+							| set1 set2 |
+							set1 := Set new: size.
+							set2 := Set new: size.
+							1 to: size do: [ :i | 
+								(is includes: i)
+									ifTrue: [ set2 add: (value at: i) ]
+									ifFalse: [ set1 add: (value at: i) ] ].
+							(aBlock1 value: set1)
+								ifNotEmpty: [ :bindings1 | 
+									(aBlock2 value: set2)
 										ifNotEmpty: [ :bindings2 | 
 											bindings1
 												do: [ :bind1 | bindings2 do: [ :bind2 | (self aggregateBinding: bind1 with: bind2) ifNotNil: [ :bind | stream nextPut: bind ] ] ] ] ] ] ] ]
