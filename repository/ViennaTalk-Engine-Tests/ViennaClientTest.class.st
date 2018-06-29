@@ -9,9 +9,7 @@ Class {
 
 { #category : #running }
 ViennaClientTest >> setUp [
-	fixture := ViennaClient on: 'http://localhost:8088/'.
-	ViennaServer isRunning
-		ifFalse: [ ViennaServer installHandler ]
+	fixture := ViennaClient on: 'http://localhost:8801/'
 ]
 
 { #category : #private }
