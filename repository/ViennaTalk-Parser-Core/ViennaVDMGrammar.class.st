@@ -2473,7 +2473,7 @@ ViennaVDMGrammar >> return [
 
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> returnStatement [
-	^ (self return , expression) ==> #second
+	^ (self return , expression optional) ==> #second
 ]
 
 { #category : #'parsers-symbols' }
@@ -2756,7 +2756,7 @@ ViennaVDMGrammar >> subset: arg1 and: arg2 [
 
 { #category : #'parsers-literals' }
 ViennaVDMGrammar >> symbolicLiteral [
-	^ (comment star , self basicSymbolicLiteral , comment star) ==> #second
+	^ self basicSymbolicLiteral flatten
 ]
 
 { #category : #'parsers-keywords' }
