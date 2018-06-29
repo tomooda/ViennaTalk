@@ -162,6 +162,195 @@ ViennaVDM2SmalltalkTest >> testBlockStatementEnv [
 	self assert: (Compiler evaluate: '|a|' , (ViennaVDM2Smalltalk new generate: node) , '. a') equals: 3
 ]
 
+{ #category : #'tests-bound variables-types' }
+ViennaVDM2SmalltalkTest >> testBoundVariablesCompositeTypeInto [
+	| node binds |
+	node := ViennaVDMParser new compositeType end parse: 'compose T of f1 : t1 f2 :- t2 t3 end'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'CompositeType'.
+	binds := Set new.
+	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'T'} asSet
+]
+
+{ #category : #'tests-bound variables-interfaces' }
+ViennaVDM2SmalltalkTest >> testBoundVariablesExportDefinitionInto [
+	| node binds |
+	node := ViennaVDMParser new exportDefinition end parse: 'exports types t1; t2; values v1:t3; v2:t4'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ExportDefinition'.
+	binds := Set new.
+	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'t1'.
+			't2'.
+			't3'.
+			't4'.
+			'v1'.
+			'v2'} asSet
+]
+
+{ #category : #'tests-bound variables-types' }
+ViennaVDM2SmalltalkTest >> testBoundVariablesInmapTypeInto [
+	| node binds |
+	node := ViennaVDMParser new inmapType end parse: 'inmap t1 to t2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'InmapType'.
+	binds := Set new.
+	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{} asSet
+]
+
+{ #category : #'tests-bound variables-types' }
+ViennaVDM2SmalltalkTest >> testBoundVariablesMapTypeInto [
+	| node binds |
+	node := ViennaVDMParser new mapType end parse: 'map t1 to t2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'MapType'.
+	binds := Set new.
+	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{} asSet
+]
+
+{ #category : #'tests-bound variables-types' }
+ViennaVDM2SmalltalkTest >> testBoundVariablesOperationTypeInto [
+	| node binds |
+	node := ViennaVDMParser new operationType end parse: 't1 ==> t2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'OperationType'.
+	binds := Set new.
+	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{} asSet
+]
+
+{ #category : #'tests-bound variables-types' }
+ViennaVDM2SmalltalkTest >> testBoundVariablesOptionalTypeInto [
+	| node binds |
+	node := ViennaVDMParser new optionalType end parse: '[t]'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'OptionalType'.
+	binds := Set new.
+	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	self assert: binds equals: {} asSet
+]
+
+{ #category : #'tests-bound variables-types' }
+ViennaVDM2SmalltalkTest >> testBoundVariablesPartialFunctionTypeInto [
+	| node binds |
+	node := ViennaVDMParser new partialFunctionType end parse: 't1 -> t2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'PartialFunctionType'.
+	binds := Set new.
+	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{} asSet
+]
+
+{ #category : #'tests-bound variables-types' }
+ViennaVDM2SmalltalkTest >> testBoundVariablesProductTypeInto [
+	| node binds |
+	node := ViennaVDMParser new productType end parse: 't1 * t2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ProductType'.
+	binds := Set new.
+	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{} asSet
+]
+
+{ #category : #'tests-bound variables-types' }
+ViennaVDM2SmalltalkTest >> testBoundVariablesRecordTypeDefinitionInto [
+	| node binds |
+	node := ViennaVDMParser new recordTypeDefinition end parse: 'T::f1:t1 f2:-t2 t3'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'RecordTypeDefinition'.
+	binds := Set new.
+	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'T'} asSet
+]
+
+{ #category : #'tests-bound variables-types' }
+ViennaVDM2SmalltalkTest >> testBoundVariablesSeq1TypeInto [
+	| node binds |
+	node := ViennaVDMParser new seq1Type end parse: 'seq1 of t'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'Seq1Type'.
+	binds := Set new.
+	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	self assert: binds equals: {} asSet
+]
+
+{ #category : #'tests-bound variables-types' }
+ViennaVDM2SmalltalkTest >> testBoundVariablesSeqTypeInto [
+	| node binds |
+	node := ViennaVDMParser new seqType end parse: 'seq of t'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SeqType'.
+	binds := Set new.
+	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	self assert: binds equals: {} asSet
+]
+
+{ #category : #'tests-bound variables-types' }
+ViennaVDM2SmalltalkTest >> testBoundVariablesSetTypeInto [
+	| node binds |
+	node := ViennaVDMParser new setType end parse: 'set of t'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SetType'.
+	binds := Set new.
+	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	self assert: binds equals: {} asSet
+]
+
+{ #category : #'tests-bound variables-types' }
+ViennaVDM2SmalltalkTest >> testBoundVariablesTotalFunctionTypeInto [
+	| node binds |
+	node := ViennaVDMParser new totalFunctionType end parse: 't1 +> t2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'TotalFunctionType'.
+	binds := Set new.
+	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{} asSet
+]
+
+{ #category : #'tests-bound variables-types' }
+ViennaVDM2SmalltalkTest >> testBoundVariablesUnionTypeInto [
+	| node binds |
+	node := ViennaVDMParser new unionType end parse: 't1 | t2'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'UnionType'.
+	binds := Set new.
+	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{} asSet
+]
+
 { #category : #'tests-code generation-statements' }
 ViennaVDM2SmalltalkTest >> testCallStatementEnv [
 	| node |
