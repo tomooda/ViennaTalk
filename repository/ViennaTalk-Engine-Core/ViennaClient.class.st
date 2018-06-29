@@ -7,6 +7,11 @@ Class {
 	#category : 'ViennaTalk-Engine-Core'
 }
 
+{ #category : #'instance creation' }
+ViennaClient class >> default [
+	^ self on: self defaultUrl
+]
+
 { #category : #defaults }
 ViennaClient class >> defaultUrl [
 	^ 'http://vdmpad.csce.kyushu-u.ac.jp/' asUrl

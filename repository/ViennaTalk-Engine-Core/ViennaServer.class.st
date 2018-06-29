@@ -97,7 +97,7 @@ ViennaServer >> initialize [
 { #category : #'initialize-release' }
 ViennaServer >> initialize: anInteger [
 	super initialize.
-	engine := VDMJProcess bank: anInteger
+	engine := ViennaVDMJ bank: anInteger
 ]
 
 { #category : #private }

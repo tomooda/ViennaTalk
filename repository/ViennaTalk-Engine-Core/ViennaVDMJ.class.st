@@ -1,5 +1,5 @@
 Class {
-	#name : #VDMJProcess,
+	#name : #ViennaVDMJ,
 	#superclass : #ViennaEngine,
 	#instVars : [
 		'process',
@@ -15,7 +15,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-VDMJProcess class >> bank: anInteger [
+ViennaVDMJ class >> bank: anInteger [
 	| bank |
 	bank := ViennaBankEngine new.
 	anInteger timesRepeat: [ bank add: self new ].
@@ -23,12 +23,12 @@ VDMJProcess class >> bank: anInteger [
 ]
 
 { #category : #accessing }
-VDMJProcess class >> javaPath [
+ViennaVDMJ class >> javaPath [
 	^ '/usr/bin/java'
 ]
 
 { #category : #'instance creation' }
-VDMJProcess class >> new [
+ViennaVDMJ class >> new [
 	| process |
 	process := super new.
 	self register: process.
@@ -36,42 +36,42 @@ VDMJProcess class >> new [
 ]
 
 { #category : #registry }
-VDMJProcess class >> register: aVDMJProcess [
-	^ self registry add: aVDMJProcess
+ViennaVDMJ class >> register: aViennaVDMJ [
+	^ self registry add: aViennaVDMJ
 ]
 
 { #category : #registry }
-VDMJProcess class >> registry [
+ViennaVDMJ class >> registry [
 	^ Registry ifNil: [Registry := WeakRegistry new]
 ]
 
 { #category : #registry }
-VDMJProcess class >> unregister: aVDMJProcess [
-	^ self registry remove: aVDMJProcess ifAbsent: []
+ViennaVDMJ class >> unregister: aViennaVDMJ [
+	^ self registry remove: aViennaVDMJ ifAbsent: []
 ]
 
 { #category : #testing }
-VDMJProcess class >> vdmjInstalled [
-	^ FileStream isAFileNamed: VDMJProcess vdmjPath
+ViennaVDMJ class >> vdmjInstalled [
+	^ FileStream isAFileNamed: ViennaVDMJ vdmjPath
 ]
 
 { #category : #accessing }
-VDMJProcess class >> vdmjPath [
+ViennaVDMJ class >> vdmjPath [
 	^ 'vdmj-3.0.1.jar'
 ]
 
 { #category : #accessing }
-VDMJProcess class >> vdmpadPath [
+ViennaVDMJ class >> vdmpadPath [
 	^ 'VDMPad.jar'
 ]
 
 { #category : #finalizing }
-VDMJProcess >> actAsExecutor [
+ViennaVDMJ >> actAsExecutor [
 	lock := nil
 ]
 
 { #category : #commands }
-VDMJProcess >> assign: aDictionary ifError: errorBlock [ 
+ViennaVDMJ >> assign: aDictionary ifError: errorBlock [ 
 	aDictionary
 		ifNotEmpty: [| statement |
 			statement := String new writeStream.
@@ -90,7 +90,7 @@ VDMJProcess >> assign: aDictionary ifError: errorBlock [
 ]
 
 { #category : #commands }
-VDMJProcess >> classicIfError: errorBlock [ 
+ViennaVDMJ >> classicIfError: errorBlock [ 
 	^ self
 		send: 'classic'
 		responseDo: [:unit | unit]
@@ -98,7 +98,7 @@ VDMJProcess >> classicIfError: errorBlock [
 ]
 
 { #category : #accessing }
-VDMJProcess >> close [
+ViennaVDMJ >> close [
 	process
 		ifNotNilDo: [:p | 
 			process := nil.
@@ -117,7 +117,7 @@ VDMJProcess >> close [
 ]
 
 { #category : #commands }
-VDMJProcess >> default: aString ifError: errorBlock [ 
+ViennaVDMJ >> default: aString ifError: errorBlock [ 
 	^ self
 		send: 'default ' , aString
 		responseDo: [:module | module]
@@ -125,7 +125,7 @@ VDMJProcess >> default: aString ifError: errorBlock [
 ]
 
 { #category : #commands }
-VDMJProcess >> disableRuntimeCheckingIfError: errorBlock [ 
+ViennaVDMJ >> disableRuntimeCheckingIfError: errorBlock [ 
 	^ self
 		send: '-rtc'
 		responseDo: [:unit | unit]
@@ -133,7 +133,7 @@ VDMJProcess >> disableRuntimeCheckingIfError: errorBlock [
 ]
 
 { #category : #commands }
-VDMJProcess >> enableRuntimeCheckingIfError: errorBlock [ 
+ViennaVDMJ >> enableRuntimeCheckingIfError: errorBlock [ 
 	^ self
 		send: '+rtc'
 		responseDo: [:unit | unit]
@@ -141,7 +141,7 @@ VDMJProcess >> enableRuntimeCheckingIfError: errorBlock [
 ]
 
 { #category : #private }
-VDMJProcess >> ensureStartupProcess [
+ViennaVDMJ >> ensureStartupProcess [
 	(reader isNil
 			or: [reader closed
 					or: [process isNil
@@ -150,7 +150,7 @@ VDMJProcess >> ensureStartupProcess [
 ]
 
 { #category : #evaluating }
-VDMJProcess >> evaluate: expression specification: specification states: states vdm10: vdm10 rtc: rtc [ 
+ViennaVDMJ >> evaluate: expression specification: specification states: states vdm10: vdm10 rtc: rtc [ 
 	lock
 		critical: [| errorMessage hasModules value postState |
 			self ensureStartupProcess.
@@ -223,17 +223,17 @@ VDMJProcess >> evaluate: expression specification: specification states: states 
 ]
 
 { #category : #finalizing }
-VDMJProcess >> executor [
+ViennaVDMJ >> executor [
 	^ executor ifNil: [executor := super executor]
 ]
 
 { #category : #finalizing }
-VDMJProcess >> finalize [
+ViennaVDMJ >> finalize [
 	self close
 ]
 
 { #category : #private }
-VDMJProcess >> forkProcess: desc [ 
+ViennaVDMJ >> forkProcess: desc [ 
 	^ UnixProcess
 		forkJob: self javaPath
 		arguments: {'-Dfile.encoding=whatever'. '-jar'.
@@ -243,18 +243,18 @@ VDMJProcess >> forkProcess: desc [
 ]
 
 { #category : #'initialize-release' }
-VDMJProcess >> initialize [
+ViennaVDMJ >> initialize [
 	super initialize.
 	lock := Semaphore forMutualExclusion
 ]
 
 { #category : #accessing }
-VDMJProcess >> javaPath [
+ViennaVDMJ >> javaPath [
 	^ self class javaPath
 ]
 
 { #category : #commands }
-VDMJProcess >> load: aString ifError: errorBlock [ 
+ViennaVDMJ >> load: aString ifError: errorBlock [ 
 	^ self
 		send: 'load ' , aString
 		responseDo: [:filename | filename]
@@ -262,7 +262,7 @@ VDMJProcess >> load: aString ifError: errorBlock [
 ]
 
 { #category : #commands }
-VDMJProcess >> modulesDo: aBlock ifError: errorBlock [ 
+ViennaVDMJ >> modulesDo: aBlock ifError: errorBlock [ 
 	^ self
 		send: 'modules'
 		responseDo: [:modules | modules do: aBlock]
@@ -270,7 +270,7 @@ VDMJProcess >> modulesDo: aBlock ifError: errorBlock [
 ]
 
 { #category : #commands }
-VDMJProcess >> print: aString ifError: errorBlock [ 
+ViennaVDMJ >> print: aString ifError: errorBlock [ 
 	^ self
 		send: 'print ' , aString
 		responseDo: [:filename | filename]
@@ -278,7 +278,7 @@ VDMJProcess >> print: aString ifError: errorBlock [
 ]
 
 { #category : #communicating }
-VDMJProcess >> send: aString responseDo: aBlock ifError: errorBlock [
+ViennaVDMJ >> send: aString responseDo: aBlock ifError: errorBlock [
 	| semaphore response readerProcess |
 	(reader next: 1024) ifNotEmpty: [:str | Transcript cr; show: str].
 	writer nextPutAll: (aString convertToEncoding: 'utf-8').
@@ -309,22 +309,22 @@ VDMJProcess >> send: aString responseDo: aBlock ifError: errorBlock [
 ]
 
 { #category : #private }
-VDMJProcess >> setProcess: anExternalProcess [
+ViennaVDMJ >> setProcess: anExternalProcess [
 	process := anExternalProcess
 ]
 
 { #category : #private }
-VDMJProcess >> setReader: aPipe [
+ViennaVDMJ >> setReader: aPipe [
 	reader := aPipe
 ]
 
 { #category : #private }
-VDMJProcess >> setWriter: aPipe [
+ViennaVDMJ >> setWriter: aPipe [
 	writer := aPipe
 ]
 
 { #category : #private }
-VDMJProcess >> startupProcess [
+ViennaVDMJ >> startupProcess [
 	| pipe1 pipe2 input output desc |
 	OSProcess accessor canAccessSystem
 		ifFalse: [ ^ nil ].
@@ -342,7 +342,7 @@ VDMJProcess >> startupProcess [
 ]
 
 { #category : #commands }
-VDMJProcess >> statesDo: aBlock ifError: errorBlock [ 
+ViennaVDMJ >> statesDo: aBlock ifError: errorBlock [ 
 	^ self
 		send: 'state'
 		responseDo: [:stateDict | stateDict
@@ -352,7 +352,7 @@ VDMJProcess >> statesDo: aBlock ifError: errorBlock [
 ]
 
 { #category : #private }
-VDMJProcess >> temporaryFileDo: aBlock [ 
+ViennaVDMJ >> temporaryFileDo: aBlock [ 
 	| random file stream |
 	random := Random new.
 	[file := FileSystem workingDirectory / 'VDMPad-spec-'
@@ -368,14 +368,14 @@ VDMJProcess >> temporaryFileDo: aBlock [
 ]
 
 { #category : #finalizing }
-VDMJProcess >> updateExecutor [
+ViennaVDMJ >> updateExecutor [
 	self executor setProcess: process.
 	self executor setReader: reader.
 	self executor setWriter: writer
 ]
 
 { #category : #commands }
-VDMJProcess >> vdm10IfError: errorBlock [ 
+ViennaVDMJ >> vdm10IfError: errorBlock [ 
 	^ self
 		send: 'vdm10'
 		responseDo: [:unit | unit]
@@ -383,6 +383,6 @@ VDMJProcess >> vdm10IfError: errorBlock [
 ]
 
 { #category : #accessing }
-VDMJProcess >> vdmjPath [
+ViennaVDMJ >> vdmjPath [
 	^ self class vdmjPath
 ]
