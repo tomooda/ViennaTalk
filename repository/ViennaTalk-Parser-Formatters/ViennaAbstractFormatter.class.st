@@ -1945,7 +1945,11 @@ ViennaAbstractFormatter >> override [
 
 { #category : #'formatting-definitions' }
 ViennaAbstractFormatter >> parameterTypes: aViennaNode [
-	^ '(' , (self format: aViennaNode first) , ')'
+	^ '('
+		,
+			(aViennaNode first
+				ifNil: [ '' ]
+				ifNotNil: [ :node | self format: node ]) , ')'
 ]
 
 { #category : #'formatting-definitions' }
