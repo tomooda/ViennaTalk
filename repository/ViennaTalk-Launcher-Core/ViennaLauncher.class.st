@@ -129,12 +129,10 @@ ViennaLauncher >> defaultTitle [
 
 { #category : #'initialize-release' }
 ViennaLauncher >> initialize [
-	| toolsMenu devMenu tools dock image extent |
+	| systemMenu toolsMenu devMenu tools dock image extent |
 	super initialize.
 	self title: self defaultTitle.
-	toolsMenu := self newMenu
-		addAllFromPragma: #ViennaToolsMenu target: self;
-		addLine;
+	systemMenu := self newMenu
 		add: 'settings...' target: self selector: #showSettingBrowser;
 		addLine;
 		add: 'update to the latest stable' target: self selector: #loadStable;
@@ -142,6 +140,9 @@ ViennaLauncher >> initialize [
 		addLine;
 		add: 'reopen' target: self selector: #reopen;
 		add: 'close' target: self selector: #close;
+		yourself.
+	toolsMenu := self newMenu
+		addAllFromPragma: #ViennaToolsMenu target: self;
 		yourself.
 	devMenu := self newMenu
 		addAllFromPragma: #ViennaDev target: self;
@@ -161,6 +162,11 @@ ViennaLauncher >> initialize [
 						label: 'VDMPad'
 						help: 'start/stop VDMPad server' translated) ].
 	dock := self newToolDockingBar
+		add: 'System' translated
+			font: self theme menuBarFont
+			icon: nil
+			help: 'ViennaTalk system operations'
+			subMenu: systemMenu;
 		add: 'Tools' translated
 			font: self theme menuBarFont
 			icon: nil
