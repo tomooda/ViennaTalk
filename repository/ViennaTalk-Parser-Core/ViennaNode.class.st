@@ -234,10 +234,20 @@ ViennaNode >> parent: aViennaNode [
 { #category : #accessing }
 ViennaNode >> parentLabelled: aString ifAbsent: errorBlock [
 	self
-		ぱparentsDo: [ :node | 
+		parentsDo: [ :node | 
 			node label = aString
 				ifTrue: [ ^ node ] ].
 	^ errorBlock value
+]
+
+{ #category : #enumerating }
+ViennaNode >> parentsDo: aBlock [
+	| node |
+	node := self.
+	[ node notNil ]
+		whileTrue: [ 
+			aBlock value: node.
+			node := node parent ]
 ]
 
 { #category : #printing }
