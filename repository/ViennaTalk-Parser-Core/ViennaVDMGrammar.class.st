@@ -1563,7 +1563,7 @@ ViennaVDMGrammar >> patternBind [
 
 { #category : #'parsers-patterns' }
 ViennaVDMGrammar >> patternIdentifier [
-	^ identifier / ((self operator: $-) ==> [ :op |  ])
+	^ identifier / ((self operator: $-) ==> [ :op |  nil])
 ]
 
 { #category : #'parsers-patterns' }

@@ -88,7 +88,7 @@ ViennaVDM2SmalltalkTranslator >> binder: aBlockString with: aString vars: anArra
 				nextPutAll: aString;
 				nextPutAll: ') ifEmpty: [false] ifNotEmpty: [:binds | ';
 				nextPutAll:
-						('.' join: (anArrayOfString collect: [ :varName | varName , ' := binds first at: ' , varName storeString ]));
+						('.' join: (anArrayOfString select: #notNil thenCollect: [ :varName | varName , ' := binds first at: ' , varName storeString ]));
 				nextPutAll: '. true])' ]
 ]
 
@@ -789,7 +789,7 @@ ViennaVDM2SmalltalkTranslator >> invariantFunction [
 		==> [ :pair | 
 			| pat patVars patMatcher expr valVar |
 			pat := pair first.
-			patVars := pat first reject: #isNil.
+			patVars := pat first.
 			patMatcher := pat second.
 			expr := pair second.
 			valVar := (self
@@ -797,8 +797,8 @@ ViennaVDM2SmalltalkTranslator >> invariantFunction [
 				uniqueIn:
 					{(pat second).
 					expr}) value.
-			'[:' , valVar , '||' , (' ' join: patVars) , '|'
-				, (self binder: pat second with: valVar vars: (pat first reject: #isNil)) , ' and: [' , expr , ']]' ]
+			'[:' , valVar , '||' , (' ' join: patVars) , '|' , (self binder: pat second with: valVar vars: pat first) , ' and: ['
+				, expr , ']]' ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -1074,7 +1074,7 @@ ViennaVDM2SmalltalkTranslator >> mapEnumerationPattern [
 				collect: [ :pair | 
 					{(pair first second).
 					(pair second second)} ].
-			{vars.
+			{(vars reject: #isNil).
 			('(ViennaRuntimeUtil matchMapEnumeration: {'
 				, (' . ' join: (maplets collect: [ :pair | '{' , pair first , ' . ' , pair second , '}' ])) , '})')} ]
 ]
@@ -1087,7 +1087,7 @@ ViennaVDM2SmalltalkTranslator >> mapMunionPattern [
 			vars := (pair first first , pair second first) asSet asArray.
 			pat1 := pair first second.
 			pat2 := pair second second.
-			{vars.
+			{(vars reject: #isNil).
 			('(ViennaRuntimeUtil match: ' , pat1 , ' munion: ' , pat2 , ')')} ]
 ]
 
@@ -1293,7 +1293,7 @@ ViennaVDM2SmalltalkTranslator >> patternBind [
 ViennaVDM2SmalltalkTranslator >> patternIdentifier [
 	^ super patternIdentifier
 		==> [ :identifierOrNil | 
-			{(Array with: identifierOrNil).
+			{(identifierOrNil ifNil: [ #() ] ifNotNil: [ {identifierOrNil} ]).
 			('(ViennaRuntimeUtil matchIdentifier: ' , identifierOrNil storeString , ')')} ]
 ]
 
@@ -1362,7 +1362,7 @@ ViennaVDM2SmalltalkTranslator >> recordPattern [
 			vars := OrderedCollection new.
 			argPatterns do: [ :arg | vars addAll: arg first ].
 			args := (argPatterns collect: #second) asSet asArray.
-			{vars.
+			{(vars reject: #isNil).
 			('(ViennaRuntimeUtil matchRecord: ' , constructorName storeString , ' args: {' , (' . ' join: args) , '})')} ]
 ]
 
@@ -1407,7 +1407,7 @@ ViennaVDM2SmalltalkTranslator >> seqConcPattern [
 			vars := (pair first first , pair second first) asSet asArray.
 			pat1 := pair first second.
 			pat2 := pair second second.
-			{vars.
+			{(vars reject: #isNil).
 			('(ViennaRuntimeUtil match: ' , pat1 , ' conc: ' , pat2 , ')')} ]
 ]
 
@@ -1419,7 +1419,7 @@ ViennaVDM2SmalltalkTranslator >> seqEnumPattern [
 			vars := (Array new: 10 streamContents: [ :stream | elementPatterns do: [ :pat | stream nextPutAll: pat first ] ])
 				asSet asArray.
 			elements := elementPatterns collect: #second.
-			{vars.
+			{(vars reject: #isNil).
 			('(ViennaRuntimeUtil matchSequenceEnumeration: {' , (' . ' join: elements) , '})')} ]
 ]
 
@@ -1556,7 +1556,7 @@ ViennaVDM2SmalltalkTranslator >> setEnumPattern [
 			vars := (Array new: 10 streamContents: [ :stream | elementPatterns do: [ :pat | stream nextPutAll: pat first ] ])
 				asSet asArray.
 			elements := elementPatterns collect: #second.
-			{vars.
+			{(vars reject: #isNil).
 			('(ViennaRuntimeUtil matchSetEnumeration: {' , (' . ' join: elements) , '})')} ]
 ]
 
@@ -1610,7 +1610,7 @@ ViennaVDM2SmalltalkTranslator >> setUnionPattern [
 			vars := (pair first first , pair second first) asSet asArray.
 			pat1 := pair first second.
 			pat2 := pair second second.
-			{vars.
+			{(vars reject: #isNil).
 			('(ViennaRuntimeUtil match: ' , pat1 , ' union: ' , pat2 , ')')} ]
 ]
 
@@ -1702,7 +1702,7 @@ ViennaVDM2SmalltalkTranslator >> tuplePattern [
 			argPatterns do: [ :arg | vars addAll: arg first ].
 			vars := vars asArray.
 			args := argPatterns collect: #second.
-			{vars.
+			{(vars reject: #isNil).
 			('(ViennaRuntimeUtil matchTuple: {' , (' . ' join: args) , '})')} ]
 ]
 
