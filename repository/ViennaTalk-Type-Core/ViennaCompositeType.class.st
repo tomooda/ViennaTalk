@@ -129,6 +129,32 @@ ViennaCompositeType >> setConstructorName: aString [
 ]
 
 { #category : #'instance creation' }
+ViennaCompositeType >> value: anObject [
+	^ self valueWithArguments: (Array with: anObject)
+]
+
+{ #category : #'instance creation' }
+ViennaCompositeType >> value: anObject1 value: anObject2 [
+	^ self valueWithArguments: (Array with: anObject1 with: anObject2)
+]
+
+{ #category : #'instance creation' }
+ViennaCompositeType >> value: anObject1 value: anObject2 value: anObject3 [
+	^ self valueWithArguments: (Array with: anObject1 with: anObject2 with: anObject3)
+]
+
+{ #category : #'instance creation' }
+ViennaCompositeType >> value: anObject1 value: anObject2 value: anObject3 value: anObject4 [
+	^ self
+		valueWithArguments:
+			(Array
+				with: anObject1
+				with: anObject2
+				with: anObject3
+				with: anObject4)
+]
+
+{ #category : #'instance creation' }
 ViennaCompositeType >> valueWithArguments: anArray [
 	| composite |
 	composite := ViennaComposite constructorName: constructorName withAll: anArray.
