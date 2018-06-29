@@ -72,6 +72,11 @@ ViennaVDMParser >> activeExpression [
 	^ super activeExpression ==> [ :nameNode | ViennaNode label: 'ActiveExpression' with: nameNode ]
 ]
 
+{ #category : #'parsers-statements' }
+ViennaVDMParser >> alwaysStatement [
+	^ super alwaysStatement ==> [ :pair | ViennaNode label: 'AlwaysStatement' withAll: pair ]
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> and: arg1 and: arg2 [
 	^ ViennaNode label: 'And' with: arg1 with: arg2
@@ -301,6 +306,11 @@ ViennaVDMParser >> exists1Expression [
 { #category : #'parsers-expressions-basics' }
 ViennaVDMParser >> existsExpression [
 	^ super existsExpression ==> [ :array | ViennaNode label: 'ExistsExpression' withAll: array ]
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDMParser >> exitStatement [
+	^ super exitStatement ==> [ :expr | ViennaNode label: 'ExitStatement' with: expr ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -1286,6 +1296,11 @@ ViennaVDMParser >> timeExpression [
 	^ super timeExpression ==> [ :string | ViennaNode label: 'TimeExpression' ]
 ]
 
+{ #category : #'parsers-statements' }
+ViennaVDMParser >> tixeStatement [
+	^ super tixeStatement ==> [ :pair | ViennaNode label: 'TixeStatement' withAll: pair ]
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> tl: arg [
 	^ ViennaNode label: 'SequenceTail' with: arg
@@ -1299,6 +1314,16 @@ ViennaVDMParser >> tokenConstructor [
 { #category : #'parsers-types' }
 ViennaVDMParser >> totalFunctionType [
 	^ super totalFunctionType ==> [ :array | ViennaNode label: 'TotalFunctionType' withAll: array ]
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDMParser >> trapStatement [
+	^ super trapStatement ==> [ :pair | ViennaNode label: 'TrapStatement' withAll: pair ]
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDMParser >> traps [
+	^ super traps ==> [ :array | ViennaNode label: 'Traps' withAll: array ]
 ]
 
 { #category : #'parsers-expressions-basics' }

@@ -135,6 +135,19 @@ ViennaVDMGrammar >> all [
 	^ self reserved: 'all'
 ]
 
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> always [
+	^ self reserved: 'always'
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDMGrammar >> alwaysStatement [
+	^ (self always , statement , self in , statement)
+		==> [ :quatro | 
+			{quatro second.
+			quatro fourth} ]
+]
+
 { #category : #'parsers-symbols' }
 ViennaVDMGrammar >> amp [
 	^ self operator: $&
@@ -889,6 +902,16 @@ ViennaVDMGrammar >> existsExpression [
 			(quatro fourth)} ]
 ]
 
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> exit [
+	^ self reserved: 'exit'
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDMGrammar >> exitStatement [
+	^ (self exit , expression) ==> #second
+]
+
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> explicitFunctionDefinition [
 	^ (identifier trim , self typeVariableList , colon , self functionType trim , (self decl: identifier) trim
@@ -1252,7 +1275,7 @@ ViennaVDMGrammar >> identifierTypePairList [
 
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> identityStatement [
-	^ (self reserved: 'skip') ==> [ :string | nil ]
+	^ self skip ==> [ :string | nil ]
 ]
 
 { #category : #'parsers-keywords' }
@@ -1371,7 +1394,7 @@ ViennaVDMGrammar >> imports [
 	^ self reserved: 'imports'
 ]
 
-{ #category : #'parsers-symbols' }
+{ #category : #'parsers-keywords' }
 ViennaVDMGrammar >> in [
 	^ self reserved: 'in'
 ]
@@ -2631,6 +2654,11 @@ ViennaVDMGrammar >> singleLineComment [
 		==> [ :str | self trimComment: str ]
 ]
 
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> skip [
+	^ self reserved: 'skip'
+]
+
 { #category : #'parsers-symbols' }
 ViennaVDMGrammar >> slash [
 	^ self operator: $/
@@ -2700,7 +2728,7 @@ ViennaVDMGrammar >> stateFieldList [
 ViennaVDMGrammar >> statement [
 	^ self letStatement / self letBeStatement / self defStatement / self identityStatement / self blockStatement
 		/ self generalAssignStatement / self callStatement / self ifStatement / self casesStatement / self sequenceForLoop
-		/ self setForLoop / self indexForLoop / self whileLoop / self nondeterministicStatement / self returnStatement
+		/ self setForLoop / self indexForLoop / self whileLoop / self nondeterministicStatement / self returnStatement / self alwaysStatement / self exitStatement / self trapStatement / self tixeStatement
 ]
 
 { #category : #'parsers-keywords' }
@@ -2746,6 +2774,19 @@ ViennaVDMGrammar >> timeExpression [
 	^ (self reserved: 'time') ==> [ :t |  ]
 ]
 
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> tixe [
+	^ self reserved: 'tixe'
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDMGrammar >> tixeStatement [
+	^ (self tixe , self traps , self in , statement)
+		==> [ :quatro | 
+			{quatro second.
+			quatro fourth} ]
+]
+
 { #category : #'parsers-symbols' }
 ViennaVDMGrammar >> tl [
 	^ self reserved: 'tl'
@@ -2772,6 +2813,38 @@ ViennaVDMGrammar >> totalFunctionType [
 		==> [ :triple | 
 			{(triple first).
 			(triple third)} ]
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> trap [
+	^ self reserved: 'trap'
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDMGrammar >> trapStatement [
+	^ (self trap , pattern , self with , statement , self in , statement)
+		==> [ :array | 
+			{array second.
+			array fourth.
+			array sixth} ]
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDMGrammar >> traps [
+	^ (lbrace
+		,
+			((pattern , self mapletArrow , statement)
+				==> [ :triple | 
+					{triple first.
+					triple third} ] separatedBy: comma) withoutSeparators , rbrace)
+		==> [ :triple | 
+			| array |
+			array := Array new: triple second size * 2.
+			triple second
+				keysAndValuesDo: [ :index :pair | 
+					array at: index * 2 - 1 put: pair first.
+					array at: index * 2 put: pair second ].
+			array ]
 ]
 
 { #category : #'parsers-comments' }
@@ -3030,6 +3103,11 @@ ViennaVDMGrammar >> whileLoop [
 		==> [ :quatro | 
 			{(quatro second).
 			(quatro fourth)} ]
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> with [
+	^ self reserved: 'with'
 ]
 
 { #category : #'parsers-keywords' }
