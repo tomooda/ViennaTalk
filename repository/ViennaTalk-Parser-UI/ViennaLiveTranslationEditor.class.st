@@ -103,7 +103,7 @@ ViennaLiveTranslationEditor >> translate: aTextOrString ifError: errorBlock [
 
 { #category : #accessing }
 ViennaLiveTranslationEditor >> translator [
-	^ translator ifNil: [ translator := self translatorClass new ]
+	^ translator ifNil: [ translator := self translatorClass new document ]
 ]
 
 { #category : #accessing }
