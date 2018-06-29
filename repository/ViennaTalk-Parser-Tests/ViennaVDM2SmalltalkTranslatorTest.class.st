@@ -51,6 +51,17 @@ ViennaVDM2SmalltalkTranslatorTest >> testApplyArgs [
 		equals: 3
 ]
 
+{ #category : #'tests-types' }
+ViennaVDM2SmalltalkTranslatorTest >> testBasicType [
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new type end parse: 'bool')) equals: ViennaType bool.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new type end parse: 'nat1')) equals: ViennaType nat1.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new type end parse: 'nat')) equals: ViennaType nat.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new type end parse: 'int')) equals: ViennaType int.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new type end parse: 'real')) equals: ViennaType real.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new type end parse: 'char')) equals: ViennaType char.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new type end parse: 'token')) equals: ViennaType token
+]
+
 { #category : #'tests-literals' }
 ViennaVDM2SmalltalkTranslatorTest >> testBooleanLiteral [
 	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: 'true')) equals: true.
@@ -96,6 +107,26 @@ ViennaVDM2SmalltalkTranslatorTest >> testCharacterLiteral [
 	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '''\101''')) equals: $A.
 	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '''\x41''')) equals: $A.
 	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '''\u0041''')) equals: $A
+]
+
+{ #category : #'tests-types' }
+ViennaVDM2SmalltalkTranslatorTest >> testCompositeType [
+	self
+		assert:
+			(Compiler evaluate: (ViennaVDM2SmalltalkTranslator new type end parse: 'compose T of bool i : int n :- nat end'))
+		equals:
+			(ViennaType
+				compose: 'T'
+				of:
+					{{nil.
+					false.
+					(ViennaType bool)}.
+					{'i'.
+					false.
+					(ViennaType int)}.
+					{'n'.
+					true.
+					(ViennaType nat)}})
 ]
 
 { #category : #'tests-operators' }
@@ -452,6 +483,13 @@ ViennaVDM2SmalltalkTranslatorTest >> testInds [
 		equals: #(1 2 3) asSet
 ]
 
+{ #category : #'tests-types' }
+ViennaVDM2SmalltalkTranslatorTest >> testInmapType [
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new type end parse: 'inmap int to nat'))
+		equals: (ViennaType int inmapTo: ViennaType nat)
+]
+
 { #category : #'tests-operators' }
 ViennaVDM2SmalltalkTranslatorTest >> testInterAnd [
 	self
@@ -691,6 +729,13 @@ ViennaVDM2SmalltalkTranslatorTest >> testMapRangeRestrictedTo [
 				yourself)
 ]
 
+{ #category : #'tests-types' }
+ViennaVDM2SmalltalkTranslatorTest >> testMapType [
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new type end parse: 'map int to nat'))
+		equals: (ViennaType int mapTo: ViennaType nat)
+]
+
 { #category : #'tests-patterns' }
 ViennaVDM2SmalltalkTranslatorTest >> testMatchValueExpression [
 	self
@@ -793,6 +838,13 @@ ViennaVDM2SmalltalkTranslatorTest >> testNotInSetAnd [
 		equals: true
 ]
 
+{ #category : #'tests-types' }
+ViennaVDM2SmalltalkTranslatorTest >> testOptionalType [
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new type end parse: '[nat]'))
+		equals: ViennaType nat optional
+]
+
 { #category : #'tests-operators' }
 ViennaVDM2SmalltalkTranslatorTest >> testOrAnd [
 	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: 'true or true')) equals: true.
@@ -818,6 +870,13 @@ ViennaVDM2SmalltalkTranslatorTest >> testOrAnd [
 	self
 		should: [ Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '1/0 or 1/0') ]
 		raise: ZeroDivide
+]
+
+{ #category : #'tests-types' }
+ViennaVDM2SmalltalkTranslatorTest >> testPartialFunctionType [
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new type end parse: 'int -> nat'))
+		equals: ViennaType int -> ViennaType nat
 ]
 
 { #category : #'tests-patterns' }
@@ -852,6 +911,13 @@ ViennaVDM2SmalltalkTranslatorTest >> testPower [
 			3} asSet)} asSet
 ]
 
+{ #category : #'tests-types' }
+ViennaVDM2SmalltalkTranslatorTest >> testProductType [
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new type end parse: 'bool*nat*int'))
+		equals: ViennaType bool * ViennaType nat * ViennaType int
+]
+
 { #category : #'tests-operators' }
 ViennaVDM2SmalltalkTranslatorTest >> testPsubsetAnd [
 	self
@@ -863,6 +929,13 @@ ViennaVDM2SmalltalkTranslatorTest >> testPsubsetAnd [
 	self
 		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '{0, 1} psubset {1, 2}'))
 		equals: false
+]
+
+{ #category : #'tests-types' }
+ViennaVDM2SmalltalkTranslatorTest >> testQuoteType [
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new type end parse: '<QUOTE>'))
+		equals: (ViennaType quote: '<QUOTE>')
 ]
 
 { #category : #'tests-expressions' }
@@ -893,6 +966,13 @@ ViennaVDM2SmalltalkTranslatorTest >> testRng [
 		equals: #(2 3) asSet
 ]
 
+{ #category : #'tests-types' }
+ViennaVDM2SmalltalkTranslatorTest >> testSeq1Type [
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new type end parse: 'seq1 of nat'))
+		equals: ViennaType nat seq1
+]
+
 { #category : #'tests-patterns' }
 ViennaVDM2SmalltalkTranslatorTest >> testSeqConcPattern [
 	self
@@ -907,6 +987,13 @@ ViennaVDM2SmalltalkTranslatorTest >> testSeqEnumPattern [
 		assert:
 			(Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: 'cases [1,2,3] : [a,b,3] -> mk_(a, b) end'))
 		equals: #(1 2)
+]
+
+{ #category : #'tests-types' }
+ViennaVDM2SmalltalkTranslatorTest >> testSeqType [
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new type end parse: 'seq of nat'))
+		equals: ViennaType nat seq
 ]
 
 { #category : #'tests-expressions' }
@@ -963,6 +1050,13 @@ ViennaVDM2SmalltalkTranslatorTest >> testSetRangeExpression [
 	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression parse: '{1,...,10}')) equals: (1 to: 10) asSet
 ]
 
+{ #category : #'tests-types' }
+ViennaVDM2SmalltalkTranslatorTest >> testSetType [
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new type end parse: 'set of nat'))
+		equals: ViennaType nat set
+]
+
 { #category : #'tests-patterns' }
 ViennaVDM2SmalltalkTranslatorTest >> testSetUnionPattern [
 	self
@@ -1003,6 +1097,13 @@ ViennaVDM2SmalltalkTranslatorTest >> testTl [
 	self
 		should: [ Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: 'tl []') ]
 		raise: SubscriptOutOfBounds
+]
+
+{ #category : #'tests-types' }
+ViennaVDM2SmalltalkTranslatorTest >> testTotalFunctionType [
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new type end parse: 'int +> nat'))
+		equals: ViennaType int +> ViennaType nat
 ]
 
 { #category : #'tests-expressions' }
@@ -1056,6 +1157,13 @@ ViennaVDM2SmalltalkTranslatorTest >> testUnionAnd [
 	self
 		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '{0,1,2} union {1,2,3}'))
 		equals: #(0 1 2 3) asSet
+]
+
+{ #category : #'tests-types' }
+ViennaVDM2SmalltalkTranslatorTest >> testUnionType [
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new type end parse: 'bool | nat | int'))
+		equals: ViennaType bool | ViennaType nat | ViennaType int
 ]
 
 { #category : #'tests-definitions' }
