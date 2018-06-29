@@ -2204,7 +2204,7 @@ ViennaVDM2Smalltalk >> subsequence: aViennaNode env: aDictionary [
 	seq := self generate: aViennaNode first env: aDictionary.
 	arg1 := self generate: aViennaNode second env: aDictionary.
 	arg2 := self generate: aViennaNode third env: aDictionary.
-	^ '(' , seq , ' copyFrom: ' , arg1 , ' to: ' , arg2 , ')'
+	^ '(' , seq , ' subsequenceFrom: ' , arg1 , ' to: ' , arg2 , ')'
 ]
 
 { #category : #'code generation-expressions' }
