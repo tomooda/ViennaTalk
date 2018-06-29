@@ -6,12 +6,20 @@ Class {
 
 { #category : #utilities }
 ViennaVDM2SmalltalkObject >> createDocumentClassWithInstVars: anArrayOfString [
+	^ self createDocumentClassWithInstVars: anArrayOfString stateVars: #()
+]
+
+{ #category : #utilities }
+ViennaVDM2SmalltalkObject >> createDocumentClassWithInstVars: anArrayOfString1 stateVars: anArrayOfString2 [
 	^ AnonymousClassInstaller
 		make: [ :builder | 
 			builder
 				superclass: Object;
-				slots: (anArrayOfString asArray collect: [ :instVarName | InstanceVariableSlot named: instVarName asSymbol ]);
+				slots:
+						(anArrayOfString1 asArray collect: [ :instVarName | InstanceVariableSlot named: instVarName asSymbol ])
+								, (anArrayOfString2 asArray collect: [ :instVarName | ViennaStateSlot named: instVarName asSymbol ]);
 				category: 'Auto Generated from VDM' ]
+
 ]
 
 { #category : #utilities }
