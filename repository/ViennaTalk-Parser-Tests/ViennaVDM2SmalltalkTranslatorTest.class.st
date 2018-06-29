@@ -51,6 +51,12 @@ ViennaVDM2SmalltalkTranslatorTest >> testApplyArgs [
 		equals: 3
 ]
 
+{ #category : #'tests-literals' }
+ViennaVDM2SmalltalkTranslatorTest >> testBooleanLiteral [
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: 'true')) equals: true.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: 'false')) equals: false
+]
+
 { #category : #'tests-operators' }
 ViennaVDM2SmalltalkTranslatorTest >> testCard [
 	self
@@ -61,16 +67,35 @@ ViennaVDM2SmalltalkTranslatorTest >> testCard [
 { #category : #'tests-expressions' }
 ViennaVDM2SmalltalkTranslatorTest >> testCasesExpression [
 	self
-		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: 'cases 1: a -> a + 1 end'))
+		assert:
+			(Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: 'cases 2: 0, 1 -> -1, a -> a + 1 end'))
+		equals: 3.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkTranslator new expression end
+						parse:
+							'
+			cases 1:
+				0, 2, 3 -> 0, 
+				4, 5, 6 -> 1, 
+				others -> 2
+			end'))
 		equals: 2
 ]
 
-{ #category : #'tests-expressions' }
-ViennaVDM2SmalltalkTranslatorTest >> testCasesExpression2 [
+{ #category : #'tests-literals' }
+ViennaVDM2SmalltalkTranslatorTest >> testCharacterLiteral [
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '''A''')) equals: $A.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '''\''''')) equals: $'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '''\\''')) equals: $\.
 	self
-		assert:
-			(Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: 'cases 1: 0 -> a + 1, others -> 2 end'))
-		equals: 2
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '''\n'''))
+		equals: Character lf.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '''\101''')) equals: $A.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '''\x41''')) equals: $A.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '''\u0041''')) equals: $A
 ]
 
 { #category : #'tests-operators' }
@@ -111,6 +136,30 @@ ViennaVDM2SmalltalkTranslatorTest >> testConcatAnd [
 	self
 		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '[1,2,3]^[4,5,6]'))
 		equals: #(1 2 3 4 5 6) asOrderedCollection
+]
+
+{ #category : #'tests-literals' }
+ViennaVDM2SmalltalkTranslatorTest >> testDecimalLiteral [
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '10')) equals: 10.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '-1.23e-4')) equals: -1.23e-4.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '-1.23E-4')) equals: -1.23e-4
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDM2SmalltalkTranslatorTest >> testDefExpression [
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkTranslator new expression
+						parse:
+							'
+			def
+				s = power {<a>, <b>, <c>};
+				mk_(a, b) = mk_(1, 2)
+			in
+				card s + a + b'))
+		equals: 11
 ]
 
 { #category : #'tests-operators' }
@@ -190,13 +239,53 @@ ViennaVDM2SmalltalkTranslatorTest >> testEquivAnd [
 		raise: ZeroDivide
 ]
 
+{ #category : #'tests-expressions' }
+ViennaVDM2SmalltalkTranslatorTest >> testExists1Expression [
+	self
+		assert:
+			(Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression parse: 'exists1 x in set {1, 2, 3} & x < 2'))
+		equals: true.
+	self
+		assert:
+			(Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression parse: 'exists1 x in set {1, 2, 3} & x < 0'))
+		equals: false.
+	self
+		assert:
+			(Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression parse: 'exists1 x in set {1, 2, 3} & x <= 2'))
+		equals: false
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDM2SmalltalkTranslatorTest >> testExistsExpression [
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkTranslator new expression end parse: 'exists x, y in set {1,2}, z in set {2,3} & x + y = z'))
+		equals: true.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkTranslator new expression end parse: 'exists x, y in set {1,2}, z in set {2,3} & x = y and y = z'))
+		equals: true.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkTranslator new expression end parse: 'exists x, y in set {1,2}, z in set {2,3} & x + y + z < 0'))
+		equals: false
+]
+
 { #category : #'tests-definitions' }
 ViennaVDM2SmalltalkTranslatorTest >> testExplicitFunctionDefinition [
 	self
 		assert:
 			(Compiler
 				evaluate:
-					(ViennaVDM2SmalltalkTranslator new explicitFunctionDefinition end parse: 'inc: int -> int inc(x) == x + 1') second
+					'|inc|'
+						,
+							(ViennaVDM2SmalltalkTranslator new explicitFunctionDefinition end parse: 'inc: int -> int inc(x) == x + 1') second
 						, '. inc value: 2')
 		equals: 3
 ]
@@ -204,6 +293,22 @@ ViennaVDM2SmalltalkTranslatorTest >> testExplicitFunctionDefinition [
 { #category : #'tests-operators' }
 ViennaVDM2SmalltalkTranslatorTest >> testFloor [
 	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: 'floor 1.9')) equals: 1
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDM2SmalltalkTranslatorTest >> testForallExpression [
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkTranslator new expression end parse: 'forall x, y in set {1,2}, z in set {5,6} & x + y < z'))
+		equals: true.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkTranslator new expression end parse: 'forall x, y in set {1,2}, z in set {2,3} & x + y < z'))
+		equals: false
 ]
 
 { #category : #'tests-operators' }
@@ -265,6 +370,13 @@ ViennaVDM2SmalltalkTranslatorTest >> testHd [
 	self
 		should: [ Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: 'hd []') ]
 		raise: SubscriptOutOfBounds
+]
+
+{ #category : #'tests-literals' }
+ViennaVDM2SmalltalkTranslatorTest >> testHexadecimalLiteral [
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '10')) equals: 10.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '0x10')) equals: 16.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '0X10')) equals: 16
 ]
 
 { #category : #'tests-expressions' }
@@ -340,6 +452,19 @@ ViennaVDM2SmalltalkTranslatorTest >> testInverse [
 				yourself)
 ]
 
+{ #category : #'tests-expressions' }
+ViennaVDM2SmalltalkTranslatorTest >> testIotaExpression [
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkTranslator new expression parse: 'iota mk_(x,y) in set {mk_(1, 2), mk_(2, 3)} & x > 1'))
+		equals: #(2 3).
+	self
+		should: [ Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression parse: 'iota x in set {1, 2, 3} & x < 0') ]
+		raise: NotFound
+]
+
 { #category : #'tests-operators' }
 ViennaVDM2SmalltalkTranslatorTest >> testIterateExpressionAnd [
 	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '2 ** 3')) equals: 8.
@@ -376,6 +501,38 @@ ViennaVDM2SmalltalkTranslatorTest >> testLessEqAnd [
 	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '1 <= 0')) equals: false.
 	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '1 <= 1')) equals: true.
 	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '1 <= 2')) equals: true
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDM2SmalltalkTranslatorTest >> testLetBeExpression [
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkTranslator new expression end
+						parse:
+							'
+						let
+							mk_(x, y), mk_(z, w) in set {mk_(1, 2), mk_(2, 3)}
+						be st
+							y = z
+						in
+							mk_(x, y, z, w)'))
+		equals: #(1 2 2 3).
+	self
+		should: [ 
+			Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkTranslator new expression end
+						parse:
+							'
+						let
+							mk_(x, y), mk_(z, w) in set {mk_(1, 2), mk_(3, 4)}
+						be st
+							y = z
+						in
+							mk_(x, y, z, w)') ]
+		raise: NotFound
 ]
 
 { #category : #'tests-expressions' }
@@ -566,7 +723,8 @@ ViennaVDM2SmalltalkTranslatorTest >> testMinusAnd [
 
 { #category : #'tests-operators' }
 ViennaVDM2SmalltalkTranslatorTest >> testModAnd [
-	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '3 mod 2')) equals: 1
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '3 mod 2')) equals: 1.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '-3 mod 2')) equals: 1
 ]
 
 { #category : #'tests-operators' }
@@ -585,6 +743,11 @@ ViennaVDM2SmalltalkTranslatorTest >> testMunionAnd [
 				at: 2 put: 3;
 				at: 4 put: 5;
 				yourself)
+]
+
+{ #category : #'tests-literals' }
+ViennaVDM2SmalltalkTranslatorTest >> testNilLiteral [
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: 'nil')) equals: nil
 ]
 
 { #category : #'tests-operators' }
@@ -646,6 +809,44 @@ ViennaVDM2SmalltalkTranslatorTest >> testPatternIdentifier [
 		equals: 1
 ]
 
+{ #category : #'tests-operators' }
+ViennaVDM2SmalltalkTranslatorTest >> testPlusAnd [
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '1 + 2')) equals: 3
+]
+
+{ #category : #'tests-operators' }
+ViennaVDM2SmalltalkTranslatorTest >> testPower [
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: 'power {1,2,3}'))
+		equals:
+			{({} asSet).
+			({1} asSet).
+			({2} asSet).
+			({3} asSet).
+			({1.
+			2} asSet).
+			({2.
+			3} asSet).
+			({1.
+			3} asSet).
+			({1.
+			2.
+			3} asSet)} asSet
+]
+
+{ #category : #'tests-operators' }
+ViennaVDM2SmalltalkTranslatorTest >> testPsubsetAnd [
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '{1} psubset {1, 2}'))
+		equals: true.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '{1, 2} psubset {1, 2}'))
+		equals: false.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '{0, 1} psubset {1, 2}'))
+		equals: false
+]
+
 { #category : #'tests-expressions' }
 ViennaVDM2SmalltalkTranslatorTest >> testRecordConstructor [
 	self
@@ -659,6 +860,19 @@ ViennaVDM2SmalltalkTranslatorTest >> testRecordPattern [
 		assert:
 			(Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: 'cases mk_t(1) : mk_t(a) -> a end'))
 		equals: 1
+]
+
+{ #category : #'tests-operators' }
+ViennaVDM2SmalltalkTranslatorTest >> testRemAnd [
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '5 rem 3')) equals: 2.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '-5 rem 3')) equals: -2
+]
+
+{ #category : #'tests-operators' }
+ViennaVDM2SmalltalkTranslatorTest >> testRng [
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: 'rng {1|->2, 2|->3}'))
+		equals: #(2 3) asSet
 ]
 
 { #category : #'tests-patterns' }
@@ -743,6 +957,36 @@ ViennaVDM2SmalltalkTranslatorTest >> testSetUnionPattern [
 			2}
 ]
 
+{ #category : #'tests-operators' }
+ViennaVDM2SmalltalkTranslatorTest >> testSubsequenceFromTo [
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '[10,20,30,40,50](2,...,3)'))
+		equals: #(20 30) asOrderedCollection
+]
+
+{ #category : #'tests-operators' }
+ViennaVDM2SmalltalkTranslatorTest >> testSubsetAnd [
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '{1} subset {1, 2}'))
+		equals: true.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '{1, 2} subset {1, 2}'))
+		equals: true.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '{0, 1} subset {1, 2}'))
+		equals: false
+]
+
+{ #category : #'tests-operators' }
+ViennaVDM2SmalltalkTranslatorTest >> testTl [
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: 'tl [1,2,3]'))
+		equals: #(2 3) asOrderedCollection.
+	self
+		should: [ Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: 'tl []') ]
+		raise: SubscriptOutOfBounds
+]
+
 { #category : #'tests-expressions' }
 ViennaVDM2SmalltalkTranslatorTest >> testTupleConstructor [
 	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression parse: 'mk_(1,2)')) equals: #(1 2)
@@ -756,11 +1000,52 @@ ViennaVDM2SmalltalkTranslatorTest >> testTuplePattern [
 		equals: 1
 ]
 
+{ #category : #'tests-operators' }
+ViennaVDM2SmalltalkTranslatorTest >> testTupleSelectWith [
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: 'mk_(10, 20, 30).#2'))
+		equals: 20
+]
+
+{ #category : #'tests-operators' }
+ViennaVDM2SmalltalkTranslatorTest >> testUnaryMinus [
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '-1')) equals: -1.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '- 1')) equals: -1.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '- - 1')) equals: 1.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '- (1+2)')) equals: -3
+]
+
+{ #category : #'tests-operators' }
+ViennaVDM2SmalltalkTranslatorTest >> testUnaryPlus [
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '+1')) equals: 1.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '+ 1')) equals: 1.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '+ + 1')) equals: 1.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '+ (1+2)')) equals: 3
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDM2SmalltalkTranslatorTest >> testUndefinedExpression [
+	self
+		should: [ Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression parse: 'undefined') ]
+		raise: ViennaUndefined.
+	self
+		shouldnt: [ Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression parse: 'if true then 1 else undefined') ]
+		raise: ViennaUndefined
+]
+
+{ #category : #'tests-operators' }
+ViennaVDM2SmalltalkTranslatorTest >> testUnionAnd [
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '{0,1,2} union {1,2,3}'))
+		equals: #(0 1 2 3) asSet
+]
+
 { #category : #'tests-definitions' }
 ViennaVDM2SmalltalkTranslatorTest >> testValueDefinition [
 	self
 		assert:
-			(Compiler evaluate: (ViennaVDM2SmalltalkTranslator new valueDefinition end parse: 'one = 1') second , '. one + 2')
+			(Compiler
+				evaluate: '|one|' , (ViennaVDM2SmalltalkTranslator new valueDefinition end parse: 'one = 1') second , '. one + 2')
 		equals: 3
 ]
 

@@ -114,12 +114,12 @@ ViennaVDMGrammarTest >> testBindList1 [
 
 { #category : #'tests-literals' }
 ViennaVDMGrammarTest >> testBooleanLiteral1 [
-	self assert: (grammar symbolicLiteral end parse: 'true') equals: 'true'
+	self assert: (grammar symbolicLiteral end parse: 'true') equals: true
 ]
 
 { #category : #'tests-literals' }
 ViennaVDMGrammarTest >> testBooleanLiteral2 [
-	self assert: (grammar symbolicLiteral end parse: 'false') equals: 'false'
+	self assert: (grammar symbolicLiteral end parse: 'false') equals: false
 ]
 
 { #category : #'tests-expressions' }
