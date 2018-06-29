@@ -191,7 +191,18 @@ ViennaRuntimeUtilTest >> testMatchMunion2 [
 						at: 2 put: 3;
 						yourself)) asSet
 		equals:
-			{(Dictionary new
+			{Dictionary new
+				at: 'map1'
+					put:
+						(Dictionary new);
+				at: 'map2'
+					put:
+						(Dictionary new
+								at: 1 put: 2;
+								at: 2 put: 3;
+								yourself);
+				yourself.
+				(Dictionary new
 				at: 'map1'
 					put:
 						(Dictionary new
@@ -214,7 +225,18 @@ ViennaRuntimeUtilTest >> testMatchMunion2 [
 						(Dictionary new
 								at: 1 put: 2;
 								yourself);
-				yourself)} asSet
+				yourself).
+				Dictionary new
+				at: 'map1'
+					put:
+						(Dictionary new
+								at: 1 put: 2;
+								at: 2 put: 3;
+								yourself);
+				at: 'map2'
+					put:
+						(Dictionary new);
+				yourself} asSet
 ]
 
 { #category : #'tests-matching-map' }
@@ -674,7 +696,7 @@ ViennaRuntimeUtilTest >> testMatchUnion3 [
 			((ViennaRuntimeUtil
 				match: (ViennaRuntimeUtil matchIdentifier: 'set1')
 				union: (ViennaRuntimeUtil matchSetEnumeration: {(ViennaRuntimeUtil matchValue: 3)})) value: #(3) asSet)
-		equals: {}
+		equals: {Dictionary new at: 'set1' put: Set new; yourself}
 ]
 
 { #category : #'tests-matching-set' }
