@@ -28,6 +28,15 @@ ViennaAbstractFormatter class >> format: aViennaNode [
 	^ self new format: aViennaNode
 ]
 
+{ #category : #utilities }
+ViennaAbstractFormatter class >> formatSource: aString ifError: errorBlock [
+	| ast |
+	ast := ViennaVDMParser new parse: aString asString.
+	ast isPetitFailure
+		ifTrue: [ ^ errorBlock value ].
+	^ self format: ast
+]
+
 { #category : #'class initialization' }
 ViennaAbstractFormatter class >> initialize [
 	super initialize.
@@ -890,7 +899,7 @@ ViennaAbstractFormatter >> format: aViennaNode [
 	string := self perform: (aViennaNode label uncapitalized , ':') asSymbol with: aViennaNode.
 	self needsParen
 		ifTrue: [ string := '(' , (self indentString: string) , ')' ].
-	^ string
+	^ string asViennaTracingString: aViennaNode
 ]
 
 { #category : #formatting }
