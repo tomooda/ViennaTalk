@@ -6,7 +6,6 @@ Class {
 		'object',
 		'parser',
 		'transpiler',
-		'envs',
 		'reader',
 		'writer'
 	],
@@ -97,22 +96,15 @@ ViennaTranspiledAnimation >> defaultModule [
 { #category : #evaluating }
 ViennaTranspiledAnimation >> evaluate: aString in: moduleName ifError: errorBlock [
 	Cursor wait
-		showWhile: [ | ast code result |
-			ast := parser expression parse: aString.
-			ast isPetitFailure
-				ifTrue: [ ^ errorBlock value: ast message ].
-			code := transpiler
-				generate: ast
-				env: (envs at: moduleName ifAbsent: [ ^ errorBlock value: 'unknown module name' ]).
-			[ result := Compiler
-				evaluate: code
-				for:
-					(moduleName = self defaultModule
-						ifTrue: [ object ]
-						ifFalse: [ object at: moduleName ifAbsent: [ ^ errorBlock value: 'unknown module name' ] ])
-				logged: false ]
+		showWhile: [ | result |
+			[ result := (moduleName = self defaultModule
+				ifTrue: [ object ]
+				ifFalse: [ object at: moduleName ifAbsent: [ ^ errorBlock value: 'unknown module name' ] ])
+				evaluateExpression: aString
+				ifError: [ :msg | ^ errorBlock cull: msg ] ]
 				on: Error
-				do: [ :ex | ^ errorBlock value: ex messageText ].
+				do: [ :ex | 
+					^ errorBlock value: ex messageText ].
 			self changed: #state.
 			^ result == object
 				ifTrue: [ nil ]
@@ -128,7 +120,6 @@ ViennaTranspiledAnimation >> init [
 ViennaTranspiledAnimation >> initialize [
 	super initialize.
 	parser := ViennaVDMParser new.
-	transpiler := ViennaVDM2SmalltalkObject new.
 	reader := ViennaReader new.
 	writer := ViennaUnquoteWriter new
 ]
@@ -199,16 +190,12 @@ ViennaTranspiledAnimation >> specification: aString [
 ViennaTranspiledAnimation >> specification: aString ifError: errorBlock [
 	transpiler := ViennaVDM2SmalltalkObject new.
 	aString
-		ifEmpty: [ object := ViennaTranspiledObject new.
-			envs := Dictionary new
-				at: self defaultModule put: Dictionary new;
-				yourself ]
+		ifEmpty: [ object := ViennaTranspiledObject new ]
 		ifNotEmpty: [ | ast |
 			ast := parser parse: aString.
 			ast isPetitFailure
 				ifTrue: [ ^ errorBlock value: ast message ].
-			object := transpiler generate: ast.
-			envs := transpiler buildEnv: ast ].
+			object := transpiler generate: ast ].
 	specification := aString.
 	self changed: #specification.
 	self changed: #state
