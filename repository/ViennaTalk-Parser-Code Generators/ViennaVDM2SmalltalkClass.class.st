@@ -50,10 +50,10 @@ ViennaVDM2SmalltalkClass >> callStatement: aViennaNode env: aDictionary [
 { #category : #utilities }
 ViennaVDM2SmalltalkClass >> closureFromMethodSource: aString binds: binds [
 	| header |
-	header := ((aString readStream upTo: Character cr) trim readStream upTo: $:) , ':'.
-	^ String
-		new: 1024
-		streamContents: [ :stream | 
+	header := ((aString readStream upTo: Character cr) trim readStream
+		upTo: $:) , ':'.
+	^ self
+		stringStreamContents: [ :stream | 
 			stream nextPut: $[.
 			1 to: binds size do: [ :i | 
 				stream nextPutAll: ' :arg'.
@@ -62,12 +62,10 @@ ViennaVDM2SmalltalkClass >> closureFromMethodSource: aString binds: binds [
 			binds ifNotEmpty: [ stream nextPutAll: '| ' ].
 			stream nextPutAll: 'self '.
 			binds
-				ifEmpty: [ 
-					stream
+				ifEmpty: [ stream
 						nextPutAll: header;
 						nextPutAll: ' nil' ]
-				ifNotEmpty: [ 
-					stream
+				ifNotEmpty: [ stream
 						nextPutAll: header;
 						nextPutAll: ' arg1'.
 					2 to: binds size do: [ :i | 
@@ -167,13 +165,13 @@ ViennaVDM2SmalltalkClass >> defineLazyMethodNamed: selector initializer: initial
 ViennaVDM2SmalltalkClass >> defineMethod: aString in: aClass protocol: protocol node: aViennaNode [
 	| selector |
 	selector := aClass
-		compile: (RBParser parseMethod: aString) formattedCode
+		compile: (RBParser parseMethod: aString asString) formattedCode
 		classified: protocol.
-	aClass nodeAt: selector put: aViennaNode
+	aClass specificationAt: selector put: aViennaNode
 ]
 
 { #category : #utilities }
-ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass protocol: protocolString fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode body: bodyString pre: preString post: postString retType: typeNode varGenerator: varGenerator env: aDictionary node: aViennaNode [
+ViennaVDM2SmalltalkClass >> defineMethodFromExplicitOperation: opName in: theClass protocol: protocolString fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode body: bodyString pre: preString post: postString retType: typeNode varGenerator: varGenerator env: aDictionary node: aViennaNode [
 	^ self
 		defineMethodFromOperation: opName
 		in: theClass
@@ -187,10 +185,11 @@ ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass proto
 		varGenerator: varGenerator
 		env: aDictionary
 		node: aViennaNode
+		bodyNode: aViennaNode fifth
 ]
 
 { #category : #utilities }
-ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass protocol: protocolString fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode body: bodyString pre: preString post: postString retVar: retVarName retType: typeNode varGenerator: varGenerator env: aDictionary node: aViennaNode [
+ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass protocol: protocolString fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode body: bodyString pre: preString post: postString retVar: retVarName retType: typeNode varGenerator: varGenerator env: aDictionary node: aViennaNode bodyNode: aViennaNode2 [
 	| tmpVars matchPatternNodes isFirstArg tuplePattern matchVars argVars formalArgs |
 	tmpVars := OrderedCollection new.
 	matchPatternNodes := OrderedCollection new.
@@ -198,9 +197,8 @@ ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass proto
 	formalArgs := OrderedCollection new.
 	self
 		defineMethod:
-			(String
-				new: 1024
-				streamContents: [ :stream | 
+			(self
+				stringStreamContents: [ :stream | 
 					stream nextPutAll: opName.
 					anArrayOfPatternNodeAndTypeSetNode isEmpty
 						ifTrue: [ stream nextPutAll: ': ' , varGenerator value ].
@@ -279,7 +277,9 @@ ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass proto
 						ifTrue: [ stream
 								nextPutAll: '(';
 								nextPutAll: (self generate: typeNode env: aDictionary);
-								nextPutAll: ' includes: ' , retVarName , ') ifFalse: [ViennaRuntimeTypeError signal].' ].
+								nextPutAll:
+									' includes: ' , retVarName
+										, ') ifFalse: [ViennaRuntimeTypeError signal].' ].
 					postString
 						ifNotNil: [ stream
 								nextPutAll: '(';
@@ -291,9 +291,8 @@ ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass proto
 		node: aViennaNode.
 	^ self
 		defineMethod:
-			(String
-				new: 1024
-				streamContents: [ :stream | 
+			(self
+				stringStreamContents: [ :stream | 
 					stream
 						nextPut: $_;
 						nextPutAll: opName.
@@ -308,7 +307,7 @@ ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass proto
 						nextPutAll: bodyString ])
 		in: theClass
 		protocol: protocolString
-		node: aViennaNode fourth
+		node: aViennaNode2
 ]
 
 { #category : #'code generation-definitions' }
@@ -368,7 +367,7 @@ ViennaVDM2SmalltalkClass >> explicitOperationDefinition: aViennaNode env: aDicti
 					argTypeNode}} ] ].
 	theClass := classes at: (aViennaNode module ifNotNil: #first).
 	self
-		defineMethodFromOperation: opname
+		defineMethodFromExplicitOperation: opname
 		in: theClass
 		protocol: 'operations'
 		fromFlatBinds: binds
@@ -392,9 +391,8 @@ ViennaVDM2SmalltalkClass >> explicitOperationDefinition: aViennaNode env: aDicti
 		initializer:
 			opname , ' := '
 				,
-					(String
-						new: 1024
-						streamContents: [ :stream | 
+					(self
+						stringStreamContents: [ :stream | 
 							stream nextPut: $[.
 							1 to: binds size do: [ :i | 
 								stream
@@ -424,9 +422,8 @@ ViennaVDM2SmalltalkClass >> explicitOperationDefinition: aViennaNode env: aDicti
 			self
 				defineLazyMethodNamed: 'pre_' , opname
 				initializer:
-					(String
-						new: 1024
-						streamContents: [ :stream | 
+					(self
+						stringStreamContents: [ :stream | 
 							stream
 								nextPutAll: 'pre_';
 								nextPutAll: opname;
@@ -452,9 +449,8 @@ ViennaVDM2SmalltalkClass >> explicitOperationDefinition: aViennaNode env: aDicti
 			self
 				defineLazyMethodNamed: 'post_' , opname
 				initializer:
-					(String
-						new: 1024
-						streamContents: [ :stream | 
+					(self
+						stringStreamContents: [ :stream | 
 							stream
 								nextPutAll: 'post_';
 								nextPutAll: opname;
@@ -513,7 +509,7 @@ ViennaVDM2SmalltalkClass >> extendedExplicitFunctionDefinition: aViennaNode env:
 
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> extendedExplicitOperationDefinition: aViennaNode env: aDictionary [
-	| opname patternTypePairListNode retVar retTypeNode body preNode postNode varGenerator binds theClass |
+	| opname patternTypePairListNode retVar retTypeNode bodyNode body preNode postNode varGenerator binds theClass |
 	opname := aViennaNode first.
 	patternTypePairListNode := aViennaNode second first
 		ifNil: [ Array new ].
@@ -523,7 +519,8 @@ ViennaVDM2SmalltalkClass >> extendedExplicitOperationDefinition: aViennaNode env
 	retTypeNode := aViennaNode third
 		ifNil: [ ViennaNode label: 'UnitType' ]
 		ifNotNil: [ :node | node second ].
-	body := self generate: aViennaNode fourth.
+	bodyNode := aViennaNode fourth.
+	body := self generate: bodyNode.
 	preNode := aViennaNode sixth.
 	postNode := aViennaNode seventh.
 	varGenerator := self
@@ -564,15 +561,16 @@ ViennaVDM2SmalltalkClass >> extendedExplicitOperationDefinition: aViennaNode env
 		retVar: retVar
 		retType: retTypeNode
 		varGenerator: varGenerator
-		env: aDictionary node: aViennaNode.
+		env: aDictionary
+		node: aViennaNode
+		bodyNode: bodyNode.
 	self
 		defineLazyMethodNamed: opname
 		initializer:
 			opname , ' := '
 				,
-					(String
-						new: 1024
-						streamContents: [ :stream | 
+					(self
+						stringStreamContents: [ :stream | 
 							stream nextPut: $[.
 							1 to: binds size do: [ :i | 
 								stream
@@ -602,9 +600,8 @@ ViennaVDM2SmalltalkClass >> extendedExplicitOperationDefinition: aViennaNode env
 			self
 				defineLazyMethodNamed: 'pre_' , opname
 				initializer:
-					(String
-						new: 1024
-						streamContents: [ :stream | 
+					(self
+						stringStreamContents: [ :stream | 
 							stream
 								nextPutAll: 'pre_';
 								nextPutAll: opname;
@@ -630,9 +627,8 @@ ViennaVDM2SmalltalkClass >> extendedExplicitOperationDefinition: aViennaNode env
 			self
 				defineLazyMethodNamed: 'post_' , opname
 				initializer:
-					(String
-						new: 1024
-						streamContents: [ :stream | 
+					(self
+						stringStreamContents: [ :stream | 
 							stream
 								nextPutAll: 'post_';
 								nextPutAll: opname;
@@ -756,11 +752,12 @@ ViennaVDM2SmalltalkClass >> implicitFunctionDefinition: aViennaNode env: aDictio
 
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> implicitOperationDefinition: aViennaNode env: aDictionary [
-	| opname patternTypePairListNode retVar retTypeNode body preNode postNode varGenerator binds theClass |
+	| opname patternTypePairListNode retVar retTypeNode bodyNode body preNode postNode varGenerator binds theClass |
 	opname := aViennaNode first.
 	patternTypePairListNode := aViennaNode second first.
 	retVar := aViennaNode third first.
 	retTypeNode := aViennaNode third second.
+	bodyNode := aViennaNode.
 	body := 'ViennaImplicitEvaluationError signal: '
 		, (opname , ' is implicitly defined.') storeString.
 	preNode := aViennaNode fourth second.
@@ -804,15 +801,15 @@ ViennaVDM2SmalltalkClass >> implicitOperationDefinition: aViennaNode env: aDicti
 		retType: retTypeNode
 		varGenerator: varGenerator
 		env: aDictionary
-		node: aViennaNode.
+		node: aViennaNode
+		bodyNode: bodyNode.
 	self
 		defineLazyMethodNamed: opname
 		initializer:
 			opname , ' := '
 				,
-					(String
-						new: 1024
-						streamContents: [ :stream | 
+					(self
+						stringStreamContents: [ :stream | 
 							stream nextPut: $[.
 							1 to: binds size do: [ :i | 
 								stream
@@ -842,9 +839,8 @@ ViennaVDM2SmalltalkClass >> implicitOperationDefinition: aViennaNode env: aDicti
 			self
 				defineLazyMethodNamed: 'pre_' , opname
 				initializer:
-					(String
-						new: 1024
-						streamContents: [ :stream | 
+					(self
+						stringStreamContents: [ :stream | 
 							stream
 								nextPutAll: 'pre_';
 								nextPutAll: opname;
@@ -870,9 +866,8 @@ ViennaVDM2SmalltalkClass >> implicitOperationDefinition: aViennaNode env: aDicti
 			self
 				defineLazyMethodNamed: 'post_' , opname
 				initializer:
-					(String
-						new: 1024
-						streamContents: [ :stream | 
+					(self
+						stringStreamContents: [ :stream | 
 							stream
 								nextPutAll: 'post_';
 								nextPutAll: opname;
@@ -929,9 +924,8 @@ ViennaVDM2SmalltalkClass >> modularDocument: aViennaNode env: aDictionary [
 	aViennaNode do: [ :node | self generate: node env: aDictionary ].
 	self
 		defineMethod:
-			(String
-				new: 1024
-				streamContents: [ :stream | 
+			(self
+				stringStreamContents: [ :stream | 
 					stream
 						nextPutAll: 'initialize';
 						cr;
@@ -1155,9 +1149,8 @@ ViennaVDM2SmalltalkClass >> stateDefinition: aViennaNode env: aDictionary [
 	(quin fourth notNil or: [ runtimeTypeCheck = true ])
 		ifTrue: [ self
 				defineMethod:
-					(String
-						new: 1024
-						streamContents: [ :stream | 
+					(self
+						stringStreamContents: [ :stream | 
 							stream
 								nextPutAll: 'inv';
 								cr.
@@ -1184,6 +1177,11 @@ ViennaVDM2SmalltalkClass >> stateDefinition: aViennaNode env: aDictionary [
 		in: theClass
 		protocol: 'state'
 		node: nil
+]
+
+{ #category : #utilities }
+ViennaVDM2SmalltalkClass >> tracingString [
+	^ ViennaTracingString new
 ]
 
 { #category : #'code generation-definitions' }

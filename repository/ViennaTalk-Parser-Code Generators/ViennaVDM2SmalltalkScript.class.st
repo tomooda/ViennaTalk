@@ -59,6 +59,11 @@ ViennaVDM2SmalltalkScript >> functionDefinitions: aViennaNode env: aDictionary [
 	^ '.' , String cr join: (aViennaNode collect: [ :node | self generate: node env: aDictionary ])
 ]
 
+{ #category : #'code generation' }
+ViennaVDM2SmalltalkScript >> generate: aViennaNode [
+	^ (super generate: aViennaNode) asString
+]
+
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkScript >> getStateCode [
 	^ 'state value'
@@ -83,9 +88,8 @@ ViennaVDM2SmalltalkScript >> operationDefinitions: aViennaNode env: aDictionary 
 ViennaVDM2SmalltalkScript >> stateDefinition: aViennaNode env: aDictionary [
 	| quin |
 	quin := super stateDefinition: aViennaNode env: aDictionary.
-	^ String
-		new: 1024
-		streamContents: [ :stream | 
+	^ self
+		stringStreamContents: [ :stream | 
 			stream
 				nextPutAll: quin first;
 				nextPutAll: quin second;

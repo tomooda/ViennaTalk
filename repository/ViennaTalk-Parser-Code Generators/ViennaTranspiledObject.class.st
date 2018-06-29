@@ -2,44 +2,21 @@ Class {
 	#name : #ViennaTranspiledObject,
 	#superclass : #Object,
 	#classInstVars : [
-		'viennaEnv',
+		'specificationDict',
 		'specification',
-		'nodeDict'
+		'viennaEnv'
 	],
 	#category : 'ViennaTalk-Parser-Code Generators'
 }
 
+{ #category : #specification }
+ViennaTranspiledObject class >> includesSpecificationFor: aSymbol [
+	^ self specificationDict includesKey: aSymbol asSymbol
+]
+
 { #category : #'class initialization' }
 ViennaTranspiledObject class >> initialize [
-	super initialize.
-	nodeDict := Dictionary new
-]
-
-{ #category : #specification }
-ViennaTranspiledObject class >> nodeAt: aSelector put: aViennaNode [
-	^ self nodeDict at: aSelector asSymbol put: aViennaNode
-]
-
-{ #category : #specification }
-ViennaTranspiledObject class >> nodeDict [
-	^ nodeDict ifNil: [ nodeDict := Dictionary new ]
-]
-
-{ #category : #specification }
-ViennaTranspiledObject class >> specSourceAt: aSelector [
-	^ self specSourceFor: (self nodeDict at: aSelector asSymbol ifAbsent: [ ^ String new ])
-]
-
-{ #category : #specification }
-ViennaTranspiledObject class >> specSourceFor: aViennaNode [
-	^ specification
-		ifNil: [ ViennaVDMFormatter new format: aViennaNode ]
-		ifNotNil: [ | start end |
-			start := aViennaNode start.
-			end := aViennaNode end.
-			(start isNil or: [ end isNil ])
-				ifTrue: [ ViennaVDMFormatter new format: aViennaNode ]
-				ifFalse: [ specification copyFrom: start to: end ] ]
+	specificationDict := Dictionary new.
 ]
 
 { #category : #specification }
@@ -48,8 +25,33 @@ ViennaTranspiledObject class >> specification [
 ]
 
 { #category : #specification }
-ViennaTranspiledObject class >> specification: aStringOrText [
-	specification := aStringOrText
+ViennaTranspiledObject class >> specification: aViennaNode [
+	specification := aViennaNode
+]
+
+{ #category : #specification }
+ViennaTranspiledObject class >> specificationAt: aSymbol [
+	^ self specificationDict at: aSymbol asSymbol
+]
+
+{ #category : #specification }
+ViennaTranspiledObject class >> specificationAt: aSelector put: aViennaNode [
+	^ self specificationDict at: aSelector asSymbol put: aViennaNode
+]
+
+{ #category : #specification }
+ViennaTranspiledObject class >> specificationDict [
+	^ specificationDict ifNil: [ specificationDict := Dictionary new ]
+]
+
+{ #category : #specification }
+ViennaTranspiledObject class >> specificationSource [
+	^ specification ifNotNil: #source ifNil: [  ]
+]
+
+{ #category : #specification }
+ViennaTranspiledObject class >> specificationSourceAt: aSelector [
+	^ (self specificationAt: aSelector) source
 ]
 
 { #category : #transpiling }

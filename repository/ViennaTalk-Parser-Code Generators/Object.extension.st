@@ -6,6 +6,11 @@ Object >> inv [
 ]
 
 { #category : #'*ViennaTalk-Parser-Code Generators' }
+Object >> isViennaTracingString [
+	^ false
+]
+
+{ #category : #'*ViennaTalk-Parser-Code Generators' }
 Object >> stateInvariantViolation [
 	^ ViennaStateInvariantViolation signal
 ]
