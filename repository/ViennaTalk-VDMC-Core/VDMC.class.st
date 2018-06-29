@@ -163,7 +163,7 @@ VDMC >> evaluate: aString [
 										ifFalse: [ module , '`' , var ])
 								put: value ] ].
 			state := postState.
-			^ result first ]
+			^  reader parseOn: result first readStream ]
 ]
 
 { #category : #evaluating }
