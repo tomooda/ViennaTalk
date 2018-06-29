@@ -146,6 +146,14 @@ ViennaVDMHighlighter >> eq [
 	^ self keyword: super eq
 ]
 
+{ #category : #'parsers-types' }
+ViennaVDMHighlighter >> equalityAbstractionField [
+	^ ((identifier trim , (self operator: ':-')) and , (self decl: identifier) trim , (self operator: ':-') , type)
+		==> [ :quatro | 
+			{(quatro second).
+			(quatro fourth)} ]
+]
+
 { #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> exists [
 	^ self keyword: super exists
@@ -189,6 +197,14 @@ ViennaVDMHighlighter >> highlight: aParser with: aTextAttributeOrCollection [
 				ifTrue: [ aTextAttributeOrCollection do: [ :attribute | text addAttribute: attribute from: start to: end ] ]
 				ifFalse: [ text addAttribute: aTextAttributeOrCollection from: start to: end ].
 			result ]
+]
+
+{ #category : #'parsers-types' }
+ViennaVDMHighlighter >> identifiedField [
+	^ ((identifier trim , colon) and , (self decl: identifier) trim , colon , type)
+		==> [ :quatro | 
+			{(quatro second).
+			(quatro fourth)} ]
 ]
 
 { #category : #'parsers-symbols' }
