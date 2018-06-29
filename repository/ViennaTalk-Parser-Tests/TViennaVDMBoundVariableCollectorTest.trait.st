@@ -73,6 +73,23 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesBindListInto [
 			'v2'} asSet
 ]
 
+{ #category : #'tests-bound variables-statements' }
+TViennaVDMBoundVariableCollectorTest >> testBoundVariablesBlockStatementInto [
+	| node binds |
+	node := ViennaVDMParser new blockStatement end
+		parse: '(dcl v1:t1 := e, v2:t1 := v1; dcl v3:t3 := f(v1, v2); op(v1, v2, v3))'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'BlockStatement'.
+	binds := Set new.
+	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'v1'.
+			'v2'.
+			'v3'} asSet
+]
+
 { #category : #'tests-bound variables-types' }
 TViennaVDMBoundVariableCollectorTest >> testBoundVariablesCompositeTypeInto [
 	| node binds |
@@ -88,6 +105,21 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesCompositeTypeInto [
 			't1'.
 			't2'.
 			't3'} asSet
+]
+
+{ #category : #'tests-bound variables-statements' }
+TViennaVDMBoundVariableCollectorTest >> testBoundVariablesDclStatementInto [
+	| node binds |
+	node := ViennaVDMParser new dclStatement end parse: 'dcl v1:t1 := e, v2:t := v1;'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'DclStatement'.
+	binds := Set new.
+	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	self
+		assert: binds
+		equals:
+			{'v1'.
+			'v2'} asSet
 ]
 
 { #category : #'tests-bound variables-definitions' }
@@ -271,6 +303,17 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesFunctionDefinitionsInt
 		equals:
 			{'fn1'.
 			'fn2'} asSet
+]
+
+{ #category : #'tests-bound variables-statements' }
+TViennaVDMBoundVariableCollectorTest >> testBoundVariablesIndexForLoopInto [
+	| node binds |
+	node := ViennaVDMParser new indexForLoop end parse: 'for v = e1 to e2 by e3 do op(v)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'IndexForLoop'.
+	binds := Set new.
+	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	self assert: binds equals: {'v'} asSet
 ]
 
 { #category : #'tests-bound variables-types' }
@@ -661,6 +704,17 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesSeqTypeInto [
 	self assert: binds equals: {'t'} asSet
 ]
 
+{ #category : #'tests-bound variables-statements' }
+TViennaVDMBoundVariableCollectorTest >> testBoundVariablesSequenceForLoopInto [
+	| node binds |
+	node := ViennaVDMParser new sequenceForLoop end parse: 'for v in s do op(v)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SequenceForLoop'.
+	binds := Set new.
+	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	self assert: binds equals: {'v'} asSet
+]
+
 { #category : #'tests-bound variables-patterns and binds' }
 TViennaVDMBoundVariableCollectorTest >> testBoundVariablesSetBindInto [
 	| node binds |
@@ -685,6 +739,17 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesSetEnumPatternInto [
 		equals:
 			{'v1'.
 			'v2'} asSet
+]
+
+{ #category : #'tests-bound variables-statements' }
+TViennaVDMBoundVariableCollectorTest >> testBoundVariablesSetForLoopInto [
+	| node binds |
+	node := ViennaVDMParser new setForLoop end parse: 'for all v in set s do op(v)'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SetForLoop'.
+	binds := Set new.
+	ViennaVDM2Smalltalk new boundVariables: node into: binds.
+	self assert: binds equals: {'v'} asSet
 ]
 
 { #category : #'tests-bound variables-types' }

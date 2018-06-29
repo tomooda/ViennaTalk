@@ -1,8 +1,8 @@
 Class {
 	#name : #ViennaVDM2SmalltalkTest,
 	#superclass : #TestCase,
-	#traits : 'TViennaVDMBoundVariableCollectorTest',
-	#classTraits : 'TViennaVDMBoundVariableCollectorTest classTrait',
+	#traits : 'TViennaVDMBoundVariableCollectorTest + TViennaVDMFreeVariableCollectorTest',
+	#classTraits : 'TViennaVDMBoundVariableCollectorTest classTrait + TViennaVDMFreeVariableCollectorTest classTrait',
 	#category : 'ViennaTalk-Parser-Tests'
 }
 
