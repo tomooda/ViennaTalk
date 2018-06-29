@@ -148,16 +148,24 @@ ViennaBrowser class >> moduleListMenu: aBuilder [
 	(aBuilder item: #'remove module' translated)
 		selector: #removeModulel;
 		withSeparatorAfter.
-	(aBuilder item: #'generate a Smalltalk script (single module)...' translated) selector: #generateSmalltalkScript.
-	(aBuilder item: #'generate classes (all modules)...' translated) selector: #generateSmalltalkClasses.
+	aBuilder model vdmc class = ViennaTranspiledAnimation
+		ifTrue: [ (aBuilder item: #'use interpreter' translated)
+				selector: #useInterpreter;
+				withSeparatorAfter ]
+		ifFalse: [ (aBuilder item: #'use transpiler' translated)
+				selector: #useTranspiler;
+				withSeparatorAfter ].
+	(aBuilder item: #'generate a Smalltalk script (single module)...' translated)
+		selector: #generateSmalltalkScript.
+	(aBuilder item: #'generate classes (all modules)...' translated)
+		selector: #generateSmalltalkClasses.
 	(aBuilder item: #'generate object (all modules)...' translated)
 		selector: #generateSmalltalkObject;
 		withSeparatorAfter.
 	aBuilder model importerModules
 		ifNotEmpty: [ :modules | 
 			(aBuilder item: #'imported by...' translated)
-				with: [ 
-					modules
+				with: [ modules
 						do: [ :module | 
 							(aBuilder item: module asSymbol)
 								selector: #selectModuleNamed:;
@@ -1061,6 +1069,16 @@ ViennaBrowser >> update: aSymbol [
 			self changed: #value ].
 	aSymbol = #state
 		ifTrue: [ self changed: #value ]
+]
+
+{ #category : #'module list menu' }
+ViennaBrowser >> useInterpreter [
+	self vdmc: self vdmc asInterpretedAnimation 
+]
+
+{ #category : #'module list menu' }
+ViennaBrowser >> useTranspiler [
+	self vdmc: self vdmc asTranspiledAnimation
 ]
 
 { #category : #'value pane' }
