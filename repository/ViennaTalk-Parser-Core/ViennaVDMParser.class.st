@@ -824,6 +824,11 @@ ViennaVDMParser >> multipleAssignStatement [
 ]
 
 { #category : #'parsers-patterns' }
+ViennaVDMParser >> multipleSeqBind [
+	^ super multipleSeqBind ==> [ :array | ViennaNode label: 'MultipleSeqBind' withAll: array ]
+]
+
+{ #category : #'parsers-patterns' }
 ViennaVDMParser >> multipleSetBind [
 	^ super multipleSetBind ==> [ :array | ViennaNode label: 'MultipleSetBind' withAll: array ]
 ]

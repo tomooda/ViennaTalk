@@ -26,6 +26,7 @@ Class {
 		'bind',
 		'bindList',
 		'setBind',
+		'seqBind',
 		'typeBind',
 		'comma',
 		'lparen',
@@ -283,7 +284,7 @@ ViennaVDMGrammar >> best [
 
 { #category : #'parsers-patterns' }
 ViennaVDMGrammar >> bind [
-	^ setBind / typeBind
+	^ self setSeqBind / typeBind
 ]
 
 { #category : #'parsers-patterns' }
@@ -1853,7 +1854,15 @@ ViennaVDMGrammar >> multipleAssignStatement [
 
 { #category : #'parsers-patterns' }
 ViennaVDMGrammar >> multipleBind [
-	^ self multipleSetBind / self multipleTypeBind
+	^ self multipleSetBind / self multipleSeqBind / self multipleTypeBind
+]
+
+{ #category : #'parsers-patterns' }
+ViennaVDMGrammar >> multipleSeqBind [
+	^ (patternList , (self reserved: 'in') , (self reserved: 'seq') , expressionExceptEquality)
+		==> [ :quatro | 
+			{(quatro first).
+			(quatro fourth)} ]
 ]
 
 { #category : #'parsers-patterns' }
@@ -2438,7 +2447,7 @@ ViennaVDMGrammar >> seqType [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> sequenceComprehension [
-	^ (lbracket , expression , bar , (setBind / self seqBind) , ((amp , expression) ==> #second) optional , rbracket)
+	^ (lbracket , expression , bar , self setSeqBind , ((amp , expression) ==> #second) optional , rbracket)
 		==> [ :six | 
 			{(six second).
 			(six fourth).
@@ -2506,6 +2515,11 @@ ViennaVDMGrammar >> setRangeExpression [
 		==> [ :array | 
 			{(array second).
 			(array sixth)} ]
+]
+
+{ #category : #'parsers-patterns' }
+ViennaVDMGrammar >> setSeqBind [
+	^ setBind / seqBind
 ]
 
 { #category : #'parsers-types' }
