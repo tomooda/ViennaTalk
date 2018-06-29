@@ -43,6 +43,17 @@ VDMPad class >> flushServer [
 ]
 
 { #category : #'class initialization' }
+VDMPad class >> initialize [
+	super initialize.
+	self install
+]
+
+{ #category : #'class initialization' }
+VDMPad class >> install [
+	(FileSystem / 'codemirror') exists ifFalse: [ self installCodemirror ]
+]
+
+{ #category : #'class initialization' }
 VDMPad class >> installCodemirror [
 	"VDMPad installCodemirror"
 
