@@ -538,7 +538,7 @@ ViennaVDMJ >> send: aString responseDo: aBlock ifError: errorBlock [
 	semaphore := Semaphore new.
 	response := String new writeStream.
 	readerProcess := [[reader next
-				ifNil: [(Delay forMilliseconds: 5) wait.
+				ifNil: ["(Delay forMilliseconds: 5) wait."Processor yield.
 					true]
 				ifNotNil: [:char | char = Character lf
 						ifTrue: [semaphore signal.
