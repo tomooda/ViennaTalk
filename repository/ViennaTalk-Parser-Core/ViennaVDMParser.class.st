@@ -11,12 +11,12 @@ ViennaVDMParser >> abs: arg [
 
 { #category : #'parsers-expressions-threads' }
 ViennaVDMParser >> actExpression [
-	^ super actExpression ==> [ :array | ViennaNode label: 'ActExpression' with: array ]
+	^ super actExpression ==> [ :nameNode | ViennaNode label: 'ActExpression' with: nameNode ]
 ]
 
 { #category : #'parsers-expressions-threads' }
 ViennaVDMParser >> activeExpression [
-	^ super activeExpression ==> [ :array | ViennaNode label: 'ActiveExpression' with: array ]
+	^ super activeExpression ==> [ :nameNode | ViennaNode label: 'ActiveExpression' with: nameNode ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -36,7 +36,7 @@ ViennaVDMParser >> basicType [
 
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> bindList [
-	^ super bindList ==> [ :array | ViennaNode label: 'BindList' with: array ]
+	^ super bindList ==> [ :array | ViennaNode label: 'BindList' withAll: array ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -47,6 +47,16 @@ ViennaVDMParser >> card: arg [
 { #category : #'parsers-expressions-basics' }
 ViennaVDMParser >> casesExpression [
 	^ super casesExpression ==> [ :array | ViennaNode label: 'CasesExpression' withAll: array ]
+]
+
+{ #category : #'parsers-expressions-basics' }
+ViennaVDMParser >> casesExpressionAlternative [
+	^ super casesExpressionAlternative ==> [ :array | ViennaNode label: 'CaseExpressionAlternative' withAll: array ]
+]
+
+{ #category : #'parsers-expressions-basics' }
+ViennaVDMParser >> casesExpressionAlternatives [
+	^ super casesExpressionAlternatives ==> [ :array | ViennaNode label: 'CaseExpressionAlternatives' withAll: array ]
 ]
 
 { #category : #'parsers-types' }
@@ -135,6 +145,16 @@ ViennaVDMParser >> extendedExplicitFunctionDefinition [
 		==> [ :array | ViennaNode label: 'ExtendedExplicitFunctionDefinition' withAll: array ]
 ]
 
+{ #category : #'parsers-patterns' }
+ViennaVDMParser >> fieldPattern [
+	^ super fieldPattern ==> [ :array | ViennaNode label: 'FieldPattern' withAll: array ]
+]
+
+{ #category : #'parsers-patterns' }
+ViennaVDMParser >> fieldPatternList [
+	^ super fieldPattern ==> [ :array | ViennaNode label: 'FieldPatternList' withAll: array ]
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> fieldSelect: record with: field [
 	^ ViennaNode label: 'FieldSelect' with: record with: field
@@ -142,7 +162,7 @@ ViennaVDMParser >> fieldSelect: record with: field [
 
 { #category : #'parsers-expressions-threads' }
 ViennaVDMParser >> finExpression [
-	^ super finExpression ==> [ :array | ViennaNode label: 'FinExpression' with: array ]
+	^ super finExpression ==> [ :nameNode | ViennaNode label: 'FinExpression' with: nameNode ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -307,7 +327,7 @@ ViennaVDMParser >> mapComprehension [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMParser >> mapEnumeration [
-	^ super mapEnumeration ==> [ :array | ViennaNode label: 'MapEnumeration' with: array ]
+	^ super mapEnumeration ==> [ :array | ViennaNode label: 'MapEnumeration' withAll: array ]
 ]
 
 { #category : #'parsers-patterns' }
@@ -323,6 +343,16 @@ ViennaVDMParser >> mapMunionPattern [
 { #category : #'parsers-types' }
 ViennaVDMParser >> mapType [
 	^ super mapType ==> [ :array | ViennaNode label: 'MapType' withAll: array ]
+]
+
+{ #category : #'parsers-expressions-basics' }
+ViennaVDMParser >> maplet [
+	^ super maplet ==> [ :array | ViennaNode label: 'Maplet' withAll: array ]
+]
+
+{ #category : #'parsers-patterns' }
+ViennaVDMParser >> mapletPattern [
+	^ super mapletPattern ==> [ :array | ViennaNode label: 'MapletPattern' withAll: array ]
 ]
 
 { #category : #'parsers-patterns' }
@@ -436,7 +466,7 @@ ViennaVDMParser >> patternIdentifier [
 
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> patternList [
-	^ super patternList ==> [ :array | ViennaNode label: 'PatternList' with: array ]
+	^ super patternList ==> [ :array | ViennaNode label: 'PatternList' withAll: array ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -451,7 +481,7 @@ ViennaVDMParser >> power: arg [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMParser >> preconditionExpression [
-	^ super preconditionExpression ==> [ :array | ViennaNode label: 'PreconditionExpression' with: array ]
+	^ super preconditionExpression ==> [ :array | ViennaNode label: 'PreconditionExpression' withAll: array ]
 ]
 
 { #category : #'parsers-types' }
@@ -486,7 +516,7 @@ ViennaVDMParser >> rem: arg1 and: arg2 [
 
 { #category : #'parsers-expressions-threads' }
 ViennaVDMParser >> reqExpression [
-	^ super reqExpression ==> [ :array | ViennaNode label: 'ReqExpression' with: array ]
+	^ super reqExpression ==> [ :nameNode | ViennaNode label: 'ReqExpression' with: nameNode ]
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -620,12 +650,12 @@ ViennaVDMParser >> totalFunctionType [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMParser >> tupleConstructor [
-	^ super tupleConstructor ==> [ :array | ViennaNode label: 'TupleConstructor' with: array ]
+	^ super tupleConstructor ==> [ :array | ViennaNode label: 'TupleConstructor' with: (ViennaNode label: 'ExpressionList' withAll: array) ]
 ]
 
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> tuplePattern [
-	^ super tuplePattern ==> [ :array | ViennaNode label: 'TuplePattern' with: array ]
+	^ super tuplePattern ==> [ :array | ViennaNode label: 'TuplePattern' with: (ViennaNode label: 'PatternList' withAll: array) ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -685,5 +715,5 @@ ViennaVDMParser >> valueDefinition [
 
 { #category : #'parsers-expressions-threads' }
 ViennaVDMParser >> waitingExpression [
-	^ super waitingExpression ==> [ :array | ViennaNode label: 'WaitingExpression' with: array ]
+	^ super waitingExpression ==> [ :nameNode | ViennaNode label: 'WaitingExpression' with: nameNode ]
 ]

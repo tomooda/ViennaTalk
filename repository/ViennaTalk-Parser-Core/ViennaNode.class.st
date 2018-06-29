@@ -74,6 +74,16 @@ ViennaNode class >> label: aString withAll: anArray [
 	^ node
 ]
 
+{ #category : #enumerating }
+ViennaNode >> collect: aBlock [
+	^ (1 to: self size) collect: [ :index | aBlock value: (self at: index) ]
+]
+
+{ #category : #enumerating }
+ViennaNode >> do: aBlock [
+	1 to: self size do: [ :index | aBlock value: (self at: index) ]
+]
+
 { #category : #accessing }
 ViennaNode >> label [
 	^ label
@@ -81,20 +91,24 @@ ViennaNode >> label [
 
 { #category : #printing }
 ViennaNode >> printOn: aStream [
+	| substrings |
 	aStream
+		nextPut: $(;
 		nextPutAll: label asString;
-		nextPut: $(.
-	(1 to: self size)
-		do: [ :index | 
-			| child |
-			child := self at: index.
-			child isArray
-				ifTrue: [ 
-					aStream nextPut: $(.
-					child do: [ :ast | ast printOn: aStream ] separatedBy: [ aStream nextPut: Character cr ].
-					aStream nextPut: $) ]
-				ifFalse: [ child printOn: aStream ] ]
-		separatedBy: [ aStream nextPutAll: ', ' ].
+		nextPut: Character space.
+	substrings := self collect: #printString.
+	((substrings contains: [ :string | string includes: Character cr ]) or: [ (substrings collect: #size) sum > 50 ])
+		ifTrue: [ 
+			substrings
+				do: [ :string | 
+					aStream nextPut: Character cr.
+					string lines
+						do: [ :line | 
+							aStream
+								nextPutAll: '  ';
+								nextPutAll: line ]
+						separatedBy: [ aStream nextPut: Character cr ] ] ]
+		ifFalse: [ substrings do: [ :string | aStream nextPutAll: string ] separatedBy: [ aStream nextPut: Character space ] ].
 	aStream nextPut: $)
 ]
 

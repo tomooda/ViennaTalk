@@ -4,6 +4,7 @@ Class {
 	#instVars : [
 		'expression',
 		'expressionExceptEquality',
+		'expressionList',
 		'letExpression',
 		'letBeExpression',
 		'defExpression',
@@ -63,6 +64,7 @@ Class {
 		'multipleSetBind',
 		'multipleTypeBind',
 		'patternList',
+		'optionalPatternList',
 		'patternBind',
 		'bind',
 		'bindList',
@@ -78,12 +80,12 @@ Class {
 		'amp',
 		'colon',
 		'semicolon',
-		'maplet',
 		'eq',
 		'bar',
 		'prefix',
 		'keyword',
-		'char'
+		'char',
+		'mapletArrow'
 	],
 	#category : 'ViennaTalk-Parser-Core'
 }
@@ -157,7 +159,7 @@ ViennaVDMGrammar >> booleanLiteral [
 ViennaVDMGrammar >> buildApplicatorParserOn: anExpressionParser [
 	| applyArgs subsequenceArgs functionTypeInstantiationArgs fieldSelector tupleSelector actions |
 	applyArgs := (lparen
-		, ((expression separatedBy: comma) withoutSeparators optional ==> [ :args | args ifNil: [ Array new ] ]) , rparen)
+		, (expressionList) , rparen)
 		==> [ :triple | 
 			{#apply.
 			(triple second)} ].
@@ -287,17 +289,35 @@ ViennaVDMGrammar >> casesExpression [
 	| others end |
 	others := self reserved: 'others'.
 	end := self reserved: 'end'.
-	^ (((self reserved: 'cases') , expression , colon) ==> #second
-		,
-			(((others / end) not and , patternList , (self operator: '->') , expression)
-				==> [ :quatro | 
-					{(quatro second).
-					(quatro fourth)} ] separatedBy: comma) withoutSeparators
+	^ (((self reserved: 'cases') , expression , colon) ==> #second , self casesExpressionAlternatives
 		, ((comma , others , (self operator: '->') , expression) ==> #fourth) optional , end)
 		==> [ :quatro | 
-			{(quatro first).
-			(quatro second).
-			(quatro third)} ]
+			| expr alternatives othersExpr |
+			expr := quatro first.
+			alternatives := quatro second.
+			othersExpr := quatro third.
+			{expr.
+			alternatives.
+			othersExpr} ]
+]
+
+{ #category : #'parsers-expressions-basics' }
+ViennaVDMGrammar >> casesExpressionAlternative [
+	| others end |
+	others := self reserved: 'others'.
+	end := self reserved: 'end'.
+	^ ((others / end) not and , patternList , (self operator: '->') , expression)
+		==> [ :quatro | 
+			| patlist expr |
+			patlist := quatro second.
+			expr := quatro fourth.
+			{patlist.
+			expr} ]
+]
+
+{ #category : #'parsers-expressions-basics' }
+ViennaVDMGrammar >> casesExpressionAlternatives [
+	^ (self casesExpressionAlternative separatedBy: comma) withoutSeparators
 ]
 
 { #category : #'parsers-literals' }
@@ -482,7 +502,7 @@ ViennaVDMGrammar >> explicitFunctionDefinition [
 		,
 			(((lbracket , (self typeVariableIdentifier separatedBy: comma) withoutSeparators , rbracket) ==> #second) optional
 				==> [ :vars | vars ifNil: [ Array new ] ]) , colon , (self partialFunctionType / self totalFunctionType) trim
-		, identifier , ((lparen , (patternList optional ==> [ :ps | ps ifNil: [ Array new ] ]) , rparen) ==> #second) plus
+		, identifier , ((lparen , (optionalPatternList) , rparen) ==> #second) plus
 		, (self operator: '==')
 		,
 			(expression / ((self reserved: 'is') , (self reserved: 'subclass') , (self reserved: 'responsibility'))
@@ -546,9 +566,27 @@ ViennaVDMGrammar >> expressionExceptEquality [
 	^ expressionParser
 ]
 
+{ #category : #'parsers-expressions-basics' }
+ViennaVDMGrammar >> expressionList [
+	^ (expression separatedBy: comma) withoutSeparators optional ==> [ :opt | opt ifNil: [ Array new ] ]
+]
+
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> extendedExplicitFunctionDefinition [
 	^ PPFailingParser new
+]
+
+{ #category : #'parsers-patterns' }
+ViennaVDMGrammar >> fieldPattern [
+	^ (identifier , mapletArrow , pattern)
+		==> [ :triple | 
+			{(triple first).
+			(triple third)} ]
+]
+
+{ #category : #'parsers-patterns' }
+ViennaVDMGrammar >> fieldPatternList [
+	^ (self fieldPattern separatedBy: comma) withoutSeparators optional ==> [ :single | single ifNil: [ Array new ] ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -569,7 +607,7 @@ ViennaVDMGrammar >> floor: arg [
 
 { #category : #'parsers-symbols' }
 ViennaVDMGrammar >> followingLetter [
-	^ PPPredicateObjectParser on: [ :char | ViennaUnicode isFollowingLetter: char ] message: 'identifier expected'
+	^ PPPredicateObjectParser on: [ :c | ViennaUnicode isFollowingLetter: c ] message: 'identifier expected'
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -628,9 +666,6 @@ ViennaVDMGrammar >> hexadecimalLiteral [
 ViennaVDMGrammar >> identifiedField [
 	^ (identifier , colon , type)
 		==> [ :triple | 
-			Transcript
-				cr;
-				show: triple printString.
 			{(triple first).
 			(triple third)} ]
 ]
@@ -685,7 +720,7 @@ ViennaVDMGrammar >> inds: arg [
 
 { #category : #'parsers-symbols' }
 ViennaVDMGrammar >> initialLetter [
-	^ PPPredicateObjectParser on: [ :char | ViennaUnicode isInitialLetter: char ] message: 'identifier expected'
+	^ PPPredicateObjectParser on: [ :c | ViennaUnicode isInitialLetter: c ] message: 'identifier expected'
 ]
 
 { #category : #'parsers-types' }
@@ -853,7 +888,7 @@ ViennaVDMGrammar >> map: arg1 rangeRestrictedTo: arg2 [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> mapComprehension [
-	^ (lbrace , expression , maplet , expression , bar , bindList , ((amp , expression) ==> #second) optional , rbrace)
+	^ (lbrace , expression , mapletArrow , expression , bar , bindList , ((amp , expression) ==> #second) optional , rbrace)
 		==> [ :array | 
 			{(array second).
 			(array fourth).
@@ -863,25 +898,14 @@ ViennaVDMGrammar >> mapComprehension [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> mapEnumeration [
-	^ (lbrace
-		,
-			((maplet ==> [ :single | Array new ])
-				/
-					((expression , maplet , expression)
-						==> [ :triple | 
-							{(triple first).
-							(triple third)} ] separatedBy: comma) withoutSeparators) , rbrace) ==> #second
+	^ (lbrace , ((mapletArrow ==> [ :single | Array new ]) / (self maplet separatedBy: comma) withoutSeparators) , rbrace)
+		==> #second
 ]
 
 { #category : #'parsers-patterns' }
 ViennaVDMGrammar >> mapEnumerationPattern [
-	| mapletPattern |
-	mapletPattern := (pattern , maplet , pattern)
-		==> [ :triple | 
-			{(triple first).
-			(triple third)} ].
-	^ (lbrace , ((maplet ==> [ :single | Array new ]) / (mapletPattern separatedBy: comma) withoutSeparators) , rbrace)
-		==> #second
+	^ (lbrace , ((mapletArrow ==> [ :single | Array new ]) / (self mapletPattern separatedBy: comma) withoutSeparators)
+		, rbrace) ==> #second
 ]
 
 { #category : #'parsers-patterns' }
@@ -900,9 +924,25 @@ ViennaVDMGrammar >> mapType [
 			(quatro fourth)} ]
 ]
 
-{ #category : #'parsers-symbols' }
+{ #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> maplet [
+	^ (expression , mapletArrow , expression)
+		==> [ :triple | 
+			{(triple first).
+			(triple third)} ]
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> mapletArrow [
 	^ self operator: '|->'
+]
+
+{ #category : #'parsers-patterns' }
+ViennaVDMGrammar >> mapletPattern [
+	^ (pattern , mapletArrow , pattern)
+		==> [ :triple | 
+			{(triple first).
+			(triple third)} ]
 ]
 
 { #category : #'parsers-patterns' }
@@ -1033,14 +1073,7 @@ ViennaVDMGrammar >> numericLiteral [
 
 { #category : #'parsers-patterns' }
 ViennaVDMGrammar >> objectPattern [
-	| fieldPattern |
-	fieldPattern := (identifier , maplet , pattern)
-		==> [ :triple | 
-			{(triple first).
-			(triple third)} ].
-	^ ('obj_' asParser , identifier , lparen
-		, ((fieldPattern separatedBy: comma) withoutSeparators optional ==> [ :single | single ifNil: [ Array new ] ])
-		, rparen)
+	^ ('obj_' asParser , identifier , lparen , self fieldPatternList , rparen)
 		==> [ :quin | 
 			{(quin second).
 			(quin fourth)} ]
@@ -1054,6 +1087,11 @@ ViennaVDMGrammar >> oldName [
 { #category : #utilities }
 ViennaVDMGrammar >> operator: aStringOrCharacterOrParser [
 	^ aStringOrCharacterOrParser asParser trim
+]
+
+{ #category : #'parsers-patterns' }
+ViennaVDMGrammar >> optionalPatternList [
+	^ (pattern separatedBy: comma) withoutSeparators optional ==> [ :opt | opt ifNil: [ Array new ] ]
 ]
 
 { #category : #'parsers-types' }
@@ -1174,8 +1212,7 @@ ViennaVDMGrammar >> rbracket [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> recordConstructor [
-	^ ('mk_' asParser , name , lparen
-		, ((expression separatedBy: comma) withoutSeparators optional ==> [ :args | args ifNil: [ Array new ] ]) , rparen)
+	^ ('mk_' asParser , name , lparen , expressionList , rparen)
 		==> [ :array | 
 			{(array second).
 			(array fourth)} ]
@@ -1185,7 +1222,7 @@ ViennaVDMGrammar >> recordConstructor [
 ViennaVDMGrammar >> recordModifier [
 	^ ((self reserved: 'mu') , lparen , expression , comma
 		,
-			((identifier , maplet , expression)
+			((identifier , mapletArrow , expression)
 				==> [ :triple | 
 					{(triple first).
 					(triple third)} ] separatedBy: comma) withoutSeparators , rparen)
@@ -1275,8 +1312,7 @@ ViennaVDMGrammar >> seqConcPattern [
 
 { #category : #'parsers-patterns' }
 ViennaVDMGrammar >> seqEnumPattern [
-	^ (lbracket , ((pattern separatedBy: comma) withoutSeparators optional ==> [ :single | single ifNil: [ Array new ] ])
-		, rbracket) ==> #second
+	^ (lbracket , optionalPatternList , rbracket) ==> #second
 ]
 
 { #category : #'parsers-types' }
@@ -1295,8 +1331,7 @@ ViennaVDMGrammar >> sequenceComprehension [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> sequenceEnumeration [
-	^ (lbracket , ((expression separatedBy: comma) withoutSeparators optional ==> [ :opt | opt ifNil: [ Array new ] ])
-		, rbracket) ==> #second
+	^ (lbracket , expressionList , rbracket) ==> #second
 ]
 
 { #category : #'parsers-patterns' }
@@ -1318,14 +1353,12 @@ ViennaVDMGrammar >> setComprehension [
 
 { #category : #'parsers-patterns' }
 ViennaVDMGrammar >> setEnumPattern [
-	^ (lbrace , ((pattern separatedBy: comma) withoutSeparators optional ==> [ :single | single ifNil: [ Array new ] ])
-		, rbrace) ==> #second
+	^ (lbrace , optionalPatternList , rbrace) ==> #second
 ]
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> setEnumeration [
-	^ (lbrace , ((expression separatedBy: comma) withoutSeparators optional ==> [ :opt | opt ifNil: [ Array new ] ])
-		, rbrace) ==> #second
+	^ (lbrace , expressionList , rbrace) ==> #second
 ]
 
 { #category : #'parsers-expressions-basics' }
