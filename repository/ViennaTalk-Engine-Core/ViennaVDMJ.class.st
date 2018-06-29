@@ -10,6 +10,7 @@ Class {
 	],
 	#classVars : [
 		'GlobalLock',
+		'RandomGenerator',
 		'Registry'
 	],
 	#category : 'ViennaTalk-Engine-Core'
@@ -255,6 +256,11 @@ ViennaVDMJ class >> proceed: aText title: aString [
 						extent: (dialog textMorph width + 100) @ 600;
 						yourself) ].
 	^ (UIManager default openModal: dialog) cancelled not
+]
+
+{ #category : #utilities }
+ViennaVDMJ class >> random [
+	^ RandomGenerator ifNil: [ RandomGenerator := Random new ]
 ]
 
 { #category : #registry }
@@ -558,6 +564,11 @@ ViennaVDMJ >> print: aString ifError: errorBlock [
 		ifError: errorBlock
 ]
 
+{ #category : #private }
+ViennaVDMJ >> random [
+	^ self class random
+]
+
 { #category : #communicating }
 ViennaVDMJ >> send: aString responseDo: aBlock ifError: errorBlock [
 	| semaphore response readerProcess |
@@ -649,7 +660,7 @@ ViennaVDMJ >> statesDo: aBlock ifError: errorBlock [
 { #category : #private }
 ViennaVDMJ >> temporaryFileDo: aBlock [
 	| random file stream |
-	random := Random new.
+	random := self random.
 	self
 		globalLock: [ 
 			[ 
