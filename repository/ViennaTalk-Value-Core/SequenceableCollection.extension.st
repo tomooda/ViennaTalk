@@ -13,6 +13,11 @@ SequenceableCollection >> isSequence [
 ]
 
 { #category : #'*ViennaTalk-Value-Core' }
+SequenceableCollection >> subsequenceFrom: anInteger1 to: anInteger2 [
+	^ self copyFrom: (1 max: anInteger1) to: (anInteger2 min: self size)
+]
+
+{ #category : #'*ViennaTalk-Value-Core' }
 SequenceableCollection >> tail [
 	^ self ifEmpty: [ SubscriptOutOfBounds signal ] ifNotEmpty: [ self copyFrom: 2 to: self size ]
 ]
