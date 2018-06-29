@@ -1,5 +1,5 @@
 Class {
-	#name : #ViennaUndefined,
+	#name : #ViennaNoMatch,
 	#superclass : #Error,
 	#category : 'ViennaTalk-Value-Core'
 }

@@ -58,7 +58,7 @@ ViennaReader >> parseCompositeOn: aStream [
 			^ specials
 				at: typeName asSymbol
 				ifPresent: [ :block | block valueWithArguments: args ]
-				ifAbsent: [ ViennaComposite type: typeName withAll: args ] ]
+				ifAbsent: [ ViennaComposite constructorName: typeName withAll: args ] ]
 ]
 
 { #category : #parsing }
