@@ -9,6 +9,13 @@ Class {
 	#category : 'ViennaTalk-Type-Core'
 }
 
+{ #category : #'instance creation' }
+ViennaTotalFunctionType class >> from: anArrayOfViennaType to: aViennaType [
+	^ self new
+		setArgtypes: anArrayOfViennaType returntype: aViennaType;
+		yourself
+]
+
 { #category : #accessing }
 ViennaTotalFunctionType class >> precedence [
 	^ 4

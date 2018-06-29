@@ -8,6 +8,13 @@ Class {
 	#category : 'ViennaTalk-Type-Core'
 }
 
+{ #category : #'instance creation' }
+ViennaSetType class >> of: aViennaType [
+	^ self new
+		setBasetype: aViennaType;
+		yourself
+]
+
 { #category : #accessing }
 ViennaSetType class >> precedence [
 	^ 5
