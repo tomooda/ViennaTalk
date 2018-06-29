@@ -21,7 +21,14 @@ Class {
 }
 
 { #category : #'instance creation' }
+ViennaBrowser class >> on: aVDMC [
+	^ self new vdmc: aVDMC
+]
+
+{ #category : #'instance creation' }
 ViennaBrowser class >> open [
+	"ViennaBrowser open"
+
 	^ self openOn: VDMC vdmj
 ]
 
@@ -32,9 +39,7 @@ ViennaBrowser class >> openOn: aVDMC [
 
 { #category : #'instance creation' }
 ViennaBrowser class >> openOn: aVDMC withLabel: label [
-	^ self new
-		vdmc: aVDMC;
-		openLabel: label
+	^ (self on: aVDMC) openLabel: label
 ]
 
 { #category : #'value pane' }
@@ -219,8 +224,8 @@ ViennaBrowser >> build [
 	lower addLazyPage: codePane label: 'Specification'.
 	lower addLazyPage: workspacePane label: 'Workspace'.
 	lower selectedPageIndex: 1.
-	pane addMorph: upper fullFrame: ((0 @ 0 corner: 1 @ 0.5) asLayoutFrame bottomRightOffset: 0 @ -2).
-	pane addMorph: lower fullFrame: ((0 @ 0.5 corner: 1 @ 1) asLayoutFrame topLeftOffset: 0 @ 2).
+	pane addMorph: upper fullFrame: ((0 @ 0 corner: 1 @ 0.4) asLayoutFrame bottomRightOffset: 0 @ -2).
+	pane addMorph: lower fullFrame: ((0 @ 0.4 corner: 1 @ 1) asLayoutFrame topLeftOffset: 0 @ 2).
 	pane addPaneSplitters.
 	^ pane
 ]
@@ -294,7 +299,7 @@ ViennaBrowser >> code [
 	section := ((self modulePositionsFrom: vdmc specification)
 		detect: [ :assoc | assoc key = module ]
 		ifNone: [ ^ self specificationTemplate ]) value.
-	^ vdmc specification copyFrom: section first to: section last
+	^ (vdmc specification copyFrom: section first to: section last) asText makeAllColor: Color black
 ]
 
 { #category : #'code pane menu' }
@@ -337,14 +342,7 @@ ViennaBrowser >> codePaneMenu: aMenu shifted: aBoolean [
 			#cancel}.
 			#-.
 			{('save contents to file...' translated).
-			#saveContentsInFile}.
-			#-.
-			{('set font... (k)' translated).
-			#offerFontMenu}.
-			{('set style... (K)' translated).
-			#changeStyle}.
-			{('set alignment... (u)' translated).
-			#chooseAlignment}}.
+			#saveContentsInFile}}.
 	^ aMenu
 ]
 
@@ -666,7 +664,7 @@ operations
 	pre <precondition>
 	post <postcondition>;
 end <module name>
-'
+' asText makeAllColor: Color gray
 ]
 
 { #category : #updating }
@@ -719,44 +717,42 @@ ViennaBrowser >> valuePaneDoIt [
 
 { #category : #'value pane menu' }
 ViennaBrowser >> valuePaneMenu: aMenu shifted: aBoolean [
-	aMenu addList: (aBoolean = true 
-		ifTrue:[{
+	aMenu
+		addList:
+			{{('find...(f)' translated).
+			#find}.
+			{('find again (g)' translated).
+			#findAgain}.
+			{('set search string (h)' translated).
+			#setSearchString}.
 			#-.
-			{'save contents to file...' translated.		#saveContentsInFile}.
-			{'send contents to printer' translated.		#sendContentsToPrinter}.
-			{'printer setup' translated.				#printerSetup}.
+			{('do again (j)' translated).
+			#again}.
+			{('undo (z)' translated).
+			#undo}.
 			#-.
-		}.]
-		ifFalse:[{
-			{'set font... (k)' translated.				#offerFontMenu}.
-			{'set style... (K)' translated.				#changeStyle}.
-			{'set alignment... (u)' translated.		#chooseAlignment}.
+			{('copy (c)' translated).
+			#copySelection}.
+			{('cut (x)' translated).
+			#cut}.
+			{('paste (v)' translated).
+			#paste}.
+			{('paste...' translated).
+			#pasteRecent}.
 			#-.
-			{'make project link (P)' translated.	#makeProjectLink}.
+			{('do it (d)' translated).
+			#valuePaneDoIt}.
+			{('print it (p)' translated).
+			#valuePanePrintIt}.
 			#-.
-			{'find...(f)' translated.					#find}.
-			{'find again (g)' translated.				#findAgain}.
-			{'set search string (h)' translated.		#setSearchString}.
+			{('accept (s)' translated).
+			#valuePaneAccept}.
+			{('cancel (l)' translated).
+			#valuePaneCancel}.
 			#-.
-			{'do again (j)' translated.				#again}.
-			{'undo (z)' translated.					#undo}.
-			#-.
-			{'copy (c)' translated.					#copySelection}.
-			{'cut (x)' translated.						#cut}.
-			{'paste (v)' translated.					#paste}.
-			{'paste...' translated.					#pasteRecent}.
-			#-.
-			{'do it (d)' translated.		#valuePaneDoIt}.			     
-			{'print it (p)' translated.		#valuePanePrintIt}.
-			#-.
-			{'accept (s)' translated.					#valuePaneAccept}.
-			{'cancel (l)' translated.					#valuePaneCancel}.
-			#-.
-			{'copy html' translated.					#copyHtml}.
-			#-.
-			{'more...' translated.					#shiftedTextPaneMenuRequest}.
-		}]).
-	^aMenu
+			{('save contents to file...' translated).
+			#saveContentsInFile}}.
+	^ aMenu
 ]
 
 { #category : #'value pane menu' }
@@ -803,44 +799,42 @@ ViennaBrowser >> workspacePaneDoIt [
 
 { #category : #'workspace pane menu' }
 ViennaBrowser >> workspacePaneMenu: aMenu shifted: aBoolean [
-	aMenu addList: (aBoolean = true 
-		ifTrue:[{
+	aMenu
+		addList:
+			{{('find...(f)' translated).
+			#find}.
+			{('find again (g)' translated).
+			#findAgain}.
+			{('set search string (h)' translated).
+			#setSearchString}.
 			#-.
-			{'save contents to file...' translated.		#saveContentsInFile}.
-			{'send contents to printer' translated.		#sendContentsToPrinter}.
-			{'printer setup' translated.				#printerSetup}.
+			{('do again (j)' translated).
+			#again}.
+			{('undo (z)' translated).
+			#undo}.
 			#-.
-		}.]
-		ifFalse:[{
-			{'set font... (k)' translated.				#offerFontMenu}.
-			{'set style... (K)' translated.				#changeStyle}.
-			{'set alignment... (u)' translated.		#chooseAlignment}.
+			{('copy (c)' translated).
+			#copySelection}.
+			{('cut (x)' translated).
+			#cut}.
+			{('paste (v)' translated).
+			#paste}.
+			{('paste...' translated).
+			#pasteRecent}.
 			#-.
-			{'make project link (P)' translated.	#makeProjectLink}.
+			{('do it (d)' translated).
+			#workspacePaneDoIt}.
+			{('print it (p)' translated).
+			#workspacePanePrintIt}.
 			#-.
-			{'find...(f)' translated.					#find}.
-			{'find again (g)' translated.				#findAgain}.
-			{'set search string (h)' translated.		#setSearchString}.
+			{('accept (s)' translated).
+			#workspaceAccept}.
+			{('cancel (l)' translated).
+			#workspaceCancel}.
 			#-.
-			{'do again (j)' translated.				#again}.
-			{'undo (z)' translated.					#undo}.
-			#-.
-			{'copy (c)' translated.					#copySelection}.
-			{'cut (x)' translated.						#cut}.
-			{'paste (v)' translated.					#paste}.
-			{'paste...' translated.					#pasteRecent}.
-			#-.
-			{'do it (d)' translated.		#workspacePaneDoIt}.			     
-			{'print it (p)' translated.		#workspacePanePrintIt}.
-			#-.
-			{'accept (s)' translated.					#workspaceAccept}.
-			{'cancel (l)' translated.					#workspaceCancel}.
-			#-.
-			{'copy html' translated.					#copyHtml}.
-			#-.
-			{'more...' translated.					#shiftedTextPaneMenuRequest}.
-		}]).
-	^aMenu
+			{('copy html' translated).
+			#copyHtml}}.
+	^ aMenu
 ]
 
 { #category : #'workspace pane menu' }

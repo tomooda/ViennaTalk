@@ -69,6 +69,15 @@ ViennaEditor >> doIt: aKeyboardEvent [
 	^ true
 ]
 
+{ #category : #'typing support' }
+ViennaEditor >> openTypeIn [
+	"Set up startOfTyping to keep track of the leftmost backspace.
+	 You can't undo typing until after closeTypeIn."
+
+	self applyAttribute: TextColor black.
+	^ super openTypeIn
+]
+
 { #category : #'do-its' }
 ViennaEditor >> printIt [
 	^ self viennaTextMorph ifNil: [ false ] ifNotNil: [ :textMorph | model printItIn: textMorph ]
@@ -82,7 +91,6 @@ ViennaEditor >> printIt: aKeyboardEvent [
 
 { #category : #'editing keys' }
 ViennaEditor >> save: aKeyboardEvent [
-self halt.
 	self closeTypeIn.
 	self accept.
 	^ true
