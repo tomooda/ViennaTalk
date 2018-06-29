@@ -90,15 +90,16 @@ ViennaVDM2SmalltalkClass >> createDocumentClassWithInstVars: anArrayOfString1 st
 		make: [ :builder | 
 			builder
 				name: documentClassName asSymbol;
-				superclass: Object;
+				superclass: ViennaTranspiledObject;
 				slots:
-						(anArrayOfString1 asArray collect: [ :instVarName | InstanceVariableSlot named: instVarName asSymbol ])
-								,
-									(anArrayOfString2 asArray
-										collect: [ :instVarName | 
-											(runtimeAssertionCheck = true
-												ifTrue: [ ViennaStateSlot ]
-												ifFalse: [ InstanceVariableSlot ]) named: instVarName asSymbol ]);
+					(anArrayOfString1 asArray
+						collect: [ :instVarName | InstanceVariableSlot named: instVarName asSymbol ])
+						,
+							(anArrayOfString2 asArray
+								collect: [ :instVarName | 
+									(runtimeAssertionCheck = true
+										ifTrue: [ ViennaStateSlot ]
+										ifFalse: [ InstanceVariableSlot ]) named: instVarName asSymbol ]);
 				category: 'Auto Generated from VDM' ]
 ]
 
@@ -115,20 +116,23 @@ ViennaVDM2SmalltalkClass >> createModuleClassWithInstVars: anArrayOfString forMo
 ViennaVDM2SmalltalkClass >> createModuleClassWithInstVars: anArrayOfString1 stateVars: anArrayOfString2 forModule: aString env: aDictionary [
 	| className |
 	className := aDictionary at: aString ifAbsent: [ aString ].
-	^ PharoClassInstaller
+	^ (PharoClassInstaller
 		make: [ :builder | 
-			builder
-				name: className asSymbol;
-				superclass: Object;
-				slots:
-						(anArrayOfString1 asArray collect: [ :instVarName | InstanceVariableSlot named: instVarName asSymbol ])
-								,
-									(anArrayOfString2 asArray
-										collect: [ :instVarName | 
-											(runtimeAssertionCheck = true
-												ifTrue: [ ViennaStateSlot ]
-												ifFalse: [ InstanceVariableSlot ]) named: instVarName asSymbol ]);
-				category: 'Auto Generated from VDM' ]
+	builder
+		name: className asSymbol;
+		superclass: ViennaTranspiledObject;
+		slots:
+			(anArrayOfString1 asArray
+				collect: [ :instVarName | InstanceVariableSlot named: instVarName asSymbol ])
+				,
+					(anArrayOfString2 asArray
+						collect: [ :instVarName | 
+							(runtimeAssertionCheck = true
+								ifTrue: [ ViennaStateSlot ]
+								ifFalse: [ InstanceVariableSlot ]) named: instVarName asSymbol ]);
+		category: 'Auto Generated from VDM' ])
+		viennaEnv: aDictionary;
+		yourself
 ]
 
 { #category : #utilities }
@@ -670,6 +674,7 @@ ViennaVDM2SmalltalkClass >> flatDocument: aViennaNode env: aDictionary [
 		protocol: 'initialize-release'.
 	(newClass includesSelector: #init)
 		ifFalse: [ self defineMethod: 'init' in: newClass protocol: 'state' ].
+	newClass viennaEnv: env.
 	^ newClass
 ]
 
@@ -937,6 +942,7 @@ ViennaVDM2SmalltalkClass >> modularDocument: aViennaNode env: aDictionary [
 		protocol: 'initialize-release'.
 	moduleNames
 		do: [ :moduleName | self defineMethod: moduleName , ' ^' , moduleName uncapitalized in: documentClass protocol: 'accessing' ].
+	documentClass viennaEnv: aDictionary.
 	^ documentClass
 ]
 
@@ -1018,8 +1024,8 @@ ViennaVDM2SmalltalkClass >> recordTypeDefinition: aViennaNode env: aDictionary [
 		, (' . ' join: fieldList) , '}'.
 	(self generate: aViennaNode third env: aDictionary)
 		ifNotNil: [ :inv | type := '(' , type , ') inv: ' , inv ].
-	initializer := identifier , ' := ViennaTypeHolder new. ' , identifier , ' type: (' , type
-		, '). ' , identifier.
+	initializer := identifier , ' := ViennaTypeHolder new. ' , identifier , ' type: ('
+		, type , ')'.
 	theClass := classes at: (aViennaNode module ifNotNil: #first).
 	self
 		defineLazyMethodNamed: identifier
