@@ -183,7 +183,7 @@ ViennaLauncher >> initialize [
 			icon: nil
 			help: 'ViennaTalk developers'' utilities'
 			subMenu: devMenu.
-		tools do: [ :morph | dock addMorphBack: morph ].
+	tools do: [ :morph | dock addMorphBack: morph ].
 	image := self newImage: self viennaLogo.
 	extent := image extent + (4 @ (dock minExtent y + 32)).
 	self
