@@ -573,7 +573,7 @@ ViennaVDMJ >> random [
 ViennaVDMJ >> send: aString responseDo: aBlock ifError: errorBlock [
 	| semaphore response readerProcess |
 	(reader next: 1024) ifNotEmpty: [:str | Transcript cr; show: str].
-	writer nextPutAll: (aString convertToEncoding: 'utf-8').
+	writer nextPutAll: ((aString copyReplaceAll: String lf with: '\n') convertToEncoding: 'utf-8').
 	writer nextPut: Character lf.
 	writer flush.
 	semaphore := Semaphore new.
