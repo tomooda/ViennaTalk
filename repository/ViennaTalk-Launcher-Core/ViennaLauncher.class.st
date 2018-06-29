@@ -2,10 +2,21 @@ Class {
 	#name : #ViennaLauncher,
 	#superclass : #StandardWindow,
 	#classVars : [
-		'Current'
+		'Current',
+		'Font'
 	],
 	#category : 'ViennaTalk-Launcher-Core'
 }
+
+{ #category : #settings }
+ViennaLauncher class >> chooseFont [
+	FreeTypeFontProvider current updateFromSystem.
+	FontChooser
+		openWithWindowTitle: 'Choose Font for VDM source...'
+		for: self
+		setSelector: #font:
+		getSelector: #font
+]
 
 { #category : #'user interface' }
 ViennaLauncher class >> close [
@@ -18,6 +29,26 @@ ViennaLauncher class >> close [
 { #category : #accessing }
 ViennaLauncher class >> current [
 	^ Current ifNil: [ Current := self new ]
+]
+
+{ #category : #settings }
+ViennaLauncher class >> font [
+	^ Font ifNil: [ Font := StandardFonts codeFont ]
+]
+
+{ #category : #settings }
+ViennaLauncher class >> font: aFont [
+	Font := aFont
+]
+
+{ #category : #settings }
+ViennaLauncher class >> fontFamilyName [
+	^ self font familyName
+]
+
+{ #category : #settings }
+ViennaLauncher class >> fontSize [
+	^ self font pointSize
 ]
 
 { #category : #'class initialization' }
@@ -58,6 +89,18 @@ ViennaLauncher class >> viennaLogo [
 				readStream
 ]
 
+{ #category : #settings }
+ViennaLauncher class >> viennaSettingsOn: aBuilder [
+	<systemsettings>
+	(aBuilder group: #ViennaTalk)
+		label: 'ViennaTalk';
+		with: [ 
+					(aBuilder setting: #font)
+						target: self;
+						description: 'The default font for VDM sources';
+						label: 'Font' ]
+]
+
 { #category : #menu }
 ViennaLauncher class >> worldMenuOn: aBuilder [
 	<worldMenu>
@@ -90,6 +133,8 @@ ViennaLauncher >> initialize [
 	self title: self defaultTitle.
 	toolsMenu := self newMenu
 		addAllFromPragma: #ViennaToolsMenu target: self;
+		addLine;
+		add: 'settings...' target: self selector: #showSettingBrowser;
 		addLine;
 		add: 'reopen' target: self selector: #reopen;
 		add: 'close' target: self selector: #close;
@@ -144,6 +189,15 @@ ViennaLauncher >> openInWorld [
 { #category : #'interface opening' }
 ViennaLauncher >> reopen [
 	^ self class reopen
+]
+
+{ #category : #'menu operations' }
+ViennaLauncher >> showSettingBrowser [
+	SettingBrowser new
+		changePackageSet:
+				{(RPackageOrganizer default packageNamed: #'ViennaTalk-Launcher-Core').
+					(RPackageOrganizer default packageNamed: #'Network-Kernel')};
+		open
 ]
 
 { #category : #resources }
