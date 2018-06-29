@@ -261,6 +261,7 @@ ViennaBrowser >> buildCodePane [
 		readSelection: #codeSelection
 		menu: #codePaneMenu:shifted:
 		setSelection: #codeSelection:)
+		setBalloonText: 'VDM specification';
 		askBeforeDiscardingEdits: true;
 		yourself
 ]
@@ -308,6 +309,7 @@ ViennaBrowser >> buildWorkspacePane [
 		readSelection: #workspaceSelection
 		menu: #workspacePaneMenu:shifted:
 		setSelection: #workspaceSelection:)
+		setBalloonText: 'workspace';
 		askBeforeDiscardingEdits: true;
 		yourself
 ]
