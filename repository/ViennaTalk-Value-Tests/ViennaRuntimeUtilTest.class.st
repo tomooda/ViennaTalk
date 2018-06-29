@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #'tests-matching-sequence' }
-ViennaRuntimeUtilTest >> testMatchConc1 [
+ViennaRuntimeUtilTest >> testMatchConc [
 	self
 		assert:
 			((ViennaRuntimeUtil
@@ -26,6 +26,52 @@ ViennaRuntimeUtilTest >> testMatchConc2 [
 				match: (ViennaRuntimeUtil matchSequenceEnumeration: {(ViennaRuntimeUtil matchIdentifier: 'head')})
 				conc: (ViennaRuntimeUtil matchIdentifier: 'head')) value: #(1 2 3 4) asOrderedCollection)
 		equals: {}
+]
+
+{ #category : #'tests-matching-sequence' }
+ViennaRuntimeUtilTest >> testMatchConcLeft [
+	self
+		assert:
+			((ViennaRuntimeUtil
+				match: (ViennaRuntimeUtil matchSequenceEnumeration: {(ViennaRuntimeUtil matchIdentifier: 'head')})
+				conc: (ViennaRuntimeUtil matchIdentifier: 'tail')
+				left: 1) value: #(1 2 3 4) asOrderedCollection)
+		equals:
+			{(Dictionary new
+				at: 'head' put: 1;
+				at: 'tail' put: #(2 3 4) asOrderedCollection;
+				yourself)}
+]
+
+{ #category : #'tests-matching-sequence' }
+ViennaRuntimeUtilTest >> testMatchConcLeftRight [
+	self
+		assert:
+			((ViennaRuntimeUtil
+				match: (ViennaRuntimeUtil matchSequenceEnumeration: {(ViennaRuntimeUtil matchIdentifier: 'head')})
+				conc: (ViennaRuntimeUtil matchIdentifier: 'tail')
+				left: 1
+				right: 3) value: #(1 2 3 4) asOrderedCollection)
+		equals:
+			{(Dictionary new
+				at: 'head' put: 1;
+				at: 'tail' put: #(2 3 4) asOrderedCollection;
+				yourself)}
+]
+
+{ #category : #'tests-matching-sequence' }
+ViennaRuntimeUtilTest >> testMatchConcRight [
+	self
+		assert:
+			((ViennaRuntimeUtil
+				match: (ViennaRuntimeUtil matchSequenceEnumeration: {(ViennaRuntimeUtil matchIdentifier: 'head')})
+				conc: (ViennaRuntimeUtil matchIdentifier: 'tail')
+				right: 3) value: #(1 2 3 4) asOrderedCollection)
+		equals:
+			{(Dictionary new
+				at: 'head' put: 1;
+				at: 'tail' put: #(2 3 4) asOrderedCollection;
+				yourself)}
 ]
 
 { #category : #'tests-matching-basic' }
@@ -154,7 +200,7 @@ ViennaRuntimeUtilTest >> testMatchMapEnumeration6 [
 ]
 
 { #category : #'tests-matching-map' }
-ViennaRuntimeUtilTest >> testMatchMunion1 [
+ViennaRuntimeUtilTest >> testMatchMunion [
 	self
 		assert:
 			((ViennaRuntimeUtil
@@ -256,6 +302,91 @@ ViennaRuntimeUtilTest >> testMatchMunion3 [
 						at: 2 put: 3;
 						yourself))
 		equals: {}
+]
+
+{ #category : #'tests-matching-map' }
+ViennaRuntimeUtilTest >> testMatchMunionLeft [
+	self
+		assert:
+			((ViennaRuntimeUtil
+				match:
+					(ViennaRuntimeUtil
+						matchMapEnumeration:
+							{{(ViennaRuntimeUtil matchIdentifier: 'key').
+							(ViennaRuntimeUtil matchValue: 2)}})
+				munion: (ViennaRuntimeUtil matchIdentifier: 'rest')
+				left: 1)
+				value:
+					(Dictionary new
+						at: 1 put: 2;
+						at: 2 put: 3;
+						yourself))
+		equals:
+			{(Dictionary new
+				at: 'key' put: 1;
+				at: 'rest'
+					put:
+						(Dictionary new
+								at: 2 put: 3;
+								yourself);
+				yourself)}
+]
+
+{ #category : #'tests-matching-map' }
+ViennaRuntimeUtilTest >> testMatchMunionLeftRight [
+	self
+		assert:
+			((ViennaRuntimeUtil
+				match:
+					(ViennaRuntimeUtil
+						matchMapEnumeration:
+							{{(ViennaRuntimeUtil matchIdentifier: 'key').
+							(ViennaRuntimeUtil matchValue: 2)}})
+				munion: (ViennaRuntimeUtil matchIdentifier: 'rest')
+				left: 1
+				right: 1)
+				value:
+					(Dictionary new
+						at: 1 put: 2;
+						at: 2 put: 3;
+						yourself))
+		equals:
+			{(Dictionary new
+				at: 'key' put: 1;
+				at: 'rest'
+					put:
+						(Dictionary new
+								at: 2 put: 3;
+								yourself);
+				yourself)}
+]
+
+{ #category : #'tests-matching-map' }
+ViennaRuntimeUtilTest >> testMatchMunionRight [
+	self
+		assert:
+			((ViennaRuntimeUtil
+				match:
+					(ViennaRuntimeUtil
+						matchMapEnumeration:
+							{{(ViennaRuntimeUtil matchIdentifier: 'key').
+							(ViennaRuntimeUtil matchValue: 2)}})
+				munion: (ViennaRuntimeUtil matchIdentifier: 'rest')
+				right: 1)
+				value:
+					(Dictionary new
+						at: 1 put: 2;
+						at: 2 put: 3;
+						yourself))
+		equals:
+			{(Dictionary new
+				at: 'key' put: 1;
+				at: 'rest'
+					put:
+						(Dictionary new
+								at: 2 put: 3;
+								yourself);
+				yourself)}
 ]
 
 { #category : #'tests-matching-record' }
@@ -651,7 +782,7 @@ ViennaRuntimeUtilTest >> testMatchTuple6 [
 ]
 
 { #category : #'tests-matching-set' }
-ViennaRuntimeUtilTest >> testMatchUnion1 [
+ViennaRuntimeUtilTest >> testMatchUnion [
 	self
 		assert:
 			((ViennaRuntimeUtil
@@ -715,6 +846,88 @@ ViennaRuntimeUtilTest >> testMatchUnion5 [
 		assert:
 			((ViennaRuntimeUtil match: (ViennaRuntimeUtil matchIdentifier: 'set1') union: (ViennaRuntimeUtil matchIdentifier: 'set2')) value: #() asSet)
 		equals: {}
+]
+
+{ #category : #'tests-matching-set' }
+ViennaRuntimeUtilTest >> testMatchUnionLeft [
+	self
+		assert:
+			((ViennaRuntimeUtil
+				match:
+					(ViennaRuntimeUtil
+						matchSetEnumeration:
+							{(ViennaRuntimeUtil matchIdentifier: 'member1').
+							(ViennaRuntimeUtil matchValue: 3)})
+				union:
+					(ViennaRuntimeUtil
+						matchSetEnumeration:
+							{(ViennaRuntimeUtil matchIdentifier: 'member2').
+							(ViennaRuntimeUtil matchValue: 4)})
+				left: 2) value: #(1 2 3 4) asSet) asSet
+		equals:
+			{(Dictionary new
+				at: 'member1' put: 1;
+				at: 'member2' put: 2;
+				yourself).
+			(Dictionary new
+				at: 'member1' put: 2;
+				at: 'member2' put: 1;
+				yourself)} asSet
+]
+
+{ #category : #'tests-matching-set' }
+ViennaRuntimeUtilTest >> testMatchUnionLeftRight [
+	self
+		assert:
+			((ViennaRuntimeUtil
+				match:
+					(ViennaRuntimeUtil
+						matchSetEnumeration:
+							{(ViennaRuntimeUtil matchIdentifier: 'member1').
+							(ViennaRuntimeUtil matchValue: 3)})
+				union:
+					(ViennaRuntimeUtil
+						matchSetEnumeration:
+							{(ViennaRuntimeUtil matchIdentifier: 'member2').
+							(ViennaRuntimeUtil matchValue: 4)})
+				left: 2
+				right: 2) value: #(1 2 3 4) asSet) asSet
+		equals:
+			{(Dictionary new
+				at: 'member1' put: 1;
+				at: 'member2' put: 2;
+				yourself).
+			(Dictionary new
+				at: 'member1' put: 2;
+				at: 'member2' put: 1;
+				yourself)} asSet
+]
+
+{ #category : #'tests-matching-set' }
+ViennaRuntimeUtilTest >> testMatchUnionRight [
+	self
+		assert:
+			((ViennaRuntimeUtil
+				match:
+					(ViennaRuntimeUtil
+						matchSetEnumeration:
+							{(ViennaRuntimeUtil matchIdentifier: 'member1').
+							(ViennaRuntimeUtil matchValue: 3)})
+				union:
+					(ViennaRuntimeUtil
+						matchSetEnumeration:
+							{(ViennaRuntimeUtil matchIdentifier: 'member2').
+							(ViennaRuntimeUtil matchValue: 4)})
+				right: 2) value: #(1 2 3 4) asSet) asSet
+		equals:
+			{(Dictionary new
+				at: 'member1' put: 1;
+				at: 'member2' put: 2;
+				yourself).
+			(Dictionary new
+				at: 'member1' put: 2;
+				at: 'member2' put: 1;
+				yourself)} asSet
 ]
 
 { #category : #'tests-matching-basic' }
