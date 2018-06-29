@@ -29,7 +29,7 @@ ViennaRuntimeUtil class >> match: aBlock1 conc: aBlock2 [
 			Array
 				new: 16
 				streamContents: [ :stream | 
-					1 to: value size - 1 do: [ :index | 
+					0 to: value size do: [ :index | 
 						| seq1 seq2 |
 						seq1 := value copyFrom: 1 to: index.
 						seq2 := value copyFrom: index + 1 to: value size.
@@ -51,7 +51,7 @@ ViennaRuntimeUtil class >> match: aBlock1 munion: aBlock2 [
 				new: 16
 				streamContents: [ :stream | 
 					self
-						nonEmptyPowersetOf: value keys asArray
+						powersetOf: value keys asArray
 						withComplementsDo: [ :keys1 :keys2 | 
 							| dict1 dict2 |
 							dict1 := Dictionary new: keys1 size.
@@ -76,7 +76,7 @@ ViennaRuntimeUtil class >> match: aBlock1 union: aBlock2 [
 				new: 16
 				streamContents: [ :stream | 
 					self
-						nonEmptyPowersetOf: value asArray
+						powersetOf: value asArray
 						withComplementsDo: [ :union1 :union2 | 
 							(aBlock1 value: union1 asSet)
 								ifNotEmpty: [ :bindings1 | 
