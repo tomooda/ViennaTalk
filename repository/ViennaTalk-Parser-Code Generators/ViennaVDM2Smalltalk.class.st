@@ -2086,7 +2086,7 @@ ViennaVDM2Smalltalk >> lessThanOrEqual: aViennaNode env: aDictionary [
 ViennaVDM2Smalltalk >> letBeExpression: aViennaNode env: aDictionary [
 	| multibind guard expr varGenerator |
 	multibind := self generate: aViennaNode first env: aDictionary.
-	guard := self generate: aViennaNode second env: aDictionary.
+	guard := (self generate: aViennaNode second env: aDictionary) ifNil: [ 'true' ].
 	expr := self generate: aViennaNode third env: aDictionary.
 	varGenerator := self varNameGenerator: 'letbe' uniqueIn: (Array with: multibind second with: guard with: expr).
 	^ String
@@ -2124,7 +2124,7 @@ ViennaVDM2Smalltalk >> letBeExpression: aViennaNode env: aDictionary [
 ViennaVDM2Smalltalk >> letBeStatement: aViennaNode env: aDictionary [
 	| multibind guard statement varGenerator |
 	multibind := self generate: aViennaNode first env: aDictionary.
-	guard := self generate: aViennaNode second env: aDictionary.
+	guard := (self generate: aViennaNode second env: aDictionary) ifNil: ['true'].
 	statement := self generate: aViennaNode third env: aDictionary.
 	varGenerator := self varNameGenerator: 'letbe' uniqueIn: (Array with: multibind second with: guard with: statement).
 	^ String
