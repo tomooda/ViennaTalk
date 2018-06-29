@@ -232,7 +232,7 @@ ViennaVDMGrammar >> buildEvaluatorParserOn: anExpressionParser [
 						left: (self reserved: 'inter') do: [ :arg1 :op :arg2 | self inter: arg1 and: arg2 ] ];
 		group: [ :p1 | 
 					p1
-						left: (self operator: $+) do: [ :arg1 :op :arg2 | self plus: arg1 and: arg2 ];
+						left: (self operator: $+) , $+ asParser not do: [ :arg1 :op :arg2 | self plus: arg1 and: arg2 ];
 						left: (self operator: $-) do: [ :arg1 :op :arg2 | self minus: arg1 and: arg2 ];
 						left: (self reserved: 'union') do: [ :arg1 :op :arg2 | self union: arg1 and: arg2 ];
 						left: (self operator: $\) do: [ :arg1 :op :arg2 | self diff: arg1 and: arg2 ];
