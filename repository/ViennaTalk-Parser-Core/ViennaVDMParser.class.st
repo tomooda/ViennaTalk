@@ -357,7 +357,7 @@ ViennaVDMParser >> forallExpression [
 { #category : #parsing }
 ViennaVDMParser >> format: aString [
 	| ast |
-	ast := self parse: aString.
+	ast := self document end / self statement end / self expression end parse: aString.
 	^ ast isPetitFailure
 		ifTrue: [ ast ]
 		ifFalse: [ 
@@ -792,6 +792,11 @@ ViennaVDMParser >> moduleBody [
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> mul: arg1 and: arg2 [
 	^ ViennaNode label: 'ArithmeticMultiplication' with: arg1 with: arg2
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDMParser >> multipleAssignStatement [
+	^ super multipleAssignStatement ==> [ :array | ViennaNode label: 'MultipleAssignStatement' withAll: array ]
 ]
 
 { #category : #'parsers-patterns' }

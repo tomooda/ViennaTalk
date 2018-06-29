@@ -205,7 +205,7 @@ ViennaVDMGrammar >> assignmentDefinition [
 			| ident varType initialValue |
 			ident := quatro first.
 			varType := quatro third.
-			initialValue := quatro fourth second.
+			initialValue := quatro fourth ifNotNil: #second.
 			{ident.
 			varType.
 			initialValue} ]

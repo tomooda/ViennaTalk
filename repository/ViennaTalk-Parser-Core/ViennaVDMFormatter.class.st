@@ -1292,6 +1292,17 @@ ViennaVDMFormatter >> moduleBody: aViennaNode [
 	^ 'definitions' , String cr , (String cr join: definitionBlocks)
 ]
 
+{ #category : #'formatting-statements' }
+ViennaVDMFormatter >> multipleAssignStatement: aViennaNode [
+	| statements |
+	statements := self formatAll: aViennaNode.
+	^ 'atomic('
+		,
+			((self anyNeedsIndent: statements)
+				ifTrue: [ ';' , String cr , indent join: (statements collect: [ :statement | self indentString: statement ]) ]
+				ifFalse: [ '; ' join: statements ]) , ')'
+]
+
 { #category : #'formatting-patterns and binds' }
 ViennaVDMFormatter >> multipleSetBind: aViennaNode [
 	^ self print: (self format: aViennaNode first) infix: 'in set' arg: (self format: aViennaNode second)
