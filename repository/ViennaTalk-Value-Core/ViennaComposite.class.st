@@ -110,6 +110,16 @@ ViennaComposite >> copyAt: anIntegerOrString put: anObject [
 		yourself
 ]
 
+{ #category : #accessing }
+ViennaComposite >> copyAtPath: anArrayOfKey put: anObject [
+	| copy |
+	copy := self copy.
+	anArrayOfKey size = 1
+		ifTrue: [ copy at: anArrayOfKey first put: anObject ]
+		ifFalse: [ (copy at: anArrayOfKey first) copyAtPath: anArrayOfKey tail put: anObject ].
+	^ copy
+]
+
 { #category : #'accessing-field types' }
 ViennaComposite >> equalityAbstractionFieldNameAt: anInteger put: aString [
 	namedFields at: aString put: anInteger.

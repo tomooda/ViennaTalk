@@ -1,6 +1,24 @@
 Extension { #name : #Collection }
 
 { #category : #'*ViennaTalk-Value-Core' }
+Collection >> copyAt: anInteger put: anObject [
+	| copy |
+	copy := self copy.
+	copy at: anInteger put: anObject.
+	^ copy
+]
+
+{ #category : #'*ViennaTalk-Value-Core' }
+Collection >> copyAtPath: anArrayOfKey put: anObject [
+	| copy |
+	copy := self copy.
+	anArrayOfKey size = 1
+		ifTrue: [ copy at: anArrayOfKey first put: anObject ]
+		ifFalse: [ (copy at: anArrayOfKey first) copyAtPath: anArrayOfKey tail put: anObject ].
+	^ copy
+]
+
+{ #category : #'*ViennaTalk-Value-Core' }
 Collection >> onlyOneSatisfy: aBlock [
 	"Evaluate aBlock with the elements of the receiver.
 	If aBlock returns true for the only one element return true.
