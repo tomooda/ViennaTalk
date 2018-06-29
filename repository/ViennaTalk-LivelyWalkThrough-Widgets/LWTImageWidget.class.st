@@ -24,6 +24,11 @@ LWTImageWidget >> changeImage [
 		ifNotNil: [ :filename | self value: filename asString ]
 ]
 
+{ #category : #defaults }
+LWTImageWidget >> defaultExtent [
+	^ 200 @ 200
+]
+
 { #category : #drawing }
 LWTImageWidget >> drawOn: aCanvas [
 	form
@@ -45,12 +50,6 @@ LWTImageWidget >> drawOn: aCanvas [
 								ifFalse: [ scale x asFloat ]))
 				at: self position ].
 	super drawOn: aCanvas
-]
-
-{ #category : #'initialize-release' }
-LWTImageWidget >> initialize [
-	super initialize.
-	self extent: 200 @ 200
 ]
 
 { #category : #menu }

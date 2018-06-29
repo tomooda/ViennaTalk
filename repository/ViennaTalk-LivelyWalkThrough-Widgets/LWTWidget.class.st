@@ -55,6 +55,11 @@ LWTWidget >> changeNameFont [
 ]
 
 { #category : #defaults }
+LWTWidget >> defaultExtent [
+	^ self subclassResponsibility
+]
+
+{ #category : #defaults }
 LWTWidget >> defaultMoveable [
 	^ true
 ]
@@ -202,7 +207,8 @@ LWTWidget >> initialize [
 	super initialize.
 	moveable := self defaultMoveable.
 	showsName := self defaultShowsName.
-	frozen := false
+	frozen := false.
+	self extent: self defaultExtent
 ]
 
 { #category : #private }

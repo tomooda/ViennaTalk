@@ -129,6 +129,11 @@ LWTMouseSensor >> defaultColor [
 	^ Color transparent
 ]
 
+{ #category : #defaults }
+LWTMouseSensor >> defaultExtent [
+	^ 100 @ 100
+]
+
 { #category : #'event handling' }
 LWTMouseSensor >> doubleClick: aMouseEvent [
 	point := aMouseEvent position.
