@@ -91,6 +91,11 @@ ViennaType class >> seqOf: aViennaType [
 ]
 
 { #category : #'instance creation' }
+ViennaType class >> set1Of: aViennaType [
+	^ ViennaSet1Type with: aViennaType
+]
+
+{ #category : #'instance creation' }
 ViennaType class >> setOf: aViennaType [
 	^ ViennaSetType with: aViennaType
 ]
@@ -291,6 +296,11 @@ ViennaType >> seq1 [
 { #category : #arithmetic }
 ViennaType >> set [
 	^ ViennaSetType with: self
+]
+
+{ #category : #arithmetic }
+ViennaType >> set1 [
+	^ ViennaSet1Type with: self
 ]
 
 { #category : #arithmetic }
