@@ -40,6 +40,11 @@ WeblyWalkThrough class >> installHandler [
 	self server delegate: self current
 ]
 
+{ #category : #testing }
+WeblyWalkThrough class >> isPublished [
+	^ self current isPublished
+]
+
 { #category : #servicing }
 WeblyWalkThrough class >> server [
 	^ Server

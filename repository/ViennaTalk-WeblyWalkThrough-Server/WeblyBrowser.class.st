@@ -14,12 +14,11 @@ Class {
 WeblyBrowser class >> WeblyBrowserMenuOn: aBuilder [
 	<worldMenu>
 	(aBuilder item: #'Webly WalkThrough')
+		parent: #ViennaTalk;
+		order: 0.3;
 		action: [ self open ];
-		order: 0.482;
-		parent: #Tools;
-		help: 'Webly Walk-Through';
-		icon: nil.
-	aBuilder withSeparatorAfter
+		help: 'open Webly Walk-Through';
+		icon: nil
 ]
 
 { #category : #defaults }
@@ -32,6 +31,16 @@ WeblyBrowser class >> open [
 	"WeblyBrowser open"
 
 	^ self openOn: WeblyWalkThrough current
+]
+
+{ #category : #menus }
+WeblyBrowser class >> viennaToolsMenuOn: aBuilder [
+	<ViennaTools>
+	(aBuilder item: #'Webly WalkThrough')
+		order: 0.3;
+		action: [ self open ];
+		help: 'open Webly Walk-Through';
+		icon: nil
 ]
 
 { #category : #'translation pane' }
