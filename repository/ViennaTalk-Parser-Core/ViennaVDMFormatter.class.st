@@ -383,7 +383,7 @@ ViennaVDMFormatter >> defaultMaxSizePerLine [
 
 { #category : #'formatting-definitions' }
 ViennaVDMFormatter >> definitionBlock: aViennaNode [
-	^ self format: aViennaNode first
+	^ (self format: aViennaNode first) , String cr
 ]
 
 { #category : #'formatting-expressions' }
