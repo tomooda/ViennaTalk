@@ -552,12 +552,12 @@ ViennaVDMGrammarTest >> testFunctionExport [
 
 { #category : #'tests-interfaces' }
 ViennaVDMGrammarTest >> testFunctionImport [
-	self assert: (grammar functionImport end parse: 'f') equals: #('f' nil nil).
-	self assert: (grammar functionImport end parse: 'f[@t]: @t -> @t') equals: #('f' #(#('@t') #('@t' '@t')) nil).
-	self assert: (grammar functionImport end parse: 'f1 renamed f2') equals: #('f1' nil 'f2').
+	self assert: (grammar functionImport end parse: 'f') equals: #('f' nil nil nil).
+	self assert: (grammar functionImport end parse: 'f[@t]: @t -> @t') equals: #('f' #('@t') #('@t' '@t') nil).
+	self assert: (grammar functionImport end parse: 'f1 renamed f2') equals: #('f1' nil nil 'f2').
 	self
 		assert: (grammar functionImport end parse: 'f1[@t]: @t -> @t renamed f2')
-		equals: #('f1' #(#('@t') #('@t' '@t')) 'f2')
+		equals: #('f1' #('@t') #('@t' '@t') 'f2')
 ]
 
 { #category : #'tests-interfaces' }
@@ -663,7 +663,7 @@ ViennaVDMGrammarTest >> testIfStatement [
 ViennaVDMGrammarTest >> testImportDefinition [
 	self
 		assert: (grammar importDefinition end parse: 'from m values v1; v2 functions f ; values v')
-		equals: #('m' #(#(#('v1' nil nil) #('v2' nil nil)) #(#('f' nil nil)) #(#('v' nil nil)))).
+		equals: #('m' #(#(#('v1' nil nil) #('v2' nil nil)) #(#('f' nil nil nil)) #(#('v' nil nil)))).
 	self assert: (grammar importDefinition end parse: 'from m all') equals: #('m' 'all')
 ]
 
@@ -671,21 +671,21 @@ ViennaVDMGrammarTest >> testImportDefinition [
 ViennaVDMGrammarTest >> testImportDefinitionList [
 	self
 		assert: (grammar importDefinitionList end parse: 'imports from m1 values v1; v2 functions f ; values v, from m2 all')
-		equals: #(#('m1' #(#(#('v1' nil nil) #('v2' nil nil)) #(#('f' nil nil)) #(#('v' nil nil)))) #('m2' 'all'))
+		equals: #(#('m1' #(#(#('v1' nil nil) #('v2' nil nil)) #(#('f' nil nil nil)) #(#('v' nil nil)))) #('m2' 'all'))
 ]
 
 { #category : #'tests-interfaces' }
 ViennaVDMGrammarTest >> testImportFunctionsSignature [
 	self
 		assert: (grammar importFunctionsSignature end parse: 'functions f1; f2 renamed f3')
-		equals: #(#('f1' nil nil) #('f2' nil 'f3'))
+		equals: #(#('f1' nil nil nil) #('f2' nil nil 'f3'))
 ]
 
 { #category : #'tests-interfaces' }
 ViennaVDMGrammarTest >> testImportModuleSignature [
 	self
 		assert: (grammar importModuleSignature end parse: 'values v1; v2 functions f ; values v')
-		equals: #(#(#('v1' nil nil) #('v2' nil nil)) #(#('f' nil nil)) #(#('v' nil nil))).
+		equals: #(#(#('v1' nil nil) #('v2' nil nil)) #(#('f' nil nil nil)) #(#('v' nil nil))).
 	self assert: (grammar importModuleSignature end parse: 'all') equals: 'all'
 ]
 
@@ -699,7 +699,7 @@ ViennaVDMGrammarTest >> testImportOperationsSignature [
 { #category : #'tests-interfaces' }
 ViennaVDMGrammarTest >> testImportSignature [
 	self assert: (grammar importSignature end parse: 'values v1; v2;') equals: #(#('v1' nil nil) #('v2' nil nil)).
-	self assert: (grammar importSignature end parse: 'functions f') equals: #(#('f' nil nil))
+	self assert: (grammar importSignature end parse: 'functions f') equals: #(#('f' nil nil nil))
 ]
 
 { #category : #'tests-interfaces' }
@@ -741,7 +741,8 @@ ViennaVDMGrammarTest >> testInmapType3 [
 ViennaVDMGrammarTest >> testInterface [
 	self
 		assert: (grammar interface end parse: 'imports from m1 values v1; v2 functions f ; values v, from m2 all exports all')
-		equals: #(#(#('m1' #(#(#('v1' nil nil) #('v2' nil nil)) #(#('f' nil nil)) #(#('v' nil nil)))) #('m2' 'all')) 'all').
+		equals:
+			#(#(#('m1' #(#(#('v1' nil nil) #('v2' nil nil)) #(#('f' nil nil nil)) #(#('v' nil nil)))) #('m2' 'all')) 'all').
 	self assert: (grammar interface end parse: 'exports values v1:t1') equals: #(nil #(#(#(#('v1') 't1'))))
 ]
 
@@ -1807,6 +1808,6 @@ ViennaVDMGrammarTest >> testWhileLoop [
 ViennaVDMGrammarTest >> testimportDefinition [
 	self
 		assert: (grammar importDefinition end parse: 'from m values v1; v2 functions f ; values v')
-		equals: #('m' #(#(#('v1' nil nil) #('v2' nil nil)) #(#('f' nil nil)) #(#('v' nil nil)))).
+		equals: #('m' #(#(#('v1' nil nil) #('v2' nil nil)) #(#('f' nil nil nil)) #(#('v' nil nil)))).
 	self assert: (grammar importDefinition end parse: 'from m all') equals: #('m' 'all')
 ]
