@@ -35,8 +35,18 @@ LivelyWalkThrough class >> fileOpen: title extensions: exts path: path preview: 
 
 { #category : #'class initialization' }
 LivelyWalkThrough class >> initialize [
-	super initialize.
+	self installEventHandlers.
 	Smalltalk at: #ViennaLauncher ifPresent: [ :launcherClass | launcherClass reopen ]
+]
+
+{ #category : #'class initialization' }
+LivelyWalkThrough class >> installEventHandlers [
+	ExternalDropHandler
+		registerHandler:
+			(ExternalDropHandler
+				type: nil
+				extension: 'lwt'
+				action: [ :stream :pasteUp :event | LivelyWalkThrough openDefault director loadStream: stream ])
 ]
 
 { #category : #'world menu' }
@@ -56,6 +66,11 @@ LivelyWalkThrough class >> on: aLWTDirector [
 ]
 
 { #category : #'instance creation' }
+LivelyWalkThrough class >> openDefault [
+	^ self default open
+]
+
+{ #category : #'instance creation' }
 LivelyWalkThrough class >> openVDMJ [
 	^ self vdmj open
 ]
@@ -71,7 +86,7 @@ LivelyWalkThrough class >> vdmj [
 LivelyWalkThrough class >> viennaToolsMenuOn: aBuilder [
 	<ViennaToolsMenu>
 	(aBuilder item: #'Lively WalkThrough')
-		action: [ self openVDMJ ];
+		action: [ self openDefault ];
 		order: 0.2;
 		help: 'Lively Walk-Through, a UI prototyping environment using VDM-SL';
 		icon: nil

@@ -261,15 +261,21 @@ LWTDirector >> load [
 	(LivelyWalkThrough
 		fileOpen: (self urlPrefix ifEmpty: [ 'Lively Walk-Through' ])
 		extensions: #('lwt')
-		path: (filepath ifNil: [ FileSystem workingDirectory parent parent ]) 
+		path: (filepath ifNil: [ FileSystem workingDirectory parent parent ])
 		preview: nil)
 		ifNotNil: [ :reference | 
 			filepath := reference.
 			filepath
 				readStreamDo: [ :stream | 
-					[ self fromJsonObject: (NeoJSONReader on: stream) next ]
+					self loadStream: stream ] ]
+]
+
+{ #category : #operations }
+LWTDirector >> loadStream: aStream [
+	
+					[ self fromJsonObject: (NeoJSONReader on: aStream) next ]
 						on: Error
-						do: [ :ex | UIManager alert: 'Can not load ' , filepath pathString ] ] ]
+						do: [ :ex | UIManager alert: 'Can not load ' , filepath pathString ] 
 ]
 
 { #category : #'accessing-morphs' }
