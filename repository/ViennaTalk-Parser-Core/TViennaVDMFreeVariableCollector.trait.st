@@ -103,6 +103,13 @@ TViennaVDMFreeVariableCollector >> freeVariablesExistsExpression: aViennaNode bo
 	self freeVariables: expressionBody boundVars: binds into: freeVars
 ]
 
+{ #category : #'free variables-definitions' }
+TViennaVDMFreeVariableCollector >> freeVariablesField: aViennaNode boundVars: boundVars into: freeVars [
+	| type |
+	type := aViennaNode third.
+	self freeVariables: type boundVars: boundVars into: freeVars
+]
+
 { #category : #'free variables-statements' }
 TViennaVDMFreeVariableCollector >> freeVariablesFieldReference: aViennaNode boundVars: boundVars into: freeVars [
 	self freeVariables: aViennaNode first boundVars: boundVars into: freeVars
@@ -130,6 +137,16 @@ TViennaVDMFreeVariableCollector >> freeVariablesIndexForLoop: aViennaNode boundV
 	binds := boundVars copy.
 	self boundVariables: aViennaNode into: binds.
 	aViennaNode do: [ :node | self freeVariables: node boundVars: binds into: freeVars ]
+]
+
+{ #category : #'free variables-definitions' }
+TViennaVDMFreeVariableCollector >> freeVariablesInvariantInitialFunction: aViennaNode boundVars: boundVars into: freeVars [
+	| pattern expression binds |
+	pattern := aViennaNode first.
+	expression := aViennaNode second.
+	binds := boundVars copy.
+	self boundVariables: pattern into: binds.
+	self freeVariables: expression boundVars: binds into: freeVars
 ]
 
 { #category : #'free variables-expressions' }
@@ -238,6 +255,18 @@ TViennaVDMFreeVariableCollector >> freeVariablesRecordModifier: aViennaNode boun
 			self freeVariables: valueExpression boundVars: boundVars into: freeVars ]
 ]
 
+{ #category : #'free variables-definitions' }
+TViennaVDMFreeVariableCollector >> freeVariablesRecordTypeDefinitions: aViennaNode boundVars: boundVars into: freeVars [
+	| binds identifier fieldList inv |
+	binds := boundVars copy.
+	identifier := aViennaNode first.
+	fieldList := aViennaNode second.
+	inv := aViennaNode third.
+	binds add: identifier.
+	self freeVariables: fieldList boundVars: binds into: freeVars.
+	self freeVariables: inv boundVars: binds into: freeVars
+]
+
 { #category : #'free variables-expressions' }
 TViennaVDMFreeVariableCollector >> freeVariablesSequenceComprehension: aViennaNode boundVars: boundVars into: freeVars [
 	| binds expression bindList guardExpression |
@@ -278,4 +307,12 @@ TViennaVDMFreeVariableCollector >> freeVariablesSetForLoop: aViennaNode boundVar
 	binds := boundVars copy.
 	self boundVariables: aViennaNode into: binds.
 	aViennaNode do: [ :node | self freeVariables: node boundVars: binds into: freeVars ]
+]
+
+{ #category : #'free variables-definitions' }
+TViennaVDMFreeVariableCollector >> freeVariablesStateDefinition: aViennaNode boundVars: boundVars into: aSet [
+	| binds |
+	binds := boundVars copy.
+	self boundVariables: aViennaNode into: binds.
+	aViennaNode do: [ :node | self freeVariables: node boundVars: binds into: aSet ]
 ]

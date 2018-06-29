@@ -19,6 +19,26 @@ ViennaVDM2Smalltalk class >> translateExplicitOperation: aString [
 	^ self new generate: (ViennaVDMParser new explicitOperationDefinition end parse: aString)
 ]
 
+{ #category : #'code generation-definitions' }
+ViennaVDM2Smalltalk >> accessFunctionDefinition: aViennaNode env: aDictionary [
+	^ self generate: aViennaNode second env: aDictionary
+]
+
+{ #category : #'code generation-definitions' }
+ViennaVDM2Smalltalk >> accessOperationDefinition: aViennaNode env: aDictionary [
+	^ self generate: aViennaNode second env: aDictionary
+]
+
+{ #category : #'code generation-definitions' }
+ViennaVDM2Smalltalk >> accessTypeDefinition: aViennaNode env: aDictionary [
+	^ self generate: aViennaNode second env: aDictionary
+]
+
+{ #category : #'code generation-definitions' }
+ViennaVDM2Smalltalk >> accessValueDefinition: aViennaNode env: aDictionary [
+	^ self generate: aViennaNode second env: aDictionary
+]
+
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> actExpression: aViennaNode env: aDictionary [
 	^ self notYetImplemented
@@ -387,6 +407,11 @@ ViennaVDM2Smalltalk >> closureFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode 
 				nextPutAll: ']' ]
 ]
 
+{ #category : #utilities }
+ViennaVDM2Smalltalk >> collectDefinitions: aViennaNode [
+	^ Array new: 32 streamContents: [ :stream | self definitions: aViennaNode do: [ :node | stream nextPut: node ] ]
+]
+
 { #category : #'code generation-types' }
 ViennaVDM2Smalltalk >> compositeType: aViennaNode env: aDictionary [
 	| constructorName fields |
@@ -440,6 +465,19 @@ ViennaVDM2Smalltalk >> defStatement: aViennaNode env: aDictionary [
 	^ '[|' , (' ' join: vars) , '|' , ('.' join: defs) , ' ifFalse: [ViennaNoMatch signal].' , statement , '] value'
 ]
 
+{ #category : #'code generation-definitions' }
+ViennaVDM2Smalltalk >> definitionBlock: aViennaNode env: aDictionary [
+	^ '.' , String cr join: (aViennaNode collect: [ :node | self generate: node env: aDictionary ])
+]
+
+{ #category : #utilities }
+ViennaVDM2Smalltalk >> definitions: aViennaNode do: aBlock [
+	(#('AccessFunctionDefinition' 'AccessOperationDefinition' 'AccessValueDefinition' 'AccessTypeDefinition' 'StateDefinition')
+		includes: aViennaNode label)
+		ifTrue: [ ^ aBlock value: aViennaNode ].
+	aViennaNode do: [ :node | self definitions: node do: aBlock ]
+]
+
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> distributedMapMerge: aViennaNode env: aDictionary [
 	^ '(' , (self generate: aViennaNode first env: aDictionary)
@@ -465,6 +503,26 @@ ViennaVDM2Smalltalk >> distributedSetUnion: aViennaNode env: aDictionary [
 	| arg |
 	arg := self generate: aViennaNode first env: aDictionary.
 	^ '(' , arg , ' inject: Set new into: [:union :set | union addAll: set; yourself])'
+]
+
+{ #category : #'code generation-definitions' }
+ViennaVDM2Smalltalk >> document: aViennaNode env: aDictionary [
+	| vars lazyDefs eagerDefs |
+	aViennaNode first label = 'DefinitionBlock'
+		ifFalse: [ ^ self error: 'This is not a flat spec.' ].
+	vars := self boundVariables: aViennaNode.
+	lazyDefs := OrderedCollection new.
+	eagerDefs := OrderedCollection new.
+	self
+		definitions: aViennaNode
+		do: [ :node | 
+			((#('AccessOperationDefinition' 'AccessFunctionDefinition') includes: node label)
+				ifTrue: [ lazyDefs ]
+				ifFalse: [ eagerDefs ]) add: node ].
+	^ '| ' , (' ' join: vars) , ' |' , String cr
+		,
+			('.' , String cr
+				join: (lazyDefs , (self reorderDefinitions: eagerDefs) collect: [ :node | self generate: node env: aDictionary ]))
 ]
 
 { #category : #'code generation-expressions' }
@@ -619,6 +677,14 @@ ViennaVDM2Smalltalk >> expressionList: aViennaNode env: aDictionary [
 	^ self generateAll: aViennaNode env: aDictionary
 ]
 
+{ #category : #'code generation-types' }
+ViennaVDM2Smalltalk >> fieldList: aViennaNode env: aDictionary [
+	^ aViennaNode
+		collect: [ :field | 
+			'{' , field first storeString , ' . ' , field second storeString , ' . ' , (self generate: field third env: aDictionary)
+				, '}' ]
+]
+
 { #category : #'code generation-patterns' }
 ViennaVDM2Smalltalk >> fieldPattern: aViennaNode env: aDictionary [
 	^ self notYetImplemented
@@ -680,7 +746,10 @@ ViennaVDM2Smalltalk >> flattenBindList: bindListNode varGenerator: varGenerator 
 						add:
 							{(typeOrSetNode label = 'SetRangeExpression'
 								ifTrue: [ '(' , (self intervalExpression: typeOrSetNode env: aDictionary) , ')' ]
-								ifFalse: [ self generate: typeOrSetNode env: aDictionary ]).
+								ifFalse: [ 
+									typeOrSetNode label = 'SequenceIndices'
+										ifTrue: [ '(' , (self indicesExpression: typeOrSetNode env: aDictionary) , ')' ]
+										ifFalse: [ self generate: typeOrSetNode env: aDictionary ] ]).
 							varName}.
 					multipleBindNode first
 						do: [ :patternNode | 
@@ -756,6 +825,11 @@ ViennaVDM2Smalltalk >> fromFlatBinds: patternsAndSets patternNodeAndSetOrTypeNod
 { #category : #'code generation-definitions' }
 ViennaVDM2Smalltalk >> functionDefinition: aViennaNode env: aDictionary [
 	^ self generate: aViennaNode first env: aDictionary
+]
+
+{ #category : #'code generation-definitions' }
+ViennaVDM2Smalltalk >> functionDefinitions: aViennaNode env: aDictionary [
+	^ '.' , String cr join: (aViennaNode collect: [ :node | self generate: node env: aDictionary ])
 ]
 
 { #category : #'code generation-expressions' }
@@ -988,6 +1062,24 @@ ViennaVDM2Smalltalk >> intervalExpression: aViennaNode env: aDictionary [
 	arg1 := self generate: aViennaNode first env: aDictionary.
 	arg2 := self generate: aViennaNode second env: aDictionary.
 	^ arg1 , ' to: ' , arg2
+]
+
+{ #category : #'code generation-types' }
+ViennaVDM2Smalltalk >> invariant: aViennaNode env: aDictionary [
+	^ self generate: aViennaNode first env: aDictionary
+]
+
+{ #category : #'code generation-types' }
+ViennaVDM2Smalltalk >> invariantInitialFunction: aViennaNode env: aDictionary [
+	| patternNode expression varGenerator |
+	patternNode := aViennaNode first.
+	expression := self generate: aViennaNode second env: aDictionary.
+	varGenerator := self varNameGenerator: 'inv' uniqueIn: {expression}.
+	^ self
+		closureFromFlatBinds: (Array with: (Array with: patternNode with: nil))
+		body: expression
+		varGenerator: varGenerator
+		env: aDictionary
 ]
 
 { #category : #'code generation-expressions' }
@@ -1500,6 +1592,16 @@ ViennaVDM2Smalltalk >> operationBody: aViennaNode env: aDictionary [
 	^ self generate: aViennaNode first env: aDictionary
 ]
 
+{ #category : #'code generation-definitions' }
+ViennaVDM2Smalltalk >> operationDefinition: aViennaNode env: aDictionary [
+	^ self generate: aViennaNode first env: aDictionary
+]
+
+{ #category : #'code generation-definitions' }
+ViennaVDM2Smalltalk >> operationDefinitions: aViennaNode env: aDictionary [
+	^ '.' , String cr join: (aViennaNode collect: [ :node | self generate: node env: aDictionary ])
+]
+
 { #category : #'code generation-types' }
 ViennaVDM2Smalltalk >> optionalType: aViennaNode env: aDictionary [
 	| baseType |
@@ -1612,15 +1714,15 @@ ViennaVDM2Smalltalk >> recordPattern: aViennaNode env: aDictionary [
 	^ '(ViennaRuntimeUtil matchRecord: ' , constructorName storeString , ' args: {' , (' . ' join: argPatterns) , '})'
 ]
 
-{ #category : #'code generation-types' }
+{ #category : #'code generation-definitions' }
 ViennaVDM2Smalltalk >> recordTypeDefinition: aViennaNode env: aDictionary [
-	| constructorName fields |
-	constructorName := self generate: aViennaNode first env: aDictionary.
-	fields := aViennaNode second
-		collect: [ :field | 
-			'{' , field first storeString , ' . ' , field second storeString , ' . ' , (self generate: field third env: aDictionary)
-				, '}' ].
-	^ '(ViennaType compose: ' , constructorName storeString , ' of: {' , (' . ' join: fields) , '})'
+	| identifier fieldList type |
+	identifier := aViennaNode first.
+	fieldList := self generate: aViennaNode second env: aDictionary.
+	type := 'ViennaCompositeType constructorName: ' , identifier storeString , ' withAll: {' , (' . ' join: fieldList)
+		, '}'.
+	(self generate: aViennaNode third env: aDictionary) ifNotNil: [ :inv | type := '(' , type , ') inv: ' , inv ].
+	^ identifier , ' := ' , type
 ]
 
 { #category : #private }
@@ -1966,6 +2068,52 @@ ViennaVDM2Smalltalk >> setUnionPattern: aViennaNode env: aDictionary [
 	^ '(ViennaRuntimeUtil match: ' , pat1 , ' union: ' , pat2 , ')'
 ]
 
+{ #category : #'code generation-definitions' }
+ViennaVDM2Smalltalk >> stateDefinition: aViennaNode env: aDictionary [
+	| constructor fieldListNode initNode vars vals recordNode initConstructor expressionListNode patternVar |
+	constructor := aViennaNode first.
+	fieldListNode := aViennaNode second.
+	initNode := aViennaNode fourth.
+	vars := fieldListNode collect: #first.
+	initNode ifNil: [ ^ self error: 'initalisation is required in state definition' ].
+	recordNode := initNode first second second.
+	initConstructor := recordNode first first.
+	expressionListNode := recordNode second.
+	initConstructor = constructor
+		ifFalse: [ ^ self error: 'Constructor must be the same name as state definition: ' , constructor , ', ' , initConstructor ].
+	vars size = expressionListNode size
+		ifFalse: [ 
+			^ self
+				error:
+					'Number of state variables and number of arguments must agree: ' , vars size printString , ', '
+						, expressionListNode size printString ].
+	vals := expressionListNode collect: [ :node | self generate: node env: aDictionary ].
+	^ String
+		new: 1024
+		streamContents: [ :stream | 
+			vars
+				with: vals
+				do: [ :var :val | 
+					stream
+						nextPutAll: var;
+						nextPutAll: ' := ';
+						nextPutAll: val;
+						nextPutAll: '.' , String cr ].
+			stream
+				nextPutAll: initConstructor;
+				nextPutAll: ' := ViennaCompositeType constructorName: ';
+				nextPutAll: initConstructor storeString;
+				nextPutAll: ' withAll: {';
+				nextPutAll: (' . ' join: (self generate: fieldListNode env: aDictionary));
+				nextPutAll: '}.' , String cr.
+			patternVar := initNode first first first.
+			stream
+				nextPutAll: 'init_';
+				nextPutAll: initConstructor;
+				nextPutAll: ' := ';
+				nextPutAll: (self generate: initNode first) ]
+]
+
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> subsequence: aViennaNode env: aDictionary [
 	| seq arg1 arg2 |
@@ -2041,6 +2189,21 @@ ViennaVDM2Smalltalk >> typeBindList: aViennaNode env: aDictionary [
 	^ self generateAll: aViennaNode env: aDictionary
 ]
 
+{ #category : #'code generation-definitions' }
+ViennaVDM2Smalltalk >> typeDefinition: aViennaNode env: aDictionary [
+	| identifier type inv |
+	identifier := aViennaNode first.
+	type := self generate: aViennaNode second env: aDictionary.
+	inv := (self generate: aViennaNode third env: aDictionary) ifNil: [ '' ] ifNotNil: [ :str | ' inv: ' , str ].
+	^ identifier , ' := ' , type , inv
+]
+
+{ #category : #'code generation-definitions' }
+ViennaVDM2Smalltalk >> typeDefinitions: aViennaNode env: aDictionary [
+	^ '.' , String cr
+		join: ((self reorderDefinitions: aViennaNode) collect: [ :node | self generate: node env: aDictionary ])
+]
+
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> typeJudgement: aViennaNode env: aDictionary [
 	| expr type |
@@ -2097,6 +2260,12 @@ ViennaVDM2Smalltalk >> valueDefinition: aViennaNode env: aDictionary [
 		ifFalse: [ 
 			binder := self binder: pattern with: body vars: (self boundVariables: aViennaNode first) asArray.
 			'(' , binder , '  ifFalse: [ViennaNoMatch signal])' ]
+]
+
+{ #category : #'code generation-definitions' }
+ViennaVDM2Smalltalk >> valueDefinitions: aViennaNode env: aDictionary [
+	^ '.' , String cr
+		join: ((self reorderDefinitions: aViennaNode) collect: [ :node | self generate: node env: aDictionary ])
 ]
 
 { #category : #utilities }
