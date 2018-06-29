@@ -23,12 +23,14 @@ ViennaVDM2SmalltalkObject >> createDocumentClassWithInstVars: anArrayOfString1 s
 ]
 
 { #category : #utilities }
-ViennaVDM2SmalltalkObject >> createModuleClassWithInstVars: anArrayOfString forModule: aString env: aDictionary [
+ViennaVDM2SmalltalkObject >> createModuleClassWithInstVars: anArrayOfString1 stateVars: anArrayOfString2 forModule: aString env: aDictionary [
 	^ AnonymousClassInstaller
 		make: [ :builder | 
 			builder
 				superclass: Object;
-				slots: (anArrayOfString asArray collect: [ :instVarName | InstanceVariableSlot named: instVarName asSymbol ]);
+				slots:
+						(anArrayOfString1 asArray collect: [ :instVarName | InstanceVariableSlot named: instVarName asSymbol ])
+								, (anArrayOfString2 asArray collect: [ :instVarName | ViennaStateSlot named: instVarName asSymbol ]);
 				category: 'Auto Generated from VDM' ]
 ]
 
