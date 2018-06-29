@@ -3,7 +3,7 @@ Class {
 	#superclass : #LWTWidget,
 	#instVars : [
 		'form',
-		'path'
+		'value'
 	],
 	#category : 'ViennaTalk-LivelyWalkThrough-Widgets'
 }
@@ -11,13 +11,28 @@ Class {
 { #category : #json }
 LWTImageWidget >> asJsonObject [
 	^ super asJsonObject
-		at: 'path' put: self path;
+		at: 'base64Form' put: self base64Form;
 		yourself
 ]
 
 { #category : #events }
 LWTImageWidget >> availableEventSelectors [
 	^ #(#changed #clicked #doubleClicked #entered #moved #left #up)
+]
+
+{ #category : #private }
+LWTImageWidget >> base64Form [
+	^ form
+		ifNotNil: [ 
+			(Base64MimeConverter
+				mimeEncode:
+					(ByteArray new: 1024 streamContents: [ :stream | PNGReadWriter putForm: form onStream: stream ]) readStream
+				multiLine: false) contents ]
+]
+
+{ #category : #private }
+LWTImageWidget >> base64Form: aString [
+	form := PNGReadWriter formFromStream: (Base64MimeConverter mimeDecodeToBytes: aString readStream)
 ]
 
 { #category : #accessing }
@@ -30,8 +45,12 @@ LWTImageWidget >> changeImage [
 	(LivelyWalkThrough
 		fileOpen: 'Select an image file'
 		extensions: #('png' 'jpg' 'jpeg')
-		path: path
-		preview: #image) ifNotNil: [ :filename | self value: filename fullName ]
+		path: nil
+		preview: #image)
+		ifNotNil: [ :filename | 
+			[ form := Form fromFileNamed: filename fullName ]
+				on: Error
+				do: [ :ex |  ] ]
 ]
 
 { #category : #'event handling' }
@@ -99,6 +118,12 @@ LWTImageWidget >> handleMouseUp: aMouseEvent [
 	self event: #up
 ]
 
+{ #category : #'initialize-release' }
+LWTImageWidget >> initialize [
+	super initialize.
+	value := String new
+]
+
 { #category : #menu }
 LWTImageWidget >> menu [
 	| menu |
@@ -112,18 +137,12 @@ LWTImageWidget >> menu [
 
 { #category : #operations }
 LWTImageWidget >> noImage [
-	self value: nil
-]
-
-{ #category : #accessing }
-LWTImageWidget >> path [
-	^ path
+	form := nil
 ]
 
 { #category : #private }
 LWTImageWidget >> path: aString [
-	path := aString.
-	form := [ ImageReadWriter formFromFileNamed: path ]
+	form := [ ImageReadWriter formFromFileNamed: aString ]
 		on: Error
 		do: [ :ex | nil ].
 	self changed
@@ -131,17 +150,14 @@ LWTImageWidget >> path: aString [
 
 { #category : #accessing }
 LWTImageWidget >> value [
-	^ path ifNil: [ String new ]
+	^ value
 ]
 
 { #category : #accessing }
 LWTImageWidget >> value: aString [
-	path ~= aString
+	value ~= aString
 		ifTrue: [ 
-			path := aString.
-			form := [ ImageReadWriter formFromFileNamed: path ]
-				on: Error
-				do: [ :ex | nil ].
+			value := aString.
 			self changed.
 			self event: #assigned.
 			self event: #changed ]

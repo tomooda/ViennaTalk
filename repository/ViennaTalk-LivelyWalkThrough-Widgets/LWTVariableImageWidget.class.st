@@ -3,9 +3,8 @@ Class {
 	#superclass : #LWTWidget,
 	#instVars : [
 		'form',
-		'path',
 		'value',
-		'map'
+		'forms'
 	],
 	#category : 'ViennaTalk-LivelyWalkThrough-Widgets'
 }
@@ -23,23 +22,22 @@ LWTVariableImageWidget >> addImage [
 	[ 
 	key := UIManager default request: 'Enter a value to map from'.
 	key ifNil: [ ^ self ].
-	(map includesKey: key) and: [ (UIManager proceed: key , ' is already defined. Do you want to overwite it?') not ] ]
+	(forms includesKey: key) and: [ (UIManager proceed: key , ' is already defined. Do you want to overwite it?') not ] ]
 		whileTrue.
 	(LivelyWalkThrough
 		fileOpen: 'Select an image file'
 		extensions: #('png' 'jpg' 'jpeg')
-		path: path
+		path: nil
 		preview: #image)
 		ifNotNil: [ :filename | 
-			map at: key put: filename fullName.
+			[forms at: key put: (Form fromFileNamed: filename fullName)] on: Error do: [:ex | ].
 			self updateImage ]
 ]
 
 { #category : #json }
 LWTVariableImageWidget >> asJsonObject [
 	^ super asJsonObject
-		at: 'path' put: self path;
-		at: 'map' put: self map;
+		at: 'base64Forms' put: self base64Forms;
 		at: '_rawValue' put: self rawValue;
 		yourself
 ]
@@ -47,6 +45,31 @@ LWTVariableImageWidget >> asJsonObject [
 { #category : #events }
 LWTVariableImageWidget >> availableEventSelectors [
 	^ #(#changed #clicked #doubleClicked #entered #moved #left #up)
+]
+
+{ #category : #private }
+LWTVariableImageWidget >> base64Forms [
+	| base64Forms |
+	base64Forms := Dictionary new.
+	forms
+		keysAndValuesDo: [ :key :image | 
+			base64Forms
+				at: key
+				put:
+					(Base64MimeConverter
+						mimeEncode:
+							(ByteArray new: 1024 streamContents: [ :stream | PNGReadWriter putForm: image onStream: stream ]) readStream
+						multiLine: false) contents ].
+	^ base64Forms
+]
+
+{ #category : #private }
+LWTVariableImageWidget >> base64Forms: aDictionary [
+	| newForms |
+	newForms := Dictionary new.
+	aDictionary
+		keysAndValuesDo: [ :key :base64 | newForms at: key put: (PNGReadWriter formFromStream: (Base64MimeConverter mimeDecodeToBytes: base64 readStream)) ].
+	forms := newForms
 ]
 
 { #category : #accessing }
@@ -59,10 +82,12 @@ LWTVariableImageWidget >> changeDefaultImage [
 	(LivelyWalkThrough
 		fileOpen: 'Select an image file'
 		extensions: #('png' 'jpg' 'jpeg')
-		path: path
+		path: nil
 		preview: #image)
 		ifNotNil: [ :filename | 
-			path := filename fullName.
+			[ forms at: nil put: (Form fromFileNamed: filename fullName) ]
+				on: Error
+				do: [ :ex |  ].
 			self updateImage ]
 ]
 
@@ -71,10 +96,12 @@ LWTVariableImageWidget >> changeImageAt: key [
 	(LivelyWalkThrough
 		fileOpen: 'Select an image file'
 		extensions: #('png' 'jpg' 'jpeg')
-		path: path
+		path: nil
 		preview: #image)
 		ifNotNil: [ :filename | 
-			map at: key put: filename fullName.
+			[ forms at: key put: (Form fromFileNamed: filename fullName) ]
+				on: Error
+				do: [ :ex |  ].
 			self updateImage ]
 ]
 
@@ -151,17 +178,13 @@ LWTVariableImageWidget >> handleMouseUp: aMouseEvent [
 { #category : #'initialize-release' }
 LWTVariableImageWidget >> initialize [
 	super initialize.
-	map := Dictionary new
-]
-
-{ #category : #private }
-LWTVariableImageWidget >> map [
-	^ map
+	forms := Dictionary new
 ]
 
 { #category : #private }
 LWTVariableImageWidget >> map: aDictionary [
-	map := aDictionary
+	forms := Dictionary new.
+	aDictionary keysAndValuesDo: [ :key :imagePath | forms at: key put: (ImageReadWriter formFromFileNamed: imagePath) ]
 ]
 
 { #category : #menu }
@@ -169,7 +192,7 @@ LWTVariableImageWidget >> menu [
 	| menu |
 	menu := super menu.
 	menu addLine.
-	map
+	forms
 		keysDo: [ :key | 
 			menu
 				add: key
@@ -195,14 +218,11 @@ LWTVariableImageWidget >> menu [
 	^ menu
 ]
 
-{ #category : #accessing }
-LWTVariableImageWidget >> path [
-	^ path
-]
-
 { #category : #private }
 LWTVariableImageWidget >> path: aString [
-	path := aString.
+	[ forms at: nil put: (Form fromFileNamed: aString) ]
+		on: Error
+		do: [ :ex |  ].
 	self updateImage
 ]
 
@@ -219,7 +239,7 @@ LWTVariableImageWidget >> rawValue: aString [
 
 { #category : #operations }
 LWTVariableImageWidget >> removeDefaultImage [
-	path := nil.
+	forms at: nil put: nil.
 	self updateImage
 ]
 
@@ -227,18 +247,13 @@ LWTVariableImageWidget >> removeDefaultImage [
 LWTVariableImageWidget >> removeImageAt: key [
 	(UIManager default proceed: 'OK to remove mapping from ' , key , '?')
 		ifTrue: [ 
-			map removeKey: key ifAbsent: [  ].
+			forms removeKey: key ifAbsent: [  ].
 			self updateImage ]
 ]
 
 { #category : #updating }
 LWTVariableImageWidget >> updateImage [
-	form := (map at: value ifAbsent: [ path ])
-		ifNotNil: [ :imagePath | 
-			Transcript cr; show: 'displaying ', imagePath.
-			[ ImageReadWriter formFromFileNamed: imagePath ]
-				on: Error
-				do: [ :ex | nil ] ].
+	form := forms at: value ifAbsent: [ forms at: nil ifAbsent: [ nil ] ].
 	self changed
 ]
 
