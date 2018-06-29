@@ -45,7 +45,8 @@ Class {
 		'evaluatorExpression',
 		'connectiveExpression',
 		'relationExpression',
-		'nameList'
+		'nameList',
+		'comment'
 	],
 	#category : 'ViennaTalk-Parser-Core'
 }
@@ -386,9 +387,14 @@ ViennaVDMGrammar >> comma [
 	^ self operator: $,
 ]
 
+{ #category : #'parsers-comments' }
+ViennaVDMGrammar >> comment [
+	^ self multiLineComment / self singleLineComment
+]
+
 { #category : #'parsers-types' }
 ViennaVDMGrammar >> compositeType [
-	^ ((self reserved: 'compose' asParser) , identifier , (self reserved: 'of') , fieldList , (self reserved: 'end'))
+	^ ((self reserved: 'compose' ) , identifier , (self reserved: 'of') , fieldList , (self reserved: 'end'))
 		==> [ :quin | 
 			{(quin second).
 			(quin fourth)} ]
@@ -1528,6 +1534,12 @@ ViennaVDMGrammar >> mul: arg1 and: arg2 [
 	arg2}
 ]
 
+{ #category : #'parsers-comments' }
+ViennaVDMGrammar >> multiLineComment [
+	^ ('/*' asParser , ('*/' asParser not , #any asParser) star , '*/' asParser) trim plus flatten
+		==> [ :str | self trimComment: str ]
+]
+
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> multipleAssignStatement [
 	| assignStatement |
@@ -1694,7 +1706,7 @@ ViennaVDMGrammar >> operationsSignature [
 
 { #category : #utilities }
 ViennaVDMGrammar >> operator: aStringOrCharacterOrParser [
-	^ aStringOrCharacterOrParser asParser trim
+	^ (comment star , aStringOrCharacterOrParser asParser trim , comment star) ==> #second
 ]
 
 { #category : #'parsers-patterns' }
@@ -1953,7 +1965,8 @@ ViennaVDMGrammar >> reqExpression [
 
 { #category : #utilities }
 ViennaVDMGrammar >> reserved: aStringOrParser [
-	^ (aStringOrParser asParser , followingLetter not) trim ==> [ :pair | pair first ]
+	^ (comment star , (aStringOrParser asParser , followingLetter not) trim , comment star)
+		==> [ :triple | triple second first ]
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -2111,6 +2124,12 @@ ViennaVDMGrammar >> setUnionPattern [
 			(triple third)} ]
 ]
 
+{ #category : #'parsers-comments' }
+ViennaVDMGrammar >> singleLineComment [
+	^ ('--' asParser , (Character cr asParser not , #any asParser) star) trim plus flatten
+		==> [ :str | self trimComment: str ]
+]
+
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> specificationStatement [
 	^ (lbracket , self implicitOperationBody , rbracket) ==> #second
@@ -2183,7 +2202,10 @@ ViennaVDMGrammar >> subset: arg1 and: arg2 [
 
 { #category : #'parsers-literals' }
 ViennaVDMGrammar >> symbolicLiteral [
-	^ self numericLiteral / self booleanLiteral / self nilLiteral / self characterLiteral / self textLiteral / self quoteLiteral
+	^ (comment star
+		,
+			(self numericLiteral / self booleanLiteral / self nilLiteral / self characterLiteral / self textLiteral
+				/ self quoteLiteral) , comment star) ==> #second
 ]
 
 { #category : #'parsers-literals' }
@@ -2212,6 +2234,17 @@ ViennaVDMGrammar >> totalFunctionType [
 		==> [ :triple | 
 			{(triple first).
 			(triple third)} ]
+]
+
+{ #category : #'parsers-comments' }
+ViennaVDMGrammar >> trimComment: aString [
+	| start end |
+	start := 1.
+	[ (aString at: start) isSeparator ] whileTrue: [ start := start + 1 ].
+	[ start > 1 and: [ (aString at: start) ~= Character cr ] ] whileTrue: [ start := start - 1 ].
+	end := aString size.
+	[ (aString at: end) isSeparator ] whileTrue: [ end := end - 1 ].	"[ end < aString size and: [ (aString at: end) ~= Character cr ] ] whileTrue: [ end := end + 1 ]."
+	^ aString copyFrom: start to: end
 ]
 
 { #category : #'parsers-expressions-basics' }
