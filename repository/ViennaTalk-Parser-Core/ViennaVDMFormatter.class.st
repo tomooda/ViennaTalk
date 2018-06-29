@@ -371,6 +371,16 @@ ViennaVDMFormatter >> defExpression: aViennaNode [
 		insertCrIfNeeded: (self indentString: 'in' insertCrIfNeeded: expression)
 ]
 
+{ #category : #'formatting-statements' }
+ViennaVDMFormatter >> defStatement: aViennaNode [
+	| equalDefinitionList statement |
+	equalDefinitionList := self format: aViennaNode first.
+	statement := self format: aViennaNode second.
+	^ self
+		noIndentString: (self indentString: 'def' insertCrIfNeeded: equalDefinitionList)
+		insertCrIfNeeded: (self indentString: 'in' insertCrIfNeeded: statement)
+]
+
 { #category : #defaults }
 ViennaVDMFormatter >> defaultIndent [
 	^ '    '
@@ -428,7 +438,7 @@ ViennaVDMFormatter >> equalDefinition: aViennaNode [
 ViennaVDMFormatter >> equalDefinitionList: aViennaNode [
 	| defs |
 	defs := self formatAll: aViennaNode.
-	^ ';' , String cr join: defs
+	^ (';' , String cr join: defs) , ';'
 ]
 
 { #category : #private }

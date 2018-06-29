@@ -232,6 +232,11 @@ ViennaVDMParser >> equalDefinition [
 	^ super equalDefinition ==> [ :array | ViennaNode label: 'EqualDefinition' withAll: array ]
 ]
 
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> equalDefinitionList [
+	^ super equalDefinitionList ==> [ :array | ViennaNode label: 'EqualDefinitionList' withAll: array ]
+]
+
 { #category : #'parsers-types' }
 ViennaVDMParser >> equalityAbstractionField [
 	^ super equalityAbstractionField

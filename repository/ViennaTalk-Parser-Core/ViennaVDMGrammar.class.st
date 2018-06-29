@@ -158,7 +158,7 @@ ViennaVDMGrammar >> applicatorExpression [
 							{#functionTypeInstantiation:args:.
 							(array second)} ])
 				/
-					(((self operator: $.) , identifier)
+					(((self operator: $.) , identifier trim)
 						==> [ :array | 
 							{#fieldSelect:with:.
 							(array second)} ])
@@ -198,7 +198,7 @@ ViennaVDMGrammar >> assignStatement [
 
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> assignmentDefinition [
-	^ (identifier , colon , type , (colonEq , expression) optional)
+	^ (identifier trim , colon , type , (colonEq , expression) optional)
 		==> [ :quatro | 
 			| ident varType initialValue |
 			ident := quatro first.
@@ -395,7 +395,7 @@ ViennaVDMGrammar >> comment [
 
 { #category : #'parsers-types' }
 ViennaVDMGrammar >> compositeType [
-	^ ((self reserved: 'compose' ) , identifier , (self reserved: 'of') , fieldList , (self reserved: 'end'))
+	^ ((self reserved: 'compose' ) , identifier trim , (self reserved: 'of') , fieldList , (self reserved: 'end'))
 		==> [ :quin | 
 			{(quin second).
 			(quin fourth)} ]
@@ -469,8 +469,7 @@ ViennaVDMGrammar >> defExpression [
 
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> defStatement [
-	^ ((self reserved: 'def') , (self equalDefinition delimitedBy: semicolon) withoutSeparators , (self reserved: 'in')
-		, statement)
+	^ ((self reserved: 'def') , self equalDefinitionList , (self reserved: 'in') , statement)
 		==> [ :quatro | 
 			| defs bodyStatement |
 			defs := quatro second.
@@ -566,9 +565,14 @@ ViennaVDMGrammar >> equalDefinition [
 			(triple third)} ]
 ]
 
+{ #category : #'parsers-statements' }
+ViennaVDMGrammar >> equalDefinitionList [
+	^ (self equalDefinition delimitedBy: semicolon) withoutSeparators
+]
+
 { #category : #'parsers-types' }
 ViennaVDMGrammar >> equalityAbstractionField [
-	^ (identifier , (self operator: ':-') , type)
+	^ (identifier trim , (self operator: ':-') , type)
 		==> [ :triple | 
 			{(triple first).
 			(triple third)} ]
@@ -736,7 +740,7 @@ ViennaVDMGrammar >> existsExpression [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> explicitFunctionDefinition [
-	^ (identifier , self typeVariableList , colon , self functionType trim , identifier , self parametersList
+	^ (identifier trim , self typeVariableList , colon , self functionType trim , identifier trim , self parametersList
 		, (self operator: '==') , (expression / self isSubclassResponsibility / self isNotYetSpecified)
 		, (((self reserved: 'pre') , expression) ==> #second) optional
 		, (((self reserved: 'post') , expression) ==> #second) optional
@@ -758,7 +762,7 @@ ViennaVDMGrammar >> explicitFunctionDefinition [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> explicitOperationDefinition [
-	^ (identifier , colon , self operationType , identifier trim , self parameters , (self operator: '==')
+	^ (identifier trim , colon , self operationType , identifier trim , self parameters , (self operator: '==')
 		, self operationBody , (((self reserved: 'pre') , expression) ==> #second) optional
 		, (((self reserved: 'post') , expression) ==> #second) optional)
 		==> [ :array | 
@@ -837,7 +841,7 @@ ViennaVDMGrammar >> fieldList [
 
 { #category : #'parsers-patterns' }
 ViennaVDMGrammar >> fieldPattern [
-	^ (identifier , mapletArrow , pattern)
+	^ (identifier trim , mapletArrow , pattern)
 		==> [ :triple | 
 			{(triple first).
 			(triple third)} ]
@@ -856,7 +860,7 @@ ViennaVDMGrammar >> fieldReference: stateDesig with: ident [
 
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> fieldReferenceArg [
-	^ ((self operator: $.) , identifier)
+	^ ((self operator: $.) , identifier trim)
 		==> [ :pair | 
 			{#fieldReference:with:.
 			(pair second)} ]
@@ -991,7 +995,7 @@ ViennaVDMGrammar >> hexadecimalLiteral [
 
 { #category : #'parsers-types' }
 ViennaVDMGrammar >> identifiedField [
-	^ (identifier , colon , type)
+	^ (identifier trim , colon , type)
 		==> [ :triple | 
 			{(triple first).
 			(triple third)} ]
@@ -1068,7 +1072,7 @@ ViennaVDMGrammar >> implicitOperationDefinition [
 
 { #category : #'parsers-interfaces' }
 ViennaVDMGrammar >> importDefinition [
-	^ ((self reserved: 'from') , identifier , self importModuleSignature)
+	^ ((self reserved: 'from') , identifier trim , self importModuleSignature)
 		==> [ :triple | 
 			{(triple second).
 			(triple third)} ]
@@ -1122,7 +1126,7 @@ ViennaVDMGrammar >> inSet: arg1 and: arg2 [
 
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> indexForLoop [
-	^ ((self reserved: 'for') , identifier , eq , expression , (self reserved: 'to') , expression
+	^ ((self reserved: 'for') , identifier trim , eq , expression , (self reserved: 'to') , expression
 		, (((self reserved: 'by') , expression) ==> #second) optional , (self reserved: 'do') , statement)
 		==> [ :array | 
 			{(array second).
@@ -1508,7 +1512,7 @@ ViennaVDMGrammar >> mod: arg1 and: arg2 [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> module [
-	^ ((self reserved: 'module') , identifier , self interface , self moduleBody optional , (self reserved: 'end')
+	^ ((self reserved: 'module') , identifier trim , self interface , self moduleBody optional , (self reserved: 'end')
 		, identifier)
 		==> [ :array | 
 			array second = array sixth
@@ -1583,7 +1587,7 @@ ViennaVDMGrammar >> munion: arg1 and: arg2 [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> name [
-	^ (identifier , ((self operator: $`) , identifier) optional)
+	^ (identifier trim , ((self operator: $`) , identifier trim) optional)
 		==> [ :pair | 
 			pair second
 				ifNil: [ pair first ]
@@ -1648,7 +1652,7 @@ ViennaVDMGrammar >> numericLiteral [
 
 { #category : #'parsers-patterns' }
 ViennaVDMGrammar >> objectPattern [
-	^ ('obj_' asParser , identifier , lparen , self fieldPatternList , rparen)
+	^ ('obj_' asParser , identifier trim , lparen , self fieldPatternList , rparen)
 		==> [ :quin | 
 			{(quin second).
 			(quin fourth)} ]
@@ -1772,7 +1776,7 @@ ViennaVDMGrammar >> patternBind [
 
 { #category : #'parsers-patterns' }
 ViennaVDMGrammar >> patternIdentifier [
-	^ identifier / ((self operator: $-) ==> [ :op |  nil])
+	^ identifier trim / ((self operator: $-) ==> [ :op |  nil])
 ]
 
 { #category : #'parsers-patterns' }
@@ -1883,7 +1887,7 @@ ViennaVDMGrammar >> recordPattern [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> recordTypeDefinition [
-	^ (identifier , (self operator: '::') , fieldList , invariant optional)
+	^ (identifier trim , (self operator: '::') , fieldList , invariant optional)
 		==> [ :quatro | 
 			| ident flist inv |
 			ident := quatro first.
@@ -2143,7 +2147,7 @@ ViennaVDMGrammar >> start [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> stateDefinition [
-	^ ((self reserved: 'state') , identifier , (self reserved: 'of') , self stateFieldList , invariant optional
+	^ ((self reserved: 'state') , identifier trim , (self reserved: 'of') , self stateFieldList , invariant optional
 		, self initialisation optional , (self reserved: 'end') , semicolon optional)
 		==> [ :array | 
 			{(array second).
@@ -2355,7 +2359,7 @@ ViennaVDMGrammar >> typeName [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> typeSynonym [
-	^ (identifier , eq , type , invariant optional)
+	^ (identifier trim , eq , type , invariant optional)
 		==> [ :quatro | 
 			{(quatro first).
 			(quatro third).
@@ -2369,7 +2373,7 @@ ViennaVDMGrammar >> typeVariable [
 
 { #category : #'parsers-symbols' }
 ViennaVDMGrammar >> typeVariableIdentifier [
-	^ ((self operator: $@) , identifier)
+	^ ((self operator: $@) , identifier) trim
 		==> [ :pair | 
 			String
 				new: pair second size + 1
