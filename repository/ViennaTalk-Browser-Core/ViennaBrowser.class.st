@@ -753,8 +753,12 @@ ViennaBrowser >> generateSmalltalkClasses [
 	| ast |
 	ast := ViennaVDMParser new parse: animation specification.
 	ast isPetitFailure
-		ifTrue: [ ^ UIManager default alert: 'Failed to generate a code : ' , ast message title: 'ViennaTalk' ].
-	(ViennaVDM2SmalltalkClass new generate: ast) ifNotNil: [ :class | class browse ]
+		ifTrue: [ ^ UIManager default
+				alert: 'Failed to generate a code : ' , ast message
+				title: 'ViennaTalk' ].
+	(ViennaVDM2SmalltalkClass new
+		source: animation specification;
+		generate: ast) ifNotNil: [ :class | class browse ]
 ]
 
 { #category : #'module list menu' }
@@ -765,7 +769,9 @@ ViennaBrowser >> generateSmalltalkObject [
 		ifTrue: [ ^ UIManager default
 				alert: 'Failed to generate a code : ' , ast message
 				title: 'ViennaTalk' ].
-	(ViennaVDM2SmalltalkObject new generate: ast) ifNotNil: [ :object | object inspect ]
+	(ViennaVDM2SmalltalkObject new
+		source: animation specification;
+		generate: ast) ifNotNil: [ :object | object inspect ]
 ]
 
 { #category : #'module list menu' }
