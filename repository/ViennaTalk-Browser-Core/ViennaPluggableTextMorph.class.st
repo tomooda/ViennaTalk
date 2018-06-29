@@ -1,8 +1,78 @@
 Class {
 	#name : #ViennaPluggableTextMorph,
 	#superclass : #PluggableTextMorph,
+	#instVars : [
+		'highlighter',
+		'wantsHighlighting'
+	],
 	#category : 'ViennaTalk-Browser-Core'
 }
+
+{ #category : #'enabling/disabling' }
+ViennaPluggableTextMorph >> disableHighlighting [
+	self highlightingEnabled: false
+]
+
+{ #category : #'enabling/disabling' }
+ViennaPluggableTextMorph >> enableHighlighting [
+	self highlightingEnabled: true
+]
+
+{ #category : #'stepping and presenter' }
+ViennaPluggableTextMorph >> highlight [
+	| source |
+	highlighter ifNil: [^ self stopStepping ].
+	source := self text asString.
+	wantsHighlighting := false.
+	highlighter text: source asText.
+	highlighter parse: source.
+	self text runs: highlighter text runs
+]
+
+{ #category : #accessing }
+ViennaPluggableTextMorph >> highlightingEnabled [
+	^ highlighter notNil
+]
+
+{ #category : #accessing }
+ViennaPluggableTextMorph >> highlightingEnabled: aBoolean [
+	aBoolean = true
+		ifTrue: [ 
+			highlighter := ViennaVDMHighlighter new.
+			self startStepping ]
+		ifFalse: [ highlighter := nil ]
+]
+
+{ #category : #'initialize-release' }
+ViennaPluggableTextMorph >> initialize [
+	super initialize.
+	highlighter := nil.
+	wantsHighlighting := false
+]
+
+{ #category : #'event handling' }
+ViennaPluggableTextMorph >> keyStroke: aKeyboardEvent [
+	wantsHighlighting := true.
+	^ super keyStroke: aKeyboardEvent
+]
+
+{ #category : #accessing }
+ViennaPluggableTextMorph >> setText: aText [
+	super setText: aText.
+	self highlight
+]
+
+{ #category : #'stepping and presenter' }
+ViennaPluggableTextMorph >> step [
+	self wantsHighlighting
+		ifTrue: [ self highlight ].
+	self changed
+]
+
+{ #category : #'stepping and presenter' }
+ViennaPluggableTextMorph >> stepTime [
+	^ 2000
+]
 
 { #category : #'class access' }
 ViennaPluggableTextMorph >> textMorphClass [
@@ -28,4 +98,14 @@ ViennaPluggableTextMorph >> update: aSymbol [
 					self hasUnacceptedEdits: false.
 					model perform: setTextSelector with: textMorph contents ] ].
 	^ super update: aSymbol
+]
+
+{ #category : #accessing }
+ViennaPluggableTextMorph >> wantsHighlighting [
+	^ wantsHighlighting = true
+]
+
+{ #category : #testing }
+ViennaPluggableTextMorph >> wantsSteps [
+	^ self highlightingEnabled
 ]
