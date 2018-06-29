@@ -589,15 +589,15 @@ ViennaVDMJ >> startupProcess [
 	Smalltalk os isWindows
 		ifTrue: [ ^ self error: 'ViennaVDMJ can not run on Windows Platform. Use ViennaClient instead.' ]
 		ifFalse: [ 
-			self vdmjPath exists
+			self class vdmjPath exists
 				ifFalse: [ 
-					self
+					self class
 						installVDMJ;
 						installJson4VDMJ ].
-			self json4vdmjPath exists
-				ifFalse: [ self installJson4VDMJ ].
-			self jsonicPath exists
-				ifFalse: [ self installJsonic ] ].
+			self class json4vdmjPath exists
+				ifFalse: [ self class installJson4VDMJ ].
+			self class jsonicPath exists
+				ifFalse: [ self class installJsonic ] ].
 	pipe1 := OSPipe blockingPipe.
 	pipe2 := OSPipe nonBlockingPipe.
 	input := pipe1 reader.
