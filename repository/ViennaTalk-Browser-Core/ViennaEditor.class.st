@@ -4,6 +4,15 @@ Class {
 	#category : 'ViennaTalk-Browser-Core'
 }
 
+{ #category : #notifying }
+ViennaEditor >> notify: aString at: anInteger in: aStream [
+	| pos |
+	pos := self selectionInterval notEmpty
+		ifTrue: [ self startIndex + anInteger - 1 ]
+		ifFalse: [ anInteger ].
+	self insertAndSelect: aString at: (pos max: 1)
+]
+
 { #category : #'typing support' }
 ViennaEditor >> openTypeIn [
 	"Set up startOfTyping to keep track of the leftmost backspace.

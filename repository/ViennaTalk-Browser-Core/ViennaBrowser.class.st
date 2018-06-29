@@ -19,6 +19,9 @@ Class {
 		'directory',
 		'lowerTabPane'
 	],
+	#classVars : [
+		'AutoFormat'
+	],
 	#category : 'ViennaTalk-Browser-Core'
 }
 
@@ -31,6 +34,16 @@ ViennaBrowser class >> VDMBrowserMenuOn: aBuilder [
 		parent: #ViennaTalk;
 		help: 'VDM-SL browser';
 		icon: nil
+]
+
+{ #category : #accessing }
+ViennaBrowser class >> autoFormat [
+	^ AutoFormat ifNil: [ AutoFormat := true ]
+]
+
+{ #category : #accessing }
+ViennaBrowser class >> autoFormat: aBoolean [
+	AutoFormat := aBoolean ~= false
 ]
 
 { #category : #defaults }
@@ -140,47 +153,48 @@ ViennaBrowser >> acceptBindings: aString in: moduleName [
 
 { #category : #'code pane' }
 ViennaBrowser >> acceptCode: aStringOrText [
+	self autoFormat
+		ifTrue: [ self formatIn: codePane ].
 	vdmc
 		ifNotNil: [ 
-			| code oldModulePositions oldModuleNames newModulePositions newModuleDict oldSpec newSpec |
+			| code oldModulePositions newModuleNames oldSpec newSpec |
 			code := aStringOrText asString trimmed copyWith: Character cr.
 			oldSpec := vdmc specification.
 			oldModulePositions := self modulePositionsFrom: oldSpec.
-			oldModuleNames := (oldModulePositions collect: #key) asSet.
-			newModulePositions := self modulePositionsFrom: code.
-			newModuleDict := Dictionary new.
-			newModulePositions do: [ :assoc | newModuleDict at: assoc key put: assoc value ].
+			newModuleNames := ((self modulePositionsFrom: code) collect: #key) asSet.
 			newSpec := String
 				new: 1024
 				streamContents: [ :stream | 
-					stream nextPutAll: (oldSpec copyFrom: 1 to: oldModulePositions first value first - 1).
+					stream nextPutAll: code.
 					oldModulePositions
 						do: [ :assoc | 
-							newModuleDict
-								at: assoc key
-								ifPresent: [ :range | stream nextPutAll: (code copyFrom: range first to: range last) ]
-								ifAbsent: [ stream nextPutAll: (oldSpec copyFrom: assoc value first to: assoc value last) ] ].
-					newModulePositions
-						do: [ :assoc | 
-							(oldModuleNames includes: assoc key)
-								ifFalse: [ stream nextPutAll: (code copyFrom: assoc value first to: assoc value last) ] ] ].
-			codePane hasUnacceptedEdits: false.
+							(newModuleNames includes: assoc key)
+								ifFalse: [ stream nextPutAll: (oldSpec copyFrom: assoc value first to: assoc value last) ] ] ].
 			vdmc
 				specification: newSpec
 				ifError: [ :msg | 
-					codePane hasUnacceptedEdits: true.
-					codePane
-						handleEdit: [ 
-							codePane textMorph editor
-								in: [ :editor | 
-									editor selectFrom: editor caret to: editor caret - 1.
-									editor afterSelectionInsertAndSelect: msg ] ].
-					^ false ].
-			self
-				selectModuleNamed:
-					((newModulePositions asSortedCollection: [ :less :more | less value first <= more value first])
-						ifEmpty: [ nil ]
-						ifNotEmpty: [ :sorted | sorted first key ]).
+					| posStrIndex charPos message |
+					charPos := 0.
+					message := msg.
+					posStrIndex := msg findLastOccurrenceOfString: 'at line ' startingAt: 1.
+					posStrIndex > 0
+						ifTrue: [ 
+							| colonIndex |
+							colonIndex := msg indexOf: $: startingAt: posStrIndex + 9.
+							colonIndex > 0
+								ifTrue: [ 
+									| linePos colPos lines |
+									message := msg copyFrom: 1 to: posStrIndex - 1.
+									(message includes: $()
+										ifTrue: [ message := message copyFrom: 1 to: (message findLastOccurrenceOfString: ' (' startingAt: 1) ].
+									linePos := (msg copyFrom: posStrIndex + 8 to: colonIndex - 1) asInteger.
+									colPos := (msg copyFrom: colonIndex + 1 to: msg size) asInteger.
+									lines := code lines.
+									linePos <= lines size
+										ifTrue: [ charPos := (((lines copyFrom: 1 to: linePos - 1) collect: #size) + 1) sum + colPos ] ] ].
+					^ codePane handleEdit: [ codePane notify: message at: charPos in: code readStream ] ].
+			codePane hasUnacceptedEdits: false.
+			self selectModuleNamed: (newModuleNames ifEmpty: [ nil ] ifNotEmpty: [ newModuleNames first ]).
 			^ true ].
 	^ false
 ]
@@ -232,6 +246,11 @@ ViennaBrowser >> acceptWorkspace: aStringOrText [
 	oldWorkspace := workspace.
 	workspace := aStringOrText.
 	oldWorkspace ~= workspace ifTrue: [ self changed: #workspace ]
+]
+
+{ #category : #accessing }
+ViennaBrowser >> autoFormat [
+	^ self class autoFormat
 ]
 
 { #category : #'user interface' }
