@@ -562,6 +562,30 @@ ViennaBrowser >> formatIn: aPluggableTextMorph [
 ]
 
 { #category : #'module list menu' }
+ViennaBrowser >> generateSmalltalkClasses [
+	| ast |
+	ast := ViennaVDMParser new parse: vdmc specification.
+	(ViennaVDM2SmalltalkClass new generate: ast) ifNotNil: [ :class | class browse ]
+]
+
+{ #category : #'module list menu' }
+ViennaBrowser >> generateSmalltalkScript [
+	self selectedModule
+		ifNotNil: [ :module | 
+			((self modulePositionsFrom: vdmc specification) detect: [ :assoc | assoc key = module ] ifNone: [  ])
+				ifNotNil: [ :assoc | 
+					| ast |
+					ast := ViennaVDMParser new parse: (vdmc specification copyFrom: assoc value first to: assoc value last).
+					ast first label = 'Module'
+						ifTrue: [ 
+							ast := ast first third copy
+								setLabel: 'Document';
+								yourself ].
+					(ViennaVDM2SmalltalkScript new generate: ast)
+						ifNotNil: [ :script | Smalltalk tools workspace openContents: (RBParser parseExpression: script) formattedCode ] ] ]
+]
+
+{ #category : #'module list menu' }
 ViennaBrowser >> importerModules [
 	| parser |
 	self selectedModule isNil
@@ -594,10 +618,15 @@ ViennaBrowser >> moduleListMenu: aMenu [
 	aMenu addLine.
 	aMenu add: 'remove module' translated selector: #removeModule.
 	aMenu addLine.
+	aMenu add: 'generate a Smalltalk script (single module)...' translated selector: #generateSmalltalkScript.
+	aMenu add: 'generate classes (all modules)...' translated selector: #generateSmalltalkClasses.
 	referenceSubMenu := MenuMorph new defaultTarget: self.
 	self importerModules do: [ :name | referenceSubMenu add: name selector: #selectModuleNamed: argument: name ].
 	referenceSubMenu hasItems
-		ifTrue: [ aMenu add: 'imported by...' translated subMenu: referenceSubMenu ].
+		ifTrue: [ 
+			aMenu
+				addLine;
+				add: 'imported by...' translated subMenu: referenceSubMenu ].
 	^ aMenu
 ]
 
