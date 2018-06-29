@@ -1561,6 +1561,14 @@ ViennaVDM2SmalltalkTranslator >> setUnionPattern [
 			('(ViennaRuntimeUtil match: ' , pat1 , ' union: ' , pat2 , ')')} ]
 ]
 
+{ #category : #'parsers-statements' }
+ViennaVDM2SmalltalkTranslator >> smalltalkStatement [
+	| backquote |
+	backquote := $` asParser.
+	^ ((backquote , ((backquote not , #any asParser) ==> #second) star , backquote)
+		==> [ :triple | String withAll: triple second ]) trim
+]
+
 { #category : #'parsers-definitions' }
 ViennaVDM2SmalltalkTranslator >> stateDefinition [
 	^ super stateDefinition
@@ -1590,6 +1598,11 @@ ViennaVDM2SmalltalkTranslator >> stateDefinition [
 											'Number of state variables and number of arguments must agree: ' , vars size printString , ', '
 												, values size printString ] ]
 						ifFalse: [ PPFailure message: 'Constructor must be the same name as state definition: ' , constructor , ', ' , initConstructor ] ] ]
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDM2SmalltalkTranslator >> statement [
+	^ super statement / self smalltalkStatement
 ]
 
 { #category : #'parsers-expressions-operators' }
