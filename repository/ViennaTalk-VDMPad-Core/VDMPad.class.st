@@ -69,6 +69,11 @@ VDMPad class >> installHandler [
 	self server delegate: self default
 ]
 
+{ #category : #servicing }
+VDMPad class >> isRunning [
+	^ Server notNil and: [ Server isRunning ]
+]
+
 { #category : #'instance creation' }
 VDMPad class >> on: aViennaEngine [
 	^ self new
@@ -84,6 +89,75 @@ VDMPad class >> server [
 				register;
 				start;
 				yourself ]
+]
+
+{ #category : #servicing }
+VDMPad class >> startService [
+	self installHandler
+]
+
+{ #category : #servicing }
+VDMPad class >> stopService [
+	Server
+		ifNotNil: [ 
+			Server stop.
+			Server := nil ]
+]
+
+{ #category : #servicing }
+VDMPad class >> toggleStartStop [
+	self isRunning
+		ifTrue: [ self stopService ]
+		ifFalse: [ self startService ]
+]
+
+{ #category : #servicing }
+VDMPad class >> viennaToolsMenuOn: aBuilder [
+	<ViennaTools>
+	(aBuilder item: #'VDMPad server')
+		withSeparatorAfter;
+		with: [ 
+					(aBuilder item: #VDMPadStart)
+						label: 'start';
+						action: [ self startService ];
+						order: 0.1;
+						parent: #'VDMPad server';
+						help: 'start VDMPad server';
+						icon: nil;
+						precondition: [ self isRunning not ].
+					(aBuilder item: #VDMPadStop)
+						label: 'stop';
+						action: [ self stopService ];
+						order: 0.1;
+						parent: #'VDMPad server';
+						help: 'stop VDMPad server';
+						icon: nil;
+						precondition: [ self isRunning ] ]
+]
+
+{ #category : #servicing }
+VDMPad class >> worldMenuOn: aBuilder [
+	<worldMenu>
+	(aBuilder item: #'VDMPad server')
+		parent: #ViennaTalk;
+		withSeparatorAfter;
+		with: [ 
+					(aBuilder item: #VDMPadStart)
+						label: 'start';
+						action: [ self startService ];
+						order: 0.1;
+						parent: #'VDMPad server';
+						help: 'start VDMPad server';
+						icon: nil;
+						enabledBlock: [ self isRunning not ].
+					(aBuilder item: #VDMPadStop)
+						label: 'stop';
+						action: [ self stopService ];
+						order: 0.1;
+						parent: #'VDMPad server';
+						help: 'stop VDMPad server';
+						icon: nil;
+						enabledBlock: [ self isRunning ] ]
 ]
 
 { #category : #'request handling-javascript' }
