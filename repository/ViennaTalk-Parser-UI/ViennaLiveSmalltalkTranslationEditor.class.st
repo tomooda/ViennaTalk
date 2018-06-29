@@ -2,7 +2,9 @@ Class {
 	#name : #ViennaLiveSmalltalkTranslationEditor,
 	#superclass : #ViennaLiveTranslationEditor,
 	#instVars : [
-		'codeText'
+		'codeText',
+		'runtimeTypeCheck',
+		'runtimeAssertionCheck'
 	],
 	#category : 'ViennaTalk-Parser-UI'
 }
@@ -109,6 +111,11 @@ ViennaLiveSmalltalkTranslationEditor class >> defaultSpec [
 					c
 						newRow: [ :row | 
 									row
+										add: #runtimeTypeCheck;
+										add: #runtimeAssertionCheck ]
+							height: 12;
+						newRow: [ :row | 
+									row
 										add: #sourceText;
 										addSplitter;
 										add: #targetText ];
@@ -147,12 +154,17 @@ ViennaLiveSmalltalkTranslationEditor >> codeTextMenu [
 { #category : #private }
 ViennaLiveSmalltalkTranslationEditor >> createTranslator [
 	^ [ :string | 
-	ViennaVDM2SmalltalkScript
+	| generator |
+	generator := ViennaVDM2SmalltalkScript new
+		runtimeTypeCheck: runtimeTypeCheck state;
+		runtimeAssertionCheck: runtimeAssertionCheck state;
+		yourself.
+	generator
 		translate: string
 		ifError: [ 
-			ViennaVDM2SmalltalkScript
+			generator
 				translateStatement: string
-				ifError: [ ViennaVDM2SmalltalkScript translateExpression: string ifError: [ :err | err ] ] ] ] 
+				ifError: [ ViennaVDM2SmalltalkScript translateExpression: string ifError: [ :err | err ] ] ] ]
 ]
 
 { #category : #accessing }
@@ -198,7 +210,27 @@ ViennaLiveSmalltalkTranslationEditor >> initializeWidgets [
 		bindKeyCombination: $f shift command toAction: [ self formatSelectionInCodeText ];
 		bindKeyCombination: $p command toAction: [ self viennaItInCodeText ];
 		bindKeyCombination: $t command toAction: [ self translateIt ];
-		whenBuiltDo: [ codeText widget font: ViennaLauncher font ]
+		whenBuiltDo: [ codeText widget font: ViennaLauncher font ].
+	runtimeTypeCheck := self newCheckBox.
+	runtimeTypeCheck
+		label: 'runtime type check';
+		state: true;
+		whenChangedDo: [ self translate ].
+	runtimeAssertionCheck := self newCheckBox.
+	runtimeAssertionCheck
+		label: 'runtime assertion check';
+		state: true;
+		whenChangedDo: [ self translate ]
+]
+
+{ #category : #accessing }
+ViennaLiveSmalltalkTranslationEditor >> runtimeAssertionCheck [
+	^ runtimeAssertionCheck
+]
+
+{ #category : #accessing }
+ViennaLiveSmalltalkTranslationEditor >> runtimeTypeCheck [
+	^ runtimeTypeCheck
 ]
 
 { #category : #evaluating }
