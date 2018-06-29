@@ -2,7 +2,7 @@ Extension { #name : #Context }
 
 { #category : #'*ViennaTalk-Parser-Code Generators' }
 Context >> basicSpecification [
-	^ self receiver class specificationAt: self selector
+	^ self methodClass specificationAt: self selector
 ]
 
 { #category : #'*ViennaTalk-Parser-Code Generators' }
