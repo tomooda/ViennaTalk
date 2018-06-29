@@ -12,7 +12,8 @@ Class {
 		'selectedModule',
 		'selectedField',
 		'codeSelection',
-		'valueSelection'
+		'valueSelection',
+		'announcer'
 	],
 	#category : 'ViennaTalk-Browser-Core'
 }
@@ -103,53 +104,47 @@ ViennaBrowser >> acceptBindings: aString in: moduleName [
 ]
 
 { #category : #'code pane' }
-ViennaBrowser >> acceptCode: aString [
+ViennaBrowser >> acceptCode: aStringOrText [
 	vdmc
 		ifNotNil: [ 
-			aString asString ~= cachedSpec
-				ifTrue: [ 
-					| newModules oldModules source oldSpecification |
-					cachedSpec := aString asString.
-					oldModules := cachedModulePositions ifNil: [ self modulePositionsFrom: vdmc specification ].
-					cachedModulePositions := self modulePositionsFrom: aString asString.
-					newModules := Dictionary new.
-					cachedModulePositions do: [ :assoc | newModules at: assoc key put: assoc value ].
-					source := String new writeStream.
-					source nextPutAll: (vdmc specification copyFrom: 1 to: oldModules first value first - 1).
-					oldModules
+			| code oldModulePositions oldModuleNames newModulePositions newModuleDict oldSpec newSpec |
+			code := aStringOrText asString.
+			oldSpec := vdmc specification.
+			oldModulePositions := self modulePositionsFrom: oldSpec.
+			oldModuleNames := (oldModulePositions collect: #key) asSet.
+			newModulePositions := self modulePositionsFrom: code.
+			newModuleDict := Dictionary new.
+			newModulePositions do: [ :assoc | newModuleDict at: assoc key put: assoc value ].
+			newSpec := String
+				new: 1024
+				streamContents: [ :stream | 
+					stream nextPutAll: (oldSpec copyFrom: 1 to: oldModulePositions first value first - 1).
+					oldModulePositions
 						do: [ :assoc | 
-							(newModules includesKey: assoc key)
-								ifTrue: [ 
-									| section |
-									section := newModules at: assoc key.
-									source nextPutAll: (aString copyFrom: section first to: section last).
-									newModules removeKey: assoc key ]
-								ifFalse: [ 
-									| section |
-									section := assoc value.
-									source nextPutAll: (vdmc specification copyFrom: section first to: section last) ] ].
-					(newModules associations asSortedCollection: [ :less :more | less value first < more value first ])
+							newModuleDict
+								at: assoc key
+								ifPresent: [ :range | stream nextPutAll: (code copyFrom: range first to: range last) ]
+								ifAbsent: [ stream nextPutAll: (oldSpec copyFrom: assoc value first to: assoc value last) ] ].
+					newModulePositions
 						do: [ :assoc | 
-							| section |
-							section := assoc value.
-							source nextPutAll: (aString copyFrom: section first to: section last) ].
-					oldSpecification := vdmc specification.
-					vdmc specification: source contents.
-					[ vdmc plainEvaluate: 'nil' ]
-						on: Error
-						do: [ :ex | 
-							vdmc specification: oldSpecification.
-							codePane
-								handleEdit: [ 
-									codePane textMorph editor
-										in: [ :editor | 
-											editor selectFrom: editor caret to: editor caret - 1.
-											editor afterSelectionInsertAndSelect: ex messageText ] ].
-							^ false ].
-					self changed: #moduleList.
-					self changed: #fieldList.
-					self changed: #value.
-					^ true ] ].
+							(oldModuleNames includes: assoc key)
+								ifFalse: [ stream nextPutAll: (code copyFrom: assoc value first to: assoc value last) ] ] ].
+			vdmc specification: newSpec.
+			[ vdmc plainEvaluate: 'nil' ]
+				on: Error
+				do: [ :ex | 
+					vdmc specification: oldSpec.
+					codePane
+						handleEdit: [ 
+							codePane textMorph editor
+								in: [ :editor | 
+									editor selectFrom: editor caret to: editor caret - 1.
+									editor afterSelectionInsertAndSelect: ex messageText ] ].
+					^ false ].
+			codePane hasUnacceptedEdits: false.
+			self changed: #moduleList.
+			self selectModuleNamed: newModulePositions first key.
+			^ true ].
 	^ false
 ]
 
@@ -194,9 +189,15 @@ ViennaBrowser >> acceptValue: aString [
 				ifNotNil: [ :field | self accept: aString asString var: field in: module ] ]
 ]
 
+{ #category : #accessing }
+ViennaBrowser >> announcer [
+
+	^ announcer ifNil: [ announcer := Announcer new ]
+]
+
 { #category : #'user interface' }
 ViennaBrowser >> buildCodePane [
-	^ (PluggableTextMorph
+	^ (ViennaPluggableTextMorph
 		on: self
 		text: #code
 		accept: #acceptCode:
@@ -229,14 +230,15 @@ ViennaBrowser >> buildModuleList [
 
 { #category : #'user interface' }
 ViennaBrowser >> buildValuePane [
-	^ (PluggableTextMorph
+	^ (ViennaPluggableTextMorph
 		on: self
 		text: #value
 		accept: #acceptValue:
 		readSelection: #valueSelection
 		menu: #valuePaneMenu:shifted:
 		setSelection: #valueSelection:)
-		askBeforeDiscardingEdits: true;
+		askBeforeDiscardingEdits: false;
+		alwaysAccept: true;
 		yourself
 ]
 
@@ -245,10 +247,10 @@ ViennaBrowser >> code [
 	| section module |
 	vdmc ifNil: [ ^ String new ].
 	module := self selectedModule.
-	module ifNil: [ ^ vdmc specification ].
+	module ifNil: [ ^ self specificationTemplate ].
 	section := ((self modulePositionsFrom: vdmc specification)
 		detect: [ :assoc | assoc key = module ]
-		ifNone: [ ^ String new ]) value.
+		ifNone: [ ^ self specificationTemplate ]) value.
 	^ vdmc specification copyFrom: section first to: section last
 ]
 
@@ -259,6 +261,7 @@ ViennaBrowser >> codePaneDoIt [
 
 { #category : #'code pane menu' }
 ViennaBrowser >> codePaneMenu: aMenu shifted: aBoolean [
+	aMenu target: self.
 	aMenu
 		addList:
 			{{('copy (c)' translated).
@@ -336,7 +339,8 @@ ViennaBrowser >> doItIn: aPluggableTextMorph [
 						handleEdit: [editor afterSelectionInsertAndSelect: error].
 					selectionInterval := editor selectionInterval.
 					aPluggableTextMorph textMorph editor selectFrom: selectionInterval first to: selectionInterval last.
-					aPluggableTextMorph scrollSelectionIntoView]]
+					aPluggableTextMorph scrollSelectionIntoView.
+					self changed: #value]]
 ]
 
 { #category : #private }
@@ -359,7 +363,7 @@ ViennaBrowser >> fieldList [
 			| m |
 			m := module , '`'.
 			(vdmc state keys
-				select: [ :name | (name copyFrom: 1 to: m size) = m ]
+				select: [ :name | name size > m size and: [(name copyFrom: 1 to: m size) = m ]]
 				thenCollect: [ :name | name copyFrom: m size + 1 to: name size ]) asSortedCollection asArray ]
 ]
 
@@ -373,80 +377,95 @@ ViennaBrowser >> fieldSelectionIndex: anInteger [
 	self selectFieldNamed: (self fieldList at: anInteger ifAbsent: [])
 ]
 
+{ #category : #'module list menu' }
+ViennaBrowser >> importerModules [
+	| parser |
+	self selectedModule isNil
+		ifTrue: [ ^ Array new ].
+	parser := 'from' asParser , #space asParser plus , self selectedModule asParser , #space asParser.
+	^ ((self modulePositionsFrom: vdmc specification)
+		select: [ :assoc | 
+			assoc key ~= self selectedModule
+				and: [ (parser matchesIn: (vdmc specification copyFrom: assoc value first to: assoc value last)) notEmpty ] ])
+		collect: [ :assoc | assoc key ]
+]
+
 { #category : #'module list' }
 ViennaBrowser >> moduleList [
-	^ vdmc
-		ifNil: [ Array new ]
-		ifNotNil: [ (cachedModulePositions ifNil: [ cachedModulePositions := self modulePositionsFrom: vdmc specification ]) collect: #key ]
+	^ vdmc ifNil: [ Array new ] ifNotNil: [ (self modulePositionsFrom: vdmc specification) collect: #key ]
 ]
 
 { #category : #'module list menu' }
 ViennaBrowser >> moduleListMenu: aMenu [ 
 	| referenceSubMenu |
-	aMenu add: 'remove module' translated action: #removeModule.
+	aMenu add: 'remove module' translated selector: #removeModule.
 	aMenu addLine.
 	referenceSubMenu := MenuMorph new defaultTarget: self.
-	self referringModules
+	self importerModules
 		do: [:name | referenceSubMenu
 				add: name
 				selector: #selectModuleNamed:
 				argument: name].
 	referenceSubMenu hasItems
-		ifTrue: [aMenu add: 'referring modules...' translated subMenu: referenceSubMenu].
+		ifTrue: [aMenu add: 'imported by...' translated subMenu: referenceSubMenu].
 	^ aMenu
 ]
 
 { #category : #private }
 ViennaBrowser >> modulePositionsFrom: aString [
-	| reader stream modulesAndPositions ends |
-	reader := ViennaReader new.
-	stream := aString readStream.
-	modulesAndPositions := Array new writeStream.
-	((stream nextMatchAll: 'module') and: [ stream next isSeparator ])
-		ifTrue: [ 
-			(String
-				new: 1
-				streamContents: [ :nameStream | 
-					[ stream atEnd or: [ stream peek isSeparator or: [ '-/' includes: stream peek ] ] ]
-						whileFalse: [ nameStream nextPut: stream next ] ]) in: [ :name | modulesAndPositions nextPut: name -> 1 ] ].
-	[ stream atEnd ]
-		whileFalse: [ 
-			stream next
-				in: [ :char | 
-					char isSeparator
-						ifTrue: [ 
-							stream position
-								in: [ :position | 
-									((stream nextMatchAll: 'module') and: [ stream next isSeparator ])
-										ifTrue: [ 
-											(String
-												new: 1
-												streamContents: [ :nameStream | 
-													[ stream atEnd or: [ stream peek isSeparator or: [ '-/' includes: stream peek ] ] ]
-														whileFalse: [ nameStream nextPut: stream next ] ])
-												in: [ :name | modulesAndPositions nextPut: name -> (position + 1) ] ] ] ].
-					char = $'
-						ifTrue: [ 
-							stream skip: -1.
-							reader parseCharOn: stream ].
-					char = $"
-						ifTrue: [ 
-							stream skip: -1.
-							reader parseStringOn: stream ].
-					(char = $/ and: [ stream nextMatchAll: '*' ])
-						ifTrue: [ 
-							stream skip: -2.
-							reader skipCommentOn: stream ].
-					(char = $- and: [ stream nextMatchAll: '-' ])
-						ifTrue: [ 
-							stream skip: -2.
-							reader skipLineCommentOn: stream ] ] ].
-	modulesAndPositions := modulesAndPositions contents.
-	modulesAndPositions ifEmpty: [ ^ Array with: 'DEFAULT' -> (1 to: aString size) ].
-	ends := ((2 to: modulesAndPositions size) collect: [ :index | (modulesAndPositions at: index) value - 1 ])
-		copyWith: aString size.
-	^ (1 to: modulesAndPositions size)
-		collect: [ :index | (modulesAndPositions at: index) key -> ((modulesAndPositions at: index) value to: (ends at: index)) ]
+	^ aString = cachedSpec
+		ifTrue: [ cachedModulePositions ]
+		ifFalse: [ 
+			| reader stream modulesAndPositions ends |
+			reader := ViennaReader new.
+			stream := aString readStream.
+			modulesAndPositions := Array new writeStream.
+			((stream nextMatchAll: 'module') and: [ stream next isSeparator ])
+				ifTrue: [ 
+					(String
+						new: 1
+						streamContents: [ :nameStream | 
+							[ stream atEnd or: [ stream peek isSeparator or: [ '-/' includes: stream peek ] ] ]
+								whileFalse: [ nameStream nextPut: stream next ] ]) in: [ :name | modulesAndPositions nextPut: name -> 1 ] ].
+			[ stream atEnd ]
+				whileFalse: [ 
+					stream next
+						in: [ :char | 
+							char isSeparator
+								ifTrue: [ 
+									stream position
+										in: [ :position | 
+											((stream nextMatchAll: 'module') and: [ stream next isSeparator ])
+												ifTrue: [ 
+													(String
+														new: 1
+														streamContents: [ :nameStream | 
+															[ stream atEnd or: [ stream peek isSeparator or: [ '-/' includes: stream peek ] ] ]
+																whileFalse: [ nameStream nextPut: stream next ] ])
+														in: [ :name | modulesAndPositions nextPut: name -> (position + 1) ] ] ] ].
+							char = $'
+								ifTrue: [ 
+									stream skip: -1.
+									reader parseCharOn: stream ].
+							char = $"
+								ifTrue: [ 
+									stream skip: -1.
+									reader parseStringOn: stream ].
+							(char = $/ and: [ stream nextMatchAll: '*' ])
+								ifTrue: [ 
+									stream skip: -2.
+									reader skipCommentOn: stream ].
+							(char = $- and: [ stream nextMatchAll: '-' ])
+								ifTrue: [ 
+									stream skip: -2.
+									reader skipLineCommentOn: stream ] ] ].
+			modulesAndPositions := modulesAndPositions contents.
+			modulesAndPositions ifEmpty: [ ^ Array with: 'DEFAULT' -> (1 to: aString size) ].
+			ends := ((2 to: modulesAndPositions size) collect: [ :index | (modulesAndPositions at: index) value - 1 ])
+				copyWith: aString size.
+			cachedSpec := aString.
+			cachedModulePositions := (1 to: modulesAndPositions size)
+				collect: [ :index | (modulesAndPositions at: index) key -> ((modulesAndPositions at: index) value to: (ends at: index)) ] ]
 ]
 
 { #category : #'module list' }
@@ -470,6 +489,7 @@ ViennaBrowser >> openLabel: aString [
 	valuePane := self buildValuePane.
 	codePane := self buildCodePane.
 	pane := BorderedMorph new.
+	pane extent: 400 @ 300.
 	pane color: Color transparent.
 	pane changeProportionalLayout.
 	upper := BorderedMorph new.
@@ -477,6 +497,7 @@ ViennaBrowser >> openLabel: aString [
 	upper addMorph: moduleListPane fullFrame: (0 @ 0 corner: 0.3 @ 1) asLayoutFrame.
 	upper addMorph: fieldListPane fullFrame: (0.3 @ 0 corner: 0.6 @ 1) asLayoutFrame.
 	upper addMorph: valuePane fullFrame: (0.6 @ 0 corner: 1 @ 1) asLayoutFrame.
+	upper addPaneSplitters.
 	pane addMorph: upper fullFrame: ((0 @ 0 corner: 1 @ 0.5) asLayoutFrame bottomRightOffset: 0 @ -2).
 	pane addMorph: codePane fullFrame: ((0 @ 0.5 corner: 1 @ 1) asLayoutFrame topLeftOffset: 0 @ 2).
 	pane addPaneSplitters.
@@ -535,28 +556,15 @@ ViennaBrowser >> printItIn: aPluggableTextMorph [
 				handleEdit: [editor afterSelectionInsertAndSelect: result].
 			selectionInterval := editor selectionInterval.
 			aPluggableTextMorph textMorph editor selectFrom: selectionInterval first to: selectionInterval last.
-			aPluggableTextMorph scrollSelectionIntoView]
-]
-
-{ #category : #'module list menu' }
-ViennaBrowser >> referringModules [
-	| parser |
-	self selectedModule isNil
-		ifTrue: [ ^ Array new ].
-	parser := 'from' asParser , #space asParser plus , self selectedModule asParser , #space asParser.
-	^ ((self modulePositionsFrom: vdmc specification)
-		select: [ :assoc | 
-			assoc key ~= self selectedModule
-				and: [ (parser matchesIn: (vdmc specification copyFrom: assoc value first to: assoc value last)) notEmpty ] ])
-		collect: [ :assoc | assoc key ]
+			aPluggableTextMorph scrollSelectionIntoView.
+			self changed: #value]
 ]
 
 { #category : #'module list menu' }
 ViennaBrowser >> removeModule [
 	self selectedModule
-		in: [ :moduleName | 
+		ifNotNil: [ :moduleName | 
 			| position newSpecification oldSpecification |
-			moduleName ifNil: [ ^ false ].
 			position := ((self modulePositionsFrom: vdmc specification)
 				detect: [ :assoc | assoc key = moduleName ]
 				ifNone: [ ^ false ]) value.
@@ -569,7 +577,10 @@ ViennaBrowser >> removeModule [
 				ifError: [ :msg | 
 					vdmc specification: oldSpecification.
 					UIManager default abort: msg title: 'VDM Error'.
-					^ false ] ]
+					^ false ].
+			self changed: #moduleList.
+			self selectModuleNamed: nil.
+			^ true ]
 ]
 
 { #category : #'field list' }
@@ -602,6 +613,33 @@ ViennaBrowser >> selectedModule [
 	^ selectedModule
 ]
 
+{ #category : #'code pane' }
+ViennaBrowser >> specificationTemplate [
+	^ 'module <module name>
+exports all
+definitions
+types
+	<typename> = <type expression>;
+values
+	<constant> = <expression>;
+functions
+	<funcname> : <arg type> -> <return type>
+	<funcname>(<arg>) == <expression>
+	pre <precondition>
+	post <postcondition>;
+state <State> of
+	<varname> : <type expression>
+init s == s = mk_<State>(<initial value>)
+end
+operations
+	<operation name> : <arg type> ==> <return type or ()>
+	<operation name>(<arg>) == <statement>
+	pre <precondition>
+	post <postcondition>;
+end <module name>
+'
+]
+
 { #category : #'value pane' }
 ViennaBrowser >> value [
 	^ self selectedModule
@@ -623,7 +661,7 @@ ViennaBrowser >> value [
 							(',' , String cr
 								join:
 									(vdmc state keys
-										select: [ :key | (key copyFrom: 1 to: prefix size) = prefix ]
+										select: [ :key | key size > prefix size and: [(key copyFrom: 1 to: prefix size) = prefix ]]
 										thenCollect: [ :key | (key copyFrom: prefix size + 1 to: key size) , ' |-> ' , (vdmc plainAt: key) ])
 										asSortedCollection) , '}' ]
 				ifNotNil: [ :field | vdmc plainAt: module , '`' , field ifAbsent: [ String new ] ] ]
