@@ -152,7 +152,7 @@ ViennaLiveSmalltalkTranslationEditor >> createTranslator [
 		ifError: [ 
 			ViennaVDM2SmalltalkScript
 				translateStatement: string
-				ifError: [ ViennaVDM2SmalltalkScript translateExpression: string ifError: [ :err | err ] ] ] ]
+				ifError: [ ViennaVDM2SmalltalkScript translateExpression: string ifError: [ :err | err ] ] ] ] 
 ]
 
 { #category : #accessing }
