@@ -6,47 +6,27 @@ Class {
 
 { #category : #utilities }
 ViennaVDM2SmalltalkScript class >> translate: aString ifError: aBlock [
-	| ast |
-	ast := ViennaVDMParser new parse: aString.
-	ast isPetitFailure
-		ifTrue: [ ^ aBlock cull: ast ].
-	^ self new generate: ast
+	^ self new translate: aString ifError: aBlock
 ]
 
 { #category : #utilities }
 ViennaVDM2SmalltalkScript class >> translateExplicitFunction: aString ifError: aBlock [
-	| ast |
-	ast := ViennaVDMParser new explicitFunctionDefinition end parse: aString.
-	ast isPetitFailure
-		ifTrue: [ ^ aBlock cull: ast ].
-	^ self new generate: ast
+	^ self new translateExplicitFunction: aString ifError: aBlock
 ]
 
 { #category : #utilities }
 ViennaVDM2SmalltalkScript class >> translateExplicitOperation: aString ifError: aBlock [
-	| ast |
-	ast := ViennaVDMParser new explicitOperationDefinition end parse: aString.
-	ast isPetitFailure
-		ifTrue: [ ^ aBlock cull: ast ].
-	^ self new generate: ast
+	^ self new translateExplicitOperation: aString ifError: aBlock
 ]
 
 { #category : #utilities }
 ViennaVDM2SmalltalkScript class >> translateExpression: aString ifError: aBlock [
-	| ast |
-	ast := ViennaVDMParser new expression end parse: aString.
-	ast isPetitFailure
-		ifTrue: [ ^ aBlock cull: ast ].
-	^ self new generate: ast
+	^ self new translateExpression: aString ifError: aBlock
 ]
 
 { #category : #utilities }
 ViennaVDM2SmalltalkScript class >> translateStatement: aString ifError: aBlock [
-	| ast |
-	ast := ViennaVDMParser new statement end parse: aString.
-	ast isPetitFailure
-		ifTrue: [ ^ aBlock cull: ast ].
-	^ self new generate: ast
+	^ self new translateStatement: aString ifError: aBlock
 ]
 
 { #category : #'code generation-definitions' }
@@ -117,6 +97,51 @@ ViennaVDM2SmalltalkScript >> stateDefinition: aViennaNode env: aDictionary [
 				nextPutAll: '. state := [';
 				nextPutAll: quin fifth;
 				nextPutAll: ']' ]
+]
+
+{ #category : #utilities }
+ViennaVDM2SmalltalkScript >> translate: aString ifError: aBlock [
+	| ast |
+	ast := ViennaVDMParser new parse: aString.
+	ast isPetitFailure
+		ifTrue: [ ^ aBlock cull: ast ].
+	^ self generate: ast
+]
+
+{ #category : #utilities }
+ViennaVDM2SmalltalkScript >> translateExplicitFunction: aString ifError: aBlock [
+	| ast |
+	ast := ViennaVDMParser new explicitFunctionDefinition end parse: aString.
+	ast isPetitFailure
+		ifTrue: [ ^ aBlock cull: ast ].
+	^ self generate: ast
+]
+
+{ #category : #utilities }
+ViennaVDM2SmalltalkScript >> translateExplicitOperation: aString ifError: aBlock [
+	| ast |
+	ast := ViennaVDMParser new explicitOperationDefinition end parse: aString.
+	ast isPetitFailure
+		ifTrue: [ ^ aBlock cull: ast ].
+	^ self generate: ast
+]
+
+{ #category : #utilities }
+ViennaVDM2SmalltalkScript >> translateExpression: aString ifError: aBlock [
+	| ast |
+	ast := ViennaVDMParser new expression end parse: aString.
+	ast isPetitFailure
+		ifTrue: [ ^ aBlock cull: ast ].
+	^ self generate: ast
+]
+
+{ #category : #utilities }
+ViennaVDM2SmalltalkScript >> translateStatement: aString ifError: aBlock [
+	| ast |
+	ast := ViennaVDMParser new statement end parse: aString.
+	ast isPetitFailure
+		ifTrue: [ ^ aBlock cull: ast ].
+	^ self generate: ast
 ]
 
 { #category : #'code generation-definitions' }

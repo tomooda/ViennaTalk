@@ -11,31 +11,6 @@ Class {
 	#category : 'ViennaTalk-Parser-Code Generators'
 }
 
-{ #category : #utilities }
-ViennaVDM2Smalltalk class >> translate: aString ifError: aBlock [
-	self subclassResponsibility
-]
-
-{ #category : #utilities }
-ViennaVDM2Smalltalk class >> translateExplicitFunction: aString ifError: aBlock [
-	self subclassResponsibility
-]
-
-{ #category : #utilities }
-ViennaVDM2Smalltalk class >> translateExplicitOperation: aString ifError: aBlock [
-	self subclassResponsibility
-]
-
-{ #category : #utilities }
-ViennaVDM2Smalltalk class >> translateExpression: aString ifError: aBlock [
-	self subclassResponsibility
-]
-
-{ #category : #utilities }
-ViennaVDM2Smalltalk class >> translateStatement: aString ifError: aBlock [
-	self subclassResponsibility
-]
-
 { #category : #'code generation-definitions' }
 ViennaVDM2Smalltalk >> accessFunctionDefinition: aViennaNode env: aDictionary [
 	^ self generate: aViennaNode second env: aDictionary
@@ -2088,6 +2063,16 @@ ViennaVDM2Smalltalk >> resultExpression: aViennaNode env: aDictionary [
 { #category : #'code generation-statements' }
 ViennaVDM2Smalltalk >> returnStatement: aViennaNode env: aDictionary [
 	^ 'thisContext viennaReturn: ' , (self generate: aViennaNode first env: aDictionary)
+]
+
+{ #category : #'enabling/disabling' }
+ViennaVDM2Smalltalk >> runtimeAssertionCheck: aBoolean [
+	runtimeAssertionCheck := aBoolean ~= false
+]
+
+{ #category : #'enabling/disabling' }
+ViennaVDM2Smalltalk >> runtimeTypeCheck: aBoolean [
+	runtimeTypeCheck := aBoolean ~= false
 ]
 
 { #category : #'code generation-expressions' }
