@@ -398,6 +398,11 @@ TViennaVDMBoundVariableCollector >> boundVariablesSequenceForLoop: aViennaNode i
 	self boundVariables: aViennaNode first into: aSet
 ]
 
+{ #category : #'bound variables-types' }
+TViennaVDMBoundVariableCollector >> boundVariablesSet1Type: aViennaNode into: aSet [
+	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
+]
+
 { #category : #'bound variables-patterns and binds' }
 TViennaVDMBoundVariableCollector >> boundVariablesSetBind: aViennaNode into: aSet [
 	self boundVariables: aViennaNode first into: aSet

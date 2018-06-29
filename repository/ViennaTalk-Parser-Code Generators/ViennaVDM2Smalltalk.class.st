@@ -2881,6 +2881,11 @@ ViennaVDM2Smalltalk >> sequenceTail: aViennaNode env: aDictionary [
 	^ (self generate: aViennaNode first env: aDictionary) , ' tail'
 ]
 
+{ #category : #'code generation-types' }
+ViennaVDM2Smalltalk >> set1Type: aViennaNode env: aDictionary [
+	^ (self generate: aViennaNode first env: aDictionary) , ' set1'
+]
+
 { #category : #'code generation-patterns' }
 ViennaVDM2Smalltalk >> setBind: aViennaNode env: aDictionary [
 	^ self generateAll: aViennaNode env: aDictionary
