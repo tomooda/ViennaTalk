@@ -1,7 +1,6 @@
 Class {
 	#name : #ViennaSetType,
 	#superclass : #ViennaType,
-	#type : #variable,
 	#instVars : [
 		'basetype'
 	],
@@ -44,25 +43,25 @@ ViennaSetType >> basetype [
 ]
 
 { #category : #enumerating }
-ViennaSetType >> do: aBlock [
+ViennaSetType >> basicDo: aBlock [
 	| values |
 	values := Array new: 1024 streamContents: [ :stream | basetype do: [ :v | stream nextPut: v ] ].
 	values powerDo: [ :array | aBlock value: array asSet ]
 ]
 
-{ #category : #comparing }
-ViennaSetType >> hash [
-	^ basetype hash bitXor: 16rffff
-]
-
 { #category : #testing }
-ViennaSetType >> includes: anObject [
+ViennaSetType >> basicIncludes: anObject [
 	^ anObject isSet and: [ anObject allSatisfy: [ :value | basetype includes: value ] ]
 ]
 
 { #category : #testing }
-ViennaSetType >> isEnumerable [
+ViennaSetType >> basicIsEnumerable [
 	^ basetype isEnumerable
+]
+
+{ #category : #comparing }
+ViennaSetType >> hash [
+	^ basetype hash bitXor: 16rffff
 ]
 
 { #category : #accessing }

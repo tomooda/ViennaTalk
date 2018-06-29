@@ -1,7 +1,6 @@
 Class {
 	#name : #ViennaSeq1Type,
 	#superclass : #ViennaType,
-	#type : #variable,
 	#instVars : [
 		'basetype'
 	],
@@ -43,23 +42,23 @@ ViennaSeq1Type >> basetype [
 ]
 
 { #category : #enumerating }
-ViennaSeq1Type >> do: aBlock [
+ViennaSeq1Type >> basicDo: aBlock [
 	^ self shouldNotImplement
+]
+
+{ #category : #testing }
+ViennaSeq1Type >> basicIncludes: anObject [
+	^ anObject isSequence and: [ anObject notEmpty and: [ anObject allSatisfy: [ :value | basetype includes: value ] ] ]
+]
+
+{ #category : #testing }
+ViennaSeq1Type >> basicIsEnumerable [
+	^ false
 ]
 
 { #category : #comparing }
 ViennaSeq1Type >> hash [
 	^ basetype hash bitXor: 16rffff
-]
-
-{ #category : #testing }
-ViennaSeq1Type >> includes: anObject [
-	^ anObject isSequence and: [ anObject notEmpty and: [ anObject allSatisfy: [ :value | basetype includes: value ] ] ]
-]
-
-{ #category : #testing }
-ViennaSeq1Type >> isEnumerable [
-	^ false
 ]
 
 { #category : #accessing }

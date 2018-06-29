@@ -1,7 +1,6 @@
 Class {
 	#name : #ViennaQuoteType,
 	#superclass : #ViennaType,
-	#type : #variable,
 	#instVars : [
 		'symbol'
 	],
@@ -26,23 +25,23 @@ ViennaQuoteType >> = anObject [
 ]
 
 { #category : #enumerating }
-ViennaQuoteType >> do: aBlock [
+ViennaQuoteType >> basicDo: aBlock [
 	aBlock value: symbol
+]
+
+{ #category : #testing }
+ViennaQuoteType >> basicIncludes: anObject [
+	^ symbol == anObject
+]
+
+{ #category : #testing }
+ViennaQuoteType >> basicIsEnumerable [
+	^ true
 ]
 
 { #category : #comparing }
 ViennaQuoteType >> hash [
 	^ symbol hash
-]
-
-{ #category : #testing }
-ViennaQuoteType >> includes: anObject [
-	^ symbol == anObject
-]
-
-{ #category : #testing }
-ViennaQuoteType >> isEnumerable [
-	^ true
 ]
 
 { #category : #accessing }

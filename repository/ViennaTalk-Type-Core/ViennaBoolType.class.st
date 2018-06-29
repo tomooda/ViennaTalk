@@ -1,17 +1,8 @@
 Class {
 	#name : #ViennaBoolType,
 	#superclass : #ViennaType,
-	#type : #variable,
-	#classVars : [
-		'Current'
-	],
 	#category : 'ViennaTalk-Type-Core'
 }
-
-{ #category : #'instance creation' }
-ViennaBoolType class >> current [
-	^ Current ifNil: [ Current := self new ]
-]
 
 { #category : #accessing }
 ViennaBoolType class >> precedence [
@@ -24,24 +15,24 @@ ViennaBoolType >> = anObject [
 ]
 
 { #category : #enumerating }
-ViennaBoolType >> do: aBlock [
+ViennaBoolType >> basicDo: aBlock [
 	aBlock value: true.
 	aBlock value: false
+]
+
+{ #category : #testing }
+ViennaBoolType >> basicIncludes: anObject [
+	^ anObject = true or: [ anObject = false ]
+]
+
+{ #category : #testing }
+ViennaBoolType >> basicIsEnumerable [
+	^ true
 ]
 
 { #category : #comparing }
 ViennaBoolType >> hash [
 	^ self class hash
-]
-
-{ #category : #testing }
-ViennaBoolType >> includes: anObject [
-	^ anObject = true or: [ anObject = false ]
-]
-
-{ #category : #testing }
-ViennaBoolType >> isEnumerable [
-	^ true
 ]
 
 { #category : #accessing }

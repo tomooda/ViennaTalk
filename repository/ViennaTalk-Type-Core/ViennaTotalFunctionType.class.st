@@ -1,7 +1,6 @@
 Class {
 	#name : #ViennaTotalFunctionType,
 	#superclass : #ViennaType,
-	#type : #variable,
 	#instVars : [
 		'returntype',
 		'argtypes'
@@ -51,23 +50,23 @@ ViennaTotalFunctionType >> argtypes [
 ]
 
 { #category : #enumerating }
-ViennaTotalFunctionType >> do: aBlock [
+ViennaTotalFunctionType >> basicDo: aBlock [
 	^ self shouldNotImplement
+]
+
+{ #category : #testing }
+ViennaTotalFunctionType >> basicIncludes: anObject [
+	^ anObject isFunction and: [ argtypes size = anObject numArgs ]
+]
+
+{ #category : #testing }
+ViennaTotalFunctionType >> basicIsEnumerable [
+	^ false
 ]
 
 { #category : #comparing }
 ViennaTotalFunctionType >> hash [
 	^ argtypes hash bitXor: returntype hash
-]
-
-{ #category : #testing }
-ViennaTotalFunctionType >> includes: anObject [
-	^ anObject isFunction and: [ argtypes size = anObject numArgs ]
-]
-
-{ #category : #testing }
-ViennaTotalFunctionType >> isEnumerable [
-	^ false
 ]
 
 { #category : #accessing }

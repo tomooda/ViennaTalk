@@ -1,20 +1,8 @@
 Class {
 	#name : #ViennaNat1Type,
 	#superclass : #ViennaType,
-	#type : #variable,
-	#instVars : [
-		'Current'
-	],
-	#classVars : [
-		'Current'
-	],
 	#category : 'ViennaTalk-Type-Core'
 }
-
-{ #category : #'instance creation' }
-ViennaNat1Type class >> current [
-	^ Current ifNil: [ Current := self new ]
-]
 
 { #category : #accessing }
 ViennaNat1Type class >> precedence [
@@ -32,23 +20,23 @@ ViennaNat1Type >> >= aViennaType [
 ]
 
 { #category : #enumerating }
-ViennaNat1Type >> do: aBlock [
+ViennaNat1Type >> basicDo: aBlock [
 	^ self shouldNotImplement
+]
+
+{ #category : #testing }
+ViennaNat1Type >> basicIncludes: anObject [
+	^ anObject isInteger and: [ anObject > 0 ]
+]
+
+{ #category : #testing }
+ViennaNat1Type >> basicIsEnumerable [
+	^ false
 ]
 
 { #category : #comparing }
 ViennaNat1Type >> hash [
 	^ self class hash
-]
-
-{ #category : #testing }
-ViennaNat1Type >> includes: anObject [
-	^ anObject isInteger and: [ anObject > 0 ]
-]
-
-{ #category : #testing }
-ViennaNat1Type >> isEnumerable [
-	^ false
 ]
 
 { #category : #testing }

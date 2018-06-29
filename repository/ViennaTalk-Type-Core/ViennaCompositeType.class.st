@@ -40,18 +40,37 @@ ViennaCompositeType >> basetypeAt: anIndex [
 	^ (self at: anIndex) third
 ]
 
-{ #category : #accessing }
-ViennaCompositeType >> constructorName [
-	^ constructorName
-]
-
 { #category : #enumerating }
-ViennaCompositeType >> do: aBlock [
+ViennaCompositeType >> basicDo: aBlock [
 	| blockGenerator block |
 	blockGenerator := [ :outerCollection :b | [ :v | outerCollection do: [ :outerValue | b value: (v copyWith: outerValue) ] ] ].
 	block := blockGenerator value: (self basetypeAt: self size) value: aBlock.
 	self size - 1 to: 2 by: -1 do: [ :index | block := blockGenerator value: (self basetypeAt: index) value: block ].
 	(self basetypeAt: 1) do: [ :v | block value: (Array with: v) ]
+]
+
+{ #category : #testing }
+ViennaCompositeType >> basicIncludes: anObject [
+	((anObject isKindOf: ViennaComposite)
+		and: [ constructorName = anObject constructorName and: [ self size = anObject size ] ])
+		ifFalse: [ ^ false ].
+	1 to: self basicSize do: [ :index | 
+		((self at: index) third includes: (anObject at: index))
+			ifFalse: [ ^ false ] ].
+	^ true
+]
+
+{ #category : #testing }
+ViennaCompositeType >> basicIsEnumerable [
+	1 to: self size do: [ :index | 
+		(self basetypeAt: index) isEnumerable
+			ifFalse: [ ^ false ] ].
+	^ true
+]
+
+{ #category : #accessing }
+ViennaCompositeType >> constructorName [
+	^ constructorName
 ]
 
 { #category : #private }
@@ -69,17 +88,6 @@ ViennaCompositeType >> hash [
 	^ (1 to: self size) inject: constructorName hash into: [ :hash :field | hash bitXor: field hash ]
 ]
 
-{ #category : #testing }
-ViennaCompositeType >> includes: anObject [
-	((anObject isKindOf: ViennaComposite)
-		and: [  constructorName = anObject constructorName and: [ self size = anObject size ] ])
-		ifFalse: [ ^ false ].
-	1 to: self basicSize do: [ :index | 
-		((self at: index) third includes: (anObject at: index))
-			ifFalse: [ ^ false ] ].
-	^ true
-]
-
 { #category : #private }
 ViennaCompositeType >> indicesAndFieldsDo: aBlock [
 	1 to: self size do: [ :index | 
@@ -90,14 +98,6 @@ ViennaCompositeType >> indicesAndFieldsDo: aBlock [
 			value: field first
 			value: field second
 			value: field third ]
-]
-
-{ #category : #testing }
-ViennaCompositeType >> isEnumerable [
-	1 to: self size do: [ :index | 
-		(self basetypeAt: index) isEnumerable
-			ifFalse: [ ^ false ] ].
-	^ true
 ]
 
 { #category : #accessing }

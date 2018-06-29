@@ -1,7 +1,6 @@
 Class {
 	#name : #ViennaCharType,
 	#superclass : #ViennaType,
-	#type : #variable,
 	#classVars : [
 		'Current'
 	],
@@ -24,23 +23,23 @@ ViennaCharType >> = anObject [
 ]
 
 { #category : #enumerating }
-ViennaCharType >> do: aBlock [
+ViennaCharType >> basicDo: aBlock [
 	^ self shouldNotImplement
+]
+
+{ #category : #testing }
+ViennaCharType >> basicIncludes: anObject [
+	^ anObject isCharacter
+]
+
+{ #category : #testing }
+ViennaCharType >> basicIsEnumerable [
+	^ false
 ]
 
 { #category : #comparing }
 ViennaCharType >> hash [
 	^ self class hash
-]
-
-{ #category : #testing }
-ViennaCharType >> includes: anObject [
-	^ anObject isCharacter
-]
-
-{ #category : #testing }
-ViennaCharType >> isEnumerable [
-	^ false
 ]
 
 { #category : #accessing }

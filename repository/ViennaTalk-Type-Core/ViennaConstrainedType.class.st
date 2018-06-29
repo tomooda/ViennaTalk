@@ -1,7 +1,6 @@
 Class {
 	#name : #ViennaConstrainedType,
 	#superclass : #ViennaType,
-	#type : #variable,
 	#instVars : [
 		'basetype',
 		'invariant'
@@ -46,21 +45,26 @@ ViennaConstrainedType >> basetype [
 ]
 
 { #category : #enumerating }
-ViennaConstrainedType >> do: aBlock [
+ViennaConstrainedType >> basicDo: aBlock [
 	basetype
 		do: [ :v | 
 			(invariant value: v)
 				ifTrue: [ aBlock value: v ] ]
 ]
 
-{ #category : #comparing }
-ViennaConstrainedType >> hash [
-	^ basetype hash bitXor: invariant hash
+{ #category : #testing }
+ViennaConstrainedType >> basicIncludes: anObject [
+	^ (basetype includes: anObject) and: [ invariant value: anObject ]
 ]
 
 { #category : #testing }
-ViennaConstrainedType >> includes: anObject [
-	^ (basetype includes: anObject) and: [ invariant value: anObject ]
+ViennaConstrainedType >> basicIsEnumerable [
+	^ basetype isEnumerable
+]
+
+{ #category : #comparing }
+ViennaConstrainedType >> hash [
+	^ basetype hash bitXor: invariant hash
 ]
 
 { #category : #arithmetic }
@@ -71,11 +75,6 @@ ViennaConstrainedType >> inv: aBlock [
 { #category : #accessing }
 ViennaConstrainedType >> invariant [
 	^ invariant
-]
-
-{ #category : #testing }
-ViennaConstrainedType >> isEnumerable [
-	^ basetype isEnumerable
 ]
 
 { #category : #testing }

@@ -1,7 +1,6 @@
 Class {
 	#name : #ViennaPartialFunctionType,
 	#superclass : #ViennaType,
-	#type : #variable,
 	#instVars : [
 		'returntype',
 		'argtypes'
@@ -44,23 +43,23 @@ ViennaPartialFunctionType >> argtypes [
 ]
 
 { #category : #enumerating }
-ViennaPartialFunctionType >> do: aBlock [
+ViennaPartialFunctionType >> basicDo: aBlock [
 	^ self shouldNotImplement
+]
+
+{ #category : #testing }
+ViennaPartialFunctionType >> basicIncludes: anObject [
+	^ anObject isFunction and: [ argtypes size = anObject numArgs ]
+]
+
+{ #category : #testing }
+ViennaPartialFunctionType >> basicIsEnumerable [
+	^ false
 ]
 
 { #category : #comparing }
 ViennaPartialFunctionType >> hash [
 	^ argtypes hash bitXor: returntype hash
-]
-
-{ #category : #testing }
-ViennaPartialFunctionType >> includes: anObject [
-	^ anObject isFunction and: [ argtypes size = anObject numArgs ]
-]
-
-{ #category : #testing }
-ViennaPartialFunctionType >> isEnumerable [
-	^ false
 ]
 
 { #category : #accessing }

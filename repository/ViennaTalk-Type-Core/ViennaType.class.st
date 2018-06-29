@@ -1,13 +1,15 @@
 Class {
 	#name : #ViennaType,
 	#superclass : #Object,
-	#type : #variable,
+	#instVars : [
+		'runtimeSet'
+	],
 	#category : 'ViennaTalk-Type-Core'
 }
 
 { #category : #'instance creation' }
 ViennaType class >> bool [
-	^ ViennaBoolType current
+	^ ViennaBoolType new
 ]
 
 { #category : #'instance creation' }
@@ -27,7 +29,7 @@ ViennaType class >> inmap: aViennaType1 to: aViennaType2 [
 
 { #category : #'instance creation' }
 ViennaType class >> int [
-	^ ViennaIntType current
+	^ ViennaIntType new
 ]
 
 { #category : #'instance creation' }
@@ -37,12 +39,12 @@ ViennaType class >> map: aViennaType1 to: aViennaType2 [
 
 { #category : #'instance creation' }
 ViennaType class >> nat [
-	^ ViennaNatType current
+	^ ViennaNatType new
 ]
 
 { #category : #'instance creation' }
 ViennaType class >> nat1 [
-	^ ViennaNat1Type current
+	^ ViennaNat1Type new
 ]
 
 { #category : #'instance creation' }
@@ -72,12 +74,12 @@ ViennaType class >> quote: aString [
 
 { #category : #'instance creation' }
 ViennaType class >> rat [
-	^ ViennaRealType current
+	^ ViennaRealType new
 ]
 
 { #category : #'instance creation' }
 ViennaType class >> real [
-	^ ViennaRealType current
+	^ ViennaRealType new
 ]
 
 { #category : #'instance creation' }
@@ -102,7 +104,7 @@ ViennaType class >> setOf: aViennaType [
 
 { #category : #'instance creation' }
 ViennaType class >> token [
-	^ ViennaTokenType
+	^ ViennaTokenType new
 ]
 
 { #category : #'instance creation' }
@@ -169,6 +171,21 @@ ViennaType >> anySatisfy: aBlock [
 ]
 
 { #category : #enumerating }
+ViennaType >> basicDo: aBlock [
+	^ self subclassResponsibility
+]
+
+{ #category : #testing }
+ViennaType >> basicIncludes: anObject [
+	^ self subclassResponsibility
+]
+
+{ #category : #testing }
+ViennaType >> basicIsEnumerable [
+	^ self subclassResponsibility
+]
+
+{ #category : #enumerating }
 ViennaType >> collect: aBlock [
 	^ Array new: 4 streamContents: [ :stream | self do: [ :value | stream nextPut: (aBlock value: value) ] ]
 ]
@@ -184,12 +201,12 @@ ViennaType >> detect: aBlock [
 
 { #category : #enumerating }
 ViennaType >> do: aBlock [
-	^ self subclassResponsibility
+	runtimeSet ifNotNil: [ runtimeSet do: aBlock ] ifNil: [ self basicDo: aBlock ]
 ]
 
 { #category : #testing }
 ViennaType >> includes: anObject [
-	^ self subclassResponsibility
+	^ runtimeSet ifNotNil: [ runtimeSet includes: anObject ] ifNil: [ self basicIncludes: anObject ]
 ]
 
 { #category : #arithmetic }
@@ -204,7 +221,7 @@ ViennaType >> inv: aBlock [
 
 { #category : #testing }
 ViennaType >> isEnumerable [
-	^ self subclassResponsibility
+	^ runtimeSet notNil or: [ self basicIsEnumerable ]
 ]
 
 { #category : #testing }
@@ -230,6 +247,26 @@ ViennaType >> isRealType [
 { #category : #arithmetic }
 ViennaType >> mapTo: aViennaType [
 	^ ViennaMapType with: self with: aViennaType
+]
+
+{ #category : #accessing }
+ViennaType >> max [
+	^ nil
+]
+
+{ #category : #accessing }
+ViennaType >> max: aNumber [
+	
+]
+
+{ #category : #accessing }
+ViennaType >> min [
+	^ nil
+]
+
+{ #category : #accessing }
+ViennaType >> min: aNumber [
+	
 ]
 
 { #category : #accessing }
@@ -270,6 +307,16 @@ ViennaType >> optional [
 { #category : #printing }
 ViennaType >> printOn: aStream [
 	aStream nextPutAll: self name
+]
+
+{ #category : #accessing }
+ViennaType >> runtimeSet [
+	^ runtimeSet
+]
+
+{ #category : #accessing }
+ViennaType >> runtimeSet: aCollection [
+	runtimeSet := aCollection
 ]
 
 { #category : #enumerating }

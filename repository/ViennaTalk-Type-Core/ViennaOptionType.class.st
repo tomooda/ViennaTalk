@@ -1,7 +1,6 @@
 Class {
 	#name : #ViennaOptionType,
 	#superclass : #ViennaType,
-	#type : #variable,
 	#instVars : [
 		'basetype'
 	],
@@ -36,24 +35,24 @@ ViennaOptionType >> basetype [
 ]
 
 { #category : #enumerating }
-ViennaOptionType >> do: aBlock [
+ViennaOptionType >> basicDo: aBlock [
 	basetype do: aBlock.
 	aBlock value: nil
+]
+
+{ #category : #testing }
+ViennaOptionType >> basicIncludes: anObject [
+	^ anObject isNil or: [ basetype includes: anObject ]
+]
+
+{ #category : #testing }
+ViennaOptionType >> basicIsEnumerable [
+	^ basetype isEnumerable
 ]
 
 { #category : #comparing }
 ViennaOptionType >> hash [
 	^ basetype hash bitXor: 16rffff
-]
-
-{ #category : #testing }
-ViennaOptionType >> includes: anObject [
-	^ anObject isNil or: [ basetype includes: anObject ]
-]
-
-{ #category : #testing }
-ViennaOptionType >> isEnumerable [
-	^ basetype isEnumerable
 ]
 
 { #category : #accessing }

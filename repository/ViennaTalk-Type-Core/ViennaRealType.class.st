@@ -1,17 +1,8 @@
 Class {
 	#name : #ViennaRealType,
 	#superclass : #ViennaType,
-	#type : #variable,
-	#classVars : [
-		'Current'
-	],
 	#category : 'ViennaTalk-Type-Core'
 }
-
-{ #category : #accessing }
-ViennaRealType class >> current [
-	^ Current ifNil: [ Current := self new ]
-]
 
 { #category : #accessing }
 ViennaRealType class >> precedence [
@@ -29,23 +20,23 @@ ViennaRealType >> >= aViennaType [
 ]
 
 { #category : #enumerating }
-ViennaRealType >> do: aBlock [
+ViennaRealType >> basicDo: aBlock [
 	^ self shouldNotImplement
+]
+
+{ #category : #testing }
+ViennaRealType >> basicIncludes: anObject [
+	^ anObject isNumber
+]
+
+{ #category : #testing }
+ViennaRealType >> basicIsEnumerable [
+	^ false
 ]
 
 { #category : #comparing }
 ViennaRealType >> hash [
 	^ self class hash
-]
-
-{ #category : #testing }
-ViennaRealType >> includes: anObject [
-	^ anObject isNumber
-]
-
-{ #category : #testing }
-ViennaRealType >> isEnumerable [
-	^ false
 ]
 
 { #category : #testing }

@@ -1,17 +1,11 @@
 Class {
 	#name : #ViennaTokenType,
 	#superclass : #ViennaType,
-	#type : #variable,
 	#classVars : [
 		'Current'
 	],
 	#category : 'ViennaTalk-Type-Core'
 }
-
-{ #category : #'instance creation' }
-ViennaTokenType class >> current [
-	^ Current ifNil: [ Current := self new ]
-]
 
 { #category : #accessing }
 ViennaTokenType class >> precedence [
@@ -31,23 +25,23 @@ ViennaTokenType >> applyTo: anArray [
 ]
 
 { #category : #enumerating }
-ViennaTokenType >> do: aBlock [
+ViennaTokenType >> basicDo: aBlock [
 	^ self shouldNotImplement
+]
+
+{ #category : #testing }
+ViennaTokenType >> basicIncludes: anObject [
+	^ anObject isKindOf: ViennaToken
+]
+
+{ #category : #testing }
+ViennaTokenType >> basicIsEnumerable [
+	^ false
 ]
 
 { #category : #comparing }
 ViennaTokenType >> hash [
 	^ self class hash
-]
-
-{ #category : #testing }
-ViennaTokenType >> includes: anObject [
-	^ anObject isKindOf: ViennaToken
-]
-
-{ #category : #testing }
-ViennaTokenType >> isEnumerable [
-	^ false
 ]
 
 { #category : #accessing }

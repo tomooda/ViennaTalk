@@ -1,7 +1,6 @@
 Class {
 	#name : #ViennaUnionType,
 	#superclass : #ViennaType,
-	#type : #variable,
 	#instVars : [
 		'basetypes'
 	],
@@ -50,23 +49,23 @@ ViennaUnionType >> basetypes [
 ]
 
 { #category : #enumerating }
-ViennaUnionType >> do: aBlock [
+ViennaUnionType >> basicDo: aBlock [
 	basetypes do: [ :type | type do: aBlock ]
+]
+
+{ #category : #testing }
+ViennaUnionType >> basicIncludes: anObject [
+	^ basetypes anySatisfy: [ :type | type includes: anObject ]
+]
+
+{ #category : #testing }
+ViennaUnionType >> basicIsEnumerable [
+	^ basetypes allSatisfy: #isEnumerable
 ]
 
 { #category : #comparing }
 ViennaUnionType >> hash [
 	^ basetypes inject: 0 into: [ :h :t | h bitXor: t hash ]
-]
-
-{ #category : #testing }
-ViennaUnionType >> includes: anObject [
-	^ basetypes anySatisfy: [ :type | type includes: anObject ]
-]
-
-{ #category : #testing }
-ViennaUnionType >> isEnumerable [
-	^ basetypes allSatisfy: #isEnumerable
 ]
 
 { #category : #accessing }

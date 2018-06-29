@@ -1,7 +1,6 @@
 Class {
 	#name : #ViennaMapType,
 	#superclass : #ViennaType,
-	#type : #variable,
 	#instVars : [
 		'keytype',
 		'valuetype'
@@ -35,7 +34,7 @@ ViennaMapType >> >= aViennaType [
 ]
 
 { #category : #enumerating }
-ViennaMapType >> do: aBlock [
+ViennaMapType >> basicDo: aBlock [
 	| values |
 	values := Array
 		new: 1024
@@ -49,13 +48,8 @@ ViennaMapType >> do: aBlock [
 				ifTrue: [ aBlock value: dict ] ]
 ]
 
-{ #category : #comparing }
-ViennaMapType >> hash [
-	^ keytype hash bitXor: valuetype hash
-]
-
 { #category : #testing }
-ViennaMapType >> includes: anObject [
+ViennaMapType >> basicIncludes: anObject [
 	^ anObject isDictionary
 		and: [ 
 			(anObject keys allSatisfy: [ :key | keytype includes: key ])
@@ -63,8 +57,13 @@ ViennaMapType >> includes: anObject [
 ]
 
 { #category : #testing }
-ViennaMapType >> isEnumerable [
+ViennaMapType >> basicIsEnumerable [
 	^ keytype isEnumerable and: [ valuetype isEnumerable ]
+]
+
+{ #category : #comparing }
+ViennaMapType >> hash [
+	^ keytype hash bitXor: valuetype hash
 ]
 
 { #category : #private }

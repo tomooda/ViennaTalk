@@ -1,7 +1,6 @@
 Class {
 	#name : #ViennaProductType,
 	#superclass : #ViennaType,
-	#type : #variable,
 	#instVars : [
 		'basetypes'
 	],
@@ -51,7 +50,7 @@ ViennaProductType >> basetypes [
 ]
 
 { #category : #enumerating }
-ViennaProductType >> do: aBlock [
+ViennaProductType >> basicDo: aBlock [
 	| blockGenerator block |
 	blockGenerator := [ :outerCollection :b | [ :v | outerCollection do: [ :outerValue | b value: (v copyWith: outerValue) ] ] ].
 	block := blockGenerator value: basetypes last value: aBlock.
@@ -59,13 +58,8 @@ ViennaProductType >> do: aBlock [
 	basetypes first do: [ :v | block value: (Array with: v) ]
 ]
 
-{ #category : #comparing }
-ViennaProductType >> hash [
-	^ basetypes hash
-]
-
 { #category : #testing }
-ViennaProductType >> includes: anArray [
+ViennaProductType >> basicIncludes: anArray [
 	^ anArray isArray
 		and: [ 
 			anArray size = basetypes size
@@ -73,8 +67,13 @@ ViennaProductType >> includes: anArray [
 ]
 
 { #category : #testing }
-ViennaProductType >> isEnumerable [
+ViennaProductType >> basicIsEnumerable [
 	^ basetypes allSatisfy: #isEnumerable
+]
+
+{ #category : #comparing }
+ViennaProductType >> hash [
+	^ basetypes hash
 ]
 
 { #category : #accessing }
