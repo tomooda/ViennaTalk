@@ -12,7 +12,8 @@ ViennaVDMDebugger class >> defaultTitle [
 
 { #category : #testing }
 ViennaVDMDebugger class >> handlesContext: aContext [
-	^ aContext specificationContext notNil
+	"^ aContext specificationContext notNil"
+	^ true
 ]
 
 { #category : #'class initialization' }
