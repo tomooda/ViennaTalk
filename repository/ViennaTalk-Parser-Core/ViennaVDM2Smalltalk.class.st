@@ -1702,10 +1702,14 @@ ViennaVDM2Smalltalk >> setEnumeration: aViennaNode env: aDictionary [
 ViennaVDM2Smalltalk >> setForLoop: aViennaNode env: aDictionary [
 	| pat setExpr body vars varGenerator |
 	pat := self generate: aViennaNode first env: aDictionary.
+	body := self generate: aViennaNode third env: aDictionary.
+	(aViennaNode first label = 'PatternIdentifier' and: [ aViennaNode second label = 'FinitePowerSet' ])
+		ifTrue: [ 
+			^ (self generate: aViennaNode second first env: aDictionary) , ' powerDo: [:' , aViennaNode first first , ' | ' , body
+				, ']' ].
 	setExpr := aViennaNode second label = 'SetRangeExpression'
 		ifTrue: [ self intervalExpression: aViennaNode second env: aDictionary ]
 		ifFalse: [ self generate: aViennaNode second env: aDictionary ].
-	body := self generate: aViennaNode third env: aDictionary.
 	aViennaNode first label = 'PatternIdentifier'
 		ifTrue: [ ^ setExpr , ' do: [:' , aViennaNode first first , ' | ' , body , ']' ].
 	vars := (self boundVariables: aViennaNode first) asArray.
