@@ -291,6 +291,24 @@ ViennaVDM2SmalltalkTranslatorTest >> testExplicitFunctionDefinition [
 ]
 
 { #category : #'tests-operators' }
+ViennaVDM2SmalltalkTranslatorTest >> testFieldSelectWith [
+	self
+		assert:
+			(Compiler
+				evaluate:
+					' | type value | type := ViennaCompositeType constructorName: ''T'' withAll: {{ nil . false . ViennaType int} . {''f'' . false . ViennaType int}}. value := type valueWithArguments: #(10 20). '
+						, (ViennaVDM2SmalltalkTranslator new expression end parse: 'value.f'))
+		equals: 20.
+	self
+		should: [ 
+			Compiler
+				evaluate:
+					' | type value | type := ViennaCompositeType constructorName: ''T'' withAll: {{ nil . false . ViennaType int} . {''f'' . false . ViennaType int}}. value := type valueWithArguments: #(10 20). '
+						, (ViennaVDM2SmalltalkTranslator new expression end parse: 'value.g') ]
+		raise: KeyNotFound
+]
+
+{ #category : #'tests-operators' }
 ViennaVDM2SmalltalkTranslatorTest >> testFloor [
 	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: 'floor 1.9')) equals: 1
 ]
@@ -851,7 +869,7 @@ ViennaVDM2SmalltalkTranslatorTest >> testPsubsetAnd [
 ViennaVDM2SmalltalkTranslatorTest >> testRecordConstructor [
 	self
 		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression parse: 'mk_t(1,2)'))
-		equals: (ViennaComposite type: 't' with: 1 with: 2)
+		equals: (ViennaComposite constructorName: 't' with: 1 with: 2)
 ]
 
 { #category : #'tests-patterns' }
@@ -1027,10 +1045,10 @@ ViennaVDM2SmalltalkTranslatorTest >> testUnaryPlus [
 ViennaVDM2SmalltalkTranslatorTest >> testUndefinedExpression [
 	self
 		should: [ Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression parse: 'undefined') ]
-		raise: ViennaUndefined.
+		raise: ViennaUndefinedEvaluationError.
 	self
 		shouldnt: [ Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression parse: 'if true then 1 else undefined') ]
-		raise: ViennaUndefined
+		raise: ViennaUndefinedEvaluationError
 ]
 
 { #category : #'tests-operators' }
