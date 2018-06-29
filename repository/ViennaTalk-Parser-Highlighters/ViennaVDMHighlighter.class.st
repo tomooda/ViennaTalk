@@ -31,6 +31,11 @@ ViennaVDMHighlighter >> all [
 	^ self keyword: super all
 ]
 
+{ #category : #'parsers-keywords' }
+ViennaVDMHighlighter >> always [
+	^ self keyword: super always
+]
+
 { #category : #'parsers-symbols' }
 ViennaVDMHighlighter >> amp [
 	^ self keyword: super amp
@@ -167,6 +172,11 @@ ViennaVDMHighlighter >> exists [
 { #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> exists1 [
 	^ self keyword: super exists1
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMHighlighter >> exit [
+	^ self keyword: super exit
 ]
 
 { #category : #'parsers-keywords' }
@@ -408,6 +418,11 @@ ViennaVDMHighlighter >> selfExpression [
 ]
 
 { #category : #'parsers-keywords' }
+ViennaVDMHighlighter >> skip [
+	^ self keyword: super skip
+]
+
+{ #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> state [
 	^ self keyword: super state
 ]
@@ -438,8 +453,18 @@ ViennaVDMHighlighter >> then [
 ]
 
 { #category : #'parsers-keywords' }
+ViennaVDMHighlighter >> tixe [
+	^ self keyword: super tixe
+]
+
+{ #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> to [
 	^ self keyword: super to
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMHighlighter >> trap [
+	^ self keyword: super trap
 ]
 
 { #category : #utilities }
@@ -491,6 +516,11 @@ ViennaVDMHighlighter >> values [
 { #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> while [
 	^ self keyword: super while
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMHighlighter >> with [
+	^ self keyword: super with
 ]
 
 { #category : #'parsers-keywords' }
