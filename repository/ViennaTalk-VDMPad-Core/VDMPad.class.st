@@ -1211,8 +1211,8 @@ VDMPad >> binaryFileService: aZnRequest [
 				readOnlyFileNamed: url
 				do: [ :stream | 
 					stream binary.
-					^ self responseBinary: stream contents mimeType: (ZnMimeType applicationOctetStream ) ] ]
-		ifFalse: [ self responseNotFound: aZnRequest uri ]
+					^ self responseBinary: stream contents mimeType: (ZnMimeType applicationOctetStream ) ] ].
+	^ self responseNotFound: aZnRequest uri
 ]
 
 { #category : #'request handling-javascript' }
