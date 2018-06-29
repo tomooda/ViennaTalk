@@ -664,23 +664,6 @@ ViennaVDM2Smalltalk >> finitePowerSet: aViennaNode env: aDictionary [
 ]
 
 { #category : #utilities }
-ViennaVDM2Smalltalk >> flattenBindList: bindListNode env: aDictionary [
-	^ Array
-		new: 16
-		streamContents: [ :stream | 
-			bindListNode
-				do: [ :multipleBindNode | 
-					| typeOrSetNode |
-					typeOrSetNode := multipleBindNode second.
-					multipleBindNode first
-						do: [ :patternNode | 
-							stream
-								nextPut:
-									{patternNode.
-									typeOrSetNode} ] ] ]
-]
-
-{ #category : #utilities }
 ViennaVDM2Smalltalk >> flattenBindList: bindListNode varGenerator: varGenerator env: aDictionary [
 	| setsAndVars |
 	setsAndVars := OrderedCollection new: bindListNode size.
@@ -804,41 +787,6 @@ ViennaVDM2Smalltalk >> generateAll: aViennaNode env: aDictionary [
 ]
 
 { #category : #utilities }
-ViennaVDM2Smalltalk >> generatorCodeBindList: bindListNode varGenerator: aVarGeneratorBlock env: aDictionary do: aBlock [
-	bindListNode
-		do: [ :multipleTypeOrSetBindNode | 
-			| typeOrSetNode |
-			typeOrSetNode := multipleTypeOrSetBindNode second.
-			multipleTypeOrSetBindNode first
-				do: [ :patternNode | 
-					aBlock
-						value:
-							(self
-								generatorCodePattern: patternNode
-								typeOrSet: typeOrSetNode
-								needsSort: false
-								varGenerator: aVarGeneratorBlock
-								env: aDictionary) ] ]
-]
-
-{ #category : #utilities }
-ViennaVDM2Smalltalk >> generatorCodePattern: patternNode typeOrSet: typeOrSetNode needsSort: aBoolean varGenerator: aVarGeneratorBlock env: aDictionary [
-	| tmpVar vars pattern typeOrSet |
-	typeOrSet := typeOrSetNode label = 'SetRangeExpression'
-		ifTrue: [ self intervalExpression: typeOrSetNode env: aDictionary ]
-		ifFalse: [ self generate: typeOrSetNode env: aDictionary ].
-	patternNode label = 'PatternIdentifier'
-		ifTrue: [ ^ typeOrSet , ' do: [:' , patternNode first , '|' ].
-	tmpVar := aVarGeneratorBlock value.
-	vars := (self boundVariables: patternNode) asArray.
-	pattern := self generate: patternNode env: aDictionary.
-	aBoolean
-		ifTrue: [ typeOrSet := typeOrSet , ' asSortedCollection' ].
-	^ typeOrSet , ' do: [:' , tmpVar , ' || ' , (' ' join: vars) , ' | ' , (self binder: pattern with: tmpVar vars: vars)
-		, ' ifFalse: [ViennaNoMatch signal].'
-]
-
-{ #category : #utilities }
 ViennaVDM2Smalltalk >> generatorFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode body: aString varGenerator: varGenerator env: aDictionary [
 	^ self
 		generatorFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode
@@ -872,7 +820,17 @@ ViennaVDM2Smalltalk >> generatorFromFlatBinds: anArrayOfPatternNodeAndTypeSetNod
 													(aSymbol = #do:
 														ifTrue: [ '' ]
 														ifFalse: [ ')' ]) ]
-										ifFalse: [ self generate: setNode env: aDictionary ]);
+										ifFalse: [ 
+											setNode label = 'SequenceIndices'
+												ifTrue: [ 
+													(aSymbol = #do:
+														ifTrue: [ '' ]
+														ifFalse: [ '(' ]) , (self indicesExpression: setNode env: aDictionary)
+														,
+															(aSymbol = #do:
+																ifTrue: [ '' ]
+																ifFalse: [ ')' ]) ]
+												ifFalse: [ self generate: setNode env: aDictionary ] ]);
 						nextPut: Character space;
 						nextPutAll: aSymbol;
 						nextPutAll: ' [ :'.
@@ -1001,6 +959,13 @@ ViennaVDM2Smalltalk >> indexForLoop: aViennaNode env: aDictionary [
 				nextPutAll: '|';
 				nextPutAll: body;
 				nextPutAll: ']' ]
+]
+
+{ #category : #utilities }
+ViennaVDM2Smalltalk >> indicesExpression: aViennaNode env: aDictionary [
+	| seqNode |
+	seqNode := self generate: aViennaNode first env: aDictionary.
+	^ '1 to: ' , seqNode , ' size'
 ]
 
 { #category : #'initialize-release' }
@@ -1748,6 +1713,22 @@ ViennaVDM2Smalltalk >> sequenceComprehension: aViennaNode env: aDictionary [
 			(guard ifNil: [ '' ])}.
 	seq := varGenerator value.
 	set := varGenerator value.
+	bindNode first label = 'PatternIdentifier'
+		ifTrue: [ 
+			| var |
+			var := bindNode first first.
+			^ '('
+				,
+					(setNode label = 'SetRangeExpression'
+						ifTrue: [ '(' , (self intervalExpression: setNode env: aDictionary) , ')' ]
+						ifFalse: [ 
+							setNode label = 'SequenceIndices'
+								ifTrue: [ '(' , (self indicesExpression: setNode env: aDictionary) , ')' ]
+								ifFalse: [ (self generate: setNode env: aDictionary) , ' asSortedCollection' ] ])
+				,
+					(guard
+						ifNotNil: [ ' select: [:' , var , ' | ' , guard , '] thenCollect: [:' , var , ' | ' ]
+						ifNil: [ ' collect: [:' , var , ' | ' ]) , expr , ']) asOrderedCollection' ].
 	^ String
 		new: 1024
 		streamContents: [ :stream | 
