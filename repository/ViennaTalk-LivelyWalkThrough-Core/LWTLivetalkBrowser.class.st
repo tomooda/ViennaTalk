@@ -64,17 +64,22 @@ LWTLivetalkBrowser >> buildCodePane [
 		menu: #codePaneMenu:shifted:
 		setSelection: #codeSelection:)
 		askBeforeDiscardingEdits: true;
+		bindKeyCombination: $d command toAction: [  ];
+		bindKeyCombination: $p command toAction: [  ];
+		font: ViennaLauncher font;
 		yourself
 ]
 
 { #category : #'user interface' }
 LWTLivetalkBrowser >> buildScriptList [
-	^ PluggableListMorph
+	^ (PluggableListMorph
 		on: self
 		list: #scriptList
 		selected: #scriptListIndex
 		changeSelected: #scriptListIndex:
-		menu: #scriptListMenu:shifted:
+		menu: #scriptListMenu:shifted:)
+		font: ViennaLauncher font;
+		yourself
 ]
 
 { #category : #'code pane' }
