@@ -90,7 +90,7 @@ ConfigurationOfViennaTalk class >> loadDevelopment [
 
 { #category : #testing }
 ConfigurationOfViennaTalk class >> possiblyNewerVersions [
-	^ (MCWorkingCopy forPackage: self package name) possiblyNewerVersions
+	^ (MCPackage named: self package name) workingCopy possiblyNewerVersions
 ]
 
 { #category : #accessing }
