@@ -1,5 +1,5 @@
 Class {
-	#name : #ViennaInvariantViolation,
+	#name : #ViennaStateInvariantViolation,
 	#superclass : #Error,
 	#category : 'ViennaTalk-Value-Core'
 }
