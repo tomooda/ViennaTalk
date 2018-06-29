@@ -38,6 +38,10 @@ ViennaLiveSmalltalkTranslationEditor class >> codeTextMenuOn: aBuilder [
 
 	<contextMenu>
 	<viennaCodeTextMenu>
+	(aBuilder item: #'Format it' translated)
+		keyText: 'F';
+		selector: #formatSelectionInCodeText;
+		help: 'Pretty print the selected expression/statement/type'.
 	(aBuilder item: #'Evaluate it' translated)
 		keyText: 'p';
 		selector: #viennaItInCodeText;
@@ -114,80 +118,6 @@ ViennaLiveSmalltalkTranslationEditor class >> defaultSpec [
 		yourself
 ]
 
-{ #category : #menu }
-ViennaLiveSmalltalkTranslationEditor class >> sourceTextMenuFor: aModel [
-	^ (PragmaMenuBuilder pragmaKeyword: self sourceTextMenuKeyword model: aModel) menu
-]
-
-{ #category : #menu }
-ViennaLiveSmalltalkTranslationEditor class >> sourceTextMenuKeyword [
-	^ 'viennaSourceTextMenu'
-]
-
-{ #category : #menu }
-ViennaLiveSmalltalkTranslationEditor class >> sourceTextMenuOn: aBuilder [
-	"Specify the menu used when writing code. Try it with:
-	(PragmaMenuBuilder 
-		pragmaKeyword: 'smalltalkEditorMenu'
-		model: nil) menu popUpInWorld
-	"
-
-	<contextMenu>
-	<viennaSourceTextMenu>
-	(aBuilder item: #'Evaluate it' translated)
-		keyText: 'p';
-		selector: #viennaItInSourceText;
-		help: nil;
-		icon: Smalltalk ui icons smallPrintItIcon;
-		withSeparatorAfter.
-	(aBuilder item: #'Find...' translated)
-		keyText: 'f';
-		selector: #find;
-		help: nil;
-		icon: Smalltalk ui icons smallFindIcon.
-	(aBuilder item: #'Find again' translated)
-		keyText: 'g';
-		selector: #findAgain;
-		help: nil;
-		icon: Smalltalk ui icons smallFindIcon.
-	UserManager default canBrowse
-		ifTrue: [ 
-			(aBuilder item: #'Code search...' translated)
-				selector: #shiftedTextPaneMenuRequest;
-				withSeparatorAfter ].
-	(aBuilder item: #'Do again' translated)
-		keyText: 'j';
-		selector: #again;
-		help: nil;
-		icon: Smalltalk ui icons smallRedoIcon.
-	(aBuilder item: #Undo translated)
-		keyText: 'z';
-		selector: #undo;
-		help: nil;
-		icon: Smalltalk ui icons smallUndoIcon;
-		withSeparatorAfter.
-	(aBuilder item: #Copy translated)
-		keyText: 'c';
-		selector: #copySelection;
-		help: nil;
-		icon: Smalltalk ui icons smallCopyIcon.
-	(aBuilder item: #Cut translated)
-		keyText: 'x';
-		selector: #cut;
-		help: nil;
-		icon: Smalltalk ui icons smallCutIcon.
-	(aBuilder item: #Paste translated)
-		keyText: 'v';
-		selector: #paste;
-		help: nil;
-		icon: Smalltalk ui icons smallPasteIcon.
-	(aBuilder item: #'Paste...' translated)
-		selector: #pasteRecent;
-		help: nil;
-		icon: Smalltalk ui icons smallCopyIcon;
-		withSeparatorAfter
-]
-
 { #category : #accessing }
 ViennaLiveSmalltalkTranslationEditor >> codeText [
 	^ codeText
@@ -208,12 +138,28 @@ ViennaLiveSmalltalkTranslationEditor >> format: aString [
 	^ (RBParser parseExpression: aString) formattedCode
 ]
 
+{ #category : #'VDM manipulations' }
+ViennaLiveSmalltalkTranslationEditor >> formatSelectionInCodeText [
+	| parser editor ast result |
+	parser := ViennaVDMParser new.
+	editor := codeText widget widget textMorph editor.
+	editor lineSelectAndEmptyCheck: [ ^ '' ].
+	ast := parser expression end / parser statement end / parser type end
+		parse: (codeText text asString copyFrom: editor startIndex to: editor stopIndex - 1) trim.
+	ast isPetitFailure
+		ifTrue: [ ^ codeText notify: ast message at: ast position + 1 in: codeText text ].
+	result := ast format.
+	editor replaceSelectionWith: result.
+	codeText widget widget
+		selectFrom: editor startIndex to: editor stopIndex - 1;
+		textChanged;
+		scrollSelectionIntoView.
+	^ true
+]
+
 { #category : #'initialize-release' }
 ViennaLiveSmalltalkTranslationEditor >> initializeWidgets [
 	super initializeWidgets.
-	sourceText
-		menuHolder: [ self sourceTextMenu ];
-		bindKeyCombination: $p command toAction: [ self viennaItInSourceText ].
 	targetText help: 'Smalltalk code'.
 	codeText := self newText.
 	codeText
@@ -222,13 +168,9 @@ ViennaLiveSmalltalkTranslationEditor >> initializeWidgets [
 		isCodeCompletionAllowed: false;
 		wantsVisualFeedback: true;
 		menuHolder: [ self codeTextMenu ];
+		bindKeyCombination: $f shift command toAction: [ self formatSelectionInCodeText ];
 		bindKeyCombination: $p command toAction: [ self viennaItInCodeText ];
 		bindKeyCombination: $t command toAction: [ self translateIt ]
-]
-
-{ #category : #menu }
-ViennaLiveSmalltalkTranslationEditor >> sourceTextMenu [
-	^ self class sourceTextMenuFor: self
 ]
 
 { #category : #evaluating }
@@ -255,31 +197,6 @@ ViennaLiveSmalltalkTranslationEditor >> translatorClass [
 ]
 
 { #category : #evaluating }
-ViennaLiveSmalltalkTranslationEditor >> viennaItIn: aTextModel [
-	| compiler codeFromSource editor codeFromSelection result |
-	compiler := ViennaVDM2SmalltalkTranslator new.
-	codeFromSource := targetText text asString.
-	editor := aTextModel widget widget textMorph editor.
-	editor lineSelectAndEmptyCheck: [ ^ '' ].
-	codeFromSelection := compiler expression end / compiler statement end / compiler type end
-		parse: (aTextModel text asString copyFrom: editor startIndex to: editor stopIndex - 1) trim.
-	codeFromSelection isPetitFailure
-		ifTrue: [ ^ aTextModel notify: codeFromSelection message at: codeFromSelection position + 1 in: aTextModel text ].
-	result := (Compiler evaluate: codeFromSource , '.' , codeFromSelection) viennaString.
-	editor afterSelectionInsertAndSelect: result.
-	aTextModel widget widget
-		selectFrom: editor startIndex to: editor stopIndex;
-		textChanged;
-		scrollSelectionIntoView.
-	^ true
-]
-
-{ #category : #evaluating }
 ViennaLiveSmalltalkTranslationEditor >> viennaItInCodeText [
 	^ self viennaItIn: codeText
-]
-
-{ #category : #evaluating }
-ViennaLiveSmalltalkTranslationEditor >> viennaItInSourceText [
-	^ self viennaItIn: sourceText
 ]
