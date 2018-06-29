@@ -35,7 +35,7 @@ WeblyBrowser class >> open [
 
 { #category : #menus }
 WeblyBrowser class >> viennaToolsMenuOn: aBuilder [
-	<ViennaTools>
+	<ViennaToolsMenu>
 	(aBuilder item: #'Webly WalkThrough')
 		order: 0.3;
 		action: [ self open ];
