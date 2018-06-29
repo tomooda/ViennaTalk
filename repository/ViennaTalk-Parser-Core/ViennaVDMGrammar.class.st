@@ -887,7 +887,17 @@ ViennaVDMGrammar >> maplet [
 
 { #category : #'parsers-patterns' }
 ViennaVDMGrammar >> matchValue [
-	^ ((lparen , expression , rparen) ==> #second) / symbolicLiteral
+	^ self matchValueExpression / self matchValueLiteral
+]
+
+{ #category : #'parsers-patterns' }
+ViennaVDMGrammar >> matchValueExpression [
+	^ (lparen , expression , rparen) ==> #second
+]
+
+{ #category : #'parsers-patterns' }
+ViennaVDMGrammar >> matchValueLiteral [
+	^ symbolicLiteral
 ]
 
 { #category : #'parsers-expressions-operators' }

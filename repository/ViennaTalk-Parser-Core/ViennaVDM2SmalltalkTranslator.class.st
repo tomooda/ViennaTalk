@@ -105,21 +105,49 @@ ViennaVDM2SmalltalkTranslator >> equiv: arg1 and: arg2 [
 ViennaVDM2SmalltalkTranslator >> explicitFunctionDefinition [
 	^ super explicitFunctionDefinition
 		==> [ :array | 
-			{(array first).
+			| funcName paramSets body varGenerator |
+			funcName := array first.
+			paramSets := array fifth.
+			body := array sixth.
+			varGenerator := self
+				varNameGenerator: 'func'
+				uniqueIn:
+					{funcName.
+					body}.
+			{(Array with: funcName).
 			(String
 				new: 1024
 				streamContents: [ :stream | 
-					array fifth
-						do: [ :args | 
-							stream nextPut: $[.
-							args
-								do: [ :arg | 
+					stream
+						nextPutAll: funcName;
+						nextPutAll: ' := '.
+					paramSets
+						do: [ :params | 
+							| vars |
+							vars := params collect: [ :p | varGenerator value ].
+							stream
+								nextPut: $[;
+								nextPutAll: (' ' join: (vars collect: [ :v | ' :' , v ]));
+								nextPutAll: '||'.
+							params
+								with: vars
+								do: [ :p :v | 
+									p first
+										do: [ :pv | 
+											stream
+												nextPutAll: pv;
+												nextPut: Character space ] ].
+							stream nextPut: $|.
+							params
+								with: vars
+								do: [ :p :v | 
 									stream
-										nextPutAll: ' :';
-										nextPutAll: arg ].
-							stream nextPut: $| ].
-					stream nextPutAll: array sixth.
-					array fifth do: [ :args | stream nextPut: $] ] ])} ]
+										nextPutAll: p second;
+										nextPutAll: ' value: ';
+										nextPutAll: v;
+										nextPut: $. ] ].
+					stream nextPutAll: body.
+					paramSets do: [ :args | stream nextPut: $] ] ])} ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -140,6 +168,34 @@ ViennaVDM2SmalltalkTranslator >> fraction: arg1 and: arg2 [
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> functionTypeInstantiation: func args: args [
 	^ func
+]
+
+{ #category : #utilities }
+ViennaVDM2SmalltalkTranslator >> generatorCodeFromBindList: aCollectionOfMultipleBind varGenerator: aVarGeneratorBlock do: aBlock [
+	aCollectionOfMultipleBind
+		do: [ :pair | 
+			| patterns set |
+			patterns := pair first.
+			set := pair second.
+			patterns
+				do: [ :pat | 
+					| vars binder |
+					vars := pat first.
+					binder := pat second.
+					aBlock
+						value:
+							(self
+								generatorCodeFromVar: vars
+								binder: binder
+								set: set
+								varGenerator: aVarGeneratorBlock) ] ]
+]
+
+{ #category : #utilities }
+ViennaVDM2SmalltalkTranslator >> generatorCodeFromVar: vars binder: binder set: set varGenerator: aVarGeneratorBlock [
+	| tmp |
+	tmp := aVarGeneratorBlock value.
+	^ set , ' do: [:' , tmp , '||' , (' ' join: vars) , '|' , binder , ' value: ' , tmp , '.'
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -207,7 +263,40 @@ ViennaVDM2SmalltalkTranslator >> iterateExpression: expr1 and: expr2 [
 { #category : #'parsers-expressions-basics' }
 ViennaVDM2SmalltalkTranslator >> lambdaExpression [
 	^ super lambdaExpression
-		==> [ :pair | '[' , (' ' join: (pair first collect: [ :var | ':' , var first ])) , ' | ' , pair second , ']' ]
+		==> [ :pair | 
+			| patterns body varGenerator vars |
+			patterns := pair first collect: #first.
+			body := pair second.
+			varGenerator := self varNameGenerator: 'lmd' uniqueIn: (Array with: body).
+			vars := patterns collect: [ :p | varGenerator value ].
+			String
+				new: 1024
+				streamContents: [ :stream | 
+					stream nextPut: $[.
+					vars
+						do: [ :var | 
+							stream
+								nextPut: $:;
+								nextPutAll: var ].
+					stream nextPutAll: '||'.
+					patterns
+						do: [ :pat | 
+							pat first
+								do: [ :v | 
+									stream
+										nextPutAll: v;
+										nextPut: $  ] ].
+					stream nextPut: $|.
+					patterns
+						with: vars
+						do: [ :pat :var | 
+							stream
+								nextPutAll: pat second;
+								nextPutAll: ' value: ';
+								nextPutAll: var;
+								nextPut: $. ].
+					stream nextPutAll: body.
+					patterns do: [ :pat | stream nextPut: $] ] ] ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -229,8 +318,11 @@ ViennaVDM2SmalltalkTranslator >> lessEq: arg1 and: arg2 [
 ViennaVDM2SmalltalkTranslator >> letExpression [
 	^ super letExpression
 		==> [ :pair | 
-			'[|' , (' ' join: (pair first collect: #first)) , '|'
-				, ('.' join: (pair first collect: [ :p | p first , ':=' , p second ])) , '.' , pair second , '] value' ]
+			| localDefinitions body vars |
+			localDefinitions := pair first.
+			body := pair second.
+			vars := Array new: 10 streamContents: [ :stream | localDefinitions do: [ :def | stream nextPutAll: def first ] ].
+			'[|' , (' ' join: vars) , '|' , ('.' join: (localDefinitions collect: #second)) , '.' , body , '] value' ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -261,42 +353,42 @@ ViennaVDM2SmalltalkTranslator >> map: map rangeRestrictedTo: set [
 ViennaVDM2SmalltalkTranslator >> mapComprehension [
 	^ super mapComprehension
 		==> [ :quatro | 
+			| keyExpr valueExpr binds guard varGenerator map |
+			keyExpr := quatro first.
+			valueExpr := quatro second.
+			binds := quatro third.
+			guard := quatro fourth.
+			varGenerator := self
+				varNameGenerator: 'map'
+				uniqueIn:
+					{keyExpr.
+					valueExpr} , (binds collect: #second) , {(guard ifNil: [ '' ])}.
+			map := varGenerator value.
 			String
 				new: 1024
 				streamContents: [ :stream | 
-					| map |
-					map := '_map'.
-					[ 
-					(quatro first findString: map) > 0
-						or: [ 
-							(quatro second findString: map) > 0
-								or: [ 
-									(quatro third contains: [ :_multibind | (_multibind second findString: map) > 0 ])
-										or: [ quatro fourth notNil and: [ (quatro fourth findString: map) > 0 ] ] ] ] ]
-						whileTrue: [ map := map , '_' ].
-					stream nextPutAll: '[ | ' , map , ' | ' , map , ' := Dictionary new.'.
-					quatro third
-						do: [ :_multibind | 
-							_multibind first
-								do: [ :_var | 
-									stream
-										nextPutAll: _multibind second;
-										nextPutAll: ' do: [:';
-										nextPutAll: _var;
-										nextPut: $| ] ].
-					quatro fourth
-						ifNotNil: [ :cond | 
+					stream nextPutAll: '[ | ' , map , ' | ' , map , ' :=Dictionary new.'.
+					self
+						generatorCodeFromBindList: binds
+						varGenerator: varGenerator
+						do: [ :generatorScript | stream nextPutAll: generatorScript ].
+					guard
+						ifNotNil: [ 
 							stream
-								nextPutAll: cond;
+								nextPutAll: guard;
 								nextPutAll: ' ifTrue: [' ].
 					stream
-						nextPutAll: map , ' at: ';
-						nextPutAll: quatro first;
+						nextPutAll: map;
+						nextPutAll: ' at: ';
+						nextPutAll: keyExpr;
 						nextPutAll: ' put: ';
-						nextPutAll: quatro second.
-					quatro fourth ifNotNil: [ stream nextPut: $] ].
-					quatro third do: [ :_multibind | _multibind first do: [ :_var | stream nextPut: $] ] ].
-					stream nextPutAll: '. ' , map , '] value' ] ]
+						nextPutAll: valueExpr.
+					guard ifNotNil: [ stream nextPut: $] ].
+					self generatorCodeFromBindList: binds varGenerator: varGenerator do: [ :generatorScript | stream nextPut: $] ].
+					stream
+						nextPut: $.;
+						nextPutAll: map;
+						nextPutAll: '] value' ] ]
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -362,6 +454,14 @@ ViennaVDM2SmalltalkTranslator >> or: arg1 and: arg2 [
 	^ '(' , arg2 , ' or: [' , arg1 , '])'
 ]
 
+{ #category : #'parsers-patterns' }
+ViennaVDM2SmalltalkTranslator >> patternIdentifier [
+	^ super patternIdentifier
+		==> [ :identifierOrNil | 
+			{(Array with: identifierOrNil).
+			('[:_value | ' , (identifierOrNil ifNil: [ 'true' ] ifNotNil: [ identifierOrNil , ':=_value.true' ]) , ']')} ]
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> plus: arg1 and: arg2 [
 	^ '(' , arg1 , '+' , arg2 , ')'
@@ -398,16 +498,51 @@ ViennaVDM2SmalltalkTranslator >> rng: arg [
 ViennaVDM2SmalltalkTranslator >> sequenceComprehension [
 	^ super sequenceComprehension
 		==> [ :triple | 
-			| seq |
-			seq := '_seq'.
-			[ 
-			(triple first findString: seq) > 0
-				or: [ (triple second second findString: seq) > 0 or: [ triple third notNil and: [ (triple third findString: seq) > 0 ] ] ] ]
-				whileTrue: [ seq := seq , '_' ].
-			'(Array new: 1024 streamContents: [ :' , seq , ' | ' , triple second second , ' asSortedCollection do: [:'
-				, triple second first , '|' , (triple third ifNil: [ '' ] ifNotNil: [ triple third , ' ifTrue: [' ]) , seq
-				, ' nextPut: ' , triple first
-				, (triple third ifNil: [ ']]) asOrderedCollection' ] ifNotNil: [ ']]]) asOrderedCollection' ]) ]
+			| expr setBinding pat vars binder set guard varGenerator seq |
+			expr := triple first.
+			setBinding := triple second.
+			pat := setBinding first.
+			vars := pat first .
+			binder := pat second.
+			set := setBinding second.
+			guard := triple third.
+			varGenerator := self
+				varNameGenerator: 'seq'
+				uniqueIn:
+					{expr.
+					binder.
+					set.
+					(guard ifNil: [ '' ])}.
+			seq := varGenerator value.
+			String
+				new: 1024
+				streamContents: [ :stream | 
+					stream
+						nextPutAll: '[|';
+						nextPutAll: seq;
+						nextPutAll: '|';
+						nextPutAll: seq;
+						nextPutAll: ':= OrderedCollection new.';
+						nextPutAll:
+								(self
+										generatorCodeFromVar: vars
+										binder: binder
+										set: set , ' asSortedCollection'
+										varGenerator: varGenerator).
+					guard
+						ifNotNil: [ 
+							stream
+								nextPutAll: guard;
+								nextPutAll: ' ifTrue: [' ].
+					stream
+						nextPutAll: seq;
+						nextPutAll: ' add: ';
+						nextPutAll: expr.
+					guard ifNotNil: [ stream nextPutAll: ']' ].
+					stream
+						nextPutAll: ']. ';
+						nextPutAll: seq;
+						nextPutAll: '] value' ] ]
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -419,37 +554,37 @@ ViennaVDM2SmalltalkTranslator >> sequenceEnumeration [
 ViennaVDM2SmalltalkTranslator >> setComprehension [
 	^ super setComprehension
 		==> [ :triple | 
-			| set |
-			set := '_set'.
-			[ 
-			(triple first findString: set) > 0
-				or: [ 
-					(triple second contains: [ :multibind | (multibind second findString: set) > 0 ])
-						or: [ triple third notNil and: [ (triple third findString: set) > 0 ] ] ] ] whileTrue: [ set := set , '_' ].
+			| expr binds guard varGenerator set |
+			expr := triple first.
+			binds := triple second.
+			guard := triple third.
+			varGenerator := self
+				varNameGenerator: 'set'
+				uniqueIn: (Array with: expr) , (binds collect: #second) , (Array with: (guard ifNil: [ '' ])).
+			set := varGenerator value.
 			String
 				new: 1024
 				streamContents: [ :stream | 
 					stream nextPutAll: '[ | ' , set , ' | ' , set , ' :=Set new.'.
-					triple second
-						do: [ :_multibind | 
-							_multibind first
-								do: [ :_var | 
-									stream
-										nextPutAll: _multibind second;
-										nextPutAll: ' do: [:';
-										nextPutAll: _var;
-										nextPut: $| ] ].
-					triple third
-						ifNotNil: [ :cond | 
+					self
+						generatorCodeFromBindList: binds
+						varGenerator: varGenerator
+						do: [ :generatorScript | stream nextPutAll: generatorScript ].
+					guard
+						ifNotNil: [ 
 							stream
-								nextPutAll: cond;
+								nextPutAll: guard;
 								nextPutAll: ' ifTrue: [' ].
 					stream
-						nextPutAll: set , ' add: ';
-						nextPutAll: triple first.
-					triple third ifNotNil: [ stream nextPut: $] ].
-					triple second do: [ :_multibind | _multibind first do: [ :_var | stream nextPut: $] ] ].
-					stream nextPutAll: '. ' , set , '] value' ] ]
+						nextPutAll: set;
+						nextPutAll: ' add: ';
+						nextPutAll: expr.
+					guard ifNotNil: [ stream nextPut: $] ].
+					self generatorCodeFromBindList: binds varGenerator: varGenerator do: [ :generatorScript | stream nextPut: $] ].
+					stream
+						nextPut: $.;
+						nextPutAll: set;
+						nextPutAll: '] value' ] ]
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -484,11 +619,33 @@ ViennaVDM2SmalltalkTranslator >> tl: arg [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDM2SmalltalkTranslator >> tupleConstructor [
-	^ super tupleConstructor
-		==> [ :array | 
-			'((Array new: ' , array size storeString , ') '
-				, (';' join: ((1 to: array size) collect: [ :i | 'at: ' , i storeString , ' put: ' , (array at: i) ]))
-				, '; yourself)' ]
+	^ super tupleConstructor ==> [ :array | '{' , (' . ' join: array) , '}' ]
+]
+
+{ #category : #'parsers-patterns' }
+ViennaVDM2SmalltalkTranslator >> tuplePattern [
+	^ super tuplePattern
+		==> [ :args | 
+			| vars varGenerator |
+			vars := OrderedCollection new.
+			args do: [ :arg | vars addAll: arg first ].
+			varGenerator := self varNameGenerator: 'var' uniqueIn: (args collect: #second).
+			{vars.
+			(String
+				new: 1024
+				streamContents: [ :stream | 
+					| var |
+					var := varGenerator value.
+					stream
+						nextPutAll: '[:';
+						nextPutAll: var;
+						nextPut: $|.
+					stream
+						nextPutAll:
+							((args size - 1 to: 1 by: -1)
+								inject: args last second , ' value: (' , var , ' at: ' , args size storeString , ')'
+								into: [ :expr :i | '(' , (args at: i) second , ' value: (' , var , ' at: ' , i storeString , ')) and: [' , expr , ']' ]).
+					stream nextPut: $] ])} ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -515,6 +672,33 @@ ViennaVDM2SmalltalkTranslator >> union: arg1 and: arg2 [
 ViennaVDM2SmalltalkTranslator >> valueDefinition [
 	^ super valueDefinition
 		==> [ :triple | 
-			{(triple first).
-			(triple third)} ]
+			| pat body vars binder |
+			pat := triple first.
+			body := triple third.
+			vars := pat first.
+			binder := pat second.
+			{vars.
+			('(' , binder , ' value: ' , body , ')')} ]
+]
+
+{ #category : #utilities }
+ViennaVDM2SmalltalkTranslator >> varNameGenerator: aString uniqueIn: anArrayOfString [
+	| var |
+	var := aString.
+	^ [ 
+	var := '_' , var.
+	[ anArrayOfString contains: [ :str | (str findString: var) > 0 ] ] whileTrue: [ var := '_' , var ].
+	var ]
+]
+
+{ #category : #utilities }
+ViennaVDM2SmalltalkTranslator >> varsFromMultiPatternBind: multiPatternBind [
+	| vars |
+	vars := Array new writeStream.
+	multiPatternBind
+		do: [ :multiPattern | 
+			| patterns |
+			patterns := multiPattern first.
+			patterns do: [ :varAndBlockString | vars nextPut: varAndBlockString first ] ].
+	^ vars
 ]
