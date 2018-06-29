@@ -7,6 +7,31 @@ Class {
 	#category : 'ViennaTalk-Parser-Code Generators'
 }
 
+{ #category : #utilities }
+ViennaVDM2SmalltalkClass >> buildEnv: aViennaNode [
+	| env |
+	env := Dictionary new.
+	aViennaNode first label = 'DefinitionBlock'
+		ifTrue: [ aViennaNode
+				do: [ :definitionBlock | 
+					definitionBlock first label = 'StateDefinition'
+						ifFalse: [ (self boundVariables: definitionBlock)
+								do: [ :ident | env at: ident put: 'self ' , ident ] ] ] ]
+		ifFalse: [ aViennaNode
+				do: [ :moduleNode | 
+					| moduleName |
+					moduleName := moduleNode first.
+					moduleNode third
+						do: [ :definitionBlock | 
+							definitionBlock first label = 'StateDefinition'
+								ifFalse: [ (self boundVariables: definitionBlock)
+										do: [ :ident | 
+											env
+												at: moduleName , '`' , ident
+												put: '(self at: ' , moduleName storeString , ') ' , ident ] ] ] ] ].
+							^env
+]
+
 { #category : #'code generation-statements' }
 ViennaVDM2SmalltalkClass >> callStatement: aViennaNode env: aDictionary [
 	| callee args |
@@ -197,7 +222,7 @@ ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass proto
 						ifTrue: [ stream
 								nextPutAll: '(';
 								nextPutAll: (self generate: typeNode env: aDictionary);
-								nextPutAll: ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError singal].' ].
+								nextPutAll: ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal].' ].
 					postString
 						ifNotNil: [ stream
 								nextPutAll: '(';
@@ -635,31 +660,15 @@ ViennaVDM2SmalltalkClass >> stateDefinition: aViennaNode env: aDictionary [
 		protocol: 'state'.
 	aDictionary at: 'init_' , stateConstructor put: 'self init_' , stateConstructor.
 	self
-		defineMethod: 'state' , String cr , '    ^ self ' , stateConstructor , ' applyTo: {' , (' . ' join: (aViennaNode second collect: #first)) , '}'
+		defineMethod:
+			'state' , String cr , '    ^ self ' , stateConstructor , ' applyTo: {'
+				, (' . ' join: (aViennaNode second collect: #first)) , '}'
 		in: theClass
 		protocol: 'state'.
-	(quin fourth notNil or: [ runtimeTypeCheck = true ])
-		ifTrue: [ self
-				defineMethod:
-					(String
-						new: 1024
-						streamContents: [ :stream | 
-							stream
-								nextPutAll: 'inv';
-								cr.
-							quin fourth
-								ifNotNil: [ stream
-										nextPutAll: '    (' , quin fourth , ' value: self state) ifFalse: [self stateInvariantViolation].';
-										cr ].
-							runtimeTypeCheck = true
-								ifTrue: [ aViennaNode second
-										do: [ :triple | 
-											stream
-												nextPutAll: '((';
-												nextPutAll: (self generate: triple third env: aDictionary);
-												nextPutAll: ') includes: (';
-												nextPutAll: triple first ;
-												nextPutAll: ')) ifFalse: [ViennaRuntimeTypeError signal].' ] ] ])
+	quin fourth
+		ifNotNil: [ :inv | 
+			self
+				defineMethod: 'inv' , String cr , '    (' , inv , ' value: self state) ifFalse: [self stateInvariantViolation]'
 				in: theClass
 				protocol: 'state' ].
 	self defineMethod: 'state' , String cr , '    ^' , quin fifth in: theClass protocol: 'state'
