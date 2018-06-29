@@ -210,13 +210,6 @@ TViennaVDMFreeVariableCollector >> freeVariablesLocalName: aViennaNode boundVars
 		ifFalse: [ freeVars add: name ]
 ]
 
-{ #category : #private }
-TViennaVDMFreeVariableCollector >> freeVariablesLocalScope: aViennaNode boundVars: boundVars into: freeVars [
-	| binds |
-	binds := boundVars copy.
-	aViennaNode do: [ :node | self freeVariables: node boundVars: binds into: freeVars ]
-]
-
 { #category : #'free variables-expressions' }
 TViennaVDMFreeVariableCollector >> freeVariablesMapComprehension: aViennaNode boundVars: boundVars into: freeVars [
 	| binds keyExpression valueExpression bindList guardExpression |

@@ -4,6 +4,14 @@ Trait {
 }
 
 { #category : #'bound variables' }
+TViennaVDMBoundVariableCollector >> boundVariables: aViennaNode [
+	| boundVars |
+	boundVars := Set new.
+	self boundVariables: aViennaNode into: boundVars.
+	^ boundVars
+]
+
+{ #category : #'bound variables' }
 TViennaVDMBoundVariableCollector >> boundVariables: aViennaNode into: aSet [
 	(aViennaNode isString or: [ aViennaNode isNil ])
 		ifFalse: [ 
