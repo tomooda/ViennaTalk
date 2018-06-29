@@ -280,7 +280,7 @@ ViennaVDMJ class >> unregister: aViennaVDMJ [
 
 { #category : #accessing }
 ViennaVDMJ class >> vdmjPath [
-	^ FileSystem workingDirectory / 'vdmj-3.1.1.jar'
+	^ FileSystem workingDirectory / 'vdmj-3.2.0.jar'
 ]
 
 { #category : #resources }
