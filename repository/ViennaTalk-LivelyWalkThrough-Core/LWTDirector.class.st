@@ -9,7 +9,8 @@ Class {
 		'cuts',
 		'scripts',
 		'dependents',
-		'urlPrefix'
+		'urlPrefix',
+		'filepath'
 	],
 	#classVars : [
 		'Server'
@@ -62,7 +63,7 @@ LWTDirector class >> vdmj [
 LWTDirector >> abort: aString [
 	| context |
 	context := thisContext.
-	[ context receiver isKindOf: LWTAction ] whileFalse: [ context := context sender ].
+	[ context receiver isKindOf: LWTLivetalkScript ] whileFalse: [ context := context sender ].
 	UIManager default abort: aString title: 'Lively Walk-Through: ' , context receiver name.
 	context return: nil
 ]
@@ -97,6 +98,22 @@ LWTDirector >> addScript: aLWTLivetalkScript [
 	^ (scripts at: aLWTLivetalkScript widgetName ifAbsentPut: [ Dictionary new ])
 		at: aLWTLivetalkScript event
 		put: aLWTLivetalkScript
+]
+
+{ #category : #json }
+LWTDirector >> asJsonObject [
+	^ Dictionary new
+		at: 'widgets' put: self widgetsToJsonObject;
+		at: 'specification' put: self specification;
+		at: 'scripts' put: self scriptsToJsonObject;
+		at: 'frames' put: self frames;
+		at: 'urlPrefix' put: self urlPrefix;
+		yourself
+]
+
+{ #category : #private }
+LWTDirector >> classicChanged: aSymbol [
+	self dependents do: [ :aDependent | aDependent update: aSymbol ]
 ]
 
 { #category : #'accessing-frames and cuts' }
@@ -175,8 +192,8 @@ LWTDirector >> execVDM: aString withArguments: anArray [
 		in: [ :expression | 
 			| value |
 			value := self vdmc plainEvaluate: expression.
-			self addFrame: (LWTVDMCallFrame callee: aString expression: expression value: value).
-			self addFrame: (LWTVDMStateFrame states: self vdmc state).
+			"self addFrame: (LWTVDMCallFrame callee: aString expression: expression value: value).
+			self addFrame: (LWTVDMStateFrame states: self vdmc state)."
 			value ]
 ]
 
@@ -188,6 +205,22 @@ LWTDirector >> execValueOf: aString [
 { #category : #'accessing-frames and cuts' }
 LWTDirector >> frames [
 	^ frames contents
+]
+
+{ #category : #private }
+LWTDirector >> frames: anArrayOfFrame [
+	frames := Array new writeStream.
+	frames nextPutAll: anArrayOfFrame.
+	lastFrame := anArrayOfFrame ifNotEmpty: [ anArrayOfFrame last ] ifEmpty: [ nil ]
+]
+
+{ #category : #json }
+LWTDirector >> fromJsonObject: aDictionary [
+	self widgetsFromJsonObject: (aDictionary at: 'widgets').
+	self specification: (aDictionary at: 'specification').
+	self scriptsFromJsonObject: (aDictionary at: 'scripts').
+	self frames: (aDictionary at: 'frames').
+	self urlPrefix: (aDictionary at: 'urlPrefix')
 ]
 
 { #category : #'event handling' }
@@ -220,6 +253,23 @@ LWTDirector >> initialize [
 { #category : #'accessing-morphs' }
 LWTDirector >> let: aString be: anObject ifAbsentDo: errorBlock [
 	^ self morphsNamed: aString ifNotEmpty: [ :morph | morph value: anObject ] ifEmpty: [ errorBlock value: anObject ]
+]
+
+{ #category : #operations }
+LWTDirector >> load [
+	(UIManager default
+		fileOpen: (self urlPrefix ifEmpty: [ 'Lively Walk-Through' ])
+		extensions: #('lwt')
+		path: (filepath ifNil: [ FileSystem workingDirectory parent parent ]) parent
+		preview: nil)
+		ifNotNil: [ :reference | 
+			filepath := reference fullName asFileReference.
+			reference close.
+			filepath
+				readStreamDo: [ :stream | 
+					[ self fromJsonObject: (NeoJSONReader on: stream) next ]
+						on: Error
+						do: [ :ex | UIManager alert: 'Can not load ' , filepath pathString ] ] ]
 ]
 
 { #category : #'accessing-morphs' }
@@ -297,6 +347,30 @@ LWTDirector >> removeScriptAt: aString ifAbsent: errorBlock [
 	^ errorBlock value
 ]
 
+{ #category : #operations }
+LWTDirector >> save [
+	(filepath notNil and: [ filepath isFile and: [ UIManager default proceed: 'OK to overwrite ' , filepath pathString ] ])
+		ifTrue: [ filepath writeStreamDo: [ :stream | (NeoJSONWriter on: stream) nextPut: self asJsonObject ] ]
+		ifFalse: [ self saveAs ]
+]
+
+{ #category : #operations }
+LWTDirector >> saveAs [
+	(UIManager default
+		fileSave: (self urlPrefix ifEmpty: [ 'Lively Walk-Through' ])
+		extensions: #('lwt')
+		path: (filepath ifNil: [ FileSystem workingDirectory parent parent ]) parent)
+		ifNotNil: [ :reference | 
+			(reference exists not or: [ UIManager proceed: 'OK to overwrite ' , reference pathString ])
+				ifTrue: [ 
+					filepath := reference.
+					reference
+						writeStreamDo: [ :stream | 
+							[ (NeoJSONWriter on: stream) nextPut: self asJsonObject ]
+								on: Error
+								do: [ :ex | UIManager default alert: 'Can not write on ' , reference pathString ] ] ] ]
+]
+
 { #category : #'accessing-scripts' }
 LWTDirector >> scriptAt: aString ifAbsent: errorBlock [
 	self
@@ -313,8 +387,34 @@ LWTDirector >> scriptSelectors [
 ]
 
 { #category : #private }
+LWTDirector >> scripts: aDictionary [
+	scripts := aDictionary
+]
+
+{ #category : #private }
 LWTDirector >> scriptsDo: aBlock [
 	scripts valuesDo: [ :scriptDict | scriptDict valuesDo: aBlock ]
+]
+
+{ #category : #json }
+LWTDirector >> scriptsFromJsonObject: aDictionary [
+	scripts := Dictionary new.
+	aDictionary
+		keysAndValuesDo: [ :selector :source | 
+			(LWTLivetalkScript
+				named: selector
+				on: self
+				source: source
+				ifFail: [  ]) ifNotNil: [ :script | self addScript: script ] ].
+	self classicChanged: #scriptSelectors
+]
+
+{ #category : #json }
+LWTDirector >> scriptsToJsonObject [
+	| json |
+	json := Dictionary new.
+	scripts valuesDo: [ :dict | dict valuesDo: [ :script | json at: script name put: script source ] ].
+	^ json
 ]
 
 { #category : #'accessing-morphs' }
@@ -336,6 +436,27 @@ LWTDirector >> specification [
 { #category : #accessing }
 LWTDirector >> specification: aString [
 	self vdmc specification: aString
+]
+
+{ #category : #stepping }
+LWTDirector >> startStepping [
+	self
+		startStepping: #stepAt:
+		at: Time millisecondClockValue
+		arguments: nil
+		stepTime: 1000
+]
+
+{ #category : #stepping }
+LWTDirector >> step [
+	| m |
+	m := self owner.
+	[ 
+	m isNil
+		ifTrue: [ self releaseHandlers ].
+	m == World
+		ifTrue: [ ^ self ].
+	m := m owner ] repeat
 ]
 
 { #category : #accessing }
@@ -396,4 +517,15 @@ LWTDirector >> vdmc: aVDMC [
 { #category : #'event handling' }
 LWTDirector >> wantsDroppedMorph: aMorph event: aMouseEvent [
 	^ true
+]
+
+{ #category : #json }
+LWTDirector >> widgetsFromJsonObject: anArray [
+	self removeAllMorphs.
+	anArray do: [ :json | (LWTWidget fromJsonObject: json on: self) ifNotNil: [ :widget | self addMorphBack: widget ] ]
+]
+
+{ #category : #json }
+LWTDirector >> widgetsToJsonObject [
+	^ (submorphs select: [ :m | m isKindOf: LWTWidget ] thenCollect: [ :m | m asJsonObject ]) asArray
 ]

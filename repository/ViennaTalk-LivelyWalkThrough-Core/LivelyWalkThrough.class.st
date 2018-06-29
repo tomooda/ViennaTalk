@@ -57,7 +57,8 @@ LivelyWalkThrough >> build [
 		addLazyPage: self buildWidgetDispenserPane label: 'Widgets';
 		addLazyPage: self buildVDMBrowserPane label: 'VDM';
 		addLazyPage: self buildLivetalkBrowserPane label: 'Livetalk';
-		addLazyPage: self buildSettingsPane label: 'Settings'.
+		addLazyPage: self buildSettingsPane label: 'Settings';
+		addLazyPage: self buildFilePane label: 'File'.
 	utilsPane selectedPageIndex: 1.
 	pane
 		addMorph: self director
@@ -76,26 +77,65 @@ LivelyWalkThrough >> build [
 ]
 
 { #category : #'user interface' }
+LivelyWalkThrough >> buildFilePane [
+	| pane |
+	pane := Morph new.
+	pane
+		color: Color white;
+		changeTableLayout;
+		listDirection: #topToBottom;
+		hResizing: #spaceFill;
+		vResizing: #shrinkWrap;
+		listCentering: #topLeft;
+		wrapCentering: #topLeft.
+	pane
+		addMorphBack:
+			(PluggableButtonMorph new
+				label: 'Load...';
+				actionBlock: [ self director load ];
+				hResizing: #spaceFill;
+				listCentering: #topLeft;
+				yourself).
+	pane
+		addMorphBack:
+			(PluggableButtonMorph new
+				label: 'Save...';
+				actionBlock: [ self director save ];
+				hResizing: #spaceFill;
+				listCentering: #topLeft;
+				yourself).
+	pane
+		addMorphBack:
+			(PluggableButtonMorph new
+				label: 'Save As...';
+				actionBlock: [ self director saveAs ];
+				hResizing: #spaceFill;
+				listCentering: #topLeft;
+				yourself).
+	^ pane
+]
+
+{ #category : #'user interface' }
 LivelyWalkThrough >> buildLivetalkBrowserPane [
 	^ (LWTLivetalkBrowser on: self director) build
 ]
 
 { #category : #'user interface' }
 LivelyWalkThrough >> buildSettingsPane [
-	| pane item |
+	| pane urlPrefixPane |
 	pane := Morph new.
 	pane
 		color: Color white;
 		changeTableLayout;
-		listDirection: #toToBottom.
-	item := Morph new.
-	item
+		listDirection: #topToBottom.
+	urlPrefixPane := Morph new.
+	urlPrefixPane
 		color: Color white;
 		changeTableLayout;
 		listDirection: #leftToRight;
 		hResizing: #spaceFill;
 		vResizing: #shrinkWrap.
-	item
+	urlPrefixPane
 		addMorphBack:
 				(' name ' asMorph
 						hResizing: #rigid;
@@ -106,7 +146,7 @@ LivelyWalkThrough >> buildSettingsPane [
 						extent: 100 @ (TextStyle default defaultFont height * 2);
 						hResizing: #spaceFill;
 						yourself).
-	pane addMorphBack: item.
+	pane addMorphBack: urlPrefixPane.
 	^ pane
 ]
 

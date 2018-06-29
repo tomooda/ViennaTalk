@@ -128,7 +128,9 @@ LWTLivetalkBrowser >> director [
 
 { #category : #accessing }
 LWTLivetalkBrowser >> director: aLWTDirector [
-	director := aLWTDirector
+	director ifNotNil: [ director removeDependent: self ].
+	director := aLWTDirector.
+	director addDependent: self
 ]
 
 { #category : #'script list menu' }
@@ -224,4 +226,10 @@ LWTLivetalkBrowser >> shiftedScriptListMenu: aMenu [
 			('inspect editor'		inspect)
 			('inspect director'		inspectDirector)).
 	^ aMenu
+]
+
+{ #category : #updating }
+LWTLivetalkBrowser >> update: aSymbol [
+	aSymbol = #scriptSelectors ifTrue: [ self changed: #scriptList ].
+	^ super update: aSymbol
 ]
