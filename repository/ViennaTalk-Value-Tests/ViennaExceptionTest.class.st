@@ -7,7 +7,7 @@ Class {
 { #category : #tests }
 ViennaExceptionTest >> testTixeIn_noException [
 	self
-		assert: (ViennaException tixe: {([ :v | true ] -> [ :binds | 2 ])} in: [ 1 ])
+		assert: (ViennaException tixe: {([ :v | {{} asDictionary} ] -> [ :binds | 2 ])} in: [ 1 ])
 		equals: 1
 ]
 
@@ -15,7 +15,7 @@ ViennaExceptionTest >> testTixeIn_noException [
 ViennaExceptionTest >> testTixeIn_notTrapped [
 	self
 		should: [ ViennaException
-				tixe: {([ :v | nil ] -> [ :binds | 2 ])}
+				tixe: {([ :v | {} ] -> [ :binds | 2 ])}
 				in: [ ViennaException expression: 1 ] ]
 		raise: ViennaException
 ]
@@ -26,8 +26,8 @@ ViennaExceptionTest >> testTixeIn_trapped [
 		assert:
 			(ViennaException
 				tixe:
-					{([ :v | nil ] -> [ :binds | nil ]).
-					([ :v | {('p' -> (v + 2))} asDictionary ]
+					{([ :v | {} ] -> [ :binds | nil ]).
+					([ :v | {{('p' -> (v + 2))} asDictionary} ]
 						-> [ :binds | 
 							| p |
 							p := binds at: 'p'.
@@ -41,11 +41,11 @@ ViennaExceptionTest >> testTixeIn_trapped_then_notTrapped [
 	self
 		should: [ ViennaException
 				tixe:
-					{([ :v | nil ] -> [ :binds | nil ]).
+					{([ :v | {} ] -> [ :binds | nil ]).
 					([ :v | 
 					v isInteger
-						ifTrue: [ Dictionary new ]
-						ifFalse: [ nil ] ] -> [ :binds | ViennaException expression: 'fatal' ])}
+						ifTrue: [ {Dictionary new} ]
+						ifFalse: [ {} ] ] -> [ :binds | ViennaException expression: 'fatal' ])}
 				in: [ ViennaException expression: 1 ] ]
 		raise: ViennaException
 ]
@@ -56,16 +56,15 @@ ViennaExceptionTest >> testTixeIn_trapped_then_trapped [
 		assert:
 			(ViennaException
 				tixe:
-					{([ :v | nil ] -> [ :binds | nil ]).
+					{([ :v | {} ] -> [ :binds | nil ]).
 					([ :v | 
 					v isInteger
-						ifTrue: [ Dictionary new ]
-						ifFalse: [ nil ] ]
-						-> [ :binds | ViennaException expression: 'fatal' ]).
+						ifTrue: [ {Dictionary new} ]
+						ifFalse: [ {} ] ] -> [ :binds | ViennaException expression: 'fatal' ]).
 					([ :v | 
 					v isString
-						ifTrue: [ {('p' -> (v , ' handled'))} asDictionary ]
-						ifFalse: [ nil ] ]
+						ifTrue: [ {{('p' -> (v , ' handled'))} asDictionary} ]
+						ifFalse: [ {} ] ]
 						-> [ :binds | 
 							| p |
 							p := binds at: 'p'.
