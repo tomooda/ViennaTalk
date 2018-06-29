@@ -10,9 +10,14 @@ ViennaVDMDebugger class >> defaultTitle [
 	^ 'VDM'
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaVDMDebugger class >> handlesContext: aContext [
 	^ aContext specificationContext notNil
+]
+
+{ #category : #'class initialization' }
+ViennaVDMDebugger class >> initialize [
+	self register
 ]
 
 { #category : #'tools registry' }
@@ -24,7 +29,7 @@ ViennaVDMDebugger class >> register [
 ViennaVDMDebugger class >> registerToolsOn: registry [
 
 	"Add ourselves to registry. See [Smalltalk tools]" 
-	registry registerDebugger: self withRank: 80.
+	registry registerDebugger: self withRank: 2.
 ]
 
 { #category : #accessing }
