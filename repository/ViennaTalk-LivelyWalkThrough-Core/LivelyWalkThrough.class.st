@@ -63,7 +63,7 @@ LivelyWalkThrough class >> vdmj [
 
 { #category : #'world menu' }
 LivelyWalkThrough class >> viennaToolsMenuOn: aBuilder [
-	<ViennaTools>
+	<ViennaToolsMenu>
 	(aBuilder item: #'Lively WalkThrough')
 		action: [ self openVDMJ ];
 		order: 0.2;
