@@ -1866,7 +1866,7 @@ ViennaVDMGrammar >> specificationStatement [
 
 { #category : #parsing }
 ViennaVDMGrammar >> start [
-	^ expression end
+	^ document end
 ]
 
 { #category : #'parsers-definitions' }
