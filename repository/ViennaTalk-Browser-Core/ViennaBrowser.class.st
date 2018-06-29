@@ -56,6 +56,12 @@ ViennaBrowser class >> defaultLabel [
 	^ 'VDM Browser'
 ]
 
+{ #category : #'class initialization' }
+ViennaBrowser class >> initialize [
+	super initialize.
+	Smalltalk at: #ViennaLauncher ifPresent: [ :launcherClass | launcherClass reopen ]
+]
+
 { #category : #'instance creation' }
 ViennaBrowser class >> on: aVDMC [
 	^ self new vdmc: aVDMC
