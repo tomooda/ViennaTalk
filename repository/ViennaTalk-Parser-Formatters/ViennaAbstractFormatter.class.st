@@ -591,6 +591,11 @@ ViennaAbstractFormatter >> errorList: aViennaNode [
 						nextPutAll: (self format: node) ] ]
 ]
 
+{ #category : #'formatting-statements' }
+ViennaAbstractFormatter >> errorStatement: aViennaNode [
+	^ 'error'
+]
+
 { #category : #private }
 ViennaAbstractFormatter >> escapeString: aString [
 	^ aString
