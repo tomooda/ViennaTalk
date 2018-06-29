@@ -2,11 +2,11 @@ Class {
 	#name : #LWTDirector,
 	#superclass : #Morph,
 	#instVars : [
-		'actions',
 		'vdmc',
 		'frames',
 		'lastFrame',
-		'cuts'
+		'cuts',
+		'scripts'
 	],
 	#category : 'ViennaTalk-LivelyWalkThrough-Core'
 }
@@ -35,25 +35,17 @@ LWTDirector >> abort: aString [
 	context return: nil
 ]
 
-{ #category : #'accessing-actions' }
-LWTDirector >> actionAt: aSymbol ifAbsent: errorBlock [
-	^ actions at: aSymbol asSymbol ifAbsent: errorBlock
-]
-
-{ #category : #'accessing-actions' }
-LWTDirector >> actionAt: aSymbol put: anLWTAction [
-	^ actions at: aSymbol asSymbol put: anLWTAction
-]
-
-{ #category : #'accessing-actions' }
-LWTDirector >> actionSelectors [
-	^ actions keys asSortedCollection asArray
-]
-
 { #category : #'accessing-frames and cuts' }
 LWTDirector >> addFrame: anLWTFrame [
 	frames nextPut: anLWTFrame.
 	lastFrame := anLWTFrame
+]
+
+{ #category : #'accessing-scripts' }
+LWTDirector >> addScript: aLWTLivetalkScript [
+	^ (scripts at: aLWTLivetalkScript widgetName ifAbsentPut: [ Dictionary new ])
+		at: aLWTLivetalkScript event
+		put: aLWTLivetalkScript
 ]
 
 { #category : #'accessing-frames and cuts' }
@@ -94,9 +86,9 @@ LWTDirector >> defaultVDMC [
 	^ VDMC vdmj
 ]
 
-{ #category : #'accessing-actions' }
-LWTDirector >> dispatchActionAt: aSymbol ifAbsent: errorBlock [
-	^ (actions at: aSymbol asSymbol ifAbsent: [  ]) ifNotNilDo: [ :action | action value: self ] ifNil: errorBlock
+{ #category : #'accessing-scripts' }
+LWTDirector >> dispatchEvent: eventName at: widgetName [
+	^ ((scripts at: widgetName ifAbsent: [ ^ self ]) at: eventName ifAbsent: [ ^ self ]) value
 ]
 
 { #category : #drawing }
@@ -106,11 +98,6 @@ LWTDirector >> drawOn: aCanvas [
 		fillColor: Color white
 		borderWidth: 0
 		borderColor: Color white
-]
-
-{ #category : #interpreting }
-LWTDirector >> execCall: aString [
-	^ self dispatchActionAt: aString asSymbol ifAbsent: [ self abort: 'Can not read an undefined variable: ' , aString ]
 ]
 
 { #category : #interpreting }
@@ -127,7 +114,7 @@ LWTDirector >> execLet: aString be: anObject [
 
 { #category : #interpreting }
 LWTDirector >> execVDM: aString withArguments: anArray [
-	^ aString , '(' , (',' join: anArray)
+	^ aString , '(' , (',' join: anArray), ')'
 		in: [ :expression | 
 			| value |
 			value := self vdmc plainEvaluate: expression.
@@ -160,14 +147,14 @@ LWTDirector >> hasProceededSince: anLWTFrame [
 LWTDirector >> inform: aString [
 	| context |
 	context := thisContext.
-	[ context receiver isKindOf: LWTAction ] whileFalse: [ context := context sender ].
+	[ context receiver isKindOf: LWTLivetalkScript ] whileFalse: [ context := context sender ].
 	UIManager default alert: aString title: 'Lively Walk-Through: ' , context receiver name
 ]
 
 { #category : #'initialize-release' }
 LWTDirector >> initialize [
 	super initialize.
-	actions := Dictionary new.
+	scripts := Dictionary new.
 	frames := Array new writeStream.
 	lastFrame := nil.
 	cuts := Dictionary new
@@ -210,14 +197,40 @@ LWTDirector >> recordEvent: aSymbol at: aMorph [
 	self addFrame: (LWTEventFrame morphName: aMorph name event: aSymbol)
 ]
 
-{ #category : #'accessing-actions' }
-LWTDirector >> removeActionAt: aSymbol ifAbsent: errorBlock [
-	^ actions removeKey: aSymbol asSymbol ifAbsent: errorBlock
-]
-
 { #category : #'accessing-frames and cuts' }
 LWTDirector >> removeCutAt: aString [
 	^ cuts removeKey: aString ifAbsent: [  ]
+]
+
+{ #category : #'accessing-scripts' }
+LWTDirector >> removeScriptAt: aString ifAbsent: errorBlock [
+	self
+		scriptsDo: [ :script | 
+			script name = aString
+				ifTrue: [ 
+					(scripts at: script widgetName) removeKey: script event.
+					^ script ] ].
+	^ errorBlock value
+]
+
+{ #category : #'accessing-scripts' }
+LWTDirector >> scriptAt: aString ifAbsent: errorBlock [
+	self
+		scriptsDo: [ :script | 
+			script name = aString
+				ifTrue: [ ^ script ] ].
+	^ errorBlock value
+]
+
+{ #category : #'accessing-scripts' }
+LWTDirector >> scriptSelectors [
+	^ (Array new: 10 streamContents: [ :stream | self scriptsDo: [ :script | stream nextPut: script name ] ])
+		asSortedCollection
+]
+
+{ #category : #private }
+LWTDirector >> scriptsDo: aBlock [
+	scripts valuesDo: [ :scriptDict | scriptDict valuesDo: aBlock ]
 ]
 
 { #category : #accessing }

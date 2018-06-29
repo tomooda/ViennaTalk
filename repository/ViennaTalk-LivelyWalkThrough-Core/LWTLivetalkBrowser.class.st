@@ -4,8 +4,8 @@ Class {
 	#instVars : [
 		'director',
 		'codePane',
-		'selectedActionSelector',
-		'codeSelection'
+		'codeSelection',
+		'selectedScriptSelector'
 	],
 	#category : 'ViennaTalk-LivelyWalkThrough-Core'
 }
@@ -24,77 +24,34 @@ LWTLivetalkBrowser >> acceptCode: aStringOrText [
 			| codeStream selector |
 			codeStream := aStringOrText asString readStream.
 			selector := (codeStream upTo: Character cr) trimmed.
-			(LWTLivetalkScriptAction
+			(LWTLivetalkScript
 				named: selector
 				on: self director
 				source: codeStream upToEnd
-				notifying: codePane
 				ifFail: [ 
 					codePane flash.
-					nil ])
-				ifNil: [ ^ false ]
-				ifNotNil: [ :action | 
-					self director actionAt: selector asSymbol put: action.
+					^ false ])
+				ifNotNil: [ :script | 
+					self director addScript: script.
 					codePane hasUnacceptedEdits: false.
-					self changed: #actionList.
-					self selectActionNamed: selector.
+					self changed: #scriptList.
+					self selectScriptNamed: selector.
 					^ true ] ]
-]
-
-{ #category : #'action list' }
-LWTLivetalkBrowser >> actionList [
-	^ self director actionSelectors
-]
-
-{ #category : #'action list' }
-LWTLivetalkBrowser >> actionListIndex [
-	^ self actionList indexOf: self selectedActionSelector
-]
-
-{ #category : #'action list' }
-LWTLivetalkBrowser >> actionListIndex: anInteger [ 
-	self
-		selectActionNamed: (self actionList
-				at: anInteger
-				ifAbsent: [])
-]
-
-{ #category : #'action list menu' }
-LWTLivetalkBrowser >> actionListMenu: aMenu shifted: shifted [ 
-	"Answer the message-list menu"
-	shifted
-		ifTrue: [^ self shiftedActionListMenu: aMenu].
-	aMenu addList: #(
-		#('do it (d)' #doIt )
-		-
-		#('remove (x)' #removeAction )
-	).
-	^ aMenu
 ]
 
 { #category : #'user interface' }
 LWTLivetalkBrowser >> build [
-	| actionList browserPane |
-	actionList := self buildActionList.
+	| scriptList browserPane |
+	scriptList := self buildScriptList.
 	codePane := self buildCodePane.
 	browserPane := BorderedMorph new
 		color: Color transparent;
 		changeProportionalLayout;
 		yourself.
-	browserPane addMorph: actionList fullFrame: ((0 @ 0 corner: 1 @ 0.4) asLayoutFrame bottomRightOffset: 0 @ -2).
+	browserPane addMorph: scriptList fullFrame: ((0 @ 0 corner: 1 @ 0.4) asLayoutFrame bottomRightOffset: 0 @ -2).
 	browserPane addMorph: codePane fullFrame: ((0 @ 0.4 corner: 1 @ 1) asLayoutFrame topLeftOffset: 0 @ 2).
 	browserPane addPaneSplitters.
 	^ browserPane
-]
-
-{ #category : #'user interface' }
-LWTLivetalkBrowser >> buildActionList [
-	^ PluggableListMorph
-		on: self
-		list: #actionList
-		selected: #actionListIndex
-		changeSelected: #actionListIndex:
-		menu: #actionListMenu:shifted:
 ]
 
 { #category : #'user interface' }
@@ -110,12 +67,22 @@ LWTLivetalkBrowser >> buildCodePane [
 		yourself
 ]
 
+{ #category : #'user interface' }
+LWTLivetalkBrowser >> buildScriptList [
+	^ PluggableListMorph
+		on: self
+		list: #scriptList
+		selected: #scriptListIndex
+		changeSelected: #scriptListIndex:
+		menu: #scriptListMenu:shifted:
+]
+
 { #category : #'code pane' }
 LWTLivetalkBrowser >> code [
-	^ self selectedActionSelector
-		ifNotNilDo: [ :selector | 
-			(self director actionAt: selector ifAbsent: [  ])
-				ifNotNilDo: [ :action | (selector , String cr , action source) asText makeAllColor: Color black ]
+	^ self selectedScriptSelector
+		ifNotNil: [ :selector | 
+			(self director scriptAt: selector ifAbsent: [  ])
+				ifNotNil: [ :script | (selector , String cr , script source) asText makeAllColor: Color black ]
 				ifNil: [ self codeTemplate ] ]
 		ifNil: [ self codeTemplate ]
 ]
@@ -132,15 +99,9 @@ LWTLivetalkBrowser >> codeSelection: anInterval [
 
 { #category : #'code pane' }
 LWTLivetalkBrowser >> codeTemplate [
-	^ 'ScriptName
+	^ 'WidgetName`event
 	VDM`operation(arg) -> [UI]
-	<ScriptName>
 	!"dialogMessage"' asText makeAllColor: Color gray
-]
-
-{ #category : #defaults }
-LWTLivetalkBrowser >> defaultBackgroundColor [
-	^ Color blue
 ]
 
 { #category : #defaults }
@@ -158,26 +119,26 @@ LWTLivetalkBrowser >> director: aLWTDirector [
 	director := aLWTDirector
 ]
 
-{ #category : #'action list menu' }
+{ #category : #'script list menu' }
 LWTLivetalkBrowser >> doIt [
-	self selectedAction
-		ifNotNilDo: [:action | action value]
+	self selectedScript
+		ifNotNilDo: [:script | script value]
 ]
 
-{ #category : #'action list' }
-LWTLivetalkBrowser >> hasActionSelected [
-	^ selectedActionSelector notNil
+{ #category : #'script list' }
+LWTLivetalkBrowser >> hasScriptSelected [
+	^ selectedScriptSelector notNil
 ]
 
-{ #category : #'action list menu' }
+{ #category : #'script list menu' }
 LWTLivetalkBrowser >> inspectDirector [
 	self director inspect
 ]
 
-{ #category : #'action list menu' }
+{ #category : #'script list menu' }
 LWTLivetalkBrowser >> inspectIt [
-	self selectedAction
-		ifNotNilDo: [:action | action value inspect]
+	self selectedScript
+		ifNotNilDo: [:script | script value inspect]
 ]
 
 { #category : #'user interface' }
@@ -185,38 +146,68 @@ LWTLivetalkBrowser >> openLabel: aString [
 	self build openInWindowLabeled: aString
 ]
 
-{ #category : #'action list menu' }
-LWTLivetalkBrowser >> removeAction [
+{ #category : #'script list menu' }
+LWTLivetalkBrowser >> removeScript [
 	self director
-		removeActionAt: self selectedActionSelector
+		removeScriptAt: self selectedScriptSelector
 		ifAbsent: [].
-	self changed: #actionList.
-	self actionListIndex < 1
-		ifTrue: [self changed: #contents]
+	self changed: #scriptList.
+	self selectScriptNamed: nil
 ]
 
-{ #category : #'action list' }
-LWTLivetalkBrowser >> selectActionNamed: aSymbol [ 
-	selectedActionSelector := aSymbol
-				ifNotNilDo: [:selector | selector asSymbol].
-	self changed: #actionListIndex.
+{ #category : #'script list' }
+LWTLivetalkBrowser >> scriptList [
+	^ self director scriptSelectors
+]
+
+{ #category : #'script list' }
+LWTLivetalkBrowser >> scriptListIndex [
+	^ self scriptList indexOf: self selectedScriptSelector
+]
+
+{ #category : #'script list' }
+LWTLivetalkBrowser >> scriptListIndex: anInteger [ 
+	self
+		selectScriptNamed: (self scriptList
+				at: anInteger
+				ifAbsent: [])
+]
+
+{ #category : #'script list menu' }
+LWTLivetalkBrowser >> scriptListMenu: aMenu shifted: shifted [ 
+	"Answer the message-list menu"
+	shifted
+		ifTrue: [^ self shiftedScriptListMenu: aMenu].
+	aMenu addList: #(
+		#('do it (d)' #doIt )
+		-
+		#('remove (x)' #removeScript )
+	).
+	^ aMenu
+]
+
+{ #category : #'script list' }
+LWTLivetalkBrowser >> selectScriptNamed: aSymbol [ 
+	selectedScriptSelector := aSymbol
+				ifNotNil: [:selector | selector asSymbol].
+	self changed: #scriptListIndex.
 	self changed: #code
 ]
 
-{ #category : #'action list' }
-LWTLivetalkBrowser >> selectedAction [
+{ #category : #'script list' }
+LWTLivetalkBrowser >> selectedScript [
 	^ self director
-		actionAt: self selectedActionSelector
+		scriptAt: self selectedScriptSelector
 		ifAbsent: []
 ]
 
-{ #category : #'action list' }
-LWTLivetalkBrowser >> selectedActionSelector [
-	^ selectedActionSelector
+{ #category : #'script list' }
+LWTLivetalkBrowser >> selectedScriptSelector [
+	^ selectedScriptSelector
 ]
 
-{ #category : #'action list menu' }
-LWTLivetalkBrowser >> shiftedActionListMenu: aMenu [
+{ #category : #'script list menu' }
+LWTLivetalkBrowser >> shiftedScriptListMenu: aMenu [
 	aMenu addList: #(
 			('inspect editor'		inspect)
 			('inspect director'		inspectDirector)).

@@ -40,13 +40,13 @@ LivelyWalkThrough >> build [
 	pane
 		addMorph: self director
 		fullFrame:
-			((0 @ 0 corner: 0.7 @ 1) asLayoutFrame
+			((0 @ 0 corner: 0.6 @ 1) asLayoutFrame
 				bottomRightOffset: -3 @ 0;
 				yourself).
 	pane
 		addMorph: utilsPane
 		fullFrame:
-			((0.7 @ 0 corner: 1 @ 1) asLayoutFrame
+			((0.6 @ 0 corner: 1 @ 1) asLayoutFrame
 				topLeftOffset: 3 @ 0;
 				yourself).
 	pane addPaneSplitters.

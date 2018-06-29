@@ -20,7 +20,7 @@ LWTFrame >> hasBrowser [
 { #category : #'initialize-release' }
 LWTFrame >> initialize [
 	super initialize.
-	timestamp := TimeStamp now
+	timestamp := DateAndTime now
 ]
 
 { #category : #testing }
