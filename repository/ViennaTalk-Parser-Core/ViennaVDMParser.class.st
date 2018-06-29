@@ -11,25 +11,49 @@ ViennaVDMParser >> abs: arg [
 
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> access [
-	^ super access ==> [ :string | ViennaNode label: 'Access' with: string ]
+	^ super access
+		=>> [ :start :end :string | 
+			ViennaNode
+				label: 'Access'
+				start: start
+				end: end
+				with: string ]
 ]
 
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> accessFunctionDefinition [
 	^ super accessFunctionDefinition
-		==> [ :array | ViennaNode label: 'AccessFunctionDefinition' with: (ViennaNode label: 'Access' withAll: array first) with: array second ]
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'AccessFunctionDefinition'
+				start: start
+				end: end
+				with: (ViennaNode label: 'Access' withAll: array first)
+				with: array second ]
 ]
 
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> accessOperationDefinition [
 	^ super accessOperationDefinition
-		==> [ :array | ViennaNode label: 'AccessOperationDefinition' with: (ViennaNode label: 'Access' withAll: array first) with: array second ]
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'AccessOperationDefinition'
+				start: start
+				end: end
+				with: (ViennaNode label: 'Access' withAll: array first)
+				with: array second ]
 ]
 
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> accessTypeDefinition [
 	^ super accessTypeDefinition
-		==> [ :array | ViennaNode label: 'AccessTypeDefinition' with: (ViennaNode label: 'Access' withAll: array first) with: array second ]
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'AccessTypeDefinition'
+				start: start
+				end: end
+				with: (ViennaNode label: 'Access' withAll: array first)
+				with: array second ]
 ]
 
 { #category : #'parsers-definitions' }

@@ -53,6 +53,11 @@ Class {
 	#category : 'ViennaTalk-Parser-Core'
 }
 
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> abs [
+	^ self reserved: 'abs'
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMGrammar >> abs: arg [
 	^ arg
@@ -135,6 +140,11 @@ ViennaVDMGrammar >> and: arg1 and: arg2 [
 	arg2}
 ]
 
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> andOp [
+	^ self reserved: 'and'
+]
+
 { #category : #'parsers-types' }
 ViennaVDMGrammar >> anonymousField [
 	^ type
@@ -144,7 +154,7 @@ ViennaVDMGrammar >> anonymousField [
 ViennaVDMGrammar >> applicatorExpression [
 	^ (self combinatorExpression
 		,
-			(((lparen , expression , comma , (self operator: '...') , comma , expression , rparen)
+			(((lparen , expression , comma , self dots , comma , expression , rparen)
 				==> [ :array | 
 					{#subsequence:from:to:.
 					(array second).
@@ -190,6 +200,11 @@ ViennaVDMGrammar >> apply: func args: args [
 	args}
 ]
 
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> arrow [
+	^ self operator: '->'
+]
+
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> assignStatement [
 	^ (self stateDesignator , colonEq , expression)
@@ -231,10 +246,18 @@ ViennaVDMGrammar >> bar [
 
 { #category : #'parsers-types' }
 ViennaVDMGrammar >> basicType [
-	^ self
-		reserved:
-			'bool' asParser / 'nat1' asParser / 'nat' asParser / 'int' asParser / 'real' asParser / 'char' asParser
-				/ 'token' asParser
+	^ self reserved: self basicTypeName
+]
+
+{ #category : #'parsers-types' }
+ViennaVDMGrammar >> basicTypeName [
+	^ 'bool' asParser / 'nat1' asParser / 'nat' asParser / 'int' asParser / 'real' asParser / 'char' asParser
+		/ 'token' asParser
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> best [
+	^ ((self reserved: 'be') , (self reserved: 'st')) ==> #yourself
 ]
 
 { #category : #'parsers-patterns' }
@@ -266,15 +289,25 @@ ViennaVDMGrammar >> callStatement [
 			(quatro third)} ]
 ]
 
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> card [
+	^ self reserved: 'card'
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMGrammar >> card: arg [
 	^ arg
 ]
 
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> cases [
+	^ self reserved: 'cases'
+]
+
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> casesExpression [
-	^ (((self reserved: 'cases') , expression , colon) ==> #second , self casesExpressionAlternatives
-		, ((comma , self othersExpression) ==> #second) optional , (self reserved: 'end'))
+	^ ((self cases , expression , colon) ==> #second , self casesExpressionAlternatives
+		, ((comma , self othersExpression) ==> #second) optional , self endKeyword)
 		==> [ :quatro | 
 			| expr alternatives othersExpr |
 			expr := quatro first.
@@ -287,7 +320,7 @@ ViennaVDMGrammar >> casesExpression [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> casesExpressionAlternative [
-	^ (((self reserved: 'others') / (self reserved: 'end')) not and , patternList , (self operator: '->') , expression)
+	^ (((self reserved: 'others') / (self reserved: 'end')) not and , patternList , self arrow , expression)
 		==> [ :quatro | 
 			| patlist expr |
 			patlist := quatro second.
@@ -303,8 +336,8 @@ ViennaVDMGrammar >> casesExpressionAlternatives [
 
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> casesStatement [
-	^ (((self reserved: 'cases') , expression , colon) ==> #second , self casesStatementAlternatives
-		, ((comma , self othersStatement) ==> #second) optional , (self reserved: 'end'))
+	^ ((self cases , expression , colon) ==> #second , self casesStatementAlternatives
+		, ((comma , self othersStatement) ==> #second) optional , self endKeyword)
 		==> [ :quatro | 
 			| expr alternatives othersExpr |
 			expr := quatro first.
@@ -317,7 +350,7 @@ ViennaVDMGrammar >> casesStatement [
 
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> casesStatementAlternative [
-	^ (((self reserved: 'others') / (self reserved: 'end')) not and , patternList , (self operator: '->') , statement)
+	^ (((self reserved: 'others') / (self reserved: 'end')) not and , patternList , self arrow , statement)
 		==> [ :quatro | 
 			| patlist expr |
 			patlist := quatro second.
@@ -345,7 +378,7 @@ ViennaVDMGrammar >> colonEq [
 ViennaVDMGrammar >> combinatorExpression [
 	| atomicExpr precedence2 precedence1 |
 	atomicExpr := self atomicExpression.
-	precedence2 := (atomicExpr , ((self operator: '**') , atomicExpr) star)
+	precedence2 := (atomicExpr , (self enumerate , atomicExpr) star)
 		==> [ :pair | 
 			pair second
 				ifEmpty: [ pair first ]
@@ -356,7 +389,7 @@ ViennaVDMGrammar >> combinatorExpression [
 							((pair second size to: 2 by: -1)
 								inject: pair second last second
 								into: [ :expr :index | self iterateExpression: (pair second at: index - 1) second and: expr ]) ] ].
-	precedence1 := (precedence2 , ((self reserved: 'comp') , precedence2) star)
+	precedence1 := (precedence2 , (self comp , precedence2) star)
 		==> [ :pair | 
 			pair second
 				ifEmpty: [ pair first ]
@@ -380,6 +413,11 @@ ViennaVDMGrammar >> comment [
 	^ self multiLineComment / self singleLineComment
 ]
 
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> comp [
+	^ self reserved: 'comp'
+]
+
 { #category : #'parsers-types' }
 ViennaVDMGrammar >> compositeType [
 	^ ((self reserved: 'compose' ) , identifier trim , (self reserved: 'of') , fieldList , (self reserved: 'end'))
@@ -392,6 +430,11 @@ ViennaVDMGrammar >> compositeType [
 ViennaVDMGrammar >> compositionExpression: expr1 and: expr2 [
 	^ {expr1.
 	expr2}
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> conc [
+	^ self reserved: 'conc'
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -408,13 +451,13 @@ ViennaVDMGrammar >> concat: arg1 and: arg2 [
 { #category : #'parsers-expressions' }
 ViennaVDMGrammar >> connectiveExpression [
 	| precedence5 precedence4 precedence3 precedence2 precedence1 |
-	precedence5 := ((self reserved: 'not') star , relationExpression)
+	precedence5 := (self notOp star , relationExpression)
 		==> [ :pair | pair first inject: pair second into: [ :expr :op | self not: expr ] ].
-	precedence4 := (precedence5 , ((self reserved: 'and') , precedence5) star)
+	precedence4 := (precedence5 , (self andOp , precedence5) star)
 		==> [ :pair | pair second inject: pair first into: [ :expr :and | self and: expr and: and second ] ].
-	precedence3 := (precedence4 , ((self reserved: 'or') , precedence4) star)
+	precedence3 := (precedence4 , (self orOp , precedence4) star)
 		==> [ :pair | pair second inject: pair first into: [ :expr :or | self or: expr and: or second ] ].
-	precedence2 := (precedence3 , ((self operator: '=>') , precedence3) star)
+	precedence2 := (precedence3 , (self impOp , precedence3) star)
 		==> [ :pair | 
 			pair second
 				ifEmpty: [ pair first ]
@@ -425,7 +468,7 @@ ViennaVDMGrammar >> connectiveExpression [
 							((pair second size to: 2 by: -1)
 								inject: pair second last second
 								into: [ :expr :index | self imp: (pair second at: index - 1) second and: expr ]) ] ].
-	precedence1 := (precedence2 , ((self operator: '<=>') , precedence2) star)
+	precedence1 := (precedence2 , (self equivOp , precedence2) star)
 		==> [ :pair | pair second inject: pair first into: [ :expr :bool | self equiv: expr and: bool second ] ].
 	^ precedence1
 ]
@@ -435,10 +478,14 @@ ViennaVDMGrammar >> dclStatement [
 	^ ((self reserved: 'dcl') , (self assignmentDefinition separatedBy: comma) withoutSeparators , semicolon) ==> #second
 ]
 
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> def [
+	^ self reserved: 'def'
+]
+
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> defExpression [
-	^ ((self reserved: 'def') , (self equalDefinition delimitedBy: semicolon) withoutSeparators , (self reserved: 'in')
-		, expression)
+	^ (self def , (self equalDefinition delimitedBy: semicolon) withoutSeparators , (self reserved: 'in') , expression)
 		==> [ :quatro | 
 			| defs bodyExpr |
 			defs := quatro second.
@@ -449,7 +496,7 @@ ViennaVDMGrammar >> defExpression [
 
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> defStatement [
-	^ ((self reserved: 'def') , self equalDefinitionList , (self reserved: 'in') , statement)
+	^ (self def , self equalDefinitionList , (self reserved: 'in') , statement)
 		==> [ :quatro | 
 			| defs bodyStatement |
 			defs := quatro second.
@@ -463,10 +510,25 @@ ViennaVDMGrammar >> definitionBlock [
 	^ (self typeDefinitions / self valueDefinitions / self functionDefinitions / self operationDefinitions / self stateDefinition) trim
 ]
 
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> definitions [
+	^ self reserved: 'definitions'
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMGrammar >> diff: arg1 and: arg2 [
 	^ {arg1.
 	arg2}
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> diffOp [
+	^ self operator: $\
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> dinter [
+	^ self reserved: 'dinter'
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -484,6 +546,11 @@ ViennaVDMGrammar >> discretionaryType1 [
 	^ type1 / self unitType
 ]
 
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> div [
+	^ self reserved: 'div'
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMGrammar >> div: arg1 and: arg2 [
 	^ {arg1.
@@ -495,9 +562,24 @@ ViennaVDMGrammar >> document [
 	^ self moduledDocument / self flatDocument
 ]
 
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> dom [
+	^ self reserved: 'dom'
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMGrammar >> dom: arg [
 	^ arg
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> dots [
+	^ self operator: '...'
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> dunion [
+	^ self reserved: 'dunion'
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -505,14 +587,29 @@ ViennaVDMGrammar >> dunion: arg [
 	^ arg
 ]
 
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> elems [
+	^ self reserved: 'elems'
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMGrammar >> elems: arg [
 	^ arg
 ]
 
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> else [
+	^ self reserved: 'else'
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> elseif [
+	^ self reserved: 'elseif'
+]
+
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> elseifExpression [
-	^ ((self reserved: 'elseif') , expression , (self reserved: 'then') , expression)
+	^ (self elseif , expression , self then , expression)
 		==> [ :quatro | 
 			{(quatro second).
 			(quatro fourth)} ]
@@ -520,14 +617,29 @@ ViennaVDMGrammar >> elseifExpression [
 
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> elseifStatement [
-	^ ((self reserved: 'elseif') , expression , (self reserved: 'then') , statement)
+	^ (self elseif , expression , self then , statement)
 		==> [ :quatro | 
 			{(quatro second).
 			(quatro fourth)} ]
 ]
 
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> endKeyword [
+	^ self reserved: 'end'
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> enumerate [
+	^ self operator: '**'
+]
+
 { #category : #'parsers-symbols' }
 ViennaVDMGrammar >> eq [
+	^ self operator: $=
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> eqOp [
 	^ self operator: $=
 ]
 
@@ -564,28 +676,31 @@ ViennaVDMGrammar >> equiv: arg1 and: arg2 [
 	arg2}
 ]
 
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> equivOp [
+	^ self operator: '<=>'
+]
+
 { #category : #'parsers-expressions' }
 ViennaVDMGrammar >> evaluatorExpression [
 	| precedence6 precedence5 precedence4 precedence3 precedence2 precedence1 |
 	precedence6 := ((((self operator: $+) ==> [ :plus | 'unaryPlus' ])
-		/ ((self operator: $-) ==> [ :minus | 'unaryMinus' ]) / (self reserved: 'abs') / (self reserved: 'floor')
-		/ (self reserved: 'card') / (self reserved: 'power') / (self reserved: 'dinter') / (self reserved: 'dunion')
-		/ (self reserved: 'dom') / (self reserved: 'rng') / (self reserved: 'merge') / (self reserved: 'len')
-		/ (self reserved: 'elems') / (self reserved: 'hd') / (self reserved: 'tl') / (self reserved: 'conc')
-		/ (self reserved: 'inds') / (self reserved: 'reverse')) star , self applicatorExpression)
+		/ ((self operator: $-) ==> [ :minus | 'unaryMinus' ]) / self abs / self floor / self card / self power / self dinter
+		/ self dunion / self dom / self rng / self merge / self len / self elems / self hd / self tl / self conc / self inds
+		/ self reverse) star , self applicatorExpression)
 		==> [ :pair | pair first reverse inject: pair second into: [ :expr :sel | self perform: (sel , ':') asSymbol with: expr ] ].
 	precedence5 := (precedence6
 		,
-			(((self operator: ':>') ==> [ :op | #map:rangeRestrictedTo: ])
-				/ ((self operator: ':->') ==> [ :op | #map:rangeRestrictedBy: ]) , precedence6) star)
+			((self mapRangeRestrictedTo ==> [ :op | #map:rangeRestrictedTo: ])
+				/ (self mapRangeRestrictedBy ==> [ :op | #map:rangeRestrictedBy: ]) , precedence6) star)
 		==> [ :pair | 
 			pair second
 				inject: pair first
 				into: [ :expr :selAndArg | self perform: selAndArg first with: expr with: selAndArg second ] ].
 	precedence4 := (precedence5
 		,
-			(((self operator: '<:') ==> [ :op | #map:domainRestrictedTo: ])
-				/ ((self operator: '<-:') ==> [ :op | #map:domainRestrictedBy: ]) , precedence5) star)
+			((self mapDomainRestrictedTo ==> [ :op | #map:domainRestrictedTo: ])
+				/ (self mapDomainRestrictedBy ==> [ :op | #map:domainRestrictedBy: ]) , precedence5) star)
 		==> [ :pair | 
 			pair second
 				ifEmpty: [ pair first ]
@@ -597,36 +712,36 @@ ViennaVDMGrammar >> evaluatorExpression [
 							((pair second size to: 2 by: -1)
 								inject: pair second last second
 								into: [ :expr :index | self perform: (pair second at: index) first with: (pair second at: index - 1) second with: expr ]) ] ].
-	precedence3 := ((self reserved: 'inverse') star , precedence4)
+	precedence3 := (self inverse star , precedence4)
 		==> [ :pair | pair first inject: pair second into: [ :expr :inv | self inverse: expr ] ].
 	precedence2 := (precedence3
 		,
-			((((self operator: $*) , precedence3)
+			(((self starOp , precedence3)
 				==> [ :pair | 
 					{#mul:and:.
 					(pair second)} ])
 				/
-					(((self operator: $/) , precedence3)
+					((self slash , precedence3)
 						==> [ :pair | 
 							{#fraction:and:.
 							(pair second)} ])
 				/
-					(((self reserved: 'rem') , precedence3)
+					((self rem , precedence3)
 						==> [ :pair | 
 							{#rem:and:.
 							(pair second)} ])
 				/
-					(((self reserved: 'mod') , precedence3)
+					((self mod , precedence3)
 						==> [ :pair | 
 							{#mod:and:.
 							(pair second)} ])
 				/
-					(((self reserved: 'div') , precedence3)
+					((self div , precedence3)
 						==> [ :pair | 
 							{#div:and:.
 							(pair second)} ])
 				/
-					(((self reserved: 'inter') , precedence3)
+					((self inter , precedence3)
 						==> [ :pair | 
 							{#inter:and:.
 							(pair second)} ])) star)
@@ -636,37 +751,37 @@ ViennaVDMGrammar >> evaluatorExpression [
 				into: [ :expr :selAndArg | self perform: selAndArg first with: expr with: selAndArg second ] ].
 	precedence1 := (precedence2
 		,
-			(((($+ asParser , $+ asParser not) trim , precedence2)
+			(((self plusOp , precedence2)
 				==> [ :pair | 
 					{#plus:and:.
 					(pair second)} ])
 				/
-					(((self operator: $-) , precedence2)
+					((self minusOp , precedence2)
 						==> [ :pair | 
 							{#minus:and:.
 							(pair second)} ])
 				/
-					(((self reserved: 'union') , precedence2)
+					((self union , precedence2)
 						==> [ :pair | 
 							{#union:and:.
 							(pair second)} ])
 				/
-					(((self operator: $\) , precedence2)
+					((self diffOp , precedence2)
 						==> [ :pair | 
 							{#diff:and:.
 							(pair second)} ])
 				/
-					(((self reserved: 'munion') , precedence2)
+					((self munion , precedence2)
 						==> [ :pair | 
 							{#munion:and:.
 							(pair second)} ])
 				/
-					(((self operator: '++') , precedence2)
+					((self plusPlusOp , precedence2)
 						==> [ :pair | 
 							{#mconcat:and:.
 							(pair second)} ])
 				/
-					(((self operator: $^) , precedence2)
+					((self hatOp , precedence2)
 						==> [ :pair | 
 							{#concat:and:.
 							(pair second)} ])) star)
@@ -677,9 +792,19 @@ ViennaVDMGrammar >> evaluatorExpression [
 	^ precedence1
 ]
 
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> exists [
+	^ self reserved: 'exists'
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> exists1 [
+	^ self reserved: 'exists1'
+]
+
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> exists1Expression [
-	^ ((self reserved: 'exists1') , bind , amp , expression)
+	^ (self exists1 , bind , amp , expression)
 		==> [ :quatro | 
 			{(quatro second).
 			(quatro fourth)} ]
@@ -687,7 +812,7 @@ ViennaVDMGrammar >> exists1Expression [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> existsExpression [
-	^ ((self reserved: 'exists') , bindList , amp , expression)
+	^ (self exists , bindList , amp , expression)
 		==> [ :quatro | 
 			{(quatro second).
 			(quatro fourth)} ]
@@ -697,9 +822,8 @@ ViennaVDMGrammar >> existsExpression [
 ViennaVDMGrammar >> explicitFunctionDefinition [
 	^ (identifier trim , self typeVariableList , colon , self functionType trim , identifier trim , self parametersList
 		, (self operator: '==') , (expression / self isSubclassResponsibility / self isNotYetSpecified)
-		, (((self reserved: 'pre') , expression) ==> #second) optional
-		, (((self reserved: 'post') , expression) ==> #second) optional
-		, (((self reserved: 'measure') , name) ==> #second) optional)
+		, ((self pre , expression) ==> #second) optional , ((self post , expression) ==> #second) optional
+		, ((self measure , name) ==> #second) optional)
 		==> [ :array | 
 			array first = array fifth
 				ifTrue: [ 
@@ -837,6 +961,11 @@ ViennaVDMGrammar >> flatDocument [
 	^ self definitionBlock star trim
 ]
 
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> floor [
+	^ self reserved: 'floor'
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMGrammar >> floor: arg [
 	^ arg
@@ -847,9 +976,14 @@ ViennaVDMGrammar >> followingLetter [
 	^ PPPredicateObjectParser on: [ :c | ViennaUnicode isFollowingLetter: c ] message: 'identifier expected'
 ]
 
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> forall [
+	^ self reserved: 'forall'
+]
+
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> forallExpression [
-	^ ((self reserved: 'forall') , bindList , amp , expression)
+	^ (self forall , bindList , amp , expression)
 		==> [ :quatro | 
 			{(quatro second).
 			(quatro fourth)} ]
@@ -868,8 +1002,8 @@ ViennaVDMGrammar >> functionDefinition [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> functionDefinitions [
-	^ ((self reserved: 'functions') , (self accessFunctionDefinition separatedBy: semicolon) withoutSeparators
-		, semicolon optional) ==> #second
+	^ (self functions , (self accessFunctionDefinition separatedBy: semicolon) withoutSeparators , semicolon optional)
+		==> #second
 ]
 
 { #category : #'parsers-interfaces' }
@@ -915,6 +1049,11 @@ ViennaVDMGrammar >> functionTypeInstantiation: func args: args [
 	args}
 ]
 
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> functions [
+	^ self reserved: 'functions'
+]
+
 { #category : #'parsers-interfaces' }
 ViennaVDMGrammar >> functionsSignature [
 	^ ((self reserved: 'functions') , (self functionSignature separatedBy: semicolon) withoutSeparators
@@ -931,6 +1070,11 @@ ViennaVDMGrammar >> generalIsExpr [
 	^ self isExpression / self typeJudgement
 ]
 
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> greater [
+	^ self operator: '>'
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMGrammar >> greater: arg1 and: arg2 [
 	^ {arg1.
@@ -941,6 +1085,21 @@ ViennaVDMGrammar >> greater: arg1 and: arg2 [
 ViennaVDMGrammar >> greaterEq: arg1 and: arg2 [
 	^ {arg1.
 	arg2}
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> greaterOrEqual [
+	^ self operator: '>='
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> hatOp [
+	^ self operator: $^
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> hd [
+	^ self reserved: 'hd'
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -972,12 +1131,17 @@ ViennaVDMGrammar >> identityStatement [
 	^ (self reserved: 'skip') ==> [ :string | nil ]
 ]
 
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> if [
+	^ self reserved: 'if'
+]
+
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> ifExpression [
-	^ (((self reserved: 'if') , expression , (self reserved: 'then') , expression)
+	^ ((self if , expression , self then , expression)
 		==> [ :quatro | 
 			{(quatro second).
-			(quatro fourth)} ] , self elseifExpression star , (((self reserved: 'else') , expression) ==> #second))
+			(quatro fourth)} ] , self elseifExpression star , ((self else , expression) ==> #second))
 		==> [ :triple | 
 			{(Array
 				new: triple second size + 1
@@ -990,10 +1154,10 @@ ViennaVDMGrammar >> ifExpression [
 
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> ifStatement [
-	^ (((self reserved: 'if') , expression , (self reserved: 'then') , statement)
+	^ ((self if , expression , self then , statement)
 		==> [ :quatro | 
 			{(quatro second).
-			(quatro fourth)} ] , self elseifStatement star , (((self reserved: 'else') , statement) ==> #second) optional)
+			(quatro fourth)} ] , self elseifStatement star , ((self else , statement) ==> #second) optional)
 		==> [ :triple | 
 			{(Array
 				new: triple second size + 1
@@ -1008,6 +1172,11 @@ ViennaVDMGrammar >> ifStatement [
 ViennaVDMGrammar >> imp: arg1 and: arg2 [
 	^ {arg1.
 	arg2}
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> impOp [
+	^ self operator: '=>'
 ]
 
 { #category : #'parsers-definitions' }
@@ -1073,6 +1242,11 @@ ViennaVDMGrammar >> importValuesSignature [
 		==> #second
 ]
 
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> in [
+	^ self reserved: 'in'
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMGrammar >> inSet: arg1 and: arg2 [
 	^ {arg1.
@@ -1089,6 +1263,11 @@ ViennaVDMGrammar >> indexForLoop [
 			(array sixth).
 			(array seventh).
 			(array ninth)} ]
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> inds [
+	^ self reserved: 'inds'
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -1117,6 +1296,16 @@ ViennaVDMGrammar >> inmapType [
 		==> [ :quatro | 
 			{(quatro second).
 			(quatro fourth)} ]
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> inset [
+	^ (self reserved: 'in') , (self reserved: 'set')
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> inter [
+	^ self reserved: 'inter'
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -1151,14 +1340,24 @@ ViennaVDMGrammar >> invariantInitialFunction [
 			expr} ]
 ]
 
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> inverse [
+	^ self reserved: 'inverse'
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMGrammar >> inverse: arg [
 	^ arg
 ]
 
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> iota [
+	^ self reserved: 'iota'
+]
+
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> iotaExpression [
-	^ ((self reserved: 'iota') , bind , amp , expression)
+	^ (self iota , bind , amp , expression)
 		==> [ :quatro | 
 			{(quatro second).
 			(quatro fourth)} ]
@@ -1166,8 +1365,7 @@ ViennaVDMGrammar >> iotaExpression [
 
 { #category : #'parsers-expressions-type discriminations' }
 ViennaVDMGrammar >> isBasicExpression [
-	^ ('is_bool' asParser / 'is_nat' asParser / 'is_nat1' asParser / 'is_int' asParser / 'is_rat' asParser
-		/ 'is_real' asParser / 'is_char' asParser / 'is_token' asParser , lparen , expression , rparen)
+	^ ('is_' asParser , self basicTypeName , lparen , expression , rparen)
 		==> [ :quatro | 
 			{(quatro first copyFrom: 4 to: quatro first size).
 			(quatro third)} ]
@@ -1229,9 +1427,14 @@ ViennaVDMGrammar >> keywords [
 	^ #('all' 'always' 'and' 'as' 'async' 'atomic' 'be' 'bool' 'by' 'card' 'cases' 'char' 'class' 'comp' 'compose' 'conc' 'cycles' 'dcl' 'def' 'definitions' 'dinter' 'div' 'dlmodule' 'do' 'dom' 'dunion' 'duration' 'elems' 'else' 'elseif' 'end' 'error' 'errs' 'exists' 'exists1' 'exit' 'exports' 'ext' 'false' 'floor' 'for' 'forall' 'from' 'functions' 'hd' 'if' 'in' 'inds' 'inmap' 'instance' 'int' 'inter' 'imports' 'init' 'inv' 'inverse' 'iota' 'is' 'isofbaseclass' 'isofclass' 'lambda' 'len' 'let' 'map' 'measure' 'merge' 'mod' 'module' 'mu' 'munion' 'mutex' 'nat' 'nat1' 'new' 'nil' 'not' 'of' 'operations' 'or' 'others' 'per' 'periodic' 'post' 'power' 'pre' 'private' 'protected' 'psubset' 'public' 'pure' 'rat' 'rd' 'real' 'rem' 'renamed' 'responsibility' 'return' 'reverse' 'rng' 'samebaseclass' 'sameclass' 'self' 'seq' 'seq1' 'set' 'skip' 'specified' 'sporadic' 'st' 'start' 'startlist' 'state' 'stop' 'stoplist' 'struct' 'subclass' 'subset' 'sync' 'system' 'then' 'thread' 'threadid' 'time' 'tixe' 'tl' 'to' 'token' 'traces' 'trap' 'true' 'types' 'undefined' 'union' 'uselib' 'values' 'variables' 'while' 'with' 'wr' 'yet' 'RESULT')
 ]
 
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> lambda [
+	^ self reserved: 'lambda'
+]
+
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> lambdaExpression [
-	^ ((self reserved: 'lambda') , self typeBindList , amp , expression)
+	^ (self lambda , self typeBindList , amp , expression)
 		==> [ :quatro | 
 			{(quatro second).
 			(quatro fourth)} ]
@@ -1247,9 +1450,19 @@ ViennaVDMGrammar >> lbracket [
 	^ self operator: $[
 ]
 
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> len [
+	^ self reserved: 'len'
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMGrammar >> len: arg [
 	^ arg
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> less [
+	^ self operator: '<'
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -1264,11 +1477,19 @@ ViennaVDMGrammar >> lessEq: arg1 and: arg2 [
 	arg2}
 ]
 
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> lessOrEqual [
+	^ self operator: '<='
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> let [
+	^ self reserved: 'let'
+]
+
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> letBeExpression [
-	^ ((self reserved: 'let') , multipleBind
-		, (((self reserved: 'be') , (self reserved: 'st') , expression) ==> #third) optional , (self reserved: 'in')
-		, expression)
+	^ ((self reserved: 'let') , multipleBind , ((self best , expression) ==> #second) optional , self in , expression)
 		==> [ :quin | 
 			{(quin second).
 			(quin third).
@@ -1277,9 +1498,7 @@ ViennaVDMGrammar >> letBeExpression [
 
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> letBeStatement [
-	^ ((self reserved: 'let') , multipleBind
-		, (((self reserved: 'be') , (self reserved: 'st') , expression) ==> #third) optional , (self reserved: 'in')
-		, statement)
+	^ (self let , multipleBind , ((self best , expression) ==> #second) optional , self in , statement)
 		==> [ :quin | 
 			| binds guardExpr bodyStatement |
 			binds := quin second.
@@ -1292,8 +1511,7 @@ ViennaVDMGrammar >> letBeStatement [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> letExpression [
-	^ ((self reserved: 'let') , self localDefinitionList, (self reserved: 'in')
-		, expression)
+	^ (self let , self localDefinitionList , self in , expression)
 		==> [ :quatro | 
 			{(quatro second).
 			(quatro fourth)} ]
@@ -1301,7 +1519,7 @@ ViennaVDMGrammar >> letExpression [
 
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> letStatement [
-	^ ((self reserved: 'let') , self localDefinitionList , (self reserved: 'in') , statement)
+	^ (self let , self localDefinitionList , self in , statement)
 		==> [ :quatro | 
 			| localDefs bodyStatement |
 			localDefs := quatro second.
@@ -1359,6 +1577,16 @@ ViennaVDMGrammar >> mapComprehension [
 			(array seventh)} ]
 ]
 
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> mapDomainRestrictedBy [
+	^ self operator: '<-:'
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> mapDomainRestrictedTo [
+	^ self operator: '<:'
+]
+
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> mapEnumeration [
 	^ (lbrace , ((mapletArrow ==> [ :single | Array new ]) / (self maplet separatedBy: comma) withoutSeparators) , rbrace)
@@ -1391,6 +1619,16 @@ ViennaVDMGrammar >> mapOrSequenceReferenceArg [
 		==> [ :triple | 
 			{#mapOrSequenceReference:with:.
 			(triple second)} ]
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> mapRangeRestrictedBy [
+	^ self operator: ':->'
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> mapRangeRestrictedTo [
+	^ self operator: ':>'
 ]
 
 { #category : #'parsers-types' }
@@ -1448,6 +1686,16 @@ ViennaVDMGrammar >> mconcat: arg1 and: arg2 [
 	arg2}
 ]
 
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> measure [
+	^ self reserved: 'measure'
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> merge [
+	^ self reserved: 'merge'
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMGrammar >> merge: arg [
 	^ arg
@@ -1459,6 +1707,16 @@ ViennaVDMGrammar >> minus: arg1 and: arg2 [
 	arg2}
 ]
 
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> minusOp [
+	^ self operator: $-
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> mod [
+	^ self reserved: 'mod'
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMGrammar >> mod: arg1 and: arg2 [
 	^ {arg1.
@@ -1467,8 +1725,7 @@ ViennaVDMGrammar >> mod: arg1 and: arg2 [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> module [
-	^ ((self reserved: 'module') , identifier trim , self interface , self moduleBody optional , (self reserved: 'end')
-		, identifier)
+	^ (self moduleKeyword , identifier trim , self interface , self moduleBody optional , self endKeyword , identifier)
 		==> [ :array | 
 			array second = array sixth
 				ifTrue: [ 
@@ -1480,7 +1737,12 @@ ViennaVDMGrammar >> module [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> moduleBody [
-	^ ((self reserved: 'definitions') , self definitionBlock plus) ==> #second
+	^ (self definitions , self definitionBlock plus) ==> #second
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> moduleKeyword [
+	^ self reserved: 'module'
 ]
 
 { #category : #'parsers-definitions' }
@@ -1534,6 +1796,11 @@ ViennaVDMGrammar >> multipleTypeBind [
 			(triple third)} ]
 ]
 
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> munion [
+	^ self reserved: 'munion'
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMGrammar >> munion: arg1 and: arg2 [
 	^ {arg1.
@@ -1583,6 +1850,11 @@ ViennaVDMGrammar >> not: arg [
 	^ arg
 ]
 
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> notEq [
+	^ self operator: '<>'
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMGrammar >> notEqual: arg1 and: arg2 [
 	^ {arg1.
@@ -1593,6 +1865,11 @@ ViennaVDMGrammar >> notEqual: arg1 and: arg2 [
 ViennaVDMGrammar >> notInSet: arg1 and: arg2 [
 	^ {arg1.
 	arg2}
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> notOp [
+	^ self reserved: 'not'
 ]
 
 { #category : #'parsers-patterns' }
@@ -1620,8 +1897,8 @@ ViennaVDMGrammar >> operationDefinition [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> operationDefinitions [
-	^ ((self reserved: 'operations') , (self accessOperationDefinition separatedBy: semicolon) withoutSeparators
-		, semicolon optional) ==> #second
+	^ (self operations , (self accessOperationDefinition separatedBy: semicolon) withoutSeparators , semicolon optional)
+		==> #second
 ]
 
 { #category : #'parsers-interfaces' }
@@ -1646,6 +1923,11 @@ ViennaVDMGrammar >> operationType [
 		==> [ :triple | 
 			{(triple first).
 			(triple third)} ]
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> operations [
+	^ self reserved: 'operations'
 ]
 
 { #category : #'parsers-interfaces' }
@@ -1675,9 +1957,19 @@ ViennaVDMGrammar >> or: arg1 and: arg2 [
 	arg2}
 ]
 
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> orOp [
+	^ self reserved: 'or'
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> others [
+	^ self reserved: 'others'
+]
+
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> othersExpression [
-	^ ((self reserved: 'others') , (self operator: '->') , expression) ==> #third
+	^ (self others , self arrow , expression) ==> #third
 ]
 
 { #category : #'parsers-statements' }
@@ -1735,9 +2027,34 @@ ViennaVDMGrammar >> plus: arg1 and: arg2 [
 	arg2}
 ]
 
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> plusOp [
+	^ ($+ asParser , $+ asParser not) trim
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> plusPlusOp [
+	^ self operator: '++'
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> post [
+	^ self reserved: 'post'
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> power [
+	^ self reserved: 'power'
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMGrammar >> power: arg [
 	^ arg
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> pre [
+	^ self reserved: 'pre'
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -1762,6 +2079,11 @@ ViennaVDMGrammar >> printOn: aStream [
 		nextPutAll: self class name
 ]
 
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> private [
+	^ self reserved: 'private'
+]
+
 { #category : #'parsers-types' }
 ViennaVDMGrammar >> productType [
 	^ (type3 , (self operator: $*) , (type3 separatedBy: (self operator: $*)) withoutSeparators)
@@ -1774,10 +2096,25 @@ ViennaVDMGrammar >> productType [
 						nextPutAll: triple third ] ]
 ]
 
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> protected [
+	^ self reserved: 'protected'
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> psubset [
+	^ self reserved: 'psubset'
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMGrammar >> psubset: arg1 and: arg2 [
 	^ {arg1.
 	arg2}
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> public [
+	^ self reserved: 'public'
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -1842,52 +2179,52 @@ ViennaVDMGrammar >> recordTypeDefinition [
 ViennaVDMGrammar >> relationExpression [
 	^ (evaluatorExpression
 		,
-			((((self operator: '=') , evaluatorExpression)
+			(((self eqOp , evaluatorExpression)
 				==> [ :pair | 
 					{#equal:and:.
 					(pair second)} ])
 				/
-					(((self operator: '<>') , evaluatorExpression)
+					((self notEq , evaluatorExpression)
 						==> [ :pair | 
 							{#notEqual:and:.
 							(pair second)} ])
 				/
-					(((self operator: '<=') , evaluatorExpression)
+					((self lessOrEqual , evaluatorExpression)
 						==> [ :pair | 
 							{#lessEq:and:.
 							(pair second)} ])
 				/
-					(((self operator: '<') , evaluatorExpression)
+					((self less , evaluatorExpression)
 						==> [ :pair | 
 							{#less:and:.
 							(pair second)} ])
 				/
-					(((self operator: '>=') , evaluatorExpression)
+					((self greaterOrEqual , evaluatorExpression)
 						==> [ :pair | 
 							{#greaterEq:and:.
 							(pair second)} ])
 				/
-					(((self operator: '>') , evaluatorExpression)
+					((self greater , evaluatorExpression)
 						==> [ :pair | 
 							{#greater:and:.
 							(pair second)} ])
 				/
-					(((self reserved: 'subset') , evaluatorExpression)
+					((self subset , evaluatorExpression)
 						==> [ :pair | 
 							{#subset:and:.
 							(pair second)} ])
 				/
-					(((self reserved: 'psubset') , evaluatorExpression)
+					((self psubset , evaluatorExpression)
 						==> [ :pair | 
 							{#psubset:and:.
 							(pair second)} ])
 				/
-					((((self reserved: 'in') , (self reserved: 'set')) ==> [ :op |  ] , evaluatorExpression)
+					((self inset ==> [ :op |  ] , evaluatorExpression)
 						==> [ :pair | 
 							{#inSet:and:.
 							(pair second)} ])
 				/
-					((((self reserved: 'not') , (self reserved: 'in') , (self reserved: 'set')) ==> [ :op |  ] , evaluatorExpression)
+					(((self notOp , (self reserved: 'in') , (self reserved: 'set')) ==> [ :op |  ] , evaluatorExpression)
 						==> [ :pair | 
 							{#notInSet:and:.
 							(pair second)} ])) star)
@@ -1895,6 +2232,11 @@ ViennaVDMGrammar >> relationExpression [
 			pair second
 				inject: pair first
 				into: [ :expr :selAndArg | self perform: selAndArg first with: expr with: selAndArg second ] ]
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> rem [
+	^ self reserved: 'rem'
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -1924,9 +2266,19 @@ ViennaVDMGrammar >> returnStatement [
 	^ ((self reserved: 'return') , expression) ==> #second
 ]
 
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> reverse [
+	^ self reserved: 'reverse'
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMGrammar >> reverse: arg [
 	^ arg
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> rng [
+	^ self reserved: 'rng'
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -2075,9 +2427,19 @@ ViennaVDMGrammar >> singleLineComment [
 		==> [ :str | self trimComment: str ]
 ]
 
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> slash [
+	^ self operator: $/
+]
+
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> specificationStatement [
 	^ (lbracket , self implicitOperationBody , rbracket) ==> #second
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> starOp [
+	^ self operator: $*
 ]
 
 { #category : #parsing }
@@ -2085,9 +2447,14 @@ ViennaVDMGrammar >> start [
 	^ document end
 ]
 
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> state [
+	^ self reserved: 'state'
+]
+
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> stateDefinition [
-	^ ((self reserved: 'state') , identifier trim , (self reserved: 'of') , self stateFieldList , invariant optional
+	^ (self state , identifier trim , (self reserved: 'of') , self stateFieldList , invariant optional
 		, self initialisation optional , (self reserved: 'end') , semicolon optional)
 		==> [ :array | 
 			{(array second).
@@ -2139,6 +2506,11 @@ ViennaVDMGrammar >> subsequence: sequence from: start to: end [
 	end}
 ]
 
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> subset [
+	^ self reserved: 'subset'
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMGrammar >> subset: arg1 and: arg2 [
 	^ {arg1.
@@ -2150,6 +2522,11 @@ ViennaVDMGrammar >> symbolicLiteral [
 	^ (comment star , self basicSymbolicLiteral , comment star) ==> #second
 ]
 
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> then [
+	^ self reserved: 'then'
+]
+
 { #category : #'parsers-expressions-threads and histories' }
 ViennaVDMGrammar >> threadidExpression [
 	^ self reserved: 'threadid'
@@ -2158,6 +2535,11 @@ ViennaVDMGrammar >> threadidExpression [
 { #category : #'parsers-expressions-threads and histories' }
 ViennaVDMGrammar >> timeExpression [
 	^ (self reserved: 'time') ==> [ :t |  ]
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> tl [
+	^ self reserved: 'tl'
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -2260,8 +2642,7 @@ ViennaVDMGrammar >> typeDefinition [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> typeDefinitions [
-	^ ((self reserved: 'types') , (self accessTypeDefinition separatedBy: semicolon) withoutSeparators , semicolon optional)
-		==> #second
+	^ (self types , (self accessTypeDefinition separatedBy: semicolon) withoutSeparators , semicolon optional) ==> #second
 ]
 
 { #category : #'parsers-interfaces' }
@@ -2319,6 +2700,11 @@ ViennaVDMGrammar >> typeVariableList [
 	^ (lbracket , (self typeVariableIdentifier separatedBy: comma) withoutSeparators , rbracket) optional ==> [:tripleOrNil | tripleOrNil ifNil: [#()] ifNotNil: [tripleOrNil second]]
 ]
 
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> types [
+	^ self reserved: 'types'
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMGrammar >> unaryMinus: arg [
 	^ arg
@@ -2332,6 +2718,11 @@ ViennaVDMGrammar >> unaryPlus: arg [
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> undefinedExpression [
 	^ (self reserved: 'undefined') ==> [ :t | nil ]
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> union [
+	^ self reserved: 'union'
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -2368,8 +2759,8 @@ ViennaVDMGrammar >> valueDefinition [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> valueDefinitions [
-	^ ((self reserved: 'values') , (self accessValueDefinition separatedBy: semicolon) withoutSeparators
-		, semicolon optional) ==> #second
+	^ (self values , (self accessValueDefinition separatedBy: semicolon) withoutSeparators , semicolon optional)
+		==> #second
 ]
 
 { #category : #'parsers-interfaces' }
@@ -2384,6 +2775,11 @@ ViennaVDMGrammar >> valueSignature [
 		==> [ :triple | 
 			{(triple first).
 			(triple third)} ]
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> values [
+	^ self reserved: 'values'
 ]
 
 { #category : #'parsers-interfaces' }

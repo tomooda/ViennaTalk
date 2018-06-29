@@ -3,7 +3,9 @@ Class {
 	#superclass : #Object,
 	#type : #variable,
 	#instVars : [
-		'label'
+		'label',
+		'start',
+		'end'
 	],
 	#category : 'ViennaTalk-Parser-Core'
 }
@@ -13,6 +15,54 @@ ViennaNode class >> label: aString [
 	^ (self new: 0)
 		setLabel: aString;
 		yourself
+]
+
+{ #category : #'instance creation' }
+ViennaNode class >> label: aString start: anInteger1 end: anInteger2 [
+	^ (self new: 0)
+		setLabel: aString;
+		start: anInteger1 end: anInteger2;
+		yourself
+]
+
+{ #category : #'instance creation' }
+ViennaNode class >> label: aString start: anInteger1 end: anInteger2 with: aViennaNode [
+	^ (self new: 1)
+		setLabel: aString;
+		at: 1 put: aViennaNode;
+		start: anInteger1 end: anInteger2;
+		yourself
+]
+
+{ #category : #'instance creation' }
+ViennaNode class >> label: aString start: anInteger1 end: anInteger2 with: aViennaNode1 with: aViennaNode2 [
+	^ (self new: 2)
+		setLabel: aString;
+		at: 1 put: aViennaNode1;
+		at: 2 put: aViennaNode2;
+		start: anInteger1 end: anInteger2;
+		yourself
+]
+
+{ #category : #'instance creation' }
+ViennaNode class >> label: aString start: anInteger1 end: anInteger2 with: aViennaNode1 with: aViennaNode2 with: aViennaNode3 [
+	^ (self new: 3)
+		setLabel: aString;
+		at: 1 put: aViennaNode1;
+		at: 2 put: aViennaNode2;
+		at: 3 put: aViennaNode3;
+		start: anInteger1 end: anInteger2;
+		yourself
+]
+
+{ #category : #'instance creation' }
+ViennaNode class >> label: aString start: anInteger1 end: anInteger2 withAll: anArray [
+	| node |
+	node := self new: anArray size.
+	node setLabel: aString.
+	1 to: anArray size do: [ :index | node at: index put: (anArray at: index) ].
+	node start: anInteger1 end: anInteger2.
+	^ node
 ]
 
 { #category : #'instance creation' }
@@ -117,6 +167,11 @@ ViennaNode >> eighth [
 ]
 
 { #category : #accessing }
+ViennaNode >> end [
+	^ end
+]
+
+{ #category : #accessing }
 ViennaNode >> fifth [
 	^ self at: 5
 ]
@@ -194,6 +249,17 @@ ViennaNode >> seventh [
 { #category : #accessing }
 ViennaNode >> sixth [
 	^ self at: 6
+]
+
+{ #category : #accessing }
+ViennaNode >> start [
+	^ start
+]
+
+{ #category : #accessing }
+ViennaNode >> start: anInteger1 end: anInteger2 [
+	start := anInteger1.
+	end := anInteger2
 ]
 
 { #category : #printing }
