@@ -6,7 +6,8 @@ Class {
 		'nameFont',
 		'nameColor',
 		'eventActionDict',
-		'resizing'
+		'moveable',
+		'showsName'
 	],
 	#category : 'ViennaTalk-LivelyWalkThrough-Widgets'
 }
@@ -54,18 +55,28 @@ LWTWidget >> clearEvent: aSymbol [
 ]
 
 { #category : #defaults }
+LWTWidget >> defaultMoveable [
+	^ true
+]
+
+{ #category : #defaults }
 LWTWidget >> defaultName [
 	^ self makeUniqueName
 ]
 
 { #category : #defaults }
 LWTWidget >> defaultNameColor [
-	^ self subclassResponsibility
+	^ Color lightGray
 ]
 
 { #category : #defaults }
 LWTWidget >> defaultNameFont [
-	^ self subclassResponsibility
+	^ TextStyle default defaultFont
+]
+
+{ #category : #defaults }
+LWTWidget >> defaultShowsName [
+	^ true
 ]
 
 { #category : #accessing }
@@ -74,6 +85,17 @@ LWTWidget >> director [
 	director := self.
 	[ director isNil or: [ director isKindOf: LWTDirector ] ] whileFalse: [ director := director owner ].
 	^ director
+]
+
+{ #category : #drawing }
+LWTWidget >> drawOn: aCanvas [
+	self showsName
+		ifTrue: [ 
+			aCanvas
+				drawString: self name
+				at: self position + self nameOffset
+				font: self nameFont
+				color: self nameColor ]
 ]
 
 { #category : #operations }
@@ -130,11 +152,13 @@ LWTWidget >> handleMouseDown: aMouseEvent [
 				setInvokingView: self;
 				invokeModal.
 			^ true ].
-	(self edgeName: aMouseEvent position)
-		ifNotEmpty: [ :edge | 
-			self perform: ('resize' , edge , ':') asSymbol with: aMouseEvent.
-			^ true ].
-	self currentHand grabMorph: self from: self owner.
+	self moveable = true
+		ifTrue: [ 
+			(self edgeName: aMouseEvent position)
+				ifNotEmpty: [ :edge | 
+					self perform: ('resize' , edge , ':') asSymbol with: aMouseEvent.
+					^ true ].
+			self currentHand grabMorph: self from: self owner ].
 	^ true
 ]
 
@@ -145,24 +169,30 @@ LWTWidget >> handleMouseLeave: aMouseEvent [
 
 { #category : #'event handling' }
 LWTWidget >> handleMouseMove: aMouseEvent [
-	(self edgeName: aMouseEvent position)
-		ifEmpty: [ ActiveHand showTemporaryCursor: Cursor normal ]
-		ifNotEmpty: [ :edge | ActiveHand showTemporaryCursor: (Cursor perform: ('resize' , edge) asSymbol) ]
+	self moveable = true
+		ifTrue: [ 
+			(self edgeName: aMouseEvent position)
+				ifEmpty: [ ActiveHand showTemporaryCursor: Cursor normal ]
+				ifNotEmpty: [ :edge | ActiveHand showTemporaryCursor: (Cursor perform: ('resize' , edge) asSymbol) ] ]
 ]
 
 { #category : #'event handling' }
 LWTWidget >> handlesMouseDown: anEvent [
-	"anEvent yellowButtonPressed
-		ifTrue: [ ^ true ].
-	(self edgeName: anEvent position) ifNotEmpty: [ :edge | ^ true ].
-	^ super handlesMouseDown: anEvent"
 	^true
+]
+
+{ #category : #operations }
+LWTWidget >> hideName [
+	showsName := false.
+	self changed
 ]
 
 { #category : #'initialize-release' }
 LWTWidget >> initialize [
 	super initialize.
-	eventActionDict := Dictionary new
+	eventActionDict := Dictionary new.
+	moveable := self defaultMoveable.
+	showsName := self defaultShowsName
 ]
 
 { #category : #private }
@@ -181,15 +211,29 @@ LWTWidget >> makeUniqueName [
 LWTWidget >> menu [
 	| menu |
 	menu := MenuMorph new
+		addTitle: self name;
 		defaultTarget: self;
-		add: 'change name' translated target: self selector: #changeName;
 		add: 'delete' translated target: self selector: #delete;
 		add: 'duplicate' translated target: self selector: #duplicateAndPlace;
+		add:
+				(self moveable
+						ifTrue: [ 'fix position' translated ]
+						ifFalse: [ 'make moveable' ])
+			target: self
+			selector: #toggleMoveable;
 		addLine;
-		add: 'change name font' translated target: self selector: #changeNameFont;
-		add: 'change name color' translated target: self selector: #changeNameColor;
-		yourself.
+		add: 'name' subMenu: self nameMenu yourself.
 	^ menu
+]
+
+{ #category : #accessing }
+LWTWidget >> moveable [
+	^ moveable
+]
+
+{ #category : #accessing }
+LWTWidget >> moveable: aBoolean [
+	moveable := aBoolean = true
 ]
 
 { #category : #accessing }
@@ -233,6 +277,23 @@ LWTWidget >> nameFont [
 LWTWidget >> nameFont: aFont [
 	nameFont := aFont.
 	self changed
+]
+
+{ #category : #menus }
+LWTWidget >> nameMenu [
+	| menu |
+	menu := MenuMorph new.
+	menu
+		defaultTarget: self;
+		add: 'change name' translated target: self selector: #changeName.
+	self showsName = true
+		ifTrue: [ 
+			menu
+				add: 'hide' translated target: self selector: #hideName;
+				add: 'change name font' translated target: self selector: #changeNameFont;
+				add: 'change name color' translated target: self selector: #changeNameColor ]
+		ifFalse: [ menu add: 'show' translated target: self selector: #showName ].
+	^ menu
 ]
 
 { #category : #geometry }
@@ -305,6 +366,22 @@ LWTWidget >> resizeTopRight: aMouseEvent [
 		forEachPointDo: [ :newPoint | self bounds: (self left @ newPoint y corner: newPoint x @ self bottom) ].
 	aMouseEvent hand attachMorph: handle.
 	handle startStepping
+]
+
+{ #category : #operations }
+LWTWidget >> showName [
+	showsName := true.
+	self changed
+]
+
+{ #category : #testing }
+LWTWidget >> showsName [
+	^ showsName = true
+]
+
+{ #category : #operations }
+LWTWidget >> toggleMoveable [
+	self moveable: self moveable not
 ]
 
 { #category : #events }

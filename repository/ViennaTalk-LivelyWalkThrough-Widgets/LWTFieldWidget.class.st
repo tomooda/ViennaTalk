@@ -5,7 +5,6 @@ Class {
 		'contents',
 		'textFont',
 		'textMorph',
-		'showsName',
 		'showsDiagram'
 	],
 	#category : 'ViennaTalk-LivelyWalkThrough-Widgets'
@@ -75,8 +74,16 @@ LWTFieldWidget class >> yellowButtonMenu [
 
 { #category : #accessing }
 LWTFieldWidget >> acceptContents: aStringOrText [
+	| oldContents |
+	oldContents := contents.
 	contents := aStringOrText asString.
+	contents ~= oldContents ifTrue: [ self event: #changed ].
 	^ true
+]
+
+{ #category : #events }
+LWTFieldWidget >> availableEventSelectors [
+	^ #(changed)
 ]
 
 { #category : #'initialize-release' }
@@ -125,16 +132,6 @@ LWTFieldWidget >> defaultExtent [
 ]
 
 { #category : #defaults }
-LWTFieldWidget >> defaultNameColor [
-	^ Color lightGray
-]
-
-{ #category : #defaults }
-LWTFieldWidget >> defaultNameFont [
-	^ TextStyle default defaultFont
-]
-
-{ #category : #defaults }
 LWTFieldWidget >> defaultTextFont [
 	^ TextStyle default defaultFont
 ]
@@ -146,11 +143,7 @@ LWTFieldWidget >> drawOn: aCanvas [
 		fillColor: Color white
 		borderWidth: 1
 		borderColor: Color lightGray.
-	aCanvas
-		drawString: self name
-		at: self position + self nameOffset
-		font: self nameFont
-		color: self nameColor
+	super drawOn: aCanvas
 ]
 
 { #category : #'event handling' }
@@ -171,15 +164,13 @@ LWTFieldWidget >> hideDiagram [
 
 { #category : #operations }
 LWTFieldWidget >> hideName [
-	showsName := false.
-	textMorph ifNotNil: [ textMorph layoutFrame: self layoutFrameForTextPane ].
-	self changed
+	super hideName.
+	textMorph ifNotNil: [ textMorph layoutFrame: self layoutFrameForTextPane ]
 ]
 
 { #category : #'initialize-release' }
 LWTFieldWidget >> initialize [
 	super initialize.
-	showsName := true.
 	showsDiagram := false.
 	self extent: self defaultExtent.
 	self buildTextPane
@@ -202,24 +193,8 @@ LWTFieldWidget >> layoutFrameForTextPane [
 { #category : #menus }
 LWTFieldWidget >> menu [
 	| menu |
-	menu := MenuMorph new.
-	menu
-		defaultTarget: self;
-		add: 'change name' translated target: self selector: #changeName;
-		add: 'delete' translated target: self selector: #delete;
-		add: 'duplicate' translated target: self selector: #duplicateAndPlace;
-		addLine.
-	self showsName
-		ifTrue: [ 
-			menu
-				add: 'change name font' translated target: self selector: #changeNameFont;
-				add: 'change name color' translated target: self selector: #changeNameColor;
-				add: 'hide name' translated target: self selector: #hideName ]
-		ifFalse: [ menu add: 'show name' translated target: self selector: #showName ].
-	menu
-		addLine;
-		add: 'change text font' translated target: self selector: #changeTextFont;
-		addLine.
+	menu := super menu.
+	menu add: 'change text font' translated target: self selector: #changeTextFont.
 	self showsDiagram
 		ifTrue: [ 
 			menu
@@ -239,19 +214,13 @@ LWTFieldWidget >> showDiagram [
 
 { #category : #operations }
 LWTFieldWidget >> showName [
-	showsName := true.
-	textMorph ifNotNil: [ textMorph layoutFrame: self layoutFrameForTextPane ].
-	self changed
+	super showName.
+	textMorph ifNotNil: [ textMorph layoutFrame: self layoutFrameForTextPane ]
 ]
 
 { #category : #testing }
 LWTFieldWidget >> showsDiagram [
 	^ showsDiagram = true
-]
-
-{ #category : #testing }
-LWTFieldWidget >> showsName [
-	^ showsName = true
 ]
 
 { #category : #geometry }
@@ -295,5 +264,5 @@ LWTFieldWidget >> value [
 { #category : #accessing }
 LWTFieldWidget >> value: aStringOrText [
 	self acceptContents: aStringOrText.
-	self changed: #contents
+	self changed: #value
 ]
