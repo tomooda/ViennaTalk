@@ -239,6 +239,24 @@ ViennaType >> nameInPrecedence: anInteger [
 		ifFalse: [ self name ]
 ]
 
+{ #category : #enumerating }
+ViennaType >> onlyOneSatisfy: aBlock [
+	"Evaluate aBlock with the elements of the receiver.
+	If aBlock returns true for the only one element return true.
+	Otherwise return false."
+
+	| found |
+	found := false.
+	self
+		do: [ :each | 
+			(aBlock value: each)
+				ifTrue: [ 
+					found
+						ifTrue: [ ^ false ].
+					found := true ] ].
+	^ found
+]
+
 { #category : #arithmetic }
 ViennaType >> optional [
 	^ ViennaOptionType with: self
