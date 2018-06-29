@@ -62,6 +62,8 @@ LWTWidgetDispenser >> handleMouseDown: aMouseEvent [
 		ifTrue: [ LWTPlotWidget new openInHand ].
 	(imageWidget bounds containsPoint: point)
 		ifTrue: [ LWTImageWidget new openInHand ].
+	(variableImageWidget bounds containsPoint: point)
+		ifTrue: [ LWTVariableImageWidget new openInHand ].
 	(buttonWidget bounds containsPoint: point)
 		ifTrue: [ LWTMouseSensor button openInHand ].
 	(padWidget bounds containsPoint: point)
@@ -69,8 +71,7 @@ LWTWidgetDispenser >> handleMouseDown: aMouseEvent [
 	(areaWidget bounds containsPoint: point)
 		ifTrue: [ LWTMouseSensor area openInHand ].
 	(remoteWidget bounds containsPoint: point)
-		ifTrue: [ LWTRemoteWidget new openInHand ].
-
+		ifTrue: [ LWTRemoteWidget new openInHand ]
 ]
 
 { #category : #'event handling' }
@@ -103,6 +104,7 @@ LWTWidgetDispenser >> initialize [
 	self addMorphBack: self fieldWidget.
 	self addMorphBack: self plotWidget.
 	self addMorphBack: self imageWidget.
+	self addMorphBack: self variableImageWidget.
 	self addMorphBack: self buttonWidget.
 	self addMorphBack: self padWidget.
 	self addMorphBack: self areaWidget.
@@ -155,5 +157,19 @@ LWTWidgetDispenser >> remoteWidget [
 				name: 'Remote';
 				nameColor: Color black;
 				nameFont: self nameFontForWidgets;
+				yourself ]
+]
+
+{ #category : #accessing }
+LWTWidgetDispenser >> variableImageWidget [
+	^ variableImageWidget
+		ifNil: [ 
+			variableImageWidget := LWTImageWidget new
+				freeze;
+				name: 'VariableImage';
+				nameColor: Color black;
+				nameFont: self nameFontForWidgets;
+				extent: 80 @ 80;
+				value: 'Pharo.png';
 				yourself ]
 ]

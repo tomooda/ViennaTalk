@@ -257,14 +257,13 @@ LWTDirector >> let: aString be: anObject ifAbsentDo: errorBlock [
 
 { #category : #operations }
 LWTDirector >> load [
-	(UIManager default
+	(LivelyWalkThrough
 		fileOpen: (self urlPrefix ifEmpty: [ 'Lively Walk-Through' ])
 		extensions: #('lwt')
 		path: (filepath ifNil: [ FileSystem workingDirectory parent parent ]) parent
 		preview: nil)
 		ifNotNil: [ :reference | 
-			filepath := reference fullName asFileReference.
-			reference close.
+			filepath := reference.
 			filepath
 				readStreamDo: [ :stream | 
 					[ self fromJsonObject: (NeoJSONReader on: stream) next ]
