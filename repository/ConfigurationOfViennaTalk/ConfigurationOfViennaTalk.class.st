@@ -88,6 +88,11 @@ ConfigurationOfViennaTalk class >> loadDevelopment [
 	^(self project version: #development) load
 ]
 
+{ #category : #testing }
+ConfigurationOfViennaTalk class >> possiblyNewerVersions [
+	^ (MCWorkingCopy forPackage: self package name) possiblyNewerVersions
+]
+
 { #category : #accessing }
 ConfigurationOfViennaTalk class >> project [
 
