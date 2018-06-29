@@ -859,6 +859,97 @@ ConfigurationOfViennaTalk >> baseline018: spec [
 ]
 
 { #category : #baselines }
+ConfigurationOfViennaTalk >> baseline019: spec [
+	<version: '0.19-baseline'>
+
+	spec for: #'common' do: [
+		spec blessing: #'baseline'.
+		spec repository: 'http://smalltalkhub.com/mc/tomooda/ViennaTalk/main/'.
+		spec 
+			project: 'NeoJSON' with: [
+				spec
+					className: #ConfigurationOfNeoJSON;
+					versionString: #'bleedingEdge';
+					repository: 'http://smalltalkhub.com/mc/Pharo/MetaRepoForPharo40/main/' ];
+			project: 'OSSubprocess' with: [
+				spec
+					className: #ConfigurationOfOSSubprocess;
+					versionString: #'stable';
+					repository: 'http://smalltalkhub.com/mc/Pharo/MetaRepoForPharo50/main/' ];
+			project: 'PetitParser' with: [
+				spec
+					className: #ConfigurationOfPetitParser;
+					versionString: #'stable';
+					repository: 'http://smalltalkhub.com/mc/Pharo/MetaRepoForPharo40/main/' ];
+			project: 'ZincHTTPComponents' with: [
+				spec
+					className: #ConfigurationOfZincHTTPComponents;
+					versionString: #'stable';
+					repository: 'http://smalltalkhub.com/mc/Pharo/Pharo40/main';
+					repository: 'http://smalltalkhub.com/mc/Pharo/Pharo40Inbox/main' ].
+		spec 
+			package: 'ViennaTalk-Animation-Core' with: [
+				spec requires: #(#'ViennaTalk-Engine-Core' #'ViennaTalk-Value-Core' ). ];
+			package: 'ViennaTalk-Animation-Tests' with: [
+				spec requires: #('ViennaTalk-Animation-Core' ). ];
+			package: 'ViennaTalk-Animation-Transpiler' with: [
+				spec requires: #('ViennaTalk-Animation-Core' #'ViennaTalk-Transpiler-Core' #'ViennaTalk-Transpiler-Debugger' #'ViennaTalk-Transpiler-Runtime' ). ];
+			package: 'ViennaTalk-Browser-Core' with: [
+				spec requires: #('ViennaTalk-Animation-Core' #'ViennaTalk-Value-Core' #'ViennaTalk-Parser-Formatters' #'ViennaTalk-Parser-Highlighters' ). ];
+			package: #'ViennaTalk-Engine-Core' with: [
+				spec requires: #('NeoJSON' 'ZincHTTPComponents' 'OSSubprocess' ). ];
+			package: #'ViennaTalk-Engine-Tests' with: [
+				spec requires: #(#'ViennaTalk-Engine-Core' ). ];
+			package: 'ViennaTalk-Html-Core' with: [
+				spec requires: #('PetitParser' ). ];
+			package: #'ViennaTalk-Launcher-Core';
+			package: 'ViennaTalk-LivelyWalkThrough-Core' with: [
+				spec requires: #('ViennaTalk-LivelyWalkThrough-Widgets' 'ViennaTalk-Browser-Core' 'ViennaTalk-Animation-Core' ). ];
+			package: 'ViennaTalk-LivelyWalkThrough-Widgets' with: [
+				spec requires: #(#'ViennaTalk-Value-Core' ). ];
+			package: #'ViennaTalk-Parser-Core' with: [
+				spec requires: #(#'ViennaTalk-Value-Core' #'ViennaTalk-Type-Core' ). ];
+			package: #'ViennaTalk-Parser-Formatters' with: [
+				spec requires: #(#'ViennaTalk-Parser-Core' ). ];
+			package: #'ViennaTalk-Parser-Highlighters' with: [
+				spec requires: #(#'ViennaTalk-Parser-Core' ). ];
+			package: 'ViennaTalk-Parser-Tests' with: [
+				spec requires: #(#'ViennaTalk-Parser-Core' #'ViennaTalk-Parser-UI' ). ];
+			package: #'ViennaTalk-Parser-UI' with: [
+				spec requires: #(#'ViennaTalk-Parser-Core' ). ];
+			package: #'ViennaTalk-Transpiler-Core' with: [
+				spec requires: #(#'ViennaTalk-Parser-Core' #'ViennaTalk-Transpiler-Runtime' #'ViennaTalk-Transpiler-Debugger' #'ViennaTalk-Value-Core' ). ];
+			package: #'ViennaTalk-Transpiler-Debugger' with: [
+				spec requires: #(#'ViennaTalk-Parser-Core' #'ViennaTalk-Parser-Formatters' #'ViennaTalk-Parser-Highlighters' #'ViennaTalk-Transpiler-Runtime' ). ];
+			package: #'ViennaTalk-Transpiler-Runtime' with: [
+				spec requires: #(#'ViennaTalk-Parser-Core' #'ViennaTalk-Transpiler-Core' #'ViennaTalk-Value-Core' ). ];
+			package: #'ViennaTalk-Transpiler-Test' with: [
+				spec requires: #(#'ViennaTalk-Parser-Core' #'ViennaTalk-Transpiler-Core' #'ViennaTalk-Type-Core' #'ViennaTalk-Value-Core' ). ];
+			package: #'ViennaTalk-Type-Core';
+			package: #'ViennaTalk-Type-Tests' with: [
+				spec requires: #(#'ViennaTalk-Type-Core' ). ];
+			package: #'ViennaTalk-VDMPad-Core' with: [
+				spec requires: #(#'ViennaTalk-Engine-Core' 'NeoJSON' 'ZincHTTPComponents' 'ViennaTalk-Html-Core' ). ];
+			package: #'ViennaTalk-Value-Core';
+			package: #'ViennaTalk-Value-Tests' with: [
+				spec requires: #(#'ViennaTalk-Value-Core' ). ];
+			package: #'ViennaTalk-WeblyWalkThrough-Server' with: [
+				spec requires: #('ViennaTalk-Animation-Core' 'ViennaTalk-Browser-Core' #'ViennaTalk-WeblyWalkThrough-Translators' ). ];
+			package: #'ViennaTalk-WeblyWalkThrough-Translators' with: [
+				spec requires: #(#'ViennaTalk-Value-Core' 'PetitParser' 'NeoJSON' ). ].
+		spec 
+			group: 'LivelyWalkThrough' with: #('ViennaTalk-LivelyWalkThrough-Core' );
+			group: 'Transpiler' with: #('ViennaTalk-Animation-Transpiler' #'ViennaTalk-Transpiler-Core' #'ViennaTalk-Transpiler-Debugger' #'ViennaTalk-Transpiler-Runtime' );
+			group: 'VDMPad' with: #(#'ViennaTalk-VDMPad-Core' );
+			group: 'WeblyWalkThrough' with: #(#'ViennaTalk-WeblyWalkThrough-Server' );
+			group: 'core' with: #(#'ViennaTalk-Engine-Core' #'ViennaTalk-Parser-Core' #'ViennaTalk-Launcher-Core' 'ViennaTalk-Browser-Core' #'ViennaTalk-Parser-Formatters' #'ViennaTalk-Parser-Highlighters' );
+			group: 'default' with: #('full' );
+			group: 'full' with: #('core' 'VDMPad' 'LivelyWalkThrough' 'tests' 'WeblyWalkThrough' 'Transpiler' );
+			group: 'tests' with: #(#'ViennaTalk-Engine-Tests' #'ViennaTalk-Value-Tests' 'ViennaTalk-Parser-Tests' #'ViennaTalk-Type-Tests' 'ViennaTalk-Animation-Tests' ). ].
+
+]
+
+{ #category : #baselines }
 ConfigurationOfViennaTalk >> baseline01: spec [
 	<version: '0.1-baseline'>
 
@@ -910,6 +1001,95 @@ ConfigurationOfViennaTalk >> baseline01: spec [
 			group: 'tests' with: #(#'ViennaTalk-Engine-Tests' #'ViennaTalk-VDMC-Tests' #'ViennaTalk-Value-Tests' );
 			group: 'full' with: #('core' 'VDMC' 'VDMPad' 'tests' );
 			group: 'default' with: #('full' ). ].
+
+]
+
+{ #category : #baselines }
+ConfigurationOfViennaTalk >> baseline020: spec [
+	<version: '0.20-baseline'>
+
+	spec for: #'common' do: [
+		spec blessing: #'baseline'.
+		spec repository: 'http://smalltalkhub.com/mc/tomooda/ViennaTalk/main/'.
+		spec 
+			project: 'NeoJSON' with: [
+				spec
+					className: #ConfigurationOfNeoJSON;
+					versionString: #'bleedingEdge';
+					repository: 'http://smalltalkhub.com/mc/Pharo/MetaRepoForPharo40/main/' ];
+			project: 'OSSubprocess' with: [
+				spec
+					className: #ConfigurationOfOSSubprocess;
+					versionString: #'stable';
+					repository: 'http://smalltalkhub.com/mc/Pharo/MetaRepoForPharo50/main/' ];
+			project: 'PetitParser' with: [
+				spec
+					className: #ConfigurationOfPetitParser;
+					versionString: #'stable';
+					repository: 'http://smalltalkhub.com/mc/Pharo/MetaRepoForPharo40/main/' ];
+			project: 'ZincHTTPComponents' with: [
+				spec
+					className: #ConfigurationOfZincHTTPComponents;
+					versionString: #'stable';
+					repository: 'http://smalltalkhub.com/mc/Pharo/Pharo40/main';
+					repository: 'http://smalltalkhub.com/mc/Pharo/Pharo40Inbox/main' ].
+		spec 
+			package: 'ViennaTalk-Animation-Core' with: [
+				spec requires: #(#'ViennaTalk-Engine-Core' #'ViennaTalk-Value-Core' ). ];
+			package: 'ViennaTalk-Animation-Tests' with: [
+				spec requires: #('ViennaTalk-Animation-Core' ). ];
+			package: 'ViennaTalk-Animation-Transpiler' with: [
+				spec requires: #('ViennaTalk-Animation-Core' 'ViennaTalk-Transpiler-Core' 'ViennaTalk-Transpiler-Debugger' ). ];
+			package: 'ViennaTalk-Browser-Core' with: [
+				spec requires: #('ViennaTalk-Animation-Core' #'ViennaTalk-Value-Core' #'ViennaTalk-Parser-Formatters' #'ViennaTalk-Parser-Highlighters' ). ];
+			package: #'ViennaTalk-Engine-Core' with: [
+				spec requires: #('NeoJSON' 'ZincHTTPComponents' 'OSSubprocess' ). ];
+			package: #'ViennaTalk-Engine-Tests' with: [
+				spec requires: #(#'ViennaTalk-Engine-Core' ). ];
+			package: 'ViennaTalk-Html-Core' with: [
+				spec requires: #('PetitParser' ). ];
+			package: #'ViennaTalk-Launcher-Core';
+			package: 'ViennaTalk-LivelyWalkThrough-Core' with: [
+				spec requires: #('ViennaTalk-LivelyWalkThrough-Widgets' 'ViennaTalk-Browser-Core' 'ViennaTalk-Animation-Core' ). ];
+			package: 'ViennaTalk-LivelyWalkThrough-Widgets' with: [
+				spec requires: #(#'ViennaTalk-Value-Core' ). ];
+			package: #'ViennaTalk-Parser-Core' with: [
+				spec requires: #(#'ViennaTalk-Value-Core' #'ViennaTalk-Type-Core' ). ];
+			package: #'ViennaTalk-Parser-Formatters' with: [
+				spec requires: #(#'ViennaTalk-Parser-Core' ). ];
+			package: #'ViennaTalk-Parser-Highlighters' with: [
+				spec requires: #(#'ViennaTalk-Parser-Core' ). ];
+			package: 'ViennaTalk-Parser-Tests' with: [
+				spec requires: #(#'ViennaTalk-Parser-Core' #'ViennaTalk-Parser-UI' ). ];
+			package: #'ViennaTalk-Parser-UI' with: [
+				spec requires: #(#'ViennaTalk-Parser-Core' ). ];
+			package: #'ViennaTalk-Transpiler-Core' with: [
+				spec requires: #(#'ViennaTalk-Parser-Core' #'ViennaTalk-Value-Core' ). ];
+			package: #'ViennaTalk-Transpiler-Debugger' with: [
+				spec requires: #(#'ViennaTalk-Parser-Core' #'ViennaTalk-Parser-Formatters' #'ViennaTalk-Parser-Highlighters' ). ];
+			package: #'ViennaTalk-Transpiler-Test' with: [
+				spec requires: #(#'ViennaTalk-Parser-Core' #'ViennaTalk-Transpiler-Core' #'ViennaTalk-Type-Core' #'ViennaTalk-Value-Core' ). ];
+			package: #'ViennaTalk-Type-Core';
+			package: #'ViennaTalk-Type-Tests' with: [
+				spec requires: #(#'ViennaTalk-Type-Core' ). ];
+			package: #'ViennaTalk-VDMPad-Core' with: [
+				spec requires: #(#'ViennaTalk-Engine-Core' 'NeoJSON' 'ZincHTTPComponents' 'ViennaTalk-Html-Core' ). ];
+			package: #'ViennaTalk-Value-Core';
+			package: #'ViennaTalk-Value-Tests' with: [
+				spec requires: #(#'ViennaTalk-Value-Core' ). ];
+			package: #'ViennaTalk-WeblyWalkThrough-Server' with: [
+				spec requires: #('ViennaTalk-Animation-Core' 'ViennaTalk-Browser-Core' #'ViennaTalk-WeblyWalkThrough-Translators' ). ];
+			package: #'ViennaTalk-WeblyWalkThrough-Translators' with: [
+				spec requires: #(#'ViennaTalk-Value-Core' 'PetitParser' 'NeoJSON' ). ].
+		spec 
+			group: 'LivelyWalkThrough' with: #('ViennaTalk-LivelyWalkThrough-Core' );
+			group: 'Transpiler' with: #('ViennaTalk-Animation-Transpiler' #'ViennaTalk-Transpiler-Core' #'ViennaTalk-Transpiler-Debugger' );
+			group: 'VDMPad' with: #(#'ViennaTalk-VDMPad-Core' );
+			group: 'WeblyWalkThrough' with: #(#'ViennaTalk-WeblyWalkThrough-Server' );
+			group: 'core' with: #(#'ViennaTalk-Engine-Core' #'ViennaTalk-Parser-Core' #'ViennaTalk-Launcher-Core' 'ViennaTalk-Browser-Core' #'ViennaTalk-Parser-Formatters' #'ViennaTalk-Parser-Highlighters' );
+			group: 'default' with: #('full' );
+			group: 'full' with: #('core' 'VDMPad' 'LivelyWalkThrough' 'tests' 'WeblyWalkThrough' 'Transpiler' );
+			group: 'tests' with: #(#'ViennaTalk-Engine-Tests' #'ViennaTalk-Value-Tests' 'ViennaTalk-Parser-Tests' #'ViennaTalk-Type-Tests' 'ViennaTalk-Animation-Tests' #'ViennaTalk-Transpiler-Test' ). ].
 
 ]
 
@@ -1455,7 +1635,7 @@ ConfigurationOfViennaTalk >> customProjectAttributes [
 ConfigurationOfViennaTalk >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '0.18-baseline'.
+	spec for: #'common' version: '0.20-baseline'.
 
 ]
 
@@ -1476,7 +1656,7 @@ ConfigurationOfViennaTalk >> project [
 ConfigurationOfViennaTalk >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.54'.
+	spec for: #'common' version: '1.56'.
 
 ]
 
@@ -3236,6 +3416,93 @@ ConfigurationOfViennaTalk >> version154: spec [
 			package: #'ViennaTalk-Type-Core' with: 'ViennaTalk-Type-Core-tomooda.16';
 			package: #'ViennaTalk-Type-Tests' with: 'ViennaTalk-Type-Tests-tomooda.7';
 			package: #'ViennaTalk-VDMPad-Core' with: 'ViennaTalk-VDMPad-Core-tomooda.28';
+			package: #'ViennaTalk-Value-Core' with: 'ViennaTalk-Value-Core-tomooda.52';
+			package: #'ViennaTalk-Value-Tests' with: 'ViennaTalk-Value-Tests-tomooda.16';
+			package: #'ViennaTalk-WeblyWalkThrough-Server' with: 'ViennaTalk-WeblyWalkThrough-Server-tomooda.16';
+			package: #'ViennaTalk-WeblyWalkThrough-Translators' with: 'ViennaTalk-WeblyWalkThrough-Translators-tomooda.5'. ].
+
+]
+
+{ #category : #versions }
+ConfigurationOfViennaTalk >> version155: spec [
+	<version: '1.55' imports: #('0.20-baseline' )>
+
+	spec for: #'common' do: [
+		spec blessing: #'stable'.
+		spec description: 'version 1.55'.
+		spec author: 'tomooda'.
+		spec timestamp: '7/1/2017 16:05'.
+		spec 
+			project: 'NeoJSON' with: '2-baseline';
+			project: 'OSSubprocess' with: '0.2.4';
+			project: 'PetitParser' with: '1.14';
+			project: 'ZincHTTPComponents' with: '2.6.2'.
+		spec 
+			package: 'ViennaTalk-Animation-Core' with: 'ViennaTalk-Animation-Core-tomooda.3';
+			package: 'ViennaTalk-Animation-Tests' with: 'ViennaTalk-Animation-Tests-tomooda.2';
+			package: 'ViennaTalk-Animation-Transpiler' with: 'ViennaTalk-Animation-Transpiler-tomooda.4';
+			package: 'ViennaTalk-Browser-Core' with: 'ViennaTalk-Browser-Core-tomooda.46';
+			package: #'ViennaTalk-Engine-Core' with: 'ViennaTalk-Engine-Core-tomooda.39';
+			package: #'ViennaTalk-Engine-Tests' with: 'ViennaTalk-Engine-Tests-tomooda.6';
+			package: 'ViennaTalk-Html-Core' with: 'ViennaTalk-Html-Core-tomooda.4';
+			package: #'ViennaTalk-Launcher-Core' with: 'ViennaTalk-Launcher-Core-tomooda.15';
+			package: 'ViennaTalk-LivelyWalkThrough-Core' with: 'ViennaTalk-LivelyWalkThrough-Core-tomooda.33';
+			package: 'ViennaTalk-LivelyWalkThrough-Widgets' with: 'ViennaTalk-LivelyWalkThrough-Widgets-tomooda.25';
+			package: #'ViennaTalk-Parser-Code Generators' with: 'ViennaTalk-Parser-Code Generators-tomooda.46';
+			package: #'ViennaTalk-Parser-Core' with: 'ViennaTalk-Parser-Core-tomooda.111';
+			package: #'ViennaTalk-Parser-Formatters' with: 'ViennaTalk-Parser-Formatters-tomooda.15';
+			package: #'ViennaTalk-Parser-Highlighters' with: 'ViennaTalk-Parser-Highlighters-tomooda.5';
+			package: 'ViennaTalk-Parser-Tests' with: 'ViennaTalk-Parser-Tests-tomooda.39';
+			package: #'ViennaTalk-Parser-UI' with: 'ViennaTalk-Parser-UI-tomooda.25';
+			package: #'ViennaTalk-Transpiler-Core' with: 'ViennaTalk-Transpiler-Core-tomooda.2';
+			package: #'ViennaTalk-Transpiler-Debugger' with: 'ViennaTalk-Transpiler-Debugger-tomooda.1';
+			package: #'ViennaTalk-Transpiler-Test' with: 'ViennaTalk-Transpiler-Test-tomooda.1';
+			package: #'ViennaTalk-Type-Core' with: 'ViennaTalk-Type-Core-tomooda.16';
+			package: #'ViennaTalk-Type-Tests' with: 'ViennaTalk-Type-Tests-tomooda.7';
+			package: #'ViennaTalk-VDMPad-Core' with: 'ViennaTalk-VDMPad-Core-tomooda.29';
+			package: #'ViennaTalk-Value-Core' with: 'ViennaTalk-Value-Core-tomooda.52';
+			package: #'ViennaTalk-Value-Tests' with: 'ViennaTalk-Value-Tests-tomooda.16';
+			package: #'ViennaTalk-WeblyWalkThrough-Server' with: 'ViennaTalk-WeblyWalkThrough-Server-tomooda.16';
+			package: #'ViennaTalk-WeblyWalkThrough-Translators' with: 'ViennaTalk-WeblyWalkThrough-Translators-tomooda.5'. ].
+
+]
+
+{ #category : #versions }
+ConfigurationOfViennaTalk >> version156: spec [
+	<version: '1.56' imports: #('0.20-baseline' )>
+
+	spec for: #'common' do: [
+		spec blessing: #'stable'.
+		spec description: 'version 1.56'.
+		spec author: 'tomooda'.
+		spec timestamp: '7/1/2017 16:09'.
+		spec 
+			project: 'NeoJSON' with: '2-baseline';
+			project: 'OSSubprocess' with: '0.2.4';
+			project: 'PetitParser' with: '1.14';
+			project: 'ZincHTTPComponents' with: '2.6.2'.
+		spec 
+			package: 'ViennaTalk-Animation-Core' with: 'ViennaTalk-Animation-Core-tomooda.3';
+			package: 'ViennaTalk-Animation-Tests' with: 'ViennaTalk-Animation-Tests-tomooda.2';
+			package: 'ViennaTalk-Animation-Transpiler' with: 'ViennaTalk-Animation-Transpiler-tomooda.4';
+			package: 'ViennaTalk-Browser-Core' with: 'ViennaTalk-Browser-Core-tomooda.46';
+			package: #'ViennaTalk-Engine-Core' with: 'ViennaTalk-Engine-Core-tomooda.39';
+			package: #'ViennaTalk-Engine-Tests' with: 'ViennaTalk-Engine-Tests-tomooda.6';
+			package: 'ViennaTalk-Html-Core' with: 'ViennaTalk-Html-Core-tomooda.4';
+			package: #'ViennaTalk-Launcher-Core' with: 'ViennaTalk-Launcher-Core-tomooda.15';
+			package: 'ViennaTalk-LivelyWalkThrough-Core' with: 'ViennaTalk-LivelyWalkThrough-Core-tomooda.33';
+			package: 'ViennaTalk-LivelyWalkThrough-Widgets' with: 'ViennaTalk-LivelyWalkThrough-Widgets-tomooda.25';
+			package: #'ViennaTalk-Parser-Core' with: 'ViennaTalk-Parser-Core-tomooda.111';
+			package: #'ViennaTalk-Parser-Formatters' with: 'ViennaTalk-Parser-Formatters-tomooda.15';
+			package: #'ViennaTalk-Parser-Highlighters' with: 'ViennaTalk-Parser-Highlighters-tomooda.5';
+			package: 'ViennaTalk-Parser-Tests' with: 'ViennaTalk-Parser-Tests-tomooda.39';
+			package: #'ViennaTalk-Parser-UI' with: 'ViennaTalk-Parser-UI-tomooda.25';
+			package: #'ViennaTalk-Transpiler-Core' with: 'ViennaTalk-Transpiler-Core-tomooda.2';
+			package: #'ViennaTalk-Transpiler-Debugger' with: 'ViennaTalk-Transpiler-Debugger-tomooda.1';
+			package: #'ViennaTalk-Transpiler-Test' with: 'ViennaTalk-Transpiler-Test-tomooda.1';
+			package: #'ViennaTalk-Type-Core' with: 'ViennaTalk-Type-Core-tomooda.16';
+			package: #'ViennaTalk-Type-Tests' with: 'ViennaTalk-Type-Tests-tomooda.7';
+			package: #'ViennaTalk-VDMPad-Core' with: 'ViennaTalk-VDMPad-Core-tomooda.29';
 			package: #'ViennaTalk-Value-Core' with: 'ViennaTalk-Value-Core-tomooda.52';
 			package: #'ViennaTalk-Value-Tests' with: 'ViennaTalk-Value-Tests-tomooda.16';
 			package: #'ViennaTalk-WeblyWalkThrough-Server' with: 'ViennaTalk-WeblyWalkThrough-Server-tomooda.16';
