@@ -23,6 +23,11 @@ ViennaAbstractFormatter class >> defaultMaxSizePerLine: anInteger [
 	DefaultMaxSizePerLine := anInteger asInteger
 ]
 
+{ #category : #utilities }
+ViennaAbstractFormatter class >> format: aViennaNode [
+	^ self new format: aViennaNode
+]
+
 { #category : #'class initialization' }
 ViennaAbstractFormatter class >> initialize [
 	super initialize.
