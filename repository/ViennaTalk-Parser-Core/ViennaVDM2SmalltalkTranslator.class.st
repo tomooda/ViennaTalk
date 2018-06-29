@@ -498,6 +498,18 @@ ViennaVDM2SmalltalkTranslator >> iotaExpression [
 				, (self binder: pat second with: var vars: pat first) , ' ifFalse: [ViennaNoMatch signal].' , exprPart , '])' ]
 ]
 
+{ #category : #'parsers-type discriminations' }
+ViennaVDM2SmalltalkTranslator >> isExpression [
+	^ super isExpression
+		==> [ :pair | 
+			| typeName expr |
+			typeName := pair first.
+			expr := pair second.
+			(#('bool' 'nat' 'nat1' 'int' 'rat' 'real' 'char' 'token') includes: typeName)
+				ifTrue: [ '(ViennaType ' , typeName , ' includes: ' , expr , ')' ]
+				ifFalse: [ '(' , typeName , ' includes: ' , expr , ')' ] ]
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> iterateExpression: expr1 and: expr2 [
 	^ '(' , expr1 , ' ** ' , expr2 , ')'
@@ -1098,6 +1110,16 @@ ViennaVDM2SmalltalkTranslator >> tuplePattern [
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> tupleSelect: tuple with: index [
 	^ '(' , tuple , ' at: ' , index , ')'
+]
+
+{ #category : #'parsers-type discriminations' }
+ViennaVDM2SmalltalkTranslator >> typeJudgement [
+	^ super typeJudgement
+		==> [ :pair | 
+			| t e |
+			t := pair second.
+			e := pair first.
+			'(' , t , ' includes: ' , e , ')' ]
 ]
 
 { #category : #'parsers-expressions-operators' }
