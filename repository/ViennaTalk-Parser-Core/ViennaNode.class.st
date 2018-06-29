@@ -212,6 +212,16 @@ ViennaNode >> hasDescendantSuchThat: aBlock [
 	^ false
 ]
 
+{ #category : #accessing }
+ViennaNode >> highlightedSource [
+	^ self source
+		in: [ :source | 
+			ViennaVDMHighlighter new
+				text: source asText;
+				parse: source;
+				text ]
+]
+
 { #category : #controlling }
 ViennaNode >> ifEmpty: aBlock [
 	^ self isEmpty
@@ -321,6 +331,11 @@ ViennaNode >> seventh [
 { #category : #accessing }
 ViennaNode >> sixth [
 	^ self at: 6
+]
+
+{ #category : #accessing }
+ViennaNode >> source [
+	^ ViennaVDMFormatter format: self
 ]
 
 { #category : #accessing }
