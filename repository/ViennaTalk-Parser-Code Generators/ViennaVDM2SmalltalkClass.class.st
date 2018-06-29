@@ -54,7 +54,7 @@ ViennaVDM2SmalltalkClass >> createDocumentClassWithInstVars: anArrayOfString [
 { #category : #utilities }
 ViennaVDM2SmalltalkClass >> createDocumentClassWithInstVars: anArrayOfString1 stateVars: anArrayOfString2 [
 	| documentClassName |
-	documentClassName := self requestClassName: ''.
+	documentClassName := self requestClassName: '' for: 'Document'.
 	documentClassName ifNil: [ ^ nil ].
 	^ PharoClassInstaller
 		make: [ :builder | 
@@ -276,7 +276,7 @@ ViennaVDM2SmalltalkClass >> modularDocument: aViennaNode env: aDictionary [
 	documentClass := self createDocumentClassWithInstVars: (moduleNames collect: #uncapitalized).
 	classNames := moduleNames
 		collect: [ :moduleName | 
-			(self requestClassName: moduleName)
+			(self requestClassName: moduleName for: moduleName, ' module')
 				ifNil: [ ^ nil ]
 				ifNotNil: [ :name | 
 					aDictionary at: moduleName put: name.
@@ -398,12 +398,12 @@ ViennaVDM2SmalltalkClass >> recordTypeDefinition: aViennaNode env: aDictionary [
 ]
 
 { #category : #utilities }
-ViennaVDM2SmalltalkClass >> requestClassName: defaultClassName [
+ViennaVDM2SmalltalkClass >> requestClassName: defaultClassName for: aString [
 	| className |
 	className := defaultClassName.
 	[ 
 	className := UIManager default
-		request: 'Enter a class name to generate.'
+		request: 'Enter a class name to generate for ', aString, '.'
 		initialAnswer: className
 		title: 'ViennaTalk code generator'.
 	className ifNil: [ ^ nil ].
