@@ -172,11 +172,6 @@ VDMC >> defaultModule [
 	^ 'DEFAULT'
 ]
 
-{ #category : #defaults }
-VDMC >> defaultUrl [
-	^ 'http://vdmpad.csce.kyushu-u.ac.jp/' asUrl
-]
-
 { #category : #accessing }
 VDMC >> engine [
 	^ engine
