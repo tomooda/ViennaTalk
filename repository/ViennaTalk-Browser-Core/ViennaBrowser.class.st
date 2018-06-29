@@ -182,6 +182,8 @@ ViennaBrowser class >> moduleListMenu: aBuilder [
 	aBuilder model selectedModule
 		ifNotNil: [ (aBuilder item: #'save the module...' translated) selector: #saveAModuleToFile ].
 	aBuilder items last withSeparatorAfter.
+	(aBuilder item: #'import UnitTesting module' translated)
+		selector: #importUnitTestingModule.
 	(aBuilder item: #'remove module' translated)
 		selector: #removeModule;
 		withSeparatorAfter.
@@ -942,6 +944,39 @@ ViennaBrowser >> generateSmalltalkScript [
 								yourself ].
 					(ViennaVDM2SmalltalkScript new generate: ast)
 						ifNotNil: [ :script | Smalltalk tools workspace openContents: (RBParser parseExpression: script) formattedCode ] ] ]
+]
+
+{ #category : #'module list menu' }
+ViennaBrowser >> importUnitTestingModule [
+	self
+		acceptCode:
+			'module UnitTesting
+exports all
+definitions
+types
+     AssertFailure :: msg : seq of char;
+     AssertEqualsFailure :: actual : ? expected : ? msg : seq of char;
+
+operations
+    assert : bool * seq of char ==> ()
+    assert(b, msg) == if not b then exit mk_AssertFailure(msg);
+    
+    assertEquals : ? * ? * seq of char ==> ()
+    assertEquals(actual, expected, msg) ==
+        if
+            actual <> expected
+        then
+            exit mk_AssertEqualsFailure(actual, expected, msg);
+    
+    assertApproxEquals : real * real * real * seq of char ==> ()
+    assertApproxEquals(actual, expected, accuracy, msg) ==
+        if
+            abs (actual - expected) > accuracy
+        then
+            exit mk_AssertEqualsFailure(actual, expected, msg);
+
+end UnitTesting
+'
 ]
 
 { #category : #'module list menu' }
