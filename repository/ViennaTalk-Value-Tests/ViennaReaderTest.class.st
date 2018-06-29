@@ -34,12 +34,12 @@ ViennaReaderTest >> testChar4 [
 
 { #category : #tests }
 ViennaReaderTest >> testComposite1 [
-	self assert: (reader parse: 'mk_foo()') equals: (ViennaComposite type: #foo)
+	self assert: (reader parse: 'mk_foo()') equals: (ViennaComposite constructorName: #foo)
 ]
 
 { #category : #tests }
 ViennaReaderTest >> testComposite2 [
-	self assert: (reader parse: 'mk_foo(1)') equals: (ViennaComposite type: #foo with: 1)
+	self assert: (reader parse: 'mk_foo(1)') equals: (ViennaComposite constructorName: #foo with: 1)
 ]
 
 { #category : #tests }
@@ -48,7 +48,7 @@ ViennaReaderTest >> testComposite3 [
 		assert: (reader parse: 'mk_foo(1,2,3)')
 		equals:
 			(ViennaComposite
-				type: #foo
+				constructorName: #foo
 				with: 1
 				with: 2
 				with: 3)
@@ -172,7 +172,7 @@ ViennaReaderTest >> testString4 [
 
 { #category : #tests }
 ViennaReaderTest >> testToken1 [
-	self assert: (reader parse: 'mk_token(1)') equals: (ViennaComposite type: #token with: 1)
+	self assert: (reader parse: 'mk_token(1)') equals: (ViennaComposite constructorName: #token with: 1)
 ]
 
 { #category : #tests }

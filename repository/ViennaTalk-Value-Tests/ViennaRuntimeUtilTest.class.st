@@ -264,7 +264,7 @@ ViennaRuntimeUtilTest >> testMatchRecord1 [
 				matchRecord: 't'
 				args:
 					{(ViennaRuntimeUtil matchValue: 1).
-					(ViennaRuntimeUtil matchIdentifier: 'field')}) value: (ViennaComposite type: 't' with: 1 with: 2))
+					(ViennaRuntimeUtil matchIdentifier: 'field')}) value: (ViennaComposite constructorName: 't' with: 1 with: 2))
 		equals:
 			{(Dictionary new
 				at: 'field' put: 2;
@@ -279,7 +279,7 @@ ViennaRuntimeUtilTest >> testMatchRecord2 [
 				matchRecord: 't'
 				args:
 					{(ViennaRuntimeUtil matchValue: 1).
-					(ViennaRuntimeUtil matchIdentifier: 'field')}) value: (ViennaComposite type: 't' with: 1 with: 2))
+					(ViennaRuntimeUtil matchIdentifier: 'field')}) value: (ViennaComposite constructorName: 't' with: 1 with: 2))
 		equals:
 			{(Dictionary new
 				at: 'field' put: 2;
@@ -294,7 +294,7 @@ ViennaRuntimeUtilTest >> testMatchRecord3 [
 				matchRecord: 't'
 				args:
 					{(ViennaRuntimeUtil matchValue: 1).
-					(ViennaRuntimeUtil matchValue: 2)}) value: (ViennaComposite type: 't' with: 1 with: 2))
+					(ViennaRuntimeUtil matchValue: 2)}) value: (ViennaComposite constructorName: 't' with: 1 with: 2))
 		equals: {(Dictionary new)}
 ]
 
@@ -306,7 +306,7 @@ ViennaRuntimeUtilTest >> testMatchRecord4 [
 				matchRecord: 't'
 				args:
 					{(ViennaRuntimeUtil matchIdentifier: 'field1').
-					(ViennaRuntimeUtil matchIdentifier: 'field2')}) value: (ViennaComposite type: 't' with: 1 with: 2))
+					(ViennaRuntimeUtil matchIdentifier: 'field2')}) value: (ViennaComposite constructorName: 't' with: 1 with: 2))
 		equals:
 			{(Dictionary new
 				at: 'field1' put: 1;
@@ -322,7 +322,7 @@ ViennaRuntimeUtilTest >> testMatchRecord5 [
 				matchRecord: 't'
 				args:
 					{(ViennaRuntimeUtil matchIdentifier: 'field').
-					(ViennaRuntimeUtil matchIdentifier: 'field')}) value: (ViennaComposite type: 't' with: 1 with: 1))
+					(ViennaRuntimeUtil matchIdentifier: 'field')}) value: (ViennaComposite constructorName: 't' with: 1 with: 1))
 		equals:
 			{(Dictionary new
 				at: 'field' put: 1;
@@ -337,7 +337,7 @@ ViennaRuntimeUtilTest >> testMatchRecord6 [
 				matchRecord: 't'
 				args:
 					{(ViennaRuntimeUtil matchIdentifier: 'field').
-					(ViennaRuntimeUtil matchValue: 3)}) value: (ViennaComposite type: 't' with: 1 with: 2))
+					(ViennaRuntimeUtil matchValue: 3)}) value: (ViennaComposite constructorName: 't' with: 1 with: 2))
 		equals: {}
 ]
 
@@ -349,7 +349,7 @@ ViennaRuntimeUtilTest >> testMatchRecord7 [
 				matchRecord: 't'
 				args:
 					{(ViennaRuntimeUtil matchIdentifier: 'field').
-					(ViennaRuntimeUtil matchIdentifier: 'field')}) value: (ViennaComposite type: 't' with: 1 with: 2))
+					(ViennaRuntimeUtil matchIdentifier: 'field')}) value: (ViennaComposite constructorName: 't' with: 1 with: 2))
 		equals: {}
 ]
 
@@ -361,7 +361,7 @@ ViennaRuntimeUtilTest >> testMatchRecord8 [
 				matchRecord: 't'
 				args:
 					{(ViennaRuntimeUtil matchIdentifier: 'field').
-					(ViennaRuntimeUtil matchValue: 2)}) value: (ViennaComposite type: 't2' with: 1 with: 2))
+					(ViennaRuntimeUtil matchValue: 2)}) value: (ViennaComposite constructorName: 't2' with: 1 with: 2))
 		equals: {}
 ]
 
