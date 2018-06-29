@@ -2,7 +2,6 @@ Class {
 	#name : #ViennaBrowser,
 	#superclass : #Model,
 	#instVars : [
-		'vdmc',
 		'cachedSpec',
 		'cachedModulePositions',
 		'moduleListPane',
@@ -17,7 +16,8 @@ Class {
 		'valueSelection',
 		'workspaceSelection',
 		'directory',
-		'lowerTabPane'
+		'lowerTabPane',
+		'animation'
 	],
 	#classVars : [
 		'AutoFormat'
@@ -148,7 +148,7 @@ ViennaBrowser class >> moduleListMenu: aBuilder [
 	(aBuilder item: #'remove module' translated)
 		selector: #removeModulel;
 		withSeparatorAfter.
-	aBuilder model vdmc class = ViennaTranspiledAnimation
+	aBuilder model animation class = ViennaTranspiledAnimation
 		ifTrue: [ (aBuilder item: #'use interpreter' translated)
 				selector: #useInterpreter;
 				withSeparatorAfter ]
@@ -173,8 +173,8 @@ ViennaBrowser class >> moduleListMenu: aBuilder [
 ]
 
 { #category : #'instance creation' }
-ViennaBrowser class >> on: aVDMC [
-	^ self new vdmc: aVDMC
+ViennaBrowser class >> on: aViennaAnimation [
+	^ self new animation: aViennaAnimation
 ]
 
 { #category : #'instance creation' }
@@ -185,13 +185,13 @@ ViennaBrowser class >> open [
 ]
 
 { #category : #'instance creation' }
-ViennaBrowser class >> openOn: aVDMC [
-	^ self openOn: aVDMC withLabel: self defaultLabel
+ViennaBrowser class >> openOn: aViennaAnimation [
+	^ self openOn: aViennaAnimation withLabel: self defaultLabel
 ]
 
 { #category : #'instance creation' }
-ViennaBrowser class >> openOn: aVDMC withLabel: label [
-	^ (self on: aVDMC) openLabel: label
+ViennaBrowser class >> openOn: aViennaAnimation withLabel: label [
+	^ (self on: aViennaAnimation) openLabel: label
 ]
 
 { #category : #menu }
@@ -332,9 +332,9 @@ ViennaBrowser class >> workspacePaneMenu: aBuilder [
 { #category : #'value pane' }
 ViennaBrowser >> accept: aString var: varName [
 	| oldValue |
-	oldValue := vdmc plainAt: varName ifAbsent: [ ^ false ].
-	vdmc plainAt: varName put: aString.
-	vdmc
+	oldValue := animation plainAt: varName ifAbsent: [ ^ false ].
+	animation plainAt: varName put: aString.
+	animation
 		plainEvaluate: 'nil'
 		ifError: [ :msg | 
 			valuePane
@@ -342,9 +342,9 @@ ViennaBrowser >> accept: aString var: varName [
 					valuePane textMorph editor
 						selectFrom: aString size to: aString size - 1;
 						afterSelectionInsertAndSelect: msg ].
-			vdmc plainAt: varName put: oldValue.
+			animation plainAt: varName put: oldValue.
 			^ false ].
-	vdmc changed: #state.
+	animation changed: #state.
 	^ true
 ]
 
@@ -352,9 +352,9 @@ ViennaBrowser >> accept: aString var: varName [
 ViennaBrowser >> accept: aString var: varName in: moduleName [
 	| key oldValue |
 	key := moduleName , '`' , varName.
-	oldValue := vdmc plainAt: key ifAbsent: [ ^ false ].
-	vdmc plainAt: key put: aString.
-	vdmc
+	oldValue := animation plainAt: key ifAbsent: [ ^ false ].
+	animation plainAt: key put: aString.
+	animation
 		plainEvaluate: 'nil'
 		ifError: [ :msg | 
 			valuePane
@@ -362,9 +362,9 @@ ViennaBrowser >> accept: aString var: varName in: moduleName [
 					valuePane textMorph editor
 						selectFrom: aString size to: aString size - 1;
 						afterSelectionInsertAndSelect: msg ].
-			vdmc plainAt: key put: oldValue.
+			animation plainAt: key put: oldValue.
 			^ false ].
-	vdmc changed: #state.
+	animation changed: #state.
 	^ true
 ]
 
@@ -380,10 +380,10 @@ ViennaBrowser >> acceptBindings: aString in: moduleName [
 						selectFrom: pos to: pos - 1;
 						afterSelectionInsertAndSelect: msg ].
 			^ false ].
-	oldBindings := vdmc state copy.
+	oldBindings := animation state copy.
 	prefix := moduleName , '`'.
-	newBindings do: [ :assoc | vdmc plainAt: prefix , assoc key put: assoc value ].
-	vdmc
+	newBindings do: [ :assoc | animation plainAt: prefix , assoc key put: assoc value ].
+	animation
 		plainEvaluate: 'nil'
 		ifError: [ :msg | 
 			valuePane
@@ -391,15 +391,15 @@ ViennaBrowser >> acceptBindings: aString in: moduleName [
 					valuePane textMorph editor
 						selectFrom: aString size to: aString size - 1;
 						afterSelectionInsertAndSelect: msg ].
-			oldBindings keysAndValuesDo: [ :key :value | vdmc plainAt: key put: value ].
+			oldBindings keysAndValuesDo: [ :key :value | animation plainAt: key put: value ].
 			^ false ].
-	vdmc changed: #state.
+	animation changed: #state.
 	^ true
 ]
 
 { #category : #'code pane' }
 ViennaBrowser >> acceptCode: aStringOrText [
-	vdmc
+	animation
 		ifNotNil: [ 
 			| code oldModulePositions newModulePositions newModuleNames oldSpec newSpec |
 			code := (self autoFormat
@@ -410,7 +410,7 @@ ViennaBrowser >> acceptCode: aStringOrText [
 								ifTrue: [ aStringOrText ]
 								ifFalse: [ formatted ] ] ]
 				ifFalse: [ aStringOrText ]) asString trimmed copyWith: Character cr.
-			oldSpec := vdmc specification.
+			oldSpec := animation specification.
 			oldModulePositions := self modulePositionsFrom: oldSpec.
 			newModulePositions := self modulePositionsFrom: code.
 			newModuleNames := (newModulePositions collect: #key) asSet.
@@ -423,7 +423,7 @@ ViennaBrowser >> acceptCode: aStringOrText [
 							(newModuleNames includes: assoc key)
 								ifFalse: [ stream nextPutAll: (oldSpec copyFrom: assoc value first to: assoc value last) ] ] ].
 			codePane hasUnacceptedEdits: false.
-			vdmc
+			animation
 				specification: newSpec
 				ifError: [ :msg | 
 					| posStrIndex charPos message |
@@ -464,9 +464,9 @@ ViennaBrowser >> acceptGlobalBindings: aString [
 						selectFrom: pos to: pos -1;
 						afterSelectionInsertAndSelect: msg ].
 			^ false ].
-	oldBindings := vdmc state copy.
-	newBindings do: [ :assoc | vdmc plainAt: assoc key put: assoc value ].
-	vdmc
+	oldBindings := animation state copy.
+	newBindings do: [ :assoc | animation plainAt: assoc key put: assoc value ].
+	animation
 		plainEvaluate: 'nil'
 		ifError: [ :msg | 
 			valuePane
@@ -474,9 +474,9 @@ ViennaBrowser >> acceptGlobalBindings: aString [
 					valuePane textMorph editor
 						selectFrom: aString size to: aString size - 1;
 						afterSelectionInsertAndSelect: msg ].
-			oldBindings keysAndValuesDo: [ :key :value | vdmc plainAt: key put: value ].
+			oldBindings keysAndValuesDo: [ :key :value | animation plainAt: key put: value ].
 			^ false ].
-	vdmc changed: #state.
+	animation changed: #state.
 	^ true
 ]
 
@@ -499,6 +499,18 @@ ViennaBrowser >> acceptWorkspace: aStringOrText [
 	oldWorkspace := workspace.
 	workspace := aStringOrText.
 	oldWorkspace ~= workspace ifTrue: [ self changed: #workspace ]
+]
+
+{ #category : #accessing }
+ViennaBrowser >> animation [
+	^ animation
+]
+
+{ #category : #accessing }
+ViennaBrowser >> animation: aViennaAnimation [
+	animation ifNotNil: [ animation removeDependent: self ].
+	animation := aViennaAnimation.
+	aViennaAnimation addDependent: self
 ]
 
 { #category : #accessing }
@@ -614,13 +626,13 @@ ViennaBrowser >> buildWorkspacePane [
 { #category : #'code pane' }
 ViennaBrowser >> code [
 	| section module |
-	vdmc ifNil: [ ^ String new ].
+	animation ifNil: [ ^ String new ].
 	module := self selectedModule.
 	module ifNil: [ ^ self specificationTemplate ].
-	section := ((self modulePositionsFrom: vdmc specification)
+	section := ((self modulePositionsFrom: animation specification)
 		detect: [ :assoc | assoc key = module ]
 		ifNone: [ ^ self specificationTemplate ]) value.
-	^ (vdmc specification copyFrom: section first to: section last) asText makeAllColor: Color black
+	^ (animation specification copyFrom: section first to: section last) asText makeAllColor: Color black
 ]
 
 { #category : #'code pane menu' }
@@ -683,18 +695,18 @@ ViennaBrowser >> evaluate: aString [
 { #category : #private }
 ViennaBrowser >> evaluate: aString ifError: errorBlock [
 	^ selectedModule
-		ifNil: [ vdmc plainEvaluate: aString ifError: errorBlock ]
-		ifNotNil: [ :m | vdmc plainEvaluate: aString in: m ifError: errorBlock ]
+		ifNil: [ animation plainEvaluate: aString ifError: errorBlock ]
+		ifNotNil: [ :m | animation plainEvaluate: aString in: m ifError: errorBlock ]
 ]
 
 { #category : #'field list' }
 ViennaBrowser >> fieldList [
 	^ self selectedModule
-		ifNil: [ vdmc state keys asSortedCollection asArray ]
+		ifNil: [ animation state keys asSortedCollection asArray ]
 		ifNotNil: [ :module | 
 			| m |
 			m := module , '`'.
-			(vdmc state keys
+			(animation state keys
 				select: [ :name | name size > m size and: [(name copyFrom: 1 to: m size) = m ]]
 				thenCollect: [ :name | name copyFrom: m size + 1 to: name size ]) asSortedCollection asArray ]
 ]
@@ -738,7 +750,7 @@ ViennaBrowser >> fileSave: title do: aBlock [
 { #category : #'module list menu' }
 ViennaBrowser >> generateSmalltalkClasses [
 	| ast |
-	ast := ViennaVDMParser new parse: vdmc specification.
+	ast := ViennaVDMParser new parse: animation specification.
 	ast isPetitFailure
 		ifTrue: [ ^ UIManager default alert: 'Failed to generate a code : ' , ast message title: 'ViennaTalk' ].
 	(ViennaVDM2SmalltalkClass new generate: ast) ifNotNil: [ :class | class browse ]
@@ -747,7 +759,7 @@ ViennaBrowser >> generateSmalltalkClasses [
 { #category : #'module list menu' }
 ViennaBrowser >> generateSmalltalkObject [
 	| ast |
-	ast := ViennaVDMParser new parse: vdmc specification.
+	ast := ViennaVDMParser new parse: animation specification.
 	ast isPetitFailure
 		ifTrue: [ ^ UIManager default
 				alert: 'Failed to generate a code : ' , ast message
@@ -759,10 +771,10 @@ ViennaBrowser >> generateSmalltalkObject [
 ViennaBrowser >> generateSmalltalkScript [
 	self selectedModule
 		ifNotNil: [ :module | 
-			((self modulePositionsFrom: vdmc specification) detect: [ :assoc | assoc key = module ] ifNone: [  ])
+			((self modulePositionsFrom: animation specification) detect: [ :assoc | assoc key = module ] ifNone: [  ])
 				ifNotNil: [ :assoc | 
 					| ast |
-					ast := ViennaVDMParser new parse: (vdmc specification copyFrom: assoc value first to: assoc value last).
+					ast := ViennaVDMParser new parse: (animation specification copyFrom: assoc value first to: assoc value last).
 					ast isPetitFailure
 						ifTrue: [ ^ UIManager default alert: 'Failed to generate a code : ' , ast message title: 'ViennaTalk' ].
 					ast first label = 'Module'
@@ -780,10 +792,10 @@ ViennaBrowser >> importerModules [
 	self selectedModule isNil
 		ifTrue: [ ^ Array new ].
 	parser := 'from' asParser , #space asParser plus , self selectedModule asParser , #space asParser.
-	^ ((self modulePositionsFrom: vdmc specification)
+	^ ((self modulePositionsFrom: animation specification)
 		select: [ :assoc | 
 			assoc key ~= self selectedModule
-				and: [ (parser matchesIn: (vdmc specification copyFrom: assoc value first to: assoc value last)) notEmpty ] ])
+				and: [ (parser matchesIn: (animation specification copyFrom: assoc value first to: assoc value last)) notEmpty ] ])
 		collect: [ :assoc | assoc key ]
 ]
 
@@ -794,7 +806,7 @@ ViennaBrowser >> loadAndMergeFromFile [
 
 { #category : #'module list' }
 ViennaBrowser >> moduleList [
-	^ vdmc ifNil: [ Array new ] ifNotNil: [ (self modulePositionsFrom: vdmc specification) collect: #key ]
+	^ animation ifNil: [ Array new ] ifNotNil: [ (self modulePositionsFrom: animation specification) collect: #key ]
 ]
 
 { #category : #'module list menu' }
@@ -880,7 +892,7 @@ ViennaBrowser >> newAndLoadFromFile [
 			stream contents
 				in: [ :source | 
 					[ 
-					vdmc specification: source ifError: [ :msg | self error: msg ].
+					animation specification: source ifError: [ :msg | self error: msg ].
 					self selectModuleNamed: nil ]
 						on: Error
 						do: [ :ex | 
@@ -953,17 +965,17 @@ ViennaBrowser >> removeModule [
 	self selectedModule
 		ifNotNil: [ :moduleName | 
 			| position newSpecification oldSpecification |
-			position := ((self modulePositionsFrom: vdmc specification)
+			position := ((self modulePositionsFrom: animation specification)
 				detect: [ :assoc | assoc key = moduleName ]
 				ifNone: [ ^ false ]) value.
-			newSpecification := (vdmc specification copyFrom: 1 to: position first - 1)
-				, (vdmc specification copyFrom: position last + 1 to: vdmc specification size).
-			oldSpecification := vdmc specification.
-			vdmc specification: newSpecification.
-			vdmc
+			newSpecification := (animation specification copyFrom: 1 to: position first - 1)
+				, (animation specification copyFrom: position last + 1 to: animation specification size).
+			oldSpecification := animation specification.
+			animation specification: newSpecification.
+			animation
 				plainEvaluate: 'nil'
 				ifError: [ :msg | 
-					vdmc specification: oldSpecification.
+					animation specification: oldSpecification.
 					UIManager default abort: msg title: 'VDM Error'.
 					^ false ].
 			self changed: #moduleList.
@@ -975,13 +987,13 @@ ViennaBrowser >> removeModule [
 ViennaBrowser >> saveAModuleToFile [
 	self selectedModule
 		ifNotNil: [ :module | 
-			((self modulePositionsFrom: vdmc specification) detect: [ :assoc | assoc key = module ] ifNone: [  ])
+			((self modulePositionsFrom: animation specification) detect: [ :assoc | assoc key = module ] ifNone: [  ])
 				ifNotNil: [ :assoc | 
 					self
 						fileSave: 'Save the "' , module , '" modules to...'
 						do: [ :stream | 
 							stream
-								nextPutAll: (vdmc specification copyFrom: assoc value first to: assoc value last);
+								nextPutAll: (animation specification copyFrom: assoc value first to: assoc value last);
 								close ] ] ]
 ]
 
@@ -991,7 +1003,7 @@ ViennaBrowser >> saveAllModulesToFile [
 		fileSave: 'Save all modules to...'
 		do: [ :stream | 
 			stream
-				nextPutAll: vdmc specification;
+				nextPutAll: animation specification;
 				close ]
 ]
 
@@ -1073,12 +1085,12 @@ ViennaBrowser >> update: aSymbol [
 
 { #category : #'module list menu' }
 ViennaBrowser >> useInterpreter [
-	self vdmc: self vdmc asInterpretedAnimation 
+	self animation: self animation asInterpretedAnimation 
 ]
 
 { #category : #'module list menu' }
 ViennaBrowser >> useTranspiler [
-	self vdmc: self vdmc asTranspiledAnimation
+	self animation: self animation asTranspiledAnimation
 ]
 
 { #category : #'value pane' }
@@ -1089,9 +1101,9 @@ ViennaBrowser >> value [
 				ifNil: [ 
 					'{'
 						,
-							(',' , String cr join: (vdmc state keys asSortedCollection collect: [ :key | key , ' |-> ' , (vdmc plainAt: key) ]))
+							(',' , String cr join: (animation state keys asSortedCollection collect: [ :key | key , ' |-> ' , (animation plainAt: key) ]))
 						, '}' ]
-				ifNotNil: [ :field | vdmc plainAt: field ifAbsent: [ String new ] ] ]
+				ifNotNil: [ :field | animation plainAt: field ifAbsent: [ String new ] ] ]
 		ifNotNil: [ :module | 
 			self selectedField
 				ifNil: [ 
@@ -1101,11 +1113,11 @@ ViennaBrowser >> value [
 						,
 							(',' , String cr
 								join:
-									(vdmc state keys
+									(animation state keys
 										select: [ :key | key size > prefix size and: [(key copyFrom: 1 to: prefix size) = prefix ]]
-										thenCollect: [ :key | (key copyFrom: prefix size + 1 to: key size) , ' |-> ' , (vdmc plainAt: key) ])
+										thenCollect: [ :key | (key copyFrom: prefix size + 1 to: key size) , ' |-> ' , (animation plainAt: key) ])
 										asSortedCollection) , '}' ]
-				ifNotNil: [ :field | vdmc plainAt: module , '`' , field ifAbsent: [ String new ] ] ]
+				ifNotNil: [ :field | animation plainAt: module , '`' , field ifAbsent: [ String new ] ] ]
 ]
 
 { #category : #'value pane menu' }
@@ -1136,18 +1148,6 @@ ViennaBrowser >> valueSelection [
 { #category : #'value pane' }
 ViennaBrowser >> valueSelection: aSelection [
 	valueSelection := aSelection
-]
-
-{ #category : #accessing }
-ViennaBrowser >> vdmc [
-	^ vdmc
-]
-
-{ #category : #accessing }
-ViennaBrowser >> vdmc: aVDMC [
-	vdmc ifNotNil: [ vdmc removeDependent: self ].
-	vdmc := aVDMC.
-	aVDMC addDependent: self
 ]
 
 { #category : #resources }
