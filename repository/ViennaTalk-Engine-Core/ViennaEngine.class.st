@@ -38,6 +38,11 @@ ViennaEngine class >> viennaSettingsOn: aBuilder [
 		order: 0.5
 ]
 
+{ #category : #accessing }
+ViennaEngine >> close [
+	^ self subclassResponsibility
+]
+
 { #category : #evaluating }
 ViennaEngine >> evaluate: expression specification: spec states: states [ 
 	^ self evaluate: expression specification: spec states: states vdm10: true rtc: true 

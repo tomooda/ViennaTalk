@@ -12,7 +12,7 @@ Class {
 
 { #category : #defaults }
 ViennaServer class >> defaultPort [
-	^ 8088
+	^ 8801
 ]
 
 { #category : #servicing }
@@ -20,9 +20,7 @@ ViennaServer class >> ensureServeIn: aBlock [
 	| isRunning |
 	isRunning := self isRunning.
 	isRunning
-		ifFalse: [ self
-				flushServer;
-				installHandler ].
+		ifFalse: [ self installHandler ].
 	aBlock
 		ensure: [ isRunning
 				ifFalse: [ self flushServer ] ]
@@ -33,9 +31,10 @@ ViennaServer class >> flushServer [
 	"ViennaServer flushServer"
 
 	Server
-		ifNotNil: [ 
-			Server stop.
-			Server unregister.
+		ifNotNil: [ (Server
+				stop;
+				unregister;
+				yourself) delegate prefixMap at: 'eval' ifPresent: #close.
 			Server := nil ]
 ]
 
@@ -67,10 +66,15 @@ ViennaServer class >> on: aViennaEngine [
 ViennaServer class >> server [
 	^ Server
 		ifNil: [ Server := (ZnMultiThreadedServer defaultOn: self defaultPort)
-				bindingAddress:  #[127 0 0 1] ;
+				bindingAddress: nil;
 				register;
 				start;
 				yourself ]
+]
+
+{ #category : #accessing }
+ViennaServer >> close [
+	engine ifNotNil: #close
 ]
 
 { #category : #defaults }
@@ -112,8 +116,7 @@ ViennaServer >> handleRequest: aZnRequest [
 			json
 				keysAndValuesDo: [ :key :value | 
 					(key includes: $`)
-						ifTrue: [ 
-							| index module var |
+						ifTrue: [ | index module var |
 							index := key indexOf: $`.
 							module := key copyFrom: 1 to: index - 1.
 							var := key copyFrom: index + 1 to: key size.
@@ -131,8 +134,11 @@ ViennaServer >> handleRequest: aZnRequest [
 				at: 'value' put: (result first ifNil: [ String new ]);
 				at: 'message' put: result third.
 			result second
-				keysAndValuesDo: [ :moduleName :bindings | bindings keysAndValuesDo: [ :varName :value | json at: moduleName , '`' , varName put: value ] ].
-			^ ZnResponse ok: (ZnEntity with: (self stringify: json) type: ZnMimeType applicationJson) ].
+				keysAndValuesDo: [ :moduleName :bindings | 
+					bindings
+						keysAndValuesDo: [ :varName :value | json at: moduleName , '`' , varName put: value ] ].
+			^ ZnResponse
+				ok: (ZnEntity with: (self stringify: json) type: ZnMimeType applicationJson) ].
 	^ ZnResponse notFound: aZnRequest url
 ]
 

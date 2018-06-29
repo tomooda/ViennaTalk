@@ -39,7 +39,7 @@ ViennaClient class >> defaultUrlString: aString [
 ViennaClient class >> localhost [
 	"ViennaClient localhost evaluate: '1+2' specification: '' states: Dictionary new"
 
-	^ self on: 'http://localhost:8088/'
+	^ self on: 'http://localhost:8801/'
 ]
 
 { #category : #'instance creation' }
@@ -60,6 +60,11 @@ ViennaClient class >> viennaSettingsOn: aBuilder [
 		description: 'The default ViennaServer url (used by ViennaClient)';
 		label: 'default Vienna server URL';
 		order: 0.4
+]
+
+{ #category : #accessing }
+ViennaClient >> close [
+	
 ]
 
 { #category : #evaluating }

@@ -14,6 +14,11 @@ ViennaBankEngine >> add: aViennaBankEngine [
 	lock critical: [ ^ engines add: aViennaBankEngine ]
 ]
 
+{ #category : #accessing }
+ViennaBankEngine >> close [
+	engines do: [ :engine | engine close ]
+]
+
 { #category : #enumerating }
 ViennaBankEngine >> enginesDo: aBlock [
 	engines do: aBlock
