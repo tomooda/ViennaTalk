@@ -498,7 +498,7 @@ ViennaVDM2Smalltalk >> defStatement: aViennaNode env: aDictionary [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2Smalltalk >> definitionBlock: aViennaNode env: aDictionary [
-	^ '.' , String cr join: (aViennaNode collect: [ :node | self generate: node env: aDictionary ])
+	aViennaNode do: [ :node | self generate: node env: aDictionary ]
 ]
 
 { #category : #utilities }
@@ -854,7 +854,12 @@ ViennaVDM2Smalltalk >> functionDefinition: aViennaNode env: aDictionary [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2Smalltalk >> functionDefinitions: aViennaNode env: aDictionary [
-	self subclassResponsibility
+	aViennaNode do: [ :node | self generate: node env: aDictionary ]
+]
+
+{ #category : #'code generation-interfaces' }
+ViennaVDM2Smalltalk >> functionImport: aViennaNode env: aDictionary [
+	^ self subclassResponsibility
 ]
 
 { #category : #'code generation-expressions' }
@@ -1023,6 +1028,36 @@ ViennaVDM2Smalltalk >> imply: aViennaNode env: aDictionary [
 	^ '(' , arg1 , ' not or: [' , arg2 , '])'
 ]
 
+{ #category : #'code generation-interfaces' }
+ViennaVDM2Smalltalk >> importDefinition: aViennaNode env: aDictionary [
+	^ self subclassResponsibility
+]
+
+{ #category : #'code generation-interfaces' }
+ViennaVDM2Smalltalk >> importDefinitionList: aViennaNode env: aDictionary [
+	aViennaNode do: [ :node | self generate: node env: aDictionary ]
+]
+
+{ #category : #'code generation-interfaces' }
+ViennaVDM2Smalltalk >> importFunctionsSignature: aViennaNode env: aDictionary [
+	aViennaNode do: [ :node | self generate: node env: aDictionary ]
+]
+
+{ #category : #'code generation-interfaces' }
+ViennaVDM2Smalltalk >> importOperationsSignature: aViennaNode env: aDictionary [
+	aViennaNode do: [ :node | self generate: node env: aDictionary ]
+]
+
+{ #category : #'code generation-interfaces' }
+ViennaVDM2Smalltalk >> importTypesSignature: aViennaNode env: aDictionary [
+	aViennaNode do: [ :node | self generate: node env: aDictionary ]
+]
+
+{ #category : #'code generation-interfaces' }
+ViennaVDM2Smalltalk >> importValuesSignature: aViennaNode env: aDictionary [
+	aViennaNode do: [ :node | self generate: node env: aDictionary ]
+]
+
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> inSet: aViennaNode env: aDictionary [
 	| arg1 arg2 |
@@ -1079,6 +1114,11 @@ ViennaVDM2Smalltalk >> inmapType: aViennaNode env: aDictionary [
 	domaintype := self generate: aViennaNode first env: aDictionary.
 	rangetype := self generate: aViennaNode second env: aDictionary.
 	^ '(' , domaintype , ' inmapTo: ' , rangetype , ')'
+]
+
+{ #category : #'code generation-interfaces' }
+ViennaVDM2Smalltalk >> interface: aViennaNode env: aDictionary [
+	self generate: aViennaNode first env: aDictionary
 ]
 
 { #category : #utilities }
@@ -1525,6 +1565,11 @@ ViennaVDM2Smalltalk >> modularDocument: aViennaNode env: aDictionary [
 	^ self subclassResponsibility
 ]
 
+{ #category : #'code generation-definitions' }
+ViennaVDM2Smalltalk >> module: aViennaNode env: aDictionary [
+	^ self subclassResponsibility
+]
+
 { #category : #'code generation-statements' }
 ViennaVDM2Smalltalk >> multipleAssignStatement: aViennaNode env: aDictionary [
 	| assigns |
@@ -1645,6 +1690,11 @@ ViennaVDM2Smalltalk >> operationDefinition: aViennaNode env: aDictionary [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2Smalltalk >> operationDefinitions: aViennaNode env: aDictionary [
+	aViennaNode do: [ :node | self generate: node env: aDictionary ]
+]
+
+{ #category : #'code generation-interfaces' }
+ViennaVDM2Smalltalk >> operationImport: aViennaNode env: aDictionary [
 	^ self subclassResponsibility
 ]
 
@@ -2284,7 +2334,12 @@ ViennaVDM2Smalltalk >> typeDefinition: aViennaNode env: aDictionary [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2Smalltalk >> typeDefinitions: aViennaNode env: aDictionary [
-	self subclassResponsibility
+	aViennaNode do: [ :node | self generate: node env: aDictionary ]
+]
+
+{ #category : #'code generation-interfaces' }
+ViennaVDM2Smalltalk >> typeImport: aViennaNode env: aDictionary [
+	^ self subclassResponsibility
 ]
 
 { #category : #'code generation-expressions' }
@@ -2347,7 +2402,12 @@ ViennaVDM2Smalltalk >> valueDefinition: aViennaNode env: aDictionary [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2Smalltalk >> valueDefinitions: aViennaNode env: aDictionary [
-	self subclassResponsibility
+	aViennaNode do: [ :node | self generate: node env: aDictionary ]
+]
+
+{ #category : #'code generation-interfaces' }
+ViennaVDM2Smalltalk >> valueImport: aViennaNode env: aDictionary [
+	^ self subclassResponsibility
 ]
 
 { #category : #utilities }

@@ -1,7 +1,20 @@
-Trait {
+Class {
 	#name : #TViennaVDMFreeVariableCollector,
-	#traits : 'TViennaVDMBoundVariableCollector',
+	#superclass : #Trait,
+	#traits : 'TViennaVDMBoundVariableCollector\r\tcategory: \'ViennaTalk-Parser-Core\'',
 	#classTraits : 'TViennaVDMBoundVariableCollector classTrait',
+	#instVars : [
+		'Trait'
+	],
+	#classVars : [
+		'TViennaVDMFreeVariableCollector'
+	],
+	#pools : [
+		'TViennaVDMBoundVariableCollector'
+	],
+	#classInstVars : [
+		'classTrait'
+	],
 	#category : 'ViennaTalk-Parser-Core'
 }
 

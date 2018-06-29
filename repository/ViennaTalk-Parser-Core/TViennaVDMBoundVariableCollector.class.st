@@ -1,5 +1,16 @@
-Trait {
+Class {
 	#name : #TViennaVDMBoundVariableCollector,
+	#superclass : #Trait,
+	#traits : '{}\r\tcategory: \'ViennaTalk-Parser-Core\'',
+	#instVars : [
+		'named:'
+	],
+	#classVars : [
+		'uses:'
+	],
+	#pools : [
+		'}'
+	],
 	#category : 'ViennaTalk-Parser-Core'
 }
 

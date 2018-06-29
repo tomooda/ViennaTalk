@@ -50,6 +50,11 @@ ViennaVDM2SmalltalkScript class >> translateStatement: aString ifError: aBlock [
 ]
 
 { #category : #'code generation-definitions' }
+ViennaVDM2SmalltalkScript >> definitionBlock: aViennaNode env: aDictionary [
+	^ '.' , String cr join: (aViennaNode collect: [ :node | self generate: node env: aDictionary ])
+]
+
+{ #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkScript >> flatDocument: aViennaNode env: aDictionary [
 	| vars lazyDefs eagerDefs |
 	aViennaNode first label = 'DefinitionBlock'

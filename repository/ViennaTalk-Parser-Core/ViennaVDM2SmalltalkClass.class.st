@@ -1,6 +1,9 @@
 Class {
 	#name : #ViennaVDM2SmalltalkClass,
 	#superclass : #ViennaVDM2Smalltalk,
+	#instVars : [
+		'classes'
+	],
 	#category : 'ViennaTalk-Parser-Core'
 }
 
@@ -18,14 +21,29 @@ ViennaVDM2SmalltalkClass >> defineMethod: aString in: aClass protocol: protocol 
 ]
 
 { #category : #'code generation-definitions' }
-ViennaVDM2SmalltalkClass >> definitionBlock: aViennaNode env: aDictionary in: aClass [
-	aViennaNode
-		do: [ :node | 
-			self
-				perform: (node label uncapitalized , ':env:in:') asSymbol
-				with: node
-				with: aDictionary
-				with: aClass ]
+ViennaVDM2SmalltalkClass >> explicitFunctionDefinition: aViennaNode env: aDictionary [
+	| identifier initializer theClass |
+	identifier := aViennaNode first.
+	initializer := super explicitFunctionDefinition: aViennaNode env: aDictionary.
+	theClass := classes at: (aViennaNode module ifNotNil: #first).
+	self
+		defineLazyMethodNamed: identifier
+		initializer: initializer
+		in: theClass
+		protocol: 'functions'
+]
+
+{ #category : #'code generation-definitions' }
+ViennaVDM2SmalltalkClass >> explicitOperationDefinition: aViennaNode env: aDictionary [
+	| identifier initializer theClass |
+	identifier := aViennaNode first.
+	initializer := super explicitOperationDefinition: aViennaNode env: aDictionary.
+	theClass := classes at: (aViennaNode module ifNotNil: #first).
+	self
+		defineLazyMethodNamed: identifier
+		initializer: initializer
+		in: theClass
+		protocol: 'operations'
 ]
 
 { #category : #'code generation-definitions' }
@@ -40,41 +58,22 @@ ViennaVDM2SmalltalkClass >> flatDocument: aViennaNode env: aDictionary [
 				ifFalse: [ (self boundVariables: definitionBlock) do: [ :ident | env at: ident put: 'self ' , ident ] ] ].
 	instVars := self boundVariables: aViennaNode.
 	newClass := Object subclass: className instanceVariableNames: (' ' join: instVars).
+	classes at: nil put: newClass.
 	self defineMethod: 'initialize super initialize. self init' in: newClass protocol: 'initialize-release'.
-	aViennaNode do: [ :definitionBlock | self definitionBlock: definitionBlock env: env in: newClass ].
+	aViennaNode do: [ :definitionBlock | self definitionBlock: definitionBlock env: env ].
 	(newClass includesSelector: #init)
 		ifFalse: [ self defineMethod: 'init' in: newClass protocol: 'state' ].
 	^ newClass
 ]
 
-{ #category : #'code generation-definitions' }
-ViennaVDM2SmalltalkClass >> functionDefinitions: aViennaNode env: aDictionary in: aClass [
-	aViennaNode
-		do: [ :node | 
-			(self boundVariables: node)
-				do: [ :identifier | 
-					self
-						defineLazyMethodNamed: identifier
-						initializer: (self generate: node env: aDictionary)
-						in: aClass
-						protocol: 'functions' ] ]
-]
-
-{ #category : #'code generation-definitions' }
-ViennaVDM2SmalltalkClass >> functionImport: aViennaNode env: aDictionary module: aString [
+{ #category : #'code generation-interfaces' }
+ViennaVDM2SmalltalkClass >> functionImport: aViennaNode env: aDictionary [
+	| moduleName |
+	moduleName := (aViennaNode parentLabelled: 'ImportDefinition' ifAbsent: [ nil ])
+		ifNotNil: [ :importDefinition | importDefinition first ]
+		ifNil: [ ^ self error: 'Malformed AST: FunctionImport must appear under ImportDefinition' ].
 	aViennaNode fourth
-		ifNotNil: [ :renameNode | aDictionary at: renameNode first put: aString , String space , aViennaNode first first ]
-]
-
-{ #category : #'code generation' }
-ViennaVDM2SmalltalkClass >> generate: aViennaNode env: aDictionary module: aString [
-	| selector |
-	selector := aViennaNode label uncapitalized , ':env:module:'.
-	^ self
-		perform: selector asSymbol
-		with: aViennaNode
-		with: aDictionary
-		with: aString
+		ifNotNil: [ :renameNode | aDictionary at: renameNode first put: moduleName , String space , aViennaNode first first ]
 ]
 
 { #category : #'code generation-expressions' }
@@ -84,42 +83,18 @@ ViennaVDM2SmalltalkClass >> globalName: aViennaNode env: aDictionary [
 		ifAbsent: [ aViennaNode first , String space , aViennaNode second ]
 ]
 
-{ #category : #'code generation-definitions' }
+{ #category : #'code generation-interfaces' }
 ViennaVDM2SmalltalkClass >> importDefinition: aViennaNode env: aDictionary [
 	| moduleName importModuleSignatureNode |
 	moduleName := aViennaNode first.
 	importModuleSignatureNode := aViennaNode second.
-	importModuleSignatureNode do: [ :node | self generate: node env: aDictionary module: moduleName ]
+	importModuleSignatureNode do: [ :node | self generate: node env: aDictionary ]
 ]
 
-{ #category : #'code generation-definitions' }
-ViennaVDM2SmalltalkClass >> importDefinitionList: aViennaNode env: aDictionary [
-	aViennaNode do: [ :node | self generate: node env: aDictionary ]
-]
-
-{ #category : #'code generation-definitions' }
-ViennaVDM2SmalltalkClass >> importFunctionsSignature: aViennaNode env: aDictionary module: aString [
-	aViennaNode do: [ :node | self generate: node env: aDictionary module: aString ]
-]
-
-{ #category : #'code generation-definitions' }
-ViennaVDM2SmalltalkClass >> importOperationsSignature: aViennaNode env: aDictionary module: aString [
-	aViennaNode do: [ :node | self generate: node env: aDictionary module: aString ]
-]
-
-{ #category : #'code generation-definitions' }
-ViennaVDM2SmalltalkClass >> importTypesSignature: aViennaNode env: aDictionary module: aString [
-	aViennaNode do: [ :node | self generate: node env: aDictionary module: aString ]
-]
-
-{ #category : #'code generation-definitions' }
-ViennaVDM2SmalltalkClass >> importValuesSignature: aViennaNode env: aDictionary module: aString [
-	aViennaNode do: [ :node | self generate: node env: aDictionary module: aString ]
-]
-
-{ #category : #'code generation-definitions' }
-ViennaVDM2SmalltalkClass >> interface: aViennaNode env: aDictionary [
-	self generate: aViennaNode first env: aDictionary
+{ #category : #'initialize-release' }
+ViennaVDM2SmalltalkClass >> initialize [
+	super initialize.
+	classes := Dictionary new
 ]
 
 { #category : #'code generation-definitions' }
@@ -209,6 +184,7 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 				ifFalse: [(self boundVariables: definitionBlock) do: [ :ident | env at: ident put: 'self ', ident ] ] ].
 	instVars := (self boundVariables: moduleBodyNode) asArray.
 	newClass := Object subclass: className instanceVariableNames: (' ' join: importClassNames , instVars).
+	classes at: moduleName put: newClass.
 	importModuleNames
 		with: importClassNames
 		do: [ :importModuleName :importClassName | 
@@ -218,28 +194,32 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 						, importClassName capitalized
 				in: newClass
 				protocol: 'imports' ].
-	moduleBodyNode do: [ :definitionBlock | self definitionBlock: definitionBlock env: env in: newClass ].
+	moduleBodyNode do: [ :definitionBlock | self definitionBlock: definitionBlock env: env ].
 	(newClass includesSelector: #init)
 		ifFalse: [ self defineMethod: 'init' in: newClass protocol: 'state' ]
 ]
 
-{ #category : #'code generation-definitions' }
-ViennaVDM2SmalltalkClass >> operationDefinitions: aViennaNode env: aDictionary in: aClass [
-	aViennaNode
-		do: [ :node | 
-			(self boundVariables: node)
-				do: [ :identifier | 
-					self
-						defineLazyMethodNamed: identifier
-						initializer: (self generate: node env: aDictionary)
-						in: aClass
-						protocol: 'operations' ] ]
+{ #category : #'code generation-interfaces' }
+ViennaVDM2SmalltalkClass >> operationImport: aViennaNode env: aDictionary [
+	| moduleName |
+	moduleName := (aViennaNode parentLabelled: 'ImportDefinition' ifAbsent: [ nil ])
+		ifNotNil: [ :importDefinition | importDefinition first ]
+		ifNil: [ ^ self error: 'Malformed AST: OperationImport must appear under ImportDefinition' ].
+	aViennaNode third
+		ifNotNil: [ :renameNode | aDictionary at: renameNode first put: moduleName , String space , aViennaNode first first ]
 ]
 
 { #category : #'code generation-definitions' }
-ViennaVDM2SmalltalkClass >> operationImport: aViennaNode env: aDictionary module: aString [
-	aViennaNode third
-		ifNotNil: [ :renameNode | aDictionary at: renameNode first put: aString , String space , aViennaNode first first ]
+ViennaVDM2SmalltalkClass >> recordTypeDefinition: aViennaNode env: aDictionary [
+	| identifier initializer theClass |
+	identifier := aViennaNode first.
+	initializer := super recordTypeDefinition: aViennaNode env: aDictionary.
+	theClass := classes at: (aViennaNode module ifNotNil: #first).
+	self
+		defineLazyMethodNamed: identifier
+		initializer: initializer
+		in: theClass
+		protocol: 'types'
 ]
 
 { #category : #utilities }
@@ -267,42 +247,47 @@ ViennaVDM2SmalltalkClass >> requestClassName: defaultClassName [
 ]
 
 { #category : #'code generation-definitions' }
-ViennaVDM2SmalltalkClass >> stateDefinition: aViennaNode env: aDictionary in: aClass [
-	| stateConstructor triple |
+ViennaVDM2SmalltalkClass >> stateDefinition: aViennaNode env: aDictionary [
+	| theClass stateConstructor triple |
+	theClass := classes at: (aViennaNode module ifNotNil: #first).
 	stateConstructor := aViennaNode first.
-	triple := self stateDefinition: aViennaNode env: aDictionary.
-	self defineMethod: 'init' , String cr , triple first in: aClass protocol: 'state'.
+	triple := super stateDefinition: aViennaNode env: aDictionary.
+	self defineMethod: 'init' , String cr , triple first in: theClass protocol: 'state'.
 	self
 		defineLazyMethodNamed: stateConstructor
 		initializer: triple second
-		in: aClass
+		in: theClass
 		protocol: 'state'.
 	aDictionary at: stateConstructor put: 'self ' , stateConstructor.
 	self
 		defineLazyMethodNamed: 'init_' , stateConstructor
 		initializer: triple third
-		in: aClass
+		in: theClass
 		protocol: 'state'.
 	aDictionary at: 'init_' , stateConstructor put: 'self init_' , stateConstructor
 ]
 
 { #category : #'code generation-definitions' }
-ViennaVDM2SmalltalkClass >> typeDefinitions: aViennaNode env: aDictionary in: aClass [
-	aViennaNode
-		do: [ :node | 
-			(self boundVariables: node)
-				do: [ :identifier | 
-					self
-						defineLazyMethodNamed: identifier
-						initializer: (self generate: node env: aDictionary)
-						in: aClass
-						protocol: 'types' ] ]
+ViennaVDM2SmalltalkClass >> typeDefinition: aViennaNode env: aDictionary [
+	| identifier initializer theClass |
+	identifier := aViennaNode first.
+	initializer := super typeDefinition: aViennaNode env: aDictionary.
+	theClass := classes at: (aViennaNode module ifNotNil: #first).
+	self
+		defineLazyMethodNamed: identifier
+		initializer: initializer
+		in: theClass
+		protocol: 'types'
 ]
 
-{ #category : #'code generation-definitions' }
-ViennaVDM2SmalltalkClass >> typeImport: aViennaNode env: aDictionary module: aString [
+{ #category : #'code generation-interfaces' }
+ViennaVDM2SmalltalkClass >> typeImport: aViennaNode env: aDictionary [
+	| moduleName |
+	moduleName := (aViennaNode parentLabelled: 'ImportDefinition' ifAbsent: [ nil ])
+		ifNotNil: [ :importDefinition | importDefinition first ]
+		ifNil: [ ^ self error: 'Malformed AST: TypeImport must appear under ImportDefinition' ].
 	aViennaNode second
-		ifNotNil: [ :renameNode | aDictionary at: renameNode first put: aString , String space , aViennaNode first first ]
+		ifNotNil: [ :renameNode | aDictionary at: renameNode first put: moduleName , String space , aViennaNode first first ]
 ]
 
 { #category : #utilities }
@@ -316,20 +301,25 @@ ViennaVDM2SmalltalkClass >> validateClassName: aString [
 ]
 
 { #category : #'code generation-definitions' }
-ViennaVDM2SmalltalkClass >> valueDefinitions: aViennaNode env: aDictionary in: aClass [
-	aViennaNode
-		do: [ :node | 
-			(self boundVariables: node)
-				do: [ :identifier | 
-					self
-						defineLazyMethodNamed: identifier
-						initializer: (self generate: node env: aDictionary) , '. ' , identifier
-						in: aClass
-						protocol: 'values' ] ]
+ViennaVDM2SmalltalkClass >> valueDefinition: aViennaNode env: aDictionary [
+	| theClass initializer |
+	theClass := classes at: (aViennaNode module ifNotNil: #first).
+	initializer := super valueDefinition: aViennaNode env: aDictionary.
+	(self boundVariables: aViennaNode)
+		do: [ :identifier | 
+			self
+				defineLazyMethodNamed: identifier
+				initializer: initializer , '. ' , identifier
+				in: theClass
+				protocol: 'values' ]
 ]
 
-{ #category : #'code generation-definitions' }
-ViennaVDM2SmalltalkClass >> valueImport: aViennaNode env: aDictionary module: aString [
+{ #category : #'code generation-interfaces' }
+ViennaVDM2SmalltalkClass >> valueImport: aViennaNode env: aDictionary [
+	| moduleName |
+	moduleName := (aViennaNode parentLabelled: 'ImportDefinition' ifAbsent: [ nil ])
+		ifNotNil: [ :importDefinition | importDefinition first ]
+		ifNil: [ ^ self error: 'Malformed AST: ValueImport must appear under ImportDefinition' ].
 	aViennaNode third
-		ifNotNil: [ :renameNode | aDictionary at: renameNode first put: aString , String space , aViennaNode first first ]
+		ifNotNil: [ :renameNode | aDictionary at: renameNode first put: moduleName , String space , aViennaNode first first ]
 ]

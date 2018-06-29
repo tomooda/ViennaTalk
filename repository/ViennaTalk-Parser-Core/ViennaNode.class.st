@@ -4,6 +4,7 @@ Class {
 	#type : #variable,
 	#instVars : [
 		'label',
+		'parent',
 		'start',
 		'end'
 	],
@@ -142,13 +143,20 @@ ViennaNode >> asArray [
 ]
 
 { #category : #converting }
-ViennaNode >> asArrayFrom: start [
-	^ self asArrayFrom: start to: self size
+ViennaNode >> asArrayFrom: anInteger [
+	^ self asArrayFrom: anInteger to: self size
 ]
 
 { #category : #converting }
-ViennaNode >> asArrayFrom: start to: end [
-	^ (start to: end) collect: [ :i | self at: i ]
+ViennaNode >> asArrayFrom: anInteger1 to: anInteger2 [
+	^ (anInteger1 to: anInteger2) collect: [ :i | self at: i ]
+]
+
+{ #category : #accessing }
+ViennaNode >> at: anInteger put: anObject [
+	(anObject isKindOf: ViennaNode)
+		ifTrue: [ anObject parent: self ].
+	^ super at: anInteger put: anObject
 ]
 
 { #category : #enumerating }
@@ -204,8 +212,32 @@ ViennaNode >> label [
 ]
 
 { #category : #accessing }
+ViennaNode >> module [
+	^ self parentLabelled: 'Module' ifAbsent: [ nil ]
+]
+
+{ #category : #accessing }
 ViennaNode >> ninth [
 	^ self at: 9
+]
+
+{ #category : #accessing }
+ViennaNode >> parent [
+	^ parent
+]
+
+{ #category : #accessing }
+ViennaNode >> parent: aViennaNode [
+	parent := aViennaNode
+]
+
+{ #category : #accessing }
+ViennaNode >> parentLabelled: aString ifAbsent: errorBlock [
+	self
+		ぱparentsDo: [ :node | 
+			node label = aString
+				ifTrue: [ ^ node ] ].
+	^ errorBlock value
 ]
 
 { #category : #printing }
@@ -277,4 +309,14 @@ ViennaNode >> storeOn: aStream [
 { #category : #accessing }
 ViennaNode >> third [
 	^ self at: 3
+]
+
+{ #category : #enumerating }
+ViennaNode >> ぱparentsDo: aBlock [
+	| node |
+	node := self.
+	[ node notNil ]
+		whileTrue: [ 
+			aBlock value: node.
+			node := node parent ]
 ]
