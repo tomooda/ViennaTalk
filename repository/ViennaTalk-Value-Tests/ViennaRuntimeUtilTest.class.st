@@ -4,26 +4,6 @@ Class {
 	#category : 'ViennaTalk-Value-Tests'
 }
 
-{ #category : #'tests-matching-binder' }
-ViennaRuntimeUtilTest >> testBinder1 [
-	| matcher binder |
-	matcher := '(ViennaRuntimeUtil matchIdentifier: ''x'')'.
-	binder := ViennaRuntimeUtil binder: matcher with: '1' vars: #('x').
-	self assert: (Compiler evaluate: '| x |' , binder , '. x') equals: 1
-]
-
-{ #category : #'tests-matching-binder' }
-ViennaRuntimeUtilTest >> testBinder2 [
-	| matcher binder |
-	matcher := '
-		(ViennaRuntimeUtil matchTuple: {
-			(ViennaRuntimeUtil matchIdentifier: ''x'') . 
-			(ViennaRuntimeUtil matchIdentifier: ''y'') . 
-			(ViennaRuntimeUtil matchValue: 3)})'.
-	binder := ViennaRuntimeUtil binder: matcher with: '#(1 2 3)' vars: #('x' 'y').
-	self assert: (Compiler evaluate: '| x y |' , binder , '. {x . y}') equals: #(1 2)
-]
-
 { #category : #'tests-matching-sequence' }
 ViennaRuntimeUtilTest >> testMatchConc1 [
 	self
