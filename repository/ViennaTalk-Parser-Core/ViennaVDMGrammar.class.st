@@ -698,7 +698,7 @@ ViennaVDMGrammar >> explicitFunctionDefinition [
 			array first = array fifth
 				ifTrue: [ 
 					{(array first).
-					(array second).
+					(array second ifNil: [ #() ]).
 					(array fourth).
 					(array fifth).
 					(array sixth).
