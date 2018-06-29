@@ -755,29 +755,36 @@ ViennaVDM2Smalltalk >> explicitFunctionDefinition: aViennaNode env: aDictionary 
 	preNode
 		ifNotNil: [ preBody := self generate: preNode env: aDictionary.
 			runtimeAssertionCheck = true
-				ifTrue: [ body := preBody , 'ifFalse: [ViennaPreconditionViolation signal]. '
-						, body ] ].
+				ifTrue: [ body := preBody , 'ifFalse: [ViennaPreconditionViolation signal]. ' , body
+						asViennaTracingString: preNode ] ].
 	postNode
 		ifNotNil: [ postBody := self generate: postNode env: aDictionary.
 			runtimeAssertionCheck = true
 				ifTrue: [ runtimeTypeCheck = true
-						ifTrue: [ body := '[|RESULT| RESULT := [' , body , '] value. ('
-								, (self generate: retType env: aDictionary)
-								, ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. ('
-								, postBody
-								, ') ifFalse: [ViennaPostconditionViolation signal]. RESULT] value' ]
-						ifFalse: [ body := '[|RESULT| RESULT := [' , body , '] value. (' , postBody
-								, ') ifFalse: [ViennaPostconditionViolation signal]. RESULT] value' ] ]
-				ifFalse: [ runtimeTypeCheck = true
-						ifTrue: [ body := '[|RESULT| RESULT := [' , body , '] value. ('
-								, (self generate: retType env: aDictionary)
+						ifTrue: [ body := '[|RESULT| RESULT := [' , body , '] value.'
 								,
-									' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. RESULT] value' ] ] ]
+									(' (' , (self generate: retType env: aDictionary)
+										, ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal].'
+										asViennaTracingString: retType)
+								,
+									('(' , postBody , ') ifFalse: [ViennaPostconditionViolation signal]. RESULT] value'
+										asViennaTracingString: postNode) ]
+						ifFalse: [ body := '[|RESULT| RESULT := [' , body , '] value.'
+								,
+									('(' , postBody , ') ifFalse: [ViennaPostconditionViolation signal].'
+										asViennaTracingString: postNode) , ' RESULT] value' ] ]
+				ifFalse: [ runtimeTypeCheck = true
+						ifTrue: [ body := '[|RESULT| RESULT := [' , body , '] value.'
+								,
+									('(' , (self generate: retType env: aDictionary)
+										, ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal].'
+										asViennaTracingString: retType) , 'RESULT] value' ] ] ]
 		ifNil: [ runtimeTypeCheck = true
-				ifTrue: [ body := '[|RESULT| RESULT := [' , body , '] value. ('
-						, (self generate: retType env: aDictionary)
+				ifTrue: [ body := '[|RESULT| RESULT := [' , body , '] value.'
 						,
-							' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. RESULT] value' ] ].
+							('(' , (self generate: retType env: aDictionary)
+								, ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal].'
+								asViennaTracingString: retType) , 'RESULT] value' ] ].
 	varGenerator := self
 		varNameGenerator: 'func'
 		uniqueIn:
@@ -973,34 +980,35 @@ ViennaVDM2Smalltalk >> extendedExplicitFunctionDefinition: aViennaNode env: aDic
 	preNode
 		ifNotNil: [ preBody := self generate: preNode env: aDictionary.
 			runtimeAssertionCheck = true
-				ifTrue: [ body := preBody , 'ifFalse: [ViennaPreconditionViolation signal]. '
-						, body ] ].
+				ifTrue: [ body := preBody , 'ifFalse: [ViennaPreconditionViolation signal]. ' , body
+						asViennaTracingString: preNode ] ].
 	postNode
 		ifNotNil: [ postBody := self generate: postNode env: aDictionary.
 			runtimeAssertionCheck = true
 				ifTrue: [ runtimeTypeCheck = true
-						ifTrue: [ body := '[|' , retValue , '| ' , retValue , ' := [' , body
-								, '] value. (' , (self generate: retType env: aDictionary)
-								, ' includes: ' , retValue
-								, ') ifFalse: [ViennaRuntimeTypeError signal]. (' , postBody
-								, ') ifFalse: [ViennaPostconditionViolation signal]. '
-								, retValue , '] value' ]
-						ifFalse: [ body := '[|' , retValue , '| ' , retValue , ' := [' , body
-								, '] value. (' , postBody
-								, ') ifFalse: [ViennaPostconditionViolation signal]. '
-								, retValue , '] value' ] ]
+						ifTrue: [ body := '[|' , retValue , '| ' , retValue , ' := [' , body , '] value.'
+								,
+									('(' , (self generate: retType env: aDictionary) , ' includes: ' , retValue
+										, ') ifFalse: [ViennaRuntimeTypeError signal].' asViennaTracingString: retType)
+								,
+									('(' , postBody , ') ifFalse: [ViennaPostconditionViolation signal].'
+										asViennaTracingString: postNode) , retValue , '] value' ]
+						ifFalse: [ body := '[|' , retValue , '| ' , retValue , ' := [' , body , '] value.'
+								,
+									('(' , postBody , ') ifFalse: [ViennaPostconditionViolation signal].'
+										asViennaTracingString: postNode) , ' ' , retValue , '] value' ] ]
 				ifFalse: [ runtimeTypeCheck = true
-						ifTrue: [ body := '[|' , retValue , '| ' , retValue , ' := [' , body
-								, '] value. (' , (self generate: retType env: aDictionary)
-								, ' includes: ' , retValue
-								, ') ifFalse: [ViennaRuntimeTypeError signal]. ' , retValue
-								, '] value' ] ] ]
+						ifTrue: [ body := '[|' , retValue , '| ' , retValue , ' := [' , body , '] value.'
+								,
+									('(' , (self generate: retType env: aDictionary) , ' includes: ' , retValue
+										, ') ifFalse: [ViennaRuntimeTypeError signal].' asViennaTracingString: retType)
+								, ' ' , retValue , '] value' ] ] ]
 		ifNil: [ runtimeTypeCheck = true
-				ifTrue: [ body := '[|' , retValue , '| ' , retValue , ' := [' , body
-						, '] value. (' , (self generate: retType env: aDictionary)
-						, ' includes: ' , retValue
-						, ') ifFalse: [ViennaRuntimeTypeError signal]. ' , retValue
-						, '] value' ] ].
+				ifTrue: [ body := '[|' , retValue , '| ' , retValue , ' := [' , body , '] value.'
+						,
+							('(' , (self generate: retType env: aDictionary) , ' includes: ' , retValue
+								, ') ifFalse: [ViennaRuntimeTypeError signal].' asViennaTracingString: retType)
+						, ' ' , retValue , '] value' ] ].
 	varGenerator := self
 		varNameGenerator: 'func'
 		uniqueIn:
@@ -1037,9 +1045,7 @@ ViennaVDM2Smalltalk >> extendedExplicitFunctionDefinition: aViennaNode env: aDic
 						,
 							((1 to: identifierTypePairList size by: 2)
 								collect: [ :index | 
-									{(ViennaNode
-										label: 'PatternIdentifier'
-										with: (identifierTypePairList at: index)).
+									{(ViennaNode label: 'PatternIdentifier' with: (identifierTypePairList at: index)).
 									(identifierTypePairList at: index + 1)} ])
 				body: postBody
 				varGenerator: varGenerator

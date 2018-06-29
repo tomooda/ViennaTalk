@@ -291,9 +291,12 @@ ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass proto
 												asViennaTracingString: triple second) ] ].
 					preString
 						ifNotNil: [ stream
-								nextPutAll: '(';
-								nextPutAll: preString;
-								nextPutAll: ') ifFalse: [ViennaPreconditionViolation signal].' ].
+								nextPutAll:
+									('(' , preString , ') ifFalse: [ViennaPreconditionViolation signal].'
+										asViennaTracingString:
+											(preString asViennaTracingString sources
+												ifNotEmpty: [ :sources | sources last value ]
+												ifEmpty: [ aViennaNode ])) ].
 					stream
 						nextPutAll: '_oldState := self state. ';
 						nextPutAll:
@@ -307,9 +310,12 @@ ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass proto
 										, ') ifFalse: [ViennaRuntimeTypeError signal].' asViennaTracingString: typeNode) ].
 					postString
 						ifNotNil: [ stream
-								nextPutAll: '(';
-								nextPutAll: postString;
-								nextPutAll: ') ifFalse: [ViennaPostconditionViolation signal].' ].
+								nextPutAll:
+									('(' , postString , ') ifFalse: [ViennaPostconditionViolation signal].'
+										asViennaTracingString:
+											(postString asViennaTracingString sources
+												ifNotEmpty: [ :sources | sources last value ]
+												ifEmpty: [ aViennaNode ])) ].
 					stream nextPutAll: '^ ' , retVarName ])
 		in: theClass
 		protocol: protocolString
@@ -400,12 +406,12 @@ ViennaVDM2SmalltalkClass >> explicitOperationDefinition: aViennaNode env: aDicti
 		pre:
 			(preNode
 				ifNotNil: [ runtimeAssertionCheck = true
-						ifTrue: [ self generate: preNode env: aDictionary ]
+						ifTrue: [ (self generate: preNode env: aDictionary) asViennaTracingString: preNode ]
 						ifFalse: [ nil ] ])
 		post:
 			(postNode
 				ifNotNil: [ runtimeAssertionCheck = true
-						ifTrue: [ self generate: postNode env: aDictionary ]
+						ifTrue: [ (self generate: postNode env: aDictionary) asViennaTracingString: postNode ]
 						ifFalse: [ nil ] ])
 		retType: retTypeNode
 		varGenerator: varGenerator
