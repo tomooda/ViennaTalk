@@ -23,6 +23,11 @@ SequenceableCollection >> tail [
 ]
 
 { #category : #'*ViennaTalk-Value-Core' }
+SequenceableCollection >> value: anInteger [
+	^ self at: anInteger
+]
+
+{ #category : #'*ViennaTalk-Value-Core' }
 SequenceableCollection >> viennaStringOn: aStream [
 	(self allSatisfy: #isCharacter)
 		ifTrue: [ (String withAll: self) viennaStringOn: aStream ].

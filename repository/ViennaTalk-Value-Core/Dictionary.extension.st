@@ -34,6 +34,11 @@ Dictionary >> inversed [
 ]
 
 { #category : #'*ViennaTalk-Value-Core' }
+Dictionary >> value: anObject [
+	^ self at: anObject
+]
+
+{ #category : #'*ViennaTalk-Value-Core' }
 Dictionary >> viennaStringOn: aStream [
 	aStream nextPutAll: '{'.
 	self isEmpty
