@@ -993,6 +993,12 @@ ViennaVDM2SmalltalkClass >> modularDocument: aViennaNode env: aDictionary [
 						do: [ :moduleName | 
 							stream
 								nextPutAll: moduleName uncapitalized;
+								nextPutAll: ' initTypes.';
+								cr ].
+					moduleNames
+						do: [ :moduleName | 
+							stream
+								nextPutAll: moduleName uncapitalized;
 								nextPutAll: ' init.';
 								cr ] ])
 		in: documentClass
@@ -1060,11 +1066,11 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 				node: (interfaceNode first detect: [ :node | node first = importModuleName ]) ].
 	moduleBodyNode
 		do: [ :definitionBlock | self definitionBlock: definitionBlock env: env ].
-	self
+	"self
 		defineMethod: 'initialize super initialize. self initTypes'
 		in: newClass
 		protocol: 'initialize-release'
-		node: nil.
+		node: nil."
 	self
 		defineInitTypeMethodForTypeNames: typeNames
 		in: newClass
