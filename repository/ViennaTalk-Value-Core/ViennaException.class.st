@@ -41,6 +41,11 @@ ViennaException class >> trap: matcherBlock with: handlerBlock in: aBlock [
 ]
 
 { #category : #accessing }
+ViennaException >> defaultAction [
+	^ UnhandledError signalForException: self
+]
+
+{ #category : #accessing }
 ViennaException >> expression [
 	^ expression
 ]
