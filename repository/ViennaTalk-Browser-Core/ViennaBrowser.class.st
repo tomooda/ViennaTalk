@@ -561,8 +561,10 @@ ViennaBrowser >> fileSave: title do: aBlock [
 
 { #category : #'module list menu' }
 ViennaBrowser >> generateSmalltalkClasses [
-	| ast | 
+	| ast |
 	ast := ViennaVDMParser new parse: vdmc specification.
+	ast isPetitFailure
+		ifTrue: [ ^ UIManager default alert: 'Failed to generate a code : ' , ast message title: 'ViennaTalk' ].
 	(ViennaVDM2SmalltalkClass new generate: ast) ifNotNil: [ :class | class browse ]
 ]
 
@@ -570,6 +572,8 @@ ViennaBrowser >> generateSmalltalkClasses [
 ViennaBrowser >> generateSmalltalkObject [
 	| ast |
 	ast := ViennaVDMParser new parse: vdmc specification.
+	ast isPetitFailure
+		ifTrue: [ ^ UIManager default alert: 'Failed to generate a code : ' , ast message title: 'ViennaTalk' ].
 	(ViennaVDM2SmalltalkObject new generate: ast) ifNotNil: [ :object | object inspect ]
 ]
 
@@ -581,6 +585,8 @@ ViennaBrowser >> generateSmalltalkScript [
 				ifNotNil: [ :assoc | 
 					| ast |
 					ast := ViennaVDMParser new parse: (vdmc specification copyFrom: assoc value first to: assoc value last).
+					ast isPetitFailure
+						ifTrue: [ ^ UIManager default alert: 'Failed to generate a code : ' , ast message title: 'ViennaTalk' ].
 					ast first label = 'Module'
 						ifTrue: [ 
 							ast := ast first third copy
