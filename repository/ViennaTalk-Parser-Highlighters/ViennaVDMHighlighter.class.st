@@ -159,6 +159,11 @@ ViennaVDMHighlighter >> equalityAbstractionField [
 			(quatro fourth)} ]
 ]
 
+{ #category : #'parsers-statements' }
+ViennaVDMHighlighter >> errorStatement [
+	^ self keyword: super errorStatement
+]
+
 { #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> errs [
 	^ self keyword: super errs
