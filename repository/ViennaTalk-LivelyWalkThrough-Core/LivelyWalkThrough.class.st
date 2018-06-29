@@ -34,6 +34,7 @@ LivelyWalkThrough >> build [
 		yourself.
 	utilsPane := LazyTabGroupMorph new.
 	utilsPane
+		addLazyPage: self buildWidgetDispenserPane label: 'Widgets';
 		addLazyPage: self buildVDMBrowserPane label: 'VDM';
 		addLazyPage: self buildLivetalkBrowserPane label: 'Livetalk'.
 	utilsPane selectedPageIndex: 1.
@@ -61,6 +62,11 @@ LivelyWalkThrough >> buildLivetalkBrowserPane [
 { #category : #'user interface' }
 LivelyWalkThrough >> buildVDMBrowserPane [
 	^ (ViennaBrowser on: self director vdmc) build
+]
+
+{ #category : #'user interface' }
+LivelyWalkThrough >> buildWidgetDispenserPane [
+	^ LWTWidgetDispenser new
 ]
 
 { #category : #accessing }
