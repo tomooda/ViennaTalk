@@ -2756,7 +2756,7 @@ ViennaVDMGrammar >> subset: arg1 and: arg2 [
 
 { #category : #'parsers-literals' }
 ViennaVDMGrammar >> symbolicLiteral [
-	^ self basicSymbolicLiteral flatten
+	^ self basicSymbolicLiteral 
 ]
 
 { #category : #'parsers-keywords' }

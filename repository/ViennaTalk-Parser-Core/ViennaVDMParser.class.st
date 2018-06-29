@@ -1283,7 +1283,8 @@ ViennaVDMParser >> subset: arg1 and: arg2 [
 
 { #category : #'parsers-literals' }
 ViennaVDMParser >> symbolicLiteral [
-	^ super symbolicLiteral  ==> [ :string | ViennaNode label: 'SymbolicLiteral' with: string trim ]
+	^ super symbolicLiteral flatten
+		==> [ :string | ViennaNode label: 'SymbolicLiteral' with: string trim ]
 ]
 
 { #category : #'parsers-expressions-threads' }
