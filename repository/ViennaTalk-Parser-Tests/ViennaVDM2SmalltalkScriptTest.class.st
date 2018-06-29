@@ -2825,7 +2825,15 @@ ViennaVDM2SmalltalkScriptTest >> testSequenceComprehensionEnv [
 		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
 		equals:
 			{4.
-			8} asOrderedCollection
+			8} asOrderedCollection.
+	node := ViennaVDMParser new expression end parse: '[i*2| i in seq [ 5,4,3,2,1 ] & i mod 2 = 0]'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SequenceComprehension'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals:
+			{8.
+			4} asOrderedCollection
 ]
 
 { #category : #'tests-code generation-expressions' }
@@ -2943,6 +2951,15 @@ ViennaVDM2SmalltalkScriptTest >> testSequenceTailEnv [
 		equals:
 			{5.
 			6} asOrderedCollection
+]
+
+{ #category : #'tests-code generation-types' }
+ViennaVDM2SmalltalkScriptTest >> testSet1TypeEnv [
+	| node |
+	node := ViennaVDMParser new type end parse: 'set1 of nat'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'Set1Type'.
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node)) equals: ViennaType nat set1
 ]
 
 { #category : #'tests-code generation-expressions' }

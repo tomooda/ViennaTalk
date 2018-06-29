@@ -1423,6 +1423,11 @@ ViennaVDMGrammarTest >> testSequenceComprehension4 [
 ]
 
 { #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testSequenceComprehension5 [
+	self assert: (grammar expression end parse: '[v1|v1 in seq s&v3]') equals: #('v1' #('v1' 's') 'v3')
+]
+
+{ #category : #'tests-expressions' }
 ViennaVDMGrammarTest >> testSequenceEnumeration1 [
 	self assert: (grammar expression end parse: '[]') equals: #()
 ]
@@ -1440,6 +1445,16 @@ ViennaVDMGrammarTest >> testSequenceEnumeration3 [
 { #category : #'tests-statements' }
 ViennaVDMGrammarTest >> testSequenceForLoop [
 	self assert: (grammar statement end parse: 'for v in e1 do return e2') equals: #('v' 'e1' 'e2')
+]
+
+{ #category : #'tests-types' }
+ViennaVDMGrammarTest >> testSet1Type1 [
+	self assert: (grammar type end parse: 'set1 of t') equals: 't'
+]
+
+{ #category : #'tests-types' }
+ViennaVDMGrammarTest >> testSet1Type2 [
+	self assert: (grammar type end parse: 'set1 of set1 of t') equals: 't'
 ]
 
 { #category : #'tests-expressions' }
