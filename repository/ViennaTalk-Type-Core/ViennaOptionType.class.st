@@ -46,6 +46,11 @@ ViennaOptionType >> includes: anObject [
 	^ anObject isNil or: [ basetype includes: anObject ]
 ]
 
+{ #category : #testing }
+ViennaOptionType >> isEnumerable [
+	^ basetype isEnumerable
+]
+
 { #category : #accessing }
 ViennaOptionType >> name [
 	^ '[' , basetype name , ']'
@@ -59,9 +64,4 @@ ViennaOptionType >> optional [
 { #category : #private }
 ViennaOptionType >> setBasetype: aViennaType [
 	basetype := aViennaType
-]
-
-{ #category : #accessing }
-ViennaOptionType >> size [
-	^ basetype size + 1
 ]

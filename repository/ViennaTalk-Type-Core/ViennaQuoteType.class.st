@@ -40,6 +40,11 @@ ViennaQuoteType >> includes: anObject [
 	^ symbol = anObject
 ]
 
+{ #category : #testing }
+ViennaQuoteType >> isEnumerable [
+	^ true
+]
+
 { #category : #accessing }
 ViennaQuoteType >> name [
 	^ symbol asString
@@ -48,11 +53,6 @@ ViennaQuoteType >> name [
 { #category : #private }
 ViennaQuoteType >> setSymbol: aSymbol [
 	symbol := aSymbol
-]
-
-{ #category : #accessing }
-ViennaQuoteType >> size [
-	^ 1
 ]
 
 { #category : #private }

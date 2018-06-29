@@ -7,7 +7,7 @@ Class {
 
 { #category : #'instance creation' }
 ViennaType class >> compose: aString of: anArray [
-	^ ViennaCompositeType constructor: aString withAll: anArray
+	^ ViennaCompositeType constructorName: aString withAll: anArray
 ]
 
 { #category : #'instance creation' }
@@ -92,6 +92,11 @@ ViennaType >> includes: anObject [
 	^ self subclassResponsibility
 ]
 
+{ #category : #testing }
+ViennaType >> isEnumerable [
+	^ self subclassResponsibility
+]
+
 { #category : #accessing }
 ViennaType >> name [
 	^ self subclassResponsibility
@@ -123,14 +128,6 @@ ViennaType >> select: aBlock [
 				do: [ :value | 
 					(aBlock value: value)
 						ifTrue: [ stream nextPut: value ] ] ]
-]
-
-{ #category : #accessing }
-ViennaType >> size [
-	| count |
-	count := 0.
-	self do: [ :value | count := count + 1 ].
-	^ count
 ]
 
 { #category : #arithmetic }

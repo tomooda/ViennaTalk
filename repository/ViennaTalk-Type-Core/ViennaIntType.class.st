@@ -38,12 +38,12 @@ ViennaIntType >> includes: anObject [
 	^ anObject isInteger
 ]
 
-{ #category : #accessing }
-ViennaIntType >> name [
-	^ 'int'
+{ #category : #testing }
+ViennaIntType >> isEnumerable [
+	^ false
 ]
 
 { #category : #accessing }
-ViennaIntType >> size [
-	^ self shouldNotImplement
+ViennaIntType >> name [
+	^ 'int'
 ]

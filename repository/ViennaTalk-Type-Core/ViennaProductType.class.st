@@ -62,6 +62,11 @@ ViennaProductType >> includes: anArray [
 				and: [ (1 to: basetypes size) allSatisfy: [ :index | (basetypes at: index) includes: (anArray at: index) ] ] ]
 ]
 
+{ #category : #testing }
+ViennaProductType >> isEnumerable [
+	^ basetypes allSatisfy: #isEnumerable
+]
+
 { #category : #accessing }
 ViennaProductType >> name [
 	^ '*' join: (basetypes collect: [ :t | t nameInPrecedence: self class precedence ])
@@ -70,9 +75,4 @@ ViennaProductType >> name [
 { #category : #private }
 ViennaProductType >> setBasetypes: anArrayOfViennaType [
 	basetypes := anArrayOfViennaType
-]
-
-{ #category : #accessing }
-ViennaProductType >> size [
-	^ basetypes inject: 1 into: [ :p :t | p * t size ]
 ]

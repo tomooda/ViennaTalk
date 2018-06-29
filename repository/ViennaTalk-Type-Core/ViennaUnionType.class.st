@@ -50,6 +50,11 @@ ViennaUnionType >> includes: anObject [
 	^ basetypes anySatisfy: [ :type | type includes: anObject ]
 ]
 
+{ #category : #testing }
+ViennaUnionType >> isEnumerable [
+	^ basetypes allSatisfy: #isEnumerable
+]
+
 { #category : #accessing }
 ViennaUnionType >> name [
 	^ '|' join: (basetypes collect: [ :t | t nameInPrecedence: self class precedence ])
@@ -58,11 +63,6 @@ ViennaUnionType >> name [
 { #category : #private }
 ViennaUnionType >> setBasetypes: anArrayOfViennaType [
 	basetypes := anArrayOfViennaType
-]
-
-{ #category : #accessing }
-ViennaUnionType >> size [
-	^ basetypes inject: 0 into: [ :s :t | s + t size ]
 ]
 
 { #category : #arithmetic }

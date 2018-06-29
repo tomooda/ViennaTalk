@@ -38,12 +38,12 @@ ViennaRealType >> includes: anObject [
 	^ anObject isNumber
 ]
 
-{ #category : #accessing }
-ViennaRealType >> name [
-	^ 'real'
+{ #category : #testing }
+ViennaRealType >> isEnumerable [
+	^ false
 ]
 
 { #category : #accessing }
-ViennaRealType >> size [
-	^ self shouldNotImplement
+ViennaRealType >> name [
+	^ 'real'
 ]
