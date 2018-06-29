@@ -306,8 +306,34 @@ LWTWidget >> menu [
 			target: self
 			selector: #toggleMoveable;
 		addLine;
+		add: 'move to front end' translated target: self selector: #moveFrontEnd;
+		add: 'move front' translated target: self selector: #moveFront;
+		add: 'move back' translated target: self selector: #moveBack;
+		add: 'move to back end' translated target: self selector: #moveBackEnd;
+		addLine;
 		add: 'name' subMenu: self nameMenu yourself.
 	^ menu
+]
+
+{ #category : #operations }
+LWTWidget >> moveBack [
+	self owner
+		ifNotNil: [ self owner privateAddMorph: self atIndex: ((self owner submorphIndexOf: self) + 2 min: self owner submorphs size + 1) ]
+]
+
+{ #category : #operations }
+LWTWidget >> moveBackEnd [
+	self owner ifNotNil: [ self owner addMorphBack: self ]
+]
+
+{ #category : #operations }
+LWTWidget >> moveFront [
+	self owner ifNotNil: [ self owner privateAddMorph: self atIndex: ((self owner submorphIndexOf: self) - 1 max: 1) ]
+]
+
+{ #category : #operations }
+LWTWidget >> moveFrontEnd [
+	self owner ifNotNil: [ self owner addMorphFront: self ]
 ]
 
 { #category : #accessing }
