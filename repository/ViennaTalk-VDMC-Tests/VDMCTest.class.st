@@ -9,7 +9,7 @@ Class {
 
 { #category : #running }
 VDMCTest >> setUp [
-	vdmc := VDMC new
+	vdmc := VDMC default
 ]
 
 { #category : #tests }
