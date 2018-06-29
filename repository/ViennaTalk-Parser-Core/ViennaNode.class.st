@@ -97,7 +97,7 @@ ViennaNode >> printOn: aStream [
 		nextPutAll: label asString;
 		nextPut: Character space.
 	substrings := self collect: #printString.
-	((substrings contains: [ :string | string includes: Character cr ]) or: [ (substrings collect: #size) sum > 50 ])
+	((substrings contains: [ :string | string includes: Character cr ]) or: [( {0}, (substrings collect: #size)) sum > 50 ])
 		ifTrue: [ 
 			substrings
 				do: [ :string | 

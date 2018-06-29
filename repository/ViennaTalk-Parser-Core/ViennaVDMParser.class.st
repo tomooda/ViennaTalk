@@ -16,22 +16,26 @@ ViennaVDMParser >> access [
 
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> accessFunctionDefinition [
-	^ super accessFunctionDefinition ==> [ :array | ViennaNode label: 'AccessFunctionDefinition' withAll: array ]
+	^ super accessFunctionDefinition
+		==> [ :array | ViennaNode label: 'AccessFunctionDefinition' with: (ViennaNode label: 'Access' withAll: array first) with: array second ]
 ]
 
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> accessOperationDefinition [
-	^ super accessOperationDefinition ==> [ :array | ViennaNode label: 'AccessOperationDefinition' withAll: array ]
+	^ super accessOperationDefinition
+		==> [ :array | ViennaNode label: 'AccessOperationDefinition' with: (ViennaNode label: 'Access' withAll: array first) with: array second ]
 ]
 
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> accessTypeDefinition [
-	^ super accessTypeDefinition ==> [ :array | ViennaNode label: 'AccessTypeDefinition' withAll: array ]
+	^ super accessTypeDefinition
+		==> [ :array | ViennaNode label: 'AccessTypeDefinition' with: (ViennaNode label: 'Access' withAll: array first) with: array second ]
 ]
 
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> accessValueDefinition [
-	^ super accessValueDefinition ==> [ :array | ViennaNode label: 'AccessValueDefinition' withAll: array ]
+	^ super accessValueDefinition
+		==> [ :array | ViennaNode label: 'AccessValueDefinition' with: (ViennaNode label: 'Access' withAll: array first) with: array second ]
 ]
 
 { #category : #'parsers-expressions-threads' }
@@ -61,6 +65,11 @@ ViennaVDMParser >> anonymousField [
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> apply: func args: args [
 	^ ViennaNode label: 'Apply' with: func with: args
+]
+
+{ #category : #'parsers-statements' }
+ViennaVDMParser >> assignStatement [
+	^ super assignStatement ==> [ :pair | ViennaNode label: 'AssignStatement' withAll: pair ]
 ]
 
 { #category : #'parsers-statements' }
@@ -160,7 +169,7 @@ ViennaVDMParser >> defStatement [
 
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> definitionBlock [
-	^ super definitionBlock ==> [ :array | ViennaNode label: 'DefinitionBlock' withAll: array ]
+	^ super definitionBlock ==> [ :array | ViennaNode label: 'DefinitionBlock' with: array ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -225,7 +234,9 @@ ViennaVDMParser >> equalityAbstractionField [
 			| fieldName fieldType |
 			fieldName := pair first.
 			fieldType := pair second.
-			'{' , fieldName storeString , '. true. ' , pair second , '}' ]
+			{fieldName.
+			true.
+			fieldType} ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -251,6 +262,11 @@ ViennaVDMParser >> explicitFunctionDefinition [
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> explicitOperationDefinition [
 	^ super explicitOperationDefinition ==> [ :array | ViennaNode label: 'ExplicitOperationDefinition' withAll: array ]
+]
+
+{ #category : #'parsers-expressions-basics' }
+ViennaVDMParser >> expressionList [
+	^ super expressionList ==> [ :array | ViennaNode label: 'ExpressionList' withAll: array ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -346,7 +362,9 @@ ViennaVDMParser >> identifiedField [
 			| fieldName fieldType |
 			fieldName := pair first.
 			fieldType := pair second.
-			'{' , fieldName storeString , '. false. ' , pair second , '}' ]
+			{fieldName.
+			false.
+			fieldType} ]
 ]
 
 { #category : #'parsers-statements' }
@@ -665,7 +683,12 @@ ViennaVDMParser >> operationBody [
 
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> operationDefinition [
-	^ super operationDefinition == [ :def | ViennaNode label: 'OperationDefinition' with: def ]
+	^ super operationDefinition ==> [ :def | ViennaNode label: 'OperationDefinition' with: def ]
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> operationDefinitions [
+	^ super operationDefinitions ==> [ :array | ViennaNode label: 'OperationDefinitions' withAll: array ]
 ]
 
 { #category : #'parsers-types' }
@@ -746,6 +769,11 @@ ViennaVDMParser >> psubset: arg1 and: arg2 [
 { #category : #'parsers-types' }
 ViennaVDMParser >> quoteType [
 	^ super quoteType ==> [ :string | ViennaNode label: 'QuoteType' with: string ]
+]
+
+{ #category : #'parsers-expressions-basics' }
+ViennaVDMParser >> recordConstructor [
+	^ super recordConstructor ==> [ :array | ViennaNode label: 'RecordConstructor' withAll: array ]
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -886,6 +914,11 @@ ViennaVDMParser >> setUnionPattern [
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> stateDefinition [
 	^ super stateDefinition ==> [ :array | ViennaNode label: 'StateDefinition' withAll: array ]
+]
+
+{ #category : #'parsers-types' }
+ViennaVDMParser >> stateFieldList [
+	^ super stateFieldList ==> [ :array | ViennaNode label: 'FieldList' withAll: array ]
 ]
 
 { #category : #'parsers-expressions-operators' }

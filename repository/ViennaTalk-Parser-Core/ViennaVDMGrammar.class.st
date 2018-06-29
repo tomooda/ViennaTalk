@@ -118,29 +118,53 @@ ViennaVDMGrammar >> access [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> accessFunctionDefinition [
-	^ access optional , functionDefinition
+	^ (access optional , functionDefinition)
+		==> [ :pair | 
+			{({(pair first)} reject: #isNil).
+			(pair second)} ]
 ]
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> accessOperationDefinition [
-	^ access optional , operationDefinition
+	| pure async static |
+	pure := self reserved: 'pure'.
+	async := self reserved: 'async'.
+	static := self reserved: 'static'.
+	^ (pure optional , async optional
+		,
+			((static , access optional)
+				/
+					((access optional , static optional)
+						==> [ :pair | 
+							{(pair second).
+							(pair first)} ])) , operationDefinition)
+		==> [ :quatro | 
+			{({(quatro first).
+			(quatro second).
+			(quatro third first).
+			(quatro third second)} reject: #isNil).
+			(quatro fourth)} ]
 ]
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> accessTypeDefinition [
 	| static |
 	static := self reserved: 'static'.
-	^ (access , static optional)
-		/
-			((static optional , access optional)
-				==> [ :pair | 
-					{(pair second).
-					(pair first)} ]) , typeDefinition
+	^ (((access , static optional)
+		==> [ :pair | 
+			{(pair second).
+			(pair first)} ]) / (static optional , access optional) , typeDefinition)
+		==> [ :pair | 
+			{(pair first reject: #isNil).
+			(pair second)} ]
 ]
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> accessValueDefinition [
-	^ access optional , valueDefinition
+	^ (access optional , valueDefinition)
+		==> [ :pair | 
+			{({(pair first)} reject: #isNil).
+			(pair second)} ]
 ]
 
 { #category : #'parsers-expressions-threads and histories' }
@@ -662,10 +686,7 @@ ViennaVDMGrammar >> existsExpression [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> explicitFunctionDefinition [
-	^ (identifier
-		,
-			(((lbracket , (self typeVariableIdentifier separatedBy: comma) withoutSeparators , rbracket) ==> #second) optional
-				==> [ :vars | vars ifNil: [ Array new ] ]) , colon , (self partialFunctionType / self totalFunctionType) trim
+	^ (identifier , self typeVariableList optional , colon , (self partialFunctionType / self totalFunctionType) trim
 		, identifier , self parametersList , (self operator: '==')
 		,
 			(expression / ((self reserved: 'is') , (self reserved: 'subclass') , (self reserved: 'responsibility'))
@@ -690,8 +711,8 @@ ViennaVDMGrammar >> explicitFunctionDefinition [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> explicitOperationDefinition [
-	^ (identifier , colon , self operationType , identifier , self parameters , (self operator: '==') , self operationBody
-		, (((self reserved: 'pre') , expression) ==> #second) optional
+	^ (identifier , colon , self operationType , identifier trim , self parameters , (self operator: '==')
+		, self operationBody , (((self reserved: 'pre') , expression) ==> #second) optional
 		, (((self reserved: 'post') , expression) ==> #second) optional)
 		==> [ :array | 
 			array first = array fourth
@@ -1469,7 +1490,7 @@ ViennaVDMGrammar >> operationDefinitions [
 
 { #category : #'parsers-types' }
 ViennaVDMGrammar >> operationType [
-	^ (self discretionaryType , (self operator: '==>') , self discretionaryType)
+	^ (discretionaryType , (self operator: '==>') , discretionaryType)
 		==> [ :triple | 
 			{(triple first).
 			(triple third)} ]
@@ -2042,6 +2063,11 @@ ViennaVDMGrammar >> typeVariableIdentifier [
 					stream
 						nextPut: pair first;
 						nextPutAll: pair second ] ]
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMGrammar >> typeVariableList [
+	^ (lbracket , (self typeVariableIdentifier separatedBy: comma) withoutSeparators , rbracket) ==> #second
 ]
 
 { #category : #'parsers-expressions-operators' }
