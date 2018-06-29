@@ -1,6 +1,6 @@
 Class {
 	#name : #ViennaTranspiledAnimation,
-	#superclass : #Object,
+	#superclass : #Model,
 	#instVars : [
 		'specification',
 		'object',
@@ -78,7 +78,10 @@ ViennaTranspiledAnimation >> at: aString put: anObject [
 
 { #category : #private }
 ViennaTranspiledAnimation >> becomeInterpretedAnimation [
-	self become: self asInterpretedAnimation 
+	| animation |
+	animation := self asInterpretedAnimation.
+	self dependents do: [ :dependent |  animation addDependent: dependent].
+	self become: animation
 ]
 
 { #category : #private }
