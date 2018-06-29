@@ -1462,13 +1462,14 @@ VDMPad >> engine: aViennaEngine [
 
 { #category : #'request handling-api' }
 VDMPad >> eval: aZnRequest [
-	| vdm10 rtc params source expression states triple json |
+	| vdm10 rtc params source module expression states triple json |
 	params := aZnRequest contentType = ZnMimeType applicationJson
 		ifTrue: [ NeoJSONReader fromString: aZnRequest entity ]
 		ifFalse: [ aZnRequest mergedFields ].
 	vdm10 := (params at: 'classic' ifAbsent: [  ]) isNil.
 	rtc := (params at: 'ignoreRuntimeChecking' ifAbsent: [  ]) isNil.
 	source := (params at: 'source' ifAbsent: [ String new ]) trimmed.
+	module := params at: 'module' ifAbsent: [ 'DEFAULT' ].
 	states := Dictionary new.
 	params
 		keysAndValuesDo: [ :k :v | 
@@ -1487,6 +1488,7 @@ VDMPad >> eval: aZnRequest [
 		evaluate: expression
 		specification: source
 		states: states
+		module: module
 		vdm10: vdm10
 		rtc: rtc.	"self log: anHttpRequest remoteHost source: source states: states
 	expression: expression value: triple first message: triple third."
