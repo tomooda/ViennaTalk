@@ -560,6 +560,52 @@ ViennaVDM2Smalltalk >> explicitFunctionDefinition: aViennaNode env: aDictionary 
 			paramSets do: [ :args | stream nextPut: $] ] ]
 ]
 
+{ #category : #'code generation-definitions' }
+ViennaVDM2Smalltalk >> explicitOperationDefinition: aViennaNode env: aDictionary [
+	| opname opType opname2 paramsNode params opbody varGenerator vars |
+	opname := aViennaNode first.
+	opType := self generate: aViennaNode second env: aDictionary.
+	opname2 := self generate: aViennaNode third env: aDictionary.
+	paramsNode := self generate: aViennaNode fourth env: aDictionary.
+	opbody := self generate: aViennaNode fifth env: aDictionary.
+	(paramsNode allSatisfy: [ :patternNode | patternNode label = 'PatternIdentifier' ])
+		ifTrue: [  ].
+	params := self generate: paramsNode env: aDictionary.
+	varGenerator := self
+		varNameGenerator: 'op'
+		uniqueIn:
+			{opname.
+			opbody}.
+	vars := params collect: [ :p | varGenerator value ].
+	^ String
+		new: 1024
+		streamContents: [ :stream | 
+			stream
+				nextPutAll: opname;
+				nextPutAll: ' := ['.
+			vars
+				ifNotEmpty: [ 
+					vars
+						do: [ :v | 
+							stream
+								nextPutAll: ' :';
+								nextPutAll: v ].
+					stream nextPutAll: ' |' ].
+			stream
+				nextPutAll: ' | ';
+				nextPutAll: (' ' join: (params inject: #() into: [ :vs :pat | vs , pat first ]));
+				nextPutAll: ' _opContext | _opContext := thisContext. '.
+			params
+				with: vars
+				do: [ :p :v | 
+					stream
+						nextPutAll: (self binder: p second with: v vars: p first);
+						nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ].
+			stream
+				nextPutAll: opbody;
+				nextPutAll: ']' ]
+]
+
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> expressionList: aViennaNode env: aDictionary [
 	^ self generateAll: aViennaNode env: aDictionary
@@ -607,6 +653,39 @@ ViennaVDM2Smalltalk >> finExpression: aViennaNode env: aDictionary [
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> finitePowerSet: aViennaNode env: aDictionary [
 	^ (self generate: aViennaNode first env: aDictionary) , ' power'
+]
+
+{ #category : #utilities }
+ViennaVDM2Smalltalk >> flattenAndCheckBindList: bindListNode env: aDictionary do: aBlock [
+	| patternsAndSets boundVariables |
+	patternsAndSets := Array
+		new: 16
+		streamContents: [ :stream | 
+			bindListNode
+				do: [ :multipleBindNode | 
+					| typeOrSetNode |
+					typeOrSetNode := multipleBindNode second.
+					multipleBindNode first
+						do: [ :patternNode | 
+							stream
+								nextPut:
+									{patternNode.
+									typeOrSetNode} ] ] ].
+	boundVariables := patternsAndSets collect: [ :pair | self boundVariables: pair first ].
+	1 to: patternsAndSets size do: [ :index | 
+		| bindNode patternNode |
+		bindNode := patternsAndSets at: index.
+		patternNode := bindNode first.
+		aBlock
+			value: bindNode first
+			value: bindNode second
+			value:
+				((patternNode label = 'PatternIdentifier'
+					and: [ 
+						(1 to: patternsAndSets size)
+							allSatisfy: [ :i | i = index or: [ ((boundVariables at: i) includes: patternNode first) not ] ] ])
+					ifTrue: [ #direct ]
+					ifFalse: [ #complex ]) ]
 ]
 
 { #category : #'code generation-expressions' }
