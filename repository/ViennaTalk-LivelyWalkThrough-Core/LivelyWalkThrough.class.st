@@ -38,8 +38,8 @@ LivelyWalkThrough class >> livelyWalkThroughMenuOn: aBuilder [
 	<worldMenu>
 	(aBuilder item: #'Lively WalkThrough')
 		action: [ self openVDMJ ];
-		order: 0.481;
-		parent: #Tools;
+		order: 0.2;
+		parent: #ViennaTalk;
 		help: 'Lively Walk-Through, a UI prototyping environment using VDM-SL';
 		icon: nil
 ]
@@ -59,6 +59,16 @@ LivelyWalkThrough class >> vdmj [
 	"LivelyWalkThrough vdmj open"
 
 	^ self on: LWTDirector vdmj
+]
+
+{ #category : #'world menu' }
+LivelyWalkThrough class >> viennaToolsMenuOn: aBuilder [
+	<ViennaTools>
+	(aBuilder item: #'Lively WalkThrough')
+		action: [ self openVDMJ ];
+		order: 0.2;
+		help: 'Lively Walk-Through, a UI prototyping environment using VDM-SL';
+		icon: nil
 ]
 
 { #category : #'user interface' }
