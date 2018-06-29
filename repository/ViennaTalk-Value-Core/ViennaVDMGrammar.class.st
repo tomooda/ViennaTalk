@@ -21,7 +21,6 @@ Class {
 		'tupleConstructor',
 		'recordConstructor',
 		'recordModifier',
-		'tupleSelect',
 		'lambdaExpression',
 		'newExpression',
 		'selfExpression',
@@ -95,6 +94,7 @@ Class {
 		'patternList',
 		'patternBind',
 		'bind',
+		'bindList',
 		'setBind',
 		'typeBind'
 	],
@@ -146,6 +146,11 @@ ViennaVDMGrammar >> bind [
 	^ setBind / typeBind
 ]
 
+{ #category : #'parsers-patterns' }
+ViennaVDMGrammar >> bindList [
+	^ (multipleBind separatedBy: (self operator: $,)) withoutSeparators
+]
+
 { #category : #'parsers-literals' }
 ViennaVDMGrammar >> booleanLiteral [
 	^ self reserved: 'true' asParser / 'false' asParser
@@ -153,7 +158,7 @@ ViennaVDMGrammar >> booleanLiteral [
 
 { #category : #'parsers-expressions' }
 ViennaVDMGrammar >> buildApplicatorParserOn: anExpressionParser [
-	| applyArgs subsequenceArgs functionTypeInstantiationArgs fieldSelector actions |
+	| applyArgs subsequenceArgs functionTypeInstantiationArgs fieldSelector tupleSelector actions |
 	applyArgs := ((self operator: $()
 		, ((expression separatedBy: (self operator: $,)) withoutSeparators optional ==> [ :args | args ifNil: [ Array new ] ])
 		, (self operator: $)))
@@ -175,15 +180,20 @@ ViennaVDMGrammar >> buildApplicatorParserOn: anExpressionParser [
 		==> [ :pair | 
 			{#field.
 			(pair second)} ].
+	tupleSelector := ((self operator: '.#') , #digit asParser plus flatten trim)
+		==> [ :pair | 
+			{#tuple.
+			(pair second)} ].
 	actions := Dictionary new
 		at: #apply put: [ :left :right | self apply: left args: right second ];
 		at: #subsequence put: [ :left :right | self subsequence: left from: right second to: right third ];
 		at: #instantiation put: [ :left :right | self functionTypeInstantiation: left args: right second ];
 		at: #field put: [ :left :right | self fieldSelect: left with: right second ];
+		at: #tuple put: [ :left :right | self tupleSelect: left with: right second ];
 		yourself.
 	anExpressionParser
-		precedence: [ :expr | 'mk_' asParser not , expr , (applyArgs / subsequenceArgs / functionTypeInstantiationArgs / fieldSelector) plus ]
-		do: [ :triple | triple third inject: triple second into: [ :left :right | (actions at: right first) value: left value: right ] ]
+		precedence: [ :expr | expr , (applyArgs / subsequenceArgs / functionTypeInstantiationArgs / tupleSelector / fieldSelector) plus ]
+		do: [ :pair | pair second inject: pair first into: [ :left :right | (actions at: right first) value: left value: right ] ]
 ]
 
 { #category : #'parsers-expressions' }
@@ -395,19 +405,34 @@ ViennaVDMGrammar >> equiv: arg1 and: arg2 [
 ]
 
 { #category : #'parsers-expressions' }
+ViennaVDMGrammar >> exists1Expression [
+	^ ((self reserved: 'exists1') , bind , (self operator: $&) , expression)
+		==> [ :quatro | 
+			{(quatro second).
+			(quatro fourth)} ]
+]
+
+{ #category : #'parsers-expressions' }
+ViennaVDMGrammar >> existsExpression [
+	^ ((self reserved: 'exists') , bindList , (self operator: $&) , expression)
+		==> [ :quatro | 
+			{(quatro second).
+			(quatro fourth)} ]
+]
+
+{ #category : #'parsers-expressions' }
 ViennaVDMGrammar >> expression [
 	| expressionParser |
 	expressionParser := PPExpressionParser new.
 	expressionParser
 		term:
 			letExpression / letBeExpression / defExpression / ifExpression / casesExpression / quantifiedExpression / iotaExpression
-				/ setEnumeration / setComprehension / setRangeExpression / sequenceEnumeration / sequenceComprehension
-				/ mapEnumeration / mapComprehension / tupleConstructor / recordConstructor / recordModifier / tupleSelect
-				/ lambdaExpression / newExpression / selfExpression / threadidExpression / generalIsExpr / undefinedExpression
-				/ preconditionExpression / isofbaseclassExpression / isofclassExpression / samebaseclassExpression
-				/ sameclassExpression / actExpression / finExpression / activeExpression / reqExpression / waitingExpression
-				/ timeExpression / name / oldName / symbolicLiteral
-				/ (((self operator: $() , expression , (self operator: $))) ==> [ :triple | triple second ]).
+				/ mapEnumeration / mapComprehension / setEnumeration / setComprehension / setRangeExpression / sequenceEnumeration
+				/ sequenceComprehension / tupleConstructor / recordConstructor / recordModifier / lambdaExpression / newExpression
+				/ selfExpression / threadidExpression / generalIsExpr / undefinedExpression / preconditionExpression
+				/ isofbaseclassExpression / isofclassExpression / samebaseclassExpression / sameclassExpression / actExpression
+				/ finExpression / activeExpression / reqExpression / waitingExpression / timeExpression / name / oldName
+				/ symbolicLiteral / (((self operator: $() , expression , (self operator: $))) ==> [ :triple | triple second ]).
 	self buildCombinatorParserOn: expressionParser.
 	self buildApplicatorParserOn: expressionParser.
 	self buildEvaluatorParserOn: expressionParser.
@@ -424,12 +449,11 @@ ViennaVDMGrammar >> expressionExceptEquality [
 		term:
 			letExpression / letBeExpression / defExpression / ifExpression / casesExpression / quantifiedExpression / iotaExpression
 				/ setEnumeration / setComprehension / setRangeExpression / sequenceEnumeration / sequenceComprehension
-				/ mapEnumeration / mapComprehension / tupleConstructor / recordConstructor / recordModifier / tupleSelect
-				/ lambdaExpression / newExpression / selfExpression / threadidExpression / generalIsExpr / undefinedExpression
-				/ preconditionExpression / isofbaseclassExpression / isofclassExpression / samebaseclassExpression
-				/ sameclassExpression / actExpression / finExpression / activeExpression / reqExpression / waitingExpression
-				/ timeExpression / name / oldName / symbolicLiteral
-				/ (((self operator: $() , expression , (self operator: $))) ==> [ :triple | triple second ]).
+				/ mapEnumeration / mapComprehension / tupleConstructor / recordConstructor / recordModifier / lambdaExpression
+				/ newExpression / selfExpression / threadidExpression / generalIsExpr / undefinedExpression / preconditionExpression
+				/ isofbaseclassExpression / isofclassExpression / samebaseclassExpression / sameclassExpression / actExpression
+				/ finExpression / activeExpression / reqExpression / waitingExpression / timeExpression / name / oldName
+				/ symbolicLiteral / (((self operator: $() , expression , (self operator: $))) ==> [ :triple | triple second ]).
 	self buildCombinatorParserOn: expressionParser.
 	self buildApplicatorParserOn: expressionParser.
 	self buildEvaluatorParserOn: expressionParser.
@@ -457,6 +481,14 @@ ViennaVDMGrammar >> floor: arg [
 { #category : #'parsers-symbols' }
 ViennaVDMGrammar >> followingLetter [
 	^ PPPredicateObjectParser on: [ :char | ViennaUnicode isFollowingLetter: char ] message: 'identifier expected'
+]
+
+{ #category : #'parsers-expressions' }
+ViennaVDMGrammar >> forallExpression [
+	^ ((self reserved: 'forall') , bindList , (self operator: $&) , expression)
+		==> [ :quatro | 
+			{(quatro second).
+			(quatro fourth)} ]
 ]
 
 { #category : #'parsers-expressions' }
@@ -511,7 +543,8 @@ ViennaVDMGrammar >> identifiedField [
 
 { #category : #'parsers-symbols' }
 ViennaVDMGrammar >> identifier [
-	^ (initialLetter , followingLetter star) flatten
+	^ ('mk_' asParser not , 'pre_' asParser not , 'post_' asParser not , 'is_' asParser not , 'obj_' asParser not
+		, 'lambda' not , 'mu' not , initialLetter , followingLetter star) flatten
 ]
 
 { #category : #'parsers-expressions' }
@@ -578,7 +611,10 @@ ViennaVDMGrammar >> inverse: arg [
 
 { #category : #'parsers-expressions' }
 ViennaVDMGrammar >> iotaExpression [
-	^ PPFailingParser new
+	^ ((self reserved: 'iota') , bind , (self operator: $&) , expression)
+		==> [ :quatro | 
+			{(quatro second).
+			(quatro fourth)} ]
 ]
 
 { #category : #'parsers-expressions' }
@@ -595,6 +631,11 @@ ViennaVDMGrammar >> isofclassExpression [
 ViennaVDMGrammar >> iterateExpression: expr1 and: expr2 [
 	^ {expr1.
 	expr2}
+]
+
+{ #category : #utilities }
+ViennaVDMGrammar >> keywords [
+	^ #('abs' 'all' 'always' 'and' 'as' 'async' 'atomic' 'be' 'bool' 'by' 'card' 'cases' 'char' 'class' 'comp' 'compose' 'conc' 'cycles' 'dcl' 'def' 'definitions' 'dinter' 'div' 'dlmodule' 'do' 'dom' 'dunion' 'duration' 'elems' 'else' 'elseif' 'end' 'error' 'errs' 'exists' 'exists1' 'exit' 'exports' 'ext' 'false' 'floor' 'for' 'forall' 'from' 'functions' 'hd' 'if' 'in' 'inds' 'inmap' 'instance' 'int' 'inter' 'imports' 'init' 'inv' 'inverse' 'iota' 'is' 'isofbaseclass' 'isofclass' 'lambda' 'len' 'let' 'map' 'measure' 'merge' 'mod' 'module' 'mu' 'munion' 'mutex' 'nat' 'nat1' 'new' 'nil' 'not' 'of' 'operations' 'or' 'others' 'per' 'periodic' 'post' 'power' 'pre' 'private' 'protected' 'psubset' 'public' 'pure' 'rat' 'rd' 'real' 'rem' 'renamed' 'responsibility' 'return' 'reverse' 'rng' 'samebaseclass' 'sameclass' 'self' 'seq' 'seq1' 'set' 'skip' 'specified' 'sporadic' 'st' 'start' 'startlist' 'state' 'stop' 'stoplist' 'struct' 'subclass' 'subset' 'sync' 'system' 'then' 'thread' 'threadid' 'time' 'tixe' 'tl' 'to' 'token' 'traces' 'trap' 'true' 'types' 'undefined' 'union' 'uselib' 'values' 'variables' 'while' 'with' 'wr' 'yet' 'RESULT')
 ]
 
 { #category : #'parsers-expressions' }
@@ -667,12 +708,25 @@ ViennaVDMGrammar >> map: arg1 rangeRestrictTo: arg2 [
 
 { #category : #'parsers-expressions' }
 ViennaVDMGrammar >> mapComprehension [
-	^ PPFailingParser new
+	^ ((self operator: ${) , expression , (self operator: '|->') , expression , (self operator: $|) , bindList
+		, (((self operator: $&) , expression) ==> #second) optional , (self operator: $}))
+		==> [ :array | 
+			{(array second).
+			(array fourth).
+			(array sixth).
+			(array seventh)} ]
 ]
 
 { #category : #'parsers-expressions' }
 ViennaVDMGrammar >> mapEnumeration [
-	^ PPFailingParser new
+	^ ((self operator: ${)
+		,
+			(((self operator: '|->') ==> [ :single | Array new ])
+				/
+					((expression , (self operator: '|->') , expression)
+						==> [ :triple | 
+							{(triple first).
+							(triple third)} ] separatedBy: (self operator: $,)) withoutSeparators) , (self operator: $})) ==> #second
 ]
 
 { #category : #'parsers-patterns' }
@@ -876,13 +930,7 @@ ViennaVDMGrammar >> patternIdentifier [
 
 { #category : #'parsers-patterns' }
 ViennaVDMGrammar >> patternList [
-	^ (pattern , ((self operator: ',') , pattern) star)
-		==> [ :pair | 
-			Array
-				new: pair second size + 1
-				streamContents: [ :stream | 
-					stream nextPut: pair first.
-					pair second do: [ :p | stream nextPut: p second ] ] ]
+	^ (pattern separatedBy: (self operator: $,)) withoutSeparators
 ]
 
 { #category : #'parsers-expressions' }
@@ -928,7 +976,7 @@ ViennaVDMGrammar >> psubset: arg1 and: arg2 [
 
 { #category : #'parsers-expressions' }
 ViennaVDMGrammar >> quantifiedExpression [
-	^ PPFailingParser new
+	^ self forallExpression / self existsExpression / self exists1Expression
 ]
 
 { #category : #'parsers-literals' }
@@ -953,7 +1001,15 @@ ViennaVDMGrammar >> recordConstructor [
 
 { #category : #'parsers-expressions' }
 ViennaVDMGrammar >> recordModifier [
-	^ PPFailingParser new
+	^ ((self reserved: 'mu') , (self operator: $() , expression , (self operator: $,)
+		,
+			((identifier , (self operator: '|->') , expression)
+				==> [ :triple | 
+					{(triple first).
+					(triple third)} ] separatedBy: (self operator: $,)) withoutSeparators , (self operator: $)))
+		==> [ :array | 
+			{(array third).
+			(array fifth)} ]
 ]
 
 { #category : #'parsers-patterns' }
@@ -1031,12 +1087,19 @@ ViennaVDMGrammar >> seqType [
 
 { #category : #'parsers-expressions' }
 ViennaVDMGrammar >> sequenceComprehension [
-	^ PPFailingParser new
+	^ ((self operator: $[) , expression , (self operator: $|) , setBind
+		, (((self operator: $&) , expression) ==> #second) optional , (self operator: $]))
+		==> [ :six | 
+			{(six second).
+			(six fourth).
+			(six fifth)} ]
 ]
 
 { #category : #'parsers-expressions' }
 ViennaVDMGrammar >> sequenceEnumeration [
-	^ PPFailingParser new
+	^ ((self operator: $[)
+		, ((expression separatedBy: (self operator: $,)) withoutSeparators optional ==> [ :opt | opt ifNil: [ Array new ] ])
+		, (self operator: $])) ==> #second
 ]
 
 { #category : #'parsers-patterns' }
@@ -1049,7 +1112,12 @@ ViennaVDMGrammar >> setBind [
 
 { #category : #'parsers-expressions' }
 ViennaVDMGrammar >> setComprehension [
-	^ PPFailingParser new
+	^ ((self operator: ${) , expression , (self operator: $|) , bindList
+		, (((self operator: $&) , expression) ==> #second) optional , (self operator: $}))
+		==> [ :six | 
+			{(six second).
+			(six fourth).
+			(six fifth)} ]
 ]
 
 { #category : #'parsers-patterns' }
@@ -1062,12 +1130,18 @@ ViennaVDMGrammar >> setEnumPattern [
 
 { #category : #'parsers-expressions' }
 ViennaVDMGrammar >> setEnumeration [
-	^ PPFailingParser new
+	^ ((self operator: ${)
+		, ((expression separatedBy: (self operator: $,)) withoutSeparators optional ==> [ :opt | opt ifNil: [ Array new ] ])
+		, (self operator: $})) ==> #second
 ]
 
 { #category : #'parsers-expressions' }
 ViennaVDMGrammar >> setRangeExpression [
-	^ PPFailingParser new
+	^ ((self operator: ${) , expression , (self operator: $,) , (self operator: '...') , (self operator: $,) , expression
+		, (self operator: $}))
+		==> [ :array | 
+			{(array second).
+			(array sixth)} ]
 ]
 
 { #category : #'parsers-types' }
@@ -1163,8 +1237,9 @@ ViennaVDMGrammar >> tuplePattern [
 ]
 
 { #category : #'parsers-expressions' }
-ViennaVDMGrammar >> tupleSelect [
-	^ PPFailingParser new
+ViennaVDMGrammar >> tupleSelect: tuple with: index [
+	^ {tuple.
+	index}
 ]
 
 { #category : #'parsers-types' }
