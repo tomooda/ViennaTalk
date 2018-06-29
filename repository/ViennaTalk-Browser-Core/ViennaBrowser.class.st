@@ -164,44 +164,8 @@ ViennaBrowser class >> installEventHandlers [
 { #category : #menu }
 ViennaBrowser class >> moduleListMenu: aBuilder [
 	<contextMenu>
-	<viennaBrowserModuleListMenu>
-	(aBuilder item: #'new and load...' translated) selector: #newAndLoadFromFile.
-	(aBuilder item: #'load and merge...' translated) selector: #loadAndMergeFromFile.
-	(aBuilder item: #'save snapshot...' translated) selector: #saveSnapshotToFile.
-	(aBuilder item: #'save all modules...' translated) selector: #saveAllModulesToFile.
-	aBuilder model selectedModule
-		ifNotNil: [ (aBuilder item: #'save the module...' translated) selector: #saveAModuleToFile ].
-	aBuilder items last withSeparatorAfter.
-	(aBuilder item: #'remove module' translated)
-		selector: #removeModule;
-		withSeparatorAfter.
-	aBuilder model animation class = ViennaTranspiledAnimation
-		ifTrue: [ (aBuilder item: #'use interpreter' translated)
-				selector: #useInterpreter;
-				withSeparatorAfter ]
-		ifFalse: [ (aBuilder item: #'use transpiler' translated)
-				selector: #useTranspiler;
-				withSeparatorAfter ].
-	(aBuilder item: #'generate a Smalltalk script (single module)...' translated)
-		selector: #generateSmalltalkScript.
-	(aBuilder item: #'generate classes (all modules)...' translated)
-		selector: #generateSmalltalkClasses.
-	(aBuilder item: #'generate object (all modules)...' translated)
-		selector: #generateSmalltalkObject;
-		withSeparatorAfter.
-	(aBuilder item: #'run module test' translated)
-		selector: #runTestModule.
-	(aBuilder item: #'run tests' translated)
-		selector: #runAllTests;
-		withSeparatorAfter.
-	aBuilder model importerModules
-		ifNotEmpty: [ :modules | 
-			(aBuilder item: #'imported by...' translated)
-				with: [ modules
-						do: [ :module | 
-							(aBuilder item: module asSymbol)
-								selector: #selectModuleNamed:;
-								arguments: (Array with: module asString) ] ] ]
+	<viennaBrowserTestPaneMenu>
+	(aBuilder item: #jump translated) selector: #jumpToSpec
 ]
 
 { #category : #'instance creation' }
@@ -718,7 +682,7 @@ ViennaBrowser >> buildTestPane [
 		list: #testList
 		selected: #testSelectionIndex
 		changeSelected: #testSelectionIndex:
-		menu: nil)
+		menu: #testPaneMenu:)
 		getIconSelector: #testResultIconFor:;
 		font: ViennaLauncher font;
 		yourself
@@ -938,6 +902,23 @@ ViennaBrowser >> importerModules [
 			assoc key ~= self selectedModule
 				and: [ (parser matchesIn: (animation specification copyFrom: assoc value first to: assoc value last)) notEmpty ] ])
 		collect: [ :assoc | assoc key ]
+]
+
+{ #category : #'test pane menu' }
+ViennaBrowser >> jumpToSpec [
+	| results |
+	results := self testList.
+	(self testSelectionIndex between: 1 and: results size)
+		ifTrue: [ (results at: self testSelectionIndex)
+				in: [ :result | 
+					self selectModuleNamed: result module.
+					(codePane textMorph text asString findString: result operation , '() ==')
+						in: [ :start | 
+							start > 0
+								ifTrue: [ codePane
+										selectFrom: start to: start + result operation size - 1;
+										scrollSelectionIntoView ] ].
+					lowerTabPane selectedPageIndex: 1 ] ]
 ]
 
 { #category : #'module list menu' }
@@ -1293,7 +1274,8 @@ ViennaBrowser >> selectModuleNamed: aString [
 			self changed: #moduleSelectionIndex.
 			self changed: #fieldList.
 			self selectFieldNamed: nil.
-			self changed: #code ]
+			self changed: #code.
+			self changed: #value ]
 ]
 
 { #category : #'field list' }
@@ -1339,6 +1321,11 @@ ViennaBrowser >> testList [
 	^ (testResult ifNil: [ Array new ]) copy
 ]
 
+{ #category : #'test pane menu' }
+ViennaBrowser >> testPaneMenu: aMenu [
+	^ aMenu addAllFromPragma: 'viennaBrowserTestPaneMenu' target: self
+]
+
 { #category : #'test pane' }
 ViennaBrowser >> testResultIconFor: aViennaTestResultItem [
 	^ aViennaTestResultItem icon
@@ -1351,20 +1338,8 @@ ViennaBrowser >> testSelectionIndex [
 
 { #category : #'test pane' }
 ViennaBrowser >> testSelectionIndex: anInteger [
-	| results |
-	results := self testList.
 	testSelectionIndex := anInteger.
-	(anInteger between: 1 and: results size)
-		ifTrue: [ (results at: anInteger)
-				in: [ :result | 
-					self selectModuleNamed: result module.
-					(codePane textMorph text asString findString: result operation , '() ==')
-						in: [ :start | 
-							start > 0
-								ifTrue: [ codePane
-										selectFrom: start to: start + result operation size - 1;
-										scrollSelectionIntoView ] ].
-					lowerTabPane selectedPageIndex: 1 ] ]
+	self changed: #testSelectionIndex
 ]
 
 { #category : #updating }
