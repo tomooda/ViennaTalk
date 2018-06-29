@@ -38,7 +38,7 @@ ViennaSeq1TypeTest >> testName [
 ]
 
 { #category : #tests }
-ViennaSeq1TypeTest >> testSubset [
+ViennaSeq1TypeTest >> testSubtype [
 	self assert: seq1ofnat <= seq1ofnat.
 	self assert: seq1ofnat < (ViennaType seqOf: ViennaType nat).
 	self assert: seq1ofnat <= (ViennaType seqOf: ViennaType nat).

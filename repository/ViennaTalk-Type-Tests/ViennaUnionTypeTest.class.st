@@ -45,7 +45,7 @@ ViennaUnionTypeTest >> testName [
 ]
 
 { #category : #tests }
-ViennaUnionTypeTest >> testSubset [
+ViennaUnionTypeTest >> testSubtype [
 	self assert: natBool <= natBool.
 	self assert: ViennaType nat <= natBool.
 	self assert: ViennaType bool <= natBool.

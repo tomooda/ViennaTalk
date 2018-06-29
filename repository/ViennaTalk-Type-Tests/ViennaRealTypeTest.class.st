@@ -38,7 +38,7 @@ ViennaRealTypeTest >> testName [
 ]
 
 { #category : #tests }
-ViennaRealTypeTest >> testSubset [
+ViennaRealTypeTest >> testSubtype [
 	self assert: real <= real.
 	self deny: real < ViennaType int.
 	self deny: real < ViennaType nat.

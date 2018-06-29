@@ -35,7 +35,7 @@ ViennaTokenTypeTest >> testName [
 ]
 
 { #category : #tests }
-ViennaTokenTypeTest >> testSubset [
+ViennaTokenTypeTest >> testSubtype [
 	self assert: token <= token
 ]
 

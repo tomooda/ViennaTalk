@@ -81,7 +81,7 @@ ViennaInmapTypeTest >> testName [
 ]
 
 { #category : #tests }
-ViennaInmapTypeTest >> testSubset [
+ViennaInmapTypeTest >> testSubtype [
 	self assert: bool2optbool <= bool2optbool.
 	self deny: bool2optbool <= bool2nat.
 	self assert: (ViennaType inmap: ViennaType bool to: ViennaType bool) <= bool2optbool.

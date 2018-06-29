@@ -91,7 +91,7 @@ ViennaCompositeTypeTest >> testNumFields [
 ]
 
 { #category : #tests }
-ViennaCompositeTypeTest >> testSubset [
+ViennaCompositeTypeTest >> testSubtype [
 	self assert: composite <= composite.
 	self deny: composite <= ViennaType int
 ]

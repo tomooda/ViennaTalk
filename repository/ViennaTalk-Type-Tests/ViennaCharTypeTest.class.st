@@ -35,7 +35,7 @@ ViennaCharTypeTest >> testName [
 ]
 
 { #category : #tests }
-ViennaCharTypeTest >> testSubset [
+ViennaCharTypeTest >> testSubtype [
 	self assert: char <= char.
 	self deny: char <= ViennaType int
 ]

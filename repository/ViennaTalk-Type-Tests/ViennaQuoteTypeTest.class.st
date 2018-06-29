@@ -36,7 +36,7 @@ ViennaQuoteTypeTest >> testName [
 ]
 
 { #category : #tests }
-ViennaQuoteTypeTest >> testSubset [
+ViennaQuoteTypeTest >> testSubtype [
 	self assert: quote <= quote.
 	self deny: quote <= (ViennaType quote: '<ANOTHER>')
 ]

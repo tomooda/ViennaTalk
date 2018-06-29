@@ -38,7 +38,7 @@ ViennaNat1TypeTest >> testName [
 ]
 
 { #category : #tests }
-ViennaNat1TypeTest >> testSubset [
+ViennaNat1TypeTest >> testSubtype [
 	self assert: nat1 <= nat1.
 	self assert: nat1 <= ViennaType nat
 ]
