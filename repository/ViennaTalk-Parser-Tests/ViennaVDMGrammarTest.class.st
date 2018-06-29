@@ -150,20 +150,17 @@ ViennaVDMGrammarTest >> testBooleanLiteral2 [
 ]
 
 { #category : #'tests-expressions' }
-ViennaVDMGrammarTest >> testCasesExpression1 [
+ViennaVDMGrammarTest >> testCasesExpression [
 	self
 		assert: (grammar expression end parse: 'cases e:p11,p12->e1,p2->e2,others->default end')
 		equals: #('e' #(#(#('p11' 'p12') 'e1') #(#('p2') 'e2')) 'default')
 ]
 
-{ #category : #'tests-expressions' }
-ViennaVDMGrammarTest >> testCasesExpression2 [
-	self assert: (grammar expression end parse: 'cases e:p1->e1 end') equals: #('e' #(#(#('p1') 'e1')) nil)
-]
-
-{ #category : #'tests-expressions' }
-ViennaVDMGrammarTest >> testCasesExpression3 [
-	self assert: (grammar expression end parse: 'cases e:others->default end') isPetitFailure
+{ #category : #'tests-statements' }
+ViennaVDMGrammarTest >> testCasesStatement [
+	self
+		assert: (grammar statement end parse: 'cases e:p11,p12->return e1,p2->return e2,others->return default end')
+		equals: #('e' #(#(#('p11' 'p12') 'e1') #(#('p2') 'e2')) 'default')
 ]
 
 { #category : #'tests-literals' }
@@ -523,6 +520,17 @@ ViennaVDMGrammarTest >> testIfExpression3 [
 	self
 		assert: (grammar expression end parse: 'if cond1 then e1 else if cond2 then e2 else e3')
 		equals: #(#(#('cond1' 'e1')) #(#(#('cond2' 'e2')) 'e3'))
+]
+
+{ #category : #'tests-statements' }
+ViennaVDMGrammarTest >> testIfStatement [
+	self
+		assert: (grammar expression end parse: 'if cond1 then e1 elseif cond2 then e2 else e3')
+		equals: #(#(#('cond1' 'e1') #('cond2' 'e2')) 'e3').
+	self assert: (grammar expression end parse: 'if cond1 then e1 else e2') equals: #(#(#('cond1' 'e1')) 'e2').
+	self
+		assert: (grammar expression end parse: 'if cond1 then e1 elseif cond2 then e2 elseif cond3 then e3 else e4')
+		equals: #(#(#('cond1' 'e1') #('cond2' 'e2') #('cond3' 'e3')) 'e4')
 ]
 
 { #category : #'tests-types' }
@@ -1070,6 +1078,11 @@ ViennaVDMGrammarTest >> testReqExpression2 [
 { #category : #'tests-expressions' }
 ViennaVDMGrammarTest >> testReqExpression3 [
 	self assert: (grammar expression end parse: '#req()') isPetitFailure
+]
+
+{ #category : #'tests-statements' }
+ViennaVDMGrammarTest >> testReturnStatement [
+	self assert: (ViennaVDMGrammar new statement parse: 'return 1') equals: '1'
 ]
 
 { #category : #'tests-expressions' }

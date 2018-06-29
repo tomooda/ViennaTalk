@@ -122,6 +122,29 @@ ViennaVDM2SmalltalkTranslatorTest >> testCasesExpression [
 		equals: 2
 ]
 
+{ #category : #'tests-statements' }
+ViennaVDM2SmalltalkTranslatorTest >> testCasesStatement [
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkTranslator new statement end parse: 'cases 2: 0, 1 -> return -1, a -> return a + 1 end'))
+		equals: 3.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkTranslator new statement end
+						parse:
+							'
+			cases 1:
+				0, 2, 3 -> return 0, 
+				4, 5, 6 -> return 1, 
+				others -> return 2
+			end'))
+		equals: 2
+]
+
 { #category : #'tests-literals' }
 ViennaVDM2SmalltalkTranslatorTest >> testCharacterLiteral [
 	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '''A''')) equals: $A.
@@ -488,6 +511,31 @@ ViennaVDM2SmalltalkTranslatorTest >> testIfExpression [
 					(ViennaVDM2SmalltalkTranslator new expression
 						parse: '[(lambda x:int&if x = 0 then <zero> elseif x = 1 then <one> else <many>)(i)|i in set {0,...,3}]'))
 		equals: #('<zero>' '<one>' '<many>' '<many>') asOrderedCollection
+]
+
+{ #category : #'tests-statements' }
+ViennaVDM2SmalltalkTranslatorTest >> testIfStatement [
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkTranslator new statement
+						parse: '(dcl x:nat := 0; if x = 1 then return "1" elseif x = 2 then return "2"  else return "other")'))
+		equals: 'other' asOrderedCollection.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkTranslator new statement
+						parse: '(dcl x:nat := 1; if x = 1 then return "1" elseif x = 2 then return "2"  else return "other")'))
+		equals: '1' asOrderedCollection.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkTranslator new statement
+						parse: '(dcl x:nat := 2; if x = 1 then return "1" elseif x = 2 then return "2"  else return "other")'))
+		equals: '2' asOrderedCollection
 ]
 
 { #category : #'tests-operators' }
@@ -1117,6 +1165,11 @@ ViennaVDM2SmalltalkTranslatorTest >> testRecordTypeDefinition [
 ViennaVDM2SmalltalkTranslatorTest >> testRemAnd [
 	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '5 rem 3')) equals: 2.
 	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '-5 rem 3')) equals: -2
+]
+
+{ #category : #'tests-statements' }
+ViennaVDM2SmalltalkTranslatorTest >> testReturnStatement [
+	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new statement parse: 'return 1')) equals: 1
 ]
 
 { #category : #'tests-operators' }
