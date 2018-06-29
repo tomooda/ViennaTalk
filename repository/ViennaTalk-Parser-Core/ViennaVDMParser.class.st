@@ -326,7 +326,7 @@ ViennaVDMParser >> fieldPattern [
 
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> fieldPatternList [
-	^ super fieldPattern ==> [ :array | ViennaNode label: 'FieldPatternList' withAll: array ]
+	^ super fieldPatternList ==> [ :array | ViennaNode label: 'FieldPatternList' withAll: array ]
 ]
 
 { #category : #'parsers-statements' }
@@ -717,7 +717,7 @@ ViennaVDMParser >> mapEnumeration [
 
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> mapEnumerationPattern [
-	^ super mapEnumerationPattern ==> [ :array | ViennaNode label: 'MapEnumerationPattern' with: array ]
+	^ super mapEnumerationPattern ==> [ :array | ViennaNode label: 'MapEnumerationPattern' withAll: array ]
 ]
 
 { #category : #'parsers-patterns' }
@@ -1074,7 +1074,7 @@ ViennaVDMParser >> seqConcPattern [
 
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> seqEnumPattern [
-	^ super seqEnumPattern ==> [ :array | ViennaNode label: 'SeqEnumPattern' with: array ]
+	^ super seqEnumPattern ==> [ :array | ViennaNode label: 'SeqEnumPattern' withAll: array ]
 ]
 
 { #category : #'parsers-types' }
@@ -1109,7 +1109,7 @@ ViennaVDMParser >> setComprehension [
 
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> setEnumPattern [
-	^ super setEnumPattern ==> [ :array | ViennaNode label: 'SetEnumPattern' with: array ]
+	^ super setEnumPattern ==> [ :array | ViennaNode label: 'SetEnumPattern' withAll: array ]
 ]
 
 { #category : #'parsers-expressions-basics' }

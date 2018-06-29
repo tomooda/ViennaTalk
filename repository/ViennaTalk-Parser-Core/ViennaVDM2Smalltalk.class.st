@@ -1,6 +1,8 @@
 Class {
 	#name : #ViennaVDM2Smalltalk,
 	#superclass : #Object,
+	#traits : 'TViennaVDMFreeVariableCollector',
+	#classTraits : 'TViennaVDMFreeVariableCollector classTrait',
 	#instVars : [
 		'decoder'
 	],
