@@ -34,7 +34,7 @@ ViennaLiveASTTranslationEditor class >> viennaDevMenuOn: aBuilder [
 ViennaLiveASTTranslationEditor >> createTranslator [
 	| parser |
 	parser := ViennaVDMParser new.
-	^ parser document end / parser statement end / parser expression end
+	^ [ :string | parser document end / parser statement end / parser expression end parse: string ]
 ]
 
 { #category : #accessing }

@@ -174,7 +174,7 @@ ViennaLiveTranslationEditor >> targetText [
 
 { #category : #accessing }
 ViennaLiveTranslationEditor >> translate: aTextOrString ifError: errorBlock [
-	^ (self translator parse: aTextOrString asString)
+	^ (self translator value: aTextOrString asString)
 		in: [ :result | 
 			result isPetitFailure
 				ifTrue: [ errorBlock value: result ]
@@ -188,15 +188,16 @@ ViennaLiveTranslationEditor >> translator [
 
 { #category : #evaluating }
 ViennaLiveTranslationEditor >> viennaItIn: aTextModel [
-	| compiler codeFromSource editor codeFromSelection result |
-	compiler := ViennaVDM2SmalltalkTranslator new.
+	| parser codeFromSource editor ast codeFromSelection result |
+	parser := ViennaVDMParser new.
 	codeFromSource := targetText text asString.
 	editor := aTextModel widget widget textMorph editor.
 	editor lineSelectAndEmptyCheck: [ ^ '' ].
-	codeFromSelection := compiler expression end / compiler statement end / compiler type end
+	ast :=parser expression end / parser statement end / parser type end
 		parse: (aTextModel text asString copyFrom: editor startIndex to: editor stopIndex - 1) trim.
-	codeFromSelection isPetitFailure
-		ifTrue: [ ^ aTextModel notify: codeFromSelection message at: codeFromSelection position + 1 in: aTextModel text ].
+	ast isPetitFailure
+		ifTrue: [ ^ aTextModel notify: ast message at: ast position + 1 in: aTextModel text ].
+	codeFromSelection := ViennaVDM2SmalltalkScript new generate: ast.
 	result := (Compiler evaluate: codeFromSource , '.' , codeFromSelection) viennaString.
 	editor afterSelectionInsertAndSelect: result.
 	aTextModel widget widget

@@ -140,7 +140,13 @@ ViennaLiveSmalltalkTranslationEditor >> codeTextMenu [
 
 { #category : #private }
 ViennaLiveSmalltalkTranslationEditor >> createTranslator [
-	^ ViennaVDM2SmalltalkTranslator new document end
+	^ [ :string | 
+	ViennaVDM2SmalltalkScript
+		translate: string
+		ifError: [ 
+			ViennaVDM2SmalltalkScript
+				translateStatement: string
+				ifError: [ ViennaVDM2SmalltalkScript translateExpression: string ifError: [ :err | err ] ] ] ]
 ]
 
 { #category : #accessing }
@@ -191,14 +197,15 @@ ViennaLiveSmalltalkTranslationEditor >> initializeWidgets [
 
 { #category : #evaluating }
 ViennaLiveSmalltalkTranslationEditor >> translateIt [
-	| compiler editor codeFromSelection |
-	compiler := ViennaVDM2SmalltalkTranslator new.
+	| parser editor ast codeFromSelection |
+	parser := ViennaVDMParser new.
 	editor := codeText widget widget textMorph editor.
 	editor lineSelectAndEmptyCheck: [ ^ '' ].
-	codeFromSelection := compiler expression end / compiler statement end / compiler type end
+	ast := parser expression end / parser statement end / parser type end
 		parse: (codeText text asString copyFrom: editor startIndex to: editor stopIndex - 1) trim.
-	codeFromSelection isPetitFailure
-		ifTrue: [ ^ codeText notify: codeFromSelection message at: codeFromSelection position + 1 in: codeText text ].
+	ast isPetitFailure
+		ifTrue: [ ^ codeText notify: ast message at: ast position + 1 in: codeText text ].
+	codeFromSelection := ViennaVDM2SmalltalkScript new generate: ast.
 	editor afterSelectionInsertAndSelect: codeFromSelection.
 	codeText widget widget
 		selectFrom: editor startIndex to: editor stopIndex;
