@@ -9,7 +9,7 @@ Class {
 
 { #category : #running }
 VDMJProcessTest >> setUp [
-	process := VDMJProcess new
+	process := ViennaVDMJ new
 ]
 
 { #category : #running }
