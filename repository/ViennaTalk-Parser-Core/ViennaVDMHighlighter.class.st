@@ -30,6 +30,11 @@ ViennaVDMHighlighter >> access [
 	^ self keyword: super access
 ]
 
+{ #category : #'parsers-keywords' }
+ViennaVDMHighlighter >> all [
+	^ self keyword: super all
+]
+
 { #category : #'parsers-symbols' }
 ViennaVDMHighlighter >> amp [
 	^ self keyword: super amp
@@ -53,6 +58,11 @@ ViennaVDMHighlighter >> basicTypeName [
 { #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> best [
 	^ self keyword: super best
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMHighlighter >> by [
+	^ self keyword: super by
 ]
 
 { #category : #'parsers-symbols' }
@@ -130,6 +140,11 @@ ViennaVDMHighlighter >> div [
 	^ self op: super div
 ]
 
+{ #category : #'parsers-keywords' }
+ViennaVDMHighlighter >> do [
+	^ self keyword: super do
+]
+
 { #category : #'parsers-symbols' }
 ViennaVDMHighlighter >> dom [
 	^ self op: super dom
@@ -138,6 +153,11 @@ ViennaVDMHighlighter >> dom [
 { #category : #'parsers-symbols' }
 ViennaVDMHighlighter >> dots [
 	^ self op: super dots
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMHighlighter >> doublebar [
+	^ self keyword: super doublebar
 ]
 
 { #category : #'parsers-symbols' }
@@ -198,6 +218,11 @@ ViennaVDMHighlighter >> exists1 [
 { #category : #'parsers-symbols' }
 ViennaVDMHighlighter >> floor [
 	^ self op: super floor
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMHighlighter >> for [
+	^ self keyword: super for
 ]
 
 { #category : #'parsers-keywords' }
@@ -273,6 +298,11 @@ ViennaVDMHighlighter >> in [
 { #category : #'parsers-symbols' }
 ViennaVDMHighlighter >> inds [
 	^ self op: super inds
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMHighlighter >> init [
+	^ self keyword: super init
 ]
 
 { #category : #'parsers-symbols' }
@@ -476,6 +506,11 @@ ViennaVDMHighlighter >> rem [
 	^ self op: super rem
 ]
 
+{ #category : #'parsers-keywords' }
+ViennaVDMHighlighter >> return [
+	^ self keyword: super return
+]
+
 { #category : #'parsers-symbols' }
 ViennaVDMHighlighter >> reverse [
 	^ self op: super reverse
@@ -484,11 +519,6 @@ ViennaVDMHighlighter >> reverse [
 { #category : #'parsers-symbols' }
 ViennaVDMHighlighter >> rng [
 	^ self op: super rng
-]
-
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> rparen [
-	^ self keyword: super rparen
 ]
 
 { #category : #'parsers-symbols' }
@@ -536,6 +566,11 @@ ViennaVDMHighlighter >> tl [
 	^ self op: super tl
 ]
 
+{ #category : #'parsers-keywords' }
+ViennaVDMHighlighter >> to [
+	^ self keyword: super to
+]
+
 { #category : #utilities }
 ViennaVDMHighlighter >> type: aParser [
 	^ self highlight: aParser with: self typeAttribute
@@ -564,4 +599,9 @@ ViennaVDMHighlighter >> union [
 { #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> values [
 	^ self keyword: super values
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMHighlighter >> while [
+	^ self keyword: super while
 ]

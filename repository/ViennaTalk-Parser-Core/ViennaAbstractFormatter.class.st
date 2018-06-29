@@ -122,6 +122,7 @@ ViennaAbstractFormatter class >> initializeOperatorPrecedence [
 		at: 'Or' put: 13;
 		at: 'Imply' put: 12;
 		at: 'LogicalEquivalence' put: 11;
+		at: 'LambdaExpression' put: 10;
 		at: 'LetExpression' put: 10;
 		at: 'LetBeExpression' put: 10;
 		at: 'DefExpression' put: 10;
@@ -921,13 +922,13 @@ ViennaAbstractFormatter >> ifStatement: aViennaNode [
 	elseifs := self formatAll: aViennaNode first asArray copyWithoutFirst.
 	aViennaNode first size = 1
 		ifTrue: [ 
-			^ (self needsIndent: cond , statement , (default ifNil: ['']))
+			^ (self needsIndent: cond , statement , (default ifNil: [ '' ]))
 				ifTrue: [ 
-					(self indentString: 'if' insertCr: cond) , String cr , (self indentString: 'then' insertCr: statement) , (default ifNil: [''] ifNotNil: [String cr
-						, (self indentString: 'else' insertCr: default)]) ]
-				ifFalse: [ 'if ' , cond , ' then ' , statement , (default ifNil: [ '' ]  ifNotNil: [' else ' , default ]) ]].
-	^ (self indentString: 'if ' , cond insertCr: 'then ' , statement) , String cr , (String cr join: elseifs) , String cr
-		, (default ifNil: [''] ifNotNil: [self indentString: 'else' insertCr: default])
+					(self indentString: 'if' insertCr: cond) , String cr , (self indentString: 'then' insertCr: statement)
+						, (default ifNil: [ '' ] ifNotNil: [ String cr , (self indentString: 'else' insertCr: default) ]) ]
+				ifFalse: [ 'if ' , cond , ' then ' , statement , (default ifNil: [ '' ] ifNotNil: [ ' else ' , default ]) ] ].
+	^ (self indentString: 'if ' , cond insertCr: 'then ' , statement) , String cr , (String cr join: elseifs)
+		, (default ifNil: [ '' ] ifNotNil: [ String cr , (self indentString: 'else' insertCr: default) ])
 ]
 
 { #category : #'symbol access' }

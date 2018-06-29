@@ -129,6 +129,11 @@ ViennaVDMGrammar >> activeExpression [
 	^ ((self reserved: '#active') , lparen , (name separatedBy: comma) withoutSeparators , rparen) ==> #third
 ]
 
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> all [
+	^ self reserved: 'all'
+]
+
 { #category : #'parsers-symbols' }
 ViennaVDMGrammar >> amp [
 	^ self operator: $&
@@ -279,6 +284,11 @@ ViennaVDMGrammar >> blockStatement [
 			statements := quin third.
 			{decls.
 			statements} ]
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> by [
+	^ self reserved: 'by'
 ]
 
 { #category : #'parsers-statements' }
@@ -557,6 +567,11 @@ ViennaVDMGrammar >> div: arg1 and: arg2 [
 	arg2}
 ]
 
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> do [
+	^ self reserved: 'do'
+]
+
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> document [
 	^ self moduledDocument / self flatDocument
@@ -575,6 +590,11 @@ ViennaVDMGrammar >> dom: arg [
 { #category : #'parsers-symbols' }
 ViennaVDMGrammar >> dots [
 	^ self operator: '...'
+]
+
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> doublebar [
+	^ self operator: '||'
 ]
 
 { #category : #'parsers-symbols' }
@@ -977,6 +997,11 @@ ViennaVDMGrammar >> followingLetter [
 ]
 
 { #category : #'parsers-keywords' }
+ViennaVDMGrammar >> for [
+	^ self reserved: 'for'
+]
+
+{ #category : #'parsers-keywords' }
 ViennaVDMGrammar >> forall [
 	^ self reserved: 'forall'
 ]
@@ -1255,8 +1280,8 @@ ViennaVDMGrammar >> inSet: arg1 and: arg2 [
 
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> indexForLoop [
-	^ ((self reserved: 'for') , identifier trim , eq , expression , (self reserved: 'to') , expression
-		, (((self reserved: 'by') , expression) ==> #second) optional , (self reserved: 'do') , statement)
+	^ (self for , identifier trim , eq , expression , self to , expression , ((self by , expression) ==> #second) optional
+		, self do , statement)
 		==> [ :array | 
 			{(array second).
 			(array fourth).
@@ -1275,6 +1300,11 @@ ViennaVDMGrammar >> inds: arg [
 	^ arg
 ]
 
+{ #category : #'parsers-symbols' }
+ViennaVDMGrammar >> init [
+	^ self reserved: 'init'
+]
+
 { #category : #'parsers-types' }
 ViennaVDMGrammar >> initialFunction [
 	^ self invariantInitialFunction
@@ -1287,7 +1317,7 @@ ViennaVDMGrammar >> initialLetter [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> initialisation [
-	^ ((self reserved: 'init') , self invariantFunction) ==> #second
+	^ (self init , self invariantFunction) ==> #second
 ]
 
 { #category : #'parsers-types' }
@@ -1842,7 +1872,7 @@ ViennaVDMGrammar >> newExpression [
 
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> nondeterministicStatement [
-	^ ((self operator: '||') , lparen , (statement separatedBy: comma) withoutSeparators , rparen) ==> #third
+	^ (self doublebar , lparen , (statement separatedBy: comma) withoutSeparators , rparen) ==> #third
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -1974,7 +2004,7 @@ ViennaVDMGrammar >> othersExpression [
 
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> othersStatement [
-	^ ((self reserved: 'others') , (self operator: '->') , statement) ==> #third
+	^ (self others , self arrow , statement) ==> #third
 ]
 
 { #category : #'parsers-definitions' }
@@ -2261,9 +2291,14 @@ ViennaVDMGrammar >> resultExpression [
 	^ (self reserved: 'RESULT') ==> [ :t |  ]
 ]
 
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> return [
+	^ self reserved: 'return'
+]
+
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> returnStatement [
-	^ ((self reserved: 'return') , expression) ==> #second
+	^ (self return , expression) ==> #second
 ]
 
 { #category : #'parsers-symbols' }
@@ -2356,7 +2391,7 @@ ViennaVDMGrammar >> sequenceEnumeration [
 
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> sequenceForLoop [
-	^ ((self reserved: 'for') , patternBind , (self reserved: 'in') , expression , (self reserved: 'do') , statement)
+	^ (self for , patternBind , self in , expression , self do , statement)
 		==> [ :array | 
 			{(array second).
 			(array fourth).
@@ -2392,12 +2427,11 @@ ViennaVDMGrammar >> setEnumeration [
 
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> setForLoop [
-	^ ((self reserved: 'for') , (self reserved: 'all') , pattern , (self reserved: 'in') , (self reserved: 'set')
-		, expression , (self reserved: 'do') , statement)
+	^ (self for , self all , pattern , self inset , expression , self do , statement)
 		==> [ :array | 
 			{(array third).
-			(array sixth).
-			(array eighth)} ]
+			(array fifth).
+			(array seventh)} ]
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -2455,7 +2489,7 @@ ViennaVDMGrammar >> state [
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> stateDefinition [
 	^ (self state , identifier trim , (self reserved: 'of') , self stateFieldList , invariant optional
-		, self initialisation optional , (self reserved: 'end') , semicolon optional)
+		, self initialisation optional , self endKeyword , semicolon optional)
 		==> [ :array | 
 			{(array second).
 			(array fourth).
@@ -2545,6 +2579,11 @@ ViennaVDMGrammar >> tl [
 { #category : #'parsers-expressions-operators' }
 ViennaVDMGrammar >> tl: arg [
 	^ arg
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> to [
+	^ self reserved: 'to'
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -2793,9 +2832,14 @@ ViennaVDMGrammar >> waitingExpression [
 	^ ((self reserved: '#waiting') , lparen , (name separatedBy: comma) withoutSeparators , rparen) ==> #third
 ]
 
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> while [
+	^ self reserved: 'while'
+]
+
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> whileLoop [
-	^ ((self reserved: 'while') , expression , (self reserved: 'do') , statement)
+	^ (self while , expression , self do , statement)
 		==> [ :quatro | 
 			{(quatro second).
 			(quatro fourth)} ]
