@@ -5,8 +5,7 @@ Class {
 		'process',
 		'reader',
 		'writer',
-		'lock',
-		'executor'
+		'lock'
 	],
 	#classVars : [
 		'GlobalLock',
@@ -225,17 +224,14 @@ ViennaVDMJ class >> jsonicPath [
 
 { #category : #'instance creation' }
 ViennaVDMJ class >> new [
-	| process |
 	Smalltalk os isWindows
-		ifTrue: [ ^ self error: 'ViennaVDMJ does not support windows platforms. Please use ViennaClient instead.' ].
+		ifTrue: [ ^ self
+				error: 'ViennaVDMJ does not support windows platforms. Please use ViennaClient instead.' ].
 	self isInstalled
-		ifFalse: [ 
-			self install.
+		ifFalse: [ self install.
 			self isInstalled
 				ifFalse: [ ^ self error: 'ViennaVDMJ requires VDMJ, Json4VDMJ and jsonic.' ] ].
-	process := super new.
-	self register: process.
-	^ process
+	^ super new
 ]
 
 { #category : #utilities }
@@ -266,7 +262,9 @@ ViennaVDMJ class >> random [
 
 { #category : #registry }
 ViennaVDMJ class >> register: aViennaVDMJ [
-	^ self registry add: aViennaVDMJ
+	(self registry includes: self)
+		ifFalse: [ self registry add: aViennaVDMJ ].
+	^ aViennaVDMJ
 ]
 
 { #category : #registry }
@@ -343,7 +341,7 @@ ViennaVDMJ >> close [
 		ifNotNil: [ :w | 
 			writer := nil.
 			w close ].
-	executor ifNotNil: [ self updateExecutor ]
+	self unregister
 ]
 
 { #category : #commands }
@@ -505,11 +503,6 @@ ViennaVDMJ >> evaluate: expression specification: specification states: states m
 ]
 
 { #category : #finalizing }
-ViennaVDMJ >> executor [
-	^ executor ifNil: [executor := super executor]
-]
-
-{ #category : #finalizing }
 ViennaVDMJ >> finalize [
 	self close
 ]
@@ -523,10 +516,8 @@ ViennaVDMJ >> forkProcess [
 			'-Xss2m'.
 			'-jar'.
 			(self json4vdmjPath fullName convertToEncoding: 'utf-8')};
-		defaultWriteStreamCreationBlock: [ OSSVMProcess vmProcess systemAccessor makeNonBlockingPipe ];
 		redirectStdout;
 		redirectStderr;
-		defaultReadStreamCreationBlock: [ OSSVMProcess vmProcess systemAccessor makeBlockingPipe ];
 		redirectStdin;
 		run;
 		yourself
@@ -580,6 +571,11 @@ ViennaVDMJ >> print: aString ifError: errorBlock [
 { #category : #private }
 ViennaVDMJ >> random [
 	^ self class random
+]
+
+{ #category : #registry }
+ViennaVDMJ >> register [
+	self class register: self
 ]
 
 { #category : #communicating }
@@ -645,7 +641,7 @@ ViennaVDMJ >> startupProcess [
 	process := self forkProcess.
 	reader := process stdoutStream.
 	writer := process stdinStream.
-	self updateExecutor
+	self register
 ]
 
 { #category : #commands }
@@ -678,11 +674,9 @@ ViennaVDMJ >> temporaryFileDo: aBlock [
 					file deleteIfAbsent: [  ] ] ]
 ]
 
-{ #category : #finalizing }
-ViennaVDMJ >> updateExecutor [
-	self executor setProcess: process.
-	self executor setReader: reader.
-	self executor setWriter: writer
+{ #category : #registry }
+ViennaVDMJ >> unregister [
+	self class unregister: self
 ]
 
 { #category : #commands }

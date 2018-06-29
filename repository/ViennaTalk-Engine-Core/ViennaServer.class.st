@@ -74,7 +74,9 @@ ViennaServer class >> server [
 
 { #category : #accessing }
 ViennaServer >> close [
-	engine ifNotNil: #close
+	engine
+		ifNotNil: [ engine close.
+			engine := nil ]
 ]
 
 { #category : #defaults }
