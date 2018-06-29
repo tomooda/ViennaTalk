@@ -45,6 +45,7 @@ Class {
 		'symbolicLiteral',
 		'pattern',
 		'type',
+		'discretionaryType',
 		'functionDefinition',
 		'type1',
 		'type2',
@@ -378,6 +379,16 @@ ViennaVDMGrammar >> dinter: arg [
 	^ arg
 ]
 
+{ #category : #'parsers-types' }
+ViennaVDMGrammar >> discretionaryType [
+	^ type / (((self operator: $() , (self operator: $))) ==> [ :pair | nil ])
+]
+
+{ #category : #'parsers-types' }
+ViennaVDMGrammar >> discretionaryType1 [
+	^ type1 / (((self operator: $() , (self operator: $))) ==> [ :pair | nil ])
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMGrammar >> div: arg1 and: arg2 [
 	^ {arg1.
@@ -705,17 +716,25 @@ ViennaVDMGrammar >> iotaExpression [
 ]
 
 { #category : #'parsers-expressions-type discriminations' }
+ViennaVDMGrammar >> isBasicExpression [
+	^ ('is_bool' asParser / 'is_nat' asParser / 'is_nat1' asParser / 'is_int' asParser / 'is_rat' asParser
+		/ 'is_real' asParser / 'is_char' asParser / 'is_token' asParser , lparen , expression , rparen)
+		==> [ :quatro | 
+			{(quatro first copyFrom: 4 to: quatro first size).
+			(quatro third)} ]
+]
+
+{ #category : #'parsers-expressions-type discriminations' }
 ViennaVDMGrammar >> isExpression [
-	^ (('is_' asParser , name , lparen , expression , rparen)
+	^ self isBasicExpression / self isNameExpression
+]
+
+{ #category : #'parsers-expressions-type discriminations' }
+ViennaVDMGrammar >> isNameExpression [
+	^ ('is_' asParser , name , lparen , expression , rparen)
 		==> [ :quin | 
 			{(quin second).
-			(quin fourth)} ])
-		/
-			(('is_bool' asParser / 'is_nat' asParser / 'is_nat1' asParser / 'is_int' asParser / 'is_rat' asParser
-				/ 'is_real' asParser / 'is_char' asParser / 'is_token' asParser , lparen , expression , rparen)
-				==> [ :quatro | 
-					{(quatro first copyFrom: 4 to: quatro first size).
-					(quatro third)} ])
+			(quin fourth)} ]
 ]
 
 { #category : #'parsers-expressions-type discriminations' }
@@ -1050,7 +1069,7 @@ ViennaVDMGrammar >> or: arg1 and: arg2 [
 
 { #category : #'parsers-types' }
 ViennaVDMGrammar >> partialFunctionType [
-	^ (type1 , (self operator: '->') , type)
+	^ (self discretionaryType1 , (self operator: '->') , type)
 		==> [ :triple | 
 			{(triple first).
 			(triple third)} ]
@@ -1375,7 +1394,7 @@ ViennaVDMGrammar >> tl: arg [
 
 { #category : #'parsers-types' }
 ViennaVDMGrammar >> totalFunctionType [
-	^ (type1 , (self operator: '+>') , type)
+	^ (self discretionaryType1 , (self operator: '+>') , type)
 		==> [ :triple | 
 			{(triple first).
 			(triple third)} ]
