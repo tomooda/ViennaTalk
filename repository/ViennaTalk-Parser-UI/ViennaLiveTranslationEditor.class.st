@@ -112,7 +112,7 @@ ViennaLiveTranslationEditor >> format: aString [
 
 { #category : #'VDM manipulations' }
 ViennaLiveTranslationEditor >> formatSourceText [
-	^ sourceText text: (ViennaVDMParser new document end parse: sourceText text asString) format
+	^ sourceText text: (ViennaVDMParser new document end parse: sourceText text asString) 
 ]
 
 { #category : #'initialize-release' }
