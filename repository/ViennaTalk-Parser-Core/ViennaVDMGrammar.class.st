@@ -1252,11 +1252,6 @@ ViennaVDMGrammar >> productType [
 						nextPutAll: triple third ] ]
 ]
 
-{ #category : #'parsers-definitions' }
-ViennaVDMGrammar >> program [
-	^ document , expression
-]
-
 { #category : #'parsers-expressions-operators' }
 ViennaVDMGrammar >> psubset: arg1 and: arg2 [
 	^ {arg1.

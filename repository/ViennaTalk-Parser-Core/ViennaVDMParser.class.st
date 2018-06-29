@@ -14,6 +14,16 @@ ViennaVDMParser >> access [
 	^ super access ==> [ :string | ViennaNode label: 'Access' with: string ]
 ]
 
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> accessTypeDefinition [
+	^ super accessTypeDefinition ==> [ :array | ViennaNode label: 'AccessTypeDefinition' withAll: array ]
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> accessValueDefinition [
+	^ super accessValueDefinition ==> [ :array | ViennaNode label: 'AccessValueDefinition' withAll: array ]
+]
+
 { #category : #'parsers-expressions-threads' }
 ViennaVDMParser >> actExpression [
 	^ super actExpression ==> [ :nameNode | ViennaNode label: 'ActExpression' with: nameNode ]
@@ -98,6 +108,11 @@ ViennaVDMParser >> defExpression [
 	^ super defExpression ==> [ :array | ViennaNode label: 'DefExpression' withAll: array ]
 ]
 
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> definitionBlock [
+	^ super definitionBlock ==> [ :array | ViennaNode label: 'DefinitionBlock' withAll: array ]
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> diff: arg1 and: arg2 [
 	^ ViennaNode label: 'SetDifference' with: arg1 with: arg2
@@ -111,6 +126,11 @@ ViennaVDMParser >> dinter: arg [
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> div: arg1 and: arg2 [
 	^ ViennaNode label: 'IntegerDivision' with: arg1 with: arg2
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> document [
+	^ super document ==> [ :array | ViennaNode label: 'Document' withAll: array ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -775,6 +795,11 @@ ViennaVDMParser >> unionType [
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> valueDefinition [
 	^ super valueDefinition ==> [ :array | ViennaNode label: 'ValueDefinition' withAll: array ]
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> valueDefinitions [
+	^ super valueDefinitions ==> [ :array | ViennaNode label: 'ValueDefinitions' withAll: array ]
 ]
 
 { #category : #'parsers-expressions-threads' }
