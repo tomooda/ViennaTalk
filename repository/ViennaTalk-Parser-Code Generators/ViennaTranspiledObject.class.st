@@ -3,11 +3,27 @@ Class {
 	#superclass : #Object,
 	#classInstVars : [
 		'specificationDict',
+		'debuggerNodeMapDict',
 		'specification',
 		'viennaEnv'
 	],
 	#category : 'ViennaTalk-Parser-Code Generators'
 }
+
+{ #category : #specification }
+ViennaTranspiledObject class >> debuggerNodeMapAt: aSymbol [
+	^ self debuggerNodeMapDict at: aSymbol asSymbol
+]
+
+{ #category : #specification }
+ViennaTranspiledObject class >> debuggerNodeMapAt: aSymbol put: anIdentityDictionary [
+	^ self debuggerNodeMapDict at: aSymbol asSymbol put: anIdentityDictionary
+]
+
+{ #category : #specification }
+ViennaTranspiledObject class >> debuggerNodeMapDict [
+	^ debuggerNodeMapDict ifNil: [ debuggerNodeMapDict := Dictionary new ]
+]
 
 { #category : #specification }
 ViennaTranspiledObject class >> includesSpecificationFor: aSymbol [
