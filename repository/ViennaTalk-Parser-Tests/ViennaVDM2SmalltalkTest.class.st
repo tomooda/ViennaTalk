@@ -248,6 +248,10 @@ ViennaVDM2SmalltalkTest >> testDefExpressionEnv [
 	node := ViennaVDMParser new expression end parse: 'def  y : nat = x + 1; x : nat = 1 in x + y'.
 	self deny: node isPetitFailure.
 	self assert: node label = 'DefExpression'.
+	self assert: (Compiler evaluate: (ViennaVDM2Smalltalk new generate: node env: Dictionary new)) equals: 3.
+	node := ViennaVDMParser new expression end parse: 'def  mk_(x, y) = mk_(1, 2) in x + y'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'DefExpression'.
 	self assert: (Compiler evaluate: (ViennaVDM2Smalltalk new generate: node env: Dictionary new)) equals: 3
 ]
 
@@ -696,10 +700,10 @@ ViennaVDM2SmalltalkTest >> testIterateEnv [
 { #category : #'tests-code generation-expressions' }
 ViennaVDM2SmalltalkTest >> testLambdaExpressionEnv [
 	| node |
-	node := ViennaVDMParser new expression end parse: 'lambda x:nat & x + 1'.
+	node := ViennaVDMParser new expression end parse: 'lambda x:nat, mk_(y, z):nat*nat & x + y + z'.
 	self deny: node isPetitFailure.
 	self assert: node label = 'LambdaExpression'.
-	self assert: (Compiler evaluate: (ViennaVDM2Smalltalk new generate: node) , ' value: 2') equals: 3
+	self assert: (Compiler evaluate: (ViennaVDM2Smalltalk new generate: node) , ' value: 1 value: {2 . 3}') equals: 6
 ]
 
 { #category : #'tests-code generation-expressions' }
@@ -922,6 +926,15 @@ ViennaVDM2SmalltalkTest >> testMapEnumerationEnv [
 ]
 
 { #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkTest >> testMapEnumerationPatternEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'def  { x |-> 1, 2 |-> y } = { 1 |-> 1, 2 |-> 2 } in x + y'.
+	self deny: node isPetitFailure.
+	self assert: node first first first label = 'MapEnumerationPattern'.
+	self assert: (Compiler evaluate: (ViennaVDM2Smalltalk new generate: node env: Dictionary new)) equals: 3
+]
+
+{ #category : #'tests-code generation-expressions' }
 ViennaVDM2SmalltalkTest >> testMapInverseEnv [
 	| node |
 	node := ViennaVDMParser new expression end parse: 'inverse {1|-><one>, 2|-><two>, 3|-><three>}'.
@@ -947,6 +960,15 @@ ViennaVDM2SmalltalkTest >> testMapMergeEnv [
 			{(1 -> #one).
 			(2 -> #two).
 			(3 -> #three)} asDictionary
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkTest >> testMapMunionPatternEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'def  { x|->y } munion { 10|->20 } = { 1 |-> 2, 10 |-> 20} in x + y'.
+	self deny: node isPetitFailure.
+	self assert: node first first first label = 'MapMunionPattern'.
+	self assert: (Compiler evaluate: (ViennaVDM2Smalltalk new generate: node env: Dictionary new)) equals: 3
 ]
 
 { #category : #'tests-code generation-expressions' }
@@ -1047,6 +1069,15 @@ ViennaVDM2SmalltalkTest >> testMapTypeEnv [
 	self
 		assert: (Compiler evaluate: (ViennaVDM2Smalltalk new generate: node))
 		equals: (ViennaType nat mapTo: ViennaType int)
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkTest >> testMatchValueEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'def  ({10|->20}) munion { x|->y } = { 1 |-> 2, 10 |-> 20} in x + y'.
+	self deny: node isPetitFailure.
+	self assert: node first first first first label = 'MatchValue'.
+	self assert: (Compiler evaluate: (ViennaVDM2Smalltalk new generate: node env: Dictionary new)) equals: 3
 ]
 
 { #category : #'tests-code generation-statements' }
@@ -1306,6 +1337,24 @@ ViennaVDM2SmalltalkTest >> testRecordModifierEnv [
 				yourself)
 ]
 
+{ #category : #'tests-code generation-patterns' }
+ViennaVDM2SmalltalkTest >> testRecordPatternEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'def  mk_T(x, y) = mk_T(1, 2) in x + y'.
+	self deny: node isPetitFailure.
+	self assert: node first first first label = 'RecordPattern'.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2Smalltalk new
+						generate: node
+						env:
+							{('T' -> '(ViennaType compose: ''T'' of: {{nil. false. (ViennaType nat)}. {nil. false. (ViennaType nat)}})')}
+								asDictionary))
+		equals: 3
+]
+
 { #category : #'tests-code generation-types' }
 ViennaVDM2SmalltalkTest >> testRecordTypeDefinitionEnv [
 	| node |
@@ -1358,6 +1407,24 @@ ViennaVDM2SmalltalkTest >> testSeq1TypeEnv [
 	self assert: (Compiler evaluate: (ViennaVDM2Smalltalk new generate: node)) equals: ViennaType nat seq1
 ]
 
+{ #category : #'tests-code generation-patterns' }
+ViennaVDM2SmalltalkTest >> testSeqConcPatternEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'def  [x]^[y] = [1, 2] in x + y'.
+	self deny: node isPetitFailure.
+	self assert: node first first first label = 'SeqConcPattern'.
+	self assert: (Compiler evaluate: (ViennaVDM2Smalltalk new generate: node env: Dictionary new)) equals: 3
+]
+
+{ #category : #'tests-code generation-patterns' }
+ViennaVDM2SmalltalkTest >> testSeqEnumPatternEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'def  [x, y] = [1, 2] in x + y'.
+	self deny: node isPetitFailure.
+	self assert: node first first first label = 'SeqEnumPattern'.
+	self assert: (Compiler evaluate: (ViennaVDM2Smalltalk new generate: node env: Dictionary new)) equals: 3
+]
+
 { #category : #'tests-code generation-types' }
 ViennaVDM2SmalltalkTest >> testSeqTypeEnv [
 	| node |
@@ -1370,14 +1437,44 @@ ViennaVDM2SmalltalkTest >> testSeqTypeEnv [
 { #category : #'tests-code generation-expressions' }
 ViennaVDM2SmalltalkTest >> testSequenceComprehensionEnv [
 	| node |
-	node := ViennaVDMParser new expression end parse: '[i| i in set {1,...,5} & i mod 2 = 0]'.
+	node := ViennaVDMParser new expression end parse: '[i*2| i in set {1,...,5}]'.
 	self deny: node isPetitFailure.
 	self assert: node label = 'SequenceComprehension'.
 	self
 		assert: (Compiler evaluate: (ViennaVDM2Smalltalk new generate: node env: Dictionary new))
 		equals:
 			{2.
-			4} asOrderedCollection
+			4.
+			6.
+			8.
+			10} asOrderedCollection.
+	node := ViennaVDMParser new expression end parse: '[i*2| i in set {1,...,5} & i mod 2 = 0]'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SequenceComprehension'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2Smalltalk new generate: node env: Dictionary new))
+		equals:
+			{4.
+			8} asOrderedCollection.
+	node := ViennaVDMParser new expression end parse: '[i*2| i in set {1,2,3,4,5}]'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SequenceComprehension'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2Smalltalk new generate: node env: Dictionary new))
+		equals:
+			{2.
+			4.
+			6.
+			8.
+			10} asOrderedCollection.
+	node := ViennaVDMParser new expression end parse: '[i*2| i in set {1,2,3,4,5} & i mod 2 = 0]'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SequenceComprehension'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2Smalltalk new generate: node env: Dictionary new))
+		equals:
+			{4.
+			8} asOrderedCollection
 ]
 
 { #category : #'tests-code generation-expressions' }
@@ -1431,7 +1528,11 @@ ViennaVDM2SmalltalkTest >> testSequenceForLoopEnv [
 	node := ViennaVDMParser new statement end parse: 'for i in [5,6,7] do x := x + i'.
 	self deny: node isPetitFailure.
 	self assert: node label = 'SequenceForLoop'.
-	self assert: (Compiler evaluate: '|x|x:=0.' , (ViennaVDM2Smalltalk new generate: node) , '. x') equals: 18
+	self assert: (Compiler evaluate: '|x|x:=0.' , (ViennaVDM2Smalltalk new generate: node) , '. x') equals: 18.
+	node := ViennaVDMParser new statement end parse: 'for mk_(i,j) in [mk_(1, 2), mk_(2, 3)] do x := x + i*j'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SequenceForLoop'.
+	self assert: (Compiler evaluate: '|x|x:=0.' , (ViennaVDM2Smalltalk new generate: node) , '. x') equals: 8
 ]
 
 { #category : #'tests-code generation-expressions' }
@@ -1505,14 +1606,23 @@ ViennaVDM2SmalltalkTest >> testSetCardinalityEnv [
 { #category : #'tests-code generation-expressions' }
 ViennaVDM2SmalltalkTest >> testSetComprehensionEnv [
 	| node |
-	node := ViennaVDMParser new expression end parse: '{i| i in set {1,...,5} & i mod 2 = 0}'.
+	node := ViennaVDMParser new expression end parse: '{i*j| i, j in set {1,...,5} & i mod 2 = 0 and j mod 2 = 0}'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SetComprehension'.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2Smalltalk new generate: node env: Dictionary new))
+		equals:
+			{4.
+			8.
+			16} asSet.
+	node := ViennaVDMParser new expression end parse: '{i*j| mk_(i,j) in set { mk_(1, 2), mk_(2, 3), mk_(3, 4) } & i <= 2}'.
 	self deny: node isPetitFailure.
 	self assert: node label = 'SetComprehension'.
 	self
 		assert: (Compiler evaluate: (ViennaVDM2Smalltalk new generate: node env: Dictionary new))
 		equals:
 			{2.
-			4} asSet
+			6} asSet
 ]
 
 { #category : #'tests-code generation-expressions' }
@@ -1522,6 +1632,15 @@ ViennaVDM2SmalltalkTest >> testSetDifferenceEnv [
 	self deny: node isPetitFailure.
 	self assert: node label = 'SetDifference'.
 	self assert: (Compiler evaluate: (ViennaVDM2Smalltalk new generate: node env: Dictionary new)) equals: {1} asSet
+]
+
+{ #category : #'tests-code generation-patterns' }
+ViennaVDM2SmalltalkTest >> testSetEnumPatternEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'def  { x, y } = { 1, 2 } in x + y'.
+	self deny: node isPetitFailure.
+	self assert: node first first first label = 'SetEnumPattern'.
+	self assert: (Compiler evaluate: (ViennaVDM2Smalltalk new generate: node env: Dictionary new)) equals: 3
 ]
 
 { #category : #'tests-code generation-expressions' }
@@ -1544,7 +1663,11 @@ ViennaVDM2SmalltalkTest >> testSetForLoopEnv [
 	node := ViennaVDMParser new statement end parse: 'for all i in set {5,6,7} do x := x + i'.
 	self deny: node isPetitFailure.
 	self assert: node label = 'SetForLoop'.
-	self assert: (Compiler evaluate: '|x|x:=0.' , (ViennaVDM2Smalltalk new generate: node) , '. x') equals: 18
+	self assert: (Compiler evaluate: '|x|x:=0.' , (ViennaVDM2Smalltalk new generate: node) , '. x') equals: 18.
+	node := ViennaVDMParser new statement end parse: 'for all mk_(i, j) in set {mk_(1, 2), mk_(2, 3)} do x := x + i*j'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'SetForLoop'.
+	self assert: (Compiler evaluate: '|x|x:=0.' , (ViennaVDM2Smalltalk new generate: node) , '. x') equals: 8
 ]
 
 { #category : #'tests-code generation-expressions' }
@@ -1597,6 +1720,15 @@ ViennaVDM2SmalltalkTest >> testSetUnionEnv [
 			2.
 			3.
 			4} asSet
+]
+
+{ #category : #'tests-code generation-patterns' }
+ViennaVDM2SmalltalkTest >> testSetUnionPatternEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'def  { x } union { y } = { 1, 2 } in x + y'.
+	self deny: node isPetitFailure.
+	self assert: node first first first label = 'SetUnionPattern'.
+	self assert: (Compiler evaluate: (ViennaVDM2Smalltalk new generate: node env: Dictionary new)) equals: 3
 ]
 
 { #category : #'tests-code generation-expressions' }
@@ -1664,6 +1796,15 @@ ViennaVDM2SmalltalkTest >> testTupleConstructorEnv [
 			{1.
 			2.
 			3}
+]
+
+{ #category : #'tests-code generation-expressions' }
+ViennaVDM2SmalltalkTest >> testTuplePatternEnv [
+	| node |
+	node := ViennaVDMParser new expression end parse: 'def  mk_(x, y) = mk_(1, 2) in x + y'.
+	self deny: node isPetitFailure.
+	self assert: node first first first label = 'TuplePattern'.
+	self assert: (Compiler evaluate: (ViennaVDM2Smalltalk new generate: node env: Dictionary new)) equals: 3
 ]
 
 { #category : #'tests-code generation-expressions' }
