@@ -173,6 +173,62 @@ ViennaBrowser class >> openOn: aVDMC withLabel: label [
 	^ (self on: aVDMC) openLabel: label
 ]
 
+{ #category : #menu }
+ViennaBrowser class >> valuePaneMenu: aBuilder [
+	<contextMenu>
+	<viennaBrowserValuePaneMenu>
+	(aBuilder item: #'Find...' translated)
+		keyText: 'f';
+		selector: #find;
+		icon: Smalltalk ui icons smallFindIcon.
+	(aBuilder item: #'Find again' translated)
+		keyText: 'g';
+		selector: #findAgain;
+		icon: Smalltalk ui icons smallFindIcon.
+	(aBuilder item: #'Set search string' translated)
+		keyText: 'h';
+		selector: #setSearchString;
+		withSeparatorAfter.
+	(aBuilder item: #'Do again' translated)
+		keyText: 'j';
+		selector: #again;
+		icon: Smalltalk ui icons smallRedoIcon.
+	(aBuilder item: #Undo translated)
+		keyText: 'z';
+		selector: #undo;
+		icon: Smalltalk ui icons smallUndoIcon;
+		withSeparatorAfter.
+	(aBuilder item: #Copy translated)
+		keyText: 'c';
+		selector: #copySelection;
+		icon: Smalltalk ui icons smallCopyIcon.
+	(aBuilder item: #Cut translated)
+		keyText: 'x';
+		selector: #cut;
+		icon: Smalltalk ui icons smallCutIcon.
+	(aBuilder item: #Paste translated)
+		keyText: 'v';
+		selector: #paste;
+		icon: Smalltalk ui icons smallPasteIcon.
+	(aBuilder item: #'Paste...' translated)
+		selector: #pasteRecent;
+		icon: Smalltalk ui icons smallPasteIcon;
+		withSeparatorAfter.
+	(aBuilder item: #'Do it' translated)
+		keyText: 'd';
+		selector: #valuePaneDoIt.
+	(aBuilder item: #'Print it' translated)
+		keyText: 'p';
+		selector: #valuePanePrintIt;
+		withSeparatorAfter.
+	(aBuilder item: #Accept translated)
+		keyText: 's';
+		selector: #accept.
+	(aBuilder item: #Cancel translated)
+		keyText: 'l';
+		selector: #cancel
+]
+
 { #category : #settings }
 ViennaBrowser class >> viennaSettingsOn: aBuilder [
 	<systemsettings>
@@ -194,6 +250,62 @@ ViennaBrowser class >> viennaToolsMenuOn: aBuilder [
 		order: 0.1;
 		help: 'VDM-SL browser';
 		icon: nil
+]
+
+{ #category : #menu }
+ViennaBrowser class >> workspacePaneMenu: aBuilder [
+	<contextMenu>
+	<viennaBrowserWorkspacePaneMenu>
+	(aBuilder item: #'Find...' translated)
+		keyText: 'f';
+		selector: #find;
+		icon: Smalltalk ui icons smallFindIcon.
+	(aBuilder item: #'Find again' translated)
+		keyText: 'g';
+		selector: #findAgain;
+		icon: Smalltalk ui icons smallFindIcon.
+	(aBuilder item: #'Set search string' translated)
+		keyText: 'h';
+		selector: #setSearchString;
+		withSeparatorAfter.
+	(aBuilder item: #'Do again' translated)
+		keyText: 'j';
+		selector: #again;
+		icon: Smalltalk ui icons smallRedoIcon.
+	(aBuilder item: #Undo translated)
+		keyText: 'z';
+		selector: #undo;
+		icon: Smalltalk ui icons smallUndoIcon;
+		withSeparatorAfter.
+	(aBuilder item: #Copy translated)
+		keyText: 'c';
+		selector: #copySelection;
+		icon: Smalltalk ui icons smallCopyIcon.
+	(aBuilder item: #Cut translated)
+		keyText: 'x';
+		selector: #cut;
+		icon: Smalltalk ui icons smallCutIcon.
+	(aBuilder item: #Paste translated)
+		keyText: 'v';
+		selector: #paste;
+		icon: Smalltalk ui icons smallPasteIcon.
+	(aBuilder item: #'Paste...' translated)
+		selector: #pasteRecent;
+		icon: Smalltalk ui icons smallPasteIcon;
+		withSeparatorAfter.
+	(aBuilder item: #'Do it' translated)
+		keyText: 'd';
+		selector: #workspacePaneDoIt.
+	(aBuilder item: #'Print it' translated)
+		keyText: 'p';
+		selector: #workspacePanePrintIt;
+		withSeparatorAfter.
+	(aBuilder item: #Accept translated)
+		keyText: 's';
+		selector: #accept.
+	(aBuilder item: #Cancel translated)
+		keyText: 'l';
+		selector: #cancel
 ]
 
 { #category : #'value pane' }
@@ -975,42 +1087,7 @@ ViennaBrowser >> valuePaneDoIt [
 
 { #category : #'value pane menu' }
 ViennaBrowser >> valuePaneMenu: aMenu shifted: aBoolean [
-	aMenu
-		addList:
-			{{('find...(f)' translated).
-			#find}.
-			{('find again (g)' translated).
-			#findAgain}.
-			{('set search string (h)' translated).
-			#setSearchString}.
-			#-.
-			{('do again (j)' translated).
-			#again}.
-			{('undo (z)' translated).
-			#undo}.
-			#-.
-			{('copy (c)' translated).
-			#copySelection}.
-			{('cut (x)' translated).
-			#cut}.
-			{('paste (v)' translated).
-			#paste}.
-			{('paste...' translated).
-			#pasteRecent}.
-			#-.
-			{('do it (d)' translated).
-			#valuePaneDoIt}.
-			{('print it (p)' translated).
-			#valuePanePrintIt}.
-			#-.
-			{('accept (s)' translated).
-			#valuePaneAccept}.
-			{('cancel (l)' translated).
-			#valuePaneCancel}.
-			#-.
-			{('save contents to file...' translated).
-			#saveContentsInFile}}.
-	^ aMenu
+	^ aMenu addAllFromPragma: 'viennaBrowserValuePaneMenu' target: self
 ]
 
 { #category : #'value pane menu' }
@@ -1066,42 +1143,7 @@ ViennaBrowser >> workspacePaneDoIt [
 
 { #category : #'workspace pane menu' }
 ViennaBrowser >> workspacePaneMenu: aMenu shifted: aBoolean [
-	aMenu
-		addList:
-			{{('find...(f)' translated).
-			#find}.
-			{('find again (g)' translated).
-			#findAgain}.
-			{('set search string (h)' translated).
-			#setSearchString}.
-			#-.
-			{('do again (j)' translated).
-			#again}.
-			{('undo (z)' translated).
-			#undo}.
-			#-.
-			{('copy (c)' translated).
-			#copySelection}.
-			{('cut (x)' translated).
-			#cut}.
-			{('paste (v)' translated).
-			#paste}.
-			{('paste...' translated).
-			#pasteRecent}.
-			#-.
-			{('do it (d)' translated).
-			#workspacePaneDoIt}.
-			{('print it (p)' translated).
-			#workspacePanePrintIt}.
-			#-.
-			{('accept (s)' translated).
-			#workspaceAccept}.
-			{('cancel (l)' translated).
-			#workspaceCancel}.
-			#-.
-			{('copy html' translated).
-			#copyHtml}}.
-	^ aMenu
+	^ aMenu addAllFromPragma: 'viennaBrowserWorkspacePaneMenu' target: self
 ]
 
 { #category : #'workspace pane menu' }
