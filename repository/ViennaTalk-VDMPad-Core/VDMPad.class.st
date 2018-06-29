@@ -843,8 +843,18 @@ VDMPad.currentFileItemNode = null;
 
 VDMPad.files = function () {
     if (localStorage) {
-        return JSON.parse(localStorage.getItem("`files"));
-    }
+        try {
+          return JSON.parse(localStorage.getItem("`files"));
+        } catch (e) { 
+          var files = [];
+          for (var i = 0; i < localStorage.length; i++) {
+            var file = localStorage.key(i);
+            if (file[0] != ''`'' && file.substr(0, 7) != "Config`") files.push(file);
+          }
+          localStorage.setItem("`files", JSON.stringify(files));
+          return files;
+        }
+   }
     return [];
 };
 
