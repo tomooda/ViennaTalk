@@ -38,6 +38,28 @@ ViennaLiveTranslationEditor >> initializeWidgets [
 	sourceText autoAccept: true.
 	sourceText
 		whenTextChanged: [ :source | 
+			| failure |
+			failure := nil.
+			targetText
+				accept:
+					(self
+						translate: source
+						ifError: [ :error | 
+							failure := error.
+							'' ])
+				notifying: nil.
+			failure
+				ifNotNil: [ sourceText text: (source addAttribute: TextColor red from: failure position + 1 to: source size) ] ].
+	targetText := self newText.
+	self title: self defaultTitle
+]
+
+{ #category : #'initialize-release' }
+ViennaLiveTranslationEditor >> initializeWidgets2 [
+	sourceText := self newText.
+	sourceText autoAccept: true.
+	sourceText
+		whenTextChanged: [ :source | 
 			[ 
 			| failure |
 			failure := nil.
