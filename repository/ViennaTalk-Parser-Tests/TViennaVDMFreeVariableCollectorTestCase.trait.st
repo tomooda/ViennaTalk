@@ -1,10 +1,10 @@
 Trait {
-	#name : #TViennaVDMFreeVariableCollectorTest,
+	#name : #TViennaVDMFreeVariableCollectorTestCase,
 	#category : 'ViennaTalk-Parser-Tests'
 }
 
 { #category : #'tests-free variables-statements' }
-TViennaVDMFreeVariableCollectorTest >> testFreeVariablesAssignmentDefinitionBoundVarsInto [
+TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesAssignmentDefinitionBoundVarsInto [
 	| node binds |
 	node := ViennaVDMParser new assignmentDefinition end parse: 'v1:t1 := e1'.
 	self deny: node isPetitFailure.
@@ -18,7 +18,7 @@ TViennaVDMFreeVariableCollectorTest >> testFreeVariablesAssignmentDefinitionBoun
 ]
 
 { #category : #'tests-free variables-statements' }
-TViennaVDMFreeVariableCollectorTest >> testFreeVariablesBlockStatementBoundVarsInto [
+TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesBlockStatementBoundVarsInto [
 	| node binds |
 	node := ViennaVDMParser new blockStatement end parse: '(dcl v1:t1 := e1; dcl v2:t2 := f(v1); op(v1, v2))'.
 	self deny: node isPetitFailure.
@@ -35,7 +35,7 @@ TViennaVDMFreeVariableCollectorTest >> testFreeVariablesBlockStatementBoundVarsI
 ]
 
 { #category : #'tests-free variables-statements' }
-TViennaVDMFreeVariableCollectorTest >> testFreeVariablesCasesExpressionAlternativeBoundVarsInto [
+TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesCasesExpressionAlternativeBoundVarsInto [
 	| node binds |
 	node := ViennaVDMParser new casesStatementAlternative end parse: 'p1 munion p2, p1 union p2 -> op(p1, p2)'.
 	self deny: node isPetitFailure.
@@ -45,7 +45,7 @@ TViennaVDMFreeVariableCollectorTest >> testFreeVariablesCasesExpressionAlternati
 ]
 
 { #category : #'tests-free variables-expressions' }
-TViennaVDMFreeVariableCollectorTest >> testFreeVariablesDefExpressionBoundVarsInto [
+TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesDefExpressionBoundVarsInto [
 	| node binds |
 	node := ViennaVDMParser new defExpression end parse: 'def v1 : t1 = f(v2) ; v2 : t2 = e1 in f(v1, v2)'.
 	self deny: node isPetitFailure.
@@ -62,7 +62,7 @@ TViennaVDMFreeVariableCollectorTest >> testFreeVariablesDefExpressionBoundVarsIn
 ]
 
 { #category : #'tests-free variables-expressions' }
-TViennaVDMFreeVariableCollectorTest >> testFreeVariablesExists1ExpressionBoundVarsInto [
+TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesExists1ExpressionBoundVarsInto [
 	| node binds |
 	node := ViennaVDMParser new exists1Expression end parse: 'exists1 v:t & p(v, e)'.
 	self deny: node isPetitFailure.
@@ -77,7 +77,7 @@ TViennaVDMFreeVariableCollectorTest >> testFreeVariablesExists1ExpressionBoundVa
 ]
 
 { #category : #'tests-free variables-expressions' }
-TViennaVDMFreeVariableCollectorTest >> testFreeVariablesExistsExpressionBoundVarsInto [
+TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesExistsExpressionBoundVarsInto [
 	| node binds |
 	node := ViennaVDMParser new existsExpression end parse: 'exists v1:t, v2 in set s & p(v1, v2, e)'.
 	self deny: node isPetitFailure.
@@ -93,7 +93,7 @@ TViennaVDMFreeVariableCollectorTest >> testFreeVariablesExistsExpressionBoundVar
 ]
 
 { #category : #'tests-free variables-statements' }
-TViennaVDMFreeVariableCollectorTest >> testFreeVariablesFieldReferenceBoundVarsInto [
+TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesFieldReferenceBoundVarsInto [
 	| node binds |
 	node := ViennaVDMParser new indexForLoop end parse: 'for v = e1 to e2 by e3 do op(v)'.
 	self deny: node isPetitFailure.
@@ -109,7 +109,7 @@ TViennaVDMFreeVariableCollectorTest >> testFreeVariablesFieldReferenceBoundVarsI
 ]
 
 { #category : #'tests-free variables-expressions' }
-TViennaVDMFreeVariableCollectorTest >> testFreeVariablesFieldSelectBoundVarsInto [
+TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesFieldSelectBoundVarsInto [
 	| node binds |
 	node := ViennaVDMParser new expression end parse: 'record.field'.
 	self deny: node isPetitFailure.
@@ -119,7 +119,7 @@ TViennaVDMFreeVariableCollectorTest >> testFreeVariablesFieldSelectBoundVarsInto
 ]
 
 { #category : #'tests-free variables-expressions' }
-TViennaVDMFreeVariableCollectorTest >> testFreeVariablesForallExpressionBoundVarsInto [
+TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesForallExpressionBoundVarsInto [
 	| node binds |
 	node := ViennaVDMParser new forallExpression end parse: 'forall v1:t, v2 in set s & p(v1, v2, e)'.
 	self deny: node isPetitFailure.
@@ -135,7 +135,7 @@ TViennaVDMFreeVariableCollectorTest >> testFreeVariablesForallExpressionBoundVar
 ]
 
 { #category : #'tests-free variables-statements' }
-TViennaVDMFreeVariableCollectorTest >> testFreeVariablesIndexForLoopBoundVarsInto [
+TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesIndexForLoopBoundVarsInto [
 	| node |
 	node := ViennaVDMParser new indexForLoop end parse: 'for v = e1 to e2 by e3 do op(v)'.
 	self deny: node isPetitFailure.
@@ -150,7 +150,7 @@ TViennaVDMFreeVariableCollectorTest >> testFreeVariablesIndexForLoopBoundVarsInt
 ]
 
 { #category : #'tests-free variables-expressions' }
-TViennaVDMFreeVariableCollectorTest >> testFreeVariablesIotaExpressionBoundVarsInto [
+TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesIotaExpressionBoundVarsInto [
 	| node binds |
 	node := ViennaVDMParser new iotaExpression end parse: 'iota v:t & p(v, e)'.
 	self deny: node isPetitFailure.
@@ -165,7 +165,7 @@ TViennaVDMFreeVariableCollectorTest >> testFreeVariablesIotaExpressionBoundVarsI
 ]
 
 { #category : #'tests-free variables-expressions' }
-TViennaVDMFreeVariableCollectorTest >> testFreeVariablesLambdaExpressionBoundVarsInto [
+TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesLambdaExpressionBoundVarsInto [
 	| node binds |
 	node := ViennaVDMParser new lambdaExpression end parse: 'lambda v : t & f(v)'.
 	self deny: node isPetitFailure.
@@ -179,7 +179,7 @@ TViennaVDMFreeVariableCollectorTest >> testFreeVariablesLambdaExpressionBoundVar
 ]
 
 { #category : #'tests-free variables-expressions' }
-TViennaVDMFreeVariableCollectorTest >> testFreeVariablesLetBeExpressionBoundVarsInto [
+TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesLetBeExpressionBoundVarsInto [
 	| node binds |
 	node := ViennaVDMParser new letBeExpression end parse: 'let v in set s be st p(v) in f(v)'.
 	self deny: node isPetitFailure.
@@ -194,7 +194,7 @@ TViennaVDMFreeVariableCollectorTest >> testFreeVariablesLetBeExpressionBoundVars
 ]
 
 { #category : #'tests-free variables-statements' }
-TViennaVDMFreeVariableCollectorTest >> testFreeVariablesLetBeStatementBoundVarsInto [
+TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesLetBeStatementBoundVarsInto [
 	| node binds |
 	node := ViennaVDMParser new letBeStatement end parse: 'let v in set s be st p(v) in op(v)'.
 	self deny: node isPetitFailure.
@@ -209,7 +209,7 @@ TViennaVDMFreeVariableCollectorTest >> testFreeVariablesLetBeStatementBoundVarsI
 ]
 
 { #category : #'tests-free variables-expressions' }
-TViennaVDMFreeVariableCollectorTest >> testFreeVariablesLetExpressionBoundVarsInto [
+TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesLetExpressionBoundVarsInto [
 	| node binds |
 	node := ViennaVDMParser new letExpression end parse: 'let v1 : t1 = f(v2), v2 : t2 = e in g(v1, v2)'.
 	self deny: node isPetitFailure.
@@ -226,7 +226,7 @@ TViennaVDMFreeVariableCollectorTest >> testFreeVariablesLetExpressionBoundVarsIn
 ]
 
 { #category : #'tests-free variables-statements' }
-TViennaVDMFreeVariableCollectorTest >> testFreeVariablesLetStatementBoundVarsInto [
+TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesLetStatementBoundVarsInto [
 	| node binds |
 	node := ViennaVDMParser new letStatement end parse: 'let v1 : t1 =e, v2 : t2 = f(v1) in op(v1, v2)'.
 	self deny: node isPetitFailure.
@@ -243,7 +243,7 @@ TViennaVDMFreeVariableCollectorTest >> testFreeVariablesLetStatementBoundVarsInt
 ]
 
 { #category : #'tests-free variables-expressions' }
-TViennaVDMFreeVariableCollectorTest >> testFreeVariablesLocalNameBoundVarsInto [
+TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesLocalNameBoundVarsInto [
 	| node binds |
 	node := ViennaVDMParser new name end parse: 'v'.
 	self deny: node isPetitFailure.
@@ -253,7 +253,7 @@ TViennaVDMFreeVariableCollectorTest >> testFreeVariablesLocalNameBoundVarsInto [
 ]
 
 { #category : #'tests-free variables-expressions' }
-TViennaVDMFreeVariableCollectorTest >> testFreeVariablesMapComprehensionBoundVarsInto [
+TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesMapComprehensionBoundVarsInto [
 	| node binds |
 	node := ViennaVDMParser new mapComprehension end parse: '{f(v1) |-> g(v2) | v1, v2 in set s & p(v1, v2)}'.
 	self deny: node isPetitFailure.
@@ -269,7 +269,7 @@ TViennaVDMFreeVariableCollectorTest >> testFreeVariablesMapComprehensionBoundVar
 ]
 
 { #category : #'tests-free variables-expressions' }
-TViennaVDMFreeVariableCollectorTest >> testFreeVariablesRecordConstructorBoundVarsInto [
+TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesRecordConstructorBoundVarsInto [
 	| node binds |
 	node := ViennaVDMParser new recordConstructor end parse: 'mk_T(v)'.
 	self deny: node isPetitFailure.
@@ -283,7 +283,7 @@ TViennaVDMFreeVariableCollectorTest >> testFreeVariablesRecordConstructorBoundVa
 ]
 
 { #category : #'tests-free variables-expressions' }
-TViennaVDMFreeVariableCollectorTest >> testFreeVariablesSequenceComprehensionBoundVarsInto [
+TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesSequenceComprehensionBoundVarsInto [
 	| node binds |
 	node := ViennaVDMParser new sequenceComprehension end parse: '[f(v) | v in set s & p(v)]'.
 	self deny: node isPetitFailure.
@@ -298,7 +298,7 @@ TViennaVDMFreeVariableCollectorTest >> testFreeVariablesSequenceComprehensionBou
 ]
 
 { #category : #'tests-free variables-statements' }
-TViennaVDMFreeVariableCollectorTest >> testFreeVariablesSequenceForLoopBoundVarsInto [
+TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesSequenceForLoopBoundVarsInto [
 	| node |
 	node := ViennaVDMParser new sequenceForLoop end parse: 'for v in s do op(v)'.
 	self deny: node isPetitFailure.
@@ -311,7 +311,7 @@ TViennaVDMFreeVariableCollectorTest >> testFreeVariablesSequenceForLoopBoundVars
 ]
 
 { #category : #'tests-free variables-expressions' }
-TViennaVDMFreeVariableCollectorTest >> testFreeVariablesSetComprehensionBoundVarsInto [
+TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesSetComprehensionBoundVarsInto [
 	| node binds |
 	node := ViennaVDMParser new setComprehension end parse: '{f(v) | v in set s & p(v)}'.
 	self deny: node isPetitFailure.
@@ -326,7 +326,7 @@ TViennaVDMFreeVariableCollectorTest >> testFreeVariablesSetComprehensionBoundVar
 ]
 
 { #category : #'tests-free variables-statements' }
-TViennaVDMFreeVariableCollectorTest >> testFreeVariablesSetForLoopBoundVarsInto [
+TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesSetForLoopBoundVarsInto [
 	| node |
 	node := ViennaVDMParser new setForLoop end parse: 'for all v in set s do op(v)'.
 	self deny: node isPetitFailure.

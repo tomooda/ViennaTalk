@@ -1,10 +1,10 @@
 Trait {
-	#name : #TViennaVDMBoundVariableCollectorTest,
+	#name : #TViennaVDMBoundVariableCollectorTestCase,
 	#category : 'ViennaTalk-Parser-Tests'
 }
 
 { #category : #'tests-bound variables-definitions' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesAccessFunctionDefinitionInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesAccessFunctionDefinitionInto [
 	| node binds |
 	node := ViennaVDMParser new accessFunctionDefinition end parse: 'public fn : t1 -> t2 fn(x) == x'.
 	self deny: node isPetitFailure.
@@ -15,7 +15,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesAccessFunctionDefiniti
 ]
 
 { #category : #'tests-bound variables-definitions' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesAccessOperationDefinitionInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesAccessOperationDefinitionInto [
 	| node binds |
 	node := ViennaVDMParser new accessOperationDefinition end parse: 'public op : t1 ==> t2 op(x) == return x'.
 	self deny: node isPetitFailure.
@@ -26,7 +26,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesAccessOperationDefinit
 ]
 
 { #category : #'tests-bound variables-definitions' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesAccessTypeDefinitionInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesAccessTypeDefinitionInto [
 	| node binds |
 	node := ViennaVDMParser new accessTypeDefinition end parse: 'public t1 = t2 inv v == e'.
 	self deny: node isPetitFailure.
@@ -37,7 +37,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesAccessTypeDefinitionIn
 ]
 
 { #category : #'tests-bound variables-definitions' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesAccessValueDefinitionInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesAccessValueDefinitionInto [
 	| node binds |
 	node := ViennaVDMParser new accessValueDefinition end parse: 'public v1 = e1'.
 	self deny: node isPetitFailure.
@@ -48,7 +48,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesAccessValueDefinitionI
 ]
 
 { #category : #'tests-bound variables-definitions' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesAssignmentDefinitionInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesAssignmentDefinitionInto [
 	| node binds |
 	node := ViennaVDMParser new assignmentDefinition end parse: 'v:t := e'.
 	self deny: node isPetitFailure.
@@ -59,7 +59,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesAssignmentDefinitionIn
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesBindListInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesBindListInto [
 	| node binds |
 	node := ViennaVDMParser new bindList end parse: 'v1 : t1, v2 in set s1'.
 	self deny: node isPetitFailure.
@@ -74,7 +74,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesBindListInto [
 ]
 
 { #category : #'tests-bound variables-statements' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesBlockStatementInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesBlockStatementInto [
 	| node binds |
 	node := ViennaVDMParser new blockStatement end
 		parse: '(dcl v1:t1 := e, v2:t1 := v1; dcl v3:t3 := f(v1, v2); op(v1, v2, v3))'.
@@ -91,7 +91,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesBlockStatementInto [
 ]
 
 { #category : #'tests-bound variables-types' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesCompositeTypeInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesCompositeTypeInto [
 	| node binds |
 	node := ViennaVDMParser new compositeType end parse: 'compose T of f1 : t1 f2 :- t2 t3 end'.
 	self deny: node isPetitFailure.
@@ -108,7 +108,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesCompositeTypeInto [
 ]
 
 { #category : #'tests-bound variables-statements' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesDclStatementInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesDclStatementInto [
 	| node binds |
 	node := ViennaVDMParser new dclStatement end parse: 'dcl v1:t1 := e, v2:t := v1;'.
 	self deny: node isPetitFailure.
@@ -123,7 +123,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesDclStatementInto [
 ]
 
 { #category : #'tests-bound variables-definitions' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesDefinitionBlockInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesDefinitionBlockInto [
 	| node binds |
 	node := ViennaVDMParser new definitionBlock end parse: 'values v1 = e1; v2 = e2'.
 	self deny: node isPetitFailure.
@@ -138,7 +138,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesDefinitionBlockInto [
 ]
 
 { #category : #'tests-bound variables-definitions' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesDocumentInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesDocumentInto [
 	| node binds |
 	node := ViennaVDMParser new document end parse: 'types t1 = t2; t3 = t4; values v1:t5 = e1; v2:t6 = e2'.
 	self deny: node isPetitFailure.
@@ -167,7 +167,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesDocumentInto [
 ]
 
 { #category : #'tests-bound variables-definitions' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesEqualDefinitionInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesEqualDefinitionInto [
 	| node binds |
 	node := ViennaVDMParser new equalDefinition end parse: 'v1 : t1 = e1'.
 	self deny: node isPetitFailure.
@@ -178,7 +178,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesEqualDefinitionInto [
 ]
 
 { #category : #'tests-bound variables-definitions' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesEqualDefinitionListInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesEqualDefinitionListInto [
 	| node binds |
 	node := ViennaVDMParser new equalDefinitionList end parse: 'v1 : t1 = e1; v2 : t2 = e2'.
 	self deny: node isPetitFailure.
@@ -193,7 +193,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesEqualDefinitionListInt
 ]
 
 { #category : #'tests-bound variables-definitions' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesExplicitFunctionDefinitionInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesExplicitFunctionDefinitionInto [
 	| node binds |
 	node := ViennaVDMParser new explicitFunctionDefinition end parse: 'fn[@t] : t1 -> t2 fn(x) == e'.
 	self deny: node isPetitFailure.
@@ -204,7 +204,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesExplicitFunctionDefini
 ]
 
 { #category : #'tests-bound variables-definitions' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesExplicitOperationDefinitionInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesExplicitOperationDefinitionInto [
 	| node binds |
 	node := ViennaVDMParser new explicitOperationDefinition end parse: 'op: t1 ==> t2 op(x) == return e'.
 	self deny: node isPetitFailure.
@@ -215,7 +215,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesExplicitOperationDefin
 ]
 
 { #category : #'tests-bound variables-interfaces' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesExportDefinitionInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesExportDefinitionInto [
 	| node binds |
 	node := ViennaVDMParser new exportDefinition end parse: 'exports types t1; t2; values v1:t3; v2:t4'.
 	self deny: node isPetitFailure.
@@ -234,7 +234,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesExportDefinitionInto [
 ]
 
 { #category : #'tests-bound variables-interfaces' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesExportFunctionsSignatureInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesExportFunctionsSignatureInto [
 	| node binds |
 	node := ViennaVDMParser new exportFunctionsSignature end parse: 'functions f1[@t1,@t2]:t3->t4; f2[@t5,@t6]:t7->t8'.
 	self deny: node isPetitFailure.
@@ -253,7 +253,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesExportFunctionsSignatu
 ]
 
 { #category : #'tests-bound variables-interfaces' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesExportModuleSignatureInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesExportModuleSignatureInto [
 	| node binds |
 	node := ViennaVDMParser new exportModuleSignature end parse: 'values v1 : t1; types t2'.
 	self deny: node isPetitFailure.
@@ -269,7 +269,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesExportModuleSignatureI
 ]
 
 { #category : #'tests-bound variables-interfaces' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesExportTypesSignatureInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesExportTypesSignatureInto [
 	| node binds |
 	node := ViennaVDMParser new exportTypesSignature end parse: 'types t1; t2'.
 	self deny: node isPetitFailure.
@@ -284,7 +284,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesExportTypesSignatureIn
 ]
 
 { #category : #'tests-bound variables-types' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesFieldInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesFieldInto [
 	| node binds |
 	node := ViennaVDMParser new field end parse: 'f : t'.
 	self deny: node isPetitFailure.
@@ -307,7 +307,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesFieldInto [
 ]
 
 { #category : #'tests-bound variables-types' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesFieldListInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesFieldListInto [
 	| node binds |
 	node := ViennaVDMParser new fieldList end parse: 'f1 : t1 f2 :- t2 t3'.
 	self deny: node isPetitFailure.
@@ -322,7 +322,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesFieldListInto [
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesFieldPatternInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesFieldPatternInto [
 	| node binds |
 	node := ViennaVDMParser new fieldPattern end parse: 'f1 |-> v'.
 	self deny: node isPetitFailure.
@@ -333,7 +333,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesFieldPatternInto [
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesFieldPatternListInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesFieldPatternListInto [
 	| node binds |
 	node := ViennaVDMParser new fieldPatternList end parse: 'f1 |-> v1, f2 |-> v2'.
 	self deny: node isPetitFailure.
@@ -348,7 +348,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesFieldPatternListInto [
 ]
 
 { #category : #'tests-bound variables-definitions' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesFunctionDefinitionInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesFunctionDefinitionInto [
 	| node binds |
 	node := ViennaVDMParser new functionDefinition end parse: 'fn[@t] : t1 -> t2 fn(x) == e'.
 	self deny: node isPetitFailure.
@@ -359,7 +359,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesFunctionDefinitionInto
 ]
 
 { #category : #'tests-bound variables-definitions' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesFunctionDefinitionsInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesFunctionDefinitionsInto [
 	| node binds |
 	node := ViennaVDMParser new functionDefinitions end
 		parse: 'functions fn1[@t] : t1 -> t2 fn1(x) == e1; fn2[@t] : t3 -> t4 fn2(y) == e2'.
@@ -375,7 +375,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesFunctionDefinitionsInt
 ]
 
 { #category : #'tests-bound variables-interfaces' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesFunctionExportInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesFunctionExportInto [
 	| node binds |
 	node := ViennaVDMParser new functionExport end parse: 'f1[@t1,@t2]:t3->t4'.
 	self deny: node isPetitFailure.
@@ -391,7 +391,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesFunctionExportInto [
 ]
 
 { #category : #'tests-bound variables-statements' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesIndexForLoopInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesIndexForLoopInto [
 	| node binds |
 	node := ViennaVDMParser new indexForLoop end parse: 'for v = e1 to e2 by e3 do op(v)'.
 	self deny: node isPetitFailure.
@@ -402,7 +402,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesIndexForLoopInto [
 ]
 
 { #category : #'tests-bound variables-types' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesInmapTypeInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesInmapTypeInto [
 	| node binds |
 	node := ViennaVDMParser new inmapType end parse: 'inmap t1 to t2'.
 	self deny: node isPetitFailure.
@@ -417,7 +417,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesInmapTypeInto [
 ]
 
 { #category : #'tests-bound variables-definitions' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesLocalDefinitionInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesLocalDefinitionInto [
 	| node binds |
 	node := ViennaVDMParser new localDefinition end parse: 'v1 : t1 = e1'.
 	self deny: node isPetitFailure.
@@ -428,7 +428,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesLocalDefinitionInto [
 ]
 
 { #category : #'tests-bound variables-definitions' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesLocalDefinitionListInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesLocalDefinitionListInto [
 	| node binds |
 	node := ViennaVDMParser new localDefinitionList end parse: 'v1 : t1 = e1, fn[@t] : t2 -> t3 fn(x) == e2'.
 	self deny: node isPetitFailure.
@@ -443,7 +443,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesLocalDefinitionListInt
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesMapEnumerationPatternInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesMapEnumerationPatternInto [
 	| node binds |
 	node := ViennaVDMParser new mapEnumerationPattern end parse: '{k1 |-> v1, k2 |-> v2}'.
 	self deny: node isPetitFailure.
@@ -460,7 +460,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesMapEnumerationPatternI
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesMapMunionPatternInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesMapMunionPatternInto [
 	| node binds |
 	node := ViennaVDMParser new mapMunionPattern end parse: '{k1 |-> v1, k2 |-> v2} munion {k3 |-> v3}'.
 	self deny: node isPetitFailure.
@@ -479,7 +479,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesMapMunionPatternInto [
 ]
 
 { #category : #'tests-bound variables-types' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesMapTypeInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesMapTypeInto [
 	| node binds |
 	node := ViennaVDMParser new mapType end parse: 'map t1 to t2'.
 	self deny: node isPetitFailure.
@@ -494,7 +494,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesMapTypeInto [
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesMapletPatternInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesMapletPatternInto [
 	| node binds |
 	node := ViennaVDMParser new mapletPattern end parse: 'k |-> v'.
 	self deny: node isPetitFailure.
@@ -509,7 +509,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesMapletPatternInto [
 ]
 
 { #category : #'tests-bound variables-definitions' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesModuleInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesModuleInto [
 	| node binds |
 	node := ViennaVDMParser new module end parse: 'module m1 exports all definitions values v1 : t1 = e1 end m1'.
 	self deny: node isPetitFailure.
@@ -520,7 +520,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesModuleInto [
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesMultipleSetBindInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesMultipleSetBindInto [
 	| node binds |
 	node := ViennaVDMParser new multipleSetBind end parse: 'v1, v2 in set s'.
 	self deny: node isPetitFailure.
@@ -535,7 +535,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesMultipleSetBindInto [
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesMultipleTypeBindInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesMultipleTypeBindInto [
 	| node binds |
 	node := ViennaVDMParser new multipleTypeBind end parse: 'v1, v2 : t'.
 	self deny: node isPetitFailure.
@@ -550,7 +550,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesMultipleTypeBindInto [
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesObjectPatternInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesObjectPatternInto [
 	| node binds |
 	node := ViennaVDMParser new objectPattern end parse: 'obj_T(f1 |-> v1, f2 |-> v2)'.
 	self deny: node isPetitFailure.
@@ -565,7 +565,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesObjectPatternInto [
 ]
 
 { #category : #'tests-bound variables-definitions' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesOperationDefinitionInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesOperationDefinitionInto [
 	| node binds |
 	node := ViennaVDMParser new operationDefinition end parse: 'op: t1 ==> t2 op(x) == return e'.
 	self deny: node isPetitFailure.
@@ -576,7 +576,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesOperationDefinitionInt
 ]
 
 { #category : #'tests-bound variables-definitions' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesOperationDefinitionsInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesOperationDefinitionsInto [
 	| node binds |
 	node := ViennaVDMParser new operationDefinitions end
 		parse: 'operations op1: t1 ==> t2 op1(x) == return e1; op2: t3 ==> t4 op2(y) == return e2'.
@@ -592,7 +592,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesOperationDefinitionsIn
 ]
 
 { #category : #'tests-bound variables-types' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesOperationTypeInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesOperationTypeInto [
 	| node binds |
 	node := ViennaVDMParser new operationType end parse: 't1 ==> t2'.
 	self deny: node isPetitFailure.
@@ -607,7 +607,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesOperationTypeInto [
 ]
 
 { #category : #'tests-bound variables-types' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesOptionalTypeInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesOptionalTypeInto [
 	| node binds |
 	node := ViennaVDMParser new optionalType end parse: '[t]'.
 	self deny: node isPetitFailure.
@@ -618,7 +618,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesOptionalTypeInto [
 ]
 
 { #category : #'tests-bound variables-definitions' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesParametersInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesParametersInto [
 	| node binds |
 	node := ViennaVDMParser new parameters end parse: '(x, y)'.
 	self deny: node isPetitFailure.
@@ -633,7 +633,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesParametersInto [
 ]
 
 { #category : #'tests-bound variables-definitions' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesParametersListInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesParametersListInto [
 	| node binds |
 	node := ViennaVDMParser new parametersList end parse: '(x, y)(z)'.
 	self deny: node isPetitFailure.
@@ -649,7 +649,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesParametersListInto [
 ]
 
 { #category : #'tests-bound variables-types' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesPartialFunctionTypeInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesPartialFunctionTypeInto [
 	| node binds |
 	node := ViennaVDMParser new partialFunctionType end parse: 't1 -> t2'.
 	self deny: node isPetitFailure.
@@ -664,7 +664,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesPartialFunctionTypeInt
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesPatternIdentifierInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesPatternIdentifierInto [
 	| node binds |
 	node := ViennaVDMParser new patternIdentifier end parse: 'v'.
 	self deny: node isPetitFailure.
@@ -675,7 +675,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesPatternIdentifierInto 
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesPatternListInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesPatternListInto [
 	| node binds |
 	node := ViennaVDMParser new patternList end parse: 'v1, v2'.
 	self deny: node isPetitFailure.
@@ -690,7 +690,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesPatternListInto [
 ]
 
 { #category : #'tests-bound variables-types' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesProductTypeInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesProductTypeInto [
 	| node binds |
 	node := ViennaVDMParser new productType end parse: 't1 * t2'.
 	self deny: node isPetitFailure.
@@ -705,7 +705,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesProductTypeInto [
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesRecordPatternInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesRecordPatternInto [
 	| node binds |
 	node := ViennaVDMParser new recordPattern end parse: 'mk_T(v1, v2)'.
 	self deny: node isPetitFailure.
@@ -720,7 +720,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesRecordPatternInto [
 ]
 
 { #category : #'tests-bound variables-types' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesRecordTypeDefinitionInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesRecordTypeDefinitionInto [
 	| node binds |
 	node := ViennaVDMParser new recordTypeDefinition end parse: 'T::f1:t1 f2:-t2 t3'.
 	self deny: node isPetitFailure.
@@ -737,7 +737,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesRecordTypeDefinitionIn
 ]
 
 { #category : #'tests-bound variables-types' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesSeq1TypeInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesSeq1TypeInto [
 	| node binds |
 	node := ViennaVDMParser new seq1Type end parse: 'seq1 of t'.
 	self deny: node isPetitFailure.
@@ -748,7 +748,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesSeq1TypeInto [
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesSeqConcPatternInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesSeqConcPatternInto [
 	| node binds |
 	node := ViennaVDMParser new seqConcPattern  end parse: '[v1, v2] ^ [v3]'.
 	self deny: node isPetitFailure.
@@ -764,7 +764,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesSeqConcPatternInto [
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesSeqEnumPatternInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesSeqEnumPatternInto [
 	| node binds |
 	node := ViennaVDMParser new seqEnumPattern end parse: '[v1, v2]'.
 	self deny: node isPetitFailure.
@@ -779,7 +779,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesSeqEnumPatternInto [
 ]
 
 { #category : #'tests-bound variables-types' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesSeqTypeInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesSeqTypeInto [
 	| node binds |
 	node := ViennaVDMParser new seqType end parse: 'seq of t'.
 	self deny: node isPetitFailure.
@@ -790,7 +790,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesSeqTypeInto [
 ]
 
 { #category : #'tests-bound variables-statements' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesSequenceForLoopInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesSequenceForLoopInto [
 	| node binds |
 	node := ViennaVDMParser new sequenceForLoop end parse: 'for v in s do op(v)'.
 	self deny: node isPetitFailure.
@@ -801,7 +801,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesSequenceForLoopInto [
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesSetBindInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesSetBindInto [
 	| node binds |
 	node := ViennaVDMParser new setBind end parse: 'v in set s'.
 	self deny: node isPetitFailure.
@@ -812,7 +812,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesSetBindInto [
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesSetEnumPatternInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesSetEnumPatternInto [
 	| node binds |
 	node := ViennaVDMParser new setEnumPattern end parse: '{v1, v2}'.
 	self deny: node isPetitFailure.
@@ -827,7 +827,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesSetEnumPatternInto [
 ]
 
 { #category : #'tests-bound variables-statements' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesSetForLoopInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesSetForLoopInto [
 	| node binds |
 	node := ViennaVDMParser new setForLoop end parse: 'for all v in set s do op(v)'.
 	self deny: node isPetitFailure.
@@ -838,7 +838,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesSetForLoopInto [
 ]
 
 { #category : #'tests-bound variables-types' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesSetTypeInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesSetTypeInto [
 	| node binds |
 	node := ViennaVDMParser new setType end parse: 'set of t'.
 	self deny: node isPetitFailure.
@@ -849,7 +849,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesSetTypeInto [
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesSetUnionPatternInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesSetUnionPatternInto [
 	| node binds |
 	node := ViennaVDMParser new setUnionPattern end parse: '{v1, v2} union {v3}'.
 	self deny: node isPetitFailure.
@@ -865,7 +865,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesSetUnionPatternInto [
 ]
 
 { #category : #'tests-bound variables-definitions' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesStateDefinitionInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesStateDefinitionInto [
 	| node binds |
 	node := ViennaVDMParser new stateDefinition end
 		parse: 'state S of v1 : t1 v2 : t2 inv mk_S(inv1, inv2) == inv1 = inv2 init s == s = mk_S(e1, e2) end'.
@@ -884,7 +884,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesStateDefinitionInto [
 ]
 
 { #category : #'tests-bound variables-types' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesTotalFunctionTypeInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTotalFunctionTypeInto [
 	| node binds |
 	node := ViennaVDMParser new totalFunctionType end parse: 't1 +> t2'.
 	self deny: node isPetitFailure.
@@ -899,7 +899,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesTotalFunctionTypeInto 
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesTuplePatternInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTuplePatternInto [
 	| node binds |
 	node := ViennaVDMParser new tuplePattern end parse: 'mk_(v1, v2)'.
 	self deny: node isPetitFailure.
@@ -914,7 +914,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesTuplePatternInto [
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesTypeBindInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTypeBindInto [
 	| node binds |
 	node := ViennaVDMParser new typeBind end parse: 'v : t'.
 	self deny: node isPetitFailure.
@@ -925,7 +925,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesTypeBindInto [
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesTypeBindListInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTypeBindListInto [
 	| node binds |
 	node := ViennaVDMParser new typeBindList end parse: 'v1 : t1, v2 : t2'.
 	self deny: node isPetitFailure.
@@ -940,7 +940,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesTypeBindListInto [
 ]
 
 { #category : #'tests-bound variables-definitions' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesTypeDefinitionInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTypeDefinitionInto [
 	| node binds |
 	node := ViennaVDMParser new typeDefinition end parse: 't1 = t2 inv v == e'.
 	self deny: node isPetitFailure.
@@ -951,7 +951,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesTypeDefinitionInto [
 ]
 
 { #category : #'tests-bound variables-definitions' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesTypeDefinitionsInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTypeDefinitionsInto [
 	| node binds |
 	node := ViennaVDMParser new typeDefinitions end parse: 'types public t1 = t2 inv v1 == e1; public t3 = t4 inv v2 == e2'.
 	self deny: node isPetitFailure.
@@ -966,7 +966,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesTypeDefinitionsInto [
 ]
 
 { #category : #'tests-bound variables-definitions' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesTypeVariableIdentifierInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTypeVariableIdentifierInto [
 	| node binds |
 	node := ViennaVDMParser new typeVariableIdentifier end parse: '@t'.
 	self deny: node isPetitFailure.
@@ -977,7 +977,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesTypeVariableIdentifier
 ]
 
 { #category : #'tests-bound variables-definitions' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesTypeVariableListInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTypeVariableListInto [
 	| node binds |
 	node := ViennaVDMParser new typeVariableList end parse: '[@t1, @t2]'.
 	self deny: node isPetitFailure.
@@ -992,7 +992,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesTypeVariableListInto [
 ]
 
 { #category : #'tests-bound variables-types' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesUnionTypeInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesUnionTypeInto [
 	| node binds |
 	node := ViennaVDMParser new unionType end parse: 't1 | t2'.
 	self deny: node isPetitFailure.
@@ -1007,7 +1007,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesUnionTypeInto [
 ]
 
 { #category : #'tests-bound variables-definitions' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesValueDefinitionInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesValueDefinitionInto [
 	| node binds |
 	node := ViennaVDMParser new valueDefinition end parse: 'v : t = e'.
 	self deny: node isPetitFailure.
@@ -1018,7 +1018,7 @@ TViennaVDMBoundVariableCollectorTest >> testBoundVariablesValueDefinitionInto [
 ]
 
 { #category : #'tests-bound variables-definitions' }
-TViennaVDMBoundVariableCollectorTest >> testBoundVariablesValueDefinitionsInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesValueDefinitionsInto [
 	| node binds |
 	node := ViennaVDMParser new valueDefinitions end parse: 'values public v1 : t1 = e1 ; public v2 : t2 = e2'.
 	self deny: node isPetitFailure.
