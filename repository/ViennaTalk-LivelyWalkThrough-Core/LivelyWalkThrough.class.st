@@ -195,7 +195,7 @@ LivelyWalkThrough >> buildSettingsPane [
 				hResizing: #spaceFill;
 				yourself).
 	pane addMorphBack: urlPrefixPane.
-	(Smalltalk includesKey: ViennaTranspiledAnimation)
+	(Smalltalk includesKey: #ViennaTranspiledAnimation)
 		ifTrue: [ animationPane := Morph new.
 			animationPane
 				color: Color white;
