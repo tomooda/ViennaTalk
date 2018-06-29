@@ -166,7 +166,8 @@ ViennaLauncher >> initialize [
 						getEnabled: nil
 						label: 'VDMPad'
 						help: 'start/stop VDMPad server' translated) ].
-	dock := self newToolDockingBar
+	dock := self newToolDockingBar.
+	dock
 		add: 'System' translated
 			font: self theme menuBarFont
 			icon: nil
@@ -181,9 +182,8 @@ ViennaLauncher >> initialize [
 			font: self theme menuBarFont
 			icon: nil
 			help: 'ViennaTalk developers'' utilities'
-			subMenu: devMenu;
-		addMorphBack: (self newToolbar: tools);
-		yourself.
+			subMenu: devMenu.
+		tools do: [ :morph | dock addMorphBack: morph ].
 	image := self newImage: self viennaLogo.
 	extent := image extent + (4 @ (dock minExtent y + 32)).
 	self
