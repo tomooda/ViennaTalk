@@ -266,7 +266,7 @@ ViennaVDMFormatter >> setPostfix [
 
 { #category : #'symbol access' }
 ViennaVDMFormatter >> setPrefix [
-	^ 'set of'
+	^ 'set of '
 ]
 
 { #category : #'symbol access' }
