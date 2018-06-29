@@ -65,11 +65,16 @@ ViennaServer class >> on: aViennaEngine [
 { #category : #servicing }
 ViennaServer class >> server [
 	^ Server
-		ifNil: [ 
-			Server := (ZnMultiThreadedServer on: self defaultPort)
+		ifNil: [ Server := (self serverClass on: self defaultPort)
+				bindingAddress: #[127 0 0 1];
 				register;
 				start;
 				yourself ]
+]
+
+{ #category : #'class access' }
+ViennaServer class >> serverClass [
+	^ ZnManagingMultiThreadedServer
 ]
 
 { #category : #defaults }
@@ -101,6 +106,7 @@ ViennaServer >> evaluate: expression specification: specification states: states
 { #category : #'request handling' }
 ViennaServer >> handleRequest: aZnRequest [
 	| json |
+	Transcript cr; show: 'received a request'.
 	aZnRequest entity
 		ifNotNil: [ :jsonString | 
 			| source expression preStates result |
