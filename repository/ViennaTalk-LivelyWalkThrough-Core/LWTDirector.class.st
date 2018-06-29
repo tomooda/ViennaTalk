@@ -206,7 +206,7 @@ LWTDirector >> execVDM: aString withArguments: anArray [
 			| value |
 			value := [ self animation plainEvaluate: expression ]
 				on: Error
-				do: [ :ex | self halt. self abort: 'VDM error: ' , ex messageText ].	
+				do: [ :ex | self abort: 'VDM error: ' , ex messageText , ' in evaluating ', expression].	
 			value ]
 ]
 
