@@ -125,6 +125,11 @@ ViennaLauncher >> close [
 ]
 
 { #category : #accessing }
+ViennaLauncher >> codename [
+	^ 'Cyprus'
+]
+
+{ #category : #accessing }
 ViennaLauncher >> defaultTitle [
 	^ 'ViennaTalk Launcher' copy
 ]
