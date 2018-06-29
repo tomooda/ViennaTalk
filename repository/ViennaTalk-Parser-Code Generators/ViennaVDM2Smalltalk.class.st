@@ -371,6 +371,18 @@ ViennaVDM2Smalltalk >> closureFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode 
 	^ String
 		new: 1024
 		streamContents: [ :stream | 
+			stream
+				nextPutAll:
+						(self closureHeaderFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode varGenerator: varGenerator env: aDictionary);
+				nextPutAll: aString;
+				nextPutAll: ']' ]
+]
+
+{ #category : #utilities }
+ViennaVDM2Smalltalk >> closureHeaderFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode varGenerator: varGenerator env: aDictionary [
+	^ String
+		new: 1024
+		streamContents: [ :stream | 
 			| tmpVars matchPatternNodes tuplePattern matchVars |
 			tmpVars := OrderedCollection new.
 			matchPatternNodes := OrderedCollection new.
@@ -382,7 +394,7 @@ ViennaVDM2Smalltalk >> closureFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode 
 						ifTrue: [ 
 							stream
 								nextPutAll: ' :';
-								nextPutAll: (patternNode first ifNil: [varGenerator value])].
+								nextPutAll: (patternNode first ifNil: [ varGenerator value ]) ].
 					bindType = #compound
 						ifTrue: [ 
 							| tmpVar |
@@ -395,7 +407,7 @@ ViennaVDM2Smalltalk >> closureFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode 
 			tuplePattern := ViennaNode label: 'TuplePattern' with: (ViennaNode label: 'PatternList' withAll: matchPatternNodes).
 			matchVars := (self boundVariables: tuplePattern) asArray.
 			anArrayOfPatternNodeAndTypeSetNode ifNotEmpty: [ stream nextPutAll: ' | ' ].
-			(matchVars notEmpty)
+			matchVars notEmpty
 				ifTrue: [ 
 					stream nextPutAll: ' | '.
 					matchVars
@@ -407,10 +419,7 @@ ViennaVDM2Smalltalk >> closureFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode 
 						nextPutAll: '| ';
 						nextPutAll:
 								(self binder: (self generate: tuplePattern env: aDictionary) with: '{' , (' . ' join: tmpVars) , '}' vars: matchVars);
-						nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ].
-			stream
-				nextPutAll: aString;
-				nextPutAll: ']' ]
+						nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ] ]
 ]
 
 { #category : #utilities }
@@ -618,7 +627,7 @@ ViennaVDM2Smalltalk >> existsExpression: aViennaNode env: aDictionary [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2Smalltalk >> explicitFunctionDefinition: aViennaNode env: aDictionary [
-	| funcName typeNode preNode postNode parametersListNode body varGenerator |
+	| funcName typeNode preNode postNode parametersListNode body varGenerator preBody postBody retType argTypes |
 	funcName := aViennaNode first.
 	typeNode := aViennaNode third.
 	preNode := aViennaNode seventh.
@@ -626,36 +635,86 @@ ViennaVDM2Smalltalk >> explicitFunctionDefinition: aViennaNode env: aDictionary 
 	parametersListNode := aViennaNode fifth.
 	body := self generate: aViennaNode sixth env: aDictionary.
 	preNode
-		ifNotNil: [ body := (self generate: preNode env: aDictionary) , 'ifFalse: [ViennaPreconditionViolation signal]. ' , body ].
+		ifNotNil: [ 
+			preBody := self generate: preNode env: aDictionary.
+			body := preBody , 'ifFalse: [ViennaPreconditionViolation signal]. ' , body ].
 	postNode
 		ifNotNil: [ 
-			body := '[|RESULT| RESULT := [' , body , '] value. (' , (self generate: postNode env: aDictionary)
+			postBody := self generate: postNode env: aDictionary.
+			body := '[|RESULT| RESULT := [' , body , '] value. (' , postBody
 				, ') ifFalse: [ViennaPostconditionViolation signal]. RESULT] value' ].
 	varGenerator := self
 		varNameGenerator: 'func'
 		uniqueIn:
 			{funcName.
 			body}.
-	parametersListNode asArray
-		reverseDo: [ :parametersNode | 
-			| argType binds |
-			argType := typeNode first.
+	argTypes := parametersListNode
+		collect: [ :node | 
+			| t |
+			t := typeNode first.
 			typeNode := typeNode second.
-			binds := argType label = 'ProductType'
-				ifTrue: [ 
-					(1 to: parametersNode size)
-						collect: [ :index | 
-							{(parametersNode at: index).
-							(argType at: index)} ] ]
-				ifFalse: [ 
-					{{(parametersNode first).
-					argType}} ].
-			body := self
-				closureFromFlatBinds: binds
-				body: body
-				varGenerator: varGenerator
-				env: aDictionary ].
-	^ funcName , ' := ' , body
+			t ].
+	retType := typeNode.
+	parametersListNode size to: 1 by: -1 do: [ :level | 
+		| parametersNode argType binds |
+		parametersNode := parametersListNode at: level.
+		argType := argTypes at: level.
+		binds := argType label = 'ProductType'
+			ifTrue: [ 
+				(1 to: parametersNode size)
+					collect: [ :index | 
+						{(parametersNode at: index).
+						(argType at: index)} ] ]
+			ifFalse: [ 
+				{{(parametersNode first).
+				argType}} ].
+		body := self
+			closureFromFlatBinds: binds
+			body: body
+			varGenerator: varGenerator
+			env: aDictionary.
+		preBody
+			ifNotNil: [ 
+				preBody := self
+					closureFromFlatBinds: binds
+					body: preBody
+					varGenerator: varGenerator
+					env: aDictionary ].
+		postBody
+			ifNotNil: [ 
+				postBody := self
+					closureFromFlatBinds:
+						(level = parametersListNode size
+							ifTrue: [ 
+								binds
+									,
+										{{(ViennaNode label: 'PatternIdentifier' with: 'RESULT').
+										typeNode}} ]
+							ifFalse: [ binds ])
+					body: postBody
+					varGenerator: varGenerator
+					env: aDictionary ] ].
+	^ String
+		new: 1024
+		streamContents: [ :stream | 
+			preBody
+				ifNotNil: [ 
+					stream
+						nextPutAll: 'pre_' , funcName;
+						nextPutAll: ' := ';
+						nextPutAll: preBody;
+						nextPutAll: '. ' ].
+			postBody
+				ifNotNil: [ 
+					stream
+						nextPutAll: 'post_' , funcName;
+						nextPutAll: ' := ';
+						nextPutAll: postBody;
+						nextPutAll: '. ' ].
+			stream
+				nextPutAll: funcName;
+				nextPutAll: ' := ';
+				nextPutAll: body ]
 ]
 
 { #category : #'code generation-definitions' }
@@ -853,6 +912,11 @@ ViennaVDM2Smalltalk >> fromFlatBinds: patternsAndSets patternNodeAndSetOrTypeNod
 							allSatisfy: [ :i | i = index or: [ ((boundVariables at: i) includes: patternNode first) not ] ] ])
 					ifTrue: [ #identifier ]
 					ifFalse: [ #compound ]) ]
+]
+
+{ #category : #'code generation-definitions' }
+ViennaVDM2Smalltalk >> funcPre: aViennaNode [
+	
 ]
 
 { #category : #'code generation-definitions' }

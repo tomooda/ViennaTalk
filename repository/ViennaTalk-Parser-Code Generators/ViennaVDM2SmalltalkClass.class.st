@@ -217,7 +217,21 @@ ViennaVDM2SmalltalkClass >> explicitFunctionDefinition: aViennaNode env: aDictio
 		defineLazyMethodNamed: identifier
 		initializer: initializer
 		in: theClass
-		protocol: 'functions'
+		protocol: 'functions'.
+	aViennaNode seventh
+		ifNotNil: [ 
+			self
+				defineLazyMethodNamed: 'pre_' , identifier
+				initializer: initializer
+				in: theClass
+				protocol: 'functions' ].
+	aViennaNode eighth
+		ifNotNil: [ 
+			self
+				defineLazyMethodNamed: 'post_' , identifier
+				initializer: initializer
+				in: theClass
+				protocol: 'functions' ]
 ]
 
 { #category : #'code generation-definitions' }

@@ -96,12 +96,16 @@ TViennaVDMBoundVariableCollector >> boundVariablesEqualDefinitionList: aViennaNo
 
 { #category : #'bound variables-definitions' }
 TViennaVDMBoundVariableCollector >> boundVariablesExplicitFunctionDefinition: aViennaNode into: aSet [
-	aSet add: aViennaNode first
+	aSet add: aViennaNode first.
+	aViennaNode seventh ifNotNil: [ aSet add: 'pre_' , aViennaNode first ].
+	aViennaNode eighth ifNotNil: [ aSet add: 'post_' , aViennaNode first ]
 ]
 
 { #category : #'bound variables-definitions' }
 TViennaVDMBoundVariableCollector >> boundVariablesExplicitOperationDefinition: aViennaNode into: aSet [
-	aSet add: aViennaNode first
+	aSet add: aViennaNode first.
+	aViennaNode sixth ifNotNil: [ aSet add: 'pre_' , aViennaNode first ].
+	aViennaNode seventh ifNotNil: [ aSet add: 'post_' , aViennaNode first ]
 ]
 
 { #category : #'bound variables-interfaces' }
