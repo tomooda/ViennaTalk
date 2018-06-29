@@ -440,5 +440,7 @@ LWTPlotWidget >> value: aVDMValue [
 	value ~= oldValue
 		ifTrue: [ 
 			self changed.
+			self event: #assigned.
 			self event: #changed ]
+		ifFalse: [ self event: #assigned ]
 ]

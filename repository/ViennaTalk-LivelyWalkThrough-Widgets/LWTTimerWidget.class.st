@@ -196,6 +196,7 @@ LWTTimerWidget >> value: aString [
 			| oldValue |
 			oldValue := value.
 			value := i asString.
+			self event: #assigned.
 			oldValue ~= value
 				ifTrue: [ self event: #changed ].
 			self changed ]

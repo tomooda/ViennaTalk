@@ -9,10 +9,11 @@ Class {
 
 { #category : #accessing }
 LWTRemoteWidget >> acceptContents: aStringOrText [
-	contents ~= aStringOrText asString trim
-		ifTrue: [ 
-			super acceptContents: aStringOrText.
-			ZnEasy put: self url asUrl data: (ZnEntity text: aStringOrText) ].
+	| oldContents |
+	oldContents := contents.
+	super acceptContents: aStringOrText.
+	oldContents ~= aStringOrText asString trim
+		ifTrue: [ ZnEasy put: self url asUrl data: (ZnEntity text: aStringOrText) ].
 	^ true
 ]
 
