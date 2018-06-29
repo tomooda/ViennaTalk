@@ -119,6 +119,7 @@ LWTFieldWidget >> buildTextPane [
 	textMorph
 		acceptOnCR: true;
 		acceptOnFocusChange: true;
+		autoAccept: true;
 		borderColor: Color black;
 		borderWidth: 1;
 		font: self textFont;
