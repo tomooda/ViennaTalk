@@ -17,3 +17,8 @@ Object >> viennaAtomic: aBlock [
 		do: [ :ex | ex resume ].
 	self inv
 ]
+
+{ #category : #'*ViennaTalk-Parser-Code Generators' }
+Object >> writeToSlot: aSlot of: anObject [
+	^anObject writeSlot: aSlot value: self
+]
