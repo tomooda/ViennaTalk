@@ -25,6 +25,11 @@ ViennaOptionType >> = anObject [
 	^ self class = anObject class and: [ basetype = anObject basetype ]
 ]
 
+{ #category : #comparing }
+ViennaOptionType >> >= aViennaType [
+	^ super >= aViennaType or: [ basetype >= aViennaType ]
+]
+
 { #category : #private }
 ViennaOptionType >> basetype [
 	^ basetype

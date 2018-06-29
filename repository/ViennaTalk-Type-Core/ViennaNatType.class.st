@@ -1,5 +1,5 @@
 Class {
-	#name : #ViennaIntType,
+	#name : #ViennaNatType,
 	#superclass : #ViennaType,
 	#type : #variable,
 	#classVars : [
@@ -9,56 +9,61 @@ Class {
 }
 
 { #category : #'instance creation' }
-ViennaIntType class >> current [
+ViennaNatType class >> current [
 	^ Current ifNil: [ Current := self new ]
 ]
 
 { #category : #accessing }
-ViennaIntType class >> precedence [
+ViennaNatType class >> precedence [
 	^ 6
 ]
 
 { #category : #comparing }
-ViennaIntType >> = anObject [
+ViennaNatType >> = anObject [
 	^ self class = anObject class or: [ self class = anObject ]
 ]
 
 { #category : #comparing }
-ViennaIntType >> >= aViennaType [
-	^ super >= aViennaType or: [ aViennaType isIntType ]
+ViennaNatType >> >= aViennaType [
+	^ super >= aViennaType or: [ aViennaType isNatType ]
 ]
 
 { #category : #enumerating }
-ViennaIntType >> do: aBlock [
+ViennaNatType >> do: aBlock [
 	^ self shouldNotImplement
 ]
 
 { #category : #comparing }
-ViennaIntType >> hash [
+ViennaNatType >> hash [
 	^ self class hash
 ]
 
 { #category : #testing }
-ViennaIntType >> includes: anObject [
-	^ anObject isInteger
+ViennaNatType >> includes: anObject [
+	^ anObject isInteger and: [ anObject >= 0 ]
 ]
 
 { #category : #testing }
-ViennaIntType >> isEnumerable [
+ViennaNatType >> isEnumerable [
 	^ false
 ]
 
 { #category : #testing }
-ViennaIntType >> isIntType [
+ViennaNatType >> isIntType [
 	^ true
 ]
 
 { #category : #testing }
-ViennaIntType >> isRealType [
+ViennaNatType >> isNatType [
+	^ true
+]
+
+{ #category : #testing }
+ViennaNatType >> isRealType [
 	^ true
 ]
 
 { #category : #accessing }
-ViennaIntType >> name [
-	^ 'int'
+ViennaNatType >> name [
+	^ 'nat'
 ]

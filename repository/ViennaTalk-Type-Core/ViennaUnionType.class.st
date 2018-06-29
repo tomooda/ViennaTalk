@@ -30,6 +30,15 @@ ViennaUnionType >> = anObject [
 	^ self class = anObject class and: [ basetypes = anObject basetypes ]
 ]
 
+{ #category : #comparing }
+ViennaUnionType >> >= aViennaType [
+	^ super >= aViennaType
+		or: [ 
+			aViennaType class = self class
+				ifTrue: [ aViennaType basetypes allSatisfy: [ :t | self >= t ] ]
+				ifFalse: [ basetypes anySatisfy: [ :t | t >= aViennaType ] ] ]
+]
+
 { #category : #private }
 ViennaUnionType >> basetypes [
 	^ basetypes

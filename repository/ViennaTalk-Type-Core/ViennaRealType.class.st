@@ -23,6 +23,11 @@ ViennaRealType >> = anObject [
 	^ self class = anObject class or: [ self class = anObject ]
 ]
 
+{ #category : #comparing }
+ViennaRealType >> >= aViennaType [
+	^ super >= aViennaType or: [ aViennaType isRealType ]
+]
+
 { #category : #enumerating }
 ViennaRealType >> do: aBlock [
 	^ self shouldNotImplement
@@ -41,6 +46,11 @@ ViennaRealType >> includes: anObject [
 { #category : #testing }
 ViennaRealType >> isEnumerable [
 	^ false
+]
+
+{ #category : #testing }
+ViennaRealType >> isRealType [
+	^ true
 ]
 
 { #category : #accessing }

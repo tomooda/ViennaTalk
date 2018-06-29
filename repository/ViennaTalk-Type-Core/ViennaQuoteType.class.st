@@ -22,7 +22,7 @@ ViennaQuoteType class >> with: aSymbol [
 
 { #category : #comparing }
 ViennaQuoteType >> = anObject [
-	^ self class = anObject class and: [ symbol = anObject symbol ]
+	^ self class = anObject class and: [ symbol == anObject symbol ]
 ]
 
 { #category : #enumerating }
@@ -37,7 +37,7 @@ ViennaQuoteType >> hash [
 
 { #category : #testing }
 ViennaQuoteType >> includes: anObject [
-	^ symbol = anObject
+	^ symbol == anObject
 ]
 
 { #category : #testing }
@@ -57,5 +57,5 @@ ViennaQuoteType >> setSymbol: aSymbol [
 
 { #category : #private }
 ViennaQuoteType >> symbol [
-	
+	^ symbol
 ]

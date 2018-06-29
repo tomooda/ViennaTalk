@@ -30,6 +30,16 @@ ViennaProductType >> * aViennaType [
 	^ self copy setBasetypes: (basetypes copyWith: aViennaType)
 ]
 
+{ #category : #arithmetic }
+ViennaProductType >> +> aViennaType [
+	^ ViennaTotalFunctionType withAll: basetypes with: aViennaType
+]
+
+{ #category : #arithmetic }
+ViennaProductType >> -> aViennaType [
+	^ ViennaPartialFunctionType withAll: basetypes with: aViennaType
+]
+
 { #category : #comparing }
 ViennaProductType >> = anObject [
 	^ self class = anObject class and: [ basetypes = anObject basetypes ]

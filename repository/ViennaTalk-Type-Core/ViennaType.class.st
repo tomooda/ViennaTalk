@@ -6,8 +6,23 @@ Class {
 }
 
 { #category : #'instance creation' }
+ViennaType class >> bool [
+	^ ViennaBoolType current
+]
+
+{ #category : #'instance creation' }
+ViennaType class >> char [
+	^ ViennaCharType current
+]
+
+{ #category : #'instance creation' }
 ViennaType class >> compose: aString of: anArray [
 	^ ViennaCompositeType constructorName: aString withAll: anArray
+]
+
+{ #category : #'instance creation' }
+ViennaType class >> inmap: aViennaType1 to: aViennaType2 [
+	^ ViennaInmapType with: aViennaType1 with: aViennaType2
 ]
 
 { #category : #'instance creation' }
@@ -16,8 +31,28 @@ ViennaType class >> int [
 ]
 
 { #category : #'instance creation' }
+ViennaType class >> map: aViennaType1 to: aViennaType2 [
+	^ ViennaMapType with: aViennaType1 with: aViennaType2
+]
+
+{ #category : #'instance creation' }
+ViennaType class >> nat [
+	^ ViennaNatType current
+]
+
+{ #category : #'instance creation' }
+ViennaType class >> nat1 [
+	^ ViennaNat1Type current
+]
+
+{ #category : #'instance creation' }
 ViennaType class >> option: aViennaType [
 	^ ViennaOptionType with: aViennaType
+]
+
+{ #category : #'instance creation' }
+ViennaType class >> partialFunction: anArrayOfViennaType to: aViennaType [
+	^ ViennaPartialFunctionType withAll: anArrayOfViennaType with: aViennaType
 ]
 
 { #category : #accessing }
@@ -41,6 +76,31 @@ ViennaType class >> real [
 ]
 
 { #category : #'instance creation' }
+ViennaType class >> seq1Of: aViennaType [
+	^ ViennaSeq1Type with: aViennaType
+]
+
+{ #category : #'instance creation' }
+ViennaType class >> seqOf: aViennaType [
+	^ ViennaSeqType with: aViennaType
+]
+
+{ #category : #'instance creation' }
+ViennaType class >> setOf: aViennaType [
+	^ ViennaSetType with: aViennaType
+]
+
+{ #category : #'instance creation' }
+ViennaType class >> token [
+	^ ViennaTokenType
+]
+
+{ #category : #'instance creation' }
+ViennaType class >> totalFunction: anArrayOfViennaType to: aViennaType [
+	^ ViennaTotalFunctionType withAll: anArrayOfViennaType with: aViennaType
+]
+
+{ #category : #'instance creation' }
 ViennaType class >> union: anArrayOfViennaType [
 	^ ViennaUnionType withAll: anArrayOfViennaType
 ]
@@ -48,6 +108,36 @@ ViennaType class >> union: anArrayOfViennaType [
 { #category : #arithmetic }
 ViennaType >> * aViennaType [
 	^ ViennaProductType with: self with: aViennaType
+]
+
+{ #category : #arithmetic }
+ViennaType >> +> aViennaType [
+	^ ViennaTotalFunctionType withAll: (Array with: self) with: aViennaType
+]
+
+{ #category : #arithmetic }
+ViennaType >> -> aViennaType [
+	^ ViennaPartialFunctionType withAll: (Array with: self) with: aViennaType
+]
+
+{ #category : #comparing }
+ViennaType >> < aViennaType [
+	^ self ~= aViennaType and: [ aViennaType >= self ]
+]
+
+{ #category : #comparing }
+ViennaType >> <= aViennaType [
+	^ aViennaType >= self
+]
+
+{ #category : #comparing }
+ViennaType >> > aViennaType [
+	^ self ~= aViennaType and: [ self >= aViennaType ]
+]
+
+{ #category : #comparing }
+ViennaType >> >= aViennaType [
+	^ self = aViennaType
 ]
 
 { #category : #enumerating }
@@ -92,9 +182,39 @@ ViennaType >> includes: anObject [
 	^ self subclassResponsibility
 ]
 
+{ #category : #arithmetic }
+ViennaType >> inmapTo: aViennaType [
+	^ ViennaInmapType with: self with: aViennaType
+]
+
 { #category : #testing }
 ViennaType >> isEnumerable [
 	^ self subclassResponsibility
+]
+
+{ #category : #testing }
+ViennaType >> isIntType [
+	^ false
+]
+
+{ #category : #testing }
+ViennaType >> isNat1Type [
+	^ false
+]
+
+{ #category : #testing }
+ViennaType >> isNatType [
+	^ false
+]
+
+{ #category : #testing }
+ViennaType >> isRealType [
+	^ false
+]
+
+{ #category : #arithmetic }
+ViennaType >> mapTo: aViennaType [
+	^ ViennaMapType with: self with: aViennaType
 ]
 
 { #category : #accessing }
@@ -128,6 +248,21 @@ ViennaType >> select: aBlock [
 				do: [ :value | 
 					(aBlock value: value)
 						ifTrue: [ stream nextPut: value ] ] ]
+]
+
+{ #category : #arithmetic }
+ViennaType >> seq [
+	^ ViennaSeqType with: self
+]
+
+{ #category : #arithmetic }
+ViennaType >> seq1 [
+	^ ViennaSeq1Type with: self
+]
+
+{ #category : #arithmetic }
+ViennaType >> set [
+	^ ViennaSetType with: self
 ]
 
 { #category : #arithmetic }

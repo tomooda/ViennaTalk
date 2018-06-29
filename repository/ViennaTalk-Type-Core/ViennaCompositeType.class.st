@@ -22,6 +22,11 @@ ViennaCompositeType class >> precedence [
 	^ 6
 ]
 
+{ #category : #'instance creation' }
+ViennaCompositeType >> applyTo: anArray [
+	^ self valueWithArguments: anArray
+]
+
 { #category : #accessing }
 ViennaCompositeType >> basetypeAt: anIndex [
 	^ (self at: anIndex) third
@@ -49,7 +54,7 @@ ViennaCompositeType >> fieldsDo: aBlock [
 { #category : #testing }
 ViennaCompositeType >> includes: anObject [
 	((anObject isKindOf: ViennaComposite)
-		and: [ self constructorName = anObject constructorName and: [ self size = anObject size ] ])
+		and: [  constructorName = anObject constructorName and: [ self size = anObject size ] ])
 		ifFalse: [ ^ false ].
 	1 to: self basicSize do: [ :index | 
 		((self at: index) third includes: (anObject at: index))
