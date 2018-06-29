@@ -14,7 +14,7 @@ Class {
 
 { #category : #accessing }
 WeblyWalkThrough class >> current [
-	^ Current ifNil: [ Current := self new ]
+	^ Current ifNil: [ Current := self default ]
 ]
 
 { #category : #defaults }
@@ -46,8 +46,18 @@ WeblyWalkThrough class >> server [
 		ifNil: [ 
 			Server := (ZnMultiThreadedServer on: self defaultPort)
 				register;
-				start;
 				yourself ]
+]
+
+{ #category : #servicing }
+WeblyWalkThrough class >> startService [
+	self installHandler.
+	self server start
+]
+
+{ #category : #servicing }
+WeblyWalkThrough class >> stopService [
+	self server stop
 ]
 
 { #category : #'request handling' }
@@ -79,7 +89,10 @@ WeblyWalkThrough >> handleRequest: aZnRequest [
 	args := Array new.
 	method := aZnRequest method asLowercase.
 	method = 'get'
-		ifTrue: [ args := aZnRequest uri query values collect: [ :arg | translator jsonToVdm: arg ] ].
+		ifTrue: [ 
+			args := aZnRequest uri query
+				ifNil: [ #() ]
+				ifNotNil: [ :query | query values collect: [ :arg | translator jsonToVdm: arg ] ] ].
 	method = 'post'
 		ifTrue: [ 
 			(aZnRequest contentType main = 'application' and: [ aZnRequest contentType sub asLowercase = 'json' ])
@@ -93,14 +106,23 @@ WeblyWalkThrough >> handleRequest: aZnRequest [
 		ifError: [ :msg | ^ ZnResponse serverError: evalString , String cr , String cr , msg ].
 	resultJson := translator vdmToJson: result.
 	resultJson isPetitFailure
-		ifTrue: [ self halt ].
-	^ ZnResponse ok: (ZnEntity json: resultJson)
+		ifTrue: [ ^ ZnResponse serverError: resultJson printString , ' : ' , result asString ].
+	^ ZnResponse
+		ok:
+			((ZnStringEntity type: ZnMimeType applicationJson)
+				string: resultJson;
+				yourself)
 ]
 
 { #category : #'initialize-release' }
 WeblyWalkThrough >> initialize [
 	super initialize.
 	translator := WWTTranslator new
+]
+
+{ #category : #testing }
+WeblyWalkThrough >> isPublished [
+	^ self class server isRunning and: [ self class server delegate == self ]
 ]
 
 { #category : #accessing }
