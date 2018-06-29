@@ -94,6 +94,15 @@ ViennaVDM2SmalltalkTranslatorTest >> testBooleanLiteral [
 	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: 'false')) equals: false
 ]
 
+{ #category : #'tests-statements' }
+ViennaVDM2SmalltalkTranslatorTest >> testCallStatement [
+	self
+		assert:
+			(Compiler
+				evaluate: (ViennaVDM2SmalltalkTranslator new statement end parse: 'let inc = lambda x:nat&x+1 in return inc(2)'))
+		equals: 3
+]
+
 { #category : #'tests-operators' }
 ViennaVDM2SmalltalkTranslatorTest >> testCard [
 	self
@@ -388,6 +397,21 @@ ViennaVDM2SmalltalkTranslatorTest >> testExplicitFunctionDefinition [
 		equals: 3
 ]
 
+{ #category : #'tests-definitions' }
+ViennaVDM2SmalltalkTranslatorTest >> testExplicitOperationDefinition [
+	self
+		assert:
+			(Compiler
+				evaluate:
+					'|inc|'
+						,
+							(ViennaVDM2SmalltalkTranslator new explicitOperationDefinition end
+								parse:
+									'inc : int ==> int 
+									inc(x) == return x + 1') second , '. inc value: 2')
+		equals: 3
+]
+
 { #category : #'tests-operators' }
 ViennaVDM2SmalltalkTranslatorTest >> testFieldSelectWith [
 	self
@@ -573,6 +597,24 @@ ViennaVDM2SmalltalkTranslatorTest >> testInSetAnd [
 	self
 		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '0 in set {1,...,10}'))
 		equals: false
+]
+
+{ #category : #'tests-statements' }
+ViennaVDM2SmalltalkTranslatorTest >> testIndexForLoop [
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkTranslator new statement end
+						parse: '(dcl a : seq of int := []; for v = 1 to 5 by 2 do a := a ^ [v] ; return a)'))
+		equals: #(1 3 5) asOrderedCollection.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkTranslator new statement end
+						parse: '(dcl a : seq of int := []; for v = 1 to 3 do a := a ^ [v] ; return a)'))
+		equals: #(1 2 3) asOrderedCollection
 ]
 
 { #category : #'tests-operators' }
@@ -974,6 +1016,17 @@ ViennaVDM2SmalltalkTranslatorTest >> testNilLiteral [
 	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: 'nil')) equals: nil
 ]
 
+{ #category : #'tests-statements' }
+ViennaVDM2SmalltalkTranslatorTest >> testNondeterministicStatement [
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkTranslator new statement end
+						parse: '(dcl a : set of int := {}; ||(a := a union {1}, a := a union {2}, a := a union {3}); return a)'))
+		equals: #(1 2 3) asSet
+]
+
 { #category : #'tests-operators' }
 ViennaVDM2SmalltalkTranslatorTest >> testNot [
 	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: 'not true')) equals: false.
@@ -1229,6 +1282,17 @@ ViennaVDM2SmalltalkTranslatorTest >> testSequenceEnumeration [
 	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression parse: '[1, 3, 5]')) equals: #(1 3 5) asOrderedCollection
 ]
 
+{ #category : #'tests-statements' }
+ViennaVDM2SmalltalkTranslatorTest >> testSequenceForLoop [
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkTranslator new statement end
+						parse: '(dcl a : seq of int := []; for v in [1, 2, 3] do a := a ^ [v] ; return a)'))
+		equals: #(1 2 3) asOrderedCollection
+]
+
 { #category : #'tests-expressions' }
 ViennaVDM2SmalltalkTranslatorTest >> testSetComprehension [
 	self
@@ -1249,6 +1313,17 @@ ViennaVDM2SmalltalkTranslatorTest >> testSetEnumPattern [
 { #category : #'tests-expressions' }
 ViennaVDM2SmalltalkTranslatorTest >> testSetEnumeration [
 	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression parse: '{1, 3, 5}')) equals: #(1 3 5) asSet
+]
+
+{ #category : #'tests-statements' }
+ViennaVDM2SmalltalkTranslatorTest >> testSetForLoop [
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkTranslator new statement end
+						parse: '(dcl a : seq of int := []; for all v in set {1, ..., 3} do a := a ^ [v] ; return a)'))
+		equals: #(1 2 3) asOrderedCollection
 ]
 
 { #category : #'tests-expressions' }
@@ -1432,4 +1507,14 @@ ViennaVDM2SmalltalkTranslatorTest >> testValuePattern [
 				evaluate:
 					(ViennaVDM2SmalltalkTranslator new expression end parse: 'cases {{1}, {1, 2}} : {{a}, ({1,...,2})} -> a end'))
 		equals: 1
+]
+
+{ #category : #'tests-statements' }
+ViennaVDM2SmalltalkTranslatorTest >> testWhileLoop [
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkTranslator new statement end parse: '(dcl a : nat := 1; while a < 3 do a := a + 1; return a)'))
+		equals: 3
 ]

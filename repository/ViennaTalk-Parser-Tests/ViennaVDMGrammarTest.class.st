@@ -149,6 +149,12 @@ ViennaVDMGrammarTest >> testBooleanLiteral2 [
 	self assert: (grammar symbolicLiteral end parse: 'false') equals: false
 ]
 
+{ #category : #'tests-statements' }
+ViennaVDMGrammarTest >> testCallStatement [
+	self assert: (grammar statement end parse: 'f(e1,e2,e3)') equals: #('f' #('e1' 'e2' 'e3')).
+	self assert: (grammar statement end parse: 'f()') equals: #('f' #())
+]
+
 { #category : #'tests-expressions' }
 ViennaVDMGrammarTest >> testCasesExpression [
 	self
@@ -401,6 +407,13 @@ ViennaVDMGrammarTest >> testExplicitFunctionDefinition [
 		equals: #('f' #() #('t1' 't2') 'f' #(#('x')) 'y' nil nil nil)
 ]
 
+{ #category : #'tests-definitions' }
+ViennaVDMGrammarTest >> testExplicitOperationDefinition [
+	self
+		assert: (grammar operationDefinition end parse: 'op : nat==> () op(x) == return x pre e1 post e2')
+		equals: #('op' #('nat' nil) 'op' #('x') 'x' 'e1' 'e2')
+]
+
 { #category : #'tests-types' }
 ViennaVDMGrammarTest >> testFieldSelect1 [
 	self assert: (grammar expression end parse: 'r1.f1') equals: #('r1' 'f1')
@@ -531,6 +544,12 @@ ViennaVDMGrammarTest >> testIfStatement [
 	self
 		assert: (grammar expression end parse: 'if cond1 then e1 elseif cond2 then e2 elseif cond3 then e3 else e4')
 		equals: #(#(#('cond1' 'e1') #('cond2' 'e2') #('cond3' 'e3')) 'e4')
+]
+
+{ #category : #'tests-statements' }
+ViennaVDMGrammarTest >> testIndexForLoop [
+	self assert: (grammar statement end parse: 'for v = e1 to e2 by e3 do return e4') equals: #('v' 'e1' 'e2' 'e3' 'e4').
+	self assert: (grammar statement end parse: 'for v = e1 to e2 do return e3') equals: #('v' 'e1' 'e2' nil 'e3')
 ]
 
 { #category : #'tests-types' }
@@ -832,6 +851,11 @@ ViennaVDMGrammarTest >> testNewExpression2 [
 { #category : #'tests-literals' }
 ViennaVDMGrammarTest >> testNilLiteral [
 	self assert: (grammar symbolicLiteral end parse: 'nil') equals: nil
+]
+
+{ #category : #'tests-statements' }
+ViennaVDMGrammarTest >> testNondeterministicStatement [
+	self assert: (grammar statement end parse: '||(return e1, return e2, return e3)') equals: #('e1' 'e2' 'e3')
 ]
 
 { #category : #'tests-patterns' }
@@ -1190,6 +1214,11 @@ ViennaVDMGrammarTest >> testSequenceEnumeration3 [
 	self assert: (grammar expression end parse: '[e1,e2]') equals: #('e1' 'e2')
 ]
 
+{ #category : #'tests-statements' }
+ViennaVDMGrammarTest >> testSequenceForLoop [
+	self assert: (grammar statement end parse: 'for v in e1 do return e2') equals: #('v' 'e1' 'e2')
+]
+
 { #category : #'tests-expressions' }
 ViennaVDMGrammarTest >> testSetComprehension1 [
 	self
@@ -1237,6 +1266,11 @@ ViennaVDMGrammarTest >> testSetEnumeration2 [
 { #category : #'tests-expressions' }
 ViennaVDMGrammarTest >> testSetEnumeration3 [
 	self assert: (grammar expression end parse: '{e1,e2}') equals: #('e1' 'e2')
+]
+
+{ #category : #'tests-statements' }
+ViennaVDMGrammarTest >> testSetForLoop [
+	self assert: (grammar statement end parse: 'for all v in set e1 do return e2') equals: #('v' 'e1' 'e2')
 ]
 
 { #category : #'tests-expressions' }
@@ -1506,4 +1540,9 @@ ViennaVDMGrammarTest >> testWaitingExpression3 [
 { #category : #'tests-expressions' }
 ViennaVDMGrammarTest >> testWatitingExpression1 [
 	self assert: (grammar expression end parse: '#waiting(o)') equals: #('o')
+]
+
+{ #category : #'tests-statements' }
+ViennaVDMGrammarTest >> testWhileLoop [
+	self assert: (grammar statement end parse: 'while e1 do return e2') equals: #('e1' 'e2')
 ]
