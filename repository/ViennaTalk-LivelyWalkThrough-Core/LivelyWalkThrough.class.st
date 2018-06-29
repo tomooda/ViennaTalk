@@ -33,6 +33,11 @@ LivelyWalkThrough class >> fileOpen: title extensions: exts path: path preview: 
 	^ (ui openModal: fd) answer ifNotNil: [ :ans | ans asFileReference ]
 ]
 
+{ #category : #'class initialization' }
+LivelyWalkThrough class >> initialize [
+	super initialize
+]
+
 { #category : #'world menu' }
 LivelyWalkThrough class >> livelyWalkThroughMenuOn: aBuilder [
 	<worldMenu>
