@@ -483,9 +483,11 @@ ViennaVDM2SmalltalkClass >> extendedExplicitFunctionDefinition: aViennaNode env:
 ViennaVDM2SmalltalkClass >> extendedExplicitOperationDefinition: aViennaNode env: aDictionary [
 	| opname patternTypePairListNode retVar retTypeNode body preNode postNode varGenerator binds theClass |
 	opname := aViennaNode first.
-	patternTypePairListNode := aViennaNode second first.
-	retVar := aViennaNode third first.
-	retTypeNode := aViennaNode third second.
+	patternTypePairListNode := aViennaNode second first ifNil: [ Array new ].
+	retVar := aViennaNode third ifNil: [ 'RESULT' ] ifNotNil: [ :node | node first ].
+	retTypeNode := aViennaNode third
+		ifNil: [ ViennaNode label: 'UnitType' ]
+		ifNotNil: [ :node | node second ].
 	body := self generate: aViennaNode fourth.
 	preNode := aViennaNode sixth.
 	postNode := aViennaNode seventh.
@@ -627,7 +629,10 @@ ViennaVDM2SmalltalkClass >> flatDocument: aViennaNode env: aDictionary [
 	aViennaNode
 		do: [ :definitionBlock | 
 			definitionBlock first label = 'StateDefinition'
-				ifTrue: [ stateVars := definitionBlock first second collect: #first ] ].
+				ifTrue: [ | stateDefinition |
+					stateDefinition := definitionBlock first.
+					stateVars := stateDefinition second collect: #first.
+					env at: stateDefinition first put: 'self ' , stateDefinition first ] ].
 	instVars := (self boundVariables: aViennaNode)
 		removeAll: stateVars;
 		asArray.
@@ -636,8 +641,12 @@ ViennaVDM2SmalltalkClass >> flatDocument: aViennaNode env: aDictionary [
 	aViennaNode
 		do: [ :definitionBlock | 
 			definitionBlock first label = 'StateDefinition'
-				ifFalse: [ (self boundVariables: definitionBlock) do: [ :ident | env at: ident put: 'self ' , ident ] ] ].
-	self defineMethod: 'initialize super initialize. self init' in: newClass protocol: 'initialize-release'.
+				ifFalse: [ (self boundVariables: definitionBlock)
+						do: [ :ident | env at: ident put: 'self ' , ident ] ] ].
+	self
+		defineMethod: 'initialize super initialize. self init'
+		in: newClass
+		protocol: 'initialize-release'.
 	aViennaNode do: [ :definitionBlock | self definitionBlock: definitionBlock env: env ].
 	(newClass includesSelector: #init)
 		ifFalse: [ self defineMethod: 'init' in: newClass protocol: 'state' ].
@@ -921,15 +930,20 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 	moduleBodyNode := aViennaNode third.
 	importModuleNames := interfaceNode first
 		ifNil: [ Array new ]
-		ifNotNil: [ :importDefinitionListNode | importDefinitionListNode collect: [ :importDefinitionNode | importDefinitionNode first ] ].
+		ifNotNil:
+			[ :importDefinitionListNode | importDefinitionListNode collect: [ :importDefinitionNode | importDefinitionNode first ] ].
 	importClassNames := importModuleNames
 		collect: [ :importModuleName | env at: importModuleName first ifAbsent: [ importModuleName ] ].
 	stateVars := #().
 	moduleBodyNode
 		do: [ :definitionBlock | 
 			definitionBlock first label = 'StateDefinition'
-				ifTrue: [ stateVars := definitionBlock first second collect: #first ]
-				ifFalse: [ (self boundVariables: definitionBlock) do: [ :ident | env at: ident put: 'self ' , ident ] ] ].
+				ifTrue: [ | stateDefinition |
+					stateDefinition := definitionBlock first.
+					stateVars := stateDefinition second collect: #first.
+					env at: stateDefinition first put: 'self ' , stateDefinition first ]
+				ifFalse: [ (self boundVariables: definitionBlock)
+						do: [ :ident | env at: ident put: 'self ' , ident ] ] ].
 	instVars := (self boundVariables: moduleBodyNode)
 		removeAll: stateVars;
 		asArray.
@@ -944,8 +958,8 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 		do: [ :importModuleName :importClassName | 
 			self
 				defineMethod:
-					importModuleName , ':' , 'a' , importClassName capitalized , String cr , importModuleName , ' := ' , 'a'
-						, importClassName capitalized
+					importModuleName , ':' , 'a' , importClassName capitalized , String cr , importModuleName
+						, ' := ' , 'a' , importClassName capitalized
 				in: newClass
 				protocol: 'imports' ].
 	moduleBodyNode do: [ :definitionBlock | self definitionBlock: definitionBlock env: env ].
