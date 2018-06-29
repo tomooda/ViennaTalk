@@ -1098,6 +1098,11 @@ ViennaAbstractFormatter >> inmapType: aViennaNode [
 ]
 
 { #category : #'symbol access' }
+ViennaAbstractFormatter >> inseq [
+	^ 'in seq'
+]
+
+{ #category : #'symbol access' }
 ViennaAbstractFormatter >> inset [
 	^ 'in set'
 ]
@@ -1924,6 +1929,11 @@ ViennaAbstractFormatter >> seq1Prefix [
 { #category : #'formatting-types' }
 ViennaAbstractFormatter >> seq1Type: aViennaNode [
 	^ self seq1Prefix, (self format: aViennaNode first) , self seq1Postfix
+]
+
+{ #category : #'formatting-patterns and binds' }
+ViennaAbstractFormatter >> seqBind: aViennaNode [
+	^ self print: (self format: aViennaNode first) infix: self inseq arg: (self format: aViennaNode second)
 ]
 
 { #category : #'formatting-patterns and binds' }
