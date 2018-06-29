@@ -521,6 +521,20 @@ ViennaVDM2SmalltalkTranslatorTest >> testIotaExpression [
 		raise: NotFound
 ]
 
+{ #category : #'tests-expressions' }
+ViennaVDM2SmalltalkTranslatorTest >> testIsExpression [
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: 'is_bool(true)'))
+		equals: true.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: 'is_int(true)'))
+		equals: false.
+	self
+		assert:
+			(Compiler evaluate: '| t | t := ViennaType int. ' , (ViennaVDM2SmalltalkTranslator new expression end parse: 'is_t(1)'))
+		equals: true
+]
+
 { #category : #'tests-operators' }
 ViennaVDM2SmalltalkTranslatorTest >> testIterateExpressionAnd [
 	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: '2 ** 3')) equals: 8.
@@ -1124,6 +1138,21 @@ ViennaVDM2SmalltalkTranslatorTest >> testTupleSelectWith [
 	self
 		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: 'mk_(10, 20, 30).#2'))
 		equals: 20
+]
+
+{ #category : #'tests-expressions' }
+ViennaVDM2SmalltalkTranslatorTest >> testTypeJudgement [
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: 'is_(true, bool)'))
+		equals: true.
+	self
+		assert: (Compiler evaluate: (ViennaVDM2SmalltalkTranslator new expression end parse: 'is_(true, int)'))
+		equals: false.
+	self
+		assert:
+			(Compiler
+				evaluate: '| t | t := ViennaType int. ' , (ViennaVDM2SmalltalkTranslator new expression end parse: 'is_(1, t)'))
+		equals: true
 ]
 
 { #category : #'tests-operators' }
