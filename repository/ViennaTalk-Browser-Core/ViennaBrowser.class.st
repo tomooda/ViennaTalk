@@ -62,7 +62,7 @@ ViennaBrowser class >> openOn: aVDMC withLabel: label [
 
 { #category : #'world menu' }
 ViennaBrowser class >> viennaToolsMenuOn: aBuilder [
-	<ViennaTools>
+	<ViennaToolsMenu>
 	(aBuilder item: #'VDM Browser')
 		action: [ self open ];
 		order: 0.1;
