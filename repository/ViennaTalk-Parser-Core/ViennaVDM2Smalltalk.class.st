@@ -1786,7 +1786,9 @@ ViennaVDM2Smalltalk >> seqConcPattern: aViennaNode env: aDictionary [
 	| pat1 pat2 |
 	pat1 := self generate: aViennaNode first env: aDictionary.
 	pat2 := self generate: aViennaNode second env: aDictionary.
-	^ '(ViennaRuntimeUtil match: ' , pat1 , ' conc: ' , pat2 , ')'
+	^ '(ViennaRuntimeUtil match: ' , pat1 , ' conc: ' , pat2
+		, ((self seqPatternSize: aViennaNode first) ifNotNil: [ :size | ' left: ' , size printString ] ifNil: [ '' ])
+		, ((self seqPatternSize: aViennaNode second) ifNotNil: [ :size | ' right: ' , size printString ] ifNil: [ '' ]) , ')'
 ]
 
 { #category : #'code generation-patterns' }
@@ -1794,6 +1796,20 @@ ViennaVDM2Smalltalk >> seqEnumPattern: aViennaNode env: aDictionary [
 	| elementPatterns |
 	elementPatterns := self generateAll: aViennaNode env: aDictionary.
 	^ '(ViennaRuntimeUtil matchSequenceEnumeration: {' , (' . ' join: elementPatterns) , '})'
+]
+
+{ #category : #utilities }
+ViennaVDM2Smalltalk >> seqPatternSize: aViennaNode [
+	aViennaNode label = 'SeqEnumPattern'
+		ifTrue: [ ^ aViennaNode size ].
+	aViennaNode label = 'SeqConcPattern'
+		ifTrue: [ 
+			| left right |
+			left := self seqPatternSize: aViennaNode first.
+			right := self seqPatternSize: aViennaNode second.
+			left ifNotNil: [ right ifNotNil: [ ^ left + right ] ].
+			^ nil ].
+	^ nil
 ]
 
 { #category : #'code generation-types' }

@@ -1181,7 +1181,7 @@ ViennaVDMFormatter >> mapEnumeration: aViennaNode [
 
 { #category : #'formatting-patterns and binds' }
 ViennaVDMFormatter >> mapEnumerationPattern: aViennaNode [
-	^ '{' , (self formatEnumerate: (self formatAll: aViennaNode first) ifEmpty: [ '|->' ]) , '}'
+	^ '{' , (self formatEnumerate: (self formatAll: aViennaNode) ifEmpty: [ '|->' ]) , '}'
 ]
 
 { #category : #'formatting-expressions' }
@@ -1656,7 +1656,7 @@ ViennaVDMFormatter >> seqConcPattern: aViennaNode [
 
 { #category : #'formatting-patterns and binds' }
 ViennaVDMFormatter >> seqEnumPattern: aViennaNode [
-	^ '[' , (self formatEnumerate: (self formatAll: aViennaNode first) ifEmpty: [ '' ]) , ']'
+	^ '[' , (self formatEnumerate: (self formatAll: aViennaNode) ifEmpty: [ '' ]) , ']'
 ]
 
 { #category : #'formatting-types' }
@@ -1757,7 +1757,7 @@ ViennaVDMFormatter >> setDifference: aViennaNode [
 
 { #category : #'formatting-patterns and binds' }
 ViennaVDMFormatter >> setEnumPattern: aViennaNode [
-	^ '{' , (self formatEnumerate: (self formatAll: aViennaNode first) ifEmpty: [ '' ]) , '}'
+	^ '{' , (self formatEnumerate: (self formatAll: aViennaNode) ifEmpty: [ '' ]) , '}'
 ]
 
 { #category : #'formatting-expressions' }
