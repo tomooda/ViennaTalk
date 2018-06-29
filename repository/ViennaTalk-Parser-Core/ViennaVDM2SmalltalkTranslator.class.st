@@ -14,9 +14,19 @@ ViennaVDM2SmalltalkTranslator >> and: arg1 and: arg2 [
 	^ '(' , arg1 , ' and: [' , arg2 , '])'
 ]
 
+{ #category : #'parsers-types' }
+ViennaVDM2SmalltalkTranslator >> anonymousField [
+	^ super anonymousField ==> [ :fieldtype | '{nil . false. ' , fieldtype , '}' ]
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> apply: func args: args [
 	^ '(' , func , ' applyTo: {' , (' . ' join: args) , '})'
+]
+
+{ #category : #'parsers-types' }
+ViennaVDM2SmalltalkTranslator >> basicType [
+	^ super basicType ==> [ :typename | 'ViennaType ' , typename ]
 ]
 
 { #category : #utilities }
@@ -118,6 +128,16 @@ ViennaVDM2SmalltalkTranslator >> characterLiteral [
 	^ super characterLiteral ==> [ :c | c storeString ]
 ]
 
+{ #category : #'parsers-types' }
+ViennaVDM2SmalltalkTranslator >> compositeType [
+	^ super compositeType
+		==> [ :pair | 
+			| constructorName fields |
+			constructorName := pair first.
+			fields := pair second.
+			'(ViennaType compose: ' , constructorName storeString , ' of: {' , (' . ' join: fields) , '})' ]
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> compositionExpression: expr1 and: expr2 [
 	^ (super compositionExpression: expr1 and: expr2) in: [ :pair | '(' , pair first , ' comp: ' , pair second , ')' ]
@@ -193,6 +213,16 @@ ViennaVDM2SmalltalkTranslator >> elems: arg [
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> equal: arg1 and: arg2 [
 	^ '(' , arg1 , ' = ' , arg2 , ')'
+]
+
+{ #category : #'parsers-types' }
+ViennaVDM2SmalltalkTranslator >> equalityAbstractionField [
+	^ super equalityAbstractionField
+		==> [ :pair | 
+			| fieldName fieldType |
+			fieldName := pair first.
+			fieldType := pair second.
+			'{' , fieldName storeString , '. true. ' , pair second , '}' ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -399,6 +429,16 @@ ViennaVDM2SmalltalkTranslator >> hexadecimalLiteral [
 	^ super hexadecimalLiteral ==> [ :hex | '16r' , hex ]
 ]
 
+{ #category : #'parsers-types' }
+ViennaVDM2SmalltalkTranslator >> identifiedField [
+	^ super identifiedField
+		==> [ :pair | 
+			| fieldName fieldType |
+			fieldName := pair first.
+			fieldType := pair second.
+			'{' , fieldName storeString , '. false. ' , pair second , '}' ]
+]
+
 { #category : #'parsers-expressions-basics' }
 ViennaVDM2SmalltalkTranslator >> ifExpression [
 	^ super ifExpression
@@ -423,6 +463,16 @@ ViennaVDM2SmalltalkTranslator >> inSet: arg1 and: arg2 [
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> inds: arg [
 	^ '(1 to: ' , arg , ' size) asSet'
+]
+
+{ #category : #'parsers-types' }
+ViennaVDM2SmalltalkTranslator >> inmapType [
+	^ super inmapType
+		==> [ :pair | 
+			| domaintype rangetype |
+			domaintype := pair first.
+			rangetype := pair second.
+			'(' , domaintype , ' inmapTo: ' , rangetype , ')' ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -658,6 +708,16 @@ ViennaVDM2SmalltalkTranslator >> mapMunionPattern [
 			('(ViennaRuntimeUtil match: ' , pat1 , ' munion: ' , pat2 , ')')} ]
 ]
 
+{ #category : #'parsers-types' }
+ViennaVDM2SmalltalkTranslator >> mapType [
+	^ super mapType
+		==> [ :pair | 
+			| domaintype rangetype |
+			domaintype := pair first.
+			rangetype := pair second.
+			'(' , domaintype , ' mapTo: ' , rangetype , ')' ]
+]
+
 { #category : #'parsers-patterns' }
 ViennaVDM2SmalltalkTranslator >> matchValueExpression [
 	^ super matchValueExpression
@@ -724,9 +784,24 @@ ViennaVDM2SmalltalkTranslator >> notInSet: arg1 and: arg2 [
 	^ '(' , arg2 , ' includes: ' , arg1 , ') not'
 ]
 
+{ #category : #'parsers-types' }
+ViennaVDM2SmalltalkTranslator >> optionalType [
+	^ super optionalType ==> [ :basetype | basetype , ' optional' ]
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> or: arg1 and: arg2 [
 	^ '(' , arg1 , ' or: [' , arg2 , '])'
+]
+
+{ #category : #'parsers-types' }
+ViennaVDM2SmalltalkTranslator >> partialFunctionType [
+	^ super partialFunctionType
+		==> [ :pair | 
+			| argstype return |
+			argstype := pair first.
+			return := pair second.
+			'(' , argstype , '->' , return , ')' ]
 ]
 
 { #category : #'parsers-patterns' }
@@ -752,6 +827,11 @@ ViennaVDM2SmalltalkTranslator >> power: set [
 	^ set , ' power'
 ]
 
+{ #category : #'parsers-types' }
+ViennaVDM2SmalltalkTranslator >> productType [
+	^ super productType ==> [ :basetypes | '(' , ('*' join: basetypes) , ')' ]
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> psubset: arg1 and: arg2 [
 	^ '([:set1 :set2 | set1 size < set2 size and: [ set2 includesAll: set1 ]] value: ' , arg1 , ' value: ' , arg2 , ')'
@@ -760,6 +840,11 @@ ViennaVDM2SmalltalkTranslator >> psubset: arg1 and: arg2 [
 { #category : #'parsers-literals' }
 ViennaVDM2SmalltalkTranslator >> quoteLiteral [
 	^ super quoteLiteral ==> [ :quote | '#''' , quote , '''' ]
+]
+
+{ #category : #'parsers-types' }
+ViennaVDM2SmalltalkTranslator >> quoteType [
+	^ super quoteType ==> [ :quote | '(ViennaType quote: ' , quote , ')' ]
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -796,6 +881,11 @@ ViennaVDM2SmalltalkTranslator >> rng: arg [
 	^ arg , ' values asSet'
 ]
 
+{ #category : #'parsers-types' }
+ViennaVDM2SmalltalkTranslator >> seq1Type [
+	^ super seq1Type ==> [ :basetype | basetype , ' seq1' ]
+]
+
 { #category : #'parsers-patterns' }
 ViennaVDM2SmalltalkTranslator >> seqConcPattern [
 	^ super seqConcPattern
@@ -818,6 +908,11 @@ ViennaVDM2SmalltalkTranslator >> seqEnumPattern [
 			elements := elementPatterns collect: #second.
 			{vars.
 			('(ViennaRuntimeUtil matchSequenceEnumeration: {' , (' . ' join: elements) , '})')} ]
+]
+
+{ #category : #'parsers-types' }
+ViennaVDM2SmalltalkTranslator >> seqType [
+	^ super seqType ==> [ :basetype | basetype , ' seq' ]
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -935,6 +1030,11 @@ ViennaVDM2SmalltalkTranslator >> setRangeExpression [
 	^ super setRangeExpression ==> [ :pair | '(' , pair first , ' to: ' , pair second , ') asSet' ]
 ]
 
+{ #category : #'parsers-types' }
+ViennaVDM2SmalltalkTranslator >> setType [
+	^ super setType ==> [ :basetype | basetype , ' set' ]
+]
+
 { #category : #'parsers-patterns' }
 ViennaVDM2SmalltalkTranslator >> setUnionPattern [
 	^ super setUnionPattern
@@ -965,6 +1065,16 @@ ViennaVDM2SmalltalkTranslator >> textLiteral [
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> tl: arg [
 	^ arg , ' tail'
+]
+
+{ #category : #'parsers-types' }
+ViennaVDM2SmalltalkTranslator >> totalFunctionType [
+	^ super totalFunctionType
+		==> [ :pair | 
+			| argstype return |
+			argstype := pair first.
+			return := pair second.
+			'(' , argstype , '+>' , return , ')' ]
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -1008,6 +1118,11 @@ ViennaVDM2SmalltalkTranslator >> undefinedExpression [
 { #category : #'parsers-expressions-operators' }
 ViennaVDM2SmalltalkTranslator >> union: arg1 and: arg2 [
 	^ '(' , arg1 , ' copy addAll: ' , arg2 , '; yourself)'
+]
+
+{ #category : #'parsers-types' }
+ViennaVDM2SmalltalkTranslator >> unionType [
+	^ super unionType ==> [ :basetypes | '(' , ('|' join: basetypes) , ')' ]
 ]
 
 { #category : #'parsers-definitions' }
