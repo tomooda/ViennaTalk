@@ -1,6 +1,9 @@
 Class {
 	#name : #ViennaRuntimeUtil,
 	#superclass : #Object,
+	#classInstVars : [
+		'random'
+	],
 	#category : 'ViennaTalk-Value-Core'
 }
 
@@ -340,4 +343,24 @@ ViennaRuntimeUtil class >> powersetOf: anArray withComplementsDo: aBlock [
 				ifTrue: [ array1 ]
 				ifFalse: [ array2 ]) nextPut: (anArray at: bit) ].
 		aBlock value: array1 contents value: array2 contents ]
+]
+
+{ #category : #randomization }
+ViennaRuntimeUtil class >> random [
+	^ random ifNil: [ random := Random new ]
+]
+
+{ #category : #randomization }
+ViennaRuntimeUtil class >> randomInt: anInteger [
+	^ self random nextInt: anInteger
+]
+
+{ #category : #randomization }
+ViennaRuntimeUtil class >> seed: anInteger [
+	self random seed: anInteger
+]
+
+{ #category : #randomization }
+ViennaRuntimeUtil class >> shuffleDo: anArrayOfBlock [
+	(anArrayOfBlock collect: [ :block | self random next -> block ]) asSortedCollection do: [ :assoc | assoc value value ]
 ]
