@@ -1,16 +1,5 @@
-Class {
+Trait {
 	#name : #TViennaVDMLiteralParser,
-	#superclass : #Trait,
-	#traits : '{}\r\tcategory: \'ViennaTalk-Parser-Core\'',
-	#instVars : [
-		'named:'
-	],
-	#classVars : [
-		'uses:'
-	],
-	#pools : [
-		'}'
-	],
 	#category : 'ViennaTalk-Parser-Core'
 }
 

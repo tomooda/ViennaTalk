@@ -310,13 +310,3 @@ ViennaNode >> storeOn: aStream [
 ViennaNode >> third [
 	^ self at: 3
 ]
-
-{ #category : #enumerating }
-ViennaNode >> ぱparentsDo: aBlock [
-	| node |
-	node := self.
-	[ node notNil ]
-		whileTrue: [ 
-			aBlock value: node.
-			node := node parent ]
-]
