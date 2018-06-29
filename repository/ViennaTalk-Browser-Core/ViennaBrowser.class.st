@@ -82,12 +82,13 @@ ViennaBrowser class >> openOn: aVDMC withLabel: label [
 ViennaBrowser class >> viennaSettingsOn: aBuilder [
 	<systemsettings>
 	(aBuilder setting: #autoFormat)
-		parent: #ViennaTalk;
+		parent: #ViennaTalkAppearances;
 		target: self;
 		getSelector: #autoFormat;
 		setSelector: #autoFormat:;
 		description: 'If checked, then VDMBrowser will automatically format the VDM source.';
-		label: 'Auto format in VDM Browser'
+		label: 'Auto format in VDM Browser';
+		order: 0.50
 ]
 
 { #category : #'world menu' }
@@ -321,7 +322,6 @@ ViennaBrowser >> buildCodePane [
 		bindKeyCombination: $f shift command toAction: [ codePane prettyPrint ];
 		bindKeyCombination: $t command toAction: [ codePane template ];
 		font: ViennaLauncher font;
-		highlightingEnabled: true;
 		yourself
 ]
 
@@ -425,7 +425,17 @@ ViennaBrowser >> codePaneMenu: aMenu shifted: aBoolean [
 			#undo}.
 			#-.
 			{('format (F)' translated).
+			#prettyPrint}}.
+	aMenu
+		addToggle: 'syntax highlighting'
+		target: codePane
+		selector: #toggleHighlighting
+		getStateSelector: #highlightingEnabled.
+	aMenu
+		addList:
+			{{('format (F)' translated).
 			#prettyPrint}.
+			#-.
 			{('template (T)' translated).
 			#template}.
 			#-.

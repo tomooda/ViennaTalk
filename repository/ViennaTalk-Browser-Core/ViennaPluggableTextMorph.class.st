@@ -5,8 +5,34 @@ Class {
 		'highlighter',
 		'wantsHighlighting'
 	],
+	#classVars : [
+		'DefaultHighlightingEnabled'
+	],
 	#category : 'ViennaTalk-Browser-Core'
 }
+
+{ #category : #accessing }
+ViennaPluggableTextMorph class >> defaultHighlightingEnabled [
+	^ DefaultHighlightingEnabled ifNil: [ DefaultHighlightingEnabled := true ]
+]
+
+{ #category : #accessing }
+ViennaPluggableTextMorph class >> defaultHighlightingEnabled: aBoolean [
+	DefaultHighlightingEnabled := aBoolean ~= false
+]
+
+{ #category : #settings }
+ViennaPluggableTextMorph class >> viennaSettingsOn: aBuilder [
+	<systemsettings>
+	(aBuilder setting: #syntaxHighlighting)
+		parent: #ViennaTalkAppearances;
+		target: self;
+		getSelector: #defaultHighlightingEnabled;
+		setSelector: #defaultHighlightingEnabled:;
+		description: 'If checked, then VDM source will be syntax-highlighted by default.';
+		label: 'Syntax highlighting enabled by default';
+		order: 0.6
+]
 
 { #category : #'enabling/disabling' }
 ViennaPluggableTextMorph >> disableHighlighting [
@@ -45,15 +71,17 @@ ViennaPluggableTextMorph >> highlightingEnabled: aBoolean [
 	aBoolean = true
 		ifTrue: [ 
 			highlighter := ViennaVDMHighlighter new.
-			self startStepping ]
-		ifFalse: [ highlighter := nil ]
+			self startStepping.
+			self wantsHighlighting: true ]
+		ifFalse: [ highlighter := nil.
+			[self text runs: self text asString asText runs ] on: Error do: [:ex |]]
 ]
 
 { #category : #'initialize-release' }
 ViennaPluggableTextMorph >> initialize [
 	super initialize.
-	highlighter := nil.
-	wantsHighlighting := false
+	wantsHighlighting := false.
+	self highlightingEnabled: self class defaultHighlightingEnabled 
 ]
 
 { #category : #'event handling' }
@@ -90,6 +118,11 @@ ViennaPluggableTextMorph >> textMorphClass [
 	"Answer the class used to create the receiver's textMorph"
 	
 	^ViennaTextMorphForEditView 
+]
+
+{ #category : #'enabling/disabling' }
+ViennaPluggableTextMorph >> toggleHighlighting [
+	self highlightingEnabled: self highlightingEnabled not
 ]
 
 { #category : #updating }
