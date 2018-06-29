@@ -17,9 +17,13 @@ ViennaVDM2SmalltalkObject >> createDocumentClassWithInstVars: anArrayOfString1 s
 				superclass: Object;
 				slots:
 						(anArrayOfString1 asArray collect: [ :instVarName | InstanceVariableSlot named: instVarName asSymbol ])
-								, (anArrayOfString2 asArray collect: [ :instVarName | ViennaStateSlot named: instVarName asSymbol ]);
+								,
+									(anArrayOfString2 asArray
+										collect: [ :instVarName | 
+											(runtimeAssertionCheck = true
+												ifTrue: [ ViennaStateSlot ]
+												ifFalse: [ InstanceVariableSlot ]) named: instVarName asSymbol ]);
 				category: 'Auto Generated from VDM' ]
-
 ]
 
 { #category : #utilities }
@@ -30,7 +34,12 @@ ViennaVDM2SmalltalkObject >> createModuleClassWithInstVars: anArrayOfString1 sta
 				superclass: Object;
 				slots:
 						(anArrayOfString1 asArray collect: [ :instVarName | InstanceVariableSlot named: instVarName asSymbol ])
-								, (anArrayOfString2 asArray collect: [ :instVarName | ViennaStateSlot named: instVarName asSymbol ]);
+								,
+									(anArrayOfString2 asArray
+										collect: [ :instVarName | 
+											(runtimeAssertionCheck = true
+												ifTrue: [ ViennaStateSlot ]
+												ifFalse: [ InstanceVariableSlot ]) named: instVarName asSymbol ]);
 				category: 'Auto Generated from VDM' ]
 ]
 

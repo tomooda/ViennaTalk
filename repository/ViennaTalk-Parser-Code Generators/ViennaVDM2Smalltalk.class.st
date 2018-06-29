@@ -4,7 +4,9 @@ Class {
 	#traits : 'TViennaVDMFreeVariableCollector',
 	#classTraits : 'TViennaVDMFreeVariableCollector classTrait',
 	#instVars : [
-		'decoder'
+		'decoder',
+		'runtimeAssertionCheck',
+		'runtimeTypeCheck'
 	],
 	#category : 'ViennaTalk-Parser-Code Generators'
 }
@@ -493,6 +495,22 @@ ViennaVDM2Smalltalk >> definitions: aViennaNode do: aBlock [
 	aViennaNode do: [ :node | self definitions: node do: aBlock ]
 ]
 
+{ #category : #'enabling/disabling' }
+ViennaVDM2Smalltalk >> disableRuntimeAssertionCheck [
+	runtimeAssertionCheck := false
+]
+
+{ #category : #'enabling/disabling' }
+ViennaVDM2Smalltalk >> disableRuntimeCheck [
+	runtimeAssertionCheck := false.
+	runtimeTypeCheck := false
+]
+
+{ #category : #'enabling/disabling' }
+ViennaVDM2Smalltalk >> disableRuntimeTypeCheck [
+	runtimeTypeCheck := false
+]
+
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> distributedMapMerge: aViennaNode env: aDictionary [
 	^ '(' , (self generate: aViennaNode first env: aDictionary)
@@ -525,6 +543,22 @@ ViennaVDM2Smalltalk >> document: aViennaNode env: aDictionary [
 	^ aViennaNode first label = 'DefinitionBlock'
 		ifTrue: [ self flatDocument: aViennaNode env: aDictionary ]
 		ifFalse: [ self modularDocument: aViennaNode env: aDictionary ]
+]
+
+{ #category : #'enabling/disabling' }
+ViennaVDM2Smalltalk >> enableRuntimeAssertionCheck [
+	runtimeAssertionCheck := true
+]
+
+{ #category : #'enabling/disabling' }
+ViennaVDM2Smalltalk >> enableRuntimeCheck [
+	runtimeAssertionCheck := true.
+	runtimeTypeCheck := true
+]
+
+{ #category : #'enabling/disabling' }
+ViennaVDM2Smalltalk >> enableRuntimeTypeCheck [
+	runtimeTypeCheck := true
 ]
 
 { #category : #'code generation-expressions' }
@@ -637,12 +671,15 @@ ViennaVDM2Smalltalk >> explicitFunctionDefinition: aViennaNode env: aDictionary 
 	preNode
 		ifNotNil: [ 
 			preBody := self generate: preNode env: aDictionary.
-			body := preBody , 'ifFalse: [ViennaPreconditionViolation signal]. ' , body ].
+			runtimeAssertionCheck = true
+				ifTrue: [ body := preBody , 'ifFalse: [ViennaPreconditionViolation signal]. ' , body ] ].
 	postNode
 		ifNotNil: [ 
 			postBody := self generate: postNode env: aDictionary.
-			body := '[|RESULT| RESULT := [' , body , '] value. (' , postBody
-				, ') ifFalse: [ViennaPostconditionViolation signal]. RESULT] value' ].
+			runtimeAssertionCheck = true
+				ifTrue: [ 
+					body := '[|RESULT| RESULT := [' , body , '] value. (' , postBody
+						, ') ifFalse: [ViennaPostconditionViolation signal]. RESULT] value' ] ].
 	varGenerator := self
 		varNameGenerator: 'func'
 		uniqueIn:
@@ -729,12 +766,15 @@ ViennaVDM2Smalltalk >> explicitOperationDefinition: aViennaNode env: aDictionary
 	preNode
 		ifNotNil: [ 
 			preBody := self generate: preNode env: aDictionary.
-			body := preBody , ' ifFalse: [ViennaPreconditionViolation signal]. ' , body ].
+			runtimeAssertionCheck = true
+				ifTrue: [ body := preBody , ' ifFalse: [ViennaPreconditionViolation signal]. ' , body ] ].
 	postNode
 		ifNotNil: [ 
 			postBody := self generate: postNode env: aDictionary.
-			body := '[|_oldState RESULT| _oldState := ' , self getStateCode , '. RESULT := [' , body , '] value. (' , postBody
-				, ') ifFalse: [ViennaPostconditionViolation signal]. RESULT] value' ].
+			runtimeAssertionCheck = true
+				ifTrue: [ 
+					body := '[|_oldState RESULT| _oldState := ' , self getStateCode , '. RESULT := [' , body , '] value. (' , postBody
+						, ') ifFalse: [ViennaPostconditionViolation signal]. RESULT] value' ] ].
 	varGenerator := self
 		varNameGenerator: 'op'
 		uniqueIn:
@@ -1236,7 +1276,9 @@ ViennaVDM2Smalltalk >> indicesExpression: aViennaNode env: aDictionary [
 { #category : #'initialize-release' }
 ViennaVDM2Smalltalk >> initialize [
 	super initialize.
-	decoder := ViennaVDMValueDecoder new
+	decoder := ViennaVDMValueDecoder new.
+	runtimeAssertionCheck := true.
+	runtimeTypeCheck := true
 ]
 
 { #category : #'code generation-types' }

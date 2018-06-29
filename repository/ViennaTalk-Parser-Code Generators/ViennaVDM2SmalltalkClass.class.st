@@ -63,7 +63,12 @@ ViennaVDM2SmalltalkClass >> createDocumentClassWithInstVars: anArrayOfString1 st
 				superclass: Object;
 				slots:
 						(anArrayOfString1 asArray collect: [ :instVarName | InstanceVariableSlot named: instVarName asSymbol ])
-								, (anArrayOfString2 asArray collect: [ :instVarName | ViennaStateSlot named: instVarName asSymbol ]);
+								,
+									(anArrayOfString2 asArray
+										collect: [ :instVarName | 
+											(runtimeAssertionCheck = true
+												ifTrue: [ ViennaStateSlot ]
+												ifFalse: [ InstanceVariableSlot ]) named: instVarName asSymbol ]);
 				category: 'Auto Generated from VDM' ]
 ]
 
@@ -87,7 +92,12 @@ ViennaVDM2SmalltalkClass >> createModuleClassWithInstVars: anArrayOfString1 stat
 				superclass: Object;
 				slots:
 						(anArrayOfString1 asArray collect: [ :instVarName | InstanceVariableSlot named: instVarName asSymbol ])
-								, (anArrayOfString2 asArray collect: [ :instVarName | ViennaStateSlot named: instVarName asSymbol ]);
+								,
+									(anArrayOfString2 asArray
+										collect: [ :instVarName | 
+											(runtimeAssertionCheck = true
+												ifTrue: [ ViennaStateSlot ]
+												ifFalse: [ InstanceVariableSlot ]) named: instVarName asSymbol ]);
 				category: 'Auto Generated from VDM' ]
 ]
 
@@ -269,8 +279,18 @@ ViennaVDM2SmalltalkClass >> explicitOperationDefinition: aViennaNode env: aDicti
 		protocol: 'operations'
 		fromFlatBinds: binds
 		body: body
-		pre: (preNode ifNotNil: [ self generate: preNode env: aDictionary ])
-		post: (postNode ifNotNil: [ self generate: postNode env: aDictionary ])
+		pre:
+			(preNode
+				ifNotNil: [ 
+					runtimeAssertionCheck = true
+						ifTrue: [ self generate: preNode env: aDictionary ]
+						ifFalse: [ nil ] ])
+		post:
+			(postNode
+				ifNotNil: [ 
+					runtimeAssertionCheck = true
+						ifTrue: [ self generate: postNode env: aDictionary ]
+						ifFalse: [ nil ] ])
 		varGenerator: varGenerator
 		env: aDictionary.
 	self
