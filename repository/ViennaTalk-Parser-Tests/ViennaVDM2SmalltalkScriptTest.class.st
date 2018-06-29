@@ -6,6 +6,40 @@ Class {
 	#category : 'ViennaTalk-Parser-Tests'
 }
 
+{ #category : #'tests-code generation-statements' }
+ViennaVDM2SmalltalkScriptTest >> testAlwaysStatementEnv [
+	self
+		assert:
+			(Compiler
+				evaluate:
+					' | a | ['
+						,
+							(ViennaVDM2SmalltalkScript new
+								generate: (ViennaVDMParser new statement parse: 'always a := 2 in return 1'))
+						, '] value')
+		equals: 1.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					' | a | ['
+						,
+							(ViennaVDM2SmalltalkScript new
+								generate: (ViennaVDMParser new statement parse: 'always a := 2 in return 1'))
+						, '] value. a')
+		equals: 2.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					' | a | ['
+						,
+							(ViennaVDM2SmalltalkScript new
+								generate: (ViennaVDMParser new statement parse: 'always a := 2 in exit 1'))
+						, '] on: ViennaException do: [:ex | ex return]. a')
+		equals: 2
+]
+
 { #category : #'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testAndEnv [
 	| node |
@@ -383,6 +417,18 @@ ViennaVDM2SmalltalkScriptTest >> testExistsExpressionEnv [
 	self deny: node isPetitFailure.
 	self assert: node label = 'ExistsExpression'.
 	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: false
+]
+
+{ #category : #'tests-code generation-statements' }
+ViennaVDM2SmalltalkScriptTest >> testExitStatementEnv [
+	| node |
+	node := ViennaVDMParser new statement end parse: 'exit 1'.
+	self deny: node isPetitFailure.
+	self assert: node label = 'ExitStatement'.
+	self
+		should: [ Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node) ]
+		raise: ViennaException
+		withExceptionDo: [ :ex | self assert: ex expression equals: 1 ]
 ]
 
 { #category : #'tests-code generation-definitions' }
@@ -1903,6 +1949,18 @@ ViennaVDM2SmalltalkScriptTest >> testSubsetEnv [
 	self assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: false
 ]
 
+{ #category : #'tests-code generation-statements' }
+ViennaVDM2SmalltalkScriptTest >> testTixeStatementEnv [
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkScript new
+						generate: (ViennaVDMParser new statement parse: 'tixe { mk_(-, -) |-> return 1, p |-> return p+2 } in exit 3')))
+		equals: 5.
+
+]
+
 { #category : #'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testTokenConstructorEnv [
 	| node |
@@ -1923,6 +1981,24 @@ ViennaVDM2SmalltalkScriptTest >> testTotalFunctionTypeEnv [
 	self
 		assert: (Compiler evaluate: (ViennaVDM2SmalltalkScript new generate: node))
 		equals: ViennaType nat * ViennaType int +> ViennaType real
+]
+
+{ #category : #'tests-code generation-statements' }
+ViennaVDM2SmalltalkScriptTest >> testTrapStatementEnv [
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkScript new
+						generate: (ViennaVDMParser new statement parse: 'trap p with return p in exit 1')))
+		equals: 1.
+	self
+		assert:
+			(Compiler
+				evaluate:
+					(ViennaVDM2SmalltalkScript new
+						generate: (ViennaVDMParser new statement parse: 'trap - with return 1 in exit nil')))
+		equals: 1
 ]
 
 { #category : #'tests-code generation-expressions' }

@@ -81,6 +81,11 @@ ViennaVDMGrammarTest >> testActiveExpression3 [
 	self assert: (grammar expression end parse: '#active()') isPetitFailure
 ]
 
+{ #category : #'tests-statements' }
+ViennaVDMGrammarTest >> testAlwaysStatement [
+	self assert: (grammar statement end parse: 'always return e1 in return e2') equals: #('e1' 'e2')
+]
+
 { #category : #'tests-expressions' }
 ViennaVDMGrammarTest >> testApply1 [
 	self assert: (grammar expression end parse: 'f()') equals: #('f' #())
@@ -427,6 +432,11 @@ ViennaVDMGrammarTest >> testExistsExpression1 [
 	self
 		assert: (grammar expression end parse: 'exists v1,v2:t1, v3:t2 & e')
 		equals: #(#(#(#('v1' 'v2') 't1') #(#('v3') 't2')) 'e')
+]
+
+{ #category : #'tests-statements' }
+ViennaVDMGrammarTest >> testExitStatement [
+	self assert: (grammar statement end parse: 'exit e') equals: 'e'
 ]
 
 { #category : #'tests-definitions' }
@@ -1633,6 +1643,11 @@ ViennaVDMGrammarTest >> testTimeExpression [
 	self assert: (grammar expression parse: 'time') equals: nil
 ]
 
+{ #category : #'tests-statements' }
+ViennaVDMGrammarTest >> testTixeStatement [
+	self assert: (grammar statement end parse: 'tixe { p1 |-> skip, p2 |-> return e1 } in return e2') equals: #(('p1' nil 'p2' 'e1') 'e2')
+]
+
 { #category : #'tests-types' }
 ViennaVDMGrammarTest >> testTotalFunctionType1 [
 	self assert: (grammar type end parse: 't1+>t2') equals: #('t1' 't2')
@@ -1656,6 +1671,13 @@ ViennaVDMGrammarTest >> testTotalFunctionType4 [
 { #category : #'tests-types' }
 ViennaVDMGrammarTest >> testTotalFunctionType5 [
 	self assert: (grammar type end parse: 't1*t2+>t3') equals: #(#('t1' 't2') 't3')
+]
+
+{ #category : #'tests-statements' }
+ViennaVDMGrammarTest >> testTrapStatement [
+	self
+		assert: (grammar statement end parse: 'trap p with return e1 in return e2')
+		equals: #('p' 'e1' 'e2')
 ]
 
 { #category : #'tests-expressions' }
