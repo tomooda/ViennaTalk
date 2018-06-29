@@ -23,6 +23,20 @@ ViennaVDMJ class >> bank: anInteger [
 ]
 
 { #category : #'class initialization' }
+ViennaVDMJ class >> initialize [
+	super initialize.
+	self install
+]
+
+{ #category : #'class initialization' }
+ViennaVDMJ class >> install [
+	self vdmjPath exists
+		ifFalse: [ self installVDMJ ].
+	self vdmpadPath exists
+		ifFalse: [ self installVDMPad ]
+]
+
+{ #category : #'class initialization' }
 ViennaVDMJ class >> installVDMJ [
 	"ViennaVDMJ installVDMJ"
 
@@ -85,12 +99,12 @@ ViennaVDMJ class >> unregister: aViennaVDMJ [
 
 { #category : #testing }
 ViennaVDMJ class >> vdmjInstalled [
-	^ FileStream isAFileNamed: ViennaVDMJ vdmjPath
+	^ FileStream isAFileNamed: self vdmjPath
 ]
 
 { #category : #accessing }
 ViennaVDMJ class >> vdmjPath [
-	^ 'vdmj-3.0.1.jar'
+	^ FileSystem workingDirectory / 'vdmj-3.0.1.jar'
 ]
 
 { #category : #resources }
@@ -105,7 +119,7 @@ ViennaVDMJ class >> vdmpadJar [
 
 { #category : #accessing }
 ViennaVDMJ class >> vdmpadPath [
-	^ 'VDMPad.jar'
+	^ FileSystem workingDirectory / 'VDMPad.jar'
 ]
 
 { #category : #finalizing }
@@ -276,11 +290,13 @@ ViennaVDMJ >> finalize [
 ]
 
 { #category : #private }
-ViennaVDMJ >> forkProcess: desc [ 
+ViennaVDMJ >> forkProcess: desc [
 	^ UnixProcess
 		forkJob: self javaPath
-		arguments: {'-Dfile.encoding=whatever'. '-jar'.
-				(FileStream fullName: 'VDMPad.jar')}
+		arguments:
+			{'-Dfile.encoding=whatever'.
+			'-jar'.
+			(self vdmpadPath fullName)}
 		environment: nil
 		descriptors: desc
 ]
@@ -428,4 +444,9 @@ ViennaVDMJ >> vdm10IfError: errorBlock [
 { #category : #accessing }
 ViennaVDMJ >> vdmjPath [
 	^ self class vdmjPath
+]
+
+{ #category : #accessing }
+ViennaVDMJ >> vdmpadPath [
+	^ self class vdmpadPath
 ]
