@@ -52,11 +52,6 @@ ViennaToken >> value [
 ]
 
 { #category : #printing }
-ViennaToken >> vdmcStringOn: aStream [
-	self viennaStringOn: aStream
-]
-
-{ #category : #printing }
 ViennaToken >> viennaStringOn: aStream [
 	aStream nextPutAll: 'mk_token('.
 	value viennaStringOn: aStream.

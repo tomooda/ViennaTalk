@@ -181,18 +181,13 @@ ViennaComposite >> postCopy [
 ViennaComposite >> printOn: aStream [
 	aStream nextPutAll: self class name.
 	aStream nextPut: $(.
-	self vdmcStringOn: aStream.
+	self viennaStringOn: aStream.
 	aStream nextPut: $)
 ]
 
 { #category : #private }
 ViennaComposite >> setConstructorName: aString [
 	constructorName := aString
-]
-
-{ #category : #printing }
-ViennaComposite >> vdmcStringOn: aStream [
-	self viennaStringOn: aStream
 ]
 
 { #category : #printing }
