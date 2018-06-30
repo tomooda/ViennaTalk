@@ -1,6 +1,6 @@
 ![ViennaTalk logo](images/ViennaTalk-logo.png)
 
-Documentation for ViennaTalk
+ViennaTalk ~ Live and Formal
 ===
 ViennaTalk is a Smalltalk library to handle VDM-SL specifications.
 
@@ -27,7 +27,11 @@ Table of Major Components of ViennaTalk
 
 What's new in the latest release
 ---
-
+* Codename Oxford has been released. (July 1, 2018)
+  - Source repository is migrated from smalltalkhub. Great thanks to Peter Uhnak for the migration tools.
+  - Base Pharo is upgraded to Pharo 6.1.
+  - ViennaTalk uses 64bits Virtual Machine by default.
+  - VDMJ bridge now works on 64bits VM
 * Codename Harajuku has been released. (Jan 18, 2018)
   - VDM Directory Browser is a VDM browser for file-based management. The browser loads all .vdmsl files and writes into files when a spec is accepted on the specification pane.
   - ViennaUnit is a testing framework for VDM Browser. It runs all operations with the 'test' prefix in all modules with the 'Test' postfix.
@@ -77,15 +81,12 @@ You may either download a pre-built package from [Release page](https://github.c
 
 Source Repository
 ---
-The monticello repository is available at http://smalltalkhub.com/#!/~tomooda/ViennaTalk.
-If you like to install from source code, please install <tt>ConfigurationOfViennaTalk</tt> and then evaluate <tt>ConfigurationOfViennaTalk load</tt>.
+The source code repository is available at https://github.com/tomooda/ViennaTalk.
+If you like to install from source code, please use Iceberg to clone https://github.com/tomooda/ViennaTalk.git with <tt>repository</tt> subdirectory, and load <tt>BaselineOfViennaTalk</tt> and install its baseline.
 Or, you may at once install it by evaluating 
 
 ```
-Gofer new smalltalkhubUser: 'tomooda' project: 'ViennaTalk';
-    configurationOf: #ViennaTalk; load. 
-(Smalltalk at: #ConfigurationOfViennaTalk) load
-```
+Metacello new	baseline: 'ViennaTalk';	repository: 'github://tomooda/ViennaTalk/repository';	load.```
 
 How to use
 ---
