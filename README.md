@@ -30,8 +30,9 @@ What's new in the latest release
 * Codename Oxford has been released. (July 1, 2018)
   - Source repository is migrated from smalltalkhub. Great thanks to Peter Uhnak for the migration tools.
   - Base Pharo is upgraded to Pharo 6.1.
-  - ViennaTalk uses 64bits Virtual Machine by default.
-  - VDMJ bridge now works on 64bits VM
+  - ViennaTalk uses 64bits Virtual Machine by default (except Windows).
+  - VDMJ bridge now works on 64bits VM (except Windows).
+  
 * Codename Harajuku has been released. (Jan 18, 2018)
   - VDM Directory Browser is a VDM browser for file-based management. The browser loads all .vdmsl files and writes into files when a spec is accepted on the specification pane.
   - ViennaUnit is a testing framework for VDM Browser. It runs all operations with the 'test' prefix in all modules with the 'Test' postfix.
@@ -86,7 +87,10 @@ If you like to install from source code, please use Iceberg to clone https://git
 Or, you may at once install it by evaluating 
 
 ```
-Metacello new	baseline: 'ViennaTalk';	repository: 'github://tomooda/ViennaTalk/repository';	load.```
+Metacello new
+	baseline: 'ViennaTalk';
+	repository: 'github://tomooda/ViennaTalk/repository';
+	load.```
 
 How to use
 ---
