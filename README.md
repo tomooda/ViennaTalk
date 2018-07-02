@@ -89,7 +89,8 @@ Or, you may at once install it by evaluating
 Metacello new
 	baseline: 'ViennaTalk';
 	repository: 'github://tomooda/ViennaTalk/repository';
-	load.```
+	load.
+```
 
 How to use
 ---
