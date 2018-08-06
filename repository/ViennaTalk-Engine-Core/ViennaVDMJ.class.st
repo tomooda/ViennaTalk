@@ -150,7 +150,7 @@ ViennaVDMJ class >> installJson4VDMJ [
 					http response code = 200
 						ifFalse: [ 
 							UIManager default
-								abort: 'Failed to download Json4VDMJ. Please download from http://vdmpad.csce.kyushu-u.ac.jp/Json4VDMJ.jar .'.
+								abort: 'Failed to download Json4VDMJ. Please download from http://vdmpad.viennatalk.org/Json4VDMJ.jar .'.
 							^ nil ].
 					self json4vdmjPath writeStream
 						nextPutAll: http entity bytes;
@@ -209,7 +209,7 @@ ViennaVDMJ class >> json4vdmjPath [
 
 { #category : #resources }
 ViennaVDMJ class >> json4vdmjUrl [
-	^ 'http://vdmpad.csce.kyushu-u.ac.jp/Json4VDMJ.jar' asUrl
+	^ 'http://vdmpad.viennatalk.org/Json4VDMJ.jar' asUrl
 ]
 
 { #category : #resources }
@@ -290,7 +290,7 @@ ViennaVDMJ class >> vdmjPath [
 
 { #category : #resources }
 ViennaVDMJ class >> vdmjUrl [
-	^ 'http://vdmpad.csce.kyushu-u.ac.jp/vdmj-3.2.0.jar' asUrl
+	^ 'http://vdmpad.viennatalk.org/vdmj-3.2.0.jar' asUrl
 ]
 
 { #category : #finalizing }
