@@ -1,0 +1,12 @@
+SmalltalkCISpec {
+  #name : 'ViennaTalk',
+  #loading : [
+    SCIMetacelloLoadSpec {
+      #baseline : 'ViennaTalk',
+      #directory : 'repository',
+      #platforms : [ #pharo ]
+    }
+  ],
+  #testing : {
+  }  
+}

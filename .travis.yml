@@ -1,0 +1,23 @@
+language: smalltalk
+
+sudo: false
+
+os:
+  - linux
+  - osx
+  
+smalltalk:
+  - Pharo-7.0
+  - Pharo-6.1
+  - Pharo-5.0
+
+env:
+  matrix:
+    - CI_FILE=.smalltalk.ston
+
+before_script:
+- wget --quiet http://vdmpad.viennatalk.org/vdmj-3.2.0.jar
+- wget --quiet http://vdmpad.viennatalk.org/Json4VDMJ.jar
+    
+script:
+- travis_wait "$SMALLTALK_CI_HOME/run.sh" ${CI_FILE}
