@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/tomooda/ViennaTalk.svg?branch=master)](https://travis-ci.org/tomooda/ViennaTalk)
+
 ![ViennaTalk logo](images/ViennaTalk-logo.png)
 
 ViennaTalk ~ Live and Formal
