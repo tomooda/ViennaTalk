@@ -99,6 +99,31 @@ ViennaVDMJ class >> bank: anInteger [
 	^ bank
 ]
 
+{ #category : #utilities }
+ViennaVDMJ class >> basicInstallJars [
+	| http |
+	http := ZnClient new.
+	http
+		beOneShot;
+		https;
+		followRedirects: true;
+		get: self vdmjUrl.
+	http response code = 200
+		ifTrue: [ self vdmjPath writeStream
+				nextPutAll: http entity bytes;
+				close ].
+	http := ZnClient new.
+	http
+		beOneShot;
+		https;
+		followRedirects: true;
+		get: self json4vdmjUrl.
+	http response code = 200
+		ifTrue: [ self json4vdmjPath writeStream
+				nextPutAll: http entity bytes;
+				close ]
+]
+
 { #category : #locking }
 ViennaVDMJ class >> globalLock [
 	^ GlobalLock ifNil: [ GlobalLock := Semaphore forMutualExclusion ]
