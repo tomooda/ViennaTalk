@@ -13,6 +13,7 @@ os:
   
 smalltalk:
   - Pharo-6.1
+  - Pharo64-6.1
 #  - Pharo-7.0
 
 env:
