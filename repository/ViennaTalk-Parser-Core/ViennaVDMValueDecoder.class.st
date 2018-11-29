@@ -31,7 +31,7 @@ ViennaVDMValueDecoder >> characterLiteral [
 
 { #category : #'parsers-expressions' }
 ViennaVDMValueDecoder >> decimalLiteral [
-	^ ($- asParser optional , super decimalLiteral) flatten trim ==> [ :str | str trim asNumber ]
+	^ ($- asPParser optional , super decimalLiteral) flatten trim ==> [ :str | str trim asNumber ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -63,7 +63,7 @@ ViennaVDMValueDecoder >> functionDefinitions [
 
 { #category : #'parsers-expressions' }
 ViennaVDMValueDecoder >> hexadecimalLiteral [
-	^ ($- asParser optional , super hexadecimalLiteral) trim
+	^ ($- asPParser optional , super hexadecimalLiteral) trim
 		==> [ :pair | 
 			| nat |
 			nat := Integer readFrom: pair second radix: 16.

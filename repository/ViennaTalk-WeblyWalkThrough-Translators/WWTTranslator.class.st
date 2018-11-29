@@ -86,7 +86,7 @@ WWTTranslator >> vdmToJsonString: vdmString [
 	vdmString trim = '()'
 		ifTrue: [ ^ String new ].
 	vdmObj := vdmDecoder parse: vdmString.
-	vdmObj isPetitFailure
+	vdmObj isPetit2Failure
 		ifTrue: [ ^ vdmString convertToEncoding: 'utf-8' ].
 	^ String streamContents: [ :stream |
 			(NeoJSONWriter on: stream) asciiOnly: true; nextPut: (self vdmToJson: vdmObj) ]

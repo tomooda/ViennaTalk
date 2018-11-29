@@ -2036,7 +2036,7 @@ VDMPad >> format: aZnRequest [
 	formattedSource := [ ViennaVDMParser new format: source width: 70 ]
 		on: Error
 		do: [ :ex | source ].
-	formattedSource isPetitFailure
+	formattedSource isPetit2Failure
 		ifTrue: [ 
 			message := formattedSource printString.
 			formattedSource := source ].

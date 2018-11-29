@@ -33,7 +33,7 @@ LWTLivetalkCompiler >> initialize [
 		at: $n put: Character cr;
 		at: $t put: Character tab;
 		yourself.
-	nat := ((1 to: 9) inject: $0 asParser into: [ :p :digit | p / digit asCharacterDigit asParser ]) plus flatten.
+	nat := ((1 to: 9) inject: $0 asParser into: [ :p :digit | p / digit asCharacterDigit asParser ]) plusA flatten.
 	int := $- asParser optional , nat.
 	decimal := int , ($. asParser , nat) optional.
 	numberLiteral := (decimal , ($e asParser / $E asParser , decimal) optional) flatten trim

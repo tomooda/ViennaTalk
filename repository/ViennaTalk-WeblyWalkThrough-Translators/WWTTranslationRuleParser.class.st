@@ -1,6 +1,6 @@
 Class {
 	#name : #WWTTranslationRuleParser,
-	#superclass : #PPCompositeParser,
+	#superclass : #PP2CompositeNode,
 	#instVars : [
 		'vdmSet',
 		'vdmSeq',
@@ -17,18 +17,18 @@ Class {
 		'var',
 		'rule'
 	],
-	#category : 'ViennaTalk-WeblyWalkThrough-Translators'
+	#category : #'ViennaTalk-WeblyWalkThrough-Translators'
 }
 
 { #category : #parsers }
 WWTTranslationRuleParser >> jsonList [
-	^ ($[ asParser trim , jsonPattern , $] asParser trim)
+	^ ($[ asPParser trim , jsonPattern , $] asPParser trim)
 		==> [ :triple | WWTTranslationOrderedCollectionMatcher with: triple second ]
 ]
 
 { #category : #parsers }
 WWTTranslationRuleParser >> jsonObj1 [
-	^ (${ asParser trim , var , $: asParser trim , jsonPattern , $} asParser trim)
+	^ (${ asPParser trim , var , $: asPParser trim , jsonPattern , $} asPParser trim)
 		==> [ :quin | 
 			| key value |
 			key := quin second.
@@ -38,12 +38,12 @@ WWTTranslationRuleParser >> jsonObj1 [
 
 { #category : #parsers }
 WWTTranslationRuleParser >> jsonObj2 [
-	^ (${ asParser trim
+	^ (${ asPParser trim
 		,
-			((PPJsonParser new stringToken , $: asParser trim , jsonPattern)
+			((PPJsonParser new stringToken , $: asPParser trim , jsonPattern)
 				==> [ :triple | 
 					{(triple first).
-					(triple third)} ] separatedBy: $, asParser trim) withoutSeparators , $} asParser trim)
+					(triple third)} ] separatedBy: $, asPParser trim) withoutSeparators , $} asPParser trim)
 		==> [ :triple | 
 			| pairs |
 			pairs := triple second.
@@ -70,14 +70,14 @@ WWTTranslationRuleParser >> jsonValue [
 WWTTranslationRuleParser >> parse: aString [
 	| translator |
 	translator := super parse: aString.
-	translator isPetitFailure
+	translator isPetit2Failure
 		ifFalse: [ translator source: aString ].
 	^ translator
 ]
 
 { #category : #parsers }
 WWTTranslationRuleParser >> rule [
-	^ (vdmPattern , '<=>' asParser trim , jsonPattern)
+	^ (vdmPattern , '<=>' asPParser trim , jsonPattern)
 		==> [ :triple | 
 			{(triple first).
 			(triple third)} ]
@@ -85,23 +85,31 @@ WWTTranslationRuleParser >> rule [
 
 { #category : #parsing }
 WWTTranslationRuleParser >> start [
-	^ rule star ==> [ :pairs | WWTTranslator withAll: pairs ]
+	^ rule starA ==> [ :pairs | WWTTranslator withAll: pairs ]
 ]
 
 { #category : #parsers }
 WWTTranslationRuleParser >> var [
-	^ ($$ asParser , (PPPredicateObjectParser on: [ :c | ViennaUnicode isInitialLetter: c ] message: 'identifier expected')
-		, (PPPredicateObjectParser on: [ :c | ViennaUnicode isFollowingLetter: c ] message: 'identifier expected') star)
+	^ ($$ asPParser , (PP2PredicateObjectNode on: [ :c | ViennaUnicode isInitialLetter: c ] message: 'identifier expected')
+		, (PP2PredicateObjectNode on: [ :c | ViennaUnicode isFollowingLetter: c ] message: 'identifier expected') starA)
 		flatten trim ==> [ :name | WWTTranslationBindingMatcher variable: name ]
 ]
 
 { #category : #parsers }
 WWTTranslationRuleParser >> vdmComposite [
 	| identifier |
-	identifier := (PPPredicateObjectParser on: [ :c | ViennaUnicode isInitialLetter: c ] message: 'identifier expected')
-		, (PPPredicateObjectParser on: [ :c | ViennaUnicode isFollowingLetter: c ] message: 'identifier expected') star.
-	^ ('mk_' asParser , (identifier , ($` asParser , identifier) optional) flatten , $( asParser trim
-		, (vdmPattern separatedBy: $, asParser trim) withoutSeparators , $) asParser trim)
+	identifier := (PP2PredicateObjectNode
+		on: [ :c | ViennaUnicode isInitialLetter: c ]
+		message: 'identifier expected')
+		,
+			(PP2PredicateObjectNode
+				on: [ :c | ViennaUnicode isFollowingLetter: c ]
+				message: 'identifier expected') starA.
+	^ ('mk_' asPParser
+		, (identifier , ($` asPParser , identifier) optional) flatten
+		, $( asPParser trim
+		, (vdmPattern separatedBy: $, asPParser trim) withoutSeparators
+		, $) asPParser trim)
 		==> [ :array | 
 			| constructor args |
 			constructor := array second.
@@ -111,7 +119,7 @@ WWTTranslationRuleParser >> vdmComposite [
 
 { #category : #parsers }
 WWTTranslationRuleParser >> vdmMap [
-	^ (${ asParser trim , vdmPattern , '|->' asParser trim , vdmPattern , $} asParser trim)
+	^ (${ asPParser trim , vdmPattern , '|->' asPParser trim , vdmPattern , $} asPParser trim)
 		==> [ :array | 
 			| key value |
 			key := array second.
@@ -126,19 +134,21 @@ WWTTranslationRuleParser >> vdmPattern [
 
 { #category : #parsers }
 WWTTranslationRuleParser >> vdmSeq [
-	^ ($[ asParser trim , vdmPattern , $] asParser trim)
+	^ ($[ asPParser trim , vdmPattern , $] asPParser trim)
 		==> [ :triple | WWTTranslationOrderedCollectionMatcher with: triple second ]
 ]
 
 { #category : #parsers }
 WWTTranslationRuleParser >> vdmSet [
-	^ (${ asParser trim , vdmPattern , $} asParser trim) ==> [ :triple | WWTTranslationSetMatcher with: triple second ]
+	^ (${ asPParser trim , vdmPattern , $} asPParser trim) ==> [ :triple | WWTTranslationSetMatcher with: triple second ]
 ]
 
 { #category : #parsers }
 WWTTranslationRuleParser >> vdmTuple [
-	^ ('mk_' asParser trim , $( asParser trim , (vdmPattern separatedBy: $, asParser trim) withoutSeparators
-		, $) asParser trim) ==> [ :array | WWTTranslationArrayMatcher withAll: array third ]
+	^ ('mk_' asPParser trim , $( asPParser trim
+		, (vdmPattern separatedBy: $, asPParser trim) withoutSeparators
+		, $) asPParser trim)
+		==> [ :array | WWTTranslationArrayMatcher withAll: array third ]
 ]
 
 { #category : #parsers }

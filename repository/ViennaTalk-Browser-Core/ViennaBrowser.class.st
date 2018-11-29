@@ -477,7 +477,7 @@ ViennaBrowser >> acceptCode: aStringOrText newModuleAndSourceDo: aBlock [
 			code := (self autoFormat
 				ifTrue: [ (ViennaVDMParser new format: aStringOrText)
 						in: [ :formatted | 
-							formatted isPetitFailure
+							formatted isPetit2Failure
 								ifTrue: [ aStringOrText ]
 								ifFalse: [ formatted ] ] ]
 				ifFalse: [ aStringOrText ]) asString trimmed copyWith: Character cr.
@@ -905,7 +905,7 @@ ViennaBrowser >> fileSave: title extensions: anArrayOfString do: aBlock [
 ViennaBrowser >> generateSmalltalkClasses [
 	| ast |
 	ast := ViennaVDMParser new parse: animation specification.
-	ast isPetitFailure
+	ast isPetit2Failure
 		ifTrue: [ ^ UIManager default
 				alert: 'Failed to generate a code : ' , ast message
 				title: 'ViennaTalk' ].
@@ -918,7 +918,7 @@ ViennaBrowser >> generateSmalltalkClasses [
 ViennaBrowser >> generateSmalltalkObject [
 	| ast |
 	ast := ViennaVDMParser new parse: animation specification.
-	ast isPetitFailure
+	ast isPetit2Failure
 		ifTrue: [ ^ UIManager default
 				alert: 'Failed to generate a code : ' , ast message
 				title: 'ViennaTalk' ].
@@ -935,7 +935,7 @@ ViennaBrowser >> generateSmalltalkScript [
 				ifNotNil: [ :assoc | 
 					| ast |
 					ast := ViennaVDMParser new parse: (animation specification copyFrom: assoc value first to: assoc value last).
-					ast isPetitFailure
+					ast isPetit2Failure
 						ifTrue: [ ^ UIManager default alert: 'Failed to generate a code : ' , ast message title: 'ViennaTalk' ].
 					ast first label = 'Module'
 						ifTrue: [ 
@@ -984,11 +984,16 @@ ViennaBrowser >> importerModules [
 	| parser |
 	self selectedModule isNil
 		ifTrue: [ ^ Array new ].
-	parser := 'from' asParser , #space asParser plus , self selectedModule asParser , #space asParser.
+	parser := 'from' asPParser , #space asPParser plusA
+		, self selectedModule asPParser , #space asPParser.
 	^ ((self modulePositionsFrom: animation specification)
 		select: [ :assoc | 
 			assoc key ~= self selectedModule
-				and: [ (parser matchesIn: (animation specification copyFrom: assoc value first to: assoc value last)) notEmpty ] ])
+				and: [ (parser
+						matchesIn:
+							(animation specification
+								copyFrom: assoc value first
+								to: assoc value last)) notEmpty ] ])
 		collect: [ :assoc | assoc key ]
 ]
 
@@ -1252,7 +1257,7 @@ ViennaBrowser >> runAllTests [
 	testResult := Array new.
 	self changed: #testList.
 	ast := ViennaVDMParser new parse: animation specification.
-	ast isPetitFailure
+	ast isPetit2Failure
 		ifTrue: [ ^ nil ].
 	ast isEmpty
 		ifTrue: [ ^ self ].
@@ -1290,7 +1295,7 @@ ViennaBrowser >> runTestModule: aString [
 	testResult := Array new.
 	self changed: #testList.
 	ast := ViennaVDMParser new parse: animation specification.
-	ast isPetitFailure
+	ast isPetit2Failure
 		ifTrue: [ ^ nil ].
 	ast isEmpty
 		ifTrue: [ ^ self ].

@@ -74,7 +74,7 @@ ViennaTranspiledObject class >> specificationSourceAt: aSelector [
 ViennaTranspiledObject class >> transpileExpression: aString with: transpiler ifError: errorBlock [
 	| ast |
 	ast := ViennaVDMParser new expression end parse: aString.
-	ast isPetitFailure
+	ast isPetit2Failure
 		ifTrue: [ ^ errorBlock cull: ast message ].
 	^ transpiler
 		defaultEnv: viennaEnv;
@@ -85,7 +85,7 @@ ViennaTranspiledObject class >> transpileExpression: aString with: transpiler if
 ViennaTranspiledObject class >> transpileStatement: aString with: transpiler ifError: errorBlock [
 	| ast |
 	ast := ViennaVDMParser new expression end parse: aString.
-	ast isPetitFailure
+	ast isPetit2Failure
 		ifTrue: [ ^ errorBlock cull: ast message ].
 	^ transpiler
 		defaultEnv: viennaEnv;

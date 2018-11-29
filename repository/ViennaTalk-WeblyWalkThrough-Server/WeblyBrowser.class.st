@@ -53,7 +53,7 @@ WeblyBrowser class >> viennaToolsMenuOn: aBuilder [
 WeblyBrowser >> acceptTranslationRule: aString [
 	| newTranslator |
 	newTranslator := WWTTranslationRuleParser new parse: aString asString.
-	newTranslator isPetitFailure
+	newTranslator isPetit2Failure
 		ifTrue: [ ^ false ].
 	animation translator: newTranslator.
 	^ true

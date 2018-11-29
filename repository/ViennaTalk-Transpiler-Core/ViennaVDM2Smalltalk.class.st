@@ -2342,7 +2342,7 @@ ViennaVDM2Smalltalk >> multipleAssignStatement: aViennaNode env: aDictionary [
 			{(self generate: assign first env: aDictionary).
 			(self generate: assign second env: aDictionary)} ].
 	^ assigns size < 2
-		ifTrue: [ PPFailure
+		ifTrue: [ PP2Failure
 				message: 'atom statement should have more than one statements' ]
 		ifFalse: [ | varGenerator tmps |
 			varGenerator := self

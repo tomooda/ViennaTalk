@@ -117,7 +117,7 @@ ViennaVDM2SmalltalkScript >> translate: aString [
 ViennaVDM2SmalltalkScript >> translate: aString ifError: aBlock [
 	| ast |
 	ast := ViennaVDMParser new parse: aString.
-	ast isPetitFailure
+	ast isPetit2Failure
 		ifTrue: [ ^ aBlock cull: ast ].
 	^ self generate: ast
 ]
@@ -126,7 +126,7 @@ ViennaVDM2SmalltalkScript >> translate: aString ifError: aBlock [
 ViennaVDM2SmalltalkScript >> translateExplicitFunction: aString ifError: aBlock [
 	| ast |
 	ast := ViennaVDMParser new explicitFunctionDefinition end parse: aString.
-	ast isPetitFailure
+	ast isPetit2Failure
 		ifTrue: [ ^ aBlock cull: ast ].
 	^ self generate: ast
 ]
@@ -135,7 +135,7 @@ ViennaVDM2SmalltalkScript >> translateExplicitFunction: aString ifError: aBlock 
 ViennaVDM2SmalltalkScript >> translateExplicitOperation: aString ifError: aBlock [
 	| ast |
 	ast := ViennaVDMParser new explicitOperationDefinition end parse: aString.
-	ast isPetitFailure
+	ast isPetit2Failure
 		ifTrue: [ ^ aBlock cull: ast ].
 	^ self generate: ast
 ]
@@ -144,7 +144,7 @@ ViennaVDM2SmalltalkScript >> translateExplicitOperation: aString ifError: aBlock
 ViennaVDM2SmalltalkScript >> translateExpression: aString ifError: aBlock [
 	| ast |
 	ast := ViennaVDMParser new expression end parse: aString.
-	ast isPetitFailure
+	ast isPetit2Failure
 		ifTrue: [ ^ aBlock cull: ast ].
 	^ self generate: ast
 ]
@@ -153,7 +153,7 @@ ViennaVDM2SmalltalkScript >> translateExpression: aString ifError: aBlock [
 ViennaVDM2SmalltalkScript >> translateStatement: aString ifError: aBlock [
 	| ast |
 	ast := ViennaVDMParser new statement end parse: aString.
-	ast isPetitFailure
+	ast isPetit2Failure
 		ifTrue: [ ^ aBlock cull: ast ].
 	^ self generate: ast
 ]

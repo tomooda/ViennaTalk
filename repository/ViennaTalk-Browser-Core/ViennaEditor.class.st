@@ -36,7 +36,7 @@ ViennaEditor >> prettyPrint [
 	[ 
 	| formattedSource |
 	formattedSource := ViennaVDMParser new format: self text.
-	formattedSource isPetitFailure
+	formattedSource isPetit2Failure
 		ifFalse: [ 
 			self selectInvisiblyFrom: 1 to: self paragraph text size.
 			self replaceSelectionWith: formattedSource.

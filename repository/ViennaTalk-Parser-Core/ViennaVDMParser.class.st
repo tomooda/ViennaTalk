@@ -631,7 +631,7 @@ ViennaVDMParser >> forallExpression [
 ViennaVDMParser >> format: aString [
 	| ast |
 	ast := self document end / self statement end / self expression end parse: aString.
-	^ ast isPetitFailure
+	^ ast isPetit2Failure
 		ifTrue: [ ast ]
 		ifFalse: [ (self scanCommentsOn: aString)
 				inject: ast format
@@ -652,7 +652,7 @@ ViennaVDMParser >> format: aString [
 ViennaVDMParser >> format: aString width: anInteger [
 	| ast |
 	ast := self parse: aString.
-	^ ast isPetitFailure
+	^ ast isPetit2Failure
 		ifTrue: [ ast ]
 		ifFalse: [ (self scanCommentsOn: aString)
 				inject: (ast formatWidth: anInteger)
@@ -1736,17 +1736,18 @@ ViennaVDMParser >> scanCommentsOn: aStream [
 							| commentString position |
 							position := commentStream position.
 							commentString := continuation value.
-							commentString isPetitFailure
+							commentString isPetit2Failure
 								ifTrue: [ commentString ]
-								ifFalse: [ 
-									| guard |
-									[ position > 0 and: [ (source at: position) isSeparator ] ] whileTrue: [ position := position - 1 ].
+								ifFalse: [ | guard |
+									[ position > 0 and: [ (source at: position) isSeparator ] ]
+										whileTrue: [ position := position - 1 ].
 									guard := position > 0
-										ifTrue: [ 
-											| char |
+										ifTrue: [ | char |
 											char := source at: position.
-											char -> ((source copyFrom: 1 to: position) occurrencesOf: char) ].
-									comments nextPut: guard -> commentString ] ]) / #any asParser) star end parse: sourceStream ]
+											char
+												-> ((source copyFrom: 1 to: position) occurrencesOf: char) ].
+									comments nextPut: guard -> commentString ] ]) / #any asPParser)
+				starA end parse: sourceStream ]
 ]
 
 { #category : #'parsers-expressions-basics' }

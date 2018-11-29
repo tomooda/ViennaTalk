@@ -74,7 +74,7 @@ WeblyWalkThrough >> apiCall: apiName in: moduleName withArguments: args [
 		plainEvaluate: evalString , '(' , (',' join: args) , ')'
 		ifError: [ :msg | ^ self responseServerError: evalString , String cr , String cr , msg ].
 	resultJson := self translateToJson: result.
-	resultJson isPetitFailure
+	resultJson isPetit2Failure
 		ifTrue: [ ^ self responseServerError: resultJson printString , ' : ' , result asString ].
 	^ self
 		responseOk:

@@ -279,7 +279,7 @@ ViennaVDMHighlighter >> iota [
 
 { #category : #'parsers-expressions' }
 ViennaVDMHighlighter >> isNameExpression [
-	^ ('is_' asParser , (self type: name) , lparen , expression , rparen)
+	^ ('is_' asPParser , (self type: name) , lparen , expression , rparen)
 		==> [ :quin | 
 			{(quin second).
 			(quin fourth)} ]
@@ -368,21 +368,21 @@ ViennaVDMHighlighter >> others [
 { #category : #accessing }
 ViennaVDMHighlighter >> parse: aStringOrText onError: errorBlock [
 	self text: aStringOrText asText.
-	(self parse: aStringOrText asString) isPetitFailure
+	(self parse: aStringOrText asString) isPetit2Failure
 		ifFalse: [ ^ self text ].
-	(self accessTypeDefinition parse: aStringOrText asString) isPetitFailure
+	(self accessTypeDefinition parse: aStringOrText asString) isPetit2Failure
 		ifFalse: [ ^ self text ].
-	(self accessValueDefinition parse: aStringOrText asString) isPetitFailure
+	(self accessValueDefinition parse: aStringOrText asString) isPetit2Failure
 		ifFalse: [ ^ self text ].
-	(self stateDefinition parse: aStringOrText asString) isPetitFailure
+	(self stateDefinition parse: aStringOrText asString) isPetit2Failure
 		ifFalse: [ ^ self text ].
-	(self accessFunctionDefinition parse: aStringOrText asString) isPetitFailure
+	(self accessFunctionDefinition parse: aStringOrText asString) isPetit2Failure
 		ifFalse: [ ^ self text ].
-	(self accessOperationDefinition parse: aStringOrText asString) isPetitFailure
+	(self accessOperationDefinition parse: aStringOrText asString) isPetit2Failure
 		ifFalse: [ ^ self text ].
-	(self statement parse: aStringOrText asString) isPetitFailure
+	(self statement parse: aStringOrText asString) isPetit2Failure
 		ifFalse: [ ^ self text ].
-	(self expression parse: aStringOrText asString) isPetitFailure
+	(self expression parse: aStringOrText asString) isPetit2Failure
 		ifFalse: [ ^ self text ].
 	^ errorBlock value
 ]
@@ -409,7 +409,7 @@ ViennaVDMHighlighter >> rd [
 
 { #category : #'parsers-expressions' }
 ViennaVDMHighlighter >> recordConstructor [
-	^ ('mk_' asParser , self typeName , lparen , expressionList , rparen)
+	^ ('mk_' asPParser , self typeName , lparen , expressionList , rparen)
 		==> [ :array | 
 			{(array second).
 			(array fourth)} ]
@@ -417,7 +417,7 @@ ViennaVDMHighlighter >> recordConstructor [
 
 { #category : #'parsers-patterns' }
 ViennaVDMHighlighter >> recordPattern [
-	^ (('mk_' asParser , self typeName , lparen) ==> #second
+	^ (('mk_' asPParser , self typeName , lparen) ==> #second
 		, (patternList optional ==> [ :single | single ifNil: [ Array new ] ]) , rparen)
 		==> [ :triple | 
 			{(triple first).

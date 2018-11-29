@@ -85,7 +85,7 @@ ViennaTranspiledModularDocument >> postCopy [
 ViennaTranspiledModularDocument >> transpileExpression: aString with: transpiler ifError: errorBlock [
 	| ast |
 	ast := ViennaVDMParser new expression end parse: aString.
-	ast isPetitFailure
+	ast isPetit2Failure
 		ifTrue: [ ^ errorBlock cull: ast message ].
 	^ transpiler
 		defaultEnv: viennaEnv;
@@ -96,7 +96,7 @@ ViennaTranspiledModularDocument >> transpileExpression: aString with: transpiler
 ViennaTranspiledModularDocument >> transpileStatement: aString with: transpiler ifError: errorBlock [
 	| ast |
 	ast := ViennaVDMParser new expression end parse: aString.
-	ast isPetitFailure
+	ast isPetit2Failure
 		ifTrue: [ ^ errorBlock cull: ast message ].
 	^ transpiler
 		defaultEnv: viennaEnv;

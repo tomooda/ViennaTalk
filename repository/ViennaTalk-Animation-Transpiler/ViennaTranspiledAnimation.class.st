@@ -206,7 +206,7 @@ ViennaTranspiledAnimation >> specification: aString ifError: errorBlock [
 		ifEmpty: [ object := ViennaTranspiledObject new ]
 		ifNotEmpty: [ | ast |
 			ast := parser parse: aString.
-			ast isPetitFailure
+			ast isPetit2Failure
 				ifTrue: [ ^ errorBlock value: ast message ].
 			object := transpiler generate: ast ].
 	specification := aString.
