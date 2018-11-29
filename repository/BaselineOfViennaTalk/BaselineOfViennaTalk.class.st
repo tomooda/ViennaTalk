@@ -18,11 +18,7 @@ BaselineOfViennaTalk >> baseline: spec [
 						repository: 'http://mc.stfx.eu/Neo/' ];
 				baseline: 'OSSubprocess'
 					with: [ spec repository: 'github://marianopeck/OSSubprocess/repository' ];
-				project: 'PetitParser'
-					with: [ spec
-						className: #ConfigurationOfPetitParser;
-						versionString: #stable;
-						repository: 'http://www.smalltalkhub.com/mc/Moose/PetitParser/main' ];
+				project: 'PetitParser2' with: [ spec repository: 'github://kursjan/petitparser2' ];
 				project: 'ZincHTTPComponents'
 					with: [ spec
 						className: #ConfigurationOfZincHTTPComponents;
