@@ -45,6 +45,7 @@ ViennaClientTest >> testBadSpec [
 ViennaClientTest >> testExpression: expression specification: specification states: states resultValue: resultValue resultStates: resultStates [
 	ViennaServer
 		ensureServeIn: [ 
+			0.1 seconds wait.
 			(fixture
 				evaluate: expression
 				specification: specification
