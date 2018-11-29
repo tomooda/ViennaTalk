@@ -1724,7 +1724,7 @@ ViennaVDMParser >> sameclassExpression [
 { #category : #parsing }
 ViennaVDMParser >> scanCommentsOn: aStream [
 	| sourceStream source |
-	sourceStream := aStream asPetitStream.
+	sourceStream := aStream asPetit2Stream.
 	source := sourceStream contents.
 	^ Array
 		new: 16

@@ -984,17 +984,16 @@ ViennaBrowser >> importerModules [
 	| parser |
 	self selectedModule isNil
 		ifTrue: [ ^ Array new ].
-	parser := 'from' asPParser , #space asPParser plusA
-		, self selectedModule asPParser , #space asPParser.
+	parser := 'from' asPParser , #space asPParser plusA , self selectedModule asPParser
+		, #space asPParser.
 	^ ((self modulePositionsFrom: animation specification)
 		select: [ :assoc | 
 			assoc key ~= self selectedModule
-				and: [ (parser
-						matchesIn:
-							(animation specification
-								copyFrom: assoc value first
-								to: assoc value last)) notEmpty ] ])
-		collect: [ :assoc | assoc key ]
+				and: [ (self
+						matches: parser
+						in:
+							(animation specification copyFrom: assoc value first to: assoc value last))
+						notEmpty ] ]) collect: [ :assoc | assoc key ]
 ]
 
 { #category : #'code pane menu' }
@@ -1058,6 +1057,23 @@ ViennaBrowser >> loadSnapshotFromFile [
 					codePane hasUnacceptedEdits: true ].
 			animation state: (json at: 'state' ifAbsent: [Dictionary new]).
 			self acceptWorkspace: (json at: 'workspace' ifAbsent: [ '' ]) ]
+]
+
+{ #category : #private }
+ViennaBrowser >> matches: aParser in: anObject [
+	"Search anObject repeatedly for the matches of the receiver. Answered an OrderedCollection of the matched parse-trees."
+
+	| result |
+	result := OrderedCollection new.
+	self matches: aParser in: anObject do: [ :each | result addLast: each ].
+	^ result
+]
+
+{ #category : #private }
+ViennaBrowser >> matches: aParser in: aStream do: aBlock [
+	"Search anObject repeatedly for the matches of the receiver. Evaluate aBlock for each match with the matched parse-tree as the argument. Make sure to always consume exactly one character with each step, to not miss any match."
+
+	((aParser and ==> aBlock , #any asPParser) / #any asPParser) star parse: aStream
 ]
 
 { #category : #'module list' }
