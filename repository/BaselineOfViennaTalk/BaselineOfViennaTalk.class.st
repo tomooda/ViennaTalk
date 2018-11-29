@@ -41,7 +41,7 @@ BaselineOfViennaTalk >> baseline: spec [
 					with: [ spec requires: #('NeoJSON' 'ZincHTTPComponents' 'OSSubprocess') ];
 				package: #'ViennaTalk-Engine-Tests'
 					with: [ spec requires: #(#'ViennaTalk-Engine-Core') ];
-				package: 'ViennaTalk-Html-Core' with: [ spec requires: #('PetitParser') ];
+				package: 'ViennaTalk-Html-Core' with: [ spec requires: #('PetitParser2') ];
 				package: #'ViennaTalk-Launcher-Core';
 				package: 'ViennaTalk-LivelyWalkThrough-Core'
 					with: [ spec
@@ -83,7 +83,7 @@ BaselineOfViennaTalk >> baseline: spec [
 						requires:
 							#('ViennaTalk-Animation-Core' 'ViennaTalk-Browser-Core' #'ViennaTalk-WeblyWalkThrough-Translators') ];
 				package: #'ViennaTalk-WeblyWalkThrough-Translators'
-					with: [ spec requires: #(#'ViennaTalk-Value-Core' 'PetitParser' 'NeoJSON') ].
+					with: [ spec requires: #(#'ViennaTalk-Value-Core' 'PetitParser2' 'NeoJSON') ].
 			spec
 				group: 'LivelyWalkThrough' with: #('ViennaTalk-LivelyWalkThrough-Core');
 				group: 'Transpiler'
