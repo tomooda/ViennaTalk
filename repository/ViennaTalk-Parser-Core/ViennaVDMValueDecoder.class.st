@@ -36,12 +36,12 @@ ViennaVDMValueDecoder >> decimalLiteral [
 
 { #category : #'parsers-definitions' }
 ViennaVDMValueDecoder >> document [
-	^ PPFailingParser new
+	^ PP2FailingNode new
 ]
 
 { #category : #'parsers-definitions' }
 ViennaVDMValueDecoder >> explicitFunctionDefinition [
-	^ PPFailingParser new
+	^ PP2FailingNode new
 ]
 
 { #category : #'parsers-definitions' }
