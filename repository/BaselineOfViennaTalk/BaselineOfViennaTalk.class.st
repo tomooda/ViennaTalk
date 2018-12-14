@@ -11,14 +11,11 @@ BaselineOfViennaTalk >> baseline: spec [
 		for: #common
 		do: [ spec blessing: #baseline.
 			spec
-				project: 'NeoJSON'
-					with: [ spec
-						className: #ConfigurationOfNeoJSON;
-						versionString: #stable;
-						repository: 'http://mc.stfx.eu/Neo/' ];
+				baseline: 'NeoJSON' with: [ spec repository: 'github://svenvc/NeoJSON/repository' ];
 				baseline: 'OSSubprocess'
 					with: [ spec repository: 'github://marianopeck/OSSubprocess/repository' ];
-				baseline: 'PetitParser2' with: [ spec repository: 'github://kursjan/petitparser2:master' ];
+				baseline: 'PetitParser2'
+					with: [ spec repository: 'github://kursjan/petitparser2:master' ];
 				project: 'ZincHTTPComponents'
 					with: [ spec
 						className: #ConfigurationOfZincHTTPComponents;
