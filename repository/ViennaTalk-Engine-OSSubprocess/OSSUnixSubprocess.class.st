@@ -32,6 +32,25 @@ OSSUnixSubprocess >> initialize [
 ]
 
 { #category : #accessing }
+OSSUnixSubprocess >> isRunning [
+	^ process notNil and: [ process isRunning ]
+]
+
+{ #category : #accessing }
+OSSUnixSubprocess >> redirectStderr [
+]
+
+{ #category : #accessing }
+OSSUnixSubprocess >> redirectStdin [
+	
+]
+
+{ #category : #accessing }
+OSSUnixSubprocess >> redirectStdout [
+	
+]
+
+{ #category : #accessing }
 OSSUnixSubprocess >> run [
 	process := ProcessWrapper new
 		useStdout;

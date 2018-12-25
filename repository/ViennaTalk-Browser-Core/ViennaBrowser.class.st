@@ -702,6 +702,10 @@ ViennaBrowser >> buildCodePane [
 		bindKeyCombination: $p command toAction: [ self printItIn: codePane ];
 		bindKeyCombination: $f shift command toAction: [ codePane prettyPrint ];
 		bindKeyCombination: $t command toAction: [ codePane template ];
+		bindKeyCombination: $d ctrl toAction: [ self doItIn: codePane ];
+		bindKeyCombination: $p ctrl toAction: [ self printItIn: codePane ];
+		bindKeyCombination: $f shift ctrl toAction: [ codePane prettyPrint ];
+		bindKeyCombination: $t ctrl toAction: [ codePane template ];
 		font: ViennaLauncher font;
 		yourself
 ]
@@ -756,6 +760,8 @@ ViennaBrowser >> buildValuePane [
 		alwaysAccept: true;
 		bindKeyCombination: $d command toAction: [ self doItIn: valuePane ];
 		bindKeyCombination: $p command toAction: [ self printItIn: valuePane ];
+		bindKeyCombination: $d ctrl toAction: [ self doItIn: valuePane ];
+		bindKeyCombination: $p ctrl toAction: [ self printItIn: valuePane ];
 		font: ViennaLauncher font;
 		yourself
 ]
@@ -773,6 +779,8 @@ ViennaBrowser >> buildWorkspacePane [
 		askBeforeDiscardingEdits: true;
 		bindKeyCombination: $d command toAction: [ self doItIn: workspacePane ];
 		bindKeyCombination: $p command toAction: [ self printItIn: workspacePane ];
+		bindKeyCombination: $d ctrl toAction: [ self doItIn: workspacePane ];
+		bindKeyCombination: $p ctrl toAction: [ self printItIn: workspacePane ];
 		font: ViennaLauncher font;
 		yourself
 ]

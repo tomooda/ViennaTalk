@@ -144,17 +144,14 @@ ViennaVDMJ class >> initialize [
 
 { #category : #'class initialization' }
 ViennaVDMJ class >> install [
-	Smalltalk os isWindows
-		ifFalse: [ 
-			self vdmjPath exists
-				ifFalse: [ 
-					self
-						installVDMJ;
-						installJson4VDMJ ].
-			self json4vdmjPath exists
-				ifFalse: [ self installJson4VDMJ ].
-			self jsonicPath exists
-				ifFalse: [ self installJsonic ] ]
+	self vdmjPath exists
+		ifFalse: [ self
+				installVDMJ;
+				installJson4VDMJ ].
+	self json4vdmjPath exists
+		ifFalse: [ self installJson4VDMJ ].
+	self jsonicPath exists
+		ifFalse: [ self installJsonic ]
 ]
 
 { #category : #'class initialization' }
@@ -249,9 +246,6 @@ ViennaVDMJ class >> jsonicPath [
 
 { #category : #'instance creation' }
 ViennaVDMJ class >> new [
-	Smalltalk os isWindows
-		ifTrue: [ ^ self
-				error: 'ViennaVDMJ does not support windows platforms. Please use ViennaClient instead.' ].
 	self isInstalled
 		ifFalse: [ self install.
 			self isInstalled
@@ -653,18 +647,14 @@ ViennaVDMJ >> setWriter: aPipe [
 
 { #category : #private }
 ViennaVDMJ >> startupProcess [
-	Smalltalk os isWindows
-		ifTrue: [ ^ self error: 'ViennaVDMJ can not run on Windows Platform. Use ViennaClient instead.' ]
-		ifFalse: [ 
-			self class vdmjPath exists
-				ifFalse: [ 
-					self class
-						installVDMJ;
-						installJson4VDMJ ].
-			self class json4vdmjPath exists
-				ifFalse: [ self class installJson4VDMJ ].
-			self class jsonicPath exists
-				ifFalse: [ self class installJsonic ] ].
+	self class vdmjPath exists
+		ifFalse: [ self class
+				installVDMJ;
+				installJson4VDMJ ].
+	self class json4vdmjPath exists
+		ifFalse: [ self class installJson4VDMJ ].
+	self class jsonicPath exists
+		ifFalse: [ self class installJsonic ].
 	process := self forkProcess.
 	reader := process stdoutStream.
 	writer := process stdinStream.

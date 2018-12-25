@@ -12,7 +12,14 @@ Class {
 
 { #category : #accessing }
 OSSStdout >> close [
-	process closeStdout
+	process
+		ifNotNil: [ process closeStdout.
+			process := nil ]
+]
+
+{ #category : #accessing }
+OSSStdout >> closed [
+	^ process isNil
 ]
 
 { #category : #'initialize-release' }
@@ -34,6 +41,16 @@ OSSStdout >> next [
 			byte := buffer at: readIndex.
 			readIndex := readIndex + 1.
 			^ Character value: byte ]
+]
+
+{ #category : #streaming }
+OSSStdout >> next: anInteger [
+	^ String
+		streamContents: [ :stream | 
+			anInteger
+				timesRepeat: [ | ch |
+					ch := self next.
+					ch ifNotNil: [ stream nextPut: ch ] ] ]
 ]
 
 { #category : #accessing }

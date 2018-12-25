@@ -9,7 +9,14 @@ Class {
 
 { #category : #accessing }
 OSSStdin >> close [
-	process closeStdin
+	process
+		ifNotNil: [ process closeStdin.
+			process := nil ]
+]
+
+{ #category : #accessing }
+OSSStdin >> closed [
+	^ process isNil
 ]
 
 { #category : #streaming }

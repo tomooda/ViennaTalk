@@ -20,7 +20,7 @@ ViennaEngine class >> alwaysUsesViennaServerAsDefault: aBoolean [
 { #category : #defaults }
 ViennaEngine class >> default [
 	^ (self alwaysUsesViennaServerAsDefault
-		or: [ Smalltalk os isWindows or: [ ViennaVDMJ isInstalled not ] ])
+		or: [ ViennaVDMJ isInstalled not ])
 		ifTrue: [ ViennaClient default ]
 		ifFalse: [ ViennaVDMJ new ]
 ]
