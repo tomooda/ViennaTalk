@@ -11,7 +11,7 @@ ViennaVDM2SmalltalkObject >> createDocumentClassWithInstVars: anArrayOfString [
 
 { #category : #utilities }
 ViennaVDM2SmalltalkObject >> createDocumentClassWithInstVars: anArrayOfString1 stateVars: anArrayOfString2 [
-	^ AnonymousClassInstaller
+	^ ShiftAnonymousClassInstaller
 		make: [ :builder | 
 			builder
 				superclass: ViennaTranspiledObject;
@@ -29,7 +29,7 @@ ViennaVDM2SmalltalkObject >> createDocumentClassWithInstVars: anArrayOfString1 s
 
 { #category : #utilities }
 ViennaVDM2SmalltalkObject >> createModuleClassWithInstVars: anArrayOfString1 stateVars: anArrayOfString2 forModule: aString env: aDictionary [
-	^ (AnonymousClassInstaller
+	^ (ShiftAnonymousClassInstaller
 		make: [ :builder | 
 	builder
 		superclass: ViennaTranspiledObject;

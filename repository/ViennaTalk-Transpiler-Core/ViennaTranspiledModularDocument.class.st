@@ -40,7 +40,11 @@ ViennaTranspiledModularDocument >> evaluateExpression: aString with: aViennaVDM2
 		transpileExpression: aString
 		with: aViennaVDM2SmalltalkClass
 		ifError: [ :msg | ^ errorBlock cull: msg ].
-	^ Compiler evaluate: src for: self logged: false
+	^ OpalCompiler new
+		source: src;
+		logged: false;
+		receiver: self;
+		evaluate
 ]
 
 { #category : #evaluating }
