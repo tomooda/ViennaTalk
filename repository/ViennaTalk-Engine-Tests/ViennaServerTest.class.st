@@ -7,9 +7,8 @@ Class {
 	#category : 'ViennaTalk-Engine-Tests'
 }
 
-{ #category : #'initialize-release' }
-ViennaServerTest >> initialize [
-	super initialize.
+{ #category : #running }
+ViennaServerTest >> setUp [
 	fixture := ViennaServer new
 ]
 
