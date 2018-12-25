@@ -109,7 +109,7 @@ ViennaVDMJ class >> basicInstallJars [
 		followRedirects: true;
 		get: self vdmjUrl.
 	http response code = 200
-		ifTrue: [ self vdmjPath writeStream
+		ifTrue: [ self vdmjPath binaryWriteStream
 				nextPutAll: http entity bytes;
 				close ].
 	http := ZnClient new.
@@ -119,7 +119,7 @@ ViennaVDMJ class >> basicInstallJars [
 		followRedirects: true;
 		get: self json4vdmjUrl.
 	http response code = 200
-		ifTrue: [ self json4vdmjPath writeStream
+		ifTrue: [ self json4vdmjPath binaryWriteStream
 				nextPutAll: http entity bytes;
 				close ]
 ]
