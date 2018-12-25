@@ -408,9 +408,7 @@ ViennaVDMJ >> evaluate: expression specification: specification states: states m
 			| errorMessage hasModules value postState |
 			self ensureStartupProcess.
 			self
-				temporaryFileDo: [ :stream | 
-					stream ascii.
-					stream lineEndConvention: #lf.
+				temporaryFileDo: [ :name :stream | 
 					stream nextPutAll: specification.
 					stream close.
 					vdm10 = true
@@ -440,7 +438,7 @@ ViennaVDMJ >> evaluate: expression specification: specification states: states m
 									states.
 									msg} ] ].
 					self
-						load: stream name
+						load: name
 						ifError: [ :msg | 
 							^ {nil.
 							states.
@@ -685,7 +683,7 @@ ViennaVDMJ >> temporaryFileDo: aBlock [
 				, '.vdm'.
 			file exists ] whileTrue.
 			stream := file writeStream.
-			[ aBlock value: stream ]
+			[ aBlock value: file fullName value: stream ]
 				ensure: [ 
 					stream close.
 					file deleteIfAbsent: [  ] ] ]
