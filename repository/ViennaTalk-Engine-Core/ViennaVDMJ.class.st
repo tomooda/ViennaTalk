@@ -174,7 +174,7 @@ ViennaVDMJ class >> installJson4VDMJ [
 							UIManager default
 								abort: 'Failed to download Json4VDMJ. Please download from http://vdmpad.viennatalk.org/Json4VDMJ.jar .'.
 							^ nil ].
-					self json4vdmjPath writeStream
+					self json4vdmjPath binaryWriteStream
 						nextPutAll: http entity bytes;
 						close ] ]
 ]
@@ -183,7 +183,7 @@ ViennaVDMJ class >> installJson4VDMJ [
 ViennaVDMJ class >> installJsonic [
 	"ViennaVDMJ installJsonic"
 
-	(FileSystem workingDirectory / 'jsonic-1.0.5.jar') writeStream
+	(FileSystem workingDirectory / 'jsonic-1.0.5.jar') binaryWriteStream
 		nextPutAll: self jsonicJar;
 		close
 ]
@@ -209,7 +209,7 @@ ViennaVDMJ class >> installVDMJ [
 								abort:
 									'Failed to download VDMJ. Please download from https://github.com/nickbattle/vdmj/releases and place it at $PHARO/Contents/Resources/ .'.
 							^ nil ].
-					self vdmjPath writeStream
+					self vdmjPath binaryWriteStream
 						nextPutAll: http entity bytes;
 						close ] ]
 ]
