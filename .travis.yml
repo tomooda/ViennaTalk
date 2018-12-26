@@ -17,9 +17,7 @@ env:
 script:
   - travis_wait "$SMALLTALK_CI_HOME/run.sh" ${CI_FILE}
 before_deploy:
-  - cp Pharo.image ViennaTalk.image
-  - cp Pharo.changes ViennaTalk.changes
-  - zip -r ViennaTalk-image.zip ViennaTalk.image ViennaTalk.changes
+  - zip -r ViennaTalk-image.zip .
 deploy:
   provider: releases
   api_key:
