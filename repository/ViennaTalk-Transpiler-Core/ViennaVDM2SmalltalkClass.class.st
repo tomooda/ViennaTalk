@@ -84,7 +84,7 @@ ViennaVDM2SmalltalkClass >> createDocumentClassWithInstVars: anArrayOfString1 st
 	| documentClassName |
 	documentClassName := self requestClassName: '' for: 'Document'.
 	documentClassName ifNil: [ ^ nil ].
-	^ (PharoClassInstaller
+	^ (ShiftClassInstaller
 		make: [ :builder | 
 	builder
 		name: documentClassName asSymbol;
@@ -116,7 +116,7 @@ ViennaVDM2SmalltalkClass >> createModuleClassWithInstVars: anArrayOfString forMo
 ViennaVDM2SmalltalkClass >> createModuleClassWithInstVars: anArrayOfString1 stateVars: anArrayOfString2 forModule: aString env: aDictionary [
 	| className |
 	className := aDictionary at: aString ifAbsent: [ aString ].
-	^ (PharoClassInstaller
+	^ (ShiftClassInstaller
 		make: [ :builder | 
 	builder
 		name: className asSymbol;
