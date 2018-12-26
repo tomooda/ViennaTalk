@@ -296,7 +296,7 @@ ViennaVDMJ class >> startUp: resume [
 	Smalltalk isHeadless
 		ifTrue: [ ^ self ].
 	UIManager default uiProcess
-		ifNil: [ Smalltalk session addDeferredStartupAction: [ self startUp: resume ].
+		ifNil: [ Smalltalk session addDeferredStartupAction: [ self install ].
 			^ self ].
 	self install
 ]
