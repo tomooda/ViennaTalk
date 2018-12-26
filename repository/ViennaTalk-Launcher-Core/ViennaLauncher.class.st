@@ -131,7 +131,7 @@ ViennaLauncher >> codename [
 
 { #category : #accessing }
 ViennaLauncher >> defaultTitle [
-	^ 'ViennaTalk Launcher' copy
+	^ 'ViennaTalk ', self codename
 ]
 
 { #category : #'initialize-release' }
