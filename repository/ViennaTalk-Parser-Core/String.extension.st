@@ -2,13 +2,11 @@ Extension { #name : #String }
 
 { #category : #'*ViennaTalk-Parser-Core' }
 String >> asViennaExpression [
-	^ Compiler new
-		evaluate: (ViennaVDM2SmalltalkScript new generate: self asViennaExpressionAst)
-		in: thisContext sender
-		to: thisContext sender receiver
-		notifying: nil
-		ifFail: nil
-		logged: false
+	^ OpalCompiler new
+		source: (ViennaVDM2SmalltalkScript new generate: self asViennaExpressionAst);
+		context: thisContext sender;
+		receiver: thisContext sender receiver;
+		evaluate
 ]
 
 { #category : #'*ViennaTalk-Parser-Core' }
@@ -18,13 +16,11 @@ String >> asViennaExpressionAst [
 
 { #category : #'*ViennaTalk-Parser-Core' }
 String >> asViennaStatement [
-	^ Compiler new
-		evaluate: (ViennaVDM2SmalltalkScript new generate: self asViennaStatementAst)
-		in: thisContext sender
-		to: thisContext sender receiver
-		notifying: nil
-		ifFail: nil
-		logged: false
+	^ OpalCompiler new
+		source: (ViennaVDM2SmalltalkScript new generate: self asViennaStatementAst);
+		context: thisContext sender;
+		receiver: thisContext sender receiver;
+		evaluate
 ]
 
 { #category : #'*ViennaTalk-Parser-Core' }
