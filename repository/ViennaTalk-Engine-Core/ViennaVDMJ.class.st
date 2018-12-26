@@ -293,9 +293,12 @@ ViennaVDMJ class >> registry [
 
 { #category : #'class initialization' }
 ViennaVDMJ class >> startUp: resume [
-	Smalltalk isHeadless ifTrue: [ ^self ].
-	Smalltalk ui theme uiProcess ifNil: [ Smalltalk session addDeferredStartupAction: [ self startUp: resume ] ].
-	self install.
+	Smalltalk isHeadless
+		ifTrue: [ ^ self ].
+	UIManager default uiProcess
+		ifNil: [ Smalltalk session addDeferredStartupAction: [ self startUp: resume ].
+			^ self ].
+	self install
 ]
 
 { #category : #registry }
