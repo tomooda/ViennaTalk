@@ -262,15 +262,14 @@ LWTFieldWidget >> isVDMType [
 { #category : #geometry }
 LWTFieldWidget >> layoutFrameForTextPane [
 	^ self showsDiagram
-		ifTrue: [ 
-			(LayoutFrame fractions: (0 @ 0 corner: 1 @ 0))
+		ifTrue: [ LayoutFrame identity
+				bottomFraction: 0;
 				leftOffset: 3;
 				rightOffset: -3;
 				topOffset: self textOffset y;
 				bottomOffset: self textOffset y + self textExtent y;
 				yourself ]
-		ifFalse: [ 
-			(LayoutFrame fractions: (0 @ 0 corner: 1 @ 1))
+		ifFalse: [ LayoutFrame identity
 				leftOffset: 3;
 				rightOffset: -3;
 				topOffset: self textOffset y;

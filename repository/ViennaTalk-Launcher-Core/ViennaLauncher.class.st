@@ -126,7 +126,7 @@ ViennaLauncher >> close [
 
 { #category : #accessing }
 ViennaLauncher >> codename [
-	^ 'Cyprus'
+	^ 'Oxford'
 ]
 
 { #category : #accessing }
@@ -142,8 +142,7 @@ ViennaLauncher >> initialize [
 	systemMenu := self newMenu
 		add: 'settings...' target: self selector: #showSettingBrowser;
 		addLine;
-		add: 'update to the latest stable' target: self selector: #loadStable;
-		add: 'update to the bleeding edge' target: self selector: #loadDevelopment;
+		add: 'update to the head on github' target: self selector: #loadHead;
 		addLine;
 		add: 'reopen' target: self selector: #reopen;
 		add: 'close' target: self selector: #close;
@@ -199,15 +198,12 @@ ViennaLauncher >> initialize [
 ]
 
 { #category : #'menu operations' }
-ViennaLauncher >> loadDevelopment [
-	self updateConfiguration.
-	Smalltalk at: #ConfigurationOfViennaTalk ifPresent: [ :config | config loadDevelopment ]
-]
-
-{ #category : #'menu operations' }
-ViennaLauncher >> loadStable [
-	self updateConfiguration.
-	Smalltalk at: #ConfigurationOfViennaTalk ifPresent: [ :config | config load ]
+ViennaLauncher >> loadHead [
+	Metacello new
+		baseline: 'ViennaTalk';
+		repository: 'github://tomooda/ViennaTalk/repository';
+		onConflictUseIncoming;
+		load
 ]
 
 { #category : #'interface opening' }
@@ -231,15 +227,6 @@ ViennaLauncher >> showSettingBrowser [
 					(RPackageOrganizer default packageNamed: #'ViennaTalk-VDMPad-Core').
 					(RPackageOrganizer default packageNamed: #'Network-Kernel')};
 		open
-]
-
-{ #category : #'menu operations' }
-ViennaLauncher >> updateConfiguration [
-	Smalltalk at: #ConfigurationOfViennaTalk ifPresent: [ :config | config possiblyNewerVersions ifEmpty: [ ^ self ] ].
-	Gofer new
-		smalltalkhubUser: 'tomooda' project: 'ViennaTalk';
-		configurationOf: #ViennaTalk;
-		load
 ]
 
 { #category : #resources }

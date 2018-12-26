@@ -20,7 +20,7 @@ Class {
 { #category : #compiling }
 LWTLivetalkCompiler >> compileToSmalltalk: aString ifError: errorBlock [
 	| sourceStream |
-	sourceStream := aString readStream asPetitStream.
+	sourceStream := aString readStream asPetit2Stream.
 	^ parser parse: sourceStream onError: [ :msg :position | errorBlock cull: msg cull: position ]
 ]
 
@@ -28,35 +28,35 @@ LWTLivetalkCompiler >> compileToSmalltalk: aString ifError: errorBlock [
 LWTLivetalkCompiler >> initialize [
 	| quote nat int decimal escapes |
 	super initialize.
-	quote := $" asParser.
+	quote := $" asPParser.
 	escapes := Dictionary new
 		at: $n put: Character cr;
 		at: $t put: Character tab;
 		yourself.
-	nat := ((1 to: 9) inject: $0 asParser into: [ :p :digit | p / digit asCharacterDigit asParser ]) plusA flatten.
-	int := $- asParser optional , nat.
-	decimal := int , ($. asParser , nat) optional.
-	numberLiteral := (decimal , ($e asParser / $E asParser , decimal) optional) flatten trim
+	nat := ((1 to: 9) inject: $0 asPParser into: [ :p :digit | p / digit asCharacterDigit asPParser ]) plusA flatten.
+	int := $- asPParser optional , nat.
+	decimal := int , ($. asPParser , nat) optional.
+	numberLiteral := (decimal , ($e asPParser / $E asPParser , decimal) optional) flatten trim
 		==> [ :str |  ' ', str trim, ' ' ].
 	stringLiteral := (quote
 		,
 			((quote not
 				,
-					((($\ asParser , #any asParser) ==> [ :pair | escapes at: pair second ifAbsent: [ pair second ] ]) / #any asParser))
+					((($\ asPParser , #any asPParser) ==> [ :pair | escapes at: pair second ifAbsent: [ pair second ] ]) / #any asPParser))
 				==> [ :pair | pair second ]) star , quote) ==> [ :triple | (String withAll: triple second) viennaString ].
-	identifier := (#letter asParser / $` asParser / $_ asParser
-		, (#letter asParser / $` asParser / $_ asParser / #digit asParser) star) flatten.
-	morphName := ($[ asParser , (($] asParser not , #any asParser) ==> [ :pair | pair second ]) star flatten , $] asParser)
+	identifier := (#letter asPParser / $` asPParser / $_ asPParser
+		, (#letter asPParser / $` asPParser / $_ asPParser / #digit asPParser) star) flatten.
+	morphName := ($[ asPParser , (($] asPParser not , #any asPParser) ==> [ :pair | pair second ]) star flatten , $] asPParser)
 		==> [ :args | args second ].
-	actionName := ($< asParser , identifier , $> asParser) ==> [ :args | args second ].
-	vdmcall := PPUnresolvedParser new.
-	expression := PPUnresolvedParser new.
+	actionName := ($< asPParser , identifier , $> asPParser) ==> [ :args | args second ].
+	vdmcall := PP2UnresolvedNode new.
+	expression := PP2UnresolvedNode new.
 	vdmcall
 		def:
-			(identifier , $( asParser trim
+			(identifier , $( asPParser trim
 				,
-					((expression , (($, asParser trim , expression) ==> [ :args | args second ]) star)
-						==> [ :args | (Array with: args first) , args second ]) optional , $) asParser trim)
+					((expression , (($, asPParser trim , expression) ==> [ :args | args second ]) star)
+						==> [ :args | (Array with: args first) , args second ]) optional , $) asPParser trim)
 				==> [ :args | Array with: args first with: args third ].
 	expression
 		def:
@@ -81,7 +81,7 @@ LWTLivetalkCompiler >> initialize [
 										separatedBy: [ stream nextPut: $. ] ].
 							stream nextPut: $}.
 							stream contents ]).
-	arrow := (expression , '->' asParser trim , morphName)
+	arrow := (expression , '->' asPParser trim , morphName)
 		==> [ :args | 
 			| stream |
 			stream := String new writeStream.
@@ -91,7 +91,7 @@ LWTLivetalkCompiler >> initialize [
 			stream nextPutAll: args first.
 			stream nextPutAll: ')'.
 			stream contents ].
-	dialog := ($! asParser trim , expression) ==> [ :pair | 'self execDialog: (' , pair second , ')' ].
+	dialog := ($! asPParser trim , expression) ==> [ :pair | 'self execDialog: (' , pair second , ')' ].
 	step := (arrow / dialog / expression) trim.
 	parser := step star end
 		==> [ :exprs | 
