@@ -65,13 +65,16 @@ LWTLivetalkScript >> setWidgetName: nameString event: eventString performer: anO
 			widgetName := nameString.
 			event := eventString asSymbol.
 			performer := anObject.
-			compiler := Compiler new.
+			compiler := OpalCompiler new.
 			compiler
-				from: smalltalkSource
-				class: performer class
-				context: nil
-				notifying: nil.
-			methodNode := compiler translate: smalltalkSource readStream noPattern: true ifFail: [ ^ errorBlock value ].
+				source: smalltalkSource;
+				class: performer class;
+				compile.
+			methodNode := compiler
+				source: smalltalkSource;
+				noPattern: true;
+				failBlock: [ ^ errorBlock value ];
+				parse.
 			compiledMethod := compiler interactive
 				ifTrue: [ methodNode generateWithSource ]
 				ifFalse: [ methodNode generate ].

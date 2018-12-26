@@ -19,13 +19,17 @@ LWTWidget class >> attributeFromJsonObject: anObject [
 	anObject
 		at: 'storeString'
 		ifPresent: [ :storeString | 
-			[ ^ Compiler evaluate: storeString ]
+			[ ^ OpalCompiler new
+				source: storeString;
+				evaluate ]
 				on: Error
 				do: [ :ex | 
 					^ anObject
 						at: 'onError'
 						ifPresent: [ :alternative | 
-							[ Compiler evaluate: alternative ]
+							[ OpalCompiler new
+								source: alternative;
+								evaluate ]
 								on: Error
 								do: [ :ex2 | nil ] ]
 						ifAbsent: [  ] ] ].
