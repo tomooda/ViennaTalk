@@ -256,7 +256,7 @@ ViennaVDMJ class >> new [
 { #category : #utilities }
 ViennaVDMJ class >> proceed: aText title: aString [
 	| dialog |
-	dialog := ProceedDialogWindow newWithTheme: UIManager default theme.
+	dialog := ProceedDialogWindow newWithTheme: Smalltalk ui theme.
 	dialog title: aString.
 	dialog textFont: TextStyle default defaultFont.
 	dialog text: aText asText.
