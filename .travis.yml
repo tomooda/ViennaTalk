@@ -1,24 +1,31 @@
 language: smalltalk
-
 sudo: false
-
 addons:
   apt:
     packages:
       - oracle-java8-set-default
-
 os:
   - linux
   - osx
-  
 smalltalk:
   - Pharo-6.1
   - Pharo64-6.1
   - Pharo64-7.0
-
 env:
   matrix:
     - CI_FILE=.smalltalk.ston
-
 script:
-- travis_wait "$SMALLTALK_CI_HOME/run.sh" ${CI_FILE}
+  - travis_wait "$SMALLTALK_CI_HOME/run.sh" ${CI_FILE}
+before_deploy:
+  - cp Pharo.image ViennaTalk.image
+  - cp Pharo.changes ViennaTalk.changes
+  - zip -r ViennaTalk-image.zip ViennaTalk.image ViennaTalk.changes
+deploy:
+  provider: releases
+  api_key:
+    secure: uuuCI5qnigaBD80wrtRKiorDQ8a0mEZd7e4bb7ybf2cMLWtOMPJAepUkE9BgsvBp6FuArtBX56sfzqSMXMYzkEWJilQpcXTu4ok8oUuv13ns5m0na2AHytnMoR5cISHqYuTL0cx+gVkdw5TLGtQiTWOZLnAAWvQHNl4evyJb4mPFjeXOMhXmn6WPB3U37kD8oHQ8tE51Uiwzc9QOO1y3q2BUBYZYg1S+H45P6U1OowQioXr7TV/dcgWp01nq6VEQ32Jf+HAkQB3n0KODJlO6nh/BR0D8vu3nyZ3yuHVHLuw/IYaTLfeIi+CnOk8BASAgp3itRFCE8+ZCRTw34776sgc1jNLZiA1RDa4d/hL4GYMAh68un3pBpn3NEE8fDaMqUWiEXkYFBK+pYJ1iLnSPnph5qP3BS393kw0rst7F/Nuf5274dbOSzLGz+J7lTH9WjfiDV9JDJ2DxepmEjw14R8qBGuivsG0/xcVp3ynf8imRiw+FzH0Lh4zTXIrSzYJxieXYxO3mBVHcDQP6cNCKxNa/pe5iumCogjqoJVVK7wyjCjHLkzy4MI/Tm2KCgB2hmesGKpxXNNbU5io2acjxA7Zx/EyL7ie7ELGfwt5dgGvu422nxgQjibcd3Lk5z+Cc+uAADrEy2uUqm/YaBp4oVQbcRVmtXguj2A8GZ3iCvxY=
+  file: ViennaTalk-image.zip
+  skip_cleanup: true
+  on:
+    repo: tomooda/ViennaTalk
+    tags: true
