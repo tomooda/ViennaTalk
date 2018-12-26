@@ -46,11 +46,6 @@ BaselineOfViennaTalk >> baseline: spec [
 					do: [ spec
 						package: #'ViennaTalk-Engine-Core'
 						with: [ spec requires: #('ViennaTalk-Engine-OSSubprocess') ] ];
-				for: #'pharo6.x'
-					do: [ spec
-						package: #'ViennaTalk-Engine-Compatibility6';
-						package: #'ViennaTalk-Engine-Core'
-							with: [ spec requires: #('ViennaTalk-Engine-Compatibility6') ] ];
 				package: #'ViennaTalk-Engine-OSSubprocess'
 					with: [ spec requires: #('ProcessWrapper') ];
 				package: #'ViennaTalk-Engine-Tests'
@@ -97,7 +92,15 @@ BaselineOfViennaTalk >> baseline: spec [
 						requires:
 							#('ViennaTalk-Animation-Core' 'ViennaTalk-Browser-Core' #'ViennaTalk-WeblyWalkThrough-Translators') ];
 				package: #'ViennaTalk-WeblyWalkThrough-Translators'
-					with: [ spec requires: #(#'ViennaTalk-Value-Core' 'PetitParser2' 'NeoJSON') ].
+					with: [ spec requires: #(#'ViennaTalk-Value-Core' 'PetitParser2' 'NeoJSON') ];
+				for: #'pharo6.x'
+					do: [ spec
+						package: #'ViennaTalk-Engine-Pharo6';
+						package: #'ViennaTalk-Engine-Core'
+							with: [ spec requires: #('ViennaTalk-Engine-Pharo6') ];
+						package: #'ViennaTalk-Transpiler-Pharo6';
+						package: #'ViennaTalk-Transpiler-Core'
+							with: [ spec requires: #('ViennaTalk-Transpiler-Pharo6') ] ].
 			spec
 				group: 'LivelyWalkThrough' with: #('ViennaTalk-LivelyWalkThrough-Core');
 				group: 'Transpiler'
