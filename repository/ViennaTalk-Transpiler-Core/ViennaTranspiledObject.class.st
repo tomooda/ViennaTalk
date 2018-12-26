@@ -143,7 +143,10 @@ ViennaTranspiledObject >> evaluateStatement: aString with: aViennaVDM2SmalltalkC
 		transpileStatement: aString
 		with: aViennaVDM2SmalltalkClass
 		ifError: [ :msg | ^ errorBlock cull: msg ].
-	^ Compiler evaluate: src for: self logged: false
+	^ OpalCompiler new
+		source: src;
+		receiver: self;
+		evaluate
 ]
 
 { #category : #private }
