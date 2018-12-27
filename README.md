@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/tomooda/ViennaTalk.svg?branch=master)](https://travis-ci.org/tomooda/ViennaTalk)
+[![Build status](https://ci.appveyor.com/api/projects/status/h77apfm990r2dmh6?svg=true)](https://ci.appveyor.com/project/tomooda/viennatalk)
 
 ![ViennaTalk logo](docs/images/ViennaTalk-logo.png)
 
