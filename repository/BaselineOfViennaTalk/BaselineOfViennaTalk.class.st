@@ -44,7 +44,7 @@ BaselineOfViennaTalk >> baseline: spec [
 						configuration: 'ProcessWrapper'
 							with: [ spec
 								versionString: #stable;
-								repository: 'http://smalltalkhub.com/mc/Pharo/MetaRepoForPharo50/main' ];
+								repository: 'http://smalltalkhub.com/mc/hernan/ProcessWrapper/main' ];
 						package: #'ViennaTalk-Engine-OSSubprocess'
 							with: [ spec requires: #('ProcessWrapper') ];
 						package: #'ViennaTalk-Engine-Core'
@@ -80,7 +80,8 @@ BaselineOfViennaTalk >> baseline: spec [
 						requires:
 							#(#'ViennaTalk-Parser-Core' #'ViennaTalk-Transpiler-Core' #'ViennaTalk-Type-Core' #'ViennaTalk-Value-Core') ];
 				package: #'ViennaTalk-Type-Core';
-				package: #'ViennaTalk-Type-Tests' with: [ spec requires: #(#'ViennaTalk-Type-Core') ];
+				package: #'ViennaTalk-Type-Tests'
+					with: [ spec requires: #(#'ViennaTalk-Type-Core') ];
 				package: #'ViennaTalk-VDMPad-Core'
 					with: [ spec
 						requires: #(#'ViennaTalk-Engine-Core' 'NeoJSON' 'ZincHTTPComponents' 'ViennaTalk-Html-Core') ];
