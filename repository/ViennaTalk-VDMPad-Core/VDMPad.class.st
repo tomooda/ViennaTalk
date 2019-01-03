@@ -2048,22 +2048,22 @@ VDMPad >> fileService: aZnRequest [
 
 { #category : #'request handling-api' }
 VDMPad >> format: aZnRequest [
-	| params source formattedSource message json |
+	| parser params source formattedSource message json |
+	parser := ViennaVDMParser new.
 	params := self getParamsFrom: aZnRequest.
 	source := (params at: 'source' ifAbsent: [ String new ]) trimmed
 		copyReplaceAll: String lf
 		with: String cr.
 	message := String new.
-	formattedSource := [ ViennaVDMParser new format: source width: 70 ]
+	formattedSource := [ parser format: source width: 70 ]
 		on: Error
 		do: [ :ex | source ].
 	formattedSource isPetit2Failure
-		ifTrue: [ message := String
+		ifTrue: [ formattedSource := parser debug: source.
+			message := String
 				streamContents: [ :stream | 
-					stream
-						nextPutAll: formattedSource message;
-						nextPutAll: ' at line '.
-					(self charPositionToPoint: formattedSource position in: source)
+					stream nextPutAll: 'Syntax Error at line '.
+					(self charPositionToPoint: formattedSource furthestPosition in: source)
 						in: [ :position | 
 							stream
 								nextPutAll: position y printString;
