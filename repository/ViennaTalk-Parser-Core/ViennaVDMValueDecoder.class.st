@@ -6,17 +6,17 @@ Class {
 
 { #category : #'parsers-definitions' }
 ViennaVDMValueDecoder >> accessFunctionDefinition [
-	^ PPFailingParser new
+	^ PP2FailingNode new
 ]
 
 { #category : #'parsers-definitions' }
 ViennaVDMValueDecoder >> accessOperationDefinition [
-	^ PPFailingParser new
+	^ PP2FailingNode new
 ]
 
 { #category : #'parsers-definitions' }
 ViennaVDMValueDecoder >> accessTypeDefinition [
-	^ PPFailingParser new
+	^ PP2FailingNode new
 ]
 
 { #category : #'parsers-expressions' }
@@ -46,7 +46,7 @@ ViennaVDMValueDecoder >> explicitFunctionDefinition [
 
 { #category : #'parsers-definitions' }
 ViennaVDMValueDecoder >> explicitOperationDefinition [
-	^ PPFailingParser new
+	^ PP2FailingNode new
 ]
 
 { #category : #'parsers-expressions' }
@@ -58,7 +58,7 @@ ViennaVDMValueDecoder >> expression [
 
 { #category : #'parsers-definitions' }
 ViennaVDMValueDecoder >> functionDefinitions [
-	^ PPFailingParser new
+	^ PP2FailingNode new
 ]
 
 { #category : #'parsers-expressions' }
@@ -73,7 +73,7 @@ ViennaVDMValueDecoder >> hexadecimalLiteral [
 
 { #category : #'parsers-definitions' }
 ViennaVDMValueDecoder >> initialisation [
-	^ PPFailingParser new
+	^ PP2FailingNode new
 ]
 
 { #category : #'parsers-expressions' }
@@ -93,7 +93,7 @@ ViennaVDMValueDecoder >> nilLiteral [
 
 { #category : #'parsers-definitions' }
 ViennaVDMValueDecoder >> operationDefinitions [
-	^ PPFailingParser new
+	^ PP2FailingNode new
 ]
 
 { #category : #'parsers-expressions' }
@@ -115,7 +115,7 @@ ViennaVDMValueDecoder >> recordConstructor [
 
 { #category : #'parsers-definitions' }
 ViennaVDMValueDecoder >> recordTypeDefinition [
-	^ PPFailingParser new
+	^ PP2FailingNode new
 ]
 
 { #category : #'parsers-expressions' }
@@ -135,7 +135,7 @@ ViennaVDMValueDecoder >> start [
 
 { #category : #'parsers-definitions' }
 ViennaVDMValueDecoder >> stateDefinition [
-	^ PPFailingParser new
+	^ PP2FailingNode new
 ]
 
 { #category : #'parsers-expressions' }
@@ -155,12 +155,12 @@ ViennaVDMValueDecoder >> tupleConstructor [
 
 { #category : #'parsers-definitions' }
 ViennaVDMValueDecoder >> typeDefinitions [
-	^ PPFailingParser new
+	^ PP2FailingNode new
 ]
 
 { #category : #'parsers-definitions' }
 ViennaVDMValueDecoder >> typeSynonym [
-	^ PPFailingParser new
+	^ PP2FailingNode new
 ]
 
 { #category : #'parsers-expressions' }
