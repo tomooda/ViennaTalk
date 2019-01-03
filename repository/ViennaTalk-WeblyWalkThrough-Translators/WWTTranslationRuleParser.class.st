@@ -40,7 +40,7 @@ WWTTranslationRuleParser >> jsonObj1 [
 WWTTranslationRuleParser >> jsonObj2 [
 	^ (${ asPParser trim
 		,
-			((PPJsonParser new stringToken , $: asPParser trim , jsonPattern)
+			((PP2JsonParser new stringToken , $: asPParser trim , jsonPattern)
 				==> [ :triple | 
 					{(triple first).
 					(triple third)} ] separatedBy: $, asPParser trim) withoutSeparators , $} asPParser trim)
@@ -57,7 +57,7 @@ WWTTranslationRuleParser >> jsonPattern [
 
 { #category : #parsers }
 WWTTranslationRuleParser >> jsonValue [
-	^ PPJsonParser new value flatten
+	^ PP2JsonParser new value flatten
 		==> [ :json | 
 			WWTTranslationObjectMatcher
 				with:

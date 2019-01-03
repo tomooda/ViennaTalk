@@ -45,70 +45,60 @@ VDMValue2HtmlDiagram >> vdmToHtmlParser [
 				,
 					'" draggable="true" ondragstart="event.dataTransfer.setData(''text'', event.target.title)">'
 				, html , '</div>' ] ].
-	expression := PPUnresolvedParser new.
-	setEnumeration := PPUnresolvedParser new.
-	sequenceEnumeration := PPUnresolvedParser new.
-	mapEnumeration := PPUnresolvedParser new.
-	apply := PPUnresolvedParser new.
+	expression := PP2UnresolvedNode new.
+	setEnumeration := PP2UnresolvedNode new.
+	sequenceEnumeration := PP2UnresolvedNode new.
+	mapEnumeration := PP2UnresolvedNode new.
+	apply := PP2UnresolvedNode new.
 	identifier := (#letter asPParser / '_' asPParser
-		, (#letter asPParser / #digit asPParser / '_' asPParser) starA)
-		flatten.
-	rawname := (identifier , ('`' asPParser trim , identifier) optional)
-		flatten.
+		, (#letter asPParser / #digit asPParser / '_' asPParser) starA) flatten.
+	rawname := (identifier , ('`' asPParser trim , identifier) optional) flatten.
 	name := rawname ==> [ :n | n asHTMLString ] >=> titleBlock.
-	symbolicLiteral := ('<' asPParser
-		, ('>' asPParser not , #any asPParser) plusA , '>' asPParser) trim
+	symbolicLiteral := ('<' asPParser , ('>' asPParser not , #any asPParser) plusA
+		, '>' asPParser) trim
 		==> [ :triple | 
 			| symbol |
-			symbol := String
-				withAll: (triple second collect: [ :pair | pair second ]).
+			symbol := String withAll: (triple second collect: [ :pair | pair second ]).
 			'<div style="border-style: outset; border-width: 1px; border-color: silver; background-color: lightgrey; padding: 0px 5px; font: 10pt normal courier">'
 				, symbol asHTMLString , '</div>' ] >=> titleBlock.
 	number := ('-' asPParser optional , #digit asPParser plusA
 		, ('.' asPParser optional , #digit asPParser plusA) optional
 		,
-			('e' asPParser / 'E' asPParser , '-' asPParser optional
-				, #digit asPParser plusA) optional) trim flatten
-		==> [ :n | n asHTMLString ] >=> titleBlock.
+			('e' asPParser / 'E' asPParser , '-' asPParser optional , #digit asPParser plusA) optional)
+		trim flatten ==> [ :n | n asHTMLString ] >=> titleBlock.
 	string := ('"' asPParser
 		,
-			((('\u' asPParser , #any asPParser , #any asPParser , #any asPParser
-				, #any asPParser)
+			((('\u' asPParser , #any asPParser , #any asPParser , #any asPParser , #any asPParser)
 				==> [ :array | 
 					Character
 						codePoint:
-							(Integer
-								readFrom: (String withAll: (array copyFrom: 2 to: array size))
-								base: 16) ]) / ('\"' asPParser ==> [ :single | $" ])
-				/ (('"' asPParser not , #any asPParser) ==> [ :pair | pair second ]))
-				starA , '"' asPParser) trim
+							(Integer readFrom: (String withAll: (array copyFrom: 2 to: array size)) base: 16) ])
+				/ ('\"' asPParser ==> [ :single | $" ])
+				/ (('"' asPParser not , #any asPParser) ==> [ :pair | pair second ])) starA
+		, '"' asPParser) trim
 		==> [ :triple | ('"' , (String withAll: triple second) , '"') asHTMLString ]
 		>=> titleBlock.
 	char := ('''' asPParser
 		,
-			((('\u' asPParser , #any asPParser , #any asPParser , #any asPParser
-				, #any asPParser)
+			((('\u' asPParser , #any asPParser , #any asPParser , #any asPParser , #any asPParser)
 				==> [ :array | 
 					Character
 						codePoint:
-							(Integer
-								readFrom: (String withAll: (array copyFrom: 2 to: array size))
-								base: 16) ]) / ('\''' asPParser ==> [ :single | $' ])
-				/ (('''' asPParser not , #any asPParser) ==> [ :pair | pair second ]))
-				plusA , '''' asPParser) trim
-		==>
-			[ :triple | ('''' , (String withAll: triple second) , '''') asHTMLString ]
+							(Integer readFrom: (String withAll: (array copyFrom: 2 to: array size)) base: 16) ])
+				/ ('\''' asPParser ==> [ :single | $' ])
+				/ (('''' asPParser not , #any asPParser) ==> [ :pair | pair second ])) plusA
+		, '''' asPParser) trim
+		==> [ :triple | ('''' , (String withAll: triple second) , '''') asHTMLString ]
 		>=> titleBlock.
 	expression
 		def:
-			setEnumeration / sequenceEnumeration / mapEnumeration / apply / name
-				/ symbolicLiteral / number / string / char.
+			setEnumeration / sequenceEnumeration / mapEnumeration / apply / name / symbolicLiteral
+				/ number / string / char.
 	setEnumeration
 		def:
 			('{' asPParser trim
 				,
-					(((expression
-						, ((',' asPParser trim , expression) ==> [ :pair | pair second ]) starA)
+					(((expression , ((',' asPParser trim , expression) ==> [ :pair | pair second ]) starA)
 						==> [ :pair | (Array with: pair first) , pair second ]) optional
 						==> [ :opt | opt ifNil: [ Array new ] ]) , '}' asPParser trim)
 				==> [ :triple | 
@@ -116,8 +106,7 @@ VDMValue2HtmlDiagram >> vdmToHtmlParser [
 					values := triple second.
 					n := values size sqrt ceiling.
 					stream := String new writeStream.
-					stream
-						nextPutAll: '<table style="border: 4px solid silver; border-radius: 20px">'.
+					stream nextPutAll: '<table style="border: 4px solid silver; border-radius: 20px">'.
 					0 to: n - 1 do: [ :row | 
 						stream nextPutAll: '<tr>'.
 						0 to: n - 1 do: [ :column | 
@@ -137,8 +126,7 @@ VDMValue2HtmlDiagram >> vdmToHtmlParser [
 		def:
 			('[' asPParser trim
 				,
-					(((expression
-						, ((',' asPParser trim , expression) ==> [ :pair | pair second ]) starA)
+					(((expression , ((',' asPParser trim , expression) ==> [ :pair | pair second ]) starA)
 						==> [ :pair | (Array with: pair first) , pair second ]) optional
 						==> [ :opt | opt ifNil: [ Array new ] ]) , ']' asPParser trim)
 				==> [ :triple | 
@@ -149,17 +137,14 @@ VDMValue2HtmlDiagram >> vdmToHtmlParser [
 						nextPutAll: '<div><div style="float: left; border-bottom: 4px solid lightgrey">'.
 					values
 						do: [ :value | 
-							stream
-								nextPutAll: '<div style="float: left; border-style: none; padding: 0px 5px">'.
+							stream nextPutAll: '<div style="float: left; border-style: none; padding: 0px 5px">'.
 							stream nextPutAll: value.
 							stream nextPutAll: '</div>' ].
 					values
 						ifEmpty: [ stream
-								nextPutAll:
-									'<div style="float: left; border-style: none; padding: 10px 10px">&nbsp</div>' ].
+								nextPutAll: '<div style="float: left; border-style: none; padding: 10px 10px">&nbsp</div>' ].
 					stream
-						nextPutAll:
-							'<div style="clear: left"></div></div><div style="clear: left"></div></div>'.
+						nextPutAll: '<div style="clear: left"></div></div><div style="clear: left"></div></div>'.
 					stream contents ] >=> titleBlock.
 	mapEnumeration
 		def:
@@ -171,8 +156,7 @@ VDMValue2HtmlDiagram >> vdmToHtmlParser [
 								==> [ :triple | Array with: 'maplet' with: triple first with: triple third ]
 								,
 									((',' asPParser trim , expression , '|->' asPParser trim , expression)
-										==>
-											[ :quatro | Array with: 'maplet' with: quatro second with: quatro fourth ])
+										==> [ :quatro | Array with: 'maplet' with: quatro second with: quatro fourth ])
 										starA) ==> [ :pair | (Array with: pair first) , pair second ]))
 				, '}' asPParser trim)
 				==> [ :triple | 
@@ -201,8 +185,7 @@ VDMValue2HtmlDiagram >> vdmToHtmlParser [
 		def:
 			(rawname , '(' asPParser trim
 				,
-					(((expression
-						, ((',' asPParser trim , expression) ==> [ :pair | pair second ]) starA)
+					(((expression , ((',' asPParser trim , expression) ==> [ :pair | pair second ]) starA)
 						==> [ :pair | (Array with: pair first) , pair second ]) optional
 						==> [ :opt | opt ifNil: [ Array new ] ]) , ')' asPParser trim)
 				==> [ :quatro | 
@@ -211,8 +194,7 @@ VDMValue2HtmlDiagram >> vdmToHtmlParser [
 					args := quatro third.
 					stream := String new writeStream.
 					kind
-						ifNotEmpty: [ stream
-								nextPutAll: '<div style="border-style:none; padding: 2px 10px">'.
+						ifNotEmpty: [ stream nextPutAll: '<div style="border-style:none; padding: 2px 10px">'.
 							stream
 								nextPutAll: '<div style="font-style: bold">';
 								nextPutAll: kind;
