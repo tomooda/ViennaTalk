@@ -1429,9 +1429,6 @@ VDMPad >> charPositionToPoint: anInteger in: aString [
 	| toGo numLines |
 	toGo := anInteger + 1.
 	numLines := 1.
-	Transcript
-		cr;
-		show: 'char at ' , (anInteger + 1) printString , ' = ' , (aString at: anInteger + 1) printString.
 	aString
 		linesDo: [ :line | 
 			| numChars |
