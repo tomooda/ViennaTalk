@@ -1424,6 +1424,25 @@ else var Blob = (function (view) {
 }(self));'
 ]
 
+{ #category : #private }
+VDMPad >> charPositionToPoint: anInteger in: aString [
+	| toGo numLines |
+	toGo := anInteger + 1.
+	numLines := 1.
+	Transcript
+		cr;
+		show: 'char at ' , (anInteger + 1) printString , ' = ' , (aString at: anInteger + 1) printString.
+	aString
+		linesDo: [ :line | 
+			| numChars |
+			numChars := line size + 1.
+			toGo <= numChars
+				ifTrue: [ ^ toGo @ numLines ].
+			toGo := toGo - numChars.
+			numLines := numLines + 1 ].
+	^ toGo @ numLines
+]
+
 { #category : #'request handling-image' }
 VDMPad >> codemirrorGlass [
 	^ self
@@ -2031,14 +2050,25 @@ VDMPad >> fileService: aZnRequest [
 VDMPad >> format: aZnRequest [
 	| params source formattedSource message json |
 	params := self getParamsFrom: aZnRequest.
-	source := (params at: 'source' ifAbsent: [ String new ]) trimmed copyReplaceAll: String lf with: String cr.
+	source := (params at: 'source' ifAbsent: [ String new ]) trimmed
+		copyReplaceAll: String lf
+		with: String cr.
 	message := String new.
 	formattedSource := [ ViennaVDMParser new format: source width: 70 ]
 		on: Error
 		do: [ :ex | source ].
 	formattedSource isPetit2Failure
-		ifTrue: [ 
-			message := formattedSource printString.
+		ifTrue: [ message := String
+				streamContents: [ :stream | 
+					stream
+						nextPutAll: formattedSource message;
+						nextPutAll: ' at line '.
+					(self charPositionToPoint: formattedSource position in: source)
+						in: [ :position | 
+							stream
+								nextPutAll: position y printString;
+								nextPut: $:;
+								nextPutAll: position x printString ] ].
 			formattedSource := source ].
 	json := params copy.
 	json
