@@ -126,7 +126,7 @@ ViennaLauncher >> close [
 
 { #category : #accessing }
 ViennaLauncher >> codename [
-	^ 'Oxford'
+	^ 'Lille'
 ]
 
 { #category : #accessing }
