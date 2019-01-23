@@ -31,6 +31,12 @@ Table of Major Components of ViennaTalk
 
 What's new in the latest release
 ---
+* Codename Lille has been released. (January 23, 2019)
+  - Base Pharo is upgraded to Pharo 7.0.
+  - ViennaTalk uses 64bits Virtual Machine by default (except Windows). Great thanks to the OSSubprocess team for the big improvements.
+  - VDMJ bridge now works on Windows platforms using ProcessWrapper(in 32bits only).
+  - Tested by CI servers by every commit. Travis is used for macOS and Linux builds and AppVeyor is used for Windows (32bits only for now).
+
 * Codename Oxford has been released. (July 1, 2018)
   - Source repository is migrated from smalltalkhub. Great thanks to Peter Uhnak for the migration tools.
   - Base Pharo is upgraded to Pharo 6.1.
