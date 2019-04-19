@@ -3,7 +3,7 @@ sudo: false
 addons:
   apt:
     packages:
-      - oracle-java8-set-default
+      - default-jre
 os:
   - linux
   - osx
