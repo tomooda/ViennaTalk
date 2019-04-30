@@ -8,9 +8,9 @@ ViennaTalk ~ Live and Formal
 ===
 ViennaTalk is a Smalltalk library to handle VDM-SL specifications.
 
-[![Introduction to VDM Browser](http://img.youtube.com/vi/ZIR3fFPeTz0/1.jpg)](http://www.youtube.com/watch?v=ZIR3fFPeTz0)
-[![ViennaTalk: Types, Values and Objects](http://img.youtube.com/vi/anZoWeA5vd0/1.jpg)](http://www.youtube.com/watch?v=anZoWeA5vd0)
-[![ViennaTalk: Code Generation](http://img.youtube.com/vi/sDXiM5yvTxw/1.jpg)](http://www.youtube.com/watch?v=sDXiM5yvTxw)
+[![Introduction to VDM Browser](https://img.youtube.com/vi/ZIR3fFPeTz0/1.jpg)](https://www.youtube.com/watch?v=ZIR3fFPeTz0)
+[![ViennaTalk: Types, Values and Objects](https://img.youtube.com/vi/anZoWeA5vd0/1.jpg)](https://www.youtube.com/watch?v=anZoWeA5vd0)
+[![ViennaTalk: Code Generation](https://img.youtube.com/vi/sDXiM5yvTxw/1.jpg)](https://www.youtube.com/watch?v=sDXiM5yvTxw)
 
 Table of Major Components of ViennaTalk
 ---
@@ -49,7 +49,7 @@ What's new in the latest release
 * Urgent update for Maribor has been released. (Aug 30, 2017)
   - The base Pharo version is back to 5.0 due to unstability of Pharo 6.1 (32bit)
 
-You can still manually configure ViennaTalk "Maribor" on Pharo 6.1 (64bit) with a limitation that use of VDMJ is limited only via remote site (default http://vdmpad.csce.kyushu-u.ac.jp). This limitation is from the OSSubprocess package that ViennaTalk uses to execute VDMJ process.
+You can still manually configure ViennaTalk "Maribor" on Pharo 6.1 (64bit) with a limitation that use of VDMJ is limited only via remote site (default https://vdmpad.viennatalk.org). This limitation is from the OSSubprocess package that ViennaTalk uses to execute VDMJ process.
  
 * Codename Maribor has been released. (Aug 28, 2017)
   - VDMDebugger integrated with Pharo's moldable debugger
