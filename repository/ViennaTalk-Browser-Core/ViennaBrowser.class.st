@@ -182,6 +182,8 @@ ViennaBrowser class >> moduleListMenu: aBuilder [
 	aBuilder model selectedModule
 		ifNotNil: [ (aBuilder item: #'save the module...' translated) selector: #saveAModuleToFile ].
 	aBuilder items last withSeparatorAfter.
+	(aBuilder item: #'generate ViennaDoc source script...' translated) selector: #generateViennaDocSourceScript.
+	aBuilder items last withSeparatorAfter.
 	(aBuilder item: #'import UnitTesting module' translated)
 		selector: #importUnitTestingModule.
 	(aBuilder item: #'remove module' translated)
@@ -897,7 +899,11 @@ ViennaBrowser >> fileOpen: title extensions: anArrayOfString do: aBlock [
 
 { #category : #private }
 ViennaBrowser >> fileSave: title extensions: anArrayOfString do: aBlock [
-	(UIManager default fileSave: title extensions: anArrayOfString path: self directory)
+	(UIManager default
+		chooseForSaveFileReference: title
+		extensions: anArrayOfString
+		path: self directory
+		preview: false)
 		ifNotNil: [ :reference | 
 			directory := reference parent.
 			reference
@@ -952,6 +958,55 @@ ViennaBrowser >> generateSmalltalkScript [
 								yourself ].
 					(ViennaVDM2SmalltalkScript new generate: ast)
 						ifNotNil: [ :script | Smalltalk tools workspace openContents: (RBParser parseExpression: script) formattedCode ] ] ]
+]
+
+{ #category : #'module list menu' }
+ViennaBrowser >> generateViennaDocSourceScript [
+	self
+		fileSave: 'Generate ViennaDoc source script to...'
+		extensions: #('js')
+		do: [ :stream | 
+			| source ast sources walker |
+			source := animation specification.
+			ast := ViennaVDMParser new parse: source.
+			ast isPetit2Failure
+				ifTrue: [ ^ self ].
+			sources := Dictionary new.
+			walker := [ :node | 
+			(node isKindOf: ViennaNode)
+				ifTrue: [ node label = 'Module'
+						ifTrue: [ sources at: node first put: (source copyFrom: node start to: node end) ].
+					node label = 'StateDefinition'
+						ifTrue: [ sources at: node first put: (source copyFrom: node start to: node end) ].
+					node label = 'ExplicitOperationDefinition'
+						ifTrue: [ sources at: node first put: (source copyFrom: node start to: node end) ].
+					node label = 'TypeDefinition'
+						ifTrue: [ sources at: node first put: (source copyFrom: node start to: node end) ].
+					node label = 'RecordTypeDefinition'
+						ifTrue: [ sources at: node first put: (source copyFrom: node start to: node end) ].
+					node label = 'ValueDefinition'
+						ifTrue: [ sources at: node first first put: (source copyFrom: node start to: node end) ].
+					node label = 'ExplicitFunctionDefinition'
+						ifTrue: [ sources at: node first put: (source copyFrom: node start to: node end) ].
+					node do: walker ] ].
+			walker value: ast.
+			stream nextPutAll: 'ViennaDoc.source='.
+			(NeoJSONWriter on: stream) nextPut: source withUnixLineEndings.
+			stream
+				nextPut: $;;
+				nextPut: Character lf;
+				nextPutAll: 'ViennaDoc.sources = {};';
+				nextPut: Character lf.
+			sources
+				keysAndValuesDo: [ :name :src | 
+					stream
+						nextPutAll: 'viennaDoc.sources[';
+						nextPutAll: name;
+						nextPutAll: ']='.
+					(NeoJSONWriter on: stream) nextPut: src withUnixLineEndings.
+					stream
+						nextPut: $;;
+						nextPut: Character lf ] ]
 ]
 
 { #category : #'module list menu' }
