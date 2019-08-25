@@ -183,7 +183,7 @@ ViennaVDMJ class >> installJson4VDMJ [
 ViennaVDMJ class >> installJsonic [
 	"ViennaVDMJ installJsonic"
 
-	(FileSystem workingDirectory / 'jsonic-1.0.5.jar') binaryWriteStream
+	self jsonicPath binaryWriteStream
 		nextPutAll: self jsonicJar;
 		close
 ]
