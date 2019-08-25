@@ -220,13 +220,18 @@ ViennaVDMJ class >> isInstalled [
 ]
 
 { #category : #accessing }
+ViennaVDMJ class >> jarDirectory [
+	^ (FileLocator viennaTalkDirectory / 'jars') ensureCreateDirectory
+]
+
+{ #category : #accessing }
 ViennaVDMJ class >> javaPath [
 	^ '/usr/bin/java'
 ]
 
 { #category : #accessing }
 ViennaVDMJ class >> json4vdmjPath [
-	^ FileSystem workingDirectory / 'Json4VDMJ.jar'
+	^ self jarDirectory / 'Json4VDMJ.jar'
 ]
 
 { #category : #resources }
@@ -241,7 +246,7 @@ ViennaVDMJ class >> jsonicJar [
 
 { #category : #accessing }
 ViennaVDMJ class >> jsonicPath [
-	^ FileSystem workingDirectory / 'jsonic-1.0.5.jar'
+	^ self jarDirectory / 'jsonic-1.0.5.jar'
 ]
 
 { #category : #'instance creation' }
@@ -308,7 +313,7 @@ ViennaVDMJ class >> unregister: aViennaVDMJ [
 
 { #category : #accessing }
 ViennaVDMJ class >> vdmjPath [
-	^ FileSystem workingDirectory / 'vdmj-3.2.0.jar'
+	^ self jarDirectory / 'vdmj-3.2.0.jar'
 ]
 
 { #category : #resources }

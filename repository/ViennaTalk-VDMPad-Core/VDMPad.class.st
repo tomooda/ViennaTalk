@@ -174,7 +174,7 @@ VDMPad class >> viennaSettingsOn: aBuilder [
 						label: 'Serves for only localhost' ]
 ]
 
-{ #category : #servicing }
+{ #category : #settings }
 VDMPad class >> worldMenuOn: aBuilder [
 	<worldMenu>
 	(aBuilder item: #'VDMPad server')

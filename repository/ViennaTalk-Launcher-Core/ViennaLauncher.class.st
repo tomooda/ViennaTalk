@@ -70,6 +70,19 @@ ViennaLauncher class >> reopen [
 	^ self current openInWorld
 ]
 
+{ #category : #'menu operations' }
+ViennaLauncher class >> showSettingBrowser [
+	SettingBrowser new
+		changePackageSet:
+				{(RPackageOrganizer default packageNamed: #'ViennaTalk-Launcher-Core').
+					(RPackageOrganizer default packageNamed: #'ViennaTalk-Browser-Core').
+					(RPackageOrganizer default packageNamed: #'ViennaTalk-Engine-Core').
+					(RPackageOrganizer default packageNamed: #'ViennaTalk-Parser-Core').
+					(RPackageOrganizer default packageNamed: #'ViennaTalk-VDMPad-Core').
+					(RPackageOrganizer default packageNamed: #'Network-Kernel')};
+		open
+]
+
 { #category : #resources }
 ViennaLauncher class >> viennaIcon [
 	^ Form
@@ -110,13 +123,19 @@ ViennaLauncher class >> worldMenuOn: aBuilder [
 	(aBuilder item: #ViennaTalk)
 		icon: self viennaIcon;
 		withSeparatorAfter;
-		with: [ 
-					(aBuilder item: #ViennaLauncher)
-						parent: #ViennaTalk;
-						action: [ self open ];
-						order: 0.0;
-						help: 'open a ViennaTalk launcher';
-						icon: nil ]
+		with: [ (aBuilder item: #Settings)
+				parent: #ViennaTalk;
+				action: [ self showSettingBrowser ];
+				order: 0.0;
+				help: 'open the preferences on ViennaTalk';
+				iconName: #smallConfigurationIcon;
+				withSeparatorAfter.
+			(aBuilder item: #ViennaLauncher)
+				parent: #ViennaTalk;
+				action: [ self open ];
+				order: 0.1;
+				help: 'open a ViennaTalk launcher';
+				icon: nil ]
 ]
 
 { #category : #'interface opening' }
@@ -218,15 +237,7 @@ ViennaLauncher >> reopen [
 
 { #category : #'menu operations' }
 ViennaLauncher >> showSettingBrowser [
-	SettingBrowser new
-		changePackageSet:
-				{(RPackageOrganizer default packageNamed: #'ViennaTalk-Launcher-Core').
-					(RPackageOrganizer default packageNamed: #'ViennaTalk-Browser-Core').
-					(RPackageOrganizer default packageNamed: #'ViennaTalk-Engine-Core').
-					(RPackageOrganizer default packageNamed: #'ViennaTalk-Parser-Core').
-					(RPackageOrganizer default packageNamed: #'ViennaTalk-VDMPad-Core').
-					(RPackageOrganizer default packageNamed: #'Network-Kernel')};
-		open
+	^ self class showSettingBrowser 
 ]
 
 { #category : #resources }

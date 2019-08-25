@@ -151,19 +151,15 @@ ViennaAnimation >> basicPlainEvaluate: aString in: moduleName ifError: errorBloc
 							var := key copyFrom: index + 1 to: key size ]
 						ifFalse: [ module := self defaultModule.
 							var := key ].
-					(preState at: module ifAbsentPut: [ Dictionary new ]) at: var put: value ].
+					(preState at: module ifAbsentPut: [ Dictionary new ])
+						at: var
+						put: value ].
 			result := engine
 				evaluate: aString
 				specification: self specification
 				states: preState
 				module: moduleName.
-			result third
-				ifNotEmpty: [ result := engine
-						evaluate: aString
-						specification: self specification
-						states: Dictionary new
-						module: moduleName.
-					result third ifNotEmpty: [ :msg | ^ errorBlock value: msg ] ].
+			result third ifNotEmpty: [ :msg | ^ errorBlock value: msg ].
 			postState := Dictionary new.
 			result second
 				keysAndValuesDo: [ :module :binds | 
@@ -296,7 +292,7 @@ ViennaAnimation >> postCopy [
 	super postCopy.
 	oldSpec := self specification.
 	oldState := self state.
-	announceur := nil.
+	announcer := nil.
 	dependents := nil.
 	self initialize.
 	self specification: oldSpec.
