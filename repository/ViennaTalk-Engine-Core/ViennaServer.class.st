@@ -110,7 +110,7 @@ ViennaServer >> handleRequest: aZnRequest [
 	| json |
 	aZnRequest entity
 		ifNotNil: [ :jsonString | 
-			| source expression preStates result |
+			| source expression preStates result response |
 			json := NeoJSONReader fromString: jsonString.
 			source := json at: 'source' ifAbsent: [ String new ].
 			expression := json at: 'expression' ifAbsent: [ String new ].
@@ -122,7 +122,9 @@ ViennaServer >> handleRequest: aZnRequest [
 							index := key indexOf: $`.
 							module := key copyFrom: 1 to: index - 1.
 							var := key copyFrom: index + 1 to: key size.
-							(preStates at: module ifAbsentPut: [ Dictionary new ]) at: var put: value ] ].
+							(preStates at: module ifAbsentPut: [ Dictionary new ])
+								at: var
+								put: value ] ].
 			result := self
 				evaluate: expression
 				specification: source
@@ -139,8 +141,15 @@ ViennaServer >> handleRequest: aZnRequest [
 				keysAndValuesDo: [ :moduleName :bindings | 
 					bindings
 						keysAndValuesDo: [ :varName :value | json at: moduleName , '`' , varName put: value ] ].
-			^ ZnResponse
-				ok: (ZnEntity with: (self stringify: json) type: ZnMimeType applicationJson) ].
+			response := ZnResponse
+				ok:
+					(ZnEntity
+						with: (self stringify: json)
+						type: ZnMimeType applicationJson).
+			response headers
+				at: 'Access-Control-Allow-Origin' put: '*';
+				at: 'Access-Control-Allow-Headers' put: '*'.
+			^ response ].
 	^ ZnResponse notFound: aZnRequest url
 ]
 

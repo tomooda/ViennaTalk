@@ -1738,7 +1738,7 @@ VDMPad >> engine: aViennaEngine [
 
 { #category : #'request handling-api' }
 VDMPad >> eval: aZnRequest [
-	| vdm10 rtc params source module expression states triple json |
+	| vdm10 rtc params source module expression states triple json response |
 	params := self getParamsFrom: aZnRequest.
 	vdm10 := (params at: 'classic' ifAbsent: [  ]) isNil.
 	rtc := (params at: 'ignoreRuntimeChecking' ifAbsent: [  ]) isNil.
@@ -1751,13 +1751,17 @@ VDMPad >> eval: aZnRequest [
 			key := k.
 			value := v.
 			((key includes: $`) and: [ value trimmed notEmpty ])
-				ifTrue: [ 
-					(states at: (key copyFrom: 1 to: (key indexOf: $`) - 1) ifAbsentPut: [ Dictionary new ])
+				ifTrue: [ (states
+						at: (key copyFrom: 1 to: (key indexOf: $`) - 1)
+						ifAbsentPut: [ Dictionary new ])
 						at: (key copyFrom: (key indexOf: $`) + 1 to: key size)
-						put: ((value copyReplaceAll: String cr with: ' ') copyReplaceAll: String lf with: ' ') ] ].
-	expression := ((params at: 'expression' ifAbsent: [ String new ]) copyReplaceAll: String cr with: ' ')
-		copyReplaceAll: String lf
-		with: ' '.
+						put:
+							((value copyReplaceAll: String cr with: ' ')
+								copyReplaceAll: String lf
+								with: ' ') ] ].
+	expression := ((params at: 'expression' ifAbsent: [ String new ])
+		copyReplaceAll: String cr
+		with: ' ') copyReplaceAll: String lf with: ' '.
 	triple := self engine
 		evaluate: expression
 		specification: source
@@ -1773,8 +1777,14 @@ VDMPad >> eval: aZnRequest [
 		at: 'value' put: (triple first ifNil: [ String new ]);
 		at: 'message' put: triple third.
 	triple second
-		keysAndValuesDo: [ :moduleName :bindings | bindings keysAndValuesDo: [ :varName :value | json at: moduleName , '`' , varName put: value ] ].
-	^ self responseJSON: json
+		keysAndValuesDo: [ :moduleName :bindings | 
+			bindings
+				keysAndValuesDo: [ :varName :value | json at: moduleName , '`' , varName put: value ] ].
+	response := self responseJSON: json.
+	response headers
+		at: 'Access-Control-Allow-Origin' put: '*';
+		at: 'Access-Control-Allow-Headers' put: '*'.
+	^ response
 ]
 
 { #category : #'request handling-image' }
