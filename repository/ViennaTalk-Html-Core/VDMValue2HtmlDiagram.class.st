@@ -41,7 +41,7 @@ VDMValue2HtmlDiagram >> vdmToHtmlParser [
 			stream position: start.
 			expr := (stream next: end - start) trimmed.
 			stream position: end.
-			'<div title="' , expr asHTMLString
+			'<div title="' , (expr asHTMLString copyReplaceAll: '"' with: '&quot;')
 				,
 					'" draggable="true" ondragstart="event.dataTransfer.setData(''text'', event.target.title)">'
 				, html , '</div>' ] ].
