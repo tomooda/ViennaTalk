@@ -33,6 +33,7 @@ ViennaTestResultItem class >> flushIcon [
 { #category : #accessing }
 ViennaTestResultItem class >> flushIcons [
 	<script: 'ViennaTestResultItem flushIcons'>
+	self flushIcon.
 	self allSubclassesDo: [ :c | c flushIcon ]
 ]
 
@@ -43,7 +44,7 @@ ViennaTestResultItem class >> icon [
 
 { #category : #accessing }
 ViennaTestResultItem class >> iconColor [
-	^ self subclassResponsibility
+	^ Color darkGray
 ]
 
 { #category : #accessing }

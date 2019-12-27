@@ -21,14 +21,16 @@ Class {
 		'lowerTabPane',
 		'animation',
 		'testResult',
-		'testProcess'
+		'testProcess',
+		'testLabelIcon',
+		'testLabel'
 	],
 	#classVars : [
 		'AutoFormat',
 		'AutoFullTest',
 		'AutoTest'
 	],
-	#category : 'ViennaTalk-Browser-Core'
+	#category : #'ViennaTalk-Browser-Core'
 }
 
 { #category : #'world menu' }
@@ -674,17 +676,40 @@ ViennaBrowser >> build [
 	pane changeProportionalLayout.
 	upper := BorderedMorph new.
 	upper changeProportionalLayout.
-	upper addMorph: moduleListPane fullFrame: (0 @ 0 corner: 0.3 @ 1) asLayoutFrame.
-	upper addMorph: fieldListPane fullFrame: (0.3 @ 0 corner: 0.6 @ 1) asLayoutFrame.
-	upper addMorph: valuePane fullFrame: (0.6 @ 0 corner: 1 @ 1) asLayoutFrame.
+	upper
+		addMorph: moduleListPane
+		fullFrame: (0 @ 0 corner: 0.3 @ 1) asLayoutFrame.
+	upper
+		addMorph: fieldListPane
+		fullFrame: (0.3 @ 0 corner: 0.6 @ 1) asLayoutFrame.
+	upper
+		addMorph: valuePane
+		fullFrame: (0.6 @ 0 corner: 1 @ 1) asLayoutFrame.
 	upper addPaneSplitters.
-	lowerTabPane := LazyTabGroupMorph new.
-	lowerTabPane addLazyPage: codePane label: 'Specification'.
-	lowerTabPane addLazyPage: workspacePane label: 'Workspace'.
-	lowerTabPane addLazyPage: testPane label: 'UnitTests'.
+	testLabel := Morph new
+		changeTableLayout;
+		color: Color transparent;
+		listDirection: #leftToRight;
+		listCentering: #center;
+		wrapCentering: #center;
+		hResizing: #shrinkWrap;
+		vResizing: #shrinkWrap;
+		addMorphBack: 'UnitTests' asMorph;
+		addMorphBack: (testLabelIcon := ViennaTestResultItem icon asMorph);
+		computeBounds;
+		disableTableLayout;
+		yourself.
+	lowerTabPane := TabGroupMorph new.
+	lowerTabPane addPage: codePane label: 'Specification'.
+	lowerTabPane addPage: workspacePane label: 'Workspace'.
+	lowerTabPane addPage: testPane label: testLabel.
 	lowerTabPane selectedPageIndex: 1.
-	pane addMorph: upper fullFrame: ((0 @ 0 corner: 1 @ 0.4) asLayoutFrame bottomRightOffset: 0 @ -2).
-	pane addMorph: lowerTabPane fullFrame: ((0 @ 0.4 corner: 1 @ 1) asLayoutFrame topLeftOffset: 0 @ 2).
+	pane
+		addMorph: upper
+		fullFrame: ((0 @ 0 corner: 1 @ 0.4) asLayoutFrame bottomRightOffset: 0 @ -2).
+	pane
+		addMorph: lowerTabPane
+		fullFrame: ((0 @ 0.4 corner: 1 @ 1) asLayoutFrame topLeftOffset: 0 @ 2).
 	pane addPaneSplitters.
 	^ pane
 ]
@@ -1334,6 +1359,7 @@ ViennaBrowser >> runAllTests [
 	testProcess ifNotNil: [ testProcess terminate ].
 	testProcess := [ | ast |
 	testResult := Array new.
+	self updateTestLabelIcon.
 	self changed: #testList.
 	ast := ViennaVDMParser new parse: animation specification.
 	ast isPetit2Failure
@@ -1352,14 +1378,19 @@ ViennaBrowser >> runAllTests [
 										ifTrue: [ definitionBlockNode first
 												do: [ :accessOperationDefinitionNode | 
 													| operationName |
-													operationName := accessOperationDefinitionNode second first first.
-													(operationName size > 4 and: [ (operationName copyFrom: 1 to: 4) = 'test' ])
+													operationName := accessOperationDefinitionNode second
+														first first.
+													(operationName size > 4
+														and: [ (operationName copyFrom: 1 to: 4) = 'test' ])
 														ifTrue: [ self runTestModule: moduleName operation: operationName ] ] ] ] ] ] ]
 		ifFalse: [  ] ] forkAt: Processor userBackgroundPriority
 ]
 
 { #category : #'test pane menu' }
 ViennaBrowser >> runTestModule [
+	testResult := Array new.
+	self changed: #testList.
+	self updateTestLabelIcon.
 	self runTestModule: self selectedModule
 ]
 
@@ -1398,7 +1429,9 @@ ViennaBrowser >> runTestModule: aString [
 
 { #category : #'test pane menu' }
 ViennaBrowser >> runTestModule: module operation: operation [
-	testResult := testResult copyWith: (self basicRunTestModule: module operation: operation).
+	testResult := testResult
+		copyWith: (self basicRunTestModule: module operation: operation).
+	self updateTestLabelIcon.
 	self changed: #testList
 ]
 
@@ -1545,6 +1578,29 @@ ViennaBrowser >> update: aSymbol [
 			self changed: #value ].
 	aSymbol = #state
 		ifTrue: [ self changed: #value ]
+]
+
+{ #category : #'test pane' }
+ViennaBrowser >> updateTestLabelIcon [
+	| level |
+	level := 0.
+	self testList
+		do: [ :item | 
+			item isSuccess
+				ifTrue: [ level := level max: 1 ].
+			item isFailure
+				ifTrue: [ level := level max: 2 ].
+			item isError
+				ifTrue: [ level := level max: 3 ] ].
+	level = 0
+		ifTrue: [ testLabelIcon form: ViennaTestResultItem icon ].
+	level = 1
+		ifTrue: [ testLabelIcon form: ViennaTestSuccessResultItem icon ].
+	level = 2
+		ifTrue: [ testLabelIcon form: ViennaTestFailureResultItem icon ].
+	level = 3
+		ifTrue: [ testLabelIcon form: ViennaTestErrorResultItem icon ].
+	testLabel changed
 ]
 
 { #category : #'module list menu' }
