@@ -699,6 +699,7 @@ ViennaBrowser >> build [
 		computeBounds;
 		disableTableLayout;
 		yourself.
+	testLabelIcon on: #click send: #runAllTests to: self.
 	lowerTabPane := TabGroupMorph new.
 	lowerTabPane addPage: codePane label: 'Specification'.
 	lowerTabPane addPage: workspacePane label: 'Workspace'.
@@ -1383,7 +1384,9 @@ ViennaBrowser >> runAllTests [
 													(operationName size > 4
 														and: [ (operationName copyFrom: 1 to: 4) = 'test' ])
 														ifTrue: [ self runTestModule: moduleName operation: operationName ] ] ] ] ] ] ]
-		ifFalse: [  ] ] forkAt: Processor userBackgroundPriority
+		ifFalse: [  ].
+	testProcess := nil.
+	self updateTestLabelIcon ] forkAt: Processor userBackgroundPriority
 ]
 
 { #category : #'test pane menu' }
@@ -1421,10 +1424,14 @@ ViennaBrowser >> runTestModule: aString [
 										ifTrue: [ definitionBlockNode first
 												do: [ :accessOperationDefinitionNode | 
 													| operationName |
-													operationName := accessOperationDefinitionNode second first first.
-													(operationName size > 4 and: [ (operationName copyFrom: 1 to: 4) = 'test' ])
+													operationName := accessOperationDefinitionNode second
+														first first.
+													(operationName size > 4
+														and: [ (operationName copyFrom: 1 to: 4) = 'test' ])
 														ifTrue: [ self runTestModule: moduleName operation: operationName ] ] ] ] ] ] ]
-		ifFalse: [  ] ] forkAt: Processor userBackgroundPriority
+		ifFalse: [  ].
+	testProcess := nil.
+	self updateTestLabelIcon ] forkAt: Processor userBackgroundPriority
 ]
 
 { #category : #'test pane menu' }
@@ -1595,7 +1602,9 @@ ViennaBrowser >> updateTestLabelIcon [
 	level = 0
 		ifTrue: [ testLabelIcon form: ViennaTestResultItem icon ].
 	level = 1
-		ifTrue: [ testLabelIcon form: ViennaTestSuccessResultItem icon ].
+		ifTrue: [ (testProcess isNil or: [ testProcess isTerminated ])
+				ifTrue: [ testLabelIcon form: ViennaTestSuccessResultItem icon ]
+				ifFalse: [ testLabelIcon form: ViennaTestResultItem icon ] ].
 	level = 2
 		ifTrue: [ testLabelIcon form: ViennaTestFailureResultItem icon ].
 	level = 3
