@@ -13,8 +13,8 @@ Context >> checkMeasure [
 					(scope allTempNames includes: 'measure')
 						ifFalse: [ ^ true ].
 					var := scope lookupVar: 'measure'.
-					m1 := (var searchFromContext: context scope: scope).
-					m2 := (var searchFromContext: self scope: scope).
+					m1 := (var readFromContext: context scope: scope).
+					m2 := (var readFromContext: self scope: scope).
 					^ m1 > m2
 					 ].
 			context := context sender ].
@@ -28,5 +28,5 @@ Context >> viennaReturn: anObject [
 	(scope allTempNames includes: '_opContext')
 		ifFalse: [ ^ self return: anObject ].
 	"(self tempNamed: '_opContext') return: anObject"
-	^ ((scope lookupVar: '_opContext') searchFromContext: self scope: scope) return: anObject
+	^ ((scope lookupVar: '_opContext') readFromContext: self scope: scope) return: anObject
 ]
