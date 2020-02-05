@@ -8,7 +8,7 @@ environment:
   CI: true
   matrix:
     # Currently, only Squeak and Pharo images are supported on AppVeyor.
-    - SMALLTALK: Pharo-8.0
+    - SMALLTALK: Pharo64-8.0
     #- SMALLTALK: Pharo64-7.0
     #- SMALLTALK: Pharo-8.0
     #- SMALLTALK: Pharo64-8.0
