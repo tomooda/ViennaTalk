@@ -5,7 +5,7 @@ Class {
 		'Current',
 		'Font'
 	],
-	#category : 'ViennaTalk-Launcher-Core'
+	#category : #'ViennaTalk-Launcher-Core'
 }
 
 { #category : #settings }
@@ -145,7 +145,7 @@ ViennaLauncher >> close [
 
 { #category : #accessing }
 ViennaLauncher >> codename [
-	^ 'Cologne'
+	^ 'Porto'
 ]
 
 { #category : #accessing }
