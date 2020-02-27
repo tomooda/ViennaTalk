@@ -103,7 +103,8 @@ ViennaDirectoryBrowser >> acceptWorkspace: aStringOrText [
 		writeStreamDo: [ :stream | 
 			stream
 				truncate;
-				nextPutAll: (aStringOrText asString replaceAll: Character cr with: Character lf) ]
+				nextPutAll: (aStringOrText asString replaceAll: Character cr with: Character lf) ].
+	^ true
 ]
 
 { #category : #accessing }
