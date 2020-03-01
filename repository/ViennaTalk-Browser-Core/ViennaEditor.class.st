@@ -1,10 +1,10 @@
 Class {
 	#name : #ViennaEditor,
-	#superclass : #TextEditor,
+	#superclass : #RubTextEditor,
 	#instVars : [
 		'template'
 	],
-	#category : 'ViennaTalk-Browser-Core'
+	#category : #'ViennaTalk-Browser-Core'
 }
 
 { #category : #'class initialization' }
@@ -28,6 +28,7 @@ ViennaEditor >> openTypeIn [
 
 	template := nil.
 	self applyAttribute: TextColor black.
+	self viennaTextMorph ifNotNil: [ :m | m wantsHighlighting: true ].
 	^ super openTypeIn
 ]
 
@@ -62,7 +63,7 @@ ViennaEditor >> template [
 { #category : #accessing }
 ViennaEditor >> viennaTextMorph [
 	| textMorph |
-	textMorph := morph.
+	textMorph := self morph.
 	[ textMorph notNil and: [ textMorph isKindOf: ViennaPluggableTextMorph ] ] whileFalse: [ textMorph := textMorph owner ].
 	^ textMorph
 ]

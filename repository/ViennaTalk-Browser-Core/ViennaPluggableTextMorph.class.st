@@ -1,6 +1,6 @@
 Class {
 	#name : #ViennaPluggableTextMorph,
-	#superclass : #PluggableTextMorph,
+	#superclass : #RubPluggableTextMorph,
 	#instVars : [
 		'highlighter',
 		'wantsHighlighting',
@@ -9,7 +9,7 @@ Class {
 	#classVars : [
 		'DefaultHighlightingEnabled'
 	],
-	#category : 'ViennaTalk-Browser-Core'
+	#category : #'ViennaTalk-Browser-Core'
 }
 
 { #category : #accessing }
@@ -47,8 +47,15 @@ ViennaPluggableTextMorph >> enableHighlighting [
 
 { #category : #'editor access' }
 ViennaPluggableTextMorph >> handleEdit: aBlock [
-	^ [ super handleEdit: aBlock ]
-		ensure: [ wantsHighlighting := true ]
+	| result |
+
+	self textMorph editor 
+		selectFrom: self selectionInterval first 
+		to: self selectionInterval last.
+	self textMorph handleEdit: [result := aBlock value].   "Update selection after edit"
+	self textChanged.
+	self wantsHighlighting: true.
+	^ result
 ]
 
 { #category : #'stepping and presenter' }
@@ -62,7 +69,8 @@ ViennaPluggableTextMorph >> highlight [
 	highlighterProcess := [ wantsHighlighting := false.
 	highlighter text: source asText.
 	highlighter parse: source.
-	self text size = highlighter text runs size ifTrue: [self text runs: highlighter text runs].
+	self text size = highlighter text runs size
+		ifTrue: [ self text runs: highlighter text runs ].
 	highlighterProcess := nil.
 	self changed ] forkAt: Processor userBackgroundPriority
 ]
@@ -96,10 +104,10 @@ ViennaPluggableTextMorph >> keyStroke: aKeyboardEvent [
 	^ super keyStroke: aKeyboardEvent
 ]
 
-{ #category : #accessing }
-ViennaPluggableTextMorph >> setText: aText [
-	super setText: aText.
-	self highlight
+{ #category : #'menu commands' }
+ViennaPluggableTextMorph >> prettyPrint [
+	self handleEdit: [ self textMorph editor prettyPrint ].
+	self wantsHighlighting: true
 ]
 
 { #category : #'stepping and presenter' }
@@ -116,7 +124,12 @@ ViennaPluggableTextMorph >> stepTime [
 
 { #category : #'menu commands' }
 ViennaPluggableTextMorph >> template [
-	self handleEdit: [ textMorph editor template ]
+	self handleEdit: [ self textMorph editor template ]
+]
+
+{ #category : #'class access' }
+ViennaPluggableTextMorph >> textAreaClass [
+	^ ViennaTextMorphForEditView
 ]
 
 { #category : #'class access' }
@@ -134,8 +147,7 @@ ViennaPluggableTextMorph >> toggleHighlighting [
 { #category : #updating }
 ViennaPluggableTextMorph >> update: aSymbol [
 	(aSymbol == getTextSelector and: [ self canDiscardEdits not ])
-		ifTrue: [ 
-			| choice |
+		ifTrue: [ | choice |
 			choice := UIManager default
 				confirm: 'Code has been modified.\What do you want to do?' translated withCRs
 				trueChoice: 'Accept' translated
@@ -144,10 +156,17 @@ ViennaPluggableTextMorph >> update: aSymbol [
 				default: nil.
 			choice ifNil: [ ^ nil ].
 			choice
-				ifTrue: [ 
-					self hasUnacceptedEdits: false.
-					model perform: setTextSelector with: textMorph contents ] ].
+				ifTrue: [ self hasUnacceptedEdits: false.
+					self textArea model
+						perform: setTextSelector
+						with: self textMorph contents ] ].
 	^ super update: aSymbol
+]
+
+{ #category : #accessing }
+ViennaPluggableTextMorph >> updateTextWith: stringOrText [
+	super updateTextWith: stringOrText.
+	self highlight
 ]
 
 { #category : #accessing }
