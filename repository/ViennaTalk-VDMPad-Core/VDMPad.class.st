@@ -9,7 +9,7 @@ Class {
 		'LocalOnly',
 		'Server'
 	],
-	#category : 'ViennaTalk-VDMPad-Core'
+	#category : #'ViennaTalk-VDMPad-Core'
 }
 
 { #category : #resources }
@@ -2273,7 +2273,7 @@ VDMPad >> mainPage [
 	page
 		cr;
 		nextPutAll:
-				'<div style="float: left; font-family: Helvetica, sans-serif; font-size:40px; font-weight: 100">VDMPad</div>  <div style="float: right; font-size: 10px; text-align: right">powered by Squeak Smalltalk with <a style="text-decoration: none" target="VDMJ" href="/VDMJcopyright.html">VDMJ</a><br><a style="text-decoration: none" target="aboutVDMPad" href="/about.html">about VDMPad</a></div>'.
+				'<div style="float: left; font-family: Helvetica, sans-serif; font-size:40px; font-weight: 100">VDMPad</div>  <div style="float: right; font-size: 10px; text-align: right">powered by Pharo Smalltalk with <a style="text-decoration: none" target="VDMJ" href="/VDMJcopyright.html">VDMJ</a><br><a style="text-decoration: none" target="aboutVDMPad" href="/about.html">about VDMPad</a></div>'.
 	page
 		cr;
 		nextPutAll: '</div>'.
