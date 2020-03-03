@@ -11,7 +11,7 @@ Class {
 		'moduleAttribute',
 		'declAttribute'
 	],
-	#category : 'ViennaTalk-Parser-Highlighters'
+	#category : #'ViennaTalk-Parser-Highlighters'
 }
 
 { #category : #accessing }
@@ -367,24 +367,16 @@ ViennaVDMHighlighter >> others [
 
 { #category : #accessing }
 ViennaVDMHighlighter >> parse: aStringOrText onError: errorBlock [
+	| result |
 	self text: aStringOrText asText.
-	(self parse: aStringOrText asString) isPetit2Failure
-		ifFalse: [ ^ self text ].
-	(self accessTypeDefinition parse: aStringOrText asString) isPetit2Failure
-		ifFalse: [ ^ self text ].
-	(self accessValueDefinition parse: aStringOrText asString) isPetit2Failure
-		ifFalse: [ ^ self text ].
-	(self stateDefinition parse: aStringOrText asString) isPetit2Failure
-		ifFalse: [ ^ self text ].
-	(self accessFunctionDefinition parse: aStringOrText asString) isPetit2Failure
-		ifFalse: [ ^ self text ].
-	(self accessOperationDefinition parse: aStringOrText asString) isPetit2Failure
-		ifFalse: [ ^ self text ].
-	(self statement parse: aStringOrText asString) isPetit2Failure
-		ifFalse: [ ^ self text ].
-	(self expression parse: aStringOrText asString) isPetit2Failure
-		ifFalse: [ ^ self text ].
-	^ errorBlock value
+	result := self parse: aStringOrText asString.
+	result isPetit2Failure
+		ifFalse: [ ^ text ].
+	errorBlock numArgs = 0
+		ifTrue: [ ^ errorBlock value ].
+	errorBlock numArgs = 1
+		ifTrue: [ ^ errorBlock value: result ].
+	^ errorBlock value: result message value: result position
 ]
 
 { #category : #'parsers-keywords' }
@@ -447,6 +439,13 @@ ViennaVDMHighlighter >> selfExpression [
 { #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> skip [
 	^ self keyword: super skip
+]
+
+{ #category : #parsing }
+ViennaVDMHighlighter >> start [
+	^ document / self accessTypeDefinition / self accessValueDefinition
+		/ self stateDefinition / self accessFunctionDefinition
+		/ self accessOperationDefinition / self statement / self expression
 ]
 
 { #category : #'parsers-keywords' }

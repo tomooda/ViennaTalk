@@ -1316,20 +1316,19 @@ ViennaBrowser >> parseBindings: aString ifError: errorBlock [
 ]
 
 { #category : #private }
-ViennaBrowser >> printItIn: aPluggableTextMorph [ 
+ViennaBrowser >> printItIn: aPluggableTextMorph [
 	aPluggableTextMorph
-		handleEdit: [| editor result selectionInterval |
+		handleEdit: [ | editor result selectionInterval |
 			editor := aPluggableTextMorph textMorph editor.
-			editor
-				lineSelectAndEmptyCheck: [^ nil].
+			editor lineSelectAndEmptyCheck: [ ^ nil ].
 			result := self evaluate: editor selectionAsStream upToEnd.
 			selectionInterval := editor selectionInterval.
-			aPluggableTextMorph textMorph installEditorToReplace: editor.
 			aPluggableTextMorph textMorph
-				handleEdit: [editor afterSelectionInsertAndSelect: result].
+				handleEdit: [ editor afterSelectionInsertAndSelect: result ].
 			selectionInterval := editor selectionInterval.
-			aPluggableTextMorph textMorph editor selectFrom: selectionInterval first to: selectionInterval last.
-			aPluggableTextMorph scrollSelectionIntoView]
+			aPluggableTextMorph textMorph editor
+				selectFrom: selectionInterval first
+				to: selectionInterval last ]
 ]
 
 { #category : #'module list menu' }
