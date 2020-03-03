@@ -244,7 +244,9 @@ ViennaVDMHighlighter >> identifier: aParser [
 
 { #category : #accessing }
 ViennaVDMHighlighter >> identifierAttribute [
-	^ identifierAttribute ifNil: [ identifierAttribute := TextColor blue ]
+	^ identifierAttribute
+		ifNil: [ identifierAttribute := TextColor
+				color: (Color blue mixed: 0.4 with: UITheme current textColor) ]
 ]
 
 { #category : #'parsers-keywords' }
@@ -322,7 +324,9 @@ ViennaVDMHighlighter >> literal: aParser [
 
 { #category : #accessing }
 ViennaVDMHighlighter >> literalAttribute [
-	^ literalAttribute ifNil: [ literalAttribute := TextColor color: Color yellow muchDarker ]
+	^ literalAttribute
+		ifNil:
+			[ literalAttribute := TextColor color: Color yellow muchDarker ]
 ]
 
 { #category : #'parsers-keywords' }
@@ -337,7 +341,9 @@ ViennaVDMHighlighter >> module: aParser [
 
 { #category : #accessing }
 ViennaVDMHighlighter >> moduleAttribute [
-	^ moduleAttribute ifNil: [ moduleAttribute := TextColor color: Color red muchDarker ]
+	^ moduleAttribute
+		ifNil: [ moduleAttribute := TextColor
+				color: (Color red mixed: 0.4 with: UITheme current textColor) ]
 ]
 
 { #category : #'parsers-symbols' }
@@ -500,7 +506,9 @@ ViennaVDMHighlighter >> type: aParser [
 
 { #category : #accessing }
 ViennaVDMHighlighter >> typeAttribute [
-	^ typeAttribute ifNil: [ typeAttribute := TextColor color: Color cyan muchDarker ]
+	^ typeAttribute
+		ifNil: [ typeAttribute := TextColor
+				color: (Color cyan mixed: 0.4 with: UITheme current textColor) ]
 ]
 
 { #category : #'parsers-interfaces' }
