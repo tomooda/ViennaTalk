@@ -8,8 +8,7 @@ SmalltalkCISpec {
     }
   ],
   #postLoading : [
-    'scripts/installJars.st',
-    'scripts/Author.st'
+    'scripts/installJars.st'
   ],
   #testing : {
   }  
