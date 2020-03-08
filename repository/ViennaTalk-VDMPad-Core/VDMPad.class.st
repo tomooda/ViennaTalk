@@ -56,7 +56,7 @@ VDMPad class >> initialize [
 
 { #category : #'class initialization' }
 VDMPad class >> install [
-	(FileSystem workingDirectory / 'codemirror') exists
+	(FileLocator viennaTalkDirectory / 'codemirror') exists
 		ifFalse: [ self installCodemirror ]
 ]
 
@@ -66,7 +66,7 @@ VDMPad class >> installCodemirror [
 
 	ZipArchive new
 		readFrom: self codemirrorZip readStream;
-		extractAllTo: FileSystem workingDirectory
+		extractAllTo: FileLocator viennaTalkDirectory
 ]
 
 { #category : #servicing }
@@ -1213,18 +1213,17 @@ THE SOFTWARE.</pre>'.
 
 { #category : #'request handling-file' }
 VDMPad >> binaryFileService: aZnRequest [
-	| url |
-	url := aZnRequest uri path.
-	url first = $/
-		ifTrue: [ url := url copyFrom: 2 to: url size ].
-	(FileStream isAFileNamed: url)
-		ifTrue: [ 
-			FileStream
-				readOnlyFileNamed: url
-				do: [ :stream | 
-					stream binary.
-					^ self responseBinary: stream contents mimeType: (ZnMimeType applicationOctetStream ) ] ].
-	^ self responseNotFound: aZnRequest uri
+	| ref |
+	ref := aZnRequest uri pathSegments
+		inject: FileLocator viennaTalkDirectory / 'jars'
+		into: [ :dir :seg | dir / seg ].
+	^ ref exists
+		ifTrue: [ ref
+				binaryReadStreamDo: [ :stream | 
+					self
+						responseBinary: stream contents
+						mimeType: ZnMimeType applicationOctetStream ] ]
+		ifFalse: [ self responseNotFound: aZnRequest uri ]
 ]
 
 { #category : #'request handling-javascript' }
@@ -1738,8 +1737,10 @@ VDMPad >> engine: aViennaEngine [
 
 { #category : #'request handling-api' }
 VDMPad >> eval: aZnRequest [
-	| vdm10 rtc params source module expression states triple json response |
+	| needsPrestates vdm10 rtc params source module expression states quatro json response |
 	params := self getParamsFrom: aZnRequest.
+	needsPrestates := (params at: 'needsPrestates' ifAbsent: [ nil ])
+		notNil.
 	vdm10 := (params at: 'classic' ifAbsent: [  ]) isNil.
 	rtc := (params at: 'ignoreRuntimeChecking' ifAbsent: [  ]) isNil.
 	source := (params at: 'source' ifAbsent: [ String new ]) trimmed.
@@ -1762,24 +1763,32 @@ VDMPad >> eval: aZnRequest [
 	expression := ((params at: 'expression' ifAbsent: [ String new ])
 		copyReplaceAll: String cr
 		with: ' ') copyReplaceAll: String lf with: ' '.
-	triple := self engine
+	quatro := self engine
 		evaluate: expression
 		specification: source
 		states: states
 		module: module
 		vdm10: vdm10
-		rtc: rtc.	"self log: anHttpRequest remoteHost source: source states: states
-	expression: expression value: triple first message: triple third."
+		rtc: rtc.
 	json := Dictionary new.
 	json
 		at: 'source' put: source;
 		at: 'expression' put: expression;
-		at: 'value' put: (triple first ifNil: [ String new ]);
-		at: 'message' put: triple third.
-	triple second
+		at: 'value' put: (quatro first ifNil: [ String new ]);
+		at: 'message' put: quatro third.
+	quatro second
 		keysAndValuesDo: [ :moduleName :bindings | 
 			bindings
 				keysAndValuesDo: [ :varName :value | json at: moduleName , '`' , varName put: value ] ].
+	needsPrestates
+		ifTrue: [ | prestates |
+			prestates := Dictionary new.
+			quatro fourth
+				keysAndValuesDo: [ :moduleName :bindings | 
+					bindings
+						keysAndValuesDo:
+							[ :varName :value | prestates at: moduleName , '`' , varName put: value ] ].
+			json at: 'prestates' put: prestates ].
 	response := self responseJSON: json.
 	response headers
 		at: 'Access-Control-Allow-Origin' put: '*';
@@ -2039,17 +2048,16 @@ if (typeof module !== "undefined") module.exports = saveAs;
 
 { #category : #'request handling-file' }
 VDMPad >> fileService: aZnRequest [
-	| url |
-	url := aZnRequest uri path.
-	url first = $/
-		ifTrue: [ url := url copyFrom: 2 to: url size ].
-	^ (FileStream isAFileNamed: url)
-		ifTrue: [ 
-			FileStream
-				readOnlyFileNamed: url
-				do: [ :stream | 
-					stream binary.
-					self responseBinary: stream contents mimeType: (self contentTypeFor: url) ] ]
+	| ref |
+	ref := aZnRequest uri pathSegments
+		inject: FileLocator viennaTalkDirectory
+		into: [ :dir :seg | dir / seg ].
+	^ ref exists
+		ifTrue: [ ref
+				binaryReadStreamDo: [ :stream | 
+					self
+						responseBinary: stream contents
+						mimeType: (self contentTypeFor: ref basename) ] ]
 		ifFalse: [ self responseNotFound: aZnRequest uri ]
 ]
 

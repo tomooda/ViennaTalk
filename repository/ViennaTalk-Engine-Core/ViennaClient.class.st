@@ -7,7 +7,7 @@ Class {
 	#classVars : [
 		'DefaultUrl'
 	],
-	#category : 'ViennaTalk-Engine-Core'
+	#category : #'ViennaTalk-Engine-Core'
 }
 
 { #category : #'instance creation' }
@@ -87,6 +87,7 @@ ViennaClient >> evaluate: expression specification: specification states: states
 		with: ((json at: 'message') ifEmpty: [ json at: 'value' ] ifNotEmpty: [ nil ])
 		with: (self stateFromJson: json)
 		with: (json at: 'message')
+		with: (json at: 'prestates')
 ]
 
 { #category : #'initialize-release' }

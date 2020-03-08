@@ -12,7 +12,7 @@ Class {
 		'RandomGenerator',
 		'Registry'
 	],
-	#category : 'ViennaTalk-Engine-Core'
+	#category : #'ViennaTalk-Engine-Core'
 }
 
 { #category : #'copyright notice' }
@@ -414,35 +414,31 @@ ViennaVDMJ >> ensureStartupProcess [
 { #category : #evaluating }
 ViennaVDMJ >> evaluate: expression specification: specification states: states module: moduleName vdm10: vdm10 rtc: rtc [
 	lock
-		critical: [ 
-			| errorMessage hasModules value postState |
+		critical: [ | errorMessage hasModules prestates value postState |
+			prestates := Dictionary new.
 			self ensureStartupProcess.
 			self
 				temporaryFileDo: [ :name :stream | 
 					stream nextPutAll: specification.
 					stream close.
 					vdm10 = true
-						ifTrue: [ 
-							self
+						ifTrue: [ self
 								vdm10IfError: [ :msg | 
 									^ {nil.
 									states.
 									msg} ] ]
-						ifFalse: [ 
-							self
+						ifFalse: [ self
 								classicIfError: [ :msg | 
 									^ {nil.
 									states.
 									msg} ] ].
 					rtc = true
-						ifTrue: [ 
-							self
+						ifTrue: [ self
 								enableRuntimeCheckingIfError: [ :msg | 
 									^ {nil.
 									states.
 									msg} ] ]
-						ifFalse: [ 
-							self
+						ifFalse: [ self
 								disableRuntimeCheckingIfError: [ :msg | 
 									^ {nil.
 									states.
@@ -470,7 +466,11 @@ ViennaVDMJ >> evaluate: expression specification: specification states: states m
 									msg} ].
 							initBindings := Dictionary new.
 							self
-								statesDo: [ :var :val | initBindings at: var put: (bindings at: var ifAbsent: [ val ]) ]
+								statesDo: [ :var :val | 
+									initBindings at: var put: (bindings at: var ifAbsent: [ val ]).
+									(prestates at: module ifAbsentPut: [ Dictionary new ])
+										at: var
+										put: (bindings at: var ifAbsent: [ val ]) ]
 								ifError: [ :msg | 
 									^ {nil.
 									states.
@@ -498,8 +498,7 @@ ViennaVDMJ >> evaluate: expression specification: specification states: states m
 					msg} ].
 			value := expression
 				ifEmpty: [ String new ]
-				ifNotEmpty: [ 
-					self
+				ifNotEmpty: [ self
 						print: expression
 						ifError: [ :msg | 
 							^ {nil.
@@ -528,7 +527,8 @@ ViennaVDMJ >> evaluate: expression specification: specification states: states m
 					msg} ].
 			^ {value.
 			postState.
-			(String new)} ]
+			String new.
+			prestates} ]
 ]
 
 { #category : #finalizing }
