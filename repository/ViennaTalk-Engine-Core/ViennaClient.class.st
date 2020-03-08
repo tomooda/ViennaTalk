@@ -72,7 +72,9 @@ ViennaClient >> evaluate: expression specification: specification states: states
 	| json response |
 	json := Dictionary new.
 	states
-		keysAndValuesDo: [ :module :binds | binds keysAndValuesDo: [ :var :value | json at: module , '`' , var put: value ] ].
+		keysAndValuesDo: [ :module :binds | 
+			binds
+				keysAndValuesDo: [ :var :value | json at: module , '`' , var put: value ] ].
 	json at: 'source' put: specification.
 	json at: 'expression' put: expression.
 	json at: 'module' put: moduleName.
@@ -80,14 +82,21 @@ ViennaClient >> evaluate: expression specification: specification states: states
 		ifTrue: [ json at: 'classic' put: String new ].
 	rtc = false
 		ifTrue: [ json at: 'ignoreRuntimeChecking' put: String new ].
-	http entity: (ZnEntity with: (self stringify: json) type: ZnMimeType applicationJson).
+	http
+		entity:
+			(ZnEntity
+				with: (self stringify: json)
+				type: ZnMimeType applicationJson).
 	response := http post.
 	json := self parseJson: response.
 	^ Array
-		with: ((json at: 'message') ifEmpty: [ json at: 'value' ] ifNotEmpty: [ nil ])
+		with:
+			((json at: 'message')
+				ifEmpty: [ json at: 'value' ]
+				ifNotEmpty: [ nil ])
 		with: (self stateFromJson: json)
 		with: (json at: 'message')
-		with: (json at: 'prestates')
+		with: (json at: 'prestates' ifAbsent: [ Dictionary new ])
 ]
 
 { #category : #'initialize-release' }
