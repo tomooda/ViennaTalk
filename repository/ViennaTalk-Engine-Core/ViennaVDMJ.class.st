@@ -414,7 +414,7 @@ ViennaVDMJ >> ensureStartupProcess [
 { #category : #evaluating }
 ViennaVDMJ >> evaluate: expression specification: specification states: states module: moduleName vdm10: vdm10 rtc: rtc [
 	lock
-		critical: [ | errorMessage hasModules prestates value postState |
+		critical: [ | errorMessage prestates value postState |
 			prestates := Dictionary new.
 			self ensureStartupProcess.
 			self
@@ -426,44 +426,48 @@ ViennaVDMJ >> evaluate: expression specification: specification states: states m
 								vdm10IfError: [ :msg | 
 									^ {nil.
 									states.
-									msg} ] ]
+									msg.
+									states} ] ]
 						ifFalse: [ self
 								classicIfError: [ :msg | 
 									^ {nil.
 									states.
-									msg} ] ].
+									msg.
+									states} ] ].
 					rtc = true
 						ifTrue: [ self
 								enableRuntimeCheckingIfError: [ :msg | 
 									^ {nil.
 									states.
-									msg} ] ]
+									msg.
+									states} ] ]
 						ifFalse: [ self
 								disableRuntimeCheckingIfError: [ :msg | 
 									^ {nil.
 									states.
-									msg} ] ].
+									msg.
+									states} ] ].
 					self
 						load: name
 						ifError: [ :msg | 
 							^ {nil.
 							states.
-							msg} ] ].
+							msg.
+							states} ] ].
 			errorMessage := String new writeStream.
-			hasModules := false.
 			self
 				modulesDo: [ :module | 
 					states
 						at: module
 						ifPresent: [ :bindings | 
 							| initBindings |
-							hasModules := true.
 							self
 								default: module
 								ifError: [ :msg | 
 									^ {nil.
 									states.
-									msg} ].
+									msg.
+									states} ].
 							initBindings := Dictionary new.
 							self
 								statesDo: [ :var :val | 
@@ -474,7 +478,8 @@ ViennaVDMJ >> evaluate: expression specification: specification states: states m
 								ifError: [ :msg | 
 									^ {nil.
 									states.
-									msg} ].
+									msg.
+									states} ].
 							self
 								assign: initBindings
 								ifError: [ :msg | 
@@ -484,18 +489,21 @@ ViennaVDMJ >> evaluate: expression specification: specification states: states m
 				ifError: [ :msg | 
 					^ {nil.
 					states.
-					msg} ].
+					msg.
+					prestates} ].
 			self
 				default: moduleName
 				ifError: [ :msg | 
 					^ {nil.
 					states.
-					msg} ].
+					msg.
+					prestates} ].
 			errorMessage contents
 				ifNotEmpty: [ :msg | 
 					^ {nil.
 					states.
-					msg} ].
+					msg.
+					prestates} ].
 			value := expression
 				ifEmpty: [ String new ]
 				ifNotEmpty: [ self
@@ -503,7 +511,8 @@ ViennaVDMJ >> evaluate: expression specification: specification states: states m
 						ifError: [ :msg | 
 							^ {nil.
 							states.
-							msg} ] ].
+							msg.
+							prestates} ] ].
 			postState := Dictionary new.
 			self
 				modulesDo: [ :module | 
@@ -514,17 +523,20 @@ ViennaVDMJ >> evaluate: expression specification: specification states: states m
 						ifError: [ :msg | 
 							^ {nil.
 							states.
-							msg} ].
+							msg.
+							prestates} ].
 					self
 						statesDo: [ :var :val | bindings at: var put: val ]
 						ifError: [ :msg | 
 							^ {nil.
 							states.
-							msg} ] ]
+							msg.
+							prestates} ] ]
 				ifError: [ :msg | 
 					^ {nil.
 					states.
-					msg} ].
+					msg.
+					prestates} ].
 			^ {value.
 			postState.
 			String new.

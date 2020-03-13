@@ -1783,7 +1783,9 @@ VDMPad >> eval: aZnRequest [
 	needsPrestates
 		ifTrue: [ | prestates |
 			prestates := Dictionary new.
-			quatro fourth
+			(quatro size >= 4
+				ifTrue: [ quatro fourth ]
+				ifFalse: [ quatro second ])
 				keysAndValuesDo: [ :moduleName :bindings | 
 					bindings
 						keysAndValuesDo:
