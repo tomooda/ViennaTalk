@@ -7,7 +7,7 @@ Class {
 	#classVars : [
 		'Server'
 	],
-	#category : 'ViennaTalk-LivelyWalkThrough-Core'
+	#category : #'ViennaTalk-LivelyWalkThrough-Core'
 }
 
 { #category : #'instance creation' }
@@ -29,7 +29,7 @@ LivelyWalkThrough class >> fileOpen: title extensions: exts path: path preview: 
 		title: title;
 		answerPathName.
 	exts ifNotNil: [ fd validExtensions: exts ].
-	path ifNotNil: [ fd selectPathName: ref parent  ].
+	path ifNotNil: [ fd selectPath: ref parent  ].
 	^ (ui openModal: fd) answer ifNotNil: [ :ans | ans asFileReference ]
 ]
 

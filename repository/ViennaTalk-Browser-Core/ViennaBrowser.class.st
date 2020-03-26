@@ -914,13 +914,14 @@ ViennaBrowser >> fieldSelectionIndex: anInteger [
 { #category : #private }
 ViennaBrowser >> fileOpen: title extensions: anArrayOfString do: aBlock [
 	(UIManager default
-		fileOpen: title
+		chooseExistingFileReference: title
 		extensions: anArrayOfString
 		path: self directory
-		preview: #text)
+		preview: nil)
 		ifNotNil: [ :stream | 
 			directory := stream name asFileReference parent.
-			aBlock value: (stream contents copyReplaceAll: String lf with: String cr) readStream ]
+			aBlock
+				value: (stream contents copyReplaceAll: String lf with: String cr) readStream ]
 ]
 
 { #category : #private }
