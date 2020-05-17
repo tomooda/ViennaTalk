@@ -56,6 +56,34 @@ To load a saved snapshot,
 
 ![Evaluating the counter example on VDMPad](https://github.com/tomooda/ViennaTalk-doc/blob/master/images/VDMPad-counter-saved.png)
 
+# Review the session
 
+VDMPad has a module called "VDMPad-EpiLog" to review the history.
+By turning on "VDMPad-EpiLog" in the settings, you'll have a history on the left (or bottom) of the VDMPad page.
 
+![Screenshot of VDMPad-EpiLog](https://github.com/tomooda/ViennaTalk-doc/blob/master/images/VDMPad-EpiLog-0-start.png)
+
+The history consists of revisions of the source specification each of which has some series of evaluations.
+In the history shown above, the ```inc``` operation was wrongly defined in the first revision.
+The expression ```inc()``` was evaluated with the initial state where ```count = 0``` and ```macx = 9999```.
+The run was as expected.
+The next series was with the initial state where ```count=9``` and ```max=9```, which is expected to get ```count``` be reset to zero by evaluating ```inc()```.
+
+The bug was in the mod operator which was fixed in the second revision.
+Again, ```inc()``` was evaluated with the initial state where ```count=9``` and ```max=9```, and successfully resulted in ```count=0```.
+
+What was tried and confirmed during the session?
+The normal counting before hitting the ```max``` value was tested against only the first revision.
+
+By clicking the ⬇️ button on the specification source, all runs evaluated agaist the first revision will be merged to the second revision.
+
+![Screenshot of VDMPad-EpiLog](https://github.com/tomooda/ViennaTalk-doc/blob/master/images/VDMPad-EpiLog-1-merge.png)
+
+The yellow boxes means that the run has not been executed in the specification.
+Such runs can be re-evaluated against the specification by the 🔄 button that appears on the box.
+Less interesting revisions and runs can be removed by the 🗑 button.
+
+After working on those revisions, the history will be finally summarized like below.
+
+![Screenshot of VDMPad-EpiLog](https://github.com/tomooda/ViennaTalk-doc/blob/master/images/VDMPad-EpiLog-4-finish.png)
 
