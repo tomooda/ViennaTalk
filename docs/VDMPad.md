@@ -16,23 +16,23 @@ A web server will start service on the port 8085.
 
 You can open it on a browser by opening http://localhost:8085/ .
 
-![Screenshot of VDMPad](https://github.com/tomooda/ViennaTalk-doc/blob/master/images/VDMPad-plain.png)
+![Screenshot of VDMPad](https://viennatalk.org/images/VDMPad-plain.png)
 
 ## Write a specification
 You can write a specification on the top text area.
 
-![Counter example on VDMPad](https://github.com/tomooda/ViennaTalk-doc/blob/master/images/VDMPad-counter-spec.png)
+![Counter example on VDMPad](https://viennatalk.org/images/VDMPad-counter-spec.png)
 
 # Animate a specification
 The initialize button will start animation of the specification.
 
-![Initializing the counter example on VDMPad](https://github.com/tomooda/ViennaTalk-doc/blob/master/images/VDMPad-counter-initialized.png)
+![Initializing the counter example on VDMPad](https://viennatalk.org/images/VDMPad-counter-initialized.png)
 
 An entry field for each state variable (```counter``` in this example) appears below the specification.
 
 You can evaluate an expression in the text field below the state fields.
 
-![Evaluating the counter example on VDMPad](https://github.com/tomooda/ViennaTalk-doc/blob/master/images/VDMPad-counter-eval.png)
+![Evaluating the counter example on VDMPad](https://viennatalk.org/images/VDMPad-counter-eval.png)
 
 # Save and load an animation session
 
@@ -47,21 +47,21 @@ To save a snapshot,
 1. Move the mouse cursor over the small square mark at the top-left of the window.
 2. Type a name in the entry field and click on the "save" button.
 
-![Evaluating the counter example on VDMPad](https://github.com/tomooda/ViennaTalk-doc/blob/master/images/VDMPad-counter-save.png)
+![Evaluating the counter example on VDMPad](https://viennatalk.org/images/VDMPad-counter-save.png)
 
 To load a saved snapshot,
 
 1. Move the mouse cursor over the small square mark at the top-left of the window.
 2. Click on the name of snapshot and then click on the "Load" button.
 
-![Evaluating the counter example on VDMPad](https://github.com/tomooda/ViennaTalk-doc/blob/master/images/VDMPad-counter-saved.png)
+![Evaluating the counter example on VDMPad](https://viennatalk.org/images/VDMPad-counter-saved.png)
 
 # Review the session
 
 VDMPad has a module called "VDMPad-EpiLog" to review the history.
 By turning on "VDMPad-EpiLog" in the settings, you'll have a history on the left (or bottom) of the VDMPad page.
 
-![Screenshot of VDMPad-EpiLog](https://github.com/tomooda/ViennaTalk-doc/blob/master/images/VDMPad-EpiLog-0-start.png)
+![Screenshot of VDMPad-EpiLog](https://viennatalk.org/images/VDMPad-EpiLog-0-start.png)
 
 The history consists of revisions of the source specification each of which has some series of evaluations.
 In the history shown above, the ```inc``` operation was wrongly defined in the first revision.
@@ -77,7 +77,7 @@ The normal counting before hitting the ```max``` value was tested against only t
 
 By clicking the ⬇️ button on the specification source, all runs evaluated agaist the first revision will be merged to the second revision.
 
-![Screenshot of VDMPad-EpiLog](https://github.com/tomooda/ViennaTalk-doc/blob/master/images/VDMPad-EpiLog-1-merge.png)
+![Screenshot of VDMPad-EpiLog](https://viennatalk.org/images/VDMPad-EpiLog-1-merge.png)
 
 The yellow boxes means that the run has not been executed in the specification.
 Such runs can be re-evaluated against the specification by the 🔄 button that appears on the box.
@@ -85,5 +85,5 @@ Less interesting revisions and runs can be removed by the 🗑 button.
 
 After working on those revisions, the history will be finally summarized like below.
 
-![Screenshot of VDMPad-EpiLog](https://github.com/tomooda/ViennaTalk-doc/blob/master/images/VDMPad-EpiLog-4-finish.png)
+![Screenshot of VDMPad-EpiLog](https://viennatalk.org/images/VDMPad-EpiLog-4-finish.png)
 
