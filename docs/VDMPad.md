@@ -61,6 +61,11 @@ To load a saved snapshot,
 VDMPad has a module called "VDMPad-EpiLog" to review the history.
 By turning on "VDMPad-EpiLog" in the settings, you'll have a history on the left (or bottom) of the VDMPad page.
 
+![Screenshot of VDMPad-EpiLog](https://viennatalk.org/images/VDMPad-EpiLog-open.png)
+
+
+The history part will look like the below.
+
 ![Screenshot of VDMPad-EpiLog](https://viennatalk.org/images/VDMPad-EpiLog-0-start.png)
 
 The history consists of revisions of the source specification each of which has some series of evaluations.
