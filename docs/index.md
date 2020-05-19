@@ -109,4 +109,4 @@ The update button will read all available fonts in the system. You can then choo
 
 Acknowledgement
 ---
-Part of the ViennaTalk project is supported by Grant-in-Aid for Scientific Research (S) 24220001 from the Japan Society for the Promotion of Science.
+Part of the ViennaTalk project is supported by Grant-in-Aid for Scientific Research (S) 24220001 and Grant-in-Aid for Early-Career Scientists 18K18033 from the Japan Society for the Promotion of Science.
