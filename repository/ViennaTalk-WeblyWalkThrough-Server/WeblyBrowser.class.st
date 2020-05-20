@@ -7,7 +7,7 @@ Class {
 		'portField',
 		'publishButton'
 	],
-	#category : 'ViennaTalk-WeblyWalkThrough-Server'
+	#category : #'ViennaTalk-WeblyWalkThrough-Server'
 }
 
 { #category : #menus }
@@ -88,7 +88,7 @@ WeblyBrowser >> build [
 			((0 @ 0 corner: 1 @ 1) asLayoutFrame
 				bottomOffset: -32;
 				yourself).
-	lowerTabPane addLazyPage: webapiPane label: 'Web API'.
+	lowerTabPane addPage: webapiPane label: 'Web API'.
 	^ pane
 ]
 

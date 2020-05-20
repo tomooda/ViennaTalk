@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'elementMatcher'
 	],
-	#category : 'ViennaTalk-WeblyWalkThrough-Translators'
+	#category : #'ViennaTalk-WeblyWalkThrough-Translators'
 }
 
 { #category : #'instance creation' }
@@ -17,7 +17,7 @@ WWTTranslationSetMatcher class >> with: aWWTTranslationMatcher [
 { #category : #translating }
 WWTTranslationSetMatcher >> accept: anObject [
 	| binds |
-	anObject isArray
+	anObject isSet
 		ifFalse: [ ^ nil ].
 	binds := Dictionary new.
 	anObject

@@ -6,7 +6,7 @@ Class {
 		'vdmDecoder',
 		'source'
 	],
-	#category : 'ViennaTalk-WeblyWalkThrough-Translators'
+	#category : #'ViennaTalk-WeblyWalkThrough-Translators'
 }
 
 { #category : #'instance creation' }
@@ -75,8 +75,23 @@ WWTTranslator >> vdmToJson: vdmObj [
 				ifNotNil: [ :binds | 
 					| translatedBinds |
 					translatedBinds := Dictionary new.
-					binds keysAndValuesDo: [ :var :val | translatedBinds at: var put: (self vdmToJson: val) ].
+					binds
+						keysAndValuesDo: [ :var :val | translatedBinds at: var put: (self vdmToJson: val) ].
 					^ jsonMatcher emit: translatedBinds ] ].
+	(vdmObj isArray or: [ vdmObj isSequence ])
+		ifTrue: [ ^ vdmObj collect: [ :vdm | self vdmToJson: vdm ] ].
+	vdmObj isDictionary
+		ifTrue: [ | json |
+			json := Dictionary new: vdmObj size.
+			vdmObj
+				keysAndValuesDo:
+					[ :key :value | json at: (self vdmToJson: key) put: (self vdmToJson: value) ].
+			^ json ].
+	vdmObj isViennaComposite
+		ifTrue: [ ^ Dictionary new
+				at: vdmObj constructorName
+					put: (vdmObj asArray collect: [ :value | self vdmToJson: value ]);
+				yourself ].
 	^ vdmObj
 ]
 
