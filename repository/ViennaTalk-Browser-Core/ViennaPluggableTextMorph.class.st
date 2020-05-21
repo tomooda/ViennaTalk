@@ -159,7 +159,7 @@ ViennaPluggableTextMorph >> update: aSymbol [
 				ifTrue: [ self hasUnacceptedEdits: false.
 					self textArea model
 						perform: setTextSelector
-						with: self textMorph contents ] ].
+						with: self textMorph text ] ].
 	^ super update: aSymbol
 ]
 

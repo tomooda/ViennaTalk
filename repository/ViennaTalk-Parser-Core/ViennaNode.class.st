@@ -8,7 +8,7 @@ Class {
 		'start',
 		'end'
 	],
-	#category : 'ViennaTalk-Parser-Core'
+	#category : #'ViennaTalk-Parser-Core'
 }
 
 { #category : #'instance creation' }
@@ -128,7 +128,10 @@ ViennaNode class >> label: aString withAll: anArray [
 { #category : #enumerating }
 ViennaNode >> allDescendantsDo: aBlock [
 	aBlock value: self.
-	self do: [ :node | node allDescendantsDo: aBlock ]
+	self
+		do: [ :node | 
+			node isViennaNode
+				ifTrue: [ node allDescendantsDo: aBlock ] ]
 ]
 
 { #category : #enumerating }
@@ -239,6 +242,11 @@ ViennaNode >> ifNotEmpty: aBlock [
 { #category : #testing }
 ViennaNode >> isEmpty [
 	^ self size = 0
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaNode [
+	^ true
 ]
 
 { #category : #accessing }

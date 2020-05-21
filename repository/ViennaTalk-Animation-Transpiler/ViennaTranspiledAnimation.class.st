@@ -9,7 +9,7 @@ Class {
 		'reader',
 		'writer'
 	],
-	#category : 'ViennaTalk-Animation-Transpiler'
+	#category : #'ViennaTalk-Animation-Transpiler'
 }
 
 { #category : #converting }
@@ -86,6 +86,11 @@ ViennaTranspiledAnimation >> becomeInterpretedAnimation [
 { #category : #private }
 ViennaTranspiledAnimation >> becomeTranspiledAnimation [
 	^ self
+]
+
+{ #category : #converting }
+ViennaTranspiledAnimation >> copyForTest [
+	^ self copy
 ]
 
 { #category : #private }

@@ -10,7 +10,7 @@ Class {
 		'writer',
 		'usesExceptionForExit'
 	],
-	#category : 'ViennaTalk-Animation-Core'
+	#category : #'ViennaTalk-Animation-Core'
 }
 
 { #category : #'instance creation' }
@@ -178,6 +178,11 @@ ViennaAnimation >> basicPlainEvaluate: aString in: moduleName ifError: errorBloc
 { #category : #private }
 ViennaAnimation >> becomeInterpretedAnimation [
 	^ self
+]
+
+{ #category : #converting }
+ViennaAnimation >> copyForTest [
+	^ self copy
 ]
 
 { #category : #defaults }

@@ -5,7 +5,8 @@ Class {
 		'translationRuleSelection',
 		'translationRulePane',
 		'portField',
-		'publishButton'
+		'publishButton',
+		'frontPageSelection'
 	],
 	#category : #'ViennaTalk-WeblyWalkThrough-Server'
 }
@@ -49,6 +50,12 @@ WeblyBrowser class >> viennaToolsMenuOn: aBuilder [
 		icon: nil
 ]
 
+{ #category : #'frontpage pane' }
+WeblyBrowser >> acceptFrontPage: aStringOrText [
+	animation frontPage: aStringOrText asString.
+	^ true
+]
+
 { #category : #'translation pane' }
 WeblyBrowser >> acceptTranslationRule: aString [
 	| newTranslator |
@@ -59,13 +66,20 @@ WeblyBrowser >> acceptTranslationRule: aString [
 	^ true
 ]
 
+{ #category : #accessing }
+WeblyBrowser >> animationClassForType: aSymbol [
+	^ WeblyWalkThrough
+]
+
 { #category : #'user interface' }
 WeblyBrowser >> build [
-	| pane webapiPane |
+	| pane frontPagePane webapiPane |
+	pane := super build.
+	frontPagePane := self buildFrontPagePane.
+	lowerTabPane addPage: frontPagePane label: 'HTML'.
 	translationRulePane := self buildTranslationRulePane.
 	portField := self buildPortField.
 	publishButton := self buildPublishButton.
-	pane := super build.
 	webapiPane := Morph new.
 	webapiPane changeProportionalLayout.
 	webapiPane
@@ -90,6 +104,20 @@ WeblyBrowser >> build [
 				yourself).
 	lowerTabPane addPage: webapiPane label: 'Web API'.
 	^ pane
+]
+
+{ #category : #'user interface' }
+WeblyBrowser >> buildFrontPagePane [
+	^ (RubPluggableTextMorph
+		on: self
+		text: #frontPage
+		accept: #acceptFrontPage:
+		readSelection: #frontPageSelection
+		menu: #frontPagePaneMenu:shifted:
+		setSelection: #frontPageSelection:)
+		setBalloonText: 'html source to use the web API';
+		font: ViennaLauncher font;
+		yourself
 ]
 
 { #category : #'user interface' }
@@ -120,7 +148,7 @@ WeblyBrowser >> buildPublishButton [
 
 { #category : #'user interface' }
 WeblyBrowser >> buildTranslationRulePane [
-	^ (PluggableTextMorph
+	^ (RubPluggableTextMorph
 		on: self
 		text: #translationRule
 		accept: #acceptTranslationRule:
@@ -132,9 +160,81 @@ WeblyBrowser >> buildTranslationRulePane [
 		yourself
 ]
 
+{ #category : #'frontpage pane' }
+WeblyBrowser >> frontPage [
+	^ animation frontPage
+]
+
+{ #category : #'frontpage pane menu' }
+WeblyBrowser >> frontPagePaneMenu: aMenu shifted: aBoolean [
+	aMenu target: self.
+	aMenu
+		addList:
+			{{('copy (c)' translated).
+			#copySelection}.
+			{('cut (x)' translated).
+			#cut}.
+			{('paste (v)' translated).
+			#paste}.
+			{('paste...' translated).
+			#pasteRecent}.
+			#-.
+			{('find...(f)' translated).
+			#find}.
+			{('find again (g)' translated).
+			#findAgain}.
+			{('set search string (h)' translated).
+			#setSearchString}.
+			#-.
+			{('undo (z)' translated).
+			#undo}.
+			#-.
+			{('accept (s)' translated).
+			#accept}.
+			{('cancel (l)' translated).
+			#cancel}}.
+	^ aMenu
+]
+
+{ #category : #'frontpage pane' }
+WeblyBrowser >> frontPageSelection [
+	^ frontPageSelection ifNil: [ frontPageSelection := 1 to: 0 ]
+]
+
+{ #category : #'frontpage pane' }
+WeblyBrowser >> frontPageSelection: anInterval [
+	frontPageSelection := anInterval
+]
+
 { #category : #'web api services' }
 WeblyBrowser >> isPublished [
 	^ animation isPublished
+]
+
+{ #category : #'module list menu' }
+WeblyBrowser >> loadSnapshotFromFile [
+	self
+		fileOpen: 'Open snapshot...'
+		extensions: #('vdmim')
+		do: [ :stream | 
+			| json |
+			json := (NeoJSONReader on: stream) next.
+			animation := (self
+				animationClassForType: (json at: 'engineType' ifAbsent: [ nil ]) asSymbol)
+				new.
+			[ animation
+				specification: (json at: 'specification' ifAbsent: [ '' ])
+				ifError: [ :msg | self error: msg ].
+			self selectModuleNamed: nil ]
+				on: Error
+				do: [ :ex | 
+					codePane setText: (json at: 'specification').
+					codePane hasUnacceptedEdits: true ].
+			animation state: (json at: 'state' ifAbsent: [ Dictionary new ]).
+			self acceptWorkspace: (json at: 'workspace' ifAbsent: [ '' ]).
+			self acceptFrontPage: (json at: 'frontpage' ifAbsent: [ '' ]).
+			self
+				acceptTranslationRule: (json at: 'translation' ifAbsent: [ '' ]) ]
 ]
 
 { #category : #'web api services' }
@@ -164,6 +264,22 @@ WeblyBrowser >> publishButtonOffColor [
 { #category : #'web api services' }
 WeblyBrowser >> publishButtonOnColor [
 	^ Color green lighter
+]
+
+{ #category : #'module list menu' }
+WeblyBrowser >> saveSnapshotToFile [
+	| json |
+	json := Dictionary new.
+	json at: 'engineType' put: self animation engineType.
+	json at: 'specification' put: self animation specification.
+	json at: 'state' put: self animation state.
+	json at: 'workspace' put: self workspace.
+	json at: 'translation' put: self translationRule.
+	json at: 'frontpage' put: self frontPage.
+	self
+		fileSave: 'Save snapshot to...'
+		extensions: #('webly')
+		do: [ :stream | (NeoJSONWriter on: stream) nextPut: json ]
 ]
 
 { #category : #'web api services' }
@@ -226,4 +342,14 @@ WeblyBrowser >> translationRuleSelection [
 { #category : #'translation pane' }
 WeblyBrowser >> translationRuleSelection: aSelection [
 	translationRuleSelection := aSelection
+]
+
+{ #category : #'module list menu' }
+WeblyBrowser >> useInterpreter [
+	self shouldNotImplement
+]
+
+{ #category : #'module list menu' }
+WeblyBrowser >> useTranspiler [
+	self shouldNotImplement
 ]

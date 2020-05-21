@@ -177,28 +177,38 @@ ViennaBrowser class >> installEventHandlers [
 ViennaBrowser class >> moduleListMenu: aBuilder [
 	<contextMenu>
 	<viennaBrowserModuleListMenu>
-	(aBuilder item: #'new and load...' translated) selector: #newAndLoadFromFile.
-	(aBuilder item: #'load and merge...' translated) selector: #loadAndMergeFromFile.
-	(aBuilder item: #'save snapshot...' translated) selector: #saveSnapshotToFile.
-	(aBuilder item: #'save all modules...' translated) selector: #saveAllModulesToFile.
+	(aBuilder item: #'load snapshot...' translated)
+		selector: #loadSnapshotFromFile.
+	(aBuilder item: #'new and load...' translated)
+		selector: #newAndLoadFromFile.
+	(aBuilder item: #'load and merge...' translated)
+		selector: #loadAndMergeFromFile.
+	(aBuilder item: #'save snapshot...' translated)
+		selector: #saveSnapshotToFile.
+	(aBuilder item: #'save all modules...' translated)
+		selector: #saveAllModulesToFile.
 	aBuilder model selectedModule
-		ifNotNil: [ (aBuilder item: #'save the module...' translated) selector: #saveAModuleToFile ].
+		ifNotNil: [ (aBuilder item: #'save the module...' translated)
+				selector: #saveAModuleToFile ].
 	aBuilder items last withSeparatorAfter.
-	(aBuilder item: #'generate ViennaDoc source script...' translated) selector: #generateViennaDocSourceScript.
+	(aBuilder item: #'generate ViennaDoc source script...' translated)
+		selector: #generateViennaDocSourceScript.
 	aBuilder items last withSeparatorAfter.
 	(aBuilder item: #'import UnitTesting module' translated)
 		selector: #importUnitTestingModule.
 	(aBuilder item: #'remove module' translated)
 		selector: #removeModule;
 		withSeparatorAfter.
-	aBuilder model animation class = ViennaTranspiledAnimation
-		ifTrue: [ (aBuilder item: #'use interpreter' translated)
-				selector: #useInterpreter;
-				withSeparatorAfter ]
-		ifFalse: [ (aBuilder item: #'use transpiler' translated)
-				selector: #useTranspiler;
-				withSeparatorAfter ].
-	(aBuilder item: #'generate a Smalltalk script (single module)...' translated)
+	aBuilder model animation class = WeblyWalkThrough
+		ifFalse: [ aBuilder model animation class = ViennaTranspiledAnimation
+				ifTrue: [ (aBuilder item: #'use interpreter' translated)
+						selector: #useInterpreter;
+						withSeparatorAfter ]
+				ifFalse: [ (aBuilder item: #'use transpiler' translated)
+						selector: #useTranspiler;
+						withSeparatorAfter ] ].
+	(aBuilder
+		item: #'generate a Smalltalk script (single module)...' translated)
 		selector: #generateSmalltalkScript.
 	(aBuilder item: #'generate classes (all modules)...' translated)
 		selector: #generateSmalltalkClasses.
@@ -578,8 +588,10 @@ ViennaBrowser >> acceptValue: aString [
 ViennaBrowser >> acceptWorkspace: aStringOrText [
 	| oldWorkspace |
 	oldWorkspace := workspace.
-	workspace := aStringOrText.
-	oldWorkspace ~= workspace ifTrue: [ self changed: #workspace ]
+	workspace := aStringOrText asString.
+	oldWorkspace ~= workspace
+		ifTrue: [ self changed: #workspace ].
+	^ true
 ]
 
 { #category : #accessing }
@@ -592,6 +604,15 @@ ViennaBrowser >> animation: aViennaAnimation [
 	animation ifNotNil: [ animation removeDependent: self ].
 	animation := aViennaAnimation.
 	aViennaAnimation addDependent: self
+]
+
+{ #category : #accessing }
+ViennaBrowser >> animationClassForType: aSymbol [
+	aSymbol = #transpiler
+		ifTrue: [ Smalltalk
+				at: #ViennaTranspiledAnimation
+				ifPresent: [ :class | ^ class ] ].
+	^ ViennaAnimation
 ]
 
 { #category : #accessing }
@@ -613,7 +634,7 @@ ViennaBrowser >> autoTest [
 ViennaBrowser >> basicRunTestModule: module operation: operation [
 	| header testAnimation |
 	header := 'Runtime: Error 4129: Exit '.
-	testAnimation := animation copy
+	testAnimation := animation copyForTest
 		state: Dictionary new;
 		yourself.
 	[ [ testAnimation
@@ -856,25 +877,24 @@ ViennaBrowser >> directory [
 ]
 
 { #category : #private }
-ViennaBrowser >> doItIn: aPluggableTextMorph [ 
+ViennaBrowser >> doItIn: aPluggableTextMorph [
 	aPluggableTextMorph
-		handleEdit: [| editor error |
+		handleEdit: [ | editor error |
 			editor := aPluggableTextMorph textMorph editor.
-			editor
-				lineSelectAndEmptyCheck: [^ nil].
+			editor lineSelectAndEmptyCheck: [ ^ nil ].
 			error := nil.
 			self
 				evaluate: editor selectionAsStream upToEnd
-				ifError: [:msg | error := msg].
+				ifError: [ :msg | error := msg ].
 			error
-				ifNotNil: [| selectionInterval |
+				ifNotNil: [ | selectionInterval |
 					selectionInterval := editor selectionInterval.
-					aPluggableTextMorph textMorph installEditorToReplace: editor.
 					aPluggableTextMorph textMorph
-						handleEdit: [editor afterSelectionInsertAndSelect: error].
+						handleEdit: [ editor afterSelectionInsertAndSelect: error ].
 					selectionInterval := editor selectionInterval.
-					aPluggableTextMorph textMorph editor selectFrom: selectionInterval first to: selectionInterval last.
-					aPluggableTextMorph scrollSelectionIntoView]]
+					aPluggableTextMorph textMorph editor
+						selectFrom: selectionInterval first
+						to: selectionInterval last ] ]
 ]
 
 { #category : #private }
@@ -1134,9 +1154,9 @@ ViennaBrowser >> loadSnapshotFromFile [
 		do: [ :stream | 
 			| json |
 			json := (NeoJSONReader on: stream) next.
-			animation := (json at: 'engineType' ifAbsent: [ nil ]) asSymbol
-				in:
-					[ :type | type = #transpiler and: [ Smalltalk hasClassNamed: #ViennaTranspiledAnimation ] ].
+			animation := (self
+				animationClassForType: (json at: 'engineType' ifAbsent: [ nil ]) asSymbol)
+				new.
 			[ animation
 				specification: (json at: 'specification' ifAbsent: [ '' ])
 				ifError: [ :msg | self error: msg ].
@@ -1145,7 +1165,7 @@ ViennaBrowser >> loadSnapshotFromFile [
 				do: [ :ex | 
 					codePane setText: (json at: 'specification').
 					codePane hasUnacceptedEdits: true ].
-			animation state: (json at: 'state' ifAbsent: [Dictionary new]).
+			animation state: (json at: 'state' ifAbsent: [ Dictionary new ]).
 			self acceptWorkspace: (json at: 'workspace' ifAbsent: [ '' ]) ]
 ]
 
@@ -1690,7 +1710,7 @@ ViennaBrowser >> viennaIcon [
 
 { #category : #'workspace pane' }
 ViennaBrowser >> workspace [
-	^ workspace
+	^ workspace asString
 ]
 
 { #category : #'workspace pane menu' }

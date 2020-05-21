@@ -4,13 +4,15 @@ Class {
 	#traits : 'TWeblyWalkThrough',
 	#classTraits : 'TWeblyWalkThrough classTrait',
 	#instVars : [
-		'translator'
+		'translator',
+		'frontPage',
+		'globalNamesAndNumArgs'
 	],
 	#classVars : [
 		'Current',
 		'Server'
 	],
-	#category : 'ViennaTalk-WeblyWalkThrough-Server'
+	#category : #'ViennaTalk-WeblyWalkThrough-Server'
 }
 
 { #category : #accessing }
@@ -106,6 +108,83 @@ WeblyWalkThrough >> argsFrom: aZnRequest [
 	^ args
 ]
 
+{ #category : #converting }
+WeblyWalkThrough >> copyForTest [
+	| animation |
+	animation := ViennaAnimation new.
+	animation
+		specification: specification
+		ifError: [ :msg | self error: msg ].
+	^ animation
+]
+
+{ #category : #defaults }
+WeblyWalkThrough >> defaultFrontPage [
+	^ '<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8">
+<title>Webly Walk-Through</title>
+</head>
+<body>
+Webly Walk-Through is running.
+</body></html>' copy
+]
+
+{ #category : #javascript }
+WeblyWalkThrough >> dynamicWeblyFunctions [
+	^ String
+		streamContents: [ :stream | 
+			stream lf.
+			(globalNamesAndNumArgs collect: #first) asSet asSortedCollection
+				do: [ :mod | 
+					stream
+						nextPutAll: 'Webly.';
+						nextPutAll: mod;
+						nextPutAll: ' = {};';
+						lf ].
+			globalNamesAndNumArgs
+				do: [ :triple | 
+					stream
+						nextPutAll: 'Webly.';
+						nextPutAll: triple first;
+						nextPut: $.;
+						nextPutAll: triple second;
+						nextPutAll: ' = function('.
+					(1 to: triple third)
+						do: [ :i | 
+							stream
+								nextPut: $a;
+								nextPutAll: i asString;
+								nextPutAll: ', ' ].
+					stream
+						nextPutAll: 'cont) {';
+						nextPutAll: 'Webly.call("';
+						nextPutAll: triple first;
+						nextPutAll: '", "';
+						nextPutAll: triple second;
+						nextPutAll: '", ['.
+					(1 to: triple third)
+						do: [ :i | 
+							stream
+								nextPut: $a;
+								nextPutAll: i asString ]
+						separatedBy: [ stream nextPutAll: ', ' ].
+					stream
+						nextPutAll: '], cont)};';
+						lf ] ]
+]
+
+{ #category : #accessing }
+WeblyWalkThrough >> frontPage [
+	^ frontPage
+		ifNil: [ frontPage := self defaultFrontPage]
+]
+
+{ #category : #accessing }
+WeblyWalkThrough >> frontPage: aString [
+	frontPage := aString asString
+]
+
 { #category : #'initialize-release' }
 WeblyWalkThrough >> initialize [
 	super initialize.
@@ -115,6 +194,18 @@ WeblyWalkThrough >> initialize [
 { #category : #testing }
 WeblyWalkThrough >> isPublished [
 	^ self class server isRunning and: [ self class server delegate == self ]
+]
+
+{ #category : #accessing }
+WeblyWalkThrough >> specification: aString [
+	self updateGlobalNamesAndNumArgs: aString.
+	super specification: aString
+]
+
+{ #category : #accessing }
+WeblyWalkThrough >> specification: aString ifError: aBlock [
+	self updateGlobalNamesAndNumArgs: aString.
+	super specification: aString ifError: [ :msg | ^ aBlock value: msg ]
 ]
 
 { #category : #translating }
@@ -135,4 +226,54 @@ WeblyWalkThrough >> translator [
 { #category : #accessing }
 WeblyWalkThrough >> translator: aWWTTranslator [
 	translator := aWWTTranslator
+]
+
+{ #category : #accessing }
+WeblyWalkThrough >> updateGlobalNamesAndNumArgs: aString [
+	| ast |
+	ast := ViennaVDMParser new parse: aString.
+	(ast isPetit2Failure or: [ ast isEmpty ])
+		ifTrue: [ globalNamesAndNumArgs := #().
+			^ self ].
+	globalNamesAndNumArgs := Array
+		streamContents: [ :stream | 
+			(ast first label = 'Module'
+				ifTrue: [ ast ]
+				ifFalse: [ {ast} ])
+				do: [ :mod | 
+					| modName |
+					modName := mod label = 'Module'
+						ifTrue: [ mod first ]
+						ifFalse: [ self defaultModule ].
+					mod
+						allDescendantsDo: [ :node | 
+							node label = 'ExplicitFunctionDefinition'
+								ifTrue: [ stream
+										nextPut:
+											{modName.
+											node first.
+											node fifth first size} ].
+							node label = 'ExplicitOperationDefinition'
+								ifTrue: [ stream
+										nextPut:
+											{modName.
+											node first.
+											node fourth size} ] ] ] ]
+]
+
+{ #category : #javascript }
+WeblyWalkThrough >> webly_js [
+	^ ('
+Webly = {};
+Webly.call = function(module, operation, arguments, continuation) { 
+    var req = new XMLHttpRequest();
+    req.open("POST", "/"+module+"/"+operation);
+    req.setRequestHeader("Content-Type", "application/json");
+    req.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200)
+            continuation(JSON.parse(this.responseText));
+    };
+    req.send(JSON.stringify(arguments));
+};
+' trim copyReplaceAll: String cr with: String lf), self dynamicWeblyFunctions
 ]
