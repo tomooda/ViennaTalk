@@ -940,7 +940,9 @@ ViennaBrowser >> fileOpen: title extensions: anArrayOfString do: aBlock [
 		preview: nil)
 		ifNotNil: [ :ref | 
 			directory := ref parent.
-			ref readStreamDo: aBlock ]
+			ref
+				readStreamDo:
+					[ :stream | aBlock value: stream contents withInternalLineEndings readStream ] ]
 ]
 
 { #category : #private }
