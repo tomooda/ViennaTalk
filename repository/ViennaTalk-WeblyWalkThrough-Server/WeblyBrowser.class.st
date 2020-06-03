@@ -215,13 +215,10 @@ WeblyBrowser >> isPublished [
 WeblyBrowser >> loadSnapshotFromFile [
 	self
 		fileOpen: 'Open snapshot...'
-		extensions: #('vdmim')
+		extensions: #('webly' 'vdmim')
 		do: [ :stream | 
 			| json |
 			json := (NeoJSONReader on: stream) next.
-			animation := (self
-				animationClassForType: (json at: 'engineType' ifAbsent: [ nil ]) asSymbol)
-				new.
 			[ animation
 				specification: (json at: 'specification' ifAbsent: [ '' ])
 				ifError: [ :msg | self error: msg ].

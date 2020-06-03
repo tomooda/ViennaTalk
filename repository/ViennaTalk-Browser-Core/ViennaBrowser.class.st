@@ -938,10 +938,9 @@ ViennaBrowser >> fileOpen: title extensions: anArrayOfString do: aBlock [
 		extensions: anArrayOfString
 		path: self directory
 		preview: nil)
-		ifNotNil: [ :stream | 
-			directory := stream name asFileReference parent.
-			aBlock
-				value: (stream contents copyReplaceAll: String lf with: String cr) readStream ]
+		ifNotNil: [ :ref | 
+			directory := ref parent.
+			ref readStreamDo: aBlock ]
 ]
 
 { #category : #private }
@@ -1284,7 +1283,10 @@ ViennaBrowser >> newAndLoadFromFile [
 
 { #category : #'user interface' }
 ViennaBrowser >> okToChange [
-	^ (codePane canDiscardEdits and: [ workspacePane canDiscardEdits ]) or: [ UIManager default confirm: 'Has unsaved changes.
+	^ (codePane okToChange and: [ workspacePane okToChange ])
+		or: [ UIManager default
+				confirm:
+					'Has unsaved changes.
 Do you want to discard it to close?' ]
 ]
 
