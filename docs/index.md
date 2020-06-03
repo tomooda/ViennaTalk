@@ -1,6 +1,7 @@
+[![Pharo version](https://img.shields.io/badge/Pharo-8.0-%23aac9ff.svg)](https://pharo.org/download)
 [![Build Status](https://travis-ci.org/tomooda/ViennaTalk.svg?branch=master)](https://travis-ci.org/tomooda/ViennaTalk)
 [![Build status](https://ci.appveyor.com/api/projects/status/h77apfm990r2dmh6?svg=true)](https://ci.appveyor.com/project/tomooda/viennatalk)
-
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/cormas/cormas/master/LICENSE)
 
 ![ViennaTalk logo](images/ViennaTalk-logo.png)
 
