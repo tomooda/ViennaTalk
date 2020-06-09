@@ -99,7 +99,7 @@ WWTTranslator >> vdmToJson: vdmObj [
 WWTTranslator >> vdmToJsonString: vdmString [
 	| vdmObj |
 	vdmString trim = '()'
-		ifTrue: [ ^ String new ].
+		ifTrue: [ ^ 'null' ].
 	vdmObj := vdmDecoder parse: vdmString.
 	vdmObj isPetit2Failure
 		ifTrue: [ ^ vdmString convertToEncoding: 'utf-8' ].
