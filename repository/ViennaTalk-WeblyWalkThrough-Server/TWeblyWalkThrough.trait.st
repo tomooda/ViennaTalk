@@ -4,32 +4,6 @@ Trait {
 }
 
 { #category : #'request handling' }
-TWeblyWalkThrough >> _handleRequest: aZnRequest [
-	| path method |
-	aZnRequest uri isSlash
-		ifTrue: [ ^ self responseOk: (ZnStringEntity html: self frontPage) ].
-	path := aZnRequest uri segments.
-	path = #('webly.js')
-		ifTrue: [ ^ self
-				responseOk:
-					((ZnStringEntity type: ZnMimeType applicationJavascript)
-						string: self webly_js;
-						yourself) ].
-	path size > 2
-		ifTrue: [ ^ self responseNotFound: aZnRequest url ].
-	path = #('favicon.ico')
-		ifTrue: [ ^ self responseNotFound: aZnRequest url ].
-	method := aZnRequest method asLowercase.
-	method = 'options'
-		ifTrue: [ ^ self
-				responseOk:
-					((ZnStringEntity type: ZnMimeType textPlain)
-						string: '';
-						yourself) ].
-	^ self handleApi: aZnRequest
-]
-
-{ #category : #'request handling' }
 TWeblyWalkThrough >> apiCall: apiName in: moduleName withArguments: args [
 	^ self subclassResponsibility
 ]
