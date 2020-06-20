@@ -90,8 +90,9 @@ TWeblyWalkThrough >> handleRequest: aZnRequest [
 	(path size = 1 and: [ path first = 'webly.js' ])
 		ifTrue: [ ^ self
 				responseOk:
-					((ZnStringEntity type: ZnMimeType applicationJavascript)
+					((ZnStringEntity type: (ZnMimeType applicationJavascript charSet: 'utf-8'))
 						string: self webly_js;
+						encoder;
 						yourself) ].
 	path size > 2
 		ifTrue: [ ^ self responseNotFound: aZnRequest url ].

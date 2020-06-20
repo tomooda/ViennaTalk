@@ -111,7 +111,7 @@ WeblyWalkThrough >> argsFrom: aZnRequest [
 { #category : #converting }
 WeblyWalkThrough >> copyForTest [
 	| animation |
-	animation := ViennaAnimation new.
+	animation := ViennaAnimation default.
 	animation
 		specification: specification
 		ifError: [ :msg | self error: msg ].

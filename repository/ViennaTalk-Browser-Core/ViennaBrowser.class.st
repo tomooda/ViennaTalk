@@ -487,14 +487,16 @@ ViennaBrowser >> acceptCode: aStringOrText [
 { #category : #'code pane' }
 ViennaBrowser >> acceptCode: aStringOrText newModuleAndSourceDo: aBlock [
 	self animation
-		ifNotNil: [ | code oldModulePositions newModulePositions newModuleNames oldSpec newSpec |
+		ifNotNil:
+			[ | code oldModulePositions newModulePositions newModuleNames oldSpec newSpec |
 			code := (self autoFormat
 				ifTrue: [ (ViennaVDMParser new format: aStringOrText)
 						in: [ :formatted | 
 							formatted isPetit2Failure
 								ifTrue: [ aStringOrText ]
 								ifFalse: [ formatted ] ] ]
-				ifFalse: [ aStringOrText ]) asString trimmed copyWith: Character cr.
+				ifFalse: [ aStringOrText ]) asString trimmed
+				copyWith: Character cr.
 			oldSpec := self animation specification.
 			oldModulePositions := self modulePositionsFrom: oldSpec.
 			newModulePositions := self modulePositionsFrom: code.
@@ -506,7 +508,8 @@ ViennaBrowser >> acceptCode: aStringOrText newModuleAndSourceDo: aBlock [
 					oldModulePositions
 						do: [ :assoc | 
 							(newModuleNames includes: assoc key)
-								ifFalse: [ stream nextPutAll: (oldSpec copyFrom: assoc value first to: assoc value last) ] ] ].
+								ifFalse: [ stream
+										nextPutAll: (oldSpec copyFrom: assoc value first to: assoc value last) ] ] ].
 			codePane hasUnacceptedEdits: false.
 			self animation
 				specification: newSpec
@@ -514,7 +517,9 @@ ViennaBrowser >> acceptCode: aStringOrText newModuleAndSourceDo: aBlock [
 					| posStrIndex charPos message |
 					charPos := 0.
 					message := msg.
-					posStrIndex := msg findLastOccurrenceOfString: 'at line ' startingAt: 1.
+					posStrIndex := msg
+						findLastOccurrenceOfString: 'at line '
+						startingAt: 1.
 					posStrIndex > 0
 						ifTrue: [ | colonIndex |
 							colonIndex := msg indexOf: $: startingAt: posStrIndex + 9.
@@ -522,19 +527,32 @@ ViennaBrowser >> acceptCode: aStringOrText newModuleAndSourceDo: aBlock [
 								ifTrue: [ | linePos colPos lines |
 									message := msg copyFrom: 1 to: posStrIndex - 1.
 									(message includes: $()
-										ifTrue: [ message := message copyFrom: 1 to: (message findLastOccurrenceOfString: ' (' startingAt: 1) ].
-									linePos := (msg copyFrom: posStrIndex + 8 to: colonIndex - 1) asInteger.
-									colPos := (msg copyFrom: colonIndex + 1 to: msg size) asInteger.
+										ifTrue: [ message := message
+												copyFrom: 1
+												to: (message findLastOccurrenceOfString: ' (' startingAt: 1) ].
+									linePos := (msg copyFrom: posStrIndex + 8 to: colonIndex - 1)
+										asInteger.
+									colPos := (msg copyFrom: colonIndex + 1 to: msg size)
+										asInteger.
 									lines := code lines.
 									linePos <= lines size
-										ifTrue: [ charPos := (((lines copyFrom: 1 to: linePos - 1) collect: #size) + 1) sum + colPos ] ] ].
-					^ codePane handleEdit: [ codePane notify: message at: charPos in: code readStream ] ].
+										ifTrue: [ charPos := (((lines copyFrom: 1 to: linePos - 1) collect: #size)
+												ifEmpty: [ 0 ]
+												ifNotEmpty: #sum) + 1 + colPos ] ] ].
+					^ codePane
+						handleEdit: [ codePane notify: message at: charPos in: code readStream ] ].
 			codePane hasUnacceptedEdits: false.
 			self
-				selectModuleNamed: (newModulePositions ifEmpty: [ nil ] ifNotEmpty: [ newModulePositions first key ]).
+				selectModuleNamed:
+					(newModulePositions
+						ifEmpty: [ nil ]
+						ifNotEmpty: [ newModulePositions first key ]).
 			aBlock
 				ifNotNil: [ newModulePositions
-						do: [ :assoc | aBlock cull: assoc key cull: (code copyFrom: assoc value first to: assoc value last) ] ].
+						do: [ :assoc | 
+							aBlock
+								cull: assoc key
+								cull: (code copyFrom: assoc value first to: assoc value last) ] ].
 			self autoTest
 				ifTrue: [ self autoFullTest
 						ifTrue: [ self runAllTests ]
