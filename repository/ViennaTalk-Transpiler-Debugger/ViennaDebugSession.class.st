@@ -1,7 +1,7 @@
 Class {
 	#name : #ViennaDebugSession,
 	#superclass : #DebugSession,
-	#category : 'ViennaTalk-Transpiler-Debugger'
+	#category : #'ViennaTalk-Transpiler-Debugger'
 }
 
 { #category : #accessing }
@@ -16,7 +16,7 @@ ViennaDebugSession >> vdmPcNodeForContext: aContext [
 	specificationContext ifNil: [ ^ nil ].
 	smalltalkNode := specificationContext method
 		sourceNodeForPC:
-			(specificationContext neighborPCWithCorrectMapping
+			(specificationContext pc
 				in: [ :pc | 
 					(self isLatestContext: aContext)
 						ifTrue: [ pc ]
