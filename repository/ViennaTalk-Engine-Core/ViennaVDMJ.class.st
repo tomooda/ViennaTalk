@@ -460,7 +460,7 @@ ViennaVDMJ >> evaluate: expression specification: specification states: states m
 					states
 						at: module
 						ifPresent: [ :bindings | 
-							| initBindings contBindings |
+							| initBindings |
 							self
 								default: module
 								ifError: [ :msg | 
@@ -469,13 +469,9 @@ ViennaVDMJ >> evaluate: expression specification: specification states: states m
 									msg.
 									states} ].
 							initBindings := Dictionary new.
-							contBindings := Dictionary new.
 							self
 								statesDo: [ :var :val | 
-									initBindings at: var put: val.
-									contBindings
-										at: var
-										put: (bindings at: var ifAbsent: [ val ]).
+									initBindings at: var put: (bindings at: var ifAbsent: [ val ]).
 									(prestates at: module ifAbsentPut: [ Dictionary new ])
 										at: var
 										put: (bindings at: var ifAbsent: [ val ]) ]
@@ -485,15 +481,12 @@ ViennaVDMJ >> evaluate: expression specification: specification states: states m
 									msg.
 									states} ].
 							self
-								assign: contBindings
-								ifError: [ self
-										assign: initBindings
-										ifError: [ :msg | 
-											^ {nil.
-											states.
-											msg.
-											states} ].
-									prestates at: module put: initBindings ] ] ]
+								assign: initBindings
+								ifError: [ :msg | 
+									^ {nil.
+									states.
+									msg.
+									prestates} ] ] ]
 				ifError: [ :msg | 
 					^ {nil.
 					states.
