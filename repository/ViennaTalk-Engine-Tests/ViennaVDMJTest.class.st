@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'process'
 	],
-	#category : 'ViennaTalk-Engine-Tests'
+	#category : #'ViennaTalk-Engine-Tests'
 }
 
 { #category : #running }
@@ -235,8 +235,8 @@ ViennaVDMJTest >> test2ValidSpecificationAndInvalidState [
 		testExpression: ''
 		specification: 'state counter of count : nat init s == s = mk_counter(0) end operations inc : () ==> nat inc() == (count := count + 1; return count);'
 		states: (self stateFromArray: {'DEFAULT' -> {'count' -> 'frq'}})
-		resultValue: nil
-		resultStates: (self stateFromArray: {'DEFAULT' -> {'count' -> 'frq'}}).
+		resultValue: ''
+		resultStates: (self stateFromArray: {'DEFAULT' -> {'count' -> '0'}}).
 	self
 		testExpression: ''
 		specification: 'state counter of count : nat init s == s = mk_counter(0) end operations inc : () ==> nat inc() == (count := count + 1; return count);'
@@ -369,8 +369,8 @@ ViennaVDMJTest >> test3ValidExpressionAndValidSpecificationAndInvalidState [
 		testExpression: ' inc ( ) '
 		specification: 'state counter of count : nat init s == s = mk_counter(0) end operations inc : () ==> nat inc() == (count := count + 1; return count);'
 		states: (self stateFromArray: {'DEFAULT' -> {'count' -> '4+"41"'}})
-		resultValue: nil
-		resultStates: (self stateFromArray: {'DEFAULT' -> {'count' -> '4+"41"'}})
+		resultValue: '1'
+		resultStates: (self stateFromArray: {'DEFAULT' -> {'count' -> '1'}})
 ]
 
 { #category : #'testing-all' }
