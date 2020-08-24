@@ -29,9 +29,11 @@ SequenceableCollection >> value: anInteger [
 
 { #category : #'*ViennaTalk-Value-Core' }
 SequenceableCollection >> viennaStringOn: aStream [
-	(self allSatisfy: #isCharacter)
-		ifTrue: [ (String withAll: self) viennaStringOn: aStream ].
-	aStream nextPutAll: '['.
-	self do: [ :obj | obj viennaStringOn: aStream ] separatedBy: [ aStream nextPutAll: ', ' ].
-	aStream nextPutAll: ']'
+	(self notEmpty and: [self allSatisfy: #isCharacter])
+		ifTrue: [ (String withAll: self) viennaStringOn: aStream ]
+		ifFalse: [ aStream nextPutAll: '['.
+			self
+				do: [ :obj | obj viennaStringOn: aStream ]
+				separatedBy: [ aStream nextPutAll: ', ' ].
+			aStream nextPutAll: ']' ]
 ]

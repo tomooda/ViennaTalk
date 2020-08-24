@@ -106,3 +106,8 @@ WWTTranslator >> vdmToJsonString: vdmString [
 	^ String streamContents: [ :stream |
 			(NeoJSONWriter on: stream) asciiOnly: true; nextPut: (self vdmToJson: vdmObj) ]
 ]
+
+{ #category : #translating }
+WWTTranslator >> vdmToXml: vdmObj [
+	vdmObj isComposite and: [ vdmObj constructor ]
+]

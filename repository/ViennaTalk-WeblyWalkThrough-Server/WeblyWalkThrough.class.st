@@ -6,7 +6,11 @@ Class {
 	#instVars : [
 		'translator',
 		'frontPage',
-		'globalNamesAndNumArgs'
+		'globalNamesAndNumArgs',
+		'displayEnabled',
+		'taggedElementDecoder',
+		'displayModule',
+		'displayOperation'
 	],
 	#classVars : [
 		'Current',
@@ -130,48 +134,86 @@ Webly Walk-Through is running.
 </body></html>' copy
 ]
 
-{ #category : #javascript }
-WeblyWalkThrough >> dynamicWeblyFunctions [
-	^ String
+{ #category : #accessing }
+WeblyWalkThrough >> disableDisplay [
+	self displayEnabled: false
+]
+
+{ #category : #'request handling' }
+WeblyWalkThrough >> display [
+	| evalString result xml |
+	evalString := displayModule  ifNil: [ displayOperation ] ifNotNil: [ displayModule , '`' , displayOperation ].
+	result := self
+		plainEvaluate: evalString , '()'
+		ifError: [ :msg | ^ self responseServerError: 'display operation failed.' ].
+	xml := self taggedElement2xml: result.
+	^ self
+		responseOk:
+			((ZnStringEntity type: ZnMimeType imageSvg)
+				string: xml;
+				yourself)
+]
+
+{ #category : #accessing }
+WeblyWalkThrough >> displayEnabled [
+	^ displayEnabled
+]
+
+{ #category : #accessing }
+WeblyWalkThrough >> displayEnabled: aBool [
+	displayEnabled := aBool = true
+]
+
+{ #category : #accessing }
+WeblyWalkThrough >> enableDisplay [
+	self displayEnabled: true
+]
+
+{ #category : #'request handling' }
+WeblyWalkThrough >> event: aDictionary [
+	| module operation type target evalString |
+	module := aDictionary at: 'module'.
+	operation := aDictionary at: 'operation'.
+	type := aDictionary at: 'type'.
+	target := (aDictionary at: 'target') asInteger.
+	evalString := String
 		streamContents: [ :stream | 
-			stream lf.
-			(globalNamesAndNumArgs collect: #first) asSet asSortedCollection
-				do: [ :mod | 
-					stream
-						nextPutAll: 'Webly.';
-						nextPutAll: mod;
-						nextPutAll: ' = {};';
-						lf ].
-			globalNamesAndNumArgs
-				do: [ :triple | 
-					stream
-						nextPutAll: 'Webly.';
-						nextPutAll: triple first;
-						nextPut: $.;
-						nextPutAll: triple second;
-						nextPutAll: ' = function('.
-					(1 to: triple third)
-						do: [ :i | 
-							stream
-								nextPut: $a;
-								nextPutAll: i asString;
-								nextPutAll: ', ' ].
-					stream
-						nextPutAll: 'cont) {';
-						nextPutAll: 'Webly.call("';
-						nextPutAll: triple first;
-						nextPutAll: '", "';
-						nextPutAll: triple second;
-						nextPutAll: '", ['.
-					(1 to: triple third)
-						do: [ :i | 
-							stream
-								nextPut: $a;
-								nextPutAll: i asString ]
-						separatedBy: [ stream nextPutAll: ', ' ].
-					stream
-						nextPutAll: '], cont)};';
-						lf ] ]
+			stream
+				nextPutAll: module;
+				nextPut: $`;
+				nextPutAll: operation;
+				nextPutAll: '(mk_ViennaDOM`'.
+			type = 'click'
+				ifTrue: [ stream
+						nextPutAll: 'MouseEvent(<';
+						nextPutAll: type;
+						nextPutAll: '>,';
+						nextPutAll: target viennaString;
+						nextPutAll: ',';
+						nextPutAll: (aDictionary at: 'x') viennaString;
+						nextPutAll: ',';
+						nextPutAll: (aDictionary at: 'y') viennaString;
+						nextPutAll: '))' ].
+			type = 'change'
+				ifTrue: [ stream
+						nextPutAll: 'ChangeEvent(<';
+						nextPutAll: type;
+						nextPutAll: '>,';
+						nextPutAll: target viennaString;
+						nextPutAll: ',';
+						nextPutAll: (aDictionary at: 'value') viennaString;
+						nextPutAll: '))' ] ].
+	self
+		plainEvaluate: evalString
+		in: module
+		ifError: [ :msg | 
+			^ self
+				responseServerError: 'event operation ' , module , '`' , operation , ' failed.' ].
+	^ self
+		responseOk:
+			((ZnStringEntity type: ZnMimeType textPlain)
+				string: '';
+				yourself)
 ]
 
 { #category : #accessing }
@@ -188,12 +230,106 @@ WeblyWalkThrough >> frontPage: aString [
 { #category : #'initialize-release' }
 WeblyWalkThrough >> initialize [
 	super initialize.
-	translator := WWTTranslator new
+	translator := WWTTranslator new.
+	displayEnabled := true.
+	displayModule := 'Counter'.
+	displayOperation := 'display'
 ]
 
 { #category : #testing }
 WeblyWalkThrough >> isPublished [
 	^ self class server isRunning and: [ self class server delegate == self ]
+]
+
+{ #category : #javascript }
+WeblyWalkThrough >> printDisplayFunctionsOn: aStream [
+	aStream nextPutAll: 'Webly.display = function () {'.
+	self displayEnabled
+		ifTrue: [ aStream
+				nextPutAll:
+					'
+    var req = new XMLHttpRequest();
+    req.open("GET", "/display");
+    req.onload = function () {while (Webly.displayElement.firstChild) Webly.displayElement.removeChild(Webly.displayElement.firstChild); Webly.displayElement.appendChild(req.responseXML.documentElement.childNodes[0]);};
+    req.send();
+' withUnixLineEndings ].
+	aStream
+		nextPutAll: '};';
+		lf.
+	self displayEnabled
+		ifTrue: [ aStream
+				nextPutAll:
+					'window.onload = function () {Webly.displayElement = document.getElementById("display");Webly.display();};';
+				lf ]
+]
+
+{ #category : #javascript }
+WeblyWalkThrough >> printDynamicWeblyFunctionsOn: aStream [
+	(globalNamesAndNumArgs collect: #first) asSet asSortedCollection
+		do: [ :mod | 
+			aStream
+				nextPutAll: 'Webly.';
+				nextPutAll: mod;
+				nextPutAll: ' = {};';
+				lf ].
+	globalNamesAndNumArgs
+		do: [ :triple | 
+			aStream
+				nextPutAll: 'Webly.';
+				nextPutAll: triple first;
+				nextPut: $.;
+				nextPutAll: triple second;
+				nextPutAll: ' = function('.
+			(1 to: triple third)
+				do: [ :i | 
+					aStream
+						nextPut: $a;
+						nextPutAll: i asString;
+						nextPutAll: ', ' ].
+			aStream
+				nextPutAll: 'cont) {';
+				nextPutAll: 'Webly.call("';
+				nextPutAll: triple first;
+				nextPutAll: '", "';
+				nextPutAll: triple second;
+				nextPutAll: '", ['.
+			(1 to: triple third)
+				do: [ :i | 
+					aStream
+						nextPut: $a;
+						nextPutAll: i asString ]
+				separatedBy: [ aStream nextPutAll: ', ' ].
+			aStream
+				nextPutAll: '], cont)};';
+				lf ]
+]
+
+{ #category : #javascript }
+WeblyWalkThrough >> printEventFunctionsOn: aStream [
+	self displayEnabled
+		ifTrue: [ aStream
+				nextPutAll:
+					'
+Webly.event = function(event, module, operation, continuation) { 
+    var req = new XMLHttpRequest();
+    var arguments = {};
+    arguments.module = module;
+    arguments.operation = operation;
+    arguments.type = event.type;
+    arguments.target = event.target.getAttribute("identifier");
+    if (event.type == "click") { 
+        arguments.x = event.x;
+        arguments.y = event.y;
+    }
+    if (event.type = "change") { 
+        arguments.value = event.target.value;
+    }
+    req.open("POST", "/event");
+    req.setRequestHeader("Content-Type", "application/json");
+    req.onload = function () {Webly.display(); if (continuation) continuation();};
+    req.send(JSON.stringify(arguments));
+};
+' withUnixLineEndings ]
 ]
 
 { #category : #accessing }
@@ -206,6 +342,33 @@ WeblyWalkThrough >> specification: aString [
 WeblyWalkThrough >> specification: aString ifError: aBlock [
 	self updateGlobalNamesAndNumArgs: aString.
 	super specification: aString ifError: [ :msg | ^ aBlock value: msg ]
+]
+
+{ #category : #translating }
+WeblyWalkThrough >> taggedElement2xml: aString [
+	| element |
+	element := self taggedElementDecoder parse: aString.
+	^ String
+		streamContents: [ :stream | 
+			stream
+				nextPutAll:
+					'<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">'.
+			element isPetit2Failure
+				ifTrue: [ aString ]
+				ifFalse: [ element isString
+						ifTrue: [ stream
+								nextPutAll:
+									'<text x="0" y="12" font-family="Helvetica" font-size="12" color="black">';
+								nextPutAll: element;
+								nextPutAll: '</text>' ]
+						ifFalse: [ element printXmlOn: stream ] ].
+			stream nextPutAll: '</svg>' ]
+]
+
+{ #category : #accessing }
+WeblyWalkThrough >> taggedElementDecoder [
+	^ taggedElementDecoder
+		ifNil: [ taggedElementDecoder := ViennaVDMTaggedElementDecoder new ]
 ]
 
 { #category : #translating }
@@ -263,17 +426,21 @@ WeblyWalkThrough >> updateGlobalNamesAndNumArgs: aString [
 
 { #category : #javascript }
 WeblyWalkThrough >> webly_js [
-	^ ('
-Webly = {};
+	^ String
+		streamContents: [ :stream | 
+			stream
+				nextPutAll:
+					'Webly = {};
 Webly.call = function(module, operation, arguments, continuation) { 
     var req = new XMLHttpRequest();
     req.open("POST", "/"+module+"/"+operation);
     req.setRequestHeader("Content-Type", "application/json");
-    req.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200)
-            continuation(JSON.parse(this.responseText));
-    };
+    req.onload = function () {Webly.display(); if (continuation) continuation(JSON.parse(this.responseText));};
     req.send(JSON.stringify(arguments));
 };
-' trim copyReplaceAll: String cr with: String lf), self dynamicWeblyFunctions
+' withUnixLineEndings.
+			self
+				printDynamicWeblyFunctionsOn: stream;
+				printDisplayFunctionsOn: stream;
+				printEventFunctionsOn: stream ]
 ]

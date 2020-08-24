@@ -8,7 +8,7 @@ Class {
 		'performer',
 		'compiledMethod'
 	],
-	#category : 'ViennaTalk-LivelyWalkThrough-Core'
+	#category : #'ViennaTalk-LivelyWalkThrough-Core'
 }
 
 { #category : #'instance creation' }
@@ -61,7 +61,7 @@ LWTLivetalkScript >> setWidgetName: nameString event: eventString performer: anO
 		compileToSmalltalk: sourceString
 		ifError: [ :msg :pos | ^ errorBlock cull: msg cull: pos ])
 		ifNotNil: [ :smalltalkSource | 
-			| compiler methodNode |
+			| compiler  |
 			widgetName := nameString.
 			event := eventString asSymbol.
 			performer := anObject.
@@ -70,8 +70,7 @@ LWTLivetalkScript >> setWidgetName: nameString event: eventString performer: anO
 				class: performer class;
 				noPattern: true;
 				failBlock: [ ^ errorBlock value ].
-			methodNode := compiler parse.
-			compiledMethod := methodNode generate.
+			compiledMethod := compiler compile.
 			source := sourceString ]
 ]
 

@@ -584,7 +584,7 @@ VDMPad >> VDMPadEpiLogSrc [
             json[key] = run.prestates[key];
         json.expression = run.expression;
         var req = new XMLHttpRequest();
-        req.open("POST", "http://vdmpad.viennatalk.org/eval");
+        req.open("POST", "/eval");
         req.setRequestHeader("Content-Type", "application/json");
         req.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {

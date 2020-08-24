@@ -61,13 +61,20 @@ TWeblyWalkThrough >> handleRequest: aZnRequest [
 	aZnRequest uri isSlash
 		ifTrue: [ ^ self responseOk: (ZnStringEntity html: self frontPage) ].
 	path := aZnRequest uri segments.
-	(path size = 1 and: [ path first = 'webly.js' ])
-		ifTrue: [ ^ self
-				responseOk:
-					((ZnStringEntity type: (ZnMimeType applicationJavascript charSet: 'utf-8'))
-						string: self webly_js;
-						encoder;
-						yourself) ].
+	path size = 1
+		ifTrue: [ path first = 'webly.js'
+				ifTrue: [ ^ self
+						responseOk:
+							((ZnStringEntity
+								type: (ZnMimeType applicationJavascript charSet: 'utf-8'))
+								string: self webly_js;
+								encoder;
+								yourself) ].
+			path first = 'display'
+				ifTrue: [ ^ self display ].
+			path first = 'event'
+				ifTrue:
+					[ ^ self event: (NeoJSONReader fromString: aZnRequest entity contents) ] ].
 	path size > 2
 		ifTrue: [ ^ self responseNotFound: aZnRequest url ].
 	path = #('favicon.ico')

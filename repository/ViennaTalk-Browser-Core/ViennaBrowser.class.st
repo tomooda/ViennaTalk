@@ -196,6 +196,8 @@ ViennaBrowser class >> moduleListMenu: aBuilder [
 	aBuilder items last withSeparatorAfter.
 	(aBuilder item: #'import UnitTesting module' translated)
 		selector: #importUnitTestingModule.
+	(aBuilder item: #'import ViennaDOM module' translated)
+		selector: #importViennaDOMModule.
 	(aBuilder item: #'remove module' translated)
 		selector: #removeModule;
 		withSeparatorAfter.
@@ -511,36 +513,39 @@ ViennaBrowser >> acceptCode: aStringOrText newModuleAndSourceDo: aBlock [
 								ifFalse: [ stream
 										nextPutAll: (oldSpec copyFrom: assoc value first to: assoc value last) ] ] ].
 			codePane hasUnacceptedEdits: false.
-			self animation
-				specification: newSpec
-				ifError: [ :msg | 
-					| posStrIndex charPos message |
-					charPos := 0.
-					message := msg.
-					posStrIndex := msg
-						findLastOccurrenceOfString: 'at line '
-						startingAt: 1.
-					posStrIndex > 0
-						ifTrue: [ | colonIndex |
-							colonIndex := msg indexOf: $: startingAt: posStrIndex + 9.
-							colonIndex > 0
-								ifTrue: [ | linePos colPos lines |
-									message := msg copyFrom: 1 to: posStrIndex - 1.
-									(message includes: $()
-										ifTrue: [ message := message
-												copyFrom: 1
-												to: (message findLastOccurrenceOfString: ' (' startingAt: 1) ].
-									linePos := (msg copyFrom: posStrIndex + 8 to: colonIndex - 1)
-										asInteger.
-									colPos := (msg copyFrom: colonIndex + 1 to: msg size)
-										asInteger.
-									lines := code lines.
-									linePos <= lines size
-										ifTrue: [ charPos := (((lines copyFrom: 1 to: linePos - 1) collect: #size)
-												ifEmpty: [ 0 ]
-												ifNotEmpty: #sum) + 1 + colPos ] ] ].
-					^ codePane
-						handleEdit: [ codePane notify: message at: charPos in: code readStream ] ].
+			(self animation specification: newSpec ifError: [ nil ])
+				ifNil: [ self animation state: Dictionary new.
+					self animation
+						specification: newSpec
+						ifError: [ :msg | 
+							| posStrIndex charPos message |
+							charPos := 0.
+							message := msg.
+							posStrIndex := msg
+								findLastOccurrenceOfString: 'at line '
+								startingAt: 1.
+							posStrIndex > 0
+								ifTrue: [ | colonIndex |
+									colonIndex := msg indexOf: $: startingAt: posStrIndex + 9.
+									colonIndex > 0
+										ifTrue: [ | linePos colPos lines |
+											message := msg copyFrom: 1 to: posStrIndex - 1.
+											(message includes: $()
+												ifTrue: [ message := message
+														copyFrom: 1
+														to: (message findLastOccurrenceOfString: ' (' startingAt: 1) ].
+											linePos := (msg
+												copyFrom: posStrIndex + 8
+												to: colonIndex - 1) asInteger.
+											colPos := (msg copyFrom: colonIndex + 1 to: msg size)
+												asInteger.
+											lines := code lines.
+											linePos <= lines size
+												ifTrue: [ charPos := (((lines copyFrom: 1 to: linePos - 1) collect: #size)
+														ifEmpty: [ 0 ]
+														ifNotEmpty: #sum) + 1 + colPos ] ] ].
+							^ codePane
+								handleEdit: [ codePane notify: message at: charPos in: code readStream ] ] ].
 			codePane hasUnacceptedEdits: false.
 			self
 				selectModuleNamed:
@@ -1105,6 +1110,210 @@ operations
             exit mk_AssertEqualsFailure(actual, expected, msg);
 
 end UnitTesting
+'
+]
+
+{ #category : #'module list menu' }
+ViennaBrowser >> importViennaDOMModule [
+	self
+		acceptCode:
+			'module ViennaDOM
+exports all
+definitions
+types
+     Element = TaggedElement| String;
+     TaggedElement ::
+        name : String
+        attributes : map String to [String]
+        eventHandlers : map EventType to Handler
+        contents : seq of Element
+        tokens : set of token
+        identifier_ : nat;
+     EventType = <click>| <change>;
+     Handler :: moduleName : String operationName : String;
+     Event = MouseEvent| ChangeEvent;
+     MouseEvent :: type : EventType target : nat x : nat y : nat;
+     ChangeEvent :: type : EventType target : nat value : String;
+     String = seq of char;
+
+state DOM of
+    current : Element
+    nextIdentifier : nat
+init s == s = mk_DOM("", 0)
+end
+
+operations
+    setDocument : Element ==> ()
+    setDocument(element) == current := element;
+    
+    pure document : () ==> Element
+    document() == return current;
+    
+    createElement : String ==> TaggedElement
+    createElement(name) ==
+        let identifier = nextIdentifier
+        in
+            (nextIdentifier := nextIdentifier + 1;
+            return mk_TaggedElement(name, {|->}, {|->}, [], {}, identifier));
+    
+    pure getAttribute : TaggedElement * String ==> [String]
+    getAttribute(element, attribute) ==
+        return if
+                attribute in set dom element.attributes
+            then
+                element.attributes(attribute)
+            else
+                nil;
+    
+    pure hasAttribute : TaggedElement * String ==> bool
+    hasAttribute(element, attribute) ==
+        return attribute in set dom element.attributes;
+    
+    pure getAttributeNames : TaggedElement ==> set of Element
+    getAttributeNames(element) == return dom element.attributes;
+    
+    pure getElements : TaggedElement -> bool ==> seq of Element
+    getElements(condition) == return findAll_(current, condition);
+    
+    pure getElementById : String ==> [TaggedElement]
+    getElementById(value) ==
+        return find_(
+                current,
+                lambda element : TaggedElement &
+                    getAttribute(element, "id") = value);
+    
+    pure getElementsByToken : token ==> seq of TaggedElement
+    getElementsByToken(target) ==
+        return findAll_(
+                current,
+                lambda element : TaggedElement & target in set element.tokens);
+    
+    remove : TaggedElement ==> ()
+    remove(element) == current := remove_(current, element);
+    
+    removeAttribute : TaggedElement * String ==> TaggedElement
+    removeAttribute(element, attribute) ==
+        let
+            new_element =
+                mu(element,attributes |-> {attribute} <-: element.attributes)
+        in
+            (current := replace_(current, element, new_element);
+            return new_element);
+    
+    setAttribute : TaggedElement * String * String ==> TaggedElement
+    setAttribute(element, attribute, value) ==
+        let
+            new_element =
+                mu(element,attributes |-> element.attributes ++ {attribute |-> value})
+        in
+            (current := replace_(current, element, new_element);
+            return new_element);
+    
+    appendChild : TaggedElement * Element ==> TaggedElement
+    appendChild(element, child) ==
+        let
+            new_element = mu(element,contents |-> element.contents ^ [child])
+        in
+            (current := replace_(current, element, new_element);
+            return new_element);
+    
+    setEventHandler : TaggedElement * EventType * String * String ==> TaggedElement
+    setEventHandler(element, event, moduleName, operationName) ==
+        let
+            new_element =
+                mu(element,
+                    eventHandlers
+                    |-> element.eventHandlers
+                    ++ {event |-> mk_Handler(moduleName, operationName)})
+        in
+            (current := replace_(current, element, new_element);
+            return new_element);
+/*
+	 Utility functions for internal use
+*/
+
+functions
+    find_ : Element * (TaggedElement -> bool) -> [TaggedElement]
+    find_(whole, condition) ==
+        cases whole:
+            mk_TaggedElement(
+                name, attributes, eventHandlers, contents, tokens, identifier) ->
+                if condition(whole) then whole else findFirst_(contents, condition),
+            others -> nil
+            end;
+    
+    findAll_ : Element * (TaggedElement -> bool) -> seq of TaggedElement
+    findAll_(whole, condition) ==
+        cases whole:
+            mk_TaggedElement(
+                name, attributes, eventHandlers, contents, tokens, identifier) ->
+                (if condition(whole) then [whole] else [])
+                ^ conc [findAll_(content, condition) | content in seq contents],
+            otherwise -> []
+            end;
+    
+    findFirst_ : seq of Element * (TaggedElement -> bool) -> [TaggedElement]
+    findFirst_(elements, condition) ==
+        cases elements:
+            [] -> nil,
+            others ->
+                let head = find_(hd elements, condition)
+                in
+                    (if head <> nil then head else findFirst_(tl elements, condition))
+            end
+    measure m_findFirst_;
+    
+    m_findFirst_ : seq of Element * (TaggedElement -> bool) -> nat
+    m_findFirst_(elements, condition) == len elements;
+    
+    equal_element_ : Element * Element -> bool
+    equal_element_(element1, element2) ==
+        element1 = element2
+        or (is_TaggedElement(element1) and is_TaggedElement(element2))
+        and element1.identifier_ = element2.identifier_;
+    
+    remove_ : Element * TaggedElement -> Element
+    remove_(whole, target) ==
+        if
+            equal_element_(whole, target)
+        then
+            ""
+        else
+            cases whole:
+                mk_TaggedElement(
+                    name, attributes, eventHandlers, contents, tokens, identifier) ->
+                    mk_TaggedElement(
+                        name,
+                        attributes,
+                        eventHandlers,
+                        [remove_(content, target)
+                            | content in seq contents & not equal_element_(content, target)],
+                        tokens,
+                        identifier),
+                others -> whole
+                end;
+    
+    replace_ : Element * TaggedElement * TaggedElement -> Element
+    replace_(whole, src, dst) ==
+        if
+            equal_element_(whole, src)
+        then
+            dst
+        else
+            cases whole:
+                mk_TaggedElement(
+                    name, attributes, eventHandlers, contents, tokens, identifier) ->
+                    mk_TaggedElement(
+                        name,
+                        attributes,
+                        eventHandlers,
+                        [replace_(content, src, dst) | content in seq contents],
+                        tokens,
+                        identifier),
+                others -> whole
+                end;
+
+end ViennaDOM
 '
 ]
 
