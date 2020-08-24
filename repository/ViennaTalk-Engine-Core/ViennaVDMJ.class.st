@@ -483,9 +483,10 @@ ViennaVDMJ >> evaluate: expression specification: specification states: states m
 							self
 								assign: initBindings
 								ifError: [ :msg | 
-									errorMessage
-										nextPutAll: msg;
-										cr ] ] ]
+									^ {nil.
+									states.
+									msg.
+									prestates} ] ] ]
 				ifError: [ :msg | 
 					^ {nil.
 					states.
@@ -647,7 +648,7 @@ ViennaVDMJ >> send: aString responseDo: aBlock ifError: errorBlock [
 			(response first = true
 				ifTrue: [aBlock]
 				ifFalse: [errorBlock])
-				value: response second]
+				cull: response second]
 ]
 
 { #category : #private }
