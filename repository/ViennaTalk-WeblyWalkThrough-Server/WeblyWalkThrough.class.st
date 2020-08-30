@@ -318,8 +318,8 @@ Webly.event = function(event, module, operation, continuation) {
     arguments.type = event.type;
     arguments.target = event.target.getAttribute("identifier");
     if (event.type == "click") { 
-        arguments.x = event.x;
-        arguments.y = event.y;
+        arguments.x = event.offsetX;
+        arguments.y = event.offsetY;
     }
     if (event.type = "change") { 
         arguments.value = event.target.value;
@@ -341,7 +341,7 @@ WeblyWalkThrough >> specification: aString [
 { #category : #accessing }
 WeblyWalkThrough >> specification: aString ifError: aBlock [
 	self updateGlobalNamesAndNumArgs: aString.
-	super specification: aString ifError: [ :msg | ^ aBlock value: msg ]
+	super specification: aString ifError: [ :msg | ^ aBlock cull: msg ]
 ]
 
 { #category : #translating }
