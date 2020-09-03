@@ -3,10 +3,13 @@ Class {
 	#superclass : #ViennaBrowser,
 	#instVars : [
 		'translationRuleSelection',
-		'translationRulePane',
 		'portField',
 		'publishButton',
-		'frontPageSelection'
+		'frontPageSelection',
+		'displayModuleField',
+		'displayOperationField',
+		'frontPageText',
+		'translationRuleText'
 	],
 	#category : #'ViennaTalk-WeblyWalkThrough-Server'
 }
@@ -73,42 +76,68 @@ WeblyBrowser >> animationClassForType: aSymbol [
 
 { #category : #'user interface' }
 WeblyBrowser >> build [
-	| pane frontPagePane webapiPane |
+	| pane frontPagePane |
 	pane := super build.
+	lowerTabPane addPage: self buildVisualsPane label: 'Visuals'.
 	frontPagePane := self buildFrontPagePane.
 	lowerTabPane addPage: frontPagePane label: 'HTML'.
-	translationRulePane := self buildTranslationRulePane.
 	portField := self buildPortField.
 	publishButton := self buildPublishButton.
-	webapiPane := Morph new.
-	webapiPane changeProportionalLayout.
-	webapiPane
-		addMorph: portField
-		fullFrame:
-			((0 @ 1 corner: 1 @ 1) asLayoutFrame
-				rightOffset: -100;
-				topOffset: -32;
-				yourself).
-	webapiPane
-		addMorph: publishButton
-		fullFrame:
-			((1 @ 1 corner: 1 @ 1) asLayoutFrame
-				leftOffset: -100;
-				topOffset: -32;
-				yourself).
-	webapiPane
-		addMorph: translationRulePane
-		fullFrame:
-			((0 @ 0 corner: 1 @ 1) asLayoutFrame
-				bottomOffset: -32;
-				yourself).
-	lowerTabPane addPage: webapiPane label: 'Web API'.
+	lowerTabPane addPage: self buildWebApiPane label: 'Web API'.
+	self updateWidgets.
 	^ pane
 ]
 
 { #category : #'user interface' }
+WeblyBrowser >> buildDisplayEnabled [
+	^ (CheckboxMorph
+		on: self
+		selected: #displayEnabled
+		changeSelected: #displayEnabled:)
+		height: self font height;
+		width:
+			(self font widthOfString: 'Enable ViennaVisuals')
+				+ (self font height * 2);
+		label: 'Enable ViennaVisuals'
+]
+
+{ #category : #'user interface' }
+WeblyBrowser >> buildDisplayModuleField [
+	^ displayModuleField := RubPluggableTextFieldMorph new
+		on: self
+			text: #displayModule
+			accept: #displayModule:
+			readSelection: nil
+			menu: nil;
+		setBalloonText: 'module that defines the display operation';
+		askBeforeDiscardingEdits: true;
+		acceptOnCR: true;
+		borderColor: Color lightGray;
+		borderWidth: 1;
+		width: 200;
+		yourself
+]
+
+{ #category : #'user interface' }
+WeblyBrowser >> buildDisplayOperationField [
+	^ displayOperationField := RubPluggableTextFieldMorph new
+		on: self
+			text: #displayOperation
+			accept: #displayOperation:
+			readSelection: nil
+			menu: nil;
+		setBalloonText: 'operation to build the display DOM';
+		askBeforeDiscardingEdits: true;
+		acceptOnCR: true;
+		borderColor: Color lightGray;
+		borderWidth: 1;
+		width: 200;
+		yourself
+]
+
+{ #category : #'user interface' }
 WeblyBrowser >> buildFrontPagePane [
-	^ (RubPluggableTextMorph
+	^ frontPageText := (RubPluggableTextMorph
 		on: self
 		text: #frontPage
 		accept: #acceptFrontPage:
@@ -122,12 +151,17 @@ WeblyBrowser >> buildFrontPagePane [
 
 { #category : #'user interface' }
 WeblyBrowser >> buildPortField [
-	^ (PluggableTextFieldMorph on: self text: #port accept: #port:)
+	^ RubPluggableTextFieldMorph new
+		on: self
+			text: #port
+			accept: #port:
+			readSelection: nil
+			menu: nil;
 		setBalloonText: 'port number of the web api server';
 		askBeforeDiscardingEdits: true;
 		acceptOnCR: true;
 		convertTo: Integer;
-		hideScrollBarsIndefinitely: true;
+		hScrollbarShowNever;
 		yourself
 ]
 
@@ -148,7 +182,7 @@ WeblyBrowser >> buildPublishButton [
 
 { #category : #'user interface' }
 WeblyBrowser >> buildTranslationRulePane [
-	^ (RubPluggableTextMorph
+	^ translationRuleText := (RubPluggableTextMorph
 		on: self
 		text: #translationRule
 		accept: #acceptTranslationRule:
@@ -158,6 +192,92 @@ WeblyBrowser >> buildTranslationRulePane [
 		setBalloonText: 'VDM - JSON translation rule';
 		font: ViennaLauncher font;
 		yourself
+]
+
+{ #category : #'user interface' }
+WeblyBrowser >> buildVisualsPane [
+	^ Morph new
+		color: Color white;
+		changeTableLayout;
+		listDirection: #bottomToTop;
+		listCentering: #topLeft;
+		wrapCentering: #topLeft;
+		cellPositioning: #topLeft;
+		hResizing: #shrinkWrap;
+		vResizing: #spaceFill;
+		addMorph: self buildDisplayEnabled;
+		addMorph:
+			(Morph new
+				color: Color white;
+				changeTableLayout;
+				listDirection: #rightToLeft;
+				listCentering: #left;
+				wrapCentering: #topLeft;
+				hResizing: #shrinkWrap;
+				vResizing: #spaceFill;
+				addMorph: 'display operation: ' asMorph;
+				addMorph: self buildDisplayModuleField;
+				addMorph: '`' asMorph;
+				addMorph: self buildDisplayOperationField;
+				yourself);
+		yourself
+]
+
+{ #category : #'user interface' }
+WeblyBrowser >> buildWebApiPane [
+	^ Morph new
+		color: Color white;
+		changeProportionalLayout;
+		addMorph: portField
+			fullFrame:
+			((0 @ 1 corner: 1 @ 1) asLayoutFrame
+				rightOffset: -100;
+				topOffset: -32;
+				bottomOffset: 0;
+				yourself);
+		addMorph: publishButton
+			fullFrame:
+			((1 @ 1 corner: 1 @ 1) asLayoutFrame
+				leftOffset: -100;
+				topOffset: -32;
+				yourself);
+		addMorph: self buildTranslationRulePane
+			fullFrame:
+			((0 @ 0 corner: 1 @ 1) asLayoutFrame
+				bottomOffset: -32;
+				yourself);
+		yourself
+]
+
+{ #category : #accessing }
+WeblyBrowser >> displayEnabled [ 
+	^ animation displayEnabled
+]
+
+{ #category : #accessing }
+WeblyBrowser >> displayEnabled: aBoolean [
+	animation displayEnabled: aBoolean.
+	self updateWidgets
+]
+
+{ #category : #accessing }
+WeblyBrowser >> displayModule [
+	^ animation displayModule
+]
+
+{ #category : #accessing }
+WeblyBrowser >> displayModule: aString [
+	animation displayModule: aString
+]
+
+{ #category : #accessing }
+WeblyBrowser >> displayOperation [
+	^ animation displayOperation
+]
+
+{ #category : #accessing }
+WeblyBrowser >> displayOperation: aString [
+	animation displayOperation: aString
 ]
 
 { #category : #'frontpage pane' }
@@ -339,6 +459,36 @@ WeblyBrowser >> translationRuleSelection [
 { #category : #'translation pane' }
 WeblyBrowser >> translationRuleSelection: aSelection [
 	translationRuleSelection := aSelection
+]
+
+{ #category : #'user interface' }
+WeblyBrowser >> updateWidgets [
+	| visualsMode |
+	visualsMode := self displayEnabled.
+	displayModuleField
+		enabled: visualsMode;
+		textColor:
+			(visualsMode
+				ifTrue: [ Color black ]
+				ifFalse: [ Color lightGray ]).
+	displayOperationField
+		enabled: visualsMode;
+		textColor:
+			(visualsMode
+				ifTrue: [ Color black ]
+				ifFalse: [ Color lightGray ]).
+	translationRuleText
+		enabled: visualsMode not;
+		textColor:
+			(visualsMode not
+				ifTrue: [ Color black ]
+				ifFalse: [ Color lightGray ]).
+	frontPageText
+		enabled: visualsMode not;
+		textColor:
+			(visualsMode not
+				ifTrue: [ Color black ]
+				ifFalse: [ Color lightGray ])
 ]
 
 { #category : #'module list menu' }

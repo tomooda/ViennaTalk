@@ -10,7 +10,7 @@ Class {
 		'OperatorGrouping',
 		'OperatorPrecedence'
 	],
-	#category : 'ViennaTalk-Parser-Formatters'
+	#category : #'ViennaTalk-Parser-Formatters'
 }
 
 { #category : #accessing }
@@ -2216,7 +2216,11 @@ ViennaAbstractFormatter >> seqBind: aViennaNode [
 
 { #category : #'formatting-patterns and binds' }
 ViennaAbstractFormatter >> seqConcPattern: aViennaNode [
-	^ self print: (self format: aViennaNode first) infix: self concat arg: (self format: aViennaNode second)
+	| patterns |
+	patterns := self formatAll: aViennaNode.
+	^ ((self anyNeedsIndent: patterns)
+		ifTrue: [ String cr , self concat ]
+		ifFalse: [ self concat ]) join: patterns
 ]
 
 { #category : #'formatting-patterns and binds' }

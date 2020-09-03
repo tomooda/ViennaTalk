@@ -2564,10 +2564,9 @@ ViennaVDMGrammar >> seqBind [
 
 { #category : #'parsers-patterns' }
 ViennaVDMGrammar >> seqConcPattern [
-	^ (pattern1 , (self operator: '^') , pattern1)
-		==> [ :triple | 
-			{(triple first).
-			(triple third)} ]
+	^ (pattern1 , (self operator: '^')
+		, (pattern1 separatedBy: (self operator: '^')) withoutSeparators)
+		==> [ :triple | triple third copyWithFirst: triple first ]
 ]
 
 { #category : #'parsers-patterns' }

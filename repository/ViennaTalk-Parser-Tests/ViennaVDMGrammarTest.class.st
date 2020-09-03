@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'grammar'
 	],
-	#category : 'ViennaTalk-Parser-Tests'
+	#category : #'ViennaTalk-Parser-Tests'
 }
 
 { #category : #running }
@@ -1443,7 +1443,9 @@ ViennaVDMGrammarTest >> testSeqConcPattern2 [
 
 { #category : #'tests-patterns' }
 ViennaVDMGrammarTest >> testSeqConcPattern3 [
-	self assert: (grammar pattern end parse: '[] ^ rest ^ tail') isPetit2Failure
+	self
+		assert: (grammar pattern end parse: '[] ^ rest ^ tail')
+		equals: #(#() 'rest' 'tail')
 ]
 
 { #category : #'tests-patterns' }

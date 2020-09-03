@@ -194,10 +194,13 @@ ViennaBrowser class >> moduleListMenu: aBuilder [
 	(aBuilder item: #'generate ViennaDoc source script...' translated)
 		selector: #generateViennaDocSourceScript.
 	aBuilder items last withSeparatorAfter.
-	(aBuilder item: #'import UnitTesting module' translated)
-		selector: #importUnitTestingModule.
-	(aBuilder item: #'import ViennaDOM module' translated)
-		selector: #importViennaDOMModule.
+	(aBuilder model moduleList includes: 'UnitTesting')
+		ifFalse: [ (aBuilder item: #'import UnitTesting module' translated)
+				selector: #importUnitTestingModule ].
+	(aBuilder model moduleList includes: 'ViennaDOM')
+		ifFalse: [ (aBuilder item: #'import ViennaDOM module' translated)
+				selector: #importViennaDOMModule ].
+	aBuilder items last withSeparatorAfter.
 	(aBuilder item: #'remove module' translated)
 		selector: #removeModule;
 		withSeparatorAfter.
@@ -984,6 +987,11 @@ ViennaBrowser >> fileSave: title extensions: anArrayOfString do: aBlock [
 							((String new: 1024 streamContents: [ :stringStream | aBlock value: stringStream ])
 								copyReplaceAll: String cr
 								with: String lf) ] ]
+]
+
+{ #category : #accessing }
+ViennaBrowser >> font [
+	^ ViennaLauncher font
 ]
 
 { #category : #'module list menu' }

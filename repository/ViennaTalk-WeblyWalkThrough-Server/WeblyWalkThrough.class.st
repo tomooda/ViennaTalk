@@ -89,29 +89,6 @@ WeblyWalkThrough >> apiCall: apiName in: moduleName withArguments: args [
 				yourself)
 ]
 
-{ #category : #'request handling' }
-WeblyWalkThrough >> argsFrom: aZnRequest [
-	| args |
-	args := Array new.
-	aZnRequest method asLowercase = 'get'
-		ifTrue: [ 
-			args := aZnRequest uri query
-				ifNil: [ #() ]
-				ifNotNil: [ :query | query values collect: [ :arg | self translateFromJson: arg ] ] ].
-	aZnRequest method asLowercase= 'post'
-		ifTrue: [ 
-			(aZnRequest contentType main = 'application' and: [ aZnRequest contentType sub asLowercase = 'json' ])
-				ifTrue: [ 
-					args := NeoJSONReader fromString: aZnRequest entity contents.
-					args isArray
-						ifTrue: [ args := args collect: [ :arg | self translateFromJson: (NeoJSONWriter toString: arg) ] ]
-						ifFalse: [ args := self translateFromJson: aZnRequest entity contents ] ]
-				ifFalse: [ 
-					(aZnRequest contentType main = 'application' and: [ aZnRequest contentType sub asLowercase = 'x-www-form-urlencoded' ])
-						ifTrue: [ args := aZnRequest entity fields values collect: [ :arg | self translateFromJson: arg ] ] ] ].
-	^ args
-]
-
 { #category : #converting }
 WeblyWalkThrough >> copyForTest [
 	| animation |
@@ -141,10 +118,9 @@ WeblyWalkThrough >> disableDisplay [
 
 { #category : #'request handling' }
 WeblyWalkThrough >> display [
-	| evalString result xml |
-	evalString := displayModule  ifNil: [ displayOperation ] ifNotNil: [ displayModule , '`' , displayOperation ].
+	| result xml |
 	result := self
-		plainEvaluate: evalString , '()'
+		plainEvaluate: self displayExpression
 		ifError: [ :msg | ^ self responseServerError: 'display operation failed.' ].
 	xml := self taggedElement2xml: result.
 	^ self
@@ -162,6 +138,39 @@ WeblyWalkThrough >> displayEnabled [
 { #category : #accessing }
 WeblyWalkThrough >> displayEnabled: aBool [
 	displayEnabled := aBool = true
+]
+
+{ #category : #accessing }
+WeblyWalkThrough >> displayExpression [
+	^ String
+		streamContents: [ :stream | 
+			(displayModule notNil and: [ displayModule notEmpty ])
+				ifTrue: [ stream
+						nextPutAll: displayModule;
+						nextPut: $` ].
+			stream
+				nextPutAll: displayOperation;
+				nextPutAll: '()' ]
+]
+
+{ #category : #accessing }
+WeblyWalkThrough >> displayModule [
+	^ displayModule
+]
+
+{ #category : #accessing }
+WeblyWalkThrough >> displayModule: aString [
+	displayModule := aString trim
+]
+
+{ #category : #accessing }
+WeblyWalkThrough >> displayOperation [
+	^ displayOperation
+]
+
+{ #category : #accessing }
+WeblyWalkThrough >> displayOperation: aString [
+	displayOperation := aString trim
 ]
 
 { #category : #accessing }
@@ -187,9 +196,9 @@ WeblyWalkThrough >> event: aDictionary [
 				ifTrue: [ stream
 						nextPutAll: 'MouseEvent(<';
 						nextPutAll: type;
-						nextPutAll: '>,';
+						nextPutAll: '>, ViennaDOM`getElement(';
 						nextPutAll: target viennaString;
-						nextPutAll: ',';
+						nextPutAll: '),';
 						nextPutAll: (aDictionary at: 'x') viennaString;
 						nextPutAll: ',';
 						nextPutAll: (aDictionary at: 'y') viennaString;
@@ -198,9 +207,9 @@ WeblyWalkThrough >> event: aDictionary [
 				ifTrue: [ stream
 						nextPutAll: 'ChangeEvent(<';
 						nextPutAll: type;
-						nextPutAll: '>,';
+						nextPutAll: '>,ViennaDOM`getElement(';
 						nextPutAll: target viennaString;
-						nextPutAll: ',';
+						nextPutAll: '),';
 						nextPutAll: (aDictionary at: 'value') viennaString;
 						nextPutAll: '))' ] ].
 	self
@@ -218,8 +227,9 @@ WeblyWalkThrough >> event: aDictionary [
 
 { #category : #accessing }
 WeblyWalkThrough >> frontPage [
-	^ frontPage
-		ifNil: [ frontPage := self defaultFrontPage]
+	^ self displayEnabled
+		ifTrue: [ self viennaVisualsPage ]
+		ifFalse: [ frontPage ifNil: [ frontPage := self defaultFrontPage ] ]
 ]
 
 { #category : #accessing }
@@ -231,8 +241,8 @@ WeblyWalkThrough >> frontPage: aString [
 WeblyWalkThrough >> initialize [
 	super initialize.
 	translator := WWTTranslator new.
-	displayEnabled := true.
-	displayModule := 'Counter'.
+	displayEnabled := false.
+	displayModule := ''.
 	displayOperation := 'display'
 ]
 
@@ -250,7 +260,8 @@ WeblyWalkThrough >> printDisplayFunctionsOn: aStream [
 					'
     var req = new XMLHttpRequest();
     req.open("GET", "/display");
-    req.onload = function () {while (Webly.displayElement.firstChild) Webly.displayElement.removeChild(Webly.displayElement.firstChild); Webly.displayElement.appendChild(req.responseXML.documentElement.childNodes[0]);};
+    req.timeout = 100000;
+    req.onload = function () {while (Webly.displayElement.firstChild) Webly.displayElement.removeChild(Webly.displayElement.firstChild);Webly.displayElement.appendChild(req.responseXML.documentElement.childNodes[0]);};
     req.send();
 ' withUnixLineEndings ].
 	aStream
@@ -422,6 +433,26 @@ WeblyWalkThrough >> updateGlobalNamesAndNumArgs: aString [
 											{modName.
 											node first.
 											node fourth size} ] ] ] ]
+]
+
+{ #category : #accessing }
+WeblyWalkThrough >> viennaVisualsPage [
+	^ '<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<title>Webly Walk-Through</title>
+<script type="application/javascript" src="webly.js" charset="utf-8"></script>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="display" style="border: solid 1px black;">
+</svg>
+<script>
+var display = document.getElementById("display");
+display.setAttribute("width", window.innerWidth-25);
+display.setAttribute("height", window.innerHeight-25);
+</script>
+</body></html>' withUnixLineEndings
 ]
 
 { #category : #javascript }

@@ -59,7 +59,8 @@ TWeblyWalkThrough >> handleApi: aZnRequest [
 TWeblyWalkThrough >> handleRequest: aZnRequest [
 	| path method |
 	aZnRequest uri isSlash
-		ifTrue: [ ^ self responseOk: (ZnStringEntity html: self frontPage) ].
+		ifTrue:
+			[ ^ self responseOk: (ZnStringEntity html: self frontPage) ].
 	path := aZnRequest uri segments.
 	path size = 1
 		ifTrue: [ path first = 'webly.js'
