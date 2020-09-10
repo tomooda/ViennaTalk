@@ -9,6 +9,11 @@ ViennaTalk ~ Live and Formal
 ===
 ViennaTalk is a Smalltalk library to handle VDM-SL specifications.
 
+* [The pre-built packages of the latest release](https://github.com/tomooda/ViennaTalk/releases/latest) is available.
+* Try [Open VDMPad server](https://vdmpad.viennatalk.org) to experience VDM-SL. No registration/no installation is required.
+
+Demo movies
+---
 [![Introduction to VDM Browser](https://img.youtube.com/vi/ZIR3fFPeTz0/1.jpg)](https://www.youtube.com/watch?v=ZIR3fFPeTz0)
 [![ViennaTalk: Types, Values and Objects](https://img.youtube.com/vi/anZoWeA5vd0/1.jpg)](https://www.youtube.com/watch?v=anZoWeA5vd0)
 [![ViennaTalk: Code Generation](https://img.youtube.com/vi/sDXiM5yvTxw/1.jpg)](https://www.youtube.com/watch?v=sDXiM5yvTxw)
