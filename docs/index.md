@@ -17,6 +17,7 @@ Demo movies
 [![Introduction to VDM Browser](https://img.youtube.com/vi/ZIR3fFPeTz0/1.jpg)](https://www.youtube.com/watch?v=ZIR3fFPeTz0)
 [![ViennaTalk: Types, Values and Objects](https://img.youtube.com/vi/anZoWeA5vd0/1.jpg)](https://www.youtube.com/watch?v=anZoWeA5vd0)
 [![ViennaTalk: Code Generation](https://img.youtube.com/vi/sDXiM5yvTxw/1.jpg)](https://www.youtube.com/watch?v=sDXiM5yvTxw)
+[![ViennaTalk: ViennaVisuals](https://img.youtube.com/vi/utaX8UYQjRs/1.jpg)](https://www.youtube.com/watch?v=utaX8UYQjRs)
 
 Table of Major Components of ViennaTalk
 ---
