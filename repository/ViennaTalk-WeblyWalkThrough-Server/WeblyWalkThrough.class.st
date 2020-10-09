@@ -184,7 +184,7 @@ WeblyWalkThrough >> event: aDictionary [
 	module := aDictionary at: 'module'.
 	operation := aDictionary at: 'operation'.
 	type := aDictionary at: 'type'.
-	target := (aDictionary at: 'target') asInteger.
+	target := aDictionary at: 'target'.
 	evalString := String
 		streamContents: [ :stream | 
 			stream
@@ -196,9 +196,9 @@ WeblyWalkThrough >> event: aDictionary [
 				ifTrue: [ stream
 						nextPutAll: 'MouseEvent(<';
 						nextPutAll: type;
-						nextPutAll: '>, ViennaDOM`getElement(';
-						nextPutAll: target viennaString;
-						nextPutAll: '),';
+						nextPutAll: '>, ';
+						nextPutAll: target;
+						nextPutAll: ',';
 						nextPutAll: (aDictionary at: 'x') viennaString;
 						nextPutAll: ',';
 						nextPutAll: (aDictionary at: 'y') viennaString;
@@ -207,15 +207,16 @@ WeblyWalkThrough >> event: aDictionary [
 				ifTrue: [ stream
 						nextPutAll: 'ChangeEvent(<';
 						nextPutAll: type;
-						nextPutAll: '>,ViennaDOM`getElement(';
-						nextPutAll: target viennaString;
-						nextPutAll: '),';
+						nextPutAll: '>,';
+						nextPutAll: target;
+						nextPutAll: ',';
 						nextPutAll: (aDictionary at: 'value') viennaString;
 						nextPutAll: '))' ] ].
 	self
 		plainEvaluate: evalString
 		in: module
 		ifError: [ :msg | 
+			self halt.
 			^ self
 				responseServerError: 'event operation ' , module , '`' , operation , ' failed.' ].
 	^ self

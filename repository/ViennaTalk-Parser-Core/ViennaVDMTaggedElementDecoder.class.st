@@ -13,7 +13,7 @@ ViennaVDMTaggedElementDecoder >> attributes [
 		,
 			((mapletArrow ==> [ :single | Array new ])
 				/
-					((self textLiteral , mapletArrow , self textLiteral)
+					((self textLiteral , mapletArrow , (self textLiteral / self numericLiteral))
 						==> [ :triple | triple first -> triple third ]
 						separatedBy: comma) withoutSeparators) , rbrace)
 		==> [ :triple | triple second asDictionary ]

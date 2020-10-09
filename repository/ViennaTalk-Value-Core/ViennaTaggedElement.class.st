@@ -133,7 +133,7 @@ ViennaTaggedElement >> printXmlOn: aStream [
 						space;
 						nextPutAll: key;
 						nextPutAll: '="';
-						nextPutAll: value asHTMLString;
+						nextPutAll: value asString asHTMLString;
 						nextPut: $" ] ].
 	eventHandlers
 		keysAndValuesDo: [ :event :handler | 

@@ -1132,7 +1132,7 @@ types
      Element = TaggedElement| String;
      TaggedElement ::
         name : String
-        attributes : map String to [String]
+        attributes : map String to [String| real]
         eventHandlers : map EventType to Handler
         contents : seq of Element
         tokens : set of token
@@ -1143,6 +1143,7 @@ types
      MouseEvent :: type : EventType target : nat x : nat y : nat;
      ChangeEvent :: type : EventType target : nat value : String;
      String = seq of char;
+     Point :: x : int y : int;
 
 state DOM of
     current : Element
@@ -1164,22 +1165,6 @@ operations
             (nextIdentifier := nextIdentifier + 1;
             return mk_TaggedElement(name, {|->}, {|->}, [], {}, identifier));
     
-    pure getAttribute : TaggedElement * String ==> [String]
-    getAttribute(element, attribute) ==
-        return if
-                attribute in set dom element.attributes
-            then
-                element.attributes(attribute)
-            else
-                nil;
-    
-    pure hasAttribute : TaggedElement * String ==> bool
-    hasAttribute(element, attribute) ==
-        return attribute in set dom element.attributes;
-    
-    pure getAttributeNames : TaggedElement ==> set of Element
-    getAttributeNames(element) == return dom element.attributes;
-    
     pure getElements : TaggedElement -> bool ==> seq of Element
     getElements(condition) == return findAll_(current, condition);
     
@@ -1199,48 +1184,85 @@ operations
     remove : TaggedElement ==> ()
     remove(element) == current := remove_(current, element);
     
-    removeAttribute : TaggedElement * String ==> TaggedElement
+    pure getElement : nat ==> [TaggedElement]
+    getElement(id) ==
+        return find_(
+                current, lambda element : TaggedElement & element.identifier_ = id);
+
+functions
+    getAttribute : TaggedElement * String -> [String]
+    getAttribute(element, attribute) ==
+        if
+            attribute in set dom element.attributes
+        then
+            element.attributes(attribute)
+        else
+            nil;
+    
+    hasAttribute : TaggedElement * String -> bool
+    hasAttribute(element, attribute) ==
+        attribute in set dom element.attributes;
+    
+    getAttributeNames : TaggedElement -> set of Element
+    getAttributeNames(element) == dom element.attributes;
+    
+    removeAttribute : TaggedElement * String -> TaggedElement
     removeAttribute(element, attribute) ==
-        let
-            new_element =
-                mu(element,attributes |-> {attribute} <-: element.attributes)
-        in
-            (current := replace_(current, element, new_element);
-            return new_element);
+        mu(element,attributes |-> {attribute} <-: element.attributes);
     
-    setAttribute : TaggedElement * String * String ==> TaggedElement
+    setAttribute : TaggedElement * String * (String| real| seq of Point) -> TaggedElement
     setAttribute(element, attribute, value) ==
-        let
-            new_element =
-                mu(element,attributes |-> element.attributes ++ {attribute |-> value})
-        in
-            (current := replace_(current, element, new_element);
-            return new_element);
+        mu(element,
+            attributes
+            |-> element.attributes
+            ++ {attribute
+            |-> if is_(value, seq of Point) then points2string(value) else value});
     
-    appendChild : TaggedElement * Element ==> TaggedElement
+    appendChild : TaggedElement * Element -> TaggedElement
     appendChild(element, child) ==
-        let
-            new_element = mu(element,contents |-> element.contents ^ [child])
-        in
-            (current := replace_(current, element, new_element);
-            return new_element);
+        mu(element,contents |-> element.contents ^ [child]);
     
-    setEventHandler : TaggedElement * EventType * String * String ==> TaggedElement
+    setEventHandler : TaggedElement * EventType * String * String -> TaggedElement
     setEventHandler(element, event, moduleName, operationName) ==
-        let
-            new_element =
-                mu(element,
-                    eventHandlers
-                    |-> element.eventHandlers
-                    ++ {event |-> mk_Handler(moduleName, operationName)})
-        in
-            (current := replace_(current, element, new_element);
-            return new_element);
+        mu(element,
+            eventHandlers
+            |-> element.eventHandlers
+            ++ {event |-> mk_Handler(moduleName, operationName)});
+    
+    addToken : TaggedElement * token -> TaggedElement
+    addToken(element, t) ==
+        mu(element,tokens |-> element.tokens union {t});
+    
+    hasToken : TaggedElement * token -> bool
+    hasToken(element, t) == t in set element.tokens;
+
+functions
 /*
 	 Utility functions for internal use
 */
-
-functions
+    digit2string : nat -> String
+    digit2string(n) == ["0123456789"(n + 1)];
+    
+    int2string : int -> String
+    int2string(i) ==
+        if i < 0
+            then "-" ^ int2string(-i)
+        elseif i <= 9
+            then digit2string(i)
+        else
+            int2string(i div 10) ^ digit2string(i mod 10);
+    
+    point2string : Point -> String
+    point2string(p) == int2string(p.x) ^ "," ^ int2string(p.y);
+    
+    points2string : seq of Point -> String
+    points2string(ps) ==
+        cases ps:
+            [] -> "",
+            [p] -> point2string(p),
+            others -> point2string(hd ps) ^ " " ^ points2string(tl ps)
+            end;
+    
     find_ : Element * (TaggedElement -> bool) -> [TaggedElement]
     find_(whole, condition) ==
         cases whole:
