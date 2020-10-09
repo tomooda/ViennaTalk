@@ -404,10 +404,10 @@ WeblyBrowser >> togglePublish [
 	self isPublished
 		ifTrue: [ 
 			WeblyWalkThrough stopService.
-			portField enable.
+			portField enabled: true.
 			publishButton color: self publishButtonOffColor ]
 		ifFalse: [ 
-			portField disable.
+			portField enabled: false.
 			WeblyWalkThrough startService.
 			publishButton color: self publishButtonOnColor ].
 	self changed: #isPublished.
