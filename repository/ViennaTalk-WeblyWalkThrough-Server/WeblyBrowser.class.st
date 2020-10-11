@@ -6,10 +6,11 @@ Class {
 		'portField',
 		'publishButton',
 		'frontPageSelection',
-		'displayModuleField',
 		'displayOperationField',
 		'frontPageText',
-		'translationRuleText'
+		'translationRuleText',
+		'guiModuleField',
+		'handleEventOperationField'
 	],
 	#category : #'ViennaTalk-WeblyWalkThrough-Server'
 }
@@ -102,23 +103,6 @@ WeblyBrowser >> buildDisplayEnabled [
 ]
 
 { #category : #'user interface' }
-WeblyBrowser >> buildDisplayModuleField [
-	^ displayModuleField := RubPluggableTextFieldMorph new
-		on: self
-			text: #displayModule
-			accept: #displayModule:
-			readSelection: nil
-			menu: nil;
-		setBalloonText: 'module that defines the display operation';
-		askBeforeDiscardingEdits: true;
-		acceptOnCR: true;
-		borderColor: Color lightGray;
-		borderWidth: 1;
-		width: 200;
-		yourself
-]
-
-{ #category : #'user interface' }
 WeblyBrowser >> buildDisplayOperationField [
 	^ displayOperationField := RubPluggableTextFieldMorph new
 		on: self
@@ -146,6 +130,40 @@ WeblyBrowser >> buildFrontPagePane [
 		setSelection: #frontPageSelection:)
 		setBalloonText: 'html source to use the web API';
 		font: ViennaLauncher font;
+		yourself
+]
+
+{ #category : #'user interface' }
+WeblyBrowser >> buildGuiModuleField [
+	^ guiModuleField := RubPluggableTextFieldMorph new
+		on: self
+			text: #guiModule
+			accept: #guiModule:
+			readSelection: nil
+			menu: nil;
+		setBalloonText: 'module that defines the display operation';
+		askBeforeDiscardingEdits: true;
+		acceptOnCR: true;
+		borderColor: Color lightGray;
+		borderWidth: 1;
+		width: 200;
+		yourself
+]
+
+{ #category : #'user interface' }
+WeblyBrowser >> buildHandleEventOperationField [
+	^ handleEventOperationField := RubPluggableTextFieldMorph new
+		on: self
+			text: #handleEventOperation
+			accept: #handleEventOperation:
+			readSelection: nil
+			menu: nil;
+		setBalloonText: 'event handler operation';
+		askBeforeDiscardingEdits: true;
+		acceptOnCR: true;
+		borderColor: Color lightGray;
+		borderWidth: 1;
+		width: 200;
 		yourself
 ]
 
@@ -215,11 +233,37 @@ WeblyBrowser >> buildVisualsPane [
 				wrapCentering: #topLeft;
 				hResizing: #shrinkWrap;
 				vResizing: #spaceFill;
+				addMorph: 'GUI module: ' asMorph;
+				addMorph: self buildGuiModuleField;
+				yourself);
+
+		addMorph:
+			(Morph new
+				color: Color white;
+				changeTableLayout;
+				listDirection: #rightToLeft;
+				listCentering: #left;
+				wrapCentering: #topLeft;
+				hResizing: #shrinkWrap;
+				vResizing: #spaceFill;
 				addMorph: 'display operation: ' asMorph;
-				addMorph: self buildDisplayModuleField;
-				addMorph: '`' asMorph;
 				addMorph: self buildDisplayOperationField;
 				yourself);
+
+		addMorph:
+			(Morph new
+				color: Color white;
+				changeTableLayout;
+				listDirection: #rightToLeft;
+				listCentering: #left;
+				wrapCentering: #topLeft;
+				hResizing: #shrinkWrap;
+				vResizing: #spaceFill;
+				addMorph: 'event handler: ' asMorph;
+				addMorph: self buildHandleEventOperationField;
+				yourself);
+
+
 		yourself
 ]
 
@@ -258,16 +302,6 @@ WeblyBrowser >> displayEnabled [
 WeblyBrowser >> displayEnabled: aBoolean [
 	animation displayEnabled: aBoolean.
 	self updateWidgets
-]
-
-{ #category : #accessing }
-WeblyBrowser >> displayModule [
-	^ animation displayModule
-]
-
-{ #category : #accessing }
-WeblyBrowser >> displayModule: aString [
-	animation displayModule: aString
 ]
 
 { #category : #accessing }
@@ -324,6 +358,26 @@ WeblyBrowser >> frontPageSelection [
 { #category : #'frontpage pane' }
 WeblyBrowser >> frontPageSelection: anInterval [
 	frontPageSelection := anInterval
+]
+
+{ #category : #accessing }
+WeblyBrowser >> guiModule [
+	^ animation guiModule
+]
+
+{ #category : #accessing }
+WeblyBrowser >> guiModule: aString [
+	animation guiModule: aString
+]
+
+{ #category : #accessing }
+WeblyBrowser >> handleEventOperation [
+	^ animation handleEventOperation
+]
+
+{ #category : #accessing }
+WeblyBrowser >> handleEventOperation: aString [
+	animation handleEventOperation: aString
 ]
 
 { #category : #'web api services' }
@@ -465,13 +519,19 @@ WeblyBrowser >> translationRuleSelection: aSelection [
 WeblyBrowser >> updateWidgets [
 	| visualsMode |
 	visualsMode := self displayEnabled.
-	displayModuleField
+	guiModuleField
 		enabled: visualsMode;
 		textColor:
 			(visualsMode
 				ifTrue: [ Color black ]
 				ifFalse: [ Color lightGray ]).
 	displayOperationField
+		enabled: visualsMode;
+		textColor:
+			(visualsMode
+				ifTrue: [ Color black ]
+				ifFalse: [ Color lightGray ]).
+	handleEventOperationField
 		enabled: visualsMode;
 		textColor:
 			(visualsMode

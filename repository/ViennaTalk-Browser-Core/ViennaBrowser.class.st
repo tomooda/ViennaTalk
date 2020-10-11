@@ -1133,15 +1133,14 @@ types
      TaggedElement ::
         name : String
         attributes : map String to [String| real]
-        eventHandlers : map EventType to Handler
+        eventHandlers : set of EventType
         contents : seq of Element
         tokens : set of token
         identifier_ : nat;
      EventType = <click>| <change>;
-     Handler :: moduleName : String operationName : String;
      Event = MouseEvent| ChangeEvent;
-     MouseEvent :: type : EventType target : nat x : nat y : nat;
-     ChangeEvent :: type : EventType target : nat value : String;
+     MouseEvent :: type : EventType target : TaggedElement x : nat y : nat;
+     ChangeEvent :: type : EventType target : TaggedElement value : String;
      String = seq of char;
      Point :: x : int y : int;
 
@@ -1163,7 +1162,7 @@ operations
         let identifier = nextIdentifier
         in
             (nextIdentifier := nextIdentifier + 1;
-            return mk_TaggedElement(name, {|->}, {|->}, [], {}, identifier));
+            return mk_TaggedElement(name, {|->}, {}, [], {}, identifier));
     
     pure getElements : TaggedElement -> bool ==> seq of Element
     getElements(condition) == return findAll_(current, condition);
@@ -1180,9 +1179,6 @@ operations
         return findAll_(
                 current,
                 lambda element : TaggedElement & target in set element.tokens);
-    
-    remove : TaggedElement ==> ()
-    remove(element) == current := remove_(current, element);
     
     pure getElement : nat ==> [TaggedElement]
     getElement(id) ==
@@ -1222,12 +1218,9 @@ functions
     appendChild(element, child) ==
         mu(element,contents |-> element.contents ^ [child]);
     
-    setEventHandler : TaggedElement * EventType * String * String -> TaggedElement
-    setEventHandler(element, event, moduleName, operationName) ==
-        mu(element,
-            eventHandlers
-            |-> element.eventHandlers
-            ++ {event |-> mk_Handler(moduleName, operationName)});
+    setEventHandler : TaggedElement * EventType -> TaggedElement
+    setEventHandler(element, event) ==
+        mu(element,eventHandlers |-> element.eventHandlers union {event});
     
     addToken : TaggedElement * token -> TaggedElement
     addToken(element, t) ==
@@ -1295,53 +1288,6 @@ functions
     
     m_findFirst_ : seq of Element * (TaggedElement -> bool) -> nat
     m_findFirst_(elements, condition) == len elements;
-    
-    equal_element_ : Element * Element -> bool
-    equal_element_(element1, element2) ==
-        element1 = element2
-        or (is_TaggedElement(element1) and is_TaggedElement(element2))
-        and element1.identifier_ = element2.identifier_;
-    
-    remove_ : Element * TaggedElement -> Element
-    remove_(whole, target) ==
-        if
-            equal_element_(whole, target)
-        then
-            ""
-        else
-            cases whole:
-                mk_TaggedElement(
-                    name, attributes, eventHandlers, contents, tokens, identifier) ->
-                    mk_TaggedElement(
-                        name,
-                        attributes,
-                        eventHandlers,
-                        [remove_(content, target)
-                            | content in seq contents & not equal_element_(content, target)],
-                        tokens,
-                        identifier),
-                others -> whole
-                end;
-    
-    replace_ : Element * TaggedElement * TaggedElement -> Element
-    replace_(whole, src, dst) ==
-        if
-            equal_element_(whole, src)
-        then
-            dst
-        else
-            cases whole:
-                mk_TaggedElement(
-                    name, attributes, eventHandlers, contents, tokens, identifier) ->
-                    mk_TaggedElement(
-                        name,
-                        attributes,
-                        eventHandlers,
-                        [replace_(content, src, dst) | content in seq contents],
-                        tokens,
-                        identifier),
-                others -> whole
-                end;
 
 end ViennaDOM
 '

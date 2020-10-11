@@ -10,7 +10,7 @@ Class {
 		'tokens',
 		'identifier'
 	],
-	#category : #'ViennaTalk-Value-Core'
+	#category : #'ViennaTalk-WeblyWalkThrough-Server'
 }
 
 { #category : #'instance creation' }
@@ -136,26 +136,18 @@ ViennaTaggedElement >> printXmlOn: aStream [
 						nextPutAll: value asString asHTMLString;
 						nextPut: $" ] ].
 	eventHandlers
-		keysAndValuesDo: [ :event :handler | 
+		do: [ :event | 
 			aStream
 				space;
 				nextPutAll: 'on';
 				nextPutAll: event;
-				nextPutAll: '="Webly.event(event,''';
-				nextPutAll: handler first;
-				nextPutAll: ''',''';
-				nextPutAll: handler second;
-				nextPutAll: ''', ()=>{';
+				nextPutAll: '="Webly.event(event, ()=>{';
 				nextPutAll:
 					(attributes
 						at: 'on' , event
 						ifPresent: [ :value | value asHTMLString ]
 						ifAbsent: [ '' ]);
 				nextPutAll: '})"' ].
-	aStream
-		nextPutAll: ' tokens="';
-		nextPutAll: tokens viennaString asHTMLString;
-		nextPut: $".
 	aStream
 		nextPutAll: ' identifier="';
 		nextPutAll: identifier printString;

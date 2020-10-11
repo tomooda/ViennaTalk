@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'taggedElement'
 	],
-	#category : #'ViennaTalk-Parser-Core'
+	#category : #'ViennaTalk-WeblyWalkThrough-Server'
 }
 
 { #category : #parsing }
@@ -21,37 +21,24 @@ ViennaVDMTaggedElementDecoder >> attributes [
 
 { #category : #parsing }
 ViennaVDMTaggedElementDecoder >> contents [
-	^ (lbracket
+	^ ((lbracket
 		,
 			(self textLiteral / taggedElement separatedBy: comma)
-				withoutSeparators optional , rbracket)
-		==> [ :triple | triple second ifNil: [ Array new ] ]
+				withoutSeparators , rbracket)
+		==> [ :triple | triple second ifNil: [ Array new ] ])
+		/ ((lbracket , rbracket) ==> [ :pair | Array new ])
 ]
 
 { #category : #parsing }
 ViennaVDMTaggedElementDecoder >> eventHandlers [
 	^ (lbrace
-		,
-			((mapletArrow ==> [ :single | Array new ])
-				/
-					((self quoteLiteral , mapletArrow , self handler)
-						==> [ :triple | triple first -> triple third ]
-						separatedBy: comma) withoutSeparators) , rbrace)
-		==> [ :triple | triple second asDictionary ]
-]
-
-{ #category : #parsing }
-ViennaVDMTaggedElementDecoder >> handler [
-	^ ('mk_Handler' asPParser , lparen , self textLiteral , comma
-		, self textLiteral , rparen)
-		==> [ :array | 
-			{array third.
-			array fifth} ]
+		, (self quoteLiteral separatedBy: comma) withoutSeparators optional
+		, rbrace) ==> [ :triple | triple second ifNil: [ Array new ] ]
 ]
 
 { #category : #parsing }
 ViennaVDMTaggedElementDecoder >> start [
-	^ (taggedElement / self textLiteral) end
+	^ ( self textLiteral / taggedElement) end
 ]
 
 { #category : #parsing }

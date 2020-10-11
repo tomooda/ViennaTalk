@@ -9,8 +9,9 @@ Class {
 		'globalNamesAndNumArgs',
 		'displayEnabled',
 		'taggedElementDecoder',
-		'displayModule',
-		'displayOperation'
+		'displayOperation',
+		'handleEventOperation',
+		'guiModule'
 	],
 	#classVars : [
 		'Current',
@@ -100,6 +101,11 @@ WeblyWalkThrough >> copyForTest [
 ]
 
 { #category : #defaults }
+WeblyWalkThrough >> defaultDisplayOperation [
+	^ 'display'
+]
+
+{ #category : #defaults }
 WeblyWalkThrough >> defaultFrontPage [
 	^ '<!DOCTYPE html>
 <html>
@@ -109,6 +115,16 @@ WeblyWalkThrough >> defaultFrontPage [
 <body>
 Webly Walk-Through is running.
 </body></html>' copy
+]
+
+{ #category : #defaults }
+WeblyWalkThrough >> defaultGuiModule [
+	^ ''
+]
+
+{ #category : #defaults }
+WeblyWalkThrough >> defaultHandleEventOperation [
+	^ 'handleEvent'
 ]
 
 { #category : #accessing }
@@ -144,9 +160,9 @@ WeblyWalkThrough >> displayEnabled: aBool [
 WeblyWalkThrough >> displayExpression [
 	^ String
 		streamContents: [ :stream | 
-			(displayModule notNil and: [ displayModule notEmpty ])
+			(guiModule notNil and: [ guiModule notEmpty ])
 				ifTrue: [ stream
-						nextPutAll: displayModule;
+						nextPutAll: guiModule;
 						nextPut: $` ].
 			stream
 				nextPutAll: displayOperation;
@@ -154,18 +170,8 @@ WeblyWalkThrough >> displayExpression [
 ]
 
 { #category : #accessing }
-WeblyWalkThrough >> displayModule [
-	^ displayModule
-]
-
-{ #category : #accessing }
-WeblyWalkThrough >> displayModule: aString [
-	displayModule := aString trim
-]
-
-{ #category : #accessing }
 WeblyWalkThrough >> displayOperation [
-	^ displayOperation
+	^ displayOperation ifNil: [ self defaultDisplayOperation ]
 ]
 
 { #category : #accessing }
@@ -181,8 +187,8 @@ WeblyWalkThrough >> enableDisplay [
 { #category : #'request handling' }
 WeblyWalkThrough >> event: aDictionary [
 	| module operation type target evalString |
-	module := aDictionary at: 'module'.
-	operation := aDictionary at: 'operation'.
+	module := self guiModule.
+	operation := self handleEventOperation.
 	type := aDictionary at: 'type'.
 	target := aDictionary at: 'target'.
 	evalString := String
@@ -196,9 +202,9 @@ WeblyWalkThrough >> event: aDictionary [
 				ifTrue: [ stream
 						nextPutAll: 'MouseEvent(<';
 						nextPutAll: type;
-						nextPutAll: '>, ';
+						nextPutAll: '>, getElement(';
 						nextPutAll: target;
-						nextPutAll: ',';
+						nextPutAll: '),';
 						nextPutAll: (aDictionary at: 'x') viennaString;
 						nextPutAll: ',';
 						nextPutAll: (aDictionary at: 'y') viennaString;
@@ -207,16 +213,15 @@ WeblyWalkThrough >> event: aDictionary [
 				ifTrue: [ stream
 						nextPutAll: 'ChangeEvent(<';
 						nextPutAll: type;
-						nextPutAll: '>,';
+						nextPutAll: '>, ViennaDOM`getElement(';
 						nextPutAll: target;
-						nextPutAll: ',';
+						nextPutAll: '),';
 						nextPutAll: (aDictionary at: 'value') viennaString;
 						nextPutAll: '))' ] ].
 	self
 		plainEvaluate: evalString
 		in: module
 		ifError: [ :msg | 
-			self halt.
 			^ self
 				responseServerError: 'event operation ' , module , '`' , operation , ' failed.' ].
 	^ self
@@ -238,13 +243,34 @@ WeblyWalkThrough >> frontPage: aString [
 	frontPage := aString asString
 ]
 
+{ #category : #accessing }
+WeblyWalkThrough >> guiModule [
+	^ guiModule
+]
+
+{ #category : #accessing }
+WeblyWalkThrough >> guiModule: aString [
+	guiModule := aString trim
+]
+
+{ #category : #accessing }
+WeblyWalkThrough >> handleEventOperation [
+	^ handleEventOperation ifNil: [ self defaultHandleEventOperation ]
+]
+
+{ #category : #accessing }
+WeblyWalkThrough >> handleEventOperation: aString [
+	handleEventOperation := aString
+]
+
 { #category : #'initialize-release' }
 WeblyWalkThrough >> initialize [
 	super initialize.
 	translator := WWTTranslator new.
 	displayEnabled := false.
-	displayModule := ''.
-	displayOperation := 'display'
+	guiModule := self defaultGuiModule.
+	displayOperation := self defaultDisplayOperation.
+	handleEventOperation := self defaultHandleEventOperation
 ]
 
 { #category : #testing }
@@ -322,11 +348,9 @@ WeblyWalkThrough >> printEventFunctionsOn: aStream [
 		ifTrue: [ aStream
 				nextPutAll:
 					'
-Webly.event = function(event, module, operation, continuation) { 
+Webly.event = function(event, continuation) { 
     var req = new XMLHttpRequest();
     var arguments = {};
-    arguments.module = module;
-    arguments.operation = operation;
     arguments.type = event.type;
     arguments.target = event.target.getAttribute("identifier");
     if (event.type == "click") { 
