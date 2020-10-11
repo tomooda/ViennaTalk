@@ -217,14 +217,14 @@ WeblyBrowser >> buildVisualsPane [
 	^ Morph new
 		color: Color white;
 		changeTableLayout;
-		listDirection: #bottomToTop;
+		listDirection: #topToBottom;
 		listCentering: #topLeft;
 		wrapCentering: #topLeft;
 		cellPositioning: #topLeft;
 		hResizing: #shrinkWrap;
-		vResizing: #spaceFill;
-		addMorph: self buildDisplayEnabled;
-		addMorph:
+		vResizing: #shrinkWrap;
+		addMorphBack: self buildDisplayEnabled;
+		addMorphBack:
 			(Morph new
 				color: Color white;
 				changeTableLayout;
@@ -232,12 +232,11 @@ WeblyBrowser >> buildVisualsPane [
 				listCentering: #left;
 				wrapCentering: #topLeft;
 				hResizing: #shrinkWrap;
-				vResizing: #spaceFill;
-				addMorph: 'GUI module: ' asMorph;
+				vResizing: #shrinkWrap;
+				addMorph: ('GUI module: ' asMorph width: 150);
 				addMorph: self buildGuiModuleField;
 				yourself);
-
-		addMorph:
+		addMorphBack:
 			(Morph new
 				color: Color white;
 				changeTableLayout;
@@ -245,12 +244,11 @@ WeblyBrowser >> buildVisualsPane [
 				listCentering: #left;
 				wrapCentering: #topLeft;
 				hResizing: #shrinkWrap;
-				vResizing: #spaceFill;
-				addMorph: 'display operation: ' asMorph;
+				vResizing: #shrinkWrap;
+				addMorph: ('display operation: ' asMorph width: 150);
 				addMorph: self buildDisplayOperationField;
 				yourself);
-
-		addMorph:
+		addMorphBack:
 			(Morph new
 				color: Color white;
 				changeTableLayout;
@@ -258,12 +256,10 @@ WeblyBrowser >> buildVisualsPane [
 				listCentering: #left;
 				wrapCentering: #topLeft;
 				hResizing: #shrinkWrap;
-				vResizing: #spaceFill;
-				addMorph: 'event handler: ' asMorph;
+				vResizing: #shrinkWrap;
+				addMorph: ('event handler: ' asMorph width: 150);
 				addMorph: self buildHandleEventOperationField;
 				yourself);
-
-
 		yourself
 ]
 
