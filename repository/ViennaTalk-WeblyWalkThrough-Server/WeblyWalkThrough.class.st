@@ -224,11 +224,7 @@ WeblyWalkThrough >> event: aDictionary [
 		ifError: [ :msg | 
 			^ self
 				responseServerError: 'event operation ' , module , '`' , operation , ' failed.' ].
-	^ self
-		responseOk:
-			((ZnStringEntity type: ZnMimeType textPlain)
-				string: '';
-				yourself)
+	^ self display
 ]
 
 { #category : #accessing }
@@ -362,7 +358,12 @@ Webly.event = function(event, continuation) {
     }
     req.open("POST", "/event");
     req.setRequestHeader("Content-Type", "application/json");
-    req.onload = function () {Webly.display(); if (continuation) continuation();};
+    req.onload = function () { 
+        while (Webly.displayElement.firstChild)
+            Webly.displayElement.removeChild(Webly.displayElement.firstChild);
+        Webly.displayElement.appendChild(req.responseXML.documentElement.childNodes[0]);
+        if (continuation) continuation();
+    };
     req.send(JSON.stringify(arguments));
 };
 ' withUnixLineEndings ]
