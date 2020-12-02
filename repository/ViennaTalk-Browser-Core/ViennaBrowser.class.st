@@ -1152,7 +1152,9 @@ end
 
 operations
     setDocument : Element ==> ()
-    setDocument(element) == current := element;
+    setDocument(element) ==
+        (current := element;
+        return current);
     
     pure document : () ==> Element
     document() == return current;

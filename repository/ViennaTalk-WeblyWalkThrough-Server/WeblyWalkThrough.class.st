@@ -160,13 +160,14 @@ WeblyWalkThrough >> displayEnabled: aBool [
 WeblyWalkThrough >> displayExpression [
 	^ String
 		streamContents: [ :stream | 
+			stream nextPutAll: 'ViennaDOM`setDocument('.
 			(guiModule notNil and: [ guiModule notEmpty ])
 				ifTrue: [ stream
 						nextPutAll: guiModule;
 						nextPut: $` ].
 			stream
 				nextPutAll: displayOperation;
-				nextPutAll: '()' ]
+				nextPutAll: '())' ]
 ]
 
 { #category : #accessing }
