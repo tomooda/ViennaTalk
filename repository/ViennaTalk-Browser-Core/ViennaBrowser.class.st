@@ -899,7 +899,7 @@ ViennaBrowser >> codeSelection: aSelection [
 
 { #category : #private }
 ViennaBrowser >> directory [
-	^ directory ifNil: [ directory := FileSystem workingDirectory parent parent parent ]
+	^ directory ifNil: [ directory := FileLocator home ]
 ]
 
 { #category : #private }
@@ -1051,24 +1051,45 @@ ViennaBrowser >> generateViennaDocSourceScript [
 			ast isPetit2Failure
 				ifTrue: [ ^ self ].
 			sources := Dictionary new.
-			walker := [ :node | 
+			walker := [ :node :module | 
 			(node isKindOf: ViennaNode)
 				ifTrue: [ node label = 'Module'
-						ifTrue: [ sources at: node first put: (source copyFrom: node start to: node end) ].
+						ifTrue: [ sources
+								at: node first
+								put: (source copyFrom: node start to: node end) ].
 					node label = 'StateDefinition'
-						ifTrue: [ sources at: node first put: (source copyFrom: node start to: node end) ].
+						ifTrue: [ sources
+								at: (module ifNil: [ '' ] ifNotNil: [ module , '`' ]) , node first
+								put: (source copyFrom: node start to: node end) ].
 					node label = 'ExplicitOperationDefinition'
-						ifTrue: [ sources at: node first put: (source copyFrom: node start to: node end) ].
+						ifTrue: [ sources
+								at: (module ifNil: [ '' ] ifNotNil: [ module , '`' ]) , node first
+								put: (source copyFrom: node start to: node end) ].
 					node label = 'TypeDefinition'
-						ifTrue: [ sources at: node first put: (source copyFrom: node start to: node end) ].
+						ifTrue: [ sources
+								at: (module ifNil: [ '' ] ifNotNil: [ module , '`' ]) , node first
+								put: (source copyFrom: node start to: node end) ].
 					node label = 'RecordTypeDefinition'
-						ifTrue: [ sources at: node first put: (source copyFrom: node start to: node end) ].
+						ifTrue: [ sources
+								at: (module ifNil: [ '' ] ifNotNil: [ module , '`' ]) , node first
+								put: (source copyFrom: node start to: node end) ].
 					node label = 'ValueDefinition'
-						ifTrue: [ sources at: node first first put: (source copyFrom: node start to: node end) ].
+						ifTrue: [ sources
+								at: (module ifNil: [ '' ] ifNotNil: [ module , '`' ]) , node first first
+								put: (source copyFrom: node start to: node end) ].
 					node label = 'ExplicitFunctionDefinition'
-						ifTrue: [ sources at: node first put: (source copyFrom: node start to: node end) ].
-					node do: walker ] ].
-			walker value: ast.
+						ifTrue: [ sources
+								at: (module ifNil: [ '' ] ifNotNil: [ module , '`' ]) , node first
+								put: (source copyFrom: node start to: node end) ].
+					node
+						do: [ :n | 
+							walker
+								value: n
+								value:
+									(module
+										ifNil: [ node label = 'Module'
+												ifTrue: [ node first ] ]) ] ] ].
+			walker value: ast value: nil.
 			stream nextPutAll: 'ViennaDoc.source='.
 			(NeoJSONWriter on: stream) nextPut: source withUnixLineEndings.
 			stream
@@ -1079,8 +1100,10 @@ ViennaBrowser >> generateViennaDocSourceScript [
 			sources
 				keysAndValuesDo: [ :name :src | 
 					stream
-						nextPutAll: 'viennaDoc.sources[';
+						nextPutAll: 'ViennaDoc.sources[';
+						nextPut: $';
 						nextPutAll: name;
+						nextPut: $';
 						nextPutAll: ']='.
 					(NeoJSONWriter on: stream) nextPut: src withUnixLineEndings.
 					stream
@@ -1151,7 +1174,7 @@ init s == s = mk_DOM("", 0)
 end
 
 operations
-    setDocument : Element ==> ()
+    setDocument : Element ==> Element
     setDocument(element) ==
         (current := element;
         return current);
@@ -1335,12 +1358,12 @@ ViennaBrowser >> jumpToSpec [
 		ifTrue: [ (results at: self testSelectionIndex)
 				in: [ :result | 
 					self selectModuleNamed: result module.
-					(codePane textMorph text asString findString: result operation , '() ==')
+					(codePane textMorph text asString
+						findString: result operation , '() ==')
 						in: [ :start | 
 							start > 0
-								ifTrue: [ codePane
-										selectFrom: start to: start + result operation size - 1;
-										scrollSelectionIntoView ] ].
+								ifTrue:
+									[ codePane selectFrom: start to: start + result operation size - 1 ] ].
 					lowerTabPane selectedPageIndex: 1 ] ]
 ]
 

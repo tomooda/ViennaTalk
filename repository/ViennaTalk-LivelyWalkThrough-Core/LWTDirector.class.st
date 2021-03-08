@@ -10,12 +10,13 @@ Class {
 		'dependents',
 		'urlPrefix',
 		'filepath',
-		'animation'
+		'animation',
+		'directory'
 	],
 	#classVars : [
 		'Server'
 	],
-	#category : 'ViennaTalk-LivelyWalkThrough-Core'
+	#category : #'ViennaTalk-LivelyWalkThrough-Core'
 }
 
 { #category : #'instance creation' }
@@ -173,6 +174,11 @@ LWTDirector >> delete [
 	self releaseHandlers
 ]
 
+{ #category : #accessing }
+LWTDirector >> directory [
+	^ directory ifNil: [ directory := FileLocator home ]
+]
+
 { #category : #drawing }
 LWTDirector >> drawOn: aCanvas [
 	aCanvas
@@ -213,6 +219,25 @@ LWTDirector >> execVDM: aString withArguments: anArray [
 { #category : #interpreting }
 LWTDirector >> execValueOf: aString [
 	^ (self morphNamed: aString ifAbsent: [ self abort: 'Can not read an undefined variable: ' , aString ]) value
+]
+
+{ #category : #private }
+LWTDirector >> fileSave: title extensions: anArrayOfString do: aBlock [
+	(UIManager default
+		chooseForSaveFileReference: title
+		extensions: anArrayOfString
+		path: self directory
+		preview: false)
+		ifNotNil: [ :reference | 
+			directory := reference parent.
+			reference
+				writeStreamDo: [ :stream | 
+					stream
+						nextPutAll:
+							((String
+								streamContents: [ :stringStream | aBlock value: stringStream ])
+								copyReplaceAll: String cr
+								with: String lf) ] ]
 ]
 
 { #category : #'accessing-frames and cuts' }
@@ -380,22 +405,13 @@ LWTDirector >> save [
 
 { #category : #operations }
 LWTDirector >> saveAs [
-	(UIManager default
+	self
 		fileSave: (self urlPrefix ifEmpty: [ 'Lively Walk-Through' ])
 		extensions: #('lwt')
-		path: (filepath ifNil: [ FileSystem workingDirectory parent parent ]) parent)
-		ifNotNil: [ :reference | 
-			(reference exists not
-				or: [ UIManager proceed: 'OK to overwrite ' , reference pathString ])
-				ifTrue: [ filepath := reference.
-					reference
-						writeStreamDo: [ :stream | 
-							[ (NeoJSONWriter on: stream)
-								asciiOnly: true;
-								nextPut: self asJsonObject ]
-								on: Error
-								do:
-									[ :ex | UIManager default alert: 'Can not write on ' , reference pathString ] ] ] ]
+		do: [ :stream | 
+			(NeoJSONWriter on: stream)
+				asciiOnly: true;
+				nextPut: self asJsonObject ]
 ]
 
 { #category : #'accessing-scripts' }

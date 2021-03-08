@@ -7,7 +7,7 @@ Class {
 		'codeSelection',
 		'selectedScriptSelector'
 	],
-	#category : 'ViennaTalk-LivelyWalkThrough-Core'
+	#category : #'ViennaTalk-LivelyWalkThrough-Core'
 }
 
 { #category : #'instance creation' }
@@ -172,7 +172,7 @@ LWTLivetalkBrowser >> director: aLWTDirector [
 { #category : #'script list menu' }
 LWTLivetalkBrowser >> doIt [
 	self selectedScript
-		ifNotNilDo: [:script | script value]
+		ifNotNil: #value
 ]
 
 { #category : #'script list' }

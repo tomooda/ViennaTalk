@@ -14,7 +14,7 @@ Class {
 	#classVars : [
 		'DefaultBasePath'
 	],
-	#category : 'ViennaTalk-Browser-Core'
+	#category : #'ViennaTalk-Browser-Core'
 }
 
 { #category : #'world menu' }
@@ -45,7 +45,11 @@ ViennaDirectoryBrowser class >> moduleListMenu: aBuilder [
 	<contextMenu>
 	<viennaDirectoryBrowserModuleListMenu>
 	(aBuilder item: #'open dir...' translated) selector: #openDirectory.
-	(aBuilder item: #'copy and merge file...' translated) selector: #loadAndMergeFromFile.
+	(aBuilder item: #'copy and merge file...' translated)
+		selector: #loadAndMergeFromFile.
+	aBuilder items last withSeparatorAfter.
+	(aBuilder item: #'generate ViennaDoc source script...' translated)
+		selector: #generateViennaDocSourceScript.
 	aBuilder items last withSeparatorAfter.
 	(aBuilder item: #'import UnitTesting module' translated)
 		selector: #importUnitTestingModule.
@@ -59,7 +63,8 @@ ViennaDirectoryBrowser class >> moduleListMenu: aBuilder [
 		ifFalse: [ (aBuilder item: #'use transpiler' translated)
 				selector: #useTranspiler;
 				withSeparatorAfter ].
-	(aBuilder item: #'generate a Smalltalk script (single module)...' translated)
+	(aBuilder
+		item: #'generate a Smalltalk script (single module)...' translated)
 		selector: #generateSmalltalkScript.
 	(aBuilder item: #'generate classes (all modules)...' translated)
 		selector: #generateSmalltalkClasses.
