@@ -49,6 +49,17 @@ ViennaDoc.evalShow = function(node, expression, prestates, poststates, module="D
     node.innerText = text;
 };
 
+ViennaDoc.valueShow = function(node, expression, module="DEFAULT") {
+    var result = ViennaDoc.eval(expression, {}, module);
+    var text = ""
+    if (result.message == "") {
+	text = " \u261E " + result.value;
+    } else {
+	text = " \u261E " + "ERROR! ";
+    }
+    node.innerText = text;
+};
+
 ViennaDoc.parseStates = function (str, module) {
     var states = {};
     if (str) {
@@ -91,6 +102,24 @@ ViennaDoc.initializeViennaEvalNode = function(node) {
     buttonNode.type = "button";
     buttonNode.value = "run";
     buttonNode.onclick = function(){ViennaDoc.evalShow(valueNode, expr, prestates, poststates, module);};
+    valueNode.className = "vdm";
+    valueNode.style.backgroundColor = "#eee";
+    valueNode.style.cursor = "pointer";
+    valueNode.onclick=function() {this.innerText="";};
+    node.parentNode.insertBefore(buttonNode, nextNode);
+    node.parentNode.insertBefore(valueNode, nextNode);
+}
+
+ViennaDoc.initializeViennaValueNode = function(node) {
+    var expr = node.innerText;
+    var module = node.getAttribute("module") || "DEFAULT";
+    var nextNode = node.nextSibling;
+    var buttonNode = document.createElement("input");
+    var valueNode = document.createElement("code");
+    node.style.backgroundColor = "#eee";
+    buttonNode.type = "button";
+    buttonNode.value = "run";
+    buttonNode.onclick = function(){ViennaDoc.valueShow(valueNode, expr, module);};
     valueNode.className = "vdm";
     valueNode.style.backgroundColor = "#eee";
     valueNode.style.cursor = "pointer";
@@ -157,6 +186,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
 	    ViennaDoc.initializeViennaSourceNode(node);
 	if (vienna == "eval")
 	    ViennaDoc.initializeViennaEvalNode(node);
+	if (vienna == "value")
+	    ViennaDoc.initializeViennaValueNode(node);
 	if (vienna == "watch")
 	    ViennaDoc.initializeViennaWatchNode(node);
 	if (vienna == "assert")
