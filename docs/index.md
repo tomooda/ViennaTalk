@@ -11,6 +11,7 @@ ViennaTalk is a Smalltalk library to handle VDM-SL specifications.
 
 * [The pre-built packages of the latest release](https://github.com/tomooda/ViennaTalk/releases/latest) is available.
 * Try [Open VDMPad server](https://vdmpad.viennatalk.org) to experience VDM-SL. No registration/no installation is required.
+* [VDM cheatsheet](https://viennatalk.org/ViennaDoc/cheatsheet-en/) provides major VDM-SL constructs with evaluatable examples. ([🇬🇧English version](https://viennatalk.org/ViennaDoc/cheatsheet-en/) [🇯🇵 Japanese version](https://viennatalk.org/ViennaDoc/cheatsheet-ja/))
 
 Demo movies
 ---
