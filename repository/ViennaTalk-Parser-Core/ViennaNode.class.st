@@ -173,6 +173,287 @@ ViennaNode >> collect: aBlock [
 	^ (1 to: self size) collect: [ :index | aBlock value: (self at: index) ]
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaNode >> definitionInCasesAlternativeOfLocalName: aString do: aBlock [
+	self first
+		allDescendantsDo: [ :n | 
+			(n label = 'PatternIdentifier' and: [ n first = aString ])
+				ifTrue: [ ^ aBlock value: n ] ]
+]
+
+{ #category : #'accessing-definitions' }
+ViennaNode >> definitionInComprehensionOfLocalName: aString do: aBlock [
+	label = 'SetComprehension'
+		ifTrue: [ self second
+				do: [ :multiBind | 
+					multiBind first
+						do: [ :pattern | 
+							pattern
+								allDescendantsDo: [ :n | 
+									(n label = 'PatternIdentifier' and: [ n first = aString ])
+										ifTrue: [ ^ aBlock value: n ] ] ] ].
+			^ self ].
+	label = 'SequenceComprehension'
+		ifTrue: [ self second first
+				allDescendantsDo: [ :n | 
+					(n label = 'PatternIdentifier' and: [ n first = aString ])
+						ifTrue: [ ^ aBlock value: n ] ].
+			^ self ].
+	label = 'MapComprehension'
+		ifTrue: [ self third
+				do: [ :multiBind | 
+					multiBind first
+						do: [ :pattern | 
+							pattern
+								allDescendantsDo: [ :n | 
+									(n label = 'PatternIdentifier' and: [ n first = aString ])
+										ifTrue: [ ^ aBlock value: n ] ] ] ] ]
+]
+
+{ #category : #'accessing-definitions' }
+ViennaNode >> definitionInDclOfLocalName: aString do: aBlock [
+	self first
+		do: [ :dclDef | 
+			dclDef first = aString
+				ifTrue: [ ^ aBlock value: dclDef ] ]
+]
+
+{ #category : #'accessing-definitions' }
+ViennaNode >> definitionInDefinitionBlockOfLocalName: aString do: aBlock [
+	self first label = 'StateDefinition'
+		ifTrue: [ | state |
+			state := self first.
+			state first = aString
+				ifTrue: [ ^ aBlock value: self ].
+			state second
+				do: [ :field | 
+					field first = aString
+						ifTrue: [ ^ aBlock value: field ] ] ]
+		ifFalse: [ self first
+				do: [ :def | 
+					| defItem defLabel |
+					defItem := def second.
+					defLabel := defItem label.
+					(defLabel = 'TypeDefinition' and: [ defItem first = aString ])
+						ifTrue: [ ^ aBlock value: defItem ].
+					(defLabel = 'RecordTypeDefinition'
+						and: [ defItem first = aString ])
+						ifTrue: [ ^ aBlock value: defItem ].
+					defLabel = 'ValueDefinition'
+						ifTrue: [ defItem first
+								allDescendantsDo: [ :n | 
+									(n label = 'PatternIdentifier' and: [ n first = aString ])
+										ifTrue: [ ^ aBlock value: n ] ] ].
+					defLabel = 'FunctionDefinition'
+						ifTrue: [ defItem first first = aString
+								ifTrue: [ ^ aBlock value: defItem first ] ].
+					defLabel = 'OperationDefinition'
+						ifTrue: [ defItem first first = aString
+								ifTrue: [ ^ aBlock value: defItem first ] ] ] ]
+]
+
+{ #category : #'accessing-definitions' }
+ViennaNode >> definitionInExplicitFunctionOfLocalName: aString do: aBlock [
+	self fifth
+		allDescendantsDo: [ :n | 
+			(n label = 'PatternIdentifier' and: [ n first = aString ])
+				ifTrue: [ ^ aBlock value: n ] ]
+]
+
+{ #category : #'accessing-definitions' }
+ViennaNode >> definitionInExplicitOperationOfLocalName: aString do: aBlock [
+	self fourth
+		allDescendantsDo: [ :n | 
+			(n label = 'PatternIdentifier' and: [ n first = aString ])
+				ifTrue: [ ^ aBlock value: n ] ]
+]
+
+{ #category : #'accessing-definitions' }
+ViennaNode >> definitionInForLoopOfLocalName: aString do: aBlock [
+	(label = 'IndexForLoop' and: [ self first = aString ])
+		ifTrue: [ ^ aBlock value: self ].
+	label = 'SequenceForLoop'
+		ifTrue: [ self first
+				allDescendantsDo: [ :n | 
+					(n label = 'PatternIdentifier' and: [ n first = aString ])
+						ifTrue: [ ^ aBlock value: n ] ] ].
+	label = 'SetForLoop'
+		ifTrue: [ self first
+				allDescendantsDo: [ :n | 
+					(n label = 'PatternIdentifier' and: [ n first = aString ])
+						ifTrue: [ ^ aBlock value: n ] ] ]
+]
+
+{ #category : #'accessing-definitions' }
+ViennaNode >> definitionInImplicitFunctionOfLocalName: aString do: aBlock [
+	self third first
+		do: [ :patList | 
+			patList label = 'PatternList'
+				ifTrue: [ patList
+						allDescendantsDo: [ :n | 
+							n first = aString
+								ifTrue: [ ^ aBlock value: n ] ] ] ].
+	self fourth
+		do: [ :n | 
+			n = aString
+				ifTrue: [ ^ aBlock value: self ] ]
+]
+
+{ #category : #'accessing-definitions' }
+ViennaNode >> definitionInImplicitOperationOfLocalName: aString do: aBlock [
+	self second first
+		do: [ :patList | 
+			patList label = 'PatternList'
+				ifTrue: [ patList
+						allDescendantsDo: [ :n | 
+							n first = aString
+								ifTrue: [ ^ aBlock value: n ] ] ] ].
+	self third
+		do: [ :n | 
+			n = aString
+				ifTrue: [ ^ aBlock value: self ] ]
+]
+
+{ #category : #'accessing-definitions' }
+ViennaNode >> definitionInImportsOfLocalName: aString do: aBlock [
+	self
+		do: [ :importDef | 
+			importDef second label = 'ImportModuleSignature'
+				ifTrue: [ importDef second
+						do: [ :import | 
+							(import at: import size)
+								ifNotNil: [ :rename | 
+									(self moduleNamed: importDef first)
+										ifNotNil: [ :module | 
+											^ aBlock
+												value: (module definitionOfLocalName: import first localName first) ] ] ] ] ]
+]
+
+{ #category : #'accessing-definitions' }
+ViennaNode >> definitionInLambdaOfLocalName: aString do: aBlock [
+	self first
+		do: [ :bind | 
+			bind first
+				allDescendantsDo: [ :node | 
+					(node label = 'PatternIdentifier' and: [ node first = aString ])
+						ifTrue: [ ^ aBlock value: node ] ] ]
+]
+
+{ #category : #'accessing-definitions' }
+ViennaNode >> definitionInLetBeOfLocalName: aString do: aBlock [
+	| valDef |
+	valDef := self first.
+	valDef
+		allDescendantsDo: [ :n | 
+			(n label = 'PatternIdentifier' and: [ n first = aString ])
+				ifTrue: [ ^ aBlock value: n ] ]
+]
+
+{ #category : #'accessing-definitions' }
+ViennaNode >> definitionInLetOfLocalName: aString do: aBlock [
+	self first
+		do: [ :localDef | 
+			| def |
+			def := localDef first.
+			def label = 'ValueDefinition'
+				ifTrue: [ def first
+						allDescendantsDo: [ :n | 
+							(n label = 'PatternIdentifier' and: [ n first = aString ])
+								ifTrue: [ ^ aBlock value: n ] ] ].
+			def label = 'FunctionDefinition'
+				ifTrue: [ def first first = aString
+						ifTrue: [ ^ aBlock value: def first ] ] ]
+]
+
+{ #category : #'accessing-definitions' }
+ViennaNode >> definitionInModuleOfLocalName: aString do: aBlock [
+	label = 'Module'
+		ifTrue: [ self second first
+				ifNotNil:
+					[ :imports | imports definitionInImportsOfLocalName: aString do: aBlock ].
+			self third
+				do: [ :defBlock | 
+					defBlock
+						definitionInDefinitionBlockOfLocalName: aString
+						do: [ :node | ^ aBlock value: node ] ].
+			^ self ].
+	(label = 'Document' and: [ self first label = 'DefinitionBlock' ])
+		ifTrue: [ self
+				do: [ :defBlock | 
+					defBlock
+						definitionInDefinitionBlockOfLocalName: aString
+						do: [ :node | ^ aBlock value: node ] ] ]
+]
+
+{ #category : #'accessing-definitions' }
+ViennaNode >> definitionInQuantifierOfLocalName: aString do: aBlock [
+	(label = 'ForallExpresison' or: [ label = 'ExistsExpression' ])
+		ifTrue: [ self first
+				do: [ :multiBind | 
+					multiBind first
+						do: [ :pattern | 
+							pattern
+								allDescendantsDo: [ :n | 
+									(n label = 'PatternIdentifier' and: [ n first = aString ])
+										ifTrue: [ ^ aBlock value: n ] ] ] ].
+			^ self ].
+	(label = 'Exists1' or: [ label = 'IotaExpression' ])
+		ifTrue: [ self first first
+				allDescendantsDo: [ :n | 
+					(n label = 'PatternIdentifier' and: [ n first = aString ])
+						ifTrue: [ ^ aBlock value: n ] ].
+			^ self ]
+]
+
+{ #category : #'accessing-definitions' }
+ViennaNode >> definitionOfLocalName: aString [
+	(label = 'LetExpression' or: [ label = 'LetStatement' ])
+		ifTrue: [ self definitionInLetOfLocalName: aString do: [ :node | ^ node ] ].
+	(label = 'LetBeExpression' or: [ label = 'LetBeStatement' ])
+		ifTrue: [ self definitionInLetBeOfLocalName: aString do: [ :node | ^ node ] ].
+	(label = 'CasesExpressionAlternative'
+		or: [ label = 'CasesStatementAlternative' ])
+		ifTrue: [ self
+				definitionInCasesAlternativeOfLocalName: aString
+				do: [ :node | ^ node ] ].
+	(#('SetComprehensiono' 'SequenceComprehension' 'MapComprehension')
+		includes: label)
+		ifTrue: [ self
+				definitionInComprehensionOfLocalName: aString
+				do: [ :node | ^ node ] ].
+	(#('ForallExpression' , 'ExistsExpression' 'Exists1Expression' 'IotaExpression')
+		includes: label)
+		ifTrue: [ self
+				definitionInQuantifierOfLocalName: aString
+				do: [ :node | ^ node ] ].
+	label = 'LambdaExpression'
+		ifTrue: [ self definitionInLambdaOfLocalName: aString do: [ :node | ^ node ] ].
+	(label = 'BlockStatement' and: [ self first label = 'DclStatement' ])
+		ifTrue: [ self definitionInDclOfLocalName: aString do: [ :node | ^ node ] ].
+	(#('IndexForLoop' 'SequenceForLoop' 'SetForLoop') includes: label)
+		ifTrue:
+			[ self definitionInForLoopOfLocalName: aString do: [ :node | ^ node ] ].
+	label = 'Module'
+		ifTrue: [ self definitionInModuleOfLocalName: aString do: [ :node | ^ node ] ].
+	label = 'ExplicitFunctionDefinition'
+		ifTrue: [ self
+				definitionInExplicitFunctionOfLocalName: aString
+				do: [ :node | ^ node ] ].
+	label = 'ImplicitFunctionDefinition'
+		ifTrue: [ self
+				definitionInImplicitFunctionOfLocalName: aString
+				do: [ :node | ^ node ] ].
+	label = 'ExplicitOperationDefinition'
+		ifTrue: [ self
+				definitionInExplicitOperationOfLocalName: aString
+				do: [ :node | ^ node ] ].
+	label = 'ImplicitOperationDefinition'
+		ifTrue: [ self
+				definitionInImplicitOperationOfLocalName: aString
+				do: [ :node | ^ node ] ].
+	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
+]
+
 { #category : #enumerating }
 ViennaNode >> detect: aBlock [
 	self do: [ :node | (aBlock value: node) ifTrue: [ ^node ] ].
@@ -180,8 +461,22 @@ ViennaNode >> detect: aBlock [
 ]
 
 { #category : #enumerating }
+ViennaNode >> detect: aBlock ifNone: errorBlock [
+	self
+		do: [ :node | 
+			(aBlock value: node)
+				ifTrue: [ ^ node ] ].
+	^ errorBlock value
+]
+
+{ #category : #enumerating }
 ViennaNode >> do: aBlock [
 	1 to: self size do: [ :index | aBlock value: (self at: index) ]
+]
+
+{ #category : #accessing }
+ViennaNode >> document [
+	^ self parentLabelled: 'Document' ifAbsent: [ nil ]
 ]
 
 { #category : #accessing }
@@ -255,8 +550,25 @@ ViennaNode >> label [
 ]
 
 { #category : #accessing }
+ViennaNode >> localName [
+	self
+		allDescendantsDo: [ :n | 
+			n label = 'LocalName'
+				ifTrue: [ ^ n ] ]
+]
+
+{ #category : #accessing }
 ViennaNode >> module [
 	^ self parentLabelled: 'Module' ifAbsent: [ nil ]
+]
+
+{ #category : #accessing }
+ViennaNode >> moduleNamed: aString [
+	self document
+		do: [ :module | 
+			(module label = 'Module' and: [ module first = aString ])
+				ifTrue: [ ^ module ] ].
+	^ nil
 ]
 
 { #category : #accessing }

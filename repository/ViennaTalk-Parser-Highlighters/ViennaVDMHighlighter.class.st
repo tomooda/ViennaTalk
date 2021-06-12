@@ -449,9 +449,11 @@ ViennaVDMHighlighter >> skip [
 
 { #category : #parsing }
 ViennaVDMHighlighter >> start [
-	^ document / self accessTypeDefinition / self accessValueDefinition
-		/ self stateDefinition / self accessFunctionDefinition
-		/ self accessOperationDefinition / self statement / self expression
+	^ document end / self accessTypeDefinition end
+		/ self accessValueDefinition end / self stateDefinition end
+		/ self accessFunctionDefinition end
+		/ self accessOperationDefinition end / self statement end
+		/ self expression end
 ]
 
 { #category : #'parsers-keywords' }
