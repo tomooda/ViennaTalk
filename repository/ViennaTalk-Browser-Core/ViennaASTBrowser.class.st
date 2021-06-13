@@ -102,12 +102,21 @@ ViennaASTBrowser >> initializePresenters [
 				ifTrue: [ self updateAppendSource ]
 				ifFalse: [ self updateSource ] ].
 	sourceText := self newText
+		contextMenu: [self sourceTextContextMenu];
+		yourself
 ]
 
 { #category : #initialization }
 ViennaASTBrowser >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter title: 'Browser'
+]
+
+{ #category : #menus }
+ViennaASTBrowser >> inspectAst [
+	(sourceText text string asViennaTracingString
+		nodeContaining: sourceText selectionInterval
+		ifAbsent: [ ^ self ]) inspect
 ]
 
 { #category : #accessing }
@@ -120,12 +129,21 @@ ViennaASTBrowser >> module [
 	^ moduleList selection selectedItem
 ]
 
+{ #category : #menus }
+ViennaASTBrowser >> sourceTextContextMenu [
+	^ self newMenu
+		addItem: [ :item | 
+			item
+				name: 'AST';
+				action: [ self inspectAst ] ]
+]
+
 { #category : #updating }
 ViennaASTBrowser >> updateAppendSource [
 	self definition
 		ifNotNil: [ :node | 
 			sourceText
-				text: sourceText text , String cr asText , node highlightedSource ]
+				text: sourceText text , String cr asText , node tracingHighlightedSource ]
 ]
 
 { #category : #updating }
@@ -175,5 +193,5 @@ ViennaASTBrowser >> updateModuleList [
 { #category : #updating }
 ViennaASTBrowser >> updateSource [
 	self definition
-		ifNotNil: [ :node | sourceText text: node highlightedSource ]
+		ifNotNil: [ :node | sourceText text: node tracingHighlightedSource ]
 ]

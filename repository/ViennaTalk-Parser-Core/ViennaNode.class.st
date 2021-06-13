@@ -527,11 +527,34 @@ ViennaNode >> ifEmpty: aBlock [
 		ifFalse: [ self ]
 ]
 
+{ #category : #testing }
+ViennaNode >> ifEmpty: emptyBlock ifNotEmpty: nonEmptyBlock [
+	^ self isEmpty
+		ifTrue: [ emptyBlock value ]
+		ifFalse: [ nonEmptyBlock cull: self ]
+]
+
 { #category : #controlling }
 ViennaNode >> ifNotEmpty: aBlock [
 	^ self isEmpty
 		ifTrue: [ self ]
 		ifFalse: [ aBlock cull: self ]
+]
+
+{ #category : #testing }
+ViennaNode >> ifNotEmpty: nonEmptyBlock ifEmpty: emptyBlock [
+	^ self isEmpty
+		ifTrue: [ emptyBlock value ]
+		ifFalse: [ nonEmptyBlock cull: self ]
+]
+
+{ #category : #testing }
+ViennaNode >> includesParent: aViennaNode [
+	self
+		parentsDo: [ :node | 
+			node = aViennaNode
+				ifTrue: [ ^ true ] ].
+	^ false
 ]
 
 { #category : #testing }
@@ -692,4 +715,19 @@ ViennaNode >> storeOn: aStream [
 { #category : #accessing }
 ViennaNode >> third [
 	^ self at: 3
+]
+
+{ #category : #accessing }
+ViennaNode >> tracingHighlightedSource [
+	^ self tracingSource
+		in: [ :source | 
+			ViennaVDMHighlighter new
+				text: source asText;
+				parse: source asString;
+				text ]
+]
+
+{ #category : #accessing }
+ViennaNode >> tracingSource [
+	^ ViennaVDMTracingFormatter format: self
 ]

@@ -5,7 +5,7 @@ Class {
 		'string',
 		'sources'
 	],
-	#category : 'ViennaTalk-Transpiler-Core'
+	#category : #'ViennaTalk-Transpiler-Core'
 }
 
 { #category : #'instance creation' }
@@ -145,6 +145,38 @@ ViennaTracingString >> nextPutAll: aString [
 			sources addAll: (aString sources collect: [ :assoc | assoc key + size -> assoc value ]).
 			string := string , aString string ]
 		ifFalse: [ string := string , aString ]
+]
+
+{ #category : #accessing }
+ViennaTracingString >> nodeAt: anInteger ifAbsent: errorBlock [
+	sources
+		do: [ :assoc | 
+			((assoc key includes: anInteger) and: [ assoc value isViennaNode ])
+				ifTrue: [ ^ assoc value ] ].
+	^ errorBlock value
+]
+
+{ #category : #accessing }
+ViennaTracingString >> nodeContaining: anInterval ifAbsent: errorBlock [
+	| start end nodes |
+	start := anInterval first.
+	end := anInterval
+		ifEmpty: [ start := start - 1 ]
+		ifNotEmpty: [ anInterval last ].
+	nodes := OrderedCollection new.
+	sources
+		do: [ :assoc | 
+			((assoc key includes: start) and: [ assoc value isViennaNode ])
+				ifTrue: [ nodes add: assoc value ] ].
+	start + 1 to: end do: [ :index | 
+		| newNodes |
+		newNodes := OrderedCollection new: nodes size.
+		sources
+			do: [ :assoc | 
+				((assoc key includes: index) and: [ nodes includes: assoc value ])
+					ifTrue: [ newNodes add: assoc value ] ].
+		nodes := newNodes ].
+	^ nodes ifNotEmpty: #first ifEmpty: [ errorBlock value ]
 ]
 
 { #category : #copying }
