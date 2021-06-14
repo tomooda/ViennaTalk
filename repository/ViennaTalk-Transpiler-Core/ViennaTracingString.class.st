@@ -76,6 +76,21 @@ ViennaTracingString >> basicAt: anInteger [
 	^ (string at: anInteger) asciiValue
 ]
 
+{ #category : #accessing }
+ViennaTracingString >> byteAt: index [
+	^ string byteAt: index
+]
+
+{ #category : #accessing }
+ViennaTracingString >> byteAt: index put: value [
+	^ string byteAt: index put: value
+]
+
+{ #category : #accessing }
+ViennaTracingString >> byteSize [
+	^ string byteSize
+]
+
 { #category : #copying }
 ViennaTracingString >> copyFrom: start to: end [
 	| newSources |
@@ -106,6 +121,15 @@ ViennaTracingString >> initialize [
 	sources := OrderedCollection new
 ]
 
+{ #category : #accessing }
+ViennaTracingString >> intervalForSource: anObject [
+	sources
+		do: [ :assoc | 
+			assoc value = anObject
+				ifTrue: [ ^ assoc key ] ].
+	^ 0 to: -1
+]
+
 { #category : #testing }
 ViennaTracingString >> isViennaTracingString [
 	^ true
@@ -130,6 +154,26 @@ ViennaTracingString >> join: aCollection [
 		separatedBy: [ sources do: [ :assoc | newSources add: assoc key + offset -> assoc value ].
 			offset := offset + string size ].
 	^ self class string: (string join: (aCollection collect: #asString)) sources: newSources
+]
+
+{ #category : #accessing }
+ViennaTracingString >> mergeSources [
+	| newSources |
+	newSources := OrderedCollection new: sources size.
+	sources
+		reverseDo: [ :assoc | 
+			| source |
+			source := assoc value.
+			(newSources anySatisfy: [ :a | source == a value ])
+				ifFalse: [ | intervals |
+					intervals := sources
+						select: [ :a | source == a value ]
+						thenCollect: #key.
+					newSources
+						add:
+							((intervals collect: #first) min to: (intervals collect: #last) max)
+								-> source ] ].
+	sources := newSources reverse
 ]
 
 { #category : #streaming }
@@ -179,6 +223,18 @@ ViennaTracingString >> nodeContaining: anInterval ifAbsent: errorBlock [
 	^ nodes ifNotEmpty: #first ifEmpty: [ errorBlock value ]
 ]
 
+{ #category : #accessing }
+ViennaTracingString >> nodesContaining: anInterval [
+	| start end |
+	start := anInterval first.
+	end := anInterval
+		ifEmpty: [ start := start - 1 ]
+		ifNotEmpty: [ anInterval last ].
+	^ sources
+		select: [ :assoc | assoc key first <= end and: [ assoc key last >= start ] ]
+		thenCollect: #value
+]
+
 { #category : #copying }
 ViennaTracingString >> postCopy [
 	string := string copy.
@@ -212,6 +268,13 @@ ViennaTracingString >> sourceAt: anInteger ifAbsent: errorBlock [
 { #category : #accessing }
 ViennaTracingString >> sources [
 	^ sources
+]
+
+{ #category : #accessing }
+ViennaTracingString >> sourcesAt: anInteger [
+	^ sources
+		select: [ :assoc | assoc key includes: anInteger ]
+		thenCollect: #value
 ]
 
 { #category : #streaming }

@@ -134,6 +134,17 @@ ViennaNode >> allDescendantsDo: aBlock [
 				ifTrue: [ node allDescendantsDo: aBlock ] ]
 ]
 
+{ #category : #accessing }
+ViennaNode >> allParents [
+	^ Array
+		streamContents: [ :stream | 
+			| node |
+			node := parent.
+			[ node notNil ]
+				whileTrue: [ stream nextPut: node.
+					node := node parent ] ]
+]
+
 { #category : #enumerating }
 ViennaNode >> allSatisfy: aBlock [
 	self
@@ -397,7 +408,7 @@ ViennaNode >> definitionInQuantifierOfLocalName: aString do: aBlock [
 									(n label = 'PatternIdentifier' and: [ n first = aString ])
 										ifTrue: [ ^ aBlock value: n ] ] ] ].
 			^ self ].
-	(label = 'Exists1' or: [ label = 'IotaExpression' ])
+	(label = 'Exists1Expression' or: [ label = 'IotaExpression' ])
 		ifTrue: [ self first first
 				allDescendantsDo: [ :n | 
 					(n label = 'PatternIdentifier' and: [ n first = aString ])
@@ -510,7 +521,7 @@ ViennaNode >> hasDescendantSuchThat: aBlock [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : #'accessing-source' }
 ViennaNode >> highlightedSource [
 	^ self source
 		in: [ :source | 
@@ -676,7 +687,7 @@ ViennaNode >> sixth [
 	^ self at: 6
 ]
 
-{ #category : #accessing }
+{ #category : #'accessing-source' }
 ViennaNode >> source [
 	^ ViennaVDMFormatter format: self
 ]
@@ -717,7 +728,7 @@ ViennaNode >> third [
 	^ self at: 3
 ]
 
-{ #category : #accessing }
+{ #category : #'accessing-source' }
 ViennaNode >> tracingHighlightedSource [
 	^ self tracingSource
 		in: [ :source | 
@@ -727,7 +738,14 @@ ViennaNode >> tracingHighlightedSource [
 				text ]
 ]
 
-{ #category : #accessing }
+{ #category : #'accessing-source' }
 ViennaNode >> tracingSource [
-	^ ViennaVDMTracingFormatter format: self
+	| source whole |
+	source := (ViennaVDMTracingFormatter format: self)
+		asViennaTracingString.
+	source mergeSources.
+	whole := 1 to: source size.
+	source sources
+		addAll: (self allParents collect: [ :node | whole -> node ]).
+	^ source
 ]

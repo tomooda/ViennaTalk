@@ -102,21 +102,22 @@ ViennaASTBrowser >> initializePresenters [
 				ifTrue: [ self updateAppendSource ]
 				ifFalse: [ self updateSource ] ].
 	sourceText := self newText
-		contextMenu: [self sourceTextContextMenu];
-		yourself
+		contextMenu: [ self sourceTextContextMenu ];
+		yourself.
+	self
+		whenBuiltDo: [ :w | 
+			| f |
+			f := TextStyle defaultFont.
+			w widget
+				allMorphsDo: [ :m | 
+					(m respondsTo: #font:)
+						ifTrue: [ m font: f ] ] ]
 ]
 
 { #category : #initialization }
 ViennaASTBrowser >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter title: 'Browser'
-]
-
-{ #category : #menus }
-ViennaASTBrowser >> inspectAst [
-	(sourceText text string asViennaTracingString
-		nodeContaining: sourceText selectionInterval
-		ifAbsent: [ ^ self ]) inspect
 ]
 
 { #category : #accessing }
@@ -130,12 +131,31 @@ ViennaASTBrowser >> module [
 ]
 
 { #category : #menus }
+ViennaASTBrowser >> selectNode: aViennaNode [
+	sourceText
+		selectionInterval: (sourceText text string intervalForSource: aViennaNode)
+]
+
+{ #category : #menus }
+ViennaASTBrowser >> selectScope: aViennaNode [
+	self selectNode: (ViennaRefactoring new scopeOf: aViennaNode)
+]
+
+{ #category : #menus }
 ViennaASTBrowser >> sourceTextContextMenu [
+	| nodes |
+	nodes := (sourceText text string asViennaTracingString
+		nodesContaining: sourceText selectionInterval) select: #isViennaNode.
+	nodes := nodes ifNotEmpty: [ nodes , nodes last allParents ].
 	^ self newMenu
 		addItem: [ :item | 
 			item
 				name: 'AST';
-				action: [ self inspectAst ] ]
+				action: [ nodes inspect ] ];
+		addItem: [ :item | 
+			item
+				name: 'Scope';
+				action: [ self selectScope: nodes first ] ]
 ]
 
 { #category : #updating }
