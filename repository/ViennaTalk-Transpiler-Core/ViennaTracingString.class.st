@@ -23,6 +23,13 @@ ViennaTracingString class >> new [
 ]
 
 { #category : #'instance creation' }
+ViennaTracingString class >> new: anInteger [
+	^ self basicNew
+		initialize;
+		setString: (String new: anInteger)
+]
+
+{ #category : #'instance creation' }
 ViennaTracingString class >> string: aString sources: aCollection [
 	^ self basicNew
 		setString: aString;

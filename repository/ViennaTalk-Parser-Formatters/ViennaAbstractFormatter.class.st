@@ -888,8 +888,10 @@ ViennaAbstractFormatter >> format: aViennaNode [
 	| string |
 	aViennaNode isString
 		ifTrue: [ ^ aViennaNode ].
-	string := self perform: (aViennaNode label uncapitalized , ':') asSymbol with: aViennaNode.
-	self needsParen
+	string := self
+		perform: (aViennaNode label uncapitalized , ':') asSymbol
+		with: aViennaNode.
+	(self needsParen: aViennaNode)
 		ifTrue: [ string := '(' , (self indentString: string) , ')' ].
 	^ string
 ]
@@ -1801,6 +1803,28 @@ ViennaAbstractFormatter >> needsParen [
 		ifPresent: [ :grouping | 
 			(grouping = #left and: [ parentNode first ~= childNode ])
 				or: [ grouping = #right and: [ parentNode second ~= childNode ] ] ]
+		ifAbsent: [ true ]
+]
+
+{ #category : #private }
+ViennaAbstractFormatter >> needsParen: aViennaNode [
+	| precedence parentPrecedence |
+	precedence := OperatorPrecedence
+		at: aViennaNode label
+		ifAbsent: [ ^ false ].
+	parentPrecedence := OperatorPrecedence
+		at: aViennaNode parent label
+		ifAbsent: [ ^ false ].
+	precedence < parentPrecedence
+		ifTrue: [ ^ true ].
+	parentPrecedence < precedence
+		ifTrue: [ ^ false ].
+	^ OperatorGrouping
+		at: aViennaNode parent label asString
+		ifPresent: [ :grouping | 
+			(grouping = #left and: [ aViennaNode parent first ~= aViennaNode ])
+				or:
+					[ grouping = #right and: [ aViennaNode parent second ~= aViennaNode ] ] ]
 		ifAbsent: [ true ]
 ]
 

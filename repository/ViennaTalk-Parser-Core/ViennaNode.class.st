@@ -644,6 +644,20 @@ ViennaNode >> parentsDo: aBlock [
 			node := node parent ]
 ]
 
+{ #category : #accessing }
+ViennaNode >> patternIdentifierNames [
+	| names |
+	names := OrderedCollection new.
+	self label = 'PatternIdentifier'
+		ifTrue: [ names add: self first ].
+	self
+		allDescendantsDo: [ :node | 
+			(node label = 'PatternIdentifier'
+				and: [ (names includes: node first) not ])
+				ifTrue: [ names add: node first ] ].
+	^ names
+]
+
 { #category : #printing }
 ViennaNode >> printOn: aStream [
 	| substrings |
