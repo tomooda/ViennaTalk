@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'fixture'
 	],
-	#category : 'ViennaTalk-Engine-Tests'
+	#category : #'ViennaTalk-Engine-Tests'
 }
 
 { #category : #running }
@@ -36,19 +36,13 @@ ViennaServerTest >> test0 [
 ]
 
 { #category : #'tests-empty' }
-ViennaServerTest >> test20times [
-	| sem count |
-	sem := Semaphore forMutualExclusion .
-	count := 0.
-	20 timesRepeat: [
-		[self
+ViennaServerTest >> testExpression [
+	self
 		testExpression: '1+2'
 		specification: ''
 		states: Dictionary new
 		resultValue: '3'
-		resultStates: Dictionary new.
-		sem critical: [ count := count + 1]] forkAt: Processor userBackgroundPriority ].
-	[ count < 20 ] whileTrue: [ (Delay forMilliseconds: 100) wait ]
+		resultStates: Dictionary new
 ]
 
 { #category : #private }
