@@ -1,5 +1,3 @@
-name: CI
-
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -12,7 +10,21 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+   strategy:
+      matrix:
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        smalltalk:
+          - Pharo64-8.0
+          - Pharo32-8.0
+        exclude: # exclude 32bit builds on macOS
+          - os: macos-latest
+            smalltalk: Pharo32-8.0
+          - os: macos-latest
+            smalltalk: Pharo32-8.0
+          - os: windows-latest
+            smalltalk: Pharo64-8.0
+    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.smalltalk }} on ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
       - uses: hpi-swa/setup-smalltalkCI@v1
