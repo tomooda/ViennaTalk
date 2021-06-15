@@ -6,6 +6,12 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - 'JavaScript/**'
+      - 'Tutorials/**'
+      - 'scripts/**'
   pull_request:
     types: [assigned, opened, synchronize, reopened]
 
