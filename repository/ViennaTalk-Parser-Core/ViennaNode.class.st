@@ -125,6 +125,20 @@ ViennaNode class >> label: aString withAll: anArray [
 	^ node
 ]
 
+{ #category : #'adding/removing' }
+ViennaNode >> add: anObject [
+	| array |
+	array := self asArray.
+	self
+		become:
+			((self class new: self size + 1)
+				setLabel: label;
+				yourself).
+	1 to: array size do: [ :index | self at: index put: (array at: index) ].
+	self at: self size put: anObject.
+	^ anObject
+]
+
 { #category : #enumerating }
 ViennaNode >> allDescendantsDo: aBlock [
 	aBlock value: self.
@@ -679,6 +693,19 @@ ViennaNode >> printOn: aStream [
 						separatedBy: [ aStream nextPut: Character cr ] ] ]
 		ifFalse: [ substrings do: [ :string | aStream nextPutAll: string ] separatedBy: [ aStream nextPut: Character space ] ].
 	aStream nextPut: $)
+]
+
+{ #category : #'adding/removing' }
+ViennaNode >> remove: anObject [
+	| array |
+	array := self asArray copyWithout: anObject.
+	self
+		become:
+			((self class new: array size)
+				setLabel: label;
+				yourself).
+	1 to: array size do: [ :index | self at: index put: (array at: index) ].
+	^ anObject
 ]
 
 { #category : #accessing }

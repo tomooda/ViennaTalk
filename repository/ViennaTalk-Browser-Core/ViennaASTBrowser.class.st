@@ -44,6 +44,16 @@ ViennaASTBrowser >> category [
 	^ categoryList selection selectedItem
 ]
 
+{ #category : #refactoring }
+ViennaASTBrowser >> convertExplicitFunctionIntoOperation: aViennaNode [
+	ViennaConvertExplicitFunctionIntoOperation new
+		ast: aViennaNode;
+		execute.
+	self
+		updateDefinitionList;
+		updateSource
+]
+
 { #category : #accessing }
 ViennaASTBrowser >> definition [
 	^ definitionList selection selectedItem
@@ -86,7 +96,11 @@ ViennaASTBrowser >> definitionListContextMenu [
 										name: 'rename';
 										action: [ self
 												renameExplicitFunction: def second first first
-												inModule: def module ] ] ].
+												inModule: def module ] ];
+								addItem: [ :item | 
+									item
+										name: 'convert into operation';
+										action: [ self convertExplicitFunctionIntoOperation: def ] ] ].
 					(def label = 'AccessFunctionDefinition'
 						and: [ def second first label = 'ImplicitFunctionDefinition' ])
 						ifTrue: [ group
@@ -125,9 +139,7 @@ ViennaASTBrowser >> definitionListContextMenu [
 										name: 'rename';
 										action: [ self
 												renameImplicitOperation: def second first first
-												inModule: def module ] ] ].
-				
-				 ] ].
+												inModule: def module ] ] ] ] ].
 	^ menu
 ]
 
