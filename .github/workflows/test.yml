@@ -1,0 +1,43 @@
+name: CI
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - 'JavaScript/**'
+      - 'Tutorials/**'
+      - 'scripts/**'
+  pull_request:
+    types: [assigned, opened, synchronize, reopened]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        smalltalk:
+          - Pharo64-8.0
+          - Pharo32-8.0
+        exclude: # exclude 32bit builds on macOS
+          - os: ubuntu-latest
+            smalltalk: Pharo32-8.0
+          - os: macos-latest
+            smalltalk: Pharo32-8.0
+          - os: windows-latest
+            smalltalk: Pharo64-8.0
+    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.smalltalk }} on ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: hpi-swa/setup-smalltalkCI@v1
+        id: smalltalkci
+        with:
+          smalltalk-image: ${{ matrix.smalltalk }}
+      - run: smalltalkci -s ${{ steps.smalltalkci.outputs.smalltalk-image }}
+        shell: bash
+        timeout-minutes: 15
