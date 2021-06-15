@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-   strategy:
+    strategy:
       matrix:
         os: [ ubuntu-latest, macos-latest, windows-latest ]
         smalltalk:
@@ -24,14 +24,14 @@ jobs:
             smalltalk: Pharo32-8.0
           - os: windows-latest
             smalltalk: Pharo64-8.0
-  runs-on: ${{ matrix.os }}
-  name: ${{ matrix.smalltalk }} on ${{ matrix.os }}
-  steps:
-    - uses: actions/checkout@v2
-    - uses: hpi-swa/setup-smalltalkCI@v1
-      id: smalltalkci
-      with:
-        smalltalk-version: Pharo64-8.0
-    - run: smalltalkci -s ${{ steps.smalltalkci.outputs.smalltalk-version }}
-      shell: bash
-      timeout-minutes: 15
+    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.smalltalk }} on ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: hpi-swa/setup-smalltalkCI@v1
+        id: smalltalkci
+        with:
+          smalltalk-version: Pharo64-8.0
+      - run: smalltalkci -s ${{ steps.smalltalkci.outputs.smalltalk-version }}
+        shell: bash
+        timeout-minutes: 15
