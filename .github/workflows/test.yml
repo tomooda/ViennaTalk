@@ -18,7 +18,7 @@ jobs:
           - Pharo64-8.0
           - Pharo32-8.0
         exclude: # exclude 32bit builds on macOS
-          - os: macos-latest
+          - os: ubuntu-latest
             smalltalk: Pharo32-8.0
           - os: macos-latest
             smalltalk: Pharo32-8.0
