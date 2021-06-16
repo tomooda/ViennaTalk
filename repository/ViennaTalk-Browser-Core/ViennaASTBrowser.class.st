@@ -313,6 +313,23 @@ ViennaASTBrowser >> renameImplicitOperation: aString inModule: aViennaNode [
 ]
 
 { #category : #refactoring }
+ViennaASTBrowser >> renameLocal: aViennaNode [
+	| oldName |
+	oldName := aViennaNode first.
+	(UIManager default request: 'rename local' initialAnswer: oldName)
+		ifNotNil: [ :ans | 
+			ans trim
+				ifNotEmpty: [ :newName | 
+					ViennaRenameLocal new
+						ast: aViennaNode;
+						oldName: oldName;
+						newName: newName;
+						execute.
+					self updateDefinitionList.
+					self updateSource ] ]
+]
+
+{ #category : #refactoring }
 ViennaASTBrowser >> renameStateConstructor: aString inModule: aViennaNode [
 	(UIManager default
 		request: 'rename state constructor'
@@ -393,33 +410,24 @@ ViennaASTBrowser >> selectScope: aViennaNode [
 
 { #category : #menus }
 ViennaASTBrowser >> sourceTextContextMenu [
-	| nodes menu |
-	nodes := (sourceText text string asViennaTracingString
-		nodesContaining: sourceText selectionInterval) select: #isViennaNode.
-	nodes := nodes ifNotEmpty: [ nodes , nodes last allParents ].
-	menu := self newMenu
-		addItem: [ :item | 
-			item
-				name: 'AST';
-				action: [ nodes inspect ] ];
-		addItem: [ :item | 
-			item
-				name: 'Scope';
-				action: [ self selectScope: nodes first ] ].
-	self definition
-		ifNotNil: [ :def | 
-			def label = 'StateDefinition'
+	| menu |
+	menu := self newMenu.
+	(sourceText text string asViennaTracingString
+		nodeContaining: sourceText selectionInterval
+		ifAbsent: [ nil ])
+		ifNotNil: [ :node | 
+			node label = 'LocalName'
 				ifTrue: [ menu
 						addItem: [ :item | 
 							item
-								name: 'rename';
-								action: [ self renameStateConstructor: def first inModule: def module ] ] ].
-			def label = 'Field'
+								name: 'rename local';
+								action: [ self renameLocal: node ] ] ].
+			node label = 'PatternIdentifier'
 				ifTrue: [ menu
 						addItem: [ :item | 
 							item
-								name: 'rename';
-								action: [ self renameStateVariable: def first inModule: def module ] ] ] ].
+								name: 'rename local';
+								action: [ self renameLocal: node ] ] ] ].
 	^ menu
 ]
 

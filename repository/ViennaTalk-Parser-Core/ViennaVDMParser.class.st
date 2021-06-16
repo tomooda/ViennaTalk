@@ -1,7 +1,7 @@
 Class {
 	#name : #ViennaVDMParser,
 	#superclass : #ViennaVDMGrammar,
-	#category : 'ViennaTalk-Parser-Core'
+	#category : #'ViennaTalk-Parser-Core'
 }
 
 { #category : #'parsers-expressions-operators' }
@@ -1486,7 +1486,7 @@ ViennaVDMParser >> operationsSignature [
 	^ super operationsSignature
 		=>> [ :start :end :array | 
 			ViennaNode
-				label: 'OperationsSignature'
+				label: 'ExportOperationsSignature'
 				start: start
 				end: end
 				withAll: array ]

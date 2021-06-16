@@ -620,6 +620,11 @@ ViennaNode >> moduleNamed: aString [
 ]
 
 { #category : #accessing }
+ViennaNode >> modulesDo: aBlock [
+	self document do: aBlock
+]
+
+{ #category : #accessing }
 ViennaNode >> ninth [
 	^ self at: 9
 ]
