@@ -33,7 +33,7 @@ BaselineOfViennaTalk >> baseline: spec [
 				package: 'ViennaTalk-Browser-Core'
 					with: [ spec
 						requires:
-							#('ViennaTalk-Animation-Core' #'ViennaTalk-Value-Core' #'ViennaTalk-Parser-Formatters' #'ViennaTalk-Parser-Highlighters') ];
+							#('ViennaTalk-Animation-Core' #'ViennaTalk-Value-Core' #'ViennaTalk-Parser-Formatters' #'ViennaTalk-Parser-Highlighters' #'ViennaTalk-Refactoring-Core') ];
 				package: #'ViennaTalk-Engine-Core'
 					with: [ spec requires: #('NeoJSON' 'ZincHTTPComponents') ];
 				for: #Unix
@@ -52,6 +52,8 @@ BaselineOfViennaTalk >> baseline: spec [
 							with: [ spec requires: #('ViennaTalk-Engine-OSSubprocess') ] ];
 				package: #'ViennaTalk-Engine-Tests'
 					with: [ spec requires: #(#'ViennaTalk-Engine-Core') ];
+				package: 'ViennaTalk-Refactoring-Core'
+					with: [ spec requires: #('ViennaTalk-Parser-Core') ];
 				package: 'ViennaTalk-Html-Core'
 					with: [ spec requires: #('PetitParser2') ];
 				package: #'ViennaTalk-Launcher-Core';
