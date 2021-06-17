@@ -4,6 +4,11 @@ Class {
 	#category : #'ViennaTalk-Refactoring-Core'
 }
 
+{ #category : #testing }
+ViennaRenameToplevel class >> isAbstract [
+	^ self = ViennaRenameToplevel
+]
+
 { #category : #operations }
 ViennaRenameToplevel >> execute [
 	super execute.
@@ -16,8 +21,8 @@ ViennaRenameToplevel >> executeOnGlobalNames [
 		allDescendantsDo: [ :node | 
 			(node label = 'GlobalName'
 				and: [ node first = self definitionNode module first
-						and: [ node second = oldName ] ])
-				ifTrue: [ node at: 2 put: newName ] ]
+						and: [ node second = self oldName ] ])
+				ifTrue: [ node at: 2 put: self newName ] ]
 ]
 
 { #category : #operations }
@@ -32,7 +37,7 @@ ViennaRenameToplevel >> executeOnImports [
 						do: [ :importDefinition | 
 							importDefinition first = moduleName
 								ifTrue: [ self
-										freeOccurrencesOf: oldName
+										freeOccurrencesOf: self oldName
 										in: importDefinition second
 										do: [ :node | self execute: node ] ] ] ] ]
 ]

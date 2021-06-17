@@ -7,6 +7,8 @@ Class {
 { #category : #operations }
 ViennaRenameLocal >> check [
 	^ self definitionNode notNil
+		and: [ self definitionNode label ~= 'Module'
+				and: [ self definitionNode label ~= 'Document' ] ]
 ]
 
 { #category : #operations }
@@ -16,24 +18,24 @@ ViennaRenameLocal >> executeOnBlockStatement: aViennaNode [
 			statement label = 'DclStatement'
 				ifTrue: [ statement
 						do: [ :assignmentDefinition | 
-							assignmentDefinition first = oldName
-								ifTrue: [ assignmentDefinition at: 1 put: newName ] ] ] ]
+							assignmentDefinition first = self oldName
+								ifTrue: [ assignmentDefinition at: 1 put: self newName ] ] ] ]
 ]
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnCasesExpressionAlternative: aViennaNode [
 	aViennaNode first
 		allDescendantsDo: [ :node | 
-			(node label = 'PatternIdentifier' and: [ node first = oldName ])
-				ifTrue: [ node at: 1 put: newName ] ]
+			(node label = 'PatternIdentifier' and: [ node first = self oldName ])
+				ifTrue: [ node at: 1 put: self newName ] ]
 ]
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnCasesStatementAlternative: aViennaNode [
 	aViennaNode first
 		allDescendantsDo: [ :node | 
-			(node label = 'PatternIdentifier' and: [ node first = oldName ])
-				ifTrue: [ node at: 1 put: newName ] ]
+			(node label = 'PatternIdentifier' and: [ node first = self oldName ])
+				ifTrue: [ node at: 1 put: self newName ] ]
 ]
 
 { #category : #operations }
@@ -48,8 +50,8 @@ ViennaRenameLocal >> executeOnDefinition [
 ViennaRenameLocal >> executeOnExists1Expression: aViennaNode [
 	aViennaNode first first
 		allDescendantsDo: [ :node | 
-			(node label = 'PatternIdentifier' and: [ node first = oldName ])
-				ifTrue: [ node at: 1 put: newName ] ]
+			(node label = 'PatternIdentifier' and: [ node first = self oldName ])
+				ifTrue: [ node at: 1 put: self newName ] ]
 ]
 
 { #category : #operations }
@@ -58,28 +60,28 @@ ViennaRenameLocal >> executeOnExistsExpression: aViennaNode [
 		do: [ :bind | 
 			bind first
 				allDescendantsDo: [ :node | 
-					(node label = 'PatternIdentifier' and: [ node first = oldName ])
-						ifTrue: [ node at: 1 put: newName ] ] ]
+					(node label = 'PatternIdentifier' and: [ node first = self oldName ])
+						ifTrue: [ node at: 1 put: self newName ] ] ]
 ]
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnExplicitFunctionDefinition: aViennaNode [
 	aViennaNode second
 		do: [ :n | 
-			(n label = 'TypeVariableIdentifier' and: [ n first = oldName ])
-				ifTrue: [ n at: 1 put: newName ] ].
+			(n label = 'TypeVariableIdentifier' and: [ n first = self oldName ])
+				ifTrue: [ n at: 1 put: self newName ] ].
 	aViennaNode fifth
 		allDescendantsDo: [ :n | 
-			(n label = 'PatternIdentifier' and: [ n first = oldName ])
-				ifTrue: [ n at: 1 put: newName ] ]
+			(n label = 'PatternIdentifier' and: [ n first = self oldName ])
+				ifTrue: [ n at: 1 put: self newName ] ]
 ]
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnExplicitOperationDefinition: aViennaNode [
 	aViennaNode fifth
 		allDescendantsDo: [ :n | 
-			(n label = 'PatternIdentifier' and: [ n first = oldName ])
-				ifTrue: [ n at: 1 put: newName ] ]
+			(n label = 'PatternIdentifier' and: [ n first = self oldName ])
+				ifTrue: [ n at: 1 put: self newName ] ]
 ]
 
 { #category : #operations }
@@ -88,8 +90,8 @@ ViennaRenameLocal >> executeOnForallExpression: aViennaNode [
 		do: [ :bind | 
 			bind first
 				allDescendantsDo: [ :node | 
-					(node label = 'PatternIdentifier' and: [ node first = oldName ])
-						ifTrue: [ node at: 1 put: newName ] ] ]
+					(node label = 'PatternIdentifier' and: [ node first = self oldName ])
+						ifTrue: [ node at: 1 put: self newName ] ] ]
 ]
 
 { #category : #operations }
@@ -99,13 +101,13 @@ ViennaRenameLocal >> executeOnImplicitFunctionDefinition: aViennaNode [
 			1 to: patternTypePairList size by: 2 do: [ :index | 
 				(patternTypePairList at: index)
 					allDescendantsDo: [ :n | 
-						(n label = 'PatternIdentifier' and: [ n first = oldName ])
-							ifTrue: [ n at: 1 put: newName ] ] ] ].
+						(n label = 'PatternIdentifier' and: [ n first = self oldName ])
+							ifTrue: [ n at: 1 put: self newName ] ] ] ].
 	aViennaNode fourth
 		ifNotEmpty: [ :identifierTypePairList | 
 			1 to: identifierTypePairList size by: 2 do: [ :index | 
-				(identifierTypePairList at: index) = oldName
-					ifTrue: [ identifierTypePairList at: 1 put: newName ] ] ]
+				(identifierTypePairList at: index) = self oldName
+					ifTrue: [ identifierTypePairList at: 1 put: self newName ] ] ]
 ]
 
 { #category : #operations }
@@ -115,59 +117,59 @@ ViennaRenameLocal >> executeOnImplicitOperationDefinition: aViennaNode [
 			1 to: patternTypePairList size by: 2 do: [ :index | 
 				(patternTypePairList at: index)
 					allDescendantsDo: [ :n | 
-						(n label = 'PatternIdentifier' and: [ n first = oldName ])
-							ifTrue: [ n at: 1 put: newName ] ] ] ].
+						(n label = 'PatternIdentifier' and: [ n first = self oldName ])
+							ifTrue: [ n at: 1 put: self newName ] ] ] ].
 	aViennaNode fourth
 		ifNotEmpty: [ :identifierTypePairList | 
 			1 to: identifierTypePairList size by: 2 do: [ :index | 
-				(identifierTypePairList at: index) = oldName
-					ifTrue: [ identifierTypePairList at: 1 put: newName ] ] ]
+				(identifierTypePairList at: index) = self oldName
+					ifTrue: [ identifierTypePairList at: 1 put: self newName ] ] ]
 ]
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnIndexForLoop: aViennaNode [
-	aViennaNode first = oldName
-		ifTrue: [ aViennaNode at: 1 put: newName ]
+	aViennaNode first = self oldName
+		ifTrue: [ aViennaNode at: 1 put: self newName ]
 ]
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnInvariantInitialFunction: aViennaNode [
 	aViennaNode first
 		allDescendantsDo: [ :n | 
-			(n label = 'PatternIdentifier' and: [ n first = oldName ])
-				ifTrue: [ n at: 1 put: newName ] ]
+			(n label = 'PatternIdentifier' and: [ n first = self oldName ])
+				ifTrue: [ n at: 1 put: self newName ] ]
 ]
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnIotaExpression: aViennaNode [
 	aViennaNode first first
 		allDescendantsDo: [ :node | 
-			(node label = 'PatternIdentifier' and: [ node first = oldName ])
-				ifTrue: [ node at: 1 put: newName ] ]
+			(node label = 'PatternIdentifier' and: [ node first = self oldName ])
+				ifTrue: [ node at: 1 put: self newName ] ]
 ]
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnLambdaExpression: aViennaNode [
 	aViennaNode first first
 		allDescendantsDo: [ :node | 
-			(node label = 'PatternIdentifier' and: [ node first = oldName ])
-				ifTrue: [ node at: 1 put: newName ] ]
+			(node label = 'PatternIdentifier' and: [ node first = self oldName ])
+				ifTrue: [ node at: 1 put: self newName ] ]
 ]
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnLetBeExpression: aViennaNode [
 	aViennaNode first first
 		allDescendantsDo: [ :n | 
-			(n label = 'PatternIdentifier' and: [ n first = oldName ])
-				ifTrue: [ n at: 1 put: newName ] ]
+			(n label = 'PatternIdentifier' and: [ n first = self oldName ])
+				ifTrue: [ n at: 1 put: self newName ] ]
 ]
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnLetBeStatement: aViennaNode [
 	aViennaNode first first
 		allDescendantsDo: [ :n | 
-			(n label = 'PatternIdentifier' and: [ n first = oldName ])
-				ifTrue: [ n at: 1 put: newName ] ]
+			(n label = 'PatternIdentifier' and: [ n first = self oldName ])
+				ifTrue: [ n at: 1 put: self newName ] ]
 ]
 
 { #category : #operations }
@@ -179,15 +181,15 @@ ViennaRenameLocal >> executeOnLetExpression: aViennaNode [
 			def label = 'ValueDefinition'
 				ifTrue: [ def first
 						allDescendantsDo: [ :n | 
-							(n label = 'PatternIdentifier' and: [ n first = oldName ])
-								ifTrue: [ n at: 1 put: newName ] ] ].
+							(n label = 'PatternIdentifier' and: [ n first = self oldName ])
+								ifTrue: [ n at: 1 put: self newName ] ] ].
 			(def label = 'FunctionDefinition'
-				and: [ def first first = oldName ])
+				and: [ def first first = self oldName ])
 				ifTrue: [ | functionDefinition |
 					functionDefinition := def first.
-					functionDefinition at: 1 put: newName.
+					functionDefinition at: 1 put: self newName.
 					functionDefinition label = 'ExplicitFunctionDefinition'
-						ifTrue: [ functionDefinition at: 4 put: newName ] ] ]
+						ifTrue: [ functionDefinition at: 4 put: self newName ] ] ]
 ]
 
 { #category : #operations }
@@ -199,15 +201,15 @@ ViennaRenameLocal >> executeOnLetStatement: aViennaNode [
 			def label = 'ValueDefinition'
 				ifTrue: [ def first
 						allDescendantsDo: [ :n | 
-							(n label = 'PatternIdentifier' and: [ n first = oldName ])
-								ifTrue: [ n at: 1 put: newName ] ] ].
+							(n label = 'PatternIdentifier' and: [ n first = self oldName ])
+								ifTrue: [ n at: 1 put: self newName ] ] ].
 			(def label = 'FunctionDefinition'
-				and: [ def first first = oldName ])
+				and: [ def first first = self oldName ])
 				ifTrue: [ | functionDefinition |
 					functionDefinition := def first.
-					functionDefinition at: 1 put: newName.
+					functionDefinition at: 1 put: self newName.
 					functionDefinition label = 'ExplicitFunctionDefinition'
-						ifTrue: [ functionDefinition at: 4 put: newName ] ] ]
+						ifTrue: [ functionDefinition at: 4 put: self newName ] ] ]
 ]
 
 { #category : #operations }
@@ -218,24 +220,24 @@ ViennaRenameLocal >> executeOnMapComprehension: aViennaNode [
 				do: [ :pattern | 
 					pattern
 						allDescendantsDo: [ :n | 
-							(n label = 'PatternIdentifier' and: [ n first = oldName ])
-								ifTrue: [ n at: 1 put: newName ] ] ] ]
+							(n label = 'PatternIdentifier' and: [ n first = self oldName ])
+								ifTrue: [ n at: 1 put: self newName ] ] ] ]
 ]
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnSequenceComprehension: aViennaNode [
 	aViennaNode second first
 		allDescendantsDo: [ :n | 
-			(n label = 'PatternIdentifier' and: [ n first = oldName ])
-				ifTrue: [ n at: 1 put: newName ] ]
+			(n label = 'PatternIdentifier' and: [ n first = self oldName ])
+				ifTrue: [ n at: 1 put: self newName ] ]
 ]
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnSequenceForLoop: aViennaNode [
 	aViennaNode first
 		allDescendantsDo: [ :n | 
-			(n label = 'PatternIdentifier' and: [ n first = oldName ])
-				ifTrue: [ n at: 1 put: newName ] ]
+			(n label = 'PatternIdentifier' and: [ n first = self oldName ])
+				ifTrue: [ n at: 1 put: self newName ] ]
 ]
 
 { #category : #operations }
@@ -246,24 +248,29 @@ ViennaRenameLocal >> executeOnSetComprehension: aViennaNode [
 				do: [ :pattern | 
 					pattern
 						allDescendantsDo: [ :n | 
-							(n label = 'PatternIdentifier' and: [ n first = oldName ])
-								ifTrue: [ n at: 1 put: newName ] ] ] ]
+							(n label = 'PatternIdentifier' and: [ n first = self oldName ])
+								ifTrue: [ n at: 1 put: self newName ] ] ] ]
 ]
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnSetForLoop: aViennaNode [
 	aViennaNode first
 		allDescendantsDo: [ :n | 
-			(n label = 'PatternIdentifier' and: [ n first = oldName ])
-				ifTrue: [ n at: 1 put: newName ] ]
+			(n label = 'PatternIdentifier' and: [ n first = self oldName ])
+				ifTrue: [ n at: 1 put: self newName ] ]
 ]
 
 { #category : #accessing }
 ViennaRenameLocal >> findDefinitionNode [
 	| node |
 	node := self scopeOf: ast.
-	[ self hasLocalBindingOf: oldName in: node ]
-		whileFalse: [ node := self scopeOf: node parent.
-			node ifNil: [ ^ nil ] ].
+	[ node ifNil: [ ^ nil ].
+	self hasLocalBindingOf: self oldName in: node ]
+		whileFalse: [ node := self scopeOf: (node parent ifNil: [ ^ nil ]) ].
 	^ node
+]
+
+{ #category : #accessing }
+ViennaRenameLocal >> findOldName [
+	^ ast first
 ]

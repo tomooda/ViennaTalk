@@ -14,12 +14,13 @@ ViennaRenameExplicitFunction >> executeOnDefinition [
 	self definitionNode
 		ifNotNil: [ :explicitFunctionDefinition | 
 			explicitFunctionDefinition
-				at: 1 put: newName;
-				at: 4 put: newName ]
+				at: 1 put: self newName;
+				at: 4 put: self newName ]
 ]
 
 { #category : #accessing }
 ViennaRenameExplicitFunction >> findDefinitionNode [
+	self oldName ifNil: [ ^ nil ].
 	ast module third
 		do: [ :definitionBlock | 
 			definitionBlock first label = 'FunctionDefinitions'
@@ -28,7 +29,17 @@ ViennaRenameExplicitFunction >> findDefinitionNode [
 							accessFunctionDef second first
 								ifNotNil: [ :functionDef | 
 									(functionDef label = 'ExplicitFunctionDefinition'
-										and: [ functionDef first = oldName and: [ functionDef fourth = oldName ] ])
+										and: [ functionDef first = self oldName
+												and: [ functionDef fourth = self oldName ] ])
 										ifTrue: [ ^ functionDef ] ] ] ] ].
+	^ nil
+]
+
+{ #category : #accessing }
+ViennaRenameExplicitFunction >> findOldName [
+	ast label = 'ExplicitFunctionDefinition'
+		ifTrue: [ ^ ast first ].
+	ast label = 'LocalName'
+		ifTrue: [ ^ ast first ].
 	^ nil
 ]

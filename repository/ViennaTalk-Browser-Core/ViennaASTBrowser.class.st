@@ -44,102 +44,50 @@ ViennaASTBrowser >> category [
 	^ categoryList selection selectedItem
 ]
 
-{ #category : #refactoring }
-ViennaASTBrowser >> convertExplicitFunctionIntoOperation: aViennaNode [
-	ViennaConvertExplicitFunctionIntoOperation new
-		ast: aViennaNode;
-		execute.
-	self
-		updateDefinitionList;
-		updateSource
-]
-
 { #category : #accessing }
 ViennaASTBrowser >> definition [
 	^ definitionList selection selectedItem
+]
+
+{ #category : #accessing }
+ViennaASTBrowser >> definitionBase [
+	| node |
+	node := self definition.
+	node ifNil: [ ^ nil ].
+	(#('AccessTypeDefinition' 'AccessValueDefinition')
+		includes: node label)
+		ifTrue: [ ^ node second ].
+	(#('AccessFunctionDefinition' 'AccessOperationDefinition')
+		includes: node label)
+		ifTrue: [ ^ node second first ].
+	^ node
 ]
 
 { #category : #menus }
 ViennaASTBrowser >> definitionListContextMenu [
 	| menu |
 	menu := self newMenu.
-	menu
-		addGroup: [ :group | 
-			self definition
-				ifNotNil: [ :def | 
-					def label = 'AccessTypeDefinition'
-						ifTrue: [ group
-								addItem: [ :item | 
-									item
-										name: 'rename';
-										action: [ self renameType: def second first inModule: def module ] ] ].
-					def label = 'AccessValueDefinition'
-						ifTrue: [ group
-								addItem: [ :item | 
-									item
-										name: 'rename';
-										action: [ def second first patternIdentifierNames
-												ifNotEmpty: [ :identifiers | 
-													(identifiers size = 1
-														ifTrue: [ identifiers first ]
-														ifFalse: [ (UIManager default
-																chooseFrom: identifiers
-																message: 'choose identifier to rename')
-																ifNotNil: #trim
-																ifNil: [ '' ] ])
-														ifNotEmpty: [ :oldName | self renameValue: oldName inModule: def module ] ] ] ] ].
-					(def label = 'AccessFunctionDefinition'
-						and: [ def second first label = 'ExplicitFunctionDefinition' ])
-						ifTrue: [ group
-								addItem: [ :item | 
-									item
-										name: 'rename';
-										action: [ self
-												renameExplicitFunction: def second first first
-												inModule: def module ] ];
-								addItem: [ :item | 
-									item
-										name: 'convert into operation';
-										action: [ self convertExplicitFunctionIntoOperation: def ] ] ].
-					(def label = 'AccessFunctionDefinition'
-						and: [ def second first label = 'ImplicitFunctionDefinition' ])
-						ifTrue: [ group
-								addItem: [ :item | 
-									item
-										name: 'rename';
-										action: [ self
-												renameImplicitFunction: def second first first
-												inModule: def module ] ] ].
-					def label = 'StateDefinition'
-						ifTrue: [ group
-								addItem: [ :item | 
-									item
-										name: 'rename';
-										action: [ self renameStateConstructor: def first inModule: def module ] ] ].
-					def label = 'Field'
-						ifTrue: [ group
-								addItem: [ :item | 
-									item
-										name: 'rename';
-										action: [ self renameStateVariable: def first inModule: def module ] ] ].
-					(def label = 'AccessOperationDefinition'
-						and: [ def second first label = 'ExplicitOperationDefinition' ])
-						ifTrue: [ group
-								addItem: [ :item | 
-									item
-										name: 'rename';
-										action: [ self
-												renameExplicitOperation: def second first first
-												inModule: def module ] ] ].
-					(def label = 'AccessOperationDefinition'
-						and: [ def second first label = 'ImplicitOperationDefinition' ])
-						ifTrue: [ group
-								addItem: [ :item | 
-									item
-										name: 'rename';
-										action: [ self
-												renameImplicitOperation: def second first first
-												inModule: def module ] ] ] ] ].
+	self definitionBase
+		ifNotNil: [ :definition | 
+			| node |
+			node := definition.
+			[ node notNil ]
+				whileTrue: [ menu
+						addGroup: [ :group | 
+							ViennaRefactoring
+								on: node
+								do: [ :refactoring | 
+									group
+										addItem: [ :item | 
+											item
+												name: refactoring name;
+												action: [ refactoring execute.
+													self
+														updateModuleList;
+														updateCategoryList;
+														updateDefinitionList;
+														updateSource ] ] ] ].
+					node := node parent ] ].
 	^ menu
 ]
 
@@ -248,166 +196,6 @@ ViennaASTBrowser >> module [
 	^ moduleList selection selectedItem
 ]
 
-{ #category : #refactoring }
-ViennaASTBrowser >> renameExplicitFunction: aString inModule: aViennaNode [
-	(UIManager default request: 'rename function' initialAnswer: aString)
-		ifNotNil: [ :ans | 
-			ans trim
-				ifNotEmpty: [ :newName | 
-					ViennaRenameExplicitFunction new
-						ast: aViennaNode;
-						oldName: aString;
-						newName: newName;
-						execute.
-					self
-						updateDefinitionList;
-						updateSource ] ]
-]
-
-{ #category : #refactoring }
-ViennaASTBrowser >> renameExplicitOperation: aString inModule: aViennaNode [
-	(UIManager default request: 'rename operation' initialAnswer: aString)
-		ifNotNil: [ :ans | 
-			ans trim
-				ifNotEmpty: [ :newName | 
-					ViennaRenameExplicitOperation new
-						ast: aViennaNode;
-						oldName: aString;
-						newName: newName;
-						execute.
-					self
-						updateDefinitionList;
-						updateSource ] ]
-]
-
-{ #category : #refactoring }
-ViennaASTBrowser >> renameImplicitFunction: aString inModule: aViennaNode [
-	(UIManager default request: 'rename function' initialAnswer: aString)
-		ifNotNil: [ :ans | 
-			ans trim
-				ifNotEmpty: [ :newName | 
-					ViennaRenameImplicitFunction new
-						ast: aViennaNode;
-						oldName: aString;
-						newName: newName;
-						execute.
-					self
-						updateDefinitionList;
-						updateSource ] ]
-]
-
-{ #category : #refactoring }
-ViennaASTBrowser >> renameImplicitOperation: aString inModule: aViennaNode [
-	(UIManager default request: 'rename operation' initialAnswer: aString)
-		ifNotNil: [ :ans | 
-			ans trim
-				ifNotEmpty: [ :newName | 
-					ViennaRenameImplicitOperation new
-						ast: aViennaNode;
-						oldName: aString;
-						newName: newName;
-						execute.
-					self
-						updateDefinitionList;
-						updateSource ] ]
-]
-
-{ #category : #refactoring }
-ViennaASTBrowser >> renameLocal: aViennaNode [
-	| oldName |
-	oldName := aViennaNode first.
-	(UIManager default request: 'rename local' initialAnswer: oldName)
-		ifNotNil: [ :ans | 
-			ans trim
-				ifNotEmpty: [ :newName | 
-					ViennaRenameLocal new
-						ast: aViennaNode;
-						oldName: oldName;
-						newName: newName;
-						execute.
-					self updateDefinitionList.
-					self updateSource ] ]
-]
-
-{ #category : #refactoring }
-ViennaASTBrowser >> renameStateConstructor: aString inModule: aViennaNode [
-	(UIManager default
-		request: 'rename state constructor'
-		initialAnswer: aString)
-		ifNotNil: [ :ans | 
-			ans trim
-				ifNotEmpty: [ :newName | 
-					ViennaRenameStateConstructor new
-						ast: aViennaNode;
-						oldName: aString;
-						newName: newName;
-						execute.
-					self
-						updateDefinitionList;
-						updateSource ] ]
-]
-
-{ #category : #refactoring }
-ViennaASTBrowser >> renameStateVariable: aString inModule: aViennaNode [
-	(UIManager default
-		request: 'rename state variable'
-		initialAnswer: aString)
-		ifNotNil: [ :ans | 
-			ans trim
-				ifNotEmpty: [ :newName | 
-					ViennaRenameStateVariable new
-						ast: aViennaNode;
-						oldName: aString;
-						newName: newName;
-						execute.
-					self
-						updateDefinitionList;
-						updateSource ] ]
-]
-
-{ #category : #refactoring }
-ViennaASTBrowser >> renameType: aString inModule: aViennaNode [
-	(UIManager default request: 'rename type' initialAnswer: aString)
-		ifNotNil: [ :ans | 
-			ans trim
-				ifNotEmpty: [ :newName | 
-					ViennaRenameType new
-						ast: aViennaNode;
-						oldName: aString;
-						newName: newName;
-						execute.
-					self
-						updateDefinitionList;
-						updateSource ] ]
-]
-
-{ #category : #refactoring }
-ViennaASTBrowser >> renameValue: aString inModule: aViennaNode [
-	(UIManager default request: 'rename value' initialAnswer: aString)
-		ifNotNil: [ :ans | 
-			ans trim
-				ifNotEmpty: [ :newName | 
-					ViennaRenameValue new
-						ast: aViennaNode;
-						oldName: aString;
-						newName: newName;
-						execute.
-					self
-						updateDefinitionList;
-						updateSource ] ]
-]
-
-{ #category : #menus }
-ViennaASTBrowser >> selectNode: aViennaNode [
-	sourceText
-		selectionInterval: (sourceText text string intervalForSource: aViennaNode)
-]
-
-{ #category : #menus }
-ViennaASTBrowser >> selectScope: aViennaNode [
-	self selectNode: (ViennaRefactoring new scopeOf: aViennaNode)
-]
-
 { #category : #menus }
 ViennaASTBrowser >> sourceTextContextMenu [
 	| menu |
@@ -416,18 +204,21 @@ ViennaASTBrowser >> sourceTextContextMenu [
 		nodeContaining: sourceText selectionInterval
 		ifAbsent: [ nil ])
 		ifNotNil: [ :node | 
-			node label = 'LocalName'
-				ifTrue: [ menu
-						addItem: [ :item | 
-							item
-								name: 'rename local';
-								action: [ self renameLocal: node ] ] ].
-			node label = 'PatternIdentifier'
-				ifTrue: [ menu
-						addItem: [ :item | 
-							item
-								name: 'rename local';
-								action: [ self renameLocal: node ] ] ] ].
+			menu
+				addGroup: [ :group | 
+					ViennaRefactoring
+						on: node
+						do: [ :refactoring | 
+							group
+								addItem: [ :item | 
+									item
+										name: refactoring name;
+										action: [ refactoring execute.
+											self
+												updateModuleList;
+												updateCategoryList;
+												updateDefinitionList;
+												updateSource ] ] ] ] ].
 	^ menu
 ]
 

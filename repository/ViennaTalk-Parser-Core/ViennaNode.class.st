@@ -128,14 +128,15 @@ ViennaNode class >> label: aString withAll: anArray [
 { #category : #'adding/removing' }
 ViennaNode >> add: anObject [
 	| array |
-	array := self asArray.
+	array := self asArray copyWith: anObject.
 	self
 		become:
-			((self class new: self size + 1)
+			((self class new: array size)
 				setLabel: label;
+				parent: parent;
+				start: start end: end;
 				yourself).
 	1 to: array size do: [ :index | self at: index put: (array at: index) ].
-	self at: self size put: anObject.
 	^ anObject
 ]
 
@@ -708,6 +709,8 @@ ViennaNode >> remove: anObject [
 		become:
 			((self class new: array size)
 				setLabel: label;
+				parent: parent;
+				start: start end: end;
 				yourself).
 	1 to: array size do: [ :index | self at: index put: (array at: index) ].
 	^ anObject

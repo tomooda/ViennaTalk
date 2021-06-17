@@ -9,7 +9,8 @@ ViennaConvertExplicitFunctionIntoOperation >> check [
 	^ ast isViennaNode
 		and: [ ast label = 'AccessFunctionDefinition'
 				and: [ ast second isViennaNode
-						and: [ ast second label = 'ExplicitFunctionDefinition' ] ] ]
+						and: [ ast second label = 'FunctionDefinition'
+								and: [ ast second first label = 'ExplicitFunctionDefinition' ] ] ] ]
 ]
 
 { #category : #operations }
@@ -27,7 +28,8 @@ ViennaConvertExplicitFunctionIntoOperation >> execute [
 		ifNone: [ nil ]) ifNotNil: #first.
 	operationDefinitions
 		ifNil: [ operationDefinitions := ViennaNode label: 'OperationDefinitions'.
-			moduleBody add: operationDefinitions ].
+			moduleBody
+				add: (ViennaNode label: 'DefinitionBlock' with: operationDefinitions) ].
 	explicitOperationDefinition := ViennaNode
 		label: 'ExplicitOperationDefinition'
 		withAll:
@@ -60,4 +62,10 @@ ViennaConvertExplicitFunctionIntoOperation >> execute [
 	functionDefinitions
 		ifEmpty: [ moduleBody remove: functionDefinitions parent ].
 	operationDefinitions add: accessOperationDefinition
+]
+
+{ #category : #accessing }
+ViennaConvertExplicitFunctionIntoOperation >> name [
+	^ 'convert ' asText , ast second first first asText allBold
+		, ' into a pure operation' asText
 ]

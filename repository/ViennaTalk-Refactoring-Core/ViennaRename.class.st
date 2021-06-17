@@ -9,6 +9,11 @@ Class {
 	#category : #'ViennaTalk-Refactoring-Core'
 }
 
+{ #category : #testing }
+ViennaRename class >> isAbstract [
+	^ self = ViennaRename
+]
+
 { #category : #accessing }
 ViennaRename >> definitionNode [
 	^ definitionNode ifNil: [ definitionNode := self findDefinitionNode ]
@@ -18,7 +23,7 @@ ViennaRename >> definitionNode [
 ViennaRename >> execute [
 	self
 		executeOnDefinition;
-		freeOccurrencesOf: oldName
+		freeOccurrencesOf: self oldName
 			in: ast module
 			do: [ :node | self execute: node ]
 ]
@@ -36,7 +41,7 @@ ViennaRename >> execute: aViennaNode [
 
 { #category : #operations }
 ViennaRename >> executeLocalName: aViennaNode [
-	aViennaNode at: 1 put: newName
+	aViennaNode at: 1 put: self newName
 ]
 
 { #category : #operations }
@@ -50,8 +55,31 @@ ViennaRename >> findDefinitionNode [
 ]
 
 { #category : #accessing }
+ViennaRename >> findNewName [
+	(UIManager default
+		request: 'rename function'
+		initialAnswer: self oldName)
+		ifNotNil: [ :ans | ans trim ifNotEmpty: [ :name | ^ name ] ].
+	^ nil
+]
+
+{ #category : #accessing }
+ViennaRename >> findOldName [
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
+ViennaRename >> name [
+	^ 'rename ' asText , self oldName asText allBold
+		,
+			(newName
+				ifNotNil: [ ' to ' asText , newName asText allBold ]
+				ifNil: [ '' asText ])
+]
+
+{ #category : #accessing }
 ViennaRename >> newName [
-	^ newName
+	^ newName ifNil: [ newName := self findNewName ]
 ]
 
 { #category : #accessing }
@@ -61,7 +89,7 @@ ViennaRename >> newName: aString [
 
 { #category : #accessing }
 ViennaRename >> oldName [
-	^ oldName
+	^ oldName ifNil: [ oldName := self findOldName ]
 ]
 
 { #category : #accessing }

@@ -7,6 +7,22 @@ Class {
 	#category : #'ViennaTalk-Refactoring-Core'
 }
 
+{ #category : #testing }
+ViennaRefactoring class >> isAbstract [
+	^ self = ViennaRefactoring
+]
+
+{ #category : #utilities }
+ViennaRefactoring class >> on: aViennaNode do: aBlock [
+	self
+		allSubclassesDo: [ :class | 
+			class isAbstract
+				ifFalse: [ | refactoring |
+					refactoring := class new ast: aViennaNode.
+					refactoring check
+						ifTrue: [ aBlock value: refactoring ] ] ]
+]
+
 { #category : #accessing }
 ViennaRefactoring >> ast [
 	^ ast
@@ -647,6 +663,11 @@ ViennaRefactoring >> localScopeBySetComprehension: aViennaNode do: aBlock [
 { #category : #'visiting-scopes' }
 ViennaRefactoring >> localScopeBySetForLoop: aViennaNode do: aBlock [
 	aBlock value: aViennaNode third
+]
+
+{ #category : #accessing }
+ViennaRefactoring >> name [
+	^ self subclassResponsibility
 ]
 
 { #category : #'visiting-labels' }
