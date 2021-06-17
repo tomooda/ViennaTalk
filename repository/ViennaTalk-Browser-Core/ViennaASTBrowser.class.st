@@ -329,6 +329,16 @@ ViennaASTBrowser class >> sectionNames [
 				yourself ]
 ]
 
+{ #category : #menus }
+ViennaASTBrowser class >> viennaDevMenuOn: aBuilder [
+	<ViennaDev>
+	(aBuilder item: #'Refactoring example (ATC)')
+		action: [ self exampleATC  ];
+		order: 1.1;
+		help: 'Example spec on refactoring borwser';
+		icon: nil
+]
+
 { #category : #accessing }
 ViennaASTBrowser >> category [
 	^ categoryList selection selectedItem
