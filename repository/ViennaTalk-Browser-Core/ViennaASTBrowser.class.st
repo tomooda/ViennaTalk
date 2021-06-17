@@ -483,7 +483,9 @@ ViennaASTBrowser >> initializePresenters [
 { #category : #initialization }
 ViennaASTBrowser >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
-	aWindowPresenter title: 'Browser'
+	aWindowPresenter
+		title: 'Browser';
+		initialExtent: 800 @ 600
 ]
 
 { #category : #accessing }

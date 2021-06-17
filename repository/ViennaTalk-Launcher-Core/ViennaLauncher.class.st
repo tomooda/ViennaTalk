@@ -31,6 +31,35 @@ ViennaLauncher class >> current [
 	^ Current ifNil: [ Current := self new ]
 ]
 
+{ #category : #utilities }
+ViennaLauncher class >> deploy [
+	<script>
+	GraphicFontSettings setFontsToStyleNamed: #small.
+	ViennaLauncher font: TextStyle defaultFont.
+	Smalltalk cleanUp: true except: {} confirming: false.
+	MCRepositoryGroup
+		allSubInstancesDo:
+			[ :group | group repositories do: [ :repo | group removeRepository: repo ] ].
+	IceRepository registry removeAll.
+	IceCredentialStore current
+		in:
+			[ :store | store allCredentials do: [ :each | each removeFrom: store ] ].
+	World closeAllWindowsDiscardingChanges.
+	ViennaLauncher reopen.
+	Deprecation
+		raiseWarning: false;
+		showWarning: false.
+	NoChangesLog install.
+	"NoPharoFilesOpener install."
+	FFICompilerPlugin install.
+	Stdio useNullStreams.
+	MCCacheRepository uniqueInstance disable.
+	EpMonitor reset.
+	5
+		timesRepeat:
+			[ "PharoCommandLineHandler forcePreferencesOmission: true" Smalltalk garbageCollect ]
+]
+
 { #category : #settings }
 ViennaLauncher class >> font [
 	^ Font ifNil: [ Font := StandardFonts codeFont ]
