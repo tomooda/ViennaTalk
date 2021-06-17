@@ -300,6 +300,13 @@ ViennaRefactoring >> freeOccurrencesOf: aString inFullQuantifierExpression: aVie
 ]
 
 { #category : #'visiting-free occurrences' }
+ViennaRefactoring >> freeOccurrencesOf: aString inFunctionImport: aViennaNode do: aBlock [
+	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
+	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock.
+	self freeOccurrencesOf: aString in: aViennaNode third do: aBlock
+]
+
+{ #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inImplicitFunctionDefinition: aViennaNode do: aBlock [
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode third do: aBlock.
@@ -466,6 +473,18 @@ ViennaRefactoring >> freeOccurrencesOf: aString inMapComprehension: aViennaNode 
 ]
 
 { #category : #'visiting-free occurrences' }
+ViennaRefactoring >> freeOccurrencesOf: aString inOldName: aViennaNode do: aBlock [
+	aViennaNode first = aString
+		ifTrue: [ aBlock value: aViennaNode ]
+]
+
+{ #category : #'visiting-free occurrences' }
+ViennaRefactoring >> freeOccurrencesOf: aString inOperationImport: aViennaNode do: aBlock [
+	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
+	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock
+]
+
+{ #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inSequenceComprehension: aViennaNode do: aBlock [
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock.
 	aViennaNode second first
@@ -520,6 +539,17 @@ ViennaRefactoring >> freeOccurrencesOf: aString inSingleQuantifierExpression: aV
 		allDescendantsDo: [ :n | 
 			(n label = 'PatternIdentifier' and: [ n first = aString ])
 				ifTrue: [ ^ self ] ].
+	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock
+]
+
+{ #category : #'visiting-free occurrences' }
+ViennaRefactoring >> freeOccurrencesOf: aString inTypeImport: aViennaNode do: aBlock [
+	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock
+]
+
+{ #category : #'visiting-free occurrences' }
+ViennaRefactoring >> freeOccurrencesOf: aString inValueImport: aViennaNode do: aBlock [
+	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock
 ]
 

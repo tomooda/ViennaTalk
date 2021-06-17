@@ -42,5 +42,7 @@ ViennaRenameStateVariable >> findOldName [
 		ifTrue: [ ^ ast first ].
 	ast label = 'LocalName'
 		ifTrue: [ ^ ast first ].
+	ast label = 'OldName'
+		ifTrue: [ ^ ast first ].
 	^ nil
 ]

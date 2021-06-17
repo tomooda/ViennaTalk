@@ -45,6 +45,11 @@ ViennaRename >> executeLocalName: aViennaNode [
 ]
 
 { #category : #operations }
+ViennaRename >> executeOldName: aViennaNode [
+	aViennaNode at: 1 put: self newName
+]
+
+{ #category : #operations }
 ViennaRename >> executeOnDefinition [
 	^ self subclassResponsibility
 ]

@@ -26,6 +26,296 @@ ViennaASTBrowser class >> defaultSpec [
 		add: #sourceText
 ]
 
+{ #category : #examples }
+ViennaASTBrowser class >> exampleATC [
+	(ViennaASTBrowser
+		on:
+			(ViennaVDMParser new
+				parse:
+					'module ATC_TERMINLOGY -- Air-Traffic Control (ATC) System abstract model from the book "ProofinVDM."
+-- This is the top-level specification of the ATC subsystem,
+exports all
+definitions
+types
+     Space = token;
+     Aircraft = token;
+     Controller = token;
+
+state ATC of
+    onduty : set of Controller
+    control : inmap Space to Controller
+    capacity : map Space to nat
+    location : map Aircraft to Space
+inv mk_ATC(cs, con, cap, loc) ==
+    ((rng con subset cs and dom con subset dom cap)
+        and rng loc subset dom con)
+    and (forall s in set rng loc & numOfAircraft(s, loc) <= cap(s))
+init σ == σ = mk_ATC({}, {|->}, {|->}, {|->})
+end
+
+functions
+    numOfAircraft : Space * map Aircraft to Space -> nat
+    numOfAircraft(s, loc) == card (dom (loc :> {s}));
+    
+    isactivated : Space * ATC -> bool
+    isactivated(s, δ) == s in set dom δ.control;
+    
+    isKnown : Aircraft * ATC -> bool
+    isKnown(p, δ) == p in set dom δ.location;
+    
+    controllerOf : Aircraft * ATC -> Controller
+    controllerOf(p, δ) == δ.control(δ.location(p))
+    pre isKnown(p, δ);
+
+operations
+    Commission(s:Space, n:nat)
+    ext wr capacity:map Space to nat
+    pre s not in set dom capacity
+    post capacity = capacity~ ++ {s |-> n};
+    
+    ResetCapacity(s:Space, n:nat)
+    ext rd location:map Aircraft to Space wr capacity:map Space to nat
+    pre s in set dom capacity and numOfAircraft(s, location) <= n
+    post capacity = capacity~ ++ {s |-> n};
+    
+    Decommission(s:Space)
+    ext rd control:inmap Space to Controller wr capacity:map Space to nat
+    pre s in set dom capacity \ dom control
+    post capacity = {s} <-: capacity~;
+    
+    ClockOn(c:Controller)
+    ext wr onduty:set of Controller
+    pre c not in set onduty
+    post onduty = onduty~ union {c};
+    
+    ClockOff(c:Controller)
+    ext wr onduty:set of Controller rd control:inmap Space to Controller
+    pre c in set onduty \ rng control
+    post onduty = onduty~ \ {c};
+    
+    Activate(s:Space, c:Controller)
+    ext rd onduty:set of Controller wr control:inmap Space to Controller rd capacity:map Space to nat
+    pre s in set dom capacity \ dom control and rng control <> onduty
+    post control = control~ ++ {s |-> c};
+    
+    Reassign(s:Space, c:Controller)
+    ext rd onduty:set of Controller wr control:inmap Space to Controller
+    pre s in set dom control and rng control <> onduty
+    post control = control~ ++ {s |-> c} and c <> control~(s);
+    
+    Deactivate(s:Space)
+    ext wr control:inmap Space to Controller rd location:map Aircraft to Space
+    pre s in set dom control \ rng location
+    post control = {s} <-: control~;
+    
+    AddFlight(p:Aircraft, s:Space)
+    ext rd control:inmap Space to Controller rd capacity:map Space to nat wr location:map Aircraft to Space
+    pre (s in set dom control and p not in set dom location)
+    and numOfAircraft(s, location) < capacity(s)
+    post location = location~ ++ {p |-> s};
+    
+    Handover(p:Aircraft, s:Space)
+    ext rd control:inmap Space to Controller rd capacity:map Space to nat wr location:map Aircraft to Space
+    pre ((s in set dom control and p in set dom location) and location(p) <> s)
+    and numOfAircraft(s, location) < capacity(s)
+    post location = location~ ++ {p |-> s};
+    
+    RemoveFlight(p:Aircraft)
+    ext wr location:map Aircraft to Space
+    pre p in set dom location
+    post location = {p} <-: location~;
+
+end ATC_TERMINLOGY
+
+module ATC  -- Air-Traffic Control System concreate model from the book "ProofinVDM."
+-- This is the top-level executable specification of the ATC subsystem,
+imports
+    from ATC_TERMINLOGY
+        types
+            Controller renamed Controller;
+            Space renamed Space;
+            Aircraft renamed Aircraft;
+exports all
+definitions
+state ATC of
+    onduty : set of Controller
+    control : inmap Space to Controller
+    capacity : map Space to nat
+    location : map Aircraft to Space
+inv mk_ATC(cs, con, cap, loc) ==
+    ((rng con subset cs and dom con subset dom cap)
+        and rng loc subset dom con)
+    and (forall s in set rng loc & numOfAircraft(s, loc) <= cap(s))
+init σ == σ = mk_ATC({}, {|->}, {|->}, {|->})
+end
+
+functions
+    numOfAircraft : Space * map Aircraft to Space -> nat
+    numOfAircraft(s, loc) == card (dom (loc :> {s}));
+
+operations
+    Commission : Space * nat ==> map Space to nat
+    Commission(s, n) ==
+        (capacity := capacity ++ {s |-> n};
+        return capacity);
+    
+    Decommission : Space ==> map Space to nat
+    Decommission(s) ==
+        (capacity := {s} <-: capacity;
+        return capacity)
+    pre  s in set dom capacity \ dom control
+    post  capacity = {s} <-: capacity~;
+    
+    ResetCapacity : Space * nat ==> map Space to nat
+    ResetCapacity(s, n) ==
+        (capacity := capacity ++ {s |-> n};
+        return capacity)
+    pre  s in set dom capacity and numOfAircraft(s, location) <= n
+    post  capacity = capacity~ ++ {s |-> n};
+    
+    ClockOn : Controller ==> set of Controller
+    ClockOn(c) ==
+        (onduty := onduty union {c};
+        return onduty)
+    pre  c not in set onduty
+    post  onduty = onduty~ union {c};
+    
+    ClockOff : Controller ==> set of Controller
+    ClockOff(c) ==
+        (onduty := onduty \ {c};
+        return onduty)
+    pre  c in set onduty \ rng control
+    post  onduty = onduty~ \ {c};
+    
+    Activate : Space * Controller ==> inmap Space to Controller
+    Activate(s, c) ==
+        (control := control ++ {s |-> c};
+        return control)
+    pre  s in set dom capacity \ dom control and rng control <> onduty
+    post  control = control~ ++ {s |-> c};
+    
+    Handover : Aircraft * Space ==> map Aircraft to Space
+    Handover(p, s) ==
+        (location := location ++ {p |-> s};
+        return location)
+    pre 
+        ((s in set dom control and p in set dom location) and location(p) <> s)
+        and numOfAircraft(s, location) < capacity(s)
+    post  location = location~ ++ {p |-> s};
+    
+    AddFlight : Aircraft * Space ==> map Aircraft to Space
+    AddFlight(p, s) ==
+        (location := location ++ {p |-> s};
+        return location)
+    pre 
+        (s in set dom control and p not in set dom location)
+        and numOfAircraft(s, location) < capacity(s)
+    post  location = location~ ++ {p |-> s};
+    
+    RemoveFlight : Aircraft ==> map Aircraft to Space
+    RemoveFlight(p) ==
+        (location := {p} <-: location;
+        return location)
+    pre  p in set dom location
+    post  location = {p} <-: location~;
+    
+    Deactivate : Space ==> inmap Space to Controller
+    Deactivate(s) ==
+        (control := {s} <-: control;
+        return control)
+    pre  s in set dom control \ rng location
+    post  control = {s} <-: control~;
+    
+    Reassign : Space * Controller ==> inmap Space to Controller
+    Reassign(s, c) ==
+        (control := control ++ {s |-> c};
+        return control)
+    pre  s in set dom control and rng control <> onduty
+    post  control = control~ ++ {s |-> c} and c <> control~(s);
+
+operations
+    test01 : () ==> seq of bool
+    test01() ==
+        (dcl r:seq of bool := [];
+-- Unit test with the test result.
+        def
+            m1 = Commission(mk_token("Kadena"), 2);
+            r = r ^ [m1(mk_token("Kadena")) = 2];
+            m2 = ResetCapacity(mk_token("Kadena"), 5);
+            r = r ^ [m2(mk_token("Kadena")) = 5];
+            m3 = Commission(mk_token("Kadena"), 3);
+            r = r ^ [m3(mk_token("Kadena")) = 3];
+            r = r ^ [ClockOn(mk_token("Sahara")) = {mk_token("Sahara")}];
+            r =
+                r
+                ^ [Activate(mk_token("Kadena"), mk_token("Sahara"))
+                = {mk_token("Kadena") |-> mk_token("Sahara")}];
+            r =
+                r
+                ^ [AddFlight(mk_token("F35_1"), mk_token("Kadena"))
+                = {mk_token("F35_1") |-> mk_token("Kadena")}];
+            r =
+                r
+                ^ [AddFlight(mk_token("F18_1"), mk_token("Kadena"))
+                = {mk_token("F35_1") |-> mk_token("Kadena"),
+                mk_token("F18_1") |-> mk_token("Kadena")}];
+            r =
+                r
+                ^ [numOfAircraft(
+                    mk_token("Kadena"),
+                    {mk_token("F35_1") |-> mk_token("Kadena"),
+                    mk_token("F18_1") |-> mk_token("Kadena")})
+                = 2];
+            r =
+                r
+                ^ [numOfAircraft(
+                    mk_token("Yokota"),
+                    {mk_token("F35_1") |-> mk_token("Yokota"),
+                    mk_token("F18_1") |-> mk_token("Yokota")})
+                = 2];
+        in return r);
+    
+    test02 : () ==> ATC
+    test02() ==
+        (onduty := ClockOn(mk_token("Sahara"));
+        onduty := ClockOff(mk_token("Sahara"));
+-- test cases by using debugger
+        onduty := ClockOn(mk_token("Sahara"));
+        capacity := Commission(mk_token("Kadena"), 4);
+        capacity := Commission(mk_token("Yokota"), 2);
+        capacity := Decommission(mk_token("Yokota"));
+        onduty := onduty union ClockOn(mk_token("Sakoh"));
+        onduty := onduty union ClockOn(mk_token("Oda"));
+        capacity := Commission(mk_token("Yokota"), 2);
+        control := Activate(mk_token("Yokota"), mk_token("Sahara"));
+        control := Activate(mk_token("Kadena"), mk_token("Oda"));
+        location := AddFlight(mk_token("F35_1"), mk_token("Kadena"));
+        location := AddFlight(mk_token("F18_1"), mk_token("Kadena"));
+        location := AddFlight(mk_token("F18_3"), mk_token("Yokota"));
+        location := AddFlight(mk_token("F35_2"), mk_token("Yokota"));
+        location := Handover(mk_token("F35_2"), mk_token("Kadena"));
+        location := Handover(mk_token("F18_3"), mk_token("Kadena"));
+        control := Deactivate(mk_token("Yokota"));
+        location := RemoveFlight(mk_token("F18_3"));
+        control := Activate(mk_token("Yokota"), mk_token("Sahara"));
+        onduty := ClockOn(mk_token("PGL"));
+        control := Reassign(mk_token("Kadena"), mk_token("PGL"));
+        location := RemoveFlight(mk_token("F35_1"));
+        location := RemoveFlight(mk_token("F18_1"));
+        location := RemoveFlight(mk_token("F35_2"));
+        control := Deactivate(mk_token("Kadena"));
+        return ATC);
+    
+    getATC : () ==> ATC
+    getATC() == return ATC;
+    
+    getLocation : () ==> map Aircraft to Space
+    getLocation() == return ATC.location;
+-- Combinatorial test
+
+end ATC')) openWithSpec
+]
+
 { #category : #accessing }
 ViennaASTBrowser class >> sectionNames [
 	^ SectionNames
