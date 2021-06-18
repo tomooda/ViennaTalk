@@ -14,6 +14,8 @@ ViennaConvertExpressionIntoValue >> check [
 	(#('LocalName' 'GlobalName' 'OldName') includes: ast label)
 		ifTrue: [ ^ false ].
 	ast variableExpressionNodesDo: [ :node | ^ false ].
+	ast parent label = 'ValueDefinition'
+		ifTrue: [ ^ false ].
 	^ true
 ]
 

@@ -210,6 +210,11 @@ ViennaNode >> collect: aBlock [
 	^ (1 to: self size) collect: [ :index | aBlock value: (self at: index) ]
 ]
 
+{ #category : #copying }
+ViennaNode >> copyFragment [
+	^ self shallowCopy postCopyFragment
+]
+
 { #category : #'accessing-definitions' }
 ViennaNode >> definitionInCasesAlternativeOfLocalName: aString do: aBlock [
 	self first
@@ -647,6 +652,21 @@ ViennaNode >> isFunctionNameNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isLocalValueNameNode [
+	self label = 'LocalName'
+		ifTrue: [ (self definitionOfLocalName: self first)
+				ifNotNil: [ :defNode | 
+					| node |
+					node := defNode.
+					[ node notNil ]
+						whileTrue: [ (#('ValueDefinition') includes: node label)
+								ifTrue: [ ^ true ].
+							node := node parent ] ].
+			^ false ].
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isOperationNameNode [
 	self label = 'LocalName'
 		ifTrue: [ (self definitionOfLocalName: self first)
@@ -797,6 +817,19 @@ ViennaNode >> patternIdentifierNames [
 				and: [ (names includes: node first) not ])
 				ifTrue: [ names add: node first ] ].
 	^ names
+]
+
+{ #category : #copying }
+ViennaNode >> postCopyFragment [
+	1 to: self size do: [ :index | 
+		| node |
+		node := self at: index.
+		self
+			at: index
+			put:
+				(node isViennaNode
+					ifTrue: [ node copyFragment ]
+					ifFalse: [ node copy ]) ]
 ]
 
 { #category : #printing }

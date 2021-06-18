@@ -7,6 +7,7 @@ Class {
 { #category : #operations }
 ViennaConvertExpressionIntoValueAndReplaceAll >> execute [
 	| moduleBody valueDefinitions valueDefinition accessValueDefinition |
+	self newName ifNil: [ ^ self ].
 	moduleBody := ast module third.
 	valueDefinitions := (moduleBody
 		detect: [ :definitionBlock | 
