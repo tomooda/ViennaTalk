@@ -8,8 +8,19 @@ Class {
 		'start',
 		'end'
 	],
+	#classVars : [
+		'ExpressionLabels'
+	],
 	#category : #'ViennaTalk-Parser-Core'
 }
+
+{ #category : #accessing }
+ViennaNode class >> expressionLabels [
+	^ ExpressionLabels
+		ifNil:
+			[ ExpressionLabels := #('ActExpression' 'ActiveExpression' 'And' 'Apply' 'ArithmeticAbs' 'ArithmeticDivide' 'ArithmeticIntegerDivision' 'ArithmeticMinus' 'ArithmeticMod' 'ArithmeticMultiplication' 'ArithmeticPlus' 'ArithmeticRem' 'CasesExpression' 'Composition' 'DefExpression' 'DistributedMapMerge' 'DistributedSequenceConcatenation' 'DistributedSetIntersection' 'DistributedSetUnion' 'Equal' 'Exists1Expression' 'ExistsExpression' 'FieldSelect' 'FinExpression' 'FinitePowerSet' 'Floor' 'ForallExpression' 'FunctionTypeInstantiation' 'GlobalName' 'GreaterThan' 'GreaterThanOrEqual' 'IfExpression' 'Imply' 'InSet' 'IotaExpression' 'IsBasicExpression' 'IsNameExpression' 'IsofbaseclassExpression' 'IsofclassExpression' 'Iterate' 'LambdaExpression' 'LessThan' 'LessThanOrEqual' 'LetBeExpression' 'LetExpression' 'LocalName' 'LogicalEquivalence' 'MapComprehension' 'MapDomain' 'MapDomainRestrictedBy' 'MapDomainRestrictedTo' 'MapEnumeration' 'MapInverse' 'MapMerge' 'MapOrSequenceModify' 'MapRange' 'MapRangeRestrictedBy' 'MapRangeRestrictedTo' 'NarrowExpression' 'NewExpression' 'Not' 'NotEqual' 'NotInSet' 'OldName' 'Or' 'PreconditionExpression' 'ProperSubset' 'RecordConstructor' 'RecordModifier' 'ReqExpression' 'ResultExpression' 'SamebaseclassExpression' 'SameclassExpression' 'SelfExpression' 'SequenceComprehension' 'SequenceConcatenate' 'SequenceElements' 'SequenceEnumeration' 'SequenceHead' 'SequenceIndices' 'SequenceLength' 'SequenceReverse' 'SequenceTail' 'SetCardinality' 'SetComprehension' 'SetDifference' 'SetEnumeration' 'SetIntersection' 'SetRangeExpression' 'SetUnion' 'Subsequence' 'Subset' 'SymbolicLiteral' 'ThreadidExpression' 'TimeExpression' 'TokenConstructor' 'TupleConstructor' 'TupleSelect' 'TypeJudgement' 'UnaryMinus' 'UnaryPlus' 'UndefinedExpression' 'WaitingExpression')
+				asSet ]
+]
 
 { #category : #'instance creation' }
 ViennaNode class >> label: aString [
@@ -346,13 +357,13 @@ ViennaNode >> definitionInImportsOfLocalName: aString do: aBlock [
 		do: [ :importDef | 
 			importDef second label = 'ImportModuleSignature'
 				ifTrue: [ importDef second
-						do: [ :import | 
-							(import at: import size)
-								ifNotNil: [ :rename | 
-									(self moduleNamed: importDef first)
-										ifNotNil: [ :module | 
-											^ aBlock
-												value: (module definitionOfLocalName: import first localName first) ] ] ] ] ]
+						do: [ :imports | 
+							imports
+								do: [ :import | 
+									(import at: import size)
+										ifNotNil: [ :rename | 
+											rename first = aString
+												ifTrue: [ ^ aBlock value: import ] ] ] ] ] ]
 ]
 
 { #category : #'accessing-definitions' }
@@ -429,6 +440,23 @@ ViennaNode >> definitionInQuantifierOfLocalName: aString do: aBlock [
 					(n label = 'PatternIdentifier' and: [ n first = aString ])
 						ifTrue: [ ^ aBlock value: n ] ].
 			^ self ]
+]
+
+{ #category : #'accessing-definitions' }
+ViennaNode >> definitionOfGlobalName: shortName module: moduleName [
+	self module second first
+		ifNotNil: [ :importDefinitionList | 
+			importDefinitionList
+				do: [ :importDef | 
+					importDef first = moduleName
+						ifTrue: [ importDef second label = 'ImportModuleSignature'
+								ifTrue: [ importDef second
+										do: [ :imports | 
+											imports
+												do: [ :import | 
+													import first first = shortName
+														ifTrue: [ ^ import ] ] ] ] ] ] ].
+	^ nil
 ]
 
 { #category : #'accessing-definitions' }
@@ -589,6 +617,99 @@ ViennaNode >> isEmpty [
 ]
 
 { #category : #testing }
+ViennaNode >> isExpressionNode [
+	^ self class expressionLabels includes: label
+]
+
+{ #category : #testing }
+ViennaNode >> isFunctionNameNode [
+	self label = 'LocalName'
+		ifTrue: [ (self definitionOfLocalName: self first)
+				ifNotNil: [ :defNode | 
+					| node |
+					node := defNode.
+					[ node notNil ]
+						whileTrue: [ (#('FunctionDefinition' 'FunctionImport') includes: node label)
+								ifTrue: [ ^ true ].
+							node := node parent ] ].
+			^ false ].
+	self label = 'GlobalName'
+		ifTrue: [ (self definitionOfGlobalName: self second module: self first)
+				ifNotNil: [ :defNode | 
+					| node |
+					node := defNode.
+					[ node notNil ]
+						whileTrue: [ node label = 'FunctionImport'
+								ifTrue: [ ^ true ].
+							node := node parent ] ].
+			^ false ].
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isOperationNameNode [
+	self label = 'LocalName'
+		ifTrue: [ (self definitionOfLocalName: self first)
+				ifNotNil: [ :defNode | 
+					| node |
+					node := defNode.
+					[ node notNil ]
+						whileTrue: [ (#('OperationDefinition' 'OperationImport') includes: node label)
+								ifTrue: [ ^ true ].
+							node := node parent ] ].
+			^ false ].
+	self label = 'GlobalName'
+		ifTrue: [ (self definitionOfGlobalName: self second module: self first)
+				ifNotNil: [ :defNode | 
+					| node |
+					node := defNode.
+					[ node notNil ]
+						whileTrue: [ node label = 'OperationImport'
+								ifTrue: [ ^ true ].
+							node := node parent ] ].
+			^ false ].
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isStateVariableNameNode [
+	self label = 'OldName'
+		ifTrue: [ ^ true ].
+	self label = 'LocalName'
+		ifTrue: [ (self definitionOfLocalName: self first)
+				ifNotNil: [ :fieldNode | 
+					fieldNode parent parent label = 'StateDefinition'
+						ifTrue: [ ^ true ] ].
+			^ false ].
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isValueNameNode [
+	self label = 'LocalName'
+		ifTrue: [ (self definitionOfLocalName: self first)
+				ifNotNil: [ :defNode | 
+					| node |
+					node := defNode.
+					[ node notNil ]
+						whileTrue: [ (#('ValueDefinition' 'ValueImport') includes: node label)
+								ifTrue: [ ^ true ].
+							node := node parent ] ].
+			^ false ].
+	self label = 'GlobalName'
+		ifTrue: [ (self definitionOfGlobalName: self second module: self first)
+				ifNotNil: [ :defNode | 
+					| node |
+					node := defNode.
+					[ node notNil ]
+						whileTrue: [ node label = 'ValueImport'
+								ifTrue: [ ^ true ].
+							node := node parent ] ].
+			^ false ].
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaNode [
 	^ true
 ]
@@ -701,6 +822,14 @@ ViennaNode >> printOn: aStream [
 	aStream nextPut: $)
 ]
 
+{ #category : #enumerating }
+ViennaNode >> referenceNodesDo: aBlock [
+	self
+		allDescendantsDo: [ :node | 
+			(#('LocalName' 'GlobalName' 'OldName') includes: node label)
+				ifTrue: [ aBlock value: node ] ]
+]
+
 { #category : #'adding/removing' }
 ViennaNode >> remove: anObject [
 	| array |
@@ -714,6 +843,25 @@ ViennaNode >> remove: anObject [
 				yourself).
 	1 to: array size do: [ :index | self at: index put: (array at: index) ].
 	^ anObject
+]
+
+{ #category : #testing }
+ViennaNode >> sameAs: aViennaNode [
+	aViennaNode isViennaNode
+		ifFalse: [ ^ false ].
+	label = aViennaNode label
+		ifFalse: [ ^ false ].
+	self size = aViennaNode size
+		ifFalse: [ ^ false ].
+	1 to: self size do: [ :index | 
+		| n1 n2 |
+		n1 := self at: index.
+		n2 := aViennaNode at: index.
+		(n1 isViennaNode
+			ifTrue: [ n1 sameAs: n2 ]
+			ifFalse: [ n1 = n2 ])
+			ifFalse: [ ^ false ] ].
+	^ true
 ]
 
 { #category : #accessing }
@@ -797,4 +945,16 @@ ViennaNode >> tracingSource [
 	source sources
 		addAll: (self allParents collect: [ :node | whole -> node ]).
 	^ source
+]
+
+{ #category : #enumerating }
+ViennaNode >> variableExpressionNodesDo: aBlock [
+	self isExpressionNode
+		ifTrue: [ self
+				allDescendantsDo: [ :node | 
+					node label = 'OldName'
+						ifTrue: [ aBlock value: node ].
+					(#('LocalName' 'GlobalName') includes: node label)
+						ifTrue: [ (node isValueNameNode or: [ node isFunctionNameNode ])
+								ifFalse: [ aBlock value: node ] ] ] ]
 ]

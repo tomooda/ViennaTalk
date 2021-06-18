@@ -701,28 +701,6 @@ ViennaRefactoring >> name [
 ]
 
 { #category : #'visiting-labels' }
-ViennaRefactoring >> patternIdentifierNamesIn: aViennaNode [
-	| names |
-	names := OrderedCollection new.
-	self
-		patternIdentifiersIn: aViennaNode
-		do: [ :node | 
-			(names includes: node first)
-				ifFalse: [ names add: node first ] ].
-	^ names asArray
-]
-
-{ #category : #'visiting-labels' }
-ViennaRefactoring >> patternIdentifiersIn: aViennaNode do: aBlock [
-	aViennaNode label = 'PatternIdentifier'
-		ifTrue: [ aBlock value: aViennaNode ].
-	aViennaNode
-		allDescendantsDo: [ :node | 
-			node label = 'PatternIdentifier'
-				ifTrue: [ aBlock value: node ] ]
-]
-
-{ #category : #'visiting-labels' }
 ViennaRefactoring >> patternIdentifiersWith: aString in: aViennaNode do: aBlock [
 	(aViennaNode label = 'PatternIdentifier'
 		and: [ aViennaNode first = aString ])
@@ -736,6 +714,15 @@ ViennaRefactoring >> patternIdentifiersWith: aString in: aViennaNode do: aBlock 
 { #category : #signaling }
 ViennaRefactoring >> refactoringError: aViennaNode [
 	^ (ViennaRefactoringError refactoring: self node: aViennaNode) signal
+]
+
+{ #category : #'visiting-manipulations' }
+ViennaRefactoring >> replaceNode: aViennaNode with: anotherViennaNode [
+	| parent |
+	parent := aViennaNode parent.
+	1 to: parent size do: [ :index | 
+		(parent at: index) == aViennaNode
+			ifTrue: [ parent at: index put: anotherViennaNode ] ]
 ]
 
 { #category : #'visiting-scopes' }

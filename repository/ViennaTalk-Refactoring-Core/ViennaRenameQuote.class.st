@@ -21,6 +21,7 @@ ViennaRenameQuote >> check [
 
 { #category : #operations }
 ViennaRenameQuote >> execute [
+	self newName ifNil: [ ^ self ].
 	ast document
 		allDescendantsDo: [ :node | 
 			(node label = 'QuoteType' and: [ node first = self oldName ])
@@ -32,7 +33,7 @@ ViennaRenameQuote >> execute [
 { #category : #accessing }
 ViennaRenameQuote >> findNewName [
 	(UIManager default
-		request: 'rename function'
+		request: 'rename quote'
 		initialAnswer: self oldName allButFirst allButLast)
 		ifNotNil: [ :ans | ans trim ifNotEmpty: [ :name | ^ '<' , name , '>' ] ].
 	^ nil
@@ -42,8 +43,10 @@ ViennaRenameQuote >> findNewName [
 ViennaRenameQuote >> findOldName [
 	ast label = 'QuoteType'
 		ifTrue: [ ^ ast first ].
-	ast label = 'SymbolicLiteral'
-		ifTrue: [ ^ ast second ].
+	(ast label = 'SymbolicLiteral'
+		and: [ ast first notEmpty
+				and: [ ast first first = $< and: [ ast first last = $> ] ] ])
+		ifTrue: [ ^ ast first ].
 	^ nil
 ]
 

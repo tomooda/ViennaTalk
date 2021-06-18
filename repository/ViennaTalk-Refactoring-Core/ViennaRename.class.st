@@ -21,6 +21,7 @@ ViennaRename >> definitionNode [
 
 { #category : #operations }
 ViennaRename >> execute [
+	self newName ifNil: [ ^ self ].
 	self
 		executeOnDefinition;
 		freeOccurrencesOf: self oldName
@@ -62,7 +63,7 @@ ViennaRename >> findDefinitionNode [
 { #category : #accessing }
 ViennaRename >> findNewName [
 	(UIManager default
-		request: 'rename function'
+		request: 'new name'
 		initialAnswer: self oldName)
 		ifNotNil: [ :ans | ans trim ifNotEmpty: [ :name | ^ name ] ].
 	^ nil

@@ -2,14 +2,18 @@ Class {
 	#name : #ViennaNodeTest,
 	#superclass : #TestCase,
 	#instVars : [
-		'ast'
+		'ast',
+		'skip'
 	],
 	#category : #'ViennaTalk-Parser-Tests'
 }
 
 { #category : #running }
 ViennaNodeTest >> setUp [
-	ast := ViennaVDMParser new parse: 'module A
+	ast := ViennaVDMParser new
+		parse:
+			'module A
+imports from B types Ti renamed Ti operations opi: () ==> () renamed opi; opi2
 exports all
 definitions
 types
@@ -35,18 +39,21 @@ end
 
 operations
 	exp_op : nat ==> nat
-	exp_op(x1) == (dcl l:nat := 0; skip; return x1 mod 2)
-end A'
-]
+	exp_op(x1) == (dcl l:nat := 0; skip; exp_op(s1); l := opi(); l := exp_f(l); return v1;B`opi2());
+	
+	op : nat ==> nat
+	op() == B`opi2();
 
-{ #category : #running }
-ViennaNodeTest >> testDefinitionOfLocalName [
-	| skip |
+end A'.
 	skip := ast.
 	ast
 		allDescendantsDo: [ :n | 
 			n label = 'IdentityStatement'
-				ifTrue: [ skip := n ] ].
+				ifTrue: [ skip := n ] ]
+]
+
+{ #category : #running }
+ViennaNodeTest >> testDefinitionOfLocalName [
 	self assert: (skip definitionOfLocalName: 'nothing') equals: nil.
 	self
 		assert: (skip definitionOfLocalName: 'x1') parent parent first
@@ -70,5 +77,108 @@ ViennaNodeTest >> testDefinitionOfLocalName [
 	self
 		assert: (skip definitionOfLocalName: 'l') parent label
 		equals: 'DclStatement'.
+	self
+		assert: (skip definitionOfLocalName: 'Ti') label
+		equals: 'TypeImport'.
+	self
+		assert: (skip definitionOfLocalName: 'opi') label
+		equals: 'OperationImport'
+]
 
+{ #category : #running }
+ViennaNodeTest >> testIsFunctionNameNode [
+	| opcall1 opcall2 funcall |
+	self deny: skip isOperationNameNode.
+	opcall1 := skip parent at: 3.
+	self assert: opcall1 label equals: 'CallStatement'.
+	self assert: opcall1 first first equals: 'exp_op'.
+	self deny: opcall1 first isFunctionNameNode.
+	opcall2 := (skip parent at: 4) second.
+	self assert: opcall2 label equals: 'Apply'.
+	self assert: opcall2 first first equals: 'opi'.
+	self deny: opcall2 first isFunctionNameNode.
+	funcall := (skip parent at: 5) second.
+	self assert: funcall label equals: 'Apply'.
+	self assert: funcall first first equals: 'exp_f'.
+	self assert: funcall first isFunctionNameNode
+]
+
+{ #category : #running }
+ViennaNodeTest >> testIsOperationNameNode [
+	| opcall1 opcall2 funcall globalopcall |
+	self deny: skip isOperationNameNode.
+	opcall1 := skip parent at: 3.
+	self assert: opcall1 label equals: 'CallStatement'.
+	self assert: opcall1 first first equals: 'exp_op'.
+	self deny: opcall1 isOperationNameNode.
+	self assert: opcall1 first isOperationNameNode.
+	self deny: opcall1 second isOperationNameNode.
+	opcall2 := (skip parent at: 4) second.
+	self assert: opcall2 label equals: 'Apply'.
+	self assert: opcall2 first first equals: 'opi'.
+	self deny: opcall2 isOperationNameNode.
+	self assert: opcall2 first isOperationNameNode.
+	self deny: opcall2 second isOperationNameNode.
+	funcall := (skip parent at: 5) second.
+	self assert: funcall label equals: 'Apply'.
+	self assert: funcall first first equals: 'exp_f'.
+	self deny: funcall isOperationNameNode.
+	self deny: funcall first isOperationNameNode.
+	self deny: funcall second isOperationNameNode.
+	globalopcall := skip parent at: 7.
+	self assert: globalopcall label equals: 'CallStatement'.
+	self assert: globalopcall first label = 'GlobalName'.
+	self assert: globalopcall first first = 'B'.
+	self assert: globalopcall first second = 'opi2'.
+	self assert: globalopcall first isOperationNameNode
+]
+
+{ #category : #running }
+ViennaNodeTest >> testIsStateVariableNameNode [
+	| opcall1 opcall1arg funcall funcallarg returnarg |
+	self deny: skip isOperationNameNode.
+	opcall1 := skip parent at: 3.
+	self assert: opcall1 label equals: 'CallStatement'.
+	opcall1arg := opcall1 second first.
+	self assert: opcall1arg first equals: 's1'.
+	self assert: opcall1arg isStateVariableNameNode.
+	funcall := (skip parent at: 5) second.
+	self assert: funcall label equals: 'Apply'.
+	funcallarg := funcall second first.
+	self assert: funcallarg first equals: 'l'.
+	self deny: funcallarg isStateVariableNameNode.
+	returnarg := (skip parent at: 6) first.
+	self assert: returnarg first = 'v1'.
+	self deny: returnarg isStateVariableNameNode
+]
+
+{ #category : #running }
+ViennaNodeTest >> testIsValueNameNode [
+	| opcall1 opcall1arg funcall funcallarg returnarg |
+	self deny: skip isValueNameNode.
+	opcall1 := skip parent at: 3.
+	self assert: opcall1 label equals: 'CallStatement'.
+	opcall1arg := opcall1 second first.
+	self assert: opcall1arg first equals: 's1'.
+	self deny: opcall1arg isValueNameNode.
+	funcall := (skip parent at: 5) second.
+	self assert: funcall label equals: 'Apply'.
+	funcallarg := funcall second first.
+	self assert: funcallarg first equals: 'l'.
+	self deny: funcallarg isValueNameNode.
+	returnarg := (skip parent at: 6) first.
+	self assert: returnarg first = 'v1'.
+	self assert: returnarg isValueNameNode
+]
+
+{ #category : #running }
+ViennaNodeTest >> testSameAs [
+	self
+		assert:
+			('1 + 2 = 3' asViennaExpressionAst
+				sameAs: '1+2=3' asViennaExpressionAst).
+	self
+		deny:
+			('1 + 2 = 3' asViennaExpressionAst
+				sameAs: '1 + 2 = 4' asViennaExpressionAst)
 ]

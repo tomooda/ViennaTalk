@@ -11,6 +11,7 @@ ViennaRenameToplevel class >> isAbstract [
 
 { #category : #operations }
 ViennaRenameToplevel >> execute [
+	self newName ifNil: [ ^ self ].
 	super execute.
 	self executeOnImports
 ]
