@@ -473,7 +473,7 @@ ViennaASTBrowser >> initializePresenters [
 	self
 		whenBuiltDo: [ :w | 
 			| f |
-			f := TextStyle defaultFont.
+			f := ViennaLauncher font.
 			w widget
 				allMorphsDo: [ :m | 
 					(m respondsTo: #font:)
