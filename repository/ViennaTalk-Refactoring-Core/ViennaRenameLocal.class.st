@@ -11,6 +11,11 @@ ViennaRenameLocal >> check [
 				and: [ self definitionNode label ~= 'Document' ] ]
 ]
 
+{ #category : #accessing }
+ViennaRenameLocal >> construct [
+	^ 'local variable'
+]
+
 { #category : #operations }
 ViennaRenameLocal >> executeOnBlockStatement: aViennaNode [
 	aViennaNode

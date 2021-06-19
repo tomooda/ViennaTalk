@@ -15,6 +15,11 @@ ViennaRename class >> isAbstract [
 ]
 
 { #category : #accessing }
+ViennaRename >> construct [
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
 ViennaRename >> definitionNode [
 	^ definitionNode ifNil: [ definitionNode := self findDefinitionNode ]
 ]
@@ -76,7 +81,8 @@ ViennaRename >> findOldName [
 
 { #category : #accessing }
 ViennaRename >> name [
-	^ 'rename ' asText , self oldName asText allBold
+	^ 'rename ' asText , self construct asText , ' '
+		, self oldName asText allBold
 		,
 			(newName
 				ifNotNil: [ ' to ' asText , newName asText allBold ]

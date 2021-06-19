@@ -10,6 +10,11 @@ ViennaRenameStateVariable >> check [
 		and: [ self definitionNode first = self oldName ]
 ]
 
+{ #category : #accessing }
+ViennaRenameStateVariable >> construct [
+	^ 'state variable'
+]
+
 { #category : #operations }
 ViennaRenameStateVariable >> executeOnDefinition [
 	self definitionNode

@@ -9,6 +9,11 @@ ViennaRenameExplicitFunction >> check [
 	^ self definitionNode notNil
 ]
 
+{ #category : #accessing }
+ViennaRenameExplicitFunction >> construct [
+	^ 'function'
+]
+
 { #category : #operations }
 ViennaRenameExplicitFunction >> executeOnDefinition [
 	self definitionNode

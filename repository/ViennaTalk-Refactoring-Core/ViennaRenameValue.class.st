@@ -9,6 +9,11 @@ ViennaRenameValue >> check [
 	^ self definitionNode notNil
 ]
 
+{ #category : #accessing }
+ViennaRenameValue >> construct [
+	^ 'constant value'
+]
+
 { #category : #operations }
 ViennaRenameValue >> executeOnDefinition [
 	self definitionNode

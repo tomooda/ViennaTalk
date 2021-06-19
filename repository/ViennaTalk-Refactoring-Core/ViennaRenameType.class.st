@@ -10,6 +10,11 @@ ViennaRenameType >> check [
 		and: [ self definitionNode first = self oldName ]
 ]
 
+{ #category : #accessing }
+ViennaRenameType >> construct [
+	^ 'type'
+]
+
 { #category : #operations }
 ViennaRenameType >> executeOnDefinition [
 	self definitionNode
