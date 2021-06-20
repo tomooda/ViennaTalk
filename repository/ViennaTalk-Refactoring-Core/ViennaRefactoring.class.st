@@ -229,6 +229,28 @@ ViennaRefactoring >> freeOccurrencesOf: aString inCasesStatementAlternative: aVi
 ]
 
 { #category : #'visiting-free occurrences' }
+ViennaRefactoring >> freeOccurrencesOf: aString inDef: aViennaNode do: aBlock [
+	aViennaNode first
+		do: [ :equalDefinition | 
+			self freeOccurrencesOf: aString in: equalDefinition do: aBlock.
+			equalDefinition first
+				allDescendantsDo: [ :n | 
+					(n label = 'PatternIdentifier' and: [ n first = aString ])
+						ifTrue: [ ^ self ] ] ].
+	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock
+]
+
+{ #category : #'visiting-free occurrences' }
+ViennaRefactoring >> freeOccurrencesOf: aString inDefExpression: aViennaNode do: aBlock [
+	^ self freeOccurrencesOf: aString inDef: aViennaNode do: aBlock
+]
+
+{ #category : #'visiting-free occurrences' }
+ViennaRefactoring >> freeOccurrencesOf: aString inDefStatement: aViennaNode do: aBlock [
+	^ self freeOccurrencesOf: aString inDef: aViennaNode do: aBlock
+]
+
+{ #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inExists1Expression: aViennaNode do: aBlock [
 	^ self
 		freeOccurrencesOf: aString
@@ -582,6 +604,16 @@ ViennaRefactoring >> localScopeByCasesExpressionAlternative: aViennaNode do: aBl
 { #category : #'visiting-scopes' }
 ViennaRefactoring >> localScopeByCasesStatementAlternative: aViennaNode do: aBlock [
 	aBlock value: aViennaNode second
+]
+
+{ #category : #'visiting-scopes' }
+ViennaRefactoring >> localScopeByDefExpression: aViennaNode do: aBlock [
+	aBlock value: aViennaNode
+]
+
+{ #category : #'visiting-scopes' }
+ViennaRefactoring >> localScopeByDefStatement: aViennaNode do: aBlock [
+	aBlock value: aViennaNode
 ]
 
 { #category : #'visiting-scopes' }

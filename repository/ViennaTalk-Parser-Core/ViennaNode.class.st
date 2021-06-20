@@ -254,10 +254,23 @@ ViennaNode >> definitionInComprehensionOfLocalName: aString do: aBlock [
 
 { #category : #'accessing-definitions' }
 ViennaNode >> definitionInDclOfLocalName: aString do: aBlock [
+	self
+		do: [ :statement | 
+			statement label = 'DclStatement'
+				ifTrue: [ statement
+						do: [ :AssignmentDefinition | 
+							AssignmentDefinition first = aString
+								ifTrue: [ ^ aBlock value: AssignmentDefinition ] ] ] ]
+]
+
+{ #category : #'accessing-definitions' }
+ViennaNode >> definitionInDefOfLocalName: aString do: aBlock [
 	self first
-		do: [ :dclDef | 
-			dclDef first = aString
-				ifTrue: [ ^ aBlock value: dclDef ] ]
+		reverseDo: [ :equalDefinition | 
+			equalDefinition first
+				allDescendantsDo: [ :n | 
+					(n label = 'PatternIdentifier' and: [ n first = aString ])
+						ifTrue: [ ^ aBlock value: n ] ] ]
 ]
 
 { #category : #'accessing-definitions' }
@@ -466,6 +479,8 @@ ViennaNode >> definitionOfGlobalName: shortName module: moduleName [
 
 { #category : #'accessing-definitions' }
 ViennaNode >> definitionOfLocalName: aString [
+	(label = 'DefExpression' or: [ label = 'DefStatement' ])
+		ifTrue: [ self definitionInDefOfLocalName: aString do: [ :node | ^ node ] ].
 	(label = 'LetExpression' or: [ label = 'LetStatement' ])
 		ifTrue: [ self definitionInLetOfLocalName: aString do: [ :node | ^ node ] ].
 	(label = 'LetBeExpression' or: [ label = 'LetBeStatement' ])
@@ -876,6 +891,11 @@ ViennaNode >> remove: anObject [
 				yourself).
 	1 to: array size do: [ :index | self at: index put: (array at: index) ].
 	^ anObject
+]
+
+{ #category : #enumerating }
+ViennaNode >> reverseDo: aBlock [
+	self size to: 1 by: -1 do: [ :index | aBlock value: (self at: index) ]
 ]
 
 { #category : #testing }
