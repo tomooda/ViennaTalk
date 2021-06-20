@@ -388,6 +388,13 @@ ViennaASTBrowser >> definitionListContextMenu [
 														updateDefinitionList;
 														updateSource ] ] ] ].
 					node := node parent ] ].
+	menu
+		addGroup: [ :group | 
+			menu
+				addItem: [ :item | 
+					item
+						name: 'inspect';
+						action: [ self definitionBase inspect ] ] ].
 	^ menu
 ]
 

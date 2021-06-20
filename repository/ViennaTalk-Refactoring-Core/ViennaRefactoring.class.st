@@ -575,6 +575,15 @@ ViennaRefactoring >> freeOccurrencesOf: aString inValueImport: aViennaNode do: a
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock
 ]
 
+{ #category : #'visiting-free occurrences' }
+ViennaRefactoring >> hasFreeOccurrencesOf: aString in: aViennaNode [
+	self
+		freeOccurrencesOf: aString
+		in: aViennaNode
+		do: [ :node | ^ true ].
+	^ false
+]
+
 { #category : #'visiting-bindings' }
 ViennaRefactoring >> hasLocalBindingOf: aString in: aViennaNode [
 	self bindingOf: aString in: aViennaNode do: [ :n | ^ true ].
