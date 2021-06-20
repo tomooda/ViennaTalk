@@ -229,6 +229,28 @@ ViennaRefactoring >> freeOccurrencesOf: aString inCasesStatementAlternative: aVi
 ]
 
 { #category : #'visiting-free occurrences' }
+ViennaRefactoring >> freeOccurrencesOf: aString inDef: aViennaNode do: aBlock [
+	aViennaNode first
+		do: [ :equalDefinition | 
+			self freeOccurrencesOf: aString in: equalDefinition do: aBlock.
+			equalDefinition first
+				allDescendantsDo: [ :n | 
+					(n label = 'PatternIdentifier' and: [ n first = aString ])
+						ifTrue: [ ^ self ] ] ].
+	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock
+]
+
+{ #category : #'visiting-free occurrences' }
+ViennaRefactoring >> freeOccurrencesOf: aString inDefExpression: aViennaNode do: aBlock [
+	^ self freeOccurrencesOf: aString inDef: aViennaNode do: aBlock
+]
+
+{ #category : #'visiting-free occurrences' }
+ViennaRefactoring >> freeOccurrencesOf: aString inDefStatement: aViennaNode do: aBlock [
+	^ self freeOccurrencesOf: aString inDef: aViennaNode do: aBlock
+]
+
+{ #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inExists1Expression: aViennaNode do: aBlock [
 	^ self
 		freeOccurrencesOf: aString
@@ -553,6 +575,15 @@ ViennaRefactoring >> freeOccurrencesOf: aString inValueImport: aViennaNode do: a
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock
 ]
 
+{ #category : #'visiting-free occurrences' }
+ViennaRefactoring >> hasFreeOccurrencesOf: aString in: aViennaNode [
+	self
+		freeOccurrencesOf: aString
+		in: aViennaNode
+		do: [ :node | ^ true ].
+	^ false
+]
+
 { #category : #'visiting-bindings' }
 ViennaRefactoring >> hasLocalBindingOf: aString in: aViennaNode [
 	self bindingOf: aString in: aViennaNode do: [ :n | ^ true ].
@@ -582,6 +613,16 @@ ViennaRefactoring >> localScopeByCasesExpressionAlternative: aViennaNode do: aBl
 { #category : #'visiting-scopes' }
 ViennaRefactoring >> localScopeByCasesStatementAlternative: aViennaNode do: aBlock [
 	aBlock value: aViennaNode second
+]
+
+{ #category : #'visiting-scopes' }
+ViennaRefactoring >> localScopeByDefExpression: aViennaNode do: aBlock [
+	aBlock value: aViennaNode
+]
+
+{ #category : #'visiting-scopes' }
+ViennaRefactoring >> localScopeByDefStatement: aViennaNode do: aBlock [
+	aBlock value: aViennaNode
 ]
 
 { #category : #'visiting-scopes' }

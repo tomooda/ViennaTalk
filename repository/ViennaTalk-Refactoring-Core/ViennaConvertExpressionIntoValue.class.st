@@ -54,7 +54,7 @@ ViennaConvertExpressionIntoValue >> execute [
 ViennaConvertExpressionIntoValue >> findNewName [
 	(UIManager default
 		request: 'name of toplevel value for ' , self ast source
-		initialAnswer: 'value')
+		initialAnswer: '')
 		ifNotNil: [ :ans | ans trim ifNotEmpty: [ :name | ^ name ] ].
 	^ nil
 ]
@@ -71,6 +71,6 @@ ViennaConvertExpressionIntoValue >> newName [
 ]
 
 { #category : #accessing }
-ViennaConvertExpressionIntoValue >> newName: anObject [
-	newName := anObject
+ViennaConvertExpressionIntoValue >> newName: aString [
+	newName := aString
 ]

@@ -236,9 +236,9 @@ operations
 operations
     test01 : () ==> seq of bool
     test01() ==
-        (dcl r:seq of bool := [];
 -- Unit test with the test result.
         def
+            r = [];
             m1 = Commission(mk_token("Kadena"), 2);
             r = r ^ [m1(mk_token("Kadena")) = 2];
             m2 = ResetCapacity(mk_token("Kadena"), 5);
@@ -273,7 +273,7 @@ operations
                     {mk_token("F35_1") |-> mk_token("Yokota"),
                     mk_token("F18_1") |-> mk_token("Yokota")})
                 = 2];
-        in return r);
+        in return r;
     
     test02 : () ==> ATC
     test02() ==
@@ -388,6 +388,13 @@ ViennaASTBrowser >> definitionListContextMenu [
 														updateDefinitionList;
 														updateSource ] ] ] ].
 					node := node parent ] ].
+	menu
+		addGroup: [ :group | 
+			menu
+				addItem: [ :item | 
+					item
+						name: 'inspect';
+						action: [ self definitionBase inspect ] ] ].
 	^ menu
 ]
 
