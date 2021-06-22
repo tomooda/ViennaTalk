@@ -23,6 +23,16 @@ ViennaRefactoring class >> on: aViennaNode do: aBlock [
 						ifTrue: [ aBlock value: refactoring ] ] ]
 ]
 
+{ #category : #utilities }
+ViennaRefactoring class >> sortedInstancesOn: aViennaNode [
+	^ (Array
+		streamContents: [ :stream | 
+			self
+				on: aViennaNode
+				do: [ :refactoring | stream nextPut: refactoring ] ])
+		sorted: [ :less :more | less sortingOrder <= more sortingOrder ]
+]
+
 { #category : #accessing }
 ViennaRefactoring >> ast [
 	^ ast
@@ -777,4 +787,9 @@ ViennaRefactoring >> scopeOf: aViennaNode [
 	[ scopingNodeLabels includes: node label ]
 		whileFalse: [ (node := node parent) ifNil: [ ^ node ] ].
 	^ node
+]
+
+{ #category : #accessing }
+ViennaRefactoring >> sortingOrder [
+	^ self subclassResponsibility
 ]

@@ -279,3 +279,8 @@ ViennaRenameLocal >> findDefinitionNode [
 ViennaRenameLocal >> findOldName [
 	^ ast first
 ]
+
+{ #category : #accessing }
+ViennaRenameLocal >> sortingOrder [
+	^ 1.2
+]

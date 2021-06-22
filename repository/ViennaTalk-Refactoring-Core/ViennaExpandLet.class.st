@@ -42,3 +42,8 @@ ViennaExpandLet >> execute [
 ViennaExpandLet >> name [
 	^ 'expand ' asText , ast source asText allBold
 ]
+
+{ #category : #accessing }
+ViennaExpandLet >> sortingOrder [
+	^ 2.17
+]

@@ -81,6 +81,11 @@ ViennaConvertStatementIntoLetStatement >> newName: anObject [
 ]
 
 { #category : #accessing }
+ViennaConvertStatementIntoLetStatement >> sortingOrder [
+	^ 2.58
+]
+
+{ #category : #accessing }
 ViennaConvertStatementIntoLetStatement >> statementNode [
 	^ statementNode ifNil: [ statementNode := self findStatementNode ]
 ]

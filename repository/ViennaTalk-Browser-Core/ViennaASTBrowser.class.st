@@ -374,8 +374,7 @@ ViennaASTBrowser >> definitionListContextMenu [
 			[ node notNil ]
 				whileTrue: [ menu
 						addGroup: [ :group | 
-							ViennaRefactoring
-								on: node
+							(ViennaRefactoring sortedInstancesOn: node)
 								do: [ :refactoring | 
 									group
 										addItem: [ :item | 
@@ -515,8 +514,7 @@ ViennaASTBrowser >> sourceTextContextMenu [
 		ifNotNil: [ :node | 
 			menu
 				addGroup: [ :group | 
-					ViennaRefactoring
-						on: node
+					(ViennaRefactoring sortedInstancesOn: node)
 						do: [ :refactoring | 
 							group
 								addItem: [ :item | 

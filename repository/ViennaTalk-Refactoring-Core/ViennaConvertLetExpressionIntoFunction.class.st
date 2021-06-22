@@ -137,3 +137,8 @@ ViennaConvertLetExpressionIntoFunction >> newName [
 ViennaConvertLetExpressionIntoFunction >> newName: aString [
 	newName := aString
 ]
+
+{ #category : #accessing }
+ViennaConvertLetExpressionIntoFunction >> sortingOrder [
+	^ 2.55
+]

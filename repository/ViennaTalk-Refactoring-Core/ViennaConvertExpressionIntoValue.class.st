@@ -75,3 +75,8 @@ ViennaConvertExpressionIntoValue >> newName [
 ViennaConvertExpressionIntoValue >> newName: aString [
 	newName := aString
 ]
+
+{ #category : #accessing }
+ViennaConvertExpressionIntoValue >> sortingOrder [
+	^ 2.53
+]

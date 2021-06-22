@@ -47,3 +47,8 @@ ViennaRenameType >> findOldName [
 		ifTrue: [ ^ ast first ].
 	^ nil
 ]
+
+{ #category : #accessing }
+ViennaRenameType >> sortingOrder [
+	^ 1.3
+]

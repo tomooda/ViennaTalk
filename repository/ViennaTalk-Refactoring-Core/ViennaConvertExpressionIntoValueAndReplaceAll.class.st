@@ -44,3 +44,8 @@ ViennaConvertExpressionIntoValueAndReplaceAll >> name [
 	^ 'convert all occurrences of ' asText , ast source asText allBold
 		, ' into a toplevel value definition' asText
 ]
+
+{ #category : #accessing }
+ViennaConvertExpressionIntoValueAndReplaceAll >> sortingOrder [
+	^ 2.54
+]

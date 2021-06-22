@@ -38,3 +38,8 @@ ViennaUseValueInAllOccurrences >> name [
 	^ 'use ' , self definitionNode first source asText allBold , ' for all occurrences of '
 		, self ast source asText allBold
 ]
+
+{ #category : #accessing }
+ViennaUseValueInAllOccurrences >> sortingOrder [
+	^ 2.12
+]

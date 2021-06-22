@@ -63,3 +63,8 @@ ViennaConvertExpressionIntoLetExpression >> newName [
 ViennaConvertExpressionIntoLetExpression >> newName: aString [
 	newName := aString
 ]
+
+{ #category : #accessing }
+ViennaConvertExpressionIntoLetExpression >> sortingOrder [
+	^ 2.52
+]

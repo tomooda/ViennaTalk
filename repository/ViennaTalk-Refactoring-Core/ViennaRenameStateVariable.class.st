@@ -51,3 +51,8 @@ ViennaRenameStateVariable >> findOldName [
 		ifTrue: [ ^ ast first ].
 	^ nil
 ]
+
+{ #category : #accessing }
+ViennaRenameStateVariable >> sortingOrder [
+	^ 1.22
+]

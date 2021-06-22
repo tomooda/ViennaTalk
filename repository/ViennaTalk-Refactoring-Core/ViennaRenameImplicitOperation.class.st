@@ -46,3 +46,8 @@ ViennaRenameImplicitOperation >> findOldName [
 		ifTrue: [ ^ ast first ].
 	^ nil
 ]
+
+{ #category : #accessing }
+ViennaRenameImplicitOperation >> sortingOrder [
+	^ 1.12
+]

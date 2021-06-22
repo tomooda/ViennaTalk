@@ -55,3 +55,8 @@ ViennaRemoveAndExpandValueDefinition >> name [
 	^ 'remove value definition of ' asText
 		, ast first source asText allBold , ' and expand it' asText
 ]
+
+{ #category : #accessing }
+ViennaRemoveAndExpandValueDefinition >> sortingOrder [
+	^ 2.15
+]

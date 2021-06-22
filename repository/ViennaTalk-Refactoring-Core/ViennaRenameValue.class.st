@@ -53,3 +53,8 @@ ViennaRenameValue >> findOldName [
 		ifTrue: [ ^ ast first ].
 	^ nil
 ]
+
+{ #category : #accessing }
+ViennaRenameValue >> sortingOrder [
+	^ 1.4
+]

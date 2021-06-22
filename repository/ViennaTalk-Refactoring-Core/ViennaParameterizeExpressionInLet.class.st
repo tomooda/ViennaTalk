@@ -77,3 +77,8 @@ ViennaParameterizeExpressionInLet >> newName [
 ViennaParameterizeExpressionInLet >> newName: aString [
 	newName := aString
 ]
+
+{ #category : #accessing }
+ViennaParameterizeExpressionInLet >> sortingOrder [
+	^ 2.18
+]

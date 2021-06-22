@@ -70,3 +70,8 @@ ViennaConvertExplicitFunctionIntoOperation >> name [
 	^ 'convert ' asText , ast second first first asText allBold
 		, ' into a pure operation' asText
 ]
+
+{ #category : #accessing }
+ViennaConvertExplicitFunctionIntoOperation >> sortingOrder [
+	^ 2.51
+]

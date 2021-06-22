@@ -79,3 +79,8 @@ ViennaRenameQuote >> oldName [
 ViennaRenameQuote >> oldName: aString [
 	oldName := aString
 ]
+
+{ #category : #accessing }
+ViennaRenameQuote >> sortingOrder [
+	^ 1.5
+]

@@ -135,3 +135,8 @@ ViennaConvertLetExpressionIntoOperation >> operationType [
 				ifEmpty: [ ViennaNode label: 'UnitType' ])
 		with: (ViennaNode label: 'BasicType' with: 'any')
 ]
+
+{ #category : #accessing }
+ViennaConvertLetExpressionIntoOperation >> sortingOrder [
+	^ 2.56
+]

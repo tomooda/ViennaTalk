@@ -40,3 +40,8 @@ ViennaRenameStateConstructor >> findOldName [
 		ifTrue: [ ^ ast first ].
 	^ nil
 ]
+
+{ #category : #accessing }
+ViennaRenameStateConstructor >> sortingOrder [
+	^ 1.21
+]

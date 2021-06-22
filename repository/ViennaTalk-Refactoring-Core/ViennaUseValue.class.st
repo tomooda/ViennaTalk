@@ -52,3 +52,8 @@ ViennaUseValue >> name [
 	^ 'use ' , self definitionNode first source asText allBold , ' for '
 		, self ast source asText allBold
 ]
+
+{ #category : #accessing }
+ViennaUseValue >> sortingOrder [
+	^ 2.11
+]
