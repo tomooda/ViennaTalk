@@ -917,6 +917,21 @@ ViennaNode >> remove: anObject [
 	^ anObject
 ]
 
+{ #category : #'adding/removing' }
+ViennaNode >> removeAfterIndex: anInteger [
+	| array |
+	array := self asArray copyFrom: 1 to: anInteger - 1.
+	self
+		become:
+			((self class new: array size)
+				setLabel: label;
+				parent: parent;
+				start: start end: end;
+				yourself).
+	1 to: array size do: [ :index | self at: index put: (array at: index) ].
+	^ anInteger
+]
+
 { #category : #enumerating }
 ViennaNode >> reverseDo: aBlock [
 	self size to: 1 by: -1 do: [ :index | aBlock value: (self at: index) ]
