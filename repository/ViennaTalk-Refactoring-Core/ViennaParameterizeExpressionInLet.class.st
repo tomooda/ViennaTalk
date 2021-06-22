@@ -29,6 +29,7 @@ ViennaParameterizeExpressionInLet >> definitionNode: aViennaNode [
 
 { #category : #operations }
 ViennaParameterizeExpressionInLet >> execute [
+	self newName ifNil: [ ^ nil ].
 	self
 		replaceNode: ast
 		with: (ViennaNode label: 'LocalName' with: self newName).
@@ -47,7 +48,9 @@ ViennaParameterizeExpressionInLet >> execute [
 
 { #category : #accessing }
 ViennaParameterizeExpressionInLet >> findDefinitionNode [
-	^ ast parent parentLabelled: 'LetExpression' ifAbsent: [ nil ]
+	^ ast parent
+		parentLabelled: 'LetExpression'
+		ifAbsent: [ ast parent parentLabelled: 'LetStatement' ifAbsent: [ nil ] ]
 ]
 
 { #category : #accessing }

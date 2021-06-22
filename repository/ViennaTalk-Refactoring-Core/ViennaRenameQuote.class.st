@@ -21,13 +21,14 @@ ViennaRenameQuote >> check [
 
 { #category : #operations }
 ViennaRenameQuote >> execute [
-	self newName ifNil: [ ^ self ].
+	self newName ifNil: [ ^ nil ].
 	ast document
 		allDescendantsDo: [ :node | 
 			(node label = 'QuoteType' and: [ node first = self oldName ])
 				ifTrue: [ node at: 1 put: self newName ].
 			(node label = 'SymbolicLiteral' and: [ node first = self oldName ])
-				ifTrue: [ node at: 1 put: self newName ] ]
+				ifTrue: [ node at: 1 put: self newName ] ].
+	^ nil
 ]
 
 { #category : #accessing }

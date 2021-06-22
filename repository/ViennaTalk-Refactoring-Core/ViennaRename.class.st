@@ -26,12 +26,13 @@ ViennaRename >> definitionNode [
 
 { #category : #operations }
 ViennaRename >> execute [
-	self newName ifNil: [ ^ self ].
+	self newName ifNil: [ ^ nil ].
 	self
 		executeOnDefinition;
 		freeOccurrencesOf: self oldName
 			in: ast module
-			do: [ :node | self execute: node ]
+			do: [ :node | self execute: node ].
+	^ nil
 ]
 
 { #category : #operations }

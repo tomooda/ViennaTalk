@@ -34,7 +34,7 @@ ViennaExpandLetExpression >> execute [
 						freeOccurrencesOf: nextDef key
 						in: def value
 						do: [ :node | self replaceNode: node with: nextDef value ] ] ].
-	self replaceNode: ast with: ast second
+	^ self replaceNode: ast with: ast second
 ]
 
 { #category : #accessing }

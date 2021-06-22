@@ -24,7 +24,7 @@ ViennaUseValue >> definitionNode: aViennaNode [
 
 { #category : #operations }
 ViennaUseValue >> execute [
-	self
+	^ self
 		replaceNode: ast
 		with: (ViennaNode label: 'LocalName' with: self definitionNode first first)
 ]

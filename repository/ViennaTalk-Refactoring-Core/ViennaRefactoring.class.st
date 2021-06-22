@@ -763,7 +763,8 @@ ViennaRefactoring >> replaceNode: aViennaNode with: anotherViennaNode [
 	parent := aViennaNode parent.
 	1 to: parent size do: [ :index | 
 		(parent at: index) == aViennaNode
-			ifTrue: [ parent at: index put: anotherViennaNode ] ]
+			ifTrue: [ parent at: index put: anotherViennaNode ] ].
+	^ anotherViennaNode
 ]
 
 { #category : #'visiting-scopes' }

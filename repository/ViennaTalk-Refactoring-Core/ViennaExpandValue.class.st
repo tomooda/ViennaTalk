@@ -11,7 +11,7 @@ ViennaExpandValue >> check [
 
 { #category : #operations }
 ViennaExpandValue >> execute [
-	((ast definitionOfLocalName: ast first)
+	^ ((ast definitionOfLocalName: ast first)
 		parentLabelled: 'ValueDefinition'
 		ifAbsent: [ nil ])
 		ifNotNil:

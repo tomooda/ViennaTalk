@@ -22,7 +22,7 @@ ViennaConvertExpressionIntoValue >> check [
 { #category : #operations }
 ViennaConvertExpressionIntoValue >> execute [
 	| moduleBody valueDefinitions valueDefinition accessValueDefinition |
-	self newName ifNil: [ ^ self ].
+	self newName ifNil: [ ^ nil ].
 	moduleBody := ast module third.
 	valueDefinitions := (moduleBody
 		detect: [ :definitionBlock | 
@@ -47,7 +47,8 @@ ViennaConvertExpressionIntoValue >> execute [
 		label: 'AccessValueDefinition'
 		with: (ViennaNode label: 'Access')
 		with: valueDefinition.
-	valueDefinitions add: accessValueDefinition
+	valueDefinitions add: accessValueDefinition.
+	^ accessValueDefinition
 ]
 
 { #category : #accessing }

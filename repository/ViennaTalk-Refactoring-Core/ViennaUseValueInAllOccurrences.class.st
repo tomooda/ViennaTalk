@@ -12,7 +12,8 @@ ViennaUseValueInAllOccurrences >> execute [
 				and: [ node sameAs: ast ])
 				ifTrue: [ self
 						replaceNode: node
-						with: (ViennaNode label: 'LocalName' with: self definitionNode first first) ] ]
+						with: (ViennaNode label: 'LocalName' with: self definitionNode first first) ] ].
+	^ nil
 ]
 
 { #category : #accessing }

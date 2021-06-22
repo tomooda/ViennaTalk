@@ -46,7 +46,8 @@ ViennaRemoveAndExpandValueDefinition >> execute [
 		ifNotNil: [ :valueDefinitions | 
 			valueDefinitions remove: ast parent.
 			valueDefinitions
-				ifEmpty: [ valueDefinitions parent parent remove: valueDefinitions parent ] ]
+				ifEmpty: [ valueDefinitions parent parent remove: valueDefinitions parent ] ].
+	^ nil
 ]
 
 { #category : #accessing }

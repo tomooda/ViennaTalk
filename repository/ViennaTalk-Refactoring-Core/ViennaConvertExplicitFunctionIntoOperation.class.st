@@ -61,7 +61,8 @@ ViennaConvertExplicitFunctionIntoOperation >> execute [
 	functionDefinitions remove: ast.
 	functionDefinitions
 		ifEmpty: [ moduleBody remove: functionDefinitions parent ].
-	operationDefinitions add: accessOperationDefinition
+	operationDefinitions add: accessOperationDefinition.
+	^ accessOperationDefinition
 ]
 
 { #category : #accessing }

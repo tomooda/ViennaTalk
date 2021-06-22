@@ -79,7 +79,8 @@ ViennaConvertLetExpressionIntoFunction >> execute [
 			(ViennaNode
 				label: 'FunctionDefinition'
 				with: explicitFunctionDefinition).
-	functionDefinitions add: accessFunctionDefinition
+	functionDefinitions add: accessFunctionDefinition.
+	^ accessFunctionDefinition
 ]
 
 { #category : #accessing }
@@ -135,9 +136,4 @@ ViennaConvertLetExpressionIntoFunction >> newName [
 { #category : #accessing }
 ViennaConvertLetExpressionIntoFunction >> newName: aString [
 	newName := aString
-]
-
-{ #category : #accessing }
-ViennaConvertLetExpressionIntoFunction >> parameters [
-	ast 
 ]

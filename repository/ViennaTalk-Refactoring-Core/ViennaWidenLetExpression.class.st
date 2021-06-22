@@ -35,14 +35,14 @@ ViennaWidenLetExpression >> execute [
 	self replaceNode: base with: dummy.
 	self replaceNode: ast with: ast second.
 	ast at: 2 put: base.
-	self replaceNode: dummy with: ast
+	^ self replaceNode: dummy with: ast
 ]
 
 { #category : #accessing }
 ViennaWidenLetExpression >> findDefinitionNode [
 	| node |
 	node := ast parent.
-	[ node ifNil: [ ^ false ].
+	[ node ifNil: [ ^ nil ].
 	node isExpressionNode ] whileFalse: [ node := node parent ].
 	^ node
 ]

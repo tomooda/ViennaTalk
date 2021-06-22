@@ -9,7 +9,8 @@ Class {
 		'end'
 	],
 	#classVars : [
-		'ExpressionLabels'
+		'ExpressionLabels',
+		'StatementLabels'
 	],
 	#category : #'ViennaTalk-Parser-Core'
 }
@@ -134,6 +135,14 @@ ViennaNode class >> label: aString withAll: anArray [
 	node setLabel: aString.
 	1 to: anArray size do: [ :index | node at: index put: (anArray at: index) ].
 	^ node
+]
+
+{ #category : #accessing }
+ViennaNode class >> statementLabels [
+	^ StatementLabels
+		ifNil:
+			[ StatementLabels := #('AlwaysStatement' 'AssignStatement' 'AssignmentDefinition' 'BlockStatement' 'CallStatement' 'CasesStatement' 'DclStatement' 'DefStatement' 'ErrorStatement' 'ExitStatement' 'IdentityStatement' 'IfStatement' 'IndexForLoop' 'LetBeStatement' 'LetStatement' 'MultipleAssignStatement' 'NondeterministicStatement' 'ReturnStatement' 'SequenceForLoop' 'SetForLoop' 'TixeStatement' 'TrapStatement' 'WhileLoop')
+				asSet ]
 ]
 
 { #category : #'adding/removing' }
@@ -632,6 +641,16 @@ ViennaNode >> includesParent: aViennaNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isBlockVariableNameNode [
+	self label = 'LocalName'
+		ifTrue: [ (self definitionOfLocalName: self first)
+				ifNotNil: [ :defNode | 
+					defNode label = 'AssignmentDefinition'
+						ifTrue: [ ^ true ] ] ].
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isEmpty [
 	^ self size = 0
 ]
@@ -717,6 +736,11 @@ ViennaNode >> isStateVariableNameNode [
 						ifTrue: [ ^ true ] ].
 			^ false ].
 	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isStatementNode [
+	^ self class statementLabels includes: label
 ]
 
 { #category : #testing }
@@ -1002,12 +1026,11 @@ ViennaNode >> tracingSource [
 
 { #category : #enumerating }
 ViennaNode >> variableExpressionNodesDo: aBlock [
-	self isExpressionNode
-		ifTrue: [ self
-				allDescendantsDo: [ :node | 
-					node label = 'OldName'
-						ifTrue: [ aBlock value: node ].
-					(#('LocalName' 'GlobalName') includes: node label)
-						ifTrue: [ (node isValueNameNode or: [ node isFunctionNameNode ])
-								ifFalse: [ aBlock value: node ] ] ] ]
+	self
+		allDescendantsDo: [ :node | 
+			node label = 'OldName'
+				ifTrue: [ aBlock value: node ].
+			(#('LocalName' 'GlobalName') includes: node label)
+				ifTrue: [ (node isValueNameNode or: [ node isFunctionNameNode ])
+						ifFalse: [ aBlock value: node ] ] ]
 ]
