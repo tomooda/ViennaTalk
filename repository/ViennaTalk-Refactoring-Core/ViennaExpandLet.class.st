@@ -1,16 +1,17 @@
 Class {
-	#name : #ViennaExpandLetExpression,
+	#name : #ViennaExpandLet,
 	#superclass : #ViennaRefactoring,
 	#category : #'ViennaTalk-Refactoring-Core'
 }
 
 { #category : #operations }
-ViennaExpandLetExpression >> check [
-	^ ast notNil and: [ ast label = 'LetExpression' ]
+ViennaExpandLet >> check [
+	^ ast notNil
+		and: [ ast label = 'LetExpression' or: [ ast label = 'LetStatement' ] ]
 ]
 
 { #category : #operations }
-ViennaExpandLetExpression >> execute [
+ViennaExpandLet >> execute [
 	| defs |
 	defs := ast first asArray
 		collect: [ :localDef | localDef first first first -> localDef first third ].
@@ -38,6 +39,6 @@ ViennaExpandLetExpression >> execute [
 ]
 
 { #category : #accessing }
-ViennaExpandLetExpression >> name [
+ViennaExpandLet >> name [
 	^ 'expand ' asText , ast source asText allBold
 ]

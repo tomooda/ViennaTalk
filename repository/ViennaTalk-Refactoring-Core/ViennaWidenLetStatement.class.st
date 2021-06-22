@@ -1,5 +1,5 @@
 Class {
-	#name : #ViennaWidenLetExpression,
+	#name : #ViennaWidenLetStatement,
 	#superclass : #ViennaRefactoring,
 	#instVars : [
 		'definitionNode'
@@ -8,26 +8,26 @@ Class {
 }
 
 { #category : #operations }
-ViennaWidenLetExpression >> check [
+ViennaWidenLetStatement >> check [
 	ast ifNil: [ ^ false ].
-	ast label = 'LetExpression'
+	ast label = 'LetStatement'
 		ifFalse: [ ^ false ].
 	self definitionNode ifNil: [ ^ false ].
 	^ true
 ]
 
 { #category : #accessing }
-ViennaWidenLetExpression >> definitionNode [
+ViennaWidenLetStatement >> definitionNode [
 	^ definitionNode ifNil: [ definitionNode := self findDefinitionNode ]
 ]
 
 { #category : #accessing }
-ViennaWidenLetExpression >> definitionNode: aViennaNode [
+ViennaWidenLetStatement >> definitionNode: aViennaNode [
 	definitionNode := aViennaNode
 ]
 
 { #category : #operations }
-ViennaWidenLetExpression >> execute [
+ViennaWidenLetStatement >> execute [
 	| dummy base |
 	dummy := ViennaNode label: 'DUMMY'.
 	base := self definitionNode.
@@ -38,15 +38,15 @@ ViennaWidenLetExpression >> execute [
 ]
 
 { #category : #accessing }
-ViennaWidenLetExpression >> findDefinitionNode [
+ViennaWidenLetStatement >> findDefinitionNode [
 	| node |
 	node := ast parent.
 	[ node ifNil: [ ^ nil ].
-	node isExpressionNode ] whileFalse: [ node := node parent ].
+	node isStatementNode ] whileFalse: [ node := node parent ].
 	^ node
 ]
 
 { #category : #accessing }
-ViennaWidenLetExpression >> name [
+ViennaWidenLetStatement >> name [
 	^ 'widen ' , ast source asText allBold
 ]
