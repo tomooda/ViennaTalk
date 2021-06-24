@@ -125,7 +125,7 @@ ViennaLiftLetExpressionIntoFunction >> functionType [
 { #category : #accessing }
 ViennaLiftLetExpressionIntoFunction >> name [
 	^ 'Lift ' asText , ast source asText allBold
-		, ' into a FUNCTION' asText
+		, ' into a function' asText
 ]
 
 { #category : #accessing }

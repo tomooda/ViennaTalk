@@ -52,7 +52,7 @@ ViennaInlineValueAndRemove >> execute [
 
 { #category : #accessing }
 ViennaInlineValueAndRemove >> name [
-	^ 'Inline VALUE definition of ' asText
+	^ 'Inline value definition of ' asText
 		, ast first source asText allBold , ' and Remove' asText
 ]
 

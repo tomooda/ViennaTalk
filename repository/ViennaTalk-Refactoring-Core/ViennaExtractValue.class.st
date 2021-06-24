@@ -63,7 +63,7 @@ ViennaExtractValue >> findNewName [
 { #category : #accessing }
 ViennaExtractValue >> name [
 	^ 'Extract ' asText , ast source asText allBold
-		, ' as a VALUE definition' asText
+		, ' as a value definition' asText
 ]
 
 { #category : #accessing }

@@ -96,7 +96,7 @@ ViennaLiftLetExpressionIntoOperation >> findNewName [
 { #category : #accessing }
 ViennaLiftLetExpressionIntoOperation >> name [
 	^ 'Lift ' asText , ast source asText allBold
-		, ' into a pure OPERATION' asText
+		, ' into a pure operation' asText
 ]
 
 { #category : #accessing }
