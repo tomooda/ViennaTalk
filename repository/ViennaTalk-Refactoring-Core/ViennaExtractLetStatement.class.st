@@ -1,5 +1,5 @@
 Class {
-	#name : #ViennaConvertStatementIntoLetStatement,
+	#name : #ViennaExtractLetStatement,
 	#superclass : #ViennaRefactoring,
 	#instVars : [
 		'newName',
@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : #operations }
-ViennaConvertStatementIntoLetStatement >> check [
+ViennaExtractLetStatement >> check [
 	ast isExpressionNode
 		ifFalse: [ ^ false ].
 	self statementNode ifNil: [ ^ false ].
@@ -17,7 +17,7 @@ ViennaConvertStatementIntoLetStatement >> check [
 ]
 
 { #category : #operations }
-ViennaConvertStatementIntoLetStatement >> execute [
+ViennaExtractLetStatement >> execute [
 	| dummy |
 	self newName ifNil: [ ^ nil ].
 	dummy := self
@@ -47,7 +47,7 @@ ViennaConvertStatementIntoLetStatement >> execute [
 ]
 
 { #category : #accessing }
-ViennaConvertStatementIntoLetStatement >> findNewName [
+ViennaExtractLetStatement >> findNewName [
 	(UIManager default
 		request: 'local name for ' , self ast source
 		initialAnswer: '')
@@ -56,7 +56,7 @@ ViennaConvertStatementIntoLetStatement >> findNewName [
 ]
 
 { #category : #accessing }
-ViennaConvertStatementIntoLetStatement >> findStatementNode [
+ViennaExtractLetStatement >> findStatementNode [
 	| node |
 	node := ast parent.
 	[ node ifNil: [ ^ nil ].
@@ -65,32 +65,32 @@ ViennaConvertStatementIntoLetStatement >> findStatementNode [
 ]
 
 { #category : #accessing }
-ViennaConvertStatementIntoLetStatement >> name [
-	^ 'convert ' asText , ast source asText allBold
-		, ' into a let statement' asText
+ViennaExtractLetStatement >> name [
+	^ 'Extract ' asText , ast source asText allBold
+		, ' as a LET statement' asText
 ]
 
 { #category : #accessing }
-ViennaConvertStatementIntoLetStatement >> newName [
+ViennaExtractLetStatement >> newName [
 	^ newName ifNil: [ newName := self findNewName ]
 ]
 
 { #category : #accessing }
-ViennaConvertStatementIntoLetStatement >> newName: anObject [
+ViennaExtractLetStatement >> newName: anObject [
 	newName := anObject
 ]
 
 { #category : #accessing }
-ViennaConvertStatementIntoLetStatement >> sortingOrder [
+ViennaExtractLetStatement >> sortingOrder [
 	^ 2.58
 ]
 
 { #category : #accessing }
-ViennaConvertStatementIntoLetStatement >> statementNode [
+ViennaExtractLetStatement >> statementNode [
 	^ statementNode ifNil: [ statementNode := self findStatementNode ]
 ]
 
 { #category : #accessing }
-ViennaConvertStatementIntoLetStatement >> statementNode: anObject [
+ViennaExtractLetStatement >> statementNode: anObject [
 	statementNode := anObject
 ]

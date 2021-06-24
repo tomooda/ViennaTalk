@@ -64,5 +64,5 @@ ViennaWidenLet >> findDefinitionNode [
 
 { #category : #accessing }
 ViennaWidenLet >> name [
-	^ 'widen ' , ast source asText allBold
+	^ 'Widen ' , ast source asText allBold
 ]

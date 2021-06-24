@@ -1,11 +1,11 @@
 Class {
-	#name : #ViennaConvertExplicitFunctionIntoOperation,
+	#name : #ViennaLiftExplicitFunctionIntoOperation,
 	#superclass : #ViennaRefactoring,
 	#category : #'ViennaTalk-Refactoring-Core'
 }
 
 { #category : #operations }
-ViennaConvertExplicitFunctionIntoOperation >> check [
+ViennaLiftExplicitFunctionIntoOperation >> check [
 	^ ast isViennaNode
 		and: [ ast label = 'AccessFunctionDefinition'
 				and: [ ast second isViennaNode
@@ -14,7 +14,7 @@ ViennaConvertExplicitFunctionIntoOperation >> check [
 ]
 
 { #category : #operations }
-ViennaConvertExplicitFunctionIntoOperation >> execute [
+ViennaLiftExplicitFunctionIntoOperation >> execute [
 	| functionDefinition explicitFunctionDefinition functionDefinitions moduleBody operationDefinitions explicitOperationDefinition accessOperationDefinition |
 	functionDefinition := ast second.
 	explicitFunctionDefinition := functionDefinition first.
@@ -66,12 +66,12 @@ ViennaConvertExplicitFunctionIntoOperation >> execute [
 ]
 
 { #category : #accessing }
-ViennaConvertExplicitFunctionIntoOperation >> name [
-	^ 'convert ' asText , ast second first first asText allBold
-		, ' into a pure operation' asText
+ViennaLiftExplicitFunctionIntoOperation >> name [
+	^ 'Lift ' asText , ast second first first asText allBold
+		, ' into a pure OPERATION' asText
 ]
 
 { #category : #accessing }
-ViennaConvertExplicitFunctionIntoOperation >> sortingOrder [
+ViennaLiftExplicitFunctionIntoOperation >> sortingOrder [
 	^ 2.51
 ]

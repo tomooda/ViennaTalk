@@ -1,16 +1,16 @@
 Class {
-	#name : #ViennaExpandValue,
+	#name : #ViennaInlineValue,
 	#superclass : #ViennaRefactoring,
 	#category : #'ViennaTalk-Refactoring-Core'
 }
 
 { #category : #operations }
-ViennaExpandValue >> check [
+ViennaInlineValue >> check [
 	^ ast notNil and: [ ast isLocalValueNameNode ]
 ]
 
 { #category : #operations }
-ViennaExpandValue >> execute [
+ViennaInlineValue >> execute [
 	^ ((ast definitionOfLocalName: ast first)
 		parentLabelled: 'ValueDefinition'
 		ifAbsent: [ nil ])
@@ -19,11 +19,11 @@ ViennaExpandValue >> execute [
 ]
 
 { #category : #accessing }
-ViennaExpandValue >> name [
-	^ 'expand ' asText , ast source asText allBold
+ViennaInlineValue >> name [
+	^ 'Inline ' asText , ast source asText allBold
 ]
 
 { #category : #accessing }
-ViennaExpandValue >> sortingOrder [
+ViennaInlineValue >> sortingOrder [
 	^ 2.14
 ]

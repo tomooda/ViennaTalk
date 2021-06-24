@@ -1,5 +1,5 @@
 Class {
-	#name : #ViennaConvertLetStatementIntoOperation,
+	#name : #ViennaLiftLetStatementIntoOperation,
 	#superclass : #ViennaRefactoring,
 	#instVars : [
 		'newName'
@@ -8,14 +8,14 @@ Class {
 }
 
 { #category : #accessing }
-ViennaConvertLetStatementIntoOperation >> arguments [
+ViennaLiftLetStatementIntoOperation >> arguments [
 	^ ViennaNode
 		label: 'ExpressionList'
 		withAll: (ast first collect: [ :localDef | localDef first third ])
 ]
 
 { #category : #operations }
-ViennaConvertLetStatementIntoOperation >> check [
+ViennaLiftLetStatementIntoOperation >> check [
 	| params |
 	ast label = 'LetStatement'
 		ifFalse: [ ^ false ].
@@ -46,7 +46,7 @@ ViennaConvertLetStatementIntoOperation >> check [
 ]
 
 { #category : #operations }
-ViennaConvertLetStatementIntoOperation >> execute [
+ViennaLiftLetStatementIntoOperation >> execute [
 	| moduleBody operationDefinitions explicitOperationDefinition accessOperationDefinition |
 	self newName ifNil: [ ^ self ].
 	moduleBody := ast module third.
@@ -89,7 +89,7 @@ ViennaConvertLetStatementIntoOperation >> execute [
 ]
 
 { #category : #accessing }
-ViennaConvertLetStatementIntoOperation >> findNewName [
+ViennaLiftLetStatementIntoOperation >> findNewName [
 	(UIManager default
 		request: 'name of operation for ' , self ast source
 		initialAnswer: '')
@@ -98,35 +98,35 @@ ViennaConvertLetStatementIntoOperation >> findNewName [
 ]
 
 { #category : #accessing }
-ViennaConvertLetStatementIntoOperation >> name [
-	^ 'convert ' asText , ast source asText allBold
-		, ' into an operation definition' asText
+ViennaLiftLetStatementIntoOperation >> name [
+	^ 'Lift ' asText , ast source asText allBold
+		, ' into an OPERATION' asText
 ]
 
 { #category : #accessing }
-ViennaConvertLetStatementIntoOperation >> newName [
+ViennaLiftLetStatementIntoOperation >> newName [
 	^ newName ifNil: [ newName := self findNewName ]
 ]
 
 { #category : #accessing }
-ViennaConvertLetStatementIntoOperation >> newName: aString [
+ViennaLiftLetStatementIntoOperation >> newName: aString [
 	newName := aString
 ]
 
 { #category : #'parsers-definitions' }
-ViennaConvertLetStatementIntoOperation >> operationBody [
+ViennaLiftLetStatementIntoOperation >> operationBody [
 	^ ast second
 ]
 
 { #category : #accessing }
-ViennaConvertLetStatementIntoOperation >> operationParametersList [
+ViennaLiftLetStatementIntoOperation >> operationParametersList [
 	^ ViennaNode
 		label: 'Parameters'
 		withAll: (ast first collect: [ :localDef | localDef first first ])
 ]
 
 { #category : #'parsers-types' }
-ViennaConvertLetStatementIntoOperation >> operationType [
+ViennaLiftLetStatementIntoOperation >> operationType [
 	^ ViennaNode
 		label: 'OperationType'
 		with:
@@ -141,6 +141,6 @@ ViennaConvertLetStatementIntoOperation >> operationType [
 ]
 
 { #category : #accessing }
-ViennaConvertLetStatementIntoOperation >> sortingOrder [
+ViennaLiftLetStatementIntoOperation >> sortingOrder [
 	^ 2.57
 ]

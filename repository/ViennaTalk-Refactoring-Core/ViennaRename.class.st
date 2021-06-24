@@ -82,7 +82,7 @@ ViennaRename >> findOldName [
 
 { #category : #accessing }
 ViennaRename >> name [
-	^ 'rename ' asText , self construct asText , ' '
+	^ 'Rename ' asText , self construct asText , ' '
 		, self oldName asText allBold
 		,
 			(newName

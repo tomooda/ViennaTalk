@@ -1,5 +1,5 @@
 Class {
-	#name : #ViennaConvertExpressionIntoLetExpression,
+	#name : #ViennaExtractLetExpression,
 	#superclass : #ViennaRefactoring,
 	#instVars : [
 		'newName'
@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #operations }
-ViennaConvertExpressionIntoLetExpression >> check [
+ViennaExtractLetExpression >> check [
 	ast isExpressionNode
 		ifFalse: [ ^ false ].
 	ast label = 'LetExpression'
@@ -17,7 +17,7 @@ ViennaConvertExpressionIntoLetExpression >> check [
 ]
 
 { #category : #operations }
-ViennaConvertExpressionIntoLetExpression >> execute [
+ViennaExtractLetExpression >> execute [
 	self newName ifNil: [ ^ nil ].
 	^ self
 		replaceNode: ast
@@ -40,7 +40,7 @@ ViennaConvertExpressionIntoLetExpression >> execute [
 ]
 
 { #category : #accessing }
-ViennaConvertExpressionIntoLetExpression >> findNewName [
+ViennaExtractLetExpression >> findNewName [
 	(UIManager default
 		request: 'local name for ' , self ast source
 		initialAnswer: '')
@@ -49,22 +49,22 @@ ViennaConvertExpressionIntoLetExpression >> findNewName [
 ]
 
 { #category : #accessing }
-ViennaConvertExpressionIntoLetExpression >> name [
-	^ 'convert ' asText , ast source asText allBold
-		, ' into a let expression' asText
+ViennaExtractLetExpression >> name [
+	^ 'Extract ' asText , ast source asText allBold
+		, ' as a LET expression' asText
 ]
 
 { #category : #accessing }
-ViennaConvertExpressionIntoLetExpression >> newName [
+ViennaExtractLetExpression >> newName [
 	^ newName ifNil: [ newName := self findNewName ]
 ]
 
 { #category : #accessing }
-ViennaConvertExpressionIntoLetExpression >> newName: aString [
+ViennaExtractLetExpression >> newName: aString [
 	newName := aString
 ]
 
 { #category : #accessing }
-ViennaConvertExpressionIntoLetExpression >> sortingOrder [
+ViennaExtractLetExpression >> sortingOrder [
 	^ 2.52
 ]

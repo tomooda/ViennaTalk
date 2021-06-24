@@ -1,5 +1,5 @@
 Class {
-	#name : #ViennaConvertExpressionIntoValue,
+	#name : #ViennaExtractValue,
 	#superclass : #ViennaRefactoring,
 	#instVars : [
 		'newName'
@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #operations }
-ViennaConvertExpressionIntoValue >> check [
+ViennaExtractValue >> check [
 	ast isExpressionNode
 		ifFalse: [ ^ false ].
 	(#('LocalName' 'GlobalName' 'OldName') includes: ast label)
@@ -20,7 +20,7 @@ ViennaConvertExpressionIntoValue >> check [
 ]
 
 { #category : #operations }
-ViennaConvertExpressionIntoValue >> execute [
+ViennaExtractValue >> execute [
 	| moduleBody valueDefinitions valueDefinition accessValueDefinition |
 	self newName ifNil: [ ^ nil ].
 	moduleBody := ast module third.
@@ -52,7 +52,7 @@ ViennaConvertExpressionIntoValue >> execute [
 ]
 
 { #category : #accessing }
-ViennaConvertExpressionIntoValue >> findNewName [
+ViennaExtractValue >> findNewName [
 	(UIManager default
 		request: 'name of toplevel value for ' , self ast source
 		initialAnswer: '')
@@ -61,22 +61,22 @@ ViennaConvertExpressionIntoValue >> findNewName [
 ]
 
 { #category : #accessing }
-ViennaConvertExpressionIntoValue >> name [
-	^ 'convert ' asText , ast source asText allBold
-		, ' into a toplevel value definition' asText
+ViennaExtractValue >> name [
+	^ 'Extract ' asText , ast source asText allBold
+		, ' as a VALUE definition' asText
 ]
 
 { #category : #accessing }
-ViennaConvertExpressionIntoValue >> newName [
+ViennaExtractValue >> newName [
 	^ newName ifNil: [ newName := self findNewName ]
 ]
 
 { #category : #accessing }
-ViennaConvertExpressionIntoValue >> newName: aString [
+ViennaExtractValue >> newName: aString [
 	newName := aString
 ]
 
 { #category : #accessing }
-ViennaConvertExpressionIntoValue >> sortingOrder [
+ViennaExtractValue >> sortingOrder [
 	^ 2.53
 ]

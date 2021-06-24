@@ -49,7 +49,7 @@ ViennaUseValue >> findDefinitionNode [
 
 { #category : #accessing }
 ViennaUseValue >> name [
-	^ 'use ' , self definitionNode first source asText allBold , ' for '
+	^ 'Use ' , self definitionNode first source asText allBold , ' for '
 		, self ast source asText allBold
 ]
 

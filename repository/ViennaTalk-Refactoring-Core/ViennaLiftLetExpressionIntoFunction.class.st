@@ -1,5 +1,5 @@
 Class {
-	#name : #ViennaConvertLetExpressionIntoFunction,
+	#name : #ViennaLiftLetExpressionIntoFunction,
 	#superclass : #ViennaRefactoring,
 	#instVars : [
 		'newName'
@@ -8,14 +8,14 @@ Class {
 }
 
 { #category : #accessing }
-ViennaConvertLetExpressionIntoFunction >> arguments [
+ViennaLiftLetExpressionIntoFunction >> arguments [
 	^ ViennaNode
 		label: 'ExpressionList'
 		withAll: (ast first collect: [ :localDef | localDef first third ])
 ]
 
 { #category : #operations }
-ViennaConvertLetExpressionIntoFunction >> check [
+ViennaLiftLetExpressionIntoFunction >> check [
 	| params |
 	ast label = 'LetExpression'
 		ifFalse: [ ^ false ].
@@ -39,7 +39,7 @@ ViennaConvertLetExpressionIntoFunction >> check [
 ]
 
 { #category : #operations }
-ViennaConvertLetExpressionIntoFunction >> execute [
+ViennaLiftLetExpressionIntoFunction >> execute [
 	| moduleBody functionDefinitions explicitFunctionDefinition accessFunctionDefinition |
 	self newName ifNil: [ ^ self ].
 	moduleBody := ast module third.
@@ -84,7 +84,7 @@ ViennaConvertLetExpressionIntoFunction >> execute [
 ]
 
 { #category : #accessing }
-ViennaConvertLetExpressionIntoFunction >> findNewName [
+ViennaLiftLetExpressionIntoFunction >> findNewName [
 	(UIManager default
 		request: 'name of toplevel function for ' , self ast source
 		initialAnswer: '')
@@ -93,12 +93,12 @@ ViennaConvertLetExpressionIntoFunction >> findNewName [
 ]
 
 { #category : #accessing }
-ViennaConvertLetExpressionIntoFunction >> functionBody [
+ViennaLiftLetExpressionIntoFunction >> functionBody [
 	^ ast second
 ]
 
 { #category : #accessing }
-ViennaConvertLetExpressionIntoFunction >> functionParametersList [
+ViennaLiftLetExpressionIntoFunction >> functionParametersList [
 	^ ViennaNode
 		label: 'ParametersList'
 		with:
@@ -108,7 +108,7 @@ ViennaConvertLetExpressionIntoFunction >> functionParametersList [
 ]
 
 { #category : #accessing }
-ViennaConvertLetExpressionIntoFunction >> functionType [
+ViennaLiftLetExpressionIntoFunction >> functionType [
 	^ ViennaNode
 		label: 'PartialFunctionType'
 		with:
@@ -123,22 +123,22 @@ ViennaConvertLetExpressionIntoFunction >> functionType [
 ]
 
 { #category : #accessing }
-ViennaConvertLetExpressionIntoFunction >> name [
-	^ 'convert ' asText , ast source asText allBold
-		, ' into a toplevel function definition' asText
+ViennaLiftLetExpressionIntoFunction >> name [
+	^ 'Lift ' asText , ast source asText allBold
+		, ' into a FUNCTION' asText
 ]
 
 { #category : #accessing }
-ViennaConvertLetExpressionIntoFunction >> newName [
+ViennaLiftLetExpressionIntoFunction >> newName [
 	^ newName ifNil: [ newName := self findNewName ]
 ]
 
 { #category : #accessing }
-ViennaConvertLetExpressionIntoFunction >> newName: aString [
+ViennaLiftLetExpressionIntoFunction >> newName: aString [
 	newName := aString
 ]
 
 { #category : #accessing }
-ViennaConvertLetExpressionIntoFunction >> sortingOrder [
+ViennaLiftLetExpressionIntoFunction >> sortingOrder [
 	^ 2.55
 ]

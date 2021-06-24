@@ -1,5 +1,5 @@
 Class {
-	#name : #ViennaFlattenBlockStatement,
+	#name : #ViennaInlineBlockStatement,
 	#superclass : #ViennaRefactoring,
 	#instVars : [
 		'blockNode'
@@ -8,17 +8,17 @@ Class {
 }
 
 { #category : #accessing }
-ViennaFlattenBlockStatement >> blockNode [
+ViennaInlineBlockStatement >> blockNode [
 	^ blockNode ifNil: [ blockNode := self findBlockNode ]
 ]
 
 { #category : #accessing }
-ViennaFlattenBlockStatement >> blockNode: aViennaNode [
+ViennaInlineBlockStatement >> blockNode: aViennaNode [
 	blockNode := aViennaNode
 ]
 
 { #category : #accessing }
-ViennaFlattenBlockStatement >> blockVariables: aViennaNode [
+ViennaInlineBlockStatement >> blockVariables: aViennaNode [
 	aViennaNode label = 'BlockStatement'
 		ifFalse: [ ^ #() ].
 	^ Array
@@ -33,7 +33,7 @@ ViennaFlattenBlockStatement >> blockVariables: aViennaNode [
 ]
 
 { #category : #operations }
-ViennaFlattenBlockStatement >> check [
+ViennaInlineBlockStatement >> check [
 	self blockNode ifNil: [ ^ false ].
 	self blockNode parent label = 'BlockStatement'
 		ifFalse: [ ^ false ].
@@ -46,7 +46,7 @@ ViennaFlattenBlockStatement >> check [
 ]
 
 { #category : #operations }
-ViennaFlattenBlockStatement >> execute [
+ViennaInlineBlockStatement >> execute [
 	^ self
 		replaceNode: self blockNode parent
 		with:
@@ -75,17 +75,17 @@ ViennaFlattenBlockStatement >> execute [
 ]
 
 { #category : #accessing }
-ViennaFlattenBlockStatement >> findBlockNode [
+ViennaInlineBlockStatement >> findBlockNode [
 	ast ifNil: [ ^ nil ].
 	^ ast parentLabelled: 'BlockStatement' ifAbsent: [ nil ]
 ]
 
 { #category : #accessing }
-ViennaFlattenBlockStatement >> name [
-	^ 'flatten block ', ast source asText allBold
+ViennaInlineBlockStatement >> name [
+	^ 'Inline BLOCK ', ast source asText allBold
 ]
 
 { #category : #accessing }
-ViennaFlattenBlockStatement >> sortingOrder [
+ViennaInlineBlockStatement >> sortingOrder [
 	^ 6.5
 ]

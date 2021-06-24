@@ -64,8 +64,8 @@ ViennaParameterizeExpressionInLet >> findNewName [
 
 { #category : #accessing }
 ViennaParameterizeExpressionInLet >> name [
-	^ 'parameterize ' asText , ast source asText allBold
-		, ' in a let expression' asText
+	^ 'Parameterize ' asText , ast source asText allBold
+		, ' in a LET expression' asText
 ]
 
 { #category : #accessing }

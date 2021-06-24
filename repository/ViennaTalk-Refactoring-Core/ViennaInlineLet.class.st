@@ -1,17 +1,17 @@
 Class {
-	#name : #ViennaExpandLet,
+	#name : #ViennaInlineLet,
 	#superclass : #ViennaRefactoring,
 	#category : #'ViennaTalk-Refactoring-Core'
 }
 
 { #category : #operations }
-ViennaExpandLet >> check [
+ViennaInlineLet >> check [
 	^ ast notNil
 		and: [ ast label = 'LetExpression' or: [ ast label = 'LetStatement' ] ]
 ]
 
 { #category : #operations }
-ViennaExpandLet >> execute [
+ViennaInlineLet >> execute [
 	| defs |
 	defs := ast first asArray
 		collect: [ :localDef | localDef first first first -> localDef first third ].
@@ -39,11 +39,11 @@ ViennaExpandLet >> execute [
 ]
 
 { #category : #accessing }
-ViennaExpandLet >> name [
-	^ 'expand ' asText , ast source asText allBold
+ViennaInlineLet >> name [
+	^ 'Inline ' asText , ast source asText allBold
 ]
 
 { #category : #accessing }
-ViennaExpandLet >> sortingOrder [
+ViennaInlineLet >> sortingOrder [
 	^ 2.17
 ]

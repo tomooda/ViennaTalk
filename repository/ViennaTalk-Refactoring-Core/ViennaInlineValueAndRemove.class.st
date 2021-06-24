@@ -1,11 +1,11 @@
 Class {
-	#name : #ViennaRemoveAndExpandValueDefinition,
+	#name : #ViennaInlineValueAndRemove,
 	#superclass : #ViennaRefactoring,
 	#category : #'ViennaTalk-Refactoring-Core'
 }
 
 { #category : #operations }
-ViennaRemoveAndExpandValueDefinition >> check [
+ViennaInlineValueAndRemove >> check [
 	| moduleName shortName |
 	ast ifNil: [ ^ false ].
 	ast label = 'ValueDefinition'
@@ -34,7 +34,7 @@ ViennaRemoveAndExpandValueDefinition >> check [
 ]
 
 { #category : #operations }
-ViennaRemoveAndExpandValueDefinition >> execute [
+ViennaInlineValueAndRemove >> execute [
 	| valueName valueBody |
 	valueName := ast first first.
 	valueBody := ast third.
@@ -51,12 +51,12 @@ ViennaRemoveAndExpandValueDefinition >> execute [
 ]
 
 { #category : #accessing }
-ViennaRemoveAndExpandValueDefinition >> name [
-	^ 'remove value definition of ' asText
-		, ast first source asText allBold , ' and expand it' asText
+ViennaInlineValueAndRemove >> name [
+	^ 'Inline VALUE definition of ' asText
+		, ast first source asText allBold , ' and Remove' asText
 ]
 
 { #category : #accessing }
-ViennaRemoveAndExpandValueDefinition >> sortingOrder [
+ViennaInlineValueAndRemove >> sortingOrder [
 	^ 2.15
 ]

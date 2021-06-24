@@ -53,7 +53,7 @@ ViennaRenameQuote >> findOldName [
 
 { #category : #accessing }
 ViennaRenameQuote >> name [
-	^ 'rename ' asText , oldName asText allBold
+	^ 'Rename ' asText , oldName asText allBold
 		,
 			(newName
 				ifNotNil: [ ' into ' asText , newName asText allBold ]

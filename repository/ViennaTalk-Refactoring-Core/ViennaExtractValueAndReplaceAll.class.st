@@ -1,11 +1,11 @@
 Class {
-	#name : #ViennaConvertExpressionIntoValueAndReplaceAll,
-	#superclass : #ViennaConvertExpressionIntoValue,
+	#name : #ViennaExtractValueAndReplaceAll,
+	#superclass : #ViennaExtractValue,
 	#category : #'ViennaTalk-Refactoring-Core'
 }
 
 { #category : #operations }
-ViennaConvertExpressionIntoValueAndReplaceAll >> execute [
+ViennaExtractValueAndReplaceAll >> execute [
 	| moduleBody valueDefinitions valueDefinition accessValueDefinition |
 	self newName ifNil: [ ^ self ].
 	moduleBody := ast module third.
@@ -40,12 +40,12 @@ ViennaConvertExpressionIntoValueAndReplaceAll >> execute [
 ]
 
 { #category : #accessing }
-ViennaConvertExpressionIntoValueAndReplaceAll >> name [
-	^ 'convert all occurrences of ' asText , ast source asText allBold
-		, ' into a toplevel value definition' asText
+ViennaExtractValueAndReplaceAll >> name [
+	^ 'Extract ' asText , ast source asText allBold
+		, ' as a VALUE definition and Replace all occurrences' asText
 ]
 
 { #category : #accessing }
-ViennaConvertExpressionIntoValueAndReplaceAll >> sortingOrder [
+ViennaExtractValueAndReplaceAll >> sortingOrder [
 	^ 2.54
 ]
