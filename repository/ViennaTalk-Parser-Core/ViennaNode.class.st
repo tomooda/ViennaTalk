@@ -668,7 +668,9 @@ ViennaNode >> isFunctionNameNode [
 					| node |
 					node := defNode.
 					[ node notNil ]
-						whileTrue: [ (#('FunctionDefinition' 'FunctionImport') includes: node label)
+						whileTrue:
+							[ ((#('ExplicitFunctionDefinition' 'ImplicitFunctionDefinition' 'FunctionImport')
+								includes: node label) and: [ node first = self first ])
 								ifTrue: [ ^ true ].
 							node := node parent ] ].
 			^ false ].
@@ -678,7 +680,7 @@ ViennaNode >> isFunctionNameNode [
 					| node |
 					node := defNode.
 					[ node notNil ]
-						whileTrue: [ node label = 'FunctionImport'
+						whileTrue: [ (node label = 'FunctionImport' and: [ node first = self first ])
 								ifTrue: [ ^ true ].
 							node := node parent ] ].
 			^ false ].
