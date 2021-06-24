@@ -1,10 +1,6 @@
 Class {
 	#name : #ViennaParameterizeExpressionInLet,
-	#superclass : #ViennaRefactoring,
-	#instVars : [
-		'newName',
-		'definitionNode'
-	],
+	#superclass : #ViennaParameterize,
 	#category : #'ViennaTalk-Refactoring-Core'
 }
 
@@ -14,25 +10,21 @@ ViennaParameterizeExpressionInLet >> check [
 	ast isExpressionNode
 		ifFalse: [ ^ false ].
 	self definitionNode ifNil: [ ^ false ].
+	(ast label = 'LocalName'
+		and: [ (ast definitionOfLocalName: ast first)
+				includesParent: self definitionNode ])
+		ifTrue: [ ^ false ].
 	^ true
 ]
 
-{ #category : #accessing }
-ViennaParameterizeExpressionInLet >> definitionNode [
-	^ definitionNode ifNil: [ definitionNode := self findDefinitionNode ]
-]
-
-{ #category : #accessing }
-ViennaParameterizeExpressionInLet >> definitionNode: aViennaNode [
-	definitionNode := aViennaNode
+{ #category : #operations }
+ViennaParameterizeExpressionInLet >> executeCallers [
+	
 ]
 
 { #category : #operations }
-ViennaParameterizeExpressionInLet >> execute [
+ViennaParameterizeExpressionInLet >> executeDefinition [
 	self newName ifNil: [ ^ nil ].
-	self
-		replaceNode: ast
-		with: (ViennaNode label: 'LocalName' with: self newName).
 	self definitionNode first
 		add:
 			(ViennaNode
@@ -54,31 +46,12 @@ ViennaParameterizeExpressionInLet >> findDefinitionNode [
 ]
 
 { #category : #accessing }
-ViennaParameterizeExpressionInLet >> findNewName [
-	(UIManager default
-		request: 'new parameter name for ' , self ast source
-		initialAnswer: '')
-		ifNotNil: [ :ans | ans trim ifNotEmpty: [ :name | ^ name ] ].
-	^ nil
-]
-
-{ #category : #accessing }
 ViennaParameterizeExpressionInLet >> name [
 	^ 'Parameterize ' asText , ast source asText allBold
 		, ' in a LET expression' asText
 ]
 
 { #category : #accessing }
-ViennaParameterizeExpressionInLet >> newName [
-	^ newName ifNil: [ newName := self findNewName ]
-]
-
-{ #category : #accessing }
-ViennaParameterizeExpressionInLet >> newName: aString [
-	newName := aString
-]
-
-{ #category : #accessing }
 ViennaParameterizeExpressionInLet >> sortingOrder [
-	^ 2.18
+	^ 2.187
 ]
