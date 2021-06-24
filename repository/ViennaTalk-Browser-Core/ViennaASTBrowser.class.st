@@ -316,6 +316,58 @@ operations
 end ATC')) openWithSpec
 ]
 
+{ #category : #examples }
+ViennaASTBrowser class >> exampleCounter [
+	(ViennaASTBrowser
+		on:
+			(ViennaVDMParser new
+				parse:
+					'module Counter exports all definitions
+					types
+     Display = seq of char inv display == elems display subset rng nat2char;
+
+values
+     num_digits : nat1 = 3;
+     base : nat = 10 ** num_digits;
+     nat2char =
+        {0 |-> ''0'', 1 |-> ''1''  , 2 |-> ''2'', 3 |-> ''3'', 4 |-> ''4'', 5 |-> ''5'',
+        6 |-> ''6'', 7 |-> ''7'', 8 |-> ''8'', 9 |-> ''9''};
+
+functions
+    show : nat -> Display
+    show(x) ==
+        [nat2char(x div 10 ** (num_digits - index) mod 10)
+            | index in set {1, ..., num_digits}]
+    post let
+        string2nat : seq of char -> nat
+        string2nat(s) ==
+            cases s:
+                [] -> 0,
+                [c] -> (inverse nat2char)(c),
+                head ^ [c] -> string2nat(head)  * 10 + (inverse nat2char)(c)
+                end
+    in x = string2nat(RESULT);
+
+state counter of
+    count : nat
+init s == s = mk_counter(0)
+end
+
+operations
+    reset : () ==> ()
+    reset() == count := 0
+    post  count = 0;
+    
+    step : () ==> nat
+    step() ==
+        (count := count + 1 mod base;
+        return count);
+    
+    display : () ==> Display
+    display() == return show(count);
+end Counter')) openWithSpec
+]
+
 { #category : #accessing }
 ViennaASTBrowser class >> sectionNames [
 	^ SectionNames
