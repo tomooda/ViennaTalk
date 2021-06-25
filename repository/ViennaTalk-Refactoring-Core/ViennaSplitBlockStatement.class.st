@@ -96,7 +96,11 @@ ViennaSplitBlockStatement >> findNewHeadStatementIndex [
 
 { #category : #accessing }
 ViennaSplitBlockStatement >> name [
-	^ 'Split block before ', ast source asText allBold
+	^ 'Split block before '
+		,
+			(self
+				shortDescription: (self blockNode at: self newHeadStatementIndex) source)
+				asText allBold
 ]
 
 { #category : #accessing }

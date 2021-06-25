@@ -40,7 +40,8 @@ ViennaInlineLet >> execute [
 
 { #category : #accessing }
 ViennaInlineLet >> name [
-	^ 'Inline ' asText , ast source asText allBold
+	^ 'Inline ' asText
+		, (self shortDescription: ast source) asText allBold
 ]
 
 { #category : #accessing }

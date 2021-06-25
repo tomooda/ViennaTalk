@@ -53,7 +53,8 @@ ViennaInlineValueAndRemove >> execute [
 { #category : #accessing }
 ViennaInlineValueAndRemove >> name [
 	^ 'Inline value definition of ' asText
-		, ast first source asText allBold , ' and Remove' asText
+		, (self shortDescription: ast first source) asText allBold
+		, ' and Remove' asText
 ]
 
 { #category : #accessing }

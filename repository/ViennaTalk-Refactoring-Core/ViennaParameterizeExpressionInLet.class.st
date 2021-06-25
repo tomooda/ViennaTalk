@@ -47,7 +47,8 @@ ViennaParameterizeExpressionInLet >> findDefinitionNode [
 
 { #category : #accessing }
 ViennaParameterizeExpressionInLet >> name [
-	^ 'Parameterize ' asText , ast source asText allBold
+	^ 'Parameterize ' asText
+		, (self shortDescription: ast source) asText allBold
 		, ' in a LET expression' asText
 ]
 

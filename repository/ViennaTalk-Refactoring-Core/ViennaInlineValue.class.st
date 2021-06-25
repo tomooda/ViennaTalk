@@ -20,7 +20,8 @@ ViennaInlineValue >> execute [
 
 { #category : #accessing }
 ViennaInlineValue >> name [
-	^ 'Inline ' asText , ast source asText allBold
+	^ 'Inline ' asText
+		, (self shortDescription: ast source) asText allBold
 ]
 
 { #category : #accessing }

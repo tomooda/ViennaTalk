@@ -73,5 +73,5 @@ ViennaNarrowLet >> findDefinitionNode [
 
 { #category : #accessing }
 ViennaNarrowLet >> name [
-	^ 'Narrow ' , ast source asText allBold
+	^ 'Narrow ' , (self shortDescription: ast source) asText allBold
 ]

@@ -50,7 +50,8 @@ ViennaExtractLetExpression >> findNewName [
 
 { #category : #accessing }
 ViennaExtractLetExpression >> name [
-	^ 'Extract let expression with ' asText , ast source asText allBold
+	^ 'Extract let expression with ' asText
+		, (self shortDescription: ast source) asText allBold
 ]
 
 { #category : #accessing }

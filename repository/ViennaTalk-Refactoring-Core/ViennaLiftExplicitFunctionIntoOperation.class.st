@@ -67,7 +67,8 @@ ViennaLiftExplicitFunctionIntoOperation >> execute [
 
 { #category : #accessing }
 ViennaLiftExplicitFunctionIntoOperation >> name [
-	^ 'Lift ' asText , ast second first first asText allBold
+	^ 'Lift ' asText
+		, (self shortDescription: ast second first first) asText allBold
 		, ' into a pure operation' asText
 ]
 

@@ -99,7 +99,7 @@ ViennaLiftLetStatementIntoOperation >> findNewName [
 
 { #category : #accessing }
 ViennaLiftLetStatementIntoOperation >> name [
-	^ 'Lift ' asText , ast source asText allBold
+	^ 'Lift ' asText , (self shortDescription: ast source) asText allBold
 		, ' into an operation' asText
 ]
 

@@ -35,8 +35,9 @@ ViennaUseValueInAllOccurrences >> findDefinitionNode [
 
 { #category : #accessing }
 ViennaUseValueInAllOccurrences >> name [
-	^ 'Use ' , self definitionNode first source asText allBold , ' for all occurrences of '
-		, self ast source asText allBold
+	^ 'Use ' , self definitionNode first source asText allBold
+		, ' for all occurrences of '
+		, (self shortDescription: self ast source) asText allBold
 ]
 
 { #category : #accessing }

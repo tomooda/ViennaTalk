@@ -82,7 +82,8 @@ ViennaInlineBlockStatement >> findBlockNode [
 
 { #category : #accessing }
 ViennaInlineBlockStatement >> name [
-	^ 'Inline block ', ast source asText allBold
+	^ 'Inline block '
+		, (self shortDescription: self blockNode source) asText allBold
 ]
 
 { #category : #accessing }

@@ -51,8 +51,9 @@ ViennaParameterizeExpressionInFunction >> executeCallers [
 
 { #category : #accessing }
 ViennaParameterizeExpressionInFunction >> name [
-	^ 'Parameterize ' asText , ast source asText allBold , ' in function ' asText
-		, self definitionNode first asText allBold
+	^ 'Parameterize ' asText
+		, (self shortDescription: ast source) asText allBold
+		, ' in function ' asText , self definitionNode first asText allBold
 ]
 
 { #category : #accessing }
