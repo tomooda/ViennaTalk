@@ -13,6 +13,8 @@ ViennaExtractLetExpression >> check [
 		ifFalse: [ ^ false ].
 	ast label = 'LetExpression'
 		ifTrue: [ ^ false ].
+	ast isOperationNameNode
+		ifTrue: [ ^ false ].
 	^ true
 ]
 

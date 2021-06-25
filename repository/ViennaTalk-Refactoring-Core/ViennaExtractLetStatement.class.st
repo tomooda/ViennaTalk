@@ -13,6 +13,8 @@ ViennaExtractLetStatement >> check [
 	ast isExpressionNode
 		ifFalse: [ ^ false ].
 	self statementNode ifNil: [ ^ false ].
+	ast isOperationNameNode
+		ifTrue: [ ^ false ].
 	^ true
 ]
 
