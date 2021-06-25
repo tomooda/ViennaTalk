@@ -492,11 +492,33 @@ ViennaVDMParser >> exportModuleSignature [
 ]
 
 { #category : #'parsers-interfaces' }
+ViennaVDMParser >> exportOperationsSignature [
+	^ super exportOperationsSignature
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'ExportOperationsSignature'
+				start: start
+				end: end
+				withAll: array ]
+]
+
+{ #category : #'parsers-interfaces' }
 ViennaVDMParser >> exportTypesSignature [
 	^ super exportTypesSignature
 		=>> [ :start :end :array | 
 			ViennaNode
 				label: 'ExportTypesSignature'
+				start: start
+				end: end
+				withAll: array ]
+]
+
+{ #category : #'parsers-interfaces' }
+ViennaVDMParser >> exportValuesSignature [
+	^ super exportValuesSignature
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'ExportValuesSignature'
 				start: start
 				end: end
 				withAll: array ]
@@ -718,31 +740,9 @@ ViennaVDMParser >> functionImport [
 				withAll: array ]
 ]
 
-{ #category : #'parsers-interfaces' }
-ViennaVDMParser >> functionSignature [
-	^ super functionSignature
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'FunctionSignature'
-				start: start
-				end: end
-				withAll: array ]
-]
-
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> functionTypeInstantiation: func args: args [
 	^ ViennaNode label: 'FunctionTypeInstantiation' with: func with: (ViennaNode label: 'FunctionTypeArgs' withAll: args)
-]
-
-{ #category : #'parsers-interfaces' }
-ViennaVDMParser >> functionsSignature [
-	^ super functionsSignature
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'FunctionsSignature'
-				start: start
-				end: end
-				withAll: array ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -1449,22 +1449,22 @@ ViennaVDMParser >> operationDefinitions [
 ]
 
 { #category : #'parsers-interfaces' }
-ViennaVDMParser >> operationImport [
-	^ super operationImport
+ViennaVDMParser >> operationExport [
+	^ super operationExport
 		=>> [ :start :end :array | 
 			ViennaNode
-				label: 'OperationImport'
+				label: 'OperationExport'
 				start: start
 				end: end
 				withAll: array ]
 ]
 
 { #category : #'parsers-interfaces' }
-ViennaVDMParser >> operationSignature [
-	^ super operationSignature
+ViennaVDMParser >> operationImport [
+	^ super operationImport
 		=>> [ :start :end :array | 
 			ViennaNode
-				label: 'OperationSignature'
+				label: 'OperationImport'
 				start: start
 				end: end
 				withAll: array ]
@@ -1476,17 +1476,6 @@ ViennaVDMParser >> operationType [
 		=>> [ :start :end :array | 
 			ViennaNode
 				label: 'OperationType'
-				start: start
-				end: end
-				withAll: array ]
-]
-
-{ #category : #'parsers-interfaces' }
-ViennaVDMParser >> operationsSignature [
-	^ super operationsSignature
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'ExportOperationsSignature'
 				start: start
 				end: end
 				withAll: array ]
@@ -2247,33 +2236,22 @@ ViennaVDMParser >> valueDefinitions [
 ]
 
 { #category : #'parsers-interfaces' }
+ViennaVDMParser >> valueExport [
+	^ super valueExport
+		=>> [ :start :end :array | 
+			ViennaNode
+				label: 'ValueExport'
+				start: start
+				end: end
+				withAll: array ]
+]
+
+{ #category : #'parsers-interfaces' }
 ViennaVDMParser >> valueImport [
 	^ super valueImport
 		=>> [ :start :end :array | 
 			ViennaNode
 				label: 'ValueImport'
-				start: start
-				end: end
-				withAll: array ]
-]
-
-{ #category : #'parsers-interfaces' }
-ViennaVDMParser >> valueSignature [
-	^ super valueSignature
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'ValueSignature'
-				start: start
-				end: end
-				withAll: array ]
-]
-
-{ #category : #'parsers-interfaces' }
-ViennaVDMParser >> valuesSignature [
-	^ super valuesSignature
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'ValuesSignature'
 				start: start
 				end: end
 				withAll: array ]

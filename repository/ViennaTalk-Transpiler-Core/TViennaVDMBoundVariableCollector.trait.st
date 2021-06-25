@@ -1,6 +1,6 @@
 Trait {
 	#name : #TViennaVDMBoundVariableCollector,
-	#category : 'ViennaTalk-Transpiler-Core'
+	#category : #'ViennaTalk-Transpiler-Core'
 }
 
 { #category : #'bound variables' }
@@ -129,7 +129,17 @@ TViennaVDMBoundVariableCollector >> boundVariablesExportModuleSignatureAll: aVie
 ]
 
 { #category : #'bound variables-interfaces' }
+TViennaVDMBoundVariableCollector >> boundVariablesExportOperationsSignature: aViennaNode into: aSet [
+	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
+]
+
+{ #category : #'bound variables-interfaces' }
 TViennaVDMBoundVariableCollector >> boundVariablesExportTypesSignature: aViennaNode into: aSet [
+	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
+]
+
+{ #category : #'bound variables-interfaces' }
+TViennaVDMBoundVariableCollector >> boundVariablesExportValuesSignature: aViennaNode into: aSet [
 	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
 ]
 
@@ -193,11 +203,6 @@ TViennaVDMBoundVariableCollector >> boundVariablesFunctionImport: aViennaNode in
 { #category : #'bound variables-interfaces' }
 TViennaVDMBoundVariableCollector >> boundVariablesFunctionSignature: aViennaNode into: aSet [
 	aViennaNode first do: [ :localName | aSet add: localName first ]
-]
-
-{ #category : #'bound variables-interfaces' }
-TViennaVDMBoundVariableCollector >> boundVariablesFunctionsSignature: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
 ]
 
 { #category : #'bound variables-definitions' }
@@ -330,25 +335,20 @@ TViennaVDMBoundVariableCollector >> boundVariablesOperationDefinitions: aViennaN
 ]
 
 { #category : #'bound variables-interfaces' }
+TViennaVDMBoundVariableCollector >> boundVariablesOperationExport: aViennaNode into: aSet [
+	aViennaNode first do: [ :localName | aSet add: localName first ].
+	self boundVariables: aViennaNode second into: aSet
+]
+
+{ #category : #'bound variables-interfaces' }
 TViennaVDMBoundVariableCollector >> boundVariablesOperationImport: aViennaNode into: aSet [
 	aViennaNode first do: [ :localName | aSet add: localName first ].
 	self boundVariables: aViennaNode second into: aSet.
 	aViennaNode third ifNotNil: [ :rename | aSet add: rename first ]
 ]
 
-{ #category : #'bound variables-interfaces' }
-TViennaVDMBoundVariableCollector >> boundVariablesOperationSignature: aViennaNode into: aSet [
-	aViennaNode first do: [ :localName | aSet add: localName first ].
-	self boundVariables: aViennaNode second into: aSet
-]
-
 { #category : #'bound variables-types' }
 TViennaVDMBoundVariableCollector >> boundVariablesOperationType: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
-]
-
-{ #category : #'bound variables-interfaces' }
-TViennaVDMBoundVariableCollector >> boundVariablesOperationsSignature: aViennaNode into: aSet [
 	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
 ]
 
@@ -551,18 +551,13 @@ TViennaVDMBoundVariableCollector >> boundVariablesValueDefinitions: aViennaNode 
 ]
 
 { #category : #'bound variables-interfaces' }
-TViennaVDMBoundVariableCollector >> boundVariablesValueImport: aViennaNode into: aSet [
-	aSet add: aViennaNode first.
-	self boundVariables: aViennaNode second into: aSet
-]
-
-{ #category : #'bound variables-interfaces' }
-TViennaVDMBoundVariableCollector >> boundVariablesValueSignature: aViennaNode into: aSet [
+TViennaVDMBoundVariableCollector >> boundVariablesValueExport: aViennaNode into: aSet [
 	aViennaNode first do: [ :localName | aSet add: localName first ].
 	self freeVariables: aViennaNode second boundVars: aSet into: aSet
 ]
 
 { #category : #'bound variables-interfaces' }
-TViennaVDMBoundVariableCollector >> boundVariablesValuesSignature: aViennaNode into: aSet [
-	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
+TViennaVDMBoundVariableCollector >> boundVariablesValueImport: aViennaNode into: aSet [
+	aSet add: aViennaNode first.
+	self boundVariables: aViennaNode second into: aSet
 ]

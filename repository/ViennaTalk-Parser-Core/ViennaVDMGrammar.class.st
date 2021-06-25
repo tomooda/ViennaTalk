@@ -977,13 +977,24 @@ ViennaVDMGrammar >> exportModuleSignature [
 ]
 
 { #category : #'parsers-interfaces' }
+ViennaVDMGrammar >> exportOperationsSignature [
+	^ (self operations , (self operationExport separatedBy: semicolon) withoutSeparators , semicolon optional)
+		==> #second
+]
+
+{ #category : #'parsers-interfaces' }
 ViennaVDMGrammar >> exportSignature [
-	^ self exportTypesSignature / self valuesSignature / self exportFunctionsSignature / self operationsSignature
+	^ self exportTypesSignature / self exportValuesSignature / self exportFunctionsSignature / self exportOperationsSignature
 ]
 
 { #category : #'parsers-interfaces' }
 ViennaVDMGrammar >> exportTypesSignature [
 	^ (self types , (self typeExport separatedBy: semicolon) withoutSeparators , semicolon optional) ==> #second
+]
+
+{ #category : #'parsers-interfaces' }
+ViennaVDMGrammar >> exportValuesSignature [
+	^ (self values , (self valueExport separatedBy: semicolon) withoutSeparators , semicolon optional) ==> #second
 ]
 
 { #category : #'parsers-keywords' }
@@ -1168,14 +1179,6 @@ ViennaVDMGrammar >> functionImport [
 			(triple third)} ]
 ]
 
-{ #category : #'parsers-interfaces' }
-ViennaVDMGrammar >> functionSignature [
-	^ (nameList , (self operator: ':') , self functionType)
-		==> [ :triple | 
-			{(triple first).
-			(triple third)} ]
-]
-
 { #category : #'parsers-types' }
 ViennaVDMGrammar >> functionType [
 	^ self partialFunctionType / self totalFunctionType
@@ -1190,11 +1193,6 @@ ViennaVDMGrammar >> functionTypeInstantiation: func args: args [
 { #category : #'parsers-keywords' }
 ViennaVDMGrammar >> functions [
 	^ self reserved: 'functions'
-]
-
-{ #category : #'parsers-interfaces' }
-ViennaVDMGrammar >> functionsSignature [
-	^ (self functions , (self functionSignature separatedBy: semicolon) withoutSeparators , semicolon optional) ==> #second
 ]
 
 { #category : #'parsers-statements' }
@@ -2104,17 +2102,17 @@ ViennaVDMGrammar >> operationDefinitions [
 ]
 
 { #category : #'parsers-interfaces' }
-ViennaVDMGrammar >> operationImport [
-	^ name , (((self operator: ':') , self operationType) ==> #second) optional
-		, ((self renamed , (self decl: name)) ==> #second) optional
-]
-
-{ #category : #'parsers-interfaces' }
-ViennaVDMGrammar >> operationSignature [
+ViennaVDMGrammar >> operationExport [
 	^ (nameList , (self operator: ':') , self operationType)
 		==> [ :triple | 
 			{(triple first).
 			(triple third)} ]
+]
+
+{ #category : #'parsers-interfaces' }
+ViennaVDMGrammar >> operationImport [
+	^ name , (((self operator: ':') , self operationType) ==> #second) optional
+		, ((self renamed , (self decl: name)) ==> #second) optional
 ]
 
 { #category : #'parsers-types' }
@@ -2130,12 +2128,6 @@ ViennaVDMGrammar >> operationType [
 { #category : #'parsers-keywords' }
 ViennaVDMGrammar >> operations [
 	^ self reserved: 'operations'
-]
-
-{ #category : #'parsers-interfaces' }
-ViennaVDMGrammar >> operationsSignature [
-	^ (self operations , (self operationSignature separatedBy: semicolon) withoutSeparators , semicolon optional)
-		==> #second
 ]
 
 { #category : #utilities }
@@ -3082,26 +3074,21 @@ ViennaVDMGrammar >> valueDefinitions [
 ]
 
 { #category : #'parsers-interfaces' }
-ViennaVDMGrammar >> valueImport [
-	^ name , (((self operator: ':') , type) ==> #second) optional , ((self renamed , (self decl: name)) ==> #second) optional
-]
-
-{ #category : #'parsers-interfaces' }
-ViennaVDMGrammar >> valueSignature [
+ViennaVDMGrammar >> valueExport [
 	^ (nameList , (self operator: ':') , type)
 		==> [ :triple | 
 			{(triple first).
 			(triple third)} ]
 ]
 
+{ #category : #'parsers-interfaces' }
+ViennaVDMGrammar >> valueImport [
+	^ name , (((self operator: ':') , type) ==> #second) optional , ((self renamed , (self decl: name)) ==> #second) optional
+]
+
 { #category : #'parsers-keywords' }
 ViennaVDMGrammar >> values [
 	^ self reserved: 'values'
-]
-
-{ #category : #'parsers-interfaces' }
-ViennaVDMGrammar >> valuesSignature [
-	^ (self values , (self valueSignature separatedBy: semicolon) withoutSeparators , semicolon optional) ==> #second
 ]
 
 { #category : #'parsers-definitions' }
