@@ -600,6 +600,23 @@ ViennaRefactoring >> hasLocalBindingOf: aString in: aViennaNode [
 	^ false
 ]
 
+{ #category : #'visiting-interface' }
+ViennaRefactoring >> includesExportName: aString in: aViennaNode [
+	^ aViennaNode module third
+		anySatisfy: [ :exportModuleSignature | 
+			exportModuleSignature label = 'ExportModuleSignatrueAll'
+				or: [ exportModuleSignature
+						anySatisfy: [ :exportSignatures | 
+							exportSignatures
+								anySatisfy: [ :export | 
+									((#('TypeNameExport' 'TypeStructExport') includes: export label)
+										and: [ export first first = aString ])
+										or: [ (#('ValueExport' 'FunctionExport' 'OperationExport')
+												includes: export label)
+												and:
+													[ export first anySatisfy: [ :localName | localName first = aString ] ] ] ] ] ] ]
+]
+
 { #category : #'visiting-scopes' }
 ViennaRefactoring >> localScopeBy: aViennaNode do: aBlock [
 	| selector |
@@ -751,6 +768,28 @@ ViennaRefactoring >> name [
 	^ self subclassResponsibility
 ]
 
+{ #category : #'visiting-interface' }
+ViennaRefactoring >> nameNodeIn: aViennaNode forImportedName: shortName from: moduleName [
+	aViennaNode module second
+		ifNotNil: [ :importDefinitionList | 
+			importDefinitionList
+				do: [ :importDefinition | 
+					moduleName = importDefinition first
+						ifTrue: [ importDefinition second
+								do: [ :importSignatures | 
+									importSignatures
+										do: [ :import | 
+											shortName
+												=
+													(import label = 'TypeImport'
+														ifTrue: [ import first first first ]
+														ifFalse: [ import first first ])
+												ifTrue: [ ^ import last
+														ifNotNil: [ :localName | ViennaNode label: 'LocalName' with: localName first ]
+														ifNil: [ ViennaNode label: 'GlobalName' with: moduleName with: shortName ] ] ] ] ] ] ].
+	^ nil
+]
+
 { #category : #'visiting-labels' }
 ViennaRefactoring >> patternIdentifiersWith: aString in: aViennaNode do: aBlock [
 	(aViennaNode label = 'PatternIdentifier'
@@ -787,6 +826,13 @@ ViennaRefactoring >> scopeOf: aViennaNode [
 	[ scopingNodeLabels includes: node label ]
 		whileFalse: [ (node := node parent) ifNil: [ ^ node ] ].
 	^ node
+]
+
+{ #category : #accessing }
+ViennaRefactoring >> shortDescription: aString [
+	^ aString size > 50
+		ifTrue: [ (aString first: 50) , '...' ]
+		ifFalse: [ aString ]
 ]
 
 { #category : #accessing }

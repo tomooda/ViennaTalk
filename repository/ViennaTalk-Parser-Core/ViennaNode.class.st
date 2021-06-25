@@ -10,6 +10,7 @@ Class {
 	],
 	#classVars : [
 		'ExpressionLabels',
+		'PatternBindLabels',
 		'StatementLabels'
 	],
 	#category : #'ViennaTalk-Parser-Core'
@@ -138,6 +139,14 @@ ViennaNode class >> label: aString withAll: anArray [
 ]
 
 { #category : #accessing }
+ViennaNode class >> patternBindLabels [
+	^ PatternBindLabels
+		ifNil:
+			[ PatternBindLabels := #('BindList' 'FieldPattern' 'FieldPatternList' 'MapEnumerationPattern' 'MapMunionPattern' 'MapletPattern' 'MatchValue' 'MultipleSeqBind' 'MultipleSetBind' 'MultipleTypeBind' 'ObjectPattern' 'PatternIdentifier' 'PatternList' 'RecordPattern' 'SeqBind' 'SeqConcPattern' 'SeqEnumPattern' 'SetBind' 'SetEnumPattern' 'SetUnionPattern' 'TuplePattern' 'PatternList' 'TypeBind' 'TypeBindList')
+				asSet ]
+]
+
+{ #category : #accessing }
 ViennaNode class >> statementLabels [
 	^ StatementLabels
 		ifNil:
@@ -189,6 +198,15 @@ ViennaNode >> allSatisfy: aBlock [
 	^ true
 ]
 
+{ #category : #enumerating }
+ViennaNode >> anySatisfy: aBlockClosure [
+	self
+		do: [ :child | 
+			(aBlockClosure value: child)
+				ifTrue: [ ^ true ] ].
+	^ false
+]
+
 { #category : #converting }
 ViennaNode >> asArray [
 	| array |
@@ -212,6 +230,14 @@ ViennaNode >> at: anInteger put: anObject [
 	(anObject isKindOf: ViennaNode)
 		ifTrue: [ anObject parent: self ].
 	^ super at: anInteger put: anObject
+]
+
+{ #category : #'accessing-definitions' }
+ViennaNode >> bindHolderNode [
+	(parent notNil
+		and: [ self class patternBindLabels includes: self label ])
+		ifTrue: [ ^ parent bindHolderNode ].
+	^ self
 ]
 
 { #category : #enumerating }
@@ -656,6 +682,27 @@ ViennaNode >> isEmpty [
 ]
 
 { #category : #testing }
+ViennaNode >> isExportedNameNode [
+	label = 'GlobalName'
+		ifTrue: [ ^ true ].
+	label = 'LocalName'
+		ifTrue: [ ^ self module second second
+				anySatisfy: [ :exportModuleSignature | 
+					exportModuleSignature label = 'ExportModuleSignatrueAll'
+						or: [ exportModuleSignature
+								anySatisfy: [ :exportSignatures | 
+									exportSignatures
+										anySatisfy: [ :export | 
+											((#('TypeNameExport' 'TypeStructExport') includes: export label)
+												and: [ export first first = self first ])
+												or: [ (#('ValueExport' 'FunctionExport' 'OperationExport')
+														includes: export label)
+														and: [ export first
+																anySatisfy: [ :localName | localName first = self first ] ] ] ] ] ] ] ].
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isExpressionNode [
 	^ self class expressionLabels includes: label
 ]
@@ -665,24 +712,21 @@ ViennaNode >> isFunctionNameNode [
 	self label = 'LocalName'
 		ifTrue: [ (self definitionOfLocalName: self first)
 				ifNotNil: [ :defNode | 
-					| node |
-					node := defNode.
-					[ node notNil ]
-						whileTrue:
-							[ ((#('ExplicitFunctionDefinition' 'ImplicitFunctionDefinition' 'FunctionImport')
-								includes: node label) and: [ node first = self first ])
-								ifTrue: [ ^ true ].
-							node := node parent ] ].
+					((#('ExplicitFunctionDefinition' 'ImplicitFunctionDefinition')
+						includes: defNode label) and: [ defNode first = self first ])
+						ifTrue: [ ^ true ].
+					(defNode label = 'FunctionImport'
+						and: [ defNode first first = self first ])
+						ifTrue: [ ^ true ] ].
 			^ false ].
 	self label = 'GlobalName'
-		ifTrue: [ (self definitionOfGlobalName: self second module: self first)
-				ifNotNil: [ :defNode | 
-					| node |
-					node := defNode.
-					[ node notNil ]
-						whileTrue: [ (node label = 'FunctionImport' and: [ node first = self first ])
-								ifTrue: [ ^ true ].
-							node := node parent ] ].
+		ifTrue: [ (self moduleNamed: self first)
+				ifNotNil: [ :moduleNode | 
+					(moduleNode definitionOfLocalName: self second)
+						ifNotNil: [ :defNode | 
+							((#('ExplicitFunctionDefinition' 'ImplicitFunctionDefinition')
+								includes: defNode label) and: [ defNode first = self second ])
+								ifTrue: [ ^ true ] ] ].
 			^ false ].
 	^ false
 ]
@@ -707,22 +751,21 @@ ViennaNode >> isOperationNameNode [
 	self label = 'LocalName'
 		ifTrue: [ (self definitionOfLocalName: self first)
 				ifNotNil: [ :defNode | 
-					| node |
-					node := defNode.
-					[ node notNil ]
-						whileTrue: [ (#('OperationDefinition' 'OperationImport') includes: node label)
-								ifTrue: [ ^ true ].
-							node := node parent ] ].
+					((#('ExplicitOperationDefinition' 'ImplicitOperationDefinition')
+						includes: defNode label) and: [ defNode first = self first ])
+						ifTrue: [ ^ true ].
+					(defNode label = 'OperationImport'
+						and: [ defNode first first = self first ])
+						ifTrue: [ ^ true ] ].
 			^ false ].
 	self label = 'GlobalName'
-		ifTrue: [ (self definitionOfGlobalName: self second module: self first)
-				ifNotNil: [ :defNode | 
-					| node |
-					node := defNode.
-					[ node notNil ]
-						whileTrue: [ node label = 'OperationImport'
-								ifTrue: [ ^ true ].
-							node := node parent ] ].
+		ifTrue: [ (self moduleNamed: self first)
+				ifNotNil: [ :moduleNode | 
+					(moduleNode definitionOfLocalName: self second)
+						ifNotNil: [ :defNode | 
+							((#('ExplicitOperationDefinition' 'ImplicitOperationDefinition')
+								includes: defNode label) and: [ defNode first = self second ])
+								ifTrue: [ ^ true ] ] ].
 			^ false ].
 	^ false
 ]
@@ -746,26 +789,48 @@ ViennaNode >> isStatementNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isTypeNameNode [
+	self label = 'LocalName'
+		ifTrue: [ (self definitionOfLocalName: self first)
+				ifNotNil: [ :defNode | 
+					((#('TypeDefinition' 'RecordTypeDefinition') includes: defNode label)
+						and: [ defNode first = self first ])
+						ifTrue: [ ^ true ].
+					(defNode label = 'TypeImport'
+						and: [ defNode first first = self first ])
+						ifTrue: [ ^ true ] ].
+			^ false ].
+	self label = 'GlobalName'
+		ifTrue: [ (self moduleNamed: self first)
+				ifNotNil: [ :moduleNode | 
+					(moduleNode definitionOfLocalName: self second)
+						ifNotNil: [ :defNode | 
+							((#('TypeDefinition' 'RecordTypeDefinition') includes: defNode label)
+								and: [ defNode first = self second ])
+								ifTrue: [ ^ true ] ] ].
+			^ false ].
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isValueNameNode [
 	self label = 'LocalName'
 		ifTrue: [ (self definitionOfLocalName: self first)
 				ifNotNil: [ :defNode | 
-					| node |
-					node := defNode.
-					[ node notNil ]
-						whileTrue: [ (#('ValueDefinition' 'ValueImport') includes: node label)
-								ifTrue: [ ^ true ].
-							node := node parent ] ].
+					defNode bindHolderNode label = 'ValueDefinition'
+						ifTrue: [ ^ true ].
+					(defNode label = 'LocalName'
+						and:
+							[ defNode parent notNil and: [ defNode parent label = 'ValueImport' ] ])
+						ifTrue: [ ^ true ] ].
 			^ false ].
 	self label = 'GlobalName'
-		ifTrue: [ (self definitionOfGlobalName: self second module: self first)
-				ifNotNil: [ :defNode | 
-					| node |
-					node := defNode.
-					[ node notNil ]
-						whileTrue: [ node label = 'ValueImport'
-								ifTrue: [ ^ true ].
-							node := node parent ] ].
+		ifTrue: [ (self moduleNamed: self first)
+				ifNotNil: [ :moduleNode | 
+					(moduleNode definitionOfLocalName: self second)
+						ifNotNil: [ :defNode | 
+							defNode bindHolderNode label = 'ValueDefinition'
+								ifTrue: [ ^ true ] ] ].
 			^ false ].
 	^ false
 ]

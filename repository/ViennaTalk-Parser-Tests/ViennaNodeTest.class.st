@@ -14,7 +14,11 @@ ViennaNodeTest >> setUp [
 		parse:
 			'module A
 imports from B types Ti renamed Ti operations opi: () ==> () renamed opi; opi2
-exports all
+exports 
+	types T1; struct T2
+	values v2 : nat
+	functions 	exp_f : nat -> nat
+	operations exp_op : nat ==> nat
 definitions
 types
 	T1 = nat;
@@ -31,20 +35,32 @@ functions
 	post res > x;
 
 state S of
-	s1 : nat
+	s1 : T1
 	s2 : int
 	inv mk_S(v1, v2) == v1 <> v2
 	init s == s = mk_S(1, 2)
 end
 
 operations
-	exp_op : nat ==> nat
+	exp_op : nat ==> T2
 	exp_op(x1) == (dcl l:nat := 0; skip; exp_op(s1); l := opi(); l := exp_f(l); return v1;B`opi2());
 	
-	op : nat ==> nat
-	op() == B`opi2();
+	op : nat ==> Ti
+	op() == return B`opi2();
+end A
 
-end A'.
+module B
+exports all
+definitions
+types 
+	Ti = nat
+operations 
+	opi: () ==> ()
+	opi() == return ;
+
+	opi2: () ==> Ti
+	opi2() == return 0;
+end B'.
 	skip := ast.
 	ast
 		allDescendantsDo: [ :n | 
@@ -83,6 +99,32 @@ ViennaNodeTest >> testDefinitionOfLocalName [
 	self
 		assert: (skip definitionOfLocalName: 'opi') label
 		equals: 'OperationImport'
+]
+
+{ #category : #running }
+ViennaNodeTest >> testIsExportedNameNode [
+	| localName |
+	localName := skip parent
+		at: 1
+		put: (ViennaNode label: 'LocalName' with: '').
+	localName at: 1 put: 'T1'.
+	self assert: localName isExportedNameNode.
+	localName at: 1 put: 'T2'.
+	self assert: localName isExportedNameNode.
+	localName at: 1 put: 'T3'.
+	self deny: localName isExportedNameNode.
+	localName at: 1 put: 'v1'.
+	self deny: localName isExportedNameNode.
+	localName at: 1 put: 'v2'.
+	self assert: localName isExportedNameNode.
+	localName at: 1 put: 'exp_f'.
+	self assert: localName isExportedNameNode.
+	localName at: 1 put: 'imp_f'.
+	self deny: localName isExportedNameNode.
+	localName at: 1 put: 'exp_op'.
+	self assert: localName isExportedNameNode.
+	localName at: 1 put: 'imp_op'.
+	self deny: localName isExportedNameNode
 ]
 
 { #category : #running }
@@ -150,6 +192,22 @@ ViennaNodeTest >> testIsStateVariableNameNode [
 	returnarg := (skip parent at: 6) first.
 	self assert: returnarg first = 'v1'.
 	self deny: returnarg isStateVariableNameNode
+]
+
+{ #category : #running }
+ViennaNodeTest >> testIsTypeNameNode [
+	| localName |
+	localName := skip parent
+		at: 1
+		put: (ViennaNode label: 'LocalName' with: '').
+	localName at: 1 put: 'T1'.
+	self assert: localName isTypeNameNode.
+	localName at: 1 put: 'T2'.
+	self assert: localName isTypeNameNode.
+	localName at: 1 put: 'Ti'.
+	self deny: localName isTypeNameNode.
+	localName at: 1 put: 'v1'.
+	self deny: localName isTypeNameNode
 ]
 
 { #category : #running }
