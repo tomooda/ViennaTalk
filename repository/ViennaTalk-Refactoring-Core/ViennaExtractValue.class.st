@@ -1,9 +1,6 @@
 Class {
 	#name : #ViennaExtractValue,
-	#superclass : #ViennaRefactoring,
-	#instVars : [
-		'newName'
-	],
+	#superclass : #ViennaExtract,
 	#category : #'ViennaTalk-Refactoring-Core'
 }
 
@@ -65,16 +62,6 @@ ViennaExtractValue >> name [
 	^ 'Extract ' asText
 		, (self shortDescription: ast source) asText allBold
 		, ' as a value definition' asText
-]
-
-{ #category : #accessing }
-ViennaExtractValue >> newName [
-	^ newName ifNil: [ newName := self findNewName ]
-]
-
-{ #category : #accessing }
-ViennaExtractValue >> newName: aString [
-	newName := aString
 ]
 
 { #category : #accessing }

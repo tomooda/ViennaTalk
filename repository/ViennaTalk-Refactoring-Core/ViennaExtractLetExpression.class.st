@@ -1,9 +1,6 @@
 Class {
 	#name : #ViennaExtractLetExpression,
-	#superclass : #ViennaRefactoring,
-	#instVars : [
-		'newName'
-	],
+	#superclass : #ViennaExtract,
 	#category : #'ViennaTalk-Refactoring-Core'
 }
 
@@ -54,16 +51,6 @@ ViennaExtractLetExpression >> findNewName [
 ViennaExtractLetExpression >> name [
 	^ 'Extract let expression with ' asText
 		, (self shortDescription: ast source) asText allBold
-]
-
-{ #category : #accessing }
-ViennaExtractLetExpression >> newName [
-	^ newName ifNil: [ newName := self findNewName ]
-]
-
-{ #category : #accessing }
-ViennaExtractLetExpression >> newName: aString [
-	newName := aString
 ]
 
 { #category : #accessing }

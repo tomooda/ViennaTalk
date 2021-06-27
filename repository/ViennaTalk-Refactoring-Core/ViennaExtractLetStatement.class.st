@@ -1,8 +1,7 @@
 Class {
 	#name : #ViennaExtractLetStatement,
-	#superclass : #ViennaRefactoring,
+	#superclass : #ViennaExtract,
 	#instVars : [
-		'newName',
 		'statementNode'
 	],
 	#category : #'ViennaTalk-Refactoring-Core'
@@ -70,16 +69,6 @@ ViennaExtractLetStatement >> findStatementNode [
 ViennaExtractLetStatement >> name [
 	^ 'Extract let statement with ' asText
 		, (self shortDescription: ast source) asText allBold
-]
-
-{ #category : #accessing }
-ViennaExtractLetStatement >> newName [
-	^ newName ifNil: [ newName := self findNewName ]
-]
-
-{ #category : #accessing }
-ViennaExtractLetStatement >> newName: anObject [
-	newName := anObject
 ]
 
 { #category : #accessing }
