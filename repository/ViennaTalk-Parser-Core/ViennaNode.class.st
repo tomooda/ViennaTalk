@@ -11,7 +11,8 @@ Class {
 	#classVars : [
 		'ExpressionLabels',
 		'PatternBindLabels',
-		'StatementLabels'
+		'StatementLabels',
+		'TypeLabels'
 	],
 	#category : #'ViennaTalk-Parser-Core'
 }
@@ -151,6 +152,14 @@ ViennaNode class >> statementLabels [
 	^ StatementLabels
 		ifNil:
 			[ StatementLabels := #('AlwaysStatement' 'AssignStatement' 'AssignmentDefinition' 'BlockStatement' 'CallStatement' 'CasesStatement' 'DclStatement' 'DefStatement' 'ErrorStatement' 'ExitStatement' 'IdentityStatement' 'IfStatement' 'IndexForLoop' 'LetBeStatement' 'LetStatement' 'MultipleAssignStatement' 'NondeterministicStatement' 'ReturnStatement' 'SequenceForLoop' 'SetForLoop' 'TixeStatement' 'TrapStatement' 'WhileLoop')
+				asSet ]
+]
+
+{ #category : #accessing }
+ViennaNode class >> typeLabels [
+	^ TypeLabels
+		ifNil:
+			[ TypeLabels := #('BasicType' 'CompositeType' 'InmapType' 'MapType' 'OptionalType' 'PartialFunctionType' 'ProductType' 'QuoteType' 'Seq1Type' 'SeqType' 'Set1Type' 'SetType' 'TotalFunctionType' 'TypeName' 'UnionType' 'UnitType')
 				asSet ]
 ]
 
@@ -704,7 +713,7 @@ ViennaNode >> isExportedNameNode [
 
 { #category : #testing }
 ViennaNode >> isExpressionNode [
-	^ self class expressionLabels includes: label
+	^ (self class expressionLabels includes: label) and: [ self isTypeNode not ]
 ]
 
 { #category : #testing }
@@ -810,6 +819,13 @@ ViennaNode >> isTypeNameNode [
 								ifTrue: [ ^ true ] ] ].
 			^ false ].
 	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isTypeNode [
+	^ (self class typeLabels includes: label)
+		or: [ (label = 'LocalName' or: [ label = 'GlobalName' ])
+				and: [ parent notNil and: [ parent label = 'TypeName' ] ] ]
 ]
 
 { #category : #testing }
