@@ -1,6 +1,6 @@
 Class {
 	#name : #ViennaInlineValueAndRemove,
-	#superclass : #ViennaRefactoring,
+	#superclass : #ViennaInline,
 	#category : #'ViennaTalk-Refactoring-Core'
 }
 

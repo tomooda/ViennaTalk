@@ -1,6 +1,6 @@
 Class {
 	#name : #ViennaInlineValue,
-	#superclass : #ViennaRefactoring,
+	#superclass : #ViennaInline,
 	#category : #'ViennaTalk-Refactoring-Core'
 }
 
@@ -16,12 +16,6 @@ ViennaInlineValue >> execute [
 		ifAbsent: [ nil ])
 		ifNotNil:
 			[ :valueDefinition | self replaceNode: ast with: valueDefinition third copyFragment ]
-]
-
-{ #category : #accessing }
-ViennaInlineValue >> name [
-	^ 'Inline ' asText
-		, (self shortDescription: ast source) asText allBold
 ]
 
 { #category : #accessing }

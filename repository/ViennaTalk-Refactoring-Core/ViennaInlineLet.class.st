@@ -1,6 +1,6 @@
 Class {
 	#name : #ViennaInlineLet,
-	#superclass : #ViennaRefactoring,
+	#superclass : #ViennaInline,
 	#category : #'ViennaTalk-Refactoring-Core'
 }
 
@@ -36,12 +36,6 @@ ViennaInlineLet >> execute [
 						in: def value
 						do: [ :node | self replaceNode: node with: nextDef value ] ] ].
 	^ self replaceNode: ast with: ast second
-]
-
-{ #category : #accessing }
-ViennaInlineLet >> name [
-	^ 'Inline ' asText
-		, (self shortDescription: ast source) asText allBold
 ]
 
 { #category : #accessing }

@@ -1,6 +1,6 @@
 Class {
 	#name : #ViennaInlineBlockStatement,
-	#superclass : #ViennaRefactoring,
+	#superclass : #ViennaInline,
 	#instVars : [
 		'blockNode'
 	],
@@ -82,7 +82,7 @@ ViennaInlineBlockStatement >> findBlockNode [
 
 { #category : #accessing }
 ViennaInlineBlockStatement >> name [
-	^ 'Inline block '
+	^ 'Inline '
 		, (self shortDescription: self blockNode source) asText allBold
 ]
 
