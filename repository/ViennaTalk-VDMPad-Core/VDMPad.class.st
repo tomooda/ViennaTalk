@@ -1291,8 +1291,8 @@ VDMPad.updateFileItems = function () {
     if (VDMPad.fileItemsNode.firstChild) {
         while (VDMPad.fileItemsNode.firstChild)
             VDMPad.fileItemsNode.removeChild(VDMPad.fileItemsNode.firstChild);
-        VDMPad.node.style.width = "850px";
-        VDMPad.menuNode.style.width = "230px";
+        VDMPad.node.style.width = "1000px";
+        VDMPad.menuNode.style.width = "200px";
         var files = VDMPad.files();
         for (var i = 0; i < files.length; i++)
             VDMPad.fileItemsNode.appendChild(VDMPad.createFileNode(files[i]));
@@ -1303,8 +1303,8 @@ VDMPad.updateFileItems = function () {
 
 VDMPad.expandFileItems = function () {
     if (!VDMPad.fileItemsNode.firstChild) {
-        VDMPad.node.style.width = "850px";
-        VDMPad.menuNode.style.width = "230px";
+        VDMPad.node.style.width = "1400px";
+        VDMPad.menuNode.style.width = "300px";
         var files = VDMPad.files();
         for (var i = 0; i < files.length; i++)
             VDMPad.fileItemsNode.appendChild(VDMPad.createFileNode(files[i]));
@@ -1318,11 +1318,8 @@ VDMPad.shrinkFileItems = function () {
     if (VDMPad.fileItemsNode.firstChild) {
         while (VDMPad.fileItemsNode.firstChild)
             VDMPad.fileItemsNode.removeChild(VDMPad.fileItemsNode.firstChild);
-        VDMPad.menuNode.style.width = "80px";
-        setTimeout(function () {VDMPad.node.style.width = "750px";}, 20);
-        setTimeout(function () {VDMPad.node.style.width = "700px";}, 40);
-        setTimeout(function () {VDMPad.node.style.width = "650px";}, 60);
-        setTimeout(function () {VDMPad.node.style.width = "640px";}, 80);
+        VDMPad.menuNode.style.width = "50px";
+        VDMPad.node.style.width = "1000px";
     }
 };
 
@@ -4514,10 +4511,10 @@ VDMPad >> mainPage [
 		nextPutAll: '<body>'.
 	page
 		cr;
-		nextPutAll: '<div id="all" style="width: 640px">'.
+		nextPutAll: '<div id="all" style="width: 1000px">'.
 	page
 		cr;
-		nextPutAll: '<div id="menu" style="float: left; width: 80px">'.
+		nextPutAll: '<div id="menu" style="float: left; width: 50px">'.
 	page
 		cr;
 		nextPutAll:
@@ -4527,7 +4524,7 @@ VDMPad >> mainPage [
 		nextPutAll: '</div>'.
 	page
 		cr;
-		nextPutAll: '<div id="main" style="float: left; width: 560px">'.
+		nextPutAll: '<div id="main" style="float: left; width: 800px">'.
 	page
 		cr;
 		nextPutAll: '<div id="title">'.
@@ -4602,7 +4599,7 @@ VDMPad >> mainPage [
 	page
 		cr;
 		nextPutAll:
-			'<div id="EpiLogArea" style="float:left; margin-left: 60px; width: 560px;">'.
+			'<div id="EpiLogArea" style="float:left; margin-left: 60px; width: 800px;">'.
 	page
 		cr;
 		nextPutAll: '</div>'.
