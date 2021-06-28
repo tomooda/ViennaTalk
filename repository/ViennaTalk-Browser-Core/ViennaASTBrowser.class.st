@@ -560,10 +560,7 @@ ViennaASTBrowser >> initializePresenters [
 		contextMenu: [ self definitionListContextMenu ];
 		display:
 				[ :ast | ast ifNotNil: [ self displayDefinition: ast ] ifNil: [ '-' ] ];
-		whenSelectionChangedDo: [ :selection | 
-			(selection notNil and: [ ActiveHand shiftPressed ])
-				ifTrue: [ self updateAppendSource ]
-				ifFalse: [ self updateSource ] ].
+		whenSelectionChangedDo: [ self updateSource ].
 	sourceText := self newText
 		contextMenu: [ self sourceTextContextMenu ];
 		yourself.
