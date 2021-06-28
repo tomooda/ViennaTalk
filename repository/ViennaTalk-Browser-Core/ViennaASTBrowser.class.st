@@ -464,10 +464,27 @@ ViennaASTBrowser >> definitionsFromCategory: aViennaNode [
 						collect: [ :def | self definitionsFromCategory: def ])
 						inject: #()
 						into: [ :array :each | array , each ] ].
+			aViennaNode label = 'ImportDefinition'
+				ifTrue: [ ^ aViennaNode second label = 'ImportModuleSignatureAll'
+						ifTrue: [ Array with: aViennaNode second ]
+						ifFalse: [ aViennaNode second asArray
+								inject: #()
+								into: [ :list :importSignature | list , importSignature asArray ] ] ].
 			aViennaNode label = 'StateDefinition'
-				ifTrue: [ ^ aViennaNode second asArray  ].
+				ifTrue: [ ^ aViennaNode second asArray ].
 			^ aViennaNode asArray ].
 	^ Array new
+]
+
+{ #category : #private }
+ViennaASTBrowser >> displayCategory: aViennaNode [
+	aViennaNode ifNil: [ ^ '-' ].
+	aViennaNode label = 'ImportDefinition'
+		ifTrue: [ ^ 'imports from ' , aViennaNode first ].
+	self class sectionNames
+		at: aViennaNode label
+		ifPresent: [ :name | ^ name ].
+	^ aViennaNode label
 ]
 
 { #category : #private }
@@ -496,8 +513,33 @@ ViennaASTBrowser >> displayDefinition: aViennaNode [
 			node label = 'ExplicitOperationDefinition'
 				ifTrue: [ ^ node first ].
 			node label = 'ImplicitOperationDefinition'
-				ifTrue: [ ^ node first ] ].
+				ifTrue: [ ^ node first ].
+			node label = 'ImportDefinition'
+				ifTrue: [ ^ '- all -' ].
+			node label = 'TypeImport'
+				ifTrue: [ ^ node second
+						ifNotNil: [ :localName | localName first ]
+						ifNil: [ node parent parent first , '`' , node first first first ] ] ].
 	^ '-'
+]
+
+{ #category : #updating }
+ViennaASTBrowser >> getSource: aViennaNode [
+	aViennaNode ifNil: [ ^ String ].
+	aViennaNode label = 'TypeImport'
+		ifTrue: [ ^ Text
+				streamContents: [ :stream | 
+					stream
+						nextPutAll: 'from';
+						space;
+						nextPutAll: aViennaNode parent parent parent first;
+						cr;
+						nextPutAll: '    ';
+						nextPutAll: 'types';
+						cr;
+						nextPutAll: '        ';
+						nextPutAll: aViennaNode tracingHighlightedSource ] ].
+	^ aViennaNode tracingHighlightedSource
 ]
 
 { #category : #initialization }
@@ -510,10 +552,7 @@ ViennaASTBrowser >> initializePresenters [
 		yourself.
 	categoryList := self newList
 		beSingleSelection;
-		display: [ :ast | 
-			ast
-				ifNotNil: [ self class sectionNames at: ast label ifAbsent: [ ast label ] ]
-				ifNil: [ '-' ] ];
+		display: [ :ast | self displayCategory: ast ];
 		whenSelectionChangedDo: [ self updateDefinitionList ];
 		yourself.
 	definitionList := self newList
@@ -596,11 +635,15 @@ ViennaASTBrowser >> updateCategoryList [
 		,
 			(self module
 				ifNotNil: [ :ast | 
-					(ast
-						detect: [ :node | node isViennaNode and: [ node label = 'ModuleBody' ] ]
-						ifNone: [  ])
-						ifNotNil: [ :body | body collect: [ :node | node first ] ]
-						ifNil: [ Array new ] ]
+					(ast second first
+						ifNotNil: [ :importDefinitionList | importDefinitionList asArray ]
+						ifNil: [ Array new ])
+						,
+							((ast
+								detect: [ :node | node isViennaNode and: [ node label = 'ModuleBody' ] ]
+								ifNone: [  ])
+								ifNotNil: [ :body | body collect: [ :node | node first ] ]
+								ifNil: [ Array new ]) ]
 				ifNil: [ Array new ]).
 	oldSelection := categoryList selection selectedItem.
 	categoryList items: newItems.
@@ -640,5 +683,5 @@ ViennaASTBrowser >> updateModuleList [
 { #category : #updating }
 ViennaASTBrowser >> updateSource [
 	self definition
-		ifNotNil: [ :node | sourceText text: node tracingHighlightedSource ]
+		ifNotNil: [ :node | sourceText text: (self getSource: node) ]
 ]

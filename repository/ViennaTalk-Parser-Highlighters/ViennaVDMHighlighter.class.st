@@ -453,7 +453,9 @@ ViennaVDMHighlighter >> start [
 		/ self accessValueDefinition end / self stateDefinition end
 		/ self accessFunctionDefinition end
 		/ self accessOperationDefinition end / self statement end
-		/ self expression end
+		/ self expression end / self importDefinition / self typeImport end
+		/ self valueImport end / self functionImport end
+		/ self operationImport end
 ]
 
 { #category : #'parsers-keywords' }
