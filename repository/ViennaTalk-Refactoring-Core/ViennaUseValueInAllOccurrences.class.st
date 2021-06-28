@@ -1,6 +1,6 @@
 Class {
 	#name : #ViennaUseValueInAllOccurrences,
-	#superclass : #ViennaUseValue,
+	#superclass : #ViennaUseInAllOccurrences,
 	#category : #'ViennaTalk-Refactoring-Core'
 }
 
@@ -12,7 +12,7 @@ ViennaUseValueInAllOccurrences >> execute [
 				and: [ node sameAs: ast ])
 				ifTrue: [ self
 						replaceNode: node
-						with: (ViennaNode label: 'LocalName' with: self definitionNode first first) ] ].
+						with: (ViennaNode label: 'LocalName' with: self identifier) ] ].
 	^ nil
 ]
 
@@ -28,19 +28,13 @@ ViennaUseValueInAllOccurrences >> findDefinitionNode [
 									accessValueDef second
 										ifNotNil: [ :valueDef | 
 											((ast sameAs: valueDef third)
-												and: [ valueDef first label = 'PatternIdentifier' ])
+												and: [ valueDef first label = 'PatternIdentifier'
+														and: [ (ast includesParent: valueDef) not ] ])
 												ifTrue: [ ^ valueDef ] ] ] ] ] ].
 	^ nil
 ]
 
 { #category : #accessing }
-ViennaUseValueInAllOccurrences >> name [
-	^ 'Use ' , self definitionNode first source asText allBold
-		, ' for all occurrences of '
-		, (self shortDescription: self ast source) asText allBold
-]
-
-{ #category : #accessing }
-ViennaUseValueInAllOccurrences >> sortingOrder [
-	^ 2.12
+ViennaUseValueInAllOccurrences >> identifier [
+	^ (self definitionNode ifNotNil: #first) ifNotNil: #first
 ]

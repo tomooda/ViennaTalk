@@ -1,32 +1,14 @@
 Class {
 	#name : #ViennaUseValue,
-	#superclass : #ViennaRefactoring,
-	#instVars : [
-		'definitionNode'
-	],
+	#superclass : #ViennaUse,
 	#category : #'ViennaTalk-Refactoring-Core'
 }
-
-{ #category : #operations }
-ViennaUseValue >> check [
-	^ self definitionNode notNil
-]
-
-{ #category : #accessing }
-ViennaUseValue >> definitionNode [
-	^ definitionNode ifNil: [ definitionNode := self findDefinitionNode ]
-]
-
-{ #category : #accessing }
-ViennaUseValue >> definitionNode: aViennaNode [
-	definitionNode := aViennaNode
-]
 
 { #category : #operations }
 ViennaUseValue >> execute [
 	^ self
 		replaceNode: ast
-		with: (ViennaNode label: 'LocalName' with: self definitionNode first first)
+		with: (ViennaNode label: 'LocalName' with: self identifier)
 ]
 
 { #category : #accessing }
@@ -48,12 +30,6 @@ ViennaUseValue >> findDefinitionNode [
 ]
 
 { #category : #accessing }
-ViennaUseValue >> name [
-	^ 'Use ' , self definitionNode first source asText allBold , ' for '
-		, (self shortDescription: self ast source) asText allBold
-]
-
-{ #category : #accessing }
-ViennaUseValue >> sortingOrder [
-	^ 2.11
+ViennaUseValue >> identifier [
+	^ (self definitionNode ifNotNil: #first) ifNotNil: #first
 ]

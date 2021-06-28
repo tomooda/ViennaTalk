@@ -13,7 +13,11 @@ ViennaInlineType >> check [
 		ifTrue: [ ast := ast parent ].
 	^ ast label = 'TypeName'
 		and: [ ast first label = 'LocalName'
-				and: [ (ast definitionOfLocalName: ast first first) third isNil ] ]
+				and: [ (ast definitionOfLocalName: ast first first)
+						ifNotNil: [ :node | 
+							node label = 'TypeDefinition'
+								ifTrue: [ node third isNil ]
+								ifFalse: [ false ] ] ] ]
 ]
 
 { #category : #operations }
