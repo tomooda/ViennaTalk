@@ -1015,6 +1015,35 @@ ViennaNode >> removeAfterIndex: anInteger [
 	^ anInteger
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaNode >> resolveLocalName: aString [
+	(self definitionOfLocalName: aString)
+		ifNotNil: [ :defNode | 
+			(#('ExplicitFunctionDefinition' 'ImplicitFunctionDefinition' 'ExplicitOperationDefinition' 'ImplicitOperationDefinition' 'TypeDefinition' 'RecordTypeDefinition')
+				includes: defNode label)
+				ifTrue: [ ^ defNode ].
+			(#('TypeImport' 'ValueImport' 'FunctionImport' 'OperationImport')
+				includes: defNode label)
+				ifTrue: [ (self
+						moduleNamed: (defNode parentLabelled: 'ImportDefinition' ifAbsent: [ ^ nil ]) first)
+						ifNotNil: [ :moduleNode | 
+							moduleNode == self module
+								ifFalse: [ ^ moduleNode
+										resolveLocalName:
+											(defNode label = 'TypeImport'
+												ifTrue: [ defNode first first first ]
+												ifFalse: [ defNode first first ]) ] ].
+					^ nil ].
+			(defNode label = 'Field'
+				and: [ defNode parent parent label = 'StateDefinition' ])
+				ifTrue: [ ^ defNode parent parent ].
+			defNode bindHolderNode
+				ifNotNil: [ :bindNode | 
+					bindNode label = 'ValueDefinition'
+						ifTrue: [ ^ bindNode ] ] ].
+	^ nil
+]
+
 { #category : #enumerating }
 ViennaNode >> reverseDo: aBlock [
 	self size to: 1 by: -1 do: [ :index | aBlock value: (self at: index) ]

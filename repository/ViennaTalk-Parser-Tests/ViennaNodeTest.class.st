@@ -230,6 +230,35 @@ ViennaNodeTest >> testIsValueNameNode [
 ]
 
 { #category : #running }
+ViennaNodeTest >> testResolveLocalName [
+	self assert: (skip resolveLocalName: 'nothing') equals: nil.
+	self assert: (skip resolveLocalName: 'x1') equals: nil.
+	self assert: (skip resolveLocalName: 'x') equals: nil.
+	self
+		assert: (skip resolveLocalName: 'T2') label
+		equals: 'RecordTypeDefinition'.
+	self
+		assert: (skip resolveLocalName: 'v2') label
+		equals: 'ValueDefinition'.
+	self
+		assert: (skip resolveLocalName: 'exp_f') label
+		equals: 'ExplicitFunctionDefinition'.
+	self
+		assert: (skip resolveLocalName: 'imp_f') label
+		equals: 'ImplicitFunctionDefinition'.
+	self
+		assert: (skip resolveLocalName: 's1') label
+		equals: 'StateDefinition'.
+	self assert: (skip resolveLocalName: 'l') equals: nil.
+	self
+		assert: (skip resolveLocalName: 'Ti') label
+		equals: 'TypeDefinition'.
+	self
+		assert: (skip resolveLocalName: 'opi') label
+		equals: 'ExplicitOperationDefinition'
+]
+
+{ #category : #running }
 ViennaNodeTest >> testSameAs [
 	self
 		assert:
