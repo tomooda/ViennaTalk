@@ -17,6 +17,17 @@ ViennaRenameLocal >> construct [
 ]
 
 { #category : #operations }
+ViennaRenameLocal >> execute [
+	self newName ifNil: [ ^ nil ].
+	self
+		executeOnDefinition;
+		freeOccurrencesOf: self oldName
+			in: self definitionNode second
+			do: [ :node | self execute: node ].
+	^ nil
+]
+
+{ #category : #operations }
 ViennaRenameLocal >> executeOnBlockStatement: aViennaNode [
 	aViennaNode
 		do: [ :statement | 
@@ -83,7 +94,7 @@ ViennaRenameLocal >> executeOnExplicitFunctionDefinition: aViennaNode [
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnExplicitOperationDefinition: aViennaNode [
-	aViennaNode fifth
+	aViennaNode fourth
 		allDescendantsDo: [ :n | 
 			(n label = 'PatternIdentifier' and: [ n first = self oldName ])
 				ifTrue: [ n at: 1 put: self newName ] ]
