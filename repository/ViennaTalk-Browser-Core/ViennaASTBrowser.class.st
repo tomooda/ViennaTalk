@@ -516,10 +516,11 @@ ViennaASTBrowser >> displayDefinition: aViennaNode [
 				ifTrue: [ ^ node first ].
 			node label = 'ImportDefinition'
 				ifTrue: [ ^ '- all -' ].
-			node label = 'TypeImport'
-				ifTrue: [ ^ node second
+			(#('TypeImport' 'ValueImport' 'FunctionImport' 'OperationImport')
+				includes: node label)
+				ifTrue: [ ^ node last
 						ifNotNil: [ :localName | localName first ]
-						ifNil: [ node parent parent first , '`' , node first first first ] ] ].
+						ifNil: [ node parent parent parent first , '`' , node name ] ] ].
 	^ '-'
 ]
 

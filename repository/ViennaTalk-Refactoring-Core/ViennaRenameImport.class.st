@@ -44,7 +44,8 @@ ViennaRenameImport >> execute [
 ViennaRenameImport >> executeOnDefinition [
 	self newName ifNil: [ ^ nil ].
 	^ self definitionNode
-		at: self definitionNode size put: self newName;
+		at: self definitionNode size
+			put: (ViennaNode label: 'LocalName' with: self newName);
 		yourself
 ]
 
@@ -68,6 +69,13 @@ ViennaRenameImport >> findDefinitionNode [
 ]
 
 { #category : #accessing }
+ViennaRenameImport >> findNewName [
+	(UIManager default request: 'new name' initialAnswer: self shortName)
+		ifNotNil: [ :ans | ans trim ifNotEmpty: [ :name | ^ name ] ].
+	^ nil
+]
+
+{ #category : #accessing }
 ViennaRenameImport >> findOldName [
 	ast ifNil: [ ^ nil ].
 	^ self moduleName , '`' , self shortName
@@ -80,7 +88,9 @@ ViennaRenameImport >> moduleName [
 
 { #category : #accessing }
 ViennaRenameImport >> shortName [
-	^ self definitionNode first first
+	^ self definitionNode label = 'TypeImport'
+		ifTrue: [ self definitionNode first first first ]
+		ifFalse: [ self definitionNode first first ]
 ]
 
 { #category : #accessing }

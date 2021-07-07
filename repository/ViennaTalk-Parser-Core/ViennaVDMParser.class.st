@@ -483,7 +483,7 @@ ViennaVDMParser >> exportModuleSignature [
 	^ super exportModuleSignature
 		=>> [ :start :end :array | 
 			array = 'all'
-				ifTrue: [ ViennaNode label: 'ExportModuleSignatrueAll' start: start end: end ]
+				ifTrue: [ ViennaNode label: 'ExportModuleSignatureAll' start: start end: end ]
 				ifFalse: [ ViennaNode
 						label: 'ExportModuleSignature'
 						start: start

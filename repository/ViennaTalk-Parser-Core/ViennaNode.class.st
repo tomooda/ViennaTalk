@@ -178,6 +178,21 @@ ViennaNode >> add: anObject [
 	^ anObject
 ]
 
+{ #category : #'adding/removing' }
+ViennaNode >> addAll: aCollection [
+	| array |
+	array := self asArray , aCollection.
+	self
+		become:
+			((self class new: array size)
+				setLabel: label;
+				parent: parent;
+				start: start end: end;
+				yourself).
+	1 to: array size do: [ :index | self at: index put: (array at: index) ].
+	^ aCollection
+]
+
 { #category : #enumerating }
 ViennaNode >> allDescendantsDo: aBlock [
 	aBlock value: self.
@@ -216,6 +231,38 @@ ViennaNode >> anySatisfy: aBlockClosure [
 	^ false
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaNode >> asAccessDefinition [
+	label = 'ValueDefinition'
+		ifTrue: [ ^ ViennaNode
+				label: 'AccessValueDefinition'
+				with: (ViennaNode label: 'Access')
+				with: self ].
+	(#('TypeDefinition' 'RecordTypeDefinition') includes: label)
+		ifTrue: [ ^ ViennaNode
+				label: 'AccessTypeDefinition'
+				with: (ViennaNode label: 'Access')
+				with: self ].
+	label = 'FunctionDefinition'
+		ifTrue: [ ^ ViennaNode
+				label: 'AccessFunctionDefinition'
+				with: (ViennaNode label: 'Access')
+				with: self ].
+	(#('ExplicitFunctionDefinition' 'ImplicitFunctionDefinition')
+		includes: label)
+		ifTrue: [ ^ (ViennaNode label: 'FunctionDefinition' with: self)
+				asAccessDefinition ].
+	label = 'OperationDefinition'
+		ifTrue: [ ^ ViennaNode
+				label: 'AccessOperationDefinition'
+				with: (ViennaNode label: 'Access')
+				with: self ].
+	(#('ExplicitOperationDefinition' 'ImplicitOperationDefinition')
+		includes: label)
+		ifTrue: [ ^ (ViennaNode label: 'OperationDefinition' with: self)
+				asAccessDefinition ]
+]
+
 { #category : #converting }
 ViennaNode >> asArray [
 	| array |
@@ -232,6 +279,187 @@ ViennaNode >> asArrayFrom: anInteger [
 { #category : #converting }
 ViennaNode >> asArrayFrom: anInteger1 to: anInteger2 [
 	^ (anInteger1 to: anInteger2) collect: [ :i | self at: i ]
+]
+
+{ #category : #'accessing-definitions' }
+ViennaNode >> asExport [
+	(#('TypeDefinition' 'RecordTypeDefinition') includes: label)
+		ifTrue: [ ^ ViennaNode
+				label: 'TypeStructExport'
+				with: (ViennaNode label: 'LocalName' with: self first) ].
+	(#('ValueDefinition') includes: label)
+		ifTrue: [ ^ ViennaNode
+				label: 'ValueExport'
+				with:
+					(ViennaNode
+						label: 'NameList'
+						withAll:
+							(self first patternIdentifiers
+								collect: [ :node | ViennaNode label: 'LocalName' with: node first ]))
+				with:
+					(self first label = 'PatternIdentifier'
+						ifTrue: [ self second ifNotNil: #copyFragment ]
+						ifFalse: [ nil ])
+				with: nil ].
+	(#('ImplicitFunctionDefinition' 'ExplicitFunctionDefinition')
+		includes: label)
+		ifTrue: [ ^ ViennaNode
+				label: 'FunctionExport'
+				with:
+					(ViennaNode
+						label: 'NameList'
+						with: (ViennaNode label: 'LocalName' with: self first))
+				with: (self second ifNotNil: #copyFragment)
+				with:
+					(label = 'ExplicitFunctionDefinition'
+						ifTrue: [ self third ifNotNil: #copyFragment ]
+						ifFalse: [ ViennaNode
+								label: 'PartialFunctionType'
+								with: self third first pairListToType
+								with: self fourth pairListToType ]) ].
+	(#('ExplicitOperationDefinition' 'ImplicitOperationDefinition')
+		includes: label)
+		ifTrue: [ ^ ViennaNode
+				label: 'OperationExport'
+				with:
+					(ViennaNode
+						label: 'NameList'
+						with: (ViennaNode label: 'LocalName' with: self first))
+				with:
+					(label = 'ExplicitOperationDefinition'
+						ifTrue: [ self second ifNotNil: #copyFragment ]
+						ifFalse: [ ViennaNode
+								label: 'OperationType'
+								with: self second first pairListToType
+								with: self third pairListToType ]) ].
+	^ nil
+]
+
+{ #category : #'accessing-definitions' }
+ViennaNode >> asExportSignature [
+	self asExport
+		ifNotNil: [ :export | 
+			(export label = 'TypeNameExport'
+				or: [ export label = 'TypeStructExport' ])
+				ifTrue: [ ^ ViennaNode label: 'ExportTypesSignature' with: export ].
+			export label = 'ValueExport'
+				ifTrue: [ ^ ViennaNode label: 'ExportValuesSignature' with: export ].
+			export label = 'FunctionExport'
+				ifTrue: [ ^ ViennaNode label: 'ExportFunctionsSignature' with: export ].
+			export label = 'OperationExport'
+				ifTrue: [ ^ ViennaNode label: 'ExportOperationsSignature' with: export ] ].
+	^ nil
+]
+
+{ #category : #'accessing-definitions' }
+ViennaNode >> asGlobalName [
+	label = 'GlobalName'
+		ifTrue: [ ^ self ].
+	(self definitionOfLocalName: self name)
+		ifNotNil: [ :defNode | 
+			(#('ExplicitFunctionDefinition' 'ImplicitFunctionDefinition' 'ExplicitOperationDefinition' 'ImplicitOperationDefinition' 'TypeDefinition' 'RecordTypeDefinition')
+				includes: defNode label)
+				ifTrue: [ ^ (ViennaNode
+						label: 'GlobalName'
+						with: defNode module name
+						with: defNode name)
+						parent: parent;
+						yourself ].
+			defNode bindHolderNode
+				ifNotNil: [ :bindNode | 
+					bindNode label = 'ValueDefinition'
+						ifTrue: [ ^ (ViennaNode
+								label: 'GlobalName'
+								with: bindNode module name
+								with: defNode name)
+								parent: parent;
+								yourself ] ].
+			(#('TypeImport' 'ValueImport' 'FunctionImport' 'OperationImport')
+				includes: defNode label)
+				ifTrue: [ ^ (ViennaNode
+						label: 'GlobalName'
+						with: defNode parent parent parent first
+						with: defNode name)
+						parent: parent;
+						yourself ] ].
+	^ nil
+]
+
+{ #category : #'accessing-definitions' }
+ViennaNode >> asImportDefinitionIn: moduleNode [
+	| importDefinition |
+	importDefinition := [ :node | 
+	ViennaNode
+		label: 'ImportDefinition'
+		with: self module name
+		with: (ViennaNode label: 'ImportModuleSignature' with: node) ].
+	(#('TypeDefinition' 'RecordTypeDefinition') includes: label)
+		ifTrue: [ ^ importDefinition
+				value:
+					(ViennaNode
+						label: 'ImportTypesSignature'
+						with:
+							(ViennaNode
+								label: 'TypeImport'
+								with:
+									(ViennaNode
+										label: 'TypeName'
+										with: (ViennaNode label: 'LocalName' with: self name))
+								with: nil)) ].
+	(#('ValueDefinition') includes: label)
+		ifTrue: [ ^ importDefinition
+				value:
+					(ViennaNode
+						label: 'ImportValuesSignature'
+						withAll:
+							(self patternIdentifierNames
+								collect: [ :name | 
+									ViennaNode
+										label: 'ValueImport'
+										with: (ViennaNode label: 'LocalName' with: name)
+										with:
+											(self first label = 'PatternIdentifier'
+												ifTrue: [ self second ifNotNil: #copyFragment ]
+												ifFalse: [ nil ])
+										with: nil ])) ].
+	(#('ExplicitFunctionDefinition' 'ImplicitFunctionDefinition')
+		includes: label)
+		ifTrue: [ ^ importDefinition
+				value:
+					(ViennaNode
+						label: 'ImportFunctionsSignature'
+						with:
+							(ViennaNode
+								label: 'FunctionImport'
+								with: (ViennaNode label: 'LocalName' with: self name)
+								with: self second copyFragment
+								with:
+									(label = 'ExplicitFunctionDefinition'
+										ifTrue: [ self third copyFragment ]
+										ifFalse: [ ViennaNode
+												label: 'PartialFunctionType'
+												with: self third first pairListToType
+												with: self fourth pairListToType ])
+								with: nil)) ].
+	(#('ExplicitOperationDefinition' 'ImplicitOperationDefinition')
+		includes: label)
+		ifTrue: [ ^ importDefinition
+				value:
+					(ViennaNode
+						label: 'ImportOperationsSignature'
+						with:
+							(ViennaNode
+								label: 'OperationImport'
+								with: (ViennaNode label: 'LocalName' with: self name)
+								with:
+									(label = 'ExplicitOperationDefinition'
+										ifTrue: [ self second copyFragment ]
+										ifFalse: [ ViennaNode
+												label: 'OperationType'
+												with: self second first pairListToType
+												with: self third pairListToType ])
+								with: nil)) ].
+	^ nil
 ]
 
 { #category : #accessing }
@@ -467,13 +695,15 @@ ViennaNode >> definitionInLetOfLocalName: aString do: aBlock [
 { #category : #'accessing-definitions' }
 ViennaNode >> definitionInModuleOfLocalName: aString do: aBlock [
 	label = 'Module'
-		ifTrue: [ self second first
-				ifNotNil:
-					[ :imports | imports definitionInImportsOfLocalName: aString do: aBlock ].
-			self third
+		ifTrue: [ self third
 				do: [ :defBlock | 
 					defBlock
 						definitionInDefinitionBlockOfLocalName: aString
+						do: [ :node | ^ aBlock value: node ] ].
+			self second first
+				ifNotNil: [ :imports | 
+					imports
+						definitionInImportsOfLocalName: aString
 						do: [ :node | ^ aBlock value: node ] ].
 			^ self ].
 	(label = 'Document' and: [ self first label = 'DefinitionBlock' ])
@@ -607,6 +837,22 @@ ViennaNode >> end [
 	^ end
 ]
 
+{ #category : #enumerating }
+ViennaNode >> ensureImports [
+	^ self module second
+		in: [ :interface | 
+			interface first
+				ifNil: [ | node |
+					node := ViennaNode label: 'ImportDefinitionList'.
+					interface at: 1 put: node.
+					node ] ]
+]
+
+{ #category : #enumerating }
+ViennaNode >> exports [
+	^ self module second second
+]
+
 { #category : #accessing }
 ViennaNode >> fifth [
 	^ self at: 5
@@ -666,6 +912,21 @@ ViennaNode >> ifNotEmpty: nonEmptyBlock ifEmpty: emptyBlock [
 		ifFalse: [ nonEmptyBlock cull: self ]
 ]
 
+{ #category : #enumerating }
+ViennaNode >> imports [
+	^ self module second first
+]
+
+{ #category : #enumerating }
+ViennaNode >> importsFrom: aString do: aBlock [
+	self module second first
+		ifNotNil: [ :importDefinitionList | 
+			importDefinitionList asArray
+				do: [ :importDefinition | 
+					importDefinition first = aString
+						ifTrue: [ aBlock value: importDefinition second ] ] ]
+]
+
 { #category : #testing }
 ViennaNode >> includesParent: aViennaNode [
 	self
@@ -697,7 +958,7 @@ ViennaNode >> isExportedNameNode [
 	label = 'LocalName'
 		ifTrue: [ ^ self module second second
 				anySatisfy: [ :exportModuleSignature | 
-					exportModuleSignature label = 'ExportModuleSignatrueAll'
+					exportModuleSignature label = 'ExportModuleSignatureAll'
 						or: [ exportModuleSignature
 								anySatisfy: [ :exportSignatures | 
 									exportSignatures
@@ -786,7 +1047,8 @@ ViennaNode >> isStateVariableNameNode [
 	self label = 'LocalName'
 		ifTrue: [ (self definitionOfLocalName: self first)
 				ifNotNil: [ :fieldNode | 
-					fieldNode parent parent label = 'StateDefinition'
+					(fieldNode label = 'Field'
+						and: [ fieldNode parent parent label = 'StateDefinition' ])
 						ifTrue: [ ^ true ] ].
 			^ false ].
 	^ false
@@ -862,6 +1124,11 @@ ViennaNode >> label [
 ]
 
 { #category : #accessing }
+ViennaNode >> last [
+	^ self at: self size
+]
+
+{ #category : #accessing }
 ViennaNode >> localName [
 	self
 		allDescendantsDo: [ :n | 
@@ -888,6 +1155,22 @@ ViennaNode >> modulesDo: aBlock [
 	self document do: aBlock
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaNode >> name [
+	(#('FunctionDefinition' 'OperationDefinition') includes: label)
+		ifTrue: [ ^ self first name ].
+	(#('Module' 'ImportDefinition' 'PatternIdentifier' 'LocalName' 'TypeDefinition' 'RecordTypeDefinition' 'ExplicitFunctionDefinition' 'ExplicitOperationDefinition' 'ImplicitFunctionDefinition' 'ImplicitOperationDefinition' 'StateDefinition' 'Field')
+		includes: label)
+		ifTrue: [ ^ self first ].
+	label = 'GlobalName'
+		ifTrue: [ ^ self first , '`' , self second ].
+	label = 'TypeImport'
+		ifTrue: [ ^ self first first first ].
+	(#('ValueImport' 'FunctionImport' 'OperationImport') includes: label)
+		ifTrue: [ ^ self first first ].
+	^ nil
+]
+
 { #category : #accessing }
 ViennaNode >> ninth [
 	^ self at: 9
@@ -896,6 +1179,17 @@ ViennaNode >> ninth [
 { #category : #testing }
 ViennaNode >> notEmpty [
 	^ self isEmpty not
+]
+
+{ #category : #'accessing-definitions' }
+ViennaNode >> pairListToType [
+	^ ((2 to: self size by: 2)
+		collect: [ :index | (self at: index) copyFragment ])
+		ifEmpty: [ ViennaNode label: 'UnitType' ]
+		ifNotEmpty: [ :types | 
+			types size = 1
+				ifTrue: [ types first ]
+				ifFalse: [ ViennaNode label: 'ProductType' withAll: types ] ]
 ]
 
 { #category : #accessing }
@@ -929,16 +1223,17 @@ ViennaNode >> parentsDo: aBlock [
 
 { #category : #accessing }
 ViennaNode >> patternIdentifierNames [
-	| names |
-	names := OrderedCollection new.
-	self label = 'PatternIdentifier'
-		ifTrue: [ names add: self first ].
-	self
-		allDescendantsDo: [ :node | 
-			(node label = 'PatternIdentifier'
-				and: [ (names includes: node first) not ])
-				ifTrue: [ names add: node first ] ].
-	^ names
+	^ self patternIdentifiers collect: #first
+]
+
+{ #category : #accessing }
+ViennaNode >> patternIdentifiers [
+	^ Array
+		streamContents: [ :stream | 
+			self
+				allDescendantsDo: [ :node | 
+					node label = 'PatternIdentifier'
+						ifTrue: [ stream nextPut: node ] ] ]
 ]
 
 { #category : #copying }
@@ -1013,6 +1308,39 @@ ViennaNode >> removeAfterIndex: anInteger [
 				yourself).
 	1 to: array size do: [ :index | self at: index put: (array at: index) ].
 	^ anInteger
+]
+
+{ #category : #'adding/removing' }
+ViennaNode >> removeAll: aCollection [
+	| array |
+	array := self asArray copyWithoutAll: aCollection.
+	self
+		become:
+			((self class new: array size)
+				setLabel: label;
+				parent: parent;
+				start: start end: end;
+				yourself).
+	1 to: array size do: [ :index | self at: index put: (array at: index) ].
+	^ aCollection
+]
+
+{ #category : #'accessing-definitions' }
+ViennaNode >> resolve [
+	label = 'LocalName'
+		ifTrue: [ ^ self resolveLocalName: self first ].
+	label = 'GlobalName'
+		ifTrue: [ ^ (self moduleNamed: self first)
+				ifNotNil: [ :module | module resolveLocalName: self second ] ].
+	(#('TypeDefinition' 'RecordTypeDefinition' 'ValueDefinition' 'ExplicitFunctionDefinition' 'ImplicitFunctionDefinition' 'ExplicitOperationDefinition' 'ImplicitOperationDefinition')
+		includes: label)
+		ifTrue: [ ^ self ].
+	(#('FunctionDefinition' 'OperationDefinition') includes: label)
+		ifTrue: [ ^ self first ].
+	(#('AccessTypeDefinition' 'AccessValueDefinition' 'AccessFunctionDefinition' 'AccessOperationDefinition')
+		includes: label)
+		ifTrue: [ ^ self second resolve ].
+	^ nil
 ]
 
 { #category : #'accessing-definitions' }

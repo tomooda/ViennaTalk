@@ -699,15 +699,15 @@ ViennaAbstractFormatter >> exportFunctionsSignature: aViennaNode [
 ]
 
 { #category : #'formatting-interfaces' }
-ViennaAbstractFormatter >> exportModuleSignatrueAll: aViennaNode [
-	^ 'all'
-]
-
-{ #category : #'formatting-interfaces' }
 ViennaAbstractFormatter >> exportModuleSignature: aViennaNode [
 	| exportSignatures |
 	exportSignatures := self formatAll: aViennaNode.
 	^ self join: String cr withAll: exportSignatures
+]
+
+{ #category : #'formatting-interfaces' }
+ViennaAbstractFormatter >> exportModuleSignatureAll: aViennaNode [
+	^ 'all'
 ]
 
 { #category : #'formatting-interfaces' }

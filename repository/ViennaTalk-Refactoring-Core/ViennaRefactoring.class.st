@@ -33,6 +33,25 @@ ViennaRefactoring class >> sortedInstancesOn: aViennaNode [
 		sorted: [ :less :more | less sortingOrder <= more sortingOrder ]
 ]
 
+{ #category : #'visiting-definitions' }
+ViennaRefactoring >> addDefinition: aViennaNode in: moduleNode [
+	| sectionLabel moduleBody section |
+	sectionLabel := self definitionsLabelFor: aViennaNode.
+	moduleBody := moduleNode module third.
+	section := (moduleBody
+		detect: [ :definitionBlock | 
+			definitionBlock isViennaNode
+				and: [ definitionBlock first isViennaNode
+						and: [ definitionBlock first label = sectionLabel ] ] ]
+		ifNone: [ | definitionBlock |
+			definitionBlock := ViennaNode
+				label: 'DefinitionBlock'
+				with: (ViennaNode label: sectionLabel).
+			moduleBody add: definitionBlock.
+			definitionBlock ]) ifNotNil: #first.
+	section add: aViennaNode asAccessDefinition
+]
+
 { #category : #accessing }
 ViennaRefactoring >> ast [
 	^ ast
@@ -165,6 +184,22 @@ ViennaRefactoring >> check [
 	^ self subclassResponsibility
 ]
 
+{ #category : #'visiting-definitions' }
+ViennaRefactoring >> definitionsLabelFor: aViennaNode [
+	(#('TypeDefinition' 'RecordTypeDefinition')
+		includes: aViennaNode label)
+		ifTrue: [ ^ 'TypeDefinitions' ].
+	(#('ValueDefinition') includes: aViennaNode label)
+		ifTrue: [ ^ 'ValueDefinitions' ].
+	(#('ExplicitFunctionDefinition' 'ImplicitFunctionDefinition')
+		includes: aViennaNode label)
+		ifTrue: [ ^ 'FunctionDefinitions' ].
+	(#('ExplicitOperationDefinition' 'ImplicitOperationDefinition')
+		includes: aViennaNode label)
+		ifTrue: [ ^ 'OperationDefinitions' ].
+	^ nil
+]
+
 { #category : #'visiting-scopes' }
 ViennaRefactoring >> directScopeNodeLabels [
 	^ #('IndexForLoop') asSet
@@ -174,6 +209,97 @@ ViennaRefactoring >> directScopeNodeLabels [
 ViennaRefactoring >> enclosingScopeNodeLabels [
 	^ #('Document' 'Module' 'ExplicitFunctionDefinition' 'ImplicitFunctionDefinition' 'ExplicitOperationDefinition' 'ImplicitOperationDefinition' 'CasesExpressionAlternative' 'CasesStatementAlternative' 'LetExpression' 'LetStatement' 'LetBeExpression' 'LetBeStatement' 'SequenceComprehension' 'SetComprehension' 'MapComprehension' 'ForallExpression' 'ExistsExpression' 'Exists1Expression' 'IotaExpression' 'LambdaExpression' 'InvariantInitialFunction' 'SequenceForLoop' 'SetForLoop' 'BlockStatement')
 		asSet
+]
+
+{ #category : #'visiting-interface' }
+ViennaRefactoring >> ensureExport: aViennaNode [
+	aViennaNode label = 'GlobalName'
+		ifTrue: [ ^ aViennaNode ].
+	(aViennaNode label = 'LocalName'
+		and: [ aViennaNode resolve module == aViennaNode module ])
+		ifTrue: [ ^ self ensureExport: aViennaNode resolve ].
+	aViennaNode asExportSignature
+		ifNotNil:
+			[ :signature | self ensureExportSignature: signature in: aViennaNode module ].
+	^ nil
+]
+
+{ #category : #'visiting-interface' }
+ViennaRefactoring >> ensureExportSignature: aViennaNode in: moduleNode [
+	| exportModuleSignature |
+	exportModuleSignature := moduleNode exports first.
+	exportModuleSignature label = 'ExportModuleSignatureAll'
+		ifTrue: [ ^ exportModuleSignature ].
+	exportModuleSignature
+		reverseDo: [ :exportSignature | 
+			exportSignature label = aViennaNode label
+				ifTrue: [ exportSignature add: aViennaNode first.
+					^ exportSignature ] ].
+	exportModuleSignature add: aViennaNode.
+	^ aViennaNode
+]
+
+{ #category : #'visiting-interface' }
+ViennaRefactoring >> ensureImport: aViennaNode in: moduleNode [
+	| importModuleSignature |
+	aViennaNode module == moduleNode
+		ifTrue: [ ^ self ].
+	importModuleSignature := (self
+		ensureImportDefinitionFrom: aViennaNode module name
+		in: moduleNode) second.
+	importModuleSignature label = 'ImportModuleSignatureAll'
+		ifTrue: [ ^ self ].
+	(aViennaNode asImportDefinitionIn: moduleNode)
+		ifNotNil: [ :srcImportDefinition | 
+			srcImportDefinition second
+				do: [ :srcImportSignature | 
+					| signatures |
+					signatures := srcImportSignature asArray asOrderedCollection.
+					srcImportSignature asArray
+						do: [ :srcImport | 
+							(importModuleSignature
+								anySatisfy: [ :importSignature | 
+									importSignature label = srcImportSignature label
+										and: [ importSignature
+												anySatisfy: [ :import | import name = srcImport name ] ] ])
+								ifTrue: [ signatures remove: srcImport ifAbsent: [  ] ] ].
+					signatures
+						ifNotEmpty: [ (self
+								ensureImportSignatureFor: srcImportSignature
+								in: importModuleSignature) addAll: signatures ] ] ]
+]
+
+{ #category : #'visiting-interface' }
+ViennaRefactoring >> ensureImportDefinitionFrom: aString in: moduleNode [
+	| last srcName |
+	last := nil.
+	srcName := aString isViennaNode
+		ifTrue: [ aString name ]
+		ifFalse: [ aString ].
+	moduleNode
+		importsFrom: srcName
+		do: [ :importModuleSignature | 
+			importModuleSignature label = 'ImportModuleSignatureAll'
+				ifTrue: [ ^ importModuleSignature parent ].
+			last := importModuleSignature parent ].
+	last
+		ifNil: [ last := ViennaNode
+				label: 'ImportDefinition'
+				with: srcName
+				with: (ViennaNode label: 'ImportModuleSignature').
+			moduleNode ensureImports add: last ].
+	^ last
+]
+
+{ #category : #'visiting-interface' }
+ViennaRefactoring >> ensureImportSignatureFor: importSignatureNode in: importModuleSignatureNode [
+	^ importModuleSignatureNode asArray
+		detect:
+			[ :importSignature | importSignature label = importSignatureNode label ]
+		ifNone: [ | importSignature |
+			importSignature := ViennaNode label: importSignatureNode label.
+			importModuleSignatureNode add: importSignature.
+			importSignature ]
 ]
 
 { #category : #operations }
@@ -600,23 +726,6 @@ ViennaRefactoring >> hasLocalBindingOf: aString in: aViennaNode [
 	^ false
 ]
 
-{ #category : #'visiting-interface' }
-ViennaRefactoring >> includesExportName: aString in: aViennaNode [
-	^ aViennaNode module third
-		anySatisfy: [ :exportModuleSignature | 
-			exportModuleSignature label = 'ExportModuleSignatrueAll'
-				or: [ exportModuleSignature
-						anySatisfy: [ :exportSignatures | 
-							exportSignatures
-								anySatisfy: [ :export | 
-									((#('TypeNameExport' 'TypeStructExport') includes: export label)
-										and: [ export first first = aString ])
-										or: [ (#('ValueExport' 'FunctionExport' 'OperationExport')
-												includes: export label)
-												and:
-													[ export first anySatisfy: [ :localName | localName first = aString ] ] ] ] ] ] ]
-]
-
 { #category : #'visiting-scopes' }
 ViennaRefactoring >> localScopeBy: aViennaNode do: aBlock [
 	| selector |
@@ -763,30 +872,56 @@ ViennaRefactoring >> localScopeBySetForLoop: aViennaNode do: aBlock [
 	aBlock value: aViennaNode third
 ]
 
+{ #category : #'visiting-interface' }
+ViennaRefactoring >> migrate: aViennaNode into: moduleNode [
+	aViennaNode module == moduleNode
+		ifTrue: [ ^ aViennaNode ].
+	aViennaNode label = 'LocalName'
+		ifTrue: [ aViennaNode asGlobalName
+				ifNotNil: [ :globalName | 
+					self ensureImport: globalName resolve in: moduleNode.
+					^ self
+						replaceNode: aViennaNode
+						with: (self nameForGlobalName: globalName in: moduleNode) ] ].
+	aViennaNode label = 'GlobalName'
+		ifTrue: [ self ensureImport: aViennaNode resolve in: moduleNode.
+			^ self
+				replaceNode: aViennaNode
+				with: (self nameForGlobalName: aViennaNode in: moduleNode) ].
+	aViennaNode
+		do: [ :node | 
+			node isViennaNode
+				ifTrue: [ self migrate: node into: moduleNode ] ].
+	^ aViennaNode
+]
+
 { #category : #accessing }
 ViennaRefactoring >> name [
 	^ self subclassResponsibility
 ]
 
 { #category : #'visiting-interface' }
-ViennaRefactoring >> nameNodeIn: aViennaNode forImportedName: shortName from: moduleName [
-	aViennaNode module second
-		ifNotNil: [ :importDefinitionList | 
-			importDefinitionList
-				do: [ :importDefinition | 
-					moduleName = importDefinition first
-						ifTrue: [ importDefinition second
-								do: [ :importSignatures | 
-									importSignatures
-										do: [ :import | 
-											shortName
-												=
-													(import label = 'TypeImport'
-														ifTrue: [ import first first first ]
-														ifFalse: [ import first first ])
-												ifTrue: [ ^ import last
-														ifNotNil: [ :localName | ViennaNode label: 'LocalName' with: localName first ]
-														ifNil: [ ViennaNode label: 'GlobalName' with: moduleName with: shortName ] ] ] ] ] ] ].
+ViennaRefactoring >> nameForGlobalName: globalNameNode in: moduleNode [
+	globalNameNode first = moduleNode name
+		ifTrue: [ ^ (ViennaNode label: 'LocalName' with: globalNameNode second)
+				parent: globalNameNode parent;
+				yourself ].
+	moduleNode
+		importsFrom: globalNameNode first
+		do: [ :importModuleSignature | 
+			importModuleSignature label = 'ImportModuleSignatureAll'
+				ifTrue: [ ^ globalNameNode copyFragment ].
+			importModuleSignature
+				do: [ :importSignature | 
+					importSignature
+						do: [ :import | 
+							import name = globalNameNode second
+								ifTrue: [ ^ import last
+										ifNotNil: [ :name | 
+											name copyFragment
+												parent: globalNameNode parent;
+												yourself ]
+										ifNil: [ ^ globalNameNode copyFragment ] ] ] ] ].
 	^ nil
 ]
 
@@ -808,12 +943,99 @@ ViennaRefactoring >> refactoringError: aViennaNode [
 
 { #category : #'visiting-manipulations' }
 ViennaRefactoring >> replaceNode: aViennaNode with: anotherViennaNode [
-	| parent |
-	parent := aViennaNode parent.
-	1 to: parent size do: [ :index | 
-		(parent at: index) == aViennaNode
-			ifTrue: [ parent at: index put: anotherViennaNode ] ].
+	aViennaNode ~~ anotherViennaNode
+		ifTrue: [ | parent |
+			parent := aViennaNode parent.
+			1 to: parent size do: [ :index | 
+				(parent at: index) == aViennaNode
+					ifTrue: [ parent at: index put: anotherViennaNode ] ] ].
 	^ anotherViennaNode
+]
+
+{ #category : #'visiting-interface' }
+ViennaRefactoring >> retractExport: aViennaNode [
+	aViennaNode label = 'GlobalName'
+		ifTrue: [ ^ aViennaNode ].
+	(aViennaNode label = 'LocalName'
+		and: [ aViennaNode resolve module == aViennaNode module ])
+		ifTrue: [ ^ self retractExport: aViennaNode resolve ].
+	aViennaNode asExportSignature
+		ifNotNil:
+			[ :signature | self retractExportSignature: signature in: aViennaNode module ].
+	^ nil
+]
+
+{ #category : #'visiting-interface' }
+ViennaRefactoring >> retractExportSignature: aViennaNode in: moduleNode [
+	| exportModuleSignature names |
+	exportModuleSignature := moduleNode exports first.
+	exportModuleSignature label = 'ExportModuleSignatureAll'
+		ifTrue: [ ^ exportModuleSignature ].
+	names := OrderedCollection new.
+	aViennaNode
+		do: [ :export | 
+			export label = 'TypeNameExport'
+				ifTrue: [ names add: export first first ].
+			export label = 'TypeStructExport'
+				ifTrue: [ names add: export first first ].
+			export label = 'ValueExport'
+				ifTrue: [ export first do: [ :localName | names add: localName first ] ].
+			export label = 'FunctionExport'
+				ifTrue: [ export first do: [ :localName | names add: localName first ] ].
+			export label = 'OperationExport'
+				ifTrue: [ export first do: [ :localName | names add: localName first ] ] ].
+	names
+		ifNotEmpty: [ exportModuleSignature asArray
+				do: [ :exportSignature | 
+					exportSignature asArray
+						do: [ :export | 
+							(#('TypeNameExport' 'TypeStructExport') includes: export label)
+								ifTrue: [ (names includes: export first first)
+										ifTrue: [ exportSignature remove: export ] ]
+								ifFalse: [ export first asArray
+										do: [ :localName | 
+											(names includes: localName first)
+												ifTrue: [ export first remove: localName ] ].
+									export first ifEmpty: [ exportSignature remove: export ] ] ] ].
+			exportModuleSignature
+				ifEmpty: [ self
+						replaceNode: exportModuleSignature
+						with: (ViennaNode label: 'ExportModuleSignatureAll') ] ]
+]
+
+{ #category : #'visiting-interface' }
+ViennaRefactoring >> retractImport: aViennaNode in: moduleNode [
+	aViennaNode label = 'GlobalName'
+		ifTrue: [ ^ aViennaNode ].
+	(aViennaNode label = 'LocalName'
+		and: [ aViennaNode resolve module == aViennaNode module ])
+		ifTrue: [ ^ self retractImport: aViennaNode resolve in: moduleNode ].
+	(aViennaNode asImportDefinitionIn: moduleNode)
+		ifNotNil:
+			[ :signature | self retractImportDefinition: signature in: moduleNode ].
+	^ nil
+]
+
+{ #category : #'visiting-interface' }
+ViennaRefactoring >> retractImportDefinition: aViennaNode in: moduleNode [
+	moduleNode
+		importsFrom: aViennaNode first
+		do: [ :importModuleSignature | 
+			importModuleSignature label = 'ImportModuleSignature'
+				ifTrue: [ importModuleSignature asArray
+						do: [ :importSignature | 
+							importSignature asArray
+								do: [ :import | 
+									(aViennaNode second
+										anySatisfy: [ :sig | sig anySatisfy: [ :imp | imp name = import name ] ])
+										ifTrue: [ importSignature remove: import ] ].
+							importSignature
+								ifEmpty: [ importModuleSignature remove: importSignature ] ].
+					importModuleSignature
+						ifEmpty: [ importModuleSignature parent parent
+								remove: importModuleSignature parent.
+							importModuleSignature parent parent
+								ifEmpty: [ importModuleSignature parent parent parent at: 1 put: nil ] ] ] ]
 ]
 
 { #category : #'visiting-scopes' }

@@ -69,6 +69,42 @@ end B'.
 ]
 
 { #category : #running }
+ViennaNodeTest >> testAsGlobalName [
+	| localName globalName |
+	localName := [ :name | (ViennaNode label: 'LocalName' with: name) parent: skip ].
+	globalName := [ :module :name | ViennaNode label: 'GlobalName' with: module with: name ].
+	self assert: (localName value: 'nothing') asGlobalName equals: nil.
+	self assert: (localName value: 'x1') asGlobalName equals: nil.
+	self assert: (localName value: 'x') asGlobalName equals: nil.
+	self
+		assert:
+			((localName value: 'T2') asGlobalName
+				sameAs: (globalName value: 'A' value: 'T2')).
+	self
+		assert:
+			((localName value: 'v2') asGlobalName
+				sameAs: (globalName value: 'A' value: 'v2')).
+	self
+		assert:
+			((localName value: 'exp_f') asGlobalName
+				sameAs: (globalName value: 'A' value: 'exp_f')).
+	self
+		assert:
+			((localName value: 'imp_f') asGlobalName
+				sameAs: (globalName value: 'A' value: 'imp_f')).
+	self assert: (localName value: 's1') asGlobalName equals: nil.
+	self assert: (localName value: 'l') asGlobalName equals: nil.
+	self
+		assert:
+			((localName value: 'Ti') asGlobalName
+				sameAs: (globalName value: 'B' value: 'Ti')).
+	self
+		assert:
+			((localName value: 'opi') asGlobalName
+				sameAs: (globalName value: 'B' value: 'opi'))
+]
+
+{ #category : #running }
 ViennaNodeTest >> testDefinitionOfLocalName [
 	self assert: (skip definitionOfLocalName: 'nothing') equals: nil.
 	self
