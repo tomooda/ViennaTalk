@@ -32,7 +32,7 @@ jobs:
             smalltalk: Pharo32-8.0
           - os: windows-latest
             smalltalk: Pharo32-9.0
-runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     name: ${{ matrix.smalltalk }} on ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
