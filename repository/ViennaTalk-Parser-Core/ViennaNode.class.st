@@ -487,6 +487,31 @@ ViennaNode >> copyFragment [
 	^ self shallowCopy postCopyFragment
 ]
 
+{ #category : #copying }
+ViennaNode >> copyWhole [
+	| map |
+	map := IdentityDictionary new.
+	self root copyWhole: map.
+	^ map at: self ifAbsent: [ nil ]
+]
+
+{ #category : #copying }
+ViennaNode >> copyWhole: aDictionary [
+	| copy |
+	copy := self shallowCopy.
+	aDictionary at: self put: copy.
+	1 to: copy size do: [ :index | 
+		| node |
+		node := copy at: index.
+		copy
+			at: index
+			put:
+				(node isViennaNode
+					ifTrue: [ node copyWhole: aDictionary ]
+					ifFalse: [ node copy ]) ].
+	^ copy
+]
+
 { #category : #'accessing-definitions' }
 ViennaNode >> definitionInCasesAlternativeOfLocalName: aString do: aBlock [
 	self first
@@ -1375,6 +1400,11 @@ ViennaNode >> resolveLocalName: aString [
 { #category : #enumerating }
 ViennaNode >> reverseDo: aBlock [
 	self size to: 1 by: -1 do: [ :index | aBlock value: (self at: index) ]
+]
+
+{ #category : #accessing }
+ViennaNode >> root [
+	^ parent ifNil: [ self ] ifNotNil: #root
 ]
 
 { #category : #testing }

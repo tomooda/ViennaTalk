@@ -105,6 +105,31 @@ ViennaNodeTest >> testAsGlobalName [
 ]
 
 { #category : #running }
+ViennaNodeTest >> testCopyFragment [
+	| op1 op2 |
+	op1 := skip
+		parentLabelled: 'ExplicitOperationDefinition'
+		ifAbsent: [ nil ].
+	op2 := op1 copyFragment.
+	self assert: (op1 sameAs: op2).
+	self deny: op1 identicalTo: op2.
+	self assert: op1 root identicalTo: op2 root
+]
+
+{ #category : #running }
+ViennaNodeTest >> testCopyWhole [
+	| op1 op2 |
+	op1 := skip
+		parentLabelled: 'ExplicitOperationDefinition'
+		ifAbsent: [ nil ].
+	op2 := op1 copyWhole.
+	self assert: (op1 sameAs: op2).
+	self deny: op1 identicalTo: op2.
+	self assert: (op1 root sameAs: op2 root).
+	self deny: op1 root identicalTo: op2 root
+]
+
+{ #category : #running }
 ViennaNodeTest >> testDefinitionOfLocalName [
 	self assert: (skip definitionOfLocalName: 'nothing') equals: nil.
 	self
