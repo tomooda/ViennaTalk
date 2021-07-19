@@ -277,7 +277,7 @@ ViennaVDMJ class >> proceed: aText title: aString [
 					((dialog newScrollPaneFor: dialog textMorph)
 						extent: (dialog textMorph width + 100) @ 300;
 						yourself) ].
-	^ (UIManager default openModal: dialog) cancelled not
+	^ dialog openModal cancelled not
 ]
 
 { #category : #utilities }

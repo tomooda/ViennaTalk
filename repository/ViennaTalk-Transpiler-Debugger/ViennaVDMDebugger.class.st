@@ -1,7 +1,7 @@
 Class {
 	#name : #ViennaVDMDebugger,
 	#superclass : #GTGenericStackDebugger,
-	#category : 'ViennaTalk-Transpiler-Debugger'
+	#category : #'ViennaTalk-Transpiler-Debugger'
 }
 
 { #category : #accessing }
@@ -28,9 +28,10 @@ ViennaVDMDebugger class >> register [
 
 { #category : #'tools registry' }
 ViennaVDMDebugger class >> registerToolsOn: registry [
+	"Add ourselves to registry. See [Smalltalk tools]"
 
-	"Add ourselves to registry. See [Smalltalk tools]" 
-	registry registerDebugger: self withRank: 2.
+	(registry respondsTo: #registerDebugger:withRank:)
+		ifTrue: [ registry registerDebugger: self withRank: 2 ]
 ]
 
 { #category : #accessing }

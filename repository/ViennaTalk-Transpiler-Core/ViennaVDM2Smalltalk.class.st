@@ -14,7 +14,7 @@ Class {
 		'DefaultRuntimeAssertionCheck',
 		'DefaultRuntimeTypeCheck'
 	],
-	#category : 'ViennaTalk-Transpiler-Core'
+	#category : #'ViennaTalk-Transpiler-Core'
 }
 
 { #category : #accessing }
@@ -587,7 +587,7 @@ ViennaVDM2Smalltalk >> distributedMapMerge: aViennaNode env: aDictionary [
 
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> distributedSequenceConcatenation: aViennaNode env: aDictionary [
-	^ (self generate: aViennaNode first env: aDictionary) , ' concatenation asOrderedCollection'
+	^ (self generate: aViennaNode first env: aDictionary) , ' flattened asOrderedCollection'
 ]
 
 { #category : #'code generation-expressions' }

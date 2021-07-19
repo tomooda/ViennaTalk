@@ -1,7 +1,7 @@
 Class {
 	#name : #ViennaTracingStringTest,
 	#superclass : #TestCase,
-	#category : 'ViennaTalk-Transpiler-Test'
+	#category : #'ViennaTalk-Transpiler-Test'
 }
 
 { #category : #tests }
@@ -25,11 +25,11 @@ ViennaTracingStringTest >> testAt [
 ViennaTracingStringTest >> testAtPut [
 	self
 		assert:
-			('abc' asViennaTracingString
+			('abc' copy asViennaTracingString
 				at: 2 put: $B;
 				yourself)
 		equals:
-			('abc'
+			('abc' copy
 				at: 2 put: $B;
 				yourself)
 ]
