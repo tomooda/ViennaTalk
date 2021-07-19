@@ -15,11 +15,8 @@ BaselineOfViennaTalk >> baseline: spec [
 					with: [ spec repository: 'github://svenvc/NeoJSON/repository' ];
 				baseline: 'PetitParser2'
 					with: [ spec repository: 'github://kursjan/petitparser2:master' ];
-				project: 'ZincHTTPComponents'
-					with: [ spec
-						className: #ConfigurationOfZincHTTPComponents;
-						versionString: #stable;
-						repository: 'http://mc.stfx.eu/ZincHTTPComponents' ].
+				baseline: 'ZincHTTPComponents'
+					with: [ spec repository: 'github://svenvc/zinc/repository' ].
 			spec
 				package: 'ViennaTalk-Animation-Core'
 					with:
