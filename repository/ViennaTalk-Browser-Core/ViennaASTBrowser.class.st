@@ -378,6 +378,11 @@ ViennaASTBrowser class >> sectionNames [
 				at: 'StateDefinition' put: 'state';
 				at: 'FunctionDefinitions' put: 'functions';
 				at: 'OperationDefinitions' put: 'operations';
+				at: 'ImportTypesSignature' put: 'types';
+				at: 'ImportValuesSignature' put: 'values';
+				at: 'ImportFunctionsSignature' put: 'functions';
+				at: 'ImportOperationsSignature' put: 'operations';
+				at: 'ImportModuleSignatureAll' put: 'all';
 				yourself ]
 ]
 
@@ -464,14 +469,10 @@ ViennaASTBrowser >> definitionsFromCategory: aViennaNode [
 						collect: [ :def | self definitionsFromCategory: def ])
 						inject: #()
 						into: [ :array :each | array , each ] ].
-			aViennaNode label = 'ImportDefinition'
-				ifTrue: [ ^ aViennaNode second label = 'ImportModuleSignatureAll'
-						ifTrue: [ Array with: aViennaNode second ]
-						ifFalse: [ aViennaNode second asArray
-								inject: #()
-								into: [ :list :importSignature | list , importSignature asArray ] ] ].
+			aViennaNode label = 'ImportModuleSignatureAll'
+				ifTrue: [ ^ Array with: aViennaNode second ].
 			aViennaNode label = 'StateDefinition'
-				ifTrue: [ ^ aViennaNode second asArray ].
+				ifTrue: [ ^ Array new ].
 			^ aViennaNode asArray ].
 	^ Array new
 ]
@@ -479,8 +480,13 @@ ViennaASTBrowser >> definitionsFromCategory: aViennaNode [
 { #category : #private }
 ViennaASTBrowser >> displayCategory: aViennaNode [
 	aViennaNode ifNil: [ ^ '-' ].
-	aViennaNode label = 'ImportDefinition'
-		ifTrue: [ ^ 'imports from ' , aViennaNode first ].
+	(#('ImportTypesSignature' 'ImportValuesSignature' 'ImportFunctionsSignature' 'ImportOperationsSignature')
+		includes: aViennaNode label)
+		ifTrue: [ ^ 'from ' , aViennaNode parent parent first , ' '
+				,
+					(self class sectionNames
+						at: aViennaNode label
+						ifAbsent: [ aViennaNode label ]) ].
 	self class sectionNames
 		at: aViennaNode label
 		ifPresent: [ :name | ^ name ].
@@ -500,8 +506,6 @@ ViennaASTBrowser >> displayDefinition: aViennaNode [
 				ifTrue: [ ^ node first ].
 			node label = 'RecordTypeDefinition'
 				ifTrue: [ ^ node first ].
-			node label = 'Field'
-				ifTrue: [ ^ aViennaNode first ].
 			node label = 'ValueDefinition'
 				ifTrue: [ ^ node first source ].
 			node label = 'StateDefinition'
@@ -514,7 +518,10 @@ ViennaASTBrowser >> displayDefinition: aViennaNode [
 				ifTrue: [ ^ node first ].
 			node label = 'ImplicitOperationDefinition'
 				ifTrue: [ ^ node first ].
-			node label = 'ImportDefinition'
+			node label = 'ImportModuleDefinitionAll'
+				ifTrue: [ ^ 'all' ].
+			(#('ImportTypesSignature' 'ImportValuesSignature' 'ImportFunctionsSignature' 'ImportOperationsSignature')
+				includes: node label)
 				ifTrue: [ ^ '- all -' ].
 			(#('TypeImport' 'ValueImport' 'FunctionImport' 'OperationImport')
 				includes: node label)
@@ -527,7 +534,7 @@ ViennaASTBrowser >> displayDefinition: aViennaNode [
 { #category : #updating }
 ViennaASTBrowser >> getSource: aViennaNode [
 	aViennaNode ifNil: [ ^ String ].
-	aViennaNode label = 'TypeImport'
+	"aViennaNode label = 'TypeImport'
 		ifTrue: [ ^ Text
 				streamContents: [ :stream | 
 					stream
@@ -539,7 +546,7 @@ ViennaASTBrowser >> getSource: aViennaNode [
 						nextPutAll: 'types';
 						cr;
 						nextPutAll: '        ';
-						nextPutAll: aViennaNode tracingHighlightedSource ] ].
+						nextPutAll: aViennaNode tracingHighlightedSource ] ]."
 	^ aViennaNode tracingHighlightedSource
 ]
 
@@ -634,7 +641,10 @@ ViennaASTBrowser >> updateCategoryList [
 			(self module
 				ifNotNil: [ :ast | 
 					(ast second first
-						ifNotNil: [ :importDefinitionList | importDefinitionList asArray ]
+						ifNotNil: [ :importDefinitionList | 
+							(importDefinitionList
+								collect: [ :importDefinition | importDefinition second asArray ])
+								flattened ]
 						ifNil: [ Array new ])
 						,
 							((ast
