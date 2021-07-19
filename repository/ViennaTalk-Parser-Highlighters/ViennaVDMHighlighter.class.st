@@ -146,11 +146,6 @@ ViennaVDMHighlighter >> endKeyword [
 	^ self keyword: super endKeyword
 ]
 
-{ #category : #'parsers-symbols' }
-ViennaVDMHighlighter >> eq [
-	^ self keyword: super eq
-]
-
 { #category : #'parsers-types' }
 ViennaVDMHighlighter >> equalityAbstractionField [
 	^ ((identifier trim , (self operator: ':-')) and , (self decl: identifier) trim , (self operator: ':-') , type)
@@ -449,13 +444,13 @@ ViennaVDMHighlighter >> skip [
 
 { #category : #parsing }
 ViennaVDMHighlighter >> start [
-	^ document end / self accessTypeDefinition end
-		/ self accessValueDefinition end / self stateDefinition end
-		/ self accessFunctionDefinition end
+	^ document end / self importModuleSignature end
+		/ self accessTypeDefinition end / self accessValueDefinition end
+		/ self stateDefinition end / self accessFunctionDefinition end
 		/ self accessOperationDefinition end / self statement end
-		/ self expression end / self importDefinition / self typeImport end
-		/ self valueImport end / self functionImport end
-		/ self operationImport end
+		/ self expression end / self importDefinition end
+		/ self typeImport end / self valueImport end
+		/ self functionImport end / self operationImport end
 ]
 
 { #category : #'parsers-keywords' }
