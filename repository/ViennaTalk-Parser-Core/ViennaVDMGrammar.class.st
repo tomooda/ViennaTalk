@@ -1921,7 +1921,7 @@ ViennaVDMGrammar >> module [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> moduleBody [
-	^ (self definitions , self definitionBlock plusA) ==> #second
+	^ (self definitions , self definitionBlock starA) ==> #second
 ]
 
 { #category : #'parsers-symbols' }
