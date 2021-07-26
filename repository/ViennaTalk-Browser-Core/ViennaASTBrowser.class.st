@@ -396,6 +396,29 @@ ViennaASTBrowser class >> viennaDevMenuOn: aBuilder [
 		icon: nil
 ]
 
+{ #category : #updating }
+ViennaASTBrowser >> accept: aStringOrText [
+	| newNode newAst copyMap parent oldNode |
+	newNode := self parser
+		parse: aStringOrText asString
+		onError: [ ^ false ].
+	copyMap := IdentityDictionary new.
+	newAst := self specification copyWhole: copyMap.
+	oldNode := copyMap at: self definition ifAbsent: [ ^ false ].
+	oldNode label = newNode label
+		ifFalse: [ ^ false ].
+	parent := oldNode parent.
+	1 to: parent size do: [ :index | 
+		(parent at: index) == oldNode
+			ifTrue: [ parent at: index put: newNode ] ].
+	copyMap keys
+		do: [ :old | 
+			(copyMap at: old) == oldNode
+				ifTrue: [ copyMap at: old put: newNode ] ].
+	self model: newAst with: copyMap.
+	^ newNode
+]
+
 { #category : #accessing }
 ViennaASTBrowser >> category [
 	^ categoryList selection selectedItem
@@ -437,12 +460,7 @@ ViennaASTBrowser >> definitionListContextMenu [
 										addItem: [ :item | 
 											item
 												name: refactoring name;
-												action: [ refactoring execute.
-													self
-														updateModuleList;
-														updateCategoryList;
-														updateDefinitionList;
-														updateSource ] ] ] ].
+												action: [ self executeRefactoring: refactoring ] ] ] ].
 					node := node parent ] ].
 	menu
 		addGroup: [ :group | 
@@ -532,21 +550,21 @@ ViennaASTBrowser >> displayDefinition: aViennaNode [
 ]
 
 { #category : #updating }
+ViennaASTBrowser >> executeRefactoring: aViennaRefactoring [
+	| newAst copyMap refactoring |
+	copyMap := IdentityDictionary new.
+	newAst := self specification copyWhole: copyMap.
+	refactoring := aViennaRefactoring class new
+		ast: (copyMap at: aViennaRefactoring ast ifAbsent: [ ^ false ]).
+	refactoring check
+		ifFalse: [ ^ false ].
+	refactoring execute.
+	self model: newAst with: copyMap
+]
+
+{ #category : #updating }
 ViennaASTBrowser >> getSource: aViennaNode [
 	aViennaNode ifNil: [ ^ String ].
-	"aViennaNode label = 'TypeImport'
-		ifTrue: [ ^ Text
-				streamContents: [ :stream | 
-					stream
-						nextPutAll: 'from';
-						space;
-						nextPutAll: aViennaNode parent parent parent first;
-						cr;
-						nextPutAll: '    ';
-						nextPutAll: 'types';
-						cr;
-						nextPutAll: '        ';
-						nextPutAll: aViennaNode tracingHighlightedSource ] ]."
 	^ aViennaNode tracingHighlightedSource
 ]
 
@@ -571,6 +589,7 @@ ViennaASTBrowser >> initializePresenters [
 		whenSelectionChangedDo: [ self updateSource ].
 	sourceText := self newText
 		contextMenu: [ self sourceTextContextMenu ];
+		acceptBlock: [ :text | self accept: text ];
 		yourself.
 	self
 		whenBuiltDo: [ :w | 
@@ -591,6 +610,22 @@ ViennaASTBrowser >> initializeWindow: aWindowPresenter [
 ]
 
 { #category : #accessing }
+ViennaASTBrowser >> model: aViennaNode with: anIdentityDictionary [
+	| module category definition |
+	module := self module.
+	category := self category.
+	definition := self definition.
+	self model: aViennaNode.
+	self updateModuleList.
+	moduleList
+		selectItem: (anIdentityDictionary at: module ifAbsent: [ nil ]).
+	categoryList
+		selectItem: (anIdentityDictionary at: category ifAbsent: [ nil ]).
+	definitionList
+		selectItem: (anIdentityDictionary at: definition ifAbsent: [ nil ])
+]
+
+{ #category : #accessing }
 ViennaASTBrowser >> modelChanged [
 	self updateModuleList
 ]
@@ -598,6 +633,21 @@ ViennaASTBrowser >> modelChanged [
 { #category : #accessing }
 ViennaASTBrowser >> module [
 	^ moduleList selection selectedItem
+]
+
+{ #category : #private }
+ViennaASTBrowser >> parser [
+	| parser |
+	parser := ViennaVDMParser new.
+	^ parser typeDefinitions end / parser valueDefinitions end
+		/ parser functionDefinitions end / parser operationDefinitions end
+		/ parser stateDefinition end / parser document end
+		/ parser importModuleSignature end / parser accessTypeDefinition end
+		/ parser accessValueDefinition end / parser stateDefinition end
+		/ parser accessFunctionDefinition end
+		/ parser accessOperationDefinition end / parser typeImport end
+		/ parser valueImport end / parser functionImport end
+		/ parser operationImport end
 ]
 
 { #category : #menus }
@@ -616,21 +666,13 @@ ViennaASTBrowser >> sourceTextContextMenu [
 								addItem: [ :item | 
 									item
 										name: refactoring name;
-										action: [ refactoring execute.
-											self
-												updateModuleList;
-												updateCategoryList;
-												updateDefinitionList;
-												updateSource ] ] ] ] ].
+										action: [ self executeRefactoring: refactoring ] ] ] ] ].
 	^ menu
 ]
 
-{ #category : #updating }
-ViennaASTBrowser >> updateAppendSource [
-	self definition
-		ifNotNil: [ :node | 
-			sourceText
-				text: sourceText text , String cr asText , node tracingHighlightedSource ]
+{ #category : #accessing }
+ViennaASTBrowser >> specification [
+	^ self model
 ]
 
 { #category : #updating }
@@ -678,7 +720,7 @@ ViennaASTBrowser >> updateDefinitionList [
 { #category : #updating }
 ViennaASTBrowser >> updateModuleList [
 	| newItems oldSelection |
-	newItems := self model
+	newItems := self specification
 		ifNotNil: [ :ast | ast asArray ]
 		ifNil: [ Array new ].
 	oldSelection := moduleList selection selectedItem.
