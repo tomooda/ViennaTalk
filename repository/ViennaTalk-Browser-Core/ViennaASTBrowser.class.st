@@ -396,7 +396,7 @@ ViennaASTBrowser class >> viennaDevMenuOn: aBuilder [
 		icon: nil
 ]
 
-{ #category : #updating }
+{ #category : #operations }
 ViennaASTBrowser >> accept: aStringOrText [
 	| newNode newAst copyMap parent oldNode |
 	newNode := self parser
@@ -417,6 +417,97 @@ ViennaASTBrowser >> accept: aStringOrText [
 				ifTrue: [ copyMap at: old put: newNode ] ].
 	self model: newAst with: copyMap.
 	^ newNode
+]
+
+{ #category : #operations }
+ViennaASTBrowser >> addExplicitFunction [
+	(UIManager default request: 'a new function name')
+		ifNotNil: [ :functionName | 
+			| ast |
+			ast := self parser
+				parse: functionName , ' : () -> ? ' , functionName , '() == undefined'.
+			ast isPetit2Failure
+				ifTrue: [ ^ self ].
+			self category label = 'FunctionDefinitions'
+				ifFalse: [ ^ self ].
+			(self category module definitionOfLocalName: functionName)
+				ifNotNil: [ UIManager default alert: functionName , ' is already defined.'.
+					^ self ].
+			self append: ast to: self category ]
+]
+
+{ #category : #operations }
+ViennaASTBrowser >> addImplicitFunction [
+	(UIManager default request: 'a new function name')
+		ifNotNil: [ :functionName | 
+			| ast |
+			ast := self parser parse: functionName , ' () res:? post true'.
+			ast isPetit2Failure
+				ifTrue: [ ^ self ].
+			self category label = 'FunctionDefinitions'
+				ifFalse: [ ^ self ].
+			(self category module definitionOfLocalName: functionName)
+				ifNotNil: [ UIManager default alert: functionName , ' is already defined.'.
+					^ self ].
+			self append: ast to: self category ]
+]
+
+{ #category : #operations }
+ViennaASTBrowser >> addRecordType [
+	(UIManager default request: 'a new record name')
+		ifNotNil: [ :typeName | 
+			| ast |
+			ast := self parser parse: typeName , '::'.
+			ast isPetit2Failure
+				ifTrue: [ ^ self ].
+			self category label = 'TypeDefinitions'
+				ifFalse: [ ^ self ].
+			(self category module definitionOfLocalName: typeName)
+				ifNotNil: [ UIManager default alert: typeName , ' is already defined.'.
+					^ self ].
+			self append: ast to: self category ]
+]
+
+{ #category : #operations }
+ViennaASTBrowser >> addTypeAlias [
+	(UIManager default request: 'a new type name')
+		ifNotNil: [ :typeName | 
+			| ast |
+			ast := self parser parse: typeName , ' = token'.
+			ast isPetit2Failure
+				ifTrue: [ ^ self ].
+			self category label = 'TypeDefinitions'
+				ifFalse: [ ^ self ].
+			(self category module definitionOfLocalName: typeName)
+				ifNotNil: [ UIManager default alert: typeName , ' is already defined.'.
+					^ self ].
+			self append: ast to: self category ]
+]
+
+{ #category : #operations }
+ViennaASTBrowser >> addValue [
+	(UIManager default request: 'a new value name')
+		ifNotNil: [ :valueName | 
+			| ast |
+			ast := self parser parse: valueName , ' = undefined'.
+			ast isPetit2Failure
+				ifTrue: [ ^ self ].
+			self category label = 'ValueDefinitions'
+				ifFalse: [ ^ self ].
+			(self category module definitionOfLocalName: valueName)
+				ifNotNil: [ UIManager default alert: valueName , ' is already defined.'.
+					^ self ].
+			self append: ast to: self category ]
+]
+
+{ #category : #operations }
+ViennaASTBrowser >> append: aViennaNode to: parentNode [
+	| copyMap newAst |
+	copyMap := IdentityDictionary new.
+	newAst := parentNode root copyWhole: copyMap.
+	(copyMap at: parentNode ifAbsent: [ ^ nil ]) add: aViennaNode.
+	self model: newAst with: copyMap.
+	definitionList selectItem: aViennaNode
 ]
 
 { #category : #accessing }
@@ -447,21 +538,49 @@ ViennaASTBrowser >> definitionBase [
 ViennaASTBrowser >> definitionListContextMenu [
 	| menu |
 	menu := self newMenu.
+	self category label = 'TypeDefinitions'
+		ifTrue: [ menu
+				addGroup: [ :group | 
+					group
+						addItem: [ :item | 
+							item
+								name: 'New type alias';
+								action: [ self addTypeAlias ] ];
+						addItem: [ :item | 
+							item
+								name: 'New record type';
+								action: [ self addRecordType ] ] ] ].
+	self category label = 'ValueDefinitions'
+		ifTrue: [ menu
+				addGroup: [ :group | 
+					group
+						addItem: [ :item | 
+							item
+								name: 'New value';
+								action: [ self addValue ] ] ] ].
+	self category label = 'FunctionDefinitions'
+		ifTrue: [ menu
+				addGroup: [ :group | 
+					group
+						addItem: [ :item | 
+							item
+								name: 'New explicit function';
+								action: [ self addExplicitFunction ] ];
+						addItem: [ :item | 
+							item
+								name: 'New implicit function';
+								action: [ self addImplicitFunction ] ] ] ].
 	self definitionBase
 		ifNotNil: [ :definition | 
-			| node |
-			node := definition.
-			[ node notNil ]
-				whileTrue: [ menu
-						addGroup: [ :group | 
-							(ViennaRefactoring sortedInstancesOn: node)
-								do: [ :refactoring | 
-									group
-										addItem: [ :item | 
-											item
-												name: refactoring name;
-												action: [ self executeRefactoring: refactoring ] ] ] ].
-					node := node parent ] ].
+			menu
+				addGroup: [ :group | 
+					(ViennaRefactoring sortedInstancesOn: definition)
+						do: [ :refactoring | 
+							group
+								addItem: [ :item | 
+									item
+										name: refactoring name;
+										action: [ self executeRefactoring: refactoring ] ] ] ] ].
 	menu
 		addGroup: [ :group | 
 			menu
@@ -549,7 +668,7 @@ ViennaASTBrowser >> displayDefinition: aViennaNode [
 	^ '-'
 ]
 
-{ #category : #updating }
+{ #category : #operations }
 ViennaASTBrowser >> executeRefactoring: aViennaRefactoring [
 	| newAst copyMap refactoring |
 	copyMap := IdentityDictionary new.
@@ -562,7 +681,7 @@ ViennaASTBrowser >> executeRefactoring: aViennaRefactoring [
 	self model: newAst with: copyMap
 ]
 
-{ #category : #updating }
+{ #category : #private }
 ViennaASTBrowser >> getSource: aViennaNode [
 	aViennaNode ifNil: [ ^ String ].
 	^ aViennaNode tracingHighlightedSource
@@ -639,12 +758,12 @@ ViennaASTBrowser >> module [
 ViennaASTBrowser >> parser [
 	| parser |
 	parser := ViennaVDMParser new.
-	^ parser typeDefinitions end / parser valueDefinitions end
-		/ parser functionDefinitions end / parser operationDefinitions end
-		/ parser stateDefinition end / parser document end
-		/ parser importModuleSignature end / parser accessTypeDefinition end
-		/ parser accessValueDefinition end / parser stateDefinition end
-		/ parser accessFunctionDefinition end
+	^ parser module end / parser typeDefinitions end
+		/ parser valueDefinitions end / parser functionDefinitions end
+		/ parser operationDefinitions end / parser stateDefinition end
+		/ parser document end / parser importModuleSignature end
+		/ parser accessTypeDefinition end / parser accessValueDefinition end
+		/ parser stateDefinition end / parser accessFunctionDefinition end
 		/ parser accessOperationDefinition end / parser typeImport end
 		/ parser valueImport end / parser functionImport end
 		/ parser operationImport end
@@ -734,4 +853,5 @@ ViennaASTBrowser >> updateModuleList [
 ViennaASTBrowser >> updateSource [
 	self definition
 		ifNotNil: [ :node | sourceText text: (self getSource: node) ]
+		ifNil: [ sourceText text: '' ]
 ]
