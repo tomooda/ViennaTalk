@@ -2174,7 +2174,8 @@ ViennaVDMGrammar >> othersStatement [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> parameterTypes [
-	^ (lparen , self patternTypePairList optional , rparen) ==> #second
+	^ (lparen , self patternTypePairList optional , rparen)
+		==> [ :triple | triple second ifNil: [ #() ] ]
 ]
 
 { #category : #'parsers-definitions' }
