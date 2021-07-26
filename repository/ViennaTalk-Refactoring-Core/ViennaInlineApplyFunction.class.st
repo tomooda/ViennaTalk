@@ -109,6 +109,12 @@ ViennaInlineApplyFunction >> findDefinitionNode [
 ]
 
 { #category : #accessing }
+ViennaInlineApplyFunction >> name [
+	^ 'Inline '
+		, (self shortDescription: self definitionNode name) asText allBold
+]
+
+{ #category : #accessing }
 ViennaInlineApplyFunction >> sortingOrder [
 	^ 2.14
 ]
