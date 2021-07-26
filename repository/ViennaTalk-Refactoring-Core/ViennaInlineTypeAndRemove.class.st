@@ -8,9 +8,16 @@ Class {
 ViennaInlineTypeAndRemove >> check [
 	| moduleName shortName |
 	ast ifNil: [ ^ false ].
-	ast label = 'TypeDefinition'
+	(#('TypeDefinition' 'RecordTypeDefinition') includes: ast label)
 		ifFalse: [ ^ false ].
-	ast third ifNotNil: [ ^ false ].
+	(((ast label = 'TypeDefinition' and: [ ast third notNil ])
+		or: [ ast label = 'RecordTypeDefinition' ])
+		and: [ self hasFreeOccurrencesOf: ast first in: ast module ])
+		ifTrue: [ ^ false ].
+	(ast label = 'TypeDefinition'
+		and: [ ast third notNil
+				and: [ self hasFreeOccurrencesOf: ast first in: ast module ] ])
+		ifTrue: [ ^ false ].
 	moduleName := ast module first.
 	shortName := ast first.
 	ast document
@@ -51,6 +58,8 @@ ViennaInlineTypeAndRemove >> execute [
 
 { #category : #accessing }
 ViennaInlineTypeAndRemove >> name [
+	ast label = 'RecordTypeDefinition'
+		ifTrue: [ ^ 'Remove record type ' asText , ast first asText allBold ].
 	^ 'Inline type definition of ' asText
 		, (self shortDescription: ast source) asText allBold
 		, ' and Remove' asText
