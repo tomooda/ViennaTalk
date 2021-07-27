@@ -2174,8 +2174,8 @@ ViennaVDMGrammar >> othersStatement [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> parameterTypes [
-	^ (lparen , self patternTypePairList optional , rparen)
-		==> [ :triple | triple second ifNil: [ #() ] ]
+	^ (lparen , self patternTypePairList , rparen)
+		==> [ :triple | triple second ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -2224,14 +2224,17 @@ ViennaVDMGrammar >> patternList [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> patternTypePairList [
-	^ (self patternList , colon , type separatedBy: comma) withoutSeparators
+	^ (self patternList , colon , type separatedBy: comma)
+		withoutSeparators optional
 		==> [ :triples | 
-			| array |
-			array := Array new: triples size * 2.
-			1 to: triples size do: [ :index | 
-				array at: index * 2 - 1 put: (triples at: index) first.
-				array at: index * 2 put: (triples at: index) third ].
-			array ]
+			triples
+				ifNil: [ #() ]
+				ifNotNil: [ | array |
+					array := Array new: triples size * 2.
+					1 to: triples size do: [ :index | 
+						array at: index * 2 - 1 put: (triples at: index) first.
+						array at: index * 2 put: (triples at: index) third ].
+					array ] ]
 ]
 
 { #category : #'parsers-expressions-operators' }
