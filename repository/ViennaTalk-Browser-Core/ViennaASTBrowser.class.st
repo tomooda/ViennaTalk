@@ -2,6 +2,7 @@ Class {
 	#name : #ViennaASTBrowser,
 	#superclass : #SpPresenterWithModel,
 	#instVars : [
+		'historyList',
 		'moduleList',
 		'categoryList',
 		'definitionList',
@@ -20,7 +21,10 @@ ViennaASTBrowser class >> defaultSpec [
 		position: 0.5;
 		add:
 			(SpBoxLayout newHorizontal
-				add: #moduleList;
+				add:
+					(SpBoxLayout newVertical
+						add: #historyList height: self buttonHeight;
+						add: #moduleList);
 				add: #categoryList;
 				add: #definitionList);
 		add: #sourceText
@@ -415,7 +419,7 @@ ViennaASTBrowser >> accept: aStringOrText [
 		do: [ :old | 
 			(copyMap at: old) == oldNode
 				ifTrue: [ copyMap at: old put: newNode ] ].
-	self model: newAst with: copyMap.
+	self model: newAst comment: 'manual edit' with: copyMap.
 	^ newNode
 ]
 
@@ -437,11 +441,28 @@ ViennaASTBrowser >> addExplicitFunction [
 ]
 
 { #category : #operations }
+ViennaASTBrowser >> addExplicitOperation [
+	(UIManager default request: 'a new operation name')
+		ifNotNil: [ :operationName | 
+			| ast |
+			ast := self parser
+				parse: operationName , ' : () ==> () ' , operationName , '() == skip'.
+			ast isPetit2Failure
+				ifTrue: [ ^ self ].
+			self category label = 'OperationDefinitions'
+				ifFalse: [ ^ self ].
+			(self category module definitionOfLocalName: operationName)
+				ifNotNil: [ UIManager default alert: operationName , ' is already defined.'.
+					^ self ].
+			self append: ast to: self category ]
+]
+
+{ #category : #operations }
 ViennaASTBrowser >> addImplicitFunction [
 	(UIManager default request: 'a new function name')
 		ifNotNil: [ :functionName | 
 			| ast |
-			ast := self parser parse: functionName , ' () res:? post true'.
+			ast := self parser parse: 'functions ', functionName , ' () res:? post true'.
 			ast isPetit2Failure
 				ifTrue: [ ^ self ].
 			self category label = 'FunctionDefinitions'
@@ -449,7 +470,23 @@ ViennaASTBrowser >> addImplicitFunction [
 			(self category module definitionOfLocalName: functionName)
 				ifNotNil: [ UIManager default alert: functionName , ' is already defined.'.
 					^ self ].
-			self append: ast to: self category ]
+			self append: ast first to: self category ]
+]
+
+{ #category : #operations }
+ViennaASTBrowser >> addImplicitOperation [
+	(UIManager default request: 'a new operation name')
+		ifNotNil: [ :operationName | 
+			| ast |
+			ast := self parser parse: 'operations ', operationName , ' () post true'.
+			ast isPetit2Failure
+				ifTrue: [ ^ self ].
+			self category label = 'OperationDefinitions'
+				ifFalse: [ ^ self ].
+			(self category module definitionOfLocalName: operationName)
+				ifNotNil: [ UIManager default alert: operationName , ' is already defined.'.
+					^ self ].
+			self append: ast first to: self category ]
 ]
 
 { #category : #operations }
@@ -506,7 +543,7 @@ ViennaASTBrowser >> append: aViennaNode to: parentNode [
 	copyMap := IdentityDictionary new.
 	newAst := parentNode root copyWhole: copyMap.
 	(copyMap at: parentNode ifAbsent: [ ^ nil ]) add: aViennaNode.
-	self model: newAst with: copyMap.
+	self model: newAst comment: 'add ' , aViennaNode name asString with: copyMap.
 	definitionList selectItem: aViennaNode
 ]
 
@@ -570,6 +607,18 @@ ViennaASTBrowser >> definitionListContextMenu [
 							item
 								name: 'New implicit function';
 								action: [ self addImplicitFunction ] ] ] ].
+	self category label = 'OperationDefinitions'
+		ifTrue: [ menu
+				addGroup: [ :group | 
+					group
+						addItem: [ :item | 
+							item
+								name: 'New explicit operation';
+								action: [ self addExplicitOperation ] ];
+						addItem: [ :item | 
+							item
+								name: 'New implicit operation';
+								action: [ self addImplicitOperation ] ] ] ].
 	self definitionBase
 		ifNotNil: [ :definition | 
 			menu
@@ -678,7 +727,7 @@ ViennaASTBrowser >> executeRefactoring: aViennaRefactoring [
 	refactoring check
 		ifFalse: [ ^ false ].
 	refactoring execute.
-	self model: newAst with: copyMap
+	self model: newAst comment: refactoring name with: copyMap
 ]
 
 { #category : #private }
@@ -689,7 +738,33 @@ ViennaASTBrowser >> getSource: aViennaNode [
 
 { #category : #initialization }
 ViennaASTBrowser >> initializePresenters [
-	super initializePresenter.
+	super initializePresenters.
+	historyList := self newDropList
+		items:
+			{{DateAndTime now.
+			'initial'.
+			self model}};
+		display: [ :triple | 
+			| time |
+			time := DateAndTime now - triple first.
+			triple second
+				,
+					(time < 1 second
+						ifTrue: [ '' ]
+						ifFalse: [ '(' , (time roundTo: 1 second) humanReadablePrintString , ')' ]) ];
+		whenSelectionChangedDo: [ | assoc |
+			assoc := historyList selectedItem.
+			assoc = historyList listItems last
+				ifFalse: [ self model: assoc third.
+					historyList
+						items:
+							historyList listItems
+								,
+									{{DateAndTime now.
+									'version'.
+									self model}};
+						selectItem: historyList listItems last ] ];
+		yourself.
 	moduleList := self newList
 		beSingleSelection;
 		display: [ :ast | ast first ];
@@ -726,6 +801,31 @@ ViennaASTBrowser >> initializeWindow: aWindowPresenter [
 	aWindowPresenter
 		title: 'Browser';
 		initialExtent: 800 @ 600
+]
+
+{ #category : #accessing }
+ViennaASTBrowser >> model: aViennaNode comment: aString with: anIdentityDictionary [
+	| module category definition |
+	module := self module.
+	category := self category.
+	definition := self definition.
+	self model: aViennaNode.
+	historyList
+		items:
+			historyList listItems
+				,
+					{{DateAndTime now.
+					aString.
+					aViennaNode}};
+		selectItem: historyList listItems last.
+	UIManager default inform: aString.
+	self updateModuleList.
+	moduleList
+		selectItem: (anIdentityDictionary at: module ifAbsent: [ nil ]).
+	categoryList
+		selectItem: (anIdentityDictionary at: category ifAbsent: [ nil ]).
+	definitionList
+		selectItem: (anIdentityDictionary at: definition ifAbsent: [ nil ])
 ]
 
 { #category : #accessing }

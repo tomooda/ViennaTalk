@@ -108,7 +108,8 @@ ViennaInlineApplyFunctionAndRemove >> findDefinitionNode [
 	name ifNil: [ ^ nil ].
 	(ast resolveLocalName: name)
 		ifNotNil: [ :defNode | 
-			defNode label = 'ExplicitFunctionDefinition'
+			(#('ExplicitFunctionDefinition' 'ImplicitFunctionDefinition')
+				includes: defNode label)
 				ifTrue: [ ^ defNode ] ].
 	^ nil
 ]
