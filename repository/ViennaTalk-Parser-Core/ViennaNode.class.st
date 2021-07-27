@@ -1187,6 +1187,9 @@ ViennaNode >> name [
 	(#('Module' 'ImportDefinition' 'PatternIdentifier' 'LocalName' 'TypeDefinition' 'RecordTypeDefinition' 'ExplicitFunctionDefinition' 'ExplicitOperationDefinition' 'ImplicitFunctionDefinition' 'ImplicitOperationDefinition' 'StateDefinition' 'Field')
 		includes: label)
 		ifTrue: [ ^ self first ].
+	(#('AccessTypeDefinition' 'AccessValueDefinition' 'AccessFunctionDefinition' 'AccessOperationDefinition')
+		includes: label)
+		ifTrue: [ ^ self second name ].
 	label = 'GlobalName'
 		ifTrue: [ ^ self first , '`' , self second ].
 	label = 'TypeImport'
