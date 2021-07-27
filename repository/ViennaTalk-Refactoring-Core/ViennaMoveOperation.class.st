@@ -9,12 +9,17 @@ ViennaMoveOperation >> findDefinitionNode [
 	ast ifNil: [ ^ nil ].
 	ast resolve
 		ifNotNil: [ :defNode | 
-			'ExplicitOperationDefinition' = defNode label
+			(#('ExplicitOperationDefinition' 'ImplicitOperationDefinition')
+				includes: defNode label)
 				ifFalse: [ ^ nil ].
-			defNode fifth
-				allDescendantsDo: [ :node | 
-					(node label = 'LocalName' and: [ node isStateVariableNameNode ])
-						ifTrue: [ ^ nil ] ].
+			defNode label = 'ExplicitOperationDefinition'
+				ifTrue: [ defNode fifth
+						allDescendantsDo: [ :node | 
+							(node label = 'LocalName' and: [ node isStateVariableNameNode ])
+								ifTrue: [ ^ nil ] ] ].
+			(defNode label = 'ImplicitOperationDefinition'
+				and: [ defNode third notEmpty ])
+				ifTrue: [ ^ nil ].
 			^ defNode ].
 	^ nil
 ]
