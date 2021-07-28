@@ -14,15 +14,16 @@ ViennaRenameToplevel >> execute [
 	self newName ifNil: [ ^ nil ].
 	super execute.
 	self executeOnImports.
+	self executeOnGlobalNames.
 	^ nil
 ]
 
 { #category : #operations }
 ViennaRenameToplevel >> executeOnGlobalNames [
-	^ ast document
+	^ ast root
 		allDescendantsDo: [ :node | 
 			(node label = 'GlobalName'
-				and: [ node first = self definitionNode module first
+				and: [ node first = self definitionNode module name
 						and: [ node second = self oldName ] ])
 				ifTrue: [ node at: 2 put: self newName ] ]
 ]
