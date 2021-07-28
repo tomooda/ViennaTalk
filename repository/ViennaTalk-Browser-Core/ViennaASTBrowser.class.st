@@ -2,6 +2,7 @@ Class {
 	#name : #ViennaASTBrowser,
 	#superclass : #SpPresenterWithModel,
 	#instVars : [
+		'menuBar',
 		'historyList',
 		'moduleList',
 		'categoryList',
@@ -17,17 +18,20 @@ Class {
 
 { #category : #specs }
 ViennaASTBrowser class >> defaultSpec [
-	^ SpPanedLayout newVertical
-		position: 0.5;
+	^ SpBoxLayout newVertical
+		add: #menuBar height: self labelHeight;
 		add:
-			(SpBoxLayout newHorizontal
+			(SpPanedLayout newVertical
+				position: 0.5;
 				add:
-					(SpBoxLayout newVertical
-						add: #historyList height: self buttonHeight;
-						add: #moduleList);
-				add: #categoryList;
-				add: #definitionList);
-		add: #sourceText
+					(SpBoxLayout newHorizontal
+						add:
+							(SpBoxLayout newVertical
+								add: #historyList height: self buttonHeight;
+								add: #moduleList);
+						add: #categoryList;
+						add: #definitionList);
+				add: #sourceText)
 ]
 
 { #category : #examples }
@@ -739,6 +743,20 @@ ViennaASTBrowser >> getSource: aViennaNode [
 { #category : #initialization }
 ViennaASTBrowser >> initializePresenters [
 	super initializePresenters.
+	menuBar := self newMenuBar
+		addGroup: [ :group | 
+			group
+				addItem: [ :item | 
+					item
+						name: 'File';
+						subMenu:
+							(self newMenu
+								addGroup: [ :g | 
+									g
+										addItem: [ :i | 
+											i
+												name: 'Open Directory...';
+												action: [ self openDirectory ] ] ]) ] ].
 	historyList := self newDropList
 		items:
 			{{DateAndTime now.
@@ -803,6 +821,15 @@ ViennaASTBrowser >> initializeWindow: aWindowPresenter [
 		initialExtent: 800 @ 600
 ]
 
+{ #category : #operations }
+ViennaASTBrowser >> load: aString [
+	| ast |
+	ast := ViennaVDMParser new document end parse: aString.
+	ast isPetit2Failure ifTrue: [ UIManager default alert: 'Failed to parse the source.'. ^ nil ].
+	historyList items: { {  DateAndTime now . 'load' . ast } }; selectItem: historyList listItems last.
+	self model: ast.
+]
+
 { #category : #accessing }
 ViennaASTBrowser >> model: aViennaNode comment: aString with: anIdentityDictionary [
 	| module category definition |
@@ -852,6 +879,44 @@ ViennaASTBrowser >> modelChanged [
 { #category : #accessing }
 ViennaASTBrowser >> module [
 	^ moduleList selection selectedItem
+]
+
+{ #category : #operations }
+ViennaASTBrowser >> openDirectory [
+	| modelFiles testFiles source |
+	(UIManager default
+		chooseDirectory: 'Open directory'
+		from: FileLocator home)
+		ifNotNil: [ :dir | 
+			modelFiles := OrderedCollection new.
+			testFiles := OrderedCollection new.
+			dir files
+				do: [ :file | 
+					(file basename endsWith: '.vdmsl')
+						ifTrue: [ (file basename endsWith: 'Test.vdmsl')
+								ifTrue: [ testFiles add: file ]
+								ifFalse: [ modelFiles add: file ] ] ].
+			modelFiles := modelFiles
+				asSortedCollection: [ :less :more | less basename <= more basename ].
+			testFiles := testFiles
+				asSortedCollection: [ :less :more | less basename <= more basename ].
+			source := String
+				streamContents: [ :writeStream | 
+					modelFiles
+						do: [ :file | 
+							writeStream
+								nextPutAll:
+									((file contents copyWith: Character cr)
+										copyReplaceAll: String lf
+										with: String cr) ].
+					testFiles
+						do: [ :file | 
+							writeStream
+								nextPutAll:
+									((file contents copyWith: Character cr)
+										copyReplaceAll: String lf
+										with: String cr) ] ].
+			self load: source ]
 ]
 
 { #category : #private }
