@@ -1907,7 +1907,7 @@ ViennaVDMGrammar >> mode [
 ViennaVDMGrammar >> module [
 	^ (self moduleKeyword , (self decl: self moduleIdentifier) trim
 		, self interface , self moduleBody optional , self endKeyword
-		, self moduleIdentifier)
+		, self moduleIdentifier) trimBlanks
 		==> [ :array | 
 			array second = array sixth
 				ifTrue: [ {array second.
