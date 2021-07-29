@@ -19,7 +19,7 @@ Class {
 { #category : #specs }
 ViennaASTBrowser class >> defaultSpec [
 	^ SpBoxLayout newVertical
-		add: #menuBar height: self labelHeight;
+		add: #menuBar height: self buttonHeight;
 		add:
 			(SpPanedLayout newVertical
 				position: 0.5;
@@ -740,23 +740,57 @@ ViennaASTBrowser >> getSource: aViennaNode [
 	^ aViennaNode tracingHighlightedSource
 ]
 
+{ #category : #operations }
+ViennaASTBrowser >> importDirectory [
+	| modelFiles testFiles source |
+	(UIManager default
+		chooseDirectory: 'Import directory'
+		from: FileLocator home)
+		ifNotNil: [ :dir | 
+			modelFiles := OrderedCollection new.
+			testFiles := OrderedCollection new.
+			dir files
+				do: [ :file | 
+					(file basename endsWith: '.vdmsl')
+						ifTrue: [ (file basename endsWith: 'Test.vdmsl')
+								ifTrue: [ testFiles add: file ]
+								ifFalse: [ modelFiles add: file ] ] ].
+			modelFiles := modelFiles
+				asSortedCollection: [ :less :more | less basename <= more basename ].
+			testFiles := testFiles
+				asSortedCollection: [ :less :more | less basename <= more basename ].
+			source := String
+				streamContents: [ :writeStream | 
+					modelFiles
+						do: [ :file | 
+							writeStream
+								nextPutAll:
+									((file contents copyWith: Character cr)
+										copyReplaceAll: String lf
+										with: String cr) ].
+					testFiles
+						do: [ :file | 
+							writeStream
+								nextPutAll:
+									((file contents copyWith: Character cr)
+										copyReplaceAll: String lf
+										with: String cr) ] ].
+			self load: source ]
+]
+
+{ #category : #operations }
+ViennaASTBrowser >> importFile [
+	(UIManager default
+		chooseExistingFileReference: 'Import directory'
+		extensions: #('vdmsl')
+		path: FileLocator home)
+		ifNotNil: [ :file | self load: file contents ]
+]
+
 { #category : #initialization }
 ViennaASTBrowser >> initializePresenters [
 	super initializePresenters.
-	menuBar := self newMenuBar
-		addGroup: [ :group | 
-			group
-				addItem: [ :item | 
-					item
-						name: 'File';
-						subMenu:
-							(self newMenu
-								addGroup: [ :g | 
-									g
-										addItem: [ :i | 
-											i
-												name: 'Open Directory...';
-												action: [ self openDirectory ] ] ]) ] ].
+	menuBar := self menuBar.
 	historyList := self newDropList
 		items:
 			{{DateAndTime now.
@@ -825,9 +859,58 @@ ViennaASTBrowser >> initializeWindow: aWindowPresenter [
 ViennaASTBrowser >> load: aString [
 	| ast |
 	ast := ViennaVDMParser new document end parse: aString.
-	ast isPetit2Failure ifTrue: [ UIManager default alert: 'Failed to parse the source.'. ^ nil ].
-	historyList items: { {  DateAndTime now . 'load' . ast } }; selectItem: historyList listItems last.
-	self model: ast.
+	ast isPetit2Failure
+		ifTrue: [ UIManager default alert: 'Failed to parse the source.'.
+			^ nil ].
+	ast label = 'Document'
+		ifFalse: [ ^ nil ].
+	ast first
+		ifNotNil: [ :first | 
+			first label = 'DefinitionBlock'
+				ifTrue: [ ast
+						at: 1
+						put:
+							(ViennaNode
+								label: 'Module'
+								with: 'DEFAULT'
+								with:
+									(ViennaNode
+										label: 'Interface'
+										with: nil
+										with:
+											(ViennaNode
+												label: 'ExportDefinition'
+												with: (ViennaNode label: 'ExportModuleSignatureAll')))
+								with: (ViennaNode label: 'ModuleBody' with: first)) ] ].
+	historyList
+		items:
+			{{DateAndTime now.
+			'load'.
+			ast}};
+		selectItem: historyList listItems last.
+	self model: ast
+]
+
+{ #category : #menus }
+ViennaASTBrowser >> menuBar [
+	^ self newMenuBar
+		addGroup: [ :group | 
+			group
+				addItem: [ :item | 
+					item
+						name: 'File';
+						subMenu:
+							(self newMenu
+								addGroup: [ :g | 
+									g
+										addItem: [ :i | 
+											i
+												name: 'Import from Directory...';
+												action: [ self importDirectory ] ];
+										addItem: [ :i | 
+											i
+												name: 'Import from File...';
+												action: [ self importFile ] ] ]) ] ]
 ]
 
 { #category : #accessing }
