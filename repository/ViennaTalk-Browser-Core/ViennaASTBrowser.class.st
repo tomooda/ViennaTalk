@@ -8,7 +8,8 @@ Class {
 		'categoryList',
 		'definitionList',
 		'sourceText',
-		'playground'
+		'testProcess',
+		'testResultTable'
 	],
 	#classVars : [
 		'SectionNames'
@@ -31,7 +32,11 @@ ViennaASTBrowser class >> defaultSpec [
 								add: #moduleList);
 						add: #categoryList;
 						add: #definitionList);
-				add: #sourceText)
+				add:
+					(SpPanedLayout newHorizontal
+						position: 0.8;
+						add: #sourceText;
+						add: #testResultTable))
 ]
 
 { #category : #examples }
@@ -734,6 +739,41 @@ ViennaASTBrowser >> executeRefactoring: aViennaRefactoring [
 	self model: newAst comment: refactoring name with: copyMap
 ]
 
+{ #category : #operations }
+ViennaASTBrowser >> exportDirectory [
+	(UIManager default
+		chooseDirectory: 'Export directory'
+		from: FileLocator home)
+		ifNotNil: [ :dir | 
+			self specification
+				modulesDo: [ :moduleNode | 
+					| file |
+					file := dir / moduleNode name withExtension: 'vdmsl'.
+					file
+						ensureDeleteAll;
+						writeStreamDo: [ :stream | 
+							stream
+								nextPutAll:
+									((ViennaVDMFormatter format: moduleNode)
+										withLineEndings: OSPlatform current lineEnding) ] ].
+			UIManager default message: 'Exported to ' , dir basename , '/.' ]
+]
+
+{ #category : #operations }
+ViennaASTBrowser >> exportFile [
+	(UIManager default
+		chooseForSaveFileReference: 'Export file'
+		extensions: #('vdmsl')
+		path: FileLocator home asFileReference)
+		ifNotNil: [ :file | 
+			file
+				ensureDeleteAll;
+				writeStreamDo: [ :stream | 
+					stream
+						nextPutAll: (self source withLineEndings: OSPlatform current lineEnding) ].
+			UIManager default message: 'Exported to ' , file basename , '.' ]
+]
+
 { #category : #private }
 ViennaASTBrowser >> getSource: aViennaNode [
 	aViennaNode ifNil: [ ^ String ].
@@ -764,17 +804,12 @@ ViennaASTBrowser >> importDirectory [
 					modelFiles
 						do: [ :file | 
 							writeStream
-								nextPutAll:
-									((file contents copyWith: Character cr)
-										copyReplaceAll: String lf
-										with: String cr) ].
+								nextPutAll: (file contents copyWith: Character cr) withInternalLineEndings ].
 					testFiles
 						do: [ :file | 
 							writeStream
 								nextPutAll:
-									((file contents copyWith: Character cr)
-										copyReplaceAll: String lf
-										with: String cr) ] ].
+									(file contents copyWith: Character cr) withInternalLineEndings ] ].
 			self load: source ]
 ]
 
@@ -784,7 +819,7 @@ ViennaASTBrowser >> importFile [
 		chooseExistingFileReference: 'Import directory'
 		extensions: #('vdmsl')
 		path: FileLocator home)
-		ifNotNil: [ :file | self load: file contents ]
+		ifNotNil: [ :file | self load: file contents withInternalLineEndings ]
 ]
 
 { #category : #initialization }
@@ -804,18 +839,18 @@ ViennaASTBrowser >> initializePresenters [
 					(time < 1 second
 						ifTrue: [ '' ]
 						ifFalse: [ '(' , (time roundTo: 1 second) humanReadablePrintString , ')' ]) ];
-		whenSelectionChangedDo: [ | assoc |
-			assoc := historyList selectedItem.
-			assoc = historyList listItems last
-				ifFalse: [ self model: assoc third.
-					historyList
-						items:
-							historyList listItems
-								,
-									{{DateAndTime now.
-									'version'.
-									self model}};
-						selectItem: historyList listItems last ] ];
+		whenSelectionChangedDo: [ historyList selectedItem
+				ifNotNil: [ :assoc | 
+					assoc = historyList listItems last
+						ifFalse: [ self model: assoc third.
+							historyList
+								items:
+									historyList listItems
+										,
+											{{DateAndTime now.
+											'version'.
+											self model}};
+								selectItem: historyList listItems last ] ] ];
 		yourself.
 	moduleList := self newList
 		beSingleSelection;
@@ -837,6 +872,29 @@ ViennaASTBrowser >> initializePresenters [
 		contextMenu: [ self sourceTextContextMenu ];
 		acceptBlock: [ :text | self accept: text ];
 		yourself.
+	testResultTable := self newTable
+		addColumn:
+			((SpImageTableColumn evaluated: #icon)
+				title: '';
+				width: ViennaTestResultItem iconExtent x;
+				sortFunction: #sortingOrder ascending);
+		addColumn:
+			((SpStringTableColumn evaluated: #module)
+				title: 'module';
+				sortFunction: #module ascending);
+		addColumn:
+			((SpStringTableColumn evaluated: #operation)
+				title: 'operation';
+				sortFunction: #operation ascending);
+		addColumn:
+			((SpStringTableColumn evaluated: #message)
+				title: 'message';
+				sortFunction: #message ascending);
+		showColumnHeaders;
+		beResizable;
+		sortingBlock: [ :upper :lower | upper sortingOrder <= lower sortingOrder ];
+		contextMenu: [ self testResultTableContextMenu ];
+		yourself.
 	self
 		whenBuiltDo: [ :w | 
 			| f |
@@ -856,6 +914,23 @@ ViennaASTBrowser >> initializeWindow: aWindowPresenter [
 ]
 
 { #category : #operations }
+ViennaASTBrowser >> jumpToModule: aString operation: anotherString [
+	| moduleNode |
+	moduleNode := (self specification moduleNamed: aString)
+		ifNil: [ ^ self ].
+	moduleList selectItem: moduleNode.
+	self updateCategoryList.
+	categoryList selectItem: moduleNode.
+	self updateDefinitionList.
+	definitionList
+		selectItem:
+			(definitionList items
+				detect: [ :item | item name = anotherString ]
+				ifNone: [ ^ self ]).
+	self updateSource
+]
+
+{ #category : #operations }
 ViennaASTBrowser >> load: aString [
 	| ast |
 	ast := ViennaVDMParser new document end parse: aString.
@@ -867,9 +942,9 @@ ViennaASTBrowser >> load: aString [
 	ast first
 		ifNotNil: [ :first | 
 			first label = 'DefinitionBlock'
-				ifTrue: [ ast
-						at: 1
-						put:
+				ifTrue: [ ast := ViennaNode
+						label: 'Document'
+						with:
 							(ViennaNode
 								label: 'Module'
 								with: 'DEFAULT'
@@ -883,6 +958,7 @@ ViennaASTBrowser >> load: aString [
 												with: (ViennaNode label: 'ExportModuleSignatureAll')))
 								with: (ViennaNode label: 'ModuleBody' with: first)) ] ].
 	historyList
+		resetSelection;
 		items:
 			{{DateAndTime now.
 			'load'.
@@ -910,7 +986,26 @@ ViennaASTBrowser >> menuBar [
 										addItem: [ :i | 
 											i
 												name: 'Import from File...';
-												action: [ self importFile ] ] ]) ] ]
+												action: [ self importFile ] ];
+										addItem: [ :i | 
+											i
+												name: 'Export to Directory...';
+												action: [ self exportDirectory ] ];
+										addItem: [ :i | 
+											i
+												name: 'Export to File...';
+												action: [ self exportFile ] ] ]) ];
+				addItem: [ :item | 
+					item
+						name: 'Test';
+						subMenu:
+							(self newMenu
+								addGroup: [ :g | 
+									g
+										addItem: [ :i | 
+											i
+												name: 'Run all tests';
+												action: [ self runAllTests ] ] ]) ] ]
 ]
 
 { #category : #accessing }
@@ -1017,6 +1112,107 @@ ViennaASTBrowser >> parser [
 		/ parser operationImport end
 ]
 
+{ #category : #operations }
+ViennaASTBrowser >> runAllTests [
+	testProcess ifNotNil: [ testProcess terminate ].
+	testProcess := [ | ast animation |
+	testResultTable items: #().
+	ast := self specification ifNil: [ ^ nil ].
+	animation := ViennaAnimation default
+		specification: (ViennaVDMFormatter format: ast);
+		yourself.
+	(ast at: 1) label = 'Module'
+		ifTrue: [ ast
+				do: [ :moduleNode | 
+					| moduleName |
+					moduleName := moduleNode first.
+					(moduleName endsWith: 'Test')
+						ifTrue: [ moduleNode third
+								do: [ :definitionBlockNode | 
+									definitionBlockNode first label = 'OperationDefinitions'
+										ifTrue: [ definitionBlockNode first
+												do: [ :accessOperationDefinitionNode | 
+													| operationName |
+													operationName := accessOperationDefinitionNode second
+														first first.
+													(operationName size > 4
+														and: [ (operationName copyFrom: 1 to: 4) = 'test' ])
+														ifTrue: [ testResultTable
+																items:
+																	(testResultTable model items
+																		copyWith:
+																			(self
+																				runTestModule: moduleName
+																				operation: operationName
+																				animation: animation)) ] ] ] ] ] ] ]
+		ifFalse: [  ].
+	testProcess := nil ] forkAt: Processor userBackgroundPriority
+]
+
+{ #category : #'private-unit testing' }
+ViennaASTBrowser >> runTestModule: module operation: operation animation: aViennaAnimation [
+	| header |
+	header := 'Runtime: Error 4129: Exit '.
+	aViennaAnimation state: Dictionary new.
+	[ [ aViennaAnimation
+		plainEvaluate: operation , '()'
+		in: module
+		ifError: [ :msg | 
+			(msg size > header size
+				and: [ (msg copyFrom: 1 to: header size) = header ])
+				ifTrue: [ ViennaException
+						expression: (ViennaReader new parse: (msg copyFrom: header size + 1 to: msg size)) ]
+				ifFalse: [ Error signal: msg ] ] ]
+		on: ViennaException
+		do: [ :exception | 
+			exception expression
+				in: [ :expr | 
+					(expr isViennaComposite
+						and: [ expr constructorName = 'AssertFailure' ])
+						ifTrue: [ ^ (ViennaTestFailureResultItem
+								module: module
+								operation: operation
+								message: 'assertion failed: ' , (expr at: 1) asString)
+								inform;
+								yourself ].
+					(expr isViennaComposite
+						and: [ expr constructorName = 'AssertEqualsFailure' ])
+						ifTrue: [ ^ (ViennaTestFailureResultItem
+								module: module
+								operation: operation
+								message:
+								'assertion failed: ' , (expr at: 3) asString , ' expected: '
+								, (expr at: 2) viennaString , ' actual: '
+								, (expr at: 1) viennaString)
+								inform;
+								yourself ].
+					^ (ViennaTestErrorResultItem
+						module: module
+						operation: operation
+						message: expr viennaString)
+						inform;
+						yourself ] ] ]
+		on: Error
+		do: [ :exception | 
+			^ (ViennaTestErrorResultItem
+				module: module
+				operation: operation
+				message: exception printString)
+				inform;
+				yourself ].
+	^ ViennaTestSuccessResultItem
+		module: module
+		operation: operation
+		message: 'OK'
+]
+
+{ #category : #accessing }
+ViennaASTBrowser >> source [
+	^ self specification
+		ifNil: [ String new ]
+		ifNotNil: [ :ast | ViennaVDMFormatter format: ast ]
+]
+
 { #category : #menus }
 ViennaASTBrowser >> sourceTextContextMenu [
 	| menu |
@@ -1040,6 +1236,21 @@ ViennaASTBrowser >> sourceTextContextMenu [
 { #category : #accessing }
 ViennaASTBrowser >> specification [
 	^ self model
+]
+
+{ #category : #menus }
+ViennaASTBrowser >> testResultTableContextMenu [
+	^ self newMenu
+		addGroup: [ :group | 
+			group
+				addItem: [ :item | 
+					item
+						name: 'Jump to test operation';
+						action: [ testResultTable selection selectedItem
+								ifNotNil: [ :testResultItem | 
+									self
+										jumpToModule: testResultItem module
+										operation: testResultItem operation ] ] ] ]
 ]
 
 { #category : #updating }

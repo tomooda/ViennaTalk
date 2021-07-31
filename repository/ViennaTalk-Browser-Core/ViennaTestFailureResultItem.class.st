@@ -1,7 +1,7 @@
 Class {
 	#name : #ViennaTestFailureResultItem,
 	#superclass : #ViennaTestResultItem,
-	#category : 'ViennaTalk-Browser-Core'
+	#category : #'ViennaTalk-Browser-Core'
 }
 
 { #category : #accessing }
@@ -12,4 +12,9 @@ ViennaTestFailureResultItem class >> iconColor [
 { #category : #testing }
 ViennaTestFailureResultItem >> isFailure [
 	^ true
+]
+
+{ #category : #accessing }
+ViennaTestFailureResultItem >> sortingOrder [
+	^ 1
 ]

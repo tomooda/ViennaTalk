@@ -9,7 +9,7 @@ Class {
 	#classInstVars : [
 		'icon'
 	],
-	#category : 'ViennaTalk-Browser-Core'
+	#category : #'ViennaTalk-Browser-Core'
 }
 
 { #category : #accessing }
@@ -132,4 +132,9 @@ ViennaTestResultItem >> printOn: aStream [
 				nextPutAll: '()' ].
 	aStream nextPutAll: ' -> '.
 	message ifNotNil: [ aStream nextPutAll: message ]
+]
+
+{ #category : #accessing }
+ViennaTestResultItem >> sortingOrder [
+	^ self subclassResponsibility
 ]

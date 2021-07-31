@@ -1,7 +1,7 @@
 Class {
 	#name : #ViennaTestSuccessResultItem,
 	#superclass : #ViennaTestResultItem,
-	#category : 'ViennaTalk-Browser-Core'
+	#category : #'ViennaTalk-Browser-Core'
 }
 
 { #category : #accessing }
@@ -12,4 +12,9 @@ ViennaTestSuccessResultItem class >> iconColor [
 { #category : #testing }
 ViennaTestSuccessResultItem >> isSuccess [
 	^ true
+]
+
+{ #category : #accessing }
+ViennaTestSuccessResultItem >> sortingOrder [
+	^ 2
 ]
