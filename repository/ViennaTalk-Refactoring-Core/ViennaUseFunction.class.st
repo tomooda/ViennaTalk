@@ -28,7 +28,8 @@ ViennaUseFunction >> execute [
 { #category : #accessing }
 ViennaUseFunction >> findDefinitionNode [
 	ast ifNil: [ ^ nil ].
-	ast isExpressionNode ifFalse: [ ^nil ].
+	ast isExpressionNode
+		ifFalse: [ ^ nil ].
 	ast module
 		ifNotNil: [ :node | 
 			node third
@@ -41,16 +42,17 @@ ViennaUseFunction >> findDefinitionNode [
 											functionDefinition first
 												ifNotNil: [ :explicitFunctionDefinition | 
 													(explicitFunctionDefinition label = 'ExplicitFunctionDefinition'
-														and: [ | binds |
-															binds := Dictionary new.
-															explicitFunctionDefinition fifth
-																allDescendantsDo: [ :patternNode | 
-																	patternNode label = 'PatternIdentifier'
-																		ifTrue: [ binds at: patternNode name put: nil ] ].
-															self
-																match: explicitFunctionDefinition sixth
-																with: ast
-																bindings: binds ])
+														and: [ explicitFunctionDefinition seventh isNil
+																and: [ | binds |
+																	binds := Dictionary new.
+																	explicitFunctionDefinition fifth
+																		allDescendantsDo: [ :patternNode | 
+																			patternNode label = 'PatternIdentifier'
+																				ifTrue: [ binds at: patternNode name put: nil ] ].
+																	self
+																		match: explicitFunctionDefinition sixth
+																		with: ast
+																		bindings: binds ] ])
 														ifTrue: [ ^ explicitFunctionDefinition ] ] ] ] ] ] ].
 	^ nil
 ]
