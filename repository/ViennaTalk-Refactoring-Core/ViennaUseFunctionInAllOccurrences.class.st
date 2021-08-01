@@ -47,16 +47,17 @@ ViennaUseFunctionInAllOccurrences >> findDefinitionNode [
 												ifNotNil: [ :explicitFunctionDefinition | 
 													(explicitFunctionDefinition label = 'ExplicitFunctionDefinition'
 														and: [ explicitFunctionDefinition seventh isNil
-																and: [ | binds |
-																	binds := Dictionary new.
-																	explicitFunctionDefinition fifth
-																		allDescendantsDo: [ :patternNode | 
-																			patternNode label = 'PatternIdentifier'
-																				ifTrue: [ binds at: patternNode name put: nil ] ].
-																	self
-																		match: explicitFunctionDefinition sixth
-																		with: ast
-																		bindings: binds ] ])
+																and: [ explicitFunctionDefinition sixth label ~= 'LocalName'
+																		and: [ | binds |
+																			binds := Dictionary new.
+																			explicitFunctionDefinition fifth
+																				allDescendantsDo: [ :patternNode | 
+																					patternNode label = 'PatternIdentifier'
+																						ifTrue: [ binds at: patternNode name put: nil ] ].
+																			self
+																				match: explicitFunctionDefinition sixth
+																				with: ast
+																				bindings: binds ] ] ])
 														ifTrue: [ ^ explicitFunctionDefinition ] ] ] ] ] ] ].
 	^ nil
 ]
