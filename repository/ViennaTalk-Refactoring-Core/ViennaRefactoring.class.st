@@ -974,10 +974,13 @@ ViennaRefactoring >> match: aViennaNode with: anotherViennaNode bindings: aDicti
 				at: aViennaNode name
 				ifPresent: [ :node | 
 					node
-						ifNil: [ aDictionary at: aViennaNode name put: anotherViennaNode.
+						ifNil:
+							[ aDictionary at: aViennaNode name put: anotherViennaNode copyFragment.
 							true ]
 						ifNotNil: [ anotherViennaNode sameAs: node ] ]
 				ifAbsent: [ false ] ].
+	aViennaNode label = anotherViennaNode label
+		ifFalse: [ ^ false ].
 	aViennaNode size = anotherViennaNode size
 		ifFalse: [ ^ false ].
 	^ (1 to: aViennaNode size)

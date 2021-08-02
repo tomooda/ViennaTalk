@@ -6,7 +6,13 @@ Class {
 
 { #category : #operations }
 ViennaUseFunctionInAllOccurrences >> execute [
-	ast module
+	[ self executeOne notNil ] whileTrue.
+	^ nil
+]
+
+{ #category : #operations }
+ViennaUseFunctionInAllOccurrences >> executeOne [
+	self definitionNode module
 		allDescendantsDo: [ :node | 
 			(node includesParent: self definitionNode) not
 				ifTrue: [ | binds |
@@ -19,7 +25,7 @@ ViennaUseFunctionInAllOccurrences >> execute [
 						ifTrue: [ | args |
 							args := self definitionNode fifth first asArray
 								collect: [ :n | self expressionFromPattern: n bindings: binds ].
-							self
+							^ self
 								replaceNode: node
 								with:
 									(ViennaNode
@@ -32,6 +38,8 @@ ViennaUseFunctionInAllOccurrences >> execute [
 { #category : #accessing }
 ViennaUseFunctionInAllOccurrences >> findDefinitionNode [
 	ast ifNil: [ ^ nil ].
+	ast label = 'ExplicitFunctionDefinition'
+		ifTrue: [ ^ ast ].
 	ast isExpressionNode
 		ifFalse: [ ^ nil ].
 	ast module

@@ -39,9 +39,7 @@ ViennaUseInAllOccurrences >> identifier [
 
 { #category : #accessing }
 ViennaUseInAllOccurrences >> name [
-	^ 'Use ' , self identifier asText allBold
-		, ' for all occurrences of '
-		, (self shortDescription: self ast source) asText allBold
+	^ 'Use ' , self identifier asText allBold , ' for all occurrences'
 ]
 
 { #category : #accessing }
