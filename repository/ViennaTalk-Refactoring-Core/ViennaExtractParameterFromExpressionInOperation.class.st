@@ -1,16 +1,16 @@
 Class {
-	#name : #ViennaParameterizeExpressionInFunction,
-	#superclass : #ViennaParameterize,
+	#name : #ViennaExtractParameterFromExpressionInOperation,
+	#superclass : #ViennaExtractParameter,
 	#category : #'ViennaTalk-Refactoring-Core'
 }
 
 { #category : #testing }
-ViennaParameterizeExpressionInFunction class >> isAbstract [
-	^ self == ViennaParameterizeExpressionInFunction
+ViennaExtractParameterFromExpressionInOperation class >> isAbstract [
+	^ self == ViennaExtractParameterFromExpressionInOperation
 ]
 
 { #category : #operations }
-ViennaParameterizeExpressionInFunction >> check [
+ViennaExtractParameterFromExpressionInOperation >> check [
 	| moduleName shortName |
 	ast ifNil: [ ^ false ].
 	ast isExpressionNode
@@ -28,19 +28,19 @@ ViennaParameterizeExpressionInFunction >> check [
 							importDefinition first = moduleName
 								ifTrue: [ importDefinition
 										allDescendantsDo: [ :node | 
-											(node label = 'FunctionImport' and: [ node first = shortName ])
+											(node label = 'OperationImport' and: [ node first = shortName ])
 												ifTrue: [ ^ false ] ] ] ] ] ].
 	^ true
 ]
 
 { #category : #operations }
-ViennaParameterizeExpressionInFunction >> executeCallers [
+ViennaExtractParameterFromExpressionInOperation >> executeCallers [
 	| moduleName shortName |
 	moduleName := ast module first.
 	shortName := self definitionNode first.
 	ast module third
 		allDescendantsDo: [ :node | 
-			(node label = 'Apply'
+			((#('Apply' 'CallStatement') includes: node label)
 				and: [ (node first label = 'LocalName'
 						and: [ node first first = shortName ])
 						or: [ node first label = 'GlobalName'
@@ -50,13 +50,13 @@ ViennaParameterizeExpressionInFunction >> executeCallers [
 ]
 
 { #category : #accessing }
-ViennaParameterizeExpressionInFunction >> name [
-	^ 'Parameterize ' asText
+ViennaExtractParameterFromExpressionInOperation >> name [
+	^ 'Extract parameter from ' asText
 		, (self shortDescription: ast source) asText allBold
-		, ' in function ' asText , self definitionNode first asText allBold
+		, ' in operation ' asText , self definitionNode first asText allBold
 ]
 
 { #category : #accessing }
-ViennaParameterizeExpressionInFunction >> sortingOrder [
-	^ 2.183
+ViennaExtractParameterFromExpressionInOperation >> sortingOrder [
+	^ 2.181
 ]

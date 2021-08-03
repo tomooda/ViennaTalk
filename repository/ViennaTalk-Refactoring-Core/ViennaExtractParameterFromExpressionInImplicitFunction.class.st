@@ -1,13 +1,13 @@
 Class {
-	#name : #ViennaParameterizeExpressionInImplicitOperation,
-	#superclass : #ViennaParameterizeExpressionInOperation,
+	#name : #ViennaExtractParameterFromExpressionInImplicitFunction,
+	#superclass : #ViennaExtractParameterFromExpressionInFunction,
 	#category : #'ViennaTalk-Refactoring-Core'
 }
 
 { #category : #operations }
-ViennaParameterizeExpressionInImplicitOperation >> executeDefinition [
+ViennaExtractParameterFromExpressionInImplicitFunction >> executeDefinition [
 	self newName ifNil: [ ^ nil ].
-	self definitionNode second first
+	self definitionNode third first
 		add:
 			(ViennaNode
 				label: 'PatternList'
@@ -17,8 +17,8 @@ ViennaParameterizeExpressionInImplicitOperation >> executeDefinition [
 ]
 
 { #category : #accessing }
-ViennaParameterizeExpressionInImplicitOperation >> findDefinitionNode [
+ViennaExtractParameterFromExpressionInImplicitFunction >> findDefinitionNode [
 	^ ast parent
-		parentLabelled: 'ImplicitOperationDefinition'
+		parentLabelled: 'ImplicitFunctionDefinition'
 		ifAbsent: []
 ]

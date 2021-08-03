@@ -1,11 +1,11 @@
 Class {
-	#name : #ViennaParameterizeExpressionInExplicitOperation,
-	#superclass : #ViennaParameterizeExpressionInOperation,
+	#name : #ViennaExtractParameterExpressionInExplicitOperation,
+	#superclass : #ViennaExtractParameterFromExpressionInOperation,
 	#category : #'ViennaTalk-Refactoring-Core'
 }
 
 { #category : #operations }
-ViennaParameterizeExpressionInExplicitOperation >> executeDefinition [
+ViennaExtractParameterExpressionInExplicitOperation >> executeDefinition [
 	self newName ifNil: [ ^ nil ].
 	self definitionNode second first
 		in: [ :typeNode | 
@@ -24,7 +24,7 @@ ViennaParameterizeExpressionInExplicitOperation >> executeDefinition [
 ]
 
 { #category : #accessing }
-ViennaParameterizeExpressionInExplicitOperation >> findDefinitionNode [
+ViennaExtractParameterExpressionInExplicitOperation >> findDefinitionNode [
 	^ ast parent
 		parentLabelled: 'ExplicitOperationDefinition'
 		ifAbsent: []

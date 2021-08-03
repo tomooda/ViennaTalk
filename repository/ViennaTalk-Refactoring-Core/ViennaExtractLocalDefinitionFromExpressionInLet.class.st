@@ -1,11 +1,11 @@
 Class {
-	#name : #ViennaParameterizeExpressionInLet,
-	#superclass : #ViennaParameterize,
+	#name : #ViennaExtractLocalDefinitionFromExpressionInLet,
+	#superclass : #ViennaExtractParameter,
 	#category : #'ViennaTalk-Refactoring-Core'
 }
 
 { #category : #operations }
-ViennaParameterizeExpressionInLet >> check [
+ViennaExtractLocalDefinitionFromExpressionInLet >> check [
 	ast ifNil: [ ^ false ].
 	ast isExpressionNode
 		ifFalse: [ ^ false ].
@@ -18,12 +18,12 @@ ViennaParameterizeExpressionInLet >> check [
 ]
 
 { #category : #operations }
-ViennaParameterizeExpressionInLet >> executeCallers [
+ViennaExtractLocalDefinitionFromExpressionInLet >> executeCallers [
 	
 ]
 
 { #category : #operations }
-ViennaParameterizeExpressionInLet >> executeDefinition [
+ViennaExtractLocalDefinitionFromExpressionInLet >> executeDefinition [
 	self newName ifNil: [ ^ nil ].
 	self definitionNode first
 		add:
@@ -39,20 +39,20 @@ ViennaParameterizeExpressionInLet >> executeDefinition [
 ]
 
 { #category : #accessing }
-ViennaParameterizeExpressionInLet >> findDefinitionNode [
+ViennaExtractLocalDefinitionFromExpressionInLet >> findDefinitionNode [
 	^ ast parent
 		parentLabelled: 'LetExpression'
 		ifAbsent: [ ast parent parentLabelled: 'LetStatement' ifAbsent: [ nil ] ]
 ]
 
 { #category : #accessing }
-ViennaParameterizeExpressionInLet >> name [
-	^ 'Parameterize ' asText
+ViennaExtractLocalDefinitionFromExpressionInLet >> name [
+	^ 'Extract local definition ' asText
 		, (self shortDescription: ast source) asText allBold
 		, ' in a LET expression' asText
 ]
 
 { #category : #accessing }
-ViennaParameterizeExpressionInLet >> sortingOrder [
+ViennaExtractLocalDefinitionFromExpressionInLet >> sortingOrder [
 	^ 2.187
 ]
