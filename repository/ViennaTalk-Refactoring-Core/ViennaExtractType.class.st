@@ -58,9 +58,8 @@ ViennaExtractType >> findNewName [
 
 { #category : #accessing }
 ViennaExtractType >> name [
-	^ 'Extract ' asText
+	^ 'Extract type from ' asText
 		, (self shortDescription: ast source) asText allBold
-		, ' as a new type' asText
 ]
 
 { #category : #accessing }

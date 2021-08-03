@@ -19,12 +19,15 @@ ViennaExtractStateVariable >> execute [
 	| moduleBody stateDefinition fieldList initializer |
 	self newName ifNil: [ ^ nil ].
 	moduleBody := ast module third.
-	stateDefinition := moduleBody
+	stateDefinition := (moduleBody
 		detect: [ :definitionBlock | 
 			definitionBlock isViennaNode
 				and: [ definitionBlock first isViennaNode
 						and: [ definitionBlock first label = 'StateDefinition' ] ] ]
-		ifNone: [ nil ].
+		ifNone: [ nil ]) ifNotNil: #first.
+	self
+		replaceNode: ast
+		with: (ViennaNode label: 'LocalName' with: self newName).
 	stateDefinition
 		ifNil: [ stateDefinition := ViennaNode
 				label: 'StateDefinition'
@@ -49,9 +52,6 @@ ViennaExtractStateVariable >> execute [
 												with: (ViennaNode label: 'ExpressionList'))))).
 			moduleBody
 				add: (ViennaNode label: 'DefinitionBlock' with: stateDefinition) ].
-	self
-		replaceNode: ast
-		with: (ViennaNode label: 'LocalName' with: self newName).
 	fieldList := stateDefinition second.
 	fieldList
 		add:
@@ -61,7 +61,13 @@ ViennaExtractStateVariable >> execute [
 				with: false
 				with: (ViennaNode label: 'BasicType' with: 'any')).
 	initializer := stateDefinition fourth first second second second.
-	initializer add: ast
+	initializer add: ast.
+	stateDefinition third
+		ifNotNil: [ :invariant | 
+			invariant first first label = 'RecordPattern'
+				ifTrue: [ invariant first first second
+						add: (ViennaNode label: 'PatternIdentifier' with: nil) ] ].
+	^ stateDefinition
 ]
 
 { #category : #accessing }
@@ -75,9 +81,8 @@ ViennaExtractStateVariable >> findNewName [
 
 { #category : #accessing }
 ViennaExtractStateVariable >> name [
-	^ 'Extract ' asText
+	^ 'Extract state variable from ' asText
 		, (self shortDescription: ast source) asText allBold
-		, ' as a state variable' asText
 ]
 
 { #category : #accessing }

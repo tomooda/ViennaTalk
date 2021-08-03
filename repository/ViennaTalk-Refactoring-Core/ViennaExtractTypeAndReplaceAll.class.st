@@ -43,9 +43,9 @@ ViennaExtractTypeAndReplaceAll >> execute [
 
 { #category : #accessing }
 ViennaExtractTypeAndReplaceAll >> name [
-	^ 'Extract ' asText
+	^ 'Extract type from ' asText
 		, (self shortDescription: ast source) asText allBold
-		, ' as a type definition and Replace all occurrences' asText
+		, ' and Replace all' asText
 ]
 
 { #category : #accessing }
