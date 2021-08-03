@@ -1,21 +1,18 @@
 Class {
-	#name : #ViennaLiftLetExpressionIntoFunction,
-	#superclass : #ViennaRefactoring,
-	#instVars : [
-		'newName'
-	],
+	#name : #ViennaExtractFunctionFromLetExpression,
+	#superclass : #ViennaExtract,
 	#category : #'ViennaTalk-Refactoring-Core'
 }
 
 { #category : #accessing }
-ViennaLiftLetExpressionIntoFunction >> arguments [
+ViennaExtractFunctionFromLetExpression >> arguments [
 	^ ViennaNode
 		label: 'ExpressionList'
 		withAll: (ast first collect: [ :localDef | localDef first third ])
 ]
 
 { #category : #operations }
-ViennaLiftLetExpressionIntoFunction >> check [
+ViennaExtractFunctionFromLetExpression >> check [
 	| params |
 	ast label = 'LetExpression'
 		ifFalse: [ ^ false ].
@@ -39,7 +36,7 @@ ViennaLiftLetExpressionIntoFunction >> check [
 ]
 
 { #category : #operations }
-ViennaLiftLetExpressionIntoFunction >> execute [
+ViennaExtractFunctionFromLetExpression >> execute [
 	| moduleBody functionDefinitions explicitFunctionDefinition accessFunctionDefinition |
 	self newName ifNil: [ ^ self ].
 	moduleBody := ast module third.
@@ -84,7 +81,7 @@ ViennaLiftLetExpressionIntoFunction >> execute [
 ]
 
 { #category : #accessing }
-ViennaLiftLetExpressionIntoFunction >> findNewName [
+ViennaExtractFunctionFromLetExpression >> findNewName [
 	(UIManager default
 		request: 'name of toplevel function for ' , self ast source
 		initialAnswer: '')
@@ -93,12 +90,12 @@ ViennaLiftLetExpressionIntoFunction >> findNewName [
 ]
 
 { #category : #accessing }
-ViennaLiftLetExpressionIntoFunction >> functionBody [
+ViennaExtractFunctionFromLetExpression >> functionBody [
 	^ ast second
 ]
 
 { #category : #accessing }
-ViennaLiftLetExpressionIntoFunction >> functionParametersList [
+ViennaExtractFunctionFromLetExpression >> functionParametersList [
 	^ ViennaNode
 		label: 'ParametersList'
 		with:
@@ -108,7 +105,7 @@ ViennaLiftLetExpressionIntoFunction >> functionParametersList [
 ]
 
 { #category : #accessing }
-ViennaLiftLetExpressionIntoFunction >> functionType [
+ViennaExtractFunctionFromLetExpression >> functionType [
 	^ ViennaNode
 		label: 'PartialFunctionType'
 		with:
@@ -123,22 +120,21 @@ ViennaLiftLetExpressionIntoFunction >> functionType [
 ]
 
 { #category : #accessing }
-ViennaLiftLetExpressionIntoFunction >> name [
-	^ 'Lift ' asText , (self shortDescription: ast source) asText allBold
-		, ' into a function' asText
+ViennaExtractFunctionFromLetExpression >> name [
+	^ 'Extract function from let expression' asText
 ]
 
 { #category : #accessing }
-ViennaLiftLetExpressionIntoFunction >> newName [
+ViennaExtractFunctionFromLetExpression >> newName [
 	^ newName ifNil: [ newName := self findNewName ]
 ]
 
 { #category : #accessing }
-ViennaLiftLetExpressionIntoFunction >> newName: aString [
+ViennaExtractFunctionFromLetExpression >> newName: aString [
 	newName := aString
 ]
 
 { #category : #accessing }
-ViennaLiftLetExpressionIntoFunction >> sortingOrder [
+ViennaExtractFunctionFromLetExpression >> sortingOrder [
 	^ 2.55
 ]

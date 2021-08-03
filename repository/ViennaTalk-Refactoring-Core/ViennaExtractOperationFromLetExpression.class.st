@@ -1,21 +1,18 @@
 Class {
-	#name : #ViennaLiftLetExpressionIntoOperation,
-	#superclass : #ViennaRefactoring,
-	#instVars : [
-		'newName'
-	],
+	#name : #ViennaExtractOperationFromLetExpression,
+	#superclass : #ViennaExtract,
 	#category : #'ViennaTalk-Refactoring-Core'
 }
 
 { #category : #accessing }
-ViennaLiftLetExpressionIntoOperation >> arguments [
+ViennaExtractOperationFromLetExpression >> arguments [
 	^ ViennaNode
 		label: 'ExpressionList'
 		withAll: (ast first collect: [ :localDef | localDef first third ])
 ]
 
 { #category : #operations }
-ViennaLiftLetExpressionIntoOperation >> check [
+ViennaExtractOperationFromLetExpression >> check [
 	| params |
 	ast label = 'LetExpression'
 		ifFalse: [ ^ false ].
@@ -42,7 +39,7 @@ ViennaLiftLetExpressionIntoOperation >> check [
 ]
 
 { #category : #operations }
-ViennaLiftLetExpressionIntoOperation >> execute [
+ViennaExtractOperationFromLetExpression >> execute [
 	| moduleBody operationDefinitions explicitOperationDefinition accessOperationDefinition |
 	self newName ifNil: [ ^ self ].
 	moduleBody := ast module third.
@@ -85,7 +82,7 @@ ViennaLiftLetExpressionIntoOperation >> execute [
 ]
 
 { #category : #accessing }
-ViennaLiftLetExpressionIntoOperation >> findNewName [
+ViennaExtractOperationFromLetExpression >> findNewName [
 	(UIManager default
 		request: 'name of pure operation for ' , self ast source
 		initialAnswer: '')
@@ -94,35 +91,34 @@ ViennaLiftLetExpressionIntoOperation >> findNewName [
 ]
 
 { #category : #accessing }
-ViennaLiftLetExpressionIntoOperation >> name [
-	^ 'Lift ' asText , (self shortDescription: ast source) asText allBold
-		, ' into a pure operation' asText
+ViennaExtractOperationFromLetExpression >> name [
+	^ 'Extract a pure operation from let expression ' asText
 ]
 
 { #category : #accessing }
-ViennaLiftLetExpressionIntoOperation >> newName [
+ViennaExtractOperationFromLetExpression >> newName [
 	^ newName ifNil: [ newName := self findNewName ]
 ]
 
 { #category : #accessing }
-ViennaLiftLetExpressionIntoOperation >> newName: aString [
+ViennaExtractOperationFromLetExpression >> newName: aString [
 	newName := aString
 ]
 
 { #category : #accessing }
-ViennaLiftLetExpressionIntoOperation >> operationBody [
+ViennaExtractOperationFromLetExpression >> operationBody [
 	^ ViennaNode label: 'ReturnStatement' with: ast second
 ]
 
 { #category : #accessing }
-ViennaLiftLetExpressionIntoOperation >> operationParametersList [
+ViennaExtractOperationFromLetExpression >> operationParametersList [
 	^ ViennaNode
 		label: 'Parameters'
 		withAll: (ast first collect: [ :localDef | localDef first first ])
 ]
 
 { #category : #'parsers-types' }
-ViennaLiftLetExpressionIntoOperation >> operationType [
+ViennaExtractOperationFromLetExpression >> operationType [
 	^ ViennaNode
 		label: 'OperationType'
 		with:
@@ -137,6 +133,6 @@ ViennaLiftLetExpressionIntoOperation >> operationType [
 ]
 
 { #category : #accessing }
-ViennaLiftLetExpressionIntoOperation >> sortingOrder [
+ViennaExtractOperationFromLetExpression >> sortingOrder [
 	^ 2.56
 ]
