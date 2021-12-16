@@ -40,9 +40,7 @@ ViennaVDMDebugger class >> defaultTitle [
 { #category : #testing }
 ViennaVDMDebugger class >> handlesContext: aContext [
 
-	"^ aContext specificationContext notNil"
-
-	^ true
+	^ aContext specificationContext notNil
 ]
 
 { #category : #'presenter - specification' }

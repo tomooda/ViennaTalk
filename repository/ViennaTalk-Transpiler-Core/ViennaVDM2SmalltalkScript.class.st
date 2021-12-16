@@ -1,7 +1,7 @@
 Class {
 	#name : #ViennaVDM2SmalltalkScript,
 	#superclass : #ViennaVDM2Smalltalk,
-	#category : 'ViennaTalk-Transpiler-Core'
+	#category : #'ViennaTalk-Transpiler-Core'
 }
 
 { #category : #utilities }
@@ -61,7 +61,7 @@ ViennaVDM2SmalltalkScript >> functionDefinitions: aViennaNode env: aDictionary [
 
 { #category : #'code generation' }
 ViennaVDM2SmalltalkScript >> generate: aViennaNode [
-	^ (super generate: aViennaNode) asString
+	^ (super generate: aViennaNode) asString; yourself
 ]
 
 { #category : #'code generation-definitions' }

@@ -257,7 +257,8 @@ ViennaLauncher >> loadHead [
 { #category : #'interface opening' }
 ViennaLauncher >> openInWorld [
 
-	^ self extent: self extent
+	self extent: self extent.
+	^ super openInWorld
 ]
 
 { #category : #'interface opening' }
