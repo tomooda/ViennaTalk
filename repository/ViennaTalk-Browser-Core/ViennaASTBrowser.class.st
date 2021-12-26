@@ -19,24 +19,21 @@ Class {
 
 { #category : #specs }
 ViennaASTBrowser class >> defaultSpec [
+
 	^ SpBoxLayout newVertical
-		add: #menuBar height: self buttonHeight;
-		add:
-			(SpPanedLayout newVertical
-				position: 0.5;
-				add:
-					(SpBoxLayout newHorizontal
-						add:
-							(SpBoxLayout newVertical
-								add: #historyList height: self buttonHeight;
-								add: #moduleList);
-						add: #categoryList;
-						add: #definitionList);
-				add:
-					(SpPanedLayout newHorizontal
-						position: 0.8;
-						add: #sourceText;
-						add: #testResultTable))
+		  add: #menuBar height: self buttonHeight;
+		  add: (SpPanedLayout newVertical
+				   positionOfSlider: 0.5;
+				   add: (SpBoxLayout newHorizontal
+						    add: (SpBoxLayout newVertical
+								     add: #historyList height: self buttonHeight;
+								     add: #moduleList);
+						    add: #categoryList;
+						    add: #definitionList);
+				   add: (SpPanedLayout newHorizontal
+						    positionOfSlider: 0.8;
+						    add: #sourceText;
+						    add: #testResultTable))
 ]
 
 { #category : #examples }
@@ -870,7 +867,7 @@ ViennaASTBrowser >> initializePresenters [
 		whenSelectionChangedDo: [ self updateSource ].
 	sourceText := self newText
 		contextMenu: [ self sourceTextContextMenu ];
-		acceptBlock: [ :text | self accept: text ];
+		whenSubmitDo: [ :text | self accept: text ];
 		yourself.
 	testResultTable := self newTable
 		addColumn:
