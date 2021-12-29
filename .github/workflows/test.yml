@@ -19,17 +19,13 @@ jobs:
   build:
     strategy:
       matrix:
-        include: # exclude 32bit builds on macOS
-          - os: ubuntu-latest
-            smalltalk: Pharo64-8.0
+        include: # 32bit VM for windows platform because ProcessWrapper provides only 32bit DLL
           - os: ubuntu-latest
             smalltalk: Pharo64-9.0
-          - os: macos-latest
-            smalltalk: Pharo64-8.0
           - os: macos-latest
             smalltalk: Pharo64-9.0
           - os: windows-latest
-            smalltalk: Pharo32-8.0
+            smalltalk: Pharo32-9.0
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.smalltalk }} on ${{ matrix.os }}
     steps:
