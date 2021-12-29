@@ -1,8 +1,35 @@
 Class {
 	#name : #ViennaVDMDebugger,
-	#superclass : #GTGenericStackDebugger,
+	#superclass : #StDebugger,
+	#instVars : [
+		'specification'
+	],
 	#category : #'ViennaTalk-Transpiler-Debugger'
 }
+
+{ #category : #specs }
+ViennaVDMDebugger class >> codeLayout [
+
+	^ SpBoxLayout newTopToBottom
+		  add: #toolbar expand: false;
+		  add: (SpPanedLayout newLeftToRight
+				   positionOfSlider: 60 percent;
+				   add: #code;
+				   add: #specification;
+				   yourself);
+		  yourself
+]
+
+{ #category : #testing }
+ViennaVDMDebugger class >> debugSession: aDebugSession [
+
+	^ super debugSession: aDebugSession asViennaDebugSession
+]
+
+{ #category : #accessing }
+ViennaVDMDebugger class >> defaultDebuggerRank [ 
+	^ 10
+]
 
 { #category : #accessing }
 ViennaVDMDebugger class >> defaultTitle [
@@ -12,103 +39,116 @@ ViennaVDMDebugger class >> defaultTitle [
 
 { #category : #testing }
 ViennaVDMDebugger class >> handlesContext: aContext [
-	"^ aContext specificationContext notNil"
-	^ true
+
+	^ aContext specificationContext notNil
 ]
 
-{ #category : #'class initialization' }
-ViennaVDMDebugger class >> initialize [
-	self register
-]
+{ #category : #'presenter - specification' }
+ViennaVDMDebugger >> acceptSpecificationChanges: newSpecification forContext: aContext [
 
-{ #category : #'tools registry' }
-ViennaVDMDebugger class >> register [
-	self registerToolsOn: Smalltalk tools
-]
+	"do nothing for now"
 
-{ #category : #'tools registry' }
-ViennaVDMDebugger class >> registerToolsOn: registry [
-	"Add ourselves to registry. See [Smalltalk tools]"
-
-	(registry respondsTo: #registerDebugger:withRank:)
-		ifTrue: [ registry registerDebugger: self withRank: 2 ]
-]
-
-{ #category : #accessing }
-ViennaVDMDebugger class >> sessionClass [
-
-	^ ViennaDebugSession
-]
-
-{ #category : #building }
-ViennaVDMDebugger >> debuggerStructureIn: browser [
 	
-	browser
-		row: #stack;
-		row: [ :c | c
-			column: #code; 
-			column: #vdmSource ] span: 2;
-		row: #inspector.
-		
 ]
 
-{ #category : #building }
-ViennaVDMDebugger >> debuggerTransmissionsIn: browser [
+{ #category : #'updating - widgets' }
+ViennaVDMDebugger >> clearSpecification [
 
-	super debuggerTransmissionsIn: browser.
-	browser transmit
-		from: #stack port: #selection;
-		to: #vdmSource;
-		andShow: [ :composite :aContext | self vdmSourceIn: composite forContext: aContext ]
+	self specification
+		clearSelection;
+		clearContent
+]
+
+{ #category : #'accessing - context' }
+ViennaVDMDebugger >> currentSpecification [
+	^ self currentContext specification
+]
+
+{ #category : #'presenter - specification' }
+ViennaVDMDebugger >> discardSpecificationChangesFor: aContext [
+
+	self specification text: aContext specification highlightedSource.
+	self update
+]
+
+{ #category : #initialization }
+ViennaVDMDebugger >> initializePresenters [
+
+	super initializePresenters.
+	self initializeSpecification.
 
 ]
 
-{ #category : #'building actions' }
-ViennaVDMDebugger >> debuggingActionsPragmas [
-	^ super debuggingActionsPragmas , #(#vdmDebuggingAction)
+{ #category : #initialization }
+ViennaVDMDebugger >> initializeSpecification [
+
+	specification := self newText.
+	specification whenSubmitDo: [ :text | 
+		self acceptSpecificationChanges: text string forContext: self selectedContext ].
+	specification whenResetDo: [ self discardSpecificationChangesFor: self selectedContext ]
 ]
 
-{ #category : #'building actions' }
-ViennaVDMDebugger >> installVDMSourceActionsFor: aPresentation [
-	self installActionsForRootPragmas: self vdmSourceActionsPragmas in: aPresentation
+{ #category : #initialization }
+ViennaVDMDebugger >> initializeStack [
+
+	super initializeStack.
+	stackTable transmitDo: [ :context | 
+		stackTable selection isEmpty ifFalse: [ 
+			self updateSpecificationFromContext: context ] ]
 ]
 
-{ #category : #'building actions' }
-ViennaVDMDebugger >> stackDebuggingActionsPragmas [
-	^ super stackDebuggingActionsPragmas , #(#vdmStackDebuggingAction)
+{ #category : #'accessing - context' }
+ViennaVDMDebugger >> newTitle [
+
+	^ '[Vienna]', super newTitle
 ]
 
-{ #category : #'building actions' }
-ViennaVDMDebugger >> vdmSourceActionsPragmas [
+{ #category : #'accessing - context' }
+ViennaVDMDebugger >> selectedSpecification [
 
-	^ #( vdmSourceDebuggingAction )
+	^ self selectedContext ifNotNil: #specification
 ]
 
-{ #category : #'building presentations' }
-ViennaVDMDebugger >> vdmSourceIn: composite forContext: aContext [
-	(self vdmSourceWidgetIn: composite forContext: aContext)
-		initialize: [ :code | 
-			code
-				selectionInterval: (self session selectedVDMRangeForContext: self currentContext) ];
-		with: [ :code | self installVDMSourceActionsFor: code ]
+{ #category : #'accessing - widgets' }
+ViennaVDMDebugger >> specification [
+
+	^ specification
 ]
 
-{ #category : #accessing }
-ViennaVDMDebugger >> vdmSourcePane [
+{ #category : #'presenter - specification' }
+ViennaVDMDebugger >> updateSpecificationFor: aContext [
 
-	^ self browser paneNamed: #vdmSource
+	self specification text: (aContext specification
+			 ifNil: [ Text new ]
+			 ifNotNil: [ :spec | spec highlightedSource ])
 ]
 
-{ #category : #accessing }
-ViennaVDMDebugger >> vdmSourcePresentation [
-	
-	^ self vdmSourcePane presentations first
+{ #category : #'presenter - specification' }
+ViennaVDMDebugger >> updateSpecificationFromContext: aContext [
+
+	| selectionInterval |
+	aContext ifNil: [ ^ self clearSpecification ].
+
+	selectionInterval := self session selectedVDMRangeForContext:
+		                     aContext.
+	self updateSpecificationFor: aContext.
+	self specification
+		selectionInterval:
+			(selectionInterval last to: selectionInterval last - 1).
+	self
+		updateSpecificationTextSegmentDecoratorsIn: aContext
+		forInterval: selectionInterval
 ]
 
-{ #category : #'building presentations' }
-ViennaVDMDebugger >> vdmSourceWidgetIn: composite forContext: aContext [
+{ #category : #'updating - widgets' }
+ViennaVDMDebugger >> updateSpecificationTextSegmentDecoratorsIn: aContext forInterval: selectionInterval [
 
-	^ composite vdmSource
-		title: 'VDM';
-		format: [ aContext specification ifNotNil: #debuggerSource ifNil: [ Text new ] ]
+	self specification
+		removeAllTextSegmentDecorations;
+		addTextSegmentDecoration: (SpTextPresenterDecorator new
+				 highlightColor: (Color orange alpha: 0.5);
+				 underlineColor: (Color white alpha: 0);
+				 interval:
+					 (selectionInterval first to: selectionInterval last + 1);
+				 yourself)
 ]

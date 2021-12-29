@@ -10,18 +10,6 @@ ViennaStepOverDebugAction class >> actionType [
 	<vdmContextMenuDebuggingAction>
 ]
 
-{ #category : #glamour }
-ViennaStepOverDebugAction class >> gtGlobalDebuggingActionFor: aDebugger [
-	<gtVdmDebuggingAction>
-	^ (self forDebugger: aDebugger) label: nil
-]
-
-{ #category : #glamour }
-ViennaStepOverDebugAction class >> gtStackDebuggingActionFor: aDebugger [
-	<gtVdmStackDebuggingAction>
-	^ (self forDebugger: aDebugger) icon: GLMUIThemeExtraIcons glamorousOver
-]
-
 { #category : #accessing }
 ViennaStepOverDebugAction >> defaultKeyText [
 
