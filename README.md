@@ -28,21 +28,29 @@ ViennaTalk is distributed under [the MIT license](https://github.com/tomooda/Vie
 
 Install
 ---
-You may either download a pre-built package from [Release page](https://github.com/tomooda/ViennaTalk-doc/releases) or install from source code repository into [Pharo](http://pharo.org/).
+You may either download a pre-built package from [Release page](https://github.com/tomooda/ViennaTalk-doc/releases), install viennatalk+pharo from command shell, or install from source code repository into [Pharo](http://pharo.org/).
 
 Source Repository
 ---
 The source code repository is available at https://github.com/tomooda/ViennaTalk.
-If you like to install from source code, please use Iceberg to clone https://github.com/tomooda/ViennaTalk.git with <tt>repository</tt> subdirectory, and load <tt>BaselineOfViennaTalk</tt> and install its baseline.
-Or, you may at once install it by evaluating 
+
+On macOS or Linux, you may download Pharo and installl ViennaTalk using the following command on a shell
+
+```
+curl https://github.com/tomooda/ViennaTalk/blob/main/scripts/install-viennatalk.sh | bash
+```
+
+
+If you like to install ViennaTalk on an existing Pharo installation, please use Iceberg to clone https://github.com/tomooda/ViennaTalk.git with <tt>repository</tt> subdirectory, and load <tt>BaselineOfViennaTalk</tt> and install its baseline.
+Or, you may programmatically install it by evaluating 
 
 ```
 Metacello new
 	baseline: 'ViennaTalk';
-	repository: 'github://tomooda/ViennaTalk/repository';
+	repository: 'github://tomooda/ViennaTalk:main/repository';
 	load.
 ```
 
 Acknowledgement
 ---
-Part of the ViennaTalk project is supported by Grant-in-Aid for Scientific Research (S) 24220001 from the Japan Society for the Promotion of Science.
+Part of the ViennaTalk project is supported by Grant-in-Aid for Scientific Research (S) 24220001, Grant-in-Aid for Scientific Research (C) 26330099, and Grant-in-Aid for Early-Career Scientists 18K18033 from the Japan Society for the Promotion of Science.
