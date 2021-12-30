@@ -37,7 +37,7 @@ The source code repository is available at https://github.com/tomooda/ViennaTalk
 On macOS or Linux, you may download Pharo and installl ViennaTalk using the following command on a shell
 
 ```
-curl https://github.com/tomooda/ViennaTalk/blob/main/scripts/install-viennatalk.sh | bash
+curl https://raw.githubusercontent.com/tomooda/ViennaTalk/main/scripts/install-viennatalk.sh | bash
 ```
 
 
