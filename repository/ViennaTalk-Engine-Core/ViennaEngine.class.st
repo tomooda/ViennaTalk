@@ -9,7 +9,10 @@ Class {
 
 { #category : #settings }
 ViennaEngine class >> alwaysUsesViennaServerAsDefault [
-	^ AlwaysUsesViennaServerAsDefault ifNil: [ AlwaysUsesViennaServerAsDefault := false ]
+
+	^ ViennaVDMJ isSupportedEnvironment not or: [ 
+		  AlwaysUsesViennaServerAsDefault ifNil: [ 
+			  AlwaysUsesViennaServerAsDefault := false ] ]
 ]
 
 { #category : #settings }

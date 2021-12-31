@@ -144,45 +144,50 @@ ViennaVDMJ class >> initialize [
 
 { #category : #'class initialization' }
 ViennaVDMJ class >> install [
-	self vdmjPath exists
-		ifFalse: [ self
-				installVDMJ;
-				installJson4VDMJ ].
-	self json4vdmjPath exists
-		ifFalse: [ self installJson4VDMJ ].
-	self jsonicPath exists
-		ifFalse: [ self installJsonic ]
+
+	self isSupportedEnvironment ifFalse: [ ^ self ].
+	self vdmjPath exists ifFalse: [ 
+		self
+			installVDMJ;
+			installJson4VDMJ ].
+	self json4vdmjPath exists ifFalse: [ self installJson4VDMJ ].
+	self jsonicPath exists ifFalse: [ self installJsonic ]
 ]
 
 { #category : #'class initialization' }
 ViennaVDMJ class >> installJson4VDMJ [
+
 	"ViennaVDMJ installJson4VDMJ"
 
-	(self proceed: 'Do you want to download Json4VDMJ?' title: 'Installing Json4VDMJ')
-		ifTrue: [ 
-			(self proceed: self aboutJson4VDMJ title: 'Json4VDMJ Copyright Notice')
-				ifTrue: [ 
-					| http |
-					http := ZnClient new.
-					http
-						beOneShot;
-						https;
-						followRedirects: true;
-						get: self json4vdmjUrl.
-					http response code = 200
-						ifFalse: [ 
-							UIManager default
-								abort: 'Failed to download Json4VDMJ. Please download from http://vdmpad.viennatalk.org/Json4VDMJ.jar .'.
-							^ nil ].
-					self json4vdmjPath binaryWriteStream
-						nextPutAll: http entity bytes;
-						close ] ]
+	self isSupportedEnvironment ifFalse: [ ^ self ].
+	(self
+		 proceed: 'Do you want to download Json4VDMJ?'
+		 title: 'Installing Json4VDMJ') ifTrue: [ 
+		(self
+			 proceed: self aboutJson4VDMJ
+			 title: 'Json4VDMJ Copyright Notice') ifTrue: [ 
+			| http |
+			http := ZnClient new.
+			http
+				beOneShot;
+				https;
+				followRedirects: true;
+				get: self json4vdmjUrl.
+			http response code = 200 ifFalse: [ 
+				UIManager default abort:
+					'Failed to download Json4VDMJ. Please download from http://vdmpad.viennatalk.org/Json4VDMJ.jar .'.
+				^ nil ].
+			self json4vdmjPath binaryWriteStream
+				nextPutAll: http entity bytes;
+				close ] ]
 ]
 
 { #category : #'class initialization' }
 ViennaVDMJ class >> installJsonic [
+
 	"ViennaVDMJ installJsonic"
 
+	self isSupportedEnvironment ifFalse: [ ^ self ].
 	self jsonicPath binaryWriteStream
 		nextPutAll: self jsonicJar;
 		close
@@ -190,33 +195,40 @@ ViennaVDMJ class >> installJsonic [
 
 { #category : #'class initialization' }
 ViennaVDMJ class >> installVDMJ [
+
 	"ViennaVDMJ installVDMJ"
 
-	(self proceed: 'Do you want to download VDMJ?' title: 'Installing VDMJ')
-		ifTrue: [ 
-			(self proceed: self aboutVDMJ title: 'VDMJ Copyright Notice')
-				ifTrue: [ 
-					| http |
-					http := ZnClient new.
-					http
-						beOneShot;
-						https;
-						followRedirects: true;
-						get: self vdmjUrl.
-					http response code = 200
-						ifFalse: [ 
-							UIManager default
-								abort:
-									'Failed to download VDMJ. Please download from https://github.com/nickbattle/vdmj/releases and place it at $PHARO/Contents/Resources/ .'.
-							^ nil ].
-					self vdmjPath binaryWriteStream
-						nextPutAll: http entity bytes;
-						close ] ]
+	self isSupportedEnvironment ifFalse: [ ^ self ].
+	(self
+		 proceed: 'Do you want to download VDMJ?'
+		 title: 'Installing VDMJ') ifTrue: [ 
+		(self proceed: self aboutVDMJ title: 'VDMJ Copyright Notice') 
+			ifTrue: [ 
+				| http |
+				http := ZnClient new.
+				http
+					beOneShot;
+					https;
+					followRedirects: true;
+					get: self vdmjUrl.
+				http response code = 200 ifFalse: [ 
+					UIManager default abort:
+						'Failed to download VDMJ. Please download from https://github.com/nickbattle/vdmj/releases and place it at $PHARO/Contents/Resources/ .'.
+					^ nil ].
+				self vdmjPath binaryWriteStream
+					nextPutAll: http entity bytes;
+					close ] ]
 ]
 
 { #category : #testing }
 ViennaVDMJ class >> isInstalled [
 	^ self vdmjPath exists and: [ self json4vdmjPath exists and: [ self jsonicPath exists ] ]
+]
+
+{ #category : #testing }
+ViennaVDMJ class >> isSupportedEnvironment [
+
+	^ Smalltalk os isWin64 not
 ]
 
 { #category : #accessing }
@@ -404,11 +416,12 @@ ViennaVDMJ >> enableRuntimeCheckingIfError: errorBlock [
 
 { #category : #private }
 ViennaVDMJ >> ensureStartupProcess [
-	(reader isNil
-			or: [reader closed
-					or: [process isNil
-							or: [process isRunning not]]])
-		ifTrue: [self startupProcess]
+
+	self isSupportedEnvironment ifFalse: [ 
+		^ self error: 'Unsupported platform' ].
+	(reader isNil or: [ 
+		 reader closed or: [ process isNil or: [ process isRunning not ] ] ]) 
+		ifTrue: [ self startupProcess ]
 ]
 
 { #category : #evaluating }
@@ -576,6 +589,12 @@ ViennaVDMJ >> initialize [
 	lock := Semaphore forMutualExclusion
 ]
 
+{ #category : #private }
+ViennaVDMJ >> isSupportedEnvironment [
+
+	^ self class isSupportedEnvironment
+]
+
 { #category : #accessing }
 ViennaVDMJ >> javaPath [
 	^ self class javaPath
@@ -696,20 +715,20 @@ ViennaVDMJ >> statesDo: aBlock ifError: errorBlock [
 
 { #category : #private }
 ViennaVDMJ >> temporaryFileDo: aBlock [
+
 	| random file stream |
 	random := self random.
-	self
-		globalLock: [ 
-			[ 
-			file := FileSystem workingDirectory / 'VDMPad-spec-'
-				, (String withAll: ((1 to: 8) collect: [ :i | '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ' at: (random nextInt: 36) ]))
-				, '.vdm'.
-			file exists ] whileTrue.
-			stream := file writeStream.
-			[ aBlock value: file fullName value: stream ]
-				ensure: [ 
-					stream close.
-					file deleteIfAbsent: [  ] ] ]
+	self globalLock: [ 
+		[ 
+		file := FileSystem workingDirectory / 'VDMPad-spec-'
+		        , (String withAll: ((1 to: 8) collect: [ :i | 
+					          '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ' at:
+						          (random nextInteger: 36) ])) , '.vdm'.
+		file exists ] whileTrue.
+		stream := file writeStream.
+		[ aBlock value: file fullName value: stream ] ensure: [ 
+			stream close.
+			file deleteIfAbsent: [  ] ] ]
 ]
 
 { #category : #registry }

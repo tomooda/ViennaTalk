@@ -1196,6 +1196,10 @@ ViennaNode >> name [
 		ifTrue: [ ^ self first first first ].
 	(#('ValueImport' 'FunctionImport' 'OperationImport') includes: label)
 		ifTrue: [ ^ self first first ].
+	label = 'TypeDefinitions' ifTrue: [ ^ 'types' ].
+	label = 'ValueDefinitions' ifTrue: [ ^ 'values' ].
+	label = 'FunctionDefinitions' ifTrue: [ ^ 'functions' ].
+	label = 'OperationDefinitions' ifTrue: [ ^ 'operations' ].
 	^ nil
 ]
 

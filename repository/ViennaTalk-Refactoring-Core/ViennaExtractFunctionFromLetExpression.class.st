@@ -121,7 +121,10 @@ ViennaExtractFunctionFromLetExpression >> functionType [
 
 { #category : #accessing }
 ViennaExtractFunctionFromLetExpression >> name [
-	^ 'Extract function from let expression' asText
+
+	^ 'Extract function '
+	  , (newName ifNil: [ '' ] ifNotNil: [ newName , ' ' ])
+	  , 'from let expression' asText
 ]
 
 { #category : #accessing }

@@ -1,5 +1,5 @@
 Class {
-	#name : #ViennaASTBrowser,
+	#name : #ViennaRefactoringBrowser,
 	#superclass : #SpPresenterWithModel,
 	#instVars : [
 		'menuBar',
@@ -17,8 +17,19 @@ Class {
 	#category : #'ViennaTalk-Browser-Core'
 }
 
+{ #category : #menus }
+ViennaRefactoringBrowser class >> VDMBrowserMenuOn: aBuilder [
+	<worldMenu>
+	(aBuilder item: #'VDM Refactoring Browser')
+		action: [ self empty openWithSpec ];
+		order: 0.12;
+		parent: #ViennaTalk;
+		help: 'AST-based VDM-SL browser with refactoring support';
+		icon: nil
+]
+
 { #category : #specs }
-ViennaASTBrowser class >> defaultSpec [
+ViennaRefactoringBrowser class >> defaultSpec [
 
 	^ SpBoxLayout newVertical
 		  add: #menuBar height: self buttonHeight;
@@ -36,9 +47,16 @@ ViennaASTBrowser class >> defaultSpec [
 						    add: #testResultTable))
 ]
 
+{ #category : #'instance creation' }
+ViennaRefactoringBrowser class >> empty [
+
+	<script: 'ViennaRefactoringBrowser empty openWithSpec'>
+	^ self on: (ViennaNode label: 'Document')
+]
+
 { #category : #examples }
-ViennaASTBrowser class >> exampleATC [
-	(ViennaASTBrowser
+ViennaRefactoringBrowser class >> exampleATC [
+	(ViennaRefactoringBrowser
 		on:
 			(ViennaVDMParser new
 				parse:
@@ -327,8 +345,8 @@ end ATC')) openWithSpec
 ]
 
 { #category : #examples }
-ViennaASTBrowser class >> exampleCounter [
-	(ViennaASTBrowser
+ViennaRefactoringBrowser class >> exampleCounter [
+	(ViennaRefactoringBrowser
 		on:
 			(ViennaVDMParser new
 				parse:
@@ -375,11 +393,16 @@ operations
     
     display : () ==> Display
     display() == return show(count);
-end Counter')) openWithSpec
+end Counter
+module CounterTest
+exports all
+definitions
+end CounterTest
+')) openWithSpec
 ]
 
 { #category : #accessing }
-ViennaASTBrowser class >> sectionNames [
+ViennaRefactoringBrowser class >> sectionNames [
 	^ SectionNames
 		ifNil: [ SectionNames := Dictionary new
 				at: 'Module' put: '- all -';
@@ -397,7 +420,7 @@ ViennaASTBrowser class >> sectionNames [
 ]
 
 { #category : #menus }
-ViennaASTBrowser class >> viennaDevMenuOn: aBuilder [
+ViennaRefactoringBrowser class >> viennaDevMenuOn: aBuilder [
 	<ViennaDev>
 	(aBuilder item: #'Refactoring example (ATC)')
 		action: [ self exampleATC  ];
@@ -406,8 +429,19 @@ ViennaASTBrowser class >> viennaDevMenuOn: aBuilder [
 		icon: nil
 ]
 
+{ #category : #menus }
+ViennaRefactoringBrowser class >> viennaToolsMenuOn: aBuilder [
+
+	<ViennaToolsMenu>
+	(aBuilder item: #'VDM Refactoring Browser')
+		action: [ self empty openWithSpec ];
+		order: 0.12;
+		help: 'AST-based VDM-SL browser with refactoring support';
+		icon: nil
+]
+
 { #category : #operations }
-ViennaASTBrowser >> accept: aStringOrText [
+ViennaRefactoringBrowser >> accept: aStringOrText [
 	| newNode newAst copyMap parent oldNode |
 	newNode := self parser
 		parse: aStringOrText asString
@@ -430,7 +464,7 @@ ViennaASTBrowser >> accept: aStringOrText [
 ]
 
 { #category : #operations }
-ViennaASTBrowser >> addExplicitFunction [
+ViennaRefactoringBrowser >> addExplicitFunction [
 	(UIManager default request: 'a new function name')
 		ifNotNil: [ :functionName | 
 			| ast |
@@ -447,7 +481,7 @@ ViennaASTBrowser >> addExplicitFunction [
 ]
 
 { #category : #operations }
-ViennaASTBrowser >> addExplicitOperation [
+ViennaRefactoringBrowser >> addExplicitOperation [
 	(UIManager default request: 'a new operation name')
 		ifNotNil: [ :operationName | 
 			| ast |
@@ -464,7 +498,7 @@ ViennaASTBrowser >> addExplicitOperation [
 ]
 
 { #category : #operations }
-ViennaASTBrowser >> addImplicitFunction [
+ViennaRefactoringBrowser >> addImplicitFunction [
 	(UIManager default request: 'a new function name')
 		ifNotNil: [ :functionName | 
 			| ast |
@@ -480,7 +514,7 @@ ViennaASTBrowser >> addImplicitFunction [
 ]
 
 { #category : #operations }
-ViennaASTBrowser >> addImplicitOperation [
+ViennaRefactoringBrowser >> addImplicitOperation [
 	(UIManager default request: 'a new operation name')
 		ifNotNil: [ :operationName | 
 			| ast |
@@ -496,7 +530,21 @@ ViennaASTBrowser >> addImplicitOperation [
 ]
 
 { #category : #operations }
-ViennaASTBrowser >> addRecordType [
+ViennaRefactoringBrowser >> addModule [
+
+	(UIManager default request: 'New module name' initialAnswer: '') 
+		ifNotNil: [ :string | 
+			string trim ifNotEmpty: [ :moduleName | 
+				| module |
+				module := ViennaVDMParser new module end parse:
+					          'module ' , moduleName
+					          , ' exports all definitions end ' , moduleName.
+				module isPetit2Failure ifFalse: [ 
+					self append: module to: self specification ] ] ]
+]
+
+{ #category : #operations }
+ViennaRefactoringBrowser >> addRecordType [
 	(UIManager default request: 'a new record name')
 		ifNotNil: [ :typeName | 
 			| ast |
@@ -512,7 +560,7 @@ ViennaASTBrowser >> addRecordType [
 ]
 
 { #category : #operations }
-ViennaASTBrowser >> addTypeAlias [
+ViennaRefactoringBrowser >> addTypeAlias [
 	(UIManager default request: 'a new type name')
 		ifNotNil: [ :typeName | 
 			| ast |
@@ -528,7 +576,7 @@ ViennaASTBrowser >> addTypeAlias [
 ]
 
 { #category : #operations }
-ViennaASTBrowser >> addValue [
+ViennaRefactoringBrowser >> addValue [
 	(UIManager default request: 'a new value name')
 		ifNotNil: [ :valueName | 
 			| ast |
@@ -544,7 +592,7 @@ ViennaASTBrowser >> addValue [
 ]
 
 { #category : #operations }
-ViennaASTBrowser >> append: aViennaNode to: parentNode [
+ViennaRefactoringBrowser >> append: aViennaNode to: parentNode [
 	| copyMap newAst |
 	copyMap := IdentityDictionary new.
 	newAst := parentNode root copyWhole: copyMap.
@@ -554,17 +602,46 @@ ViennaASTBrowser >> append: aViennaNode to: parentNode [
 ]
 
 { #category : #accessing }
-ViennaASTBrowser >> category [
+ViennaRefactoringBrowser >> category [
 	^ categoryList selection selectedItem
 ]
 
+{ #category : #menus }
+ViennaRefactoringBrowser >> categoryListContextMenu [
+
+	| menu |
+	menu := self newMenu.
+	self category
+		ifNotNil: [ :category | 
+			menu addGroup: [ :group | 
+				(ViennaRefactoring sortedInstancesOn: category) do: [ :refactoring | 
+					group addItem: [ :item | 
+						item
+							name: refactoring name;
+							action: [ self executeRefactoring: refactoring ] ] ] ] ]
+		ifNil: [ 
+			menu addGroup: [ :group | 
+				(ViennaRefactoring sortedInstancesOn: self specification) do: [ 
+					:refactoring | 
+					group addItem: [ :item | 
+						item
+							name: refactoring name;
+							action: [ self executeRefactoring: refactoring ] ] ] ] ].
+	menu addGroup: [ :group | 
+		menu addItem: [ :item | 
+			item
+				name: 'inspect';
+				action: [ self category inspect ] ] ].
+	^ menu
+]
+
 { #category : #accessing }
-ViennaASTBrowser >> definition [
+ViennaRefactoringBrowser >> definition [
 	^ definitionList selection selectedItem
 ]
 
 { #category : #accessing }
-ViennaASTBrowser >> definitionBase [
+ViennaRefactoringBrowser >> definitionBase [
 	| node |
 	node := self definition.
 	node ifNil: [ ^ nil ].
@@ -578,7 +655,7 @@ ViennaASTBrowser >> definitionBase [
 ]
 
 { #category : #menus }
-ViennaASTBrowser >> definitionListContextMenu [
+ViennaRefactoringBrowser >> definitionListContextMenu [
 	| menu |
 	menu := self newMenu.
 	self category label = 'TypeDefinitions'
@@ -601,30 +678,6 @@ ViennaASTBrowser >> definitionListContextMenu [
 							item
 								name: 'New value';
 								action: [ self addValue ] ] ] ].
-	self category label = 'FunctionDefinitions'
-		ifTrue: [ menu
-				addGroup: [ :group | 
-					group
-						addItem: [ :item | 
-							item
-								name: 'New explicit function';
-								action: [ self addExplicitFunction ] ];
-						addItem: [ :item | 
-							item
-								name: 'New implicit function';
-								action: [ self addImplicitFunction ] ] ] ].
-	self category label = 'OperationDefinitions'
-		ifTrue: [ menu
-				addGroup: [ :group | 
-					group
-						addItem: [ :item | 
-							item
-								name: 'New explicit operation';
-								action: [ self addExplicitOperation ] ];
-						addItem: [ :item | 
-							item
-								name: 'New implicit operation';
-								action: [ self addImplicitOperation ] ] ] ].
 	self definitionBase
 		ifNotNil: [ :definition | 
 			menu
@@ -647,7 +700,7 @@ ViennaASTBrowser >> definitionListContextMenu [
 ]
 
 { #category : #private }
-ViennaASTBrowser >> definitionsFromCategory: aViennaNode [
+ViennaRefactoringBrowser >> definitionsFromCategory: aViennaNode [
 	aViennaNode isViennaNode
 		ifTrue: [ aViennaNode label = 'Module'
 				ifTrue: [ ^ ((self module
@@ -670,7 +723,7 @@ ViennaASTBrowser >> definitionsFromCategory: aViennaNode [
 ]
 
 { #category : #private }
-ViennaASTBrowser >> displayCategory: aViennaNode [
+ViennaRefactoringBrowser >> displayCategory: aViennaNode [
 	aViennaNode ifNil: [ ^ '-' ].
 	(#('ImportTypesSignature' 'ImportValuesSignature' 'ImportFunctionsSignature' 'ImportOperationsSignature')
 		includes: aViennaNode label)
@@ -686,7 +739,7 @@ ViennaASTBrowser >> displayCategory: aViennaNode [
 ]
 
 { #category : #private }
-ViennaASTBrowser >> displayDefinition: aViennaNode [
+ViennaRefactoringBrowser >> displayDefinition: aViennaNode [
 	aViennaNode
 		allDescendantsDo: [ :node | 
 			(#('Module' 'TypeDefinitions' 'ValueDefinitions' 'FunctionDefinitions' 'OperationDefinitions')
@@ -724,7 +777,7 @@ ViennaASTBrowser >> displayDefinition: aViennaNode [
 ]
 
 { #category : #operations }
-ViennaASTBrowser >> executeRefactoring: aViennaRefactoring [
+ViennaRefactoringBrowser >> executeRefactoring: aViennaRefactoring [
 	| newAst copyMap refactoring |
 	copyMap := IdentityDictionary new.
 	newAst := self specification copyWhole: copyMap.
@@ -737,7 +790,7 @@ ViennaASTBrowser >> executeRefactoring: aViennaRefactoring [
 ]
 
 { #category : #operations }
-ViennaASTBrowser >> exportDirectory [
+ViennaRefactoringBrowser >> exportDirectory [
 	(UIManager default
 		chooseDirectory: 'Export directory'
 		from: FileLocator home)
@@ -757,7 +810,7 @@ ViennaASTBrowser >> exportDirectory [
 ]
 
 { #category : #operations }
-ViennaASTBrowser >> exportFile [
+ViennaRefactoringBrowser >> exportFile [
 	(UIManager default
 		chooseForSaveFileReference: 'Export file'
 		extensions: #('vdmsl')
@@ -772,13 +825,13 @@ ViennaASTBrowser >> exportFile [
 ]
 
 { #category : #private }
-ViennaASTBrowser >> getSource: aViennaNode [
+ViennaRefactoringBrowser >> getSource: aViennaNode [
 	aViennaNode ifNil: [ ^ String ].
 	^ aViennaNode tracingHighlightedSource
 ]
 
 { #category : #operations }
-ViennaASTBrowser >> importDirectory [
+ViennaRefactoringBrowser >> importDirectory [
 	| modelFiles testFiles source |
 	(UIManager default
 		chooseDirectory: 'Import directory'
@@ -811,7 +864,7 @@ ViennaASTBrowser >> importDirectory [
 ]
 
 { #category : #operations }
-ViennaASTBrowser >> importFile [
+ViennaRefactoringBrowser >> importFile [
 	(UIManager default
 		chooseExistingFileReference: 'Import directory'
 		extensions: #('vdmsl')
@@ -820,90 +873,93 @@ ViennaASTBrowser >> importFile [
 ]
 
 { #category : #initialization }
-ViennaASTBrowser >> initializePresenters [
+ViennaRefactoringBrowser >> initializePresenters [
+
 	super initializePresenters.
 	menuBar := self menuBar.
 	historyList := self newDropList
-		items:
-			{{DateAndTime now.
-			'initial'.
-			self model}};
-		display: [ :triple | 
-			| time |
-			time := DateAndTime now - triple first.
-			triple second
-				,
-					(time < 1 second
-						ifTrue: [ '' ]
-						ifFalse: [ '(' , (time roundTo: 1 second) humanReadablePrintString , ')' ]) ];
-		whenSelectionChangedDo: [ historyList selectedItem
-				ifNotNil: [ :assoc | 
-					assoc = historyList listItems last
-						ifFalse: [ self model: assoc third.
-							historyList
-								items:
-									historyList listItems
-										,
-											{{DateAndTime now.
-											'version'.
-											self model}};
-								selectItem: historyList listItems last ] ] ];
-		yourself.
+		               items: { { 
+				               DateAndTime now.
+				               'initial'.
+				               self model } };
+		               display: [ :triple | 
+			               | time |
+			               time := DateAndTime now - triple first.
+			               triple second , (time < 1 second
+					                ifTrue: [ '' ]
+					                ifFalse: [ 
+						                '('
+						                ,
+							                (time roundTo: 1 second)
+								                humanReadablePrintString , ')' ]) ];
+		               whenSelectionChangedDo: [ 
+			               historyList selectedItem ifNotNil: [ :assoc | 
+					               assoc = historyList listItems last ifFalse: [ 
+							               self model: assoc third.
+							               historyList
+								               items: historyList listItems , { { 
+											               DateAndTime now.
+											               'version'.
+											               self model } };
+								               selectItem: historyList listItems last ] ] ];
+		               yourself.
 	moduleList := self newList
-		beSingleSelection;
-		display: [ :ast | ast first ];
-		whenSelectionChangedDo: [ self updateCategoryList ];
-		yourself.
+		              beSingleSelection;
+		              contextMenu: [ self moduleListContextMenu ];
+		              display: [ :ast | ast ifNil: [ '-' ] ifNotNil: #first ];
+		              whenSelectionChangedDo: [ self updateCategoryList ];
+		              yourself.
 	categoryList := self newList
-		beSingleSelection;
-		display: [ :ast | self displayCategory: ast ];
-		whenSelectionChangedDo: [ self updateDefinitionList ];
-		yourself.
+		                beSingleSelection;
+		                contextMenu: [ self categoryListContextMenu ];
+		                display: [ :ast | self displayCategory: ast ];
+		                whenSelectionChangedDo: [ self updateDefinitionList ];
+		                yourself.
 	definitionList := self newList
-		beSingleSelection;
-		contextMenu: [ self definitionListContextMenu ];
-		display:
-				[ :ast | ast ifNotNil: [ self displayDefinition: ast ] ifNil: [ '-' ] ];
-		whenSelectionChangedDo: [ self updateSource ].
+		                  beSingleSelection;
+		                  contextMenu: [ self definitionListContextMenu ];
+		                  display: [ :ast | 
+			                  ast
+				                  ifNotNil: [ self displayDefinition: ast ]
+				                  ifNil: [ '-' ] ];
+		                  whenSelectionChangedDo: [ self updateSource ].
 	sourceText := self newText
-		contextMenu: [ self sourceTextContextMenu ];
-		whenSubmitDo: [ :text | self accept: text ];
-		yourself.
+		              contextMenu: [ self sourceTextContextMenu ];
+		              whenSubmitDo: [ :text | self accept: text ];
+		              yourself.
 	testResultTable := self newTable
-		addColumn:
-			((SpImageTableColumn evaluated: #icon)
-				title: '';
-				width: ViennaTestResultItem iconExtent x;
-				sortFunction: #sortingOrder ascending);
-		addColumn:
-			((SpStringTableColumn evaluated: #module)
-				title: 'module';
-				sortFunction: #module ascending);
-		addColumn:
-			((SpStringTableColumn evaluated: #operation)
-				title: 'operation';
-				sortFunction: #operation ascending);
-		addColumn:
-			((SpStringTableColumn evaluated: #message)
-				title: 'message';
-				sortFunction: #message ascending);
-		showColumnHeaders;
-		beResizable;
-		sortingBlock: [ :upper :lower | upper sortingOrder <= lower sortingOrder ];
-		contextMenu: [ self testResultTableContextMenu ];
-		yourself.
-	self
-		whenBuiltDo: [ :w | 
-			| f |
-			f := ViennaLauncher font.
-			w widget
-				allMorphsDo: [ :m | 
-					(m respondsTo: #font:)
-						ifTrue: [ m font: f ] ] ]
+		                   addColumn:
+			                   ((SpImageTableColumn evaluated: #icon)
+				                    title: '';
+				                    width: ViennaTestResultItem iconExtent x;
+				                    sortFunction: #sortingOrder ascending);
+		                   addColumn:
+			                   ((SpStringTableColumn evaluated: #module)
+				                    title: 'module';
+				                    sortFunction: #module ascending);
+		                   addColumn:
+			                   ((SpStringTableColumn evaluated: #operation)
+				                    title: 'operation';
+				                    sortFunction: #operation ascending);
+		                   addColumn:
+			                   ((SpStringTableColumn evaluated: #message)
+				                    title: 'message';
+				                    sortFunction: #message ascending);
+		                   showColumnHeaders;
+		                   beResizable;
+		                   sortingBlock: [ :upper :lower | 
+		                   upper sortingOrder <= lower sortingOrder ];
+		                   contextMenu: [ self testResultTableContextMenu ];
+		                   yourself.
+	self whenBuiltDo: [ :w | 
+		| f |
+		f := ViennaLauncher font.
+		w widget allMorphsDo: [ :m | 
+			(m respondsTo: #font:) ifTrue: [ m font: f ] ] ]
 ]
 
 { #category : #initialization }
-ViennaASTBrowser >> initializeWindow: aWindowPresenter [
+ViennaRefactoringBrowser >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter
 		title: 'Browser';
@@ -911,7 +967,7 @@ ViennaASTBrowser >> initializeWindow: aWindowPresenter [
 ]
 
 { #category : #operations }
-ViennaASTBrowser >> jumpToModule: aString operation: anotherString [
+ViennaRefactoringBrowser >> jumpToModule: aString operation: anotherString [
 	| moduleNode |
 	moduleNode := (self specification moduleNamed: aString)
 		ifNil: [ ^ self ].
@@ -928,7 +984,7 @@ ViennaASTBrowser >> jumpToModule: aString operation: anotherString [
 ]
 
 { #category : #operations }
-ViennaASTBrowser >> load: aString [
+ViennaRefactoringBrowser >> load: aString [
 	| ast |
 	ast := ViennaVDMParser new document end parse: aString.
 	ast isPetit2Failure
@@ -965,7 +1021,7 @@ ViennaASTBrowser >> load: aString [
 ]
 
 { #category : #menus }
-ViennaASTBrowser >> menuBar [
+ViennaRefactoringBrowser >> menuBar [
 	^ self newMenuBar
 		addGroup: [ :group | 
 			group
@@ -1006,7 +1062,7 @@ ViennaASTBrowser >> menuBar [
 ]
 
 { #category : #accessing }
-ViennaASTBrowser >> model: aViennaNode comment: aString with: anIdentityDictionary [
+ViennaRefactoringBrowser >> model: aViennaNode comment: aString with: anIdentityDictionary [
 	| module category definition |
 	module := self module.
 	category := self category.
@@ -1031,7 +1087,7 @@ ViennaASTBrowser >> model: aViennaNode comment: aString with: anIdentityDictiona
 ]
 
 { #category : #accessing }
-ViennaASTBrowser >> model: aViennaNode with: anIdentityDictionary [
+ViennaRefactoringBrowser >> model: aViennaNode with: anIdentityDictionary [
 	| module category definition |
 	module := self module.
 	category := self category.
@@ -1047,17 +1103,46 @@ ViennaASTBrowser >> model: aViennaNode with: anIdentityDictionary [
 ]
 
 { #category : #accessing }
-ViennaASTBrowser >> modelChanged [
+ViennaRefactoringBrowser >> modelChanged [
 	self updateModuleList
 ]
 
 { #category : #accessing }
-ViennaASTBrowser >> module [
+ViennaRefactoringBrowser >> module [
 	^ moduleList selection selectedItem
 ]
 
+{ #category : #menus }
+ViennaRefactoringBrowser >> moduleListContextMenu [
+
+	| menu |
+	menu := self newMenu.
+	self module
+		ifNotNil: [ :module | 
+			menu addGroup: [ :group | 
+				(ViennaRefactoring sortedInstancesOn: module) do: [ :refactoring | 
+					group addItem: [ :item | 
+						item
+							name: refactoring name;
+							action: [ self executeRefactoring: refactoring ] ] ] ] ]
+		ifNil: [ 
+			menu addGroup: [ :group | 
+				(ViennaRefactoring sortedInstancesOn: self specification) do: [ 
+					:refactoring | 
+					group addItem: [ :item | 
+						item
+							name: refactoring name;
+							action: [ self executeRefactoring: refactoring ] ] ] ] ].
+	menu addGroup: [ :group | 
+		menu addItem: [ :item | 
+			item
+				name: 'inspect';
+				action: [ self module inspect ] ] ].
+	^ menu
+]
+
 { #category : #operations }
-ViennaASTBrowser >> openDirectory [
+ViennaRefactoringBrowser >> openDirectory [
 	| modelFiles testFiles source |
 	(UIManager default
 		chooseDirectory: 'Open directory'
@@ -1095,7 +1180,7 @@ ViennaASTBrowser >> openDirectory [
 ]
 
 { #category : #private }
-ViennaASTBrowser >> parser [
+ViennaRefactoringBrowser >> parser [
 	| parser |
 	parser := ViennaVDMParser new.
 	^ parser module end / parser typeDefinitions end
@@ -1110,7 +1195,7 @@ ViennaASTBrowser >> parser [
 ]
 
 { #category : #operations }
-ViennaASTBrowser >> runAllTests [
+ViennaRefactoringBrowser >> runAllTests [
 	testProcess ifNotNil: [ testProcess terminate ].
 	testProcess := [ | ast animation |
 	testResultTable items: #().
@@ -1147,7 +1232,7 @@ ViennaASTBrowser >> runAllTests [
 ]
 
 { #category : #'private-unit testing' }
-ViennaASTBrowser >> runTestModule: module operation: operation animation: aViennaAnimation [
+ViennaRefactoringBrowser >> runTestModule: module operation: operation animation: aViennaAnimation [
 	| header |
 	header := 'Runtime: Error 4129: Exit '.
 	aViennaAnimation state: Dictionary new.
@@ -1204,14 +1289,14 @@ ViennaASTBrowser >> runTestModule: module operation: operation animation: aVienn
 ]
 
 { #category : #accessing }
-ViennaASTBrowser >> source [
+ViennaRefactoringBrowser >> source [
 	^ self specification
 		ifNil: [ String new ]
 		ifNotNil: [ :ast | ViennaVDMFormatter format: ast ]
 ]
 
 { #category : #menus }
-ViennaASTBrowser >> sourceTextContextMenu [
+ViennaRefactoringBrowser >> sourceTextContextMenu [
 	| menu |
 	menu := self newMenu.
 	(sourceText text string asViennaTracingString
@@ -1231,12 +1316,12 @@ ViennaASTBrowser >> sourceTextContextMenu [
 ]
 
 { #category : #accessing }
-ViennaASTBrowser >> specification [
+ViennaRefactoringBrowser >> specification [
 	^ self model
 ]
 
 { #category : #menus }
-ViennaASTBrowser >> testResultTableContextMenu [
+ViennaRefactoringBrowser >> testResultTableContextMenu [
 	^ self newMenu
 		addGroup: [ :group | 
 			group
@@ -1251,7 +1336,7 @@ ViennaASTBrowser >> testResultTableContextMenu [
 ]
 
 { #category : #updating }
-ViennaASTBrowser >> updateCategoryList [
+ViennaRefactoringBrowser >> updateCategoryList [
 	| newItems oldSelection |
 	newItems := (Array with: self module)
 		,
@@ -1278,7 +1363,7 @@ ViennaASTBrowser >> updateCategoryList [
 ]
 
 { #category : #updating }
-ViennaASTBrowser >> updateDefinitionList [
+ViennaRefactoringBrowser >> updateDefinitionList [
 	| newItems oldSelection |
 	newItems := (Array with: self category)
 		,
@@ -1293,11 +1378,13 @@ ViennaASTBrowser >> updateDefinitionList [
 ]
 
 { #category : #updating }
-ViennaASTBrowser >> updateModuleList [
+ViennaRefactoringBrowser >> updateModuleList [
+
 	| newItems oldSelection |
 	newItems := self specification
-		ifNotNil: [ :ast | ast asArray ]
-		ifNil: [ Array new ].
+		            ifNotNil: [ :ast | 
+		            ast asArray ifEmpty: [ Array with: nil ] ]
+		            ifNil: [ Array with: nil ].
 	oldSelection := moduleList selection selectedItem.
 	moduleList items: newItems.
 	(newItems includes: oldSelection)
@@ -1306,7 +1393,7 @@ ViennaASTBrowser >> updateModuleList [
 ]
 
 { #category : #updating }
-ViennaASTBrowser >> updateSource [
+ViennaRefactoringBrowser >> updateSource [
 	self definition
 		ifNotNil: [ :node | sourceText text: (self getSource: node) ]
 		ifNil: [ sourceText text: '' ]

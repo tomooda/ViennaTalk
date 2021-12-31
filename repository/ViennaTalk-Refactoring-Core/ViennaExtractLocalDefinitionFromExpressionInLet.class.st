@@ -47,9 +47,11 @@ ViennaExtractLocalDefinitionFromExpressionInLet >> findDefinitionNode [
 
 { #category : #accessing }
 ViennaExtractLocalDefinitionFromExpressionInLet >> name [
+
 	^ 'Extract local definition ' asText
-		, (self shortDescription: ast source) asText allBold
-		, ' in a LET expression' asText
+	  , (newName ifNil: [ '' ] ifNotNil: [ newName , ' = ' ])
+	  , (self shortDescription: ast source) asText allBold
+	  , ' in a LET expression' asText
 ]
 
 { #category : #accessing }

@@ -92,7 +92,10 @@ ViennaExtractOperationFromLetExpression >> findNewName [
 
 { #category : #accessing }
 ViennaExtractOperationFromLetExpression >> name [
-	^ 'Extract a pure operation from let expression ' asText
+
+	^ 'Extract a pure operation '
+	  , (newName ifNil: [ '' ] ifNotNil: [ newName , ' ' ])
+	  , 'from let expression ' asText
 ]
 
 { #category : #accessing }

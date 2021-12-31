@@ -41,9 +41,12 @@ ViennaExtractValueAndReplaceAll >> execute [
 
 { #category : #accessing }
 ViennaExtractValueAndReplaceAll >> name [
-	^ 'Extract value definition from ' asText
-		, (self shortDescription: ast source) asText allBold
-		, ' and Replace all' asText
+
+	^ 'Extract value '
+	  , (newName ifNil: [ '' ] ifNotNil: [ newName , ' ' ])
+	  , 'from ' asText
+	  , (self shortDescription: ast source) asText allBold
+	  , ' and Replace all' asText
 ]
 
 { #category : #accessing }

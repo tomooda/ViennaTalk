@@ -67,8 +67,10 @@ ViennaExtractLetStatement >> findStatementNode [
 
 { #category : #accessing }
 ViennaExtractLetStatement >> name [
+
 	^ 'Extract let statement with ' asText
-		, (self shortDescription: ast source) asText allBold
+	  , (newName ifNil: [ '' ] ifNotNil: [ newName , ' = ' ])
+	  , (self shortDescription: ast source) asText allBold
 ]
 
 { #category : #accessing }

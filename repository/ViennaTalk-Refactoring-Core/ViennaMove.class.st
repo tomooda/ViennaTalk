@@ -108,11 +108,12 @@ ViennaMove >> findOkToAddImports [
 
 { #category : #accessing }
 ViennaMove >> name [
-	^ 'Move ' asText
-		,
-			(', ' asText
-				join: (self definitionNames collect: [ :name | name asText allBold ]))
-		, ' to another module' asText
+
+	^ 'Move ' asText , (', ' asText join:
+		   (self definitionNames collect: [ :name | name asText allBold ]))
+	  , ' to ' , (destinationModule
+		   ifNil: [ 'another module' ]
+		   ifNotNil: [ 'module ' , destinationModule name ]) asText
 ]
 
 { #category : #accessing }

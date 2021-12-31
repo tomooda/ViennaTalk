@@ -1151,8 +1151,11 @@ ViennaVDMGrammar >> functionDefinition [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> functionDefinitions [
-	^ (self functions , (self accessFunctionDefinition separatedBy: semicolon) withoutSeparators , semicolon optional)
-		==> #second
+
+	^ self functions
+	  , (self accessFunctionDefinition separatedBy: semicolon)
+			  withoutSeparators optional , semicolon optional
+	  ==> [ :triple | triple second ifNil: [ Array new ] ]
 ]
 
 { #category : #'parsers-interfaces' }
@@ -2097,8 +2100,11 @@ ViennaVDMGrammar >> operationDefinition [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> operationDefinitions [
-	^ (self operations , (self accessOperationDefinition separatedBy: semicolon) withoutSeparators , semicolon optional)
-		==> #second
+
+	^ self operations
+	  , (self accessOperationDefinition separatedBy: semicolon)
+			  withoutSeparators optional , semicolon optional
+	  ==> [ :triple | triple second ifNil: [ Array new ] ]
 ]
 
 { #category : #'parsers-interfaces' }
@@ -2947,7 +2953,12 @@ ViennaVDMGrammar >> typeDefinition [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> typeDefinitions [
-	^ (self types , (self accessTypeDefinition separatedBy: semicolon) withoutSeparators , semicolon optional) ==> #second
+
+	^ self types
+	  ,
+		  (self accessTypeDefinition separatedBy: semicolon)
+			  withoutSeparators optional , semicolon optional
+	  ==> [ :triple | triple second ifNil: [ Array new ] ]
 ]
 
 { #category : #'parsers-interfaces' }
@@ -3073,8 +3084,12 @@ ViennaVDMGrammar >> valueDefinition [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> valueDefinitions [
-	^ (self values , (self accessValueDefinition separatedBy: semicolon) withoutSeparators , semicolon optional)
-		==> #second
+
+	^ self values
+	  ,
+		  (self accessValueDefinition separatedBy: semicolon)
+			  withoutSeparators optional , semicolon optional
+	  ==> [ :triple | triple second ifNil: [ Array new ] ]
 ]
 
 { #category : #'parsers-interfaces' }

@@ -28,6 +28,27 @@ ViennaRenameLocal >> execute [
 ]
 
 { #category : #operations }
+ViennaRenameLocal >> execute: aViennaNode [
+	| selector |
+	aViennaNode isViennaNode
+		ifFalse: [ ^ self ].
+	selector := ('execute' , aViennaNode label , ':') asSymbol.
+	(self respondsTo: selector)
+		ifTrue: [ self perform: selector with: aViennaNode ]
+		ifFalse: [ self refactoringError: aViennaNode ]
+]
+
+{ #category : #operations }
+ViennaRenameLocal >> executeLocalName: aViennaNode [
+	aViennaNode at: 1 put: self newName
+]
+
+{ #category : #operations }
+ViennaRenameLocal >> executeOldName: aViennaNode [
+	aViennaNode at: 1 put: self newName
+]
+
+{ #category : #operations }
 ViennaRenameLocal >> executeOnBlockStatement: aViennaNode [
 	aViennaNode
 		do: [ :statement | 
@@ -288,7 +309,7 @@ ViennaRenameLocal >> findDefinitionNode [
 
 { #category : #accessing }
 ViennaRenameLocal >> findOldName [
-	^ ast first
+	^ ast ifNotEmpty: #first
 ]
 
 { #category : #accessing }

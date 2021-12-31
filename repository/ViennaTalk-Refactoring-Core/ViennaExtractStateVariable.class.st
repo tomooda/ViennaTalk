@@ -81,8 +81,11 @@ ViennaExtractStateVariable >> findNewName [
 
 { #category : #accessing }
 ViennaExtractStateVariable >> name [
-	^ 'Extract state variable from ' asText
-		, (self shortDescription: ast source) asText allBold
+
+	^ 'Extract state variable '
+	  , (newName ifNil: [ '' ] ifNotNil: [ newName , ' ' ])
+	  , 'from ' asText
+	  , (self shortDescription: ast source) asText allBold
 ]
 
 { #category : #accessing }

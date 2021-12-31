@@ -51,9 +51,13 @@ ViennaExtractParameterFromExpressionInOperation >> executeCallers [
 
 { #category : #accessing }
 ViennaExtractParameterFromExpressionInOperation >> name [
-	^ 'Extract parameter from ' asText
-		, (self shortDescription: ast source) asText allBold
-		, ' in operation ' asText , self definitionNode first asText allBold
+
+	^ 'Extract parameter '
+	  , (newName ifNil: [ '' ] ifNotNil: [ newName , ' ' ])
+	  , 'from ' asText
+	  , (self shortDescription: ast source) asText allBold
+	  , ' in operation ' asText
+	  , self definitionNode first asText allBold
 ]
 
 { #category : #accessing }

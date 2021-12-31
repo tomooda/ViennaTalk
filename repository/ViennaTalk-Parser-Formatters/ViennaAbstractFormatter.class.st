@@ -968,12 +968,12 @@ ViennaAbstractFormatter >> functionDefinition: aViennaNode [
 
 { #category : #'formatting-definitions' }
 ViennaAbstractFormatter >> functionDefinitions: aViennaNode [
-	^ self
-		indentString: 'functions'
-		insertCr:
-			(self
-				join: ';' , String cr , String cr
-				withAll: (self formatAll: aViennaNode)) , ';' , String cr
+
+	^ self indentString: 'functions' insertCr: (self
+			   join: ';' , String cr , String cr
+			   withAll: (self formatAll: aViennaNode)) , (aViennaNode isEmpty
+			   ifTrue: [ '' ]
+			   ifFalse: [ ';' , String cr ])
 ]
 
 { #category : #'formatting-interfaces' }
@@ -1673,14 +1673,14 @@ ViennaAbstractFormatter >> maplet: aViennaNode [
 
 { #category : #'formatting-expressions' }
 ViennaAbstractFormatter >> mapletList: aViennaNode [
+
 	| maplets |
 	maplets := self formatAll: aViennaNode.
-	^ ',' , self
-		join:
-			((self anyNeedsIndent: maplets)
-				ifTrue: [ String cr ]
-				ifFalse: [ String space ])
-		withAll: maplets
+	^ self
+		  join: ',' , ((self anyNeedsIndent: maplets)
+				   ifTrue: [ String cr ]
+				   ifFalse: [ String space ])
+		  withAll: maplets
 ]
 
 { #category : #'formatting-patterns and binds' }
@@ -1940,12 +1940,12 @@ ViennaAbstractFormatter >> operationDefinition: aViennaNode [
 
 { #category : #'formatting-definitions' }
 ViennaAbstractFormatter >> operationDefinitions: aViennaNode [
-	^ self
-		indentString: 'operations'
-		insertCr:
-			(self
-				join: ';' , String cr , String cr
-				withAll: (self formatAll: aViennaNode)) , ';' , String cr
+
+	^ self indentString: 'operations' insertCr: (self
+			   join: ';' , String cr , String cr
+			   withAll: (self formatAll: aViennaNode)) , (aViennaNode isEmpty
+			   ifTrue: [ '' ]
+			   ifFalse: [ ';' , String cr ])
 ]
 
 { #category : #'formatting-interfaces' }
@@ -2659,11 +2659,15 @@ ViennaAbstractFormatter >> typeDefinition: aViennaNode [
 
 { #category : #'formatting-definitions' }
 ViennaAbstractFormatter >> typeDefinitions: aViennaNode [
+
 	^ self
-		indentString: 'types'
-		insertCr:
-			(self join: ';' , String cr withAll: (self formatAll: aViennaNode))
-				, ';' , String cr
+		  indentString: 'types'
+		  insertCr:
+			  (self
+				   join: ';' , String cr
+				   withAll: (self formatAll: aViennaNode)) , (aViennaNode isEmpty
+				   ifTrue: [ '' ]
+				   ifFalse: [ ';' , String cr ])
 ]
 
 { #category : #'formatting-interfaces' }
@@ -2767,11 +2771,15 @@ ViennaAbstractFormatter >> valueDefinition: aViennaNode [
 
 { #category : #'formatting-definitions' }
 ViennaAbstractFormatter >> valueDefinitions: aViennaNode [
+
 	^ self
-		indentString: 'values'
-		insertCr:
-			(self join: ';' , String cr withAll: (self formatAll: aViennaNode))
-				, ';' , String cr
+		  indentString: 'values'
+		  insertCr:
+			  (self
+				   join: ';' , String cr
+				   withAll: (self formatAll: aViennaNode)) , (aViennaNode isEmpty
+				   ifTrue: [ '' ]
+				   ifFalse: [ ';' , String cr ])
 ]
 
 { #category : #'formatting-interfaces' }

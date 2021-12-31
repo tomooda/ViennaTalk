@@ -96,7 +96,10 @@ ViennaExtractOperationFromLetStatement >> findNewName [
 
 { #category : #accessing }
 ViennaExtractOperationFromLetStatement >> name [
-	^ 'Extract an operation from let statement ' asText
+
+	^ 'Extract an operation '
+	  , (newName ifNil: [ '' ] ifNotNil: [ newName , ' ' ])
+	  , 'from let statement ' asText
 ]
 
 { #category : #accessing }

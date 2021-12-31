@@ -1,10 +1,6 @@
 Class {
 	#name : #ViennaRenameQuote,
-	#superclass : #ViennaRefactoring,
-	#instVars : [
-		'oldName',
-		'newName'
-	],
+	#superclass : #ViennaRename,
 	#category : #'ViennaTalk-Refactoring-Core'
 }
 
@@ -19,6 +15,11 @@ ViennaRenameQuote >> check [
 	^ false
 ]
 
+{ #category : #accessing }
+ViennaRenameQuote >> construct [
+	^ 'quote'
+]
+
 { #category : #operations }
 ViennaRenameQuote >> execute [
 	self newName ifNil: [ ^ nil ].
@@ -28,6 +29,11 @@ ViennaRenameQuote >> execute [
 				ifTrue: [ node at: 1 put: self newName ].
 			(node label = 'SymbolicLiteral' and: [ node first = self oldName ])
 				ifTrue: [ node at: 1 put: self newName ] ].
+	^ nil
+]
+
+{ #category : #accessing }
+ViennaRenameQuote >> findDefinitionNode [
 	^ nil
 ]
 
@@ -49,35 +55,6 @@ ViennaRenameQuote >> findOldName [
 				and: [ ast first first = $< and: [ ast first last = $> ] ] ])
 		ifTrue: [ ^ ast first ].
 	^ nil
-]
-
-{ #category : #accessing }
-ViennaRenameQuote >> name [
-	^ 'Rename ' asText , oldName asText allBold
-		,
-			(newName
-				ifNotNil: [ ' into ' asText , newName asText allBold ]
-				ifNil: [ '' asText ])
-]
-
-{ #category : #accessing }
-ViennaRenameQuote >> newName [
-	^ newName ifNil: [ newName := self findNewName ]
-]
-
-{ #category : #accessing }
-ViennaRenameQuote >> newName: aString [
-	newName := aString
-]
-
-{ #category : #accessing }
-ViennaRenameQuote >> oldName [
-	^ oldName ifNil: [ oldName := self findOldName ]
-]
-
-{ #category : #accessing }
-ViennaRenameQuote >> oldName: aString [
-	oldName := aString
 ]
 
 { #category : #accessing }

@@ -24,43 +24,6 @@ ViennaRename >> definitionNode [
 	^ definitionNode ifNil: [ definitionNode := self findDefinitionNode ]
 ]
 
-{ #category : #operations }
-ViennaRename >> execute [
-	self newName ifNil: [ ^ nil ].
-	self
-		executeOnDefinition;
-		freeOccurrencesOf: self oldName
-			in: ast module
-			do: [ :node | self execute: node ].
-	^ nil
-]
-
-{ #category : #operations }
-ViennaRename >> execute: aViennaNode [
-	| selector |
-	aViennaNode isViennaNode
-		ifFalse: [ ^ self ].
-	selector := ('execute' , aViennaNode label , ':') asSymbol.
-	(self respondsTo: selector)
-		ifTrue: [ self perform: selector with: aViennaNode ]
-		ifFalse: [ self refactoringError: aViennaNode ]
-]
-
-{ #category : #operations }
-ViennaRename >> executeLocalName: aViennaNode [
-	aViennaNode at: 1 put: self newName
-]
-
-{ #category : #operations }
-ViennaRename >> executeOldName: aViennaNode [
-	aViennaNode at: 1 put: self newName
-]
-
-{ #category : #operations }
-ViennaRename >> executeOnDefinition [
-	^ self subclassResponsibility
-]
-
 { #category : #accessing }
 ViennaRename >> findDefinitionNode [
 	^ self subclassResponsibility
