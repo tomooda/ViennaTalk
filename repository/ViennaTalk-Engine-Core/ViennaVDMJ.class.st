@@ -228,7 +228,7 @@ ViennaVDMJ class >> isInstalled [
 { #category : #testing }
 ViennaVDMJ class >> isSupportedEnvironment [
 
-	^ Smalltalk os isWin64 not
+	^ Smalltalk os isWindows not
 ]
 
 { #category : #accessing }
