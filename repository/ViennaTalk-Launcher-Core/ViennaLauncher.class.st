@@ -174,7 +174,7 @@ ViennaLauncher >> close [
 
 { #category : #accessing }
 ViennaLauncher >> codename [
-	^ 'Hakodate'
+	^ 'Boulder'
 ]
 
 { #category : #accessing }
