@@ -311,11 +311,11 @@ ViennaVDMJ class >> registry [
 
 { #category : #'class initialization' }
 ViennaVDMJ class >> startUp: resume [
-	Smalltalk isHeadless
-		ifTrue: [ ^ self ].
-	UIManager default uiProcess
-		ifNil: [ Smalltalk session addDeferredStartupAction: [ self install ].
-			^ self ].
+
+	Smalltalk isInteractiveGraphic ifFalse: [ ^ self ].
+	UIManager default uiProcess ifNil: [ 
+		Smalltalk session addDeferredStartupAction: [ self install ].
+		^ self ].
 	self install
 ]
 
