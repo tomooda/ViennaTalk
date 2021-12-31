@@ -70,7 +70,7 @@ BaselineOfViennaTalk >> baseline: spec [
 			   'ViennaTalk-Value-Core' ) ];
 		package: #'ViennaTalk-Parser-Core' with: [ 
 		spec requires:
-			#( 'ViennaTalk-Parser-Formatter' 'ViennaTalk-Parser-Highlighters'
+			#( 'ViennaTalk-Parser-Formatters' 'ViennaTalk-Parser-Highlighters'
 			   'ViennaTalk-Transpiler-Core' 'ViennaTalk-Transpiler-Debugger'
 			   'ViennaTalk-Value-Core' ) ];
 		package: #'ViennaTalk-Parser-Formatters'
