@@ -11,3 +11,8 @@ ViennaNode >> formatWidth: anInteger [
 		maxSizePerLine: anInteger;
 		format: self
 ]
+
+{ #category : #'*ViennaTalk-Parser-Formatters' }
+ViennaNode >> source [
+	^ ViennaVDMFormatter format: self
+]

@@ -8,6 +8,24 @@ String >> , aString [
 ]
 
 { #category : #'*ViennaTalk-Transpiler-Core' }
+String >> asViennaExpression [
+	^ OpalCompiler new
+		source: (ViennaVDM2SmalltalkScript new generate: self asViennaExpressionAst);
+		context: thisContext sender;
+		receiver: thisContext sender receiver;
+		evaluate
+]
+
+{ #category : #'*ViennaTalk-Transpiler-Core' }
+String >> asViennaStatement [
+	^ OpalCompiler new
+		source: (ViennaVDM2SmalltalkScript new generate: self asViennaStatementAst);
+		context: thisContext sender;
+		receiver: thisContext sender receiver;
+		evaluate
+]
+
+{ #category : #'*ViennaTalk-Transpiler-Core' }
 String >> asViennaTracingString [
 	^ ViennaTracingString fromString: self
 ]
