@@ -65,7 +65,7 @@ BaselineOfViennaTalk >> baseline: spec [
 			   'ViennaTalk-Browser-Core' 'ViennaTalk-Launcher-Core'
 			   'PetitParser2' ) ];
 		package: #'ViennaTalk-Parser-Core'
-		with: [ spec requires: #( 'ViennaTalk-Value-Core' ) ];
+		with: [ spec requires: #( 'ViennaTalk-Value-Core' 'PetitParser2') ];
 		package: #'ViennaTalk-Parser-Formatters'
 		with: [ spec requires: #( 'ViennaTalk-Parser-Core' ) ];
 		package: #'ViennaTalk-Parser-Highlighters'
