@@ -45,10 +45,13 @@ If you like to install ViennaTalk on an existing Pharo installation, please use 
 Or, you may programmatically install it by evaluating 
 
 ```
-Metacello new
-	baseline: 'ViennaTalk';
-	repository: 'github://tomooda/ViennaTalk:main/repository';
-	load.
+EpMonitor disableDuring: [
+	Metacello new
+		onConflictUseLoaded;
+		onWarningLog;
+		repository: 'github://tomooda/ViennaTalk:main/';
+		baseline: 'ViennaTalk';
+		load ] 
 ```
 
 Acknowledgement
