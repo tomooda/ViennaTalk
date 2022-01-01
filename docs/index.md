@@ -38,6 +38,22 @@ Table of Major Components of ViennaTalk
 
 What's new in the latest release
 ---
+* Codename Boulder has been released. (Dec 31, 2021)
+  - Refactoring browser based on AST manipulations is now experimentally available.
+  - Base Phro is upgraded to Pharo 9.
+
+* Codename Hakodate has been released. (Sep 4, 2020)
+  - ViennaVisuals: a DOM library to generate XML document and bind UI events on DOM elements to handler operations
+
+* Codename Porto has been released. (Feb 5, 2020)
+  - Base Pharo is upgraded to Pharo 8.0.
+  - Better UI for Unit Testing on VDMBrowser.
+
+* Codename Cologne has been released. (Aug 8, 2019)
+  - Base Pharo is upgraded to Pharo 7.0.4.
+  - JavaScript library to use ViennaServer or VDMPad to evaluate VDM-SL.
+  - ViennaDoc is a documentation tool to create an animatable and testable documentation.
+
 * Codename Lille has been released. (January 23, 2019)
   - Base Pharo is upgraded to Pharo 7.0.
   - ViennaTalk uses 64bits Virtual Machine by default (except Windows). Great thanks to the OSSubprocess team for the big improvements.
