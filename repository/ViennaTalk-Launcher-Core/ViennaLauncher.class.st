@@ -82,7 +82,29 @@ ViennaLauncher class >> fontSize [
 
 { #category : #'class initialization' }
 ViennaLauncher class >> initialize [
+	self installDesktopLogo.
 	self open
+]
+
+{ #category : #'class initialization' }
+ViennaLauncher class >> installDesktopLogo [
+
+	<script: 'ViennaLauncher installDesktopLogo'>
+	| backgroundImage response |
+	backgroundImage := FileLocator localDirectory / 'viennatalk-logo.png'.
+	PharoLightTheme beCurrent.
+	response := ZnClient new
+		            url:
+			            'https://github.com/tomooda/ViennaTalk/raw/main/resources/ViennaTalk-logo-transparent.png';
+		            get;
+		            response.
+	(response isSuccess and: [ response entity contentType sub = 'png' ]) 
+		ifTrue: [ 
+			backgroundImage binaryWriteStreamDo: [ :writeStream | 
+				response entity writeOn: writeStream ].
+			PolymorphSystemSettings desktopLogoFileName: ''.
+			PolymorphSystemSettings desktopLogoFileName:
+				backgroundImage fullName ]
 ]
 
 { #category : #'user interface' }
