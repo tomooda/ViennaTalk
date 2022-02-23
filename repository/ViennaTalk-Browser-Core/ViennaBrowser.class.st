@@ -206,7 +206,7 @@ ViennaBrowser class >> moduleListMenu: aBuilder [
 		selector: #removeModule;
 		withSeparatorAfter.
 	(Smalltalk globals
-		 classNamed: #WeblyWalkThrough
+		 at: #WeblyWalkThrough
 		 ifPresent: [ :webly | aBuilder model animation class = webly ]
 		 ifAbsent: [ false ]) ifFalse: [ 
 		aBuilder model animation class = ViennaTranspiledAnimation
