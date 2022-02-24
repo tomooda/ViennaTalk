@@ -12,6 +12,9 @@ BaselineOfViennaTalk >> baseline: spec [
 		for: #common do: [ 
 			spec blessing: #baseline.
 			spec
+				baseline: 'Pharo9UTF8Path'
+				with: [ 
+					spec repository: 'github://tomooda/Pharo9UTF8Path:main/src' ];
 				baseline: 'NeoJSON'
 				with: [ spec repository: 'github://svenvc/NeoJSON/repository' ];
 				baseline: 'PetitParser2'
@@ -19,24 +22,23 @@ BaselineOfViennaTalk >> baseline: spec [
 				baseline: 'ZincHTTPComponents'
 				with: [ spec repository: 'github://svenvc/zinc/repository' ].
 			spec
-				package: 'ViennaTalk-Animation-Core' with: [ spec requires:
-							#( 'ViennaTalk-Engine-Core' 'ViennaTalk-Value-Core' )
-					 ];
+				package: 'ViennaTalk-Animation-Core' with: [ 
+					spec requires:
+							#( 'ViennaTalk-Engine-Core' 'ViennaTalk-Value-Core' ) ];
 				package: 'ViennaTalk-Animation-Tests'
 				with: [ spec requires: #( 'ViennaTalk-Animation-Core' ) ];
-				package: 'ViennaTalk-Animation-Transpiler'
-				with: [ spec requires:
+				package: 'ViennaTalk-Animation-Transpiler' with: [ 
+					spec requires:
 							#( 'ViennaTalk-Animation-Core' 'ViennaTalk-Parser-Core'
-							   'ViennaTalk-Transpiler-Core' 'ViennaTalk-Transpiler-Debugger' )
-					 ];
-				package: 'ViennaTalk-Browser-Core' with: [ spec requires:
+							   'ViennaTalk-Transpiler-Core' 'ViennaTalk-Transpiler-Debugger' ) ];
+				package: 'ViennaTalk-Browser-Core' with: [ 
+					spec requires:
 							#( 'ViennaTalk-Animation-Core' 'ViennaTalk-Animation-Transpiler'
 							   'ViennaTalk-Launcher-Core' 'ViennaTalk-Parser-Core'
 							   'ViennaTalk-Parser-Formatters'
 							   'ViennaTalk-Parser-Highlighters'
 							   'ViennaTalk-Refactoring-Core' 'ViennaTalk-Transpiler-Core'
-							   'ViennaTalk-Value-Core' )
-					 ];
+							   'ViennaTalk-Value-Core' ) ];
 				package: #'ViennaTalk-Engine-Core'
 				with: [ spec requires: #( 'NeoJSON' 'ZincHTTPComponents' ) ];
 				for: #Unix do: [ 
@@ -58,14 +60,16 @@ BaselineOfViennaTalk >> baseline: spec [
 		with: [ spec requires: #( 'ViennaTalk-Engine-Core' ) ];
 		package: 'ViennaTalk-Html-Core'
 		with: [ spec requires: #( 'PetitParser2' ) ];
-		package: 'ViennaTalk-Launcher-Core';
+		package: 'ViennaTalk-Launcher-Core'
+		with: [ spec requires: #( 'Pharo9UTF8Path' ) ];
 		package: 'ViennaTalk-LivelyWalkThrough-Core' with: [ 
 		spec requires:
 			#( 'ViennaTalk-Animation-Core' 'ViennaTalk-Animation-Transpiler'
 			   'ViennaTalk-Browser-Core' 'ViennaTalk-Launcher-Core'
 			   'PetitParser2' ) ];
 		package: #'ViennaTalk-Parser-Core'
-		with: [ spec requires: #( 'ViennaTalk-Value-Core' 'PetitParser2') ];
+		with: [ spec requires: #( 'ViennaTalk-Value-Core'
+		   'PetitParser2' ) ];
 		package: #'ViennaTalk-Parser-Formatters'
 		with: [ spec requires: #( 'ViennaTalk-Parser-Core' ) ];
 		package: #'ViennaTalk-Parser-Highlighters'
