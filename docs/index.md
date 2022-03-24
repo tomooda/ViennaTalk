@@ -133,3 +133,7 @@ The update button will read all available fonts in the system. You can then choo
 Acknowledgement
 ---
 Part of the ViennaTalk project is supported by Grant-in-Aid for Scientific Research (S) 24220001 and Grant-in-Aid for Early-Career Scientists 18K18033 from the Japan Society for the Promotion of Science.
+
+The ViennaTalk project is supported by [Software Research Associates, Inc.](https://www.sra.co.jp/en/).
+
+[![SRA logo](images/sra-logo.png)](https://www.sra.co.jp/en/)
