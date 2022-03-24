@@ -54,7 +54,7 @@ EpMonitor disableDuring: [
 		load ] 
 ```
 
-Acknowledgement
+Acknowledgements
 ---
 Part of the ViennaTalk project is supported by Grant-in-Aid for Scientific Research (S) 24220001, Grant-in-Aid for Scientific Research (C) 26330099, and Grant-in-Aid for Early-Career Scientists 18K18033 from the Japan Society for the Promotion of Science.
 
