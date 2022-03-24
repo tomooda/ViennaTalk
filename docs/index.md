@@ -130,7 +130,7 @@ If you want to setup the font for VDM sources, you can click on the font to open
 
 The update button will read all available fonts in the system. You can then choose the font family and point size, and press OK.
 
-Acknowledgement
+Acknowledgements
 ---
 Part of the ViennaTalk project is supported by Grant-in-Aid for Scientific Research (S) 24220001 and Grant-in-Aid for Early-Career Scientists 18K18033 from the Japan Society for the Promotion of Science.
 
