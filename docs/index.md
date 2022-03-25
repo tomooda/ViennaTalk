@@ -136,4 +136,4 @@ Part of the ViennaTalk project is supported by Grant-in-Aid for Scientific Resea
 
 The ViennaTalk project is supported by [Software Research Associates, Inc.](https://www.sra.co.jp/en/).
 
-[![SRA logo](images/sra-logo.png)](https://www.sra.co.jp/en/)
+[![SRA logo](images/SRA-logo-large.png)](https://www.sra.co.jp/en/)
