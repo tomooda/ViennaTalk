@@ -54,6 +54,10 @@ EpMonitor disableDuring: [
 		load ] 
 ```
 
-Acknowledgement
+Acknowledgements
 ---
 Part of the ViennaTalk project is supported by Grant-in-Aid for Scientific Research (S) 24220001, Grant-in-Aid for Scientific Research (C) 26330099, and Grant-in-Aid for Early-Career Scientists 18K18033 from the Japan Society for the Promotion of Science.
+
+The ViennaTalk project is supported by [Software Research Associates, Inc.](https://www.sra.co.jp/en/).
+
+[![SRA logo](resources/SRA-logo-large.png)](https://www.sra.co.jp/en/)
