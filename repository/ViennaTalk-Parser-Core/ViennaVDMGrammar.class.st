@@ -71,53 +71,59 @@ ViennaVDMGrammar >> access [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> accessFunctionDefinition [
-	^ (access optional , self functionDefinition)
-		==> [ :pair | 
-			{({(pair first)} reject: #isNil).
-			(pair second)} ]
+
+	^ comment star
+	  , (access optional , self functionDefinition ==> [ :pair | 
+		   { 
+			   ({ pair first } reject: #isNil).
+			   pair second } ]) ==> #second
 ]
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> accessOperationDefinition [
+
 	| pure async static |
 	pure := self reserved: 'pure'.
 	async := self reserved: 'async'.
 	static := self reserved: 'static'.
-	^ (pure optional , async optional
-		,
-			((static , access optional)
-				/
-					((access optional , static optional)
-						==> [ :pair | 
-							{(pair second).
-							(pair first)} ])) , self operationDefinition)
-		==> [ :quatro | 
-			{({(quatro first).
-			(quatro second).
-			(quatro third first).
-			(quatro third second)} reject: #isNil).
-			(quatro fourth)} ]
+	^ comment star
+	  , (pure optional , async optional , (static , access optional
+		    / (access optional , static optional ==> [ :pair | 
+			     { 
+				     pair second.
+				     pair first } ])) , self operationDefinition ==> [ :quatro | 
+		   { 
+			   ({ 
+				    quatro first.
+				    quatro second.
+				    quatro third first.
+				    quatro third second } reject: #isNil).
+			   quatro fourth } ]) ==> #second
 ]
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> accessTypeDefinition [
+
 	| static |
 	static := self reserved: 'static'.
-	^ (((access , static optional)
-		==> [ :pair | 
-			{(pair second).
-			(pair first)} ]) / (static optional , access optional) , self typeDefinition)
-		==> [ :pair | 
-			{(pair first reject: #isNil).
-			(pair second)} ]
+	^ comment star , (access , static optional ==> [ :pair | 
+	   { 
+		   pair second.
+		   pair first } ] / (static optional , access optional)
+	   , self typeDefinition ==> [ :pair | 
+	   { 
+		   (pair first reject: #isNil).
+		   pair second } ]) ==> #second
 ]
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> accessValueDefinition [
-	^ (access optional , self valueDefinition)
-		==> [ :pair | 
-			{({(pair first)} reject: #isNil).
-			(pair second)} ]
+
+	^ comment star
+	  , (access optional , self valueDefinition ==> [ :pair | 
+		   { 
+			   ({ pair first } reject: #isNil).
+			   pair second } ]) ==> #second
 ]
 
 { #category : #'parsers-expressions-threads and histories' }
@@ -450,7 +456,11 @@ ViennaVDMGrammar >> comma [
 
 { #category : #'parsers-comments' }
 ViennaVDMGrammar >> comment [
-	^ self multiLineComment / self singleLineComment
+
+	^ (#space asPParser star
+	   , (self singleLineAnnotation / self multiLineComment
+		    / self singleLineComment)) flatten , #space asPParser star
+	  ==> #first
 ]
 
 { #category : #'parsers-symbols' }
@@ -614,7 +624,8 @@ ViennaVDMGrammar >> do [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> document [
-	^ self moduledDocument / self flatDocument
+
+	^ self moduledDocument / self flatDocument , comment starA ==> #first
 ]
 
 { #category : #'parsers-symbols' }
@@ -1255,16 +1266,16 @@ ViennaVDMGrammar >> identifiedField [
 
 { #category : #accessing }
 ViennaVDMGrammar >> identifier [
-	^ (self initialLetter , followingLetter starA) flatten
-		==> [ :str | 
-			((self prefixes
-				anySatisfy: [ :p | 
-					str size >= p size
-						and: [ (1 to: p size) allSatisfy: [ :i | (str at: i) = (p at: i) ] ] ])
-				or: [ self keywords includes: str ])
-				ifTrue: [ PP2Failure
-						message: 'a keyword or prefixed word can not be an identifier' ]
-				ifFalse: [ str ] ]
+
+	^ (self initialLetter , followingLetter starA) flatten ==> [ :str | 
+	  ((self prefixes anySatisfy: [ :p | 
+		    str size >= p size and: [ 
+			    (1 to: p size) allSatisfy: [ :i | (str at: i) = (p at: i) ] ] ]) 
+		   or: [ self keywords includes: str ])
+		  ifTrue: [ 
+			  PP2Failure message:
+				  'a keyword or prefixed word can not be an identifier' ]
+		  ifFalse: [ str ] ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -1950,9 +1961,9 @@ ViennaVDMGrammar >> mul: arg1 and: arg2 [
 
 { #category : #'parsers-comments' }
 ViennaVDMGrammar >> multiLineComment [
+
 	^ ('/*' asPParser , ('*/' asPParser not , #any asPParser) starA
-		, '*/' asPParser) trim plusA flatten
-		==> [ :str | self trimComment: str ]
+	   , '*/' asPParser) flatten
 ]
 
 { #category : #'parsers-statements' }
@@ -2138,8 +2149,9 @@ ViennaVDMGrammar >> operations [
 
 { #category : #utilities }
 ViennaVDMGrammar >> operator: aStringOrCharacterOrParser [
-	^ (comment starA , aStringOrCharacterOrParser asPParser trim
-		, comment starA) ==> #second
+
+	^ comment star , aStringOrCharacterOrParser asPParser trim
+	  ==> #second
 ]
 
 { #category : #'parsers-patterns' }
@@ -2481,8 +2493,10 @@ ViennaVDMGrammar >> reqExpression [
 
 { #category : #utilities }
 ViennaVDMGrammar >> reserved: aStringOrParser [
-	^ (comment starA , (aStringOrParser asPParser , followingLetter not) trim
-		, comment starA) ==> [ :triple | triple second first ]
+
+	^ comment star
+	  , (aStringOrParser asPParser , followingLetter not) trim
+	  ==> [ :triple | triple second first ]
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -2672,9 +2686,18 @@ ViennaVDMGrammar >> setUnionPattern [
 ]
 
 { #category : #'parsers-comments' }
+ViennaVDMGrammar >> singleLineAnnotation [
+
+	^ '--@' asPParser
+	  , (Character cr asPParser not , #any asPParser) starA flatten
+	  ==> #second
+]
+
+{ #category : #'parsers-comments' }
 ViennaVDMGrammar >> singleLineComment [
-	^ ('--' asPParser , (Character cr asPParser not , #any asPParser) starA)
-		trim plusA flatten ==> [ :str | self trimComment: str ]
+
+	^ ('--' asPParser
+	   , (Character cr asPParser not , #any asPParser) starA) flatten
 ]
 
 { #category : #'parsers-keywords' }
@@ -2869,17 +2892,6 @@ ViennaVDMGrammar >> traps [
 					array at: index * 2 - 1 put: pair first.
 					array at: index * 2 put: pair second ].
 			array ]
-]
-
-{ #category : #'parsers-comments' }
-ViennaVDMGrammar >> trimComment: aString [
-	| start end |
-	start := 1.
-	[ (aString at: start) isSeparator ] whileTrue: [ start := start + 1 ].
-	[ start > 1 and: [ (aString at: start) ~= Character cr ] ] whileTrue: [ start := start - 1 ].
-	end := aString size.
-	[ (aString at: end) isSeparator ] whileTrue: [ end := end - 1 ].	"[ end < aString size and: [ (aString at: end) ~= Character cr ] ] whileTrue: [ end := end + 1 ]."
-	^ aString copyFrom: start to: end
 ]
 
 { #category : #'parsers-expressions-basics' }

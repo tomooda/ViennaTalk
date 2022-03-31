@@ -6,7 +6,8 @@ Class {
 		'label',
 		'parent',
 		'start',
-		'end'
+		'end',
+		'annotations'
 	],
 	#classVars : [
 		'ExpressionLabels',
@@ -220,6 +221,18 @@ ViennaNode >> allSatisfy: aBlock [
 			(aBlock value: node)
 				ifFalse: [ ^ false ] ].
 	^ true
+]
+
+{ #category : #accessing }
+ViennaNode >> annotations [
+
+	^ annotations
+]
+
+{ #category : #accessing }
+ViennaNode >> annotations: anArrayOfString [
+
+	annotations := anArrayOfString
 ]
 
 { #category : #enumerating }

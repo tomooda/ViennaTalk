@@ -1,8 +1,17 @@
 Class {
 	#name : #ViennaVDMParser,
 	#superclass : #ViennaVDMGrammar,
+	#instVars : [
+		'annotations'
+	],
 	#category : #'ViennaTalk-Parser-Core'
 }
+
+{ #category : #accessing }
+ViennaVDMParser class >> ignoredNames [
+
+	^ super ignoredNames , #( 'annotations' )
+]
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> abs: arg [
@@ -22,50 +31,62 @@ ViennaVDMParser >> access [
 
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> accessFunctionDefinition [
-	^ super accessFunctionDefinition
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'AccessFunctionDefinition'
-				start: start
-				end: end
-				with: (ViennaNode label: 'Access' withAll: array first)
-				with: array second ]
+
+	self flushAnnotations.
+	^ super accessFunctionDefinition =>> [ :start :end :array | 
+	  (ViennaNode
+		   label: 'AccessFunctionDefinition'
+		   start: start
+		   end: end
+		   with: (ViennaNode label: 'Access' withAll: array first)
+		   with: array second)
+		  annotations: self flushAnnotations;
+		  yourself ]
 ]
 
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> accessOperationDefinition [
-	^ super accessOperationDefinition
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'AccessOperationDefinition'
-				start: start
-				end: end
-				with: (ViennaNode label: 'Access' withAll: array first)
-				with: array second ]
+
+	self flushAnnotations.
+	^ super accessOperationDefinition =>> [ :start :end :array | 
+	  (ViennaNode
+		   label: 'AccessOperationDefinition'
+		   start: start
+		   end: end
+		   with: (ViennaNode label: 'Access' withAll: array first)
+		   with: array second)
+		  annotations: self flushAnnotations;
+		  yourself ]
 ]
 
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> accessTypeDefinition [
-	^ super accessTypeDefinition
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'AccessTypeDefinition'
-				start: start
-				end: end
-				with: (ViennaNode label: 'Access' withAll: array first)
-				with: array second ]
+
+	self flushAnnotations.
+	^ super accessTypeDefinition =>> [ :start :end :array | 
+	  (ViennaNode
+		   label: 'AccessTypeDefinition'
+		   start: start
+		   end: end
+		   with: (ViennaNode label: 'Access' withAll: array first)
+		   with: array second)
+		  annotations: self flushAnnotations;
+		  yourself ]
 ]
 
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> accessValueDefinition [
-	^ super accessValueDefinition
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'AccessValueDefinition'
-				start: start
-				end: end
-				with: (ViennaNode label: 'Access' withAll: array first)
-				with: array second ]
+
+	self flushAnnotations.
+	^ super accessValueDefinition =>> [ :start :end :array | 
+	  (ViennaNode
+		   label: 'AccessValueDefinition'
+		   start: start
+		   end: end
+		   with: (ViennaNode label: 'Access' withAll: array first)
+		   with: array second)
+		  annotations: self flushAnnotations;
+		  yourself ]
 ]
 
 { #category : #'parsers-expressions-threads' }
@@ -88,6 +109,13 @@ ViennaVDMParser >> activeExpression [
 				start: start
 				end: end
 				with: nameNode ]
+]
+
+{ #category : #annotations }
+ViennaVDMParser >> addAnnotation: aString [
+
+	annotations add: aString.
+	^ aString
 ]
 
 { #category : #'parsers-statements' }
@@ -644,6 +672,15 @@ ViennaVDMParser >> floor: arg [
 	^ ViennaNode label: 'Floor' with: arg
 ]
 
+{ #category : #annotations }
+ViennaVDMParser >> flushAnnotations [
+
+	| result |
+	result := Array withAll: annotations.
+	annotations removeAll.
+	^ result
+]
+
 { #category : #'parsers-expressions-basics' }
 ViennaVDMParser >> forallExpression [
 	^ super forallExpression ==> [ :array | ViennaNode label: 'ForallExpression' withAll: array ]
@@ -651,44 +688,53 @@ ViennaVDMParser >> forallExpression [
 
 { #category : #parsing }
 ViennaVDMParser >> format: aString [
+
 	| ast |
-	ast := self document end / self statement end / self expression end parse: aString.
+	ast := self document end / self statement end / self expression end 
+		       parse: aString.
 	^ ast isPetit2Failure
-		ifTrue: [ ast ]
-		ifFalse: [ (self scanCommentsOn: aString)
-				inject: ast format
-				into: [ :source :posAndComment | 
-					posAndComment key
-						ifNil: [ posAndComment value , String cr , source ]
-						ifNotNil: [ | char count commentString index |
-							char := posAndComment key key.
-							count := posAndComment key value.
-							commentString := posAndComment value.
-							index := 0.
-							count timesRepeat: [ index := source indexOf: char startingAt: index + 1 ].
-							(source copyFrom: 1 to: index) , commentString
-								, (source copyFrom: index + 1 to: source size) ] ] ]
+		  ifTrue: [ ast ]
+		  ifFalse: [ 
+			  (self scanCommentsOn: aString)
+				  inject: ast format
+				  into: [ :source :posAndComment | 
+					  posAndComment key
+						  ifNil: [ posAndComment value , String cr , source ]
+						  ifNotNil: [ 
+							  | char count commentString index |
+							  char := posAndComment key key.
+							  count := posAndComment key value.
+							  commentString := posAndComment value.
+							  index := 0.
+							  count timesRepeat: [ 
+								  index := source indexOf: char startingAt: index + 1 ].
+							  (source copyFrom: 1 to: index) , commentString
+							  , (source copyFrom: index + 1 to: source size) ] ] ]
 ]
 
 { #category : #parsing }
 ViennaVDMParser >> format: aString width: anInteger [
+
 	| ast |
 	ast := self parse: aString.
 	^ ast isPetit2Failure
-		ifTrue: [ ast ]
-		ifFalse: [ (self scanCommentsOn: aString)
-				inject: (ast formatWidth: anInteger)
-				into: [ :source :posAndComment | 
-					posAndComment key
-						ifNil: [ posAndComment value , String cr , source ]
-						ifNotNil: [ | char count commentString index |
-							char := posAndComment key key.
-							count := posAndComment key value.
-							commentString := posAndComment value.
-							index := 0.
-							count timesRepeat: [ index := source indexOf: char startingAt: index + 1 ].
-							(source copyFrom: 1 to: index) , commentString
-								, (source copyFrom: index + 1 to: source size) ] ] ]
+		  ifTrue: [ ast ]
+		  ifFalse: [ 
+			  (self scanCommentsOn: aString)
+				  inject: (ast formatWidth: anInteger)
+				  into: [ :source :posAndComment | 
+					  posAndComment key
+						  ifNil: [ posAndComment value , String cr , source ]
+						  ifNotNil: [ 
+							  | char count commentString index |
+							  char := posAndComment key key.
+							  count := posAndComment key value.
+							  commentString := posAndComment value.
+							  index := 0.
+							  count timesRepeat: [ 
+								  index := source indexOf: char startingAt: index + 1 ].
+							  (source copyFrom: 1 to: index) , commentString
+							  , (source copyFrom: index + 1 to: source size) ] ] ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -975,6 +1021,13 @@ ViennaVDMParser >> initialisation [
 				start: start
 				end: end
 				with: invFunc ]
+]
+
+{ #category : #initialization }
+ViennaVDMParser >> initialize [
+
+	super initialize.
+	annotations := OrderedCollection new
 ]
 
 { #category : #'parsers-types' }
@@ -1901,15 +1954,22 @@ ViennaVDMParser >> setUnionPattern [
 				withAll: array ]
 ]
 
+{ #category : #'parsers-comments' }
+ViennaVDMParser >> singleLineAnnotation [
+
+	^ super singleLineAnnotation
+	  ==> [ :string | self addAnnotation: string ]
+]
+
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> stateDefinition [
-	^ super stateDefinition
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'StateDefinition'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super stateDefinition =>> [ :start :end :array | 
+	  ViennaNode
+		  label: 'StateDefinition'
+		  start: start
+		  end: end
+		  withAll: array ]
 ]
 
 { #category : #'parsers-types' }
