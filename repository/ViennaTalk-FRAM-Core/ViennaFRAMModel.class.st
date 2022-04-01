@@ -27,7 +27,7 @@ ViennaFRAMModel class >> examplePedestrianCounter [
 		newOutputNamed: 'one pedestrian'.
 	(model newFunctionNamed: 'report the count')
 		beHuman;
-		newControlNamed: 'observation hours';
+		newTimeNamed: 'observation hours';
 		newResourceNamed: 'current count'.
 	spec := ViennaVDMParser parse: '
 	state Count of
