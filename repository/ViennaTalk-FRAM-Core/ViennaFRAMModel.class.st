@@ -9,23 +9,26 @@ ViennaFRAMModel class >> examplePedestrianCounter [
 
 	| model spec |
 	model := ViennaFRAMModel new.
-	model
-		newFunctionNamed: 'observation plan';
-		newOutputOf: 'observation plan' named: 'in the observation hours'.
-	model
-		newFunctionNamed: 'go to the post';
-		newControlOf: 'go to the post' named: 'in the observation hours';
-		newOutputOf: 'go to the post' named: 'at the post'.
-	model
-		newFunctionNamed: 'find pedestrian';
-		newControlOf: 'find pedestrian' named: 'in the observation hours';
-		newInputOf: 'find pedestrian' named: 'at the post';
-		newPreconditionOf: 'find pedestrian' named: 'counter is ready';
-		newOutputOf: 'find pedestrian' named: 'new pedestrian'.
-	model
-		newFunctionNamed: 'report the count';
-		newControlOf: 'report the count' named: 'in the observation hours';
-		newResourceOf: 'report the count' named: 'current count'.
+	(model newFunctionNamed: 'observation plan')
+		beOrganisational;
+		newOutputNamed: 'observation hours';
+		newOutputNamed: 'observation post'.
+	(model newFunctionNamed: 'go to post and prepare counting')
+		beHuman;
+		newControlNamed: 'observation post';
+		newTimeNamed: 'observation hours';
+		newOutputNamed: 'at the post'.
+	(model newFunctionNamed: 'find a pedestrian')
+		beHuman;
+		newControlNamed: 'observation post';
+		newTimeNamed: 'observation hours';
+		newInputNamed: 'at the post';
+		newPreconditionNamed: 'counter is ready';
+		newOutputNamed: 'one pedestrian'.
+	(model newFunctionNamed: 'report the count')
+		beHuman;
+		newControlNamed: 'observation hours';
+		newResourceNamed: 'current count'.
 	spec := ViennaVDMParser parse: '
 	state Count of
 	count : nat
@@ -34,11 +37,12 @@ ViennaFRAMModel class >> examplePedestrianCounter [
 	
 	operations
 	--@FRAM OUTPUT current count
-	--@FRAM INPUT new pedestrian
+	--@FRAM INPUT one pedestrian
 	inc : () ==> nat
 	inc() == (count := count + 1; return count);
 	
 	--@FRAM OUTPUT counter is ready
+	--@FRAM INPUT at the post
 	reset : () ==> ()
 	reset() == count := 0'.
 	model loadSpec: spec.
