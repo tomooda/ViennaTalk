@@ -12,6 +12,8 @@ BaselineOfViennaTalk >> baseline: spec [
 		for: #common do: [ 
 			spec blessing: #baseline.
 			spec
+				baseline: 'FRAM'
+				with: [ spec repository: 'github://tomooda/FRAM:main/src' ];
 				baseline: 'Pharo9UTF8Path'
 				with: [ 
 					spec repository: 'github://tomooda/Pharo9UTF8Path:main/src' ];
@@ -48,14 +50,7 @@ BaselineOfViennaTalk >> baseline: spec [
 							spec repository: 'github://marianopeck/OSSubprocess/repository' ];
 						package: #'ViennaTalk-Engine-Core'
 						with: [ spec requires: #( 'OSSubprocess' ) ] ];
-				for: #Windows do: [ "spec
-						baseline: 'ProcessWrapper'
-							with: [ spec repository: 'github://hernanmd/ProcessWrapper' ];
-						package: #'ViennaTalk-Engine-OSSubprocess'
-							with: [ spec requires: #('ProcessWrapper') ];
-						package: #'ViennaTalk-Engine-Core'
-							with: [ spec requires: #('ViennaTalk-Engine-OSSubprocess')" 
-				spec package: 'ViennaTalk-Engine-Core' ] ];
+				for: #Windows do: [ spec package: 'ViennaTalk-Engine-Core' ] ];
 		package: #'ViennaTalk-Engine-Tests'
 		with: [ spec requires: #( 'ViennaTalk-Engine-Core' ) ];
 		package: 'ViennaTalk-Html-Core'
@@ -110,8 +105,15 @@ BaselineOfViennaTalk >> baseline: spec [
 			   'ViennaTalk-Launcher-Core' 'ViennaTalk-WeblyWalkThrough-Translators' ) ];
 		package: #'ViennaTalk-WeblyWalkThrough-Translators' with: [ 
 		spec requires: #( 'ViennaTalk-Parser-Core' 'ViennaTalk-Value-Core'
-			   'PetitParser2' 'NeoJSON' ) ].
+			   'PetitParser2' 'NeoJSON' ) ];
+		package: #'ViennaTalk-FRAM-Core'
+		with: [ spec requires: #( 'ViennaTalk-Parser-Core'
+		   'FRAM' ) ];
+		package: #'ViennaTalk-FRAM-Tests'
+		with: [ spec requires: #( 'ViennaTalk-FRAM-Core' ) ].
+
 	spec
+		group: 'ViennaFRAM' with: #( 'ViennaTalk-FRAM-Core' );
 		group: 'LivelyWalkThrough'
 		with: #( 'ViennaTalk-LivelyWalkThrough-Core' );
 		group: 'Transpiler'
@@ -129,11 +131,12 @@ BaselineOfViennaTalk >> baseline: spec [
 		group: 'full'
 		with:
 			#( 'core' 'VDMPad' 'LivelyWalkThrough' 'tests' 'WeblyWalkThrough'
-			   'Transpiler' );
+			   'Transpiler' 'ViennaFRAM' );
 		group: 'tests'
 		with: #( #'ViennaTalk-Engine-Tests' #'ViennaTalk-Value-Tests'
 			   'ViennaTalk-Parser-Tests' #'ViennaTalk-Type-Tests'
-			   'ViennaTalk-Animation-Tests' #'ViennaTalk-Transpiler-Test' )
+			   'ViennaTalk-Animation-Tests' #'ViennaTalk-Transpiler-Test'
+			   #'ViennaTalk-FRAM-Tests' )
 ]
 
 { #category : #accessing }
