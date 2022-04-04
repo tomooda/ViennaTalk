@@ -903,14 +903,19 @@ ViennaAbstractFormatter >> forallExpression: aViennaNode [
 
 { #category : #formatting }
 ViennaAbstractFormatter >> format: aViennaNode [
+
 	| string |
-	aViennaNode isString
-		ifTrue: [ ^ aViennaNode ].
-	string := self
-		perform: (aViennaNode label uncapitalized , ':') asSymbol
-		with: aViennaNode.
-	(self needsParen: aViennaNode)
-		ifTrue: [ string := '(' , (self indentString: string) , ')' ].
+	aViennaNode isString ifTrue: [ ^ aViennaNode ].
+	string := (aViennaNode annotations
+		           ifNil: [ '' ]
+		           ifNotNil: [ :annotations | 
+			           (String cr join:
+				            (annotations collect: [ :annotation | 
+					             '--@' , annotation ])) , String cr ]) , (self
+		           perform: (aViennaNode label uncapitalized , ':') asSymbol
+		           with: aViennaNode).
+	(self needsParen: aViennaNode) ifTrue: [ 
+		string := '(' , (self indentString: string) , ')' ].
 	^ string
 ]
 

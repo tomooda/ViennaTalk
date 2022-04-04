@@ -865,11 +865,12 @@ ViennaRefactoringBrowser >> importDirectory [
 
 { #category : #operations }
 ViennaRefactoringBrowser >> importFile [
+
 	(UIManager default
-		chooseExistingFileReference: 'Import directory'
-		extensions: #('vdmsl')
-		path: FileLocator home)
-		ifNotNil: [ :file | self load: file contents withInternalLineEndings ]
+		 chooseExistingFileReference: 'Import directory'
+		 extensions: #( 'vdmsl' )
+		 path: FileLocator home) ifNotNil: [ :file | 
+		self load: file contents withInternalLineEndings ]
 ]
 
 { #category : #initialization }
@@ -1009,7 +1010,7 @@ ViennaRefactoringBrowser >> load: aString [
 											(ViennaNode
 												label: 'ExportDefinition'
 												with: (ViennaNode label: 'ExportModuleSignatureAll')))
-								with: (ViennaNode label: 'ModuleBody' with: first)) ] ].
+								with: (ViennaNode label: 'ModuleBody' withAll: ast asArray)) ] ].
 	historyList
 		resetSelection;
 		items:

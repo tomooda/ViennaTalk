@@ -133,10 +133,17 @@ ViennaNode class >> label: aString with: aViennaNode1 with: aViennaNode2 with: a
 
 { #category : #'instance creation' }
 ViennaNode class >> label: aString withAll: anArray [
+
+	^ self label: aString withAll: anArray annotations: nil
+]
+
+{ #category : #'instance creation' }
+ViennaNode class >> label: aString withAll: anArray annotations: anArrayOfString [
 	| node |
 	node := self new: anArray size.
 	node setLabel: aString.
 	1 to: anArray size do: [ :index | node at: index put: (anArray at: index) ].
+	node annotations: anArrayOfString.
 	^ node
 ]
 
@@ -192,6 +199,14 @@ ViennaNode >> addAll: aCollection [
 				yourself).
 	1 to: array size do: [ :index | self at: index put: (array at: index) ].
 	^ aCollection
+]
+
+{ #category : #'adding/removing' }
+ViennaNode >> addAnnotation: aString [
+
+	annotations := annotations
+		               ifNil: [ { aString } ]
+		               ifNotNil: [ annotations copyWith: aString ]
 ]
 
 { #category : #enumerating }
@@ -1360,6 +1375,15 @@ ViennaNode >> removeAll: aCollection [
 	^ aCollection
 ]
 
+{ #category : #'adding/removing' }
+ViennaNode >> removeAnnotation: aString [
+
+	annotations ifNotNil: [ 
+		annotations := annotations copyWithout: aString.
+		annotations ifEmpty: [ annotations := nil ] ].
+	^ aString
+]
+
 { #category : #'accessing-definitions' }
 ViennaNode >> resolve [
 	label = 'LocalName'
@@ -1477,14 +1501,19 @@ ViennaNode >> stateVariablesDo: aBlock [
 
 { #category : #printing }
 ViennaNode >> storeOn: aStream [
+
 	aStream
 		nextPutAll: '(';
 		nextPutAll: self class name;
 		nextPutAll: ' label: '.
 	label storeOn: aStream.
 	aStream nextPutAll: ' withAll: {'.
-	(1 to: self size) do: [ :index | (self at: index) storeOn: aStream ] separatedBy: [ aStream nextPutAll: ' . ' ].
-	aStream nextPutAll: '})'
+	(1 to: self size)
+		do: [ :index | (self at: index) storeOn: aStream ]
+		separatedBy: [ aStream nextPutAll: ' . ' ].
+	aStream nextPutAll: '} annotations: '.
+	annotations storeOn: aStream.
+	aStream nextPutAll: ')'
 ]
 
 { #category : #accessing }
