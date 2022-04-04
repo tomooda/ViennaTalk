@@ -11,22 +11,23 @@ ViennaFRAMModel class >> examplePedestrianCounter [
 	model := ViennaFRAMModel new.
 	(model newFunctionNamed: 'observation plan')
 		beOrganisational;
-		newOutputNamed: 'observation hours';
-		newOutputNamed: 'observation post'.
+		newOutputNamed: 'instructions';
+		newOutputNamed: 'observation hours'.
 	(model newFunctionNamed: 'go to post and prepare counting')
 		beHuman;
-		newControlNamed: 'observation post';
+		newControlNamed: 'instructions';
 		newTimeNamed: 'observation hours';
 		newOutputNamed: 'at the post'.
 	(model newFunctionNamed: 'find a pedestrian')
 		beHuman;
-		newControlNamed: 'observation post';
+		newControlNamed: 'instructions';
 		newTimeNamed: 'observation hours';
 		newInputNamed: 'at the post';
 		newPreconditionNamed: 'counter is ready';
 		newOutputNamed: 'one pedestrian'.
 	(model newFunctionNamed: 'report the count')
 		beHuman;
+		newControlNamed: 'instructions';
 		newTimeNamed: 'observation hours';
 		newResourceNamed: 'current count'.
 	spec := ViennaVDMParser parse: '
@@ -45,12 +46,53 @@ ViennaFRAMModel class >> examplePedestrianCounter [
 	--@FRAM INPUT at the post
 	reset : () ==> ()
 	reset() == count := 0'.
-	model loadSpec: spec.
+	model
+		loadSpec: spec
+		newFunctionsDo: [ :f | f color: Color blue ]
+		newAspectsDo: [ :a |  ].
+	model openInExternalViewer
+]
+
+{ #category : #examples }
+ViennaFRAMModel class >> examplePedestrianTraffic [
+
+	| model |
+	model := ViennaFRAMModel new.
+	(model newFunctionNamed: 'observation plan')
+		beOrganisational;
+		newOutputNamed: 'instructions';
+		newOutputNamed: 'observation hours'.
+	(model newFunctionNamed: 'go to post and prepare counting')
+		beHuman;
+		newControlNamed: 'instructions';
+		newTimeNamed: 'observation hours';
+		newOutputNamed: 'at the post'.
+	(model newFunctionNamed: 'find a pedestrian')
+		beHuman;
+		newControlNamed: 'instructions';
+		newTimeNamed: 'observation hours';
+		newInputNamed: 'at the post';
+		newPreconditionNamed: 'counter is ready';
+		newOutputNamed: 'one pedestrian'.
+	(model newFunctionNamed: 'report the count')
+		beHuman;
+		newControlNamed: 'instructions';
+		newTimeNamed: 'observation hours';
+		newResourceNamed: 'current count'.
 	model openInExternalViewer
 ]
 
 { #category : #merging }
 ViennaFRAMModel >> loadSpec: aViennaNode [
+
+	self
+		loadSpec: aViennaNode
+		newFunctionsDo: [ :f |  ]
+		newAspectsDo: [ :a |  ]
+]
+
+{ #category : #merging }
+ViennaFRAMModel >> loadSpec: aViennaNode newFunctionsDo: functionBlock newAspectsDo: aspectBlock [
 
 	| parser |
 	parser := ViennaFRAMAnnotationParser new.
@@ -74,20 +116,28 @@ ViennaFRAMModel >> loadSpec: aViennaNode [
 					| functionId |
 					functionId := self
 						              idOfFunctionNamed: functionName
-						              ifAbsentNew: [ :f | f beTechnological ].
+						              ifAbsentNew: [ :f | 
+							              f beTechnological.
+							              functionBlock cull: f ].
 					framAnnotations do: [ :annotation | 
 						| aspect |
 						aspect := annotation first.
 						aspect = $c ifTrue: [ 
-							self newControlOf: functionId named: annotation second ].
+							aspectBlock cull:
+								(self newControlOf: functionId named: annotation second) ].
 						aspect = $i ifTrue: [ 
-							self newInputOf: functionId named: annotation second ].
+							aspectBlock cull:
+								(self newInputOf: functionId named: annotation second) ].
 						aspect = $o ifTrue: [ 
-							self newOutputOf: functionId named: annotation second ].
+							aspectBlock cull:
+								(self newOutputOf: functionId named: annotation second) ].
 						aspect = $p ifTrue: [ 
-							self newPreconditionOf: functionId named: annotation second ].
+							aspectBlock cull:
+								(self newPreconditionOf: functionId named: annotation second) ].
 						aspect = $r ifTrue: [ 
-							self newResourceOf: functionId named: annotation second ].
+							aspectBlock cull:
+								(self newResourceOf: functionId named: annotation second) ].
 						aspect = $t ifTrue: [ 
-							self newTimeOf: functionId named: annotation second ] ] ] ] ] ]
+							aspectBlock cull:
+								(self newTimeOf: functionId named: annotation second) ] ] ] ] ] ]
 ]
