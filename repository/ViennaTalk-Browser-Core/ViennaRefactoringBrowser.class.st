@@ -1023,43 +1023,62 @@ ViennaRefactoringBrowser >> load: aString [
 
 { #category : #menus }
 ViennaRefactoringBrowser >> menuBar [
-	^ self newMenuBar
-		addGroup: [ :group | 
-			group
-				addItem: [ :item | 
-					item
-						name: 'File';
-						subMenu:
-							(self newMenu
-								addGroup: [ :g | 
-									g
-										addItem: [ :i | 
-											i
-												name: 'Import from Directory...';
-												action: [ self importDirectory ] ];
-										addItem: [ :i | 
-											i
-												name: 'Import from File...';
-												action: [ self importFile ] ];
-										addItem: [ :i | 
-											i
-												name: 'Export to Directory...';
-												action: [ self exportDirectory ] ];
-										addItem: [ :i | 
-											i
-												name: 'Export to File...';
-												action: [ self exportFile ] ] ]) ];
-				addItem: [ :item | 
-					item
-						name: 'Test';
-						subMenu:
-							(self newMenu
-								addGroup: [ :g | 
-									g
-										addItem: [ :i | 
-											i
-												name: 'Run all tests';
-												action: [ self runAllTests ] ] ]) ] ]
+
+	^ self newMenuBar addGroup: [ :group | 
+		  group
+			  addItem: [ :item | 
+				  item
+					  name: 'File';
+					  subMenu: (self newMenu
+							   addGroup: [ :g | 
+								   g
+									   addItem: [ :i | 
+										   i
+											   name: 'Import from Directory...';
+											   action: [ self importDirectory ] ];
+									   addItem: [ :i | 
+										   i
+											   name: 'Import from File...';
+											   action: [ self importFile ] ];
+									   addItem: [ :i | 
+										   i
+											   name: 'Export to Directory...';
+											   action: [ self exportDirectory ] ];
+									   addItem: [ :i | 
+										   i
+											   name: 'Export to File...';
+											   action: [ self exportFile ] ] ];
+							   addGroup: [ :g | 
+								   g addItem: [ :i | 
+									   i
+										   name: 'Merge annotations into FRAM...';
+										   action: [ self mergeAnnotationsIntoFRAM ] ] ]) ];
+			  addItem: [ :item | 
+				  item
+					  name: 'Test';
+					  subMenu: (self newMenu addGroup: [ :g | 
+								   g addItem: [ :i | 
+										   i
+											   name: 'Run all tests';
+											   action: [ self runAllTests ] ] ]) ] ]
+]
+
+{ #category : #operations }
+ViennaRefactoringBrowser >> mergeAnnotationsIntoFRAM [
+
+	| fram |
+	(UIManager default
+		 chooseExistingFileReference: 'Import directory'
+		 extensions: #( 'xfmv' )
+		 path: FileLocator home) ifNotNil: [ :ref | 
+		fram := ViennaFRAMModel fromFile: ref ].
+	fram ifNil: [ ^ nil ].
+	fram loadSpec: self specification.
+	(UIManager default
+		 chooseForSaveFileReference: 'Export file'
+		 extensions: #( 'xfmv' )
+		 path: FileLocator home asFileReference) ifNotNil: [ :ref | 
+		fram writeXMLFile: ref ]
 ]
 
 { #category : #accessing }

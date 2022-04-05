@@ -204,9 +204,11 @@ ViennaNode >> addAll: aCollection [
 { #category : #'adding/removing' }
 ViennaNode >> addAnnotation: aString [
 
-	annotations := annotations
-		               ifNil: [ { aString } ]
-		               ifNotNil: [ annotations copyWith: aString ]
+	annotations := annotations ifNil: [ { aString } ] ifNotNil: [ 
+		               (annotations includes: aString)
+			               ifTrue: [ annotations ]
+			               ifFalse: [ annotations copyWith: aString ] ].
+	^ aString
 ]
 
 { #category : #enumerating }

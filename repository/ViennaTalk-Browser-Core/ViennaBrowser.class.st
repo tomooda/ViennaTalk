@@ -205,6 +205,9 @@ ViennaBrowser class >> moduleListMenu: aBuilder [
 	(aBuilder item: #'remove module' translated)
 		selector: #removeModule;
 		withSeparatorAfter.
+	(aBuilder item: #'merge annotations into FRAM...' translated)
+		selector: #mergeAnnotationsIntoFRAM;
+		withSeparatorAfter.
 	(Smalltalk globals
 		 at: #WeblyWalkThrough
 		 ifPresent: [ :webly | aBuilder model animation class = webly ]
@@ -1413,6 +1416,24 @@ ViennaBrowser >> matches: aParser in: aStream do: aBlock [
 	"Search anObject repeatedly for the matches of the receiver. Evaluate aBlock for each match with the matched parse-tree as the argument. Make sure to always consume exactly one character with each step, to not miss any match."
 
 	((aParser and ==> aBlock , #any asPParser) / #any asPParser) star parse: aStream
+]
+
+{ #category : #'module list menu' }
+ViennaBrowser >> mergeAnnotationsIntoFRAM [
+
+	| fram ast |
+	self
+		fileOpen: 'Load FRAM ...'
+		extensions: #( 'xfram' )
+		do: [ :stream | fram := ViennaFRAMModel fromXML: stream ].
+	fram ifNil: [ ^ nil ].
+	ast := ViennaVDMParser new parse: animation specification.
+	ast isPetit2Failure ifTrue: [ ^ nil ].
+	fram loadSpec: ast.
+	self
+		fileSave: 'Write the merged FRAM to...'
+		extensions: #( 'xfram' )
+		do: [ :stream | fram writeXMLOn: stream ]
 ]
 
 { #category : #'module list' }

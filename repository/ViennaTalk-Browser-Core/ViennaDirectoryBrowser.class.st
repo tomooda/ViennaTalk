@@ -42,48 +42,52 @@ ViennaDirectoryBrowser class >> defaultBasePath: aFileReference [
 
 { #category : #menu }
 ViennaDirectoryBrowser class >> moduleListMenu: aBuilder [
+
 	<contextMenu>
 	<viennaDirectoryBrowserModuleListMenu>
 	(aBuilder item: #'open dir...' translated) selector: #openDirectory.
-	(aBuilder item: #'copy and merge file...' translated)
-		selector: #loadAndMergeFromFile.
+	(aBuilder item: #'copy and merge file...' translated) selector:
+		#loadAndMergeFromFile.
 	aBuilder items last withSeparatorAfter.
-	(aBuilder item: #'generate ViennaDoc source script...' translated)
+	(aBuilder item: #'generate ViennaDoc source script...' translated) 
 		selector: #generateViennaDocSourceScript.
 	aBuilder items last withSeparatorAfter.
-	(aBuilder item: #'import UnitTesting module' translated)
-		selector: #importUnitTestingModule.
+	(aBuilder item: #'import UnitTesting module' translated) selector:
+		#importUnitTestingModule.
 	(aBuilder item: #'remove module' translated)
 		selector: #removeModule;
 		withSeparatorAfter.
+	(aBuilder item: #'merge annotations into FRAM...' translated)
+		selector: #mergeAnnotationsIntoFRAM;
+		withSeparatorAfter.
 	aBuilder model animation class = ViennaTranspiledAnimation
-		ifTrue: [ (aBuilder item: #'use interpreter' translated)
+		ifTrue: [ 
+			(aBuilder item: #'use interpreter' translated)
 				selector: #useInterpreter;
 				withSeparatorAfter ]
-		ifFalse: [ (aBuilder item: #'use transpiler' translated)
+		ifFalse: [ 
+			(aBuilder item: #'use transpiler' translated)
 				selector: #useTranspiler;
 				withSeparatorAfter ].
-	(aBuilder
-		item: #'generate a Smalltalk script (single module)...' translated)
+	(aBuilder item:
+		 #'generate a Smalltalk script (single module)...' translated) 
 		selector: #generateSmalltalkScript.
-	(aBuilder item: #'generate classes (all modules)...' translated)
+	(aBuilder item: #'generate classes (all modules)...' translated) 
 		selector: #generateSmalltalkClasses.
 	(aBuilder item: #'generate object (all modules)...' translated)
 		selector: #generateSmalltalkObject;
 		withSeparatorAfter.
-	(aBuilder item: #'run module test' translated)
-		selector: #runTestModule.
+	(aBuilder item: #'run module test' translated) selector:
+		#runTestModule.
 	(aBuilder item: #'run tests' translated)
 		selector: #runAllTests;
 		withSeparatorAfter.
-	aBuilder model importerModules
-		ifNotEmpty: [ :modules | 
-			(aBuilder item: #'imported by...' translated)
-				with: [ modules
-						do: [ :module | 
-							(aBuilder item: module asSymbol)
-								selector: #selectModuleNamed:;
-								arguments: (Array with: module asString) ] ] ]
+	aBuilder model importerModules ifNotEmpty: [ :modules | 
+		(aBuilder item: #'imported by...' translated) with: [ 
+			modules do: [ :module | 
+				(aBuilder item: module asSymbol)
+					selector: #selectModuleNamed:;
+					arguments: (Array with: module asString) ] ] ]
 ]
 
 { #category : #'world menu' }

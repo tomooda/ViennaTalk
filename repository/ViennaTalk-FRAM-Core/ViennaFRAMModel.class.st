@@ -60,25 +60,20 @@ ViennaFRAMModel class >> examplePedestrianTraffic [
 	model := ViennaFRAMModel new.
 	(model newFunctionNamed: 'observation plan')
 		beOrganisational;
-		newOutputNamed: 'instructions';
 		newOutputNamed: 'observation hours'.
 	(model newFunctionNamed: 'go to post and prepare counting')
 		beHuman;
-		newControlNamed: 'instructions';
 		newTimeNamed: 'observation hours';
 		newOutputNamed: 'at the post'.
-	(model newFunctionNamed: 'find a pedestrian')
+	(model newFunctionNamed: 'count pedestrians')
 		beHuman;
-		newControlNamed: 'instructions';
 		newTimeNamed: 'observation hours';
 		newInputNamed: 'at the post';
-		newPreconditionNamed: 'counter is ready';
-		newOutputNamed: 'one pedestrian'.
+		newOutputNamed: 'current count'.
 	(model newFunctionNamed: 'report the count')
 		beHuman;
-		newControlNamed: 'instructions';
 		newTimeNamed: 'observation hours';
-		newResourceNamed: 'current count'.
+		newInputNamed: 'current count'.
 	model openInExternalViewer
 ]
 
