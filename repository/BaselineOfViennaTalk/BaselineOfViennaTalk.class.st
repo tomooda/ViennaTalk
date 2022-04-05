@@ -55,8 +55,9 @@ BaselineOfViennaTalk >> baseline: spec [
 		with: [ spec requires: #( 'ViennaTalk-Engine-Core' ) ];
 		package: 'ViennaTalk-Html-Core'
 		with: [ spec requires: #( 'PetitParser2' ) ];
-		package: 'ViennaTalk-Launcher-Core'
-		with: [ spec requires: #( 'Pharo9UTF8Path' ) ];
+		package: 'ViennaTalk-Launcher-Core' with: [ 
+		SystemVersion current major = 9 ifTrue: [ 
+			spec requires: #( 'Pharo9UTF8Path' ) ] ];
 		package: 'ViennaTalk-LivelyWalkThrough-Core' with: [ 
 		spec requires:
 			#( 'ViennaTalk-Animation-Core' 'ViennaTalk-Animation-Transpiler'
