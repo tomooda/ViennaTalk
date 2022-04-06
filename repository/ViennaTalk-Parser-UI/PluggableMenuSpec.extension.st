@@ -4,3 +4,8 @@ Extension { #name : #PluggableMenuSpec }
 PluggableMenuSpec >> build [
 	^ self asMenuMorph
 ]
+
+{ #category : #'*ViennaTalk-Parser-UI' }
+PluggableMenuSpec >> buildWithSpec [
+	^ self asMenuMorph
+]
