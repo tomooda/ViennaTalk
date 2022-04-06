@@ -97,14 +97,13 @@ WWTTranslator >> vdmToJson: vdmObj [
 
 { #category : #translating }
 WWTTranslator >> vdmToJsonString: vdmString [
+
 	| vdmObj |
-	vdmString trim = '()'
-		ifTrue: [ ^ 'null' ].
+	vdmString trim = '()' ifTrue: [ ^ 'null' ].
 	vdmObj := vdmDecoder parse: vdmString.
-	vdmObj isPetit2Failure
-		ifTrue: [ ^ vdmString convertToEncoding: 'utf-8' ].
-	^ String streamContents: [ :stream |
-			(NeoJSONWriter on: stream) asciiOnly: true; nextPut: (self vdmToJson: vdmObj) ]
+	vdmObj isPetit2Failure ifTrue: [ ^ vdmString ].
+	^ String streamContents: [ :stream | 
+		  (NeoJSONWriter on: stream) nextPut: (self vdmToJson: vdmObj) ]
 ]
 
 { #category : #translating }
