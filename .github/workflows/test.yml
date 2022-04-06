@@ -23,11 +23,11 @@ jobs:
           - os: ubuntu-latest
             smalltalk: Pharo64-9.0
           - os: ubuntu-latest
-            smalltalk: Pharo64-10.0
+            smalltalk: Pharo64-10
           - os: macos-latest
             smalltalk: Pharo64-9.0
           - os: macos-latest
-            smalltalk: Pharo64-10.0
+            smalltalk: Pharo64-10
           #- os: windows-latest
           #  smalltalk: Pharo32-9.0
     runs-on: ${{ matrix.os }}
