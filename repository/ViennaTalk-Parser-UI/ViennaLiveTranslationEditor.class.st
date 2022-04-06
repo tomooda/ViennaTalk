@@ -1,30 +1,27 @@
 Class {
 	#name : #ViennaLiveTranslationEditor,
-	#superclass : #ComposableModel,
+	#superclass : #SpPresenter,
 	#instVars : [
 		'sourceText',
 		'targetText',
 		'translator',
 		'process'
 	],
-	#category : 'ViennaTalk-Parser-UI'
+	#category : #'ViennaTalk-Parser-UI'
 }
 
-{ #category : #specs }
-ViennaLiveTranslationEditor class >> defaultSpec [
+{ #category : #layout }
+ViennaLiveTranslationEditor class >> defaultLayout [
 	<spec: #default>
-	^ SpecLayout composed
-		newRow: [ :c | 
-					c
+	^ SpPanedLayout newHorizontal
 						add: #sourceText;
-						addSplitter;
-						add: #targetText ];
+						add: #targetText;
 		yourself
 ]
 
 { #category : #menu }
 ViennaLiveTranslationEditor class >> sourceTextMenuFor: aModel [
-	^ (PragmaMenuBuilder pragmaKeyword: self sourceTextMenuKeyword model: aModel) menu
+	^ (PragmaMenuBuilder pragmaKeyword: self sourceTextMenuKeyword model: aModel) menuSpec
 ]
 
 { #category : #menu }
@@ -117,21 +114,35 @@ ViennaLiveTranslationEditor >> formatSourceText [
 
 { #category : #'initialize-release' }
 ViennaLiveTranslationEditor >> initializeWidgets [
+
 	sourceText := self newText.
 	sourceText
 		help: 'VDM source';
 		autoAccept: true;
-		isCodeCompletionAllowed: false;
-		menuHolder: [ self sourceTextMenu ];
-		bindKeyCombination: $f shift command toAction: [ self formatSourceText ];
-		bindKeyCombination: $p command toAction: [ self viennaItInSourceText ];
-		whenTextChanged: [ [self translate] forkAt: Processor userBackgroundPriority  ];
-		whenBuiltDo: [ sourceText widget font: ViennaLauncher font ].
+		withoutEditionContextMenu;
+		contextMenu: [ self sourceTextMenu ];
+		bindKeyCombination: $f shift command
+		toAction: [ self formatSourceText ];
+		bindKeyCombination: $p command
+		toAction: [ self viennaItInSourceText ];
+		bindKeyCombination: $p control
+		toAction: [ self viennaItInSourceText ];
+		whenTextChangedDo: [ 
+			[ self translate ] forkAt: Processor userBackgroundPriority ];
+		whenBuiltDo: [ 
+			sourceText withWidgetDo: [ :w | w font: ViennaLauncher font ] ].
 	targetText := self newText.
 	targetText
 		help: 'Translation output';
-		whenBuiltDo: [ targetText widget font: ViennaLauncher font ].
-	self title: self defaultTitle
+		whenBuiltDo: [ 
+			targetText withWidgetDo: [ :w | w font: ViennaLauncher font ] ]
+]
+
+{ #category : #'initialize-release' }
+ViennaLiveTranslationEditor >> initializeWindow: aSpWindowPresenter [
+
+	super initializeWindow: aSpWindowPresenter.
+	aSpWindowPresenter title: self defaultTitle
 ]
 
 { #category : #accessing }
@@ -151,25 +162,22 @@ ViennaLiveTranslationEditor >> targetText [
 
 { #category : #private }
 ViennaLiveTranslationEditor >> translate [
+
 	| source |
 	source := sourceText text asString.
 	[ 
 	| failure |
 	failure := nil.
-	targetText
-		accept:
-			(self
-				translate: source
-				ifError: [ :error | 
-					failure := error.
-					'' ])
-		notifying: nil.
-	failure ifNotNil: [ sourceText text: (source addAttribute: TextColor red from: failure position + 1 to: source size) ] ]
+	targetText text: (self translate: source ifError: [ :error | 
+			 failure := error.
+			 '' ]).
+	failure ifNotNil: [ 
+		sourceText text: (source
+				 addAttribute: TextColor red
+				 from: failure position + 1
+				 to: source size) ] ]
 		on: Error
-		do: [ :ex | 
-			Transcript
-				cr;
-				show: ex printString ]
+		do: [ :ex |  ]
 ]
 
 { #category : #accessing }
@@ -188,23 +196,31 @@ ViennaLiveTranslationEditor >> translator [
 
 { #category : #evaluating }
 ViennaLiveTranslationEditor >> viennaItIn: aTextModel [
+
 	| parser codeFromSource editor ast codeFromSelection result |
 	parser := ViennaVDMParser new.
 	codeFromSource := targetText text asString.
-	editor := aTextModel widget widget textMorph editor.
+	aTextModel withWidgetDo: [ :widget | 
+		editor := widget widget textMorph editor ].
 	editor lineSelectAndEmptyCheck: [ ^ '' ].
-	ast := parser expression end / parser statement end / parser type end
-		parse: (aTextModel text asString copyFrom: editor startIndex to: editor stopIndex - 1) trim.
-	ast isPetit2Failure
-		ifTrue: [ ^ aTextModel notify: ast message at: ast position + 1 in: aTextModel text ].
+	ast := parser expression end / parser statement end / parser type end 
+		       parse: (aTextModel text asString
+				        copyFrom: editor startIndex
+				        to: editor stopIndex - 1) trim.
+	ast isPetit2Failure ifTrue: [ 
+		^ aTextModel
+			  notify: ast message
+			  at: ast position + 1
+			  in: aTextModel text ].
 	codeFromSelection := ViennaVDM2SmalltalkScript new generate: ast.
 	result := (OpalCompiler new
-		source: codeFromSource , '.' , codeFromSelection;
-		evaluate) viennaString.
+		           source: codeFromSource , '.' , codeFromSelection;
+		           evaluate) viennaString.
 	editor afterSelectionInsertAndSelect: result.
-	aTextModel widget widget
-		selectFrom: editor startIndex to: editor stopIndex - 1;
-		textChanged.
+	aTextModel withWidgetDo: [ :widget | 
+		widget widget
+			selectFrom: editor startIndex to: editor stopIndex - 1;
+			textChanged ].
 	^ true
 ]
 

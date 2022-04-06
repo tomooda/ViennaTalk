@@ -644,7 +644,7 @@ ViennaVDMJ >> register [
 ViennaVDMJ >> send: aString responseDo: aBlock ifError: errorBlock [
 	| semaphore response readerProcess |
 	(reader next: 1024) ifNotEmpty: [:str | Transcript cr; show: str].
-	writer nextPutAll: ((aString copyReplaceAll: String lf with: '\n') convertToEncoding: 'utf-8').
+	writer nextPutAll: ((aString copyReplaceAll: String lf with: '\n') utf8Encoded asString).
 	writer nextPut: Character lf.
 	writer flush.
 	semaphore := Semaphore new.
@@ -664,7 +664,7 @@ ViennaVDMJ >> send: aString responseDo: aBlock ifError: errorBlock [
 			self startupProcess.
 			errorBlock value: 'Time out']
 		ifFalse: [response := NeoJSONReader
-						fromString: (response contents convertFromEncoding: 'utf-8').
+						fromString: (response contents utf8Encoded asString).
 			(response first = true
 				ifTrue: [aBlock]
 				ifFalse: [errorBlock])
@@ -704,14 +704,17 @@ ViennaVDMJ >> startupProcess [
 
 { #category : #commands }
 ViennaVDMJ >> statesDo: aBlock ifError: errorBlock [
+
 	^ self
-		send: 'state'
-		responseDo: [ :stateDict | 
-			stateDict
-				keysAndValuesDo: [ :var :value | 
-					(value beginsWithEmpty: 'mk_' , var , '(' caseSensitive: true)
-						ifFalse: [ aBlock value: var value: value ] ] ]
-		ifError: errorBlock
+		  send: 'state'
+		  responseDo: [ :stateDict | 
+			  stateDict keysAndValuesDo: [ :var :value | 
+				  ('mk_' , var , '('
+					   ifEmpty: [ true ]
+					   ifNotEmpty: [ 
+					   value beginsWith: 'mk_' , var , '(' caseSensitive: true ]) 
+					  ifFalse: [ aBlock value: var value: value ] ] ]
+		  ifError: errorBlock
 ]
 
 { #category : #private }

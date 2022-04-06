@@ -6,14 +6,15 @@ Class {
 		'runtimeTypeCheck',
 		'runtimeAssertionCheck'
 	],
-	#category : 'ViennaTalk-Parser-UI'
+	#category : #'ViennaTalk-Parser-UI'
 }
 
 { #category : #menu }
 ViennaLiveSmalltalkTranslationEditor class >> VDM2SmalltalkTranslatorMenuOn: aBuilder [
+
 	<worldMenu>
 	(aBuilder item: #'VDM->Smalltalk translator')
-		action: [ self new openWithSpec ];
+		action: [ self new open ];
 		order: 0.2;
 		parent: #VienntaTalkDev;
 		help: 'VDM-SL to Smalltalk LIVE translating editor';
@@ -22,7 +23,7 @@ ViennaLiveSmalltalkTranslationEditor class >> VDM2SmalltalkTranslatorMenuOn: aBu
 
 { #category : #menu }
 ViennaLiveSmalltalkTranslationEditor class >> codeTextMenuFor: aModel [
-	^ (PragmaMenuBuilder pragmaKeyword: self codeTextMenuKeyword model: aModel) menu
+	^ (PragmaMenuBuilder pragmaKeyword: self codeTextMenuKeyword model: aModel) menuSpec
 ]
 
 { #category : #menu }
@@ -103,25 +104,20 @@ ViennaLiveSmalltalkTranslationEditor class >> codeTextMenuOn: aBuilder [
 ]
 
 { #category : #specs }
-ViennaLiveSmalltalkTranslationEditor class >> defaultSpec [
+ViennaLiveSmalltalkTranslationEditor class >> defaultLayout [
+
 	<spec: #default>
-	^ SpecLayout composed
-		newColumn: [ :c | 
-					c
-						newRow: [ :row | 
-									row
-										add: #runtimeTypeCheck;
-										add: #runtimeAssertionCheck ]
-							height: 12;
-						newRow: [ :row | 
-									row
-										add: #sourceText;
-										addSplitter;
-										add: #targetText ];
-						addSplitter;
-						newRow: [ :row | row add: #codeText ];
-						yourself ];
-		yourself
+	^ SpBoxLayout newVertical
+		  add: (SpPanedLayout newHorizontal
+				   add: #runtimeTypeCheck;
+				   add: #runtimeAssertionCheck)
+		  expand: false;
+		  add: (SpPanedLayout newVertical
+				   add: (SpPanedLayout newHorizontal
+						    add: #sourceText;
+						    add: #targetText);
+				   add: #codeText);
+		  yourself
 ]
 
 { #category : #'class initialization' }
@@ -197,19 +193,27 @@ ViennaLiveSmalltalkTranslationEditor >> formatSelectionInCodeText [
 
 { #category : #'initialize-release' }
 ViennaLiveSmalltalkTranslationEditor >> initializeWidgets [
+
 	super initializeWidgets.
 	targetText help: 'Smalltalk code'.
-	codeText := self newText.
+	codeText := self newCode.
 	codeText
 		help: 'VDM expression/statement/type to evaluate';
 		autoAccept: true;
-		isCodeCompletionAllowed: false;
 		wantsVisualFeedback: true;
-		menuHolder: [ self codeTextMenu ];
-		bindKeyCombination: $f shift command toAction: [ self formatSelectionInCodeText ];
-		bindKeyCombination: $p command toAction: [ self viennaItInCodeText ];
+		overridingContextMenu;
+		contextMenu: [ self codeTextMenu ];
+		bindKeyCombination: $f shift command
+		toAction: [ self formatSelectionInCodeText ];
+		bindKeyCombination: $p command
+		toAction: [ self viennaItInCodeText ];
+		bindKeyCombination: $p control
+		toAction: [ self viennaItInCodeText ];
 		bindKeyCombination: $t command toAction: [ self translateIt ];
-		whenBuiltDo: [ codeText widget font: ViennaLauncher font ].
+		bindKeyCombination: $t control toAction: [ self translateIt ];
+		whenBuiltDo: [ 
+			codeText withWidgetDo: [ :widget | 
+					widget font: ViennaLauncher font ] ].
 	runtimeTypeCheck := self newCheckBox.
 	runtimeTypeCheck
 		label: 'runtime type check';

@@ -6,18 +6,19 @@ Class {
 
 { #category : #menu }
 ViennaLiveASTTranslationEditor class >> VDM2SmalltalkTranslatorMenuOn: aBuilder [
+
 	<worldMenu>
 	((aBuilder item: #VienntaTalkDev)
-		parent: #ViennaTalk;
-		label: 'dev')
+		 parent: #ViennaTalk;
+		 label: 'dev')
 		withSeparatorAfter;
 		with: [ 
-					(aBuilder item: #'VDM->AST translator')
-						action: [ self new openWithSpec ];
-						order: 0.1;
-						parent: #VienntaTalkDev;
-						help: 'VDM-SL to AST LIVE translating editor';
-						icon: nil ]
+			(aBuilder item: #'VDM->AST translator')
+				action: [ self new open ];
+				order: 0.1;
+				parent: #VienntaTalkDev;
+				help: 'VDM-SL to AST LIVE translating editor';
+				icon: nil ]
 ]
 
 { #category : #'class initialization' }

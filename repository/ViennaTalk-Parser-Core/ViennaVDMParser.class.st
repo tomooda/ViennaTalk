@@ -1773,7 +1773,7 @@ ViennaVDMParser >> scanCommentsOn: aStream [
 		streamContents: [ :comments | 
 			(self textLiteral / self characterLiteral
 				/
-					(comment
+					(super singleLineAnnotation trim not, comment ==> #second
 						>=> [ :commentStream :continuation | 
 							| commentString position |
 							position := commentStream position.

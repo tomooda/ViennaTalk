@@ -28,8 +28,8 @@ ViennaRefactoringBrowser class >> VDMBrowserMenuOn: aBuilder [
 		icon: nil
 ]
 
-{ #category : #specs }
-ViennaRefactoringBrowser class >> defaultSpec [
+{ #category : #layout }
+ViennaRefactoringBrowser class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		  add: #menuBar height: self buttonHeight;
@@ -434,7 +434,7 @@ ViennaRefactoringBrowser class >> viennaToolsMenuOn: aBuilder [
 
 	<ViennaToolsMenu>
 	(aBuilder item: #'VDM Refactoring Browser')
-		action: [ self empty openWithSpec ];
+		action: [ self empty open ];
 		order: 0.12;
 		help: 'AST-based VDM-SL browser with refactoring support';
 		icon: nil
