@@ -1,4 +1,4 @@
-[![Pharo version](https://img.shields.io/badge/Pharo-9.0-%23aac9ff.svg)](https://pharo.org/download)
+[![Pharo version](https://img.shields.io/badge/Pharo-10-87CEFA.svg)](https://pharo.org/download)
 ![CI](https://github.com/tomooda/ViennaTalk/actions/workflows/test.yml/badge.svg)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/cormas/cormas/master/LICENSE)
 
@@ -40,7 +40,7 @@ What's new in the latest release
 ---
 * Codename Boulder has been released. (Dec 31, 2021)
   - Refactoring browser based on AST manipulations is now experimentally available.
-  - Base Phro is upgraded to Pharo 9.
+  - Base Pharo is upgraded to Pharo 9.
 
 * Codename Hakodate has been released. (Sep 4, 2020)
   - ViennaVisuals: a DOM library to generate XML document and bind UI events on DOM elements to handler operations
