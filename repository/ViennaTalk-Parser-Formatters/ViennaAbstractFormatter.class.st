@@ -909,9 +909,12 @@ ViennaAbstractFormatter >> format: aViennaNode [
 	string := (aViennaNode annotations
 		           ifNil: [ '' ]
 		           ifNotNil: [ :annotations | 
-			           (String cr join:
-				            (annotations collect: [ :annotation | 
-					             '--@' , annotation ])) , String cr ]) , (self
+			           String streamContents: [ :stream | 
+				           annotations do: [ :annotation | 
+					           stream
+						           nextPutAll: '--@';
+						           nextPutAll: annotation;
+						           nextPutAll: String cr ] ] ]) , (self
 		           perform: (aViennaNode label uncapitalized , ':') asSymbol
 		           with: aViennaNode).
 	(self needsParen: aViennaNode) ifTrue: [ 
