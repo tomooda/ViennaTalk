@@ -9,7 +9,8 @@ Class {
 		'definitionList',
 		'sourceText',
 		'testProcess',
-		'testResultTable'
+		'testResultTable',
+		'highlighterProcess'
 	],
 	#classVars : [
 		'SectionNames'
@@ -19,9 +20,10 @@ Class {
 
 { #category : #menus }
 ViennaRefactoringBrowser class >> VDMBrowserMenuOn: aBuilder [
+
 	<worldMenu>
 	(aBuilder item: #'VDM Refactoring Browser')
-		action: [ self empty openWithSpec ];
+		action: [ self empty open ];
 		order: 0.12;
 		parent: #ViennaTalk;
 		help: 'AST-based VDM-SL browser with refactoring support';
@@ -831,6 +833,39 @@ ViennaRefactoringBrowser >> getSource: aViennaNode [
 ]
 
 { #category : #operations }
+ViennaRefactoringBrowser >> highlightSourceText [
+
+	highlighterProcess ifNotNil: [ 
+		highlighterProcess terminate.
+		highlighterProcess := nil ].
+	highlighterProcess := [ 
+	                      | source highlighter context result |
+	                      source := sourceText text asString copy.
+	                      highlighter := ViennaVDMHighlighter new.
+	                      highlighter text: source asText.
+	                      context := ViennaPP2HighlightingContext new.
+	                      result := highlighter
+		                                parse: source
+		                                withContext: context.
+	                      result isPetit2Failure ifTrue: [ 
+		                      highlighter text
+			                      makeColor: Color red
+			                      from:
+			                      (context furthestPosition
+				                       min: source size
+				                       max: 1)
+			                      to: source size ].
+	                      source size = highlighter text runs size 
+		                      ifTrue: [ 
+			                      sourceText withAdapterDo: [ :a | 
+				                      a widgetDo: [ :w | 
+					                      w text runs: highlighter text runs.
+					                      w changed ] ] ].
+	                      highlighterProcess := nil ] forkAt:
+		                      Processor userBackgroundPriority
+]
+
+{ #category : #operations }
 ViennaRefactoringBrowser >> importDirectory [
 	| modelFiles testFiles source |
 	(UIManager default
@@ -926,6 +961,7 @@ ViennaRefactoringBrowser >> initializePresenters [
 		                  whenSelectionChangedDo: [ self updateSource ].
 	sourceText := self newText
 		              contextMenu: [ self sourceTextContextMenu ];
+						  whenTextChangedDo: [ self onTheFlyCheckSourceText ];
 		              whenSubmitDo: [ :text | self accept: text ];
 		              yourself.
 	testResultTable := self newTable
@@ -1159,6 +1195,11 @@ ViennaRefactoringBrowser >> moduleListContextMenu [
 				name: 'inspect';
 				action: [ self module inspect ] ] ].
 	^ menu
+]
+
+{ #category : #operations }
+ViennaRefactoringBrowser >> onTheFlyCheckSourceText [
+	self highlightSourceText
 ]
 
 { #category : #operations }
