@@ -38,6 +38,15 @@ Table of Major Components of ViennaTalk
 
 What's new in the latest release
 ---
+
+* Codename Graz has been released. (May 5, 2022)
+  - migration to Pharo 10
+  - IM supports by default
+  - FRAM collaboration support
+    - Import operations from FRAM functions
+    - Export operations to FRAM functions and aspects
+
+
 * Codename Boulder has been released. (Dec 31, 2021)
   - Refactoring browser based on AST manipulations is now experimentally available.
   - Base Pharo is upgraded to Pharo 9.
