@@ -196,7 +196,7 @@ ViennaLauncher >> close [
 
 { #category : #accessing }
 ViennaLauncher >> codename [
-	^ 'Boulder'
+	^ 'Graz'
 ]
 
 { #category : #accessing }
