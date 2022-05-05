@@ -205,6 +205,8 @@ ViennaBrowser class >> moduleListMenu: aBuilder [
 	(aBuilder item: #'remove module' translated)
 		selector: #removeModule;
 		withSeparatorAfter.
+	(aBuilder item: #'merge operations from FRAM...' translated) 
+		selector: #mergeOperationsFromFRAM.
 	(aBuilder item: #'merge annotations into FRAM...' translated)
 		selector: #mergeAnnotationsIntoFRAM;
 		withSeparatorAfter.
@@ -1424,7 +1426,7 @@ ViennaBrowser >> mergeAnnotationsIntoFRAM [
 	| fram ast |
 	self
 		fileOpen: 'Load FRAM ...'
-		extensions: #( 'xfram' )
+		extensions: #( 'xfmv' )
 		do: [ :stream | fram := ViennaFRAMModel fromXML: stream ].
 	fram ifNil: [ ^ nil ].
 	ast := ViennaVDMParser new parse: animation specification.
@@ -1432,8 +1434,24 @@ ViennaBrowser >> mergeAnnotationsIntoFRAM [
 	fram loadSpec: ast.
 	self
 		fileSave: 'Write the merged FRAM to...'
-		extensions: #( 'xfram' )
+		extensions: #( 'xfmv' )
 		do: [ :stream | fram writeXMLOn: stream ]
+]
+
+{ #category : #'module list menu' }
+ViennaBrowser >> mergeOperationsFromFRAM [
+
+	| fram ast |
+	self
+		fileOpen: 'Load FRAM ...'
+		extensions: #( 'xfmv' )
+		do: [ :stream | fram := ViennaFRAMModel fromXML: stream ].
+	fram ifNil: [ ^ nil ].
+	ast := ViennaVDMParser new parse: animation specification.
+	ast isPetit2Failure ifTrue: [ ^ nil ].
+	fram appendToSpec: ast.
+	animation specification: ast source
+
 ]
 
 { #category : #'module list' }

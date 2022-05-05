@@ -57,6 +57,8 @@ ViennaDirectoryBrowser class >> moduleListMenu: aBuilder [
 	(aBuilder item: #'remove module' translated)
 		selector: #removeModule;
 		withSeparatorAfter.
+	(aBuilder item: #'merge operations from FRAM...' translated) 
+		selector: #mergeOperationsFromFRAM.
 	(aBuilder item: #'merge annotations into FRAM...' translated)
 		selector: #mergeAnnotationsIntoFRAM;
 		withSeparatorAfter.

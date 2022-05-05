@@ -7,11 +7,12 @@ Class {
 { #category : #parsing }
 ViennaFRAMAnnotationParser >> framAnnotation [
 
-	^ 'FRAM' asPParser trim , #letter asPParser plus trim , #any asPParser star flatten
-	  ==> [ :triple | 
+	^ 'FRAM' asPParser , #blank asPParser plus
+	  , #letter asPParser plus trim , #any asPParser star flatten
+	  ==> [ :quad | 
 		  { 
-			  triple second first asLowercase.
-			  triple third trim } ]
+			  quad third first asLowercase.
+			  quad fourth trim } ]
 ]
 
 { #category : #parsing }

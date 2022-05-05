@@ -78,6 +78,150 @@ ViennaFRAMModel class >> examplePedestrianTraffic [
 ]
 
 { #category : #merging }
+ViennaFRAMModel >> appendToSpec: aViennaNode [
+
+	self
+		appendToSpec: aViennaNode
+		newOperationsDo: [ :node |  ]
+		newAnnotationsDo: [ :annotation |  ]
+]
+
+{ #category : #merging }
+ViennaFRAMModel >> appendToSpec: aViennaNode newOperationsDo: functionBlock newAnnotationsDo: aspectBlock [
+
+	| parser |
+	parser := ViennaFRAMVDMAnnotationParser new.
+	self functionsDo: [ :function | 
+		function description trim lines do: [ :line | 
+			| operationName |
+			operationName := parser parse: line.
+			operationName isPetit2Success ifTrue: [ 
+				| operationNode |
+				operationNode := operationName isString
+					                 ifTrue: [ 
+					                 self
+						                 findOrCreateOperationNamed: operationName
+						                 in: aViennaNode ]
+					                 ifFalse: [ 
+						                 self
+							                 findOrCreateOperationNamed:
+							                 operationName second
+							                 module: operationName first
+							                 in: aViennaNode ].
+				self
+					ensureAnnotation: 'Function'
+					name: function name
+					in: operationNode.
+				function aspectsDo: [ :aspect | 
+					self
+						ensureAnnotation: aspect aspect
+						name: aspect name
+						in: operationNode ] ] ] ]
+]
+
+{ #category : #private }
+ViennaFRAMModel >> createOperationDefinitionNode: aString [
+
+	^ ViennaNode
+		  label: 'AccessOperationDefinition'
+		  with: (ViennaNode label: 'Access')
+		  with: (ViennaNode label: 'OperationDefinition' with: (ViennaNode
+					    label: 'ExplicitOperationDefinition'
+					    with: aString
+					    with: (ViennaNode
+							     label: 'OperationType'
+							     with: (ViennaNode label: 'UnitType')
+							     with: (ViennaNode label: 'UnitType'))
+					    with: aString
+					    with: (ViennaNode label: 'Parameters')
+					    with: (ViennaNode
+							     label: 'OperationBody'
+							     with: (ViennaNode label: 'IsNotYetSpecified'))
+					    with: nil
+					    with: nil))
+]
+
+{ #category : #private }
+ViennaFRAMModel >> ensureAnnotation: aString name: anotherString in: aViennaNode [
+
+	| parser |
+	parser := ViennaFRAMAnnotationParser new.
+	aViennaNode annotations ifNotNil: [ :annotations | 
+		annotations do: [ :annotation | 
+			| pair |
+			pair := parser parse: annotation.
+			pair isPetit2Success ifTrue: [ 
+				(pair first = aString and: [ pair second = anotherString ]) 
+					ifTrue: [Transcript cr; show: 'skip ', annotation printString. ^ self ] ] ] ].
+	aViennaNode addAnnotation: 'FRAM ' , aString , ' ' , anotherString
+]
+
+{ #category : #private }
+ViennaFRAMModel >> findOrCreateOperationNamed: operationName in: aViennaNode [
+
+	| opNode |
+	(aViennaNode label = 'Document' and: [ 
+		 aViennaNode size = 1 and: [ 
+			 aViennaNode first label = 'DefinitionBlock' ] ]) ifFalse: [ 
+		^ self error: 'Internal error: A flat spec should be given.' ].
+	aViennaNode allDescendantsDo: [ :node | 
+		node label = 'AccessOperationDefinition' ifTrue: [ 
+			opNode := node second first.
+			(opNode label = 'ExplicitOperationDefinition' and: [ 
+				 opNode first = operationName ]) ifTrue: [ ^ opNode ] ] ].
+	opNode := self createOperationDefinitionNode: operationName.
+	aViennaNode allDescendantsDo: [ :node | 
+		node label = 'OperationDefinitions' ifTrue: [ 
+			node add: opNode.
+			^ opNode ] ].
+	aViennaNode first add:
+		(ViennaNode label: 'OperationDefinition' with: opNode).
+	^ opNode
+]
+
+{ #category : #private }
+ViennaFRAMModel >> findOrCreateOperationNamed: operationName module: moduleName in: aViennaNode [
+
+	| moduleNode opNode |
+	(aViennaNode label = 'Document' and: [ 
+		 aViennaNode size = 0 or: [ aViennaNode first label = 'Module' ] ]) 
+		ifFalse: [ 
+		^ self error: 'Internal error: A modular spec should be given.' ].
+	moduleNode := aViennaNode moduleNamed: moduleName.
+	moduleNode isNil ifTrue: [ 
+		moduleNode := ViennaNode
+			              label: 'Module'
+			              with: moduleName
+			              with:
+				              (ViennaNode
+					               label: 'Interface'
+					               with: nil
+					               with: (ViennaNode
+							                label: 'ExportDefinition'
+							                with:
+							                (ViennaNode label: 'ExportModuleSignatureAll')))
+			              with: (ViennaNode
+					               label: 'ModuleBody'
+					               with: (ViennaNode label: 'DefinitionBlock')).
+		aViennaNode add: moduleNode ].
+
+
+	moduleNode allDescendantsDo: [ :node | 
+		node label = 'AccessOperationDefinition' ifTrue: [ 
+			opNode := node second first.
+			(opNode label = 'ExplicitOperationDefinition' and: [ 
+				 opNode first = operationName ]) ifTrue: [ ^ opNode ] ] ].
+	opNode := self createOperationDefinitionNode: operationName.
+	moduleNode allDescendantsDo: [ :node | 
+		node label = 'OperationDefinitions' ifTrue: [ 
+			node add: opNode.
+			^ opNode ] ].
+	moduleNode third first add:
+		(ViennaNode label: 'OperationDefinitions' with: opNode).
+	^ opNode
+]
+
+{ #category : #merging }
 ViennaFRAMModel >> loadSpec: aViennaNode [
 
 	self
@@ -114,6 +258,11 @@ ViennaFRAMModel >> loadSpec: aViennaNode newFunctionsDo: functionBlock newAspect
 						              ifAbsentNew: [ :f | 
 							              f beTechnological.
 							              functionBlock cull: f ].
+					self functionAt: functionId ifPresent: [ :function | 
+						(function description lines select: [ :line | 
+							 line beginsWith: '@VDM' ]) ifEmpty: [ 
+							function description: (String cr join:
+									 function description lines , { ('@VDM ' , operationName) }) ] ].
 					framAnnotations do: [ :annotation | 
 						| aspect |
 						aspect := annotation first.

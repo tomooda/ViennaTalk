@@ -132,6 +132,34 @@ ViennaNode class >> label: aString with: aViennaNode1 with: aViennaNode2 with: a
 ]
 
 { #category : #'instance creation' }
+ViennaNode class >> label: aString with: aViennaNode1 with: aViennaNode2 with: aViennaNode3 with: aViennaNode4 with: aViennaNode5 with: aViennaNode6 [
+	^ (self new: 6)
+		setLabel: aString;
+		at: 1 put: aViennaNode1;
+		at: 2 put: aViennaNode2;
+		at: 3 put: aViennaNode3;
+		at: 4 put: aViennaNode4;
+		at: 5 put: aViennaNode5;
+		at: 6 put: aViennaNode6;
+		yourself
+]
+
+{ #category : #'instance creation' }
+ViennaNode class >> label: aString with: aViennaNode1 with: aViennaNode2 with: aViennaNode3 with: aViennaNode4 with: aViennaNode5 with: aViennaNode6 with: aViennaNode7 [
+
+	^ (self new: 7)
+		  setLabel: aString;
+		  at: 1 put: aViennaNode1;
+		  at: 2 put: aViennaNode2;
+		  at: 3 put: aViennaNode3;
+		  at: 4 put: aViennaNode4;
+		  at: 5 put: aViennaNode5;
+		  at: 6 put: aViennaNode6;
+		  at: 7 put: aViennaNode7;
+		  yourself
+]
+
+{ #category : #'instance creation' }
 ViennaNode class >> label: aString withAll: anArray [
 
 	^ self label: aString withAll: anArray annotations: nil

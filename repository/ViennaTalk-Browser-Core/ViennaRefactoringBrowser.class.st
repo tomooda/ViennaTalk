@@ -1085,10 +1085,15 @@ ViennaRefactoringBrowser >> menuBar [
 											   name: 'Export to File...';
 											   action: [ self exportFile ] ] ];
 							   addGroup: [ :g | 
-								   g addItem: [ :i | 
-									   i
-										   name: 'Merge annotations into FRAM...';
-										   action: [ self mergeAnnotationsIntoFRAM ] ] ]) ];
+								   g
+									   addItem: [ :i | 
+										   i
+											   name: 'Merge annotations into FRAM...';
+											   action: [ self mergeAnnotationsIntoFRAM ] ];
+									   addItem: [ :i | 
+										   i
+											   name: 'Merge operations from FRAM...';
+											   action: [ self mergeOperationsFromFRAM ] ] ]) ];
 			  addItem: [ :item | 
 				  item
 					  name: 'Test';
@@ -1115,6 +1120,23 @@ ViennaRefactoringBrowser >> mergeAnnotationsIntoFRAM [
 		 extensions: #( 'xfmv' )
 		 path: FileLocator home asFileReference) ifNotNil: [ :ref | 
 		fram writeXMLFile: ref ]
+]
+
+{ #category : #operations }
+ViennaRefactoringBrowser >> mergeOperationsFromFRAM [
+
+	| fram copyMap newAst |
+	(UIManager default
+		 chooseExistingFileReference: 'Import directory'
+		 extensions: #( 'xfmv' )
+		 path: FileLocator home) ifNotNil: [ :ref | 
+		fram := ViennaFRAMModel fromFile: ref ].
+	fram ifNil: [ ^ nil ].
+	copyMap := IdentityDictionary new.
+	newAst := self specification copyWhole: copyMap.
+	fram appendToSpec: newAst.
+	self model: newAst comment: 'merge from FRAM' with: copyMap.
+	^ newAst
 ]
 
 { #category : #accessing }
