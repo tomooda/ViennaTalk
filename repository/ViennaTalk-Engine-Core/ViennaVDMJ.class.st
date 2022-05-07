@@ -642,33 +642,45 @@ ViennaVDMJ >> register [
 
 { #category : #communicating }
 ViennaVDMJ >> send: aString responseDo: aBlock ifError: errorBlock [
+
 	| semaphore response readerProcess |
-	(reader next: 1024) ifNotEmpty: [:str | Transcript cr; show: str].
-	writer nextPutAll: ((aString copyReplaceAll: String lf with: '\n') utf8Encoded asString).
+	(reader next: 1024) ifNotEmpty: [ :str | 
+		Transcript
+			cr;
+			show: str ].
+	writer nextPutAll:
+		(aString copyReplaceAll: String lf with: '\n') utf8Encoded asString.
 	writer nextPut: Character lf.
 	writer flush.
 	semaphore := Semaphore new.
 	response := String new writeStream.
-	readerProcess := [[reader next
-				ifNil: ["(Delay forMilliseconds: 5) wait."Processor yield.
-					true]
-				ifNotNil: [:char | char = Character lf
-						ifTrue: [semaphore signal.
-							false]
-						ifFalse: [response nextPut: char.
-							true]]] whileTrue]
-				forkAt: Processor userBackgroundPriority.
+	readerProcess := [ 
+	                 [ 
+	                 reader next
+		                 ifNil: [ "(Delay forMilliseconds: 5) wait."
+			                 Processor yield.
+			                 true ]
+		                 ifNotNil: [ :char | 
+			                 char = Character lf
+				                 ifTrue: [ 
+					                 semaphore signal.
+					                 false ]
+				                 ifFalse: [ 
+					                 response nextPut: char.
+					                 true ] ] ] whileTrue ] forkAt:
+		                 Processor userBackgroundPriority.
 	^ (semaphore waitTimeoutMSecs: 10000)
-		ifTrue: [readerProcess terminate.
-			self close.
-			self startupProcess.
-			errorBlock value: 'Time out']
-		ifFalse: [response := NeoJSONReader
-						fromString: (response contents utf8Encoded asString).
-			(response first = true
-				ifTrue: [aBlock]
-				ifFalse: [errorBlock])
-				cull: response second]
+		  ifTrue: [ 
+			  readerProcess terminate.
+			  self close.
+			  self startupProcess.
+			  errorBlock value: 'Time out' ]
+		  ifFalse: [ 
+			  response := NeoJSONReader fromString:
+				              response contents asByteArray utf8Decoded.
+			  (response first = true
+				   ifTrue: [ aBlock ]
+				   ifFalse: [ errorBlock ]) cull: response second ]
 ]
 
 { #category : #private }
