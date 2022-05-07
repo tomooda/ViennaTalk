@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'fixture'
 	],
-	#category : 'ViennaTalk-Engine-Tests'
+	#category : #'ViennaTalk-Engine-Tests'
 }
 
 { #category : #running }
@@ -69,4 +69,14 @@ ViennaClientTest >> testOKSpec [
 		states: (self stateFromArray: {'DEFAULT' -> {'count' -> '441'}})
 		resultValue: '442'
 		resultStates: (self stateFromArray: {'DEFAULT' -> {'count' -> '442'}})
+]
+
+{ #category : #tests }
+ViennaClientTest >> testUTF8Strings [
+	self
+		testExpression: '"あいう"'
+		specification: ''
+		states: Dictionary new
+		resultValue: '"あいう"'
+		resultStates: Dictionary new
 ]

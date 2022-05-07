@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'process'
 	],
-	#category : 'ViennaTalk-Engine-Tests'
+	#category : #'ViennaTalk-Engine-Tests'
 }
 
 { #category : #running }
@@ -401,4 +401,14 @@ ViennaVDMJTest >> testExpression: expression specification: specification states
 			self assert: resultValue equals: triple first.
 			self assert: resultStates equals: triple second.
 			self assert: resultValue isNil equals: triple third notEmpty]
+]
+
+{ #category : #'testing-only expression' }
+ViennaVDMJTest >> testUTF8Strings [
+	self
+		testExpression: '"あいう"'
+		specification: ''
+		states: Dictionary new
+		resultValue: '"あいう"'
+		resultStates: Dictionary new
 ]
