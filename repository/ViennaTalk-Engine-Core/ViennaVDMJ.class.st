@@ -724,7 +724,7 @@ ViennaVDMJ >> temporaryFileDo: aBlock [
 	random := self random.
 	self globalLock: [ 
 		[ 
-		file := FileSystem workingDirectory / 'VDMPad-spec-'
+		file := FileLocator viennaTalkDirectory / 'VDMPad-spec-'
 		        , (String withAll: ((1 to: 8) collect: [ :i | 
 					          '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ' at:
 						          (random nextInteger: 36) ])) , '.vdm'.

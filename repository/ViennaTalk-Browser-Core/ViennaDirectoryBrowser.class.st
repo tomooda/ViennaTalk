@@ -30,8 +30,10 @@ ViennaDirectoryBrowser class >> VDMBrowserMenuOn: aBuilder [
 
 { #category : #accessing }
 ViennaDirectoryBrowser class >> defaultBasePath [
-	(DefaultBasePath isNil or: [ DefaultBasePath isDirectory not ])
-		ifTrue: [ DefaultBasePath := FileLocator desktop ].
+
+	(DefaultBasePath isNil or: [ DefaultBasePath isDirectory not ]) 
+		ifTrue: [ 
+		DefaultBasePath := FileLocator viennaTalkDocumentDirectory ].
 	^ DefaultBasePath
 ]
 

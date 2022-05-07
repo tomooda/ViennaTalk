@@ -4,3 +4,9 @@ Extension { #name : #FileLocator }
 FileLocator class >> viennaTalkDirectory [
 	^ (self localDirectory / 'ViennaTalk') ensureCreateDirectory
 ]
+
+{ #category : #'*ViennaTalk-Launcher-Core' }
+FileLocator class >> viennaTalkDocumentDirectory [
+
+	^ (self documents / 'ViennaTalk') ensureCreateDirectory
+]

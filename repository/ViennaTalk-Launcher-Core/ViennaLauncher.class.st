@@ -91,7 +91,8 @@ ViennaLauncher class >> installDesktopLogo [
 
 	<script: 'ViennaLauncher installDesktopLogo'>
 	| backgroundImage response |
-	backgroundImage := FileLocator localDirectory / 'viennatalk-logo.png'.
+	backgroundImage := FileLocator viennaTalkDirectory
+	                   / 'viennatalk-logo.png'.
 	PharoLightTheme beCurrent.
 	response := ZnClient new
 		            url:

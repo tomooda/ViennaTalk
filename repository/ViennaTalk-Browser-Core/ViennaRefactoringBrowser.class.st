@@ -795,7 +795,7 @@ ViennaRefactoringBrowser >> executeRefactoring: aViennaRefactoring [
 ViennaRefactoringBrowser >> exportDirectory [
 	(UIManager default
 		chooseDirectory: 'Export directory'
-		from: FileLocator home)
+		from: FileLocator viennaTalkDocumentDirectory )
 		ifNotNil: [ :dir | 
 			self specification
 				modulesDo: [ :moduleNode | 
@@ -816,7 +816,7 @@ ViennaRefactoringBrowser >> exportFile [
 	(UIManager default
 		chooseForSaveFileReference: 'Export file'
 		extensions: #('vdmsl')
-		path: FileLocator home asFileReference)
+		path: FileLocator viennaTalkDocumentDirectory asFileReference)
 		ifNotNil: [ :file | 
 			file
 				ensureDeleteAll;
@@ -870,7 +870,7 @@ ViennaRefactoringBrowser >> importDirectory [
 	| modelFiles testFiles source |
 	(UIManager default
 		chooseDirectory: 'Import directory'
-		from: FileLocator home)
+		from: FileLocator viennaTalkDocumentDirectory)
 		ifNotNil: [ :dir | 
 			modelFiles := OrderedCollection new.
 			testFiles := OrderedCollection new.
@@ -904,7 +904,7 @@ ViennaRefactoringBrowser >> importFile [
 	(UIManager default
 		 chooseExistingFileReference: 'Import directory'
 		 extensions: #( 'vdmsl' )
-		 path: FileLocator home) ifNotNil: [ :file | 
+		 path: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :file | 
 		self load: file contents withInternalLineEndings ]
 ]
 
@@ -1111,7 +1111,7 @@ ViennaRefactoringBrowser >> mergeAnnotationsIntoFRAM [
 	(UIManager default
 		 chooseExistingFileReference: 'Import directory'
 		 extensions: #( 'xfmv' )
-		 path: FileLocator home) ifNotNil: [ :ref | 
+		 path: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :ref | 
 		fram := ViennaFRAMModel fromFile: ref ].
 	fram ifNil: [ ^ nil ].
 	fram loadSpec: self specification.
@@ -1129,7 +1129,7 @@ ViennaRefactoringBrowser >> mergeOperationsFromFRAM [
 	(UIManager default
 		 chooseExistingFileReference: 'Import directory'
 		 extensions: #( 'xfmv' )
-		 path: FileLocator home) ifNotNil: [ :ref | 
+		 path: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :ref | 
 		fram := ViennaFRAMModel fromFile: ref ].
 	fram ifNil: [ ^ nil ].
 	copyMap := IdentityDictionary new.
@@ -1229,7 +1229,7 @@ ViennaRefactoringBrowser >> openDirectory [
 	| modelFiles testFiles source |
 	(UIManager default
 		chooseDirectory: 'Open directory'
-		from: FileLocator home)
+		from: FileLocator viennaTalkDocumentDirectory)
 		ifNotNil: [ :dir | 
 			modelFiles := OrderedCollection new.
 			testFiles := OrderedCollection new.

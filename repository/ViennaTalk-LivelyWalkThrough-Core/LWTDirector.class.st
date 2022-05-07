@@ -176,7 +176,7 @@ LWTDirector >> delete [
 
 { #category : #accessing }
 LWTDirector >> directory [
-	^ directory ifNil: [ directory := FileLocator home ]
+	^ directory ifNil: [ directory := FileLocator viennaTalkDocumentDirectory  ]
 ]
 
 { #category : #drawing }
@@ -298,7 +298,7 @@ LWTDirector >> load [
 	(LivelyWalkThrough
 		fileOpen: (self urlPrefix ifEmpty: [ 'Lively Walk-Through' ])
 		extensions: #('lwt')
-		path: (filepath ifNil: [ FileSystem workingDirectory parent parent ])
+		path: (filepath ifNil: [ FileLocator viennaTalkDocumentDirectory ])
 		preview: nil)
 		ifNotNil: [ :reference | 
 			filepath := reference.

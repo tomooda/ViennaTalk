@@ -904,7 +904,9 @@ ViennaBrowser >> codeSelection: aSelection [
 
 { #category : #private }
 ViennaBrowser >> directory [
-	^ directory ifNil: [ directory := FileLocator home ]
+
+	^ directory ifNil: [ 
+		  directory := FileLocator viennaTalkDocumentDirectory ]
 ]
 
 { #category : #private }
