@@ -250,7 +250,7 @@ ViennaFRAMModel >> loadSpec: aViennaNode newFunctionsDo: functionBlock newAspect
 					                  pair first = $f ])
 					                 ifNotEmpty: [ :functionAnnotations | 
 					                 functionAnnotations collect: #second ]
-					                 ifEmpty: [ { operationName } ].
+					                 ifEmpty: [ {  } ].
 				functionNames do: [ :functionName | 
 					| functionId |
 					functionId := self
@@ -258,11 +258,13 @@ ViennaFRAMModel >> loadSpec: aViennaNode newFunctionsDo: functionBlock newAspect
 						              ifAbsentNew: [ :f | 
 							              f beTechnological.
 							              functionBlock cull: f ].
+					self removeAllAspectsOf: functionId.
 					self functionAt: functionId ifPresent: [ :function | 
-						(function description lines select: [ :line | 
-							 line beginsWith: '@VDM' ]) ifEmpty: [ 
-							function description: (String cr join:
-									 function description lines , { ('@VDM ' , operationName) }) ] ].
+						function description:
+							(String cr join:
+								 (function description lines reject: [ :line | 
+									  line trim beginsWith: '@VDM' ])
+								 , { ('@VDM ' , operationName) }) ].
 					framAnnotations do: [ :annotation | 
 						| aspect |
 						aspect := annotation first.
