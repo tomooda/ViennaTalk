@@ -161,7 +161,8 @@ ViennaFRAMModel >> findOrCreateOperationNamed: operationName in: aViennaNode [
 
 	| opNode |
 	(aViennaNode label = 'Document' and: [ 
-		 aViennaNode first label = 'DefinitionBlock' ]) ifFalse: [ 
+		 aViennaNode isEmpty or: [ 
+			 aViennaNode first label = 'DefinitionBlock' ] ]) ifFalse: [ 
 		^ self error: 'Internal error: A flat spec should be given.' ].
 	aViennaNode allDescendantsDo: [ :node | 
 		node label = 'AccessOperationDefinition' ifTrue: [ 
@@ -173,6 +174,8 @@ ViennaFRAMModel >> findOrCreateOperationNamed: operationName in: aViennaNode [
 		node label = 'OperationDefinitions' ifTrue: [ 
 			node add: opNode.
 			^ opNode ] ].
+	aViennaNode isEmpty ifTrue: [ 
+		aViennaNode add: (ViennaNode label: 'DefinitionBlock') ].
 	aViennaNode first add:
 		(ViennaNode label: 'OperationDefinition' with: opNode).
 	^ opNode
