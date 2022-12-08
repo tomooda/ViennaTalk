@@ -17,6 +17,12 @@ LWTTimerWidget >> asJsonObject [
 		yourself
 ]
 
+{ #category : #events }
+LWTTimerWidget >> availableEventSelectors [
+
+	^ #( changed assigned )
+]
+
 { #category : #accessing }
 LWTTimerWidget >> basename [
 	^ 'Timer'

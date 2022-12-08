@@ -4,7 +4,7 @@ Class {
 	#classInstVars : [
 		'random'
 	],
-	#category : 'ViennaTalk-Value-Core'
+	#category : #'ViennaTalk-Value-Core'
 }
 
 { #category : #private }
@@ -616,7 +616,8 @@ ViennaRuntimeUtil class >> random [
 
 { #category : #randomization }
 ViennaRuntimeUtil class >> randomInt: anInteger [
-	^ self random nextInt: anInteger
+
+	^ self random nextInteger: anInteger
 ]
 
 { #category : #randomization }

@@ -22,6 +22,12 @@ LWTPlotWidget >> asJsonObject [
 		yourself
 ]
 
+{ #category : #events }
+LWTPlotWidget >> availableEventSelectors [
+
+	^ #( changed assigned )
+]
+
 { #category : #accessing }
 LWTPlotWidget >> basename [
 	^ 'Plot' copy

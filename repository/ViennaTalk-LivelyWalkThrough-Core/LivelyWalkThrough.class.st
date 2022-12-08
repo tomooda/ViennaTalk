@@ -94,32 +94,31 @@ LivelyWalkThrough class >> viennaToolsMenuOn: aBuilder [
 
 { #category : #'user interface' }
 LivelyWalkThrough >> build [
+
 	| pane utilsPane |
 	pane := BorderedMorph new
-		extent: 900 @ 600;
-		color: Color transparent;
-		changeProportionalLayout;
-		yourself.
-	utilsPane := LazyTabGroupMorph new.
+		        extent: 900 @ 600;
+		        color: Color transparent;
+		        changeProportionalLayout;
+		        yourself.
+	utilsPane := TabGroupMorph new.
 	utilsPane
-		addLazyPage: self buildWidgetDispenserPane label: 'Widgets';
-		addLazyPage: self buildVDMBrowserPane label: 'VDM';
-		addLazyPage: self buildLivetalkBrowserPane label: 'Livetalk';
-		addLazyPage: self buildSettingsPane label: 'Settings';
-		addLazyPage: self buildFilePane label: 'File'.
+		addPage: self buildWidgetDispenserPane label: 'Widgets';
+		addPage: self buildVDMBrowserPane label: 'VDM';
+		addPage: self buildLivetalkBrowserPane label: 'Livetalk';
+		addPage: self buildSettingsPane label: 'Settings';
+		addPage: self buildFilePane label: 'File'.
 	utilsPane selectedPageIndex: 1.
 	pane
 		addMorph: self director
-		fullFrame:
-			((0 @ 0 corner: 0.6 @ 1) asLayoutFrame
-				bottomRightOffset: -3 @ 0;
-				yourself).
+		fullFrame: ((0 @ 0 corner: 0.6 @ 1) asLayoutFrame
+				 bottomRightOffset: -3 @ 0;
+				 yourself).
 	pane
 		addMorph: utilsPane
-		fullFrame:
-			((0.6 @ 0 corner: 1 @ 1) asLayoutFrame
-				topLeftOffset: 3 @ 0;
-				yourself).
+		fullFrame: ((0.6 @ 0 corner: 1 @ 1) asLayoutFrame
+				 topLeftOffset: 3 @ 0;
+				 yourself).
 	pane addPaneSplitters.
 	^ pane
 ]
@@ -170,6 +169,7 @@ LivelyWalkThrough >> buildLivetalkBrowserPane [
 
 { #category : #'user interface' }
 LivelyWalkThrough >> buildSettingsPane [
+
 	| pane urlPrefixPane animationPane |
 	pane := Morph new.
 	pane
@@ -184,34 +184,35 @@ LivelyWalkThrough >> buildSettingsPane [
 		hResizing: #spaceFill;
 		vResizing: #shrinkWrap.
 	urlPrefixPane
-		addMorphBack:
-			(' name ' asMorph
-				hResizing: #rigid;
-				yourself);
-		addMorphBack:
-			((PluggableTextMorph on: self director text: #urlPrefix accept: #acceptUrlPrefix:)
-				autoAccept: true;
-				extent: 100 @ (TextStyle default defaultFont height * 2);
-				hResizing: #spaceFill;
-				yourself).
+		addMorphBack: (' name ' asMorph
+				 hResizing: #rigid;
+				 yourself);
+		addMorphBack: ((RubPluggableTextMorph
+				  on: self director
+				  text: #urlPrefix
+				  accept: #acceptUrlPrefix:
+				  readSelection: nil
+				  menu: nil)
+				 autoAccept: true;
+				 extent: 100 @ (TextStyle default defaultFont height * 2);
+				 hResizing: #spaceFill;
+				 yourself).
 	pane addMorphBack: urlPrefixPane.
-	(Smalltalk includesKey: #ViennaTranspiledAnimation)
-		ifTrue: [ animationPane := Morph new.
-			animationPane
-				color: Color white;
-				changeTableLayout;
-				listDirection: #leftToRight;
-				hResizing: #spaceFill;
-				vResizing: #shrinkWrap.
-			animationPane
-				addMorphBack:
-					((CheckboxMorph
-						on: self director
-						selected: #usesTranspiler
-						changeSelected: #usesTranspiler:)
-						label: 'use transpiler';
-						yourself).
-			pane addMorphBack: animationPane ].
+	(Smalltalk includesKey: #ViennaTranspiledAnimation) ifTrue: [ 
+		animationPane := Morph new.
+		animationPane
+			color: Color white;
+			changeTableLayout;
+			listDirection: #leftToRight;
+			hResizing: #spaceFill;
+			vResizing: #shrinkWrap.
+		animationPane addMorphBack: ((CheckboxMorph
+				  on: self director
+				  selected: #usesTranspiler
+				  changeSelected: #usesTranspiler:)
+				 label: 'use transpiler';
+				 yourself).
+		pane addMorphBack: animationPane ].
 	^ pane
 ]
 

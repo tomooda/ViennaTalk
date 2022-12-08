@@ -251,16 +251,19 @@ LWTWidget >> handleMouseDown: aMouseEvent [
 
 { #category : #'event handling' }
 LWTWidget >> handleMouseLeave: aMouseEvent [
-	ActiveHand showTemporaryCursor: Cursor normal
+
+	World activeHand showTemporaryCursor: Cursor normal
 ]
 
 { #category : #'event handling' }
 LWTWidget >> handleMouseMove: aMouseEvent [
-	self moveable = true
-		ifTrue: [ 
-			(self edgeName: aMouseEvent position)
-				ifEmpty: [ ActiveHand showTemporaryCursor: Cursor normal ]
-				ifNotEmpty: [ :edge | ActiveHand showTemporaryCursor: (Cursor perform: ('resize' , edge) asSymbol) ] ]
+
+	self moveable = true ifTrue: [ 
+		(self edgeName: aMouseEvent position)
+			ifEmpty: [ World activeHand showTemporaryCursor: Cursor normal ]
+			ifNotEmpty: [ :edge | 
+				World activeHand showTemporaryCursor:
+					(Cursor perform: ('resize' , edge) asSymbol) ] ]
 ]
 
 { #category : #'event handling' }
@@ -285,13 +288,16 @@ LWTWidget >> initialize [
 
 { #category : #private }
 LWTWidget >> makeUniqueName [
+
 	| prefix random uniqueName |
 	prefix := self basename.
 	random := Random new.
 	[ 
-	uniqueName := prefix , (random nextInt: 999999) printString.
+	uniqueName := prefix , (random nextInteger: 999999) printString.
 	(self director ifNil: [ World ])
-		findDeepSubmorphThat: [ :m | m ~~ self and: [ (m isKindOf: LWTWidget) and: [ m name = uniqueName ] ] ]
+		findDeepSubmorphThat: [ :m | 
+			m ~~ self and: [ 
+				(m isKindOf: LWTWidget) and: [ m name = uniqueName ] ] ]
 		ifAbsent: [ ^ uniqueName ] ] repeat
 ]
 
