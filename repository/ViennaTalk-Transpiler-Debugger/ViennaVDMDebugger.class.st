@@ -7,17 +7,48 @@ Class {
 	#category : #'ViennaTalk-Transpiler-Debugger'
 }
 
-{ #category : #specs }
-ViennaVDMDebugger class >> codeLayout [
+{ #category : #commands }
+ViennaVDMDebugger class >> buildCommandsGroupWith: stDebuggerInstance forRoot: rootCommandGroup [
 
-	^ SpBoxLayout newTopToBottom
-		  add: #toolbar expand: false;
-		  add: (SpPanedLayout newLeftToRight
-				   positionOfSlider: 60 percent;
-				   add: #code;
-				   add: #specification;
-				   yourself);
-		  yourself
+	StDebuggerStackCommandTreeBuilder
+		buildCommandsGroupWith: stDebuggerInstance
+		forRoot: rootCommandGroup.
+	ViennaDebuggerToolbarCommandTreeBuilder
+		buildCommandsGroupWith: stDebuggerInstance
+		forRoot: rootCommandGroup.
+	StDebuggerCodeCommandTreeBuilder
+		buildCommandsGroupWith: stDebuggerInstance
+		forRoot: rootCommandGroup.
+	StDebuggerConfigurationCommandTreeBuilder
+		buildCommandsGroupWith: stDebuggerInstance
+		forRoot: rootCommandGroup
+]
+
+{ #category : #commands }
+ViennaVDMDebugger class >> buildSindarinExtentionCommandsGroupWith: stDebuggerInstance forRoot: rootCommandGroup [
+
+	<extensionCommands>
+	| commands codeGroup toolbarGroup toolbarSindarinGroup |
+	commands := (Pragma allNamed: #codeExtensionDebugCommand:) collect: [ 
+		            :prg | 
+		            | class |
+		            class := prg methodClass soleInstance.
+		            class forSpecContext: stDebuggerInstance ].
+
+
+	codeGroup := rootCommandGroup
+	             / StDebuggerCodeCommandTreeBuilder groupName
+	             / StDebuggerCodeCommandTreeBuilder new codeDebugCommandsGroupName.
+	commands do: [ :c | codeGroup register: c ].
+
+	toolbarGroup := rootCommandGroup / ViennaDebuggerToolbarCommandTreeBuilder groupName.
+	toolbarSindarinGroup := CmCommandGroup forSpec
+			beToolbarPopoverButton;
+			name: 'Advanced Step';
+			icon: (stDebuggerInstance application iconNamed: #smallExpert);
+			yourself.
+	toolbarGroup register: toolbarSindarinGroup.
+	commands do: [ :c | toolbarSindarinGroup register: c ].		 
 ]
 
 { #category : #testing }
@@ -38,9 +69,9 @@ ViennaVDMDebugger class >> defaultTitle [
 ]
 
 { #category : #testing }
-ViennaVDMDebugger class >> handlesContext: aContext [
+ViennaVDMDebugger class >> handlesDebugSession: aDebugSession [
 
-	^ aContext specificationContext notNil
+	^ aDebugSession context specificationContext notNil
 ]
 
 { #category : #'presenter - specification' }
@@ -51,12 +82,49 @@ ViennaVDMDebugger >> acceptSpecificationChanges: newSpecification forContext: aC
 	
 ]
 
+{ #category : #'commands - support' }
+ViennaVDMDebugger >> buildContextMenus [
+	| stackGroup codeCommands debuggerCommandGroup |
+	
+	debuggerCommandGroup := self rootCommandsGroup.
+	"Stack"
+	stackGroup := debuggerCommandGroup / StDebuggerStackCommandTreeBuilder groupName. 
+	stackTable contextMenu: stackGroup beRoot asMenuPresenter.
+	stackTable contextKeyBindings: (self keybindsForFromContextMenu: stackGroup).
+	 
+	"Toolbar"
+	toolbarCommandGroup := debuggerCommandGroup / ViennaDebuggerToolbarCommandTreeBuilder groupName.
+	SpToolbarPresenterBuilder new
+		toolbarPresenter: toolbar;
+		visit: toolbarCommandGroup.
+
+	"Code"
+	codeCommands := debuggerCommandGroup / StDebuggerCodeCommandTreeBuilder groupName.
+	code contextMenu: codeCommands beRoot asMenuPresenter.
+	
+	"Configuration"
+	stackHeader toolbarActions: (debuggerCommandGroup / StDebuggerConfigurationCommandTreeBuilder groupName).
+]
+
 { #category : #'updating - widgets' }
 ViennaVDMDebugger >> clearSpecification [
 
 	self specification
 		clearSelection;
 		clearContent
+]
+
+{ #category : #specs }
+ViennaVDMDebugger >> codeLayout [
+
+	^ SpBoxLayout newTopToBottom
+		  add: #toolbar expand: false;
+		  add: (SpPanedLayout newLeftToRight
+				   positionOfSlider: 60 percent;
+				   add: #code;
+				   add: #specification;
+				   yourself);
+		  yourself
 ]
 
 { #category : #'accessing - context' }
@@ -77,6 +145,18 @@ ViennaVDMDebugger >> initializePresenters [
 	super initializePresenters.
 	self initializeSpecification.
 
+]
+
+{ #category : #initialization }
+ViennaVDMDebugger >> initializeShortcuts: aWindowPresenter [
+
+	super initializeShortcuts: aWindowPresenter.
+	aWindowPresenter
+		bindKeyCombination: ViennaStepIntoCommand defaultShortcut
+		toAction: [ self vdmStepInto ].
+	aWindowPresenter
+		bindKeyCombination: ViennaStepOverCommand defaultShortcut
+		toAction: [ self vdmStepOver ]
 ]
 
 { #category : #initialization }
@@ -151,4 +231,16 @@ ViennaVDMDebugger >> updateSpecificationTextSegmentDecoratorsIn: aContext forInt
 				 interval:
 					 (selectionInterval first to: selectionInterval last + 1);
 				 yourself)
+]
+
+{ #category : #action }
+ViennaVDMDebugger >> vdmStepInto [
+
+	self session vdmStepInto: self context
+]
+
+{ #category : #action }
+ViennaVDMDebugger >> vdmStepOver [
+
+	self session vdmStepOver: self context
 ]
