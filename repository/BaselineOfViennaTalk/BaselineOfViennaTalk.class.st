@@ -36,7 +36,7 @@ BaselineOfViennaTalk >> baseline: spec [
 				package: 'ViennaTalk-Browser-Core' with: [ 
 					spec requires:
 							#( 'ViennaTalk-Animation-Core' 'ViennaTalk-Animation-Transpiler'
-							   'ViennaTalk-Launcher-Core' 'ViennaTalk-Parser-Core'
+							   'ViennaTalk-Launcher-Core' 'ViennaTalk-Parser-Core' 'ViennaTalk-Parser-AST'
 							   'ViennaTalk-Parser-Formatters'
 							   'ViennaTalk-Parser-Highlighters'
 							   'ViennaTalk-Refactoring-Core' 'ViennaTalk-Transpiler-Core'
