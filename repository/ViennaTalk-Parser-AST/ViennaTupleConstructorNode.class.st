@@ -5,7 +5,17 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
+ViennaTupleConstructorNode class >> withAll: anArrayOfViennaExpressionNode [
+
+	| tuple |
+	tuple := self new: anArrayOfViennaExpressionNode size.
+	1 to: anArrayOfViennaExpressionNode size do: [ :index |
+		tuple at: index put: (anArrayOfViennaExpressionNode at: index) ].
+	^ tuple
+]
+
+{ #category : #accessing }
 ViennaTupleConstructorNode >> label [
 
 	^ 'TupleConstructor'

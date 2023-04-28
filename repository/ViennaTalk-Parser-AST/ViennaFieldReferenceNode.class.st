@@ -1,6 +1,6 @@
 Class {
 	#name : #ViennaFieldReferenceNode,
-	#superclass : #ViennaAbstractSyntaxNode,
+	#superclass : #ViennaDefinitionComponentNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }

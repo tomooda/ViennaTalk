@@ -1,12 +1,45 @@
 Class {
 	#name : #ViennaGlobalNameNode,
-	#superclass : #ViennaExpressionNode,
+	#superclass : #ViennaNameNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
+ViennaGlobalNameNode class >> moduleIdentifier: aString1 identifier: aString2 [
+
+	^ (self new: 2)
+		  moduleIdentifier: aString1;
+		  identifier: aString2;
+		  yourself
+]
+
+{ #category : #'parsers-symbols' }
+ViennaGlobalNameNode >> identifier [
+
+	^ self at: 2
+]
+
+{ #category : #'parsers-symbols' }
+ViennaGlobalNameNode >> identifier: aString [
+
+	self at: 2 put: aString
+]
+
+{ #category : #accessing }
 ViennaGlobalNameNode >> label [
 
 	^ 'GlobalName'
+]
+
+{ #category : #'parsers-symbols' }
+ViennaGlobalNameNode >> moduleIdentifier [
+
+	^ self at: 1
+]
+
+{ #category : #'parsers-symbols' }
+ViennaGlobalNameNode >> moduleIdentifier: aString [
+
+	self at: 1 put: aString
 ]

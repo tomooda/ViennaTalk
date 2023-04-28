@@ -1,6 +1,6 @@
 Class {
 	#name : #ViennaDistributedSetIntersectionNode,
-	#superclass : #ViennaExpressionNode,
+	#superclass : #ViennaUnaryOperatorExpressionNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }

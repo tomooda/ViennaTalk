@@ -1,6 +1,6 @@
 Class {
 	#name : #ViennaGreaterThanNode,
-	#superclass : #ViennaExpressionNode,
+	#superclass : #ViennaBinaryOperatorExpressionNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }

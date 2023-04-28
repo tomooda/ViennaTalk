@@ -1,6 +1,6 @@
 Class {
 	#name : #ViennaArithmeticIntegerDivisionNode,
-	#superclass : #ViennaExpressionNode,
+	#superclass : #ViennaBinaryOperatorExpressionNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }

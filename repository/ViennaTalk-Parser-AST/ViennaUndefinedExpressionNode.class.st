@@ -5,7 +5,7 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ViennaUndefinedExpressionNode >> label [
 
 	^ 'UndefinedExpression'

@@ -1,6 +1,6 @@
 Class {
 	#name : #ViennaMultipleSeqBindNode,
-	#superclass : #ViennaDefinitionComponentNode,
+	#superclass : #ViennaMultipleBindNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }

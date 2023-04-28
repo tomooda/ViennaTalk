@@ -5,6 +5,39 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #'instance creation' }
+ViennaFunctionTypeInstantiationNode class >> expression: aViennaExpression functionTypeArgs: aViennaFunctionTypeArgsNode [
+
+	^ (self new: 2)
+		  expression: aViennaExpression;
+		  functionTypeArgs: aViennaFunctionTypeArgsNode;
+		  yourself
+]
+
+{ #category : #accessing }
+ViennaFunctionTypeInstantiationNode >> expression [
+
+	^ self at: 1
+]
+
+{ #category : #accessing }
+ViennaFunctionTypeInstantiationNode >> expression: aViennaExpressionNode [
+
+	self at: 1 put: aViennaExpressionNode
+]
+
+{ #category : #accessing }
+ViennaFunctionTypeInstantiationNode >> functionTypeArgs [
+
+	^ self at: 2
+]
+
+{ #category : #accessing }
+ViennaFunctionTypeInstantiationNode >> functionTypeArgs: aViennaFunctionTypeArgsNode [
+
+	self at: 2 put: aViennaFunctionTypeArgsNode
+]
+
 { #category : #accessing }
 ViennaFunctionTypeInstantiationNode >> label [
 

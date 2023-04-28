@@ -349,22 +349,6 @@ ViennaVDMParser >> elems: arg [
 	^ ViennaNode label: 'SequenceElements' with: arg
 ]
 
-{ #category : #'parsers-expressions-basics' }
-ViennaVDMParser >> elseifExpression [
-	^ super elseifExpression ==> [ :array | ViennaNode label: 'ElseifExpression' withAll: array ]
-]
-
-{ #category : #'parsers-statements' }
-ViennaVDMParser >> elseifStatement [
-	^ super elseifStatement
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'ElseifStatement'
-				start: start
-				end: end
-				withAll: array ]
-]
-
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> equal: arg1 and: arg2 [
 	^ ViennaNode label: 'Equal' with: arg1 with: arg2
@@ -854,7 +838,7 @@ ViennaVDMParser >> ifExpression [
 				label: 'IfExpression'
 				with:
 					(ViennaNode
-						label: 'ConditionaExpressionList'
+						label: 'ConditionalExpressionList'
 						withAll: (array first collect: [ :pair | ViennaNode label: 'ConditionalExpression' withAll: pair ]))
 				with: array second ]
 ]
@@ -869,7 +853,7 @@ ViennaVDMParser >> ifStatement [
 				end: end
 				with:
 					(ViennaNode
-						label: 'ConditionaStatementList'
+						label: 'ConditionalStatementList'
 						withAll: (array first collect: [ :pair | ViennaNode label: 'ConditionalStatement' withAll: pair ]))
 				with: array second ]
 ]
@@ -1465,7 +1449,9 @@ ViennaVDMParser >> objectPattern [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMParser >> oldName [
-	^ super oldName ==> [ :string | ViennaNode label: 'OldName' with: (string copyFrom: 1 to: string size - 1) ]
+
+	^ super oldName
+	  ==> [ :string | ViennaNode label: 'OldName' with: string ]
 ]
 
 { #category : #'parsers-definitions' }

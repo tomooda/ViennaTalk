@@ -11,6 +11,11 @@ ViennaAbstractSyntaxNode class >> isAbstract [
 	^ self = ViennaAbstractSyntaxNode
 ]
 
+{ #category : #testing }
+ViennaAbstractSyntaxNode >> isViennaExpressionNode [
+	^ false
+]
+
 { #category : #initialization }
 ViennaAbstractSyntaxNode >> setLabel: aString [
 

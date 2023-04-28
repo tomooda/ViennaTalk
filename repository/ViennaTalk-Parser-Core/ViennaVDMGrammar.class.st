@@ -2096,7 +2096,8 @@ ViennaVDMGrammar >> of [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> oldName [
-	^ (identifier , (self operator: '~')) ==> [ :pair | pair first , pair second ]
+
+	^ identifier , (self operator: '~') ==> [ :pair | pair first ]
 ]
 
 { #category : #'parsers-definitions' }

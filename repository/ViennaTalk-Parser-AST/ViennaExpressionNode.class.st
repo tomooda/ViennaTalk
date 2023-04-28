@@ -10,3 +10,8 @@ ViennaExpressionNode class >> isAbstract [
 
 	^ self = ViennaExpressionNode
 ]
+
+{ #category : #testing }
+ViennaExpressionNode >> isViennaExpressionNode [
+	^ true
+]

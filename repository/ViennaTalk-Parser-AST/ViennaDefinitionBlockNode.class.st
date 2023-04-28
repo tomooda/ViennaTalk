@@ -10,3 +10,8 @@ ViennaDefinitionBlockNode >> label [
 
 	^ 'DefinitionBlock'
 ]
+
+{ #category : #accessing }
+ViennaDefinitionBlockNode >> section [
+	^ self at: 1
+]

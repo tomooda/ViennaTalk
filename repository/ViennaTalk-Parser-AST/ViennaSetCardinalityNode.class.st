@@ -1,6 +1,6 @@
 Class {
 	#name : #ViennaSetCardinalityNode,
-	#superclass : #ViennaExpressionNode,
+	#superclass : #ViennaUnaryOperatorExpressionNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }
