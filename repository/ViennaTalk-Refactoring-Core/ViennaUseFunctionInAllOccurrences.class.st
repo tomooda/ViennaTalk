@@ -12,26 +12,24 @@ ViennaUseFunctionInAllOccurrences >> execute [
 
 { #category : #operations }
 ViennaUseFunctionInAllOccurrences >> executeOne [
-	self definitionNode module
-		allDescendantsDo: [ :node | 
-			(node includesParent: self definitionNode) not
-				ifTrue: [ | binds |
-					binds := Dictionary new.
-					self definitionNode fifth
-						allDescendantsDo: [ :patternNode | 
-							patternNode label = 'PatternIdentifier'
-								ifTrue: [ binds at: patternNode name put: nil ] ].
-					(self match: self definitionNode sixth with: node bindings: binds)
-						ifTrue: [ | args |
-							args := self definitionNode fifth first asArray
-								collect: [ :n | self expressionFromPattern: n bindings: binds ].
-							^ self
-								replaceNode: node
-								with:
-									(ViennaNode
-										label: 'Apply'
-										with: (ViennaNode label: 'LocalName' with: self identifier)
-										with: (ViennaNode label: 'ExpressionList' withAll: args)) ] ] ].
+
+	self definitionNode module allDescendantsDo: [ :node |
+		(node includesParent: self definitionNode) not ifTrue: [
+			| binds |
+			binds := Dictionary new.
+			self definitionNode fifth allDescendantsDo: [ :patternNode |
+				patternNode label = 'PatternIdentifier' ifTrue: [
+					binds at: patternNode name put: nil ] ].
+			(self match: self definitionNode sixth with: node bindings: binds)
+				ifTrue: [
+					| args |
+					args := self definitionNode fifth first asArray collect: [ :n |
+						        self expressionFromPattern: n bindings: binds ].
+					^ self replaceNode: node with: (ViennaApplyNode
+							   expression:
+							   (ViennaNode label: 'LocalName' with: self identifier)
+							   argumentExpressionList:
+							   (ViennaNode label: 'ExpressionList' withAll: args)) ] ] ].
 	^ nil
 ]
 
@@ -40,7 +38,7 @@ ViennaUseFunctionInAllOccurrences >> findDefinitionNode [
 	ast ifNil: [ ^ nil ].
 	ast label = 'ExplicitFunctionDefinition'
 		ifTrue: [ ^ ast ].
-	ast isExpressionNode
+	ast isViennaExpressionNode
 		ifFalse: [ ^ nil ].
 	ast module
 		ifNotNil: [ :node | 

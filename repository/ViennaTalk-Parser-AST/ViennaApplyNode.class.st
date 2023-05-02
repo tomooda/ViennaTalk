@@ -9,7 +9,7 @@ Class {
 ViennaApplyNode class >> expression: aViennaExpressionNode argumentExpressionList: aViennaExpressionListNode [
 
 	^ (self new: 2)
-		  functionName: aViennaExpressionNode;
+		  expression: aViennaExpressionNode;
 		  argumentExpressionList: aViennaExpressionListNode;
 		  yourself
 ]
@@ -38,8 +38,26 @@ ViennaApplyNode >> expression: aString [
 	self at: 1 put: aString
 ]
 
+{ #category : #'pretty printing' }
+ViennaApplyNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 [
+
+	^ aBlock1 value
+]
+
+{ #category : #testing }
+ViennaApplyNode >> isViennaApplyNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaApplyNode >> label [
 
 	^ 'Apply'
+]
+
+{ #category : #'pretty printing' }
+ViennaApplyNode >> operatorPrecedence [
+
+	^ 40
 ]

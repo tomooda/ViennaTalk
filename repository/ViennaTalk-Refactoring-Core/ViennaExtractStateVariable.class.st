@@ -6,7 +6,7 @@ Class {
 
 { #category : #operations }
 ViennaExtractStateVariable >> check [
-	ast isExpressionNode
+	ast isViennaExpressionNode
 		ifFalse: [ ^ false ].
 	ast variableExpressionNodesDo: [ :node | ^ false ].
 	ast parent label = 'ValueDefinition'

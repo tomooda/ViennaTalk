@@ -13,7 +13,7 @@ ViennaExtractParameterFromExpressionInOperation class >> isAbstract [
 ViennaExtractParameterFromExpressionInOperation >> check [
 	| moduleName shortName |
 	ast ifNil: [ ^ false ].
-	ast isExpressionNode
+	ast isViennaExpressionNode
 		ifFalse: [ ^ false ].
 	ast variableExpressionNodesDo: [ :node | ^ false ].
 	self definitionNode ifNil: [ ^ false ].
@@ -35,18 +35,23 @@ ViennaExtractParameterFromExpressionInOperation >> check [
 
 { #category : #operations }
 ViennaExtractParameterFromExpressionInOperation >> executeCallers [
-	| moduleName shortName |
+
+	| moduleName shortName globalName localName |
 	moduleName := ast module first.
 	shortName := self definitionNode first.
-	ast module third
-		allDescendantsDo: [ :node | 
-			((#('Apply' 'CallStatement') includes: node label)
-				and: [ (node first label = 'LocalName'
-						and: [ node first first = shortName ])
-						or: [ node first label = 'GlobalName'
-								and:
-									[ node first first = moduleName and: [ node first second = shortName ] ] ] ])
-				ifTrue: [ node second add: ast copyFragment ] ]
+	globalName := ViennaGlobalNameNode
+		              moduleIdentifier: moduleName
+		              identifier: shortName.
+	localName := ViennaLocalNameNode identifier: shortName.
+	ast module third allDescendantsDo: [ :node |
+		(node isViennaApplyNode and: [
+			 (node expression sameAs: globalName) or: [
+				 node expression sameAs: localName ] ]) ifTrue: [
+			node argumentExpressionList add: ast copyFragment ].
+		(node label = 'CallStatement' and: [
+			 (node first sameAs: globalName) or: [
+				 node first sameAs: localName ] ]) ifTrue: [
+			node second add: ast copyFragment ] ]
 ]
 
 { #category : #accessing }

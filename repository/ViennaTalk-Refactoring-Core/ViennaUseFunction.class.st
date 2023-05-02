@@ -6,29 +6,27 @@ Class {
 
 { #category : #operations }
 ViennaUseFunction >> execute [
+
 	| binds args |
 	binds := Dictionary new.
-	self definitionNode fifth
-		allDescendantsDo: [ :patternNode | 
-			patternNode label = 'PatternIdentifier'
-				ifTrue: [ binds at: patternNode name put: nil ] ].
+	self definitionNode fifth allDescendantsDo: [ :patternNode |
+		patternNode label = 'PatternIdentifier' ifTrue: [
+			binds at: patternNode name put: nil ] ].
 	(self match: self definitionNode sixth with: ast bindings: binds)
 		ifFalse: [ ^ nil ].
-	args := self definitionNode fifth first asArray
-		collect: [ :node | self expressionFromPattern: node bindings: binds ].
-	^ self
-		replaceNode: ast
-		with:
-			(ViennaNode
-				label: 'Apply'
-				with: (ViennaNode label: 'LocalName' with: self identifier)
-				with: (ViennaNode label: 'ExpressionList' withAll: args))
+	args := self definitionNode fifth first asArray collect: [ :node |
+		        self expressionFromPattern: node bindings: binds ].
+	^ self replaceNode: ast with: (ViennaApplyNode
+			   expression:
+			   (ViennaNode label: 'LocalName' with: self identifier)
+			   argumentExpressionList:
+			   (ViennaNode label: 'ExpressionList' withAll: args))
 ]
 
 { #category : #accessing }
 ViennaUseFunction >> findDefinitionNode [
 	ast ifNil: [ ^ nil ].
-	ast isExpressionNode
+	ast isViennaExpressionNode
 		ifFalse: [ ^ nil ].
 	ast module
 		ifNotNil: [ :node | 

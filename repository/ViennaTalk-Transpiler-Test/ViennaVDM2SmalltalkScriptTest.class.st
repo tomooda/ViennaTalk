@@ -3,7 +3,7 @@ Class {
 	#superclass : #TestCase,
 	#traits : 'TViennaVDMBoundVariableCollectorTestCase + TViennaVDMFreeVariableCollectorTestCase',
 	#classTraits : 'TViennaVDMBoundVariableCollectorTestCase classTrait + TViennaVDMFreeVariableCollectorTestCase classTrait',
-	#category : 'ViennaTalk-Transpiler-Test'
+	#category : #'ViennaTalk-Transpiler-Test'
 }
 
 { #category : #private }
@@ -97,11 +97,15 @@ ViennaVDM2SmalltalkScriptTest >> testAndEnv [
 
 { #category : #'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testApplyEnv [
+
 	| node |
 	node := ViennaVDMParser new expression end parse: '{1|->2}(1)'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'Apply'.
-	self assert: (self evaluate: (ViennaVDM2SmalltalkScript new generate: node)) equals: 2
+	self assert: node isViennaApplyNode.
+	self
+		assert:
+		(self evaluate: (ViennaVDM2SmalltalkScript new generate: node))
+		equals: 2
 ]
 
 { #category : #'tests-code generation-expressions' }

@@ -11,9 +11,35 @@ ViennaAbstractSyntaxNode class >> isAbstract [
 	^ self = ViennaAbstractSyntaxNode
 ]
 
+{ #category : #'pretty printing' }
+ViennaAbstractSyntaxNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 [
+
+	^ nil
+]
+
 { #category : #testing }
 ViennaAbstractSyntaxNode >> isViennaExpressionNode [
 	^ false
+]
+
+{ #category : #'pretty printing' }
+ViennaAbstractSyntaxNode >> operatorPrecedence [
+
+	^ 0
+]
+
+{ #category : #comparing }
+ViennaAbstractSyntaxNode >> sameAs: aViennaNode [
+
+	self class = aViennaNode class ifFalse: [ ^ false ].
+	1 to: self size do: [ :index |
+		| node |
+		node := self at: index.
+		node isViennaNode
+			ifTrue: [
+			(node sameAs: (aViennaNode at: index)) ifFalse: [ ^ false ] ]
+			ifFalse: [ node = (aViennaNode at: index) ifFalse: [ ^ false ] ] ].
+	^ true
 ]
 
 { #category : #initialization }

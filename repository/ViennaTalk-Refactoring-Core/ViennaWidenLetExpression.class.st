@@ -11,7 +11,7 @@ ViennaWidenLetExpression >> acceptsAstLabel: aString [
 
 { #category : #testing }
 ViennaWidenLetExpression >> acceptsDefinitionNode: aViennaNode [
-	^ aViennaNode isExpressionNode
+	^ aViennaNode isViennaExpressionNode
 ]
 
 { #category : #accessing }

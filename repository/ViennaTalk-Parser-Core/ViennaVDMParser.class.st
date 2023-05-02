@@ -147,7 +147,8 @@ ViennaVDMParser >> anonymousField [
 
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> apply: func args: args [
-	^ ViennaNode label: 'Apply' with: func with: args
+
+	^ ViennaApplyNode expression: func argumentExpressionList: args
 ]
 
 { #category : #'parsers-statements' }

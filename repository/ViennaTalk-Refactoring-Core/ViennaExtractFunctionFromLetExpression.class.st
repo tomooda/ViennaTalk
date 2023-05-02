@@ -37,45 +37,43 @@ ViennaExtractFunctionFromLetExpression >> check [
 
 { #category : #operations }
 ViennaExtractFunctionFromLetExpression >> execute [
+
 	| moduleBody functionDefinitions explicitFunctionDefinition accessFunctionDefinition |
 	self newName ifNil: [ ^ self ].
 	moduleBody := ast module third.
 	functionDefinitions := (moduleBody
-		detect: [ :definitionBlock | 
-			definitionBlock isViennaNode
-				and: [ definitionBlock first isViennaNode
-						and: [ definitionBlock first label = 'FunctionDefinitions' ] ] ]
-		ifNone: [ nil ]) ifNotNil: #first.
-	functionDefinitions
-		ifNil: [ functionDefinitions := ViennaNode label: 'FunctionDefinitions'.
-			moduleBody
-				add: (ViennaNode label: 'DefinitionBlock' with: functionDefinitions) ].
-	self
-		replaceNode: ast
-		with:
-			(ViennaNode
-				label: 'Apply'
-				with: (ViennaNode label: 'LocalName' with: self newName)
-				with: self arguments).
+		                        detect: [ :definitionBlock |
+			                        definitionBlock isViennaNode and: [
+				                        definitionBlock first isViennaNode and: [
+					                        definitionBlock first label
+					                        = 'FunctionDefinitions' ] ] ]
+		                        ifNone: [ nil ]) ifNotNil: #first.
+	functionDefinitions ifNil: [
+		functionDefinitions := ViennaNode label: 'FunctionDefinitions'.
+		moduleBody add:
+			(ViennaNode label: 'DefinitionBlock' with: functionDefinitions) ].
+	self replaceNode: ast with: (ViennaApplyNode
+			 expression: (ViennaNode label: 'LocalName' with: self newName)
+			 argumentExpressionList: self arguments).
 	explicitFunctionDefinition := ViennaNode
-		label: 'ExplicitFunctionDefinition'
-		withAll:
-			{self newName.
-			(ViennaNode label: 'TypeVariableList').
-			self functionType.
-			self newName.
-			self functionParametersList.
-			self functionBody.
-			nil.
-			nil.
-			nil}.
+		                              label: 'ExplicitFunctionDefinition'
+		                              withAll: {
+				                              self newName.
+				                              (ViennaNode label:
+					                               'TypeVariableList').
+				                              self functionType.
+				                              self newName.
+				                              self functionParametersList.
+				                              self functionBody.
+				                              nil.
+				                              nil.
+				                              nil }.
 	accessFunctionDefinition := ViennaNode
-		label: 'AccessFunctionDefinition'
-		with: (ViennaNode label: 'Access')
-		with:
-			(ViennaNode
-				label: 'FunctionDefinition'
-				with: explicitFunctionDefinition).
+		                            label: 'AccessFunctionDefinition'
+		                            with: (ViennaNode label: 'Access')
+		                            with: (ViennaNode
+				                             label: 'FunctionDefinition'
+				                             with: explicitFunctionDefinition).
 	functionDefinitions add: accessFunctionDefinition.
 	^ accessFunctionDefinition
 ]

@@ -7,7 +7,7 @@ Class {
 { #category : #operations }
 ViennaExtractLocalDefinitionFromExpressionInLet >> check [
 	ast ifNil: [ ^ false ].
-	ast isExpressionNode
+	ast isViennaExpressionNode
 		ifFalse: [ ^ false ].
 	self definitionNode ifNil: [ ^ false ].
 	(ast label = 'LocalName'

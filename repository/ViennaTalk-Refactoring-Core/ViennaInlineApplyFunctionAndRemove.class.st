@@ -9,37 +9,30 @@ Class {
 
 { #category : #accessing }
 ViennaInlineApplyFunctionAndRemove >> check [
+
 	| shortName moduleName |
 	ast ifNil: [ ^ false ].
 	self definitionNode ifNil: [ ^ false ].
 	shortName := definitionNode first.
 	moduleName := self definitionNode module name.
-	self
-		freeOccurrencesOf: shortName
-		in: ast module
-		do: [ :node | 
-			(node parent label = 'Apply' and: [ node parent first == node ])
-				ifFalse: [ ^ false ] ].
+	self freeOccurrencesOf: shortName in: ast module do: [ :node |
+		(node parent isViennaApplyNode and: [
+			 node parent expression == node ]) ifFalse: [ ^ false ] ].
 	(self hasFreeOccurrencesOf: 'pre_' , shortName in: ast module)
 		ifTrue: [ ^ false ].
 	(self hasFreeOccurrencesOf: 'post_' , shortName in: ast module)
 		ifTrue: [ ^ false ].
-	ast document
-		allDescendantsDo: [ :node | 
-			(node label = 'GlobalName'
-				and: [ node first = moduleName and: [ node second = shortName ] ])
-				ifTrue: [ ^ false ] ].
-	ast
-		modulesDo: [ :module | 
-			module second first
-				ifNotNil: [ :importDefinitionList | 
-					importDefinitionList
-						do: [ :importDefinition | 
-							importDefinition first = moduleName
-								ifTrue: [ importDefinition
-										allDescendantsDo: [ :node | 
-											(node label = 'FunctionImport' and: [ node first = shortName ])
-												ifTrue: [ ^ false ] ] ] ] ] ].
+	ast document allDescendantsDo: [ :node |
+		(node label = 'GlobalName' and: [
+			 node first = moduleName and: [ node second = shortName ] ])
+			ifTrue: [ ^ false ] ].
+	ast modulesDo: [ :module |
+		module second first ifNotNil: [ :importDefinitionList |
+			importDefinitionList do: [ :importDefinition |
+				importDefinition first = moduleName ifTrue: [
+					importDefinition allDescendantsDo: [ :node |
+						(node label = 'FunctionImport' and: [ node first = shortName ])
+							ifTrue: [ ^ false ] ] ] ] ] ].
 	^ true
 ]
 

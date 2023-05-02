@@ -40,43 +40,43 @@ ViennaExtractOperationFromLetExpression >> check [
 
 { #category : #operations }
 ViennaExtractOperationFromLetExpression >> execute [
+
 	| moduleBody operationDefinitions explicitOperationDefinition accessOperationDefinition |
 	self newName ifNil: [ ^ self ].
 	moduleBody := ast module third.
 	operationDefinitions := (moduleBody
-		detect: [ :definitionBlock | 
-			definitionBlock isViennaNode
-				and: [ definitionBlock first isViennaNode
-						and: [ definitionBlock first label = 'OperationDefinitions' ] ] ]
-		ifNone: [ nil ]) ifNotNil: #first.
-	operationDefinitions
-		ifNil: [ operationDefinitions := ViennaNode label: 'OperationDefinitions'.
-			moduleBody
-				add: (ViennaNode label: 'DefinitionBlock' with: operationDefinitions) ].
-	self
-		replaceNode: ast
-		with:
-			(ViennaNode
-				label: 'Apply'
-				with: (ViennaNode label: 'LocalName' with: self newName)
-				with: self arguments).
+		                         detect: [ :definitionBlock |
+			                         definitionBlock isViennaNode and: [
+				                         definitionBlock first isViennaNode and: [
+					                         definitionBlock first label
+					                         = 'OperationDefinitions' ] ] ]
+		                         ifNone: [ nil ]) ifNotNil: #first.
+	operationDefinitions ifNil: [
+		operationDefinitions := ViennaNode label: 'OperationDefinitions'.
+		moduleBody add:
+			(ViennaNode label: 'DefinitionBlock' with: operationDefinitions) ].
+	self replaceNode: ast with: (ViennaApplyNode
+			 expression: (ViennaNode label: 'LocalName' with: self newName)
+			 argumentExpressionList: self arguments).
 	explicitOperationDefinition := ViennaNode
-		label: 'ExplicitOperationDefinition'
-		withAll:
-			{self newName.
-			self operationType.
-			self newName.
-			self operationParametersList.
-			self operationBody.
-			nil.
-			nil}.
+		                               label: 'ExplicitOperationDefinition'
+		                               withAll: {
+				                               self newName.
+				                               self operationType.
+				                               self newName.
+				                               self operationParametersList.
+				                               self operationBody.
+				                               nil.
+				                               nil }.
 	accessOperationDefinition := ViennaNode
-		label: 'AccessOperationDefinition'
-		with: (ViennaNode label: 'Access' with: 'pure')
-		with:
-			(ViennaNode
-				label: 'OperationDefinition'
-				with: explicitOperationDefinition).
+		                             label: 'AccessOperationDefinition'
+		                             with:
+		                             (ViennaNode
+			                              label: 'Access'
+			                              with: 'pure')
+		                             with: (ViennaNode
+				                              label: 'OperationDefinition'
+				                              with: explicitOperationDefinition).
 	operationDefinitions add: accessOperationDefinition.
 	^ accessOperationDefinition
 ]

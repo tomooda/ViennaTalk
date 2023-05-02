@@ -9,7 +9,7 @@ Class {
 
 { #category : #operations }
 ViennaExtractLetStatement >> check [
-	ast isExpressionNode
+	ast isViennaExpressionNode
 		ifFalse: [ ^ false ].
 	self statementNode ifNil: [ ^ false ].
 	ast isOperationNameNode

@@ -190,6 +190,7 @@ ViennaNodeTest >> testIsExportedNameNode [
 
 { #category : #running }
 ViennaNodeTest >> testIsFunctionNameNode [
+
 	| opcall1 opcall2 funcall |
 	self deny: skip isOperationNameNode.
 	opcall1 := skip parent at: 3.
@@ -197,13 +198,13 @@ ViennaNodeTest >> testIsFunctionNameNode [
 	self assert: opcall1 first first equals: 'exp_op'.
 	self deny: opcall1 first isFunctionNameNode.
 	opcall2 := (skip parent at: 4) second.
-	self assert: opcall2 label equals: 'Apply'.
-	self assert: opcall2 first first equals: 'opi'.
-	self deny: opcall2 first isFunctionNameNode.
+	self assert: opcall2 isViennaApplyNode.
+	self assert: opcall2 expression first equals: 'opi'.
+	self deny: opcall2 expression isFunctionNameNode.
 	funcall := (skip parent at: 5) second.
-	self assert: funcall label equals: 'Apply'.
-	self assert: funcall first first equals: 'exp_f'.
-	self assert: funcall first isFunctionNameNode
+	self assert: funcall isViennaApplyNode.
+	self assert: funcall expression first equals: 'exp_f'.
+	self assert: funcall expression isFunctionNameNode
 ]
 
 { #category : #running }
@@ -217,17 +218,17 @@ ViennaNodeTest >> testIsOperationNameNode [
 	self assert: opcall1 first isOperationNameNode.
 	self deny: opcall1 second isOperationNameNode.
 	opcall2 := (skip parent at: 4) second.
-	self assert: opcall2 label equals: 'Apply'.
-	self assert: opcall2 first first equals: 'opi'.
+	self assert: opcall2 isViennaApplyNode.
+	self assert: opcall2 expression first equals: 'opi'.
 	self deny: opcall2 isOperationNameNode.
-	self assert: opcall2 first isOperationNameNode.
-	self deny: opcall2 second isOperationNameNode.
+	self assert: opcall2 expression isOperationNameNode.
+	self deny: opcall2 argumentExpressionList isOperationNameNode.
 	funcall := (skip parent at: 5) second.
-	self assert: funcall label equals: 'Apply'.
-	self assert: funcall first first equals: 'exp_f'.
+	self assert: funcall isViennaApplyNode.
+	self assert: funcall expression first equals: 'exp_f'.
 	self deny: funcall isOperationNameNode.
-	self deny: funcall first isOperationNameNode.
-	self deny: funcall second isOperationNameNode.
+	self deny: funcall expression isOperationNameNode.
+	self deny: funcall argumentExpressionList isOperationNameNode.
 	globalopcall := skip parent at: 7.
 	self assert: globalopcall label equals: 'CallStatement'.
 	self assert: globalopcall first label = 'GlobalName'.
@@ -238,6 +239,7 @@ ViennaNodeTest >> testIsOperationNameNode [
 
 { #category : #running }
 ViennaNodeTest >> testIsStateVariableNameNode [
+
 	| opcall1 opcall1arg funcall funcallarg returnarg |
 	self deny: skip isOperationNameNode.
 	opcall1 := skip parent at: 3.
@@ -246,8 +248,8 @@ ViennaNodeTest >> testIsStateVariableNameNode [
 	self assert: opcall1arg first equals: 's1'.
 	self assert: opcall1arg isStateVariableNameNode.
 	funcall := (skip parent at: 5) second.
-	self assert: funcall label equals: 'Apply'.
-	funcallarg := funcall second first.
+	self assert: funcall isViennaApplyNode.
+	funcallarg := funcall argumentExpressionList first.
 	self assert: funcallarg first equals: 'l'.
 	self deny: funcallarg isStateVariableNameNode.
 	returnarg := (skip parent at: 6) first.
@@ -273,6 +275,7 @@ ViennaNodeTest >> testIsTypeNameNode [
 
 { #category : #running }
 ViennaNodeTest >> testIsValueNameNode [
+
 	| opcall1 opcall1arg funcall funcallarg returnarg |
 	self deny: skip isValueNameNode.
 	opcall1 := skip parent at: 3.
@@ -281,8 +284,8 @@ ViennaNodeTest >> testIsValueNameNode [
 	self assert: opcall1arg first equals: 's1'.
 	self deny: opcall1arg isValueNameNode.
 	funcall := (skip parent at: 5) second.
-	self assert: funcall label equals: 'Apply'.
-	funcallarg := funcall second first.
+	self assert: funcall isViennaApplyNode.
+	funcallarg := funcall argumentExpressionList first.
 	self assert: funcallarg first equals: 'l'.
 	self deny: funcallarg isValueNameNode.
 	returnarg := (skip parent at: 6) first.

@@ -18,14 +18,6 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #accessing }
-ViennaNode class >> expressionLabels [
-	^ ExpressionLabels
-		ifNil:
-			[ ExpressionLabels := #('ActExpression' 'ActiveExpression' 'And' 'Apply' 'ArithmeticAbs' 'ArithmeticDivide' 'ArithmeticIntegerDivision' 'ArithmeticMinus' 'ArithmeticMod' 'ArithmeticMultiplication' 'ArithmeticPlus' 'ArithmeticRem' 'CasesExpression' 'Composition' 'DefExpression' 'DistributedMapMerge' 'DistributedSequenceConcatenation' 'DistributedSetIntersection' 'DistributedSetUnion' 'Equal' 'Exists1Expression' 'ExistsExpression' 'FieldSelect' 'FinExpression' 'FinitePowerSet' 'Floor' 'ForallExpression' 'FunctionTypeInstantiation' 'GlobalName' 'GreaterThan' 'GreaterThanOrEqual' 'IfExpression' 'Imply' 'InSet' 'IotaExpression' 'IsBasicExpression' 'IsNameExpression' 'IsofbaseclassExpression' 'IsofclassExpression' 'Iterate' 'LambdaExpression' 'LessThan' 'LessThanOrEqual' 'LetBeExpression' 'LetExpression' 'LocalName' 'LogicalEquivalence' 'MapComprehension' 'MapDomain' 'MapDomainRestrictedBy' 'MapDomainRestrictedTo' 'MapEnumeration' 'MapInverse' 'MapMerge' 'MapOrSequenceModify' 'MapRange' 'MapRangeRestrictedBy' 'MapRangeRestrictedTo' 'NarrowExpression' 'NewExpression' 'Not' 'NotEqual' 'NotInSet' 'OldName' 'Or' 'PreconditionExpression' 'ProperSubset' 'RecordConstructor' 'RecordModifier' 'ReqExpression' 'ResultExpression' 'SamebaseclassExpression' 'SameclassExpression' 'SelfExpression' 'SequenceComprehension' 'SequenceConcatenate' 'SequenceElements' 'SequenceEnumeration' 'SequenceHead' 'SequenceIndices' 'SequenceLength' 'SequenceReverse' 'SequenceTail' 'SetCardinality' 'SetComprehension' 'SetDifference' 'SetEnumeration' 'SetIntersection' 'SetRangeExpression' 'SetUnion' 'Subsequence' 'Subset' 'SymbolicLiteral' 'ThreadidExpression' 'TimeExpression' 'TokenConstructor' 'TupleConstructor' 'TupleSelect' 'TypeJudgement' 'UnaryMinus' 'UnaryPlus' 'UndefinedExpression' 'WaitingExpression')
-				asSet ]
-]
-
 { #category : #'instance creation' }
 ViennaNode class >> label: aString [
 
@@ -1036,13 +1028,6 @@ ViennaNode >> isExportedNameNode [
 ]
 
 { #category : #testing }
-ViennaNode >> isExpressionNode [
-
-	^ (self class expressionLabels includes: self label) and: [
-		  self isTypeNode not ]
-]
-
-{ #category : #testing }
 ViennaNode >> isFunctionNameNode [
 	self label = 'LocalName'
 		ifTrue: [ (self definitionOfLocalName: self first)
@@ -1177,6 +1162,18 @@ ViennaNode >> isValueNameNode [
 							defNode bindHolderNode label = 'ValueDefinition'
 								ifTrue: [ ^ true ] ] ].
 			^ false ].
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaApplyNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaExpressionNode [
+
 	^ false
 ]
 

@@ -6,7 +6,7 @@ Class {
 
 { #category : #operations }
 ViennaExtractLetExpression >> check [
-	ast isExpressionNode
+	ast isViennaExpressionNode
 		ifFalse: [ ^ false ].
 	ast label = 'LetExpression'
 		ifTrue: [ ^ false ].

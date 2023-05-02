@@ -6,7 +6,7 @@ Class {
 
 { #category : #operations }
 ViennaExtractValue >> check [
-	ast isExpressionNode
+	ast isViennaExpressionNode
 		ifFalse: [ ^ false ].
 	(#('LocalName' 'GlobalName' 'OldName') includes: ast label)
 		ifTrue: [ ^ false ].

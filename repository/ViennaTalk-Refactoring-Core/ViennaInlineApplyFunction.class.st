@@ -72,17 +72,15 @@ ViennaInlineApplyFunction >> execute [
 
 { #category : #accessing }
 ViennaInlineApplyFunction >> findCallerNode [
+
 	| node |
 	node := ast.
 	node ifNil: [ ^ nil ].
-	node label = 'LocalName'
-		ifTrue: [ node := node parent ].
-	node label = 'GlobalName'
-		ifTrue: [ node := node parent ].
-	node label = 'FunctionTypeInstantiation'
-		ifTrue: [ node := node parent ].
-	node label = 'Apply'
-		ifTrue: [ ^ node ].
+	node label = 'LocalName' ifTrue: [ node := node parent ].
+	node label = 'GlobalName' ifTrue: [ node := node parent ].
+	node label = 'FunctionTypeInstantiation' ifTrue: [
+		node := node parent ].
+	node isViennaApplyNode ifTrue: [ ^ node ].
 	^ nil
 ]
 
