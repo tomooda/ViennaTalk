@@ -38,6 +38,12 @@ ViennaFunctionTypeInstantiationNode >> functionTypeArgs: aViennaFunctionTypeArgs
 	self at: 2 put: aViennaFunctionTypeArgsNode
 ]
 
+{ #category : #'pretty printing' }
+ViennaFunctionTypeInstantiationNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
+
+	^ aBlock1 value
+]
+
 { #category : #accessing }
 ViennaFunctionTypeInstantiationNode >> label [
 

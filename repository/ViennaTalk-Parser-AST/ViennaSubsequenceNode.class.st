@@ -27,6 +27,12 @@ ViennaSubsequenceNode >> endExpression: aViennaExpressionNode [
 	self at: 3 put: aViennaExpressionNode
 ]
 
+{ #category : #'pretty printing' }
+ViennaSubsequenceNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
+
+	^ aBlock1 value
+]
+
 { #category : #accessing }
 ViennaSubsequenceNode >> label [
 

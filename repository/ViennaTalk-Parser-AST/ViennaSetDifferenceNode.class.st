@@ -5,6 +5,12 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #'pretty printing' }
+ViennaSetDifferenceNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
+
+	^ aBlock1 value
+]
+
 { #category : #accessing }
 ViennaSetDifferenceNode >> label [
 

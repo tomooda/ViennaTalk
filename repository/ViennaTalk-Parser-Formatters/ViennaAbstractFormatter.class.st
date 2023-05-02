@@ -7,7 +7,6 @@ Class {
 	],
 	#classVars : [
 		'DefaultMaxSizePerLine',
-		'OperatorGrouping',
 		'OperatorPrecedence'
 	],
 	#category : #'ViennaTalk-Parser-Formatters'
@@ -39,39 +38,9 @@ ViennaAbstractFormatter class >> formatSource: aString ifError: errorBlock [
 
 { #category : #'class initialization' }
 ViennaAbstractFormatter class >> initialize [
-	super initialize.
-	self initializeOperatorPrecedence.
-	self initializeOperatorGrouping
-]
 
-{ #category : #'class initialization' }
-ViennaAbstractFormatter class >> initializeOperatorGrouping [
-	OperatorGrouping := Dictionary new
-		at: 'Iterate' put: #right;
-		at: 'Composition' put: #right;
-		at: 'Subsequence' put: #left;
-		at: 'Apply' put: #left;
-		at: 'FunctionTypeInstantiation' put: #left;
-		at: 'FieldSelect' put: #left;
-		at: 'MapRangeRestrictedBy' put: #left;
-		at: 'MapRangeRestrictedTo' put: #left;
-		at: 'MapDomainRestrictedBy' put: #right;
-		at: 'MapDomainRestrictedTo' put: #right;
-		at: 'ArithmeticMultiplication' put: #left;
-		at: 'ArithmeticDivide' put: #left;
-		at: 'ArithmeticRem' put: #left;
-		at: 'ArithmeticMod' put: #left;
-		at: 'ArithmeticIntegerDivision' put: #left;
-		at: 'ArithmeticMinus' put: #left;
-		at: 'ArithmeticPlus' put: #left;
-		at: 'SetDifference' put: #left;
-		at: 'MapMerge' put: #left;
-		at: 'MapOrSequenceModify' put: #left;
-		at: 'SequenceConcatenate' put: #left;
-		at: 'Imply' put: #right;
-		at: 'PartialFunctionType' put: #right;
-		at: 'TotalFunctionType' put: #right;
-		yourself
+	super initialize.
+	self initializeOperatorPrecedence
 ]
 
 { #category : #'class initialization' }
@@ -1799,50 +1768,48 @@ ViennaAbstractFormatter >> needsIndent: aString [
 
 { #category : #private }
 ViennaAbstractFormatter >> needsParen [
+
 	| childContext childNode childPrecedence parentContext parentNode parentPrecedence |
 	childContext := thisContext sender.
-	[ childContext notNil and: [ childContext selector ~= #format: ] ] whileTrue: [ childContext := childContext sender ].
+	[ childContext notNil and: [ childContext selector ~= #format: ] ]
+		whileTrue: [ childContext := childContext sender ].
 	childContext ifNil: [ ^ false ].
 	childNode := childContext arguments first.
-	childPrecedence := OperatorPrecedence at: childNode label ifAbsent: [ ^ false ].
+	childPrecedence := OperatorPrecedence
+		                   at: childNode label
+		                   ifAbsent: [ ^ false ].
 	parentContext := childContext sender.
 	[ parentContext notNil and: [ parentContext selector ~= #format: ] ]
 		whileTrue: [ parentContext := parentContext sender ].
 	parentContext ifNil: [ ^ false ].
 	parentNode := parentContext arguments first.
-	parentPrecedence := OperatorPrecedence at: parentNode label ifAbsent: [ ^ false ].
-	childPrecedence < parentPrecedence
-		ifTrue: [ ^ true ].
-	parentPrecedence < childPrecedence
-		ifTrue: [ ^ false ].
-	^ OperatorGrouping
-		at: parentNode label asString
-		ifPresent: [ :grouping | 
-			(grouping = #left and: [ parentNode first ~= childNode ])
-				or: [ grouping = #right and: [ parentNode second ~= childNode ] ] ]
-		ifAbsent: [ true ]
+	parentPrecedence := OperatorPrecedence
+		                    at: parentNode label
+		                    ifAbsent: [ ^ false ].
+	childPrecedence < parentPrecedence ifTrue: [ ^ true ].
+	parentPrecedence < childPrecedence ifTrue: [ ^ false ].
+	^ parentNode
+		  ifAssociatesLeftDo: [ parentNode first ~= childNode ]
+		  ifAssociatesRightDo: [ parentNode second ~= childNode ]
+		  otherwise: [ true ]
 ]
 
 { #category : #private }
 ViennaAbstractFormatter >> needsParen: aViennaNode [
+
 	| precedence parentPrecedence |
 	precedence := OperatorPrecedence
-		at: aViennaNode label
-		ifAbsent: [ ^ false ].
+		              at: aViennaNode label
+		              ifAbsent: [ ^ false ].
 	parentPrecedence := OperatorPrecedence
-		at: aViennaNode parent label
-		ifAbsent: [ ^ false ].
-	precedence < parentPrecedence
-		ifTrue: [ ^ true ].
-	parentPrecedence < precedence
-		ifTrue: [ ^ false ].
-	^ OperatorGrouping
-		at: aViennaNode parent label asString
-		ifPresent: [ :grouping | 
-			(grouping = #left and: [ aViennaNode parent first ~= aViennaNode ])
-				or:
-					[ grouping = #right and: [ aViennaNode parent second ~= aViennaNode ] ] ]
-		ifAbsent: [ true ]
+		                    at: aViennaNode parent label
+		                    ifAbsent: [ ^ false ].
+	precedence < parentPrecedence ifTrue: [ ^ true ].
+	parentPrecedence < precedence ifTrue: [ ^ false ].
+	^ aViennaNode parent
+		  ifAssociatesLeftDo: [ aViennaNode parent first ~= aViennaNode ]
+		  ifAssociatesRightDo: [ aViennaNode parent second ~= aViennaNode ]
+		  otherwise: [ true ]
 ]
 
 { #category : #private }

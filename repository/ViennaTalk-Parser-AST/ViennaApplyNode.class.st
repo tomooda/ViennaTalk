@@ -39,7 +39,7 @@ ViennaApplyNode >> expression: aString [
 ]
 
 { #category : #'pretty printing' }
-ViennaApplyNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 [
+ViennaApplyNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
 
 	^ aBlock1 value
 ]

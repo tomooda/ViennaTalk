@@ -12,9 +12,9 @@ ViennaAbstractSyntaxNode class >> isAbstract [
 ]
 
 { #category : #'pretty printing' }
-ViennaAbstractSyntaxNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 [
+ViennaAbstractSyntaxNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
 
-	^ nil
+	^ aBlock3 value
 ]
 
 { #category : #testing }

@@ -38,6 +38,12 @@ ViennaFieldSelectNode >> field: aString [
 	self at: 2 put: aString
 ]
 
+{ #category : #'pretty printing' }
+ViennaFieldSelectNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
+
+	^ aBlock1 value
+]
+
 { #category : #accessing }
 ViennaFieldSelectNode >> label [
 
