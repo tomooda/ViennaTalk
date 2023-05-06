@@ -10,3 +10,9 @@ ViennaArithmeticAbsNode >> label [
 
 	^ 'ArithmeticAbs'
 ]
+
+{ #category : #'pretty printing' }
+ViennaArithmeticAbsNode >> operatorPrecedence [
+
+	^ 36
+]

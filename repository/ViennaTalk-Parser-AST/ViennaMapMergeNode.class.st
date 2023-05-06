@@ -16,3 +16,9 @@ ViennaMapMergeNode >> label [
 
 	^ 'MapMerge'
 ]
+
+{ #category : #'pretty printing' }
+ViennaMapMergeNode >> operatorPrecedence [
+
+	^ 31
+]

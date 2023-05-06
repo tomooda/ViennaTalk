@@ -49,3 +49,9 @@ ViennaFieldSelectNode >> label [
 
 	^ 'FieldSelect'
 ]
+
+{ #category : #'pretty printing' }
+ViennaFieldSelectNode >> operatorPrecedence [
+
+	^ 40
+]

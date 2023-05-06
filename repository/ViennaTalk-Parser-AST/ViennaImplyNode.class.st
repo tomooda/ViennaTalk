@@ -16,3 +16,9 @@ ViennaImplyNode >> label [
 
 	^ 'Imply'
 ]
+
+{ #category : #'pretty printing' }
+ViennaImplyNode >> operatorPrecedence [
+
+	^ 12
+]

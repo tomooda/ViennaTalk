@@ -14,25 +14,25 @@ ViennaExistsExpressionNode class >> bindList: aViennaBindListNode expression: aV
 		  yourself
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : #accessing }
 ViennaExistsExpressionNode >> bindList [
 
 	^ self at: 1
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : #accessing }
 ViennaExistsExpressionNode >> bindList: aViennaBindListNode [
 
 	self at: 1 put: aViennaBindListNode
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : #accessing }
 ViennaExistsExpressionNode >> expression [
 
 	^ self at: 2
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : #accessing }
 ViennaExistsExpressionNode >> expression: aViennaExpressionNode [
 
 	self at: 2 put: aViennaExpressionNode
@@ -42,4 +42,10 @@ ViennaExistsExpressionNode >> expression: aViennaExpressionNode [
 ViennaExistsExpressionNode >> label [
 
 	^ 'ExistsExpression'
+]
+
+{ #category : #'pretty printing' }
+ViennaExistsExpressionNode >> operatorPrecedence [
+
+	^ 10
 ]

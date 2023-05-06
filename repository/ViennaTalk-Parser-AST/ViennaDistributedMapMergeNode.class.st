@@ -5,8 +5,14 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ViennaDistributedMapMergeNode >> label [
 
 	^ 'DistributedMapMerge'
+]
+
+{ #category : #'pretty printing' }
+ViennaDistributedMapMergeNode >> operatorPrecedence [
+
+	^ 36
 ]

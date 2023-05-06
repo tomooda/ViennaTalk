@@ -49,3 +49,9 @@ ViennaFunctionTypeInstantiationNode >> label [
 
 	^ 'FunctionTypeInstantiation'
 ]
+
+{ #category : #'pretty printing' }
+ViennaFunctionTypeInstantiationNode >> operatorPrecedence [
+
+	^ 40
+]

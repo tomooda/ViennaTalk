@@ -16,3 +16,9 @@ ViennaCompositionNode >> label [
 
 	^ 'Composition'
 ]
+
+{ #category : #'pretty printing' }
+ViennaCompositionNode >> operatorPrecedence [
+
+	^ 51
+]

@@ -5,8 +5,14 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ViennaMapRangeNode >> label [
 
 	^ 'MapRange'
+]
+
+{ #category : #'pretty printing' }
+ViennaMapRangeNode >> operatorPrecedence [
+
+	^ 36
 ]

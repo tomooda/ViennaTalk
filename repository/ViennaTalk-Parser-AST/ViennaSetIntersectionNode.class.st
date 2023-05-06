@@ -5,8 +5,14 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ViennaSetIntersectionNode >> label [
 
 	^ 'SetIntersection'
+]
+
+{ #category : #'pretty printing' }
+ViennaSetIntersectionNode >> operatorPrecedence [
+
+	^ 32
 ]

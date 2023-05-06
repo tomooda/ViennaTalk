@@ -39,6 +39,12 @@ ViennaSubsequenceNode >> label [
 	^ 'Subsequence'
 ]
 
+{ #category : #'pretty printing' }
+ViennaSubsequenceNode >> operatorPrecedence [
+
+	^ 40
+]
+
 { #category : #accessing }
 ViennaSubsequenceNode >> sequenceExpression [
 

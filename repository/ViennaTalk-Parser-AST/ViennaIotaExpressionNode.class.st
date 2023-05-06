@@ -14,25 +14,25 @@ ViennaIotaExpressionNode class >> bind: aViennaBindNode expression: aViennaExpre
 		  yourself
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : #accessing }
 ViennaIotaExpressionNode >> bind [
 
 	^ self at: 1
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : #accessing }
 ViennaIotaExpressionNode >> bind: aViennaBindNode [
 
 	self at: 1 put: aViennaBindNode
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : #accessing }
 ViennaIotaExpressionNode >> expression [
 
 	^ self at: 2
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : #accessing }
 ViennaIotaExpressionNode >> expression: aViennaExpressionNode [
 
 	self at: 2 put: aViennaExpressionNode
@@ -42,4 +42,10 @@ ViennaIotaExpressionNode >> expression: aViennaExpressionNode [
 ViennaIotaExpressionNode >> label [
 
 	^ 'IotaExpression'
+]
+
+{ #category : #'pretty printing' }
+ViennaIotaExpressionNode >> operatorPrecedence [
+
+	^ 30
 ]

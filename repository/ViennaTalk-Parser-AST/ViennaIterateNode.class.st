@@ -16,3 +16,9 @@ ViennaIterateNode >> label [
 
 	^ 'Iterate'
 ]
+
+{ #category : #'pretty printing' }
+ViennaIterateNode >> operatorPrecedence [
+
+	^ 52
+]

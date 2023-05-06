@@ -16,3 +16,9 @@ ViennaSequenceConcatenateNode >> label [
 
 	^ 'SequenceConcatenate'
 ]
+
+{ #category : #'pretty printing' }
+ViennaSequenceConcatenateNode >> operatorPrecedence [
+
+	^ 31
+]

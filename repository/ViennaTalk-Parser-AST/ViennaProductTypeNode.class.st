@@ -5,8 +5,14 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ViennaProductTypeNode >> label [
 
 	^ 'ProductType'
+]
+
+{ #category : #'pretty printing' }
+ViennaProductTypeNode >> operatorPrecedence [
+
+	^ 3
 ]

@@ -6,8 +6,7 @@ Class {
 		'indent'
 	],
 	#classVars : [
-		'DefaultMaxSizePerLine',
-		'OperatorPrecedence'
+		'DefaultMaxSizePerLine'
 	],
 	#category : #'ViennaTalk-Parser-Formatters'
 }
@@ -34,98 +33,6 @@ ViennaAbstractFormatter class >> formatSource: aString ifError: errorBlock [
 	ast isPetit2Failure
 		ifTrue: [ ^ errorBlock value ].
 	^ self format: ast
-]
-
-{ #category : #'class initialization' }
-ViennaAbstractFormatter class >> initialize [
-
-	super initialize.
-	self initializeOperatorPrecedence
-]
-
-{ #category : #'class initialization' }
-ViennaAbstractFormatter class >> initializeOperatorPrecedence [
-	OperatorPrecedence := Dictionary new
-		at: 'Iterate' put: 52;
-		at: 'Composition' put: 51;
-		at: 'Subsequence' put: 40;
-		at: 'Apply' put: 40;
-		at: 'FunctionTypeInstantiation' put: 40;
-		at: 'FieldSelect' put: 40;
-		at: 'UnaryPlus' put: 36;
-		at: 'UnaryMinus' put: 36;
-		at: 'ArithmeticAbs' put: 36;
-		at: 'Floor' put: 36;
-		at: 'SetCardinality' put: 36;
-		at: 'FinitePowerSet' put: 36;
-		at: 'DistributedSetIntersection' put: 36;
-		at: 'DistributedSetUnion' put: 36;
-		at: 'MapDomain' put: 36;
-		at: 'MapRange' put: 36;
-		at: 'DistributedMapMerge' put: 36;
-		at: 'SequenceLength' put: 36;
-		at: 'SequenceElements' put: 36;
-		at: 'SequenceHead' put: 36;
-		at: 'SequenceTail' put: 36;
-		at: 'DistributedSequenceConcatenation' put: 36;
-		at: 'SequenceIndices' put: 36;
-		at: 'SequenceReverse' put: 36;
-		at: 'MapRangeRestrictedBy' put: 35;
-		at: 'MapRangeRestrictedTo' put: 35;
-		at: 'MapDomainRestrictedBy' put: 34;
-		at: 'MapDomainRestrictedTo' put: 34;
-		at: 'MapInverse' put: 33;
-		at: 'ArithmeticMultiplication' put: 32;
-		at: 'ArithmeticDivide' put: 32;
-		at: 'ArithmeticRem' put: 32;
-		at: 'ArithmeticMod' put: 32;
-		at: 'ArithmeticIntegerDivision' put: 32;
-		at: 'SetIntersection' put: 32;
-		at: 'ArithmeticPlus' put: 31;
-		at: 'ArithmeticMinus' put: 31;
-		at: 'SetUnion' put: 31;
-		at: 'SetDifference' put: 31;
-		at: 'MapMerge' put: 31;
-		at: 'MapOrSequenceModify' put: 31;
-		at: 'SequenceConcatenate' put: 31;
-		at: 'IotaExpression' put: 30;
-		at: 'LessThanOrEqual' put: 21;
-		at: 'LessThan' put: 21;
-		at: 'GreaterThanOrEqual' put: 21;
-		at: 'GreaterThan' put: 21;
-		at: 'Equal' put: 21;
-		at: 'NotEqual' put: 21;
-		at: 'Subset' put: 21;
-		at: 'ProperSubset' put: 21;
-		at: 'InSet' put: 21;
-		at: 'NotInSet' put: 21;
-		at: 'ForallExpression' put: 10;
-		at: 'ExistsExpression' put: 10;
-		at: 'Exists1Expression' put: 10;
-		at: 'Not' put: 15;
-		at: 'And' put: 14;
-		at: 'Or' put: 13;
-		at: 'Imply' put: 12;
-		at: 'LogicalEquivalence' put: 11;
-		at: 'LambdaExpression' put: 10;
-		at: 'LetExpression' put: 10;
-		at: 'LetBeExpression' put: 10;
-		at: 'DefExpression' put: 10;
-		at: 'ForallExpression' put: 10;
-		at: 'ExistsExpression' put: 10;
-		at: 'Exists1Expression' put: 10;
-		at: 'IfExpression' put: 10;
-		at: 'IotaExpression' put: 10;
-		at: 'SetType' put: 5;
-		at: 'SeqType' put: 5;
-		at: 'Seq1Type' put: 5;
-		at: 'MapType' put: 4;
-		at: 'InmapType' put: 4;
-		at: 'ProductType' put: 3;
-		at: 'UnionType' put: 2;
-		at: 'PartialFunctionType' put: 1;
-		at: 'TotalFunctionType' put: 1;
-		yourself
 ]
 
 { #category : #settings }
@@ -1775,17 +1682,15 @@ ViennaAbstractFormatter >> needsParen [
 		whileTrue: [ childContext := childContext sender ].
 	childContext ifNil: [ ^ false ].
 	childNode := childContext arguments first.
-	childPrecedence := OperatorPrecedence
-		                   at: childNode label
-		                   ifAbsent: [ ^ false ].
+	childPrecedence := childNode operatorPrecedence.
+	childPrecedence = 0 ifTrue: [ ^ false ].
 	parentContext := childContext sender.
 	[ parentContext notNil and: [ parentContext selector ~= #format: ] ]
 		whileTrue: [ parentContext := parentContext sender ].
 	parentContext ifNil: [ ^ false ].
 	parentNode := parentContext arguments first.
-	parentPrecedence := OperatorPrecedence
-		                    at: parentNode label
-		                    ifAbsent: [ ^ false ].
+	parentPrecedence := parentNode operatorPrecedence.
+	parentPrecedence = 0 ifTrue: [ ^ false ].
 	childPrecedence < parentPrecedence ifTrue: [ ^ true ].
 	parentPrecedence < childPrecedence ifTrue: [ ^ false ].
 	^ parentNode
@@ -1798,12 +1703,10 @@ ViennaAbstractFormatter >> needsParen [
 ViennaAbstractFormatter >> needsParen: aViennaNode [
 
 	| precedence parentPrecedence |
-	precedence := OperatorPrecedence
-		              at: aViennaNode label
-		              ifAbsent: [ ^ false ].
-	parentPrecedence := OperatorPrecedence
-		                    at: aViennaNode parent label
-		                    ifAbsent: [ ^ false ].
+	precedence := aViennaNode operatorPrecedence.
+	precedence = 0 ifTrue: [ ^ false ].
+	parentPrecedence := aViennaNode parent operatorPrecedence.
+	parentPrecedence = 0 ifTrue: [ ^ false ].
 	precedence < parentPrecedence ifTrue: [ ^ true ].
 	parentPrecedence < precedence ifTrue: [ ^ false ].
 	^ aViennaNode parent

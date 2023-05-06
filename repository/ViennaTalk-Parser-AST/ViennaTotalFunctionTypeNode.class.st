@@ -16,3 +16,9 @@ ViennaTotalFunctionTypeNode >> label [
 
 	^ 'TotalFunctionType'
 ]
+
+{ #category : #'pretty printing' }
+ViennaTotalFunctionTypeNode >> operatorPrecedence [
+
+	^ 1
+]

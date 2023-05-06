@@ -14,13 +14,13 @@ ViennaLambdaExpressionNode class >> typeBindList: aViennaTypeBindListNode expres
 		  yourself
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : #accessing }
 ViennaLambdaExpressionNode >> expression [
 
 	^ self at: 2
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : #accessing }
 ViennaLambdaExpressionNode >> expression: aViennaExpressionNode [
 
 	self at: 2 put: aViennaExpressionNode
@@ -32,13 +32,19 @@ ViennaLambdaExpressionNode >> label [
 	^ 'LambdaExpression'
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : #'pretty printing' }
+ViennaLambdaExpressionNode >> operatorPrecedence [
+
+	^ 10
+]
+
+{ #category : #accessing }
 ViennaLambdaExpressionNode >> typeBindList [
 
 	^ self at: 1
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : #accessing }
 ViennaLambdaExpressionNode >> typeBindList: aViennaTypeBindListNode [
 
 	self at: 1 put: aViennaTypeBindListNode

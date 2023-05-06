@@ -16,3 +16,9 @@ ViennaPartialFunctionTypeNode >> label [
 
 	^ 'PartialFunctionType'
 ]
+
+{ #category : #'pretty printing' }
+ViennaPartialFunctionTypeNode >> operatorPrecedence [
+
+	^ 1
+]

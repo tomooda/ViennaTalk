@@ -14,25 +14,25 @@ ViennaForallExpressionNode class >> bindList: aViennaBindListNode expression: aV
 		  yourself
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : #accessing }
 ViennaForallExpressionNode >> bindList [
 
 	^ self at: 1
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : #accessing }
 ViennaForallExpressionNode >> bindList: aViennaBindListNode [
 
 	self at: 1 put: aViennaBindListNode
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : #accessing }
 ViennaForallExpressionNode >> expression [
 
 	^ self at: 2
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : #accessing }
 ViennaForallExpressionNode >> expression: aViennaExpressionNode [
 
 	self at: 2 put: aViennaExpressionNode
@@ -42,4 +42,10 @@ ViennaForallExpressionNode >> expression: aViennaExpressionNode [
 ViennaForallExpressionNode >> label [
 
 	^ 'ForallExpression'
+]
+
+{ #category : #'pretty printing' }
+ViennaForallExpressionNode >> operatorPrecedence [
+
+	^ 10
 ]

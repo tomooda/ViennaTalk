@@ -5,8 +5,14 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ViennaSequenceTailNode >> label [
 
 	^ 'SequenceTail'
+]
+
+{ #category : #'pretty printing' }
+ViennaSequenceTailNode >> operatorPrecedence [
+
+	^ 36
 ]

@@ -10,3 +10,9 @@ ViennaDistributedSetIntersectionNode >> label [
 
 	^ 'DistributedSetIntersection'
 ]
+
+{ #category : #'pretty printing' }
+ViennaDistributedSetIntersectionNode >> operatorPrecedence [
+
+	^ 36
+]

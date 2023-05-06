@@ -5,8 +5,14 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ViennaSequenceIndicesNode >> label [
 
 	^ 'SequenceIndices'
+]
+
+{ #category : #'pretty printing' }
+ViennaSequenceIndicesNode >> operatorPrecedence [
+
+	^ 36
 ]

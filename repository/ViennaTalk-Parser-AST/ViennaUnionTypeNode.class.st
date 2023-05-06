@@ -5,8 +5,14 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ViennaUnionTypeNode >> label [
 
 	^ 'UnionType'
+]
+
+{ #category : #'pretty printing' }
+ViennaUnionTypeNode >> operatorPrecedence [
+
+	^ 2
 ]

@@ -5,8 +5,14 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ViennaSeqTypeNode >> label [
 
 	^ 'SeqType'
+]
+
+{ #category : #'pretty printing' }
+ViennaSeqTypeNode >> operatorPrecedence [
+
+	^ 5
 ]

@@ -10,3 +10,9 @@ ViennaAndNode >> label [
 
 	^ 'And'
 ]
+
+{ #category : #'pretty printing' }
+ViennaAndNode >> operatorPrecedence [
+
+	^ 14
+]

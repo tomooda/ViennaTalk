@@ -16,3 +16,9 @@ ViennaArithmeticMultiplicationNode >> label [
 
 	^ 'ArithmeticMultiplication'
 ]
+
+{ #category : #'pretty printing' }
+ViennaArithmeticMultiplicationNode >> operatorPrecedence [
+
+	^ 32
+]

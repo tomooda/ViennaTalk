@@ -16,3 +16,9 @@ ViennaMapRangeRestrictedByNode >> label [
 
 	^ 'MapRangeRestrictedBy'
 ]
+
+{ #category : #'pretty printing' }
+ViennaMapRangeRestrictedByNode >> operatorPrecedence [
+
+	^ 35
+]

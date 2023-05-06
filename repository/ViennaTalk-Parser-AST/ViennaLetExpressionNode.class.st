@@ -14,13 +14,13 @@ ViennaLetExpressionNode class >> localDefinitionList: aViennaLocalDefinitionList
 		  yourself
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : #accessing }
 ViennaLetExpressionNode >> expression [
 
 	^ self at: 2
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : #accessing }
 ViennaLetExpressionNode >> expression: aViennaExpressionNode [
 
 	self at: 2 put: aViennaExpressionNode
@@ -32,14 +32,20 @@ ViennaLetExpressionNode >> label [
 	^ 'LetExpression'
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : #accessing }
 ViennaLetExpressionNode >> localDefinitionList [
 
 	^ self at: 1
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : #accessing }
 ViennaLetExpressionNode >> localDefinitionList: aViennaLocalDefinitionListNode [
 
 	self at: 1 put: aViennaLocalDefinitionListNode
+]
+
+{ #category : #'pretty printing' }
+ViennaLetExpressionNode >> operatorPrecedence [
+
+	^ 10
 ]

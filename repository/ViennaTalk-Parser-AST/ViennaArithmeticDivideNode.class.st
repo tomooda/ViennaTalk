@@ -16,3 +16,9 @@ ViennaArithmeticDivideNode >> label [
 
 	^ 'ArithmeticDivide'
 ]
+
+{ #category : #'pretty printing' }
+ViennaArithmeticDivideNode >> operatorPrecedence [
+
+	^ 32
+]

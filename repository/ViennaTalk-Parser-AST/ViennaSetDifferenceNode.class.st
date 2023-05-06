@@ -16,3 +16,9 @@ ViennaSetDifferenceNode >> label [
 
 	^ 'SetDifference'
 ]
+
+{ #category : #'pretty printing' }
+ViennaSetDifferenceNode >> operatorPrecedence [
+
+	^ 31
+]

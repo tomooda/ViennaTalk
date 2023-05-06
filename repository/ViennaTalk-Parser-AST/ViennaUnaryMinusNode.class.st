@@ -5,8 +5,14 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ViennaUnaryMinusNode >> label [
 
 	^ 'UnaryMinus'
+]
+
+{ #category : #'pretty printing' }
+ViennaUnaryMinusNode >> operatorPrecedence [
+
+	^ 36
 ]

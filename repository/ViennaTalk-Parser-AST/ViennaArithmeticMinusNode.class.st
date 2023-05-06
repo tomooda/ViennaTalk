@@ -16,3 +16,9 @@ ViennaArithmeticMinusNode >> label [
 
 	^ 'ArithmeticMinus'
 ]
+
+{ #category : #'pretty printing' }
+ViennaArithmeticMinusNode >> operatorPrecedence [
+
+	^ 31
+]

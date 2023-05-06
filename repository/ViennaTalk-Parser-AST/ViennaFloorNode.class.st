@@ -10,3 +10,9 @@ ViennaFloorNode >> label [
 
 	^ 'Floor'
 ]
+
+{ #category : #'pretty printing' }
+ViennaFloorNode >> operatorPrecedence [
+
+	^ 36
+]

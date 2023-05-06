@@ -43,3 +43,9 @@ ViennaIfExpressionNode >> label [
 
 	^ 'IfExpression'
 ]
+
+{ #category : #'pretty printing' }
+ViennaIfExpressionNode >> operatorPrecedence [
+
+	^ 10
+]

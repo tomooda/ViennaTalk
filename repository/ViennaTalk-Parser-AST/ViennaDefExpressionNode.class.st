@@ -14,25 +14,25 @@ ViennaDefExpressionNode class >> equalDefinitionList: aViennaEqualDefinitionList
 		  yourself
 ]
 
-{ #category : #'parsers-statements' }
+{ #category : #accessing }
 ViennaDefExpressionNode >> equalDefinitionList [
 
 	^ self at: 1
 ]
 
-{ #category : #'parsers-statements' }
+{ #category : #accessing }
 ViennaDefExpressionNode >> equalDefinitionList: aViennaEqualDefinitionListNode [
 
 	self at: 1 put: aViennaEqualDefinitionListNode
 ]
 
-{ #category : #'parsers-statements' }
+{ #category : #accessing }
 ViennaDefExpressionNode >> expression [
 
 	^ self at: 2
 ]
 
-{ #category : #'parsers-statements' }
+{ #category : #accessing }
 ViennaDefExpressionNode >> expression: aViennaExpressionNode [
 
 	self at: 2 put: aViennaExpressionNode
@@ -42,4 +42,10 @@ ViennaDefExpressionNode >> expression: aViennaExpressionNode [
 ViennaDefExpressionNode >> label [
 
 	^ 'DefExpression'
+]
+
+{ #category : #'pretty printing' }
+ViennaDefExpressionNode >> operatorPrecedence [
+
+	^ 10
 ]

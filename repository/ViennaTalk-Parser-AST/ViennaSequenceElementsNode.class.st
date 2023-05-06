@@ -10,3 +10,9 @@ ViennaSequenceElementsNode >> label [
 
 	^ 'SequenceElements'
 ]
+
+{ #category : #'pretty printing' }
+ViennaSequenceElementsNode >> operatorPrecedence [
+
+	^ 36
+]

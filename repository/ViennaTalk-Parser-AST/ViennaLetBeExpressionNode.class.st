@@ -14,13 +14,13 @@ ViennaLetBeExpressionNode class >> multipleBind: aViennaMultipleBindNode express
 		  yourself
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : #accessing }
 ViennaLetBeExpressionNode >> expression [
 
 	^ self at: 2
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : #accessing }
 ViennaLetBeExpressionNode >> expression: aViennaExpressionNode [
 
 	self at: 2 put: aViennaExpressionNode
@@ -32,14 +32,20 @@ ViennaLetBeExpressionNode >> label [
 	^ 'LetBeExpression'
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : #accessing }
 ViennaLetBeExpressionNode >> multipleBind [
 
 	^ self at: 1
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : #accessing }
 ViennaLetBeExpressionNode >> multipleBind: aViennaMultipleBindNode [
 
 	self at: 1 put: aViennaMultipleBindNode
+]
+
+{ #category : #'pretty printing' }
+ViennaLetBeExpressionNode >> operatorPrecedence [
+
+	^ 10
 ]

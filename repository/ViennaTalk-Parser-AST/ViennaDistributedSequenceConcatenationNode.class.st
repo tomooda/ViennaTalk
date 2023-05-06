@@ -10,3 +10,9 @@ ViennaDistributedSequenceConcatenationNode >> label [
 
 	^ 'DistributedSequenceConcatenation'
 ]
+
+{ #category : #'pretty printing' }
+ViennaDistributedSequenceConcatenationNode >> operatorPrecedence [
+
+	^ 36
+]

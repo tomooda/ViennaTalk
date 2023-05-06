@@ -10,3 +10,9 @@ ViennaMapDomainNode >> label [
 
 	^ 'MapDomain'
 ]
+
+{ #category : #'pretty printing' }
+ViennaMapDomainNode >> operatorPrecedence [
+
+	^ 36
+]

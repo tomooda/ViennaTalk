@@ -10,3 +10,9 @@ ViennaLogicalEquivalenceNode >> label [
 
 	^ 'LogicalEquivalence'
 ]
+
+{ #category : #'pretty printing' }
+ViennaLogicalEquivalenceNode >> operatorPrecedence [
+
+	^ 11
+]

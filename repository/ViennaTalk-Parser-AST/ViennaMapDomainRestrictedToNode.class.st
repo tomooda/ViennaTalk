@@ -16,3 +16,9 @@ ViennaMapDomainRestrictedToNode >> label [
 
 	^ 'MapDomainRestrictedTo'
 ]
+
+{ #category : #'pretty printing' }
+ViennaMapDomainRestrictedToNode >> operatorPrecedence [
+
+	^ 34
+]

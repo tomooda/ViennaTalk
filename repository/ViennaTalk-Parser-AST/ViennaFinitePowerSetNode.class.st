@@ -5,8 +5,14 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ViennaFinitePowerSetNode >> label [
 
 	^ 'FinitePowerSet'
+]
+
+{ #category : #'pretty printing' }
+ViennaFinitePowerSetNode >> operatorPrecedence [
+
+	^ 36
 ]

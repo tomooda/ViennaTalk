@@ -16,3 +16,9 @@ ViennaMapOrSequenceReferenceNode >> label [
 
 	^ 'MapOrSequenceReference'
 ]
+
+{ #category : #'pretty printing' }
+ViennaMapOrSequenceReferenceNode >> operatorPrecedence [
+
+	^ 31
+]

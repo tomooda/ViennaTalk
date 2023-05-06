@@ -16,3 +16,9 @@ ViennaArithmeticModNode >> label [
 
 	^ 'ArithmeticMod'
 ]
+
+{ #category : #'pretty printing' }
+ViennaArithmeticModNode >> operatorPrecedence [
+
+	^ 32
+]

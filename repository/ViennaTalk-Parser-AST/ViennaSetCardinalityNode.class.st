@@ -10,3 +10,9 @@ ViennaSetCardinalityNode >> label [
 
 	^ 'SetCardinality'
 ]
+
+{ #category : #'pretty printing' }
+ViennaSetCardinalityNode >> operatorPrecedence [
+
+	^ 36
+]

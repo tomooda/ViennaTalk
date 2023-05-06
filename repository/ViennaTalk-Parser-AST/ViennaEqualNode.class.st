@@ -10,3 +10,9 @@ ViennaEqualNode >> label [
 
 	^ 'Equal'
 ]
+
+{ #category : #'pretty printing' }
+ViennaEqualNode >> operatorPrecedence [
+
+	^ 21
+]

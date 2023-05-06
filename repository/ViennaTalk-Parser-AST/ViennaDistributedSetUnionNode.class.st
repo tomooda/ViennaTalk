@@ -10,3 +10,9 @@ ViennaDistributedSetUnionNode >> label [
 
 	^ 'DistributedSetUnion'
 ]
+
+{ #category : #'pretty printing' }
+ViennaDistributedSetUnionNode >> operatorPrecedence [
+
+	^ 36
+]

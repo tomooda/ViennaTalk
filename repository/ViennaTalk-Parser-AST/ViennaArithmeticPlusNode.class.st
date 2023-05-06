@@ -16,3 +16,9 @@ ViennaArithmeticPlusNode >> label [
 
 	^ 'ArithmeticPlus'
 ]
+
+{ #category : #'pretty printing' }
+ViennaArithmeticPlusNode >> operatorPrecedence [
+
+	^ 31
+]

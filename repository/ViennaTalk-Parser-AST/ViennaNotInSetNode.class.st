@@ -5,8 +5,14 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ViennaNotInSetNode >> label [
 
 	^ 'NotInSet'
+]
+
+{ #category : #'pretty printing' }
+ViennaNotInSetNode >> operatorPrecedence [
+
+	^ 21
 ]

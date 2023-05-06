@@ -16,3 +16,9 @@ ViennaArithmeticRemNode >> label [
 
 	^ 'ArithmeticRem'
 ]
+
+{ #category : #'pretty printing' }
+ViennaArithmeticRemNode >> operatorPrecedence [
+
+	^ 32
+]
