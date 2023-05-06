@@ -27,6 +27,12 @@ ViennaApplyNode >> argumentExpressionList: aViennaExpressionListNode [
 ]
 
 { #category : #accessing }
+ViennaApplyNode >> arguments [
+
+	^ self argumentExpressionList asArray
+]
+
+{ #category : #accessing }
 ViennaApplyNode >> expression [
 
 	^ self at: 1
@@ -36,6 +42,12 @@ ViennaApplyNode >> expression [
 ViennaApplyNode >> expression: aString [
 
 	self at: 1 put: aString
+]
+
+{ #category : #accessing }
+ViennaApplyNode >> function [
+
+	^ self expression
 ]
 
 { #category : #'pretty printing' }
