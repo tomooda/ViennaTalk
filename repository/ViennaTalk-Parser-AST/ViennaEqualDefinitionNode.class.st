@@ -26,6 +26,17 @@ ViennaEqualDefinitionNode >> expression: aViennaExpressionNode [
 	self at: 2 put: aViennaExpressionNode
 ]
 
+{ #category : #'pretty printing' }
+ViennaEqualDefinitionNode >> formatWith: aViennaAbstractFormatter [
+
+	| patternOrBind expression |
+	patternOrBind := aViennaAbstractFormatter format: self patternOrBind.
+	expression := aViennaAbstractFormatter format: self expression.
+	^ aViennaAbstractFormatter
+		  indentString: patternOrBind , ' = '
+		  insertCrIfNeeded: expression
+]
+
 { #category : #accessing }
 ViennaEqualDefinitionNode >> label [
 

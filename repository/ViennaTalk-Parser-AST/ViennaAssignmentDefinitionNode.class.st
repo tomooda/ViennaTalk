@@ -27,6 +27,16 @@ ViennaAssignmentDefinitionNode >> expression: aViennaExpressionNode [
 	self at: 3 put: aViennaExpressionNode
 ]
 
+{ #category : #'pretty printing' }
+ViennaAssignmentDefinitionNode >> formatWith: aViennaAbstractFormatter [
+
+	^ self identifier , ':'
+	  , (aViennaAbstractFormatter format: self type) , (self expression
+		   ifNotNil: [ :exp |
+		   ' := ' , (aViennaAbstractFormatter format: exp) ]
+		   ifNil: [ '' ])
+]
+
 { #category : #accessing }
 ViennaAssignmentDefinitionNode >> identifier [
 

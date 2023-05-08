@@ -1,9 +1,15 @@
 Class {
 	#name : #ViennaDefinitionBlockNode,
-	#superclass : #ViennaAbstractSyntaxNode,
+	#superclass : #ViennaObsoleteNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }
+
+{ #category : #'pretty printing' }
+ViennaDefinitionBlockNode >> formatWith: aViennaAbstractFormatter [
+
+	^ (aViennaAbstractFormatter format: self first) , String cr
+]
 
 { #category : #accessing }
 ViennaDefinitionBlockNode >> label [

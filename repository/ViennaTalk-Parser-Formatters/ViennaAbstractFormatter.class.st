@@ -48,35 +48,6 @@ ViennaAbstractFormatter class >> viennaSettingsOn: aBuilder [
 		order: 0.51
 ]
 
-{ #category : #'formatting-definitions' }
-ViennaAbstractFormatter >> access: aViennaNode [
-	^ self join: ' ' withAll: (self formatAll: aViennaNode)
-]
-
-{ #category : #'formatting-definitions' }
-ViennaAbstractFormatter >> accessFunctionDefinition: aViennaNode [
-	^ self
-		join: ' '
-		withAll: ((self formatAll: aViennaNode) reject: #isEmpty)
-]
-
-{ #category : #'formatting-definitions' }
-ViennaAbstractFormatter >> accessOperationDefinition: aViennaNode [
-	^ self
-		join: ' '
-		withAll: ((self formatAll: aViennaNode) reject: #isEmpty)
-]
-
-{ #category : #'formatting-definitions' }
-ViennaAbstractFormatter >> accessTypeDefinition: aViennaNode [
-	^ self join: ' ' withAll: (self formatAll: aViennaNode)
-]
-
-{ #category : #'formatting-definitions' }
-ViennaAbstractFormatter >> accessValueDefinition: aViennaNode [
-	^ self join: ' ' withAll: (self formatAll: aViennaNode)
-]
-
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> act [
 	^ '#act'
@@ -186,12 +157,6 @@ ViennaAbstractFormatter >> arrow [
 { #category : #'formatting-statements' }
 ViennaAbstractFormatter >> assignStatement: aViennaNode [
 	^ self indentString: (self format: aViennaNode first) insertCrIfNeeded: ':= ' , (self format: aViennaNode second)
-]
-
-{ #category : #'formatting-definitions' }
-ViennaAbstractFormatter >> assignmentDefinition: aViennaNode [
-	^ aViennaNode first , ':' , (self format: aViennaNode second)
-		, (aViennaNode third ifNotNil: [ ' := ' , (self format: aViennaNode third) ] ifNil: [ '' ])
 ]
 
 { #category : #'formatting-types' }
@@ -376,11 +341,6 @@ ViennaAbstractFormatter >> defaultMaxSizePerLine [
 	^ self class defaultMaxSizePerLine
 ]
 
-{ #category : #'formatting-definitions' }
-ViennaAbstractFormatter >> definitionBlock: aViennaNode [
-	^ (self format: aViennaNode first) , String cr
-]
-
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> dinter [
 	^ 'dinter'
@@ -404,11 +364,6 @@ ViennaAbstractFormatter >> distributedSetIntersection: aViennaNode [
 { #category : #'formatting-expressions' }
 ViennaAbstractFormatter >> distributedSetUnion: aViennaNode [
 	^ self dunion , ' ' , (self format: aViennaNode first)
-]
-
-{ #category : #'formatting-definitions' }
-ViennaAbstractFormatter >> document: aViennaNode [
-	^ self join: String cr withAll: (self formatAll: aViennaNode)
 ]
 
 { #category : #'symbol access' }
@@ -441,37 +396,9 @@ ViennaAbstractFormatter >> equal: aViennaNode [
 	^ self print: (self format: aViennaNode first) infix: '=' arg: (self format: aViennaNode second)
 ]
 
-{ #category : #'formatting-definitions' }
-ViennaAbstractFormatter >> equalDefinition: aViennaNode [
-	| patternBind expression |
-	patternBind := self format: aViennaNode first.
-	expression := self format: aViennaNode second.
-	^ self indentString: patternBind , ' =' insertCrIfNeeded: expression
-]
-
-{ #category : #'formatting-definitions' }
-ViennaAbstractFormatter >> equalDefinitionList: aViennaNode [
-	| defs |
-	defs := self formatAll: aViennaNode.
-	^ (self join: ';' , String cr withAll: defs) , ';'
-]
-
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> equiv [
 	^ '<=>'
-]
-
-{ #category : #'formatting-definitions' }
-ViennaAbstractFormatter >> error: aViennaNode [
-	^ aViennaNode first , ':' , (self format: aViennaNode second) , '->'
-		, (self format: aViennaNode third)
-]
-
-{ #category : #'formatting-definitions' }
-ViennaAbstractFormatter >> errorList: aViennaNode [
-	^ aViennaNode asArray
-		inject: ''
-		into: [ :string :node | string , ' ' , (self format: node) ]
 ]
 
 { #category : #'formatting-statements' }
@@ -784,16 +711,21 @@ ViennaAbstractFormatter >> format: aViennaNode [
 	aViennaNode isString ifTrue: [ ^ aViennaNode ].
 	string := (aViennaNode annotations
 		           ifNil: [ '' ]
-		           ifNotNil: [ :annotations | 
-			           String streamContents: [ :stream | 
-				           annotations do: [ :annotation | 
+		           ifNotNil: [ :annotations |
+			           String streamContents: [ :stream |
+				           annotations do: [ :annotation |
 					           stream
 						           nextPutAll: '--@';
 						           nextPutAll: annotation;
-						           nextPutAll: String cr ] ] ]) , (self
-		           perform: (aViennaNode label uncapitalized , ':') asSymbol
-		           with: aViennaNode).
-	(self needsParen: aViennaNode) ifTrue: [ 
+						           nextPutAll: String cr ] ] ])
+	          , ([ aViennaNode formatWith: self ]
+			           on: SubclassResponsibility
+			           do: [ :ex |
+				           self
+					           perform:
+					           (aViennaNode label uncapitalized , ':') asSymbol
+					           with: aViennaNode ]).
+	(self needsParen: aViennaNode) ifTrue: [
 		string := '(' , (self indentString: string) , ')' ].
 	^ string
 ]

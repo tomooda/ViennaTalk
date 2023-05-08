@@ -12,6 +12,12 @@ ViennaAbstractSyntaxNode class >> isAbstract [
 ]
 
 { #category : #'pretty printing' }
+ViennaAbstractSyntaxNode >> formatWith: aViennaAbstractFormatter [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'pretty printing' }
 ViennaAbstractSyntaxNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
 
 	^ aBlock3 value
