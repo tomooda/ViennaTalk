@@ -6,6 +6,12 @@ Class {
 }
 
 { #category : #'pretty printing' }
+ViennaArithmeticRemNode >> formatOperatorWith: aViennaAbstractFormatter [
+
+	^ 'rem'
+]
+
+{ #category : #'pretty printing' }
 ViennaArithmeticRemNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
 
 	^ aBlock1 value

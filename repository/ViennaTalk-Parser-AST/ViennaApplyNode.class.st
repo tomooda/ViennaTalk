@@ -44,6 +44,20 @@ ViennaApplyNode >> expression: aString [
 	self at: 1 put: aString
 ]
 
+{ #category : #'pretty printing' }
+ViennaApplyNode >> formatWith: aViennaAbstractFormatter [
+
+	| expression args |
+	expression := aViennaAbstractFormatter format: self expression.
+	args := aViennaAbstractFormatter format: self argumentExpressionList.
+	^ expression , '('
+	  , ((aViennaAbstractFormatter needsIndent: expression , args)
+			   ifTrue: [
+				   String cr , aViennaAbstractFormatter indent
+				   , (aViennaAbstractFormatter indentString: args) ]
+			   ifFalse: [ args ]) , ')'
+]
+
 { #category : #accessing }
 ViennaApplyNode >> function [
 

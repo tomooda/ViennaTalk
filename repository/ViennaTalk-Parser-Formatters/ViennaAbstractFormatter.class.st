@@ -53,18 +53,6 @@ ViennaAbstractFormatter >> act [
 	^ '#act'
 ]
 
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> actExpression: aViennaNode [
-	^ self act , '('
-		, (self join: ', ' withAll: (self formatAll: aViennaNode)) , ')'
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> activeExpression: aViennaNode [
-	^ '#active('
-		, (self join: ', ' withAll: (self formatAll: aViennaNode)) , ')'
-]
-
 { #category : #'formatting-statements' }
 ViennaAbstractFormatter >> alwaysStatement: aViennaNode [
 	| handler statement |
@@ -81,11 +69,6 @@ ViennaAbstractFormatter >> and [
 	^ 'and'
 ]
 
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> and: aViennaNode [
-	^ self print: (self format: aViennaNode first) infix: self and arg: (self format: aViennaNode second)
-]
-
 { #category : #private }
 ViennaAbstractFormatter >> anyNeedsIndent: anArrayOfString [
 	^ (anArrayOfString contains: [ :string | string includes: Character cr ])
@@ -95,58 +78,6 @@ ViennaAbstractFormatter >> anyNeedsIndent: anArrayOfString [
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> anyType [
 	^ '?'
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> apply: aViennaNode [
-	| expression args |
-	expression := self format: aViennaNode first.
-	args := self format: aViennaNode second.
-	^ expression , '('
-		,
-			((self needsIndent: expression , args)
-				ifTrue: [ String cr , indent , (self indentString: args) ]
-				ifFalse: [ args ]) , ')'
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> arithmeticAbs: aViennaNode [
-	^ 'abs ' , (self format: aViennaNode first)
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> arithmeticDivide: aViennaNode [
-	^ self print: (self format: aViennaNode first) infix: '/' arg: (self format: aViennaNode second)
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> arithmeticIntegerDivision: aViennaNode [
-	^ self print: (self format: aViennaNode first) infix: 'div' arg: (self format: aViennaNode second)
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> arithmeticMinus: aViennaNode [
-	^ self print: (self format: aViennaNode first) infix: '-' arg: (self format: aViennaNode second)
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> arithmeticMod: aViennaNode [
-	^ self print: (self format: aViennaNode first) infix: 'mod' arg: (self format: aViennaNode second)
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> arithmeticMultiplication: aViennaNode [
-	^ self print: (self format: aViennaNode first) infix: self mul arg: (self format: aViennaNode second)
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> arithmeticPlus: aViennaNode [
-	^ self print: (self format: aViennaNode first) infix: '+' arg: (self format: aViennaNode second)
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> arithmeticRem: aViennaNode [
-	^ self print: (self format: aViennaNode first) infix: 'rem' arg: (self format: aViennaNode second)
 ]
 
 { #category : #'symbol access' }
@@ -1637,7 +1568,9 @@ ViennaAbstractFormatter >> needsParen: aViennaNode [
 	| precedence parentPrecedence |
 	precedence := aViennaNode operatorPrecedence.
 	precedence = 0 ifTrue: [ ^ false ].
-	parentPrecedence := aViennaNode parent operatorPrecedence.
+	parentPrecedence := aViennaNode parent
+		                    ifNotNil: #operatorPrecedence
+		                    ifNil: [ 0 ].
 	parentPrecedence = 0 ifTrue: [ ^ false ].
 	precedence < parentPrecedence ifTrue: [ ^ true ].
 	parentPrecedence < precedence ifTrue: [ ^ false ].

@@ -27,6 +27,81 @@ ViennaVDMFormatterTest >> setUp [
 ]
 
 { #category : #tests }
+ViennaVDMFormatterTest >> testFormatAnd [
+
+	self
+		assertParseFormattedSource: 'p and q'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatApply [
+
+	self assertParseFormattedSource: 'f()' with: parser expression end.
+	self assertParseFormattedSource: 'f(x)' with: parser expression end.
+	self
+		assertParseFormattedSource: 'f(x, y)'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatArithmeticAbs [
+
+	self assertParseFormattedSource: 'abs x' with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatArithmeticDivide [
+
+	self assertParseFormattedSource: 'x / y' with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatArithmeticIntegerDivision [
+
+	self
+		assertParseFormattedSource: 'x div y'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatArithmeticMinus [
+
+	self
+		assertParseFormattedSource: 'x - y'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatArithmeticMod [
+
+	self
+		assertParseFormattedSource: 'x mod y'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatArithmeticMultiplication [
+	self
+		assertParseFormattedSource: 'x * y'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatArithmeticPlus [
+	self
+		assertParseFormattedSource: 'x + y'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatArithmeticRem [
+	self
+		assertParseFormattedSource: 'x rem y'
+		with: parser expression end
+]
+
+{ #category : #tests }
 ViennaVDMFormatterTest >> testFormatAssignmentDefinition [
 
 	self

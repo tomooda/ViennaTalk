@@ -6,6 +6,12 @@ Class {
 }
 
 { #category : #'pretty printing' }
+ViennaArithmeticDivideNode >> formatOperatorWith: aViennaAbstractFormatter [
+
+	^ '/'
+]
+
+{ #category : #'pretty printing' }
 ViennaArithmeticDivideNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
 
 	^ aBlock1 value

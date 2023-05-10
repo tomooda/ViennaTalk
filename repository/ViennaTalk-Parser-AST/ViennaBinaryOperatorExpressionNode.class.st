@@ -37,3 +37,18 @@ ViennaBinaryOperatorExpressionNode >> expression2: aViennaExpressionNode [
 
 	self at: 2 put: aViennaExpressionNode
 ]
+
+{ #category : #'pretty printing' }
+ViennaBinaryOperatorExpressionNode >> formatOperatorWith: aViennaAbstractFormatter [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'pretty printing' }
+ViennaBinaryOperatorExpressionNode >> formatWith: aViennaAbstractFormatter [
+
+	^ aViennaAbstractFormatter
+		  print: (aViennaAbstractFormatter format: self expression1)
+		  infix: (self formatOperatorWith: aViennaAbstractFormatter)
+		  arg: (aViennaAbstractFormatter format: self expression2)
+]

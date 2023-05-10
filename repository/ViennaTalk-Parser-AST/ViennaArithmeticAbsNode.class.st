@@ -5,6 +5,12 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #'pretty printing' }
+ViennaArithmeticAbsNode >> formatWith: aViennaAbstractFormatter [
+
+	^ 'abs ' , (aViennaAbstractFormatter format: self expression)
+]
+
 { #category : #accessing }
 ViennaArithmeticAbsNode >> label [
 
