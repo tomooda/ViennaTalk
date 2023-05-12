@@ -5,6 +5,12 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #'pretty printing' }
+ViennaDistributedSetIntersectionNode >> formatOperatorWith: aViennaAbstractFormatter [
+
+	^ aViennaAbstractFormatter dinter
+]
+
 { #category : #accessing }
 ViennaDistributedSetIntersectionNode >> label [
 

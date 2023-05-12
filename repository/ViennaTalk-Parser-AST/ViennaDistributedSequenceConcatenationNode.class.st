@@ -5,6 +5,12 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #'pretty printing' }
+ViennaDistributedSequenceConcatenationNode >> formatOperatorWith: aViennaAbstractFormatter [
+
+	^ 'conc'
+]
+
 { #category : #accessing }
 ViennaDistributedSequenceConcatenationNode >> label [
 

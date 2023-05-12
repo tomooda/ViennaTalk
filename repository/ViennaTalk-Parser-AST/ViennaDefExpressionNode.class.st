@@ -38,6 +38,22 @@ ViennaDefExpressionNode >> expression: aViennaExpressionNode [
 	self at: 2 put: aViennaExpressionNode
 ]
 
+{ #category : #'pretty printing' }
+ViennaDefExpressionNode >> formatWith: aViennaAbstractFormatter [
+
+	| defs expression |
+	defs := aViennaAbstractFormatter format: self first.
+	expression := aViennaAbstractFormatter format: self second.
+	^ aViennaAbstractFormatter
+		  indentString:
+		  (aViennaAbstractFormatter
+			   indentString: 'def'
+			   insertCrIfNeeded: defs)
+		  insertCrIfNeeded: (aViennaAbstractFormatter
+				   indentString: 'in'
+				   insertCrIfNeeded: expression)
+]
+
 { #category : #accessing }
 ViennaDefExpressionNode >> label [
 

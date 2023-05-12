@@ -38,6 +38,20 @@ ViennaForallExpressionNode >> expression: aViennaExpressionNode [
 	self at: 2 put: aViennaExpressionNode
 ]
 
+{ #category : #'pretty printing' }
+ViennaForallExpressionNode >> formatWith: aViennaAbstractFormatter [
+
+	| bindList expression |
+	bindList := aViennaAbstractFormatter format: self first.
+	expression := aViennaAbstractFormatter format: self second.
+	^ aViennaAbstractFormatter
+		  indentString: (aViennaAbstractFormatter
+				   indentString: aViennaAbstractFormatter forall
+				   insertCrIfNeeded:
+				   bindList trim , ' ' , aViennaAbstractFormatter dot)
+		  insertCrIfNeeded: expression
+]
+
 { #category : #accessing }
 ViennaForallExpressionNode >> label [
 

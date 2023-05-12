@@ -5,6 +5,12 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #'pretty printing' }
+ViennaDistributedMapMergeNode >> formatOperatorWith: aViennaAbstractFormatter [
+
+	^ 'merge'
+]
+
 { #category : #accessing }
 ViennaDistributedMapMergeNode >> label [
 

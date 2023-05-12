@@ -38,6 +38,16 @@ ViennaConditionalExpressionNode >> expression: aViennaExpressionNode [
 	self at: 2 put: aViennaExpressionNode
 ]
 
+{ #category : #'pretty printing' }
+ViennaConditionalExpressionNode >> formatWith: aViennaAbstractFormatter [
+
+	^ 'elseif ' , (aViennaAbstractFormatter indentString:
+		   (aViennaAbstractFormatter format: self first)) , String cr
+	  , aViennaAbstractFormatter indent , 'then '
+	  , (aViennaAbstractFormatter indentString:
+			   (aViennaAbstractFormatter format: self second))
+]
+
 { #category : #accessing }
 ViennaConditionalExpressionNode >> label [
 

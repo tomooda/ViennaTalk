@@ -5,6 +5,12 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #'pretty printing' }
+ViennaFinitePowerSetNode >> formatOperatorWith: aViennaAbstractFormatter [
+
+	^ aViennaAbstractFormatter power
+]
+
 { #category : #accessing }
 ViennaFinitePowerSetNode >> label [
 

@@ -27,6 +27,94 @@ ViennaVDMFormatterTest >> setUp [
 ]
 
 { #category : #tests }
+ViennaVDMFormatterTest >> testComposition [
+
+	self
+		assertParseFormattedSource: 'f comp g'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testDefExpression [
+
+	self
+		assertParseFormattedSource: 'def x:t1 = v1; y:t2 = v2 in e'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testDistributedMapMerge [
+
+	self
+		assertParseFormattedSource: 'merge s'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testDistributedSequenceConcatenation [
+
+	self assertParseFormattedSource: 'conc s' with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testDistributedSetIntersection [
+
+	self assertParseFormattedSource: 'dinter s' with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testDistributedSetUnion [
+
+	self assertParseFormattedSource: 'dunion s' with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testExists1Expression [
+
+	self
+		assertParseFormattedSource: 'exists1 x in set xs & x = y'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testExistsExpression [
+
+	self
+		assertParseFormattedSource: 'exists x in set xs, y in set ys & x = y'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFieldSelect [
+
+	self
+		assertParseFormattedSource: 'x.f'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFinitePowerSet [
+
+	self
+		assertParseFormattedSource: 'power s'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFloor [
+
+	self assertParseFormattedSource: 'floor x' with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testForallExpression [
+
+	self
+		assertParseFormattedSource: 'forall x in set xs, y in set ys & x <> y'
+		with: parser expression end
+]
+
+{ #category : #tests }
 ViennaVDMFormatterTest >> testFormatAnd [
 
 	self
@@ -110,6 +198,25 @@ ViennaVDMFormatterTest >> testFormatAssignmentDefinition [
 ]
 
 { #category : #tests }
+ViennaVDMFormatterTest >> testFormatCasesExpression [
+
+	self
+		assertParseFormattedSource: 'cases e:
+	x^xs, {y} -> e1,
+	others -> e2
+	end'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatEqual [
+
+	self
+		assertParseFormattedSource: 'x = y'
+		with: parser expression end
+]
+
+{ #category : #tests }
 ViennaVDMFormatterTest >> testFormatEqualDefinition [
 
 	self
@@ -158,4 +265,13 @@ ViennaVDMFormatterTest >> testFormatFlatDocument [
 	self
 		assertParseFormattedSource: 'types n = nat values v1 : n = 0; v2 : n = v1'
 		with: parser document end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testIfExpression [
+
+	self
+		assertParseFormattedSource:
+		'if a > b then e1 elseif c > d then e2 else e3'
+		with: parser expression end
 ]

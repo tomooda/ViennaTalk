@@ -38,6 +38,22 @@ ViennaCasesExpressionNode >> expression: aViennaExpression [
 	self at: 1 put: aViennaExpression
 ]
 
+{ #category : #'pretty printing' }
+ViennaCasesExpressionNode >> formatWith: aViennaAbstractFormatter [
+
+	| value alternatives others |
+	value := aViennaAbstractFormatter format: self expression.
+	alternatives := aViennaAbstractFormatter format:
+		                self casesExpressionAlternatives.
+	others := self othersExpression
+		          ifNil: [ '' ]
+		          ifNotNil: [ :node |
+		          ',' , String cr , (aViennaAbstractFormatter format: node) ].
+	^ aViennaAbstractFormatter indentString:
+		  'cases ' , value , ':' , String cr , alternatives , others
+		  , String cr , 'end'
+]
+
 { #category : #accessing }
 ViennaCasesExpressionNode >> label [
 

@@ -6,9 +6,9 @@ Class {
 }
 
 { #category : #'pretty printing' }
-ViennaArithmeticAbsNode >> formatWith: aViennaAbstractFormatter [
+ViennaArithmeticAbsNode >> formatOperatorWith: aViennaAbstractFormatter [
 
-	^ 'abs ' , (aViennaAbstractFormatter format: self expression)
+	^ 'abs'
 ]
 
 { #category : #accessing }

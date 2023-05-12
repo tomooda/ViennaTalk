@@ -6,6 +6,12 @@ Class {
 }
 
 { #category : #'pretty printing' }
+ViennaCompositionNode >> formatOperatorWith: aViennaAbstractFormatter [
+
+	^ 'comp'
+]
+
+{ #category : #'pretty printing' }
 ViennaCompositionNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
 
 	^ aBlock2 value

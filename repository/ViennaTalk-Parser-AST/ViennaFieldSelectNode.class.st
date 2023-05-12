@@ -39,6 +39,15 @@ ViennaFieldSelectNode >> field: aString [
 ]
 
 { #category : #'pretty printing' }
+ViennaFieldSelectNode >> formatWith: aViennaAbstractFormatter [
+
+	| record field |
+	record := aViennaAbstractFormatter format: self expression.
+	field := aViennaAbstractFormatter format: self field.
+	^ record , '.' , field
+]
+
+{ #category : #'pretty printing' }
 ViennaFieldSelectNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
 
 	^ aBlock1 value

@@ -27,15 +27,28 @@ ViennaExists1ExpressionNode >> bind: aViennaBindNode [
 ]
 
 { #category : #accessing }
-ViennaExists1ExpressionNode >> edxpression [
+ViennaExists1ExpressionNode >> expression [
 
 	^ self at: 2
 ]
 
 { #category : #accessing }
-ViennaExists1ExpressionNode >> edxpression: aViennaExpressionNode [
+ViennaExists1ExpressionNode >> expression: aViennaExpressionNode [
 
 	self at: 2 put: aViennaExpressionNode
+]
+
+{ #category : #'pretty printing' }
+ViennaExists1ExpressionNode >> formatWith: aViennaAbstractFormatter [
+
+	| bind expression |
+	bind := aViennaAbstractFormatter format: self bind.
+	expression := aViennaAbstractFormatter format: self expression.
+	^ aViennaAbstractFormatter
+		  indentString: (aViennaAbstractFormatter
+				   indentString: aViennaAbstractFormatter exists1
+				   insertCrIfNeeded: bind , ' ' , aViennaAbstractFormatter dot)
+		  insertCrIfNeeded: expression
 ]
 
 { #category : #accessing }
