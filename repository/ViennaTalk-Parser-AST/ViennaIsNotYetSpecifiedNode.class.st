@@ -5,7 +5,13 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pretty printing' }
+ViennaIsNotYetSpecifiedNode >> formatWith: aViennaAbstractFormatter [
+
+	^ 'is not yet specified'
+]
+
+{ #category : #accessing }
 ViennaIsNotYetSpecifiedNode >> label [
 
 	^ 'IsNotYetSpecified'

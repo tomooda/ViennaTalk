@@ -26,6 +26,19 @@ ViennaLambdaExpressionNode >> expression: aViennaExpressionNode [
 	self at: 2 put: aViennaExpressionNode
 ]
 
+{ #category : #'pretty printing' }
+ViennaLambdaExpressionNode >> formatWith: aViennaAbstractFormatter [
+
+	| typeBind expression |
+	typeBind := aViennaAbstractFormatter format: self typeBindList.
+	expression := aViennaAbstractFormatter format: self expression.
+	^ aViennaAbstractFormatter
+		  indentString:
+			  aViennaAbstractFormatter lambda , ' ' , typeBind , ' '
+			  , aViennaAbstractFormatter dot
+		  insertCrIfNeeded: expression
+]
+
 { #category : #accessing }
 ViennaLambdaExpressionNode >> label [
 

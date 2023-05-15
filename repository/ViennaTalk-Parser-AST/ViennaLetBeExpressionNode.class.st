@@ -6,24 +6,60 @@ Class {
 }
 
 { #category : #'instance creation' }
-ViennaLetBeExpressionNode class >> multipleBind: aViennaMultipleBindNode expression: aViennaExpressionNode [
+ViennaLetBeExpressionNode class >> multipleBind: aViennaMultipleBindNode conditionExpression: aViennaExpressionNode1 expression: aViennaExpressionNode2 [
 
 	^ (self new: 2)
 		  multipleBind: aViennaMultipleBindNode;
-		  expression: aViennaExpressionNode;
+		  conditionExpression: aViennaExpressionNode1;
+		  expression: aViennaExpressionNode2;
 		  yourself
 ]
 
 { #category : #accessing }
-ViennaLetBeExpressionNode >> expression [
+ViennaLetBeExpressionNode >> conditionExpression [
 
 	^ self at: 2
 ]
 
 { #category : #accessing }
-ViennaLetBeExpressionNode >> expression: aViennaExpressionNode [
+ViennaLetBeExpressionNode >> conditionExpression: aViennaExpressionNode [
 
 	self at: 2 put: aViennaExpressionNode
+]
+
+{ #category : #accessing }
+ViennaLetBeExpressionNode >> expression [
+
+	^ self at: 3
+]
+
+{ #category : #accessing }
+ViennaLetBeExpressionNode >> expression: aViennaExpressionNode [
+
+	self at: 3 put: aViennaExpressionNode
+]
+
+{ #category : #'pretty printing' }
+ViennaLetBeExpressionNode >> formatWith: aViennaAbstractFormatter [
+
+	| multipleBind guard expression |
+	multipleBind := aViennaAbstractFormatter
+		                indentString: 'let'
+		                insertCrIfNeeded:
+		                (aViennaAbstractFormatter format: self multipleBind).
+	guard := self conditionExpression ifNil: [ '' ] ifNotNil: [ :node |
+		         aViennaAbstractFormatter
+			         indentString: 'be st'
+			         insertCrIfNeeded: (aViennaAbstractFormatter format: node) ].
+	expression := aViennaAbstractFormatter
+		              indentString: 'in'
+		              insertCrIfNeeded:
+		              (aViennaAbstractFormatter format: self expression).
+	^ aViennaAbstractFormatter
+		  noIndentString: (aViennaAbstractFormatter
+				   noIndentString: multipleBind
+				   insertCrIfNeeded: guard)
+		  insertCrIfNeeded: expression
 ]
 
 { #category : #accessing }

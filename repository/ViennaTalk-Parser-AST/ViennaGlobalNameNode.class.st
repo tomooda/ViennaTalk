@@ -14,6 +14,12 @@ ViennaGlobalNameNode class >> moduleIdentifier: aString1 identifier: aString2 [
 		  yourself
 ]
 
+{ #category : #'pretty printing' }
+ViennaGlobalNameNode >> formatWith: aViennaAbstractFormatter [
+
+	^ self moduleIdentifier , '`' , self identifier
+]
+
 { #category : #'parsers-symbols' }
 ViennaGlobalNameNode >> identifier [
 

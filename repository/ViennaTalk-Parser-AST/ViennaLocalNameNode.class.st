@@ -13,6 +13,12 @@ ViennaLocalNameNode class >> identifier: aString [
 		  yourself
 ]
 
+{ #category : #'pretty printing' }
+ViennaLocalNameNode >> formatWith: aViennaAbstractFormatter [
+
+	^ aViennaAbstractFormatter format: self identifier
+]
+
 { #category : #accessing }
 ViennaLocalNameNode >> identifier [
 

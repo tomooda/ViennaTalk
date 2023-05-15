@@ -6,6 +6,12 @@ Class {
 }
 
 { #category : #'pretty printing' }
+ViennaIterateNode >> formatOperatorWith: aViennaAbstractFormatter [
+
+	^ aViennaAbstractFormatter iterate
+]
+
+{ #category : #'pretty printing' }
 ViennaIterateNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
 
 	^ aBlock2 value

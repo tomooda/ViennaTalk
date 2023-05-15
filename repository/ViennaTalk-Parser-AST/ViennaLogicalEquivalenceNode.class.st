@@ -5,6 +5,12 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #'pretty printing' }
+ViennaLogicalEquivalenceNode >> formatOperatorWith: aViennaAbstractFormatter [
+
+	^ aViennaAbstractFormatter equiv
+]
+
 { #category : #accessing }
 ViennaLogicalEquivalenceNode >> label [
 

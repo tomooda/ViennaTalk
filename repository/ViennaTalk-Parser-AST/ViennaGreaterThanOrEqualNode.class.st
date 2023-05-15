@@ -5,6 +5,12 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #'pretty printing' }
+ViennaGreaterThanOrEqualNode >> formatOperatorWith: aViennaAbstractFormatter [
+
+	^ '>='
+]
+
 { #category : #accessing }
 ViennaGreaterThanOrEqualNode >> label [
 

@@ -26,6 +26,15 @@ ViennaFunctionTypeInstantiationNode >> expression: aViennaExpressionNode [
 	self at: 1 put: aViennaExpressionNode
 ]
 
+{ #category : #'pretty printing' }
+ViennaFunctionTypeInstantiationNode >> formatWith: aViennaAbstractFormatter [
+
+	| function typeArgs |
+	function := aViennaAbstractFormatter format: self first.
+	typeArgs := aViennaAbstractFormatter format: self second.
+	^ function , typeArgs
+]
+
 { #category : #accessing }
 ViennaFunctionTypeInstantiationNode >> functionTypeArgs [
 

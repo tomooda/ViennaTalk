@@ -619,38 +619,9 @@ ViennaAbstractFormatter >> functionSignature: aViennaNode [
 	^ nameList , ' : ' , functionType
 ]
 
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> functionTypeArgs: aViennaNode [
-	^ '[' , (self join: ', ' withAll: (self formatAll: aViennaNode))
-		, ']'
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> functionTypeInstantiation: aViennaNode [
-	| function typeArgs |
-	function := self format: aViennaNode first.
-	typeArgs := self format: aViennaNode second.
-	^ function , typeArgs
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> globalName: aViennaNode [
-	^ aViennaNode first , '`' , aViennaNode second
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> greaterThan: aViennaNode [
-	^ self print: (self format: aViennaNode first) infix: '>' arg: (self format: aViennaNode second)
-]
-
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> greaterThanOrEqual [
 	^ '>='
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> greaterThanOrEqual: aViennaNode [
-	^ self print: (self format: aViennaNode first) infix: self greaterThanOrEqual arg: (self format: aViennaNode second)
 ]
 
 { #category : #'formatting-definitions' }
@@ -669,24 +640,6 @@ ViennaAbstractFormatter >> identifierTypePairList: aViennaNode [
 { #category : #'formatting-statements' }
 ViennaAbstractFormatter >> identityStatement: aViennaNode [
 	^ 'skip'
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> ifExpression: aViennaNode [
-	| cond expr default elseifs |
-	cond := self format: aViennaNode first first first.
-	expr := self format: aViennaNode first first second.
-	default := self format: aViennaNode second.
-	elseifs := self formatAll: aViennaNode first asArray copyWithoutFirst.
-	aViennaNode first size = 1
-		ifTrue: [ ^ (self needsIndent: cond , expr , default)
-				ifTrue: [ (self indentString: 'if' insertCr: cond) , String cr
-						, (self indentString: 'then' insertCr: expr) , String cr
-						, (self indentString: 'else' insertCr: default) ]
-				ifFalse: [ 'if ' , cond , ' then ' , expr , ' else ' , default ] ].
-	^ (self indentString: 'if ' , cond insertCr: 'then ' , expr)
-		, String cr , (self join: String cr withAll: elseifs) , String cr
-		, (self indentString: 'else' insertCr: default)
 ]
 
 { #category : #'formatting-statements' }
@@ -772,11 +725,6 @@ ViennaAbstractFormatter >> imply [
 	^ '=>'
 ]
 
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> imply: aViennaNode [
-	^ self print: (self format: aViennaNode first) infix: self imply arg: (self format: aViennaNode second)
-]
-
 { #category : #'formatting-interfaces' }
 ViennaAbstractFormatter >> importDefinition: aViennaNode [
 	| identifier moduleSignature |
@@ -840,11 +788,6 @@ ViennaAbstractFormatter >> importValuesSignature: aViennaNode [
 	^ self
 		indentString: 'values'
 		insertCrIfNeeded: (self join: ';' , String cr withAll: valueImports) , ';'
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> inSet: aViennaNode [
-	^ self print: (self format: aViennaNode first) infix: self inset arg: (self format: aViennaNode second)
 ]
 
 { #category : #accessing }
@@ -999,72 +942,9 @@ ViennaAbstractFormatter >> iota [
 	^ 'iota'
 ]
 
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> iotaExpression: aViennaNode [
-	| bind expression |
-	bind := self format: aViennaNode first.
-	expression := self format: aViennaNode second.
-	^ self indentString: self iota , ' ' , bind , ' ' , self dot insertCrIfNeeded: expression
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> isBasicExpression: aViennaNode [
-	| name expression |
-	name := self format: aViennaNode first.
-	expression := self format: aViennaNode second.
-	^ 'is_' , name , '('
-		,
-			((self needsIndent: expression)
-				ifTrue: [ String cr , indent , (self indentString: expression) ]
-				ifFalse: [ expression ]) , ')'
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> isNameExpression: aViennaNode [
-	| name expression |
-	name := self format: aViennaNode first.
-	expression := self format: aViennaNode second.
-	^ 'is_' , name , '('
-		,
-			((self needsIndent: expression)
-				ifTrue: [ String cr , indent , (self indentString: expression) ]
-				ifFalse: [ expression ]) , ')'
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> isNotYetSpecified: aViennaNode [
-	^ 'is not yet specified'
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> isSubclassResponsibility: aViennaNode [
-	^ 'is subclass responsibility'
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> isofbaseclassExpression: aViennaNode [
-	| cls expression |
-	cls := self format: aViennaNode first.
-	expression := self format: aViennaNode second.
-	^ self indentString: 'isofbaseclass(' , cls , ',' insertCrIfNeeded: expression , ')'
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> isofclassExpression: aViennaNode [
-	| cls expression |
-	cls := self format: aViennaNode first.
-	expression := self format: aViennaNode second.
-	^ self indentString: 'isofclass(' , cls , ',' insertCrIfNeeded: expression , ')'
-]
-
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> iterate [
 	^ '**'
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> iterate: aViennaNode [
-	^ self print: (self format: aViennaNode first) infix: self iterate arg: (self format: aViennaNode second)
 ]
 
 { #category : #private }
@@ -1077,38 +957,9 @@ ViennaAbstractFormatter >> lambda [
 	^ 'lambda'
 ]
 
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> lambdaExpression: aViennaNode [
-	| typeBind expression |
-	typeBind := self format: aViennaNode first.
-	expression := self format: aViennaNode second.
-	^ self indentString: self lambda , ' ' , typeBind , ' ' , self dot insertCrIfNeeded: expression
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> lessThan: aViennaNode [
-	^ self print: (self format: aViennaNode first) infix: '<' arg: (self format: aViennaNode second)
-]
-
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> lessThanOrEqual [
 	^ '<='
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> lessThanOrEqual: aViennaNode [
-	^ self print: (self format: aViennaNode first) infix: self lessThanOrEqual arg: (self format: aViennaNode second)
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> letBeExpression: aViennaNode [
-	| multipleBind guard expression |
-	multipleBind := self indentString: 'let' insertCrIfNeeded: (self format: aViennaNode first).
-	guard := aViennaNode second
-		ifNil: [ '' ]
-		ifNotNil: [ :node | self indentString: 'be st' insertCrIfNeeded: (self format: node) ].
-	expression := self indentString: 'in' insertCrIfNeeded: (self format: aViennaNode third).
-	^ self noIndentString: (self noIndentString: multipleBind insertCrIfNeeded: guard) insertCrIfNeeded: expression
 ]
 
 { #category : #'formatting-statements' }
@@ -1120,16 +971,6 @@ ViennaAbstractFormatter >> letBeStatement: aViennaNode [
 		ifNotNil: [ :node | self indentString: 'be st' insertCrIfNeeded: (self format: node) ].
 	statement := self indentString: 'in' insertCrIfNeeded: (self format: aViennaNode third).
 	^ self noIndentString: (self noIndentString: multipleBind insertCrIfNeeded: guard) insertCrIfNeeded: statement
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> letExpression: aViennaNode [
-	| localDefinitionList expression |
-	localDefinitionList := self format: aViennaNode first.
-	expression := self format: aViennaNode second.
-	^ self
-		noIndentString: (self indentString: 'let' insertCrIfNeeded: localDefinitionList)
-		insertCrIfNeeded: (self indentString: 'in' insertCrIfNeeded: expression)
 ]
 
 { #category : #'formatting-statements' }
@@ -1154,16 +995,6 @@ ViennaAbstractFormatter >> localDefinitionList: aViennaNode [
 	^ (self anyNeedsIndent: localDefinitions)
 		ifTrue: [ self join: ',' , String cr withAll: localDefinitions ]
 		ifFalse: [ self join: ', ' withAll: localDefinitions ]
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> localName: aViennaNode [
-	^ self format: aViennaNode first
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> logicalEquivalence: aViennaNode [
-	^ self print: (self format: aViennaNode first) infix: self equiv arg: (self format: aViennaNode second)
 ]
 
 { #category : #'formatting-expressions' }

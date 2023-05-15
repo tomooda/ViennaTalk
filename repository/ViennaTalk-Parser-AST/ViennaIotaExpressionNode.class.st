@@ -38,6 +38,18 @@ ViennaIotaExpressionNode >> expression: aViennaExpressionNode [
 	self at: 2 put: aViennaExpressionNode
 ]
 
+{ #category : #'pretty printing' }
+ViennaIotaExpressionNode >> formatWith: aViennaAbstractFormatter [
+
+	| bind expression |
+	bind := aViennaAbstractFormatter format: self bind.
+	expression := aViennaAbstractFormatter format: self expression.
+	^ aViennaAbstractFormatter
+		  indentString: aViennaAbstractFormatter iota , ' ' , bind , ' '
+			  , aViennaAbstractFormatter dot
+		  insertCrIfNeeded: expression
+]
+
 { #category : #accessing }
 ViennaIotaExpressionNode >> label [
 

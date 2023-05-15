@@ -38,6 +38,20 @@ ViennaIsBasicExpressionNode >> expression: aViennaExpressionNode [
 	self at: 2 put: aViennaExpressionNode
 ]
 
+{ #category : #'pretty printing' }
+ViennaIsBasicExpressionNode >> formatWith: aViennaAbstractFormatter [
+
+	| name expression |
+	name := aViennaAbstractFormatter format: self basicTypeName.
+	expression := aViennaAbstractFormatter format: self expression.
+	^ 'is_' , name , '('
+	  , ((aViennaAbstractFormatter needsIndent: expression)
+			   ifTrue: [
+				   String cr , aViennaAbstractFormatter indent
+				   , (aViennaAbstractFormatter indentString: expression) ]
+			   ifFalse: [ expression ]) , ')'
+]
+
 { #category : #accessing }
 ViennaIsBasicExpressionNode >> label [
 

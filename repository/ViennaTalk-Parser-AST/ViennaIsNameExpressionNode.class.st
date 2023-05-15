@@ -26,6 +26,20 @@ ViennaIsNameExpressionNode >> expression: aViennaExpressionNode [
 	self at: 2 put: aViennaExpressionNode
 ]
 
+{ #category : #'pretty printing' }
+ViennaIsNameExpressionNode >> formatWith: aViennaAbstractFormatter [
+
+	| name expression |
+	name := aViennaAbstractFormatter format: self name.
+	expression := aViennaAbstractFormatter format: self expression.
+	^ 'is_' , name , '('
+	  , ((aViennaAbstractFormatter needsIndent: expression)
+			   ifTrue: [
+				   String cr , aViennaAbstractFormatter indent
+				   , (aViennaAbstractFormatter indentString: expression) ]
+			   ifFalse: [ expression ]) , ')'
+]
+
 { #category : #accessing }
 ViennaIsNameExpressionNode >> label [
 

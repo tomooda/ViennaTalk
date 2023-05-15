@@ -5,7 +5,13 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pretty printing' }
+ViennaIsSubclassResponsibilityNode >> formatWith: aViennaAbstractFormatter [
+
+	^ 'is subclass responsibility'
+]
+
+{ #category : #accessing }
 ViennaIsSubclassResponsibilityNode >> label [
 
 	^ 'IsSubclassResponsibility'

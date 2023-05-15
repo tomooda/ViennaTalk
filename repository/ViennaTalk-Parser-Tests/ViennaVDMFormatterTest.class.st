@@ -268,6 +268,161 @@ ViennaVDMFormatterTest >> testFormatFlatDocument [
 ]
 
 { #category : #tests }
+ViennaVDMFormatterTest >> testFormatFunctionTypeInstantiation [
+
+	self
+		assertParseFormattedSource: 'f[nat, nat]'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatGlobalName [
+
+	self
+		assertParseFormattedSource: 'm`x'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatGreaterThan [
+
+	self
+		assertParseFormattedSource: 'x > y'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatGreaterThanOrEqual [
+
+	self
+		assertParseFormattedSource: 'x >= y'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatIfExpression [
+
+	self
+		assertParseFormattedSource:
+		'if c1 then e1 elseif c2 then e2 elseif c3 then e3 else e4'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatImply [
+
+	self
+		assertParseFormattedSource: 'x = y => z = 0'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatInSet [
+
+	self
+		assertParseFormattedSource: 'x in set s'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatIotaExpression [
+
+	self
+		assertParseFormattedSource: 'iota x in set s & x = y'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatIsBasicExpression [
+
+	self
+		assertParseFormattedSource: 'is_nat(x)'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatIsNameExpression [
+
+	self
+		assertParseFormattedSource: 'is_T(x)'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatIsNotYetSpecified [
+
+	self
+		assertParseFormattedSource: 'is not yet specified'
+		with: parser isNotYetSpecified end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatIterate [
+
+	self
+		assertParseFormattedSource: 'f ** 3'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatLambdaExpression [
+
+	self
+		assertParseFormattedSource: 'lambda x:nat, y:int & x + y'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatLessThan [
+
+	self
+		assertParseFormattedSource: 'x < y'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatLessThanOrEqual [
+
+	self
+		assertParseFormattedSource: 'x <= y'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatLetBeExpression [
+
+	self
+		assertParseFormattedSource: 'let x, y in set s be st x = y in e'
+		with: parser expression end.
+	self
+		assertParseFormattedSource: 'let x, y in set s in e'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatLetExpression [
+
+	self
+		assertParseFormattedSource:
+		'let x : nat = 1, y = 2, f : nat -> nat f(x) == x + 1 in e'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatLocalName [
+
+	self assertParseFormattedSource: 'x' with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatLogicalEquivalence [
+
+	self
+		assertParseFormattedSource: 'p <=> q'
+		with: parser expression end
+]
+
+{ #category : #tests }
 ViennaVDMFormatterTest >> testIfExpression [
 
 	self

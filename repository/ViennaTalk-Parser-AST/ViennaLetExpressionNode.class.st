@@ -26,6 +26,22 @@ ViennaLetExpressionNode >> expression: aViennaExpressionNode [
 	self at: 2 put: aViennaExpressionNode
 ]
 
+{ #category : #'pretty printing' }
+ViennaLetExpressionNode >> formatWith: aViennaAbstractFormatter [
+
+	| localDefinitionList expression |
+	localDefinitionList := aViennaAbstractFormatter format:
+		                       self localDefinitionList.
+	expression := aViennaAbstractFormatter format: self expression.
+	^ aViennaAbstractFormatter
+		  noIndentString: (aViennaAbstractFormatter
+				   indentString: 'let'
+				   insertCrIfNeeded: localDefinitionList)
+		  insertCrIfNeeded: (aViennaAbstractFormatter
+				   indentString: 'in'
+				   insertCrIfNeeded: expression)
+]
+
 { #category : #accessing }
 ViennaLetExpressionNode >> label [
 

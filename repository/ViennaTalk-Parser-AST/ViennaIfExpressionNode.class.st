@@ -38,6 +38,33 @@ ViennaIfExpressionNode >> expression: aViennaExpressionNode [
 	self at: 2 put: aViennaExpressionNode
 ]
 
+{ #category : #'pretty printing' }
+ViennaIfExpressionNode >> formatWith: aViennaAbstractFormatter [
+
+	| cond expr default elseifs |
+	cond := aViennaAbstractFormatter format: self first first first.
+	expr := aViennaAbstractFormatter format: self first first second.
+	default := aViennaAbstractFormatter format: self second.
+	elseifs := aViennaAbstractFormatter formatAll:
+		           self first asArray copyWithoutFirst.
+	self first size = 1 ifTrue: [
+		^ (aViennaAbstractFormatter needsIndent: cond , expr , default)
+			  ifTrue: [
+				  (aViennaAbstractFormatter indentString: 'if' insertCr: cond)
+				  , String cr
+				  , (aViennaAbstractFormatter indentString: 'then' insertCr: expr)
+				  , String cr
+				  ,
+				  (aViennaAbstractFormatter indentString: 'else' insertCr: default) ]
+			  ifFalse: [ 'if ' , cond , ' then ' , expr , ' else ' , default ] ].
+	^ (aViennaAbstractFormatter
+		   indentString: 'if ' , cond
+		   insertCr: 'then ' , expr) , String cr
+	  , (aViennaAbstractFormatter join: String cr withAll: elseifs)
+	  , String cr
+	  , (aViennaAbstractFormatter indentString: 'else' insertCr: default)
+]
+
 { #category : #accessing }
 ViennaIfExpressionNode >> label [
 
