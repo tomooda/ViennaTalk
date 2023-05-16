@@ -5,6 +5,12 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #'pretty printing' }
+ViennaResultExpressionNode >> formatWith: aViennaAbstractFormatter [
+
+	^ 'RESULT'
+]
+
 { #category : #accessing }
 ViennaResultExpressionNode >> label [
 

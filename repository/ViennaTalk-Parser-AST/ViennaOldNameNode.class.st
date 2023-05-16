@@ -13,6 +13,12 @@ ViennaOldNameNode class >> identifier: aString [
 		  yourself
 ]
 
+{ #category : #'pretty printing' }
+ViennaOldNameNode >> formatWith: aViennaAbstractFormatter [
+
+	^ (aViennaAbstractFormatter format: self identifier) , '~'
+]
+
 { #category : #accessing }
 ViennaOldNameNode >> identifier [
 

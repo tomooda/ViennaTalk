@@ -27,94 +27,6 @@ ViennaVDMFormatterTest >> setUp [
 ]
 
 { #category : #tests }
-ViennaVDMFormatterTest >> testComposition [
-
-	self
-		assertParseFormattedSource: 'f comp g'
-		with: parser expression end
-]
-
-{ #category : #tests }
-ViennaVDMFormatterTest >> testDefExpression [
-
-	self
-		assertParseFormattedSource: 'def x:t1 = v1; y:t2 = v2 in e'
-		with: parser expression end
-]
-
-{ #category : #tests }
-ViennaVDMFormatterTest >> testDistributedMapMerge [
-
-	self
-		assertParseFormattedSource: 'merge s'
-		with: parser expression end
-]
-
-{ #category : #tests }
-ViennaVDMFormatterTest >> testDistributedSequenceConcatenation [
-
-	self assertParseFormattedSource: 'conc s' with: parser expression end
-]
-
-{ #category : #tests }
-ViennaVDMFormatterTest >> testDistributedSetIntersection [
-
-	self assertParseFormattedSource: 'dinter s' with: parser expression end
-]
-
-{ #category : #tests }
-ViennaVDMFormatterTest >> testDistributedSetUnion [
-
-	self assertParseFormattedSource: 'dunion s' with: parser expression end
-]
-
-{ #category : #tests }
-ViennaVDMFormatterTest >> testExists1Expression [
-
-	self
-		assertParseFormattedSource: 'exists1 x in set xs & x = y'
-		with: parser expression end
-]
-
-{ #category : #tests }
-ViennaVDMFormatterTest >> testExistsExpression [
-
-	self
-		assertParseFormattedSource: 'exists x in set xs, y in set ys & x = y'
-		with: parser expression end
-]
-
-{ #category : #tests }
-ViennaVDMFormatterTest >> testFieldSelect [
-
-	self
-		assertParseFormattedSource: 'x.f'
-		with: parser expression end
-]
-
-{ #category : #tests }
-ViennaVDMFormatterTest >> testFinitePowerSet [
-
-	self
-		assertParseFormattedSource: 'power s'
-		with: parser expression end
-]
-
-{ #category : #tests }
-ViennaVDMFormatterTest >> testFloor [
-
-	self assertParseFormattedSource: 'floor x' with: parser expression end
-]
-
-{ #category : #tests }
-ViennaVDMFormatterTest >> testForallExpression [
-
-	self
-		assertParseFormattedSource: 'forall x in set xs, y in set ys & x <> y'
-		with: parser expression end
-]
-
-{ #category : #tests }
 ViennaVDMFormatterTest >> testFormatAnd [
 
 	self
@@ -205,7 +117,55 @@ ViennaVDMFormatterTest >> testFormatCasesExpression [
 	x^xs, {y} -> e1,
 	others -> e2
 	end'
+		with: parser expression end.
+	self
+		assertParseFormattedSource: 'cases e:
+	x^xs, {y} -> e1,
+	[z] -> e2
+	end'
 		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatComposition [
+
+	self
+		assertParseFormattedSource: 'f comp g'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatDefExpression [
+
+	self
+		assertParseFormattedSource: 'def x:t1 = v1; y:t2 = v2 in e'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatDistributedMapMerge [
+
+	self
+		assertParseFormattedSource: 'merge s'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatDistributedSequenceConcatenation [
+
+	self assertParseFormattedSource: 'conc s' with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatDistributedSetIntersection [
+
+	self assertParseFormattedSource: 'dinter s' with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatDistributedSetUnion [
+
+	self assertParseFormattedSource: 'dunion s' with: parser expression end
 ]
 
 { #category : #tests }
@@ -249,6 +209,22 @@ ViennaVDMFormatterTest >> testFormatErrorList [
 ]
 
 { #category : #tests }
+ViennaVDMFormatterTest >> testFormatExists1Expression [
+
+	self
+		assertParseFormattedSource: 'exists1 x in set xs & x = y'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatExistsExpression [
+
+	self
+		assertParseFormattedSource: 'exists x in set xs, y in set ys & x = y'
+		with: parser expression end
+]
+
+{ #category : #tests }
 ViennaVDMFormatterTest >> testFormatExplicitFunctionDefinition [
 
 	self
@@ -260,11 +236,41 @@ ViennaVDMFormatterTest >> testFormatExplicitFunctionDefinition [
 ]
 
 { #category : #tests }
+ViennaVDMFormatterTest >> testFormatFieldSelect [
+
+	self
+		assertParseFormattedSource: 'x.f'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatFinitePowerSet [
+
+	self
+		assertParseFormattedSource: 'power s'
+		with: parser expression end
+]
+
+{ #category : #tests }
 ViennaVDMFormatterTest >> testFormatFlatDocument [
 
 	self
 		assertParseFormattedSource: 'types n = nat values v1 : n = 0; v2 : n = v1'
 		with: parser document end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatFloor [
+
+	self assertParseFormattedSource: 'floor x' with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatForallExpression [
+
+	self
+		assertParseFormattedSource: 'forall x in set xs, y in set ys & x <> y'
+		with: parser expression end
 ]
 
 { #category : #tests }
@@ -304,7 +310,7 @@ ViennaVDMFormatterTest >> testFormatIfExpression [
 
 	self
 		assertParseFormattedSource:
-		'if c1 then e1 elseif c2 then e2 elseif c3 then e3 else e4'
+		'if a > b then e1 elseif c > d then e2 else e3'
 		with: parser expression end
 ]
 
@@ -423,10 +429,195 @@ ViennaVDMFormatterTest >> testFormatLogicalEquivalence [
 ]
 
 { #category : #tests }
-ViennaVDMFormatterTest >> testIfExpression [
+ViennaVDMFormatterTest >> testFormatMapComprehension [
 
 	self
 		assertParseFormattedSource:
-		'if a > b then e1 elseif c > d then e2 else e3'
+		'{k |-> v | mk_(k, v) in set s & k <> nil}'
+		with: parser expression end.
+	self
+		assertParseFormattedSource: '{k |-> v | mk_(k, v) in set s}'
 		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatMapDomain [
+
+	self
+		assertParseFormattedSource: '{dom m}'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatMapDomainRestrictedBy [
+
+	self
+		assertParseFormattedSource: 's <-: m'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatMapDomainRestrictedTo [
+
+	self
+		assertParseFormattedSource: 's <: m'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatMapEnumeration [
+
+	self
+		assertParseFormattedSource: '{k1 |-> v1, k2 |-> v2}'
+		with: parser expression end.
+	self
+		assertParseFormattedSource: '{k1 |-> v1}'
+		with: parser expression end.
+	self assertParseFormattedSource: '{|->}' with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatMapInverse [
+
+	self
+		assertParseFormattedSource: 'inverse m'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatMapMerge [
+
+	self
+		assertParseFormattedSource: 'm1 munion m2'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatMapOrSequenceModify [
+
+	self
+		assertParseFormattedSource: 'm1 ++ m2'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatMapOrSequenceReference [
+
+	self
+		assertParseFormattedSource: 'm1(1)'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatMapRange [
+
+	self
+		assertParseFormattedSource: 'rng m'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatMapRangeRestrictedBy [
+
+	self
+		assertParseFormattedSource: 'm :-> s'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatMapRangeRestrictedTo [
+
+	self
+		assertParseFormattedSource: 'm :> s'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatMaplet [
+
+	self
+		assertParseFormattedSource: 'k |-> v'
+		with: parser maplet end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatMapletList [
+
+	self
+		assertParseFormattedSource: 'k1 |-> v1, k2 |-> v2, k3 |-> v3'
+		with: parser mapletList end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatNot [
+
+	self assertParseFormattedSource: 'not e' with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatNotEqual [
+
+	self
+		assertParseFormattedSource: 'e1 <> e2'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatNotInSet [
+
+	self
+		assertParseFormattedSource: 'v not in set s'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatOldName [
+
+	self assertParseFormattedSource: 'v~' with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatOr [
+
+	self
+		assertParseFormattedSource: 'e1 or e2'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatPreconditionExpression [
+
+	self
+		assertParseFormattedSource: 'pre_(f, e1, e2)'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatProperSubset [
+
+	self
+		assertParseFormattedSource: 's1 psubset s2'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatRecordConstructor [
+
+	self
+		assertParseFormattedSource: 'mk_r(e1, e2, e3)'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatRecordModifier [
+
+	self
+		assertParseFormattedSource: 'mu(e, f1 |-> v1, f2 |-> v2)'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatResult [
+
+	self assertParseFormattedSource: 'RESULT' with: parser expression end
 ]

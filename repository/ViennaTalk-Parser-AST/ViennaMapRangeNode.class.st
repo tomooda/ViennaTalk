@@ -5,6 +5,12 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #'pretty printing' }
+ViennaMapRangeNode >> formatOperatorWith: aViennaAbstractFormatter [
+
+	^ 'rng'
+]
+
 { #category : #accessing }
 ViennaMapRangeNode >> label [
 

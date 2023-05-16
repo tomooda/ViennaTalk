@@ -5,6 +5,19 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #'pretty printing' }
+ViennaMapInverseNode >> formatOperatorWith: aViennaAbstractFormatter [
+
+	^ self shouldNotImplement
+]
+
+{ #category : #'pretty printing' }
+ViennaMapInverseNode >> formatWith: aViennaAbstractFormatter [
+
+	^ aViennaAbstractFormatter inverse:
+		  (aViennaAbstractFormatter format: self expression)
+]
+
 { #category : #accessing }
 ViennaMapInverseNode >> label [
 

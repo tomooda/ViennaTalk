@@ -1,6 +1,6 @@
 Class {
 	#name : #ViennaMapOrSequenceModifyNode,
-	#superclass : #ViennaExpressionNode,
+	#superclass : #ViennaBinaryOperatorExpressionNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }
@@ -36,6 +36,12 @@ ViennaMapOrSequenceModifyNode >> expression2 [
 ViennaMapOrSequenceModifyNode >> expression2: aViennaExpressionNode [
 
 	self at: 2 put: aViennaExpressionNode
+]
+
+{ #category : #'pretty printing' }
+ViennaMapOrSequenceModifyNode >> formatOperatorWith: aViennaAbstractFormatter [
+
+	^ aViennaAbstractFormatter override
 ]
 
 { #category : #accessing }

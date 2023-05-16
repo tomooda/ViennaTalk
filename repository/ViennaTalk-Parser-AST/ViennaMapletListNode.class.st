@@ -5,7 +5,19 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pretty printing' }
+ViennaMapletListNode >> formatWith: aViennaAbstractFormatter [
+
+	| maplets |
+	maplets := aViennaAbstractFormatter formatAll: self.
+	^ aViennaAbstractFormatter
+		  join: ',' , ((aViennaAbstractFormatter anyNeedsIndent: maplets)
+				   ifTrue: [ String cr ]
+				   ifFalse: [ String space ])
+		  withAll: maplets
+]
+
+{ #category : #accessing }
 ViennaMapletListNode >> label [
 
 	^ 'MapletList'

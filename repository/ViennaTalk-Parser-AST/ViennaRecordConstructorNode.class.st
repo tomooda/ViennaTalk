@@ -26,6 +26,21 @@ ViennaRecordConstructorNode >> expressionList: aViennaExpressionListNode [
 	self at: 2 put: aViennaExpressionListNode
 ]
 
+{ #category : #'pretty printing' }
+ViennaRecordConstructorNode >> formatWith: aViennaAbstractFormatter [
+
+	| constructor expressionList |
+	constructor := aViennaAbstractFormatter format: self name.
+	expressionList := aViennaAbstractFormatter format:
+		                  self expressionList.
+	^ 'mk_' , constructor , '('
+	  , ((aViennaAbstractFormatter needsIndent: expressionList)
+			   ifTrue: [
+				   String cr , aViennaAbstractFormatter indent
+				   , (aViennaAbstractFormatter indentString: expressionList) ]
+			   ifFalse: [ expressionList ]) , ')'
+]
+
 { #category : #accessing }
 ViennaRecordConstructorNode >> label [
 

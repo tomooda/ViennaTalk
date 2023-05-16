@@ -5,7 +5,15 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pretty printing' }
+ViennaReqExpressionNode >> formatWith: aViennaAbstractFormatter [
+
+	^ '#req(' , (aViennaAbstractFormatter
+		   join: ', '
+		   withAll: (aViennaAbstractFormatter formatAll: self)) , ')'
+]
+
+{ #category : #accessing }
 ViennaReqExpressionNode >> label [
 
 	^ 'ReqExpression'

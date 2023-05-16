@@ -28,6 +28,31 @@ ViennaMapComprehensionNode >> bindList: aViennaBindListNode [
 	self at: 3 put: aViennaBindListNode
 ]
 
+{ #category : #'pretty printing' }
+ViennaMapComprehensionNode >> formatWith: aViennaAbstractFormatter [
+
+	| keyExpression valueExpression bindList guard |
+	keyExpression := aViennaAbstractFormatter format: self keyExpression.
+	valueExpression := aViennaAbstractFormatter format:
+		                   self valueExpression.
+	bindList := aViennaAbstractFormatter format: self bindList.
+	guard := self suchthatExpression ifNil: [ '' ] ifNotNil: [ :node |
+		         aViennaAbstractFormatter dot , ' '
+		         , (aViennaAbstractFormatter format: node) ].
+	(aViennaAbstractFormatter needsIndent:
+		 keyExpression , valueExpression , bindList , guard) ifFalse: [
+		^ '{' , keyExpression , ' ' , aViennaAbstractFormatter maplet , ' '
+		  , valueExpression , ' | ' , bindList , guard , '}' ].
+	^ '{' , (aViennaAbstractFormatter
+		   noIndentString: (aViennaAbstractFormatter
+				    noIndentString: keyExpression
+				    insertCrIfNeeded:
+				    aViennaAbstractFormatter maplet , ' ' , valueExpression)
+		   insertCrIfNeeded: (aViennaAbstractFormatter
+				    noIndentString: '| ' , bindList
+				    insertCrIfNeeded: guard)) , '}'
+]
+
 { #category : #accessing }
 ViennaMapComprehensionNode >> keyExpression [
 

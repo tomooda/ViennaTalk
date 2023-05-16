@@ -1,7 +1,7 @@
 Class {
 	#name : #ViennaVDMSymbolFormatter,
 	#superclass : #ViennaAbstractFormatter,
-	#category : 'ViennaTalk-Parser-Formatters'
+	#category : #'ViennaTalk-Parser-Formatters'
 }
 
 { #category : #'symbol access' }
@@ -110,13 +110,8 @@ ViennaVDMSymbolFormatter >> inter [
 ]
 
 { #category : #'symbol access' }
-ViennaVDMSymbolFormatter >> inversePostfix [
-	^ String with: (Character codePoint: 16r207b) with: (Character codePoint: 16r00b9)
-]
-
-{ #category : #'symbol access' }
-ViennaVDMSymbolFormatter >> inversePrefix [
-	^ ''
+ViennaVDMSymbolFormatter >> inverse: aString [
+	^ aString, '⁻¹'
 ]
 
 { #category : #'symbol access' }

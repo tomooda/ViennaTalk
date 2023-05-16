@@ -15,6 +15,16 @@ ViennaMapEnumerationNode class >> withAll: anArrayOfViennaMapletNode [
 	^ map
 ]
 
+{ #category : #'pretty printing' }
+ViennaMapEnumerationNode >> formatWith: aViennaAbstractFormatter [
+
+	| elements |
+	elements := aViennaAbstractFormatter formatAll: self.
+	^ '{' , (aViennaAbstractFormatter
+		   formatEnumerate: elements
+		   ifEmpty: [ aViennaAbstractFormatter maplet ]) , '}'
+]
+
 { #category : #accessing }
 ViennaMapEnumerationNode >> label [
 
