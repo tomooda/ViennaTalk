@@ -818,18 +818,6 @@ ViennaVDM2SmalltalkScriptTest >> testIsNotYetSpecifiedEnv [
 ]
 
 { #category : #'tests-code generation-expressions' }
-ViennaVDM2SmalltalkScriptTest >> testIsSubclassResponsibilityEnv [
-	| node |
-	node := ViennaVDMParser new explicitFunctionDefinition end parse: 'f:t1->t2 f(x) == is subclass responsibility'.
-	self deny: node isPetit2Failure.
-	node := node at: 6.
-	self assert: node label = 'IsSubclassResponsibility'.
-	self
-		should: [ self evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new) ]
-		raise: SubclassResponsibility
-]
-
-{ #category : #'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testIterateEnv [
 	| node |
 	node := ViennaVDMParser new expression end parse: '{1|->2, 2|->3, 3|->4, 4|->5, 5|->1} ** 3'.

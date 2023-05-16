@@ -48,11 +48,6 @@ ViennaAbstractFormatter class >> viennaSettingsOn: aBuilder [
 		order: 0.51
 ]
 
-{ #category : #'symbol access' }
-ViennaAbstractFormatter >> act [
-	^ '#act'
-]
-
 { #category : #'formatting-statements' }
 ViennaAbstractFormatter >> alwaysStatement: aViennaNode [
 	| handler statement |

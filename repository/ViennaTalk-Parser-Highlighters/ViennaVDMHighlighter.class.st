@@ -287,11 +287,6 @@ ViennaVDMHighlighter >> isNotYetSpecified [
 	^ self keyword: super isNotYetSpecified
 ]
 
-{ #category : #'parsers-definitions' }
-ViennaVDMHighlighter >> isSubclassResponsibility [
-	^ self keyword: super isSubclassResponsibility
-]
-
 { #category : #utilities }
 ViennaVDMHighlighter >> keyword: aParser [
 	^ self highlight: aParser with: self keywordAttribute
@@ -430,11 +425,6 @@ ViennaVDMHighlighter >> resultExpression [
 { #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> return [
 	^ self keyword: super return
-]
-
-{ #category : #'parsers-expressions' }
-ViennaVDMHighlighter >> selfExpression [
-	^ self keyword: super selfExpression
 ]
 
 { #category : #'parsers-keywords' }

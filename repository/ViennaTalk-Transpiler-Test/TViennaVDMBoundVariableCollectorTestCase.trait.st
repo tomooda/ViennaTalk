@@ -1,6 +1,6 @@
 Trait {
 	#name : #TViennaVDMBoundVariableCollectorTestCase,
-	#category : 'ViennaTalk-Transpiler-Test'
+	#category : #'ViennaTalk-Transpiler-Test'
 }
 
 { #category : #'tests-bound variables-definitions' }
@@ -558,21 +558,6 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesMultipleTypeBindIn
 	node := ViennaVDMParser new multipleTypeBind end parse: 'v1, v2 : t'.
 	self deny: node isPetit2Failure.
 	self assert: node label = 'MultipleTypeBind'.
-	binds := Set new.
-	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{'v1'.
-			'v2'} asSet
-]
-
-{ #category : #'tests-bound variables-patterns and binds' }
-TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesObjectPatternInto [
-	| node binds |
-	node := ViennaVDMParser new objectPattern end parse: 'obj_T(f1 |-> v1, f2 |-> v2)'.
-	self deny: node isPetit2Failure.
-	self assert: node label = 'ObjectPattern'.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self

@@ -90,28 +90,6 @@ ViennaVDMParser >> accessValueDefinition [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-threads' }
-ViennaVDMParser >> actExpression [
-	^ super actExpression
-		=>> [ :start :end :nameNode | 
-			ViennaNode
-				label: 'ActExpression'
-				start: start
-				end: end
-				with: nameNode ]
-]
-
-{ #category : #'parsers-expressions-threads' }
-ViennaVDMParser >> activeExpression [
-	^ super activeExpression
-		=>> [ :start :end :nameNode | 
-			ViennaNode
-				label: 'ActiveExpression'
-				start: start
-				end: end
-				with: nameNode ]
-]
-
 { #category : #annotations }
 ViennaVDMParser >> addAnnotation: aString [
 
@@ -684,11 +662,6 @@ ViennaVDMParser >> fieldSelect: record with: field [
 	^ ViennaFieldSelectNode expression: record field: field
 ]
 
-{ #category : #'parsers-expressions-threads' }
-ViennaVDMParser >> finExpression [
-	^ super finExpression ==> [ :nameNode | ViennaNode label: 'FinExpression' with: nameNode ]
-]
-
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> floor: arg [
 
@@ -1155,23 +1128,6 @@ ViennaVDMParser >> isNotYetSpecified [
 		=>> [ :start :end :ignore | ViennaNode label: 'IsNotYetSpecified' start: start end: end ]
 ]
 
-{ #category : #'parsers-definitions' }
-ViennaVDMParser >> isSubclassResponsibility [
-	^ super isSubclassResponsibility
-		=>>
-			[ :start :end :ignore | ViennaNode label: 'IsSubclassResponsibility' start: start end: end ]
-]
-
-{ #category : #'parsers-expressions-type discriminations' }
-ViennaVDMParser >> isofbaseclassExpression [
-	^ super isofbaseclassExpression ==> [ :array | ViennaNode label: 'IsofbaseclassExpression' withAll: array ]
-]
-
-{ #category : #'parsers-expressions-type discriminations' }
-ViennaVDMParser >> isofclassExpression [
-	^ super isofclassExpression ==> [ :array | ViennaNode label: 'IsofclassExpression' withAll: array ]
-]
-
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> iterateExpression: expr1 and: expr2 [
 
@@ -1505,16 +1461,6 @@ ViennaVDMParser >> nameList [
 				withAll: array ]
 ]
 
-{ #category : #'parsers-expressions-basics' }
-ViennaVDMParser >> narrowExpression [
-	^ super narrowExpression ==> [ :array | ViennaNode label: 'NarrowExpression' withAll: array ]
-]
-
-{ #category : #'parsers-expressions-basics' }
-ViennaVDMParser >> newExpression [
-	^ super newExpression ==> [ :array | ViennaNode label: 'NewExpression' withAll: array ]
-]
-
 { #category : #'parsers-statements' }
 ViennaVDMParser >> nondeterministicStatement [
 	^ super nondeterministicStatement
@@ -1542,17 +1488,6 @@ ViennaVDMParser >> notEqual: arg1 and: arg2 [
 ViennaVDMParser >> notInSet: arg1 and: arg2 [
 
 	^ ViennaNotInSetNode expression: arg1 expression: arg2
-]
-
-{ #category : #'parsers-patterns' }
-ViennaVDMParser >> objectPattern [
-	^ super objectPattern
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'ObjectPattern'
-				start: start
-				end: end
-				withAll: array ]
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -1831,11 +1766,6 @@ ViennaVDMParser >> rem: arg1 and: arg2 [
 	^ ViennaArithmeticRemNode expression: arg1 expression: arg2
 ]
 
-{ #category : #'parsers-expressions-threads' }
-ViennaVDMParser >> reqExpression [
-	^ super reqExpression ==> [ :nameNode | ViennaNode label: 'ReqExpression' with: nameNode ]
-]
-
 { #category : #'parsers-expressions-basics' }
 ViennaVDMParser >> resultExpression [
 
@@ -1866,16 +1796,6 @@ ViennaVDMParser >> rng: arg [
 	^ ViennaMapRangeNode expression: arg
 ]
 
-{ #category : #'parsers-expressions-type discriminations' }
-ViennaVDMParser >> samebaseclassExpression [
-	^ super samebaseclassExpression ==> [ :array | ViennaNode label: 'SamebaseclassExpression' withAll: array ]
-]
-
-{ #category : #'parsers-expressions-type discriminations' }
-ViennaVDMParser >> sameclassExpression [
-	^ super sameclassExpression ==> [ :array | ViennaNode label: 'SameclassExpression' withAll: array ]
-]
-
 { #category : #parsing }
 ViennaVDMParser >> scanCommentsOn: aStream [
 	| sourceStream source |
@@ -1903,11 +1823,6 @@ ViennaVDMParser >> scanCommentsOn: aStream [
 												-> ((source copyFrom: 1 to: position) occurrencesOf: char) ].
 									comments nextPut: guard -> commentString ] ]) / #any asPParser)
 				starA end parse: sourceStream ]
-]
-
-{ #category : #'parsers-expressions-basics' }
-ViennaVDMParser >> selfExpression [
-	^ super selfExpression ==> [ :array | ViennaNode label: 'SelfExpression' ]
 ]
 
 { #category : #'parsers-types' }
@@ -2147,16 +2062,6 @@ ViennaVDMParser >> symbolicLiteral [
 	  (ViennaSymbolicLiteralNode string: string trim)
 		  start: start end: end;
 		  yourself ]
-]
-
-{ #category : #'parsers-expressions-threads' }
-ViennaVDMParser >> threadidExpression [
-	^ super threadidExpression ==> [ :string | ViennaNode label: 'ThreadidExpression' ]
-]
-
-{ #category : #'parsers-expressions-threads' }
-ViennaVDMParser >> timeExpression [
-	^ super timeExpression ==> [ :string | ViennaNode label: 'TimeExpression' ]
 ]
 
 { #category : #'parsers-statements' }
@@ -2470,11 +2375,6 @@ ViennaVDMParser >> varInformation [
 				start: start
 				end: end
 				withAll: array ]
-]
-
-{ #category : #'parsers-expressions-threads' }
-ViennaVDMParser >> waitingExpression [
-	^ super waitingExpression ==> [ :nameNode | ViennaNode label: 'WaitingExpression' with: nameNode ]
 ]
 
 { #category : #'parsers-statements' }

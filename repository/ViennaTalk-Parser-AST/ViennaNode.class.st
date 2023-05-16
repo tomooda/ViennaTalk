@@ -181,10 +181,19 @@ ViennaNode class >> new: anInteger label: aString [
 
 { #category : #accessing }
 ViennaNode class >> patternBindLabels [
-	^ PatternBindLabels
-		ifNil:
-			[ PatternBindLabels := #('BindList' 'FieldPattern' 'FieldPatternList' 'MapEnumerationPattern' 'MapMunionPattern' 'MapletPattern' 'MatchValue' 'MultipleSeqBind' 'MultipleSetBind' 'MultipleTypeBind' 'ObjectPattern' 'PatternIdentifier' 'PatternList' 'RecordPattern' 'SeqBind' 'SeqConcPattern' 'SeqEnumPattern' 'SetBind' 'SetEnumPattern' 'SetUnionPattern' 'TuplePattern' 'PatternList' 'TypeBind' 'TypeBindList')
-				asSet ]
+
+	^ PatternBindLabels ifNil: [
+		  PatternBindLabels := #( 'BindList' 'FieldPattern' 'FieldPatternList'
+		                          'MapEnumerationPattern'
+		                          'MapMunionPattern' 'MapletPattern'
+		                          'MatchValue' 'MultipleSeqBind'
+		                          'MultipleSetBind' 'MultipleTypeBind'
+		                          'PatternIdentifier' 'PatternList'
+		                          'RecordPattern' 'SeqBind' 'SeqConcPattern'
+		                          'SeqEnumPattern' 'SetBind' 'SetEnumPattern'
+		                          'SetUnionPattern' 'TuplePattern'
+		                          'PatternList' 'TypeBind' 'TypeBindList' )
+			                       asSet ]
 ]
 
 { #category : #accessing }
