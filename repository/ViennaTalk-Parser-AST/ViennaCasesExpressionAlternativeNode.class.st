@@ -5,6 +5,15 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #'instance creation' }
+ViennaCasesExpressionAlternativeNode class >> patternList: aViennaPatternListNode expression: aViennaExpressionNode [
+
+	^ (self new: 2)
+		  patternList: aViennaPatternListNode;
+		  expression: aViennaExpressionNode;
+		  yourself
+]
+
 { #category : #accessing }
 ViennaCasesExpressionAlternativeNode >> expression [
 

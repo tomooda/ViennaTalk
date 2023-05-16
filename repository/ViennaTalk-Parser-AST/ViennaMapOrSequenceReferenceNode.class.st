@@ -5,6 +5,39 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #'instance creation' }
+ViennaMapOrSequenceReferenceNode class >> expression: aViennaExpressionNode1 argumentExpression: aViennaExpressionNode2 [
+
+	^ (self new: 2)
+		  expression: aViennaExpressionNode1;
+		  argumentExpression: aViennaExpressionNode2;
+		  yourself
+]
+
+{ #category : #accessing }
+ViennaMapOrSequenceReferenceNode >> argumentExpression [
+
+	^ self at: 2
+]
+
+{ #category : #accessing }
+ViennaMapOrSequenceReferenceNode >> argumentExpression: aViennaExpressionNode [
+
+	self at: 2 put: aViennaExpressionNode
+]
+
+{ #category : #accessing }
+ViennaMapOrSequenceReferenceNode >> expression [
+
+	^ self at: 1
+]
+
+{ #category : #accessing }
+ViennaMapOrSequenceReferenceNode >> expression: aViennaExpressionNode [
+
+	self at: 1 put: aViennaExpressionNode
+]
+
 { #category : #'pretty printing' }
 ViennaMapOrSequenceReferenceNode >> formatWith: aViennaAbstractFormatter [
 

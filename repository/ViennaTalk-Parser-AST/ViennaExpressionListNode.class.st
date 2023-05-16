@@ -5,6 +5,16 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #'instance creation' }
+ViennaExpressionListNode class >> withAll: anArrayOfViennaExpressionNode [
+
+	| list |
+	list := self new: anArrayOfViennaExpressionNode size.
+	1 to: anArrayOfViennaExpressionNode size do: [ :index |
+		list at: index put: (anArrayOfViennaExpressionNode at: index) ].
+	^ list
+]
+
 { #category : #'pretty printing' }
 ViennaExpressionListNode >> formatWith: aViennaAbstractFormatter [
 

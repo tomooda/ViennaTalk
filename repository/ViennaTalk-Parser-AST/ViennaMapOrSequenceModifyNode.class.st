@@ -5,15 +5,6 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'instance creation' }
-ViennaMapOrSequenceModifyNode class >> expression: aViennaExpressionNode1 expression: aViennaExpressionNode2 [
-
-	^ (self new: 2)
-		  expression1: aViennaExpressionNode1;
-		  expression1: aViennaExpressionNode2;
-		  yourself
-]
-
 { #category : #accessing }
 ViennaMapOrSequenceModifyNode >> expression1 [
 

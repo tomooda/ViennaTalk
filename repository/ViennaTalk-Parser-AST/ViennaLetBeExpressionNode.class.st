@@ -8,7 +8,7 @@ Class {
 { #category : #'instance creation' }
 ViennaLetBeExpressionNode class >> multipleBind: aViennaMultipleBindNode conditionExpression: aViennaExpressionNode1 expression: aViennaExpressionNode2 [
 
-	^ (self new: 2)
+	^ (self new: 3)
 		  multipleBind: aViennaMultipleBindNode;
 		  conditionExpression: aViennaExpressionNode1;
 		  expression: aViennaExpressionNode2;
