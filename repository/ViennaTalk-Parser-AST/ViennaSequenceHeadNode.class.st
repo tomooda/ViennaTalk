@@ -5,6 +5,12 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #'pretty printing' }
+ViennaSequenceHeadNode >> formatOperatorWith: aViennaAbstractFormatter [
+
+	^ 'hd'
+]
+
 { #category : #accessing }
 ViennaSequenceHeadNode >> label [
 

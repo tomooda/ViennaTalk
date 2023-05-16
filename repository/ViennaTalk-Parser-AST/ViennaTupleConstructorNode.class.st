@@ -6,13 +6,36 @@ Class {
 }
 
 { #category : #'instance creation' }
-ViennaTupleConstructorNode class >> withAll: anArrayOfViennaExpressionNode [
+ViennaTupleConstructorNode class >> expressionList: aViennaExpressionListNode [
 
-	| tuple |
-	tuple := self new: anArrayOfViennaExpressionNode size.
-	1 to: anArrayOfViennaExpressionNode size do: [ :index |
-		tuple at: index put: (anArrayOfViennaExpressionNode at: index) ].
-	^ tuple
+	^ (self new: 1)
+		  expressionList: aViennaExpressionListNode;
+		  yourself
+]
+
+{ #category : #accessing }
+ViennaTupleConstructorNode >> expressionList [
+
+	^ self at: 1
+]
+
+{ #category : #accessing }
+ViennaTupleConstructorNode >> expressionList: aViennaExpressionListNode [
+
+	self at: 1 put: aViennaExpressionListNode
+]
+
+{ #category : #'pretty printing' }
+ViennaTupleConstructorNode >> formatWith: aViennaAbstractFormatter [
+
+	| expressionList |
+	expressionList := aViennaAbstractFormatter format:
+		                  self expressionList.
+	^ 'mk_(' , ((aViennaAbstractFormatter needsIndent: expressionList)
+		   ifTrue: [
+			   String cr , aViennaAbstractFormatter indent
+			   , (aViennaAbstractFormatter indentString: expressionList) ]
+		   ifFalse: [ expressionList ]) , ')'
 ]
 
 { #category : #accessing }

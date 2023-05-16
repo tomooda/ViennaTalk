@@ -5,7 +5,18 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pretty printing' }
+ViennaSameclassExpressionNode >> formatWith: aViennaAbstractFormatter [
+
+	| cls expression |
+	cls := aViennaAbstractFormatter format: self first.
+	expression := aViennaAbstractFormatter format: self second.
+	^ aViennaAbstractFormatter
+		  indentString: 'sameclass(' , cls , ','
+		  insertCrIfNeeded: expression , ')'
+]
+
+{ #category : #accessing }
 ViennaSameclassExpressionNode >> label [
 
 	^ 'SameclassExpression'

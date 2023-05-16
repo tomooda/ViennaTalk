@@ -5,6 +5,12 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #'pretty printing' }
+ViennaUndefinedExpressionNode >> formatWith: aViennaAbstractFormatter [
+
+	^ 'undefined'
+]
+
 { #category : #accessing }
 ViennaUndefinedExpressionNode >> label [
 

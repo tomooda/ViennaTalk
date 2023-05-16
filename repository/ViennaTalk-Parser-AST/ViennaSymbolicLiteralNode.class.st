@@ -13,6 +13,12 @@ ViennaSymbolicLiteralNode class >> string: aString [
 		  yourself
 ]
 
+{ #category : #'pretty printing' }
+ViennaSymbolicLiteralNode >> formatWith: aViennaAbstractFormatter [
+
+	^ self string trim
+]
+
 { #category : #accessing }
 ViennaSymbolicLiteralNode >> label [
 

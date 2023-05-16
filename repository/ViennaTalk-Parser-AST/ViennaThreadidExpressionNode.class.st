@@ -5,7 +5,13 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pretty printing' }
+ViennaThreadidExpressionNode >> formatWith: aViennaAbstractFormatter [
+
+	^ 'threadid'
+]
+
+{ #category : #accessing }
 ViennaThreadidExpressionNode >> label [
 
 	^ 'ThreadidExpression'

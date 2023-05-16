@@ -5,7 +5,15 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pretty printing' }
+ViennaWaitingExpressionNode >> formatWith: aViennaAbstractFormatter [
+
+	^ '#waiting(' , (aViennaAbstractFormatter
+		   join: ', '
+		   withAll: (aViennaAbstractFormatter formatAll: self)) , ')'
+]
+
+{ #category : #accessing }
 ViennaWaitingExpressionNode >> label [
 
 	^ 'WaitingExpression'

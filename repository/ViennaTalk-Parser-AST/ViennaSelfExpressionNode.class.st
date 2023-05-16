@@ -5,7 +5,13 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pretty printing' }
+ViennaSelfExpressionNode >> formatWith: aViennaAbstractFormatter [
+
+	^ 'self'
+]
+
+{ #category : #accessing }
 ViennaSelfExpressionNode >> label [
 
 	^ 'SelfExpression'

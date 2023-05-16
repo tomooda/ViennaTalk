@@ -5,6 +5,12 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #'pretty printing' }
+ViennaSequenceLengthNode >> formatOperatorWith: aViennaAbstractFormatter [
+
+	^ 'len'
+]
+
 { #category : #accessing }
 ViennaSequenceLengthNode >> label [
 

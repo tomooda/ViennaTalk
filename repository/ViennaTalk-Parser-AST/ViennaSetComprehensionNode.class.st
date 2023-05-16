@@ -39,6 +39,24 @@ ViennaSetComprehensionNode >> expression: aViennaExpressionNode [
 	self at: 1 put: aViennaExpressionNode
 ]
 
+{ #category : #'pretty printing' }
+ViennaSetComprehensionNode >> formatWith: aViennaAbstractFormatter [
+
+	| expression bindList guard |
+	expression := aViennaAbstractFormatter format: self expression.
+	bindList := aViennaAbstractFormatter format: self bindList.
+	guard := self suchthatExpression
+		         ifNotNil: [ :node |
+			         aViennaAbstractFormatter dot , ' '
+			         , (aViennaAbstractFormatter format: node) ]
+		         ifNil: [ '' ].
+	^ '{' , (aViennaAbstractFormatter
+		   indentString: (aViennaAbstractFormatter
+				    indentString: expression
+				    insertCrIfNeeded: '| ' , bindList)
+		   insertCrIfNeeded: guard) , '}'
+]
+
 { #category : #accessing }
 ViennaSetComprehensionNode >> label [
 

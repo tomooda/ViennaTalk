@@ -5,7 +5,13 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pretty printing' }
+ViennaTimeExpressionNode >> formatWith: aViennaAbstractFormatter [
+
+	^ 'time'
+]
+
+{ #category : #accessing }
 ViennaTimeExpressionNode >> label [
 
 	^ 'TimeExpression'

@@ -26,6 +26,15 @@ ViennaTupleSelectNode >> expression: aViennaExpressionNode [
 	self at: 1 put: aViennaExpressionNode
 ]
 
+{ #category : #'pretty printing' }
+ViennaTupleSelectNode >> formatWith: aViennaAbstractFormatter [
+
+	| tuple int |
+	tuple := aViennaAbstractFormatter format: self expression.
+	int := aViennaAbstractFormatter format: self index.
+	^ aViennaAbstractFormatter print: tuple infix: '.#' arg: int
+]
+
 { #category : #accessing }
 ViennaTupleSelectNode >> index [
 

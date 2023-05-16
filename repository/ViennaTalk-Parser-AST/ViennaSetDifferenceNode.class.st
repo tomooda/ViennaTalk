@@ -6,6 +6,12 @@ Class {
 }
 
 { #category : #'pretty printing' }
+ViennaSetDifferenceNode >> formatOperatorWith: aViennaAbstractFormatter [
+
+	^ aViennaAbstractFormatter setDifference
+]
+
+{ #category : #'pretty printing' }
 ViennaSetDifferenceNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
 
 	^ aBlock1 value

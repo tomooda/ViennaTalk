@@ -6,13 +6,34 @@ Class {
 }
 
 { #category : #'instance creation' }
-ViennaSetEnumerationNode class >> withAll: anArrayOfViennaExpressionNode [
+ViennaSetEnumerationNode class >> expressionList: aViennaExpressionListNode [
 
-	| set |
-	set := self new: anArrayOfViennaExpressionNode size.
-	1 to: anArrayOfViennaExpressionNode size do: [ :index |
-		set at: index put: (anArrayOfViennaExpressionNode at: index) ].
-	^ set
+	^ (self new: 1)
+		  expressionList: aViennaExpressionListNode;
+		  yourself
+]
+
+{ #category : #accessing }
+ViennaSetEnumerationNode >> expressionList [
+
+	^ self at: 1
+]
+
+{ #category : #accessing }
+ViennaSetEnumerationNode >> expressionList: aViennaExpressionListNode [
+
+	self at: 1 put: aViennaExpressionListNode
+]
+
+{ #category : #'pretty printing' }
+ViennaSetEnumerationNode >> formatWith: aViennaAbstractFormatter [
+
+	| elements |
+	elements := aViennaAbstractFormatter formatAll: self first.
+	^ '{'
+	  ,
+	  (aViennaAbstractFormatter formatEnumerate: elements ifEmpty: [ '' ])
+	  , '}'
 ]
 
 { #category : #accessing }

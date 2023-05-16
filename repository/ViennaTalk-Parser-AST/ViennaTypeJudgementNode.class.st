@@ -26,6 +26,23 @@ ViennaTypeJudgementNode >> expression: aViennaExpressionNode [
 	self at: 1 put: aViennaExpressionNode
 ]
 
+{ #category : #'pretty printing' }
+ViennaTypeJudgementNode >> formatWith: aViennaAbstractFormatter [
+
+	| type expression |
+	expression := aViennaAbstractFormatter format: self expression.
+	type := aViennaAbstractFormatter format: self type.
+	(aViennaAbstractFormatter needsIndent: expression , type) ifFalse: [
+		^ 'is_(' , expression , ', ' , type , ')' ].
+	^ 'is_(' , ((aViennaAbstractFormatter needsIndent: expression)
+		   ifTrue: [
+			   String cr , aViennaAbstractFormatter indent
+			   , (aViennaAbstractFormatter indentString: expression) ]
+		   ifFalse: [ expression ]) , ',' , String cr
+	  , aViennaAbstractFormatter indent
+	  , (aViennaAbstractFormatter indentString: type) , ')'
+]
+
 { #category : #accessing }
 ViennaTypeJudgementNode >> label [
 

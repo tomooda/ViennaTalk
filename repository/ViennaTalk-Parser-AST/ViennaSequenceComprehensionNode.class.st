@@ -27,6 +27,24 @@ ViennaSequenceComprehensionNode >> expression: aViennaExpressionNode [
 	self at: 1 put: aViennaExpressionNode
 ]
 
+{ #category : #'pretty printing' }
+ViennaSequenceComprehensionNode >> formatWith: aViennaAbstractFormatter [
+
+	| expression setBind guard |
+	expression := aViennaAbstractFormatter format: self expression.
+	setBind := aViennaAbstractFormatter format: self setSeqBind.
+	guard := self third
+		         ifNotNil: [ :node |
+			         aViennaAbstractFormatter dot , ' '
+			         , (aViennaAbstractFormatter format: node) ]
+		         ifNil: [ '' ].
+	^ '[' , (aViennaAbstractFormatter
+		   indentString: expression
+		   insertCrIfNeeded: (aViennaAbstractFormatter
+				    indentString: '| ' , setBind
+				    insertCrIfNeeded: guard)) , ']'
+]
+
 { #category : #accessing }
 ViennaSequenceComprehensionNode >> label [
 

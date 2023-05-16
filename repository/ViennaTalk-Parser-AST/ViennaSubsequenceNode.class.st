@@ -28,6 +28,31 @@ ViennaSubsequenceNode >> endExpression: aViennaExpressionNode [
 ]
 
 { #category : #'pretty printing' }
+ViennaSubsequenceNode >> formatWith: aViennaAbstractFormatter [
+
+	| sequence startExpression endExpression |
+	sequence := aViennaAbstractFormatter format: self sequenceExpression.
+	startExpression := aViennaAbstractFormatter format:
+		                   self startExpression.
+	endExpression := aViennaAbstractFormatter format: self endExpression.
+	(aViennaAbstractFormatter needsIndent:
+		 sequence , startExpression , endExpression) ifFalse: [
+		^ sequence , '(' , startExpression , ','
+		  , aViennaAbstractFormatter dots , ',' , endExpression , ')' ].
+	(aViennaAbstractFormatter needsIndent:
+		 startExpression , endExpression) ifFalse: [
+		^ sequence , '(' , String cr , aViennaAbstractFormatter indent
+		  , (aViennaAbstractFormatter indentString:
+				   startExpression , ',' , aViennaAbstractFormatter dots , ', '
+				   , endExpression , ')') ].
+	^ sequence , '(' , String cr , aViennaAbstractFormatter indent
+	  , ((aViennaAbstractFormatter indentString: startExpression , ',')
+		   , String cr , aViennaAbstractFormatter indent
+		   , aViennaAbstractFormatter dots , ', '
+		   , (aViennaAbstractFormatter indentString: endExpression , ')'))
+]
+
+{ #category : #'pretty printing' }
 ViennaSubsequenceNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
 
 	^ aBlock1 value

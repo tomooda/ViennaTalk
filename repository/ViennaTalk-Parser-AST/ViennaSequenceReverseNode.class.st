@@ -5,6 +5,12 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #'pretty printing' }
+ViennaSequenceReverseNode >> formatOperatorWith: aViennaAbstractFormatter [
+
+	^ 'reverse'
+]
+
 { #category : #accessing }
 ViennaSequenceReverseNode >> label [
 

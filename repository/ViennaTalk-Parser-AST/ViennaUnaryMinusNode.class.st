@@ -5,6 +5,12 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #'pretty printing' }
+ViennaUnaryMinusNode >> formatOperatorWith: aViennaAbstractFormatter [
+
+	^ '-'
+]
+
 { #category : #accessing }
 ViennaUnaryMinusNode >> label [
 

@@ -1453,27 +1453,6 @@ ViennaAbstractFormatter >> returnStatement: aViennaNode [
 		, (aViennaNode first ifNil: [ '' ] ifNotNil: [ :arg | self indentString: (self format: arg) ])
 ]
 
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> samebaseclassExpression: aViennaNode [
-	| cls expression |
-	cls := self format: aViennaNode first.
-	expression := self format: aViennaNode second.
-	^ self indentString: 'samebaseclass(' , cls , ',' insertCrIfNeeded: expression , ')'
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> sameclassExpression: aViennaNode [
-	| cls expression |
-	cls := self format: aViennaNode first.
-	expression := self format: aViennaNode second.
-	^ self indentString: 'sameclass(' , cls , ',' insertCrIfNeeded: expression , ')'
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> selfExpression: aViennaNode [
-	^ 'self'
-]
-
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> seq1Postfix [
 	^ ''
@@ -1526,33 +1505,6 @@ ViennaAbstractFormatter >> seqType: aViennaNode [
 	^ self seqPrefix, (self format: aViennaNode first) , self seqPostfix
 ]
 
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> sequenceComprehension: aViennaNode [
-	| expression setBind guard |
-	expression := self format: aViennaNode first.
-	setBind := self format: aViennaNode second.
-	guard := aViennaNode third ifNotNil: [ :node | self dot , ' ' , (self format: node) ] ifNil: [ '' ].
-	^ '[' , (self indentString: expression insertCrIfNeeded: (self indentString: '| ' , setBind insertCrIfNeeded: guard))
-		, ']'
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> sequenceConcatenate: aViennaNode [
-	^ self print: (self format: aViennaNode first) infix: self concat arg: (self format: aViennaNode second)
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> sequenceElements: aViennaNode [
-	^ 'elems ' , (self format: aViennaNode first)
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> sequenceEnumeration: aViennaNode [
-	| elements |
-	elements := self formatAll: aViennaNode first.
-	^ '[' , (self formatEnumerate: elements ifEmpty: [ '' ]) , ']'
-]
-
 { #category : #'formatting-statements' }
 ViennaAbstractFormatter >> sequenceForLoop: aViennaNode [
 	| patternBind expression statement |
@@ -1565,31 +1517,6 @@ ViennaAbstractFormatter >> sequenceForLoop: aViennaNode [
 				noIndentString: (self indentString: 'for' insertCrIfNeeded: patternBind)
 				insertCrIfNeeded: (self indentString: 'in' insertCrIfNeeded: expression))
 		insertCrIfNeeded: (self indentString: 'do' insertCrIfNeeded: statement)
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> sequenceHead: aViennaNode [
-	^ 'hd ' , (self format: aViennaNode first)
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> sequenceIndices: aViennaNode [
-	^ 'inds ' , (self format: aViennaNode first)
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> sequenceLength: aViennaNode [
-	^ 'len ' , (self format: aViennaNode first)
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> sequenceReverse: aViennaNode [
-	^ 'reverse ' , (self format: aViennaNode first)
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> sequenceTail: aViennaNode [
-	^ 'tl ' , (self format: aViennaNode first)
 ]
 
 { #category : #'symbol access' }
@@ -1612,41 +1539,14 @@ ViennaAbstractFormatter >> setBind: aViennaNode [
 	^ self print: (self format: aViennaNode first) infix: self inset arg: (self format: aViennaNode second)
 ]
 
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> setCardinality: aViennaNode [
-	^ self print: 'card' withChildren: (self formatAll: aViennaNode)
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> setComprehension: aViennaNode [
-	| expression bindList guard |
-	expression := self format: aViennaNode first.
-	bindList := self format: aViennaNode second.
-	guard := aViennaNode third ifNotNil: [ :node | self dot , ' ' , (self format: node) ] ifNil: [ '' ].
-	^ '{' , (self indentString: (self indentString: expression insertCrIfNeeded: '| ' , bindList) insertCrIfNeeded: guard)
-		, '}'
-]
-
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> setDifference [
 	^ '\'
 ]
 
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> setDifference: aViennaNode [
-	^ self print: (self format: aViennaNode first) infix: self setDifference arg: (self format: aViennaNode second)
-]
-
 { #category : #'formatting-patterns and binds' }
 ViennaAbstractFormatter >> setEnumPattern: aViennaNode [
 	^ '{' , (self formatEnumerate: (self formatAll: aViennaNode) ifEmpty: [ '' ]) , '}'
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> setEnumeration: aViennaNode [
-	| elements |
-	elements := self formatAll: aViennaNode first.
-	^ '{' , (self formatEnumerate: elements ifEmpty: [ '' ]) , '}'
 ]
 
 { #category : #'formatting-statements' }
@@ -1667,11 +1567,6 @@ ViennaAbstractFormatter >> setForLoop: aViennaNode [
 		insertCrIfNeeded: (self indentString: 'do' insertCrIfNeeded: statement)
 ]
 
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> setIntersection: aViennaNode [
-	^ self print: (self format: aViennaNode first) infix: self inter arg: (self format: aViennaNode second)
-]
-
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> setPostfix [
 	^ ''
@@ -1682,22 +1577,9 @@ ViennaAbstractFormatter >> setPrefix [
 	^ 'set of '
 ]
 
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> setRangeExpression: aViennaNode [
-	| start end |
-	start := self format: aViennaNode first.
-	end := self format: aViennaNode second.
-	^ self noIndentString: '{' , start , ',' insertCrIfNeeded: self dots , ', ' , end , '}'
-]
-
 { #category : #'formatting-types' }
 ViennaAbstractFormatter >> setType: aViennaNode [
 	^ self setPrefix, (self format: aViennaNode first) , self setPostfix
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> setUnion: aViennaNode [
-	^ self print: (self format: aViennaNode first) infix: self union arg: (self format: aViennaNode second)
 ]
 
 { #category : #'formatting-patterns and binds' }
@@ -1740,45 +1622,9 @@ ViennaAbstractFormatter >> strlen: aString [
 						ifFalse: [ 2 ]) ]
 ]
 
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> subsequence: aViennaNode [
-	| sequence start end |
-	sequence := self format: aViennaNode first.
-	start := self format: aViennaNode second.
-	end := self format: aViennaNode third.
-	(self needsIndent: sequence , start , end)
-		ifFalse: [ ^ sequence , '(' , start , ',' , self dots , ',' , end , ')' ].
-	(self needsIndent: start , end)
-		ifFalse: [ ^ sequence , '(' , String cr , indent , (self indentString: start , ',' , self dots , ', ' , end , ')') ].
-	^ sequence , '(' , String cr , indent
-		, ((self indentString: start , ',') , String cr , indent , self dots , ', ' , (self indentString: end , ')'))
-]
-
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> subset [
 	^ 'subset'
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> subset: aViennaNode [
-	^ self print: (self format: aViennaNode first) infix: self subset arg: (self format: aViennaNode second)
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> symbolicLiteral: aViennaNode [
-	| literal |
-	literal := aViennaNode first trim.
-	^ literal
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> threadidExpression: aViennaNode [
-	^ 'threadid'
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> timeExpression: aViennaNode [
-	^ 'time'
 ]
 
 { #category : #'formatting-statements' }
@@ -1790,17 +1636,6 @@ ViennaAbstractFormatter >> tixeStatement: aViennaNode [
 		ifTrue: [ (self indentString: 'tixe' insertCr: traps) , String cr
 				, (self indentString: 'in' insertCr: statement) ]
 		ifFalse: [ self indentString: 'tixe ' , traps , ' in' insertCrIfNeeded: statement ]
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> tokenConstructor: aViennaNode [
-	| expression |
-	expression := self format: aViennaNode first.
-	^ 'mk_token('
-		,
-			((self needsIndent: expression)
-				ifTrue: [ String cr , indent , (self indentString: expression) ]
-				ifFalse: [ expression ]) , ')'
 ]
 
 { #category : #'symbol access' }
@@ -1849,17 +1684,6 @@ ViennaAbstractFormatter >> traps: aViennaNode [
 				ifEmpty: [ '' ]) , '}'
 ]
 
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> tupleConstructor: aViennaNode [
-	| expressionList |
-	expressionList := self format: aViennaNode first.
-	^ 'mk_('
-		,
-			((self needsIndent: expressionList)
-				ifTrue: [ String cr , indent , (self indentString: expressionList) ]
-				ifFalse: [ expressionList ]) , ')'
-]
-
 { #category : #'formatting-patterns and binds' }
 ViennaAbstractFormatter >> tuplePattern: aViennaNode [
 	| patternList |
@@ -1869,14 +1693,6 @@ ViennaAbstractFormatter >> tuplePattern: aViennaNode [
 			((self needsIndent: patternList)
 				ifTrue: [ String cr , indent , (self indentString: patternList) ]
 				ifFalse: [ patternList ]) , ')'
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> tupleSelect: aViennaNode [
-	| tuple int |
-	tuple := self format: aViennaNode first.
-	int := self format: aViennaNode second.
-	^ self print: tuple infix: '.#' arg: int
 ]
 
 { #category : #'formatting-patterns and binds' }
@@ -1928,20 +1744,6 @@ ViennaAbstractFormatter >> typeImport: aViennaNode [
 	^ self indentString: type insertCrIfNeeded: rename
 ]
 
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> typeJudgement: aViennaNode [
-	| type expression |
-	expression := self format: aViennaNode first.
-	type := self format: aViennaNode second.
-	(self needsIndent: expression , type)
-		ifFalse: [ ^ 'is_(' , expression , ', ' , type , ')' ].
-	^ 'is_('
-		,
-			((self needsIndent: expression)
-				ifTrue: [ String cr , indent , (self indentString: expression) ]
-				ifFalse: [ expression ]) , ',' , String cr , indent , (self indentString: type) , ')'
-]
-
 { #category : #'formatting-types' }
 ViennaAbstractFormatter >> typeName: aViennaNode [
 	^ self format: aViennaNode first
@@ -1978,21 +1780,6 @@ ViennaAbstractFormatter >> typeVariableList: aViennaNode [
 				, (self join: String space withAll: (self formatAll: aViennaNode))
 				, ']' ]
 		ifFalse: [ '' ]
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> unaryMinus: aViennaNode [
-	^ '-' , (self format: aViennaNode first)
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> unaryPlus: aViennaNode [
-	^ '+' , (self format: aViennaNode first)
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> undefinedExpression: aViennaNode [
-	^ 'undefined'
 ]
 
 { #category : #'symbol access' }
@@ -2058,12 +1845,6 @@ ViennaAbstractFormatter >> varInformation: aViennaNode [
 		ifNotNil: [ :node | ':' , (self format: node) ]
 		ifNil: [ String new ].
 	^ mode , ' ' , nameList , type
-]
-
-{ #category : #'formatting-expressions' }
-ViennaAbstractFormatter >> waitingExpression: aViennaNode [
-	^ '#waiting('
-		, (self join: ', ' withAll: (self formatAll: aViennaNode)) , ')'
 ]
 
 { #category : #'formatting-statements' }

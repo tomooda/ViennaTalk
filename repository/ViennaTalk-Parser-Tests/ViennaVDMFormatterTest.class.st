@@ -621,3 +621,202 @@ ViennaVDMFormatterTest >> testFormatResult [
 
 	self assertParseFormattedSource: 'RESULT' with: parser expression end
 ]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatSequenceComprehension [
+
+	self
+		assertParseFormattedSource: '[x | x in set s & x = y]'
+		with: parser expression end.
+	self
+		assertParseFormattedSource: '[x | x in set s]'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatSequenceConcatenate [
+
+	self
+		assertParseFormattedSource: 's1 ^ s2'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatSequenceElements [
+
+	self
+		assertParseFormattedSource: 'elems s'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatSequenceEnumeration [
+
+	self
+		assertParseFormattedSource: '[v1, v2, v3]'
+		with: parser expression end.
+	self assertParseFormattedSource: '[v1]' with: parser expression end.
+	self assertParseFormattedSource: '[]' with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatSequenceHead [
+
+	self assertParseFormattedSource: 'hd s' with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatSequenceIndices [
+
+	self assertParseFormattedSource: 'inds s' with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatSequenceLength [
+
+	self assertParseFormattedSource: 'len s' with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatSequenceReverse [
+
+	self assertParseFormattedSource: 'reverse s' with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatSequenceTail [
+
+	self assertParseFormattedSource: 'tl s' with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatSetCardinality [
+
+	self assertParseFormattedSource: 'card s' with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatSetComprehension [
+
+	self
+		assertParseFormattedSource: '{f(v) | v in set s & p(v)}'
+		with: parser expression end.
+	self
+		assertParseFormattedSource: '{f(v) | v in set s}'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatSetDifference [
+
+	self
+		assertParseFormattedSource: 's1 \ s2'
+		with: parser expression end.
+
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatSetEnumeration [
+
+	self
+		assertParseFormattedSource: '{v1, v2, v3}'
+		with: parser expression end.
+	self assertParseFormattedSource: '{v1}' with: parser expression end.
+	self assertParseFormattedSource: '{}' with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatSetIntersection [
+
+	self
+		assertParseFormattedSource: 's1 inter s2'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatSetRangeExpression [
+
+	self
+		assertParseFormattedSource: '{v1, ..., v2}'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatSetUnion [
+
+	self
+		assertParseFormattedSource: 's1 union s2'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatSubsequence [
+
+	self
+		assertParseFormattedSource: 's1(v1,...,v2)'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatSubset [
+
+	self
+		assertParseFormattedSource: 's1 subset s2'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatSymbolicLiteral [
+
+	self assertParseFormattedSource: 'true' with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatTokenConstructor [
+
+	self
+		assertParseFormattedSource: 'mk_token(v)'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatTupleConstructor [
+
+	self
+		assertParseFormattedSource: 'mk_(v1, v2, v3)'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatTupleSelect [
+
+	self assertParseFormattedSource: 'v.#1' with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatTypeJudgement [
+
+	self
+		assertParseFormattedSource: 'is_(v, t)'
+		with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatUnaryMinus [
+
+	self assertParseFormattedSource: '-v' with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatUnaryPlus [
+
+	self assertParseFormattedSource: '+v' with: parser expression end
+]
+
+{ #category : #tests }
+ViennaVDMFormatterTest >> testFormatUndefined [
+
+	self
+		assertParseFormattedSource: 'undefined'
+		with: parser expression end
+]
