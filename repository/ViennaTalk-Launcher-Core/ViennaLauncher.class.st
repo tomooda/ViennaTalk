@@ -197,7 +197,7 @@ ViennaLauncher >> close [
 
 { #category : #accessing }
 ViennaLauncher >> codename [
-	^ 'Graz'
+	^ 'Firenze'
 ]
 
 { #category : #accessing }
