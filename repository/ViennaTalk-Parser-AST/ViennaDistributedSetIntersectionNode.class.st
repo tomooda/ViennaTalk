@@ -12,6 +12,12 @@ ViennaDistributedSetIntersectionNode >> formatOperatorWith: aViennaAbstractForma
 ]
 
 { #category : #accessing }
+ViennaDistributedSetIntersectionNode >> isViennaDistributedSetIntersectionNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaDistributedSetIntersectionNode >> label [
 
 	^ 'DistributedSetIntersection'

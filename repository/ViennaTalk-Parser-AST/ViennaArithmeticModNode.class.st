@@ -18,6 +18,12 @@ ViennaArithmeticModNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlo
 ]
 
 { #category : #accessing }
+ViennaArithmeticModNode >> isViennaArithmeticModNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaArithmeticModNode >> label [
 
 	^ 'ArithmeticMod'

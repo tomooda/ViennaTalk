@@ -37,6 +37,12 @@ ViennaTokenConstructorNode >> formatWith: aViennaAbstractFormatter [
 		   ifFalse: [ expression ]) , ')'
 ]
 
+{ #category : #testing }
+ViennaTokenConstructorNode >> isViennaTokenConstructorNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaTokenConstructorNode >> label [
 

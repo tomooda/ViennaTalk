@@ -18,6 +18,12 @@ ViennaImplyNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 othe
 ]
 
 { #category : #accessing }
+ViennaImplyNode >> isViennaImplyNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaImplyNode >> label [
 
 	^ 'Imply'

@@ -52,12 +52,12 @@ ViennaRenameToplevel >> executeOnDefinition [
 
 { #category : #operations }
 ViennaRenameToplevel >> executeOnGlobalNames [
-	^ ast root
-		allDescendantsDo: [ :node | 
-			(node label = 'GlobalName'
-				and: [ node first = self definitionNode module name
-						and: [ node second = self oldName ] ])
-				ifTrue: [ node at: 2 put: self newName ] ]
+
+	^ ast root allDescendantsDo: [ :node |
+		  (node
+			   isViennaGlobalNameNode: self definitionNode module name
+			   identifier: self oldName) ifTrue: [
+			  node identifier: self newName ] ]
 ]
 
 { #category : #operations }

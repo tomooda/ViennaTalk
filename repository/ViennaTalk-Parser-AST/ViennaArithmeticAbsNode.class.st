@@ -11,6 +11,12 @@ ViennaArithmeticAbsNode >> formatOperatorWith: aViennaAbstractFormatter [
 	^ 'abs'
 ]
 
+{ #category : #testing }
+ViennaArithmeticAbsNode >> isViennaArithmeticAbsNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaArithmeticAbsNode >> label [
 

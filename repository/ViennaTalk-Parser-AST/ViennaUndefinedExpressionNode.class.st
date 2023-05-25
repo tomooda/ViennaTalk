@@ -12,6 +12,12 @@ ViennaUndefinedExpressionNode >> formatWith: aViennaAbstractFormatter [
 ]
 
 { #category : #accessing }
+ViennaUndefinedExpressionNode >> isViennaUndefinedExpressionNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaUndefinedExpressionNode >> label [
 
 	^ 'UndefinedExpression'

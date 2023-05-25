@@ -46,26 +46,19 @@ ViennaInlineLetParameter >> execute [
 
 { #category : #accessing }
 ViennaInlineLetParameter >> findDefinitionNode [
+
 	ast ifNil: [ ^ nil ].
-	ast label = 'PatternIdentifier'
-		ifFalse: [ ^ nil ].
-	ast parent
-		ifNotNil: [ :valueDefinition | 
-			valueDefinition label = 'ValueDefinition'
-				ifFalse: [ ^ nil ].
-			valueDefinition parent
-				ifNotNil: [ :localDefinition | 
-					localDefinition label = 'LocalDefinition'
-						ifFalse: [ ^ nil ].
-					localDefinition parent
-						ifNotNil: [ :localDefinitionList | 
-							localDefinitionList label = 'LocalDefinitionList'
-								ifFalse: [ ^ nil ].
-							localDefinitionList parent
-								ifNotNil: [ :let | 
-									(#('LetExpression' 'LetStatement') includes: let label)
-										ifFalse: [ ^ nil ].
-									^ let ] ] ] ].
+	ast label = 'PatternIdentifier' ifFalse: [ ^ nil ].
+	ast parent ifNotNil: [ :valueDefinition |
+		valueDefinition label = 'ValueDefinition' ifFalse: [ ^ nil ].
+		valueDefinition parent ifNotNil: [ :localDefinition |
+			localDefinition label = 'LocalDefinition' ifFalse: [ ^ nil ].
+			localDefinition parent ifNotNil: [ :localDefinitionList |
+				localDefinitionList label = 'LocalDefinitionList' ifFalse: [
+					^ nil ].
+				localDefinitionList parent ifNotNil: [ :let |
+					let isViennaLetNode ifFalse: [ ^ nil ].
+					^ let ] ] ] ].
 	^ nil
 ]
 

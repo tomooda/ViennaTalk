@@ -17,6 +17,12 @@ ViennaArithmeticIntegerDivisionNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesR
 	^ aBlock1 value
 ]
 
+{ #category : #testing }
+ViennaArithmeticIntegerDivisionNode >> isViennaArithmeticIntegerDivisionNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaArithmeticIntegerDivisionNode >> label [
 

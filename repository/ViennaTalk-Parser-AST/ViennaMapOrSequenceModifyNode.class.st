@@ -36,6 +36,12 @@ ViennaMapOrSequenceModifyNode >> formatOperatorWith: aViennaAbstractFormatter [
 ]
 
 { #category : #accessing }
+ViennaMapOrSequenceModifyNode >> isViennaMapOrSequenceModifyNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaMapOrSequenceModifyNode >> label [
 
 	^ 'MapOrSequenceModify'

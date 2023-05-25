@@ -12,6 +12,12 @@ ViennaMapRangeNode >> formatOperatorWith: aViennaAbstractFormatter [
 ]
 
 { #category : #accessing }
+ViennaMapRangeNode >> isViennaMapRangeNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaMapRangeNode >> label [
 
 	^ 'MapRange'

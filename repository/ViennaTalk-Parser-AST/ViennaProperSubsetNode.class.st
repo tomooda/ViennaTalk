@@ -12,6 +12,12 @@ ViennaProperSubsetNode >> formatOperatorWith: aViennaAbstractFormatter [
 ]
 
 { #category : #accessing }
+ViennaProperSubsetNode >> isViennaProperSubsetNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaProperSubsetNode >> label [
 
 	^ 'ProperSubset'

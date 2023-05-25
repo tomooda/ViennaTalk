@@ -28,6 +28,18 @@ ViennaLetBeExpressionNode >> conditionExpression: aViennaExpressionNode [
 ]
 
 { #category : #accessing }
+ViennaLetBeExpressionNode >> definitionOfLocalName: aString [
+
+	| valDef |
+	valDef := self first.
+	valDef
+		allDescendantsSuchThat: [ :n |
+		n isViennaPatternIdentifierNode: aString ]
+		do: [ :n | ^ n ].
+	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
+]
+
+{ #category : #accessing }
 ViennaLetBeExpressionNode >> expression [
 
 	^ self at: 3
@@ -60,6 +72,12 @@ ViennaLetBeExpressionNode >> formatWith: aViennaAbstractFormatter [
 				   noIndentString: multipleBind
 				   insertCrIfNeeded: guard)
 		  insertCrIfNeeded: expression
+]
+
+{ #category : #accessing }
+ViennaLetBeExpressionNode >> isViennaLetBeExpressionNode [
+
+	^ true
 ]
 
 { #category : #accessing }

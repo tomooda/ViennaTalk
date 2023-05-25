@@ -18,6 +18,12 @@ ViennaArithmeticMinusNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aB
 ]
 
 { #category : #accessing }
+ViennaArithmeticMinusNode >> isViennaArithmeticMinusNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaArithmeticMinusNode >> label [
 
 	^ 'ArithmeticMinus'

@@ -52,3 +52,9 @@ ViennaBinaryOperatorExpressionNode >> formatWith: aViennaAbstractFormatter [
 		  infix: (self formatOperatorWith: aViennaAbstractFormatter)
 		  arg: (aViennaAbstractFormatter format: self expression2)
 ]
+
+{ #category : #testing }
+ViennaBinaryOperatorExpressionNode >> isViennaBinaryOperatorExpression [
+
+	^ true
+]

@@ -11,6 +11,12 @@ ViennaNotNode >> formatOperatorWith: aViennaAbstractFormatter [
 	^ aViennaAbstractFormatter not
 ]
 
+{ #category : #testing }
+ViennaNotNode >> isViennaNotNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaNotNode >> label [
 

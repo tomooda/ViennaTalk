@@ -53,6 +53,12 @@ ViennaIsBasicExpressionNode >> formatWith: aViennaAbstractFormatter [
 ]
 
 { #category : #accessing }
+ViennaIsBasicExpressionNode >> isViennaIsBasicExpressionNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaIsBasicExpressionNode >> label [
 
 	^ 'IsBasicExpression'

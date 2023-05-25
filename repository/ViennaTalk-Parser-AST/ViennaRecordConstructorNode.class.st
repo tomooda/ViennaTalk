@@ -42,6 +42,12 @@ ViennaRecordConstructorNode >> formatWith: aViennaAbstractFormatter [
 ]
 
 { #category : #accessing }
+ViennaRecordConstructorNode >> isViennaRecordConstructorNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaRecordConstructorNode >> label [
 
 	^ 'RecordConstructor'

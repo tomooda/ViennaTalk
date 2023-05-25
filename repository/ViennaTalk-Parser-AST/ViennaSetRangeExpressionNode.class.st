@@ -39,6 +39,12 @@ ViennaSetRangeExpressionNode >> formatWith: aViennaAbstractFormatter [
 		  aViennaAbstractFormatter dots , ', ' , endExpression , '}'
 ]
 
+{ #category : #testing }
+ViennaSetRangeExpressionNode >> isViennaSetRangeExpressionNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaSetRangeExpressionNode >> label [
 

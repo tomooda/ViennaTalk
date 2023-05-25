@@ -14,6 +14,16 @@ ViennaDefExpressionNode class >> equalDefinitionList: aViennaEqualDefinitionList
 		  yourself
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaDefExpressionNode >> definitionOfLocalName: aString [
+
+	self patternOrBindReverseDo: [ :patternOrBind |
+		patternOrBind
+			allDescendantsSuchThat: [ :n | n isViennaPatternIdentifierNode: aString ]
+			do: [ :n | ^ n ] ].
+	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
+]
+
 { #category : #accessing }
 ViennaDefExpressionNode >> equalDefinitionList [
 
@@ -24,6 +34,12 @@ ViennaDefExpressionNode >> equalDefinitionList [
 ViennaDefExpressionNode >> equalDefinitionList: aViennaEqualDefinitionListNode [
 
 	self at: 1 put: aViennaEqualDefinitionListNode
+]
+
+{ #category : #enumerating }
+ViennaDefExpressionNode >> equalDefinitionListReverseDo: aBlock [
+
+	self equalDefinitionList reverseDo: aBlock
 ]
 
 { #category : #accessing }
@@ -55,6 +71,12 @@ ViennaDefExpressionNode >> formatWith: aViennaAbstractFormatter [
 ]
 
 { #category : #accessing }
+ViennaDefExpressionNode >> isViennaDefExpressionNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaDefExpressionNode >> label [
 
 	^ 'DefExpression'
@@ -64,4 +86,11 @@ ViennaDefExpressionNode >> label [
 ViennaDefExpressionNode >> operatorPrecedence [
 
 	^ 10
+]
+
+{ #category : #enumerating }
+ViennaDefExpressionNode >> patternOrBindReverseDo: aBlock [
+
+	self equalDefinitionListReverseDo: [ :equalDefinition |
+		aBlock value: equalDefinition patternOrBind ]
 ]

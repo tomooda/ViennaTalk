@@ -12,6 +12,12 @@ ViennaSetIntersectionNode >> formatOperatorWith: aViennaAbstractFormatter [
 ]
 
 { #category : #accessing }
+ViennaSetIntersectionNode >> isViennaSetIntersectionNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaSetIntersectionNode >> label [
 
 	^ 'SetIntersection'

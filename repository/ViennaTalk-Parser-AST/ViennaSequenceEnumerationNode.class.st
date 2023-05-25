@@ -36,6 +36,12 @@ ViennaSequenceEnumerationNode >> formatWith: aViennaAbstractFormatter [
 	  , ']'
 ]
 
+{ #category : #testing }
+ViennaSequenceEnumerationNode >> isViennaSequenceEnumerationNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaSequenceEnumerationNode >> label [
 

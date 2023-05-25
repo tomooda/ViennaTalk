@@ -12,6 +12,12 @@ ViennaSequenceHeadNode >> formatOperatorWith: aViennaAbstractFormatter [
 ]
 
 { #category : #accessing }
+ViennaSequenceHeadNode >> isViennaSequenceHeadNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaSequenceHeadNode >> label [
 
 	^ 'SequenceHead'

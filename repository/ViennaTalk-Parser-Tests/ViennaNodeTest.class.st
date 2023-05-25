@@ -70,38 +70,31 @@ end B'.
 
 { #category : #running }
 ViennaNodeTest >> testAsGlobalName [
+
 	| localName globalName |
-	localName := [ :name | (ViennaNode label: 'LocalName' with: name) parent: skip ].
-	globalName := [ :module :name | ViennaNode label: 'GlobalName' with: module with: name ].
+	localName := [ :name |
+	             (ViennaLocalNameNode identifier: name) parent: skip ].
+	globalName := [ :module :name |
+	              ViennaGlobalNameNode
+		              moduleIdentifier: module
+		              identifier: name ].
 	self assert: (localName value: 'nothing') asGlobalName equals: nil.
 	self assert: (localName value: 'x1') asGlobalName equals: nil.
 	self assert: (localName value: 'x') asGlobalName equals: nil.
-	self
-		assert:
-			((localName value: 'T2') asGlobalName
-				sameAs: (globalName value: 'A' value: 'T2')).
-	self
-		assert:
-			((localName value: 'v2') asGlobalName
-				sameAs: (globalName value: 'A' value: 'v2')).
-	self
-		assert:
-			((localName value: 'exp_f') asGlobalName
-				sameAs: (globalName value: 'A' value: 'exp_f')).
-	self
-		assert:
-			((localName value: 'imp_f') asGlobalName
-				sameAs: (globalName value: 'A' value: 'imp_f')).
+	self assert: ((localName value: 'T2') asGlobalName sameAs:
+			 (globalName value: 'A' value: 'T2')).
+	self assert: ((localName value: 'v2') asGlobalName sameAs:
+			 (globalName value: 'A' value: 'v2')).
+	self assert: ((localName value: 'exp_f') asGlobalName sameAs:
+			 (globalName value: 'A' value: 'exp_f')).
+	self assert: ((localName value: 'imp_f') asGlobalName sameAs:
+			 (globalName value: 'A' value: 'imp_f')).
 	self assert: (localName value: 's1') asGlobalName equals: nil.
 	self assert: (localName value: 'l') asGlobalName equals: nil.
-	self
-		assert:
-			((localName value: 'Ti') asGlobalName
-				sameAs: (globalName value: 'B' value: 'Ti')).
-	self
-		assert:
-			((localName value: 'opi') asGlobalName
-				sameAs: (globalName value: 'B' value: 'opi'))
+	self assert: ((localName value: 'Ti') asGlobalName sameAs:
+			 (globalName value: 'B' value: 'Ti')).
+	self assert: ((localName value: 'opi') asGlobalName sameAs:
+			 (globalName value: 'B' value: 'opi'))
 ]
 
 { #category : #running }
@@ -164,27 +157,28 @@ ViennaNodeTest >> testDefinitionOfLocalName [
 
 { #category : #running }
 ViennaNodeTest >> testIsExportedNameNode [
+
 	| localName |
 	localName := skip parent
-		at: 1
-		put: (ViennaNode label: 'LocalName' with: '').
-	localName at: 1 put: 'T1'.
+		             at: 1
+		             put: (ViennaLocalNameNode identifier: '').
+	localName identifier: 'T1'.
 	self assert: localName isExportedNameNode.
-	localName at: 1 put: 'T2'.
+	localName identifier: 'T2'.
 	self assert: localName isExportedNameNode.
-	localName at: 1 put: 'T3'.
+	localName identifier: 'T3'.
 	self deny: localName isExportedNameNode.
-	localName at: 1 put: 'v1'.
+	localName identifier: 'v1'.
 	self deny: localName isExportedNameNode.
-	localName at: 1 put: 'v2'.
+	localName identifier: 'v2'.
 	self assert: localName isExportedNameNode.
-	localName at: 1 put: 'exp_f'.
+	localName identifier: 'exp_f'.
 	self assert: localName isExportedNameNode.
-	localName at: 1 put: 'imp_f'.
+	localName identifier: 'imp_f'.
 	self deny: localName isExportedNameNode.
-	localName at: 1 put: 'exp_op'.
+	localName identifier: 'exp_op'.
 	self assert: localName isExportedNameNode.
-	localName at: 1 put: 'imp_op'.
+	localName identifier: 'imp_op'.
 	self deny: localName isExportedNameNode
 ]
 
@@ -209,6 +203,7 @@ ViennaNodeTest >> testIsFunctionNameNode [
 
 { #category : #running }
 ViennaNodeTest >> testIsOperationNameNode [
+
 	| opcall1 opcall2 funcall globalopcall |
 	self deny: skip isOperationNameNode.
 	opcall1 := skip parent at: 3.
@@ -231,7 +226,7 @@ ViennaNodeTest >> testIsOperationNameNode [
 	self deny: funcall argumentExpressionList isOperationNameNode.
 	globalopcall := skip parent at: 7.
 	self assert: globalopcall label equals: 'CallStatement'.
-	self assert: globalopcall first label = 'GlobalName'.
+	self assert: globalopcall first isViennaGlobalNameNode.
 	self assert: globalopcall first first = 'B'.
 	self assert: globalopcall first second = 'opi2'.
 	self assert: globalopcall first isOperationNameNode
@@ -259,17 +254,18 @@ ViennaNodeTest >> testIsStateVariableNameNode [
 
 { #category : #running }
 ViennaNodeTest >> testIsTypeNameNode [
+
 	| localName |
 	localName := skip parent
-		at: 1
-		put: (ViennaNode label: 'LocalName' with: '').
+		             at: 1
+		             put: (ViennaLocalNameNode identifier: '').
 	localName at: 1 put: 'T1'.
 	self assert: localName isTypeNameNode.
-	localName at: 1 put: 'T2'.
+	localName identifier: 'T2'.
 	self assert: localName isTypeNameNode.
-	localName at: 1 put: 'Ti'.
+	localName identifier: 'Ti'.
 	self deny: localName isTypeNameNode.
-	localName at: 1 put: 'v1'.
+	localName identifier: 'v1'.
 	self deny: localName isTypeNameNode
 ]
 

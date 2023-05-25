@@ -11,6 +11,12 @@ ViennaUnaryMinusNode >> formatOperatorWith: aViennaAbstractFormatter [
 	^ '-'
 ]
 
+{ #category : #testing }
+ViennaUnaryMinusNode >> isViennaUnaryMinusNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaUnaryMinusNode >> label [
 

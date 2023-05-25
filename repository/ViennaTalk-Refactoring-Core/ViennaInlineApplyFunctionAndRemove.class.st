@@ -23,9 +23,9 @@ ViennaInlineApplyFunctionAndRemove >> check [
 	(self hasFreeOccurrencesOf: 'post_' , shortName in: ast module)
 		ifTrue: [ ^ false ].
 	ast document allDescendantsDo: [ :node |
-		(node label = 'GlobalName' and: [
-			 node first = moduleName and: [ node second = shortName ] ])
-			ifTrue: [ ^ false ] ].
+		(node isViennaGlobalNameNode and: [
+			 node moduleIdentifier = moduleName and: [
+				 node identifier = shortName ] ]) ifTrue: [ ^ false ] ].
 	ast modulesDo: [ :module |
 		module second first ifNotNil: [ :importDefinitionList |
 			importDefinitionList do: [ :importDefinition |
@@ -48,49 +48,40 @@ ViennaInlineApplyFunctionAndRemove >> definitionNode: aViennaNode [
 
 { #category : #operations }
 ViennaInlineApplyFunctionAndRemove >> execute [
+
 	| functionName |
 	functionName := self definitionNode name.
-	self
-		freeOccurrencesOf: functionName
-		in: ast module
-		do: [ :node | 
-			| callerNode |
-			callerNode := node parent.
-			self
-				replaceNode: callerNode
-				with:
-					(ViennaNode
-						label: 'LetExpression'
-						with:
-							(ViennaNode
-								label: 'LocalDefinitionList'
-								withAll:
-									((1 to: callerNode second size)
-										collect: [ :index | 
-											| param type arg |
-											param := (self definitionNode fifth first at: index)
-												copyFragment.
-											type := callerNode second size = 1
-												ifTrue: [ self definitionNode third first ]
-												ifFalse: [ self definitionNode third first label = 'ProductType'
-														ifTrue: [ self definitionNode third first at: index ]
-														ifFalse: [ nil ] ].
-											arg := (callerNode second at: index) copyFragment.
-											ViennaNode
-												label: 'LocalDefinition'
-												with:
-													(ViennaNode
-														label: 'ValueDefinition'
-														with: param
-														with: type
-														with: arg) ]))
-						with: self definitionNode sixth) ].
+	self freeOccurrencesOf: functionName in: ast module do: [ :node |
+		| callerNode |
+		callerNode := node parent.
+		self replaceNode: callerNode with: (ViennaLetExpressionNode
+				 localDefinitionList: (ViennaNode
+						  label: 'LocalDefinitionList'
+						  withAll: ((1 to: callerNode second size) collect: [ :index |
+								   | param type arg |
+								   param := (self definitionNode fifth first at: index)
+									            copyFragment.
+								   type := callerNode second size = 1
+									           ifTrue: [ self definitionNode third first ]
+									           ifFalse: [
+										           self definitionNode third first label
+										           = 'ProductType'
+											           ifTrue: [
+											           self definitionNode third first at: index ]
+											           ifFalse: [ nil ] ].
+								   arg := (callerNode second at: index) copyFragment.
+								   ViennaNode label: 'LocalDefinition' with: (ViennaNode
+										    label: 'ValueDefinition'
+										    with: param
+										    with: type
+										    with: arg) ]))
+				 expression: self definitionNode sixth) ].
 	(ast parentLabelled: 'FunctionDefinitions' ifAbsent: [ nil ])
-		ifNotNil: [ :functionDefinitions | 
+		ifNotNil: [ :functionDefinitions |
 			functionDefinitions remove: self definitionNode parent parent.
-			functionDefinitions
-				ifEmpty:
-					[ functionDefinitions parent parent remove: functionDefinitions parent ] ].
+			functionDefinitions ifEmpty: [
+				functionDefinitions parent parent remove:
+					functionDefinitions parent ] ].
 	^ nil
 ]
 

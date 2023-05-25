@@ -38,6 +38,12 @@ ViennaTupleConstructorNode >> formatWith: aViennaAbstractFormatter [
 		   ifFalse: [ expressionList ]) , ')'
 ]
 
+{ #category : #testing }
+ViennaTupleConstructorNode >> isViennaTupleConstructorNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaTupleConstructorNode >> label [
 

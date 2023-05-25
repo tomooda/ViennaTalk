@@ -28,6 +28,17 @@ ViennaMapComprehensionNode >> bindList: aViennaBindListNode [
 	self at: 3 put: aViennaBindListNode
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaMapComprehensionNode >> definitionOfLocalName: aString [
+
+	self patternsDo: [ :pattern |
+		pattern
+			allDescendantsSuchThat: [ :n |
+			n isViennaPatternIdentifierNode: aString ]
+			do: [ :n | ^ n ] ].
+	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
+]
+
 { #category : #'pretty printing' }
 ViennaMapComprehensionNode >> formatWith: aViennaAbstractFormatter [
 
@@ -54,6 +65,12 @@ ViennaMapComprehensionNode >> formatWith: aViennaAbstractFormatter [
 ]
 
 { #category : #accessing }
+ViennaMapComprehensionNode >> isViennaMapComprehensionNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaMapComprehensionNode >> keyExpression [
 
 	^ self at: 1
@@ -69,6 +86,19 @@ ViennaMapComprehensionNode >> keyExpression: aViennaExpressionNode [
 ViennaMapComprehensionNode >> label [
 
 	^ 'MapComprehension'
+]
+
+{ #category : #enumerating }
+ViennaMapComprehensionNode >> multipleBindsDo: aBlock [
+
+	self bindList do: aBlock
+]
+
+{ #category : #enumerating }
+ViennaMapComprehensionNode >> patternsDo: aBlock [
+
+	self multipleBindsDo: [ :multipleBind |
+		multipleBind patternsDo: aBlock ]
 ]
 
 { #category : #accessing }

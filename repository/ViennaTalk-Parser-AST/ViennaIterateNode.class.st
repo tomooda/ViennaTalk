@@ -18,6 +18,12 @@ ViennaIterateNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 ot
 ]
 
 { #category : #accessing }
+ViennaIterateNode >> isViennaIterateNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaIterateNode >> label [
 
 	^ 'Iterate'

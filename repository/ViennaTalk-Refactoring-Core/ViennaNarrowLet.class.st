@@ -13,15 +13,15 @@ ViennaNarrowLet class >> isAbstract [
 ]
 
 { #category : #testing }
-ViennaNarrowLet >> acceptsAstLabel: aString [
+ViennaNarrowLet >> acceptsNode: aString [
 	^ self subclassResponsibility
 ]
 
 { #category : #operations }
 ViennaNarrowLet >> check [
+
 	ast ifNil: [ ^ false ].
-	(self acceptsAstLabel: ast label)
-		ifFalse: [ ^ false ].
+	(self acceptsNode: ast) ifFalse: [ ^ false ].
 	self definitionNode ifNil: [ ^ false ].
 	^ true
 ]

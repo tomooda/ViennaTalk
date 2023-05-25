@@ -11,6 +11,12 @@ ViennaUnaryPlusNode >> formatOperatorWith: aViennaAbstractFormatter [
 	^ '+'
 ]
 
+{ #category : #testing }
+ViennaUnaryPlusNode >> isViennaUnaryPlusNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaUnaryPlusNode >> label [
 

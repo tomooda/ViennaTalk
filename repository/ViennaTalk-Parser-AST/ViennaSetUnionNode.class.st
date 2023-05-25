@@ -12,6 +12,12 @@ ViennaSetUnionNode >> formatOperatorWith: aViennaAbstractFormatter [
 ]
 
 { #category : #accessing }
+ViennaSetUnionNode >> isViennaSetUnionNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaSetUnionNode >> label [
 
 	^ 'SetUnion'

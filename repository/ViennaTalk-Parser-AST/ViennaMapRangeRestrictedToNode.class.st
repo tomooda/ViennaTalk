@@ -18,6 +18,12 @@ ViennaMapRangeRestrictedToNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightD
 ]
 
 { #category : #accessing }
+ViennaMapRangeRestrictedToNode >> isViennaMapRangeRestrictedToNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaMapRangeRestrictedToNode >> label [
 
 	^ 'MapRangeRestrictedTo'

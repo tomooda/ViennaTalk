@@ -40,6 +40,12 @@ ViennaRecordModifierNode >> formatWith: aViennaAbstractFormatter [
 			   ifFalse: [ mapletList ]) , ')'
 ]
 
+{ #category : #testing }
+ViennaRecordModifierNode >> isViennaRecordModifierNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaRecordModifierNode >> label [
 

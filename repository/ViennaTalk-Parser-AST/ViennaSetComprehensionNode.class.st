@@ -27,6 +27,17 @@ ViennaSetComprehensionNode >> bindList: aViennaBindListNode [
 	self at: 2 put: aViennaBindListNode
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaSetComprehensionNode >> definitionOfLocalName: aString [
+
+	self patternsDo: [ :pattern |
+		pattern
+			allDescendantsSuchThat: [ :n |
+			n isViennaPatternIdentifierNode: aString ]
+			do: [ :n | ^ n ] ].
+	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
+]
+
 { #category : #accessing }
 ViennaSetComprehensionNode >> expression [
 
@@ -57,10 +68,29 @@ ViennaSetComprehensionNode >> formatWith: aViennaAbstractFormatter [
 		   insertCrIfNeeded: guard) , '}'
 ]
 
+{ #category : #testing }
+ViennaSetComprehensionNode >> isViennaSetComprehensionNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaSetComprehensionNode >> label [
 
 	^ 'SetComprehension'
+]
+
+{ #category : #enumerating }
+ViennaSetComprehensionNode >> multipleBindsDo: aBlock [
+
+	self bindList do: aBlock
+]
+
+{ #category : #enumerating }
+ViennaSetComprehensionNode >> patternsDo: aBlock [
+
+	self multipleBindsDo: [ :multipleBind |
+		multipleBind patternsDo: aBlock ]
 ]
 
 { #category : #accessing }

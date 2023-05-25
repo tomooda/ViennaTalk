@@ -18,6 +18,12 @@ ViennaSetDifferenceNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlo
 ]
 
 { #category : #accessing }
+ViennaSetDifferenceNode >> isViennaSetDifferenceNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaSetDifferenceNode >> label [
 
 	^ 'SetDifference'

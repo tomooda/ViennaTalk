@@ -39,14 +39,14 @@ ViennaExtractParameterFromExpressionInFunction >> executeCallers [
 	| moduleName shortName |
 	moduleName := ast module first.
 	shortName := self definitionNode first.
-	ast module third allDescendantsDo: [ :node |
-		(node isViennaApplyNode and: [
-			 (node expression label = 'LocalName' and: [
-				  node expression first = shortName ]) or: [
-				 node expression label = 'GlobalName' and: [
-					 node expression first = moduleName and: [
-						 node expression second = shortName ] ] ] ]) ifTrue: [
-			node argumentExpressionList add: ast copyFragment ] ]
+	ast module third
+		allDescendantsSuchThat: [ :node |
+			node isViennaApplyNode and: [
+				(node expression isViennaLocalNameNode: shortName) or: [
+					node expression
+						isViennaGlobalNameNode: moduleName
+						identifier: shortName ] ] ]
+		do: [ :node | node argumentExpressionList add: ast copyFragment ]
 ]
 
 { #category : #accessing }

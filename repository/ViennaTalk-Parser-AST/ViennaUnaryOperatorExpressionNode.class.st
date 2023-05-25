@@ -37,3 +37,9 @@ ViennaUnaryOperatorExpressionNode >> formatWith: aViennaAbstractFormatter [
 	^ (self formatOperatorWith: aViennaAbstractFormatter) , ' '
 	  , (aViennaAbstractFormatter format: self expression)
 ]
+
+{ #category : #testing }
+ViennaUnaryOperatorExpressionNode >> isViennaUnaryOperatorExpressionNode [
+
+	^ true
+]

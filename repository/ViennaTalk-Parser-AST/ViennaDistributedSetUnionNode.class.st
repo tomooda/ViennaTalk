@@ -12,6 +12,12 @@ ViennaDistributedSetUnionNode >> formatOperatorWith: aViennaAbstractFormatter [
 ]
 
 { #category : #accessing }
+ViennaDistributedSetUnionNode >> isViennaDistributedSetUnionNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaDistributedSetUnionNode >> label [
 
 	^ 'DistributedSetUnion'

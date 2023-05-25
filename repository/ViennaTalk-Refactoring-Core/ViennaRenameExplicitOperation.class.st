@@ -43,10 +43,9 @@ ViennaRenameExplicitOperation >> findDefinitionNode [
 
 { #category : #accessing }
 ViennaRenameExplicitOperation >> findOldName [
-	ast label = 'ExplicitOperationDefinition'
-		ifTrue: [ ^ ast first ].
-	ast label = 'LocalName'
-		ifTrue: [ ^ ast first ].
+
+	ast label = 'ExplicitOperationDefinition' ifTrue: [ ^ ast first ].
+	ast isViennaLocalNameNode ifTrue: [ ^ ast first ].
 	^ nil
 ]
 

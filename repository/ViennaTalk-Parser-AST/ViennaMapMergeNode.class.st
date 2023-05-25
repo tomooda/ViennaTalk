@@ -18,6 +18,12 @@ ViennaMapMergeNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 o
 ]
 
 { #category : #accessing }
+ViennaMapMergeNode >> isViennaMapMergeNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaMapMergeNode >> label [
 
 	^ 'MapMerge'

@@ -58,6 +58,12 @@ ViennaSubsequenceNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock
 	^ aBlock1 value
 ]
 
+{ #category : #testing }
+ViennaSubsequenceNode >> isViennaSubsequenceNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaSubsequenceNode >> label [
 

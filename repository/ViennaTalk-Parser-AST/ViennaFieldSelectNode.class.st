@@ -54,6 +54,12 @@ ViennaFieldSelectNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock
 ]
 
 { #category : #accessing }
+ViennaFieldSelectNode >> isViennaFieldSelectNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaFieldSelectNode >> label [
 
 	^ 'FieldSelect'

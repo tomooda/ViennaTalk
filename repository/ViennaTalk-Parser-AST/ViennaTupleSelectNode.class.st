@@ -47,6 +47,12 @@ ViennaTupleSelectNode >> index: aString [
 	self at: 2 put: aString
 ]
 
+{ #category : #testing }
+ViennaTupleSelectNode >> isViennaTupleSelectNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaTupleSelectNode >> label [
 

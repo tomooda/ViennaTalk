@@ -11,6 +11,12 @@ ViennaSequenceElementsNode >> formatOperatorWith: aViennaAbstractFormatter [
 	^ 'elems'
 ]
 
+{ #category : #testing }
+ViennaSequenceElementsNode >> isViennaSequenceElementsNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaSequenceElementsNode >> label [
 

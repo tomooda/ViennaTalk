@@ -26,6 +26,15 @@ ViennaExists1ExpressionNode >> bind: aViennaBindNode [
 	self at: 1 put: aViennaBindNode
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaExists1ExpressionNode >> definitionOfLocalName: aString [
+
+	self pattern
+		allDescendantsSuchThat: [ :n | n isViennaPatternIdentifierNode: aString ]
+		do: [ :n | ^ n ].
+	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
+]
+
 { #category : #accessing }
 ViennaExists1ExpressionNode >> expression [
 
@@ -52,6 +61,12 @@ ViennaExists1ExpressionNode >> formatWith: aViennaAbstractFormatter [
 ]
 
 { #category : #accessing }
+ViennaExists1ExpressionNode >> isViennaExists1ExpressionNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaExists1ExpressionNode >> label [
 
 	^ 'Exists1Expression'
@@ -61,4 +76,10 @@ ViennaExists1ExpressionNode >> label [
 ViennaExists1ExpressionNode >> operatorPrecedence [
 
 	^ 10
+]
+
+{ #category : #accessing }
+ViennaExists1ExpressionNode >> pattern [
+
+	^ self bind pattern
 ]

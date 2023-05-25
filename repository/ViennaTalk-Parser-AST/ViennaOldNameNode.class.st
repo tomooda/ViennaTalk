@@ -31,6 +31,18 @@ ViennaOldNameNode >> identifier: aString [
 	self at: 1 put: aString
 ]
 
+{ #category : #testing }
+ViennaOldNameNode >> isStateVariableNameNode [
+
+	^ true
+]
+
+{ #category : #testing }
+ViennaOldNameNode >> isViennaOldNameNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaOldNameNode >> label [
 

@@ -13,22 +13,14 @@ ViennaWidenLet class >> isAbstract [
 ]
 
 { #category : #testing }
-ViennaWidenLet >> acceptsAstLabel: aString [
-	^ self subclassResponsibility
-]
-
-{ #category : #testing }
 ViennaWidenLet >> acceptsDefinitionNode: aViennaNode [
 	^ self subclassResponsibility
 ]
 
-{ #category : #operations }
-ViennaWidenLet >> check [
-	ast ifNil: [ ^ false ].
-	(self acceptsAstLabel: ast label)
-		ifFalse: [ ^ false ].
-	self definitionNode ifNil: [ ^ false ].
-	^ true
+{ #category : #testing }
+ViennaWidenLet >> acceptsNode: aViennaNode [
+
+	^ self subclassResponsibility
 ]
 
 { #category : #accessing }

@@ -23,11 +23,6 @@ ViennaAbstractSyntaxNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBl
 	^ aBlock3 value
 ]
 
-{ #category : #testing }
-ViennaAbstractSyntaxNode >> isViennaExpressionNode [
-	^ false
-]
-
 { #category : #'pretty printing' }
 ViennaAbstractSyntaxNode >> operatorPrecedence [
 

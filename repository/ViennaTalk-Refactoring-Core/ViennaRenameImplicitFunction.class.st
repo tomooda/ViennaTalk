@@ -40,10 +40,9 @@ ViennaRenameImplicitFunction >> findDefinitionNode [
 
 { #category : #accessing }
 ViennaRenameImplicitFunction >> findOldName [
-	ast label = 'ImplicitFunctionDefinition'
-		ifTrue: [ ^ ast first ].
-	ast label = 'LocalName'
-		ifTrue: [ ^ ast first ].
+
+	ast label = 'ImplicitFunctionDefinition' ifTrue: [ ^ ast first ].
+	ast isViennaLocalNameNode ifTrue: [ ^ ast first ].
 	^ nil
 ]
 

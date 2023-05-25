@@ -11,6 +11,12 @@ ViennaSequenceReverseNode >> formatOperatorWith: aViennaAbstractFormatter [
 	^ 'reverse'
 ]
 
+{ #category : #testing }
+ViennaSequenceReverseNode >> isViennaSequenceReverseNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaSequenceReverseNode >> label [
 

@@ -6,13 +6,13 @@ Class {
 
 { #category : #accessing }
 ViennaUseValueInAllOccurrences >> execute [
-	ast module
-		allDescendantsDo: [ :node | 
-			((node includesParent: self definitionNode) not
-				and: [ node sameAs: ast ])
-				ifTrue: [ self
-						replaceNode: node
-						with: (ViennaNode label: 'LocalName' with: self identifier) ] ].
+
+	ast module allDescendantsDo: [ :node |
+		((node includesParent: self definitionNode) not and: [
+			 node sameAs: ast ]) ifTrue: [
+			self
+				replaceNode: node
+				with: (ViennaLocalNameNode identifier: self identifier) ] ].
 	^ nil
 ]
 

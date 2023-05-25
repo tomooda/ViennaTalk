@@ -6,8 +6,8 @@ Class {
 
 { #category : #operations }
 ViennaInlineLet >> check [
-	^ ast notNil
-		and: [ ast label = 'LetExpression' or: [ ast label = 'LetStatement' ] ]
+
+	^ ast notNil and: [ ast isViennaLetNode ]
 ]
 
 { #category : #operations }

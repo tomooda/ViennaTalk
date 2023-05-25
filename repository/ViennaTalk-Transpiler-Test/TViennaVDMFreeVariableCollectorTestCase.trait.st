@@ -1,6 +1,6 @@
 Trait {
 	#name : #TViennaVDMFreeVariableCollectorTestCase,
-	#category : 'ViennaTalk-Transpiler-Test'
+	#category : #'ViennaTalk-Transpiler-Test'
 }
 
 { #category : #'tests-free variables-statements' }
@@ -46,50 +46,53 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesCasesExpressionAlter
 
 { #category : #'tests-free variables-expressions' }
 TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesDefExpressionBoundVarsInto [
+
 	| node binds |
-	node := ViennaVDMParser new defExpression end parse: 'def v1 : t1 = f(v2) ; v2 : t2 = e1 in f(v1, v2)'.
+	node := ViennaVDMParser new defExpression end parse:
+		        'def v1 : t1 = f(v2) ; v2 : t2 = e1 in f(v1, v2)'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'DefExpression'.
+	self assert: node isViennaDefExpressionNode.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
-		equals:
-			{'t1'.
-			'f'.
-			't2'.
-			'e1'.
-			'f'} asSet
+		assert:
+		(ViennaVDM2SmalltalkScript new
+			 freeVariables: node
+			 env: Dictionary new)
+		equals: { 't1'. 'f'. 't2'. 'e1'. 'f' } asSet
 ]
 
 { #category : #'tests-free variables-expressions' }
 TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesExists1ExpressionBoundVarsInto [
+
 	| node binds |
-	node := ViennaVDMParser new exists1Expression end parse: 'exists1 v:t & p(v, e)'.
+	node := ViennaVDMParser new exists1Expression end parse:
+		        'exists1 v:t & p(v, e)'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'Exists1Expression'.
+	self assert: node isViennaExists1ExpressionNode.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
-		equals:
-			{'t'.
-			'p'.
-			'e'} asSet
+		assert:
+		(ViennaVDM2SmalltalkScript new
+			 freeVariables: node
+			 env: Dictionary new)
+		equals: { 't'. 'p'. 'e' } asSet
 ]
 
 { #category : #'tests-free variables-expressions' }
 TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesExistsExpressionBoundVarsInto [
+
 	| node binds |
-	node := ViennaVDMParser new existsExpression end parse: 'exists v1:t, v2 in set s & p(v1, v2, e)'.
+	node := ViennaVDMParser new existsExpression end parse:
+		        'exists v1:t, v2 in set s & p(v1, v2, e)'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'ExistsExpression'.
+	self assert: node isViennaExistsExpressionNode.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
-		equals:
-			{'t'.
-			's'.
-			'p'.
-			'e'} asSet
+		assert:
+		(ViennaVDM2SmalltalkScript new
+			 freeVariables: node
+			 env: Dictionary new)
+		equals: { 't'. 's'. 'p'. 'e' } asSet
 ]
 
 { #category : #'tests-free variables-statements' }
@@ -110,28 +113,35 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesFieldReferenceBoundV
 
 { #category : #'tests-free variables-expressions' }
 TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesFieldSelectBoundVarsInto [
+
 	| node binds |
 	node := ViennaVDMParser new expression end parse: 'record.field'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'FieldSelect'.
+	self assert: node isViennaFieldSelectNode.
 	binds := Set new.
-	self assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new) equals: {'record'} asSet
+	self
+		assert:
+		(ViennaVDM2SmalltalkScript new
+			 freeVariables: node
+			 env: Dictionary new)
+		equals: { 'record' } asSet
 ]
 
 { #category : #'tests-free variables-expressions' }
 TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesForallExpressionBoundVarsInto [
+
 	| node binds |
-	node := ViennaVDMParser new forallExpression end parse: 'forall v1:t, v2 in set s & p(v1, v2, e)'.
+	node := ViennaVDMParser new forallExpression end parse:
+		        'forall v1:t, v2 in set s & p(v1, v2, e)'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'ForallExpression'.
+	self assert: node isViennaForallExpressionNode.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
-		equals:
-			{'t'.
-			's'.
-			'p'.
-			'e'} asSet
+		assert:
+		(ViennaVDM2SmalltalkScript new
+			 freeVariables: node
+			 env: Dictionary new)
+		equals: { 't'. 's'. 'p'. 'e' } asSet
 ]
 
 { #category : #'tests-free variables-statements' }
@@ -151,46 +161,53 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesIndexForLoopBoundVar
 
 { #category : #'tests-free variables-expressions' }
 TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesIotaExpressionBoundVarsInto [
+
 	| node binds |
-	node := ViennaVDMParser new iotaExpression end parse: 'iota v:t & p(v, e)'.
+	node := ViennaVDMParser new iotaExpression end parse:
+		        'iota v:t & p(v, e)'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'IotaExpression'.
+	self assert: node isViennaIotaExpressionNode.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
-		equals:
-			{'t'.
-			'p'.
-			'e'} asSet
+		assert:
+		(ViennaVDM2SmalltalkScript new
+			 freeVariables: node
+			 env: Dictionary new)
+		equals: { 't'. 'p'. 'e' } asSet
 ]
 
 { #category : #'tests-free variables-expressions' }
 TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesLambdaExpressionBoundVarsInto [
+
 	| node binds |
-	node := ViennaVDMParser new lambdaExpression end parse: 'lambda v : t & f(v)'.
+	node := ViennaVDMParser new lambdaExpression end parse:
+		        'lambda v : t & f(v)'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'LambdaExpression'.
+	self assert: node isViennaLambdaExpressionNode.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
-		equals:
-			{'t'.
-			'f'} asSet
+		assert:
+		(ViennaVDM2SmalltalkScript new
+			 freeVariables: node
+			 env: Dictionary new)
+		equals: { 't'. 'f' } asSet
 ]
 
 { #category : #'tests-free variables-expressions' }
 TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesLetBeExpressionBoundVarsInto [
+
 	| node binds |
-	node := ViennaVDMParser new letBeExpression end parse: 'let v in set s be st p(v) in f(v)'.
+	node := ViennaVDMParser new letBeExpression end parse:
+		        'let v in set s be st p(v) in f(v)'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'LetBeExpression'.
+	self assert: node isViennaLetBeExpressionNode.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
-		equals:
-			{'s'.
-			'p'.
-			'f'} asSet
+		assert:
+		(ViennaVDM2SmalltalkScript new
+			 freeVariables: node
+			 env: Dictionary new)
+		equals: { 's'. 'p'. 'f' } asSet
 ]
 
 { #category : #'tests-free variables-statements' }
@@ -210,19 +227,19 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesLetBeStatementBoundV
 
 { #category : #'tests-free variables-expressions' }
 TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesLetExpressionBoundVarsInto [
+
 	| node binds |
-	node := ViennaVDMParser new letExpression end parse: 'let v1 : t1 = f(v2), v2 : t2 = e in g(v1, v2)'.
+	node := ViennaVDMParser new letExpression end parse:
+		        'let v1 : t1 = f(v2), v2 : t2 = e in g(v1, v2)'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'LetExpression'.
+	self assert: node isViennaLetExpressionNode.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
-		equals:
-			{'t1'.
-			'f'.
-			't2'.
-			'e'.
-			'g'} asSet
+		assert:
+		(ViennaVDM2SmalltalkScript new
+			 freeVariables: node
+			 env: Dictionary new)
+		equals: { 't1'. 'f'. 't2'. 'e'. 'g' } asSet
 ]
 
 { #category : #'tests-free variables-statements' }
@@ -244,57 +261,68 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesLetStatementBoundVar
 
 { #category : #'tests-free variables-expressions' }
 TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesLocalNameBoundVarsInto [
+
 	| node binds |
 	node := ViennaVDMParser new name end parse: 'v'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'LocalName'.
+	self assert: node isViennaLocalNameNode.
 	binds := Set new.
-	self assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new) equals: {'v'} asSet
+	self
+		assert:
+		(ViennaVDM2SmalltalkScript new
+			 freeVariables: node
+			 env: Dictionary new)
+		equals: { 'v' } asSet
 ]
 
 { #category : #'tests-free variables-expressions' }
 TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesMapComprehensionBoundVarsInto [
+
 	| node binds |
-	node := ViennaVDMParser new mapComprehension end parse: '{f(v1) |-> g(v2) | v1, v2 in set s & p(v1, v2)}'.
+	node := ViennaVDMParser new mapComprehension end parse:
+		        '{f(v1) |-> g(v2) | v1, v2 in set s & p(v1, v2)}'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'MapComprehension'.
+	self assert: node isViennaMapComprehensionNode.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
-		equals:
-			{'f'.
-			'g'.
-			's'.
-			'p'} asSet
+		assert:
+		(ViennaVDM2SmalltalkScript new
+			 freeVariables: node
+			 env: Dictionary new)
+		equals: { 'f'. 'g'. 's'. 'p' } asSet
 ]
 
 { #category : #'tests-free variables-expressions' }
 TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesRecordConstructorBoundVarsInto [
+
 	| node binds |
 	node := ViennaVDMParser new recordConstructor end parse: 'mk_T(v)'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'RecordConstructor'.
+	self assert: node isViennaRecordConstructorNode.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
-		equals:
-			{'T'.
-			'v'} asSet
+		assert:
+		(ViennaVDM2SmalltalkScript new
+			 freeVariables: node
+			 env: Dictionary new)
+		equals: { 'T'. 'v' } asSet
 ]
 
 { #category : #'tests-free variables-expressions' }
 TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesSequenceComprehensionBoundVarsInto [
+
 	| node binds |
-	node := ViennaVDMParser new sequenceComprehension end parse: '[f(v) | v in set s & p(v)]'.
+	node := ViennaVDMParser new sequenceComprehension end parse:
+		        '[f(v) | v in set s & p(v)]'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'SequenceComprehension'.
+	self assert: node isViennaSequenceComprehensionNode.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
-		equals:
-			{'f'.
-			's'.
-			'p'} asSet
+		assert:
+		(ViennaVDM2SmalltalkScript new
+			 freeVariables: node
+			 env: Dictionary new)
+		equals: { 'f'. 's'. 'p' } asSet
 ]
 
 { #category : #'tests-free variables-statements' }
@@ -312,17 +340,19 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesSequenceForLoopBound
 
 { #category : #'tests-free variables-expressions' }
 TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesSetComprehensionBoundVarsInto [
+
 	| node binds |
-	node := ViennaVDMParser new setComprehension end parse: '{f(v) | v in set s & p(v)}'.
+	node := ViennaVDMParser new setComprehension end parse:
+		        '{f(v) | v in set s & p(v)}'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'SetComprehension'.
+	self assert: node isViennaSetComprehensionNode.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
-		equals:
-			{'f'.
-			's'.
-			'p'} asSet
+		assert:
+		(ViennaVDM2SmalltalkScript new
+			 freeVariables: node
+			 env: Dictionary new)
+		equals: { 'f'. 's'. 'p' } asSet
 ]
 
 { #category : #'tests-free variables-statements' }

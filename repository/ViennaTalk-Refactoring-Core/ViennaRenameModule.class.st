@@ -20,14 +20,15 @@ ViennaRenameModule >> execute [
 	self definitionNode ifNil: [ ^ nil ].
 	self newName ifNil: [ ^ nil ].
 	self definitionNode at: 1 put: self newName.
-	self definitionNode document do: [ :module | 
-		module second first ifNotNil: [ :importList | 
-			importList do: [ :importDefinition | 
-				importDefinition first = self oldName ifTrue: [ 
+	self definitionNode document do: [ :module |
+		module second first ifNotNil: [ :importList |
+			importList do: [ :importDefinition |
+				importDefinition first = self oldName ifTrue: [
 					importDefinition at: 1 put: self newName ] ] ].
-		module third allDescendantsDo: [ :node | 
-			(node label = 'GlobalName' and: [ node first = self oldName ]) 
-				ifTrue: [ node at: 1 put: self newName ] ] ]
+		module third allDescendantsDo: [ :node |
+			(node isViennaGlobalNameNode and: [
+				 node moduleIdentifier = self oldName ]) ifTrue: [
+				node moduleIdentifier: self newName ] ] ]
 ]
 
 { #category : #accessing }

@@ -18,6 +18,12 @@ ViennaCompositionNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock
 ]
 
 { #category : #accessing }
+ViennaCompositionNode >> isViennaCompositionNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaCompositionNode >> label [
 
 	^ 'Composition'

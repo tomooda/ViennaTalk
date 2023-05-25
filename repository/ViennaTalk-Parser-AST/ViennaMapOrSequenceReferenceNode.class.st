@@ -58,6 +58,12 @@ ViennaMapOrSequenceReferenceNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRigh
 ]
 
 { #category : #accessing }
+ViennaMapOrSequenceReferenceNode >> isViennaMapOrSequenceReferenceNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaMapOrSequenceReferenceNode >> label [
 
 	^ 'MapOrSequenceReference'

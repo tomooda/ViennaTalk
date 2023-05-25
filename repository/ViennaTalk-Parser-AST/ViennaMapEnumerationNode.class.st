@@ -5,16 +5,6 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'instance creation' }
-ViennaMapEnumerationNode class >> withAll: anArrayOfViennaMapletNode [
-
-	| map |
-	map := self new: anArrayOfViennaMapletNode size.
-	1 to: anArrayOfViennaMapletNode size do: [ :index |
-	map at: index put: (anArrayOfViennaMapletNode at: index) ].
-	^ map
-]
-
 { #category : #'pretty printing' }
 ViennaMapEnumerationNode >> formatWith: aViennaAbstractFormatter [
 
@@ -23,6 +13,12 @@ ViennaMapEnumerationNode >> formatWith: aViennaAbstractFormatter [
 	^ '{' , (aViennaAbstractFormatter
 		   formatEnumerate: elements
 		   ifEmpty: [ aViennaAbstractFormatter maplet ]) , '}'
+]
+
+{ #category : #accessing }
+ViennaMapEnumerationNode >> isViennaMapEnumerationNode [
+
+	^ true
 ]
 
 { #category : #accessing }

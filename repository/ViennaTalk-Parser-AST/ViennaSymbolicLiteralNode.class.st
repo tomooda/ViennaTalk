@@ -19,6 +19,12 @@ ViennaSymbolicLiteralNode >> formatWith: aViennaAbstractFormatter [
 	^ self string trim
 ]
 
+{ #category : #testing }
+ViennaSymbolicLiteralNode >> isViennaSymbolicLiteralNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaSymbolicLiteralNode >> label [
 

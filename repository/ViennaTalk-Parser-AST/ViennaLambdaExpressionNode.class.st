@@ -14,6 +14,17 @@ ViennaLambdaExpressionNode class >> typeBindList: aViennaTypeBindListNode expres
 		  yourself
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaLambdaExpressionNode >> definitionOfLocalName: aString [
+
+	self patternsDo: [ :pattern |
+		pattern
+			allDescendantsSuchThat: [ :node |
+			node isViennaPatternIdentifierNode: aString ]
+			do: [ :node | ^ node ] ].
+	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
+]
+
 { #category : #accessing }
 ViennaLambdaExpressionNode >> expression [
 
@@ -40,6 +51,12 @@ ViennaLambdaExpressionNode >> formatWith: aViennaAbstractFormatter [
 ]
 
 { #category : #accessing }
+ViennaLambdaExpressionNode >> isViennaLambdaExpressionNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaLambdaExpressionNode >> label [
 
 	^ 'LambdaExpression'
@@ -49,6 +66,12 @@ ViennaLambdaExpressionNode >> label [
 ViennaLambdaExpressionNode >> operatorPrecedence [
 
 	^ 10
+]
+
+{ #category : #enumerating }
+ViennaLambdaExpressionNode >> patternsDo: aBlock [
+
+	self typeBindList do: [ :typeBind | aBlock value: typeBind pattern ]
 ]
 
 { #category : #accessing }
@@ -61,4 +84,10 @@ ViennaLambdaExpressionNode >> typeBindList [
 ViennaLambdaExpressionNode >> typeBindList: aViennaTypeBindListNode [
 
 	self at: 1 put: aViennaTypeBindListNode
+]
+
+{ #category : #enumerating }
+ViennaLambdaExpressionNode >> typeBindsDo: aBlock [
+
+	self typeBindList do: aBlock
 ]

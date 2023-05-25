@@ -11,6 +11,12 @@ ViennaFloorNode >> formatOperatorWith: aViennaAbstractFormatter [
 	^ 'floor'
 ]
 
+{ #category : #testing }
+ViennaFloorNode >> isViennaFloorNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaFloorNode >> label [
 

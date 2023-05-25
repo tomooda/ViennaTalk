@@ -6,18 +6,16 @@ Class {
 
 { #category : #operations }
 ViennaInlineType >> check [
+
 	ast ifNil: [ ^ false ].
-	ast isTypeNode
-		ifFalse: [ ^ false ].
-	(ast label = 'LocalName' or: [ ast label = 'GlobalName' ])
-		ifTrue: [ ast := ast parent ].
-	^ ast label = 'TypeName'
-		and: [ ast first label = 'LocalName'
-				and: [ (ast definitionOfLocalName: ast first first)
-						ifNotNil: [ :node | 
-							node label = 'TypeDefinition'
-								ifTrue: [ node third isNil ]
-								ifFalse: [ false ] ] ] ]
+	ast isTypeNode ifFalse: [ ^ false ].
+	ast label isViennaNameNode ifTrue: [ ast := ast parent ].
+	^ ast label = 'TypeName' and: [
+		  ast first isViennaLocalNameNode and: [
+			  (ast definitionOfLocalName: ast first first) ifNotNil: [ :node |
+				  node label = 'TypeDefinition'
+					  ifTrue: [ node third isNil ]
+					  ifFalse: [ false ] ] ] ]
 ]
 
 { #category : #operations }

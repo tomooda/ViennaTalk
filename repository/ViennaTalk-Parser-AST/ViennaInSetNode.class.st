@@ -12,6 +12,12 @@ ViennaInSetNode >> formatOperatorWith: aViennaAbstractFormatter [
 ]
 
 { #category : #accessing }
+ViennaInSetNode >> isViennaInSetNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaInSetNode >> label [
 
 	^ 'InSet'

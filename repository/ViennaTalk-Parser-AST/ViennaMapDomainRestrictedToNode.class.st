@@ -18,6 +18,12 @@ ViennaMapDomainRestrictedToNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRight
 ]
 
 { #category : #accessing }
+ViennaMapDomainRestrictedToNode >> isViennaMapDomainRestrictedToNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaMapDomainRestrictedToNode >> label [
 
 	^ 'MapDomainRestrictedTo'

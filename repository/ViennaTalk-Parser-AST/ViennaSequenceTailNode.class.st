@@ -11,6 +11,12 @@ ViennaSequenceTailNode >> formatOperatorWith: aViennaAbstractFormatter [
 	^ 'tl'
 ]
 
+{ #category : #testing }
+ViennaSequenceTailNode >> isViennaSequenceTailNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaSequenceTailNode >> label [
 

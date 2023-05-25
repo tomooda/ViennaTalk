@@ -6,9 +6,10 @@ Class {
 
 { #category : #operations }
 ViennaUseValue >> execute [
+
 	^ self
-		replaceNode: ast
-		with: (ViennaNode label: 'LocalName' with: self identifier)
+		  replaceNode: ast
+		  with: (ViennaLocalNameNode identifier: self identifier)
 ]
 
 { #category : #accessing }

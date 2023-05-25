@@ -215,26 +215,17 @@ ViennaMove >> sourceModule: aViennaNode [
 
 { #category : #operations }
 ViennaMove >> updateName: aViennaNode [
-	aViennaNode = self definitionNode
-		ifTrue: [ ^ self ].
-	aViennaNode = newDefinitionNode
-		ifTrue: [ ^ self ].
-	(aViennaNode label = 'LocalName'
-		or: [ aViennaNode label = 'GlobalName' ])
-		ifTrue: [ ^ aViennaNode resolve
-				ifNotNil: [ :node | 
-					node == self definitionNode
-						ifTrue: [ ^ self
-								replaceNode: aViennaNode
-								with:
-									(self
-										nameForGlobalName:
-											(aViennaNode asGlobalName
-												at: 1 put: self destinationModule name;
-												yourself)
-										in: aViennaNode module) ] ] ].
-	aViennaNode
-		do: [ :node | 
-			node isViennaNode
-				ifTrue: [ self updateName: node ] ]
+
+	aViennaNode = self definitionNode ifTrue: [ ^ self ].
+	aViennaNode = newDefinitionNode ifTrue: [ ^ self ].
+	aViennaNode isViennaNameNode ifTrue: [
+		^ aViennaNode resolve ifNotNil: [ :node |
+			  node == self definitionNode ifTrue: [
+				  ^ self replaceNode: aViennaNode with: (self
+						     nameForGlobalName: (aViennaNode asGlobalName
+								      moduleIdentifier: self destinationModule name;
+								      yourself)
+						     in: aViennaNode module) ] ] ].
+	aViennaNode do: [ :node |
+		node isViennaNode ifTrue: [ self updateName: node ] ]
 ]

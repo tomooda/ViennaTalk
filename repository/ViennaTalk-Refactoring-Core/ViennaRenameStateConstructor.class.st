@@ -34,10 +34,9 @@ ViennaRenameStateConstructor >> findDefinitionNode [
 
 { #category : #accessing }
 ViennaRenameStateConstructor >> findOldName [
-	ast label = 'StateDefinition'
-		ifTrue: [ ^ ast first ].
-	ast label = 'LocalName'
-		ifTrue: [ ^ ast first ].
+
+	ast label = 'StateDefinition' ifTrue: [ ^ ast first ].
+	ast isViennaLocalNameNode ifTrue: [ ^ ast first ].
 	^ nil
 ]
 

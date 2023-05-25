@@ -11,6 +11,12 @@ ViennaFinitePowerSetNode >> formatOperatorWith: aViennaAbstractFormatter [
 	^ aViennaAbstractFormatter power
 ]
 
+{ #category : #testing }
+ViennaFinitePowerSetNode >> isViennaFinitePowerSetNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaFinitePowerSetNode >> label [
 

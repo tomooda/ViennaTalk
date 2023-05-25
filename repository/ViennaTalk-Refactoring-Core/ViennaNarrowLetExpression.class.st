@@ -5,8 +5,9 @@ Class {
 }
 
 { #category : #testing }
-ViennaNarrowLetExpression >> acceptsAstLabel: aString [
-	^ aString = 'LetExpression'
+ViennaNarrowLetExpression >> acceptsNode: aViennaNode [
+
+	^ aViennaNode isViennaLetExpressionNode
 ]
 
 { #category : #accessing }

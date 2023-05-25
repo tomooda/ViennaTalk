@@ -6,14 +6,13 @@ Class {
 
 { #category : #operations }
 ViennaExtractLocalDefinitionFromExpressionInLet >> check [
+
 	ast ifNil: [ ^ false ].
-	ast isViennaExpressionNode
-		ifFalse: [ ^ false ].
+	ast isViennaExpressionNode ifFalse: [ ^ false ].
 	self definitionNode ifNil: [ ^ false ].
-	(ast label = 'LocalName'
-		and: [ (ast definitionOfLocalName: ast first)
-				includesParent: self definitionNode ])
-		ifTrue: [ ^ false ].
+	(ast isViennaLocalNameNode and: [
+		 (ast definitionOfLocalName: ast identifier) includesParent:
+			 self definitionNode ]) ifTrue: [ ^ false ].
 	^ true
 ]
 
@@ -40,9 +39,8 @@ ViennaExtractLocalDefinitionFromExpressionInLet >> executeDefinition [
 
 { #category : #accessing }
 ViennaExtractLocalDefinitionFromExpressionInLet >> findDefinitionNode [
-	^ ast parent
-		parentLabelled: 'LetExpression'
-		ifAbsent: [ ast parent parentLabelled: 'LetStatement' ifAbsent: [ nil ] ]
+
+	^ ast detectParent: #isViennaLetNode ifNone: [ nil ]
 ]
 
 { #category : #accessing }

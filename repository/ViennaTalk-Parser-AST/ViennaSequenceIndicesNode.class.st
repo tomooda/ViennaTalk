@@ -11,6 +11,12 @@ ViennaSequenceIndicesNode >> formatOperatorWith: aViennaAbstractFormatter [
 	^ 'inds'
 ]
 
+{ #category : #testing }
+ViennaSequenceIndicesNode >> isViennaSequenceIndicesNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaSequenceIndicesNode >> label [
 

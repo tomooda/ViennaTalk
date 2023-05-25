@@ -2216,24 +2216,23 @@ ViennaVDMParser >> typeJudgement [
 
 { #category : #'parsers-types' }
 ViennaVDMParser >> typeName [
-	^ super typeName
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'TypeName'
-				start: start
-				end: end
-				with:
-					(array isString
-						ifTrue: [ ViennaNode
-								label: 'LocalName'
-								start: start
-								end: end
-								with: array ]
-						ifFalse: [ ViennaNode
-								label: 'GlobalName'
-								start: start
-								end: end
-								withAll: array ]) ]
+
+	^ super typeName =>> [ :start :end :array |
+	  ViennaNode
+		  label: 'TypeName'
+		  start: start
+		  end: end
+		  with: (array isString
+				   ifTrue: [
+					   (ViennaLocalNameNode identifier: array)
+						   start: start end: end;
+						   yourself ]
+				   ifFalse: [
+					   (ViennaGlobalNameNode
+						    moduleIdentifier: array first
+						    identifier: array second)
+						   start: start end: end;
+						   yourself ]) ]
 ]
 
 { #category : #'parsers-definitions' }

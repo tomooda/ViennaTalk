@@ -18,6 +18,12 @@ ViennaArithmeticRemNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlo
 ]
 
 { #category : #accessing }
+ViennaArithmeticRemNode >> isViennaArithmeticRemNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaArithmeticRemNode >> label [
 
 	^ 'ArithmeticRem'

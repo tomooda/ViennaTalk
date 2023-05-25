@@ -43,6 +43,12 @@ ViennaTypeJudgementNode >> formatWith: aViennaAbstractFormatter [
 	  , (aViennaAbstractFormatter indentString: type) , ')'
 ]
 
+{ #category : #testing }
+ViennaTypeJudgementNode >> isViennaTypeJudgementNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaTypeJudgementNode >> label [
 

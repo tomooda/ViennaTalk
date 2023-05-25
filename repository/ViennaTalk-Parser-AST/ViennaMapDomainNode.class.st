@@ -11,6 +11,12 @@ ViennaMapDomainNode >> formatOperatorWith: aViennaAbstractFormatter [
 	^ 'dom'
 ]
 
+{ #category : #testing }
+ViennaMapDomainNode >> isViennaMapDomainNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaMapDomainNode >> label [
 

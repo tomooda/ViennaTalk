@@ -18,6 +18,12 @@ ViennaArithmeticPlusNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBl
 ]
 
 { #category : #accessing }
+ViennaArithmeticPlusNode >> isViennaArithmeticPlusNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaArithmeticPlusNode >> label [
 
 	^ 'ArithmeticPlus'

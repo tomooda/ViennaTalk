@@ -12,6 +12,12 @@ ViennaGreaterThanOrEqualNode >> formatOperatorWith: aViennaAbstractFormatter [
 ]
 
 { #category : #accessing }
+ViennaGreaterThanOrEqualNode >> isViennaGreaterThanOrEqualNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaGreaterThanOrEqualNode >> label [
 
 	^ 'GreaterThanOrEqual'

@@ -41,6 +41,12 @@ ViennaIsNameExpressionNode >> formatWith: aViennaAbstractFormatter [
 ]
 
 { #category : #accessing }
+ViennaIsNameExpressionNode >> isViennaIsNameExpressionNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaIsNameExpressionNode >> label [
 
 	^ 'IsNameExpression'

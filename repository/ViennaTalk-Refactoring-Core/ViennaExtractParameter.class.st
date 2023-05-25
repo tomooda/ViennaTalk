@@ -42,10 +42,11 @@ ViennaExtractParameter >> executeDefinition [
 
 { #category : #operations }
 ViennaExtractParameter >> executeReplacement [
+
 	self newName ifNil: [ ^ nil ].
 	^ self
-		replaceNode: ast
-		with: (ViennaNode label: 'LocalName' with: self newName)
+		  replaceNode: ast
+		  with: (ViennaLocalNameNode identifier: self newName)
 ]
 
 { #category : #accessing }

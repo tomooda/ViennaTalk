@@ -6,6 +6,7 @@ Class {
 
 { #category : #operations }
 ViennaRemoveOperation >> check [
+
 	| moduleName shortName |
 	ast ifNil: [ ^ false ].
 	self definitionNode ifNil: [ ^ false ].
@@ -14,29 +15,21 @@ ViennaRemoveOperation >> check [
 	(self hasFreeOccurrencesOf: shortName in: self definitionNode module)
 		ifTrue: [ ^ false ].
 	(self
-		hasFreeOccurrencesOf: 'pre_' , shortName
-		in: self definitionNode module)
-		ifTrue: [ ^ false ].
+		 hasFreeOccurrencesOf: 'pre_' , shortName
+		 in: self definitionNode module) ifTrue: [ ^ false ].
 	(self
-		hasFreeOccurrencesOf: 'post' , shortName
-		in: self definitionNode module)
-		ifTrue: [ ^ false ].
-	ast document
-		allDescendantsDo: [ :node | 
-			(node label = 'GlobalName'
-				and: [ node first = moduleName and: [ node second = shortName ] ])
-				ifTrue: [ ^ false ] ].
-	ast
-		modulesDo: [ :module | 
-			module second first
-				ifNotNil: [ :importDefinitionList | 
-					importDefinitionList
-						do: [ :importDefinition | 
-							importDefinition first = moduleName
-								ifTrue: [ importDefinition
-										allDescendantsDo: [ :node | 
-											(node label = 'OperationImport' and: [ node first = shortName ])
-												ifTrue: [ ^ false ] ] ] ] ] ].
+		 hasFreeOccurrencesOf: 'post' , shortName
+		 in: self definitionNode module) ifTrue: [ ^ false ].
+	ast document allDescendantsDo: [ :node |
+		(node isViennaGlobalNameNode: moduleName identifier: shortName)
+			ifTrue: [ ^ false ] ].
+	ast modulesDo: [ :module |
+		module second first ifNotNil: [ :importDefinitionList |
+			importDefinitionList do: [ :importDefinition |
+				importDefinition first = moduleName ifTrue: [
+					importDefinition allDescendantsDo: [ :node |
+						(node label = 'OperationImport' and: [ node first = shortName ])
+							ifTrue: [ ^ false ] ] ] ] ] ].
 	^ true
 ]
 

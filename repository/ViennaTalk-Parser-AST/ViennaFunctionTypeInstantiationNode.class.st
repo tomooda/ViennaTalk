@@ -54,6 +54,12 @@ ViennaFunctionTypeInstantiationNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesR
 ]
 
 { #category : #accessing }
+ViennaFunctionTypeInstantiationNode >> isViennaFunctionTypeInstantiationNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaFunctionTypeInstantiationNode >> label [
 
 	^ 'FunctionTypeInstantiation'

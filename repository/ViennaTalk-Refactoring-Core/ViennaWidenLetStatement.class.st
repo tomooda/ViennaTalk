@@ -5,13 +5,23 @@ Class {
 }
 
 { #category : #testing }
-ViennaWidenLetStatement >> acceptsAstLabel: aString [
-	^ aString = 'LetStatement'
-]
-
-{ #category : #testing }
 ViennaWidenLetStatement >> acceptsDefinitionNode: aViennaNode [
 	^ aViennaNode isStatementNode
+]
+
+{ #category : #operations }
+ViennaWidenLetStatement >> acceptsNode: aViennaNode [
+
+	^ aViennaNode label = 'LetExpressionStatement'
+]
+
+{ #category : #operations }
+ViennaWidenLetStatement >> check [
+
+	ast ifNil: [ ^ false ].
+	ast label = 'LetExpressionStatement' ifFalse: [ ^ false ].
+	self definitionNode ifNil: [ ^ false ].
+	^ true
 ]
 
 { #category : #accessing }

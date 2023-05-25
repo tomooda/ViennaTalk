@@ -26,6 +26,15 @@ ViennaIotaExpressionNode >> bind: aViennaBindNode [
 	self at: 1 put: aViennaBindNode
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaIotaExpressionNode >> definitionOfLocalName: aString [
+
+	self pattern
+		allDescendantsSuchThat: [ :n | n isViennaPatternIdentifierNode: aString ]
+		do: [ :n | ^ n ].
+	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
+]
+
 { #category : #accessing }
 ViennaIotaExpressionNode >> expression [
 
@@ -51,6 +60,12 @@ ViennaIotaExpressionNode >> formatWith: aViennaAbstractFormatter [
 ]
 
 { #category : #accessing }
+ViennaIotaExpressionNode >> isViennaIotaExpressionNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaIotaExpressionNode >> label [
 
 	^ 'IotaExpression'
@@ -60,4 +75,10 @@ ViennaIotaExpressionNode >> label [
 ViennaIotaExpressionNode >> operatorPrecedence [
 
 	^ 30
+]
+
+{ #category : #accessing }
+ViennaIotaExpressionNode >> pattern [
+
+	^ self bind pattern
 ]

@@ -17,6 +17,12 @@ ViennaSequenceConcatenateNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo
 	^ aBlock1 value
 ]
 
+{ #category : #testing }
+ViennaSequenceConcatenateNode >> isViennaSequenceConcatenateNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaSequenceConcatenateNode >> label [
 

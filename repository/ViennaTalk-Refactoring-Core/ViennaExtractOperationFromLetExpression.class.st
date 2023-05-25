@@ -13,28 +13,20 @@ ViennaExtractOperationFromLetExpression >> arguments [
 
 { #category : #operations }
 ViennaExtractOperationFromLetExpression >> check [
+
 	| params |
-	ast label = 'LetExpression'
-		ifFalse: [ ^ false ].
+	ast isViennaLetExpressionNode ifFalse: [ ^ false ].
 	params := Set new: ast first size * 2.
-	ast first
-		do: [ :localDef | 
-			localDef first label = 'FunctionDefinition'
-				ifTrue: [ ^ false ].
-			localDef first first
-				allDescendantsDo: [ :node | 
-					node label = 'PatternIdentifier'
-						ifTrue: [ params add: node first ] ] ].
-	ast first
-		do: [ :localDef | 
-			localDef first third
-				allDescendantsDo: [ :node | 
-					(node label = 'LocalName' and: [ params includes: node first ])
-						ifTrue: [ ^ false ] ] ].
-	ast second
-		variableExpressionNodesDo: [ :node | 
-			node isStateVariableNameNode
-				ifFalse: [ ^ false ] ].
+	ast first do: [ :localDef |
+		localDef first label = 'FunctionDefinition' ifTrue: [ ^ false ].
+		localDef first first allDescendantsDo: [ :node |
+			node label = 'PatternIdentifier' ifTrue: [ params add: node first ] ] ].
+	ast first do: [ :localDef |
+		localDef first third allDescendantsDo: [ :node |
+			(node isViennaLocalNameNode and: [
+				 params includes: node identifier ]) ifTrue: [ ^ false ] ] ].
+	ast second variableExpressionNodesDo: [ :node |
+		node isStateVariableNameNode ifFalse: [ ^ false ] ].
 	^ true
 ]
 
@@ -56,7 +48,7 @@ ViennaExtractOperationFromLetExpression >> execute [
 		moduleBody add:
 			(ViennaNode label: 'DefinitionBlock' with: operationDefinitions) ].
 	self replaceNode: ast with: (ViennaApplyNode
-			 expression: (ViennaNode label: 'LocalName' with: self newName)
+			 expression: (ViennaLocalNameNode identifier: self newName)
 			 argumentExpressionList: self arguments).
 	explicitOperationDefinition := ViennaNode
 		                               label: 'ExplicitOperationDefinition'

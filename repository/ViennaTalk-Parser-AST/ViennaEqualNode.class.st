@@ -12,6 +12,12 @@ ViennaEqualNode >> formatOperatorWith: aViennaAbstractFormatter [
 ]
 
 { #category : #accessing }
+ViennaEqualNode >> isViennaEqualNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaEqualNode >> label [
 
 	^ 'Equal'

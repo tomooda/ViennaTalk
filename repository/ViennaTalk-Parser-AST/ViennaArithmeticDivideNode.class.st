@@ -17,6 +17,12 @@ ViennaArithmeticDivideNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: a
 	^ aBlock1 value
 ]
 
+{ #category : #testing }
+ViennaArithmeticDivideNode >> isViennaArithmeticDivideNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaArithmeticDivideNode >> label [
 

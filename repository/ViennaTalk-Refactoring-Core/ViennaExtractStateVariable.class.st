@@ -16,57 +16,59 @@ ViennaExtractStateVariable >> check [
 
 { #category : #operations }
 ViennaExtractStateVariable >> execute [
+
 	| moduleBody stateDefinition fieldList initializer |
 	self newName ifNil: [ ^ nil ].
 	moduleBody := ast module third.
 	stateDefinition := (moduleBody
-		detect: [ :definitionBlock | 
-			definitionBlock isViennaNode
-				and: [ definitionBlock first isViennaNode
-						and: [ definitionBlock first label = 'StateDefinition' ] ] ]
-		ifNone: [ nil ]) ifNotNil: #first.
+		                    detect: [ :definitionBlock |
+			                    definitionBlock isViennaNode and: [
+				                    definitionBlock first isViennaNode and: [
+					                    definitionBlock first label
+					                    = 'StateDefinition' ] ] ]
+		                    ifNone: [ nil ]) ifNotNil: #first.
 	self
 		replaceNode: ast
-		with: (ViennaNode label: 'LocalName' with: self newName).
-	stateDefinition
-		ifNil: [ stateDefinition := ViennaNode
-				label: 'StateDefinition'
-				with: 'State'
-				with: (ViennaNode label: 'FieldList')
-				with: nil
-				with:
-					(ViennaNode
-						label: 'Initialisation'
-						with:
-							(ViennaNode
-								label: 'InvariantInitialFunction'
-								with: (ViennaNode label: 'PatternIdentifier' with: 's')
-								with:
-									(ViennaNode
-										label: 'Equal'
-										with: (ViennaNode label: 'LocalName' with: 's')
-										with:
-											(ViennaNode
-												label: 'RecordConstructor'
-												with: (ViennaNode label: 'LocalName' with: 'State')
-												with: (ViennaNode label: 'ExpressionList'))))).
-			moduleBody
-				add: (ViennaNode label: 'DefinitionBlock' with: stateDefinition) ].
+		with: (ViennaLocalNameNode identifier: self newName).
+	stateDefinition ifNil: [
+		stateDefinition := ViennaNode
+			                   label: 'StateDefinition'
+			                   with: 'State'
+			                   with: (ViennaNode label: 'FieldList')
+			                   with: nil
+			                   with:
+				                   (ViennaNode
+					                    label: 'Initialisation'
+					                    with: (ViennaNode
+							                     label: 'InvariantInitialFunction'
+							                     with:
+							                     (ViennaNode
+								                      label: 'PatternIdentifier'
+								                      with: 's')
+							                     with: (ViennaEqualNode
+									                      expression:
+									                      (ViennaLocalNameNode identifier: 's')
+									                      expression:
+										                      (ViennaRecordConstructorNode
+											                       name:
+											                       (ViennaLocalNameNode identifier:
+												                        'State')
+											                       expressionList:
+											                       (ViennaNode label: 'ExpressionList'))))).
+		moduleBody add:
+			(ViennaNode label: 'DefinitionBlock' with: stateDefinition) ].
 	fieldList := stateDefinition second.
-	fieldList
-		add:
-			(ViennaNode
-				label: 'Field'
-				with: self newName
-				with: false
-				with: (ViennaNode label: 'BasicType' with: 'any')).
+	fieldList add: (ViennaNode
+			 label: 'Field'
+			 with: self newName
+			 with: false
+			 with: (ViennaNode label: 'BasicType' with: 'any')).
 	initializer := stateDefinition fourth first second second second.
 	initializer add: ast.
-	stateDefinition third
-		ifNotNil: [ :invariant | 
-			invariant first first label = 'RecordPattern'
-				ifTrue: [ invariant first first second
-						add: (ViennaNode label: 'PatternIdentifier' with: nil) ] ].
+	stateDefinition third ifNotNil: [ :invariant |
+		invariant first first label = 'RecordPattern' ifTrue: [
+			invariant first first second add:
+				(ViennaNode label: 'PatternIdentifier' with: nil) ] ].
 	^ stateDefinition
 ]
 

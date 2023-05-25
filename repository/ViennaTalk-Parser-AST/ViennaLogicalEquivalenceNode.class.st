@@ -12,6 +12,12 @@ ViennaLogicalEquivalenceNode >> formatOperatorWith: aViennaAbstractFormatter [
 ]
 
 { #category : #accessing }
+ViennaLogicalEquivalenceNode >> isViennaLogicalEquivalenceNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaLogicalEquivalenceNode >> label [
 
 	^ 'LogicalEquivalence'

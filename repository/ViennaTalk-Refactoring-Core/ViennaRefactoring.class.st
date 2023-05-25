@@ -213,14 +213,13 @@ ViennaRefactoring >> enclosingScopeNodeLabels [
 
 { #category : #'visiting-interface' }
 ViennaRefactoring >> ensureExport: aViennaNode [
-	aViennaNode label = 'GlobalName'
-		ifTrue: [ ^ aViennaNode ].
-	(aViennaNode label = 'LocalName'
-		and: [ aViennaNode resolve module == aViennaNode module ])
-		ifTrue: [ ^ self ensureExport: aViennaNode resolve ].
-	aViennaNode asExportSignature
-		ifNotNil:
-			[ :signature | self ensureExportSignature: signature in: aViennaNode module ].
+
+	aViennaNode isViennaGlobalNameNode ifTrue: [ ^ aViennaNode ].
+	(aViennaNode isViennaLocalNameNode and: [
+		 aViennaNode resolve module == aViennaNode module ]) ifTrue: [
+		^ self ensureExport: aViennaNode resolve ].
+	aViennaNode asExportSignature ifNotNil: [ :signature |
+		self ensureExportSignature: signature in: aViennaNode module ].
 	^ nil
 ]
 
@@ -309,94 +308,75 @@ ViennaRefactoring >> execute [
 
 { #category : #'visiting-pattern matching' }
 ViennaRefactoring >> expressionFromPattern: aViennaNode bindings: aDictionary [
-	aViennaNode label = 'PatternIdentifier'
-		ifTrue: [ ^ aDictionary
-				at: aViennaNode name
-				ifPresent: [ :node | node copyFragment ]
-				ifAbsent: [ ViennaNode label: 'LocalName' with: aViennaNode name ] ].
-	aViennaNode label = 'MapEnumerationPattern'
-		ifTrue: [ ^ ViennaNode
-				label: 'MapEnumeration'
-				withAll:
-					(aViennaNode asArray
-						collect: [ :node | 
-							node isViennaNode
-								ifTrue: [ self expressionFromPattern: node bindings: aDictionary ]
-								ifFalse: [ node ] ]) ].
-	aViennaNode label = 'MapMunionPattern'
-		ifTrue: [ ^ ViennaNode
-				label: 'MapMerge'
-				withAll:
-					(aViennaNode asArray
-						collect: [ :node | 
-							node isViennaNode
-								ifTrue: [ self expressionFromPattern: node bindings: aDictionary ]
-								ifFalse: [ node ] ]) ].
-	aViennaNode label = 'MapletPattern'
-		ifTrue: [ ^ ViennaNode
-				label: 'Maplet'
-				withAll:
-					(aViennaNode asArray
-						collect: [ :node | 
-							node isViennaNode
-								ifTrue: [ self expressionFromPattern: node bindings: aDictionary ]
-								ifFalse: [ node ] ]) ].
-	aViennaNode label = 'MatchValue'
-		ifTrue: [ ^ aViennaNode first ].
-	aViennaNode label = 'RecordPattern'
-		ifTrue: [ ^ ViennaNode
-				label: 'RecordConstructor'
-				withAll:
-					(aViennaNode asArray
-						collect: [ :node | 
-							node isViennaNode
-								ifTrue: [ self expressionFromPattern: node bindings: aDictionary ]
-								ifFalse: [ node ] ]) ].
-	aViennaNode label = 'SeqConcPattern'
-		ifTrue: [ ^ ViennaNode
-				label: 'SequenceConcatenate'
-				withAll:
-					(aViennaNode asArray
-						collect: [ :node | 
-							node isViennaNode
-								ifTrue: [ self expressionFromPattern: node bindings: aDictionary ]
-								ifFalse: [ node ] ]) ].
-	aViennaNode label = 'SeqEnumPattern'
-		ifTrue: [ ^ ViennaNode
-				label: 'SequenceEnumeration'
-				withAll:
-					(aViennaNode asArray
-						collect: [ :node | 
-							node isViennaNode
-								ifTrue: [ self expressionFromPattern: node bindings: aDictionary ]
-								ifFalse: [ node ] ]) ].
-	aViennaNode label = 'SetEnumPattern'
-		ifTrue: [ ^ ViennaNode
-				label: 'SetEnumeration'
-				withAll:
-					(aViennaNode asArray
-						collect: [ :node | 
-							node isViennaNode
-								ifTrue: [ self expressionFromPattern: node bindings: aDictionary ]
-								ifFalse: [ node ] ]) ].
-	aViennaNode label = 'SetUnionPattern'
-		ifTrue: [ ^ ViennaNode
-				label: 'SetUnion'
-				withAll:
-					(aViennaNode asArray
-						collect: [ :node | 
-							node isViennaNode
-								ifTrue: [ self expressionFromPattern: node bindings: aDictionary ]
-								ifFalse: [ node ] ]) ].
-	aViennaNode label = 'TuplePattern'
-		ifTrue: [ ^ ViennaNode
-				label: 'TupleConstructor'
-				withAll:
-					(aViennaNode asArray
-						collect: [ :node | 
-							node isViennaNode
-								ifTrue: [ self expressionFromPattern: node bindings: aDictionary ]
-								ifFalse: [ node ] ]) ].
+
+	aViennaNode label = 'PatternIdentifier' ifTrue: [
+		^ aDictionary
+			  at: aViennaNode name
+			  ifPresent: [ :node | node copyFragment ]
+			  ifAbsent: [ ViennaLocalNameNode identifier: aViennaNode name ] ].
+	aViennaNode label = 'MapEnumerationPattern' ifTrue: [
+		^ ViennaMapEnumerationNode withAll:
+			  (aViennaNode asArray collect: [ :node |
+				   node isViennaNode
+					   ifTrue: [
+					   self expressionFromPattern: node bindings: aDictionary ]
+					   ifFalse: [ node ] ]) ].
+	aViennaNode label = 'MapMunionPattern' ifTrue: [
+		^ ViennaMapMergeNode withAll:
+			  (aViennaNode asArray collect: [ :node |
+				   node isViennaNode
+					   ifTrue: [
+					   self expressionFromPattern: node bindings: aDictionary ]
+					   ifFalse: [ node ] ]) ].
+	aViennaNode label = 'MapletPattern' ifTrue: [
+		^ ViennaMapletNode withAll: (aViennaNode asArray collect: [ :node |
+				   node isViennaNode
+					   ifTrue: [
+					   self expressionFromPattern: node bindings: aDictionary ]
+					   ifFalse: [ node ] ]) ].
+	aViennaNode label = 'MatchValue' ifTrue: [ ^ aViennaNode first ].
+	aViennaNode label = 'RecordPattern' ifTrue: [
+		^ ViennaRecordConstructorNode withAll:
+			  (aViennaNode asArray collect: [ :node |
+				   node isViennaNode
+					   ifTrue: [
+					   self expressionFromPattern: node bindings: aDictionary ]
+					   ifFalse: [ node ] ]) ].
+	aViennaNode label = 'SeqConcPattern' ifTrue: [
+		^ ViennaSequenceConcatenateNode withAll:
+			  (aViennaNode asArray collect: [ :node |
+				   node isViennaNode
+					   ifTrue: [
+					   self expressionFromPattern: node bindings: aDictionary ]
+					   ifFalse: [ node ] ]) ].
+	aViennaNode label = 'SeqEnumPattern' ifTrue: [
+		^ ViennaSequenceEnumerationNode withAll:
+			  (aViennaNode asArray collect: [ :node |
+				   node isViennaNode
+					   ifTrue: [
+					   self expressionFromPattern: node bindings: aDictionary ]
+					   ifFalse: [ node ] ]) ].
+	aViennaNode label = 'SetEnumPattern' ifTrue: [
+		^ ViennaSetEnumerationNode withAll:
+			  (aViennaNode asArray collect: [ :node |
+				   node isViennaNode
+					   ifTrue: [
+					   self expressionFromPattern: node bindings: aDictionary ]
+					   ifFalse: [ node ] ]) ].
+	aViennaNode label = 'SetUnionPattern' ifTrue: [
+		^ ViennaSetUnionNode withAll:
+			  (aViennaNode asArray collect: [ :node |
+				   node isViennaNode
+					   ifTrue: [
+					   self expressionFromPattern: node bindings: aDictionary ]
+					   ifFalse: [ node ] ]) ].
+	aViennaNode label = 'TuplePattern' ifTrue: [
+		^ ViennaTupleConstructorNode withAll:
+			  (aViennaNode asArray collect: [ :node |
+				   node isViennaNode
+					   ifTrue: [
+					   self expressionFromPattern: node bindings: aDictionary ]
+					   ifFalse: [ node ] ]) ].
 	^ self error: 'Unknown pattern syntax'
 ]
 
@@ -967,53 +947,50 @@ ViennaRefactoring >> localScopeBySetForLoop: aViennaNode do: aBlock [
 
 { #category : #'visiting-pattern matching' }
 ViennaRefactoring >> match: aViennaNode with: anotherViennaNode bindings: aDictionary [
-	(aViennaNode sameAs: anotherViennaNode)
-		ifTrue: [ ^ true ].
-	aViennaNode label = 'LocalName'
-		ifTrue: [ ^ aDictionary
-				at: aViennaNode name
-				ifPresent: [ :node | 
-					node
-						ifNil:
-							[ aDictionary at: aViennaNode name put: anotherViennaNode copyFragment.
-							true ]
-						ifNotNil: [ anotherViennaNode sameAs: node ] ]
-				ifAbsent: [ false ] ].
-	aViennaNode label = anotherViennaNode label
-		ifFalse: [ ^ false ].
-	aViennaNode size = anotherViennaNode size
-		ifFalse: [ ^ false ].
-	^ (1 to: aViennaNode size)
-		allSatisfy: [ :index | 
-			| node1 node2 |
-			node1 := aViennaNode at: index.
-			node2 := anotherViennaNode at: index.
-			node1 isViennaNode
-				ifTrue: [ node2 isViennaNode
-						and: [ self match: node1 with: node2 bindings: aDictionary ] ]
-				ifFalse: [ node1 = node2 ] ]
+
+	(aViennaNode sameAs: anotherViennaNode) ifTrue: [ ^ true ].
+	aViennaNode isViennaLocalNameNode ifTrue: [
+		^ aDictionary
+			  at: aViennaNode identifier
+			  ifPresent: [ :node |
+				  node
+					  ifNil: [
+						  aDictionary
+							  at: aViennaNode identifier
+							  put: anotherViennaNode copyFragment.
+						  true ]
+					  ifNotNil: [ anotherViennaNode sameAs: node ] ]
+			  ifAbsent: [ false ] ].
+	aViennaNode label = anotherViennaNode label ifFalse: [ ^ false ].
+	aViennaNode size = anotherViennaNode size ifFalse: [ ^ false ].
+	^ (1 to: aViennaNode size) allSatisfy: [ :index |
+		  | node1 node2 |
+		  node1 := aViennaNode at: index.
+		  node2 := anotherViennaNode at: index.
+		  node1 isViennaNode
+			  ifTrue: [
+				  node2 isViennaNode and: [
+					  self match: node1 with: node2 bindings: aDictionary ] ]
+			  ifFalse: [ node1 = node2 ] ]
 ]
 
 { #category : #'visiting-interface' }
 ViennaRefactoring >> migrate: aViennaNode into: moduleNode [
-	aViennaNode module == moduleNode
-		ifTrue: [ ^ aViennaNode ].
-	aViennaNode label = 'LocalName'
-		ifTrue: [ aViennaNode asGlobalName
-				ifNotNil: [ :globalName | 
-					self ensureImport: globalName resolve in: moduleNode.
-					^ self
-						replaceNode: aViennaNode
-						with: (self nameForGlobalName: globalName in: moduleNode) ] ].
-	aViennaNode label = 'GlobalName'
-		ifTrue: [ self ensureImport: aViennaNode resolve in: moduleNode.
+
+	aViennaNode module == moduleNode ifTrue: [ ^ aViennaNode ].
+	aViennaNode isViennaLocalNameNode ifTrue: [
+		aViennaNode asGlobalName ifNotNil: [ :globalName |
+			self ensureImport: globalName resolve in: moduleNode.
 			^ self
-				replaceNode: aViennaNode
-				with: (self nameForGlobalName: aViennaNode in: moduleNode) ].
-	aViennaNode
-		do: [ :node | 
-			node isViennaNode
-				ifTrue: [ self migrate: node into: moduleNode ] ].
+				  replaceNode: aViennaNode
+				  with: (self nameForGlobalName: globalName in: moduleNode) ] ].
+	aViennaNode isViennaGlobalNameNode ifTrue: [
+		self ensureImport: aViennaNode resolve in: moduleNode.
+		^ self
+			  replaceNode: aViennaNode
+			  with: (self nameForGlobalName: aViennaNode in: moduleNode) ].
+	aViennaNode do: [ :node |
+		node isViennaNode ifTrue: [ self migrate: node into: moduleNode ] ].
 	^ aViennaNode
 ]
 
@@ -1024,26 +1001,25 @@ ViennaRefactoring >> name [
 
 { #category : #'visiting-interface' }
 ViennaRefactoring >> nameForGlobalName: globalNameNode in: moduleNode [
-	globalNameNode first = moduleNode name
-		ifTrue: [ ^ (ViennaNode label: 'LocalName' with: globalNameNode second)
-				parent: globalNameNode parent;
-				yourself ].
+
+	globalNameNode first = moduleNode name ifTrue: [
+		^ (ViennaLocalNameNode identifier: globalNameNode identifier)
+			  parent: globalNameNode parent;
+			  yourself ].
 	moduleNode
 		importsFrom: globalNameNode first
-		do: [ :importModuleSignature | 
-			importModuleSignature label = 'ImportModuleSignatureAll'
-				ifTrue: [ ^ globalNameNode copyFragment ].
-			importModuleSignature
-				do: [ :importSignature | 
-					importSignature
-						do: [ :import | 
-							import name = globalNameNode second
-								ifTrue: [ ^ import last
-										ifNotNil: [ :name | 
-											name copyFragment
-												parent: globalNameNode parent;
-												yourself ]
-										ifNil: [ ^ globalNameNode copyFragment ] ] ] ] ].
+		do: [ :importModuleSignature |
+			importModuleSignature label = 'ImportModuleSignatureAll' ifTrue: [
+				^ globalNameNode copyFragment ].
+			importModuleSignature do: [ :importSignature |
+				importSignature do: [ :import |
+					import name = globalNameNode second ifTrue: [
+						^ import last
+							  ifNotNil: [ :name |
+								  name copyFragment
+									  parent: globalNameNode parent;
+									  yourself ]
+							  ifNil: [ ^ globalNameNode copyFragment ] ] ] ] ].
 	^ nil
 ]
 
@@ -1076,14 +1052,13 @@ ViennaRefactoring >> replaceNode: aViennaNode with: anotherViennaNode [
 
 { #category : #'visiting-interface' }
 ViennaRefactoring >> retractExport: aViennaNode [
-	aViennaNode label = 'GlobalName'
-		ifTrue: [ ^ aViennaNode ].
-	(aViennaNode label = 'LocalName'
-		and: [ aViennaNode resolve module == aViennaNode module ])
-		ifTrue: [ ^ self retractExport: aViennaNode resolve ].
-	aViennaNode asExportSignature
-		ifNotNil:
-			[ :signature | self retractExportSignature: signature in: aViennaNode module ].
+
+	aViennaNode isViennaGlobalNameNode ifTrue: [ ^ aViennaNode ].
+	(aViennaNode isViennaLocalNameNode and: [
+		 aViennaNode resolve module == aViennaNode module ]) ifTrue: [
+		^ self retractExport: aViennaNode resolve ].
+	aViennaNode asExportSignature ifNotNil: [ :signature |
+		self retractExportSignature: signature in: aViennaNode module ].
 	^ nil
 ]
 
@@ -1127,14 +1102,13 @@ ViennaRefactoring >> retractExportSignature: aViennaNode in: moduleNode [
 
 { #category : #'visiting-interface' }
 ViennaRefactoring >> retractImport: aViennaNode in: moduleNode [
-	aViennaNode label = 'GlobalName'
-		ifTrue: [ ^ aViennaNode ].
-	(aViennaNode label = 'LocalName'
-		and: [ aViennaNode resolve module == aViennaNode module ])
-		ifTrue: [ ^ self retractImport: aViennaNode resolve in: moduleNode ].
-	(aViennaNode asImportDefinitionIn: moduleNode)
-		ifNotNil:
-			[ :signature | self retractImportDefinition: signature in: moduleNode ].
+
+	aViennaNode isViennaGlobalNameNode ifTrue: [ ^ aViennaNode ].
+	(aViennaNode isViennaLocalNameNode and: [
+		 aViennaNode resolve module == aViennaNode module ]) ifTrue: [
+		^ self retractImport: aViennaNode resolve in: moduleNode ].
+	(aViennaNode asImportDefinitionIn: moduleNode) ifNotNil: [ :signature |
+		self retractImportDefinition: signature in: moduleNode ].
 	^ nil
 ]
 

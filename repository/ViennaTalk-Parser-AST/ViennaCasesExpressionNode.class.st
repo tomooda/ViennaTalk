@@ -54,6 +54,12 @@ ViennaCasesExpressionNode >> formatWith: aViennaAbstractFormatter [
 		  , String cr , 'end'
 ]
 
+{ #category : #testing }
+ViennaCasesExpressionNode >> isViennaCasesExpressionNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaCasesExpressionNode >> label [
 

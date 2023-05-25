@@ -1024,11 +1024,12 @@ ViennaAbstractFormatter >> mapletPattern: aViennaNode [
 
 { #category : #'formatting-patterns and binds' }
 ViennaAbstractFormatter >> matchValue: aViennaNode [
+
 	| value |
 	value := self format: aViennaNode first.
-	^ aViennaNode first label = 'SymbolicLiteral'
-		ifTrue: [ value ]
-		ifFalse: [ '(' , value , ')' ]
+	^ aViennaNode first isViennaSymbolicLiteralNode
+		  ifTrue: [ value ]
+		  ifFalse: [ '(' , value , ')' ]
 ]
 
 { #category : #accessing }

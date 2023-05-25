@@ -38,36 +38,31 @@ ViennaInlineApplyFunction >> definitionNode: aViennaNode [
 
 { #category : #operations }
 ViennaInlineApplyFunction >> execute [
+
 	self definitionNode ifNil: [ ^ nil ].
-	self
-		replaceNode: self callerNode
-		with:
-			(ViennaNode
-				label: 'LetExpression'
-				with:
-					(ViennaNode
-						label: 'LocalDefinitionList'
-						withAll:
-							((1 to: self callerNode second size)
-								collect: [ :index | 
-									| param type arg |
-									param := (self definitionNode fifth first at: index)
-										copyFragment.
-									type := self callerNode second size = 1
-										ifTrue: [ self definitionNode third first ]
-										ifFalse: [ self definitionNode third first label = 'ProductType'
-												ifTrue: [ self definitionNode third first at: index ]
-												ifFalse: [ nil ] ].
-									arg := (self callerNode second at: index) copyFragment.
-									ViennaNode
-										label: 'LocalDefinition'
-										with:
-											(ViennaNode
-												label: 'ValueDefinition'
-												with: param
-												with: type
-												with: arg) ]))
-				with: self definitionNode sixth)
+	self replaceNode: self callerNode with: (ViennaLetExpressionNode
+			 localDefinitionList: (ViennaNode
+					  label: 'LocalDefinitionList'
+					  withAll:
+						  ((1 to: self callerNode second size) collect: [ :index |
+							   | param type arg |
+							   param := (self definitionNode fifth first at: index)
+								            copyFragment.
+							   type := self callerNode second size = 1
+								           ifTrue: [ self definitionNode third first ]
+								           ifFalse: [
+									           self definitionNode third first label
+									           = 'ProductType'
+										           ifTrue: [
+										           self definitionNode third first at: index ]
+										           ifFalse: [ nil ] ].
+							   arg := (self callerNode second at: index) copyFragment.
+							   ViennaNode label: 'LocalDefinition' with: (ViennaNode
+									    label: 'ValueDefinition'
+									    with: param
+									    with: type
+									    with: arg) ]))
+			 expression: self definitionNode sixth)
 ]
 
 { #category : #accessing }
@@ -76,9 +71,9 @@ ViennaInlineApplyFunction >> findCallerNode [
 	| node |
 	node := ast.
 	node ifNil: [ ^ nil ].
-	node label = 'LocalName' ifTrue: [ node := node parent ].
-	node label = 'GlobalName' ifTrue: [ node := node parent ].
-	node label = 'FunctionTypeInstantiation' ifTrue: [
+	node isViennaLocalNameNode ifTrue: [ node := node parent ].
+	node isViennaGlobalNameNode ifTrue: [ node := node parent ].
+	node isViennaFunctionTypeInstantiationNode ifTrue: [
 		node := node parent ].
 	node isViennaApplyNode ifTrue: [ ^ node ].
 	^ nil
@@ -86,23 +81,21 @@ ViennaInlineApplyFunction >> findCallerNode [
 
 { #category : #accessing }
 ViennaInlineApplyFunction >> findDefinitionNode [
+
 	self callerNode ifNil: [ ^ nil ].
-	self callerNode first
-		ifNotNil: [ :nameNode | 
-			nameNode label = 'LocalName'
-				ifTrue: [ ^ (nameNode resolveLocalName: nameNode first)
-						ifNotNil: [ :defNode | 
-							defNode label = 'ExplicitFunctionDefinition'
-								ifTrue: [ defNode ]
-								ifFalse: [ nil ] ] ].
-			nameNode label = 'GlobalName'
-				ifTrue: [ ^ (nameNode moduleNamed: nameNode first)
-						ifNotNil: [ :moduleNode | 
-							(moduleNode resolveLocalName: nameNode second)
-								ifNotNil: [ :defNode | 
-									defNode label = 'ExplicitFunctionDefinition'
-										ifTrue: [ defNode ]
-										ifFalse: [ nil ] ] ] ] ].
+	self callerNode first ifNotNil: [ :nameNode |
+		nameNode isViennaLocalNameNode ifTrue: [
+			^ (nameNode resolveLocalName: nameNode first) ifNotNil: [ :defNode |
+				  defNode label = 'ExplicitFunctionDefinition'
+					  ifTrue: [ defNode ]
+					  ifFalse: [ nil ] ] ].
+		nameNode isViennaGlobalNameNode ifTrue: [
+			^ (nameNode moduleNamed: nameNode first) ifNotNil: [ :moduleNode |
+				  (moduleNode resolveLocalName: nameNode second) ifNotNil: [
+					  :defNode |
+					  defNode label = 'ExplicitFunctionDefinition'
+						  ifTrue: [ defNode ]
+						  ifFalse: [ nil ] ] ] ] ].
 	^ nil
 ]
 

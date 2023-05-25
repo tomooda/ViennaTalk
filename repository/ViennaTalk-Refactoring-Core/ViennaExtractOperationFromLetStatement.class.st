@@ -13,74 +13,62 @@ ViennaExtractOperationFromLetStatement >> arguments [
 
 { #category : #operations }
 ViennaExtractOperationFromLetStatement >> check [
+
 	| params |
-	ast label = 'LetStatement'
-		ifFalse: [ ^ false ].
+	ast label = 'LetStatement' ifFalse: [ ^ false ].
 	params := Set new: ast first size * 2.
-	ast first
-		do: [ :localDef | 
-			localDef first label = 'FunctionDefinition'
-				ifTrue: [ ^ false ].
-			localDef first first
-				allDescendantsDo: [ :node | 
-					node label = 'PatternIdentifier'
-						ifTrue: [ params add: node first ] ] ].
-	ast first
-		do: [ :localDef | 
-			localDef first third
-				allDescendantsDo: [ :node | 
-					(node label = 'LocalName' and: [ params includes: node first ])
-						ifTrue: [ ^ false ] ] ].
-	ast second
-		variableExpressionNodesDo: [ :node | 
-			node isStateVariableNameNode
-				ifFalse: [ ^ false ] ].
-	ast second
-		allDescendantsDo: [ :node | 
-			node label = 'ReturnStatement'
-				ifTrue: [ ^ false ] ].
+	ast first do: [ :localDef |
+		localDef first label = 'FunctionDefinition' ifTrue: [ ^ false ].
+		localDef first first allDescendantsDo: [ :node |
+			node label = 'PatternIdentifier' ifTrue: [ params add: node first ] ] ].
+	ast first do: [ :localDef |
+		localDef first third allDescendantsDo: [ :node |
+			(node isViennaLocalNameNode and: [
+				 params includes: node identifier ]) ifTrue: [ ^ false ] ] ].
+	ast second variableExpressionNodesDo: [ :node |
+		node isStateVariableNameNode ifFalse: [ ^ false ] ].
+	ast second allDescendantsDo: [ :node |
+		node label = 'ReturnStatement' ifTrue: [ ^ false ] ].
 	^ true
 ]
 
 { #category : #operations }
 ViennaExtractOperationFromLetStatement >> execute [
+
 	| moduleBody operationDefinitions explicitOperationDefinition accessOperationDefinition |
 	self newName ifNil: [ ^ self ].
 	moduleBody := ast module third.
 	operationDefinitions := (moduleBody
-		detect: [ :definitionBlock | 
-			definitionBlock isViennaNode
-				and: [ definitionBlock first isViennaNode
-						and: [ definitionBlock first label = 'OperationDefinitions' ] ] ]
-		ifNone: [ nil ]) ifNotNil: #first.
-	operationDefinitions
-		ifNil: [ operationDefinitions := ViennaNode label: 'OperationDefinitions'.
-			moduleBody
-				add: (ViennaNode label: 'DefinitionBlock' with: operationDefinitions) ].
-	self
-		replaceNode: ast
-		with:
-			(ViennaNode
-				label: 'CallStatement'
-				with: (ViennaNode label: 'LocalName' with: self newName)
-				with: self arguments).
+		                         detect: [ :definitionBlock |
+			                         definitionBlock isViennaNode and: [
+				                         definitionBlock first isViennaNode and: [
+					                         definitionBlock first label
+					                         = 'OperationDefinitions' ] ] ]
+		                         ifNone: [ nil ]) ifNotNil: #first.
+	operationDefinitions ifNil: [
+		operationDefinitions := ViennaNode label: 'OperationDefinitions'.
+		moduleBody add:
+			(ViennaNode label: 'DefinitionBlock' with: operationDefinitions) ].
+	self replaceNode: ast with: (ViennaNode
+			 label: 'CallStatement'
+			 with: (ViennaLocalNameNode identifier: self newName)
+			 with: self arguments).
 	explicitOperationDefinition := ViennaNode
-		label: 'ExplicitOperationDefinition'
-		withAll:
-			{self newName.
-			self operationType.
-			self newName.
-			self operationParametersList.
-			self operationBody.
-			nil.
-			nil}.
+		                               label: 'ExplicitOperationDefinition'
+		                               withAll: {
+				                               self newName.
+				                               self operationType.
+				                               self newName.
+				                               self operationParametersList.
+				                               self operationBody.
+				                               nil.
+				                               nil }.
 	accessOperationDefinition := ViennaNode
-		label: 'AccessOperationDefinition'
-		with: (ViennaNode label: 'Access')
-		with:
-			(ViennaNode
-				label: 'OperationDefinition'
-				with: explicitOperationDefinition).
+		                             label: 'AccessOperationDefinition'
+		                             with: (ViennaNode label: 'Access')
+		                             with: (ViennaNode
+				                              label: 'OperationDefinition'
+				                              with: explicitOperationDefinition).
 	operationDefinitions add: accessOperationDefinition.
 	^ accessOperationDefinition
 ]

@@ -28,43 +28,41 @@ ViennaRenameImport >> construct [
 
 { #category : #operations }
 ViennaRenameImport >> execute [
+
 	self newName ifNil: [ ^ nil ].
 	self executeOnDefinition.
-	ast module
-		allDescendantsDo: [ :node | 
-			(node label = 'GlobalName'
-				and: [ node first = self moduleName and: [ node second = self shortName ] ])
-				ifTrue: [ self
-						replaceNode: node
-						with: (ViennaNode label: 'LocalName' with: self newName) ] ].
+	ast module allDescendantsDo: [ :node |
+		(node
+			 isViennaGlobalNameNode: self moduleName
+			 identifier: self shortName) ifTrue: [
+			self
+				replaceNode: node
+				with: (ViennaLocalNameNode identifier: self newName) ] ].
 	^ ast
 ]
 
 { #category : #operations }
 ViennaRenameImport >> executeOnDefinition [
+
 	self newName ifNil: [ ^ nil ].
 	^ self definitionNode
-		at: self definitionNode size
-			put: (ViennaNode label: 'LocalName' with: self newName);
-		yourself
+		  at: self definitionNode size
+		  put: (ViennaLocalNameNode identifier: self newName);
+		  yourself
 ]
 
 { #category : #accessing }
 ViennaRenameImport >> findDefinitionNode [
+
 	ast ifNil: [ ^ nil ].
-	(#('TypeImport' 'ValueImport' 'FunctionImport' 'OperationImport')
-		includes: ast label)
-		ifTrue: [ ^ ast ].
-	ast label = 'GlobalName'
-		ifTrue: [ ast module second first
-				do: [ :importDefinition | 
-					importDefinition first = ast first
-						ifTrue: [ importDefinition second
-								do: [ :importSignature | 
-									importSignature
-										do: [ :import | 
-											import first first = ast second
-												ifTrue: [ ^ import ] ] ] ] ] ].
+	(#( 'TypeImport' 'ValueImport' 'FunctionImport' 'OperationImport' )
+		 includes: ast label) ifTrue: [ ^ ast ].
+	ast isViennaGlobalNameNode ifTrue: [
+		ast module second first do: [ :importDefinition |
+			importDefinition first = ast first ifTrue: [
+				importDefinition second do: [ :importSignature |
+					importSignature do: [ :import |
+						import first first = ast second ifTrue: [ ^ import ] ] ] ] ] ].
 	^ nil
 ]
 

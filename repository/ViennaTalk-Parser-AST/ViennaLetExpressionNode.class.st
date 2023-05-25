@@ -14,6 +14,22 @@ ViennaLetExpressionNode class >> localDefinitionList: aViennaLocalDefinitionList
 		  yourself
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaLetExpressionNode >> definitionOfLocalName: aString [
+
+	self first do: [ :localDef |
+		| def |
+		def := localDef first.
+		def label = 'ValueDefinition' ifTrue: [
+			def first
+				allDescendantsSuchThat: [ :n |
+				n isViennaPatternIdentifierNode: aString ]
+				do: [ :n | ^ n ] ].
+		def label = 'FunctionDefinition' ifTrue: [
+			def first first = aString ifTrue: [ ^ def first ] ] ].
+	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
+]
+
 { #category : #accessing }
 ViennaLetExpressionNode >> expression [
 
@@ -43,6 +59,12 @@ ViennaLetExpressionNode >> formatWith: aViennaAbstractFormatter [
 ]
 
 { #category : #accessing }
+ViennaLetExpressionNode >> isViennaLetExpressionNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaLetExpressionNode >> label [
 
 	^ 'LetExpression'
@@ -58,6 +80,13 @@ ViennaLetExpressionNode >> localDefinitionList [
 ViennaLetExpressionNode >> localDefinitionList: aViennaLocalDefinitionListNode [
 
 	self at: 1 put: aViennaLocalDefinitionListNode
+]
+
+{ #category : #enumerating }
+ViennaLetExpressionNode >> localDefinitionsDo: aBlock [
+
+	self localDefinitionList do: [ :localDef |
+		aBlock value: localDef first ]
 ]
 
 { #category : #'pretty printing' }

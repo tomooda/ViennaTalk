@@ -19,32 +19,28 @@ ViennaExtractLetStatement >> check [
 
 { #category : #operations }
 ViennaExtractLetStatement >> execute [
+
 	| dummy |
 	self newName ifNil: [ ^ nil ].
 	dummy := self
-		replaceNode: self statementNode
-		with: (ViennaNode label: 'DUMMY').
+		         replaceNode: self statementNode
+		         with: (ViennaNode label: 'DUMMY').
 	self
 		replaceNode: ast
-		with: (ViennaNode label: 'LocalName' with: self newName).
-	^ self
-		replaceNode: dummy
-		with:
-			(ViennaNode
-				label: 'LetStatement'
-				with:
-					(ViennaNode
-						label: 'LocalDefinitionList'
-						with:
-							(ViennaNode
-								label: 'LocalDefinition'
-								with:
-									(ViennaNode
-										label: 'ValueDefinition'
-										with: (ViennaNode label: 'PatternIdentifier' with: self newName)
-										with: nil
-										with: ast)))
-				with: self statementNode)
+		with: (ViennaLocalNameNode identifier: self newName).
+	^ self replaceNode: dummy with: (ViennaNode
+			   label: 'LetStatement'
+			   with: (ViennaNode
+					    label: 'LocalDefinitionList'
+					    with: (ViennaNode label: 'LocalDefinition' with: (ViennaNode
+								      label: 'ValueDefinition'
+								      with:
+								      (ViennaNode
+									       label: 'PatternIdentifier'
+									       with: self newName)
+								      with: nil
+								      with: ast)))
+			   with: self statementNode)
 ]
 
 { #category : #accessing }

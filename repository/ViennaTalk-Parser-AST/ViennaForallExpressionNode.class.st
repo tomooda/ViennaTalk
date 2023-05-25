@@ -1,6 +1,6 @@
 Class {
 	#name : #ViennaForallExpressionNode,
-	#superclass : #ViennaExpressionNode,
+	#superclass : #ViennaMultipleBindQuantifierNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }
@@ -12,30 +12,6 @@ ViennaForallExpressionNode class >> bindList: aViennaBindListNode expression: aV
 		  bindList: aViennaBindListNode;
 		  expression: aViennaExpressionNode;
 		  yourself
-]
-
-{ #category : #accessing }
-ViennaForallExpressionNode >> bindList [
-
-	^ self at: 1
-]
-
-{ #category : #accessing }
-ViennaForallExpressionNode >> bindList: aViennaBindListNode [
-
-	self at: 1 put: aViennaBindListNode
-]
-
-{ #category : #accessing }
-ViennaForallExpressionNode >> expression [
-
-	^ self at: 2
-]
-
-{ #category : #accessing }
-ViennaForallExpressionNode >> expression: aViennaExpressionNode [
-
-	self at: 2 put: aViennaExpressionNode
 ]
 
 { #category : #'pretty printing' }
@@ -50,6 +26,12 @@ ViennaForallExpressionNode >> formatWith: aViennaAbstractFormatter [
 				   insertCrIfNeeded:
 				   bindList trim , ' ' , aViennaAbstractFormatter dot)
 		  insertCrIfNeeded: expression
+]
+
+{ #category : #accessing }
+ViennaForallExpressionNode >> isViennaForallExpressionNode [
+
+	^ true
 ]
 
 { #category : #accessing }

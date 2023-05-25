@@ -11,6 +11,12 @@ ViennaDistributedMapMergeNode >> formatOperatorWith: aViennaAbstractFormatter [
 	^ 'merge'
 ]
 
+{ #category : #testing }
+ViennaDistributedMapMergeNode >> isViennaDistributedMapMergeNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaDistributedMapMergeNode >> label [
 

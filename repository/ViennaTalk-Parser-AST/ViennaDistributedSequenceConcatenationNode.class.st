@@ -11,6 +11,12 @@ ViennaDistributedSequenceConcatenationNode >> formatOperatorWith: aViennaAbstrac
 	^ 'conc'
 ]
 
+{ #category : #testing }
+ViennaDistributedSequenceConcatenationNode >> isViennaDistributedSequenceConcatenationNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaDistributedSequenceConcatenationNode >> label [
 

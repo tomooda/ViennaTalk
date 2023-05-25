@@ -6,30 +6,23 @@ Class {
 
 { #category : #operations }
 ViennaInlineValueAndRemove >> check [
+
 	| moduleName shortName |
 	ast ifNil: [ ^ false ].
-	ast label = 'ValueDefinition'
-		ifFalse: [ ^ false ].
-	ast first label = 'PatternIdentifier'
-		ifFalse: [ ^ false ].
+	ast label = 'ValueDefinition' ifFalse: [ ^ false ].
+	ast first label = 'PatternIdentifier' ifFalse: [ ^ false ].
 	moduleName := ast module first.
 	shortName := ast first.
-	ast document
-		allDescendantsDo: [ :node | 
-			(node label = 'GlobalName'
-				and: [ node first = moduleName and: [ node second = shortName ] ])
-				ifTrue: [ ^ false ] ].
-	ast
-		modulesDo: [ :module | 
-			module second first
-				ifNotNil: [ :importDefinitionList | 
-					importDefinitionList
-						do: [ :importDefinition | 
-							importDefinition first = moduleName
-								ifTrue: [ importDefinition
-										allDescendantsDo: [ :node | 
-											(node label = 'ValueImport' and: [ node first = shortName ])
-												ifTrue: [ ^ false ] ] ] ] ] ].
+	ast document allDescendantsDo: [ :node |
+		(node isViennaGlobalNameNode: moduleName identifier: shortName)
+			ifTrue: [ ^ false ] ].
+	ast modulesDo: [ :module |
+		module second first ifNotNil: [ :importDefinitionList |
+			importDefinitionList do: [ :importDefinition |
+				importDefinition first = moduleName ifTrue: [
+					importDefinition allDescendantsDo: [ :node |
+						(node label = 'ValueImport' and: [ node first = shortName ])
+							ifTrue: [ ^ false ] ] ] ] ] ].
 	^ true
 ]
 

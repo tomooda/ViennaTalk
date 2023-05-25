@@ -18,6 +18,12 @@ ViennaMapInverseNode >> formatWith: aViennaAbstractFormatter [
 		  (aViennaAbstractFormatter format: self expression)
 ]
 
+{ #category : #testing }
+ViennaMapInverseNode >> isViennaMapInverseNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaMapInverseNode >> label [
 

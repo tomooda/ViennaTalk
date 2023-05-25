@@ -36,6 +36,12 @@ ViennaSetEnumerationNode >> formatWith: aViennaAbstractFormatter [
 	  , '}'
 ]
 
+{ #category : #testing }
+ViennaSetEnumerationNode >> isViennaSetEnumerationNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaSetEnumerationNode >> label [
 

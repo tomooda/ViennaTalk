@@ -12,6 +12,12 @@ ViennaSetCardinalityNode >> formatOperatorWith: aViennaAbstractFormatter [
 ]
 
 { #category : #accessing }
+ViennaSetCardinalityNode >> isViennaSetCardinalityNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaSetCardinalityNode >> label [
 
 	^ 'SetCardinality'

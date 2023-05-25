@@ -11,6 +11,12 @@ ViennaSequenceLengthNode >> formatOperatorWith: aViennaAbstractFormatter [
 	^ 'len'
 ]
 
+{ #category : #testing }
+ViennaSequenceLengthNode >> isViennaSequenceLengthNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaSequenceLengthNode >> label [
 

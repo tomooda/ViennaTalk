@@ -12,6 +12,12 @@ ViennaOrNode >> formatOperatorWith: aViennaAbstractFormatter [
 ]
 
 { #category : #accessing }
+ViennaOrNode >> isViennaOrNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaOrNode >> label [
 
 	^ 'Or'

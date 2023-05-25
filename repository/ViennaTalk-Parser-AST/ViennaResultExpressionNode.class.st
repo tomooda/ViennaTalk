@@ -11,6 +11,12 @@ ViennaResultExpressionNode >> formatWith: aViennaAbstractFormatter [
 	^ 'RESULT'
 ]
 
+{ #category : #testing }
+ViennaResultExpressionNode >> isViennaResultExpressionNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaResultExpressionNode >> label [
 

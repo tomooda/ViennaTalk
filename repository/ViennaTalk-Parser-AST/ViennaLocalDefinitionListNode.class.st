@@ -5,16 +5,6 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'instance creation' }
-ViennaLocalDefinitionListNode class >> withAll: anArrayOfViennaLocalDefinitionNode [
-
-	| list |
-	list := self new: anArrayOfViennaLocalDefinitionNode size.
-	1 to: anArrayOfViennaLocalDefinitionNode size do: [ :index |
-		list at: index put: (anArrayOfViennaLocalDefinitionNode at: index) ].
-	^ list
-]
-
 { #category : #'pretty printing' }
 ViennaLocalDefinitionListNode >> formatWith: aViennaAbstractFormatter [
 

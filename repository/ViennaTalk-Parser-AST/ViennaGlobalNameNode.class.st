@@ -14,6 +14,12 @@ ViennaGlobalNameNode class >> moduleIdentifier: aString1 identifier: aString2 [
 		  yourself
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaGlobalNameNode >> asGlobalName [
+
+	^ self
+]
+
 { #category : #'pretty printing' }
 ViennaGlobalNameNode >> formatWith: aViennaAbstractFormatter [
 
@@ -32,6 +38,71 @@ ViennaGlobalNameNode >> identifier: aString [
 	self at: 2 put: aString
 ]
 
+{ #category : #testing }
+ViennaGlobalNameNode >> isExportedNameNode [
+
+	^ true
+]
+
+{ #category : #testing }
+ViennaGlobalNameNode >> isFunctionNameNode [
+
+	(self moduleNamed: self moduleIdentifier) ifNotNil: [ :moduleNode |
+		(moduleNode definitionOfLocalName: self identifier) ifNotNil: [
+			:defNode |
+			((#( 'ExplicitFunctionDefinition' 'ImplicitFunctionDefinition' )
+				  includes: defNode label) and: [ defNode first = self identifier ])
+				ifTrue: [ ^ true ] ] ].
+	^ false
+]
+
+{ #category : #testing }
+ViennaGlobalNameNode >> isOperationNameNode [
+
+	(self moduleNamed: self moduleIdentifier) ifNotNil: [ :moduleNode |
+		(moduleNode definitionOfLocalName: self identifier) ifNotNil: [
+			:defNode |
+			((#( 'ExplicitOperationDefinition' 'ImplicitOperationDefinition' )
+				  includes: defNode label) and: [ defNode first = self identifier ])
+				ifTrue: [ ^ true ] ] ].
+	^ false
+]
+
+{ #category : #testing }
+ViennaGlobalNameNode >> isTypeNameNode [
+
+	(self moduleNamed: self moduleIdentifier) ifNotNil: [ :moduleNode |
+		(moduleNode definitionOfLocalName: self identifier) ifNotNil: [
+			:defNode |
+			((#( 'TypeDefinition' 'RecordTypeDefinition' ) includes:
+				  defNode label) and: [ defNode first = self identifier ])
+				ifTrue: [ ^ true ] ] ].
+	^ false
+]
+
+{ #category : #testing }
+ViennaGlobalNameNode >> isValueNameNode [
+
+	(self moduleNamed: self moduleIdentifier) ifNotNil: [ :moduleNode |
+		(moduleNode definitionOfLocalName: self identifier) ifNotNil: [
+			:defNode |
+			defNode bindHolderNode label = 'ValueDefinition' ifTrue: [ ^ true ] ] ].
+	^ false
+]
+
+{ #category : #testing }
+ViennaGlobalNameNode >> isViennaGlobalNameNode [
+
+	^ true
+]
+
+{ #category : #testing }
+ViennaGlobalNameNode >> isViennaGlobalNameNode: aString identifier: anotherString [
+
+	^ self moduleIdentifier = aString and: [
+		  self identifier = anotherString ]
+]
+
 { #category : #accessing }
 ViennaGlobalNameNode >> label [
 
@@ -48,4 +119,17 @@ ViennaGlobalNameNode >> moduleIdentifier [
 ViennaGlobalNameNode >> moduleIdentifier: aString [
 
 	self at: 1 put: aString
+]
+
+{ #category : #accessing }
+ViennaGlobalNameNode >> name [
+
+	^ self moduleIdentifier , '`' , self identifier
+]
+
+{ #category : #'accessing-definitions' }
+ViennaGlobalNameNode >> resolve [
+
+	^ (self moduleNamed: self moduleIdentifier) ifNotNil: [ :module |
+		  module resolveLocalName: self identifier ]
 ]

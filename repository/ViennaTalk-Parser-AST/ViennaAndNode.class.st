@@ -11,6 +11,12 @@ ViennaAndNode >> formatOperatorWith: aViennaAbstractFormatter [
 	^ aViennaAbstractFormatter and
 ]
 
+{ #category : #testing }
+ViennaAndNode >> isViennaAndNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaAndNode >> label [
 

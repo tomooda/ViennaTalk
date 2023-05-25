@@ -18,6 +18,12 @@ ViennaArithmeticMultiplicationNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRi
 ]
 
 { #category : #accessing }
+ViennaArithmeticMultiplicationNode >> isViennaArithmeticMultiplicationNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaArithmeticMultiplicationNode >> label [
 
 	^ 'ArithmeticMultiplication'

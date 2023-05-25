@@ -65,6 +65,12 @@ ViennaIfExpressionNode >> formatWith: aViennaAbstractFormatter [
 	  , (aViennaAbstractFormatter indentString: 'else' insertCr: default)
 ]
 
+{ #category : #testing }
+ViennaIfExpressionNode >> isViennaIfExpressionNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaIfExpressionNode >> label [
 

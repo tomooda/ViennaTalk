@@ -15,6 +15,16 @@ ViennaSequenceComprehensionNode class >> expression: aViennaExpressionNode1 setS
 		  yourself
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaSequenceComprehensionNode >> definitionOfLocalName: aString [
+
+	self pattern
+		allDescendantsSuchThat: [ :n |
+		n isViennaPatternIdentifierNode: aString ]
+		do: [ :n | ^ n ].
+	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
+]
+
 { #category : #accessing }
 ViennaSequenceComprehensionNode >> expression [
 
@@ -45,10 +55,22 @@ ViennaSequenceComprehensionNode >> formatWith: aViennaAbstractFormatter [
 				    insertCrIfNeeded: guard)) , ']'
 ]
 
+{ #category : #testing }
+ViennaSequenceComprehensionNode >> isViennaSequenceComprehensionNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaSequenceComprehensionNode >> label [
 
 	^ 'SequenceComprehension'
+]
+
+{ #category : #accessing }
+ViennaSequenceComprehensionNode >> pattern [
+
+	^ self setSeqBind pattern
 ]
 
 { #category : #accessing }
