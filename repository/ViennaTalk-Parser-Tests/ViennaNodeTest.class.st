@@ -188,7 +188,7 @@ ViennaNodeTest >> testIsFunctionNameNode [
 	| opcall1 opcall2 funcall |
 	self deny: skip isOperationNameNode.
 	opcall1 := skip parent at: 3.
-	self assert: opcall1 label equals: 'CallStatement'.
+	self assert: opcall1 isViennaCallStatementNode.
 	self assert: opcall1 first first equals: 'exp_op'.
 	self deny: opcall1 first isFunctionNameNode.
 	opcall2 := (skip parent at: 4) second.
@@ -207,7 +207,7 @@ ViennaNodeTest >> testIsOperationNameNode [
 	| opcall1 opcall2 funcall globalopcall |
 	self deny: skip isOperationNameNode.
 	opcall1 := skip parent at: 3.
-	self assert: opcall1 label equals: 'CallStatement'.
+	self assert: opcall1 isViennaCallStatementNode.
 	self assert: opcall1 first first equals: 'exp_op'.
 	self deny: opcall1 isOperationNameNode.
 	self assert: opcall1 first isOperationNameNode.
@@ -225,7 +225,7 @@ ViennaNodeTest >> testIsOperationNameNode [
 	self deny: funcall expression isOperationNameNode.
 	self deny: funcall argumentExpressionList isOperationNameNode.
 	globalopcall := skip parent at: 7.
-	self assert: globalopcall label equals: 'CallStatement'.
+	self assert: globalopcall isViennaCallStatementNode.
 	self assert: globalopcall first isViennaGlobalNameNode.
 	self assert: globalopcall first first = 'B'.
 	self assert: globalopcall first second = 'opi2'.
@@ -238,7 +238,7 @@ ViennaNodeTest >> testIsStateVariableNameNode [
 	| opcall1 opcall1arg funcall funcallarg returnarg |
 	self deny: skip isOperationNameNode.
 	opcall1 := skip parent at: 3.
-	self assert: opcall1 label equals: 'CallStatement'.
+	self assert: opcall1 isViennaCallStatementNode.
 	opcall1arg := opcall1 second first.
 	self assert: opcall1arg first equals: 's1'.
 	self assert: opcall1arg isStateVariableNameNode.
@@ -275,7 +275,7 @@ ViennaNodeTest >> testIsValueNameNode [
 	| opcall1 opcall1arg funcall funcallarg returnarg |
 	self deny: skip isValueNameNode.
 	opcall1 := skip parent at: 3.
-	self assert: opcall1 label equals: 'CallStatement'.
+	self assert: opcall1 isViennaCallStatementNode.
 	opcall1arg := opcall1 second first.
 	self assert: opcall1arg first equals: 's1'.
 	self deny: opcall1arg isValueNameNode.

@@ -75,19 +75,15 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesBindListInto [
 
 { #category : #'tests-bound variables-statements' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesBlockStatementInto [
+
 	| node binds |
-	node := ViennaVDMParser new blockStatement end
-		parse: '(dcl v1:t1 := e, v2:t1 := v1; dcl v3:t3 := f(v1, v2); op(v1, v2, v3))'.
+	node := ViennaVDMParser new blockStatement end parse:
+		        '(dcl v1:t1 := e, v2:t1 := v1; dcl v3:t3 := f(v1, v2); op(v1, v2, v3))'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'BlockStatement'.
+	self assert: node isViennaBlockStatementNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{'v1'.
-			'v2'.
-			'v3'} asSet
+	self assert: binds equals: { 'v1'. 'v2'. 'v3' } asSet
 ]
 
 { #category : #'tests-bound variables-types' }

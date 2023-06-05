@@ -19,19 +19,19 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesAssignmentDefinition
 
 { #category : #'tests-free variables-statements' }
 TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesBlockStatementBoundVarsInto [
+
 	| node binds |
-	node := ViennaVDMParser new blockStatement end parse: '(dcl v1:t1 := e1; dcl v2:t2 := f(v1); op(v1, v2))'.
+	node := ViennaVDMParser new blockStatement end parse:
+		        '(dcl v1:t1 := e1; dcl v2:t2 := f(v1); op(v1, v2))'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'BlockStatement'.
+	self assert: node isViennaBlockStatementNode.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
-		equals:
-			{'t1'.
-			'e1'.
-			't2'.
-			'f'.
-			'op'} asSet
+		assert:
+		(ViennaVDM2SmalltalkScript new
+			 freeVariables: node
+			 env: Dictionary new)
+		equals: { 't1'. 'e1'. 't2'. 'f'. 'op' } asSet
 ]
 
 { #category : #'tests-free variables-statements' }

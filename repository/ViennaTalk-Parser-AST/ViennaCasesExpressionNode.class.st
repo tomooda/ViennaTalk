@@ -6,7 +6,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-ViennaCasesExpressionNode class >> expression: aViennaExpressionNode casesExpressionAlternatives: aViennaCasesExpressionAlternativesNode others: aViennaOthersExpressionNode [
+ViennaCasesExpressionNode class >> expression: aViennaExpressionNode casesExpressionAlternatives: aViennaCasesExpressionAlternativesNode othersExpression: aViennaOthersExpressionNode [
 
 	^ (self new: 3)
 		  expression: aViennaExpressionNode;

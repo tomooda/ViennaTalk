@@ -175,12 +175,18 @@ ViennaVDMParser >> bindList [
 
 { #category : #'parsers-statements' }
 ViennaVDMParser >> blockStatement [
-	^ super blockStatement ==> [ :array | ViennaNode label: 'BlockStatement' withAll: array first , array second ]
+
+	^ super blockStatement ==> [ :array |
+	  ViennaBlockStatementNode withAll: array first , array second ]
 ]
 
 { #category : #'parsers-statements' }
 ViennaVDMParser >> callStatement [
-	^ super callStatement ==> [ :array | ViennaNode label: 'CallStatement' withAll: array ]
+
+	^ super callStatement ==> [ :array |
+	  ViennaCallStatementNode
+		  name: array first
+		  expressionList: array second ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -196,7 +202,7 @@ ViennaVDMParser >> casesExpression [
 	  ViennaCasesExpressionNode
 		  expression: triple first
 		  casesExpressionAlternatives: triple second
-		  others: triple third ]
+		  othersExpression: triple third ]
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -218,7 +224,12 @@ ViennaVDMParser >> casesExpressionAlternatives [
 
 { #category : #'parsers-statements' }
 ViennaVDMParser >> casesStatement [
-	^ super casesStatement ==> [ :array | ViennaNode label: 'CasesStatement' withAll: array ]
+
+	^ super casesStatement ==> [ :array |
+	  ViennaCasesStatementNode
+		  expression: array first
+		  casesStatementAlternatives: array second
+		  othersStatement: array third ]
 ]
 
 { #category : #'parsers-statements' }

@@ -5,6 +5,12 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #testing }
+ViennaDclStatementNode >> isViennaDclStatementNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaDclStatementNode >> label [
 

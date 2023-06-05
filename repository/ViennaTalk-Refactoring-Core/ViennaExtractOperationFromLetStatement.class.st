@@ -49,10 +49,9 @@ ViennaExtractOperationFromLetStatement >> execute [
 		operationDefinitions := ViennaNode label: 'OperationDefinitions'.
 		moduleBody add:
 			(ViennaNode label: 'DefinitionBlock' with: operationDefinitions) ].
-	self replaceNode: ast with: (ViennaNode
-			 label: 'CallStatement'
-			 with: (ViennaLocalNameNode identifier: self newName)
-			 with: self arguments).
+	self replaceNode: ast with: (ViennaCallStatementNode
+			 name: (ViennaLocalNameNode identifier: self newName)
+			 expressionList: self arguments).
 	explicitOperationDefinition := ViennaNode
 		                               label: 'ExplicitOperationDefinition'
 		                               withAll: {

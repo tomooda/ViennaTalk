@@ -48,7 +48,7 @@ ViennaExtractParameterFromExpressionInOperation >> executeCallers [
 			 (node expression sameAs: globalName) or: [
 				 node expression sameAs: localName ] ]) ifTrue: [
 			node argumentExpressionList add: ast copyFragment ].
-		(node label = 'CallStatement' and: [
+		(node isViennaCallStatementNode and: [
 			 (node first sameAs: globalName) or: [
 				 node first sameAs: localName ] ]) ifTrue: [
 			node second add: ast copyFragment ] ]

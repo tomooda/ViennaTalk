@@ -788,9 +788,6 @@ ViennaNode >> definitionOfLocalName: aString [
 		self
 			definitionInCasesAlternativeOfLocalName: aString
 			do: [ :node | ^ node ] ].
-	(self label = 'BlockStatement' and: [
-		 self first label = 'DclStatement' ]) ifTrue: [
-		self definitionInDclOfLocalName: aString do: [ :node | ^ node ] ].
 	(#( 'IndexForLoop' 'SequenceForLoop' 'SetForLoop' ) includes:
 		 self label) ifTrue: [
 		self definitionInForLoopOfLocalName: aString do: [ :node | ^ node ] ].
@@ -1082,13 +1079,37 @@ ViennaNode >> isViennaBinaryOperatorExpression [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaBlockStatementNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaCallStatementNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaCasesExpressionNode [
 
 	^ false
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaCasesStatementNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaCompositionNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaDclStatementNode [
 
 	^ false
 ]
