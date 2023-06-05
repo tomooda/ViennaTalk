@@ -12,7 +12,6 @@ Class {
 	#classVars : [
 		'ExpressionLabels',
 		'PatternBindLabels',
-		'StatementLabels',
 		'TypeLabels'
 	],
 	#category : #'ViennaTalk-Parser-AST'
@@ -194,14 +193,6 @@ ViennaNode class >> patternBindLabels [
 		                          'SetUnionPattern' 'TuplePattern'
 		                          'PatternList' 'TypeBind' 'TypeBindList' )
 			                       asSet ]
-]
-
-{ #category : #accessing }
-ViennaNode class >> statementLabels [
-	^ StatementLabels
-		ifNil:
-			[ StatementLabels := #('AlwaysStatement' 'AssignStatement' 'AssignmentDefinition' 'BlockStatement' 'CallStatement' 'CasesStatement' 'DclStatement' 'DefStatement' 'ErrorStatement' 'ExitStatement' 'IdentityStatement' 'IfStatement' 'IndexForLoop' 'LetBeStatement' 'LetStatement' 'MultipleAssignStatement' 'NondeterministicStatement' 'ReturnStatement' 'SequenceForLoop' 'SetForLoop' 'TixeStatement' 'TrapStatement' 'WhileLoop')
-				asSet ]
 ]
 
 { #category : #accessing }
@@ -1001,12 +992,6 @@ ViennaNode >> isStateVariableNameNode [
 ]
 
 { #category : #testing }
-ViennaNode >> isStatementNode [
-
-	^ self class statementLabels includes: self label
-]
-
-{ #category : #testing }
 ViennaNode >> isTypeNameNode [
 
 	^ false
@@ -1085,6 +1070,12 @@ ViennaNode >> isViennaArithmeticRemNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaAssignStatementNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaBinaryOperatorExpression [
 
 	^ false
@@ -1152,6 +1143,12 @@ ViennaNode >> isViennaExistsExpressionNode [
 
 { #category : #testing }
 ViennaNode >> isViennaExpressionNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaFieldReferenceNode [
 
 	^ false
 ]

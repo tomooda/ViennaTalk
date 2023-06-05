@@ -206,7 +206,7 @@ ViennaVDM2SmalltalkScriptTest >> testAssignStatementEnv [
 	| node |
 	node := ViennaVDMParser new statement end parse: 'x := 1'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'AssignStatement'.
+	self assert: node isViennaAssignStatementNode.
 	self assert: (self evaluate: '|x|' , (ViennaVDM2SmalltalkScript new generate: node) , '. x') equals: 1
 ]
 
@@ -547,19 +547,17 @@ ViennaVDM2SmalltalkScriptTest >> testExtendedExplicitOperation [
 
 { #category : #'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testFieldReferenceEnv [
+
 	| node |
 	node := ViennaVDMParser new statement end parse: 'x.f := 1'.
 	self deny: node isPetit2Failure.
-	self assert: node first label = 'FieldReference'.
+	self assert: node first isViennaFieldReferenceNode.
 	self
-		assert:
-			(self
-				evaluate:
-					'|x|x:=(ViennaComposite constructorName:''T'' with: nil with: 2) fieldNameAt: 1 put: ''f''; yourself.'
-						, (ViennaVDM2SmalltalkScript new generate: node) , '. {x at: 1. x at: 2}')
-		equals:
-			{1.
-			2}
+		assert: (self evaluate:
+				 '|x|x:=(ViennaComposite constructorName:''T'' with: nil with: 2) fieldNameAt: 1 put: ''f''; yourself.'
+				 , (ViennaVDM2SmalltalkScript new generate: node)
+				 , '. {x at: 1. x at: 2}')
+		equals: { 1. 2 }
 ]
 
 { #category : #'tests-code generation-expressions' }

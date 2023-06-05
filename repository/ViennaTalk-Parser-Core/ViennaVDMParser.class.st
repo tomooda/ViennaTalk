@@ -99,13 +99,13 @@ ViennaVDMParser >> addAnnotation: aString [
 
 { #category : #'parsers-statements' }
 ViennaVDMParser >> alwaysStatement [
-	^ super alwaysStatement
-		=>> [ :start :end :pair | 
-			ViennaNode
-				label: 'AlwaysStatement'
-				start: start
-				end: end
-				withAll: pair ]
+
+	^ super alwaysStatement =>> [ :start :end :pair |
+	  (ViennaAlwaysStatementNode
+		   entailingStatement: pair first
+		   bodyStatement: pair second)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -133,7 +133,11 @@ ViennaVDMParser >> apply: func args: args [
 
 { #category : #'parsers-statements' }
 ViennaVDMParser >> assignStatement [
-	^ super assignStatement ==> [ :pair | ViennaNode label: 'AssignStatement' withAll: pair ]
+
+	^ super assignStatement ==> [ :pair |
+	  ViennaAssignStatementNode
+		  stateDesignator: pair first
+		  expression: pair second ]
 ]
 
 { #category : #'parsers-statements' }
@@ -653,7 +657,8 @@ ViennaVDMParser >> fieldPatternList [
 
 { #category : #'parsers-statements' }
 ViennaVDMParser >> fieldReference: stateDesig with: field [
-	^ ViennaNode label: 'FieldReference' with: stateDesig with: field
+
+	^ ViennaFieldReferenceNode stateDesignator: stateDesig field: field
 ]
 
 { #category : #'parsers-expressions-operators' }

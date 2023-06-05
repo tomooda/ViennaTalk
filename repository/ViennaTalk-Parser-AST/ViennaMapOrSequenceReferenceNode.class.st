@@ -1,6 +1,6 @@
 Class {
 	#name : #ViennaMapOrSequenceReferenceNode,
-	#superclass : #ViennaExpressionNode,
+	#superclass : #ViennaStateDesignatorNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }

@@ -57,7 +57,7 @@ ViennaExtractLetStatement >> findStatementNode [
 	| node |
 	node := ast parent.
 	[ node ifNil: [ ^ nil ].
-	node isStatementNode ] whileFalse: [ node := node parent ].
+	node isViennaStatementNode ] whileFalse: [ node := node parent ].
 	^ node
 ]
 

@@ -6,7 +6,7 @@ Class {
 
 { #category : #testing }
 ViennaWidenLetStatement >> acceptsDefinitionNode: aViennaNode [
-	^ aViennaNode isStatementNode
+	^ aViennaNode isViennaStatementNode
 ]
 
 { #category : #operations }
