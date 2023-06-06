@@ -20,10 +20,10 @@ ViennaInlineBlockStatement >> blockNode: aViennaNode [
 { #category : #accessing }
 ViennaInlineBlockStatement >> blockVariables: aViennaNode [
 
-	aViennaNode isViennaBlockStatementNode ifFalse: [ ^ #(  ) ].
+	aViennaNode isViennaBlockStatementNode ifFalse: [ ^ Array new ].
 	^ Array streamContents: [ :stream |
 		  aViennaNode do: [ :statement |
-			  statement label = 'DclStatement' ifTrue: [
+			  statement isViennaDclStatementNode ifTrue: [
 				  statement do: [ :assignment |
 					  assignment label = 'AssignmentDefinition' ifTrue: [
 						  stream nextPut: assignment first ] ] ] ] ]
@@ -50,17 +50,17 @@ ViennaInlineBlockStatement >> execute [
 			  (ViennaBlockStatementNode withAll:
 				   (Array streamContents: [ :stream |
 					    self blockNode parent do: [ :statement |
-						    statement label = 'DclStatement' ifTrue: [
+						    statement isViennaDclStatementNode ifTrue: [
 							    stream nextPut: statement ] ].
 					    self blockNode do: [ :statement |
-						    statement label = 'DclStatement' ifTrue: [
+						    statement isViennaDclStatementNode ifTrue: [
 							    stream nextPut: statement ] ].
 					    self blockNode parent do: [ :outerStatement |
-						    outerStatement label = 'DclStatement' ifFalse: [
+						    outerStatement isViennaDclStatementNode ifFalse: [
 							    self blockNode == outerStatement
 								    ifTrue: [
 									    self blockNode do: [ :innerStatement |
-										    innerStatement label = 'DclStatement' ifFalse: [
+										    innerStatement isViennaDclStatementNode ifFalse: [
 											    stream nextPut: innerStatement ] ] ]
 								    ifFalse: [ stream nextPut: outerStatement ] ] ] ]))
 ]

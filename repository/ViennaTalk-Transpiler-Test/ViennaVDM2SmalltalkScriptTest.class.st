@@ -346,11 +346,16 @@ ViennaVDM2SmalltalkScriptTest >> testCompositionEnv [
 
 { #category : #'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testDclStatementEnv [
+
 	| node |
-	node := ViennaVDMParser new statement end parse: '(dcl x:nat := 1, y:nat; y := 2; a := x + y)'.
+	node := ViennaVDMParser new statement end parse:
+		        '(dcl x:nat := 1, y:nat; y := 2; a := x + y)'.
 	self deny: node isPetit2Failure.
-	self assert: node first label = 'DclStatement'.
-	self assert: (self evaluate: '|a|' , (ViennaVDM2SmalltalkScript new generate: node) , '. a') equals: 3
+	self assert: node first isViennaDclStatementNode.
+	self
+		assert: (self evaluate:
+				 '|a|' , (ViennaVDM2SmalltalkScript new generate: node) , '. a')
+		equals: 3
 ]
 
 { #category : #'tests-code generation-expressions' }
@@ -377,11 +382,18 @@ ViennaVDM2SmalltalkScriptTest >> testDefExpressionEnv [
 
 { #category : #'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testDefStatementEnv [
+
 	| node |
-	node := ViennaVDMParser new statement end parse: 'def x : nat = 1; y : nat = x + 1 in a := x + y'.
+	node := ViennaVDMParser new statement end parse:
+		        'def x : nat = 1; y : nat = x + 1 in a := x + y'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'DefStatement'.
-	self assert: (self evaluate: '|a|' , (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new) , '.a') equals: 3
+	self assert: node isViennaDefStatementNode.
+	self
+		assert: (self evaluate: '|a|'
+				 ,
+				 (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)
+				 , '.a')
+		equals: 3
 ]
 
 { #category : #'tests-code generation-expressions' }

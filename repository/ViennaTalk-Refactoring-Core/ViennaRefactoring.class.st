@@ -399,16 +399,18 @@ ViennaRefactoring >> freeOccurrencesOf: aString in: aViennaNode do: aBlock [
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inBlockStatement: aViennaNode do: aBlock [
-	aViennaNode first label = 'DclStatement'
-		ifTrue: [ self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
-			aViennaNode first
-				do: [ :dclDef | 
-					dclDef first = aString
-						ifTrue: [ ^ self ] ].
-			2 to: aViennaNode size do:
-				[ :index | self freeOccurrencesOf: aString in: (aViennaNode at: index) do: aBlock ] ].
-	aViennaNode
-		do: [ :node | self freeOccurrencesOf: aString in: node do: aBlock ]
+
+	aViennaNode first isViennaDclStatementNode ifTrue: [
+		self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
+		aViennaNode first do: [ :assignmentDefinition |
+			assignmentDefinition identifier = aString ifTrue: [ ^ self ] ].
+		2 to: aViennaNode size do: [ :index |
+			self
+				freeOccurrencesOf: aString
+				in: (aViennaNode at: index)
+				do: aBlock ] ].
+	aViennaNode do: [ :node |
+		self freeOccurrencesOf: aString in: node do: aBlock ]
 ]
 
 { #category : #'visiting-free occurrences' }

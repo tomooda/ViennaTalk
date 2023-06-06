@@ -50,13 +50,12 @@ ViennaRenameLocal >> executeOldName: aViennaNode [
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnBlockStatement: aViennaNode [
-	aViennaNode
-		do: [ :statement | 
-			statement label = 'DclStatement'
-				ifTrue: [ statement
-						do: [ :assignmentDefinition | 
-							assignmentDefinition first = self oldName
-								ifTrue: [ assignmentDefinition at: 1 put: self newName ] ] ] ]
+
+	aViennaNode do: [ :statement |
+		statement isViennaDclStatementNode ifTrue: [
+			statement do: [ :assignmentDefinition |
+				assignmentDefinition first = self oldName ifTrue: [
+					assignmentDefinition at: 1 put: self newName ] ] ] ]
 ]
 
 { #category : #operations }

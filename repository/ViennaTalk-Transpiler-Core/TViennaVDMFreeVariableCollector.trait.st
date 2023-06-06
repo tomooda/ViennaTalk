@@ -2,7 +2,7 @@ Trait {
 	#name : #TViennaVDMFreeVariableCollector,
 	#traits : 'TViennaVDMBoundVariableCollector',
 	#classTraits : 'TViennaVDMBoundVariableCollector classTrait',
-	#category : 'ViennaTalk-Transpiler-Core'
+	#category : #'ViennaTalk-Transpiler-Core'
 }
 
 { #category : #'free variables' }
@@ -39,13 +39,14 @@ TViennaVDMFreeVariableCollector >> freeVariablesAssignmentDefinition: aViennaNod
 
 { #category : #'free variables-statements' }
 TViennaVDMFreeVariableCollector >> freeVariablesBlockStatement: aViennaNode boundVars: boundVars into: freeVars [
+
 	| binds |
 	binds := boundVars copy.
-	aViennaNode
-		do: [ :node | 
-			node label = 'DclStatement'
-				ifTrue: [ self boundVariables: node into: binds ] ].
-	aViennaNode do: [ :node | self freeVariables: node boundVars: binds into: freeVars ]
+	aViennaNode do: [ :node |
+		node isViennaDclStatementNode ifTrue: [
+			self boundVariables: node into: binds ] ].
+	aViennaNode do: [ :node |
+		self freeVariables: node boundVars: binds into: freeVars ]
 ]
 
 { #category : #'free variables-expressions' }

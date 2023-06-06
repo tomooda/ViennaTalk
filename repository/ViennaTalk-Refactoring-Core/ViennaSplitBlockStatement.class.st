@@ -20,24 +20,25 @@ ViennaSplitBlockStatement >> blockNode: aViennaNode [
 
 { #category : #operations }
 ViennaSplitBlockStatement >> check [
+
 	self blockNode ifNil: [ ^ false ].
 	self newHeadStatementIndex ifNil: [ ^ false ].
-	self blockNode
-		do: [ :dclStatement | 
-			dclStatement label = 'DclStatement'
-				ifTrue: [ dclStatement
-						do: [ :assignmentDefinition | 
-							assignmentDefinition label = 'AssignmentDefinition'
-								ifTrue: [ | varName |
-									varName := assignmentDefinition first.
-									(((self newHeadStatementIndex to: self blockNode size)
-										anySatisfy:
-											[ :index | self hasFreeOccurrencesOf: varName in: (self blockNode at: index) ])
-										and: [ assignmentDefinition third notNil
-												or: [ (1 to: self newHeadStatementIndex - 1)
-														anySatisfy:
-															[ :index | self hasFreeOccurrencesOf: varName in: (self blockNode at: index) ] ] ])
-										ifTrue: [ ^ false ] ] ] ] ].
+	self blockNode do: [ :dclStatement |
+		dclStatement isViennaDclStatementNode ifTrue: [
+			dclStatement do: [ :assignmentDefinition |
+				assignmentDefinition label = 'AssignmentDefinition' ifTrue: [
+					| varName |
+					varName := assignmentDefinition first.
+					(((self newHeadStatementIndex to: self blockNode size)
+						  anySatisfy: [ :index |
+							  self
+								  hasFreeOccurrencesOf: varName
+								  in: (self blockNode at: index) ]) and: [
+						 assignmentDefinition third notNil or: [
+							 (1 to: self newHeadStatementIndex - 1) anySatisfy: [ :index |
+								 self
+									 hasFreeOccurrencesOf: varName
+									 in: (self blockNode at: index) ] ] ]) ifTrue: [ ^ false ] ] ] ] ].
 	^ true
 ]
 
@@ -52,7 +53,7 @@ ViennaSplitBlockStatement >> execute [
 		                     (Array streamContents: [ :statementStream |
 			                      (Array streamContents: [ :assignmentStream |
 				                       self blockNode do: [ :dclStatement |
-					                       dclStatement label = 'DclStatement'
+					                       dclStatement isViennaDclStatementNode
 						                       ifTrue: [
 							                       dclStatement do: [ :assignmentDefinition |
 								                       assignmentDefinition label
@@ -70,9 +71,8 @@ ViennaSplitBlockStatement >> execute [
 											                       assignmentDefinition ] ] ] ] ] ])
 				                      ifNotEmpty: [ :assignments |
 					                      statementStream nextPut:
-						                      (ViennaNode
-							                       label: 'DclStatement'
-							                       withAll: assignments) ].
+						                      (ViennaDclStatementNode withAll:
+							                       assignments) ].
 			                      self newHeadStatementIndex to:
 			                      self blockNode size do: [ :index |
 			                      statementStream nextPut:

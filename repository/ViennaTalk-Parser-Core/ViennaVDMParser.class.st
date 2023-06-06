@@ -285,13 +285,11 @@ ViennaVDMParser >> concat: arg1 and: arg2 [
 
 { #category : #'parsers-statements' }
 ViennaVDMParser >> dclStatement [
-	^ super dclStatement
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'DclStatement'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super dclStatement =>> [ :start :end :array |
+	  (ViennaDclStatementNode withAll: array)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -306,7 +304,11 @@ ViennaVDMParser >> defExpression [
 
 { #category : #'parsers-statements' }
 ViennaVDMParser >> defStatement [
-	^ super defStatement ==> [ :array | ViennaNode label: 'DefStatement' withAll: array ]
+
+	^ super defStatement ==> [ :pair |
+	  ViennaDefStatementNode
+		  equalDefinitionList: pair first
+		  statement: pair second ]
 ]
 
 { #category : #'parsers-definitions' }

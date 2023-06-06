@@ -124,6 +124,7 @@ ViennaNodeTest >> testCopyWhole [
 
 { #category : #running }
 ViennaNodeTest >> testDefinitionOfLocalName [
+
 	self assert: (skip definitionOfLocalName: 'nothing') equals: nil.
 	self
 		assert: (skip definitionOfLocalName: 'x1') parent parent first
@@ -144,9 +145,8 @@ ViennaNodeTest >> testDefinitionOfLocalName [
 	self
 		assert: (skip definitionOfLocalName: 's1') parent parent label
 		equals: 'StateDefinition'.
-	self
-		assert: (skip definitionOfLocalName: 'l') parent label
-		equals: 'DclStatement'.
+	self assert:
+		(skip definitionOfLocalName: 'l') parent isViennaDclStatementNode.
 	self
 		assert: (skip definitionOfLocalName: 'Ti') label
 		equals: 'TypeImport'.

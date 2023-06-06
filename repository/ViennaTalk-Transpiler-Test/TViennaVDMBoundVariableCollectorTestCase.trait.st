@@ -102,17 +102,15 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesCompositeTypeInto 
 
 { #category : #'tests-bound variables-statements' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesDclStatementInto [
+
 	| node binds |
-	node := ViennaVDMParser new dclStatement end parse: 'dcl v1:t1 := e, v2:t := v1;'.
+	node := ViennaVDMParser new dclStatement end parse:
+		        'dcl v1:t1 := e, v2:t := v1;'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'DclStatement'.
+	self assert: node isViennaDclStatementNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{'v1'.
-			'v2'} asSet
+	self assert: binds equals: { 'v1'. 'v2' } asSet
 ]
 
 { #category : #'tests-bound variables-definitions' }

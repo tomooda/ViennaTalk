@@ -580,27 +580,6 @@ ViennaNode >> definitionInCasesAlternativeOfLocalName: aString do: aBlock [
 ]
 
 { #category : #'accessing-definitions' }
-ViennaNode >> definitionInDclOfLocalName: aString do: aBlock [
-	self
-		do: [ :statement | 
-			statement label = 'DclStatement'
-				ifTrue: [ statement
-						do: [ :AssignmentDefinition | 
-							AssignmentDefinition first = aString
-								ifTrue: [ ^ aBlock value: AssignmentDefinition ] ] ] ]
-]
-
-{ #category : #'accessing-definitions' }
-ViennaNode >> definitionInDefOfLocalName: aString do: aBlock [
-	self first
-		reverseDo: [ :equalDefinition | 
-			equalDefinition first
-				allDescendantsDo: [ :n | 
-					(n label = 'PatternIdentifier' and: [ n first = aString ])
-						ifTrue: [ ^ aBlock value: n ] ] ]
-]
-
-{ #category : #'accessing-definitions' }
 ViennaNode >> definitionInDefinitionBlockOfLocalName: aString do: aBlock [
 	self first label = 'StateDefinition'
 		ifTrue: [ | state |
@@ -777,8 +756,6 @@ ViennaNode >> definitionOfGlobalName: shortName module: moduleName [
 { #category : #'accessing-definitions' }
 ViennaNode >> definitionOfLocalName: aString [
 
-	self label = 'DefStatement' ifTrue: [
-		self definitionInDefOfLocalName: aString do: [ :node | ^ node ] ].
 	self label = 'LetStatement' ifTrue: [
 		self definitionInLetOfLocalName: aString do: [ :node | ^ node ] ].
 	self label = 'LetBeStatement' ifTrue: [
@@ -1116,6 +1093,12 @@ ViennaNode >> isViennaDclStatementNode [
 
 { #category : #testing }
 ViennaNode >> isViennaDefExpressionNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaDefStatementNode [
 
 	^ false
 ]

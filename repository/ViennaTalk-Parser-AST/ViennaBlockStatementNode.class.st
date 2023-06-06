@@ -10,9 +10,11 @@ ViennaBlockStatementNode >> definitionOfLocalName: aString [
 
 	self do: [ :statement |
 		statement isViennaDclStatementNode ifTrue: [
-			statement do: [ :assignmentDefinition |
-				assignmentDefinition identifier = aString ifTrue: [
-					^ assignmentDefinition ] ] ] ].
+			(statement
+				 detect: [ :assignmentDefinition |
+				 assignmentDefinition identifier = aString ]
+				 ifNone: [ nil ]) ifNotNil: [ :assignmentDefinition |
+				^ assignmentDefinition ] ] ].
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
