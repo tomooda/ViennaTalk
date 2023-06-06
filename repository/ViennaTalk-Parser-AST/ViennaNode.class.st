@@ -630,19 +630,6 @@ ViennaNode >> definitionInExplicitOperationOfLocalName: aString do: aBlock [
 ]
 
 { #category : #'accessing-definitions' }
-ViennaNode >> definitionInForLoopOfLocalName: aString do: aBlock [
-
-	self label = 'SequenceForLoop' ifTrue: [
-		self first allDescendantsDo: [ :n |
-			(n label = 'PatternIdentifier' and: [ n first = aString ]) ifTrue: [
-				^ aBlock value: n ] ] ].
-	self label = 'SetForLoop' ifTrue: [
-		self first allDescendantsDo: [ :n |
-			(n label = 'PatternIdentifier' and: [ n first = aString ]) ifTrue: [
-				^ aBlock value: n ] ] ]
-]
-
-{ #category : #'accessing-definitions' }
 ViennaNode >> definitionInImplicitFunctionOfLocalName: aString do: aBlock [
 	self third first
 		do: [ :patList | 
@@ -759,8 +746,6 @@ ViennaNode >> definitionOfLocalName: aString [
 		self
 			definitionInCasesAlternativeOfLocalName: aString
 			do: [ :node | ^ node ] ].
-	(#( 'SequenceForLoop' 'SetForLoop' ) includes: self label) ifTrue: [
-		self definitionInForLoopOfLocalName: aString do: [ :node | ^ node ] ].
 	self label = 'Module' ifTrue: [
 		self definitionInModuleOfLocalName: aString do: [ :node | ^ node ] ].
 	self label = 'ExplicitFunctionDefinition' ifTrue: [
@@ -1540,6 +1525,12 @@ ViennaNode >> isViennaSequenceEnumerationNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaSequenceForLoopNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaSequenceHeadNode [
 
 	^ false
@@ -1594,6 +1585,12 @@ ViennaNode >> isViennaSetEnumerationNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaSetForLoopNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaSetIntersectionNode [
 
 	^ false
@@ -1630,7 +1627,19 @@ ViennaNode >> isViennaSymbolicLiteralNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaTixeStatementNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaTokenConstructorNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaTrapStatementNode [
 
 	^ false
 ]
@@ -1673,6 +1682,12 @@ ViennaNode >> isViennaUnaryPlusNode [
 
 { #category : #testing }
 ViennaNode >> isViennaUndefinedExpressionNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaWhileLoopNode [
 
 	^ false
 ]

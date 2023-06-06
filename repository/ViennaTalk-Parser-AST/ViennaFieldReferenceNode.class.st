@@ -30,7 +30,8 @@ ViennaFieldReferenceNode >> field: aString [
 ViennaFieldReferenceNode >> formatWith: aViennaAbstractFormatter [
 
 	| stateDesignator field |
-	stateDesignator := aViennaAbstractFormatter format: self expression.
+	stateDesignator := aViennaAbstractFormatter format:
+		                   self stateDesignator.
 	field := aViennaAbstractFormatter format: self field.
 	^ aViennaAbstractFormatter
 		  indentString: stateDesignator

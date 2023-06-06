@@ -5,8 +5,65 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
+ViennaTixeStatementNode class >> traps: aViennaTrapsNode statement: aViennaStatementNode [
+
+	^ (self new: 2)
+		  traps: aViennaTrapsNode;
+		  statement: aViennaStatementNode;
+		  yourself
+]
+
+{ #category : #'pretty printing' }
+ViennaTixeStatementNode >> formatWith: aViennaAbstractFormatter [
+
+	| traps statement |
+	traps := aViennaAbstractFormatter format: self traps.
+	statement := aViennaAbstractFormatter format: self statement.
+	^ (aViennaAbstractFormatter needsIndent: traps)
+		  ifTrue: [
+			  (aViennaAbstractFormatter indentString: 'tixe' insertCr: traps)
+			  , String cr
+			  ,
+			  (aViennaAbstractFormatter indentString: 'in' insertCr: statement) ]
+		  ifFalse: [
+			  aViennaAbstractFormatter
+				  indentString: 'tixe ' , traps , ' in'
+				  insertCrIfNeeded: statement ]
+]
+
+{ #category : #testing }
+ViennaTixeStatementNode >> isViennaTixeStatementNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaTixeStatementNode >> label [
 
 	^ 'TixeStatement'
+]
+
+{ #category : #accessing }
+ViennaTixeStatementNode >> statement [
+
+	^ self at: 2
+]
+
+{ #category : #accessing }
+ViennaTixeStatementNode >> statement: aViennaStatementNode [
+
+	self at: 2 put: aViennaStatementNode
+]
+
+{ #category : #accessing }
+ViennaTixeStatementNode >> traps [
+
+	^ self at: 1
+]
+
+{ #category : #accessing }
+ViennaTixeStatementNode >> traps: aViennaTrapsNode [
+
+	self at: 1 put: aViennaTrapsNode
 ]

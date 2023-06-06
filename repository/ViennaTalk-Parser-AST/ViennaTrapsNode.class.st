@@ -5,7 +5,21 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pretty printing' }
+ViennaTrapsNode >> formatWith: aViennaAbstractFormatter [
+
+	^ '{' , (self
+		   ifNotEmpty: [
+			   aViennaAbstractFormatter
+				   join: ',' , String cr
+				   withAll: ((1 to: self size by: 2) collect: [ :index |
+						    (aViennaAbstractFormatter format: (self at: index))
+						    , ' |-> ' , (aViennaAbstractFormatter indentString:
+							     (aViennaAbstractFormatter format: (self at: index + 1))) ]) ]
+		   ifEmpty: [ '' ]) , '}'
+]
+
+{ #category : #accessing }
 ViennaTrapsNode >> label [
 
 	^ 'Traps'

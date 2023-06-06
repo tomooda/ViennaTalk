@@ -331,15 +331,18 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesSequenceComprehensio
 
 { #category : #'tests-free variables-statements' }
 TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesSequenceForLoopBoundVarsInto [
+
 	| node |
-	node := ViennaVDMParser new sequenceForLoop end parse: 'for v in s do op(v)'.
+	node := ViennaVDMParser new sequenceForLoop end parse:
+		        'for v in s do op(v)'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'SequenceForLoop'.
+	self assert: node isViennaSequenceForLoopNode.
 	self
-		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
-		equals:
-			{'s'.
-			'op'} asSet
+		assert:
+		(ViennaVDM2SmalltalkScript new
+			 freeVariables: node
+			 env: Dictionary new)
+		equals: { 's'. 'op' } asSet
 ]
 
 { #category : #'tests-free variables-expressions' }
@@ -361,13 +364,16 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesSetComprehensionBoun
 
 { #category : #'tests-free variables-statements' }
 TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesSetForLoopBoundVarsInto [
+
 	| node |
-	node := ViennaVDMParser new setForLoop end parse: 'for all v in set s do op(v)'.
+	node := ViennaVDMParser new setForLoop end parse:
+		        'for all v in set s do op(v)'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'SetForLoop'.
+	self assert: node isViennaSetForLoopNode.
 	self
-		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
-		equals:
-			{'s'.
-			'op'} asSet
+		assert:
+		(ViennaVDM2SmalltalkScript new
+			 freeVariables: node
+			 env: Dictionary new)
+		equals: { 's'. 'op' } asSet
 ]

@@ -5,8 +5,52 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #'instance creation' }
+ViennaCasesStatementAlternativeNode class >> patternList: aViennaPatternListNode statement: aViennaStatementNode [
+
+	^ (self new: 2)
+		  patternList: aViennaPatternListNode;
+		  statement: aViennaStatementNode;
+		  yourself
+]
+
+{ #category : #'pretty printing' }
+ViennaCasesStatementAlternativeNode >> formatWith: aViennaAbstractFormatter [
+
+	| patternList statement |
+	patternList := aViennaAbstractFormatter format: self patternList.
+	statement := aViennaAbstractFormatter format: self statement.
+	^ aViennaAbstractFormatter
+		  indentString: patternList , ' ' , aViennaAbstractFormatter arrow
+		  insertCrIfNeeded: statement
+]
+
 { #category : #accessing }
 ViennaCasesStatementAlternativeNode >> label [
 
 	^ 'CasesStatementAlternative'
+]
+
+{ #category : #'pretty printing' }
+ViennaCasesStatementAlternativeNode >> patternList [
+
+	^ self at: 1
+]
+
+{ #category : #'pretty printing' }
+ViennaCasesStatementAlternativeNode >> patternList: aViennaPatternListNode [
+
+	self at: 1 put: aViennaPatternListNode
+]
+
+{ #category : #'pretty printing' }
+ViennaCasesStatementAlternativeNode >> statement [
+
+	^ self at: 2
+]
+
+{ #category : #'pretty printing' }
+ViennaCasesStatementAlternativeNode >> statement: aViennaStatementNode [
+
+	self at: 2 put: aViennaStatementNode
 ]

@@ -1920,13 +1920,14 @@ ViennaVDMParser >> sequenceEnumeration [
 
 { #category : #'parsers-statements' }
 ViennaVDMParser >> sequenceForLoop [
-	^ super sequenceForLoop
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'SequenceForLoop'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super sequenceForLoop =>> [ :start :end :array |
+	  (ViennaSequenceForLoopNode
+		   patternOrBind: array first
+		   expression: array second
+		   statement: array third)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-types' }
@@ -1981,13 +1982,14 @@ ViennaVDMParser >> setEnumeration [
 
 { #category : #'parsers-statements' }
 ViennaVDMParser >> setForLoop [
-	^ super setForLoop
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'SetForLoop'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super setForLoop =>> [ :start :end :array |
+	  (ViennaSetForLoopNode
+		   pattern: array first
+		   expression: array second
+		   statement: array third)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -2087,13 +2089,11 @@ ViennaVDMParser >> symbolicLiteral [
 
 { #category : #'parsers-statements' }
 ViennaVDMParser >> tixeStatement [
-	^ super tixeStatement
-		=>> [ :start :end :pair | 
-			ViennaNode
-				label: 'TixeStatement'
-				start: start
-				end: end
-				withAll: pair ]
+
+	^ super tixeStatement =>> [ :start :end :pair |
+	  (ViennaTixeStatementNode traps: pair first statement: pair second)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -2122,13 +2122,14 @@ ViennaVDMParser >> totalFunctionType [
 
 { #category : #'parsers-statements' }
 ViennaVDMParser >> trapStatement [
-	^ super trapStatement
-		=>> [ :start :end :pair | 
-			ViennaNode
-				label: 'TrapStatement'
-				start: start
-				end: end
-				withAll: pair ]
+
+	^ super trapStatement =>> [ :start :end :triple |
+	  (ViennaTrapStatementNode
+		   pattern: triple first
+		   handlerStatement: triple second
+		   statement: triple third)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-statements' }
@@ -2399,11 +2400,9 @@ ViennaVDMParser >> varInformation [
 
 { #category : #'parsers-statements' }
 ViennaVDMParser >> whileLoop [
-	^ super whileLoop
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'WhileLoop'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super whileLoop =>> [ :start :end :pair |
+	  (ViennaWhileLoopNode expression: pair first statement: pair second)
+		  start: start end: end;
+		  yourself ]
 ]

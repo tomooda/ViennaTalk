@@ -1940,15 +1940,26 @@ ViennaVDM2SmalltalkScriptTest >> testSequenceEnumerationEnv [
 
 { #category : #'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testSequenceForLoopEnv [
+
 	| node |
-	node := ViennaVDMParser new statement end parse: 'for i in [5,6,7] do x := x + i'.
+	node := ViennaVDMParser new statement end parse:
+		        'for i in [5,6,7] do x := x + i'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'SequenceForLoop'.
-	self assert: (self evaluate: '|x|x:=0.' , (ViennaVDM2SmalltalkScript new generate: node) , '. x') equals: 18.
-	node := ViennaVDMParser new statement end parse: 'for mk_(i,j) in [mk_(1, 2), mk_(2, 3)] do x := x + i*j'.
+	self assert: node isViennaSequenceForLoopNode.
+	self
+		assert: (self evaluate:
+				 '|x|x:=0.' , (ViennaVDM2SmalltalkScript new generate: node)
+				 , '. x')
+		equals: 18.
+	node := ViennaVDMParser new statement end parse:
+		        'for mk_(i,j) in [mk_(1, 2), mk_(2, 3)] do x := x + i*j'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'SequenceForLoop'.
-	self assert: (self evaluate: '|x|x:=0.' , (ViennaVDM2SmalltalkScript new generate: node) , '. x') equals: 8
+	self assert: node isViennaSequenceForLoopNode.
+	self
+		assert: (self evaluate:
+				 '|x|x:=0.' , (ViennaVDM2SmalltalkScript new generate: node)
+				 , '. x')
+		equals: 8
 ]
 
 { #category : #'tests-code generation-expressions' }
@@ -2098,19 +2109,35 @@ ViennaVDM2SmalltalkScriptTest >> testSetEnumerationEnv [
 
 { #category : #'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testSetForLoopEnv [
+
 	| node |
-	node := ViennaVDMParser new statement end parse: 'for all i in set {5,6,7} do x := x + i'.
+	node := ViennaVDMParser new statement end parse:
+		        'for all i in set {5,6,7} do x := x + i'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'SetForLoop'.
-	self assert: (self evaluate: '|x|x:=0.' , (ViennaVDM2SmalltalkScript new generate: node) , '. x') equals: 18.
-	node := ViennaVDMParser new statement end parse: 'for all mk_(i, j) in set {mk_(1, 2), mk_(2, 3)} do x := x + i*j'.
+	self assert: node isViennaSetForLoopNode.
+	self
+		assert: (self evaluate:
+				 '|x|x:=0.' , (ViennaVDM2SmalltalkScript new generate: node)
+				 , '. x')
+		equals: 18.
+	node := ViennaVDMParser new statement end parse:
+		        'for all mk_(i, j) in set {mk_(1, 2), mk_(2, 3)} do x := x + i*j'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'SetForLoop'.
-	self assert: (self evaluate: '|x|x:=0.' , (ViennaVDM2SmalltalkScript new generate: node) , '. x') equals: 8.
-	node := ViennaVDMParser new statement end parse: 'for all s in set power { 1,...,3 } do x := x + 1'.
+	self assert: node isViennaSetForLoopNode.
+	self
+		assert: (self evaluate:
+				 '|x|x:=0.' , (ViennaVDM2SmalltalkScript new generate: node)
+				 , '. x')
+		equals: 8.
+	node := ViennaVDMParser new statement end parse:
+		        'for all s in set power { 1,...,3 } do x := x + 1'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'SetForLoop'.
-	self assert: (self evaluate: '|x|x:=0.' , (ViennaVDM2SmalltalkScript new generate: node) , '. x') equals: 8
+	self assert: node isViennaSetForLoopNode.
+	self
+		assert: (self evaluate:
+				 '|x|x:=0.' , (ViennaVDM2SmalltalkScript new generate: node)
+				 , '. x')
+		equals: 8
 ]
 
 { #category : #'tests-code generation-expressions' }
@@ -2398,11 +2425,17 @@ ViennaVDM2SmalltalkScriptTest >> testUnionTypeEnv [
 
 { #category : #'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testWhileLoopEnv [
+
 	| node |
-	node := ViennaVDMParser new statement end parse: 'while i <= 7 do (x := x + i; i := i + 1)'.
+	node := ViennaVDMParser new statement end parse:
+		        'while i <= 7 do (x := x + i; i := i + 1)'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'WhileLoop'.
-	self assert: (self evaluate: '|i x|i := 5. x:=0.' , (ViennaVDM2SmalltalkScript new generate: node) , '. x') equals: 18
+	self assert: node isViennaWhileLoopNode.
+	self
+		assert: (self evaluate:
+				 '|i x|i := 5. x:=0.'
+				 , (ViennaVDM2SmalltalkScript new generate: node) , '. x')
+		equals: 18
 ]
 
 { #category : #private }
