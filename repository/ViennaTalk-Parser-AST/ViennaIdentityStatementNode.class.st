@@ -5,7 +5,19 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pretty printing' }
+ViennaIdentityStatementNode >> formatWith: aViennaAbstractFormatter [
+
+	^ 'skip'
+]
+
+{ #category : #testing }
+ViennaIdentityStatementNode >> isViennaIdentityStatementNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaIdentityStatementNode >> label [
 
 	^ 'IdentityStatement'

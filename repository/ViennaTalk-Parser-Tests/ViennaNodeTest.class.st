@@ -10,9 +10,8 @@ Class {
 
 { #category : #running }
 ViennaNodeTest >> setUp [
-	ast := ViennaVDMParser new
-		parse:
-			'module A
+
+	ast := ViennaVDMParser new parse: 'module A
 imports from B types Ti renamed Ti operations opi: () ==> () renamed opi; opi2
 exports 
 	types T1; struct T2
@@ -62,10 +61,8 @@ operations
 	opi2() == return 0;
 end B'.
 	skip := ast.
-	ast
-		allDescendantsDo: [ :n | 
-			n label = 'IdentityStatement'
-				ifTrue: [ skip := n ] ]
+	ast allDescendantsDo: [ :n |
+		n isViennaIdentityStatementNode ifTrue: [ skip := n ] ]
 ]
 
 { #category : #running }

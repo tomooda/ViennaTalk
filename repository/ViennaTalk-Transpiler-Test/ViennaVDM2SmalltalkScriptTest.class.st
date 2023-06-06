@@ -536,12 +536,14 @@ ViennaVDM2SmalltalkScriptTest >> testExistsExpressionEnv [
 
 { #category : #'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testExitStatementEnv [
+
 	| node |
 	node := ViennaVDMParser new statement end parse: 'exit 1'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'ExitStatement'.
+	self assert: node isViennaExitStatementNode.
 	self
-		should: [ self evaluate: (ViennaVDM2SmalltalkScript new generate: node) ]
+		should: [
+		self evaluate: (ViennaVDM2SmalltalkScript new generate: node) ]
 		raise: ViennaException
 		withExceptionDo: [ :ex | self assert: ex expression equals: 1 ]
 ]

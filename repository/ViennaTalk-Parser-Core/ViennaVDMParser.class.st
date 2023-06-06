@@ -441,7 +441,8 @@ ViennaVDMParser >> errorList [
 
 { #category : #'parsers-statements' }
 ViennaVDMParser >> errorStatement [
-	^ super errorStatement ==> [ :string | ViennaNode label: 'ErrorStatement' ]
+
+	^ super errorStatement ==> [ :string | ViennaErrorStatementNode new ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -475,7 +476,9 @@ ViennaVDMParser >> existsExpression [
 
 { #category : #'parsers-statements' }
 ViennaVDMParser >> exitStatement [
-	^ super exitStatement ==> [ :expr | ViennaNode label: 'ExitStatement' with: expr ]
+
+	^ super exitStatement
+	  ==> [ :expr | ViennaExitStatementNode expression: expr ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -867,8 +870,11 @@ ViennaVDMParser >> identifierTypePairList [
 
 { #category : #'parsers-statements' }
 ViennaVDMParser >> identityStatement [
-	^ super identityStatement
-		=>> [ :start :end :ignore | ViennaNode label: 'IdentityStatement' start: start end: end ]
+
+	^ super identityStatement =>> [ :start :end :ignore |
+	  ViennaIdentityStatementNode new
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-expressions-basics' }

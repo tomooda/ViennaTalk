@@ -1134,6 +1134,12 @@ ViennaNode >> isViennaEqualNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaErrorStatementNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaExists1ExpressionNode [
 
 	^ false
@@ -1141,6 +1147,12 @@ ViennaNode >> isViennaExists1ExpressionNode [
 
 { #category : #testing }
 ViennaNode >> isViennaExistsExpressionNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaExitStatementNode [
 
 	^ false
 ]
@@ -1207,6 +1219,12 @@ ViennaNode >> isViennaGreaterThanNode [
 
 { #category : #testing }
 ViennaNode >> isViennaGreaterThanOrEqualNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaIdentityStatementNode [
 
 	^ false
 ]

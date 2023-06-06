@@ -58,6 +58,12 @@ ViennaAlwaysStatementNode >> formatWith: aViennaAbstractFormatter [
 				  insertCrIfNeeded: statement ]
 ]
 
+{ #category : #testing }
+ViennaAlwaysStatementNode >> isViennaAlwaysStatementNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaAlwaysStatementNode >> label [
 
