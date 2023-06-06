@@ -28,19 +28,15 @@ ViennaExtractLetStatement >> execute [
 	self
 		replaceNode: ast
 		with: (ViennaLocalNameNode identifier: self newName).
-	^ self replaceNode: dummy with: (ViennaNode
-			   label: 'LetStatement'
-			   with: (ViennaNode
-					    label: 'LocalDefinitionList'
-					    with: (ViennaNode label: 'LocalDefinition' with: (ViennaNode
-								      label: 'ValueDefinition'
-								      with:
-								      (ViennaNode
-									       label: 'PatternIdentifier'
-									       with: self newName)
-								      with: nil
-								      with: ast)))
-			   with: self statementNode)
+	^ self replaceNode: dummy with: (ViennaLetStatementNode
+			   localDefinitionList: (ViennaLocalDefinitionListNode withAll:
+					    { (ViennaLocalDefinitionNode with: (ViennaNode
+							      label: 'ValueDefinition'
+							      with:
+							      (ViennaNode label: 'PatternIdentifier' with: self newName)
+							      with: nil
+							      with: ast)) })
+			   statement: self statementNode)
 ]
 
 { #category : #accessing }

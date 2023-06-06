@@ -7,7 +7,7 @@ Class {
 { #category : #testing }
 ViennaNarrowLetStatement >> acceptsNode: aViennaNode [
 
-	^ aViennaNode label = 'LetStatement'
+	^ aViennaNode isViennaLetStatementNode
 ]
 
 { #category : #accessing }

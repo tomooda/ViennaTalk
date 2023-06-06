@@ -746,15 +746,25 @@ ViennaVDM2SmalltalkScriptTest >> testIfExpressionEnv [
 
 { #category : #'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testIfStatementEnv [
+
 	| node |
-	node := ViennaVDMParser new statement end parse: 'if true then x := x + 1'.
+	node := ViennaVDMParser new statement end parse:
+		        'if true then x := x + 1'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'IfStatement'.
-	self assert: (self evaluate: '|x| x:= 0.' , (ViennaVDM2SmalltalkScript new generate: node) , '.x') equals: 1.
-	node := ViennaVDMParser new statement end parse: 'if false then x := 1 elseif true then x := 2 else x := 3'.
+	self assert: node isViennaIfStatementNode.
+	self
+		assert: (self evaluate:
+				 '|x| x:= 0.' , (ViennaVDM2SmalltalkScript new generate: node)
+				 , '.x')
+		equals: 1.
+	node := ViennaVDMParser new statement end parse:
+		        'if false then x := 1 elseif true then x := 2 else x := 3'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'IfStatement'.
-	self assert: (self evaluate: '|x|' , (ViennaVDM2SmalltalkScript new generate: node) , '.x') equals: 2
+	self assert: node isViennaIfStatementNode.
+	self
+		assert: (self evaluate:
+				 '|x|' , (ViennaVDM2SmalltalkScript new generate: node) , '.x')
+		equals: 2
 ]
 
 { #category : #'tests-code generation-definitions' }
@@ -891,12 +901,16 @@ ViennaVDM2SmalltalkScriptTest >> testInSetEnv [
 
 { #category : #'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testIndexForLoop [
+
 	| node |
-	node := ViennaVDMParser new statement end parse: 'for i = 1 to 10 by 2 do x := x + i'.
+	node := ViennaVDMParser new statement end parse:
+		        'for i = 1 to 10 by 2 do x := x + i'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'IndexForLoop'.
+	self assert: node isViennaIndexForLoopNode.
 	self
-		assert: (self evaluate: '|x| x:= 0.' , (ViennaVDM2SmalltalkScript new generate: node) , '.x')
+		assert: (self evaluate:
+				 '|x| x:= 0.' , (ViennaVDM2SmalltalkScript new generate: node)
+				 , '.x')
 		equals: 1 + 3 + 5 + 7 + 9
 ]
 
@@ -1092,12 +1106,17 @@ ViennaVDM2SmalltalkScriptTest >> testLetBeExpressionEnv [
 
 { #category : #'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testLetBeStatementEnv [
+
 	| node |
-	node := ViennaVDMParser new statement end parse: 'let x in set {1,2} be st x mod 2 = 0 in a := x + 1'.
+	node := ViennaVDMParser new statement end parse:
+		        'let x in set {1,2} be st x mod 2 = 0 in a := x + 1'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'LetBeStatement'.
+	self assert: node isViennaLetBeStatementNode.
 	self
-		assert: (self evaluate: '|a|' , (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new) , '. a')
+		assert: (self evaluate: '|a|'
+				 ,
+				 (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)
+				 , '. a')
 		equals: 3
 ]
 
@@ -1117,11 +1136,18 @@ ViennaVDM2SmalltalkScriptTest >> testLetExpressionEnv [
 
 { #category : #'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testLetStatementEnv [
+
 	| node |
-	node := ViennaVDMParser new statement end parse: 'let x:nat = y+1, y:nat = 2, f:nat->nat f(n)==n+1 in a:=f(x * y)'.
+	node := ViennaVDMParser new statement end parse:
+		        'let x:nat = y+1, y:nat = 2, f:nat->nat f(n)==n+1 in a:=f(x * y)'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'LetStatement'.
-	self assert: (self evaluate: '|a|' , (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new) , '.a') equals: 7
+	self assert: node isViennaLetStatementNode.
+	self
+		assert: (self evaluate: '|a|'
+				 ,
+				 (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)
+				 , '.a')
+		equals: 7
 ]
 
 { #category : #'tests-code generation-expressions' }
@@ -1440,26 +1466,31 @@ ViennaVDM2SmalltalkScriptTest >> testMatchValueEnv [
 
 { #category : #'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testMultipleAssignStatementEnv [
+
 	| node |
-	node := ViennaVDMParser new statement end parse: 'atomic(x:= y; y:= x)'.
+	node := ViennaVDMParser new statement end parse:
+		        'atomic(x:= y; y:= x)'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'MultipleAssignStatement'.
+	self assert: node isViennaMultipleAssignStatementNode.
 	self
-		assert: (self evaluate: '|x y| x := 1. y := 2. ' , (ViennaVDM2SmalltalkScript new generate: node) , '. {x . y}')
-		equals:
-			{2.
-			1}
+		assert: (self evaluate: '|x y| x := 1. y := 2. '
+				 , (ViennaVDM2SmalltalkScript new generate: node) , '. {x . y}')
+		equals: { 2. 1 }
 ]
 
 { #category : #'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testNondeterministicStatementEnv [
+
 	| node |
-	node := ViennaVDMParser new statement end parse: '||(a := a union {1}, a := a union {2}, a := a union {3})'.
+	node := ViennaVDMParser new statement end parse:
+		        '||(a := a union {1}, a := a union {2}, a := a union {3})'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'NondeterministicStatement'.
+	self assert: node isViennaNondeterministicStatementNode.
 	self
-		assert: (self evaluate: '|a| a := Set new.' , (ViennaVDM2SmalltalkScript new generate: node) , '. a')
-		equals: #(1 2 3) asSet
+		assert: (self evaluate:
+				 '|a| a := Set new.'
+				 , (ViennaVDM2SmalltalkScript new generate: node) , '. a')
+		equals: #( 1 2 3 ) asSet
 ]
 
 { #category : #'tests-code generation-expressions' }
@@ -1771,11 +1802,15 @@ ViennaVDM2SmalltalkScriptTest >> testResultExpressionEnv [
 
 { #category : #'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testReturnStatementEnv [
+
 	| node |
 	node := ViennaVDMParser new statement end parse: 'return 1'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'ReturnStatement'.
-	self assert: (self evaluate: (ViennaVDM2SmalltalkScript new generate: node)) equals: 1
+	self assert: node isViennaReturnStatementNode.
+	self
+		assert:
+		(self evaluate: (ViennaVDM2SmalltalkScript new generate: node))
+		equals: 1
 ]
 
 { #category : #'tests-code generation-types' }

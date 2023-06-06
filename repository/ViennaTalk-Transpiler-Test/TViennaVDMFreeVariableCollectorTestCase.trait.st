@@ -97,18 +97,19 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesExistsExpressionBoun
 
 { #category : #'tests-free variables-statements' }
 TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesFieldReferenceBoundVarsInto [
+
 	| node binds |
-	node := ViennaVDMParser new indexForLoop end parse: 'for v = e1 to e2 by e3 do op(v)'.
+	node := ViennaVDMParser new indexForLoop end parse:
+		        'for v = e1 to e2 by e3 do op(v)'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'IndexForLoop'.
+	self assert: node isViennaIndexForLoopNode.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
-		equals:
-			{'e1'.
-			'e2'.
-			'e3'.
-			'op'} asSet
+		assert:
+		(ViennaVDM2SmalltalkScript new
+			 freeVariables: node
+			 env: Dictionary new)
+		equals: { 'e1'. 'e2'. 'e3'. 'op' } asSet
 ]
 
 { #category : #'tests-free variables-expressions' }
@@ -146,17 +147,18 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesForallExpressionBoun
 
 { #category : #'tests-free variables-statements' }
 TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesIndexForLoopBoundVarsInto [
+
 	| node |
-	node := ViennaVDMParser new indexForLoop end parse: 'for v = e1 to e2 by e3 do op(v)'.
+	node := ViennaVDMParser new indexForLoop end parse:
+		        'for v = e1 to e2 by e3 do op(v)'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'IndexForLoop'.
+	self assert: node isViennaIndexForLoopNode.
 	self
-		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
-		equals:
-			{'e1'.
-			'e2'.
-			'e3'.
-			'op'} asSet
+		assert:
+		(ViennaVDM2SmalltalkScript new
+			 freeVariables: node
+			 env: Dictionary new)
+		equals: { 'e1'. 'e2'. 'e3'. 'op' } asSet
 ]
 
 { #category : #'tests-free variables-expressions' }
@@ -212,17 +214,19 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesLetBeExpressionBound
 
 { #category : #'tests-free variables-statements' }
 TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesLetBeStatementBoundVarsInto [
+
 	| node binds |
-	node := ViennaVDMParser new letBeStatement end parse: 'let v in set s be st p(v) in op(v)'.
+	node := ViennaVDMParser new letBeStatement end parse:
+		        'let v in set s be st p(v) in op(v)'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'LetBeStatement'.
+	self assert: node isViennaLetBeStatementNode.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
-		equals:
-			{'s'.
-			'p'.
-			'op'} asSet
+		assert:
+		(ViennaVDM2SmalltalkScript new
+			 freeVariables: node
+			 env: Dictionary new)
+		equals: { 's'. 'p'. 'op' } asSet
 ]
 
 { #category : #'tests-free variables-expressions' }
@@ -244,19 +248,19 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesLetExpressionBoundVa
 
 { #category : #'tests-free variables-statements' }
 TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesLetStatementBoundVarsInto [
+
 	| node binds |
-	node := ViennaVDMParser new letStatement end parse: 'let v1 : t1 =e, v2 : t2 = f(v1) in op(v1, v2)'.
+	node := ViennaVDMParser new letStatement end parse:
+		        'let v1 : t1 =e, v2 : t2 = f(v1) in op(v1, v2)'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'LetStatement'.
+	self assert: node isViennaLetStatementNode.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
-		equals:
-			{'t1'.
-			'f'.
-			't2'.
-			'e'.
-			'op'} asSet
+		assert:
+		(ViennaVDM2SmalltalkScript new
+			 freeVariables: node
+			 env: Dictionary new)
+		equals: { 't1'. 'f'. 't2'. 'e'. 'op' } asSet
 ]
 
 { #category : #'tests-free variables-expressions' }

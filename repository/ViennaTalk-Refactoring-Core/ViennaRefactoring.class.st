@@ -201,11 +201,6 @@ ViennaRefactoring >> definitionsLabelFor: aViennaNode [
 ]
 
 { #category : #'visiting-scopes' }
-ViennaRefactoring >> directScopeNodeLabels [
-	^ #('IndexForLoop') asSet
-]
-
-{ #category : #'visiting-scopes' }
 ViennaRefactoring >> enclosingScopeNodeLabels [
 	^ #('Document' 'Module' 'ExplicitFunctionDefinition' 'ImplicitFunctionDefinition' 'ExplicitOperationDefinition' 'ImplicitOperationDefinition' 'CasesExpressionAlternative' 'CasesStatementAlternative' 'LetExpression' 'LetStatement' 'LetBeExpression' 'LetBeStatement' 'SequenceComprehension' 'SetComprehension' 'MapComprehension' 'ForallExpression' 'ExistsExpression' 'Exists1Expression' 'IotaExpression' 'LambdaExpression' 'InvariantInitialFunction' 'SequenceForLoop' 'SetForLoop' 'BlockStatement')
 		asSet
@@ -1138,13 +1133,13 @@ ViennaRefactoring >> retractImportDefinition: aViennaNode in: moduleNode [
 
 { #category : #'visiting-scopes' }
 ViennaRefactoring >> scopeOf: aViennaNode [
+
 	| scopingNodeLabels node |
 	scopingNodeLabels := self enclosingScopeNodeLabels.
-	(self directScopeNodeLabels includes: aViennaNode label)
-		ifTrue: [ ^ aViennaNode ].
+	aViennaNode isViennaIndexForLoopNode ifTrue: [ ^ aViennaNode ].
 	node := aViennaNode parent ifNil: [ ^ aViennaNode ].
-	[ scopingNodeLabels includes: node label ]
-		whileFalse: [ (node := node parent) ifNil: [ ^ node ] ].
+	[ scopingNodeLabels includes: node label ] whileFalse: [
+		(node := node parent) ifNil: [ ^ node ] ].
 	^ node
 ]
 

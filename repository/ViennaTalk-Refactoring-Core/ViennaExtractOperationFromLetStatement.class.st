@@ -15,20 +15,20 @@ ViennaExtractOperationFromLetStatement >> arguments [
 ViennaExtractOperationFromLetStatement >> check [
 
 	| params |
-	ast label = 'LetStatement' ifFalse: [ ^ false ].
-	params := Set new: ast first size * 2.
-	ast first do: [ :localDef |
+	ast isViennaLetStatementNode ifFalse: [ ^ false ].
+	params := Set new: ast localDefinitionList size * 2.
+	ast localDefinitionList do: [ :localDef |
 		localDef first label = 'FunctionDefinition' ifTrue: [ ^ false ].
 		localDef first first allDescendantsDo: [ :node |
 			node label = 'PatternIdentifier' ifTrue: [ params add: node first ] ] ].
-	ast first do: [ :localDef |
+	ast localDefinitionList do: [ :localDef |
 		localDef first third allDescendantsDo: [ :node |
 			(node isViennaLocalNameNode and: [
 				 params includes: node identifier ]) ifTrue: [ ^ false ] ] ].
-	ast second variableExpressionNodesDo: [ :node |
+	ast statement variableExpressionNodesDo: [ :node |
 		node isStateVariableNameNode ifFalse: [ ^ false ] ].
-	ast second allDescendantsDo: [ :node |
-		node label = 'ReturnStatement' ifTrue: [ ^ false ] ].
+	ast statement allDescendantsDo: [ :node |
+		node isViennaReturnStatementNode ifTrue: [ ^ false ] ].
 	^ true
 ]
 

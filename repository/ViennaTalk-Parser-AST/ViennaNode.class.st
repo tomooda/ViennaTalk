@@ -632,8 +632,6 @@ ViennaNode >> definitionInExplicitOperationOfLocalName: aString do: aBlock [
 { #category : #'accessing-definitions' }
 ViennaNode >> definitionInForLoopOfLocalName: aString do: aBlock [
 
-	(self label = 'IndexForLoop' and: [ self first = aString ]) ifTrue: [
-		^ aBlock value: self ].
 	self label = 'SequenceForLoop' ifTrue: [
 		self first allDescendantsDo: [ :n |
 			(n label = 'PatternIdentifier' and: [ n first = aString ]) ifTrue: [
@@ -756,17 +754,12 @@ ViennaNode >> definitionOfGlobalName: shortName module: moduleName [
 { #category : #'accessing-definitions' }
 ViennaNode >> definitionOfLocalName: aString [
 
-	self label = 'LetStatement' ifTrue: [
-		self definitionInLetOfLocalName: aString do: [ :node | ^ node ] ].
-	self label = 'LetBeStatement' ifTrue: [
-		self definitionInLetBeOfLocalName: aString do: [ :node | ^ node ] ].
 	(self label = 'CasesExpressionAlternative' or: [
 		 self label = 'CasesStatementAlternative' ]) ifTrue: [
 		self
 			definitionInCasesAlternativeOfLocalName: aString
 			do: [ :node | ^ node ] ].
-	(#( 'IndexForLoop' 'SequenceForLoop' 'SetForLoop' ) includes:
-		 self label) ifTrue: [
+	(#( 'SequenceForLoop' 'SetForLoop' ) includes: self label) ifTrue: [
 		self definitionInForLoopOfLocalName: aString do: [ :node | ^ node ] ].
 	self label = 'Module' ifTrue: [
 		self definitionInModuleOfLocalName: aString do: [ :node | ^ node ] ].
@@ -1086,6 +1079,12 @@ ViennaNode >> isViennaCompositionNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaConditionalStatementNode [
+
+	^ true
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaDclStatementNode [
 
 	^ false
@@ -1236,6 +1235,12 @@ ViennaNode >> isViennaIfExpressionNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaIfStatementNode [
+
+	^ true
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaImplyNode [
 
 	^ false
@@ -1243,6 +1248,12 @@ ViennaNode >> isViennaImplyNode [
 
 { #category : #testing }
 ViennaNode >> isViennaInSetNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaIndexForLoopNode [
 
 	^ false
 ]
@@ -1296,6 +1307,12 @@ ViennaNode >> isViennaLetBeExpressionNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaLetBeStatementNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaLetExpressionNode [
 
 	^ false
@@ -1304,7 +1321,13 @@ ViennaNode >> isViennaLetExpressionNode [
 { #category : #testing }
 ViennaNode >> isViennaLetNode [
 
-	^ self isViennaLetExpressionNode or: [ self label = 'LetStatement' ]
+	^ self isViennaLetExpressionNode or: [ self isViennaLetStatementNode ]
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaLetStatementNode [
+
+	^ false
 ]
 
 { #category : #testing }
@@ -1398,6 +1421,12 @@ ViennaNode >> isViennaMapRangeRestrictedToNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaMultipleAssignStatementNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaNameNode [
 
 	^ false
@@ -1406,6 +1435,12 @@ ViennaNode >> isViennaNameNode [
 { #category : #testing }
 ViennaNode >> isViennaNode [
 	^ true
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaNondeterministicStatementNode [
+
+	^ false
 ]
 
 { #category : #testing }
@@ -1470,6 +1505,12 @@ ViennaNode >> isViennaRecordModifierNode [
 
 { #category : #testing }
 ViennaNode >> isViennaResultExpressionNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaReturnStatementNode [
 
 	^ false
 ]

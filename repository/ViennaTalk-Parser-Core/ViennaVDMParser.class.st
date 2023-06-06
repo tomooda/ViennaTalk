@@ -893,17 +893,18 @@ ViennaVDMParser >> ifExpression [
 
 { #category : #'parsers-statements' }
 ViennaVDMParser >> ifStatement [
-	^ super ifStatement
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'IfStatement'
-				start: start
-				end: end
-				with:
-					(ViennaNode
-						label: 'ConditionalStatementList'
-						withAll: (array first collect: [ :pair | ViennaNode label: 'ConditionalStatement' withAll: pair ]))
-				with: array second ]
+
+	^ super ifStatement =>> [ :start :end :array |
+	  (ViennaIfStatementNode
+		   conditionalStatementList:
+			   (ViennaConditionalStatementListNode withAll:
+					    (array first collect: [ :pair |
+							     ViennaConditionalStatementNode
+								     condition: pair first
+								     statement: pair second ]))
+		   statement: array second)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -1032,13 +1033,16 @@ ViennaVDMParser >> inSet: arg1 and: arg2 [
 
 { #category : #'parsers-statements' }
 ViennaVDMParser >> indexForLoop [
-	^ super indexForLoop
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'IndexForLoop'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super indexForLoop =>> [ :start :end :array |
+	  (ViennaIndexForLoopNode
+		   identifier: array first
+		   startExpression: array second
+		   endExpression: array third
+		   stepExpression: array fourth
+		   statement: array fifth)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -1197,13 +1201,14 @@ ViennaVDMParser >> letBeExpression [
 
 { #category : #'parsers-statements' }
 ViennaVDMParser >> letBeStatement [
-	^ super letBeStatement
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'LetBeStatement'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super letBeStatement =>> [ :start :end :array |
+	  (ViennaLetBeStatementNode
+		   multipleBind: array first
+		   conditionExpression: array second
+		   statement: array third)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -1217,13 +1222,13 @@ ViennaVDMParser >> letExpression [
 
 { #category : #'parsers-statements' }
 ViennaVDMParser >> letStatement [
-	^ super letStatement
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'LetStatement'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super letStatement =>> [ :start :end :pair |
+	  (ViennaLetStatementNode
+		   localDefinitionList: pair first
+		   statement: pair second)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -1414,13 +1419,11 @@ ViennaVDMParser >> mul: arg1 and: arg2 [
 
 { #category : #'parsers-statements' }
 ViennaVDMParser >> multipleAssignStatement [
-	^ super multipleAssignStatement
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'MultipleAssignStatement'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super multipleAssignStatement =>> [ :start :end :array |
+	  (ViennaMultipleAssignStatementNode withAll: array)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-patterns' }
@@ -1487,13 +1490,11 @@ ViennaVDMParser >> nameList [
 
 { #category : #'parsers-statements' }
 ViennaVDMParser >> nondeterministicStatement [
-	^ super nondeterministicStatement
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'NondeterministicStatement'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super nondeterministicStatement =>> [ :start :end :array |
+	  (ViennaNondeterministicStatementNode withAll: array)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -1611,13 +1612,11 @@ ViennaVDMParser >> othersExpression [
 
 { #category : #'parsers-statements' }
 ViennaVDMParser >> othersStatement [
-	^ super othersStatement
-		=>> [ :start :end :bodyStatement | 
-			ViennaNode
-				label: 'OthersStatement'
-				start: start
-				end: end
-				with: bodyStatement ]
+
+	^ super othersStatement =>> [ :start :end :bodyStatement |
+	  (ViennaOthersStatementNode statement: bodyStatement)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -1799,13 +1798,11 @@ ViennaVDMParser >> resultExpression [
 
 { #category : #'parsers-statements' }
 ViennaVDMParser >> returnStatement [
-	^ super returnStatement
-		=>> [ :start :end :expr | 
-			ViennaNode
-				label: 'ReturnStatement'
-				start: start
-				end: end
-				with: expr ]
+
+	^ super returnStatement =>> [ :start :end :expr |
+	  (ViennaReturnStatementNode expression: expr)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-expressions-operators' }

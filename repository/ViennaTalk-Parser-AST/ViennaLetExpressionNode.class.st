@@ -17,7 +17,7 @@ ViennaLetExpressionNode class >> localDefinitionList: aViennaLocalDefinitionList
 { #category : #'accessing-definitions' }
 ViennaLetExpressionNode >> definitionOfLocalName: aString [
 
-	self first do: [ :localDef |
+	self localDefinitionList do: [ :localDef |
 		| def |
 		def := localDef first.
 		def label = 'ValueDefinition' ifTrue: [

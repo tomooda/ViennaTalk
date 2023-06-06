@@ -26,6 +26,22 @@ ViennaConditionalStatementNode >> condition: aViennaExpressionNode [
 	self at: 1 put: aViennaExpressionNode
 ]
 
+{ #category : #'pretty printing' }
+ViennaConditionalStatementNode >> formatWith: aViennaAbstractFormatter [
+
+	^ 'elseif ' , (aViennaAbstractFormatter indentString:
+		   (aViennaAbstractFormatter format: self condition)) , String cr
+	  , aViennaAbstractFormatter indent , 'then '
+	  , (aViennaAbstractFormatter indentString:
+			   (aViennaAbstractFormatter format: self statement))
+]
+
+{ #category : #testing }
+ViennaConditionalStatementNode >> isViennaConditionalStatementNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaConditionalStatementNode >> label [
 

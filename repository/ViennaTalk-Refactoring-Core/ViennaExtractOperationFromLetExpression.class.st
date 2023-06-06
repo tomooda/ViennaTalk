@@ -102,7 +102,8 @@ ViennaExtractOperationFromLetExpression >> newName: aString [
 
 { #category : #accessing }
 ViennaExtractOperationFromLetExpression >> operationBody [
-	^ ViennaNode label: 'ReturnStatement' with: ast second
+
+	^ ViennaReturnStatementNode expression: ast second
 ]
 
 { #category : #accessing }

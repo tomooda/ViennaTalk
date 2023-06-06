@@ -406,13 +406,15 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesImplicitFunctionDe
 
 { #category : #'tests-bound variables-statements' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesIndexForLoopInto [
+
 	| node binds |
-	node := ViennaVDMParser new indexForLoop end parse: 'for v = e1 to e2 by e3 do op(v)'.
+	node := ViennaVDMParser new indexForLoop end parse:
+		        'for v = e1 to e2 by e3 do op(v)'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'IndexForLoop'.
+	self assert: node isViennaIndexForLoopNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self assert: binds equals: {'v'} asSet
+	self assert: binds equals: { 'v' } asSet
 ]
 
 { #category : #'tests-bound variables-types' }

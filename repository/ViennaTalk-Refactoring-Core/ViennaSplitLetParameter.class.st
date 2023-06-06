@@ -29,7 +29,7 @@ ViennaSplitLetParameter >> execute [
 	localDefinition := ast parent parent.
 	localDefinition parent remove: localDefinition.
 	^ (self definitionNode parent isViennaLetExpressionNode or: [
-		   self definitionNode parent label = 'LetStatement' ])
+		   self definitionNode parent isViennaLetStatementNode ])
 		  ifTrue: [ self definitionNode parent first add: localDefinition ]
 		  ifFalse: [
 			  self
@@ -38,7 +38,7 @@ ViennaSplitLetParameter >> execute [
 			  self replaceNode: dummyNode with: (ViennaNode
 					   label: self definitionNode label
 					   with:
-					   (ViennaNode label: 'LocalDefinitionList' with: localDefinition)
+					   (ViennaLocalDefinitionListNode withAll: { localDefinition })
 					   with: self definitionNode) ]
 ]
 
