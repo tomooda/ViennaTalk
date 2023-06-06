@@ -17,7 +17,7 @@ ViennaPatternIdentifierNode >> isViennaPatternIdentifierNode: aString [
 	^ self identifier = aString
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ViennaPatternIdentifierNode >> label [
 
 	^ 'PatternIdentifier'

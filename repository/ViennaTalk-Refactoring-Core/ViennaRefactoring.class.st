@@ -309,27 +309,28 @@ ViennaRefactoring >> expressionFromPattern: aViennaNode bindings: aDictionary [
 			  at: aViennaNode name
 			  ifPresent: [ :node | node copyFragment ]
 			  ifAbsent: [ ViennaLocalNameNode identifier: aViennaNode name ] ].
-	aViennaNode label = 'MapEnumerationPattern' ifTrue: [
+	aViennaNode isViennaMapEnumerationPatternNode ifTrue: [
 		^ ViennaMapEnumerationNode withAll:
 			  (aViennaNode asArray collect: [ :node |
 				   node isViennaNode
 					   ifTrue: [
 					   self expressionFromPattern: node bindings: aDictionary ]
 					   ifFalse: [ node ] ]) ].
-	aViennaNode label = 'MapMunionPattern' ifTrue: [
+	aViennaNode isViennaMapMunionPatternNode ifTrue: [
 		^ ViennaMapMergeNode withAll:
 			  (aViennaNode asArray collect: [ :node |
 				   node isViennaNode
 					   ifTrue: [
 					   self expressionFromPattern: node bindings: aDictionary ]
 					   ifFalse: [ node ] ]) ].
-	aViennaNode label = 'MapletPattern' ifTrue: [
+	aViennaNode isViennaMapletPatternNode ifTrue: [
 		^ ViennaMapletNode withAll: (aViennaNode asArray collect: [ :node |
 				   node isViennaNode
 					   ifTrue: [
 					   self expressionFromPattern: node bindings: aDictionary ]
 					   ifFalse: [ node ] ]) ].
-	aViennaNode label = 'MatchValue' ifTrue: [ ^ aViennaNode first ].
+	aViennaNode isViennaMatchValueNode ifTrue: [
+		^ aViennaNode expression ].
 	aViennaNode label = 'RecordPattern' ifTrue: [
 		^ ViennaRecordConstructorNode withAll:
 			  (aViennaNode asArray collect: [ :node |

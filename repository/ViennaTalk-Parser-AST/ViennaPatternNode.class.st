@@ -10,3 +10,9 @@ ViennaPatternNode class >> isAbstract [
 
 	^ self = ViennaPatternNode
 ]
+
+{ #category : #testing }
+ViennaPatternNode >> isViennaPatternNode [
+
+	^ true
+]

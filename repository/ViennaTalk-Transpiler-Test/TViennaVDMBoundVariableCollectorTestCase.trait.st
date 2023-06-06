@@ -329,7 +329,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesFieldPatternInto [
 	| node binds |
 	node := ViennaVDMParser new fieldPattern end parse: 'f1 |-> v'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'FieldPattern'.
+	self assert: node isViennaFieldPatternNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self assert: binds equals: {'v'} asSet
@@ -337,17 +337,15 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesFieldPatternInto [
 
 { #category : #'tests-bound variables-patterns and binds' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesFieldPatternListInto [
+
 	| node binds |
-	node := ViennaVDMParser new fieldPatternList end parse: 'f1 |-> v1, f2 |-> v2'.
+	node := ViennaVDMParser new fieldPatternList end parse:
+		        'f1 |-> v1, f2 |-> v2'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'FieldPatternList'.
+	self assert: node isViennaFieldPatternListNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{'v1'.
-			'v2'} asSet
+	self assert: binds equals: { 'v1'. 'v2' } asSet
 ]
 
 { #category : #'tests-bound variables-definitions' }
@@ -459,38 +457,30 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesLocalDefinitionLis
 
 { #category : #'tests-bound variables-patterns and binds' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesMapEnumerationPatternInto [
+
 	| node binds |
-	node := ViennaVDMParser new mapEnumerationPattern end parse: '{k1 |-> v1, k2 |-> v2}'.
+	node := ViennaVDMParser new mapEnumerationPattern end parse:
+		        '{k1 |-> v1, k2 |-> v2}'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'MapEnumerationPattern'.
+	self assert: node isViennaMapEnumerationPatternNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{'k1'.
-			'v1'.
-			'k2'.
-			'v2'} asSet
+	self assert: binds equals: { 'k1'. 'v1'. 'k2'. 'v2' } asSet
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesMapMunionPatternInto [
+
 	| node binds |
-	node := ViennaVDMParser new mapMunionPattern end parse: '{k1 |-> v1, k2 |-> v2} munion {k3 |-> v3}'.
+	node := ViennaVDMParser new mapMunionPattern end parse:
+		        '{k1 |-> v1, k2 |-> v2} munion {k3 |-> v3}'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'MapMunionPattern'.
+	self assert: node isViennaMapMunionPatternNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
-		equals:
-			{'k1'.
-			'v1'.
-			'k2'.
-			'v2'.
-			'k3'.
-			'v3'} asSet
+		equals: { 'k1'. 'v1'. 'k2'. 'v2'. 'k3'. 'v3' } asSet
 ]
 
 { #category : #'tests-bound variables-types' }
@@ -509,17 +499,14 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesMapTypeInto [
 
 { #category : #'tests-bound variables-patterns and binds' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesMapletPatternInto [
+
 	| node binds |
 	node := ViennaVDMParser new mapletPattern end parse: 'k |-> v'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'MapletPattern'.
+	self assert: node isViennaMapletPatternNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{'k'.
-			'v'} asSet
+	self assert: binds equals: { 'k'. 'v' } asSet
 ]
 
 { #category : #'tests-bound variables-definitions' }

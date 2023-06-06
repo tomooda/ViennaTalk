@@ -5,7 +5,21 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pretty printing' }
+ViennaMapEnumerationPatternNode >> formatWith: aViennaAbstractFormatter [
+
+	^ '{' , (aViennaAbstractFormatter
+		   formatEnumerate: (aViennaAbstractFormatter formatAll: self)
+		   ifEmpty: [ aViennaAbstractFormatter maplet ]) , '}'
+]
+
+{ #category : #testing }
+ViennaMapEnumerationPatternNode >> isViennaMapEnumerationPatternNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaMapEnumerationPatternNode >> label [
 
 	^ 'MapEnumerationPattern'

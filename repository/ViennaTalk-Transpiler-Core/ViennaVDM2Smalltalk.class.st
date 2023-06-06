@@ -2265,15 +2265,15 @@ ViennaVDM2Smalltalk >> mapOrSequenceReference: aViennaNode env: aDictionary [
 
 { #category : #utilities }
 ViennaVDM2Smalltalk >> mapPatternSize: aViennaNode [
-	aViennaNode label = 'MapEnumerationPattern'
-		ifTrue: [ ^ aViennaNode size ].
-	aViennaNode label = 'MapMunionPattern'
-		ifTrue: [ 
-			| left right |
-			left := self mapPatternSize: aViennaNode first.
-			right := self mapPatternSize: aViennaNode second.
-			left ifNotNil: [ right ifNotNil: [ ^ left + right ] ].
-			^ nil ].
+
+	aViennaNode isViennaMapEnumerationPatternNode ifTrue: [
+		^ aViennaNode size ].
+	aViennaNode isViennaMapMunionPatternNode ifTrue: [
+		| left right |
+		left := self mapPatternSize: aViennaNode pattern1.
+		right := self mapPatternSize: aViennaNode pattern2.
+		left ifNotNil: [ right ifNotNil: [ ^ left + right ] ].
+		^ nil ].
 	^ nil
 ]
 

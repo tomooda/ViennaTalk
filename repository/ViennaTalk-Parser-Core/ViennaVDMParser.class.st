@@ -651,24 +651,22 @@ ViennaVDMParser >> fieldList [
 
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> fieldPattern [
-	^ super fieldPattern
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'FieldPattern'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super fieldPattern =>> [ :start :end :array |
+	  (ViennaFieldPatternNode
+		   identifier: array first
+		   pattern: array second)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> fieldPatternList [
-	^ super fieldPatternList
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'FieldPatternList'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super fieldPatternList =>> [ :start :end :array |
+	  (ViennaFieldPatternListNode withAll: array)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-statements' }
@@ -1293,23 +1291,22 @@ ViennaVDMParser >> mapEnumeration [
 
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> mapEnumerationPattern [
-	^ super mapEnumerationPattern
-		=>> [:start :end :array | 
-			ViennaNode
-				label: 'MapEnumerationPattern'
-				 start: start end: end 
-				withAll: array ]
+
+	^ super mapEnumerationPattern =>> [ :start :end :array |
+	  (ViennaMapEnumerationPatternNode withAll: array)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> mapMunionPattern [
-	^ super mapMunionPattern
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'MapMunionPattern'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super mapMunionPattern =>> [ :start :end :array |
+	  (ViennaMapMunionPatternNode
+		   pattern: array first
+		   pattern: array second)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-statements' }
@@ -1343,24 +1340,22 @@ ViennaVDMParser >> mapletList [
 
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> mapletPattern [
-	^ super mapletPattern
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'MapletPattern'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super mapletPattern =>> [ :start :end :array |
+	  (ViennaMapletPatternNode
+		   keyPattern: array first
+		   valuePattern: array second)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> matchValue [
-	^ super matchValue
-		=>> [ :start :end :ast | 
-			ViennaNode
-				label: 'MatchValue'
-				start: start
-				end: end
-				with: ast ]
+
+	^ super matchValue =>> [ :start :end :ast |
+	  (ViennaMatchValueNode expression: ast)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-expressions-operators' }

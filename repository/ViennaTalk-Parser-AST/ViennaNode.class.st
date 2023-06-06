@@ -1148,6 +1148,18 @@ ViennaNode >> isViennaExpressionNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaFieldPatternListNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaFieldPatternNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaFieldReferenceNode [
 
 	^ false
@@ -1364,6 +1376,12 @@ ViennaNode >> isViennaMapEnumerationNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaMapEnumerationPatternNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaMapInverseNode [
 
 	^ false
@@ -1371,6 +1389,12 @@ ViennaNode >> isViennaMapInverseNode [
 
 { #category : #testing }
 ViennaNode >> isViennaMapMergeNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaMapMunionPatternNode [
 
 	^ false
 ]
@@ -1401,6 +1425,18 @@ ViennaNode >> isViennaMapRangeRestrictedByNode [
 
 { #category : #testing }
 ViennaNode >> isViennaMapRangeRestrictedToNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaMapletPatternNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaMatchValueNode [
 
 	^ false
 ]
@@ -1460,6 +1496,12 @@ ViennaNode >> isViennaOrNode [
 
 { #category : #testing }
 ViennaNode >> isViennaPatternIdentifierNode: aString [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaPatternNode [
 
 	^ false
 ]

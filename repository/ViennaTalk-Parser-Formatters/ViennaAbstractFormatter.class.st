@@ -357,28 +357,6 @@ ViennaAbstractFormatter >> fieldList: aViennaNode [
 		withAll: fields
 ]
 
-{ #category : #'formatting-patterns and binds' }
-ViennaAbstractFormatter >> fieldPattern: aViennaNode [
-	| identifier pattern |
-	identifier := self format: aViennaNode first.
-	pattern := self format: aViennaNode second.
-	^ identifier , ' ', self maplet, ' ', pattern
-]
-
-{ #category : #'formatting-patterns and binds' }
-ViennaAbstractFormatter >> fieldPatternList: aViennaNode [
-	| fieldPatterns |
-	fieldPatterns := self formatAll: aViennaNode.
-	^ self
-		join:
-			','
-				,
-					((self anyNeedsIndent: fieldPatterns)
-						ifTrue: [ String cr ]
-						ifFalse: [ String space ])
-		withAll: fieldPatterns
-]
-
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> forall [
 	^ 'forall'
@@ -810,19 +788,9 @@ ViennaAbstractFormatter >> localDefinitionList: aViennaNode [
 		ifFalse: [ self join: ', ' withAll: localDefinitions ]
 ]
 
-{ #category : #'formatting-patterns and binds' }
-ViennaAbstractFormatter >> mapEnumerationPattern: aViennaNode [
-	^ '{' , (self formatEnumerate: (self formatAll: aViennaNode) ifEmpty: [ self maplet ]) , '}'
-]
-
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> mapInfix [
 	^ 'to'
-]
-
-{ #category : #'formatting-patterns and binds' }
-ViennaAbstractFormatter >> mapMunionPattern: aViennaNode [
-	^ self print: (self format: aViennaNode first) infix: self munion arg: (self format: aViennaNode second)
 ]
 
 { #category : #'symbol access' }
@@ -838,21 +806,6 @@ ViennaAbstractFormatter >> mapType: aViennaNode [
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> maplet [
 	^ '|->'
-]
-
-{ #category : #'formatting-patterns and binds' }
-ViennaAbstractFormatter >> mapletPattern: aViennaNode [
-	^ self print: (self format: aViennaNode first) infix: self maplet arg: (self format: aViennaNode second)
-]
-
-{ #category : #'formatting-patterns and binds' }
-ViennaAbstractFormatter >> matchValue: aViennaNode [
-
-	| value |
-	value := self format: aViennaNode first.
-	^ aViennaNode first isViennaSymbolicLiteralNode
-		  ifTrue: [ value ]
-		  ifFalse: [ '(' , value , ')' ]
 ]
 
 { #category : #accessing }

@@ -1299,11 +1299,17 @@ ViennaVDM2SmalltalkScriptTest >> testMapEnumerationEnv [
 
 { #category : #'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testMapEnumerationPatternEnv [
+
 	| node |
-	node := ViennaVDMParser new expression end parse: 'def  { x |-> 1, 2 |-> y } = { 1 |-> 1, 2 |-> 2 } in x + y'.
+	node := ViennaVDMParser new expression end parse:
+		        'def  { x |-> 1, 2 |-> y } = { 1 |-> 1, 2 |-> 2 } in x + y'.
 	self deny: node isPetit2Failure.
-	self assert: node first first first label = 'MapEnumerationPattern'.
-	self assert: (self evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: 3
+	self assert: node equalDefinitionList first patternOrBind
+			isViennaMapEnumerationPatternNode.
+	self
+		assert: (self evaluate:
+				 (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals: 3
 ]
 
 { #category : #'tests-code generation-expressions' }
@@ -1342,11 +1348,17 @@ ViennaVDM2SmalltalkScriptTest >> testMapMergeEnv [
 
 { #category : #'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testMapMunionPatternEnv [
+
 	| node |
-	node := ViennaVDMParser new expression end parse: 'def  { x|->y } munion { 10|->20 } = { 1 |-> 2, 10 |-> 20} in x + y'.
+	node := ViennaVDMParser new expression end parse:
+		        'def  { x|->y } munion { 10|->20 } = { 1 |-> 2, 10 |-> 20} in x + y'.
 	self deny: node isPetit2Failure.
-	self assert: node first first first label = 'MapMunionPattern'.
-	self assert: (self evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: 3
+	self assert: node equalDefinitionList first patternOrBind
+			isViennaMapMunionPatternNode.
+	self
+		assert: (self evaluate:
+				 (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals: 3
 ]
 
 { #category : #'tests-code generation-expressions' }
@@ -1457,11 +1469,17 @@ ViennaVDM2SmalltalkScriptTest >> testMapTypeEnv [
 
 { #category : #'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testMatchValueEnv [
+
 	| node |
-	node := ViennaVDMParser new expression end parse: 'def  ({10|->20}) munion { x|->y } = { 1 |-> 2, 10 |-> 20} in x + y'.
+	node := ViennaVDMParser new expression end parse:
+		        'def  ({10|->20}) munion { x|->y } = { 1 |-> 2, 10 |-> 20} in x + y'.
 	self deny: node isPetit2Failure.
-	self assert: node first first first first label = 'MatchValue'.
-	self assert: (self evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: 3
+	self assert: node equalDefinitionList first patternOrBind first
+			isViennaMatchValueNode.
+	self
+		assert: (self evaluate:
+				 (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals: 3
 ]
 
 { #category : #'tests-code generation-statements' }
