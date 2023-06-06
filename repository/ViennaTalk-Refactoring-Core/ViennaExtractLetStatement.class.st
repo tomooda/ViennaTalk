@@ -33,7 +33,7 @@ ViennaExtractLetStatement >> execute [
 					    { (ViennaLocalDefinitionNode with: (ViennaNode
 							      label: 'ValueDefinition'
 							      with:
-							      (ViennaNode label: 'PatternIdentifier' with: self newName)
+							      (ViennaPatternIdentifierNode identifier: self newName)
 							      with: nil
 							      with: ast)) })
 			   statement: self statementNode)

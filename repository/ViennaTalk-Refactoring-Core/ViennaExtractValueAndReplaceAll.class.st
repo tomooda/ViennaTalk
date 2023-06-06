@@ -27,9 +27,8 @@ ViennaExtractValueAndReplaceAll >> execute [
 				replaceNode: n
 				with: (ViennaLocalNameNode identifier: self newName) ] ].
 	valueDefinition := ViennaNode label: 'ValueDefinition' withAll: {
-			                   (ViennaNode
-				                    label: 'PatternIdentifier'
-				                    with: self newName).
+			                   (ViennaPatternIdentifierNode identifier:
+				                    self newName).
 			                   nil.
 			                   ast }.
 	accessValueDefinition := ViennaNode

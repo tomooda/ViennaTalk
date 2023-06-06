@@ -10,7 +10,7 @@ ViennaInlineValueAndRemove >> check [
 	| moduleName shortName |
 	ast ifNil: [ ^ false ].
 	ast label = 'ValueDefinition' ifFalse: [ ^ false ].
-	ast first label = 'PatternIdentifier' ifFalse: [ ^ false ].
+	ast first isViennaPatternIdentifierNode ifFalse: [ ^ false ].
 	moduleName := ast module first.
 	shortName := ast first.
 	ast document allDescendantsDo: [ :node |

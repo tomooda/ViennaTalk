@@ -14,6 +14,16 @@ ViennaCasesStatementAlternativeNode class >> patternList: aViennaPatternListNode
 		  yourself
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaCasesStatementAlternativeNode >> definitionOfLocalName: aString [
+
+	self patternList
+		allDescendantsSuchThat: [ :n |
+		n isViennaPatternIdentifierNode: aString ]
+		do: [ :n | ^ n ].
+	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
+]
+
 { #category : #'pretty printing' }
 ViennaCasesStatementAlternativeNode >> formatWith: aViennaAbstractFormatter [
 

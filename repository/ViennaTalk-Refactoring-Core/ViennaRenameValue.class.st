@@ -46,9 +46,9 @@ ViennaRenameValue >> findDefinitionNode [
 ViennaRenameValue >> findOldName [
 
 	(ast label = 'ValueDefinition' and: [
-		 ast first label = 'PatternIdentifier' ]) ifTrue: [
+		 ast first isViennaPatternIdentifierNode ]) ifTrue: [
 		^ ast first first ].
-	ast label = 'PatternIdentifier' ifTrue: [ ^ ast first ].
+	ast isViennaPatternIdentifierNode ifTrue: [ ^ ast first ].
 	ast isViennaLocalNameNode ifTrue: [ ^ ast first ].
 	^ nil
 ]

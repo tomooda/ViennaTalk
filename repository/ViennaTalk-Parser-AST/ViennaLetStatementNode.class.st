@@ -21,9 +21,10 @@ ViennaLetStatementNode >> definitionOfLocalName: aString [
 		| def |
 		def := localDef first.
 		def label = 'ValueDefinition' ifTrue: [
-			def first allDescendantsDo: [ :n |
-				(n label = 'PatternIdentifier' and: [ n first = aString ])
-					ifTrue: [ ^ n ] ] ].
+			def first
+				allDescendantsSuchThat: [ :n |
+				n isViennaPatternIdentifierNode: aString ]
+				do: [ :n | ^ n ] ].
 		def label = 'FunctionDefinition' ifTrue: [
 			def first first = aString ifTrue: [ ^ def first ] ] ]
 ]

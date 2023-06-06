@@ -42,9 +42,8 @@ ViennaExtractStateVariable >> execute [
 					                    with: (ViennaNode
 							                     label: 'InvariantInitialFunction'
 							                     with:
-							                     (ViennaNode
-								                      label: 'PatternIdentifier'
-								                      with: 's')
+							                     (ViennaPatternIdentifierNode identifier:
+								                      's')
 							                     with: (ViennaEqualNode
 									                      expression:
 									                      (ViennaLocalNameNode identifier: 's')
@@ -68,7 +67,7 @@ ViennaExtractStateVariable >> execute [
 	stateDefinition third ifNotNil: [ :invariant |
 		invariant first first label = 'RecordPattern' ifTrue: [
 			invariant first first second add:
-				(ViennaNode label: 'PatternIdentifier' with: nil) ] ].
+				ViennaPatternIdentifierNode anonymous ] ].
 	^ stateDefinition
 ]
 

@@ -20,7 +20,8 @@ ViennaExtractOperationFromLetExpression >> check [
 	ast first do: [ :localDef |
 		localDef first label = 'FunctionDefinition' ifTrue: [ ^ false ].
 		localDef first first allDescendantsDo: [ :node |
-			node label = 'PatternIdentifier' ifTrue: [ params add: node first ] ] ].
+			node isViennaPatternIdentifierNode ifTrue: [
+				params add: node first ] ] ].
 	ast first do: [ :localDef |
 		localDef first third allDescendantsDo: [ :node |
 			(node isViennaLocalNameNode and: [

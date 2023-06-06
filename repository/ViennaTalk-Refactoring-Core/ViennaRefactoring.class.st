@@ -304,7 +304,7 @@ ViennaRefactoring >> execute [
 { #category : #'visiting-pattern matching' }
 ViennaRefactoring >> expressionFromPattern: aViennaNode bindings: aDictionary [
 
-	aViennaNode label = 'PatternIdentifier' ifTrue: [
+	aViennaNode isViennaPatternIdentifierNode ifTrue: [
 		^ aDictionary
 			  at: aViennaNode name
 			  ifPresent: [ :node | node copyFragment ]
@@ -411,11 +411,12 @@ ViennaRefactoring >> freeOccurrencesOf: aString inBlockStatement: aViennaNode do
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inCasesAlternative: aViennaNode do: aBlock [
+
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
 	aViennaNode first
-		allDescendantsDo: [ :n | 
-			(n label = 'PatternIdentifier' and: [ n first = aString ])
-				ifTrue: [ ^ self ] ].
+		allDescendantsSuchThat: [ :n |
+		n isViennaPatternIdentifierNode: aString ]
+		do: [ :n | ^ self ].
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock
 ]
 
@@ -437,13 +438,13 @@ ViennaRefactoring >> freeOccurrencesOf: aString inCasesStatementAlternative: aVi
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inDef: aViennaNode do: aBlock [
-	aViennaNode first
-		do: [ :equalDefinition | 
-			self freeOccurrencesOf: aString in: equalDefinition do: aBlock.
-			equalDefinition first
-				allDescendantsDo: [ :n | 
-					(n label = 'PatternIdentifier' and: [ n first = aString ])
-						ifTrue: [ ^ self ] ] ].
+
+	aViennaNode first do: [ :equalDefinition |
+		self freeOccurrencesOf: aString in: equalDefinition do: aBlock.
+		equalDefinition first
+			allDescendantsSuchThat: [ :n |
+			n isViennaPatternIdentifierNode: aString ]
+			do: [ :n | ^ self ] ].
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock
 ]
 
@@ -475,19 +476,19 @@ ViennaRefactoring >> freeOccurrencesOf: aString inExistsExpression: aViennaNode 
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inExplicitFunctionDefinition: aViennaNode do: aBlock [
-	aViennaNode second
-		do: [ :n | 
-			(n label = 'TypeVariableIdentifier' and: [ n first = aString ])
-				ifTrue: [ ^ self ] ].
+
+	aViennaNode second do: [ :n |
+		(n label = 'TypeVariableIdentifier' and: [ n first = aString ])
+			ifTrue: [ ^ self ] ].
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode third do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode fourth do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode fifth do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode ninth do: aBlock.
 	aViennaNode fifth
-		allDescendantsDo: [ :n | 
-			(n label = 'PatternIdentifier' and: [ n first = aString ])
-				ifTrue: [ ^ self ] ].
+		allDescendantsSuchThat: [ :n |
+		n isViennaPatternIdentifierNode: aString ]
+		do: [ :n | ^ self ].
 	self freeOccurrencesOf: aString in: aViennaNode sixth do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode seventh do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode eighth do: aBlock
@@ -495,12 +496,13 @@ ViennaRefactoring >> freeOccurrencesOf: aString inExplicitFunctionDefinition: aV
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inExplicitOperationDefinition: aViennaNode do: aBlock [
+
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode fourth do: aBlock.
 	aViennaNode fifth
-		allDescendantsDo: [ :n | 
-			(n label = 'PatternIdentifier' and: [ n first = aString ])
-				ifTrue: [ ^ self ] ].
+		allDescendantsSuchThat: [ :n |
+		n isViennaPatternIdentifierNode: aString ]
+		do: [ :n | ^ self ].
 	self freeOccurrencesOf: aString in: aViennaNode fifth do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode sixth do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode seventh do: aBlock
@@ -516,15 +518,14 @@ ViennaRefactoring >> freeOccurrencesOf: aString inForallExpression: aViennaNode 
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inFullQuantifierExpression: aViennaNode do: aBlock [
+
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
-	aViennaNode first
-		do: [ :multiBind | 
-			multiBind first
-				do: [ :pattern | 
-					pattern
-						allDescendantsDo: [ :n | 
-							(n label = 'PatternIdentifier' and: [ n first = aString ])
-								ifTrue: [ ^ self ] ] ] ].
+	aViennaNode first do: [ :multiBind |
+		multiBind first do: [ :pattern |
+			pattern
+				allDescendantsSuchThat: [ :n |
+				n isViennaPatternIdentifierNode: aString ]
+				do: [ :n | ^ self ] ] ].
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock
 ]
 
@@ -537,27 +538,26 @@ ViennaRefactoring >> freeOccurrencesOf: aString inFunctionImport: aViennaNode do
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inImplicitFunctionDefinition: aViennaNode do: aBlock [
+
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode third do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode fourth do: aBlock.
-	aViennaNode third first
-		ifNotEmpty: [ :patternTypePairList | 
-			1 to: patternTypePairList size by: 2 do: [ :index | 
-				(patternTypePairList at: index)
-					allDescendantsDo: [ :n | 
-						(n label = 'PatternIdentifier' and: [ n first = aString ])
-							ifTrue: [ ^ self ] ] ] ].
+	aViennaNode third first ifNotEmpty: [ :patternTypePairList |
+		1 to: patternTypePairList size by: 2 do: [ :index |
+			(patternTypePairList at: index)
+				allDescendantsSuchThat: [ :n |
+				n isViennaPatternIdentifierNode: aString ]
+				do: [ :n | ^ self ] ] ].
 	self freeOccurrencesOf: aString in: aViennaNode fifth do: aBlock.
-	aViennaNode fourth
-		ifNotEmpty: [ :identifierTypePairList | 
-			1 to: identifierTypePairList size by: 2 do: [ :index | 
-				(identifierTypePairList at: index) = aString
-					ifTrue: [ ^ self ] ] ].
+	aViennaNode fourth ifNotEmpty: [ :identifierTypePairList |
+		1 to: identifierTypePairList size by: 2 do: [ :index |
+			(identifierTypePairList at: index) = aString ifTrue: [ ^ self ] ] ].
 	self freeOccurrencesOf: aString in: aViennaNode sixth do: aBlock
 ]
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inImplicitOperationDefinition: aViennaNode do: aBlock [
+
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode third do: aBlock.
 	self
@@ -568,22 +568,19 @@ ViennaRefactoring >> freeOccurrencesOf: aString inImplicitOperationDefinition: a
 		freeOccurrencesOf: aString
 		in: aViennaNode fourth fourth
 		do: aBlock.
-	aViennaNode second first
-		ifNotEmpty: [ :patternTypePairList | 
-			1 to: patternTypePairList size by: 2 do: [ :index | 
-				(patternTypePairList at: index)
-					allDescendantsDo: [ :n | 
-						(n label = 'PatternIdentifier' and: [ n first = aString ])
-							ifTrue: [ ^ self ] ] ] ].
+	aViennaNode second first ifNotEmpty: [ :patternTypePairList |
+		1 to: patternTypePairList size by: 2 do: [ :index |
+			(patternTypePairList at: index)
+				allDescendantsSuchThat: [ :n |
+				n isViennaPatternIdentifierNode: aString ]
+				do: [ :n | ^ self ] ] ].
 	self
 		freeOccurrencesOf: aString
 		in: aViennaNode fourth second
 		do: aBlock.
-	aViennaNode fourth
-		ifNotEmpty: [ :identifierTypePairList | 
-			1 to: identifierTypePairList size by: 2 do: [ :index | 
-				(identifierTypePairList at: index) = aString
-					ifTrue: [ ^ self ] ] ].
+	aViennaNode fourth ifNotEmpty: [ :identifierTypePairList |
+		1 to: identifierTypePairList size by: 2 do: [ :index |
+			(identifierTypePairList at: index) = aString ifTrue: [ ^ self ] ] ].
 	self
 		freeOccurrencesOf: aString
 		in: aViennaNode fourth third
@@ -602,11 +599,12 @@ ViennaRefactoring >> freeOccurrencesOf: aString inIndexForLoop: aViennaNode do: 
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inInvariantInitialFunction: aViennaNode do: aBlock [
+
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
 	aViennaNode first
-		allDescendantsDo: [ :n | 
-			(n label = 'PatternIdentifier' and: [ n first = aString ])
-				ifTrue: [ ^ self ] ].
+		allDescendantsSuchThat: [ :n |
+		n isViennaPatternIdentifierNode: aString ]
+		do: [ :n | ^ self ].
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock
 ]
 
@@ -620,42 +618,42 @@ ViennaRefactoring >> freeOccurrencesOf: aString inIotaExpression: aViennaNode do
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inLambdaExpression: aViennaNode do: aBlock [
+
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
-	aViennaNode first
-		do: [ :bind | 
-			bind first
-				allDescendantsDo: [ :node | 
-					(node label = 'PatternIdentifier' and: [ node first = aString ])
-						ifTrue: [ ^ self ] ] ].
+	aViennaNode first do: [ :bind |
+		bind first
+			allDescendantsSuchThat: [ :n |
+			n isViennaPatternIdentifierNode: aString ]
+			do: [ :n | ^ self ] ].
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock
 ]
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inLet: aViennaNode do: aBlock [
+
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
-	aViennaNode first
-		do: [ :localDef | 
-			| def |
-			def := localDef first.
-			def label = 'ValueDefinition'
-				ifTrue: [ def first
-						allDescendantsDo: [ :n | 
-							(n label = 'PatternIdentifier' and: [ n first = aString ])
-								ifTrue: [ ^ self ] ] ].
-			(def label = 'FunctionDefinition'
-				and: [ def first first = aString ])
-				ifTrue: [ ^ self ] ].
+	aViennaNode first do: [ :localDef |
+		| def |
+		def := localDef first.
+		def label = 'ValueDefinition' ifTrue: [
+			def first
+				allDescendantsSuchThat: [ :n |
+				n isViennaPatternIdentifierNode: aString ]
+				do: [ :n | ^ self ] ].
+		(def label = 'FunctionDefinition' and: [ def first first = aString ])
+			ifTrue: [ ^ self ] ].
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock
 ]
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inLetBe: aViennaNode do: aBlock [
+
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock.
 	aViennaNode first first
-		allDescendantsDo: [ :n | 
-			(n label = 'PatternIdentifier' and: [ n first = aString ])
-				ifTrue: [ ^ self ] ].
+		allDescendantsSuchThat: [ :n |
+		n isViennaPatternIdentifierNode: aString ]
+		do: [ :n | ^ self ].
 	self freeOccurrencesOf: aString in: aViennaNode third do: aBlock
 ]
 
@@ -687,15 +685,14 @@ ViennaRefactoring >> freeOccurrencesOf: aString inLocalName: aViennaNode do: aBl
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inMapComprehension: aViennaNode do: aBlock [
+
 	self freeOccurrencesOf: aString in: aViennaNode third do: aBlock.
-	aViennaNode third
-		do: [ :multiBind | 
-			multiBind first
-				do: [ :pattern | 
-					pattern
-						allDescendantsDo: [ :n | 
-							(n label = 'PatternIdentifier' and: [ n first = aString ])
-								ifTrue: [ ^ self ] ] ] ].
+	aViennaNode third do: [ :multiBind |
+		multiBind first do: [ :pattern |
+			pattern
+				allDescendantsSuchThat: [ :n |
+				n isViennaPatternIdentifierNode: aString ]
+				do: [ :n | ^ self ] ] ].
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode fourth do: aBlock
@@ -715,59 +712,62 @@ ViennaRefactoring >> freeOccurrencesOf: aString inOperationImport: aViennaNode d
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inSequenceComprehension: aViennaNode do: aBlock [
+
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock.
 	aViennaNode second first
-		allDescendantsDo: [ :n | 
-			(n label = 'PatternIdentifier' and: [ n first = aString ])
-				ifTrue: [ ^ self ] ].
+		allDescendantsSuchThat: [ :n |
+		n isViennaPatternIdentifierNode: aString ]
+		do: [ :n | ^ self ].
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode third do: aBlock
 ]
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inSequenceForLoop: aViennaNode do: aBlock [
+
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock.
 	aViennaNode first
-		allDescendantsDo: [ :n | 
-			(n label = 'PatternIdentifier' and: [ n first = aString ])
-				ifTrue: [ ^ self ] ].
+		allDescendantsSuchThat: [ :n |
+		n isViennaPatternIdentifierNode: aString ]
+		do: [ :n | ^ self ].
 	self freeOccurrencesOf: aString in: aViennaNode third do: aBlock
 ]
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inSetComprehension: aViennaNode do: aBlock [
+
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock.
-	aViennaNode second
-		do: [ :multiBind | 
-			multiBind first
-				do: [ :pattern | 
-					pattern
-						allDescendantsDo: [ :n | 
-							(n label = 'PatternIdentifier' and: [ n first = aString ])
-								ifTrue: [ ^ self ] ] ] ].
+	aViennaNode second do: [ :multiBind |
+		multiBind first do: [ :pattern |
+			pattern
+				allDescendantsSuchThat: [ :n |
+				n isViennaPatternIdentifierNode: aString ]
+				do: [ :n | ^ self ] ] ].
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode third do: aBlock
 ]
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inSetForLoop: aViennaNode do: aBlock [
+
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock.
 	aViennaNode first
-		allDescendantsDo: [ :n | 
-			(n label = 'PatternIdentifier' and: [ n first = aString ])
-				ifTrue: [ ^ self ] ].
+		allDescendantsSuchThat: [ :n |
+		n isViennaPatternIdentifierNode: aString ]
+		do: [ :n | ^ self ].
 	self freeOccurrencesOf: aString in: aViennaNode third do: aBlock
 ]
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inSingleQuantifierExpression: aViennaNode do: aBlock [
+
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
 	aViennaNode first first
-		allDescendantsDo: [ :n | 
-			(n label = 'PatternIdentifier' and: [ n first = aString ])
-				ifTrue: [ ^ self ] ].
+		allDescendantsSuchThat: [ :n |
+		n isViennaPatternIdentifierNode: aString ]
+		do: [ :n | ^ self ].
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock
 ]
 
@@ -1023,13 +1023,13 @@ ViennaRefactoring >> nameForGlobalName: globalNameNode in: moduleNode [
 
 { #category : #'visiting-labels' }
 ViennaRefactoring >> patternIdentifiersWith: aString in: aViennaNode do: aBlock [
-	(aViennaNode label = 'PatternIdentifier'
-		and: [ aViennaNode first = aString ])
-		ifTrue: [ aBlock cull: aViennaNode ].
+
+	(aViennaNode isViennaPatternIdentifierNode: aString) ifTrue: [
+		aBlock cull: aViennaNode ].
 	aViennaNode
-		allDescendantsDo: [ :node | 
-			(node label = 'PatternIdentifier' and: [ node first = aString ])
-				ifTrue: [ aBlock cull: node ] ]
+		allDescendantsSuchThat: [ :node |
+		node isViennaPatternIdentifierNode: aString ]
+		do: [ :node | aBlock cull: node ]
 ]
 
 { #category : #signaling }

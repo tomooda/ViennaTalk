@@ -23,17 +23,14 @@ ViennaExtractLocalDefinitionFromExpressionInLet >> executeCallers [
 
 { #category : #operations }
 ViennaExtractLocalDefinitionFromExpressionInLet >> executeDefinition [
+
 	self newName ifNil: [ ^ nil ].
-	self definitionNode first
-		add:
-			(ViennaNode
-				label: 'LocalDefinition'
-				with:
-					(ViennaNode
-						label: 'ValueDefinition'
-						with: (ViennaNode label: 'PatternIdentifier' with: self newName)
-						with: nil
-						with: ast)).
+	self definitionNode first add:
+		(ViennaNode label: 'LocalDefinition' with: (ViennaNode
+				  label: 'ValueDefinition'
+				  with: (ViennaPatternIdentifierNode identifier: self newName)
+				  with: nil
+				  with: ast)).
 	^ self definitionNode
 ]
 

@@ -22,9 +22,7 @@ ViennaExtractLetExpression >> execute [
 					    with: (ViennaNode label: 'LocalDefinition' with: (ViennaNode
 								      label: 'ValueDefinition'
 								      with:
-								      (ViennaNode
-									       label: 'PatternIdentifier'
-									       with: self newName)
+								      (ViennaPatternIdentifierNode identifier: self newName)
 								      with: nil
 								      with: ast copyFragment)))
 			   expression: (ViennaLocalNameNode identifier: self newName))

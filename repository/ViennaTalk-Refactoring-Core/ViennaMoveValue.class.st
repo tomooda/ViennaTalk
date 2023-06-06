@@ -6,12 +6,8 @@ Class {
 
 { #category : #accessing }
 ViennaMoveValue >> definitionNames [
-	^ Array
-		streamContents: [ :stream | 
-			self definitionNode
-				allDescendantsDo: [ :node | 
-					node label = 'PatternIdentifier'
-						ifTrue: [ stream nextPut: node first ] ] ]
+
+	^ self definitionNode patternIdentifiers collect: #identifier
 ]
 
 { #category : #accessing }

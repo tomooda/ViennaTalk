@@ -18,7 +18,7 @@ ViennaUseFunctionInAllOccurrences >> executeOne [
 			| binds |
 			binds := Dictionary new.
 			self definitionNode fifth allDescendantsDo: [ :patternNode |
-				patternNode label = 'PatternIdentifier' ifTrue: [
+				patternNode isViennaPatternIdentifierNode ifTrue: [
 					binds at: patternNode name put: nil ] ].
 			(self match: self definitionNode sixth with: node bindings: binds)
 				ifTrue: [
@@ -54,7 +54,7 @@ ViennaUseFunctionInAllOccurrences >> findDefinitionNode [
 											 binds := Dictionary new.
 											 explicitFunctionDefinition fifth allDescendantsDo: [
 												 :patternNode |
-												 patternNode label = 'PatternIdentifier' ifTrue: [
+												 patternNode isViennaPatternIdentifierNode ifTrue: [
 													 binds at: patternNode name put: nil ] ].
 											 self
 												 match: explicitFunctionDefinition sixth

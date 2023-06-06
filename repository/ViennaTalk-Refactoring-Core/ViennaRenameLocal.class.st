@@ -60,18 +60,20 @@ ViennaRenameLocal >> executeOnBlockStatement: aViennaNode [
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnCasesExpressionAlternative: aViennaNode [
+
 	aViennaNode first
-		allDescendantsDo: [ :node | 
-			(node label = 'PatternIdentifier' and: [ node first = self oldName ])
-				ifTrue: [ node at: 1 put: self newName ] ]
+		allDescendantsSuchThat: [ :node |
+		node isViennaPatternIdentifierNode: self oldName ]
+		do: [ :node | node identifier: self newName ]
 ]
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnCasesStatementAlternative: aViennaNode [
+
 	aViennaNode first
-		allDescendantsDo: [ :node | 
-			(node label = 'PatternIdentifier' and: [ node first = self oldName ])
-				ifTrue: [ node at: 1 put: self newName ] ]
+		allDescendantsSuchThat: [ :node |
+		node isViennaPatternIdentifierNode: self oldName ]
+		do: [ :node | node identifier: self newName ]
 ]
 
 { #category : #operations }
@@ -84,82 +86,83 @@ ViennaRenameLocal >> executeOnDefinition [
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnExists1Expression: aViennaNode [
+
 	aViennaNode first first
-		allDescendantsDo: [ :node | 
-			(node label = 'PatternIdentifier' and: [ node first = self oldName ])
-				ifTrue: [ node at: 1 put: self newName ] ]
+		allDescendantsSuchThat: [ :node |
+		node isViennaPatternIdentifierNode: self oldName ]
+		do: [ :node | node identifier: self newName ]
 ]
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnExistsExpression: aViennaNode [
-	aViennaNode first
-		do: [ :bind | 
-			bind first
-				allDescendantsDo: [ :node | 
-					(node label = 'PatternIdentifier' and: [ node first = self oldName ])
-						ifTrue: [ node at: 1 put: self newName ] ] ]
+
+	aViennaNode first do: [ :bind |
+		bind first
+			allDescendantsSuchThat: [ :node |
+			node isViennaPatternIdentifierNode: self oldName ]
+			do: [ :node | node identifier: self newName ] ]
 ]
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnExplicitFunctionDefinition: aViennaNode [
+
 	aViennaNode second
-		do: [ :n | 
-			(n label = 'TypeVariableIdentifier' and: [ n first = self oldName ])
-				ifTrue: [ n at: 1 put: self newName ] ].
+		allDescendantsSuchThat: [ :node |
+		node isViennaPatternIdentifierNode: self oldName ]
+		do: [ :node | node identifier: self newName ].
 	aViennaNode fifth
-		allDescendantsDo: [ :n | 
-			(n label = 'PatternIdentifier' and: [ n first = self oldName ])
-				ifTrue: [ n at: 1 put: self newName ] ]
+		allDescendantsSuchThat: [ :node |
+		node isViennaPatternIdentifierNode: self oldName ]
+		do: [ :node | node identifier: self newName ]
 ]
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnExplicitOperationDefinition: aViennaNode [
+
 	aViennaNode fourth
-		allDescendantsDo: [ :n | 
-			(n label = 'PatternIdentifier' and: [ n first = self oldName ])
-				ifTrue: [ n at: 1 put: self newName ] ]
+		allDescendantsSuchThat: [ :node |
+		node isViennaPatternIdentifierNode: self oldName ]
+		do: [ :node | node identifier: self newName ]
 ]
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnForallExpression: aViennaNode [
-	aViennaNode first
-		do: [ :bind | 
-			bind first
-				allDescendantsDo: [ :node | 
-					(node label = 'PatternIdentifier' and: [ node first = self oldName ])
-						ifTrue: [ node at: 1 put: self newName ] ] ]
+
+	aViennaNode first do: [ :bind |
+		bind first
+			allDescendantsSuchThat: [ :node |
+			node isViennaPatternIdentifierNode: self oldName ]
+			do: [ :node | node identifier: self newName ] ]
 ]
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnImplicitFunctionDefinition: aViennaNode [
-	aViennaNode third first
-		ifNotEmpty: [ :patternTypePairList | 
-			1 to: patternTypePairList size by: 2 do: [ :index | 
-				(patternTypePairList at: index)
-					allDescendantsDo: [ :n | 
-						(n label = 'PatternIdentifier' and: [ n first = self oldName ])
-							ifTrue: [ n at: 1 put: self newName ] ] ] ].
-	aViennaNode fourth
-		ifNotEmpty: [ :identifierTypePairList | 
-			1 to: identifierTypePairList size by: 2 do: [ :index | 
-				(identifierTypePairList at: index) = self oldName
-					ifTrue: [ identifierTypePairList at: 1 put: self newName ] ] ]
+
+	aViennaNode third first ifNotEmpty: [ :patternTypePairList |
+		1 to: patternTypePairList size by: 2 do: [ :index |
+			(patternTypePairList at: index)
+				allDescendantsSuchThat: [ :node |
+				node isViennaPatternIdentifierNode: self oldName ]
+				do: [ :node | node identifier: self newName ] ] ].
+	aViennaNode fourth ifNotEmpty: [ :identifierTypePairList |
+		1 to: identifierTypePairList size by: 2 do: [ :index |
+			(identifierTypePairList at: index) = self oldName ifTrue: [
+				identifierTypePairList at: 1 put: self newName ] ] ]
 ]
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnImplicitOperationDefinition: aViennaNode [
-	aViennaNode second first
-		ifNotEmpty: [ :patternTypePairList | 
-			1 to: patternTypePairList size by: 2 do: [ :index | 
-				(patternTypePairList at: index)
-					allDescendantsDo: [ :n | 
-						(n label = 'PatternIdentifier' and: [ n first = self oldName ])
-							ifTrue: [ n at: 1 put: self newName ] ] ] ].
-	aViennaNode fourth
-		ifNotEmpty: [ :identifierTypePairList | 
-			1 to: identifierTypePairList size by: 2 do: [ :index | 
-				(identifierTypePairList at: index) = self oldName
-					ifTrue: [ identifierTypePairList at: 1 put: self newName ] ] ]
+
+	aViennaNode second first ifNotEmpty: [ :patternTypePairList |
+		1 to: patternTypePairList size by: 2 do: [ :index |
+			(patternTypePairList at: index)
+				allDescendantsSuchThat: [ :node |
+				node isViennaPatternIdentifierNode: self oldName ]
+				do: [ :node | node identifier: self newName ] ] ].
+	aViennaNode fourth ifNotEmpty: [ :identifierTypePairList |
+		1 to: identifierTypePairList size by: 2 do: [ :index |
+			(identifierTypePairList at: index) = self oldName ifTrue: [
+				identifierTypePairList at: 1 put: self newName ] ] ]
 ]
 
 { #category : #operations }
@@ -170,130 +173,136 @@ ViennaRenameLocal >> executeOnIndexForLoop: aViennaNode [
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnInvariantInitialFunction: aViennaNode [
+
 	aViennaNode first
-		allDescendantsDo: [ :n | 
-			(n label = 'PatternIdentifier' and: [ n first = self oldName ])
-				ifTrue: [ n at: 1 put: self newName ] ]
+		allDescendantsSuchThat: [ :node |
+		node isViennaPatternIdentifierNode: self oldName ]
+		do: [ :node | node identifier: self newName ]
 ]
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnIotaExpression: aViennaNode [
+
 	aViennaNode first first
-		allDescendantsDo: [ :node | 
-			(node label = 'PatternIdentifier' and: [ node first = self oldName ])
-				ifTrue: [ node at: 1 put: self newName ] ]
+		allDescendantsSuchThat: [ :node |
+		node isViennaPatternIdentifierNode: self oldName ]
+		do: [ :node | node identifier: self newName ]
 ]
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnLambdaExpression: aViennaNode [
+
 	aViennaNode first first
-		allDescendantsDo: [ :node | 
-			(node label = 'PatternIdentifier' and: [ node first = self oldName ])
-				ifTrue: [ node at: 1 put: self newName ] ]
+		allDescendantsSuchThat: [ :node |
+		node isViennaPatternIdentifierNode: self oldName ]
+		do: [ :node | node identifier: self newName ]
 ]
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnLetBeExpression: aViennaNode [
+
 	aViennaNode first first
-		allDescendantsDo: [ :n | 
-			(n label = 'PatternIdentifier' and: [ n first = self oldName ])
-				ifTrue: [ n at: 1 put: self newName ] ]
+		allDescendantsSuchThat: [ :node |
+		node isViennaPatternIdentifierNode: self oldName ]
+		do: [ :node | node identifier: self newName ]
 ]
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnLetBeStatement: aViennaNode [
+
 	aViennaNode first first
-		allDescendantsDo: [ :n | 
-			(n label = 'PatternIdentifier' and: [ n first = self oldName ])
-				ifTrue: [ n at: 1 put: self newName ] ]
+		allDescendantsSuchThat: [ :node |
+		node isViennaPatternIdentifierNode: self oldName ]
+		do: [ :node | node identifier: self newName ]
 ]
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnLetExpression: aViennaNode [
-	aViennaNode first
-		do: [ :localDef | 
-			| def |
-			def := localDef first.
-			def label = 'ValueDefinition'
-				ifTrue: [ def first
-						allDescendantsDo: [ :n | 
-							(n label = 'PatternIdentifier' and: [ n first = self oldName ])
-								ifTrue: [ n at: 1 put: self newName ] ] ].
-			(def label = 'FunctionDefinition'
-				and: [ def first first = self oldName ])
-				ifTrue: [ | functionDefinition |
-					functionDefinition := def first.
-					functionDefinition at: 1 put: self newName.
-					functionDefinition label = 'ExplicitFunctionDefinition'
-						ifTrue: [ functionDefinition at: 4 put: self newName ] ] ]
+
+	aViennaNode first do: [ :localDef |
+		| def |
+		def := localDef first.
+		def label = 'ValueDefinition' ifTrue: [
+			def first
+				allDescendantsSuchThat: [ :node |
+				node isViennaPatternIdentifierNode: self oldName ]
+				do: [ :node | node identifier: self newName ] ].
+		(def label = 'FunctionDefinition' and: [
+			 def first first = self oldName ]) ifTrue: [
+			| functionDefinition |
+			functionDefinition := def first.
+			functionDefinition at: 1 put: self newName.
+			functionDefinition label = 'ExplicitFunctionDefinition' ifTrue: [
+				functionDefinition at: 4 put: self newName ] ] ]
 ]
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnLetStatement: aViennaNode [
-	aViennaNode first
-		do: [ :localDef | 
-			| def |
-			def := localDef first.
-			def label = 'ValueDefinition'
-				ifTrue: [ def first
-						allDescendantsDo: [ :n | 
-							(n label = 'PatternIdentifier' and: [ n first = self oldName ])
-								ifTrue: [ n at: 1 put: self newName ] ] ].
-			(def label = 'FunctionDefinition'
-				and: [ def first first = self oldName ])
-				ifTrue: [ | functionDefinition |
-					functionDefinition := def first.
-					functionDefinition at: 1 put: self newName.
-					functionDefinition label = 'ExplicitFunctionDefinition'
-						ifTrue: [ functionDefinition at: 4 put: self newName ] ] ]
+
+	aViennaNode first do: [ :localDef |
+		| def |
+		def := localDef first.
+		def label = 'ValueDefinition' ifTrue: [
+			def first
+				allDescendantsSuchThat: [ :node |
+				node isViennaPatternIdentifierNode: self oldName ]
+				do: [ :node | node identifier: self newName ] ].
+		(def label = 'FunctionDefinition' and: [
+			 def first first = self oldName ]) ifTrue: [
+			| functionDefinition |
+			functionDefinition := def first.
+			functionDefinition at: 1 put: self newName.
+			functionDefinition label = 'ExplicitFunctionDefinition' ifTrue: [
+				functionDefinition at: 4 put: self newName ] ] ]
 ]
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnMapComprehension: aViennaNode [
-	aViennaNode third
-		do: [ :multiBind | 
-			multiBind first
-				do: [ :pattern | 
-					pattern
-						allDescendantsDo: [ :n | 
-							(n label = 'PatternIdentifier' and: [ n first = self oldName ])
-								ifTrue: [ n at: 1 put: self newName ] ] ] ]
+
+	aViennaNode third do: [ :multiBind |
+		multiBind first do: [ :pattern |
+			pattern
+				allDescendantsSuchThat: [ :node |
+				node isViennaPatternIdentifierNode: self oldName ]
+				do: [ :node | node identifier: self newName ] ] ]
 ]
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnSequenceComprehension: aViennaNode [
+
 	aViennaNode second first
-		allDescendantsDo: [ :n | 
-			(n label = 'PatternIdentifier' and: [ n first = self oldName ])
-				ifTrue: [ n at: 1 put: self newName ] ]
+		allDescendantsSuchThat: [ :node |
+		node isViennaPatternIdentifierNode: self oldName ]
+		do: [ :node | node identifier: self newName ]
 ]
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnSequenceForLoop: aViennaNode [
+
 	aViennaNode first
-		allDescendantsDo: [ :n | 
-			(n label = 'PatternIdentifier' and: [ n first = self oldName ])
-				ifTrue: [ n at: 1 put: self newName ] ]
+		allDescendantsSuchThat: [ :node |
+		node isViennaPatternIdentifierNode: self oldName ]
+		do: [ :node | node identifier: self newName ]
 ]
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnSetComprehension: aViennaNode [
-	aViennaNode second
-		do: [ :multiBind | 
-			multiBind first
-				do: [ :pattern | 
-					pattern
-						allDescendantsDo: [ :n | 
-							(n label = 'PatternIdentifier' and: [ n first = self oldName ])
-								ifTrue: [ n at: 1 put: self newName ] ] ] ]
+
+	aViennaNode second do: [ :multiBind |
+		multiBind first do: [ :pattern |
+			pattern
+				allDescendantsSuchThat: [ :node |
+				node isViennaPatternIdentifierNode: self oldName ]
+				do: [ :node | node identifier: self newName ] ] ]
 ]
 
 { #category : #operations }
 ViennaRenameLocal >> executeOnSetForLoop: aViennaNode [
+
 	aViennaNode first
-		allDescendantsDo: [ :n | 
-			(n label = 'PatternIdentifier' and: [ n first = self oldName ])
-				ifTrue: [ n at: 1 put: self newName ] ]
+		allDescendantsSuchThat: [ :node |
+		node isViennaPatternIdentifierNode: self oldName ]
+		do: [ :node | node identifier: self newName ]
 ]
 
 { #category : #accessing }

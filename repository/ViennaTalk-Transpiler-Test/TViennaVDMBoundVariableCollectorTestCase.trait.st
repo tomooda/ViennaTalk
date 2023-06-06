@@ -649,13 +649,14 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesPartialFunctionTyp
 
 { #category : #'tests-bound variables-patterns and binds' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesPatternIdentifierInto [
+
 	| node binds |
 	node := ViennaVDMParser new patternIdentifier end parse: 'v'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'PatternIdentifier'.
+	self assert: node isViennaPatternIdentifierNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self assert: binds equals: {'v'} asSet
+	self assert: binds equals: { 'v' } asSet
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }

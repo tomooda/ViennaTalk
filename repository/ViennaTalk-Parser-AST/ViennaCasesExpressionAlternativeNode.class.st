@@ -14,6 +14,16 @@ ViennaCasesExpressionAlternativeNode class >> patternList: aViennaPatternListNod
 		  yourself
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaCasesExpressionAlternativeNode >> definitionOfLocalName: aString [
+
+	self patternList
+		allDescendantsSuchThat: [ :n |
+		n isViennaPatternIdentifierNode: aString ]
+		do: [ :n | ^ n ].
+	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
+]
+
 { #category : #accessing }
 ViennaCasesExpressionAlternativeNode >> expression [
 

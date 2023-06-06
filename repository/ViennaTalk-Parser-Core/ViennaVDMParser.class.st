@@ -1660,13 +1660,11 @@ ViennaVDMParser >> partialFunctionType [
 
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> patternIdentifier [
-	^ super patternIdentifier
-		=>> [ :start :end :stringOrNil | 
-			ViennaNode
-				label: 'PatternIdentifier'
-				start: start
-				end: end
-				with: stringOrNil ]
+
+	^ super patternIdentifier =>> [ :start :end :stringOrNil |
+	  (ViennaPatternIdentifierNode identifier: stringOrNil)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-patterns' }

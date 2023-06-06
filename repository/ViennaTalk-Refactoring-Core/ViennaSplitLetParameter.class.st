@@ -46,7 +46,7 @@ ViennaSplitLetParameter >> execute [
 ViennaSplitLetParameter >> findDefinitionNode [
 
 	ast ifNil: [ ^ nil ].
-	ast label = 'PatternIdentifier' ifFalse: [ ^ nil ].
+	ast isViennaPatternIdentifierNode ifFalse: [ ^ nil ].
 	ast parent ifNotNil: [ :valueDefinition |
 		valueDefinition label = 'ValueDefinition' ifFalse: [ ^ nil ].
 		valueDefinition parent ifNotNil: [ :localDefinition |

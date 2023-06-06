@@ -18,19 +18,15 @@ ViennaUseValueInAllOccurrences >> execute [
 
 { #category : #accessing }
 ViennaUseValueInAllOccurrences >> findDefinitionNode [
-	ast module
-		ifNotNil: [ :node | 
-			node third
-				do: [ :definitionBlock | 
-					definitionBlock first label = 'ValueDefinitions'
-						ifTrue: [ definitionBlock first
-								do: [ :accessValueDef | 
-									accessValueDef second
-										ifNotNil: [ :valueDef | 
-											((ast sameAs: valueDef third)
-												and: [ valueDef first label = 'PatternIdentifier'
-														and: [ (ast includesParent: valueDef) not ] ])
-												ifTrue: [ ^ valueDef ] ] ] ] ] ].
+
+	ast module ifNotNil: [ :node |
+		node third do: [ :definitionBlock |
+			definitionBlock first label = 'ValueDefinitions' ifTrue: [
+				definitionBlock first do: [ :accessValueDef |
+					accessValueDef second ifNotNil: [ :valueDef |
+						((ast sameAs: valueDef third) and: [
+							 valueDef first isViennaPatternIdentifierNode and: [
+								 (ast includesParent: valueDef) not ] ]) ifTrue: [ ^ valueDef ] ] ] ] ] ].
 	^ nil
 ]
 
