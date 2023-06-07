@@ -5,16 +5,19 @@ Trait {
 
 { #category : #'tests-free variables-statements' }
 TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesAssignmentDefinitionBoundVarsInto [
+
 	| node binds |
-	node := ViennaVDMParser new assignmentDefinition end parse: 'v1:t1 := e1'.
+	node := ViennaVDMParser new assignmentDefinition end parse:
+		        'v1:t1 := e1'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'AssignmentDefinition'.
+	self assert: node isViennaAssignmentDefinitionNode.
 	binds := Set new.
 	self
-		assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new)
-		equals:
-			{'t1'.
-			'e1'} asSet
+		assert:
+		(ViennaVDM2SmalltalkScript new
+			 freeVariables: node
+			 env: Dictionary new)
+		equals: { 't1'. 'e1' } asSet
 ]
 
 { #category : #'tests-free variables-statements' }

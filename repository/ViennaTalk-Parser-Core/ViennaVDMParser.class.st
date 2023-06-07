@@ -142,13 +142,14 @@ ViennaVDMParser >> assignStatement [
 
 { #category : #'parsers-statements' }
 ViennaVDMParser >> assignmentDefinition [
-	^ super assignmentDefinition
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'AssignmentDefinition'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super assignmentDefinition =>> [ :start :end :array |
+	  (ViennaAssignmentDefinitionNode
+		   identifier: array first
+		   type: array second
+		   expression: array third)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-types' }
@@ -162,13 +163,11 @@ ViennaVDMParser >> basicType [
 
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> bindList [
-	^ super bindList
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'BindList'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super bindList =>> [ :start :end :array |
+	  (ViennaBindListNode withAll: array)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-statements' }
@@ -1840,13 +1839,11 @@ ViennaVDMParser >> seq1Type [
 
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> seqBind [
-	^ super seqBind
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'SeqBind'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super seqBind =>> [ :start :end :array |
+	  (ViennaSeqBindNode pattern: array first expression: array second)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-patterns' }
@@ -1916,13 +1913,11 @@ ViennaVDMParser >> set1Type [
 
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> setBind [
-	^ super setBind
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'SetBind'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super setBind =>> [ :start :end :array |
+	  (ViennaSetBindNode pattern: array first expression: array second)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -2138,13 +2133,11 @@ ViennaVDMParser >> tupleSelect: tuple with: index [
 
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> typeBind [
-	^ super typeBind
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'TypeBind'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super typeBind =>> [ :start :end :array |
+	  (ViennaTypeBindNode pattern: array first type: array second)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-patterns' }

@@ -985,6 +985,12 @@ ViennaNode >> isViennaAssignStatementNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaAssignmentDefinitionNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaBasicTypeNode [
 
 	^ false
@@ -992,6 +998,18 @@ ViennaNode >> isViennaBasicTypeNode [
 
 { #category : #testing }
 ViennaNode >> isViennaBinaryOperatorExpression [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaBindListNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaBindNode [
 
 	^ false
 ]
@@ -1566,6 +1584,12 @@ ViennaNode >> isViennaSeq1TypeNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaSeqBindNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaSeqConcPatternNode [
 
 	^ false
@@ -1650,6 +1674,12 @@ ViennaNode >> isViennaSet1TypeNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaSetBindNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaSetCardinalityNode [
 
 	^ false
@@ -1693,6 +1723,12 @@ ViennaNode >> isViennaSetIntersectionNode [
 
 { #category : #testing }
 ViennaNode >> isViennaSetRangeExpressionNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaSetSeqBindNode [
 
 	^ false
 ]
@@ -1771,6 +1807,12 @@ ViennaNode >> isViennaTuplePatternNode [
 
 { #category : #testing }
 ViennaNode >> isViennaTupleSelectNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaTypeBindNode [
 
 	^ false
 ]

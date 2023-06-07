@@ -35,7 +35,7 @@ ViennaLocalNameNode >> identifier: aString [
 ViennaLocalNameNode >> isBlockVariableNameNode [
 
 	(self definitionOfLocalName: self identifier) ifNotNil: [ :defNode |
-		defNode label = 'AssignmentDefinition' ifTrue: [ ^ true ] ].
+		defNode isViennaAssignmentDefinitionNode ifTrue: [ ^ true ] ].
 	^ false
 ]
 

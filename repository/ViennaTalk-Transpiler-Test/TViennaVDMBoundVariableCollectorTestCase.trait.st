@@ -49,28 +49,28 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesAccessValueDefinit
 
 { #category : #'tests-bound variables-definitions' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesAssignmentDefinitionInto [
+
 	| node binds |
-	node := ViennaVDMParser new assignmentDefinition end parse: 'v:t := e'.
+	node := ViennaVDMParser new assignmentDefinition end parse:
+		        'v:t := e'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'AssignmentDefinition'.
+	self assert: node isViennaAssignmentDefinitionNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self assert: binds equals: {'v'} asSet
+	self assert: binds equals: { 'v' } asSet
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesBindListInto [
+
 	| node binds |
-	node := ViennaVDMParser new bindList end parse: 'v1 : t1, v2 in set s1'.
+	node := ViennaVDMParser new bindList end parse:
+		        'v1 : t1, v2 in set s1'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'BindList'.
+	self assert: node isViennaBindListNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{'v1'.
-			'v2'} asSet
+	self assert: binds equals: { 'v1'. 'v2' } asSet
 ]
 
 { #category : #'tests-bound variables-statements' }
@@ -769,13 +769,14 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesSequenceForLoopInt
 
 { #category : #'tests-bound variables-patterns and binds' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesSetBindInto [
+
 	| node binds |
 	node := ViennaVDMParser new setBind end parse: 'v in set s'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'SetBind'.
+	self assert: node isViennaSetBindNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self assert: binds equals: {'v'} asSet
+	self assert: binds equals: { 'v' } asSet
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
@@ -874,13 +875,14 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTuplePatternInto [
 
 { #category : #'tests-bound variables-patterns and binds' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTypeBindInto [
+
 	| node binds |
 	node := ViennaVDMParser new typeBind end parse: 'v : t'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'TypeBind'.
+	self assert: node isViennaTypeBindNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self assert: binds equals: {'v'} asSet
+	self assert: binds equals: { 'v' } asSet
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }

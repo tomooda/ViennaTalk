@@ -644,18 +644,18 @@ ViennaVDM2Smalltalk >> equal: aViennaNode env: aDictionary [
 ViennaVDM2Smalltalk >> equalDefinition: aViennaNode env: aDictionary [
 
 	| leftNode right guard |
-	leftNode := aViennaNode first.
+	leftNode := aViennaNode patternOrBind.
 	guard := nil.
-	(#( 'SetBind' 'SeqBind' ) includes: leftNode label)
+	leftNode isViennaSetSeqBindNode
 		ifTrue: [
-			guard := self generate: leftNode second env: aDictionary.
-			leftNode := leftNode first ]
+			guard := self generate: leftNode expression env: aDictionary.
+			leftNode := leftNode pattern ]
 		ifFalse: [
-			leftNode label = 'TypeBind' ifTrue: [
+			leftNode isViennaTypeBindNode ifTrue: [
 				runtimeTypeCheck = true ifTrue: [
-					guard := self generate: leftNode second env: aDictionary ].
-				leftNode := leftNode first ] ].
-	right := self generate: aViennaNode second env: aDictionary.
+					guard := self generate: leftNode type env: aDictionary ].
+				leftNode := leftNode pattern ] ].
+	right := self generate: aViennaNode expression env: aDictionary.
 	^ leftNode isViennaPatternIdentifierNode
 		  ifTrue: [
 			  '[' , leftNode first , ' := ' , right , '. '
@@ -2760,7 +2760,7 @@ ViennaVDM2Smalltalk >> sequenceComprehension: aViennaNode env: aDictionary [
 	bindNode first isViennaPatternIdentifierNode ifTrue: [
 		| var |
 		var := bindNode first first.
-		^ bindNode label = 'SeqBind'
+		^ bindNode isViennaSeqBindNode
 			  ifTrue: [
 				  '(' , (self generate: setNode env: aDictionary) , (guard
 					   ifNotNil: [
@@ -2836,19 +2836,18 @@ ViennaVDM2Smalltalk >> sequenceForLoop: aViennaNode env: aDictionary [
 	| guard patNode pat seqExpr body vars varGenerator |
 	guard := nil.
 	patNode := aViennaNode first.
-	(#( 'TypeBind' 'SetBind' 'SeqBind' ) includes: patNode label)
-		ifTrue: [
-			guard := self generate: patNode second env: aDictionary.
-			patNode := patNode first ].
+	patNode isViennaBindNode ifTrue: [
+		guard := self generate: patNode typeOrExpression env: aDictionary.
+		patNode := patNode pattern ].
 	pat := self generate: patNode env: aDictionary.
-	seqExpr := self generate: aViennaNode second env: aDictionary.
-	body := self generate: aViennaNode third env: aDictionary.
+	seqExpr := self generate: aViennaNode expression env: aDictionary.
+	body := self generate: aViennaNode statement env: aDictionary.
 	patNode isViennaPatternIdentifierNode ifTrue: [
-		^ seqExpr , ' do: [:' , patNode first , ' | '
+		^ seqExpr , ' do: [:' , patNode identifier , ' | '
 		  , (guard ifNil: [ '' ] ifNotNil: [
 				   '(' , guard , ' includes: ' , patNode first
 				   , ') ifFalse: [ViennaBindingViolation signal].' ]) , body , ']' ].
-	vars := (self boundVariables: aViennaNode first) asArray.
+	vars := (self boundVariables: aViennaNode patternOrBind) asArray.
 	varGenerator := self
 		                varNameGenerator: 'for'
 		                uniqueIn: (Array with: seqExpr with: body) , vars.

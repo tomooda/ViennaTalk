@@ -25,8 +25,8 @@ ViennaInlineBlockStatement >> blockVariables: aViennaNode [
 		  aViennaNode do: [ :statement |
 			  statement isViennaDclStatementNode ifTrue: [
 				  statement do: [ :assignment |
-					  assignment label = 'AssignmentDefinition' ifTrue: [
-						  stream nextPut: assignment first ] ] ] ] ]
+					  assignment isViennaAssignmentDefinitionNode ifTrue: [
+						  stream nextPut: assignment identifier ] ] ] ] ]
 ]
 
 { #category : #operations }

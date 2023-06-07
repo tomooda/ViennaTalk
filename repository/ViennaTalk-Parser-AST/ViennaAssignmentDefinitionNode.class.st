@@ -49,6 +49,12 @@ ViennaAssignmentDefinitionNode >> identifier: aString [
 	self at: 1 put: aString
 ]
 
+{ #category : #testing }
+ViennaAssignmentDefinitionNode >> isViennaAssignmentDefinitionNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaAssignmentDefinitionNode >> label [
 

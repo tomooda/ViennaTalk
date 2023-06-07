@@ -26,15 +26,15 @@ ViennaSplitBlockStatement >> check [
 	self blockNode do: [ :dclStatement |
 		dclStatement isViennaDclStatementNode ifTrue: [
 			dclStatement do: [ :assignmentDefinition |
-				assignmentDefinition label = 'AssignmentDefinition' ifTrue: [
+				assignmentDefinition isViennaAssignmentDefinitionNode ifTrue: [
 					| varName |
-					varName := assignmentDefinition first.
+					varName := assignmentDefinition identifier.
 					(((self newHeadStatementIndex to: self blockNode size)
 						  anySatisfy: [ :index |
 							  self
 								  hasFreeOccurrencesOf: varName
 								  in: (self blockNode at: index) ]) and: [
-						 assignmentDefinition third notNil or: [
+						 assignmentDefinition expression notNil or: [
 							 (1 to: self newHeadStatementIndex - 1) anySatisfy: [ :index |
 								 self
 									 hasFreeOccurrencesOf: varName
@@ -56,19 +56,21 @@ ViennaSplitBlockStatement >> execute [
 					                       dclStatement isViennaDclStatementNode
 						                       ifTrue: [
 							                       dclStatement do: [ :assignmentDefinition |
-								                       assignmentDefinition label
-								                       = 'AssignmentDefinition' ifTrue: [
-									                       | varName |
-									                       varName := assignmentDefinition first.
-									                       ((self newHeadStatementIndex to:
-									                         self blockNode size) anySatisfy: [
-										                        :index |
-										                        self
-											                        hasFreeOccurrencesOf: varName
-											                        in: (self blockNode at: index) ])
-										                       ifTrue: [
-										                       assignmentStream nextPut:
-											                       assignmentDefinition ] ] ] ] ] ])
+								                       assignmentDefinition
+									                       isViennaAssignmentDefinitionNode
+									                       ifTrue: [
+										                       | varName |
+										                       varName := assignmentDefinition
+											                                  identifier.
+										                       ((self newHeadStatementIndex to:
+										                         self blockNode size) anySatisfy: [
+											                        :index |
+											                        self
+												                        hasFreeOccurrencesOf: varName
+												                        in: (self blockNode at: index) ])
+											                       ifTrue: [
+											                       assignmentStream nextPut:
+												                       assignmentDefinition ] ] ] ] ] ])
 				                      ifNotEmpty: [ :assignments |
 					                      statementStream nextPut:
 						                      (ViennaDclStatementNode withAll:
