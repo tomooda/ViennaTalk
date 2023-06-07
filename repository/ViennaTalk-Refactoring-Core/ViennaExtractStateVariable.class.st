@@ -65,7 +65,7 @@ ViennaExtractStateVariable >> execute [
 	initializer := stateDefinition fourth first second second second.
 	initializer add: ast.
 	stateDefinition third ifNotNil: [ :invariant |
-		invariant first first label = 'RecordPattern' ifTrue: [
+		invariant first first isViennaRecordPatternNode ifTrue: [
 			invariant first first second add:
 				ViennaPatternIdentifierNode anonymous ] ].
 	^ stateDefinition

@@ -1498,6 +1498,12 @@ ViennaNode >> isViennaRecordModifierNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaRecordPatternNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaResultExpressionNode [
 
 	^ false
@@ -1505,6 +1511,18 @@ ViennaNode >> isViennaResultExpressionNode [
 
 { #category : #testing }
 ViennaNode >> isViennaReturnStatementNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaSeqConcPatternNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaSeqEnumPatternNode [
 
 	^ false
 ]
@@ -1588,6 +1606,12 @@ ViennaNode >> isViennaSetDifferenceNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaSetEnumPatternNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaSetEnumerationNode [
 
 	^ false
@@ -1613,6 +1637,12 @@ ViennaNode >> isViennaSetRangeExpressionNode [
 
 { #category : #testing }
 ViennaNode >> isViennaSetUnionNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaSetUnionPatternNode [
 
 	^ false
 ]
@@ -1655,6 +1685,12 @@ ViennaNode >> isViennaTrapStatementNode [
 
 { #category : #testing }
 ViennaNode >> isViennaTupleConstructorNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaTuplePatternNode [
 
 	^ false
 ]

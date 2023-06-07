@@ -130,9 +130,8 @@ ViennaNodeTest >> testDefinitionOfLocalName [
 	self
 		assert: (skip definitionOfLocalName: 'T2') label
 		equals: 'RecordTypeDefinition'.
-	self
-		assert: (skip definitionOfLocalName: 'v2') parent parent label
-		equals: 'TuplePattern'.
+	self assert: (skip definitionOfLocalName: 'v2') parent parent
+			isViennaTuplePatternNode.
 	self
 		assert: (skip definitionOfLocalName: 'exp_f') label
 		equals: 'ExplicitFunctionDefinition'.

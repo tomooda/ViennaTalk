@@ -331,42 +331,42 @@ ViennaRefactoring >> expressionFromPattern: aViennaNode bindings: aDictionary [
 					   ifFalse: [ node ] ]) ].
 	aViennaNode isViennaMatchValueNode ifTrue: [
 		^ aViennaNode expression ].
-	aViennaNode label = 'RecordPattern' ifTrue: [
+	aViennaNode isViennaRecordPatternNode ifTrue: [
 		^ ViennaRecordConstructorNode withAll:
 			  (aViennaNode asArray collect: [ :node |
 				   node isViennaNode
 					   ifTrue: [
 					   self expressionFromPattern: node bindings: aDictionary ]
 					   ifFalse: [ node ] ]) ].
-	aViennaNode label = 'SeqConcPattern' ifTrue: [
+	aViennaNode isViennaSeqConcPatternNode ifTrue: [
 		^ ViennaSequenceConcatenateNode withAll:
 			  (aViennaNode asArray collect: [ :node |
 				   node isViennaNode
 					   ifTrue: [
 					   self expressionFromPattern: node bindings: aDictionary ]
 					   ifFalse: [ node ] ]) ].
-	aViennaNode label = 'SeqEnumPattern' ifTrue: [
+	aViennaNode isViennaSeqEnumPatternNode ifTrue: [
 		^ ViennaSequenceEnumerationNode withAll:
 			  (aViennaNode asArray collect: [ :node |
 				   node isViennaNode
 					   ifTrue: [
 					   self expressionFromPattern: node bindings: aDictionary ]
 					   ifFalse: [ node ] ]) ].
-	aViennaNode label = 'SetEnumPattern' ifTrue: [
+	aViennaNode isViennaSetEnumPatternNode ifTrue: [
 		^ ViennaSetEnumerationNode withAll:
 			  (aViennaNode asArray collect: [ :node |
 				   node isViennaNode
 					   ifTrue: [
 					   self expressionFromPattern: node bindings: aDictionary ]
 					   ifFalse: [ node ] ]) ].
-	aViennaNode label = 'SetUnionPattern' ifTrue: [
+	aViennaNode isViennaSetUnionPatternNode ifTrue: [
 		^ ViennaSetUnionNode withAll:
 			  (aViennaNode asArray collect: [ :node |
 				   node isViennaNode
 					   ifTrue: [
 					   self expressionFromPattern: node bindings: aDictionary ]
 					   ifFalse: [ node ] ]) ].
-	aViennaNode label = 'TuplePattern' ifTrue: [
+	aViennaNode isViennaTuplePatternNode ifTrue: [
 		^ ViennaTupleConstructorNode withAll:
 			  (aViennaNode asArray collect: [ :node |
 				   node isViennaNode

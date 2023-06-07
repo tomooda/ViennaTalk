@@ -690,17 +690,14 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesProductTypeInto [
 
 { #category : #'tests-bound variables-patterns and binds' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesRecordPatternInto [
+
 	| node binds |
 	node := ViennaVDMParser new recordPattern end parse: 'mk_T(v1, v2)'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'RecordPattern'.
+	self assert: node isViennaRecordPatternNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{'v1'.
-			'v2'} asSet
+	self assert: binds equals: { 'v1'. 'v2' } asSet
 ]
 
 { #category : #'tests-bound variables-types' }
@@ -730,33 +727,27 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesSeq1TypeInto [
 
 { #category : #'tests-bound variables-patterns and binds' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesSeqConcPatternInto [
+
 	| node binds |
-	node := ViennaVDMParser new seqConcPattern  end parse: '[v1, v2] ^ [v3]'.
+	node := ViennaVDMParser new seqConcPattern end parse:
+		        '[v1, v2] ^ [v3]'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'SeqConcPattern'.
+	self assert: node isViennaSeqConcPatternNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{'v1'.
-			'v2'.
-			'v3'} asSet
+	self assert: binds equals: { 'v1'. 'v2'. 'v3' } asSet
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesSeqEnumPatternInto [
+
 	| node binds |
 	node := ViennaVDMParser new seqEnumPattern end parse: '[v1, v2]'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'SeqEnumPattern'.
+	self assert: node isViennaSeqEnumPatternNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{'v1'.
-			'v2'} asSet
+	self assert: binds equals: { 'v1'. 'v2' } asSet
 ]
 
 { #category : #'tests-bound variables-types' }
@@ -796,17 +787,14 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesSetBindInto [
 
 { #category : #'tests-bound variables-patterns and binds' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesSetEnumPatternInto [
+
 	| node binds |
 	node := ViennaVDMParser new setEnumPattern end parse: '{v1, v2}'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'SetEnumPattern'.
+	self assert: node isViennaSetEnumPatternNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{'v1'.
-			'v2'} asSet
+	self assert: binds equals: { 'v1'. 'v2' } asSet
 ]
 
 { #category : #'tests-bound variables-statements' }
@@ -835,18 +823,15 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesSetTypeInto [
 
 { #category : #'tests-bound variables-patterns and binds' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesSetUnionPatternInto [
+
 	| node binds |
-	node := ViennaVDMParser new setUnionPattern end parse: '{v1, v2} union {v3}'.
+	node := ViennaVDMParser new setUnionPattern end parse:
+		        '{v1, v2} union {v3}'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'SetUnionPattern'.
+	self assert: node isViennaSetUnionPatternNode.
 	binds := Set new.
 	ViennaVDM2Smalltalk new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{'v1'.
-			'v2'.
-			'v3'} asSet
+	self assert: binds equals: { 'v1'. 'v2'. 'v3' } asSet
 ]
 
 { #category : #'tests-bound variables-definitions' }
@@ -885,17 +870,14 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTotalFunctionTypeI
 
 { #category : #'tests-bound variables-patterns and binds' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTuplePatternInto [
+
 	| node binds |
 	node := ViennaVDMParser new tuplePattern end parse: 'mk_(v1, v2)'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'TuplePattern'.
+	self assert: node isViennaTuplePatternNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{'v1'.
-			'v2'} asSet
+	self assert: binds equals: { 'v1'. 'v2' } asSet
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }

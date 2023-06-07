@@ -419,61 +419,67 @@ ViennaVDM2Smalltalk >> casesStatementAlternatives: aViennaNode env: aDictionary 
 
 { #category : #utilities }
 ViennaVDM2Smalltalk >> closureFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode body: aString varGenerator: varGenerator env: aDictionary [
-	^ self
-		stringStreamContents: [ :stream | 
-			| tmpVars argVars matchPatternNodes tuplePattern matchVars |
-			tmpVars := OrderedCollection new.
-			argVars := OrderedCollection new.
-			matchPatternNodes := OrderedCollection new.
-			stream nextPutAll: '['.
-			self
-				fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode
-				patternNodeAndSetOrTypeNodeAndBindTypesDo: [ :patternNode :setNode :bindType | 
-					bindType = #identifier
-						ifTrue: [ stream
-								nextPutAll: ' :';
-								nextPutAll: (argVars add: (patternNode first ifNil: [ varGenerator value ])) ].
-					bindType = #compound
-						ifTrue: [ | tmpVar |
-							tmpVar := varGenerator value.
-							tmpVars add: tmpVar.
-							argVars add: tmpVar.
-							matchPatternNodes add: patternNode.
-							stream
-								nextPutAll: ' :';
-								nextPutAll: tmpVar ] ].
-			tuplePattern := ViennaNode
-				label: 'TuplePattern'
-				with: (ViennaNode label: 'PatternList' withAll: matchPatternNodes).
-			matchVars := (self boundVariables: tuplePattern) asArray.
-			anArrayOfPatternNodeAndTypeSetNode
-				ifNotEmpty: [ stream nextPutAll: ' | ' ].
-			matchVars notEmpty
-				ifTrue: [ stream nextPutAll: ' | '.
-					matchVars
-						do: [ :var | 
-							stream
-								nextPutAll: var;
-								nextPut: Character space ].
-					stream nextPutAll: '| ' ].
-			1 to: argVars size do: [ :index | 
-				| arg type |
-				arg := argVars at: index.
-				type := (anArrayOfPatternNodeAndTypeSetNode at: index) second.
-				(type notNil and: [ runtimeTypeCheck = true ])
-					ifTrue: [ stream
-							nextPutAll: (self generateCheck: arg type: (self generate: type env: aDictionary)) ] ].
-			matchVars notEmpty
-				ifTrue: [ stream
-						nextPutAll:
-							(self
-								binder: (self generate: tuplePattern env: aDictionary)
-								with: '{' , (' . ' join: tmpVars) , '}'
-								vars: matchVars);
-						nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ].
-			stream
-				nextPutAll: aString;
-				nextPutAll: ']' ]
+
+	^ self stringStreamContents: [ :stream |
+		  | tmpVars argVars matchPatternNodes tuplePattern matchVars |
+		  tmpVars := OrderedCollection new.
+		  argVars := OrderedCollection new.
+		  matchPatternNodes := OrderedCollection new.
+		  stream nextPutAll: '['.
+		  self
+			  fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode
+			  patternNodeAndSetOrTypeNodeAndBindTypesDo: [
+				  :patternNode
+				  :setNode
+				  :bindType |
+				  bindType = #identifier ifTrue: [
+					  stream
+						  nextPutAll: ' :';
+						  nextPutAll:
+							  (argVars add:
+									   (patternNode first ifNil: [ varGenerator value ])) ].
+				  bindType = #compound ifTrue: [
+					  | tmpVar |
+					  tmpVar := varGenerator value.
+					  tmpVars add: tmpVar.
+					  argVars add: tmpVar.
+					  matchPatternNodes add: patternNode.
+					  stream
+						  nextPutAll: ' :';
+						  nextPutAll: tmpVar ] ].
+		  tuplePattern := ViennaTuplePatternNode patternList:
+			                  (ViennaNode
+				                   label: 'PatternList'
+				                   withAll: matchPatternNodes).
+		  matchVars := (self boundVariables: tuplePattern) asArray.
+		  anArrayOfPatternNodeAndTypeSetNode ifNotEmpty: [
+			  stream nextPutAll: ' | ' ].
+		  matchVars notEmpty ifTrue: [
+			  stream nextPutAll: ' | '.
+			  matchVars do: [ :var |
+				  stream
+					  nextPutAll: var;
+					  nextPut: Character space ].
+			  stream nextPutAll: '| ' ].
+		  1 to: argVars size do: [ :index |
+			  | arg type |
+			  arg := argVars at: index.
+			  type := (anArrayOfPatternNodeAndTypeSetNode at: index) second.
+			  (type notNil and: [ runtimeTypeCheck = true ]) ifTrue: [
+				  stream nextPutAll:
+					  (self
+						   generateCheck: arg
+						   type: (self generate: type env: aDictionary)) ] ].
+		  matchVars notEmpty ifTrue: [
+			  stream
+				  nextPutAll: (self
+						   binder: (self generate: tuplePattern env: aDictionary)
+						   with: '{' , (' . ' join: tmpVars) , '}'
+						   vars: matchVars);
+				  nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ].
+		  stream
+			  nextPutAll: aString;
+			  nextPutAll: ']' ]
 ]
 
 { #category : #utilities }
@@ -1544,9 +1550,7 @@ ViennaVDM2Smalltalk >> generatorFromFlatBinds: anArrayOfPatternNodeAndTypeSetNod
 					  stream nextPutAll: tmpVar ].
 				  stream nextPutAll: ' | '.
 				  numParens := numParens + 1 ].
-		  tuplePattern := ViennaNode
-			                  label: 'TuplePattern'
-			                  with:
+		  tuplePattern := ViennaTuplePatternNode patternList:
 			                  (ViennaNode
 				                   label: 'PatternList'
 				                   withAll: matchPatternNodes).
@@ -2726,15 +2730,14 @@ ViennaVDM2Smalltalk >> seqEnumPattern: aViennaNode env: aDictionary [
 
 { #category : #utilities }
 ViennaVDM2Smalltalk >> seqPatternSize: aViennaNode [
-	aViennaNode label = 'SeqEnumPattern'
-		ifTrue: [ ^ aViennaNode size ].
-	aViennaNode label = 'SeqConcPattern'
-		ifTrue: [ 
-			| left right |
-			left := self seqPatternSize: aViennaNode first.
-			right := self seqPatternSize: aViennaNode second.
-			left ifNotNil: [ right ifNotNil: [ ^ left + right ] ].
-			^ nil ].
+
+	aViennaNode isViennaSeqEnumPatternNode ifTrue: [ ^ aViennaNode size ].
+	aViennaNode isViennaSeqConcPatternNode ifTrue: [
+		| left right |
+		left := self seqPatternSize: aViennaNode first.
+		right := self seqPatternSize: aViennaNode second.
+		left ifNotNil: [ right ifNotNil: [ ^ left + right ] ].
+		^ nil ].
 	^ nil
 ]
 
@@ -3025,15 +3028,14 @@ ViennaVDM2Smalltalk >> setIntersection: aViennaNode env: aDictionary [
 
 { #category : #utilities }
 ViennaVDM2Smalltalk >> setPatternSize: aViennaNode [
-	aViennaNode label = 'SetEnumPattern'
-		ifTrue: [ ^ aViennaNode size ].
-	aViennaNode label = 'SetUnionPattern'
-		ifTrue: [ 
-			| left right |
-			left := self setPatternSize: aViennaNode first.
-			right := self setPatternSize: aViennaNode second.
-			left ifNotNil: [ right ifNotNil: [ ^ left + right ] ].
-			^ nil ].
+
+	aViennaNode isViennaSetEnumPatternNode ifTrue: [ ^ aViennaNode size ].
+	aViennaNode isViennaSetUnionPatternNode ifTrue: [
+		| left right |
+		left := self setPatternSize: aViennaNode pattern1.
+		right := self setPatternSize: aViennaNode pattern2.
+		left ifNotNil: [ right ifNotNil: [ ^ left + right ] ].
+		^ nil ].
 	^ nil
 ]
 

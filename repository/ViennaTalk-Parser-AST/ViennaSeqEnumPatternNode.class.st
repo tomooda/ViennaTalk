@@ -5,7 +5,21 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pretty printing' }
+ViennaSeqEnumPatternNode >> formatWith: aViennaAbstractFormatter [
+
+	^ '[' , (aViennaAbstractFormatter
+		   formatEnumerate: (aViennaAbstractFormatter formatAll: self)
+		   ifEmpty: [ '' ]) , ']'
+]
+
+{ #category : #testing }
+ViennaSeqEnumPatternNode >> isViennaSeqEnumPatternNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaSeqEnumPatternNode >> label [
 
 	^ 'SeqEnumPattern'

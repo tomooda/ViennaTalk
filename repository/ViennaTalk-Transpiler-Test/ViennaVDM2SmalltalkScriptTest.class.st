@@ -235,18 +235,15 @@ ViennaVDM2SmalltalkScriptTest >> testBlockStatementEnv [
 
 { #category : #'tests-bound variables-patterns and binds' }
 ViennaVDM2SmalltalkScriptTest >> testBoundVariablesSetUnionPatternInto [
+
 	| node binds |
-	node := ViennaVDMParser new setUnionPattern end parse: '{v1, v2} union {v3}'.
+	node := ViennaVDMParser new setUnionPattern end parse:
+		        '{v1, v2} union {v3}'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'SetUnionPattern'.
+	self assert: node isViennaSetUnionPatternNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{'v1'.
-			'v2'.
-			'v3'} asSet
+	self assert: binds equals: { 'v1'. 'v2'. 'v3' } asSet
 ]
 
 { #category : #'tests-code generation-statements' }
@@ -1765,19 +1762,20 @@ ViennaVDM2SmalltalkScriptTest >> testRecordModifierEnv [
 
 { #category : #'tests-code generation-patterns' }
 ViennaVDM2SmalltalkScriptTest >> testRecordPatternEnv [
+
 	| node |
-	node := ViennaVDMParser new expression end parse: 'def  mk_T(x, y) = mk_T(1, 2) in x + y'.
+	node := ViennaVDMParser new expression end parse:
+		        'def  mk_T(x, y) = mk_T(1, 2) in x + y'.
 	self deny: node isPetit2Failure.
-	self assert: node first first first label = 'RecordPattern'.
+	self assert:
+		node equalDefinitionList first patternOrBind
+			isViennaRecordPatternNode.
 	self
-		assert:
-			(self
-				evaluate:
-					(ViennaVDM2SmalltalkScript new
-						generate: node
-						env:
-							{('T' -> '(ViennaType compose: ''T'' of: {{nil. false. (ViennaType nat)}. {nil. false. (ViennaType nat)}})')}
-								asDictionary))
+		assert: (self evaluate:
+				 (ViennaVDM2SmalltalkScript new generate: node env: { ('T'
+					   ->
+					   '(ViennaType compose: ''T'' of: {{nil. false. (ViennaType nat)}. {nil. false. (ViennaType nat)}})') }
+						  asDictionary))
 		equals: 3
 ]
 
@@ -1842,20 +1840,32 @@ ViennaVDM2SmalltalkScriptTest >> testSeq1TypeEnv [
 
 { #category : #'tests-code generation-patterns' }
 ViennaVDM2SmalltalkScriptTest >> testSeqConcPatternEnv [
+
 	| node |
-	node := ViennaVDMParser new expression end parse: 'def  [x]^[y] = [1, 2] in x + y'.
+	node := ViennaVDMParser new expression end parse:
+		        'def  [x]^[y] = [1, 2] in x + y'.
 	self deny: node isPetit2Failure.
-	self assert: node first first first label = 'SeqConcPattern'.
-	self assert: (self evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: 3
+	self assert: node equalDefinitionList first patternOrBind
+			isViennaSeqConcPatternNode.
+	self
+		assert: (self evaluate:
+				 (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals: 3
 ]
 
 { #category : #'tests-code generation-patterns' }
 ViennaVDM2SmalltalkScriptTest >> testSeqEnumPatternEnv [
+
 	| node |
-	node := ViennaVDMParser new expression end parse: 'def  [x, y] = [1, 2] in x + y'.
+	node := ViennaVDMParser new expression end parse:
+		        'def  [x, y] = [1, 2] in x + y'.
 	self deny: node isPetit2Failure.
-	self assert: node first first first label = 'SeqEnumPattern'.
-	self assert: (self evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: 3
+	self assert: node equalDefinitionList first patternOrBind
+			isViennaSeqEnumPatternNode.
+	self
+		assert: (self evaluate:
+				 (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals: 3
 ]
 
 { #category : #'tests-code generation-types' }
@@ -2105,11 +2115,17 @@ ViennaVDM2SmalltalkScriptTest >> testSetDifferenceEnv [
 
 { #category : #'tests-code generation-patterns' }
 ViennaVDM2SmalltalkScriptTest >> testSetEnumPatternEnv [
+
 	| node |
-	node := ViennaVDMParser new expression end parse: 'def  { x, y } = { 1, 2 } in x + y'.
+	node := ViennaVDMParser new expression end parse:
+		        'def  { x, y } = { 1, 2 } in x + y'.
 	self deny: node isPetit2Failure.
-	self assert: node first first first label = 'SetEnumPattern'.
-	self assert: (self evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: 3
+	self assert: node equalDefinitionList first patternOrBind
+			isViennaSetEnumPatternNode.
+	self
+		assert: (self evaluate:
+				 (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals: 3
 ]
 
 { #category : #'tests-code generation-expressions' }
@@ -2210,11 +2226,17 @@ ViennaVDM2SmalltalkScriptTest >> testSetUnionEnv [
 
 { #category : #'tests-code generation-patterns' }
 ViennaVDM2SmalltalkScriptTest >> testSetUnionPatternEnv [
+
 	| node |
-	node := ViennaVDMParser new expression end parse: 'def  { x } union { y } = { 1, 2 } in x + y'.
+	node := ViennaVDMParser new expression end parse:
+		        'def  { x } union { y } = { 1, 2 } in x + y'.
 	self deny: node isPetit2Failure.
-	self assert: node first first first label = 'SetUnionPattern'.
-	self assert: (self evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: 3
+	self assert: node equalDefinitionList first patternOrBind
+			isViennaSetUnionPatternNode.
+	self
+		assert: (self evaluate:
+				 (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals: 3
 ]
 
 { #category : #'tests-code generation-expressions' }
@@ -2330,11 +2352,18 @@ ViennaVDM2SmalltalkScriptTest >> testTupleConstructorEnv [
 
 { #category : #'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testTuplePatternEnv [
+
 	| node |
-	node := ViennaVDMParser new expression end parse: 'def  mk_(x, y) = mk_(1, 2) in x + y'.
+	node := ViennaVDMParser new expression end parse:
+		        'def  mk_(x, y) = mk_(1, 2) in x + y'.
 	self deny: node isPetit2Failure.
-	self assert: node first first first label = 'TuplePattern'.
-	self assert: (self evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new)) equals: 3
+	self assert:
+		node equalDefinitionList first patternOrBind
+			isViennaTuplePatternNode.
+	self
+		assert: (self evaluate:
+				 (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new))
+		equals: 3
 ]
 
 { #category : #'tests-code generation-expressions' }

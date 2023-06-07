@@ -1756,13 +1756,13 @@ ViennaVDMParser >> recordModifier [
 
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> recordPattern [
-	^ super recordPattern
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'RecordPattern'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super recordPattern =>> [ :start :end :array |
+	  (ViennaRecordPatternNode
+		   name: array first
+		   patternList: array second)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -1863,24 +1863,20 @@ ViennaVDMParser >> seqBind [
 
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> seqConcPattern [
-	^ super seqConcPattern
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'SeqConcPattern'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super seqConcPattern =>> [ :start :end :array |
+	  (ViennaSeqConcPatternNode withAll: array)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> seqEnumPattern [
-	^ super seqEnumPattern
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'SeqEnumPattern'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super seqEnumPattern =>> [ :start :end :array |
+	  (ViennaSeqEnumPatternNode withAll: array)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-types' }
@@ -1957,13 +1953,11 @@ ViennaVDMParser >> setComprehension [
 
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> setEnumPattern [
-	^ super setEnumPattern
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'SetEnumPattern'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super setEnumPattern =>> [ :start :end :array |
+	  (ViennaSetEnumPatternNode withAll: array)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -2007,13 +2001,13 @@ ViennaVDMParser >> setType [
 
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> setUnionPattern [
-	^ super setUnionPattern
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'SetUnionPattern'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super setUnionPattern =>> [ :start :end :array |
+	  (ViennaSetUnionPatternNode
+		   pattern: array first
+		   pattern: array second)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-comments' }
@@ -2146,13 +2140,12 @@ ViennaVDMParser >> tupleConstructor [
 
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> tuplePattern [
-	^ super tuplePattern
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'TuplePattern'
-				start: start
-				end: end
-				with: (ViennaNode label: 'PatternList' withAll: array) ]
+
+	^ super tuplePattern =>> [ :start :end :array |
+	  (ViennaTuplePatternNode patternList:
+			   (ViennaNode label: 'PatternList' withAll: array))
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-expressions-operators' }
