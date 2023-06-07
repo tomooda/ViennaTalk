@@ -34,17 +34,16 @@ ViennaExtractStateVariable >> execute [
 		stateDefinition := ViennaNode
 			                   label: 'StateDefinition'
 			                   with: 'State'
-			                   with: (ViennaNode label: 'FieldList')
+			                   with: (ViennaFieldListNode withAll: #(  ))
 			                   with: nil
 			                   with:
-				                   (ViennaNode
-					                    label: 'Initialisation'
-					                    with: (ViennaNode
-							                     label: 'InvariantInitialFunction'
-							                     with:
+				                   (ViennaInitialisationNode
+					                    invariantInitialFunction:
+						                    (ViennaInvariantInitialFunctionNode
+							                     pattern:
 							                     (ViennaPatternIdentifierNode identifier:
 								                      's')
-							                     with: (ViennaEqualNode
+							                     expression: (ViennaEqualNode
 									                      expression:
 									                      (ViennaLocalNameNode identifier: 's')
 									                      expression:
@@ -57,11 +56,10 @@ ViennaExtractStateVariable >> execute [
 		moduleBody add:
 			(ViennaNode label: 'DefinitionBlock' with: stateDefinition) ].
 	fieldList := stateDefinition second.
-	fieldList add: (ViennaNode
-			 label: 'Field'
-			 with: self newName
-			 with: false
-			 with: ViennaBasicTypeNode any).
+	fieldList add: (ViennaFieldNode
+			 identifier: self newName
+			 equalityAbstraction: false
+			 type: ViennaBasicTypeNode any).
 	initializer := stateDefinition fourth first second second second.
 	initializer add: ast.
 	stateDefinition third ifNotNil: [ :invariant |

@@ -39,12 +39,19 @@ TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesBlockStatementBoundV
 
 { #category : #'tests-free variables-statements' }
 TViennaVDMFreeVariableCollectorTestCase >> testFreeVariablesCasesExpressionAlternativeBoundVarsInto [
+
 	| node binds |
-	node := ViennaVDMParser new casesStatementAlternative end parse: 'p1 munion p2, p1 union p2 -> op(p1, p2)'.
+	node := ViennaVDMParser new casesStatementAlternative end parse:
+		        'p1 munion p2, p1 union p2 -> op(p1, p2)'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'CasesStatementAlternative'.
+	self assert: node isViennaCasesStatementAlternativeNode.
 	binds := Set new.
-	self assert: (ViennaVDM2SmalltalkScript new freeVariables: node env: Dictionary new) equals: {'op'} asSet
+	self
+		assert:
+		(ViennaVDM2SmalltalkScript new
+			 freeVariables: node
+			 env: Dictionary new)
+		equals: { 'op' } asSet
 ]
 
 { #category : #'tests-free variables-expressions' }

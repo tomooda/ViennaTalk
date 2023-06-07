@@ -1033,6 +1033,12 @@ ViennaNode >> isViennaCasesExpressionNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaCasesStatementAlternativeNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaCasesStatementNode [
 
 	^ false
@@ -1093,6 +1099,18 @@ ViennaNode >> isViennaDistributedSetUnionNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaEqualDefinitionListNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaEqualDefinitionNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaEqualNode [
 
 	^ false
@@ -1124,6 +1142,18 @@ ViennaNode >> isViennaExitStatementNode [
 
 { #category : #testing }
 ViennaNode >> isViennaExpressionNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaFieldListNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaFieldNode [
 
 	^ false
 ]
@@ -1237,6 +1267,12 @@ ViennaNode >> isViennaIndexForLoopNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaInitialisationNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaInmapTypeNode [
 
 	^ false
@@ -1256,6 +1292,12 @@ ViennaNode >> isViennaIsBasicExpressionNode [
 
 { #category : #testing }
 ViennaNode >> isViennaIsNameExpressionNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaIsNotYetSpecifiedNode [
 
 	^ false
 ]
@@ -1310,6 +1352,18 @@ ViennaNode >> isViennaLetNode [
 
 { #category : #testing }
 ViennaNode >> isViennaLetStatementNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaLocalDefinitionListNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaLocalDefinitionNode [
 
 	^ false
 ]
@@ -1945,8 +1999,7 @@ ViennaNode >> name [
 	(#( 'Module' 'ImportDefinition' 'TypeDefinition' 'RecordTypeDefinition'
 	    'ExplicitFunctionDefinition' 'ExplicitOperationDefinition'
 	    'ImplicitFunctionDefinition' 'ImplicitOperationDefinition'
-	    'StateDefinition' 'Field' ) includes: self label) ifTrue: [
-		^ self first ].
+	    'StateDefinition' ) includes: self label) ifTrue: [ ^ self first ].
 	(#( 'AccessTypeDefinition' 'AccessValueDefinition'
 	    'AccessFunctionDefinition' 'AccessOperationDefinition' )
 		 includes: self label) ifTrue: [ ^ self second name ].
@@ -2143,30 +2196,27 @@ ViennaNode >> resolve [
 
 { #category : #'accessing-definitions' }
 ViennaNode >> resolveLocalName: aString [
-	(self definitionOfLocalName: aString)
-		ifNotNil: [ :defNode | 
-			(#('ExplicitFunctionDefinition' 'ImplicitFunctionDefinition' 'ExplicitOperationDefinition' 'ImplicitOperationDefinition' 'TypeDefinition' 'RecordTypeDefinition')
-				includes: defNode label)
-				ifTrue: [ ^ defNode ].
-			(#('TypeImport' 'ValueImport' 'FunctionImport' 'OperationImport')
-				includes: defNode label)
-				ifTrue: [ (self
-						moduleNamed: (defNode parentLabelled: 'ImportDefinition' ifAbsent: [ ^ nil ]) first)
-						ifNotNil: [ :moduleNode | 
-							moduleNode == self module
-								ifFalse: [ ^ moduleNode
-										resolveLocalName:
-											(defNode label = 'TypeImport'
-												ifTrue: [ defNode first first first ]
-												ifFalse: [ defNode first first ]) ] ].
-					^ nil ].
-			(defNode label = 'Field'
-				and: [ defNode parent parent label = 'StateDefinition' ])
-				ifTrue: [ ^ defNode parent parent ].
-			defNode bindHolderNode
-				ifNotNil: [ :bindNode | 
-					bindNode label = 'ValueDefinition'
-						ifTrue: [ ^ bindNode ] ] ].
+
+	(self definitionOfLocalName: aString) ifNotNil: [ :defNode |
+		(#( 'ExplicitFunctionDefinition' 'ImplicitFunctionDefinition'
+		    'ExplicitOperationDefinition' 'ImplicitOperationDefinition'
+		    'TypeDefinition' 'RecordTypeDefinition' ) includes:
+			 defNode label) ifTrue: [ ^ defNode ].
+		(#( 'TypeImport' 'ValueImport' 'FunctionImport' 'OperationImport' )
+			 includes: defNode label) ifTrue: [
+			(self moduleNamed:
+				 (defNode parentLabelled: 'ImportDefinition' ifAbsent: [ ^ nil ])
+					 first) ifNotNil: [ :moduleNode |
+				moduleNode == self module ifFalse: [
+					^ moduleNode resolveLocalName: (defNode label = 'TypeImport'
+							   ifTrue: [ defNode first first first ]
+							   ifFalse: [ defNode first first ]) ] ].
+			^ nil ].
+		(defNode isViennaFieldNode and: [
+			 defNode parent parent label = 'StateDefinition' ]) ifTrue: [
+			^ defNode parent parent ].
+		defNode bindHolderNode ifNotNil: [ :bindNode |
+			bindNode label = 'ValueDefinition' ifTrue: [ ^ bindNode ] ] ].
 	^ nil
 ]
 

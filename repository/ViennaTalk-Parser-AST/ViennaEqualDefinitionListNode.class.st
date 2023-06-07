@@ -14,6 +14,12 @@ ViennaEqualDefinitionListNode >> formatWith: aViennaAbstractFormatter [
 	  , ';'
 ]
 
+{ #category : #testing }
+ViennaEqualDefinitionListNode >> isViennaEqualDefinitionListNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaEqualDefinitionListNode >> label [
 

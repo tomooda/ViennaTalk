@@ -1272,12 +1272,6 @@ ViennaVDMGrammar >> identifier [
 ]
 
 { #category : #'parsers-definitions' }
-ViennaVDMGrammar >> identifierTypePair [
-	^ (identifier trim , colon , type)
-		==> [ :triple | Array with: triple first with: triple third ]
-]
-
-{ #category : #'parsers-definitions' }
 ViennaVDMGrammar >> identifierTypePairList [
 	^ (identifier trim , colon , type separatedBy: comma) withoutSeparators optional
 		==> [ :triples | 

@@ -6,10 +6,10 @@ Class {
 }
 
 { #category : #'instance creation' }
-ViennaLocalDefinitionNode class >> with: aViennaNode [
+ViennaLocalDefinitionNode class >> valueDefinitionOrFunctionDefinition: aViennaNode [
 
 	^ (self new: 1)
-		  at: 1 put: aViennaNode;
+		  valueDefinitionOrFunctionDefinition: aViennaNode;
 		  yourself
 ]
 
@@ -19,8 +19,26 @@ ViennaLocalDefinitionNode >> formatWith: aViennaAbstractFormatter [
 	^ aViennaAbstractFormatter format: self first
 ]
 
+{ #category : #testing }
+ViennaLocalDefinitionNode >> isViennaLocalDefinitionNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaLocalDefinitionNode >> label [
 
 	^ 'LocalDefinition'
+]
+
+{ #category : #accessing }
+ViennaLocalDefinitionNode >> valueDefinitionOrFunctionDefinition [
+
+	^ self at: 1
+]
+
+{ #category : #accessing }
+ViennaLocalDefinitionNode >> valueDefinitionOrFunctionDefinition: aViennaNode [
+
+	self at: 1 put: aViennaNode
 ]

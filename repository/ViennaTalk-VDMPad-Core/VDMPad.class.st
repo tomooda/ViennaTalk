@@ -5001,18 +5001,22 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
 
 { #category : #private }
 VDMPad >> tailerErrorMessage: aString [
+
 	| message |
 	message := String new writeStream.
 	aString linesDo: [ :line |
 		| output |
 		output := nil.
-		(line includesSubString: 'Error') ifTrue: [
+		(line includesSubstring: 'Error') ifTrue: [
 			output := line.
-			(output includesSubString: 'at line') ifTrue: [
-				output := output copyFrom: 1 to: (output size - (output reverse indexOf: $())
-			]
-		].
-		output ifNotNil: [message nextPutAll: output; cr]].
+			(output includesSubstring: 'at line') ifTrue: [
+				output := output
+					          copyFrom: 1
+					          to: output size - (output reverse indexOf: $() ] ].
+		output ifNotNil: [
+			message
+				nextPutAll: output;
+				cr ] ].
 	"^ message contents"
 	^ aString
 ]

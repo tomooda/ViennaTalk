@@ -5,7 +5,34 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
+ViennaInvariantNode class >> invariantInitialFunction: aViennaInvariantInitialFunctionNode [
+
+	^ (self new: 1)
+		  invariantInitialFunction: aViennaInvariantInitialFunctionNode;
+		  yourself
+]
+
+{ #category : #'pretty printing' }
+ViennaInvariantNode >> formatWith: aViennaAbstractFormatter [
+
+	^ 'inv '
+	  , (aViennaAbstractFormatter format: self invariantInitialFunction)
+]
+
+{ #category : #accessing }
+ViennaInvariantNode >> invariantInitialFunction [
+
+	^ self at: 1
+]
+
+{ #category : #accessing }
+ViennaInvariantNode >> invariantInitialFunction: aViennaInvariantInitialFunctionNode [
+
+	self at: 1 put: aViennaInvariantInitialFunctionNode
+]
+
+{ #category : #accessing }
 ViennaInvariantNode >> label [
 
 	^ 'Invariant'

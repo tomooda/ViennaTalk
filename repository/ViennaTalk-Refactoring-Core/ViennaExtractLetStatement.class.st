@@ -30,12 +30,13 @@ ViennaExtractLetStatement >> execute [
 		with: (ViennaLocalNameNode identifier: self newName).
 	^ self replaceNode: dummy with: (ViennaLetStatementNode
 			   localDefinitionList: (ViennaLocalDefinitionListNode withAll:
-					    { (ViennaLocalDefinitionNode with: (ViennaNode
-							      label: 'ValueDefinition'
-							      with:
-							      (ViennaPatternIdentifierNode identifier: self newName)
-							      with: nil
-							      with: ast)) })
+					    { (ViennaLocalDefinitionNode
+						     valueDefinitionOrFunctionDefinition: (ViennaNode
+								      label: 'ValueDefinition'
+								      with:
+								      (ViennaPatternIdentifierNode identifier: self newName)
+								      with: nil
+								      with: ast)) })
 			   statement: self statementNode)
 ]
 

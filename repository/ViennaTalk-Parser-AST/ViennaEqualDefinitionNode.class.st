@@ -37,6 +37,12 @@ ViennaEqualDefinitionNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: expression
 ]
 
+{ #category : #testing }
+ViennaEqualDefinitionNode >> isViennaEqualDefinitionNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaEqualDefinitionNode >> label [
 

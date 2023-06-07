@@ -11,6 +11,12 @@ ViennaIsNotYetSpecifiedNode >> formatWith: aViennaAbstractFormatter [
 	^ 'is not yet specified'
 ]
 
+{ #category : #testing }
+ViennaIsNotYetSpecifiedNode >> isViennaIsNotYetSpecifiedNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaIsNotYetSpecifiedNode >> label [
 

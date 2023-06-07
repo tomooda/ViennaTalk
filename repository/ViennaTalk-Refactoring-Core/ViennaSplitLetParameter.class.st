@@ -50,9 +50,9 @@ ViennaSplitLetParameter >> findDefinitionNode [
 	ast parent ifNotNil: [ :valueDefinition |
 		valueDefinition label = 'ValueDefinition' ifFalse: [ ^ nil ].
 		valueDefinition parent ifNotNil: [ :localDefinition |
-			localDefinition label = 'LocalDefinition' ifFalse: [ ^ nil ].
+			localDefinition isViennaLocalDefinitionNode ifFalse: [ ^ nil ].
 			localDefinition parent ifNotNil: [ :localDefinitionList |
-				localDefinitionList label = 'LocalDefinitionList' ifFalse: [
+				localDefinitionList isViennaLocalDefinitionListNode ifFalse: [
 					^ nil ].
 				localDefinitionList size > 1 ifFalse: [ ^ nil ].
 				localDefinitionList parent ifNotNil: [ :let |

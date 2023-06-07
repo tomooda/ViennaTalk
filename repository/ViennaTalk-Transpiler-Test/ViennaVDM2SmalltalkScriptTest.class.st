@@ -995,13 +995,17 @@ ViennaVDM2SmalltalkScriptTest >> testIsNameExpressionEnv [
 
 { #category : #'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testIsNotYetSpecifiedEnv [
+
 	| node |
-	node := ViennaVDMParser new explicitFunctionDefinition end parse: 'f:t1->t2 f(x) == is not yet specified'.
+	node := ViennaVDMParser new explicitFunctionDefinition end parse:
+		        'f:t1->t2 f(x) == is not yet specified'.
 	self deny: node isPetit2Failure.
 	node := node at: 6.
-	self assert: node label = 'IsNotYetSpecified'.
+	self assert: node isViennaIsNotYetSpecifiedNode.
 	self
-		should: [ self evaluate: (ViennaVDM2SmalltalkScript new generate: node env: Dictionary new) ]
+		should: [
+			self evaluate:
+				(ViennaVDM2SmalltalkScript new generate: node env: Dictionary new) ]
 		raise: NotYetImplemented
 ]
 

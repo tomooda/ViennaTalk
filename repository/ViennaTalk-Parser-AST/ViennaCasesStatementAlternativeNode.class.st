@@ -35,6 +35,12 @@ ViennaCasesStatementAlternativeNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: statement
 ]
 
+{ #category : #testing }
+ViennaCasesStatementAlternativeNode >> isViennaCasesStatementAlternativeNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaCasesStatementAlternativeNode >> label [
 

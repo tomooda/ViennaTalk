@@ -159,28 +159,27 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesDocumentInto [
 
 { #category : #'tests-bound variables-definitions' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesEqualDefinitionInto [
+
 	| node binds |
 	node := ViennaVDMParser new equalDefinition end parse: 'v1 : t1 = e1'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'EqualDefinition'.
+	self assert: node isViennaEqualDefinitionNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self assert: binds equals: {'v1'} asSet
+	self assert: binds equals: { 'v1' } asSet
 ]
 
 { #category : #'tests-bound variables-definitions' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesEqualDefinitionListInto [
+
 	| node binds |
-	node := ViennaVDMParser new equalDefinitionList end parse: 'v1 : t1 = e1; v2 : t2 = e2'.
+	node := ViennaVDMParser new equalDefinitionList end parse:
+		        'v1 : t1 = e1; v2 : t2 = e2'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'EqualDefinitionList'.
+	self assert: node isViennaEqualDefinitionListNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{'v1'.
-			'v2'} asSet
+	self assert: binds equals: { 'v1'. 'v2' } asSet
 ]
 
 { #category : #'tests-bound variables-definitions' }
@@ -288,40 +287,39 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesExtendedExplicitFu
 
 { #category : #'tests-bound variables-types' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesFieldInto [
+
 	| node binds |
 	node := ViennaVDMParser new field end parse: 'f : t'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'Field'.
+	self assert: node isViennaFieldNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self assert: binds equals: {'f'} asSet.
+	self assert: binds equals: { 'f' } asSet.
 	node := ViennaVDMParser new field end parse: 'f :- t'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'Field'.
+	self assert: node isViennaFieldNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self assert: binds equals: {'f'} asSet.
+	self assert: binds equals: { 'f' } asSet.
 	node := ViennaVDMParser new field end parse: 't'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'Field'.
+	self assert: node isViennaFieldNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self assert: binds equals: {} asSet
+	self assert: binds equals: {  } asSet
 ]
 
 { #category : #'tests-bound variables-types' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesFieldListInto [
+
 	| node binds |
-	node := ViennaVDMParser new fieldList end parse: 'f1 : t1 f2 :- t2 t3'.
+	node := ViennaVDMParser new fieldList end parse:
+		        'f1 : t1 f2 :- t2 t3'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'FieldList'.
+	self assert: node isViennaFieldListNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{'f1'.
-			'f2'} asSet
+	self assert: binds equals: { 'f1'. 'f2' } asSet
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
@@ -429,28 +427,27 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesInmapTypeInto [
 
 { #category : #'tests-bound variables-definitions' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesLocalDefinitionInto [
+
 	| node binds |
 	node := ViennaVDMParser new localDefinition end parse: 'v1 : t1 = e1'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'LocalDefinition'.
+	self assert: node isViennaLocalDefinitionNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self assert: binds equals: {'v1'} asSet
+	self assert: binds equals: { 'v1' } asSet
 ]
 
 { #category : #'tests-bound variables-definitions' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesLocalDefinitionListInto [
+
 	| node binds |
-	node := ViennaVDMParser new localDefinitionList end parse: 'v1 : t1 = e1, fn[@t] : t2 -> t3 fn(x) == e2'.
+	node := ViennaVDMParser new localDefinitionList end parse:
+		        'v1 : t1 = e1, fn[@t] : t2 -> t3 fn(x) == e2'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'LocalDefinitionList'.
+	self assert: node isViennaLocalDefinitionListNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{'v1'.
-			'fn'} asSet
+	self assert: binds equals: { 'v1'. 'fn' } asSet
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }

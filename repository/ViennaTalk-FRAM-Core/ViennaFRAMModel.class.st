@@ -135,7 +135,7 @@ ViennaFRAMModel >> createOperationDefinitionNode: aString [
 					    with: (ViennaNode label: 'Parameters')
 					    with: (ViennaNode
 							     label: 'OperationBody'
-							     with: (ViennaNode label: 'IsNotYetSpecified'))
+							     with: ViennaIsNotYetSpecifiedNode new)
 					    with: nil
 					    with: nil))
 ]

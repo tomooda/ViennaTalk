@@ -55,22 +55,22 @@ ViennaInlineApplyFunctionAndRemove >> execute [
 		| callerNode |
 		callerNode := node parent.
 		self replaceNode: callerNode with: (ViennaLetExpressionNode
-				 localDefinitionList: (ViennaNode
-						  label: 'LocalDefinitionList'
-						  withAll: ((1 to: callerNode second size) collect: [ :index |
-								   | param type arg |
-								   param := (self definitionNode fifth first at: index)
-									            copyFragment.
-								   type := callerNode second size = 1
-									           ifTrue: [ self definitionNode third first ]
-									           ifFalse: [
-										           self definitionNode third first
-											           isViennaProductTypeNode
-											           ifTrue: [
-											           self definitionNode third first at: index ]
-											           ifFalse: [ nil ] ].
-								   arg := (callerNode second at: index) copyFragment.
-								   ViennaNode label: 'LocalDefinition' with: (ViennaNode
+				 localDefinitionList: (ViennaLocalDefinitionListNode withAll:
+						  ((1 to: callerNode second size) collect: [ :index |
+							   | param type arg |
+							   param := (self definitionNode fifth first at: index)
+								            copyFragment.
+							   type := callerNode second size = 1
+								           ifTrue: [ self definitionNode third first ]
+								           ifFalse: [
+									           self definitionNode third first
+										           isViennaProductTypeNode
+										           ifTrue: [
+										           self definitionNode third first at: index ]
+										           ifFalse: [ nil ] ].
+							   arg := (callerNode second at: index) copyFragment.
+							   ViennaLocalDefinitionNode
+								   valueDefinitionOrFunctionDefinition: (ViennaNode
 										    label: 'ValueDefinition'
 										    with: param
 										    with: type

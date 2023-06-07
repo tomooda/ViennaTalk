@@ -5,8 +5,52 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
+ViennaInvariantInitialFunctionNode class >> pattern: aViennaPatternNode expression: aViennaExpressionNode [
+
+	^ (self new: 2)
+		  pattern: aViennaPatternNode;
+		  expression: aViennaExpressionNode;
+		  yourself
+]
+
+{ #category : #accessing }
+ViennaInvariantInitialFunctionNode >> expression [
+
+	^ self at: 2
+]
+
+{ #category : #accessing }
+ViennaInvariantInitialFunctionNode >> expression: aViennaExpressionNode [
+
+	self at: 2 put: aViennaExpressionNode
+]
+
+{ #category : #'pretty printing' }
+ViennaInvariantInitialFunctionNode >> formatWith: aViennaAbstractFormatter [
+
+	| pattern expression |
+	pattern := aViennaAbstractFormatter format: self pattern.
+	expression := aViennaAbstractFormatter format: self expression.
+	^ aViennaAbstractFormatter
+		  indentString: pattern , ' =='
+		  insertCrIfNeeded: expression
+]
+
+{ #category : #accessing }
 ViennaInvariantInitialFunctionNode >> label [
 
 	^ 'InvariantInitialFunction'
+]
+
+{ #category : #accessing }
+ViennaInvariantInitialFunctionNode >> pattern [
+
+	^ self at: 1
+]
+
+{ #category : #accessing }
+ViennaInvariantInitialFunctionNode >> pattern: aViennaPatternNode [
+
+	self at: 1 put: aViennaPatternNode
 ]

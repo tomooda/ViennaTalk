@@ -17,14 +17,14 @@ ViennaExtractLetExpression >> execute [
 
 	self newName ifNil: [ ^ nil ].
 	^ self replaceNode: ast with: (ViennaLetExpressionNode
-			   localDefinitionList: (ViennaNode
-					    label: 'LocalDefinitionList'
-					    with: (ViennaNode label: 'LocalDefinition' with: (ViennaNode
+			   localDefinitionList: (ViennaLocalDefinitionListNode withAll:
+					    { (ViennaLocalDefinitionNode
+						     valueDefinitionOrFunctionDefinition: (ViennaNode
 								      label: 'ValueDefinition'
 								      with:
 								      (ViennaPatternIdentifierNode identifier: self newName)
 								      with: nil
-								      with: ast copyFragment)))
+								      with: ast copyFragment)) })
 			   expression: (ViennaLocalNameNode identifier: self newName))
 ]
 

@@ -44,9 +44,9 @@ ViennaRenameStateVariable >> findDefinitionNode [
 { #category : #accessing }
 ViennaRenameStateVariable >> findOldName [
 
-	ast label = 'Field' ifTrue: [ ^ ast first ].
-	ast isViennaLocalNameNode ifTrue: [ ^ ast first ].
-	ast isViennaOldNameNode ifTrue: [ ^ ast first ].
+	ast isViennaFieldNode ifTrue: [ ^ ast identifier ].
+	ast isViennaLocalNameNode ifTrue: [ ^ ast identifier ].
+	ast isViennaOldNameNode ifTrue: [ ^ ast identifier ].
 	^ nil
 ]
 

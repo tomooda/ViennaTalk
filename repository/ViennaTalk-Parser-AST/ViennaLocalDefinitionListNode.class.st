@@ -19,6 +19,12 @@ ViennaLocalDefinitionListNode >> formatWith: aViennaAbstractFormatter [
 		  aViennaAbstractFormatter join: ', ' withAll: localDefinitions ]
 ]
 
+{ #category : #testing }
+ViennaLocalDefinitionListNode >> isViennaLocalDefinitionListNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaLocalDefinitionListNode >> label [
 

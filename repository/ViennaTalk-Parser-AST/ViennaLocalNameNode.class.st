@@ -95,7 +95,7 @@ ViennaLocalNameNode >> isOperationNameNode [
 ViennaLocalNameNode >> isStateVariableNameNode [
 
 	(self definitionOfLocalName: self identifier) ifNotNil: [ :fieldNode |
-		(fieldNode label = 'Field' and: [
+		(fieldNode isViennaFieldNode and: [
 			 fieldNode parent parent label = 'StateDefinition' ]) ifTrue: [
 			^ true ] ].
 	^ false
