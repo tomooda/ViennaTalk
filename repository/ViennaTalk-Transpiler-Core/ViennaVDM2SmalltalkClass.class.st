@@ -304,13 +304,13 @@ ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass proto
 						 (retVarName , ' := self _' , opName , ((' _: ' join: argVars)
 								   ifNotEmpty: [ :str | '_: ' , str ]
 								   ifEmpty: [ '' ]) , '.' asViennaTracingString: aViennaNode).
-				 (runtimeTypeCheck = true and: [ typeNode label ~= 'UnitType' ])
-					 ifTrue: [
-						 stream nextPutAll:
-							 ('(' , (self generate: typeNode env: aDictionary)
-							  , ' includes: ' , retVarName
-							  , ') ifFalse: [ViennaRuntimeTypeError signal].'
-								  asViennaTracingString: typeNode) ].
+				 (runtimeTypeCheck = true and: [
+					  typeNode isViennaUnitTypeNode not ]) ifTrue: [
+					 stream nextPutAll:
+						 ('(' , (self generate: typeNode env: aDictionary)
+						  , ' includes: ' , retVarName
+						  , ') ifFalse: [ViennaRuntimeTypeError signal].'
+							  asViennaTracingString: typeNode) ].
 				 postString ifNotNil: [
 					 stream nextPutAll: ('(' , postString
 						  , ') ifFalse: [ViennaPostconditionViolation signal].'
@@ -385,10 +385,10 @@ ViennaVDM2SmalltalkClass >> explicitOperationDefinition: aViennaNode env: aDicti
 			                body }.
 	argTypeNode := typeNode first.
 	retTypeNode := typeNode second.
-	binds := argTypeNode label = 'UnitType'
+	binds := argTypeNode isViennaUnitTypeNode
 		         ifTrue: [ {  } ]
 		         ifFalse: [
-			         argTypeNode label = 'ProductType'
+			         argTypeNode isViennaProductTypeNode
 				         ifTrue: [
 					         (1 to: argTypeNode size) collect: [ :index |
 						         {
@@ -486,7 +486,7 @@ ViennaVDM2SmalltalkClass >> explicitOperationDefinition: aViennaNode env: aDicti
 												  nil }.
 											  {
 												  (ViennaPatternIdentifierNode identifier: '_oldState').
-												  nil } } , (retTypeNode label = 'UnitType'
+												  nil } } , (retTypeNode isViennaUnitTypeNode
 											   ifTrue: [ {  } ]
 											   ifFalse: [
 												   { {
@@ -541,7 +541,7 @@ ViennaVDM2SmalltalkClass >> extendedExplicitOperationDefinition: aViennaNode env
 		          ifNil: [ 'RESULT' ]
 		          ifNotNil: [ :node | node first ].
 	retTypeNode := aViennaNode third
-		               ifNil: [ ViennaNode label: 'UnitType' ]
+		               ifNil: [ ViennaUnitTypeNode new ]
 		               ifNotNil: [ :node | node second ].
 	bodyNode := aViennaNode fourth.
 	body := self generate: bodyNode.
@@ -645,7 +645,7 @@ ViennaVDM2SmalltalkClass >> extendedExplicitOperationDefinition: aViennaNode env
 												  nil }.
 											  {
 												  (ViennaPatternIdentifierNode identifier: '_oldState').
-												  nil } } , (retTypeNode label = 'UnitType'
+												  nil } } , (retTypeNode isViennaUnitTypeNode
 											   ifTrue: [ {  } ]
 											   ifFalse: [
 												   { {
@@ -865,7 +865,7 @@ ViennaVDM2SmalltalkClass >> implicitOperationDefinition: aViennaNode env: aDicti
 												  nil }.
 											  {
 												  (ViennaPatternIdentifierNode identifier: '_oldState').
-												  nil } } , (retTypeNode label = 'UnitType'
+												  nil } } , (retTypeNode isViennaUnitTypeNode
 											   ifTrue: [ {  } ]
 											   ifFalse: [
 												   { {

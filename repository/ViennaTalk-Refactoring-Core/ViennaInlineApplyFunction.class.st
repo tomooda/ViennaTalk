@@ -51,8 +51,8 @@ ViennaInlineApplyFunction >> execute [
 							   type := self callerNode second size = 1
 								           ifTrue: [ self definitionNode third first ]
 								           ifFalse: [
-									           self definitionNode third first label
-									           = 'ProductType'
+									           self definitionNode third first
+										           isViennaProductTypeNode
 										           ifTrue: [
 										           self definitionNode third first at: index ]
 										           ifFalse: [ nil ] ].

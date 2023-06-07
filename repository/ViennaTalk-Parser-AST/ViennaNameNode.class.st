@@ -14,7 +14,7 @@ ViennaNameNode class >> isAbstract [
 { #category : #testing }
 ViennaNameNode >> isTypeNode [
 
-	parent notNil and: [ parent label = 'TypeName' ]
+	parent notNil and: [ parent isViennaTypeNameNode ]
 ]
 
 { #category : #testing }

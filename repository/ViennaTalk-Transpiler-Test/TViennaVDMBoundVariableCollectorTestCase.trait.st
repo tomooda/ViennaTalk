@@ -417,16 +417,14 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesIndexForLoopInto [
 
 { #category : #'tests-bound variables-types' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesInmapTypeInto [
+
 	| node binds |
 	node := ViennaVDMParser new inmapType end parse: 'inmap t1 to t2'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'InmapType'.
+	self assert: node isViennaInmapTypeNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{} asSet
+	self assert: binds equals: {  } asSet
 ]
 
 { #category : #'tests-bound variables-definitions' }
@@ -485,16 +483,14 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesMapMunionPatternIn
 
 { #category : #'tests-bound variables-types' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesMapTypeInto [
+
 	| node binds |
 	node := ViennaVDMParser new mapType end parse: 'map t1 to t2'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'MapType'.
+	self assert: node isViennaMapTypeNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{} asSet
+	self assert: binds equals: {  } asSet
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
@@ -579,27 +575,26 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesOperationDefinitio
 
 { #category : #'tests-bound variables-types' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesOperationTypeInto [
+
 	| node binds |
 	node := ViennaVDMParser new operationType end parse: 't1 ==> t2'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'OperationType'.
+	self assert: node isViennaOperationTypeNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{} asSet
+	self assert: binds equals: {  } asSet
 ]
 
 { #category : #'tests-bound variables-types' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesOptionalTypeInto [
+
 	| node binds |
 	node := ViennaVDMParser new optionalType end parse: '[t]'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'OptionalType'.
+	self assert: node isViennaOptionalTypeNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self assert: binds equals: {} asSet
+	self assert: binds equals: {  } asSet
 ]
 
 { #category : #'tests-bound variables-definitions' }
@@ -635,16 +630,14 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesParametersListInto
 
 { #category : #'tests-bound variables-types' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesPartialFunctionTypeInto [
+
 	| node binds |
 	node := ViennaVDMParser new partialFunctionType end parse: 't1 -> t2'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'PartialFunctionType'.
+	self assert: node isViennaPartialFunctionTypeNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{} asSet
+	self assert: binds equals: {  } asSet
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
@@ -676,16 +669,14 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesPatternListInto [
 
 { #category : #'tests-bound variables-types' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesProductTypeInto [
+
 	| node binds |
 	node := ViennaVDMParser new productType end parse: 't1 * t2'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'ProductType'.
+	self assert: node isViennaProductTypeNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{} asSet
+	self assert: binds equals: {  } asSet
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
@@ -716,13 +707,14 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesRecordTypeDefiniti
 
 { #category : #'tests-bound variables-types' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesSeq1TypeInto [
+
 	| node binds |
 	node := ViennaVDMParser new seq1Type end parse: 'seq1 of t'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'Seq1Type'.
+	self assert: node isViennaSeq1TypeNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self assert: binds equals: {} asSet
+	self assert: binds equals: {  } asSet
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
@@ -752,13 +744,14 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesSeqEnumPatternInto
 
 { #category : #'tests-bound variables-types' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesSeqTypeInto [
+
 	| node binds |
 	node := ViennaVDMParser new seqType end parse: 'seq of t'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'SeqType'.
+	self assert: node isViennaSeqTypeNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self assert: binds equals: {} asSet
+	self assert: binds equals: {  } asSet
 ]
 
 { #category : #'tests-bound variables-statements' }
@@ -812,13 +805,14 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesSetForLoopInto [
 
 { #category : #'tests-bound variables-types' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesSetTypeInto [
+
 	| node binds |
 	node := ViennaVDMParser new setType end parse: 'set of t'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'SetType'.
+	self assert: node isViennaSetTypeNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self assert: binds equals: {} asSet
+	self assert: binds equals: {  } asSet
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
@@ -856,16 +850,14 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesStateDefinitionInt
 
 { #category : #'tests-bound variables-types' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTotalFunctionTypeInto [
+
 	| node binds |
 	node := ViennaVDMParser new totalFunctionType end parse: 't1 +> t2'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'TotalFunctionType'.
+	self assert: node isViennaTotalFunctionTypeNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{} asSet
+	self assert: binds equals: {  } asSet
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
@@ -934,13 +926,14 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTypeDefinitionsInt
 
 { #category : #'tests-bound variables-definitions' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTypeVariableIdentifierInto [
+
 	| node binds |
 	node := ViennaVDMParser new typeVariableIdentifier end parse: '@t'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'TypeVariableIdentifier'.
+	self assert: node isViennaTypeVariableIdentifierNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self assert: binds equals: {'@t'} asSet
+	self assert: binds equals: { '@t' } asSet
 ]
 
 { #category : #'tests-bound variables-definitions' }
@@ -960,16 +953,14 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTypeVariableListIn
 
 { #category : #'tests-bound variables-types' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesUnionTypeInto [
+
 	| node binds |
 	node := ViennaVDMParser new unionType end parse: 't1 | t2'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'UnionType'.
+	self assert: node isViennaUnionTypeNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{} asSet
+	self assert: binds equals: {  } asSet
 ]
 
 { #category : #'tests-bound variables-definitions' }

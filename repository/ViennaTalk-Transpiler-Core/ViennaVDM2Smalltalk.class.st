@@ -824,7 +824,7 @@ ViennaVDM2Smalltalk >> explicitFunctionDefinition: aViennaNode env: aDictionary 
 		| parametersNode argType binds |
 		parametersNode := parametersListNode at: level.
 		argType := argTypes at: level.
-		binds := argType label = 'ProductType'
+		binds := argType isViennaProductTypeNode
 			         ifTrue: [
 				         (1 to: parametersNode size) collect: [ :index |
 					         {
@@ -922,19 +922,19 @@ ViennaVDM2Smalltalk >> explicitOperationDefinition: aViennaNode env: aDictionary
 						        ,
 						        ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. RESULT] value' ] ] ]
 		ifNil: [
-			(runtimeTypeCheck = true and: [ retTypeNode label ~= 'UnitType' ])
-				ifTrue: [
-					body := '[|RESULT| RESULT := [' , body , '] value. ('
-					        , (self generate: retTypeNode env: aDictionary)
-					        ,
-					        ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. RESULT] value' ] ].
+			(runtimeTypeCheck = true and: [
+				 retTypeNode isViennaUnitTypeNode not ]) ifTrue: [
+				body := '[|RESULT| RESULT := [' , body , '] value. ('
+				        , (self generate: retTypeNode env: aDictionary)
+				        ,
+				        ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. RESULT] value' ] ].
 	varGenerator := self varNameGenerator: 'op' uniqueIn: {
 			                opname.
 			                body }.
-	binds := argTypeNode label = 'UnitType'
+	binds := argTypeNode isViennaUnitTypeNode
 		         ifTrue: [ {  } ]
 		         ifFalse: [
-			         argTypeNode label = 'ProductType'
+			         argTypeNode isViennaProductTypeNode
 				         ifTrue: [
 					         (1 to: argTypeNode size) collect: [ :index |
 						         {
@@ -969,7 +969,7 @@ ViennaVDM2Smalltalk >> explicitOperationDefinition: aViennaNode env: aDictionary
 				  nextPutAll: ' := ';
 				  nextPutAll: (self
 						   closureFromFlatBinds:
-							   binds , (retTypeNode label = 'UnitType'
+							   binds , (retTypeNode isViennaUnitTypeNode
 									    ifTrue: [ {  } ]
 									    ifFalse: [
 										    { {
@@ -1012,12 +1012,11 @@ ViennaVDM2Smalltalk >> extendedExplicitFunctionDefinition: aViennaNode env: aDic
 	postNode := aViennaNode seventh.
 	argType := ((2 to: patternTypePairList size by: 2) collect: [ :index |
 		            patternTypePairList at: index ])
-		           ifEmpty: [ ViennaNode label: 'UnitType' ]
+		           ifEmpty: [ ViennaUnitTypeNode new ]
 		           ifNotEmpty: [ :types |
 			           types size = 1
 				           ifTrue: [ types first ]
-				           ifFalse: [
-				           ViennaNode label: 'ProductType' withAll: types ] ].
+				           ifFalse: [ ViennaProductTypeNode withAll: types ] ].
 	retValue := identifierTypePairList first.
 	retType := identifierTypePairList second.
 	preNode ifNotNil: [
@@ -1136,7 +1135,7 @@ ViennaVDM2Smalltalk >> extendedExplicitOperationDefinition: aViennaNode env: aDi
 	identifierTypePairList := aViennaNode third ifNil: [
 		                          {
 			                          'RESULT'.
-			                          (ViennaNode label: 'UnitType') } ].
+			                          ViennaUnitTypeNode new } ].
 	retVarName := identifierTypePairList first.
 	retTypeNode := identifierTypePairList second.
 	body := '[|_opContext| _opContext := thisContext. '
@@ -1146,12 +1145,11 @@ ViennaVDM2Smalltalk >> extendedExplicitOperationDefinition: aViennaNode env: aDi
 	postNode := aViennaNode seventh.
 	argType := ((2 to: patternTypePairList size by: 2) collect: [ :index |
 		            patternTypePairList at: index ])
-		           ifEmpty: [ ViennaNode label: 'UnitType' ]
+		           ifEmpty: [ ViennaUnitTypeNode new ]
 		           ifNotEmpty: [ :types |
 			           types size = 1
 				           ifTrue: [ types first ]
-				           ifFalse: [
-				           ViennaNode label: 'ProductType' withAll: types ] ].
+				           ifFalse: [ ViennaProductTypeNode withAll: types ] ].
 	retValue := identifierTypePairList first.
 	retType := identifierTypePairList second.
 	preNode ifNotNil: [
@@ -1255,7 +1253,7 @@ ViennaVDM2Smalltalk >> extendedExplicitOperationDefinition: aViennaNode env: aDi
 				  nextPutAll: ' := ';
 				  nextPutAll: (self
 						   closureFromFlatBinds:
-							   binds , (retTypeNode label = 'UnitType'
+							   binds , (retTypeNode isViennaUnitTypeNode
 									    ifTrue: [ {  } ]
 									    ifFalse: [
 										    { {
@@ -1710,7 +1708,7 @@ ViennaVDM2Smalltalk >> implicitOperationDefinition: aViennaNode env: aDictionary
 	identifierTypePairListNode := aViennaNode third ifNil: [
 		                              {
 			                              'RESULT'.
-			                              (ViennaNode label: 'UnitType') } ].
+			                              ViennaUnitTypeNode new } ].
 	retVarName := identifierTypePairListNode first.
 	retTypeNode := identifierTypePairListNode second.
 	preNode := aViennaNode fourth second.
@@ -1784,7 +1782,7 @@ ViennaVDM2Smalltalk >> implicitOperationDefinition: aViennaNode env: aDictionary
 				  nextPutAll: ' := ';
 				  nextPutAll: (self
 						   closureFromFlatBinds:
-							   binds , (retTypeNode label = 'UnitType'
+							   binds , (retTypeNode isViennaUnitTypeNode
 									    ifTrue: [ {  } ]
 									    ifFalse: [
 										    { {

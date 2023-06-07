@@ -478,8 +478,7 @@ ViennaRefactoring >> freeOccurrencesOf: aString inExistsExpression: aViennaNode 
 ViennaRefactoring >> freeOccurrencesOf: aString inExplicitFunctionDefinition: aViennaNode do: aBlock [
 
 	aViennaNode second do: [ :n |
-		(n label = 'TypeVariableIdentifier' and: [ n first = aString ])
-			ifTrue: [ ^ self ] ].
+		(n isViennaTypeVariableIdentifierNode: aString) ifTrue: [ ^ self ] ].
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode third do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode fourth do: aBlock.

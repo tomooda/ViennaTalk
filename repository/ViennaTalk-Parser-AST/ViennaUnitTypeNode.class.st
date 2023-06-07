@@ -5,7 +5,19 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pretty printing' }
+ViennaUnitTypeNode >> formatWith: aViennaAbstractFormatter [
+
+	^ '()'
+]
+
+{ #category : #testing }
+ViennaUnitTypeNode >> isViennaUnitTypeNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaUnitTypeNode >> label [
 
 	^ 'UnitType'

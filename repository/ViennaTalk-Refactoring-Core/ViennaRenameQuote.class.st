@@ -8,7 +8,7 @@ Class {
 ViennaRenameQuote >> check [
 
 	ast document allDescendantsDo: [ :node |
-		(node label = 'QuoteType' and: [ node first = self oldName ])
+		(node isViennaQuoteTypeNode and: [ node first = self oldName ])
 			ifTrue: [ ^ true ].
 		(node isViennaSymbolicLiteralNode and: [ node string = self oldName ])
 			ifTrue: [ ^ true ] ].
@@ -25,8 +25,8 @@ ViennaRenameQuote >> execute [
 
 	self newName ifNil: [ ^ nil ].
 	ast document allDescendantsDo: [ :node |
-		(node label = 'QuoteType' and: [ node first = self oldName ])
-			ifTrue: [ node at: 1 put: self newName ].
+		(node isViennaQuoteTypeNode and: [ node first = self oldName ])
+			ifTrue: [ node string: self newName ].
 		(node isViennaSymbolicLiteralNode and: [ node string = self oldName ])
 			ifTrue: [ node string: self newName ] ].
 	^ nil
@@ -49,7 +49,7 @@ ViennaRenameQuote >> findNewName [
 { #category : #accessing }
 ViennaRenameQuote >> findOldName [
 
-	ast label = 'QuoteType' ifTrue: [ ^ ast first ].
+	ast isViennaQuoteTypeNode ifTrue: [ ^ ast string ].
 	(ast isViennaSymbolicLiteralNode and: [
 		 ast string notEmpty and: [
 			 ast string first = $< and: [ ast string last = $> ] ] ]) ifTrue: [

@@ -1,9 +1,23 @@
 Class {
 	#name : #ViennaSetTypeNode,
-	#superclass : #ViennaTypeNode,
+	#superclass : #ViennaUnaryTypeConstructorNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }
+
+{ #category : #'pretty printing' }
+ViennaSetTypeNode >> formatWith: aViennaAbstractFormatter [
+
+	^ aViennaAbstractFormatter setPrefix
+	  , (aViennaAbstractFormatter format: self type)
+	  , aViennaAbstractFormatter setPostfix
+]
+
+{ #category : #testing }
+ViennaSetTypeNode >> isViennaSetTypeNode [
+
+	^ true
+]
 
 { #category : #accessing }
 ViennaSetTypeNode >> label [

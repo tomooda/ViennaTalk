@@ -10,9 +10,10 @@ ViennaInlineType >> check [
 	ast ifNil: [ ^ false ].
 	ast isTypeNode ifFalse: [ ^ false ].
 	ast label isViennaNameNode ifTrue: [ ast := ast parent ].
-	^ ast label = 'TypeName' and: [
-		  ast first isViennaLocalNameNode and: [
-			  (ast definitionOfLocalName: ast first first) ifNotNil: [ :node |
+	^ ast isViennaTypeNameNode and: [
+		  ast name isViennaLocalNameNode and: [
+			  (ast definitionOfLocalName: ast name identifier) ifNotNil: [
+				  :node |
 				  node label = 'TypeDefinition'
 					  ifTrue: [ node third isNil ]
 					  ifFalse: [ false ] ] ] ]

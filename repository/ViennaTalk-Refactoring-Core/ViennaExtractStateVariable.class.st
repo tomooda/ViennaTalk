@@ -61,7 +61,7 @@ ViennaExtractStateVariable >> execute [
 			 label: 'Field'
 			 with: self newName
 			 with: false
-			 with: (ViennaNode label: 'BasicType' with: 'any')).
+			 with: ViennaBasicTypeNode any).
 	initializer := stateDefinition fourth first second second second.
 	initializer add: ast.
 	stateDefinition third ifNotNil: [ :invariant |

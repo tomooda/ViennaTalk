@@ -153,13 +153,11 @@ ViennaVDMParser >> assignmentDefinition [
 
 { #category : #'parsers-types' }
 ViennaVDMParser >> basicType [
-	^ super basicType
-		=>> [ :start :end :ast | 
-			ViennaNode
-				label: 'BasicType'
-				start: start
-				end: end
-				with: ast ]
+
+	^ super basicType =>> [ :start :end :ast |
+	  (ViennaBasicTypeNode identifier: ast)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-patterns' }
@@ -1069,13 +1067,13 @@ ViennaVDMParser >> initialize [
 
 { #category : #'parsers-types' }
 ViennaVDMParser >> inmapType [
-	^ super inmapType
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'InmapType'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super inmapType =>> [ :start :end :array |
+	  (ViennaInmapTypeNode
+		   domainType: array first
+		   rangeType: array second)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -1319,13 +1317,11 @@ ViennaVDMParser >> mapOrSequenceReference: stateDesig with: expr [
 
 { #category : #'parsers-types' }
 ViennaVDMParser >> mapType [
-	^ super mapType
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'MapType'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super mapType =>> [ :start :end :array |
+	  (ViennaMapTypeNode domainType: array first rangeType: array second)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -1574,24 +1570,22 @@ ViennaVDMParser >> operationImport [
 
 { #category : #'parsers-types' }
 ViennaVDMParser >> operationType [
-	^ super operationType
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'OperationType'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super operationType =>> [ :start :end :array |
+	  (ViennaOperationTypeNode
+		   argumentType: array first
+		   returnType: array second)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-types' }
 ViennaVDMParser >> optionalType [
-	^ super optionalType
-		=>> [ :start :end :ast | 
-			ViennaNode
-				label: 'OptionalType'
-				start: start
-				end: end
-				with: ast ]
+
+	^ super optionalType =>> [ :start :end :ast |
+	  (ViennaOptionalTypeNode type: ast)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -1649,13 +1643,13 @@ ViennaVDMParser >> parametersList [
 
 { #category : #'parsers-types' }
 ViennaVDMParser >> partialFunctionType [
-	^ super partialFunctionType
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'PartialFunctionType'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super partialFunctionType =>> [ :start :end :array |
+	  (ViennaPartialFunctionTypeNode
+		   argumentType: array first
+		   returnType: array second)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-patterns' }
@@ -1710,13 +1704,11 @@ ViennaVDMParser >> preconditionExpression [
 
 { #category : #'parsers-types' }
 ViennaVDMParser >> productType [
-	^ super productType
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'ProductType'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super productType =>> [ :start :end :array |
+	  (ViennaProductTypeNode withAll: array)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -1727,13 +1719,11 @@ ViennaVDMParser >> psubset: arg1 and: arg2 [
 
 { #category : #'parsers-types' }
 ViennaVDMParser >> quoteType [
-	^ super quoteType
-		=>> [ :start :end :string | 
-			ViennaNode
-				label: 'QuoteType'
-				start: start
-				end: end
-				with: string ]
+
+	^ super quoteType =>> [ :start :end :string |
+	  (ViennaQuoteTypeNode string: string)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -1841,13 +1831,11 @@ ViennaVDMParser >> scanCommentsOn: aStream [
 
 { #category : #'parsers-types' }
 ViennaVDMParser >> seq1Type [
-	^ super seq1Type
-		=>> [ :start :end :ast | 
-			ViennaNode
-				label: 'Seq1Type'
-				start: start
-				end: end
-				with: ast ]
+
+	^ super seq1Type =>> [ :start :end :ast |
+	  (ViennaSeq1TypeNode type: ast)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-patterns' }
@@ -1881,13 +1869,11 @@ ViennaVDMParser >> seqEnumPattern [
 
 { #category : #'parsers-types' }
 ViennaVDMParser >> seqType [
-	^ super seqType
-		=>> [ :start :end :ast | 
-			ViennaNode
-				label: 'SeqType'
-				start: start
-				end: end
-				with: ast ]
+
+	^ super seqType =>> [ :start :end :ast |
+	  (ViennaSeqTypeNode type: ast)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -1921,13 +1907,11 @@ ViennaVDMParser >> sequenceForLoop [
 
 { #category : #'parsers-types' }
 ViennaVDMParser >> set1Type [
-	^ super set1Type
-		=>> [ :start :end :ast | 
-			ViennaNode
-				label: 'Set1Type'
-				start: start
-				end: end
-				with: ast ]
+
+	^ super set1Type =>> [ :start :end :ast |
+	  (ViennaSet1TypeNode type: ast)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-patterns' }
@@ -1990,13 +1974,11 @@ ViennaVDMParser >> setRangeExpression [
 
 { #category : #'parsers-types' }
 ViennaVDMParser >> setType [
-	^ super setType
-		=>> [ :start :end :ast | 
-			ViennaNode
-				label: 'SetType'
-				start: start
-				end: end
-				with: ast ]
+
+	^ super setType =>> [ :start :end :ast |
+	  (ViennaSetTypeNode type: ast)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-patterns' }
@@ -2098,13 +2080,13 @@ ViennaVDMParser >> tokenConstructor [
 
 { #category : #'parsers-types' }
 ViennaVDMParser >> totalFunctionType [
-	^ super totalFunctionType
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'TotalFunctionType'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super totalFunctionType =>> [ :start :end :array |
+	  (ViennaTotalFunctionTypeNode
+		   argumentType: array first
+		   returnType: array second)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-statements' }
@@ -2226,21 +2208,19 @@ ViennaVDMParser >> typeJudgement [
 ViennaVDMParser >> typeName [
 
 	^ super typeName =>> [ :start :end :array |
-	  ViennaNode
-		  label: 'TypeName'
-		  start: start
-		  end: end
-		  with: (array isString
-				   ifTrue: [
-					   (ViennaLocalNameNode identifier: array)
-						   start: start end: end;
-						   yourself ]
-				   ifFalse: [
-					   (ViennaGlobalNameNode
-						    moduleIdentifier: array first
-						    identifier: array second)
-						   start: start end: end;
-						   yourself ]) ]
+	  (ViennaTypeNameNode name: (array isString
+				    ifTrue: [
+					    (ViennaLocalNameNode identifier: array)
+						    start: start end: end;
+						    yourself ]
+				    ifFalse: [
+					    (ViennaGlobalNameNode
+						     moduleIdentifier: array first
+						     identifier: array second)
+						    start: start end: end;
+						    yourself ]))
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -2256,24 +2236,20 @@ ViennaVDMParser >> typeSynonym [
 
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> typeVariable [
-	^ super typeVariable
-		=>> [ :start :end :string | 
-			ViennaNode
-				label: 'TypeVariable'
-				start: start
-				end: end
-				with: string ]
+
+	^ super typeVariable =>> [ :start :end :string |
+	  (ViennaTypeVariableNode string: string)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> typeVariableIdentifier [
-	^ super typeVariableIdentifier
-		=>> [ :start :end :string | 
-			ViennaNode
-				label: 'TypeVariableIdentifier'
-				start: start
-				end: end
-				with: string ]
+
+	^ super typeVariableIdentifier =>> [ :start :end :string |
+	  (ViennaTypeVariableIdentifierNode string: string)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -2314,19 +2290,20 @@ ViennaVDMParser >> union: arg1 and: arg2 [
 
 { #category : #'parsers-types' }
 ViennaVDMParser >> unionType [
-	^ super unionType
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'UnionType'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super unionType =>> [ :start :end :array |
+	  (ViennaUnionTypeNode withAll: array)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-types' }
 ViennaVDMParser >> unitType [
-	^ super unitType
-		=>> [ :start :end :ignore | ViennaNode label: 'UnitType' start: start end: end ]
+
+	^ super unitType =>> [ :start :end :ignore |
+	  ViennaUnitTypeNode new
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-definitions' }

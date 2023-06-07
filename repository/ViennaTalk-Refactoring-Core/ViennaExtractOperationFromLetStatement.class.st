@@ -114,17 +114,16 @@ ViennaExtractOperationFromLetStatement >> operationParametersList [
 
 { #category : #'parsers-types' }
 ViennaExtractOperationFromLetStatement >> operationType [
-	^ ViennaNode
-		label: 'OperationType'
-		with:
-			((ast first
-				collect: [ :localDef | ViennaNode label: 'BasicType' with: 'any' ])
-				ifNotEmpty: [ :paramTypes | 
-					paramTypes size = 1
-						ifTrue: [ paramTypes first ]
-						ifFalse: [ ViennaNode label: 'ProductType' withAll: paramTypes ] ]
-				ifEmpty: [ ViennaNode label: 'UnitType' ])
-		with: (ViennaNode label: 'UnitType')
+
+	^ ViennaOperationTypeNode
+		  argumentType:
+			  ((ast first collect: [ :localDef | ViennaBasicTypeNode any ])
+				   ifNotEmpty: [ :paramTypes |
+					   paramTypes size = 1
+						   ifTrue: [ paramTypes first ]
+						   ifFalse: [ ViennaProductTypeNode withAll: paramTypes ] ]
+				   ifEmpty: [ ViennaUnitTypeNode new ])
+		  returnType: ViennaUnitTypeNode new
 ]
 
 { #category : #accessing }

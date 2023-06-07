@@ -390,10 +390,9 @@ ViennaNode >> asExport [
 			  with: (self label = 'ExplicitFunctionDefinition'
 					   ifTrue: [ self third ifNotNil: #copyFragment ]
 					   ifFalse: [
-						   ViennaNode
-							   label: 'PartialFunctionType'
-							   with: self third first pairListToType
-							   with: self fourth pairListToType ]) ].
+						   ViennaPartialFunctionTypeNode
+							   argumentType: self third first pairListToType
+							   returnType: self fourth pairListToType ]) ].
 	(#( 'ExplicitOperationDefinition' 'ImplicitOperationDefinition' )
 		 includes: self label) ifTrue: [
 		^ ViennaNode
@@ -404,10 +403,9 @@ ViennaNode >> asExport [
 			  with: (self label = 'ExplicitOperationDefinition'
 					   ifTrue: [ self second ifNotNil: #copyFragment ]
 					   ifFalse: [
-						   ViennaNode
-							   label: 'OperationType'
-							   with: self second first pairListToType
-							   with: self third pairListToType ]) ].
+						   ViennaOperationTypeNode
+							   argumentType: self second first pairListToType
+							   returnType: self third pairListToType ]) ].
 	^ nil
 ]
 
@@ -474,9 +472,9 @@ ViennaNode >> asImportDefinitionIn: moduleNode [
 			^ importDefinition value:
 				  (ViennaNode label: 'ImportTypesSignature' with: (ViennaNode
 						    label: 'TypeImport'
-						    with: (ViennaNode
-								     label: 'TypeName'
-								     with: (ViennaLocalNameNode identifier: self name))
+						    with:
+						    (ViennaTypeNameNode name:
+							     (ViennaLocalNameNode identifier: self name))
 						    with: nil)) ].
 	(#( 'ValueDefinition' ) includes: self label) ifTrue: [
 		^ importDefinition value: (ViennaNode
@@ -499,10 +497,9 @@ ViennaNode >> asImportDefinitionIn: moduleNode [
 					    with: (self label = 'ExplicitFunctionDefinition'
 							     ifTrue: [ self third copyFragment ]
 							     ifFalse: [
-								     ViennaNode
-									     label: 'PartialFunctionType'
-									     with: self third first pairListToType
-									     with: self fourth pairListToType ])
+								     ViennaPartialFunctionTypeNode
+									     argumentType: self third first pairListToType
+									     returnType: self fourth pairListToType ])
 					    with: nil)) ].
 	(#( 'ExplicitOperationDefinition' 'ImplicitOperationDefinition' )
 		 includes: self label) ifTrue: [
@@ -513,10 +510,9 @@ ViennaNode >> asImportDefinitionIn: moduleNode [
 					    with: (self label = 'ExplicitOperationDefinition'
 							     ifTrue: [ self second copyFragment ]
 							     ifFalse: [
-								     ViennaNode
-									     label: 'OperationType'
-									     with: self second first pairListToType
-									     with: self third pairListToType ])
+								     ViennaOperationTypeNode
+									     argumentType: self second first pairListToType
+									     returnType: self third pairListToType ])
 					    with: nil)) ].
 	^ nil
 ]
@@ -989,6 +985,12 @@ ViennaNode >> isViennaAssignStatementNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaBasicTypeNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaBinaryOperatorExpression [
 
 	^ false
@@ -1217,6 +1219,12 @@ ViennaNode >> isViennaIndexForLoopNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaInmapTypeNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaIotaExpressionNode [
 
 	^ false
@@ -1391,6 +1399,12 @@ ViennaNode >> isViennaMapRangeRestrictedToNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaMapTypeNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaMapletPatternNode [
 
 	^ false
@@ -1450,7 +1464,25 @@ ViennaNode >> isViennaOldNameNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaOperationTypeNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaOptionalTypeNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaOrNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaPartialFunctionTypeNode [
 
 	^ false
 ]
@@ -1480,7 +1512,19 @@ ViennaNode >> isViennaPreconditionExpressionNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaProductTypeNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaProperSubsetNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaQuoteTypeNode [
 
 	^ false
 ]
@@ -1516,6 +1560,12 @@ ViennaNode >> isViennaReturnStatementNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaSeq1TypeNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaSeqConcPatternNode [
 
 	^ false
@@ -1523,6 +1573,12 @@ ViennaNode >> isViennaSeqConcPatternNode [
 
 { #category : #testing }
 ViennaNode >> isViennaSeqEnumPatternNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaSeqTypeNode [
 
 	^ false
 ]
@@ -1588,6 +1644,12 @@ ViennaNode >> isViennaSequenceTailNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaSet1TypeNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaSetCardinalityNode [
 
 	^ false
@@ -1636,6 +1698,12 @@ ViennaNode >> isViennaSetRangeExpressionNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaSetTypeNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaSetUnionNode [
 
 	^ false
@@ -1678,6 +1746,12 @@ ViennaNode >> isViennaTokenConstructorNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaTotalFunctionTypeNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaTrapStatementNode [
 
 	^ false
@@ -1708,6 +1782,42 @@ ViennaNode >> isViennaTypeJudgementNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaTypeNameNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaTypeNode [
+
+	^ true
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaTypeVariableIdentifierNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaTypeVariableIdentifierNode: aString [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaTypeVariableNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaTypeVariableNode: aString [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaUnaryMinusNode [
 
 	^ false
@@ -1727,6 +1837,18 @@ ViennaNode >> isViennaUnaryPlusNode [
 
 { #category : #testing }
 ViennaNode >> isViennaUndefinedExpressionNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaUnionTypeNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaUnitTypeNode [
 
 	^ false
 ]
@@ -1808,13 +1930,14 @@ ViennaNode >> notEmpty [
 
 { #category : #'accessing-definitions' }
 ViennaNode >> pairListToType [
-	^ ((2 to: self size by: 2)
-		collect: [ :index | (self at: index) copyFragment ])
-		ifEmpty: [ ViennaNode label: 'UnitType' ]
-		ifNotEmpty: [ :types | 
-			types size = 1
-				ifTrue: [ types first ]
-				ifFalse: [ ViennaNode label: 'ProductType' withAll: types ] ]
+
+	^ ((2 to: self size by: 2) collect: [ :index |
+		   (self at: index) copyFragment ])
+		  ifEmpty: [ ViennaUnitTypeNode new ]
+		  ifNotEmpty: [ :types |
+			  types size = 1
+				  ifTrue: [ types first ]
+				  ifFalse: [ ViennaProductTypeNode withAll: types ] ]
 ]
 
 { #category : #accessing }

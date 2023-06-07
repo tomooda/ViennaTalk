@@ -36,12 +36,11 @@ ViennaConvertExplicitFunctionIntoOperation >> execute [
 		                               label: 'ExplicitOperationDefinition'
 		                               withAll: {
 				                               explicitFunctionDefinition first.
-				                               (ViennaNode
-					                                label: 'OperationType'
-					                                with:
+				                               (ViennaOperationTypeNode
+					                                argumentType:
 					                                explicitFunctionDefinition third
 						                                first
-					                                with:
+					                                returnType:
 					                                explicitFunctionDefinition third
 						                                second).
 				                               explicitFunctionDefinition fourth.

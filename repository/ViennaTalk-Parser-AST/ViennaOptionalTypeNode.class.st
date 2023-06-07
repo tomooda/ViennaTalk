@@ -1,11 +1,23 @@
 Class {
 	#name : #ViennaOptionalTypeNode,
-	#superclass : #ViennaTypeNode,
+	#superclass : #ViennaUnaryTypeConstructorNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pretty printing' }
+ViennaOptionalTypeNode >> formatWith: aViennaAbstractFormatter [
+
+	^ '[' , (aViennaAbstractFormatter format: self type) , ']'
+]
+
+{ #category : #testing }
+ViennaOptionalTypeNode >> isViennaOptionalTypeNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaOptionalTypeNode >> label [
 
 	^ 'OptionalType'

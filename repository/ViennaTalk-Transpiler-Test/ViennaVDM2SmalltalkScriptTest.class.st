@@ -212,11 +212,15 @@ ViennaVDM2SmalltalkScriptTest >> testAssignStatementEnv [
 
 { #category : #'tests-code generation-types' }
 ViennaVDM2SmalltalkScriptTest >> testBasicTypeEnv [
+
 	| node |
 	node := ViennaVDMParser new type end parse: 'int'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'BasicType'.
-	self assert: (self evaluate: (ViennaVDM2SmalltalkScript new generate: node)) equals: ViennaType int
+	self assert: node isViennaBasicTypeNode.
+	self
+		assert:
+		(self evaluate: (ViennaVDM2SmalltalkScript new generate: node))
+		equals: ViennaType int
 ]
 
 { #category : #'tests-code generation-statements' }
@@ -913,12 +917,14 @@ ViennaVDM2SmalltalkScriptTest >> testIndexForLoop [
 
 { #category : #'tests-code generation-types' }
 ViennaVDM2SmalltalkScriptTest >> testInmapTypeEnv [
+
 	| node |
 	node := ViennaVDMParser new type end parse: 'inmap nat to int'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'InmapType'.
+	self assert: node isViennaInmapTypeNode.
 	self
-		assert: (self evaluate: (ViennaVDM2SmalltalkScript new generate: node))
+		assert:
+		(self evaluate: (ViennaVDM2SmalltalkScript new generate: node))
 		equals: (ViennaType nat inmapTo: ViennaType int)
 ]
 
@@ -1455,12 +1461,14 @@ ViennaVDM2SmalltalkScriptTest >> testMapRangeRestrictedToEnv [
 
 { #category : #'tests-code generation-types' }
 ViennaVDM2SmalltalkScriptTest >> testMapTypeEnv [
+
 	| node |
 	node := ViennaVDMParser new type end parse: 'map nat to int'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'MapType'.
+	self assert: node isViennaMapTypeNode.
 	self
-		assert: (self evaluate: (ViennaVDM2SmalltalkScript new generate: node))
+		assert:
+		(self evaluate: (ViennaVDM2SmalltalkScript new generate: node))
 		equals: (ViennaType nat mapTo: ViennaType int)
 ]
 
@@ -1588,11 +1596,15 @@ ViennaVDM2SmalltalkScriptTest >> testOldNameEnv [
 
 { #category : #'tests-code generation-types' }
 ViennaVDM2SmalltalkScriptTest >> testOptionalTypeEnv [
+
 	| node |
 	node := ViennaVDMParser new type end parse: '[nat]'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'OptionalType'.
-	self assert: (self evaluate: (ViennaVDM2SmalltalkScript new generate: node)) equals: ViennaType nat optional
+	self assert: node isViennaOptionalTypeNode.
+	self
+		assert:
+		(self evaluate: (ViennaVDM2SmalltalkScript new generate: node))
+		equals: ViennaType nat optional
 ]
 
 { #category : #'tests-code generation-expressions' }
@@ -1648,22 +1660,28 @@ ViennaVDM2SmalltalkScriptTest >> testOrEnv [
 
 { #category : #'tests-code generation-types' }
 ViennaVDM2SmalltalkScriptTest >> testPartialFunctionTypeEnv [
+
 	| node |
 	node := ViennaVDMParser new type end parse: 'nat * int -> real'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'PartialFunctionType'.
+	self assert: node isViennaPartialFunctionTypeNode.
 	self
-		assert: (self evaluate: (ViennaVDM2SmalltalkScript new generate: node))
+		assert:
+		(self evaluate: (ViennaVDM2SmalltalkScript new generate: node))
 		equals: ViennaType nat * ViennaType int -> ViennaType real
 ]
 
 { #category : #'tests-code generation-types' }
 ViennaVDM2SmalltalkScriptTest >> testProductTypeEnv [
+
 	| node |
 	node := ViennaVDMParser new type end parse: 'nat * int'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'ProductType'.
-	self assert: (self evaluate: (ViennaVDM2SmalltalkScript new generate: node)) equals: ViennaType nat * ViennaType int
+	self assert: node isViennaProductTypeNode.
+	self
+		assert:
+		(self evaluate: (ViennaVDM2SmalltalkScript new generate: node))
+		equals: ViennaType nat * ViennaType int
 ]
 
 { #category : #'tests-code generation-expressions' }
@@ -1698,11 +1716,15 @@ ViennaVDM2SmalltalkScriptTest >> testProperSubsetEnv [
 
 { #category : #'tests-code generation-types' }
 ViennaVDM2SmalltalkScriptTest >> testQuoteTypeEnv [
+
 	| node |
 	node := ViennaVDMParser new type end parse: '<quote>'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'QuoteType'.
-	self assert: (self evaluate: (ViennaVDM2SmalltalkScript new generate: node)) equals: (ViennaType quote: #quote)
+	self assert: node isViennaQuoteTypeNode.
+	self
+		assert:
+		(self evaluate: (ViennaVDM2SmalltalkScript new generate: node))
+		equals: (ViennaType quote: #quote)
 ]
 
 { #category : #'tests-code generation-expressions' }
@@ -1831,11 +1853,15 @@ ViennaVDM2SmalltalkScriptTest >> testReturnStatementEnv [
 
 { #category : #'tests-code generation-types' }
 ViennaVDM2SmalltalkScriptTest >> testSeq1TypeEnv [
+
 	| node |
 	node := ViennaVDMParser new type end parse: 'seq1 of nat'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'Seq1Type'.
-	self assert: (self evaluate: (ViennaVDM2SmalltalkScript new generate: node)) equals: ViennaType nat seq1
+	self assert: node isViennaSeq1TypeNode.
+	self
+		assert:
+		(self evaluate: (ViennaVDM2SmalltalkScript new generate: node))
+		equals: ViennaType nat seq1
 ]
 
 { #category : #'tests-code generation-patterns' }
@@ -1870,11 +1896,15 @@ ViennaVDM2SmalltalkScriptTest >> testSeqEnumPatternEnv [
 
 { #category : #'tests-code generation-types' }
 ViennaVDM2SmalltalkScriptTest >> testSeqTypeEnv [
+
 	| node |
 	node := ViennaVDMParser new type end parse: 'seq of nat'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'SeqType'.
-	self assert: (self evaluate: (ViennaVDM2SmalltalkScript new generate: node)) equals: ViennaType nat seq
+	self assert: node isViennaSeqTypeNode.
+	self
+		assert:
+		(self evaluate: (ViennaVDM2SmalltalkScript new generate: node))
+		equals: ViennaType nat seq
 ]
 
 { #category : #'tests-code generation-expressions' }
@@ -2057,11 +2087,15 @@ ViennaVDM2SmalltalkScriptTest >> testSequenceTailEnv [
 
 { #category : #'tests-code generation-types' }
 ViennaVDM2SmalltalkScriptTest >> testSet1TypeEnv [
+
 	| node |
 	node := ViennaVDMParser new type end parse: 'set1 of nat'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'Set1Type'.
-	self assert: (self evaluate: (ViennaVDM2SmalltalkScript new generate: node)) equals: ViennaType nat set1
+	self assert: node isViennaSet1TypeNode.
+	self
+		assert:
+		(self evaluate: (ViennaVDM2SmalltalkScript new generate: node))
+		equals: ViennaType nat set1
 ]
 
 { #category : #'tests-code generation-expressions' }
@@ -2203,11 +2237,15 @@ ViennaVDM2SmalltalkScriptTest >> testSetRangeExpressionEnv [
 
 { #category : #'tests-code generation-types' }
 ViennaVDM2SmalltalkScriptTest >> testSetTypeEnv [
+
 	| node |
 	node := ViennaVDMParser new type end parse: 'set of nat'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'SetType'.
-	self assert: (self evaluate: (ViennaVDM2SmalltalkScript new generate: node)) equals: ViennaType nat set
+	self assert: node isViennaSetTypeNode.
+	self
+		assert:
+		(self evaluate: (ViennaVDM2SmalltalkScript new generate: node))
+		equals: ViennaType nat set
 ]
 
 { #category : #'tests-code generation-expressions' }
@@ -2310,12 +2348,14 @@ ViennaVDM2SmalltalkScriptTest >> testTokenConstructorEnv [
 
 { #category : #'tests-code generation-types' }
 ViennaVDM2SmalltalkScriptTest >> testTotalFunctionTypeEnv [
+
 	| node |
 	node := ViennaVDMParser new type end parse: 'nat * int +> real'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'TotalFunctionType'.
+	self assert: node isViennaTotalFunctionTypeNode.
 	self
-		assert: (self evaluate: (ViennaVDM2SmalltalkScript new generate: node))
+		assert:
+		(self evaluate: (ViennaVDM2SmalltalkScript new generate: node))
 		equals: ViennaType nat * ViennaType int +> ViennaType real
 ]
 
@@ -2401,23 +2441,29 @@ ViennaVDM2SmalltalkScriptTest >> testTypeJudgementEnv [
 
 { #category : #'tests-code generation-types' }
 ViennaVDM2SmalltalkScriptTest >> testTypeNameEnv [
+
 	| node |
 	node := ViennaVDMParser new type end parse: 't'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'TypeName'.
+	self assert: node isViennaTypeNameNode.
 	self
-		assert: (self evaluate: (ViennaVDM2SmalltalkScript new generate: node env: {('t' -> 'ViennaType nat')} asDictionary))
+		assert: (self evaluate: (ViennaVDM2SmalltalkScript new
+					  generate: node
+					  env: { ('t' -> 'ViennaType nat') } asDictionary))
 		equals: ViennaType nat
 ]
 
 { #category : #'tests-code generation-types' }
 ViennaVDM2SmalltalkScriptTest >> testTypeVariableEnv [
+
 	| node |
 	node := ViennaVDMParser new type end parse: '@t'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'TypeVariable'.
+	self assert: node isViennaTypeVariableNode.
 	self
-		assert: (self evaluate: (ViennaVDM2SmalltalkScript new generate: node env: {('@t' -> 'ViennaType nat')} asDictionary))
+		assert: (self evaluate: (ViennaVDM2SmalltalkScript new
+					  generate: node
+					  env: { ('@t' -> 'ViennaType nat') } asDictionary))
 		equals: ViennaType nat
 ]
 
@@ -2463,11 +2509,15 @@ ViennaVDM2SmalltalkScriptTest >> testUndefinedExpressionEnv [
 
 { #category : #'tests-code generation-types' }
 ViennaVDM2SmalltalkScriptTest >> testUnionTypeEnv [
+
 	| node |
 	node := ViennaVDMParser new type end parse: 'nat | int'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'UnionType'.
-	self assert: (self evaluate: (ViennaVDM2SmalltalkScript new generate: node)) equals: ViennaType nat | ViennaType int
+	self assert: node isViennaUnionTypeNode.
+	self
+		assert:
+		(self evaluate: (ViennaVDM2SmalltalkScript new generate: node))
+		equals: ViennaType nat | ViennaType int
 ]
 
 { #category : #'tests-code generation-statements' }

@@ -12,7 +12,7 @@ ViennaExtractParameterFromExpressionInImplicitOperation >> executeDefinition [
 		add: (ViennaNode
 				 label: 'PatternList'
 				 with: (ViennaPatternIdentifierNode identifier: self newName));
-		add: (ViennaNode label: 'BasicType' with: 'any').
+		add: ViennaBasicTypeNode any.
 	^ self definitionNode
 ]
 

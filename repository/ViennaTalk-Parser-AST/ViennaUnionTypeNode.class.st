@@ -5,6 +5,21 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #'pretty printing' }
+ViennaUnionTypeNode >> formatWith: aViennaAbstractFormatter [
+
+	^ aViennaAbstractFormatter
+		  formatEnumerate: (aViennaAbstractFormatter formatAll: self)
+		  separator: '|'
+		  ifEmpty: [ '' ]
+]
+
+{ #category : #testing }
+ViennaUnionTypeNode >> isViennaUnionTypeNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaUnionTypeNode >> label [
 

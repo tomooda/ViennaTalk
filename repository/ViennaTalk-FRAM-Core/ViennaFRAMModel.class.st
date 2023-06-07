@@ -128,10 +128,9 @@ ViennaFRAMModel >> createOperationDefinitionNode: aString [
 		  with: (ViennaNode label: 'OperationDefinition' with: (ViennaNode
 					    label: 'ExplicitOperationDefinition'
 					    with: aString
-					    with: (ViennaNode
-							     label: 'OperationType'
-							     with: (ViennaNode label: 'UnitType')
-							     with: (ViennaNode label: 'UnitType'))
+					    with: (ViennaOperationTypeNode
+							     argumentType: ViennaUnitTypeNode new
+							     returnType: ViennaUnitTypeNode new)
 					    with: aString
 					    with: (ViennaNode label: 'Parameters')
 					    with: (ViennaNode

@@ -7,9 +7,8 @@ Class {
 { #category : #operations }
 ViennaUseType >> execute [
 
-	^ self replaceNode: ast with: (ViennaNode
-			   label: 'TypeName'
-			   with: (ViennaLocalNameNode identifier: self identifier))
+	^ self replaceNode: ast with: (ViennaTypeNameNode name:
+			   (ViennaLocalNameNode identifier: self identifier))
 ]
 
 { #category : #accessing }

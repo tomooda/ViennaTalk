@@ -9,15 +9,14 @@ ViennaExtractParameterFromExpressionInExplicitFunction >> executeDefinition [
 
 	self newName ifNil: [ ^ nil ].
 	self definitionNode third first in: [ :typeNode |
-		typeNode label = 'ProductType'
-			ifTrue: [
-			typeNode add: (ViennaNode label: 'BasicType' with: 'any') ]
+		typeNode isViennaProductTypeNode
+			ifTrue: [ typeNode add: ViennaBasicTypeNode any ]
 			ifFalse: [
 				(self
 					 replaceNode: typeNode
-					 with: (ViennaNode label: 'ProductType'))
+					 with: (ViennaProductTypeNode withAll: #(  )))
 					add: typeNode;
-					add: (ViennaNode label: 'BasicType' with: 'any') ] ].
+					add: ViennaBasicTypeNode any ] ].
 	self definitionNode fifth first add:
 		(ViennaPatternIdentifierNode identifier: self newName).
 	^ self definitionNode
