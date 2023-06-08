@@ -32,6 +32,12 @@ ViennaAbstractMapTypeNode >> domainType: aViennaTypeNode [
 	self at: 1 put: aViennaTypeNode
 ]
 
+{ #category : #'as yet unclassified' }
+ViennaAbstractMapTypeNode >> isViennaAbstractMapTypeNode [
+
+	^ true
+]
+
 { #category : #'pretty printing' }
 ViennaAbstractMapTypeNode >> operatorPrecedence [
 

@@ -17,6 +17,12 @@ ViennaMapletListNode >> formatWith: aViennaAbstractFormatter [
 		  withAll: maplets
 ]
 
+{ #category : #'as yet unclassified' }
+ViennaMapletListNode >> isViennaMapletListNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaMapletListNode >> label [
 

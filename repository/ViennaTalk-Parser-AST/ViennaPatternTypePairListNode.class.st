@@ -25,6 +25,12 @@ ViennaPatternTypePairListNode >> formatWith: aViennaAbstractFormatter [
 	^ string
 ]
 
+{ #category : #'as yet unclassified' }
+ViennaPatternTypePairListNode >> isViennaPatternTypePairListNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaPatternTypePairListNode >> label [
 

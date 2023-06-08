@@ -13,6 +13,12 @@ ViennaAccessTypeDefinitionNode >> formatWith: aViennaAbstractFormatter [
 		  withAll: (aViennaAbstractFormatter formatAll: self)
 ]
 
+{ #category : #'as yet unclassified' }
+ViennaAccessTypeDefinitionNode >> isViennaAccessTypeDefinitionNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaAccessTypeDefinitionNode >> label [
 

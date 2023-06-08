@@ -10,3 +10,9 @@ ViennaTopLevelDefinitionNode class >> isAbstract [
 
 	^ self = ViennaTopLevelDefinitionNode
 ]
+
+{ #category : #'as yet unclassified' }
+ViennaTopLevelDefinitionNode >> isViennaTopLevelDefinitionNode [
+
+	^ true
+]

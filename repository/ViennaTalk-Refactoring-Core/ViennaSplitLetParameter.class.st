@@ -37,8 +37,7 @@ ViennaSplitLetParameter >> execute [
 				  with: (dummyNode := ViennaNode label: 'DUMMY').
 			  self replaceNode: dummyNode with: (ViennaNode
 					   label: self definitionNode label
-					   with:
-					   (ViennaLocalDefinitionListNode withAll: { localDefinition })
+					   with: (ViennaLocalDefinitionListNode with: localDefinition)
 					   with: self definitionNode) ]
 ]
 

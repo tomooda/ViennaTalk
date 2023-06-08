@@ -6,6 +6,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+ViennaImplicitFunctionDefinitionNode >> isViennaImplicitFunctionDefinitionNode [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 ViennaImplicitFunctionDefinitionNode >> label [
 
 	^ 'ImplicitFunctionDefinition'

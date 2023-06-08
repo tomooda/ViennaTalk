@@ -28,6 +28,12 @@ ViennaVarInformationNode >> formatWith: aViennaAbstractFormatter [
 	^ mode , ' ' , nameList , type
 ]
 
+{ #category : #'as yet unclassified' }
+ViennaVarInformationNode >> isViennaVarInformationNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaVarInformationNode >> label [
 

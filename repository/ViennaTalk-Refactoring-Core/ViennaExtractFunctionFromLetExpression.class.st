@@ -89,8 +89,8 @@ ViennaExtractFunctionFromLetExpression >> functionBody [
 { #category : #accessing }
 ViennaExtractFunctionFromLetExpression >> functionParametersList [
 
-	^ ViennaParametersListNode withAll: { (ViennaParametersNode withAll:
-			   (ast first collect: [ :localDef | localDef first first ])) }
+	^ ViennaParametersListNode with: (ViennaParametersNode withAll:
+			   (ast first collect: [ :localDef | localDef first first ]))
 ]
 
 { #category : #accessing }

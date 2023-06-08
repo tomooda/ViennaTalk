@@ -23,6 +23,12 @@ ViennaOthersStatementNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: statement
 ]
 
+{ #category : #'as yet unclassified' }
+ViennaOthersStatementNode >> isViennaOthersStatementNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaOthersStatementNode >> label [
 

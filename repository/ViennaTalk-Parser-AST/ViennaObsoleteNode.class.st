@@ -10,3 +10,9 @@ ViennaObsoleteNode class >> isAbstract [
 
 	^ self = ViennaObsoleteNode
 ]
+
+{ #category : #'as yet unclassified' }
+ViennaObsoleteNode >> isViennaObsoleteNode [
+
+	^ true
+]

@@ -45,6 +45,12 @@ ViennaMultipleBindQuantifierNode >> expression: aViennaExpressionNode [
 	self at: 2 put: aViennaExpressionNode
 ]
 
+{ #category : #'as yet unclassified' }
+ViennaMultipleBindQuantifierNode >> isViennaMultipleBindQuantifierNode [
+
+	^ true
+]
+
 { #category : #enumerating }
 ViennaMultipleBindQuantifierNode >> multipleBindsDo: aBlock [
 

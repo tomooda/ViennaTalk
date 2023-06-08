@@ -19,6 +19,12 @@ ViennaTrapsNode >> formatWith: aViennaAbstractFormatter [
 		   ifEmpty: [ '' ]) , '}'
 ]
 
+{ #category : #'as yet unclassified' }
+ViennaTrapsNode >> isViennaTrapsNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaTrapsNode >> label [
 

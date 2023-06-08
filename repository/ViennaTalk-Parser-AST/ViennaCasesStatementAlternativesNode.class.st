@@ -13,6 +13,12 @@ ViennaCasesStatementAlternativesNode >> formatWith: aViennaAbstractFormatter [
 		  withAll: (aViennaAbstractFormatter formatAll: self)
 ]
 
+{ #category : #'as yet unclassified' }
+ViennaCasesStatementAlternativesNode >> isViennaCasesStatementAlternativesNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaCasesStatementAlternativesNode >> label [
 

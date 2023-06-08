@@ -12,9 +12,6 @@ Class {
 		'testResultTable',
 		'highlighterProcess'
 	],
-	#classVars : [
-		'SectionNames'
-	],
 	#category : #'ViennaTalk-Browser-Core'
 }
 
@@ -403,24 +400,6 @@ end CounterTest
 ')) openWithSpec
 ]
 
-{ #category : #accessing }
-ViennaRefactoringBrowser class >> sectionNames [
-	^ SectionNames
-		ifNil: [ SectionNames := Dictionary new
-				at: 'Module' put: '- all -';
-				at: 'TypeDefinitions' put: 'types';
-				at: 'ValueDefinitions' put: 'values';
-				at: 'StateDefinition' put: 'state';
-				at: 'FunctionDefinitions' put: 'functions';
-				at: 'OperationDefinitions' put: 'operations';
-				at: 'ImportTypesSignature' put: 'types';
-				at: 'ImportValuesSignature' put: 'values';
-				at: 'ImportFunctionsSignature' put: 'functions';
-				at: 'ImportOperationsSignature' put: 'operations';
-				at: 'ImportModuleSignatureAll' put: 'all';
-				yourself ]
-]
-
 { #category : #menus }
 ViennaRefactoringBrowser class >> viennaDevMenuOn: aBuilder [
 	<ViennaDev>
@@ -718,7 +697,7 @@ ViennaRefactoringBrowser >> definitionsFromCategory: aViennaNode [
 				   self definitionsFromCategory: def ])
 				  inject: #(  )
 				  into: [ :array :each | array , each ] ].
-		aViennaNode label = 'ImportModuleSignatureAll' ifTrue: [
+		aViennaNode isViennaImportModuleSignatureAllNode ifTrue: [
 			^ Array with: aViennaNode second ].
 		aViennaNode label = 'StateDefinition' ifTrue: [ ^ Array new ].
 		^ aViennaNode asArray ].
@@ -727,18 +706,14 @@ ViennaRefactoringBrowser >> definitionsFromCategory: aViennaNode [
 
 { #category : #private }
 ViennaRefactoringBrowser >> displayCategory: aViennaNode [
+
 	aViennaNode ifNil: [ ^ '-' ].
-	(#('ImportTypesSignature' 'ImportValuesSignature' 'ImportFunctionsSignature' 'ImportOperationsSignature')
-		includes: aViennaNode label)
-		ifTrue: [ ^ 'from ' , aViennaNode parent parent first , ' '
-				,
-					(self class sectionNames
-						at: aViennaNode label
-						ifAbsent: [ aViennaNode label ]) ].
-	self class sectionNames
-		at: aViennaNode label
-		ifPresent: [ :name | ^ name ].
-	^ aViennaNode label
+	(#( 'ImportTypesSignature' 'ImportValuesSignature'
+	    'ImportFunctionsSignature' 'ImportOperationsSignature' )
+		 includes: aViennaNode label) ifTrue: [
+		^ 'from ' , aViennaNode parent parent first , ' '
+		  , aViennaNode refactoringBrowserSectionName ].
+	^ aViennaNode refactoringBrowserSectionName ifNil: [ '?' ]
 ]
 
 { #category : #private }
@@ -1031,19 +1006,17 @@ ViennaRefactoringBrowser >> load: aString [
 		^ nil ].
 	ast isViennaDocumentNode ifFalse: [ ^ nil ].
 	ast first ifNotNil: [ :first |
-		first label = 'DefinitionBlock' ifTrue: [
-			ast := ViennaDocumentNode withAll: { (ViennaNode
+		first isViennaDefinitionBlockNode ifTrue: [
+			ast := ViennaDocumentNode with: (ViennaNode
 					        label: 'Module'
 					        with: 'DEFAULT'
-					        with:
-						        (ViennaNode
+					        with: (ViennaNode
 							         label: 'Interface'
 							         with: nil
-							         with: (ViennaNode
-									          label: 'ExportDefinition'
-									          with:
-									          (ViennaNode label: 'ExportModuleSignatureAll')))
-					        with: (ViennaModuleBodyNode withAll: ast asArray)) } ] ].
+							         with:
+								         (ViennaExportDefinitionNode exportModuleSignature:
+									          ViennaExportModuleSignatureAllNode new))
+					        with: (ViennaModuleBodyNode withAll: ast asArray)) ] ].
 	historyList
 		resetSelection;
 		items: { {

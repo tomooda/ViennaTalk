@@ -14,6 +14,12 @@ ViennaExternalsNode >> formatWith: aViennaAbstractFormatter [
 		  str , ' ' , (aViennaAbstractFormatter format: node) ]
 ]
 
+{ #category : #'as yet unclassified' }
+ViennaExternalsNode >> isViennaExternalsNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaExternalsNode >> label [
 

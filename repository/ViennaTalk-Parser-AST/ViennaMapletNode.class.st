@@ -23,6 +23,12 @@ ViennaMapletNode >> formatWith: aViennaAbstractFormatter [
 		  arg: (aViennaAbstractFormatter format: self valueExpression)
 ]
 
+{ #category : #'as yet unclassified' }
+ViennaMapletNode >> isViennaMapletNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaMapletNode >> keyExpression [
 

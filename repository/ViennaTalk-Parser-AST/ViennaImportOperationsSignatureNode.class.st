@@ -6,6 +6,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+ViennaImportOperationsSignatureNode >> isViennaImportOperationsSignatureNode [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 ViennaImportOperationsSignatureNode >> label [
 
 	^ 'ImportOperationsSignature'

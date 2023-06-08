@@ -150,52 +150,44 @@ ViennaMove >> removeSource [
 
 { #category : #operations }
 ViennaMove >> rewriteImports [
+
 	| names |
 	names := self definitionNames asSet.
-	newDefinitionNode
-		modulesDo: [ :moduleNode | 
-			| imports newImportModuleSignature |
-			imports := Array
-				streamContents: [ :stream | 
-					moduleNode
-						importsFrom: self sourceModule name
-						do: [ :importModuleSignature | 
-							importModuleSignature
-								do: [ :importSignature | 
-									importSignature
-										do: [ :import | 
-											(names includes: import name)
-												ifTrue: [ stream nextPut: import ] ] ] ] ].
-			newImportModuleSignature := ViennaNode
-				label: 'ImportModuleSignature'.
-			imports
-				do: [ :import | 
-					(newImportModuleSignature isEmpty
-						or: [ newImportModuleSignature last label ~= import parent label ])
-						ifTrue: [ newImportModuleSignature
-								add: (ViennaNode label: import parent label) ].
-					newImportModuleSignature last add: import copyFragment ].
-			imports
-				do: [ :import | 
-					| signature |
-					signature := import parent.
-					signature remove: import.
-					signature
-						ifEmpty: [ | moduleSignature |
-							moduleSignature := signature parent.
-							moduleSignature remove: signature.
-							moduleSignature
-								ifEmpty: [ | importDefinition importDefinitionList |
-									importDefinition := moduleSignature parent.
-									importDefinitionList := importDefinition parent.
-									importDefinitionList remove: importDefinition ] ] ].
-			newImportModuleSignature
-				ifNotEmpty: [ moduleNode ensureImports
-						add:
-							(ViennaNode
-								label: 'ImportDefinition'
-								with: self destinationModule name
-								with: newImportModuleSignature) ] ]
+	newDefinitionNode modulesDo: [ :moduleNode |
+		| imports newImportModuleSignature |
+		imports := Array streamContents: [ :stream |
+			           moduleNode
+				           importsFrom: self sourceModule name
+				           do: [ :importModuleSignature |
+					           importModuleSignature do: [ :importSignature |
+						           importSignature do: [ :import |
+							           (names includes: import name) ifTrue: [
+								           stream nextPut: import ] ] ] ] ].
+		newImportModuleSignature := ViennaImportModuleSignatureNode empty.
+		imports do: [ :import |
+			(newImportModuleSignature isEmpty or: [
+				 newImportModuleSignature last label ~= import parent label ])
+				ifTrue: [
+					newImportModuleSignature add:
+						(ViennaNode label: import parent label) ].
+			newImportModuleSignature last add: import copyFragment ].
+		imports do: [ :import |
+			| signature |
+			signature := import parent.
+			signature remove: import.
+			signature ifEmpty: [
+				| moduleSignature |
+				moduleSignature := signature parent.
+				moduleSignature remove: signature.
+				moduleSignature ifEmpty: [
+					| importDefinition importDefinitionList |
+					importDefinition := moduleSignature parent.
+					importDefinitionList := importDefinition parent.
+					importDefinitionList remove: importDefinition ] ] ].
+		newImportModuleSignature ifNotEmpty: [
+			moduleNode ensureImports add: (ViennaImportDefinitionNode
+					 moduleIdentifier: self destinationModule name
+					 importModuleSignature: newImportModuleSignature) ] ]
 ]
 
 { #category : #accessing }

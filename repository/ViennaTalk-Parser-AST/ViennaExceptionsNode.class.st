@@ -31,6 +31,12 @@ ViennaExceptionsNode >> formatWith: aViennaAbstractFormatter [
 	^ 'errs' , (aViennaAbstractFormatter format: self errorList)
 ]
 
+{ #category : #'as yet unclassified' }
+ViennaExceptionsNode >> isViennaExceptionsNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaExceptionsNode >> label [
 

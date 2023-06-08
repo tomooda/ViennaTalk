@@ -703,12 +703,20 @@ ViennaVDM2SmalltalkClass >> flatDocument: aViennaNode env: aDictionary [
 
 { #category : #'code generation-interfaces' }
 ViennaVDM2SmalltalkClass >> functionImport: aViennaNode env: aDictionary [
+
 	| moduleName |
-	moduleName := (aViennaNode parentLabelled: 'ImportDefinition' ifAbsent: [ nil ])
-		ifNotNil: [ :importDefinition | importDefinition first ]
-		ifNil: [ ^ self error: 'Malformed AST: FunctionImport must appear under ImportDefinition' ].
-	aViennaNode fourth
-		ifNotNil: [ :renameNode | aDictionary at: renameNode first put: moduleName , String space , aViennaNode first first ]
+	moduleName := (aViennaNode
+		               detectParent: #isViennaImportDefinitionNode
+		               ifNone: [ nil ])
+		              ifNotNil: [ :importDefinition |
+		              importDefinition moduleIdentifier ]
+		              ifNil: [
+			              ^ self error:
+				                'Malformed AST: FunctionImport must appear under ImportDefinition' ].
+	aViennaNode fourth ifNotNil: [ :renameNode |
+		aDictionary
+			at: renameNode first
+			put: moduleName , String space , aViennaNode first first ]
 ]
 
 { #category : #'code generation-definitions' }
@@ -1044,12 +1052,20 @@ ViennaVDM2SmalltalkClass >> noCheckAssignment: aVarName be: aValString [
 
 { #category : #'code generation-interfaces' }
 ViennaVDM2SmalltalkClass >> operationImport: aViennaNode env: aDictionary [
+
 	| moduleName |
-	moduleName := (aViennaNode parentLabelled: 'ImportDefinition' ifAbsent: [ nil ])
-		ifNotNil: [ :importDefinition | importDefinition first ]
-		ifNil: [ ^ self error: 'Malformed AST: OperationImport must appear under ImportDefinition' ].
-	aViennaNode third
-		ifNotNil: [ :renameNode | aDictionary at: renameNode first put: moduleName , String space , aViennaNode first first ]
+	moduleName := (aViennaNode
+		               detectParent: #isViennaImportDefinitionNode
+		               ifNone: [ nil ])
+		              ifNotNil: [ :importDefinition |
+		              importDefinition moduleIdentifier ]
+		              ifNil: [
+			              ^ self error:
+				                'Malformed AST: OperationImport must appear under ImportDefinition' ].
+	aViennaNode third ifNotNil: [ :renameNode |
+		aDictionary
+			at: renameNode first
+			put: moduleName , String space , aViennaNode first first ]
 ]
 
 { #category : #'code generation-definitions' }
@@ -1204,12 +1220,20 @@ ViennaVDM2SmalltalkClass >> typeDefinition: aViennaNode env: aDictionary [
 
 { #category : #'code generation-interfaces' }
 ViennaVDM2SmalltalkClass >> typeImport: aViennaNode env: aDictionary [
+
 	| moduleName |
-	moduleName := (aViennaNode parentLabelled: 'ImportDefinition' ifAbsent: [ nil ])
-		ifNotNil: [ :importDefinition | importDefinition first ]
-		ifNil: [ ^ self error: 'Malformed AST: TypeImport must appear under ImportDefinition' ].
-	aViennaNode second
-		ifNotNil: [ :renameNode | aDictionary at: renameNode first put: moduleName , String space , aViennaNode first first first ]
+	moduleName := (aViennaNode
+		               detectParent: #isViennaImportDefinitionNode
+		               ifNone: [ nil ])
+		              ifNotNil: [ :importDefinition |
+		              importDefinition first ]
+		              ifNil: [
+			              ^ self error:
+				                'Malformed AST: TypeImport must appear under ImportDefinition' ].
+	aViennaNode second ifNotNil: [ :renameNode |
+		aDictionary
+			at: renameNode first
+			put: moduleName , String space , aViennaNode first first first ]
 ]
 
 { #category : #utilities }
@@ -1241,10 +1265,18 @@ ViennaVDM2SmalltalkClass >> valueDefinitions: aViennaNode env: aDictionary [
 
 { #category : #'code generation-interfaces' }
 ViennaVDM2SmalltalkClass >> valueImport: aViennaNode env: aDictionary [
+
 	| moduleName |
-	moduleName := (aViennaNode parentLabelled: 'ImportDefinition' ifAbsent: [ nil ])
-		ifNotNil: [ :importDefinition | importDefinition first ]
-		ifNil: [ ^ self error: 'Malformed AST: ValueImport must appear under ImportDefinition' ].
-	aViennaNode third
-		ifNotNil: [ :renameNode | aDictionary at: renameNode first put: moduleName , String space , aViennaNode first first ]
+	moduleName := (aViennaNode
+		               detectParent: #isViennaImportDefinitionNode
+		               ifNone: [ nil ])
+		              ifNotNil: [ :importDefinition |
+		              importDefinition first ]
+		              ifNil: [
+			              ^ self error:
+				                'Malformed AST: ValueImport must appear under ImportDefinition' ].
+	aViennaNode third ifNotNil: [ :renameNode |
+		aDictionary
+			at: renameNode first
+			put: moduleName , String space , aViennaNode first first ]
 ]

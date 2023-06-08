@@ -13,6 +13,12 @@ ViennaAccessNode >> formatWith: aViennaAbstractFormatter [
 		  withAll: (aViennaAbstractFormatter formatAll: self)
 ]
 
+{ #category : #'as yet unclassified' }
+ViennaAccessNode >> isViennaAccessNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaAccessNode >> label [
 

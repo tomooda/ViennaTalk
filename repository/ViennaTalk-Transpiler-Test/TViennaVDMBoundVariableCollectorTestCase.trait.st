@@ -196,71 +196,58 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesExplicitOperationD
 
 { #category : #'tests-bound variables-interfaces' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesExportDefinitionInto [
+
 	| node binds |
-	node := ViennaVDMParser new exportDefinition end parse: 'exports types t1; t2; values v1:t3; v2:t4'.
+	node := ViennaVDMParser new exportDefinition end parse:
+		        'exports types t1; t2; values v1:t3; v2:t4'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'ExportDefinition'.
+	self assert: node isViennaExportDefinitionNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
-		equals:
-			{'t1'.
-			't2'.
-			't3'.
-			't4'.
-			'v1'.
-			'v2'} asSet
+		equals: { 't1'. 't2'. 't3'. 't4'. 'v1'. 'v2' } asSet
 ]
 
 { #category : #'tests-bound variables-interfaces' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesExportFunctionsSignatureInto [
+
 	| node binds |
-	node := ViennaVDMParser new exportFunctionsSignature end parse: 'functions f1[@t1,@t2]:t3->t4; f2[@t5,@t6]:t7->t8'.
+	node := ViennaVDMParser new exportFunctionsSignature end parse:
+		        'functions f1[@t1,@t2]:t3->t4; f2[@t5,@t6]:t7->t8'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'ExportFunctionsSignature'.
+	self assert: node isViennaExportFunctionsSignatureNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
-		equals:
-			{'f1'.
-			't3'.
-			't4'.
-			'f2'.
-			't7'.
-			't8'} asSet
+		equals: { 'f1'. 't3'. 't4'. 'f2'. 't7'. 't8' } asSet
 ]
 
 { #category : #'tests-bound variables-interfaces' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesExportModuleSignatureInto [
+
 	| node binds |
-	node := ViennaVDMParser new exportModuleSignature end parse: 'values v1 : t1; types t2'.
+	node := ViennaVDMParser new exportModuleSignature end parse:
+		        'values v1 : t1; types t2'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'ExportModuleSignature'.
+	self assert: node isViennaExportModuleSignatureNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{'v1'.
-			't1'.
-			't2'} asSet
+	self assert: binds equals: { 'v1'. 't1'. 't2' } asSet
 ]
 
 { #category : #'tests-bound variables-interfaces' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesExportTypesSignatureInto [
+
 	| node binds |
-	node := ViennaVDMParser new exportTypesSignature end parse: 'types t1; t2'.
+	node := ViennaVDMParser new exportTypesSignature end parse:
+		        'types t1; t2'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'ExportTypesSignature'.
+	self assert: node isViennaExportTypesSignatureNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{'t1'.
-			't2'} asSet
+	self assert: binds equals: { 't1'. 't2' } asSet
 ]
 
 { #category : #'tests-bound variables-definitions' }
@@ -365,18 +352,15 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesFunctionDefinition
 
 { #category : #'tests-bound variables-interfaces' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesFunctionExportInto [
+
 	| node binds |
-	node := ViennaVDMParser new functionExport end parse: 'f1[@t1,@t2]:t3->t4'.
+	node := ViennaVDMParser new functionExport end parse:
+		        'f1[@t1,@t2]:t3->t4'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'FunctionExport'.
+	self assert: node isViennaFunctionExportNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{'f1'.
-			't3'.
-			't4'} asSet
+	self assert: binds equals: { 'f1'. 't3'. 't4' } asSet
 ]
 
 { #category : #'tests-bound variables-definitions' }

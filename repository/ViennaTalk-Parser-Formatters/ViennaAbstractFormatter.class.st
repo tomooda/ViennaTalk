@@ -173,61 +173,6 @@ ViennaAbstractFormatter >> explicitOperationDefinition: aViennaNode [
 		, (self indentString: identifier2 , parameters , ' ==' insertCrIfNeeded: expression) , pre , post
 ]
 
-{ #category : #'formatting-interfaces' }
-ViennaAbstractFormatter >> exportDefinition: aViennaNode [
-	| exportSig |
-	exportSig := self format: aViennaNode first.
-	^ self indentString: 'exports' insertCrIfNeeded: exportSig
-]
-
-{ #category : #'formatting-interfaces' }
-ViennaAbstractFormatter >> exportFunctionsSignature: aViennaNode [
-	| functionExports |
-	functionExports := self formatAll: aViennaNode.
-	^ self
-		indentString: 'functions'
-		insertCrIfNeeded: (self join: ';' , String cr withAll: functionExports) , ';'
-]
-
-{ #category : #'formatting-interfaces' }
-ViennaAbstractFormatter >> exportModuleSignature: aViennaNode [
-	| exportSignatures |
-	exportSignatures := self formatAll: aViennaNode.
-	^ self join: String cr withAll: exportSignatures
-]
-
-{ #category : #'formatting-interfaces' }
-ViennaAbstractFormatter >> exportModuleSignatureAll: aViennaNode [
-	^ 'all'
-]
-
-{ #category : #'formatting-interfaces' }
-ViennaAbstractFormatter >> exportOperationsSignature: aViennaNode [
-	| signatures |
-	signatures := self formatAll: aViennaNode.
-	^ self
-		indentString: 'operations'
-		insertCrIfNeeded: (self join: ';' , String cr withAll: signatures) , ';'
-]
-
-{ #category : #'formatting-interfaces' }
-ViennaAbstractFormatter >> exportTypesSignature: aViennaNode [
-	| typeExports |
-	typeExports := self formatAll: aViennaNode.
-	^ self
-		indentString: 'types'
-		insertCrIfNeeded: (self join: ';' , String cr withAll: typeExports) , ';'
-]
-
-{ #category : #'formatting-interfaces' }
-ViennaAbstractFormatter >> exportValuesSignature: aViennaNode [
-	| signatures |
-	signatures := self formatAll: aViennaNode.
-	^ self
-		indentString: 'values'
-		insertCrIfNeeded: (self join: ';' , String cr withAll: signatures) , ';'
-]
-
 { #category : #'formatting-definitions' }
 ViennaAbstractFormatter >> extendedExplicitFunctionDefinition: aViennaNode [
 	| identifier typeVariableList parameterTypes identifierTypePairList body pre post |
@@ -368,15 +313,6 @@ ViennaAbstractFormatter >> functionDefinitions: aViennaNode [
 ]
 
 { #category : #'formatting-interfaces' }
-ViennaAbstractFormatter >> functionExport: aViennaNode [
-	| nameList typeVarList functionType |
-	nameList := self format: aViennaNode first.
-	typeVarList := self format: aViennaNode second.
-	functionType := self format: aViennaNode third.
-	^ self indentString: nameList , typeVarList insertCrIfNeeded: ': ' , functionType
-]
-
-{ #category : #'formatting-interfaces' }
 ViennaAbstractFormatter >> functionImport: aViennaNode [
 	| name typeVariableList type rename |
 	name := self format: aViennaNode first.
@@ -478,41 +414,12 @@ ViennaAbstractFormatter >> imply [
 ]
 
 { #category : #'formatting-interfaces' }
-ViennaAbstractFormatter >> importDefinition: aViennaNode [
-	| identifier moduleSignature |
-	identifier := self format: aViennaNode first.
-	moduleSignature := self format: aViennaNode second.
-	^ self indentString: 'from ' , identifier insertCrIfNeeded: moduleSignature
-]
-
-{ #category : #'formatting-interfaces' }
-ViennaAbstractFormatter >> importDefinitionList: aViennaNode [
-	| definitions |
-	definitions := self formatAll: aViennaNode.
-	^ self
-		indentString: 'imports'
-		insertCrIfNeeded: (self join: ',' , String cr withAll: definitions)
-]
-
-{ #category : #'formatting-interfaces' }
 ViennaAbstractFormatter >> importFunctionsSignature: aViennaNode [
 	| functionImport |
 	functionImport := self formatAll: aViennaNode.
 	^ self
 		indentString: 'functions'
 		insertCrIfNeeded: (self join: ';' , String cr withAll: functionImport) , ';'
-]
-
-{ #category : #'formatting-interfaces' }
-ViennaAbstractFormatter >> importModuleSignature: aViennaNode [
-	| importSignatures |
-	importSignatures := self formatAll: aViennaNode.
-	^ self join: String cr withAll: importSignatures
-]
-
-{ #category : #'formatting-interfaces' }
-ViennaAbstractFormatter >> importModuleSignatureAll: aViennaNode [
-	^ 'all'
 ]
 
 { #category : #'formatting-interfaces' }
@@ -845,14 +752,6 @@ ViennaAbstractFormatter >> operationDefinitions: aViennaNode [
 ]
 
 { #category : #'formatting-interfaces' }
-ViennaAbstractFormatter >> operationExport: aViennaNode [
-	| name operationType |
-	name := self format: aViennaNode first.
-	operationType := aViennaNode second ifNil: [ '' ] ifNotNil: [ :node | ' : ' , (self format: node) ].
-	^ name , operationType
-]
-
-{ #category : #'formatting-interfaces' }
 ViennaAbstractFormatter >> operationImport: aViennaNode [
 	| name operationType rename |
 	name := self format: aViennaNode first.
@@ -1063,20 +962,6 @@ ViennaAbstractFormatter >> typeImport: aViennaNode [
 	type := self format: aViennaNode first.
 	rename := aViennaNode second ifNil: [ '' ] ifNotNil: [ :node | 'renamed ' , (self format: node) ].
 	^ self indentString: type insertCrIfNeeded: rename
-]
-
-{ #category : #'formatting-interfaces' }
-ViennaAbstractFormatter >> typeNameExport: aViennaNode [
-	| name |
-	name := self format: aViennaNode first.
-	^ name
-]
-
-{ #category : #'formatting-interfaces' }
-ViennaAbstractFormatter >> typeStructExport: aViennaNode [
-	| name |
-	name := self format: aViennaNode first.
-	^ 'struct ' , name
 ]
 
 { #category : #'symbol access' }

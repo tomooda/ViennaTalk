@@ -47,6 +47,12 @@ ViennaCasesExpressionAlternativeNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: expression
 ]
 
+{ #category : #'as yet unclassified' }
+ViennaCasesExpressionAlternativeNode >> isViennaCasesExpressionAlternativeNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaCasesExpressionAlternativeNode >> label [
 

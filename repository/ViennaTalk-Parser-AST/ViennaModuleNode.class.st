@@ -6,6 +6,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+ViennaModuleNode >> isViennaModuleNode [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 ViennaModuleNode >> label [
 
 	^ 'Module'

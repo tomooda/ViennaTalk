@@ -23,6 +23,12 @@ ViennaAbstractSyntaxNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBl
 	^ aBlock3 value
 ]
 
+{ #category : #'as yet unclassified' }
+ViennaAbstractSyntaxNode >> isViennaAbstractSyntaxNode [
+
+	^ true
+]
+
 { #category : #'pretty printing' }
 ViennaAbstractSyntaxNode >> operatorPrecedence [
 

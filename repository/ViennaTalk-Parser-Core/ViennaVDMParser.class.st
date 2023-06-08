@@ -493,70 +493,62 @@ ViennaVDMParser >> explicitOperationDefinition [
 
 { #category : #'parsers-interfaces' }
 ViennaVDMParser >> exportDefinition [
-	^ super exportDefinition
-		=>> [ :start :end :moduleSignature | 
-			ViennaNode
-				label: 'ExportDefinition'
-				start: start
-				end: end
-				with: moduleSignature ]
+
+	^ super exportDefinition =>> [ :start :end :moduleSignature |
+	  (ViennaExportDefinitionNode exportModuleSignature: moduleSignature)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-interfaces' }
 ViennaVDMParser >> exportFunctionsSignature [
-	^ super exportFunctionsSignature
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'ExportFunctionsSignature'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super exportFunctionsSignature =>> [ :start :end :array |
+	  (ViennaExportFunctionsSignatureNode withAll: array)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-interfaces' }
 ViennaVDMParser >> exportModuleSignature [
-	^ super exportModuleSignature
-		=>> [ :start :end :array | 
-			array = 'all'
-				ifTrue: [ ViennaNode label: 'ExportModuleSignatureAll' start: start end: end ]
-				ifFalse: [ ViennaNode
-						label: 'ExportModuleSignature'
-						start: start
-						end: end
-						withAll: array ] ]
+
+	^ super exportModuleSignature =>> [ :start :end :array |
+	  array = 'all'
+		  ifTrue: [
+			  ViennaExportModuleSignatureAllNode new
+				  start: start end: end;
+				  yourself ]
+		  ifFalse: [
+			  (ViennaExportModuleSignatureNode withAll: array)
+				  start: start end: end;
+				  yourself ] ]
 ]
 
 { #category : #'parsers-interfaces' }
 ViennaVDMParser >> exportOperationsSignature [
-	^ super exportOperationsSignature
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'ExportOperationsSignature'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super exportOperationsSignature =>> [ :start :end :array |
+	  (ViennaExportOperationsSignatureNode withAll: array)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-interfaces' }
 ViennaVDMParser >> exportTypesSignature [
-	^ super exportTypesSignature
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'ExportTypesSignature'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super exportTypesSignature =>> [ :start :end :array |
+	  (ViennaExportTypesSignatureNode withAll: array)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-interfaces' }
 ViennaVDMParser >> exportValuesSignature [
-	^ super exportValuesSignature
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'ExportValuesSignature'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super exportValuesSignature =>> [ :start :end :array |
+	  (ViennaExportValuesSignatureNode withAll: array)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-expressions' }
@@ -771,13 +763,14 @@ ViennaVDMParser >> functionDefinitions [
 
 { #category : #'parsers-interfaces' }
 ViennaVDMParser >> functionExport [
-	^ super functionExport
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'FunctionExport'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super functionExport =>> [ :start :end :array |
+	  (ViennaFunctionExportNode
+		   nameList: array first
+		   typeVariableList: array second
+		   functionType: array third)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-interfaces' }
@@ -920,24 +913,22 @@ ViennaVDMParser >> implicitOperationDefinition [
 
 { #category : #'parsers-interfaces' }
 ViennaVDMParser >> importDefinition [
-	^ super importDefinition
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'ImportDefinition'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super importDefinition =>> [ :start :end :array |
+	  (ViennaImportDefinitionNode
+		   moduleIdentifier: array first
+		   importModuleSignature: array second)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-interfaces' }
 ViennaVDMParser >> importDefinitionList [
-	^ super importDefinitionList
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'ImportDefinitionList'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super importDefinitionList =>> [ :start :end :array |
+	  (ViennaImportDefinitionListNode withAll: array)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-interfaces' }
@@ -953,15 +944,17 @@ ViennaVDMParser >> importFunctionsSignature [
 
 { #category : #'parsers-interfaces' }
 ViennaVDMParser >> importModuleSignature [
-	^ super importModuleSignature
-		=>> [ :start :end :array | 
-			array = 'all'
-				ifTrue: [ ViennaNode label: 'ImportModuleSignatureAll' start: start end: end ]
-				ifFalse: [ ViennaNode
-						label: 'ImportModuleSignature'
-						start: start
-						end: end
-						withAll: array ] ]
+
+	^ super importModuleSignature =>> [ :start :end :array |
+	  array = 'all'
+		  ifTrue: [
+			  ViennaImportModuleSignatureAllNode new
+				  start: start end: end;
+				  yourself ]
+		  ifFalse: [
+			  (ViennaImportModuleSignatureNode withAll: array)
+				  start: start end: end;
+				  yourself ] ]
 ]
 
 { #category : #'parsers-interfaces' }
@@ -1523,13 +1516,13 @@ ViennaVDMParser >> operationDefinitions [
 
 { #category : #'parsers-interfaces' }
 ViennaVDMParser >> operationExport [
-	^ super operationExport
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'OperationExport'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super operationExport =>> [ :start :end :array |
+	  (ViennaOperationExportNode
+		   nameList: array first
+		   operationType: array second)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-interfaces' }
@@ -2125,19 +2118,17 @@ ViennaVDMParser >> typeDefinitions [
 
 { #category : #'parsers-interfaces' }
 ViennaVDMParser >> typeExport [
-	^ super typeExport
-		=>> [ :start :end :array | 
-			array first isNil
-				ifTrue: [ ViennaNode
-						label: 'TypeNameExport'
-						start: start
-						end: end
-						with: array second ]
-				ifFalse: [ ViennaNode
-						label: 'TypeStructExport'
-						start: start
-						end: end
-						with: array second ] ]
+
+	^ super typeExport =>> [ :start :end :array |
+	  array first isNil
+		  ifTrue: [
+			  (ViennaTypeNameExportNode name: array second)
+				  start: start end: end;
+				  yourself ]
+		  ifFalse: [
+			  (ViennaTypeStructExportNode name: array second)
+				  start: start end: end;
+				  yourself ] ]
 ]
 
 { #category : #'parsers-interfaces' }
@@ -2282,13 +2273,11 @@ ViennaVDMParser >> valueDefinitions [
 
 { #category : #'parsers-interfaces' }
 ViennaVDMParser >> valueExport [
-	^ super valueExport
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'ValueExport'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super valueExport =>> [ :start :end :array |
+	  (ViennaValueExportNode nameList: array first type: array second)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-interfaces' }

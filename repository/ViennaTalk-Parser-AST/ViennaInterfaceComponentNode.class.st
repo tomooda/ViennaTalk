@@ -10,3 +10,9 @@ ViennaInterfaceComponentNode class >> isAbstract [
 
 	^ self = ViennaInterfaceComponentNode
 ]
+
+{ #category : #'as yet unclassified' }
+ViennaInterfaceComponentNode >> isViennaInterfaceComponentNode [
+
+	^ true
+]

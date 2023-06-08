@@ -48,6 +48,12 @@ ViennaConditionalExpressionNode >> formatWith: aViennaAbstractFormatter [
 			   (aViennaAbstractFormatter format: self second))
 ]
 
+{ #category : #'as yet unclassified' }
+ViennaConditionalExpressionNode >> isViennaConditionalExpressionNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaConditionalExpressionNode >> label [
 

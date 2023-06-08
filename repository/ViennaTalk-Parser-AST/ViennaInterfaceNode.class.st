@@ -6,6 +6,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+ViennaInterfaceNode >> isViennaInterfaceNode [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 ViennaInterfaceNode >> label [
 
 	^ 'Interface'

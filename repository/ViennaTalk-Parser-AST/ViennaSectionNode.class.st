@@ -10,3 +10,9 @@ ViennaSectionNode class >> isAbstract [
 
 	^ self = ViennaSectionNode
 ]
+
+{ #category : #'as yet unclassified' }
+ViennaSectionNode >> isViennaSectionNode [
+
+	^ true
+]

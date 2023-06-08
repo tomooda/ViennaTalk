@@ -6,6 +6,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+ViennaRecordTypeDefinitionNode >> isViennaRecordTypeDefinitionNode [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 ViennaRecordTypeDefinitionNode >> label [
 
 	^ 'RecordTypeDefinition'

@@ -5,6 +5,12 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #'as yet unclassified' }
+ViennaConditionalStatementListNode >> isViennaConditionalStatementListNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaConditionalStatementListNode >> label [
 

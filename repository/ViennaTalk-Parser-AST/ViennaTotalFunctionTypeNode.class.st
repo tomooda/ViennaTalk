@@ -1,6 +1,6 @@
 Class {
 	#name : #ViennaTotalFunctionTypeNode,
-	#superclass : #ViennaAbstractFunctionTypeNode,
+	#superclass : #ViennaFunctionTypeNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }
@@ -13,12 +13,6 @@ ViennaTotalFunctionTypeNode >> formatWith: aViennaAbstractFormatter [
 	  , (aViennaAbstractFormatter format: self returnType)
 ]
 
-{ #category : #'pretty printing' }
-ViennaTotalFunctionTypeNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
-
-	^ aBlock2 value
-]
-
 { #category : #testing }
 ViennaTotalFunctionTypeNode >> isViennaTotalFunctionTypeNode [
 
@@ -29,10 +23,4 @@ ViennaTotalFunctionTypeNode >> isViennaTotalFunctionTypeNode [
 ViennaTotalFunctionTypeNode >> label [
 
 	^ 'TotalFunctionType'
-]
-
-{ #category : #'pretty printing' }
-ViennaTotalFunctionTypeNode >> operatorPrecedence [
-
-	^ 1
 ]

@@ -17,6 +17,12 @@ ViennaErrorStatementNode >> isViennaErrorNode [
 	^ true
 ]
 
+{ #category : #'as yet unclassified' }
+ViennaErrorStatementNode >> isViennaErrorStatementNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaErrorStatementNode >> label [
 

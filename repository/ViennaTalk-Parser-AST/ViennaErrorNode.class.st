@@ -59,6 +59,12 @@ ViennaErrorNode >> identifier: aString [
 	self at: 1 put: aString
 ]
 
+{ #category : #'as yet unclassified' }
+ViennaErrorNode >> isViennaErrorNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaErrorNode >> label [
 

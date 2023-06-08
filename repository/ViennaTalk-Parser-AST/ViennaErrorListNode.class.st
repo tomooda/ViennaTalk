@@ -12,6 +12,12 @@ ViennaErrorListNode >> formatWith: aViennaAbstractFormatter [
 		  string , ' ' , (aViennaAbstractFormatter format: node) ]
 ]
 
+{ #category : #'as yet unclassified' }
+ViennaErrorListNode >> isViennaErrorListNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaErrorListNode >> label [
 

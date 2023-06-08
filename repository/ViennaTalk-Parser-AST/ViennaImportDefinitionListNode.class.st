@@ -5,7 +5,26 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pretty printing' }
+ViennaImportDefinitionListNode >> formatWith: aViennaAbstractFormatter [
+
+	| definitions |
+	definitions := aViennaAbstractFormatter formatAll: self.
+	^ aViennaAbstractFormatter
+		  indentString: 'imports'
+		  insertCrIfNeeded:
+		  (aViennaAbstractFormatter
+			   join: ',' , String cr
+			   withAll: definitions)
+]
+
+{ #category : #testing }
+ViennaImportDefinitionListNode >> isViennaImportDefinitionListNode [
+
+	^ true
+]
+
+{ #category : #testing }
 ViennaImportDefinitionListNode >> label [
 
 	^ 'ImportDefinitionList'

@@ -32,6 +32,12 @@ ViennaInvariantNode >> invariantInitialFunction: aViennaInvariantInitialFunction
 	self at: 1 put: aViennaInvariantInitialFunctionNode
 ]
 
+{ #category : #'as yet unclassified' }
+ViennaInvariantNode >> isViennaInvariantNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaInvariantNode >> label [
 

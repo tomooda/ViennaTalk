@@ -1,11 +1,23 @@
 Class {
 	#name : #ViennaTypeNameExportNode,
-	#superclass : #ViennaInterfaceComponentNode,
+	#superclass : #ViennaTypeExportNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pretty printing' }
+ViennaTypeNameExportNode >> formatWith: aViennaAbstractFormatter [
+
+	^ aViennaAbstractFormatter format: self name
+]
+
+{ #category : #testing }
+ViennaTypeNameExportNode >> isViennaTypeNameExportNode [
+
+	^ true
+]
+
+{ #category : #testing }
 ViennaTypeNameExportNode >> label [
 
 	^ 'TypeNameExport'

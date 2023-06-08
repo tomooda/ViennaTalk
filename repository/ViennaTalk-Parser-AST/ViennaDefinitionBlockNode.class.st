@@ -11,6 +11,12 @@ ViennaDefinitionBlockNode >> formatWith: aViennaAbstractFormatter [
 	^ (aViennaAbstractFormatter format: self first) , String cr
 ]
 
+{ #category : #'as yet unclassified' }
+ViennaDefinitionBlockNode >> isViennaDefinitionBlockNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaDefinitionBlockNode >> label [
 

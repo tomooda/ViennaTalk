@@ -1,6 +1,6 @@
 Class {
 	#name : #ViennaPartialFunctionTypeNode,
-	#superclass : #ViennaAbstractFunctionTypeNode,
+	#superclass : #ViennaFunctionTypeNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }
@@ -13,12 +13,6 @@ ViennaPartialFunctionTypeNode >> formatWith: aViennaAbstractFormatter [
 	  , (aViennaAbstractFormatter format: self returnType)
 ]
 
-{ #category : #'pretty printing' }
-ViennaPartialFunctionTypeNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
-
-	^ aBlock2 value
-]
-
 { #category : #testing }
 ViennaPartialFunctionTypeNode >> isViennaPartialFunctionTypeNode [
 
@@ -29,10 +23,4 @@ ViennaPartialFunctionTypeNode >> isViennaPartialFunctionTypeNode [
 ViennaPartialFunctionTypeNode >> label [
 
 	^ 'PartialFunctionType'
-]
-
-{ #category : #'pretty printing' }
-ViennaPartialFunctionTypeNode >> operatorPrecedence [
-
-	^ 1
 ]

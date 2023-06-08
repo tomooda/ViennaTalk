@@ -32,6 +32,12 @@ ViennaAbstractFunctionTypeNode >> argumentType: aViennaTypeNode [
 	self at: 1 put: aViennaTypeNode
 ]
 
+{ #category : #'as yet unclassified' }
+ViennaAbstractFunctionTypeNode >> isViennaAbstractFunctionTypeNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaAbstractFunctionTypeNode >> returnType [
 

@@ -22,6 +22,12 @@ ViennaParameterTypesNode >> formatWith: aViennaAbstractFormatter [
 	  , ')'
 ]
 
+{ #category : #'as yet unclassified' }
+ViennaParameterTypesNode >> isViennaParameterTypesNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaParameterTypesNode >> label [
 

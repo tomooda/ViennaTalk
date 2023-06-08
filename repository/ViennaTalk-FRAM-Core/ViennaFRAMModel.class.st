@@ -191,14 +191,13 @@ ViennaFRAMModel >> findOrCreateOperationNamed: operationName module: moduleName 
 		moduleNode := ViennaNode
 			              label: 'Module'
 			              with: moduleName
-			              with:
-				              (ViennaNode
+			              with: (ViennaNode
 					               label: 'Interface'
 					               with: nil
-					               with: (ViennaNode
-							                label: 'ExportDefinition'
-							                with:
-							                (ViennaNode label: 'ExportModuleSignatureAll')))
+					               with:
+						               (ViennaExportDefinitionNode
+							                exportModuleSignature:
+							                ViennaExportModuleSignatureAllNode new))
 			              with: (ViennaModuleBodyNode withAll:
 					               { (ViennaNode label: 'DefinitionBlock') }).
 		aViennaNode add: moduleNode ].

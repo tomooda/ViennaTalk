@@ -18,6 +18,12 @@ ViennaExpressionListNode >> formatWith: aViennaAbstractFormatter [
 		  withAll: expressions
 ]
 
+{ #category : #'as yet unclassified' }
+ViennaExpressionListNode >> isViennaExpressionListNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaExpressionListNode >> label [
 

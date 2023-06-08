@@ -10,3 +10,9 @@ ViennaStateDesignatorNode class >> isAbstract [
 
 	^ self = ViennaStateDesignatorNode
 ]
+
+{ #category : #'as yet unclassified' }
+ViennaStateDesignatorNode >> isViennaStateDesignatorNode [
+
+	^ true
+]

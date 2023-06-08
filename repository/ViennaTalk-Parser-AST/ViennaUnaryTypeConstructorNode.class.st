@@ -19,6 +19,12 @@ ViennaUnaryTypeConstructorNode class >> type: aViennaTypeNode [
 		  yourself
 ]
 
+{ #category : #'as yet unclassified' }
+ViennaUnaryTypeConstructorNode >> isViennaUnaryTypeConstructorNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaUnaryTypeConstructorNode >> type [
 

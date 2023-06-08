@@ -58,3 +58,9 @@ ViennaBinaryOperatorExpressionNode >> isViennaBinaryOperatorExpression [
 
 	^ true
 ]
+
+{ #category : #'as yet unclassified' }
+ViennaBinaryOperatorExpressionNode >> isViennaBinaryOperatorExpressionNode [
+
+	^ true
+]

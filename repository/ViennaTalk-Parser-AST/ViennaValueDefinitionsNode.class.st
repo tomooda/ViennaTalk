@@ -6,6 +6,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+ViennaValueDefinitionsNode >> isViennaValueDefinitionsNode [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 ViennaValueDefinitionsNode >> label [
 
 	^ 'ValueDefinitions'

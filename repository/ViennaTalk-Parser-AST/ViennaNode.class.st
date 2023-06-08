@@ -210,6 +210,15 @@ ViennaNode class >> typeLabels [
 ]
 
 { #category : #'instance creation' }
+ViennaNode class >> with: aViennaNode [
+
+	| node |
+	node := self new: 1.
+	node at: 1 put: aViennaNode.
+	^ node
+]
+
+{ #category : #'instance creation' }
 ViennaNode class >> withAll: anArrayOfViennaNode [
 
 	| node |
@@ -369,41 +378,40 @@ ViennaNode >> asArrayFrom: anInteger1 to: anInteger2 [
 { #category : #'accessing-definitions' }
 ViennaNode >> asExport [
 
-	(#( 'TypeDefinition' 'RecordTypeDefinition' ) includes: self label)
-		ifTrue: [
-			^ ViennaNode
-				  label: 'TypeStructExport'
-				  with: (ViennaLocalNameNode identifier: self first) ].
+	(self isViennaTypeDefinitionNode or: [
+		 self isViennaRecordTypeDefinitionNode ]) ifTrue: [
+		#( 'TypeDefinition' 'RecordTypeDefinition' ).
+		^ ViennaTypeStructExportNode name:
+			  (ViennaLocalNameNode identifier: self first) ].
 	(#( 'ValueDefinition' ) includes: self label) ifTrue: [
-		^ ViennaNode
-			  label: 'ValueExport'
-			  with: (ViennaNameListNode withAll:
+		^ ViennaValueExportNode
+			  nameList: (ViennaNameListNode withAll:
 					   (self first patternIdentifiers collect: [ :node |
 						    ViennaLocalNameNode identifier: node first ]))
-			  with: (self first isViennaPatternIdentifierNode
+			  type: (self first isViennaPatternIdentifierNode
 					   ifTrue: [ self second ifNotNil: #copyFragment ]
-					   ifFalse: [ nil ])
-			  with: nil ].
-	(#( 'ImplicitFunctionDefinition' 'ExplicitFunctionDefinition' )
-		 includes: self label) ifTrue: [
-		^ ViennaNode
-			  label: 'FunctionExport'
-			  with: (ViennaNameListNode withAll:
-					   { (ViennaLocalNameNode identifier: self first) })
-			  with: (self second ifNotNil: #copyFragment)
-			  with: (self label = 'ExplicitFunctionDefinition'
+					   ifFalse: [ nil ]) ].
+	(self isViennaImplicitFunctionDefinitionNode or: [
+		 self isViennaExplicitFunctionDefinitionNode ]) ifTrue: [
+		#( 'ImplicitFunctionDefinition' 'ExplicitFunctionDefinition' ).
+		^ ViennaFunctionExportNode
+			  nameList:
+			  (ViennaNameListNode with:
+				   (ViennaLocalNameNode identifier: self first))
+			  typeVariableList: (self second ifNotNil: #copyFragment)
+			  functionType: (self label = 'ExplicitFunctionDefinition'
 					   ifTrue: [ self third ifNotNil: #copyFragment ]
 					   ifFalse: [
 						   ViennaPartialFunctionTypeNode
 							   argumentType: self third first pairListToType
 							   returnType: self fourth pairListToType ]) ].
-	(#( 'ExplicitOperationDefinition' 'ImplicitOperationDefinition' )
-		 includes: self label) ifTrue: [
-		^ ViennaNode
-			  label: 'OperationExport'
-			  with: (ViennaNameListNode withAll:
+	(self isViennaExplicitOperationDefinitionNode or: [
+		 self isViennaImplicitOperationDefinitionNode ]) ifTrue: [
+		#( 'ExplicitOperationDefinition' 'ImplicitOperationDefinition' ).
+		^ ViennaOperationExportNode
+			  nameList: (ViennaNameListNode withAll:
 					   { (ViennaLocalNameNode identifier: self first) })
-			  with: (self label = 'ExplicitOperationDefinition'
+			  operationType: (self label = 'ExplicitOperationDefinition'
 					   ifTrue: [ self second ifNotNil: #copyFragment ]
 					   ifFalse: [
 						   ViennaOperationTypeNode
@@ -414,17 +422,17 @@ ViennaNode >> asExport [
 
 { #category : #'accessing-definitions' }
 ViennaNode >> asExportSignature [
-	self asExport
-		ifNotNil: [ :export | 
-			(export label = 'TypeNameExport'
-				or: [ export label = 'TypeStructExport' ])
-				ifTrue: [ ^ ViennaNode label: 'ExportTypesSignature' with: export ].
-			export label = 'ValueExport'
-				ifTrue: [ ^ ViennaNode label: 'ExportValuesSignature' with: export ].
-			export label = 'FunctionExport'
-				ifTrue: [ ^ ViennaNode label: 'ExportFunctionsSignature' with: export ].
-			export label = 'OperationExport'
-				ifTrue: [ ^ ViennaNode label: 'ExportOperationsSignature' with: export ] ].
+
+	self asExport ifNotNil: [ :export |
+		(export isViennaTypeNameExportNode or: [
+			 export isViennaTypeStructExportNode ]) ifTrue: [
+			^ ViennaExportTypesSignatureNode with: export ].
+		export isViennaValueExportNode ifTrue: [
+			^ ViennaExportValuesSignatureNode with: export ].
+		export isViennaFunctionExportNode ifTrue: [
+			^ ViennaExportFunctionsSignatureNode with: export ].
+		export isViennaOperationExportNode ifTrue: [
+			^ ViennaExportOperationsSignatureNode with: export ] ].
 	^ nil
 ]
 
@@ -463,13 +471,10 @@ ViennaNode >> asImportDefinitionIn: moduleNode [
 
 	| importDefinition |
 	importDefinition := [ :node |
-	                    ViennaNode
-		                    label: 'ImportDefinition'
-		                    with: self module name
-		                    with:
-		                    (ViennaNode
-			                     label: 'ImportModuleSignature'
-			                     with: node) ].
+	                    ViennaImportDefinitionNode
+		                    moduleIdentifier: self module name
+		                    importModuleSignature:
+		                    (ViennaImportModuleSignatureNode with: node) ].
 	(#( 'TypeDefinition' 'RecordTypeDefinition' ) includes: self label)
 		ifTrue: [
 			^ importDefinition value:
@@ -642,17 +647,13 @@ ViennaNode >> definitionInImplicitOperationOfLocalName: aString do: aBlock [
 
 { #category : #'accessing-definitions' }
 ViennaNode >> definitionInImportsOfLocalName: aString do: aBlock [
-	self
-		do: [ :importDef | 
-			importDef second label = 'ImportModuleSignature'
-				ifTrue: [ importDef second
-						do: [ :imports | 
-							imports
-								do: [ :import | 
-									(import at: import size)
-										ifNotNil: [ :rename | 
-											rename first = aString
-												ifTrue: [ ^ aBlock value: import ] ] ] ] ] ]
+
+	self do: [ :importDef |
+		importDef second isViennaImportModuleSignatureNode ifTrue: [
+			importDef second do: [ :imports |
+				imports do: [ :import |
+					(import at: import size) ifNotNil: [ :rename |
+						rename first = aString ifTrue: [ ^ aBlock value: import ] ] ] ] ] ]
 ]
 
 { #category : #'accessing-definitions' }
@@ -678,18 +679,14 @@ ViennaNode >> definitionInModuleOfLocalName: aString do: aBlock [
 
 { #category : #'accessing-definitions' }
 ViennaNode >> definitionOfGlobalName: shortName module: moduleName [
-	self module second first
-		ifNotNil: [ :importDefinitionList | 
-			importDefinitionList
-				do: [ :importDef | 
-					importDef first = moduleName
-						ifTrue: [ importDef second label = 'ImportModuleSignature'
-								ifTrue: [ importDef second
-										do: [ :imports | 
-											imports
-												do: [ :import | 
-													import first first = shortName
-														ifTrue: [ ^ import ] ] ] ] ] ] ].
+
+	self module second first ifNotNil: [ :importDefinitionList |
+		importDefinitionList do: [ :importDef |
+			importDef first = moduleName ifTrue: [
+				importDef second isViennaImportModuleSignatureNode ifTrue: [
+					importDef second do: [ :imports |
+						imports do: [ :import |
+							import first first = shortName ifTrue: [ ^ import ] ] ] ] ] ] ].
 	^ nil
 ]
 
@@ -766,13 +763,13 @@ ViennaNode >> end [
 
 { #category : #enumerating }
 ViennaNode >> ensureImports [
-	^ self module second
-		in: [ :interface | 
-			interface first
-				ifNil: [ | node |
-					node := ViennaNode label: 'ImportDefinitionList'.
-					interface at: 1 put: node.
-					node ] ]
+
+	^ self module second in: [ :interface |
+		  interface first ifNil: [
+			  | node |
+			  node := ViennaImportDefinitionListNode empty.
+			  interface at: 1 put: node.
+			  node ] ]
 ]
 
 { #category : #enumerating }
@@ -913,6 +910,54 @@ ViennaNode >> isValueNameNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaAbstractFunctionTypeNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaAbstractMapTypeNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaAbstractSyntaxNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaAccessFunctionDefinitionNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaAccessNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaAccessOperationDefinitionNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaAccessTypeDefinitionNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaAccessValueDefinitionNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaAndNode [
 
 	^ false
@@ -997,6 +1042,12 @@ ViennaNode >> isViennaBinaryOperatorExpression [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaBinaryOperatorExpressionNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaBindListNode [
 
 	^ false
@@ -1021,6 +1072,18 @@ ViennaNode >> isViennaCallStatementNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaCasesExpressionAlternativeNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaCasesExpressionAlternativesNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaCasesExpressionNode [
 
 	^ false
@@ -1028,6 +1091,12 @@ ViennaNode >> isViennaCasesExpressionNode [
 
 { #category : #testing }
 ViennaNode >> isViennaCasesStatementAlternativeNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaCasesStatementAlternativesNode [
 
 	^ false
 ]
@@ -1046,6 +1115,24 @@ ViennaNode >> isViennaCompositeTypeNode [
 
 { #category : #testing }
 ViennaNode >> isViennaCompositionNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaConditionalExpressionListNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaConditionalExpressionNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaConditionalStatementListNode [
 
 	^ false
 ]
@@ -1070,6 +1157,18 @@ ViennaNode >> isViennaDefExpressionNode [
 
 { #category : #testing }
 ViennaNode >> isViennaDefStatementNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaDefinitionBlockNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaDefinitionComponentNode [
 
 	^ false
 ]
@@ -1123,7 +1222,25 @@ ViennaNode >> isViennaEqualNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaErrorListNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaErrorNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaErrorStatementNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaExceptionsNode [
 
 	^ false
 ]
@@ -1147,7 +1264,85 @@ ViennaNode >> isViennaExitStatementNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaExplicitFunctionDefinitionNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaExplicitOperationDefinitionNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaExportDefinitionNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaExportFunctionsSignatureNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaExportModuleSignatureAllNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaExportModuleSignatureNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaExportOperationsSignatureNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaExportTypesSignatureNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaExportValuesSignatureNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaExpressionListNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaExpressionNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaExtendedExplicitFunctionDefinitionNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaExtendedExplicitOperationDefinitionNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaExternalsNode [
 
 	^ false
 ]
@@ -1195,6 +1390,12 @@ ViennaNode >> isViennaFinitePowerSetNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaFlatDocumnetNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaFloorNode [
 
 	^ false
@@ -1207,7 +1408,43 @@ ViennaNode >> isViennaForallExpressionNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaFunctionDefinitionNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaFunctionDefinitionsNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaFunctionExportNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaFunctionImportNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaFunctionTypeArgsNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaFunctionTypeInstantiationNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaFunctionTypeNode [
 
 	^ false
 ]
@@ -1237,6 +1474,12 @@ ViennaNode >> isViennaGreaterThanOrEqualNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaIdentifierTypePairListNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaIdentityStatementNode [
 
 	^ false
@@ -1255,7 +1498,73 @@ ViennaNode >> isViennaIfStatementNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaImplicitFunctionDefinitionNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaImplicitOperationBodyNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaImplicitOperationDefinitionNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaImplyNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaImportDefinitionListNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaImportDefinitionNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaImportFunctionsSignatureNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaImportModuleSignatureAllNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaImportModuleSignatureNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaImportOperationsSignatureNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaImportTypesSignatureNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaImportValuesSignatureNode [
 
 	^ false
 ]
@@ -1280,6 +1589,30 @@ ViennaNode >> isViennaInitialisationNode [
 
 { #category : #testing }
 ViennaNode >> isViennaInmapTypeNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaInterfaceComponentNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaInterfaceNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaInvariantInitialFunctionNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaInvariantNode [
 
 	^ false
 ]
@@ -1483,6 +1816,18 @@ ViennaNode >> isViennaMapTypeNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaMapletListNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaMapletNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaMapletPatternNode [
 
 	^ false
@@ -1495,7 +1840,19 @@ ViennaNode >> isViennaMatchValueNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaModularDocumnetNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaModuleBodyNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaModuleNode [
 
 	^ false
 ]
@@ -1513,6 +1870,12 @@ ViennaNode >> isViennaMultipleBindNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaMultipleBindQuantifierNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaMultipleSeqBindNode [
 
 	^ false
@@ -1525,7 +1888,19 @@ ViennaNode >> isViennaMultipleSetBindNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaMultipleSetSeqBindNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaMultipleTypeBindNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaNameListNode [
 
 	^ false
 ]
@@ -1566,7 +1941,43 @@ ViennaNode >> isViennaNotNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaObsoleteNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaOldNameNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaOperationBodyNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaOperationDefinitionNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaOperationDefinitionsNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaOperationExportNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaOperationImportNode [
 
 	^ false
 ]
@@ -1585,6 +1996,24 @@ ViennaNode >> isViennaOptionalTypeNode [
 
 { #category : #testing }
 ViennaNode >> isViennaOrNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaOthersExpressionNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaOthersStatementNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaParameterTypesNode [
 
 	^ false
 ]
@@ -1632,6 +2061,12 @@ ViennaNode >> isViennaPatternNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaPatternTypePairListNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaPreconditionExpressionNode [
 
 	^ false
@@ -1674,6 +2109,12 @@ ViennaNode >> isViennaRecordPatternNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaRecordTypeDefinitionNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaResultExpressionNode [
 
 	^ false
@@ -1681,6 +2122,12 @@ ViennaNode >> isViennaResultExpressionNode [
 
 { #category : #testing }
 ViennaNode >> isViennaReturnStatementNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaSectionNode [
 
 	^ false
 ]
@@ -1860,6 +2307,18 @@ ViennaNode >> isViennaSetUnionPatternNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaStateDefinitionNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaStateDesignatorNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaSubsequenceNode [
 
 	^ false
@@ -1890,6 +2349,12 @@ ViennaNode >> isViennaTokenConstructorNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaTopLevelDefinitionNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaTotalFunctionTypeNode [
 
 	^ false
@@ -1897,6 +2362,12 @@ ViennaNode >> isViennaTotalFunctionTypeNode [
 
 { #category : #testing }
 ViennaNode >> isViennaTrapStatementNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaTrapsNode [
 
 	^ false
 ]
@@ -1932,7 +2403,37 @@ ViennaNode >> isViennaTypeBindNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaTypeDefinitionNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaTypeDefinitionsNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaTypeExportNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaTypeImportNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaTypeJudgementNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaTypeNameExportNode [
 
 	^ false
 ]
@@ -1947,6 +2448,12 @@ ViennaNode >> isViennaTypeNameNode [
 ViennaNode >> isViennaTypeNode [
 
 	^ true
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaTypeStructExportNode [
+
+	^ false
 ]
 
 { #category : #testing }
@@ -1998,6 +2505,12 @@ ViennaNode >> isViennaUnaryPlusNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaUnaryTypeConstructorNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaUndefinedExpressionNode [
 
 	^ false
@@ -2011,6 +2524,36 @@ ViennaNode >> isViennaUnionTypeNode [
 
 { #category : #testing }
 ViennaNode >> isViennaUnitTypeNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaValueDefinitionNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaValueDefinitionsNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaValueExportNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaValueImportNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaVarInformationNode [
 
 	^ false
 ]
@@ -2062,7 +2605,7 @@ ViennaNode >> name [
 
 	(#( 'FunctionDefinition' 'OperationDefinition' ) includes: self label)
 		ifTrue: [ ^ self first name ].
-	(#( 'Module' 'ImportDefinition' 'TypeDefinition' 'RecordTypeDefinition'
+	(#( 'Module' 'TypeDefinition' 'RecordTypeDefinition'
 	    'ExplicitFunctionDefinition' 'ExplicitOperationDefinition'
 	    'ImplicitFunctionDefinition' 'ImplicitOperationDefinition'
 	    'StateDefinition' ) includes: self label) ifTrue: [ ^ self first ].
@@ -2271,8 +2814,9 @@ ViennaNode >> resolveLocalName: aString [
 		(#( 'TypeImport' 'ValueImport' 'FunctionImport' 'OperationImport' )
 			 includes: defNode label) ifTrue: [
 			(self moduleNamed:
-				 (defNode parentLabelled: 'ImportDefinition' ifAbsent: [ ^ nil ])
-					 first) ifNotNil: [ :moduleNode |
+				 (defNode
+					  detectParent: #isViennaImportDefinitionNode
+					  ifNone: [ ^ nil ]) moduleIdentifier) ifNotNil: [ :moduleNode |
 				moduleNode == self module ifFalse: [
 					^ moduleNode resolveLocalName: (defNode label = 'TypeImport'
 							   ifTrue: [ defNode first first first ]

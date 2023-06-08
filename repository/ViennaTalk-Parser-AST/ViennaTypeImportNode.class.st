@@ -6,6 +6,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+ViennaTypeImportNode >> isViennaTypeImportNode [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 ViennaTypeImportNode >> label [
 
 	^ 'TypeImport'
