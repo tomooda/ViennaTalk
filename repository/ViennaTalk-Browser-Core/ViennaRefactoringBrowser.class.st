@@ -53,7 +53,7 @@ ViennaRefactoringBrowser class >> defaultLayout [
 ViennaRefactoringBrowser class >> empty [
 
 	<script: 'ViennaRefactoringBrowser empty openWithSpec'>
-	^ self on: (ViennaNode label: 'Document')
+	^ self on: ViennaDocumentNode empty
 ]
 
 { #category : #examples }
@@ -1029,10 +1029,10 @@ ViennaRefactoringBrowser >> load: aString [
 	ast isPetit2Failure ifTrue: [
 		UIManager default alert: 'Failed to parse the source.'.
 		^ nil ].
-	ast label = 'Document' ifFalse: [ ^ nil ].
+	ast isViennaDocumentNode ifFalse: [ ^ nil ].
 	ast first ifNotNil: [ :first |
 		first label = 'DefinitionBlock' ifTrue: [
-			ast := ViennaNode label: 'Document' with: (ViennaNode
+			ast := ViennaDocumentNode withAll: { (ViennaNode
 					        label: 'Module'
 					        with: 'DEFAULT'
 					        with:
@@ -1043,7 +1043,7 @@ ViennaRefactoringBrowser >> load: aString [
 									          label: 'ExportDefinition'
 									          with:
 									          (ViennaNode label: 'ExportModuleSignatureAll')))
-					        with: (ViennaModuleBodyNode withAll: ast asArray)) ] ].
+					        with: (ViennaModuleBodyNode withAll: ast asArray)) } ] ].
 	historyList
 		resetSelection;
 		items: { {

@@ -13,6 +13,12 @@ ViennaDocumentNode >> formatWith: aViennaAbstractFormatter [
 		  withAll: (aViennaAbstractFormatter formatAll: self)
 ]
 
+{ #category : #testing }
+ViennaDocumentNode >> isViennaDocumentNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaDocumentNode >> label [
 

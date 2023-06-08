@@ -339,13 +339,11 @@ ViennaVDMParser >> div: arg1 and: arg2 [
 
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> document [
-	^ super document
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'Document'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super document =>> [ :start :end :array |
+	  (ViennaDocumentNode withAll: array)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-expressions-operators' }

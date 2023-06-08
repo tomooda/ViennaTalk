@@ -54,8 +54,7 @@ ViennaExtractFunctionFromLetExpression >> execute [
 		                              label: 'ExplicitFunctionDefinition'
 		                              withAll: {
 				                              self newName.
-				                              (ViennaTypeVariableListNode
-					                               withAll: {  }).
+				                              ViennaTypeVariableListNode empty.
 				                              self functionType.
 				                              self newName.
 				                              self functionParametersList.

@@ -12,9 +12,7 @@ ViennaExtractParameterFromExpressionInExplicitFunction >> executeDefinition [
 		typeNode isViennaProductTypeNode
 			ifTrue: [ typeNode add: ViennaBasicTypeNode any ]
 			ifFalse: [
-				(self
-					 replaceNode: typeNode
-					 with: (ViennaProductTypeNode withAll: #(  )))
+				(self replaceNode: typeNode with: ViennaProductTypeNode empty)
 					add: typeNode;
 					add: ViennaBasicTypeNode any ] ].
 	self definitionNode fifth first add:

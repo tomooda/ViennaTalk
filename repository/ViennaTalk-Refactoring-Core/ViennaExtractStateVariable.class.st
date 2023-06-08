@@ -34,7 +34,7 @@ ViennaExtractStateVariable >> execute [
 		stateDefinition := ViennaNode
 			                   label: 'StateDefinition'
 			                   with: 'State'
-			                   with: (ViennaFieldListNode withAll: #(  ))
+			                   with: ViennaFieldListNode empty
 			                   with: nil
 			                   with:
 				                   (ViennaInitialisationNode

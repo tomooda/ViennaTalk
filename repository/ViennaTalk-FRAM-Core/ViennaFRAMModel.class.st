@@ -132,7 +132,7 @@ ViennaFRAMModel >> createOperationDefinitionNode: aString [
 							     argumentType: ViennaUnitTypeNode new
 							     returnType: ViennaUnitTypeNode new)
 					    with: aString
-					    with: (ViennaParametersNode withAll: {  })
+					    with: ViennaParametersNode empty
 					    with: ViennaOperationBodyNode isNotYetSpecified
 					    with: nil
 					    with: nil))
@@ -157,21 +157,21 @@ ViennaFRAMModel >> ensureAnnotation: aString name: anotherString in: aViennaNode
 ViennaFRAMModel >> findOrCreateOperationNamed: operationName in: aViennaNode [
 
 	| opNode |
-	(aViennaNode label = 'Document' and: [ 
-		 aViennaNode isEmpty or: [ 
-			 aViennaNode first label = 'DefinitionBlock' ] ]) ifFalse: [ 
+	(aViennaNode isViennaDocumentNode and: [
+		 aViennaNode isEmpty or: [
+			 aViennaNode first label = 'DefinitionBlock' ] ]) ifFalse: [
 		^ self error: 'Internal error: A flat spec should be given.' ].
-	aViennaNode allDescendantsDo: [ :node | 
-		node label = 'AccessOperationDefinition' ifTrue: [ 
+	aViennaNode allDescendantsDo: [ :node |
+		node label = 'AccessOperationDefinition' ifTrue: [
 			opNode := node second first.
-			(opNode label = 'ExplicitOperationDefinition' and: [ 
+			(opNode label = 'ExplicitOperationDefinition' and: [
 				 opNode first = operationName ]) ifTrue: [ ^ opNode ] ] ].
 	opNode := self createOperationDefinitionNode: operationName.
-	aViennaNode allDescendantsDo: [ :node | 
-		node label = 'OperationDefinitions' ifTrue: [ 
+	aViennaNode allDescendantsDo: [ :node |
+		node label = 'OperationDefinitions' ifTrue: [
 			node add: opNode.
 			^ opNode ] ].
-	aViennaNode isEmpty ifTrue: [ 
+	aViennaNode isEmpty ifTrue: [
 		aViennaNode add: (ViennaNode label: 'DefinitionBlock') ].
 	aViennaNode first add:
 		(ViennaNode label: 'OperationDefinition' with: opNode).
@@ -182,7 +182,7 @@ ViennaFRAMModel >> findOrCreateOperationNamed: operationName in: aViennaNode [
 ViennaFRAMModel >> findOrCreateOperationNamed: operationName module: moduleName in: aViennaNode [
 
 	| moduleNode opNode |
-	(aViennaNode label = 'Document' and: [
+	(aViennaNode isViennaDocumentNode and: [
 		 aViennaNode size = 0 or: [ aViennaNode first label = 'Module' ] ])
 		ifFalse: [
 		^ self error: 'Internal error: A modular spec should be given.' ].

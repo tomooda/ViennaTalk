@@ -8,7 +8,7 @@ Class {
 ViennaAddModule >> findContainerNode [
 
 	ast ifNil: [ ^ nil ].
-	ast label = 'Document' ifTrue: [ ^ ast ].
+	ast isViennaDocumentNode ifTrue: [ ^ ast ].
 	ast label = 'Module' ifTrue: [ ^ ast document ].
 	^ nil
 ]

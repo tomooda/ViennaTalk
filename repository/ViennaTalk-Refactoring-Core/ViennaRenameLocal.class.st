@@ -6,9 +6,10 @@ Class {
 
 { #category : #operations }
 ViennaRenameLocal >> check [
-	^ self definitionNode notNil
-		and: [ self definitionNode label ~= 'Module'
-				and: [ self definitionNode label ~= 'Document' ] ]
+
+	^ self definitionNode notNil and: [
+		  self definitionNode label ~= 'Module' and: [
+			  self definitionNode isViennaDocumentNode not ] ]
 ]
 
 { #category : #accessing }

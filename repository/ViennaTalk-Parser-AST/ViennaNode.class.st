@@ -18,6 +18,12 @@ Class {
 }
 
 { #category : #'instance creation' }
+ViennaNode class >> empty [
+
+	^ self new: 0
+]
+
+{ #category : #'instance creation' }
 ViennaNode class >> label: aString [
 
 	^ self new: 0 label: aString
@@ -662,12 +668,12 @@ ViennaNode >> definitionInModuleOfLocalName: aString do: aBlock [
 				definitionInImportsOfLocalName: aString
 				do: [ :node | ^ aBlock value: node ] ].
 		^ self ].
-	(self label = 'Document' and: [ self first label = 'DefinitionBlock' ])
-		ifTrue: [
-			self do: [ :defBlock |
-				defBlock
-					definitionInDefinitionBlockOfLocalName: aString
-					do: [ :node | ^ aBlock value: node ] ] ]
+	(self isViennaDocumentNode and: [
+		 self first label = 'DefinitionBlock' ]) ifTrue: [
+		self do: [ :defBlock |
+			defBlock
+				definitionInDefinitionBlockOfLocalName: aString
+				do: [ :node | ^ aBlock value: node ] ] ]
 ]
 
 { #category : #'accessing-definitions' }
@@ -744,7 +750,8 @@ ViennaNode >> do: aBlock [
 
 { #category : #accessing }
 ViennaNode >> document [
-	^ self parentLabelled: 'Document' ifAbsent: [ nil ]
+
+	^ self detectParent: #isViennaDocumentNode ifNone: [ nil ]
 ]
 
 { #category : #accessing }
@@ -1087,6 +1094,12 @@ ViennaNode >> isViennaDistributedSetIntersectionNode [
 
 { #category : #testing }
 ViennaNode >> isViennaDistributedSetUnionNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaDocumentNode [
 
 	^ false
 ]
