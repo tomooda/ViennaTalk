@@ -703,24 +703,25 @@ ViennaRefactoringBrowser >> definitionListContextMenu [
 
 { #category : #private }
 ViennaRefactoringBrowser >> definitionsFromCategory: aViennaNode [
-	aViennaNode isViennaNode
-		ifTrue: [ aViennaNode label = 'Module'
-				ifTrue: [ ^ ((self module
-						ifNotNil: [ :ast | 
-							(ast
-								detect: [ :node | node isViennaNode and: [ node label = 'ModuleBody' ] ]
-								ifNone: [  ])
-								ifNotNil: [ :body | body collect: [ :node | node first ] ]
-								ifNil: [ Array new ] ]
-						ifNil: [ Array new ])
-						collect: [ :def | self definitionsFromCategory: def ])
-						inject: #()
-						into: [ :array :each | array , each ] ].
-			aViennaNode label = 'ImportModuleSignatureAll'
-				ifTrue: [ ^ Array with: aViennaNode second ].
-			aViennaNode label = 'StateDefinition'
-				ifTrue: [ ^ Array new ].
-			^ aViennaNode asArray ].
+
+	aViennaNode isViennaNode ifTrue: [
+		aViennaNode label = 'Module' ifTrue: [
+			^ ((self module
+				    ifNotNil: [ :ast |
+					    (ast
+						     detect: [ :node |
+						     node isViennaNode and: [ node isViennaModuleBodyNode ] ]
+						     ifNone: [  ])
+						    ifNotNil: [ :body | body collect: [ :node | node first ] ]
+						    ifNil: [ Array new ] ]
+				    ifNil: [ Array new ]) collect: [ :def |
+				   self definitionsFromCategory: def ])
+				  inject: #(  )
+				  into: [ :array :each | array , each ] ].
+		aViennaNode label = 'ImportModuleSignatureAll' ifTrue: [
+			^ Array with: aViennaNode second ].
+		aViennaNode label = 'StateDefinition' ifTrue: [ ^ Array new ].
+		^ aViennaNode asArray ].
 	^ Array new
 ]
 
@@ -1022,37 +1023,33 @@ ViennaRefactoringBrowser >> jumpToModule: aString operation: anotherString [
 
 { #category : #operations }
 ViennaRefactoringBrowser >> load: aString [
+
 	| ast |
 	ast := ViennaVDMParser new document end parse: aString.
-	ast isPetit2Failure
-		ifTrue: [ UIManager default alert: 'Failed to parse the source.'.
-			^ nil ].
-	ast label = 'Document'
-		ifFalse: [ ^ nil ].
-	ast first
-		ifNotNil: [ :first | 
-			first label = 'DefinitionBlock'
-				ifTrue: [ ast := ViennaNode
-						label: 'Document'
-						with:
-							(ViennaNode
-								label: 'Module'
-								with: 'DEFAULT'
-								with:
-									(ViennaNode
-										label: 'Interface'
-										with: nil
-										with:
-											(ViennaNode
-												label: 'ExportDefinition'
-												with: (ViennaNode label: 'ExportModuleSignatureAll')))
-								with: (ViennaNode label: 'ModuleBody' withAll: ast asArray)) ] ].
+	ast isPetit2Failure ifTrue: [
+		UIManager default alert: 'Failed to parse the source.'.
+		^ nil ].
+	ast label = 'Document' ifFalse: [ ^ nil ].
+	ast first ifNotNil: [ :first |
+		first label = 'DefinitionBlock' ifTrue: [
+			ast := ViennaNode label: 'Document' with: (ViennaNode
+					        label: 'Module'
+					        with: 'DEFAULT'
+					        with:
+						        (ViennaNode
+							         label: 'Interface'
+							         with: nil
+							         with: (ViennaNode
+									          label: 'ExportDefinition'
+									          with:
+									          (ViennaNode label: 'ExportModuleSignatureAll')))
+					        with: (ViennaModuleBodyNode withAll: ast asArray)) ] ].
 	historyList
 		resetSelection;
-		items:
-			{{DateAndTime now.
-			'load'.
-			ast}};
+		items: { {
+				DateAndTime now.
+				'load'.
+				ast } };
 		selectItem: historyList listItems last.
 	self model: ast
 ]
@@ -1420,24 +1417,23 @@ ViennaRefactoringBrowser >> testResultTableContextMenu [
 
 { #category : #updating }
 ViennaRefactoringBrowser >> updateCategoryList [
+
 	| newItems oldSelection |
-	newItems := (Array with: self module)
-		,
-			(self module
-				ifNotNil: [ :ast | 
-					(ast second first
-						ifNotNil: [ :importDefinitionList | 
-							(importDefinitionList
-								collect: [ :importDefinition | importDefinition second asArray ])
-								flattened ]
-						ifNil: [ Array new ])
-						,
-							((ast
-								detect: [ :node | node isViennaNode and: [ node label = 'ModuleBody' ] ]
-								ifNone: [  ])
-								ifNotNil: [ :body | body collect: [ :node | node first ] ]
-								ifNil: [ Array new ]) ]
-				ifNil: [ Array new ]).
+	newItems := (Array with: self module) , (self module
+		             ifNotNil: [ :ast |
+			             (ast second first
+				              ifNotNil: [ :importDefinitionList |
+					              (importDefinitionList collect: [ :importDefinition |
+						               importDefinition second asArray ]) flattened ]
+				              ifNil: [ Array new ]) , ((ast
+				               detect: [ :node |
+				               node isViennaNode and: [
+					               node isViennaModuleBodyNode ] ]
+				               ifNone: [  ])
+				              ifNotNil: [ :body |
+				              body collect: [ :node | node first ] ]
+				              ifNil: [ Array new ]) ]
+		             ifNil: [ Array new ]).
 	oldSelection := categoryList selection selectedItem.
 	categoryList items: newItems.
 	(newItems includes: oldSelection)

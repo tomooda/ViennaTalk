@@ -184,12 +184,12 @@ ViennaFRAMModel >> findOrCreateOperationNamed: operationName in: aViennaNode [
 ViennaFRAMModel >> findOrCreateOperationNamed: operationName module: moduleName in: aViennaNode [
 
 	| moduleNode opNode |
-	(aViennaNode label = 'Document' and: [ 
-		 aViennaNode size = 0 or: [ aViennaNode first label = 'Module' ] ]) 
-		ifFalse: [ 
+	(aViennaNode label = 'Document' and: [
+		 aViennaNode size = 0 or: [ aViennaNode first label = 'Module' ] ])
+		ifFalse: [
 		^ self error: 'Internal error: A modular spec should be given.' ].
 	moduleNode := aViennaNode moduleNamed: moduleName.
-	moduleNode isNil ifTrue: [ 
+	moduleNode isNil ifTrue: [
 		moduleNode := ViennaNode
 			              label: 'Module'
 			              with: moduleName
@@ -201,20 +201,19 @@ ViennaFRAMModel >> findOrCreateOperationNamed: operationName module: moduleName 
 							                label: 'ExportDefinition'
 							                with:
 							                (ViennaNode label: 'ExportModuleSignatureAll')))
-			              with: (ViennaNode
-					               label: 'ModuleBody'
-					               with: (ViennaNode label: 'DefinitionBlock')).
+			              with: (ViennaModuleBodyNode withAll:
+					               { (ViennaNode label: 'DefinitionBlock') }).
 		aViennaNode add: moduleNode ].
 
 
-	moduleNode allDescendantsDo: [ :node | 
-		node label = 'AccessOperationDefinition' ifTrue: [ 
+	moduleNode allDescendantsDo: [ :node |
+		node label = 'AccessOperationDefinition' ifTrue: [
 			opNode := node second first.
-			(opNode label = 'ExplicitOperationDefinition' and: [ 
+			(opNode label = 'ExplicitOperationDefinition' and: [
 				 opNode first = operationName ]) ifTrue: [ ^ opNode ] ] ].
 	opNode := self createOperationDefinitionNode: operationName.
-	moduleNode allDescendantsDo: [ :node | 
-		node label = 'OperationDefinitions' ifTrue: [ 
+	moduleNode allDescendantsDo: [ :node |
+		node label = 'OperationDefinitions' ifTrue: [
 			node add: opNode.
 			^ opNode ] ].
 	moduleNode third first add:

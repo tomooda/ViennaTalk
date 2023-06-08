@@ -1305,12 +1305,18 @@ ViennaVDMParser >> mapType [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMParser >> maplet [
-	^ super maplet ==> [ :array | ViennaNode label: 'Maplet' withAll: array ]
+
+	^ super maplet ==> [ :array |
+	  ViennaMapletNode
+		  keyExpression: array first
+		  valueExpression: array second ]
 ]
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMParser >> mapletList [
-	^ super mapletList ==> [ :array | ViennaNode label: 'MapletList' withAll: array ]
+
+	^ super mapletList
+	  ==> [ :array | ViennaMapletListNode withAll: array ]
 ]
 
 { #category : #'parsers-patterns' }
@@ -1370,13 +1376,11 @@ ViennaVDMParser >> module [
 
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> moduleBody [
-	^ super moduleBody
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'ModuleBody'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super moduleBody =>> [ :start :end :array |
+	  (ViennaModuleBodyNode withAll: array)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -1398,35 +1402,35 @@ ViennaVDMParser >> multipleAssignStatement [
 
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> multipleSeqBind [
-	^ super multipleSeqBind
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'MultipleSeqBind'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super multipleSeqBind =>> [ :start :end :array |
+	  (ViennaMultipleSeqBindNode
+		   patternList: array first
+		   expression: array second)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> multipleSetBind [
-	^ super multipleSetBind
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'MultipleSetBind'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super multipleSetBind =>> [ :start :end :array |
+	  (ViennaMultipleSetBindNode
+		   patternList: array first
+		   expression: array second)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> multipleTypeBind [
-	^ super multipleTypeBind
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'MultipleTypeBind'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super multipleTypeBind =>> [ :start :end :array |
+	  (ViennaMultipleTypeBindNode
+		   patternList: array first
+		   type: array second)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-expressions-operators' }

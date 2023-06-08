@@ -515,32 +515,27 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesModuleInto [
 
 { #category : #'tests-bound variables-patterns and binds' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesMultipleSetBindInto [
+
 	| node binds |
-	node := ViennaVDMParser new multipleSetBind end parse: 'v1, v2 in set s'.
+	node := ViennaVDMParser new multipleSetBind end parse:
+		        'v1, v2 in set s'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'MultipleSetBind'.
+	self assert: node isViennaMultipleSetBindNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{'v1'.
-			'v2'} asSet
+	self assert: binds equals: { 'v1'. 'v2' } asSet
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesMultipleTypeBindInto [
+
 	| node binds |
 	node := ViennaVDMParser new multipleTypeBind end parse: 'v1, v2 : t'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'MultipleTypeBind'.
+	self assert: node isViennaMultipleTypeBindNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{'v1'.
-			'v2'} asSet
+	self assert: binds equals: { 'v1'. 'v2' } asSet
 ]
 
 { #category : #'tests-bound variables-definitions' }

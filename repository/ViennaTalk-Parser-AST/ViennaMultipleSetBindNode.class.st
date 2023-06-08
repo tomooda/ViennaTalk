@@ -1,11 +1,26 @@
 Class {
 	#name : #ViennaMultipleSetBindNode,
-	#superclass : #ViennaMultipleBindNode,
+	#superclass : #ViennaMultipleSetSeqBindNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pretty printing' }
+ViennaMultipleSetBindNode >> formatWith: aViennaAbstractFormatter [
+
+	^ aViennaAbstractFormatter
+		  print: (aViennaAbstractFormatter format: self patternList)
+		  infix: aViennaAbstractFormatter inset
+		  arg: (aViennaAbstractFormatter format: self expression)
+]
+
+{ #category : #testing }
+ViennaMultipleSetBindNode >> isViennaMultipleSetBindNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaMultipleSetBindNode >> label [
 
 	^ 'MultipleSetBind'

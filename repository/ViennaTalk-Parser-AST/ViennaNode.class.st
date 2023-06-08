@@ -1489,7 +1489,37 @@ ViennaNode >> isViennaMatchValueNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaModuleBodyNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaMultipleAssignStatementNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaMultipleBindNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaMultipleSeqBindNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaMultipleSetBindNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaMultipleTypeBindNode [
 
 	^ false
 ]
