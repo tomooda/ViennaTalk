@@ -371,10 +371,9 @@ ViennaNode >> asExport [
 	(#( 'ValueDefinition' ) includes: self label) ifTrue: [
 		^ ViennaNode
 			  label: 'ValueExport'
-			  with: (ViennaNode
-					   label: 'NameList'
-					   withAll: (self first patternIdentifiers collect: [ :node |
-							    ViennaLocalNameNode identifier: node first ]))
+			  with: (ViennaNameListNode withAll:
+					   (self first patternIdentifiers collect: [ :node |
+						    ViennaLocalNameNode identifier: node first ]))
 			  with: (self first isViennaPatternIdentifierNode
 					   ifTrue: [ self second ifNotNil: #copyFragment ]
 					   ifFalse: [ nil ])
@@ -383,9 +382,8 @@ ViennaNode >> asExport [
 		 includes: self label) ifTrue: [
 		^ ViennaNode
 			  label: 'FunctionExport'
-			  with: (ViennaNode
-					   label: 'NameList'
-					   with: (ViennaLocalNameNode identifier: self first))
+			  with: (ViennaNameListNode withAll:
+					   { (ViennaLocalNameNode identifier: self first) })
 			  with: (self second ifNotNil: #copyFragment)
 			  with: (self label = 'ExplicitFunctionDefinition'
 					   ifTrue: [ self third ifNotNil: #copyFragment ]
@@ -397,9 +395,8 @@ ViennaNode >> asExport [
 		 includes: self label) ifTrue: [
 		^ ViennaNode
 			  label: 'OperationExport'
-			  with: (ViennaNode
-					   label: 'NameList'
-					   with: (ViennaLocalNameNode identifier: self first))
+			  with: (ViennaNameListNode withAll:
+					   { (ViennaLocalNameNode identifier: self first) })
 			  with: (self label = 'ExplicitOperationDefinition'
 					   ifTrue: [ self second ifNotNil: #copyFragment ]
 					   ifFalse: [
@@ -619,32 +616,22 @@ ViennaNode >> definitionInExplicitOperationOfLocalName: aString do: aBlock [
 
 { #category : #'accessing-definitions' }
 ViennaNode >> definitionInImplicitFunctionOfLocalName: aString do: aBlock [
-	self third first
-		do: [ :patList | 
-			patList label = 'PatternList'
-				ifTrue: [ patList
-						allDescendantsDo: [ :n | 
-							n first = aString
-								ifTrue: [ ^ aBlock value: n ] ] ] ].
-	self fourth
-		do: [ :n | 
-			n = aString
-				ifTrue: [ ^ aBlock value: self ] ]
+
+	self third first do: [ :patList |
+		patList isViennaPatternListNode ifTrue: [
+			patList allDescendantsDo: [ :n |
+				n first = aString ifTrue: [ ^ aBlock value: n ] ] ] ].
+	self fourth do: [ :n | n = aString ifTrue: [ ^ aBlock value: self ] ]
 ]
 
 { #category : #'accessing-definitions' }
 ViennaNode >> definitionInImplicitOperationOfLocalName: aString do: aBlock [
-	self second first
-		do: [ :patList | 
-			patList label = 'PatternList'
-				ifTrue: [ patList
-						allDescendantsDo: [ :n | 
-							n first = aString
-								ifTrue: [ ^ aBlock value: n ] ] ] ].
-	self third
-		do: [ :n | 
-			n = aString
-				ifTrue: [ ^ aBlock value: self ] ]
+
+	self second first do: [ :patList |
+		patList isViennaPatternListNode ifTrue: [
+			patList allDescendantsDo: [ :n |
+				n first = aString ifTrue: [ ^ aBlock value: n ] ] ] ].
+	self third do: [ :n | n = aString ifTrue: [ ^ aBlock value: self ] ]
 ]
 
 { #category : #'accessing-definitions' }
@@ -1040,6 +1027,12 @@ ViennaNode >> isViennaCasesStatementAlternativeNode [
 
 { #category : #testing }
 ViennaNode >> isViennaCasesStatementNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaCompositeTypeNode [
 
 	^ false
 ]
@@ -1584,6 +1577,18 @@ ViennaNode >> isViennaOrNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaParametersListNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaParametersNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaPartialFunctionTypeNode [
 
 	^ false
@@ -1597,6 +1602,12 @@ ViennaNode >> isViennaPatternIdentifierNode [
 
 { #category : #testing }
 ViennaNode >> isViennaPatternIdentifierNode: aString [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaPatternListNode [
 
 	^ false
 ]
@@ -1896,6 +1907,12 @@ ViennaNode >> isViennaTupleSelectNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaTypeBindListNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaTypeBindNode [
 
 	^ false
@@ -1927,6 +1944,12 @@ ViennaNode >> isViennaTypeVariableIdentifierNode [
 
 { #category : #testing }
 ViennaNode >> isViennaTypeVariableIdentifierNode: aString [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaTypeVariableListNode [
 
 	^ false
 ]

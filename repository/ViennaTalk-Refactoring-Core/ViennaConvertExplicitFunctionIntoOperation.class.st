@@ -46,9 +46,8 @@ ViennaConvertExplicitFunctionIntoOperation >> execute [
 				                               explicitFunctionDefinition fourth.
 				                               explicitFunctionDefinition fifth
 					                               first.
-				                               (ViennaNode
-					                                label: 'OperationBody'
-					                                with:
+				                               (ViennaOperationBodyNode
+					                                statement:
 						                                (ViennaReturnStatementNode
 							                                 expression:
 							                                 explicitFunctionDefinition

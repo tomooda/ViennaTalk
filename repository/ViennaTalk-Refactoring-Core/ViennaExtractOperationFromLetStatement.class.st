@@ -107,9 +107,9 @@ ViennaExtractOperationFromLetStatement >> operationBody [
 
 { #category : #accessing }
 ViennaExtractOperationFromLetStatement >> operationParametersList [
-	^ ViennaNode
-		label: 'Parameters'
-		withAll: (ast first collect: [ :localDef | localDef first first ])
+
+	^ ViennaParametersNode withAll:
+		  (ast first collect: [ :localDef | localDef first first ])
 ]
 
 { #category : #'parsers-types' }

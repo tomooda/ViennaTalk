@@ -448,9 +448,7 @@ ViennaVDM2Smalltalk >> closureFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode 
 						  nextPutAll: ' :';
 						  nextPutAll: tmpVar ] ].
 		  tuplePattern := ViennaTuplePatternNode patternList:
-			                  (ViennaNode
-				                   label: 'PatternList'
-				                   withAll: matchPatternNodes).
+			                  (ViennaPatternListNode withAll: matchPatternNodes).
 		  matchVars := (self boundVariables: tuplePattern) asArray.
 		  anArrayOfPatternNodeAndTypeSetNode ifNotEmpty: [
 			  stream nextPutAll: ' | ' ].
@@ -1549,9 +1547,7 @@ ViennaVDM2Smalltalk >> generatorFromFlatBinds: anArrayOfPatternNodeAndTypeSetNod
 				  stream nextPutAll: ' | '.
 				  numParens := numParens + 1 ].
 		  tuplePattern := ViennaTuplePatternNode patternList:
-			                  (ViennaNode
-				                   label: 'PatternList'
-				                   withAll: matchPatternNodes).
+			                  (ViennaPatternListNode withAll: matchPatternNodes).
 		  matchVars := (self boundVariables: tuplePattern) asArray.
 		  matchVars notEmpty ifTrue: [
 			  stream nextPutAll: ' | '.

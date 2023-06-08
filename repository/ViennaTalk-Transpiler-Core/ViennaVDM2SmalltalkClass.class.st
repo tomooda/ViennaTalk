@@ -260,9 +260,8 @@ ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass proto
 								 nextPutAll: tmpVar ].
 						 isFirstArg := false ].
 				 tuplePattern := ViennaTuplePatternNode patternList:
-					                 (ViennaNode
-						                  label: 'PatternList'
-						                  withAll: matchPatternNodes).
+					                 (ViennaPatternListNode withAll:
+						                  matchPatternNodes).
 				 matchVars := (self boundVariables: tuplePattern) asArray.
 				 stream cr.
 				 matchVars

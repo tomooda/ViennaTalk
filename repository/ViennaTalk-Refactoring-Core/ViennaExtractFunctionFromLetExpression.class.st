@@ -54,8 +54,8 @@ ViennaExtractFunctionFromLetExpression >> execute [
 		                              label: 'ExplicitFunctionDefinition'
 		                              withAll: {
 				                              self newName.
-				                              (ViennaNode label:
-					                               'TypeVariableList').
+				                              (ViennaTypeVariableListNode
+					                               withAll: {  }).
 				                              self functionType.
 				                              self newName.
 				                              self functionParametersList.
@@ -89,12 +89,9 @@ ViennaExtractFunctionFromLetExpression >> functionBody [
 
 { #category : #accessing }
 ViennaExtractFunctionFromLetExpression >> functionParametersList [
-	^ ViennaNode
-		label: 'ParametersList'
-		with:
-			(ViennaNode
-				label: 'Parameters'
-				withAll: (ast first collect: [ :localDef | localDef first first ]))
+
+	^ ViennaParametersListNode withAll: { (ViennaParametersNode withAll:
+			   (ast first collect: [ :localDef | localDef first first ])) }
 ]
 
 { #category : #accessing }

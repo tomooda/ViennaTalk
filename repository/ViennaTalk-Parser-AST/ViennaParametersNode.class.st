@@ -5,7 +5,21 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pretty printing' }
+ViennaParametersNode >> formatWith: aViennaAbstractFormatter [
+
+	^ '(' , (aViennaAbstractFormatter
+		   join: ', '
+		   withAll: (aViennaAbstractFormatter formatAll: self)) , ')'
+]
+
+{ #category : #testing }
+ViennaParametersNode >> isViennaParametersNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaParametersNode >> label [
 
 	^ 'Parameters'

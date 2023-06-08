@@ -253,13 +253,11 @@ ViennaVDMParser >> casesStatementAlternatives [
 
 { #category : #'parsers-types' }
 ViennaVDMParser >> compositeType [
-	^ super compositeType
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'CompositeType'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super compositeType =>> [ :start :end :array |
+	  (ViennaCompositeTypeNode name: array first fieldList: array second)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -1453,13 +1451,11 @@ ViennaVDMParser >> name [
 
 { #category : #'parsers-interfaces' }
 ViennaVDMParser >> nameList [
-	^ super nameList
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'NameList'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super nameList =>> [ :start :end :array |
+	  (ViennaNameListNode withAll: array)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-statements' }
@@ -1498,13 +1494,11 @@ ViennaVDMParser >> oldName [
 
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> operationBody [
-	^ super operationBody
-		=>> [ :start :end :body | 
-			ViennaNode
-				label: 'OperationBody'
-				start: start
-				end: end
-				with: body ]
+
+	^ super operationBody =>> [ :start :end :body |
+	  (ViennaOperationBodyNode statementOrIsNotYetSpecified: body)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -1593,35 +1587,29 @@ ViennaVDMParser >> othersStatement [
 
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> parameterTypes [
-	^ super parameterTypes
-		=>> [ :start :end :n | 
-			ViennaNode
-				label: 'ParameterTypes'
-				start: start
-				end: end
-				with: n ]
+
+	^ super parameterTypes =>> [ :start :end :n |
+	  (ViennaParameterTypesNode patternTypePairList: n)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> parameters [
-	^ super parameters
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'Parameters'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super parameters =>> [ :start :end :array |
+	  (ViennaParametersNode withAll: array)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> parametersList [
-	^ super parametersList
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'ParametersList'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super parametersList =>> [ :start :end :array |
+	  (ViennaParametersListNode withAll: array)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-types' }
@@ -1646,24 +1634,20 @@ ViennaVDMParser >> patternIdentifier [
 
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> patternList [
-	^ super patternList
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'PatternList'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super patternList =>> [ :start :end :array |
+	  (ViennaPatternListNode withAll: array)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> patternTypePairList [
-	^ super patternTypePairList
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'PatternTypePairList'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super patternTypePairList =>> [ :start :end :array |
+	  (ViennaPatternTypePairListNode withAll: array)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -2081,13 +2065,11 @@ ViennaVDMParser >> trapStatement [
 
 { #category : #'parsers-statements' }
 ViennaVDMParser >> traps [
-	^ super traps
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'Traps'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super traps =>> [ :start :end :array |
+	  (ViennaTrapsNode withAll: array)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -2103,7 +2085,7 @@ ViennaVDMParser >> tuplePattern [
 
 	^ super tuplePattern =>> [ :start :end :array |
 	  (ViennaTuplePatternNode patternList:
-			   (ViennaNode label: 'PatternList' withAll: array))
+			   (ViennaPatternListNode withAll: array))
 		  start: start end: end;
 		  yourself ]
 ]
@@ -2125,13 +2107,11 @@ ViennaVDMParser >> typeBind [
 
 { #category : #'parsers-patterns' }
 ViennaVDMParser >> typeBindList [
-	^ super typeBindList
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'TypeBindList'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super typeBindList =>> [ :start :end :array |
+	  (ViennaTypeBindListNode withAll: array)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -2230,13 +2210,11 @@ ViennaVDMParser >> typeVariableIdentifier [
 
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> typeVariableList [
-	^ super typeVariableList
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'TypeVariableList'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super typeVariableList =>> [ :start :end :array |
+	  (ViennaTypeVariableListNode withAll: array)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-expressions-operators' }

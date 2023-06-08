@@ -5,7 +5,25 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pretty printing' }
+ViennaTypeBindListNode >> formatWith: aViennaAbstractFormatter [
+
+	| patterns |
+	patterns := aViennaAbstractFormatter formatAll: self.
+	^ aViennaAbstractFormatter
+		  join: ',' , ((aViennaAbstractFormatter anyNeedsIndent: patterns)
+				   ifTrue: [ String cr ]
+				   ifFalse: [ String space ])
+		  withAll: patterns
+]
+
+{ #category : #testing }
+ViennaTypeBindListNode >> isViennaTypeBindListNode [
+
+	^ true
+]
+
+{ #category : #accessing }
 ViennaTypeBindListNode >> label [
 
 	^ 'TypeBindList'

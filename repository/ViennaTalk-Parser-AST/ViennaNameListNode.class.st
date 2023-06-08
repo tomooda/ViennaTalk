@@ -5,7 +5,15 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pretty printing' }
+ViennaNameListNode >> formatWith: aViennaAbstractFormatter [
+
+	| names |
+	names := aViennaAbstractFormatter formatAll: self.
+	^ aViennaAbstractFormatter join: ', ' withAll: names
+]
+
+{ #category : #accessing }
 ViennaNameListNode >> label [
 
 	^ 'NameList'

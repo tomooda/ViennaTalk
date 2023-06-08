@@ -88,16 +88,15 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesBlockStatementInto
 
 { #category : #'tests-bound variables-types' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesCompositeTypeInto [
+
 	| node binds |
-	node := ViennaVDMParser new compositeType end parse: 'compose T of f1 : t1 f2 :- t2 t3 end'.
+	node := ViennaVDMParser new compositeType end parse:
+		        'compose T of f1 : t1 f2 :- t2 t3 end'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'CompositeType'.
+	self assert: node isViennaCompositeTypeNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{'T'} asSet
+	self assert: binds equals: { 'T' } asSet
 ]
 
 { #category : #'tests-bound variables-statements' }
@@ -591,33 +590,26 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesOptionalTypeInto [
 
 { #category : #'tests-bound variables-definitions' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesParametersInto [
+
 	| node binds |
 	node := ViennaVDMParser new parameters end parse: '(x, y)'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'Parameters'.
+	self assert: node isViennaParametersNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{'x'.
-			'y'} asSet
+	self assert: binds equals: { 'x'. 'y' } asSet
 ]
 
 { #category : #'tests-bound variables-definitions' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesParametersListInto [
+
 	| node binds |
 	node := ViennaVDMParser new parametersList end parse: '(x, y)(z)'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'ParametersList'.
+	self assert: node isViennaParametersListNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{'x'.
-			'y'.
-			'z'} asSet
+	self assert: binds equals: { 'x'. 'y'. 'z' } asSet
 ]
 
 { #category : #'tests-bound variables-types' }
@@ -646,17 +638,14 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesPatternIdentifierI
 
 { #category : #'tests-bound variables-patterns and binds' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesPatternListInto [
+
 	| node binds |
 	node := ViennaVDMParser new patternList end parse: 'v1, v2'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'PatternList'.
+	self assert: node isViennaPatternListNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{'v1'.
-			'v2'} asSet
+	self assert: binds equals: { 'v1'. 'v2' } asSet
 ]
 
 { #category : #'tests-bound variables-types' }
@@ -879,17 +868,15 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTypeBindInto [
 
 { #category : #'tests-bound variables-patterns and binds' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTypeBindListInto [
+
 	| node binds |
-	node := ViennaVDMParser new typeBindList end parse: 'v1 : t1, v2 : t2'.
+	node := ViennaVDMParser new typeBindList end parse:
+		        'v1 : t1, v2 : t2'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'TypeBindList'.
+	self assert: node isViennaTypeBindListNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{'v1'.
-			'v2'} asSet
+	self assert: binds equals: { 'v1'. 'v2' } asSet
 ]
 
 { #category : #'tests-bound variables-definitions' }
@@ -932,17 +919,14 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTypeVariableIdenti
 
 { #category : #'tests-bound variables-definitions' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTypeVariableListInto [
+
 	| node binds |
 	node := ViennaVDMParser new typeVariableList end parse: '[@t1, @t2]'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'TypeVariableList'.
+	self assert: node isViennaTypeVariableListNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{'@t1'.
-			'@t2'} asSet
+	self assert: binds equals: { '@t1'. '@t2' } asSet
 ]
 
 { #category : #'tests-bound variables-types' }

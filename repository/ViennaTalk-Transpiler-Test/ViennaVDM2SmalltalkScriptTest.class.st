@@ -310,25 +310,28 @@ ViennaVDM2SmalltalkScriptTest >> testCasesStatementEnv [
 
 { #category : #'tests-code generation-types' }
 ViennaVDM2SmalltalkScriptTest >> testCompositeTypeEnv [
+
 	| node |
-	node := ViennaVDMParser new type end parse: 'compose T of x:nat y:-int char end'.
+	node := ViennaVDMParser new type end parse:
+		        'compose T of x:nat y:-int char end'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'CompositeType'.
+	self assert: node isViennaCompositeTypeNode.
 	self
-		assert: (self evaluate: (ViennaVDM2SmalltalkScript new generate: node))
-		equals:
-			(ViennaType
-				compose: 'T'
-				of:
-					{{'x'.
-					false.
-					(ViennaType nat)}.
-					{'y'.
-					true.
-					(ViennaType int)}.
-					{nil.
-					false.
-					(ViennaType char)}})
+		assert:
+		(self evaluate: (ViennaVDM2SmalltalkScript new generate: node))
+		equals: (ViennaType compose: 'T' of: {
+					 {
+						 'x'.
+						 false.
+						 ViennaType nat }.
+					 {
+						 'y'.
+						 true.
+						 ViennaType int }.
+					 {
+						 nil.
+						 false.
+						 ViennaType char } })
 ]
 
 { #category : #'tests-code generation-expressions' }
