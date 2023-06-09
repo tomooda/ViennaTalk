@@ -21,8 +21,7 @@ ViennaInlineValueAndRemove >> check [
 			importDefinitionList do: [ :importDefinition |
 				importDefinition first = moduleName ifTrue: [
 					importDefinition allDescendantsDo: [ :node |
-						(node label = 'ValueImport' and: [ node first = shortName ])
-							ifTrue: [ ^ false ] ] ] ] ] ].
+						(node isViennaValueImportNode: shortName) ifTrue: [ ^ false ] ] ] ] ] ].
 	^ true
 ]
 

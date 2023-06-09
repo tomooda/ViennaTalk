@@ -6,23 +6,23 @@ Class {
 
 { #category : #operations }
 ViennaRenameImport >> check [
-	^ self definitionNode notNil
-		and: [ (#('TypeImport' 'ValueImport' 'FunctionImport' 'OperationImport')
-				includes: self definitionNode label)
-				and: [ self definitionNode last isNil ] ]
+
+	^ self definitionNode notNil and: [
+		  self definitionNode isViennaImportNode and: [
+			  self definitionNode rename isNil ] ]
 ]
 
 { #category : #accessing }
 ViennaRenameImport >> construct [
+
 	self definitionNode ifNil: [ ^ nil ].
-	self definitionNode label = 'TypeImport'
-		ifTrue: [ ^ 'type import' ].
-	self definitionNode label = 'ValueImport'
-		ifTrue: [ ^ 'value import' ].
-	self definitionNode label = 'FunctionImport'
-		ifTrue: [ ^ 'function import' ].
-	self definitionNode label = 'OperationImport'
-		ifTrue: [ ^ 'operation import' ].
+	self definitionNode isViennaTypeImportNode ifTrue: [ ^ 'type import' ].
+	self definitionNode isViennaValueImportNode ifTrue: [
+		^ 'value import' ].
+	self definitionNode isViennaFunctionImportNode ifTrue: [
+		^ 'function import' ].
+	self definitionNode isViennaOperationImportNode ifTrue: [
+		^ 'operation import' ].
 	^ nil
 ]
 
@@ -55,8 +55,7 @@ ViennaRenameImport >> executeOnDefinition [
 ViennaRenameImport >> findDefinitionNode [
 
 	ast ifNil: [ ^ nil ].
-	(#( 'TypeImport' 'ValueImport' 'FunctionImport' 'OperationImport' )
-		 includes: ast label) ifTrue: [ ^ ast ].
+	ast isViennaImportNode ifTrue: [ ^ ast ].
 	ast isViennaGlobalNameNode ifTrue: [
 		ast module second first do: [ :importDefinition |
 			importDefinition first = ast first ifTrue: [
@@ -86,9 +85,8 @@ ViennaRenameImport >> moduleName [
 
 { #category : #accessing }
 ViennaRenameImport >> shortName [
-	^ self definitionNode label = 'TypeImport'
-		ifTrue: [ self definitionNode first first first ]
-		ifFalse: [ self definitionNode first first ]
+
+	^ self definitionNode identifier
 ]
 
 { #category : #accessing }

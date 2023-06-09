@@ -65,12 +65,6 @@ ViennaFieldNode >> label [
 ]
 
 { #category : #accessing }
-ViennaFieldNode >> name [
-
-	^ self identifier
-]
-
-{ #category : #accessing }
 ViennaFieldNode >> type [
 
 	^ self at: 3

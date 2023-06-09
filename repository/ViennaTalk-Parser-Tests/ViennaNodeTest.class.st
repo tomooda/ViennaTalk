@@ -143,12 +143,10 @@ ViennaNodeTest >> testDefinitionOfLocalName [
 		equals: 'StateDefinition'.
 	self assert:
 		(skip definitionOfLocalName: 'l') parent isViennaDclStatementNode.
-	self
-		assert: (skip definitionOfLocalName: 'Ti') label
-		equals: 'TypeImport'.
-	self
-		assert: (skip definitionOfLocalName: 'opi') label
-		equals: 'OperationImport'
+	self assert:
+		(skip definitionOfLocalName: 'Ti') isViennaTypeImportNode.
+	self assert:
+		(skip definitionOfLocalName: 'opi') isViennaOperationImportNode
 ]
 
 { #category : #running }
@@ -260,7 +258,7 @@ ViennaNodeTest >> testIsTypeNameNode [
 	localName identifier: 'T2'.
 	self assert: localName isTypeNameNode.
 	localName identifier: 'Ti'.
-	self deny: localName isTypeNameNode.
+	self assert: localName isTypeNameNode.
 	localName identifier: 'v1'.
 	self deny: localName isTypeNameNode
 ]

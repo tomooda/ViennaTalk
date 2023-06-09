@@ -239,7 +239,7 @@ ViennaFRAMModel >> loadSpec: aViennaNode newFunctionsDo: functionBlock newAspect
 					| operationName framAnnotations functionNames |
 					operationName := (node module
 						                  ifNotNil: [ :m | m first , '`' ]
-						                  ifNil: [ '' ]) , node name.
+						                  ifNil: [ '' ]) , node identifier.
 					framAnnotations := annotations
 						                   collect: [ :annotation | 
 						                   parser parse: annotation ]

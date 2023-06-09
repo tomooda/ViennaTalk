@@ -64,7 +64,7 @@ ViennaImportDefinitionNode >> moduleIdentifier: aString [
 ]
 
 { #category : #testing }
-ViennaImportDefinitionNode >> name [
+ViennaImportDefinitionNode >> shortName [
 
 	^ self moduleIdentifier
 ]

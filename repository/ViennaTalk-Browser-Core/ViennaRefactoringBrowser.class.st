@@ -718,39 +718,28 @@ ViennaRefactoringBrowser >> displayCategory: aViennaNode [
 
 { #category : #private }
 ViennaRefactoringBrowser >> displayDefinition: aViennaNode [
-	aViennaNode
-		allDescendantsDo: [ :node | 
-			(#('Module' 'TypeDefinitions' 'ValueDefinitions' 'FunctionDefinitions' 'OperationDefinitions')
-				includes: node label)
-				ifTrue: [ ^ ' - all - ' ].
-			node label = 'FunctionsDefinition'
-				ifTrue: [ ^ ' - all - ' ].
-			node label = 'TypeDefinition'
-				ifTrue: [ ^ node first ].
-			node label = 'RecordTypeDefinition'
-				ifTrue: [ ^ node first ].
-			node label = 'ValueDefinition'
-				ifTrue: [ ^ node first source ].
-			node label = 'StateDefinition'
-				ifTrue: [ ^ node first ].
-			node label = 'ExplicitFunctionDefinition'
-				ifTrue: [ ^ node first ].
-			node label = 'ImplicitFunctionDefinition'
-				ifTrue: [ ^ node first ].
-			node label = 'ExplicitOperationDefinition'
-				ifTrue: [ ^ node first ].
-			node label = 'ImplicitOperationDefinition'
-				ifTrue: [ ^ node first ].
-			node label = 'ImportModuleDefinitionAll'
-				ifTrue: [ ^ 'all' ].
-			(#('ImportTypesSignature' 'ImportValuesSignature' 'ImportFunctionsSignature' 'ImportOperationsSignature')
-				includes: node label)
-				ifTrue: [ ^ '- all -' ].
-			(#('TypeImport' 'ValueImport' 'FunctionImport' 'OperationImport')
-				includes: node label)
-				ifTrue: [ ^ node last
-						ifNotNil: [ :localName | localName first ]
-						ifNil: [ node parent parent parent first , '`' , node name ] ] ].
+
+	aViennaNode allDescendantsDo: [ :node |
+		(#( 'Module' 'TypeDefinitions' 'ValueDefinitions' 'FunctionDefinitions'
+		    'OperationDefinitions' ) includes: node label) ifTrue: [
+			^ ' - all - ' ].
+		node label = 'FunctionsDefinition' ifTrue: [ ^ ' - all - ' ].
+		node label = 'TypeDefinition' ifTrue: [ ^ node first ].
+		node label = 'RecordTypeDefinition' ifTrue: [ ^ node first ].
+		node label = 'ValueDefinition' ifTrue: [ ^ node first source ].
+		node label = 'StateDefinition' ifTrue: [ ^ node first ].
+		node label = 'ExplicitFunctionDefinition' ifTrue: [ ^ node first ].
+		node label = 'ImplicitFunctionDefinition' ifTrue: [ ^ node first ].
+		node label = 'ExplicitOperationDefinition' ifTrue: [ ^ node first ].
+		node label = 'ImplicitOperationDefinition' ifTrue: [ ^ node first ].
+		node label = 'ImportModuleDefinitionAll' ifTrue: [ ^ 'all' ].
+		(#( 'ImportTypesSignature' 'ImportValuesSignature'
+		    'ImportFunctionsSignature' 'ImportOperationsSignature' )
+			 includes: node label) ifTrue: [ ^ '- all -' ].
+		node isViennaImportNode ifTrue: [
+			^ node rename
+				  ifNotNil: [ :localName | localName shortName ]
+				  ifNil: [ node module identifier , '`' , node identifier ] ] ].
 	^ '-'
 ]
 

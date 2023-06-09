@@ -14,6 +14,12 @@ ViennaAccessOperationDefinitionNode >> formatWith: aViennaAbstractFormatter [
 		  ((aViennaAbstractFormatter formatAll: self) reject: #isEmpty)
 ]
 
+{ #category : #accessing }
+ViennaAccessOperationDefinitionNode >> identifier [
+
+	^ self operationDefinition identifier
+]
+
 { #category : #'as yet unclassified' }
 ViennaAccessOperationDefinitionNode >> isViennaAccessOperationDefinitionNode [
 
@@ -24,4 +30,10 @@ ViennaAccessOperationDefinitionNode >> isViennaAccessOperationDefinitionNode [
 ViennaAccessOperationDefinitionNode >> label [
 
 	^ 'AccessOperationDefinition'
+]
+
+{ #category : #'parsers-definitions' }
+ViennaAccessOperationDefinitionNode >> operationDefinition [
+
+	^ self at: 2
 ]

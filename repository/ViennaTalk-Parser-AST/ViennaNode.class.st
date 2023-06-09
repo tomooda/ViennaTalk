@@ -399,7 +399,7 @@ ViennaNode >> asExport [
 			  (ViennaNameListNode with:
 				   (ViennaLocalNameNode identifier: self first))
 			  typeVariableList: (self second ifNotNil: #copyFragment)
-			  functionType: (self label = 'ExplicitFunctionDefinition'
+			  type: (self label = 'ExplicitFunctionDefinition'
 					   ifTrue: [ self third ifNotNil: #copyFragment ]
 					   ifFalse: [
 						   ViennaPartialFunctionTypeNode
@@ -411,7 +411,7 @@ ViennaNode >> asExport [
 		^ ViennaOperationExportNode
 			  nameList: (ViennaNameListNode withAll:
 					   { (ViennaLocalNameNode identifier: self first) })
-			  operationType: (self label = 'ExplicitOperationDefinition'
+			  type: (self label = 'ExplicitOperationDefinition'
 					   ifTrue: [ self second ifNotNil: #copyFragment ]
 					   ifFalse: [
 						   ViennaOperationTypeNode
@@ -439,28 +439,30 @@ ViennaNode >> asExportSignature [
 { #category : #'accessing-definitions' }
 ViennaNode >> asGlobalName [
 
-	(self definitionOfLocalName: self name) ifNotNil: [ :defNode |
+	(self definitionOfLocalName: self identifier) ifNotNil: [ :defNode |
 		(#( 'ExplicitFunctionDefinition' 'ImplicitFunctionDefinition'
 		    'ExplicitOperationDefinition' 'ImplicitOperationDefinition'
 		    'TypeDefinition' 'RecordTypeDefinition' ) includes:
 			 defNode label) ifTrue: [
 			^ (ViennaGlobalNameNode
-				   moduleIdentifier: defNode module name
-				   identifier: defNode name)
+				   moduleIdentifier: defNode module identifier
+				   identifier: defNode identifier)
 				  parent: parent;
 				  yourself ].
 		defNode bindHolderNode ifNotNil: [ :bindNode |
 			bindNode label = 'ValueDefinition' ifTrue: [
 				^ (ViennaGlobalNameNode
-					   moduleIdentifier: bindNode module name
-					   identifier: defNode name)
+					   moduleIdentifier: bindNode module identifier
+					   identifier: defNode identifier)
 					  parent: parent;
 					  yourself ] ].
-		(#( 'TypeImport' 'ValueImport' 'FunctionImport' 'OperationImport' )
-			 includes: defNode label) ifTrue: [
+		defNode isViennaImportNode ifTrue: [
 			^ (ViennaGlobalNameNode
-				   moduleIdentifier: defNode parent parent parent first
-				   identifier: defNode name)
+				   moduleIdentifier:
+					   (defNode
+						    detectParent: #isViennaImportDefinitionNode
+						    ifNone: [ ^ nil ]) moduleIdentifier
+				   identifier: defNode identifier)
 				  parent: parent;
 				  yourself ] ].
 	^ nil
@@ -472,56 +474,55 @@ ViennaNode >> asImportDefinitionIn: moduleNode [
 	| importDefinition |
 	importDefinition := [ :node |
 	                    ViennaImportDefinitionNode
-		                    moduleIdentifier: self module name
+		                    moduleIdentifier: self module identifier
 		                    importModuleSignature:
 		                    (ViennaImportModuleSignatureNode with: node) ].
 	(#( 'TypeDefinition' 'RecordTypeDefinition' ) includes: self label)
 		ifTrue: [
 			^ importDefinition value:
-				  (ViennaNode label: 'ImportTypesSignature' with: (ViennaNode
-						    label: 'TypeImport'
-						    with:
-						    (ViennaTypeNameNode name:
-							     (ViennaLocalNameNode identifier: self name))
-						    with: nil)) ].
+				  (ViennaNode
+					   label: 'ImportTypesSignature'
+					   with: (ViennaTypeImportNode
+							    typeName: (ViennaTypeNameNode name:
+									     (ViennaLocalNameNode identifier: self identifier))
+							    rename: nil)) ].
 	(#( 'ValueDefinition' ) includes: self label) ifTrue: [
 		^ importDefinition value: (ViennaNode
 				   label: 'ImportValuesSignature'
 				   withAll: (self patternIdentifierNames collect: [ :name |
-						    ViennaNode
-							    label: 'ValueImport'
-							    with: (ViennaLocalNameNode identifier: name)
-							    with: (self first isViennaPatternIdentifierNode
+						    ViennaValueImportNode
+							    name: (ViennaLocalNameNode identifier: name)
+							    type: (self first isViennaPatternIdentifierNode
 									     ifTrue: [ self second ifNotNil: #copyFragment ]
 									     ifFalse: [ nil ])
-							    with: nil ])) ].
+							    rename: nil ])) ].
 	(#( 'ExplicitFunctionDefinition' 'ImplicitFunctionDefinition' )
 		 includes: self label) ifTrue: [
-		^ importDefinition value:
-			  (ViennaNode label: 'ImportFunctionsSignature' with: (ViennaNode
-					    label: 'FunctionImport'
-					    with: (ViennaLocalNameNode identifier: self name)
-					    with: self second copyFragment
-					    with: (self label = 'ExplicitFunctionDefinition'
-							     ifTrue: [ self third copyFragment ]
-							     ifFalse: [
-								     ViennaPartialFunctionTypeNode
-									     argumentType: self third first pairListToType
-									     returnType: self fourth pairListToType ])
-					    with: nil)) ].
+		^ importDefinition value: (ViennaNode
+				   label: 'ImportFunctionsSignature'
+				   with: (ViennaFunctionImportNode
+						    name: (ViennaLocalNameNode identifier: self name)
+						    typeVariableList: self second copyFragment
+						    type: (self label = 'ExplicitFunctionDefinition'
+								     ifTrue: [ self third copyFragment ]
+								     ifFalse: [
+									     ViennaPartialFunctionTypeNode
+										     argumentType: self third first pairListToType
+										     returnType: self fourth pairListToType ])
+						    rename: nil)) ].
 	(#( 'ExplicitOperationDefinition' 'ImplicitOperationDefinition' )
 		 includes: self label) ifTrue: [
-		^ importDefinition value:
-			  (ViennaNode label: 'ImportOperationsSignature' with: (ViennaNode
-					    label: 'OperationImport'
-					    with: (ViennaLocalNameNode identifier: self name)
-					    with: (self label = 'ExplicitOperationDefinition'
-							     ifTrue: [ self second copyFragment ]
-							     ifFalse: [
-								     ViennaOperationTypeNode
-									     argumentType: self second first pairListToType
-									     returnType: self third pairListToType ])
-					    with: nil)) ].
+		^ importDefinition value: (ViennaNode
+				   label: 'ImportOperationsSignature'
+				   with: (ViennaOperationImportNode
+						    name: (ViennaLocalNameNode identifier: self identifier)
+						    type: (self label = 'ExplicitOperationDefinition'
+								     ifTrue: [ self second copyFragment ]
+								     ifFalse: [
+									     ViennaOperationTypeNode
+										     argumentType: self second first pairListToType
+										     returnType: self third pairListToType ])
+						    rename: nil)) ].
 	^ nil
 ]
 
@@ -1432,6 +1433,18 @@ ViennaNode >> isViennaFunctionImportNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaFunctionImportNode: aString [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaFunctionImportNodeRenamed: aString [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaFunctionTypeArgsNode [
 
 	^ false
@@ -1547,6 +1560,18 @@ ViennaNode >> isViennaImportModuleSignatureAllNode [
 
 { #category : #testing }
 ViennaNode >> isViennaImportModuleSignatureNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaImportNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaImportNode: aString [
 
 	^ false
 ]
@@ -1978,6 +2003,18 @@ ViennaNode >> isViennaOperationExportNode [
 
 { #category : #testing }
 ViennaNode >> isViennaOperationImportNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaOperationImportNode: aString [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaOperationImportNodeRenamed: aString [
 
 	^ false
 ]
@@ -2427,6 +2464,18 @@ ViennaNode >> isViennaTypeImportNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaTypeImportNode: aString [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaTypeImportNodeRenamed: aString [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaTypeJudgementNode [
 
 	^ false
@@ -2553,6 +2602,12 @@ ViennaNode >> isViennaValueImportNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaValueImportNodeRenamed: aString [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaVarInformationNode [
 
 	^ false
@@ -2598,28 +2653,6 @@ ViennaNode >> moduleNamed: aString [
 { #category : #accessing }
 ViennaNode >> modulesDo: aBlock [
 	self document do: aBlock
-]
-
-{ #category : #'accessing-definitions' }
-ViennaNode >> name [
-
-	(#( 'FunctionDefinition' 'OperationDefinition' ) includes: self label)
-		ifTrue: [ ^ self first name ].
-	(#( 'Module' 'TypeDefinition' 'RecordTypeDefinition'
-	    'ExplicitFunctionDefinition' 'ExplicitOperationDefinition'
-	    'ImplicitFunctionDefinition' 'ImplicitOperationDefinition'
-	    'StateDefinition' ) includes: self label) ifTrue: [ ^ self first ].
-	(#( 'AccessTypeDefinition' 'AccessValueDefinition'
-	    'AccessFunctionDefinition' 'AccessOperationDefinition' )
-		 includes: self label) ifTrue: [ ^ self second name ].
-	self label = 'TypeImport' ifTrue: [ ^ self first first first ].
-	(#( 'ValueImport' 'FunctionImport' 'OperationImport' ) includes:
-		 self label) ifTrue: [ ^ self first first ].
-	self label = 'TypeDefinitions' ifTrue: [ ^ 'types' ].
-	self label = 'ValueDefinitions' ifTrue: [ ^ 'values' ].
-	self label = 'FunctionDefinitions' ifTrue: [ ^ 'functions' ].
-	self label = 'OperationDefinitions' ifTrue: [ ^ 'operations' ].
-	^ nil
 ]
 
 { #category : #accessing }
@@ -2811,16 +2844,13 @@ ViennaNode >> resolveLocalName: aString [
 		    'ExplicitOperationDefinition' 'ImplicitOperationDefinition'
 		    'TypeDefinition' 'RecordTypeDefinition' ) includes:
 			 defNode label) ifTrue: [ ^ defNode ].
-		(#( 'TypeImport' 'ValueImport' 'FunctionImport' 'OperationImport' )
-			 includes: defNode label) ifTrue: [
+		defNode isViennaImportNode ifTrue: [
 			(self moduleNamed:
 				 (defNode
 					  detectParent: #isViennaImportDefinitionNode
 					  ifNone: [ ^ nil ]) moduleIdentifier) ifNotNil: [ :moduleNode |
 				moduleNode == self module ifFalse: [
-					^ moduleNode resolveLocalName: (defNode label = 'TypeImport'
-							   ifTrue: [ defNode first first first ]
-							   ifFalse: [ defNode first first ]) ] ].
+					^ moduleNode resolveLocalName: defNode identifier ] ].
 			^ nil ].
 		(defNode isViennaFieldNode and: [
 			 defNode parent parent label = 'StateDefinition' ]) ifTrue: [
@@ -2869,6 +2899,25 @@ ViennaNode >> setLabel: aString [
 { #category : #accessing }
 ViennaNode >> seventh [
 	^ self at: 7
+]
+
+{ #category : #'accessing-definitions' }
+ViennaNode >> shortName [
+
+	(#( 'FunctionDefinition' 'OperationDefinition' ) includes: self label)
+		ifTrue: [ ^ self first name ].
+	(#( 'Module' 'TypeDefinition' 'RecordTypeDefinition'
+	    'ExplicitFunctionDefinition' 'ExplicitOperationDefinition'
+	    'ImplicitFunctionDefinition' 'ImplicitOperationDefinition'
+	    'StateDefinition' ) includes: self label) ifTrue: [ ^ self first ].
+	(#( 'AccessTypeDefinition' 'AccessValueDefinition'
+	    'AccessFunctionDefinition' 'AccessOperationDefinition' )
+		 includes: self label) ifTrue: [ ^ self second name ].
+	self label = 'TypeDefinitions' ifTrue: [ ^ 'types' ].
+	self label = 'ValueDefinitions' ifTrue: [ ^ 'values' ].
+	self label = 'FunctionDefinitions' ifTrue: [ ^ 'functions' ].
+	self label = 'OperationDefinitions' ifTrue: [ ^ 'operations' ].
+	^ nil
 ]
 
 { #category : #accessing }

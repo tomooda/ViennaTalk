@@ -6,12 +6,12 @@ Class {
 }
 
 { #category : #'instance creation' }
-ViennaFunctionExportNode class >> nameList: aViennaNameListNode typeVariableList: aViennaTypeVariableListNode functionType: aViennaFunctionTypeNode [
+ViennaFunctionExportNode class >> nameList: aViennaNameListNode typeVariableList: aViennaTypeVariableListNode type: aViennaFunctionTypeNode [
 
 	^ (self new: 3)
 		  nameList: aViennaNameListNode;
 		  typeVariableList: aViennaTypeVariableListNode;
-		  functionType: aViennaFunctionTypeNode;
+		  type: aViennaFunctionTypeNode;
 		  yourself
 ]
 
@@ -33,22 +33,10 @@ ViennaFunctionExportNode >> formatWith: aViennaAbstractFormatter [
 	| nameList typeVarList functionType |
 	nameList := aViennaAbstractFormatter format: self nameList.
 	typeVarList := aViennaAbstractFormatter format: self typeVariableList.
-	functionType := aViennaAbstractFormatter format: self functionType.
+	functionType := aViennaAbstractFormatter format: self type.
 	^ aViennaAbstractFormatter
 		  indentString: nameList , typeVarList
 		  insertCrIfNeeded: ': ' , functionType
-]
-
-{ #category : #accessing }
-ViennaFunctionExportNode >> functionType [
-
-	^ self at: 3
-]
-
-{ #category : #accessing }
-ViennaFunctionExportNode >> functionType: aViennaFunctionTypeNode [
-
-	self at: 3 put: aViennaFunctionTypeNode
 ]
 
 { #category : #testing }
@@ -91,6 +79,18 @@ ViennaFunctionExportNode >> namesDo: aBlock [
 ViennaFunctionExportNode >> removeName: aViennaNameNode [
 
 	self nameList remove: aViennaNameNode
+]
+
+{ #category : #accessing }
+ViennaFunctionExportNode >> type [
+
+	^ self at: 3
+]
+
+{ #category : #accessing }
+ViennaFunctionExportNode >> type: aViennaFunctionTypeNode [
+
+	self at: 3 put: aViennaFunctionTypeNode
 ]
 
 { #category : #accessing }

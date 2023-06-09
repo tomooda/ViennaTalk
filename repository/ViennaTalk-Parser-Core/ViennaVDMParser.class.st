@@ -768,20 +768,22 @@ ViennaVDMParser >> functionExport [
 	  (ViennaFunctionExportNode
 		   nameList: array first
 		   typeVariableList: array second
-		   functionType: array third)
+		   type: array third)
 		  start: start end: end;
 		  yourself ]
 ]
 
 { #category : #'parsers-interfaces' }
 ViennaVDMParser >> functionImport [
-	^ super functionImport
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'FunctionImport'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super functionImport =>> [ :start :end :array |
+	  (ViennaFunctionImportNode
+		   name: array first
+		   typeVariableList: array second
+		   type: array third
+		   rename: array fourth)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -1520,20 +1522,21 @@ ViennaVDMParser >> operationExport [
 	^ super operationExport =>> [ :start :end :array |
 	  (ViennaOperationExportNode
 		   nameList: array first
-		   operationType: array second)
+		   type: array second)
 		  start: start end: end;
 		  yourself ]
 ]
 
 { #category : #'parsers-interfaces' }
 ViennaVDMParser >> operationImport [
-	^ super operationImport
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'OperationImport'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super operationImport =>> [ :start :end :array |
+	  (ViennaOperationImportNode
+		   name: array first
+		   type: array second
+		   rename: array third)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-types' }
@@ -2133,13 +2136,11 @@ ViennaVDMParser >> typeExport [
 
 { #category : #'parsers-interfaces' }
 ViennaVDMParser >> typeImport [
-	^ super typeImport
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'TypeImport'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super typeImport =>> [ :start :end :array |
+	  (ViennaTypeImportNode typeName: array first rename: array second)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-expressions-type discriminations' }
@@ -2282,13 +2283,14 @@ ViennaVDMParser >> valueExport [
 
 { #category : #'parsers-interfaces' }
 ViennaVDMParser >> valueImport [
-	^ super valueImport
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'ValueImport'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super valueImport =>> [ :start :end :array |
+	  (ViennaValueImportNode
+		   name: array first
+		   type: array second
+		   rename: array third)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-definitions' }

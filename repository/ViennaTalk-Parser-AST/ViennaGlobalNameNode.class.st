@@ -121,15 +121,15 @@ ViennaGlobalNameNode >> moduleIdentifier: aString [
 	self at: 1 put: aString
 ]
 
-{ #category : #accessing }
-ViennaGlobalNameNode >> name [
-
-	^ self moduleIdentifier , '`' , self identifier
-]
-
 { #category : #'accessing-definitions' }
 ViennaGlobalNameNode >> resolve [
 
 	^ (self moduleNamed: self moduleIdentifier) ifNotNil: [ :module |
 		  module resolveLocalName: self identifier ]
+]
+
+{ #category : #'pretty printing' }
+ViennaGlobalNameNode >> shortName [
+
+	^ self moduleIdentifier , '`' , self identifier
 ]

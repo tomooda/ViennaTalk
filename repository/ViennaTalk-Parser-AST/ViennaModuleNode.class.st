@@ -5,6 +5,12 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #accessing }
+ViennaModuleNode >> identifier [
+
+	^ self at: 1
+]
+
 { #category : #'as yet unclassified' }
 ViennaModuleNode >> isViennaModuleNode [
 

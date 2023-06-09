@@ -5,6 +5,12 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #accessing }
+ViennaImplicitFunctionDefinitionNode >> identifier [
+
+	^ self at: 1
+]
+
 { #category : #'as yet unclassified' }
 ViennaImplicitFunctionDefinitionNode >> isViennaImplicitFunctionDefinitionNode [
 

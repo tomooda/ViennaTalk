@@ -10,8 +10,8 @@ ViennaRemoveOperation >> check [
 	| moduleName shortName |
 	ast ifNil: [ ^ false ].
 	self definitionNode ifNil: [ ^ false ].
-	moduleName := self definitionNode module first.
-	shortName := self definitionNode name.
+	moduleName := self definitionNode module identifier.
+	shortName := self definitionNode identifier.
 	(self hasFreeOccurrencesOf: shortName in: self definitionNode module)
 		ifTrue: [ ^ false ].
 	(self
@@ -28,8 +28,7 @@ ViennaRemoveOperation >> check [
 			importDefinitionList do: [ :importDefinition |
 				importDefinition first = moduleName ifTrue: [
 					importDefinition allDescendantsDo: [ :node |
-						(node label = 'OperationImport' and: [ node first = shortName ])
-							ifTrue: [ ^ false ] ] ] ] ] ].
+						(node isViennaOperationImportNode: shortName) ifTrue: [ ^ false ] ] ] ] ] ].
 	^ true
 ]
 

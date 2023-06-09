@@ -59,7 +59,7 @@ ViennaPatternIdentifierNode >> label [
 ]
 
 { #category : #accessing }
-ViennaPatternIdentifierNode >> name [
+ViennaPatternIdentifierNode >> shortName [
 
 	^ self identifier
 ]

@@ -6,11 +6,11 @@ Class {
 }
 
 { #category : #'instance creation' }
-ViennaOperationExportNode class >> nameList: aViennaNameListNode operationType: aViennaOperationTypeNode [
+ViennaOperationExportNode class >> nameList: aViennaNameListNode type: aViennaOperationTypeNode [
 
 	^ (self new: 2)
 		  nameList: aViennaNameListNode;
-		  operationType: aViennaOperationTypeNode;
+		  type: aViennaOperationTypeNode;
 		  yourself
 ]
 
@@ -29,13 +29,13 @@ ViennaOperationExportNode >> exportsName: aViennaNameNode [
 { #category : #'pretty printing' }
 ViennaOperationExportNode >> formatWith: aViennaAbstractFormatter [
 
-	| name operationType |
+	| name type |
 	name := aViennaAbstractFormatter format: self nameList.
-	operationType := self operationType
-		                 ifNil: [ '' ]
-		                 ifNotNil: [ :node |
-		                 ' : ' , (aViennaAbstractFormatter format: node) ].
-	^ name , operationType
+	type := self type
+		        ifNil: [ '' ]
+		        ifNotNil: [ :node |
+		        ' : ' , (aViennaAbstractFormatter format: node) ].
+	^ name , type
 ]
 
 { #category : #testing }
@@ -74,20 +74,20 @@ ViennaOperationExportNode >> namesDo: aBlock [
 	self nameList do: aBlock
 ]
 
+{ #category : #removing }
+ViennaOperationExportNode >> removeName: aViennaNameNode [
+
+	self nameList remove: aViennaNameNode
+]
+
 { #category : #accessing }
-ViennaOperationExportNode >> operationType [
+ViennaOperationExportNode >> type [
 
 	^ self at: 2
 ]
 
 { #category : #accessing }
-ViennaOperationExportNode >> operationType: aViennaOperationTypeNode [
+ViennaOperationExportNode >> type: aViennaOperationTypeNode [
 
 	self at: 2 put: aViennaOperationTypeNode
-]
-
-{ #category : #removing }
-ViennaOperationExportNode >> removeName: aViennaNameNode [
-
-	self nameList remove: aViennaNameNode
 ]

@@ -29,8 +29,7 @@ ViennaInlineTypeAndRemove >> check [
 			importDefinitionList do: [ :importDefinition |
 				importDefinition first = moduleName ifTrue: [
 					importDefinition allDescendantsDo: [ :node |
-						(node label = 'TypeImport' and: [ node first = shortName ])
-							ifTrue: [ ^ false ] ] ] ] ] ].
+						(node isViennaTypeImportNode: shortName) ifTrue: [ ^ false ] ] ] ] ] ].
 	^ true
 ]
 

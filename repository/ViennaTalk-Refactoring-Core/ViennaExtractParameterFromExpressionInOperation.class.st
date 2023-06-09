@@ -11,25 +11,20 @@ ViennaExtractParameterFromExpressionInOperation class >> isAbstract [
 
 { #category : #operations }
 ViennaExtractParameterFromExpressionInOperation >> check [
+
 	| moduleName shortName |
 	ast ifNil: [ ^ false ].
-	ast isViennaExpressionNode
-		ifFalse: [ ^ false ].
+	ast isViennaExpressionNode ifFalse: [ ^ false ].
 	ast variableExpressionNodesDo: [ :node | ^ false ].
 	self definitionNode ifNil: [ ^ false ].
-	moduleName := ast module first.
-	shortName := self definitionNode first.
-	ast
-		modulesDo: [ :module | 
-			module second first
-				ifNotNil: [ :importDefinitionList | 
-					importDefinitionList
-						do: [ :importDefinition | 
-							importDefinition first = moduleName
-								ifTrue: [ importDefinition
-										allDescendantsDo: [ :node | 
-											(node label = 'OperationImport' and: [ node first = shortName ])
-												ifTrue: [ ^ false ] ] ] ] ] ].
+	moduleName := ast module identifier.
+	shortName := self definitionNode identifier.
+	ast modulesDo: [ :module |
+		module second first ifNotNil: [ :importDefinitionList |
+			importDefinitionList do: [ :importDefinition |
+				importDefinition first = moduleName ifTrue: [
+					importDefinition allDescendantsDo: [ :node |
+						(node isViennaOperationImportNode: shortName) ifTrue: [ ^ false ] ] ] ] ] ].
 	^ true
 ]
 

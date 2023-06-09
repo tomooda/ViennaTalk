@@ -25,19 +25,25 @@ ViennaTypeExportNode >> exportsName: aViennaNameNode [
 	^ self name sameAs: aViennaNameNode
 ]
 
+{ #category : #accessing }
+ViennaTypeExportNode >> identifier [
+
+	^ self name identifier
+]
+
 { #category : #testing }
 ViennaTypeExportNode >> isViennaTypeExportNode [
 
 	^ true
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : #accessing }
 ViennaTypeExportNode >> name [
 
 	^ self at: 1
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : #accessing }
 ViennaTypeExportNode >> name: aViennaNameNode [
 
 	self at: 1 put: aViennaNameNode

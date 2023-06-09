@@ -31,8 +31,7 @@ ViennaInlineApplyFunctionAndRemove >> check [
 			importDefinitionList do: [ :importDefinition |
 				importDefinition first = moduleName ifTrue: [
 					importDefinition allDescendantsDo: [ :node |
-						(node label = 'FunctionImport' and: [ node first = shortName ])
-							ifTrue: [ ^ false ] ] ] ] ] ].
+						(node isViennaFunctionImportNode: shortName) ifTrue: [ ^ false ] ] ] ] ] ].
 	^ true
 ]
 
@@ -87,10 +86,10 @@ ViennaInlineApplyFunctionAndRemove >> execute [
 
 { #category : #accessing }
 ViennaInlineApplyFunctionAndRemove >> findDefinitionNode [
-	| name |
-	name := ast name.
-	name ifNil: [ ^ nil ].
-	(ast resolveLocalName: name)
+	| identifier |
+	identifier := ast identifier.
+	identifier ifNil: [ ^ nil ].
+	(ast resolveLocalName: identifier)
 		ifNotNil: [ :defNode | 
 			(#('ExplicitFunctionDefinition' 'ImplicitFunctionDefinition')
 				includes: defNode label)

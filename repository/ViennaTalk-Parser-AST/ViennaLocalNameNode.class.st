@@ -56,8 +56,8 @@ ViennaLocalNameNode >> isFunctionNameNode [
 		((#( 'ExplicitFunctionDefinition' 'ImplicitFunctionDefinition' )
 			  includes: defNode label) and: [ defNode first = self identifier ])
 			ifTrue: [ ^ true ].
-		(defNode label = 'FunctionImport' and: [
-			 defNode first first = self identifier ]) ifTrue: [ ^ true ] ].
+		(defNode isViennaFunctionImportNode: self identifier) ifTrue: [
+			^ true ] ].
 	^ false
 ]
 
@@ -80,8 +80,8 @@ ViennaLocalNameNode >> isOperationNameNode [
 		((#( 'ExplicitOperationDefinition' 'ImplicitOperationDefinition' )
 			  includes: defNode label) and: [ defNode first = self identifier ])
 			ifTrue: [ ^ true ].
-		(defNode label = 'OperationImport' and: [
-			 defNode first first = self identifier ]) ifTrue: [ ^ true ] ].
+		(defNode isViennaOperationImportNode: self identifier) ifTrue: [
+			^ true ] ].
 	^ false
 ]
 
@@ -102,8 +102,7 @@ ViennaLocalNameNode >> isTypeNameNode [
 		((#( 'TypeDefinition' 'RecordTypeDefinition' ) includes:
 			  defNode label) and: [ defNode first = self identifier ]) ifTrue: [
 			^ true ].
-		(defNode label = 'TypeImport' and: [
-			 defNode first first = self identifier ]) ifTrue: [ ^ true ] ].
+		(defNode isViennaTypeImportNodeRenamed: self identifier) ifTrue: [ ^ true ] ].
 	^ false
 ]
 
@@ -113,8 +112,8 @@ ViennaLocalNameNode >> isValueNameNode [
 	(self definitionOfLocalName: self identifier) ifNotNil: [ :defNode |
 		defNode bindHolderNode label = 'ValueDefinition' ifTrue: [ ^ true ].
 		(defNode isViennaLocalNameNode and: [
-			 defNode parent notNil and: [ defNode parent label = 'ValueImport' ] ])
-			ifTrue: [ ^ true ] ].
+			 defNode parent notNil and: [
+				 defNode parent isViennaValueImportNode ] ]) ifTrue: [ ^ true ] ].
 	^ false
 ]
 
@@ -137,13 +136,13 @@ ViennaLocalNameNode >> label [
 ]
 
 { #category : #accessing }
-ViennaLocalNameNode >> name [
-
-	^ self identifier
-]
-
-{ #category : #accessing }
 ViennaLocalNameNode >> resolve [
 
 	^ self resolveLocalName: self identifier
+]
+
+{ #category : #accessing }
+ViennaLocalNameNode >> shortName [
+
+	^ self identifier
 ]
