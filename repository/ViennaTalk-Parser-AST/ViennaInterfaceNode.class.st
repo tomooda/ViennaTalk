@@ -5,6 +5,15 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #'instance creation' }
+ViennaInterfaceNode class >> importDefinitionList: aViennaImportDefinitionListNode exportDefinition: aViennaExportDefinitionNode [
+
+	^ (self new: 2)
+		  importDefinitionList: aViennaImportDefinitionListNode;
+		  exportDefinition: aViennaExportDefinitionNode;
+		  yourself
+]
+
 { #category : #accessing }
 ViennaInterfaceNode >> exportDefinition [
 

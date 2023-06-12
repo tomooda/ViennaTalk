@@ -8,7 +8,7 @@ Class {
 ViennaRenameLocal >> check [
 
 	^ self definitionNode notNil and: [
-		  self definitionNode label ~= 'Module' and: [
+		  self definitionNode isViennaModuleNode and: [
 			  self definitionNode isViennaDocumentNode not ] ]
 ]
 

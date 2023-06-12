@@ -19,7 +19,8 @@ ViennaRemoveModule >> execute [
 { #category : #accessing }
 ViennaRemoveModule >> findDefinitionNode [
 
-	(ast label = 'Module' and: [ ast third isEmpty ]) ifTrue: [ ^ ast ].
+	(ast isViennaModuleNode and: [ ast moduleBody isEmpty ]) ifTrue: [
+		^ ast ].
 	^ nil
 ]
 

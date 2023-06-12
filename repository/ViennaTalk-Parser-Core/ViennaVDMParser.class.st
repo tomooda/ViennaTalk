@@ -1045,13 +1045,13 @@ ViennaVDMParser >> inter: arg1 and: arg2 [
 
 { #category : #'parsers-interfaces' }
 ViennaVDMParser >> interface [
-	^ super interface
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'Interface'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super interface =>> [ :start :end :array |
+	  (ViennaInterfaceNode
+		   importDefinitionList: array first
+		   exportDefinition: array second)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -1348,13 +1348,14 @@ ViennaVDMParser >> mod: arg1 and: arg2 [
 
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> module [
-	^ super module
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'Module'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super module =>> [ :start :end :array |
+	  (ViennaModuleNode
+		   identifier: array first
+		   interface: array second
+		   moduleBody: array third)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-definitions' }

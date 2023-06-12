@@ -684,7 +684,7 @@ ViennaRefactoringBrowser >> definitionListContextMenu [
 ViennaRefactoringBrowser >> definitionsFromCategory: aViennaNode [
 
 	aViennaNode isViennaNode ifTrue: [
-		aViennaNode label = 'Module' ifTrue: [
+		aViennaNode isViennaModuleNode ifTrue: [
 			^ ((self module
 				    ifNotNil: [ :ast |
 					    (ast
@@ -718,8 +718,9 @@ ViennaRefactoringBrowser >> displayCategory: aViennaNode [
 ViennaRefactoringBrowser >> displayDefinition: aViennaNode [
 
 	aViennaNode allDescendantsDo: [ :node |
-		(#( 'Module' 'TypeDefinitions' 'ValueDefinitions' 'FunctionDefinitions'
-		    'OperationDefinitions' ) includes: node label) ifTrue: [
+		(node isViennaModuleNode or: [
+			 #( 'TypeDefinitions' 'ValueDefinitions' 'FunctionDefinitions'
+			    'OperationDefinitions' ) includes: node label ]) ifTrue: [
 			^ ' - all - ' ].
 		node label = 'FunctionsDefinition' ifTrue: [ ^ ' - all - ' ].
 		node label = 'TypeDefinition' ifTrue: [ ^ node first ].
@@ -992,16 +993,14 @@ ViennaRefactoringBrowser >> load: aString [
 	ast isViennaDocumentNode ifFalse: [ ^ nil ].
 	ast first ifNotNil: [ :first |
 		first isViennaDefinitionBlockNode ifTrue: [
-			ast := ViennaDocumentNode with: (ViennaNode
-					        label: 'Module'
-					        with: 'DEFAULT'
-					        with: (ViennaNode
-							         label: 'Interface'
-							         with: nil
-							         with:
+			ast := ViennaDocumentNode with: (ViennaModuleNode
+					        identifier: 'DEFAULT'
+					        interface: (ViennaInterfaceNode
+							         importDefinitionList: nil
+							         exportDefinition:
 								         (ViennaExportDefinitionNode exportModuleSignature:
 									          ViennaExportModuleSignatureAllNode new))
-					        with: (ViennaModuleBodyNode withAll: ast asArray)) ] ].
+					        moduleBody: (ViennaModuleBodyNode withAll: ast asArray)) ] ].
 	historyList
 		resetSelection;
 		items: { {
@@ -1234,39 +1233,42 @@ ViennaRefactoringBrowser >> parser [
 
 { #category : #operations }
 ViennaRefactoringBrowser >> runAllTests [
+
 	testProcess ifNotNil: [ testProcess terminate ].
-	testProcess := [ | ast animation |
-	testResultTable items: #().
-	ast := self specification ifNil: [ ^ nil ].
-	animation := ViennaAnimation default
-		specification: (ViennaVDMFormatter format: ast);
-		yourself.
-	(ast at: 1) label = 'Module'
-		ifTrue: [ ast
-				do: [ :moduleNode | 
-					| moduleName |
-					moduleName := moduleNode first.
-					(moduleName endsWith: 'Test')
-						ifTrue: [ moduleNode third
-								do: [ :definitionBlockNode | 
-									definitionBlockNode first label = 'OperationDefinitions'
-										ifTrue: [ definitionBlockNode first
-												do: [ :accessOperationDefinitionNode | 
-													| operationName |
-													operationName := accessOperationDefinitionNode second
-														first first.
-													(operationName size > 4
-														and: [ (operationName copyFrom: 1 to: 4) = 'test' ])
-														ifTrue: [ testResultTable
-																items:
-																	(testResultTable model items
-																		copyWith:
-																			(self
-																				runTestModule: moduleName
-																				operation: operationName
-																				animation: animation)) ] ] ] ] ] ] ]
-		ifFalse: [  ].
-	testProcess := nil ] forkAt: Processor userBackgroundPriority
+	testProcess := [
+	               | ast animation |
+	               testResultTable items: #(  ).
+	               ast := self specification ifNil: [ ^ nil ].
+	               animation := ViennaAnimation default
+		                            specification:
+			                            (ViennaVDMFormatter format: ast);
+		                            yourself.
+	               (ast at: 1) isViennaModuleNode
+		               ifTrue: [
+			               ast do: [ :moduleNode |
+				               | moduleName |
+				               moduleName := moduleNode first.
+				               (moduleName endsWith: 'Test') ifTrue: [
+					               moduleNode third do: [ :definitionBlockNode |
+						               definitionBlockNode first label
+						               = 'OperationDefinitions' ifTrue: [
+							               definitionBlockNode first do: [
+								               :accessOperationDefinitionNode |
+								               | operationName |
+								               operationName := accessOperationDefinitionNode
+									                                second first first.
+								               (operationName size > 4 and: [
+									                (operationName copyFrom: 1 to: 4) = 'test' ])
+									               ifTrue: [
+										               testResultTable items:
+											               (testResultTable model items copyWith:
+												                (self
+													                 runTestModule: moduleName
+													                 operation: operationName
+													                 animation: animation)) ] ] ] ] ] ] ]
+		               ifFalse: [  ].
+	               testProcess := nil ] forkAt:
+		               Processor userBackgroundPriority
 ]
 
 { #category : #'private-unit testing' }

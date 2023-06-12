@@ -657,7 +657,7 @@ ViennaNode >> definitionInImportsOfLocalName: aString do: aBlock [
 { #category : #'accessing-definitions' }
 ViennaNode >> definitionInModuleOfLocalName: aString do: aBlock [
 
-	self label = 'Module' ifTrue: [
+	self isViennaModuleNode ifTrue: [
 		self third do: [ :defBlock |
 			defBlock
 				definitionInDefinitionBlockOfLocalName: aString
@@ -691,7 +691,7 @@ ViennaNode >> definitionOfGlobalName: shortName module: moduleName [
 { #category : #'accessing-definitions' }
 ViennaNode >> definitionOfLocalName: aString [
 
-	self label = 'Module' ifTrue: [
+	self isViennaModuleNode ifTrue: [
 		self definitionInModuleOfLocalName: aString do: [ :node | ^ node ] ].
 	self label = 'ExplicitFunctionDefinition' ifTrue: [
 		self
@@ -1886,6 +1886,12 @@ ViennaNode >> isViennaModuleNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaModuleNode: aString [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaMultipleAssignStatementNode [
 
 	^ false
@@ -2641,15 +2647,15 @@ ViennaNode >> localName [
 
 { #category : #accessing }
 ViennaNode >> module [
-	^ self parentLabelled: 'Module' ifAbsent: [ nil ]
+
+	^ self detectParent: #isViennaModuleNode ifNone: [ nil ]
 ]
 
 { #category : #accessing }
 ViennaNode >> moduleNamed: aString [
-	self document
-		do: [ :module | 
-			(module label = 'Module' and: [ module first = aString ])
-				ifTrue: [ ^ module ] ].
+
+	self document do: [ :module |
+		(module isViennaModuleNode: aString) ifTrue: [ ^ module ] ].
 	^ nil
 ]
 
@@ -2909,10 +2915,10 @@ ViennaNode >> shortName [
 
 	(#( 'FunctionDefinition' 'OperationDefinition' ) includes: self label)
 		ifTrue: [ ^ self first name ].
-	(#( 'Module' 'TypeDefinition' 'RecordTypeDefinition'
-	    'ExplicitFunctionDefinition' 'ExplicitOperationDefinition'
-	    'ImplicitFunctionDefinition' 'ImplicitOperationDefinition'
-	    'StateDefinition' ) includes: self label) ifTrue: [ ^ self first ].
+	(#( 'TypeDefinition' 'RecordTypeDefinition' 'ExplicitFunctionDefinition'
+	    'ExplicitOperationDefinition' 'ImplicitFunctionDefinition'
+	    'ImplicitOperationDefinition' 'StateDefinition' ) includes:
+		 self label) ifTrue: [ ^ self first ].
 	(#( 'AccessTypeDefinition' 'AccessValueDefinition'
 	    'AccessFunctionDefinition' 'AccessOperationDefinition' )
 		 includes: self label) ifTrue: [ ^ self second name ].

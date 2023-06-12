@@ -183,22 +183,20 @@ ViennaFRAMModel >> findOrCreateOperationNamed: operationName module: moduleName 
 
 	| moduleNode opNode |
 	(aViennaNode isViennaDocumentNode and: [
-		 aViennaNode size = 0 or: [ aViennaNode first label = 'Module' ] ])
+		 aViennaNode size = 0 or: [ aViennaNode first isViennaModuleNode ] ])
 		ifFalse: [
 		^ self error: 'Internal error: A modular spec should be given.' ].
 	moduleNode := aViennaNode moduleNamed: moduleName.
 	moduleNode isNil ifTrue: [
-		moduleNode := ViennaNode
-			              label: 'Module'
-			              with: moduleName
-			              with: (ViennaNode
-					               label: 'Interface'
-					               with: nil
-					               with:
+		moduleNode := ViennaModuleNode
+			              identifier: moduleName
+			              interface: (ViennaInterfaceNode
+					               importDefinitionList: nil
+					               exportDefinition:
 						               (ViennaExportDefinitionNode
 							                exportModuleSignature:
 							                ViennaExportModuleSignatureAllNode new))
-			              with: (ViennaModuleBodyNode withAll:
+			              moduleBody: (ViennaModuleBodyNode withAll:
 					               { (ViennaNode label: 'DefinitionBlock') }).
 		aViennaNode add: moduleNode ].
 

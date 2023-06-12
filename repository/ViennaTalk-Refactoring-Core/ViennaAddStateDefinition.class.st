@@ -8,8 +8,8 @@ Class {
 ViennaAddStateDefinition >> findContainerNode [
 
 	ast ifNil: [ ^ nil ].
-	ast label = 'Module' ifTrue: [ 
-		ast third do: [ :def | 
+	ast isViennaModuleNode ifTrue: [
+		ast moduleBody do: [ :def |
 			def first label = 'StateDefinition' ifTrue: [ ^ nil ] ].
 		^ ast third ].
 	^ nil

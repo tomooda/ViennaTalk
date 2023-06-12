@@ -35,7 +35,7 @@ ViennaRenameModule >> execute [
 ViennaRenameModule >> findDefinitionNode [
 
 	ast ifNil: [ ^ nil ].
-	ast label = 'Module' ifTrue: [ ^ ast ].
+	ast isViennaModuleNode ifTrue: [ ^ ast ].
 	^ nil
 ]
 
@@ -54,7 +54,7 @@ ViennaRenameModule >> findNewName [
 { #category : #accessing }
 ViennaRenameModule >> findOldName [
 
-	ast ifNotNil: [ ast label = 'Module' ifTrue: [ ^ ast name ] ].
+	ast ifNotNil: [ ast isViennaModuleNode ifTrue: [ ^ ast name ] ].
 	^ nil
 ]
 

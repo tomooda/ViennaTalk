@@ -478,13 +478,15 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesMapletPatternInto 
 
 { #category : #'tests-bound variables-definitions' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesModuleInto [
+
 	| node binds |
-	node := ViennaVDMParser new module end parse: 'module m1 exports all definitions values v1 : t1 = e1 end m1'.
+	node := ViennaVDMParser new module end parse:
+		        'module m1 exports all definitions values v1 : t1 = e1 end m1'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'Module'.
+	self assert: node isViennaModuleNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self assert: binds equals: {'m1'} asSet
+	self assert: binds equals: { 'm1' } asSet
 ]
 
 { #category : #'tests-bound variables-patterns and binds' }

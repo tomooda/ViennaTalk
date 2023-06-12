@@ -8,9 +8,9 @@ Class {
 ViennaAddTestModule >> findContainerNode [
 
 	ast ifNil: [ ^ nil ].
-	(ast label = 'Module' and: [ 
-		 (ast document moduleNamed: self newName) isNil and: [ 
-			 (ast document moduleNamed: 'UnitTesting') notNil ] ]) ifTrue: [ 
+	(ast isViennaModuleNode and: [
+		 (ast document moduleNamed: self newName) isNil and: [
+			 (ast document moduleNamed: 'UnitTesting') notNil ] ]) ifTrue: [
 		^ ast document ].
 	^ nil
 ]

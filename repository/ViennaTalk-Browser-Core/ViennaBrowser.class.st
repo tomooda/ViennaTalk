@@ -1042,7 +1042,7 @@ ViennaBrowser >> generateSmalltalkScript [
 				^ UIManager default
 					  alert: 'Failed to generate a code : ' , ast message
 					  title: 'ViennaTalk' ].
-			ast first label = 'Module' ifTrue: [
+			ast first isViennaModuleNode ifTrue: [
 				ast := ViennaDocumentNode withAll: ast first third ].
 			(ViennaVDM2SmalltalkScript new generate: ast) ifNotNil: [ :script |
 				Smalltalk tools workspace openContents:
@@ -1051,54 +1051,64 @@ ViennaBrowser >> generateSmalltalkScript [
 
 { #category : #'module list menu' }
 ViennaBrowser >> generateViennaDocSourceScript [
+
 	self
 		fileSave: 'Generate ViennaDoc source script to...'
-		extensions: #('js')
-		do: [ :stream | 
+		extensions: #( 'js' )
+		do: [ :stream |
 			| source ast sources walker |
 			source := animation specification.
 			ast := ViennaVDMParser new parse: source.
-			ast isPetit2Failure
-				ifTrue: [ ^ self ].
+			ast isPetit2Failure ifTrue: [ ^ self ].
 			sources := Dictionary new.
-			walker := [ :node :module | 
-			(node isKindOf: ViennaNode)
-				ifTrue: [ node label = 'Module'
-						ifTrue: [ sources
-								at: node first
-								put: (source copyFrom: node start to: node end) ].
-					node label = 'StateDefinition'
-						ifTrue: [ sources
-								at: (module ifNil: [ '' ] ifNotNil: [ module , '`' ]) , node first
-								put: (source copyFrom: node start to: node end) ].
-					node label = 'ExplicitOperationDefinition'
-						ifTrue: [ sources
-								at: (module ifNil: [ '' ] ifNotNil: [ module , '`' ]) , node first
-								put: (source copyFrom: node start to: node end) ].
-					node label = 'TypeDefinition'
-						ifTrue: [ sources
-								at: (module ifNil: [ '' ] ifNotNil: [ module , '`' ]) , node first
-								put: (source copyFrom: node start to: node end) ].
-					node label = 'RecordTypeDefinition'
-						ifTrue: [ sources
-								at: (module ifNil: [ '' ] ifNotNil: [ module , '`' ]) , node first
-								put: (source copyFrom: node start to: node end) ].
-					node label = 'ValueDefinition'
-						ifTrue: [ sources
-								at: (module ifNil: [ '' ] ifNotNil: [ module , '`' ]) , node first first
-								put: (source copyFrom: node start to: node end) ].
-					node label = 'ExplicitFunctionDefinition'
-						ifTrue: [ sources
-								at: (module ifNil: [ '' ] ifNotNil: [ module , '`' ]) , node first
-								put: (source copyFrom: node start to: node end) ].
-					node
-						do: [ :n | 
-							walker
-								value: n
-								value:
-									(module
-										ifNil: [ node label = 'Module'
-												ifTrue: [ node first ] ]) ] ] ].
+			walker := [ :node :module |
+			          (node isKindOf: ViennaNode) ifTrue: [
+				          node isViennaModuleNode ifTrue: [
+					          sources
+						          at: node first
+						          put: (source copyFrom: node start to: node end) ].
+				          node label = 'StateDefinition' ifTrue: [
+					          sources
+						          at:
+						          (module ifNil: [ '' ] ifNotNil: [ module , '`' ])
+						          , node first
+						          put: (source copyFrom: node start to: node end) ].
+				          node label = 'ExplicitOperationDefinition' ifTrue: [
+					          sources
+						          at:
+						          (module ifNil: [ '' ] ifNotNil: [ module , '`' ])
+						          , node first
+						          put: (source copyFrom: node start to: node end) ].
+				          node label = 'TypeDefinition' ifTrue: [
+					          sources
+						          at:
+						          (module ifNil: [ '' ] ifNotNil: [ module , '`' ])
+						          , node first
+						          put: (source copyFrom: node start to: node end) ].
+				          node label = 'RecordTypeDefinition' ifTrue: [
+					          sources
+						          at:
+						          (module ifNil: [ '' ] ifNotNil: [ module , '`' ])
+						          , node first
+						          put: (source copyFrom: node start to: node end) ].
+				          node label = 'ValueDefinition' ifTrue: [
+					          sources
+						          at:
+						          (module ifNil: [ '' ] ifNotNil: [ module , '`' ])
+						          , node first first
+						          put: (source copyFrom: node start to: node end) ].
+				          node label = 'ExplicitFunctionDefinition' ifTrue: [
+					          sources
+						          at:
+						          (module ifNil: [ '' ] ifNotNil: [ module , '`' ])
+						          , node first
+						          put: (source copyFrom: node start to: node end) ].
+				          node do: [ :n |
+					          walker
+						          value: n
+						          value:
+						          (module ifNil: [
+							           node isViennaModuleNode ifTrue: [ node first ] ]) ] ] ].
 			walker value: ast value: nil.
 			stream nextPutAll: 'ViennaDoc.source='.
 			(NeoJSONWriter on: stream) nextPut: source withUnixLineEndings.
@@ -1107,18 +1117,17 @@ ViennaBrowser >> generateViennaDocSourceScript [
 				nextPut: Character lf;
 				nextPutAll: 'ViennaDoc.sources = {};';
 				nextPut: Character lf.
-			sources
-				keysAndValuesDo: [ :name :src | 
-					stream
-						nextPutAll: 'ViennaDoc.sources[';
-						nextPut: $';
-						nextPutAll: name;
-						nextPut: $';
-						nextPutAll: ']='.
-					(NeoJSONWriter on: stream) nextPut: src withUnixLineEndings.
-					stream
-						nextPut: $;;
-						nextPut: Character lf ] ]
+			sources keysAndValuesDo: [ :name :src |
+				stream
+					nextPutAll: 'ViennaDoc.sources[';
+					nextPut: $';
+					nextPutAll: name;
+					nextPut: $';
+					nextPutAll: ']='.
+				(NeoJSONWriter on: stream) nextPut: src withUnixLineEndings.
+				stream
+					nextPut: $;;
+					nextPut: Character lf ] ]
 ]
 
 { #category : #'module list menu' }
@@ -1653,36 +1662,41 @@ ViennaBrowser >> removeModule [
 
 { #category : #'test pane menu' }
 ViennaBrowser >> runAllTests [
+
 	testProcess ifNotNil: [ testProcess terminate ].
-	testProcess := [ | ast |
-	testResult := Array new.
-	self updateTestLabelIcon.
-	self changed: #testList.
-	ast := ViennaVDMParser new parse: animation specification.
-	ast isPetit2Failure
-		ifTrue: [ ^ nil ].
-	ast isEmpty
-		ifTrue: [ ^ self ].
-	(ast at: 1) label = 'Module'
-		ifTrue: [ ast
-				do: [ :moduleNode | 
-					| moduleName |
-					moduleName := moduleNode first.
-					(moduleName endsWith: 'Test')
-						ifTrue: [ moduleNode third
-								do: [ :definitionBlockNode | 
-									definitionBlockNode first label = 'OperationDefinitions'
-										ifTrue: [ definitionBlockNode first
-												do: [ :accessOperationDefinitionNode | 
-													| operationName |
-													operationName := accessOperationDefinitionNode second
-														first first.
-													(operationName size > 4
-														and: [ (operationName copyFrom: 1 to: 4) = 'test' ])
-														ifTrue: [ self runTestModule: moduleName operation: operationName ] ] ] ] ] ] ]
-		ifFalse: [  ].
-	testProcess := nil.
-	self updateTestLabelIcon ] forkAt: Processor userBackgroundPriority
+	testProcess := [
+	               | ast |
+	               testResult := Array new.
+	               self updateTestLabelIcon.
+	               self changed: #testList.
+	               ast := ViennaVDMParser new parse:
+		                      animation specification.
+	               ast isPetit2Failure ifTrue: [ ^ nil ].
+	               ast isEmpty ifTrue: [ ^ self ].
+	               (ast at: 1) isViennaModuleNode
+		               ifTrue: [
+			               ast do: [ :moduleNode |
+				               | moduleName |
+				               moduleName := moduleNode first.
+				               (moduleName endsWith: 'Test') ifTrue: [
+					               moduleNode third do: [ :definitionBlockNode |
+						               definitionBlockNode first label
+						               = 'OperationDefinitions' ifTrue: [
+							               definitionBlockNode first do: [
+								               :accessOperationDefinitionNode |
+								               | operationName |
+								               operationName := accessOperationDefinitionNode
+									                                second first first.
+								               (operationName size > 4 and: [
+									                (operationName copyFrom: 1 to: 4) = 'test' ])
+									               ifTrue: [
+									               self
+										               runTestModule: moduleName
+										               operation: operationName ] ] ] ] ] ] ]
+		               ifFalse: [  ].
+	               testProcess := nil.
+	               self updateTestLabelIcon ] forkAt:
+		               Processor userBackgroundPriority
 ]
 
 { #category : #'test pane menu' }
@@ -1695,39 +1709,44 @@ ViennaBrowser >> runTestModule [
 
 { #category : #'test pane menu' }
 ViennaBrowser >> runTestModule: aString [
+
 	| testModuleName |
 	testModuleName := aString.
-	(testModuleName endsWith: 'Test')
-		ifFalse: [ testModuleName := testModuleName , 'Test' ].
+	(testModuleName endsWith: 'Test') ifFalse: [
+		testModuleName := testModuleName , 'Test' ].
 	testProcess ifNotNil: [ testProcess terminate ].
-	testProcess := [ | ast |
-	testResult := Array new.
-	self changed: #testList.
-	ast := ViennaVDMParser new parse: animation specification.
-	ast isPetit2Failure
-		ifTrue: [ ^ nil ].
-	ast isEmpty
-		ifTrue: [ ^ self ].
-	(ast at: 1) label = 'Module'
-		ifTrue: [ ast
-				do: [ :moduleNode | 
-					| moduleName |
-					moduleName := moduleNode first.
-					moduleName = testModuleName
-						ifTrue: [ moduleNode third
-								do: [ :definitionBlockNode | 
-									definitionBlockNode first label = 'OperationDefinitions'
-										ifTrue: [ definitionBlockNode first
-												do: [ :accessOperationDefinitionNode | 
-													| operationName |
-													operationName := accessOperationDefinitionNode second
-														first first.
-													(operationName size > 4
-														and: [ (operationName copyFrom: 1 to: 4) = 'test' ])
-														ifTrue: [ self runTestModule: moduleName operation: operationName ] ] ] ] ] ] ]
-		ifFalse: [  ].
-	testProcess := nil.
-	self updateTestLabelIcon ] forkAt: Processor userBackgroundPriority
+	testProcess := [
+	               | ast |
+	               testResult := Array new.
+	               self changed: #testList.
+	               ast := ViennaVDMParser new parse:
+		                      animation specification.
+	               ast isPetit2Failure ifTrue: [ ^ nil ].
+	               ast isEmpty ifTrue: [ ^ self ].
+	               (ast at: 1) isViennaModuleNode
+		               ifTrue: [
+			               ast do: [ :moduleNode |
+				               | moduleName |
+				               moduleName := moduleNode first.
+				               moduleName = testModuleName ifTrue: [
+					               moduleNode third do: [ :definitionBlockNode |
+						               definitionBlockNode first label
+						               = 'OperationDefinitions' ifTrue: [
+							               definitionBlockNode first do: [
+								               :accessOperationDefinitionNode |
+								               | operationName |
+								               operationName := accessOperationDefinitionNode
+									                                second first first.
+								               (operationName size > 4 and: [
+									                (operationName copyFrom: 1 to: 4) = 'test' ])
+									               ifTrue: [
+									               self
+										               runTestModule: moduleName
+										               operation: operationName ] ] ] ] ] ] ]
+		               ifFalse: [  ].
+	               testProcess := nil.
+	               self updateTestLabelIcon ] forkAt:
+		               Processor userBackgroundPriority
 ]
 
 { #category : #'test pane menu' }
