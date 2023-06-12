@@ -480,49 +480,46 @@ ViennaNode >> asImportDefinitionIn: moduleNode [
 	(#( 'TypeDefinition' 'RecordTypeDefinition' ) includes: self label)
 		ifTrue: [
 			^ importDefinition value:
-				  (ViennaNode
-					   label: 'ImportTypesSignature'
-					   with: (ViennaTypeImportNode
-							    typeName: (ViennaTypeNameNode name:
-									     (ViennaLocalNameNode identifier: self identifier))
-							    rename: nil)) ].
+				  (ViennaImportTypesSignatureNode with: (ViennaTypeImportNode
+						    typeName: (ViennaTypeNameNode name:
+								     (ViennaLocalNameNode identifier: self identifier))
+						    rename: nil)) ].
 	(#( 'ValueDefinition' ) includes: self label) ifTrue: [
-		^ importDefinition value: (ViennaNode
-				   label: 'ImportValuesSignature'
-				   withAll: (self patternIdentifierNames collect: [ :name |
-						    ViennaValueImportNode
-							    name: (ViennaLocalNameNode identifier: name)
-							    type: (self first isViennaPatternIdentifierNode
-									     ifTrue: [ self second ifNotNil: #copyFragment ]
-									     ifFalse: [ nil ])
-							    rename: nil ])) ].
+		^ importDefinition value: (ViennaImportValuesSignatureNode withAll:
+				   (self patternIdentifierNames collect: [ :name |
+					    ViennaValueImportNode
+						    name: (ViennaLocalNameNode identifier: name)
+						    type: (self first isViennaPatternIdentifierNode
+								     ifTrue: [ self second ifNotNil: #copyFragment ]
+								     ifFalse: [ nil ])
+						    rename: nil ])) ].
 	(#( 'ExplicitFunctionDefinition' 'ImplicitFunctionDefinition' )
 		 includes: self label) ifTrue: [
-		^ importDefinition value: (ViennaNode
-				   label: 'ImportFunctionsSignature'
-				   with: (ViennaFunctionImportNode
-						    name: (ViennaLocalNameNode identifier: self name)
-						    typeVariableList: self second copyFragment
-						    type: (self label = 'ExplicitFunctionDefinition'
-								     ifTrue: [ self third copyFragment ]
-								     ifFalse: [
-									     ViennaPartialFunctionTypeNode
-										     argumentType: self third first pairListToType
-										     returnType: self fourth pairListToType ])
-						    rename: nil)) ].
+		^ importDefinition value:
+			  (ViennaImportFunctionsSignatureNode with:
+				   (ViennaFunctionImportNode
+					    name: (ViennaLocalNameNode identifier: self name)
+					    typeVariableList: self second copyFragment
+					    type: (self label = 'ExplicitFunctionDefinition'
+							     ifTrue: [ self third copyFragment ]
+							     ifFalse: [
+								     ViennaPartialFunctionTypeNode
+									     argumentType: self third first pairListToType
+									     returnType: self fourth pairListToType ])
+					    rename: nil)) ].
 	(#( 'ExplicitOperationDefinition' 'ImplicitOperationDefinition' )
 		 includes: self label) ifTrue: [
-		^ importDefinition value: (ViennaNode
-				   label: 'ImportOperationsSignature'
-				   with: (ViennaOperationImportNode
-						    name: (ViennaLocalNameNode identifier: self identifier)
-						    type: (self label = 'ExplicitOperationDefinition'
-								     ifTrue: [ self second copyFragment ]
-								     ifFalse: [
-									     ViennaOperationTypeNode
-										     argumentType: self second first pairListToType
-										     returnType: self third pairListToType ])
-						    rename: nil)) ].
+		^ importDefinition value:
+			  (ViennaImportOperationsSignatureNode with:
+				   (ViennaOperationImportNode
+					    name: (ViennaLocalNameNode identifier: self identifier)
+					    type: (self label = 'ExplicitOperationDefinition'
+							     ifTrue: [ self second copyFragment ]
+							     ifFalse: [
+								     ViennaOperationTypeNode
+									     argumentType: self second first pairListToType
+									     returnType: self third pairListToType ])
+					    rename: nil)) ].
 	^ nil
 ]
 
@@ -1578,6 +1575,12 @@ ViennaNode >> isViennaImportNode: aString [
 
 { #category : #testing }
 ViennaNode >> isViennaImportOperationsSignatureNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaImportSignatureNode [
 
 	^ false
 ]

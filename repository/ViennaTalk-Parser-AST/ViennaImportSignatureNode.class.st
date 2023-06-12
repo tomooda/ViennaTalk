@@ -10,3 +10,9 @@ ViennaImportSignatureNode class >> isAbstract [
 
 	^ self = ViennaImportSignatureNode
 ]
+
+{ #category : #testing }
+ViennaImportSignatureNode >> isViennaImportSignatureNode [
+
+	^ true
+]

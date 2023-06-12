@@ -708,9 +708,7 @@ ViennaRefactoringBrowser >> definitionsFromCategory: aViennaNode [
 ViennaRefactoringBrowser >> displayCategory: aViennaNode [
 
 	aViennaNode ifNil: [ ^ '-' ].
-	(#( 'ImportTypesSignature' 'ImportValuesSignature'
-	    'ImportFunctionsSignature' 'ImportOperationsSignature' )
-		 includes: aViennaNode label) ifTrue: [
+	aViennaNode isViennaImportSignatureNode ifTrue: [
 		^ 'from ' , aViennaNode parent parent first , ' '
 		  , aViennaNode refactoringBrowserSectionName ].
 	^ aViennaNode refactoringBrowserSectionName ifNil: [ '?' ]
@@ -733,9 +731,7 @@ ViennaRefactoringBrowser >> displayDefinition: aViennaNode [
 		node label = 'ExplicitOperationDefinition' ifTrue: [ ^ node first ].
 		node label = 'ImplicitOperationDefinition' ifTrue: [ ^ node first ].
 		node label = 'ImportModuleDefinitionAll' ifTrue: [ ^ 'all' ].
-		(#( 'ImportTypesSignature' 'ImportValuesSignature'
-		    'ImportFunctionsSignature' 'ImportOperationsSignature' )
-			 includes: node label) ifTrue: [ ^ '- all -' ].
+		node isViennaImportSignatureNode ifTrue: [ ^ '- all -' ].
 		node isViennaImportNode ifTrue: [
 			^ node rename
 				  ifNotNil: [ :localName | localName shortName ]

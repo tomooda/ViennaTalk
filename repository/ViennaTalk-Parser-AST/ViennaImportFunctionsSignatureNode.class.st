@@ -5,13 +5,25 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pretty printing' }
+ViennaImportFunctionsSignatureNode >> formatWith: aViennaAbstractFormatter [
+
+	| functionImport |
+	functionImport := aViennaAbstractFormatter formatAll: self.
+	^ aViennaAbstractFormatter
+		  indentString: 'functions'
+		  insertCrIfNeeded: (aViennaAbstractFormatter
+				   join: ';' , String cr
+				   withAll: functionImport) , ';'
+]
+
+{ #category : #testing }
 ViennaImportFunctionsSignatureNode >> isViennaImportFunctionsSignatureNode [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaImportFunctionsSignatureNode >> label [
 
 	^ 'ImportFunctionsSignature'
