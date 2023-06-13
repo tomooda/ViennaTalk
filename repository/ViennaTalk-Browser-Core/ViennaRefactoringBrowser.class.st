@@ -623,15 +623,16 @@ ViennaRefactoringBrowser >> definition [
 
 { #category : #accessing }
 ViennaRefactoringBrowser >> definitionBase [
+
 	| node |
 	node := self definition.
 	node ifNil: [ ^ nil ].
-	(#('AccessTypeDefinition' 'AccessValueDefinition')
-		includes: node label)
-		ifTrue: [ ^ node second ].
-	(#('AccessFunctionDefinition' 'AccessOperationDefinition')
-		includes: node label)
-		ifTrue: [ ^ node second first ].
+	node isViennaAccessValueDefinitionNode ifTrue: [
+		^ node valueDefinition ].
+	node isViennaAccessFunctionDefinitionNode ifTrue: [
+		^ node functionDefinition definition ].
+	node isViennaAccessOperationDefinitionNode ifTrue: [
+		^ node operationDefinition definition ].
 	^ node
 ]
 

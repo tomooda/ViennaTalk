@@ -5,6 +5,27 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #'instance creation' }
+ViennaAccessOperationDefinitionNode class >> access: aViennaAccessNode operationDefinition: aViennaOperationDefinitionNode [
+
+	^ (self new: 2)
+		  access: aViennaAccessNode;
+		  operationDefinition: aViennaOperationDefinitionNode;
+		  yourself
+]
+
+{ #category : #accessing }
+ViennaAccessOperationDefinitionNode >> access [
+
+	^ self at: 1
+]
+
+{ #category : #accessing }
+ViennaAccessOperationDefinitionNode >> access: aViennaAccessNode [
+
+	self at: 1 put: aViennaAccessNode
+]
+
 { #category : #'pretty printing' }
 ViennaAccessOperationDefinitionNode >> formatWith: aViennaAbstractFormatter [
 
@@ -20,7 +41,7 @@ ViennaAccessOperationDefinitionNode >> identifier [
 	^ self operationDefinition identifier
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaAccessOperationDefinitionNode >> isViennaAccessOperationDefinitionNode [
 
 	^ true
@@ -32,8 +53,26 @@ ViennaAccessOperationDefinitionNode >> label [
 	^ 'AccessOperationDefinition'
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : #accessing }
 ViennaAccessOperationDefinitionNode >> operationDefinition [
 
 	^ self at: 2
+]
+
+{ #category : #accessing }
+ViennaAccessOperationDefinitionNode >> operationDefinition: aViennaOperationDefinitionNode [
+
+	self at: 2 put: aViennaOperationDefinitionNode
+]
+
+{ #category : #'accessing-definitions' }
+ViennaAccessOperationDefinitionNode >> resolve [
+
+	^ self operationDefinition resolve
+]
+
+{ #category : #'accessing-definitions' }
+ViennaAccessOperationDefinitionNode >> shortName [
+
+	^ self operationDefinition shortName
 ]

@@ -5,13 +5,13 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaValueDefinitionNode >> isViennaValueDefinitionNode [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaValueDefinitionNode >> label [
 
 	^ 'ValueDefinition'

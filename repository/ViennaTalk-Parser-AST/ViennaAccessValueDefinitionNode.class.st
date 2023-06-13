@@ -5,6 +5,27 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #'instance creation' }
+ViennaAccessValueDefinitionNode class >> access: aViennaAccessNode valueDefinition: aViennaValueDefinitionNode [
+
+	^ (self new: 2)
+		  access: aViennaAccessNode;
+		  valueDefinition: aViennaValueDefinitionNode;
+		  yourself
+]
+
+{ #category : #accessing }
+ViennaAccessValueDefinitionNode >> access [
+
+	^ self at: 1
+]
+
+{ #category : #accessing }
+ViennaAccessValueDefinitionNode >> access: aViennaAccessNode [
+
+	self at: 1 put: aViennaAccessNode
+]
+
 { #category : #'pretty printing' }
 ViennaAccessValueDefinitionNode >> formatWith: aViennaAbstractFormatter [
 
@@ -13,7 +34,7 @@ ViennaAccessValueDefinitionNode >> formatWith: aViennaAbstractFormatter [
 		  withAll: (aViennaAbstractFormatter formatAll: self)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaAccessValueDefinitionNode >> isViennaAccessValueDefinitionNode [
 
 	^ true
@@ -23,4 +44,28 @@ ViennaAccessValueDefinitionNode >> isViennaAccessValueDefinitionNode [
 ViennaAccessValueDefinitionNode >> label [
 
 	^ 'AccessValueDefinition'
+]
+
+{ #category : #'accessing-definitions' }
+ViennaAccessValueDefinitionNode >> resolve [
+
+	^ self valueDefinition resolve
+]
+
+{ #category : #'accessing-definitions' }
+ViennaAccessValueDefinitionNode >> shortName [
+
+	^ self valueDefinition shortName
+]
+
+{ #category : #accessing }
+ViennaAccessValueDefinitionNode >> valueDefinition [
+
+	^ self at: 2
+]
+
+{ #category : #accessing }
+ViennaAccessValueDefinitionNode >> valueDefinition: aViennaValueDefinitionNode [
+
+	self at: 2 put: aViennaValueDefinitionNode
 ]

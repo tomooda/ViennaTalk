@@ -327,30 +327,26 @@ ViennaNode >> anySatisfy: aBlockClosure [
 ViennaNode >> asAccessDefinition [
 
 	self label = 'ValueDefinition' ifTrue: [
-		^ ViennaNode
-			  label: 'AccessValueDefinition'
-			  with: (ViennaNode label: 'Access')
-			  with: self ].
+		^ ViennaAccessValueDefinitionNode
+			  access: (ViennaNode label: 'Access')
+			  valueDefinition: self ].
 	(#( 'TypeDefinition' 'RecordTypeDefinition' ) includes: self label)
 		ifTrue: [
-			^ ViennaNode
-				  label: 'AccessTypeDefinition'
-				  with: (ViennaNode label: 'Access')
-				  with: self ].
+			^ ViennaAccessTypeDefinitionNode
+				  access: (ViennaNode label: 'Access')
+				  typeDefinition: self ].
 	self label = 'FunctionDefinition' ifTrue: [
-		^ ViennaNode
-			  label: 'AccessFunctionDefinition'
-			  with: (ViennaNode label: 'Access')
-			  with: self ].
+		^ ViennaAccessFunctionDefinitionNode
+			  access: (ViennaNode label: 'Access')
+			  functionDefinition: self ].
 	(#( 'ExplicitFunctionDefinition' 'ImplicitFunctionDefinition' )
 		 includes: self label) ifTrue: [
 		^ (ViennaNode label: 'FunctionDefinition' with: self)
 			  asAccessDefinition ].
 	self label = 'OperationDefinition' ifTrue: [
-		^ ViennaNode
-			  label: 'AccessOperationDefinition'
-			  with: (ViennaNode label: 'Access')
-			  with: self ].
+		^ ViennaAccessOperationDefinitionNode
+			  access: (ViennaNode label: 'Access')
+			  operationDefinition: self ].
 	(#( 'ExplicitOperationDefinition' 'ImplicitOperationDefinition' )
 		 includes: self label) ifTrue: [
 		^ (ViennaNode label: 'OperationDefinition' with: self)
@@ -2839,9 +2835,6 @@ ViennaNode >> resolve [
 		 includes: self label) ifTrue: [ ^ self ].
 	(#( 'FunctionDefinition' 'OperationDefinition' ) includes: self label)
 		ifTrue: [ ^ self first ].
-	(#( 'AccessTypeDefinition' 'AccessValueDefinition'
-	    'AccessFunctionDefinition' 'AccessOperationDefinition' )
-		 includes: self label) ifTrue: [ ^ self second resolve ].
 	^ nil
 ]
 
@@ -2914,14 +2907,11 @@ ViennaNode >> seventh [
 ViennaNode >> shortName [
 
 	(#( 'FunctionDefinition' 'OperationDefinition' ) includes: self label)
-		ifTrue: [ ^ self first name ].
+		ifTrue: [ ^ self first shortName ].
 	(#( 'TypeDefinition' 'RecordTypeDefinition' 'ExplicitFunctionDefinition'
 	    'ExplicitOperationDefinition' 'ImplicitFunctionDefinition'
 	    'ImplicitOperationDefinition' 'StateDefinition' ) includes:
 		 self label) ifTrue: [ ^ self first ].
-	(#( 'AccessTypeDefinition' 'AccessValueDefinition'
-	    'AccessFunctionDefinition' 'AccessOperationDefinition' )
-		 includes: self label) ifTrue: [ ^ self second name ].
 	self label = 'TypeDefinitions' ifTrue: [ ^ 'types' ].
 	self label = 'ValueDefinitions' ifTrue: [ ^ 'values' ].
 	self label = 'FunctionDefinitions' ifTrue: [ ^ 'functions' ].

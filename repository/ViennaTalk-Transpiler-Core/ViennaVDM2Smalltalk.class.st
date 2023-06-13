@@ -558,8 +558,12 @@ ViennaVDM2Smalltalk >> definitionBlock: aViennaNode env: aDictionary [
 
 { #category : #utilities }
 ViennaVDM2Smalltalk >> definitions: aViennaNode do: aBlock [
-	(#('AccessFunctionDefinition' 'AccessOperationDefinition' 'AccessValueDefinition' 'AccessTypeDefinition' 'StateDefinition')
-		includes: aViennaNode label)
+
+	(aViennaNode isViennaAccessFunctionDefinitionNode or: [
+		 aViennaNode isViennaAccessOperationDefinitionNode or: [
+			 aViennaNode isViennaAccessTypeDefinitionNode or: [
+				 aViennaNode isViennaAccessValueDefinitionNode or: [
+					 #( 'StateDefinition' ) includes: aViennaNode label ] ] ] ])
 		ifTrue: [ ^ aBlock value: aViennaNode ].
 	aViennaNode do: [ :node | self definitions: node do: aBlock ]
 ]

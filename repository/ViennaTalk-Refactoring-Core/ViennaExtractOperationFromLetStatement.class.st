@@ -63,10 +63,9 @@ ViennaExtractOperationFromLetStatement >> execute [
 				                               self operationBody.
 				                               nil.
 				                               nil }.
-	accessOperationDefinition := ViennaNode
-		                             label: 'AccessOperationDefinition'
-		                             with: (ViennaNode label: 'Access')
-		                             with: (ViennaNode
+	accessOperationDefinition := ViennaAccessOperationDefinitionNode
+		                             access: (ViennaNode label: 'Access')
+		                             operationDefinition: (ViennaNode
 				                              label: 'OperationDefinition'
 				                              with: explicitOperationDefinition).
 	operationDefinitions add: accessOperationDefinition.

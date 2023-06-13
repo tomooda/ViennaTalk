@@ -62,10 +62,9 @@ ViennaExtractFunctionFromLetExpression >> execute [
 				                              nil.
 				                              nil.
 				                              nil }.
-	accessFunctionDefinition := ViennaNode
-		                            label: 'AccessFunctionDefinition'
-		                            with: (ViennaNode label: 'Access')
-		                            with: (ViennaNode
+	accessFunctionDefinition := ViennaAccessFunctionDefinitionNode
+		                            access: (ViennaNode label: 'Access')
+		                            functionDefinition: (ViennaNode
 				                             label: 'FunctionDefinition'
 				                             with: explicitFunctionDefinition).
 	functionDefinitions add: accessFunctionDefinition.

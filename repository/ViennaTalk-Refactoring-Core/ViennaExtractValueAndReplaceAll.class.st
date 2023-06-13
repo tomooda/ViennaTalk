@@ -31,10 +31,9 @@ ViennaExtractValueAndReplaceAll >> execute [
 				                    self newName).
 			                   nil.
 			                   ast }.
-	accessValueDefinition := ViennaNode
-		                         label: 'AccessValueDefinition'
-		                         with: (ViennaNode label: 'Access')
-		                         with: valueDefinition.
+	accessValueDefinition := ViennaAccessValueDefinitionNode
+		                         access: (ViennaNode label: 'Access')
+		                         valueDefinition: valueDefinition.
 	valueDefinitions add: accessValueDefinition.
 	^ accessValueDefinition
 ]

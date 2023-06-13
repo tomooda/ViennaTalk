@@ -122,10 +122,10 @@ ViennaFRAMModel >> appendToSpec: aViennaNode newOperationsDo: functionBlock newA
 { #category : #private }
 ViennaFRAMModel >> createOperationDefinitionNode: aString [
 
-	^ ViennaNode
-		  label: 'AccessOperationDefinition'
-		  with: (ViennaNode label: 'Access')
-		  with: (ViennaNode label: 'OperationDefinition' with: (ViennaNode
+	^ ViennaAccessOperationDefinitionNode
+		  access: (ViennaNode label: 'Access')
+		  operationDefinition:
+			  (ViennaNode label: 'OperationDefinition' with: (ViennaNode
 					    label: 'ExplicitOperationDefinition'
 					    with: aString
 					    with: (ViennaOperationTypeNode
@@ -162,7 +162,7 @@ ViennaFRAMModel >> findOrCreateOperationNamed: operationName in: aViennaNode [
 			 aViennaNode first label = 'DefinitionBlock' ] ]) ifFalse: [
 		^ self error: 'Internal error: A flat spec should be given.' ].
 	aViennaNode allDescendantsDo: [ :node |
-		node label = 'AccessOperationDefinition' ifTrue: [
+		node isViennaAccessOperationDefinitionNode ifTrue: [
 			opNode := node second first.
 			(opNode label = 'ExplicitOperationDefinition' and: [
 				 opNode first = operationName ]) ifTrue: [ ^ opNode ] ] ].
@@ -202,7 +202,7 @@ ViennaFRAMModel >> findOrCreateOperationNamed: operationName module: moduleName 
 
 
 	moduleNode allDescendantsDo: [ :node |
-		node label = 'AccessOperationDefinition' ifTrue: [
+		node isViennaAccessOperationDefinitionNode ifTrue: [
 			opNode := node second first.
 			(opNode label = 'ExplicitOperationDefinition' and: [
 				 opNode first = operationName ]) ifTrue: [ ^ opNode ] ] ].
@@ -230,56 +230,56 @@ ViennaFRAMModel >> loadSpec: aViennaNode newFunctionsDo: functionBlock newAspect
 
 	| parser |
 	parser := ViennaFRAMAnnotationParser new.
-	aViennaNode allDescendantsDo: [ :node | 
-		node label = 'AccessOperationDefinition' ifTrue: [ 
-			node annotations ifNotNil: [ :annotations | 
-				annotations ifNotEmpty: [ 
+	aViennaNode allDescendantsDo: [ :node |
+		node isViennaAccessOperationDefinitionNode ifTrue: [
+			node annotations ifNotNil: [ :annotations |
+				annotations ifNotEmpty: [
 					| operationName framAnnotations functionNames |
 					operationName := (node module
 						                  ifNotNil: [ :m | m first , '`' ]
 						                  ifNil: [ '' ]) , node identifier.
 					framAnnotations := annotations
-						                   collect: [ :annotation | 
+						                   collect: [ :annotation |
 						                   parser parse: annotation ]
 						                   thenSelect: #isPetit2Success.
-					functionNames := (framAnnotations select: [ :pair | 
+					functionNames := (framAnnotations select: [ :pair |
 						                  pair first = $f ])
-						                 ifNotEmpty: [ :functionAnnotations | 
+						                 ifNotEmpty: [ :functionAnnotations |
 						                 functionAnnotations collect: #second ]
 						                 ifEmpty: [ { operationName } ].
-					functionNames do: [ :functionName | 
+					functionNames do: [ :functionName |
 						| functionId |
 						functionId := self
 							              idOfFunctionNamed: functionName
-							              ifAbsentNew: [ :f | 
+							              ifAbsentNew: [ :f |
 								              f beTechnological.
 								              functionBlock cull: f ].
 						self removeAllAspectsOf: functionId.
-						self functionAt: functionId ifPresent: [ :function | 
+						self functionAt: functionId ifPresent: [ :function |
 							function description:
 								(String cr join:
-									 (function description lines reject: [ :line | 
+									 (function description lines reject: [ :line |
 										  line trim beginsWith: '@VDM' ])
 									 , { ('@VDM ' , operationName) }) ].
-						framAnnotations do: [ :annotation | 
+						framAnnotations do: [ :annotation |
 							| aspect |
 							aspect := annotation first.
-							aspect = $c ifTrue: [ 
+							aspect = $c ifTrue: [
 								aspectBlock cull:
 									(self newControlOf: functionId named: annotation second) ].
-							aspect = $i ifTrue: [ 
+							aspect = $i ifTrue: [
 								aspectBlock cull:
 									(self newInputOf: functionId named: annotation second) ].
-							aspect = $o ifTrue: [ 
+							aspect = $o ifTrue: [
 								aspectBlock cull:
 									(self newOutputOf: functionId named: annotation second) ].
-							aspect = $p ifTrue: [ 
+							aspect = $p ifTrue: [
 								aspectBlock cull:
 									(self newPreconditionOf: functionId named: annotation second) ].
-							aspect = $r ifTrue: [ 
+							aspect = $r ifTrue: [
 								aspectBlock cull:
 									(self newResourceOf: functionId named: annotation second) ].
-							aspect = $t ifTrue: [ 
+							aspect = $t ifTrue: [
 								aspectBlock cull:
 									(self newTimeOf: functionId named: annotation second) ] ] ] ] ] ] ]
 ]

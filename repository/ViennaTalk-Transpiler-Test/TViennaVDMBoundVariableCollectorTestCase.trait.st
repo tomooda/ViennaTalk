@@ -5,46 +5,54 @@ Trait {
 
 { #category : #'tests-bound variables-definitions' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesAccessFunctionDefinitionInto [
+
 	| node binds |
-	node := ViennaVDMParser new accessFunctionDefinition end parse: 'public fn : t1 -> t2 fn(x) == x'.
+	node := ViennaVDMParser new accessFunctionDefinition end parse:
+		        'public fn : t1 -> t2 fn(x) == x'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'AccessFunctionDefinition'.
+	self assert: node isViennaAccessFunctionDefinitionNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self assert: binds equals: {'fn'} asSet
+	self assert: binds equals: { 'fn' } asSet
 ]
 
 { #category : #'tests-bound variables-definitions' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesAccessOperationDefinitionInto [
+
 	| node binds |
-	node := ViennaVDMParser new accessOperationDefinition end parse: 'public op : t1 ==> t2 op(x) == return x'.
+	node := ViennaVDMParser new accessOperationDefinition end parse:
+		        'public op : t1 ==> t2 op(x) == return x'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'AccessOperationDefinition'.
+	self assert: node isViennaAccessOperationDefinitionNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self assert: binds equals: {'op'} asSet
+	self assert: binds equals: { 'op' } asSet
 ]
 
 { #category : #'tests-bound variables-definitions' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesAccessTypeDefinitionInto [
+
 	| node binds |
-	node := ViennaVDMParser new accessTypeDefinition end parse: 'public t1 = t2 inv v == e'.
+	node := ViennaVDMParser new accessTypeDefinition end parse:
+		        'public t1 = t2 inv v == e'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'AccessTypeDefinition'.
+	self assert: node isViennaAccessTypeDefinitionNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self assert: binds equals: {'t1'} asSet
+	self assert: binds equals: { 't1' } asSet
 ]
 
 { #category : #'tests-bound variables-definitions' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesAccessValueDefinitionInto [
+
 	| node binds |
-	node := ViennaVDMParser new accessValueDefinition end parse: 'public v1 = e1'.
+	node := ViennaVDMParser new accessValueDefinition end parse:
+		        'public v1 = e1'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'AccessValueDefinition'.
+	self assert: node isViennaAccessValueDefinitionNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self assert: binds equals: {'v1'} asSet
+	self assert: binds equals: { 'v1' } asSet
 ]
 
 { #category : #'tests-bound variables-definitions' }

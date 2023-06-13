@@ -6,9 +6,15 @@ Class {
 }
 
 { #category : #accessing }
+ViennaOperationDefinitionNode >> definition [
+
+	^ self at: 1
+]
+
+{ #category : #accessing }
 ViennaOperationDefinitionNode >> identifier [
 
-	^ (self at: 1) identifier
+	^ self definition identifier
 ]
 
 { #category : #'as yet unclassified' }

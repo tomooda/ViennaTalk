@@ -5,10 +5,16 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #'as yet unclassified' }
+ViennaFunctionDefinitionNode >> definition [
+
+	^ self at: 1
+]
+
 { #category : #accessing }
 ViennaFunctionDefinitionNode >> identifier [
 
-	^ (self at: 1) identifier
+	^ self definition identifier
 ]
 
 { #category : #'as yet unclassified' }

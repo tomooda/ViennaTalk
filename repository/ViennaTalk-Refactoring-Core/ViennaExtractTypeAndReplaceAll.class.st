@@ -30,10 +30,9 @@ ViennaExtractTypeAndReplaceAll >> execute [
 		                  with: self newName
 		                  with: ast
 		                  with: nil.
-	accessTypeDefinition := ViennaNode
-		                        label: 'AccessTypeDefinition'
-		                        with: (ViennaNode label: 'Access')
-		                        with: typeDefinition.
+	accessTypeDefinition := ViennaAccessTypeDefinitionNode
+		                        access: (ViennaNode label: 'Access')
+		                        typeDefinition: typeDefinition.
 	typeDefinitions add: accessTypeDefinition.
 	^ accessTypeDefinition
 ]

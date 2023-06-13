@@ -6,11 +6,13 @@ Class {
 
 { #category : #operations }
 ViennaConvertExplicitFunctionIntoOperation >> check [
-	^ ast isViennaNode
-		and: [ ast label = 'AccessFunctionDefinition'
-				and: [ ast second isViennaNode
-						and: [ ast second label = 'FunctionDefinition'
-								and: [ ast second first label = 'ExplicitFunctionDefinition' ] ] ] ]
+
+	^ ast isViennaNode and: [
+		  ast isViennaAccessFunctionDefinitionNode and: [
+			  ast functionDefinition isViennaNode and: [
+				  ast functionDefinition label = 'FunctionDefinition' and: [
+					  ast functionDefinition first label
+					  = 'ExplicitFunctionDefinition' ] ] ] ]
 ]
 
 { #category : #operations }
@@ -54,13 +56,12 @@ ViennaConvertExplicitFunctionIntoOperation >> execute [
 								                                 sixth)).
 				                               explicitFunctionDefinition seventh.
 				                               explicitFunctionDefinition eighth }.
-	accessOperationDefinition := ViennaNode
-		                             label: 'AccessOperationDefinition'
-		                             with: (ViennaNode
+	accessOperationDefinition := ViennaAccessOperationDefinitionNode
+		                             access: (ViennaNode
 				                              label: 'Access'
 				                              withAll:
 				                              (ast first asArray copyWith: 'pure'))
-		                             with: (ViennaNode
+		                             operationDefinition: (ViennaNode
 				                              label: 'OperationDefinition'
 				                              with: explicitOperationDefinition).
 	functionDefinitions remove: ast.
