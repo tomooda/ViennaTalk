@@ -35,20 +35,106 @@ ViennaRefactoring class >> sortedInstancesOn: aViennaNode [
 
 { #category : #'visiting-definitions' }
 ViennaRefactoring >> addDefinition: aViennaNode in: moduleNode [
-	| sectionLabel moduleBody section |
-	sectionLabel := self definitionsLabelFor: aViennaNode.
+
+	aViennaNode isViennaTypeDefinitionNode ifTrue: [
+		^ self addTypeDefinition: aViennaNode in: moduleNode ].
+	aViennaNode isViennaRecordTypeDefinitionNode ifTrue: [
+		^ self addTypeDefinition: aViennaNode in: moduleNode ].
+	aViennaNode isViennaValueDefinitionNode ifTrue: [
+		^ self addValueDefinition: aViennaNode in: moduleNode ].
+	aViennaNode isViennaExplicitFunctionDefinitionNode ifTrue: [
+		^ self addFunctionDefinition: aViennaNode in: moduleNode ].
+	aViennaNode isViennaImplicitFunctionDefinitionNode ifTrue: [
+		^ self addFunctionDefinition: aViennaNode in: moduleNode ].
+	aViennaNode isViennaExplicitOperationDefinitionNode ifTrue: [
+		^ self addOperationDefinition: aViennaNode in: moduleNode ].
+	aViennaNode isViennaImplicitOperationDefinitionNode ifTrue: [
+		^ self addOperationDefinition: aViennaNode in: moduleNode ].
+	^ nil
+]
+
+{ #category : #'visiting-definitions' }
+ViennaRefactoring >> addFunctionDefinition: aViennaNode in: moduleNode [
+
+	| moduleBody section |
 	moduleBody := moduleNode module third.
 	section := (moduleBody
-		detect: [ :definitionBlock | 
-			definitionBlock isViennaNode
-				and: [ definitionBlock first isViennaNode
-						and: [ definitionBlock first label = sectionLabel ] ] ]
-		ifNone: [ | definitionBlock |
-			definitionBlock := ViennaNode
-				label: 'DefinitionBlock'
-				with: (ViennaNode label: sectionLabel).
-			moduleBody add: definitionBlock.
-			definitionBlock ]) ifNotNil: #first.
+		            detect: [ :definitionBlock |
+			            definitionBlock isViennaNode and: [
+				            definitionBlock definition isViennaNode and: [
+					            definitionBlock definition
+						            isViennaFunctionDefinitionsNode ] ] ]
+		            ifNone: [
+			            | definitionBlock |
+			            definitionBlock := ViennaDefinitionBlockNode
+				                               definition:
+				                               ViennaFunctionDefinitionsNode empty.
+			            moduleBody add: definitionBlock.
+			            definitionBlock ]) ifNotNil: #definition.
+	section add: aViennaNode asAccessDefinition
+]
+
+{ #category : #'visiting-definitions' }
+ViennaRefactoring >> addOperationDefinition: aViennaNode in: moduleNode [
+
+	| moduleBody section |
+	moduleBody := moduleNode module third.
+	section := (moduleBody
+		            detect: [ :definitionBlock |
+			            definitionBlock isViennaNode and: [
+				            definitionBlock definition isViennaNode and: [
+					            definitionBlock definition
+						            isViennaOperationDefinitionsNode ] ] ]
+		            ifNone: [
+			            | definitionBlock |
+			            definitionBlock := ViennaDefinitionBlockNode
+				                               definition:
+				                               ViennaOperationDefinitionsNode
+					                               empty.
+			            moduleBody add: definitionBlock.
+			            definitionBlock ]) ifNotNil: #definition.
+	section add: aViennaNode asAccessDefinition
+]
+
+{ #category : #'visiting-definitions' }
+ViennaRefactoring >> addTypeDefinition: aViennaNode in: moduleNode [
+
+	| moduleBody section |
+	moduleBody := moduleNode module third.
+	section := (moduleBody
+		            detect: [ :definitionBlock |
+			            definitionBlock isViennaNode and: [
+				            definitionBlock definition isViennaNode and: [
+					            definitionBlock definition
+						            isViennaTypeDefinitionsNode ] ] ]
+		            ifNone: [
+			            | definitionBlock |
+			            definitionBlock := ViennaDefinitionBlockNode
+				                               definition:
+				                               ViennaTypeDefinitionsNode empty.
+			            moduleBody add: definitionBlock.
+			            definitionBlock ]) ifNotNil: #definition.
+	section add: aViennaNode asAccessDefinition
+]
+
+{ #category : #'visiting-definitions' }
+ViennaRefactoring >> addValueDefinition: aViennaNode in: moduleNode [
+
+	| moduleBody section |
+	moduleBody := moduleNode module third.
+	section := (moduleBody
+		            detect: [ :definitionBlock |
+			            definitionBlock isViennaNode and: [
+				            definitionBlock definition isViennaNode and: [
+					            definitionBlock definition
+						            isViennaValueDefinitionsNode ] ] ]
+		            ifNone: [
+			            | definitionBlock |
+			            definitionBlock := ViennaDefinitionBlockNode
+				                               definition:
+				                               ViennaValueDefinitionsNode empty.
+			            moduleBody add: definitionBlock.
+			            definitionBlock ]) ifNotNil: #definition.
 	section add: aViennaNode asAccessDefinition
 ]
 
@@ -182,22 +268,6 @@ ViennaRefactoring >> bindingOf: aString inTypeVariableIdentifier: aViennaNode do
 { #category : #operations }
 ViennaRefactoring >> check [
 	^ self subclassResponsibility
-]
-
-{ #category : #'visiting-definitions' }
-ViennaRefactoring >> definitionsLabelFor: aViennaNode [
-	(#('TypeDefinition' 'RecordTypeDefinition')
-		includes: aViennaNode label)
-		ifTrue: [ ^ 'TypeDefinitions' ].
-	(#('ValueDefinition') includes: aViennaNode label)
-		ifTrue: [ ^ 'ValueDefinitions' ].
-	(#('ExplicitFunctionDefinition' 'ImplicitFunctionDefinition')
-		includes: aViennaNode label)
-		ifTrue: [ ^ 'FunctionDefinitions' ].
-	(#('ExplicitOperationDefinition' 'ImplicitOperationDefinition')
-		includes: aViennaNode label)
-		ifTrue: [ ^ 'OperationDefinitions' ].
-	^ nil
 ]
 
 { #category : #'visiting-scopes' }

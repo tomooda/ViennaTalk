@@ -11,8 +11,8 @@ ViennaConvertExplicitFunctionIntoOperation >> check [
 		  ast isViennaAccessFunctionDefinitionNode and: [
 			  ast functionDefinition isViennaNode and: [
 				  ast functionDefinition label = 'FunctionDefinition' and: [
-					  ast functionDefinition first label
-					  = 'ExplicitFunctionDefinition' ] ] ] ]
+					  ast functionDefinition first
+						  isViennaExplicitFunctionDefinitionNode ] ] ] ]
 ]
 
 { #category : #operations }
@@ -33,29 +33,29 @@ ViennaConvertExplicitFunctionIntoOperation >> execute [
 	operationDefinitions ifNil: [
 		operationDefinitions := ViennaNode label: 'OperationDefinitions'.
 		moduleBody add:
-			(ViennaNode label: 'DefinitionBlock' with: operationDefinitions) ].
-	explicitOperationDefinition := ViennaNode
-		                               label: 'ExplicitOperationDefinition'
-		                               withAll: {
-				                               explicitFunctionDefinition first.
-				                               (ViennaOperationTypeNode
-					                                argumentType:
-					                                explicitFunctionDefinition third
-						                                first
-					                                returnType:
-					                                explicitFunctionDefinition third
-						                                second).
-				                               explicitFunctionDefinition fourth.
-				                               explicitFunctionDefinition fifth
-					                               first.
-				                               (ViennaOperationBodyNode
-					                                statement:
-						                                (ViennaReturnStatementNode
-							                                 expression:
-							                                 explicitFunctionDefinition
-								                                 sixth)).
-				                               explicitFunctionDefinition seventh.
-				                               explicitFunctionDefinition eighth }.
+			(ViennaDefinitionBlockNode definition: operationDefinitions) ].
+	explicitOperationDefinition := ViennaExplicitOperationDefinitionNode
+		                               identifier:
+		                               explicitFunctionDefinition identifier
+		                               type: (ViennaOperationTypeNode
+				                                argumentType:
+				                                explicitFunctionDefinition type
+					                                argumentType
+				                                returnType:
+				                                explicitFunctionDefinition type
+					                                returnType)
+		                               parameters:
+		                               explicitFunctionDefinition
+			                               parametersList first
+		                               operationBody:
+			                               (ViennaOperationBodyNode statement:
+				                                (ViennaReturnStatementNode
+					                                 expression:
+					                                 explicitFunctionDefinition sixth))
+		                               pre:
+		                               explicitFunctionDefinition seventh
+		                               post:
+		                               explicitFunctionDefinition eighth.
 	accessOperationDefinition := ViennaAccessOperationDefinitionNode
 		                             access: (ViennaNode
 				                              label: 'Access'

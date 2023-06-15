@@ -446,18 +446,20 @@ WeblyWalkThrough >> updateGlobalNamesAndNumArgs: aString [
 				                                    ifTrue: [ mod first ]
 				                                    ifFalse: [ self defaultModule ].
 			                         mod allDescendantsDo: [ :node |
-				                         node label = 'ExplicitFunctionDefinition'
+				                         node
+					                         isViennaExplicitFunctionDefinitionNode
+					                         ifTrue: [
+						                         stream nextPut: {
+								                         modName.
+								                         node identifier.
+								                         node parametersList first size } ].
+				                         node
+					                         isViennaExplicitOperationDefinitionNode
 					                         ifTrue: [
 						                         stream nextPut: {
 								                         modName.
 								                         node first.
-								                         node fifth first size } ].
-				                         node label
-				                         = 'ExplicitOperationDefinition' ifTrue: [
-					                         stream nextPut: {
-							                         modName.
-							                         node first.
-							                         node fourth size } ] ] ] ]
+								                         node fourth size } ] ] ] ]
 ]
 
 { #category : #accessing }

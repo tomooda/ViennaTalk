@@ -96,10 +96,11 @@ ViennaNodeTest >> testAsGlobalName [
 
 { #category : #running }
 ViennaNodeTest >> testCopyFragment [
+
 	| op1 op2 |
 	op1 := skip
-		parentLabelled: 'ExplicitOperationDefinition'
-		ifAbsent: [ nil ].
+		       detectParent: #isViennaExplicitOperationDefinitionNode
+		       ifNone: [ nil ].
 	op2 := op1 copyFragment.
 	self assert: (op1 sameAs: op2).
 	self deny: op1 identicalTo: op2.
@@ -108,10 +109,11 @@ ViennaNodeTest >> testCopyFragment [
 
 { #category : #running }
 ViennaNodeTest >> testCopyWhole [
+
 	| op1 op2 |
 	op1 := skip
-		parentLabelled: 'ExplicitOperationDefinition'
-		ifAbsent: [ nil ].
+		       detectParent: #isViennaExplicitOperationDefinitionNode
+		       ifNone: [ nil ].
 	op2 := op1 copyWhole.
 	self assert: (op1 sameAs: op2).
 	self deny: op1 identicalTo: op2.
@@ -132,9 +134,8 @@ ViennaNodeTest >> testDefinitionOfLocalName [
 		equals: 'RecordTypeDefinition'.
 	self assert: (skip definitionOfLocalName: 'v2') parent parent
 			isViennaTuplePatternNode.
-	self
-		assert: (skip definitionOfLocalName: 'exp_f') label
-		equals: 'ExplicitFunctionDefinition'.
+	self assert: (skip definitionOfLocalName: 'exp_f')
+			isViennaExplicitFunctionDefinitionNode.
 	self
 		assert: (skip definitionOfLocalName: 'imp_f') label
 		equals: 'ImplicitFunctionDefinition'.
@@ -285,6 +286,7 @@ ViennaNodeTest >> testIsValueNameNode [
 
 { #category : #running }
 ViennaNodeTest >> testResolveLocalName [
+
 	self assert: (skip resolveLocalName: 'nothing') equals: nil.
 	self assert: (skip resolveLocalName: 'x1') equals: nil.
 	self assert: (skip resolveLocalName: 'x') equals: nil.
@@ -294,9 +296,8 @@ ViennaNodeTest >> testResolveLocalName [
 	self
 		assert: (skip resolveLocalName: 'v2') label
 		equals: 'ValueDefinition'.
-	self
-		assert: (skip resolveLocalName: 'exp_f') label
-		equals: 'ExplicitFunctionDefinition'.
+	self assert: (skip resolveLocalName: 'exp_f')
+			isViennaExplicitFunctionDefinitionNode.
 	self
 		assert: (skip resolveLocalName: 'imp_f') label
 		equals: 'ImplicitFunctionDefinition'.
@@ -307,9 +308,9 @@ ViennaNodeTest >> testResolveLocalName [
 	self
 		assert: (skip resolveLocalName: 'Ti') label
 		equals: 'TypeDefinition'.
-	self
-		assert: (skip resolveLocalName: 'opi') label
-		equals: 'ExplicitOperationDefinition'
+	self assert:
+		(skip resolveLocalName: 'opi')
+			isViennaExplicitOperationDefinitionNode
 ]
 
 { #category : #running }

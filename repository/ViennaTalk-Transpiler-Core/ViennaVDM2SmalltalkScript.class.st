@@ -38,7 +38,7 @@ ViennaVDM2SmalltalkScript >> definitionBlock: aViennaNode env: aDictionary [
 ViennaVDM2SmalltalkScript >> flatDocument: aViennaNode env: aDictionary [
 
 	| vars lazyDefs eagerDefs |
-	aViennaNode first label = 'DefinitionBlock' ifFalse: [
+	aViennaNode first isViennaDefinitionBlockNode ifFalse: [
 		^ self error: 'This is not a flat spec.' ].
 	vars := self boundVariables: aViennaNode.
 	lazyDefs := OrderedCollection new.

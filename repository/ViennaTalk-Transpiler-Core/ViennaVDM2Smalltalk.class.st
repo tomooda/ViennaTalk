@@ -613,9 +613,10 @@ ViennaVDM2Smalltalk >> distributedSetUnion: aViennaNode env: aDictionary [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2Smalltalk >> document: aViennaNode env: aDictionary [
-	^ aViennaNode first label = 'DefinitionBlock'
-		ifTrue: [ self flatDocument: aViennaNode env: aDictionary ]
-		ifFalse: [ self modularDocument: aViennaNode env: aDictionary ]
+
+	^ aViennaNode first isViennaDefinitionBlockNode
+		  ifTrue: [ self flatDocument: aViennaNode env: aDictionary ]
+		  ifFalse: [ self modularDocument: aViennaNode env: aDictionary ]
 ]
 
 { #category : #'enabling/disabling' }

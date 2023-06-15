@@ -122,17 +122,15 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesDclStatementInto [
 
 { #category : #'tests-bound variables-definitions' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesDefinitionBlockInto [
+
 	| node binds |
-	node := ViennaVDMParser new definitionBlock end parse: 'values v1 = e1; v2 = e2'.
+	node := ViennaVDMParser new definitionBlock end parse:
+		        'values v1 = e1; v2 = e2'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'DefinitionBlock'.
+	self assert: node isViennaDefinitionBlockNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{'v1'.
-			'v2'} asSet
+	self assert: binds equals: { 'v1'. 'v2' } asSet
 ]
 
 { #category : #'tests-bound variables-definitions' }
@@ -182,24 +180,28 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesEqualDefinitionLis
 
 { #category : #'tests-bound variables-definitions' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesExplicitFunctionDefinitionInto [
+
 	| node binds |
-	node := ViennaVDMParser new explicitFunctionDefinition end parse: 'fn[@t] : t1 -> t2 fn(x) == e'.
+	node := ViennaVDMParser new explicitFunctionDefinition end parse:
+		        'fn[@t] : t1 -> t2 fn(x) == e'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'ExplicitFunctionDefinition'.
+	self assert: node isViennaExplicitFunctionDefinitionNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self assert: binds equals: {'fn'} asSet
+	self assert: binds equals: { 'fn' } asSet
 ]
 
 { #category : #'tests-bound variables-definitions' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesExplicitOperationDefinitionInto [
+
 	| node binds |
-	node := ViennaVDMParser new explicitOperationDefinition end parse: 'op: t1 ==> t2 op(x) == return e'.
+	node := ViennaVDMParser new explicitOperationDefinition end parse:
+		        'op: t1 ==> t2 op(x) == return e'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'ExplicitOperationDefinition'.
+	self assert: node isViennaExplicitOperationDefinitionNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self assert: binds equals: {'op'} asSet
+	self assert: binds equals: { 'op' } asSet
 ]
 
 { #category : #'tests-bound variables-interfaces' }

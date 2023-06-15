@@ -25,26 +25,22 @@ ViennaRenameExplicitOperation >> executeOnDefinition [
 
 { #category : #accessing }
 ViennaRenameExplicitOperation >> findDefinitionNode [
-	ast module
-		ifNotNil: [ :node | 
-			node third
-				do: [ :definitionBlock | 
-					definitionBlock first label = 'OperationDefinitions'
-						ifTrue: [ definitionBlock first
-								do: [ :accessOperationDef | 
-									accessOperationDef second first
-										ifNotNil: [ :operationDef | 
-											(operationDef label = 'ExplicitOperationDefinition'
-												and: [ operationDef first = self oldName
-														and: [ operationDef third = self oldName ] ])
-												ifTrue: [ ^ operationDef ] ] ] ] ] ].
+
+	ast module ifNotNil: [ :node |
+		node third do: [ :definitionBlock |
+			definitionBlock first label = 'OperationDefinitions' ifTrue: [
+				definitionBlock first do: [ :accessOperationDef |
+					accessOperationDef second first ifNotNil: [ :operationDef |
+						(operationDef isViennaExplicitOperationDefinitionNode:
+							 self oldName) ifTrue: [ ^ operationDef ] ] ] ] ] ].
 	^ nil
 ]
 
 { #category : #accessing }
 ViennaRenameExplicitOperation >> findOldName [
 
-	ast label = 'ExplicitOperationDefinition' ifTrue: [ ^ ast first ].
+	ast isViennaExplicitOperationDefinitionNode ifTrue: [
+		^ ast identifier ].
 	ast isViennaLocalNameNode ifTrue: [ ^ ast first ].
 	^ nil
 ]

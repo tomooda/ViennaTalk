@@ -20,7 +20,7 @@ ViennaExtractTypeAndReplaceAll >> execute [
 	typeDefinitions ifNil: [
 		typeDefinitions := ViennaNode label: 'TypeDefinitions'.
 		moduleBody add:
-			(ViennaNode label: 'DefinitionBlock' with: typeDefinitions) ].
+			(ViennaDefinitionBlockNode definition: typeDefinitions) ].
 	ast module allDescendantsDo: [ :n |
 		(ast sameAs: n) ifTrue: [
 			self replaceNode: n with: (ViennaTypeNameNode name:

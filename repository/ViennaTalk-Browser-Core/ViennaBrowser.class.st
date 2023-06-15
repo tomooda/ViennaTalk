@@ -1073,7 +1073,7 @@ ViennaBrowser >> generateViennaDocSourceScript [
 						          (module ifNil: [ '' ] ifNotNil: [ module , '`' ])
 						          , node first
 						          put: (source copyFrom: node start to: node end) ].
-				          node label = 'ExplicitOperationDefinition' ifTrue: [
+				          node isViennaExplicitOperationDefinitionNode ifTrue: [
 					          sources
 						          at:
 						          (module ifNil: [ '' ] ifNotNil: [ module , '`' ])
@@ -1097,7 +1097,7 @@ ViennaBrowser >> generateViennaDocSourceScript [
 						          (module ifNil: [ '' ] ifNotNil: [ module , '`' ])
 						          , node first first
 						          put: (source copyFrom: node start to: node end) ].
-				          node label = 'ExplicitFunctionDefinition' ifTrue: [
+				          node isViennaExplicitFunctionDefinitionNode ifTrue: [
 					          sources
 						          at:
 						          (module ifNil: [ '' ] ifNotNil: [ module , '`' ])

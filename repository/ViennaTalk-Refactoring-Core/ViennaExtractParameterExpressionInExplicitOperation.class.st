@@ -25,7 +25,8 @@ ViennaExtractParameterExpressionInExplicitOperation >> executeDefinition [
 
 { #category : #accessing }
 ViennaExtractParameterExpressionInExplicitOperation >> findDefinitionNode [
+
 	^ ast parent
-		parentLabelled: 'ExplicitOperationDefinition'
-		ifAbsent: []
+		  detectParent: #isViennaExplicitOperationDefinitionNode
+		  ifNone: [  ]
 ]

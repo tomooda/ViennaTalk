@@ -20,7 +20,7 @@ ViennaExtractValueAndReplaceAll >> execute [
 	valueDefinitions ifNil: [
 		valueDefinitions := ViennaNode label: 'ValueDefinitions'.
 		moduleBody add:
-			(ViennaNode label: 'DefinitionBlock' with: valueDefinitions) ].
+			(ViennaDefinitionBlockNode definition: valueDefinitions) ].
 	ast module allDescendantsDo: [ :n |
 		(ast sameAs: n) ifTrue: [
 			self

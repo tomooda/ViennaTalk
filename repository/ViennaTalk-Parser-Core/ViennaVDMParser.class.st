@@ -234,13 +234,11 @@ ViennaVDMParser >> casesStatementAlternative [
 
 { #category : #'parsers-statements' }
 ViennaVDMParser >> casesStatementAlternatives [
-	^ super casesStatementAlternatives
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'CasesStatementAlternatives'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super casesStatementAlternatives =>> [ :start :end :array |
+	  (ViennaCasesStatementAlternativesNode withAll: array)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-types' }
@@ -300,13 +298,11 @@ ViennaVDMParser >> defStatement [
 
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> definitionBlock [
-	^ super definitionBlock
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'DefinitionBlock'
-				start: start
-				end: end
-				with: array ]
+
+	^ super definitionBlock =>> [ :start :end :node |
+	  (ViennaDefinitionBlockNode definition: node)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -463,24 +459,34 @@ ViennaVDMParser >> exitStatement [
 
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> explicitFunctionDefinition [
-	^ super explicitFunctionDefinition
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'ExplicitFunctionDefinition'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super explicitFunctionDefinition =>> [ :start :end :array |
+	  (ViennaExplicitFunctionDefinitionNode
+		   identifier: array first
+		   typeVariableList: array second
+		   type: array third
+		   parametersList: array fifth
+		   expression: array sixth
+		   pre: array seventh
+		   post: array eighth
+		   measure: array ninth)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> explicitOperationDefinition [
-	^ super explicitOperationDefinition
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'ExplicitOperationDefinition'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super explicitOperationDefinition =>> [ :start :end :array |
+	  (ViennaExplicitOperationDefinitionNode
+		   identifier: array first
+		   type: array second
+		   parameters: array fourth
+		   operationBody: array fifth
+		   pre: array sixth
+		   post: array seventh)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-interfaces' }

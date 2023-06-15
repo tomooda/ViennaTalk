@@ -37,7 +37,7 @@ ViennaUseFunctionInAllOccurrences >> executeOne [
 ViennaUseFunctionInAllOccurrences >> findDefinitionNode [
 
 	ast ifNil: [ ^ nil ].
-	ast label = 'ExplicitFunctionDefinition' ifTrue: [ ^ ast ].
+	ast isViennaExplicitFunctionDefinitionNode ifTrue: [ ^ ast ].
 	ast isViennaExpressionNode ifFalse: [ ^ nil ].
 	ast module ifNotNil: [ :node |
 		node third do: [ :definitionBlock |
@@ -45,21 +45,21 @@ ViennaUseFunctionInAllOccurrences >> findDefinitionNode [
 				definitionBlock first do: [ :accessFunctionDefinition |
 					accessFunctionDefinition second ifNotNil: [ :functionDefinition |
 						functionDefinition first ifNotNil: [ :explicitFunctionDefinition |
-							(explicitFunctionDefinition label
-							 = 'ExplicitFunctionDefinition' and: [
-								 explicitFunctionDefinition seventh isNil and: [
-									 explicitFunctionDefinition sixth isViennaLocalNameNode not
-										 and: [
-											 | binds |
-											 binds := Dictionary new.
-											 explicitFunctionDefinition fifth allDescendantsDo: [
-												 :patternNode |
+							(explicitFunctionDefinition
+								 isViennaExplicitFunctionDefinitionNode and: [
+								 explicitFunctionDefinition pre isNil and: [
+									 explicitFunctionDefinition expression isViennaLocalNameNode
+										 not and: [
+										 | binds |
+										 binds := Dictionary new.
+										 explicitFunctionDefinition parametersList
+											 allDescendantsDo: [ :patternNode |
 												 patternNode isViennaPatternIdentifierNode ifTrue: [
 													 binds at: patternNode name put: nil ] ].
-											 self
-												 match: explicitFunctionDefinition sixth
-												 with: ast
-												 bindings: binds ] ] ]) ifTrue: [
+										 self
+											 match: explicitFunctionDefinition expression
+											 with: ast
+											 bindings: binds ] ] ]) ifTrue: [
 								^ explicitFunctionDefinition ] ] ] ] ] ] ].
 	^ nil
 ]

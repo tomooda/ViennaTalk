@@ -50,9 +50,10 @@ ViennaGlobalNameNode >> isFunctionNameNode [
 	(self moduleNamed: self moduleIdentifier) ifNotNil: [ :moduleNode |
 		(moduleNode definitionOfLocalName: self identifier) ifNotNil: [
 			:defNode |
-			((#( 'ExplicitFunctionDefinition' 'ImplicitFunctionDefinition' )
-				  includes: defNode label) and: [ defNode first = self identifier ])
-				ifTrue: [ ^ true ] ] ].
+			((defNode isViennaExplicitFunctionDefinitionNode: self identifier)
+				 or: [
+					 (#( 'ImplicitFunctionDefinition' ) includes: defNode label)
+						 and: [ defNode first = self identifier ] ]) ifTrue: [ ^ true ] ] ].
 	^ false
 ]
 
@@ -62,9 +63,10 @@ ViennaGlobalNameNode >> isOperationNameNode [
 	(self moduleNamed: self moduleIdentifier) ifNotNil: [ :moduleNode |
 		(moduleNode definitionOfLocalName: self identifier) ifNotNil: [
 			:defNode |
-			((#( 'ExplicitOperationDefinition' 'ImplicitOperationDefinition' )
-				  includes: defNode label) and: [ defNode first = self identifier ])
-				ifTrue: [ ^ true ] ] ].
+			(defNode isViennaExplicitOperationDefinitionNode: self identifier)
+				ifTrue: [ ^ true ].
+			((#( 'ImplicitOperationDefinition' ) includes: defNode label) and: [
+				 defNode first = self identifier ]) ifTrue: [ ^ true ] ] ].
 	^ false
 ]
 

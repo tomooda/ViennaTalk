@@ -15,6 +15,45 @@ ViennaModuleNode class >> identifier: aString interface: aViennaInterfaceNode mo
 		  yourself
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaModuleNode >> definitionOfLocalName: aString [
+
+	self moduleBody do: [ :defBlock |
+		defBlock first label = 'StateDefinition'
+			ifTrue: [
+				| state |
+				state := defBlock first.
+				state first = aString ifTrue: [ ^ defBlock ].
+				state second do: [ :field |
+					field first = aString ifTrue: [ ^ field ] ] ]
+			ifFalse: [
+				defBlock first do: [ :def |
+					| defItem defLabel |
+					defItem := def second.
+					defLabel := defItem label.
+					(defLabel = 'TypeDefinition' and: [ defItem first = aString ])
+						ifTrue: [ ^ defItem ].
+					(defLabel = 'RecordTypeDefinition' and: [
+						 defItem first = aString ]) ifTrue: [ ^ defItem ].
+					defLabel = 'ValueDefinition' ifTrue: [
+						defItem first
+							allDescendantsSuchThat: [ :n |
+							n isViennaPatternIdentifierNode: aString ]
+							do: [ :n | ^ n ] ].
+					defLabel = 'FunctionDefinition' ifTrue: [
+						defItem first first = aString ifTrue: [ ^ defItem first ] ].
+					defLabel = 'OperationDefinition' ifTrue: [
+						defItem first first = aString ifTrue: [ ^ defItem first ] ] ] ] ].
+	self interface importDefinitionList ifNotNil: [ :imports |
+		imports do: [ :importDef |
+			importDef second isViennaImportModuleSignatureNode ifTrue: [
+				importDef second do: [ :imps |
+					imps do: [ :import |
+						(import at: import size) ifNotNil: [ :rename |
+							rename first = aString ifTrue: [ ^ import ] ] ] ] ] ] ].
+	^ nil
+]
+
 { #category : #'pretty printing' }
 ViennaModuleNode >> formatWith: aViennaAbstractFormatter [
 

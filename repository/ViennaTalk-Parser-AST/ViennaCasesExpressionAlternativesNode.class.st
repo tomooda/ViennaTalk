@@ -1,6 +1,6 @@
 Class {
 	#name : #ViennaCasesExpressionAlternativesNode,
-	#superclass : #ViennaObsoleteNode,
+	#superclass : #ViennaDefinitionComponentNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }
@@ -13,7 +13,7 @@ ViennaCasesExpressionAlternativesNode >> formatWith: aViennaAbstractFormatter [
 		  withAll: (aViennaAbstractFormatter formatAll: self)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaCasesExpressionAlternativesNode >> isViennaCasesExpressionAlternativesNode [
 
 	^ true

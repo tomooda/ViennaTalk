@@ -728,9 +728,11 @@ ViennaRefactoringBrowser >> displayDefinition: aViennaNode [
 		node label = 'RecordTypeDefinition' ifTrue: [ ^ node first ].
 		node label = 'ValueDefinition' ifTrue: [ ^ node first source ].
 		node label = 'StateDefinition' ifTrue: [ ^ node first ].
-		node label = 'ExplicitFunctionDefinition' ifTrue: [ ^ node first ].
+		node isViennaExplicitFunctionDefinitionNode ifTrue: [
+			^ node identifier ].
 		node label = 'ImplicitFunctionDefinition' ifTrue: [ ^ node first ].
-		node label = 'ExplicitOperationDefinition' ifTrue: [ ^ node first ].
+		node isViennaExplicitOperationDefinitionNode ifTrue: [
+			^ node identifier ].
 		node label = 'ImplicitOperationDefinition' ifTrue: [ ^ node first ].
 		node label = 'ImportModuleDefinitionAll' ifTrue: [ ^ 'all' ].
 		node isViennaImportSignatureNode ifTrue: [ ^ '- all -' ].

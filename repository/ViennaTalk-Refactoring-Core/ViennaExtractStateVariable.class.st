@@ -54,7 +54,7 @@ ViennaExtractStateVariable >> execute [
 											                       expressionList:
 											                       (ViennaNode label: 'ExpressionList'))))).
 		moduleBody add:
-			(ViennaNode label: 'DefinitionBlock' with: stateDefinition) ].
+			(ViennaDefinitionBlockNode definition: stateDefinition) ].
 	fieldList := stateDefinition second.
 	fieldList add: (ViennaFieldNode
 			 identifier: self newName

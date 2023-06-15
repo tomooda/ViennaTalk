@@ -28,7 +28,7 @@ ViennaExtractType >> execute [
 	typeDefinitions ifNil: [
 		typeDefinitions := ViennaNode label: 'TypeDefinitions'.
 		moduleBody add:
-			(ViennaNode label: 'DefinitionBlock' with: typeDefinitions) ].
+			(ViennaDefinitionBlockNode definition: typeDefinitions) ].
 	self replaceNode: ast with: (ViennaTypeNameNode name:
 			 (ViennaLocalNameNode identifier: self newName)).
 	typeDefinition := ViennaNode

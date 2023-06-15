@@ -9,10 +9,11 @@ ViennaMoveOperation >> findDefinitionNode [
 
 	ast ifNil: [ ^ nil ].
 	ast resolve ifNotNil: [ :defNode |
-		(#( 'ExplicitOperationDefinition' 'ImplicitOperationDefinition' )
-			 includes: defNode label) ifFalse: [ ^ nil ].
-		defNode label = 'ExplicitOperationDefinition' ifTrue: [
-			defNode fifth allDescendantsDo: [ :node |
+		(defNode isViennaExplicitOperationDefinitionNode or: [
+			 defNode isViennaImplicitOperationDefinitionNode ]) ifFalse: [
+			^ nil ].
+		defNode isViennaExplicitOperationDefinitionNode ifTrue: [
+			defNode operationBody allDescendantsDo: [ :node |
 				(node isViennaLocalNameNode and: [ node isStateVariableNameNode ])
 					ifTrue: [ ^ nil ] ] ].
 		(defNode label = 'ImplicitOperationDefinition' and: [

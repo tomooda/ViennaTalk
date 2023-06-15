@@ -86,14 +86,14 @@ ViennaInlineApplyFunctionAndRemove >> execute [
 
 { #category : #accessing }
 ViennaInlineApplyFunctionAndRemove >> findDefinitionNode [
+
 	| identifier |
 	identifier := ast identifier.
 	identifier ifNil: [ ^ nil ].
-	(ast resolveLocalName: identifier)
-		ifNotNil: [ :defNode | 
-			(#('ExplicitFunctionDefinition' 'ImplicitFunctionDefinition')
-				includes: defNode label)
-				ifTrue: [ ^ defNode ] ].
+	(ast resolveLocalName: identifier) ifNotNil: [ :defNode |
+		defNode isViennaExplicitFunctionDefinitionNode ifTrue: [ ^ defNode ].
+		(#( 'ImplicitFunctionDefinition' ) includes: defNode label) ifTrue: [
+			^ defNode ] ].
 	^ nil
 ]
 

@@ -85,14 +85,14 @@ ViennaInlineApplyFunction >> findDefinitionNode [
 	self callerNode first ifNotNil: [ :nameNode |
 		nameNode isViennaLocalNameNode ifTrue: [
 			^ (nameNode resolveLocalName: nameNode first) ifNotNil: [ :defNode |
-				  defNode label = 'ExplicitFunctionDefinition'
+				  defNode isViennaExplicitFunctionDefinitionNode
 					  ifTrue: [ defNode ]
 					  ifFalse: [ nil ] ] ].
 		nameNode isViennaGlobalNameNode ifTrue: [
 			^ (nameNode moduleNamed: nameNode first) ifNotNil: [ :moduleNode |
 				  (moduleNode resolveLocalName: nameNode second) ifNotNil: [
 					  :defNode |
-					  defNode label = 'ExplicitFunctionDefinition'
+					  defNode isViennaExplicitFunctionDefinitionNode
 						  ifTrue: [ defNode ]
 						  ifFalse: [ nil ] ] ] ] ].
 	^ nil

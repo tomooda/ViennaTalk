@@ -140,40 +140,6 @@ ViennaAbstractFormatter >> exists1 [
 ]
 
 { #category : #'formatting-definitions' }
-ViennaAbstractFormatter >> explicitFunctionDefinition: aViennaNode [
-	| identifier1 typeVariableList functionType identifier2 parametersList expression pre post measure |
-	identifier1 := self format: aViennaNode first.
-	typeVariableList := self format: aViennaNode second.
-	functionType := self format: aViennaNode third.
-	identifier2 := self format: aViennaNode fourth.
-	parametersList := self format: aViennaNode fifth.
-	expression := self format: aViennaNode sixth.
-	pre := aViennaNode seventh ifNotNil: [ :node | String cr , 'pre ' , (self format: node) ] ifNil: [ '' ].
-	post := aViennaNode eighth ifNotNil: [ :node | String cr , 'post ' , (self format: node) ] ifNil: [ '' ].
-	measure := aViennaNode ninth ifNotNil: [ :node | String cr , 'measure ' , (self format: node) ] ifNil: [ '' ].
-	^ identifier1 , typeVariableList , ' : ' , functionType , String cr
-		, (self indentString: identifier2 , parametersList , ' ==' insertCrIfNeeded: expression) , pre , post , measure
-]
-
-{ #category : #'formatting-definitions' }
-ViennaAbstractFormatter >> explicitOperationDefinition: aViennaNode [
-	| identifier1 operationType identifier2 parameters expression pre post |
-	identifier1 := self format: aViennaNode first.
-	operationType := self format: aViennaNode second.
-	identifier2 := self format: aViennaNode third.
-	parameters := self format: aViennaNode fourth.
-	expression := self format: aViennaNode fifth.
-	pre := aViennaNode sixth
-		ifNotNil: [ :node | String cr , (self indentString: 'pre ' insertCrIfNeeded: (self format: node)) ]
-		ifNil: [ '' ].
-	post := aViennaNode seventh
-		ifNotNil: [ :node | String cr , (self indentString: 'post ' insertCrIfNeeded: (self format: node)) ]
-		ifNil: [ '' ].
-	^ identifier1 , ' : ' , operationType , String cr
-		, (self indentString: identifier2 , parameters , ' ==' insertCrIfNeeded: expression) , pre , post
-]
-
-{ #category : #'formatting-definitions' }
 ViennaAbstractFormatter >> extendedExplicitFunctionDefinition: aViennaNode [
 	| identifier typeVariableList parameterTypes identifierTypePairList body pre post |
 	identifier := aViennaNode first.

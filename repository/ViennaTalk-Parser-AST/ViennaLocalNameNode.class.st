@@ -53,9 +53,10 @@ ViennaLocalNameNode >> isExportedNameNode [
 ViennaLocalNameNode >> isFunctionNameNode [
 
 	(self definitionOfLocalName: self identifier) ifNotNil: [ :defNode |
-		((#( 'ExplicitFunctionDefinition' 'ImplicitFunctionDefinition' )
-			  includes: defNode label) and: [ defNode first = self identifier ])
-			ifTrue: [ ^ true ].
+		((defNode isViennaExplicitFunctionDefinitionNode: self identifier)
+			 or: [
+				 (#( 'ImplicitFunctionDefinition' ) includes: defNode label) and: [
+					 defNode first = self identifier ] ]) ifTrue: [ ^ true ].
 		(defNode isViennaFunctionImportNode: self identifier) ifTrue: [
 			^ true ] ].
 	^ false
@@ -77,9 +78,10 @@ ViennaLocalNameNode >> isLocalValueNameNode [
 ViennaLocalNameNode >> isOperationNameNode [
 
 	(self definitionOfLocalName: self identifier) ifNotNil: [ :defNode |
-		((#( 'ExplicitOperationDefinition' 'ImplicitOperationDefinition' )
-			  includes: defNode label) and: [ defNode first = self identifier ])
+		(defNode isViennaExplicitOperationDefinitionNode: self identifier)
 			ifTrue: [ ^ true ].
+		((#( 'ImplicitOperationDefinition' ) includes: defNode label) and: [
+			 defNode first = self identifier ]) ifTrue: [ ^ true ].
 		(defNode isViennaOperationImportNode: self identifier) ifTrue: [
 			^ true ] ].
 	^ false

@@ -46,13 +46,13 @@ ViennaRemoveOperation >> execute [
 
 { #category : #accessing }
 ViennaRemoveOperation >> findDefinitionNode [
+
 	ast ifNil: [ ^ nil ].
-	^ ast resolve
-		ifNotNil: [ :node | 
-			(#('ExplicitOperationDefinition' 'ImplicitOperationDefinition')
-				includes: node label)
-				ifTrue: [ node ]
-				ifFalse: [ nil ] ]
+	^ ast resolve ifNotNil: [ :node |
+		  (node isViennaExplicitOperationDefinitionNode or: [
+			   node isViennaImplicitOperationDefinitionNode ])
+			  ifTrue: [ node ]
+			  ifFalse: [ nil ] ]
 ]
 
 { #category : #accessing }

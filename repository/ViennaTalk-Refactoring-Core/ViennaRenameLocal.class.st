@@ -229,12 +229,10 @@ ViennaRenameLocal >> executeOnLetExpression: aViennaNode [
 				node isViennaPatternIdentifierNode: self oldName ]
 				do: [ :node | node identifier: self newName ] ].
 		(def label = 'FunctionDefinition' and: [
-			 def first first = self oldName ]) ifTrue: [
+			 def first identifier = self oldName ]) ifTrue: [
 			| functionDefinition |
 			functionDefinition := def first.
-			functionDefinition at: 1 put: self newName.
-			functionDefinition label = 'ExplicitFunctionDefinition' ifTrue: [
-				functionDefinition at: 4 put: self newName ] ] ]
+			functionDefinition identifier: self newName ] ]
 ]
 
 { #category : #operations }
@@ -252,9 +250,7 @@ ViennaRenameLocal >> executeOnLetStatement: aViennaNode [
 			 def first first = self oldName ]) ifTrue: [
 			| functionDefinition |
 			functionDefinition := def first.
-			functionDefinition at: 1 put: self newName.
-			functionDefinition label = 'ExplicitFunctionDefinition' ifTrue: [
-				functionDefinition at: 4 put: self newName ] ] ]
+			functionDefinition identifier: self newName ] ]
 ]
 
 { #category : #operations }

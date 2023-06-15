@@ -46,22 +46,21 @@ ViennaExtractFunctionFromLetExpression >> execute [
 	functionDefinitions ifNil: [
 		functionDefinitions := ViennaNode label: 'FunctionDefinitions'.
 		moduleBody add:
-			(ViennaNode label: 'DefinitionBlock' with: functionDefinitions) ].
+			(ViennaDefinitionBlockNode definition: functionDefinitions) ].
 	self replaceNode: ast with: (ViennaApplyNode
 			 expression: (ViennaLocalNameNode identifier: self newName)
 			 argumentExpressionList: self arguments).
-	explicitFunctionDefinition := ViennaNode
-		                              label: 'ExplicitFunctionDefinition'
-		                              withAll: {
-				                              self newName.
-				                              ViennaTypeVariableListNode empty.
-				                              self functionType.
-				                              self newName.
-				                              self functionParametersList.
-				                              self functionBody.
-				                              nil.
-				                              nil.
-				                              nil }.
+	explicitFunctionDefinition := ViennaExplicitFunctionDefinitionNode
+		                              identifier: self newName
+		                              typeVariableList:
+		                              ViennaTypeVariableListNode empty
+		                              type: self functionType
+		                              parametersList:
+		                              self functionParametersList
+		                              expression: self functionBody
+		                              pre: nil
+		                              post: nil
+		                              measure: nil.
 	accessFunctionDefinition := ViennaAccessFunctionDefinitionNode
 		                            access: (ViennaNode label: 'Access')
 		                            functionDefinition: (ViennaNode

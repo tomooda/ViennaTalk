@@ -49,20 +49,18 @@ ViennaExtractOperationFromLetStatement >> execute [
 	operationDefinitions ifNil: [
 		operationDefinitions := ViennaNode label: 'OperationDefinitions'.
 		moduleBody add:
-			(ViennaNode label: 'DefinitionBlock' with: operationDefinitions) ].
+			(ViennaDefinitionBlockNode definition: operationDefinitions) ].
 	self replaceNode: ast with: (ViennaCallStatementNode
 			 name: (ViennaLocalNameNode identifier: self newName)
 			 expressionList: self arguments).
-	explicitOperationDefinition := ViennaNode
-		                               label: 'ExplicitOperationDefinition'
-		                               withAll: {
-				                               self newName.
-				                               self operationType.
-				                               self newName.
-				                               self operationParametersList.
-				                               self operationBody.
-				                               nil.
-				                               nil }.
+	explicitOperationDefinition := ViennaExplicitOperationDefinitionNode
+		                               identifier: self newName
+		                               type: self operationType
+		                               parameters:
+		                               self operationParametersList
+		                               operationBody: self operationBody
+		                               pre: nil
+		                               post: nil.
 	accessOperationDefinition := ViennaAccessOperationDefinitionNode
 		                             access: (ViennaNode label: 'Access')
 		                             operationDefinition: (ViennaNode
