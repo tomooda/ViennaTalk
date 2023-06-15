@@ -10,7 +10,7 @@ ViennaConvertExplicitFunctionIntoOperation >> check [
 	^ ast isViennaNode and: [
 		  ast isViennaAccessFunctionDefinitionNode and: [
 			  ast functionDefinition isViennaNode and: [
-				  ast functionDefinition label = 'FunctionDefinition' and: [
+				  ast functionDefinition isViennaFunctionDefinitionNode and: [
 					  ast functionDefinition first
 						  isViennaExplicitFunctionDefinitionNode ] ] ] ]
 ]

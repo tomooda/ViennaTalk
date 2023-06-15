@@ -264,11 +264,6 @@ ViennaAbstractFormatter >> formatEnumerate: anArrayOfString separator: aString i
 ]
 
 { #category : #'formatting-definitions' }
-ViennaAbstractFormatter >> functionDefinition: aViennaNode [
-	^ self format: aViennaNode first
-]
-
-{ #category : #'formatting-definitions' }
 ViennaAbstractFormatter >> functionDefinitions: aViennaNode [
 
 	^ self indentString: 'functions' insertCr: (self

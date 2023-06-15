@@ -18,7 +18,7 @@ ViennaExpressionListNode >> formatWith: aViennaAbstractFormatter [
 		  withAll: expressions
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaExpressionListNode >> isViennaExpressionListNode [
 
 	^ true

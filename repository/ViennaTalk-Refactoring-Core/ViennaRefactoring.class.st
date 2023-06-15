@@ -706,8 +706,8 @@ ViennaRefactoring >> freeOccurrencesOf: aString inLet: aViennaNode do: aBlock [
 				allDescendantsSuchThat: [ :n |
 				n isViennaPatternIdentifierNode: aString ]
 				do: [ :n | ^ self ] ].
-		(def label = 'FunctionDefinition' and: [ def first first = aString ])
-			ifTrue: [ ^ self ] ].
+		(def isViennaFunctionDefinitionNode and: [
+			 def first first = aString ]) ifTrue: [ ^ self ] ].
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock
 ]
 

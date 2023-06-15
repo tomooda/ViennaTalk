@@ -29,7 +29,7 @@ ViennaUseFunctionInAllOccurrences >> executeOne [
 							   expression:
 							   (ViennaLocalNameNode identifier: self identifier)
 							   argumentExpressionList:
-							   (ViennaNode label: 'ExpressionList' withAll: args)) ] ] ].
+							   (ViennaExpressionListNode withAll: args)) ] ] ].
 	^ nil
 ]
 

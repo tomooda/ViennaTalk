@@ -335,13 +335,15 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesFieldPatternListIn
 
 { #category : #'tests-bound variables-definitions' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesFunctionDefinitionInto [
+
 	| node binds |
-	node := ViennaVDMParser new functionDefinition end parse: 'fn[@t] : t1 -> t2 fn(x) == e'.
+	node := ViennaVDMParser new functionDefinition end parse:
+		        'fn[@t] : t1 -> t2 fn(x) == e'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'FunctionDefinition'.
+	self assert: node isViennaFunctionDefinitionNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self assert: binds equals: {'fn'} asSet
+	self assert: binds equals: { 'fn' } asSet
 ]
 
 { #category : #'tests-bound variables-definitions' }

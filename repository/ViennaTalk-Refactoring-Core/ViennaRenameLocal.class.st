@@ -228,7 +228,7 @@ ViennaRenameLocal >> executeOnLetExpression: aViennaNode [
 				allDescendantsSuchThat: [ :node |
 				node isViennaPatternIdentifierNode: self oldName ]
 				do: [ :node | node identifier: self newName ] ].
-		(def label = 'FunctionDefinition' and: [
+		(def isViennaFunctionDefinitionNode and: [
 			 def first identifier = self oldName ]) ifTrue: [
 			| functionDefinition |
 			functionDefinition := def first.
@@ -246,7 +246,7 @@ ViennaRenameLocal >> executeOnLetStatement: aViennaNode [
 				allDescendantsSuchThat: [ :node |
 				node isViennaPatternIdentifierNode: self oldName ]
 				do: [ :node | node identifier: self newName ] ].
-		(def label = 'FunctionDefinition' and: [
+		(def isViennaFunctionDefinitionNode and: [
 			 def first first = self oldName ]) ifTrue: [
 			| functionDefinition |
 			functionDefinition := def first.

@@ -23,8 +23,7 @@ ViennaExplicitFunctionDefinitionNode class >> identifier: aString typeVariableLi
 { #category : #'accessing-definitions' }
 ViennaExplicitFunctionDefinitionNode >> asAccessDefinition [
 
-	^ (ViennaNode label: 'FunctionDefinition' with: self)
-		  asAccessDefinition
+	^ (ViennaFunctionDefinitionNode definition: self) asAccessDefinition
 ]
 
 { #category : #'accessing-definitions' }

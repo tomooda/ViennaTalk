@@ -25,8 +25,8 @@ ViennaLetStatementNode >> definitionOfLocalName: aString [
 				allDescendantsSuchThat: [ :n |
 				n isViennaPatternIdentifierNode: aString ]
 				do: [ :n | ^ n ] ].
-		def label = 'FunctionDefinition' ifTrue: [
-			def first first = aString ifTrue: [ ^ def first ] ] ]
+		(def isViennaFunctionDefinitionNode: aString) ifTrue: [ ^ def definition ] ].
+	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
 { #category : #'pretty printing' }

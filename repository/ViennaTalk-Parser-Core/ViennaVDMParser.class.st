@@ -569,7 +569,9 @@ ViennaVDMParser >> expressionExceptEquality [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMParser >> expressionList [
-	^ super expressionList ==> [ :array | ViennaNode label: 'ExpressionList' withAll: array ]
+
+	^ super expressionList
+	  ==> [ :array | ViennaExpressionListNode withAll: array ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -739,13 +741,11 @@ ViennaVDMParser >> fraction: arg1 and: arg2 [
 
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> functionDefinition [
-	^ super functionDefinition
-		=>> [ :start :end :body | 
-			ViennaNode
-				label: 'FunctionDefinition'
-				start: start
-				end: end
-				with: body ]
+
+	^ super functionDefinition =>> [ :start :end :body |
+	  (ViennaFunctionDefinitionNode definition: body)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-definitions' }

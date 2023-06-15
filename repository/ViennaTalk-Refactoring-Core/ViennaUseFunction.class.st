@@ -18,8 +18,7 @@ ViennaUseFunction >> execute [
 		        self expressionFromPattern: node bindings: binds ].
 	^ self replaceNode: ast with: (ViennaApplyNode
 			   expression: (ViennaLocalNameNode identifier: self identifier)
-			   argumentExpressionList:
-			   (ViennaNode label: 'ExpressionList' withAll: args))
+			   argumentExpressionList: (ViennaExpressionListNode withAll: args))
 ]
 
 { #category : #accessing }

@@ -335,13 +335,8 @@ ViennaNode >> asAccessDefinition [
 			^ ViennaAccessTypeDefinitionNode
 				  access: (ViennaNode label: 'Access')
 				  typeDefinition: self ].
-	self label = 'FunctionDefinition' ifTrue: [
-		^ ViennaAccessFunctionDefinitionNode
-			  access: (ViennaNode label: 'Access')
-			  functionDefinition: self ].
 	(#( 'ImplicitFunctionDefinition' ) includes: self label) ifTrue: [
-		^ (ViennaNode label: 'FunctionDefinition' with: self)
-			  asAccessDefinition ].
+		^ (ViennaFunctionDefinitionNode definition: self) asAccessDefinition ].
 	self label = 'OperationDefinition' ifTrue: [
 		^ ViennaAccessOperationDefinitionNode
 			  access: (ViennaNode label: 'Access')
@@ -576,9 +571,8 @@ ViennaNode >> definitionInDefinitionBlockOfLocalName: aString do: aBlock [
 						allDescendantsSuchThat: [ :n |
 						n isViennaPatternIdentifierNode: aString ]
 						do: [ :n | ^ aBlock value: n ] ].
-				defLabel = 'FunctionDefinition' ifTrue: [
-					defItem first first = aString ifTrue: [
-						^ aBlock value: defItem first ] ].
+				(defItem isViennaFunctionDefinitionNode: aString) ifTrue: [
+					^ aBlock value: defItem definition ].
 				defLabel = 'OperationDefinition' ifTrue: [
 					defItem first first = aString ifTrue: [
 						^ aBlock value: defItem first ] ] ] ]
@@ -1358,6 +1352,12 @@ ViennaNode >> isViennaForallExpressionNode [
 
 { #category : #testing }
 ViennaNode >> isViennaFunctionDefinitionNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaFunctionDefinitionNode: aString [
 
 	^ false
 ]
@@ -2787,8 +2787,8 @@ ViennaNode >> resolve [
 	(#( 'TypeDefinition' 'RecordTypeDefinition' 'ValueDefinition'
 	    'ImplicitFunctionDefinition' 'ImplicitOperationDefinition' )
 		 includes: self label) ifTrue: [ ^ self ].
-	(#( 'FunctionDefinition' 'OperationDefinition' ) includes: self label)
-		ifTrue: [ ^ self first ].
+	(#( 'OperationDefinition' ) includes: self label) ifTrue: [
+		^ self first ].
 	^ nil
 ]
 
@@ -2861,8 +2861,8 @@ ViennaNode >> seventh [
 { #category : #'accessing-definitions' }
 ViennaNode >> shortName [
 
-	(#( 'FunctionDefinition' 'OperationDefinition' ) includes: self label)
-		ifTrue: [ ^ self first shortName ].
+	(#( 'OperationDefinition' ) includes: self label) ifTrue: [
+		^ self first shortName ].
 	(#( 'TypeDefinition' 'RecordTypeDefinition' 'ImplicitFunctionDefinition'
 	    'ImplicitOperationDefinition' 'StateDefinition' ) includes:
 		 self label) ifTrue: [ ^ self first ].

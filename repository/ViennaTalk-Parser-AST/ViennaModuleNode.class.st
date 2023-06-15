@@ -40,8 +40,8 @@ ViennaModuleNode >> definitionOfLocalName: aString [
 							allDescendantsSuchThat: [ :n |
 							n isViennaPatternIdentifierNode: aString ]
 							do: [ :n | ^ n ] ].
-					defLabel = 'FunctionDefinition' ifTrue: [
-						defItem first first = aString ifTrue: [ ^ defItem first ] ].
+					(defItem isViennaFunctionDefinitionNode: aString) ifTrue: [
+						^ defItem definition ].
 					defLabel = 'OperationDefinition' ifTrue: [
 						defItem first first = aString ifTrue: [ ^ defItem first ] ] ] ] ].
 	self interface importDefinitionList ifNotNil: [ :imports |

@@ -6,9 +6,9 @@ Class {
 
 { #category : #accessing }
 ViennaExtractOperationFromLetExpression >> arguments [
-	^ ViennaNode
-		label: 'ExpressionList'
-		withAll: (ast first collect: [ :localDef | localDef first third ])
+
+	^ ViennaExpressionListNode withAll:
+		  (ast first collect: [ :localDef | localDef first third ])
 ]
 
 { #category : #operations }
@@ -18,8 +18,8 @@ ViennaExtractOperationFromLetExpression >> check [
 	ast isViennaLetExpressionNode ifFalse: [ ^ false ].
 	params := Set new: ast first size * 2.
 	ast first do: [ :localDef |
-		localDef first label = 'FunctionDefinition' ifTrue: [ ^ false ].
-		localDef first first allDescendantsDo: [ :node |
+		localDef first isViennaFunctionDefinitionNode ifTrue: [ ^ false ].
+		localDef first definition allDescendantsDo: [ :node |
 			node isViennaPatternIdentifierNode ifTrue: [
 				params add: node first ] ] ].
 	ast first do: [ :localDef |

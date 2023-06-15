@@ -34,7 +34,7 @@ ViennaOperationBodyNode >> formatWith: aViennaAbstractFormatter [
 	^ aViennaAbstractFormatter format: self statementOrIsNotYetSpecified
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaOperationBodyNode >> isViennaOperationBodyNode [
 
 	^ true

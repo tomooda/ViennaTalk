@@ -64,7 +64,7 @@ ViennaExplicitOperationDefinitionNode >> formatWith: aViennaAbstractFormatter [
 	identifier := aViennaAbstractFormatter format: self identifier.
 	operationType := aViennaAbstractFormatter format: self type.
 	parameters := aViennaAbstractFormatter format: self parameters.
-	statement := aViennaAbstractFormatter format: self statement.
+	statement := aViennaAbstractFormatter format: self operationBody.
 	pre := self pre
 		       ifNotNil: [ :node |
 			       String cr , (aViennaAbstractFormatter
