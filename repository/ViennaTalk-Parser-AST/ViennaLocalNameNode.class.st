@@ -101,10 +101,11 @@ ViennaLocalNameNode >> isStateVariableNameNode [
 ViennaLocalNameNode >> isTypeNameNode [
 
 	(self definitionOfLocalName: self identifier) ifNotNil: [ :defNode |
-		((#( 'TypeDefinition' 'RecordTypeDefinition' ) includes:
-			  defNode label) and: [ defNode first = self identifier ]) ifTrue: [
-			^ true ].
-		(defNode isViennaTypeImportNodeRenamed: self identifier) ifTrue: [ ^ true ] ].
+		(defNode isViennaTypeSynonymNode: self identifier) ifTrue: [ ^ true ].
+		((#( 'RecordTypeDefinition' ) includes: defNode label) and: [
+			 defNode first = self identifier ]) ifTrue: [ ^ true ].
+		(defNode isViennaTypeImportNodeRenamed: self identifier) ifTrue: [
+			^ true ] ].
 	^ false
 ]
 

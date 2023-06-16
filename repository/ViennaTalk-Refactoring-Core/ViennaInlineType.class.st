@@ -14,8 +14,8 @@ ViennaInlineType >> check [
 		  ast name isViennaLocalNameNode and: [
 			  (ast definitionOfLocalName: ast name identifier) ifNotNil: [
 				  :node |
-				  node label = 'TypeDefinition'
-					  ifTrue: [ node third isNil ]
+				  node isViennaTypeSynonymNode
+					  ifTrue: [ node inv isNil ]
 					  ifFalse: [ false ] ] ] ]
 ]
 

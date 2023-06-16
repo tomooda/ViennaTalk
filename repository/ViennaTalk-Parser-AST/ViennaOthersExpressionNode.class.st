@@ -1,11 +1,11 @@
 Class {
 	#name : #ViennaOthersExpressionNode,
-	#superclass : #ViennaObsoleteNode,
+	#superclass : #ViennaDefinitionComponentNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #accessing }
+{ #category : #'instance creation' }
 ViennaOthersExpressionNode class >> expression: aViennaExpressionNode [
 
 	^ (self new: 1)
@@ -35,7 +35,7 @@ ViennaOthersExpressionNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: expression
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaOthersExpressionNode >> isViennaOthersExpressionNode [
 
 	^ true

@@ -64,9 +64,10 @@ ViennaExtractOperationFromLetExpression >> execute [
 		                             (ViennaNode
 			                              label: 'Access'
 			                              with: 'pure')
-		                             operationDefinition: (ViennaNode
-				                              label: 'OperationDefinition'
-				                              with: explicitOperationDefinition).
+		                             operationDefinition:
+		                             (ViennaOperationDefinitionNode
+			                              definition:
+			                              explicitOperationDefinition).
 	operationDefinitions add: accessOperationDefinition.
 	^ accessOperationDefinition
 ]

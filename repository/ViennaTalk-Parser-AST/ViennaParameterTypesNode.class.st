@@ -22,7 +22,7 @@ ViennaParameterTypesNode >> formatWith: aViennaAbstractFormatter [
 	  , ')'
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaParameterTypesNode >> isViennaParameterTypesNode [
 
 	^ true

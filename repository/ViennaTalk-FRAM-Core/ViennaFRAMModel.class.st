@@ -124,17 +124,16 @@ ViennaFRAMModel >> createOperationDefinitionNode: aString [
 
 	^ ViennaAccessOperationDefinitionNode
 		  access: (ViennaNode label: 'Access')
-		  operationDefinition: (ViennaNode
-				   label: 'OperationDefinition'
-				   with: (ViennaExplicitOperationDefinitionNode
-						    identifier: aString
-						    type: (ViennaOperationTypeNode
-								     argumentType: ViennaUnitTypeNode new
-								     returnType: ViennaUnitTypeNode new)
-						    parameters: ViennaParametersNode empty
-						    operationBody: ViennaOperationBodyNode isNotYetSpecified
-						    pre: nil
-						    post: nil))
+		  operationDefinition: (ViennaOperationDefinitionNode definition:
+				   (ViennaExplicitOperationDefinitionNode
+					    identifier: aString
+					    type: (ViennaOperationTypeNode
+							     argumentType: ViennaUnitTypeNode new
+							     returnType: ViennaUnitTypeNode new)
+					    parameters: ViennaParametersNode empty
+					    operationBody: ViennaOperationBodyNode isNotYetSpecified
+					    pre: nil
+					    post: nil))
 ]
 
 { #category : #private }
@@ -167,13 +166,13 @@ ViennaFRAMModel >> findOrCreateOperationNamed: operationName in: aViennaNode [
 				ifTrue: [ ^ opNode ] ] ].
 	opNode := self createOperationDefinitionNode: operationName.
 	aViennaNode allDescendantsDo: [ :node |
-		node label = 'OperationDefinitions' ifTrue: [
+		node isViennaOperationDefinitionsNode ifTrue: [
 			node add: opNode.
 			^ opNode ] ].
 	aViennaNode isEmpty ifTrue: [
 		aViennaNode add: ViennaDefinitionBlockNode empty ].
 	aViennaNode first add:
-		(ViennaNode label: 'OperationDefinition' with: opNode).
+		(ViennaOperationDefinitionNode definition: opNode).
 	^ opNode
 ]
 

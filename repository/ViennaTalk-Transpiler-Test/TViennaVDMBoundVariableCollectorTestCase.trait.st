@@ -30,7 +30,7 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesAccessOperationDef
 ]
 
 { #category : #'tests-bound variables-definitions' }
-TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesAccessTypeDefinitionInto [
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesAccessTypeSynonymInto [
 
 	| node binds |
 	node := ViennaVDMParser new accessTypeDefinition end parse:
@@ -528,13 +528,15 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesMultipleTypeBindIn
 
 { #category : #'tests-bound variables-definitions' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesOperationDefinitionInto [
+
 	| node binds |
-	node := ViennaVDMParser new operationDefinition end parse: 'op: t1 ==> t2 op(x) == return e'.
+	node := ViennaVDMParser new operationDefinition end parse:
+		        'op: t1 ==> t2 op(x) == return e'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'OperationDefinition'.
+	self assert: node isViennaOperationDefinitionNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self assert: binds equals: {'op'} asSet
+	self assert: binds equals: { 'op' } asSet
 ]
 
 { #category : #'tests-bound variables-definitions' }
@@ -869,17 +871,6 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTypeBindListInto [
 ]
 
 { #category : #'tests-bound variables-definitions' }
-TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTypeDefinitionInto [
-	| node binds |
-	node := ViennaVDMParser new typeDefinition end parse: 't1 = t2 inv v == e'.
-	self deny: node isPetit2Failure.
-	self assert: node label = 'TypeDefinition'.
-	binds := Set new.
-	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self assert: binds equals: {'t1'} asSet
-]
-
-{ #category : #'tests-bound variables-definitions' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTypeDefinitionsInto [
 	| node binds |
 	node := ViennaVDMParser new typeDefinitions end parse: 'types public t1 = t2 inv v1 == e1; public t3 = t4 inv v2 == e2'.
@@ -892,6 +883,19 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTypeDefinitionsInt
 		equals:
 			{'t1'.
 			't3'} asSet
+]
+
+{ #category : #'tests-bound variables-definitions' }
+TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTypeSynonymInto [
+
+	| node binds |
+	node := ViennaVDMParser new typeDefinition end parse:
+		        't1 = t2 inv v == e'.
+	self deny: node isPetit2Failure.
+	self assert: node isViennaTypeSynonymNode.
+	binds := Set new.
+	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
+	self assert: binds equals: { 't1' } asSet
 ]
 
 { #category : #'tests-bound variables-definitions' }

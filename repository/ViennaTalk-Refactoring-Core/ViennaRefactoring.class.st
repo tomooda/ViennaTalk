@@ -36,7 +36,7 @@ ViennaRefactoring class >> sortedInstancesOn: aViennaNode [
 { #category : #'visiting-definitions' }
 ViennaRefactoring >> addDefinition: aViennaNode in: moduleNode [
 
-	aViennaNode isViennaTypeDefinitionNode ifTrue: [
+	aViennaNode isViennaTypeSynonymNode ifTrue: [
 		^ self addTypeDefinition: aViennaNode in: moduleNode ].
 	aViennaNode isViennaRecordTypeDefinitionNode ifTrue: [
 		^ self addTypeDefinition: aViennaNode in: moduleNode ].
@@ -250,7 +250,7 @@ ViennaRefactoring >> bindingOf: aString inStateDefinition: aViennaNode do: aBloc
 ]
 
 { #category : #'visiting-bindings' }
-ViennaRefactoring >> bindingOf: aString inTypeDefinition: aViennaNode do: aBlock [
+ViennaRefactoring >> bindingOf: aString inTypeSynonym: aViennaNode do: aBlock [
 	aViennaNode first = aString
 		ifTrue: [ aBlock value: aViennaNode ].
 	aViennaNode

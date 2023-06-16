@@ -1199,24 +1199,6 @@ ViennaVDM2SmalltalkClass >> tracingString [
 	^ ViennaTracingString new
 ]
 
-{ #category : #'code generation-definitions' }
-ViennaVDM2SmalltalkClass >> typeDefinition: aViennaNode env: aDictionary [
-	| identifier type inv initializer theClass |
-	identifier := aViennaNode first.
-	type := self generate: aViennaNode second env: aDictionary.
-	inv := (self generate: aViennaNode third env: aDictionary)
-		ifNil: [ '' ]
-		ifNotNil: [ :str | ' inv: ' , str ].
-	initializer := identifier , ' := ViennaTypeHolder new. ' , identifier , ' type: (' , type
-		, inv , ')'.
-	theClass := classes at: (aViennaNode module ifNotNil: #first).
-	self
-		defineLazyMethodNamed: identifier
-		initializer: initializer
-		in: theClass
-		protocol: 'types' node: aViennaNode
-]
-
 { #category : #'code generation-interfaces' }
 ViennaVDM2SmalltalkClass >> typeImport: aViennaNode env: aDictionary [
 
@@ -1233,6 +1215,24 @@ ViennaVDM2SmalltalkClass >> typeImport: aViennaNode env: aDictionary [
 		aDictionary
 			at: renameNode first
 			put: moduleName , String space , aViennaNode first first first ]
+]
+
+{ #category : #'code generation-definitions' }
+ViennaVDM2SmalltalkClass >> typeSynonym: aViennaNode env: aDictionary [
+	| identifier type inv initializer theClass |
+	identifier := aViennaNode first.
+	type := self generate: aViennaNode second env: aDictionary.
+	inv := (self generate: aViennaNode third env: aDictionary)
+		ifNil: [ '' ]
+		ifNotNil: [ :str | ' inv: ' , str ].
+	initializer := identifier , ' := ViennaTypeHolder new. ' , identifier , ' type: (' , type
+		, inv , ')'.
+	theClass := classes at: (aViennaNode module ifNotNil: #first).
+	self
+		defineLazyMethodNamed: identifier
+		initializer: initializer
+		in: theClass
+		protocol: 'types' node: aViennaNode
 ]
 
 { #category : #utilities }

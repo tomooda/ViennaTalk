@@ -305,9 +305,7 @@ ViennaNodeTest >> testResolveLocalName [
 		assert: (skip resolveLocalName: 's1') label
 		equals: 'StateDefinition'.
 	self assert: (skip resolveLocalName: 'l') equals: nil.
-	self
-		assert: (skip resolveLocalName: 'Ti') label
-		equals: 'TypeDefinition'.
+	self assert: (skip resolveLocalName: 'Ti') isViennaTypeSynonymNode.
 	self assert:
 		(skip resolveLocalName: 'opi')
 			isViennaExplicitOperationDefinitionNode

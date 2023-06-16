@@ -44,7 +44,7 @@ ViennaRemoveFramAnnotation >> findDefinitionNode [
 		ast := ast parent ].
 	ast label = 'ImplicitOperationDefinition' ifTrue: [
 		ast := ast parent ].
-	ast label = 'OperationDefinition' ifTrue: [ ast := ast parent ].
+	ast isViennaOperationDefinitionNode ifTrue: [ ast := ast parent ].
 	ast isViennaAccessOperationDefinitionNode ifFalse: [ ^ nil ].
 	ast annotations ifNil: [ ^ nil ].
 	ast annotations ifEmpty: [ ^ nil ].

@@ -330,19 +330,18 @@ ViennaNode >> asAccessDefinition [
 		^ ViennaAccessValueDefinitionNode
 			  access: (ViennaNode label: 'Access')
 			  valueDefinition: self ].
-	(#( 'TypeDefinition' 'RecordTypeDefinition' ) includes: self label)
-		ifTrue: [
-			^ ViennaAccessTypeDefinitionNode
-				  access: (ViennaNode label: 'Access')
-				  typeDefinition: self ].
+	(#( 'RecordTypeDefinition' ) includes: self label) ifTrue: [
+		^ ViennaAccessTypeDefinitionNode
+			  access: (ViennaNode label: 'Access')
+			  typeDefinition: self ].
 	(#( 'ImplicitFunctionDefinition' ) includes: self label) ifTrue: [
 		^ (ViennaFunctionDefinitionNode definition: self) asAccessDefinition ].
-	self label = 'OperationDefinition' ifTrue: [
+	self isViennaOperationDefinitionNode ifTrue: [
 		^ ViennaAccessOperationDefinitionNode
 			  access: (ViennaNode label: 'Access')
 			  operationDefinition: self ].
 	(#( 'ImplicitOperationDefinition' ) includes: self label) ifTrue: [
-		^ (ViennaNode label: 'OperationDefinition' with: self)
+		^ (ViennaOperationDefinitionNode definition: self)
 			  asAccessDefinition ]
 ]
 
@@ -367,9 +366,8 @@ ViennaNode >> asArrayFrom: anInteger1 to: anInteger2 [
 { #category : #'accessing-definitions' }
 ViennaNode >> asExport [
 
-	(self isViennaTypeDefinitionNode or: [
-		 self isViennaRecordTypeDefinitionNode ]) ifTrue: [
-		#( 'TypeDefinition' 'RecordTypeDefinition' ).
+	self isViennaRecordTypeDefinitionNode ifTrue: [
+		#( 'RecordTypeDefinition' ).
 		^ ViennaTypeStructExportNode name:
 			  (ViennaLocalNameNode identifier: self first) ].
 	(#( 'ValueDefinition' ) includes: self label) ifTrue: [
@@ -423,14 +421,15 @@ ViennaNode >> asGlobalName [
 	(self definitionOfLocalName: self identifier) ifNotNil: [ :defNode |
 		(defNode isViennaExplicitFunctionDefinitionNode or: [
 			 defNode isViennaExplicitOperationDefinitionNode or: [
-				 #( 'ImplicitFunctionDefinition' '' 'ImplicitOperationDefinition'
-				    'TypeDefinition' 'RecordTypeDefinition' ) includes:
-					 defNode label ] ]) ifTrue: [
-			^ (ViennaGlobalNameNode
-				   moduleIdentifier: defNode module identifier
-				   identifier: defNode identifier)
-				  parent: parent;
-				  yourself ].
+				 defNode isViennaTypeSynonymNode or: [
+					 #( 'ImplicitFunctionDefinition' '' 'ImplicitOperationDefinition'
+					    'RecordTypeDefinition' ) includes: defNode label ] ] ])
+			ifTrue: [
+				^ (ViennaGlobalNameNode
+					   moduleIdentifier: defNode module identifier
+					   identifier: defNode identifier)
+					  parent: parent;
+					  yourself ].
 		defNode bindHolderNode ifNotNil: [ :bindNode |
 			bindNode label = 'ValueDefinition' ifTrue: [
 				^ (ViennaGlobalNameNode
@@ -459,13 +458,12 @@ ViennaNode >> asImportDefinitionIn: moduleNode [
 		                    moduleIdentifier: self module identifier
 		                    importModuleSignature:
 		                    (ViennaImportModuleSignatureNode with: node) ].
-	(#( 'TypeDefinition' 'RecordTypeDefinition' ) includes: self label)
-		ifTrue: [
-			^ importDefinition value:
-				  (ViennaImportTypesSignatureNode with: (ViennaTypeImportNode
-						    typeName: (ViennaTypeNameNode name:
-								     (ViennaLocalNameNode identifier: self identifier))
-						    rename: nil)) ].
+	(#( 'RecordTypeDefinition' ) includes: self label) ifTrue: [
+		^ importDefinition value:
+			  (ViennaImportTypesSignatureNode with: (ViennaTypeImportNode
+					    typeName: (ViennaTypeNameNode name:
+							     (ViennaLocalNameNode identifier: self identifier))
+					    rename: nil)) ].
 	(#( 'ValueDefinition' ) includes: self label) ifTrue: [
 		^ importDefinition value: (ViennaImportValuesSignatureNode withAll:
 				   (self patternIdentifierNames collect: [ :name |
@@ -562,8 +560,8 @@ ViennaNode >> definitionInDefinitionBlockOfLocalName: aString do: aBlock [
 				| defItem defLabel |
 				defItem := def second.
 				defLabel := defItem label.
-				(defLabel = 'TypeDefinition' and: [ defItem first = aString ])
-					ifTrue: [ ^ aBlock value: defItem ].
+				(defItem isViennaTypeSynonymNode: aString) ifTrue: [
+					^ aBlock value: defItem ].
 				(defLabel = 'RecordTypeDefinition' and: [ defItem first = aString ])
 					ifTrue: [ ^ aBlock value: defItem ].
 				defLabel = 'ValueDefinition' ifTrue: [
@@ -573,9 +571,8 @@ ViennaNode >> definitionInDefinitionBlockOfLocalName: aString do: aBlock [
 						do: [ :n | ^ aBlock value: n ] ].
 				(defItem isViennaFunctionDefinitionNode: aString) ifTrue: [
 					^ aBlock value: defItem definition ].
-				defLabel = 'OperationDefinition' ifTrue: [
-					defItem first first = aString ifTrue: [
-						^ aBlock value: defItem first ] ] ] ]
+				(defItem isViennaOperationDefinitionNode: aString) ifTrue: [
+					^ aBlock value: defItem definition ] ] ]
 ]
 
 { #category : #'accessing-definitions' }
@@ -1950,6 +1947,12 @@ ViennaNode >> isViennaOperationDefinitionNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaOperationDefinitionNode: aString [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaOperationDefinitionsNode [
 
 	^ false
@@ -2400,12 +2403,6 @@ ViennaNode >> isViennaTypeBindNode [
 ]
 
 { #category : #testing }
-ViennaNode >> isViennaTypeDefinitionNode [
-
-	^ false
-]
-
-{ #category : #testing }
 ViennaNode >> isViennaTypeDefinitionsNode [
 
 	^ false
@@ -2461,6 +2458,18 @@ ViennaNode >> isViennaTypeNode [
 
 { #category : #testing }
 ViennaNode >> isViennaTypeStructExportNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaTypeSynonymNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaTypeSynonymNode: aString [
 
 	^ false
 ]
@@ -2784,11 +2793,9 @@ ViennaNode >> removeAnnotation: aString [
 { #category : #'accessing-definitions' }
 ViennaNode >> resolve [
 
-	(#( 'TypeDefinition' 'RecordTypeDefinition' 'ValueDefinition'
+	(#( 'RecordTypeDefinition' 'ValueDefinition'
 	    'ImplicitFunctionDefinition' 'ImplicitOperationDefinition' )
 		 includes: self label) ifTrue: [ ^ self ].
-	(#( 'OperationDefinition' ) includes: self label) ifTrue: [
-		^ self first ].
 	^ nil
 ]
 
@@ -2798,9 +2805,10 @@ ViennaNode >> resolveLocalName: aString [
 	(self definitionOfLocalName: aString) ifNotNil: [ :defNode |
 		defNode isViennaExplicitFunctionDefinitionNode ifTrue: [ ^ defNode ].
 		defNode isViennaExplicitOperationDefinitionNode ifTrue: [ ^ defNode ].
+		defNode isViennaTypeSynonymNode ifTrue: [ ^ defNode ].
 		(#( 'ImplicitFunctionDefinition' 'ImplicitOperationDefinition'
-		    'TypeDefinition' 'RecordTypeDefinition' ) includes:
-			 defNode label) ifTrue: [ ^ defNode ].
+		    'RecordTypeDefinition' ) includes: defNode label) ifTrue: [
+			^ defNode ].
 		defNode isViennaImportNode ifTrue: [
 			(self moduleNamed:
 				 (defNode
@@ -2861,9 +2869,7 @@ ViennaNode >> seventh [
 { #category : #'accessing-definitions' }
 ViennaNode >> shortName [
 
-	(#( 'OperationDefinition' ) includes: self label) ifTrue: [
-		^ self first shortName ].
-	(#( 'TypeDefinition' 'RecordTypeDefinition' 'ImplicitFunctionDefinition'
+	(#( 'RecordTypeDefinition' 'ImplicitFunctionDefinition'
 	    'ImplicitOperationDefinition' 'StateDefinition' ) includes:
 		 self label) ifTrue: [ ^ self first ].
 	self label = 'TypeDefinitions' ifTrue: [ ^ 'types' ].

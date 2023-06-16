@@ -1487,13 +1487,11 @@ ViennaVDMParser >> operationBody [
 
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> operationDefinition [
-	^ super operationDefinition
-		=>> [ :start :end :def | 
-			ViennaNode
-				label: 'OperationDefinition'
-				start: start
-				end: end
-				with: def ]
+
+	^ super operationDefinition =>> [ :start :end :def |
+	  (ViennaOperationDefinitionNode definition: def)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -1558,7 +1556,9 @@ ViennaVDMParser >> or: arg1 and: arg2 [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMParser >> othersExpression [
-	^ super othersExpression ==> [ :expr | ViennaNode label: 'OthersExpression' with: expr ]
+
+	^ super othersExpression
+	  ==> [ :expr | ViennaOthersExpressionNode expression: expr ]
 ]
 
 { #category : #'parsers-statements' }
@@ -2165,7 +2165,7 @@ ViennaVDMParser >> typeSynonym [
 	^ super typeSynonym
 		=>> [ :start :end :array | 
 			ViennaNode
-				label: 'TypeDefinition'
+				label: 'TypeSynonym'
 				start: start
 				end: end
 				withAll: array ]

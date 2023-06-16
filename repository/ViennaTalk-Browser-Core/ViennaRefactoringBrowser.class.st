@@ -724,7 +724,7 @@ ViennaRefactoringBrowser >> displayDefinition: aViennaNode [
 			    'OperationDefinitions' ) includes: node label ]) ifTrue: [
 			^ ' - all - ' ].
 		node label = 'FunctionsDefinition' ifTrue: [ ^ ' - all - ' ].
-		node label = 'TypeDefinition' ifTrue: [ ^ node first ].
+		node isViennaTypeSynonymNode ifTrue: [ ^ node identifier ].
 		node label = 'RecordTypeDefinition' ifTrue: [ ^ node first ].
 		node label = 'ValueDefinition' ifTrue: [ ^ node first source ].
 		node label = 'StateDefinition' ifTrue: [ ^ node first ].

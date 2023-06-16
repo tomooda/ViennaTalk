@@ -1079,7 +1079,7 @@ ViennaBrowser >> generateViennaDocSourceScript [
 						          (module ifNil: [ '' ] ifNotNil: [ module , '`' ])
 						          , node first
 						          put: (source copyFrom: node start to: node end) ].
-				          node label = 'TypeDefinition' ifTrue: [
+				          node isViennaTypeSynonymNode ifTrue: [
 					          sources
 						          at:
 						          (module ifNil: [ '' ] ifNotNil: [ module , '`' ])

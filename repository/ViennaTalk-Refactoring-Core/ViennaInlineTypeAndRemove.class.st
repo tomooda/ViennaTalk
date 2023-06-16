@@ -9,15 +9,12 @@ ViennaInlineTypeAndRemove >> check [
 
 	| moduleName shortName |
 	ast ifNil: [ ^ false ].
-	(#( 'TypeDefinition' 'RecordTypeDefinition' ) includes: ast label)
-		ifFalse: [ ^ false ].
-	(((ast label = 'TypeDefinition' and: [ ast third notNil ]) or: [
+	(ast isViennaTypeSynonymNode or: [
+		 #( 'RecordTypeDefinition' ) includes: ast label ]) ifFalse: [
+		^ false ].
+	(((ast isViennaTypeSynonymNode and: [ ast inv notNil ]) or: [
 		  ast label = 'RecordTypeDefinition' ]) and: [
 		 self hasFreeOccurrencesOf: ast first in: ast module ]) ifTrue: [
-		^ false ].
-	(ast label = 'TypeDefinition' and: [
-		 ast third notNil and: [
-			 self hasFreeOccurrencesOf: ast first in: ast module ] ]) ifTrue: [
 		^ false ].
 	moduleName := ast module first.
 	shortName := ast first.

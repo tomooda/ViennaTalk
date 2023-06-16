@@ -22,8 +22,8 @@ ViennaExtractType >> execute [
 		                    detect: [ :definitionBlock |
 			                    definitionBlock isViennaNode and: [
 				                    definitionBlock first isViennaNode and: [
-					                    definitionBlock first label
-					                    = 'TypeDefinitions' ] ] ]
+					                    definitionBlock first
+						                    isViennaTypeDefinitionsNode ] ] ]
 		                    ifNone: [ nil ]) ifNotNil: #first.
 	typeDefinitions ifNil: [
 		typeDefinitions := ViennaNode label: 'TypeDefinitions'.
@@ -31,11 +31,10 @@ ViennaExtractType >> execute [
 			(ViennaDefinitionBlockNode definition: typeDefinitions) ].
 	self replaceNode: ast with: (ViennaTypeNameNode name:
 			 (ViennaLocalNameNode identifier: self newName)).
-	typeDefinition := ViennaNode
-		                  label: 'TypeDefinition'
-		                  with: self newName
-		                  with: ast
-		                  with: nil.
+	typeDefinition := ViennaTypeSynonymNode
+		                  identifier: self newName
+		                  type: ast
+		                  inv: nil.
 	accessTypeDefinition := ViennaAccessTypeDefinitionNode
 		                        access: (ViennaNode label: 'Access')
 		                        typeDefinition: typeDefinition.

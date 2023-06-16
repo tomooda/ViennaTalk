@@ -500,11 +500,6 @@ TViennaVDMBoundVariableCollector >> boundVariablesTypeBindList: aViennaNode into
 ]
 
 { #category : #'bound variables-definitions' }
-TViennaVDMBoundVariableCollector >> boundVariablesTypeDefinition: aViennaNode into: aSet [
-	aSet add: aViennaNode first
-]
-
-{ #category : #'bound variables-definitions' }
 TViennaVDMBoundVariableCollector >> boundVariablesTypeDefinitions: aViennaNode into: aSet [
 	aViennaNode do: [ :node | self boundVariables: node into: aSet ]
 ]
@@ -523,6 +518,11 @@ TViennaVDMBoundVariableCollector >> boundVariablesTypeNameExport: aViennaNode in
 { #category : #'bound variables-interfaces' }
 TViennaVDMBoundVariableCollector >> boundVariablesTypeStructExport: aViennaNode into: aSet [
 	aSet add: aViennaNode first first
+]
+
+{ #category : #'bound variables-definitions' }
+TViennaVDMBoundVariableCollector >> boundVariablesTypeSynonym: aViennaNode into: aSet [
+	aSet add: aViennaNode first
 ]
 
 { #category : #'bound variables-definitions' }

@@ -3309,15 +3309,6 @@ ViennaVDM2Smalltalk >> typeBindList: aViennaNode env: aDictionary [
 ]
 
 { #category : #'code generation-definitions' }
-ViennaVDM2Smalltalk >> typeDefinition: aViennaNode env: aDictionary [
-	| identifier type inv |
-	identifier := aViennaNode first.
-	type := self generate: aViennaNode second env: aDictionary.
-	inv := (self generate: aViennaNode third env: aDictionary) ifNil: [ '' ] ifNotNil: [ :str | ' inv: ' , str ].
-	^ identifier , ' := ' , type , inv
-]
-
-{ #category : #'code generation-definitions' }
 ViennaVDM2Smalltalk >> typeDefinitions: aViennaNode env: aDictionary [
 	aViennaNode do: [ :node | self generate: node env: aDictionary ]
 ]
@@ -3338,6 +3329,15 @@ ViennaVDM2Smalltalk >> typeJudgement: aViennaNode env: aDictionary [
 { #category : #'code generation-types' }
 ViennaVDM2Smalltalk >> typeName: aViennaNode env: aDictionary [
 	^ self generate: aViennaNode first env: aDictionary
+]
+
+{ #category : #'code generation-definitions' }
+ViennaVDM2Smalltalk >> typeSynonym: aViennaNode env: aDictionary [
+	| identifier type inv |
+	identifier := aViennaNode first.
+	type := self generate: aViennaNode second env: aDictionary.
+	inv := (self generate: aViennaNode third env: aDictionary) ifNil: [ '' ] ifNotNil: [ :str | ' inv: ' , str ].
+	^ identifier , ' := ' , type , inv
 ]
 
 { #category : #'code generation-types' }

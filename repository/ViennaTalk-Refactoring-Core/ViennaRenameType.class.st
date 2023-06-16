@@ -40,7 +40,7 @@ ViennaRenameType >> findDefinitionNode [
 { #category : #accessing }
 ViennaRenameType >> findOldName [
 
-	ast label = 'TypeDefinition' ifTrue: [ ^ ast first ].
+	ast isViennaTypeDefinitionNode ifTrue: [ ^ ast identifier ].
 	ast label = 'RecordTypeDefinition' ifTrue: [ ^ ast first ].
 	ast isViennaLocalNameNode ifTrue: [ ^ ast first ].
 	^ nil

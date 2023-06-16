@@ -21,8 +21,7 @@ ViennaExplicitOperationDefinitionNode class >> identifier: aString type: aVienna
 { #category : #'accessing-definitions' }
 ViennaExplicitOperationDefinitionNode >> asAccessDefinition [
 
-	^ (ViennaNode label: 'OperationDefinition' with: self)
-		  asAccessDefinition
+	^ (ViennaOperationDefinitionNode definition: self) asAccessDefinition
 ]
 
 { #category : #'accessing-definitions' }

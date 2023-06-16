@@ -27,11 +27,11 @@ ViennaConvertExplicitFunctionIntoOperation >> execute [
 		                         detect: [ :definitionBlock |
 			                         definitionBlock isViennaNode and: [
 				                         definitionBlock first isViennaNode and: [
-					                         definitionBlock first label
-					                         = 'OperationDefinitions' ] ] ]
+					                         definitionBlock first
+						                         isViennaOperationDefinitionsNode ] ] ]
 		                         ifNone: [ nil ]) ifNotNil: #first.
 	operationDefinitions ifNil: [
-		operationDefinitions := ViennaNode label: 'OperationDefinitions'.
+		operationDefinitions := ViennaOperationDefinitionsNode empty.
 		moduleBody add:
 			(ViennaDefinitionBlockNode definition: operationDefinitions) ].
 	explicitOperationDefinition := ViennaExplicitOperationDefinitionNode
@@ -51,7 +51,7 @@ ViennaConvertExplicitFunctionIntoOperation >> execute [
 			                               (ViennaOperationBodyNode statement:
 				                                (ViennaReturnStatementNode
 					                                 expression:
-					                                 explicitFunctionDefinition sixth))
+					                                 explicitFunctionDefinition expression))
 		                               pre:
 		                               explicitFunctionDefinition seventh
 		                               post:
@@ -61,9 +61,10 @@ ViennaConvertExplicitFunctionIntoOperation >> execute [
 				                              label: 'Access'
 				                              withAll:
 				                              (ast first asArray copyWith: 'pure'))
-		                             operationDefinition: (ViennaNode
-				                              label: 'OperationDefinition'
-				                              with: explicitOperationDefinition).
+		                             operationDefinition:
+		                             (ViennaOperationDefinitionNode
+			                              definition:
+			                              explicitOperationDefinition).
 	functionDefinitions remove: ast.
 	functionDefinitions ifEmpty: [
 		moduleBody remove: functionDefinitions parent ].

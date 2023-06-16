@@ -76,9 +76,10 @@ ViennaGlobalNameNode >> isTypeNameNode [
 	(self moduleNamed: self moduleIdentifier) ifNotNil: [ :moduleNode |
 		(moduleNode definitionOfLocalName: self identifier) ifNotNil: [
 			:defNode |
-			((#( 'TypeDefinition' 'RecordTypeDefinition' ) includes:
-				  defNode label) and: [ defNode first = self identifier ])
-				ifTrue: [ ^ true ] ] ].
+			(defNode isViennaTypeSynonymNode: self identifier) ifTrue: [
+				^ true ].
+			((#( 'RecordTypeDefinition' ) includes: defNode label) and: [
+				 defNode first = self identifier ]) ifTrue: [ ^ true ] ] ].
 	^ false
 ]
 

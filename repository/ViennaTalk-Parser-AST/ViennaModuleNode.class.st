@@ -31,8 +31,7 @@ ViennaModuleNode >> definitionOfLocalName: aString [
 					| defItem defLabel |
 					defItem := def second.
 					defLabel := defItem label.
-					(defLabel = 'TypeDefinition' and: [ defItem first = aString ])
-						ifTrue: [ ^ defItem ].
+					(defItem isViennaTypeSynonymNode: aString) ifTrue: [ ^ defItem ].
 					(defLabel = 'RecordTypeDefinition' and: [
 						 defItem first = aString ]) ifTrue: [ ^ defItem ].
 					defLabel = 'ValueDefinition' ifTrue: [
@@ -42,8 +41,8 @@ ViennaModuleNode >> definitionOfLocalName: aString [
 							do: [ :n | ^ n ] ].
 					(defItem isViennaFunctionDefinitionNode: aString) ifTrue: [
 						^ defItem definition ].
-					defLabel = 'OperationDefinition' ifTrue: [
-						defItem first first = aString ifTrue: [ ^ defItem first ] ] ] ] ].
+					(defItem isViennaOperationDefinitionNode: aString) ifTrue: [
+						^ defItem definition ] ] ] ].
 	self interface importDefinitionList ifNotNil: [ :imports |
 		imports do: [ :importDef |
 			importDef second isViennaImportModuleSignatureNode ifTrue: [
