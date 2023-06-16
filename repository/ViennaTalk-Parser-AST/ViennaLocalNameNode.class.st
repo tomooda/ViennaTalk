@@ -53,10 +53,12 @@ ViennaLocalNameNode >> isExportedNameNode [
 ViennaLocalNameNode >> isFunctionNameNode [
 
 	(self definitionOfLocalName: self identifier) ifNotNil: [ :defNode |
-		((defNode isViennaExplicitFunctionDefinitionNode: self identifier)
-			 or: [
-				 (#( 'ImplicitFunctionDefinition' ) includes: defNode label) and: [
-					 defNode first = self identifier ] ]) ifTrue: [ ^ true ].
+		(defNode isViennaExplicitFunctionDefinitionNode: self identifier)
+			ifTrue: [ ^ true ].
+		(defNode isViennaExtendedExplicitFunctionDefinitionNode:
+			 self identifier) ifTrue: [ ^ true ].
+		(defNode isViennaImplicitFunctionDefinitionNode: self identifier)
+			ifTrue: [ ^ true ].
 		(defNode isViennaFunctionImportNode: self identifier) ifTrue: [
 			^ true ] ].
 	^ false
@@ -65,12 +67,8 @@ ViennaLocalNameNode >> isFunctionNameNode [
 { #category : #testing }
 ViennaLocalNameNode >> isLocalValueNameNode [
 
-	(self definitionOfLocalName: self first) ifNotNil: [ :defNode |
-		| node |
-		node := defNode.
-		[ node notNil ] whileTrue: [
-			(#( 'ValueDefinition' ) includes: node label) ifTrue: [ ^ true ].
-			node := node parent ] ].
+	(self definitionOfLocalName: self identifier) ifNotNil: [ :defNode |
+		defNode bindHolderNode isViennaValueDefinitionNode ifTrue: [ ^ true ] ].
 	^ false
 ]
 
@@ -80,8 +78,8 @@ ViennaLocalNameNode >> isOperationNameNode [
 	(self definitionOfLocalName: self identifier) ifNotNil: [ :defNode |
 		(defNode isViennaExplicitOperationDefinitionNode: self identifier)
 			ifTrue: [ ^ true ].
-		((#( 'ImplicitOperationDefinition' ) includes: defNode label) and: [
-			 defNode first = self identifier ]) ifTrue: [ ^ true ].
+		(defNode isViennaImplicitOperationDefinitionNode: self identifier)
+			ifTrue: [ ^ true ].
 		(defNode isViennaOperationImportNode: self identifier) ifTrue: [
 			^ true ] ].
 	^ false
@@ -92,7 +90,7 @@ ViennaLocalNameNode >> isStateVariableNameNode [
 
 	(self definitionOfLocalName: self identifier) ifNotNil: [ :fieldNode |
 		(fieldNode isViennaFieldNode and: [
-			 fieldNode parent parent label = 'StateDefinition' ]) ifTrue: [
+			 fieldNode parent parent isViennaStateDefinitionNode ]) ifTrue: [
 			^ true ] ].
 	^ false
 ]
@@ -102,8 +100,8 @@ ViennaLocalNameNode >> isTypeNameNode [
 
 	(self definitionOfLocalName: self identifier) ifNotNil: [ :defNode |
 		(defNode isViennaTypeSynonymNode: self identifier) ifTrue: [ ^ true ].
-		((#( 'RecordTypeDefinition' ) includes: defNode label) and: [
-			 defNode first = self identifier ]) ifTrue: [ ^ true ].
+		(defNode isViennaRecordTypeDefinitionNode: self identifier) ifTrue: [
+			^ true ].
 		(defNode isViennaTypeImportNodeRenamed: self identifier) ifTrue: [
 			^ true ] ].
 	^ false
@@ -113,7 +111,7 @@ ViennaLocalNameNode >> isTypeNameNode [
 ViennaLocalNameNode >> isValueNameNode [
 
 	(self definitionOfLocalName: self identifier) ifNotNil: [ :defNode |
-		defNode bindHolderNode label = 'ValueDefinition' ifTrue: [ ^ true ].
+		defNode bindHolderNode isViennaValueDefinitionNode ifTrue: [ ^ true ].
 		(defNode isViennaLocalNameNode and: [
 			 defNode parent notNil and: [
 				 defNode parent isViennaValueImportNode ] ]) ifTrue: [ ^ true ] ].

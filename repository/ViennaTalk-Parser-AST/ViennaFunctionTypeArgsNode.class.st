@@ -13,7 +13,7 @@ ViennaFunctionTypeArgsNode >> formatWith: aViennaAbstractFormatter [
 		   withAll: (aViennaAbstractFormatter formatAll: self)) , ']'
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaFunctionTypeArgsNode >> isViennaFunctionTypeArgsNode [
 
 	^ true

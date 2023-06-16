@@ -20,7 +20,7 @@ ViennaAddFramAnnotationToOperation >> findContainerNode [
 	ast ifNil: [ ^ nil ].
 	ast isViennaExplicitOperationDefinitionNode ifTrue: [
 		ast := ast parent ].
-	ast label = 'ImplicitOperationDefinition' ifTrue: [
+	ast isViennaImplicitOperationDefinitionNode ifTrue: [
 		ast := ast parent ].
 	ast isViennaOperationDefinitionNode ifTrue: [ ast := ast parent ].
 	ast isViennaAccessOperationDefinitionNode ifFalse: [ ^ nil ].

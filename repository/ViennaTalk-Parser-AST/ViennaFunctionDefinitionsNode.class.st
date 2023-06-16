@@ -5,7 +5,7 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaFunctionDefinitionsNode >> isViennaFunctionDefinitionsNode [
 
 	^ true
@@ -15,4 +15,10 @@ ViennaFunctionDefinitionsNode >> isViennaFunctionDefinitionsNode [
 ViennaFunctionDefinitionsNode >> label [
 
 	^ 'FunctionDefinitions'
+]
+
+{ #category : #'pretty printing' }
+ViennaFunctionDefinitionsNode >> sectionName [
+
+	^ 'functions'
 ]

@@ -262,14 +262,15 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesExportTypesSignatu
 
 { #category : #'tests-bound variables-definitions' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesExtendedExplicitFunctionDefinitionInto [
+
 	| node binds |
 	node := ViennaVDMParser new extendedExplicitFunctionDefinition end
-		parse: 'fn[@t](x:t1) res:t2 == e post b'.
+		        parse: 'fn[@t](x:t1) res:t2 == e post b'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'ExtendedExplicitFunctionDefinition'.
+	self assert: node isViennaExtendedExplicitFunctionDefinitionNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self assert: binds equals: {'fn' . 'post_fn'} asSet
+	self assert: binds equals: { 'fn'. 'post_fn' } asSet
 ]
 
 { #category : #'tests-bound variables-types' }
@@ -348,18 +349,15 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesFunctionDefinition
 
 { #category : #'tests-bound variables-definitions' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesFunctionDefinitionsInto [
+
 	| node binds |
-	node := ViennaVDMParser new functionDefinitions end
-		parse: 'functions fn1[@t] : t1 -> t2 fn1(x) == e1; fn2[@t] : t3 -> t4 fn2(y) == e2'.
+	node := ViennaVDMParser new functionDefinitions end parse:
+		        'functions fn1[@t] : t1 -> t2 fn1(x) == e1; fn2[@t] : t3 -> t4 fn2(y) == e2'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'FunctionDefinitions'.
+	self assert: node isViennaFunctionDefinitionsNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{'fn1'.
-			'fn2'} asSet
+	self assert: binds equals: { 'fn1'. 'fn2' } asSet
 ]
 
 { #category : #'tests-bound variables-interfaces' }
@@ -377,13 +375,15 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesFunctionExportInto
 
 { #category : #'tests-bound variables-definitions' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesImplicitFunctionDefinitionInto [
+
 	| node binds |
-	node := ViennaVDMParser new implicitFunctionDefinition end parse: 'fn[@t](p1:t1,p2:t2)i:t post b'.
+	node := ViennaVDMParser new implicitFunctionDefinition end parse:
+		        'fn[@t](p1:t1,p2:t2)i:t post b'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'ImplicitFunctionDefinition'.
+	self assert: node isViennaImplicitFunctionDefinitionNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self assert: binds equals: {'fn'. 'post_fn'} asSet
+	self assert: binds equals: { 'fn'. 'post_fn' } asSet
 ]
 
 { #category : #'tests-bound variables-statements' }
@@ -541,18 +541,15 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesOperationDefinitio
 
 { #category : #'tests-bound variables-definitions' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesOperationDefinitionsInto [
+
 	| node binds |
-	node := ViennaVDMParser new operationDefinitions end
-		parse: 'operations op1: t1 ==> t2 op1(x) == return e1; op2: t3 ==> t4 op2(y) == return e2'.
+	node := ViennaVDMParser new operationDefinitions end parse:
+		        'operations op1: t1 ==> t2 op1(x) == return e1; op2: t3 ==> t4 op2(y) == return e2'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'OperationDefinitions'.
+	self assert: node isViennaOperationDefinitionsNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{'op1'.
-			'op2'} asSet
+	self assert: binds equals: { 'op1'. 'op2' } asSet
 ]
 
 { #category : #'tests-bound variables-types' }
@@ -665,16 +662,15 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesRecordPatternInto 
 
 { #category : #'tests-bound variables-types' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesRecordTypeDefinitionInto [
+
 	| node binds |
-	node := ViennaVDMParser new recordTypeDefinition end parse: 'T::f1:t1 f2:-t2 t3'.
+	node := ViennaVDMParser new recordTypeDefinition end parse:
+		        'T::f1:t1 f2:-t2 t3'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'RecordTypeDefinition'.
+	self assert: node isViennaRecordTypeDefinitionNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{'T'} asSet
+	self assert: binds equals: { 'T' } asSet
 ]
 
 { #category : #'tests-bound variables-types' }
@@ -803,22 +799,17 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesSetUnionPatternInt
 
 { #category : #'tests-bound variables-definitions' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesStateDefinitionInto [
+
 	| node binds |
-	node := ViennaVDMParser new stateDefinition end
-		parse: 'state S of v1 : t1 v2 : t2 inv mk_S(inv1, inv2) == inv1 = inv2 init s == s = mk_S(e1, e2) end'.
+	node := ViennaVDMParser new stateDefinition end parse:
+		        'state S of v1 : t1 v2 : t2 inv mk_S(inv1, inv2) == inv1 = inv2 init s == s = mk_S(e1, e2) end'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'StateDefinition'.
+	self assert: node isViennaStateDefinitionNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
 	self
 		assert: binds
-		equals:
-			{'S'.
-			'v1'.
-			'v2'.
-			'inv_S'.
-			'init_S'.
-			'state'} asSet
+		equals: { 'S'. 'v1'. 'v2'. 'inv_S'. 'init_S'. 'state' } asSet
 ]
 
 { #category : #'tests-bound variables-types' }
@@ -872,17 +863,15 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTypeBindListInto [
 
 { #category : #'tests-bound variables-definitions' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesTypeDefinitionsInto [
+
 	| node binds |
-	node := ViennaVDMParser new typeDefinitions end parse: 'types public t1 = t2 inv v1 == e1; public t3 = t4 inv v2 == e2'.
+	node := ViennaVDMParser new typeDefinitions end parse:
+		        'types public t1 = t2 inv v1 == e1; public t3 = t4 inv v2 == e2'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'TypeDefinitions'.
+	self assert: node isViennaTypeDefinitionsNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{'t1'.
-			't3'} asSet
+	self assert: binds equals: { 't1'. 't3' } asSet
 ]
 
 { #category : #'tests-bound variables-definitions' }
@@ -936,26 +925,25 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesUnionTypeInto [
 
 { #category : #'tests-bound variables-definitions' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesValueDefinitionInto [
+
 	| node binds |
 	node := ViennaVDMParser new valueDefinition end parse: 'v : t = e'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'ValueDefinition'.
+	self assert: node isViennaValueDefinitionNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self assert: binds equals: {'v'} asSet
+	self assert: binds equals: { 'v' } asSet
 ]
 
 { #category : #'tests-bound variables-definitions' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesValueDefinitionsInto [
+
 	| node binds |
-	node := ViennaVDMParser new valueDefinitions end parse: 'values public v1 : t1 = e1 ; public v2 : t2 = e2'.
+	node := ViennaVDMParser new valueDefinitions end parse:
+		        'values public v1 : t1 = e1 ; public v2 : t2 = e2'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'ValueDefinitions'.
+	self assert: node isViennaValueDefinitionsNode.
 	binds := Set new.
 	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self
-		assert: binds
-		equals:
-			{'v1'.
-			'v2'} asSet
+	self assert: binds equals: { 'v1'. 'v2' } asSet
 ]

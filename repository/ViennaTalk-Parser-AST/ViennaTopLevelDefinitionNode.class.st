@@ -11,7 +11,13 @@ ViennaTopLevelDefinitionNode class >> isAbstract [
 	^ self = ViennaTopLevelDefinitionNode
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
+ViennaTopLevelDefinitionNode >> isViennaExportableTopLevelDefinitionNode [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #testing }
 ViennaTopLevelDefinitionNode >> isViennaTopLevelDefinitionNode [
 
 	^ true

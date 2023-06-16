@@ -16,7 +16,7 @@ ViennaMoveOperation >> findDefinitionNode [
 			defNode operationBody allDescendantsDo: [ :node |
 				(node isViennaLocalNameNode and: [ node isStateVariableNameNode ])
 					ifTrue: [ ^ nil ] ] ].
-		(defNode label = 'ImplicitOperationDefinition' and: [
+		(defNode isViennaImplicitOperationDefinitionNode and: [
 			 defNode third notEmpty ]) ifTrue: [ ^ nil ].
 		^ defNode ].
 	^ nil

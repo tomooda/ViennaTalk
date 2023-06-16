@@ -14,18 +14,31 @@ ViennaLetStatementNode class >> localDefinitionList: aViennaLocalDefinitionListN
 		  yourself
 ]
 
+{ #category : #accessing }
+ViennaLetStatementNode >> body [
+
+	^ self statement
+]
+
+{ #category : #accessing }
+ViennaLetStatementNode >> body: aViennaStatementNode [
+
+	^ self statement: aViennaStatementNode
+]
+
 { #category : #'accessing-definitions' }
 ViennaLetStatementNode >> definitionOfLocalName: aString [
 
 	self localDefinitionList do: [ :localDef |
 		| def |
 		def := localDef first.
-		def label = 'ValueDefinition' ifTrue: [
-			def first
+		def isViennaValueDefinitionNode ifTrue: [
+			def pattern
 				allDescendantsSuchThat: [ :n |
 				n isViennaPatternIdentifierNode: aString ]
 				do: [ :n | ^ n ] ].
-		(def isViennaFunctionDefinitionNode: aString) ifTrue: [ ^ def definition ] ].
+		(def isViennaFunctionDefinitionNode: aString) ifTrue: [
+			^ def definition ] ].
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 

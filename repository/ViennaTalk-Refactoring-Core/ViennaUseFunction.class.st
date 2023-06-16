@@ -28,7 +28,7 @@ ViennaUseFunction >> findDefinitionNode [
 	ast isViennaExpressionNode ifFalse: [ ^ nil ].
 	ast module ifNotNil: [ :node |
 		node third do: [ :definitionBlock |
-			definitionBlock first label = 'FunctionDefinitions' ifTrue: [
+			definitionBlock first isViennaFunctionDefinitionsNode ifTrue: [
 				definitionBlock first do: [ :accessFunctionDefinition |
 					accessFunctionDefinition second ifNotNil: [ :functionDefinition |
 						functionDefinition first ifNotNil: [ :explicitFunctionDefinition |

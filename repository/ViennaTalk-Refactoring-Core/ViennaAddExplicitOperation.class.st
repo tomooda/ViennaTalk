@@ -8,7 +8,7 @@ Class {
 ViennaAddExplicitOperation >> findContainerNode [
 
 	ast ifNil: [ ^ nil ].
-	ast label = 'OperationDefinitions' ifTrue: [ ^ ast  ].
+	ast isViennaOperationDefinitionsNode ifTrue: [ ^ ast ].
 	^ nil
 ]
 

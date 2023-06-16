@@ -13,6 +13,14 @@ ViennaOperationDefinitionNode class >> definition: aViennaNode [
 		  yourself
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaOperationDefinitionNode >> asAccessDefinition [
+
+	^ ViennaAccessOperationDefinitionNode
+		  access: (ViennaNode label: 'Access')
+		  operationDefinition: self
+]
+
 { #category : #accessing }
 ViennaOperationDefinitionNode >> definition [
 

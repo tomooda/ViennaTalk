@@ -24,23 +24,26 @@ ViennaInlineLetParameter >> definitionNode: anObject [
 
 { #category : #operations }
 ViennaInlineLetParameter >> execute [
+
 	| expr |
-	self definitionNode first asArray
-		do: [ :localDef | 
-			(localDef first label = 'ValueDefinition'
-				and: [ localDef first first == ast ])
-				ifTrue: [ expr := localDef first third.
-					localDef parent remove: localDef ] ].
-	self definitionNode first asArray
-		do: [ :localDef | 
-			self
-				freeOccurrencesOf: ast name
-				in: localDef
-				do: [ :localName | self replaceNode: localName with: expr copyFragment ] ].
+	self definitionNode localDefinitionList asArray do: [ :localDef |
+		(localDef valueDefinitionOrFunctionDefinition
+			 isViennaValueDefinitionNode and: [
+			 localDef valueDefinitionOrFunctionDefinition pattern == ast ])
+			ifTrue: [
+				expr := localDef valueDefinitionOrFunctionDefinition expression.
+				localDef parent remove: localDef ] ].
+	self definitionNode localDefinitionList asArray do: [ :localDef |
+		self
+			freeOccurrencesOf: ast identifier
+			in: localDef
+			do: [ :localName |
+			self replaceNode: localName with: expr copyFragment ] ].
 	self
-		freeOccurrencesOf: ast name
-		in: self definitionNode second
-		do: [ :localName | self replaceNode: localName with: expr copyFragment ].
+		freeOccurrencesOf: ast identifier
+		in: self definitionNode body
+		do: [ :localName |
+		self replaceNode: localName with: expr copyFragment ].
 	^ self definitionNode
 ]
 
@@ -50,7 +53,7 @@ ViennaInlineLetParameter >> findDefinitionNode [
 	ast ifNil: [ ^ nil ].
 	ast isViennaPatternIdentifierNode ifFalse: [ ^ nil ].
 	ast parent ifNotNil: [ :valueDefinition |
-		valueDefinition label = 'ValueDefinition' ifFalse: [ ^ nil ].
+		valueDefinition isViennaValueDefinitionNode ifFalse: [ ^ nil ].
 		valueDefinition parent ifNotNil: [ :localDefinition |
 			localDefinition isViennaLocalDefinitionNode ifFalse: [ ^ nil ].
 			localDefinition parent ifNotNil: [ :localDefinitionList |

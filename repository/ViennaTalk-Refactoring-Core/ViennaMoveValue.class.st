@@ -12,10 +12,9 @@ ViennaMoveValue >> definitionNames [
 
 { #category : #accessing }
 ViennaMoveValue >> findDefinitionNode [
+
 	ast ifNil: [ ^ nil ].
-	ast resolve
-		ifNotNil: [ :defNode | 
-			defNode label = 'ValueDefinition'
-				ifTrue: [ ^ defNode ] ].
+	ast resolve ifNotNil: [ :defNode |
+		defNode isViennaValueDefinitionNode ifTrue: [ ^ defNode ] ].
 	^ nil
 ]

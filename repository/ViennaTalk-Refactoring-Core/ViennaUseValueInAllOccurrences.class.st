@@ -21,7 +21,7 @@ ViennaUseValueInAllOccurrences >> findDefinitionNode [
 
 	ast module ifNotNil: [ :node |
 		node third do: [ :definitionBlock |
-			definitionBlock first label = 'ValueDefinitions' ifTrue: [
+			definitionBlock first isViennaValueDefinitionsNode ifTrue: [
 				definitionBlock first do: [ :accessValueDef |
 					accessValueDef second ifNotNil: [ :valueDef |
 						((ast sameAs: valueDef third) and: [

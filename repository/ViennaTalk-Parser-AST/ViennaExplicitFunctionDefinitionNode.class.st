@@ -1,6 +1,6 @@
 Class {
 	#name : #ViennaExplicitFunctionDefinitionNode,
-	#superclass : #ViennaObsoleteNode,
+	#superclass : #ViennaTopLevelDefinitionNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }
@@ -128,6 +128,12 @@ ViennaExplicitFunctionDefinitionNode >> isViennaExplicitFunctionDefinitionNode [
 ViennaExplicitFunctionDefinitionNode >> isViennaExplicitFunctionDefinitionNode: aString [
 
 	^ self identifier = aString
+]
+
+{ #category : #testing }
+ViennaExplicitFunctionDefinitionNode >> isViennaExportableTopLevelDefinitionNode [
+
+	^ true
 ]
 
 { #category : #accessing }

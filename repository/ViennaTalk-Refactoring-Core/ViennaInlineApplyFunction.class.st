@@ -42,26 +42,26 @@ ViennaInlineApplyFunction >> execute [
 	self definitionNode ifNil: [ ^ nil ].
 	self replaceNode: self callerNode with: (ViennaLetExpressionNode
 			 localDefinitionList: (ViennaLocalDefinitionListNode withAll:
-					  ((1 to: self callerNode second size) collect: [ :index |
+					  ((1 to: self callerNode argumentExpressionList size) collect: [ :index |
 						   | param type arg |
-						   param := (self definitionNode fifth first at: index)
+						   param := (self definitionNode parametersList first at: index)
 							            copyFragment.
-						   type := self callerNode second size = 1
-							           ifTrue: [ self definitionNode third first ]
+						   type := self callerNode argumentExpressionList size = 1
+							           ifTrue: [ self definitionNode type argumentType ]
 							           ifFalse: [
-								           self definitionNode third first
+								           self definitionNode type argumentType
 									           isViennaProductTypeNode
 									           ifTrue: [
-									           self definitionNode third first at: index ]
+									           self definitionNode type argumentType at: index ]
 									           ifFalse: [ nil ] ].
-						   arg := (self callerNode second at: index) copyFragment.
+						   arg := (self callerNode argumentExpressionList at: index) copyFragment.
 						   ViennaLocalDefinitionNode
-							   valueDefinitionOrFunctionDefinition: (ViennaNode
-									    label: 'ValueDefinition'
-									    with: param
-									    with: type
-									    with: arg) ]))
-			 expression: self definitionNode sixth)
+							   valueDefinitionOrFunctionDefinition:
+							   (ViennaValueDefinitionNode
+								    pattern: param
+								    type: type
+								    expression: arg) ]))
+			 expression: self definitionNode expression)
 ]
 
 { #category : #accessing }

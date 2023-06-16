@@ -1810,25 +1810,28 @@ ViennaVDM2SmalltalkScriptTest >> testRecordPatternEnv [
 
 { #category : #'tests-code generation-types' }
 ViennaVDM2SmalltalkScriptTest >> testRecordTypeDefinitionEnv [
+
 	| node |
-	node := ViennaVDMParser new recordTypeDefinition end parse: 'T :: x:nat y:-int char'.
+	node := ViennaVDMParser new recordTypeDefinition end parse:
+		        'T :: x:nat y:-int char'.
 	self deny: node isPetit2Failure.
-	self assert: node label = 'RecordTypeDefinition'.
+	self assert: node isViennaRecordTypeDefinitionNode.
 	self
-		assert: (self evaluate: '| T |' , (ViennaVDM2SmalltalkScript new generate: node))
-		equals:
-			(ViennaType
-				compose: 'T'
-				of:
-					{{'x'.
-					false.
-					(ViennaType nat)}.
-					{'y'.
-					true.
-					(ViennaType int)}.
-					{nil.
-					false.
-					(ViennaType char)}})
+		assert: (self evaluate:
+				 '| T |' , (ViennaVDM2SmalltalkScript new generate: node))
+		equals: (ViennaType compose: 'T' of: {
+					 {
+						 'x'.
+						 false.
+						 ViennaType nat }.
+					 {
+						 'y'.
+						 true.
+						 ViennaType int }.
+					 {
+						 nil.
+						 false.
+						 ViennaType char } })
 ]
 
 { #category : #'tests-code generation-expressions' }

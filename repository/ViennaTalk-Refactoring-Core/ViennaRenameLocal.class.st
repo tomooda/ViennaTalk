@@ -222,16 +222,16 @@ ViennaRenameLocal >> executeOnLetExpression: aViennaNode [
 
 	aViennaNode first do: [ :localDef |
 		| def |
-		def := localDef first.
-		def label = 'ValueDefinition' ifTrue: [
-			def first
+		def := localDef valueDefinitionOrFunctionDefinition.
+		def isViennaValueDefinitionNode ifTrue: [
+			def pattern
 				allDescendantsSuchThat: [ :node |
 				node isViennaPatternIdentifierNode: self oldName ]
 				do: [ :node | node identifier: self newName ] ].
 		(def isViennaFunctionDefinitionNode and: [
-			 def first identifier = self oldName ]) ifTrue: [
+			 def definition identifier = self oldName ]) ifTrue: [
 			| functionDefinition |
-			functionDefinition := def first.
+			functionDefinition := def definition.
 			functionDefinition identifier: self newName ] ]
 ]
 
@@ -240,16 +240,16 @@ ViennaRenameLocal >> executeOnLetStatement: aViennaNode [
 
 	aViennaNode first do: [ :localDef |
 		| def |
-		def := localDef first.
-		def label = 'ValueDefinition' ifTrue: [
-			def first
+		def := localDef valueDefinitionOrFunctionDefinition.
+		def isViennaValueDefinitionNode ifTrue: [
+			def pattern
 				allDescendantsSuchThat: [ :node |
 				node isViennaPatternIdentifierNode: self oldName ]
 				do: [ :node | node identifier: self newName ] ].
 		(def isViennaFunctionDefinitionNode and: [
-			 def first first = self oldName ]) ifTrue: [
+			 def definition identifier = self oldName ]) ifTrue: [
 			| functionDefinition |
-			functionDefinition := def first.
+			functionDefinition := def definition.
 			functionDefinition identifier: self newName ] ]
 ]
 

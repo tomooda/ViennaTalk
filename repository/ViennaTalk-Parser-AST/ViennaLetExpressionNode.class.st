@@ -14,14 +14,26 @@ ViennaLetExpressionNode class >> localDefinitionList: aViennaLocalDefinitionList
 		  yourself
 ]
 
+{ #category : #accessing }
+ViennaLetExpressionNode >> body [
+
+	^ self expression
+]
+
+{ #category : #accessing }
+ViennaLetExpressionNode >> body: aViennaExpressionNode [
+
+	^ self expression: aViennaExpressionNode
+]
+
 { #category : #'accessing-definitions' }
 ViennaLetExpressionNode >> definitionOfLocalName: aString [
 
 	self localDefinitionList do: [ :localDef |
 		| def |
-		def := localDef first.
-		def label = 'ValueDefinition' ifTrue: [
-			def first
+		def := localDef valueDefinitionOrFunctionDefinition.
+		def isViennaValueDefinitionNode ifTrue: [
+			def pattern
 				allDescendantsSuchThat: [ :n |
 				n isViennaPatternIdentifierNode: aString ]
 				do: [ :n | ^ n ] ].

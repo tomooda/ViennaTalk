@@ -36,40 +36,6 @@ ViennaNarrowLet >> definitionNode: aViennaNode [
 	definitionNode := aViennaNode
 ]
 
-{ #category : #operations }
-ViennaNarrowLet >> execute [
-	| dummy base |
-	dummy := self replaceNode: ast with: (ViennaNode label: 'DUMMY').
-	base := ast second.
-	self replaceNode: self definitionNode with: ast.
-	ast at: 2 put: self definitionNode.
-	^ self replaceNode: dummy with: base
-]
-
-{ #category : #accessing }
-ViennaNarrowLet >> findDefinitionNode [
-
-	| paramNames |
-	paramNames := Set new: ast first size * 2.
-	ast first do: [ :localDefinition |
-		localDefinition first label = 'ValueDefinition'
-			ifTrue: [
-				localDefinition first first allDescendantsDo: [ :node |
-					node isViennaPatternIdentifierNode ifTrue: [
-						paramNames add: node first ] ] ]
-			ifFalse: [ ^ nil ] ].
-	paramNames := paramNames asArray.
-	^ (ast second asArray select: [ :node |
-		   node isViennaNode and: [
-			   paramNames anySatisfy: [ :param |
-				   self hasFreeOccurrencesOf: param in: node ] ] ])
-		  ifNotEmpty: [ :nodes |
-			  nodes size = 1
-				  ifTrue: [ nodes first ]
-				  ifFalse: [ nil ] ]
-		  ifEmpty: [ nil ]
-]
-
 { #category : #accessing }
 ViennaNarrowLet >> name [
 	^ 'Narrow ' , (self shortDescription: ast source) asText allBold

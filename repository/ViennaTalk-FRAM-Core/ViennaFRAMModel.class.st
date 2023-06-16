@@ -207,11 +207,11 @@ ViennaFRAMModel >> findOrCreateOperationNamed: operationName module: moduleName 
 				ifTrue: [ ^ opNode ] ] ].
 	opNode := self createOperationDefinitionNode: operationName.
 	moduleNode allDescendantsDo: [ :node |
-		node label = 'OperationDefinitions' ifTrue: [
+		node isViennaOperationDefinitionsNode ifTrue: [
 			node add: opNode.
 			^ opNode ] ].
 	moduleNode third first add:
-		(ViennaNode label: 'OperationDefinitions' with: opNode).
+		(ViennaOperationDefinitionsNode with: opNode).
 	^ opNode
 ]
 

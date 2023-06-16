@@ -17,8 +17,7 @@ ViennaRemoveEmptySection >> execute [
 { #category : #accessing }
 ViennaRemoveEmptySection >> findDefinitionNode [
 
-	(#( 'TypeDefinitions' 'ValueDefinitions' 'FunctionDefinitions'
-	    'OperationDefinitions' ) includes: ast label) ifFalse: [ ^ nil ].
+	ast isViennaSectionNode ifFalse: [ ^ nil ].
 	ast isEmpty ifTrue: [ ^ ast ].
 	^ nil
 ]

@@ -10,14 +10,13 @@ ViennaInlineTypeAndRemove >> check [
 	| moduleName shortName |
 	ast ifNil: [ ^ false ].
 	(ast isViennaTypeSynonymNode or: [
-		 #( 'RecordTypeDefinition' ) includes: ast label ]) ifFalse: [
-		^ false ].
+		 ast isViennaRecordTypeDefinitionNode ]) ifFalse: [ ^ false ].
 	(((ast isViennaTypeSynonymNode and: [ ast inv notNil ]) or: [
-		  ast label = 'RecordTypeDefinition' ]) and: [
-		 self hasFreeOccurrencesOf: ast first in: ast module ]) ifTrue: [
-		^ false ].
-	moduleName := ast module first.
-	shortName := ast first.
+		  ast isViennaRecordTypeDefinitionNode ]) and: [
+		 self hasFreeOccurrencesOf: ast identifier in: ast module ])
+		ifTrue: [ ^ false ].
+	moduleName := ast module identifier.
+	shortName := ast identifier.
 	ast document allDescendantsDo: [ :node |
 		(node isViennaGlobalNameNode: moduleName identifier: shortName)
 			ifTrue: [ ^ false ] ].
@@ -32,28 +31,31 @@ ViennaInlineTypeAndRemove >> check [
 
 { #category : #operations }
 ViennaInlineTypeAndRemove >> execute [
+
 	| typeName typeBody |
 	typeName := ast first.
 	typeBody := ast second.
 	self
 		freeOccurrencesOf: typeName
 		in: ast module
-		do: [ :node | self replaceNode: node parent with: typeBody copyFragment ].
-	(ast parentLabelled: 'TypeDefinitions' ifAbsent: [ nil ])
-		ifNotNil: [ :typeDefinitions | 
+		do: [ :node |
+		self replaceNode: node parent with: typeBody copyFragment ].
+	(ast detectParent: #isViennaTypeDefinitionsNode ifNone: [ nil ])
+		ifNotNil: [ :typeDefinitions |
 			typeDefinitions remove: ast parent.
-			typeDefinitions
-				ifEmpty: [ typeDefinitions parent parent remove: typeDefinitions parent ] ].
+			typeDefinitions ifEmpty: [
+				typeDefinitions parent parent remove: typeDefinitions parent ] ].
 	^ nil
 ]
 
 { #category : #accessing }
 ViennaInlineTypeAndRemove >> name [
-	ast label = 'RecordTypeDefinition'
-		ifTrue: [ ^ 'Remove record type ' asText , ast first asText allBold ].
+
+	ast isViennaRecordTypeDefinitionNode ifTrue: [
+		^ 'Remove record type ' asText , ast first asText allBold ].
 	^ 'Inline type definition of ' asText
-		, (self shortDescription: ast source) asText allBold
-		, ' and Remove' asText
+	  , (self shortDescription: ast source) asText allBold
+	  , ' and Remove' asText
 ]
 
 { #category : #accessing }

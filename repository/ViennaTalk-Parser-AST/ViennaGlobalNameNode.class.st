@@ -50,10 +50,12 @@ ViennaGlobalNameNode >> isFunctionNameNode [
 	(self moduleNamed: self moduleIdentifier) ifNotNil: [ :moduleNode |
 		(moduleNode definitionOfLocalName: self identifier) ifNotNil: [
 			:defNode |
-			((defNode isViennaExplicitFunctionDefinitionNode: self identifier)
-				 or: [
-					 (#( 'ImplicitFunctionDefinition' ) includes: defNode label)
-						 and: [ defNode first = self identifier ] ]) ifTrue: [ ^ true ] ] ].
+			(defNode isViennaExplicitFunctionDefinitionNode: self identifier)
+				ifTrue: [ ^ true ].
+			(defNode isViennaExtendedExplicitFunctionDefinitionNode:
+				 self identifier) ifTrue: [ ^ true ].
+			(defNode isViennaImplicitFunctionDefinitionNode: self identifier)
+				ifTrue: [ ^ true ] ] ].
 	^ false
 ]
 
@@ -65,8 +67,8 @@ ViennaGlobalNameNode >> isOperationNameNode [
 			:defNode |
 			(defNode isViennaExplicitOperationDefinitionNode: self identifier)
 				ifTrue: [ ^ true ].
-			((#( 'ImplicitOperationDefinition' ) includes: defNode label) and: [
-				 defNode first = self identifier ]) ifTrue: [ ^ true ] ] ].
+			(defNode isViennaImplicitOperationDefinitionNode: self identifier)
+				ifTrue: [ ^ true ] ] ].
 	^ false
 ]
 
@@ -78,8 +80,8 @@ ViennaGlobalNameNode >> isTypeNameNode [
 			:defNode |
 			(defNode isViennaTypeSynonymNode: self identifier) ifTrue: [
 				^ true ].
-			((#( 'RecordTypeDefinition' ) includes: defNode label) and: [
-				 defNode first = self identifier ]) ifTrue: [ ^ true ] ] ].
+			(defNode isViennaRecordTypeDefinitionNode: self identifier)
+				ifTrue: [ ^ true ] ] ].
 	^ false
 ]
 
@@ -89,7 +91,8 @@ ViennaGlobalNameNode >> isValueNameNode [
 	(self moduleNamed: self moduleIdentifier) ifNotNil: [ :moduleNode |
 		(moduleNode definitionOfLocalName: self identifier) ifNotNil: [
 			:defNode |
-			defNode bindHolderNode label = 'ValueDefinition' ifTrue: [ ^ true ] ] ].
+			defNode bindHolderNode isViennaValueDefinitionNode ifTrue: [
+				^ true ] ] ].
 	^ false
 ]
 

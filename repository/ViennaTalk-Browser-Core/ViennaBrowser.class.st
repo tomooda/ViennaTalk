@@ -1065,50 +1065,49 @@ ViennaBrowser >> generateViennaDocSourceScript [
 			          (node isKindOf: ViennaNode) ifTrue: [
 				          node isViennaModuleNode ifTrue: [
 					          sources
-						          at: node first
+						          at: node identifier
 						          put: (source copyFrom: node start to: node end) ].
-				          node label = 'StateDefinition' ifTrue: [
+				          node isViennaStateDefinitionNode ifTrue: [
 					          sources
 						          at:
 						          (module ifNil: [ '' ] ifNotNil: [ module , '`' ])
-						          , node first
+						          , node identifier
 						          put: (source copyFrom: node start to: node end) ].
 				          node isViennaExplicitOperationDefinitionNode ifTrue: [
 					          sources
 						          at:
 						          (module ifNil: [ '' ] ifNotNil: [ module , '`' ])
-						          , node first
+						          , node identifier
 						          put: (source copyFrom: node start to: node end) ].
 				          node isViennaTypeSynonymNode ifTrue: [
 					          sources
 						          at:
 						          (module ifNil: [ '' ] ifNotNil: [ module , '`' ])
-						          , node first
+						          , node identifier
 						          put: (source copyFrom: node start to: node end) ].
-				          node label = 'RecordTypeDefinition' ifTrue: [
+				          node isViennaRecordTypeDefinitionNode ifTrue: [
 					          sources
 						          at:
 						          (module ifNil: [ '' ] ifNotNil: [ module , '`' ])
-						          , node first
+						          , node identifier
 						          put: (source copyFrom: node start to: node end) ].
-				          node label = 'ValueDefinition' ifTrue: [
+				          node isViennaValueDefinitionNode ifTrue: [
 					          sources
-						          at:
-						          (module ifNil: [ '' ] ifNotNil: [ module , '`' ])
-						          , node first first
+						          at: (module ifNil: [ '' ] ifNotNil: [ module , '`' ])
+							          , node pattern identifier
 						          put: (source copyFrom: node start to: node end) ].
 				          node isViennaExplicitFunctionDefinitionNode ifTrue: [
 					          sources
 						          at:
 						          (module ifNil: [ '' ] ifNotNil: [ module , '`' ])
-						          , node first
+						          , node identifier
 						          put: (source copyFrom: node start to: node end) ].
 				          node do: [ :n |
 					          walker
 						          value: n
 						          value:
 						          (module ifNil: [
-							           node isViennaModuleNode ifTrue: [ node first ] ]) ] ] ].
+							           node isViennaModuleNode ifTrue: [ node identifier ] ]) ] ] ].
 			walker value: ast value: nil.
 			stream nextPutAll: 'ViennaDoc.source='.
 			(NeoJSONWriter on: stream) nextPut: source withUnixLineEndings.
@@ -1680,8 +1679,8 @@ ViennaBrowser >> runAllTests [
 				               moduleName := moduleNode first.
 				               (moduleName endsWith: 'Test') ifTrue: [
 					               moduleNode third do: [ :definitionBlockNode |
-						               definitionBlockNode first label
-						               = 'OperationDefinitions' ifTrue: [
+						               definitionBlockNode first
+							               isViennaOperationDefinitionsNode ifTrue: [
 							               definitionBlockNode first do: [
 								               :accessOperationDefinitionNode |
 								               | operationName |
@@ -1730,8 +1729,8 @@ ViennaBrowser >> runTestModule: aString [
 				               moduleName := moduleNode first.
 				               moduleName = testModuleName ifTrue: [
 					               moduleNode third do: [ :definitionBlockNode |
-						               definitionBlockNode first label
-						               = 'OperationDefinitions' ifTrue: [
+						               definitionBlockNode first
+							               isViennaOperationDefinitionsNode ifTrue: [
 							               definitionBlockNode first do: [
 								               :accessOperationDefinitionNode |
 								               | operationName |

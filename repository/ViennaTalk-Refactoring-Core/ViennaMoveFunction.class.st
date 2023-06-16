@@ -10,7 +10,6 @@ ViennaMoveFunction >> findDefinitionNode [
 	ast ifNil: [ ^ nil ].
 	ast resolve ifNotNil: [ :defNode |
 		defNode isViennaExplicitFunctionDefinitionNode ifTrue: [ ^ defNode ].
-		(#( 'ImplicitFunctionDefinition' ) includes: defNode label) ifTrue: [
-			^ defNode ] ].
+		defNode isViennaImplicitFunctionDefinitionNode ifTrue: [ ^ defNode ] ].
 	^ nil
 ]

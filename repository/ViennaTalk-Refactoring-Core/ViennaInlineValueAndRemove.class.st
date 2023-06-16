@@ -9,7 +9,7 @@ ViennaInlineValueAndRemove >> check [
 
 	| moduleName shortName |
 	ast ifNil: [ ^ false ].
-	ast label = 'ValueDefinition' ifFalse: [ ^ false ].
+	ast isViennaValueDefinitionNode ifFalse: [ ^ false ].
 	ast first isViennaPatternIdentifierNode ifFalse: [ ^ false ].
 	moduleName := ast module first.
 	shortName := ast first.
@@ -27,6 +27,7 @@ ViennaInlineValueAndRemove >> check [
 
 { #category : #operations }
 ViennaInlineValueAndRemove >> execute [
+
 	| valueName valueBody |
 	valueName := ast first first.
 	valueBody := ast third.
@@ -34,11 +35,11 @@ ViennaInlineValueAndRemove >> execute [
 		freeOccurrencesOf: valueName
 		in: ast module
 		do: [ :node | self replaceNode: node with: valueBody copyFragment ].
-	(ast parentLabelled: 'ValueDefinitions' ifAbsent: [ nil ])
-		ifNotNil: [ :valueDefinitions | 
+	(ast detectParent: #isViennaValueDefinitionsNode ifNone: [ nil ])
+		ifNotNil: [ :valueDefinitions |
 			valueDefinitions remove: ast parent.
-			valueDefinitions
-				ifEmpty: [ valueDefinitions parent parent remove: valueDefinitions parent ] ].
+			valueDefinitions ifEmpty: [
+				valueDefinitions parent parent remove: valueDefinitions parent ] ].
 	^ nil
 ]
 

@@ -23,17 +23,13 @@ ViennaRenameType >> executeOnDefinition [
 
 { #category : #accessing }
 ViennaRenameType >> findDefinitionNode [
-	ast module
-		ifNotNil: [ :node | 
-			node third
-				do: [ :definitionBlock | 
-					definitionBlock first label = 'TypeDefinitions'
-						ifTrue: [ definitionBlock first
-								do: [ :accessTypeDef | 
-									accessTypeDef second
-										ifNotNil: [ :typeDef | 
-											typeDef first = self oldName
-												ifTrue: [ ^ typeDef ] ] ] ] ] ].
+
+	ast module ifNotNil: [ :node |
+		node third do: [ :definitionBlock |
+			definitionBlock first isViennaTypeDefinitionsNode ifTrue: [
+				definitionBlock first do: [ :accessTypeDef |
+					accessTypeDef second ifNotNil: [ :typeDef |
+						typeDef first = self oldName ifTrue: [ ^ typeDef ] ] ] ] ] ].
 	^ nil
 ]
 
@@ -41,7 +37,7 @@ ViennaRenameType >> findDefinitionNode [
 ViennaRenameType >> findOldName [
 
 	ast isViennaTypeDefinitionNode ifTrue: [ ^ ast identifier ].
-	ast label = 'RecordTypeDefinition' ifTrue: [ ^ ast first ].
+	ast isViennaRecordTypeDefinitionNode ifTrue: [ ^ ast identifier ].
 	ast isViennaLocalNameNode ifTrue: [ ^ ast first ].
 	^ nil
 ]

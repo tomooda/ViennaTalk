@@ -1,6 +1,6 @@
 Class {
 	#name : #ViennaExplicitOperationDefinitionNode,
-	#superclass : #ViennaObsoleteNode,
+	#superclass : #ViennaTopLevelDefinitionNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }
@@ -106,6 +106,12 @@ ViennaExplicitOperationDefinitionNode >> isViennaExplicitOperationDefinitionNode
 ViennaExplicitOperationDefinitionNode >> isViennaExplicitOperationDefinitionNode: aString [
 
 	^ self identifier = aString
+]
+
+{ #category : #testing }
+ViennaExplicitOperationDefinitionNode >> isViennaExportableTopLevelDefinitionNode [
+
+	^ true
 ]
 
 { #category : #accessing }

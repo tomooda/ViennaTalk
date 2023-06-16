@@ -17,7 +17,8 @@ ViennaExtractParameterFromExpressionInImplicitFunction >> executeDefinition [
 
 { #category : #accessing }
 ViennaExtractParameterFromExpressionInImplicitFunction >> findDefinitionNode [
+
 	^ ast parent
-		parentLabelled: 'ImplicitFunctionDefinition'
-		ifAbsent: []
+		  detectParent: #isViennaImplicitFunctionDefinitionNode
+		  ifNone: [  ]
 ]

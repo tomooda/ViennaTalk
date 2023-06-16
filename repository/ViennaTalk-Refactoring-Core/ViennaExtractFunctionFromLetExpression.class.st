@@ -44,7 +44,7 @@ ViennaExtractFunctionFromLetExpression >> execute [
 						                        isViennaFunctionDefinitionsNode ] ] ]
 		                        ifNone: [ nil ]) ifNotNil: #first.
 	functionDefinitions ifNil: [
-		functionDefinitions := ViennaNode label: 'FunctionDefinitions'.
+		functionDefinitions := ViennaFunctionDefinitionsNode empty.
 		moduleBody add:
 			(ViennaDefinitionBlockNode definition: functionDefinitions) ].
 	self replaceNode: ast with: (ViennaApplyNode

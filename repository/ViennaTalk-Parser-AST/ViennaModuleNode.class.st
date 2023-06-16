@@ -19,23 +19,23 @@ ViennaModuleNode class >> identifier: aString interface: aViennaInterfaceNode mo
 ViennaModuleNode >> definitionOfLocalName: aString [
 
 	self moduleBody do: [ :defBlock |
-		defBlock first label = 'StateDefinition'
+		defBlock first isViennaStateDefinitionNode
 			ifTrue: [
 				| state |
 				state := defBlock first.
-				state first = aString ifTrue: [ ^ defBlock ].
-				state second do: [ :field |
-					field first = aString ifTrue: [ ^ field ] ] ]
+				state identifier = aString ifTrue: [ ^ defBlock ].
+				state fieldList do: [ :field |
+					field identifier = aString ifTrue: [ ^ field ] ] ]
 			ifFalse: [
 				defBlock first do: [ :def |
 					| defItem defLabel |
 					defItem := def second.
 					defLabel := defItem label.
 					(defItem isViennaTypeSynonymNode: aString) ifTrue: [ ^ defItem ].
-					(defLabel = 'RecordTypeDefinition' and: [
-						 defItem first = aString ]) ifTrue: [ ^ defItem ].
-					defLabel = 'ValueDefinition' ifTrue: [
-						defItem first
+					(defItem isViennaRecordTypeDefinitionNode: aString) ifTrue: [
+						^ defItem ].
+					defItem isViennaValueDefinitionNode ifTrue: [
+						defItem pattern
 							allDescendantsSuchThat: [ :n |
 							n isViennaPatternIdentifierNode: aString ]
 							do: [ :n | ^ n ] ].

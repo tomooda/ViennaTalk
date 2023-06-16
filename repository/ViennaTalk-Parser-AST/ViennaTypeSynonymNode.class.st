@@ -12,12 +12,12 @@ ViennaTypeSynonymNode class >> identifier: aString type: aViennaTypeNode [
 ]
 
 { #category : #'instance creation' }
-ViennaTypeSynonymNode class >> identifier: aString type: aViennaTypeNode inv: aViennaExpression [
+ViennaTypeSynonymNode class >> identifier: aString type: aViennaTypeNode inv: aViennaInvariantNode [
 
 	^ (self new: 3)
 		  identifier: aString;
 		  type: aViennaTypeNode;
-		  inv: aViennaExpression;
+		  inv: aViennaInvariantNode;
 		  yourself
 ]
 
@@ -84,9 +84,15 @@ ViennaTypeSynonymNode >> inv [
 ]
 
 { #category : #accessing }
-ViennaTypeSynonymNode >> inv: aViennaExpression [
+ViennaTypeSynonymNode >> inv: aViennaInvariantNode [
 
-	self at: 3 put: aViennaExpression
+	self at: 3 put: aViennaInvariantNode
+]
+
+{ #category : #testing }
+ViennaTypeSynonymNode >> isViennaExportableTopLevelDefinitionNode [
+
+	^ true
 ]
 
 { #category : #testing }

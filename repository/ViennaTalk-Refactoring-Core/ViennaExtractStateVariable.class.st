@@ -6,11 +6,10 @@ Class {
 
 { #category : #operations }
 ViennaExtractStateVariable >> check [
-	ast isViennaExpressionNode
-		ifFalse: [ ^ false ].
+
+	ast isViennaExpressionNode ifFalse: [ ^ false ].
 	ast variableExpressionNodesDo: [ :node | ^ false ].
-	ast parent label = 'ValueDefinition'
-		ifTrue: [ ^ false ].
+	ast parent isViennaValueDefinitionNode ifTrue: [ ^ false ].
 	^ true
 ]
 
@@ -23,20 +22,19 @@ ViennaExtractStateVariable >> execute [
 	stateDefinition := (moduleBody
 		                    detect: [ :definitionBlock |
 			                    definitionBlock isViennaNode and: [
-				                    definitionBlock first isViennaNode and: [
-					                    definitionBlock first label
-					                    = 'StateDefinition' ] ] ]
-		                    ifNone: [ nil ]) ifNotNil: #first.
+				                    definitionBlock definition isViennaNode and: [
+					                    definitionBlock definition
+						                    isViennaStateDefinitionNode ] ] ]
+		                    ifNone: [ nil ]) ifNotNil: #definition.
 	self
 		replaceNode: ast
 		with: (ViennaLocalNameNode identifier: self newName).
 	stateDefinition ifNil: [
-		stateDefinition := ViennaNode
-			                   label: 'StateDefinition'
-			                   with: 'State'
-			                   with: ViennaFieldListNode empty
-			                   with: nil
-			                   with:
+		stateDefinition := ViennaStateDefinitionNode
+			                   identifier: 'State'
+			                   fieldList: ViennaFieldListNode empty
+			                   inv: nil
+			                   init:
 				                   (ViennaInitialisationNode
 					                    invariantInitialFunction:
 						                    (ViennaInvariantInitialFunctionNode

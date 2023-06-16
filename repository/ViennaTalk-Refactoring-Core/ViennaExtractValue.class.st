@@ -11,7 +11,7 @@ ViennaExtractValue >> check [
 	(ast isViennaNameNode or: [ ast isViennaOldNameNode ]) ifTrue: [
 		^ false ].
 	ast variableExpressionNodesDo: [ :node | ^ false ].
-	ast parent label = 'ValueDefinition' ifTrue: [ ^ false ].
+	ast parent isViennaValueDefinitionNode ifTrue: [ ^ false ].
 	^ true
 ]
 
@@ -25,21 +25,22 @@ ViennaExtractValue >> execute [
 		                     detect: [ :definitionBlock |
 			                     definitionBlock isViennaNode and: [
 				                     definitionBlock first isViennaNode and: [
-					                     definitionBlock first label
-					                     = 'ValueDefinitions' ] ] ]
+					                     definitionBlock first
+						                     isViennaValueDefinitionsNode ] ] ]
 		                     ifNone: [ nil ]) ifNotNil: #first.
 	valueDefinitions ifNil: [
-		valueDefinitions := ViennaNode label: 'ValueDefinitions'.
+		valueDefinitions := ViennaValueDefinitionsNode empty.
 		moduleBody add:
 			(ViennaDefinitionBlockNode definition: valueDefinitions) ].
 	self
 		replaceNode: ast
 		with: (ViennaLocalNameNode identifier: self newName).
-	valueDefinition := ViennaNode label: 'ValueDefinition' withAll: {
-			                   (ViennaPatternIdentifierNode identifier:
-				                    self newName).
-			                   nil.
-			                   ast }.
+	valueDefinition := ViennaValueDefinitionNode
+		                   pattern:
+		                   (ViennaPatternIdentifierNode identifier:
+			                    self newName)
+		                   type: nil
+		                   expression: ast.
 	accessValueDefinition := ViennaAccessValueDefinitionNode
 		                         access: (ViennaNode label: 'Access')
 		                         valueDefinition: valueDefinition.

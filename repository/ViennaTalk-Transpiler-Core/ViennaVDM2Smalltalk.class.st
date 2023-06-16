@@ -563,8 +563,8 @@ ViennaVDM2Smalltalk >> definitions: aViennaNode do: aBlock [
 		 aViennaNode isViennaAccessOperationDefinitionNode or: [
 			 aViennaNode isViennaAccessTypeDefinitionNode or: [
 				 aViennaNode isViennaAccessValueDefinitionNode or: [
-					 #( 'StateDefinition' ) includes: aViennaNode label ] ] ] ])
-		ifTrue: [ ^ aBlock value: aViennaNode ].
+					 aViennaNode isViennaStateDefinitionNode ] ] ] ]) ifTrue: [
+		^ aBlock value: aViennaNode ].
 	aViennaNode do: [ :node | self definitions: node do: aBlock ]
 ]
 

@@ -139,52 +139,6 @@ ViennaAbstractFormatter >> exists1 [
 	^ 'exists1'
 ]
 
-{ #category : #'formatting-definitions' }
-ViennaAbstractFormatter >> extendedExplicitFunctionDefinition: aViennaNode [
-	| identifier typeVariableList parameterTypes identifierTypePairList body pre post |
-	identifier := aViennaNode first.
-	typeVariableList := aViennaNode second.
-	parameterTypes := aViennaNode third.
-	identifierTypePairList := aViennaNode fourth.
-	body := aViennaNode fifth.
-	pre := aViennaNode sixth.
-	post := aViennaNode seventh.
-	^ (self format: identifier) , (self format: typeVariableList)
-		, (self format: parameterTypes)
-		, (self format: identifierTypePairList) , ' ==' , String cr , indent
-		, (self indentString: (self format: body))
-		,
-			(pre
-				ifNotNil: [ String cr , 'pre ' , (self format: pre) ]
-				ifNil: [ '' ]) , String cr , 'post ' , (self format: post)
-]
-
-{ #category : #'formatting-definitions' }
-ViennaAbstractFormatter >> extendedExplicitOperationDefinition: aViennaNode [
-	| identifier parameterTypes identifierTypePairList body externals pre post exceptions string |
-	identifier := aViennaNode first.
-	parameterTypes := aViennaNode second.
-	identifierTypePairList := aViennaNode third.
-	body := aViennaNode fourth.
-	externals := aViennaNode fifth.
-	pre := aViennaNode sixth.
-	post := aViennaNode seventh.
-	exceptions := aViennaNode eighth.
-	string := (self format: identifier) , (self format: parameterTypes)
-		, (self format: identifierTypePairList) , ' ==' , String cr , indent
-		, (self indentString: (self format: body)).
-	externals
-		ifNotNil: [ string := string , String cr , (self format: externals) ].
-	pre
-		ifNotNil:
-			[ string := string , String cr , 'pre ' , (self format: pre) ].
-	string := string , String cr , 'post ' , (self format: post).
-	exceptions
-		ifNotNil:
-			[ string := string , String cr , (self format: exceptions) ].
-	^ string
-]
-
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> forall [
 	^ 'forall'
@@ -263,16 +217,6 @@ ViennaAbstractFormatter >> formatEnumerate: anArrayOfString separator: aString i
 	^ self join: aString , String cr withAll: lines
 ]
 
-{ #category : #'formatting-definitions' }
-ViennaAbstractFormatter >> functionDefinitions: aViennaNode [
-
-	^ self indentString: 'functions' insertCr: (self
-			   join: ';' , String cr , String cr
-			   withAll: (self formatAll: aViennaNode)) , (aViennaNode isEmpty
-			   ifTrue: [ '' ]
-			   ifFalse: [ ';' , String cr ])
-]
-
 { #category : #'formatting-interfaces' }
 ViennaAbstractFormatter >> functionImport: aViennaNode [
 	| name typeVariableList type rename |
@@ -315,58 +259,6 @@ ViennaAbstractFormatter >> identifierTypePairList: aViennaNode [
 			string , (self format: (aViennaNode at: aViennaNode size - 1))
 				, ':' , (self format: (aViennaNode at: aViennaNode size)) ]
 		ifEmpty: [ '' ]
-]
-
-{ #category : #'formatting-definitions' }
-ViennaAbstractFormatter >> implicitFunctionDefinition: aViennaNode [
-	| identifier typeVariableList parameterTypes identifierTypePairList pre post |
-	identifier := aViennaNode first.
-	typeVariableList := aViennaNode second.
-	parameterTypes := aViennaNode third.
-	identifierTypePairList := aViennaNode fourth.
-	pre := aViennaNode fifth.
-	post := aViennaNode sixth.
-	^ (self format: identifier) , (self format: typeVariableList)
-		, (self format: parameterTypes)
-		, (self format: identifierTypePairList)
-		,
-			(pre
-				ifNotNil: [ String cr , 'pre ' , (self format: pre) ]
-				ifNil: [ String new ]) , String cr , 'post ' , (self format: post)
-]
-
-{ #category : #'formatting-definitions' }
-ViennaAbstractFormatter >> implicitOperationBody: aViennaNode [
-	^ (aViennaNode first
-		ifNotNil:
-			[ :externals | String cr , (self format: externals) ]
-		ifNil: [ '' ])
-		,
-			(aViennaNode second
-				ifNotNil:
-					[ :pre | String cr , 'pre ' , (self format: pre) ]
-				ifNil: [ '' ])
-		,
-			(aViennaNode third
-				ifNotNil:
-					[ :post | String cr , 'post ' , (self format: post) ]
-				ifNil: [ '' ])
-		,
-			(aViennaNode fourth
-				ifNotNil:
-					[ :exceptions | String cr , (self format: exceptions) ]
-				ifNil: [ '' ])
-]
-
-{ #category : #'formatting-definitions' }
-ViennaAbstractFormatter >> implicitOperationDefinition: aViennaNode [
-	| identifier parameterTypes identifierTypePairList implicitOperationBody |
-	identifier := aViennaNode first.
-	parameterTypes := self format: aViennaNode second.
-	identifierTypePairList := self format: aViennaNode third.
-	implicitOperationBody := self format: aViennaNode fourth.
-	^ identifier , parameterTypes , identifierTypePairList
-		, implicitOperationBody
 ]
 
 { #category : #'symbol access' }
@@ -697,21 +589,6 @@ ViennaAbstractFormatter >> oparrow [
 	^ '==>'
 ]
 
-{ #category : #'formatting-definitions' }
-ViennaAbstractFormatter >> operationDefinition: aViennaNode [
-	^ self format: aViennaNode first
-]
-
-{ #category : #'formatting-definitions' }
-ViennaAbstractFormatter >> operationDefinitions: aViennaNode [
-
-	^ self indentString: 'operations' insertCr: (self
-			   join: ';' , String cr , String cr
-			   withAll: (self formatAll: aViennaNode)) , (aViennaNode isEmpty
-			   ifTrue: [ '' ]
-			   ifFalse: [ ';' , String cr ])
-]
-
 { #category : #'formatting-interfaces' }
 ViennaAbstractFormatter >> operationImport: aViennaNode [
 	| name operationType rename |
@@ -776,21 +653,6 @@ ViennaAbstractFormatter >> real [
 	^ 'real'
 ]
 
-{ #category : #'formatting-types' }
-ViennaAbstractFormatter >> recordTypeDefinition: aViennaNode [
-	| identifier fieldList invariant |
-	identifier := self format: aViennaNode first.
-	fieldList := self format: aViennaNode second.
-	invariant := aViennaNode third
-		ifNotNil: [ String cr , indent , (self indentString: (self format: aViennaNode third)) ]
-		ifNil: [ '' ].
-	^ identifier , ' ::'
-		,
-			((self needsIndent: identifier , fieldList)
-				ifTrue: [ String cr , indent , (self indentString: fieldList) ]
-				ifFalse: [ String space , fieldList ]) , invariant
-]
-
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> seq1Postfix [
 	^ ''
@@ -841,24 +703,6 @@ ViennaAbstractFormatter >> space [
 	^ ' '
 ]
 
-{ #category : #'formatting-definitions' }
-ViennaAbstractFormatter >> stateDefinition: aViennaNode [
-	| identifier stateFieldList invariant initialisation |
-	identifier := self format: aViennaNode first.
-	stateFieldList := self
-		join: String cr
-		withAll: (self formatAll: aViennaNode second).
-	invariant := aViennaNode third
-		ifNil: [ '' ]
-		ifNotNil: [ :node | String cr , (self format: node) ].
-	initialisation := aViennaNode fourth
-		ifNil: [ '' ]
-		ifNotNil: [ :node | String cr , (self format: node) ].
-	^ 'state ' , identifier , ' of' , String cr , indent
-		, (self indentString: stateFieldList) , invariant , initialisation
-		, String cr , 'end'
-]
-
 { #category : #private }
 ViennaAbstractFormatter >> strlen: aString [
 	^ aString
@@ -895,28 +739,6 @@ ViennaAbstractFormatter >> typeBindList: aViennaNode [
 		withAll: patterns
 ]
 
-{ #category : #'formatting-definitions' }
-ViennaAbstractFormatter >> typeDefinition: aViennaNode [
-	| typeName baseType invariant |
-	typeName := self format: aViennaNode first.
-	baseType := self format: aViennaNode second.
-	invariant := aViennaNode third ifNil: [ '' ] ifNotNil: [ :node | self format: node ].
-	^ self indentString: (self indentString: typeName , ' =' insertCrIfNeeded: baseType) insertCrIfNeeded: invariant
-]
-
-{ #category : #'formatting-definitions' }
-ViennaAbstractFormatter >> typeDefinitions: aViennaNode [
-
-	^ self
-		  indentString: 'types'
-		  insertCr:
-			  (self
-				   join: ';' , String cr
-				   withAll: (self formatAll: aViennaNode)) , (aViennaNode isEmpty
-				   ifTrue: [ '' ]
-				   ifFalse: [ ';' , String cr ])
-]
-
 { #category : #'formatting-interfaces' }
 ViennaAbstractFormatter >> typeImport: aViennaNode [
 	| type rename |
@@ -937,19 +759,6 @@ ViennaAbstractFormatter >> valueDefinition: aViennaNode [
 	type := aViennaNode second ifNil: [ '' ] ifNotNil: [ :node | ' : ' , (self format: node) ].
 	expression := self format: aViennaNode third.
 	^ self indentString: identifier , type , ' =' insertCrIfNeeded: expression
-]
-
-{ #category : #'formatting-definitions' }
-ViennaAbstractFormatter >> valueDefinitions: aViennaNode [
-
-	^ self
-		  indentString: 'values'
-		  insertCr:
-			  (self
-				   join: ';' , String cr
-				   withAll: (self formatAll: aViennaNode)) , (aViennaNode isEmpty
-				   ifTrue: [ '' ]
-				   ifFalse: [ ';' , String cr ])
 ]
 
 { #category : #'formatting-interfaces' }

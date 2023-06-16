@@ -8,7 +8,7 @@ Class {
 ViennaAddTypeAlias >> findContainerNode [
 
 	ast ifNil: [ ^ nil ].
-	ast label = 'TypeDefinitions' ifTrue: [ ^ ast ].
+	ast isViennaTypeDefinitionsNode ifTrue: [ ^ ast ].
 	^ nil
 ]
 

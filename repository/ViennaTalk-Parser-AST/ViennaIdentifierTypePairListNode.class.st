@@ -25,7 +25,7 @@ ViennaIdentifierTypePairListNode >> formatWith: aViennaAbstractFormatter [
 		  ifEmpty: [ '' ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaIdentifierTypePairListNode >> isViennaIdentifierTypePairListNode [
 
 	^ true

@@ -5,14 +5,20 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaTypeDefinitionsNode >> isViennaTypeDefinitionsNode [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaTypeDefinitionsNode >> label [
 
 	^ 'TypeDefinitions'
+]
+
+{ #category : #'pretty printing' }
+ViennaTypeDefinitionsNode >> sectionName [
+
+	^ 'types'
 ]

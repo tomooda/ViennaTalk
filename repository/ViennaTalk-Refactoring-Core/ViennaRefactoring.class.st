@@ -701,13 +701,13 @@ ViennaRefactoring >> freeOccurrencesOf: aString inLet: aViennaNode do: aBlock [
 	aViennaNode first do: [ :localDef |
 		| def |
 		def := localDef first.
-		def label = 'ValueDefinition' ifTrue: [
-			def first
+		def isViennaValueDefinitionNode ifTrue: [
+			def pattern
 				allDescendantsSuchThat: [ :n |
 				n isViennaPatternIdentifierNode: aString ]
 				do: [ :n | ^ self ] ].
 		(def isViennaFunctionDefinitionNode and: [
-			 def first first = aString ]) ifTrue: [ ^ self ] ].
+			 def definition identifier = aString ]) ifTrue: [ ^ self ] ].
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock
 ]
 

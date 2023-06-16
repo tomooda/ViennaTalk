@@ -124,24 +124,21 @@ ViennaNodeTest >> testCopyWhole [
 { #category : #running }
 ViennaNodeTest >> testDefinitionOfLocalName [
 
-	self assert: (skip definitionOfLocalName: 'nothing') equals: nil.
+	self assert: (skip definitionOfLocalName: 'nothing') isNil.
 	self
 		assert: (skip definitionOfLocalName: 'x1') parent parent first
 		equals: 'exp_op'.
-	self assert: (skip definitionOfLocalName: 'x') equals: nil.
-	self
-		assert: (skip definitionOfLocalName: 'T2') label
-		equals: 'RecordTypeDefinition'.
+	self assert: (skip definitionOfLocalName: 'x') isNil.
+	self assert:
+		(skip definitionOfLocalName: 'T2') isViennaRecordTypeDefinitionNode.
 	self assert: (skip definitionOfLocalName: 'v2') parent parent
 			isViennaTuplePatternNode.
 	self assert: (skip definitionOfLocalName: 'exp_f')
 			isViennaExplicitFunctionDefinitionNode.
-	self
-		assert: (skip definitionOfLocalName: 'imp_f') label
-		equals: 'ImplicitFunctionDefinition'.
-	self
-		assert: (skip definitionOfLocalName: 's1') parent parent label
-		equals: 'StateDefinition'.
+	self assert: (skip definitionOfLocalName: 'imp_f')
+			isViennaImplicitFunctionDefinitionNode.
+	self assert: (skip definitionOfLocalName: 's1') parent parent
+			isViennaStateDefinitionNode.
 	self assert:
 		(skip definitionOfLocalName: 'l') parent isViennaDclStatementNode.
 	self assert:
@@ -290,20 +287,16 @@ ViennaNodeTest >> testResolveLocalName [
 	self assert: (skip resolveLocalName: 'nothing') equals: nil.
 	self assert: (skip resolveLocalName: 'x1') equals: nil.
 	self assert: (skip resolveLocalName: 'x') equals: nil.
-	self
-		assert: (skip resolveLocalName: 'T2') label
-		equals: 'RecordTypeDefinition'.
-	self
-		assert: (skip resolveLocalName: 'v2') label
-		equals: 'ValueDefinition'.
+	self assert:
+		(skip resolveLocalName: 'T2') isViennaRecordTypeDefinitionNode.
+	self assert:
+		(skip resolveLocalName: 'v2') isViennaValueDefinitionNode.
 	self assert: (skip resolveLocalName: 'exp_f')
 			isViennaExplicitFunctionDefinitionNode.
-	self
-		assert: (skip resolveLocalName: 'imp_f') label
-		equals: 'ImplicitFunctionDefinition'.
-	self
-		assert: (skip resolveLocalName: 's1') label
-		equals: 'StateDefinition'.
+	self assert: (skip resolveLocalName: 'imp_f')
+			isViennaImplicitFunctionDefinitionNode.
+	self assert:
+		(skip resolveLocalName: 's1') isViennaStateDefinitionNode.
 	self assert: (skip resolveLocalName: 'l') equals: nil.
 	self assert: (skip resolveLocalName: 'Ti') isViennaTypeSynonymNode.
 	self assert:

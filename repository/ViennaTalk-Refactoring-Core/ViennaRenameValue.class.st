@@ -26,30 +26,27 @@ ViennaRenameValue >> executeOnDefinition [
 
 { #category : #accessing }
 ViennaRenameValue >> findDefinitionNode [
-	ast module
-		ifNotNil: [ :node | 
-			node third
-				do: [ :definitionBlock | 
-					definitionBlock first label = 'ValueDefinitions'
-						ifTrue: [ definitionBlock first
-								do: [ :accessValueDef | 
-									accessValueDef second
-										ifNotNil: [ :valueDef | 
-											self
-												patternIdentifiersWith: self oldName
-												in: valueDef first
-												do: [ ^ valueDef ] ] ] ] ] ].
+
+	ast module ifNotNil: [ :node |
+		node third do: [ :definitionBlock |
+			definitionBlock first isViennaValueDefinitionsNode ifTrue: [
+				definitionBlock first do: [ :accessValueDef |
+					accessValueDef second ifNotNil: [ :valueDef |
+						self
+							patternIdentifiersWith: self oldName
+							in: valueDef first
+							do: [ ^ valueDef ] ] ] ] ] ].
 	^ nil
 ]
 
 { #category : #accessing }
 ViennaRenameValue >> findOldName [
 
-	(ast label = 'ValueDefinition' and: [
-		 ast first isViennaPatternIdentifierNode ]) ifTrue: [
-		^ ast first first ].
-	ast isViennaPatternIdentifierNode ifTrue: [ ^ ast first ].
-	ast isViennaLocalNameNode ifTrue: [ ^ ast first ].
+	(ast isViennaValueDefinitionNode and: [
+		 ast pattern isViennaPatternIdentifierNode ]) ifTrue: [
+		^ ast pattern identifier ].
+	ast isViennaPatternIdentifierNode ifTrue: [ ^ ast identifier ].
+	ast isViennaLocalNameNode ifTrue: [ ^ ast identifier ].
 	^ nil
 ]
 

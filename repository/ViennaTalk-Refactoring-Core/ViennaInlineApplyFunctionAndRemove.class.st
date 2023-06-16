@@ -55,27 +55,29 @@ ViennaInlineApplyFunctionAndRemove >> execute [
 		callerNode := node parent.
 		self replaceNode: callerNode with: (ViennaLetExpressionNode
 				 localDefinitionList: (ViennaLocalDefinitionListNode withAll:
-						  ((1 to: callerNode second size) collect: [ :index |
+						  ((1 to: callerNode argumentExpressionList size) collect: [
+							   :index |
 							   | param type arg |
-							   param := (self definitionNode fifth first at: index)
+							   param := (self definitionNode parametersList first at: index)
 								            copyFragment.
-							   type := callerNode second size = 1
-								           ifTrue: [ self definitionNode third first ]
+							   type := callerNode argumentExpressionList size = 1
+								           ifTrue: [ self definitionNode type argumentType ]
 								           ifFalse: [
-									           self definitionNode third first
+									           self definitionNode type argumentType
 										           isViennaProductTypeNode
 										           ifTrue: [
-										           self definitionNode third first at: index ]
+										           self definitionNode type argumentType at: index ]
 										           ifFalse: [ nil ] ].
-							   arg := (callerNode second at: index) copyFragment.
+							   arg := (callerNode argumentExpressionList at: index)
+								          copyFragment.
 							   ViennaLocalDefinitionNode
-								   valueDefinitionOrFunctionDefinition: (ViennaNode
-										    label: 'ValueDefinition'
-										    with: param
-										    with: type
-										    with: arg) ]))
-				 expression: self definitionNode sixth) ].
-	(ast parentLabelled: 'FunctionDefinitions' ifAbsent: [ nil ])
+								   valueDefinitionOrFunctionDefinition:
+								   (ViennaValueDefinitionNode
+									    pattern: param
+									    type: type
+									    expression: arg) ]))
+				 expression: self definitionNode expression) ].
+	(ast detectParent: #isViennaFunctionDefinitionsNode ifNone: [ nil ])
 		ifNotNil: [ :functionDefinitions |
 			functionDefinitions remove: self definitionNode parent parent.
 			functionDefinitions ifEmpty: [
@@ -92,8 +94,7 @@ ViennaInlineApplyFunctionAndRemove >> findDefinitionNode [
 	identifier ifNil: [ ^ nil ].
 	(ast resolveLocalName: identifier) ifNotNil: [ :defNode |
 		defNode isViennaExplicitFunctionDefinitionNode ifTrue: [ ^ defNode ].
-		(#( 'ImplicitFunctionDefinition' ) includes: defNode label) ifTrue: [
-			^ defNode ] ].
+		defNode isViennaImplicitFunctionDefinitionNode ifTrue: [ ^ defNode ] ].
 	^ nil
 ]
 

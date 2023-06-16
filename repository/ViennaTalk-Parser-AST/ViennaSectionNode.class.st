@@ -11,8 +11,33 @@ ViennaSectionNode class >> isAbstract [
 	^ self = ViennaSectionNode
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pretty printing' }
+ViennaSectionNode >> formatWith: aViennaAbstractFormatter [
+
+	^ aViennaAbstractFormatter
+		  indentString: self sectionName
+		  insertCr: (aViennaAbstractFormatter
+				   join: ';' , String cr , String cr
+				   withAll: (aViennaAbstractFormatter formatAll: self))
+			  , (self isEmpty
+					   ifTrue: [ '' ]
+					   ifFalse: [ ';' , String cr ])
+]
+
+{ #category : #testing }
 ViennaSectionNode >> isViennaSectionNode [
 
 	^ true
+]
+
+{ #category : #'pretty printing' }
+ViennaSectionNode >> sectionName [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
+ViennaSectionNode >> shortName [
+
+	^ self sectionName
 ]

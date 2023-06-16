@@ -23,26 +23,23 @@ ViennaRenameImplicitFunction >> executeOnDefinition [
 
 { #category : #accessing }
 ViennaRenameImplicitFunction >> findDefinitionNode [
-	ast module
-		ifNotNil: [ :node | 
-			node third
-				do: [ :definitionBlock | 
-					definitionBlock first label = 'FunctionDefinitions'
-						ifTrue: [ definitionBlock first
-								do: [ :accessFunctionDef | 
-									accessFunctionDef second first
-										ifNotNil: [ :functionDef | 
-											(functionDef label = 'ImplicitFunctionDefinition'
-												and: [ functionDef first = self oldName ])
-												ifTrue: [ ^ functionDef ] ] ] ] ] ].
+
+	ast module ifNotNil: [ :node |
+		node third do: [ :definitionBlock |
+			definitionBlock first isViennaFunctionDefinitionsNode ifTrue: [
+				definitionBlock first do: [ :accessFunctionDef |
+					accessFunctionDef second first ifNotNil: [ :functionDef |
+						(functionDef isViennaImplicitFunctionDefinitionNode:
+							 self oldName) ifTrue: [ ^ functionDef ] ] ] ] ] ].
 	^ nil
 ]
 
 { #category : #accessing }
 ViennaRenameImplicitFunction >> findOldName [
 
-	ast label = 'ImplicitFunctionDefinition' ifTrue: [ ^ ast first ].
-	ast isViennaLocalNameNode ifTrue: [ ^ ast first ].
+	ast isViennaImplicitFunctionDefinitionNode ifTrue: [
+		^ ast identifier ].
+	ast isViennaLocalNameNode ifTrue: [ ^ ast identifier ].
 	^ nil
 ]
 

@@ -23,20 +23,19 @@ ViennaRenameStateConstructor >> executeOnDefinition [
 
 { #category : #accessing }
 ViennaRenameStateConstructor >> findDefinitionNode [
-	ast module
-		ifNotNil: [ :node | 
-			node third
-				do: [ :definitionBlock | 
-					definitionBlock first label = 'StateDefinition'
-						ifTrue: [ ^ definitionBlock first ] ] ].
+
+	ast module ifNotNil: [ :node |
+		node moduleBody do: [ :definitionBlock |
+			definitionBlock definition isViennaStateDefinitionNode ifTrue: [
+				^ definitionBlock definition ] ] ].
 	^ nil
 ]
 
 { #category : #accessing }
 ViennaRenameStateConstructor >> findOldName [
 
-	ast label = 'StateDefinition' ifTrue: [ ^ ast first ].
-	ast isViennaLocalNameNode ifTrue: [ ^ ast first ].
+	ast isViennaStateDefinitionNode ifTrue: [ ^ ast identifier ].
+	ast isViennaLocalNameNode ifTrue: [ ^ ast identifier ].
 	^ nil
 ]
 

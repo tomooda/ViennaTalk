@@ -43,11 +43,11 @@ ViennaExtractOperationFromLetStatement >> execute [
 		                         detect: [ :definitionBlock |
 			                         definitionBlock isViennaNode and: [
 				                         definitionBlock first isViennaNode and: [
-					                         definitionBlock first label
-					                         = 'OperationDefinitions' ] ] ]
+					                         definitionBlock first
+						                         isViennaOperationDefinitionsNode ] ] ]
 		                         ifNone: [ nil ]) ifNotNil: #first.
 	operationDefinitions ifNil: [
-		operationDefinitions := ViennaNode label: 'OperationDefinitions'.
+		operationDefinitions := ViennaOperationDefinitionsNode empty.
 		moduleBody add:
 			(ViennaDefinitionBlockNode definition: operationDefinitions) ].
 	self replaceNode: ast with: (ViennaCallStatementNode

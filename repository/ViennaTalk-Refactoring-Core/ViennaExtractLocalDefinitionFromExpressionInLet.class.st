@@ -27,11 +27,10 @@ ViennaExtractLocalDefinitionFromExpressionInLet >> executeDefinition [
 	self newName ifNil: [ ^ nil ].
 	self definitionNode first add:
 		(ViennaLocalDefinitionNode valueDefinitionOrFunctionDefinition:
-			 (ViennaNode
-				  label: 'ValueDefinition'
-				  with: (ViennaPatternIdentifierNode identifier: self newName)
-				  with: nil
-				  with: ast)).
+			 (ViennaValueDefinitionNode
+				  pattern: (ViennaPatternIdentifierNode identifier: self newName)
+				  type: nil
+				  expression: ast)).
 	^ self definitionNode
 ]
 

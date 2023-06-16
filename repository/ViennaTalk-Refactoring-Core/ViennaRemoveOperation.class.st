@@ -34,14 +34,14 @@ ViennaRemoveOperation >> check [
 
 { #category : #operations }
 ViennaRemoveOperation >> execute [
+
 	(self definitionNode
-		parentLabelled: 'OperationDefinitions'
-		ifAbsent: [ nil ])
-		ifNotNil: [ :operationDefinitions | 
-			operationDefinitions remove: self definitionNode parent parent.
-			operationDefinitions
-				ifEmpty: [ operationDefinitions parent parent
-						remove: operationDefinitions parent ] ]
+		 detectParent: #isViennaOperationDefinitionsNode
+		 ifNone: [ nil ]) ifNotNil: [ :operationDefinitions |
+		operationDefinitions remove: self definitionNode parent parent.
+		operationDefinitions ifEmpty: [
+			operationDefinitions parent parent remove:
+				operationDefinitions parent ] ]
 ]
 
 { #category : #accessing }

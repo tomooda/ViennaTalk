@@ -26,7 +26,7 @@ ViennaExtractType >> execute [
 						                    isViennaTypeDefinitionsNode ] ] ]
 		                    ifNone: [ nil ]) ifNotNil: #first.
 	typeDefinitions ifNil: [
-		typeDefinitions := ViennaNode label: 'TypeDefinitions'.
+		typeDefinitions := ViennaTypeDefinitionsNode empty.
 		moduleBody add:
 			(ViennaDefinitionBlockNode definition: typeDefinitions) ].
 	self replaceNode: ast with: (ViennaTypeNameNode name:

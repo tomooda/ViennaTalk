@@ -27,17 +27,14 @@ ViennaRenameStateVariable >> executeOnImports [
 
 { #category : #accessing }
 ViennaRenameStateVariable >> findDefinitionNode [
-	ast module
-		ifNotNil: [ :node | 
-			node third
-				do: [ :definitionBlock | 
-					definitionBlock first label = 'StateDefinition'
-						ifTrue: [ | stateDefinition |
-							stateDefinition := definitionBlock first.
-							stateDefinition second
-								do: [ :field | 
-									field first = self oldName
-										ifTrue: [ ^ field ] ] ] ] ].
+
+	ast module ifNotNil: [ :node |
+		node third do: [ :definitionBlock |
+			definitionBlock definition isViennaStateDefinitionNode ifTrue: [
+				| stateDefinition |
+				stateDefinition := definitionBlock definition.
+				stateDefinition fieldList do: [ :field |
+					field identifier = self oldName ifTrue: [ ^ field ] ] ] ] ].
 	^ nil
 ]
 

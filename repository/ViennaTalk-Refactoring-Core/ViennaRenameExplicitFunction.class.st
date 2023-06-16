@@ -28,7 +28,7 @@ ViennaRenameExplicitFunction >> findDefinitionNode [
 
 	self oldName ifNil: [ ^ nil ].
 	ast module third do: [ :definitionBlock |
-		definitionBlock first label = 'FunctionDefinitions' ifTrue: [
+		definitionBlock first isViennaFunctionDefinitionsNode ifTrue: [
 			definitionBlock first do: [ :accessFunctionDef |
 				accessFunctionDef second first ifNotNil: [ :functionDef |
 					(functionDef isViennaExplicitFunctionDefinitionNode: self oldName)

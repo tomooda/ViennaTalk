@@ -58,7 +58,7 @@ ViennaImplicitOperationBodyNode >> formatWith: aViennaAbstractFormatter [
 		   ifNil: [ '' ])
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaImplicitOperationBodyNode >> isViennaImplicitOperationBodyNode [
 
 	^ true

@@ -1,6 +1,6 @@
 Class {
 	#name : #ViennaOthersStatementNode,
-	#superclass : #ViennaStatementNode,
+	#superclass : #ViennaDefinitionComponentNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }
@@ -23,7 +23,7 @@ ViennaOthersStatementNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: statement
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaOthersStatementNode >> isViennaOthersStatementNode [
 
 	^ true

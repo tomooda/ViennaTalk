@@ -18,7 +18,7 @@ ViennaVDM2SmalltalkClass >> buildEnv: aViennaNode [
 			| env |
 			env := envs at: 'DEFAULT'.
 			aViennaNode do: [ :definitionBlock |
-				definitionBlock definition label = 'StateDefinition' ifFalse: [
+				definitionBlock definition isViennaStateDefinitionNode ifFalse: [
 					(self boundVariables: definitionBlock) do: [ :ident |
 						env at: ident put: 'self ' , ident ] ] ] ]
 		ifFalse: [
@@ -27,7 +27,7 @@ ViennaVDM2SmalltalkClass >> buildEnv: aViennaNode [
 				moduleName := moduleNode first.
 				envs at: moduleName put: Dictionary new.
 				moduleNode third do: [ :definitionBlock |
-					definitionBlock first label = 'StateDefinition' ifFalse: [
+					definitionBlock first isViennaStateDefinitionNode ifFalse: [
 						(self boundVariables: definitionBlock) do: [ :ident |
 							(envs at: moduleName) at: ident put: 'self ' , ident.
 							(envs at: 'DEFAULT')
@@ -659,43 +659,53 @@ ViennaVDM2SmalltalkClass >> extendedExplicitOperationDefinition: aViennaNode env
 
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> flatDocument: aViennaNode env: aDictionary [
+
 	| env instVars stateVars typeNames newClass |
 	env := aDictionary copy.
-	stateVars := #().
+	stateVars := #(  ).
 	typeNames := Array new writeStream.
-	aViennaNode
-		do: [ :definitionBlock | 
-			definitionBlock first label = 'StateDefinition'
-				ifTrue: [ | stateDefinition |
-					stateDefinition := definitionBlock first.
-					stateVars := stateDefinition second collect: #first.
-					env at: stateDefinition first put: 'self ' , stateDefinition first ].
-			definitionBlock first label = 'TypeDefinitions'
-				ifTrue: [ typeNames nextPutAll: (self boundVariables: definitionBlock first) ] ].
+	aViennaNode do: [ :definitionBlock |
+		definitionBlock definition isViennaStateDefinitionNode ifTrue: [
+			| stateDefinition |
+			stateDefinition := definitionBlock definition.
+			stateVars := stateDefinition fieldList collect: #identifier.
+			env
+				at: stateDefinition first
+				put: 'self ' , stateDefinition identifier ].
+		definitionBlock definition isViennaTypeDefinitionsNode ifTrue: [
+			typeNames nextPutAll:
+				(self boundVariables: definitionBlock definition) ] ].
 	typeNames := typeNames contents.
 	instVars := (self boundVariables: aViennaNode)
-		removeAll: stateVars;
-		asArray.
-	newClass := self createDocumentClassWithInstVars: instVars stateVars: stateVars.
+		            removeAll: stateVars;
+		            asArray.
+	newClass := self
+		            createDocumentClassWithInstVars: instVars
+		            stateVars: stateVars.
 	classes at: nil put: newClass.
-	aViennaNode
-		do: [ :definitionBlock | 
-			definitionBlock first label = 'StateDefinition'
-				ifFalse: [ (self boundVariables: definitionBlock)
-						do: [ :ident | env at: ident put: 'self ' , ident ] ] ].
+	aViennaNode do: [ :definitionBlock |
+		definitionBlock definition isViennaStateDefinitionNode ifFalse: [
+			(self boundVariables: definitionBlock) do: [ :ident |
+				env at: ident put: 'self ' , ident ] ] ].
 	self
-		defineMethod: 'initialize super initialize. self initTypes. self init'
+		defineMethod:
+		'initialize super initialize. self initTypes. self init'
 		in: newClass
 		protocol: 'initialize-release'
 		node: nil.
-	aViennaNode do: [ :definitionBlock | self definitionBlock: definitionBlock env: env ].
+	aViennaNode do: [ :definitionBlock |
+		self definitionBlock: definitionBlock env: env ].
 	self
 		defineInitTypeMethodForTypeNames: typeNames
 		in: newClass
 		protocol: 'initialize-release'
 		node: nil.
-	(newClass includesSelector: #init)
-		ifFalse: [ self defineMethod: 'init' in: newClass protocol: 'state' node: nil ].
+	(newClass includesSelector: #init) ifFalse: [
+		self
+			defineMethod: 'init'
+			in: newClass
+			protocol: 'state'
+			node: nil ].
 	newClass viennaEnv: env.
 	^ newClass
 ]
@@ -977,6 +987,7 @@ ViennaVDM2SmalltalkClass >> modularDocument: aViennaNode env: aDictionary [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
+
 	| env moduleName interfaceNode moduleBodyNode importModuleNames importClassNames instVars stateVars typeNames newClass |
 	env := aDictionary copy.
 	self generate: aViennaNode second env: env.
@@ -984,64 +995,68 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 	interfaceNode := aViennaNode second.
 	moduleBodyNode := aViennaNode third.
 	importModuleNames := interfaceNode first
-		ifNil: [ Array new ]
-		ifNotNil: [ :importDefinitionListNode | 
-			importDefinitionListNode
-				collect: [ :importDefinitionNode | importDefinitionNode first ] ].
-	importClassNames := importModuleNames
-		collect:
-			[ :importModuleName | env at: importModuleName first ifAbsent: [ importModuleName ] ].
-	stateVars := #().
+		                     ifNil: [ Array new ]
+		                     ifNotNil: [ :importDefinitionListNode |
+			                     importDefinitionListNode collect: [
+				                     :importDefinitionNode |
+				                     importDefinitionNode first ] ].
+	importClassNames := importModuleNames collect: [ :importModuleName |
+		                    env
+			                    at: importModuleName first
+			                    ifAbsent: [ importModuleName ] ].
+	stateVars := #(  ).
 	typeNames := Array new writeStream.
-	moduleBodyNode
-		do: [ :definitionBlock | 
-			definitionBlock first label = 'StateDefinition'
-				ifTrue: [ | stateDefinition |
-					stateDefinition := definitionBlock first.
-					stateVars := stateDefinition second collect: #first.
-					env at: stateDefinition first put: 'self ' , stateDefinition first ]
-				ifFalse: [ (self boundVariables: definitionBlock)
-						do: [ :ident | env at: ident put: 'self ' , ident ] ].
-			definitionBlock first label = 'TypeDefinitions'
-				ifTrue: [ typeNames nextPutAll: (self boundVariables: definitionBlock first) ] ].
+	moduleBodyNode do: [ :definitionBlock |
+		definitionBlock definition isViennaStateDefinitionNode
+			ifTrue: [
+				| stateDefinition |
+				stateDefinition := definitionBlock definition.
+				stateVars := stateDefinition fieldList collect: #identifier.
+				env
+					at: stateDefinition identifier
+					put: 'self ' , stateDefinition identifier ]
+			ifFalse: [
+				(self boundVariables: definitionBlock) do: [ :ident |
+					env at: ident put: 'self ' , ident ] ].
+		definitionBlock first isViennaTypeDefinitionsNode ifTrue: [
+			typeNames nextPutAll: (self boundVariables: definitionBlock first) ] ].
 	typeNames := typeNames contents.
 	instVars := (self boundVariables: moduleBodyNode)
-		removeAll: stateVars;
-		asArray.
+		            removeAll: stateVars;
+		            asArray.
 	newClass := self
-		createModuleClassWithInstVars: importClassNames , instVars
-		stateVars: stateVars
-		forModule: moduleName
-		env: env.
+		            createModuleClassWithInstVars:
+		            importClassNames , instVars
+		            stateVars: stateVars
+		            forModule: moduleName
+		            env: env.
 	classes at: moduleName put: newClass.
 	importModuleNames
 		with: importClassNames
-		do: [ :importModuleName :importClassName | 
+		do: [ :importModuleName :importClassName |
 			self
 				defineMethod:
-					importModuleName , ':' , 'a' , importClassName capitalized , String cr
-						, importModuleName , ' := ' , 'a' , importClassName capitalized
+					importModuleName , ':' , 'a' , importClassName capitalized
+					, String cr , importModuleName , ' := ' , 'a'
+					, importClassName capitalized
 				in: newClass
 				protocol: 'imports'
-				node: (interfaceNode first detect: [ :node | node first = importModuleName ]) ].
-	moduleBodyNode
-		do: [ :definitionBlock | self definitionBlock: definitionBlock env: env ].
-	"self
-		defineMethod: 'initialize super initialize. self initTypes'
-		in: newClass
-		protocol: 'initialize-release'
-		node: nil."
+				node:
+				(interfaceNode first detect: [ :node |
+					 node first = importModuleName ]) ].
+	moduleBodyNode do: [ :definitionBlock |
+		self definitionBlock: definitionBlock env: env ].
 	self
 		defineInitTypeMethodForTypeNames: typeNames
 		in: newClass
 		protocol: 'initialize-release'
 		node: nil.
-	(newClass includesSelector: #init)
-		ifFalse: [ self
-				defineMethod: 'init'
-				in: newClass
-				protocol: 'state'
-				node: nil ]
+	(newClass includesSelector: #init) ifFalse: [
+		self
+			defineMethod: 'init'
+			in: newClass
+			protocol: 'state'
+			node: nil ]
 ]
 
 { #category : #'code generation-definitions' }
