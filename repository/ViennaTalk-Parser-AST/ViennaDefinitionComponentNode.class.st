@@ -1,6 +1,6 @@
 Class {
 	#name : #ViennaDefinitionComponentNode,
-	#superclass : #ViennaAbstractSyntaxNode,
+	#superclass : #ViennaNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }
@@ -11,7 +11,7 @@ ViennaDefinitionComponentNode class >> isAbstract [
 	^ self = ViennaDefinitionComponentNode
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaDefinitionComponentNode >> isViennaDefinitionComponentNode [
 
 	^ true

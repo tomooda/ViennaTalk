@@ -21,6 +21,12 @@ ViennaExtendedExplicitOperationDefinitionNode class >> identifier: aString param
 ]
 
 { #category : #accessing }
+ViennaExtendedExplicitOperationDefinitionNode >> argumentType [
+
+	^ self parameterTypes patternTypePairList type
+]
+
+{ #category : #accessing }
 ViennaExtendedExplicitOperationDefinitionNode >> exceptions [
 
 	^ self at: 8
@@ -164,4 +170,24 @@ ViennaExtendedExplicitOperationDefinitionNode >> pre [
 ViennaExtendedExplicitOperationDefinitionNode >> pre: aViennaExpressionNode [
 
 	self at: 6 put: aViennaExpressionNode
+]
+
+{ #category : #accessing }
+ViennaExtendedExplicitOperationDefinitionNode >> returnIdentifier [
+
+	^ self identifierTypePairList first
+]
+
+{ #category : #accessing }
+ViennaExtendedExplicitOperationDefinitionNode >> returnType [
+
+	^ self identifierTypePairList type
+]
+
+{ #category : #accessing }
+ViennaExtendedExplicitOperationDefinitionNode >> type [
+
+	^ ViennaOperationTypeNode
+		  argumentType: self argumentType
+		  returnType: self returnType
 ]

@@ -25,7 +25,7 @@ ViennaPatternTypePairListNode >> formatWith: aViennaAbstractFormatter [
 	^ string
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaPatternTypePairListNode >> isViennaPatternTypePairListNode [
 
 	^ true
@@ -35,4 +35,16 @@ ViennaPatternTypePairListNode >> isViennaPatternTypePairListNode [
 ViennaPatternTypePairListNode >> label [
 
 	^ 'PatternTypePairList'
+]
+
+{ #category : #accessing }
+ViennaPatternTypePairListNode >> type [
+
+	^ ((2 to: self size by: 2) collect: [ :index |
+		   (self at: index) copyFragment ])
+		  ifEmpty: [ ViennaUnitTypeNode new ]
+		  ifNotEmpty: [ :types |
+			  types size = 1
+				  ifTrue: [ types first ]
+				  ifFalse: [ ViennaProductTypeNode withAll: types ] ]
 ]

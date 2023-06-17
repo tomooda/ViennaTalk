@@ -292,11 +292,12 @@ ViennaRefactoring >> ensureExport: aViennaNode [
 ViennaRefactoring >> ensureExportSignature: aViennaNode in: moduleNode [
 
 	| exportModuleSignature |
-	exportModuleSignature := moduleNode exports first.
+	exportModuleSignature := moduleNode exportDefinition
+		                         exportModuleSignature.
 	exportModuleSignature isViennaExportModuleSignatureAllNode ifTrue: [
 		^ exportModuleSignature ].
 	exportModuleSignature reverseDo: [ :exportSignature |
-		exportSignature label = aViennaNode label ifTrue: [
+		exportSignature class = aViennaNode class ifTrue: [
 			exportSignature add: aViennaNode first.
 			^ exportSignature ] ].
 	exportModuleSignature add: aViennaNode.
@@ -348,19 +349,21 @@ ViennaRefactoring >> ensureImportDefinitionFrom: aString in: moduleNode [
 			        moduleIdentifier: srcName
 			        importModuleSignature:
 			        ViennaImportModuleSignatureNode empty.
-		moduleNode ensureImports add: last ].
+		moduleNode addImportDefinition: last ].
 	^ last
 ]
 
 { #category : #'visiting-interface' }
 ViennaRefactoring >> ensureImportSignatureFor: importSignatureNode in: importModuleSignatureNode [
+
 	^ importModuleSignatureNode asArray
-		detect:
-			[ :importSignature | importSignature label = importSignatureNode label ]
-		ifNone: [ | importSignature |
-			importSignature := ViennaNode label: importSignatureNode label.
-			importModuleSignatureNode add: importSignature.
-			importSignature ]
+		  detect: [ :importSignature |
+			  importSignature class = importSignatureNode class ]
+		  ifNone: [
+			  | importSignature |
+			  importSignature := importSignatureNode class empty.
+			  importModuleSignatureNode add: importSignature.
+			  importSignature ]
 ]
 
 { #category : #operations }
@@ -544,34 +547,42 @@ ViennaRefactoring >> freeOccurrencesOf: aString inExistsExpression: aViennaNode 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inExplicitFunctionDefinition: aViennaNode do: aBlock [
 
-	aViennaNode second do: [ :n |
+	aViennaNode typeVariableList do: [ :n |
 		(n isViennaTypeVariableIdentifierNode: aString) ifTrue: [ ^ self ] ].
-	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock.
-	self freeOccurrencesOf: aString in: aViennaNode third do: aBlock.
-	self freeOccurrencesOf: aString in: aViennaNode fourth do: aBlock.
-	self freeOccurrencesOf: aString in: aViennaNode fifth do: aBlock.
-	self freeOccurrencesOf: aString in: aViennaNode ninth do: aBlock.
-	aViennaNode fifth
+	self
+		freeOccurrencesOf: aString
+		in: aViennaNode typeVariableList
+		do: aBlock.
+	self freeOccurrencesOf: aString in: aViennaNode type do: aBlock.
+	self
+		freeOccurrencesOf: aString
+		in: aViennaNode parametersList
+		do: aBlock.
+	self freeOccurrencesOf: aString in: aViennaNode measure do: aBlock.
+	aViennaNode parametersList
 		allDescendantsSuchThat: [ :n |
 		n isViennaPatternIdentifierNode: aString ]
 		do: [ :n | ^ self ].
-	self freeOccurrencesOf: aString in: aViennaNode sixth do: aBlock.
-	self freeOccurrencesOf: aString in: aViennaNode seventh do: aBlock.
-	self freeOccurrencesOf: aString in: aViennaNode eighth do: aBlock
+	self freeOccurrencesOf: aString in: aViennaNode expression do: aBlock.
+	self freeOccurrencesOf: aString in: aViennaNode pre do: aBlock.
+	self freeOccurrencesOf: aString in: aViennaNode post do: aBlock
 ]
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inExplicitOperationDefinition: aViennaNode do: aBlock [
 
-	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock.
-	self freeOccurrencesOf: aString in: aViennaNode fourth do: aBlock.
-	aViennaNode fifth
+	self freeOccurrencesOf: aString in: aViennaNode type do: aBlock.
+	self freeOccurrencesOf: aString in: aViennaNode parameters do: aBlock.
+	aViennaNode operationBody
 		allDescendantsSuchThat: [ :n |
 		n isViennaPatternIdentifierNode: aString ]
 		do: [ :n | ^ self ].
-	self freeOccurrencesOf: aString in: aViennaNode fifth do: aBlock.
-	self freeOccurrencesOf: aString in: aViennaNode sixth do: aBlock.
-	self freeOccurrencesOf: aString in: aViennaNode seventh do: aBlock
+	self
+		freeOccurrencesOf: aString
+		in: aViennaNode operationBody
+		do: aBlock.
+	self freeOccurrencesOf: aString in: aViennaNode pre do: aBlock.
+	self freeOccurrencesOf: aString in: aViennaNode post do: aBlock
 ]
 
 { #category : #'visiting-free occurrences' }
@@ -605,20 +616,31 @@ ViennaRefactoring >> freeOccurrencesOf: aString inFunctionImport: aViennaNode do
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inImplicitFunctionDefinition: aViennaNode do: aBlock [
 
-	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock.
-	self freeOccurrencesOf: aString in: aViennaNode third do: aBlock.
-	self freeOccurrencesOf: aString in: aViennaNode fourth do: aBlock.
-	aViennaNode third first ifNotEmpty: [ :patternTypePairList |
+	self
+		freeOccurrencesOf: aString
+		in: aViennaNode typeVariableList
+		do: aBlock.
+	self
+		freeOccurrencesOf: aString
+		in: aViennaNode parameterTypes
+		do: aBlock.
+	self
+		freeOccurrencesOf: aString
+		in: aViennaNode identifierTypePairList
+		do: aBlock.
+	aViennaNode parameterTypes patternTypePairList ifNotEmpty: [
+		:patternTypePairList |
 		1 to: patternTypePairList size by: 2 do: [ :index |
 			(patternTypePairList at: index)
 				allDescendantsSuchThat: [ :n |
 				n isViennaPatternIdentifierNode: aString ]
 				do: [ :n | ^ self ] ] ].
-	self freeOccurrencesOf: aString in: aViennaNode fifth do: aBlock.
-	aViennaNode fourth ifNotEmpty: [ :identifierTypePairList |
+	self freeOccurrencesOf: aString in: aViennaNode pre do: aBlock.
+	aViennaNode identifierTypePairList ifNotEmpty: [
+		:identifierTypePairList |
 		1 to: identifierTypePairList size by: 2 do: [ :index |
 			(identifierTypePairList at: index) = aString ifTrue: [ ^ self ] ] ].
-	self freeOccurrencesOf: aString in: aViennaNode sixth do: aBlock
+	self freeOccurrencesOf: aString in: aViennaNode post do: aBlock
 ]
 
 { #category : #'visiting-free occurrences' }
@@ -655,12 +677,21 @@ ViennaRefactoring >> freeOccurrencesOf: aString inImplicitOperationDefinition: a
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inIndexForLoop: aViennaNode do: aBlock [
-	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock.
-	self freeOccurrencesOf: aString in: aViennaNode third do: aBlock.
-	self freeOccurrencesOf: aString in: aViennaNode fourth do: aBlock.
-	aViennaNode first = aString
-		ifTrue: [ ^ self ].
-	self freeOccurrencesOf: aString in: aViennaNode fifth do: aBlock
+
+	self
+		freeOccurrencesOf: aString
+		in: aViennaNode startExpression
+		do: aBlock.
+	self
+		freeOccurrencesOf: aString
+		in: aViennaNode endExpression
+		do: aBlock.
+	self
+		freeOccurrencesOf: aString
+		in: aViennaNode stepExpression
+		do: aBlock.
+	aViennaNode identifier = aString ifTrue: [ ^ self ].
+	self freeOccurrencesOf: aString in: aViennaNode statement do: aBlock
 ]
 
 { #category : #'visiting-free occurrences' }
@@ -910,16 +941,18 @@ ViennaRefactoring >> localScopeByExistsExpression: aViennaNode do: aBlock [
 
 { #category : #'visiting-scopes' }
 ViennaRefactoring >> localScopeByExplicitFunctionDefinition: aViennaNode do: aBlock [
-	aBlock value: aViennaNode sixth.
-	aBlock value: aViennaNode seventh.
-	aBlock value: aViennaNode eighth
+
+	aBlock value: aViennaNode expression.
+	aBlock value: aViennaNode pre.
+	aBlock value: aViennaNode post
 ]
 
 { #category : #'visiting-scopes' }
 ViennaRefactoring >> localScopeByExplicitOperationDefinition: aViennaNode do: aBlock [
-	aBlock value: aViennaNode fifth first.
-	aBlock value: aViennaNode sixth.
-	aBlock value: aViennaNode seventh
+
+	aBlock value: aViennaNode operationBody statement.
+	aBlock value: aViennaNode pre.
+	aBlock value: aViennaNode post
 ]
 
 { #category : #'visiting-scopes' }
@@ -929,8 +962,9 @@ ViennaRefactoring >> localScopeByForallExpression: aViennaNode do: aBlock [
 
 { #category : #'visiting-scopes' }
 ViennaRefactoring >> localScopeByImplicitFunctionDefinition: aViennaNode do: aBlock [
-	aBlock value: aViennaNode fifth.
-	aBlock value: aViennaNode sixth
+
+	aBlock value: aViennaNode pre.
+	aBlock value: aViennaNode post
 ]
 
 { #category : #'visiting-scopes' }
@@ -942,7 +976,8 @@ ViennaRefactoring >> localScopeByImplicitOperationDefinition: aViennaNode do: aB
 
 { #category : #'visiting-scopes' }
 ViennaRefactoring >> localScopeByIndexForLoopDefinition: aViennaNode do: aBlock [
-	aBlock value: aViennaNode fifth
+
+	aBlock value: aViennaNode statement
 ]
 
 { #category : #'visiting-scopes' }
@@ -1130,7 +1165,8 @@ ViennaRefactoring >> retractExport: aViennaNode [
 ViennaRefactoring >> retractExportSignature: aViennaNode in: moduleNode [
 
 	| exportModuleSignature names |
-	exportModuleSignature := moduleNode exports first.
+	exportModuleSignature := moduleNode exportDefinition
+		                         exportModuleSignature.
 	exportModuleSignature isViennaExportModuleSignatureAllNode ifTrue: [
 		^ exportModuleSignature ].
 	names := OrderedCollection new.

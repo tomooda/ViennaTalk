@@ -21,13 +21,11 @@ ViennaVDMParser >> abs: arg [
 
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> access [
-	^ super access
-		=>> [ :start :end :string | 
-			ViennaNode
-				label: 'Access'
-				start: start
-				end: end
-				with: string ]
+
+	^ super access =>> [ :start :end :string |
+	  (ViennaAccessNode with: string)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -36,7 +34,7 @@ ViennaVDMParser >> accessFunctionDefinition [
 	self flushAnnotations.
 	^ super accessFunctionDefinition =>> [ :start :end :array |
 	  (ViennaAccessFunctionDefinitionNode
-		   access: (ViennaNode label: 'Access' withAll: array first)
+		   access: (ViennaAccessNode withAll: array first)
 		   functionDefinition: array second)
 		  start: start end: end;
 		  annotations: self flushAnnotations;
@@ -49,7 +47,7 @@ ViennaVDMParser >> accessOperationDefinition [
 	self flushAnnotations.
 	^ super accessOperationDefinition =>> [ :start :end :array |
 	  (ViennaAccessOperationDefinitionNode
-		   access: (ViennaNode label: 'Access' withAll: array first)
+		   access: (ViennaAccessNode withAll: array first)
 		   operationDefinition: array second)
 		  start: start end: end;
 		  annotations: self flushAnnotations;
@@ -62,7 +60,7 @@ ViennaVDMParser >> accessTypeDefinition [
 	self flushAnnotations.
 	^ super accessTypeDefinition =>> [ :start :end :array |
 	  (ViennaAccessTypeDefinitionNode
-		   access: (ViennaNode label: 'Access' withAll: array first)
+		   access: (ViennaAccessNode withAll: array first)
 		   typeDefinition: array second)
 		  start: start end: end;
 		  annotations: self flushAnnotations;
@@ -75,7 +73,7 @@ ViennaVDMParser >> accessValueDefinition [
 	self flushAnnotations.
 	^ super accessValueDefinition =>> [ :start :end :array |
 	  (ViennaAccessValueDefinitionNode
-		   access: (ViennaNode label: 'Access' withAll: array first)
+		   access: (ViennaAccessNode withAll: array first)
 		   valueDefinition: array second)
 		  start: start end: end;
 		  annotations: self flushAnnotations;
@@ -2178,13 +2176,14 @@ ViennaVDMParser >> typeName [
 
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> typeSynonym [
-	^ super typeSynonym
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'TypeSynonym'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super typeSynonym =>> [ :start :end :array |
+	  (ViennaTypeSynonymNode
+		   identifier: array first
+		   type: array second
+		   inv: array third)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -2301,13 +2300,14 @@ ViennaVDMParser >> valueImport [
 
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> varInformation [
-	^ super varInformation
-		=>> [ :start :end :array | 
-			ViennaNode
-				label: 'VarInformation'
-				start: start
-				end: end
-				withAll: array ]
+
+	^ super varInformation =>> [ :start :end :array |
+	  (ViennaVarInformationNode
+		   mode: array first
+		   nameList: array second
+		   type: array third)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-statements' }

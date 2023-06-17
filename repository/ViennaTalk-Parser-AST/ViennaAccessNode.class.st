@@ -5,6 +5,12 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #'instance creation' }
+ViennaAccessNode class >> pure [
+
+	^ self with: 'pure'
+]
+
 { #category : #'pretty printing' }
 ViennaAccessNode >> formatWith: aViennaAbstractFormatter [
 

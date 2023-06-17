@@ -17,7 +17,7 @@ ViennaOperationDefinitionNode class >> definition: aViennaNode [
 ViennaOperationDefinitionNode >> asAccessDefinition [
 
 	^ ViennaAccessOperationDefinitionNode
-		  access: (ViennaNode label: 'Access')
+		  access: ViennaAccessNode empty
 		  operationDefinition: self
 ]
 

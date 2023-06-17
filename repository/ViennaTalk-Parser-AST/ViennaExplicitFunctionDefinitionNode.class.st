@@ -20,6 +20,12 @@ ViennaExplicitFunctionDefinitionNode class >> identifier: aString typeVariableLi
 		  yourself
 ]
 
+{ #category : #accessing }
+ViennaExplicitFunctionDefinitionNode >> argumentType [
+
+	^ self type argumentType
+]
+
 { #category : #'accessing-definitions' }
 ViennaExplicitFunctionDefinitionNode >> asAccessDefinition [
 
@@ -194,6 +200,18 @@ ViennaExplicitFunctionDefinitionNode >> pre: aViennaExpressionNode [
 ViennaExplicitFunctionDefinitionNode >> resolve [
 
 	^ self
+]
+
+{ #category : #accessing }
+ViennaExplicitFunctionDefinitionNode >> returnIdentifier [
+
+	^ 'RESULT'
+]
+
+{ #category : #accessing }
+ViennaExplicitFunctionDefinitionNode >> returnType [
+
+	^ self type returnType
 ]
 
 { #category : #'accessing-definitions' }

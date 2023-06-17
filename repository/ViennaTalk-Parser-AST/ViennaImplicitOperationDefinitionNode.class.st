@@ -16,6 +16,12 @@ ViennaImplicitOperationDefinitionNode class >> identifier: aString parameterType
 		  yourself
 ]
 
+{ #category : #accessing }
+ViennaImplicitOperationDefinitionNode >> argumentType [
+
+	^ self parameterTypes patternTypePairList type
+]
+
 { #category : #'accessing-definitions' }
 ViennaImplicitOperationDefinitionNode >> asAccessDefinition [
 
@@ -27,10 +33,8 @@ ViennaImplicitOperationDefinitionNode >> asExport [
 
 	^ ViennaOperationExportNode
 		  nameList: (ViennaNameListNode withAll:
-				   { (ViennaLocalNameNode identifier: self first) })
-		  type: (ViennaOperationTypeNode
-				   argumentType: self second first pairListToType
-				   returnType: self third pairListToType)
+				   { (ViennaLocalNameNode identifier: self identifier) })
+		  type: self type
 ]
 
 { #category : #'accessing-definitions' }
@@ -42,9 +46,7 @@ ViennaImplicitOperationDefinitionNode >> asImportDefinitionIn: moduleNode [
 				   (ViennaImportOperationsSignatureNode with:
 					    (ViennaOperationImportNode
 						     name: (ViennaLocalNameNode identifier: self identifier)
-						     type: (ViennaOperationTypeNode
-								      argumentType: self second first pairListToType
-								      returnType: self third pairListToType)
+						     type: self type
 						     rename: nil)))
 ]
 
@@ -153,8 +155,28 @@ ViennaImplicitOperationDefinitionNode >> resolve [
 	^ self
 ]
 
+{ #category : #accessing }
+ViennaImplicitOperationDefinitionNode >> returnIdentifier [
+
+	^ self identifierTypePairList first
+]
+
+{ #category : #accessing }
+ViennaImplicitOperationDefinitionNode >> returnType [
+
+	^ self identifierTypePairList type
+]
+
 { #category : #'accessing-definitions' }
 ViennaImplicitOperationDefinitionNode >> shortName [
 
 	^ self identifier
+]
+
+{ #category : #accessing }
+ViennaImplicitOperationDefinitionNode >> type [
+
+	^ ViennaOperationTypeNode
+		  argumentType: self argumentType
+		  returnType: self returnType
 ]

@@ -46,9 +46,7 @@ ViennaSplitBlockStatement >> check [
 ViennaSplitBlockStatement >> execute [
 
 	| dummy newBlockStatement |
-	dummy := self
-		         replaceNode: self blockNode
-		         with: (ViennaNode label: 'DUMMY').
+	dummy := self replaceNode: self blockNode with: ViennaDummyNode empty.
 	newBlockStatement := ViennaBlockStatementNode withAll:
 		                     (Array streamContents: [ :statementStream |
 			                      (Array streamContents: [ :assignmentStream |

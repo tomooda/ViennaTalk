@@ -1062,7 +1062,7 @@ ViennaBrowser >> generateViennaDocSourceScript [
 			ast isPetit2Failure ifTrue: [ ^ self ].
 			sources := Dictionary new.
 			walker := [ :node :module |
-			          (node isKindOf: ViennaNode) ifTrue: [
+			          node isViennaNode ifTrue: [
 				          node isViennaModuleNode ifTrue: [
 					          sources
 						          at: node identifier

@@ -524,12 +524,15 @@ ViennaVDM2Smalltalk >> dclStatement: aViennaNode env: aDictionary [
 
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> defExpression: aViennaNode env: aDictionary [
+
 	| definitionList defs expr vars |
-	definitionList := ViennaNode label: aViennaNode first label withAll: (self reorderDefinitions: aViennaNode first).
+	definitionList := aViennaNode first class withAll:
+		                  (self reorderDefinitions: aViennaNode first).
 	defs := self generate: definitionList env: aDictionary.
 	expr := self generate: aViennaNode second env: aDictionary.
 	vars := (self boundVariables: aViennaNode first) asArray.
-	^ '[|' , (' ' join: vars) , '|' , ('.' join: defs) , ' ifFalse: [ViennaNoMatch signal].' , expr , '] value'
+	^ '[|' , (' ' join: vars) , '|' , ('.' join: defs)
+	  , ' ifFalse: [ViennaNoMatch signal].' , expr , '] value'
 ]
 
 { #category : #'code generation-statements' }
@@ -768,16 +771,16 @@ ViennaVDM2Smalltalk >> exitStatement: aViennaNode env: aDictionary [
 ViennaVDM2Smalltalk >> explicitFunctionDefinition: aViennaNode env: aDictionary [
 
 	| funcName typeNode preNode postNode parametersListNode body varGenerator preBody postBody retType argTypes |
-	funcName := aViennaNode first.
-	typeNode := aViennaNode third.
-	preNode := aViennaNode seventh.
-	postNode := aViennaNode eighth.
-	parametersListNode := aViennaNode fifth.
-	body := self generate: aViennaNode sixth env: aDictionary.
+	funcName := aViennaNode identifier.
+	typeNode := aViennaNode type.
+	preNode := aViennaNode pre.
+	postNode := aViennaNode post.
+	parametersListNode := aViennaNode parametersList.
+	body := self generate: aViennaNode expression env: aDictionary.
 	argTypes := parametersListNode collect: [ :node |
 		            | t |
-		            t := typeNode first.
-		            typeNode := typeNode second.
+		            t := typeNode argumentType.
+		            typeNode := typeNode returnType.
 		            t ].
 	retType := typeNode.
 	preNode ifNotNil: [
@@ -883,16 +886,16 @@ ViennaVDM2Smalltalk >> explicitFunctionDefinition: aViennaNode env: aDictionary 
 ViennaVDM2Smalltalk >> explicitOperationDefinition: aViennaNode env: aDictionary [
 
 	| opname typeNode paramsNode preNode postNode body varGenerator preBody postBody argTypeNode retTypeNode binds |
-	opname := aViennaNode first.
-	typeNode := aViennaNode second.
-	paramsNode := aViennaNode fourth.
-	preNode := aViennaNode sixth.
-	postNode := aViennaNode seventh.
+	opname := aViennaNode identifier.
+	typeNode := aViennaNode type.
+	paramsNode := aViennaNode parameters.
+	preNode := aViennaNode pre.
+	postNode := aViennaNode post.
 	body := '[|_opContext| _opContext := thisContext. '
-	        , (self generate: aViennaNode fifth env: aDictionary)
+	        , (self generate: aViennaNode operationBody env: aDictionary)
 	        , '] value'.
-	argTypeNode := typeNode first.
-	retTypeNode := typeNode second.
+	argTypeNode := typeNode argumentType.
+	retTypeNode := typeNode returnType.
 	preNode ifNotNil: [
 		preBody := self generate: preNode env: aDictionary.
 		runtimeAssertionCheck = true ifTrue: [
@@ -1007,21 +1010,16 @@ ViennaVDM2Smalltalk >> expressionList: aViennaNode env: aDictionary [
 ViennaVDM2Smalltalk >> extendedExplicitFunctionDefinition: aViennaNode env: aDictionary [
 
 	| funcName patternTypePairList identifierTypePairList preNode postNode body varGenerator preBody postBody retType argType retValue binds |
-	funcName := aViennaNode first.
-	patternTypePairList := aViennaNode third first ifNil: [ Array new ].
-	identifierTypePairList := aViennaNode fourth.
-	body := self generate: aViennaNode fifth env: aDictionary.
-	preNode := aViennaNode sixth.
-	postNode := aViennaNode seventh.
-	argType := ((2 to: patternTypePairList size by: 2) collect: [ :index |
-		            patternTypePairList at: index ])
-		           ifEmpty: [ ViennaUnitTypeNode new ]
-		           ifNotEmpty: [ :types |
-			           types size = 1
-				           ifTrue: [ types first ]
-				           ifFalse: [ ViennaProductTypeNode withAll: types ] ].
-	retValue := identifierTypePairList first.
-	retType := identifierTypePairList second.
+	funcName := aViennaNode identifier.
+	patternTypePairList := aViennaNode parameterTypes patternTypePairList
+		                       ifNil: [ Array new ].
+	identifierTypePairList := aViennaNode identifierTypePairList.
+	body := self generate: aViennaNode expression env: aDictionary.
+	preNode := aViennaNode pre.
+	postNode := aViennaNode post.
+	argType := aViennaNode argumentType.
+	retValue := aViennaNode returnIdentifier.
+	retType := aViennaNode returnType.
 	preNode ifNotNil: [
 		preBody := self generate: preNode env: aDictionary.
 		runtimeAssertionCheck = true ifTrue: [
@@ -1631,11 +1629,12 @@ ViennaVDM2Smalltalk >> ifStatement: aViennaNode env: aDictionary [
 ViennaVDM2Smalltalk >> implicitFunctionDefinition: aViennaNode env: aDictionary [
 
 	| funcName patternTypePairListNode identifierTypePairListNode preNode postNode body binds varGenerator preBody postBody |
-	funcName := aViennaNode first.
-	patternTypePairListNode := aViennaNode third first.
-	identifierTypePairListNode := aViennaNode fourth.
-	preNode := aViennaNode fifth.
-	postNode := aViennaNode sixth.
+	funcName := aViennaNode identifier.
+	patternTypePairListNode := aViennaNode parameterTypes
+		                           patternTypePairList.
+	identifierTypePairListNode := aViennaNode identifierTypePairList.
+	preNode := aViennaNode pre.
+	postNode := aViennaNode post.
 	body := 'ViennaImplicitEvaluationError signal: '
 	        , (funcName , ' is implicitly defined.') storeString.
 	preNode ifNotNil: [
@@ -1853,29 +1852,29 @@ ViennaVDM2Smalltalk >> inSet: aViennaNode env: aDictionary [
 
 { #category : #'code generation-statements' }
 ViennaVDM2Smalltalk >> indexForLoop: aViennaNode env: aDictionary [
+
 	| ident start end step body |
-	ident := self generate: aViennaNode first env: aDictionary.
-	start := self generate: aViennaNode second env: aDictionary.
-	end := self generate: aViennaNode third env: aDictionary.
-	step := self generate: aViennaNode fourth env: aDictionary.
-	body := self generate: aViennaNode fifth env: aDictionary.
-	^ self
-		stringStreamContents: [ :stream | 
-			stream
-				nextPut: Character space;
-				nextPutAll: start;
-				nextPutAll: ' to: ';
-				nextPutAll: end.
-			step
-				ifNotNil: [ stream
-						nextPutAll: ' by: ';
-						nextPutAll: step ].
-			stream
-				nextPutAll: ' do: [:';
-				nextPutAll: ident;
-				nextPutAll: '|';
-				nextPutAll: body;
-				nextPutAll: ']' ]
+	ident := self generate: aViennaNode identifier env: aDictionary.
+	start := self generate: aViennaNode startExpression env: aDictionary.
+	end := self generate: aViennaNode endExpression env: aDictionary.
+	step := self generate: aViennaNode stepExpression env: aDictionary.
+	body := self generate: aViennaNode statement env: aDictionary.
+	^ self stringStreamContents: [ :stream |
+		  stream
+			  nextPut: Character space;
+			  nextPutAll: start;
+			  nextPutAll: ' to: ';
+			  nextPutAll: end.
+		  step ifNotNil: [
+			  stream
+				  nextPutAll: ' by: ';
+				  nextPutAll: step ].
+		  stream
+			  nextPutAll: ' do: [:';
+			  nextPutAll: ident;
+			  nextPutAll: '|';
+			  nextPutAll: body;
+			  nextPutAll: ']' ]
 ]
 
 { #category : #utilities }
@@ -2115,22 +2114,28 @@ ViennaVDM2Smalltalk >> letBeStatement: aViennaNode env: aDictionary [
 
 { #category : #'code generation-expressions' }
 ViennaVDM2Smalltalk >> letExpression: aViennaNode env: aDictionary [
+
 	| definitionList localDefinitions body vars |
-	definitionList := ViennaNode label: aViennaNode first label withAll: (self reorderDefinitions: aViennaNode first).
+	definitionList := aViennaNode first class withAll:
+		                  (self reorderDefinitions: aViennaNode first).
 	localDefinitions := self generate: definitionList env: aDictionary.
 	body := self generate: aViennaNode second env: aDictionary.
 	vars := (self boundVariables: definitionList) asArray.
-	^ '[|' , (' ' join: vars) , '|' , ('. ' join: localDefinitions) , '. ' , body , '] value'
+	^ '[|' , (' ' join: vars) , '|' , ('. ' join: localDefinitions)
+	  , '. ' , body , '] value'
 ]
 
 { #category : #'code generation-statements' }
 ViennaVDM2Smalltalk >> letStatement: aViennaNode env: aDictionary [
+
 	| definitionList localDefinitions body vars |
-	definitionList := ViennaNode label: aViennaNode first label withAll: (self reorderDefinitions: aViennaNode first).
+	definitionList := aViennaNode first class withAll:
+		                  (self reorderDefinitions: aViennaNode first).
 	localDefinitions := self generate: definitionList env: aDictionary.
 	body := self generate: aViennaNode second env: aDictionary.
 	vars := (self boundVariables: definitionList) asArray.
-	^ '[|' , (' ' join: vars) , '|' , ('.' join: localDefinitions) , '.' , body , '] value'
+	^ '[|' , (' ' join: vars) , '|' , ('.' join: localDefinitions) , '.'
+	  , body , '] value'
 ]
 
 { #category : #'code generation-definitions' }

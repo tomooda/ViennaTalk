@@ -167,9 +167,7 @@ ViennaMove >> rewriteImports [
 		imports do: [ :import |
 			(newImportModuleSignature isEmpty or: [
 				 newImportModuleSignature last label ~= import parent label ])
-				ifTrue: [
-					newImportModuleSignature add:
-						(ViennaNode label: import parent label) ].
+				ifTrue: [ newImportModuleSignature add: import parent class empty ].
 			newImportModuleSignature last add: import copyFragment ].
 		imports do: [ :import |
 			| signature |
@@ -185,7 +183,7 @@ ViennaMove >> rewriteImports [
 					importDefinitionList := importDefinition parent.
 					importDefinitionList remove: importDefinition ] ] ].
 		newImportModuleSignature ifNotEmpty: [
-			moduleNode ensureImports add: (ViennaImportDefinitionNode
+			moduleNode addImportDefinition: (ViennaImportDefinitionNode
 					 moduleIdentifier: self destinationModule name
 					 importModuleSignature: newImportModuleSignature) ] ]
 ]

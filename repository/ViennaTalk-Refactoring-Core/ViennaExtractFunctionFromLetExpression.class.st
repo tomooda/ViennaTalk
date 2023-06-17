@@ -35,14 +35,15 @@ ViennaExtractFunctionFromLetExpression >> execute [
 
 	| moduleBody functionDefinitions explicitFunctionDefinition accessFunctionDefinition |
 	self newName ifNil: [ ^ self ].
-	moduleBody := ast module third.
+	moduleBody := ast module moduleBody.
 	functionDefinitions := (moduleBody
 		                        detect: [ :definitionBlock |
 			                        definitionBlock isViennaNode and: [
-				                        definitionBlock first isViennaNode and: [
-					                        definitionBlock first
+				                        definitionBlock definition isViennaNode
+					                        and: [
+					                        definitionBlock definition
 						                        isViennaFunctionDefinitionsNode ] ] ]
-		                        ifNone: [ nil ]) ifNotNil: #first.
+		                        ifNone: [ nil ]) ifNotNil: #definition.
 	functionDefinitions ifNil: [
 		functionDefinitions := ViennaFunctionDefinitionsNode empty.
 		moduleBody add:
@@ -62,7 +63,7 @@ ViennaExtractFunctionFromLetExpression >> execute [
 		                              post: nil
 		                              measure: nil.
 	accessFunctionDefinition := ViennaAccessFunctionDefinitionNode
-		                            access: (ViennaNode label: 'Access')
+		                            access: ViennaAccessNode empty
 		                            functionDefinition:
 		                            (ViennaFunctionDefinitionNode
 			                             definition: explicitFunctionDefinition).

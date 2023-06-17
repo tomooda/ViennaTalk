@@ -107,11 +107,11 @@ ViennaRenameLocal >> executeOnExistsExpression: aViennaNode [
 { #category : #operations }
 ViennaRenameLocal >> executeOnExplicitFunctionDefinition: aViennaNode [
 
-	aViennaNode second
+	aViennaNode typeVariableList
 		allDescendantsSuchThat: [ :node |
 		node isViennaPatternIdentifierNode: self oldName ]
 		do: [ :node | node identifier: self newName ].
-	aViennaNode fifth
+	aViennaNode parametersList
 		allDescendantsSuchThat: [ :node |
 		node isViennaPatternIdentifierNode: self oldName ]
 		do: [ :node | node identifier: self newName ]

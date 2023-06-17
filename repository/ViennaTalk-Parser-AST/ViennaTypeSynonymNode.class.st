@@ -25,7 +25,7 @@ ViennaTypeSynonymNode class >> identifier: aString type: aViennaTypeNode inv: aV
 ViennaTypeSynonymNode >> asAccessDefinition [
 
 	^ ViennaAccessTypeDefinitionNode
-		  access: (ViennaNode label: 'Access')
+		  access: ViennaAccessNode empty
 		  typeDefinition: self
 ]
 

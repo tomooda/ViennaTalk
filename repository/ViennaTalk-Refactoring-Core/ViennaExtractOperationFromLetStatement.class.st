@@ -62,7 +62,7 @@ ViennaExtractOperationFromLetStatement >> execute [
 		                               pre: nil
 		                               post: nil.
 	accessOperationDefinition := ViennaAccessOperationDefinitionNode
-		                             access: (ViennaNode label: 'Access')
+		                             access: ViennaAccessNode empty
 		                             operationDefinition:
 		                             (ViennaOperationDefinitionNode
 			                              definition:

@@ -20,6 +20,12 @@ ViennaExtendedExplicitFunctionDefinitionNode class >> identifier: aString typeVa
 ]
 
 { #category : #accessing }
+ViennaExtendedExplicitFunctionDefinitionNode >> argumentType [
+
+	^ self parameterTypes patternTypePairList type
+]
+
+{ #category : #accessing }
 ViennaExtendedExplicitFunctionDefinitionNode >> expression [
 
 	^ self at: 5
@@ -137,6 +143,26 @@ ViennaExtendedExplicitFunctionDefinitionNode >> pre [
 ViennaExtendedExplicitFunctionDefinitionNode >> pre: aViennaExpressionNode [
 
 	self at: 6 put: aViennaExpressionNode
+]
+
+{ #category : #accessing }
+ViennaExtendedExplicitFunctionDefinitionNode >> returnIdentifier [
+
+	^ self identifierTypePairList first
+]
+
+{ #category : #accessing }
+ViennaExtendedExplicitFunctionDefinitionNode >> returnType [
+
+	^ self identifierTypePairList type
+]
+
+{ #category : #accessing }
+ViennaExtendedExplicitFunctionDefinitionNode >> type [
+
+	^ ViennaPartialFunctionTypeNode
+		  argumentType: self argumentType
+		  returnType: self returnType
 ]
 
 { #category : #accessing }

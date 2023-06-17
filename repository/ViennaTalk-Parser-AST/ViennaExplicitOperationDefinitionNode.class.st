@@ -18,6 +18,12 @@ ViennaExplicitOperationDefinitionNode class >> identifier: aString type: aVienna
 		  yourself
 ]
 
+{ #category : #accessing }
+ViennaExplicitOperationDefinitionNode >> argumentType [
+
+	^ self type argumentType
+]
+
 { #category : #'accessing-definitions' }
 ViennaExplicitOperationDefinitionNode >> asAccessDefinition [
 
@@ -172,6 +178,18 @@ ViennaExplicitOperationDefinitionNode >> pre: aViennaExpression [
 ViennaExplicitOperationDefinitionNode >> resolve [
 
 	^ self
+]
+
+{ #category : #accessing }
+ViennaExplicitOperationDefinitionNode >> returnIdentifier [
+
+	^ 'RESULT'
+]
+
+{ #category : #accessing }
+ViennaExplicitOperationDefinitionNode >> returnType [
+
+	^ self type returnType
 ]
 
 { #category : #'accessing-definitions' }

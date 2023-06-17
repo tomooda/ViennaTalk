@@ -14,7 +14,7 @@ ViennaNarrowLetStatement >> acceptsNode: aViennaNode [
 ViennaNarrowLetStatement >> execute [
 
 	| dummy base |
-	dummy := self replaceNode: ast with: (ViennaNode label: 'DUMMY').
+	dummy := self replaceNode: ast with: ViennaDummyNode empty.
 	base := ast statement.
 	self replaceNode: self definitionNode with: ast.
 	ast statement: self definitionNode.

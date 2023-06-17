@@ -203,20 +203,21 @@ ViennaVDM2SmalltalkClass >> defineMethod: sourceString in: aClass protocol: prot
 
 { #category : #utilities }
 ViennaVDM2SmalltalkClass >> defineMethodFromExplicitOperation: opName in: theClass protocol: protocolString fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode body: bodyString pre: preString post: postString retType: typeNode varGenerator: varGenerator env: aDictionary node: aViennaNode [
+
 	^ self
-		defineMethodFromOperation: opName
-		in: theClass
-		protocol: protocolString
-		fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode
-		body: bodyString
-		pre: preString
-		post: postString
-		retVar: 'RESULT'
-		retType: typeNode
-		varGenerator: varGenerator
-		env: aDictionary
-		node: aViennaNode
-		bodyNode: aViennaNode fifth
+		  defineMethodFromOperation: opName
+		  in: theClass
+		  protocol: protocolString
+		  fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode
+		  body: bodyString
+		  pre: preString
+		  post: postString
+		  retVar: 'RESULT'
+		  retType: typeNode
+		  varGenerator: varGenerator
+		  env: aDictionary
+		  node: aViennaNode
+		  bodyNode: aViennaNode operationBody
 ]
 
 { #category : #utilities }
@@ -340,11 +341,12 @@ ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass proto
 
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> explicitFunctionDefinition: aViennaNode env: aDictionary [
+
 	| identifier initializer theClass |
-	identifier := aViennaNode first.
+	identifier := aViennaNode identifier.
 	initializer := super
-		explicitFunctionDefinition: aViennaNode
-		env: aDictionary.
+		               explicitFunctionDefinition: aViennaNode
+		               env: aDictionary.
 	theClass := classes at: (aViennaNode module ifNotNil: #first).
 	self
 		defineLazyMethodNamed: identifier
@@ -352,32 +354,32 @@ ViennaVDM2SmalltalkClass >> explicitFunctionDefinition: aViennaNode env: aDictio
 		in: theClass
 		protocol: 'functions'
 		node: aViennaNode.
-	aViennaNode seventh
-		ifNotNil: [ self
-				defineLazyMethodNamed: 'pre_' , identifier
-				initializer: initializer
-				in: theClass
-				protocol: 'functions'
-				node: aViennaNode seventh ].
-	aViennaNode eighth
-		ifNotNil: [ self
-				defineLazyMethodNamed: 'post_' , identifier
-				initializer: initializer
-				in: theClass
-				protocol: 'functions'
-				node: aViennaNode eighth ]
+	aViennaNode pre ifNotNil: [
+		self
+			defineLazyMethodNamed: 'pre_' , identifier
+			initializer: initializer
+			in: theClass
+			protocol: 'functions'
+			node: aViennaNode pre ].
+	aViennaNode post ifNotNil: [
+		self
+			defineLazyMethodNamed: 'post_' , identifier
+			initializer: initializer
+			in: theClass
+			protocol: 'functions'
+			node: aViennaNode post ]
 ]
 
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> explicitOperationDefinition: aViennaNode env: aDictionary [
 
 	| opname typeNode paramsNode body preNode postNode varGenerator argTypeNode retTypeNode binds theClass |
-	opname := aViennaNode first.
-	typeNode := aViennaNode second.
-	paramsNode := aViennaNode fourth.
-	body := self generate: aViennaNode fifth env: aDictionary.
-	preNode := aViennaNode sixth.
-	postNode := aViennaNode seventh.
+	opname := aViennaNode identifier.
+	typeNode := aViennaNode type.
+	paramsNode := aViennaNode parameters.
+	body := self generate: aViennaNode operationBody env: aDictionary.
+	preNode := aViennaNode pre.
+	postNode := aViennaNode post.
 	varGenerator := self varNameGenerator: 'op' uniqueIn: {
 			                opname.
 			                body }.
@@ -742,32 +744,33 @@ ViennaVDM2SmalltalkClass >> globalName: aViennaNode env: aDictionary [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> implicitFunctionDefinition: aViennaNode env: aDictionary [
+
 	| identifier initializer theClass |
-	identifier := aViennaNode first.
+	identifier := aViennaNode identifier.
 	initializer := super
-		implicitFunctionDefinition: aViennaNode
-		env: aDictionary.
-	theClass := classes at: (aViennaNode module ifNotNil: #first).
+		               implicitFunctionDefinition: aViennaNode
+		               env: aDictionary.
+	theClass := classes at: (aViennaNode module ifNotNil: #identifier).
 	self
 		defineLazyMethodNamed: identifier
 		initializer: initializer
 		in: theClass
 		protocol: 'functions'
 		node: aViennaNode.
-	aViennaNode fifth
-		ifNotNil: [ self
-				defineLazyMethodNamed: 'pre_' , identifier
-				initializer: initializer
-				in: theClass
-				protocol: 'functions'
-				node: aViennaNode fifth ].
-	aViennaNode sixth
-		ifNotNil: [ self
-				defineLazyMethodNamed: 'post_' , identifier
-				initializer: initializer
-				in: theClass
-				protocol: 'functions'
-				node: aViennaNode sixth ]
+	aViennaNode pre ifNotNil: [
+		self
+			defineLazyMethodNamed: 'pre_' , identifier
+			initializer: initializer
+			in: theClass
+			protocol: 'functions'
+			node: aViennaNode pre ].
+	aViennaNode post ifNotNil: [
+		self
+			defineLazyMethodNamed: 'post_' , identifier
+			initializer: initializer
+			in: theClass
+			protocol: 'functions'
+			node: aViennaNode post ]
 ]
 
 { #category : #'code generation-definitions' }
@@ -1138,9 +1141,10 @@ ViennaVDM2SmalltalkClass >> returnStatement: aViennaNode env: aDictionary [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> stateDefinition: aViennaNode env: aDictionary [
+
 	| theClass stateConstructor quin |
-	theClass := classes at: (aViennaNode module ifNotNil: #first).
-	stateConstructor := aViennaNode first.
+	theClass := classes at: (aViennaNode module ifNotNil: #identifier).
+	stateConstructor := aViennaNode identifier.
 	quin := super stateDefinition: aViennaNode env: aDictionary.
 	self
 		defineMethod: 'init' , String cr , quin first
@@ -1159,49 +1163,52 @@ ViennaVDM2SmalltalkClass >> stateDefinition: aViennaNode env: aDictionary [
 		initializer: quin third
 		in: theClass
 		protocol: 'state'
-		node: aViennaNode fourth.
-	aDictionary at: 'inv_' , stateConstructor put: 'self inv_' , stateConstructor.
-	quin fourth
-		ifNotNil: [ self
-				defineLazyMethodNamed: 'inv_' , stateConstructor
-				initializer: quin fourth
-				in: theClass
-				protocol: 'state'
-				node: aViennaNode third ].
-	aDictionary at: 'init_' , stateConstructor put: 'self init_' , stateConstructor.
+		node: aViennaNode init.
+	aDictionary
+		at: 'inv_' , stateConstructor
+		put: 'self inv_' , stateConstructor.
+	quin fourth ifNotNil: [
+		self
+			defineLazyMethodNamed: 'inv_' , stateConstructor
+			initializer: quin fourth
+			in: theClass
+			protocol: 'state'
+			node: aViennaNode inv ].
+	aDictionary
+		at: 'init_' , stateConstructor
+		put: 'self init_' , stateConstructor.
 	self
 		defineMethod:
 			'state' , String cr
-				,
-					('^ self ' , stateConstructor , ' applyTo: {' , (' . ' join: (aViennaNode second collect: #first))
-						, '}' asViennaTracingString: aViennaNode fourth)
+			, ('^ self ' , stateConstructor , ' applyTo: {'
+				 , (' . ' join: (aViennaNode fieldList collect: #identifier))
+				 , '}' asViennaTracingString: aViennaNode init)
 		in: theClass
 		protocol: 'state'
 		node: aViennaNode.
-	(quin fourth notNil or: [ runtimeTypeCheck = true ])
-		ifTrue: [ self
-				defineMethod:
-					(self
-						stringStreamContents: [ :stream | 
-							stream
-								nextPutAll: 'inv';
-								cr.
-							quin fourth
-								ifNotNil: [ stream
-										nextPutAll:
-											('(self inv_' , stateConstructor , ' value: self state) ifFalse: [self stateInvariantViolation].'
-												asViennaTracingString: aViennaNode third);
-										cr ].
-							runtimeTypeCheck = true
-								ifTrue: [ aViennaNode second
-										do: [ :triple | 
-											stream
-												nextPutAll:
-													('((' , (self generate: triple third env: aDictionary) , ') includes: (' , triple first
-														, ')) ifFalse: [ViennaRuntimeTypeError signal].' asViennaTracingString: triple third) ] ] ])
-				in: theClass
-				protocol: 'state'
-				node: aViennaNode ].
+	(quin fourth notNil or: [ runtimeTypeCheck = true ]) ifTrue: [
+		self
+			defineMethod: (self stringStreamContents: [ :stream |
+					 stream
+						 nextPutAll: 'inv';
+						 cr.
+					 quin fourth ifNotNil: [
+						 stream
+							 nextPutAll: ('(self inv_' , stateConstructor
+								  ,
+									  ' value: self state) ifFalse: [self stateInvariantViolation].'
+									  asViennaTracingString: aViennaNode inv);
+							 cr ].
+					 runtimeTypeCheck = true ifTrue: [
+						 aViennaNode fieldList do: [ :field |
+							 stream nextPutAll:
+								 ('((' , (self generate: field type env: aDictionary)
+								  , ') includes: (' , field identifier
+								  , ')) ifFalse: [ViennaRuntimeTypeError signal].'
+									  asViennaTracingString: field type) ] ] ])
+			in: theClass
+			protocol: 'state'
+			node: aViennaNode ].
 	self
 		defineMethod: 'state' , String cr , '    ^' , quin fifth
 		in: theClass

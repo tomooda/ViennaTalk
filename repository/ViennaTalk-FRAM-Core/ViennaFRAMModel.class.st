@@ -123,7 +123,7 @@ ViennaFRAMModel >> appendToSpec: aViennaNode newOperationsDo: functionBlock newA
 ViennaFRAMModel >> createOperationDefinitionNode: aString [
 
 	^ ViennaAccessOperationDefinitionNode
-		  access: (ViennaNode label: 'Access')
+		  access: ViennaAccessNode empty
 		  operationDefinition: (ViennaOperationDefinitionNode definition:
 				   (ViennaExplicitOperationDefinitionNode
 					    identifier: aString

@@ -96,9 +96,10 @@ TViennaVDMBoundVariableCollector >> boundVariablesEqualDefinitionList: aViennaNo
 
 { #category : #'bound variables-definitions' }
 TViennaVDMBoundVariableCollector >> boundVariablesExplicitFunctionDefinition: aViennaNode into: aSet [
+
 	aSet add: aViennaNode first.
-	aViennaNode seventh ifNotNil: [ aSet add: 'pre_' , aViennaNode first ].
-	aViennaNode eighth ifNotNil: [ aSet add: 'post_' , aViennaNode first ]
+	aViennaNode pre ifNotNil: [ aSet add: 'pre_' , aViennaNode first ].
+	aViennaNode post ifNotNil: [ aSet add: 'post_' , aViennaNode first ]
 ]
 
 { #category : #'bound variables-definitions' }
@@ -207,9 +208,11 @@ TViennaVDMBoundVariableCollector >> boundVariablesFunctionSignature: aViennaNode
 
 { #category : #'bound variables-definitions' }
 TViennaVDMBoundVariableCollector >> boundVariablesImplicitFunctionDefinition: aViennaNode into: aSet [
+
 	aSet add: aViennaNode first.
-	aViennaNode fifth ifNotNil: [ aSet add: 'pre_' , aViennaNode first ].
-	aSet add: 'post_' , aViennaNode first
+	aViennaNode pre ifNotNil: [
+		aSet add: 'pre_' , aViennaNode identifier ].
+	aSet add: 'post_' , aViennaNode identifier
 ]
 
 { #category : #'bound variables-definitions' }

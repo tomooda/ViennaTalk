@@ -6,6 +6,14 @@ Class {
 }
 
 { #category : #'instance creation' }
+ViennaLetStatementNode class >> localDefinitionList: aViennaLocalDefinitionListNode body: aViennaStatementNode [
+
+	^ self
+		  localDefinitionList: aViennaLocalDefinitionListNode
+		  statement: aViennaStatementNode
+]
+
+{ #category : #'instance creation' }
 ViennaLetStatementNode class >> localDefinitionList: aViennaLocalDefinitionListNode statement: aViennaStatementNode [
 
 	^ (self new: 2)

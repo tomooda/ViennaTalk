@@ -34,11 +34,11 @@ ViennaSplitLetParameter >> execute [
 		  ifFalse: [
 			  self
 				  replaceNode: self definitionNode
-				  with: (dummyNode := ViennaNode label: 'DUMMY').
-			  self replaceNode: dummyNode with: (ViennaNode
-					   label: self definitionNode label
-					   with: (ViennaLocalDefinitionListNode with: localDefinition)
-					   with: self definitionNode) ]
+				  with: (dummyNode := ViennaDummyNode empty).
+			  self replaceNode: dummyNode with: (self definitionNode class
+					   localDefinitionList:
+					   (ViennaLocalDefinitionListNode with: localDefinition)
+					   body: self definitionNode) ]
 ]
 
 { #category : #accessing }

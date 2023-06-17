@@ -9,13 +9,13 @@ ViennaUseFunction >> execute [
 
 	| binds args |
 	binds := Dictionary new.
-	self definitionNode fifth allDescendantsDo: [ :patternNode |
+	self definitionNode parametersList allDescendantsDo: [ :patternNode |
 		patternNode isViennaPatternIdentifierNode ifTrue: [
 			binds at: patternNode name put: nil ] ].
-	(self match: self definitionNode sixth with: ast bindings: binds)
+	(self match: self definitionNode expression with: ast bindings: binds)
 		ifFalse: [ ^ nil ].
-	args := self definitionNode fifth first asArray collect: [ :node |
-		        self expressionFromPattern: node bindings: binds ].
+	args := self definitionNode parametersList first asArray collect: [
+		        :node | self expressionFromPattern: node bindings: binds ].
 	^ self replaceNode: ast with: (ViennaApplyNode
 			   expression: (ViennaLocalNameNode identifier: self identifier)
 			   argumentExpressionList: (ViennaExpressionListNode withAll: args))

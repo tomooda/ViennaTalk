@@ -19,7 +19,7 @@ ViennaRecordTypeDefinitionNode class >> identifier: aString fieldList: aViennaFi
 ViennaRecordTypeDefinitionNode >> asAccessDefinition [
 
 	^ ViennaAccessTypeDefinitionNode
-		  access: (ViennaNode label: 'Access')
+		  access: ViennaAccessNode empty
 		  typeDefinition: self
 ]
 

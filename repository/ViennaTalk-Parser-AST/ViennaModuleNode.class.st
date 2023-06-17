@@ -1,6 +1,6 @@
 Class {
 	#name : #ViennaModuleNode,
-	#superclass : #ViennaAbstractSyntaxNode,
+	#superclass : #ViennaNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }
@@ -13,6 +13,18 @@ ViennaModuleNode class >> identifier: aString interface: aViennaInterfaceNode mo
 		  interface: aViennaInterfaceNode;
 		  moduleBody: aViennaModuleBodyNode;
 		  yourself
+]
+
+{ #category : #'accessing-definitions' }
+ViennaModuleNode >> addImportDefinition: aViennaImportDefinitionNode [
+
+	| interface |
+	interface := self interface.
+	(interface importDefinitionList ifNil: [
+		 | node |
+		 node := ViennaImportDefinitionListNode empty.
+		 interface importDefinitionList: node.
+		 node ]) add: aViennaImportDefinitionNode
 ]
 
 { #category : #'accessing-definitions' }
@@ -51,6 +63,12 @@ ViennaModuleNode >> definitionOfLocalName: aString [
 						(import at: import size) ifNotNil: [ :rename |
 							rename first = aString ifTrue: [ ^ import ] ] ] ] ] ] ].
 	^ nil
+]
+
+{ #category : #accessing }
+ViennaModuleNode >> exportDefinition [
+
+	^ self interface exportDefinition
 ]
 
 { #category : #'pretty printing' }

@@ -40,17 +40,18 @@ ViennaIndexForLoopNode >> endExpression: aViennaExpressionNode [
 ViennaIndexForLoopNode >> formatWith: aViennaAbstractFormatter [
 
 	| identifier startExpression endExpression stepExpression statement |
-	identifier := aViennaAbstractFormatter format: self first.
-	startExpression := aViennaAbstractFormatter format: self second.
-	endExpression := aViennaAbstractFormatter format: self third.
-	stepExpression := self fourth
+	identifier := aViennaAbstractFormatter format: self identifier.
+	startExpression := aViennaAbstractFormatter format:
+		                   self startExpression.
+	endExpression := aViennaAbstractFormatter format: self endExpression.
+	stepExpression := self stepExpression
 		                  ifNotNil: [ :node |
 			                  aViennaAbstractFormatter
 				                  indentString: 'by '
 				                  insertCrIfNeeded:
 				                  (aViennaAbstractFormatter format: node) ]
 		                  ifNil: [ '' ].
-	statement := aViennaAbstractFormatter format: self fifth.
+	statement := aViennaAbstractFormatter format: self statement.
 	^ aViennaAbstractFormatter
 		  noIndentString: (aViennaAbstractFormatter
 				   noIndentString: (aViennaAbstractFormatter

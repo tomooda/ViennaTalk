@@ -17,19 +17,20 @@ ViennaUseFunctionInAllOccurrences >> executeOne [
 		(node includesParent: self definitionNode) not ifTrue: [
 			| binds |
 			binds := Dictionary new.
-			self definitionNode fifth allDescendantsDo: [ :patternNode |
+			self definitionNode parametersList allDescendantsDo: [ :patternNode |
 				patternNode isViennaPatternIdentifierNode ifTrue: [
 					binds at: patternNode name put: nil ] ].
-			(self match: self definitionNode sixth with: node bindings: binds)
-				ifTrue: [
-					| args |
-					args := self definitionNode fifth first asArray collect: [ :n |
-						        self expressionFromPattern: n bindings: binds ].
-					^ self replaceNode: node with: (ViennaApplyNode
-							   expression:
-							   (ViennaLocalNameNode identifier: self identifier)
-							   argumentExpressionList:
-							   (ViennaExpressionListNode withAll: args)) ] ] ].
+			(self
+				 match: self definitionNode expression
+				 with: node
+				 bindings: binds) ifTrue: [
+				| args |
+				args := self definitionNode parameters first asArray collect: [ :n |
+					        self expressionFromPattern: n bindings: binds ].
+				^ self replaceNode: node with: (ViennaApplyNode
+						   expression: (ViennaLocalNameNode identifier: self identifier)
+						   argumentExpressionList:
+						   (ViennaExpressionListNode withAll: args)) ] ] ].
 	^ nil
 ]
 

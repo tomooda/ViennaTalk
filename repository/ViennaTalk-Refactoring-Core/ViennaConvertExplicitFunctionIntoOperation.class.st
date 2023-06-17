@@ -19,17 +19,18 @@ ViennaConvertExplicitFunctionIntoOperation >> check [
 ViennaConvertExplicitFunctionIntoOperation >> execute [
 
 	| functionDefinition explicitFunctionDefinition functionDefinitions moduleBody operationDefinitions explicitOperationDefinition accessOperationDefinition |
-	functionDefinition := ast second.
-	explicitFunctionDefinition := functionDefinition first.
+	functionDefinition := ast functionDefinition.
+	explicitFunctionDefinition := functionDefinition definition.
 	functionDefinitions := ast parent.
 	moduleBody := functionDefinitions parent parent.
 	operationDefinitions := (moduleBody
 		                         detect: [ :definitionBlock |
 			                         definitionBlock isViennaNode and: [
-				                         definitionBlock first isViennaNode and: [
-					                         definitionBlock first
+				                         definitionBlock definition isViennaNode
+					                         and: [
+					                         definitionBlock definition
 						                         isViennaOperationDefinitionsNode ] ] ]
-		                         ifNone: [ nil ]) ifNotNil: #first.
+		                         ifNone: [ nil ]) ifNotNil: #definition.
 	operationDefinitions ifNil: [
 		operationDefinitions := ViennaOperationDefinitionsNode empty.
 		moduleBody add:
@@ -51,16 +52,14 @@ ViennaConvertExplicitFunctionIntoOperation >> execute [
 			                               (ViennaOperationBodyNode statement:
 				                                (ViennaReturnStatementNode
 					                                 expression:
-					                                 explicitFunctionDefinition expression))
-		                               pre:
-		                               explicitFunctionDefinition seventh
-		                               post:
-		                               explicitFunctionDefinition eighth.
+					                                 explicitFunctionDefinition
+						                                 expression))
+		                               pre: explicitFunctionDefinition pre
+		                               post: explicitFunctionDefinition post.
 	accessOperationDefinition := ViennaAccessOperationDefinitionNode
-		                             access: (ViennaNode
-				                              label: 'Access'
-				                              withAll:
-				                              (ast first asArray copyWith: 'pure'))
+		                             access:
+		                             (ViennaAccessNode withAll:
+			                              (ast access asArray copyWith: 'pure'))
 		                             operationDefinition:
 		                             (ViennaOperationDefinitionNode
 			                              definition:

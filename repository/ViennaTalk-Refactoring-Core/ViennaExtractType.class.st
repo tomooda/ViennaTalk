@@ -36,7 +36,7 @@ ViennaExtractType >> execute [
 		                  type: ast
 		                  inv: nil.
 	accessTypeDefinition := ViennaAccessTypeDefinitionNode
-		                        access: (ViennaNode label: 'Access')
+		                        access: ViennaAccessNode empty
 		                        typeDefinition: typeDefinition.
 	typeDefinitions add: accessTypeDefinition.
 	^ accessTypeDefinition

@@ -23,6 +23,12 @@ ViennaNode class >> empty [
 	^ self new: 0
 ]
 
+{ #category : #testing }
+ViennaNode class >> isAbstract [
+
+	^ self = ViennaNode
+]
+
 { #category : #'instance creation' }
 ViennaNode class >> label: aString [
 
@@ -337,16 +343,6 @@ ViennaNode >> asArray [
 	^ array
 ]
 
-{ #category : #converting }
-ViennaNode >> asArrayFrom: anInteger [
-	^ self asArrayFrom: anInteger to: self size
-]
-
-{ #category : #converting }
-ViennaNode >> asArrayFrom: anInteger1 to: anInteger2 [
-	^ (anInteger1 to: anInteger2) collect: [ :i | self at: i ]
-]
-
 { #category : #'accessing-definitions' }
 ViennaNode >> asExport [
 
@@ -406,8 +402,8 @@ ViennaNode >> asImportDefinitionIn: moduleNode [
 
 { #category : #accessing }
 ViennaNode >> at: anInteger put: anObject [
-	(anObject isKindOf: ViennaNode)
-		ifTrue: [ anObject parent: self ].
+
+	anObject isViennaNode ifTrue: [ anObject parent: self ].
 	^ super at: anInteger put: anObject
 ]
 
@@ -455,35 +451,17 @@ ViennaNode >> copyWhole: aDictionary [
 ]
 
 { #category : #'accessing-definitions' }
-ViennaNode >> definitionInExplicitOperationOfLocalName: aString do: aBlock [
-
-	self fourth
-		allDescendantsSuchThat: [ :n |
-		n isViennaPatternIdentifierNode: aString ]
-		do: [ :n | ^ aBlock value: n ]
-]
-
-{ #category : #'accessing-definitions' }
-ViennaNode >> definitionInImportsOfLocalName: aString do: aBlock [
-
-	self do: [ :importDef |
-		importDef second isViennaImportModuleSignatureNode ifTrue: [
-			importDef second do: [ :imports |
-				imports do: [ :import |
-					(import at: import size) ifNotNil: [ :rename |
-						rename first = aString ifTrue: [ ^ aBlock value: import ] ] ] ] ] ]
-]
-
-{ #category : #'accessing-definitions' }
 ViennaNode >> definitionOfGlobalName: shortName module: moduleName [
 
-	self module second first ifNotNil: [ :importDefinitionList |
+	self module interface importDefinitionList ifNotNil: [
+		:importDefinitionList |
 		importDefinitionList do: [ :importDef |
-			importDef first = moduleName ifTrue: [
-				importDef second isViennaImportModuleSignatureNode ifTrue: [
-					importDef second do: [ :imports |
-						imports do: [ :import |
-							import first first = shortName ifTrue: [ ^ import ] ] ] ] ] ] ].
+			importDef moduleIdentifier = moduleName ifTrue: [
+				importDef importModuleSignature isViennaImportModuleSignatureNode
+					ifTrue: [
+						importDef importModuleSignature do: [ :imports |
+							imports do: [ :import |
+								import name identifier = shortName ifTrue: [ ^ import ] ] ] ] ] ] ].
 	^ nil
 ]
 
@@ -531,39 +509,19 @@ ViennaNode >> document [
 ]
 
 { #category : #accessing }
-ViennaNode >> eighth [
-	^ self at: 8
-]
-
-{ #category : #accessing }
 ViennaNode >> end [
 	^ end
-]
-
-{ #category : #enumerating }
-ViennaNode >> ensureImports [
-
-	^ self module second in: [ :interface |
-		  interface first ifNil: [
-			  | node |
-			  node := ViennaImportDefinitionListNode empty.
-			  interface at: 1 put: node.
-			  node ] ]
-]
-
-{ #category : #enumerating }
-ViennaNode >> exports [
-	^ self module second second
-]
-
-{ #category : #accessing }
-ViennaNode >> fifth [
-	^ self at: 5
 ]
 
 { #category : #accessing }
 ViennaNode >> first [
 	^ self at: 1
+]
+
+{ #category : #'pretty printing' }
+ViennaNode >> formatWith: aViennaAbstractFormatter [
+
+	^ self subclassResponsibility
 ]
 
 { #category : #accessing }
@@ -575,6 +533,12 @@ ViennaNode >> fourth [
 ViennaNode >> hasDescendantSuchThat: aBlock [
 	self allDescendantsDo: [ :n | (aBlock value: n) ifTrue: [ ^true ] ].
 	^ false
+]
+
+{ #category : #'pretty printing' }
+ViennaNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
+
+	^ aBlock3 value
 ]
 
 { #category : #controlling }
@@ -696,12 +660,6 @@ ViennaNode >> isViennaAbstractFunctionTypeNode [
 
 { #category : #testing }
 ViennaNode >> isViennaAbstractMapTypeNode [
-
-	^ false
-]
-
-{ #category : #testing }
-ViennaNode >> isViennaAbstractSyntaxNode [
 
 	^ false
 ]
@@ -2515,16 +2473,10 @@ ViennaNode >> notEmpty [
 	^ self isEmpty not
 ]
 
-{ #category : #'accessing-definitions' }
-ViennaNode >> pairListToType [
+{ #category : #'pretty printing' }
+ViennaNode >> operatorPrecedence [
 
-	^ ((2 to: self size by: 2) collect: [ :index |
-		   (self at: index) copyFragment ])
-		  ifEmpty: [ ViennaUnitTypeNode new ]
-		  ifNotEmpty: [ :types |
-			  types size = 1
-				  ifTrue: [ types first ]
-				  ifFalse: [ ViennaProductTypeNode withAll: types ] ]
+	^ 0
 ]
 
 { #category : #accessing }
@@ -2713,19 +2665,17 @@ ViennaNode >> root [
 	^ parent ifNil: [ self ] ifNotNil: #root
 ]
 
-{ #category : #testing }
+{ #category : #comparing }
 ViennaNode >> sameAs: aViennaNode [
 
-	aViennaNode isViennaNode ifFalse: [ ^ false ].
-	self label = aViennaNode label ifFalse: [ ^ false ].
-	self size = aViennaNode size ifFalse: [ ^ false ].
+	self class = aViennaNode class ifFalse: [ ^ false ].
 	1 to: self size do: [ :index |
-		| n1 n2 |
-		n1 := self at: index.
-		n2 := aViennaNode at: index.
-		(n1 isViennaNode
-			 ifTrue: [ n1 sameAs: n2 ]
-			 ifFalse: [ n1 = n2 ]) ifFalse: [ ^ false ] ].
+		| node |
+		node := self at: index.
+		node isViennaNode
+			ifTrue: [
+			(node sameAs: (aViennaNode at: index)) ifFalse: [ ^ false ] ]
+			ifFalse: [ node = (aViennaNode at: index) ifFalse: [ ^ false ] ] ].
 	^ true
 ]
 
@@ -2742,8 +2692,10 @@ ViennaNode >> select: aBlock [
 			  (aBlock value: child) ifTrue: [ stream nextPut: child ] ] ]
 ]
 
-{ #category : #private }
+{ #category : #initialization }
 ViennaNode >> setLabel: aString [
+
+	aString = self label ifFalse: [ self error: 'Label mismatch' ].
 	label := aString
 ]
 

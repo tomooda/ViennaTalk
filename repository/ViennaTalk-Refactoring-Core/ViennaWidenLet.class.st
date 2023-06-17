@@ -35,8 +35,9 @@ ViennaWidenLet >> definitionNode: aViennaNode [
 
 { #category : #operations }
 ViennaWidenLet >> execute [
+
 	| dummy base |
-	dummy := ViennaNode label: 'DUMMY'.
+	dummy := ViennaDummyNode empty.
 	base := self definitionNode.
 	self replaceNode: base with: dummy.
 	self replaceNode: ast with: ast second.

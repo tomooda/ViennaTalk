@@ -24,7 +24,7 @@ ViennaExtractLetStatement >> execute [
 	self newName ifNil: [ ^ nil ].
 	dummy := self
 		         replaceNode: self statementNode
-		         with: (ViennaNode label: 'DUMMY').
+		         with: ViennaDummyNode empty.
 	self
 		replaceNode: ast
 		with: (ViennaLocalNameNode identifier: self newName).

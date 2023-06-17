@@ -19,7 +19,7 @@ ViennaValueDefinitionNode class >> pattern: aViennaPatternNode type: aViennaType
 ViennaValueDefinitionNode >> asAccessDefinition [
 
 	^ ViennaAccessValueDefinitionNode
-		  access: (ViennaNode label: 'Access')
+		  access: ViennaAccessNode empty
 		  valueDefinition: self
 ]
 

@@ -18,6 +18,12 @@ ViennaImplicitFunctionDefinitionNode class >> identifier: aString typeVariableLi
 		  yourself
 ]
 
+{ #category : #accessing }
+ViennaImplicitFunctionDefinitionNode >> argumentType [
+
+	^ self parameterTypes patternTypePairList type
+]
+
 { #category : #'accessing-definitions' }
 ViennaImplicitFunctionDefinitionNode >> asAccessDefinition [
 
@@ -28,13 +34,10 @@ ViennaImplicitFunctionDefinitionNode >> asAccessDefinition [
 ViennaImplicitFunctionDefinitionNode >> asExport [
 
 	^ ViennaFunctionExportNode
-		  nameList:
-		  (ViennaNameListNode with:
-			   (ViennaLocalNameNode identifier: self first))
-		  typeVariableList: (self second ifNotNil: #copyFragment)
-		  type: (ViennaPartialFunctionTypeNode
-				   argumentType: self third first pairListToType
-				   returnType: self fourth pairListToType)
+		  nameList: (ViennaNameListNode with:
+				   (ViennaLocalNameNode identifier: self identifier))
+		  typeVariableList: (self typeVariableList ifNotNil: #copyFragment)
+		  type: self type
 ]
 
 { #category : #'accessing-definitions' }
@@ -47,9 +50,7 @@ ViennaImplicitFunctionDefinitionNode >> asImportDefinitionIn: moduleNode [
 					    (ViennaFunctionImportNode
 						     name: (ViennaLocalNameNode identifier: self identifier)
 						     typeVariableList: self second copyFragment
-						     type: (ViennaPartialFunctionTypeNode
-								      argumentType: self third first pairListToType
-								      returnType: self fourth pairListToType)
+						     type: self type
 						     rename: nil)))
 ]
 
@@ -69,12 +70,12 @@ ViennaImplicitFunctionDefinitionNode >> definitionOfLocalName: aString [
 ViennaImplicitFunctionDefinitionNode >> formatWith: aViennaAbstractFormatter [
 
 	| identifier typeVariableList parameterTypes identifierTypePairList pre post |
-	identifier := self first.
-	typeVariableList := self second.
-	parameterTypes := self third.
-	identifierTypePairList := self fourth.
-	pre := self fifth.
-	post := self sixth.
+	identifier := self identifier.
+	typeVariableList := self typeVariableList.
+	parameterTypes := self parameterTypes.
+	identifierTypePairList := self identifierTypePairList.
+	pre := self pre.
+	post := self post.
 	^ (aViennaAbstractFormatter format: identifier)
 	  , (aViennaAbstractFormatter format: typeVariableList)
 	  , (aViennaAbstractFormatter format: parameterTypes)
@@ -175,10 +176,30 @@ ViennaImplicitFunctionDefinitionNode >> resolve [
 	^ self
 ]
 
+{ #category : #accessing }
+ViennaImplicitFunctionDefinitionNode >> returnIdentifier [
+
+	^ self identifierTypePairList first
+]
+
+{ #category : #accessing }
+ViennaImplicitFunctionDefinitionNode >> returnType [
+
+	^ self identifierTypePairList type
+]
+
 { #category : #'accessing-definitions' }
 ViennaImplicitFunctionDefinitionNode >> shortName [
 
 	^ self identifier
+]
+
+{ #category : #accessing }
+ViennaImplicitFunctionDefinitionNode >> type [
+
+	^ ViennaPartialFunctionTypeNode
+		  argumentType: self argumentType
+		  returnType: self returnType
 ]
 
 { #category : #accessing }
