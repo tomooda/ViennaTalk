@@ -43,7 +43,8 @@ TViennaVDMBoundVariableCollector >> boundVariablesAccessValueDefinition: aVienna
 
 { #category : #'bound variables-definitions' }
 TViennaVDMBoundVariableCollector >> boundVariablesAssignmentDefinition: aViennaNode into: aSet [
-	aSet add: aViennaNode first
+
+	aSet add: aViennaNode identifier
 ]
 
 { #category : #'bound variables-patterns and binds' }
@@ -58,15 +59,15 @@ TViennaVDMBoundVariableCollector >> boundVariablesBlockStatement: aViennaNode in
 
 { #category : #'bound variables-types' }
 TViennaVDMBoundVariableCollector >> boundVariablesCompositeType: aViennaNode into: aSet [
+
 	| constructor fieldList |
-	constructor := aViennaNode first.
-	fieldList := aViennaNode second.
+	constructor := aViennaNode identifier.
+	fieldList := aViennaNode fieldList.
 	aSet add: constructor.
-	fieldList
-		do: [ :field | 
-			| type |
-			type := field third.
-			self boundVariables: type into: aSet ]
+	fieldList do: [ :field |
+		| type |
+		type := field type.
+		self boundVariables: type into: aSet ]
 ]
 
 { #category : #'bound variables-statements' }
@@ -86,7 +87,8 @@ TViennaVDMBoundVariableCollector >> boundVariablesDocument: aViennaNode into: aS
 
 { #category : #'bound variables-definitions' }
 TViennaVDMBoundVariableCollector >> boundVariablesEqualDefinition: aViennaNode into: aSet [
-	self boundVariables: aViennaNode first into: aSet
+
+	self boundVariables: aViennaNode patternOrBind into: aSet
 ]
 
 { #category : #'bound variables-definitions' }
@@ -97,16 +99,21 @@ TViennaVDMBoundVariableCollector >> boundVariablesEqualDefinitionList: aViennaNo
 { #category : #'bound variables-definitions' }
 TViennaVDMBoundVariableCollector >> boundVariablesExplicitFunctionDefinition: aViennaNode into: aSet [
 
-	aSet add: aViennaNode first.
-	aViennaNode pre ifNotNil: [ aSet add: 'pre_' , aViennaNode first ].
-	aViennaNode post ifNotNil: [ aSet add: 'post_' , aViennaNode first ]
+	aSet add: aViennaNode identifier.
+	aViennaNode pre ifNotNil: [
+		aSet add: 'pre_' , aViennaNode identifier ].
+	aViennaNode post ifNotNil: [
+		aSet add: 'post_' , aViennaNode identifier ]
 ]
 
 { #category : #'bound variables-definitions' }
 TViennaVDMBoundVariableCollector >> boundVariablesExplicitOperationDefinition: aViennaNode into: aSet [
-	aSet add: aViennaNode first.
-	aViennaNode sixth ifNotNil: [ aSet add: 'pre_' , aViennaNode first ].
-	aViennaNode seventh ifNotNil: [ aSet add: 'post_' , aViennaNode first ]
+
+	aSet add: aViennaNode identifier.
+	aViennaNode pre ifNotNil: [
+		aSet add: 'pre_' , aViennaNode identifier ].
+	aViennaNode post ifNotNil: [
+		aSet add: 'post_' , aViennaNode identifier ]
 ]
 
 { #category : #'bound variables-interfaces' }
@@ -146,21 +153,26 @@ TViennaVDMBoundVariableCollector >> boundVariablesExportValuesSignature: aVienna
 
 { #category : #'bound variables-definitions' }
 TViennaVDMBoundVariableCollector >> boundVariablesExtendedExplicitFunctionDefinition: aViennaNode into: aSet [
-	aSet add: aViennaNode first.
-	aViennaNode sixth ifNotNil: [ aSet add: 'pre_' , aViennaNode first ].
-	aSet add: 'post_' , aViennaNode first
+
+	aSet add: aViennaNode identifier.
+	aViennaNode pre ifNotNil: [
+		aSet add: 'pre_' , aViennaNode identifier ].
+	aSet add: 'post_' , aViennaNode identifier
 ]
 
 { #category : #'bound variables-definitions' }
 TViennaVDMBoundVariableCollector >> boundVariablesExtendedExplicitOperationDefinition: aViennaNode into: aSet [
-	aSet add: aViennaNode first.
-	aViennaNode sixth ifNotNil: [ aSet add: 'pre_' , aViennaNode first ].
-	aSet add: 'post_' , aViennaNode first
+
+	aSet add: aViennaNode identifier.
+	aViennaNode pre ifNotNil: [
+		aSet add: 'pre_' , aViennaNode identifier ].
+	aSet add: 'post_' , aViennaNode identifier
 ]
 
 { #category : #'bound variables-types' }
 TViennaVDMBoundVariableCollector >> boundVariablesField: aViennaNode into: aSet [
-	aViennaNode first ifNotNil: [ :name | aSet add: name ]
+
+	aViennaNode identifier ifNotNil: [ :name | aSet add: name ]
 ]
 
 { #category : #'bound variables-types' }
@@ -180,7 +192,8 @@ TViennaVDMBoundVariableCollector >> boundVariablesFieldPatternList: aViennaNode 
 
 { #category : #'bound variables-definitions' }
 TViennaVDMBoundVariableCollector >> boundVariablesFunctionDefinition: aViennaNode into: aSet [
-	self boundVariables: aViennaNode first into: aSet
+
+	self boundVariables: aViennaNode definition into: aSet
 ]
 
 { #category : #'bound variables-definitions' }
@@ -190,26 +203,32 @@ TViennaVDMBoundVariableCollector >> boundVariablesFunctionDefinitions: aViennaNo
 
 { #category : #'bound variables-interfaces' }
 TViennaVDMBoundVariableCollector >> boundVariablesFunctionExport: aViennaNode into: aSet [
-	aViennaNode first do: [ :localName | aSet add: localName first ].
-	self freeVariables: aViennaNode third boundVars: aSet into: aSet
+
+	aViennaNode nameList do: [ :localName |
+		aSet add: localName identifier ].
+	self freeVariables: aViennaNode type boundVars: aSet into: aSet
 ]
 
 { #category : #'bound variables-interfaces' }
 TViennaVDMBoundVariableCollector >> boundVariablesFunctionImport: aViennaNode into: aSet [
-	aViennaNode first do: [ :localName | aSet add: localName first ].
-	self boundVariables: aViennaNode third into: aSet.
-	aViennaNode fourth ifNotNil: [ :rename | aSet add: rename first ]
+
+	aViennaNode nameList do: [ :localName |
+		aSet add: localName identifier ].
+	self boundVariables: aViennaNode type into: aSet.
+	aViennaNode rename ifNotNil: [ :rename | aSet add: rename identifier ]
 ]
 
 { #category : #'bound variables-interfaces' }
 TViennaVDMBoundVariableCollector >> boundVariablesFunctionSignature: aViennaNode into: aSet [
-	aViennaNode first do: [ :localName | aSet add: localName first ]
+
+	aViennaNode nameList do: [ :localName |
+		aSet add: localName identifier ]
 ]
 
 { #category : #'bound variables-definitions' }
 TViennaVDMBoundVariableCollector >> boundVariablesImplicitFunctionDefinition: aViennaNode into: aSet [
 
-	aSet add: aViennaNode first.
+	aSet add: aViennaNode identifier.
 	aViennaNode pre ifNotNil: [
 		aSet add: 'pre_' , aViennaNode identifier ].
 	aSet add: 'post_' , aViennaNode identifier
@@ -217,9 +236,11 @@ TViennaVDMBoundVariableCollector >> boundVariablesImplicitFunctionDefinition: aV
 
 { #category : #'bound variables-definitions' }
 TViennaVDMBoundVariableCollector >> boundVariablesImplicitOperationDefinition: aViennaNode into: aSet [
-	aSet add: aViennaNode first.
-	aViennaNode fourth second ifNotNil: [ aSet add: 'pre_' , aViennaNode first ].
-	aSet add: 'post_' , aViennaNode first
+
+	aSet add: aViennaNode identifier.
+	aViennaNode implicitOperationBody pre ifNotNil: [
+		aSet add: 'pre_' , aViennaNode identifier ].
+	aSet add: 'post_' , aViennaNode identifier
 ]
 
 { #category : #'bound variables-interfaces' }
@@ -259,7 +280,8 @@ TViennaVDMBoundVariableCollector >> boundVariablesImportTypesSignature: aViennaN
 
 { #category : #'bound variables-statements' }
 TViennaVDMBoundVariableCollector >> boundVariablesIndexForLoop: aViennaNode into: aSet [
-	aSet add: aViennaNode first
+
+	aSet add: aViennaNode identifier
 ]
 
 { #category : #'bound variables-types' }
@@ -269,7 +291,10 @@ TViennaVDMBoundVariableCollector >> boundVariablesInmapType: aViennaNode into: a
 
 { #category : #'bound variables-definitions' }
 TViennaVDMBoundVariableCollector >> boundVariablesLocalDefinition: aViennaNode into: aSet [
-	self boundVariables: aViennaNode first into: aSet
+
+	self
+		boundVariables: aViennaNode valueDefinitionOrFunctionDefinition
+		into: aSet
 ]
 
 { #category : #'bound variables-definitions' }
@@ -299,7 +324,8 @@ TViennaVDMBoundVariableCollector >> boundVariablesMapletPattern: aViennaNode int
 
 { #category : #'bound variables-definitions' }
 TViennaVDMBoundVariableCollector >> boundVariablesModule: aViennaNode into: aSet [
-	aSet add: aViennaNode first
+
+	aSet add: aViennaNode identifier
 ]
 
 { #category : #'bound variables-definitions' }
@@ -309,17 +335,20 @@ TViennaVDMBoundVariableCollector >> boundVariablesModuleBody: aViennaNode into: 
 
 { #category : #'bound variables-patterns and binds' }
 TViennaVDMBoundVariableCollector >> boundVariablesMultipleSeqBind: aViennaNode into: aSet [
-	self boundVariables: aViennaNode first into: aSet
+
+	self boundVariables: aViennaNode patternList into: aSet
 ]
 
 { #category : #'bound variables-patterns and binds' }
 TViennaVDMBoundVariableCollector >> boundVariablesMultipleSetBind: aViennaNode into: aSet [
-	self boundVariables: aViennaNode first into: aSet
+
+	self boundVariables: aViennaNode patternList into: aSet
 ]
 
 { #category : #'bound variables-patterns and binds' }
 TViennaVDMBoundVariableCollector >> boundVariablesMultipleTypeBind: aViennaNode into: aSet [
-	self boundVariables: aViennaNode first into: aSet
+
+	self boundVariables: aViennaNode patternList into: aSet
 ]
 
 { #category : #'bound variables-patterns and binds' }
@@ -329,7 +358,8 @@ TViennaVDMBoundVariableCollector >> boundVariablesObjectPattern: aViennaNode int
 
 { #category : #'bound variables-definitions' }
 TViennaVDMBoundVariableCollector >> boundVariablesOperationDefinition: aViennaNode into: aSet [
-	self boundVariables: aViennaNode first into: aSet
+
+	self boundVariables: aViennaNode definition into: aSet
 ]
 
 { #category : #'bound variables-definitions' }
@@ -339,15 +369,19 @@ TViennaVDMBoundVariableCollector >> boundVariablesOperationDefinitions: aViennaN
 
 { #category : #'bound variables-interfaces' }
 TViennaVDMBoundVariableCollector >> boundVariablesOperationExport: aViennaNode into: aSet [
-	aViennaNode first do: [ :localName | aSet add: localName first ].
-	self boundVariables: aViennaNode second into: aSet
+
+	aViennaNode nameList do: [ :localName |
+		aSet add: localName identifier ].
+	self boundVariables: aViennaNode type into: aSet
 ]
 
 { #category : #'bound variables-interfaces' }
 TViennaVDMBoundVariableCollector >> boundVariablesOperationImport: aViennaNode into: aSet [
-	aViennaNode first do: [ :localName | aSet add: localName first ].
-	self boundVariables: aViennaNode second into: aSet.
-	aViennaNode third ifNotNil: [ :rename | aSet add: rename first ]
+
+	aViennaNode nameList do: [ :localName |
+		aSet add: localName identifier ].
+	self boundVariables: aViennaNode type into: aSet.
+	aViennaNode rename ifNotNil: [ :rename | aSet add: rename rename ]
 ]
 
 { #category : #'bound variables-types' }
@@ -377,7 +411,8 @@ TViennaVDMBoundVariableCollector >> boundVariablesPartialFunctionType: aViennaNo
 
 { #category : #'bound variables-patterns and binds' }
 TViennaVDMBoundVariableCollector >> boundVariablesPatternIdentifier: aViennaNode into: aSet [
-	aViennaNode first ifNotNil: [ :string | aSet add: string ]
+
+	aViennaNode identifier ifNotNil: [ :string | aSet add: string ]
 ]
 
 { #category : #'bound variables-patterns and binds' }
@@ -397,15 +432,15 @@ TViennaVDMBoundVariableCollector >> boundVariablesRecordPattern: aViennaNode int
 
 { #category : #'bound variables-types' }
 TViennaVDMBoundVariableCollector >> boundVariablesRecordTypeDefinition: aViennaNode into: aSet [
+
 	| constructor fieldList |
-	constructor := aViennaNode first.
-	fieldList := aViennaNode second.
+	constructor := aViennaNode identifier.
+	fieldList := aViennaNode fieldList.
 	aSet add: constructor.
-	fieldList
-		do: [ :field | 
-			| type |
-			type := field third.
-			self boundVariables: type into: aSet ]
+	fieldList do: [ :field |
+		| type |
+		type := field type.
+		self boundVariables: type into: aSet ]
 ]
 
 { #category : #'bound variables-types' }
@@ -415,7 +450,8 @@ TViennaVDMBoundVariableCollector >> boundVariablesSeq1Type: aViennaNode into: aS
 
 { #category : #'bound variables-patterns and binds' }
 TViennaVDMBoundVariableCollector >> boundVariablesSeqBind: aViennaNode into: aSet [
-	self boundVariables: aViennaNode first into: aSet
+
+	self boundVariables: aViennaNode pattern into: aSet
 ]
 
 { #category : #'bound variables-patterns and binds' }
@@ -435,7 +471,8 @@ TViennaVDMBoundVariableCollector >> boundVariablesSeqType: aViennaNode into: aSe
 
 { #category : #'bound variables-statements' }
 TViennaVDMBoundVariableCollector >> boundVariablesSequenceForLoop: aViennaNode into: aSet [
-	self boundVariables: aViennaNode first into: aSet
+
+	self boundVariables: aViennaNode patternOrBind into: aSet
 ]
 
 { #category : #'bound variables-types' }
@@ -445,7 +482,7 @@ TViennaVDMBoundVariableCollector >> boundVariablesSet1Type: aViennaNode into: aS
 
 { #category : #'bound variables-patterns and binds' }
 TViennaVDMBoundVariableCollector >> boundVariablesSetBind: aViennaNode into: aSet [
-	self boundVariables: aViennaNode first into: aSet
+	self boundVariables: aViennaNode pattern into: aSet
 ]
 
 { #category : #'bound variables-patterns and binds' }
@@ -455,7 +492,8 @@ TViennaVDMBoundVariableCollector >> boundVariablesSetEnumPattern: aViennaNode in
 
 { #category : #'bound variables-statements' }
 TViennaVDMBoundVariableCollector >> boundVariablesSetForLoop: aViennaNode into: aSet [
-	self boundVariables: aViennaNode first into: aSet
+
+	self boundVariables: aViennaNode pattern into: aSet
 ]
 
 { #category : #'bound variables-types' }
@@ -470,11 +508,12 @@ TViennaVDMBoundVariableCollector >> boundVariablesSetUnionPattern: aViennaNode i
 
 { #category : #'bound variables-definitions' }
 TViennaVDMBoundVariableCollector >> boundVariablesStateDefinition: aViennaNode into: aSet [
+
 	| identifier stateFieldList invariant initialisation |
-	identifier := aViennaNode first.
-	stateFieldList := aViennaNode second.
-	invariant := aViennaNode third.
-	initialisation := aViennaNode fourth.
+	identifier := aViennaNode identifier.
+	stateFieldList := aViennaNode fieldList.
+	invariant := aViennaNode inv.
+	initialisation := aViennaNode init.
 	aSet add: identifier.
 	invariant ifNotNil: [ aSet add: 'inv_' , identifier ].
 	initialisation ifNotNil: [ aSet add: 'init_' , identifier ].
@@ -494,7 +533,8 @@ TViennaVDMBoundVariableCollector >> boundVariablesTuplePattern: aViennaNode into
 
 { #category : #'bound variables-patterns and binds' }
 TViennaVDMBoundVariableCollector >> boundVariablesTypeBind: aViennaNode into: aSet [
-	self boundVariables: aViennaNode first into: aSet
+
+	self boundVariables: aViennaNode pattern into: aSet
 ]
 
 { #category : #'bound variables-patterns and binds' }
@@ -509,28 +549,33 @@ TViennaVDMBoundVariableCollector >> boundVariablesTypeDefinitions: aViennaNode i
 
 { #category : #'bound variables-interfaces' }
 TViennaVDMBoundVariableCollector >> boundVariablesTypeImport: aViennaNode into: aSet [
-	aSet add: aViennaNode first.
-	aViennaNode second ifNotNil: [ :rename | aSet add: rename first ]
+
+	aSet add: aViennaNode identifier.
+	aViennaNode rename ifNotNil: [ :rename | aSet add: rename identifier ]
 ]
 
 { #category : #'bound variables-interfaces' }
 TViennaVDMBoundVariableCollector >> boundVariablesTypeNameExport: aViennaNode into: aSet [
-	aSet add: aViennaNode first first
+
+	aSet add: aViennaNode identifier
 ]
 
 { #category : #'bound variables-interfaces' }
 TViennaVDMBoundVariableCollector >> boundVariablesTypeStructExport: aViennaNode into: aSet [
-	aSet add: aViennaNode first first
+
+	aSet add: aViennaNode identifier
 ]
 
 { #category : #'bound variables-definitions' }
 TViennaVDMBoundVariableCollector >> boundVariablesTypeSynonym: aViennaNode into: aSet [
-	aSet add: aViennaNode first
+
+	aSet add: aViennaNode identifier
 ]
 
 { #category : #'bound variables-definitions' }
 TViennaVDMBoundVariableCollector >> boundVariablesTypeVariableIdentifier: aViennaNode into: aSet [
-	aSet add: aViennaNode first
+
+	aSet add: aViennaNode identifier
 ]
 
 { #category : #'bound variables-definitions' }
@@ -545,7 +590,8 @@ TViennaVDMBoundVariableCollector >> boundVariablesUnionType: aViennaNode into: a
 
 { #category : #'bound variables-definitions' }
 TViennaVDMBoundVariableCollector >> boundVariablesValueDefinition: aViennaNode into: aSet [
-	self boundVariables: aViennaNode first into: aSet
+
+	self boundVariables: aViennaNode pattern into: aSet
 ]
 
 { #category : #'bound variables-definitions' }
@@ -555,12 +601,15 @@ TViennaVDMBoundVariableCollector >> boundVariablesValueDefinitions: aViennaNode 
 
 { #category : #'bound variables-interfaces' }
 TViennaVDMBoundVariableCollector >> boundVariablesValueExport: aViennaNode into: aSet [
-	aViennaNode first do: [ :localName | aSet add: localName first ].
-	self freeVariables: aViennaNode second boundVars: aSet into: aSet
+
+	aViennaNode nameList do: [ :localName |
+		aSet add: localName identifier ].
+	self freeVariables: aViennaNode type boundVars: aSet into: aSet
 ]
 
 { #category : #'bound variables-interfaces' }
 TViennaVDMBoundVariableCollector >> boundVariablesValueImport: aViennaNode into: aSet [
-	aSet add: aViennaNode first.
-	self boundVariables: aViennaNode second into: aSet
+
+	aSet add: aViennaNode identifier.
+	self boundVariables: aViennaNode type into: aSet
 ]

@@ -6,17 +6,29 @@ Class {
 }
 
 { #category : #'instance creation' }
-ViennaTypeVariableNode class >> string: aString [
+ViennaTypeVariableNode class >> identifier: aString [
 
 	^ (self new: 1)
-		  string: aString;
+		  identifier: aString;
 		  yourself
 ]
 
 { #category : #'pretty printing' }
 ViennaTypeVariableNode >> formatWith: aViennaAbstractFormatter [
 
-	^ aViennaAbstractFormatter format: self string
+	^ aViennaAbstractFormatter format: self identifier
+]
+
+{ #category : #accessing }
+ViennaTypeVariableNode >> identifier [
+
+	^ self at: 1
+]
+
+{ #category : #accessing }
+ViennaTypeVariableNode >> identifier: aString [
+
+	self at: 1 put: aString
 ]
 
 { #category : #testing }
@@ -35,16 +47,4 @@ ViennaTypeVariableNode >> isViennaTypeVariableNode: aString [
 ViennaTypeVariableNode >> label [
 
 	^ 'TypeVariable'
-]
-
-{ #category : #accessing }
-ViennaTypeVariableNode >> string [
-
-	^ self at: 1
-]
-
-{ #category : #accessing }
-ViennaTypeVariableNode >> string: aString [
-
-	self at: 1 put: aString
 ]

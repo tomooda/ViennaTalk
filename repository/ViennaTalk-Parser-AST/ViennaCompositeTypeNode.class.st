@@ -6,10 +6,10 @@ Class {
 }
 
 { #category : #'instance creation' }
-ViennaCompositeTypeNode class >> name: aViennaNameNode fieldList: aViennaFieldListNode [
+ViennaCompositeTypeNode class >> identifier: aString fieldList: aViennaFieldListNode [
 
 	^ (self new: 2)
-		  name: aViennaNameNode;
+		  identifier: aString;
 		  fieldList: aViennaFieldListNode;
 		  yourself
 ]
@@ -39,6 +39,18 @@ ViennaCompositeTypeNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: 'end'
 ]
 
+{ #category : #accessing }
+ViennaCompositeTypeNode >> identifier [
+
+	^ self at: 1
+]
+
+{ #category : #accessing }
+ViennaCompositeTypeNode >> identifier: aString [
+
+	self at: 1 put: aString
+]
+
 { #category : #testing }
 ViennaCompositeTypeNode >> isViennaCompositeTypeNode [
 
@@ -49,16 +61,4 @@ ViennaCompositeTypeNode >> isViennaCompositeTypeNode [
 ViennaCompositeTypeNode >> label [
 
 	^ 'CompositeType'
-]
-
-{ #category : #accessing }
-ViennaCompositeTypeNode >> name [
-
-	^ self at: 1
-]
-
-{ #category : #accessing }
-ViennaCompositeTypeNode >> name: aViennaNameNode [
-
-	self at: 1 put: aViennaNameNode
 ]

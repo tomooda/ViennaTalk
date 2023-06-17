@@ -37,7 +37,7 @@ ViennaInvariantInitialFunctionNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: expression
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaInvariantInitialFunctionNode >> isViennaInvariantInitialFunctionNode [
 
 	^ true

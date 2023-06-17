@@ -47,7 +47,7 @@ ViennaCasesExpressionAlternativeNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: expression
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaCasesExpressionAlternativeNode >> isViennaCasesExpressionAlternativeNode [
 
 	^ true

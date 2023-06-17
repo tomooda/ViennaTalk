@@ -243,7 +243,9 @@ ViennaVDMParser >> casesStatementAlternatives [
 ViennaVDMParser >> compositeType [
 
 	^ super compositeType =>> [ :start :end :array |
-	  (ViennaCompositeTypeNode name: array first fieldList: array second)
+	  (ViennaCompositeTypeNode
+		   identifier: array first
+		   fieldList: array second)
 		  start: start end: end;
 		  yourself ]
 ]
@@ -2190,7 +2192,7 @@ ViennaVDMParser >> typeSynonym [
 ViennaVDMParser >> typeVariable [
 
 	^ super typeVariable =>> [ :start :end :string |
-	  (ViennaTypeVariableNode string: string)
+	  (ViennaTypeVariableNode identifier: string)
 		  start: start end: end;
 		  yourself ]
 ]
@@ -2199,7 +2201,7 @@ ViennaVDMParser >> typeVariable [
 ViennaVDMParser >> typeVariableIdentifier [
 
 	^ super typeVariableIdentifier =>> [ :start :end :string |
-	  (ViennaTypeVariableIdentifierNode string: string)
+	  (ViennaTypeVariableIdentifierNode identifier: string)
 		  start: start end: end;
 		  yourself ]
 ]
