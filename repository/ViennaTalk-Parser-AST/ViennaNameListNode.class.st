@@ -13,7 +13,7 @@ ViennaNameListNode >> formatWith: aViennaAbstractFormatter [
 	^ aViennaAbstractFormatter join: ', ' withAll: names
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaNameListNode >> isViennaNameListNode [
 
 	^ true

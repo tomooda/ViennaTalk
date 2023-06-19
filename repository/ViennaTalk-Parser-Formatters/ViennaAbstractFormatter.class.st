@@ -158,13 +158,7 @@ ViennaAbstractFormatter >> format: aViennaNode [
 						           nextPutAll: '--@';
 						           nextPutAll: annotation;
 						           nextPutAll: String cr ] ] ])
-	          , ([ aViennaNode formatWith: self ]
-			           on: SubclassResponsibility
-			           do: [ :ex |
-				           self
-					           perform:
-					           (aViennaNode label uncapitalized , ':') asSymbol
-					           with: aViennaNode ]).
+	          , (aViennaNode formatWith: self).
 	(self needsParen: aViennaNode) ifTrue: [
 		string := '(' , (self indentString: string) , ')' ].
 	^ string
@@ -217,89 +211,14 @@ ViennaAbstractFormatter >> formatEnumerate: anArrayOfString separator: aString i
 	^ self join: aString , String cr withAll: lines
 ]
 
-{ #category : #'formatting-interfaces' }
-ViennaAbstractFormatter >> functionImport: aViennaNode [
-	| name typeVariableList type rename |
-	name := self format: aViennaNode first.
-	typeVariableList := aViennaNode second ifNil: [ '' ] ifNotNil: [ :node | self format: node ].
-	type := aViennaNode third ifNil: [ '' ] ifNotNil: [ :node | ': ' , (self format: node) ].
-	rename := aViennaNode fourth ifNil: [ '' ] ifNotNil: [ :node | 'renamed ' , (self format: node) ].
-	^ self indentString: name , typeVariableList , type insertCrIfNeeded: rename
-]
-
-{ #category : #'formatting-interfaces' }
-ViennaAbstractFormatter >> functionImportType: aViennaNode [
-	| typeVarList functionType |
-	typeVarList := self format: aViennaNode first.
-	functionType := self format: aViennaNode second.
-	^ typeVarList , ' : ' , functionType
-]
-
-{ #category : #'formatting-interfaces' }
-ViennaAbstractFormatter >> functionSignature: aViennaNode [
-	| nameList functionType |
-	nameList := self format: aViennaNode first.
-	functionType := self format: aViennaNode second.
-	^ nameList , ' : ' , functionType
-]
-
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> greaterThanOrEqual [
 	^ '>='
 ]
 
-{ #category : #'formatting-definitions' }
-ViennaAbstractFormatter >> identifierTypePairList: aViennaNode [
-	^ aViennaNode
-		ifNotEmpty: [ | string |
-			string := ''.
-			1 to: aViennaNode size - 2 by: 2 do: [ :index | 
-				string := string , (self format: (aViennaNode at: index)) , ':'
-					, (self format: (aViennaNode at: index + 1)) , ', ' ].
-			string , (self format: (aViennaNode at: aViennaNode size - 1))
-				, ':' , (self format: (aViennaNode at: aViennaNode size)) ]
-		ifEmpty: [ '' ]
-]
-
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> imply [
 	^ '=>'
-]
-
-{ #category : #'formatting-interfaces' }
-ViennaAbstractFormatter >> importFunctionsSignature: aViennaNode [
-	| functionImport |
-	functionImport := self formatAll: aViennaNode.
-	^ self
-		indentString: 'functions'
-		insertCrIfNeeded: (self join: ';' , String cr withAll: functionImport) , ';'
-]
-
-{ #category : #'formatting-interfaces' }
-ViennaAbstractFormatter >> importOperationsSignature: aViennaNode [
-	| operationImports |
-	operationImports := self formatAll: aViennaNode.
-	^ self
-		indentString: 'operations'
-		insertCrIfNeeded: (self join: ';' , String cr withAll: operationImports) , ';'
-]
-
-{ #category : #'formatting-interfaces' }
-ViennaAbstractFormatter >> importTypesSignature: aViennaNode [
-	| typeImports |
-	typeImports := self formatAll: aViennaNode.
-	^ self
-		indentString: 'types'
-		insertCrIfNeeded: (self join: ';' , String cr withAll: typeImports) , ';'
-]
-
-{ #category : #'formatting-interfaces' }
-ViennaAbstractFormatter >> importValuesSignature: aViennaNode [
-	| valueImports |
-	valueImports := self formatAll: aViennaNode.
-	^ self
-		indentString: 'values'
-		insertCrIfNeeded: (self join: ';' , String cr withAll: valueImports) , ';'
 ]
 
 { #category : #accessing }
@@ -390,14 +309,6 @@ ViennaAbstractFormatter >> inter [
 	^ 'inter'
 ]
 
-{ #category : #'formatting-interfaces' }
-ViennaAbstractFormatter >> interface: aViennaNode [
-	| importDefinitionList exportDefinition |
-	importDefinitionList := aViennaNode first ifNil: [ '' ] ifNotNil: [ (self format: aViennaNode first) , String cr ].
-	exportDefinition := self format: aViennaNode second.
-	^ importDefinitionList , exportDefinition
-]
-
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> inverse: aString [
 	^ 'inverse ', aString
@@ -453,15 +364,6 @@ ViennaAbstractFormatter >> maxSizePerLine: anInteger [
 	maxSizePerLine := anInteger
 ]
 
-{ #category : #'formatting-definitions' }
-ViennaAbstractFormatter >> module: aViennaNode [
-	| identifier interface moduleBody |
-	identifier := self format: aViennaNode first.
-	interface := self format: aViennaNode second.
-	moduleBody := aViennaNode third ifNil: [ '' ] ifNotNil: [ :node | String cr , (self format: node) ].
-	^ 'module ' , identifier , String cr , interface , moduleBody , String cr , 'end ' , identifier
-]
-
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> mu [
 	^ 'mu'
@@ -475,13 +377,6 @@ ViennaAbstractFormatter >> mul [
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> munion [
 	^ 'munion'
-]
-
-{ #category : #'formatting-interfaces' }
-ViennaAbstractFormatter >> nameList: aViennaNode [
-	| names |
-	names := self formatAll: aViennaNode.
-	^ self join: ', ' withAll: names
 ]
 
 { #category : #'symbol access' }
@@ -587,15 +482,6 @@ ViennaAbstractFormatter >> notInSet [
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> oparrow [
 	^ '==>'
-]
-
-{ #category : #'formatting-interfaces' }
-ViennaAbstractFormatter >> operationImport: aViennaNode [
-	| name operationType rename |
-	name := self format: aViennaNode first.
-	operationType := aViennaNode second ifNil: [ '' ] ifNotNil: [ :node | ': ' , (self format: node) ].
-	rename := aViennaNode third ifNil: [ '' ] ifNotNil: [ :node | 'renamed ' , (self format: node) ].
-	^ self indentString: name , operationType insertCrIfNeeded: rename
 ]
 
 { #category : #'symbol access' }
@@ -725,55 +611,7 @@ ViennaAbstractFormatter >> totalFunction [
 	^ '+>'
 ]
 
-{ #category : #'formatting-patterns and binds' }
-ViennaAbstractFormatter >> typeBindList: aViennaNode [
-	| patterns |
-	patterns := self formatAll: aViennaNode.
-	^ self
-		join:
-			','
-				,
-					((self anyNeedsIndent: patterns)
-						ifTrue: [ String cr ]
-						ifFalse: [ String space ])
-		withAll: patterns
-]
-
-{ #category : #'formatting-interfaces' }
-ViennaAbstractFormatter >> typeImport: aViennaNode [
-	| type rename |
-	type := self format: aViennaNode first.
-	rename := aViennaNode second ifNil: [ '' ] ifNotNil: [ :node | 'renamed ' , (self format: node) ].
-	^ self indentString: type insertCrIfNeeded: rename
-]
-
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> union [
 	^ 'union'
-]
-
-{ #category : #'formatting-definitions' }
-ViennaAbstractFormatter >> valueDefinition: aViennaNode [
-	| identifier type expression |
-	identifier := self format: aViennaNode first.
-	type := aViennaNode second ifNil: [ '' ] ifNotNil: [ :node | ' : ' , (self format: node) ].
-	expression := self format: aViennaNode third.
-	^ self indentString: identifier , type , ' =' insertCrIfNeeded: expression
-]
-
-{ #category : #'formatting-interfaces' }
-ViennaAbstractFormatter >> valueExport: aViennaNode [
-	| nameList type |
-	nameList := self format: aViennaNode first.
-	type := aViennaNode second ifNil: [ '' ] ifNotNil: [ :node | ' : ' , (self format: node) ].
-	^ nameList , type
-]
-
-{ #category : #'formatting-interfaces' }
-ViennaAbstractFormatter >> valueImport: aViennaNode [
-	| name type rename |
-	name := self format: aViennaNode first.
-	type := aViennaNode second ifNil: [ '' ] ifNotNil: [ :node | ': ' , (self format: node) ].
-	rename := aViennaNode third ifNil: [ '' ] ifNotNil: [ :node | 'renamed ' , (self format: node) ].
-	^ self indentString: name , type insertCrIfNeeded: rename
 ]
