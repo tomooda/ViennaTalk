@@ -14,6 +14,12 @@ ViennaConditionalStatementNode class >> condition: aViennaExpressionNode stateme
 		  yourself
 ]
 
+{ #category : #private }
+ViennaConditionalStatementNode >> boundIdentifiersInto: aSet [
+
+	
+]
+
 { #category : #accessing }
 ViennaConditionalStatementNode >> condition [
 

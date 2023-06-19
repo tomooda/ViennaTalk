@@ -13,6 +13,12 @@ ViennaExceptionsNode class >> errorList: aViennaErrorListNode [
 		  yourself
 ]
 
+{ #category : #private }
+ViennaExceptionsNode >> boundIdentifiersInto: aSet [
+
+	self errorList boundIdentifiersInto: aSet
+]
+
 { #category : #accessing }
 ViennaExceptionsNode >> errorList [
 
@@ -31,7 +37,7 @@ ViennaExceptionsNode >> formatWith: aViennaAbstractFormatter [
 	^ 'errs' , (aViennaAbstractFormatter format: self errorList)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaExceptionsNode >> isViennaExceptionsNode [
 
 	^ true

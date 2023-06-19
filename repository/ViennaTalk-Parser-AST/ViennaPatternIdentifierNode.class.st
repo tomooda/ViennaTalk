@@ -19,6 +19,12 @@ ViennaPatternIdentifierNode class >> identifier: aString [
 		  yourself
 ]
 
+{ #category : #private }
+ViennaPatternIdentifierNode >> boundIdentifiersInto: aSet [
+
+	self identifier ifNotNil: [ :identifier | aSet add: identifier ]
+]
+
 { #category : #'pretty printing' }
 ViennaPatternIdentifierNode >> formatWith: aViennaAbstractFormatter [
 

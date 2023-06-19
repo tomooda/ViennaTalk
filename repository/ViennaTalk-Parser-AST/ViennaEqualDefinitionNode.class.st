@@ -14,6 +14,12 @@ ViennaEqualDefinitionNode class >> patternOrBind: aViennaPatternNodeOrViennaBind
 		  yourself
 ]
 
+{ #category : #private }
+ViennaEqualDefinitionNode >> boundIdentifiersInto: aSet [
+
+	self patternOrBind boundIdentifiersInto: aSet
+]
+
 { #category : #'parsers-patterns' }
 ViennaEqualDefinitionNode >> expression [
 

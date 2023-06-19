@@ -5,6 +5,12 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #private }
+ViennaTypeBindListNode >> boundIdentifiersInto: aSet [
+
+	self do: [ :pattern | pattern boundIdentifiersInto: aSet ]
+]
+
 { #category : #'pretty printing' }
 ViennaTypeBindListNode >> formatWith: aViennaAbstractFormatter [
 

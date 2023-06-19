@@ -5,6 +5,12 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #private }
+ViennaExternalsNode >> boundIdentifiersInto: aSet [
+
+	self do: [ :node | node boundIdentifiersInto: aSet ]
+]
+
 { #category : #'pretty printing' }
 ViennaExternalsNode >> formatWith: aViennaAbstractFormatter [
 
@@ -14,7 +20,7 @@ ViennaExternalsNode >> formatWith: aViennaAbstractFormatter [
 		  str , ' ' , (aViennaAbstractFormatter format: node) ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaExternalsNode >> isViennaExternalsNode [
 
 	^ true

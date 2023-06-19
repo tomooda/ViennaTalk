@@ -639,26 +639,6 @@ ViennaVDMParser >> fieldList [
 		  yourself ]
 ]
 
-{ #category : #'parsers-patterns' }
-ViennaVDMParser >> fieldPattern [
-
-	^ super fieldPattern =>> [ :start :end :array |
-	  (ViennaFieldPatternNode
-		   identifier: array first
-		   pattern: array second)
-		  start: start end: end;
-		  yourself ]
-]
-
-{ #category : #'parsers-patterns' }
-ViennaVDMParser >> fieldPatternList [
-
-	^ super fieldPatternList =>> [ :start :end :array |
-	  (ViennaFieldPatternListNode withAll: array)
-		  start: start end: end;
-		  yourself ]
-]
-
 { #category : #'parsers-statements' }
 ViennaVDMParser >> fieldReference: stateDesig with: field [
 

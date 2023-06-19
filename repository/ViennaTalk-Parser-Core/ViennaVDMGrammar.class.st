@@ -1066,19 +1066,6 @@ ViennaVDMGrammar >> fieldList [
 	^ self field starA
 ]
 
-{ #category : #'parsers-patterns' }
-ViennaVDMGrammar >> fieldPattern [
-	^ (identifier trim , mapletArrow , pattern)
-		==> [ :triple | 
-			{(triple first).
-			(triple third)} ]
-]
-
-{ #category : #'parsers-patterns' }
-ViennaVDMGrammar >> fieldPatternList [
-	^ (self fieldPattern separatedBy: comma) withoutSeparators optional ==> [ :single | single ifNil: [ Array new ] ]
-]
-
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> fieldReference: stateDesig with: ident [
 	^ {stateDesig.

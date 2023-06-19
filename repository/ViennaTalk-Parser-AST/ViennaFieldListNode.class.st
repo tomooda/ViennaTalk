@@ -5,6 +5,12 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #private }
+ViennaFieldListNode >> boundIdentifiersInto: aSet [
+
+	
+]
+
 { #category : #'pretty printing' }
 ViennaFieldListNode >> formatWith: aViennaAbstractFormatter [
 

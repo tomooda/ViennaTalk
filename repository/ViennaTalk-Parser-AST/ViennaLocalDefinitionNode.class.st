@@ -13,6 +13,12 @@ ViennaLocalDefinitionNode class >> valueDefinitionOrFunctionDefinition: aViennaN
 		  yourself
 ]
 
+{ #category : #private }
+ViennaLocalDefinitionNode >> boundIdentifiersInto: aSet [
+
+	self valueDefinitionOrFunctionDefinition boundIdentifiersInto: aSet
+]
+
 { #category : #'pretty printing' }
 ViennaLocalDefinitionNode >> formatWith: aViennaAbstractFormatter [
 

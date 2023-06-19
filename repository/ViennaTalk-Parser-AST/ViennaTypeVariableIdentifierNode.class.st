@@ -13,6 +13,12 @@ ViennaTypeVariableIdentifierNode class >> identifier: aString [
 		  yourself
 ]
 
+{ #category : #private }
+ViennaTypeVariableIdentifierNode >> boundIdentifiersInto: aSet [
+
+	aSet add: self identifier
+]
+
 { #category : #'pretty printing' }
 ViennaTypeVariableIdentifierNode >> formatWith: aViennaAbstractFormatter [
 

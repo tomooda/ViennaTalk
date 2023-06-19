@@ -1041,7 +1041,7 @@ ViennaRefactoring >> localScopeBySetForLoop: aViennaNode do: aBlock [
 { #category : #'visiting-pattern matching' }
 ViennaRefactoring >> match: aViennaNode with: anotherViennaNode bindings: aDictionary [
 
-	(aViennaNode sameAs: anotherViennaNode) ifTrue: [ ^ true ].
+	aViennaNode = anotherViennaNode ifTrue: [ ^ true ].
 	aViennaNode isViennaLocalNameNode ifTrue: [
 		^ aDictionary
 			  at: aViennaNode identifier
@@ -1052,7 +1052,7 @@ ViennaRefactoring >> match: aViennaNode with: anotherViennaNode bindings: aDicti
 							  at: aViennaNode identifier
 							  put: anotherViennaNode copyFragment.
 						  true ]
-					  ifNotNil: [ anotherViennaNode sameAs: node ] ]
+					  ifNotNil: [ anotherViennaNode = node ] ]
 			  ifAbsent: [ false ] ].
 	aViennaNode class = anotherViennaNode class ifFalse: [ ^ false ].
 	aViennaNode size = anotherViennaNode size ifFalse: [ ^ false ].

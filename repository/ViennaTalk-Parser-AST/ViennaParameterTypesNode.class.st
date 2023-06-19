@@ -13,6 +13,12 @@ ViennaParameterTypesNode class >> patternTypePairList: aViennaPatternTypePairLis
 		  yourself
 ]
 
+{ #category : #private }
+ViennaParameterTypesNode >> boundIdentifiersInto: aSet [
+
+	
+]
+
 { #category : #'pretty printing' }
 ViennaParameterTypesNode >> formatWith: aViennaAbstractFormatter [
 

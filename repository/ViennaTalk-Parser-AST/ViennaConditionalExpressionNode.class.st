@@ -14,6 +14,12 @@ ViennaConditionalExpressionNode class >> condition: aViennaExpressionNode1 expre
 		  yourself
 ]
 
+{ #category : #private }
+ViennaConditionalExpressionNode >> boundIdentifiersInto: aSet [
+
+	
+]
+
 { #category : #accessing }
 ViennaConditionalExpressionNode >> condition [
 
@@ -48,7 +54,7 @@ ViennaConditionalExpressionNode >> formatWith: aViennaAbstractFormatter [
 			   (aViennaAbstractFormatter format: self second))
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaConditionalExpressionNode >> isViennaConditionalExpressionNode [
 
 	^ true

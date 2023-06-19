@@ -26,6 +26,12 @@ ViennaAccessOperationDefinitionNode >> access: aViennaAccessNode [
 	self at: 1 put: aViennaAccessNode
 ]
 
+{ #category : #private }
+ViennaAccessOperationDefinitionNode >> boundIdentifiersInto: aSet [
+
+	self operationDefinition boundIdentifiersInto: aSet
+]
+
 { #category : #'pretty printing' }
 ViennaAccessOperationDefinitionNode >> formatWith: aViennaAbstractFormatter [
 

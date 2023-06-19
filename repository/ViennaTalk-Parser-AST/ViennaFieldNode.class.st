@@ -15,6 +15,12 @@ ViennaFieldNode class >> identifier: aString equalityAbstraction: aBoolean type:
 		  yourself
 ]
 
+{ #category : #private }
+ViennaFieldNode >> boundIdentifiersInto: aSet [
+
+	
+]
+
 { #category : #accessing }
 ViennaFieldNode >> equalityAbstraction [
 

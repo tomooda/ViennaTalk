@@ -15,6 +15,12 @@ ViennaAssignmentDefinitionNode class >> identifier: aString type: aViennaTypeNod
 		  yourself
 ]
 
+{ #category : #private }
+ViennaAssignmentDefinitionNode >> boundIdentifiersInto: aSet [
+
+	aSet add: self identifier
+]
+
 { #category : #accessing }
 ViennaAssignmentDefinitionNode >> expression [
 

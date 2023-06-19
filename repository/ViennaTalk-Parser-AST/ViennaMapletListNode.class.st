@@ -5,6 +5,12 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #private }
+ViennaMapletListNode >> boundIdentifiersInto: aSet [
+
+	
+]
+
 { #category : #'pretty printing' }
 ViennaMapletListNode >> formatWith: aViennaAbstractFormatter [
 
@@ -17,7 +23,7 @@ ViennaMapletListNode >> formatWith: aViennaAbstractFormatter [
 		  withAll: maplets
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaMapletListNode >> isViennaMapletListNode [
 
 	^ true

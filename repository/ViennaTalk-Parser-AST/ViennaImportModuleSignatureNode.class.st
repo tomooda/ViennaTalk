@@ -5,6 +5,13 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #private }
+ViennaImportModuleSignatureNode >> boundIdentifiersInto: aSet [
+
+	self do: [ :importSignature |
+		importSignature boundIdentifiersInto: aSet ]
+]
+
 { #category : #'pretty printing' }
 ViennaImportModuleSignatureNode >> formatWith: aViennaAbstractFormatter [
 

@@ -13,6 +13,12 @@ ViennaTuplePatternNode class >> patternList: aViennaPatternListNode [
 		  yourself
 ]
 
+{ #category : #private }
+ViennaTuplePatternNode >> boundIdentifiersInto: aSet [
+
+	self patternList boundIdentifiersInto: aSet
+]
+
 { #category : #'pretty printing' }
 ViennaTuplePatternNode >> formatWith: aViennaAbstractFormatter [
 

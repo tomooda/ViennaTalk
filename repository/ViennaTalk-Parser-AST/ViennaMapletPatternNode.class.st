@@ -14,6 +14,13 @@ ViennaMapletPatternNode class >> keyPattern: aViennaPatternNode1 valuePattern: a
 		  yourself
 ]
 
+{ #category : #private }
+ViennaMapletPatternNode >> boundIdentifiersInto: aSet [
+
+	self keyPattern boundIdentifiersInto: aSet.
+	self valuePattern boundIdentifiersInto: aSet
+]
+
 { #category : #'pretty printing' }
 ViennaMapletPatternNode >> formatWith: aViennaAbstractFormatter [
 

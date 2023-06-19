@@ -13,6 +13,12 @@ ViennaInvariantNode class >> invariantInitialFunction: aViennaInvariantInitialFu
 		  yourself
 ]
 
+{ #category : #private }
+ViennaInvariantNode >> boundIdentifiersInto: aSet [
+
+	
+]
+
 { #category : #'pretty printing' }
 ViennaInvariantNode >> formatWith: aViennaAbstractFormatter [
 
@@ -32,7 +38,7 @@ ViennaInvariantNode >> invariantInitialFunction: aViennaInvariantInitialFunction
 	self at: 1 put: aViennaInvariantInitialFunctionNode
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaInvariantNode >> isViennaInvariantNode [
 
 	^ true

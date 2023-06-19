@@ -5,6 +5,13 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #private }
+ViennaEqualDefinitionListNode >> boundIdentifiersInto: aSet [
+
+	self do: [ :equalDefinition |
+		equalDefinition boundIdentifiersInto: aSet ]
+]
+
 { #category : #'pretty printing' }
 ViennaEqualDefinitionListNode >> formatWith: aViennaAbstractFormatter [
 

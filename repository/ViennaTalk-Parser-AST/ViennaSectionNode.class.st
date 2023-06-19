@@ -11,6 +11,12 @@ ViennaSectionNode class >> isAbstract [
 	^ self = ViennaSectionNode
 ]
 
+{ #category : #private }
+ViennaSectionNode >> boundIdentifiersInto: aSet [
+
+	self do: [ :node | node boundIdentifiersInto: aSet ]
+]
+
 { #category : #'pretty printing' }
 ViennaSectionNode >> formatWith: aViennaAbstractFormatter [
 

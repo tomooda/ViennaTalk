@@ -40,7 +40,7 @@ ViennaVDM2SmalltalkScript >> flatDocument: aViennaNode env: aDictionary [
 	| vars lazyDefs eagerDefs |
 	aViennaNode first isViennaDefinitionBlockNode ifFalse: [
 		^ self error: 'This is not a flat spec.' ].
-	vars := self boundVariables: aViennaNode.
+	vars := aViennaNode boundIdentifiers.
 	lazyDefs := OrderedCollection new.
 	eagerDefs := OrderedCollection new.
 	self definitions: aViennaNode do: [ :node |

@@ -24,7 +24,7 @@ ViennaFunctionExportNode >> addName: aViennaNameNode [
 { #category : #testing }
 ViennaFunctionExportNode >> exportsName: aViennaNameNode [
 
-	^ self nameList anySatisfy: [ :name | name sameAs: aViennaNameNode ]
+	^ self nameList anySatisfy: [ :name | name = aViennaNameNode ]
 ]
 
 { #category : #'pretty printing' }

@@ -14,6 +14,12 @@ ViennaCasesExpressionAlternativeNode class >> patternList: aViennaPatternListNod
 		  yourself
 ]
 
+{ #category : #private }
+ViennaCasesExpressionAlternativeNode >> boundIdentifiersInto: aSet [
+
+	self patternList boundIdentifiersInto: aSet
+]
+
 { #category : #'accessing-definitions' }
 ViennaCasesExpressionAlternativeNode >> definitionOfLocalName: aString [
 

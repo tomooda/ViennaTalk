@@ -42,6 +42,15 @@ ViennaNode class >> withAll: anArrayOfViennaNode [
 	^ node
 ]
 
+{ #category : #comparing }
+ViennaNode >> = aViennaNode [
+
+	self class = aViennaNode class ifFalse: [ ^ false ].
+	1 to: self size do: [ :index |
+		(self at: index) = (aViennaNode at: index) ifFalse: [ ^ false ] ].
+	^ true
+]
+
 { #category : #'adding/removing' }
 ViennaNode >> add: anObject [
 
@@ -223,6 +232,21 @@ ViennaNode >> bindHolderNode [
 	^ self
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaNode >> boundIdentifiers [
+
+	| identifiers |
+	identifiers := Set new.
+	self boundIdentifiersInto: identifiers.
+	^ identifiers
+]
+
+{ #category : #private }
+ViennaNode >> boundIdentifiersInto: aSet [
+
+	^ self subclassResponsibility
+]
+
 { #category : #enumerating }
 ViennaNode >> collect: aBlock [
 	^ (1 to: self size) collect: [ :index | aBlock value: (self at: index) ]
@@ -349,6 +373,29 @@ ViennaNode >> hasScope [
 	^ false
 ]
 
+{ #category : #comparing }
+ViennaNode >> hash [
+
+	^ self
+		  inject: self class hash
+		  into: [ :hash :node | hash bitXor: node hash ]
+]
+
+{ #category : #'accessing-definitions' }
+ViennaNode >> identifiers [
+
+	| identifiers |
+	identifiers := Set new.
+	self identifiersDo: [ :identifier | identifiers add: identifier ].
+	^ identifiers
+]
+
+{ #category : #enumerating }
+ViennaNode >> identifiersDo: aBlock [
+
+	
+]
+
 { #category : #'pretty printing' }
 ViennaNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
 
@@ -405,6 +452,15 @@ ViennaNode >> includesParent: aViennaNode [
 			node = aViennaNode
 				ifTrue: [ ^ true ] ].
 	^ false
+]
+
+{ #category : #enumerating }
+ViennaNode >> inject: anObject into: aBlock [
+
+	| value |
+	value := anObject.
+	self do: [ :node | value := aBlock value: value value: node ].
+	^ value
 ]
 
 { #category : #testing }
@@ -2475,20 +2531,6 @@ ViennaNode >> reverseDo: aBlock [
 { #category : #accessing }
 ViennaNode >> root [
 	^ parent ifNil: [ self ] ifNotNil: #root
-]
-
-{ #category : #comparing }
-ViennaNode >> sameAs: aViennaNode [
-
-	self class = aViennaNode class ifFalse: [ ^ false ].
-	1 to: self size do: [ :index |
-		| node |
-		node := self at: index.
-		node isViennaNode
-			ifTrue: [
-			(node sameAs: (aViennaNode at: index)) ifFalse: [ ^ false ] ]
-			ifFalse: [ node = (aViennaNode at: index) ifFalse: [ ^ false ] ] ].
-	^ true
 ]
 
 { #category : #enumerating }

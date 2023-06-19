@@ -11,6 +11,12 @@ ViennaStatementNode class >> isAbstract [
 	^ self = ViennaStatementNode
 ]
 
+{ #category : #private }
+ViennaStatementNode >> boundIdentifiersInto: aSet [
+
+	
+]
+
 { #category : #testing }
 ViennaStatementNode >> isViennaStatementNode [
 

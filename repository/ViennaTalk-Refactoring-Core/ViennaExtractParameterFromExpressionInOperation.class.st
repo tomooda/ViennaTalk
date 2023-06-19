@@ -40,12 +40,10 @@ ViennaExtractParameterFromExpressionInOperation >> executeCallers [
 	localName := ViennaLocalNameNode identifier: shortName.
 	ast module third allDescendantsDo: [ :node |
 		(node isViennaApplyNode and: [
-			 (node expression sameAs: globalName) or: [
-				 node expression sameAs: localName ] ]) ifTrue: [
-			node argumentExpressionList add: ast copyFragment ].
+			 node expression = globalName or: [ node expression = localName ] ])
+			ifTrue: [ node argumentExpressionList add: ast copyFragment ].
 		(node isViennaCallStatementNode and: [
-			 (node first sameAs: globalName) or: [
-				 node first sameAs: localName ] ]) ifTrue: [
+			 node first = globalName or: [ node first = localName ] ]) ifTrue: [
 			node second add: ast copyFragment ] ]
 ]
 

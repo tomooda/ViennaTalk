@@ -32,7 +32,7 @@ ViennaMultipleSetSeqBindNode >> expression: aViennaExpressionNode [
 	self at: 2 put: aViennaExpressionNode
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaMultipleSetSeqBindNode >> isViennaMultipleSetSeqBindNode [
 
 	^ true

@@ -5,6 +5,12 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #private }
+ViennaFunctionTypeArgsNode >> boundIdentifiersInto: aSet [
+
+	self do: [ :typeArg | typeArg boundIdentifiersInto: aSet ]
+]
+
 { #category : #'pretty printing' }
 ViennaFunctionTypeArgsNode >> formatWith: aViennaAbstractFormatter [
 

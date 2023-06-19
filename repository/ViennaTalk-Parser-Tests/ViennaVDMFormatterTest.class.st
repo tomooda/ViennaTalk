@@ -16,7 +16,7 @@ ViennaVDMFormatterTest >> assertParseFormattedSource: aString with: aPP2Node [
 	self assert: ast1 isPetit2Success.
 	source := formatter format: ast1.
 	ast2 := aPP2Node parse: source.
-	self assert: (ast1 sameAs: ast2)
+	self assert: ast1 equals: ast2
 ]
 
 { #category : #running }

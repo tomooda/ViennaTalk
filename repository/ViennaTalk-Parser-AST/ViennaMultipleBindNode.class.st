@@ -11,6 +11,12 @@ ViennaMultipleBindNode class >> isAbstract [
 	^ self = ViennaMultipleBindNode
 ]
 
+{ #category : #private }
+ViennaMultipleBindNode >> boundIdentifiersInto: aSet [
+
+	self patternList boundIdentifiersInto: aSet
+]
+
 { #category : #testing }
 ViennaMultipleBindNode >> isViennaMultipleBindNode [
 

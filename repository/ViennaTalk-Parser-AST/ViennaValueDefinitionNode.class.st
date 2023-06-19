@@ -51,6 +51,12 @@ ViennaValueDefinitionNode >> asImportDefinitionIn: moduleNode [
 							     rename: nil ])))
 ]
 
+{ #category : #private }
+ViennaValueDefinitionNode >> boundIdentifiersInto: aSet [
+
+	self pattern boundIdentifiersInto: aSet
+]
+
 { #category : #accessing }
 ViennaValueDefinitionNode >> expression [
 

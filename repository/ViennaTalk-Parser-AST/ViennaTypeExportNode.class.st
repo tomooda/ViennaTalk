@@ -22,7 +22,7 @@ ViennaTypeExportNode class >> name: aViennaNameNode [
 { #category : #testing }
 ViennaTypeExportNode >> exportsName: aViennaNameNode [
 
-	^ self name sameAs: aViennaNameNode
+	^ self name = aViennaNameNode
 ]
 
 { #category : #accessing }

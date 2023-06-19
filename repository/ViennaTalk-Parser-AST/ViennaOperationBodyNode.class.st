@@ -28,6 +28,12 @@ ViennaOperationBodyNode class >> statementOrIsNotYetSpecified: aViennaStatementN
 		  yourself
 ]
 
+{ #category : #private }
+ViennaOperationBodyNode >> boundIdentifiersInto: aSet [
+
+	
+]
+
 { #category : #'pretty printing' }
 ViennaOperationBodyNode >> formatWith: aViennaAbstractFormatter [
 

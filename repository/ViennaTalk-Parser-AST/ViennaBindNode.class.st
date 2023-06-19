@@ -11,6 +11,12 @@ ViennaBindNode class >> isAbstract [
 	^ self = ViennaBindNode
 ]
 
+{ #category : #private }
+ViennaBindNode >> boundIdentifiersInto: aSet [
+
+	self pattern boundIdentifiersInto: aSet
+]
+
 { #category : #testing }
 ViennaBindNode >> isViennaBindNode [
 

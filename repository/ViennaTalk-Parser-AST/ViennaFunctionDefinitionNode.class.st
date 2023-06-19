@@ -21,6 +21,12 @@ ViennaFunctionDefinitionNode >> asAccessDefinition [
 		  functionDefinition: self
 ]
 
+{ #category : #private }
+ViennaFunctionDefinitionNode >> boundIdentifiersInto: aSet [
+
+	self definition boundIdentifiersInto: aSet
+]
+
 { #category : #accessing }
 ViennaFunctionDefinitionNode >> definition [
 

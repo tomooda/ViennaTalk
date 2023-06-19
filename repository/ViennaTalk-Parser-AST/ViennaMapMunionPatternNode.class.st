@@ -14,6 +14,13 @@ ViennaMapMunionPatternNode class >> pattern: aViennaPatternNode1 pattern: aVienn
 		  yourself
 ]
 
+{ #category : #private }
+ViennaMapMunionPatternNode >> boundIdentifiersInto: aSet [
+
+	self pattern1 boundIdentifiersInto: aSet.
+	self pattern2 boundIdentifiersInto: aSet
+]
+
 { #category : #'pretty printing' }
 ViennaMapMunionPatternNode >> formatWith: aViennaAbstractFormatter [
 

@@ -16,6 +16,12 @@ ViennaImplicitOperationBodyNode class >> externals: aViennaExternalsNode pre: aV
 		  yourself
 ]
 
+{ #category : #private }
+ViennaImplicitOperationBodyNode >> boundIdentifiersInto: aSet [
+
+	
+]
+
 { #category : #accessing }
 ViennaImplicitOperationBodyNode >> exceptions [
 

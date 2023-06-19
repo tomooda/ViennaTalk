@@ -14,6 +14,13 @@ ViennaSetUnionPatternNode class >> pattern: aViennaPatternNode1 pattern: aVienna
 		  yourself
 ]
 
+{ #category : #private }
+ViennaSetUnionPatternNode >> boundIdentifiersInto: aSet [
+
+	self pattern1 boundIdentifiersInto: aSet.
+	self pattern2 boundIdentifiersInto: aSet
+]
+
 { #category : #'pretty printing' }
 ViennaSetUnionPatternNode >> formatWith: aViennaAbstractFormatter [
 

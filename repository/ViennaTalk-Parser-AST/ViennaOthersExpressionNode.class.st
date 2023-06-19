@@ -13,6 +13,12 @@ ViennaOthersExpressionNode class >> expression: aViennaExpressionNode [
 		  yourself
 ]
 
+{ #category : #private }
+ViennaOthersExpressionNode >> boundIdentifiersInto: aSet [
+
+	
+]
+
 { #category : #accessing }
 ViennaOthersExpressionNode >> expression [
 

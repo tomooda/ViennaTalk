@@ -19,7 +19,7 @@ ViennaUseType >> findDefinitionNode [
 			definitionBlock first isViennaTypeDefinitionsNode ifTrue: [
 				definitionBlock first do: [ :accessTypeDef |
 					accessTypeDef second ifNotNil: [ :typeDef |
-						((ast sameAs: typeDef second) and: [
+						(ast = typeDef second and: [
 							 typeDef third isNil and: [ (ast includesParent: typeDef) not ] ])
 							ifTrue: [ ^ typeDef ] ] ] ] ] ].
 	^ nil

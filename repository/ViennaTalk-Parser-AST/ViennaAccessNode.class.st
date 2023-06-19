@@ -11,6 +11,12 @@ ViennaAccessNode class >> pure [
 	^ self with: 'pure'
 ]
 
+{ #category : #private }
+ViennaAccessNode >> boundIdentifiersInto: aSet [
+
+
+]
+
 { #category : #'pretty printing' }
 ViennaAccessNode >> formatWith: aViennaAbstractFormatter [
 

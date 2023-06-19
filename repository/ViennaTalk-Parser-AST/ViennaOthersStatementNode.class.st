@@ -13,6 +13,12 @@ ViennaOthersStatementNode class >> statement: aViennaStatementNode [
 		  yourself
 ]
 
+{ #category : #private }
+ViennaOthersStatementNode >> boundIdentifiersInto: aSet [
+
+	
+]
+
 { #category : #'pretty printing' }
 ViennaOthersStatementNode >> formatWith: aViennaAbstractFormatter [
 

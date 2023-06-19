@@ -5,6 +5,12 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #private }
+ViennaErrorListNode >> boundIdentifiersInto: aSet [
+
+	self do: [ :error | error boundIdentifiersInto: aSet ]
+]
+
 { #category : #'pretty printing' }
 ViennaErrorListNode >> formatWith: aViennaAbstractFormatter [
 
@@ -12,7 +18,7 @@ ViennaErrorListNode >> formatWith: aViennaAbstractFormatter [
 		  string , ' ' , (aViennaAbstractFormatter format: node) ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaErrorListNode >> isViennaErrorListNode [
 
 	^ true

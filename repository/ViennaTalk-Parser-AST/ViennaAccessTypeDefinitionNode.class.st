@@ -26,6 +26,12 @@ ViennaAccessTypeDefinitionNode >> access: aViennaAccessNode [
 	self at: 1 put: aViennaAccessNode
 ]
 
+{ #category : #private }
+ViennaAccessTypeDefinitionNode >> boundIdentifiersInto: aSet [
+
+	self typeDefinition boundIdentifiersInto: aSet
+]
+
 { #category : #accessing }
 ViennaAccessTypeDefinitionNode >> definitionBase [
 

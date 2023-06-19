@@ -8,11 +8,11 @@ Class {
 ViennaUseValueInAllOccurrences >> execute [
 
 	ast module allDescendantsDo: [ :node |
-		((node includesParent: self definitionNode) not and: [
-			 node sameAs: ast ]) ifTrue: [
-			self
-				replaceNode: node
-				with: (ViennaLocalNameNode identifier: self identifier) ] ].
+		((node includesParent: self definitionNode) not and: [ node = ast ])
+			ifTrue: [
+				self
+					replaceNode: node
+					with: (ViennaLocalNameNode identifier: self identifier) ] ].
 	^ nil
 ]
 
@@ -24,7 +24,7 @@ ViennaUseValueInAllOccurrences >> findDefinitionNode [
 			definitionBlock first isViennaValueDefinitionsNode ifTrue: [
 				definitionBlock first do: [ :accessValueDef |
 					accessValueDef second ifNotNil: [ :valueDef |
-						((ast sameAs: valueDef third) and: [
+						(ast = valueDef third and: [
 							 valueDef first isViennaPatternIdentifierNode and: [
 								 (ast includesParent: valueDef) not ] ]) ifTrue: [ ^ valueDef ] ] ] ] ] ].
 	^ nil

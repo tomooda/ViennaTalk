@@ -27,6 +27,12 @@ ViennaModuleNode >> addImportDefinition: aViennaImportDefinitionNode [
 		 node ]) add: aViennaImportDefinitionNode
 ]
 
+{ #category : #private }
+ViennaModuleNode >> boundIdentifiersInto: aSet [
+
+	aSet add: self identifier
+]
+
 { #category : #'accessing-definitions' }
 ViennaModuleNode >> definitionOfLocalName: aString [
 

@@ -310,30 +310,6 @@ TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesFieldListInto [
 	self assert: binds equals: { 'f1'. 'f2' } asSet
 ]
 
-{ #category : #'tests-bound variables-patterns and binds' }
-TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesFieldPatternInto [
-	| node binds |
-	node := ViennaVDMParser new fieldPattern end parse: 'f1 |-> v'.
-	self deny: node isPetit2Failure.
-	self assert: node isViennaFieldPatternNode.
-	binds := Set new.
-	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self assert: binds equals: {'v'} asSet
-]
-
-{ #category : #'tests-bound variables-patterns and binds' }
-TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesFieldPatternListInto [
-
-	| node binds |
-	node := ViennaVDMParser new fieldPatternList end parse:
-		        'f1 |-> v1, f2 |-> v2'.
-	self deny: node isPetit2Failure.
-	self assert: node isViennaFieldPatternListNode.
-	binds := Set new.
-	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self assert: binds equals: { 'v1'. 'v2' } asSet
-]
-
 { #category : #'tests-bound variables-definitions' }
 TViennaVDMBoundVariableCollectorTestCase >> testBoundVariablesFunctionDefinitionInto [
 

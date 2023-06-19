@@ -5,8 +5,20 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #private }
+ViennaDummyNode >> boundIdentifiersInto: aSet [
+
+	
+]
+
 { #category : #'pretty printing' }
 ViennaDummyNode >> formatWith: aViennaAbstractFormatter [
 
 	^ '--dummy--'
+]
+
+{ #category : #accessing }
+ViennaDummyNode >> label [
+
+	^ '--DUMMY--'
 ]

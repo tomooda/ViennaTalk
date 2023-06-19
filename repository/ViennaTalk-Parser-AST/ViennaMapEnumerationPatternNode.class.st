@@ -5,6 +5,12 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #private }
+ViennaMapEnumerationPatternNode >> boundIdentifiersInto: aSet [
+
+	self do: [ :mapletPattern | mapletPattern boundIdentifiersInto: aSet ]
+]
+
 { #category : #'pretty printing' }
 ViennaMapEnumerationPatternNode >> formatWith: aViennaAbstractFormatter [
 

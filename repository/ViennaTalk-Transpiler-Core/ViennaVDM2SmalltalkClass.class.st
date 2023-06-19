@@ -19,7 +19,7 @@ ViennaVDM2SmalltalkClass >> buildEnv: aViennaNode [
 			env := envs at: 'DEFAULT'.
 			aViennaNode do: [ :definitionBlock |
 				definitionBlock definition isViennaStateDefinitionNode ifFalse: [
-					(self boundVariables: definitionBlock) do: [ :ident |
+					definitionBlock boundIdentifiers do: [ :ident |
 						env at: ident put: 'self ' , ident ] ] ] ]
 		ifFalse: [
 			aViennaNode do: [ :moduleNode |
@@ -28,7 +28,7 @@ ViennaVDM2SmalltalkClass >> buildEnv: aViennaNode [
 				envs at: moduleName put: Dictionary new.
 				moduleNode third do: [ :definitionBlock |
 					definitionBlock first isViennaStateDefinitionNode ifFalse: [
-						(self boundVariables: definitionBlock) do: [ :ident |
+						definitionBlock boundIdentifiers do: [ :ident |
 							(envs at: moduleName) at: ident put: 'self ' , ident.
 							(envs at: 'DEFAULT')
 								at: moduleName , '`' , ident
@@ -249,7 +249,7 @@ ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass proto
 								 nextPutAll: patternNode first ].
 						 bindType = #compound ifTrue: [
 							 | tmpVar |
-							 argVars addAll: (self boundVariables: patternNode).
+							 argVars addAll: patternNode boundIdentifiers.
 							 tmpVar := varGenerator value.
 							 tmpVars add: tmpVar.
 							 formalArgs add: tmpVar -> setNode.
@@ -262,7 +262,7 @@ ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass proto
 				 tuplePattern := ViennaTuplePatternNode patternList:
 					                 (ViennaPatternListNode withAll:
 						                  matchPatternNodes).
-				 matchVars := (self boundVariables: tuplePattern) asArray.
+				 matchVars := tuplePattern boundIdentifiers asArray.
 				 stream cr.
 				 matchVars
 					 ifEmpty: [
@@ -675,10 +675,9 @@ ViennaVDM2SmalltalkClass >> flatDocument: aViennaNode env: aDictionary [
 				at: stateDefinition first
 				put: 'self ' , stateDefinition identifier ].
 		definitionBlock definition isViennaTypeDefinitionsNode ifTrue: [
-			typeNames nextPutAll:
-				(self boundVariables: definitionBlock definition) ] ].
+			typeNames nextPutAll: definitionBlock definition boundIdentifiers ] ].
 	typeNames := typeNames contents.
-	instVars := (self boundVariables: aViennaNode)
+	instVars := aViennaNode boundIdentifiers
 		            removeAll: stateVars;
 		            asArray.
 	newClass := self
@@ -687,7 +686,7 @@ ViennaVDM2SmalltalkClass >> flatDocument: aViennaNode env: aDictionary [
 	classes at: nil put: newClass.
 	aViennaNode do: [ :definitionBlock |
 		definitionBlock definition isViennaStateDefinitionNode ifFalse: [
-			(self boundVariables: definitionBlock) do: [ :ident |
+			definitionBlock boundIdentifiers do: [ :ident |
 				env at: ident put: 'self ' , ident ] ] ].
 	self
 		defineMethod:
@@ -1019,12 +1018,12 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 					at: stateDefinition identifier
 					put: 'self ' , stateDefinition identifier ]
 			ifFalse: [
-				(self boundVariables: definitionBlock) do: [ :ident |
+				definitionBlock boundIdentifiers do: [ :ident |
 					env at: ident put: 'self ' , ident ] ].
 		definitionBlock first isViennaTypeDefinitionsNode ifTrue: [
-			typeNames nextPutAll: (self boundVariables: definitionBlock first) ] ].
+			typeNames nextPutAll: definitionBlock first boundIdentifiers ] ].
 	typeNames := typeNames contents.
-	instVars := (self boundVariables: moduleBodyNode)
+	instVars := moduleBodyNode boundIdentifiers
 		            removeAll: stateVars;
 		            asArray.
 	newClass := self
@@ -1269,19 +1268,18 @@ ViennaVDM2SmalltalkClass >> validateClassName: aString [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> valueDefinitions: aViennaNode env: aDictionary [
+
 	| theClass initializer |
 	theClass := classes at: (aViennaNode module ifNotNil: #first).
-	aViennaNode
-		do: [ :node | 
-			initializer := self generate: node env: aDictionary.
-			(self boundVariables: node)
-				do: [ :identifier | 
-					self
-						defineLazyMethodNamed: identifier
-						initializer: initializer , '. ' , identifier
-						in: theClass
-						protocol: 'values'
-						node: node ] ]
+	aViennaNode do: [ :node |
+		initializer := self generate: node env: aDictionary.
+		node boundIdentifiers do: [ :identifier |
+			self
+				defineLazyMethodNamed: identifier
+				initializer: initializer , '. ' , identifier
+				in: theClass
+				protocol: 'values'
+				node: node ] ]
 ]
 
 { #category : #'code generation-interfaces' }

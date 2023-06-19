@@ -14,6 +14,12 @@ ViennaRecordPatternNode class >> name: aViennaNameNode patternList: aViennaPatte
 		  yourself
 ]
 
+{ #category : #private }
+ViennaRecordPatternNode >> boundIdentifiersInto: aSet [
+
+	self patternList boundIdentifiersInto: aSet
+]
+
 { #category : #'pretty printing' }
 ViennaRecordPatternNode >> formatWith: aViennaAbstractFormatter [
 

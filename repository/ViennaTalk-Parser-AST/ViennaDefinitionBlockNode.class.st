@@ -13,6 +13,12 @@ ViennaDefinitionBlockNode class >> definition: aViennaNode [
 		  yourself
 ]
 
+{ #category : #private }
+ViennaDefinitionBlockNode >> boundIdentifiersInto: aSet [
+
+	self definition boundIdentifiersInto: aSet
+]
+
 { #category : #accessing }
 ViennaDefinitionBlockNode >> definition [
 

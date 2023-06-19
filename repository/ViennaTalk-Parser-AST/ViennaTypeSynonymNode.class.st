@@ -48,6 +48,11 @@ ViennaTypeSynonymNode >> asImportDefinitionIn: moduleNode [
 						     rename: nil)))
 ]
 
+{ #category : #private }
+ViennaTypeSynonymNode >> boundIdentifiersInto: aSet [
+	aSet add: self identifier 
+]
+
 { #category : #'pretty printing' }
 ViennaTypeSynonymNode >> formatWith: aViennaAbstractFormatter [
 

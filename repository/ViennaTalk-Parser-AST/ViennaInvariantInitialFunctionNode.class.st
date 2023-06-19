@@ -14,6 +14,12 @@ ViennaInvariantInitialFunctionNode class >> pattern: aViennaPatternNode expressi
 		  yourself
 ]
 
+{ #category : #private }
+ViennaInvariantInitialFunctionNode >> boundIdentifiersInto: aSet [
+
+	
+]
+
 { #category : #accessing }
 ViennaInvariantInitialFunctionNode >> expression [
 

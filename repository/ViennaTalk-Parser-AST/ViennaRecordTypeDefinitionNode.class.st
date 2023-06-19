@@ -42,6 +42,11 @@ ViennaRecordTypeDefinitionNode >> asImportDefinitionIn: moduleNode [
 						     rename: nil)))
 ]
 
+{ #category : #private }
+ViennaRecordTypeDefinitionNode >> boundIdentifiersInto: aSet [
+	aSet add: self identifier 
+]
+
 { #category : #accessing }
 ViennaRecordTypeDefinitionNode >> fieldList [
 

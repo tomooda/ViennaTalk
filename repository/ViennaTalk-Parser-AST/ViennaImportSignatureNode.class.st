@@ -11,6 +11,12 @@ ViennaImportSignatureNode class >> isAbstract [
 	^ self = ViennaImportSignatureNode
 ]
 
+{ #category : #private }
+ViennaImportSignatureNode >> boundIdentifiersInto: aSet [
+
+	self do: [ :import | import boundIdentifiersInto: aSet ]
+]
+
 { #category : #testing }
 ViennaImportSignatureNode >> isViennaImportSignatureNode [
 

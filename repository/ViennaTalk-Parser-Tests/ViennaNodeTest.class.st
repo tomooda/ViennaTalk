@@ -78,20 +78,26 @@ ViennaNodeTest >> testAsGlobalName [
 	self assert: (localName value: 'nothing') asGlobalName equals: nil.
 	self assert: (localName value: 'x1') asGlobalName equals: nil.
 	self assert: (localName value: 'x') asGlobalName equals: nil.
-	self assert: ((localName value: 'T2') asGlobalName sameAs:
-			 (globalName value: 'A' value: 'T2')).
-	self assert: ((localName value: 'v2') asGlobalName sameAs:
-			 (globalName value: 'A' value: 'v2')).
-	self assert: ((localName value: 'exp_f') asGlobalName sameAs:
-			 (globalName value: 'A' value: 'exp_f')).
-	self assert: ((localName value: 'imp_f') asGlobalName sameAs:
-			 (globalName value: 'A' value: 'imp_f')).
+	self
+		assert: (localName value: 'T2') asGlobalName
+		equals: (globalName value: 'A' value: 'T2').
+	self
+		assert: (localName value: 'v2') asGlobalName
+		equals: (globalName value: 'A' value: 'v2').
+	self
+		assert: (localName value: 'exp_f') asGlobalName
+		equals: (globalName value: 'A' value: 'exp_f').
+	self
+		assert: (localName value: 'imp_f') asGlobalName
+		equals: (globalName value: 'A' value: 'imp_f').
 	self assert: (localName value: 's1') asGlobalName equals: nil.
 	self assert: (localName value: 'l') asGlobalName equals: nil.
-	self assert: ((localName value: 'Ti') asGlobalName sameAs:
-			 (globalName value: 'B' value: 'Ti')).
-	self assert: ((localName value: 'opi') asGlobalName sameAs:
-			 (globalName value: 'B' value: 'opi'))
+	self
+		assert: (localName value: 'Ti') asGlobalName
+		equals: (globalName value: 'B' value: 'Ti').
+	self
+		assert: (localName value: 'opi') asGlobalName
+		equals: (globalName value: 'B' value: 'opi')
 ]
 
 { #category : #running }
@@ -102,7 +108,7 @@ ViennaNodeTest >> testCopyFragment [
 		       detectParent: #isViennaExplicitOperationDefinitionNode
 		       ifNone: [ nil ].
 	op2 := op1 copyFragment.
-	self assert: (op1 sameAs: op2).
+	self assert: op1 equals: op2.
 	self deny: op1 identicalTo: op2.
 	self assert: op1 root identicalTo: op2 root
 ]
@@ -115,9 +121,9 @@ ViennaNodeTest >> testCopyWhole [
 		       detectParent: #isViennaExplicitOperationDefinitionNode
 		       ifNone: [ nil ].
 	op2 := op1 copyWhole.
-	self assert: (op1 sameAs: op2).
+	self assert: op1 equals: op2.
 	self deny: op1 identicalTo: op2.
-	self assert: (op1 root sameAs: op2 root).
+	self assert: op1 root equals: op2 root.
 	self deny: op1 root identicalTo: op2 root
 ]
 
@@ -145,6 +151,17 @@ ViennaNodeTest >> testDefinitionOfLocalName [
 		(skip definitionOfLocalName: 'Ti') isViennaTypeImportNode.
 	self assert:
 		(skip definitionOfLocalName: 'opi') isViennaOperationImportNode
+]
+
+{ #category : #running }
+ViennaNodeTest >> testEquals [
+
+	self
+		assert: '1 + 2 = 3' asViennaExpressionAst
+		equals: '1+2=3' asViennaExpressionAst.
+	self
+		deny: '1 + 2 = 3' asViennaExpressionAst
+		equals: '1 + 2 = 4' asViennaExpressionAst
 ]
 
 { #category : #running }
@@ -302,16 +319,4 @@ ViennaNodeTest >> testResolveLocalName [
 	self assert:
 		(skip resolveLocalName: 'opi')
 			isViennaExplicitOperationDefinitionNode
-]
-
-{ #category : #running }
-ViennaNodeTest >> testSameAs [
-	self
-		assert:
-			('1 + 2 = 3' asViennaExpressionAst
-				sameAs: '1+2=3' asViennaExpressionAst).
-	self
-		deny:
-			('1 + 2 = 3' asViennaExpressionAst
-				sameAs: '1 + 2 = 4' asViennaExpressionAst)
 ]

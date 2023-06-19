@@ -5,6 +5,12 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #private }
+ViennaTrapsNode >> boundIdentifiersInto: aSet [
+
+	
+]
+
 { #category : #'pretty printing' }
 ViennaTrapsNode >> formatWith: aViennaAbstractFormatter [
 
@@ -19,7 +25,7 @@ ViennaTrapsNode >> formatWith: aViennaAbstractFormatter [
 		   ifEmpty: [ '' ]) , '}'
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaTrapsNode >> isViennaTrapsNode [
 
 	^ true

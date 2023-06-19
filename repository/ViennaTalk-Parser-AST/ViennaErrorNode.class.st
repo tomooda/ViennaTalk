@@ -15,6 +15,12 @@ ViennaErrorNode class >> identifier: aString expression: aViennaExpressionNode1 
 		  yourself
 ]
 
+{ #category : #private }
+ViennaErrorNode >> boundIdentifiersInto: aSet [
+
+	aSet add: self identifier
+]
+
 { #category : #accessing }
 ViennaErrorNode >> expression1 [
 
@@ -59,7 +65,7 @@ ViennaErrorNode >> identifier: aString [
 	self at: 1 put: aString
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaErrorNode >> isViennaErrorNode [
 
 	^ true

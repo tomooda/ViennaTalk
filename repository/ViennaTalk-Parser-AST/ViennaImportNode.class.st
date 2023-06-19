@@ -11,6 +11,12 @@ ViennaImportNode class >> isAbstract [
 	^ self = ViennaImportNode
 ]
 
+{ #category : #private }
+ViennaImportNode >> boundIdentifiersInto: aSet [
+
+	self rename ifNotNil: [ :rename | aSet value: rename ]
+]
+
 { #category : #accessing }
 ViennaImportNode >> identifier [
 

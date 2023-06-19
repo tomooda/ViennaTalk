@@ -54,6 +54,14 @@ ViennaImplicitFunctionDefinitionNode >> asImportDefinitionIn: moduleNode [
 						     rename: nil)))
 ]
 
+{ #category : #private }
+ViennaImplicitFunctionDefinitionNode >> boundIdentifiersInto: aSet [
+
+	aSet add: self identifier.
+	self pre ifNotNil: [ aSet add: 'pre_' , self identifier ].
+	self post ifNotNil: [ aSet add: 'post_' , self identifier ]
+]
+
 { #category : #'accessing-definitions' }
 ViennaImplicitFunctionDefinitionNode >> definitionOfLocalName: aString [
 

@@ -20,7 +20,7 @@ ViennaUseValue >> findDefinitionNode [
 			definitionBlock first isViennaValueDefinitionsNode ifTrue: [
 				definitionBlock first do: [ :accessValueDef |
 					accessValueDef second ifNotNil: [ :valueDef |
-						((ast sameAs: valueDef third) and: [
+						(ast = valueDef third and: [
 							 valueDef first isViennaPatternIdentifierNode and: [
 								 (ast includesParent: valueDef) not ] ]) ifTrue: [ ^ valueDef ] ] ] ] ] ].
 	^ nil

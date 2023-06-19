@@ -13,6 +13,12 @@ ViennaInitialisationNode class >> invariantInitialFunction: aViennaInvariantInit
 		  yourself
 ]
 
+{ #category : #private }
+ViennaInitialisationNode >> boundIdentifiersInto: aSet [
+
+	
+]
+
 { #category : #'pretty printing' }
 ViennaInitialisationNode >> formatWith: aViennaAbstractFormatter [
 

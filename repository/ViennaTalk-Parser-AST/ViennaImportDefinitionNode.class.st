@@ -14,6 +14,12 @@ ViennaImportDefinitionNode class >> moduleIdentifier: aString importModuleSignat
 		  yourself
 ]
 
+{ #category : #private }
+ViennaImportDefinitionNode >> boundIdentifiersInto: aSet [
+
+	self importModuleSignature boundIdentifiersInto: aSet
+]
+
 { #category : #'pretty printing' }
 ViennaImportDefinitionNode >> formatWith: aViennaAbstractFormatter [
 

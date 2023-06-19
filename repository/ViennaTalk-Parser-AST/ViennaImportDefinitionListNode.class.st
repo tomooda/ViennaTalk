@@ -5,6 +5,13 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #private }
+ViennaImportDefinitionListNode >> boundIdentifiersInto: aSet [
+
+	self do: [ :importDefinition |
+		importDefinition boundIdentifiersInto: aSet ]
+]
+
 { #category : #'pretty printing' }
 ViennaImportDefinitionListNode >> formatWith: aViennaAbstractFormatter [
 

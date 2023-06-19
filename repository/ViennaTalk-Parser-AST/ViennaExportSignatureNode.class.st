@@ -10,3 +10,9 @@ ViennaExportSignatureNode class >> isAbstract [
 
 	^ self = ViennaExportSignatureNode
 ]
+
+{ #category : #private }
+ViennaExportSignatureNode >> boundIdentifiersInto: aSet [
+
+	
+]

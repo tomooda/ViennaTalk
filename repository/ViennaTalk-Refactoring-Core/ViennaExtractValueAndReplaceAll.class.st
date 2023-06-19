@@ -22,7 +22,7 @@ ViennaExtractValueAndReplaceAll >> execute [
 		moduleBody add:
 			(ViennaDefinitionBlockNode definition: valueDefinitions) ].
 	ast module allDescendantsDo: [ :n |
-		(ast sameAs: n) ifTrue: [
+		ast = n ifTrue: [
 			self
 				replaceNode: n
 				with: (ViennaLocalNameNode identifier: self newName) ] ].

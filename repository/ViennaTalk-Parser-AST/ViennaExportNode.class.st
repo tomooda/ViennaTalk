@@ -11,6 +11,12 @@ ViennaExportNode class >> isAbstract [
 	^ self = ViennaExportNode
 ]
 
+{ #category : #private }
+ViennaExportNode >> boundIdentifiersInto: aSet [
+
+	
+]
+
 { #category : #testing }
 ViennaExportNode >> exportsName: aViennaNameNode [
 

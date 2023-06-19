@@ -14,6 +14,12 @@ ViennaMapletNode class >> keyExpression: aViennaExpressionNode1 valueExpression:
 		  yourself
 ]
 
+{ #category : #private }
+ViennaMapletNode >> boundIdentifiersInto: aSet [
+
+	
+]
+
 { #category : #'pretty printing' }
 ViennaMapletNode >> formatWith: aViennaAbstractFormatter [
 
@@ -23,7 +29,7 @@ ViennaMapletNode >> formatWith: aViennaAbstractFormatter [
 		  arg: (aViennaAbstractFormatter format: self valueExpression)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaMapletNode >> isViennaMapletNode [
 
 	^ true

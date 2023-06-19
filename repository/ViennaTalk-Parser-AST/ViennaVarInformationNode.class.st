@@ -15,6 +15,12 @@ ViennaVarInformationNode class >> mode: aString nameList: aViennaNameListNode ty
 		  yourself
 ]
 
+{ #category : #private }
+ViennaVarInformationNode >> boundIdentifiersInto: aSet [
+
+	self nameList do: [ :identifier | aSet add: identifier ]
+]
+
 { #category : #'pretty printing' }
 ViennaVarInformationNode >> formatWith: aViennaAbstractFormatter [
 

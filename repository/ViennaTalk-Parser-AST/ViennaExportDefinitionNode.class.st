@@ -13,6 +13,12 @@ ViennaExportDefinitionNode class >> exportModuleSignature: aViennaExportModuleSi
 		  yourself
 ]
 
+{ #category : #private }
+ViennaExportDefinitionNode >> boundIdentifiersInto: aSet [
+
+	
+]
+
 { #category : #accessing }
 ViennaExportDefinitionNode >> exportModuleSignature [
 

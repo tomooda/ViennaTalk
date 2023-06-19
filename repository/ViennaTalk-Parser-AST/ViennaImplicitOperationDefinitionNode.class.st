@@ -50,6 +50,14 @@ ViennaImplicitOperationDefinitionNode >> asImportDefinitionIn: moduleNode [
 						     rename: nil)))
 ]
 
+{ #category : #private }
+ViennaImplicitOperationDefinitionNode >> boundIdentifiersInto: aSet [
+
+	aSet add: self identifier.
+	self pre ifNotNil: [ aSet add: 'pre_' , self identifier ].
+	self post ifNotNil: [ aSet add: 'post_' , self identifier ]
+]
+
 { #category : #'accessing-definitions' }
 ViennaImplicitOperationDefinitionNode >> definitionOfLocalName: aString [
 
@@ -153,6 +161,30 @@ ViennaImplicitOperationDefinitionNode >> parameterTypes [
 ViennaImplicitOperationDefinitionNode >> parameterTypes: aViennaParameterTypesNode [
 
 	self at: 2 put: aViennaParameterTypesNode
+]
+
+{ #category : #accessing }
+ViennaImplicitOperationDefinitionNode >> post [
+
+	^ self implicitOperationBody post
+]
+
+{ #category : #accessing }
+ViennaImplicitOperationDefinitionNode >> post: aViennaExpressionNode [
+
+	self implicitOperationBody post: aViennaExpressionNode
+]
+
+{ #category : #accessing }
+ViennaImplicitOperationDefinitionNode >> pre [
+
+	^ self implicitOperationBody pre
+]
+
+{ #category : #accessing }
+ViennaImplicitOperationDefinitionNode >> pre: aViennaExpressionNode [
+
+	self implicitOperationBody pre: aViennaExpressionNode
 ]
 
 { #category : #'accessing-definitions' }
