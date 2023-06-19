@@ -1,6 +1,6 @@
 Class {
 	#name : #ViennaTypeBindListNode,
-	#superclass : #ViennaDefinitionComponentNode,
+	#superclass : #ViennaPatternBindNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }

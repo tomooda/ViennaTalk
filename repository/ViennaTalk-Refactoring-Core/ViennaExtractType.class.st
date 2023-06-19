@@ -7,7 +7,7 @@ Class {
 { #category : #operations }
 ViennaExtractType >> check [
 
-	ast isTypeNode ifFalse: [ ^ false ].
+	ast isViennaTypeNode ifFalse: [ ^ false ].
 	ast isViennaNameNode ifTrue: [ ast := ast parent ].
 	^ true
 ]

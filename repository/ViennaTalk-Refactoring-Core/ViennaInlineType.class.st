@@ -8,7 +8,7 @@ Class {
 ViennaInlineType >> check [
 
 	ast ifNil: [ ^ false ].
-	ast isTypeNode ifFalse: [ ^ false ].
+	ast isViennaTypeNode ifFalse: [ ^ false ].
 	ast label isViennaNameNode ifTrue: [ ast := ast parent ].
 	^ ast isViennaTypeNameNode and: [
 		  ast name isViennaLocalNameNode and: [

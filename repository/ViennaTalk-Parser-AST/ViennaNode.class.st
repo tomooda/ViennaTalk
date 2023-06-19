@@ -9,11 +9,6 @@ Class {
 		'end',
 		'annotations'
 	],
-	#classVars : [
-		'ExpressionLabels',
-		'PatternBindLabels',
-		'TypeLabels'
-	],
 	#category : #'ViennaTalk-Parser-AST'
 }
 
@@ -188,31 +183,6 @@ ViennaNode class >> new: anInteger label: aString [
 			  (self new: anInteger)
 				  setLabel: aString;
 				  yourself ]
-]
-
-{ #category : #accessing }
-ViennaNode class >> patternBindLabels [
-
-	^ PatternBindLabels ifNil: [
-		  PatternBindLabels := #( 'BindList' 'FieldPattern' 'FieldPatternList'
-		                          'MapEnumerationPattern'
-		                          'MapMunionPattern' 'MapletPattern'
-		                          'MatchValue' 'MultipleSeqBind'
-		                          'MultipleSetBind' 'MultipleTypeBind'
-		                          'PatternIdentifier' 'PatternList'
-		                          'RecordPattern' 'SeqBind' 'SeqConcPattern'
-		                          'SeqEnumPattern' 'SetBind' 'SetEnumPattern'
-		                          'SetUnionPattern' 'TuplePattern'
-		                          'PatternList' 'TypeBind' 'TypeBindList' )
-			                       asSet ]
-]
-
-{ #category : #accessing }
-ViennaNode class >> typeLabels [
-	^ TypeLabels
-		ifNil:
-			[ TypeLabels := #('BasicType' 'CompositeType' 'InmapType' 'MapType' 'OptionalType' 'PartialFunctionType' 'ProductType' 'QuoteType' 'Seq1Type' 'SeqType' 'Set1Type' 'SetType' 'TotalFunctionType' 'TypeName' 'UnionType' 'UnitType')
-				asSet ]
 ]
 
 { #category : #'instance creation' }
@@ -409,9 +379,9 @@ ViennaNode >> at: anInteger put: anObject [
 
 { #category : #'accessing-definitions' }
 ViennaNode >> bindHolderNode [
-	(parent notNil
-		and: [ self class patternBindLabels includes: self label ])
-		ifTrue: [ ^ parent bindHolderNode ].
+
+	(parent notNil and: [ self isViennaPatternBindNode ]) ifTrue: [
+		^ parent bindHolderNode ].
 	^ self
 ]
 
@@ -638,12 +608,6 @@ ViennaNode >> isStateVariableNameNode [
 ViennaNode >> isTypeNameNode [
 
 	^ false
-]
-
-{ #category : #testing }
-ViennaNode >> isTypeNode [
-
-	^ self class typeLabels includes: self label
 ]
 
 { #category : #testing }
@@ -1870,6 +1834,18 @@ ViennaNode >> isViennaPartialFunctionTypeNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaPatternBindNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaPatternHolderNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaPatternIdentifierNode [
 
 	^ false
@@ -2487,15 +2463,6 @@ ViennaNode >> parent [
 { #category : #accessing }
 ViennaNode >> parent: aViennaNode [
 	parent := aViennaNode
-]
-
-{ #category : #accessing }
-ViennaNode >> parentLabelled: aString ifAbsent: errorBlock [
-	self
-		parentsDo: [ :node | 
-			node label = aString
-				ifTrue: [ ^ node ] ].
-	^ errorBlock value
 ]
 
 { #category : #enumerating }

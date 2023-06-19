@@ -31,18 +31,17 @@ ViennaModuleNode >> addImportDefinition: aViennaImportDefinitionNode [
 ViennaModuleNode >> definitionOfLocalName: aString [
 
 	self moduleBody do: [ :defBlock |
-		defBlock first isViennaStateDefinitionNode
+		defBlock definition isViennaStateDefinitionNode
 			ifTrue: [
 				| state |
-				state := defBlock first.
+				state := defBlock definition.
 				state identifier = aString ifTrue: [ ^ defBlock ].
 				state fieldList do: [ :field |
 					field identifier = aString ifTrue: [ ^ field ] ] ]
 			ifFalse: [
 				defBlock first do: [ :def |
-					| defItem defLabel |
+					| defItem |
 					defItem := def second.
-					defLabel := defItem label.
 					(defItem isViennaTypeSynonymNode: aString) ifTrue: [ ^ defItem ].
 					(defItem isViennaRecordTypeDefinitionNode: aString) ifTrue: [
 						^ defItem ].
