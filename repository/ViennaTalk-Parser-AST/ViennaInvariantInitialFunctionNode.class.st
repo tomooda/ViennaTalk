@@ -38,6 +38,12 @@ ViennaInvariantInitialFunctionNode >> formatWith: aViennaAbstractFormatter [
 ]
 
 { #category : #testing }
+ViennaInvariantInitialFunctionNode >> hasScope [
+
+	^ true
+]
+
+{ #category : #testing }
 ViennaInvariantInitialFunctionNode >> isViennaInvariantInitialFunctionNode [
 
 	^ true

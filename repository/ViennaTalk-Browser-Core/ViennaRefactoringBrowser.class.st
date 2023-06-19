@@ -423,23 +423,21 @@ ViennaRefactoringBrowser class >> viennaToolsMenuOn: aBuilder [
 
 { #category : #operations }
 ViennaRefactoringBrowser >> accept: aStringOrText [
+
 	| newNode newAst copyMap parent oldNode |
 	newNode := self parser
-		parse: aStringOrText asString
-		onError: [ ^ false ].
+		           parse: aStringOrText asString
+		           onError: [ ^ false ].
 	copyMap := IdentityDictionary new.
 	newAst := self specification copyWhole: copyMap.
 	oldNode := copyMap at: self definition ifAbsent: [ ^ false ].
-	oldNode label = newNode label
-		ifFalse: [ ^ false ].
+	oldNode class = newNode class ifFalse: [ ^ false ].
 	parent := oldNode parent.
-	1 to: parent size do: [ :index | 
-		(parent at: index) == oldNode
-			ifTrue: [ parent at: index put: newNode ] ].
-	copyMap keys
-		do: [ :old | 
-			(copyMap at: old) == oldNode
-				ifTrue: [ copyMap at: old put: newNode ] ].
+	1 to: parent size do: [ :index |
+		(parent at: index) == oldNode ifTrue: [
+			parent at: index put: newNode ] ].
+	copyMap keys do: [ :old |
+		(copyMap at: old) == oldNode ifTrue: [ copyMap at: old put: newNode ] ].
 	self model: newAst comment: 'manual edit' with: copyMap.
 	^ newNode
 ]

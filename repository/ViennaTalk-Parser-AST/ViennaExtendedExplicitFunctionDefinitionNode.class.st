@@ -61,6 +61,12 @@ ViennaExtendedExplicitFunctionDefinitionNode >> formatWith: aViennaAbstractForma
 	  , (aViennaAbstractFormatter format: post)
 ]
 
+{ #category : #testing }
+ViennaExtendedExplicitFunctionDefinitionNode >> hasScope [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaExtendedExplicitFunctionDefinitionNode >> identifier [
 

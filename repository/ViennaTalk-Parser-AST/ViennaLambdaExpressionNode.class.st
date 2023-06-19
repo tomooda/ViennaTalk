@@ -50,6 +50,12 @@ ViennaLambdaExpressionNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: expression
 ]
 
+{ #category : #testing }
+ViennaLambdaExpressionNode >> hasScope [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaLambdaExpressionNode >> isViennaLambdaExpressionNode [
 

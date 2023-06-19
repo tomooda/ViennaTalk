@@ -110,6 +110,12 @@ ViennaExplicitFunctionDefinitionNode >> formatWith: aViennaAbstractFormatter [
 			   insertCrIfNeeded: expression) , pre , post , measure
 ]
 
+{ #category : #testing }
+ViennaExplicitFunctionDefinitionNode >> hasScope [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaExplicitFunctionDefinitionNode >> identifier [
 

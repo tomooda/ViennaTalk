@@ -67,6 +67,12 @@ ViennaIndexForLoopNode >> formatWith: aViennaAbstractFormatter [
 				   insertCrIfNeeded: statement)
 ]
 
+{ #category : #testing }
+ViennaIndexForLoopNode >> hasScope [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaIndexForLoopNode >> identifier [
 

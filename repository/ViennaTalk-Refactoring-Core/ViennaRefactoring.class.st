@@ -270,12 +270,6 @@ ViennaRefactoring >> check [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'visiting-scopes' }
-ViennaRefactoring >> enclosingScopeNodeLabels [
-	^ #('Document' 'Module' 'ExplicitFunctionDefinition' 'ImplicitFunctionDefinition' 'ExplicitOperationDefinition' 'ImplicitOperationDefinition' 'CasesExpressionAlternative' 'CasesStatementAlternative' 'LetExpression' 'LetStatement' 'LetBeExpression' 'LetBeStatement' 'SequenceComprehension' 'SetComprehension' 'MapComprehension' 'ForallExpression' 'ExistsExpression' 'Exists1Expression' 'IotaExpression' 'LambdaExpression' 'InvariantInitialFunction' 'SequenceForLoop' 'SetForLoop' 'BlockStatement')
-		asSet
-]
-
 { #category : #'visiting-interface' }
 ViennaRefactoring >> ensureExport: aViennaNode [
 
@@ -322,7 +316,7 @@ ViennaRefactoring >> ensureImport: aViennaNode in: moduleNode [
 			signatures := srcImportSignature asArray asOrderedCollection.
 			srcImportSignature asArray do: [ :srcImport |
 				(importModuleSignature anySatisfy: [ :importSignature |
-					 importSignature label = srcImportSignature label and: [
+					 importSignature class = srcImportSignature class and: [
 						 importSignature anySatisfy: [ :import |
 							 import name = srcImport name ] ] ]) ifTrue: [
 					signatures remove: srcImport ifAbsent: [  ] ] ].
@@ -1060,7 +1054,7 @@ ViennaRefactoring >> match: aViennaNode with: anotherViennaNode bindings: aDicti
 						  true ]
 					  ifNotNil: [ anotherViennaNode sameAs: node ] ]
 			  ifAbsent: [ false ] ].
-	aViennaNode label = anotherViennaNode label ifFalse: [ ^ false ].
+	aViennaNode class = anotherViennaNode class ifFalse: [ ^ false ].
 	aViennaNode size = anotherViennaNode size ifFalse: [ ^ false ].
 	^ (1 to: aViennaNode size) allSatisfy: [ :index |
 		  | node1 node2 |
@@ -1226,13 +1220,8 @@ ViennaRefactoring >> retractImportDefinition: aViennaNode in: moduleNode [
 { #category : #'visiting-scopes' }
 ViennaRefactoring >> scopeOf: aViennaNode [
 
-	| scopingNodeLabels node |
-	scopingNodeLabels := self enclosingScopeNodeLabels.
-	aViennaNode isViennaIndexForLoopNode ifTrue: [ ^ aViennaNode ].
-	node := aViennaNode parent ifNil: [ ^ aViennaNode ].
-	[ scopingNodeLabels includes: node label ] whileFalse: [
-		(node := node parent) ifNil: [ ^ node ] ].
-	^ node
+	aViennaNode scopesDo: [ :node | ^ node ].
+	^ nil
 ]
 
 { #category : #accessing }

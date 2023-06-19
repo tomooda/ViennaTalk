@@ -45,7 +45,13 @@ ViennaMultipleBindQuantifierNode >> expression: aViennaExpressionNode [
 	self at: 2 put: aViennaExpressionNode
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
+ViennaMultipleBindQuantifierNode >> hasScope [
+
+	^ true
+]
+
+{ #category : #testing }
 ViennaMultipleBindQuantifierNode >> isViennaMultipleBindQuantifierNode [
 
 	^ true

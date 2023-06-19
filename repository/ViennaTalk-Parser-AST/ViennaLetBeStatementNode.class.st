@@ -63,6 +63,12 @@ ViennaLetBeStatementNode >> formatWith: aViennaAbstractFormatter [
 ]
 
 { #category : #testing }
+ViennaLetBeStatementNode >> hasScope [
+
+	^ true
+]
+
+{ #category : #testing }
 ViennaLetBeStatementNode >> isViennaLetBeStatementNode [
 
 	^ true

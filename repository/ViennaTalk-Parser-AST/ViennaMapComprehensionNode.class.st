@@ -64,6 +64,12 @@ ViennaMapComprehensionNode >> formatWith: aViennaAbstractFormatter [
 				    insertCrIfNeeded: guard)) , '}'
 ]
 
+{ #category : #testing }
+ViennaMapComprehensionNode >> hasScope [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaMapComprehensionNode >> isViennaMapComprehensionNode [
 

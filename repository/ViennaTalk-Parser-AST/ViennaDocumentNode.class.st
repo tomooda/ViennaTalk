@@ -14,6 +14,12 @@ ViennaDocumentNode >> formatWith: aViennaAbstractFormatter [
 ]
 
 { #category : #testing }
+ViennaDocumentNode >> hasScope [
+
+	^ true
+]
+
+{ #category : #testing }
 ViennaDocumentNode >> isViennaDocumentNode [
 
 	^ true

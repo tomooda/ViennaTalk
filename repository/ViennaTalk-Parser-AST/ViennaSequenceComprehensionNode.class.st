@@ -56,6 +56,12 @@ ViennaSequenceComprehensionNode >> formatWith: aViennaAbstractFormatter [
 ]
 
 { #category : #testing }
+ViennaSequenceComprehensionNode >> hasScope [
+
+	^ true
+]
+
+{ #category : #testing }
 ViennaSequenceComprehensionNode >> isViennaSequenceComprehensionNode [
 
 	^ true

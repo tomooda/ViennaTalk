@@ -82,6 +82,12 @@ ViennaExtendedExplicitOperationDefinitionNode >> formatWith: aViennaAbstractForm
 	^ string
 ]
 
+{ #category : #testing }
+ViennaExtendedExplicitOperationDefinitionNode >> hasScope [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaExtendedExplicitOperationDefinitionNode >> identifier [
 

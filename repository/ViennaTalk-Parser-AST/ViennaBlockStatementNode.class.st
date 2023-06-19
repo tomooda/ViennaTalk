@@ -27,6 +27,12 @@ ViennaBlockStatementNode >> formatWith: aViennaAbstractFormatter [
 ]
 
 { #category : #testing }
+ViennaBlockStatementNode >> hasScope [
+
+	^ true
+]
+
+{ #category : #testing }
 ViennaBlockStatementNode >> isViennaBlockStatementNode [
 
 	^ true

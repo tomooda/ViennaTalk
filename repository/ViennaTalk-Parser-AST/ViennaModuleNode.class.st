@@ -84,6 +84,12 @@ ViennaModuleNode >> formatWith: aViennaAbstractFormatter [
 	  , String cr , 'end ' , identifier
 ]
 
+{ #category : #testing }
+ViennaModuleNode >> hasScope [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaModuleNode >> identifier [
 

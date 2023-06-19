@@ -77,6 +77,12 @@ ViennaImplicitOperationDefinitionNode >> formatWith: aViennaAbstractFormatter [
 	  , implicitOperationBody
 ]
 
+{ #category : #testing }
+ViennaImplicitOperationDefinitionNode >> hasScope [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaImplicitOperationDefinitionNode >> identifier [
 

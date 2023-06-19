@@ -74,6 +74,12 @@ ViennaLetBeExpressionNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: expression
 ]
 
+{ #category : #testing }
+ViennaLetBeExpressionNode >> hasScope [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaLetBeExpressionNode >> isViennaLetBeExpressionNode [
 

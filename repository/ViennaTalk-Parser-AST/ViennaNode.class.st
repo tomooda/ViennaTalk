@@ -3,7 +3,6 @@ Class {
 	#superclass : #Object,
 	#type : #variable,
 	#instVars : [
-		'label',
 		'parent',
 		'start',
 		'end',
@@ -22,167 +21,6 @@ ViennaNode class >> empty [
 ViennaNode class >> isAbstract [
 
 	^ self = ViennaNode
-]
-
-{ #category : #'instance creation' }
-ViennaNode class >> label: aString [
-
-	^ self new: 0 label: aString
-]
-
-{ #category : #'instance creation' }
-ViennaNode class >> label: aString start: anInteger1 end: anInteger2 [
-
-	^ (self new: 0 label: aString)
-		  start: anInteger1 end: anInteger2;
-		  yourself
-]
-
-{ #category : #'instance creation' }
-ViennaNode class >> label: aString start: anInteger1 end: anInteger2 with: aViennaNode [
-
-	^ (self new: 1 label: aString)
-		  at: 1 put: aViennaNode;
-		  start: anInteger1 end: anInteger2;
-		  yourself
-]
-
-{ #category : #'instance creation' }
-ViennaNode class >> label: aString start: anInteger1 end: anInteger2 with: aViennaNode1 with: aViennaNode2 [
-
-	^ (self new: 2 label: aString)
-		  at: 1 put: aViennaNode1;
-		  at: 2 put: aViennaNode2;
-		  start: anInteger1 end: anInteger2;
-		  yourself
-]
-
-{ #category : #'instance creation' }
-ViennaNode class >> label: aString start: anInteger1 end: anInteger2 with: aViennaNode1 with: aViennaNode2 with: aViennaNode3 [
-
-	^ (self new: 3 label: aString)
-		  at: 1 put: aViennaNode1;
-		  at: 2 put: aViennaNode2;
-		  at: 3 put: aViennaNode3;
-		  start: anInteger1 end: anInteger2;
-		  yourself
-]
-
-{ #category : #'instance creation' }
-ViennaNode class >> label: aString start: anInteger1 end: anInteger2 withAll: anArray [
-
-	| node |
-	node := self new: anArray size label: aString.
-	1 to: anArray size do: [ :index |
-	node at: index put: (anArray at: index) ].
-	node start: anInteger1 end: anInteger2.
-	^ node
-]
-
-{ #category : #'instance creation' }
-ViennaNode class >> label: aString with: aViennaNode [
-
-	^ (self new: 1 label: aString)
-		  at: 1 put: aViennaNode;
-		  yourself
-]
-
-{ #category : #'instance creation' }
-ViennaNode class >> label: aString with: aViennaNode1 with: aViennaNode2 [
-
-	^ (self new: 2 label: aString)
-		  at: 1 put: aViennaNode1;
-		  at: 2 put: aViennaNode2;
-		  yourself
-]
-
-{ #category : #'instance creation' }
-ViennaNode class >> label: aString with: aViennaNode1 with: aViennaNode2 with: aViennaNode3 [
-
-	^ (self new: 3 label: aString)
-		  at: 1 put: aViennaNode1;
-		  at: 2 put: aViennaNode2;
-		  at: 3 put: aViennaNode3;
-		  yourself
-]
-
-{ #category : #'instance creation' }
-ViennaNode class >> label: aString with: aViennaNode1 with: aViennaNode2 with: aViennaNode3 with: aViennaNode4 [
-
-	^ (self new: 4 label: aString)
-		  at: 1 put: aViennaNode1;
-		  at: 2 put: aViennaNode2;
-		  at: 3 put: aViennaNode3;
-		  at: 4 put: aViennaNode4;
-		  yourself
-]
-
-{ #category : #'instance creation' }
-ViennaNode class >> label: aString with: aViennaNode1 with: aViennaNode2 with: aViennaNode3 with: aViennaNode4 with: aViennaNode5 [
-
-	^ (self new: 5 label: aString)
-		  at: 1 put: aViennaNode1;
-		  at: 2 put: aViennaNode2;
-		  at: 3 put: aViennaNode3;
-		  at: 4 put: aViennaNode4;
-		  at: 5 put: aViennaNode5;
-		  yourself
-]
-
-{ #category : #'instance creation' }
-ViennaNode class >> label: aString with: aViennaNode1 with: aViennaNode2 with: aViennaNode3 with: aViennaNode4 with: aViennaNode5 with: aViennaNode6 [
-
-	^ (self new: 6 label: aString)
-		  at: 1 put: aViennaNode1;
-		  at: 2 put: aViennaNode2;
-		  at: 3 put: aViennaNode3;
-		  at: 4 put: aViennaNode4;
-		  at: 5 put: aViennaNode5;
-		  at: 6 put: aViennaNode6;
-		  yourself
-]
-
-{ #category : #'instance creation' }
-ViennaNode class >> label: aString with: aViennaNode1 with: aViennaNode2 with: aViennaNode3 with: aViennaNode4 with: aViennaNode5 with: aViennaNode6 with: aViennaNode7 [
-
-	^ (self new: 7 label: aString)
-		  at: 1 put: aViennaNode1;
-		  at: 2 put: aViennaNode2;
-		  at: 3 put: aViennaNode3;
-		  at: 4 put: aViennaNode4;
-		  at: 5 put: aViennaNode5;
-		  at: 6 put: aViennaNode6;
-		  at: 7 put: aViennaNode7;
-		  yourself
-]
-
-{ #category : #'instance creation' }
-ViennaNode class >> label: aString withAll: anArray [
-
-	^ self label: aString withAll: anArray annotations: nil
-]
-
-{ #category : #'instance creation' }
-ViennaNode class >> label: aString withAll: anArray annotations: anArrayOfString [
-
-	| node |
-	node := self new: anArray size label: aString.
-	1 to: anArray size do: [ :index |
-	node at: index put: (anArray at: index) ].
-	node annotations: anArrayOfString.
-	^ node
-]
-
-{ #category : #'instance creation' }
-ViennaNode class >> new: anInteger label: aString [
-
-	^ Smalltalk
-		  at: ('Vienna' , aString , 'Node') asSymbol
-		  ifPresent: [ :class | class new: anInteger ]
-		  ifAbsent: [
-			  (self new: anInteger)
-				  setLabel: aString;
-				  yourself ]
 ]
 
 { #category : #'instance creation' }
@@ -209,7 +47,7 @@ ViennaNode >> add: anObject [
 
 	| array |
 	array := self asArray copyWith: anObject.
-	self become: ((self class new: array size label: self label)
+	self become: ((self class new: array size)
 			 parent: parent;
 			 start: start end: end;
 			 yourself).
@@ -223,7 +61,7 @@ ViennaNode >> addAll: aCollection [
 
 	| array |
 	array := self asArray , aCollection.
-	self become: ((self class new: array size label: self label)
+	self become: ((self class new: array size)
 			 parent: parent;
 			 start: start end: end;
 			 yourself).
@@ -502,6 +340,12 @@ ViennaNode >> fourth [
 { #category : #enumerating }
 ViennaNode >> hasDescendantSuchThat: aBlock [
 	self allDescendantsDo: [ :n | (aBlock value: n) ifTrue: [ ^true ] ].
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> hasScope [
+
 	^ false
 ]
 
@@ -2405,7 +2249,8 @@ ViennaNode >> isViennaWhileLoopNode [
 
 { #category : #accessing }
 ViennaNode >> label [
-	^ label
+
+	^ self subclassResponsibility
 ]
 
 { #category : #accessing }
@@ -2544,7 +2389,7 @@ ViennaNode >> remove: anObject [
 
 	| array |
 	array := self asArray copyWithout: anObject.
-	self become: ((self class new: array size label: self label)
+	self become: ((self class new: array size)
 			 parent: parent;
 			 start: start end: end;
 			 yourself).
@@ -2558,7 +2403,7 @@ ViennaNode >> removeAfterIndex: anInteger [
 
 	| array |
 	array := self asArray copyFrom: 1 to: anInteger - 1.
-	self become: ((self class new: array size label: self label)
+	self become: ((self class new: array size)
 			 parent: parent;
 			 start: start end: end;
 			 yourself).
@@ -2572,7 +2417,7 @@ ViennaNode >> removeAll: aCollection [
 
 	| array |
 	array := self asArray copyWithoutAll: aCollection.
-	self become: ((self class new: array size label: self label)
+	self become: ((self class new: array size)
 			 parent: parent;
 			 start: start end: end;
 			 yourself).
@@ -2646,6 +2491,16 @@ ViennaNode >> sameAs: aViennaNode [
 	^ true
 ]
 
+{ #category : #enumerating }
+ViennaNode >> scopesDo: aBlock [
+
+	| node |
+	node := self.
+	[ node notNil ] whileTrue: [
+		node hasScope ifTrue: [ aBlock cull: node ].
+		node := node parent ]
+]
+
 { #category : #accessing }
 ViennaNode >> second [
 	^ self at: 2
@@ -2657,13 +2512,6 @@ ViennaNode >> select: aBlock [
 	^ Array streamContents: [ :stream |
 		  self do: [ :child |
 			  (aBlock value: child) ifTrue: [ stream nextPut: child ] ] ]
-]
-
-{ #category : #initialization }
-ViennaNode >> setLabel: aString [
-
-	aString = self label ifFalse: [ self error: 'Label mismatch' ].
-	label := aString
 ]
 
 { #category : #accessing }
@@ -2701,23 +2549,6 @@ ViennaNode >> stateVariablesDo: aBlock [
 		node definition isViennaStateDefinitionNode ifTrue: [
 			node definition fieldList do: [ :field |
 				aBlock value: field identifier ] ] ]
-]
-
-{ #category : #printing }
-ViennaNode >> storeOn: aStream [
-
-	aStream
-		nextPutAll: '(';
-		nextPutAll: self class name;
-		nextPutAll: ' label: '.
-	self label storeOn: aStream.
-	aStream nextPutAll: ' withAll: {'.
-	(1 to: self size)
-		do: [ :index | (self at: index) storeOn: aStream ]
-		separatedBy: [ aStream nextPutAll: ' . ' ].
-	aStream nextPutAll: '} annotations: '.
-	annotations storeOn: aStream.
-	aStream nextPutAll: ')'
 ]
 
 { #category : #accessing }

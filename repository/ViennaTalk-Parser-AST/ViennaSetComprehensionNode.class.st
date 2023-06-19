@@ -69,6 +69,12 @@ ViennaSetComprehensionNode >> formatWith: aViennaAbstractFormatter [
 ]
 
 { #category : #testing }
+ViennaSetComprehensionNode >> hasScope [
+
+	^ true
+]
+
+{ #category : #testing }
 ViennaSetComprehensionNode >> isViennaSetComprehensionNode [
 
 	^ true

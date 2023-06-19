@@ -9,7 +9,7 @@ ViennaInlineType >> check [
 
 	ast ifNil: [ ^ false ].
 	ast isViennaTypeNode ifFalse: [ ^ false ].
-	ast label isViennaNameNode ifTrue: [ ast := ast parent ].
+	ast isViennaNameNode ifTrue: [ ast := ast parent ].
 	^ ast isViennaTypeNameNode and: [
 		  ast name isViennaLocalNameNode and: [
 			  (ast definitionOfLocalName: ast name identifier) ifNotNil: [

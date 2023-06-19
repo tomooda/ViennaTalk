@@ -59,6 +59,12 @@ ViennaIotaExpressionNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: expression
 ]
 
+{ #category : #testing }
+ViennaIotaExpressionNode >> hasScope [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaIotaExpressionNode >> isViennaIotaExpressionNode [
 

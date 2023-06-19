@@ -58,6 +58,12 @@ ViennaSequenceForLoopNode >> formatWith: aViennaAbstractFormatter [
 ]
 
 { #category : #testing }
+ViennaSequenceForLoopNode >> hasScope [
+
+	^ true
+]
+
+{ #category : #testing }
 ViennaSequenceForLoopNode >> isViennaSequenceForLoopNode [
 
 	^ true

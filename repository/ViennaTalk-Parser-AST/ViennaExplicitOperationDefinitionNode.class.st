@@ -88,6 +88,12 @@ ViennaExplicitOperationDefinitionNode >> formatWith: aViennaAbstractFormatter [
 			   insertCrIfNeeded: statement) , pre , post
 ]
 
+{ #category : #testing }
+ViennaExplicitOperationDefinitionNode >> hasScope [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaExplicitOperationDefinitionNode >> identifier [
 

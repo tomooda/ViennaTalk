@@ -12,14 +12,14 @@ ViennaWidenLetStatement >> acceptsDefinitionNode: aViennaNode [
 { #category : #operations }
 ViennaWidenLetStatement >> acceptsNode: aViennaNode [
 
-	^ aViennaNode label = 'LetExpressionStatement'
+	^ aViennaNode isViennaLetStatementNode
 ]
 
 { #category : #operations }
 ViennaWidenLetStatement >> check [
 
 	ast ifNil: [ ^ false ].
-	ast label = 'LetExpressionStatement' ifFalse: [ ^ false ].
+	ast isViennaLetStatementNode ifFalse: [ ^ false ].
 	self definitionNode ifNil: [ ^ false ].
 	^ true
 ]

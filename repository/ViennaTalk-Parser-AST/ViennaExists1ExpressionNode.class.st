@@ -60,6 +60,12 @@ ViennaExists1ExpressionNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: expression
 ]
 
+{ #category : #testing }
+ViennaExists1ExpressionNode >> hasScope [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaExists1ExpressionNode >> isViennaExists1ExpressionNode [
 

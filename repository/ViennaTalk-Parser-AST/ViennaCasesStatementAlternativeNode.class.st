@@ -36,6 +36,12 @@ ViennaCasesStatementAlternativeNode >> formatWith: aViennaAbstractFormatter [
 ]
 
 { #category : #testing }
+ViennaCasesStatementAlternativeNode >> hasScope [
+
+	^ true
+]
+
+{ #category : #testing }
 ViennaCasesStatementAlternativeNode >> isViennaCasesStatementAlternativeNode [
 
 	^ true

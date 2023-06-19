@@ -86,6 +86,12 @@ ViennaImplicitFunctionDefinitionNode >> formatWith: aViennaAbstractFormatter [
 	  , (aViennaAbstractFormatter format: post)
 ]
 
+{ #category : #testing }
+ViennaImplicitFunctionDefinitionNode >> hasScope [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaImplicitFunctionDefinitionNode >> identifier [
 
