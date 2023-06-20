@@ -30,6 +30,13 @@ ViennaSetUnionPatternNode >> formatWith: aViennaAbstractFormatter [
 		  arg: (aViennaAbstractFormatter format: self pattern2)
 ]
 
+{ #category : #private }
+ViennaSetUnionPatternNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self pattern1 freeIdentifiersExcept: aSet do: aBlock.
+	self pattern2 freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaSetUnionPatternNode >> isViennaSetUnionPatternNode [
 

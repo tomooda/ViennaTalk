@@ -32,6 +32,13 @@ ViennaSetSeqBindNode >> expression: aViennaExpressionNode [
 	self at: 2 put: aViennaExpressionNode
 ]
 
+{ #category : #private }
+ViennaSetSeqBindNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self pattern freeIdentifiersExcept: aSet do: aBlock.
+	self expression freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaSetSeqBindNode >> isViennaSetSeqBindNode [
 

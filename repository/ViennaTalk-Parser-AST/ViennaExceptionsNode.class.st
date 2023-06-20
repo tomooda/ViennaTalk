@@ -37,6 +37,12 @@ ViennaExceptionsNode >> formatWith: aViennaAbstractFormatter [
 	^ 'errs' , (aViennaAbstractFormatter format: self errorList)
 ]
 
+{ #category : #private }
+ViennaExceptionsNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self errorList freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaExceptionsNode >> isViennaExceptionsNode [
 

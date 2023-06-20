@@ -41,6 +41,12 @@ ViennaAccessOperationDefinitionNode >> formatWith: aViennaAbstractFormatter [
 		  ((aViennaAbstractFormatter formatAll: self) reject: #isEmpty)
 ]
 
+{ #category : #private }
+ViennaAccessOperationDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self operationDefinition freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #accessing }
 ViennaAccessOperationDefinitionNode >> identifier [
 

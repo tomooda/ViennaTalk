@@ -19,6 +19,12 @@ ViennaFunctionTypeArgsNode >> formatWith: aViennaAbstractFormatter [
 		   withAll: (aViennaAbstractFormatter formatAll: self)) , ']'
 ]
 
+{ #category : #private }
+ViennaFunctionTypeArgsNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self do: [ :arg | arg freeIdentifiersExcept: aSet do: aBlock ]
+]
+
 { #category : #testing }
 ViennaFunctionTypeArgsNode >> isViennaFunctionTypeArgsNode [
 

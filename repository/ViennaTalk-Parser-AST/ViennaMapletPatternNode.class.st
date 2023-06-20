@@ -30,6 +30,13 @@ ViennaMapletPatternNode >> formatWith: aViennaAbstractFormatter [
 		  arg: (aViennaAbstractFormatter format: self valuePattern)
 ]
 
+{ #category : #private }
+ViennaMapletPatternNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self keyPattern freeIdentifiersExcept: aSet do: aBlock.
+	self valuePattern freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaMapletPatternNode >> isViennaMapletPatternNode [
 

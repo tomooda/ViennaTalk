@@ -43,6 +43,15 @@ ViennaInvariantInitialFunctionNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: expression
 ]
 
+{ #category : #private }
+ViennaInvariantInitialFunctionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self pattern freeIdentifiersExcept: aSet do: aBlock.
+	self expression
+		freeIdentifiersExcept: aSet , self pattern uniqueBoundIdentifiers
+		do: aBlock
+]
+
 { #category : #testing }
 ViennaInvariantInitialFunctionNode >> hasScope [
 

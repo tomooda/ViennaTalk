@@ -85,6 +85,22 @@ ViennaImplicitOperationDefinitionNode >> formatWith: aViennaAbstractFormatter [
 	  , implicitOperationBody
 ]
 
+{ #category : #private }
+ViennaImplicitOperationDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	| boundIdentifiers |
+	boundIdentifiers := aSet.
+	self type freeIdentifiersExcept: boundIdentifiers do: aBlock.
+	self parameters freeIdentifiersExcept: boundIdentifiers do: aBlock.
+	boundIdentifiers := boundIdentifiers
+	                    , self parameters uniqueBoundIdentifiers
+	                    , self returnIdentifiers.
+	self pre ifNotNil: [ :pre |
+		pre freeIdentifiersExcept: boundIdentifiers do: aBlock ].
+	self post ifNotNil: [ :post |
+		post freeIdentifiersExcept: boundIdentifiers do: aBlock ]
+]
+
 { #category : #testing }
 ViennaImplicitOperationDefinitionNode >> hasScope [
 
@@ -164,6 +180,12 @@ ViennaImplicitOperationDefinitionNode >> parameterTypes: aViennaParameterTypesNo
 ]
 
 { #category : #accessing }
+ViennaImplicitOperationDefinitionNode >> parameters [
+
+	^ self parameterTypes parameters
+]
+
+{ #category : #accessing }
 ViennaImplicitOperationDefinitionNode >> post [
 
 	^ self implicitOperationBody post
@@ -194,9 +216,9 @@ ViennaImplicitOperationDefinitionNode >> resolve [
 ]
 
 { #category : #accessing }
-ViennaImplicitOperationDefinitionNode >> returnIdentifier [
+ViennaImplicitOperationDefinitionNode >> returnIdentifiers [
 
-	^ self identifierTypePairList first
+	^ self identifierTypePairList identifiers
 ]
 
 { #category : #accessing }

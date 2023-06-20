@@ -38,6 +38,12 @@ ViennaUnaryOperatorExpressionNode >> formatWith: aViennaAbstractFormatter [
 	  , (aViennaAbstractFormatter format: self expression)
 ]
 
+{ #category : #private }
+ViennaUnaryOperatorExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self expression freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaUnaryOperatorExpressionNode >> isViennaUnaryOperatorExpressionNode [
 

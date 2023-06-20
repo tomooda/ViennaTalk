@@ -23,6 +23,12 @@ ViennaBindListNode >> formatWith: aViennaAbstractFormatter [
 		  withAll: binds
 ]
 
+{ #category : #private }
+ViennaBindListNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self do: [ :bind | bind freeIdentifiersExcept: aSet do: aBlock ]
+]
+
 { #category : #testing }
 ViennaBindListNode >> isViennaBindListNode [
 

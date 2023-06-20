@@ -11,6 +11,10 @@ ViennaUnitTypeNode >> formatWith: aViennaAbstractFormatter [
 	^ '()'
 ]
 
+{ #category : #private }
+ViennaUnitTypeNode >> freeIdentifiersExcept: aSet do: aBlock [
+]
+
 { #category : #testing }
 ViennaUnitTypeNode >> isViennaUnitTypeNode [
 

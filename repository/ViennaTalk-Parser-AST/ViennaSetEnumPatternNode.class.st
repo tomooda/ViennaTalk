@@ -19,6 +19,12 @@ ViennaSetEnumPatternNode >> formatWith: aViennaAbstractFormatter [
 		   ifEmpty: [ '' ]) , '}'
 ]
 
+{ #category : #private }
+ViennaSetEnumPatternNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self do: [ :pattern | pattern freeIdentifiersExcept: aSet do: aBlock ]
+]
+
 { #category : #testing }
 ViennaSetEnumPatternNode >> isViennaSetEnumPatternNode [
 

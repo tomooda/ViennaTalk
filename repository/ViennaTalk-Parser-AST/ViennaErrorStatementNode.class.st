@@ -11,13 +11,19 @@ ViennaErrorStatementNode >> formatWith: aViennaAbstractFormatter [
 	^ 'error'
 ]
 
+{ #category : #private }
+ViennaErrorStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	
+]
+
 { #category : #testing }
 ViennaErrorStatementNode >> isViennaErrorNode [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaErrorStatementNode >> isViennaErrorStatementNode [
 
 	^ true

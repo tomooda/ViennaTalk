@@ -38,6 +38,12 @@ ViennaFieldReferenceNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: '.' , field
 ]
 
+{ #category : #private }
+ViennaFieldReferenceNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self stateDesignator freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaFieldReferenceNode >> isViennaFieldReferenceNode [
 

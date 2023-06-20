@@ -32,6 +32,13 @@ ViennaAbstractFunctionTypeNode >> argumentType: aViennaTypeNode [
 	self at: 1 put: aViennaTypeNode
 ]
 
+{ #category : #private }
+ViennaAbstractFunctionTypeNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self argumentType freeIdentifiersExcept: aSet do: aBlock.
+	self returnType freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #'as yet unclassified' }
 ViennaAbstractFunctionTypeNode >> isViennaAbstractFunctionTypeNode [
 

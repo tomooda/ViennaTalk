@@ -32,6 +32,13 @@ ViennaPatternTypePairListNode >> formatWith: aViennaAbstractFormatter [
 	^ string
 ]
 
+{ #category : #private }
+ViennaPatternTypePairListNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self do: [ :patternOrType |
+		patternOrType freeIdentifiersExcept: aSet do: aBlock ]
+]
+
 { #category : #testing }
 ViennaPatternTypePairListNode >> isViennaPatternTypePairListNode [
 
@@ -42,6 +49,14 @@ ViennaPatternTypePairListNode >> isViennaPatternTypePairListNode [
 ViennaPatternTypePairListNode >> label [
 
 	^ 'PatternTypePairList'
+]
+
+{ #category : #private }
+ViennaPatternTypePairListNode >> parameters [
+
+	^ (ViennaParametersNode withAll:
+		   ((1 to: self size by: 2) collect: [ :index | self at: index ]))
+		  parent: parent
 ]
 
 { #category : #accessing }

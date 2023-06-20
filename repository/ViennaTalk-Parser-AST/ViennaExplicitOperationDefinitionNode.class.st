@@ -96,6 +96,22 @@ ViennaExplicitOperationDefinitionNode >> formatWith: aViennaAbstractFormatter [
 			   insertCrIfNeeded: statement) , pre , post
 ]
 
+{ #category : #private }
+ViennaExplicitOperationDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	| boundIdentifiers |
+	boundIdentifiers := aSet.
+	self type freeIdentifiersExcept: boundIdentifiers do: aBlock.
+	self parameters freeIdentifiersExcept: boundIdentifiers do: aBlock.
+	boundIdentifiers := boundIdentifiers
+	                    , self parameters uniqueBoundIdentifiers.
+	self statement freeIdentifiersExcept: boundIdentifiers do: aBlock.
+	self pre ifNotNil: [ :pre |
+		pre freeIdentifiersExcept: boundIdentifiers do: aBlock ].
+	self post ifNotNil: [ :post |
+		post freeIdentifiersExcept: boundIdentifiers do: aBlock ]
+]
+
 { #category : #testing }
 ViennaExplicitOperationDefinitionNode >> hasScope [
 
@@ -195,9 +211,9 @@ ViennaExplicitOperationDefinitionNode >> resolve [
 ]
 
 { #category : #accessing }
-ViennaExplicitOperationDefinitionNode >> returnIdentifier [
+ViennaExplicitOperationDefinitionNode >> returnIdentifiers [
 
-	^ 'RESULT'
+	^ #( 'RESULT' )
 ]
 
 { #category : #accessing }
@@ -210,6 +226,19 @@ ViennaExplicitOperationDefinitionNode >> returnType [
 ViennaExplicitOperationDefinitionNode >> shortName [
 
 	^ self identifier
+]
+
+{ #category : #private }
+ViennaExplicitOperationDefinitionNode >> statement [
+
+	^ self operationBody statementOrIsNotYetSpecified
+]
+
+{ #category : #private }
+ViennaExplicitOperationDefinitionNode >> statement: aViennaStatementNode [
+
+	^ self operationBody statementOrIsNotYetSpecified:
+		  aViennaStatementNode
 ]
 
 { #category : #accessing }

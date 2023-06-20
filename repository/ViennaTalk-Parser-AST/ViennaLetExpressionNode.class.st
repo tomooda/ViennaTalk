@@ -78,6 +78,18 @@ ViennaLetExpressionNode >> formatWith: aViennaAbstractFormatter [
 				   insertCrIfNeeded: expression)
 ]
 
+{ #category : #private }
+ViennaLetExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	| boundIdentifiers |
+	boundIdentifiers := aSet
+	                    , self localDefinitionList uniqueBoundIdentifiers.
+	self localDefinitionList
+		freeIdentifiersExcept: boundIdentifiers
+		do: aBlock.
+	self expression freeIdentifiersExcept: boundIdentifiers do: aBlock
+]
+
 { #category : #testing }
 ViennaLetExpressionNode >> hasScope [
 

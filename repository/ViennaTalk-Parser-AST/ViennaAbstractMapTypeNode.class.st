@@ -32,6 +32,13 @@ ViennaAbstractMapTypeNode >> domainType: aViennaTypeNode [
 	self at: 1 put: aViennaTypeNode
 ]
 
+{ #category : #private }
+ViennaAbstractMapTypeNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self domainType freeIdentifiersExcept: aSet do: aBlock.
+	self rangeType freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #'as yet unclassified' }
 ViennaAbstractMapTypeNode >> isViennaAbstractMapTypeNode [
 

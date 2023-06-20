@@ -5,6 +5,13 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #private }
+ViennaDclStatementNode >> boundIdentifiersDo: aBlock [
+
+	self do: [ :assignmentDefinition |
+		assignmentDefinition boundIdentifiersDo: aBlock ]
+]
+
 { #category : #'accessing-definitions' }
 ViennaDclStatementNode >> definitionOfLocalName: aString [
 
@@ -30,6 +37,19 @@ ViennaDclStatementNode >> formatWith: aViennaAbstractFormatter [
 		   ifFalse: [
 			   String space
 			   , (aViennaAbstractFormatter join: ', ' withAll: assigns) ])
+]
+
+{ #category : #private }
+ViennaDclStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	| boundIdentifiers |
+	boundIdentifiers := aSet.
+	self do: [ :assignmentDefinition |
+		boundIdentifiers := boundIdentifiers
+		                    , assignmentDefinition uniqueBoundIdentifiers.
+		assignmentDefinition
+			freeIdentifiersExcept: boundIdentifiers
+			do: aBlock ]
 ]
 
 { #category : #testing }

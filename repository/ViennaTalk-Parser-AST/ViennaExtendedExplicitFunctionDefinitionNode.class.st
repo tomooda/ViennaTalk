@@ -22,7 +22,7 @@ ViennaExtendedExplicitFunctionDefinitionNode class >> identifier: aString typeVa
 { #category : #accessing }
 ViennaExtendedExplicitFunctionDefinitionNode >> argumentType [
 
-	^ self parameterTypes patternTypePairList type
+	^ self parameterTypes type
 ]
 
 { #category : #private }
@@ -67,6 +67,24 @@ ViennaExtendedExplicitFunctionDefinitionNode >> formatWith: aViennaAbstractForma
 		   String cr , 'pre ' , (aViennaAbstractFormatter format: pre) ]
 		   ifNil: [ '' ]) , String cr , 'post '
 	  , (aViennaAbstractFormatter format: post)
+]
+
+{ #category : #private }
+ViennaExtendedExplicitFunctionDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	| boundIdentifiers |
+	boundIdentifiers := aSet
+	                    , self typeVariableList uniqueBoundIdentifiers.
+	self type freeIdentifiersExcept: boundIdentifiers do: aBlock.
+	self parameters freeIdentifiersExcept: boundIdentifiers do: aBlock.
+	boundIdentifiers := boundIdentifiers
+	                    , self parameters uniqueBoundIdentifiers
+	                    , self returnIdentifiers.
+	self expression freeIdentifiersExcept: boundIdentifiers do: aBlock.
+	self pre ifNotNil: [ :pre |
+		pre freeIdentifiersExcept: boundIdentifiers do: aBlock ].
+	self post ifNotNil: [ :post |
+		post freeIdentifiersExcept: boundIdentifiers do: aBlock ]
 ]
 
 { #category : #testing }
@@ -136,6 +154,12 @@ ViennaExtendedExplicitFunctionDefinitionNode >> parameterTypes: aViennaParameter
 ]
 
 { #category : #accessing }
+ViennaExtendedExplicitFunctionDefinitionNode >> parameters [
+
+	^ self parameterTypes parameters
+]
+
+{ #category : #accessing }
 ViennaExtendedExplicitFunctionDefinitionNode >> post [
 
 	^ self at: 7
@@ -160,9 +184,9 @@ ViennaExtendedExplicitFunctionDefinitionNode >> pre: aViennaExpressionNode [
 ]
 
 { #category : #accessing }
-ViennaExtendedExplicitFunctionDefinitionNode >> returnIdentifier [
+ViennaExtendedExplicitFunctionDefinitionNode >> returnIdentifiers [
 
-	^ self identifierTypePairList first
+	^ self identifierTypePairList identifiers
 ]
 
 { #category : #accessing }

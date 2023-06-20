@@ -31,6 +31,19 @@ ViennaIdentifierTypePairListNode >> formatWith: aViennaAbstractFormatter [
 		  ifEmpty: [ '' ]
 ]
 
+{ #category : #private }
+ViennaIdentifierTypePairListNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	2 to: self size by: 2 do: [ :index |
+	(self at: index) freeIdentifiersExcept: aSet do: aBlock ]
+]
+
+{ #category : #private }
+ViennaIdentifierTypePairListNode >> identifiers [
+
+	^ (1 to: self size by: 2) collect: [ :index | self at: index ]
+]
+
 { #category : #testing }
 ViennaIdentifierTypePairListNode >> isViennaIdentifierTypePairListNode [
 
@@ -53,4 +66,10 @@ ViennaIdentifierTypePairListNode >> type [
 			  types size = 1
 				  ifTrue: [ types first ]
 				  ifFalse: [ ViennaProductTypeNode withAll: types ] ]
+]
+
+{ #category : #private }
+ViennaIdentifierTypePairListNode >> types [
+
+	^ (2 to: self size by: 2) collect: [ :index | self at: index ]
 ]

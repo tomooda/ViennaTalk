@@ -34,6 +34,12 @@ ViennaVarInformationNode >> formatWith: aViennaAbstractFormatter [
 	^ mode , ' ' , nameList , type
 ]
 
+{ #category : #private }
+ViennaVarInformationNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self type freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaVarInformationNode >> isViennaVarInformationNode [
 

@@ -352,6 +352,12 @@ ViennaNode >> fourth [
 	^ self at: 4
 ]
 
+{ #category : #private }
+ViennaNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	^ self subclassResponsibility
+]
+
 { #category : #enumerating }
 ViennaNode >> hasDescendantSuchThat: aBlock [
 	self allDescendantsDo: [ :n | (aBlock value: n) ifTrue: [ ^true ] ].
@@ -2590,6 +2596,28 @@ ViennaNode >> uniqueBoundIdentifiersDo: aBlock [
 	| done |
 	done := Set new.
 	self boundIdentifiersDo: [ :identifier |
+		(done includes: identifier) ifFalse: [
+			done add: identifier.
+			aBlock value: identifier ] ]
+]
+
+{ #category : #'accessing-definitions' }
+ViennaNode >> uniqueFreeIdentifiers [
+
+	| identifiers |
+	identifiers := Set new.
+	self
+		freeIdentifiersExcept: Set new
+		do: [ :identifier | identifiers add: identifier ].
+	^ identifiers asArray
+]
+
+{ #category : #enumerating }
+ViennaNode >> uniqueFreeIdentifiersDo: aBlock [
+
+	| done |
+	done := Set new.
+	self freeIdentifiersExcept: Set new do: [ :identifier |
 		(done includes: identifier) ifFalse: [
 			done add: identifier.
 			aBlock value: identifier ] ]

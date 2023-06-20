@@ -65,6 +65,13 @@ ViennaIfExpressionNode >> formatWith: aViennaAbstractFormatter [
 	  , (aViennaAbstractFormatter indentString: 'else' insertCr: default)
 ]
 
+{ #category : #private }
+ViennaIfExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self conditionalExpressionList freeIdentifiersExcept: aSet do: aBlock.
+	self expression freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaIfExpressionNode >> isViennaIfExpressionNode [
 

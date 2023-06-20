@@ -33,6 +33,12 @@ ViennaReturnStatementNode >> formatWith: aViennaAbstractFormatter [
 			   (aViennaAbstractFormatter format: arg) ])
 ]
 
+{ #category : #private }
+ViennaReturnStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self expression freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaReturnStatementNode >> isViennaReturnStatementNode [
 

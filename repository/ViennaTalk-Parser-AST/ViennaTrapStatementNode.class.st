@@ -58,6 +58,16 @@ ViennaTrapStatementNode >> formatWith: aViennaAbstractFormatter [
 ]
 
 { #category : #accessing }
+ViennaTrapStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self statement freeIdentifiersExcept: aSet do: aBlock.
+	self pattern freeIdentifiersExcept: aSet do: aBlock.
+	self handlerStatement
+		freeIdentifiersExcept: aSet , self pattern uniqueBoundIdentifiers
+		do: aBlock
+]
+
+{ #category : #accessing }
 ViennaTrapStatementNode >> handlerStatement [
 
 	^ self at: 2

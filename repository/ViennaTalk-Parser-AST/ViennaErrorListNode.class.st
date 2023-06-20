@@ -18,6 +18,12 @@ ViennaErrorListNode >> formatWith: aViennaAbstractFormatter [
 		  string , ' ' , (aViennaAbstractFormatter format: node) ]
 ]
 
+{ #category : #private }
+ViennaErrorListNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self do: [ :error | error freeIdentifiersExcept: aSet do: aBlock ]
+]
+
 { #category : #testing }
 ViennaErrorListNode >> isViennaErrorListNode [
 

@@ -11,6 +11,10 @@ ViennaUndefinedExpressionNode >> formatWith: aViennaAbstractFormatter [
 	^ 'undefined'
 ]
 
+{ #category : #private }
+ViennaUndefinedExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
+]
+
 { #category : #accessing }
 ViennaUndefinedExpressionNode >> isViennaUndefinedExpressionNode [
 

@@ -40,6 +40,12 @@ ViennaAccessValueDefinitionNode >> formatWith: aViennaAbstractFormatter [
 		  withAll: (aViennaAbstractFormatter formatAll: self)
 ]
 
+{ #category : #private }
+ViennaAccessValueDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self valueDefinition freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaAccessValueDefinitionNode >> isViennaAccessValueDefinitionNode [
 

@@ -25,6 +25,13 @@ ViennaTypeVariableIdentifierNode >> formatWith: aViennaAbstractFormatter [
 	^ aViennaAbstractFormatter format: self identifier
 ]
 
+{ #category : #private }
+ViennaTypeVariableIdentifierNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	(aSet includes: self identifier) ifFalse: [
+		aBlock value: self identifier ]
+]
+
 { #category : #accessing }
 ViennaTypeVariableIdentifierNode >> identifier [
 

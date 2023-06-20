@@ -23,6 +23,12 @@ ViennaSeqConcPatternNode >> formatWith: aViennaAbstractFormatter [
 		  withAll: patterns
 ]
 
+{ #category : #private }
+ViennaSeqConcPatternNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self do: [ :pattern | pattern freeIdentifiersExcept: aSet do: aBlock ]
+]
+
 { #category : #testing }
 ViennaSeqConcPatternNode >> isViennaSeqConcPatternNode [
 

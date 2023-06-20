@@ -60,6 +60,15 @@ ViennaExists1ExpressionNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: expression
 ]
 
+{ #category : #private }
+ViennaExists1ExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self bind freeIdentifiersExcept: aSet do: aBlock.
+	self expression
+		freeIdentifiersExcept: aSet , self bind uniqueBoundIdentifiers
+		do: aBlock
+]
+
 { #category : #testing }
 ViennaExists1ExpressionNode >> hasScope [
 

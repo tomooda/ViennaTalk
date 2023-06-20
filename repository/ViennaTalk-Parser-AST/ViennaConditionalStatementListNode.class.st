@@ -17,6 +17,12 @@ ViennaConditionalStatementListNode >> formatWith: aViennaAbstractFormatter [
 	
 ]
 
+{ #category : #private }
+ViennaConditionalStatementListNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self do: [ :node | node freeIdentifiersExcept: aSet do: aBlock ]
+]
+
 { #category : #testing }
 ViennaConditionalStatementListNode >> isViennaConditionalStatementListNode [
 

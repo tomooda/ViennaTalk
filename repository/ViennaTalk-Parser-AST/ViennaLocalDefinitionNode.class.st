@@ -25,6 +25,14 @@ ViennaLocalDefinitionNode >> formatWith: aViennaAbstractFormatter [
 	^ aViennaAbstractFormatter format: self first
 ]
 
+{ #category : #private }
+ViennaLocalDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self valueDefinitionOrFunctionDefinition
+		freeIdentifiersExcept: aSet
+		do: aBlock
+]
+
 { #category : #testing }
 ViennaLocalDefinitionNode >> isViennaLocalDefinitionNode [
 

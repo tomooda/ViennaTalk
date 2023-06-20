@@ -19,6 +19,10 @@ ViennaQuoteTypeNode >> formatWith: aViennaAbstractFormatter [
 	aViennaAbstractFormatter format: self string
 ]
 
+{ #category : #private }
+ViennaQuoteTypeNode >> freeIdentifiersExcept: aSet do: aBlock [
+]
+
 { #category : #testing }
 ViennaQuoteTypeNode >> isViennaQuoteTypeNode [
 

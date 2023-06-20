@@ -11,6 +11,10 @@ ViennaIdentityStatementNode >> formatWith: aViennaAbstractFormatter [
 	^ 'skip'
 ]
 
+{ #category : #private }
+ViennaIdentityStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
+]
+
 { #category : #testing }
 ViennaIdentityStatementNode >> isViennaIdentityStatementNode [
 

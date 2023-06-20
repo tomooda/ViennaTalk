@@ -23,6 +23,12 @@ ViennaFieldListNode >> formatWith: aViennaAbstractFormatter [
 		  withAll: fields
 ]
 
+{ #category : #private }
+ViennaFieldListNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self do: [ :field | field freeIdentifiersExcept: aSet do: aBlock ]
+]
+
 { #category : #testing }
 ViennaFieldListNode >> isViennaFieldListNode [
 

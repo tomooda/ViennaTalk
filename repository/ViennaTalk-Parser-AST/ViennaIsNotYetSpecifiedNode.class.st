@@ -17,6 +17,12 @@ ViennaIsNotYetSpecifiedNode >> formatWith: aViennaAbstractFormatter [
 	^ 'is not yet specified'
 ]
 
+{ #category : #private }
+ViennaIsNotYetSpecifiedNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	
+]
+
 { #category : #testing }
 ViennaIsNotYetSpecifiedNode >> isViennaIsNotYetSpecifiedNode [
 

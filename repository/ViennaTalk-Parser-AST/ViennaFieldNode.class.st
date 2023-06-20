@@ -46,6 +46,12 @@ ViennaFieldNode >> formatWith: aViennaAbstractFormatter [
 			    ifFalse: [ ' : ' ]) ]) , type
 ]
 
+{ #category : #private }
+ViennaFieldNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self type freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #accessing }
 ViennaFieldNode >> identifier [
 

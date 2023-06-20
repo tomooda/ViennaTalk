@@ -23,6 +23,12 @@ ViennaMapletListNode >> formatWith: aViennaAbstractFormatter [
 		  withAll: maplets
 ]
 
+{ #category : #private }
+ViennaMapletListNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self do: [ :maplet | maplet freeIdentifiersExcept: aSet do: aBlock ]
+]
+
 { #category : #testing }
 ViennaMapletListNode >> isViennaMapletListNode [
 

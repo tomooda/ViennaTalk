@@ -1,12 +1,12 @@
 Class {
-	#name : #ViennaFlatDocumnetNode,
+	#name : #ViennaModularDocumentNode,
 	#superclass : #ViennaDocumentNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }
 
 { #category : #testing }
-ViennaFlatDocumnetNode >> isViennaFlatDocumnetNode [
+ViennaModularDocumentNode >> isViennaModularDocumnetNode [
 
 	^ true
 ]

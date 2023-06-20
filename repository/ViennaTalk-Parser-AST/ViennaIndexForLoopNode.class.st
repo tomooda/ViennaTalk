@@ -67,6 +67,17 @@ ViennaIndexForLoopNode >> formatWith: aViennaAbstractFormatter [
 				   insertCrIfNeeded: statement)
 ]
 
+{ #category : #private }
+ViennaIndexForLoopNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self startExpression freeIdentifiersExcept: aSet do: aBlock.
+	self endExpression freeIdentifiersExcept: aSet do: aBlock.
+	self stepExpression freeIdentifiersExcept: aSet do: aBlock.
+	self statement
+		freeIdentifiersExcept: (aSet copyWith: self identifier)
+		do: aBlock
+]
+
 { #category : #testing }
 ViennaIndexForLoopNode >> hasScope [
 

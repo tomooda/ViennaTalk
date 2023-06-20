@@ -32,6 +32,13 @@ ViennaTixeStatementNode >> formatWith: aViennaAbstractFormatter [
 				  insertCrIfNeeded: statement ]
 ]
 
+{ #category : #private }
+ViennaTixeStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self traps freeIdentifiersExcept: aSet do: aBlock.
+	self statement freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaTixeStatementNode >> isViennaTixeStatementNode [
 

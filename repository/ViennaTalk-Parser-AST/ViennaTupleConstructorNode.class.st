@@ -38,6 +38,12 @@ ViennaTupleConstructorNode >> formatWith: aViennaAbstractFormatter [
 		   ifFalse: [ expressionList ]) , ')'
 ]
 
+{ #category : #private }
+ViennaTupleConstructorNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self expressionList freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaTupleConstructorNode >> isViennaTupleConstructorNode [
 

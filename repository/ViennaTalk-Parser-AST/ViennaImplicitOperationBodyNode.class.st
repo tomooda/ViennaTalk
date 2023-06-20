@@ -64,6 +64,21 @@ ViennaImplicitOperationBodyNode >> formatWith: aViennaAbstractFormatter [
 		   ifNil: [ '' ])
 ]
 
+{ #category : #private }
+ViennaImplicitOperationBodyNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	| boundIdentifiers |
+	self externals ifNotNil: [ :ext |
+		ext freeIdentifiersExcept: aSet do: aBlock ].
+	boundIdentifiers := aSet , self externals uniqueBoundIdentifiers.
+	self pre ifNotNil: [ :pre |
+		pre freeIdentifiersExcept: boundIdentifiers do: aBlock ].
+	self post ifNotNil: [ :post |
+		post freeIdentifiersExcept: boundIdentifiers do: aBlock ].
+	self exceptions ifNotNil: [ :exception |
+		exception freeIdentifiersExcept: boundIdentifiers do: aBlock ]
+]
+
 { #category : #testing }
 ViennaImplicitOperationBodyNode >> isViennaImplicitOperationBodyNode [
 

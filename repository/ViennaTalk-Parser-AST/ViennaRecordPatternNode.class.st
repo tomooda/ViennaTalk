@@ -35,6 +35,13 @@ ViennaRecordPatternNode >> formatWith: aViennaAbstractFormatter [
 			   ifFalse: [ patternList ]) , ')'
 ]
 
+{ #category : #private }
+ViennaRecordPatternNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self name freeIdentifiersExcept: aSet do: aBlock.
+	self patternList freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaRecordPatternNode >> isViennaRecordPatternNode [
 

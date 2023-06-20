@@ -26,6 +26,17 @@ ViennaBlockStatementNode >> formatWith: aViennaAbstractFormatter [
 		   withAll: (aViennaAbstractFormatter formatAll: self)) , ')'
 ]
 
+{ #category : #private }
+ViennaBlockStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	| boundIdentifiers |
+	self ifEmpty: [ ^ self ].
+	boundIdentifiers := aSet , self first uniqueBoundIdentifiers.
+	self first freeIdentifiersExcept: aSet do: aBlock.
+	2 to: self size do: [ :index |
+		(self at: index) freeIdentifiersExcept: boundIdentifiers do: aBlock ]
+]
+
 { #category : #testing }
 ViennaBlockStatementNode >> hasScope [
 

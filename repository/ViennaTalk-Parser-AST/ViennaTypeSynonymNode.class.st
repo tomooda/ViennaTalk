@@ -71,6 +71,12 @@ ViennaTypeSynonymNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: invariant
 ]
 
+{ #category : #private }
+ViennaTypeSynonymNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self type freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #accessing }
 ViennaTypeSynonymNode >> identifier [
 

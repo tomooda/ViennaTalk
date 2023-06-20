@@ -29,6 +29,12 @@ ViennaOthersStatementNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: statement
 ]
 
+{ #category : #private }
+ViennaOthersStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self statement freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaOthersStatementNode >> isViennaOthersStatementNode [
 

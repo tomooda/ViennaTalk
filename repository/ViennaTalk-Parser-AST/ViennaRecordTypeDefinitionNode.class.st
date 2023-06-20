@@ -80,6 +80,14 @@ ViennaRecordTypeDefinitionNode >> formatWith: aViennaAbstractFormatter [
 			   ifFalse: [ String space , fieldList ]) , invariant
 ]
 
+{ #category : #private }
+ViennaRecordTypeDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self fieldList freeIdentifiersExcept: aSet do: aBlock.
+	self inv ifNotNil: [ :inv |
+		inv freeIdentifiersExcept: aSet do: aBlock ]
+]
+
 { #category : #accessing }
 ViennaRecordTypeDefinitionNode >> identifier [
 

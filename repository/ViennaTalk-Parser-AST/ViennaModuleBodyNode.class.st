@@ -21,6 +21,12 @@ ViennaModuleBodyNode >> formatWith: aViennaAbstractFormatter [
 	  (aViennaAbstractFormatter join: String cr withAll: definitionBlocks)
 ]
 
+{ #category : #private }
+ViennaModuleBodyNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self do: [ :node | node freeIdentifiersExcept: aSet do: aBlock ]
+]
+
 { #category : #testing }
 ViennaModuleBodyNode >> isViennaModuleBodyNode [
 

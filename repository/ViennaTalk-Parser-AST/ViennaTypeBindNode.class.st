@@ -23,6 +23,13 @@ ViennaTypeBindNode >> formatWith: aViennaAbstractFormatter [
 		  arg: (aViennaAbstractFormatter format: self type)
 ]
 
+{ #category : #private }
+ViennaTypeBindNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self pattern freeIdentifiersExcept: aSet do: aBlock.
+	self type freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaTypeBindNode >> isViennaTypeBindNode [
 

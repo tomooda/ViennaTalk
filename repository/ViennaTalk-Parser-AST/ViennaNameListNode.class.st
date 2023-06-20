@@ -19,6 +19,12 @@ ViennaNameListNode >> formatWith: aViennaAbstractFormatter [
 	^ aViennaAbstractFormatter join: ', ' withAll: names
 ]
 
+{ #category : #private }
+ViennaNameListNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self do: [ :name | name freeIdentifiersExcept: aSet do: aBlock ]
+]
+
 { #category : #testing }
 ViennaNameListNode >> includesIdentifier: aString [
 

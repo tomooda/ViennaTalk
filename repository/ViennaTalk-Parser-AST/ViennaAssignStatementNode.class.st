@@ -35,6 +35,13 @@ ViennaAssignStatementNode >> formatWith: aViennaAbstractFormatter [
 		  ':= ' , (aViennaAbstractFormatter format: self second)
 ]
 
+{ #category : #private }
+ViennaAssignStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self stateDesignator freeIdentifiersExcept: aSet do: aBlock.
+	self expression freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaAssignStatementNode >> isViennaAssignStatementNode [
 

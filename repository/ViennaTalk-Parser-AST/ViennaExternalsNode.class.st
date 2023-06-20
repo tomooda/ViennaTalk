@@ -20,6 +20,12 @@ ViennaExternalsNode >> formatWith: aViennaAbstractFormatter [
 		  str , ' ' , (aViennaAbstractFormatter format: node) ]
 ]
 
+{ #category : #private }
+ViennaExternalsNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self do: [ :varInfo | varInfo freeIdentifiersExcept: aSet do: aBlock ]
+]
+
 { #category : #testing }
 ViennaExternalsNode >> isViennaExternalsNode [
 

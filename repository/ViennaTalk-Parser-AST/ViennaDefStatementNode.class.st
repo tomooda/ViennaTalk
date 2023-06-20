@@ -52,6 +52,16 @@ ViennaDefStatementNode >> formatWith: aViennaAbstractFormatter [
 				   insertCrIfNeeded: statement)
 ]
 
+{ #category : #private }
+ViennaDefStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self equalDefinitionList freeIdentifiersExcept: aSet do: aBlock.
+	self statement
+		freeIdentifiersExcept:
+		aSet , self equalDefinitionList uniqueBoundIdentifiers
+		do: aBlock
+]
+
 { #category : #testing }
 ViennaDefStatementNode >> isViennaDefStatementNode [
 

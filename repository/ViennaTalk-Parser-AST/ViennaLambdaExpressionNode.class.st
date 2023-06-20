@@ -50,6 +50,16 @@ ViennaLambdaExpressionNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: expression
 ]
 
+{ #category : #private }
+ViennaLambdaExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self typeBindList freeIdentifiersExcept: aSet do: aBlock.
+	self expression
+		freeIdentifiersExcept:
+		aSet , self typeBindList uniqueBoundIdentifiers
+		do: aBlock
+]
+
 { #category : #testing }
 ViennaLambdaExpressionNode >> hasScope [
 

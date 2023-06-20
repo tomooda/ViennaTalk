@@ -19,6 +19,12 @@ ViennaParametersNode >> formatWith: aViennaAbstractFormatter [
 		   withAll: (aViennaAbstractFormatter formatAll: self)) , ')'
 ]
 
+{ #category : #private }
+ViennaParametersNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self do: [ :pattern | pattern freeIdentifiersExcept: aSet do: aBlock ]
+]
+
 { #category : #testing }
 ViennaParametersNode >> isViennaParametersNode [
 

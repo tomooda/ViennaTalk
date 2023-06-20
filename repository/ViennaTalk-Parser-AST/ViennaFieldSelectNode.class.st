@@ -47,6 +47,12 @@ ViennaFieldSelectNode >> formatWith: aViennaAbstractFormatter [
 	^ record , '.' , field
 ]
 
+{ #category : #private }
+ViennaFieldSelectNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self expression freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #'pretty printing' }
 ViennaFieldSelectNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
 

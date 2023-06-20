@@ -68,6 +68,18 @@ ViennaSetComprehensionNode >> formatWith: aViennaAbstractFormatter [
 		   insertCrIfNeeded: guard) , '}'
 ]
 
+{ #category : #private }
+ViennaSetComprehensionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	| newBoundIdentifiers |
+	self bindList freeIdentifiersExcept: aSet do: aBlock.
+	newBoundIdentifiers := aSet , self bindList uniqueBoundIdentifiers.
+	self suchthatExpression
+		freeIdentifiersExcept: newBoundIdentifiers
+		do: aBlock.
+	self expression freeIdentifiersExcept: newBoundIdentifiers do: aBlock
+]
+
 { #category : #testing }
 ViennaSetComprehensionNode >> hasScope [
 

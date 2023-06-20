@@ -17,6 +17,12 @@ ViennaConditionalExpressionListNode >> formatWith: aViennaAbstractFormatter [
 	
 ]
 
+{ #category : #private }
+ViennaConditionalExpressionListNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self do: [ :node | node freeIdentifiersExcept: aSet do: aBlock ]
+]
+
 { #category : #testing }
 ViennaConditionalExpressionListNode >> isViennaConditionalExpressionListNode [
 

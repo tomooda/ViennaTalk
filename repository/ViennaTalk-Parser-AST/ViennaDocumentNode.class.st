@@ -19,6 +19,12 @@ ViennaDocumentNode >> formatWith: aViennaAbstractFormatter [
 		  withAll: (aViennaAbstractFormatter formatAll: self)
 ]
 
+{ #category : #private }
+ViennaDocumentNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self do: [ :node | node freeIdentifiersExcept: aSet do: aBlock ]
+]
+
 { #category : #testing }
 ViennaDocumentNode >> hasScope [
 

@@ -40,6 +40,14 @@ ViennaOperationBodyNode >> formatWith: aViennaAbstractFormatter [
 	^ aViennaAbstractFormatter format: self statementOrIsNotYetSpecified
 ]
 
+{ #category : #private }
+ViennaOperationBodyNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self statementOrIsNotYetSpecified
+		freeIdentifiersExcept: aSet
+		do: aBlock
+]
+
 { #category : #testing }
 ViennaOperationBodyNode >> isViennaOperationBodyNode [
 

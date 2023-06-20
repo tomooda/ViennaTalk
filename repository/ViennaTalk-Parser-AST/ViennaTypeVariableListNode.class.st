@@ -22,6 +22,12 @@ ViennaTypeVariableListNode >> formatWith: aViennaAbstractFormatter [
 		  ifFalse: [ '' ]
 ]
 
+{ #category : #private }
+ViennaTypeVariableListNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	
+]
+
 { #category : #testing }
 ViennaTypeVariableListNode >> isViennaTypeVariableListNode [
 

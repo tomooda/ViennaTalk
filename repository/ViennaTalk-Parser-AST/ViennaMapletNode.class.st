@@ -29,6 +29,13 @@ ViennaMapletNode >> formatWith: aViennaAbstractFormatter [
 		  arg: (aViennaAbstractFormatter format: self valueExpression)
 ]
 
+{ #category : #private }
+ViennaMapletNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self keyExpression freeIdentifiersExcept: aSet do: aBlock.
+	self valueExpression freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaMapletNode >> isViennaMapletNode [
 

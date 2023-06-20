@@ -36,6 +36,12 @@ ViennaSequenceEnumerationNode >> formatWith: aViennaAbstractFormatter [
 	  , ']'
 ]
 
+{ #category : #private }
+ViennaSequenceEnumerationNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self expressionList freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaSequenceEnumerationNode >> isViennaSequenceEnumerationNode [
 

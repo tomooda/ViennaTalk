@@ -26,6 +26,13 @@ ViennaLocalDefinitionListNode >> formatWith: aViennaAbstractFormatter [
 		  aViennaAbstractFormatter join: ', ' withAll: localDefinitions ]
 ]
 
+{ #category : #private }
+ViennaLocalDefinitionListNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self do: [ :localDefinition |
+		localDefinition freeIdentifiersExcept: aSet do: aBlock ]
+]
+
 { #category : #testing }
 ViennaLocalDefinitionListNode >> isViennaLocalDefinitionListNode [
 

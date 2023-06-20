@@ -19,6 +19,12 @@ ViennaTypeNameNode >> formatWith: aViennaAbstractFormatter [
 	^ aViennaAbstractFormatter format: self name
 ]
 
+{ #category : #private }
+ViennaTypeNameNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self name freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaTypeNameNode >> isViennaTypeNameNode [
 

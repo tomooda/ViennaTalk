@@ -20,6 +20,13 @@ ViennaMapEnumerationPatternNode >> formatWith: aViennaAbstractFormatter [
 		   ifEmpty: [ aViennaAbstractFormatter maplet ]) , '}'
 ]
 
+{ #category : #private }
+ViennaMapEnumerationPatternNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self do: [ :mapletPattern |
+		mapletPattern freeIdentifiersExcept: aSet do: aBlock ]
+]
+
 { #category : #testing }
 ViennaMapEnumerationPatternNode >> isViennaMapEnumerationPatternNode [
 

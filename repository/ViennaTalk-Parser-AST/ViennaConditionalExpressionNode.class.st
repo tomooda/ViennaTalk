@@ -54,6 +54,13 @@ ViennaConditionalExpressionNode >> formatWith: aViennaAbstractFormatter [
 			   (aViennaAbstractFormatter format: self second))
 ]
 
+{ #category : #private }
+ViennaConditionalExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self condition freeIdentifiersExcept: aSet do: aBlock.
+	self expression freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaConditionalExpressionNode >> isViennaConditionalExpressionNode [
 

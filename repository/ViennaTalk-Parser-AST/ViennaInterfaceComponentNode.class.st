@@ -11,6 +11,10 @@ ViennaInterfaceComponentNode class >> isAbstract [
 	^ self = ViennaInterfaceComponentNode
 ]
 
+{ #category : #private }
+ViennaInterfaceComponentNode >> freeIdentifiersExcept: aSet do: aBlock [
+]
+
 { #category : #testing }
 ViennaInterfaceComponentNode >> isViennaInterfaceComponentNode [
 

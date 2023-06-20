@@ -41,6 +41,12 @@ ViennaOthersExpressionNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: expression
 ]
 
+{ #category : #private }
+ViennaOthersExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self expression freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaOthersExpressionNode >> isViennaOthersExpressionNode [
 

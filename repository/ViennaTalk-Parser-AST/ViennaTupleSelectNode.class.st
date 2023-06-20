@@ -35,6 +35,12 @@ ViennaTupleSelectNode >> formatWith: aViennaAbstractFormatter [
 	^ aViennaAbstractFormatter print: tuple infix: '.#' arg: int
 ]
 
+{ #category : #private }
+ViennaTupleSelectNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self expression freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #accessing }
 ViennaTupleSelectNode >> index [
 

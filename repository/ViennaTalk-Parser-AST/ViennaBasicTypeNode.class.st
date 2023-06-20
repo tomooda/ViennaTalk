@@ -39,6 +39,10 @@ ViennaBasicTypeNode >> formatWith: aViennaAbstractFormatter [
 	^ type
 ]
 
+{ #category : #private }
+ViennaBasicTypeNode >> freeIdentifiersExcept: aSet do: aBlock [
+]
+
 { #category : #accessing }
 ViennaBasicTypeNode >> identifier [
 

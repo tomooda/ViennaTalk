@@ -45,6 +45,12 @@ ViennaFunctionDefinitionNode >> formatWith: aViennaAbstractFormatter [
 	^ aViennaAbstractFormatter format: self definition
 ]
 
+{ #category : #private }
+ViennaFunctionDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self definition freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #accessing }
 ViennaFunctionDefinitionNode >> identifier [
 

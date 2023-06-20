@@ -30,6 +30,12 @@ ViennaSectionNode >> formatWith: aViennaAbstractFormatter [
 					   ifFalse: [ ';' , String cr ])
 ]
 
+{ #category : #private }
+ViennaSectionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self do: [ :node | node freeIdentifiersExcept: aSet do: aBlock ]
+]
+
 { #category : #testing }
 ViennaSectionNode >> isViennaSectionNode [
 

@@ -17,6 +17,12 @@ ViennaDummyNode >> formatWith: aViennaAbstractFormatter [
 	^ '--dummy--'
 ]
 
+{ #category : #private }
+ViennaDummyNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	
+]
+
 { #category : #accessing }
 ViennaDummyNode >> label [
 

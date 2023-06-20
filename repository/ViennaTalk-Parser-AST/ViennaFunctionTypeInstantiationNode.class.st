@@ -35,6 +35,13 @@ ViennaFunctionTypeInstantiationNode >> formatWith: aViennaAbstractFormatter [
 	^ function , typeArgs
 ]
 
+{ #category : #private }
+ViennaFunctionTypeInstantiationNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self expression freeIdentifiersExcept: aSet do: aBlock.
+	self functionTypeArgs freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #accessing }
 ViennaFunctionTypeInstantiationNode >> functionTypeArgs [
 

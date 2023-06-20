@@ -20,6 +20,13 @@ ViennaPreconditionExpressionNode >> formatWith: aViennaAbstractFormatter [
 		   aViennaAbstractFormatter join: ', ' withAll: expressions ]) , ')'
 ]
 
+{ #category : #private }
+ViennaPreconditionExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self do: [ :expression |
+		expression freeIdentifiersExcept: aSet do: aBlock ]
+]
+
 { #category : #testing }
 ViennaPreconditionExpressionNode >> isViennaPreconditionExpressionNode [
 

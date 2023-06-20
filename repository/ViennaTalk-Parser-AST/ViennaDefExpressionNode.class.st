@@ -70,6 +70,16 @@ ViennaDefExpressionNode >> formatWith: aViennaAbstractFormatter [
 				   insertCrIfNeeded: expression)
 ]
 
+{ #category : #private }
+ViennaDefExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self equalDefinitionList freeIdentifiersExcept: aSet do: aBlock.
+	self expression
+		freeIdentifiersExcept:
+		aSet , self equalDefinitionList uniqueBoundIdentifiers
+		do: aBlock
+]
+
 { #category : #accessing }
 ViennaDefExpressionNode >> isViennaDefExpressionNode [
 

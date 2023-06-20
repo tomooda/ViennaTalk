@@ -37,6 +37,12 @@ ViennaDefinitionBlockNode >> formatWith: aViennaAbstractFormatter [
 	^ (aViennaAbstractFormatter format: self definition) , String cr
 ]
 
+{ #category : #private }
+ViennaDefinitionBlockNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self definition freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaDefinitionBlockNode >> isViennaDefinitionBlockNode [
 

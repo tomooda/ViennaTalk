@@ -52,6 +52,14 @@ ViennaSubsequenceNode >> formatWith: aViennaAbstractFormatter [
 		   , (aViennaAbstractFormatter indentString: endExpression , ')'))
 ]
 
+{ #category : #private }
+ViennaSubsequenceNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self sequenceExpression freeIdentifiersExcept: aSet do: aBlock.
+	self startExpression freeIdentifiersExcept: aSet do: aBlock.
+	self endExpression freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #'pretty printing' }
 ViennaSubsequenceNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
 

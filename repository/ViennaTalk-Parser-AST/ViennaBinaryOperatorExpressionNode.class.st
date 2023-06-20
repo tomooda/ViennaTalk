@@ -53,13 +53,20 @@ ViennaBinaryOperatorExpressionNode >> formatWith: aViennaAbstractFormatter [
 		  arg: (aViennaAbstractFormatter format: self expression2)
 ]
 
+{ #category : #private }
+ViennaBinaryOperatorExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self expression1 freeIdentifiersExcept: aSet do: aBlock.
+	self expression2 freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaBinaryOperatorExpressionNode >> isViennaBinaryOperatorExpression [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaBinaryOperatorExpressionNode >> isViennaBinaryOperatorExpressionNode [
 
 	^ true

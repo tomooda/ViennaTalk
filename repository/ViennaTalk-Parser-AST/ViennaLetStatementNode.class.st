@@ -66,6 +66,18 @@ ViennaLetStatementNode >> formatWith: aViennaAbstractFormatter [
 				   insertCrIfNeeded: statement)
 ]
 
+{ #category : #private }
+ViennaLetStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	| boundIdentifiers |
+	boundIdentifiers := aSet
+	                    , self localDefinitionList uniqueBoundIdentifiers.
+	self localDefinitionList
+		freeIdentifiersExcept: boundIdentifiers
+		do: aBlock.
+	self statement freeIdentifiersExcept: boundIdentifiers do: aBlock
+]
+
 { #category : #testing }
 ViennaLetStatementNode >> hasScope [
 

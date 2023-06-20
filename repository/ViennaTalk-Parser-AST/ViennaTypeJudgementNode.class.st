@@ -43,6 +43,13 @@ ViennaTypeJudgementNode >> formatWith: aViennaAbstractFormatter [
 	  , (aViennaAbstractFormatter indentString: type) , ')'
 ]
 
+{ #category : #private }
+ViennaTypeJudgementNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self expression freeIdentifiersExcept: aSet do: aBlock.
+	self type freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaTypeJudgementNode >> isViennaTypeJudgementNode [
 

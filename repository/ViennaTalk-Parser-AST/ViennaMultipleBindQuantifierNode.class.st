@@ -45,6 +45,15 @@ ViennaMultipleBindQuantifierNode >> expression: aViennaExpressionNode [
 	self at: 2 put: aViennaExpressionNode
 ]
 
+{ #category : #private }
+ViennaMultipleBindQuantifierNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self bindList freeIdentifiersExcept: aSet do: aBlock.
+	self expression
+		freeIdentifiersExcept: aSet , self bindList uniqueBoundIdentifiers
+		do: aBlock
+]
+
 { #category : #testing }
 ViennaMultipleBindQuantifierNode >> hasScope [
 

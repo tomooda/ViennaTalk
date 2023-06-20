@@ -21,6 +21,24 @@ ViennaEqualDefinitionListNode >> formatWith: aViennaAbstractFormatter [
 	  , ';'
 ]
 
+{ #category : #private }
+ViennaEqualDefinitionListNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	| boundIdentifiers |
+	boundIdentifiers := aSet.
+	self do: [ :equalDefinition |
+		equalDefinition patternOrBind
+			freeIdentifiersExcept: boundIdentifiers
+			do: aBlock.
+		boundIdentifiers := boundIdentifiers
+		                    ,
+		                    equalDefinition patternOrBind
+			                    uniqueBoundIdentifiers.
+		equalDefinition expression
+			freeIdentifiersExcept: boundIdentifiers
+			do: aBlock ]
+]
+
 { #category : #testing }
 ViennaEqualDefinitionListNode >> isViennaEqualDefinitionListNode [
 

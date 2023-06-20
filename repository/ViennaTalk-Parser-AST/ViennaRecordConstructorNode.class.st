@@ -41,6 +41,13 @@ ViennaRecordConstructorNode >> formatWith: aViennaAbstractFormatter [
 			   ifFalse: [ expressionList ]) , ')'
 ]
 
+{ #category : #private }
+ViennaRecordConstructorNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self name freeIdentifiersExcept: aSet do: aBlock.
+	self expressionList freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #accessing }
 ViennaRecordConstructorNode >> isViennaRecordConstructorNode [
 

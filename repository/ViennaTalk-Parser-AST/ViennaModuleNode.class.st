@@ -90,6 +90,16 @@ ViennaModuleNode >> formatWith: aViennaAbstractFormatter [
 	  , String cr , 'end ' , identifier
 ]
 
+{ #category : #private }
+ViennaModuleNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self moduleBody
+		freeIdentifiersExcept:
+			aSet , self moduleBody uniqueBoundIdentifiers
+			, self uniqueImportedIdentifiers
+		do: aBlock
+]
+
 { #category : #testing }
 ViennaModuleNode >> hasScope [
 
@@ -106,6 +116,14 @@ ViennaModuleNode >> identifier [
 ViennaModuleNode >> identifier: aString [
 
 	self at: 1 put: aString
+]
+
+{ #category : #accessing }
+ViennaModuleNode >> importsIdentifier: aString [
+
+	self interface boundIdentifiersDo: [ :string |
+		string = aString ifTrue: [ ^ true ] ].
+	^ false
 ]
 
 { #category : #accessing }
@@ -154,4 +172,10 @@ ViennaModuleNode >> moduleBody: aViennaModuleBodyNode [
 ViennaModuleNode >> shortName [
 
 	^ self identifier
+]
+
+{ #category : #accessing }
+ViennaModuleNode >> uniqueImportedIdentifiers [
+
+	^ self interface uniqueBoundIdentifiers
 ]

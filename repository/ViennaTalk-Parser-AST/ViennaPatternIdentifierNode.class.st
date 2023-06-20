@@ -34,6 +34,10 @@ ViennaPatternIdentifierNode >> formatWith: aViennaAbstractFormatter [
 		  aViennaAbstractFormatter format: identifier ]
 ]
 
+{ #category : #private }
+ViennaPatternIdentifierNode >> freeIdentifiersExcept: aSet do: aBlock [
+]
+
 { #category : #accessing }
 ViennaPatternIdentifierNode >> identifier [
 

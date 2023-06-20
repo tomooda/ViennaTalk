@@ -37,6 +37,13 @@ ViennaCallStatementNode >> formatWith: aViennaAbstractFormatter [
 			   ifFalse: [ args ]) , ')'
 ]
 
+{ #category : #private }
+ViennaCallStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self name freeIdentifiersExcept: aSet do: aBlock.
+	self expressionList freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaCallStatementNode >> isViennaCallStatementNode [
 

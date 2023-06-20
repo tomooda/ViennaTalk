@@ -37,6 +37,12 @@ ViennaTokenConstructorNode >> formatWith: aViennaAbstractFormatter [
 		   ifFalse: [ expression ]) , ')'
 ]
 
+{ #category : #private }
+ViennaTokenConstructorNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self expression freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaTokenConstructorNode >> isViennaTokenConstructorNode [
 

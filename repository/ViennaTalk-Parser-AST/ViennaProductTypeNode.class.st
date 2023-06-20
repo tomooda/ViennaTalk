@@ -14,6 +14,12 @@ ViennaProductTypeNode >> formatWith: aViennaAbstractFormatter [
 		  ifEmpty: [ '' ]
 ]
 
+{ #category : #private }
+ViennaProductTypeNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self do: [ :type | type freeIdentifiersExcept: aSet do: aBlock ]
+]
+
 { #category : #testing }
 ViennaProductTypeNode >> isViennaProductTypeNode [
 

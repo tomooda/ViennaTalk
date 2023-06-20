@@ -19,6 +19,10 @@ ViennaSymbolicLiteralNode >> formatWith: aViennaAbstractFormatter [
 	^ self string trim
 ]
 
+{ #category : #private }
+ViennaSymbolicLiteralNode >> freeIdentifiersExcept: aSet do: aBlock [
+]
+
 { #category : #testing }
 ViennaSymbolicLiteralNode >> isViennaSymbolicLiteralNode [
 

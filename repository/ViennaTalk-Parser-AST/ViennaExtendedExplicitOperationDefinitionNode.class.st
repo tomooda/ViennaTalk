@@ -90,6 +90,23 @@ ViennaExtendedExplicitOperationDefinitionNode >> formatWith: aViennaAbstractForm
 	^ string
 ]
 
+{ #category : #private }
+ViennaExtendedExplicitOperationDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	| boundIdentifiers |
+	boundIdentifiers := aSet.
+	self type freeIdentifiersExcept: boundIdentifiers do: aBlock.
+	self parameters freeIdentifiersExcept: boundIdentifiers do: aBlock.
+	boundIdentifiers := boundIdentifiers
+	                    , self parameters uniqueBoundIdentifiers
+	                    , self returnIdentifiers.
+	self statement freeIdentifiersExcept: boundIdentifiers do: aBlock.
+	self pre ifNotNil: [ :pre |
+		pre freeIdentifiersExcept: boundIdentifiers do: aBlock ].
+	self post ifNotNil: [ :post |
+		post freeIdentifiersExcept: boundIdentifiers do: aBlock ]
+]
+
 { #category : #testing }
 ViennaExtendedExplicitOperationDefinitionNode >> hasScope [
 
@@ -163,6 +180,12 @@ ViennaExtendedExplicitOperationDefinitionNode >> parameterTypes: aViennaParamete
 ]
 
 { #category : #accessing }
+ViennaExtendedExplicitOperationDefinitionNode >> parameters [
+
+	^ self parameterTypes parameters
+]
+
+{ #category : #accessing }
 ViennaExtendedExplicitOperationDefinitionNode >> post [
 
 	^ self at: 7
@@ -187,15 +210,21 @@ ViennaExtendedExplicitOperationDefinitionNode >> pre: aViennaExpressionNode [
 ]
 
 { #category : #accessing }
-ViennaExtendedExplicitOperationDefinitionNode >> returnIdentifier [
+ViennaExtendedExplicitOperationDefinitionNode >> returnIdentifiers [
 
-	^ self identifierTypePairList first
+	^ self identifierTypePairList identifiers
 ]
 
 { #category : #accessing }
 ViennaExtendedExplicitOperationDefinitionNode >> returnType [
 
 	^ self identifierTypePairList type
+]
+
+{ #category : #accessing }
+ViennaExtendedExplicitOperationDefinitionNode >> statement [
+
+	^ self operationBody statementOrIsNotYetSpecified
 ]
 
 { #category : #accessing }

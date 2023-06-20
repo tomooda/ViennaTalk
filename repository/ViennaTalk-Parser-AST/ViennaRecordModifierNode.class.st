@@ -40,6 +40,14 @@ ViennaRecordModifierNode >> formatWith: aViennaAbstractFormatter [
 			   ifFalse: [ mapletList ]) , ')'
 ]
 
+{ #category : #accessing }
+ViennaRecordModifierNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self expression freeIdentifiersExcept: aSet do: aBlock.
+	self mapletList do: [ :maplet |
+		maplet valueExpression freeIdentifiersExcept: aSet do: aBlock ]
+]
+
 { #category : #testing }
 ViennaRecordModifierNode >> isViennaRecordModifierNode [
 

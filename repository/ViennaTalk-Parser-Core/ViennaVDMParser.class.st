@@ -2171,8 +2171,8 @@ ViennaVDMParser >> typeSynonym [
 { #category : #'parsers-definitions' }
 ViennaVDMParser >> typeVariable [
 
-	^ super typeVariable =>> [ :start :end :string |
-	  (ViennaTypeVariableNode identifier: string)
+	^ super typeVariable =>> [ :start :end :typeVariableIdentifier |
+	  (ViennaTypeVariableNode variableIdentifier: typeVariableIdentifier)
 		  start: start end: end;
 		  yourself ]
 ]

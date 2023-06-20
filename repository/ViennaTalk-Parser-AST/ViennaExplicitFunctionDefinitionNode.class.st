@@ -118,6 +118,27 @@ ViennaExplicitFunctionDefinitionNode >> formatWith: aViennaAbstractFormatter [
 			   insertCrIfNeeded: expression) , pre , post , measure
 ]
 
+{ #category : #private }
+ViennaExplicitFunctionDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	| boundIdentifiers |
+	boundIdentifiers := aSet
+	                    , self typeVariableList uniqueBoundIdentifiers.
+	self type freeIdentifiersExcept: boundIdentifiers do: aBlock.
+	self parametersList
+		freeIdentifiersExcept: boundIdentifiers
+		do: aBlock.
+	boundIdentifiers := boundIdentifiers
+	                    , self parametersList uniqueBoundIdentifiers.
+	self expression freeIdentifiersExcept: boundIdentifiers do: aBlock.
+	self pre ifNotNil: [ :pre |
+		pre freeIdentifiersExcept: boundIdentifiers do: aBlock ].
+	self post ifNotNil: [ :post |
+		post freeIdentifiersExcept: boundIdentifiers do: aBlock ].
+	self measure ifNotNil: [ :measure |
+		measure freeIdentifiersExcept: boundIdentifiers do: aBlock ]
+]
+
 { #category : #testing }
 ViennaExplicitFunctionDefinitionNode >> hasScope [
 
@@ -217,9 +238,9 @@ ViennaExplicitFunctionDefinitionNode >> resolve [
 ]
 
 { #category : #accessing }
-ViennaExplicitFunctionDefinitionNode >> returnIdentifier [
+ViennaExplicitFunctionDefinitionNode >> returnIdentifiers [
 
-	^ 'RESULT'
+	^ #( 'RESULT' )
 ]
 
 { #category : #accessing }

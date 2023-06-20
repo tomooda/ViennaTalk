@@ -46,6 +46,12 @@ ViennaAccessTypeDefinitionNode >> formatWith: aViennaAbstractFormatter [
 		  withAll: (aViennaAbstractFormatter formatAll: self)
 ]
 
+{ #category : #private }
+ViennaAccessTypeDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self typeDefinition freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaAccessTypeDefinitionNode >> isViennaAccessTypeDefinitionNode [
 

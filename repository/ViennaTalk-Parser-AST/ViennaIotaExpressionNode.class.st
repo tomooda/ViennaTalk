@@ -59,6 +59,15 @@ ViennaIotaExpressionNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: expression
 ]
 
+{ #category : #private }
+ViennaIotaExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self bind freeIdentifiersExcept: aSet do: aBlock.
+	self expression
+		freeIdentifiersExcept: aSet , self bind uniqueBoundIdentifiers
+		do: aBlock
+]
+
 { #category : #testing }
 ViennaIotaExpressionNode >> hasScope [
 

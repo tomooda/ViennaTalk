@@ -28,6 +28,12 @@ ViennaParameterTypesNode >> formatWith: aViennaAbstractFormatter [
 	  , ')'
 ]
 
+{ #category : #accessing }
+ViennaParameterTypesNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self patternTypePairList freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaParameterTypesNode >> isViennaParameterTypesNode [
 
@@ -41,6 +47,12 @@ ViennaParameterTypesNode >> label [
 ]
 
 { #category : #accessing }
+ViennaParameterTypesNode >> parameters [
+
+	^ self patternTypePairList parameters
+]
+
+{ #category : #accessing }
 ViennaParameterTypesNode >> patternTypePairList [
 
 	^ self at: 1
@@ -50,4 +62,10 @@ ViennaParameterTypesNode >> patternTypePairList [
 ViennaParameterTypesNode >> patternTypePairList: aViennaPatternTypePairListNode [
 
 	self at: 1 put: aViennaPatternTypePairListNode
+]
+
+{ #category : #accessing }
+ViennaParameterTypesNode >> type [
+
+	^ self patternTypePairList type
 ]

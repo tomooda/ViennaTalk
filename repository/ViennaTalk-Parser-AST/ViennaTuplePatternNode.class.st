@@ -31,6 +31,12 @@ ViennaTuplePatternNode >> formatWith: aViennaAbstractFormatter [
 		   ifFalse: [ patternList ]) , ')'
 ]
 
+{ #category : #private }
+ViennaTuplePatternNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self patternList freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaTuplePatternNode >> isViennaTuplePatternNode [
 

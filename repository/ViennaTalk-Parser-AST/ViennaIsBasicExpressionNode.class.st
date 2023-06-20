@@ -52,6 +52,12 @@ ViennaIsBasicExpressionNode >> formatWith: aViennaAbstractFormatter [
 			   ifFalse: [ expression ]) , ')'
 ]
 
+{ #category : #private }
+ViennaIsBasicExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self expression freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #accessing }
 ViennaIsBasicExpressionNode >> isViennaIsBasicExpressionNode [
 

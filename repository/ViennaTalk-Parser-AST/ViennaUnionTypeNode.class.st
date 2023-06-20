@@ -14,6 +14,12 @@ ViennaUnionTypeNode >> formatWith: aViennaAbstractFormatter [
 		  ifEmpty: [ '' ]
 ]
 
+{ #category : #private }
+ViennaUnionTypeNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self do: [ :type | type freeIdentifiersExcept: aSet do: aBlock ]
+]
+
 { #category : #testing }
 ViennaUnionTypeNode >> isViennaUnionTypeNode [
 

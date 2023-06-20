@@ -41,6 +41,13 @@ ViennaWhileLoopNode >> formatWith: aViennaAbstractFormatter [
 				   insertCrIfNeeded: statement)
 ]
 
+{ #category : #private }
+ViennaWhileLoopNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self expression freeIdentifiersExcept: aSet do: aBlock.
+	self statement freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaWhileLoopNode >> isViennaWhileLoopNode [
 

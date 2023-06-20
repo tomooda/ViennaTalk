@@ -6,10 +6,10 @@ Class {
 }
 
 { #category : #'instance creation' }
-ViennaTypeVariableNode class >> identifier: aString [
+ViennaTypeVariableNode class >> variableIdentifier: aString [
 
 	^ (self new: 1)
-		  identifier: aString;
+		  variableIdentifier: aString;
 		  yourself
 ]
 
@@ -19,16 +19,22 @@ ViennaTypeVariableNode >> formatWith: aViennaAbstractFormatter [
 	^ aViennaAbstractFormatter format: self identifier
 ]
 
+{ #category : #private }
+ViennaTypeVariableNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self variableIdentifier freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #accessing }
 ViennaTypeVariableNode >> identifier [
 
-	^ self at: 1
+	^ self variableIdentifier identifier
 ]
 
 { #category : #accessing }
 ViennaTypeVariableNode >> identifier: aString [
 
-	self at: 1 put: aString
+	self variableIdentifier identifier: aString
 ]
 
 { #category : #testing }
@@ -47,4 +53,16 @@ ViennaTypeVariableNode >> isViennaTypeVariableNode: aString [
 ViennaTypeVariableNode >> label [
 
 	^ 'TypeVariable'
+]
+
+{ #category : #accessing }
+ViennaTypeVariableNode >> variableIdentifier [
+
+	^ self at: 1
+]
+
+{ #category : #accessing }
+ViennaTypeVariableNode >> variableIdentifier: aString [
+
+	self at: 1 put: aString
 ]

@@ -55,6 +55,18 @@ ViennaSequenceComprehensionNode >> formatWith: aViennaAbstractFormatter [
 				    insertCrIfNeeded: guard)) , ']'
 ]
 
+{ #category : #private }
+ViennaSequenceComprehensionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	| newBoundIdentifiers |
+	self setSeqBind freeIdentifiersExcept: aSet do: aBlock.
+	newBoundIdentifiers := aSet , self setSeqBind uniqueBoundIdentifiers.
+	self suchthatExpression
+		freeIdentifiersExcept: newBoundIdentifiers
+		do: aBlock.
+	self expression freeIdentifiersExcept: newBoundIdentifiers do: aBlock
+]
+
 { #category : #testing }
 ViennaSequenceComprehensionNode >> hasScope [
 

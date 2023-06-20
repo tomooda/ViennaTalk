@@ -32,6 +32,12 @@ ViennaExitStatementNode >> formatWith: aViennaAbstractFormatter [
 		   (aViennaAbstractFormatter format: self expression))
 ]
 
+{ #category : #private }
+ViennaExitStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self expression freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaExitStatementNode >> isViennaExitStatementNode [
 

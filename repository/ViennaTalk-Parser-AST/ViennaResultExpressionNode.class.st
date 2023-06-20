@@ -11,6 +11,10 @@ ViennaResultExpressionNode >> formatWith: aViennaAbstractFormatter [
 	^ 'RESULT'
 ]
 
+{ #category : #private }
+ViennaResultExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
+]
+
 { #category : #testing }
 ViennaResultExpressionNode >> isViennaResultExpressionNode [
 

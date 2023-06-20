@@ -40,6 +40,13 @@ ViennaIsNameExpressionNode >> formatWith: aViennaAbstractFormatter [
 			   ifFalse: [ expression ]) , ')'
 ]
 
+{ #category : #private }
+ViennaIsNameExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self expression freeIdentifiersExcept: aSet do: aBlock.
+	self name freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #accessing }
 ViennaIsNameExpressionNode >> isViennaIsNameExpressionNode [
 

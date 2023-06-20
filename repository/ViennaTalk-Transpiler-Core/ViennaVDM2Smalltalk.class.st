@@ -1025,7 +1025,7 @@ ViennaVDM2Smalltalk >> extendedExplicitFunctionDefinition: aViennaNode env: aDic
 	preNode := aViennaNode pre.
 	postNode := aViennaNode post.
 	argType := aViennaNode argumentType.
-	retValue := aViennaNode returnIdentifier.
+	retValue := aViennaNode returnIdentifiers first.
 	retType := aViennaNode returnType.
 	preNode ifNotNil: [
 		preBody := self generate: preNode env: aDictionary.

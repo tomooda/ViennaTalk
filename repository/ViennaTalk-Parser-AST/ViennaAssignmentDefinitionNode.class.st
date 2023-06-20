@@ -43,6 +43,17 @@ ViennaAssignmentDefinitionNode >> formatWith: aViennaAbstractFormatter [
 		   ifNil: [ '' ])
 ]
 
+{ #category : #private }
+ViennaAssignmentDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	| boundIdentifiers |
+	boundIdentifiers := aSet copyWith: self identifier.
+	self type ifNotNil: [ :type |
+		type freeIdentifiersExcept: boundIdentifiers do: aBlock ].
+	self expression ifNotNil: [ :expression |
+		expression freeIdentifiersExcept: boundIdentifiers do: aBlock ]
+]
+
 { #category : #accessing }
 ViennaAssignmentDefinitionNode >> identifier [
 

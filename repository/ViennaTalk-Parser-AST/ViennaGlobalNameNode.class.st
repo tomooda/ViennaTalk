@@ -26,6 +26,10 @@ ViennaGlobalNameNode >> formatWith: aViennaAbstractFormatter [
 	^ self moduleIdentifier , '`' , self identifier
 ]
 
+{ #category : #private }
+ViennaGlobalNameNode >> freeIdentifiersExcept: aSet do: aBlock [
+]
+
 { #category : #'parsers-symbols' }
 ViennaGlobalNameNode >> identifier [
 

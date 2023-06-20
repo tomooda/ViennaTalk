@@ -39,6 +39,12 @@ ViennaCompositeTypeNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: 'end'
 ]
 
+{ #category : #private }
+ViennaCompositeTypeNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self fieldList freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #accessing }
 ViennaCompositeTypeNode >> identifier [
 

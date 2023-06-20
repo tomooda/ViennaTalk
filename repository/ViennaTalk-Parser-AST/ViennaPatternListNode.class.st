@@ -23,6 +23,12 @@ ViennaPatternListNode >> formatWith: aViennaAbstractFormatter [
 		  withAll: patterns
 ]
 
+{ #category : #private }
+ViennaPatternListNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self do: [ :pattern | pattern freeIdentifiersExcept: aSet do: aBlock ]
+]
+
 { #category : #testing }
 ViennaPatternListNode >> isViennaPatternListNode [
 

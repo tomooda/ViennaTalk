@@ -19,6 +19,13 @@ ViennaCasesStatementAlternativesNode >> formatWith: aViennaAbstractFormatter [
 		  withAll: (aViennaAbstractFormatter formatAll: self)
 ]
 
+{ #category : #private }
+ViennaCasesStatementAlternativesNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self do: [ :alternative |
+		alternative freeIdentifiersExcept: aSet do: aBlock ]
+]
+
 { #category : #testing }
 ViennaCasesStatementAlternativesNode >> isViennaCasesStatementAlternativesNode [
 

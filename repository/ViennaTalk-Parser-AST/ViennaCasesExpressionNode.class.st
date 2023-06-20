@@ -54,6 +54,17 @@ ViennaCasesExpressionNode >> formatWith: aViennaAbstractFormatter [
 		  , String cr , 'end'
 ]
 
+{ #category : #private }
+ViennaCasesExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self expression freeIdentifiersExcept: aSet do: aBlock.
+	self casesExpressionAlternatives
+		freeIdentifiersExcept: aSet
+		do: aBlock.
+	self othersExpression ifNotNil: [ :others |
+		others freeIdentifiersExcept: aSet do: aBlock ]
+]
+
 { #category : #testing }
 ViennaCasesExpressionNode >> isViennaCasesExpressionNode [
 

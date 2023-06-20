@@ -51,6 +51,13 @@ ViennaMapOrSequenceReferenceNode >> formatWith: aViennaAbstractFormatter [
 		  ifFalse: [ ref , '(' , arg , ')' ]
 ]
 
+{ #category : #private }
+ViennaMapOrSequenceReferenceNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self expression freeIdentifiersExcept: aSet do: aBlock.
+	self argumentExpression freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #'pretty printing' }
 ViennaMapOrSequenceReferenceNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
 

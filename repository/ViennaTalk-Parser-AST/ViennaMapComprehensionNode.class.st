@@ -64,6 +64,21 @@ ViennaMapComprehensionNode >> formatWith: aViennaAbstractFormatter [
 				    insertCrIfNeeded: guard)) , '}'
 ]
 
+{ #category : #private }
+ViennaMapComprehensionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	| boundIdentifiers |
+	boundIdentifiers := aSet , self bindList uniqueBoundIdentifiers.
+	self bindList freeIdentifiersExcept: aSet do: aBlock.
+	self suchthatExpression
+		freeIdentifiersExcept: boundIdentifiers
+		do: aBlock.
+	self keyExpression freeIdentifiersExcept: boundIdentifiers do: aBlock.
+	self valueExpression
+		freeIdentifiersExcept: boundIdentifiers
+		do: aBlock
+]
+
 { #category : #testing }
 ViennaMapComprehensionNode >> hasScope [
 

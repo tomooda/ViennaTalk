@@ -53,6 +53,13 @@ ViennaErrorNode >> formatWith: aViennaAbstractFormatter [
 	  , (aViennaAbstractFormatter format: self expression2)
 ]
 
+{ #category : #private }
+ViennaErrorNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self expression1 freeIdentifiersExcept: aSet do: aBlock.
+	self expression2 freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #accessing }
 ViennaErrorNode >> identifier [
 

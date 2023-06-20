@@ -20,6 +20,13 @@ ViennaMultipleAssignStatementNode >> formatWith: aViennaAbstractFormatter [
 		   aViennaAbstractFormatter join: '; ' withAll: statements ]) , ')'
 ]
 
+{ #category : #private }
+ViennaMultipleAssignStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self do: [ :assignmentStatement |
+		assignmentStatement freeIdentifiersExcept: aSet do: aBlock ]
+]
+
 { #category : #testing }
 ViennaMultipleAssignStatementNode >> isViennaMultipleAssignStatementNode [
 

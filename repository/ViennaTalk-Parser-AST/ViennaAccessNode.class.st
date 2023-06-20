@@ -25,6 +25,12 @@ ViennaAccessNode >> formatWith: aViennaAbstractFormatter [
 		  withAll: (aViennaAbstractFormatter formatAll: self)
 ]
 
+{ #category : #private }
+ViennaAccessNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	
+]
+
 { #category : #testing }
 ViennaAccessNode >> isViennaAccessNode [
 

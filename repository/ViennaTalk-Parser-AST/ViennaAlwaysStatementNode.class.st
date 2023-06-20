@@ -58,6 +58,13 @@ ViennaAlwaysStatementNode >> formatWith: aViennaAbstractFormatter [
 				  insertCrIfNeeded: statement ]
 ]
 
+{ #category : #private }
+ViennaAlwaysStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self bodyStatement freeIdentifiersExcept: aSet do: aBlock.
+	self entailingStatement freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaAlwaysStatementNode >> isViennaAlwaysStatementNode [
 

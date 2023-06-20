@@ -19,6 +19,12 @@ ViennaSeqEnumPatternNode >> formatWith: aViennaAbstractFormatter [
 		   ifEmpty: [ '' ]) , ']'
 ]
 
+{ #category : #private }
+ViennaSeqEnumPatternNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self do: [ :pattern | pattern freeIdentifiersExcept: aSet do: aBlock ]
+]
+
 { #category : #testing }
 ViennaSeqEnumPatternNode >> isViennaSeqEnumPatternNode [
 

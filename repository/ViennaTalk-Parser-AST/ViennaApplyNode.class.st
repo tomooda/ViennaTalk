@@ -58,6 +58,13 @@ ViennaApplyNode >> formatWith: aViennaAbstractFormatter [
 			   ifFalse: [ args ]) , ')'
 ]
 
+{ #category : #private }
+ViennaApplyNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self expression freeIdentifiersExcept: aSet do: aBlock.
+	self argumentExpressionList freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #accessing }
 ViennaApplyNode >> function [
 

@@ -19,6 +19,12 @@ ViennaUnaryTypeConstructorNode class >> type: aViennaTypeNode [
 		  yourself
 ]
 
+{ #category : #private }
+ViennaUnaryTypeConstructorNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self type freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #'as yet unclassified' }
 ViennaUnaryTypeConstructorNode >> isViennaUnaryTypeConstructorNode [
 

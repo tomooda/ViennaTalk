@@ -15,6 +15,12 @@ ViennaMapEnumerationNode >> formatWith: aViennaAbstractFormatter [
 		   ifEmpty: [ aViennaAbstractFormatter maplet ]) , '}'
 ]
 
+{ #category : #private }
+ViennaMapEnumerationNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self do: [ :maplet | maplet freeIdentifiersExcept: aSet do: aBlock ]
+]
+
 { #category : #accessing }
 ViennaMapEnumerationNode >> isViennaMapEnumerationNode [
 

@@ -20,6 +20,13 @@ ViennaNondeterministicStatementNode >> formatWith: aViennaAbstractFormatter [
 		   aViennaAbstractFormatter join: ', ' withAll: statements ]) , ')'
 ]
 
+{ #category : #private }
+ViennaNondeterministicStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self do: [ :statement |
+		statement freeIdentifiersExcept: aSet do: aBlock ]
+]
+
 { #category : #testing }
 ViennaNondeterministicStatementNode >> isViennaNondeterministicStatementNode [
 

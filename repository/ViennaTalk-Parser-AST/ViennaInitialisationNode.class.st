@@ -26,6 +26,12 @@ ViennaInitialisationNode >> formatWith: aViennaAbstractFormatter [
 	  , (aViennaAbstractFormatter format: self invariantInitialFunction)
 ]
 
+{ #category : #private }
+ViennaInitialisationNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self invariantInitialFunction freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #accessing }
 ViennaInitialisationNode >> invariantInitialFunction [
 

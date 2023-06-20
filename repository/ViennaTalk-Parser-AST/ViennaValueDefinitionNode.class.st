@@ -84,6 +84,14 @@ ViennaValueDefinitionNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: expression
 ]
 
+{ #category : #private }
+ViennaValueDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self pattern freeIdentifiersExcept: aSet do: aBlock.
+	self type freeIdentifiersExcept: aSet do: aBlock.
+	self expression freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaValueDefinitionNode >> isViennaExportableTopLevelDefinitionNode [
 

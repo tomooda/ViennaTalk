@@ -14,6 +14,13 @@ ViennaInterfaceNode class >> importDefinitionList: aViennaImportDefinitionListNo
 		  yourself
 ]
 
+{ #category : #private }
+ViennaInterfaceNode >> boundIdentifiersDo: aBlock [
+
+	self importDefinitionList ifNotNil: [ :importDefinitionList |
+		importDefinitionList boundIdentifiersDo: aBlock ]
+]
+
 { #category : #accessing }
 ViennaInterfaceNode >> exportDefinition [
 

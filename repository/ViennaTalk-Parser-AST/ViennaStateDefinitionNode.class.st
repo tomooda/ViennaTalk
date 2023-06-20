@@ -59,6 +59,16 @@ ViennaStateDefinitionNode >> formatWith: aViennaAbstractFormatter [
 	  , invariant , initialisation , String cr , 'end'
 ]
 
+{ #category : #private }
+ViennaStateDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self fieldList freeIdentifiersExcept: aSet do: aBlock.
+	self inv ifNotNil: [ :inv |
+		inv freeIdentifiersExcept: aSet do: aBlock ].
+	self init ifNotNil: [ :init |
+		init freeIdentifiersExcept: aSet do: aBlock ]
+]
+
 { #category : #accessing }
 ViennaStateDefinitionNode >> identifier [
 

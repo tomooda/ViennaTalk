@@ -94,6 +94,23 @@ ViennaImplicitFunctionDefinitionNode >> formatWith: aViennaAbstractFormatter [
 	  , (aViennaAbstractFormatter format: post)
 ]
 
+{ #category : #private }
+ViennaImplicitFunctionDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	| boundIdentifiers |
+	boundIdentifiers := aSet
+	                    , self typeVariableList uniqueBoundIdentifiers.
+	self type freeIdentifiersExcept: boundIdentifiers do: aBlock.
+	self parameters freeIdentifiersExcept: boundIdentifiers do: aBlock.
+	boundIdentifiers := boundIdentifiers
+	                    , self parameters uniqueBoundIdentifiers
+	                    , self returnIdentifiers.
+	self pre ifNotNil: [ :pre |
+		pre freeIdentifiersExcept: boundIdentifiers do: aBlock ].
+	self post ifNotNil: [ :post |
+		post freeIdentifiersExcept: boundIdentifiers do: aBlock ]
+]
+
 { #category : #testing }
 ViennaImplicitFunctionDefinitionNode >> hasScope [
 
@@ -161,6 +178,12 @@ ViennaImplicitFunctionDefinitionNode >> parameterTypes: aViennaParameterTypesNod
 ]
 
 { #category : #accessing }
+ViennaImplicitFunctionDefinitionNode >> parameters [
+
+	^ self parameterTypes parameters
+]
+
+{ #category : #accessing }
 ViennaImplicitFunctionDefinitionNode >> post [
 
 	^ self at: 6
@@ -191,9 +214,9 @@ ViennaImplicitFunctionDefinitionNode >> resolve [
 ]
 
 { #category : #accessing }
-ViennaImplicitFunctionDefinitionNode >> returnIdentifier [
+ViennaImplicitFunctionDefinitionNode >> returnIdentifiers [
 
-	^ self identifierTypePairList first
+	^ self identifierTypePairList identifiers
 ]
 
 { #category : #accessing }

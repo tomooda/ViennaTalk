@@ -53,6 +53,16 @@ ViennaCasesExpressionAlternativeNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: expression
 ]
 
+{ #category : #private }
+ViennaCasesExpressionAlternativeNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self patternList freeIdentifiersExcept: aSet do: aBlock.
+	self expression
+		freeIdentifiersExcept:
+		aSet , self patternList uniqueBoundIdentifiers
+		do: aBlock
+]
+
 { #category : #testing }
 ViennaCasesExpressionAlternativeNode >> hasScope [
 

@@ -43,6 +43,16 @@ ViennaEqualDefinitionNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: expression
 ]
 
+{ #category : #private }
+ViennaEqualDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self patternOrBind freeIdentifiersExcept: aSet do: aBlock.
+	self expression
+		freeIdentifiersExcept:
+		aSet , self patternOrBind uniqueBoundIdentifiers
+		do: aBlock
+]
+
 { #category : #testing }
 ViennaEqualDefinitionNode >> isViennaEqualDefinitionNode [
 

@@ -41,6 +41,12 @@ ViennaMatchValueNode >> formatWith: aViennaAbstractFormatter [
 		  ifFalse: [ '(' , value , ')' ]
 ]
 
+{ #category : #private }
+ViennaMatchValueNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self expression freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaMatchValueNode >> isViennaMatchValueNode [
 
