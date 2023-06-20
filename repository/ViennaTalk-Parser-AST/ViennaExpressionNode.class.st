@@ -12,7 +12,9 @@ ViennaExpressionNode class >> isAbstract [
 ]
 
 { #category : #private }
-ViennaExpressionNode >> boundIdentifiersInto: aSet [
+ViennaExpressionNode >> boundIdentifiersDo: aBlock [
+
+	
 ]
 
 { #category : #testing }

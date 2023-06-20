@@ -1,6 +1,6 @@
 Class {
 	#name : #ViennaExportNode,
-	#superclass : #ViennaInterfaceComponentNode,
+	#superclass : #ViennaExportComponentNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }
@@ -12,19 +12,7 @@ ViennaExportNode class >> isAbstract [
 ]
 
 { #category : #private }
-ViennaExportNode >> boundIdentifiersInto: aSet [
+ViennaExportNode >> boundIdentifiersDo: aBlock [
 
 	
-]
-
-{ #category : #testing }
-ViennaExportNode >> exportsName: aViennaNameNode [
-
-	^ self subclassResponsibility
-]
-
-{ #category : #enumerating }
-ViennaExportNode >> namesDo: aBlock [
-
-	^ self subclassResponsibility
 ]

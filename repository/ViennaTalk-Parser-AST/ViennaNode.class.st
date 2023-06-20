@@ -232,17 +232,8 @@ ViennaNode >> bindHolderNode [
 	^ self
 ]
 
-{ #category : #'accessing-definitions' }
-ViennaNode >> boundIdentifiers [
-
-	| identifiers |
-	identifiers := Set new.
-	self boundIdentifiersInto: identifiers.
-	^ identifiers
-]
-
 { #category : #private }
-ViennaNode >> boundIdentifiersInto: aSet [
+ViennaNode >> boundIdentifiersDo: aBlock [
 
 	^ self subclassResponsibility
 ]
@@ -379,21 +370,6 @@ ViennaNode >> hash [
 	^ self
 		  inject: self class hash
 		  into: [ :hash :node | hash bitXor: node hash ]
-]
-
-{ #category : #'accessing-definitions' }
-ViennaNode >> identifiers [
-
-	| identifiers |
-	identifiers := Set new.
-	self identifiersDo: [ :identifier | identifiers add: identifier ].
-	^ identifiers
-]
-
-{ #category : #enumerating }
-ViennaNode >> identifiersDo: aBlock [
-
-	
 ]
 
 { #category : #'pretty printing' }
@@ -2471,14 +2447,15 @@ ViennaNode >> removeAfterIndex: anInteger [
 { #category : #'adding/removing' }
 ViennaNode >> removeAll: aCollection [
 
-	| array |
-	array := self asArray copyWithoutAll: aCollection.
-	self become: ((self class new: array size)
-			 parent: parent;
-			 start: start end: end;
-			 yourself).
-	1 to: array size do: [ :index |
-	self at: index put: (array at: index) ].
+	aCollection ifNotEmpty: [
+		| array |
+		array := self asArray copyWithoutAll: aCollection.
+		self become: ((self class new: array size)
+				 parent: parent;
+				 start: start end: end;
+				 yourself).
+		1 to: array size do: [ :index |
+		self at: index put: (array at: index) ] ].
 	^ aCollection
 ]
 
@@ -2596,6 +2573,26 @@ ViennaNode >> stateVariablesDo: aBlock [
 { #category : #accessing }
 ViennaNode >> third [
 	^ self at: 3
+]
+
+{ #category : #'accessing-definitions' }
+ViennaNode >> uniqueBoundIdentifiers [
+
+	| identifiers |
+	identifiers := Set new.
+	self boundIdentifiersDo: [ :identifier | identifiers add: identifier ].
+	^ identifiers asArray
+]
+
+{ #category : #enumerating }
+ViennaNode >> uniqueBoundIdentifiersDo: aBlock [
+
+	| done |
+	done := Set new.
+	self boundIdentifiersDo: [ :identifier |
+		(done includes: identifier) ifFalse: [
+			done add: identifier.
+			aBlock value: identifier ] ]
 ]
 
 { #category : #enumerating }

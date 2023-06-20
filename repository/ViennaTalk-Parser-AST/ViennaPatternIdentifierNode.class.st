@@ -20,9 +20,9 @@ ViennaPatternIdentifierNode class >> identifier: aString [
 ]
 
 { #category : #private }
-ViennaPatternIdentifierNode >> boundIdentifiersInto: aSet [
+ViennaPatternIdentifierNode >> boundIdentifiersDo: aBlock [
 
-	self identifier ifNotNil: [ :identifier | aSet add: identifier ]
+	self identifier ifNotNil: [ :identifier | aBlock value: identifier ]
 ]
 
 { #category : #'pretty printing' }

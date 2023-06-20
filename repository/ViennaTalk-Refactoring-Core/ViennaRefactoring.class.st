@@ -1158,30 +1158,9 @@ ViennaRefactoring >> retractExport: aViennaNode [
 { #category : #'visiting-interface' }
 ViennaRefactoring >> retractExportSignature: aViennaNode in: moduleNode [
 
-	| exportModuleSignature names |
-	exportModuleSignature := moduleNode exportDefinition
-		                         exportModuleSignature.
-	exportModuleSignature isViennaExportModuleSignatureAllNode ifTrue: [
-		^ exportModuleSignature ].
-	names := OrderedCollection new.
-	aViennaNode do: [ :export |
-		export namesDo: [ :name | names add: name identifier ] ].
-	names ifNotEmpty: [
-		exportModuleSignature asArray do: [ :exportSignature |
-			exportSignature asArray do: [ :export |
-				export isViennaTypeExportNode
-					ifTrue: [
-						(names includes: export name identifier) ifTrue: [
-							exportSignature remove: export ] ]
-					ifFalse: [
-						export namesDo: [ :localName |
-							(names includes: localName identifier) ifTrue: [
-								export removeName: localName ] ].
-						export ifEmpty: [ exportSignature remove: export ] ] ] ].
-		exportModuleSignature ifEmpty: [
-			self
-				replaceNode: exportModuleSignature
-				with: ViennaExportModuleSignatureAllNode new ] ]
+	aViennaNode exportedIdentifiers do: [ :identifier |
+		moduleNode exportDefinition exportModuleSignature removeIdentifier:
+			identifier ]
 ]
 
 { #category : #'visiting-interface' }

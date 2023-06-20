@@ -14,7 +14,7 @@ ViennaInvariantNode class >> invariantInitialFunction: aViennaInvariantInitialFu
 ]
 
 { #category : #private }
-ViennaInvariantNode >> boundIdentifiersInto: aSet [
+ViennaInvariantNode >> boundIdentifiersDo: aBlock [
 
 	
 ]

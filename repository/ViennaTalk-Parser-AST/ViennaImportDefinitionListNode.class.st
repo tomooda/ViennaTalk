@@ -1,15 +1,15 @@
 Class {
 	#name : #ViennaImportDefinitionListNode,
-	#superclass : #ViennaInterfaceComponentNode,
+	#superclass : #ViennaImportComponentNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }
 
 { #category : #private }
-ViennaImportDefinitionListNode >> boundIdentifiersInto: aSet [
+ViennaImportDefinitionListNode >> boundIdentifiersDo: aBlock [
 
 	self do: [ :importDefinition |
-		importDefinition boundIdentifiersInto: aSet ]
+		importDefinition boundIdentifiersDo: aBlock ]
 ]
 
 { #category : #'pretty printing' }

@@ -15,7 +15,7 @@ ViennaInvariantInitialFunctionNode class >> pattern: aViennaPatternNode expressi
 ]
 
 { #category : #private }
-ViennaInvariantInitialFunctionNode >> boundIdentifiersInto: aSet [
+ViennaInvariantInitialFunctionNode >> boundIdentifiersDo: aBlock [
 
 	
 ]

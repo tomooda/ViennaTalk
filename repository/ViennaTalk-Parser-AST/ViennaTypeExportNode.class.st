@@ -19,10 +19,10 @@ ViennaTypeExportNode class >> name: aViennaNameNode [
 		  yourself
 ]
 
-{ #category : #testing }
-ViennaTypeExportNode >> exportsName: aViennaNameNode [
+{ #category : #enumerating }
+ViennaTypeExportNode >> exportedIdentifiersDo: aBlock [
 
-	^ self name = aViennaNameNode
+	aBlock value: self identifier
 ]
 
 { #category : #accessing }
@@ -49,8 +49,9 @@ ViennaTypeExportNode >> name: aViennaNameNode [
 	self at: 1 put: aViennaNameNode
 ]
 
-{ #category : #enumerating }
-ViennaTypeExportNode >> namesDo: aBlock [
+{ #category : #removing }
+ViennaTypeExportNode >> removeIdentifier: aString [
 
-	aBlock value: self name
+	self identifier = aString ifTrue: [
+		parent ifNotNil: [ parent remove: self ] ]
 ]

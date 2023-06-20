@@ -27,9 +27,9 @@ ViennaAccessOperationDefinitionNode >> access: aViennaAccessNode [
 ]
 
 { #category : #private }
-ViennaAccessOperationDefinitionNode >> boundIdentifiersInto: aSet [
+ViennaAccessOperationDefinitionNode >> boundIdentifiersDo: aBlock [
 
-	self operationDefinition boundIdentifiersInto: aSet
+	self operationDefinition boundIdentifiersDo: aBlock
 ]
 
 { #category : #'pretty printing' }

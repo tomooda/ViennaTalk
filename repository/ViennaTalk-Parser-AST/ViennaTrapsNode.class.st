@@ -6,7 +6,7 @@ Class {
 }
 
 { #category : #private }
-ViennaTrapsNode >> boundIdentifiersInto: aSet [
+ViennaTrapsNode >> boundIdentifiersDo: aBlock [
 
 	
 ]

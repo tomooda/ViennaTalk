@@ -6,9 +6,9 @@ Class {
 }
 
 { #category : #private }
-ViennaErrorListNode >> boundIdentifiersInto: aSet [
+ViennaErrorListNode >> boundIdentifiersDo: aBlock [
 
-	self do: [ :error | error boundIdentifiersInto: aSet ]
+	self do: [ :error | error boundIdentifiersDo: aBlock ]
 ]
 
 { #category : #'pretty printing' }

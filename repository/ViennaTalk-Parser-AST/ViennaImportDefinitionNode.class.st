@@ -1,6 +1,6 @@
 Class {
 	#name : #ViennaImportDefinitionNode,
-	#superclass : #ViennaInterfaceComponentNode,
+	#superclass : #ViennaImportComponentNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }
@@ -15,9 +15,9 @@ ViennaImportDefinitionNode class >> moduleIdentifier: aString importModuleSignat
 ]
 
 { #category : #private }
-ViennaImportDefinitionNode >> boundIdentifiersInto: aSet [
+ViennaImportDefinitionNode >> boundIdentifiersDo: aBlock [
 
-	self importModuleSignature boundIdentifiersInto: aSet
+	self importModuleSignature boundIdentifiersDo: aBlock
 ]
 
 { #category : #'pretty printing' }

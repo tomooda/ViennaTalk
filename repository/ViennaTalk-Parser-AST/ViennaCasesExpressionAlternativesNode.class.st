@@ -6,9 +6,9 @@ Class {
 }
 
 { #category : #private }
-ViennaCasesExpressionAlternativesNode >> boundIdentifiersInto: aSet [
+ViennaCasesExpressionAlternativesNode >> boundIdentifiersDo: aBlock [
 
-	self do: [ :alternative | alternative boundIdentifiersInto: aSet ]
+	self do: [ :alternative | alternative boundIdentifiersDo: aBlock ]
 ]
 
 { #category : #'pretty printing' }

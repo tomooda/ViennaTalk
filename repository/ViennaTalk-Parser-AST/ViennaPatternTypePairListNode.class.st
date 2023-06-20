@@ -6,10 +6,10 @@ Class {
 }
 
 { #category : #private }
-ViennaPatternTypePairListNode >> boundIdentifiersInto: aSet [
+ViennaPatternTypePairListNode >> boundIdentifiersDo: aBlock [
 
 	1 to: self size by: 2 do: [ :index |
-	(self at: index) boundIdentifiersInto: aSet ]
+	(self at: index) boundIdentifiersDo: aBlock ]
 ]
 
 { #category : #'pretty printing' }

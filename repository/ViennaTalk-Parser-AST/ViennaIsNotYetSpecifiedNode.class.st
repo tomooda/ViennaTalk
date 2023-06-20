@@ -6,7 +6,7 @@ Class {
 }
 
 { #category : #private }
-ViennaIsNotYetSpecifiedNode >> boundIdentifiersInto: aSet [
+ViennaIsNotYetSpecifiedNode >> boundIdentifiersDo: aBlock [
 
 	
 ]

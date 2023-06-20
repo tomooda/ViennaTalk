@@ -28,9 +28,9 @@ ViennaModuleNode >> addImportDefinition: aViennaImportDefinitionNode [
 ]
 
 { #category : #private }
-ViennaModuleNode >> boundIdentifiersInto: aSet [
+ViennaModuleNode >> boundIdentifiersDo: aBlock [
 
-	aSet add: self identifier
+	aBlock value: self identifier
 ]
 
 { #category : #'accessing-definitions' }

@@ -6,7 +6,7 @@ Class {
 }
 
 { #category : #private }
-ViennaNameListNode >> boundIdentifiersInto: aSet [
+ViennaNameListNode >> boundIdentifiersDo: aBlock [
 
 	
 ]
@@ -20,6 +20,12 @@ ViennaNameListNode >> formatWith: aViennaAbstractFormatter [
 ]
 
 { #category : #testing }
+ViennaNameListNode >> includesIdentifier: aString [
+
+	^ self anySatisfy: [ :name | name identifier = aString ]
+]
+
+{ #category : #testing }
 ViennaNameListNode >> isViennaNameListNode [
 
 	^ true
@@ -29,4 +35,11 @@ ViennaNameListNode >> isViennaNameListNode [
 ViennaNameListNode >> label [
 
 	^ 'NameList'
+]
+
+{ #category : #removing }
+ViennaNameListNode >> removeIdentifier: aString [
+
+	(self includesIdentifier: aString) ifTrue: [
+		self removeAll: (self select: [ :name | name identifier = aString ]) ]
 ]

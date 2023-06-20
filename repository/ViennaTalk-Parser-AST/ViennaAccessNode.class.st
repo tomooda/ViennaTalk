@@ -12,9 +12,9 @@ ViennaAccessNode class >> pure [
 ]
 
 { #category : #private }
-ViennaAccessNode >> boundIdentifiersInto: aSet [
+ViennaAccessNode >> boundIdentifiersDo: aBlock [
 
-
+	
 ]
 
 { #category : #'pretty printing' }

@@ -12,7 +12,7 @@ ViennaStatementNode class >> isAbstract [
 ]
 
 { #category : #private }
-ViennaStatementNode >> boundIdentifiersInto: aSet [
+ViennaStatementNode >> boundIdentifiersDo: aBlock [
 
 	
 ]

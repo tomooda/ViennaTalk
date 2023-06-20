@@ -14,9 +14,9 @@ ViennaTuplePatternNode class >> patternList: aViennaPatternListNode [
 ]
 
 { #category : #private }
-ViennaTuplePatternNode >> boundIdentifiersInto: aSet [
+ViennaTuplePatternNode >> boundIdentifiersDo: aBlock [
 
-	self patternList boundIdentifiersInto: aSet
+	self patternList boundIdentifiersDo: aBlock
 ]
 
 { #category : #'pretty printing' }

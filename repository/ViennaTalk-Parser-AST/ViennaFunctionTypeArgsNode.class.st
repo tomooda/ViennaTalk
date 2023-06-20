@@ -6,9 +6,9 @@ Class {
 }
 
 { #category : #private }
-ViennaFunctionTypeArgsNode >> boundIdentifiersInto: aSet [
+ViennaFunctionTypeArgsNode >> boundIdentifiersDo: aBlock [
 
-	self do: [ :typeArg | typeArg boundIdentifiersInto: aSet ]
+	self do: [ :typeArg | typeArg boundIdentifiersDo: aBlock ]
 ]
 
 { #category : #'pretty printing' }

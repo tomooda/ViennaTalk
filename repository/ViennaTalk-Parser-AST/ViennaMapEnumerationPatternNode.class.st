@@ -6,9 +6,10 @@ Class {
 }
 
 { #category : #private }
-ViennaMapEnumerationPatternNode >> boundIdentifiersInto: aSet [
+ViennaMapEnumerationPatternNode >> boundIdentifiersDo: aBlock [
 
-	self do: [ :mapletPattern | mapletPattern boundIdentifiersInto: aSet ]
+	self do: [ :mapletPattern |
+		mapletPattern boundIdentifiersDo: aBlock ]
 ]
 
 { #category : #'pretty printing' }

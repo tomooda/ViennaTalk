@@ -14,9 +14,9 @@ ViennaExceptionsNode class >> errorList: aViennaErrorListNode [
 ]
 
 { #category : #private }
-ViennaExceptionsNode >> boundIdentifiersInto: aSet [
+ViennaExceptionsNode >> boundIdentifiersDo: aBlock [
 
-	self errorList boundIdentifiersInto: aSet
+	self errorList boundIdentifiersDo: aBlock
 ]
 
 { #category : #accessing }

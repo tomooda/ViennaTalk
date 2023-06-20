@@ -309,7 +309,7 @@ ViennaVDM2Smalltalk >> casesExpression: aViennaNode env: aDictionary [
 					  with: alternativeNode first asArray
 					  do: [ :pat :patternNode |
 						  | vars binder |
-						  vars := patternNode boundIdentifiers asArray.
+						  vars := patternNode uniqueBoundIdentifiers.
 						  binder := self binder: pat with: valueVar vars: vars.
 						  stream
 							  nextPutAll: foundVar;
@@ -388,7 +388,7 @@ ViennaVDM2Smalltalk >> casesStatement: aViennaNode env: aDictionary [
 					  with: alternativeNode first asArray
 					  do: [ :pat :patternNode |
 						  | vars binder |
-						  vars := patternNode boundIdentifiers asArray.
+						  vars := patternNode uniqueBoundIdentifiers.
 						  binder := self binder: pat with: valueVar vars: vars.
 						  stream
 							  nextPutAll: foundVar;
@@ -455,7 +455,7 @@ ViennaVDM2Smalltalk >> closureFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode 
 						  nextPutAll: tmpVar ] ].
 		  tuplePattern := ViennaTuplePatternNode patternList:
 			                  (ViennaPatternListNode withAll: matchPatternNodes).
-		  matchVars := tuplePattern boundIdentifiers asArray.
+		  matchVars := tuplePattern uniqueBoundIdentifiers.
 		  anArrayOfPatternNodeAndTypeSetNode ifNotEmpty: [
 			  stream nextPutAll: ' | ' ].
 		  matchVars notEmpty ifTrue: [
@@ -536,7 +536,7 @@ ViennaVDM2Smalltalk >> defExpression: aViennaNode env: aDictionary [
 		                  (self reorderDefinitions: aViennaNode first).
 	defs := self generate: definitionList env: aDictionary.
 	expr := self generate: aViennaNode second env: aDictionary.
-	vars := aViennaNode equalDefinitionList boundIdentifiers asArray.
+	vars := aViennaNode equalDefinitionList uniqueBoundIdentifiers.
 	^ '[|' , (' ' join: vars) , '|' , ('.' join: defs)
 	  , ' ifFalse: [ViennaNoMatch signal].' , expr , '] value'
 ]
@@ -549,7 +549,7 @@ ViennaVDM2Smalltalk >> defStatement: aViennaNode env: aDictionary [
 		        generate: aViennaNode equalDefinitionList
 		        env: aDictionary.
 	statement := self generate: aViennaNode statement env: aDictionary.
-	vars := aViennaNode equalDefinitionList boundIdentifiers asArray.
+	vars := aViennaNode equalDefinitionList uniqueBoundIdentifiers.
 	^ '[|' , (' ' join: vars) , '|' , ('.' join: defs)
 	  , ' ifFalse: [ViennaNoMatch signal].' , statement , '] value'
 ]
@@ -687,16 +687,13 @@ ViennaVDM2Smalltalk >> equalDefinition: aViennaNode env: aDictionary [
 			  left := self generate: leftNode env: aDictionary.
 			  guard
 				  ifNil: [
-					  self
-						  binder: left
-						  with: right
-						  vars: aViennaNode boundIdentifiers asArray ]
+				  self binder: left with: right vars: aViennaNode uniqueBoundIdentifiers ]
 				  ifNotNil: [
 					  '([:' , rightVar , ' | (' , guard , ' includes: ' , rightVar
 					  , ') ifFalse: [ViennaBindingViolation signal]. ' , (self
 						   binder: left
 						   with: rightVar
-						   vars: aViennaNode boundIdentifiers asArray) , '] value: '
+						   vars: aViennaNode uniqueBoundIdentifiers asArray) , '] value: '
 					  , right , ')' ] ]
 ]
 
@@ -1429,7 +1426,7 @@ ViennaVDM2Smalltalk >> fromFlatBinds: patternsAndSets patternNodeAndSetOrTypeNod
 
 	| boundVariables |
 	boundVariables := patternsAndSets collect: [ :pair |
-		                  pair first boundIdentifiers ].
+		                  pair first uniqueBoundIdentifiers asSet ].
 	1 to: patternsAndSets size do: [ :index |
 		| bindNode patternNode |
 		bindNode := patternsAndSets at: index.
@@ -1561,7 +1558,7 @@ ViennaVDM2Smalltalk >> generatorFromFlatBinds: anArrayOfPatternNodeAndTypeSetNod
 				  numParens := numParens + 1 ].
 		  tuplePattern := ViennaTuplePatternNode patternList:
 			                  (ViennaPatternListNode withAll: matchPatternNodes).
-		  matchVars := tuplePattern boundIdentifiers asArray.
+		  matchVars := tuplePattern uniqueBoundIdentifiers.
 		  matchVars notEmpty ifTrue: [
 			  stream nextPutAll: ' | '.
 			  matchVars do: [ :var |
@@ -2051,7 +2048,7 @@ ViennaVDM2Smalltalk >> letBeExpression: aViennaNode env: aDictionary [
 		  | patterns set vars |
 		  patterns := multibind first.
 		  set := multibind second.
-		  vars := aViennaNode first boundIdentifiers asArray.
+		  vars := aViennaNode first uniqueBoundIdentifiers.
 		  stream
 			  nextPutAll: '[|';
 			  nextPutAll: (' ' join: vars);
@@ -2069,7 +2066,7 @@ ViennaVDM2Smalltalk >> letBeExpression: aViennaNode env: aDictionary [
 					  nextPutAll: (self
 							   binder: pat
 							   with: loopVar
-							   vars: patternNode boundIdentifiers asArray);
+							   vars: patternNode uniqueBoundIdentifiers asArray);
 					  nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ].
 		  stream nextPutAll: guard.
 		  multibind first do: [ :pat | stream nextPut: $] ].
@@ -2099,7 +2096,7 @@ ViennaVDM2Smalltalk >> letBeStatement: aViennaNode env: aDictionary [
 		  | patterns set vars |
 		  patterns := multibind first.
 		  set := multibind second.
-		  vars := aViennaNode first boundIdentifiers asArray.
+		  vars := aViennaNode first uniqueBoundIdentifiers.
 		  stream
 			  nextPutAll: '[|';
 			  nextPutAll: (' ' join: vars);
@@ -2117,7 +2114,7 @@ ViennaVDM2Smalltalk >> letBeStatement: aViennaNode env: aDictionary [
 					  nextPutAll: (self
 							   binder: pat
 							   with: loopVar
-							   vars: patternNode boundIdentifiers asArray);
+							   vars: patternNode uniqueBoundIdentifiers asArray);
 					  nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ].
 		  stream nextPutAll: guard.
 		  multibind first do: [ :pat | stream nextPut: $] ].
@@ -2135,7 +2132,7 @@ ViennaVDM2Smalltalk >> letExpression: aViennaNode env: aDictionary [
 		                  (self reorderDefinitions: aViennaNode first).
 	localDefinitions := self generate: definitionList env: aDictionary.
 	body := self generate: aViennaNode expression env: aDictionary.
-	vars := definitionList boundIdentifiers asArray.
+	vars := definitionList uniqueBoundIdentifiers.
 	^ '[|' , (' ' join: vars) , '|' , ('. ' join: localDefinitions)
 	  , '. ' , body , '] value'
 ]
@@ -2149,7 +2146,7 @@ ViennaVDM2Smalltalk >> letStatement: aViennaNode env: aDictionary [
 			                   aViennaNode localDefinitionList).
 	localDefinitions := self generate: definitionList env: aDictionary.
 	body := self generate: aViennaNode statement env: aDictionary.
-	vars := definitionList boundIdentifiers asArray.
+	vars := definitionList uniqueBoundIdentifiers.
 	^ '[|' , (' ' join: vars) , '|' , ('.' join: localDefinitions) , '.'
 	  , body , '] value'
 ]
@@ -2667,7 +2664,7 @@ ViennaVDM2Smalltalk >> reorderDefinitions: aCollectionOfViennaNode [
 	originalDefs := Array withAll: aCollectionOfViennaNode.
 	env := Dictionary new.
 	boundVars := (originalDefs collect: [ :def |
-		              def -> def boundIdentifiers asArray ]) asDictionary.
+		              def -> def uniqueBoundIdentifiers ]) asDictionary.
 	freeVars := (originalDefs collect: [ :def |
 		             def -> (self freeVariables: def env: env) asArray ])
 		            asDictionary.
@@ -2874,7 +2871,7 @@ ViennaVDM2Smalltalk >> sequenceForLoop: aViennaNode env: aDictionary [
 		  , (guard ifNil: [ '' ] ifNotNil: [
 				   '(' , guard , ' includes: ' , patNode first
 				   , ') ifFalse: [ViennaBindingViolation signal].' ]) , body , ']' ].
-	vars := aViennaNode patternOrBind boundIdentifiers asArray.
+	vars := aViennaNode patternOrBind uniqueBoundIdentifiers.
 	varGenerator := self
 		                varNameGenerator: 'for'
 		                uniqueIn: (Array with: seqExpr with: body) , vars.
@@ -3022,7 +3019,7 @@ ViennaVDM2Smalltalk >> setForLoop: aViennaNode env: aDictionary [
 		           self generate: aViennaNode second env: aDictionary ].
 	aViennaNode first isViennaPatternIdentifierNode ifTrue: [
 		^ setExpr , ' do: [:' , aViennaNode first first , ' | ' , body , ']' ].
-	vars := aViennaNode first boundIdentifiers asArray.
+	vars := aViennaNode first uniqueBoundIdentifiers.
 	varGenerator := self
 		                varNameGenerator: 'for'
 		                uniqueIn: (Array with: setExpr with: body) , vars.
@@ -3224,7 +3221,7 @@ ViennaVDM2Smalltalk >> tixeStatement: aViennaNode env: aDictionary [
 			  | patternNode handlerNode matchVars |
 			  patternNode := patternHandlersNode at: index.
 			  handlerNode := patternHandlersNode at: index + 1.
-			  matchVars := patternNode boundIdentifiers asArray.
+			  matchVars := patternNode uniqueBoundIdentifiers.
 			  stream
 				  nextPutAll: '[:tixe | ';
 				  nextPutAll: (self generate: patternNode);
@@ -3268,7 +3265,7 @@ ViennaVDM2Smalltalk >> totalFunctionType: aViennaNode env: aDictionary [
 ViennaVDM2Smalltalk >> trapStatement: aViennaNode env: aDictionary [
 
 	| matchVars pattern handler statement |
-	matchVars := aViennaNode first boundIdentifiers asArray.
+	matchVars := aViennaNode first uniqueBoundIdentifiers.
 	pattern := self generate: aViennaNode first env: aDictionary.
 	handler := self generate: aViennaNode second env: aDictionary.
 	statement := self generate: aViennaNode third env: aDictionary.
@@ -3437,7 +3434,7 @@ ViennaVDM2Smalltalk >> valueDefinition: aViennaNode env: aDictionary [
 					  nextPutAll: (self
 							   binder: pattern
 							   with: val
-							   vars: aViennaNode first boundIdentifiers asArray);
+							   vars: aViennaNode first uniqueBoundIdentifiers);
 					  nextPutAll: ' ifFalse: [ViennaNoMatch signal]])' ] ]
 ]
 

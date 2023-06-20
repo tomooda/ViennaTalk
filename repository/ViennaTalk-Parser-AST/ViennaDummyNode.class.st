@@ -6,7 +6,7 @@ Class {
 }
 
 { #category : #private }
-ViennaDummyNode >> boundIdentifiersInto: aSet [
+ViennaDummyNode >> boundIdentifiersDo: aBlock [
 
 	
 ]

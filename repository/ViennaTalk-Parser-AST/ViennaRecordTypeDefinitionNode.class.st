@@ -43,8 +43,9 @@ ViennaRecordTypeDefinitionNode >> asImportDefinitionIn: moduleNode [
 ]
 
 { #category : #private }
-ViennaRecordTypeDefinitionNode >> boundIdentifiersInto: aSet [
-	aSet add: self identifier 
+ViennaRecordTypeDefinitionNode >> boundIdentifiersDo: aBlock [
+
+	aBlock value: self identifier
 ]
 
 { #category : #accessing }

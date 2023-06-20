@@ -12,9 +12,9 @@ ViennaSectionNode class >> isAbstract [
 ]
 
 { #category : #private }
-ViennaSectionNode >> boundIdentifiersInto: aSet [
+ViennaSectionNode >> boundIdentifiersDo: aBlock [
 
-	self do: [ :node | node boundIdentifiersInto: aSet ]
+	self do: [ :node | node boundIdentifiersDo: aBlock ]
 ]
 
 { #category : #'pretty printing' }

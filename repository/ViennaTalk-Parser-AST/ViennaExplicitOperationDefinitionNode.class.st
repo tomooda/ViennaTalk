@@ -53,11 +53,11 @@ ViennaExplicitOperationDefinitionNode >> asImportDefinitionIn: moduleNode [
 ]
 
 { #category : #private }
-ViennaExplicitOperationDefinitionNode >> boundIdentifiersInto: aSet [
+ViennaExplicitOperationDefinitionNode >> boundIdentifiersDo: aBlock [
 
-	aSet add: self identifier.
-	self pre ifNotNil: [ aSet add: 'pre_' , self identifier ].
-	self post ifNotNil: [ aSet add: 'post_' , self identifier ]
+	aBlock value: self identifier.
+	self pre ifNotNil: [ aBlock value: 'pre_' , self identifier ].
+	self post ifNotNil: [ aBlock value: 'post_' , self identifier ]
 ]
 
 { #category : #'accessing-definitions' }

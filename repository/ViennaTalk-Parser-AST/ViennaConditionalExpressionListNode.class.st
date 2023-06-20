@@ -6,7 +6,7 @@ Class {
 }
 
 { #category : #private }
-ViennaConditionalExpressionListNode >> boundIdentifiersInto: aSet [
+ViennaConditionalExpressionListNode >> boundIdentifiersDo: aBlock [
 
 	
 ]

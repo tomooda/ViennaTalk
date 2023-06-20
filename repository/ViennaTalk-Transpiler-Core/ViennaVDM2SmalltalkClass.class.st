@@ -19,7 +19,7 @@ ViennaVDM2SmalltalkClass >> buildEnv: aViennaNode [
 			env := envs at: 'DEFAULT'.
 			aViennaNode do: [ :definitionBlock |
 				definitionBlock definition isViennaStateDefinitionNode ifFalse: [
-					definitionBlock boundIdentifiers do: [ :ident |
+					definitionBlock uniqueBoundIdentifiersDo: [ :ident |
 						env at: ident put: 'self ' , ident ] ] ] ]
 		ifFalse: [
 			aViennaNode do: [ :moduleNode |
@@ -28,7 +28,7 @@ ViennaVDM2SmalltalkClass >> buildEnv: aViennaNode [
 				envs at: moduleName put: Dictionary new.
 				moduleNode third do: [ :definitionBlock |
 					definitionBlock first isViennaStateDefinitionNode ifFalse: [
-						definitionBlock boundIdentifiers do: [ :ident |
+						definitionBlock uniqueBoundIdentifiersDo: [ :ident |
 							(envs at: moduleName) at: ident put: 'self ' , ident.
 							(envs at: 'DEFAULT')
 								at: moduleName , '`' , ident
@@ -249,7 +249,7 @@ ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass proto
 								 nextPutAll: patternNode first ].
 						 bindType = #compound ifTrue: [
 							 | tmpVar |
-							 argVars addAll: patternNode boundIdentifiers.
+							 argVars addAll: patternNode uniqueBoundIdentifiers.
 							 tmpVar := varGenerator value.
 							 tmpVars add: tmpVar.
 							 formalArgs add: tmpVar -> setNode.
@@ -262,7 +262,7 @@ ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass proto
 				 tuplePattern := ViennaTuplePatternNode patternList:
 					                 (ViennaPatternListNode withAll:
 						                  matchPatternNodes).
-				 matchVars := tuplePattern boundIdentifiers asArray.
+				 matchVars := tuplePattern uniqueBoundIdentifiers.
 				 stream cr.
 				 matchVars
 					 ifEmpty: [
@@ -675,18 +675,18 @@ ViennaVDM2SmalltalkClass >> flatDocument: aViennaNode env: aDictionary [
 				at: stateDefinition first
 				put: 'self ' , stateDefinition identifier ].
 		definitionBlock definition isViennaTypeDefinitionsNode ifTrue: [
-			typeNames nextPutAll: definitionBlock definition boundIdentifiers ] ].
+			typeNames nextPutAll:
+				definitionBlock definition uniqueBoundIdentifiers ] ].
 	typeNames := typeNames contents.
-	instVars := aViennaNode boundIdentifiers
-		            removeAll: stateVars;
-		            asArray.
+	instVars := aViennaNode uniqueBoundIdentifiers copyWithoutAll:
+		            stateVars.
 	newClass := self
 		            createDocumentClassWithInstVars: instVars
 		            stateVars: stateVars.
 	classes at: nil put: newClass.
 	aViennaNode do: [ :definitionBlock |
 		definitionBlock definition isViennaStateDefinitionNode ifFalse: [
-			definitionBlock boundIdentifiers do: [ :ident |
+			definitionBlock uniqueBoundIdentifiersDo: [ :ident |
 				env at: ident put: 'self ' , ident ] ] ].
 	self
 		defineMethod:
@@ -1018,14 +1018,13 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 					at: stateDefinition identifier
 					put: 'self ' , stateDefinition identifier ]
 			ifFalse: [
-				definitionBlock boundIdentifiers do: [ :ident |
+				definitionBlock uniqueBoundIdentifiersDo: [ :ident |
 					env at: ident put: 'self ' , ident ] ].
 		definitionBlock first isViennaTypeDefinitionsNode ifTrue: [
-			typeNames nextPutAll: definitionBlock first boundIdentifiers ] ].
+			typeNames nextPutAll: definitionBlock first uniqueBoundIdentifiers ] ].
 	typeNames := typeNames contents.
-	instVars := moduleBodyNode boundIdentifiers
-		            removeAll: stateVars;
-		            asArray.
+	instVars := moduleBodyNode uniqueBoundIdentifiers copyWithoutAll:
+		            stateVars.
 	newClass := self
 		            createModuleClassWithInstVars:
 		            importClassNames , instVars
@@ -1273,7 +1272,7 @@ ViennaVDM2SmalltalkClass >> valueDefinitions: aViennaNode env: aDictionary [
 	theClass := classes at: (aViennaNode module ifNotNil: #first).
 	aViennaNode do: [ :node |
 		initializer := self generate: node env: aDictionary.
-		node boundIdentifiers do: [ :identifier |
+		node uniqueBoundIdentifiersDo: [ :identifier |
 			self
 				defineLazyMethodNamed: identifier
 				initializer: initializer , '. ' , identifier

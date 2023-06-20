@@ -12,7 +12,7 @@ ViennaTypeNode class >> isAbstract [
 ]
 
 { #category : #private }
-ViennaTypeNode >> boundIdentifiersInto: aSet [
+ViennaTypeNode >> boundIdentifiersDo: aBlock [
 
 	
 ]

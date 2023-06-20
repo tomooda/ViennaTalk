@@ -15,16 +15,10 @@ ViennaFunctionExportNode class >> nameList: aViennaNameListNode typeVariableList
 		  yourself
 ]
 
-{ #category : #adding }
-ViennaFunctionExportNode >> addName: aViennaNameNode [
+{ #category : #enumerating }
+ViennaFunctionExportNode >> exportedIdentifiersDo: aBlock [
 
-	self nameList add: aViennaNameNode
-]
-
-{ #category : #testing }
-ViennaFunctionExportNode >> exportsName: aViennaNameNode [
-
-	^ self nameList anySatisfy: [ :name | name = aViennaNameNode ]
+	self nameList do: [ :name | aBlock value: name identifier ]
 ]
 
 { #category : #'pretty printing' }
@@ -69,16 +63,11 @@ ViennaFunctionExportNode >> nameList: aViennaNameListNode [
 	self at: 1 put: aViennaNameListNode
 ]
 
-{ #category : #enumerating }
-ViennaFunctionExportNode >> namesDo: aBlock [
+{ #category : #removing }
+ViennaFunctionExportNode >> removeIdentifier: aString [
 
-	self nameList do: aBlock
-]
-
-{ #category : #adding }
-ViennaFunctionExportNode >> removeName: aViennaNameNode [
-
-	self nameList remove: aViennaNameNode
+	self nameList removeIdentifier: aString.
+	self nameList ifEmpty: [ parent ifNotNil: [ parent remove: self ] ]
 ]
 
 { #category : #accessing }

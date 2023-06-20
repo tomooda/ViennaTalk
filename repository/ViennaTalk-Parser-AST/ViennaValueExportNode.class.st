@@ -14,16 +14,10 @@ ViennaValueExportNode class >> nameList: aViennaNameListNode type: aViennaTypeNo
 		  yourself
 ]
 
-{ #category : #adding }
-ViennaValueExportNode >> addName: aViennaNameNode [
+{ #category : #enumerating }
+ViennaValueExportNode >> exportedIdentifiersDo: aBlock [
 
-	self nameList add: aViennaNameNode
-]
-
-{ #category : #testing }
-ViennaValueExportNode >> exportsName: aViennaNameNode [
-
-	^ self nameList anySatisfy: [ :name | name = aViennaNameNode ]
+	self nameList do: [ :name | aBlock value: name identifier ]
 ]
 
 { #category : #'pretty printing' }
@@ -68,16 +62,11 @@ ViennaValueExportNode >> nameList: aViennaNameListNode [
 	self at: 1 put: aViennaNameListNode
 ]
 
-{ #category : #enumerating }
-ViennaValueExportNode >> namesDo: aBlock [
-
-	self nameList do: aBlock
-]
-
 { #category : #removing }
-ViennaValueExportNode >> removeName: aViennaNameNode [
+ViennaValueExportNode >> removeIdentifier: aString [
 
-	self nameList remove: aViennaNameNode
+	self nameList removeIdentifier: aString.
+	self nameList ifEmpty: [ parent ifNotNil: [ parent remove: self ] ]
 ]
 
 { #category : #accessing }

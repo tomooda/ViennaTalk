@@ -29,7 +29,7 @@ ViennaOperationBodyNode class >> statementOrIsNotYetSpecified: aViennaStatementN
 ]
 
 { #category : #private }
-ViennaOperationBodyNode >> boundIdentifiersInto: aSet [
+ViennaOperationBodyNode >> boundIdentifiersDo: aBlock [
 
 	
 ]

@@ -16,7 +16,7 @@ ViennaFieldNode class >> identifier: aString equalityAbstraction: aBoolean type:
 ]
 
 { #category : #private }
-ViennaFieldNode >> boundIdentifiersInto: aSet [
+ViennaFieldNode >> boundIdentifiersDo: aBlock [
 
 	
 ]

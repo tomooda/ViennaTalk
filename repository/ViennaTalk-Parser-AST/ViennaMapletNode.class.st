@@ -15,7 +15,7 @@ ViennaMapletNode class >> keyExpression: aViennaExpressionNode1 valueExpression:
 ]
 
 { #category : #private }
-ViennaMapletNode >> boundIdentifiersInto: aSet [
+ViennaMapletNode >> boundIdentifiersDo: aBlock [
 
 	
 ]

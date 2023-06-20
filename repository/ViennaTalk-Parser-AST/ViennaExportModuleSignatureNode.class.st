@@ -1,14 +1,21 @@
 Class {
 	#name : #ViennaExportModuleSignatureNode,
-	#superclass : #ViennaInterfaceComponentNode,
+	#superclass : #ViennaExportComponentNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }
 
 { #category : #private }
-ViennaExportModuleSignatureNode >> boundIdentifiersInto: aSet [
+ViennaExportModuleSignatureNode >> boundIdentifiersDo: aBlock [
 
 	
+]
+
+{ #category : #enumerating }
+ViennaExportModuleSignatureNode >> exportedIdentifiersDo: aBlock [
+
+	self do: [ :exportSignature |
+		exportSignature exportedIdentifiersDo: aBlock ]
 ]
 
 { #category : #'pretty printing' }
@@ -29,4 +36,16 @@ ViennaExportModuleSignatureNode >> isViennaExportModuleSignatureNode [
 ViennaExportModuleSignatureNode >> label [
 
 	^ 'ExportModuleSignature'
+]
+
+{ #category : #removing }
+ViennaExportModuleSignatureNode >> removeIdentifier: aString [
+
+	(self exportsIdentifier: aString) ifTrue: [
+		self asArray do: [ :exportSignature |
+			exportSignature removeIdentifier: aString ].
+		self ifEmpty: [
+			parent ifNotNil: [
+				parent exportModuleSignature:
+					ViennaExportModuleSignatureAllNode empty ] ] ]
 ]

@@ -52,9 +52,9 @@ ViennaValueDefinitionNode >> asImportDefinitionIn: moduleNode [
 ]
 
 { #category : #private }
-ViennaValueDefinitionNode >> boundIdentifiersInto: aSet [
+ViennaValueDefinitionNode >> boundIdentifiersDo: aBlock [
 
-	self pattern boundIdentifiersInto: aSet
+	self pattern boundIdentifiersDo: aBlock
 ]
 
 { #category : #accessing }

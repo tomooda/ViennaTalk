@@ -6,9 +6,9 @@ Class {
 }
 
 { #category : #private }
-ViennaModuleBodyNode >> boundIdentifiersInto: aSet [
+ViennaModuleBodyNode >> boundIdentifiersDo: aBlock [
 
-	self do: [ :node | node boundIdentifiersInto: aSet ]
+	self do: [ :node | node boundIdentifiersDo: aBlock ]
 ]
 
 { #category : #'pretty printing' }

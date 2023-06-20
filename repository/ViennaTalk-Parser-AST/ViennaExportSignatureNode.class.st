@@ -1,6 +1,6 @@
 Class {
 	#name : #ViennaExportSignatureNode,
-	#superclass : #ViennaInterfaceComponentNode,
+	#superclass : #ViennaExportComponentNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }
@@ -12,7 +12,21 @@ ViennaExportSignatureNode class >> isAbstract [
 ]
 
 { #category : #private }
-ViennaExportSignatureNode >> boundIdentifiersInto: aSet [
+ViennaExportSignatureNode >> boundIdentifiersDo: aBlock [
 
 	
+]
+
+{ #category : #enumerating }
+ViennaExportSignatureNode >> exportedIdentifiersDo: aBlock [
+
+	^ self do: [ :export | export exportedIdentifiersDo: aBlock ]
+]
+
+{ #category : #removing }
+ViennaExportSignatureNode >> removeIdentifier: aString [
+
+	(self exportsIdentifier: aString) ifTrue: [
+		self do: [ :export | export removeIdentifier: aString ].
+		self ifEmpty: [ parent ifNotNil: [ parent remove: self ] ] ]
 ]

@@ -15,10 +15,10 @@ ViennaMapletPatternNode class >> keyPattern: aViennaPatternNode1 valuePattern: a
 ]
 
 { #category : #private }
-ViennaMapletPatternNode >> boundIdentifiersInto: aSet [
+ViennaMapletPatternNode >> boundIdentifiersDo: aBlock [
 
-	self keyPattern boundIdentifiersInto: aSet.
-	self valuePattern boundIdentifiersInto: aSet
+	self keyPattern boundIdentifiersDo: aBlock.
+	self valuePattern boundIdentifiersDo: aBlock
 ]
 
 { #category : #'pretty printing' }

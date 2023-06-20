@@ -15,9 +15,9 @@ ViennaEqualDefinitionNode class >> patternOrBind: aViennaPatternNodeOrViennaBind
 ]
 
 { #category : #private }
-ViennaEqualDefinitionNode >> boundIdentifiersInto: aSet [
+ViennaEqualDefinitionNode >> boundIdentifiersDo: aBlock [
 
-	self patternOrBind boundIdentifiersInto: aSet
+	self patternOrBind boundIdentifiersDo: aBlock
 ]
 
 { #category : #'parsers-patterns' }

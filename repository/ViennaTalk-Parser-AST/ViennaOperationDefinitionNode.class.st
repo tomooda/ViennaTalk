@@ -22,9 +22,9 @@ ViennaOperationDefinitionNode >> asAccessDefinition [
 ]
 
 { #category : #private }
-ViennaOperationDefinitionNode >> boundIdentifiersInto: aSet [
+ViennaOperationDefinitionNode >> boundIdentifiersDo: aBlock [
 
-	self definition boundIdentifiersInto: aSet
+	self definition boundIdentifiersDo: aBlock
 ]
 
 { #category : #accessing }

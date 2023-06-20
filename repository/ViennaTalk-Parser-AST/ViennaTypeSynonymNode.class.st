@@ -49,8 +49,9 @@ ViennaTypeSynonymNode >> asImportDefinitionIn: moduleNode [
 ]
 
 { #category : #private }
-ViennaTypeSynonymNode >> boundIdentifiersInto: aSet [
-	aSet add: self identifier 
+ViennaTypeSynonymNode >> boundIdentifiersDo: aBlock [
+
+	aBlock value: self identifier
 ]
 
 { #category : #'pretty printing' }

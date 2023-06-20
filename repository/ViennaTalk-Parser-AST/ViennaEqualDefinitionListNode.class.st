@@ -6,10 +6,10 @@ Class {
 }
 
 { #category : #private }
-ViennaEqualDefinitionListNode >> boundIdentifiersInto: aSet [
+ViennaEqualDefinitionListNode >> boundIdentifiersDo: aBlock [
 
 	self do: [ :equalDefinition |
-		equalDefinition boundIdentifiersInto: aSet ]
+		equalDefinition boundIdentifiersDo: aBlock ]
 ]
 
 { #category : #'pretty printing' }

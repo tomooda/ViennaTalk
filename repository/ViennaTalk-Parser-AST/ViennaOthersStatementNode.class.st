@@ -14,7 +14,7 @@ ViennaOthersStatementNode class >> statement: aViennaStatementNode [
 ]
 
 { #category : #private }
-ViennaOthersStatementNode >> boundIdentifiersInto: aSet [
+ViennaOthersStatementNode >> boundIdentifiersDo: aBlock [
 
 	
 ]

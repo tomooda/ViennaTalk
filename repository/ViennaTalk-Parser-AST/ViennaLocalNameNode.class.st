@@ -42,11 +42,8 @@ ViennaLocalNameNode >> isBlockVariableNameNode [
 { #category : #testing }
 ViennaLocalNameNode >> isExportedNameNode [
 
-	^ self module second second anySatisfy: [ :exportModuleSignature |
-		  exportModuleSignature isViennaExportModuleSignatureAllNode or: [
-			  exportModuleSignature anySatisfy: [ :exportSignatures |
-				  exportSignatures anySatisfy: [ :export |
-					  export exportsName: self ] ] ] ]
+	^ self module interface exportDefinition exportsIdentifier:
+		  self identifier
 ]
 
 { #category : #testing }

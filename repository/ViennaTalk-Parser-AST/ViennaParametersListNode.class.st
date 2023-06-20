@@ -6,9 +6,9 @@ Class {
 }
 
 { #category : #private }
-ViennaParametersListNode >> boundIdentifiersInto: aSet [
+ViennaParametersListNode >> boundIdentifiersDo: aBlock [
 
-	self do: [ :parameters | parameters boundIdentifiersInto: aSet ]
+	self do: [ :parameters | parameters boundIdentifiersDo: aBlock ]
 ]
 
 { #category : #'pretty printing' }

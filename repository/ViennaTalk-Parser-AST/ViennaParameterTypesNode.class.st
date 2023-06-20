@@ -14,7 +14,7 @@ ViennaParameterTypesNode class >> patternTypePairList: aViennaPatternTypePairLis
 ]
 
 { #category : #private }
-ViennaParameterTypesNode >> boundIdentifiersInto: aSet [
+ViennaParameterTypesNode >> boundIdentifiersDo: aBlock [
 
 	
 ]

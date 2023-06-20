@@ -15,7 +15,7 @@ ViennaConditionalStatementNode class >> condition: aViennaExpressionNode stateme
 ]
 
 { #category : #private }
-ViennaConditionalStatementNode >> boundIdentifiersInto: aSet [
+ViennaConditionalStatementNode >> boundIdentifiersDo: aBlock [
 
 	
 ]

@@ -14,9 +14,9 @@ ViennaDefinitionBlockNode class >> definition: aViennaNode [
 ]
 
 { #category : #private }
-ViennaDefinitionBlockNode >> boundIdentifiersInto: aSet [
+ViennaDefinitionBlockNode >> boundIdentifiersDo: aBlock [
 
-	self definition boundIdentifiersInto: aSet
+	self definition boundIdentifiersDo: aBlock
 ]
 
 { #category : #accessing }

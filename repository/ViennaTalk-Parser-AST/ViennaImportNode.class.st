@@ -1,6 +1,6 @@
 Class {
 	#name : #ViennaImportNode,
-	#superclass : #ViennaInterfaceComponentNode,
+	#superclass : #ViennaImportComponentNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }
@@ -12,9 +12,9 @@ ViennaImportNode class >> isAbstract [
 ]
 
 { #category : #private }
-ViennaImportNode >> boundIdentifiersInto: aSet [
+ViennaImportNode >> boundIdentifiersDo: aBlock [
 
-	self rename ifNotNil: [ :rename | aSet value: rename ]
+	self rename ifNotNil: aBlock
 ]
 
 { #category : #accessing }

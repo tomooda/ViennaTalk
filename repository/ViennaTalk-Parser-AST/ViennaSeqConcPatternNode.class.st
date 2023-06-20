@@ -6,9 +6,9 @@ Class {
 }
 
 { #category : #private }
-ViennaSeqConcPatternNode >> boundIdentifiersInto: aSet [
+ViennaSeqConcPatternNode >> boundIdentifiersDo: aBlock [
 
-	self do: [ :pattern | pattern boundIdentifiersInto: aSet ]
+	self do: [ :pattern | pattern boundIdentifiersDo: aBlock ]
 ]
 
 { #category : #'pretty printing' }

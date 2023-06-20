@@ -1,12 +1,12 @@
 Class {
 	#name : #ViennaImportModuleSignatureAllNode,
-	#superclass : #ViennaInterfaceComponentNode,
+	#superclass : #ViennaImportComponentNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }
 
 { #category : #private }
-ViennaImportModuleSignatureAllNode >> boundIdentifiersInto: aSet [
+ViennaImportModuleSignatureAllNode >> boundIdentifiersDo: aBlock [
 
 	
 ]

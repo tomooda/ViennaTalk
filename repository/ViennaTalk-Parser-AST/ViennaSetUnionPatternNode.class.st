@@ -15,10 +15,10 @@ ViennaSetUnionPatternNode class >> pattern: aViennaPatternNode1 pattern: aVienna
 ]
 
 { #category : #private }
-ViennaSetUnionPatternNode >> boundIdentifiersInto: aSet [
+ViennaSetUnionPatternNode >> boundIdentifiersDo: aBlock [
 
-	self pattern1 boundIdentifiersInto: aSet.
-	self pattern2 boundIdentifiersInto: aSet
+	self pattern1 boundIdentifiersDo: aBlock.
+	self pattern2 boundIdentifiersDo: aBlock
 ]
 
 { #category : #'pretty printing' }

@@ -17,9 +17,9 @@ ViennaStateDefinitionNode class >> identifier: aString fieldList: aViennaFieldLi
 ]
 
 { #category : #private }
-ViennaStateDefinitionNode >> boundIdentifiersInto: aSet [
+ViennaStateDefinitionNode >> boundIdentifiersDo: aBlock [
 
-	self fieldList do: [ :field | aSet add: field identifier ]
+	self fieldList do: [ :field | aBlock value: field identifier ]
 ]
 
 { #category : #accessing }

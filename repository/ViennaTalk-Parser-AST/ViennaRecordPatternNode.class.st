@@ -15,9 +15,9 @@ ViennaRecordPatternNode class >> name: aViennaNameNode patternList: aViennaPatte
 ]
 
 { #category : #private }
-ViennaRecordPatternNode >> boundIdentifiersInto: aSet [
+ViennaRecordPatternNode >> boundIdentifiersDo: aBlock [
 
-	self patternList boundIdentifiersInto: aSet
+	self patternList boundIdentifiersDo: aBlock
 ]
 
 { #category : #'pretty printing' }

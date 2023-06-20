@@ -12,9 +12,9 @@ ViennaBindNode class >> isAbstract [
 ]
 
 { #category : #private }
-ViennaBindNode >> boundIdentifiersInto: aSet [
+ViennaBindNode >> boundIdentifiersDo: aBlock [
 
-	self pattern boundIdentifiersInto: aSet
+	self pattern boundIdentifiersDo: aBlock
 ]
 
 { #category : #testing }

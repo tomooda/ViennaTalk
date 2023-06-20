@@ -14,9 +14,9 @@ ViennaLocalDefinitionNode class >> valueDefinitionOrFunctionDefinition: aViennaN
 ]
 
 { #category : #private }
-ViennaLocalDefinitionNode >> boundIdentifiersInto: aSet [
+ViennaLocalDefinitionNode >> boundIdentifiersDo: aBlock [
 
-	self valueDefinitionOrFunctionDefinition boundIdentifiersInto: aSet
+	self valueDefinitionOrFunctionDefinition boundIdentifiersDo: aBlock
 ]
 
 { #category : #'pretty printing' }

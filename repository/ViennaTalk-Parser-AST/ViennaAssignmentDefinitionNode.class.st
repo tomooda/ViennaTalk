@@ -16,9 +16,9 @@ ViennaAssignmentDefinitionNode class >> identifier: aString type: aViennaTypeNod
 ]
 
 { #category : #private }
-ViennaAssignmentDefinitionNode >> boundIdentifiersInto: aSet [
+ViennaAssignmentDefinitionNode >> boundIdentifiersDo: aBlock [
 
-	aSet add: self identifier
+	aBlock value: self identifier
 ]
 
 { #category : #accessing }

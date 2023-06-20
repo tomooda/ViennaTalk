@@ -6,9 +6,9 @@ Class {
 }
 
 { #category : #private }
-ViennaBindListNode >> boundIdentifiersInto: aSet [
+ViennaBindListNode >> boundIdentifiersDo: aBlock [
 
-	self do: [ :bind | bind boundIdentifiersInto: aSet ]
+	self do: [ :bind | bind boundIdentifiersDo: aBlock ]
 ]
 
 { #category : #'pretty printing' }

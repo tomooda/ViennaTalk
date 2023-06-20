@@ -6,10 +6,10 @@ Class {
 }
 
 { #category : #private }
-ViennaLocalDefinitionListNode >> boundIdentifiersInto: aSet [
+ViennaLocalDefinitionListNode >> boundIdentifiersDo: aBlock [
 
 	self do: [ :localDefinition |
-		localDefinition boundIdentifiersInto: aSet ]
+		localDefinition boundIdentifiersDo: aBlock ]
 ]
 
 { #category : #'pretty printing' }

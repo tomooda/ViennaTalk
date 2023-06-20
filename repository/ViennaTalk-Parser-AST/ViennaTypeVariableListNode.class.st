@@ -6,9 +6,9 @@ Class {
 }
 
 { #category : #private }
-ViennaTypeVariableListNode >> boundIdentifiersInto: aSet [
+ViennaTypeVariableListNode >> boundIdentifiersDo: aBlock [
 
-	self do: [ :typeVariable | typeVariable boundIdentifiersInto: aSet ]
+	self do: [ :typeVariable | typeVariable boundIdentifiersDo: aBlock ]
 ]
 
 { #category : #'pretty printing' }

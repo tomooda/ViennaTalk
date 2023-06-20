@@ -27,9 +27,9 @@ ViennaAccessFunctionDefinitionNode >> access: aViennaAccessNode [
 ]
 
 { #category : #private }
-ViennaAccessFunctionDefinitionNode >> boundIdentifiersInto: aSet [
+ViennaAccessFunctionDefinitionNode >> boundIdentifiersDo: aBlock [
 
-	self functionDefinition boundIdentifiersInto: aSet
+	self functionDefinition boundIdentifiersDo: aBlock
 ]
 
 { #category : #'pretty printing' }
@@ -51,12 +51,6 @@ ViennaAccessFunctionDefinitionNode >> functionDefinition [
 ViennaAccessFunctionDefinitionNode >> functionDefinition: aViennaFunctionDefinitionNode [
 
 	self at: 2 put: aViennaFunctionDefinitionNode
-]
-
-{ #category : #enumerating }
-ViennaAccessFunctionDefinitionNode >> identifiersDo: aBlock [
-
-	self functionDefinition identifiersDo: aBlock
 ]
 
 { #category : #testing }

@@ -27,9 +27,9 @@ ViennaAccessTypeDefinitionNode >> access: aViennaAccessNode [
 ]
 
 { #category : #private }
-ViennaAccessTypeDefinitionNode >> boundIdentifiersInto: aSet [
+ViennaAccessTypeDefinitionNode >> boundIdentifiersDo: aBlock [
 
-	self typeDefinition boundIdentifiersInto: aSet
+	self typeDefinition boundIdentifiersDo: aBlock
 ]
 
 { #category : #accessing }

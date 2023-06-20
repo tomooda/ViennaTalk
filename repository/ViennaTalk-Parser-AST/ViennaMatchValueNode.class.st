@@ -14,7 +14,7 @@ ViennaMatchValueNode class >> expression: aViennaExpressionNode [
 ]
 
 { #category : #private }
-ViennaMatchValueNode >> boundIdentifiersInto: aSet [
+ViennaMatchValueNode >> boundIdentifiersDo: aBlock [
 
 	
 ]

@@ -6,7 +6,7 @@ Class {
 }
 
 { #category : #private }
-ViennaFieldListNode >> boundIdentifiersInto: aSet [
+ViennaFieldListNode >> boundIdentifiersDo: aBlock [
 
 	
 ]

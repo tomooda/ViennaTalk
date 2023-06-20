@@ -6,7 +6,7 @@ Class {
 }
 
 { #category : #private }
-ViennaMapletListNode >> boundIdentifiersInto: aSet [
+ViennaMapletListNode >> boundIdentifiersDo: aBlock [
 
 	
 ]

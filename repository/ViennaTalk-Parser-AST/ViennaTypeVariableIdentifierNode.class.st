@@ -14,9 +14,9 @@ ViennaTypeVariableIdentifierNode class >> identifier: aString [
 ]
 
 { #category : #private }
-ViennaTypeVariableIdentifierNode >> boundIdentifiersInto: aSet [
+ViennaTypeVariableIdentifierNode >> boundIdentifiersDo: aBlock [
 
-	aSet add: self identifier
+	aBlock value: self identifier
 ]
 
 { #category : #'pretty printing' }

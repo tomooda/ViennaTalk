@@ -15,9 +15,9 @@ ViennaCasesExpressionAlternativeNode class >> patternList: aViennaPatternListNod
 ]
 
 { #category : #private }
-ViennaCasesExpressionAlternativeNode >> boundIdentifiersInto: aSet [
+ViennaCasesExpressionAlternativeNode >> boundIdentifiersDo: aBlock [
 
-	self patternList boundIdentifiersInto: aSet
+	self patternList boundIdentifiersDo: aBlock
 ]
 
 { #category : #'accessing-definitions' }

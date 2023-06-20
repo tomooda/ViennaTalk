@@ -1,6 +1,6 @@
 Class {
 	#name : #ViennaImportSignatureNode,
-	#superclass : #ViennaInterfaceComponentNode,
+	#superclass : #ViennaImportComponentNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }
@@ -12,9 +12,9 @@ ViennaImportSignatureNode class >> isAbstract [
 ]
 
 { #category : #private }
-ViennaImportSignatureNode >> boundIdentifiersInto: aSet [
+ViennaImportSignatureNode >> boundIdentifiersDo: aBlock [
 
-	self do: [ :import | import boundIdentifiersInto: aSet ]
+	self do: [ :import | import boundIdentifiersDo: aBlock ]
 ]
 
 { #category : #testing }

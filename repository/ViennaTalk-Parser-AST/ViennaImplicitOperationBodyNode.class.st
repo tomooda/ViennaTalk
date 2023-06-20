@@ -17,7 +17,7 @@ ViennaImplicitOperationBodyNode class >> externals: aViennaExternalsNode pre: aV
 ]
 
 { #category : #private }
-ViennaImplicitOperationBodyNode >> boundIdentifiersInto: aSet [
+ViennaImplicitOperationBodyNode >> boundIdentifiersDo: aBlock [
 
 	
 ]

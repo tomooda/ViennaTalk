@@ -14,7 +14,7 @@ ViennaOthersExpressionNode class >> expression: aViennaExpressionNode [
 ]
 
 { #category : #private }
-ViennaOthersExpressionNode >> boundIdentifiersInto: aSet [
+ViennaOthersExpressionNode >> boundIdentifiersDo: aBlock [
 
 	
 ]
