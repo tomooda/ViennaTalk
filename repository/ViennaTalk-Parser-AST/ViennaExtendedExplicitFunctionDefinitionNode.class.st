@@ -22,7 +22,7 @@ ViennaExtendedExplicitFunctionDefinitionNode class >> identifier: aString typeVa
 { #category : #accessing }
 ViennaExtendedExplicitFunctionDefinitionNode >> argumentType [
 
-	^ self parameterTypes type
+	^ self parameterTypes type parent: self
 ]
 
 { #category : #private }
@@ -142,6 +142,12 @@ ViennaExtendedExplicitFunctionDefinitionNode >> label [
 ]
 
 { #category : #accessing }
+ViennaExtendedExplicitFunctionDefinitionNode >> meassure [
+
+	^ nil
+]
+
+{ #category : #accessing }
 ViennaExtendedExplicitFunctionDefinitionNode >> parameterTypes [
 
 	^ self at: 3
@@ -157,6 +163,16 @@ ViennaExtendedExplicitFunctionDefinitionNode >> parameterTypes: aViennaParameter
 ViennaExtendedExplicitFunctionDefinitionNode >> parameters [
 
 	^ self parameterTypes parameters
+		  parent: self;
+		  yourself
+]
+
+{ #category : #accessing }
+ViennaExtendedExplicitFunctionDefinitionNode >> parametersList [
+
+	^ (ViennaParametersListNode with: self parameters)
+		  parent: self;
+		  yourself
 ]
 
 { #category : #accessing }
@@ -193,14 +209,18 @@ ViennaExtendedExplicitFunctionDefinitionNode >> returnIdentifiers [
 ViennaExtendedExplicitFunctionDefinitionNode >> returnType [
 
 	^ self identifierTypePairList type
+		  parent: self;
+		  yourself
 ]
 
 { #category : #accessing }
 ViennaExtendedExplicitFunctionDefinitionNode >> type [
 
-	^ ViennaPartialFunctionTypeNode
-		  argumentType: self argumentType
-		  returnType: self returnType
+	^ (ViennaPartialFunctionTypeNode
+		   argumentType: self argumentType
+		   returnType: self returnType)
+		  parent: self;
+		  yourself
 ]
 
 { #category : #accessing }

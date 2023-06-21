@@ -325,15 +325,6 @@ ViennaVDMParser >> div: arg1 and: arg2 [
 		  expression: arg2
 ]
 
-{ #category : #'parsers-definitions' }
-ViennaVDMParser >> document [
-
-	^ super document =>> [ :start :end :array |
-	  (ViennaDocumentNode withAll: array)
-		  start: start end: end;
-		  yourself ]
-]
-
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> dom: arg [
 
@@ -649,6 +640,15 @@ ViennaVDMParser >> fieldReference: stateDesig with: field [
 ViennaVDMParser >> fieldSelect: record with: field [
 
 	^ ViennaFieldSelectNode expression: record field: field
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> flatDocument [
+
+	^ super flatDocument =>> [ :start :end :array |
+	  (ViennaFlatDocumentNode withAll: array)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -1358,6 +1358,15 @@ ViennaVDMParser >> moduleBody [
 
 	^ super moduleBody =>> [ :start :end :array |
 	  (ViennaModuleBodyNode withAll: array)
+		  start: start end: end;
+		  yourself ]
+]
+
+{ #category : #'parsers-definitions' }
+ViennaVDMParser >> moduledDocument [
+
+	^ super moduledDocument =>> [ :start :end :array |
+	  (ViennaModularDocumentNode withAll: array)
 		  start: start end: end;
 		  yourself ]
 ]

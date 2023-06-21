@@ -22,6 +22,8 @@ ViennaImplicitFunctionDefinitionNode class >> identifier: aString typeVariableLi
 ViennaImplicitFunctionDefinitionNode >> argumentType [
 
 	^ self parameterTypes patternTypePairList type
+		  parent: self;
+		  yourself
 ]
 
 { #category : #'accessing-definitions' }
@@ -166,6 +168,12 @@ ViennaImplicitFunctionDefinitionNode >> label [
 ]
 
 { #category : #accessing }
+ViennaImplicitFunctionDefinitionNode >> measure [
+
+	^ nil
+]
+
+{ #category : #accessing }
 ViennaImplicitFunctionDefinitionNode >> parameterTypes [
 
 	^ self at: 3
@@ -181,6 +189,16 @@ ViennaImplicitFunctionDefinitionNode >> parameterTypes: aViennaParameterTypesNod
 ViennaImplicitFunctionDefinitionNode >> parameters [
 
 	^ self parameterTypes parameters
+		  parent: self;
+		  yourself
+]
+
+{ #category : #accessing }
+ViennaImplicitFunctionDefinitionNode >> parametersList [
+
+	^ (ViennaParametersListNode with: self parameters)
+		  parent: self;
+		  yourself
 ]
 
 { #category : #accessing }
@@ -223,6 +241,8 @@ ViennaImplicitFunctionDefinitionNode >> returnIdentifiers [
 ViennaImplicitFunctionDefinitionNode >> returnType [
 
 	^ self identifierTypePairList type
+		  parent: self;
+		  yourself
 ]
 
 { #category : #'accessing-definitions' }
@@ -234,9 +254,11 @@ ViennaImplicitFunctionDefinitionNode >> shortName [
 { #category : #accessing }
 ViennaImplicitFunctionDefinitionNode >> type [
 
-	^ ViennaPartialFunctionTypeNode
-		  argumentType: self argumentType
-		  returnType: self returnType
+	^ (ViennaPartialFunctionTypeNode
+		   argumentType: self argumentType
+		   returnType: self returnType)
+		  parent: self;
+		  yourself
 ]
 
 { #category : #accessing }

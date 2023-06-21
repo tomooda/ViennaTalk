@@ -38,3 +38,19 @@ ViennaModuleBodyNode >> label [
 
 	^ 'ModuleBody'
 ]
+
+{ #category : #enumerating }
+ViennaModuleBodyNode >> sectionsDo: aBlock [
+
+	self do: [ :definitionBlock |
+		aBlock value: definitionBlock definition ]
+]
+
+{ #category : #enumerating }
+ViennaModuleBodyNode >> toplevelDefinitionsDo: aBlock [
+
+	self sectionsDo: [ :section |
+		section isViennaStateDefinitionNode
+			ifTrue: [ aBlock value: section ]
+			ifFalse: [ section do: aBlock ] ]
+]

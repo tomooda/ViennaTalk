@@ -49,17 +49,15 @@ ViennaRefactoringBrowser class >> defaultLayout [
 { #category : #'instance creation' }
 ViennaRefactoringBrowser class >> empty [
 
-	<script: 'ViennaRefactoringBrowser empty openWithSpec'>
-	^ self on: ViennaDocumentNode empty
+	<script: 'ViennaRefactoringBrowser empty open'>
+	^ self on: ViennaModularDocumentNode empty
 ]
 
 { #category : #examples }
 ViennaRefactoringBrowser class >> exampleATC [
-	(ViennaRefactoringBrowser
-		on:
-			(ViennaVDMParser new
-				parse:
-					'module ATC_TERMINLOGY -- Air-Traffic Control (ATC) System abstract model from the book "ProofinVDM."
+
+	(ViennaRefactoringBrowser on: (ViennaVDMParser new parse:
+			  'module ATC_TERMINLOGY -- Air-Traffic Control (ATC) System abstract model from the book "ProofinVDM."
 -- This is the top-level specification of the ATC subsystem,
 exports all
 definitions
@@ -340,16 +338,15 @@ operations
     getLocation() == return ATC.location;
 -- Combinatorial test
 
-end ATC')) openWithSpec
+end ATC')) open
 ]
 
 { #category : #examples }
 ViennaRefactoringBrowser class >> exampleCounter [
-	(ViennaRefactoringBrowser
-		on:
-			(ViennaVDMParser new
-				parse:
-					'module Counter exports all definitions
+
+	(ViennaRefactoringBrowser on:
+		 (ViennaVDMParser new parse:
+			  'module Counter exports all definitions
 					types
      Display = seq of char inv display == elems display subset rng nat2char;
 
@@ -397,7 +394,7 @@ module CounterTest
 exports all
 definitions
 end CounterTest
-')) openWithSpec
+')) open
 ]
 
 { #category : #menus }
@@ -985,7 +982,7 @@ ViennaRefactoringBrowser >> load: aString [
 	ast isViennaDocumentNode ifFalse: [ ^ nil ].
 	ast first ifNotNil: [ :first |
 		first isViennaDefinitionBlockNode ifTrue: [
-			ast := ViennaDocumentNode with: (ViennaModuleNode
+			ast := ViennaModularDocumentNode with: (ViennaModuleNode
 					        identifier: 'DEFAULT'
 					        interface: (ViennaInterfaceNode
 							         importDefinitionList: nil

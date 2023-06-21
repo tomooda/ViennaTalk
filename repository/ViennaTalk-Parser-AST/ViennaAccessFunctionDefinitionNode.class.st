@@ -26,10 +26,22 @@ ViennaAccessFunctionDefinitionNode >> access: aViennaAccessNode [
 	self at: 1 put: aViennaAccessNode
 ]
 
+{ #category : #accessing }
+ViennaAccessFunctionDefinitionNode >> argumentType [
+
+	^ self functionDefinition argumentType
+]
+
 { #category : #private }
 ViennaAccessFunctionDefinitionNode >> boundIdentifiersDo: aBlock [
 
 	self functionDefinition boundIdentifiersDo: aBlock
+]
+
+{ #category : #accessing }
+ViennaAccessFunctionDefinitionNode >> expression [
+
+	^ self functionDefinition expression
 ]
 
 { #category : #'pretty printing' }
@@ -59,6 +71,12 @@ ViennaAccessFunctionDefinitionNode >> functionDefinition: aViennaFunctionDefinit
 	self at: 2 put: aViennaFunctionDefinitionNode
 ]
 
+{ #category : #accessing }
+ViennaAccessFunctionDefinitionNode >> identifier [
+
+	^ self functionDefinition identifier
+]
+
 { #category : #testing }
 ViennaAccessFunctionDefinitionNode >> isViennaAccessFunctionDefinitionNode [
 
@@ -71,14 +89,56 @@ ViennaAccessFunctionDefinitionNode >> label [
 	^ 'AccessFunctionDefinition'
 ]
 
+{ #category : #accessing }
+ViennaAccessFunctionDefinitionNode >> measure [
+
+	^ self functionDefinition measure
+]
+
+{ #category : #accessing }
+ViennaAccessFunctionDefinitionNode >> parametersList [
+
+	^ self functionDefinition parametersList
+]
+
+{ #category : #accessing }
+ViennaAccessFunctionDefinitionNode >> post [
+
+	^ self functionDefinition post
+]
+
+{ #category : #accessing }
+ViennaAccessFunctionDefinitionNode >> pre [
+
+	^ self functionDefinition pre
+]
+
 { #category : #'accessing-definitions' }
 ViennaAccessFunctionDefinitionNode >> resolve [
 
 	^ self functionDefinition resolve
 ]
 
+{ #category : #accessing }
+ViennaAccessFunctionDefinitionNode >> returnType [
+
+	^ self functionDefinition returnType
+]
+
 { #category : #'accessing-definitions' }
 ViennaAccessFunctionDefinitionNode >> shortName [
 
 	^ self functionDefinition shortName
+]
+
+{ #category : #accessing }
+ViennaAccessFunctionDefinitionNode >> type [
+
+	^ self functionDefinition type
+]
+
+{ #category : #accessing }
+ViennaAccessFunctionDefinitionNode >> typeVariableList [
+
+	^ self functionDefinition typeVariableList
 ]

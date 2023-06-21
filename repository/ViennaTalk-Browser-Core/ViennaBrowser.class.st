@@ -1043,7 +1043,7 @@ ViennaBrowser >> generateSmalltalkScript [
 					  alert: 'Failed to generate a code : ' , ast message
 					  title: 'ViennaTalk' ].
 			ast first isViennaModuleNode ifTrue: [
-				ast := ViennaDocumentNode withAll: ast first third ].
+				ast := ViennaFlatDocumentNode withAll: ast first third ].
 			(ViennaVDM2SmalltalkScript new generate: ast) ifNotNil: [ :script |
 				Smalltalk tools workspace openContents:
 					(RBParser parseExpression: script) formattedCode ] ] ]

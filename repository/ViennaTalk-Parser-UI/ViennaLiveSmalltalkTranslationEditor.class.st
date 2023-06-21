@@ -128,9 +128,10 @@ ViennaLiveSmalltalkTranslationEditor class >> initialize [
 
 { #category : #menu }
 ViennaLiveSmalltalkTranslationEditor class >> viennaDevMenuOn: aBuilder [
+
 	<ViennaDev>
 	(aBuilder item: #'VDM->Smalltalk translator')
-		action: [ self new openWithSpec ];
+		action: [ self new open ];
 		order: 0.2;
 		help: 'VDM-SL to Smalltalk LIVE translating editor';
 		icon: nil

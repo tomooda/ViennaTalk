@@ -17,8 +17,20 @@ ViennaImportSignatureNode >> boundIdentifiersDo: aBlock [
 	self do: [ :import | import boundIdentifiersDo: aBlock ]
 ]
 
+{ #category : #enumerating }
+ViennaImportSignatureNode >> importsDo: aBlock [
+
+	self do: aBlock
+]
+
 { #category : #testing }
 ViennaImportSignatureNode >> isViennaImportSignatureNode [
 
 	^ true
+]
+
+{ #category : #accessing }
+ViennaImportSignatureNode >> moduleIdentifier [
+
+	^ parent ifNotNil: #moduleIdentifier
 ]

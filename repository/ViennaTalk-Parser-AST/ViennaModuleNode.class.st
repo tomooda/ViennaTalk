@@ -34,6 +34,18 @@ ViennaModuleNode >> boundIdentifiersDo: aBlock [
 ]
 
 { #category : #'accessing-definitions' }
+ViennaModuleNode >> deepResolveIdentifier: aString [
+
+	| node |
+	node := self resolveIdentifier: aString.
+	node ifNil: [ ^ nil ].
+	node isViennaImportNode ifTrue: [
+		(self moduleNamed: node moduleIdentifier) ifNotNil: [ :module |
+			^ module deepResolveIdentifier: node identifier ] ].
+	^ node
+]
+
+{ #category : #'accessing-definitions' }
 ViennaModuleNode >> definitionOfLocalName: aString [
 
 	self moduleBody do: [ :defBlock |
@@ -118,6 +130,13 @@ ViennaModuleNode >> identifier: aString [
 	self at: 1 put: aString
 ]
 
+{ #category : #enumerating }
+ViennaModuleNode >> importDefinitionsDo: aBlock [
+
+	self interface importDefinitionList ifNotNil: [ :importDefinitionList |
+		importDefinitionList do: aBlock ]
+]
+
 { #category : #accessing }
 ViennaModuleNode >> importsIdentifier: aString [
 
@@ -168,10 +187,33 @@ ViennaModuleNode >> moduleBody: aViennaModuleBodyNode [
 	self at: 3 put: aViennaModuleBodyNode
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaModuleNode >> resolveIdentifier: aString [
+
+	self toplevelDefinitionsDo: [ :definition |
+		(definition bindsIdentifier: aString) ifTrue: [ ^ definition ] ].
+	self importDefinitionsDo: [ :importDefinition |
+		importDefinition importsDo: [ :import |
+			import rename identifier = aString ifTrue: [ ^ import ] ] ].
+	^ nil
+]
+
+{ #category : #enumerating }
+ViennaModuleNode >> sectionsDo: aBlock [
+
+	self moduleBody sectionsDo: aBlock
+]
+
 { #category : #testing }
 ViennaModuleNode >> shortName [
 
 	^ self identifier
+]
+
+{ #category : #enumerating }
+ViennaModuleNode >> toplevelDefinitionsDo: aBlock [
+
+	self moduleBody toplevelDefinitionsDo: aBlock
 ]
 
 { #category : #accessing }

@@ -232,6 +232,14 @@ ViennaNode >> bindHolderNode [
 	^ self
 ]
 
+{ #category : #testing }
+ViennaNode >> bindsIdentifier: aString [
+
+	self boundIdentifiersDo: [ :identifier |
+		identifier = aString ifTrue: [ ^ true ] ].
+	^ false
+]
+
 { #category : #private }
 ViennaNode >> boundIdentifiersDo: aBlock [
 
@@ -328,7 +336,7 @@ ViennaNode >> do: aBlock [
 { #category : #accessing }
 ViennaNode >> document [
 
-	^ self detectParent: #isViennaDocumentNode ifNone: [ nil ]
+	^ parent ifNotNil: #document
 ]
 
 { #category : #accessing }

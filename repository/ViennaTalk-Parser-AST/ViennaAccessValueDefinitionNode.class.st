@@ -59,6 +59,12 @@ ViennaAccessValueDefinitionNode >> label [
 ]
 
 { #category : #'accessing-definitions' }
+ViennaAccessValueDefinitionNode >> pattern [
+
+	^ self valueDefinition pattern
+]
+
+{ #category : #'accessing-definitions' }
 ViennaAccessValueDefinitionNode >> resolve [
 
 	^ self valueDefinition resolve
@@ -68,6 +74,12 @@ ViennaAccessValueDefinitionNode >> resolve [
 ViennaAccessValueDefinitionNode >> shortName [
 
 	^ self valueDefinition shortName
+]
+
+{ #category : #'accessing-definitions' }
+ViennaAccessValueDefinitionNode >> type [
+
+	^ self valueDefinition type
 ]
 
 { #category : #accessing }

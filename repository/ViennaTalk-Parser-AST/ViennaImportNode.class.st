@@ -14,7 +14,7 @@ ViennaImportNode class >> isAbstract [
 { #category : #private }
 ViennaImportNode >> boundIdentifiersDo: aBlock [
 
-	self rename ifNotNil: aBlock
+	self rename ifNotNil: [ :name | aBlock value: name identifier ]
 ]
 
 { #category : #accessing }
@@ -33,6 +33,12 @@ ViennaImportNode >> isViennaImportNode [
 ViennaImportNode >> isViennaImportNode: aString [
 
 	^ self identifier = aString
+]
+
+{ #category : #accessing }
+ViennaImportNode >> moduleIdentifier [
+
+	^ parent ifNotNil: #moduleIdentifier
 ]
 
 { #category : #accessing }

@@ -20,6 +20,12 @@ ViennaImportModuleSignatureNode >> formatWith: aViennaAbstractFormatter [
 	^ aViennaAbstractFormatter join: String cr withAll: importSignatures
 ]
 
+{ #category : #enumerating }
+ViennaImportModuleSignatureNode >> importsDo: aBlock [
+
+	self do: [ :importSignature | importSignature importsDo: aBlock ]
+]
+
 { #category : #testing }
 ViennaImportModuleSignatureNode >> isViennaImportModuleSignatureNode [
 
@@ -30,4 +36,10 @@ ViennaImportModuleSignatureNode >> isViennaImportModuleSignatureNode [
 ViennaImportModuleSignatureNode >> label [
 
 	^ 'ImportModuleSignature'
+]
+
+{ #category : #accessing }
+ViennaImportModuleSignatureNode >> moduleIdentifier [
+
+	^ parent ifNotNil: #moduleIdentifier
 ]

@@ -17,6 +17,10 @@ ViennaImportModuleSignatureAllNode >> formatWith: aViennaAbstractFormatter [
 	^ 'all'
 ]
 
+{ #category : #enumerating }
+ViennaImportModuleSignatureAllNode >> importsDo: aBlock [
+]
+
 { #category : #testing }
 ViennaImportModuleSignatureAllNode >> isViennaImportModuleSignatureAllNode [
 
@@ -27,4 +31,10 @@ ViennaImportModuleSignatureAllNode >> isViennaImportModuleSignatureAllNode [
 ViennaImportModuleSignatureAllNode >> label [
 
 	^ 'ImportModuleSignatureAll'
+]
+
+{ #category : #accessing }
+ViennaImportModuleSignatureAllNode >> moduleIdentifier [
+
+	^ parent ifNotNil: #moduleIdentifier
 ]

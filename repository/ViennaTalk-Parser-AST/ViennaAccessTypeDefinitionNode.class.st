@@ -52,6 +52,12 @@ ViennaAccessTypeDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
 	self typeDefinition freeIdentifiersExcept: aSet do: aBlock
 ]
 
+{ #category : #accessing }
+ViennaAccessTypeDefinitionNode >> identifier [
+
+	^ self typeDefinition identifier
+]
+
 { #category : #testing }
 ViennaAccessTypeDefinitionNode >> isViennaAccessTypeDefinitionNode [
 

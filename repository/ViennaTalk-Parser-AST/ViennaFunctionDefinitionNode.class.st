@@ -13,6 +13,12 @@ ViennaFunctionDefinitionNode class >> definition: aViennaNode [
 		  yourself
 ]
 
+{ #category : #accessing }
+ViennaFunctionDefinitionNode >> argumentType [
+
+	^ self definition argumentType
+]
+
 { #category : #'accessing-definitions' }
 ViennaFunctionDefinitionNode >> asAccessDefinition [
 
@@ -37,6 +43,12 @@ ViennaFunctionDefinitionNode >> definition [
 ViennaFunctionDefinitionNode >> definition: aViennaNode [
 
 	self at: 1 put: aViennaNode
+]
+
+{ #category : #accessing }
+ViennaFunctionDefinitionNode >> expression [
+
+	^ self definition expression
 ]
 
 { #category : #'pretty printing' }
@@ -75,14 +87,56 @@ ViennaFunctionDefinitionNode >> label [
 	^ 'FunctionDefinition'
 ]
 
+{ #category : #accessing }
+ViennaFunctionDefinitionNode >> measure [
+
+	^ self definition measure
+]
+
+{ #category : #accessing }
+ViennaFunctionDefinitionNode >> parametersList [
+
+	^ self definition parametersList
+]
+
+{ #category : #accessing }
+ViennaFunctionDefinitionNode >> post [
+
+	^ self definition post
+]
+
+{ #category : #accessing }
+ViennaFunctionDefinitionNode >> pre [
+
+	^ self definition pre
+]
+
 { #category : #'accessing-definitions' }
 ViennaFunctionDefinitionNode >> resolve [
 
 	^ self definition
 ]
 
+{ #category : #accessing }
+ViennaFunctionDefinitionNode >> returnType [
+
+	^ self definition returnType
+]
+
 { #category : #'accessing-definitions' }
 ViennaFunctionDefinitionNode >> shortName [
 
 	^ self definition shortName
+]
+
+{ #category : #accessing }
+ViennaFunctionDefinitionNode >> type [
+
+	^ self definition type
+]
+
+{ #category : #accessing }
+ViennaFunctionDefinitionNode >> typeVariableList [
+
+	^ self definition typeVariableList
 ]

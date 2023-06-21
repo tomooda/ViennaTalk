@@ -5,10 +5,28 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #testing }
+ViennaDocumentNode class >> isAbstract [
+
+	^ self = ViennaDocumentNode
+]
+
 { #category : #private }
 ViennaDocumentNode >> boundIdentifiersDo: aBlock [
 
 	self do: [ :node | node boundIdentifiersDo: aBlock ]
+]
+
+{ #category : #'accessing-definitions' }
+ViennaDocumentNode >> deepResolveIdentifier: aString [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
+ViennaDocumentNode >> document [
+
+	^ self
 ]
 
 { #category : #'pretty printing' }
@@ -41,4 +59,10 @@ ViennaDocumentNode >> isViennaDocumentNode [
 ViennaDocumentNode >> label [
 
 	^ 'Document'
+]
+
+{ #category : #'accessing-definitions' }
+ViennaDocumentNode >> resolveIdentifier: aString [
+
+	^ self subclassResponsibility
 ]
