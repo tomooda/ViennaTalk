@@ -1,8 +1,6 @@
 Class {
 	#name : #ViennaVDM2Smalltalk,
 	#superclass : #Object,
-	#traits : 'TViennaVDMFreeVariableCollector',
-	#classTraits : 'TViennaVDMFreeVariableCollector classTrait',
 	#instVars : [
 		'decoder',
 		'runtimeAssertionCheck',
@@ -234,10 +232,9 @@ ViennaVDM2Smalltalk >> blockStatement: aViennaNode env: aDictionary [
 
 	| statements vars |
 	statements := OrderedCollection new: aViennaNode size.
-	vars := Set new.
-	aViennaNode do: [ :statement |
-		statement isViennaDclStatementNode ifTrue: [
-			self boundVariables: statement into: vars ] ].
+	vars := aViennaNode
+		        ifNotEmpty: [ aViennaNode first uniqueBoundIdentifiers ]
+		        ifEmpty: [ #(  ) ].
 	aViennaNode do: [ :node |
 		(self generate: node env: aDictionary) ifNotNil: [ :statement |
 			statements add: statement ] ].
@@ -2581,12 +2578,15 @@ ViennaVDM2Smalltalk >> preconditionExpression: aViennaNode env: aDictionary [
 
 { #category : #utilities }
 ViennaVDM2Smalltalk >> prepareOldVarsIn: aViennaNode intoEnv: aDictionary [
+
 	| env |
 	env := aDictionary copy.
-	(self freeVariables: aViennaNode env: aDictionary)
-		do: [ :var | 
-			var last = $~
-				ifTrue: [ env at: var put: '(_oldState at: ' , (var copyFrom: 1 to: var size - 1) storeString , ')' ] ].
+	aViennaNode
+		allDescendantsSuchThat: #isViennaOldNameNode
+		do: [ :node |
+			env
+				at: node identifier , '~'
+				put: '(_oldState at: ' , node identifier storeString , ')' ].
 	^ env
 ]
 
@@ -2660,14 +2660,12 @@ ViennaVDM2Smalltalk >> recordTypeDefinition: aViennaNode env: aDictionary [
 { #category : #private }
 ViennaVDM2Smalltalk >> reorderDefinitions: aCollectionOfViennaNode [
 
-	| originalDefs env boundVars freeVars newDefs |
+	| originalDefs boundVars freeVars newDefs |
 	originalDefs := Array withAll: aCollectionOfViennaNode.
-	env := Dictionary new.
 	boundVars := (originalDefs collect: [ :def |
 		              def -> def uniqueBoundIdentifiers ]) asDictionary.
 	freeVars := (originalDefs collect: [ :def |
-		             def -> (self freeVariables: def env: env) asArray ])
-		            asDictionary.
+		             def -> def uniqueFreeIdentifiers ]) asDictionary.
 	newDefs := OrderedCollection new: originalDefs size.
 	[ originalDefs notEmpty ] whileTrue: [
 		| allBoundVars index |

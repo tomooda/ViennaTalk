@@ -1,8 +1,6 @@
 Class {
 	#name : #ViennaVDM2SmalltalkScriptTest,
 	#superclass : #TestCase,
-	#traits : 'TViennaVDMFreeVariableCollectorTestCase',
-	#classTraits : 'TViennaVDMFreeVariableCollectorTestCase classTrait',
 	#category : #'ViennaTalk-Transpiler-Test'
 }
 
@@ -235,19 +233,6 @@ ViennaVDM2SmalltalkScriptTest >> testBlockStatementEnv [
 		assert: (self evaluate:
 				 '|a|' , (ViennaVDM2SmalltalkScript new generate: node) , '. a')
 		equals: 3
-]
-
-{ #category : #'tests-bound variables-patterns and binds' }
-ViennaVDM2SmalltalkScriptTest >> testBoundVariablesSetUnionPatternInto [
-
-	| node binds |
-	node := ViennaVDMParser new setUnionPattern end parse:
-		        '{v1, v2} union {v3}'.
-	self deny: node isPetit2Failure.
-	self assert: node isViennaSetUnionPatternNode.
-	binds := Set new.
-	ViennaVDM2SmalltalkScript new boundVariables: node into: binds.
-	self assert: binds equals: { 'v1'. 'v2'. 'v3' } asSet
 ]
 
 { #category : #'tests-code generation-statements' }

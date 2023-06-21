@@ -1,8 +1,6 @@
 Class {
 	#name : #ViennaVDM2SmalltalkObjectTest,
 	#superclass : #TestCase,
-	#traits : 'TViennaVDMFreeVariableCollectorTestCase',
-	#classTraits : 'TViennaVDMFreeVariableCollectorTestCase classTrait',
 	#category : #'ViennaTalk-Transpiler-Test'
 }
 
