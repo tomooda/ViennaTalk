@@ -23,7 +23,14 @@ ViennaExtendedExplicitFunctionDefinitionNode class >> identifier: aString typeVa
 { #category : #accessing }
 ViennaExtendedExplicitFunctionDefinitionNode >> argumentType [
 
-	^ self parameterTypes type parent: self
+	^ self parameterTypes type
+]
+
+{ #category : #'accessing-definitions' }
+ViennaExtendedExplicitFunctionDefinitionNode >> asAccessDefinition [
+
+	^ (ViennaFunctionDefinitionNode definition: self copyFragment)
+		  asAccessDefinition
 ]
 
 { #category : #private }
@@ -44,6 +51,16 @@ ViennaExtendedExplicitFunctionDefinitionNode >> expression [
 ViennaExtendedExplicitFunctionDefinitionNode >> expression: aViennaExpressionNode [
 
 	self at: 5 put: aViennaExpressionNode
+]
+
+{ #category : #'accessing-definitions' }
+ViennaExtendedExplicitFunctionDefinitionNode >> findResolverForIdentifier: aString [
+
+	^ ((self returnIdentifiers includes: aString) or: [
+		   (self typeVariableList bindsIdentifier: aString) or: [
+			   self parameters bindsIdentifier: aString ] ])
+		  ifTrue: [ self ]
+		  ifFalse: [ super findResolverForIdentifier: aString ]
 ]
 
 { #category : #'pretty printing' }
@@ -170,16 +187,12 @@ ViennaExtendedExplicitFunctionDefinitionNode >> parameterTypes: aViennaParameter
 ViennaExtendedExplicitFunctionDefinitionNode >> parameters [
 
 	^ self parameterTypes parameters
-		  parent: self;
-		  yourself
 ]
 
 { #category : #accessing }
 ViennaExtendedExplicitFunctionDefinitionNode >> parametersList [
 
-	^ (ViennaParametersListNode with: self parameters)
-		  parent: self;
-		  yourself
+	^ ViennaParametersListNode with: self parameters copyFragment
 ]
 
 { #category : #accessing }
@@ -206,16 +219,6 @@ ViennaExtendedExplicitFunctionDefinitionNode >> pre: aViennaExpressionNode [
 	self at: 6 put: aViennaExpressionNode
 ]
 
-{ #category : #'accessing-definitions' }
-ViennaExtendedExplicitFunctionDefinitionNode >> resolveIdentifier: aString [
-
-	^ ((self returnIdentifiers includes: aString) or: [
-		   (self typeVariableList bindsIdentifier: aString) or: [
-			   self parameters bindsIdentifier: aString ] ])
-		  ifTrue: [ self ]
-		  ifFalse: [ super resolveIdentifier: aString ]
-]
-
 { #category : #accessing }
 ViennaExtendedExplicitFunctionDefinitionNode >> returnIdentifiers [
 
@@ -226,16 +229,14 @@ ViennaExtendedExplicitFunctionDefinitionNode >> returnIdentifiers [
 ViennaExtendedExplicitFunctionDefinitionNode >> returnType [
 
 	^ self identifierTypePairList type
-		  parent: self;
-		  yourself
 ]
 
 { #category : #accessing }
 ViennaExtendedExplicitFunctionDefinitionNode >> type [
 
 	^ (ViennaPartialFunctionTypeNode
-		   argumentType: self argumentType
-		   returnType: self returnType)
+		   argumentType: self argumentType copyFragment
+		   returnType: self returnType copyFragment)
 		  parent: self;
 		  yourself
 ]

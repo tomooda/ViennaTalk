@@ -27,7 +27,8 @@ ViennaExplicitOperationDefinitionNode >> argumentType [
 { #category : #'accessing-definitions' }
 ViennaExplicitOperationDefinitionNode >> asAccessDefinition [
 
-	^ (ViennaOperationDefinitionNode definition: self) asAccessDefinition
+	^ (ViennaOperationDefinitionNode definition: self copyFragment)
+		  asAccessDefinition
 ]
 
 { #category : #'accessing-definitions' }
@@ -68,6 +69,14 @@ ViennaExplicitOperationDefinitionNode >> definitionOfLocalName: aString [
 		n isViennaPatternIdentifierNode: aString ]
 		do: [ :n | ^ n ].
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
+]
+
+{ #category : #'accessing-definitions' }
+ViennaExplicitOperationDefinitionNode >> findResolverForIdentifier: aString [
+
+	^ (aString = 'RESULT' or: [ self parameters bindsIdentifier: aString ])
+		  ifTrue: [ self ]
+		  ifFalse: [ super findResolverForIdentifier: aString ]
 ]
 
 { #category : #'pretty printing' }
@@ -208,14 +217,6 @@ ViennaExplicitOperationDefinitionNode >> pre: aViennaExpression [
 ViennaExplicitOperationDefinitionNode >> resolve [
 
 	^ self
-]
-
-{ #category : #'accessing-definitions' }
-ViennaExplicitOperationDefinitionNode >> resolveIdentifier: aString [
-
-	^ (aString = 'RESULT' or: [ self parameters bindsIdentifier: aString ])
-		  ifTrue: [ self ]
-		  ifFalse: [ super resolveIdentifier: aString ]
 ]
 
 { #category : #accessing }

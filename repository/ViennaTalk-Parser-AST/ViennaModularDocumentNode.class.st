@@ -6,7 +6,13 @@ Class {
 }
 
 { #category : #'accessing-definitions' }
-ViennaModularDocumentNode >> deepResolveIdentifier: aString [
+ViennaModularDocumentNode >> deepFindResolverForIdentifier: aString [
+
+	^ nil
+]
+
+{ #category : #'accessing-definitions' }
+ViennaModularDocumentNode >> findResolverForIdentifier: aString [
 
 	^ nil
 ]
@@ -15,10 +21,4 @@ ViennaModularDocumentNode >> deepResolveIdentifier: aString [
 ViennaModularDocumentNode >> isViennaModularDocumnetNode [
 
 	^ true
-]
-
-{ #category : #'accessing-definitions' }
-ViennaModularDocumentNode >> resolveIdentifier: aString [
-
-	^ nil
 ]

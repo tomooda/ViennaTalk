@@ -20,14 +20,14 @@ ViennaRecordTypeDefinitionNode >> asAccessDefinition [
 
 	^ ViennaAccessTypeDefinitionNode
 		  access: ViennaAccessNode empty
-		  typeDefinition: self
+		  typeDefinition: self copyFragment
 ]
 
 { #category : #'accessing-definitions' }
 ViennaRecordTypeDefinitionNode >> asExport [
 
 	^ ViennaTypeStructExportNode name:
-		  (ViennaLocalNameNode identifier: self first)
+		  (ViennaLocalNameNode identifier: self identifier)
 ]
 
 { #category : #'accessing-definitions' }

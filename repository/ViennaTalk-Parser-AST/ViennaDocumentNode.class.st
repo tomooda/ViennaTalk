@@ -23,6 +23,12 @@ ViennaDocumentNode >> document [
 	^ self
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaDocumentNode >> findResolverForIdentifier: aString [
+
+	^ self subclassResponsibility
+]
+
 { #category : #'pretty printing' }
 ViennaDocumentNode >> formatWith: aViennaAbstractFormatter [
 
@@ -53,10 +59,4 @@ ViennaDocumentNode >> isViennaDocumentNode [
 ViennaDocumentNode >> label [
 
 	^ 'Document'
-]
-
-{ #category : #'accessing-definitions' }
-ViennaDocumentNode >> resolveIdentifier: aString [
-
-	^ self subclassResponsibility
 ]

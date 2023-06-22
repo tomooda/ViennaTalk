@@ -50,6 +50,14 @@ ViennaLetStatementNode >> definitionOfLocalName: aString [
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaLetStatementNode >> findResolverForIdentifier: aString [
+
+	^ (self localDefinitionList bindsIdentifier: aString)
+		  ifTrue: [ self ]
+		  ifFalse: [ super findResolverForIdentifier: aString ]
+]
+
 { #category : #'pretty printing' }
 ViennaLetStatementNode >> formatWith: aViennaAbstractFormatter [
 
@@ -106,14 +114,6 @@ ViennaLetStatementNode >> localDefinitionList [
 ViennaLetStatementNode >> localDefinitionList: aViennaLocalDefinitionListNode [
 
 	self at: 1 put: aViennaLocalDefinitionListNode
-]
-
-{ #category : #'accessing-definitions' }
-ViennaLetStatementNode >> resolveIdentifier: aString [
-
-	^ (self localDefinitionList bindsIdentifier: aString)
-		  ifTrue: [ self ]
-		  ifFalse: [ super resolveIdentifier: aString ]
 ]
 
 { #category : #accessing }

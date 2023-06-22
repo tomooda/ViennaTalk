@@ -25,6 +25,14 @@ ViennaBlockStatementNode >> definitionOfLocalName: aString [
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaBlockStatementNode >> findResolverForIdentifier: aString [
+
+	self dclStatement ifNotNil: [ :dclStatement |
+		(dclStatement bindsIdentifier: aString) ifTrue: [ ^ self ] ].
+	^ super findResolverForIdentifier: aString
+]
+
 { #category : #'pretty printing' }
 ViennaBlockStatementNode >> formatWith: aViennaAbstractFormatter [
 
@@ -60,12 +68,4 @@ ViennaBlockStatementNode >> isViennaBlockStatementNode [
 ViennaBlockStatementNode >> label [
 
 	^ 'BlockStatement'
-]
-
-{ #category : #'accessing-definitions' }
-ViennaBlockStatementNode >> resolveIdentifier: aString [
-
-	self dclStatement ifNotNil: [ :dclStatement |
-		(dclStatement bindsIdentifier: aString) ifTrue: [ ^ self ] ].
-	^ super resolveIdentifier: aString
 ]

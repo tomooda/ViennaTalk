@@ -37,6 +37,14 @@ ViennaSequenceComprehensionNode >> expression: aViennaExpressionNode [
 	self at: 1 put: aViennaExpressionNode
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaSequenceComprehensionNode >> findResolverForIdentifier: aString [
+
+	^ (self setSeqBind bindsIdentifier: aString)
+		  ifTrue: [ self ]
+		  ifFalse: [ super findResolverForIdentifier: aString ]
+]
+
 { #category : #'pretty printing' }
 ViennaSequenceComprehensionNode >> formatWith: aViennaAbstractFormatter [
 
@@ -89,14 +97,6 @@ ViennaSequenceComprehensionNode >> label [
 ViennaSequenceComprehensionNode >> pattern [
 
 	^ self setSeqBind pattern
-]
-
-{ #category : #'accessing-definitions' }
-ViennaSequenceComprehensionNode >> resolveIdentifier: aString [
-
-	^ (self setSeqBind bindsIdentifier: aString)
-		  ifTrue: [ self ]
-		  ifFalse: [ super resolveIdentifier: aString ]
 ]
 
 { #category : #accessing }

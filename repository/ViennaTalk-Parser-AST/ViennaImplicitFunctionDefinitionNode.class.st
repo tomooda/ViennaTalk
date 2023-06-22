@@ -22,14 +22,13 @@ ViennaImplicitFunctionDefinitionNode class >> identifier: aString typeVariableLi
 ViennaImplicitFunctionDefinitionNode >> argumentType [
 
 	^ self parameterTypes patternTypePairList type
-		  parent: self;
-		  yourself
 ]
 
 { #category : #'accessing-definitions' }
 ViennaImplicitFunctionDefinitionNode >> asAccessDefinition [
 
-	^ (ViennaFunctionDefinitionNode definition: self) asAccessDefinition
+	^ (ViennaFunctionDefinitionNode definition: self copyFragment)
+		  asAccessDefinition
 ]
 
 { #category : #'accessing-definitions' }
@@ -74,6 +73,16 @@ ViennaImplicitFunctionDefinitionNode >> definitionOfLocalName: aString [
 				do: [ :n | ^ n ] ] ].
 	self identifierTypePairList do: [ :n |
 		n = aString ifTrue: [ ^ self ] ]
+]
+
+{ #category : #'accessing-definitions' }
+ViennaImplicitFunctionDefinitionNode >> findResolverForIdentifier: aString [
+
+	^ ((self returnIdentifiers includes: aString) or: [
+		   (self typeVariableList bindsIdentifier: aString) or: [
+			   self parameters bindsIdentifier: aString ] ])
+		  ifTrue: [ self ]
+		  ifFalse: [ super findResolverForIdentifier: aString ]
 ]
 
 { #category : #'pretty printing' }
@@ -189,16 +198,12 @@ ViennaImplicitFunctionDefinitionNode >> parameterTypes: aViennaParameterTypesNod
 ViennaImplicitFunctionDefinitionNode >> parameters [
 
 	^ self parameterTypes parameters
-		  parent: self;
-		  yourself
 ]
 
 { #category : #accessing }
 ViennaImplicitFunctionDefinitionNode >> parametersList [
 
-	^ (ViennaParametersListNode with: self parameters)
-		  parent: self;
-		  yourself
+	^ ViennaParametersListNode with: self parameters copyFragment
 ]
 
 { #category : #accessing }
@@ -231,16 +236,6 @@ ViennaImplicitFunctionDefinitionNode >> resolve [
 	^ self
 ]
 
-{ #category : #'accessing-definitions' }
-ViennaImplicitFunctionDefinitionNode >> resolveIdentifier: aString [
-
-	^ ((self returnIdentifiers includes: aString) or: [
-		   (self typeVariableList bindsIdentifier: aString) or: [
-			   self parameters bindsIdentifier: aString ] ])
-		  ifTrue: [ self ]
-		  ifFalse: [ super resolveIdentifier: aString ]
-]
-
 { #category : #accessing }
 ViennaImplicitFunctionDefinitionNode >> returnIdentifiers [
 
@@ -251,8 +246,6 @@ ViennaImplicitFunctionDefinitionNode >> returnIdentifiers [
 ViennaImplicitFunctionDefinitionNode >> returnType [
 
 	^ self identifierTypePairList type
-		  parent: self;
-		  yourself
 ]
 
 { #category : #'accessing-definitions' }
@@ -265,8 +258,8 @@ ViennaImplicitFunctionDefinitionNode >> shortName [
 ViennaImplicitFunctionDefinitionNode >> type [
 
 	^ (ViennaPartialFunctionTypeNode
-		   argumentType: self argumentType
-		   returnType: self returnType)
+		   argumentType: self argumentType copyFragment
+		   returnType: self returnType copyFragment)
 		  parent: self;
 		  yourself
 ]

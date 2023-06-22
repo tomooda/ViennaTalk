@@ -29,7 +29,8 @@ ViennaExplicitFunctionDefinitionNode >> argumentType [
 { #category : #'accessing-definitions' }
 ViennaExplicitFunctionDefinitionNode >> asAccessDefinition [
 
-	^ (ViennaFunctionDefinitionNode definition: self) asAccessDefinition
+	^ (ViennaFunctionDefinitionNode definition: self copyFragment)
+		  asAccessDefinition
 ]
 
 { #category : #'accessing-definitions' }
@@ -85,6 +86,16 @@ ViennaExplicitFunctionDefinitionNode >> expression [
 ViennaExplicitFunctionDefinitionNode >> expression: aViennaExpressionNode [
 
 	self at: 6 put: aViennaExpressionNode
+]
+
+{ #category : #'accessing-definitions' }
+ViennaExplicitFunctionDefinitionNode >> findResolverForIdentifier: aString [
+
+	^ (aString = 'RESULT' or: [
+		   (self typeVariableList bindsIdentifier: aString) or: [
+			   self parametersList bindsIdentifier: aString ] ])
+		  ifTrue: [ self ]
+		  ifFalse: [ super findResolverForIdentifier: aString ]
 ]
 
 { #category : #'pretty printing' }
@@ -235,16 +246,6 @@ ViennaExplicitFunctionDefinitionNode >> pre: aViennaExpressionNode [
 ViennaExplicitFunctionDefinitionNode >> resolve [
 
 	^ self
-]
-
-{ #category : #'accessing-definitions' }
-ViennaExplicitFunctionDefinitionNode >> resolveIdentifier: aString [
-
-	^ (aString = 'RESULT' or: [
-		   (self typeVariableList bindsIdentifier: aString) or: [
-			   self parametersList bindsIdentifier: aString ] ])
-		  ifTrue: [ self ]
-		  ifFalse: [ super resolveIdentifier: aString ]
 ]
 
 { #category : #accessing }

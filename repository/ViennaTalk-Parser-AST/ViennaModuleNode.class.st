@@ -34,15 +34,16 @@ ViennaModuleNode >> boundIdentifiersDo: aBlock [
 ]
 
 { #category : #'accessing-definitions' }
-ViennaModuleNode >> deepResolveIdentifier: aString [
+ViennaModuleNode >> deepFindResolverForIdentifier: aString [
 
 	| node |
-	node := self resolveIdentifier: aString.
-	node ifNil: [ ^ nil ].
-	node isViennaImportNode ifTrue: [
-		(self moduleNamed: node moduleIdentifier) ifNotNil: [ :module |
-			^ module deepResolveIdentifier: node identifier ] ].
-	^ node
+	node := self lookupIdentifier: aString.
+	node ifNil: [ ^ super deepFindResolverForIdentifier: aString ].
+	^ node isViennaImportNode
+		  ifTrue: [
+			  (self moduleNamed: node moduleIdentifier) ifNotNil: [ :module |
+				  module deepFindResolverForIdentifier: node identifier ] ]
+		  ifFalse: [ self ]
 ]
 
 { #category : #'accessing-definitions' }
@@ -86,6 +87,18 @@ ViennaModuleNode >> definitionOfLocalName: aString [
 ViennaModuleNode >> exportDefinition [
 
 	^ self interface exportDefinition
+]
+
+{ #category : #'accessing-definitions' }
+ViennaModuleNode >> findResolverForIdentifier: aString [
+
+	self toplevelDefinitionsDo: [ :definition |
+		(definition bindsIdentifier: aString) ifTrue: [ ^ self ] ].
+	self importDefinitionsDo: [ :importDefinition |
+		importDefinition importsDo: [ :import |
+			(import rename notNil and: [ import rename identifier = aString ])
+				ifTrue: [ ^ self ] ] ].
+	^ nil
 ]
 
 { #category : #'pretty printing' }
@@ -175,6 +188,23 @@ ViennaModuleNode >> label [
 	^ 'Module'
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaModuleNode >> lookupIdentifier: aString [
+
+	self toplevelDefinitionsDo: [ :definition |
+		(definition bindsIdentifier: aString) ifTrue: [ ^ definition ] ].
+	self importDefinitionsDo: [ :importDefinition |
+		importDefinition importsDo: [ :import |
+			import rename identifier = aString ifTrue: [ ^ import ] ] ].
+	^ nil
+]
+
+{ #category : #accessing }
+ViennaModuleNode >> module [
+
+	^ self
+]
+
 { #category : #accessing }
 ViennaModuleNode >> moduleBody [
 
@@ -185,17 +215,6 @@ ViennaModuleNode >> moduleBody [
 ViennaModuleNode >> moduleBody: aViennaModuleBodyNode [
 
 	self at: 3 put: aViennaModuleBodyNode
-]
-
-{ #category : #'accessing-definitions' }
-ViennaModuleNode >> resolveIdentifier: aString [
-
-	self toplevelDefinitionsDo: [ :definition |
-		(definition bindsIdentifier: aString) ifTrue: [ ^ definition ] ].
-	self importDefinitionsDo: [ :importDefinition |
-		importDefinition importsDo: [ :import |
-			import rename identifier = aString ifTrue: [ ^ import ] ] ].
-	^ nil
 ]
 
 { #category : #enumerating }

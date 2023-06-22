@@ -32,6 +32,14 @@ ViennaInvariantInitialFunctionNode >> expression: aViennaExpressionNode [
 	self at: 2 put: aViennaExpressionNode
 ]
 
+{ #category : #testing }
+ViennaInvariantInitialFunctionNode >> findResolverForIdentifier: aString [
+
+	^ (self pattern bindsIdentifier: aString)
+		  ifTrue: [ self ]
+		  ifFalse: [ super findResolverForIdentifier: aString ]
+]
+
 { #category : #'pretty printing' }
 ViennaInvariantInitialFunctionNode >> formatWith: aViennaAbstractFormatter [
 
@@ -80,12 +88,4 @@ ViennaInvariantInitialFunctionNode >> pattern [
 ViennaInvariantInitialFunctionNode >> pattern: aViennaPatternNode [
 
 	self at: 1 put: aViennaPatternNode
-]
-
-{ #category : #testing }
-ViennaInvariantInitialFunctionNode >> resolveIdentifier: aString [
-
-	^ (self pattern bindsIdentifier: aString)
-		  ifTrue: [ self ]
-		  ifFalse: [ super resolveIdentifier: aString ]
 ]

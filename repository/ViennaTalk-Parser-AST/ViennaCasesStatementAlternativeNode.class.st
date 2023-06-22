@@ -30,6 +30,14 @@ ViennaCasesStatementAlternativeNode >> definitionOfLocalName: aString [
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaCasesStatementAlternativeNode >> findResolverForIdentifier: aString [
+
+	^ (self patternList bindsIdentifier: aString)
+		  ifTrue: [ self ]
+		  ifFalse: [ super findResolverForIdentifier: aString ]
+]
+
 { #category : #'pretty printing' }
 ViennaCasesStatementAlternativeNode >> formatWith: aViennaAbstractFormatter [
 
@@ -79,14 +87,6 @@ ViennaCasesStatementAlternativeNode >> patternList [
 ViennaCasesStatementAlternativeNode >> patternList: aViennaPatternListNode [
 
 	self at: 1 put: aViennaPatternListNode
-]
-
-{ #category : #'accessing-definitions' }
-ViennaCasesStatementAlternativeNode >> resolveIdentifier: aString [
-
-	^ (self patternList bindsIdentifier: aString)
-		  ifTrue: [ self ]
-		  ifFalse: [ super resolveIdentifier: aString ]
 ]
 
 { #category : #'pretty printing' }

@@ -37,6 +37,14 @@ ViennaLambdaExpressionNode >> expression: aViennaExpressionNode [
 	self at: 2 put: aViennaExpressionNode
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaLambdaExpressionNode >> findResolverForIdentifier: aString [
+
+	^ (self typeBindList bindsIdentifier: aString)
+		  ifTrue: [ self ]
+		  ifFalse: [ super findResolverForIdentifier: aString ]
+]
+
 { #category : #'pretty printing' }
 ViennaLambdaExpressionNode >> formatWith: aViennaAbstractFormatter [
 
@@ -88,14 +96,6 @@ ViennaLambdaExpressionNode >> operatorPrecedence [
 ViennaLambdaExpressionNode >> patternsDo: aBlock [
 
 	self typeBindList do: [ :typeBind | aBlock value: typeBind pattern ]
-]
-
-{ #category : #'accessing-definitions' }
-ViennaLambdaExpressionNode >> resolveIdentifier: aString [
-
-	^ (self typeBindList bindsIdentifier: aString)
-		  ifTrue: [ self ]
-		  ifFalse: [ super resolveIdentifier: aString ]
 ]
 
 { #category : #accessing }

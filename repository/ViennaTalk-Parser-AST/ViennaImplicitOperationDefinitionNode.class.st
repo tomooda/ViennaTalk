@@ -70,6 +70,15 @@ ViennaImplicitOperationDefinitionNode >> definitionOfLocalName: aString [
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaImplicitOperationDefinitionNode >> findResolverForIdentifier: aString [
+
+	^ ((self returnIdentifiers includes: aString) or: [
+		   self parameters bindsIdentifier: aString ])
+		  ifTrue: [ self ]
+		  ifFalse: [ super findResolverForIdentifier: aString ]
+]
+
 { #category : #'pretty printing' }
 ViennaImplicitOperationDefinitionNode >> formatWith: aViennaAbstractFormatter [
 
@@ -215,15 +224,6 @@ ViennaImplicitOperationDefinitionNode >> resolve [
 	^ self
 ]
 
-{ #category : #'accessing-definitions' }
-ViennaImplicitOperationDefinitionNode >> resolveIdentifier: aString [
-
-	^ ((self returnIdentifiers includes: aString) or: [
-		   self parameters bindsIdentifier: aString ])
-		  ifTrue: [ self ]
-		  ifFalse: [ super resolveIdentifier: aString ]
-]
-
 { #category : #accessing }
 ViennaImplicitOperationDefinitionNode >> returnIdentifiers [
 
@@ -245,7 +245,9 @@ ViennaImplicitOperationDefinitionNode >> shortName [
 { #category : #accessing }
 ViennaImplicitOperationDefinitionNode >> type [
 
-	^ ViennaOperationTypeNode
-		  argumentType: self argumentType
-		  returnType: self returnType
+	^ (ViennaOperationTypeNode
+		   argumentType: self argumentType copyFragment
+		   returnType: self returnType copyFragment)
+		  parent: self;
+		  yourself
 ]

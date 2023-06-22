@@ -36,6 +36,14 @@ ViennaIndexForLoopNode >> endExpression: aViennaExpressionNode [
 	self at: 3 put: aViennaExpressionNode
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaIndexForLoopNode >> findResolverForIdentifier: aString [
+
+	^ self identifier = aString
+		  ifTrue: [ self ]
+		  ifFalse: [ super findResolverForIdentifier: aString ]
+]
+
 { #category : #'pretty printing' }
 ViennaIndexForLoopNode >> formatWith: aViennaAbstractFormatter [
 
@@ -106,14 +114,6 @@ ViennaIndexForLoopNode >> isViennaIndexForLoopNode [
 ViennaIndexForLoopNode >> label [
 
 	^ 'IndexForLoop'
-]
-
-{ #category : #'accessing-definitions' }
-ViennaIndexForLoopNode >> resolveIdentifier: aString [
-
-	^ self identifier = aString
-		  ifTrue: [ self ]
-		  ifFalse: [ super resolveIdentifier: aString ]
 ]
 
 { #category : #accessing }

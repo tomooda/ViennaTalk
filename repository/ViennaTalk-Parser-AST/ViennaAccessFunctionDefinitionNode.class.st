@@ -83,6 +83,12 @@ ViennaAccessFunctionDefinitionNode >> isViennaAccessFunctionDefinitionNode [
 	^ true
 ]
 
+{ #category : #testing }
+ViennaAccessFunctionDefinitionNode >> isViennaExportableTopLevelDefinitionNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaAccessFunctionDefinitionNode >> label [
 

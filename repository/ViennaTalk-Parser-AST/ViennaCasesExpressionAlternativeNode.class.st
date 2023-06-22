@@ -42,6 +42,14 @@ ViennaCasesExpressionAlternativeNode >> expression: aViennaExpressionNode [
 	self at: 2 put: aViennaExpressionNode
 ]
 
+{ #category : #private }
+ViennaCasesExpressionAlternativeNode >> findResolverForIdentifier: aString [
+
+	^ (self patternList bindsIdentifier: aString)
+		  ifTrue: [ self ]
+		  ifFalse: [ super findResolverForIdentifier: aString ]
+]
+
 { #category : #'pretty printing' }
 ViennaCasesExpressionAlternativeNode >> formatWith: aViennaAbstractFormatter [
 
@@ -91,12 +99,4 @@ ViennaCasesExpressionAlternativeNode >> patternList [
 ViennaCasesExpressionAlternativeNode >> patternList: aViennaPatternListNode [
 
 	self at: 1 put: aViennaPatternListNode
-]
-
-{ #category : #private }
-ViennaCasesExpressionAlternativeNode >> resolveIdentifier: aString [
-
-	^ (self patternList bindsIdentifier: aString)
-		  ifTrue: [ self ]
-		  ifFalse: [ super resolveIdentifier: aString ]
 ]

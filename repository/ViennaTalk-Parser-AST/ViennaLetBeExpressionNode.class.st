@@ -51,6 +51,14 @@ ViennaLetBeExpressionNode >> expression: aViennaExpressionNode [
 	self at: 3 put: aViennaExpressionNode
 ]
 
+{ #category : #testing }
+ViennaLetBeExpressionNode >> findResolverForIdentifier: aString [
+
+	^ (self multipleBind bindsIdentifier: aString)
+		  ifTrue: [ self ]
+		  ifFalse: [ super findResolverForIdentifier: aString ]
+]
+
 { #category : #'pretty printing' }
 ViennaLetBeExpressionNode >> formatWith: aViennaAbstractFormatter [
 
@@ -120,12 +128,4 @@ ViennaLetBeExpressionNode >> multipleBind: aViennaMultipleBindNode [
 ViennaLetBeExpressionNode >> operatorPrecedence [
 
 	^ 10
-]
-
-{ #category : #testing }
-ViennaLetBeExpressionNode >> resolveIdentifier: aString [
-
-	^ (self multipleBind bindsIdentifier: aString)
-		  ifTrue: [ self ]
-		  ifFalse: [ super resolveIdentifier: aString ]
 ]

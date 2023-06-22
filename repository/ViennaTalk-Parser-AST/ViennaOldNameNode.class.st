@@ -1,6 +1,6 @@
 Class {
 	#name : #ViennaOldNameNode,
-	#superclass : #ViennaExpressionNode,
+	#superclass : #ViennaLocalNameNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }
@@ -26,22 +26,52 @@ ViennaOldNameNode >> freeIdentifiersExcept: aSet do: aBlock [
 		aBlock value: self identifier ]
 ]
 
-{ #category : #accessing }
-ViennaOldNameNode >> identifier [
+{ #category : #testing }
+ViennaOldNameNode >> isBlockVariableNameNode [
 
-	^ self at: 1
+	^ false
 ]
 
-{ #category : #accessing }
-ViennaOldNameNode >> identifier: aString [
+{ #category : #testing }
+ViennaOldNameNode >> isExportedNameNode [
 
-	self at: 1 put: aString
+	^ false
+]
+
+{ #category : #testing }
+ViennaOldNameNode >> isFunctionNameNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaOldNameNode >> isLocalValueNameNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaOldNameNode >> isOperationNameNode [
+
+	^ false
 ]
 
 { #category : #testing }
 ViennaOldNameNode >> isStateVariableNameNode [
 
 	^ true
+]
+
+{ #category : #testing }
+ViennaOldNameNode >> isTypeNameNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaOldNameNode >> isValueNameNode [
+
+	^ false
 ]
 
 { #category : #testing }

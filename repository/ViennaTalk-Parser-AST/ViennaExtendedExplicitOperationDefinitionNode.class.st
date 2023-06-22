@@ -26,6 +26,13 @@ ViennaExtendedExplicitOperationDefinitionNode >> argumentType [
 	^ self parameterTypes patternTypePairList type
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaExtendedExplicitOperationDefinitionNode >> asAccessDefinition [
+
+	^ (ViennaOperationDefinitionNode definition: self copyFragment)
+		  asAccessDefinition
+]
+
 { #category : #private }
 ViennaExtendedExplicitOperationDefinitionNode >> boundIdentifiersDo: aBlock [
 
@@ -56,6 +63,15 @@ ViennaExtendedExplicitOperationDefinitionNode >> externals [
 ViennaExtendedExplicitOperationDefinitionNode >> externals: aViennaExternalsNode [
 
 	self at: 5 put: aViennaExternalsNode
+]
+
+{ #category : #'accessing-definitions' }
+ViennaExtendedExplicitOperationDefinitionNode >> findResolverForIdentifier: aString [
+
+	^ ((self returnIdentifiers includes: aString) or: [
+		   self parameters bindsIdentifier: aString ])
+		  ifTrue: [ self ]
+		  ifFalse: [ super findResolverForIdentifier: aString ]
 ]
 
 { #category : #'pretty printing' }
@@ -209,15 +225,6 @@ ViennaExtendedExplicitOperationDefinitionNode >> pre: aViennaExpressionNode [
 	self at: 6 put: aViennaExpressionNode
 ]
 
-{ #category : #'accessing-definitions' }
-ViennaExtendedExplicitOperationDefinitionNode >> resolveIdentifier: aString [
-
-	^ ((self returnIdentifiers includes: aString) or: [
-		   self parameters bindsIdentifier: aString ])
-		  ifTrue: [ self ]
-		  ifFalse: [ super resolveIdentifier: aString ]
-]
-
 { #category : #accessing }
 ViennaExtendedExplicitOperationDefinitionNode >> returnIdentifiers [
 
@@ -239,7 +246,9 @@ ViennaExtendedExplicitOperationDefinitionNode >> statement [
 { #category : #accessing }
 ViennaExtendedExplicitOperationDefinitionNode >> type [
 
-	^ ViennaOperationTypeNode
-		  argumentType: self argumentType
-		  returnType: self returnType
+	^ (ViennaOperationTypeNode
+		   argumentType: self argumentType copyFragment
+		   returnType: self returnType copyFragment)
+		  parent: self;
+		  yourself
 ]

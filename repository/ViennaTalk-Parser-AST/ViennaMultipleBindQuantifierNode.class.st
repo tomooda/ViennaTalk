@@ -45,6 +45,14 @@ ViennaMultipleBindQuantifierNode >> expression: aViennaExpressionNode [
 	self at: 2 put: aViennaExpressionNode
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaMultipleBindQuantifierNode >> findResolverForIdentifier: aString [
+
+	^ (self bindList bindsIdentifier: aString)
+		  ifTrue: [ self ]
+		  ifFalse: [ super findResolverForIdentifier: aString ]
+]
+
 { #category : #private }
 ViennaMultipleBindQuantifierNode >> freeIdentifiersExcept: aSet do: aBlock [
 
@@ -77,12 +85,4 @@ ViennaMultipleBindQuantifierNode >> patternsDo: aBlock [
 
 	self multipleBindsDo: [ :multipleBind |
 		multipleBind patternsDo: aBlock ]
-]
-
-{ #category : #'accessing-definitions' }
-ViennaMultipleBindQuantifierNode >> resolveIdentifier: aString [
-
-	^ (self bindList bindsIdentifier: aString)
-		  ifTrue: [ self ]
-		  ifFalse: [ super resolveIdentifier: aString ]
 ]

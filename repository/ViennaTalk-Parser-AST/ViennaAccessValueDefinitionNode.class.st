@@ -52,6 +52,12 @@ ViennaAccessValueDefinitionNode >> isViennaAccessValueDefinitionNode [
 	^ true
 ]
 
+{ #category : #testing }
+ViennaAccessValueDefinitionNode >> isViennaExportableTopLevelDefinitionNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaAccessValueDefinitionNode >> label [
 

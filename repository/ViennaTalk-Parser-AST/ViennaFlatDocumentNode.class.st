@@ -6,9 +6,15 @@ Class {
 }
 
 { #category : #'accessing-definitions' }
-ViennaFlatDocumentNode >> deepResolveIdentifier: aString [
+ViennaFlatDocumentNode >> deepFindResolverForIdentifier: aString [
 
-	^ self resolveIdentifier: aString
+	^ self findResolverForIdentifier: aString
+]
+
+{ #category : #'accessing-definitions' }
+ViennaFlatDocumentNode >> findResolverForIdentifier: aString [
+
+	^ (self lookupIdentifier: aString) ifNotNil: [ self ]
 ]
 
 { #category : #testing }
@@ -18,7 +24,7 @@ ViennaFlatDocumentNode >> isViennaFlatDocumnetNode [
 ]
 
 { #category : #'accessing-definitions' }
-ViennaFlatDocumentNode >> resolveIdentifier: aString [
+ViennaFlatDocumentNode >> lookupIdentifier: aString [
 
 	self toplevelDefinitionsDo: [ :definition |
 		(definition bindsIdentifier: aString) ifTrue: [ ^ definition ] ].

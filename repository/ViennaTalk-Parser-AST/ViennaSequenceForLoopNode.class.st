@@ -37,6 +37,14 @@ ViennaSequenceForLoopNode >> expression: aViennaExpressionNode [
 	self at: 2 put: aViennaExpressionNode
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaSequenceForLoopNode >> findResolverForIdentifier: aString [
+
+	^ (self patternOrBind bindsIdentifier: aString)
+		  ifTrue: [ self ]
+		  ifFalse: [ super findResolverForIdentifier: aString ]
+]
+
 { #category : #'pretty printing' }
 ViennaSequenceForLoopNode >> formatWith: aViennaAbstractFormatter [
 
@@ -96,14 +104,6 @@ ViennaSequenceForLoopNode >> patternOrBind [
 ViennaSequenceForLoopNode >> patternOrBind: aViennaPatternNodeOrViennaBindNode [
 
 	self at: 1 put: aViennaPatternNodeOrViennaBindNode
-]
-
-{ #category : #'accessing-definitions' }
-ViennaSequenceForLoopNode >> resolveIdentifier: aString [
-
-	^ (self patternOrBind bindsIdentifier: aString)
-		  ifTrue: [ self ]
-		  ifFalse: [ super resolveIdentifier: aString ]
 ]
 
 { #category : #accessing }

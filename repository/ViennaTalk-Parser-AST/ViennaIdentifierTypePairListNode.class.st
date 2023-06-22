@@ -59,13 +59,15 @@ ViennaIdentifierTypePairListNode >> label [
 { #category : #accessing }
 ViennaIdentifierTypePairListNode >> type [
 
-	^ ((2 to: self size by: 2) collect: [ :index |
-		   (self at: index) copyFragment ])
-		  ifEmpty: [ ViennaUnitTypeNode new ]
-		  ifNotEmpty: [ :types |
-			  types size = 1
-				  ifTrue: [ types first ]
-				  ifFalse: [ ViennaProductTypeNode withAll: types ] ]
+	^ (((2 to: self size by: 2) collect: [ :index |
+			    (self at: index) copyFragment ])
+		   ifEmpty: [ ViennaUnitTypeNode new ]
+		   ifNotEmpty: [ :types |
+			   types size = 1
+				   ifTrue: [ types first ]
+				   ifFalse: [ ViennaProductTypeNode withAll: types ] ])
+		  parent: parent;
+		  yourself
 ]
 
 { #category : #private }

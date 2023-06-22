@@ -11,6 +11,12 @@ ViennaNameNode class >> isAbstract [
 	^ self = ViennaNameNode
 ]
 
+{ #category : #converting }
+ViennaNameNode >> asGlobalName [
+
+	^ self subclassResponsibility
+]
+
 { #category : #testing }
 ViennaNameNode >> isTypeNode [
 

@@ -47,6 +47,14 @@ ViennaIotaExpressionNode >> expression: aViennaExpressionNode [
 	self at: 2 put: aViennaExpressionNode
 ]
 
+{ #category : #testing }
+ViennaIotaExpressionNode >> findResolverForIdentifier: aString [
+
+	^ (self bind bindsIdentifier: aString)
+		  ifTrue: [ self ]
+		  ifFalse: [ super findResolverForIdentifier: aString ]
+]
+
 { #category : #'pretty printing' }
 ViennaIotaExpressionNode >> formatWith: aViennaAbstractFormatter [
 
@@ -96,12 +104,4 @@ ViennaIotaExpressionNode >> operatorPrecedence [
 ViennaIotaExpressionNode >> pattern [
 
 	^ self bind pattern
-]
-
-{ #category : #testing }
-ViennaIotaExpressionNode >> resolveIdentifier: aString [
-
-	^ (self bind bindsIdentifier: aString)
-		  ifTrue: [ self ]
-		  ifFalse: [ super resolveIdentifier: aString ]
 ]

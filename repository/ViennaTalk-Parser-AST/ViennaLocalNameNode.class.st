@@ -13,6 +13,24 @@ ViennaLocalNameNode class >> identifier: aString [
 		  yourself
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaLocalNameNode >> asGlobalName [
+
+	^ (self findResolverForIdentifier: self identifier) ifNotNil: [
+		  :resolver |
+		  resolver isViennaModuleNode ifTrue: [
+			  (resolver lookupIdentifier: self identifier) ifNotNil: [
+				  :localDefinition |
+				  localDefinition isViennaImportNode
+					  ifTrue: [ localDefinition asGlobalName ]
+					  ifFalse: [
+						  localDefinition isViennaExportableTopLevelDefinitionNode
+							  ifTrue: [
+								  ViennaGlobalNameNode
+									  moduleIdentifier: resolver identifier
+									  identifier: self identifier ] ] ] ] ]
+]
+
 { #category : #'pretty printing' }
 ViennaLocalNameNode >> formatWith: aViennaAbstractFormatter [
 

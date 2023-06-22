@@ -62,6 +62,14 @@ ViennaLetExpressionNode >> expression: aViennaExpressionNode [
 	self at: 2 put: aViennaExpressionNode
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaLetExpressionNode >> findResolverForIdentifier: aString [
+
+	^ (self localDefinitionList bindsIdentifier: aString)
+		  ifTrue: [ self ]
+		  ifFalse: [ super findResolverForIdentifier: aString ]
+]
+
 { #category : #'pretty printing' }
 ViennaLetExpressionNode >> formatWith: aViennaAbstractFormatter [
 
@@ -131,12 +139,4 @@ ViennaLetExpressionNode >> localDefinitionsDo: aBlock [
 ViennaLetExpressionNode >> operatorPrecedence [
 
 	^ 10
-]
-
-{ #category : #'accessing-definitions' }
-ViennaLetExpressionNode >> resolveIdentifier: aString [
-
-	^ (self localDefinitionList bindsIdentifier: aString)
-		  ifTrue: [ self ]
-		  ifFalse: [ super resolveIdentifier: aString ]
 ]

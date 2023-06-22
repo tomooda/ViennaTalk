@@ -55,18 +55,20 @@ ViennaPatternTypePairListNode >> label [
 ViennaPatternTypePairListNode >> parameters [
 
 	^ (ViennaParametersNode withAll:
-		   ((1 to: self size by: 2) collect: [ :index | self at: index ]))
-		  parent: parent
+		   ((1 to: self size by: 2) collect: [ :index |
+			    (self at: index) copyFragment ])) parent: parent
 ]
 
 { #category : #accessing }
 ViennaPatternTypePairListNode >> type [
 
-	^ ((2 to: self size by: 2) collect: [ :index |
-		   (self at: index) copyFragment ])
-		  ifEmpty: [ ViennaUnitTypeNode new ]
-		  ifNotEmpty: [ :types |
-			  types size = 1
-				  ifTrue: [ types first ]
-				  ifFalse: [ ViennaProductTypeNode withAll: types ] ]
+	^ (((2 to: self size by: 2) collect: [ :index |
+			    (self at: index) copyFragment ])
+		   ifEmpty: [ ViennaUnitTypeNode new ]
+		   ifNotEmpty: [ :types |
+			   types size = 1
+				   ifTrue: [ types first ]
+				   ifFalse: [ ViennaProductTypeNode withAll: types ] ])
+		  parent: parent;
+		  yourself
 ]

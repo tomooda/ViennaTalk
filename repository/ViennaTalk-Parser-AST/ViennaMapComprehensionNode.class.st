@@ -39,6 +39,14 @@ ViennaMapComprehensionNode >> definitionOfLocalName: aString [
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaMapComprehensionNode >> findResolverForIdentifier: aString [
+
+	^ (self bindList bindsIdentifier: aString)
+		  ifTrue: [ self ]
+		  ifFalse: [ super findResolverForIdentifier: aString ]
+]
+
 { #category : #'pretty printing' }
 ViennaMapComprehensionNode >> formatWith: aViennaAbstractFormatter [
 
@@ -120,14 +128,6 @@ ViennaMapComprehensionNode >> patternsDo: aBlock [
 
 	self multipleBindsDo: [ :multipleBind |
 		multipleBind patternsDo: aBlock ]
-]
-
-{ #category : #'accessing-definitions' }
-ViennaMapComprehensionNode >> resolveIdentifier: aString [
-
-	^ (self bindList bindsIdentifier: aString)
-		  ifTrue: [ self ]
-		  ifFalse: [ super resolveIdentifier: aString ]
 ]
 
 { #category : #accessing }

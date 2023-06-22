@@ -39,6 +39,14 @@ ViennaLetBeStatementNode >> definitionOfLocalName: aString [
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaLetBeStatementNode >> findResolverForIdentifier: aString [
+
+	^ (self multipleBind bindsIdentifier: aString)
+		  ifTrue: [ self ]
+		  ifFalse: [ super findResolverForIdentifier: aString ]
+]
+
 { #category : #'pretty printing' }
 ViennaLetBeStatementNode >> formatWith: aViennaAbstractFormatter [
 
@@ -102,14 +110,6 @@ ViennaLetBeStatementNode >> multipleBind [
 ViennaLetBeStatementNode >> multipleBind: aViennaMultipleBindNode [
 
 	self at: 1 put: aViennaMultipleBindNode
-]
-
-{ #category : #'accessing-definitions' }
-ViennaLetBeStatementNode >> resolveIdentifier: aString [
-
-	^ (self multipleBind bindsIdentifier: aString)
-		  ifTrue: [ self ]
-		  ifFalse: [ super resolveIdentifier: aString ]
 ]
 
 { #category : #accessing }

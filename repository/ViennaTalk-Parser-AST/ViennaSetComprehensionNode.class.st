@@ -50,6 +50,14 @@ ViennaSetComprehensionNode >> expression: aViennaExpressionNode [
 	self at: 1 put: aViennaExpressionNode
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaSetComprehensionNode >> findResolverForIdentifier: aString [
+
+	^ (self bindList bindsIdentifier: aString)
+		  ifTrue: [ self ]
+		  ifFalse: [ super findResolverForIdentifier: aString ]
+]
+
 { #category : #'pretty printing' }
 ViennaSetComprehensionNode >> formatWith: aViennaAbstractFormatter [
 
@@ -109,14 +117,6 @@ ViennaSetComprehensionNode >> patternsDo: aBlock [
 
 	self multipleBindsDo: [ :multipleBind |
 		multipleBind patternsDo: aBlock ]
-]
-
-{ #category : #'accessing-definitions' }
-ViennaSetComprehensionNode >> resolveIdentifier: aString [
-
-	^ (self bindList bindsIdentifier: aString)
-		  ifTrue: [ self ]
-		  ifFalse: [ super resolveIdentifier: aString ]
 ]
 
 { #category : #accessing }

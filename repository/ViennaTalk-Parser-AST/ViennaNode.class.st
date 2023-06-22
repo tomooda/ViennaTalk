@@ -183,35 +183,6 @@ ViennaNode >> asExportSignature [
 ]
 
 { #category : #'accessing-definitions' }
-ViennaNode >> asGlobalName [
-
-	(self definitionOfLocalName: self identifier) ifNotNil: [ :defNode |
-		defNode isViennaExportableTopLevelDefinitionNode ifTrue: [
-			^ (ViennaGlobalNameNode
-				   moduleIdentifier: defNode module identifier
-				   identifier: defNode identifier)
-				  parent: parent;
-				  yourself ].
-		defNode bindHolderNode ifNotNil: [ :bindNode |
-			bindNode isViennaValueDefinitionNode ifTrue: [
-				^ (ViennaGlobalNameNode
-					   moduleIdentifier: bindNode module identifier
-					   identifier: defNode identifier)
-					  parent: parent;
-					  yourself ] ].
-		defNode isViennaImportNode ifTrue: [
-			^ (ViennaGlobalNameNode
-				   moduleIdentifier:
-					   (defNode
-						    detectParent: #isViennaImportDefinitionNode
-						    ifNone: [ ^ nil ]) moduleIdentifier
-				   identifier: defNode identifier)
-				  parent: parent;
-				  yourself ] ].
-	^ nil
-]
-
-{ #category : #'accessing-definitions' }
 ViennaNode >> asImportDefinitionIn: moduleNode [
 
 	^ nil
@@ -282,14 +253,14 @@ ViennaNode >> copyWhole: aDictionary [
 ]
 
 { #category : #'accessing-definitions' }
-ViennaNode >> deepResolveIdentifier: aString [
+ViennaNode >> deepFindResolverForIdentifier: aString [
 
 	| node |
-	node := self resolveIdentifier: aString.
+	node := self findResolverForIdentifier: aString.
 	node ifNil: [ ^ nil ].
 	node isViennaImportNode ifTrue: [
 		(self moduleNamed: node moduleIdentifier) ifNotNil: [ :module |
-			^ module deepResolveIdentifier: node identifier ] ].
+			^ module deepFindResolverForIdentifier: node identifier ] ].
 	^ node
 ]
 
@@ -354,6 +325,12 @@ ViennaNode >> document [
 { #category : #accessing }
 ViennaNode >> end [
 	^ end
+]
+
+{ #category : #'accessing-definitions' }
+ViennaNode >> findResolverForIdentifier: aString [
+
+	^ parent ifNotNil: [ parent findResolverForIdentifier: aString ]
 ]
 
 { #category : #accessing }
@@ -2332,7 +2309,7 @@ ViennaNode >> localName [
 { #category : #accessing }
 ViennaNode >> module [
 
-	^ self detectParent: #isViennaModuleNode ifNone: [ nil ]
+	^ parent ifNotNil: #module
 ]
 
 { #category : #accessing }
@@ -2504,12 +2481,6 @@ ViennaNode >> removeAnnotation: aString [
 ViennaNode >> resolve [
 
 	^ nil
-]
-
-{ #category : #'accessing-definitions' }
-ViennaNode >> resolveIdentifier: aString [
-
-	^ parent ifNotNil: [ parent resolveIdentifier: aString ]
 ]
 
 { #category : #'accessing-definitions' }
