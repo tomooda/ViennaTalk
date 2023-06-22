@@ -490,32 +490,40 @@ ViennaVDMGrammarTest >> testExportValuesSignature [
 
 { #category : #'tests-definitions' }
 ViennaVDMGrammarTest >> testExtendedExplicitFunctionDefinition [
+
 	self
-		assert: (grammar functionDefinition end parse: 'f[@t](x:t1) res:t2 == y pre b1 post b2')
-		equals: #('f' #('@t') #(('x') 't1') #('res' 't2') 'y' 'b1' 'b2' ).
+		assert: (grammar functionDefinition end parse:
+				 'f[@t](x:t1) res:t2 == y pre b1 post b2 measure n')
+		equals:
+		#( 'f' #( '@t' ) #( #( 'x' ) 't1' ) #( 'res' 't2' ) 'y' 'b1' 'b2'
+		   'n' ).
 	self
-		assert: (grammar functionDefinition end parse: 'f(x:t1) res:t2 == y post b2')
-		equals: #('f' #() #(('x') 't1') #('res' 't2') 'y' nil 'b2' ).
-	self
-		assert: (grammar functionDefinition end parse: 'f(x:t1) res:t2 == y') isPetit2Failure
+		assert:
+		(grammar functionDefinition end parse: 'f(x:t1) res:t2 == y')
+		equals:
+		#( 'f' #(  ) #( #( 'x' ) 't1' ) #( 'res' 't2' ) 'y' nil nil nil ).
+	self assert:
+		(grammar functionDefinition end parse: 'f(x:t1) res:t2')
+			isPetit2Failure
 ]
 
 { #category : #'tests-definitions' }
 ViennaVDMGrammarTest >> testExtendedExplicitOperationDefinition [
+
 	self
-		assert:
-			(grammar operationDefinition end
-				parse: 'op(p1:t1, p2:t2) i1:t3 == skip ext rd v1:t4 wr v2:t5 pre b1 post b2 errs i2:e1->e2')
-		equals:
-			#('op' #(#('p1') 't1' #('p2') 't2') #('i1' 't3') nil #(#('rd' #('v1') 't4') #('wr' #('v2') 't5')) 'b1' 'b2' #(#('i2' 'e1' 'e2'))).
+		assert: (grammar operationDefinition end parse:
+				 'op(p1:t1, p2:t2) i1:t3 == skip ext rd v1:t4 wr v2:t5 pre b1 post b2 errs i2:e1->e2')
+		equals: #( 'op' #( #( 'p1' ) 't1' #( 'p2' ) 't2' )
+			   #( 'i1' 't3' ) nil #( #( 'rd' #( 'v1' ) 't4' )
+			      #( 'wr' #( 'v2' ) 't5' ) )
+			   'b1' 'b2' #( #( 'i2' 'e1' 'e2' ) ) ).
 	self
-		assert: (grammar operationDefinition end parse: 'op(p1:t1, p2:t2) i1:t3 == skip post b2')
-		equals: #('op' #(#('p1') 't1' #('p2') 't2') #('i1' 't3') nil nil nil 'b2' nil).
-	self
-		assert:
-			(grammar operationDefinition end
-				parse: 'op(p1:t1, p2:t2) i1:t3 == skip ext rd v1:t4 wr v2:t5 pre b1  errs i2:e1->e2')
-				isPetit2Failure
+		assert: (grammar operationDefinition end parse:
+				 'op(p1:t1, p2:t2) i1:t3 == skip')
+		equals: #( 'op' #( #( 'p1' ) 't1' #( 'p2' ) 't2' )
+			   #( 'i1' 't3' ) nil nil nil nil nil ).
+	self assert: (grammar operationDefinition end parse:
+			 'op(p1:t1, p2:t2) i1:t3') isPetit2Failure
 ]
 
 { #category : #'tests-types' }
