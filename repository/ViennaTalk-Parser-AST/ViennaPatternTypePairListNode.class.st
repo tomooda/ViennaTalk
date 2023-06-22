@@ -59,6 +59,12 @@ ViennaPatternTypePairListNode >> parameters [
 			    (self at: index) copyFragment ])) parent: parent
 ]
 
+{ #category : #enumerating }
+ViennaPatternTypePairListNode >> patternsDo: aBlock [
+
+	1 to: self size by: 2 do: [ :index | aBlock value: (self at: index) ]
+]
+
 { #category : #accessing }
 ViennaPatternTypePairListNode >> type [
 

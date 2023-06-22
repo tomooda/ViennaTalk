@@ -74,6 +74,15 @@ ViennaMultipleBindQuantifierNode >> isViennaMultipleBindQuantifierNode [
 	^ true
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaMultipleBindQuantifierNode >> lookupIdentifier: aString [
+
+	self multipleBindsDo: [ :multibind |
+		multibind patternList do: [ :pattern |
+			(pattern bindsIdentifier: aString) ifTrue: [ ^ pattern ] ] ].
+	^ nil
+]
+
 { #category : #enumerating }
 ViennaMultipleBindQuantifierNode >> multipleBindsDo: aBlock [
 

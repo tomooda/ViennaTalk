@@ -70,6 +70,12 @@ ViennaFunctionDefinitionNode >> identifier [
 ]
 
 { #category : #testing }
+ViennaFunctionDefinitionNode >> isFunctionDefinition [
+
+	^ true
+]
+
+{ #category : #testing }
 ViennaFunctionDefinitionNode >> isViennaFunctionDefinitionNode [
 
 	^ true

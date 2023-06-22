@@ -12,9 +12,8 @@ ViennaInlineValue >> check [
 { #category : #operations }
 ViennaInlineValue >> execute [
 
-	^ ((ast definitionOfLocalName: ast identifier)
-		   detectParent: #isViennaValueDefinitionNode
-		   ifNone: [ nil ]) ifNotNil: [ :valueDefinition |
+	^ (ast resolveIdentifier: ast identifier) ifNotNil: [
+		  :valueDefinition |
 		  self
 			  replaceNode: ast
 			  with: valueDefinition expression copyFragment ]

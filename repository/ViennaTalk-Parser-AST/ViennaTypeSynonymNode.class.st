@@ -102,6 +102,12 @@ ViennaTypeSynonymNode >> inv: aViennaInvariantNode [
 ]
 
 { #category : #testing }
+ViennaTypeSynonymNode >> isTypeDefinition [
+
+	^ true
+]
+
+{ #category : #testing }
 ViennaTypeSynonymNode >> isViennaExportableTopLevelDefinitionNode [
 
 	^ true

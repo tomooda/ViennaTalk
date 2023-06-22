@@ -77,6 +77,14 @@ ViennaCasesStatementAlternativeNode >> label [
 	^ 'CasesStatementAlternative'
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaCasesStatementAlternativeNode >> lookupIdentifier: aString [
+
+	^ self patternList
+		  detect: [ :pattern | pattern bindsIdentifier: aString ]
+		  ifNone: [ nil ]
+]
+
 { #category : #'pretty printing' }
 ViennaCasesStatementAlternativeNode >> patternList [
 

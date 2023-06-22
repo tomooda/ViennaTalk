@@ -16,17 +16,18 @@ ViennaExtractFunctionFromLetExpression >> check [
 
 	| params |
 	ast isViennaLetExpressionNode ifFalse: [ ^ false ].
-	params := Set new: ast first size * 2.
-	ast first do: [ :localDef |
-		localDef first isViennaFunctionDefinitionNode ifTrue: [ ^ false ].
-		localDef first definition allDescendantsDo: [ :node |
+	params := Set new: ast localDefinitionList size * 2.
+	ast localDefinitionList do: [ :localDef |
+		localDef localDefinitionList isViennaFunctionDefinitionNode ifTrue: [
+			^ false ].
+		localDef localDefinitionList definition allDescendantsDo: [ :node |
 			node isViennaPatternIdentifierNode ifTrue: [
-				params add: node first ] ] ].
-	ast first do: [ :localDef |
-		localDef first third allDescendantsDo: [ :node |
+				params add: node localDefinitionList ] ] ].
+	ast localDefinitionList do: [ :localDef |
+		localDef definition expression allDescendantsDo: [ :node |
 			(node isViennaLocalNameNode and: [
 				 params includes: node identifier ]) ifTrue: [ ^ false ] ] ].
-	ast second variableExpressionNodesDo: [ :node | ^ false ].
+	ast second hasStatefulReference ifTrue: [ ^ false ].
 	^ true
 ]
 

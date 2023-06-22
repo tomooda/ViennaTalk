@@ -28,3 +28,9 @@ ViennaNameNode >> isViennaNameNode [
 
 	^ true
 ]
+
+{ #category : #'accessing-definitions' }
+ViennaNameNode >> resolve [
+
+	^ self subclassResponsibility
+]

@@ -78,6 +78,12 @@ ViennaAccessFunctionDefinitionNode >> identifier [
 ]
 
 { #category : #testing }
+ViennaAccessFunctionDefinitionNode >> isFunctionDefinition [
+
+	^ true
+]
+
+{ #category : #testing }
 ViennaAccessFunctionDefinitionNode >> isViennaAccessFunctionDefinitionNode [
 
 	^ true

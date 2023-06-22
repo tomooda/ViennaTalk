@@ -154,6 +154,12 @@ ViennaExtendedExplicitOperationDefinitionNode >> identifierTypePairList: aVienna
 ]
 
 { #category : #testing }
+ViennaExtendedExplicitOperationDefinitionNode >> isOperationDefinition [
+
+	^ true
+]
+
+{ #category : #testing }
 ViennaExtendedExplicitOperationDefinitionNode >> isViennaExportableTopLevelDefinitionNode [
 
 	^ true
@@ -169,6 +175,16 @@ ViennaExtendedExplicitOperationDefinitionNode >> isViennaExtendedExplicitOperati
 ViennaExtendedExplicitOperationDefinitionNode >> label [
 
 	^ 'ExtendedExplicitOperationDefinition'
+]
+
+{ #category : #'accessing-definitions' }
+ViennaExtendedExplicitOperationDefinitionNode >> lookupIdentifier: aString [
+
+	self parameterTypes patternsDo: [ :pattern |
+		(pattern bindsIdentifier: aString) ifTrue: [ ^ pattern ] ].
+	(self identifierTypePairList bindsIdentifier: aString) ifTrue: [
+		^ self ].
+	^ nil
 ]
 
 { #category : #accessing }

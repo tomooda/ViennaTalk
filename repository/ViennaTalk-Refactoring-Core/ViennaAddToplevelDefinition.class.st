@@ -13,10 +13,8 @@ ViennaAddToplevelDefinition class >> isAbstract [
 { #category : #accessing }
 ViennaAddToplevelDefinition >> findNewName [
 
-	^ super findNewName ifNotNil: [ :name | 
-		  (ast module definitionOfLocalName: name)
-			  ifNil: [ name ]
-			  ifNotNil: [ 
-				  UIManager default alert: name , ' is already defined.'.
-				  nil ] ]
+	^ super findNewName ifNotNil: [ :name |
+		  (ast module lookupIdentifier: name) ifNil: [ name ] ifNotNil: [
+			  UIManager default alert: name , ' is already defined.'.
+			  nil ] ]
 ]

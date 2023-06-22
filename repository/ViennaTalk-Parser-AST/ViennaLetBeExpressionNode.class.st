@@ -112,6 +112,14 @@ ViennaLetBeExpressionNode >> label [
 	^ 'LetBeExpression'
 ]
 
+{ #category : #testing }
+ViennaLetBeExpressionNode >> lookupIdentifier: aString [
+
+	self multipleBind patternList do: [ :pattern |
+		(pattern bindsIdentifier: aString) ifTrue: [ ^ pattern ] ].
+	^ nil
+]
+
 { #category : #accessing }
 ViennaLetBeExpressionNode >> multipleBind [
 

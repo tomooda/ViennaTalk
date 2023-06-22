@@ -135,6 +135,15 @@ ViennaLetExpressionNode >> localDefinitionsDo: aBlock [
 		aBlock value: localDef first ]
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaLetExpressionNode >> lookupIdentifier: aString [
+
+	self localDefinitionList do: [ :localDefinition |
+		(localDefinition definition bindsIdentifier: aString) ifTrue: [
+			^ localDefinition definition ] ].
+	^ nil
+]
+
 { #category : #'pretty printing' }
 ViennaLetExpressionNode >> operatorPrecedence [
 

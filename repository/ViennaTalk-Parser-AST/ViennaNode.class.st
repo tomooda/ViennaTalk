@@ -255,13 +255,14 @@ ViennaNode >> copyWhole: aDictionary [
 { #category : #'accessing-definitions' }
 ViennaNode >> deepFindResolverForIdentifier: aString [
 
-	| node |
-	node := self findResolverForIdentifier: aString.
-	node ifNil: [ ^ nil ].
+	| resolver node |
+	resolver := self findResolverForIdentifier: aString.
+	resolver ifNil: [ ^ nil ].
+	node := resolver lookupIdentifier: aString.
 	node isViennaImportNode ifTrue: [
 		(self moduleNamed: node moduleIdentifier) ifNotNil: [ :module |
 			^ module deepFindResolverForIdentifier: node identifier ] ].
-	^ node
+	^ resolver
 ]
 
 { #category : #'accessing-definitions' }
@@ -367,6 +368,16 @@ ViennaNode >> hasScope [
 	^ false
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaNode >> hasStatefulReference [
+
+	self uniqueFreeIdentifiersDo: [ :identifier |
+		(self resolveIdentifier: identifier) ifNotNil: [ :node |
+			(node isViennaStateDefinitionNode or: [
+				 node isViennaBlockStatementNode ]) ifTrue: [ ^ true ] ] ].
+	^ false
+]
+
 { #category : #comparing }
 ViennaNode >> hash [
 
@@ -460,6 +471,12 @@ ViennaNode >> isExportedNameNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isFunctionDefinition [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isFunctionNameNode [
 
 	^ false
@@ -472,9 +489,24 @@ ViennaNode >> isLocalValueNameNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isOperationDefinition [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isOperationNameNode [
 
 	^ false
+]
+
+{ #category : #'accessing-definitions' }
+ViennaNode >> isRelocatable [
+
+	self uniqueFreeIdentifiersDo: [ :identifier |
+		(self resolveIdentifier: identifier) isViennaTopLevelDefinitionNode
+			ifFalse: [ ^ false ] ].
+	^ true
 ]
 
 { #category : #testing }
@@ -484,7 +516,19 @@ ViennaNode >> isStateVariableNameNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isTypeDefinition [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isTypeNameNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isValueDefinition [
 
 	^ false
 ]
@@ -2306,6 +2350,12 @@ ViennaNode >> localName [
 		n isViennaLocalNameNode ifTrue: [ ^ n ] ]
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaNode >> lookupIdentifier: aString [
+
+	^ nil
+]
+
 { #category : #accessing }
 ViennaNode >> module [
 
@@ -2484,29 +2534,10 @@ ViennaNode >> resolve [
 ]
 
 { #category : #'accessing-definitions' }
-ViennaNode >> resolveLocalName: aString [
+ViennaNode >> resolveIdentifier: aString [
 
-	(self definitionOfLocalName: aString) ifNotNil: [ :defNode |
-		defNode isViennaExplicitFunctionDefinitionNode ifTrue: [ ^ defNode ].
-		defNode isViennaExplicitOperationDefinitionNode ifTrue: [ ^ defNode ].
-		defNode isViennaImplicitFunctionDefinitionNode ifTrue: [ ^ defNode ].
-		defNode isViennaImplicitOperationDefinitionNode ifTrue: [ ^ defNode ].
-		defNode isViennaTypeSynonymNode ifTrue: [ ^ defNode ].
-		defNode isViennaRecordTypeDefinitionNode ifTrue: [ ^ defNode ].
-		defNode isViennaImportNode ifTrue: [
-			(self moduleNamed:
-				 (defNode
-					  detectParent: #isViennaImportDefinitionNode
-					  ifNone: [ ^ nil ]) moduleIdentifier) ifNotNil: [ :moduleNode |
-				moduleNode == self module ifFalse: [
-					^ moduleNode resolveLocalName: defNode identifier ] ].
-			^ nil ].
-		(defNode isViennaFieldNode and: [
-			 defNode parent parent isViennaStateDefinitionNode ]) ifTrue: [
-			^ defNode parent parent ].
-		defNode bindHolderNode ifNotNil: [ :bindNode |
-			bindNode isViennaValueDefinitionNode ifTrue: [ ^ bindNode ] ] ].
-	^ nil
+	^ (self deepFindResolverForIdentifier: aString) ifNotNil: [ :resolver |
+		  resolver lookupIdentifier: aString ]
 ]
 
 { #category : #enumerating }
@@ -2624,14 +2655,4 @@ ViennaNode >> uniqueFreeIdentifiersDo: aBlock [
 		(done includes: identifier) ifFalse: [
 			done add: identifier.
 			aBlock value: identifier ] ]
-]
-
-{ #category : #enumerating }
-ViennaNode >> variableExpressionNodesDo: aBlock [
-
-	self allDescendantsDo: [ :node |
-		(node isViennaOldNameNode or: [
-			 node isViennaNameNode and: [
-				 (node isValueNameNode or: [ node isFunctionNameNode ]) not ] ])
-			ifTrue: [ aBlock value: node ] ]
 ]

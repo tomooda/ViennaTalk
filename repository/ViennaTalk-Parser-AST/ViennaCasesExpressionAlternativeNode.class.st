@@ -89,6 +89,14 @@ ViennaCasesExpressionAlternativeNode >> label [
 	^ 'CasesExpressionAlternative'
 ]
 
+{ #category : #private }
+ViennaCasesExpressionAlternativeNode >> lookupIdentifier: aString [
+
+	^ self patternList
+		  detect: [ :pattern | pattern bindsIdentifier: aString ]
+		  ifNone: [ nil ]
+]
+
 { #category : #accessing }
 ViennaCasesExpressionAlternativeNode >> patternList [
 

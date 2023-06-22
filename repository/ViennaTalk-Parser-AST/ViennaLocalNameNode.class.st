@@ -161,7 +161,7 @@ ViennaLocalNameNode >> label [
 { #category : #accessing }
 ViennaLocalNameNode >> resolve [
 
-	^ self resolveLocalName: self identifier
+	^ self resolveIdentifier: self identifier
 ]
 
 { #category : #accessing }

@@ -16,3 +16,9 @@ ViennaPatternNode >> isViennaPatternNode [
 
 	^ true
 ]
+
+{ #category : #accessing }
+ViennaPatternNode >> pattern [
+
+	^ self
+]

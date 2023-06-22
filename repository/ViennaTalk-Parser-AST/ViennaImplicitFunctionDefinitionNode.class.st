@@ -153,6 +153,12 @@ ViennaImplicitFunctionDefinitionNode >> identifierTypePairList: aViennaIdentifie
 ]
 
 { #category : #testing }
+ViennaImplicitFunctionDefinitionNode >> isFunctionDefinition [
+
+	^ true
+]
+
+{ #category : #testing }
 ViennaImplicitFunctionDefinitionNode >> isViennaExportableTopLevelDefinitionNode [
 
 	^ true
@@ -174,6 +180,18 @@ ViennaImplicitFunctionDefinitionNode >> isViennaImplicitFunctionDefinitionNode: 
 ViennaImplicitFunctionDefinitionNode >> label [
 
 	^ 'ImplicitFunctionDefinition'
+]
+
+{ #category : #'accessing-definitions' }
+ViennaImplicitFunctionDefinitionNode >> lookupIdentifier: aString [
+
+	self typeVariableList do: [ :typeVariable |
+		(typeVariable bindsIdentifier: aString) ifTrue: [ ^ typeVariable ] ].
+	self parameterTypes patternsDo: [ :pattern |
+		(pattern bindsIdentifier: aString) ifTrue: [ ^ pattern ] ].
+	(self identifierTypePairList bindsIdentifier: aString) ifTrue: [
+		^ self ].
+	^ nil
 ]
 
 { #category : #accessing }

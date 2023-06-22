@@ -54,6 +54,12 @@ ViennaAccessOperationDefinitionNode >> identifier [
 ]
 
 { #category : #testing }
+ViennaAccessOperationDefinitionNode >> isOperationDefinition [
+
+	^ true
+]
+
+{ #category : #testing }
 ViennaAccessOperationDefinitionNode >> isViennaAccessOperationDefinitionNode [
 
 	^ true

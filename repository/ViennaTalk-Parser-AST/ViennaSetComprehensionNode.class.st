@@ -106,6 +106,15 @@ ViennaSetComprehensionNode >> label [
 	^ 'SetComprehension'
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaSetComprehensionNode >> lookupIdentifier: aString [
+
+	self bindList do: [ :multiplebind |
+		multiplebind patternList do: [ :pattern |
+			(pattern bindsIdentifier: aString) ifTrue: [ ^ pattern ] ] ].
+	^ nil
+]
+
 { #category : #enumerating }
 ViennaSetComprehensionNode >> multipleBindsDo: aBlock [
 

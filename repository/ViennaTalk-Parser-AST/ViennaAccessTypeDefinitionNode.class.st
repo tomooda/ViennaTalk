@@ -59,6 +59,12 @@ ViennaAccessTypeDefinitionNode >> identifier [
 ]
 
 { #category : #testing }
+ViennaAccessTypeDefinitionNode >> isTypeDefinition [
+
+	^ true
+]
+
+{ #category : #testing }
 ViennaAccessTypeDefinitionNode >> isViennaAccessTypeDefinitionNode [
 
 	^ true

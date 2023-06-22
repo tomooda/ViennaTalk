@@ -69,3 +69,14 @@ ViennaBlockStatementNode >> label [
 
 	^ 'BlockStatement'
 ]
+
+{ #category : #'accessing-definitions' }
+ViennaBlockStatementNode >> lookupIdentifier: aString [
+
+	self dclStatement ifNotNil: [ :dclStatement |
+		(dclStatement bindsIdentifier: aString) ifTrue: [
+			dclStatement do: [ :assignmentDefinition |
+				assignmentDefinition identifier = aString ifTrue: [
+					^ assignmentDefinition ] ] ] ].
+	^ super findResolverForIdentifier: aString
+]

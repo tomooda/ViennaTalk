@@ -102,6 +102,12 @@ ViennaSetForLoopNode >> label [
 	^ 'SetForLoop'
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaSetForLoopNode >> lookupIdentifier: aString [
+
+	^ (self pattern bindsIdentifier: aString) ifTrue: [ self pattern ]
+]
+
 { #category : #accessing }
 ViennaSetForLoopNode >> pattern [
 

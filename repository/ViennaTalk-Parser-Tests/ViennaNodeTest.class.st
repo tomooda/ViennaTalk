@@ -198,15 +198,15 @@ ViennaNodeTest >> testIsFunctionNameNode [
 	self deny: skip isOperationNameNode.
 	opcall1 := skip parent at: 3.
 	self assert: opcall1 isViennaCallStatementNode.
-	self assert: opcall1 first first equals: 'exp_op'.
-	self deny: opcall1 first isFunctionNameNode.
+	self assert: opcall1 name identifier equals: 'exp_op'.
+	self deny: opcall1 name isFunctionNameNode.
 	opcall2 := (skip parent at: 4) second.
 	self assert: opcall2 isViennaApplyNode.
-	self assert: opcall2 expression first equals: 'opi'.
+	self assert: opcall2 expression identifier equals: 'opi'.
 	self deny: opcall2 expression isFunctionNameNode.
 	funcall := (skip parent at: 5) second.
 	self assert: funcall isViennaApplyNode.
-	self assert: funcall expression first equals: 'exp_f'.
+	self assert: funcall expression identifier equals: 'exp_f'.
 	self assert: funcall expression isFunctionNameNode
 ]
 
@@ -296,27 +296,4 @@ ViennaNodeTest >> testIsValueNameNode [
 	returnarg := (skip parent at: 6) first.
 	self assert: returnarg first = 'v1'.
 	self assert: returnarg isValueNameNode
-]
-
-{ #category : #running }
-ViennaNodeTest >> testResolveLocalName [
-
-	self assert: (skip resolveLocalName: 'nothing') equals: nil.
-	self assert: (skip resolveLocalName: 'x1') equals: nil.
-	self assert: (skip resolveLocalName: 'x') equals: nil.
-	self assert:
-		(skip resolveLocalName: 'T2') isViennaRecordTypeDefinitionNode.
-	self assert:
-		(skip resolveLocalName: 'v2') isViennaValueDefinitionNode.
-	self assert: (skip resolveLocalName: 'exp_f')
-			isViennaExplicitFunctionDefinitionNode.
-	self assert: (skip resolveLocalName: 'imp_f')
-			isViennaImplicitFunctionDefinitionNode.
-	self assert:
-		(skip resolveLocalName: 's1') isViennaStateDefinitionNode.
-	self assert: (skip resolveLocalName: 'l') equals: nil.
-	self assert: (skip resolveLocalName: 'Ti') isViennaTypeSynonymNode.
-	self assert:
-		(skip resolveLocalName: 'opi')
-			isViennaExplicitOperationDefinitionNode
 ]

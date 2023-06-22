@@ -116,6 +116,15 @@ ViennaLetStatementNode >> localDefinitionList: aViennaLocalDefinitionListNode [
 	self at: 1 put: aViennaLocalDefinitionListNode
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaLetStatementNode >> lookupIdentifier: aString [
+
+	self localDefinitionList do: [ :localDefinition |
+		(localDefinition definition bindsIdentifier: aString) ifTrue: [
+			^ localDefinition definition ] ].
+	^ nil
+]
+
 { #category : #accessing }
 ViennaLetStatementNode >> statement [
 

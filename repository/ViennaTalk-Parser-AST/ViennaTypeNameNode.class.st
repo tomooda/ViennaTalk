@@ -25,6 +25,12 @@ ViennaTypeNameNode >> freeIdentifiersExcept: aSet do: aBlock [
 	self name freeIdentifiersExcept: aSet do: aBlock
 ]
 
+{ #category : #accessing }
+ViennaTypeNameNode >> identifier [
+
+	^ self name identifier
+]
+
 { #category : #testing }
 ViennaTypeNameNode >> isViennaTypeNameNode [
 
@@ -47,4 +53,10 @@ ViennaTypeNameNode >> name [
 ViennaTypeNameNode >> name: aViennaNameNode [
 
 	self at: 1 put: aViennaNameNode
+]
+
+{ #category : #'accessing-definitions' }
+ViennaTypeNameNode >> resolve [
+
+	^ self name resolve
 ]

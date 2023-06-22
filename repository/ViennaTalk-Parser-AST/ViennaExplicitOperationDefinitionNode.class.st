@@ -142,6 +142,12 @@ ViennaExplicitOperationDefinitionNode >> identifier: aString [
 ]
 
 { #category : #testing }
+ViennaExplicitOperationDefinitionNode >> isOperationDefinition [
+
+	^ true
+]
+
+{ #category : #testing }
 ViennaExplicitOperationDefinitionNode >> isViennaExplicitOperationDefinitionNode [
 
 	^ true
@@ -163,6 +169,15 @@ ViennaExplicitOperationDefinitionNode >> isViennaExportableTopLevelDefinitionNod
 ViennaExplicitOperationDefinitionNode >> label [
 
 	^ 'ExplicitOperationDefinition'
+]
+
+{ #category : #'accessing-definitions' }
+ViennaExplicitOperationDefinitionNode >> lookupIdentifier: aString [
+
+	aString = 'RESULT' ifTrue: [ ^ self ].
+	self parameters do: [ :parameter |
+		(parameter bindsIdentifier: aString) ifTrue: [ ^ parameter ] ].
+	^ nil
 ]
 
 { #category : #accessing }

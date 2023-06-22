@@ -136,6 +136,12 @@ ViennaExtendedExplicitFunctionDefinitionNode >> identifierTypePairList: aViennaI
 ]
 
 { #category : #testing }
+ViennaExtendedExplicitFunctionDefinitionNode >> isFunctionDefinition [
+
+	^ true
+]
+
+{ #category : #testing }
 ViennaExtendedExplicitFunctionDefinitionNode >> isViennaExportableTopLevelDefinitionNode [
 
 	^ true
@@ -157,6 +163,18 @@ ViennaExtendedExplicitFunctionDefinitionNode >> isViennaExtendedExplicitFunction
 ViennaExtendedExplicitFunctionDefinitionNode >> label [
 
 	^ 'ExtendedExplicitFunctionDefinition'
+]
+
+{ #category : #'accessing-definitions' }
+ViennaExtendedExplicitFunctionDefinitionNode >> lookupIdentifier: aString [
+
+	self typeVariableList do: [ :typeVariable |
+		(typeVariable bindsIdentifier: aString) ifTrue: [ ^ typeVariable ] ].
+	self parameterTypes patternsDo: [ :pattern |
+		(pattern bindsIdentifier: aString) ifTrue: [ ^ pattern ] ].
+	(self identifierTypePairList bindsIdentifier: aString) ifTrue: [
+		^ self ].
+	^ nil
 ]
 
 { #category : #accessing }

@@ -26,8 +26,7 @@ ViennaExtractOperationFromLetStatement >> check [
 		localDef first third allDescendantsDo: [ :node |
 			(node isViennaLocalNameNode and: [
 				 params includes: node identifier ]) ifTrue: [ ^ false ] ] ].
-	ast statement variableExpressionNodesDo: [ :node |
-		node isStateVariableNameNode ifFalse: [ ^ false ] ].
+	ast statement isRelocatable ifFalse: [ ^ false ].
 	ast statement allDescendantsDo: [ :node |
 		node isViennaReturnStatementNode ifTrue: [ ^ false ] ].
 	^ true

@@ -113,6 +113,12 @@ ViennaRecordTypeDefinitionNode >> inv: aViennaInvariantNode [
 ]
 
 { #category : #testing }
+ViennaRecordTypeDefinitionNode >> isTypeDefinition [
+
+	^ true
+]
+
+{ #category : #testing }
 ViennaRecordTypeDefinitionNode >> isViennaExportableTopLevelDefinitionNode [
 
 	^ true

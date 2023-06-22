@@ -15,7 +15,7 @@ ViennaExtractParameterFromExpressionInFunction >> check [
 	| moduleName shortName |
 	ast ifNil: [ ^ false ].
 	ast isViennaExpressionNode ifFalse: [ ^ false ].
-	ast variableExpressionNodesDo: [ :node | ^ false ].
+	ast hasStatefulReference ifTrue: [ ^ false ].
 	self definitionNode ifNil: [ ^ false ].
 	moduleName := ast module first.
 	shortName := self definitionNode first.

@@ -93,6 +93,12 @@ ViennaValueDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
 ]
 
 { #category : #testing }
+ViennaValueDefinitionNode >> isValueDefinition [
+
+	^ true
+]
+
+{ #category : #testing }
 ViennaValueDefinitionNode >> isViennaExportableTopLevelDefinitionNode [
 
 	^ true

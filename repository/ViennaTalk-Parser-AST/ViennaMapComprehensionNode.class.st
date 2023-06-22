@@ -117,6 +117,15 @@ ViennaMapComprehensionNode >> label [
 	^ 'MapComprehension'
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaMapComprehensionNode >> lookupIdentifier: aString [
+
+	self bindList do: [ :multiplebind |
+		multiplebind patternList do: [ :pattern |
+			(pattern bindsIdentifier: aString) ifTrue: [ ^ pattern ] ] ].
+	^ nil
+]
+
 { #category : #enumerating }
 ViennaMapComprehensionNode >> multipleBindsDo: aBlock [
 

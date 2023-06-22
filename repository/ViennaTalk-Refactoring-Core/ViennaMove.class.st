@@ -87,7 +87,7 @@ ViennaMove >> findDestinationModule [
 						ifTrue: [ (self definitionNames
 								allSatisfy: [ :localName | 
 									| localDef |
-									localDef := moduleNode resolveLocalName: localName.
+									localDef := moduleNode resolveIdentifier: localName.
 									localDef isNil or: [ localDef == self definitionNode ] ])
 								ifTrue: [ stream nextPut: moduleNode first ] ] ] ].
 	^ ast

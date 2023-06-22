@@ -64,6 +64,12 @@ ViennaParameterTypesNode >> patternTypePairList: aViennaPatternTypePairListNode 
 	self at: 1 put: aViennaPatternTypePairListNode
 ]
 
+{ #category : #enumerating }
+ViennaParameterTypesNode >> patternsDo: aBlock [
+
+	self patternTypePairList patternsDo: aBlock
+]
+
 { #category : #accessing }
 ViennaParameterTypesNode >> type [
 

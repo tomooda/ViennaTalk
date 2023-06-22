@@ -58,6 +58,12 @@ ViennaOperationDefinitionNode >> identifier [
 ]
 
 { #category : #testing }
+ViennaOperationDefinitionNode >> isOperationDefinition [
+
+	^ true
+]
+
+{ #category : #testing }
 ViennaOperationDefinitionNode >> isViennaOperationDefinitionNode [
 
 	^ true

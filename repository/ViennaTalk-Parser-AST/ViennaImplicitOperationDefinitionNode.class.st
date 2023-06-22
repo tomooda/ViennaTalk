@@ -153,6 +153,12 @@ ViennaImplicitOperationDefinitionNode >> implicitOperationBody: aViennaImplicitO
 ]
 
 { #category : #testing }
+ViennaImplicitOperationDefinitionNode >> isOperationDefinition [
+
+	^ true
+]
+
+{ #category : #testing }
 ViennaImplicitOperationDefinitionNode >> isViennaExportableTopLevelDefinitionNode [
 
 	^ true
@@ -174,6 +180,16 @@ ViennaImplicitOperationDefinitionNode >> isViennaImplicitOperationDefinitionNode
 ViennaImplicitOperationDefinitionNode >> label [
 
 	^ 'ImplicitOperationDefinition'
+]
+
+{ #category : #'accessing-definitions' }
+ViennaImplicitOperationDefinitionNode >> lookupIdentifier: aString [
+
+	self parameterTypes patternsDo: [ :pattern |
+		(pattern bindsIdentifier: aString) ifTrue: [ ^ pattern ] ].
+	(self identifierTypePairList bindsIdentifier: aString) ifTrue: [
+		^ self ].
+	^ nil
 ]
 
 { #category : #accessing }

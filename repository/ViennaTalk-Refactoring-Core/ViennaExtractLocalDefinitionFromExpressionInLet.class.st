@@ -11,7 +11,7 @@ ViennaExtractLocalDefinitionFromExpressionInLet >> check [
 	ast isViennaExpressionNode ifFalse: [ ^ false ].
 	self definitionNode ifNil: [ ^ false ].
 	(ast isViennaLocalNameNode and: [
-		 (ast definitionOfLocalName: ast identifier) includesParent:
+		 (ast resolveIdentifier: ast identifier) includesParent:
 			 self definitionNode ]) ifTrue: [ ^ false ].
 	^ true
 ]

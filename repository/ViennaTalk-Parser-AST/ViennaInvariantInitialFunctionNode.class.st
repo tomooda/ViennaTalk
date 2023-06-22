@@ -78,6 +78,12 @@ ViennaInvariantInitialFunctionNode >> label [
 	^ 'InvariantInitialFunction'
 ]
 
+{ #category : #testing }
+ViennaInvariantInitialFunctionNode >> lookupIdentifier: aString [
+
+	^ (self pattern bindsIdentifier: aString) ifTrue: [ self pattern ]
+]
+
 { #category : #accessing }
 ViennaInvariantInitialFunctionNode >> pattern [
 

@@ -92,7 +92,7 @@ ViennaInlineApplyFunctionAndRemove >> findDefinitionNode [
 	| identifier |
 	identifier := ast identifier.
 	identifier ifNil: [ ^ nil ].
-	(ast resolveLocalName: identifier) ifNotNil: [ :defNode |
+	(ast resolveIdentifier: identifier) ifNotNil: [ :defNode |
 		defNode isViennaExplicitFunctionDefinitionNode ifTrue: [ ^ defNode ].
 		defNode isViennaImplicitFunctionDefinitionNode ifTrue: [ ^ defNode ] ].
 	^ nil

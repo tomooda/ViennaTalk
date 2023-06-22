@@ -93,6 +93,14 @@ ViennaSequenceComprehensionNode >> label [
 	^ 'SequenceComprehension'
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaSequenceComprehensionNode >> lookupIdentifier: aString [
+
+	(self setSeqBind pattern bindsIdentifier: aString) ifTrue: [
+		^ self setSeqBind pattern ].
+	^ nil
+]
+
 { #category : #accessing }
 ViennaSequenceComprehensionNode >> pattern [
 

@@ -86,6 +86,14 @@ ViennaLambdaExpressionNode >> label [
 	^ 'LambdaExpression'
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaLambdaExpressionNode >> lookupIdentifier: aString [
+
+	self typeBindList do: [ :typeBind |
+		(typeBind bindsIdentifier: aString) ifTrue: [ ^ typeBind pattern ] ].
+	^ nil
+]
+
 { #category : #'pretty printing' }
 ViennaLambdaExpressionNode >> operatorPrecedence [
 

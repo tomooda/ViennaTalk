@@ -8,7 +8,7 @@ Class {
 ViennaExtractStateVariable >> check [
 
 	ast isViennaExpressionNode ifFalse: [ ^ false ].
-	ast variableExpressionNodesDo: [ :node | ^ false ].
+	ast hasStatefulReference ifTrue: [ ^ false ].
 	ast parent isViennaValueDefinitionNode ifTrue: [ ^ false ].
 	^ true
 ]

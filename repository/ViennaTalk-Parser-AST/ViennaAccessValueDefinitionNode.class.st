@@ -47,6 +47,12 @@ ViennaAccessValueDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
 ]
 
 { #category : #testing }
+ViennaAccessValueDefinitionNode >> isValueDefinition [
+
+	^ true
+]
+
+{ #category : #testing }
 ViennaAccessValueDefinitionNode >> isViennaAccessValueDefinitionNode [
 
 	^ true

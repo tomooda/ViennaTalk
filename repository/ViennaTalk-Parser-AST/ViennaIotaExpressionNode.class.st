@@ -94,6 +94,12 @@ ViennaIotaExpressionNode >> label [
 	^ 'IotaExpression'
 ]
 
+{ #category : #testing }
+ViennaIotaExpressionNode >> lookupIdentifier: aString [
+
+	^ (self bind bindsIdentifier: aString) ifTrue: [ self bind parameter ]
+]
+
 { #category : #'pretty printing' }
 ViennaIotaExpressionNode >> operatorPrecedence [
 

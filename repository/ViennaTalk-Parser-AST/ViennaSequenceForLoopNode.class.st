@@ -94,6 +94,15 @@ ViennaSequenceForLoopNode >> label [
 	^ 'SequenceForLoop'
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaSequenceForLoopNode >> lookupIdentifier: aString [
+
+	| pattern |
+	pattern := self patternOrBind pattern.
+	(pattern bindsIdentifier: aString) ifTrue: [ ^ pattern ].
+	^ nil
+]
+
 { #category : #accessing }
 ViennaSequenceForLoopNode >> patternOrBind [
 

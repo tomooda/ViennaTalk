@@ -51,53 +51,33 @@ ViennaGlobalNameNode >> isExportedNameNode [
 { #category : #testing }
 ViennaGlobalNameNode >> isFunctionNameNode [
 
-	(self moduleNamed: self moduleIdentifier) ifNotNil: [ :moduleNode |
-		(moduleNode definitionOfLocalName: self identifier) ifNotNil: [
-			:defNode |
-			(defNode isViennaExplicitFunctionDefinitionNode: self identifier)
-				ifTrue: [ ^ true ].
-			(defNode isViennaExtendedExplicitFunctionDefinitionNode:
-				 self identifier) ifTrue: [ ^ true ].
-			(defNode isViennaImplicitFunctionDefinitionNode: self identifier)
-				ifTrue: [ ^ true ] ] ].
-	^ false
+	^ self resolve
+		  ifNotNil: [ :def | def isFunctionDefinition ]
+		  ifNil: [ false ]
 ]
 
 { #category : #testing }
 ViennaGlobalNameNode >> isOperationNameNode [
 
-	(self moduleNamed: self moduleIdentifier) ifNotNil: [ :moduleNode |
-		(moduleNode definitionOfLocalName: self identifier) ifNotNil: [
-			:defNode |
-			(defNode isViennaExplicitOperationDefinitionNode: self identifier)
-				ifTrue: [ ^ true ].
-			(defNode isViennaImplicitOperationDefinitionNode: self identifier)
-				ifTrue: [ ^ true ] ] ].
-	^ false
+	^ self resolve
+		  ifNotNil: [ :def | def isOperationDefinition ]
+		  ifNil: [ false ]
 ]
 
 { #category : #testing }
 ViennaGlobalNameNode >> isTypeNameNode [
 
-	(self moduleNamed: self moduleIdentifier) ifNotNil: [ :moduleNode |
-		(moduleNode definitionOfLocalName: self identifier) ifNotNil: [
-			:defNode |
-			(defNode isViennaTypeSynonymNode: self identifier) ifTrue: [
-				^ true ].
-			(defNode isViennaRecordTypeDefinitionNode: self identifier)
-				ifTrue: [ ^ true ] ] ].
-	^ false
+	^ self resolve
+		  ifNotNil: [ :def | def isTypeDefinition ]
+		  ifNil: [ false ]
 ]
 
 { #category : #testing }
 ViennaGlobalNameNode >> isValueNameNode [
 
-	(self moduleNamed: self moduleIdentifier) ifNotNil: [ :moduleNode |
-		(moduleNode definitionOfLocalName: self identifier) ifNotNil: [
-			:defNode |
-			defNode bindHolderNode isViennaValueDefinitionNode ifTrue: [
-				^ true ] ] ].
-	^ false
+	^ self resolve
+		  ifNotNil: [ :def | def isValueDefinition ]
+		  ifNil: [ false ]
 ]
 
 { #category : #testing }
@@ -135,7 +115,7 @@ ViennaGlobalNameNode >> moduleIdentifier: aString [
 ViennaGlobalNameNode >> resolve [
 
 	^ (self moduleNamed: self moduleIdentifier) ifNotNil: [ :module |
-		  module resolveLocalName: self identifier ]
+		  module resolveIdentifier: self identifier ]
 ]
 
 { #category : #'pretty printing' }
