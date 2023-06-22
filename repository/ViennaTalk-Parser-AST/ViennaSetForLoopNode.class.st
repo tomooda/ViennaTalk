@@ -106,6 +106,14 @@ ViennaSetForLoopNode >> pattern: aViennaPatternNode [
 	self at: 1 put: aViennaPatternNode
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaSetForLoopNode >> resolveIdentifier: aString [
+
+	^ (self pattern bindsIdentifier: aString)
+		  ifTrue: [ self ]
+		  ifFalse: [ super resolveIdentifier: aString ]
+]
+
 { #category : #accessing }
 ViennaSetForLoopNode >> statement [
 

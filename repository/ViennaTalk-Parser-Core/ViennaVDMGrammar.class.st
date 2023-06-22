@@ -1038,17 +1038,20 @@ ViennaVDMGrammar >> extendedExplicitFunctionDefinition [
 	  , self identifierTypePairList
 	  , ((self operator: '==') , (expression / self isNotYetSpecified)
 		   ==> #second) , (self pre , expression ==> #second) optional
-	  , (self post , expression ==> #second)
+	  , (self post , expression ==> #second) optional
+	  , (self measure , expression ==> #second) optional
 ]
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> extendedExplicitOperationDefinition [
+
 	^ identifier trim , self parameterTypes
-		, self identifierTypePairList optional
-		, (((self operator: '==') , self operationBody) ==> #second)
-		, self externals optional
-		, ((self pre , expression) ==> #second) optional
-		, ((self post , expression) ==> #second) , self exceptions optional
+	  , self identifierTypePairList optional
+	  , ((self operator: '==') , self operationBody ==> #second)
+	  , self externals optional
+	  , (self pre , expression ==> #second) optional
+	  , (self post , expression ==> #second) optional
+	  , self exceptions optional
 ]
 
 { #category : #'parsers-definitions' }

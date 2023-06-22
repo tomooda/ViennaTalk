@@ -209,6 +209,15 @@ ViennaExtendedExplicitOperationDefinitionNode >> pre: aViennaExpressionNode [
 	self at: 6 put: aViennaExpressionNode
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaExtendedExplicitOperationDefinitionNode >> resolveIdentifier: aString [
+
+	^ ((self returnIdentifiers includes: aString) or: [
+		   self parameters bindsIdentifier: aString ])
+		  ifTrue: [ self ]
+		  ifFalse: [ super resolveIdentifier: aString ]
+]
+
 { #category : #accessing }
 ViennaExtendedExplicitOperationDefinitionNode >> returnIdentifiers [
 

@@ -215,6 +215,15 @@ ViennaImplicitOperationDefinitionNode >> resolve [
 	^ self
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaImplicitOperationDefinitionNode >> resolveIdentifier: aString [
+
+	^ ((self returnIdentifiers includes: aString) or: [
+		   self parameters bindsIdentifier: aString ])
+		  ifTrue: [ self ]
+		  ifFalse: [ super resolveIdentifier: aString ]
+]
+
 { #category : #accessing }
 ViennaImplicitOperationDefinitionNode >> returnIdentifiers [
 

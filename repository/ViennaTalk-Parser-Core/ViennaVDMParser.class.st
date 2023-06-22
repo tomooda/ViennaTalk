@@ -577,7 +577,8 @@ ViennaVDMParser >> extendedExplicitFunctionDefinition [
 			   identifierTypePairList: array fourth
 			   expression: array fifth
 			   pre: array sixth
-			   post: array seventh)
+			   post: array seventh
+			   measure: array eighth)
 			  start: start end: end;
 			  yourself ]
 ]

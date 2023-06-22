@@ -121,3 +121,11 @@ ViennaLetBeExpressionNode >> operatorPrecedence [
 
 	^ 10
 ]
+
+{ #category : #testing }
+ViennaLetBeExpressionNode >> resolveIdentifier: aString [
+
+	^ (self multipleBind bindsIdentifier: aString)
+		  ifTrue: [ self ]
+		  ifFalse: [ super resolveIdentifier: aString ]
+]

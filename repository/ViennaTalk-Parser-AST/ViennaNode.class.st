@@ -282,6 +282,18 @@ ViennaNode >> copyWhole: aDictionary [
 ]
 
 { #category : #'accessing-definitions' }
+ViennaNode >> deepResolveIdentifier: aString [
+
+	| node |
+	node := self resolveIdentifier: aString.
+	node ifNil: [ ^ nil ].
+	node isViennaImportNode ifTrue: [
+		(self moduleNamed: node moduleIdentifier) ifNotNil: [ :module |
+			^ module deepResolveIdentifier: node identifier ] ].
+	^ node
+]
+
+{ #category : #'accessing-definitions' }
 ViennaNode >> definitionOfGlobalName: shortName module: moduleName [
 
 	self module interface importDefinitionList ifNotNil: [
@@ -616,6 +628,12 @@ ViennaNode >> isViennaAssignStatementNode [
 
 { #category : #testing }
 ViennaNode >> isViennaAssignmentDefinitionNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaAssignmentDefinitionNode: aString [
 
 	^ false
 ]
@@ -2486,6 +2504,12 @@ ViennaNode >> removeAnnotation: aString [
 ViennaNode >> resolve [
 
 	^ nil
+]
+
+{ #category : #'accessing-definitions' }
+ViennaNode >> resolveIdentifier: aString [
+
+	^ parent ifNotNil: [ parent resolveIdentifier: aString ]
 ]
 
 { #category : #'accessing-definitions' }

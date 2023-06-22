@@ -17,7 +17,7 @@ ViennaCasesStatementAlternativeNode class >> patternList: aViennaPatternListNode
 { #category : #private }
 ViennaCasesStatementAlternativeNode >> boundIdentifiersDo: aBlock [
 
-	self patternList boundIdentifiersDo: aBlock
+	
 ]
 
 { #category : #'accessing-definitions' }
@@ -79,6 +79,14 @@ ViennaCasesStatementAlternativeNode >> patternList [
 ViennaCasesStatementAlternativeNode >> patternList: aViennaPatternListNode [
 
 	self at: 1 put: aViennaPatternListNode
+]
+
+{ #category : #'accessing-definitions' }
+ViennaCasesStatementAlternativeNode >> resolveIdentifier: aString [
+
+	^ (self patternList bindsIdentifier: aString)
+		  ifTrue: [ self ]
+		  ifFalse: [ super resolveIdentifier: aString ]
 ]
 
 { #category : #'pretty printing' }

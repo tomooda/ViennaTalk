@@ -97,3 +97,11 @@ ViennaIotaExpressionNode >> pattern [
 
 	^ self bind pattern
 ]
+
+{ #category : #testing }
+ViennaIotaExpressionNode >> resolveIdentifier: aString [
+
+	^ (self bind bindsIdentifier: aString)
+		  ifTrue: [ self ]
+		  ifFalse: [ super resolveIdentifier: aString ]
+]

@@ -108,6 +108,14 @@ ViennaLetStatementNode >> localDefinitionList: aViennaLocalDefinitionListNode [
 	self at: 1 put: aViennaLocalDefinitionListNode
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaLetStatementNode >> resolveIdentifier: aString [
+
+	^ (self localDefinitionList bindsIdentifier: aString)
+		  ifTrue: [ self ]
+		  ifFalse: [ super resolveIdentifier: aString ]
+]
+
 { #category : #accessing }
 ViennaLetStatementNode >> statement [
 

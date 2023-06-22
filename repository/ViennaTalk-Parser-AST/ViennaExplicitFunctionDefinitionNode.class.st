@@ -237,6 +237,16 @@ ViennaExplicitFunctionDefinitionNode >> resolve [
 	^ self
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaExplicitFunctionDefinitionNode >> resolveIdentifier: aString [
+
+	^ (aString = 'RESULT' or: [
+		   (self typeVariableList bindsIdentifier: aString) or: [
+			   self parametersList bindsIdentifier: aString ] ])
+		  ifTrue: [ self ]
+		  ifFalse: [ super resolveIdentifier: aString ]
+]
+
 { #category : #accessing }
 ViennaExplicitFunctionDefinitionNode >> returnIdentifiers [
 

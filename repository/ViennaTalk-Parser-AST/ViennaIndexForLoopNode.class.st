@@ -108,6 +108,14 @@ ViennaIndexForLoopNode >> label [
 	^ 'IndexForLoop'
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaIndexForLoopNode >> resolveIdentifier: aString [
+
+	^ self identifier = aString
+		  ifTrue: [ self ]
+		  ifFalse: [ super resolveIdentifier: aString ]
+]
+
 { #category : #accessing }
 ViennaIndexForLoopNode >> startExpression [
 

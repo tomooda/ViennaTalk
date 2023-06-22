@@ -9,6 +9,14 @@ Class {
 }
 
 { #category : #utilities }
+ViennaResolveIdentifierTest >> f [
+
+	flatDocument
+		allDescendantsSuchThat: #isViennaExplicitFunctionDefinitionNode
+		do: [ :n | ^ n ]
+]
+
+{ #category : #utilities }
 ViennaResolveIdentifierTest >> moduleA [
 	^ modularDocument moduleNamed: 'A'
 ]
@@ -17,6 +25,14 @@ ViennaResolveIdentifierTest >> moduleA [
 ViennaResolveIdentifierTest >> moduleB [
 
 	^ modularDocument moduleNamed: 'B'
+]
+
+{ #category : #utilities }
+ViennaResolveIdentifierTest >> o [
+
+	flatDocument
+		allDescendantsSuchThat: #isViennaExplicitOperationDefinitionNode
+		do: [ :n | ^ n ]
 ]
 
 { #category : #running }
@@ -70,12 +86,52 @@ state Sa of
 init s == s = mk_Sa(0)
 end
 operations
-	o:() ==> ()
-	o() == skip;
+	o: nat ==> ()
+	o(x) == return x;
 ' trim
 ]
 
-{ #category : #tests }
+{ #category : #utilities }
+ViennaResolveIdentifierTest >> t [
+
+	flatDocument
+		allDescendantsSuchThat: #isViennaTypeSynonymNode
+		do: [ :n | ^ n ]
+]
+
+{ #category : #'tests-statements' }
+ViennaResolveIdentifierTest >> testBlockStatement [
+
+	| node |
+	node := ViennaVDMParser new statement parse:
+		        '(dcl x:nat := 0; return x)'.
+	self assert: (node second resolveIdentifier: 'x') identicalTo: node
+]
+
+{ #category : #'tests-expressions' }
+ViennaResolveIdentifierTest >> testCasesExpression [
+
+	| node |
+	node := ViennaVDMParser new casesExpressionAlternative parse:
+		        'x -> nil'.
+	self
+		assert: (node expression resolveIdentifier: 'x')
+		identicalTo: node.
+	self assert: (node expression resolveIdentifier: 'z') isNil
+]
+
+{ #category : #'tests-statements' }
+ViennaResolveIdentifierTest >> testCasesStatement [
+
+	| node |
+	node := ViennaVDMParser new casesStatementAlternative parse:
+		        'x -> skip'.
+	self
+		assert: (node statement resolveIdentifier: 'x')
+		identicalTo: node
+]
+
+{ #category : #'tests-modules' }
 ViennaResolveIdentifierTest >> testDeepResolveImportedFunction [
 
 	| node |
@@ -85,7 +141,7 @@ ViennaResolveIdentifierTest >> testDeepResolveImportedFunction [
 	self assert: node module identifier equals: 'B'
 ]
 
-{ #category : #tests }
+{ #category : #'tests-modules' }
 ViennaResolveIdentifierTest >> testDeepResolveImportedOperation [
 
 	| node |
@@ -95,7 +151,7 @@ ViennaResolveIdentifierTest >> testDeepResolveImportedOperation [
 	self assert: node module identifier equals: 'B'
 ]
 
-{ #category : #tests }
+{ #category : #'tests-modules' }
 ViennaResolveIdentifierTest >> testDeepResolveImportedType [
 
 	| node |
@@ -105,7 +161,7 @@ ViennaResolveIdentifierTest >> testDeepResolveImportedType [
 	self assert: node module identifier equals: 'B'
 ]
 
-{ #category : #tests }
+{ #category : #'tests-modules' }
 ViennaResolveIdentifierTest >> testDeepResolveImportedValue [
 
 	| node |
@@ -115,7 +171,7 @@ ViennaResolveIdentifierTest >> testDeepResolveImportedValue [
 	self assert: node module identifier equals: 'B'
 ]
 
-{ #category : #tests }
+{ #category : #'tests-modules' }
 ViennaResolveIdentifierTest >> testDeepResolveLocalFunction [
 
 	| node |
@@ -124,7 +180,7 @@ ViennaResolveIdentifierTest >> testDeepResolveLocalFunction [
 	self assert: node identifier equals: 'f'
 ]
 
-{ #category : #tests }
+{ #category : #'tests-modules' }
 ViennaResolveIdentifierTest >> testDeepResolveLocalFunctionParameter [
 
 	| node |
@@ -132,7 +188,7 @@ ViennaResolveIdentifierTest >> testDeepResolveLocalFunctionParameter [
 	self assert: node isNil
 ]
 
-{ #category : #tests }
+{ #category : #'tests-modules' }
 ViennaResolveIdentifierTest >> testDeepResolveLocalOperation [
 
 	| node |
@@ -141,7 +197,7 @@ ViennaResolveIdentifierTest >> testDeepResolveLocalOperation [
 	self assert: node identifier equals: 'o'
 ]
 
-{ #category : #tests }
+{ #category : #'tests-modules' }
 ViennaResolveIdentifierTest >> testDeepResolveLocalStateVariable [
 
 	| node |
@@ -150,7 +206,7 @@ ViennaResolveIdentifierTest >> testDeepResolveLocalStateVariable [
 	self assert: node identifier equals: 'Sa'
 ]
 
-{ #category : #tests }
+{ #category : #'tests-modules' }
 ViennaResolveIdentifierTest >> testDeepResolveLocalType [
 
 	| node |
@@ -159,7 +215,7 @@ ViennaResolveIdentifierTest >> testDeepResolveLocalType [
 	self assert: node identifier equals: 't'
 ]
 
-{ #category : #tests }
+{ #category : #'tests-modules' }
 ViennaResolveIdentifierTest >> testDeepResolveLocalValue [
 
 	| node |
@@ -168,7 +224,247 @@ ViennaResolveIdentifierTest >> testDeepResolveLocalValue [
 	self assert: node pattern identifier equals: 'v'
 ]
 
-{ #category : #tests }
+{ #category : #'tests-expressions' }
+ViennaResolveIdentifierTest >> testExists1Expression [
+
+	| node |
+	node := ViennaVDMParser new expression parse:
+		        'exists1 x in set xs & x < 10'.
+	self
+		assert: (node expression resolveIdentifier: 'x')
+		identicalTo: node.
+	self assert: (node expression resolveIdentifier: 'z') isNil
+]
+
+{ #category : #'tests-expressions' }
+ViennaResolveIdentifierTest >> testExistsExpression [
+
+	| node |
+	node := ViennaVDMParser new expression parse:
+		        'exists x, y in set s & x + y = z'.
+	self
+		assert: (node expression resolveIdentifier: 'x')
+		identicalTo: node.
+	self
+		assert: (node expression resolveIdentifier: 'y')
+		identicalTo: node.
+	self assert: (node expression resolveIdentifier: 'z') isNil
+]
+
+{ #category : #'tests-toplevel definitions' }
+ViennaResolveIdentifierTest >> testExplicitFunctionDefinition [
+
+	| node |
+	node := self f.
+	self assert: node identifier equals: 'f'.
+	self assert: (node parametersList bindsIdentifier: 'x').
+	self
+		assert: (node expression resolveIdentifier: 'x')
+		identicalTo: node
+]
+
+{ #category : #'tests-toplevel definitions' }
+ViennaResolveIdentifierTest >> testExplicitOperationDefinition [
+
+	| node |
+	node := self o.
+	self assert: node identifier equals: 'o'.
+	self assert: (node parameters bindsIdentifier: 'x').
+	self
+		assert: (node statement resolveIdentifier: 'x')
+		identicalTo: node
+]
+
+{ #category : #'tests-toplevel definitions' }
+ViennaResolveIdentifierTest >> testExtendedExplicitFunctionDefinition [
+
+	| node |
+	node := ViennaVDMParser new extendedExplicitFunctionDefinition end
+		        parse: 'f[@T] (x:@T) res:@T == x post res = x'.
+	self assert: (node type resolveIdentifier: '@T') identicalTo: node.
+	self
+		assert: (node expression resolveIdentifier: 'x')
+		identicalTo: node.
+	self assert: (node post resolveIdentifier: 'res') identicalTo: node
+]
+
+{ #category : #'tests-toplevel definitions' }
+ViennaResolveIdentifierTest >> testExtendedExplicitOperationDefinition [
+
+	| node |
+	node := ViennaVDMParser new extendedExplicitOperationDefinition end
+		        parse: 'o (x:T) res:T == return x post res = x'.
+	self
+		assert: (node statement expression resolveIdentifier: 'x')
+		identicalTo: node.
+	self assert: (node post resolveIdentifier: 'res') identicalTo: node
+]
+
+{ #category : #'tests-expressions' }
+ViennaResolveIdentifierTest >> testForallExpression [
+
+	| node |
+	node := ViennaVDMParser new expression parse:
+		        'forall x, y in set s & x + y = z'.
+	self
+		assert: (node expression resolveIdentifier: 'x')
+		identicalTo: node.
+	self
+		assert: (node expression resolveIdentifier: 'y')
+		identicalTo: node.
+	self assert: (node expression resolveIdentifier: 'z') isNil
+]
+
+{ #category : #'tests-toplevel definitions' }
+ViennaResolveIdentifierTest >> testImplicitFunctionDefinition [
+
+	| node |
+	node := ViennaVDMParser new implicitFunctionDefinition end parse:
+		        'f[@T] (x:@T) res:@T post res = x'.
+	self assert: (node type resolveIdentifier: '@T') identicalTo: node.
+	self assert: (node post resolveIdentifier: 'x') identicalTo: node.
+	self assert: (node post resolveIdentifier: 'res') identicalTo: node
+]
+
+{ #category : #'tests-toplevel definitions' }
+ViennaResolveIdentifierTest >> testImplicitOperationDefinition [
+
+	| node |
+	node := ViennaVDMParser new implicitOperationDefinition end parse:
+		        'o (x:T) res:T ext rd a:T post res = x'.
+	self assert: (node post resolveIdentifier: 'x') identicalTo: node.
+	self assert: (node post resolveIdentifier: 'res') identicalTo: node.
+	self assert: (node post resolveIdentifier: 'a') isNil
+]
+
+{ #category : #'tests-statements' }
+ViennaResolveIdentifierTest >> testIndexForLoop [
+
+	| node |
+	node := ViennaVDMParser new statement parse:
+		        'for i = 1 to 10 by 2 do skip'.
+	self
+		assert: (node statement resolveIdentifier: 'i')
+		identicalTo: node
+]
+
+{ #category : #'tests-others' }
+ViennaResolveIdentifierTest >> testInvariant [
+
+	| node |
+	node := ViennaVDMParser new invariantInitialFunction end parse:
+		        'mk_(x, y) == x = y'.
+	self
+		assert: (node expression resolveIdentifier: 'x')
+		identicalTo: node.
+	self
+		assert: (node expression resolveIdentifier: 'y')
+		identicalTo: node
+]
+
+{ #category : #'tests-expressions' }
+ViennaResolveIdentifierTest >> testIotaExpression [
+
+	| node |
+	node := ViennaVDMParser new expression parse:
+		        'iota x in set xs & x < 10'.
+	self
+		assert: (node expression resolveIdentifier: 'x')
+		identicalTo: node.
+	self assert: (node expression resolveIdentifier: 'z') isNil
+]
+
+{ #category : #'tests-expressions' }
+ViennaResolveIdentifierTest >> testLambdaExpression [
+
+	| node |
+	node := ViennaVDMParser new expression parse:
+		        'lambda x:nat, y:nat & x + y'.
+	self
+		assert: (node expression resolveIdentifier: 'x')
+		identicalTo: node.
+	self
+		assert: (node expression resolveIdentifier: 'y')
+		identicalTo: node.
+	self assert: (node expression resolveIdentifier: 'z') isNil
+]
+
+{ #category : #'tests-expressions' }
+ViennaResolveIdentifierTest >> testLetBeExpression [
+
+	| node |
+	node := ViennaVDMParser new expression parse:
+		        'let x, y in set s be st x = y in x + y'.
+	self
+		assert: (node expression resolveIdentifier: 'x')
+		identicalTo: node.
+	self
+		assert: (node expression resolveIdentifier: 'y')
+		identicalTo: node.
+	self assert: (node expression resolveIdentifier: 'z') isNil
+]
+
+{ #category : #'tests-statements' }
+ViennaResolveIdentifierTest >> testLetBeStatement [
+
+	| node |
+	node := ViennaVDMParser new statement parse:
+		        'let x, y in set s be st x = y in z := x + y'.
+	self
+		assert: (node statement resolveIdentifier: 'x')
+		identicalTo: node.
+	self
+		assert: (node statement resolveIdentifier: 'y')
+		identicalTo: node.
+	self assert: (node statement resolveIdentifier: 'z') isNil
+]
+
+{ #category : #'tests-expressions' }
+ViennaResolveIdentifierTest >> testLetExpression [
+
+	| node |
+	node := ViennaVDMParser new expression parse:
+		        'let mk_(x, y) = z in x + y'.
+	self
+		assert: (node expression resolveIdentifier: 'x')
+		identicalTo: node.
+	self
+		assert: (node expression resolveIdentifier: 'y')
+		identicalTo: node.
+	self assert: (node expression resolveIdentifier: 'z') isNil
+]
+
+{ #category : #'tests-statements' }
+ViennaResolveIdentifierTest >> testLetStatement [
+
+	| node |
+	node := ViennaVDMParser new statement parse:
+		        'let mk_(x, y) = z in z := mk_(x + y, x - y)'.
+	self
+		assert: (node statement resolveIdentifier: 'x')
+		identicalTo: node.
+	self
+		assert: (node statement resolveIdentifier: 'y')
+		identicalTo: node.
+	self assert: (node statement resolveIdentifier: 'z') isNil
+]
+
+{ #category : #'tests-expressions' }
+ViennaResolveIdentifierTest >> testMapComprehension [
+
+	| node |
+	node := ViennaVDMParser new expression parse:
+		        '{k |-> v | k in set s, v in set s & k = v + z}'.
+	self
+		assert: (node suchthatExpression resolveIdentifier: 'k')
+		identicalTo: node.
+	self
+		assert: (node suchthatExpression resolveIdentifier: 'v')
+		identicalTo: node.
+	self assert: (node suchthatExpression resolveIdentifier: 'z') isNil
+]
+
+{ #category : #'tests-flat documents' }
 ViennaResolveIdentifierTest >> testResolveFlatFunction [
 
 	| node |
@@ -177,7 +473,7 @@ ViennaResolveIdentifierTest >> testResolveFlatFunction [
 	self assert: node identifier equals: 'f'
 ]
 
-{ #category : #tests }
+{ #category : #'tests-flat documents' }
 ViennaResolveIdentifierTest >> testResolveFlatFunctionParameter [
 
 	| node |
@@ -185,7 +481,7 @@ ViennaResolveIdentifierTest >> testResolveFlatFunctionParameter [
 	self assert: node isNil
 ]
 
-{ #category : #tests }
+{ #category : #'tests-flat documents' }
 ViennaResolveIdentifierTest >> testResolveFlatOperation [
 
 	| node |
@@ -194,7 +490,7 @@ ViennaResolveIdentifierTest >> testResolveFlatOperation [
 	self assert: node identifier equals: 'o'
 ]
 
-{ #category : #tests }
+{ #category : #'tests-flat documents' }
 ViennaResolveIdentifierTest >> testResolveFlatStateVariable [
 
 	| node |
@@ -203,7 +499,7 @@ ViennaResolveIdentifierTest >> testResolveFlatStateVariable [
 	self assert: node identifier equals: 'Sa'
 ]
 
-{ #category : #tests }
+{ #category : #'tests-flat documents' }
 ViennaResolveIdentifierTest >> testResolveFlatType [
 
 	| node |
@@ -212,7 +508,7 @@ ViennaResolveIdentifierTest >> testResolveFlatType [
 	self assert: node identifier equals: 't'
 ]
 
-{ #category : #tests }
+{ #category : #'tests-flat documents' }
 ViennaResolveIdentifierTest >> testResolveFlatValue [
 
 	| node |
@@ -221,7 +517,7 @@ ViennaResolveIdentifierTest >> testResolveFlatValue [
 	self assert: node pattern identifier equals: 'v'
 ]
 
-{ #category : #tests }
+{ #category : #'tests-modules' }
 ViennaResolveIdentifierTest >> testResolveImportedFunction [
 
 	| node |
@@ -233,7 +529,7 @@ ViennaResolveIdentifierTest >> testResolveImportedFunction [
 	self assert: node isNil
 ]
 
-{ #category : #tests }
+{ #category : #'tests-modules' }
 ViennaResolveIdentifierTest >> testResolveImportedOperation [
 
 	| node |
@@ -245,7 +541,7 @@ ViennaResolveIdentifierTest >> testResolveImportedOperation [
 	self assert: node isNil
 ]
 
-{ #category : #tests }
+{ #category : #'tests-modules' }
 ViennaResolveIdentifierTest >> testResolveImportedType [
 
 	| node |
@@ -257,7 +553,7 @@ ViennaResolveIdentifierTest >> testResolveImportedType [
 	self assert: node isNil
 ]
 
-{ #category : #tests }
+{ #category : #'tests-modules' }
 ViennaResolveIdentifierTest >> testResolveImportedValue [
 
 	| node |
@@ -269,7 +565,7 @@ ViennaResolveIdentifierTest >> testResolveImportedValue [
 	self assert: node isNil
 ]
 
-{ #category : #tests }
+{ #category : #'tests-modules' }
 ViennaResolveIdentifierTest >> testResolveLocalFunction [
 
 	| node |
@@ -278,7 +574,7 @@ ViennaResolveIdentifierTest >> testResolveLocalFunction [
 	self assert: node identifier equals: 'f'
 ]
 
-{ #category : #tests }
+{ #category : #'tests-modules' }
 ViennaResolveIdentifierTest >> testResolveLocalFunctionParameter [
 
 	| node |
@@ -286,7 +582,7 @@ ViennaResolveIdentifierTest >> testResolveLocalFunctionParameter [
 	self assert: node isNil
 ]
 
-{ #category : #tests }
+{ #category : #'tests-modules' }
 ViennaResolveIdentifierTest >> testResolveLocalOperation [
 
 	| node |
@@ -295,7 +591,7 @@ ViennaResolveIdentifierTest >> testResolveLocalOperation [
 	self assert: node identifier equals: 'o'
 ]
 
-{ #category : #tests }
+{ #category : #'tests-modules' }
 ViennaResolveIdentifierTest >> testResolveLocalStateVariable [
 
 	| node |
@@ -304,7 +600,7 @@ ViennaResolveIdentifierTest >> testResolveLocalStateVariable [
 	self assert: node identifier equals: 'Sa'
 ]
 
-{ #category : #tests }
+{ #category : #'tests-modules' }
 ViennaResolveIdentifierTest >> testResolveLocalType [
 
 	| node |
@@ -313,11 +609,76 @@ ViennaResolveIdentifierTest >> testResolveLocalType [
 	self assert: node identifier equals: 't'
 ]
 
-{ #category : #tests }
+{ #category : #'tests-modules' }
 ViennaResolveIdentifierTest >> testResolveLocalValue [
 
 	| node |
 	node := self moduleA resolveIdentifier: 'v'.
 	self assert: node isViennaAccessValueDefinitionNode.
 	self assert: node pattern identifier equals: 'v'
+]
+
+{ #category : #'tests-expressions' }
+ViennaResolveIdentifierTest >> testSequenceComprehension [
+
+	| node |
+	node := ViennaVDMParser new expression parse:
+		        '[x + z | x in set {1, ..., z} & x < z]'.
+	self
+		assert: (node expression resolveIdentifier: 'x')
+		identicalTo: node.
+	self assert: (node expression resolveIdentifier: 'z') isNil
+]
+
+{ #category : #'tests-statements' }
+ViennaResolveIdentifierTest >> testSequenceForLoop [
+
+	| node |
+	node := ViennaVDMParser new statement parse:
+		        'for mk_(x, y) in z do z := [mk_(x, y)]'.
+	self
+		assert: (node statement resolveIdentifier: 'x')
+		identicalTo: node.
+	self
+		assert: (node statement resolveIdentifier: 'y')
+		identicalTo: node.
+	self assert: (node statement resolveIdentifier: 'z') isNil
+]
+
+{ #category : #'tests-expressions' }
+ViennaResolveIdentifierTest >> testSetComprehension [
+
+	| node |
+	node := ViennaVDMParser new expression parse:
+		        '{x + y + z | x in set {1, ..., z}, y in set {z, ..., 10} & x < y}'.
+	self
+		assert: (node expression resolveIdentifier: 'x')
+		identicalTo: node.
+	self
+		assert: (node expression resolveIdentifier: 'y')
+		identicalTo: node.
+	self assert: (node expression resolveIdentifier: 'z') isNil
+]
+
+{ #category : #'tests-statements' }
+ViennaResolveIdentifierTest >> testSetForLoop [
+
+	| node |
+	node := ViennaVDMParser new statement parse:
+		        'for all mk_(x, y) in set z do z := {mk_(x, y)}'.
+	self
+		assert: (node statement resolveIdentifier: 'x')
+		identicalTo: node.
+	self
+		assert: (node statement resolveIdentifier: 'y')
+		identicalTo: node.
+	self assert: (node statement resolveIdentifier: 'z') isNil
+]
+
+{ #category : #utilities }
+ViennaResolveIdentifierTest >> v [
+
+	flatDocument
+		allDescendantsSuchThat: #isViennaValueDefinitionNode
+		do: [ :n | ^ n ]
 ]

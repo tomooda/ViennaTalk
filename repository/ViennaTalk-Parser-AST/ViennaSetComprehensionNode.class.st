@@ -111,6 +111,14 @@ ViennaSetComprehensionNode >> patternsDo: aBlock [
 		multipleBind patternsDo: aBlock ]
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaSetComprehensionNode >> resolveIdentifier: aString [
+
+	^ (self bindList bindsIdentifier: aString)
+		  ifTrue: [ self ]
+		  ifFalse: [ super resolveIdentifier: aString ]
+]
+
 { #category : #accessing }
 ViennaSetComprehensionNode >> suchthatExpression [
 

@@ -132,3 +132,11 @@ ViennaLetExpressionNode >> operatorPrecedence [
 
 	^ 10
 ]
+
+{ #category : #'accessing-definitions' }
+ViennaLetExpressionNode >> resolveIdentifier: aString [
+
+	^ (self localDefinitionList bindsIdentifier: aString)
+		  ifTrue: [ self ]
+		  ifFalse: [ super resolveIdentifier: aString ]
+]

@@ -122,6 +122,14 @@ ViennaMapComprehensionNode >> patternsDo: aBlock [
 		multipleBind patternsDo: aBlock ]
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaMapComprehensionNode >> resolveIdentifier: aString [
+
+	^ (self bindList bindsIdentifier: aString)
+		  ifTrue: [ self ]
+		  ifFalse: [ super resolveIdentifier: aString ]
+]
+
 { #category : #accessing }
 ViennaMapComprehensionNode >> suchthatExpression [
 

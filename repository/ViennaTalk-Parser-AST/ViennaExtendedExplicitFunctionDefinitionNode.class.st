@@ -6,9 +6,9 @@ Class {
 }
 
 { #category : #'instance creation' }
-ViennaExtendedExplicitFunctionDefinitionNode class >> identifier: aString typeVariableList: aViennaTypeVariableListNode parameterTypes: aViennaParameterTypesNode identifierTypePairList: aViennaIdentifierTypePairListNode expression: aViennaExpressionNode1 pre: aViennaExpressionNode2 post: aViennaExpressionNode3 [
+ViennaExtendedExplicitFunctionDefinitionNode class >> identifier: aString typeVariableList: aViennaTypeVariableListNode parameterTypes: aViennaParameterTypesNode identifierTypePairList: aViennaIdentifierTypePairListNode expression: aViennaExpressionNode1 pre: aViennaExpressionNode2 post: aViennaExpressionNode3 measure: aViennaExpressionNode4 [
 
-	^ (self new: 7)
+	^ (self new: 8)
 		  identifier: aString;
 		  typeVariableList: aViennaTypeVariableListNode;
 		  parameterTypes: aViennaParameterTypesNode;
@@ -16,6 +16,7 @@ ViennaExtendedExplicitFunctionDefinitionNode class >> identifier: aString typeVa
 		  expression: aViennaExpressionNode1;
 		  pre: aViennaExpressionNode2;
 		  post: aViennaExpressionNode3;
+		  measure: aViennaExpressionNode4;
 		  yourself
 ]
 
@@ -142,9 +143,15 @@ ViennaExtendedExplicitFunctionDefinitionNode >> label [
 ]
 
 { #category : #accessing }
-ViennaExtendedExplicitFunctionDefinitionNode >> meassure [
+ViennaExtendedExplicitFunctionDefinitionNode >> measure [
 
-	^ nil
+	^ self at: 8
+]
+
+{ #category : #accessing }
+ViennaExtendedExplicitFunctionDefinitionNode >> measure: aViennaExpressionNode [
+
+	self at: 8 put: aViennaExpressionNode
 ]
 
 { #category : #accessing }
@@ -197,6 +204,16 @@ ViennaExtendedExplicitFunctionDefinitionNode >> pre [
 ViennaExtendedExplicitFunctionDefinitionNode >> pre: aViennaExpressionNode [
 
 	self at: 6 put: aViennaExpressionNode
+]
+
+{ #category : #'accessing-definitions' }
+ViennaExtendedExplicitFunctionDefinitionNode >> resolveIdentifier: aString [
+
+	^ ((self returnIdentifiers includes: aString) or: [
+		   (self typeVariableList bindsIdentifier: aString) or: [
+			   self parameters bindsIdentifier: aString ] ])
+		  ifTrue: [ self ]
+		  ifFalse: [ super resolveIdentifier: aString ]
 ]
 
 { #category : #accessing }

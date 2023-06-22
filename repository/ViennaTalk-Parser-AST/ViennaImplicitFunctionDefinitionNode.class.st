@@ -231,6 +231,16 @@ ViennaImplicitFunctionDefinitionNode >> resolve [
 	^ self
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaImplicitFunctionDefinitionNode >> resolveIdentifier: aString [
+
+	^ ((self returnIdentifiers includes: aString) or: [
+		   (self typeVariableList bindsIdentifier: aString) or: [
+			   self parameters bindsIdentifier: aString ] ])
+		  ifTrue: [ self ]
+		  ifFalse: [ super resolveIdentifier: aString ]
+]
+
 { #category : #accessing }
 ViennaImplicitFunctionDefinitionNode >> returnIdentifiers [
 

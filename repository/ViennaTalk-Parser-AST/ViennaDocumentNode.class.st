@@ -17,12 +17,6 @@ ViennaDocumentNode >> boundIdentifiersDo: aBlock [
 	self do: [ :node | node boundIdentifiersDo: aBlock ]
 ]
 
-{ #category : #'accessing-definitions' }
-ViennaDocumentNode >> deepResolveIdentifier: aString [
-
-	^ self subclassResponsibility
-]
-
 { #category : #accessing }
 ViennaDocumentNode >> document [
 

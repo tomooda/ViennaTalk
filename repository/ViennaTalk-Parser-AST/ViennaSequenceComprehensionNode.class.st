@@ -91,6 +91,14 @@ ViennaSequenceComprehensionNode >> pattern [
 	^ self setSeqBind pattern
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaSequenceComprehensionNode >> resolveIdentifier: aString [
+
+	^ (self setSeqBind bindsIdentifier: aString)
+		  ifTrue: [ self ]
+		  ifFalse: [ super resolveIdentifier: aString ]
+]
+
 { #category : #accessing }
 ViennaSequenceComprehensionNode >> setSeqBind [
 

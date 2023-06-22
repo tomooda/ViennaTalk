@@ -17,7 +17,7 @@ ViennaCasesExpressionAlternativeNode class >> patternList: aViennaPatternListNod
 { #category : #private }
 ViennaCasesExpressionAlternativeNode >> boundIdentifiersDo: aBlock [
 
-	self patternList boundIdentifiersDo: aBlock
+	
 ]
 
 { #category : #'accessing-definitions' }
@@ -91,4 +91,12 @@ ViennaCasesExpressionAlternativeNode >> patternList [
 ViennaCasesExpressionAlternativeNode >> patternList: aViennaPatternListNode [
 
 	self at: 1 put: aViennaPatternListNode
+]
+
+{ #category : #private }
+ViennaCasesExpressionAlternativeNode >> resolveIdentifier: aString [
+
+	^ (self patternList bindsIdentifier: aString)
+		  ifTrue: [ self ]
+		  ifFalse: [ super resolveIdentifier: aString ]
 ]

@@ -81,3 +81,11 @@ ViennaInvariantInitialFunctionNode >> pattern: aViennaPatternNode [
 
 	self at: 1 put: aViennaPatternNode
 ]
+
+{ #category : #testing }
+ViennaInvariantInitialFunctionNode >> resolveIdentifier: aString [
+
+	^ (self pattern bindsIdentifier: aString)
+		  ifTrue: [ self ]
+		  ifFalse: [ super resolveIdentifier: aString ]
+]

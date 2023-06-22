@@ -8,7 +8,7 @@ Class {
 { #category : #private }
 ViennaCasesStatementAlternativesNode >> boundIdentifiersDo: aBlock [
 
-	self do: [ :alternative | alternative boundIdentifiersDo: aBlock ]
+	
 ]
 
 { #category : #'pretty printing' }

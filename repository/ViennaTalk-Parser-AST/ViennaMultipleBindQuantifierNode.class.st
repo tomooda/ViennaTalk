@@ -78,3 +78,11 @@ ViennaMultipleBindQuantifierNode >> patternsDo: aBlock [
 	self multipleBindsDo: [ :multipleBind |
 		multipleBind patternsDo: aBlock ]
 ]
+
+{ #category : #'accessing-definitions' }
+ViennaMultipleBindQuantifierNode >> resolveIdentifier: aString [
+
+	^ (self bindList bindsIdentifier: aString)
+		  ifTrue: [ self ]
+		  ifFalse: [ super resolveIdentifier: aString ]
+]

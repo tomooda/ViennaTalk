@@ -5,6 +5,13 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #accessing }
+ViennaBlockStatementNode >> dclStatement [
+
+	^ (self notEmpty and: [ self first isViennaDclStatementNode ])
+		  ifTrue: [ self first ]
+]
+
 { #category : #'accessing-definitions' }
 ViennaBlockStatementNode >> definitionOfLocalName: aString [
 
@@ -53,4 +60,12 @@ ViennaBlockStatementNode >> isViennaBlockStatementNode [
 ViennaBlockStatementNode >> label [
 
 	^ 'BlockStatement'
+]
+
+{ #category : #'accessing-definitions' }
+ViennaBlockStatementNode >> resolveIdentifier: aString [
+
+	self dclStatement ifNotNil: [ :dclStatement |
+		(dclStatement bindsIdentifier: aString) ifTrue: [ ^ self ] ].
+	^ super resolveIdentifier: aString
 ]

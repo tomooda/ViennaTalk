@@ -210,6 +210,14 @@ ViennaExplicitOperationDefinitionNode >> resolve [
 	^ self
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaExplicitOperationDefinitionNode >> resolveIdentifier: aString [
+
+	^ (aString = 'RESULT' or: [ self parameters bindsIdentifier: aString ])
+		  ifTrue: [ self ]
+		  ifFalse: [ super resolveIdentifier: aString ]
+]
+
 { #category : #accessing }
 ViennaExplicitOperationDefinitionNode >> returnIdentifiers [
 

@@ -98,3 +98,11 @@ ViennaExists1ExpressionNode >> pattern [
 
 	^ self bind pattern
 ]
+
+{ #category : #testing }
+ViennaExists1ExpressionNode >> resolveIdentifier: aString [
+
+	^ (self bind bindsIdentifier: aString)
+		  ifTrue: [ self ]
+		  ifFalse: [ super resolveIdentifier: aString ]
+]

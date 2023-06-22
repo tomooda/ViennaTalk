@@ -104,6 +104,14 @@ ViennaLetBeStatementNode >> multipleBind: aViennaMultipleBindNode [
 	self at: 1 put: aViennaMultipleBindNode
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaLetBeStatementNode >> resolveIdentifier: aString [
+
+	^ (self multipleBind bindsIdentifier: aString)
+		  ifTrue: [ self ]
+		  ifFalse: [ super resolveIdentifier: aString ]
+]
+
 { #category : #accessing }
 ViennaLetBeStatementNode >> statement [
 

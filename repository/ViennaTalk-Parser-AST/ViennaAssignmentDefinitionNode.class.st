@@ -72,6 +72,12 @@ ViennaAssignmentDefinitionNode >> isViennaAssignmentDefinitionNode [
 	^ true
 ]
 
+{ #category : #testing }
+ViennaAssignmentDefinitionNode >> isViennaAssignmentDefinitionNode: aString [
+
+	^ self identifier = aString
+]
+
 { #category : #accessing }
 ViennaAssignmentDefinitionNode >> label [
 
