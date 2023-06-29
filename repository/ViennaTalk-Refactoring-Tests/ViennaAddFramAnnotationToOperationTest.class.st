@@ -4,21 +4,7 @@ Class {
 	#category : #'ViennaTalk-Refactoring-Tests'
 }
 
-{ #category : #tests }
-ViennaAddFramAnnotationToOperationTest >> assertExecute [
-
-	self
-		assert:
-		((spec moduleNamed: 'A') resolveIdentifier: 'op') annotations size
-		equals: 1.
-	self
-		assert:
-			((spec moduleNamed: 'A') resolveIdentifier: 'op') annotations first
-				substrings
-		equals: #( 'FRAM' 'Output' 'nothing' )
-]
-
-{ #category : #tests }
+{ #category : #accessing }
 ViennaAddFramAnnotationToOperationTest >> createSpec [
 
 	^ '
@@ -40,13 +26,30 @@ ViennaAddFramAnnotationToOperationTest >> findFailureAst [
 	^ (self spec moduleNamed: 'A') resolveIdentifier: 'f'
 ]
 
-{ #category : #tests }
+{ #category : #accessing }
 ViennaAddFramAnnotationToOperationTest >> findSuccessAst [
 
 	^ (self spec moduleNamed: 'A') resolveIdentifier: 'op'
 ]
 
-{ #category : #tests }
+{ #category : #accessing }
+ViennaAddFramAnnotationToOperationTest >> resultingSpec [
+
+	^ '
+module A
+exports all
+definitions
+operations
+	--@FRAM Output nothing
+	op: () ==> ()
+	op() == skip;
+functions
+	f : nat -> nat
+	f(x) == x + 1;
+end A' asViennaDocumentAst
+]
+
+{ #category : #running }
 ViennaAddFramAnnotationToOperationTest >> setupRefactoring: aViennaRefactoring [
 
 	aViennaRefactoring

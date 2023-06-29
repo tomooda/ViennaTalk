@@ -4,20 +4,6 @@ Class {
 	#category : #'ViennaTalk-Refactoring-Tests'
 }
 
-{ #category : #running }
-ViennaAddOperationsSectionTest >> assertExecute [
-
-	self assert: self spec equals: '
-module A
-exports all
-definitions
-functions
-	f : nat -> nat
-	f(x) == x + 1;
-operations
-end A' asViennaDocumentAst
-]
-
 { #category : #accessing }
 ViennaAddOperationsSectionTest >> createSpec [
 
@@ -42,6 +28,20 @@ ViennaAddOperationsSectionTest >> findFailureAst [
 ViennaAddOperationsSectionTest >> findSuccessAst [
 
 	^ self spec moduleNamed: 'A'
+]
+
+{ #category : #accessing }
+ViennaAddOperationsSectionTest >> resultingSpec [
+
+	^ '
+module A
+exports all
+definitions
+functions
+	f : nat -> nat
+	f(x) == x + 1;
+operations
+end A' asViennaDocumentAst
 ]
 
 { #category : #running }

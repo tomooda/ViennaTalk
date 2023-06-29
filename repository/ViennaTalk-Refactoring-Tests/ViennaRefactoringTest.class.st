@@ -15,12 +15,6 @@ ViennaRefactoringTest class >> isAbstract [
 	^ self = ViennaRefactoringTest
 ]
 
-{ #category : #running }
-ViennaRefactoringTest >> assertExecute [
-
-	^ self subclassResponsibility
-]
-
 { #category : #accessing }
 ViennaRefactoringTest >> createSpec [
 
@@ -47,6 +41,12 @@ ViennaRefactoringTest >> findFailureAst [
 
 { #category : #accessing }
 ViennaRefactoringTest >> findSuccessAst [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
+ViennaRefactoringTest >> resultingSpec [
 
 	^ self subclassResponsibility
 ]
@@ -115,5 +115,5 @@ ViennaRefactoringTest >> testExecute [
 	self setupRefactoring: refactoring.
 	self assert: refactoring check.
 	refactoring execute.
-	self assertExecute
+	self assert: self spec equals: self resultingSpec
 ]

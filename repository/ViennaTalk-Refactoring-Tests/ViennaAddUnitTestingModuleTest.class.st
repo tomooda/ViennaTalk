@@ -4,12 +4,6 @@ Class {
 	#category : #'ViennaTalk-Refactoring-Tests'
 }
 
-{ #category : #running }
-ViennaAddUnitTestingModuleTest >> assertExecute [
-
-	self assert: (self spec moduleNamed: 'UnitTesting') notNil
-]
-
 { #category : #accessing }
 ViennaAddUnitTestingModuleTest >> createSpec [
 
@@ -37,6 +31,23 @@ ViennaAddUnitTestingModuleTest >> findFailureAst [
 ViennaAddUnitTestingModuleTest >> findSuccessAst [
 
 	^ self spec moduleNamed: 'A'
+]
+
+{ #category : #accessing }
+ViennaAddUnitTestingModuleTest >> resultingSpec [
+
+	^ ('
+module A
+exports all
+definitions
+operations
+	op: () ==> ()
+	op() == skip;
+functions
+	f : nat -> nat
+	f(x) == x + 1;
+end A
+' , ViennaModuleNode unitTestingSource) asViennaDocumentAst
 ]
 
 { #category : #running }
