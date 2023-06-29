@@ -18,7 +18,7 @@ ViennaAddTestModule >> findContainerNode [
 { #category : #accessing }
 ViennaAddTestModule >> findNewName [
 
-	^ ast name ifNotNil: [ :name | name , 'Test' ]
+	^ ast identifier ifNotNil: [ :name | name , 'Test' ]
 ]
 
 { #category : #accessing }

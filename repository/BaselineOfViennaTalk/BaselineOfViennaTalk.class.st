@@ -41,17 +41,17 @@ BaselineOfViennaTalk >> baseline: spec [
 							   'ViennaTalk-Parser-Highlighters'
 							   'ViennaTalk-Refactoring-Core' 'ViennaTalk-Transpiler-Core'
 							   'ViennaTalk-Value-Core' ) ];
-				package: #'ViennaTalk-Engine-Core'
+				package: 'ViennaTalk-Engine-Core'
 				with: [ spec requires: #( 'NeoJSON' 'ZincHTTPComponents' ) ];
 				for: #Unix do: [
 					spec
 						baseline: 'OSSubprocess'
 						with: [
 							spec repository: 'github://marianopeck/OSSubprocess/repository' ];
-						package: #'ViennaTalk-Engine-Core'
+						package: 'ViennaTalk-Engine-Core'
 						with: [ spec requires: #( 'OSSubprocess' ) ] ];
 				for: #Windows do: [ spec package: 'ViennaTalk-Engine-Core' ] ];
-		package: #'ViennaTalk-Engine-Tests'
+		package: 'ViennaTalk-Engine-Tests'
 		with: [ spec requires: #( 'ViennaTalk-Engine-Core' ) ];
 		package: 'ViennaTalk-Html-Core'
 		with: [ spec requires: #( 'PetitParser2' ) ];
@@ -63,56 +63,58 @@ BaselineOfViennaTalk >> baseline: spec [
 			#( 'ViennaTalk-Animation-Core' 'ViennaTalk-Animation-Transpiler'
 			   'ViennaTalk-Browser-Core' 'ViennaTalk-Launcher-Core'
 			   'PetitParser2' ) ];
-		package: #'ViennaTalk-Parser-Core' with: [
-		spec requires: #( #'ViennaTalk-Parser-AST' 'ViennaTalk-Value-Core'
+		package: 'ViennaTalk-Parser-Core' with: [
+		spec requires: #( 'ViennaTalk-Parser-AST' 'ViennaTalk-Value-Core'
 			   'PetitParser2' ) ];
-		package: #'ViennaTalk-Parser-AST' with: [  ];
-		package: #'ViennaTalk-Parser-Formatters'
+		package: 'ViennaTalk-Parser-AST' with: [  ];
+		package: 'ViennaTalk-Parser-Formatters'
 		with: [ spec requires: #( 'ViennaTalk-Parser-Core' ) ];
-		package: #'ViennaTalk-Parser-Highlighters'
+		package: 'ViennaTalk-Parser-Highlighters'
 		with: [ spec requires: #( 'ViennaTalk-Parser-Core' ) ];
 		package: 'ViennaTalk-Parser-Tests'
 		with: [
 		spec requires: #( 'ViennaTalk-Parser-Core' 'ViennaTalk-Parser-UI' ) ];
-		package: #'ViennaTalk-Parser-UI'
+		package: 'ViennaTalk-Parser-UI'
 		with: [ spec requires: #( 'ViennaTalk-Parser-Core' ) ];
 		package: 'ViennaTalk-Refactoring-Core'
 		with: [ spec requires: #( 'ViennaTalk-Parser-Core' ) ];
-		package: #'ViennaTalk-Transpiler-Core' with: [
+		package: 'ViennaTalk-Transpiler-Core' with: [
 		spec requires: #( 'ViennaTalk-Parser-Core' 'ViennaTalk-Value-Core' ) ];
-		package: #'ViennaTalk-Transpiler-Debugger' with: [
+		package: 'ViennaTalk-Transpiler-Debugger' with: [
 		spec requires:
 			#( 'ViennaTalk-Parser-Core' 'ViennaTalk-Parser-Formatters'
 			   'ViennaTalk-Parser-Highlighters'
 			   'ViennaTalk-Transpiler-Core' ) ];
-		package: #'ViennaTalk-Transpiler-Test' with: [
+		package: 'ViennaTalk-Transpiler-Test' with: [
 		spec requires:
-			#( 'ViennaTalk-Parser-Core' #'ViennaTalk-Transpiler-Core'
-			   'ViennaTalk-Type-Core' #'ViennaTalk-Value-Core' ) ];
-		package: #'ViennaTalk-Type-Core'
+			#( 'ViennaTalk-Parser-Core' 'ViennaTalk-Transpiler-Core'
+			   'ViennaTalk-Type-Core' 'ViennaTalk-Value-Core' ) ];
+		package: 'ViennaTalk-Type-Core'
 		with: [ spec requires: #( 'ViennaTalk-Value-Core' ) ];
-		package: #'ViennaTalk-Type-Tests'
+		package: 'ViennaTalk-Type-Tests'
 		with: [
 		spec requires: #( 'ViennaTalk-Type-Core' 'ViennaTalk-Value-Core' ) ];
-		package: #'ViennaTalk-VDMPad-Core' with: [
+		package: 'ViennaTalk-VDMPad-Core' with: [
 		spec requires:
 			#( 'ViennaTalk-Engine-Core' 'NeoJSON' 'ZincHTTPComponents'
 			   'ViennaTalk-Html-Core' 'ViennaTalk-Parser-Core' ) ];
-		package: #'ViennaTalk-Value-Core';
-		package: #'ViennaTalk-Value-Tests'
+		package: 'ViennaTalk-Value-Core';
+		package: 'ViennaTalk-Value-Tests'
 		with: [ spec requires: #( 'ViennaTalk-Value-Core' ) ];
-		package: #'ViennaTalk-WeblyWalkThrough-Server' with: [
+		package: 'ViennaTalk-WeblyWalkThrough-Server' with: [
 		spec requires:
 			#( 'ViennaTalk-Animation-Core' 'ViennaTalk-Browser-Core'
 			   'ViennaTalk-Launcher-Core' 'ViennaTalk-WeblyWalkThrough-Translators' ) ];
-		package: #'ViennaTalk-WeblyWalkThrough-Translators' with: [
+		package: 'ViennaTalk-WeblyWalkThrough-Translators' with: [
 		spec requires: #( 'ViennaTalk-Parser-Core' 'ViennaTalk-Value-Core'
 			   'PetitParser2' 'NeoJSON' ) ];
-		package: #'ViennaTalk-FRAM-Core'
+		package: 'ViennaTalk-FRAM-Core'
 		with: [ spec requires: #( 'ViennaTalk-Parser-Core'
 		   'FRAM' ) ];
-		package: #'ViennaTalk-FRAM-Tests'
-		with: [ spec requires: #( 'ViennaTalk-FRAM-Core' ) ].
+		package: 'ViennaTalk-FRAM-Tests'
+		with: [ spec requires: #( 'ViennaTalk-FRAM-Core' ) ];
+		package: 'ViennaTalk-Refactoring-Tests'
+		with: [ spec requires: #( 'ViennaTalk-Refactoring-Core' ) ].
 
 	spec
 		group: 'ViennaFRAM' with: #( 'ViennaTalk-FRAM-Core' );
@@ -121,24 +123,24 @@ BaselineOfViennaTalk >> baseline: spec [
 		group: 'Transpiler'
 		with:
 			#( 'ViennaTalk-Animation-Transpiler'
-			   #'ViennaTalk-Transpiler-Core' #'ViennaTalk-Transpiler-Debugger' );
-		group: 'VDMPad' with: #( #'ViennaTalk-VDMPad-Core' );
+			   'ViennaTalk-Transpiler-Core' 'ViennaTalk-Transpiler-Debugger' );
+		group: 'VDMPad' with: #( 'ViennaTalk-VDMPad-Core' );
 		group: 'WeblyWalkThrough'
-		with: #( #'ViennaTalk-WeblyWalkThrough-Server' );
+		with: #( 'ViennaTalk-WeblyWalkThrough-Server' );
 		group: 'core'
 		with: #( 'ViennaTalk-Engine-Core' 'ViennaTalk-Parser-Core'
 			   'ViennaTalk-Launcher-Core' 'ViennaTalk-Browser-Core'
-			   'ViennaTalk-Parser-Formatters' #'ViennaTalk-Parser-Highlighters' );
+			   'ViennaTalk-Parser-Formatters' 'ViennaTalk-Parser-Highlighters' );
 		group: 'default' with: #( 'full' );
 		group: 'full'
 		with:
 			#( 'core' 'VDMPad' 'LivelyWalkThrough' 'tests' 'WeblyWalkThrough'
 			   'Transpiler' 'ViennaFRAM' );
 		group: 'tests'
-		with: #( #'ViennaTalk-Engine-Tests' #'ViennaTalk-Value-Tests'
-			   'ViennaTalk-Parser-Tests' #'ViennaTalk-Type-Tests'
-			   'ViennaTalk-Animation-Tests' #'ViennaTalk-Transpiler-Test'
-			   #'ViennaTalk-FRAM-Tests' )
+		with: #( 'ViennaTalk-Engine-Tests' 'ViennaTalk-Value-Tests'
+			   'ViennaTalk-Parser-Tests' 'ViennaTalk-Type-Tests'
+			   'ViennaTalk-Animation-Tests' 'ViennaTalk-Transpiler-Test'
+			   'ViennaTalk-FRAM-Tests' 'ViennaTalk-Refactoring-Tests' )
 ]
 
 { #category : #accessing }

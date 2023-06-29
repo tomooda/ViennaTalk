@@ -1,6 +1,12 @@
 Extension { #name : #String }
 
 { #category : #'*ViennaTalk-Parser-Core' }
+String >> asViennaDocumentAst [
+
+	^ ViennaVDMParser new document end parse: self trim
+]
+
+{ #category : #'*ViennaTalk-Parser-Core' }
 String >> asViennaExpressionAst [
 	^ ViennaVDMParser new expression end parse: self
 ]

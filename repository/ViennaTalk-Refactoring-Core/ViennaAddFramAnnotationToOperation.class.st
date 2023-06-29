@@ -25,7 +25,6 @@ ViennaAddFramAnnotationToOperation >> findContainerNode [
 	ast isViennaOperationDefinitionNode ifTrue: [ ast := ast parent ].
 	ast isViennaAccessOperationDefinitionNode ifFalse: [ ^ nil ].
 	ast annotations ifNil: [ ^ nil ].
-	ast annotations ifEmpty: [ ^ nil ].
 	^ ast
 ]
 
@@ -56,6 +55,12 @@ ViennaAddFramAnnotationToOperation >> name [
 ViennaAddFramAnnotationToOperation >> newAspect [
 
 	^ newAspect ifNil: [ newAspect := self findNewAspect ]
+]
+
+{ #category : #accessing }
+ViennaAddFramAnnotationToOperation >> newAspect: aString [
+
+	newAspect := aString
 ]
 
 { #category : #accessing }
