@@ -2088,6 +2088,12 @@ ViennaNode >> isViennaSymbolicLiteralNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaSymbolicLiteralNode: aString [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaTixeStatementNode [
 
 	^ false
@@ -2204,7 +2210,7 @@ ViennaNode >> isViennaTypeNameNode [
 { #category : #testing }
 ViennaNode >> isViennaTypeNode [
 
-	^ true
+	^ false
 ]
 
 { #category : #testing }

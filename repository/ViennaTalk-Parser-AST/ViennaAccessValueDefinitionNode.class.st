@@ -32,6 +32,12 @@ ViennaAccessValueDefinitionNode >> boundIdentifiersDo: aBlock [
 	self valueDefinition boundIdentifiersDo: aBlock
 ]
 
+{ #category : #accessing }
+ViennaAccessValueDefinitionNode >> expression [
+
+	^ self valueDefinition expression
+]
+
 { #category : #'pretty printing' }
 ViennaAccessValueDefinitionNode >> formatWith: aViennaAbstractFormatter [
 
@@ -70,7 +76,7 @@ ViennaAccessValueDefinitionNode >> label [
 	^ 'AccessValueDefinition'
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : #accessing }
 ViennaAccessValueDefinitionNode >> pattern [
 
 	^ self valueDefinition pattern
@@ -88,7 +94,7 @@ ViennaAccessValueDefinitionNode >> shortName [
 	^ self valueDefinition shortName
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : #accessing }
 ViennaAccessValueDefinitionNode >> type [
 
 	^ self valueDefinition type

@@ -9,7 +9,8 @@ ViennaExtractStateVariable >> check [
 
 	ast isViennaExpressionNode ifFalse: [ ^ false ].
 	ast hasStatefulReference ifTrue: [ ^ false ].
-	ast parent isViennaValueDefinitionNode ifTrue: [ ^ false ].
+	(ast detectParent: #isViennaValueDefinitionNode ifNone: [ nil ])
+		ifNotNil: [ ^ false ].
 	^ true
 ]
 

@@ -9,8 +9,8 @@ ViennaExtractValue >> check [
 
 	ast isViennaExpressionNode ifFalse: [ ^ false ].
 	ast isViennaNameNode ifTrue: [ ^ false ].
+	ast isRelocatable ifFalse: [ ^ false ].
 	ast hasStatefulReference ifTrue: [ ^ false ].
-	ast parent isViennaValueDefinitionNode ifTrue: [ ^ false ].
 	^ true
 ]
 

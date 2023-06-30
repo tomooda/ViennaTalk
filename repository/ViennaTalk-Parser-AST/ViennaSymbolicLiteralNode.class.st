@@ -29,6 +29,12 @@ ViennaSymbolicLiteralNode >> isViennaSymbolicLiteralNode [
 	^ true
 ]
 
+{ #category : #testing }
+ViennaSymbolicLiteralNode >> isViennaSymbolicLiteralNode: aString [
+
+	^ aString = self string
+]
+
 { #category : #accessing }
 ViennaSymbolicLiteralNode >> label [
 
