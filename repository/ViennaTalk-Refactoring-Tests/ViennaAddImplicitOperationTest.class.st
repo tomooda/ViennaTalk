@@ -1,11 +1,11 @@
 Class {
-	#name : #ViennaAddExplicitOperationTest,
+	#name : #ViennaAddImplicitOperationTest,
 	#superclass : #ViennaRefactoringTest,
 	#category : #'ViennaTalk-Refactoring-Tests'
 }
 
 { #category : #accessing }
-ViennaAddExplicitOperationTest >> createSpec [
+ViennaAddImplicitOperationTest >> createSpec [
 
 	^ '
 module A
@@ -17,7 +17,7 @@ end A' asViennaDocumentAst
 ]
 
 { #category : #accessing }
-ViennaAddExplicitOperationTest >> findFailureAst [
+ViennaAddImplicitOperationTest >> findFailureAst [
 
 	(self spec moduleNamed: 'A')
 		allDescendantsSuchThat: #isViennaFunctionDefinitionsNode
@@ -26,7 +26,7 @@ ViennaAddExplicitOperationTest >> findFailureAst [
 ]
 
 { #category : #accessing }
-ViennaAddExplicitOperationTest >> findSuccessAst [
+ViennaAddImplicitOperationTest >> findSuccessAst [
 
 	(self spec moduleNamed: 'A')
 		allDescendantsSuchThat: #isViennaOperationDefinitionsNode
@@ -35,7 +35,7 @@ ViennaAddExplicitOperationTest >> findSuccessAst [
 ]
 
 { #category : #accessing }
-ViennaAddExplicitOperationTest >> resultingSpec [
+ViennaAddImplicitOperationTest >> resultingSpec [
 
 	^ '
 module A
@@ -43,13 +43,13 @@ exports all
 definitions
 functions
 operations
-	op : () ==> ()
-	op() == skip
+	op ()
+	post true
 end A' asViennaDocumentAst
 ]
 
 { #category : #running }
-ViennaAddExplicitOperationTest >> setupRefactoring: aViennaRefactoring [
+ViennaAddImplicitOperationTest >> setupRefactoring: aViennaRefactoring [
 
 	aViennaRefactoring newName: 'op'
 ]

@@ -12,13 +12,17 @@ module A
 exports all
 definitions
 functions
+operations
 end A' asViennaDocumentAst
 ]
 
 { #category : #accessing }
 ViennaAddExplicitFunctionTest >> findFailureAst [
 
-	^ nil
+	(self spec moduleNamed: 'A')
+		allDescendantsSuchThat: #isViennaOperationDefinitionsNode
+		do: [ :node | ^ node ].
+	^ self fail
 ]
 
 { #category : #accessing }
@@ -40,6 +44,7 @@ definitions
 functions
 	f : () -> ?
 	f() == undefined
+operations
 end A' asViennaDocumentAst
 ]
 
