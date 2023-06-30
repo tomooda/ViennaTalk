@@ -81,6 +81,18 @@ ViennaOperationDefinitionNode >> label [
 	^ 'OperationDefinition'
 ]
 
+{ #category : #accessing }
+ViennaOperationDefinitionNode >> post [
+
+	^ self definition post
+]
+
+{ #category : #accessing }
+ViennaOperationDefinitionNode >> pre [
+
+	^ self definition pre
+]
+
 { #category : #'accessing-definitions' }
 ViennaOperationDefinitionNode >> resolve [
 

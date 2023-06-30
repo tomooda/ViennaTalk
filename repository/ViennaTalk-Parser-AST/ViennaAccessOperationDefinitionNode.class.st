@@ -89,6 +89,18 @@ ViennaAccessOperationDefinitionNode >> operationDefinition: aViennaOperationDefi
 	self at: 2 put: aViennaOperationDefinitionNode
 ]
 
+{ #category : #accessing }
+ViennaAccessOperationDefinitionNode >> post [
+
+	^ self operationDefinition post
+]
+
+{ #category : #accessing }
+ViennaAccessOperationDefinitionNode >> pre [
+
+	^ self operationDefinition pre
+]
+
 { #category : #'accessing-definitions' }
 ViennaAccessOperationDefinitionNode >> resolve [
 
