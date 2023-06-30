@@ -10,9 +10,9 @@ ViennaExtractLocalDefinitionFromExpressionInLet >> check [
 	ast ifNil: [ ^ false ].
 	ast isViennaExpressionNode ifFalse: [ ^ false ].
 	self definitionNode ifNil: [ ^ false ].
-	(ast isViennaLocalNameNode and: [
-		 (ast resolveIdentifier: ast identifier) includesParent:
-			 self definitionNode ]) ifTrue: [ ^ false ].
+	ast uniqueFreeIdentifiersDo: [ :identifier |
+		(self definitionNode localDefinitionList bindsIdentifier: identifier)
+			ifTrue: [ ^ false ] ].
 	^ true
 ]
 
