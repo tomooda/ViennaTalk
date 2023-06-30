@@ -139,8 +139,8 @@ ViennaLetExpressionNode >> localDefinitionsDo: aBlock [
 ViennaLetExpressionNode >> lookupIdentifier: aString [
 
 	self localDefinitionList do: [ :localDefinition |
-		(localDefinition definition bindsIdentifier: aString) ifTrue: [
-			^ localDefinition definition ] ].
+		(localDefinition bindsIdentifier: aString) ifTrue: [
+			^ localDefinition valueDefinitionOrFunctionDefinition ] ].
 	^ nil
 ]
 

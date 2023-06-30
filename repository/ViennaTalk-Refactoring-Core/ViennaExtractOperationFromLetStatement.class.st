@@ -1,6 +1,9 @@
 Class {
 	#name : #ViennaExtractOperationFromLetStatement,
 	#superclass : #ViennaExtract,
+	#instVars : [
+		'freeIdentifiers'
+	],
 	#category : #'ViennaTalk-Refactoring-Core'
 }
 
@@ -9,6 +12,8 @@ ViennaExtractOperationFromLetStatement >> arguments [
 
 	^ ViennaExpressionListNode withAll:
 		  (ast first collect: [ :localDef | localDef first third ])
+		  , (freeIdentifiers collect: [ :identifier |
+				   ViennaLocalNameNode identifier: identifier ])
 ]
 
 { #category : #operations }
@@ -16,19 +21,15 @@ ViennaExtractOperationFromLetStatement >> check [
 
 	| params |
 	ast isViennaLetStatementNode ifFalse: [ ^ false ].
-	params := Set new: ast localDefinitionList size * 2.
-	ast localDefinitionList do: [ :localDef |
-		localDef first isViennaFunctionDefinitionNode ifTrue: [ ^ false ].
-		localDef first definition allDescendantsDo: [ :node |
-			node isViennaPatternIdentifierNode ifTrue: [
-				params add: node first ] ] ].
+	params := ast localDefinitionList uniqueBoundIdentifiers
+		          asOrderedCollection.
 	ast localDefinitionList do: [ :localDef |
 		localDef first third allDescendantsDo: [ :node |
 			(node isViennaLocalNameNode and: [
 				 params includes: node identifier ]) ifTrue: [ ^ false ] ] ].
-	ast statement isRelocatable ifFalse: [ ^ false ].
-	ast statement allDescendantsDo: [ :node |
-		node isViennaReturnStatementNode ifTrue: [ ^ false ] ].
+	ast statement
+		allDescendantsSuchThat: #isViennaReturnStatementNode
+		do: [ :node | ^ false ].
 	^ true
 ]
 
@@ -49,6 +50,10 @@ ViennaExtractOperationFromLetStatement >> execute [
 		operationDefinitions := ViennaOperationDefinitionsNode empty.
 		moduleBody add:
 			(ViennaDefinitionBlockNode definition: operationDefinitions) ].
+	freeIdentifiers := self ast uniqueFreeIdentifiers reject: [
+		                   :identifier |
+		                   (self ast resolveIdentifier: identifier)
+			                   isViennaStateDefinitionNode ].
 	self replaceNode: ast with: (ViennaCallStatementNode
 			 name: (ViennaLocalNameNode identifier: self newName)
 			 expressionList: self arguments).
@@ -99,7 +104,8 @@ ViennaExtractOperationFromLetStatement >> newName: aString [
 
 { #category : #'parsers-definitions' }
 ViennaExtractOperationFromLetStatement >> operationBody [
-	^ ast second
+
+	^ ViennaOperationBodyNode statement: ast second
 ]
 
 { #category : #accessing }
@@ -107,14 +113,16 @@ ViennaExtractOperationFromLetStatement >> operationParametersList [
 
 	^ ViennaParametersNode withAll:
 		  (ast first collect: [ :localDef | localDef first first ])
+		  , (freeIdentifiers collect: [ :identifier |
+				   ViennaPatternIdentifierNode identifier: identifier ])
 ]
 
 { #category : #'parsers-types' }
 ViennaExtractOperationFromLetStatement >> operationType [
 
 	^ ViennaOperationTypeNode
-		  argumentType:
-			  ((ast first collect: [ :localDef | ViennaBasicTypeNode any ])
+		  argumentType: ((self operationParametersList collect: [ :param |
+				    ViennaBasicTypeNode any ])
 				   ifNotEmpty: [ :paramTypes |
 					   paramTypes size = 1
 						   ifTrue: [ paramTypes first ]

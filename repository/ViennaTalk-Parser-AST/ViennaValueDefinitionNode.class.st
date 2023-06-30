@@ -88,7 +88,8 @@ ViennaValueDefinitionNode >> formatWith: aViennaAbstractFormatter [
 ViennaValueDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self pattern freeIdentifiersExcept: aSet do: aBlock.
-	self type freeIdentifiersExcept: aSet do: aBlock.
+	self type ifNotNil: [ :type |
+		type freeIdentifiersExcept: aSet do: aBlock ].
 	self expression freeIdentifiersExcept: aSet do: aBlock
 ]
 

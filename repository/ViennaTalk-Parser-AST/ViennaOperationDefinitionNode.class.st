@@ -92,3 +92,9 @@ ViennaOperationDefinitionNode >> shortName [
 
 	^ self definition shortName
 ]
+
+{ #category : #accessing }
+ViennaOperationDefinitionNode >> statement [
+
+	^ self definition statement
+]

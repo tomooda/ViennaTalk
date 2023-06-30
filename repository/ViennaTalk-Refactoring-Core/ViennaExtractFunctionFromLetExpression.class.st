@@ -1,6 +1,9 @@
 Class {
 	#name : #ViennaExtractFunctionFromLetExpression,
 	#superclass : #ViennaExtract,
+	#instVars : [
+		'freeIdentifiers'
+	],
 	#category : #'ViennaTalk-Refactoring-Core'
 }
 
@@ -8,26 +11,26 @@ Class {
 ViennaExtractFunctionFromLetExpression >> arguments [
 
 	^ ViennaExpressionListNode withAll:
-		  (ast first collect: [ :localDef | localDef first third ])
+		  (ast localDefinitionList collect: [ :localDef |
+			   localDef valueDefinitionOrFunctionDefinition expression ])
+		  , (freeIdentifiers collect: [ :identifier |
+				   ViennaLocalNameNode identifier: identifier ])
 ]
 
 { #category : #operations }
 ViennaExtractFunctionFromLetExpression >> check [
 
 	| params |
-	ast isViennaLetExpressionNode ifFalse: [ ^ false ].
-	params := Set new: ast localDefinitionList size * 2.
+	(ast notNil and: [ ast isViennaLetExpressionNode ]) ifFalse: [
+		^ false ].
+	ast expression hasStatefulReference ifTrue: [ ^ false ].
+	params := ast localDefinitionList uniqueBoundIdentifiers
+		          asOrderedCollection.
 	ast localDefinitionList do: [ :localDef |
-		localDef localDefinitionList isViennaFunctionDefinitionNode ifTrue: [
-			^ false ].
-		localDef localDefinitionList definition allDescendantsDo: [ :node |
-			node isViennaPatternIdentifierNode ifTrue: [
-				params add: node localDefinitionList ] ] ].
-	ast localDefinitionList do: [ :localDef |
-		localDef definition expression allDescendantsDo: [ :node |
-			(node isViennaLocalNameNode and: [
-				 params includes: node identifier ]) ifTrue: [ ^ false ] ] ].
-	ast second hasStatefulReference ifTrue: [ ^ false ].
+		localDef valueDefinitionOrFunctionDefinition expression
+			allDescendantsDo: [ :node |
+				(node isViennaLocalNameNode and: [
+					 params includes: node identifier ]) ifTrue: [ ^ false ] ] ].
 	^ true
 ]
 
@@ -49,6 +52,7 @@ ViennaExtractFunctionFromLetExpression >> execute [
 		functionDefinitions := ViennaFunctionDefinitionsNode empty.
 		moduleBody add:
 			(ViennaDefinitionBlockNode definition: functionDefinitions) ].
+	freeIdentifiers := self ast uniqueFreeIdentifiers.
 	self replaceNode: ast with: (ViennaApplyNode
 			 expression: (ViennaLocalNameNode identifier: self newName)
 			 argumentExpressionList: self arguments).
@@ -90,7 +94,10 @@ ViennaExtractFunctionFromLetExpression >> functionBody [
 ViennaExtractFunctionFromLetExpression >> functionParametersList [
 
 	^ ViennaParametersListNode with: (ViennaParametersNode withAll:
-			   (ast first collect: [ :localDef | localDef first first ]))
+			   (ast localDefinitionList collect: [ :localDef |
+				    localDef valueDefinitionOrFunctionDefinition pattern ])
+			   , (freeIdentifiers collect: [ :identifier |
+					    ViennaPatternIdentifierNode identifier: identifier ]))
 ]
 
 { #category : #accessing }
@@ -98,7 +105,8 @@ ViennaExtractFunctionFromLetExpression >> functionType [
 
 	^ ViennaPartialFunctionTypeNode
 		  argumentType:
-			  ((ast first collect: [ :localDef | ViennaBasicTypeNode any ])
+			  ((self functionParametersList first collect: [ :param |
+				    ViennaBasicTypeNode any ])
 				   ifNotEmpty: [ :paramTypes |
 					   paramTypes size = 1
 						   ifTrue: [ paramTypes first ]

@@ -100,3 +100,9 @@ ViennaAccessOperationDefinitionNode >> shortName [
 
 	^ self operationDefinition shortName
 ]
+
+{ #category : #accessing }
+ViennaAccessOperationDefinitionNode >> statement [
+
+	^ self operationDefinition statement
+]
