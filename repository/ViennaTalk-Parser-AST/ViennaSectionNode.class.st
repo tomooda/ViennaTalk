@@ -42,6 +42,19 @@ ViennaSectionNode >> isViennaSectionNode [
 	^ true
 ]
 
+{ #category : #private }
+ViennaSectionNode >> remove [
+
+	#isViennaDefinitionBlockNode.
+	self parent parent remove: self parent
+]
+
+{ #category : #private }
+ViennaSectionNode >> removeIfEmpty [
+
+	self ifEmpty: [ self remove ]
+]
+
 { #category : #'pretty printing' }
 ViennaSectionNode >> sectionName [
 

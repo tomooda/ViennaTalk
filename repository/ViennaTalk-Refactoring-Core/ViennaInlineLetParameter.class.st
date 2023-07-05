@@ -34,16 +34,14 @@ ViennaInlineLetParameter >> execute [
 				expr := localDef valueDefinitionOrFunctionDefinition expression.
 				localDef parent remove: localDef ] ].
 	self definitionNode localDefinitionList asArray do: [ :localDef |
-		self
-			freeOccurrencesOf: ast identifier
-			in: localDef
-			do: [ :localName |
-			self replaceNode: localName with: expr copyFragment ] ].
-	self
-		freeOccurrencesOf: ast identifier
-		in: self definitionNode body
-		do: [ :localName |
-		self replaceNode: localName with: expr copyFragment ].
+		localDef freeIdentifiersExcept: Set new do: [ :identifier :node |
+			identifier = self ast identifier ifTrue: [
+				self replaceNode: node with: expr copyFragment ] ] ].
+	self definitionNode body
+		freeIdentifiersExcept: Set new
+		do: [ :identifier :node |
+			identifier = self ast identifier ifTrue: [
+				self replaceNode: node with: expr copyFragment ] ].
 	^ self definitionNode
 ]
 

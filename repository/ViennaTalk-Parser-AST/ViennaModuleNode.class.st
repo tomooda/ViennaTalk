@@ -367,6 +367,19 @@ ViennaModuleNode >> importDefinitionsDo: aBlock [
 		importDefinitionList do: aBlock ]
 ]
 
+{ #category : #testing }
+ViennaModuleNode >> importsFrom: moduleIdentifier identifier: identifier [
+
+	self interface importDefinitionList ifNotNil: [ :importDefinitionList |
+		importDefinitionList do: [ :importDefinition |
+			importDefinition moduleIdentifier = moduleIdentifier ifTrue: [
+				importDefinition
+					allDescendantsSuchThat: [ :node |
+					node isViennaImportNode: identifier ]
+					do: [ :node | ^ true ] ] ] ].
+	^ false
+]
+
 { #category : #accessing }
 ViennaModuleNode >> importsIdentifier: aString [
 

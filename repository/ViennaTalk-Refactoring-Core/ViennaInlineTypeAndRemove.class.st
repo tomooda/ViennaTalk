@@ -9,6 +9,8 @@ ViennaInlineTypeAndRemove >> check [
 
 	| moduleName shortName |
 	ast ifNil: [ ^ false ].
+	ast isViennaAccessTypeDefinitionNode ifTrue: [
+		ast := ast typeDefinition ].
 	(ast isViennaTypeSynonymNode or: [
 		 ast isViennaRecordTypeDefinitionNode ]) ifFalse: [ ^ false ].
 	(((ast isViennaTypeSynonymNode and: [ ast inv notNil ]) or: [
@@ -33,19 +35,16 @@ ViennaInlineTypeAndRemove >> check [
 ViennaInlineTypeAndRemove >> execute [
 
 	| typeName typeBody |
-	typeName := ast first.
-	typeBody := ast second.
-	self
-		freeOccurrencesOf: typeName
-		in: ast module
-		do: [ :node |
-		self replaceNode: node parent with: typeBody copyFragment ].
-	(ast detectParent: #isViennaTypeDefinitionsNode ifNone: [ nil ])
-		ifNotNil: [ :typeDefinitions |
-			typeDefinitions remove: ast parent.
-			typeDefinitions ifEmpty: [
-				typeDefinitions parent parent remove: typeDefinitions parent ] ].
-	^ nil
+	typeName := ast identifier.
+	typeBody := ast type.
+	ast document
+		allDescendantsSuchThat: [ :node |
+		node isViennaTypeNameNode: typeName ]
+		do: [ :node | self replaceNode: node with: typeBody copyFragment ].
+	^ (ast parent ifNotNil: #parent) ifNotNil: [ :typesSection |
+		  typesSection isViennaTypeDefinitionsNode ifFalse: [ ^ nil ].
+		  typesSection remove: ast parent.
+		  typesSection removeIfEmpty ]
 ]
 
 { #category : #accessing }

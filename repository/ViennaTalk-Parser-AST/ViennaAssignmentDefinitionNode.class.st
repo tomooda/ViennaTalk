@@ -15,6 +15,16 @@ ViennaAssignmentDefinitionNode class >> identifier: aString type: aViennaTypeNod
 		  yourself
 ]
 
+{ #category : #converting }
+ViennaAssignmentDefinitionNode >> asViennaAssignStatementNode [
+
+	^ self expression ifNotNil: [
+		  ViennaAssignStatementNode
+			  stateDesignator:
+			  (ViennaLocalNameNode identifier: self identifier)
+			  expression: self expression ]
+]
+
 { #category : #private }
 ViennaAssignmentDefinitionNode >> boundIdentifiersDo: aBlock [
 
@@ -94,4 +104,13 @@ ViennaAssignmentDefinitionNode >> type [
 ViennaAssignmentDefinitionNode >> type: aViennaTypeNode [
 
 	self at: 2 put: aViennaTypeNode
+]
+
+{ #category : #converting }
+ViennaAssignmentDefinitionNode >> withoutInitialization [
+
+	^ self class
+		  identifier: self identifier
+		  type: self type copyFragment
+		  expression: nil
 ]

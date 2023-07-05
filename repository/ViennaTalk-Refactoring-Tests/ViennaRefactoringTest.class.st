@@ -115,5 +115,6 @@ ViennaRefactoringTest >> testExecute [
 	self setupRefactoring: refactoring.
 	self assert: refactoring check.
 	refactoring execute.
+	self assert: self spec source equals: self resultingSpec source.
 	self assert: self spec equals: self resultingSpec
 ]

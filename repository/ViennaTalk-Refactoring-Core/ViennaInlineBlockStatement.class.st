@@ -34,34 +34,53 @@ ViennaInlineBlockStatement >> check [
 
 	self blockNode ifNil: [ ^ false ].
 	self blockNode parent isViennaBlockStatementNode ifFalse: [ ^ false ].
-	(self blockVariables: self blockNode) ifNotEmpty: [ :innerVars |
-		(self blockVariables: self blockNode parent) ifNotEmpty: [
-			:outerVars |
-			(innerVars intersect: outerVars) ifNotEmpty: [ ^ false ] ] ].
+	self blockNode
+		allDescendantsSuchThat: #isViennaReturnStatementNode
+		do: [ :node | ^ false ].
+	self blockNode dclStatement ifNotNil: [ :dcl1 |
+		self blockNode parent dclStatement ifNotNil: [ :dcl2 |
+			| identifiers1 |
+			identifiers1 := dcl1 uniqueBoundIdentifiers asSet.
+			(dcl2 uniqueBoundIdentifiers anySatisfy: [ :identifier2 |
+				 identifiers1 includes: identifier2 ]) ifTrue: [ ^ false ] ] ].
 	^ true
 ]
 
 { #category : #operations }
 ViennaInlineBlockStatement >> execute [
 
+	| assignmentDefinitions |
+	assignmentDefinitions := Array streamContents: [ :stream |
+		                         self blockNode parent dclStatement
+			                         ifNotNil: [ :dclStatement |
+				                         dclStatement do: [ :assignmentDefinition |
+					                         stream nextPut: assignmentDefinition ] ].
+		                         self blockNode dclStatement ifNotNil: [
+			                         :dclStatement |
+			                         dclStatement do: [ :assignmentDefinition |
+				                         stream nextPut:
+					                         assignmentDefinition
+						                         withoutInitialization ] ] ].
 	^ self
 		  replaceNode: self blockNode parent
 		  with:
 			  (ViennaBlockStatementNode withAll:
 				   (Array streamContents: [ :stream |
-					    self blockNode parent do: [ :statement |
-						    statement isViennaDclStatementNode ifTrue: [
-							    stream nextPut: statement ] ].
-					    self blockNode do: [ :statement |
-						    statement isViennaDclStatementNode ifTrue: [
-							    stream nextPut: statement ] ].
+					    assignmentDefinitions ifNotEmpty: [
+						    stream nextPut:
+							    (ViennaDclStatementNode withAll: assignmentDefinitions) ].
 					    self blockNode parent do: [ :outerStatement |
 						    outerStatement isViennaDclStatementNode ifFalse: [
 							    self blockNode == outerStatement
 								    ifTrue: [
 									    self blockNode do: [ :innerStatement |
-										    innerStatement isViennaDclStatementNode ifFalse: [
-											    stream nextPut: innerStatement ] ] ]
+										    innerStatement isViennaDclStatementNode
+											    ifTrue: [
+												    innerStatement do: [ :assignmentDefinition |
+													    assignmentDefinition asViennaAssignStatementNode
+														    ifNotNil: [ :assignStatement |
+														    stream nextPut: assignStatement ] ] ]
+											    ifFalse: [ stream nextPut: innerStatement ] ] ]
 								    ifFalse: [ stream nextPut: outerStatement ] ] ] ]))
 ]
 
@@ -69,6 +88,7 @@ ViennaInlineBlockStatement >> execute [
 ViennaInlineBlockStatement >> findBlockNode [
 
 	ast ifNil: [ ^ nil ].
+	ast isViennaBlockStatementNode ifTrue: [ ^ ast ].
 	^ ast detectParent: #isViennaBlockStatementNode ifNone: [ nil ]
 ]
 

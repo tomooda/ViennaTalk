@@ -364,6 +364,27 @@ ViennaNode >> hasDescendantSuchThat: aBlock [
 ]
 
 { #category : #testing }
+ViennaNode >> hasFreeIdentifier: aString [
+
+	self
+		freeIdentifiersExcept: Set new
+		do: [ :identifier | identifier = aString ifTrue: [ ^ true ] ].
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> hasGlobalReferenceToModule: moduleIdentifier identifier: identifier [
+
+	self
+		allDescendantsSuchThat: [ :node |
+			node
+				isViennaGlobalNameNode: moduleIdentifier
+				identifier: identifier ]
+		do: [ :node | ^ true ].
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> hasScope [
 
 	^ false
@@ -2203,6 +2224,12 @@ ViennaNode >> isViennaTypeNameExportNode [
 
 { #category : #testing }
 ViennaNode >> isViennaTypeNameNode [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaNode >> isViennaTypeNameNode: aString [
 
 	^ false
 ]

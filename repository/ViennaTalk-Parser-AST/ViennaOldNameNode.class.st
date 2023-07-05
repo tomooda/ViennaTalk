@@ -19,13 +19,6 @@ ViennaOldNameNode >> formatWith: aViennaAbstractFormatter [
 	^ (aViennaAbstractFormatter format: self identifier) , '~'
 ]
 
-{ #category : #private }
-ViennaOldNameNode >> freeIdentifiersExcept: aSet do: aBlock [
-
-	(aSet includes: self identifier) ifFalse: [
-		aBlock value: self identifier ]
-]
-
 { #category : #testing }
 ViennaOldNameNode >> isBlockVariableNameNode [
 

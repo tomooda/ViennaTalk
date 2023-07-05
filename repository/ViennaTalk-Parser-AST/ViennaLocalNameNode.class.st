@@ -41,7 +41,7 @@ ViennaLocalNameNode >> formatWith: aViennaAbstractFormatter [
 ViennaLocalNameNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	(aSet includes: self identifier) ifFalse: [
-		aBlock value: self identifier ]
+		aBlock cull: self identifier cull: self ]
 ]
 
 { #category : #accessing }

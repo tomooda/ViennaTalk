@@ -13,7 +13,7 @@ ViennaInlineType >> check [
 	^ ast isViennaTypeNameNode and: [
 		  ast name isViennaLocalNameNode and: [
 			  (ast resolveIdentifier: ast name identifier) ifNotNil: [ :node |
-				  node isViennaTypeSynonymNode
+				  node typeDefinition isViennaTypeSynonymNode
 					  ifTrue: [ node inv isNil ]
 					  ifFalse: [ false ] ] ] ]
 ]
@@ -23,7 +23,8 @@ ViennaInlineType >> execute [
 
 	^ self
 		  replaceNode: ast
-		  with: (ast resolveIdentifier: ast identifier) type copyFragment
+		  with: (ast resolveIdentifier: ast identifier) typeDefinition type
+				  copyFragment
 ]
 
 { #category : #accessing }

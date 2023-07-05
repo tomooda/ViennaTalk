@@ -53,6 +53,12 @@ ViennaBlockStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
 ]
 
 { #category : #testing }
+ViennaBlockStatementNode >> hasDclStatement [
+
+	^ self notEmpty and: [ self first isViennaDclStatementNode ]
+]
+
+{ #category : #testing }
 ViennaBlockStatementNode >> hasScope [
 
 	^ true

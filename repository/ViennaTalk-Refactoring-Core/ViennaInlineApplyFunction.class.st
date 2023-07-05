@@ -82,17 +82,17 @@ ViennaInlineApplyFunction >> findCallerNode [
 ViennaInlineApplyFunction >> findDefinitionNode [
 
 	self callerNode ifNil: [ ^ nil ].
-	self callerNode first ifNotNil: [ :nameNode |
+	self callerNode expression ifNotNil: [ :nameNode |
 		nameNode isViennaLocalNameNode ifTrue: [
 			^ (nameNode resolveIdentifier: nameNode first) ifNotNil: [ :defNode |
-				  defNode isViennaExplicitFunctionDefinitionNode
+				  defNode isViennaAccessFunctionDefinitionNode
 					  ifTrue: [ defNode ]
 					  ifFalse: [ nil ] ] ].
 		nameNode isViennaGlobalNameNode ifTrue: [
 			^ (nameNode moduleNamed: nameNode first) ifNotNil: [ :moduleNode |
 				  (moduleNode resolveIdentifier: nameNode second) ifNotNil: [
 					  :defNode |
-					  defNode isViennaExplicitFunctionDefinitionNode
+					  defNode isViennaAccessFunctionDefinitionNode
 						  ifTrue: [ defNode ]
 						  ifFalse: [ nil ] ] ] ] ].
 	^ nil

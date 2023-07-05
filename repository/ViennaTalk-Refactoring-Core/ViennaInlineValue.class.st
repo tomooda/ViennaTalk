@@ -6,7 +6,13 @@ Class {
 
 { #category : #operations }
 ViennaInlineValue >> check [
-	^ ast notNil and: [ ast isLocalValueNameNode ]
+
+	^ ast notNil and: [
+		  ast isViennaLocalNameNode and: [
+			  (ast resolveIdentifier: ast identifier) ifNotNil: [
+				  :valueDefinition |
+				  valueDefinition isViennaAccessValueDefinitionNode and: [
+					  valueDefinition pattern isViennaPatternIdentifierNode ] ] ] ]
 ]
 
 { #category : #operations }

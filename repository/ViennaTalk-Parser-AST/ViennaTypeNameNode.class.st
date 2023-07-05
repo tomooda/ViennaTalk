@@ -37,6 +37,12 @@ ViennaTypeNameNode >> isViennaTypeNameNode [
 	^ true
 ]
 
+{ #category : #testing }
+ViennaTypeNameNode >> isViennaTypeNameNode: aString [
+
+	^ self identifier = aString
+]
+
 { #category : #accessing }
 ViennaTypeNameNode >> label [
 
