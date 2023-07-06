@@ -22,7 +22,8 @@ ViennaImportNode >> asGlobalName [
 { #category : #private }
 ViennaImportNode >> boundIdentifiersDo: aBlock [
 
-	self rename ifNotNil: [ :name | aBlock value: name identifier ]
+	self rename ifNotNil: [ :name |
+		aBlock cull: name identifier cull: self ]
 ]
 
 { #category : #accessing }

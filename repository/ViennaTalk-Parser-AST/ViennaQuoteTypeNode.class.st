@@ -29,6 +29,12 @@ ViennaQuoteTypeNode >> isViennaQuoteTypeNode [
 	^ true
 ]
 
+{ #category : #testing }
+ViennaQuoteTypeNode >> isViennaQuoteTypeNode: aString [
+
+	^ self string = aString
+]
+
 { #category : #accessing }
 ViennaQuoteTypeNode >> label [
 

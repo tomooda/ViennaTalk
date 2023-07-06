@@ -8,7 +8,8 @@ Class {
 { #category : #private }
 ViennaIdentifierTypePairListNode >> boundIdentifiersDo: aBlock [
 
-	1 to: self size by: 2 do: [ :index | aBlock value: (self at: index) ]
+	1 to: self size by: 2 do: [ :index |
+	aBlock cull: (self at: index) cull: self ]
 ]
 
 { #category : #'pretty printing' }

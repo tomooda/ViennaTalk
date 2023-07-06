@@ -1870,6 +1870,12 @@ ViennaNode >> isViennaQuoteTypeNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaQuoteTypeNode: aString [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaRecordConstructorNode [
 
 	^ false

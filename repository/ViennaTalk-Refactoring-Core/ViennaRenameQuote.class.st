@@ -7,12 +7,7 @@ Class {
 { #category : #operations }
 ViennaRenameQuote >> check [
 
-	ast document allDescendantsDo: [ :node |
-		(node isViennaQuoteTypeNode and: [ node first = self oldName ])
-			ifTrue: [ ^ true ].
-		(node isViennaSymbolicLiteralNode and: [ node string = self oldName ])
-			ifTrue: [ ^ true ] ].
-	^ false
+	^ self oldName notNil
 ]
 
 { #category : #accessing }
@@ -25,10 +20,10 @@ ViennaRenameQuote >> execute [
 
 	self newName ifNil: [ ^ nil ].
 	ast document allDescendantsDo: [ :node |
-		(node isViennaQuoteTypeNode and: [ node first = self oldName ])
-			ifTrue: [ node string: self newName ].
-		(node isViennaSymbolicLiteralNode and: [ node string = self oldName ])
-			ifTrue: [ node string: self newName ] ].
+		(node isViennaQuoteTypeNode: self oldName) ifTrue: [
+			node string: self newName ].
+		(node isViennaSymbolicLiteralNode: self oldName) ifTrue: [
+			node string: self newName ] ].
 	^ nil
 ]
 

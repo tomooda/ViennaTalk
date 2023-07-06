@@ -18,7 +18,7 @@ ViennaVarInformationNode class >> mode: aString nameList: aViennaNameListNode ty
 { #category : #private }
 ViennaVarInformationNode >> boundIdentifiersDo: aBlock [
 
-	self nameList do: [ :identifier | aBlock value: identifier ]
+	self nameList do: [ :identifier | aBlock cull: identifier cull: self ]
 ]
 
 { #category : #'pretty printing' }

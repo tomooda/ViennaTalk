@@ -18,7 +18,7 @@ ViennaErrorNode class >> identifier: aString expression: aViennaExpressionNode1 
 { #category : #private }
 ViennaErrorNode >> boundIdentifiersDo: aBlock [
 
-	aBlock value: self identifier
+	aBlock cull: self identifier cull: self
 ]
 
 { #category : #accessing }

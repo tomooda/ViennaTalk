@@ -22,7 +22,8 @@ ViennaPatternIdentifierNode class >> identifier: aString [
 { #category : #private }
 ViennaPatternIdentifierNode >> boundIdentifiersDo: aBlock [
 
-	self identifier ifNotNil: [ :identifier | aBlock value: identifier ]
+	self identifier ifNotNil: [ :identifier |
+		aBlock cull: identifier cull: self ]
 ]
 
 { #category : #'pretty printing' }

@@ -19,13 +19,14 @@ ViennaRenameModule >> execute [
 
 	self definitionNode ifNil: [ ^ nil ].
 	self newName ifNil: [ ^ nil ].
+	self oldName = self newName ifTrue: [ ^ nil ].
 	self definitionNode at: 1 put: self newName.
 	self definitionNode document do: [ :module |
-		module second first ifNotNil: [ :importList |
+		module interface importDefinitionList ifNotNil: [ :importList |
 			importList do: [ :importDefinition |
 				importDefinition first = self oldName ifTrue: [
-					importDefinition at: 1 put: self newName ] ] ].
-		module third allDescendantsDo: [ :node |
+					importDefinition moduleIdentifier: self newName ] ] ].
+		module moduleBody allDescendantsDo: [ :node |
 			(node isViennaGlobalNameNode and: [
 				 node moduleIdentifier = self oldName ]) ifTrue: [
 				node moduleIdentifier: self newName ] ] ]
@@ -54,7 +55,7 @@ ViennaRenameModule >> findNewName [
 { #category : #accessing }
 ViennaRenameModule >> findOldName [
 
-	ast ifNotNil: [ ast isViennaModuleNode ifTrue: [ ^ ast name ] ].
+	ast ifNotNil: [ ast isViennaModuleNode ifTrue: [ ^ ast identifier ] ].
 	^ nil
 ]
 

@@ -28,7 +28,7 @@ ViennaAssignmentDefinitionNode >> asViennaAssignStatementNode [
 { #category : #private }
 ViennaAssignmentDefinitionNode >> boundIdentifiersDo: aBlock [
 
-	aBlock value: self identifier
+	aBlock cull: self identifier cull: self
 ]
 
 { #category : #accessing }

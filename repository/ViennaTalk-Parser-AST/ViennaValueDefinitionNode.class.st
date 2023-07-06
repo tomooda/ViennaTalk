@@ -95,6 +95,20 @@ ViennaValueDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
 ]
 
 { #category : #testing }
+ViennaValueDefinitionNode >> hasOnlyOnePatternIdentifier [
+
+	^ self pattern uniqueBoundIdentifiers size = 1
+]
+
+{ #category : #accessing }
+ViennaValueDefinitionNode >> identifier: aString [
+
+	self hasOnlyOnePatternIdentifier ifTrue: [
+		self pattern boundIdentifiersDo: [ :identifier :pattern |
+			pattern identifier: aString ] ]
+]
+
+{ #category : #testing }
 ViennaValueDefinitionNode >> isValueDefinition [
 
 	^ true
@@ -134,6 +148,14 @@ ViennaValueDefinitionNode >> pattern: aViennaPatternNode [
 ViennaValueDefinitionNode >> resolve [
 
 	^ self
+]
+
+{ #category : #'class membership' }
+ViennaValueDefinitionNode >> respondsTo: aSymbol [
+
+	aSymbol = #identifier: ifTrue: [
+		^ self hasOnlyOnePatternIdentifier ].
+	^ super respondsTo: aSymbol
 ]
 
 { #category : #accessing }

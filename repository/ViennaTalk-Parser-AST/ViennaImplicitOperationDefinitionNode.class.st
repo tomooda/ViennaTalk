@@ -54,9 +54,11 @@ ViennaImplicitOperationDefinitionNode >> asImportDefinitionIn: moduleNode [
 { #category : #private }
 ViennaImplicitOperationDefinitionNode >> boundIdentifiersDo: aBlock [
 
-	aBlock value: self identifier.
-	self pre ifNotNil: [ aBlock value: 'pre_' , self identifier ].
-	self post ifNotNil: [ aBlock value: 'post_' , self identifier ]
+	aBlock cull: self identifier cull: self.
+	self pre ifNotNil: [
+		aBlock cull: 'pre_' , self identifier cull: self ].
+	self post ifNotNil: [
+		aBlock cull: 'post_' , self identifier cull: self ]
 ]
 
 { #category : #'accessing-definitions' }

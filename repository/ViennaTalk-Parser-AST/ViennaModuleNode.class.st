@@ -247,7 +247,7 @@ ViennaModuleNode >> addImportDefinition: aViennaImportDefinitionNode [
 { #category : #private }
 ViennaModuleNode >> boundIdentifiersDo: aBlock [
 
-	aBlock value: self identifier
+	aBlock cull: self identifier cull: self
 ]
 
 { #category : #'accessing-definitions' }
@@ -360,6 +360,37 @@ ViennaModuleNode >> identifier: aString [
 	self at: 1 put: aString
 ]
 
+{ #category : #accessing }
+ViennaModuleNode >> importAtModuleIdentifier: aString identifier: anotherString [
+
+	(self importDefinitionAtModuleIdentifier: aString) ifNotNil: [
+		:importDefinition |
+		importDefinition importsDo: [ :import |
+			import identifier = anotherString ifTrue: [ ^ import ] ] ].
+	^ nil
+]
+
+{ #category : #accessing }
+ViennaModuleNode >> importAtModuleName: aString rename: anotherString [
+
+	(self importDefinitionAtModuleIdentifier: aString) ifNotNil: [
+		:importDefinition |
+		importDefinition importsDo: [ :import |
+			(import rename notNil and: [
+				 import rename identifier = anotherString ]) ifTrue: [ ^ import ] ] ].
+	^ nil
+]
+
+{ #category : #accessing }
+ViennaModuleNode >> importDefinitionAtModuleIdentifier: aString [
+
+	self interface importDefinitionList ifNotNil: [ :importDefinitionList |
+		importDefinitionList do: [ :importDefinition |
+			importDefinition moduleIdentifier = aString ifTrue: [
+				^ importDefinition ] ] ].
+	^ nil
+]
+
 { #category : #enumerating }
 ViennaModuleNode >> importDefinitionsDo: aBlock [
 
@@ -380,7 +411,7 @@ ViennaModuleNode >> importsFrom: moduleIdentifier identifier: identifier [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : #testing }
 ViennaModuleNode >> importsIdentifier: aString [
 
 	self interface boundIdentifiersDo: [ :string |
