@@ -24,28 +24,16 @@ ViennaNarrowLetStatement >> execute [
 { #category : #accessing }
 ViennaNarrowLetStatement >> findDefinitionNode [
 
-	| paramNames |
-	paramNames := Set new: ast first size * 2.
-	ast localDefinitionList do: [ :localDefinition |
-		localDefinition valueDefinitionOrFunctionDefinition
-			isViennaValueDefinitionNode
-			ifTrue: [
-				localDefinition valueDefinitionOrFunctionDefinition pattern
-					allDescendantsDo: [ :node |
-						node isViennaPatternIdentifierNode ifTrue: [
-							paramNames add: node identifier ] ] ]
-			ifFalse: [ ^ nil ] ].
-	paramNames := paramNames asArray.
-	^ (ast statement select: [ :node |
-		   node isViennaNode and: [
-			   node isViennaStatementNode and: [
-				   paramNames anySatisfy: [ :param |
-					   self hasFreeOccurrencesOf: param in: node ] ] ] ])
-		  ifNotEmpty: [ :nodes |
-			  nodes size = 1
-				  ifTrue: [ nodes first ]
-				  ifFalse: [ nil ] ]
-		  ifEmpty: [ nil ]
+	| statement |
+	(ast localDefinitionList allSatisfy: [ :localDefinition |
+		 localDefinition valueDefinitionOrFunctionDefinition
+			 isViennaValueDefinitionNode ]) ifFalse: [ ^ nil ].
+	statement := self ast statement
+		             narrowestStatementWithFreeIdentifiers:
+		             ast localDefinitionList uniqueBoundIdentifiers.
+	^ statement == self ast statement
+		  ifTrue: [ nil ]
+		  ifFalse: [ statement ]
 ]
 
 { #category : #accessing }

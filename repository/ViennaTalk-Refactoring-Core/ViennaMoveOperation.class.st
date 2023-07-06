@@ -18,6 +18,6 @@ ViennaMoveOperation >> findDefinitionNode [
 					ifTrue: [ ^ nil ] ] ].
 		(defNode isViennaImplicitOperationDefinitionNode and: [
 			 defNode third notEmpty ]) ifTrue: [ ^ nil ].
-		^ defNode ].
+		^ defNode asAccessDefinition ].
 	^ nil
 ]

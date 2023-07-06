@@ -18,25 +18,36 @@ ViennaMove class >> isAbstract [
 
 { #category : #operations }
 ViennaMove >> check [
+
 	ast ifNil: [ ^ false ].
 	self definitionNode ifNil: [ ^ false ].
+	destinationModule ifNotNil: [
+		(self definitionNames anySatisfy: [ :identifier |
+			 (destinationModule resolveIdentifier: identifier) notNil ])
+			ifTrue: [ ^ false ] ].
 	^ true
 ]
 
 { #category : #operations }
 ViennaMove >> defineDestination [
+
 	newDefinitionNode := self definitionNode copyFragment.
 	self migrate: newDefinitionNode into: self destinationModule.
 	self addDefinition: newDefinitionNode in: self destinationModule.
 	self ensureExport: newDefinitionNode.
-	self ensureImport: newDefinitionNode in: self sourceModule.
-	self updateName: self sourceModule third.
-	self updateName: self destinationModule third
+	(self sourceModule moduleBody hasAnyDescendantsSuchThat: [ :node |
+		 node isViennaLocalNameNode and: [
+			 node resolve == self definitionNode asAccessDefinition ] ])
+		ifTrue: [
+		self ensureImport: newDefinitionNode in: self sourceModule ].
+	self updateName: self sourceModule moduleBody.
+	self updateName: self destinationModule moduleBody
 ]
 
 { #category : #accessing }
 ViennaMove >> definitionNames [
-	^ Array with: self definitionNode name
+
+	^ Array with: self definitionNode identifier
 ]
 
 { #category : #accessing }
@@ -61,6 +72,7 @@ ViennaMove >> destinationModule: aViennaNode [
 
 { #category : #operations }
 ViennaMove >> execute [
+
 	self destinationModule ifNil: [ ^ nil ].
 	self sourceModule ifNil: [ ^ nil ].
 	self
@@ -102,8 +114,9 @@ ViennaMove >> findDestinationModule [
 
 { #category : #operations }
 ViennaMove >> findOkToAddImports [
-	^ UIManager default
-		confirm: 'OK to add import in ' , self destinationModule first
+
+	^ UIManager default confirm:
+		  'OK to add import in ' , self destinationModule identifier
 ]
 
 { #category : #accessing }
@@ -133,7 +146,10 @@ ViennaMove >> removeExportInSource [
 
 { #category : #operations }
 ViennaMove >> removeImportInDestination [
-	self retractImport: self definitionNode in: self destinationModule
+
+	self
+		retractImport: self definitionNode asAccessDefinition
+		in: self destinationModule
 ]
 
 { #category : #operations }
@@ -157,7 +173,7 @@ ViennaMove >> rewriteImports [
 		| imports newImportModuleSignature |
 		imports := Array streamContents: [ :stream |
 			           moduleNode
-				           importsFrom: self sourceModule name
+				           importsFrom: self sourceModule identifier
 				           do: [ :importModuleSignature |
 					           importModuleSignature do: [ :importSignature |
 						           importSignature do: [ :import |
@@ -206,14 +222,15 @@ ViennaMove >> sourceModule: aViennaNode [
 { #category : #operations }
 ViennaMove >> updateName: aViennaNode [
 
-	aViennaNode = self definitionNode ifTrue: [ ^ self ].
-	aViennaNode = newDefinitionNode ifTrue: [ ^ self ].
+	aViennaNode = self definitionNode asAccessDefinition ifTrue: [
+		^ self ].
+	aViennaNode = newDefinitionNode asAccessDefinition ifTrue: [ ^ self ].
 	aViennaNode isViennaNameNode ifTrue: [
 		^ aViennaNode resolve ifNotNil: [ :node |
-			  node == self definitionNode ifTrue: [
+			  node == self definitionNode asAccessDefinition ifTrue: [
 				  ^ self replaceNode: aViennaNode with: (self
-						     nameForGlobalName: (aViennaNode asGlobalName
-								      moduleIdentifier: self destinationModule name;
+						     nameForGlobalName: (aViennaNode asGlobalName copyFragment
+								      moduleIdentifier: self destinationModule identifier;
 								      yourself)
 						     in: aViennaNode module) ] ] ].
 	aViennaNode do: [ :node |

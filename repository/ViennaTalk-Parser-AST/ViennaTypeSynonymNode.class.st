@@ -24,9 +24,10 @@ ViennaTypeSynonymNode class >> identifier: aString type: aViennaTypeNode inv: aV
 { #category : #'accessing-definitions' }
 ViennaTypeSynonymNode >> asAccessDefinition [
 
-	^ ViennaAccessTypeDefinitionNode
-		  access: ViennaAccessNode empty
-		  typeDefinition: self
+	^ parent ifNil: [
+		  ViennaAccessTypeDefinitionNode
+			  access: ViennaAccessNode empty
+			  typeDefinition: self ]
 ]
 
 { #category : #'accessing-definitions' }

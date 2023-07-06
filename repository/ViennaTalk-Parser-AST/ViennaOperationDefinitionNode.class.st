@@ -16,9 +16,10 @@ ViennaOperationDefinitionNode class >> definition: aViennaNode [
 { #category : #'accessing-definitions' }
 ViennaOperationDefinitionNode >> asAccessDefinition [
 
-	^ ViennaAccessOperationDefinitionNode
-		  access: ViennaAccessNode empty
-		  operationDefinition: self
+	^ parent ifNil: [
+		  ViennaAccessOperationDefinitionNode
+			  access: ViennaAccessNode empty
+			  operationDefinition: self ]
 ]
 
 { #category : #private }

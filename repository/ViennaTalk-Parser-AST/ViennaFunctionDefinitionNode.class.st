@@ -22,9 +22,10 @@ ViennaFunctionDefinitionNode >> argumentType [
 { #category : #'accessing-definitions' }
 ViennaFunctionDefinitionNode >> asAccessDefinition [
 
-	^ ViennaAccessFunctionDefinitionNode
-		  access: ViennaAccessNode empty
-		  functionDefinition: self
+	^ parent ifNil: [
+		  ViennaAccessFunctionDefinitionNode
+			  access: ViennaAccessNode empty
+			  functionDefinition: self ]
 ]
 
 { #category : #private }

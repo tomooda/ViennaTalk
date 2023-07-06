@@ -26,6 +26,19 @@ ViennaAccessOperationDefinitionNode >> access: aViennaAccessNode [
 	self at: 1 put: aViennaAccessNode
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaAccessOperationDefinitionNode >> asAccessDefinition [
+
+	^ self
+]
+
+{ #category : #'accessing-definitions' }
+ViennaAccessOperationDefinitionNode >> asImportDefinitionIn: aViennaModuleNode [
+
+	^ self operationDefinition definition asImportDefinitionIn:
+		  aViennaModuleNode
+]
+
 { #category : #private }
 ViennaAccessOperationDefinitionNode >> boundIdentifiersDo: aBlock [
 

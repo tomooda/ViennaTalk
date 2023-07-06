@@ -18,9 +18,10 @@ ViennaRecordTypeDefinitionNode class >> identifier: aString fieldList: aViennaFi
 { #category : #'accessing-definitions' }
 ViennaRecordTypeDefinitionNode >> asAccessDefinition [
 
-	^ ViennaAccessTypeDefinitionNode
-		  access: ViennaAccessNode empty
-		  typeDefinition: self copyFragment
+	^ parent ifNil: [
+		  ViennaAccessTypeDefinitionNode
+			  access: ViennaAccessNode empty
+			  typeDefinition: self copyFragment ]
 ]
 
 { #category : #'accessing-definitions' }

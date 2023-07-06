@@ -5,7 +5,7 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 ViennaImportDefinitionNode class >> moduleIdentifier: aString importModuleSignature: aViennaImportModuleSignatureNode [
 
 	^ (self new: 2)

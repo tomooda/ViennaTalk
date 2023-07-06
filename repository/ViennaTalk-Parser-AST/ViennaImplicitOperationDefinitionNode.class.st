@@ -25,7 +25,8 @@ ViennaImplicitOperationDefinitionNode >> argumentType [
 { #category : #'accessing-definitions' }
 ViennaImplicitOperationDefinitionNode >> asAccessDefinition [
 
-	^ (ViennaOperationDefinitionNode definition: self) asAccessDefinition
+	^ (parent ifNil: [ ViennaOperationDefinitionNode definition: self ])
+		  asAccessDefinition
 ]
 
 { #category : #'accessing-definitions' }

@@ -425,7 +425,8 @@ ViennaModuleNode >> lookupIdentifier: aString [
 		(definition bindsIdentifier: aString) ifTrue: [ ^ definition ] ].
 	self importDefinitionsDo: [ :importDefinition |
 		importDefinition importsDo: [ :import |
-			import rename identifier = aString ifTrue: [ ^ import ] ] ].
+			(import rename notNil and: [ import rename identifier = aString ])
+				ifTrue: [ ^ import ] ] ].
 	^ nil
 ]
 

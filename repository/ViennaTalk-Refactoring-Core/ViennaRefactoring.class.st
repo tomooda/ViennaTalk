@@ -36,6 +36,14 @@ ViennaRefactoring class >> sortedInstancesOn: aViennaNode [
 { #category : #'visiting-definitions' }
 ViennaRefactoring >> addDefinition: aViennaNode in: moduleNode [
 
+	aViennaNode isViennaAccessTypeDefinitionNode ifTrue: [
+		^ self addTypeDefinition: aViennaNode in: moduleNode ].
+	aViennaNode isViennaAccessValueDefinitionNode ifTrue: [
+		^ self addValueDefinition: aViennaNode in: moduleNode ].
+	aViennaNode isViennaAccessFunctionDefinitionNode ifTrue: [
+		^ self addFunctionDefinition: aViennaNode in: moduleNode ].
+	aViennaNode isViennaAccessOperationDefinitionNode ifTrue: [
+		^ self addOperationDefinition: aViennaNode in: moduleNode ].
 	aViennaNode isViennaTypeSynonymNode ifTrue: [
 		^ self addTypeDefinition: aViennaNode in: moduleNode ].
 	aViennaNode isViennaRecordTypeDefinitionNode ifTrue: [
@@ -305,7 +313,7 @@ ViennaRefactoring >> ensureImport: aViennaNode in: moduleNode [
 	aViennaNode module == moduleNode ifTrue: [ ^ self ].
 	importModuleSignature := (self
 		                          ensureImportDefinitionFrom:
-		                          aViennaNode module name
+		                          aViennaNode module identifier
 		                          in: moduleNode) second.
 	importModuleSignature isViennaImportModuleSignatureAllNode ifTrue: [
 		^ self ].
@@ -1095,24 +1103,24 @@ ViennaRefactoring >> name [
 { #category : #'visiting-interface' }
 ViennaRefactoring >> nameForGlobalName: globalNameNode in: moduleNode [
 
-	globalNameNode first = moduleNode name ifTrue: [
+	globalNameNode moduleIdentifier = moduleNode identifier ifTrue: [
 		^ (ViennaLocalNameNode identifier: globalNameNode identifier)
 			  parent: globalNameNode parent;
 			  yourself ].
 	moduleNode
-		importsFrom: globalNameNode first
+		importsFrom: globalNameNode moduleIdentifier
 		do: [ :importModuleSignature |
 			importModuleSignature isViennaImportModuleSignatureAllNode ifTrue: [
 				^ globalNameNode copyFragment ].
 			importModuleSignature do: [ :importSignature |
 				importSignature do: [ :import |
-					import name = globalNameNode second ifTrue: [
+					import identifier = globalNameNode identifier ifTrue: [
 						^ import last
 							  ifNotNil: [ :name |
 								  name copyFragment
 									  parent: globalNameNode parent;
 									  yourself ]
-							  ifNil: [ ^ globalNameNode copyFragment ] ] ] ] ].
+							  ifNil: [ globalNameNode copyFragment ] ] ] ] ].
 	^ nil
 ]
 
@@ -1169,7 +1177,9 @@ ViennaRefactoring >> retractImport: aViennaNode in: moduleNode [
 	aViennaNode isViennaGlobalNameNode ifTrue: [ ^ aViennaNode ].
 	(aViennaNode isViennaLocalNameNode and: [
 		 aViennaNode resolve module == aViennaNode module ]) ifTrue: [
-		^ self retractImport: aViennaNode resolve in: moduleNode ].
+		^ self
+			  retractImport: aViennaNode resolve asAccessDefinition
+			  in: moduleNode ].
 	(aViennaNode asImportDefinitionIn: moduleNode) ifNotNil: [ :signature |
 		self retractImportDefinition: signature in: moduleNode ].
 	^ nil

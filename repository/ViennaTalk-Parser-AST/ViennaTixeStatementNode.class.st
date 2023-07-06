@@ -52,6 +52,26 @@ ViennaTixeStatementNode >> label [
 ]
 
 { #category : #accessing }
+ViennaTixeStatementNode >> narrowestStatementWithFreeIdentifiers: anArrayOfString [
+
+	(self traps patterns uniqueBoundIdentifiers includesAnyOf:
+		 anArrayOfString) ifTrue: [
+		^ (self uniqueFreeIdentifiers includesAnyOf: anArrayOfString)
+			  ifTrue: [ self ]
+			  ifFalse: [ nil ] ].
+	^ (((self traps statements asArray collect: [ :statement |
+		     statement narrowestStatementWithFreeIdentifiers:
+			     anArrayOfString ]) copyWith:
+		    (self statement narrowestStatementWithFreeIdentifiers:
+			     anArrayOfString)) select: #notNil)
+		  ifNotEmpty: [ :narrowests |
+			  narrowests size = 1
+				  ifTrue: [ narrowests first ]
+				  ifFalse: [ self ] ]
+		  ifEmpty: [ nil ]
+]
+
+{ #category : #accessing }
 ViennaTixeStatementNode >> statement [
 
 	^ self at: 2

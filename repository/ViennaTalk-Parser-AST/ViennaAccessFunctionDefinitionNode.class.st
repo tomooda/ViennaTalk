@@ -32,6 +32,19 @@ ViennaAccessFunctionDefinitionNode >> argumentType [
 	^ self functionDefinition argumentType
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaAccessFunctionDefinitionNode >> asAccessDefinition [
+
+	^ self
+]
+
+{ #category : #'accessing-definitions' }
+ViennaAccessFunctionDefinitionNode >> asImportDefinitionIn: aViennaModuleNode [
+
+	^ self functionDefinition definition asImportDefinitionIn:
+		  aViennaModuleNode
+]
+
 { #category : #private }
 ViennaAccessFunctionDefinitionNode >> boundIdentifiersDo: aBlock [
 

@@ -18,9 +18,10 @@ ViennaValueDefinitionNode class >> pattern: aViennaPatternNode type: aViennaType
 { #category : #'accessing-definitions' }
 ViennaValueDefinitionNode >> asAccessDefinition [
 
-	^ ViennaAccessValueDefinitionNode
-		  access: ViennaAccessNode empty
-		  valueDefinition: self
+	^ parent ifNil: [
+		  ViennaAccessValueDefinitionNode
+			  access: ViennaAccessNode empty
+			  valueDefinition: self ]
 ]
 
 { #category : #'accessing-definitions' }

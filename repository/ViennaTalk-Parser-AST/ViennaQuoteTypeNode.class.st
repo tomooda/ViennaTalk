@@ -16,7 +16,7 @@ ViennaQuoteTypeNode class >> string: aString [
 { #category : #'pretty printing' }
 ViennaQuoteTypeNode >> formatWith: aViennaAbstractFormatter [
 
-	aViennaAbstractFormatter format: self string
+	^ aViennaAbstractFormatter format: self string
 ]
 
 { #category : #private }

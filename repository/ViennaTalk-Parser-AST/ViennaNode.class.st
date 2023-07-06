@@ -225,7 +225,8 @@ ViennaNode >> collect: aBlock [
 
 { #category : #copying }
 ViennaNode >> copyFragment [
-	^ self shallowCopy postCopyFragment
+
+	^ self shallowCopy postCopyFragment parent: nil
 ]
 
 { #category : #copying }
@@ -355,6 +356,13 @@ ViennaNode >> fourth [
 ViennaNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	^ self subclassResponsibility
+]
+
+{ #category : #testing }
+ViennaNode >> hasAnyDescendantsSuchThat: aBlock [
+
+	self allDescendantsSuchThat: aBlock do: [ :node | ^ true ].
+	^ false
 ]
 
 { #category : #enumerating }
@@ -2576,8 +2584,14 @@ ViennaNode >> resolve [
 { #category : #'accessing-definitions' }
 ViennaNode >> resolveIdentifier: aString [
 
-	^ (self deepFindResolverForIdentifier: aString) ifNotNil: [ :resolver |
-		  resolver lookupIdentifier: aString ]
+	| resolver node |
+	resolver := self findResolverForIdentifier: aString.
+	resolver ifNil: [ ^ nil ].
+	node := resolver lookupIdentifier: aString.
+	node isViennaImportNode ifTrue: [
+		(self moduleNamed: node moduleIdentifier) ifNotNil: [ :module |
+			^ module resolveIdentifier: node identifier ] ].
+	^ node
 ]
 
 { #category : #enumerating }

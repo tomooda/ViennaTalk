@@ -92,6 +92,22 @@ ViennaTrapStatementNode >> label [
 ]
 
 { #category : #accessing }
+ViennaTrapStatementNode >> narrowestStatementWithFreeIdentifiers: anArrayOfString [
+
+	| s1 s2 |
+	(self pattern uniqueBoundIdentifiers includesAnyOf: anArrayOfString)
+		ifTrue: [
+			^ (self uniqueFreeIdentifiers includesAnyOf: anArrayOfString)
+				  ifTrue: [ self ]
+				  ifFalse: [ nil ] ].
+	s1 := self statement narrowestStatementWithFreeIdentifiers:
+		      anArrayOfString.
+	s2 := self handlerStatement narrowestStatementWithFreeIdentifiers:
+		      anArrayOfString.
+	^ s1 ifNotNil: [ s2 ifNotNil: [ self ] ifNil: [ s1 ] ] ifNil: [ s2 ]
+]
+
+{ #category : #accessing }
 ViennaTrapStatementNode >> pattern [
 
 	^ self at: 1

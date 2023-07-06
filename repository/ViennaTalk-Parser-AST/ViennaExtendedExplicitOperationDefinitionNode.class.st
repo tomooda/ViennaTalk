@@ -29,7 +29,8 @@ ViennaExtendedExplicitOperationDefinitionNode >> argumentType [
 { #category : #'accessing-definitions' }
 ViennaExtendedExplicitOperationDefinitionNode >> asAccessDefinition [
 
-	^ (ViennaOperationDefinitionNode definition: self copyFragment)
+	^ (parent ifNil: [
+		   ViennaOperationDefinitionNode definition: self copyFragment ])
 		  asAccessDefinition
 ]
 

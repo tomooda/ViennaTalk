@@ -108,9 +108,9 @@ ViennaNodeTest >> testCopyFragment [
 		       detectParent: #isViennaExplicitOperationDefinitionNode
 		       ifNone: [ nil ].
 	op2 := op1 copyFragment.
+	self assert: op2 parent isNil.
 	self assert: op1 equals: op2.
-	self deny: op1 identicalTo: op2.
-	self assert: op1 root identicalTo: op2 root
+	self deny: op1 identicalTo: op2
 ]
 
 { #category : #running }

@@ -25,22 +25,14 @@ ViennaNarrowLetExpression >> execute [
 ViennaNarrowLetExpression >> findDefinitionNode [
 
 	| paramNames |
-	paramNames := Set new: ast first size * 2.
-	ast localDefinitionList do: [ :localDefinition |
-		localDefinition valueDefinitionOrFunctionDefinition
-			isViennaValueDefinitionNode
-			ifTrue: [
-				localDefinition valueDefinitionOrFunctionDefinition pattern
-					allDescendantsDo: [ :node |
-						node isViennaPatternIdentifierNode ifTrue: [
-							paramNames add: node identifier ] ] ]
-			ifFalse: [ ^ nil ] ].
-	paramNames := paramNames asArray.
+	(ast localDefinitionList allSatisfy: [ :localDefinition |
+		 localDefinition valueDefinitionOrFunctionDefinition
+			 isViennaValueDefinitionNode ]) ifFalse: [ ^ nil ].
+	paramNames := ast localDefinitionList uniqueBoundIdentifiers.
 	^ (ast expression select: [ :node |
 		   node isViennaNode and: [
 			   node isViennaExpressionNode and: [
-				   paramNames anySatisfy: [ :param |
-					   self hasFreeOccurrencesOf: param in: node ] ] ] ])
+				   node uniqueFreeIdentifiers includesAnyOf: paramNames ] ] ])
 		  ifNotEmpty: [ :nodes |
 			  nodes size = 1
 				  ifTrue: [ nodes first ]
