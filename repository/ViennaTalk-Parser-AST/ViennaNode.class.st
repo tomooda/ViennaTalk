@@ -530,6 +530,17 @@ ViennaNode >> isOperationNameNode [
 	^ false
 ]
 
+{ #category : #testing }
+ViennaNode >> isReferenced [
+
+	self document ifNil: [ ^ false ].
+	self document
+		allDescendantsSuchThat: [ :node |
+		node isViennaNameNode and: [ node resolve == self ] ]
+		do: [ :node | ^ true ].
+	^ false
+]
+
 { #category : #'accessing-definitions' }
 ViennaNode >> isRelocatable [
 

@@ -401,6 +401,15 @@ ViennaModuleNode >> interface: aViennaInterfaceNode [
 ]
 
 { #category : #testing }
+ViennaModuleNode >> isReferenced [
+
+	self document ifNil: [ ^ false ].
+	self modulesDo: [ :module |
+		module importsFrom: self identifier do: [ :node | ^ true ] ].
+	^ false
+]
+
+{ #category : #testing }
 ViennaModuleNode >> isViennaModuleNode [
 
 	^ true

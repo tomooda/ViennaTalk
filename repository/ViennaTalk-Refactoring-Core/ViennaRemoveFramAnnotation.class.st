@@ -10,7 +10,13 @@ Class {
 { #category : #accessing }
 ViennaRemoveFramAnnotation >> annotation [
 
-	^ annotation ifNil: [ annotation := self findAnnotation ]
+	^ annotation
+]
+
+{ #category : #accessing }
+ViennaRemoveFramAnnotation >> annotation: aString [
+
+	annotation := aString
 ]
 
 { #category : #operations }
@@ -27,13 +33,15 @@ ViennaRemoveFramAnnotation >> execute [
 { #category : #accessing }
 ViennaRemoveFramAnnotation >> findAnnotation [
 
-	^ self definitionNode ifNotNil: [ :node | 
-		  (UIManager default
-			   chooseFrom: (node annotations ifNil: [ {  } ])
-			   message: 'Select an annotation to remove.') ifNotNil: [ :index | 
-			  index >= 1
-				  ifTrue: [ node annotations at: index ]
-				  ifFalse: [ nil ] ] ]
+	^ annotation ifNotNil: [
+		  annotation := self definitionNode ifNotNil: [ :node |
+			                (UIManager default
+				                 chooseFrom: (node annotations ifNil: [ {  } ])
+				                 message: 'Select an annotation to remove.')
+				                ifNotNil: [ :index |
+					                index >= 1
+						                ifTrue: [ node annotations at: index ]
+						                ifFalse: [ nil ] ] ] ]
 ]
 
 { #category : #accessing }

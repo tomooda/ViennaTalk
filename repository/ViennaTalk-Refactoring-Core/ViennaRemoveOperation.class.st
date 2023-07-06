@@ -7,28 +7,9 @@ Class {
 { #category : #operations }
 ViennaRemoveOperation >> check [
 
-	| moduleName shortName |
 	ast ifNil: [ ^ false ].
 	self definitionNode ifNil: [ ^ false ].
-	moduleName := self definitionNode module identifier.
-	shortName := self definitionNode identifier.
-	(self hasFreeOccurrencesOf: shortName in: self definitionNode module)
-		ifTrue: [ ^ false ].
-	(self
-		 hasFreeOccurrencesOf: 'pre_' , shortName
-		 in: self definitionNode module) ifTrue: [ ^ false ].
-	(self
-		 hasFreeOccurrencesOf: 'post' , shortName
-		 in: self definitionNode module) ifTrue: [ ^ false ].
-	ast document allDescendantsDo: [ :node |
-		(node isViennaGlobalNameNode: moduleName identifier: shortName)
-			ifTrue: [ ^ false ] ].
-	ast modulesDo: [ :module |
-		module second first ifNotNil: [ :importDefinitionList |
-			importDefinitionList do: [ :importDefinition |
-				importDefinition first = moduleName ifTrue: [
-					importDefinition allDescendantsDo: [ :node |
-						(node isViennaOperationImportNode: shortName) ifTrue: [ ^ false ] ] ] ] ] ].
+	self definitionNode isReferenced ifTrue: [ ^ false ].
 	^ true
 ]
 
@@ -38,7 +19,7 @@ ViennaRemoveOperation >> execute [
 	(self definitionNode
 		 detectParent: #isViennaOperationDefinitionsNode
 		 ifNone: [ nil ]) ifNotNil: [ :operationDefinitions |
-		operationDefinitions remove: self definitionNode parent parent.
+		operationDefinitions remove: self definitionNode.
 		operationDefinitions ifEmpty: [
 			operationDefinitions parent parent remove:
 				operationDefinitions parent ] ]
@@ -51,7 +32,7 @@ ViennaRemoveOperation >> findDefinitionNode [
 	^ ast resolve ifNotNil: [ :node |
 		  (node isViennaExplicitOperationDefinitionNode or: [
 			   node isViennaImplicitOperationDefinitionNode ])
-			  ifTrue: [ node ]
+			  ifTrue: [ node asAccessDefinition ]
 			  ifFalse: [ nil ] ]
 ]
 
