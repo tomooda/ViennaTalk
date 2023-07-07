@@ -19,6 +19,7 @@ ViennaStateDefinitionNode class >> identifier: aString fieldList: aViennaFieldLi
 { #category : #private }
 ViennaStateDefinitionNode >> boundIdentifiersDo: aBlock [
 
+	aBlock cull: self identifier cull: self.
 	self fieldList do: [ :field |
 		aBlock cull: field identifier cull: self ]
 ]

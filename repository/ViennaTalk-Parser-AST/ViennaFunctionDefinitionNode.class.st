@@ -70,6 +70,12 @@ ViennaFunctionDefinitionNode >> identifier [
 	^ self definition identifier
 ]
 
+{ #category : #accessing }
+ViennaFunctionDefinitionNode >> identifier: aString [
+
+	self definition identifier: aString
+]
+
 { #category : #testing }
 ViennaFunctionDefinitionNode >> isFunctionDefinition [
 
@@ -92,6 +98,12 @@ ViennaFunctionDefinitionNode >> isViennaFunctionDefinitionNode: aString [
 ViennaFunctionDefinitionNode >> label [
 
 	^ 'FunctionDefinition'
+]
+
+{ #category : #'accessing-definitions' }
+ViennaFunctionDefinitionNode >> localResolve [
+
+	^ self definition localResolve
 ]
 
 { #category : #accessing }

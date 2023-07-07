@@ -371,7 +371,7 @@ ViennaModuleNode >> importAtModuleIdentifier: aString identifier: anotherString 
 ]
 
 { #category : #accessing }
-ViennaModuleNode >> importAtModuleName: aString rename: anotherString [
+ViennaModuleNode >> importAtModuleIdentifier: aString rename: anotherString [
 
 	(self importDefinitionAtModuleIdentifier: aString) ifNotNil: [
 		:importDefinition |

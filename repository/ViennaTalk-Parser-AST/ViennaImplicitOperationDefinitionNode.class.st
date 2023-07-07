@@ -186,6 +186,12 @@ ViennaImplicitOperationDefinitionNode >> label [
 ]
 
 { #category : #'accessing-definitions' }
+ViennaImplicitOperationDefinitionNode >> localResolve [
+
+	^ self
+]
+
+{ #category : #'accessing-definitions' }
 ViennaImplicitOperationDefinitionNode >> lookupIdentifier: aString [
 
 	self parameterTypes patternsDo: [ :pattern |

@@ -58,6 +58,12 @@ ViennaOperationDefinitionNode >> identifier [
 	^ self definition identifier
 ]
 
+{ #category : #accessing }
+ViennaOperationDefinitionNode >> identifier: aString [
+
+	self definition identifier: aString
+]
+
 { #category : #testing }
 ViennaOperationDefinitionNode >> isOperationDefinition [
 
@@ -80,6 +86,12 @@ ViennaOperationDefinitionNode >> isViennaOperationDefinitionNode: aString [
 ViennaOperationDefinitionNode >> label [
 
 	^ 'OperationDefinition'
+]
+
+{ #category : #'accessing-definitions' }
+ViennaOperationDefinitionNode >> localResolve [
+
+	^ self definition localResolve
 ]
 
 { #category : #accessing }

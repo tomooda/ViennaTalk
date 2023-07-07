@@ -90,6 +90,12 @@ ViennaAccessFunctionDefinitionNode >> identifier [
 	^ self functionDefinition identifier
 ]
 
+{ #category : #accessing }
+ViennaAccessFunctionDefinitionNode >> identifier: aString [
+
+	self functionDefinition identifier: aString
+]
+
 { #category : #testing }
 ViennaAccessFunctionDefinitionNode >> isFunctionDefinition [
 
@@ -112,6 +118,12 @@ ViennaAccessFunctionDefinitionNode >> isViennaExportableTopLevelDefinitionNode [
 ViennaAccessFunctionDefinitionNode >> label [
 
 	^ 'AccessFunctionDefinition'
+]
+
+{ #category : #'accessing-definitions' }
+ViennaAccessFunctionDefinitionNode >> loocalResolve [
+
+	^ self functionDefinition localResolve
 ]
 
 { #category : #accessing }

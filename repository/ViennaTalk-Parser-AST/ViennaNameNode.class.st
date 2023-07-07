@@ -30,6 +30,12 @@ ViennaNameNode >> isViennaNameNode [
 ]
 
 { #category : #'accessing-definitions' }
+ViennaNameNode >> localResolve [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'accessing-definitions' }
 ViennaNameNode >> resolve [
 
 	^ self subclassResponsibility

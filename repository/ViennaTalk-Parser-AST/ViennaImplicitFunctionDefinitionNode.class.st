@@ -186,6 +186,12 @@ ViennaImplicitFunctionDefinitionNode >> label [
 ]
 
 { #category : #'accessing-definitions' }
+ViennaImplicitFunctionDefinitionNode >> localResolve [
+
+	^ self
+]
+
+{ #category : #'accessing-definitions' }
 ViennaImplicitFunctionDefinitionNode >> lookupIdentifier: aString [
 
 	self typeVariableList do: [ :typeVariable |

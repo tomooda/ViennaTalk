@@ -49,6 +49,12 @@ ViennaTypeNameNode >> label [
 	^ 'TypeName'
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaTypeNameNode >> localResolve [
+
+	^ self name localResolve
+]
+
 { #category : #accessing }
 ViennaTypeNameNode >> name [
 

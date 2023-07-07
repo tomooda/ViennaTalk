@@ -32,6 +32,12 @@ ViennaImportNode >> identifier [
 	^ self name identifier
 ]
 
+{ #category : #accessing }
+ViennaImportNode >> identifier: aString [
+
+	^ self name identifier: aString
+]
+
 { #category : #testing }
 ViennaImportNode >> isViennaImportNode [
 

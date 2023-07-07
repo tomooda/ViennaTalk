@@ -132,6 +132,12 @@ ViennaValueDefinitionNode >> label [
 	^ 'ValueDefinition'
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaValueDefinitionNode >> localResolve [
+
+	^ self
+]
+
 { #category : #accessing }
 ViennaValueDefinitionNode >> pattern [
 

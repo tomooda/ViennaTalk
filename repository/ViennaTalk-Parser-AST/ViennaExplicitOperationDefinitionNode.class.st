@@ -175,6 +175,12 @@ ViennaExplicitOperationDefinitionNode >> label [
 ]
 
 { #category : #'accessing-definitions' }
+ViennaExplicitOperationDefinitionNode >> localResolve [
+
+	^ self
+]
+
+{ #category : #'accessing-definitions' }
 ViennaExplicitOperationDefinitionNode >> lookupIdentifier: aString [
 
 	aString = 'RESULT' ifTrue: [ ^ self ].

@@ -88,6 +88,12 @@ ViennaAccessValueDefinitionNode >> label [
 	^ 'AccessValueDefinition'
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaAccessValueDefinitionNode >> localResolve [
+
+	^ self valueDefinition localResolve
+]
+
 { #category : #accessing }
 ViennaAccessValueDefinitionNode >> pattern [
 

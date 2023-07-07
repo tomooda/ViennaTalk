@@ -99,6 +99,20 @@ ViennaGlobalNameNode >> label [
 	^ 'GlobalName'
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaGlobalNameNode >> localResolve [
+
+	^ (self module importDefinitionAtModuleIdentifier:
+		   self module identifier) ifNotNil: [ :importDefinition |
+		  importDefinition importModuleSignature ifNotNil: [ :signature |
+			  signature isViennaImportModuleSignatureAllNode
+				  ifTrue: [ signature ]
+				  ifFalse: [
+					  signature
+						  detect: [ :import | import identifier = self identifier ]
+						  ifNone: [ nil ] ] ] ]
+]
+
 { #category : #'parsers-symbols' }
 ViennaGlobalNameNode >> moduleIdentifier [
 

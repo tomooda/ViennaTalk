@@ -2661,6 +2661,8 @@ ViennaVDM2Smalltalk >> recordTypeDefinition: aViennaNode env: aDictionary [
 ViennaVDM2Smalltalk >> reorderDefinitions: aCollectionOfViennaNode [
 
 	| originalDefs boundVars freeVars newDefs |
+	aCollectionOfViennaNode size <= 1 ifTrue: [
+		^ aCollectionOfViennaNode ].
 	originalDefs := Array withAll: aCollectionOfViennaNode.
 	boundVars := (originalDefs collect: [ :def |
 		              def -> def uniqueBoundIdentifiers ]) asDictionary.

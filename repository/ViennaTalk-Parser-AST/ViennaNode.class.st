@@ -2416,6 +2416,19 @@ ViennaNode >> localName [
 ]
 
 { #category : #'accessing-definitions' }
+ViennaNode >> localResolve [
+
+	^ nil
+]
+
+{ #category : #'accessing-definitions' }
+ViennaNode >> localResolveIdentifier: aString [
+
+	^ (self findResolverForIdentifier: aString) ifNotNil: [ :resolver |
+		  resolver lookupIdentifier: aString ]
+]
+
+{ #category : #'accessing-definitions' }
 ViennaNode >> lookupIdentifier: aString [
 
 	^ nil
@@ -2601,14 +2614,12 @@ ViennaNode >> resolve [
 { #category : #'accessing-definitions' }
 ViennaNode >> resolveIdentifier: aString [
 
-	| resolver node |
-	resolver := self findResolverForIdentifier: aString.
-	resolver ifNil: [ ^ nil ].
-	node := resolver lookupIdentifier: aString.
-	node isViennaImportNode ifTrue: [
-		(self moduleNamed: node moduleIdentifier) ifNotNil: [ :module |
-			^ module resolveIdentifier: node identifier ] ].
-	^ node
+	^ (self localResolveIdentifier: aString) ifNotNil: [ :node |
+		  node isViennaImportNode
+			  ifTrue: [
+				  (self moduleNamed: node moduleIdentifier) ifNotNil: [ :module |
+					  module resolveIdentifier: node identifier ] ]
+			  ifFalse: [ node ] ]
 ]
 
 { #category : #enumerating }

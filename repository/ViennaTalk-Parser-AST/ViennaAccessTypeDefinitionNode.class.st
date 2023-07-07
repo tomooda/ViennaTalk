@@ -70,6 +70,12 @@ ViennaAccessTypeDefinitionNode >> identifier [
 	^ self typeDefinition identifier
 ]
 
+{ #category : #accessing }
+ViennaAccessTypeDefinitionNode >> identifier: aString [
+
+	self typeDefinition identifier: aString
+]
+
 { #category : #testing }
 ViennaAccessTypeDefinitionNode >> isTypeDefinition [
 
@@ -92,6 +98,12 @@ ViennaAccessTypeDefinitionNode >> isViennaExportableTopLevelDefinitionNode [
 ViennaAccessTypeDefinitionNode >> label [
 
 	^ 'AccessTypeDefinition'
+]
+
+{ #category : #accessing }
+ViennaAccessTypeDefinitionNode >> localResolve [
+
+	^ self typeDefinition localResolve
 ]
 
 { #category : #accessing }
