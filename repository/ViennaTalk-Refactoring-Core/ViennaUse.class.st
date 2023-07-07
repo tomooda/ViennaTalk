@@ -14,7 +14,8 @@ ViennaUse class >> isAbstract [
 
 { #category : #operations }
 ViennaUse >> check [
-	^ self definitionNode notNil and: [ self identifier notNil ]
+
+	^ self definitionNode notNil
 ]
 
 { #category : #accessing }
@@ -30,17 +31,6 @@ ViennaUse >> definitionNode: aViennaNode [
 { #category : #accessing }
 ViennaUse >> findDefinitionNode [
 	^ self subclassResponsibility
-]
-
-{ #category : #accessing }
-ViennaUse >> identifier [
-	^ self subclassResponsibility
-]
-
-{ #category : #accessing }
-ViennaUse >> name [
-	^ 'Use ' , self identifier asText allBold , ' for '
-		, (self shortDescription: self ast source) asText allBold
 ]
 
 { #category : #accessing }

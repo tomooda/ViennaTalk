@@ -378,9 +378,10 @@ ViennaRefactoring >> expressionFromPattern: aViennaNode bindings: aDictionary [
 
 	aViennaNode isViennaPatternIdentifierNode ifTrue: [
 		^ aDictionary
-			  at: aViennaNode name
+			  at: aViennaNode identifier
 			  ifPresent: [ :node | node copyFragment ]
-			  ifAbsent: [ ViennaLocalNameNode identifier: aViennaNode name ] ].
+			  ifAbsent: [
+			  ViennaLocalNameNode identifier: aViennaNode identifier ] ].
 	aViennaNode isViennaMapEnumerationPatternNode ifTrue: [
 		^ ViennaMapEnumerationNode withAll:
 			  (aViennaNode asArray collect: [ :node |
@@ -1049,7 +1050,6 @@ ViennaRefactoring >> localScopeBySetForLoop: aViennaNode do: aBlock [
 { #category : #'visiting-pattern matching' }
 ViennaRefactoring >> match: aViennaNode with: anotherViennaNode bindings: aDictionary [
 
-	aViennaNode = anotherViennaNode ifTrue: [ ^ true ].
 	aViennaNode isViennaLocalNameNode ifTrue: [
 		^ aDictionary
 			  at: aViennaNode identifier
@@ -1061,7 +1061,14 @@ ViennaRefactoring >> match: aViennaNode with: anotherViennaNode bindings: aDicti
 							  put: anotherViennaNode copyFragment.
 						  true ]
 					  ifNotNil: [ anotherViennaNode = node ] ]
-			  ifAbsent: [ false ] ].
+			  ifAbsent: [ aViennaNode = anotherViennaNode ] ].
+	aViennaNode = anotherViennaNode ifTrue: [
+		aDictionary keys do: [ :string |
+			(aDictionary at: string) ifNil: [
+				aDictionary
+					at: string
+					put: (ViennaLocalNameNode identifier: string) ] ].
+		^ true ].
 	aViennaNode class = anotherViennaNode class ifFalse: [ ^ false ].
 	aViennaNode size = anotherViennaNode size ifFalse: [ ^ false ].
 	^ (1 to: aViennaNode size) allSatisfy: [ :index |

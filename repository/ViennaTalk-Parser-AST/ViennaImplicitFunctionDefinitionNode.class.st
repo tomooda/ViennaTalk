@@ -78,6 +78,12 @@ ViennaImplicitFunctionDefinitionNode >> definitionOfLocalName: aString [
 		n = aString ifTrue: [ ^ self ] ]
 ]
 
+{ #category : #accessing }
+ViennaImplicitFunctionDefinitionNode >> expression [
+
+	^ nil
+]
+
 { #category : #'accessing-definitions' }
 ViennaImplicitFunctionDefinitionNode >> findResolverForIdentifier: aString [
 

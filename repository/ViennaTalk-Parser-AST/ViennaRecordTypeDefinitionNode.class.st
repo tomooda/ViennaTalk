@@ -160,3 +160,9 @@ ViennaRecordTypeDefinitionNode >> shortName [
 
 	^ self identifier
 ]
+
+{ #category : #accessing }
+ViennaRecordTypeDefinitionNode >> type [
+
+	^ nil
+]

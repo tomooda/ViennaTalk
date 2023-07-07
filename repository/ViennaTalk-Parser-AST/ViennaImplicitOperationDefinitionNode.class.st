@@ -268,6 +268,12 @@ ViennaImplicitOperationDefinitionNode >> shortName [
 ]
 
 { #category : #accessing }
+ViennaImplicitOperationDefinitionNode >> statement [
+
+	^ nil
+]
+
+{ #category : #accessing }
 ViennaImplicitOperationDefinitionNode >> type [
 
 	^ (ViennaOperationTypeNode

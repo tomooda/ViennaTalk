@@ -2,92 +2,54 @@ Class {
 	#name : #ViennaSplitBlockStatement,
 	#superclass : #ViennaRefactoring,
 	#instVars : [
-		'blockNode',
+		'definitionNode',
 		'newHeadStatementIndex'
 	],
 	#category : #'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #accessing }
-ViennaSplitBlockStatement >> blockNode [
-	^ blockNode ifNil: [ blockNode := self findBlockNode ]
-]
-
-{ #category : #accessing }
-ViennaSplitBlockStatement >> blockNode: aViennaNode [
-	blockNode := aViennaNode
-]
-
 { #category : #operations }
 ViennaSplitBlockStatement >> check [
 
-	self blockNode ifNil: [ ^ false ].
+	self definitionNode ifNil: [ ^ false ].
 	self newHeadStatementIndex ifNil: [ ^ false ].
-	self blockNode do: [ :dclStatement |
-		dclStatement isViennaDclStatementNode ifTrue: [
-			dclStatement do: [ :assignmentDefinition |
-				assignmentDefinition isViennaAssignmentDefinitionNode ifTrue: [
-					| varName |
-					varName := assignmentDefinition identifier.
-					(((self newHeadStatementIndex to: self blockNode size)
-						  anySatisfy: [ :index |
-							  self
-								  hasFreeOccurrencesOf: varName
-								  in: (self blockNode at: index) ]) and: [
-						 assignmentDefinition expression notNil or: [
-							 (1 to: self newHeadStatementIndex - 1) anySatisfy: [ :index |
-								 self
-									 hasFreeOccurrencesOf: varName
-									 in: (self blockNode at: index) ] ] ]) ifTrue: [ ^ false ] ] ] ] ].
+	self newHeadStatementIndex = 1 ifTrue: [ ^ false ].
+	(self newHeadStatementIndex = 2 and: [
+		 self definitionNode dclStatement notNil ]) ifTrue: [ ^ false ].
 	^ true
+]
+
+{ #category : #accessing }
+ViennaSplitBlockStatement >> definitionNode [
+
+	^ definitionNode ifNil: [ definitionNode := self findDefinitionNode ]
 ]
 
 { #category : #operations }
 ViennaSplitBlockStatement >> execute [
 
-	| dummy newBlockStatement |
-	dummy := self replaceNode: self blockNode with: ViennaDummyNode empty.
-	newBlockStatement := ViennaBlockStatementNode withAll:
-		                     (Array streamContents: [ :statementStream |
-			                      (Array streamContents: [ :assignmentStream |
-				                       self blockNode do: [ :dclStatement |
-					                       dclStatement isViennaDclStatementNode
-						                       ifTrue: [
-							                       dclStatement do: [ :assignmentDefinition |
-								                       assignmentDefinition
-									                       isViennaAssignmentDefinitionNode
-									                       ifTrue: [
-										                       | varName |
-										                       varName := assignmentDefinition
-											                                  identifier.
-										                       ((self newHeadStatementIndex to:
-										                         self blockNode size) anySatisfy: [
-											                        :index |
-											                        self
-												                        hasFreeOccurrencesOf: varName
-												                        in: (self blockNode at: index) ])
-											                       ifTrue: [
-											                       assignmentStream nextPut:
-												                       assignmentDefinition ] ] ] ] ] ])
-				                      ifNotEmpty: [ :assignments |
-					                      statementStream nextPut:
-						                      (ViennaDclStatementNode withAll:
-							                       assignments) ].
-			                      self newHeadStatementIndex to:
-			                      self blockNode size do: [ :index |
-			                      statementStream nextPut:
-				                      (self blockNode at: index) ] ]).
-	self blockNode removeAfterIndex: self newHeadStatementIndex.
+	| dclStatement newBlockStatement1 newBlockStatement2 |
+	dclStatement := self definitionNode dclStatement.
+	newBlockStatement1 := ViennaBlockStatementNode withAll:
+		                      (((dclStatement ifNil: [ 1 ] ifNotNil: [ 2 ])
+		                        to: self newHeadStatementIndex - 1)
+			                       collect: [ :index |
+			                       (self definitionNode at: index) copyFragment ]).
+	newBlockStatement2 := ViennaBlockStatementNode withAll:
+		                      ((self newHeadStatementIndex to:
+		                        self definitionNode size) collect: [ :index |
+			                       (self definitionNode at: index) copyFragment ]).
 	^ self
-		  replaceNode: dummy
-		  with:
-		  (ViennaBlockStatementNode
-			   with: self blockNode
-			   with: newBlockStatement)
+		  replaceNode: self definitionNode
+		  with: (ViennaBlockStatementNode withAll:
+				   (dclStatement ifNil: [ {  } ] ifNotNil: [ { dclStatement } ])
+				   , {
+						   newBlockStatement1.
+						   newBlockStatement2 })
 ]
 
 { #category : #accessing }
-ViennaSplitBlockStatement >> findBlockNode [
+ViennaSplitBlockStatement >> findDefinitionNode [
 
 	ast ifNil: [ ^ nil ].
 	^ ast detectParent: #isViennaBlockStatementNode ifNone: [ nil ]
@@ -95,30 +57,23 @@ ViennaSplitBlockStatement >> findBlockNode [
 
 { #category : #accessing }
 ViennaSplitBlockStatement >> findNewHeadStatementIndex [
-	1 to: (self blockNode ifNil: [ ^ nil ]) size do: [ :index | 
-		(ast includesParent: (self blockNode at: index))
-			ifTrue: [ ^ index ] ].
+
+	1 to: (self definitionNode ifNil: [ ^ nil ]) size do: [ :index |
+		(ast includesParent: (self definitionNode at: index)) ifTrue: [
+			^ index ] ].
 	^ nil
 ]
 
 { #category : #accessing }
 ViennaSplitBlockStatement >> name [
-	^ 'Split block before '
-		,
-			(self
-				shortDescription: (self blockNode at: self newHeadStatementIndex) source)
-				asText allBold
+
+	^ 'Split block'
 ]
 
 { #category : #accessing }
 ViennaSplitBlockStatement >> newHeadStatementIndex [
 	^ newHeadStatementIndex
 		ifNil: [ newHeadStatementIndex := self findNewHeadStatementIndex ]
-]
-
-{ #category : #accessing }
-ViennaSplitBlockStatement >> newHeadStatementIndex: anInteger [
-	newHeadStatementIndex := anInteger
 ]
 
 { #category : #accessing }

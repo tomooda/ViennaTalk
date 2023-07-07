@@ -119,6 +119,12 @@ ViennaAccessTypeDefinitionNode >> shortName [
 ]
 
 { #category : #accessing }
+ViennaAccessTypeDefinitionNode >> type [
+
+	^ self typeDefinition type
+]
+
+{ #category : #accessing }
 ViennaAccessTypeDefinitionNode >> typeDefinition [
 
 	^ self at: 2
