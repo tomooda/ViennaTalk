@@ -121,7 +121,7 @@ ViennaAccessFunctionDefinitionNode >> label [
 ]
 
 { #category : #'accessing-definitions' }
-ViennaAccessFunctionDefinitionNode >> loocalResolve [
+ViennaAccessFunctionDefinitionNode >> localResolve [
 
 	^ self functionDefinition localResolve
 ]

@@ -23,6 +23,15 @@ ViennaWidenLet >> acceptsNode: aViennaNode [
 	^ self subclassResponsibility
 ]
 
+{ #category : #operations }
+ViennaWidenLet >> check [
+
+	ast ifNil: [ ^ false ].
+	(self acceptsNode: ast) ifFalse: [ ^ false ].
+	self definitionNode ifNil: [ ^ false ].
+	^ true
+]
+
 { #category : #accessing }
 ViennaWidenLet >> definitionNode [
 	^ definitionNode ifNil: [ definitionNode := self findDefinitionNode ]

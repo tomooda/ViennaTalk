@@ -15,15 +15,6 @@ ViennaWidenLetStatement >> acceptsNode: aViennaNode [
 	^ aViennaNode isViennaLetStatementNode
 ]
 
-{ #category : #operations }
-ViennaWidenLetStatement >> check [
-
-	ast ifNil: [ ^ false ].
-	ast isViennaLetStatementNode ifFalse: [ ^ false ].
-	self definitionNode ifNil: [ ^ false ].
-	^ true
-]
-
 { #category : #accessing }
 ViennaWidenLetStatement >> sortingOrder [
 	^ 3.61
