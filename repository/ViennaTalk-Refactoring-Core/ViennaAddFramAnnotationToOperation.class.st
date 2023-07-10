@@ -48,7 +48,7 @@ ViennaAddFramAnnotationToOperation >> findNewName [
 { #category : #accessing }
 ViennaAddFramAnnotationToOperation >> name [
 
-	^ 'Add FRAM annotation to ', ast name
+	^ 'Add FRAM annotation to ', ast identifier
 ]
 
 { #category : #accessing }
