@@ -6,22 +6,42 @@ Class {
 }
 
 { #category : #'instance creation' }
-ViennaValueDefinitionNode class >> pattern: aViennaPatternNode type: aViennaTypeNode expression: aViennaExpressionNode [
+ViennaValueDefinitionNode class >> access: aViennaAccessNode pattern: aViennaPatternNode type: aViennaTypeNode expression: aViennaExpressionNode [
 
-	^ (self new: 3)
+	^ (self new: 4)
+		  access: aViennaAccessNode;
 		  pattern: aViennaPatternNode;
 		  type: aViennaTypeNode;
 		  expression: aViennaExpressionNode;
 		  yourself
 ]
 
+{ #category : #'instance creation' }
+ViennaValueDefinitionNode class >> pattern: aViennaPatternNode type: aViennaTypeNode expression: aViennaExpressionNode [
+
+	^ self
+		  access: ViennaAccessNode empty
+		  pattern: aViennaPatternNode
+		  type: aViennaTypeNode
+		  expression: aViennaExpressionNode
+]
+
+{ #category : #accessing }
+ViennaValueDefinitionNode >> access [
+
+	^ self at: 1
+]
+
+{ #category : #accessing }
+ViennaValueDefinitionNode >> access: aViennaAccessNode [
+
+	self at: 1 put: aViennaAccessNode
+]
+
 { #category : #'accessing-definitions' }
 ViennaValueDefinitionNode >> asAccessDefinition [
 
-	^ parent ifNil: [
-		  ViennaAccessValueDefinitionNode
-			  access: ViennaAccessNode empty
-			  valueDefinition: self ]
+	^ self
 ]
 
 { #category : #'accessing-definitions' }
@@ -61,19 +81,21 @@ ViennaValueDefinitionNode >> boundIdentifiersDo: aBlock [
 { #category : #accessing }
 ViennaValueDefinitionNode >> expression [
 
-	^ self at: 3
+	^ self at: 4
 ]
 
 { #category : #accessing }
 ViennaValueDefinitionNode >> expression: aViennaExpressionNode [
 
-	self at: 3 put: aViennaExpressionNode
+	self at: 4 put: aViennaExpressionNode
 ]
 
 { #category : #'pretty printing' }
 ViennaValueDefinitionNode >> formatWith: aViennaAbstractFormatter [
 
-	| pattern type expression |
+	| access pattern type expression |
+	access := (aViennaAbstractFormatter format: self access) trim
+		          ifNotEmpty: [ :string | string , ' ' ].
 	pattern := aViennaAbstractFormatter format: self pattern.
 	type := self type
 		        ifNil: [ '' ]
@@ -81,7 +103,7 @@ ViennaValueDefinitionNode >> formatWith: aViennaAbstractFormatter [
 		        ' : ' , (aViennaAbstractFormatter format: node) ].
 	expression := aViennaAbstractFormatter format: self expression.
 	^ aViennaAbstractFormatter
-		  indentString: pattern , type , ' ='
+		  indentString: access , pattern , type , ' ='
 		  insertCrIfNeeded: expression
 ]
 
@@ -115,6 +137,12 @@ ViennaValueDefinitionNode >> isValueDefinition [
 ]
 
 { #category : #testing }
+ViennaValueDefinitionNode >> isViennaAccessValueDefinitionNode [
+
+	^ true
+]
+
+{ #category : #testing }
 ViennaValueDefinitionNode >> isViennaExportableTopLevelDefinitionNode [
 
 	^ true
@@ -141,13 +169,13 @@ ViennaValueDefinitionNode >> localResolve [
 { #category : #accessing }
 ViennaValueDefinitionNode >> pattern [
 
-	^ self at: 1
+	^ self at: 2
 ]
 
 { #category : #accessing }
 ViennaValueDefinitionNode >> pattern: aViennaPatternNode [
 
-	self at: 1 put: aViennaPatternNode
+	self at: 2 put: aViennaPatternNode
 ]
 
 { #category : #'accessing-definitions' }
@@ -167,11 +195,11 @@ ViennaValueDefinitionNode >> respondsTo: aSymbol [
 { #category : #accessing }
 ViennaValueDefinitionNode >> type [
 
-	^ self at: 2
+	^ self at: 3
 ]
 
 { #category : #accessing }
 ViennaValueDefinitionNode >> type: aViennaTypeNode [
 
-	self at: 2 put: aViennaTypeNode
+	self at: 3 put: aViennaTypeNode
 ]

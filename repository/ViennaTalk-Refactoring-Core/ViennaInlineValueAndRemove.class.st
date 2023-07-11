@@ -9,8 +9,6 @@ ViennaInlineValueAndRemove >> check [
 
 	| moduleIdentifier identifier |
 	ast ifNil: [ ^ false ].
-	ast isViennaAccessValueDefinitionNode ifTrue: [
-		ast := ast valueDefinition ].
 	ast isViennaValueDefinitionNode ifFalse: [ ^ false ].
 	ast pattern isViennaPatternIdentifierNode ifFalse: [ ^ false ].
 	moduleIdentifier := ast module identifier.
@@ -32,21 +30,21 @@ ViennaInlineValueAndRemove >> execute [
 	valueBody := ast expression.
 	ast module
 		allDescendantsSuchThat: [ :node |
-			(node isViennaLocalNameNode: valueName) and: [
-				node resolve isViennaAccessValueDefinitionNode ] ]
+			(node isViennaLocalNameNode: valueName) and: [ node resolve == ast ] ]
 		do: [ :node | self replaceNode: node with: valueBody copyFragment ].
-	(ast parent ifNotNil: #parent) ifNotNil: [ :valuesSection |
+	ast parent ifNotNil: [ :valuesSection |
 		valuesSection isViennaValueDefinitionsNode ifTrue: [
-			valuesSection remove: ast parent.
+			valuesSection remove: ast.
 			valuesSection removeIfEmpty ] ].
 	^ nil
 ]
 
 { #category : #accessing }
 ViennaInlineValueAndRemove >> name [
+
 	^ 'Inline value definition of ' asText
-		, (self shortDescription: ast first source) asText allBold
-		, ' and Remove' asText
+	  , (self shortDescription: ast pattern source) asText allBold
+	  , ' and Remove' asText
 ]
 
 { #category : #accessing }

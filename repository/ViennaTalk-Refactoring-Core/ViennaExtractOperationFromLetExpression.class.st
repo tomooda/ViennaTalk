@@ -11,7 +11,8 @@ Class {
 ViennaExtractOperationFromLetExpression >> arguments [
 
 	^ ViennaExpressionListNode withAll:
-		  (ast first collect: [ :localDef | localDef first third ])
+		  (ast localDefinitionList collect: [ :localDef |
+			   localDef valueDefinitionOrFunctionDefinition expression ])
 		  , (freeIdentifiers collect: [ :identifier |
 				   ViennaLocalNameNode identifier: identifier ])
 ]
@@ -37,12 +38,13 @@ ViennaExtractOperationFromLetExpression >> execute [
 
 	| moduleBody operationDefinitions explicitOperationDefinition accessOperationDefinition |
 	self newName ifNil: [ ^ self ].
-	moduleBody := ast module third.
+	moduleBody := ast module moduleBody.
 	operationDefinitions := (moduleBody
 		                         detect: [ :definitionBlock |
 			                         definitionBlock isViennaNode and: [
-				                         definitionBlock first isViennaNode and: [
-					                         definitionBlock first
+				                         definitionBlock definition isViennaNode
+					                         and: [
+					                         definitionBlock definition
 						                         isViennaOperationDefinitionsNode ] ] ]
 		                         ifNone: [ nil ]) ifNotNil: #first.
 	operationDefinitions ifNil: [
@@ -112,7 +114,8 @@ ViennaExtractOperationFromLetExpression >> operationBody [
 ViennaExtractOperationFromLetExpression >> operationParametersList [
 
 	^ ViennaParametersNode withAll:
-		  (ast first collect: [ :localDef | localDef first first ])
+		  (ast localDefinitionList collect: [ :localDef |
+			   localDef valueDefinitionOrFunctionDefinition pattern ])
 		  , (freeIdentifiers collect: [ :identifier |
 				   ViennaPatternIdentifierNode identifier: identifier ])
 ]

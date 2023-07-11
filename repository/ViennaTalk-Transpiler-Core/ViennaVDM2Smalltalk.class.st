@@ -3394,15 +3394,15 @@ ViennaVDM2Smalltalk >> unionType: aViennaNode env: aDictionary [
 ViennaVDM2Smalltalk >> valueDefinition: aViennaNode env: aDictionary [
 
 	| patternNode pattern patternType typeCheck body |
-	patternNode := aViennaNode first.
+	patternNode := aViennaNode pattern.
 	pattern := self generate: patternNode env: aDictionary.
-	patternType := aViennaNode second ifNotNil: [ :typeNode |
+	patternType := aViennaNode type ifNotNil: [ :typeNode |
 		               self generate: typeNode env: aDictionary ].
 	typeCheck := runtimeTypeCheck = true and: [ patternType notNil ].
-	body := self generate: aViennaNode third env: aDictionary.
+	body := self generate: aViennaNode expression env: aDictionary.
 	^ patternNode isViennaPatternIdentifierNode
 		  ifTrue: [
-			  patternNode first
+			  patternNode identifier
 				  ifNotNil: [
 					  self stringStreamContents: [ :stream |
 						  stream

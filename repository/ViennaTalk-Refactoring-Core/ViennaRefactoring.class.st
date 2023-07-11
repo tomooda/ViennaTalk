@@ -175,94 +175,92 @@ ViennaRefactoring >> bindingOf: aString in: aViennaNode do: aBlock [
 
 { #category : #'visiting-bindings' }
 ViennaRefactoring >> bindingOf: aString inAssignmentDefinition: aViennaNode do: aBlock [
-	aViennaNode first = aString
-		ifTrue: [ aBlock value: aViennaNode ].
-	aViennaNode
-		do: [ :node | self bindingOf: aString in: node do: aBlock ]
+
+	aViennaNode identifier = aString ifTrue: [ aBlock value: aViennaNode ].
+	aViennaNode do: [ :node |
+		self bindingOf: aString in: node do: aBlock ]
 ]
 
 { #category : #'visiting-bindings' }
 ViennaRefactoring >> bindingOf: aString inError: aViennaNode do: aBlock [
-	aViennaNode first = aString
-		ifTrue: [ aBlock value: aViennaNode ].
-	aViennaNode
-		do: [ :node | self bindingOf: aString in: node do: aBlock ]
+
+	aViennaNode identifier = aString ifTrue: [ aBlock value: aViennaNode ].
+	aViennaNode do: [ :node |
+		self bindingOf: aString in: node do: aBlock ]
 ]
 
 { #category : #'visiting-bindings' }
 ViennaRefactoring >> bindingOf: aString inExplicitFunctionDefinition: aViennaNode do: aBlock [
-	aViennaNode first = aString
-		ifTrue: [ aBlock value: aViennaNode ].
-	aViennaNode
-		do: [ :node | self bindingOf: aString in: node do: aBlock ]
+
+	aViennaNode identifier = aString ifTrue: [ aBlock value: aViennaNode ].
+	aViennaNode do: [ :node |
+		self bindingOf: aString in: node do: aBlock ]
 ]
 
 { #category : #'visiting-bindings' }
 ViennaRefactoring >> bindingOf: aString inExplicitOperationDefinition: aViennaNode do: aBlock [
-	aViennaNode first = aString
-		ifTrue: [ aBlock value: aViennaNode ].
-	aViennaNode
-		do: [ :node | self bindingOf: aString in: node do: aBlock ]
+
+	aViennaNode identifier = aString ifTrue: [ aBlock value: aViennaNode ].
+	aViennaNode do: [ :node |
+		self bindingOf: aString in: node do: aBlock ]
 ]
 
 { #category : #'visiting-bindings' }
 ViennaRefactoring >> bindingOf: aString inImplicitFunctionDefinition: aViennaNode do: aBlock [
-	aViennaNode first = aString
-		ifTrue: [ aBlock value: aViennaNode ].
-	aViennaNode
-		do: [ :node | self bindingOf: aString in: node do: aBlock ]
+
+	aViennaNode identifier = aString ifTrue: [ aBlock value: aViennaNode ].
+	aViennaNode do: [ :node |
+		self bindingOf: aString in: node do: aBlock ]
 ]
 
 { #category : #'visiting-bindings' }
 ViennaRefactoring >> bindingOf: aString inImplicitOperationDefinition: aViennaNode do: aBlock [
-	aViennaNode first = aString
-		ifTrue: [ aBlock value: aViennaNode ].
-	aViennaNode
-		do: [ :node | self bindingOf: aString in: node do: aBlock ]
+
+	aViennaNode identifier = aString ifTrue: [ aBlock value: aViennaNode ].
+	aViennaNode do: [ :node |
+		self bindingOf: aString in: node do: aBlock ]
 ]
 
 { #category : #'visiting-bindings' }
 ViennaRefactoring >> bindingOf: aString inIndexForLoop: aViennaNode do: aBlock [
-	aViennaNode first = aString
-		ifTrue: [ aBlock value: aViennaNode ].
-	aViennaNode
-		do: [ :node | self bindingOf: aString in: node do: aBlock ]
+
+	aViennaNode identifier = aString ifTrue: [ aBlock value: aViennaNode ].
+	aViennaNode do: [ :node |
+		self bindingOf: aString in: node do: aBlock ]
 ]
 
 { #category : #'visiting-bindings' }
 ViennaRefactoring >> bindingOf: aString inPatternIdentifier: aViennaNode do: aBlock [
-	aViennaNode first = aString
-		ifTrue: [ aBlock value: aViennaNode ].
-	aViennaNode
-		do: [ :node | self bindingOf: aString in: node do: aBlock ]
+
+	aViennaNode identifier = aString ifTrue: [ aBlock value: aViennaNode ].
+	aViennaNode do: [ :node |
+		self bindingOf: aString in: node do: aBlock ]
 ]
 
 { #category : #'visiting-bindings' }
 ViennaRefactoring >> bindingOf: aString inRecordTypeDefinition: aViennaNode do: aBlock [
-	aViennaNode first = aString
-		ifTrue: [ aBlock value: aViennaNode ].
-	aViennaNode
-		do: [ :node | self bindingOf: aString in: node do: aBlock ]
+
+	aViennaNode identifier = aString ifTrue: [ aBlock value: aViennaNode ].
+	aViennaNode do: [ :node |
+		self bindingOf: aString in: node do: aBlock ]
 ]
 
 { #category : #'visiting-bindings' }
 ViennaRefactoring >> bindingOf: aString inStateDefinition: aViennaNode do: aBlock [
-	aViennaNode first = aString
-		ifTrue: [ aBlock value: aViennaNode ].
-	aViennaNode second
-		do: [ :field | 
-			field first = aString
-				ifTrue: [ aBlock value: field ] ].
-	aViennaNode
-		do: [ :node | self bindingOf: aString in: node do: aBlock ]
+
+	aViennaNode identifier = aString ifTrue: [ aBlock value: aViennaNode ].
+	aViennaNode second do: [ :field |
+		field first = aString ifTrue: [ aBlock value: field ] ].
+	aViennaNode do: [ :node |
+		self bindingOf: aString in: node do: aBlock ]
 ]
 
 { #category : #'visiting-bindings' }
 ViennaRefactoring >> bindingOf: aString inTypeSynonym: aViennaNode do: aBlock [
-	aViennaNode first = aString
-		ifTrue: [ aBlock value: aViennaNode ].
-	aViennaNode
-		do: [ :node | self bindingOf: aString in: node do: aBlock ]
+
+	aViennaNode identifier = aString ifTrue: [ aBlock value: aViennaNode ].
+	aViennaNode do: [ :node |
+		self bindingOf: aString in: node do: aBlock ]
 ]
 
 { #category : #'visiting-bindings' }
@@ -485,8 +483,11 @@ ViennaRefactoring >> freeOccurrencesOf: aString inBlockStatement: aViennaNode do
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inCasesAlternative: aViennaNode do: aBlock [
 
-	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
-	aViennaNode first
+	self
+		freeOccurrencesOf: aString
+		in: aViennaNode patternList
+		do: aBlock.
+	aViennaNode patternList
 		allDescendantsSuchThat: [ :n |
 		n isViennaPatternIdentifierNode: aString ]
 		do: [ :n | ^ self ].
@@ -512,9 +513,9 @@ ViennaRefactoring >> freeOccurrencesOf: aString inCasesStatementAlternative: aVi
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inDef: aViennaNode do: aBlock [
 
-	aViennaNode first do: [ :equalDefinition |
+	aViennaNode equalDefinitionList do: [ :equalDefinition |
 		self freeOccurrencesOf: aString in: equalDefinition do: aBlock.
-		equalDefinition first
+		equalDefinition pattern
 			allDescendantsSuchThat: [ :n |
 			n isViennaPatternIdentifierNode: aString ]
 			do: [ :n | ^ self ] ].

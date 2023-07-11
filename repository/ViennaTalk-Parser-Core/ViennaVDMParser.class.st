@@ -72,9 +72,8 @@ ViennaVDMParser >> accessValueDefinition [
 
 	self flushAnnotations.
 	^ super accessValueDefinition =>> [ :start :end :array |
-	  (ViennaAccessValueDefinitionNode
-		   access: (ViennaAccessNode withAll: array first)
-		   valueDefinition: array second)
+	  array second
+		  access: (ViennaAccessNode withAll: array first);
 		  start: start end: end;
 		  annotations: self flushAnnotations;
 		  yourself ]

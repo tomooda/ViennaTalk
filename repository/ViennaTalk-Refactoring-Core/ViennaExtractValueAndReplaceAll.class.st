@@ -7,7 +7,7 @@ Class {
 { #category : #operations }
 ViennaExtractValueAndReplaceAll >> execute [
 
-	| moduleBody valueDefinitions valueDefinition accessValueDefinition |
+	| moduleBody valueDefinitions valueDefinition |
 	self newName ifNil: [ ^ self ].
 	moduleBody := ast module third.
 	valueDefinitions := (moduleBody
@@ -32,11 +32,8 @@ ViennaExtractValueAndReplaceAll >> execute [
 			                    self newName)
 		                   type: nil
 		                   expression: ast.
-	accessValueDefinition := ViennaAccessValueDefinitionNode
-		                         access: ViennaAccessNode empty
-		                         valueDefinition: valueDefinition.
-	valueDefinitions add: accessValueDefinition.
-	^ accessValueDefinition
+	valueDefinitions add: valueDefinition.
+	^ valueDefinition
 ]
 
 { #category : #accessing }

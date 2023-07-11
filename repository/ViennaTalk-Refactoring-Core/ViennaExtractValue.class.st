@@ -17,7 +17,7 @@ ViennaExtractValue >> check [
 { #category : #operations }
 ViennaExtractValue >> execute [
 
-	| moduleBody valueDefinitions valueDefinition accessValueDefinition |
+	| moduleBody valueDefinitions valueDefinition |
 	self newName ifNil: [ ^ nil ].
 	moduleBody := ast module third.
 	valueDefinitions := (moduleBody
@@ -40,11 +40,8 @@ ViennaExtractValue >> execute [
 			                    self newName)
 		                   type: nil
 		                   expression: ast.
-	accessValueDefinition := ViennaAccessValueDefinitionNode
-		                         access: ViennaAccessNode empty
-		                         valueDefinition: valueDefinition.
-	valueDefinitions add: accessValueDefinition.
-	^ accessValueDefinition
+	valueDefinitions add: valueDefinition.
+	^ valueDefinition
 ]
 
 { #category : #accessing }

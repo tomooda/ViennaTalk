@@ -275,14 +275,14 @@ ViennaModuleNode >> definitionOfLocalName: aString [
 				state fieldList do: [ :field |
 					field identifier = aString ifTrue: [ ^ field ] ] ]
 			ifFalse: [
-				defBlock first do: [ :def |
+				defBlock definition do: [ :def |
 					| defItem |
 					defItem := def second.
 					(defItem isViennaTypeSynonymNode: aString) ifTrue: [ ^ defItem ].
 					(defItem isViennaRecordTypeDefinitionNode: aString) ifTrue: [
 						^ defItem ].
-					defItem isViennaValueDefinitionNode ifTrue: [
-						defItem pattern
+					def isViennaValueDefinitionNode ifTrue: [
+						def pattern
 							allDescendantsSuchThat: [ :n |
 							n isViennaPatternIdentifierNode: aString ]
 							do: [ :n | ^ n ] ].

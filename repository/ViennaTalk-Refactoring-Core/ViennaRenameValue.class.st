@@ -19,9 +19,7 @@ ViennaRenameValue >> construct [
 ViennaRenameValue >> executeOnDefinition [
 
 	self definitionNode ifNotNil: [ :valueDefinition |
-		valueDefinition valueDefinition pattern boundIdentifiersDo: [
-			:identifier
-			:pattern |
+		valueDefinition pattern boundIdentifiersDo: [ :identifier :pattern |
 			identifier = self oldName ifTrue: [
 				pattern identifier: self newName ] ] ]
 ]
