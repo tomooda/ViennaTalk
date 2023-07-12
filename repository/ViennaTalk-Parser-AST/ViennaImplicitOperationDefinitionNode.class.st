@@ -53,12 +53,6 @@ ViennaImplicitOperationDefinitionNode >> argumentType [
 ]
 
 { #category : #'accessing-definitions' }
-ViennaImplicitOperationDefinitionNode >> asAccessDefinition [
-
-	^ self
-]
-
-{ #category : #'accessing-definitions' }
 ViennaImplicitOperationDefinitionNode >> asExport [
 
 	^ ViennaOperationExportNode

@@ -238,18 +238,6 @@ ViennaExtendedExplicitOperationDefinitionNode >> lookupIdentifier: aString [
 ]
 
 { #category : #accessing }
-ViennaExtendedExplicitOperationDefinitionNode >> operationBody [
-
-	^ self at: 5
-]
-
-{ #category : #accessing }
-ViennaExtendedExplicitOperationDefinitionNode >> operationBody: aViennaOperationBodyNode [
-
-	self at: 5 put: aViennaOperationBodyNode
-]
-
-{ #category : #accessing }
 ViennaExtendedExplicitOperationDefinitionNode >> parameterTypes [
 
 	^ self at: 3

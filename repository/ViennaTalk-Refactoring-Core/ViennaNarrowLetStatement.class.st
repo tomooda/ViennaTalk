@@ -26,8 +26,7 @@ ViennaNarrowLetStatement >> findDefinitionNode [
 
 	| statement |
 	(ast localDefinitionList allSatisfy: [ :localDefinition |
-		 localDefinition valueDefinitionOrFunctionDefinition
-			 isViennaValueDefinitionNode ]) ifFalse: [ ^ nil ].
+		 localDefinition isViennaValueDefinitionNode ]) ifFalse: [ ^ nil ].
 	statement := self ast statement
 		             narrowestStatementWithFreeIdentifiers:
 		             ast localDefinitionList uniqueBoundIdentifiers.

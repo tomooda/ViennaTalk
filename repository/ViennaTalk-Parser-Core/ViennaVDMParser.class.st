@@ -1172,15 +1172,6 @@ ViennaVDMParser >> letStatement [
 ]
 
 { #category : #'parsers-definitions' }
-ViennaVDMParser >> localDefinition [
-
-	^ super localDefinition =>> [ :start :end :def |
-	  (ViennaLocalDefinitionNode valueDefinitionOrFunctionDefinition: def)
-		  start: start end: end;
-		  yourself ]
-]
-
-{ #category : #'parsers-definitions' }
 ViennaVDMParser >> localDefinitionList [
 
 	^ super localDefinitionList =>> [ :start :end :array |

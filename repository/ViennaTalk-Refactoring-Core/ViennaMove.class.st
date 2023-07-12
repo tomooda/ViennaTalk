@@ -37,8 +37,7 @@ ViennaMove >> defineDestination [
 	self ensureExport: newDefinitionNode.
 	(self sourceModule moduleBody hasAnyDescendantsSuchThat: [ :node |
 		 node isViennaLocalNameNode and: [
-			 node resolve == self definitionNode asAccessDefinition ] ])
-		ifTrue: [
+			 node resolve == self definitionNode ] ]) ifTrue: [
 		self ensureImport: newDefinitionNode in: self sourceModule ].
 	self updateName: self sourceModule moduleBody.
 	self updateName: self destinationModule moduleBody
@@ -147,9 +146,7 @@ ViennaMove >> removeExportInSource [
 { #category : #operations }
 ViennaMove >> removeImportInDestination [
 
-	self
-		retractImport: self definitionNode asAccessDefinition
-		in: self destinationModule
+	self retractImport: self definitionNode in: self destinationModule
 ]
 
 { #category : #operations }
@@ -222,12 +219,11 @@ ViennaMove >> sourceModule: aViennaNode [
 { #category : #operations }
 ViennaMove >> updateName: aViennaNode [
 
-	aViennaNode = self definitionNode asAccessDefinition ifTrue: [
-		^ self ].
-	aViennaNode = newDefinitionNode asAccessDefinition ifTrue: [ ^ self ].
+	aViennaNode = self definitionNode ifTrue: [ ^ self ].
+	aViennaNode = newDefinitionNode ifTrue: [ ^ self ].
 	aViennaNode isViennaNameNode ifTrue: [
 		^ aViennaNode resolve ifNotNil: [ :node |
-			  node == self definitionNode asAccessDefinition ifTrue: [
+			  node == self definitionNode ifTrue: [
 				  ^ self replaceNode: aViennaNode with: (self
 						     nameForGlobalName: (aViennaNode asGlobalName copyFragment
 								      moduleIdentifier: self destinationModule identifier;

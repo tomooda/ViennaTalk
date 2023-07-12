@@ -20,11 +20,8 @@ ViennaUseTypeSynonymInAllOccurrences >> findDefinitionNode [
 
 	ast ifNil: [ ^ nil ].
 	^ ast localResolve ifNotNil: [ :def |
-		  | accessDef |
-		  accessDef := def asAccessDefinition.
-		  (accessDef isViennaAccessTypeDefinitionNode and: [
-			   accessDef isViennaTypeSynonymNode and: [ accessDef inv isNil ] ])
-			  ifTrue: [ accessDef ] ]
+		  (def isViennaTypeSynonymNode and: [ def inv isNil ]) ifTrue: [
+			  def ] ]
 ]
 
 { #category : #accessing }

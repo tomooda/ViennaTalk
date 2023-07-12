@@ -9,9 +9,7 @@ ViennaMoveType >> findDefinitionNode [
 
 	ast ifNil: [ ^ nil ].
 	ast resolve ifNotNil: [ :defNode |
-		defNode isViennaTypeSynonymNode ifTrue: [
-			^ defNode asAccessDefinition ].
-		defNode isViennaRecordTypeDefinitionNode ifTrue: [
-			^ defNode asAccessDefinition ] ].
+		defNode isViennaTypeSynonymNode ifTrue: [ ^ defNode ].
+		defNode isViennaRecordTypeDefinitionNode ifTrue: [ ^ defNode ] ].
 	^ nil
 ]

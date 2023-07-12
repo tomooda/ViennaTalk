@@ -12,7 +12,7 @@ ViennaExtractFunctionFromLetExpression >> arguments [
 
 	^ ViennaExpressionListNode withAll:
 		  (ast localDefinitionList collect: [ :localDef |
-			   localDef valueDefinitionOrFunctionDefinition expression ])
+			   localDef expression ])
 		  , (freeIdentifiers collect: [ :identifier |
 				   ViennaLocalNameNode identifier: identifier ])
 ]
@@ -27,10 +27,9 @@ ViennaExtractFunctionFromLetExpression >> check [
 	params := ast localDefinitionList uniqueBoundIdentifiers
 		          asOrderedCollection.
 	ast localDefinitionList do: [ :localDef |
-		localDef valueDefinitionOrFunctionDefinition expression
-			allDescendantsDo: [ :node |
-				(node isViennaLocalNameNode and: [
-					 params includes: node identifier ]) ifTrue: [ ^ false ] ] ].
+		localDef expression allDescendantsDo: [ :node |
+			(node isViennaLocalNameNode and: [
+				 params includes: node identifier ]) ifTrue: [ ^ false ] ] ].
 	^ true
 ]
 
@@ -90,7 +89,7 @@ ViennaExtractFunctionFromLetExpression >> functionParametersList [
 
 	^ ViennaParametersListNode with: (ViennaParametersNode withAll:
 			   (ast localDefinitionList collect: [ :localDef |
-				    localDef valueDefinitionOrFunctionDefinition pattern ])
+				    localDef pattern ])
 			   , (freeIdentifiers collect: [ :identifier |
 					    ViennaPatternIdentifierNode identifier: identifier ]))
 ]

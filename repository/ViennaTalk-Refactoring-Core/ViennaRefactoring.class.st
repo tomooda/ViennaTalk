@@ -79,7 +79,7 @@ ViennaRefactoring >> addFunctionDefinition: aViennaNode in: moduleNode [
 				                               ViennaFunctionDefinitionsNode empty.
 			            moduleBody add: definitionBlock.
 			            definitionBlock ]) ifNotNil: #definition.
-	section add: aViennaNode asAccessDefinition
+	section add: aViennaNode
 ]
 
 { #category : #'visiting-definitions' }
@@ -101,7 +101,7 @@ ViennaRefactoring >> addOperationDefinition: aViennaNode in: moduleNode [
 					                               empty.
 			            moduleBody add: definitionBlock.
 			            definitionBlock ]) ifNotNil: #definition.
-	section add: aViennaNode asAccessDefinition
+	section add: aViennaNode
 ]
 
 { #category : #'visiting-definitions' }
@@ -122,7 +122,7 @@ ViennaRefactoring >> addTypeDefinition: aViennaNode in: moduleNode [
 				                               ViennaTypeDefinitionsNode empty.
 			            moduleBody add: definitionBlock.
 			            definitionBlock ]) ifNotNil: #definition.
-	section add: aViennaNode asAccessDefinition
+	section add: aViennaNode
 ]
 
 { #category : #'visiting-definitions' }
@@ -143,7 +143,7 @@ ViennaRefactoring >> addValueDefinition: aViennaNode in: moduleNode [
 				                               ViennaValueDefinitionsNode empty.
 			            moduleBody add: definitionBlock.
 			            definitionBlock ]) ifNotNil: #definition.
-	section add: aViennaNode asAccessDefinition
+	section add: aViennaNode
 ]
 
 { #category : #accessing }
@@ -1182,9 +1182,7 @@ ViennaRefactoring >> retractImport: aViennaNode in: moduleNode [
 	aViennaNode isViennaGlobalNameNode ifTrue: [ ^ aViennaNode ].
 	(aViennaNode isViennaLocalNameNode and: [
 		 aViennaNode resolve module == aViennaNode module ]) ifTrue: [
-		^ self
-			  retractImport: aViennaNode resolve asAccessDefinition
-			  in: moduleNode ].
+		^ self retractImport: aViennaNode resolve in: moduleNode ].
 	(aViennaNode asImportDefinitionIn: moduleNode) ifNotNil: [ :signature |
 		self retractImportDefinition: signature in: moduleNode ].
 	^ nil

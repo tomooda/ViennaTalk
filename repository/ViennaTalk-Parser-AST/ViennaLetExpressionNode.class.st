@@ -37,9 +37,7 @@ ViennaLetExpressionNode >> body: aViennaExpressionNode [
 { #category : #'accessing-definitions' }
 ViennaLetExpressionNode >> definitionOfLocalName: aString [
 
-	self localDefinitionList do: [ :localDef |
-		| def |
-		def := localDef valueDefinitionOrFunctionDefinition.
+	self localDefinitionList do: [ :def |
 		def isViennaValueDefinitionNode ifTrue: [
 			def pattern
 				allDescendantsSuchThat: [ :n |
@@ -131,8 +129,7 @@ ViennaLetExpressionNode >> localDefinitionList: aViennaLocalDefinitionListNode [
 { #category : #enumerating }
 ViennaLetExpressionNode >> localDefinitionsDo: aBlock [
 
-	self localDefinitionList do: [ :localDef |
-		aBlock value: localDef first ]
+	self localDefinitionList do: aBlock
 ]
 
 { #category : #'accessing-definitions' }
@@ -140,7 +137,7 @@ ViennaLetExpressionNode >> lookupIdentifier: aString [
 
 	self localDefinitionList do: [ :localDefinition |
 		(localDefinition bindsIdentifier: aString) ifTrue: [
-			^ localDefinition valueDefinitionOrFunctionDefinition ] ].
+			^ localDefinition ] ].
 	^ nil
 ]
 

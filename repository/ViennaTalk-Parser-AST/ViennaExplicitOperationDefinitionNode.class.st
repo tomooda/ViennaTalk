@@ -6,20 +6,6 @@ Class {
 }
 
 { #category : #'instance creation' }
-ViennaExplicitOperationDefinitionNode class >> access: aViennaAccessNode identifier: aString type: aViennaTypeNode parameters: aViennaParametersNode operationBody: aViennaOperationBodyNode pre: aViennaExpresssionNode1 post: aViennaExpressionNode2 [
-
-	^ (self new: 8)
-		  access: aViennaAccessNode;
-		  identifier: aString;
-		  type: aViennaTypeNode;
-		  parameters: aViennaParametersNode;
-		  operationBody: aViennaOperationBodyNode;
-		  pre: aViennaExpresssionNode1;
-		  post: aViennaExpressionNode2;
-		  yourself
-]
-
-{ #category : #'instance creation' }
 ViennaExplicitOperationDefinitionNode class >> access: aViennaAccessNode identifier: aString type: aViennaTypeNode parameters: aViennaParametersNode statement: aViennaStatementNode pre: aViennaExpresssionNode1 post: aViennaExpressionNode2 [
 
 	^ (self new: 8)
@@ -31,19 +17,6 @@ ViennaExplicitOperationDefinitionNode class >> access: aViennaAccessNode identif
 		  pre: aViennaExpresssionNode1;
 		  post: aViennaExpressionNode2;
 		  yourself
-]
-
-{ #category : #'instance creation' }
-ViennaExplicitOperationDefinitionNode class >> identifier: aString type: aViennaTypeNode parameters: aViennaParametersNode operationBody: aViennaOperationBodyNode pre: aViennaExpresssionNode1 post: aViennaExpressionNode2 [
-
-	^ self
-		  access: ViennaAccessNode empty
-		  identifier: aString
-		  type: aViennaTypeNode
-		  parameters: aViennaParametersNode
-		  operationBody: aViennaOperationBodyNode
-		  pre: aViennaExpresssionNode1
-		  post: aViennaExpressionNode2
 ]
 
 { #category : #'instance creation' }
@@ -252,18 +225,6 @@ ViennaExplicitOperationDefinitionNode >> lookupIdentifier: aString [
 	self parameters do: [ :parameter |
 		(parameter bindsIdentifier: aString) ifTrue: [ ^ parameter ] ].
 	^ nil
-]
-
-{ #category : #accessing }
-ViennaExplicitOperationDefinitionNode >> operationBody [
-
-	^ self at: 6
-]
-
-{ #category : #accessing }
-ViennaExplicitOperationDefinitionNode >> operationBody: aViennaOperationBodyNode [
-
-	self at: 6 put: aViennaOperationBodyNode
 ]
 
 { #category : #accessing }

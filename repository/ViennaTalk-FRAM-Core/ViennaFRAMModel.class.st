@@ -129,7 +129,7 @@ ViennaFRAMModel >> createOperationDefinitionNode: aString [
 				   argumentType: ViennaUnitTypeNode new
 				   returnType: ViennaUnitTypeNode new)
 		  parameters: ViennaParametersNode empty
-		  operationBody: ViennaIsNotYetSpecifiedNode new
+		  statement: ViennaIsNotYetSpecifiedNode new
 		  pre: nil
 		  post: nil
 ]

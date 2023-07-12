@@ -38,10 +38,7 @@ ViennaUseFunctionInAllOccurrences >> findDefinitionNode [
 
 	ast ifNil: [ ^ nil ].
 	^ ast localResolve ifNotNil: [ :def |
-		  | accessDef |
-		  accessDef := def asAccessDefinition.
-		  (accessDef isViennaAccessFunctionDefinitionNode and: [
-			   accessDef pre isNil ]) ifTrue: [ accessDef ] ]
+		  (def isFunctionDefinition and: [ def pre isNil ]) ifTrue: [ def ] ]
 ]
 
 { #category : #accessing }

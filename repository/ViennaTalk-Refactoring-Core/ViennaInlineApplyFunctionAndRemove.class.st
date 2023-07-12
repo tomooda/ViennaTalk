@@ -74,12 +74,10 @@ ViennaInlineApplyFunctionAndRemove >> execute [
 										           ifFalse: [ nil ] ].
 							   arg := (callerNode argumentExpressionList at: index)
 								          copyFragment.
-							   ViennaLocalDefinitionNode
-								   valueDefinitionOrFunctionDefinition:
-								   (ViennaValueDefinitionNode
-									    pattern: param
-									    type: type
-									    expression: arg) ]))
+							   ViennaValueDefinitionNode
+								   pattern: param
+								   type: type
+								   expression: arg ]))
 				 expression: self definitionNode expression) ].
 	(self definitionNode
 		 detectParent: #isViennaFunctionDefinitionsNode

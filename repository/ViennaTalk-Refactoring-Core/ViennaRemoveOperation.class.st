@@ -30,9 +30,8 @@ ViennaRemoveOperation >> findDefinitionNode [
 
 	ast ifNil: [ ^ nil ].
 	^ ast resolve ifNotNil: [ :node |
-		  (node isViennaExplicitOperationDefinitionNode or: [
-			   node isViennaImplicitOperationDefinitionNode ])
-			  ifTrue: [ node asAccessDefinition ]
+		  node isOperationDefinition
+			  ifTrue: [ node ]
 			  ifFalse: [ nil ] ]
 ]
 

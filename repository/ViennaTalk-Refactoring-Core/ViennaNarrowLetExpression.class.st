@@ -26,8 +26,7 @@ ViennaNarrowLetExpression >> findDefinitionNode [
 
 	| paramNames |
 	(ast localDefinitionList allSatisfy: [ :localDefinition |
-		 localDefinition valueDefinitionOrFunctionDefinition
-			 isViennaValueDefinitionNode ]) ifFalse: [ ^ nil ].
+		 localDefinition isViennaValueDefinitionNode ]) ifFalse: [ ^ nil ].
 	paramNames := ast localDefinitionList uniqueBoundIdentifiers.
 	^ (ast expression select: [ :node |
 		   node isViennaNode and: [
