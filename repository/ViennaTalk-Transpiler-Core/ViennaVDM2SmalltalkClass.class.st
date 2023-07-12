@@ -13,22 +13,22 @@ ViennaVDM2SmalltalkClass >> buildEnv: aViennaNode [
 	| envs |
 	envs := Dictionary new.
 	envs at: 'DEFAULT' put: Dictionary new.
-	aViennaNode first isViennaDefinitionBlockNode
+	aViennaNode isViennaFlatDocumentNode
 		ifTrue: [
 			| env |
 			env := envs at: 'DEFAULT'.
-			aViennaNode do: [ :definitionBlock |
-				definitionBlock definition isViennaStateDefinitionNode ifFalse: [
-					definitionBlock uniqueBoundIdentifiersDo: [ :ident |
+			aViennaNode do: [ :section |
+				section isViennaStateDefinitionNode ifFalse: [
+					section uniqueBoundIdentifiersDo: [ :ident |
 						env at: ident put: 'self ' , ident ] ] ] ]
 		ifFalse: [
 			aViennaNode do: [ :moduleNode |
 				| moduleName |
-				moduleName := moduleNode first.
+				moduleName := moduleNode identifier.
 				envs at: moduleName put: Dictionary new.
-				moduleNode third do: [ :definitionBlock |
-					definitionBlock first isViennaStateDefinitionNode ifFalse: [
-						definitionBlock uniqueBoundIdentifiersDo: [ :ident |
+				moduleNode moduleBody do: [ :section |
+					section isViennaStateDefinitionNode ifFalse: [
+						section uniqueBoundIdentifiersDo: [ :ident |
 							(envs at: moduleName) at: ident put: 'self ' , ident.
 							(envs at: 'DEFAULT')
 								at: moduleName , '`' , ident
@@ -667,17 +667,16 @@ ViennaVDM2SmalltalkClass >> flatDocument: aViennaNode env: aDictionary [
 	env := aDictionary copy.
 	stateVars := #(  ).
 	typeNames := Array new writeStream.
-	aViennaNode do: [ :definitionBlock |
-		definitionBlock definition isViennaStateDefinitionNode ifTrue: [
+	aViennaNode do: [ :section |
+		section isViennaStateDefinitionNode ifTrue: [
 			| stateDefinition |
-			stateDefinition := definitionBlock definition.
+			stateDefinition := section.
 			stateVars := stateDefinition fieldList collect: #identifier.
 			env
 				at: stateDefinition first
 				put: 'self ' , stateDefinition identifier ].
-		definitionBlock definition isViennaTypeDefinitionsNode ifTrue: [
-			typeNames nextPutAll:
-				definitionBlock definition uniqueBoundIdentifiers ] ].
+		section isViennaTypeDefinitionsNode ifTrue: [
+			typeNames nextPutAll: section uniqueBoundIdentifiers ] ].
 	typeNames := typeNames contents.
 	instVars := aViennaNode uniqueBoundIdentifiers copyWithoutAll:
 		            stateVars.
@@ -685,9 +684,9 @@ ViennaVDM2SmalltalkClass >> flatDocument: aViennaNode env: aDictionary [
 		            createDocumentClassWithInstVars: instVars
 		            stateVars: stateVars.
 	classes at: nil put: newClass.
-	aViennaNode do: [ :definitionBlock |
-		definitionBlock definition isViennaStateDefinitionNode ifFalse: [
-			definitionBlock uniqueBoundIdentifiersDo: [ :ident |
+	aViennaNode do: [ :section |
+		section isViennaStateDefinitionNode ifFalse: [
+			section uniqueBoundIdentifiersDo: [ :ident |
 				env at: ident put: 'self ' , ident ] ] ].
 	self
 		defineMethod:
@@ -695,8 +694,7 @@ ViennaVDM2SmalltalkClass >> flatDocument: aViennaNode env: aDictionary [
 		in: newClass
 		protocol: 'initialize-release'
 		node: nil.
-	aViennaNode do: [ :definitionBlock |
-		self definitionBlock: definitionBlock env: env ].
+	aViennaNode do: [ :section | self generate: section env: env ].
 	self
 		defineInitTypeMethodForTypeNames: typeNames
 		in: newClass
@@ -1010,20 +1008,20 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 			                    ifAbsent: [ importModuleName ] ].
 	stateVars := #(  ).
 	typeNames := Array new writeStream.
-	moduleBodyNode do: [ :definitionBlock |
-		definitionBlock definition isViennaStateDefinitionNode
+	moduleBodyNode do: [ :section |
+		section isViennaStateDefinitionNode
 			ifTrue: [
 				| stateDefinition |
-				stateDefinition := definitionBlock definition.
+				stateDefinition := section.
 				stateVars := stateDefinition fieldList collect: #identifier.
 				env
 					at: stateDefinition identifier
 					put: 'self ' , stateDefinition identifier ]
 			ifFalse: [
-				definitionBlock uniqueBoundIdentifiersDo: [ :ident |
+				section uniqueBoundIdentifiersDo: [ :ident |
 					env at: ident put: 'self ' , ident ] ].
-		definitionBlock first isViennaTypeDefinitionsNode ifTrue: [
-			typeNames nextPutAll: definitionBlock first uniqueBoundIdentifiers ] ].
+		section isViennaTypeDefinitionsNode ifTrue: [
+			typeNames nextPutAll: section uniqueBoundIdentifiers ] ].
 	typeNames := typeNames contents.
 	instVars := moduleBodyNode uniqueBoundIdentifiers copyWithoutAll:
 		            stateVars.
@@ -1047,8 +1045,7 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 				node:
 				(interfaceNode first detect: [ :node |
 					 node first = importModuleName ]) ].
-	moduleBodyNode do: [ :definitionBlock |
-		self definitionBlock: definitionBlock env: env ].
+	moduleBodyNode do: [ :section | self generate: section env: env ].
 	self
 		defineInitTypeMethodForTypeNames: typeNames
 		in: newClass

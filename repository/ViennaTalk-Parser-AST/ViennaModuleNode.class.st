@@ -6,6 +6,19 @@ Class {
 }
 
 { #category : #'instance creation' }
+ViennaModuleNode class >> identifier: aString [
+
+	^ self
+		  identifier: aString
+		  interface: (ViennaInterfaceNode
+				   importDefinitionList: nil
+				   exportDefinition:
+					   (ViennaExportDefinitionNode exportModuleSignature:
+						    ViennaExportModuleSignatureAllNode new))
+		  moduleBody: ViennaModuleBodyNode empty
+]
+
+{ #category : #'instance creation' }
 ViennaModuleNode class >> identifier: aString interface: aViennaInterfaceNode moduleBody: aViennaModuleBodyNode [
 
 	^ (self new: 3)
@@ -233,6 +246,16 @@ end ViennaDOM'
 ]
 
 { #category : #'accessing-definitions' }
+ViennaModuleNode >> addFunctionDefinition: aViennaNode [
+
+	(self moduleBody detect: #isViennaFunctionDefinitionsNode ifNone: [
+		 | section |
+		 section := ViennaFunctionDefinitionsNode empty.
+		 self moduleBody add: section.
+		 section ]) add: aViennaNode
+]
+
+{ #category : #'accessing-definitions' }
 ViennaModuleNode >> addImportDefinition: aViennaImportDefinitionNode [
 
 	| interface |
@@ -242,6 +265,36 @@ ViennaModuleNode >> addImportDefinition: aViennaImportDefinitionNode [
 		 node := ViennaImportDefinitionListNode empty.
 		 interface importDefinitionList: node.
 		 node ]) add: aViennaImportDefinitionNode
+]
+
+{ #category : #'accessing-definitions' }
+ViennaModuleNode >> addOperationDefinition: aViennaNode [
+
+	(self moduleBody detect: #isViennaOperationDefinitionsNode ifNone: [
+		 | section |
+		 section := ViennaOperationDefinitionsNode empty.
+		 self moduleBody add: section.
+		 section ]) add: aViennaNode
+]
+
+{ #category : #'accessing-definitions' }
+ViennaModuleNode >> addTypeDefinition: aViennaNode [
+
+	(self moduleBody detect: #isViennaTypeDefinitionsNode ifNone: [
+		 | section |
+		 section := ViennaTypeDefinitionsNode empty.
+		 self moduleBody add: section.
+		 section ]) add: aViennaNode
+]
+
+{ #category : #'accessing-definitions' }
+ViennaModuleNode >> addValueDefinition: aViennaNode [
+
+	(self moduleBody detect: #isViennaValueDefinitionsNode ifNone: [
+		 | section |
+		 section := ViennaValueDefinitionsNode empty.
+		 self moduleBody add: section.
+		 section ]) add: aViennaNode
 ]
 
 { #category : #private }
@@ -266,17 +319,14 @@ ViennaModuleNode >> deepFindResolverForIdentifier: aString [
 { #category : #'accessing-definitions' }
 ViennaModuleNode >> definitionOfLocalName: aString [
 
-	self moduleBody do: [ :defBlock |
-		defBlock definition isViennaStateDefinitionNode
+	self sectionsDo: [ :section |
+		section isViennaStateDefinitionNode
 			ifTrue: [
-				| state |
-				state := defBlock definition.
-				state identifier = aString ifTrue: [ ^ defBlock ].
-				state fieldList do: [ :field |
+				section identifier = aString ifTrue: [ ^ section ].
+				section fieldList do: [ :field |
 					field identifier = aString ifTrue: [ ^ field ] ] ]
 			ifFalse: [
-				defBlock definition do: [ :def |
-					| defItem |
+				section do: [ :def |
 					(def isViennaTypeSynonymNode: aString) ifTrue: [ ^ def ].
 					(def isViennaRecordTypeDefinitionNode: aString) ifTrue: [ ^ def ].
 					def isViennaValueDefinitionNode ifTrue: [
@@ -318,9 +368,9 @@ ViennaModuleNode >> findResolverForIdentifier: aString [
 ViennaModuleNode >> formatWith: aViennaAbstractFormatter [
 
 	| identifier interface moduleBody |
-	identifier := aViennaAbstractFormatter format: self first.
-	interface := aViennaAbstractFormatter format: self second.
-	moduleBody := self third
+	identifier := aViennaAbstractFormatter format: self identifier.
+	interface := aViennaAbstractFormatter format: self interface.
+	moduleBody := self moduleBody
 		              ifNil: [ '' ]
 		              ifNotNil: [ :node |
 		              String cr , (aViennaAbstractFormatter format: node) ].
@@ -484,6 +534,18 @@ ViennaModuleNode >> moduleBody: aViennaModuleBodyNode [
 	self at: 3 put: aViennaModuleBodyNode
 ]
 
+{ #category : #accessing }
+ViennaModuleNode >> moduleOrFlatDocument [
+
+	^ self
+]
+
+{ #category : #accessing }
+ViennaModuleNode >> sections [
+
+	^ self moduleBody asArray
+]
+
 { #category : #enumerating }
 ViennaModuleNode >> sectionsDo: aBlock [
 
@@ -494,6 +556,24 @@ ViennaModuleNode >> sectionsDo: aBlock [
 ViennaModuleNode >> shortName [
 
 	^ self identifier
+]
+
+{ #category : #'accessing-definitions' }
+ViennaModuleNode >> stateDefinition [
+
+	self sectionsDo: [ :section |
+		section isViennaStateDefinitionNode ifTrue: [ ^ section ] ].
+	^ nil
+]
+
+{ #category : #'accessing-definitions' }
+ViennaModuleNode >> stateDefinitionIfAbsentPut: errorBlock [
+
+	^ self stateDefinition ifNil: [
+		  | def |
+		  def := errorBlock value.
+		  self moduleBody add: def.
+		  def ]
 ]
 
 { #category : #enumerating }

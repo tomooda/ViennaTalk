@@ -971,16 +971,15 @@ ViennaRefactoringBrowser >> load: aString [
 		UIManager default alert: 'Failed to parse the source.'.
 		^ nil ].
 	ast isViennaDocumentNode ifFalse: [ ^ nil ].
-	ast first ifNotNil: [ :first |
-		first isViennaDefinitionBlockNode ifTrue: [
-			ast := ViennaModularDocumentNode with: (ViennaModuleNode
-					        identifier: 'DEFAULT'
-					        interface: (ViennaInterfaceNode
-							         importDefinitionList: nil
-							         exportDefinition:
-								         (ViennaExportDefinitionNode exportModuleSignature:
-									          ViennaExportModuleSignatureAllNode new))
-					        moduleBody: (ViennaModuleBodyNode withAll: ast asArray)) ] ].
+	ast isViennaFlatDocumnetNode ifTrue: [
+		ast := ViennaModularDocumentNode with: (ViennaModuleNode
+				        identifier: 'DEFAULT'
+				        interface: (ViennaInterfaceNode
+						         importDefinitionList: nil
+						         exportDefinition:
+							         (ViennaExportDefinitionNode exportModuleSignature:
+								          ViennaExportModuleSignatureAllNode new))
+				        moduleBody: (ViennaModuleBodyNode withAll: ast asArray)) ].
 	historyList
 		resetSelection;
 		items: { {

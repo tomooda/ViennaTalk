@@ -17,54 +17,25 @@ ViennaExtractStateVariable >> check [
 { #category : #operations }
 ViennaExtractStateVariable >> execute [
 
-	| moduleBody stateDefinition fieldList initializer |
+	| module stateDefinition |
 	self newName ifNil: [ ^ nil ].
-	moduleBody := ast module third.
-	stateDefinition := (moduleBody
-		                    detect: [ :definitionBlock |
-			                    definitionBlock isViennaNode and: [
-				                    definitionBlock definition isViennaNode and: [
-					                    definitionBlock definition
-						                    isViennaStateDefinitionNode ] ] ]
-		                    ifNone: [ nil ]) ifNotNil: #definition.
+	module := ast module.
+	stateDefinition := module stateDefinitionIfAbsentPut: [
+		                   ViennaStateDefinitionNode empty ].
 	self
 		replaceNode: ast
 		with: (ViennaLocalNameNode identifier: self newName).
-	stateDefinition ifNil: [
-		stateDefinition := ViennaStateDefinitionNode
-			                   identifier: 'State'
-			                   fieldList: ViennaFieldListNode empty
-			                   inv: nil
-			                   init:
-				                   (ViennaInitialisationNode
-					                    invariantInitialFunction:
-						                    (ViennaInvariantInitialFunctionNode
-							                     pattern:
-							                     (ViennaPatternIdentifierNode identifier:
-								                      's')
-							                     expression: (ViennaEqualNode
-									                      expression:
-									                      (ViennaLocalNameNode identifier: 's')
-									                      expression:
-										                      (ViennaRecordConstructorNode
-											                       name:
-											                       (ViennaLocalNameNode identifier:
-												                        'State')
-											                       expressionList:
-											                       ViennaExpressionListNode empty)))).
-		moduleBody add:
-			(ViennaDefinitionBlockNode definition: stateDefinition) ].
-	fieldList := stateDefinition second.
-	fieldList add: (ViennaFieldNode
+	stateDefinition fieldList add: (ViennaFieldNode
 			 identifier: self newName
 			 equalityAbstraction: false
 			 type: ViennaBasicTypeNode any).
-	initializer := stateDefinition fourth first second second second.
-	initializer add: ast.
-	stateDefinition third ifNotNil: [ :invariant |
-		invariant first first isViennaRecordPatternNode ifTrue: [
-			invariant first first second add:
-				ViennaPatternIdentifierNode anonymous ] ].
+	stateDefinition init invariantInitialFunction expression expression2
+		expressionList add: ast.
+	stateDefinition inv ifNotNil: [ :invariant |
+		invariant invariantInitialFunction pattern isViennaRecordPatternNode
+			ifTrue: [
+				invariant invariantInitialFunction pattern patternList add:
+					ViennaPatternIdentifierNode anonymous ] ].
 	^ stateDefinition
 ]
 

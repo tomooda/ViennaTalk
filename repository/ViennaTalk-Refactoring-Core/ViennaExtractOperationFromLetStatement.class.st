@@ -37,20 +37,9 @@ ViennaExtractOperationFromLetStatement >> check [
 { #category : #operations }
 ViennaExtractOperationFromLetStatement >> execute [
 
-	| moduleBody operationDefinitions explicitOperationDefinition |
+	| module explicitOperationDefinition |
 	self newName ifNil: [ ^ self ].
-	moduleBody := ast module third.
-	operationDefinitions := (moduleBody
-		                         detect: [ :definitionBlock |
-			                         definitionBlock isViennaNode and: [
-				                         definitionBlock first isViennaNode and: [
-					                         definitionBlock first
-						                         isViennaOperationDefinitionsNode ] ] ]
-		                         ifNone: [ nil ]) ifNotNil: #first.
-	operationDefinitions ifNil: [
-		operationDefinitions := ViennaOperationDefinitionsNode empty.
-		moduleBody add:
-			(ViennaDefinitionBlockNode definition: operationDefinitions) ].
+	module := ast module.
 	freeIdentifiers := self ast uniqueFreeIdentifiers reject: [
 		                   :identifier |
 		                   (self ast resolveIdentifier: identifier)
@@ -67,7 +56,7 @@ ViennaExtractOperationFromLetStatement >> execute [
 		                               statement: self statement
 		                               pre: nil
 		                               post: nil.
-	operationDefinitions add: explicitOperationDefinition.
+	self addOperationDefinition: explicitOperationDefinition in: module.
 	^ explicitOperationDefinition
 ]
 

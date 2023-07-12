@@ -292,15 +292,6 @@ ViennaVDMParser >> defStatement [
 		  statement: pair second ]
 ]
 
-{ #category : #'parsers-definitions' }
-ViennaVDMParser >> definitionBlock [
-
-	^ super definitionBlock =>> [ :start :end :node |
-	  (ViennaDefinitionBlockNode definition: node)
-		  start: start end: end;
-		  yourself ]
-]
-
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> diff: arg1 and: arg2 [
 

@@ -561,11 +561,6 @@ ViennaVDM2Smalltalk >> defaultEnv: aDictionary [
 	defaultEnv := aDictionary
 ]
 
-{ #category : #'code generation-definitions' }
-ViennaVDM2Smalltalk >> definitionBlock: aViennaNode env: aDictionary [
-	aViennaNode do: [ :node | self generate: node env: aDictionary ]
-]
-
 { #category : #utilities }
 ViennaVDM2Smalltalk >> definitions: aViennaNode do: aBlock [
 
@@ -624,7 +619,7 @@ ViennaVDM2Smalltalk >> distributedSetUnion: aViennaNode env: aDictionary [
 { #category : #'code generation-definitions' }
 ViennaVDM2Smalltalk >> document: aViennaNode env: aDictionary [
 
-	^ aViennaNode first isViennaDefinitionBlockNode
+	^ aViennaNode isViennaFlatDocumentNode
 		  ifTrue: [ self flatDocument: aViennaNode env: aDictionary ]
 		  ifFalse: [ self modularDocument: aViennaNode env: aDictionary ]
 ]

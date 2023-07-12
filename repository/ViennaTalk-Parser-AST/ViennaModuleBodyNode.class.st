@@ -42,8 +42,7 @@ ViennaModuleBodyNode >> label [
 { #category : #enumerating }
 ViennaModuleBodyNode >> sectionsDo: aBlock [
 
-	self do: [ :definitionBlock |
-		aBlock value: definitionBlock definition ]
+	self do: aBlock
 ]
 
 { #category : #enumerating }

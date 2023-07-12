@@ -7,20 +7,9 @@ Class {
 { #category : #operations }
 ViennaExtractTypeAndReplaceAll >> execute [
 
-	| moduleBody typeDefinitions typeDefinition |
+	| module typeDefinition |
 	self newName ifNil: [ ^ self ].
-	moduleBody := ast module third.
-	typeDefinitions := (moduleBody
-		                    detect: [ :definitionBlock |
-			                    definitionBlock isViennaNode and: [
-				                    definitionBlock first isViennaNode and: [
-					                    definitionBlock first
-						                    isViennaTypeDefinitionsNode ] ] ]
-		                    ifNone: [ nil ]) ifNotNil: #first.
-	typeDefinitions ifNil: [
-		typeDefinitions := ViennaTypeDefinitionsNode empty.
-		moduleBody add:
-			(ViennaDefinitionBlockNode definition: typeDefinitions) ].
+	module := ast module.
 	ast module allDescendantsDo: [ :n |
 		ast = n ifTrue: [
 			self replaceNode: n with: (ViennaTypeNameNode name:
@@ -29,7 +18,7 @@ ViennaExtractTypeAndReplaceAll >> execute [
 		                  identifier: self newName
 		                  type: ast
 		                  inv: nil.
-	typeDefinitions add: typeDefinition.
+	self addTypeDefinition: typeDefinition in: module.
 	^ typeDefinition
 ]
 

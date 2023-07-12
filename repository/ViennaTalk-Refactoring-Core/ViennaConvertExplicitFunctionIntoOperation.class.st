@@ -13,21 +13,8 @@ ViennaConvertExplicitFunctionIntoOperation >> check [
 { #category : #operations }
 ViennaConvertExplicitFunctionIntoOperation >> execute [
 
-	| functionDefinitions moduleBody operationDefinitions explicitOperationDefinition |
-	functionDefinitions := ast parent.
-	moduleBody := functionDefinitions parent parent.
-	operationDefinitions := (moduleBody
-		                         detect: [ :definitionBlock |
-			                         definitionBlock isViennaNode and: [
-				                         definitionBlock definition isViennaNode
-					                         and: [
-					                         definitionBlock definition
-						                         isViennaOperationDefinitionsNode ] ] ]
-		                         ifNone: [ nil ]) ifNotNil: #definition.
-	operationDefinitions ifNil: [
-		operationDefinitions := ViennaOperationDefinitionsNode empty.
-		moduleBody add:
-			(ViennaDefinitionBlockNode definition: operationDefinitions) ].
+	| module explicitOperationDefinition |
+	module := ast module.
 	explicitOperationDefinition := ViennaExplicitOperationDefinitionNode
 		                               access:
 		                               (ViennaAccessNode withAll:
@@ -44,10 +31,8 @@ ViennaConvertExplicitFunctionIntoOperation >> execute [
 			                                expression: ast expression)
 		                               pre: ast pre
 		                               post: ast post.
-	functionDefinitions remove: ast.
-	functionDefinitions ifEmpty: [
-		moduleBody remove: functionDefinitions parent ].
-	operationDefinitions add: explicitOperationDefinition.
+	self removeOperationDefinition: ast.
+	self addOperationDefinition: explicitOperationDefinition in: module.
 	^ explicitOperationDefinition
 ]
 

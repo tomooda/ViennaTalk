@@ -36,21 +36,9 @@ ViennaExtractFunctionFromLetExpression >> check [
 { #category : #operations }
 ViennaExtractFunctionFromLetExpression >> execute [
 
-	| moduleBody functionDefinitions explicitFunctionDefinition |
+	| module explicitFunctionDefinition |
+	module := self ast module.
 	self newName ifNil: [ ^ self ].
-	moduleBody := ast module moduleBody.
-	functionDefinitions := (moduleBody
-		                        detect: [ :definitionBlock |
-			                        definitionBlock isViennaNode and: [
-				                        definitionBlock definition isViennaNode
-					                        and: [
-					                        definitionBlock definition
-						                        isViennaFunctionDefinitionsNode ] ] ]
-		                        ifNone: [ nil ]) ifNotNil: #definition.
-	functionDefinitions ifNil: [
-		functionDefinitions := ViennaFunctionDefinitionsNode empty.
-		moduleBody add:
-			(ViennaDefinitionBlockNode definition: functionDefinitions) ].
 	freeIdentifiers := self ast uniqueFreeIdentifiers.
 	self replaceNode: ast with: (ViennaApplyNode
 			 expression: (ViennaLocalNameNode identifier: self newName)
@@ -66,7 +54,7 @@ ViennaExtractFunctionFromLetExpression >> execute [
 		                              pre: nil
 		                              post: nil
 		                              measure: nil.
-	functionDefinitions add: explicitFunctionDefinition.
+	self addFunctionDefinition: explicitFunctionDefinition in: module.
 	^ explicitFunctionDefinition
 ]
 

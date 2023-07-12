@@ -45,8 +45,7 @@ ViennaSectionNode >> isViennaSectionNode [
 { #category : #private }
 ViennaSectionNode >> remove [
 
-	#isViennaDefinitionBlockNode.
-	self parent parent remove: self parent
+	self parent remove: self
 ]
 
 { #category : #private }

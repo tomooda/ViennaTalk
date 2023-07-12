@@ -151,14 +151,11 @@ ViennaMove >> removeImportInDestination [
 
 { #category : #operations }
 ViennaMove >> removeSource [
-	self sourceModule third asArray
-		do: [ :definitionBlock | 
-			definitionBlock first asArray
-				do: [ :def | 
-					(self definitionNode includesParent: def)
-						ifTrue: [ definitionBlock first remove: def ] ].
-			definitionBlock first
-				ifEmpty: [ self sourceModule third remove: definitionBlock ] ]
+
+	| section |
+	section := self definitionNode parent.
+	section remove: self definitionNode.
+	section ifEmpty: [ section parent remove: section ]
 ]
 
 { #category : #operations }

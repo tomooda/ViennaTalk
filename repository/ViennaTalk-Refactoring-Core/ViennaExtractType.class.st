@@ -15,27 +15,16 @@ ViennaExtractType >> check [
 { #category : #operations }
 ViennaExtractType >> execute [
 
-	| moduleBody typeDefinitions typeDefinition |
+	| module typeDefinition |
 	self newName ifNil: [ ^ nil ].
-	moduleBody := ast module third.
-	typeDefinitions := (moduleBody
-		                    detect: [ :definitionBlock |
-			                    definitionBlock isViennaNode and: [
-				                    definitionBlock first isViennaNode and: [
-					                    definitionBlock first
-						                    isViennaTypeDefinitionsNode ] ] ]
-		                    ifNone: [ nil ]) ifNotNil: #first.
-	typeDefinitions ifNil: [
-		typeDefinitions := ViennaTypeDefinitionsNode empty.
-		moduleBody add:
-			(ViennaDefinitionBlockNode definition: typeDefinitions) ].
+	module := ast module.
 	self replaceNode: ast with: (ViennaTypeNameNode name:
 			 (ViennaLocalNameNode identifier: self newName)).
 	typeDefinition := ViennaTypeSynonymNode
 		                  identifier: self newName
 		                  type: ast
 		                  inv: nil.
-	typeDefinitions add: typeDefinition.
+	self addTypeDefinition: typeDefinition in: module.
 	^ typeDefinition
 ]
 

@@ -7,20 +7,9 @@ Class {
 { #category : #operations }
 ViennaExtractValueAndReplaceAll >> execute [
 
-	| moduleBody valueDefinitions valueDefinition |
+	| module valueDefinition |
 	self newName ifNil: [ ^ self ].
-	moduleBody := ast module third.
-	valueDefinitions := (moduleBody
-		                     detect: [ :definitionBlock |
-			                     definitionBlock isViennaNode and: [
-				                     definitionBlock first isViennaNode and: [
-					                     definitionBlock first
-						                     isViennaValueDefinitionsNode ] ] ]
-		                     ifNone: [ nil ]) ifNotNil: #first.
-	valueDefinitions ifNil: [
-		valueDefinitions := ViennaValueDefinitionsNode empty.
-		moduleBody add:
-			(ViennaDefinitionBlockNode definition: valueDefinitions) ].
+	module := ast module.
 	ast module allDescendantsDo: [ :n |
 		ast = n ifTrue: [
 			self
@@ -32,7 +21,7 @@ ViennaExtractValueAndReplaceAll >> execute [
 			                    self newName)
 		                   type: nil
 		                   expression: ast.
-	valueDefinitions add: valueDefinition.
+	self addValueDefinition: valueDefinition in: module.
 	^ valueDefinition
 ]
 

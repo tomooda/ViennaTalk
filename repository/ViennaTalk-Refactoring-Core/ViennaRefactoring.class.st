@@ -64,86 +64,25 @@ ViennaRefactoring >> addDefinition: aViennaNode in: moduleNode [
 { #category : #'visiting-definitions' }
 ViennaRefactoring >> addFunctionDefinition: aViennaNode in: moduleNode [
 
-	| moduleBody section |
-	moduleBody := moduleNode module third.
-	section := (moduleBody
-		            detect: [ :definitionBlock |
-			            definitionBlock isViennaNode and: [
-				            definitionBlock definition isViennaNode and: [
-					            definitionBlock definition
-						            isViennaFunctionDefinitionsNode ] ] ]
-		            ifNone: [
-			            | definitionBlock |
-			            definitionBlock := ViennaDefinitionBlockNode
-				                               definition:
-				                               ViennaFunctionDefinitionsNode empty.
-			            moduleBody add: definitionBlock.
-			            definitionBlock ]) ifNotNil: #definition.
-	section add: aViennaNode
+	moduleNode addFunctionDefinition: aViennaNode
 ]
 
 { #category : #'visiting-definitions' }
 ViennaRefactoring >> addOperationDefinition: aViennaNode in: moduleNode [
 
-	| moduleBody section |
-	moduleBody := moduleNode module third.
-	section := (moduleBody
-		            detect: [ :definitionBlock |
-			            definitionBlock isViennaNode and: [
-				            definitionBlock definition isViennaNode and: [
-					            definitionBlock definition
-						            isViennaOperationDefinitionsNode ] ] ]
-		            ifNone: [
-			            | definitionBlock |
-			            definitionBlock := ViennaDefinitionBlockNode
-				                               definition:
-				                               ViennaOperationDefinitionsNode
-					                               empty.
-			            moduleBody add: definitionBlock.
-			            definitionBlock ]) ifNotNil: #definition.
-	section add: aViennaNode
+	moduleNode addOperationDefinition: aViennaNode
 ]
 
 { #category : #'visiting-definitions' }
 ViennaRefactoring >> addTypeDefinition: aViennaNode in: moduleNode [
 
-	| moduleBody section |
-	moduleBody := moduleNode module third.
-	section := (moduleBody
-		            detect: [ :definitionBlock |
-			            definitionBlock isViennaNode and: [
-				            definitionBlock definition isViennaNode and: [
-					            definitionBlock definition
-						            isViennaTypeDefinitionsNode ] ] ]
-		            ifNone: [
-			            | definitionBlock |
-			            definitionBlock := ViennaDefinitionBlockNode
-				                               definition:
-				                               ViennaTypeDefinitionsNode empty.
-			            moduleBody add: definitionBlock.
-			            definitionBlock ]) ifNotNil: #definition.
-	section add: aViennaNode
+	moduleNode addTypeDefinition: aViennaNode
 ]
 
 { #category : #'visiting-definitions' }
 ViennaRefactoring >> addValueDefinition: aViennaNode in: moduleNode [
 
-	| moduleBody section |
-	moduleBody := moduleNode module third.
-	section := (moduleBody
-		            detect: [ :definitionBlock |
-			            definitionBlock isViennaNode and: [
-				            definitionBlock definition isViennaNode and: [
-					            definitionBlock definition
-						            isViennaValueDefinitionsNode ] ] ]
-		            ifNone: [
-			            | definitionBlock |
-			            definitionBlock := ViennaDefinitionBlockNode
-				                               definition:
-				                               ViennaValueDefinitionsNode empty.
-			            moduleBody add: definitionBlock.
-			            definitionBlock ]) ifNotNil: #definition.
-	section add: aViennaNode
+	moduleNode addValueDefinition: aViennaNode
 ]
 
 { #category : #accessing }
@@ -730,16 +669,14 @@ ViennaRefactoring >> freeOccurrencesOf: aString inLambdaExpression: aViennaNode 
 ViennaRefactoring >> freeOccurrencesOf: aString inLet: aViennaNode do: aBlock [
 
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
-	aViennaNode first do: [ :localDef |
-		| def |
-		def := localDef first.
+	aViennaNode localDefinitionsDo: [ :def |
 		def isViennaValueDefinitionNode ifTrue: [
 			def pattern
 				allDescendantsSuchThat: [ :n |
 				n isViennaPatternIdentifierNode: aString ]
 				do: [ :n | ^ self ] ].
-		(def isViennaFunctionDefinitionNode and: [
-			 def definition identifier = aString ]) ifTrue: [ ^ self ] ].
+		(def isFunctionDefinition and: [ def identifier = aString ])
+			ifTrue: [ ^ self ] ].
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock
 ]
 
@@ -1143,6 +1080,42 @@ ViennaRefactoring >> patternIdentifiersWith: aString in: aViennaNode do: aBlock 
 { #category : #signaling }
 ViennaRefactoring >> refactoringError: aViennaNode [
 	^ (ViennaRefactoringError refactoring: self node: aViennaNode) signal
+]
+
+{ #category : #'visiting-definitions' }
+ViennaRefactoring >> removeFunctionDefinition: aViennaNode [
+
+	| section |
+	section := aViennaNode parent.
+	section remove: aViennaNode.
+	section ifEmpty: [ section parent remove: section ]
+]
+
+{ #category : #'visiting-definitions' }
+ViennaRefactoring >> removeOperationDefinition: aViennaNode [
+
+	| section |
+	section := aViennaNode parent.
+	section remove: aViennaNode.
+	section ifEmpty: [ section parent remove: section ]
+]
+
+{ #category : #'visiting-definitions' }
+ViennaRefactoring >> removeTypeDefinition: aViennaNode [
+
+	| section |
+	section := aViennaNode parent.
+	section remove: aViennaNode.
+	section ifEmpty: [ section parent remove: section ]
+]
+
+{ #category : #'visiting-definitions' }
+ViennaRefactoring >> removeValueDefinition: aViennaNode [
+
+	| section |
+	section := aViennaNode parent.
+	section remove: aViennaNode.
+	section ifEmpty: [ section parent remove: section ]
 ]
 
 { #category : #'visiting-manipulations' }

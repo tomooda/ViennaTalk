@@ -18,7 +18,7 @@ ViennaModularDocumentNode >> findResolverForIdentifier: aString [
 ]
 
 { #category : #testing }
-ViennaModularDocumentNode >> isViennaModularDocumnetNode [
+ViennaModularDocumentNode >> isViennaModularDocumentNode [
 
 	^ true
 ]

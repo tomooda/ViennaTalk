@@ -6,6 +6,46 @@ Class {
 }
 
 { #category : #'accessing-definitions' }
+ViennaFlatDocumentNode >> addFunctionDefinition: aViennaNode [
+
+	(self detect: #isViennaFunctionDefinitionsNode ifNone: [
+		 | section |
+		 section := ViennaFunctionDefinitionsNode empty.
+		 self add: section.
+		 section ]) add: aViennaNode
+]
+
+{ #category : #'accessing-definitions' }
+ViennaFlatDocumentNode >> addOperationDefinition: aViennaNode [
+
+	(self detect: #isViennaOperationDefinitionsNode ifNone: [
+		 | section |
+		 section := ViennaOperationDefinitionsNode empty.
+		 self add: section.
+		 section ]) add: aViennaNode
+]
+
+{ #category : #'accessing-definitions' }
+ViennaFlatDocumentNode >> addTypeDefinition: aViennaNode [
+
+	(self detect: #isViennaTypeDefinitionsNode ifNone: [
+		 | section |
+		 section := ViennaTypeDefinitionsNode empty.
+		 self add: section.
+		 section ]) add: aViennaNode
+]
+
+{ #category : #'accessing-definitions' }
+ViennaFlatDocumentNode >> addValueDefinition: aViennaNode [
+
+	(self detect: #isViennaValueDefinitionsNode ifNone: [
+		 | section |
+		 section := ViennaValueDefinitionsNode empty.
+		 self add: section.
+		 section ]) add: aViennaNode
+]
+
+{ #category : #'accessing-definitions' }
 ViennaFlatDocumentNode >> deepFindResolverForIdentifier: aString [
 
 	^ self findResolverForIdentifier: aString
@@ -18,7 +58,7 @@ ViennaFlatDocumentNode >> findResolverForIdentifier: aString [
 ]
 
 { #category : #testing }
-ViennaFlatDocumentNode >> isViennaFlatDocumnetNode [
+ViennaFlatDocumentNode >> isViennaFlatDocumentNode [
 
 	^ true
 ]
@@ -31,11 +71,34 @@ ViennaFlatDocumentNode >> lookupIdentifier: aString [
 	^ nil
 ]
 
+{ #category : #accessing }
+ViennaFlatDocumentNode >> moduleOrFlatDocument [
+
+	^ self
+]
+
 { #category : #enumerating }
 ViennaFlatDocumentNode >> sectionsDo: aBlock [
 
-	self do: [ :definitionBlock |
-		aBlock value: definitionBlock definition ]
+	self do: aBlock
+]
+
+{ #category : #'accessing-definitions' }
+ViennaFlatDocumentNode >> stateDefinition [
+
+	self sectionsDo: [ :section |
+		section isViennaStateDefinitionNode ifTrue: [ ^ section ] ].
+	^ nil
+]
+
+{ #category : #'accessing-definitions' }
+ViennaFlatDocumentNode >> stateDefinitionIfAbsentPut: errorBlock [
+
+	^ self stateDefinition ifNil: [
+		  | def |
+		  def := errorBlock value.
+		  self add: def.
+		  def ]
 ]
 
 { #category : #enumerating }

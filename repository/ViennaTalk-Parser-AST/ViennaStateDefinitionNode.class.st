@@ -6,6 +6,23 @@ Class {
 }
 
 { #category : #'instance creation' }
+ViennaStateDefinitionNode class >> empty [
+
+	^ self
+		  identifier: 'State'
+		  fieldList: ViennaFieldListNode empty
+		  inv: nil
+		  init: (ViennaInitialisationNode invariantInitialFunction:
+				   (ViennaInvariantInitialFunctionNode
+					    pattern: (ViennaPatternIdentifierNode identifier: 's')
+					    expression: (ViennaEqualNode
+							     expression: (ViennaLocalNameNode identifier: 's')
+							     expression: (ViennaRecordConstructorNode
+									      name: (ViennaLocalNameNode identifier: 'State')
+									      expressionList: ViennaExpressionListNode empty))))
+]
+
+{ #category : #'instance creation' }
 ViennaStateDefinitionNode class >> identifier: aString fieldList: aViennaFieldListNode inv: aViennaInvariantNode init: aViennaInitialisationNode [
 
 	^ (self new: 4)

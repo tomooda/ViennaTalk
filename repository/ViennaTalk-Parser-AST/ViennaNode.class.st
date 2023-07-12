@@ -1085,7 +1085,7 @@ ViennaNode >> isViennaFinitePowerSetNode [
 ]
 
 { #category : #testing }
-ViennaNode >> isViennaFlatDocumnetNode [
+ViennaNode >> isViennaFlatDocumentNode [
 
 	^ false
 ]
@@ -1583,7 +1583,7 @@ ViennaNode >> isViennaMatchValueNode [
 ]
 
 { #category : #testing }
-ViennaNode >> isViennaModularDocumnetNode [
+ViennaNode >> isViennaModularDocumentNode [
 
 	^ false
 ]
@@ -2449,6 +2449,12 @@ ViennaNode >> moduleNamed: aString [
 ]
 
 { #category : #accessing }
+ViennaNode >> moduleOrFlatDocument [
+
+	^ parent ifNotNil: #moduleOrFlatDocument
+]
+
+{ #category : #accessing }
 ViennaNode >> modulesDo: aBlock [
 	self document do: aBlock
 ]
@@ -2685,11 +2691,9 @@ ViennaNode >> start: anInteger1 end: anInteger2 [
 { #category : #accessing }
 ViennaNode >> stateVariablesDo: aBlock [
 
-	(self detectParent: #isViennaDefinitionBlockNode ifNone: [ ^ self ])
-		parent do: [ :node |
-		node definition isViennaStateDefinitionNode ifTrue: [
-			node definition fieldList do: [ :field |
-				aBlock value: field identifier ] ] ]
+	self moduleOrFlatDocument stateDefinition ifNotNil: [ :stateDefinition |
+		stateDefinition fieldList do: [ :field |
+			aBlock value: field identifier ] ]
 ]
 
 { #category : #accessing }
