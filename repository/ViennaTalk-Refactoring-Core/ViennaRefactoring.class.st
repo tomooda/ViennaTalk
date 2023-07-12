@@ -577,14 +577,11 @@ ViennaRefactoring >> freeOccurrencesOf: aString inExplicitOperationDefinition: a
 
 	self freeOccurrencesOf: aString in: aViennaNode type do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode parameters do: aBlock.
-	aViennaNode operationBody
+	aViennaNode statement
 		allDescendantsSuchThat: [ :n |
 		n isViennaPatternIdentifierNode: aString ]
 		do: [ :n | ^ self ].
-	self
-		freeOccurrencesOf: aString
-		in: aViennaNode operationBody
-		do: aBlock.
+	self freeOccurrencesOf: aString in: aViennaNode statement do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode pre do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode post do: aBlock
 ]
@@ -954,7 +951,7 @@ ViennaRefactoring >> localScopeByExplicitFunctionDefinition: aViennaNode do: aBl
 { #category : #'visiting-scopes' }
 ViennaRefactoring >> localScopeByExplicitOperationDefinition: aViennaNode do: aBlock [
 
-	aBlock value: aViennaNode operationBody statement.
+	aBlock value: aViennaNode statement.
 	aBlock value: aViennaNode pre.
 	aBlock value: aViennaNode post
 ]

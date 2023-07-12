@@ -619,16 +619,7 @@ ViennaRefactoringBrowser >> definition [
 { #category : #accessing }
 ViennaRefactoringBrowser >> definitionBase [
 
-	| node |
-	node := self definition.
-	node ifNil: [ ^ nil ].
-	node isViennaAccessValueDefinitionNode ifTrue: [
-		^ node valueDefinition ].
-	node isViennaAccessFunctionDefinitionNode ifTrue: [
-		^ node functionDefinition definition ].
-	node isViennaAccessOperationDefinitionNode ifTrue: [
-		^ node operationDefinition definition ].
-	^ node
+	^ self definition
 ]
 
 { #category : #menus }

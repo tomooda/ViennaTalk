@@ -36,7 +36,7 @@ ViennaExtractOperationFromLetExpression >> check [
 { #category : #operations }
 ViennaExtractOperationFromLetExpression >> execute [
 
-	| moduleBody operationDefinitions explicitOperationDefinition accessOperationDefinition |
+	| moduleBody operationDefinitions explicitOperationDefinition |
 	self newName ifNil: [ ^ self ].
 	moduleBody := ast module moduleBody.
 	operationDefinitions := (moduleBody
@@ -59,21 +59,16 @@ ViennaExtractOperationFromLetExpression >> execute [
 			 expression: (ViennaLocalNameNode identifier: self newName)
 			 argumentExpressionList: self arguments).
 	explicitOperationDefinition := ViennaExplicitOperationDefinitionNode
+		                               access: ViennaAccessNode pure
 		                               identifier: self newName
 		                               type: self operationType
 		                               parameters:
 		                               self operationParametersList
-		                               operationBody: self operationBody
+		                               statement: self statement
 		                               pre: nil
 		                               post: nil.
-	accessOperationDefinition := ViennaAccessOperationDefinitionNode
-		                             access: ViennaAccessNode pure
-		                             operationDefinition:
-		                             (ViennaOperationDefinitionNode
-			                              definition:
-			                              explicitOperationDefinition).
-	operationDefinitions add: accessOperationDefinition.
-	^ accessOperationDefinition
+	operationDefinitions add: explicitOperationDefinition.
+	^ explicitOperationDefinition
 ]
 
 { #category : #accessing }
@@ -104,13 +99,6 @@ ViennaExtractOperationFromLetExpression >> newName: aString [
 ]
 
 { #category : #accessing }
-ViennaExtractOperationFromLetExpression >> operationBody [
-
-	^ ViennaOperationBodyNode statement:
-		  (ViennaReturnStatementNode expression: ast second)
-]
-
-{ #category : #accessing }
 ViennaExtractOperationFromLetExpression >> operationParametersList [
 
 	^ ViennaParametersNode withAll:
@@ -138,4 +126,10 @@ ViennaExtractOperationFromLetExpression >> operationType [
 { #category : #accessing }
 ViennaExtractOperationFromLetExpression >> sortingOrder [
 	^ 2.56
+]
+
+{ #category : #accessing }
+ViennaExtractOperationFromLetExpression >> statement [
+
+	^ ViennaReturnStatementNode expression: ast second
 ]

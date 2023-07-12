@@ -6,22 +6,42 @@ Class {
 }
 
 { #category : #'instance creation' }
-ViennaRecordTypeDefinitionNode class >> identifier: aString fieldList: aViennaFieldListNode inv: aViennaInvariantNode [
+ViennaRecordTypeDefinitionNode class >> access: aViennaAccessNode identifier: aString fieldList: aViennaFieldListNode inv: aViennaInvariantNode [
 
-	^ (self new: 3)
+	^ (self new: 4)
+		  access: aViennaAccessNode;
 		  identifier: aString;
 		  fieldList: aViennaFieldListNode;
 		  inv: aViennaInvariantNode;
 		  yourself
 ]
 
+{ #category : #'instance creation' }
+ViennaRecordTypeDefinitionNode class >> identifier: aString fieldList: aViennaFieldListNode inv: aViennaInvariantNode [
+
+	^ self
+		  access: ViennaAccessNode empty
+		  identifier: aString
+		  fieldList: aViennaFieldListNode
+		  inv: aViennaInvariantNode
+]
+
+{ #category : #accessing }
+ViennaRecordTypeDefinitionNode >> access [
+
+	^ self at: 1
+]
+
+{ #category : #accessing }
+ViennaRecordTypeDefinitionNode >> access: aViennaAccessNode [
+
+	self at: 1 put: aViennaAccessNode
+]
+
 { #category : #'accessing-definitions' }
 ViennaRecordTypeDefinitionNode >> asAccessDefinition [
 
-	^ parent ifNil: [
-		  ViennaAccessTypeDefinitionNode
-			  access: ViennaAccessNode empty
-			  typeDefinition: self copyFragment ]
+	^ self
 ]
 
 { #category : #'accessing-definitions' }
@@ -52,19 +72,21 @@ ViennaRecordTypeDefinitionNode >> boundIdentifiersDo: aBlock [
 { #category : #accessing }
 ViennaRecordTypeDefinitionNode >> fieldList [
 
-	^ self at: 2
+	^ self at: 3
 ]
 
 { #category : #accessing }
 ViennaRecordTypeDefinitionNode >> fieldList: aViennaFieldListNode [
 
-	self at: 2 put: aViennaFieldListNode
+	self at: 3 put: aViennaFieldListNode
 ]
 
 { #category : #'pretty printing' }
 ViennaRecordTypeDefinitionNode >> formatWith: aViennaAbstractFormatter [
 
-	| identifier fieldList invariant |
+	| access identifier fieldList invariant |
+	access := (aViennaAbstractFormatter format: self access) trim
+		          ifNotEmpty: [ :string | string , ' ' ].
 	identifier := aViennaAbstractFormatter format: self identifier.
 	fieldList := aViennaAbstractFormatter format: self fieldList.
 	invariant := self inv
@@ -73,7 +95,7 @@ ViennaRecordTypeDefinitionNode >> formatWith: aViennaAbstractFormatter [
 			             , (aViennaAbstractFormatter indentString:
 					              (aViennaAbstractFormatter format: self third)) ]
 		             ifNil: [ '' ].
-	^ identifier , ' ::'
+	^ access , identifier , ' ::'
 	  , ((aViennaAbstractFormatter needsIndent: identifier , fieldList)
 			   ifTrue: [
 				   String cr , aViennaAbstractFormatter indent
@@ -92,29 +114,35 @@ ViennaRecordTypeDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
 { #category : #accessing }
 ViennaRecordTypeDefinitionNode >> identifier [
 
-	^ self at: 1
+	^ self at: 2
 ]
 
 { #category : #accessing }
 ViennaRecordTypeDefinitionNode >> identifier: aString [
 
-	self at: 1 put: aString
+	self at: 2 put: aString
 ]
 
 { #category : #accessing }
 ViennaRecordTypeDefinitionNode >> inv [
 
-	^ self at: 3
+	^ self at: 4
 ]
 
 { #category : #accessing }
 ViennaRecordTypeDefinitionNode >> inv: aViennaInvariantNode [
 
-	self at: 3 put: aViennaInvariantNode
+	self at: 4 put: aViennaInvariantNode
 ]
 
 { #category : #testing }
 ViennaRecordTypeDefinitionNode >> isTypeDefinition [
+
+	^ true
+]
+
+{ #category : #testing }
+ViennaRecordTypeDefinitionNode >> isViennaAccessTypeDefinitionNode [
 
 	^ true
 ]

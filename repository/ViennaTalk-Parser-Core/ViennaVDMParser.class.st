@@ -33,9 +33,8 @@ ViennaVDMParser >> accessFunctionDefinition [
 
 	self flushAnnotations.
 	^ super accessFunctionDefinition =>> [ :start :end :array |
-	  (ViennaAccessFunctionDefinitionNode
-		   access: (ViennaAccessNode withAll: array first)
-		   functionDefinition: array second)
+	  array second
+		  access: (ViennaAccessNode withAll: array first);
 		  start: start end: end;
 		  annotations: self flushAnnotations;
 		  yourself ]
@@ -46,9 +45,8 @@ ViennaVDMParser >> accessOperationDefinition [
 
 	self flushAnnotations.
 	^ super accessOperationDefinition =>> [ :start :end :array |
-	  (ViennaAccessOperationDefinitionNode
-		   access: (ViennaAccessNode withAll: array first)
-		   operationDefinition: array second)
+	  array second
+		  access: (ViennaAccessNode withAll: array first);
 		  start: start end: end;
 		  annotations: self flushAnnotations;
 		  yourself ]
@@ -59,9 +57,8 @@ ViennaVDMParser >> accessTypeDefinition [
 
 	self flushAnnotations.
 	^ super accessTypeDefinition =>> [ :start :end :array |
-	  (ViennaAccessTypeDefinitionNode
-		   access: (ViennaAccessNode withAll: array first)
-		   typeDefinition: array second)
+	  array second
+		  access: (ViennaAccessNode withAll: array first);
 		  start: start end: end;
 		  annotations: self flushAnnotations;
 		  yourself ]
@@ -472,7 +469,7 @@ ViennaVDMParser >> explicitOperationDefinition [
 		   identifier: array first
 		   type: array second
 		   parameters: array fourth
-		   operationBody: array fifth
+		   statement: array fifth
 		   pre: array sixth
 		   post: array seventh)
 		  start: start end: end;
@@ -591,7 +588,7 @@ ViennaVDMParser >> extendedExplicitOperationDefinition [
 			   identifier: array first
 			   parameterTypes: array second
 			   identifierTypePairList: array third
-			   operationBody: array fourth
+			   statement: array fourth
 			   externals: array fifth
 			   pre: array sixth
 			   post: array seventh
@@ -736,7 +733,7 @@ ViennaVDMParser >> fraction: arg1 and: arg2 [
 ViennaVDMParser >> functionDefinition [
 
 	^ super functionDefinition =>> [ :start :end :body |
-	  (ViennaFunctionDefinitionNode definition: body)
+	  body
 		  start: start end: end;
 		  yourself ]
 ]
@@ -883,19 +880,6 @@ ViennaVDMParser >> implicitFunctionDefinition [
 ]
 
 { #category : #'parsers-definitions' }
-ViennaVDMParser >> implicitOperationBody [
-
-	^ super implicitOperationBody =>> [ :start :end :array |
-	  (ViennaImplicitOperationBodyNode
-		   externals: array first
-		   pre: array second
-		   post: array third
-		   exceptions: array fourth)
-		  start: start end: end;
-		  yourself ]
-]
-
-{ #category : #'parsers-definitions' }
 ViennaVDMParser >> implicitOperationDefinition [
 
 	^ super implicitOperationDefinition =>> [ :start :end :array |
@@ -903,7 +887,10 @@ ViennaVDMParser >> implicitOperationDefinition [
 		   identifier: array first
 		   parameterTypes: array second
 		   identifierTypePairList: array third
-		   implicitOperationBody: array fourth)
+		   externals: array fourth first
+		   pre: array fourth second
+		   post: array fourth third
+		   exceptions: array fourth fourth)
 		  start: start end: end;
 		  yourself ]
 ]
@@ -1483,19 +1470,10 @@ ViennaVDMParser >> oldName [
 ]
 
 { #category : #'parsers-definitions' }
-ViennaVDMParser >> operationBody [
-
-	^ super operationBody =>> [ :start :end :body |
-	  (ViennaOperationBodyNode statementOrIsNotYetSpecified: body)
-		  start: start end: end;
-		  yourself ]
-]
-
-{ #category : #'parsers-definitions' }
 ViennaVDMParser >> operationDefinition [
 
 	^ super operationDefinition =>> [ :start :end :def |
-	  (ViennaOperationDefinitionNode definition: def)
+	  def
 		  start: start end: end;
 		  yourself ]
 ]

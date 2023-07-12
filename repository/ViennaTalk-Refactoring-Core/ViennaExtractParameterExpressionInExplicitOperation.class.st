@@ -8,7 +8,7 @@ Class {
 ViennaExtractParameterExpressionInExplicitOperation >> executeDefinition [
 
 	self newName ifNil: [ ^ nil ].
-	self definitionNode second first in: [ :typeNode |
+	self definitionNode argumentType in: [ :typeNode |
 		typeNode isViennaUnitTypeNode
 			ifTrue: [ self replaceNode: typeNode with: ViennaBasicTypeNode any ]
 			ifFalse: [
@@ -18,7 +18,7 @@ ViennaExtractParameterExpressionInExplicitOperation >> executeDefinition [
 						(self replaceNode: typeNode with: ViennaProductTypeNode empty)
 							add: typeNode;
 							add: ViennaBasicTypeNode any ] ] ].
-	self definitionNode fourth add:
+	self definitionNode parameters add:
 		(ViennaPatternIdentifierNode identifier: self newName).
 	^ self definitionNode
 ]
@@ -26,7 +26,7 @@ ViennaExtractParameterExpressionInExplicitOperation >> executeDefinition [
 { #category : #accessing }
 ViennaExtractParameterExpressionInExplicitOperation >> findDefinitionNode [
 
-	^ ast parent
+	^ ast
 		  detectParent: #isViennaExplicitOperationDefinitionNode
 		  ifNone: [  ]
 ]

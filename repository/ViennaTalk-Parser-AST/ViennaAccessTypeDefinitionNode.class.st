@@ -14,42 +14,6 @@ ViennaAccessTypeDefinitionNode class >> access: aViennaAccessNode typeDefinition
 		  yourself
 ]
 
-{ #category : #accessing }
-ViennaAccessTypeDefinitionNode >> access [
-
-	^ self at: 1
-]
-
-{ #category : #accessing }
-ViennaAccessTypeDefinitionNode >> access: aViennaAccessNode [
-
-	self at: 1 put: aViennaAccessNode
-]
-
-{ #category : #'accessing-definitions' }
-ViennaAccessTypeDefinitionNode >> asAccessDefinition [
-
-	^ self
-]
-
-{ #category : #'accessing-definitions' }
-ViennaAccessTypeDefinitionNode >> asImportDefinitionIn: aViennaModuleNode [
-
-	^ self typeDefinition asImportDefinitionIn: aViennaModuleNode
-]
-
-{ #category : #private }
-ViennaAccessTypeDefinitionNode >> boundIdentifiersDo: aBlock [
-
-	self typeDefinition boundIdentifiersDo: aBlock
-]
-
-{ #category : #accessing }
-ViennaAccessTypeDefinitionNode >> definitionBase [
-
-	^ self typeDefinition
-]
-
 { #category : #'pretty printing' }
 ViennaAccessTypeDefinitionNode >> formatWith: aViennaAbstractFormatter [
 
@@ -58,38 +22,8 @@ ViennaAccessTypeDefinitionNode >> formatWith: aViennaAbstractFormatter [
 		  withAll: (aViennaAbstractFormatter formatAll: self)
 ]
 
-{ #category : #private }
-ViennaAccessTypeDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
-
-	self typeDefinition freeIdentifiersExcept: aSet do: aBlock
-]
-
-{ #category : #accessing }
-ViennaAccessTypeDefinitionNode >> identifier [
-
-	^ self typeDefinition identifier
-]
-
-{ #category : #accessing }
-ViennaAccessTypeDefinitionNode >> identifier: aString [
-
-	self typeDefinition identifier: aString
-]
-
-{ #category : #testing }
-ViennaAccessTypeDefinitionNode >> isTypeDefinition [
-
-	^ true
-]
-
 { #category : #testing }
 ViennaAccessTypeDefinitionNode >> isViennaAccessTypeDefinitionNode [
-
-	^ true
-]
-
-{ #category : #testing }
-ViennaAccessTypeDefinitionNode >> isViennaExportableTopLevelDefinitionNode [
 
 	^ true
 ]
@@ -98,30 +32,6 @@ ViennaAccessTypeDefinitionNode >> isViennaExportableTopLevelDefinitionNode [
 ViennaAccessTypeDefinitionNode >> label [
 
 	^ 'AccessTypeDefinition'
-]
-
-{ #category : #accessing }
-ViennaAccessTypeDefinitionNode >> localResolve [
-
-	^ self typeDefinition localResolve
-]
-
-{ #category : #accessing }
-ViennaAccessTypeDefinitionNode >> resolve [
-
-	^ self typeDefinition resolve
-]
-
-{ #category : #accessing }
-ViennaAccessTypeDefinitionNode >> shortName [
-
-	^ self typeDefinition shortName
-]
-
-{ #category : #accessing }
-ViennaAccessTypeDefinitionNode >> type [
-
-	^ self typeDefinition type
 ]
 
 { #category : #accessing }

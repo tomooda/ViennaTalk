@@ -7,7 +7,7 @@ Class {
 { #category : #operations }
 ViennaExtractTypeAndReplaceAll >> execute [
 
-	| moduleBody typeDefinitions typeDefinition accessTypeDefinition |
+	| moduleBody typeDefinitions typeDefinition |
 	self newName ifNil: [ ^ self ].
 	moduleBody := ast module third.
 	typeDefinitions := (moduleBody
@@ -29,11 +29,8 @@ ViennaExtractTypeAndReplaceAll >> execute [
 		                  identifier: self newName
 		                  type: ast
 		                  inv: nil.
-	accessTypeDefinition := ViennaAccessTypeDefinitionNode
-		                        access: ViennaAccessNode empty
-		                        typeDefinition: typeDefinition.
-	typeDefinitions add: accessTypeDefinition.
-	^ accessTypeDefinition
+	typeDefinitions add: typeDefinition.
+	^ typeDefinition
 ]
 
 { #category : #accessing }

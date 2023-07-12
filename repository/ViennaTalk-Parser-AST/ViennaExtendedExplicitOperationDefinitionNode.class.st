@@ -6,18 +6,46 @@ Class {
 }
 
 { #category : #'instance creation' }
-ViennaExtendedExplicitOperationDefinitionNode class >> identifier: aString parameterTypes: aViennaParameterTypesNode identifierTypePairList: aViennaIdentifierTypePairListNode operationBody: aViennaOperfationBodyNode externals: aViennaExternalsNode pre: aViennaExpressionNode1 post: aViennaExpressionNode2 exceptions: aViennaExceptionsNode [
+ViennaExtendedExplicitOperationDefinitionNode class >> access: aViennaAccessNode identifier: aString parameterTypes: aViennaParameterTypesNode identifierTypePairList: aViennaIdentifierTypePairListNode statement: aViennaStatementNode externals: aViennaExternalsNode pre: aViennaExpressionNode1 post: aViennaExpressionNode2 exceptions: aViennaExceptionsNode [
 
-	^ (self new: 8)
+	^ (self new: 9)
+		  access: aViennaAccessNode;
 		  identifier: aString;
 		  parameterTypes: aViennaParameterTypesNode;
 		  identifierTypePairList: aViennaIdentifierTypePairListNode;
-		  operationBody: aViennaOperfationBodyNode;
+		  statement: aViennaStatementNode;
 		  externals: aViennaExternalsNode;
 		  pre: aViennaExpressionNode1;
 		  post: aViennaExpressionNode2;
 		  exceptions: aViennaExceptionsNode;
 		  yourself
+]
+
+{ #category : #'instance creation' }
+ViennaExtendedExplicitOperationDefinitionNode class >> identifier: aString parameterTypes: aViennaParameterTypesNode identifierTypePairList: aViennaIdentifierTypePairListNode statement: aViennaStatementNode externals: aViennaExternalsNode pre: aViennaExpressionNode1 post: aViennaExpressionNode2 exceptions: aViennaExceptionsNode [
+
+	^ self
+		  access: ViennaAccessNode empty
+		  identifier: aString
+		  parameterTypes: aViennaParameterTypesNode
+		  identifierTypePairList: aViennaIdentifierTypePairListNode
+		  statement: aViennaStatementNode
+		  externals: aViennaExternalsNode
+		  pre: aViennaExpressionNode1
+		  post: aViennaExpressionNode2
+		  exceptions: aViennaExceptionsNode
+]
+
+{ #category : #accessing }
+ViennaExtendedExplicitOperationDefinitionNode >> access [
+
+	^ self at: 1
+]
+
+{ #category : #accessing }
+ViennaExtendedExplicitOperationDefinitionNode >> access: aViennaAccessNode [
+
+	self at: 1 put: aViennaAccessNode
 ]
 
 { #category : #accessing }
@@ -29,9 +57,7 @@ ViennaExtendedExplicitOperationDefinitionNode >> argumentType [
 { #category : #'accessing-definitions' }
 ViennaExtendedExplicitOperationDefinitionNode >> asAccessDefinition [
 
-	^ (parent ifNil: [
-		   ViennaOperationDefinitionNode definition: self copyFragment ])
-		  asAccessDefinition
+	^ self
 ]
 
 { #category : #private }
@@ -47,25 +73,25 @@ ViennaExtendedExplicitOperationDefinitionNode >> boundIdentifiersDo: aBlock [
 { #category : #accessing }
 ViennaExtendedExplicitOperationDefinitionNode >> exceptions [
 
-	^ self at: 8
+	^ self at: 9
 ]
 
 { #category : #accessing }
 ViennaExtendedExplicitOperationDefinitionNode >> exceptions: aViennaExceptionsNode [
 
-	self at: 8 put: aViennaExceptionsNode
+	self at: 9 put: aViennaExceptionsNode
 ]
 
 { #category : #accessing }
 ViennaExtendedExplicitOperationDefinitionNode >> externals [
 
-	^ self at: 5
+	^ self at: 6
 ]
 
 { #category : #accessing }
 ViennaExtendedExplicitOperationDefinitionNode >> externals: aViennaExternalsNode [
 
-	self at: 5 put: aViennaExternalsNode
+	self at: 6 put: aViennaExternalsNode
 ]
 
 { #category : #'accessing-definitions' }
@@ -80,33 +106,42 @@ ViennaExtendedExplicitOperationDefinitionNode >> findResolverForIdentifier: aStr
 { #category : #'pretty printing' }
 ViennaExtendedExplicitOperationDefinitionNode >> formatWith: aViennaAbstractFormatter [
 
-	| identifier parameterTypes identifierTypePairList operationBody externals pre post exceptions string |
-	identifier := self identifier.
-	parameterTypes := self parameterTypes.
-	identifierTypePairList := self identifierTypePairList.
-	operationBody := self operationBody.
-	externals := self externals.
-	pre := self pre.
-	post := self post.
-	exceptions := self exceptions.
-	string := (aViennaAbstractFormatter format: identifier)
-	          , (aViennaAbstractFormatter format: parameterTypes)
-	          , (aViennaAbstractFormatter format: identifierTypePairList)
-	          , ' ==' , String cr , aViennaAbstractFormatter indent
-	          , (aViennaAbstractFormatter indentString:
-			           (aViennaAbstractFormatter format: operationBody)).
-	externals ifNotNil: [
-		string := string , String cr
-		          , (aViennaAbstractFormatter format: externals) ].
-	pre ifNotNil: [
-		string := string , String cr , 'pre '
-		          , (aViennaAbstractFormatter format: pre) ].
-	string := string , String cr , 'post '
-	          , (aViennaAbstractFormatter format: post).
-	exceptions ifNotNil: [
-		string := string , String cr
-		          , (aViennaAbstractFormatter format: exceptions) ].
-	^ string
+	| access identifier parameterTypes identifierTypePairList operationBody externals pre post exceptions |
+	access := (aViennaAbstractFormatter format: self access) trim
+		          ifNotEmpty: [ :string | string , ' ' ].
+	identifier := aViennaAbstractFormatter format: self identifier.
+	parameterTypes := aViennaAbstractFormatter format:
+		                  self parameterTypes.
+	identifierTypePairList := aViennaAbstractFormatter format:
+		                          self identifierTypePairList.
+	operationBody := aViennaAbstractFormatter format: self statement.
+	externals := self externals
+		             ifNotNil: [
+		             String cr
+		             , (aViennaAbstractFormatter format: self externals) ]
+		             ifNil: [ '' ].
+	pre := self pre
+		       ifNotNil: [
+		       String cr , 'pre '
+		       , (aViennaAbstractFormatter format: self pre) ]
+		       ifNil: [ '' ].
+	post := self post
+		        ifNotNil: [
+		        String cr , 'post '
+		        , (aViennaAbstractFormatter format: self post) ]
+		        ifNil: [ '' ].
+	exceptions := self exceptions
+		              ifNotNil: [
+		              String cr
+		              , (aViennaAbstractFormatter format: self exceptions) ]
+		              ifNil: [ '' ].
+	^ access , (aViennaAbstractFormatter format: identifier)
+	  , (aViennaAbstractFormatter format: parameterTypes)
+	  , (aViennaAbstractFormatter format: identifierTypePairList) , ' =='
+	  , String cr , aViennaAbstractFormatter indent
+	  , (aViennaAbstractFormatter indentString:
+			   (aViennaAbstractFormatter format: operationBody)) , externals
+	  , pre , post , exceptions
 ]
 
 { #category : #private }
@@ -135,29 +170,35 @@ ViennaExtendedExplicitOperationDefinitionNode >> hasScope [
 { #category : #accessing }
 ViennaExtendedExplicitOperationDefinitionNode >> identifier [
 
-	^ self at: 1
+	^ self at: 2
 ]
 
 { #category : #accessing }
 ViennaExtendedExplicitOperationDefinitionNode >> identifier: aString [
 
-	self at: 1 put: aString
+	self at: 2 put: aString
 ]
 
 { #category : #accessing }
 ViennaExtendedExplicitOperationDefinitionNode >> identifierTypePairList [
 
-	^ self at: 3
+	^ self at: 4
 ]
 
 { #category : #accessing }
 ViennaExtendedExplicitOperationDefinitionNode >> identifierTypePairList: aViennaIdentifierTypePairListNode [
 
-	self at: 3 put: aViennaIdentifierTypePairListNode
+	self at: 4 put: aViennaIdentifierTypePairListNode
 ]
 
 { #category : #testing }
 ViennaExtendedExplicitOperationDefinitionNode >> isOperationDefinition [
+
+	^ true
+]
+
+{ #category : #testing }
+ViennaExtendedExplicitOperationDefinitionNode >> isViennaAccessOperationDefinitionNode [
 
 	^ true
 ]
@@ -172,6 +213,12 @@ ViennaExtendedExplicitOperationDefinitionNode >> isViennaExportableTopLevelDefin
 ViennaExtendedExplicitOperationDefinitionNode >> isViennaExtendedExplicitOperationDefinitionNode [
 
 	^ true
+]
+
+{ #category : #testing }
+ViennaExtendedExplicitOperationDefinitionNode >> isViennaOperationDefinitionNode: aString [
+
+	^ self identifier = aString
 ]
 
 { #category : #accessing }
@@ -193,25 +240,25 @@ ViennaExtendedExplicitOperationDefinitionNode >> lookupIdentifier: aString [
 { #category : #accessing }
 ViennaExtendedExplicitOperationDefinitionNode >> operationBody [
 
-	^ self at: 4
+	^ self at: 5
 ]
 
 { #category : #accessing }
 ViennaExtendedExplicitOperationDefinitionNode >> operationBody: aViennaOperationBodyNode [
 
-	self at: 4 put: aViennaOperationBodyNode
+	self at: 5 put: aViennaOperationBodyNode
 ]
 
 { #category : #accessing }
 ViennaExtendedExplicitOperationDefinitionNode >> parameterTypes [
 
-	^ self at: 2
+	^ self at: 3
 ]
 
 { #category : #accessing }
 ViennaExtendedExplicitOperationDefinitionNode >> parameterTypes: aViennaParameterTypesNode [
 
-	self at: 2 put: aViennaParameterTypesNode
+	self at: 3 put: aViennaParameterTypesNode
 ]
 
 { #category : #accessing }
@@ -223,25 +270,25 @@ ViennaExtendedExplicitOperationDefinitionNode >> parameters [
 { #category : #accessing }
 ViennaExtendedExplicitOperationDefinitionNode >> post [
 
-	^ self at: 7
+	^ self at: 8
 ]
 
 { #category : #accessing }
 ViennaExtendedExplicitOperationDefinitionNode >> post: aViennaExpressionNode [
 
-	self at: 7 put: aViennaExpressionNode
+	self at: 8 put: aViennaExpressionNode
 ]
 
 { #category : #accessing }
 ViennaExtendedExplicitOperationDefinitionNode >> pre [
 
-	^ self at: 6
+	^ self at: 7
 ]
 
 { #category : #accessing }
 ViennaExtendedExplicitOperationDefinitionNode >> pre: aViennaExpressionNode [
 
-	self at: 6 put: aViennaExpressionNode
+	self at: 7 put: aViennaExpressionNode
 ]
 
 { #category : #accessing }
@@ -259,7 +306,13 @@ ViennaExtendedExplicitOperationDefinitionNode >> returnType [
 { #category : #accessing }
 ViennaExtendedExplicitOperationDefinitionNode >> statement [
 
-	^ self operationBody statementOrIsNotYetSpecified
+	^ self at: 5
+]
+
+{ #category : #accessing }
+ViennaExtendedExplicitOperationDefinitionNode >> statement: aViennaStatementNode [
+
+	self at: 5 put: aViennaStatementNode
 ]
 
 { #category : #accessing }

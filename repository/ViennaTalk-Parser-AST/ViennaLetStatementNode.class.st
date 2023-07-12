@@ -45,8 +45,7 @@ ViennaLetStatementNode >> definitionOfLocalName: aString [
 				allDescendantsSuchThat: [ :n |
 				n isViennaPatternIdentifierNode: aString ]
 				do: [ :n | ^ n ] ].
-		(def isViennaFunctionDefinitionNode: aString) ifTrue: [
-			^ def definition ] ].
+		(def isViennaFunctionDefinitionNode: aString) ifTrue: [ ^ def ] ].
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 

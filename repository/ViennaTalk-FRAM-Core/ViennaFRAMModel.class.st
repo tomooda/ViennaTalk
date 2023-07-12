@@ -122,18 +122,16 @@ ViennaFRAMModel >> appendToSpec: aViennaNode newOperationsDo: functionBlock newA
 { #category : #private }
 ViennaFRAMModel >> createOperationDefinitionNode: aString [
 
-	^ ViennaAccessOperationDefinitionNode
+	^ ViennaExplicitOperationDefinitionNode
 		  access: ViennaAccessNode empty
-		  operationDefinition: (ViennaOperationDefinitionNode definition:
-				   (ViennaExplicitOperationDefinitionNode
-					    identifier: aString
-					    type: (ViennaOperationTypeNode
-							     argumentType: ViennaUnitTypeNode new
-							     returnType: ViennaUnitTypeNode new)
-					    parameters: ViennaParametersNode empty
-					    operationBody: ViennaOperationBodyNode isNotYetSpecified
-					    pre: nil
-					    post: nil))
+		  identifier: aString
+		  type: (ViennaOperationTypeNode
+				   argumentType: ViennaUnitTypeNode new
+				   returnType: ViennaUnitTypeNode new)
+		  parameters: ViennaParametersNode empty
+		  operationBody: ViennaIsNotYetSpecifiedNode new
+		  pre: nil
+		  post: nil
 ]
 
 { #category : #private }
@@ -160,10 +158,8 @@ ViennaFRAMModel >> findOrCreateOperationNamed: operationName in: aViennaNode [
 			 aViennaNode first isViennaDefinitionBlockNode ] ]) ifFalse: [
 		^ self error: 'Internal error: A flat spec should be given.' ].
 	aViennaNode allDescendantsDo: [ :node |
-		node isViennaAccessOperationDefinitionNode ifTrue: [
-			opNode := node second first.
-			(opNode isViennaExplicitOperationDefinitionNode: operationName)
-				ifTrue: [ ^ opNode ] ] ].
+		(node isViennaExplicitOperationDefinitionNode: operationName)
+			ifTrue: [ ^ node ] ].
 	opNode := self createOperationDefinitionNode: operationName.
 	aViennaNode allDescendantsDo: [ :node |
 		node isViennaOperationDefinitionsNode ifTrue: [
@@ -171,8 +167,7 @@ ViennaFRAMModel >> findOrCreateOperationNamed: operationName in: aViennaNode [
 			^ opNode ] ].
 	aViennaNode isEmpty ifTrue: [
 		aViennaNode add: ViennaDefinitionBlockNode empty ].
-	aViennaNode first add:
-		(ViennaOperationDefinitionNode definition: opNode).
+	aViennaNode first add: opNode.
 	^ opNode
 ]
 

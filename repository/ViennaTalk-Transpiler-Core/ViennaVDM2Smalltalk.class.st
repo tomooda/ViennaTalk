@@ -896,7 +896,7 @@ ViennaVDM2Smalltalk >> explicitOperationDefinition: aViennaNode env: aDictionary
 	preNode := aViennaNode pre.
 	postNode := aViennaNode post.
 	body := '[|_opContext| _opContext := thisContext. '
-	        , (self generate: aViennaNode operationBody env: aDictionary)
+	        , (self generate: aViennaNode statement env: aDictionary)
 	        , '] value'.
 	argTypeNode := typeNode argumentType.
 	retTypeNode := typeNode returnType.
@@ -1135,19 +1135,19 @@ ViennaVDM2Smalltalk >> extendedExplicitFunctionDefinition: aViennaNode env: aDic
 ViennaVDM2Smalltalk >> extendedExplicitOperationDefinition: aViennaNode env: aDictionary [
 
 	| opName patternTypePairList identifierTypePairList retVarName retTypeNode preNode postNode body varGenerator preBody postBody retType argType retValue binds |
-	opName := aViennaNode first.
-	patternTypePairList := aViennaNode second first.
-	identifierTypePairList := aViennaNode third ifNil: [
+	opName := aViennaNode identifier.
+	patternTypePairList := aViennaNode parameterTypes patternTypePairList.
+	identifierTypePairList := aViennaNode identifierTypePairList ifNil: [
 		                          {
 			                          'RESULT'.
 			                          ViennaUnitTypeNode new } ].
 	retVarName := identifierTypePairList first.
 	retTypeNode := identifierTypePairList second.
 	body := '[|_opContext| _opContext := thisContext. '
-	        , (self generate: aViennaNode fourth env: aDictionary)
+	        , (self generate: aViennaNode statement env: aDictionary)
 	        , '] value'.
-	preNode := aViennaNode sixth.
-	postNode := aViennaNode seventh.
+	preNode := aViennaNode pre.
+	postNode := aViennaNode post.
 	argType := ((2 to: patternTypePairList size by: 2) collect: [ :index |
 		            patternTypePairList at: index ])
 		           ifEmpty: [ ViennaUnitTypeNode new ]
@@ -1706,17 +1706,18 @@ ViennaVDM2Smalltalk >> implicitFunctionDefinition: aViennaNode env: aDictionary 
 ViennaVDM2Smalltalk >> implicitOperationDefinition: aViennaNode env: aDictionary [
 
 	| opName patternTypePairListNode identifierTypePairListNode retVarName retTypeNode preNode postNode body binds varGenerator preBody postBody |
-	opName := aViennaNode first.
-	patternTypePairListNode := aViennaNode second first ifNil: [
-		                           Array new ].
-	identifierTypePairListNode := aViennaNode third ifNil: [
-		                              {
-			                              'RESULT'.
-			                              ViennaUnitTypeNode new } ].
+	opName := aViennaNode identifier.
+	patternTypePairListNode := aViennaNode parameterTypes
+		                           patternTypePairList ifNil: [ Array new ].
+	identifierTypePairListNode := aViennaNode identifierTypePairList
+		                              ifNil: [
+			                              {
+				                              'RESULT'.
+				                              ViennaUnitTypeNode new } ].
 	retVarName := identifierTypePairListNode first.
 	retTypeNode := identifierTypePairListNode second.
-	preNode := aViennaNode fourth second.
-	postNode := aViennaNode fourth third.
+	preNode := aViennaNode pre.
+	postNode := aViennaNode post.
 	body := 'ViennaImplicitEvaluationError signal: '
 	        , (opName , ' is implicitly defined.') storeString.
 	preNode ifNotNil: [
@@ -2648,12 +2649,15 @@ ViennaVDM2Smalltalk >> recordPattern: aViennaNode env: aDictionary [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2Smalltalk >> recordTypeDefinition: aViennaNode env: aDictionary [
+
 	| identifier fieldList type |
-	identifier := aViennaNode first.
-	fieldList := self generate: aViennaNode second env: aDictionary.
-	type := 'ViennaCompositeType constructorName: ' , identifier storeString , ' withAll: {' , (' . ' join: fieldList)
-		, '}'.
-	(self generate: aViennaNode third env: aDictionary) ifNotNil: [ :inv | type := '(' , type , ') inv: ' , inv ].
+	identifier := aViennaNode identifier.
+	fieldList := self generate: aViennaNode fieldList env: aDictionary.
+	type := 'ViennaCompositeType constructorName: '
+	        , identifier storeString , ' withAll: {'
+	        , (' . ' join: fieldList) , '}'.
+	(self generate: aViennaNode inv env: aDictionary) ifNotNil: [ :inv |
+		type := '(' , type , ') inv: ' , inv ].
 	^ identifier , ' := ' , type
 ]
 

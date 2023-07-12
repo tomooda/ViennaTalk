@@ -7,20 +7,13 @@ Class {
 { #category : #operations }
 ViennaConvertExplicitFunctionIntoOperation >> check [
 
-	^ ast isViennaNode and: [
-		  ast isViennaAccessFunctionDefinitionNode and: [
-			  ast functionDefinition isViennaNode and: [
-				  ast functionDefinition isViennaFunctionDefinitionNode and: [
-					  ast functionDefinition first
-						  isViennaExplicitFunctionDefinitionNode ] ] ] ]
+	^ ast isViennaNode and: [ ast isViennaExplicitFunctionDefinitionNode ]
 ]
 
 { #category : #operations }
 ViennaConvertExplicitFunctionIntoOperation >> execute [
 
-	| functionDefinition explicitFunctionDefinition functionDefinitions moduleBody operationDefinitions explicitOperationDefinition accessOperationDefinition |
-	functionDefinition := ast functionDefinition.
-	explicitFunctionDefinition := functionDefinition definition.
+	| functionDefinitions moduleBody operationDefinitions explicitOperationDefinition |
 	functionDefinitions := ast parent.
 	moduleBody := functionDefinitions parent parent.
 	operationDefinitions := (moduleBody
@@ -36,39 +29,26 @@ ViennaConvertExplicitFunctionIntoOperation >> execute [
 		moduleBody add:
 			(ViennaDefinitionBlockNode definition: operationDefinitions) ].
 	explicitOperationDefinition := ViennaExplicitOperationDefinitionNode
-		                               identifier:
-		                               explicitFunctionDefinition identifier
+		                               access:
+		                               (ViennaAccessNode withAll:
+			                                (ast access asArray copyWith:
+				                                 'pure'))
+		                               identifier: ast identifier
 		                               type: (ViennaOperationTypeNode
 				                                argumentType:
-				                                explicitFunctionDefinition type
-					                                argumentType
-				                                returnType:
-				                                explicitFunctionDefinition type
-					                                returnType)
-		                               parameters:
-		                               explicitFunctionDefinition
-			                               parametersList first
-		                               operationBody:
-			                               (ViennaOperationBodyNode statement:
-				                                (ViennaReturnStatementNode
-					                                 expression:
-					                                 explicitFunctionDefinition
-						                                 expression))
-		                               pre: explicitFunctionDefinition pre
-		                               post: explicitFunctionDefinition post.
-	accessOperationDefinition := ViennaAccessOperationDefinitionNode
-		                             access:
-		                             (ViennaAccessNode withAll:
-			                              (ast access asArray copyWith: 'pure'))
-		                             operationDefinition:
-		                             (ViennaOperationDefinitionNode
-			                              definition:
-			                              explicitOperationDefinition).
+				                                ast type argumentType
+				                                returnType: ast type returnType)
+		                               parameters: ast parametersList first
+		                               statement:
+		                               (ViennaReturnStatementNode
+			                                expression: ast expression)
+		                               pre: ast pre
+		                               post: ast post.
 	functionDefinitions remove: ast.
 	functionDefinitions ifEmpty: [
 		moduleBody remove: functionDefinitions parent ].
-	operationDefinitions add: accessOperationDefinition.
-	^ accessOperationDefinition
+	operationDefinitions add: explicitOperationDefinition.
+	^ explicitOperationDefinition
 ]
 
 { #category : #accessing }

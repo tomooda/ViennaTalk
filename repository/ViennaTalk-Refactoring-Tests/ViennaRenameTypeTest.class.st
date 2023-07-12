@@ -27,7 +27,7 @@ end B
 { #category : #accessing }
 ViennaRenameTypeTest >> findFailureAst [
 
-	^ ((self spec moduleNamed: 'A') resolveIdentifier: 'T') typeDefinition type
+	^ ((self spec moduleNamed: 'A') resolveIdentifier: 'T') type
 ]
 
 { #category : #accessing }

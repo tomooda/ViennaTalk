@@ -23,8 +23,8 @@ ViennaUseTypeSynonymInAllOccurrences >> findDefinitionNode [
 		  | accessDef |
 		  accessDef := def asAccessDefinition.
 		  (accessDef isViennaAccessTypeDefinitionNode and: [
-			   accessDef typeDefinition isViennaTypeSynonymNode and: [
-				   accessDef inv isNil ] ]) ifTrue: [ accessDef ] ]
+			   accessDef isViennaTypeSynonymNode and: [ accessDef inv isNil ] ])
+			  ifTrue: [ accessDef ] ]
 ]
 
 { #category : #accessing }

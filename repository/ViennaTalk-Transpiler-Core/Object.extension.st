@@ -1,12 +1,6 @@
 Extension { #name : #Object }
 
 { #category : #'*ViennaTalk-Transpiler-Core' }
-Object >> inv [
-
-	^ self typeDefinition inv
-]
-
-{ #category : #'*ViennaTalk-Transpiler-Core' }
 Object >> isViennaTracingString [
 	^ false
 ]

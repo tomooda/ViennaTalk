@@ -988,7 +988,7 @@ ViennaVDM2SmalltalkScriptTest >> testIsNotYetSpecifiedEnv [
 	node := ViennaVDMParser new explicitFunctionDefinition end parse:
 		        'f:t1->t2 f(x) == is not yet specified'.
 	self deny: node isPetit2Failure.
-	node := node at: 6.
+	node := node expression.
 	self assert: node isViennaIsNotYetSpecifiedNode.
 	self
 		should: [

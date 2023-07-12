@@ -217,7 +217,7 @@ ViennaVDM2SmalltalkClass >> defineMethodFromExplicitOperation: opName in: theCla
 		  varGenerator: varGenerator
 		  env: aDictionary
 		  node: aViennaNode
-		  bodyNode: aViennaNode operationBody
+		  bodyNode: aViennaNode statement
 ]
 
 { #category : #utilities }
@@ -347,7 +347,7 @@ ViennaVDM2SmalltalkClass >> explicitFunctionDefinition: aViennaNode env: aDictio
 	initializer := super
 		               explicitFunctionDefinition: aViennaNode
 		               env: aDictionary.
-	theClass := classes at: (aViennaNode module ifNotNil: #first).
+	theClass := classes at: (aViennaNode module ifNotNil: #identifier).
 	self
 		defineLazyMethodNamed: identifier
 		initializer: initializer
@@ -377,7 +377,7 @@ ViennaVDM2SmalltalkClass >> explicitOperationDefinition: aViennaNode env: aDicti
 	opname := aViennaNode identifier.
 	typeNode := aViennaNode type.
 	paramsNode := aViennaNode parameters.
-	body := self generate: aViennaNode operationBody env: aDictionary.
+	body := self generate: aViennaNode statement env: aDictionary.
 	preNode := aViennaNode pre.
 	postNode := aViennaNode post.
 	varGenerator := self varNameGenerator: 'op' uniqueIn: {
@@ -398,7 +398,7 @@ ViennaVDM2SmalltalkClass >> explicitOperationDefinition: aViennaNode env: aDicti
 					         { {
 						         paramsNode first.
 						         argTypeNode } } ] ].
-	theClass := classes at: (aViennaNode module ifNotNil: #first).
+	theClass := classes at: (aViennaNode module ifNotNil: #identifier).
 	self
 		defineMethodFromExplicitOperation: opname
 		in: theClass
@@ -502,51 +502,52 @@ ViennaVDM2SmalltalkClass >> explicitOperationDefinition: aViennaNode env: aDicti
 
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> extendedExplicitFunctionDefinition: aViennaNode env: aDictionary [
+
 	| identifier initializer theClass |
-	identifier := aViennaNode first.
+	identifier := aViennaNode identifier.
 	initializer := super
-		extendedExplicitFunctionDefinition: aViennaNode
-		env: aDictionary.
-	theClass := classes at: (aViennaNode module ifNotNil: #first).
+		               extendedExplicitFunctionDefinition: aViennaNode
+		               env: aDictionary.
+	theClass := classes at: (aViennaNode module ifNotNil: #identifier).
 	self
 		defineLazyMethodNamed: identifier
 		initializer: initializer
 		in: theClass
 		protocol: 'functions'
 		node: aViennaNode.
-	aViennaNode sixth
-		ifNotNil: [ self
-				defineLazyMethodNamed: 'pre_' , identifier
-				initializer: initializer
-				in: theClass
-				protocol: 'functions'
-				node: aViennaNode sixth ].
-	aViennaNode seventh
-		ifNotNil: [ self
-				defineLazyMethodNamed: 'post_' , identifier
-				initializer: initializer
-				in: theClass
-				protocol: 'functions'
-				node: aViennaNode seventh ]
+	aViennaNode pre ifNotNil: [
+		self
+			defineLazyMethodNamed: 'pre_' , identifier
+			initializer: initializer
+			in: theClass
+			protocol: 'functions'
+			node: aViennaNode pre ].
+	aViennaNode post ifNotNil: [
+		self
+			defineLazyMethodNamed: 'post_' , identifier
+			initializer: initializer
+			in: theClass
+			protocol: 'functions'
+			node: aViennaNode post ]
 ]
 
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> extendedExplicitOperationDefinition: aViennaNode env: aDictionary [
 
 	| opname patternTypePairListNode retVar retTypeNode bodyNode body preNode postNode varGenerator binds theClass |
-	opname := aViennaNode first.
-	patternTypePairListNode := aViennaNode second first ifNil: [
-		                           Array new ].
-	retVar := aViennaNode third
+	opname := aViennaNode identifier.
+	patternTypePairListNode := aViennaNode parameterTypes
+		                           patternTypePairList ifNil: [ Array new ].
+	retVar := aViennaNode identifierTypePairList
 		          ifNil: [ 'RESULT' ]
 		          ifNotNil: [ :node | node first ].
-	retTypeNode := aViennaNode third
+	retTypeNode := aViennaNode identifierTypePairList
 		               ifNil: [ ViennaUnitTypeNode new ]
 		               ifNotNil: [ :node | node second ].
-	bodyNode := aViennaNode fourth.
+	bodyNode := aViennaNode statement.
 	body := self generate: bodyNode.
-	preNode := aViennaNode sixth.
-	postNode := aViennaNode seventh.
+	preNode := aViennaNode pre.
+	postNode := aViennaNode post.
 	varGenerator := self varNameGenerator: 'op' uniqueIn: {
 			                opname.
 			                body }.
@@ -776,15 +777,16 @@ ViennaVDM2SmalltalkClass >> implicitFunctionDefinition: aViennaNode env: aDictio
 ViennaVDM2SmalltalkClass >> implicitOperationDefinition: aViennaNode env: aDictionary [
 
 	| opname patternTypePairListNode retVar retTypeNode bodyNode body preNode postNode varGenerator binds theClass |
-	opname := aViennaNode first.
-	patternTypePairListNode := aViennaNode second first.
-	retVar := aViennaNode third first.
-	retTypeNode := aViennaNode third second.
+	opname := aViennaNode identifier.
+	patternTypePairListNode := aViennaNode parameterTypes
+		                           patternTypePairList.
+	retVar := aViennaNode identifierTypePairList first.
+	retTypeNode := aViennaNode identifierTypePairList second.
 	bodyNode := aViennaNode.
 	body := 'ViennaImplicitEvaluationError signal: '
 	        , (opname , ' is implicitly defined.') storeString.
-	preNode := aViennaNode fourth second.
-	postNode := aViennaNode fourth third.
+	preNode := aViennaNode pre.
+	postNode := aViennaNode post.
 	varGenerator := self varNameGenerator: 'op' uniqueIn: {
 			                opname.
 			                body }.
@@ -1085,17 +1087,18 @@ ViennaVDM2SmalltalkClass >> operationImport: aViennaNode env: aDictionary [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> recordTypeDefinition: aViennaNode env: aDictionary [
+
 	| identifier fieldList type initializer theClass |
-	identifier := aViennaNode first.
-	fieldList := self generate: aViennaNode second env: aDictionary.
+	identifier := aViennaNode identifier.
+	fieldList := self generate: aViennaNode fieldList env: aDictionary.
 	type := 'ViennaCompositeType constructorName: '
-		, identifier storeString , ' withAll: {' , (' . ' join: fieldList)
-		, '}'.
-	(self generate: aViennaNode third env: aDictionary)
-		ifNotNil: [ :inv | type := '(' , type , ') inv: ' , inv ].
+	        , identifier storeString , ' withAll: {'
+	        , (' . ' join: fieldList) , '}'.
+	(self generate: aViennaNode inv env: aDictionary) ifNotNil: [ :inv |
+		type := '(' , type , ') inv: ' , inv ].
 	initializer := identifier , ' := ViennaTypeHolder new. ' , identifier
-		, ' type: (' , type , ')'.
-	theClass := classes at: (aViennaNode module ifNotNil: #first).
+	               , ' type: (' , type , ')'.
+	theClass := classes at: (aViennaNode module ifNotNil: #identifier).
 	self
 		defineLazyMethodNamed: identifier
 		initializer: initializer
@@ -1239,20 +1242,22 @@ ViennaVDM2SmalltalkClass >> typeImport: aViennaNode env: aDictionary [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> typeSynonym: aViennaNode env: aDictionary [
+
 	| identifier type inv initializer theClass |
-	identifier := aViennaNode first.
-	type := self generate: aViennaNode second env: aDictionary.
-	inv := (self generate: aViennaNode third env: aDictionary)
-		ifNil: [ '' ]
-		ifNotNil: [ :str | ' inv: ' , str ].
-	initializer := identifier , ' := ViennaTypeHolder new. ' , identifier , ' type: (' , type
-		, inv , ')'.
-	theClass := classes at: (aViennaNode module ifNotNil: #first).
+	identifier := aViennaNode identifier.
+	type := self generate: aViennaNode type env: aDictionary.
+	inv := (self generate: aViennaNode inv env: aDictionary)
+		       ifNil: [ '' ]
+		       ifNotNil: [ :str | ' inv: ' , str ].
+	initializer := identifier , ' := ViennaTypeHolder new. ' , identifier
+	               , ' type: (' , type , inv , ')'.
+	theClass := classes at: (aViennaNode module ifNotNil: #identifier).
 	self
 		defineLazyMethodNamed: identifier
 		initializer: initializer
 		in: theClass
-		protocol: 'types' node: aViennaNode
+		protocol: 'types'
+		node: aViennaNode
 ]
 
 { #category : #utilities }
@@ -1269,7 +1274,7 @@ ViennaVDM2SmalltalkClass >> validateClassName: aString [
 ViennaVDM2SmalltalkClass >> valueDefinitions: aViennaNode env: aDictionary [
 
 	| theClass initializer |
-	theClass := classes at: (aViennaNode module ifNotNil: #first).
+	theClass := classes at: (aViennaNode module ifNotNil: #identifier).
 	aViennaNode do: [ :node |
 		initializer := self generate: node env: aDictionary.
 		node uniqueBoundIdentifiersDo: [ :identifier |

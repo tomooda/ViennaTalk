@@ -28,8 +28,7 @@ end B
 { #category : #accessing }
 ViennaMoveTypeTest >> findFailureAst [
 
-	^ ((self spec moduleNamed: 'A') resolveIdentifier: 'T1')
-		  typeDefinition type
+	^ ((self spec moduleNamed: 'A') resolveIdentifier: 'T1') type
 ]
 
 { #category : #accessing }

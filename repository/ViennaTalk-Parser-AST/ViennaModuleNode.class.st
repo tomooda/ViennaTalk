@@ -277,19 +277,15 @@ ViennaModuleNode >> definitionOfLocalName: aString [
 			ifFalse: [
 				defBlock definition do: [ :def |
 					| defItem |
-					defItem := def second.
-					(defItem isViennaTypeSynonymNode: aString) ifTrue: [ ^ defItem ].
-					(defItem isViennaRecordTypeDefinitionNode: aString) ifTrue: [
-						^ defItem ].
+					(def isViennaTypeSynonymNode: aString) ifTrue: [ ^ def ].
+					(def isViennaRecordTypeDefinitionNode: aString) ifTrue: [ ^ def ].
 					def isViennaValueDefinitionNode ifTrue: [
 						def pattern
 							allDescendantsSuchThat: [ :n |
 							n isViennaPatternIdentifierNode: aString ]
 							do: [ :n | ^ n ] ].
-					(defItem isViennaFunctionDefinitionNode: aString) ifTrue: [
-						^ defItem definition ].
-					(defItem isViennaOperationDefinitionNode: aString) ifTrue: [
-						^ defItem definition ] ] ] ].
+					(def isViennaFunctionDefinitionNode: aString) ifTrue: [ ^ def ].
+					(def isViennaOperationDefinitionNode: aString) ifTrue: [ ^ def ] ] ] ].
 	self interface importDefinitionList ifNotNil: [ :imports |
 		imports do: [ :importDef |
 			importDef second isViennaImportModuleSignatureNode ifTrue: [

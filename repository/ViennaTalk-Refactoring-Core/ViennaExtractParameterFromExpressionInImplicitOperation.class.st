@@ -8,7 +8,7 @@ Class {
 ViennaExtractParameterFromExpressionInImplicitOperation >> executeDefinition [
 
 	self newName ifNil: [ ^ nil ].
-	self definitionNode second first
+	self definitionNode parameterTypes patternTypePairList
 		add: (ViennaPatternListNode withAll:
 					 { (ViennaPatternIdentifierNode identifier: self newName) });
 		add: ViennaBasicTypeNode any.

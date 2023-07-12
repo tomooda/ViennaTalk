@@ -38,7 +38,7 @@ ViennaExtractOperationFromLetStatement >> check [
 { #category : #operations }
 ViennaExtractOperationFromLetStatement >> execute [
 
-	| moduleBody operationDefinitions explicitOperationDefinition accessOperationDefinition |
+	| moduleBody operationDefinitions explicitOperationDefinition |
 	self newName ifNil: [ ^ self ].
 	moduleBody := ast module third.
 	operationDefinitions := (moduleBody
@@ -60,21 +60,16 @@ ViennaExtractOperationFromLetStatement >> execute [
 			 name: (ViennaLocalNameNode identifier: self newName)
 			 expressionList: self arguments).
 	explicitOperationDefinition := ViennaExplicitOperationDefinitionNode
+		                               access: ViennaAccessNode empty
 		                               identifier: self newName
 		                               type: self operationType
 		                               parameters:
 		                               self operationParametersList
-		                               operationBody: self operationBody
+		                               statement: self statement
 		                               pre: nil
 		                               post: nil.
-	accessOperationDefinition := ViennaAccessOperationDefinitionNode
-		                             access: ViennaAccessNode empty
-		                             operationDefinition:
-		                             (ViennaOperationDefinitionNode
-			                              definition:
-			                              explicitOperationDefinition).
-	operationDefinitions add: accessOperationDefinition.
-	^ accessOperationDefinition
+	operationDefinitions add: explicitOperationDefinition.
+	^ explicitOperationDefinition
 ]
 
 { #category : #accessing }
@@ -104,12 +99,6 @@ ViennaExtractOperationFromLetStatement >> newName: aString [
 	newName := aString
 ]
 
-{ #category : #'parsers-definitions' }
-ViennaExtractOperationFromLetStatement >> operationBody [
-
-	^ ViennaOperationBodyNode statement: ast second
-]
-
 { #category : #accessing }
 ViennaExtractOperationFromLetStatement >> operationParametersList [
 
@@ -137,4 +126,10 @@ ViennaExtractOperationFromLetStatement >> operationType [
 { #category : #accessing }
 ViennaExtractOperationFromLetStatement >> sortingOrder [
 	^ 2.57
+]
+
+{ #category : #'parsers-definitions' }
+ViennaExtractOperationFromLetStatement >> statement [
+
+	^ ast second
 ]

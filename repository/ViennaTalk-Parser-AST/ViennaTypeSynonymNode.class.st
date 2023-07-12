@@ -6,6 +6,17 @@ Class {
 }
 
 { #category : #'instance creation' }
+ViennaTypeSynonymNode class >> access: aViennaAccessNode identifier: aString type: aViennaTypeNode inv: aViennaInvariantNode [
+
+	^ (self new: 4)
+		  access: aViennaAccessNode;
+		  identifier: aString;
+		  type: aViennaTypeNode;
+		  inv: aViennaInvariantNode;
+		  yourself
+]
+
+{ #category : #'instance creation' }
 ViennaTypeSynonymNode class >> identifier: aString type: aViennaTypeNode [
 
 	^ self identifier: aString type: aViennaTypeNode inv: nil
@@ -14,20 +25,29 @@ ViennaTypeSynonymNode class >> identifier: aString type: aViennaTypeNode [
 { #category : #'instance creation' }
 ViennaTypeSynonymNode class >> identifier: aString type: aViennaTypeNode inv: aViennaInvariantNode [
 
-	^ (self new: 3)
-		  identifier: aString;
-		  type: aViennaTypeNode;
-		  inv: aViennaInvariantNode;
-		  yourself
+	^ self
+		  access: ViennaAccessNode empty
+		  identifier: aString
+		  type: aViennaTypeNode
+		  inv: aViennaInvariantNode
+]
+
+{ #category : #accessing }
+ViennaTypeSynonymNode >> access [
+
+	^ self at: 1
+]
+
+{ #category : #accessing }
+ViennaTypeSynonymNode >> access: aViennaAccessNode [
+
+	self at: 1 put: aViennaAccessNode
 ]
 
 { #category : #'accessing-definitions' }
 ViennaTypeSynonymNode >> asAccessDefinition [
 
-	^ parent ifNil: [
-		  ViennaAccessTypeDefinitionNode
-			  access: ViennaAccessNode empty
-			  typeDefinition: self ]
+	^ self
 ]
 
 { #category : #'accessing-definitions' }
@@ -58,16 +78,18 @@ ViennaTypeSynonymNode >> boundIdentifiersDo: aBlock [
 { #category : #'pretty printing' }
 ViennaTypeSynonymNode >> formatWith: aViennaAbstractFormatter [
 
-	| typeName baseType invariant |
-	typeName := aViennaAbstractFormatter format: self first.
-	baseType := aViennaAbstractFormatter format: self second.
-	invariant := self third
+	| access typeName baseType invariant |
+	access := (aViennaAbstractFormatter format: self access) trim
+		          ifNotEmpty: [ :string | string , ' ' ].
+	typeName := aViennaAbstractFormatter format: self identifier.
+	baseType := aViennaAbstractFormatter format: self type.
+	invariant := self inv
 		             ifNil: [ '' ]
 		             ifNotNil: [ :node |
 		             aViennaAbstractFormatter format: node ].
 	^ aViennaAbstractFormatter
 		  indentString: (aViennaAbstractFormatter
-				   indentString: typeName , ' ='
+				   indentString: access , typeName , ' ='
 				   insertCrIfNeeded: baseType)
 		  insertCrIfNeeded: invariant
 ]
@@ -81,29 +103,35 @@ ViennaTypeSynonymNode >> freeIdentifiersExcept: aSet do: aBlock [
 { #category : #accessing }
 ViennaTypeSynonymNode >> identifier [
 
-	^ self at: 1
+	^ self at: 2
 ]
 
 { #category : #accessing }
 ViennaTypeSynonymNode >> identifier: aString [
 
-	self at: 1 put: aString
+	self at: 2 put: aString
 ]
 
 { #category : #accessing }
 ViennaTypeSynonymNode >> inv [
 
-	^ self at: 3
+	^ self at: 4
 ]
 
 { #category : #accessing }
 ViennaTypeSynonymNode >> inv: aViennaInvariantNode [
 
-	self at: 3 put: aViennaInvariantNode
+	self at: 4 put: aViennaInvariantNode
 ]
 
 { #category : #testing }
 ViennaTypeSynonymNode >> isTypeDefinition [
+
+	^ true
+]
+
+{ #category : #testing }
+ViennaTypeSynonymNode >> isViennaAccessTypeDefinitionNode [
 
 	^ true
 ]
@@ -153,11 +181,11 @@ ViennaTypeSynonymNode >> shortName [
 { #category : #accessing }
 ViennaTypeSynonymNode >> type [
 
-	^ self at: 2
+	^ self at: 3
 ]
 
 { #category : #accessing }
 ViennaTypeSynonymNode >> type: aViennaTypeNode [
 
-	self at: 2 put: aViennaTypeNode
+	self at: 3 put: aViennaTypeNode
 ]

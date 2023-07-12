@@ -132,7 +132,7 @@ ViennaNodeTest >> testDefinitionOfLocalName [
 
 	self assert: (skip definitionOfLocalName: 'nothing') isNil.
 	self
-		assert: (skip definitionOfLocalName: 'x1') parent parent first
+		assert: (skip definitionOfLocalName: 'x1') parent parent identifier
 		equals: 'exp_op'.
 	self assert: (skip definitionOfLocalName: 'x') isNil.
 	self assert:

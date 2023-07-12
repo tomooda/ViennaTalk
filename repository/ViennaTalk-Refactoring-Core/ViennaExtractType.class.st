@@ -15,7 +15,7 @@ ViennaExtractType >> check [
 { #category : #operations }
 ViennaExtractType >> execute [
 
-	| moduleBody typeDefinitions typeDefinition accessTypeDefinition |
+	| moduleBody typeDefinitions typeDefinition |
 	self newName ifNil: [ ^ nil ].
 	moduleBody := ast module third.
 	typeDefinitions := (moduleBody
@@ -35,11 +35,8 @@ ViennaExtractType >> execute [
 		                  identifier: self newName
 		                  type: ast
 		                  inv: nil.
-	accessTypeDefinition := ViennaAccessTypeDefinitionNode
-		                        access: ViennaAccessNode empty
-		                        typeDefinition: typeDefinition.
-	typeDefinitions add: accessTypeDefinition.
-	^ accessTypeDefinition
+	typeDefinitions add: typeDefinition.
+	^ typeDefinition
 ]
 
 { #category : #accessing }

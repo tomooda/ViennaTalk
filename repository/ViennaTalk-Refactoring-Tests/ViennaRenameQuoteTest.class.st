@@ -22,8 +22,7 @@ end A
 { #category : #accessing }
 ViennaRenameQuoteTest >> findFailureAst [
 
-	^ ((self spec moduleNamed: 'A') resolveIdentifier: 'T')
-		  typeDefinition type
+	^ ((self spec moduleNamed: 'A') resolveIdentifier: 'T') type
 ]
 
 { #category : #accessing }

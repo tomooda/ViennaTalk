@@ -21,15 +21,15 @@ end A' asViennaDocumentAst
 { #category : #accessing }
 ViennaInlineTypeTest >> findFailureAst [
 
-	^ ((self spec moduleNamed: 'A') resolveIdentifier: 'Rect')
-		  typeDefinition fieldList second type
+	^ ((self spec moduleNamed: 'A') resolveIdentifier: 'Rect') fieldList
+		  second type
 ]
 
 { #category : #accessing }
 ViennaInlineTypeTest >> findSuccessAst [
 
-	^ ((self spec moduleNamed: 'A') resolveIdentifier: 'Rect')
-		  typeDefinition fieldList first type
+	^ ((self spec moduleNamed: 'A') resolveIdentifier: 'Rect') fieldList
+		  first type
 ]
 
 { #category : #accessing }

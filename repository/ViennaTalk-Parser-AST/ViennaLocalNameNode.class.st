@@ -74,16 +74,7 @@ ViennaLocalNameNode >> isExportedNameNode [
 { #category : #testing }
 ViennaLocalNameNode >> isFunctionNameNode [
 
-	(self definitionOfLocalName: self identifier) ifNotNil: [ :defNode |
-		(defNode isViennaExplicitFunctionDefinitionNode: self identifier)
-			ifTrue: [ ^ true ].
-		(defNode isViennaExtendedExplicitFunctionDefinitionNode:
-			 self identifier) ifTrue: [ ^ true ].
-		(defNode isViennaImplicitFunctionDefinitionNode: self identifier)
-			ifTrue: [ ^ true ].
-		(defNode isViennaFunctionImportNode: self identifier) ifTrue: [
-			^ true ] ].
-	^ false
+	^ self resolve ifNotNil: #isFunctionDefinition ifNil: [ false ]
 ]
 
 { #category : #testing }
