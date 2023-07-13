@@ -6,6 +6,13 @@ Class {
 }
 
 { #category : #'formatting-interfaces' }
+ViennaExportDefinitionNode class >> all [
+
+	^ self exportModuleSignature:
+		  ViennaExportModuleSignatureAllNode empty
+]
+
+{ #category : #'formatting-interfaces' }
 ViennaExportDefinitionNode class >> exportModuleSignature: aViennaExportModuleSignature [
 
 	^ (self new: 1)

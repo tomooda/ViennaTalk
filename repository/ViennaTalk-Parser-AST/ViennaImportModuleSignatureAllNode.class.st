@@ -18,6 +18,12 @@ ViennaImportModuleSignatureAllNode >> formatWith: aViennaAbstractFormatter [
 ]
 
 { #category : #enumerating }
+ViennaImportModuleSignatureAllNode >> importSignaturesDo: aBlock [
+
+	
+]
+
+{ #category : #enumerating }
 ViennaImportModuleSignatureAllNode >> importsDo: aBlock [
 ]
 

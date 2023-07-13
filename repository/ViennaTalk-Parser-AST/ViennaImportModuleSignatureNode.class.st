@@ -20,6 +20,18 @@ ViennaImportModuleSignatureNode >> formatWith: aViennaAbstractFormatter [
 	^ aViennaAbstractFormatter join: String cr withAll: importSignatures
 ]
 
+{ #category : #accessing }
+ViennaImportModuleSignatureNode >> importSignatures [
+
+	^ self asArray
+]
+
+{ #category : #enumerating }
+ViennaImportModuleSignatureNode >> importSignaturesDo: aBlock [
+
+	self do: aBlock
+]
+
 { #category : #enumerating }
 ViennaImportModuleSignatureNode >> importsDo: aBlock [
 

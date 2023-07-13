@@ -45,6 +45,15 @@ ViennaFlatDocumentNode >> addValueDefinition: aViennaNode [
 		 section ]) add: aViennaNode
 ]
 
+{ #category : #converting }
+ViennaFlatDocumentNode >> asModularDocument [
+
+	^ ViennaModularDocumentNode withAll: (ViennaModuleNode
+			   identifier: 'DEFAULT'
+			   moduleBody:
+			   (ViennaModuleBodyNode withAll: (self collect: #copyFragment)))
+]
+
 { #category : #'accessing-definitions' }
 ViennaFlatDocumentNode >> deepFindResolverForIdentifier: aString [
 

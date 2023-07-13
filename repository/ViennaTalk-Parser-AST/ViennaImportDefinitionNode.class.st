@@ -46,6 +46,12 @@ ViennaImportDefinitionNode >> importModuleSignature: aViennaImportModuleSignatur
 ]
 
 { #category : #enumerating }
+ViennaImportDefinitionNode >> importSignaturesDo: aBlock [
+
+	self importModuleSignature importSignaturesDo: aBlock
+]
+
+{ #category : #enumerating }
 ViennaImportDefinitionNode >> importsDo: aBlock [
 
 	self importModuleSignature importsDo: aBlock

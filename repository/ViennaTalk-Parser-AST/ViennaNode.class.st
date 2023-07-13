@@ -452,7 +452,8 @@ ViennaNode >> ifNotEmpty: nonEmptyBlock ifEmpty: emptyBlock [
 
 { #category : #enumerating }
 ViennaNode >> imports [
-	^ self module second first
+
+	^ self module interface importDefinitionList
 ]
 
 { #category : #enumerating }

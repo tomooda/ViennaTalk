@@ -6,6 +6,14 @@ Class {
 }
 
 { #category : #'instance creation' }
+ViennaInterfaceNode class >> exportsAll [
+
+	^ self
+		  importDefinitionList: ViennaImportDefinitionListNode empty
+		  exportDefinition: ViennaExportDefinitionNode all
+]
+
+{ #category : #'instance creation' }
 ViennaInterfaceNode class >> importDefinitionList: aViennaImportDefinitionListNode exportDefinition: aViennaExportDefinitionNode [
 
 	^ (self new: 2)
@@ -57,6 +65,13 @@ ViennaInterfaceNode >> importDefinitionList [
 ViennaInterfaceNode >> importDefinitionList: aViennaImportDefinitionListNode [
 
 	self at: 1 put: aViennaImportDefinitionListNode
+]
+
+{ #category : #enumerating }
+ViennaInterfaceNode >> importSignaturesDo: aBlock [
+
+	self importDefinitionList ifNotNil: [ :importDefinitionList |
+		importDefinitionList importSignaturesDo: aBlock ]
 ]
 
 { #category : #testing }

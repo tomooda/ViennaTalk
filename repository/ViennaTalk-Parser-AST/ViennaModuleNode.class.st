@@ -29,6 +29,15 @@ ViennaModuleNode class >> identifier: aString interface: aViennaInterfaceNode mo
 ]
 
 { #category : #'instance creation' }
+ViennaModuleNode class >> identifier: aString moduleBody: aViennaModuleBodyNode [
+
+	^ self
+		  identifier: aString
+		  interface: ViennaInterfaceNode exportsAll
+		  moduleBody: aViennaModuleBodyNode
+]
+
+{ #category : #'instance creation' }
 ViennaModuleNode class >> unitTesting [
 
 	^ ViennaVDMParser new module end parse: self unitTestingSource
@@ -442,6 +451,12 @@ ViennaModuleNode >> importDefinitionsDo: aBlock [
 
 	self interface importDefinitionList ifNotNil: [ :importDefinitionList |
 		importDefinitionList do: aBlock ]
+]
+
+{ #category : #enumerating }
+ViennaModuleNode >> importSignaturesDo: aBlock [
+
+	self interface importSignaturesDo: aBlock
 ]
 
 { #category : #testing }

@@ -689,7 +689,7 @@ ViennaRefactoringBrowser >> displayCategory: aViennaNode [
 
 	aViennaNode ifNil: [ ^ '-' ].
 	aViennaNode isViennaImportSignatureNode ifTrue: [
-		^ 'from ' , aViennaNode parent parent first , ' '
+		^ 'from ' , aViennaNode moduleIdentifier , ' '
 		  , aViennaNode refactoringBrowserSectionName ].
 	^ aViennaNode refactoringBrowserSectionName ifNil: [ '?' ]
 ]
@@ -971,7 +971,7 @@ ViennaRefactoringBrowser >> load: aString [
 		UIManager default alert: 'Failed to parse the source.'.
 		^ nil ].
 	ast isViennaDocumentNode ifFalse: [ ^ nil ].
-	ast isViennaFlatDocumnetNode ifTrue: [
+	ast isViennaFlatDocumentNode ifTrue: [
 		ast := ViennaModularDocumentNode with: (ViennaModuleNode
 				        identifier: 'DEFAULT'
 				        interface: (ViennaInterfaceNode
@@ -1358,21 +1358,13 @@ ViennaRefactoringBrowser >> testResultTableContextMenu [
 ViennaRefactoringBrowser >> updateCategoryList [
 
 	| newItems oldSelection |
-	newItems := (Array with: self module) , (self module
-		             ifNotNil: [ :ast |
-			             (ast second first
-				              ifNotNil: [ :importDefinitionList |
-					              (importDefinitionList collect: [ :importDefinition |
-						               importDefinition second asArray ]) flattened ]
-				              ifNil: [ Array new ]) , ((ast
-				               detect: [ :node |
-				               node isViennaNode and: [
-					               node isViennaModuleBodyNode ] ]
-				               ifNone: [  ])
-				              ifNotNil: [ :body |
-				              body collect: [ :node | node first ] ]
-				              ifNil: [ Array new ]) ]
-		             ifNil: [ Array new ]).
+	newItems := Array streamContents: [ :stream |
+		            stream nextPut: self module.
+		            self module ifNotNil: [ :moduleNode |
+			            moduleNode importSignaturesDo: [ :importSignature |
+				            stream nextPut: importSignature ].
+			            moduleNode sectionsDo: [ :section |
+				            stream nextPut: section ] ] ].
 	oldSelection := categoryList selection selectedItem.
 	categoryList items: newItems.
 	(newItems includes: oldSelection)
@@ -1400,8 +1392,8 @@ ViennaRefactoringBrowser >> updateModuleList [
 
 	| newItems oldSelection |
 	newItems := self specification
-		            ifNotNil: [ :ast | 
-		            ast asArray ifEmpty: [ Array with: nil ] ]
+		            ifNotNil: [ :documentNode |
+		            documentNode modules ifEmpty: [ Array with: nil ] ]
 		            ifNil: [ Array with: nil ].
 	oldSelection := moduleList selection selectedItem.
 	moduleList items: newItems.

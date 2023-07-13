@@ -25,6 +25,13 @@ ViennaImportDefinitionListNode >> formatWith: aViennaAbstractFormatter [
 			   withAll: definitions)
 ]
 
+{ #category : #enumerating }
+ViennaImportDefinitionListNode >> importSignaturesDo: aBlock [
+
+	self do: [ :importDefinition |
+		importDefinition importSignaturesDo: aBlock ]
+]
+
 { #category : #testing }
 ViennaImportDefinitionListNode >> isViennaImportDefinitionListNode [
 

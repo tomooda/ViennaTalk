@@ -22,3 +22,15 @@ ViennaModularDocumentNode >> isViennaModularDocumentNode [
 
 	^ true
 ]
+
+{ #category : #accessing }
+ViennaModularDocumentNode >> modules [
+
+	^ self asArray
+]
+
+{ #category : #accessing }
+ViennaModularDocumentNode >> modulesDo: aBlock [
+
+	self do: aBlock
+]
