@@ -536,8 +536,8 @@ ViennaVDM2SmalltalkClass >> extendedExplicitOperationDefinition: aViennaNode env
 
 	| opname patternTypePairListNode retVar retTypeNode bodyNode body preNode postNode varGenerator binds theClass |
 	opname := aViennaNode identifier.
-	patternTypePairListNode := aViennaNode parameterTypes
-		                           patternTypePairList ifNil: [ Array new ].
+	patternTypePairListNode := aViennaNode patternTypePairList ifNil: [
+		                           Array new ].
 	retVar := aViennaNode identifierTypePairList
 		          ifNil: [ 'RESULT' ]
 		          ifNotNil: [ :node | node first ].
@@ -776,8 +776,7 @@ ViennaVDM2SmalltalkClass >> implicitOperationDefinition: aViennaNode env: aDicti
 
 	| opname patternTypePairListNode retVar retTypeNode bodyNode body preNode postNode varGenerator binds theClass |
 	opname := aViennaNode identifier.
-	patternTypePairListNode := aViennaNode parameterTypes
-		                           patternTypePairList.
+	patternTypePairListNode := aViennaNode patternTypePairList.
 	retVar := aViennaNode identifierTypePairList first.
 	retTypeNode := aViennaNode identifierTypePairList second.
 	bodyNode := aViennaNode.

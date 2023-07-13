@@ -560,7 +560,7 @@ ViennaVDMParser >> extendedExplicitFunctionDefinition [
 		  (ViennaExtendedExplicitFunctionDefinitionNode
 			   identifier: array first
 			   typeVariableList: array second
-			   parameterTypes: array third
+			   patternTypePairList: array third
 			   identifierTypePairList: array fourth
 			   expression: array fifth
 			   pre: array sixth
@@ -577,7 +577,7 @@ ViennaVDMParser >> extendedExplicitOperationDefinition [
 	  =>> [ :start :end :array |
 		  (ViennaExtendedExplicitOperationDefinitionNode
 			   identifier: array first
-			   parameterTypes: array second
+			   patternTypePairList: array second
 			   identifierTypePairList: array third
 			   statement: array fourth
 			   externals: array fifth
@@ -862,7 +862,7 @@ ViennaVDMParser >> implicitFunctionDefinition [
 	  (ViennaImplicitFunctionDefinitionNode
 		   identifier: array first
 		   typeVariableList: array second
-		   parameterTypes: array third
+		   patternTypePairList: array third
 		   identifierTypePairList: array fourth
 		   pre: array fifth
 		   post: array sixth)
@@ -876,7 +876,7 @@ ViennaVDMParser >> implicitOperationDefinition [
 	^ super implicitOperationDefinition =>> [ :start :end :array |
 	  (ViennaImplicitOperationDefinitionNode
 		   identifier: array first
-		   parameterTypes: array second
+		   patternTypePairList: array second
 		   identifierTypePairList: array third
 		   externals: array fourth first
 		   pre: array fourth second
@@ -1530,15 +1530,6 @@ ViennaVDMParser >> othersStatement [
 
 	^ super othersStatement =>> [ :start :end :bodyStatement |
 	  (ViennaOthersStatementNode statement: bodyStatement)
-		  start: start end: end;
-		  yourself ]
-]
-
-{ #category : #'parsers-definitions' }
-ViennaVDMParser >> parameterTypes [
-
-	^ super parameterTypes =>> [ :start :end :n |
-	  (ViennaParameterTypesNode patternTypePairList: n)
 		  start: start end: end;
 		  yourself ]
 ]

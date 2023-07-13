@@ -562,14 +562,13 @@ ViennaRefactoring >> freeOccurrencesOf: aString inImplicitFunctionDefinition: aV
 		do: aBlock.
 	self
 		freeOccurrencesOf: aString
-		in: aViennaNode parameterTypes
+		in: aViennaNode patternTypePairList
 		do: aBlock.
 	self
 		freeOccurrencesOf: aString
 		in: aViennaNode identifierTypePairList
 		do: aBlock.
-	aViennaNode parameterTypes patternTypePairList ifNotEmpty: [
-		:patternTypePairList |
+	aViennaNode patternTypePairList ifNotEmpty: [ :patternTypePairList |
 		1 to: patternTypePairList size by: 2 do: [ :index |
 			(patternTypePairList at: index)
 				allDescendantsSuchThat: [ :n |

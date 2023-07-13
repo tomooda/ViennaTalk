@@ -6,13 +6,13 @@ Class {
 }
 
 { #category : #'instance creation' }
-ViennaImplicitFunctionDefinitionNode class >> access: aViennaAccessNode identifier: aString typeVariableList: aViennaTypeVariableListNode parameterTypes: aViennaParameterTypesNode identifierTypePairList: aViennaIdentifierTypePairListNode pre: aViennaExpressionNode1 post: aViennaExpressionNode2 [
+ViennaImplicitFunctionDefinitionNode class >> access: aViennaAccessNode identifier: aString typeVariableList: aViennaTypeVariableListNode patternTypePairList: aViennaPatternTypePairListNode identifierTypePairList: aViennaIdentifierTypePairListNode pre: aViennaExpressionNode1 post: aViennaExpressionNode2 [
 
 	^ (self new: 7)
 		  access: aViennaAccessNode;
 		  identifier: aString;
 		  typeVariableList: aViennaTypeVariableListNode;
-		  parameterTypes: aViennaParameterTypesNode;
+		  patternTypePairList: aViennaPatternTypePairListNode;
 		  identifierTypePairList: aViennaIdentifierTypePairListNode;
 		  pre: aViennaExpressionNode1;
 		  post: aViennaExpressionNode2;
@@ -20,13 +20,13 @@ ViennaImplicitFunctionDefinitionNode class >> access: aViennaAccessNode identifi
 ]
 
 { #category : #'instance creation' }
-ViennaImplicitFunctionDefinitionNode class >> identifier: aString typeVariableList: aViennaTypeVariableListNode parameterTypes: aViennaParameterTypesNode identifierTypePairList: aViennaIdentifierTypePairListNode pre: aViennaExpressionNode1 post: aViennaExpressionNode2 [
+ViennaImplicitFunctionDefinitionNode class >> identifier: aString typeVariableList: aViennaTypeVariableListNode patternTypePairList: aViennaPatternTypePairListNode identifierTypePairList: aViennaIdentifierTypePairListNode pre: aViennaExpressionNode1 post: aViennaExpressionNode2 [
 
 	^ self
 		  access: ViennaAccessNode empty
 		  identifier: aString
 		  typeVariableList: aViennaTypeVariableListNode
-		  parameterTypes: aViennaParameterTypesNode
+		  patternTypePairList: aViennaPatternTypePairListNode
 		  identifierTypePairList: aViennaIdentifierTypePairListNode
 		  pre: aViennaExpressionNode1
 		  post: aViennaExpressionNode2
@@ -47,7 +47,7 @@ ViennaImplicitFunctionDefinitionNode >> access: aViennaAccessNode [
 { #category : #accessing }
 ViennaImplicitFunctionDefinitionNode >> argumentType [
 
-	^ self parameterTypes patternTypePairList type
+	^ self patternTypePairList type
 ]
 
 { #category : #'accessing-definitions' }
@@ -93,7 +93,7 @@ ViennaImplicitFunctionDefinitionNode >> boundIdentifiersDo: aBlock [
 { #category : #'accessing-definitions' }
 ViennaImplicitFunctionDefinitionNode >> definitionOfLocalName: aString [
 
-	self parameterTypes patternTypePairList do: [ :patList |
+	self patternTypePairList do: [ :patList |
 		patList isViennaPatternListNode ifTrue: [
 			patList
 				allDescendantsSuchThat: [ :n | n isPatternIdentifier: aString ]
@@ -121,12 +121,12 @@ ViennaImplicitFunctionDefinitionNode >> findResolverForIdentifier: aString [
 { #category : #'pretty printing' }
 ViennaImplicitFunctionDefinitionNode >> formatWith: aViennaAbstractFormatter [
 
-	| identifier typeVariableList parameterTypes identifierTypePairList pre post |
+	| identifier typeVariableList patternTypePairList identifierTypePairList pre post |
 	identifier := aViennaAbstractFormatter format: self identifier.
 	typeVariableList := aViennaAbstractFormatter format:
 		                    self typeVariableList.
-	parameterTypes := aViennaAbstractFormatter format:
-		                  self parameterTypes.
+	patternTypePairList := aViennaAbstractFormatter format:
+		                       self patternTypePairList.
 	identifierTypePairList := aViennaAbstractFormatter format:
 		                          self identifierTypePairList.
 	pre := self pre
@@ -140,7 +140,7 @@ ViennaImplicitFunctionDefinitionNode >> formatWith: aViennaAbstractFormatter [
 		        , (aViennaAbstractFormatter format: self post) ]
 		        ifNil: [ '' ].
 	^ identifier , (aViennaAbstractFormatter format: typeVariableList)
-	  , (aViennaAbstractFormatter format: parameterTypes)
+	  , (aViennaAbstractFormatter format: patternTypePairList)
 	  , (aViennaAbstractFormatter format: identifierTypePairList) , pre
 	  , post
 ]
@@ -245,7 +245,7 @@ ViennaImplicitFunctionDefinitionNode >> lookupIdentifier: aString [
 
 	self typeVariableList do: [ :typeVariable |
 		(typeVariable bindsIdentifier: aString) ifTrue: [ ^ typeVariable ] ].
-	self parameterTypes patternsDo: [ :pattern |
+	self patternTypePairList patternsDo: [ :pattern |
 		(pattern bindsIdentifier: aString) ifTrue: [ ^ pattern ] ].
 	(self identifierTypePairList bindsIdentifier: aString) ifTrue: [
 		^ self ].
@@ -273,13 +273,25 @@ ViennaImplicitFunctionDefinitionNode >> parameterTypes: aViennaParameterTypesNod
 { #category : #accessing }
 ViennaImplicitFunctionDefinitionNode >> parameters [
 
-	^ self parameterTypes parameters
+	^ self patternTypePairList parameters
 ]
 
 { #category : #accessing }
 ViennaImplicitFunctionDefinitionNode >> parametersList [
 
 	^ ViennaParametersListNode with: self parameters copyFragment
+]
+
+{ #category : #accessing }
+ViennaImplicitFunctionDefinitionNode >> patternTypePairList [
+
+	^ self at: 4
+]
+
+{ #category : #accessing }
+ViennaImplicitFunctionDefinitionNode >> patternTypePairList: aViennaPatternTypePairListNode [
+
+	self at: 4 put: aViennaPatternTypePairListNode
 ]
 
 { #category : #accessing }

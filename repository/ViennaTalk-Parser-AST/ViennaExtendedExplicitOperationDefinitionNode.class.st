@@ -6,12 +6,12 @@ Class {
 }
 
 { #category : #'instance creation' }
-ViennaExtendedExplicitOperationDefinitionNode class >> access: aViennaAccessNode identifier: aString parameterTypes: aViennaParameterTypesNode identifierTypePairList: aViennaIdentifierTypePairListNode statement: aViennaStatementNode externals: aViennaExternalsNode pre: aViennaExpressionNode1 post: aViennaExpressionNode2 exceptions: aViennaExceptionsNode [
+ViennaExtendedExplicitOperationDefinitionNode class >> access: aViennaAccessNode identifier: aString patternTypePairList: aViennaPatternTypePairListNode identifierTypePairList: aViennaIdentifierTypePairListNode statement: aViennaStatementNode externals: aViennaExternalsNode pre: aViennaExpressionNode1 post: aViennaExpressionNode2 exceptions: aViennaExceptionsNode [
 
 	^ (self new: 9)
 		  access: aViennaAccessNode;
 		  identifier: aString;
-		  parameterTypes: aViennaParameterTypesNode;
+		  patternTypePairList: aViennaPatternTypePairListNode;
 		  identifierTypePairList: aViennaIdentifierTypePairListNode;
 		  statement: aViennaStatementNode;
 		  externals: aViennaExternalsNode;
@@ -22,12 +22,12 @@ ViennaExtendedExplicitOperationDefinitionNode class >> access: aViennaAccessNode
 ]
 
 { #category : #'instance creation' }
-ViennaExtendedExplicitOperationDefinitionNode class >> identifier: aString parameterTypes: aViennaParameterTypesNode identifierTypePairList: aViennaIdentifierTypePairListNode statement: aViennaStatementNode externals: aViennaExternalsNode pre: aViennaExpressionNode1 post: aViennaExpressionNode2 exceptions: aViennaExceptionsNode [
+ViennaExtendedExplicitOperationDefinitionNode class >> identifier: aString patternTypePairList: aViennaPatternTypePairListNode identifierTypePairList: aViennaIdentifierTypePairListNode statement: aViennaStatementNode externals: aViennaExternalsNode pre: aViennaExpressionNode1 post: aViennaExpressionNode2 exceptions: aViennaExceptionsNode [
 
 	^ self
 		  access: ViennaAccessNode empty
 		  identifier: aString
-		  parameterTypes: aViennaParameterTypesNode
+		  patternTypePairList: aViennaPatternTypePairListNode
 		  identifierTypePairList: aViennaIdentifierTypePairListNode
 		  statement: aViennaStatementNode
 		  externals: aViennaExternalsNode
@@ -51,7 +51,7 @@ ViennaExtendedExplicitOperationDefinitionNode >> access: aViennaAccessNode [
 { #category : #accessing }
 ViennaExtendedExplicitOperationDefinitionNode >> argumentType [
 
-	^ self parameterTypes patternTypePairList type
+	^ self patternTypePairList type
 ]
 
 { #category : #'accessing-definitions' }
@@ -106,12 +106,12 @@ ViennaExtendedExplicitOperationDefinitionNode >> findResolverForIdentifier: aStr
 { #category : #'pretty printing' }
 ViennaExtendedExplicitOperationDefinitionNode >> formatWith: aViennaAbstractFormatter [
 
-	| access identifier parameterTypes identifierTypePairList operationBody externals pre post exceptions |
+	| access identifier patternTypePairList identifierTypePairList operationBody externals pre post exceptions |
 	access := (aViennaAbstractFormatter format: self access) trim
 		          ifNotEmpty: [ :string | string , ' ' ].
 	identifier := aViennaAbstractFormatter format: self identifier.
-	parameterTypes := aViennaAbstractFormatter format:
-		                  self parameterTypes.
+	patternTypePairList := aViennaAbstractFormatter format:
+		                       self patternTypePairList.
 	identifierTypePairList := aViennaAbstractFormatter format:
 		                          self identifierTypePairList.
 	operationBody := aViennaAbstractFormatter format: self statement.
@@ -136,7 +136,7 @@ ViennaExtendedExplicitOperationDefinitionNode >> formatWith: aViennaAbstractForm
 		              , (aViennaAbstractFormatter format: self exceptions) ]
 		              ifNil: [ '' ].
 	^ access , (aViennaAbstractFormatter format: identifier)
-	  , (aViennaAbstractFormatter format: parameterTypes)
+	  , (aViennaAbstractFormatter format: patternTypePairList)
 	  , (aViennaAbstractFormatter format: identifierTypePairList) , ' =='
 	  , String cr , aViennaAbstractFormatter indent
 	  , (aViennaAbstractFormatter indentString:
@@ -230,7 +230,7 @@ ViennaExtendedExplicitOperationDefinitionNode >> label [
 { #category : #'accessing-definitions' }
 ViennaExtendedExplicitOperationDefinitionNode >> lookupIdentifier: aString [
 
-	self parameterTypes patternsDo: [ :pattern |
+	self patternTypePairList patternsDo: [ :pattern |
 		(pattern bindsIdentifier: aString) ifTrue: [ ^ pattern ] ].
 	(self identifierTypePairList bindsIdentifier: aString) ifTrue: [
 		^ self ].
@@ -252,7 +252,19 @@ ViennaExtendedExplicitOperationDefinitionNode >> parameterTypes: aViennaParamete
 { #category : #accessing }
 ViennaExtendedExplicitOperationDefinitionNode >> parameters [
 
-	^ self parameterTypes parameters
+	^ self patternTypePairList parameters
+]
+
+{ #category : #accessing }
+ViennaExtendedExplicitOperationDefinitionNode >> patternTypePairList [
+
+	^ self at: 3
+]
+
+{ #category : #accessing }
+ViennaExtendedExplicitOperationDefinitionNode >> patternTypePairList: aViennaPatternTypePairListNode [
+
+	self at: 3 put: aViennaPatternTypePairListNode
 ]
 
 { #category : #accessing }

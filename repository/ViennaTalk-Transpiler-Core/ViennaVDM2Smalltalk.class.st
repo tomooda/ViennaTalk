@@ -1010,8 +1010,8 @@ ViennaVDM2Smalltalk >> extendedExplicitFunctionDefinition: aViennaNode env: aDic
 
 	| funcName patternTypePairList identifierTypePairList preNode postNode body varGenerator preBody postBody retType argType retValue binds |
 	funcName := aViennaNode identifier.
-	patternTypePairList := aViennaNode parameterTypes patternTypePairList
-		                       ifNil: [ Array new ].
+	patternTypePairList := aViennaNode patternTypePairList ifNil: [
+		                       Array new ].
 	identifierTypePairList := aViennaNode identifierTypePairList.
 	body := self generate: aViennaNode expression env: aDictionary.
 	preNode := aViennaNode pre.
@@ -1131,7 +1131,7 @@ ViennaVDM2Smalltalk >> extendedExplicitOperationDefinition: aViennaNode env: aDi
 
 	| opName patternTypePairList identifierTypePairList retVarName retTypeNode preNode postNode body varGenerator preBody postBody retType argType retValue binds |
 	opName := aViennaNode identifier.
-	patternTypePairList := aViennaNode parameterTypes patternTypePairList.
+	patternTypePairList := aViennaNode patternTypePairList.
 	identifierTypePairList := aViennaNode identifierTypePairList ifNil: [
 		                          {
 			                          'RESULT'.
@@ -1629,8 +1629,7 @@ ViennaVDM2Smalltalk >> implicitFunctionDefinition: aViennaNode env: aDictionary 
 
 	| funcName patternTypePairListNode identifierTypePairListNode preNode postNode body binds varGenerator preBody postBody |
 	funcName := aViennaNode identifier.
-	patternTypePairListNode := aViennaNode parameterTypes
-		                           patternTypePairList.
+	patternTypePairListNode := aViennaNode patternTypePairList.
 	identifierTypePairListNode := aViennaNode identifierTypePairList.
 	preNode := aViennaNode pre.
 	postNode := aViennaNode post.
@@ -1702,8 +1701,8 @@ ViennaVDM2Smalltalk >> implicitOperationDefinition: aViennaNode env: aDictionary
 
 	| opName patternTypePairListNode identifierTypePairListNode retVarName retTypeNode preNode postNode body binds varGenerator preBody postBody |
 	opName := aViennaNode identifier.
-	patternTypePairListNode := aViennaNode parameterTypes
-		                           patternTypePairList ifNil: [ Array new ].
+	patternTypePairListNode := aViennaNode patternTypePairList ifNil: [
+		                           Array new ].
 	identifierTypePairListNode := aViennaNode identifierTypePairList
 		                              ifNil: [
 			                              {
