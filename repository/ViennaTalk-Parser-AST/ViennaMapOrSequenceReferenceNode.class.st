@@ -6,10 +6,10 @@ Class {
 }
 
 { #category : #'instance creation' }
-ViennaMapOrSequenceReferenceNode class >> expression: aViennaExpressionNode1 argumentExpression: aViennaExpressionNode2 [
+ViennaMapOrSequenceReferenceNode class >> stateDesignator: aViennaStateDesignatorNode1 argumentExpression: aViennaExpressionNode2 [
 
 	^ (self new: 2)
-		  expression: aViennaExpressionNode1;
+		  stateDesignator: aViennaStateDesignatorNode1;
 		  argumentExpression: aViennaExpressionNode2;
 		  yourself
 ]
@@ -26,24 +26,12 @@ ViennaMapOrSequenceReferenceNode >> argumentExpression: aViennaExpressionNode [
 	self at: 2 put: aViennaExpressionNode
 ]
 
-{ #category : #accessing }
-ViennaMapOrSequenceReferenceNode >> expression [
-
-	^ self at: 1
-]
-
-{ #category : #accessing }
-ViennaMapOrSequenceReferenceNode >> expression: aViennaExpressionNode [
-
-	self at: 1 put: aViennaExpressionNode
-]
-
 { #category : #'pretty printing' }
 ViennaMapOrSequenceReferenceNode >> formatWith: aViennaAbstractFormatter [
 
 	| ref arg |
-	ref := aViennaAbstractFormatter format: self first.
-	arg := aViennaAbstractFormatter format: self second.
+	ref := aViennaAbstractFormatter format: self stateDesignator.
+	arg := aViennaAbstractFormatter format: self argumentExpression.
 	^ (aViennaAbstractFormatter needsIndent: ref , arg)
 		  ifTrue: [
 			  ref , String cr , aViennaAbstractFormatter indent
@@ -80,4 +68,16 @@ ViennaMapOrSequenceReferenceNode >> label [
 ViennaMapOrSequenceReferenceNode >> operatorPrecedence [
 
 	^ 31
+]
+
+{ #category : #accessing }
+ViennaMapOrSequenceReferenceNode >> stateDesignator [
+
+	^ self at: 1
+]
+
+{ #category : #accessing }
+ViennaMapOrSequenceReferenceNode >> stateDesignator: aViennaStateDesignatorNode [
+
+	self at: 1 put: aViennaStateDesignatorNode
 ]

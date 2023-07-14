@@ -88,6 +88,12 @@ ViennaStateDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
 		init freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
+{ #category : #testing }
+ViennaStateDefinitionNode >> hasStateVariableIdentifier: aString [
+
+	^ self fieldList anySatisfy: [ :field | field identifier = aString ]
+]
+
 { #category : #accessing }
 ViennaStateDefinitionNode >> identifier [
 

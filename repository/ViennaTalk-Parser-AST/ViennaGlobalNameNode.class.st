@@ -125,6 +125,12 @@ ViennaGlobalNameNode >> moduleIdentifier: aString [
 	self at: 1 put: aString
 ]
 
+{ #category : #converting }
+ViennaGlobalNameNode >> privateGlobalName [
+
+	^ self asGlobalName
+]
+
 { #category : #'accessing-definitions' }
 ViennaGlobalNameNode >> resolve [
 

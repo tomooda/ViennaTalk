@@ -13,7 +13,7 @@ ViennaLocalNameNode class >> identifier: aString [
 		  yourself
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : #converting }
 ViennaLocalNameNode >> asGlobalName [
 
 	^ (self findResolverForIdentifier: self identifier) ifNotNil: [
@@ -153,6 +153,24 @@ ViennaLocalNameNode >> label [
 ViennaLocalNameNode >> localResolve [
 
 	^ self localResolveIdentifier: self identifier
+]
+
+{ #category : #converting }
+ViennaLocalNameNode >> privateGlobalName [
+
+	(self findResolverForIdentifier: self identifier) ifNotNil: [
+		:resolver |
+		resolver isViennaModuleNode ifTrue: [
+			(resolver lookupIdentifier: self identifier) ifNotNil: [
+				:localDefinition |
+				localDefinition isViennaImportNode
+					ifTrue: [ ^ localDefinition asGlobalName ]
+					ifFalse: [
+						localDefinition isViennaTopLevelDefinitionNode ifTrue: [
+							^ ViennaGlobalNameNode
+								  moduleIdentifier: resolver identifier
+								  identifier: self identifier ] ] ] ] ].
+	^ self
 ]
 
 { #category : #accessing }

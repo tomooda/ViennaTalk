@@ -14,6 +14,12 @@ ViennaBinaryOperatorExpressionNode class >> expression: aViennaExpressionNode1 e
 		  yourself
 ]
 
+{ #category : #testing }
+ViennaBinaryOperatorExpressionNode class >> isAbstract [
+
+	^ self = ViennaBinaryOperatorExpressionNode
+]
+
 { #category : #accessing }
 ViennaBinaryOperatorExpressionNode >> expression1 [
 

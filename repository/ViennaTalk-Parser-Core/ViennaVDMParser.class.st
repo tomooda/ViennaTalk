@@ -1237,7 +1237,7 @@ ViennaVDMParser >> mapMunionPattern [
 ViennaVDMParser >> mapOrSequenceReference: stateDesig with: expr [
 
 	^ ViennaMapOrSequenceReferenceNode
-		  expression: stateDesig
+		  stateDesignator: stateDesig
 		  argumentExpression: expr
 ]
 
