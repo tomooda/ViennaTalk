@@ -28,21 +28,3 @@ ViennaNameNode >> isViennaNameNode [
 
 	^ true
 ]
-
-{ #category : #'accessing-definitions' }
-ViennaNameNode >> localResolve [
-
-	^ self subclassResponsibility
-]
-
-{ #category : #converting }
-ViennaNameNode >> privateGlobalName [
-
-	^ self subclassResponsibility
-]
-
-{ #category : #'accessing-definitions' }
-ViennaNameNode >> resolve [
-
-	^ self subclassResponsibility
-]

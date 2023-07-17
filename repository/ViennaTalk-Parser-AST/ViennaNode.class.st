@@ -403,8 +403,8 @@ ViennaNode >> hasStatefulReference [
 
 	self uniqueFreeIdentifiersDo: [ :identifier |
 		(self resolveIdentifier: identifier) ifNotNil: [ :node |
-			(node isViennaStateDefinitionNode or: [
-				 node isViennaBlockStatementNode ]) ifTrue: [ ^ true ] ] ].
+			(node isViennaFieldNode or: [ node isViennaBlockStatementNode ])
+				ifTrue: [ ^ true ] ] ].
 	^ false
 ]
 
@@ -2419,7 +2419,7 @@ ViennaNode >> localName [
 { #category : #'accessing-definitions' }
 ViennaNode >> localResolve [
 
-	^ nil
+	^ self
 ]
 
 { #category : #'accessing-definitions' }
@@ -2615,7 +2615,7 @@ ViennaNode >> removeAnnotation: aString [
 { #category : #'accessing-definitions' }
 ViennaNode >> resolve [
 
-	^ nil
+	^ self
 ]
 
 { #category : #'accessing-definitions' }

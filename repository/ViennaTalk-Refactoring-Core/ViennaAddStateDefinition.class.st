@@ -11,7 +11,7 @@ ViennaAddStateDefinition >> findContainerNode [
 	ast isViennaModuleNode ifTrue: [
 		ast moduleBody do: [ :def |
 			def isViennaStateDefinitionNode ifTrue: [ ^ nil ] ].
-		^ ast third ].
+		^ ast moduleBody ].
 	^ nil
 ]
 

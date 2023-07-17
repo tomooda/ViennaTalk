@@ -64,10 +64,22 @@ ViennaMapOrSequenceReferenceNode >> label [
 	^ 'MapOrSequenceReference'
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaMapOrSequenceReferenceNode >> localResolve [
+
+	^ self stateDesignator localResolve
+]
+
 { #category : #'pretty printing' }
 ViennaMapOrSequenceReferenceNode >> operatorPrecedence [
 
 	^ 31
+]
+
+{ #category : #'accessing-definitions' }
+ViennaMapOrSequenceReferenceNode >> resolve [
+
+	^ self stateDesignator resolve
 ]
 
 { #category : #accessing }

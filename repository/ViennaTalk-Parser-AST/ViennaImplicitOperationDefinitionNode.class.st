@@ -253,12 +253,6 @@ ViennaImplicitOperationDefinitionNode >> label [
 ]
 
 { #category : #'accessing-definitions' }
-ViennaImplicitOperationDefinitionNode >> localResolve [
-
-	^ self
-]
-
-{ #category : #'accessing-definitions' }
 ViennaImplicitOperationDefinitionNode >> lookupIdentifier: aString [
 
 	self patternTypePairList patternsDo: [ :pattern |
@@ -320,12 +314,6 @@ ViennaImplicitOperationDefinitionNode >> pre [
 ViennaImplicitOperationDefinitionNode >> pre: aViennaExpression [
 
 	self at: 6 put: aViennaExpression
-]
-
-{ #category : #'accessing-definitions' }
-ViennaImplicitOperationDefinitionNode >> resolve [
-
-	^ self
 ]
 
 { #category : #accessing }

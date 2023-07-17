@@ -235,12 +235,6 @@ ViennaImplicitFunctionDefinitionNode >> label [
 ]
 
 { #category : #'accessing-definitions' }
-ViennaImplicitFunctionDefinitionNode >> localResolve [
-
-	^ self
-]
-
-{ #category : #'accessing-definitions' }
 ViennaImplicitFunctionDefinitionNode >> lookupIdentifier: aString [
 
 	self typeVariableList do: [ :typeVariable |
@@ -316,12 +310,6 @@ ViennaImplicitFunctionDefinitionNode >> pre [
 ViennaImplicitFunctionDefinitionNode >> pre: aViennaExpressionNode [
 
 	self at: 6 put: aViennaExpressionNode
-]
-
-{ #category : #'accessing-definitions' }
-ViennaImplicitFunctionDefinitionNode >> resolve [
-
-	^ self
 ]
 
 { #category : #accessing }

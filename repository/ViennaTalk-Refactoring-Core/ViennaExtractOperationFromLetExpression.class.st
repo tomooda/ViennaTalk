@@ -41,7 +41,7 @@ ViennaExtractOperationFromLetExpression >> execute [
 	freeIdentifiers := self ast uniqueFreeIdentifiers reject: [
 		                   :identifier |
 		                   (self ast resolveIdentifier: identifier)
-			                   isViennaStateDefinitionNode ].
+			                   isViennaFieldNode ].
 	self replaceNode: ast with: (ViennaApplyNode
 			 expression: (ViennaLocalNameNode identifier: self newName)
 			 argumentExpressionList: self arguments).

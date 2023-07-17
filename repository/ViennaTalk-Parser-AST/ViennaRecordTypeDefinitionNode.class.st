@@ -172,18 +172,6 @@ ViennaRecordTypeDefinitionNode >> label [
 ]
 
 { #category : #'accessing-definitions' }
-ViennaRecordTypeDefinitionNode >> localResolve [
-
-	^ self
-]
-
-{ #category : #'accessing-definitions' }
-ViennaRecordTypeDefinitionNode >> resolve [
-
-	^ self
-]
-
-{ #category : #'accessing-definitions' }
 ViennaRecordTypeDefinitionNode >> shortName [
 
 	^ self identifier

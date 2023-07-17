@@ -213,12 +213,6 @@ ViennaExplicitOperationDefinitionNode >> label [
 ]
 
 { #category : #'accessing-definitions' }
-ViennaExplicitOperationDefinitionNode >> localResolve [
-
-	^ self
-]
-
-{ #category : #'accessing-definitions' }
 ViennaExplicitOperationDefinitionNode >> lookupIdentifier: aString [
 
 	aString = 'RESULT' ifTrue: [ ^ self ].
@@ -261,12 +255,6 @@ ViennaExplicitOperationDefinitionNode >> pre [
 ViennaExplicitOperationDefinitionNode >> pre: aViennaExpression [
 
 	self at: 7 put: aViennaExpression
-]
-
-{ #category : #'accessing-definitions' }
-ViennaExplicitOperationDefinitionNode >> resolve [
-
-	^ self
 ]
 
 { #category : #accessing }

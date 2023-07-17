@@ -7,9 +7,8 @@ Class {
 { #category : #testing }
 ViennaRenameStateVariable >> acceptsDefinitionNode: aViennaNode [
 
-	^ aViennaNode isViennaStateDefinitionNode and: [
-		  aViennaNode fieldList asArray anySatisfy: [ :field |
-			  field identifier = self oldName ] ]
+	^ aViennaNode isViennaFieldNode and: [
+		  aViennaNode identifier = self oldName ]
 ]
 
 { #category : #accessing }
@@ -20,10 +19,8 @@ ViennaRenameStateVariable >> construct [
 { #category : #operations }
 ViennaRenameStateVariable >> executeOnDefinition [
 
-	self definitionNode ifNotNil: [ :stateDefinition |
-		stateDefinition fieldList do: [ :field |
-			field identifier = self oldName ifTrue: [
-				field identifier: self newName ] ] ]
+	self definitionNode ifNotNil: [ :field |
+		field identifier: self newName ]
 ]
 
 { #category : #operations }

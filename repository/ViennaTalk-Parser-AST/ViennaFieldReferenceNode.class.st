@@ -56,6 +56,18 @@ ViennaFieldReferenceNode >> label [
 	^ 'FieldReference'
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaFieldReferenceNode >> localResolve [
+
+	^ self stateDesignator localResolve
+]
+
+{ #category : #'accessing-definitions' }
+ViennaFieldReferenceNode >> resolve [
+
+	^ self stateDesignator resolve
+]
+
 { #category : #accessing }
 ViennaFieldReferenceNode >> stateDesignator [
 

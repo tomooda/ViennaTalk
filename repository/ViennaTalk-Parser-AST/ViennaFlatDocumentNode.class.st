@@ -76,7 +76,11 @@ ViennaFlatDocumentNode >> isViennaFlatDocumentNode [
 ViennaFlatDocumentNode >> lookupIdentifier: aString [
 
 	self toplevelDefinitionsDo: [ :definition |
-		(definition bindsIdentifier: aString) ifTrue: [ ^ definition ] ].
+		(definition bindsIdentifier: aString) ifTrue: [
+			definition isViennaStateDefinitionNode ifTrue: [
+				definition fieldsDo: [ :field |
+					field identifier = aString ifTrue: [ ^ field ] ] ].
+			^ definition ] ].
 	^ nil
 ]
 

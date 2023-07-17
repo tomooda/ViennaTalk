@@ -523,7 +523,11 @@ ViennaModuleNode >> label [
 ViennaModuleNode >> lookupIdentifier: aString [
 
 	self toplevelDefinitionsDo: [ :definition |
-		(definition bindsIdentifier: aString) ifTrue: [ ^ definition ] ].
+		(definition bindsIdentifier: aString) ifTrue: [
+			definition isViennaStateDefinitionNode ifTrue: [
+				definition fieldsDo: [ :field |
+					field identifier = aString ifTrue: [ ^ field ] ] ].
+			^ definition ] ].
 	self importDefinitionsDo: [ :importDefinition |
 		importDefinition importsDo: [ :import |
 			(import rename notNil and: [ import rename identifier = aString ])

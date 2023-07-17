@@ -160,12 +160,6 @@ ViennaValueDefinitionNode >> label [
 	^ 'ValueDefinition'
 ]
 
-{ #category : #'accessing-definitions' }
-ViennaValueDefinitionNode >> localResolve [
-
-	^ self
-]
-
 { #category : #accessing }
 ViennaValueDefinitionNode >> pattern [
 
@@ -176,12 +170,6 @@ ViennaValueDefinitionNode >> pattern [
 ViennaValueDefinitionNode >> pattern: aViennaPatternNode [
 
 	self at: 2 put: aViennaPatternNode
-]
-
-{ #category : #'accessing-definitions' }
-ViennaValueDefinitionNode >> resolve [
-
-	^ self
 ]
 
 { #category : #'class membership' }

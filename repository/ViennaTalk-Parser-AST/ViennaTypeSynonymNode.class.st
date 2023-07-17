@@ -161,18 +161,6 @@ ViennaTypeSynonymNode >> label [
 ]
 
 { #category : #'accessing-definitions' }
-ViennaTypeSynonymNode >> localResolve [
-
-	^ self
-]
-
-{ #category : #'accessing-definitions' }
-ViennaTypeSynonymNode >> resolve [
-
-	^ self
-]
-
-{ #category : #'accessing-definitions' }
 ViennaTypeSynonymNode >> shortName [
 
 	^ self identifier

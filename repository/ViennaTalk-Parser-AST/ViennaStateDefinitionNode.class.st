@@ -53,6 +53,12 @@ ViennaStateDefinitionNode >> fieldList: aViennaFieldListNode [
 	self at: 2 put: aViennaFieldListNode
 ]
 
+{ #category : #enumerating }
+ViennaStateDefinitionNode >> fieldsDo: aBlock [
+
+	self fieldList do: aBlock
+]
+
 { #category : #'pretty printing' }
 ViennaStateDefinitionNode >> formatWith: aViennaAbstractFormatter [
 

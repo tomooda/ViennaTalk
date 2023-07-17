@@ -101,11 +101,7 @@ ViennaLocalNameNode >> isOperationNameNode [
 { #category : #testing }
 ViennaLocalNameNode >> isStateVariableNameNode [
 
-	(self definitionOfLocalName: self identifier) ifNotNil: [ :fieldNode |
-		(fieldNode isViennaFieldNode and: [
-			 fieldNode parent parent isViennaStateDefinitionNode ]) ifTrue: [
-			^ true ] ].
-	^ false
+	^ self resolve isViennaFieldNode
 ]
 
 { #category : #testing }
@@ -153,24 +149,6 @@ ViennaLocalNameNode >> label [
 ViennaLocalNameNode >> localResolve [
 
 	^ self localResolveIdentifier: self identifier
-]
-
-{ #category : #converting }
-ViennaLocalNameNode >> privateGlobalName [
-
-	(self findResolverForIdentifier: self identifier) ifNotNil: [
-		:resolver |
-		resolver isViennaModuleNode ifTrue: [
-			(resolver lookupIdentifier: self identifier) ifNotNil: [
-				:localDefinition |
-				localDefinition isViennaImportNode
-					ifTrue: [ ^ localDefinition asGlobalName ]
-					ifFalse: [
-						localDefinition isViennaTopLevelDefinitionNode ifTrue: [
-							^ ViennaGlobalNameNode
-								  moduleIdentifier: resolver identifier
-								  identifier: self identifier ] ] ] ] ].
-	^ self
 ]
 
 { #category : #accessing }

@@ -78,11 +78,3 @@ ViennaOldNameNode >> label [
 
 	^ 'OldName'
 ]
-
-{ #category : #converting }
-ViennaOldNameNode >> privateGlobalName [
-
-	^ ((ViennaLocalNameNode identifier: self identifier)
-		   parent: self;
-		   yourself) privateGlobalName
-]

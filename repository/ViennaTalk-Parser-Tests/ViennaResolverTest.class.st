@@ -465,7 +465,7 @@ ViennaResolverTest >> testLookupFlatStateVariable [
 
 	| node |
 	node := flatDocument lookupIdentifier: 'a'.
-	self assert: node isViennaStateDefinitionNode
+	self assert: node isViennaFieldNode
 ]
 
 { #category : #'tests-flat documents' }
@@ -537,7 +537,7 @@ ViennaResolverTest >> testLookupLocalStateVariable [
 
 	| node |
 	node := self moduleA lookupIdentifier: 'a'.
-	self assert: node isViennaStateDefinitionNode
+	self assert: node isViennaFieldNode
 ]
 
 { #category : #'tests-modules' }

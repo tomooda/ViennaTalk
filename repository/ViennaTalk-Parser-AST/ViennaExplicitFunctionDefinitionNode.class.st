@@ -244,12 +244,6 @@ ViennaExplicitFunctionDefinitionNode >> label [
 ]
 
 { #category : #'accessing-definitions' }
-ViennaExplicitFunctionDefinitionNode >> localResolve [
-
-	^ self
-]
-
-{ #category : #'accessing-definitions' }
 ViennaExplicitFunctionDefinitionNode >> lookupIdentifier: aString [
 
 	aString = 'RESULT' ifTrue: [ ^ self ].
@@ -307,12 +301,6 @@ ViennaExplicitFunctionDefinitionNode >> pre [
 ViennaExplicitFunctionDefinitionNode >> pre: aViennaExpressionNode [
 
 	self at: 8 put: aViennaExpressionNode
-]
-
-{ #category : #'accessing-definitions' }
-ViennaExplicitFunctionDefinitionNode >> resolve [
-
-	^ self
 ]
 
 { #category : #accessing }
