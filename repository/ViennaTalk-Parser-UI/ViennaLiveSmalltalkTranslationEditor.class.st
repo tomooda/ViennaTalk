@@ -183,7 +183,7 @@ ViennaLiveSmalltalkTranslationEditor >> formatSelectionInCodeText [
 		parse: (codeText text asString copyFrom: editor startIndex to: editor stopIndex - 1) trim.
 	ast isPetit2Failure
 		ifTrue: [ ^ codeText notify: ast message at: ast position + 1 in: codeText text ].
-	result := ast format.
+	result := ast source.
 	editor replaceSelectionWith: result.
 	codeText widget widget
 		selectFrom: editor startIndex to: editor stopIndex - 1;

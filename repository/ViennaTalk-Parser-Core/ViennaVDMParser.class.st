@@ -673,7 +673,7 @@ ViennaVDMParser >> format: aString [
 		  ifTrue: [ ast ]
 		  ifFalse: [ 
 			  (self scanCommentsOn: aString)
-				  inject: ast format
+				  inject: ast source
 				  into: [ :source :posAndComment | 
 					  posAndComment key
 						  ifNil: [ posAndComment value , String cr , source ]
