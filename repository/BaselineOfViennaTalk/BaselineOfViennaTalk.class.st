@@ -80,7 +80,7 @@ BaselineOfViennaTalk >> baseline: spec [
 		with: [ spec requires: #( 'ViennaTalk-Parser-Core' ) ];
 		package: 'ViennaTalk-Slicing-Core'
 		with: [ spec requires: #( 'ViennaTalk-Parser-AST' ) ];
-		package: 'ViennaTalk-Slicing-Tests' with: [
+		package: 'ViennaTalk-Slicing-Test' with: [
 		spec requires: #( 'ViennaTalk-Slicing-Core'
 			   'ViennaTalk-Parser-AST' 'ViennaTalk-Parser-Core' ) ];
 		package: 'ViennaTalk-Transpiler-Core' with: [
@@ -146,7 +146,7 @@ BaselineOfViennaTalk >> baseline: spec [
 		with: #( 'ViennaTalk-Engine-Tests' 'ViennaTalk-Value-Tests'
 			   'ViennaTalk-Parser-Tests' 'ViennaTalk-Type-Tests'
 			   'ViennaTalk-Animation-Tests' 'ViennaTalk-Transpiler-Test'
-			   'ViennaTalk-FRAM-Tests' 'ViennaTalk-Slicing-Tests'
+			   'ViennaTalk-FRAM-Tests' 'ViennaTalk-Slicing-Test'
 			   'ViennaTalk-Refactoring-Tests' )
 ]
 
