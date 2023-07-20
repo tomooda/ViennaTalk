@@ -4,6 +4,7 @@ Class {
 	#instVars : [
 		'spec',
 		'op',
+		'op2',
 		'x',
 		'y',
 		'z',
@@ -30,9 +31,13 @@ init s == s = mk_S(0, 0, 0)
 end
 operations
 	op : () ==> ()
-	op() == x := y
+	op() == x := y;
+	
+	op2 : () ==> ()
+	op2() == skip;
 end A' asViennaDocumentAst.
 	op := (spec moduleNamed: 'A') resolveIdentifier: 'op'.
+	op2 := (spec moduleNamed: 'A') resolveIdentifier: 'op2'.
 	x := 'x' asViennaExpressionAst
 		     parent: op;
 		     resolve.
@@ -61,23 +66,23 @@ ViennaIntraOperationSlicerTest >> testAgenda [
 	names := {
 		         x.
 		         y } asSet.
-	slicer agenda: names.
+	slicer criteria: names.
 	self assert: slicer agenda asSet equals: names
 ]
 
 { #category : #tests }
 ViennaIntraOperationSlicerTest >> testBranch [
 
-	slicer addAgenda: x.
-	slicer node: skip1 do: [  ].
+	slicer addCriterion: x.
+	slicer onNode: skip1 do: [  ].
 	slicer branch
 		value: [ :subslicer |
-			subslicer node: skip2 do: [
+			subslicer onNode: skip2 do: [
 					subslicer
 						read: y;
 						write: x ] ];
 		value: [ :subslicer |
-			subslicer node: skip3 do: [
+			subslicer onNode: skip3 do: [
 				subslicer
 					read: z;
 					write: y ] ];
@@ -90,25 +95,28 @@ ViennaIntraOperationSlicerTest >> testBranch [
 { #category : #tests }
 ViennaIntraOperationSlicerTest >> testCall [
 
-	slicer addAgenda: x.
-	slicer node: skip1 do: [
-		slicer call: ((ViennaApplyNode
-				  expression: ((ViennaLocalNameNode identifier: 'op')
-						   parent: op;
-						   yourself)
-				  argumentExpressionList: ViennaExpressionListNode empty)
-				 parent: op;
-				 yourself) ].
+	slicer operation: op2.
+	slicer criteria: { x }.
+	slicer call: ('op()' asViennaExpressionAst
+			 parent: op2 statement;
+			 yourself).
+	self assert: slicer agenda asSet equals: { x } asSet.
+	op statement sliceWith:
+		(slicer interOperationSlicer slicerOnOperation: op criteria: { x }).
+	slicer criteria: { x }.
+	slicer call: ('op()' asViennaExpressionAst
+			 parent: op2 statement;
+			 yourself).
 	self assert: slicer agenda asSet equals: { y } asSet
 ]
 
 { #category : #tests }
 ViennaIntraOperationSlicerTest >> testContinue [
 
-	slicer agenda: { x }.
+	slicer criteria: { x }.
 	slicer read: y.
 	slicer write: z.
-	slicer continue: (slicer subslicer
+	slicer continue: (slicer copy
 			 agenda: { y };
 			 read: x;
 			 write: z;
@@ -119,11 +127,22 @@ ViennaIntraOperationSlicerTest >> testContinue [
 ]
 
 { #category : #tests }
+ViennaIntraOperationSlicerTest >> testCriteria [
+
+	| names |
+	names := {
+		         x.
+		         y } asSet.
+	slicer criteria: names.
+	self assert: slicer criteria asSet equals: names
+]
+
+{ #category : #tests }
 ViennaIntraOperationSlicerTest >> testPostCopy [
 
 	| copy |
 	slicer
-		addAgenda: x;
+		addCriterion: x;
 		read: y;
 		write: z.
 	self assert: slicer agenda equals: { x }.
@@ -168,34 +187,6 @@ ViennaIntraOperationSlicerTest >> testRead [
 	b := block last expression.
 	slicer read: b.
 	self assert: (slicer reads includes: b resolve)
-]
-
-{ #category : #tests }
-ViennaIntraOperationSlicerTest >> testSubslicer [
-
-	| subslicer |
-	slicer
-		addAgenda: x;
-		read: y;
-		write: z.
-	self assert: slicer agenda equals: { x }.
-	self assert: slicer reads equals: { y }.
-	self assert: slicer writes equals: { z }.
-	subslicer := slicer subslicer.
-	self assert: subslicer agenda asSet equals: slicer agenda asSet.
-	self assertEmpty: subslicer reads.
-	self assertEmpty: subslicer writes
-]
-
-{ #category : #tests }
-ViennaIntraOperationSlicerTest >> testWithAll [
-
-	| names |
-	names := {
-		         x.
-		         y } asSet.
-	slicer := ViennaIntraOperationSlicer withAll: names.
-	self assert: slicer agenda asSet equals: names
 ]
 
 { #category : #tests }

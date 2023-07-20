@@ -1,28 +1,48 @@
 Class {
 	#name : #ViennaIntraOperationSlicer,
-	#superclass : #ViennaSlicer,
+	#superclass : #Object,
 	#instVars : [
-		'nodes',
+		'operation',
+		'criteria',
+		'slice',
 		'agenda',
 		'reads',
 		'writes',
-		'statement'
+		'interOperationSlicer'
 	],
 	#category : #'ViennaTalk-Slicing-Core'
 }
 
 { #category : #'instance creation' }
-ViennaIntraOperationSlicer class >> withAll: aCollectionOfViennaNameNode [
+ViennaIntraOperationSlicer class >> operation: aViennaNode criteria: aCollectionOfViennaNameNode [
 
 	^ self new
-		  agenda: (Set withAll: aCollectionOfViennaNameNode);
+		  operation: aViennaNode;
+		  criteria: aCollectionOfViennaNameNode;
 		  yourself
 ]
 
-{ #category : #private }
-ViennaIntraOperationSlicer >> addAgenda: aViennaNameNode [
+{ #category : #'instance creation' }
+ViennaIntraOperationSlicer class >> withAll: aCollectionOfViennaNameNode [
 
-	agenda add: aViennaNameNode resolve
+	^ self new
+		  criteria: aCollectionOfViennaNameNode;
+		  yourself
+]
+
+{ #category : #comparing }
+ViennaIntraOperationSlicer >> = anObject [
+
+	^ self class = anObject class and: [
+		  operation == anObject operation and: [
+			  criteria = anObject criteria ] ]
+]
+
+{ #category : #private }
+ViennaIntraOperationSlicer >> addCriterion: aViennaNode [
+
+	criteria add: aViennaNode resolve.
+	agenda := criteria copy
 ]
 
 { #category : #accessing }
@@ -65,12 +85,9 @@ ViennaIntraOperationSlicer >> call: aViennaApplyNode [
 	| calleeName |
 	calleeName := aViennaApplyNode expression.
 	calleeName isViennaNameNode ifTrue: [
-		calleeName resolve ifNotNil: [ :callee |
-			callee isOperationDefinition ifTrue: [
-				| calleeSlicer |
-				calleeSlicer := self subslicer.
-				callee sliceWith: calleeSlicer.
-				self continue: calleeSlicer ] ] ].
+		self continue: (self interOperationSlicer
+				 slicerOnOperation: calleeName resolve
+				 criteria: self agenda) ].
 	aViennaApplyNode arguments do: [ :expression |
 		expression sliceWith: self ].
 	calleeName sliceWith: self
@@ -82,36 +99,80 @@ ViennaIntraOperationSlicer >> continue: aViennaIntraOperationSlicer [
 	agenda := aViennaIntraOperationSlicer agenda copy
 ]
 
+{ #category : #accessing }
+ViennaIntraOperationSlicer >> criteria [
+
+	^ criteria
+]
+
+{ #category : #accessing }
+ViennaIntraOperationSlicer >> criteria: aCollectionOfViennaNode [
+
+	criteria := IdentitySet withAll:
+		            (aCollectionOfViennaNode collect: #resolve).
+	agenda := criteria copy
+]
+
+{ #category : #comparing }
+ViennaIntraOperationSlicer >> hash [
+
+	^ (self class hash bitXor: operation hash) bitXor: criteria hash
+]
+
 { #category : #initialization }
 ViennaIntraOperationSlicer >> initialize [
 
 	super initialize.
-	agenda := Set new.
-	nodes := IdentitySet new.
+	criteria := IdentitySet new.
+	slice := IdentitySet new.
+	agenda := IdentitySet new.
 	reads := Set new.
 	writes := Set new
 ]
 
-{ #category : #operations }
-ViennaIntraOperationSlicer >> node: aViennaNode do: aBlock [
+{ #category : #accessing }
+ViennaIntraOperationSlicer >> interOperationSlicer [
 
-	| oldStatement |
-	oldStatement := statement.
-	statement := aViennaNode.
+	^ interOperationSlicer ifNil: [
+		  interOperationSlicer := ViennaInterOperationSlicer new ]
+]
+
+{ #category : #accessing }
+ViennaIntraOperationSlicer >> interOperationSlicer: aViennaInterOperationSlicer [
+
+	interOperationSlicer := aViennaInterOperationSlicer
+]
+
+{ #category : #operations }
+ViennaIntraOperationSlicer >> onNode: aViennaNode do: aBlock [
+
+	self agenda.
 	[ aBlock cull: self ] ensure: [
 		(writes anySatisfy: [ :w | agenda includes: w ]) ifTrue: [
 			agenda removeAllFoundIn: writes.
 			agenda addAll: reads.
 			reads removeAll.
 			writes removeAll.
-			nodes add: aViennaNode ].
-		statement := oldStatement ]
+			slice add: aViennaNode ] ]
+]
+
+{ #category : #accessing }
+ViennaIntraOperationSlicer >> operation [
+
+	^ operation
+]
+
+{ #category : #accessing }
+ViennaIntraOperationSlicer >> operation: aViennaNode [
+
+	operation := aViennaNode resolve
 ]
 
 { #category : #copying }
 ViennaIntraOperationSlicer >> postCopy [
 
-	nodes := nodes copy.
+	criteria := criteria copy.
+	slice := slice copy.
 	agenda := agenda copy.
 	reads := reads copy.
 	writes := writes copy
@@ -127,12 +188,6 @@ ViennaIntraOperationSlicer >> read: aViennaNameNode [
 ViennaIntraOperationSlicer >> reads [
 
 	^ reads asArray
-]
-
-{ #category : #operations }
-ViennaIntraOperationSlicer >> subslicer [
-
-	^ self class withAll: agenda
 ]
 
 { #category : #operations }

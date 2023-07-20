@@ -3,7 +3,7 @@ Extension { #name : #ViennaAssignStatementNodeTest }
 { #category : #'*ViennaTalk-Slicing-Tests' }
 ViennaAssignStatementNodeTest >> testSliceWith [
 
-	| spec statement slicer |
+	| spec op statement slicer |
 	spec := '
 module A
 exports all
@@ -18,12 +18,13 @@ operations
 	op : () ==> ()
 	op() == x := y
 end A' asViennaDocumentAst.
-	statement := ((spec moduleNamed: 'A') resolveIdentifier: 'op')
-		             statement.
-	slicer := ViennaIntraOperationSlicer withAll:
-		          { ((ViennaLocalNameNode identifier: 'x')
-			           parent: statement;
-			           resolve) }.
+	op := (spec moduleNamed: 'A') resolveIdentifier: 'op'.
+	statement := op statement.
+	slicer := ViennaIntraOperationSlicer
+		          operation: op
+		          criteria: { ((ViennaLocalNameNode identifier: 'x')
+				           parent: statement;
+				           resolve) }.
 	statement sliceWith: slicer.
 	self
 		assert: slicer agenda asSet

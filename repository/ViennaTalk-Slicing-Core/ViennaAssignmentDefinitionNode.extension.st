@@ -3,7 +3,7 @@ Extension { #name : #ViennaAssignmentDefinitionNode }
 { #category : #'*ViennaTalk-Slicing-Core' }
 ViennaAssignmentDefinitionNode >> sliceWith: aViennaSlicer [
 
-	aViennaSlicer node: self do: [
+	aViennaSlicer onNode: self do: [
 		self expression ifNotNil: [ :expression |
 			expression sliceWith: aViennaSlicer ].
 		aViennaSlicer write:
