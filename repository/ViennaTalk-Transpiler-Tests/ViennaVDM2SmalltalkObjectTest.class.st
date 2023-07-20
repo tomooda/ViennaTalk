@@ -1,7 +1,7 @@
 Class {
 	#name : #ViennaVDM2SmalltalkObjectTest,
 	#superclass : #TestCase,
-	#category : #'ViennaTalk-Transpiler-Test'
+	#category : #'ViennaTalk-Transpiler-Tests'
 }
 
 { #category : #'tests-postconditions' }

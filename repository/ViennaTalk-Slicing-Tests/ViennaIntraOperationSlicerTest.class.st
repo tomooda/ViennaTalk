@@ -12,7 +12,7 @@ Class {
 		'skip3',
 		'slicer'
 	],
-	#category : #'ViennaTalk-Slicing-Test'
+	#category : #'ViennaTalk-Slicing-Tests'
 }
 
 { #category : #tests }

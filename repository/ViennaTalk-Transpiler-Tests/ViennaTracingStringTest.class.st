@@ -1,7 +1,7 @@
 Class {
 	#name : #ViennaTracingStringTest,
 	#superclass : #TestCase,
-	#category : #'ViennaTalk-Transpiler-Test'
+	#category : #'ViennaTalk-Transpiler-Tests'
 }
 
 { #category : #tests }

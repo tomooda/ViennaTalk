@@ -1,6 +1,6 @@
 Extension { #name : #ViennaAssignStatementNodeTest }
 
-{ #category : #'*ViennaTalk-Slicing-Test' }
+{ #category : #'*ViennaTalk-Slicing-Tests' }
 ViennaAssignStatementNodeTest >> testSliceWith [
 
 	| spec statement slicer |
