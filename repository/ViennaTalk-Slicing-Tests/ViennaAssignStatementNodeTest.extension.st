@@ -20,7 +20,7 @@ operations
 end A' asViennaDocumentAst.
 	op := (spec moduleNamed: 'A') resolveIdentifier: 'op'.
 	statement := op statement.
-	slicer := ViennaIntraOperationSlicer
+	slicer := ViennaSlicer
 		          operation: op
 		          criteria: { ((ViennaLocalNameNode identifier: 'x')
 				           parent: statement;

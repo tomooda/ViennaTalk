@@ -2,30 +2,70 @@ Class {
 	#name : #ViennaInterOperationSlicer,
 	#superclass : #Object,
 	#instVars : [
-		'dependency',
-		'agenda'
+		'agenda',
+		'slicers',
+		'dependency'
 	],
 	#category : #'ViennaTalk-Slicing-Core'
 }
+
+{ #category : #slicing }
+ViennaInterOperationSlicer >> addAgenda: aViennaIntraOperationSlicer [
+
+	agenda add: aViennaIntraOperationSlicer.
+	dependency
+		at: aViennaIntraOperationSlicer
+		ifPresent: [ :dependentSlicers | agenda addAll: dependentSlicers ]
+]
+
+{ #category : #private }
+ViennaInterOperationSlicer >> addSlicer: aViennaSlicer [
+
+	slicers
+		at: {
+				aViennaSlicer operation.
+				aViennaSlicer criteria copy }
+		put: aViennaSlicer
+]
+
+{ #category : #slicing }
+ViennaInterOperationSlicer >> finishAgenda [
+
+	[ agenda notEmpty ] whileTrue: [
+		| slicer |
+		slicer := agenda anyOne.
+		agenda remove: slicer ifAbsent: [  ].
+		slicer cut ]
+]
 
 { #category : #initialization }
 ViennaInterOperationSlicer >> initialize [
 
 	super initialize.
-	dependency := Dictionary new.
-	agenda := IdentitySet new
+	slicers := Dictionary new.
+	agenda := IdentitySet new.
+	dependency := IdentityDictionary new
 ]
 
-{ #category : #slicing }
-ViennaInterOperationSlicer >> slicerOnOperation: aViennaNode criteria: aCollectionOfViennaNode [
+{ #category : #accessing }
+ViennaInterOperationSlicer >> slicerOnOperation: aViennaNode criteria: aCollectionOfViennaNode callerSlicer: aViennaSlicer [
 
-	^ dependency at: aViennaNode resolve ifAbsentPut: [
-		  | slicer |
-		  slicer := (ViennaIntraOperationSlicer
-			             operation: aViennaNode
-			             criteria: aCollectionOfViennaNode)
-			            interOperationSlicer: self;
-			            yourself.
-		  agenda add: slicer.
-		  slicer ]
+	| key newSlicer |
+	key := {
+		       aViennaNode resolve.
+		       aCollectionOfViennaNode }.
+
+	slicers at: key ifPresent: [ :slicer |
+		(dependency at: slicer ifAbsentPut: [ Set new ]) add: aViennaSlicer.
+		^ slicer ].
+	newSlicer := (ViennaSlicer
+		              operation: aViennaNode
+		              criteria: aCollectionOfViennaNode)
+		             interOperationSlicer: self.
+	slicers at: key put: newSlicer.
+	(dependency at: newSlicer ifAbsentPut: [ Set new ]) add:
+		aViennaSlicer.
+	^ newSlicer
+		  cut;
+		  yourself
 ]

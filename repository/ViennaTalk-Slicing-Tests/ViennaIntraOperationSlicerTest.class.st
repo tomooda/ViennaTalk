@@ -56,7 +56,7 @@ end A' asViennaDocumentAst.
 	skip3 := 'skip' asViennaStatementAst
 		         parent: op;
 		         yourself.
-	slicer := ViennaIntraOperationSlicer new
+	slicer := ViennaSlicer new
 ]
 
 { #category : #tests }
@@ -97,14 +97,7 @@ ViennaIntraOperationSlicerTest >> testCall [
 
 	slicer operation: op2.
 	slicer criteria: { x }.
-	slicer call: ('op()' asViennaExpressionAst
-			 parent: op2 statement;
-			 yourself).
-	self assert: slicer agenda asSet equals: { x } asSet.
-	op statement sliceWith:
-		(slicer interOperationSlicer slicerOnOperation: op criteria: { x }).
-	slicer criteria: { x }.
-	slicer call: ('op()' asViennaExpressionAst
+	slicer call: ('op' asViennaExpressionAst
 			 parent: op2 statement;
 			 yourself).
 	self assert: slicer agenda asSet equals: { y } asSet
@@ -122,7 +115,9 @@ ViennaIntraOperationSlicerTest >> testContinue [
 			 write: z;
 			 yourself).
 	self assert: slicer agenda asSet equals: { y } asSet.
-	self assert: slicer reads asSet equals: { y } asSet.
+	self assert: slicer reads asSet equals: {
+			x.
+			y } asSet.
 	self assert: slicer writes asSet equals: { z } asSet
 ]
 
@@ -138,6 +133,19 @@ ViennaIntraOperationSlicerTest >> testCriteria [
 ]
 
 { #category : #tests }
+ViennaIntraOperationSlicerTest >> testCut [
+
+	op statement: 'if z = 0 then op2() else x := y' asViennaStatementAst.
+	op2 statement: 'if z <> 0 then op() else y := z' asViennaStatementAst.
+	slicer operation: op2.
+	slicer criteria: { x }.
+	slicer cut.
+	self assert: slicer agenda asSet equals: {
+			x.
+			y } asSet
+]
+
+{ #category : #tests }
 ViennaIntraOperationSlicerTest >> testPostCopy [
 
 	| copy |
@@ -145,9 +153,9 @@ ViennaIntraOperationSlicerTest >> testPostCopy [
 		addCriterion: x;
 		read: y;
 		write: z.
-	self assert: slicer agenda equals: { x }.
-	self assert: slicer reads equals: { y }.
-	self assert: slicer writes equals: { z }.
+	self assert: slicer agenda equals: { x } asIdentitySet.
+	self assert: slicer reads equals: { y } asIdentitySet.
+	self assert: slicer writes equals: { z } asIdentitySet.
 	copy := slicer copy.
 	self
 		assert: (copy instVarNamed: 'agenda')
@@ -187,6 +195,21 @@ ViennaIntraOperationSlicerTest >> testRead [
 	b := block last expression.
 	slicer read: b.
 	self assert: (slicer reads includes: b resolve)
+]
+
+{ #category : #tests }
+ViennaIntraOperationSlicerTest >> testSlice [
+
+	op statement:
+		'if z = 0 then (z := y; op2()) else x := y' asViennaStatementAst.
+	op2 statement: 'if z <> 0 then op()' asViennaStatementAst.
+	slicer operation: op2.
+	slicer criteria: { x }.
+	slicer slice.
+	self assert: slicer agenda asSet equals: {
+			x.
+			y.
+			z } asSet
 ]
 
 { #category : #tests }

@@ -88,14 +88,7 @@ ViennaLocalNameNode >> isLocalValueNameNode [
 { #category : #testing }
 ViennaLocalNameNode >> isOperationNameNode [
 
-	(self definitionOfLocalName: self identifier) ifNotNil: [ :defNode |
-		(defNode isViennaExplicitOperationDefinitionNode: self identifier)
-			ifTrue: [ ^ true ].
-		(defNode isViennaImplicitOperationDefinitionNode: self identifier)
-			ifTrue: [ ^ true ].
-		(defNode isViennaOperationImportNode: self identifier) ifTrue: [
-			^ true ] ].
-	^ false
+	^ self resolve isOperationDefinition
 ]
 
 { #category : #testing }
