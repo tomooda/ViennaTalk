@@ -3,7 +3,7 @@ Extension { #name : #ViennaCallStatementNode }
 { #category : #'*ViennaTalk-Slicing-Core' }
 ViennaCallStatementNode >> sliceWith: aViennaSlicer [
 
-	aViennaSlicer call: self name.
+	aViennaSlicer onNode: self do: [ aViennaSlicer call: self name ].
 	self expressionList reverseDo: [ :expression |
 		expression sliceWith: aViennaSlicer ]
 ]

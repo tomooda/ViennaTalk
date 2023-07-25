@@ -73,7 +73,7 @@ ViennaSlicer >> branch [
 	  block
 		  ifNotNil: [
 			  self continue: origin.
-			  block value: self.
+			  block cull: self.
 			  subslicerStream nextPut: self copy ]
 		  ifNil: [
 			  agenda := Set new.
@@ -97,11 +97,17 @@ ViennaSlicer >> call: aViennaNode [
 ]
 
 { #category : #operations }
-ViennaSlicer >> continue: aViennaIntraOperationSlicer [
+ViennaSlicer >> continue: aViennaSlicer [
 
-	agenda := aViennaIntraOperationSlicer agenda copy.
-	reads := aViennaIntraOperationSlicer reads copy.
-	writes := aViennaIntraOperationSlicer writes copy
+	agenda := aViennaSlicer agenda copy.
+	reads := aViennaSlicer reads copy.
+	writes := aViennaSlicer writes copy
+]
+
+{ #category : #operations }
+ViennaSlicer >> control: aViennaNode [
+
+	agenda add: aViennaNode resolve
 ]
 
 { #category : #accessing }
@@ -222,9 +228,9 @@ ViennaSlicer >> printOn: aStream [
 ]
 
 { #category : #operations }
-ViennaSlicer >> read: aViennaNameNode [
+ViennaSlicer >> read: aViennaNode [
 
-	reads add: aViennaNameNode resolve
+	reads add: aViennaNode resolve
 ]
 
 { #category : #private }
@@ -242,9 +248,9 @@ ViennaSlicer >> slice [
 ]
 
 { #category : #operations }
-ViennaSlicer >> write: aViennaNameNode [
+ViennaSlicer >> write: aViennaNode [
 
-	writes add: aViennaNameNode resolve
+	writes add: aViennaNode resolve
 ]
 
 { #category : #private }

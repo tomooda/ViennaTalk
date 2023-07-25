@@ -47,6 +47,12 @@ ViennaOthersStatementNode >> label [
 	^ 'OthersStatement'
 ]
 
+{ #category : #'as yet unclassified' }
+ViennaOthersStatementNode >> sliceWith: aViennaSlicer [
+
+	self statement sliceWith: aViennaSlicer
+]
+
 { #category : #accessing }
 ViennaOthersStatementNode >> statement [
 
