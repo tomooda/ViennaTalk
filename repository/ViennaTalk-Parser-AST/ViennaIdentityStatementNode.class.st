@@ -26,9 +26,3 @@ ViennaIdentityStatementNode >> label [
 
 	^ 'IdentityStatement'
 ]
-
-{ #category : #'as yet unclassified' }
-ViennaIdentityStatementNode >> sliceWith: aViennaSlicer [
-
-	aViennaSlicer onNode: self do: [  ]
-]

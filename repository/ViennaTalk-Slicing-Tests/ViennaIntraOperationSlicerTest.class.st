@@ -140,9 +140,10 @@ ViennaIntraOperationSlicerTest >> testCut [
 	slicer operation: op2.
 	slicer criteria: { x }.
 	slicer cut.
-	self assert: slicer agenda asSet equals: {
+	self assert: slicer agenda equals: {
 			x.
-			y } asSet
+			y.
+			z } asSet
 ]
 
 { #category : #tests }

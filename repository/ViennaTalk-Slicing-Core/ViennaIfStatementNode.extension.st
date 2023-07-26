@@ -5,16 +5,30 @@ ViennaIfStatementNode >> sliceWith: aViennaSlicer [
 
 	| branchSlicer |
 	branchSlicer := aViennaSlicer branch.
-	self statement ifNotNil: [ :statement |
-		branchSlicer value: [ :slicer |
-			statement sliceWith: slicer.
-			self conditionalStatementList reverseDo: [ :conditionalStatement |
-				conditionalStatement condition sliceWith: slicer ] ] ].
+	self statement
+		ifNil: [ branchSlicer value: [ :slicer |  ] ]
+		ifNotNil: [ :statement |
+			branchSlicer value: [ :slicer |
+				| origin needsControl |
+				origin := slicer copy.
+				statement sliceWith: slicer.
+				needsControl := slicer agenda ~= origin agenda.
+				self conditionalStatementList reverseDo: [ :conditionalStatement |
+					needsControl ifTrue: [
+						slicer control: conditionalStatement condition ].
+					conditionalStatement condition sliceWith: slicer ] ] ].
 	self conditionalStatementList size to: 1 by: -1 do: [ :index |
 		branchSlicer value: [ :slicer |
+			| origin needsControl |
+			origin := slicer copy.
 			(self conditionalStatementList at: index) statement sliceWith:
 				slicer.
+			needsControl := slicer agenda ~= origin agenda.
 			index to: 1 by: -1 do: [ :i |
-				(self conditionalStatementList at: i) condition sliceWith: slicer ] ] ].
+				| conditionalStatement |
+				conditionalStatement := self conditionalStatementList at: i.
+				needsControl ifTrue: [
+					slicer control: conditionalStatement condition ].
+				conditionalStatement condition sliceWith: slicer ] ] ].
 	branchSlicer value: nil
 ]

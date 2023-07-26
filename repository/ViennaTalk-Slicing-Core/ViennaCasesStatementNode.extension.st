@@ -10,7 +10,9 @@ ViennaCasesStatementNode >> sliceWith: aViennaSlicer [
 		self othersStatement sliceWith: slicer ].
 	self casesStatementAlternatives reverseDo: [ :alternative |
 		branchSlicer value: [ :slicer |
-			alternative statement sliceWith: slicer ] ].
+			alternative statement sliceWith: slicer.
+			alternative patternList reverseDo: [ :pattern |
+				pattern sliceWith: slicer ] ] ].
 	branchSlicer value: nil.
 	origin agenda ~= aViennaSlicer agenda ifTrue: [
 		aViennaSlicer control: self expression ].

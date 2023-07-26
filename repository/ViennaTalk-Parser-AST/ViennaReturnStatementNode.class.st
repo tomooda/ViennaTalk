@@ -50,10 +50,3 @@ ViennaReturnStatementNode >> label [
 
 	^ 'ReturnStatement'
 ]
-
-{ #category : #'as yet unclassified' }
-ViennaReturnStatementNode >> sliceWith: aViennaSlicer [
-
-	self expression sliceWith: self expression.
-	aViennaSlicer onNode: self do: [ aViennaSlicer write: self ]
-]

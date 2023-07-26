@@ -20,7 +20,10 @@ ViennaCasesExpressionNode >> sliceWith: aViennaSlicer [
 			slicer onNode: alternative do: [
 				slicer
 					write: alternative;
-					read: self expression ] ] ].
+					read: self expression.
+				alternative patternList do: [ :pattern | slicer read: pattern ] ].
+			alternative patternList reverseDo: [ :pattern |
+				pattern sliceWith: slicer ] ] ].
 	branchSlicer value: nil.
 	self expression sliceWith: aViennaSlicer
 ]

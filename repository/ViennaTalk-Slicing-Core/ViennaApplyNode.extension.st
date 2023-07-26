@@ -4,9 +4,13 @@ Extension { #name : #ViennaApplyNode }
 ViennaApplyNode >> sliceWith: aViennaSlicer [
 
 	aViennaSlicer onNode: self do: [
-		aViennaSlicer call: self expression.
-		self arguments do: [ :expression |
-			expression sliceWith: aViennaSlicer ].
-		self expression sliceWith: aViennaSlicer.
-		aViennaSlicer write: self ]
+		aViennaSlicer
+			write: self;
+			read: self expression.
+		self argumentExpressionList do: [ :expression |
+			aViennaSlicer read: expression ] ].
+	aViennaSlicer call: self expression.
+	self arguments do: [ :expression |
+		expression sliceWith: aViennaSlicer ].
+	self expression sliceWith: aViennaSlicer
 ]
