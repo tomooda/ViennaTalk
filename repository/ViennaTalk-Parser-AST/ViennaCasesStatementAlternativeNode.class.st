@@ -80,9 +80,9 @@ ViennaCasesStatementAlternativeNode >> label [
 { #category : #'accessing-definitions' }
 ViennaCasesStatementAlternativeNode >> lookupIdentifier: aString [
 
-	^ self patternList
-		  detect: [ :pattern | pattern bindsIdentifier: aString ]
-		  ifNone: [ nil ]
+	^ (self bindsIdentifier: aString)
+		  ifTrue: [ self ]
+		  ifFalse: [ nil ]
 ]
 
 { #category : #'pretty printing' }

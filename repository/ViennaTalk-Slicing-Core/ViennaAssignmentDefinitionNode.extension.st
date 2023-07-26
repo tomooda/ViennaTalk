@@ -5,9 +5,11 @@ ViennaAssignmentDefinitionNode >> sliceWith: aViennaSlicer [
 
 	aViennaSlicer onNode: self do: [
 		self expression ifNotNil: [ :expression |
-			expression sliceWith: aViennaSlicer ].
+			aViennaSlicer read: expression ].
 		aViennaSlicer write:
 			((ViennaLocalNameNode identifier: self identifier)
 				 parent: self;
-				 yourself) ]
+				 yourself) ].
+	self expression ifNotNil: [ :expression |
+		expression sliceWith: aViennaSlicer ]
 ]

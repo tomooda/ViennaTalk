@@ -54,6 +54,14 @@ ViennaDefExpressionNode >> expression: aViennaExpressionNode [
 	self at: 2 put: aViennaExpressionNode
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaDefExpressionNode >> findResolverForIdentifier: aString [
+
+	^ (self equalDefinitionList bindsIdentifier: aString)
+		  ifTrue: [ self ]
+		  ifFalse: [ super findResolverForIdentifier: aString ]
+]
+
 { #category : #'pretty printing' }
 ViennaDefExpressionNode >> formatWith: aViennaAbstractFormatter [
 
@@ -90,6 +98,15 @@ ViennaDefExpressionNode >> isViennaDefExpressionNode [
 ViennaDefExpressionNode >> label [
 
 	^ 'DefExpression'
+]
+
+{ #category : #'accessing-definitions' }
+ViennaDefExpressionNode >> lookupIdentifier: aString [
+
+	self equalDefinitionList do: [ :equalDefinition |
+		(equalDefinition bindsIdentifier: aString) ifTrue: [
+			^ equalDefinition ] ].
+	^ nil
 ]
 
 { #category : #'pretty printing' }

@@ -6,10 +6,21 @@ ViennaCasesExpressionNode >> sliceWith: aViennaSlicer [
 	| branchSlicer |
 	branchSlicer := aViennaSlicer branch.
 	branchSlicer value: [ :slicer |
-		self othersExpression sliceWith: slicer ].
+		slicer onNode: self othersExpression do: [
+			slicer write: self.
+			slicer read: self othersExpression expression ].
+		self othersExpression expression sliceWith: slicer.
+		aViennaSlicer control: self expression ].
 	self casesExpressionAlternatives reverseDo: [ :alternative |
 		branchSlicer value: [ :slicer |
-			alternative expression sliceWith: slicer ] ].
+			slicer onNode: alternative do: [
+				slicer write: self.
+				slicer read: alternative expression ].
+			alternative expression sliceWith: slicer.
+			slicer onNode: alternative do: [
+				slicer
+					write: alternative;
+					read: self expression ] ] ].
 	branchSlicer value: nil.
 	self expression sliceWith: aViennaSlicer
 ]
