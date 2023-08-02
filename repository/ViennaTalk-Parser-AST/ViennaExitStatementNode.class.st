@@ -28,8 +28,11 @@ ViennaExitStatementNode >> expression: aViennaExpressionNode [
 { #category : #'pretty printing' }
 ViennaExitStatementNode >> formatWith: aViennaAbstractFormatter [
 
-	^ 'exit ' , (aViennaAbstractFormatter indentString:
-		   (aViennaAbstractFormatter format: self expression))
+	^ self expression
+		  ifNotNil: [ :expression |
+			  'exit ' , (aViennaAbstractFormatter indentString:
+				   (aViennaAbstractFormatter format: expression)) ]
+		  ifNil: [ 'exit' ]
 ]
 
 { #category : #private }

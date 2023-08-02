@@ -62,7 +62,7 @@ ViennaTrapsNode >> patternsAndStatementsDo: aBlock [
 		| pattern statement |
 		pattern := self at: index.
 		statement := self at: index + 1.
-		aBlock value: pattern value statement ]
+		aBlock value: pattern value: statement ]
 ]
 
 { #category : #accessing }

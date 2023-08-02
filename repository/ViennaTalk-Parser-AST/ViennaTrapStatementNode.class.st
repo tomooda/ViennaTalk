@@ -15,6 +15,14 @@ ViennaTrapStatementNode class >> pattern: aViennaPatternNode handlerStatement: a
 		  yourself
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaTrapStatementNode >> findResolverForIdentifier: aString [
+
+	^ (self pattern bindsIdentifier: aString)
+		  ifTrue: [ self ]
+		  ifFalse: [ super findResolverForIdentifier: aString ]
+]
+
 { #category : #'pretty printing' }
 ViennaTrapStatementNode >> formatWith: aViennaAbstractFormatter [
 
@@ -89,6 +97,14 @@ ViennaTrapStatementNode >> isViennaTrapStatementNode [
 ViennaTrapStatementNode >> label [
 
 	^ 'TrapStatement'
+]
+
+{ #category : #'accessing-definitions' }
+ViennaTrapStatementNode >> lookupIdentifier: aString [
+
+	^ (self pattern bindsIdentifier: aString)
+		  ifTrue: [ self ]
+		  ifFalse: [ nil ]
 ]
 
 { #category : #accessing }

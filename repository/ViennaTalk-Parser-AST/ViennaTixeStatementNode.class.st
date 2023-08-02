@@ -14,6 +14,14 @@ ViennaTixeStatementNode class >> traps: aViennaTrapsNode statement: aViennaState
 		  yourself
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaTixeStatementNode >> findResolverForIdentifier: aString [
+
+	self traps patternsAndStatementsDo: [ :pattern :statement |
+		(pattern bindsIdentifier: aString) ifTrue: [ ^ self ] ].
+	^ super findResolverForIdentifier: aString
+]
+
 { #category : #'pretty printing' }
 ViennaTixeStatementNode >> formatWith: aViennaAbstractFormatter [
 
@@ -51,6 +59,14 @@ ViennaTixeStatementNode >> label [
 	^ 'TixeStatement'
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaTixeStatementNode >> lookupIdentifier: aString [
+
+	self traps patternsAndStatementsDo: [ :pattern :statement |
+		(pattern bindsIdentifier: aString) ifTrue: [ ^ self ] ].
+	^ nil
+]
+
 { #category : #accessing }
 ViennaTixeStatementNode >> narrowestStatementWithFreeIdentifiers: anArrayOfString [
 
@@ -69,6 +85,12 @@ ViennaTixeStatementNode >> narrowestStatementWithFreeIdentifiers: anArrayOfStrin
 				  ifTrue: [ narrowests first ]
 				  ifFalse: [ self ] ]
 		  ifEmpty: [ nil ]
+]
+
+{ #category : #enumerating }
+ViennaTixeStatementNode >> patternsAndStatementsDo: aBlock [
+
+	self traps patternsAndStatementsDo: aBlock
 ]
 
 { #category : #accessing }
