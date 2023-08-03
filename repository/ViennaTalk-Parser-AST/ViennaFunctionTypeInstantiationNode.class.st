@@ -77,3 +77,9 @@ ViennaFunctionTypeInstantiationNode >> operatorPrecedence [
 
 	^ 40
 ]
+
+{ #category : #accessing }
+ViennaFunctionTypeInstantiationNode >> resolve [
+
+	^ self expression resolve
+]
