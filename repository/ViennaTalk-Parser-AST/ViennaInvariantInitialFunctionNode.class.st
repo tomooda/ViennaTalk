@@ -32,7 +32,7 @@ ViennaInvariantInitialFunctionNode >> expression: aViennaExpressionNode [
 	self at: 2 put: aViennaExpressionNode
 ]
 
-{ #category : #testing }
+{ #category : #'accessing-definitions' }
 ViennaInvariantInitialFunctionNode >> findResolverForIdentifier: aString [
 
 	^ (self pattern bindsIdentifier: aString)
@@ -78,7 +78,7 @@ ViennaInvariantInitialFunctionNode >> label [
 	^ 'InvariantInitialFunction'
 ]
 
-{ #category : #testing }
+{ #category : #'accessing-definitions' }
 ViennaInvariantInitialFunctionNode >> lookupIdentifier: aString [
 
 	^ (self pattern bindsIdentifier: aString) ifTrue: [ self pattern ]

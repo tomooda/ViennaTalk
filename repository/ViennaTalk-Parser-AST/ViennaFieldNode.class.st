@@ -76,6 +76,12 @@ ViennaFieldNode >> label [
 	^ 'Field'
 ]
 
+{ #category : #'as yet unclassified' }
+ViennaFieldNode >> sliceWith: aViennaSlicer [
+
+	
+]
+
 { #category : #accessing }
 ViennaFieldNode >> type [
 

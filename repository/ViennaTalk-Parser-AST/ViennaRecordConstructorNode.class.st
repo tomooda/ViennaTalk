@@ -71,3 +71,14 @@ ViennaRecordConstructorNode >> name: aViennaNameNode [
 
 	self at: 1 put: aViennaNameNode
 ]
+
+{ #category : #'as yet unclassified' }
+ViennaRecordConstructorNode >> sliceWith: aViennaSlicer [
+
+	aViennaSlicer onNode: self do: [
+		aViennaSlicer write: self.
+		self expressionList do: [ :expression |
+			aViennaSlicer read: expression ] ].
+	self expressionList reverseDo: [ :expression |
+		expression sliceWith: aViennaSlicer ]
+]

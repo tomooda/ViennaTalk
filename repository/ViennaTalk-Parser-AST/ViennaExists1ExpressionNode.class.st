@@ -47,10 +47,10 @@ ViennaExists1ExpressionNode >> expression: aViennaExpressionNode [
 	self at: 2 put: aViennaExpressionNode
 ]
 
-{ #category : #testing }
+{ #category : #'accessing-definitions' }
 ViennaExists1ExpressionNode >> findResolverForIdentifier: aString [
 
-	^ (self bind bindsIdentifier: aString)
+	^ (self pattern bindsIdentifier: aString)
 		  ifTrue: [ self ]
 		  ifFalse: [ super findResolverForIdentifier: aString ]
 ]
@@ -93,6 +93,14 @@ ViennaExists1ExpressionNode >> isViennaExists1ExpressionNode [
 ViennaExists1ExpressionNode >> label [
 
 	^ 'Exists1Expression'
+]
+
+{ #category : #'accessing-definitions' }
+ViennaExists1ExpressionNode >> lookupIdentifier: aString [
+
+	^ (self pattern bindsIdentifier: aString)
+		  ifTrue: [ self bind ]
+		  ifFalse: [ nil ]
 ]
 
 { #category : #'pretty printing' }

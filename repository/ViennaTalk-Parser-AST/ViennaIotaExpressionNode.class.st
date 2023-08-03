@@ -97,7 +97,9 @@ ViennaIotaExpressionNode >> label [
 { #category : #testing }
 ViennaIotaExpressionNode >> lookupIdentifier: aString [
 
-	^ (self bind bindsIdentifier: aString) ifTrue: [ self bind parameter ]
+	^ (self bind bindsIdentifier: aString)
+		  ifTrue: [ self bind ]
+		  ifFalse: [ nil ]
 ]
 
 { #category : #'pretty printing' }
