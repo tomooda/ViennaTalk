@@ -11,5 +11,7 @@ ViennaExplicitFunctionDefinitionNode >> sliceWith: aViennaSlicer [
 		self typeVariableList do: [ :typeVariable |
 			aViennaSlicer read: typeVariable ] ].
 	self expression sliceWith: aViennaSlicer.
-	self type sliceWith: aViennaSlicer
+	self type sliceWith: aViennaSlicer.
+	self parametersList do: [ :parameters |
+		parameters do: [ :parameter | parameter sliceWith: aViennaSlicer ] ]
 ]
