@@ -13,6 +13,12 @@ ViennaUnaryOperatorExpressionNode class >> expression: aViennaExpressionNode [
 		  yourself
 ]
 
+{ #category : #testing }
+ViennaUnaryOperatorExpressionNode class >> isAbstract [
+
+	^ self = ViennaUnaryOperatorExpressionNode
+]
+
 { #category : #accessing }
 ViennaUnaryOperatorExpressionNode >> expression [
 

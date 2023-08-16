@@ -1,7 +1,7 @@
-Extension { #name : #ViennaRecordConstructortNodeTest }
+Extension { #name : #ViennaRecordPatternNodeTest }
 
 { #category : #'*ViennaTalk-Slicing-Tests' }
-ViennaRecordConstructortNodeTest >> testSliceWith [
+ViennaRecordPatternNodeTest >> testSliceWith [
 
 	| spec op statement slicer |
 	spec := '

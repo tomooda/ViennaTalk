@@ -1541,6 +1541,11 @@ ViennaVDMGrammarTest >> testTixeStatement [
 	self assert: (grammar statement end parse: 'tixe { p1 |-> skip, p2 |-> return e1 } in return e2') equals: #(('p1' nil 'p2' 'e1') 'e2')
 ]
 
+{ #category : #'tests-expressions' }
+ViennaVDMGrammarTest >> testTokenConstructor1 [
+	self assert: (grammar expression end parse: 'mk_token(z)') equals: 'z'
+]
+
 { #category : #'tests-types' }
 ViennaVDMGrammarTest >> testTotalFunctionType1 [
 	self assert: (grammar type end parse: 't1+>t2') equals: #('t1' 't2')

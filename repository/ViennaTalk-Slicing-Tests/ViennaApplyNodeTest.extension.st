@@ -14,11 +14,14 @@ state S of
 	z : nat
 init s == s = mk_S(0,0,0)
 end
+functions
+	f : nat -> nat
+	f(a) == a + 1;
 operations
 	op : () ==> nat
 	op() == x := op2();
 	op2: () ==> nat
-	op2() == (y := z; return z);	
+	op2() == (y := z; return f(z));	
 end A' asViennaDocumentAst.
 	op := (spec moduleNamed: 'A') resolveIdentifier: 'op'.
 	statement := op statement.

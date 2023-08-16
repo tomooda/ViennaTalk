@@ -1,7 +1,7 @@
-Extension { #name : #ViennaRecordConstructortNodeTest }
+Extension { #name : #ViennaUndefinedExpressionNodeTest }
 
 { #category : #'*ViennaTalk-Slicing-Tests' }
-ViennaRecordConstructortNodeTest >> testSliceWith [
+ViennaUndefinedExpressionNodeTest >> testSliceWith [
 
 	| spec op statement slicer |
 	spec := '
@@ -14,11 +14,9 @@ state S of
 	z : nat
 init s == s = mk_S(0,0,0)
 end
-types
-	R :: f : nat inv mk_R(f) == f < z
 operations
-	op : () ==> ()
-	op() == x := mk_R(y);
+	op : () ==> nat
+	op() == x := undefined;
 end A' asViennaDocumentAst.
 	op := (spec moduleNamed: 'A') resolveIdentifier: 'op'.
 	statement := op statement.
@@ -28,11 +26,5 @@ end A' asViennaDocumentAst.
 				           parent: statement;
 				           resolve) }.
 	statement sliceWith: slicer.
-	self assert: slicer agenda asSet equals: {
-			((ViennaLocalNameNode identifier: 'y')
-				 parent: statement;
-				 resolve).
-			((ViennaLocalNameNode identifier: 'z')
-				 parent: statement;
-				 resolve) } asSet
+	self assert: slicer agenda asSet equals: {  } asSet
 ]

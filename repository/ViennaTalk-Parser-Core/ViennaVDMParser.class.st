@@ -1980,7 +1980,7 @@ ViennaVDMParser >> tl: arg [
 ViennaVDMParser >> tokenConstructor [
 
 	^ super tokenConstructor
-	  ==> [ :array | ViennaTokenConstructorNode expression: array first ]
+	  ==> [ :exp | ViennaTokenConstructorNode expression: exp ]
 ]
 
 { #category : #'parsers-types' }

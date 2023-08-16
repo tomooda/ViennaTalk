@@ -39,6 +39,13 @@ ViennaSetRangeExpressionNode >> formatWith: aViennaAbstractFormatter [
 		  aViennaAbstractFormatter dots , ', ' , endExpression , '}'
 ]
 
+{ #category : #private }
+ViennaSetRangeExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self startExpression freeIdentifiersExcept: aSet do: aBlock.
+	self endExpression freeIdentifiersExcept: aSet do: aBlock
+]
+
 { #category : #testing }
 ViennaSetRangeExpressionNode >> isViennaSetRangeExpressionNode [
 

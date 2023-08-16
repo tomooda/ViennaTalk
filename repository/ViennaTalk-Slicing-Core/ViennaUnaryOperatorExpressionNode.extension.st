@@ -1,7 +1,7 @@
-Extension { #name : #ViennaSetBindNode }
+Extension { #name : #ViennaUnaryOperatorExpressionNode }
 
 { #category : #'*ViennaTalk-Slicing-Core' }
-ViennaSetBindNode >> sliceWith: aViennaSlicer [
+ViennaUnaryOperatorExpressionNode >> sliceWith: aViennaSlicer [
 
 	aViennaSlicer onNode: self do: [
 		aViennaSlicer

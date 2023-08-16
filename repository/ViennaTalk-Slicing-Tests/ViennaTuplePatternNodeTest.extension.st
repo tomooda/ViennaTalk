@@ -1,7 +1,7 @@
-Extension { #name : #ViennaRecordConstructortNodeTest }
+Extension { #name : #ViennaTuplePatternNodeTest }
 
 { #category : #'*ViennaTalk-Slicing-Tests' }
-ViennaRecordConstructortNodeTest >> testSliceWith [
+ViennaTuplePatternNodeTest >> testSliceWith [
 
 	| spec op statement slicer |
 	spec := '
@@ -14,11 +14,9 @@ state S of
 	z : nat
 init s == s = mk_S(0,0,0)
 end
-types
-	R :: f : nat inv mk_R(f) == f < z
 operations
 	op : () ==> ()
-	op() == x := mk_R(y);
+	op() == x := let mk_(a, -) = mk_(y, z) in a;
 end A' asViennaDocumentAst.
 	op := (spec moduleNamed: 'A') resolveIdentifier: 'op'.
 	statement := op statement.

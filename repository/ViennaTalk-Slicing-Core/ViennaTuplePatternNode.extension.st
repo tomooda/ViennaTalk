@@ -4,10 +4,8 @@ Extension { #name : #ViennaTuplePatternNode }
 ViennaTuplePatternNode >> sliceWith: aViennaSlicer [
 
 	aViennaSlicer onNode: self do: [
-		self patternList do: [ :pattern |
-			aViennaSlicer
-				read: pattern;
-				write: self ] ].
+		aViennaSlicer write: self.
+		self patternList do: [ :pattern | aViennaSlicer read: pattern ] ].
 	self patternList reverseDo: [ :pattern |
 		pattern sliceWith: aViennaSlicer ]
 ]

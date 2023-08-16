@@ -1,7 +1,7 @@
-Extension { #name : #ViennaRecordConstructortNodeTest }
+Extension { #name : #ViennaTokenConstructortNodeTest }
 
 { #category : #'*ViennaTalk-Slicing-Tests' }
-ViennaRecordConstructortNodeTest >> testSliceWith [
+ViennaTokenConstructortNodeTest >> testSliceWith [
 
 	| spec op statement slicer |
 	spec := '
@@ -9,16 +9,14 @@ module A
 exports all
 definitions
 state S of
-	x : nat
+	x : token
 	y : nat
 	z : nat
 init s == s = mk_S(0,0,0)
 end
-types
-	R :: f : nat inv mk_R(f) == f < z
 operations
 	op : () ==> ()
-	op() == x := mk_R(y);
+	op() == x := mk_token(y+z);
 end A' asViennaDocumentAst.
 	op := (spec moduleNamed: 'A') resolveIdentifier: 'op'.
 	statement := op statement.

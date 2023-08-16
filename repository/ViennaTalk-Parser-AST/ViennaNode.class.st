@@ -470,7 +470,7 @@ ViennaNode >> importsFrom: aString do: aBlock [
 ViennaNode >> includesParent: aViennaNode [
 	self
 		parentsDo: [ :node | 
-			node = aViennaNode
+			node == aViennaNode
 				ifTrue: [ ^ true ] ].
 	^ false
 ]

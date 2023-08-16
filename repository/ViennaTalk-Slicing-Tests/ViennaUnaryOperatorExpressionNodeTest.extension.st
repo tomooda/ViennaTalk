@@ -1,7 +1,7 @@
-Extension { #name : #ViennaRecordConstructortNodeTest }
+Extension { #name : #ViennaUnaryOperatorExpressionNodeTest }
 
 { #category : #'*ViennaTalk-Slicing-Tests' }
-ViennaRecordConstructortNodeTest >> testSliceWith [
+ViennaUnaryOperatorExpressionNodeTest >> testSliceWith [
 
 	| spec op statement slicer |
 	spec := '
@@ -14,11 +14,9 @@ state S of
 	z : nat
 init s == s = mk_S(0,0,0)
 end
-types
-	R :: f : nat inv mk_R(f) == f < z
 operations
-	op : () ==> ()
-	op() == x := mk_R(y);
+	op : () ==> nat
+	op() == x := card {y, z};
 end A' asViennaDocumentAst.
 	op := (spec moduleNamed: 'A') resolveIdentifier: 'op'.
 	statement := op statement.
