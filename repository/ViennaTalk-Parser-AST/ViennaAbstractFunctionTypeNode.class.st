@@ -39,7 +39,7 @@ ViennaAbstractFunctionTypeNode >> freeIdentifiersExcept: aSet do: aBlock [
 	self returnType freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaAbstractFunctionTypeNode >> isViennaAbstractFunctionTypeNode [
 
 	^ true

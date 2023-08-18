@@ -25,7 +25,7 @@ ViennaUnaryTypeConstructorNode >> freeIdentifiersExcept: aSet do: aBlock [
 	self type freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaUnaryTypeConstructorNode >> isViennaUnaryTypeConstructorNode [
 
 	^ true

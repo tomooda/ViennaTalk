@@ -61,3 +61,9 @@ ViennaTypeVariableIdentifierNode >> label [
 
 	^ 'TypeVariableIdentifier'
 ]
+
+{ #category : #'accessing-definitions' }
+ViennaTypeVariableIdentifierNode >> resolve [
+
+	^ self resolveIdentifier: self identifier
+]

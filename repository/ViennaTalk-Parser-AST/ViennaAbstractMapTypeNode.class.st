@@ -39,7 +39,7 @@ ViennaAbstractMapTypeNode >> freeIdentifiersExcept: aSet do: aBlock [
 	self rangeType freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ViennaAbstractMapTypeNode >> isViennaAbstractMapTypeNode [
 
 	^ true

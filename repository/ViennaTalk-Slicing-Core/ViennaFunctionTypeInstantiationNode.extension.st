@@ -12,10 +12,10 @@ ViennaFunctionTypeInstantiationNode >> sliceWith: aViennaSlicer [
 	self expression sliceWith: aViennaSlicer.
 	functionDefinition := self expression resolve.
 	functionDefinition isFunctionDefinition ifTrue: [
-		aViennaSlicer onNode: self do: [
-			self functionTypeArgs asArray
-				with: functionDefinition typeVariableList asArray
-				do: [ :type :typeVar |
+		self functionTypeArgs asArray
+			with: functionDefinition typeVariableList asArray
+			do: [ :type :typeVar |
+				aViennaSlicer onNode: self do: [
 					aViennaSlicer
 						write: typeVar;
 						read: type ] ].
