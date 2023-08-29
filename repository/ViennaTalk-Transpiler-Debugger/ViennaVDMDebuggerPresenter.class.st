@@ -89,8 +89,7 @@ ViennaVDMDebuggerPresenter >> initializeToolbar [
 { #category : #initialization }
 ViennaVDMDebuggerPresenter >> setModelBeforeInitialization: aDebugger [
 
-	debugger := aDebugger.
-	debugger session: debugger session asViennaDebugSession
+	debugger := aDebugger
 ]
 
 { #category : #initialization }
