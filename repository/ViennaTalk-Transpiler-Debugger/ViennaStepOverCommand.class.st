@@ -31,5 +31,5 @@ ViennaStepOverCommand class >> defaultShortcut [
 
 { #category : #execution }
 ViennaStepOverCommand >> execute [
-	self debugger vdmStepOver
+	self context vdmStepOver
 ]

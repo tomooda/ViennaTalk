@@ -31,5 +31,5 @@ ViennaStepIntoCommand class >> defaultShortcut [
 
 { #category : #execution }
 ViennaStepIntoCommand >> execute [
-	self debugger vdmStepInto
+	self context vdmStepInto
 ]
