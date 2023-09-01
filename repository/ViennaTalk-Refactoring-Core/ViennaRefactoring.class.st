@@ -35,21 +35,54 @@ ViennaRefactoring class >> sortedInstancesOn: aViennaNode [
 
 { #category : #'visiting-definitions' }
 ViennaRefactoring >> addDefinition: aViennaNode in: moduleNode [
-	| sectionLabel moduleBody section |
-	sectionLabel := self definitionsLabelFor: aViennaNode.
-	moduleBody := moduleNode module third.
-	section := (moduleBody
-		detect: [ :definitionBlock | 
-			definitionBlock isViennaNode
-				and: [ definitionBlock first isViennaNode
-						and: [ definitionBlock first label = sectionLabel ] ] ]
-		ifNone: [ | definitionBlock |
-			definitionBlock := ViennaNode
-				label: 'DefinitionBlock'
-				with: (ViennaNode label: sectionLabel).
-			moduleBody add: definitionBlock.
-			definitionBlock ]) ifNotNil: #first.
-	section add: aViennaNode asAccessDefinition
+
+	aViennaNode isViennaAccessTypeDefinitionNode ifTrue: [
+		^ self addTypeDefinition: aViennaNode in: moduleNode ].
+	aViennaNode isViennaAccessValueDefinitionNode ifTrue: [
+		^ self addValueDefinition: aViennaNode in: moduleNode ].
+	aViennaNode isViennaAccessFunctionDefinitionNode ifTrue: [
+		^ self addFunctionDefinition: aViennaNode in: moduleNode ].
+	aViennaNode isViennaAccessOperationDefinitionNode ifTrue: [
+		^ self addOperationDefinition: aViennaNode in: moduleNode ].
+	aViennaNode isViennaTypeSynonymNode ifTrue: [
+		^ self addTypeDefinition: aViennaNode in: moduleNode ].
+	aViennaNode isViennaRecordTypeDefinitionNode ifTrue: [
+		^ self addTypeDefinition: aViennaNode in: moduleNode ].
+	aViennaNode isViennaValueDefinitionNode ifTrue: [
+		^ self addValueDefinition: aViennaNode in: moduleNode ].
+	aViennaNode isViennaExplicitFunctionDefinitionNode ifTrue: [
+		^ self addFunctionDefinition: aViennaNode in: moduleNode ].
+	aViennaNode isViennaImplicitFunctionDefinitionNode ifTrue: [
+		^ self addFunctionDefinition: aViennaNode in: moduleNode ].
+	aViennaNode isViennaExplicitOperationDefinitionNode ifTrue: [
+		^ self addOperationDefinition: aViennaNode in: moduleNode ].
+	aViennaNode isViennaImplicitOperationDefinitionNode ifTrue: [
+		^ self addOperationDefinition: aViennaNode in: moduleNode ].
+	^ nil
+]
+
+{ #category : #'visiting-definitions' }
+ViennaRefactoring >> addFunctionDefinition: aViennaNode in: moduleNode [
+
+	moduleNode addFunctionDefinition: aViennaNode
+]
+
+{ #category : #'visiting-definitions' }
+ViennaRefactoring >> addOperationDefinition: aViennaNode in: moduleNode [
+
+	moduleNode addOperationDefinition: aViennaNode
+]
+
+{ #category : #'visiting-definitions' }
+ViennaRefactoring >> addTypeDefinition: aViennaNode in: moduleNode [
+
+	moduleNode addTypeDefinition: aViennaNode
+]
+
+{ #category : #'visiting-definitions' }
+ViennaRefactoring >> addValueDefinition: aViennaNode in: moduleNode [
+
+	moduleNode addValueDefinition: aViennaNode
 ]
 
 { #category : #accessing }
@@ -81,94 +114,92 @@ ViennaRefactoring >> bindingOf: aString in: aViennaNode do: aBlock [
 
 { #category : #'visiting-bindings' }
 ViennaRefactoring >> bindingOf: aString inAssignmentDefinition: aViennaNode do: aBlock [
-	aViennaNode first = aString
-		ifTrue: [ aBlock value: aViennaNode ].
-	aViennaNode
-		do: [ :node | self bindingOf: aString in: node do: aBlock ]
+
+	aViennaNode identifier = aString ifTrue: [ aBlock value: aViennaNode ].
+	aViennaNode do: [ :node |
+		self bindingOf: aString in: node do: aBlock ]
 ]
 
 { #category : #'visiting-bindings' }
 ViennaRefactoring >> bindingOf: aString inError: aViennaNode do: aBlock [
-	aViennaNode first = aString
-		ifTrue: [ aBlock value: aViennaNode ].
-	aViennaNode
-		do: [ :node | self bindingOf: aString in: node do: aBlock ]
+
+	aViennaNode identifier = aString ifTrue: [ aBlock value: aViennaNode ].
+	aViennaNode do: [ :node |
+		self bindingOf: aString in: node do: aBlock ]
 ]
 
 { #category : #'visiting-bindings' }
 ViennaRefactoring >> bindingOf: aString inExplicitFunctionDefinition: aViennaNode do: aBlock [
-	aViennaNode first = aString
-		ifTrue: [ aBlock value: aViennaNode ].
-	aViennaNode
-		do: [ :node | self bindingOf: aString in: node do: aBlock ]
+
+	aViennaNode identifier = aString ifTrue: [ aBlock value: aViennaNode ].
+	aViennaNode do: [ :node |
+		self bindingOf: aString in: node do: aBlock ]
 ]
 
 { #category : #'visiting-bindings' }
 ViennaRefactoring >> bindingOf: aString inExplicitOperationDefinition: aViennaNode do: aBlock [
-	aViennaNode first = aString
-		ifTrue: [ aBlock value: aViennaNode ].
-	aViennaNode
-		do: [ :node | self bindingOf: aString in: node do: aBlock ]
+
+	aViennaNode identifier = aString ifTrue: [ aBlock value: aViennaNode ].
+	aViennaNode do: [ :node |
+		self bindingOf: aString in: node do: aBlock ]
 ]
 
 { #category : #'visiting-bindings' }
 ViennaRefactoring >> bindingOf: aString inImplicitFunctionDefinition: aViennaNode do: aBlock [
-	aViennaNode first = aString
-		ifTrue: [ aBlock value: aViennaNode ].
-	aViennaNode
-		do: [ :node | self bindingOf: aString in: node do: aBlock ]
+
+	aViennaNode identifier = aString ifTrue: [ aBlock value: aViennaNode ].
+	aViennaNode do: [ :node |
+		self bindingOf: aString in: node do: aBlock ]
 ]
 
 { #category : #'visiting-bindings' }
 ViennaRefactoring >> bindingOf: aString inImplicitOperationDefinition: aViennaNode do: aBlock [
-	aViennaNode first = aString
-		ifTrue: [ aBlock value: aViennaNode ].
-	aViennaNode
-		do: [ :node | self bindingOf: aString in: node do: aBlock ]
+
+	aViennaNode identifier = aString ifTrue: [ aBlock value: aViennaNode ].
+	aViennaNode do: [ :node |
+		self bindingOf: aString in: node do: aBlock ]
 ]
 
 { #category : #'visiting-bindings' }
 ViennaRefactoring >> bindingOf: aString inIndexForLoop: aViennaNode do: aBlock [
-	aViennaNode first = aString
-		ifTrue: [ aBlock value: aViennaNode ].
-	aViennaNode
-		do: [ :node | self bindingOf: aString in: node do: aBlock ]
+
+	aViennaNode identifier = aString ifTrue: [ aBlock value: aViennaNode ].
+	aViennaNode do: [ :node |
+		self bindingOf: aString in: node do: aBlock ]
 ]
 
 { #category : #'visiting-bindings' }
 ViennaRefactoring >> bindingOf: aString inPatternIdentifier: aViennaNode do: aBlock [
-	aViennaNode first = aString
-		ifTrue: [ aBlock value: aViennaNode ].
-	aViennaNode
-		do: [ :node | self bindingOf: aString in: node do: aBlock ]
+
+	aViennaNode identifier = aString ifTrue: [ aBlock value: aViennaNode ].
+	aViennaNode do: [ :node |
+		self bindingOf: aString in: node do: aBlock ]
 ]
 
 { #category : #'visiting-bindings' }
 ViennaRefactoring >> bindingOf: aString inRecordTypeDefinition: aViennaNode do: aBlock [
-	aViennaNode first = aString
-		ifTrue: [ aBlock value: aViennaNode ].
-	aViennaNode
-		do: [ :node | self bindingOf: aString in: node do: aBlock ]
+
+	aViennaNode identifier = aString ifTrue: [ aBlock value: aViennaNode ].
+	aViennaNode do: [ :node |
+		self bindingOf: aString in: node do: aBlock ]
 ]
 
 { #category : #'visiting-bindings' }
 ViennaRefactoring >> bindingOf: aString inStateDefinition: aViennaNode do: aBlock [
-	aViennaNode first = aString
-		ifTrue: [ aBlock value: aViennaNode ].
-	aViennaNode second
-		do: [ :field | 
-			field first = aString
-				ifTrue: [ aBlock value: field ] ].
-	aViennaNode
-		do: [ :node | self bindingOf: aString in: node do: aBlock ]
+
+	aViennaNode identifier = aString ifTrue: [ aBlock value: aViennaNode ].
+	aViennaNode second do: [ :field |
+		field first = aString ifTrue: [ aBlock value: field ] ].
+	aViennaNode do: [ :node |
+		self bindingOf: aString in: node do: aBlock ]
 ]
 
 { #category : #'visiting-bindings' }
-ViennaRefactoring >> bindingOf: aString inTypeDefinition: aViennaNode do: aBlock [
-	aViennaNode first = aString
-		ifTrue: [ aBlock value: aViennaNode ].
-	aViennaNode
-		do: [ :node | self bindingOf: aString in: node do: aBlock ]
+ViennaRefactoring >> bindingOf: aString inTypeSynonym: aViennaNode do: aBlock [
+
+	aViennaNode identifier = aString ifTrue: [ aBlock value: aViennaNode ].
+	aViennaNode do: [ :node |
+		self bindingOf: aString in: node do: aBlock ]
 ]
 
 { #category : #'visiting-bindings' }
@@ -184,122 +215,94 @@ ViennaRefactoring >> check [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'visiting-definitions' }
-ViennaRefactoring >> definitionsLabelFor: aViennaNode [
-	(#('TypeDefinition' 'RecordTypeDefinition')
-		includes: aViennaNode label)
-		ifTrue: [ ^ 'TypeDefinitions' ].
-	(#('ValueDefinition') includes: aViennaNode label)
-		ifTrue: [ ^ 'ValueDefinitions' ].
-	(#('ExplicitFunctionDefinition' 'ImplicitFunctionDefinition')
-		includes: aViennaNode label)
-		ifTrue: [ ^ 'FunctionDefinitions' ].
-	(#('ExplicitOperationDefinition' 'ImplicitOperationDefinition')
-		includes: aViennaNode label)
-		ifTrue: [ ^ 'OperationDefinitions' ].
-	^ nil
-]
-
-{ #category : #'visiting-scopes' }
-ViennaRefactoring >> directScopeNodeLabels [
-	^ #('IndexForLoop') asSet
-]
-
-{ #category : #'visiting-scopes' }
-ViennaRefactoring >> enclosingScopeNodeLabels [
-	^ #('Document' 'Module' 'ExplicitFunctionDefinition' 'ImplicitFunctionDefinition' 'ExplicitOperationDefinition' 'ImplicitOperationDefinition' 'CasesExpressionAlternative' 'CasesStatementAlternative' 'LetExpression' 'LetStatement' 'LetBeExpression' 'LetBeStatement' 'SequenceComprehension' 'SetComprehension' 'MapComprehension' 'ForallExpression' 'ExistsExpression' 'Exists1Expression' 'IotaExpression' 'LambdaExpression' 'InvariantInitialFunction' 'SequenceForLoop' 'SetForLoop' 'BlockStatement')
-		asSet
-]
-
 { #category : #'visiting-interface' }
 ViennaRefactoring >> ensureExport: aViennaNode [
-	aViennaNode label = 'GlobalName'
-		ifTrue: [ ^ aViennaNode ].
-	(aViennaNode label = 'LocalName'
-		and: [ aViennaNode resolve module == aViennaNode module ])
-		ifTrue: [ ^ self ensureExport: aViennaNode resolve ].
-	aViennaNode asExportSignature
-		ifNotNil:
-			[ :signature | self ensureExportSignature: signature in: aViennaNode module ].
+
+	aViennaNode isViennaGlobalNameNode ifTrue: [ ^ aViennaNode ].
+	(aViennaNode isViennaLocalNameNode and: [
+		 aViennaNode resolve module == aViennaNode module ]) ifTrue: [
+		^ self ensureExport: aViennaNode resolve ].
+	aViennaNode asExportSignature ifNotNil: [ :signature |
+		self ensureExportSignature: signature in: aViennaNode module ].
 	^ nil
 ]
 
 { #category : #'visiting-interface' }
 ViennaRefactoring >> ensureExportSignature: aViennaNode in: moduleNode [
+
 	| exportModuleSignature |
-	exportModuleSignature := moduleNode exports first.
-	exportModuleSignature label = 'ExportModuleSignatureAll'
-		ifTrue: [ ^ exportModuleSignature ].
-	exportModuleSignature
-		reverseDo: [ :exportSignature | 
-			exportSignature label = aViennaNode label
-				ifTrue: [ exportSignature add: aViennaNode first.
-					^ exportSignature ] ].
+	exportModuleSignature := moduleNode exportDefinition
+		                         exportModuleSignature.
+	exportModuleSignature isViennaExportModuleSignatureAllNode ifTrue: [
+		^ exportModuleSignature ].
+	exportModuleSignature reverseDo: [ :exportSignature |
+		exportSignature class = aViennaNode class ifTrue: [
+			exportSignature add: aViennaNode first.
+			^ exportSignature ] ].
 	exportModuleSignature add: aViennaNode.
 	^ aViennaNode
 ]
 
 { #category : #'visiting-interface' }
 ViennaRefactoring >> ensureImport: aViennaNode in: moduleNode [
+
 	| importModuleSignature |
-	aViennaNode module == moduleNode
-		ifTrue: [ ^ self ].
+	aViennaNode module == moduleNode ifTrue: [ ^ self ].
 	importModuleSignature := (self
-		ensureImportDefinitionFrom: aViennaNode module name
-		in: moduleNode) second.
-	importModuleSignature label = 'ImportModuleSignatureAll'
-		ifTrue: [ ^ self ].
-	(aViennaNode asImportDefinitionIn: moduleNode)
-		ifNotNil: [ :srcImportDefinition | 
-			srcImportDefinition second
-				do: [ :srcImportSignature | 
-					| signatures |
-					signatures := srcImportSignature asArray asOrderedCollection.
-					srcImportSignature asArray
-						do: [ :srcImport | 
-							(importModuleSignature
-								anySatisfy: [ :importSignature | 
-									importSignature label = srcImportSignature label
-										and: [ importSignature
-												anySatisfy: [ :import | import name = srcImport name ] ] ])
-								ifTrue: [ signatures remove: srcImport ifAbsent: [  ] ] ].
-					signatures
-						ifNotEmpty: [ (self
-								ensureImportSignatureFor: srcImportSignature
-								in: importModuleSignature) addAll: signatures ] ] ]
+		                          ensureImportDefinitionFrom:
+		                          aViennaNode module identifier
+		                          in: moduleNode) second.
+	importModuleSignature isViennaImportModuleSignatureAllNode ifTrue: [
+		^ self ].
+	(aViennaNode asImportDefinitionIn: moduleNode) ifNotNil: [
+		:srcImportDefinition |
+		srcImportDefinition second do: [ :srcImportSignature |
+			| signatures |
+			signatures := srcImportSignature asArray asOrderedCollection.
+			srcImportSignature asArray do: [ :srcImport |
+				(importModuleSignature anySatisfy: [ :importSignature |
+					 importSignature class = srcImportSignature class and: [
+						 importSignature anySatisfy: [ :import |
+							 import name = srcImport name ] ] ]) ifTrue: [
+					signatures remove: srcImport ifAbsent: [  ] ] ].
+			signatures ifNotEmpty: [
+				(self
+					 ensureImportSignatureFor: srcImportSignature
+					 in: importModuleSignature) addAll: signatures ] ] ]
 ]
 
 { #category : #'visiting-interface' }
 ViennaRefactoring >> ensureImportDefinitionFrom: aString in: moduleNode [
+
 	| last srcName |
 	last := nil.
 	srcName := aString isViennaNode
-		ifTrue: [ aString name ]
-		ifFalse: [ aString ].
-	moduleNode
-		importsFrom: srcName
-		do: [ :importModuleSignature | 
-			importModuleSignature label = 'ImportModuleSignatureAll'
-				ifTrue: [ ^ importModuleSignature parent ].
-			last := importModuleSignature parent ].
-	last
-		ifNil: [ last := ViennaNode
-				label: 'ImportDefinition'
-				with: srcName
-				with: (ViennaNode label: 'ImportModuleSignature').
-			moduleNode ensureImports add: last ].
+		           ifTrue: [ aString name ]
+		           ifFalse: [ aString ].
+	moduleNode importsFrom: srcName do: [ :importModuleSignature |
+		importModuleSignature isViennaImportModuleSignatureAllNode ifTrue: [
+			^ importModuleSignature parent ].
+		last := importModuleSignature parent ].
+	last ifNil: [
+		last := ViennaImportDefinitionNode
+			        moduleIdentifier: srcName
+			        importModuleSignature:
+			        ViennaImportModuleSignatureNode empty.
+		moduleNode addImportDefinition: last ].
 	^ last
 ]
 
 { #category : #'visiting-interface' }
 ViennaRefactoring >> ensureImportSignatureFor: importSignatureNode in: importModuleSignatureNode [
+
 	^ importModuleSignatureNode asArray
-		detect:
-			[ :importSignature | importSignature label = importSignatureNode label ]
-		ifNone: [ | importSignature |
-			importSignature := ViennaNode label: importSignatureNode label.
-			importModuleSignatureNode add: importSignature.
-			importSignature ]
+		  detect: [ :importSignature |
+			  importSignature class = importSignatureNode class ]
+		  ifNone: [
+			  | importSignature |
+			  importSignature := importSignatureNode class empty.
+			  importModuleSignatureNode add: importSignature.
+			  importSignature ]
 ]
 
 { #category : #operations }
@@ -309,94 +312,77 @@ ViennaRefactoring >> execute [
 
 { #category : #'visiting-pattern matching' }
 ViennaRefactoring >> expressionFromPattern: aViennaNode bindings: aDictionary [
-	aViennaNode label = 'PatternIdentifier'
-		ifTrue: [ ^ aDictionary
-				at: aViennaNode name
-				ifPresent: [ :node | node copyFragment ]
-				ifAbsent: [ ViennaNode label: 'LocalName' with: aViennaNode name ] ].
-	aViennaNode label = 'MapEnumerationPattern'
-		ifTrue: [ ^ ViennaNode
-				label: 'MapEnumeration'
-				withAll:
-					(aViennaNode asArray
-						collect: [ :node | 
-							node isViennaNode
-								ifTrue: [ self expressionFromPattern: node bindings: aDictionary ]
-								ifFalse: [ node ] ]) ].
-	aViennaNode label = 'MapMunionPattern'
-		ifTrue: [ ^ ViennaNode
-				label: 'MapMerge'
-				withAll:
-					(aViennaNode asArray
-						collect: [ :node | 
-							node isViennaNode
-								ifTrue: [ self expressionFromPattern: node bindings: aDictionary ]
-								ifFalse: [ node ] ]) ].
-	aViennaNode label = 'MapletPattern'
-		ifTrue: [ ^ ViennaNode
-				label: 'Maplet'
-				withAll:
-					(aViennaNode asArray
-						collect: [ :node | 
-							node isViennaNode
-								ifTrue: [ self expressionFromPattern: node bindings: aDictionary ]
-								ifFalse: [ node ] ]) ].
-	aViennaNode label = 'MatchValue'
-		ifTrue: [ ^ aViennaNode first ].
-	aViennaNode label = 'RecordPattern'
-		ifTrue: [ ^ ViennaNode
-				label: 'RecordConstructor'
-				withAll:
-					(aViennaNode asArray
-						collect: [ :node | 
-							node isViennaNode
-								ifTrue: [ self expressionFromPattern: node bindings: aDictionary ]
-								ifFalse: [ node ] ]) ].
-	aViennaNode label = 'SeqConcPattern'
-		ifTrue: [ ^ ViennaNode
-				label: 'SequenceConcatenate'
-				withAll:
-					(aViennaNode asArray
-						collect: [ :node | 
-							node isViennaNode
-								ifTrue: [ self expressionFromPattern: node bindings: aDictionary ]
-								ifFalse: [ node ] ]) ].
-	aViennaNode label = 'SeqEnumPattern'
-		ifTrue: [ ^ ViennaNode
-				label: 'SequenceEnumeration'
-				withAll:
-					(aViennaNode asArray
-						collect: [ :node | 
-							node isViennaNode
-								ifTrue: [ self expressionFromPattern: node bindings: aDictionary ]
-								ifFalse: [ node ] ]) ].
-	aViennaNode label = 'SetEnumPattern'
-		ifTrue: [ ^ ViennaNode
-				label: 'SetEnumeration'
-				withAll:
-					(aViennaNode asArray
-						collect: [ :node | 
-							node isViennaNode
-								ifTrue: [ self expressionFromPattern: node bindings: aDictionary ]
-								ifFalse: [ node ] ]) ].
-	aViennaNode label = 'SetUnionPattern'
-		ifTrue: [ ^ ViennaNode
-				label: 'SetUnion'
-				withAll:
-					(aViennaNode asArray
-						collect: [ :node | 
-							node isViennaNode
-								ifTrue: [ self expressionFromPattern: node bindings: aDictionary ]
-								ifFalse: [ node ] ]) ].
-	aViennaNode label = 'TuplePattern'
-		ifTrue: [ ^ ViennaNode
-				label: 'TupleConstructor'
-				withAll:
-					(aViennaNode asArray
-						collect: [ :node | 
-							node isViennaNode
-								ifTrue: [ self expressionFromPattern: node bindings: aDictionary ]
-								ifFalse: [ node ] ]) ].
+
+	aViennaNode isViennaPatternIdentifierNode ifTrue: [
+		^ aDictionary
+			  at: aViennaNode identifier
+			  ifPresent: [ :node | node copyFragment ]
+			  ifAbsent: [
+			  ViennaLocalNameNode identifier: aViennaNode identifier ] ].
+	aViennaNode isViennaMapEnumerationPatternNode ifTrue: [
+		^ ViennaMapEnumerationNode withAll:
+			  (aViennaNode asArray collect: [ :node |
+				   node isViennaNode
+					   ifTrue: [
+					   self expressionFromPattern: node bindings: aDictionary ]
+					   ifFalse: [ node ] ]) ].
+	aViennaNode isViennaMapMunionPatternNode ifTrue: [
+		^ ViennaMapMergeNode withAll:
+			  (aViennaNode asArray collect: [ :node |
+				   node isViennaNode
+					   ifTrue: [
+					   self expressionFromPattern: node bindings: aDictionary ]
+					   ifFalse: [ node ] ]) ].
+	aViennaNode isViennaMapletPatternNode ifTrue: [
+		^ ViennaMapletNode withAll: (aViennaNode asArray collect: [ :node |
+				   node isViennaNode
+					   ifTrue: [
+					   self expressionFromPattern: node bindings: aDictionary ]
+					   ifFalse: [ node ] ]) ].
+	aViennaNode isViennaMatchValueNode ifTrue: [
+		^ aViennaNode expression ].
+	aViennaNode isViennaRecordPatternNode ifTrue: [
+		^ ViennaRecordConstructorNode withAll:
+			  (aViennaNode asArray collect: [ :node |
+				   node isViennaNode
+					   ifTrue: [
+					   self expressionFromPattern: node bindings: aDictionary ]
+					   ifFalse: [ node ] ]) ].
+	aViennaNode isViennaSeqConcPatternNode ifTrue: [
+		^ ViennaSequenceConcatenateNode withAll:
+			  (aViennaNode asArray collect: [ :node |
+				   node isViennaNode
+					   ifTrue: [
+					   self expressionFromPattern: node bindings: aDictionary ]
+					   ifFalse: [ node ] ]) ].
+	aViennaNode isViennaSeqEnumPatternNode ifTrue: [
+		^ ViennaSequenceEnumerationNode withAll:
+			  (aViennaNode asArray collect: [ :node |
+				   node isViennaNode
+					   ifTrue: [
+					   self expressionFromPattern: node bindings: aDictionary ]
+					   ifFalse: [ node ] ]) ].
+	aViennaNode isViennaSetEnumPatternNode ifTrue: [
+		^ ViennaSetEnumerationNode withAll:
+			  (aViennaNode asArray collect: [ :node |
+				   node isViennaNode
+					   ifTrue: [
+					   self expressionFromPattern: node bindings: aDictionary ]
+					   ifFalse: [ node ] ]) ].
+	aViennaNode isViennaSetUnionPatternNode ifTrue: [
+		^ ViennaSetUnionNode withAll:
+			  (aViennaNode asArray collect: [ :node |
+				   node isViennaNode
+					   ifTrue: [
+					   self expressionFromPattern: node bindings: aDictionary ]
+					   ifFalse: [ node ] ]) ].
+	aViennaNode isViennaTuplePatternNode ifTrue: [
+		^ ViennaTupleConstructorNode withAll:
+			  (aViennaNode asArray collect: [ :node |
+				   node isViennaNode
+					   ifTrue: [
+					   self expressionFromPattern: node bindings: aDictionary ]
+					   ifFalse: [ node ] ]) ].
 	^ self error: 'Unknown pattern syntax'
 ]
 
@@ -419,25 +405,31 @@ ViennaRefactoring >> freeOccurrencesOf: aString in: aViennaNode do: aBlock [
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inBlockStatement: aViennaNode do: aBlock [
-	aViennaNode first label = 'DclStatement'
-		ifTrue: [ self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
-			aViennaNode first
-				do: [ :dclDef | 
-					dclDef first = aString
-						ifTrue: [ ^ self ] ].
-			2 to: aViennaNode size do:
-				[ :index | self freeOccurrencesOf: aString in: (aViennaNode at: index) do: aBlock ] ].
-	aViennaNode
-		do: [ :node | self freeOccurrencesOf: aString in: node do: aBlock ]
+
+	aViennaNode first isViennaDclStatementNode ifTrue: [
+		self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
+		aViennaNode first do: [ :assignmentDefinition |
+			assignmentDefinition identifier = aString ifTrue: [ ^ self ] ].
+		2 to: aViennaNode size do: [ :index |
+			self
+				freeOccurrencesOf: aString
+				in: (aViennaNode at: index)
+				do: aBlock ] ].
+	aViennaNode do: [ :node |
+		self freeOccurrencesOf: aString in: node do: aBlock ]
 ]
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inCasesAlternative: aViennaNode do: aBlock [
-	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
-	aViennaNode first
-		allDescendantsDo: [ :n | 
-			(n label = 'PatternIdentifier' and: [ n first = aString ])
-				ifTrue: [ ^ self ] ].
+
+	self
+		freeOccurrencesOf: aString
+		in: aViennaNode patternList
+		do: aBlock.
+	aViennaNode patternList
+		allDescendantsSuchThat: [ :n |
+		n isViennaPatternIdentifierNode: aString ]
+		do: [ :n | ^ self ].
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock
 ]
 
@@ -459,13 +451,13 @@ ViennaRefactoring >> freeOccurrencesOf: aString inCasesStatementAlternative: aVi
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inDef: aViennaNode do: aBlock [
-	aViennaNode first
-		do: [ :equalDefinition | 
-			self freeOccurrencesOf: aString in: equalDefinition do: aBlock.
-			equalDefinition first
-				allDescendantsDo: [ :n | 
-					(n label = 'PatternIdentifier' and: [ n first = aString ])
-						ifTrue: [ ^ self ] ] ].
+
+	aViennaNode equalDefinitionList do: [ :equalDefinition |
+		self freeOccurrencesOf: aString in: equalDefinition do: aBlock.
+		equalDefinition pattern
+			allDescendantsSuchThat: [ :n |
+			n isViennaPatternIdentifierNode: aString ]
+			do: [ :n | ^ self ] ].
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock
 ]
 
@@ -497,35 +489,40 @@ ViennaRefactoring >> freeOccurrencesOf: aString inExistsExpression: aViennaNode 
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inExplicitFunctionDefinition: aViennaNode do: aBlock [
-	aViennaNode second
-		do: [ :n | 
-			(n label = 'TypeVariableIdentifier' and: [ n first = aString ])
-				ifTrue: [ ^ self ] ].
-	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock.
-	self freeOccurrencesOf: aString in: aViennaNode third do: aBlock.
-	self freeOccurrencesOf: aString in: aViennaNode fourth do: aBlock.
-	self freeOccurrencesOf: aString in: aViennaNode fifth do: aBlock.
-	self freeOccurrencesOf: aString in: aViennaNode ninth do: aBlock.
-	aViennaNode fifth
-		allDescendantsDo: [ :n | 
-			(n label = 'PatternIdentifier' and: [ n first = aString ])
-				ifTrue: [ ^ self ] ].
-	self freeOccurrencesOf: aString in: aViennaNode sixth do: aBlock.
-	self freeOccurrencesOf: aString in: aViennaNode seventh do: aBlock.
-	self freeOccurrencesOf: aString in: aViennaNode eighth do: aBlock
+
+	aViennaNode typeVariableList do: [ :n |
+		(n isViennaTypeVariableIdentifierNode: aString) ifTrue: [ ^ self ] ].
+	self
+		freeOccurrencesOf: aString
+		in: aViennaNode typeVariableList
+		do: aBlock.
+	self freeOccurrencesOf: aString in: aViennaNode type do: aBlock.
+	self
+		freeOccurrencesOf: aString
+		in: aViennaNode parametersList
+		do: aBlock.
+	self freeOccurrencesOf: aString in: aViennaNode measure do: aBlock.
+	aViennaNode parametersList
+		allDescendantsSuchThat: [ :n |
+		n isViennaPatternIdentifierNode: aString ]
+		do: [ :n | ^ self ].
+	self freeOccurrencesOf: aString in: aViennaNode expression do: aBlock.
+	self freeOccurrencesOf: aString in: aViennaNode pre do: aBlock.
+	self freeOccurrencesOf: aString in: aViennaNode post do: aBlock
 ]
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inExplicitOperationDefinition: aViennaNode do: aBlock [
-	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock.
-	self freeOccurrencesOf: aString in: aViennaNode fourth do: aBlock.
-	aViennaNode fifth
-		allDescendantsDo: [ :n | 
-			(n label = 'PatternIdentifier' and: [ n first = aString ])
-				ifTrue: [ ^ self ] ].
-	self freeOccurrencesOf: aString in: aViennaNode fifth do: aBlock.
-	self freeOccurrencesOf: aString in: aViennaNode sixth do: aBlock.
-	self freeOccurrencesOf: aString in: aViennaNode seventh do: aBlock
+
+	self freeOccurrencesOf: aString in: aViennaNode type do: aBlock.
+	self freeOccurrencesOf: aString in: aViennaNode parameters do: aBlock.
+	aViennaNode statement
+		allDescendantsSuchThat: [ :n |
+		n isViennaPatternIdentifierNode: aString ]
+		do: [ :n | ^ self ].
+	self freeOccurrencesOf: aString in: aViennaNode statement do: aBlock.
+	self freeOccurrencesOf: aString in: aViennaNode pre do: aBlock.
+	self freeOccurrencesOf: aString in: aViennaNode post do: aBlock
 ]
 
 { #category : #'visiting-free occurrences' }
@@ -538,15 +535,14 @@ ViennaRefactoring >> freeOccurrencesOf: aString inForallExpression: aViennaNode 
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inFullQuantifierExpression: aViennaNode do: aBlock [
+
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
-	aViennaNode first
-		do: [ :multiBind | 
-			multiBind first
-				do: [ :pattern | 
-					pattern
-						allDescendantsDo: [ :n | 
-							(n label = 'PatternIdentifier' and: [ n first = aString ])
-								ifTrue: [ ^ self ] ] ] ].
+	aViennaNode first do: [ :multiBind |
+		multiBind first do: [ :pattern |
+			pattern
+				allDescendantsSuchThat: [ :n |
+				n isViennaPatternIdentifierNode: aString ]
+				do: [ :n | ^ self ] ] ].
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock
 ]
 
@@ -559,27 +555,36 @@ ViennaRefactoring >> freeOccurrencesOf: aString inFunctionImport: aViennaNode do
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inImplicitFunctionDefinition: aViennaNode do: aBlock [
-	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock.
-	self freeOccurrencesOf: aString in: aViennaNode third do: aBlock.
-	self freeOccurrencesOf: aString in: aViennaNode fourth do: aBlock.
-	aViennaNode third first
-		ifNotEmpty: [ :patternTypePairList | 
-			1 to: patternTypePairList size by: 2 do: [ :index | 
-				(patternTypePairList at: index)
-					allDescendantsDo: [ :n | 
-						(n label = 'PatternIdentifier' and: [ n first = aString ])
-							ifTrue: [ ^ self ] ] ] ].
-	self freeOccurrencesOf: aString in: aViennaNode fifth do: aBlock.
-	aViennaNode fourth
-		ifNotEmpty: [ :identifierTypePairList | 
-			1 to: identifierTypePairList size by: 2 do: [ :index | 
-				(identifierTypePairList at: index) = aString
-					ifTrue: [ ^ self ] ] ].
-	self freeOccurrencesOf: aString in: aViennaNode sixth do: aBlock
+
+	self
+		freeOccurrencesOf: aString
+		in: aViennaNode typeVariableList
+		do: aBlock.
+	self
+		freeOccurrencesOf: aString
+		in: aViennaNode patternTypePairList
+		do: aBlock.
+	self
+		freeOccurrencesOf: aString
+		in: aViennaNode identifierTypePairList
+		do: aBlock.
+	aViennaNode patternTypePairList ifNotEmpty: [ :patternTypePairList |
+		1 to: patternTypePairList size by: 2 do: [ :index |
+			(patternTypePairList at: index)
+				allDescendantsSuchThat: [ :n |
+				n isViennaPatternIdentifierNode: aString ]
+				do: [ :n | ^ self ] ] ].
+	self freeOccurrencesOf: aString in: aViennaNode pre do: aBlock.
+	aViennaNode identifierTypePairList ifNotEmpty: [
+		:identifierTypePairList |
+		1 to: identifierTypePairList size by: 2 do: [ :index |
+			(identifierTypePairList at: index) = aString ifTrue: [ ^ self ] ] ].
+	self freeOccurrencesOf: aString in: aViennaNode post do: aBlock
 ]
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inImplicitOperationDefinition: aViennaNode do: aBlock [
+
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode third do: aBlock.
 	self
@@ -590,22 +595,19 @@ ViennaRefactoring >> freeOccurrencesOf: aString inImplicitOperationDefinition: a
 		freeOccurrencesOf: aString
 		in: aViennaNode fourth fourth
 		do: aBlock.
-	aViennaNode second first
-		ifNotEmpty: [ :patternTypePairList | 
-			1 to: patternTypePairList size by: 2 do: [ :index | 
-				(patternTypePairList at: index)
-					allDescendantsDo: [ :n | 
-						(n label = 'PatternIdentifier' and: [ n first = aString ])
-							ifTrue: [ ^ self ] ] ] ].
+	aViennaNode second first ifNotEmpty: [ :patternTypePairList |
+		1 to: patternTypePairList size by: 2 do: [ :index |
+			(patternTypePairList at: index)
+				allDescendantsSuchThat: [ :n |
+				n isViennaPatternIdentifierNode: aString ]
+				do: [ :n | ^ self ] ] ].
 	self
 		freeOccurrencesOf: aString
 		in: aViennaNode fourth second
 		do: aBlock.
-	aViennaNode fourth
-		ifNotEmpty: [ :identifierTypePairList | 
-			1 to: identifierTypePairList size by: 2 do: [ :index | 
-				(identifierTypePairList at: index) = aString
-					ifTrue: [ ^ self ] ] ].
+	aViennaNode fourth ifNotEmpty: [ :identifierTypePairList |
+		1 to: identifierTypePairList size by: 2 do: [ :index |
+			(identifierTypePairList at: index) = aString ifTrue: [ ^ self ] ] ].
 	self
 		freeOccurrencesOf: aString
 		in: aViennaNode fourth third
@@ -614,21 +616,31 @@ ViennaRefactoring >> freeOccurrencesOf: aString inImplicitOperationDefinition: a
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inIndexForLoop: aViennaNode do: aBlock [
-	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock.
-	self freeOccurrencesOf: aString in: aViennaNode third do: aBlock.
-	self freeOccurrencesOf: aString in: aViennaNode fourth do: aBlock.
-	aViennaNode first = aString
-		ifTrue: [ ^ self ].
-	self freeOccurrencesOf: aString in: aViennaNode fifth do: aBlock
+
+	self
+		freeOccurrencesOf: aString
+		in: aViennaNode startExpression
+		do: aBlock.
+	self
+		freeOccurrencesOf: aString
+		in: aViennaNode endExpression
+		do: aBlock.
+	self
+		freeOccurrencesOf: aString
+		in: aViennaNode stepExpression
+		do: aBlock.
+	aViennaNode identifier = aString ifTrue: [ ^ self ].
+	self freeOccurrencesOf: aString in: aViennaNode statement do: aBlock
 ]
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inInvariantInitialFunction: aViennaNode do: aBlock [
+
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
 	aViennaNode first
-		allDescendantsDo: [ :n | 
-			(n label = 'PatternIdentifier' and: [ n first = aString ])
-				ifTrue: [ ^ self ] ].
+		allDescendantsSuchThat: [ :n |
+		n isViennaPatternIdentifierNode: aString ]
+		do: [ :n | ^ self ].
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock
 ]
 
@@ -642,42 +654,40 @@ ViennaRefactoring >> freeOccurrencesOf: aString inIotaExpression: aViennaNode do
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inLambdaExpression: aViennaNode do: aBlock [
+
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
-	aViennaNode first
-		do: [ :bind | 
-			bind first
-				allDescendantsDo: [ :node | 
-					(node label = 'PatternIdentifier' and: [ node first = aString ])
-						ifTrue: [ ^ self ] ] ].
+	aViennaNode first do: [ :bind |
+		bind first
+			allDescendantsSuchThat: [ :n |
+			n isViennaPatternIdentifierNode: aString ]
+			do: [ :n | ^ self ] ].
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock
 ]
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inLet: aViennaNode do: aBlock [
+
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
-	aViennaNode first
-		do: [ :localDef | 
-			| def |
-			def := localDef first.
-			def label = 'ValueDefinition'
-				ifTrue: [ def first
-						allDescendantsDo: [ :n | 
-							(n label = 'PatternIdentifier' and: [ n first = aString ])
-								ifTrue: [ ^ self ] ] ].
-			(def label = 'FunctionDefinition'
-				and: [ def first first = aString ])
-				ifTrue: [ ^ self ] ].
+	aViennaNode localDefinitionsDo: [ :def |
+		def isViennaValueDefinitionNode ifTrue: [
+			def pattern
+				allDescendantsSuchThat: [ :n |
+				n isViennaPatternIdentifierNode: aString ]
+				do: [ :n | ^ self ] ].
+		(def isFunctionDefinition and: [ def identifier = aString ])
+			ifTrue: [ ^ self ] ].
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock
 ]
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inLetBe: aViennaNode do: aBlock [
+
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock.
 	aViennaNode first first
-		allDescendantsDo: [ :n | 
-			(n label = 'PatternIdentifier' and: [ n first = aString ])
-				ifTrue: [ ^ self ] ].
+		allDescendantsSuchThat: [ :n |
+		n isViennaPatternIdentifierNode: aString ]
+		do: [ :n | ^ self ].
 	self freeOccurrencesOf: aString in: aViennaNode third do: aBlock
 ]
 
@@ -709,15 +719,14 @@ ViennaRefactoring >> freeOccurrencesOf: aString inLocalName: aViennaNode do: aBl
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inMapComprehension: aViennaNode do: aBlock [
+
 	self freeOccurrencesOf: aString in: aViennaNode third do: aBlock.
-	aViennaNode third
-		do: [ :multiBind | 
-			multiBind first
-				do: [ :pattern | 
-					pattern
-						allDescendantsDo: [ :n | 
-							(n label = 'PatternIdentifier' and: [ n first = aString ])
-								ifTrue: [ ^ self ] ] ] ].
+	aViennaNode third do: [ :multiBind |
+		multiBind first do: [ :pattern |
+			pattern
+				allDescendantsSuchThat: [ :n |
+				n isViennaPatternIdentifierNode: aString ]
+				do: [ :n | ^ self ] ] ].
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode fourth do: aBlock
@@ -737,59 +746,62 @@ ViennaRefactoring >> freeOccurrencesOf: aString inOperationImport: aViennaNode d
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inSequenceComprehension: aViennaNode do: aBlock [
+
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock.
 	aViennaNode second first
-		allDescendantsDo: [ :n | 
-			(n label = 'PatternIdentifier' and: [ n first = aString ])
-				ifTrue: [ ^ self ] ].
+		allDescendantsSuchThat: [ :n |
+		n isViennaPatternIdentifierNode: aString ]
+		do: [ :n | ^ self ].
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode third do: aBlock
 ]
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inSequenceForLoop: aViennaNode do: aBlock [
+
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock.
 	aViennaNode first
-		allDescendantsDo: [ :n | 
-			(n label = 'PatternIdentifier' and: [ n first = aString ])
-				ifTrue: [ ^ self ] ].
+		allDescendantsSuchThat: [ :n |
+		n isViennaPatternIdentifierNode: aString ]
+		do: [ :n | ^ self ].
 	self freeOccurrencesOf: aString in: aViennaNode third do: aBlock
 ]
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inSetComprehension: aViennaNode do: aBlock [
+
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock.
-	aViennaNode second
-		do: [ :multiBind | 
-			multiBind first
-				do: [ :pattern | 
-					pattern
-						allDescendantsDo: [ :n | 
-							(n label = 'PatternIdentifier' and: [ n first = aString ])
-								ifTrue: [ ^ self ] ] ] ].
+	aViennaNode second do: [ :multiBind |
+		multiBind first do: [ :pattern |
+			pattern
+				allDescendantsSuchThat: [ :n |
+				n isViennaPatternIdentifierNode: aString ]
+				do: [ :n | ^ self ] ] ].
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode third do: aBlock
 ]
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inSetForLoop: aViennaNode do: aBlock [
+
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock.
 	aViennaNode first
-		allDescendantsDo: [ :n | 
-			(n label = 'PatternIdentifier' and: [ n first = aString ])
-				ifTrue: [ ^ self ] ].
+		allDescendantsSuchThat: [ :n |
+		n isViennaPatternIdentifierNode: aString ]
+		do: [ :n | ^ self ].
 	self freeOccurrencesOf: aString in: aViennaNode third do: aBlock
 ]
 
 { #category : #'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inSingleQuantifierExpression: aViennaNode do: aBlock [
+
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
 	aViennaNode first first
-		allDescendantsDo: [ :n | 
-			(n label = 'PatternIdentifier' and: [ n first = aString ])
-				ifTrue: [ ^ self ] ].
+		allDescendantsSuchThat: [ :n |
+		n isViennaPatternIdentifierNode: aString ]
+		do: [ :n | ^ self ].
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock
 ]
 
@@ -866,16 +878,18 @@ ViennaRefactoring >> localScopeByExistsExpression: aViennaNode do: aBlock [
 
 { #category : #'visiting-scopes' }
 ViennaRefactoring >> localScopeByExplicitFunctionDefinition: aViennaNode do: aBlock [
-	aBlock value: aViennaNode sixth.
-	aBlock value: aViennaNode seventh.
-	aBlock value: aViennaNode eighth
+
+	aBlock value: aViennaNode expression.
+	aBlock value: aViennaNode pre.
+	aBlock value: aViennaNode post
 ]
 
 { #category : #'visiting-scopes' }
 ViennaRefactoring >> localScopeByExplicitOperationDefinition: aViennaNode do: aBlock [
-	aBlock value: aViennaNode fifth first.
-	aBlock value: aViennaNode sixth.
-	aBlock value: aViennaNode seventh
+
+	aBlock value: aViennaNode statement.
+	aBlock value: aViennaNode pre.
+	aBlock value: aViennaNode post
 ]
 
 { #category : #'visiting-scopes' }
@@ -885,8 +899,9 @@ ViennaRefactoring >> localScopeByForallExpression: aViennaNode do: aBlock [
 
 { #category : #'visiting-scopes' }
 ViennaRefactoring >> localScopeByImplicitFunctionDefinition: aViennaNode do: aBlock [
-	aBlock value: aViennaNode fifth.
-	aBlock value: aViennaNode sixth
+
+	aBlock value: aViennaNode pre.
+	aBlock value: aViennaNode post
 ]
 
 { #category : #'visiting-scopes' }
@@ -898,7 +913,8 @@ ViennaRefactoring >> localScopeByImplicitOperationDefinition: aViennaNode do: aB
 
 { #category : #'visiting-scopes' }
 ViennaRefactoring >> localScopeByIndexForLoopDefinition: aViennaNode do: aBlock [
-	aBlock value: aViennaNode fifth
+
+	aBlock value: aViennaNode statement
 ]
 
 { #category : #'visiting-scopes' }
@@ -967,53 +983,56 @@ ViennaRefactoring >> localScopeBySetForLoop: aViennaNode do: aBlock [
 
 { #category : #'visiting-pattern matching' }
 ViennaRefactoring >> match: aViennaNode with: anotherViennaNode bindings: aDictionary [
-	(aViennaNode sameAs: anotherViennaNode)
-		ifTrue: [ ^ true ].
-	aViennaNode label = 'LocalName'
-		ifTrue: [ ^ aDictionary
-				at: aViennaNode name
-				ifPresent: [ :node | 
-					node
-						ifNil:
-							[ aDictionary at: aViennaNode name put: anotherViennaNode copyFragment.
-							true ]
-						ifNotNil: [ anotherViennaNode sameAs: node ] ]
-				ifAbsent: [ false ] ].
-	aViennaNode label = anotherViennaNode label
-		ifFalse: [ ^ false ].
-	aViennaNode size = anotherViennaNode size
-		ifFalse: [ ^ false ].
-	^ (1 to: aViennaNode size)
-		allSatisfy: [ :index | 
-			| node1 node2 |
-			node1 := aViennaNode at: index.
-			node2 := anotherViennaNode at: index.
-			node1 isViennaNode
-				ifTrue: [ node2 isViennaNode
-						and: [ self match: node1 with: node2 bindings: aDictionary ] ]
-				ifFalse: [ node1 = node2 ] ]
+
+	aViennaNode isViennaLocalNameNode ifTrue: [
+		^ aDictionary
+			  at: aViennaNode identifier
+			  ifPresent: [ :node |
+				  node
+					  ifNil: [
+						  aDictionary
+							  at: aViennaNode identifier
+							  put: anotherViennaNode copyFragment.
+						  true ]
+					  ifNotNil: [ anotherViennaNode = node ] ]
+			  ifAbsent: [ aViennaNode = anotherViennaNode ] ].
+	aViennaNode = anotherViennaNode ifTrue: [
+		aDictionary keys do: [ :string |
+			(aDictionary at: string) ifNil: [
+				aDictionary
+					at: string
+					put: (ViennaLocalNameNode identifier: string) ] ].
+		^ true ].
+	aViennaNode class = anotherViennaNode class ifFalse: [ ^ false ].
+	aViennaNode size = anotherViennaNode size ifFalse: [ ^ false ].
+	^ (1 to: aViennaNode size) allSatisfy: [ :index |
+		  | node1 node2 |
+		  node1 := aViennaNode at: index.
+		  node2 := anotherViennaNode at: index.
+		  node1 isViennaNode
+			  ifTrue: [
+				  node2 isViennaNode and: [
+					  self match: node1 with: node2 bindings: aDictionary ] ]
+			  ifFalse: [ node1 = node2 ] ]
 ]
 
 { #category : #'visiting-interface' }
 ViennaRefactoring >> migrate: aViennaNode into: moduleNode [
-	aViennaNode module == moduleNode
-		ifTrue: [ ^ aViennaNode ].
-	aViennaNode label = 'LocalName'
-		ifTrue: [ aViennaNode asGlobalName
-				ifNotNil: [ :globalName | 
-					self ensureImport: globalName resolve in: moduleNode.
-					^ self
-						replaceNode: aViennaNode
-						with: (self nameForGlobalName: globalName in: moduleNode) ] ].
-	aViennaNode label = 'GlobalName'
-		ifTrue: [ self ensureImport: aViennaNode resolve in: moduleNode.
+
+	aViennaNode module == moduleNode ifTrue: [ ^ aViennaNode ].
+	aViennaNode isViennaLocalNameNode ifTrue: [
+		aViennaNode asGlobalName ifNotNil: [ :globalName |
+			self ensureImport: globalName resolve in: moduleNode.
 			^ self
-				replaceNode: aViennaNode
-				with: (self nameForGlobalName: aViennaNode in: moduleNode) ].
-	aViennaNode
-		do: [ :node | 
-			node isViennaNode
-				ifTrue: [ self migrate: node into: moduleNode ] ].
+				  replaceNode: aViennaNode
+				  with: (self nameForGlobalName: globalName in: moduleNode) ] ].
+	aViennaNode isViennaGlobalNameNode ifTrue: [
+		self ensureImport: aViennaNode resolve in: moduleNode.
+		^ self
+			  replaceNode: aViennaNode
+			  with: (self nameForGlobalName: aViennaNode in: moduleNode) ].
+	aViennaNode do: [ :node |
+		node isViennaNode ifTrue: [ self migrate: node into: moduleNode ] ].
 	^ aViennaNode
 ]
 
@@ -1024,43 +1043,78 @@ ViennaRefactoring >> name [
 
 { #category : #'visiting-interface' }
 ViennaRefactoring >> nameForGlobalName: globalNameNode in: moduleNode [
-	globalNameNode first = moduleNode name
-		ifTrue: [ ^ (ViennaNode label: 'LocalName' with: globalNameNode second)
-				parent: globalNameNode parent;
-				yourself ].
+
+	globalNameNode moduleIdentifier = moduleNode identifier ifTrue: [
+		^ (ViennaLocalNameNode identifier: globalNameNode identifier)
+			  parent: globalNameNode parent;
+			  yourself ].
 	moduleNode
-		importsFrom: globalNameNode first
-		do: [ :importModuleSignature | 
-			importModuleSignature label = 'ImportModuleSignatureAll'
-				ifTrue: [ ^ globalNameNode copyFragment ].
-			importModuleSignature
-				do: [ :importSignature | 
-					importSignature
-						do: [ :import | 
-							import name = globalNameNode second
-								ifTrue: [ ^ import last
-										ifNotNil: [ :name | 
-											name copyFragment
-												parent: globalNameNode parent;
-												yourself ]
-										ifNil: [ ^ globalNameNode copyFragment ] ] ] ] ].
+		importsFrom: globalNameNode moduleIdentifier
+		do: [ :importModuleSignature |
+			importModuleSignature isViennaImportModuleSignatureAllNode ifTrue: [
+				^ globalNameNode copyFragment ].
+			importModuleSignature do: [ :importSignature |
+				importSignature do: [ :import |
+					import identifier = globalNameNode identifier ifTrue: [
+						^ import last
+							  ifNotNil: [ :name |
+								  name copyFragment
+									  parent: globalNameNode parent;
+									  yourself ]
+							  ifNil: [ globalNameNode copyFragment ] ] ] ] ].
 	^ nil
 ]
 
 { #category : #'visiting-labels' }
 ViennaRefactoring >> patternIdentifiersWith: aString in: aViennaNode do: aBlock [
-	(aViennaNode label = 'PatternIdentifier'
-		and: [ aViennaNode first = aString ])
-		ifTrue: [ aBlock cull: aViennaNode ].
+
+	(aViennaNode isViennaPatternIdentifierNode: aString) ifTrue: [
+		aBlock cull: aViennaNode ].
 	aViennaNode
-		allDescendantsDo: [ :node | 
-			(node label = 'PatternIdentifier' and: [ node first = aString ])
-				ifTrue: [ aBlock cull: node ] ]
+		allDescendantsSuchThat: [ :node |
+		node isViennaPatternIdentifierNode: aString ]
+		do: [ :node | aBlock cull: node ]
 ]
 
 { #category : #signaling }
 ViennaRefactoring >> refactoringError: aViennaNode [
 	^ (ViennaRefactoringError refactoring: self node: aViennaNode) signal
+]
+
+{ #category : #'visiting-definitions' }
+ViennaRefactoring >> removeFunctionDefinition: aViennaNode [
+
+	| section |
+	section := aViennaNode parent.
+	section remove: aViennaNode.
+	section ifEmpty: [ section parent remove: section ]
+]
+
+{ #category : #'visiting-definitions' }
+ViennaRefactoring >> removeOperationDefinition: aViennaNode [
+
+	| section |
+	section := aViennaNode parent.
+	section remove: aViennaNode.
+	section ifEmpty: [ section parent remove: section ]
+]
+
+{ #category : #'visiting-definitions' }
+ViennaRefactoring >> removeTypeDefinition: aViennaNode [
+
+	| section |
+	section := aViennaNode parent.
+	section remove: aViennaNode.
+	section ifEmpty: [ section parent remove: section ]
+]
+
+{ #category : #'visiting-definitions' }
+ViennaRefactoring >> removeValueDefinition: aViennaNode [
+
+	| section |
+	section := aViennaNode parent.
+	section remove: aViennaNode.
+	section ifEmpty: [ section parent remove: section ]
 ]
 
 { #category : #'visiting-manipulations' }
@@ -1076,100 +1130,62 @@ ViennaRefactoring >> replaceNode: aViennaNode with: anotherViennaNode [
 
 { #category : #'visiting-interface' }
 ViennaRefactoring >> retractExport: aViennaNode [
-	aViennaNode label = 'GlobalName'
-		ifTrue: [ ^ aViennaNode ].
-	(aViennaNode label = 'LocalName'
-		and: [ aViennaNode resolve module == aViennaNode module ])
-		ifTrue: [ ^ self retractExport: aViennaNode resolve ].
-	aViennaNode asExportSignature
-		ifNotNil:
-			[ :signature | self retractExportSignature: signature in: aViennaNode module ].
+
+	aViennaNode isViennaGlobalNameNode ifTrue: [ ^ aViennaNode ].
+	(aViennaNode isViennaLocalNameNode and: [
+		 aViennaNode resolve module == aViennaNode module ]) ifTrue: [
+		^ self retractExport: aViennaNode resolve ].
+	aViennaNode asExportSignature ifNotNil: [ :signature |
+		self retractExportSignature: signature in: aViennaNode module ].
 	^ nil
 ]
 
 { #category : #'visiting-interface' }
 ViennaRefactoring >> retractExportSignature: aViennaNode in: moduleNode [
-	| exportModuleSignature names |
-	exportModuleSignature := moduleNode exports first.
-	exportModuleSignature label = 'ExportModuleSignatureAll'
-		ifTrue: [ ^ exportModuleSignature ].
-	names := OrderedCollection new.
-	aViennaNode
-		do: [ :export | 
-			export label = 'TypeNameExport'
-				ifTrue: [ names add: export first first ].
-			export label = 'TypeStructExport'
-				ifTrue: [ names add: export first first ].
-			export label = 'ValueExport'
-				ifTrue: [ export first do: [ :localName | names add: localName first ] ].
-			export label = 'FunctionExport'
-				ifTrue: [ export first do: [ :localName | names add: localName first ] ].
-			export label = 'OperationExport'
-				ifTrue: [ export first do: [ :localName | names add: localName first ] ] ].
-	names
-		ifNotEmpty: [ exportModuleSignature asArray
-				do: [ :exportSignature | 
-					exportSignature asArray
-						do: [ :export | 
-							(#('TypeNameExport' 'TypeStructExport') includes: export label)
-								ifTrue: [ (names includes: export first first)
-										ifTrue: [ exportSignature remove: export ] ]
-								ifFalse: [ export first asArray
-										do: [ :localName | 
-											(names includes: localName first)
-												ifTrue: [ export first remove: localName ] ].
-									export first ifEmpty: [ exportSignature remove: export ] ] ] ].
-			exportModuleSignature
-				ifEmpty: [ self
-						replaceNode: exportModuleSignature
-						with: (ViennaNode label: 'ExportModuleSignatureAll') ] ]
+
+	aViennaNode exportedIdentifiers do: [ :identifier |
+		moduleNode exportDefinition exportModuleSignature removeIdentifier:
+			identifier ]
 ]
 
 { #category : #'visiting-interface' }
 ViennaRefactoring >> retractImport: aViennaNode in: moduleNode [
-	aViennaNode label = 'GlobalName'
-		ifTrue: [ ^ aViennaNode ].
-	(aViennaNode label = 'LocalName'
-		and: [ aViennaNode resolve module == aViennaNode module ])
-		ifTrue: [ ^ self retractImport: aViennaNode resolve in: moduleNode ].
-	(aViennaNode asImportDefinitionIn: moduleNode)
-		ifNotNil:
-			[ :signature | self retractImportDefinition: signature in: moduleNode ].
+
+	aViennaNode isViennaGlobalNameNode ifTrue: [ ^ aViennaNode ].
+	(aViennaNode isViennaLocalNameNode and: [
+		 aViennaNode resolve module == aViennaNode module ]) ifTrue: [
+		^ self retractImport: aViennaNode resolve in: moduleNode ].
+	(aViennaNode asImportDefinitionIn: moduleNode) ifNotNil: [ :signature |
+		self retractImportDefinition: signature in: moduleNode ].
 	^ nil
 ]
 
 { #category : #'visiting-interface' }
 ViennaRefactoring >> retractImportDefinition: aViennaNode in: moduleNode [
+
 	moduleNode
 		importsFrom: aViennaNode first
-		do: [ :importModuleSignature | 
-			importModuleSignature label = 'ImportModuleSignature'
-				ifTrue: [ importModuleSignature asArray
-						do: [ :importSignature | 
-							importSignature asArray
-								do: [ :import | 
-									(aViennaNode second
-										anySatisfy: [ :sig | sig anySatisfy: [ :imp | imp name = import name ] ])
-										ifTrue: [ importSignature remove: import ] ].
-							importSignature
-								ifEmpty: [ importModuleSignature remove: importSignature ] ].
-					importModuleSignature
-						ifEmpty: [ importModuleSignature parent parent
-								remove: importModuleSignature parent.
-							importModuleSignature parent parent
-								ifEmpty: [ importModuleSignature parent parent parent at: 1 put: nil ] ] ] ]
+		do: [ :importModuleSignature |
+			importModuleSignature isViennaImportModuleSignatureNode ifTrue: [
+				importModuleSignature asArray do: [ :importSignature |
+					importSignature asArray do: [ :import |
+						(aViennaNode second anySatisfy: [ :sig |
+							 sig anySatisfy: [ :imp | imp name = import name ] ]) ifTrue: [
+							importSignature remove: import ] ].
+					importSignature ifEmpty: [
+						importModuleSignature remove: importSignature ] ].
+				importModuleSignature ifEmpty: [
+					importModuleSignature parent parent remove:
+						importModuleSignature parent.
+					importModuleSignature parent parent ifEmpty: [
+						importModuleSignature parent parent parent at: 1 put: nil ] ] ] ]
 ]
 
 { #category : #'visiting-scopes' }
 ViennaRefactoring >> scopeOf: aViennaNode [
-	| scopingNodeLabels node |
-	scopingNodeLabels := self enclosingScopeNodeLabels.
-	(self directScopeNodeLabels includes: aViennaNode label)
-		ifTrue: [ ^ aViennaNode ].
-	node := aViennaNode parent ifNil: [ ^ aViennaNode ].
-	[ scopingNodeLabels includes: node label ]
-		whileFalse: [ (node := node parent) ifNil: [ ^ node ] ].
-	^ node
+
+	aViennaNode scopesDo: [ :node | ^ node ].
+	^ nil
 ]
 
 { #category : #accessing }

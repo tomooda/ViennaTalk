@@ -1,11 +1,6 @@
 Extension { #name : #Object }
 
 { #category : #'*ViennaTalk-Transpiler-Core' }
-Object >> inv [
-	
-]
-
-{ #category : #'*ViennaTalk-Transpiler-Core' }
 Object >> isViennaTracingString [
 	^ false
 ]

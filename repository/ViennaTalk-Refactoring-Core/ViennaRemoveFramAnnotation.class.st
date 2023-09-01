@@ -10,7 +10,13 @@ Class {
 { #category : #accessing }
 ViennaRemoveFramAnnotation >> annotation [
 
-	^ annotation ifNil: [ annotation := self findAnnotation ]
+	^ annotation
+]
+
+{ #category : #accessing }
+ViennaRemoveFramAnnotation >> annotation: aString [
+
+	annotation := aString
 ]
 
 { #category : #operations }
@@ -27,23 +33,22 @@ ViennaRemoveFramAnnotation >> execute [
 { #category : #accessing }
 ViennaRemoveFramAnnotation >> findAnnotation [
 
-	^ self definitionNode ifNotNil: [ :node | 
-		  (UIManager default
-			   chooseFrom: (node annotations ifNil: [ {  } ])
-			   message: 'Select an annotation to remove.') ifNotNil: [ :index | 
-			  index >= 1
-				  ifTrue: [ node annotations at: index ]
-				  ifFalse: [ nil ] ] ]
+	^ annotation ifNotNil: [
+		  annotation := self definitionNode ifNotNil: [ :node |
+			                (UIManager default
+				                 chooseFrom: (node annotations ifNil: [ {  } ])
+				                 message: 'Select an annotation to remove.')
+				                ifNotNil: [ :index |
+					                index >= 1
+						                ifTrue: [ node annotations at: index ]
+						                ifFalse: [ nil ] ] ] ]
 ]
 
 { #category : #accessing }
 ViennaRemoveFramAnnotation >> findDefinitionNode [
 
 	ast ifNil: [ ^ nil ].
-	ast label = 'ExplicitOperationDefinition' ifTrue: [ ast := ast parent ].
-	ast label = 'ImplicitOperationDefinition' ifTrue: [ ast := ast parent ].
-	ast label = 'OperationDefinition' ifTrue: [ ast := ast parent ].
-	ast label = 'AccessOperationDefinition' ifFalse: [ ^ nil ].
+	ast isViennaAccessOperationDefinitionNode ifFalse: [ ^ nil ].
 	ast annotations ifNil: [ ^ nil ].
 	ast annotations ifEmpty: [ ^ nil ].
 	^ ast

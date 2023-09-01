@@ -12,65 +12,37 @@ ViennaUseFunctionInAllOccurrences >> execute [
 
 { #category : #operations }
 ViennaUseFunctionInAllOccurrences >> executeOne [
-	self definitionNode module
-		allDescendantsDo: [ :node | 
-			(node includesParent: self definitionNode) not
-				ifTrue: [ | binds |
-					binds := Dictionary new.
-					self definitionNode fifth
-						allDescendantsDo: [ :patternNode | 
-							patternNode label = 'PatternIdentifier'
-								ifTrue: [ binds at: patternNode name put: nil ] ].
-					(self match: self definitionNode sixth with: node bindings: binds)
-						ifTrue: [ | args |
-							args := self definitionNode fifth first asArray
-								collect: [ :n | self expressionFromPattern: n bindings: binds ].
-							^ self
-								replaceNode: node
-								with:
-									(ViennaNode
-										label: 'Apply'
-										with: (ViennaNode label: 'LocalName' with: self identifier)
-										with: (ViennaNode label: 'ExpressionList' withAll: args)) ] ] ].
+
+	self definitionNode module allDescendantsDo: [ :node |
+		(node includesParent: self definitionNode) not ifTrue: [
+			| binds |
+			binds := (self definitionNode parametersList uniqueBoundIdentifiers
+				          collect: [ :identifier | identifier -> nil ])
+				         asDictionary.
+			(self
+				 match: self definitionNode expression
+				 with: node
+				 bindings: binds) ifTrue: [
+				| args |
+				args := self definitionNode parametersList first asArray collect: [
+					        :n | self expressionFromPattern: n bindings: binds ].
+				^ self replaceNode: node with: (ViennaApplyNode
+						   expression: (ViennaLocalNameNode identifier: self identifier)
+						   argumentExpressionList:
+						   (ViennaExpressionListNode withAll: args)) ] ] ].
 	^ nil
 ]
 
 { #category : #accessing }
 ViennaUseFunctionInAllOccurrences >> findDefinitionNode [
+
 	ast ifNil: [ ^ nil ].
-	ast label = 'ExplicitFunctionDefinition'
-		ifTrue: [ ^ ast ].
-	ast isExpressionNode
-		ifFalse: [ ^ nil ].
-	ast module
-		ifNotNil: [ :node | 
-			node third
-				do: [ :definitionBlock | 
-					definitionBlock first label = 'FunctionDefinitions'
-						ifTrue: [ definitionBlock first
-								do: [ :accessFunctionDefinition | 
-									accessFunctionDefinition second
-										ifNotNil: [ :functionDefinition | 
-											functionDefinition first
-												ifNotNil: [ :explicitFunctionDefinition | 
-													(explicitFunctionDefinition label = 'ExplicitFunctionDefinition'
-														and: [ explicitFunctionDefinition seventh isNil
-																and: [ explicitFunctionDefinition sixth label ~= 'LocalName'
-																		and: [ | binds |
-																			binds := Dictionary new.
-																			explicitFunctionDefinition fifth
-																				allDescendantsDo: [ :patternNode | 
-																					patternNode label = 'PatternIdentifier'
-																						ifTrue: [ binds at: patternNode name put: nil ] ].
-																			self
-																				match: explicitFunctionDefinition sixth
-																				with: ast
-																				bindings: binds ] ] ])
-														ifTrue: [ ^ explicitFunctionDefinition ] ] ] ] ] ] ].
-	^ nil
+	^ ast localResolve ifNotNil: [ :def |
+		  (def isFunctionDefinition and: [ def pre isNil ]) ifTrue: [ def ] ]
 ]
 
 { #category : #accessing }
 ViennaUseFunctionInAllOccurrences >> identifier [
-	^ self definitionNode ifNotNil: #name
+
+	^ self definitionNode ifNotNil: #identifier
 ]

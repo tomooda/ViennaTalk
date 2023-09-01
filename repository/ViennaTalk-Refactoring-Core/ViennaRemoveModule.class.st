@@ -7,7 +7,9 @@ Class {
 { #category : #operations }
 ViennaRemoveModule >> check [
 
-	^ self definitionNode notNil
+	self definitionNode ifNil: [ ^ false ].
+	self definitionNode isReferenced ifTrue: [ ^ false ].
+	^ true
 ]
 
 { #category : #operations }
@@ -19,7 +21,7 @@ ViennaRemoveModule >> execute [
 { #category : #accessing }
 ViennaRemoveModule >> findDefinitionNode [
 
-	(ast label = 'Module' and: [ ast third isEmpty ]) ifTrue: [ ^ ast ].
+	ast isViennaModuleNode ifTrue: [ ^ ast ].
 	^ nil
 ]
 

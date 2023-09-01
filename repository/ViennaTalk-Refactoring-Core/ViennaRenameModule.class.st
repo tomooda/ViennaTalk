@@ -19,22 +19,24 @@ ViennaRenameModule >> execute [
 
 	self definitionNode ifNil: [ ^ nil ].
 	self newName ifNil: [ ^ nil ].
+	self oldName = self newName ifTrue: [ ^ nil ].
 	self definitionNode at: 1 put: self newName.
-	self definitionNode document do: [ :module | 
-		module second first ifNotNil: [ :importList | 
-			importList do: [ :importDefinition | 
-				importDefinition first = self oldName ifTrue: [ 
-					importDefinition at: 1 put: self newName ] ] ].
-		module third allDescendantsDo: [ :node | 
-			(node label = 'GlobalName' and: [ node first = self oldName ]) 
-				ifTrue: [ node at: 1 put: self newName ] ] ]
+	self definitionNode document do: [ :module |
+		module interface importDefinitionList ifNotNil: [ :importList |
+			importList do: [ :importDefinition |
+				importDefinition first = self oldName ifTrue: [
+					importDefinition moduleIdentifier: self newName ] ] ].
+		module moduleBody allDescendantsDo: [ :node |
+			(node isViennaGlobalNameNode and: [
+				 node moduleIdentifier = self oldName ]) ifTrue: [
+				node moduleIdentifier: self newName ] ] ]
 ]
 
 { #category : #accessing }
 ViennaRenameModule >> findDefinitionNode [
 
 	ast ifNil: [ ^ nil ].
-	ast label = 'Module' ifTrue: [ ^ ast ].
+	ast isViennaModuleNode ifTrue: [ ^ ast ].
 	^ nil
 ]
 
@@ -53,7 +55,7 @@ ViennaRenameModule >> findNewName [
 { #category : #accessing }
 ViennaRenameModule >> findOldName [
 
-	ast ifNotNil: [ ast label = 'Module' ifTrue: [ ^ ast name ] ].
+	ast ifNotNil: [ ast isViennaModuleNode ifTrue: [ ^ ast identifier ] ].
 	^ nil
 ]
 

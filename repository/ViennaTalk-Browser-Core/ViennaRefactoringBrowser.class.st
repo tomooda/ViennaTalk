@@ -12,9 +12,6 @@ Class {
 		'testResultTable',
 		'highlighterProcess'
 	],
-	#classVars : [
-		'SectionNames'
-	],
 	#category : #'ViennaTalk-Browser-Core'
 }
 
@@ -52,17 +49,15 @@ ViennaRefactoringBrowser class >> defaultLayout [
 { #category : #'instance creation' }
 ViennaRefactoringBrowser class >> empty [
 
-	<script: 'ViennaRefactoringBrowser empty openWithSpec'>
-	^ self on: (ViennaNode label: 'Document')
+	<script: 'ViennaRefactoringBrowser empty open'>
+	^ self on: ViennaModularDocumentNode empty
 ]
 
 { #category : #examples }
 ViennaRefactoringBrowser class >> exampleATC [
-	(ViennaRefactoringBrowser
-		on:
-			(ViennaVDMParser new
-				parse:
-					'module ATC_TERMINLOGY -- Air-Traffic Control (ATC) System abstract model from the book "ProofinVDM."
+
+	(ViennaRefactoringBrowser on: (ViennaVDMParser new parse:
+			  'module ATC_TERMINLOGY -- Air-Traffic Control (ATC) System abstract model from the book "ProofinVDM."
 -- This is the top-level specification of the ATC subsystem,
 exports all
 definitions
@@ -343,16 +338,15 @@ operations
     getLocation() == return ATC.location;
 -- Combinatorial test
 
-end ATC')) openWithSpec
+end ATC')) open
 ]
 
 { #category : #examples }
 ViennaRefactoringBrowser class >> exampleCounter [
-	(ViennaRefactoringBrowser
-		on:
-			(ViennaVDMParser new
-				parse:
-					'module Counter exports all definitions
+
+	(ViennaRefactoringBrowser on:
+		 (ViennaVDMParser new parse:
+			  'module Counter exports all definitions
 					types
      Display = seq of char inv display == elems display subset rng nat2char;
 
@@ -400,25 +394,7 @@ module CounterTest
 exports all
 definitions
 end CounterTest
-')) openWithSpec
-]
-
-{ #category : #accessing }
-ViennaRefactoringBrowser class >> sectionNames [
-	^ SectionNames
-		ifNil: [ SectionNames := Dictionary new
-				at: 'Module' put: '- all -';
-				at: 'TypeDefinitions' put: 'types';
-				at: 'ValueDefinitions' put: 'values';
-				at: 'StateDefinition' put: 'state';
-				at: 'FunctionDefinitions' put: 'functions';
-				at: 'OperationDefinitions' put: 'operations';
-				at: 'ImportTypesSignature' put: 'types';
-				at: 'ImportValuesSignature' put: 'values';
-				at: 'ImportFunctionsSignature' put: 'functions';
-				at: 'ImportOperationsSignature' put: 'operations';
-				at: 'ImportModuleSignatureAll' put: 'all';
-				yourself ]
+')) open
 ]
 
 { #category : #menus }
@@ -444,91 +420,93 @@ ViennaRefactoringBrowser class >> viennaToolsMenuOn: aBuilder [
 
 { #category : #operations }
 ViennaRefactoringBrowser >> accept: aStringOrText [
+
 	| newNode newAst copyMap parent oldNode |
 	newNode := self parser
-		parse: aStringOrText asString
-		onError: [ ^ false ].
+		           parse: aStringOrText asString
+		           onError: [ ^ false ].
 	copyMap := IdentityDictionary new.
 	newAst := self specification copyWhole: copyMap.
 	oldNode := copyMap at: self definition ifAbsent: [ ^ false ].
-	oldNode label = newNode label
-		ifFalse: [ ^ false ].
+	oldNode class = newNode class ifFalse: [ ^ false ].
 	parent := oldNode parent.
-	1 to: parent size do: [ :index | 
-		(parent at: index) == oldNode
-			ifTrue: [ parent at: index put: newNode ] ].
-	copyMap keys
-		do: [ :old | 
-			(copyMap at: old) == oldNode
-				ifTrue: [ copyMap at: old put: newNode ] ].
+	1 to: parent size do: [ :index |
+		(parent at: index) == oldNode ifTrue: [
+			parent at: index put: newNode ] ].
+	copyMap keys do: [ :old |
+		(copyMap at: old) == oldNode ifTrue: [ copyMap at: old put: newNode ] ].
 	self model: newAst comment: 'manual edit' with: copyMap.
 	^ newNode
 ]
 
 { #category : #operations }
 ViennaRefactoringBrowser >> addExplicitFunction [
-	(UIManager default request: 'a new function name')
-		ifNotNil: [ :functionName | 
-			| ast |
-			ast := self parser
-				parse: functionName , ' : () -> ? ' , functionName , '() == undefined'.
-			ast isPetit2Failure
-				ifTrue: [ ^ self ].
-			self category label = 'FunctionDefinitions'
-				ifFalse: [ ^ self ].
-			(self category module definitionOfLocalName: functionName)
-				ifNotNil: [ UIManager default alert: functionName , ' is already defined.'.
-					^ self ].
-			self append: ast to: self category ]
+
+	(UIManager default request: 'a new function name') ifNotNil: [
+		:functionName |
+		| ast |
+		ast := self parser parse:
+			       functionName , ' : () -> ? ' , functionName
+			       , '() == undefined'.
+		ast isPetit2Failure ifTrue: [ ^ self ].
+		self category isViennaFunctionDefinitionsNode ifFalse: [ ^ self ].
+		(self category module definitionOfLocalName: functionName)
+			ifNotNil: [
+				UIManager default alert: functionName , ' is already defined.'.
+				^ self ].
+		self append: ast to: self category ]
 ]
 
 { #category : #operations }
 ViennaRefactoringBrowser >> addExplicitOperation [
-	(UIManager default request: 'a new operation name')
-		ifNotNil: [ :operationName | 
-			| ast |
-			ast := self parser
-				parse: operationName , ' : () ==> () ' , operationName , '() == skip'.
-			ast isPetit2Failure
-				ifTrue: [ ^ self ].
-			self category label = 'OperationDefinitions'
-				ifFalse: [ ^ self ].
-			(self category module definitionOfLocalName: operationName)
-				ifNotNil: [ UIManager default alert: operationName , ' is already defined.'.
-					^ self ].
-			self append: ast to: self category ]
+
+	(UIManager default request: 'a new operation name') ifNotNil: [
+		:operationName |
+		| ast |
+		ast := self parser parse:
+			       operationName , ' : () ==> () ' , operationName
+			       , '() == skip'.
+		ast isPetit2Failure ifTrue: [ ^ self ].
+		self category isViennaOperationDefinitionsNode ifFalse: [ ^ self ].
+		(self category module definitionOfLocalName: operationName)
+			ifNotNil: [
+				UIManager default alert: operationName , ' is already defined.'.
+				^ self ].
+		self append: ast to: self category ]
 ]
 
 { #category : #operations }
 ViennaRefactoringBrowser >> addImplicitFunction [
-	(UIManager default request: 'a new function name')
-		ifNotNil: [ :functionName | 
-			| ast |
-			ast := self parser parse: 'functions ', functionName , ' () res:? post true'.
-			ast isPetit2Failure
-				ifTrue: [ ^ self ].
-			self category label = 'FunctionDefinitions'
-				ifFalse: [ ^ self ].
-			(self category module definitionOfLocalName: functionName)
-				ifNotNil: [ UIManager default alert: functionName , ' is already defined.'.
-					^ self ].
-			self append: ast first to: self category ]
+
+	(UIManager default request: 'a new function name') ifNotNil: [
+		:functionName |
+		| ast |
+		ast := self parser parse:
+			       'functions ' , functionName , ' () res:? post true'.
+		ast isPetit2Failure ifTrue: [ ^ self ].
+		self category isViennaFunctionDefinitionsNode ifFalse: [ ^ self ].
+		(self category module definitionOfLocalName: functionName)
+			ifNotNil: [
+				UIManager default alert: functionName , ' is already defined.'.
+				^ self ].
+		self append: ast first to: self category ]
 ]
 
 { #category : #operations }
 ViennaRefactoringBrowser >> addImplicitOperation [
-	(UIManager default request: 'a new operation name')
-		ifNotNil: [ :operationName | 
-			| ast |
-			ast := self parser parse: 'operations ', operationName , ' () post true'.
-			ast isPetit2Failure
-				ifTrue: [ ^ self ].
-			self category label = 'OperationDefinitions'
-				ifFalse: [ ^ self ].
-			(self category module definitionOfLocalName: operationName)
-				ifNotNil: [ UIManager default alert: operationName , ' is already defined.'.
-					^ self ].
-			self append: ast first to: self category ]
+
+	(UIManager default request: 'a new operation name') ifNotNil: [
+		:operationName |
+		| ast |
+		ast := self parser parse:
+			       'operations ' , operationName , ' () post true'.
+		ast isPetit2Failure ifTrue: [ ^ self ].
+		self category isViennaOperationDefinitionsNode ifFalse: [ ^ self ].
+		(self category module definitionOfLocalName: operationName)
+			ifNotNil: [
+				UIManager default alert: operationName , ' is already defined.'.
+				^ self ].
+		self append: ast first to: self category ]
 ]
 
 { #category : #operations }
@@ -547,50 +525,46 @@ ViennaRefactoringBrowser >> addModule [
 
 { #category : #operations }
 ViennaRefactoringBrowser >> addRecordType [
-	(UIManager default request: 'a new record name')
-		ifNotNil: [ :typeName | 
-			| ast |
-			ast := self parser parse: typeName , '::'.
-			ast isPetit2Failure
-				ifTrue: [ ^ self ].
-			self category label = 'TypeDefinitions'
-				ifFalse: [ ^ self ].
-			(self category module definitionOfLocalName: typeName)
-				ifNotNil: [ UIManager default alert: typeName , ' is already defined.'.
-					^ self ].
-			self append: ast to: self category ]
+
+	(UIManager default request: 'a new record name') ifNotNil: [
+		:typeName |
+		| ast |
+		ast := self parser parse: typeName , '::'.
+		ast isPetit2Failure ifTrue: [ ^ self ].
+		self category isViennaTypeDefinitionsNode ifFalse: [ ^ self ].
+		(self category module definitionOfLocalName: typeName) ifNotNil: [
+			UIManager default alert: typeName , ' is already defined.'.
+			^ self ].
+		self append: ast to: self category ]
 ]
 
 { #category : #operations }
 ViennaRefactoringBrowser >> addTypeAlias [
-	(UIManager default request: 'a new type name')
-		ifNotNil: [ :typeName | 
-			| ast |
-			ast := self parser parse: typeName , ' = token'.
-			ast isPetit2Failure
-				ifTrue: [ ^ self ].
-			self category label = 'TypeDefinitions'
-				ifFalse: [ ^ self ].
-			(self category module definitionOfLocalName: typeName)
-				ifNotNil: [ UIManager default alert: typeName , ' is already defined.'.
-					^ self ].
-			self append: ast to: self category ]
+
+	(UIManager default request: 'a new type name') ifNotNil: [ :typeName |
+		| ast |
+		ast := self parser parse: typeName , ' = token'.
+		ast isPetit2Failure ifTrue: [ ^ self ].
+		self category isViennaTypeDefinitionsNode ifFalse: [ ^ self ].
+		(self category module definitionOfLocalName: typeName) ifNotNil: [
+			UIManager default alert: typeName , ' is already defined.'.
+			^ self ].
+		self append: ast to: self category ]
 ]
 
 { #category : #operations }
 ViennaRefactoringBrowser >> addValue [
-	(UIManager default request: 'a new value name')
-		ifNotNil: [ :valueName | 
-			| ast |
-			ast := self parser parse: valueName , ' = undefined'.
-			ast isPetit2Failure
-				ifTrue: [ ^ self ].
-			self category label = 'ValueDefinitions'
-				ifFalse: [ ^ self ].
-			(self category module definitionOfLocalName: valueName)
-				ifNotNil: [ UIManager default alert: valueName , ' is already defined.'.
-					^ self ].
-			self append: ast to: self category ]
+
+	(UIManager default request: 'a new value name') ifNotNil: [
+		:valueName |
+		| ast |
+		ast := self parser parse: valueName , ' = undefined'.
+		ast isPetit2Failure ifTrue: [ ^ self ].
+		self category isViennaValueDefinitionsNode ifFalse: [ ^ self ].
+		(self category module definitionOfLocalName: valueName) ifNotNil: [
+			UIManager default alert: valueName , ' is already defined.'.
+			^ self ].
+		self append: ast to: self category ]
 ]
 
 { #category : #operations }
@@ -644,137 +618,105 @@ ViennaRefactoringBrowser >> definition [
 
 { #category : #accessing }
 ViennaRefactoringBrowser >> definitionBase [
-	| node |
-	node := self definition.
-	node ifNil: [ ^ nil ].
-	(#('AccessTypeDefinition' 'AccessValueDefinition')
-		includes: node label)
-		ifTrue: [ ^ node second ].
-	(#('AccessFunctionDefinition' 'AccessOperationDefinition')
-		includes: node label)
-		ifTrue: [ ^ node second first ].
-	^ node
+
+	^ self definition
 ]
 
 { #category : #menus }
 ViennaRefactoringBrowser >> definitionListContextMenu [
+
 	| menu |
 	menu := self newMenu.
-	self category label = 'TypeDefinitions'
-		ifTrue: [ menu
-				addGroup: [ :group | 
-					group
-						addItem: [ :item | 
-							item
-								name: 'New type alias';
-								action: [ self addTypeAlias ] ];
-						addItem: [ :item | 
-							item
-								name: 'New record type';
-								action: [ self addRecordType ] ] ] ].
-	self category label = 'ValueDefinitions'
-		ifTrue: [ menu
-				addGroup: [ :group | 
-					group
-						addItem: [ :item | 
-							item
-								name: 'New value';
-								action: [ self addValue ] ] ] ].
-	self definitionBase
-		ifNotNil: [ :definition | 
-			menu
-				addGroup: [ :group | 
-					(ViennaRefactoring sortedInstancesOn: definition)
-						do: [ :refactoring | 
-							group
-								addItem: [ :item | 
-									item
-										name: refactoring name;
-										action: [ self executeRefactoring: refactoring ] ] ] ] ].
-	menu
-		addGroup: [ :group | 
-			menu
-				addItem: [ :item | 
+	self category isViennaTypeDefinitionsNode ifTrue: [
+		menu addGroup: [ :group |
+			group
+				addItem: [ :item |
 					item
-						name: 'inspect';
-						action: [ self definitionBase inspect ] ] ].
+						name: 'New type alias';
+						action: [ self addTypeAlias ] ];
+				addItem: [ :item |
+					item
+						name: 'New record type';
+						action: [ self addRecordType ] ] ] ].
+	self category isViennaValueDefinitionsNode ifTrue: [
+		menu addGroup: [ :group |
+			group addItem: [ :item |
+				item
+					name: 'New value';
+					action: [ self addValue ] ] ] ].
+	self definitionBase ifNotNil: [ :definition |
+		menu addGroup: [ :group |
+			(ViennaRefactoring sortedInstancesOn: definition) do: [
+				:refactoring |
+				group addItem: [ :item |
+					item
+						name: refactoring name;
+						action: [ self executeRefactoring: refactoring ] ] ] ] ].
+	menu addGroup: [ :group |
+		menu addItem: [ :item |
+			item
+				name: 'inspect';
+				action: [ self definitionBase inspect ] ] ].
 	^ menu
 ]
 
 { #category : #private }
 ViennaRefactoringBrowser >> definitionsFromCategory: aViennaNode [
-	aViennaNode isViennaNode
-		ifTrue: [ aViennaNode label = 'Module'
-				ifTrue: [ ^ ((self module
-						ifNotNil: [ :ast | 
-							(ast
-								detect: [ :node | node isViennaNode and: [ node label = 'ModuleBody' ] ]
-								ifNone: [  ])
-								ifNotNil: [ :body | body collect: [ :node | node first ] ]
-								ifNil: [ Array new ] ]
-						ifNil: [ Array new ])
-						collect: [ :def | self definitionsFromCategory: def ])
-						inject: #()
-						into: [ :array :each | array , each ] ].
-			aViennaNode label = 'ImportModuleSignatureAll'
-				ifTrue: [ ^ Array with: aViennaNode second ].
-			aViennaNode label = 'StateDefinition'
-				ifTrue: [ ^ Array new ].
-			^ aViennaNode asArray ].
+
+	aViennaNode isViennaNode ifTrue: [
+		aViennaNode isViennaModuleNode ifTrue: [
+			^ ((self module
+				    ifNotNil: [ :ast |
+					    (ast
+						     detect: [ :node |
+						     node isViennaNode and: [ node isViennaModuleBodyNode ] ]
+						     ifNone: [  ])
+						    ifNotNil: [ :body | body collect: [ :node | node first ] ]
+						    ifNil: [ Array new ] ]
+				    ifNil: [ Array new ]) collect: [ :def |
+				   self definitionsFromCategory: def ])
+				  inject: #(  )
+				  into: [ :array :each | array , each ] ].
+		aViennaNode isViennaImportModuleSignatureAllNode ifTrue: [
+			^ Array with: aViennaNode second ].
+		aViennaNode isViennaStateDefinitionNode ifTrue: [ ^ Array new ].
+		^ aViennaNode asArray ].
 	^ Array new
 ]
 
 { #category : #private }
 ViennaRefactoringBrowser >> displayCategory: aViennaNode [
+
 	aViennaNode ifNil: [ ^ '-' ].
-	(#('ImportTypesSignature' 'ImportValuesSignature' 'ImportFunctionsSignature' 'ImportOperationsSignature')
-		includes: aViennaNode label)
-		ifTrue: [ ^ 'from ' , aViennaNode parent parent first , ' '
-				,
-					(self class sectionNames
-						at: aViennaNode label
-						ifAbsent: [ aViennaNode label ]) ].
-	self class sectionNames
-		at: aViennaNode label
-		ifPresent: [ :name | ^ name ].
-	^ aViennaNode label
+	aViennaNode isViennaImportSignatureNode ifTrue: [
+		^ 'from ' , aViennaNode moduleIdentifier , ' '
+		  , aViennaNode refactoringBrowserSectionName ].
+	^ aViennaNode refactoringBrowserSectionName ifNil: [ '?' ]
 ]
 
 { #category : #private }
 ViennaRefactoringBrowser >> displayDefinition: aViennaNode [
-	aViennaNode
-		allDescendantsDo: [ :node | 
-			(#('Module' 'TypeDefinitions' 'ValueDefinitions' 'FunctionDefinitions' 'OperationDefinitions')
-				includes: node label)
-				ifTrue: [ ^ ' - all - ' ].
-			node label = 'FunctionsDefinition'
-				ifTrue: [ ^ ' - all - ' ].
-			node label = 'TypeDefinition'
-				ifTrue: [ ^ node first ].
-			node label = 'RecordTypeDefinition'
-				ifTrue: [ ^ node first ].
-			node label = 'ValueDefinition'
-				ifTrue: [ ^ node first source ].
-			node label = 'StateDefinition'
-				ifTrue: [ ^ node first ].
-			node label = 'ExplicitFunctionDefinition'
-				ifTrue: [ ^ node first ].
-			node label = 'ImplicitFunctionDefinition'
-				ifTrue: [ ^ node first ].
-			node label = 'ExplicitOperationDefinition'
-				ifTrue: [ ^ node first ].
-			node label = 'ImplicitOperationDefinition'
-				ifTrue: [ ^ node first ].
-			node label = 'ImportModuleDefinitionAll'
-				ifTrue: [ ^ 'all' ].
-			(#('ImportTypesSignature' 'ImportValuesSignature' 'ImportFunctionsSignature' 'ImportOperationsSignature')
-				includes: node label)
-				ifTrue: [ ^ '- all -' ].
-			(#('TypeImport' 'ValueImport' 'FunctionImport' 'OperationImport')
-				includes: node label)
-				ifTrue: [ ^ node last
-						ifNotNil: [ :localName | localName first ]
-						ifNil: [ node parent parent parent first , '`' , node name ] ] ].
+
+	aViennaNode allDescendantsDo: [ :node |
+		node isViennaModuleNode ifTrue: [ ^ ' - all - ' ].
+		node isViennaSectionNode ifTrue: [ ^ ' - all - ' ].
+		node isViennaTypeSynonymNode ifTrue: [ ^ node identifier ].
+		node isViennaRecordTypeDefinitionNode ifTrue: [ ^ node identifier ].
+		node isViennaValueDefinitionNode ifTrue: [ ^ node pattern source ].
+		node isViennaStateDefinitionNode ifTrue: [ ^ node identifier ].
+		node isViennaExplicitFunctionDefinitionNode ifTrue: [
+			^ node identifier ].
+		node isViennaImplicitFunctionDefinitionNode ifTrue: [
+			^ node identifier ].
+		node isViennaExplicitOperationDefinitionNode ifTrue: [
+			^ node identifier ].
+		node isViennaImplicitOperationDefinitionNode ifTrue: [
+			^ node identifier ].
+		node isViennaImportSignatureNode ifTrue: [ ^ '- all -' ].
+		node isViennaImportNode ifTrue: [
+			^ node rename
+				  ifNotNil: [ :localName | localName shortName ]
+				  ifNil: [ node module identifier , '`' , node identifier ] ] ].
 	^ '-'
 ]
 
@@ -1022,37 +964,28 @@ ViennaRefactoringBrowser >> jumpToModule: aString operation: anotherString [
 
 { #category : #operations }
 ViennaRefactoringBrowser >> load: aString [
+
 	| ast |
 	ast := ViennaVDMParser new document end parse: aString.
-	ast isPetit2Failure
-		ifTrue: [ UIManager default alert: 'Failed to parse the source.'.
-			^ nil ].
-	ast label = 'Document'
-		ifFalse: [ ^ nil ].
-	ast first
-		ifNotNil: [ :first | 
-			first label = 'DefinitionBlock'
-				ifTrue: [ ast := ViennaNode
-						label: 'Document'
-						with:
-							(ViennaNode
-								label: 'Module'
-								with: 'DEFAULT'
-								with:
-									(ViennaNode
-										label: 'Interface'
-										with: nil
-										with:
-											(ViennaNode
-												label: 'ExportDefinition'
-												with: (ViennaNode label: 'ExportModuleSignatureAll')))
-								with: (ViennaNode label: 'ModuleBody' withAll: ast asArray)) ] ].
+	ast isPetit2Failure ifTrue: [
+		UIManager default alert: 'Failed to parse the source.'.
+		^ nil ].
+	ast isViennaDocumentNode ifFalse: [ ^ nil ].
+	ast isViennaFlatDocumentNode ifTrue: [
+		ast := ViennaModularDocumentNode with: (ViennaModuleNode
+				        identifier: 'DEFAULT'
+				        interface: (ViennaInterfaceNode
+						         importDefinitionList: nil
+						         exportDefinition:
+							         (ViennaExportDefinitionNode exportModuleSignature:
+								          ViennaExportModuleSignatureAllNode new))
+				        moduleBody: (ViennaModuleBodyNode withAll: ast asArray)) ].
 	historyList
 		resetSelection;
-		items:
-			{{DateAndTime now.
-			'load'.
-			ast}};
+		items: { {
+				DateAndTime now.
+				'load'.
+				ast } };
 		selectItem: historyList listItems last.
 	self model: ast
 ]
@@ -1279,39 +1212,42 @@ ViennaRefactoringBrowser >> parser [
 
 { #category : #operations }
 ViennaRefactoringBrowser >> runAllTests [
+
 	testProcess ifNotNil: [ testProcess terminate ].
-	testProcess := [ | ast animation |
-	testResultTable items: #().
-	ast := self specification ifNil: [ ^ nil ].
-	animation := ViennaAnimation default
-		specification: (ViennaVDMFormatter format: ast);
-		yourself.
-	(ast at: 1) label = 'Module'
-		ifTrue: [ ast
-				do: [ :moduleNode | 
-					| moduleName |
-					moduleName := moduleNode first.
-					(moduleName endsWith: 'Test')
-						ifTrue: [ moduleNode third
-								do: [ :definitionBlockNode | 
-									definitionBlockNode first label = 'OperationDefinitions'
-										ifTrue: [ definitionBlockNode first
-												do: [ :accessOperationDefinitionNode | 
-													| operationName |
-													operationName := accessOperationDefinitionNode second
-														first first.
-													(operationName size > 4
-														and: [ (operationName copyFrom: 1 to: 4) = 'test' ])
-														ifTrue: [ testResultTable
-																items:
-																	(testResultTable model items
-																		copyWith:
-																			(self
-																				runTestModule: moduleName
-																				operation: operationName
-																				animation: animation)) ] ] ] ] ] ] ]
-		ifFalse: [  ].
-	testProcess := nil ] forkAt: Processor userBackgroundPriority
+	testProcess := [
+	               | ast animation |
+	               testResultTable items: #(  ).
+	               ast := self specification ifNil: [ ^ nil ].
+	               animation := ViennaAnimation default
+		                            specification:
+			                            (ViennaVDMFormatter format: ast);
+		                            yourself.
+	               (ast at: 1) isViennaModuleNode
+		               ifTrue: [
+			               ast do: [ :moduleNode |
+				               | moduleName |
+				               moduleName := moduleNode first.
+				               (moduleName endsWith: 'Test') ifTrue: [
+					               moduleNode third do: [ :definitionBlockNode |
+						               definitionBlockNode first
+							               isViennaOperationDefinitionsNode ifTrue: [
+							               definitionBlockNode first do: [
+								               :accessOperationDefinitionNode |
+								               | operationName |
+								               operationName := accessOperationDefinitionNode
+									                                second first first.
+								               (operationName size > 4 and: [
+									                (operationName copyFrom: 1 to: 4) = 'test' ])
+									               ifTrue: [
+										               testResultTable items:
+											               (testResultTable model items copyWith:
+												                (self
+													                 runTestModule: moduleName
+													                 operation: operationName
+													                 animation: animation)) ] ] ] ] ] ] ]
+		               ifFalse: [  ].
+	               testProcess := nil ] forkAt:
+		               Processor userBackgroundPriority
 ]
 
 { #category : #'private-unit testing' }
@@ -1420,24 +1356,15 @@ ViennaRefactoringBrowser >> testResultTableContextMenu [
 
 { #category : #updating }
 ViennaRefactoringBrowser >> updateCategoryList [
+
 	| newItems oldSelection |
-	newItems := (Array with: self module)
-		,
-			(self module
-				ifNotNil: [ :ast | 
-					(ast second first
-						ifNotNil: [ :importDefinitionList | 
-							(importDefinitionList
-								collect: [ :importDefinition | importDefinition second asArray ])
-								flattened ]
-						ifNil: [ Array new ])
-						,
-							((ast
-								detect: [ :node | node isViennaNode and: [ node label = 'ModuleBody' ] ]
-								ifNone: [  ])
-								ifNotNil: [ :body | body collect: [ :node | node first ] ]
-								ifNil: [ Array new ]) ]
-				ifNil: [ Array new ]).
+	newItems := Array streamContents: [ :stream |
+		            stream nextPut: self module.
+		            self module ifNotNil: [ :moduleNode |
+			            moduleNode importSignaturesDo: [ :importSignature |
+				            stream nextPut: importSignature ].
+			            moduleNode sectionsDo: [ :section |
+				            stream nextPut: section ] ] ].
 	oldSelection := categoryList selection selectedItem.
 	categoryList items: newItems.
 	(newItems includes: oldSelection)
@@ -1465,8 +1392,8 @@ ViennaRefactoringBrowser >> updateModuleList [
 
 	| newItems oldSelection |
 	newItems := self specification
-		            ifNotNil: [ :ast | 
-		            ast asArray ifEmpty: [ Array with: nil ] ]
+		            ifNotNil: [ :documentNode |
+		            documentNode modules ifEmpty: [ Array with: nil ] ]
 		            ifNil: [ Array with: nil ].
 	oldSelection := moduleList selection selectedItem.
 	moduleList items: newItems.

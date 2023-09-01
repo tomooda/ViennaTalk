@@ -8,7 +8,7 @@ Class {
 ViennaAddValue >> findContainerNode [
 
 	ast ifNil: [ ^ nil ].
-	ast label = 'ValueDefinitions' ifTrue: [ ^ ast ].
+	ast isViennaValueDefinitionsNode ifTrue: [ ^ ast ].
 	^ nil
 ]
 

@@ -5,13 +5,14 @@ Class {
 }
 
 { #category : #testing }
-ViennaWidenLetStatement >> acceptsAstLabel: aString [
-	^ aString = 'LetStatement'
+ViennaWidenLetStatement >> acceptsDefinitionNode: aViennaNode [
+	^ aViennaNode isViennaStatementNode
 ]
 
-{ #category : #testing }
-ViennaWidenLetStatement >> acceptsDefinitionNode: aViennaNode [
-	^ aViennaNode isStatementNode
+{ #category : #operations }
+ViennaWidenLetStatement >> acceptsNode: aViennaNode [
+
+	^ aViennaNode isViennaLetStatementNode
 ]
 
 { #category : #accessing }

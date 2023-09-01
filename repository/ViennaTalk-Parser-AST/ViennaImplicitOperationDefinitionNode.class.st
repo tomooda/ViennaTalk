@@ -1,0 +1,351 @@
+Class {
+	#name : #ViennaImplicitOperationDefinitionNode,
+	#superclass : #ViennaTopLevelDefinitionNode,
+	#type : #variable,
+	#category : #'ViennaTalk-Parser-AST'
+}
+
+{ #category : #'instance creation' }
+ViennaImplicitOperationDefinitionNode class >> access: aViennaAccessNode identifier: aString patternTypePairList: aViennaPatternTypePairListNode identifierTypePairList: aViennaIdentifierTypePairListNode externals: aViennaExternalsNode pre: aViennaExpression1 post: aViennaExpression2 exceptions: aViennaExceptionsNode [
+
+	^ (self new: 8)
+		  access: aViennaAccessNode;
+		  identifier: aString;
+		  patternTypePairList: aViennaPatternTypePairListNode;
+		  identifierTypePairList: aViennaIdentifierTypePairListNode;
+		  externals: aViennaExternalsNode;
+		  pre: aViennaExpression1;
+		  post: aViennaExpression2;
+		  exceptions: aViennaExceptionsNode;
+		  yourself
+]
+
+{ #category : #'instance creation' }
+ViennaImplicitOperationDefinitionNode class >> identifier: aString patternTypePairList: aViennaPatternTypePairListNode identifierTypePairList: aViennaIdentifierTypePairListNode externals: aViennaExternalsNode pre: aViennaExpression1 post: aViennaExpression2 exceptions: aViennaExceptionsNode [
+
+	^ self
+		  access: ViennaAccessNode empty
+		  identifier: aString
+		  patternTypePairList: aViennaPatternTypePairListNode
+		  identifierTypePairList: aViennaIdentifierTypePairListNode
+		  externals: aViennaExternalsNode
+		  pre: aViennaExpression1
+		  post: aViennaExpression2
+		  exceptions: aViennaExceptionsNode
+]
+
+{ #category : #accessing }
+ViennaImplicitOperationDefinitionNode >> access [
+
+	^ self at: 1
+]
+
+{ #category : #accessing }
+ViennaImplicitOperationDefinitionNode >> access: aViennaAccessNode [
+
+	self at: 1 put: aViennaAccessNode
+]
+
+{ #category : #accessing }
+ViennaImplicitOperationDefinitionNode >> argumentType [
+
+	^ self patternTypePairList type
+]
+
+{ #category : #'accessing-definitions' }
+ViennaImplicitOperationDefinitionNode >> asExport [
+
+	^ ViennaOperationExportNode
+		  nameList: (ViennaNameListNode withAll:
+				   { (ViennaLocalNameNode identifier: self identifier) })
+		  type: self type
+]
+
+{ #category : #'accessing-definitions' }
+ViennaImplicitOperationDefinitionNode >> asImportDefinitionIn: moduleNode [
+
+	^ ViennaImportDefinitionNode
+		  moduleIdentifier: self module identifier
+		  importModuleSignature: (ViennaImportModuleSignatureNode with:
+				   (ViennaImportOperationsSignatureNode with:
+					    (ViennaOperationImportNode
+						     name: (ViennaLocalNameNode identifier: self identifier)
+						     type: self type
+						     rename: nil)))
+]
+
+{ #category : #private }
+ViennaImplicitOperationDefinitionNode >> boundIdentifiersDo: aBlock [
+
+	aBlock cull: self identifier cull: self.
+	self pre ifNotNil: [
+		aBlock cull: 'pre_' , self identifier cull: self ].
+	self post ifNotNil: [
+		aBlock cull: 'post_' , self identifier cull: self ]
+]
+
+{ #category : #'accessing-definitions' }
+ViennaImplicitOperationDefinitionNode >> definitionOfLocalName: aString [
+
+	self patternTypePairList do: [ :patList |
+		patList isViennaPatternListNode ifTrue: [
+			patList allDescendantsDo: [ :n |
+				(n isViennaPatternIdentifier: aString) ifTrue: [ ^ n ] ] ] ].
+	self identifierTypePairList do: [ :n |
+		n = aString ifTrue: [ ^ self ] ].
+	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
+]
+
+{ #category : #accessing }
+ViennaImplicitOperationDefinitionNode >> exceptions [
+
+	^ self at: 8
+]
+
+{ #category : #accessing }
+ViennaImplicitOperationDefinitionNode >> exceptions: aViennaExceptionsNode [
+
+	self at: 8 put: aViennaExceptionsNode
+]
+
+{ #category : #accessing }
+ViennaImplicitOperationDefinitionNode >> externals [
+
+	^ self at: 5
+]
+
+{ #category : #accessing }
+ViennaImplicitOperationDefinitionNode >> externals: aViennaExternalsNode [
+
+	self at: 5 put: aViennaExternalsNode
+]
+
+{ #category : #'accessing-definitions' }
+ViennaImplicitOperationDefinitionNode >> findResolverForIdentifier: aString [
+
+	^ ((self returnIdentifiers includes: aString) or: [
+		   self parameters bindsIdentifier: aString ])
+		  ifTrue: [ self ]
+		  ifFalse: [ super findResolverForIdentifier: aString ]
+]
+
+{ #category : #'pretty printing' }
+ViennaImplicitOperationDefinitionNode >> formatWith: aViennaAbstractFormatter [
+
+	| access identifier patternTypePairList identifierTypePairList externals pre post exceptions |
+	access := (aViennaAbstractFormatter format: self access) trim
+		          ifNotEmpty: [ :string | string , ' ' ].
+	identifier := aViennaAbstractFormatter format: self identifier.
+	patternTypePairList := aViennaAbstractFormatter format:
+		                       self patternTypePairList.
+	identifierTypePairList := aViennaAbstractFormatter format:
+		                          self identifierTypePairList.
+	externals := self externals
+		             ifNotNil: [
+		             String cr
+		             , (aViennaAbstractFormatter format: self externals) ]
+		             ifNil: [ '' ].
+	pre := self pre
+		       ifNotNil: [
+		       String cr , 'pre '
+		       , (aViennaAbstractFormatter format: self pre) ]
+		       ifNil: [ '' ].
+	post := self post
+		        ifNotNil: [
+		        String cr , 'post '
+		        , (aViennaAbstractFormatter format: self post) ]
+		        ifNil: [ '' ].
+	exceptions := self exceptions
+		              ifNotNil: [
+		              String cr
+		              , (aViennaAbstractFormatter format: self exceptions) ]
+		              ifNil: [ '' ].
+	^ access , identifier , patternTypePairList , identifierTypePairList
+	  , externals , pre , post , exceptions
+]
+
+{ #category : #private }
+ViennaImplicitOperationDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	| boundIdentifiers |
+	boundIdentifiers := aSet.
+	self type freeIdentifiersExcept: boundIdentifiers do: aBlock.
+	self parameters freeIdentifiersExcept: boundIdentifiers do: aBlock.
+	boundIdentifiers := boundIdentifiers
+	                    , self parameters uniqueBoundIdentifiers
+	                    , self returnIdentifiers.
+	self pre ifNotNil: [ :pre |
+		pre freeIdentifiersExcept: boundIdentifiers do: aBlock ].
+	self post ifNotNil: [ :post |
+		post freeIdentifiersExcept: boundIdentifiers do: aBlock ]
+]
+
+{ #category : #testing }
+ViennaImplicitOperationDefinitionNode >> hasScope [
+
+	^ true
+]
+
+{ #category : #accessing }
+ViennaImplicitOperationDefinitionNode >> identifier [
+
+	^ self at: 2
+]
+
+{ #category : #accessing }
+ViennaImplicitOperationDefinitionNode >> identifier: aString [
+
+	self at: 2 put: aString
+]
+
+{ #category : #accessing }
+ViennaImplicitOperationDefinitionNode >> identifierTypePairList [
+
+	^ self at: 4
+]
+
+{ #category : #accessing }
+ViennaImplicitOperationDefinitionNode >> identifierTypePairList: aViennaIdentifierTypePairListNode [
+
+	self at: 4 put: aViennaIdentifierTypePairListNode
+]
+
+{ #category : #testing }
+ViennaImplicitOperationDefinitionNode >> isOperationDefinition [
+
+	^ true
+]
+
+{ #category : #testing }
+ViennaImplicitOperationDefinitionNode >> isViennaAccessOperationDefinitionNode [
+
+	^ true
+]
+
+{ #category : #testing }
+ViennaImplicitOperationDefinitionNode >> isViennaExportableTopLevelDefinitionNode [
+
+	^ true
+]
+
+{ #category : #testing }
+ViennaImplicitOperationDefinitionNode >> isViennaImplicitOperationDefinitionNode [
+
+	^ true
+]
+
+{ #category : #testing }
+ViennaImplicitOperationDefinitionNode >> isViennaImplicitOperationDefinitionNode: aString [
+
+	^ self identifier = aString
+]
+
+{ #category : #testing }
+ViennaImplicitOperationDefinitionNode >> isViennaOperationDefinitionNode: aString [
+
+	^ self identifier = aString
+]
+
+{ #category : #testing }
+ViennaImplicitOperationDefinitionNode >> label [
+
+	^ 'ImplicitOperationDefinition'
+]
+
+{ #category : #'accessing-definitions' }
+ViennaImplicitOperationDefinitionNode >> lookupIdentifier: aString [
+
+	self patternTypePairList patternsDo: [ :pattern |
+		(pattern bindsIdentifier: aString) ifTrue: [ ^ pattern ] ].
+	(self identifierTypePairList bindsIdentifier: aString) ifTrue: [
+		^ self ].
+	^ nil
+]
+
+{ #category : #accessing }
+ViennaImplicitOperationDefinitionNode >> parameterTypes [
+
+	^ self at: 3
+]
+
+{ #category : #accessing }
+ViennaImplicitOperationDefinitionNode >> parameterTypes: aViennaParameterTypesNode [
+
+	self at: 3 put: aViennaParameterTypesNode
+]
+
+{ #category : #accessing }
+ViennaImplicitOperationDefinitionNode >> parameters [
+
+	^ self patternTypePairList parameters
+]
+
+{ #category : #accessing }
+ViennaImplicitOperationDefinitionNode >> patternTypePairList [
+
+	^ self at: 3
+]
+
+{ #category : #accessing }
+ViennaImplicitOperationDefinitionNode >> patternTypePairList: aViennaPatternTypePairListNode [
+
+	self at: 3 put: aViennaPatternTypePairListNode
+]
+
+{ #category : #accessing }
+ViennaImplicitOperationDefinitionNode >> post [
+
+	^ self at: 7
+]
+
+{ #category : #accessing }
+ViennaImplicitOperationDefinitionNode >> post: aViennaExpressionNode [
+
+	self at: 7 put: aViennaExpressionNode
+]
+
+{ #category : #accessing }
+ViennaImplicitOperationDefinitionNode >> pre [
+
+	^ self at: 6
+]
+
+{ #category : #accessing }
+ViennaImplicitOperationDefinitionNode >> pre: aViennaExpression [
+
+	self at: 6 put: aViennaExpression
+]
+
+{ #category : #accessing }
+ViennaImplicitOperationDefinitionNode >> returnIdentifiers [
+
+	^ self identifierTypePairList identifiers
+]
+
+{ #category : #accessing }
+ViennaImplicitOperationDefinitionNode >> returnType [
+
+	^ self identifierTypePairList type
+]
+
+{ #category : #'accessing-definitions' }
+ViennaImplicitOperationDefinitionNode >> shortName [
+
+	^ self identifier
+]
+
+{ #category : #accessing }
+ViennaImplicitOperationDefinitionNode >> statement [
+
+	^ nil
+]
+
+{ #category : #accessing }
+ViennaImplicitOperationDefinitionNode >> type [
+
+	^ (ViennaOperationTypeNode
+		   argumentType: self argumentType copyFragment
+		   returnType: self returnType copyFragment)
+		  parent: self;
+		  yourself
+]

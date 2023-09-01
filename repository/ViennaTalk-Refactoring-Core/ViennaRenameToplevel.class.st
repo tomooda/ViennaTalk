@@ -9,70 +9,83 @@ ViennaRenameToplevel class >> isAbstract [
 	^ self = ViennaRenameToplevel
 ]
 
-{ #category : #operations }
-ViennaRenameToplevel >> execute [
-
-	self newName ifNil: [ ^ nil ].
-	self
-		executeOnDefinition;
-		freeOccurrencesOf: self oldName
-		in: ast module
-		do: [ :node | self execute: node ].
-	self executeOnImports.
-	self executeOnGlobalNames.
-	^ nil
-]
-
-{ #category : #operations }
-ViennaRenameToplevel >> execute: aViennaNode [
-	| selector |
-	aViennaNode isViennaNode
-		ifFalse: [ ^ self ].
-	selector := ('execute' , aViennaNode label , ':') asSymbol.
-	(self respondsTo: selector)
-		ifTrue: [ self perform: selector with: aViennaNode ]
-		ifFalse: [ self refactoringError: aViennaNode ]
-]
-
-{ #category : #operations }
-ViennaRenameToplevel >> executeLocalName: aViennaNode [
-	aViennaNode at: 1 put: self newName
-]
-
-{ #category : #operations }
-ViennaRenameToplevel >> executeOldName: aViennaNode [
-	aViennaNode at: 1 put: self newName
-]
-
-{ #category : #operations }
-ViennaRenameToplevel >> executeOnDefinition [
+{ #category : #testing }
+ViennaRenameToplevel >> acceptsDefinitionNode: aViennaNode [
 
 	^ self subclassResponsibility
 ]
 
 { #category : #operations }
+ViennaRenameToplevel >> check [
+	^ self definitionNode notNil
+]
+
+{ #category : #operations }
+ViennaRenameToplevel >> execute [
+
+	self newName ifNil: [ ^ nil ].
+	self definitionNode ifNil: [ ^ nil ].
+	self
+		executeOnReferences;
+		executeOnImports;
+		executeOnGlobalNames;
+		executeOnDefinition.
+	^ nil
+]
+
+{ #category : #operations }
+ViennaRenameToplevel >> executeOnDefinition [
+
+	self definitionNode ifNotNil: [ :definition |
+		definition identifier: self newName ]
+]
+
+{ #category : #operations }
 ViennaRenameToplevel >> executeOnGlobalNames [
-	^ ast root
-		allDescendantsDo: [ :node | 
-			(node label = 'GlobalName'
-				and: [ node first = self definitionNode module name
-						and: [ node second = self oldName ] ])
-				ifTrue: [ node at: 2 put: self newName ] ]
+
+	^ ast root allDescendantsDo: [ :node |
+		  (node
+			   isViennaGlobalNameNode: self definitionNode module identifier
+			   identifier: self oldName) ifTrue: [
+			  node identifier: self newName ] ]
 ]
 
 { #category : #operations }
 ViennaRenameToplevel >> executeOnImports [
-	| moduleName |
-	moduleName := ast module first.
-	ast
-		modulesDo: [ :module | 
-			module second first
-				ifNotNil: [ :importDefinitionList | 
-					importDefinitionList
-						do: [ :importDefinition | 
-							importDefinition first = moduleName
-								ifTrue: [ self
-										freeOccurrencesOf: self oldName
-										in: importDefinition second
-										do: [ :node | self execute: node ] ] ] ] ]
+
+	self ast document modulesDo: [ :module |
+		(module
+			 importAtModuleIdentifier: self ast module identifier
+			 identifier: self oldName) ifNotNil: [ :import |
+			import identifier: self newName ] ]
+]
+
+{ #category : #operations }
+ViennaRenameToplevel >> executeOnReferences [
+
+	self ast document
+		allDescendantsSuchThat: [ :node |
+			node isViennaNameNode and: [
+				node identifier = self oldName and: [
+					node localResolve == self definitionNode ] ] ]
+		do: [ :node | node identifier: self newName ]
+]
+
+{ #category : #accessing }
+ViennaRenameToplevel >> findDefinitionNode [
+
+	self oldName ifNil: [ ^ nil ].
+	^ (ast module resolveIdentifier: self oldName) ifNotNil: [
+		  :definition |
+		  (self acceptsDefinitionNode: definition)
+			  ifTrue: [ definition ]
+			  ifFalse: [ nil ] ]
+]
+
+{ #category : #accessing }
+ViennaRenameToplevel >> findOldName [
+
+	^ (ast respondsTo: #identifier)
+		  ifTrue: [ ast identifier ]
+		  ifFalse: [ nil ]
 ]

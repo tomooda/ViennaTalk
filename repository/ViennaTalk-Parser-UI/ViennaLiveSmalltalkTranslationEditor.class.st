@@ -128,9 +128,10 @@ ViennaLiveSmalltalkTranslationEditor class >> initialize [
 
 { #category : #menu }
 ViennaLiveSmalltalkTranslationEditor class >> viennaDevMenuOn: aBuilder [
+
 	<ViennaDev>
 	(aBuilder item: #'VDM->Smalltalk translator')
-		action: [ self new openWithSpec ];
+		action: [ self new open ];
 		order: 0.2;
 		help: 'VDM-SL to Smalltalk LIVE translating editor';
 		icon: nil
@@ -182,7 +183,7 @@ ViennaLiveSmalltalkTranslationEditor >> formatSelectionInCodeText [
 		parse: (codeText text asString copyFrom: editor startIndex to: editor stopIndex - 1) trim.
 	ast isPetit2Failure
 		ifTrue: [ ^ codeText notify: ast message at: ast position + 1 in: codeText text ].
-	result := ast format.
+	result := ast source.
 	editor replaceSelectionWith: result.
 	codeText widget widget
 		selectFrom: editor startIndex to: editor stopIndex - 1;

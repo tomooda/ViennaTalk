@@ -6,35 +6,32 @@ Class {
 
 { #category : #accessing }
 ViennaUseValueInAllOccurrences >> execute [
-	ast module
-		allDescendantsDo: [ :node | 
-			((node includesParent: self definitionNode) not
-				and: [ node sameAs: ast ])
-				ifTrue: [ self
-						replaceNode: node
-						with: (ViennaNode label: 'LocalName' with: self identifier) ] ].
+
+	ast module allDescendantsDo: [ :node |
+		((node includesParent: self definitionNode) not and: [
+			 node = self definitionNode expression ]) ifTrue: [
+			| binds expression |
+			binds := (self definitionNode pattern uniqueBoundIdentifiers
+				          collect: [ :string |
+				          string -> (ViennaLocalNameNode identifier: string) ])
+				         asDictionary.
+			expression := self
+				              expressionFromPattern: self definitionNode pattern
+				              bindings: binds.
+			^ self replaceNode: node with: expression ] ].
 	^ nil
 ]
 
 { #category : #accessing }
 ViennaUseValueInAllOccurrences >> findDefinitionNode [
-	ast module
-		ifNotNil: [ :node | 
-			node third
-				do: [ :definitionBlock | 
-					definitionBlock first label = 'ValueDefinitions'
-						ifTrue: [ definitionBlock first
-								do: [ :accessValueDef | 
-									accessValueDef second
-										ifNotNil: [ :valueDef | 
-											((ast sameAs: valueDef third)
-												and: [ valueDef first label = 'PatternIdentifier'
-														and: [ (ast includesParent: valueDef) not ] ])
-												ifTrue: [ ^ valueDef ] ] ] ] ] ].
-	^ nil
+
+	ast ifNil: [ ^ nil ].
+	^ ast localResolve ifNotNil: [ :def |
+		  def isViennaValueDefinitionNode ifTrue: [ def ] ]
 ]
 
 { #category : #accessing }
 ViennaUseValueInAllOccurrences >> identifier [
-	^ (self definitionNode ifNotNil: #first) ifNotNil: #first
+
+	^ (self definitionNode ifNotNil: #pattern) source
 ]

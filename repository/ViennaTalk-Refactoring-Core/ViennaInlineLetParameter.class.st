@@ -24,48 +24,38 @@ ViennaInlineLetParameter >> definitionNode: anObject [
 
 { #category : #operations }
 ViennaInlineLetParameter >> execute [
+
 	| expr |
-	self definitionNode first asArray
-		do: [ :localDef | 
-			(localDef first label = 'ValueDefinition'
-				and: [ localDef first first == ast ])
-				ifTrue: [ expr := localDef first third.
-					localDef parent remove: localDef ] ].
-	self definitionNode first asArray
-		do: [ :localDef | 
-			self
-				freeOccurrencesOf: ast name
-				in: localDef
-				do: [ :localName | self replaceNode: localName with: expr copyFragment ] ].
-	self
-		freeOccurrencesOf: ast name
-		in: self definitionNode second
-		do: [ :localName | self replaceNode: localName with: expr copyFragment ].
+	self definitionNode localDefinitionList asArray do: [ :localDef |
+		(localDef isViennaValueDefinitionNode and: [
+			 localDef pattern == ast ]) ifTrue: [
+			expr := localDef expression.
+			localDef parent remove: localDef ] ].
+	self definitionNode localDefinitionList asArray do: [ :localDef |
+		localDef freeIdentifiersExcept: Set new do: [ :identifier :node |
+			identifier = self ast identifier ifTrue: [
+				self replaceNode: node with: expr copyFragment ] ] ].
+	self definitionNode body
+		freeIdentifiersExcept: Set new
+		do: [ :identifier :node |
+			identifier = self ast identifier ifTrue: [
+				self replaceNode: node with: expr copyFragment ] ].
 	^ self definitionNode
 ]
 
 { #category : #accessing }
 ViennaInlineLetParameter >> findDefinitionNode [
+
 	ast ifNil: [ ^ nil ].
-	ast label = 'PatternIdentifier'
-		ifFalse: [ ^ nil ].
-	ast parent
-		ifNotNil: [ :valueDefinition | 
-			valueDefinition label = 'ValueDefinition'
-				ifFalse: [ ^ nil ].
-			valueDefinition parent
-				ifNotNil: [ :localDefinition | 
-					localDefinition label = 'LocalDefinition'
-						ifFalse: [ ^ nil ].
-					localDefinition parent
-						ifNotNil: [ :localDefinitionList | 
-							localDefinitionList label = 'LocalDefinitionList'
-								ifFalse: [ ^ nil ].
-							localDefinitionList parent
-								ifNotNil: [ :let | 
-									(#('LetExpression' 'LetStatement') includes: let label)
-										ifFalse: [ ^ nil ].
-									^ let ] ] ] ].
+	ast isViennaPatternIdentifierNode ifFalse: [ ^ nil ].
+	ast parent ifNotNil: [ :valueDefinition |
+		valueDefinition isViennaValueDefinitionNode ifFalse: [ ^ nil ].
+		valueDefinition parent ifNotNil: [ :localDefinitionList |
+			localDefinitionList isViennaLocalDefinitionListNode ifFalse: [
+				^ nil ].
+			localDefinitionList parent ifNotNil: [ :let |
+				let isViennaLetNode ifFalse: [ ^ nil ].
+				^ let ] ] ].
 	^ nil
 ]
 

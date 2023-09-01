@@ -6,11 +6,9 @@ Class {
 
 { #category : #accessing }
 ViennaMoveFunction >> findDefinitionNode [
+
 	ast ifNil: [ ^ nil ].
-	ast resolve
-		ifNotNil: [ :defNode | 
-			(#('ExplicitFunctionDefinition' 'ImplicitFunctionDefinition')
-				includes: defNode label)
-				ifTrue: [ ^ defNode ] ].
+	ast resolve ifNotNil: [ :defNode |
+		defNode isFunctionDefinition ifTrue: [ ^ defNode ] ].
 	^ nil
 ]

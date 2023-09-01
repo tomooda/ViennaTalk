@@ -122,23 +122,16 @@ ViennaFRAMModel >> appendToSpec: aViennaNode newOperationsDo: functionBlock newA
 { #category : #private }
 ViennaFRAMModel >> createOperationDefinitionNode: aString [
 
-	^ ViennaNode
-		  label: 'AccessOperationDefinition'
-		  with: (ViennaNode label: 'Access')
-		  with: (ViennaNode label: 'OperationDefinition' with: (ViennaNode
-					    label: 'ExplicitOperationDefinition'
-					    with: aString
-					    with: (ViennaNode
-							     label: 'OperationType'
-							     with: (ViennaNode label: 'UnitType')
-							     with: (ViennaNode label: 'UnitType'))
-					    with: aString
-					    with: (ViennaNode label: 'Parameters')
-					    with: (ViennaNode
-							     label: 'OperationBody'
-							     with: (ViennaNode label: 'IsNotYetSpecified'))
-					    with: nil
-					    with: nil))
+	^ ViennaExplicitOperationDefinitionNode
+		  access: ViennaAccessNode empty
+		  identifier: aString
+		  type: (ViennaOperationTypeNode
+				   argumentType: ViennaUnitTypeNode new
+				   returnType: ViennaUnitTypeNode new)
+		  parameters: ViennaParametersNode empty
+		  statement: ViennaIsNotYetSpecifiedNode new
+		  pre: nil
+		  post: nil
 ]
 
 { #category : #private }
@@ -160,24 +153,12 @@ ViennaFRAMModel >> ensureAnnotation: aString name: anotherString in: aViennaNode
 ViennaFRAMModel >> findOrCreateOperationNamed: operationName in: aViennaNode [
 
 	| opNode |
-	(aViennaNode label = 'Document' and: [ 
-		 aViennaNode isEmpty or: [ 
-			 aViennaNode first label = 'DefinitionBlock' ] ]) ifFalse: [ 
+	aViennaNode isViennaFlatDocumentNode ifFalse: [
 		^ self error: 'Internal error: A flat spec should be given.' ].
-	aViennaNode allDescendantsDo: [ :node | 
-		node label = 'AccessOperationDefinition' ifTrue: [ 
-			opNode := node second first.
-			(opNode label = 'ExplicitOperationDefinition' and: [ 
-				 opNode first = operationName ]) ifTrue: [ ^ opNode ] ] ].
+	(aViennaNode lookupIdentifier: operationName) ifNotNil: [ :node |
+		^ node ].
 	opNode := self createOperationDefinitionNode: operationName.
-	aViennaNode allDescendantsDo: [ :node | 
-		node label = 'OperationDefinitions' ifTrue: [ 
-			node add: opNode.
-			^ opNode ] ].
-	aViennaNode isEmpty ifTrue: [ 
-		aViennaNode add: (ViennaNode label: 'DefinitionBlock') ].
-	aViennaNode first add:
-		(ViennaNode label: 'OperationDefinition' with: opNode).
+	aViennaNode addOperationDefinition: opNode.
 	^ opNode
 ]
 
@@ -185,41 +166,16 @@ ViennaFRAMModel >> findOrCreateOperationNamed: operationName in: aViennaNode [
 ViennaFRAMModel >> findOrCreateOperationNamed: operationName module: moduleName in: aViennaNode [
 
 	| moduleNode opNode |
-	(aViennaNode label = 'Document' and: [ 
-		 aViennaNode size = 0 or: [ aViennaNode first label = 'Module' ] ]) 
-		ifFalse: [ 
+	aViennaNode isViennaModularDocumentNode ifFalse: [
 		^ self error: 'Internal error: A modular spec should be given.' ].
 	moduleNode := aViennaNode moduleNamed: moduleName.
-	moduleNode isNil ifTrue: [ 
-		moduleNode := ViennaNode
-			              label: 'Module'
-			              with: moduleName
-			              with:
-				              (ViennaNode
-					               label: 'Interface'
-					               with: nil
-					               with: (ViennaNode
-							                label: 'ExportDefinition'
-							                with:
-							                (ViennaNode label: 'ExportModuleSignatureAll')))
-			              with: (ViennaNode
-					               label: 'ModuleBody'
-					               with: (ViennaNode label: 'DefinitionBlock')).
+	moduleNode isNil ifTrue: [
+		moduleNode := ViennaModuleNode identifier: moduleName.
 		aViennaNode add: moduleNode ].
-
-
-	moduleNode allDescendantsDo: [ :node | 
-		node label = 'AccessOperationDefinition' ifTrue: [ 
-			opNode := node second first.
-			(opNode label = 'ExplicitOperationDefinition' and: [ 
-				 opNode first = operationName ]) ifTrue: [ ^ opNode ] ] ].
+	(moduleNode lookupIdentifier: operationName) ifNotNil: [ :node |
+		^ node ].
 	opNode := self createOperationDefinitionNode: operationName.
-	moduleNode allDescendantsDo: [ :node | 
-		node label = 'OperationDefinitions' ifTrue: [ 
-			node add: opNode.
-			^ opNode ] ].
-	moduleNode third first add:
-		(ViennaNode label: 'OperationDefinitions' with: opNode).
+	moduleNode addOperationDefinition: opNode.
 	^ opNode
 ]
 
@@ -237,56 +193,56 @@ ViennaFRAMModel >> loadSpec: aViennaNode newFunctionsDo: functionBlock newAspect
 
 	| parser |
 	parser := ViennaFRAMAnnotationParser new.
-	aViennaNode allDescendantsDo: [ :node | 
-		node label = 'AccessOperationDefinition' ifTrue: [ 
-			node annotations ifNotNil: [ :annotations | 
-				annotations ifNotEmpty: [ 
+	aViennaNode allDescendantsDo: [ :node |
+		node isViennaAccessOperationDefinitionNode ifTrue: [
+			node annotations ifNotNil: [ :annotations |
+				annotations ifNotEmpty: [
 					| operationName framAnnotations functionNames |
 					operationName := (node module
 						                  ifNotNil: [ :m | m first , '`' ]
-						                  ifNil: [ '' ]) , node name.
+						                  ifNil: [ '' ]) , node identifier.
 					framAnnotations := annotations
-						                   collect: [ :annotation | 
+						                   collect: [ :annotation |
 						                   parser parse: annotation ]
 						                   thenSelect: #isPetit2Success.
-					functionNames := (framAnnotations select: [ :pair | 
+					functionNames := (framAnnotations select: [ :pair |
 						                  pair first = $f ])
-						                 ifNotEmpty: [ :functionAnnotations | 
+						                 ifNotEmpty: [ :functionAnnotations |
 						                 functionAnnotations collect: #second ]
 						                 ifEmpty: [ { operationName } ].
-					functionNames do: [ :functionName | 
+					functionNames do: [ :functionName |
 						| functionId |
 						functionId := self
 							              idOfFunctionNamed: functionName
-							              ifAbsentNew: [ :f | 
+							              ifAbsentNew: [ :f |
 								              f beTechnological.
 								              functionBlock cull: f ].
 						self removeAllAspectsOf: functionId.
-						self functionAt: functionId ifPresent: [ :function | 
+						self functionAt: functionId ifPresent: [ :function |
 							function description:
 								(String cr join:
-									 (function description lines reject: [ :line | 
+									 (function description lines reject: [ :line |
 										  line trim beginsWith: '@VDM' ])
 									 , { ('@VDM ' , operationName) }) ].
-						framAnnotations do: [ :annotation | 
+						framAnnotations do: [ :annotation |
 							| aspect |
 							aspect := annotation first.
-							aspect = $c ifTrue: [ 
+							aspect = $c ifTrue: [
 								aspectBlock cull:
 									(self newControlOf: functionId named: annotation second) ].
-							aspect = $i ifTrue: [ 
+							aspect = $i ifTrue: [
 								aspectBlock cull:
 									(self newInputOf: functionId named: annotation second) ].
-							aspect = $o ifTrue: [ 
+							aspect = $o ifTrue: [
 								aspectBlock cull:
 									(self newOutputOf: functionId named: annotation second) ].
-							aspect = $p ifTrue: [ 
+							aspect = $p ifTrue: [
 								aspectBlock cull:
 									(self newPreconditionOf: functionId named: annotation second) ].
-							aspect = $r ifTrue: [ 
+							aspect = $r ifTrue: [
 								aspectBlock cull:
 									(self newResourceOf: functionId named: annotation second) ].
-							aspect = $t ifTrue: [ 
+							aspect = $t ifTrue: [
 								aspectBlock cull:
 									(self newTimeOf: functionId named: annotation second) ] ] ] ] ] ] ]
 ]

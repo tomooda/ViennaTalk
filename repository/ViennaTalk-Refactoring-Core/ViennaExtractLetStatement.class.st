@@ -9,7 +9,7 @@ Class {
 
 { #category : #operations }
 ViennaExtractLetStatement >> check [
-	ast isExpressionNode
+	ast isViennaExpressionNode
 		ifFalse: [ ^ false ].
 	self statementNode ifNil: [ ^ false ].
 	ast isOperationNameNode
@@ -19,32 +19,24 @@ ViennaExtractLetStatement >> check [
 
 { #category : #operations }
 ViennaExtractLetStatement >> execute [
+
 	| dummy |
 	self newName ifNil: [ ^ nil ].
 	dummy := self
-		replaceNode: self statementNode
-		with: (ViennaNode label: 'DUMMY').
+		         replaceNode: self statementNode
+		         with: ViennaDummyNode empty.
 	self
 		replaceNode: ast
-		with: (ViennaNode label: 'LocalName' with: self newName).
-	^ self
-		replaceNode: dummy
-		with:
-			(ViennaNode
-				label: 'LetStatement'
-				with:
-					(ViennaNode
-						label: 'LocalDefinitionList'
-						with:
-							(ViennaNode
-								label: 'LocalDefinition'
-								with:
-									(ViennaNode
-										label: 'ValueDefinition'
-										with: (ViennaNode label: 'PatternIdentifier' with: self newName)
-										with: nil
-										with: ast)))
-				with: self statementNode)
+		with: (ViennaLocalNameNode identifier: self newName).
+	^ self replaceNode: dummy with: (ViennaLetStatementNode
+			   localDefinitionList:
+				   (ViennaLocalDefinitionListNode withAll:
+					    { (ViennaValueDefinitionNode
+						     pattern:
+						     (ViennaPatternIdentifierNode identifier: self newName)
+						     type: nil
+						     expression: ast) })
+			   statement: self statementNode)
 ]
 
 { #category : #accessing }
@@ -61,7 +53,7 @@ ViennaExtractLetStatement >> findStatementNode [
 	| node |
 	node := ast parent.
 	[ node ifNil: [ ^ nil ].
-	node isStatementNode ] whileFalse: [ node := node parent ].
+	node isViennaStatementNode ] whileFalse: [ node := node parent ].
 	^ node
 ]
 

@@ -7,39 +7,35 @@ Class {
 	#category : #'ViennaTalk-Refactoring-Core'
 }
 
+{ #category : #enumerating }
+ViennaInlineApplyFunctionAndRemove >> callerNodesDo: aBlock [
+
+	ast ifNil: [ ^ nil ].
+	ast document
+		allDescendantsSuchThat: [ :callerNode |
+			callerNode isViennaApplyNode and: [
+				callerNode expression resolve = self definitionNode ] ]
+		do: aBlock
+]
+
 { #category : #accessing }
 ViennaInlineApplyFunctionAndRemove >> check [
-	| shortName moduleName |
+
+	| identifier moduleName |
 	ast ifNil: [ ^ false ].
 	self definitionNode ifNil: [ ^ false ].
-	shortName := definitionNode first.
-	moduleName := self definitionNode module name.
-	self
-		freeOccurrencesOf: shortName
-		in: ast module
-		do: [ :node | 
-			(node parent label = 'Apply' and: [ node parent first == node ])
-				ifFalse: [ ^ false ] ].
-	(self hasFreeOccurrencesOf: 'pre_' , shortName in: ast module)
-		ifTrue: [ ^ false ].
-	(self hasFreeOccurrencesOf: 'post_' , shortName in: ast module)
-		ifTrue: [ ^ false ].
-	ast document
-		allDescendantsDo: [ :node | 
-			(node label = 'GlobalName'
-				and: [ node first = moduleName and: [ node second = shortName ] ])
-				ifTrue: [ ^ false ] ].
-	ast
-		modulesDo: [ :module | 
-			module second first
-				ifNotNil: [ :importDefinitionList | 
-					importDefinitionList
-						do: [ :importDefinition | 
-							importDefinition first = moduleName
-								ifTrue: [ importDefinition
-										allDescendantsDo: [ :node | 
-											(node label = 'FunctionImport' and: [ node first = shortName ])
-												ifTrue: [ ^ false ] ] ] ] ] ].
+	identifier := definitionNode identifier.
+	moduleName := self definitionNode module identifier.
+	(self definitionNode module moduleBody hasFreeIdentifier:
+		 'pre_' , identifier) ifTrue: [ ^ false ].
+	(self definitionNode module moduleBody hasFreeIdentifier:
+		 'post_' , identifier) ifTrue: [ ^ false ].
+	(ast document
+		 hasGlobalReferenceToModule: moduleName
+		 identifier: identifier) ifTrue: [ ^ false ].
+	ast modulesDo: [ :module |
+		(module importsFrom: moduleName identifier: identifier) ifTrue: [
+			^ false ] ].
 	^ true
 ]
 
@@ -55,62 +51,52 @@ ViennaInlineApplyFunctionAndRemove >> definitionNode: aViennaNode [
 
 { #category : #operations }
 ViennaInlineApplyFunctionAndRemove >> execute [
+
 	| functionName |
-	functionName := self definitionNode name.
-	self
-		freeOccurrencesOf: functionName
-		in: ast module
-		do: [ :node | 
-			| callerNode |
-			callerNode := node parent.
-			self
-				replaceNode: callerNode
-				with:
-					(ViennaNode
-						label: 'LetExpression'
-						with:
-							(ViennaNode
-								label: 'LocalDefinitionList'
-								withAll:
-									((1 to: callerNode second size)
-										collect: [ :index | 
-											| param type arg |
-											param := (self definitionNode fifth first at: index)
-												copyFragment.
-											type := callerNode second size = 1
-												ifTrue: [ self definitionNode third first ]
-												ifFalse: [ self definitionNode third first label = 'ProductType'
-														ifTrue: [ self definitionNode third first at: index ]
-														ifFalse: [ nil ] ].
-											arg := (callerNode second at: index) copyFragment.
-											ViennaNode
-												label: 'LocalDefinition'
-												with:
-													(ViennaNode
-														label: 'ValueDefinition'
-														with: param
-														with: type
-														with: arg) ]))
-						with: self definitionNode sixth) ].
-	(ast parentLabelled: 'FunctionDefinitions' ifAbsent: [ nil ])
-		ifNotNil: [ :functionDefinitions | 
-			functionDefinitions remove: self definitionNode parent parent.
-			functionDefinitions
-				ifEmpty:
-					[ functionDefinitions parent parent remove: functionDefinitions parent ] ].
+	functionName := self definitionNode identifier.
+	self freeOccurrencesOf: functionName in: ast module do: [ :node |
+		| callerNode |
+		callerNode := node parent.
+		self replaceNode: callerNode with: (ViennaLetExpressionNode
+				 localDefinitionList: (ViennaLocalDefinitionListNode withAll:
+						  ((1 to: callerNode argumentExpressionList size) collect: [
+							   :index |
+							   | param type arg |
+							   param := (self definitionNode parametersList first at: index)
+								            copyFragment.
+							   type := callerNode argumentExpressionList size = 1
+								           ifTrue: [ self definitionNode type argumentType ]
+								           ifFalse: [
+									           self definitionNode type argumentType
+										           isViennaProductTypeNode
+										           ifTrue: [
+										           self definitionNode type argumentType at: index ]
+										           ifFalse: [ nil ] ].
+							   arg := (callerNode argumentExpressionList at: index)
+								          copyFragment.
+							   ViennaValueDefinitionNode
+								   pattern: param
+								   type: type
+								   expression: arg ]))
+				 expression: self definitionNode expression) ].
+	(self definitionNode
+		 detectParent: #isViennaFunctionDefinitionsNode
+		 ifNone: [ nil ]) ifNotNil: [ :functionDefinitions |
+		functionDefinitions remove: self definitionNode.
+		functionDefinitions removeIfEmpty ].
 	^ nil
 ]
 
 { #category : #accessing }
 ViennaInlineApplyFunctionAndRemove >> findDefinitionNode [
-	| name |
-	name := ast name.
-	name ifNil: [ ^ nil ].
-	(ast resolveLocalName: name)
-		ifNotNil: [ :defNode | 
-			(#('ExplicitFunctionDefinition' 'ImplicitFunctionDefinition')
-				includes: defNode label)
-				ifTrue: [ ^ defNode ] ].
+
+	| identifier |
+	ast ifNil: [ ^ nil ].
+	(ast respondsTo: #identifier) ifFalse: [ ^ nil ].
+	identifier := ast identifier.
+	identifier ifNil: [ ^ nil ].
+	(ast resolveIdentifier: identifier) ifNotNil: [ :defNode |
+		defNode isViennaAccessFunctionDefinitionNode ifTrue: [ ^ defNode ] ].
 	^ nil
 ]
 

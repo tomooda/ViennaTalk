@@ -6,36 +6,25 @@ Class {
 
 { #category : #operations }
 ViennaExtractLetExpression >> check [
-	ast isExpressionNode
-		ifFalse: [ ^ false ].
-	ast label = 'LetExpression'
-		ifTrue: [ ^ false ].
-	ast isOperationNameNode
-		ifTrue: [ ^ false ].
-	^ true
+
+	^ ast isViennaExpressionNode and: [
+		  ast isViennaLetExpressionNode not and: [
+			  ast isOperationNameNode not ] ]
 ]
 
 { #category : #operations }
 ViennaExtractLetExpression >> execute [
+
 	self newName ifNil: [ ^ nil ].
-	^ self
-		replaceNode: ast
-		with:
-			(ViennaNode
-				label: 'LetExpression'
-				with:
-					(ViennaNode
-						label: 'LocalDefinitionList'
-						with:
-							(ViennaNode
-								label: 'LocalDefinition'
-								with:
-									(ViennaNode
-										label: 'ValueDefinition'
-										with: (ViennaNode label: 'PatternIdentifier' with: self newName)
-										with: nil
-										with: ast copyFragment)))
-				with: (ViennaNode label: 'LocalName' with: self newName))
+	^ self replaceNode: ast with: (ViennaLetExpressionNode
+			   localDefinitionList:
+				   (ViennaLocalDefinitionListNode withAll:
+					    { (ViennaValueDefinitionNode
+						     pattern:
+						     (ViennaPatternIdentifierNode identifier: self newName)
+						     type: nil
+						     expression: ast copyFragment) })
+			   expression: (ViennaLocalNameNode identifier: self newName))
 ]
 
 { #category : #accessing }

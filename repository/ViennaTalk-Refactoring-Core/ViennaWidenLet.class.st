@@ -13,20 +13,21 @@ ViennaWidenLet class >> isAbstract [
 ]
 
 { #category : #testing }
-ViennaWidenLet >> acceptsAstLabel: aString [
+ViennaWidenLet >> acceptsDefinitionNode: aViennaNode [
 	^ self subclassResponsibility
 ]
 
 { #category : #testing }
-ViennaWidenLet >> acceptsDefinitionNode: aViennaNode [
+ViennaWidenLet >> acceptsNode: aViennaNode [
+
 	^ self subclassResponsibility
 ]
 
 { #category : #operations }
 ViennaWidenLet >> check [
+
 	ast ifNil: [ ^ false ].
-	(self acceptsAstLabel: ast label)
-		ifFalse: [ ^ false ].
+	(self acceptsNode: ast) ifFalse: [ ^ false ].
 	self definitionNode ifNil: [ ^ false ].
 	^ true
 ]
@@ -43,8 +44,9 @@ ViennaWidenLet >> definitionNode: aViennaNode [
 
 { #category : #operations }
 ViennaWidenLet >> execute [
+
 	| dummy base |
-	dummy := ViennaNode label: 'DUMMY'.
+	dummy := ViennaDummyNode empty.
 	base := self definitionNode.
 	self replaceNode: base with: dummy.
 	self replaceNode: ast with: ast second.

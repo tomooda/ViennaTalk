@@ -1,83 +1,61 @@
 Class {
 	#name : #ViennaExtractFunctionFromLetExpression,
 	#superclass : #ViennaExtract,
+	#instVars : [
+		'freeIdentifiers'
+	],
 	#category : #'ViennaTalk-Refactoring-Core'
 }
 
 { #category : #accessing }
 ViennaExtractFunctionFromLetExpression >> arguments [
-	^ ViennaNode
-		label: 'ExpressionList'
-		withAll: (ast first collect: [ :localDef | localDef first third ])
+
+	^ ViennaExpressionListNode withAll:
+		  (ast localDefinitionList collect: [ :localDef |
+			   localDef expression ])
+		  , (freeIdentifiers collect: [ :identifier |
+				   ViennaLocalNameNode identifier: identifier ])
 ]
 
 { #category : #operations }
 ViennaExtractFunctionFromLetExpression >> check [
+
 	| params |
-	ast label = 'LetExpression'
-		ifFalse: [ ^ false ].
-	params := Set new: ast first size * 2.
-	ast first
-		do: [ :localDef | 
-			localDef first label = 'FunctionDefinition'
-				ifTrue: [ ^ false ].
-			localDef first first
-				allDescendantsDo: [ :node | 
-					node label = 'PatternIdentifier'
-						ifTrue: [ params add: node first ] ] ].
-	ast first
-		do: [ :localDef | 
-			localDef first third
-				allDescendantsDo: [ :node | 
-					(node label = 'LocalName' and: [ params includes: node first ])
-						ifTrue: [ ^ false ] ] ].
-	ast second variableExpressionNodesDo: [ :node | ^ false ].
+	(ast notNil and: [ ast isViennaLetExpressionNode ]) ifFalse: [
+		^ false ].
+	ast expression hasStatefulReference ifTrue: [ ^ false ].
+	params := ast localDefinitionList uniqueBoundIdentifiers
+		          asOrderedCollection.
+	ast localDefinitionList do: [ :localDef |
+		localDef expression allDescendantsDo: [ :node |
+			(node isViennaLocalNameNode and: [
+				 params includes: node identifier ]) ifTrue: [ ^ false ] ] ].
 	^ true
 ]
 
 { #category : #operations }
 ViennaExtractFunctionFromLetExpression >> execute [
-	| moduleBody functionDefinitions explicitFunctionDefinition accessFunctionDefinition |
+
+	| module explicitFunctionDefinition |
+	module := self ast module.
 	self newName ifNil: [ ^ self ].
-	moduleBody := ast module third.
-	functionDefinitions := (moduleBody
-		detect: [ :definitionBlock | 
-			definitionBlock isViennaNode
-				and: [ definitionBlock first isViennaNode
-						and: [ definitionBlock first label = 'FunctionDefinitions' ] ] ]
-		ifNone: [ nil ]) ifNotNil: #first.
-	functionDefinitions
-		ifNil: [ functionDefinitions := ViennaNode label: 'FunctionDefinitions'.
-			moduleBody
-				add: (ViennaNode label: 'DefinitionBlock' with: functionDefinitions) ].
-	self
-		replaceNode: ast
-		with:
-			(ViennaNode
-				label: 'Apply'
-				with: (ViennaNode label: 'LocalName' with: self newName)
-				with: self arguments).
-	explicitFunctionDefinition := ViennaNode
-		label: 'ExplicitFunctionDefinition'
-		withAll:
-			{self newName.
-			(ViennaNode label: 'TypeVariableList').
-			self functionType.
-			self newName.
-			self functionParametersList.
-			self functionBody.
-			nil.
-			nil.
-			nil}.
-	accessFunctionDefinition := ViennaNode
-		label: 'AccessFunctionDefinition'
-		with: (ViennaNode label: 'Access')
-		with:
-			(ViennaNode
-				label: 'FunctionDefinition'
-				with: explicitFunctionDefinition).
-	functionDefinitions add: accessFunctionDefinition.
-	^ accessFunctionDefinition
+	freeIdentifiers := self ast uniqueFreeIdentifiers.
+	self replaceNode: ast with: (ViennaApplyNode
+			 expression: (ViennaLocalNameNode identifier: self newName)
+			 argumentExpressionList: self arguments).
+	explicitFunctionDefinition := ViennaExplicitFunctionDefinitionNode
+		                              identifier: self newName
+		                              typeVariableList:
+		                              ViennaTypeVariableListNode empty
+		                              type: self functionType
+		                              parametersList:
+		                              self functionParametersList
+		                              expression: self functionBody
+		                              pre: nil
+		                              post: nil
+		                              measure: nil.
+	self addFunctionDefinition: explicitFunctionDefinition in: module.
+	^ explicitFunctionDefinition
 ]
 
 { #category : #accessing }
@@ -96,27 +74,27 @@ ViennaExtractFunctionFromLetExpression >> functionBody [
 
 { #category : #accessing }
 ViennaExtractFunctionFromLetExpression >> functionParametersList [
-	^ ViennaNode
-		label: 'ParametersList'
-		with:
-			(ViennaNode
-				label: 'Parameters'
-				withAll: (ast first collect: [ :localDef | localDef first first ]))
+
+	^ ViennaParametersListNode with: (ViennaParametersNode withAll:
+			   (ast localDefinitionList collect: [ :localDef |
+				    localDef pattern ])
+			   , (freeIdentifiers collect: [ :identifier |
+					    ViennaPatternIdentifierNode identifier: identifier ]))
 ]
 
 { #category : #accessing }
 ViennaExtractFunctionFromLetExpression >> functionType [
-	^ ViennaNode
-		label: 'PartialFunctionType'
-		with:
-			((ast first
-				collect: [ :localDef | ViennaNode label: 'BasicType' with: 'any' ])
-				ifNotEmpty: [ :paramTypes | 
-					paramTypes size = 1
-						ifTrue: [ paramTypes first ]
-						ifFalse: [ ViennaNode label: 'ProductType' withAll: paramTypes ] ]
-				ifEmpty: [ ViennaNode label: 'UnitType' ])
-		with: (ViennaNode label: 'BasicType' with: 'any')
+
+	^ ViennaPartialFunctionTypeNode
+		  argumentType:
+			  ((self functionParametersList first collect: [ :param |
+				    ViennaBasicTypeNode any ])
+				   ifNotEmpty: [ :paramTypes |
+					   paramTypes size = 1
+						   ifTrue: [ paramTypes first ]
+						   ifFalse: [ ViennaProductTypeNode withAll: paramTypes ] ]
+				   ifEmpty: [ ViennaUnitTypeNode new ])
+		  returnType: ViennaBasicTypeNode any
 ]
 
 { #category : #accessing }

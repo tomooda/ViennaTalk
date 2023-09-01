@@ -1,88 +1,63 @@
 Class {
 	#name : #ViennaExtractOperationFromLetStatement,
 	#superclass : #ViennaExtract,
+	#instVars : [
+		'freeIdentifiers'
+	],
 	#category : #'ViennaTalk-Refactoring-Core'
 }
 
 { #category : #accessing }
 ViennaExtractOperationFromLetStatement >> arguments [
-	^ ViennaNode
-		label: 'ExpressionList'
-		withAll: (ast first collect: [ :localDef | localDef first third ])
+
+	^ ViennaExpressionListNode withAll:
+		  (ast localDefinitionList collect: [ :localDef |
+			   localDef expression ])
+		  , (freeIdentifiers collect: [ :identifier |
+				   ViennaLocalNameNode identifier: identifier ])
 ]
 
 { #category : #operations }
 ViennaExtractOperationFromLetStatement >> check [
+
 	| params |
-	ast label = 'LetStatement'
-		ifFalse: [ ^ false ].
-	params := Set new: ast first size * 2.
-	ast first
-		do: [ :localDef | 
-			localDef first label = 'FunctionDefinition'
-				ifTrue: [ ^ false ].
-			localDef first first
-				allDescendantsDo: [ :node | 
-					node label = 'PatternIdentifier'
-						ifTrue: [ params add: node first ] ] ].
-	ast first
-		do: [ :localDef | 
-			localDef first third
-				allDescendantsDo: [ :node | 
-					(node label = 'LocalName' and: [ params includes: node first ])
-						ifTrue: [ ^ false ] ] ].
-	ast second
-		variableExpressionNodesDo: [ :node | 
-			node isStateVariableNameNode
-				ifFalse: [ ^ false ] ].
-	ast second
-		allDescendantsDo: [ :node | 
-			node label = 'ReturnStatement'
-				ifTrue: [ ^ false ] ].
+	ast isViennaLetStatementNode ifFalse: [ ^ false ].
+	params := ast localDefinitionList uniqueBoundIdentifiers
+		          asOrderedCollection.
+	ast localDefinitionList do: [ :localDef |
+		localDef expression allDescendantsDo: [ :node |
+			(node isViennaLocalNameNode and: [
+				 params includes: node identifier ]) ifTrue: [ ^ false ] ] ].
+	ast statement
+		allDescendantsSuchThat: #isViennaReturnStatementNode
+		do: [ :node | ^ false ].
 	^ true
 ]
 
 { #category : #operations }
 ViennaExtractOperationFromLetStatement >> execute [
-	| moduleBody operationDefinitions explicitOperationDefinition accessOperationDefinition |
+
+	| module explicitOperationDefinition |
 	self newName ifNil: [ ^ self ].
-	moduleBody := ast module third.
-	operationDefinitions := (moduleBody
-		detect: [ :definitionBlock | 
-			definitionBlock isViennaNode
-				and: [ definitionBlock first isViennaNode
-						and: [ definitionBlock first label = 'OperationDefinitions' ] ] ]
-		ifNone: [ nil ]) ifNotNil: #first.
-	operationDefinitions
-		ifNil: [ operationDefinitions := ViennaNode label: 'OperationDefinitions'.
-			moduleBody
-				add: (ViennaNode label: 'DefinitionBlock' with: operationDefinitions) ].
-	self
-		replaceNode: ast
-		with:
-			(ViennaNode
-				label: 'CallStatement'
-				with: (ViennaNode label: 'LocalName' with: self newName)
-				with: self arguments).
-	explicitOperationDefinition := ViennaNode
-		label: 'ExplicitOperationDefinition'
-		withAll:
-			{self newName.
-			self operationType.
-			self newName.
-			self operationParametersList.
-			self operationBody.
-			nil.
-			nil}.
-	accessOperationDefinition := ViennaNode
-		label: 'AccessOperationDefinition'
-		with: (ViennaNode label: 'Access')
-		with:
-			(ViennaNode
-				label: 'OperationDefinition'
-				with: explicitOperationDefinition).
-	operationDefinitions add: accessOperationDefinition.
-	^ accessOperationDefinition
+	module := ast module.
+	freeIdentifiers := self ast uniqueFreeIdentifiers reject: [
+		                   :identifier |
+		                   (self ast resolveIdentifier: identifier)
+			                   isViennaFieldNode ].
+	self replaceNode: ast with: (ViennaCallStatementNode
+			 name: (ViennaLocalNameNode identifier: self newName)
+			 expressionList: self arguments).
+	explicitOperationDefinition := ViennaExplicitOperationDefinitionNode
+		                               access: ViennaAccessNode empty
+		                               identifier: self newName
+		                               type: self operationType
+		                               parameters:
+		                               self operationParametersList
+		                               statement: self statement
+		                               pre: nil
+		                               post: nil.
+	self addOperationDefinition: explicitOperationDefinition in: module.
+	^ explicitOperationDefinition
 ]
 
 { #category : #accessing }
@@ -112,34 +87,36 @@ ViennaExtractOperationFromLetStatement >> newName: aString [
 	newName := aString
 ]
 
-{ #category : #'parsers-definitions' }
-ViennaExtractOperationFromLetStatement >> operationBody [
-	^ ast second
-]
-
 { #category : #accessing }
 ViennaExtractOperationFromLetStatement >> operationParametersList [
-	^ ViennaNode
-		label: 'Parameters'
-		withAll: (ast first collect: [ :localDef | localDef first first ])
+
+	^ ViennaParametersNode withAll:
+		  (ast localDefinitionList collect: [ :localDef | localDef pattern ])
+		  , (freeIdentifiers collect: [ :identifier |
+				   ViennaPatternIdentifierNode identifier: identifier ])
 ]
 
 { #category : #'parsers-types' }
 ViennaExtractOperationFromLetStatement >> operationType [
-	^ ViennaNode
-		label: 'OperationType'
-		with:
-			((ast first
-				collect: [ :localDef | ViennaNode label: 'BasicType' with: 'any' ])
-				ifNotEmpty: [ :paramTypes | 
-					paramTypes size = 1
-						ifTrue: [ paramTypes first ]
-						ifFalse: [ ViennaNode label: 'ProductType' withAll: paramTypes ] ]
-				ifEmpty: [ ViennaNode label: 'UnitType' ])
-		with: (ViennaNode label: 'UnitType')
+
+	^ ViennaOperationTypeNode
+		  argumentType: ((self operationParametersList collect: [ :param |
+				    ViennaBasicTypeNode any ])
+				   ifNotEmpty: [ :paramTypes |
+					   paramTypes size = 1
+						   ifTrue: [ paramTypes first ]
+						   ifFalse: [ ViennaProductTypeNode withAll: paramTypes ] ]
+				   ifEmpty: [ ViennaUnitTypeNode new ])
+		  returnType: ViennaUnitTypeNode new
 ]
 
 { #category : #accessing }
 ViennaExtractOperationFromLetStatement >> sortingOrder [
 	^ 2.57
+]
+
+{ #category : #'parsers-definitions' }
+ViennaExtractOperationFromLetStatement >> statement [
+
+	^ ast second
 ]

@@ -14,7 +14,7 @@ ViennaAddSection class >> isAbstract [
 ViennaAddSection >> findContainerNode [
 
 	ast ifNil: [ ^ nil ].
-	ast label = 'Module' ifTrue: [ ^ ast third ].
+	ast isViennaModuleNode ifTrue: [ ^ ast third ].
 	^ nil
 ]
 

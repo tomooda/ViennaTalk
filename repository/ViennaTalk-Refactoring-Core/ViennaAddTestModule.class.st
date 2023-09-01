@@ -8,9 +8,9 @@ Class {
 ViennaAddTestModule >> findContainerNode [
 
 	ast ifNil: [ ^ nil ].
-	(ast label = 'Module' and: [ 
-		 (ast document moduleNamed: self newName) isNil and: [ 
-			 (ast document moduleNamed: 'UnitTesting') notNil ] ]) ifTrue: [ 
+	(ast isViennaModuleNode and: [
+		 (ast document moduleNamed: self newName) isNil and: [
+			 (ast document moduleNamed: 'UnitTesting') notNil ] ]) ifTrue: [
 		^ ast document ].
 	^ nil
 ]
@@ -18,7 +18,7 @@ ViennaAddTestModule >> findContainerNode [
 { #category : #accessing }
 ViennaAddTestModule >> findNewName [
 
-	^ ast name ifNotNil: [ :name | name , 'Test' ]
+	^ ast identifier ifNotNil: [ :name | name , 'Test' ]
 ]
 
 { #category : #accessing }

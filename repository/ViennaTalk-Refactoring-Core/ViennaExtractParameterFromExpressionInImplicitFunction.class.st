@@ -6,19 +6,19 @@ Class {
 
 { #category : #operations }
 ViennaExtractParameterFromExpressionInImplicitFunction >> executeDefinition [
+
 	self newName ifNil: [ ^ nil ].
-	self definitionNode third first
-		add:
-			(ViennaNode
-				label: 'PatternList'
-				with: (ViennaNode label: 'PatternIdentifier' with: self newName));
-		add: (ViennaNode label: 'BasicType' with: 'any').
+	self definitionNode patternTypePairList
+		add: (ViennaPatternListNode withAll:
+					 { (ViennaPatternIdentifierNode identifier: self newName) });
+		add: ViennaBasicTypeNode any.
 	^ self definitionNode
 ]
 
 { #category : #accessing }
 ViennaExtractParameterFromExpressionInImplicitFunction >> findDefinitionNode [
+
 	^ ast parent
-		parentLabelled: 'ImplicitFunctionDefinition'
-		ifAbsent: []
+		  detectParent: #isViennaImplicitFunctionDefinitionNode
+		  ifNone: [  ]
 ]

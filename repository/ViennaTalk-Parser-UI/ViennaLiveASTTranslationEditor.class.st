@@ -1,7 +1,7 @@
 Class {
 	#name : #ViennaLiveASTTranslationEditor,
 	#superclass : #ViennaLiveTranslationEditor,
-	#category : 'ViennaTalk-Parser-UI'
+	#category : #'ViennaTalk-Parser-UI'
 }
 
 { #category : #menu }
@@ -29,9 +29,10 @@ ViennaLiveASTTranslationEditor class >> initialize [
 
 { #category : #menu }
 ViennaLiveASTTranslationEditor class >> viennaDevMenuOn: aBuilder [
+
 	<ViennaDev>
 	(aBuilder item: #'VDM->AST translator')
-		action: [ self new openWithSpec ];
+		action: [ self new open ];
 		order: 0.1;
 		help: 'VDM-SL to AST LIVE translating editor';
 		icon: nil

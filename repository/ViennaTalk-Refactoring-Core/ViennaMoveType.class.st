@@ -6,10 +6,10 @@ Class {
 
 { #category : #accessing }
 ViennaMoveType >> findDefinitionNode [
+
 	ast ifNil: [ ^ nil ].
-	ast resolve
-		ifNotNil: [ :defNode | 
-			(#('TypeDefinition' 'RecordTypeDefinition') includes: defNode label)
-				ifTrue: [ ^ defNode ] ].
+	ast resolve ifNotNil: [ :defNode |
+		defNode isViennaTypeSynonymNode ifTrue: [ ^ defNode ].
+		defNode isViennaRecordTypeDefinitionNode ifTrue: [ ^ defNode ] ].
 	^ nil
 ]

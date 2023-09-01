@@ -6,16 +6,23 @@ Class {
 
 { #category : #operations }
 ViennaInlineValue >> check [
-	^ ast notNil and: [ ast isLocalValueNameNode ]
+
+	^ ast notNil and: [
+		  ast isViennaLocalNameNode and: [
+			  (ast resolveIdentifier: ast identifier) ifNotNil: [
+				  :valueDefinition |
+				  valueDefinition isViennaAccessValueDefinitionNode and: [
+					  valueDefinition pattern isViennaPatternIdentifierNode ] ] ] ]
 ]
 
 { #category : #operations }
 ViennaInlineValue >> execute [
-	^ ((ast definitionOfLocalName: ast first)
-		parentLabelled: 'ValueDefinition'
-		ifAbsent: [ nil ])
-		ifNotNil:
-			[ :valueDefinition | self replaceNode: ast with: valueDefinition third copyFragment ]
+
+	^ (ast resolveIdentifier: ast identifier) ifNotNil: [
+		  :valueDefinition |
+		  self
+			  replaceNode: ast
+			  with: valueDefinition expression copyFragment ]
 ]
 
 { #category : #accessing }

@@ -6,46 +6,31 @@ Class {
 
 { #category : #operations }
 ViennaExtractValue >> check [
-	ast isExpressionNode
-		ifFalse: [ ^ false ].
-	(#('LocalName' 'GlobalName' 'OldName') includes: ast label)
-		ifTrue: [ ^ false ].
-	ast variableExpressionNodesDo: [ :node | ^ false ].
-	ast parent label = 'ValueDefinition'
-		ifTrue: [ ^ false ].
+
+	ast isViennaExpressionNode ifFalse: [ ^ false ].
+	ast isViennaNameNode ifTrue: [ ^ false ].
+	ast isRelocatable ifFalse: [ ^ false ].
+	ast hasStatefulReference ifTrue: [ ^ false ].
 	^ true
 ]
 
 { #category : #operations }
 ViennaExtractValue >> execute [
-	| moduleBody valueDefinitions valueDefinition accessValueDefinition |
+
+	| module valueDefinition |
 	self newName ifNil: [ ^ nil ].
-	moduleBody := ast module third.
-	valueDefinitions := (moduleBody
-		detect: [ :definitionBlock | 
-			definitionBlock isViennaNode
-				and: [ definitionBlock first isViennaNode
-						and: [ definitionBlock first label = 'ValueDefinitions' ] ] ]
-		ifNone: [ nil ]) ifNotNil: #first.
-	valueDefinitions
-		ifNil: [ valueDefinitions := ViennaNode label: 'ValueDefinitions'.
-			moduleBody
-				add: (ViennaNode label: 'DefinitionBlock' with: valueDefinitions) ].
+	module := ast module.
 	self
 		replaceNode: ast
-		with: (ViennaNode label: 'LocalName' with: self newName).
-	valueDefinition := ViennaNode
-		label: 'ValueDefinition'
-		withAll:
-			{(ViennaNode label: 'PatternIdentifier' with: self newName).
-			nil.
-			ast}.
-	accessValueDefinition := ViennaNode
-		label: 'AccessValueDefinition'
-		with: (ViennaNode label: 'Access')
-		with: valueDefinition.
-	valueDefinitions add: accessValueDefinition.
-	^ accessValueDefinition
+		with: (ViennaLocalNameNode identifier: self newName).
+	valueDefinition := ViennaValueDefinitionNode
+		                   pattern:
+		                   (ViennaPatternIdentifierNode identifier:
+			                    self newName)
+		                   type: nil
+		                   expression: ast.
+	self addValueDefinition: valueDefinition in: module.
+	^ valueDefinition
 ]
 
 { #category : #accessing }

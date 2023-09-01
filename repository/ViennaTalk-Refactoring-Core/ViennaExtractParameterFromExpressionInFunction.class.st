@@ -11,42 +11,34 @@ ViennaExtractParameterFromExpressionInFunction class >> isAbstract [
 
 { #category : #operations }
 ViennaExtractParameterFromExpressionInFunction >> check [
-	| moduleName shortName |
+
+	| moduleName identifier |
 	ast ifNil: [ ^ false ].
-	ast isExpressionNode
-		ifFalse: [ ^ false ].
-	ast variableExpressionNodesDo: [ :node | ^ false ].
+	ast isViennaExpressionNode ifFalse: [ ^ false ].
+	ast hasStatefulReference ifTrue: [ ^ false ].
 	self definitionNode ifNil: [ ^ false ].
-	moduleName := ast module first.
-	shortName := self definitionNode first.
-	ast
-		modulesDo: [ :module | 
-			module second first
-				ifNotNil: [ :importDefinitionList | 
-					importDefinitionList
-						do: [ :importDefinition | 
-							importDefinition first = moduleName
-								ifTrue: [ importDefinition
-										allDescendantsDo: [ :node | 
-											(node label = 'FunctionImport' and: [ node first = shortName ])
-												ifTrue: [ ^ false ] ] ] ] ] ].
+	moduleName := ast module identifier.
+	identifier := self definitionNode identifier.
+	ast modulesDo: [ :module |
+		(module importsFrom: moduleName identifier: identifier) ifTrue: [
+			^ false ] ].
 	^ true
 ]
 
 { #category : #operations }
 ViennaExtractParameterFromExpressionInFunction >> executeCallers [
+
 	| moduleName shortName |
-	moduleName := ast module first.
-	shortName := self definitionNode first.
-	ast module third
-		allDescendantsDo: [ :node | 
-			(node label = 'Apply'
-				and: [ (node first label = 'LocalName'
-						and: [ node first first = shortName ])
-						or: [ node first label = 'GlobalName'
-								and:
-									[ node first first = moduleName and: [ node first second = shortName ] ] ] ])
-				ifTrue: [ node second add: ast copyFragment ] ]
+	moduleName := ast module identifier.
+	shortName := self definitionNode identifier.
+	ast module moduleBody
+		allDescendantsSuchThat: [ :node |
+			node isViennaApplyNode and: [
+				(node expression isViennaLocalNameNode: shortName) or: [
+					node expression
+						isViennaGlobalNameNode: moduleName
+						identifier: shortName ] ] ]
+		do: [ :node | node argumentExpressionList add: ast copyFragment ]
 ]
 
 { #category : #accessing }

@@ -6,22 +6,24 @@ Class {
 
 { #category : #operations }
 ViennaExtractParameterFromExpressionInExplicitFunction >> executeDefinition [
+
 	self newName ifNil: [ ^ nil ].
-	self definitionNode third first
-		in: [ :typeNode | 
-			typeNode label = 'ProductType'
-				ifTrue: [ typeNode add: (ViennaNode label: 'BasicType' with: 'any') ]
-				ifFalse: [ (self replaceNode: typeNode with: (ViennaNode label: 'ProductType'))
-						add: typeNode;
-						add: (ViennaNode label: 'BasicType' with: 'any') ] ].
-	self definitionNode fifth first
-		add: (ViennaNode label: 'PatternIdentifier' with: self newName).
+	self definitionNode type argumentType in: [ :typeNode |
+		typeNode isViennaProductTypeNode
+			ifTrue: [ typeNode add: ViennaBasicTypeNode any ]
+			ifFalse: [
+				(self replaceNode: typeNode with: ViennaProductTypeNode empty)
+					add: typeNode;
+					add: ViennaBasicTypeNode any ] ].
+	self definitionNode parametersList first add:
+		(ViennaPatternIdentifierNode identifier: self newName).
 	^ self definitionNode
 ]
 
 { #category : #accessing }
 ViennaExtractParameterFromExpressionInExplicitFunction >> findDefinitionNode [
+
 	^ ast parent
-		parentLabelled: 'ExplicitFunctionDefinition'
-		ifAbsent: []
+		  detectParent: #isViennaExplicitFunctionDefinitionNode
+		  ifNone: [  ]
 ]

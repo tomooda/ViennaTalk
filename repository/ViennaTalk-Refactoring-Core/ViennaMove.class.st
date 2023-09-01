@@ -18,25 +18,35 @@ ViennaMove class >> isAbstract [
 
 { #category : #operations }
 ViennaMove >> check [
+
 	ast ifNil: [ ^ false ].
 	self definitionNode ifNil: [ ^ false ].
+	destinationModule ifNotNil: [
+		(self definitionNames anySatisfy: [ :identifier |
+			 (destinationModule resolveIdentifier: identifier) notNil ])
+			ifTrue: [ ^ false ] ].
 	^ true
 ]
 
 { #category : #operations }
 ViennaMove >> defineDestination [
+
 	newDefinitionNode := self definitionNode copyFragment.
 	self migrate: newDefinitionNode into: self destinationModule.
 	self addDefinition: newDefinitionNode in: self destinationModule.
 	self ensureExport: newDefinitionNode.
-	self ensureImport: newDefinitionNode in: self sourceModule.
-	self updateName: self sourceModule third.
-	self updateName: self destinationModule third
+	(self sourceModule moduleBody hasAnyDescendantsSuchThat: [ :node |
+		 node isViennaLocalNameNode and: [
+			 node resolve == self definitionNode ] ]) ifTrue: [
+		self ensureImport: newDefinitionNode in: self sourceModule ].
+	self updateName: self sourceModule moduleBody.
+	self updateName: self destinationModule moduleBody
 ]
 
 { #category : #accessing }
 ViennaMove >> definitionNames [
-	^ Array with: self definitionNode name
+
+	^ Array with: self definitionNode identifier
 ]
 
 { #category : #accessing }
@@ -61,6 +71,7 @@ ViennaMove >> destinationModule: aViennaNode [
 
 { #category : #operations }
 ViennaMove >> execute [
+
 	self destinationModule ifNil: [ ^ nil ].
 	self sourceModule ifNil: [ ^ nil ].
 	self
@@ -87,7 +98,7 @@ ViennaMove >> findDestinationModule [
 						ifTrue: [ (self definitionNames
 								allSatisfy: [ :localName | 
 									| localDef |
-									localDef := moduleNode resolveLocalName: localName.
+									localDef := moduleNode resolveIdentifier: localName.
 									localDef isNil or: [ localDef == self definitionNode ] ])
 								ifTrue: [ stream nextPut: moduleNode first ] ] ] ].
 	^ ast
@@ -102,8 +113,9 @@ ViennaMove >> findDestinationModule [
 
 { #category : #operations }
 ViennaMove >> findOkToAddImports [
-	^ UIManager default
-		confirm: 'OK to add import in ' , self destinationModule first
+
+	^ UIManager default confirm:
+		  'OK to add import in ' , self destinationModule identifier
 ]
 
 { #category : #accessing }
@@ -133,69 +145,57 @@ ViennaMove >> removeExportInSource [
 
 { #category : #operations }
 ViennaMove >> removeImportInDestination [
+
 	self retractImport: self definitionNode in: self destinationModule
 ]
 
 { #category : #operations }
 ViennaMove >> removeSource [
-	self sourceModule third asArray
-		do: [ :definitionBlock | 
-			definitionBlock first asArray
-				do: [ :def | 
-					(self definitionNode includesParent: def)
-						ifTrue: [ definitionBlock first remove: def ] ].
-			definitionBlock first
-				ifEmpty: [ self sourceModule third remove: definitionBlock ] ]
+
+	| section |
+	section := self definitionNode parent.
+	section remove: self definitionNode.
+	section ifEmpty: [ section parent remove: section ]
 ]
 
 { #category : #operations }
 ViennaMove >> rewriteImports [
+
 	| names |
 	names := self definitionNames asSet.
-	newDefinitionNode
-		modulesDo: [ :moduleNode | 
-			| imports newImportModuleSignature |
-			imports := Array
-				streamContents: [ :stream | 
-					moduleNode
-						importsFrom: self sourceModule name
-						do: [ :importModuleSignature | 
-							importModuleSignature
-								do: [ :importSignature | 
-									importSignature
-										do: [ :import | 
-											(names includes: import name)
-												ifTrue: [ stream nextPut: import ] ] ] ] ].
-			newImportModuleSignature := ViennaNode
-				label: 'ImportModuleSignature'.
-			imports
-				do: [ :import | 
-					(newImportModuleSignature isEmpty
-						or: [ newImportModuleSignature last label ~= import parent label ])
-						ifTrue: [ newImportModuleSignature
-								add: (ViennaNode label: import parent label) ].
-					newImportModuleSignature last add: import copyFragment ].
-			imports
-				do: [ :import | 
-					| signature |
-					signature := import parent.
-					signature remove: import.
-					signature
-						ifEmpty: [ | moduleSignature |
-							moduleSignature := signature parent.
-							moduleSignature remove: signature.
-							moduleSignature
-								ifEmpty: [ | importDefinition importDefinitionList |
-									importDefinition := moduleSignature parent.
-									importDefinitionList := importDefinition parent.
-									importDefinitionList remove: importDefinition ] ] ].
-			newImportModuleSignature
-				ifNotEmpty: [ moduleNode ensureImports
-						add:
-							(ViennaNode
-								label: 'ImportDefinition'
-								with: self destinationModule name
-								with: newImportModuleSignature) ] ]
+	newDefinitionNode modulesDo: [ :moduleNode |
+		| imports newImportModuleSignature |
+		imports := Array streamContents: [ :stream |
+			           moduleNode
+				           importsFrom: self sourceModule identifier
+				           do: [ :importModuleSignature |
+					           importModuleSignature do: [ :importSignature |
+						           importSignature do: [ :import |
+							           (names includes: import name) ifTrue: [
+								           stream nextPut: import ] ] ] ] ].
+		newImportModuleSignature := ViennaImportModuleSignatureNode empty.
+		imports do: [ :import |
+			(newImportModuleSignature isEmpty or: [
+				 newImportModuleSignature last class ~= import parent class ])
+				ifTrue: [ newImportModuleSignature add: import parent class empty ].
+			newImportModuleSignature last add: import copyFragment ].
+		imports do: [ :import |
+			| signature |
+			signature := import parent.
+			signature remove: import.
+			signature ifEmpty: [
+				| moduleSignature |
+				moduleSignature := signature parent.
+				moduleSignature remove: signature.
+				moduleSignature ifEmpty: [
+					| importDefinition importDefinitionList |
+					importDefinition := moduleSignature parent.
+					importDefinitionList := importDefinition parent.
+					importDefinitionList remove: importDefinition ] ] ].
+		newImportModuleSignature ifNotEmpty: [
+			moduleNode addImportDefinition: (ViennaImportDefinitionNode
+					 moduleIdentifier: self destinationModule name
+					 importModuleSignature: newImportModuleSignature) ] ]
 ]
 
 { #category : #accessing }
@@ -215,26 +215,17 @@ ViennaMove >> sourceModule: aViennaNode [
 
 { #category : #operations }
 ViennaMove >> updateName: aViennaNode [
-	aViennaNode = self definitionNode
-		ifTrue: [ ^ self ].
-	aViennaNode = newDefinitionNode
-		ifTrue: [ ^ self ].
-	(aViennaNode label = 'LocalName'
-		or: [ aViennaNode label = 'GlobalName' ])
-		ifTrue: [ ^ aViennaNode resolve
-				ifNotNil: [ :node | 
-					node == self definitionNode
-						ifTrue: [ ^ self
-								replaceNode: aViennaNode
-								with:
-									(self
-										nameForGlobalName:
-											(aViennaNode asGlobalName
-												at: 1 put: self destinationModule name;
-												yourself)
-										in: aViennaNode module) ] ] ].
-	aViennaNode
-		do: [ :node | 
-			node isViennaNode
-				ifTrue: [ self updateName: node ] ]
+
+	aViennaNode = self definitionNode ifTrue: [ ^ self ].
+	aViennaNode = newDefinitionNode ifTrue: [ ^ self ].
+	aViennaNode isViennaNameNode ifTrue: [
+		^ aViennaNode resolve ifNotNil: [ :node |
+			  node == self definitionNode ifTrue: [
+				  ^ self replaceNode: aViennaNode with: (self
+						     nameForGlobalName: (aViennaNode asGlobalName copyFragment
+								      moduleIdentifier: self destinationModule identifier;
+								      yourself)
+						     in: aViennaNode module) ] ] ].
+	aViennaNode do: [ :node |
+		node isViennaNode ifTrue: [ self updateName: node ] ]
 ]

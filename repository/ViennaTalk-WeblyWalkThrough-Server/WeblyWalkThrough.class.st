@@ -431,35 +431,35 @@ WeblyWalkThrough >> translator: aWWTTranslator [
 
 { #category : #accessing }
 WeblyWalkThrough >> updateGlobalNamesAndNumArgs: aString [
+
 	| ast |
 	ast := ViennaVDMParser new parse: aString.
-	(ast isPetit2Failure or: [ ast isEmpty ])
-		ifTrue: [ globalNamesAndNumArgs := #().
-			^ self ].
-	globalNamesAndNumArgs := Array
-		streamContents: [ :stream | 
-			(ast first label = 'Module'
-				ifTrue: [ ast ]
-				ifFalse: [ {ast} ])
-				do: [ :mod | 
-					| modName |
-					modName := mod label = 'Module'
-						ifTrue: [ mod first ]
-						ifFalse: [ self defaultModule ].
-					mod
-						allDescendantsDo: [ :node | 
-							node label = 'ExplicitFunctionDefinition'
-								ifTrue: [ stream
-										nextPut:
-											{modName.
-											node first.
-											node fifth first size} ].
-							node label = 'ExplicitOperationDefinition'
-								ifTrue: [ stream
-										nextPut:
-											{modName.
-											node first.
-											node fourth size} ] ] ] ]
+	(ast isPetit2Failure or: [ ast isEmpty ]) ifTrue: [
+		globalNamesAndNumArgs := #(  ).
+		^ self ].
+	globalNamesAndNumArgs := Array streamContents: [ :stream |
+		                         (ast first isViennaModuleNode
+			                          ifTrue: [ ast ]
+			                          ifFalse: [ { ast } ]) do: [ :mod |
+			                         | modName |
+			                         modName := mod isViennaModuleNode
+				                                    ifTrue: [ mod first ]
+				                                    ifFalse: [ self defaultModule ].
+			                         mod allDescendantsDo: [ :node |
+				                         node
+					                         isViennaExplicitFunctionDefinitionNode
+					                         ifTrue: [
+						                         stream nextPut: {
+								                         modName.
+								                         node identifier.
+								                         node parametersList first size } ].
+				                         node
+					                         isViennaExplicitOperationDefinitionNode
+					                         ifTrue: [
+						                         stream nextPut: {
+								                         modName.
+								                         node first.
+								                         node fourth size } ] ] ] ]
 ]
 
 { #category : #accessing }

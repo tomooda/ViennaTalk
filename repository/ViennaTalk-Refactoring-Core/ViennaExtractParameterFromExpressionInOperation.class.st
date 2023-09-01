@@ -11,42 +11,37 @@ ViennaExtractParameterFromExpressionInOperation class >> isAbstract [
 
 { #category : #operations }
 ViennaExtractParameterFromExpressionInOperation >> check [
-	| moduleName shortName |
+
+	| moduleIdentifier identifier |
 	ast ifNil: [ ^ false ].
-	ast isExpressionNode
-		ifFalse: [ ^ false ].
-	ast variableExpressionNodesDo: [ :node | ^ false ].
+	ast isViennaExpressionNode ifFalse: [ ^ false ].
+	ast hasStatefulReference ifTrue: [ ^ false ].
 	self definitionNode ifNil: [ ^ false ].
-	moduleName := ast module first.
-	shortName := self definitionNode first.
-	ast
-		modulesDo: [ :module | 
-			module second first
-				ifNotNil: [ :importDefinitionList | 
-					importDefinitionList
-						do: [ :importDefinition | 
-							importDefinition first = moduleName
-								ifTrue: [ importDefinition
-										allDescendantsDo: [ :node | 
-											(node label = 'OperationImport' and: [ node first = shortName ])
-												ifTrue: [ ^ false ] ] ] ] ] ].
+	moduleIdentifier := ast module identifier.
+	identifier := self definitionNode identifier.
+	ast modulesDo: [ :module |
+		(module importsFrom: moduleIdentifier identifier: identifier)
+			ifTrue: [ ^ false ] ].
 	^ true
 ]
 
 { #category : #operations }
 ViennaExtractParameterFromExpressionInOperation >> executeCallers [
-	| moduleName shortName |
-	moduleName := ast module first.
-	shortName := self definitionNode first.
-	ast module third
-		allDescendantsDo: [ :node | 
-			((#('Apply' 'CallStatement') includes: node label)
-				and: [ (node first label = 'LocalName'
-						and: [ node first first = shortName ])
-						or: [ node first label = 'GlobalName'
-								and:
-									[ node first first = moduleName and: [ node first second = shortName ] ] ] ])
-				ifTrue: [ node second add: ast copyFragment ] ]
+
+	| moduleName shortName globalName localName |
+	moduleName := ast module identifier.
+	shortName := self definitionNode identifier.
+	globalName := ViennaGlobalNameNode
+		              moduleIdentifier: moduleName
+		              identifier: shortName.
+	localName := ViennaLocalNameNode identifier: shortName.
+	ast module third allDescendantsDo: [ :node |
+		(node isViennaApplyNode and: [
+			 node expression = globalName or: [ node expression = localName ] ])
+			ifTrue: [ node argumentExpressionList add: ast copyFragment ].
+		(node isViennaCallStatementNode and: [
+			 node first = globalName or: [ node first = localName ] ]) ifTrue: [
+			node second add: ast copyFragment ] ]
 ]
 
 { #category : #accessing }

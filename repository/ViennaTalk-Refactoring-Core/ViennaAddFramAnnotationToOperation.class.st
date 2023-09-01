@@ -18,12 +18,8 @@ ViennaAddFramAnnotationToOperation >> execute [
 ViennaAddFramAnnotationToOperation >> findContainerNode [
 
 	ast ifNil: [ ^ nil ].
-	ast label = 'ExplicitOperationDefinition' ifTrue: [ ast := ast parent ].
-	ast label = 'ImplicitOperationDefinition' ifTrue: [ ast := ast parent ].
-	ast label = 'OperationDefinition' ifTrue: [ ast := ast parent ].
-	ast label = 'AccessOperationDefinition' ifFalse: [ ^ nil ].
+	ast isViennaAccessOperationDefinitionNode ifFalse: [ ^ nil ].
 	ast annotations ifNil: [ ^ nil ].
-	ast annotations ifEmpty: [ ^ nil ].
 	^ ast
 ]
 
@@ -47,13 +43,19 @@ ViennaAddFramAnnotationToOperation >> findNewName [
 { #category : #accessing }
 ViennaAddFramAnnotationToOperation >> name [
 
-	^ 'Add FRAM annotation to ', ast name
+	^ 'Add FRAM annotation to ', ast identifier
 ]
 
 { #category : #accessing }
 ViennaAddFramAnnotationToOperation >> newAspect [
 
 	^ newAspect ifNil: [ newAspect := self findNewAspect ]
+]
+
+{ #category : #accessing }
+ViennaAddFramAnnotationToOperation >> newAspect: aString [
+
+	newAspect := aString
 ]
 
 { #category : #accessing }

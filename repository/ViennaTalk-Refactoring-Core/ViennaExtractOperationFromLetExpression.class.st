@@ -1,84 +1,61 @@
 Class {
 	#name : #ViennaExtractOperationFromLetExpression,
 	#superclass : #ViennaExtract,
+	#instVars : [
+		'freeIdentifiers'
+	],
 	#category : #'ViennaTalk-Refactoring-Core'
 }
 
 { #category : #accessing }
 ViennaExtractOperationFromLetExpression >> arguments [
-	^ ViennaNode
-		label: 'ExpressionList'
-		withAll: (ast first collect: [ :localDef | localDef first third ])
+
+	^ ViennaExpressionListNode withAll:
+		  (ast localDefinitionList collect: [ :localDef |
+			   localDef expression ])
+		  , (freeIdentifiers collect: [ :identifier |
+				   ViennaLocalNameNode identifier: identifier ])
 ]
 
 { #category : #operations }
 ViennaExtractOperationFromLetExpression >> check [
+
 	| params |
-	ast label = 'LetExpression'
-		ifFalse: [ ^ false ].
-	params := Set new: ast first size * 2.
-	ast first
-		do: [ :localDef | 
-			localDef first label = 'FunctionDefinition'
-				ifTrue: [ ^ false ].
-			localDef first first
-				allDescendantsDo: [ :node | 
-					node label = 'PatternIdentifier'
-						ifTrue: [ params add: node first ] ] ].
-	ast first
-		do: [ :localDef | 
-			localDef first third
-				allDescendantsDo: [ :node | 
-					(node label = 'LocalName' and: [ params includes: node first ])
-						ifTrue: [ ^ false ] ] ].
-	ast second
-		variableExpressionNodesDo: [ :node | 
-			node isStateVariableNameNode
-				ifFalse: [ ^ false ] ].
+	(ast notNil and: [ ast isViennaLetExpressionNode ]) ifFalse: [
+		^ false ].
+	params := ast localDefinitionList uniqueBoundIdentifiers
+		          asOrderedCollection.
+	ast localDefinitionList do: [ :localDef |
+		localDef expression allDescendantsDo: [ :node |
+			(node isViennaLocalNameNode and: [
+				 params includes: node identifier ]) ifTrue: [ ^ false ] ] ].
 	^ true
 ]
 
 { #category : #operations }
 ViennaExtractOperationFromLetExpression >> execute [
-	| moduleBody operationDefinitions explicitOperationDefinition accessOperationDefinition |
+
+	| module explicitOperationDefinition |
 	self newName ifNil: [ ^ self ].
-	moduleBody := ast module third.
-	operationDefinitions := (moduleBody
-		detect: [ :definitionBlock | 
-			definitionBlock isViennaNode
-				and: [ definitionBlock first isViennaNode
-						and: [ definitionBlock first label = 'OperationDefinitions' ] ] ]
-		ifNone: [ nil ]) ifNotNil: #first.
-	operationDefinitions
-		ifNil: [ operationDefinitions := ViennaNode label: 'OperationDefinitions'.
-			moduleBody
-				add: (ViennaNode label: 'DefinitionBlock' with: operationDefinitions) ].
-	self
-		replaceNode: ast
-		with:
-			(ViennaNode
-				label: 'Apply'
-				with: (ViennaNode label: 'LocalName' with: self newName)
-				with: self arguments).
-	explicitOperationDefinition := ViennaNode
-		label: 'ExplicitOperationDefinition'
-		withAll:
-			{self newName.
-			self operationType.
-			self newName.
-			self operationParametersList.
-			self operationBody.
-			nil.
-			nil}.
-	accessOperationDefinition := ViennaNode
-		label: 'AccessOperationDefinition'
-		with: (ViennaNode label: 'Access' with: 'pure')
-		with:
-			(ViennaNode
-				label: 'OperationDefinition'
-				with: explicitOperationDefinition).
-	operationDefinitions add: accessOperationDefinition.
-	^ accessOperationDefinition
+	module := ast module.
+	freeIdentifiers := self ast uniqueFreeIdentifiers reject: [
+		                   :identifier |
+		                   (self ast resolveIdentifier: identifier)
+			                   isViennaFieldNode ].
+	self replaceNode: ast with: (ViennaApplyNode
+			 expression: (ViennaLocalNameNode identifier: self newName)
+			 argumentExpressionList: self arguments).
+	explicitOperationDefinition := ViennaExplicitOperationDefinitionNode
+		                               access: ViennaAccessNode pure
+		                               identifier: self newName
+		                               type: self operationType
+		                               parameters:
+		                               self operationParametersList
+		                               statement: self statement
+		                               pre: nil
+		                               post: nil.
+	self addOperationDefinition: explicitOperationDefinition in: module.
+	^ explicitOperationDefinition
 ]
 
 { #category : #accessing }
@@ -109,33 +86,36 @@ ViennaExtractOperationFromLetExpression >> newName: aString [
 ]
 
 { #category : #accessing }
-ViennaExtractOperationFromLetExpression >> operationBody [
-	^ ViennaNode label: 'ReturnStatement' with: ast second
-]
-
-{ #category : #accessing }
 ViennaExtractOperationFromLetExpression >> operationParametersList [
-	^ ViennaNode
-		label: 'Parameters'
-		withAll: (ast first collect: [ :localDef | localDef first first ])
+
+	^ ViennaParametersNode withAll:
+		  (ast localDefinitionList collect: [ :localDef | localDef pattern ])
+		  , (freeIdentifiers collect: [ :identifier |
+				   ViennaPatternIdentifierNode identifier: identifier ])
 ]
 
 { #category : #'parsers-types' }
 ViennaExtractOperationFromLetExpression >> operationType [
-	^ ViennaNode
-		label: 'OperationType'
-		with:
-			((ast first
-				collect: [ :localDef | ViennaNode label: 'BasicType' with: 'any' ])
-				ifNotEmpty: [ :paramTypes | 
-					paramTypes size = 1
-						ifTrue: [ paramTypes first ]
-						ifFalse: [ ViennaNode label: 'ProductType' withAll: paramTypes ] ]
-				ifEmpty: [ ViennaNode label: 'UnitType' ])
-		with: (ViennaNode label: 'BasicType' with: 'any')
+
+	^ ViennaOperationTypeNode
+		  argumentType:
+			  ((self operationParametersList collect: [ :param |
+				    ViennaBasicTypeNode any ])
+				   ifNotEmpty: [ :paramTypes |
+					   paramTypes size = 1
+						   ifTrue: [ paramTypes first ]
+						   ifFalse: [ ViennaProductTypeNode withAll: paramTypes ] ]
+				   ifEmpty: [ ViennaUnitTypeNode new ])
+		  returnType: ViennaBasicTypeNode any
 ]
 
 { #category : #accessing }
 ViennaExtractOperationFromLetExpression >> sortingOrder [
 	^ 2.56
+]
+
+{ #category : #accessing }
+ViennaExtractOperationFromLetExpression >> statement [
+
+	^ ViennaReturnStatementNode expression: ast second
 ]

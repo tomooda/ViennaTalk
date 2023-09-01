@@ -1,0 +1,42 @@
+Class {
+	#name : #ViennaSeqConcPatternNode,
+	#superclass : #ViennaPatternNode,
+	#type : #variable,
+	#category : #'ViennaTalk-Parser-AST'
+}
+
+{ #category : #private }
+ViennaSeqConcPatternNode >> boundIdentifiersDo: aBlock [
+
+	self do: [ :pattern | pattern boundIdentifiersDo: aBlock ]
+]
+
+{ #category : #'pretty printing' }
+ViennaSeqConcPatternNode >> formatWith: aViennaAbstractFormatter [
+
+	| patterns |
+	patterns := aViennaAbstractFormatter formatAll: self.
+	^ aViennaAbstractFormatter
+		  join: ((aViennaAbstractFormatter anyNeedsIndent: patterns)
+				   ifTrue: [ String cr , aViennaAbstractFormatter concat ]
+				   ifFalse: [ aViennaAbstractFormatter concat ])
+		  withAll: patterns
+]
+
+{ #category : #private }
+ViennaSeqConcPatternNode >> freeIdentifiersExcept: aSet do: aBlock [
+
+	self do: [ :pattern | pattern freeIdentifiersExcept: aSet do: aBlock ]
+]
+
+{ #category : #testing }
+ViennaSeqConcPatternNode >> isViennaSeqConcPatternNode [
+
+	^ true
+]
+
+{ #category : #accessing }
+ViennaSeqConcPatternNode >> label [
+
+	^ 'SeqConcPattern'
+]

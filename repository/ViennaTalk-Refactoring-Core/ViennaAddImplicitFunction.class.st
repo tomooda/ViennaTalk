@@ -8,7 +8,7 @@ Class {
 ViennaAddImplicitFunction >> findContainerNode [
 
 	ast ifNil: [ ^ nil ].
-	ast label = 'FunctionDefinitions' ifTrue: [ ^ ast ].
+	ast isViennaFunctionDefinitionsNode ifTrue: [ ^ ast ].
 	^ nil
 ]
 

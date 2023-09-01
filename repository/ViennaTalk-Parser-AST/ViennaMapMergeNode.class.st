@@ -1,0 +1,36 @@
+Class {
+	#name : #ViennaMapMergeNode,
+	#superclass : #ViennaBinaryOperatorExpressionNode,
+	#type : #variable,
+	#category : #'ViennaTalk-Parser-AST'
+}
+
+{ #category : #'pretty printing' }
+ViennaMapMergeNode >> formatOperatorWith: aViennaAbstractFormatter [
+
+	^ aViennaAbstractFormatter munion
+]
+
+{ #category : #'pretty printing' }
+ViennaMapMergeNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
+
+	^ aBlock1 value
+]
+
+{ #category : #accessing }
+ViennaMapMergeNode >> isViennaMapMergeNode [
+
+	^ true
+]
+
+{ #category : #accessing }
+ViennaMapMergeNode >> label [
+
+	^ 'MapMerge'
+]
+
+{ #category : #'pretty printing' }
+ViennaMapMergeNode >> operatorPrecedence [
+
+	^ 31
+]

@@ -30,33 +30,33 @@ ViennaVDM2SmalltalkScript class >> translateStatement: aString ifError: aBlock [
 ]
 
 { #category : #'code generation-definitions' }
-ViennaVDM2SmalltalkScript >> definitionBlock: aViennaNode env: aDictionary [
-	^ '.' , String cr join: (aViennaNode collect: [ :node | self generate: node env: aDictionary ])
-]
-
-{ #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkScript >> flatDocument: aViennaNode env: aDictionary [
+
 	| vars lazyDefs eagerDefs |
-	aViennaNode first label = 'DefinitionBlock'
-		ifFalse: [ ^ self error: 'This is not a flat spec.' ].
-	vars := self boundVariables: aViennaNode.
+	aViennaNode isViennaFlatDocumentNode ifFalse: [
+		^ self error: 'This is not a flat spec.' ].
+	vars := aViennaNode uniqueBoundIdentifiers.
 	lazyDefs := OrderedCollection new.
 	eagerDefs := OrderedCollection new.
-	self
-		definitions: aViennaNode
-		do: [ :node | 
-			((#('AccessOperationDefinition' 'AccessFunctionDefinition') includes: node label)
-				ifTrue: [ lazyDefs ]
-				ifFalse: [ eagerDefs ]) add: node ].
+	self definitions: aViennaNode do: [ :node |
+		((node isViennaAccessFunctionDefinitionNode or: [
+			  node isViennaAccessOperationDefinitionNode ])
+			 ifTrue: [ lazyDefs ]
+			 ifFalse: [ eagerDefs ]) add: node ].
 	^ '| ' , (' ' join: vars) , ' |' , String cr
-		,
-			('.' , String cr
-				join: (lazyDefs , (self reorderDefinitions: eagerDefs) collect: [ :node | self generate: node env: aDictionary ]))
+	  , ('.' , String cr join:
+			   (lazyDefs , (self reorderDefinitions: eagerDefs) collect: [
+				    :node | self generate: node env: aDictionary ]))
 ]
 
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkScript >> functionDefinitions: aViennaNode env: aDictionary [
 	^ '.' , String cr join: (aViennaNode collect: [ :node | self generate: node env: aDictionary ])
+]
+
+{ #category : #'code generation-interfaces' }
+ViennaVDM2SmalltalkScript >> functionImport: aViennaNode env: aDictionary [
+
 ]
 
 { #category : #'code generation' }
@@ -69,9 +69,21 @@ ViennaVDM2SmalltalkScript >> getStateCode [
 	^ 'state value'
 ]
 
+{ #category : #'code generation-interfaces' }
+ViennaVDM2SmalltalkScript >> importDefinition: aViennaNode env: aDictionary [
+
+	
+]
+
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkScript >> modularDocument: aViennaNode env: aDictionary [
 	^ self notYetImplemented
+]
+
+{ #category : #'code generation-definitions' }
+ViennaVDM2SmalltalkScript >> module: aViennaNode env: aDictionary [
+
+	
 ]
 
 { #category : #'code generation-definitions' }
@@ -82,6 +94,12 @@ ViennaVDM2SmalltalkScript >> noCheckAssignment: aVarName be: aValString [
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkScript >> operationDefinitions: aViennaNode env: aDictionary [
 	^ '.' , String cr join: (aViennaNode collect: [ :node | self generate: node env: aDictionary ])
+]
+
+{ #category : #'code generation-interfaces' }
+ViennaVDM2SmalltalkScript >> operationImport: aViennaNode env: aDictionary [
+
+	
 ]
 
 { #category : #'code generation-definitions' }
@@ -164,8 +182,20 @@ ViennaVDM2SmalltalkScript >> typeDefinitions: aViennaNode env: aDictionary [
 		join: ((self reorderDefinitions: aViennaNode) collect: [ :node | self generate: node env: aDictionary ])
 ]
 
+{ #category : #'code generation-interfaces' }
+ViennaVDM2SmalltalkScript >> typeImport: aViennaNode env: aDictionary [
+
+	
+]
+
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkScript >> valueDefinitions: aViennaNode env: aDictionary [
 	^ '.' , String cr
 		join: ((self reorderDefinitions: aViennaNode) collect: [ :node | self generate: node env: aDictionary ])
+]
+
+{ #category : #'code generation-interfaces' }
+ViennaVDM2SmalltalkScript >> valueImport: aViennaNode env: aDictionary [
+
+	
 ]

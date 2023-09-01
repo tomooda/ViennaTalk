@@ -126,16 +126,6 @@ ViennaVDMGrammar >> accessValueDefinition [
 			   pair second } ]) ==> #second
 ]
 
-{ #category : #'parsers-expressions-threads and histories' }
-ViennaVDMGrammar >> actExpression [
-	^ ((self reserved: '#act') , lparen , (name separatedBy: comma) withoutSeparators , rparen) ==> #third
-]
-
-{ #category : #'parsers-expressions-threads and histories' }
-ViennaVDMGrammar >> activeExpression [
-	^ ((self reserved: '#active') , lparen , (name separatedBy: comma) withoutSeparators , rparen) ==> #third
-]
-
 { #category : #'parsers-keywords' }
 ViennaVDMGrammar >> all [
 	^ self reserved: 'all'
@@ -253,15 +243,20 @@ ViennaVDMGrammar >> assignmentDefinition [
 
 { #category : #'parsers-expressions' }
 ViennaVDMGrammar >> atomicExpression [
-	^ self letExpression / self letBeExpression / self defExpression / self ifExpression / self casesExpression
-		/ self quantifiedExpression / self iotaExpression / self mapEnumeration / self mapComprehension / self setEnumeration
-		/ self setComprehension / self setRangeExpression / self sequenceEnumeration / self sequenceComprehension
-		/ self tupleConstructor / self recordConstructor / self tokenConstructor / self recordModifier / self lambdaExpression
-		/ self resultExpression / self narrowExpression / self newExpression / self selfExpression / self threadidExpression
-		/ self generalIsExpr / self undefinedExpression / self preconditionExpression / self isofbaseclassExpression
-		/ self isofclassExpression / self samebaseclassExpression / self sameclassExpression / self actExpression
-		/ self finExpression / self activeExpression / self reqExpression / self waitingExpression / self timeExpression
-		/ self oldName / name / symbolicLiteral / ((lparen , expression , rparen) ==> [ :triple | triple second ])
+
+	^ self letExpression / self letBeExpression / self defExpression
+	  / self ifExpression / self casesExpression
+	  / self quantifiedExpression / self iotaExpression
+	  / self mapEnumeration / self mapComprehension / self setEnumeration
+	  / self setComprehension / self setRangeExpression
+	  / self sequenceEnumeration / self sequenceComprehension
+	  / self tupleConstructor / self recordConstructor
+	  / self tokenConstructor / self recordModifier
+	  / self lambdaExpression / self resultExpression
+	  / self generalIsExpr / self undefinedExpression
+	  / self preconditionExpression / self oldName / name
+	  / symbolicLiteral
+	  / (lparen , expression , rparen ==> [ :triple | triple second ])
 ]
 
 { #category : #'parsers-symbols' }
@@ -930,26 +925,29 @@ ViennaVDMGrammar >> exitStatement [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> explicitFunctionDefinition [
-	^ (identifier trim , self typeVariableList , colon
-		, self functionType trim , (self decl: identifier) trim
-		, self parametersList , (self operator: '==')
-		, (expression / self isSubclassResponsibility / self isNotYetSpecified)
-		, ((self pre , expression) ==> #second) optional
-		, ((self post , expression) ==> #second) optional
-		, ((self measure , expression) ==> #second) optional)
-		==> [ :array | 
-			array first = array fifth
-				ifTrue: [ {array first.
-					array second.
-					array fourth.
-					array fifth.
-					array sixth.
-					array eighth.
-					array ninth.
-					(array at: 10).
-					(array at: 11)} ]
-				ifFalse: [ PP2Failure
-						message: 'function name mismatch: ' , array first , ', ' , array fifth ] ]
+
+	^ identifier trim , self typeVariableList , colon
+	  , self functionType trim , (self decl: identifier) trim
+	  , self parametersList , (self operator: '==')
+	  , (expression / self isNotYetSpecified)
+	  , (self pre , expression ==> #second) optional
+	  , (self post , expression ==> #second) optional
+	  , (self measure , expression ==> #second) optional ==> [ :array |
+	  array first = array fifth
+		  ifTrue: [
+			  {
+				  array first.
+				  array second.
+				  array fourth.
+				  array fifth.
+				  array sixth.
+				  array eighth.
+				  array ninth.
+				  (array at: 10).
+				  (array at: 11) } ]
+		  ifFalse: [
+			  PP2Failure message:
+				  'function name mismatch: ' , array first , ', ' , array fifth ] ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -1035,22 +1033,25 @@ ViennaVDMGrammar >> ext [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> extendedExplicitFunctionDefinition [
+
 	^ identifier trim , self typeVariableList , self parameterTypes
-		, self identifierTypePairList
-		,
-			(((self operator: '==')
-				, (expression / self isSubclassResponsibility / self isNotYetSpecified)) ==> #second)
-		, ((self pre , expression) ==> #second) optional , ((self post , expression) ==> #second)
+	  , self identifierTypePairList
+	  , ((self operator: '==') , (expression / self isNotYetSpecified)
+		   ==> #second) , (self pre , expression ==> #second) optional
+	  , (self post , expression ==> #second) optional
+	  , (self measure , expression ==> #second) optional
 ]
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> extendedExplicitOperationDefinition [
+
 	^ identifier trim , self parameterTypes
-		, self identifierTypePairList optional
-		, (((self operator: '==') , self operationBody) ==> #second)
-		, self externals optional
-		, ((self pre , expression) ==> #second) optional
-		, ((self post , expression) ==> #second) , self exceptions optional
+	  , self identifierTypePairList optional
+	  , ((self operator: '==') , self operationBody ==> #second)
+	  , self externals optional
+	  , (self pre , expression ==> #second) optional
+	  , (self post , expression ==> #second) optional
+	  , self exceptions optional
 ]
 
 { #category : #'parsers-definitions' }
@@ -1066,19 +1067,6 @@ ViennaVDMGrammar >> field [
 { #category : #'parsers-types' }
 ViennaVDMGrammar >> fieldList [
 	^ self field starA
-]
-
-{ #category : #'parsers-patterns' }
-ViennaVDMGrammar >> fieldPattern [
-	^ (identifier trim , mapletArrow , pattern)
-		==> [ :triple | 
-			{(triple first).
-			(triple third)} ]
-]
-
-{ #category : #'parsers-patterns' }
-ViennaVDMGrammar >> fieldPatternList [
-	^ (self fieldPattern separatedBy: comma) withoutSeparators optional ==> [ :single | single ifNil: [ Array new ] ]
 ]
 
 { #category : #'parsers-statements' }
@@ -1099,11 +1087,6 @@ ViennaVDMGrammar >> fieldReferenceArg [
 ViennaVDMGrammar >> fieldSelect: record with: field [
 	^ {record.
 	field}
-]
-
-{ #category : #'parsers-expressions-threads and histories' }
-ViennaVDMGrammar >> finExpression [
-	^ ((self reserved: '#fin') , lparen , (name separatedBy: comma) withoutSeparators , rparen) ==> #third
 ]
 
 { #category : #'parsers-definitions' }
@@ -1276,12 +1259,6 @@ ViennaVDMGrammar >> identifier [
 			  PP2Failure message:
 				  'a keyword or prefixed word can not be an identifier' ]
 		  ifFalse: [ str ] ]
-]
-
-{ #category : #'parsers-definitions' }
-ViennaVDMGrammar >> identifierTypePair [
-	^ (identifier trim , colon , type)
-		==> [ :triple | Array with: triple first with: triple third ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -1577,27 +1554,6 @@ ViennaVDMGrammar >> isNameExpression [
 ViennaVDMGrammar >> isNotYetSpecified [
 	^ ((self reserved: 'is') , (self reserved: 'not') , (self reserved: 'yet') , (self reserved: 'specified'))
 		==> [ :array | nil ]
-]
-
-{ #category : #'parsers-definitions' }
-ViennaVDMGrammar >> isSubclassResponsibility [
-	^ ((self reserved: 'is') , (self reserved: 'subclass') , (self reserved: 'responsibility')) ==> [ :array | nil ]
-]
-
-{ #category : #'parsers-expressions-type discriminations' }
-ViennaVDMGrammar >> isofbaseclassExpression [
-	^ ((self reserved: 'isofbaseclass') , lparen , name , comma , expression , rparen)
-		==> [ :array | 
-			{(array third).
-			(array fifth)} ]
-]
-
-{ #category : #'parsers-expressions-type discriminations' }
-ViennaVDMGrammar >> isofclassExpression [
-	^ ((self reserved: 'isofclass') , lparen , name , comma , expression , rparen)
-		==> [ :array | 
-			{(array third).
-			(array fifth)} ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -2032,23 +1988,6 @@ ViennaVDMGrammar >> nameList [
 	^ (name separatedBy: comma) withoutSeparators
 ]
 
-{ #category : #'parsers-expressions-basics' }
-ViennaVDMGrammar >> narrowExpression [
-	^ ((self reserved: 'narrow_') , lparen , expression , comma , type , rparen)
-		==> [ :array | 
-			{(array third).
-			(array fifth)} ]
-]
-
-{ #category : #'parsers-expressions-basics' }
-ViennaVDMGrammar >> newExpression [
-	^ ((self reserved: 'new') , name , lparen
-		, ((expression separatedBy: comma) withoutSeparators optional ==> [ :single | single ifNil: [ Array new ] ]) , rparen)
-		==> [ :quin | 
-			{(quin second).
-			(quin fourth)} ]
-]
-
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> nondeterministicStatement [
 	^ (self doublebar , lparen , (statement separatedBy: comma) withoutSeparators , rparen) ==> #third
@@ -2081,14 +2020,6 @@ ViennaVDMGrammar >> notOp [
 	^ self reserved: 'not'
 ]
 
-{ #category : #'parsers-patterns' }
-ViennaVDMGrammar >> objectPattern [
-	^ ('obj_' asPParser , self typeIdentifier trim , lparen , self fieldPatternList , rparen)
-		==> [ :quin | 
-			{(quin second).
-			(quin fourth)} ]
-]
-
 { #category : #'parsers-keywords' }
 ViennaVDMGrammar >> of [
 	^ self reserved: 'of'
@@ -2096,12 +2027,14 @@ ViennaVDMGrammar >> of [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> oldName [
-	^ (identifier , (self operator: '~')) ==> [ :pair | pair first , pair second ]
+
+	^ identifier , (self operator: '~') ==> [ :pair | pair first ]
 ]
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> operationBody [
-	^ statement / self isSubclassResponsibility / self isNotYetSpecified
+
+	^ statement / self isNotYetSpecified
 ]
 
 { #category : #'parsers-definitions' }
@@ -2221,8 +2154,10 @@ ViennaVDMGrammar >> pattern [
 
 { #category : #'parsers-patterns' }
 ViennaVDMGrammar >> pattern1 [
-	^ self matchValue / self setEnumPattern / self seqEnumPattern / self mapEnumerationPattern / self tuplePattern / self objectPattern / self recordPattern
-		/ self patternIdentifier
+
+	^ self matchValue / self setEnumPattern / self seqEnumPattern
+	  / self mapEnumerationPattern / self tuplePattern
+	  / self recordPattern / self patternIdentifier
 ]
 
 { #category : #'parsers-patterns' }
@@ -2486,11 +2421,6 @@ ViennaVDMGrammar >> renamed [
 	^ self reserved: 'renamed'
 ]
 
-{ #category : #'parsers-expressions-threads and histories' }
-ViennaVDMGrammar >> reqExpression [
-	^ ((self reserved: '#req') , lparen , (name separatedBy: comma) withoutSeparators , rparen) ==> #third
-]
-
 { #category : #utilities }
 ViennaVDMGrammar >> reserved: aStringOrParser [
 
@@ -2537,27 +2467,6 @@ ViennaVDMGrammar >> rng: arg [
 { #category : #'parsers-symbols' }
 ViennaVDMGrammar >> rparen [
 	^ self operator: $)
-]
-
-{ #category : #'parsers-expressions-type discriminations' }
-ViennaVDMGrammar >> samebaseclassExpression [
-	^ ((self reserved: 'samebaseclass') , lparen , expression , comma , expression , rparen)
-		==> [ :array | 
-			{(array third).
-			(array fifth)} ]
-]
-
-{ #category : #'parsers-expressions-type discriminations' }
-ViennaVDMGrammar >> sameclassExpression [
-	^ ((self reserved: 'sameclass') , lparen , expression , comma , expression , rparen)
-		==> [ :array | 
-			{(array third).
-			(array fifth)} ]
-]
-
-{ #category : #'parsers-expressions-basics' }
-ViennaVDMGrammar >> selfExpression [
-	^ (self reserved: 'self') ==> [ :s |  ]
 ]
 
 { #category : #'parsers-symbols' }
@@ -2809,16 +2718,6 @@ ViennaVDMGrammar >> symbolicLiteral [
 { #category : #'parsers-keywords' }
 ViennaVDMGrammar >> then [
 	^ self reserved: 'then'
-]
-
-{ #category : #'parsers-expressions-threads and histories' }
-ViennaVDMGrammar >> threadidExpression [
-	^ self reserved: 'threadid'
-]
-
-{ #category : #'parsers-expressions-threads and histories' }
-ViennaVDMGrammar >> timeExpression [
-	^ (self reserved: 'time') ==> [ :t |  ]
 ]
 
 { #category : #'parsers-keywords' }
@@ -3125,11 +3024,6 @@ ViennaVDMGrammar >> values [
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> varInformation [
 	^ self mode , nameList , ((colon , type) ==> #second) optional
-]
-
-{ #category : #'parsers-expressions-threads and histories' }
-ViennaVDMGrammar >> waitingExpression [
-	^ ((self reserved: '#waiting') , lparen , (name separatedBy: comma) withoutSeparators , rparen) ==> #third
 ]
 
 { #category : #'parsers-keywords' }

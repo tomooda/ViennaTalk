@@ -6,14 +6,13 @@ Class {
 
 { #category : #operations }
 ViennaExtractLocalDefinitionFromExpressionInLet >> check [
+
 	ast ifNil: [ ^ false ].
-	ast isExpressionNode
-		ifFalse: [ ^ false ].
+	ast isViennaExpressionNode ifFalse: [ ^ false ].
 	self definitionNode ifNil: [ ^ false ].
-	(ast label = 'LocalName'
-		and: [ (ast definitionOfLocalName: ast first)
-				includesParent: self definitionNode ])
-		ifTrue: [ ^ false ].
+	ast uniqueFreeIdentifiersDo: [ :identifier |
+		(self definitionNode localDefinitionList bindsIdentifier: identifier)
+			ifTrue: [ ^ false ] ].
 	^ true
 ]
 
@@ -24,25 +23,19 @@ ViennaExtractLocalDefinitionFromExpressionInLet >> executeCallers [
 
 { #category : #operations }
 ViennaExtractLocalDefinitionFromExpressionInLet >> executeDefinition [
+
 	self newName ifNil: [ ^ nil ].
-	self definitionNode first
-		add:
-			(ViennaNode
-				label: 'LocalDefinition'
-				with:
-					(ViennaNode
-						label: 'ValueDefinition'
-						with: (ViennaNode label: 'PatternIdentifier' with: self newName)
-						with: nil
-						with: ast)).
+	self definitionNode first add: (ViennaValueDefinitionNode
+			 pattern: (ViennaPatternIdentifierNode identifier: self newName)
+			 type: nil
+			 expression: ast).
 	^ self definitionNode
 ]
 
 { #category : #accessing }
 ViennaExtractLocalDefinitionFromExpressionInLet >> findDefinitionNode [
-	^ ast parent
-		parentLabelled: 'LetExpression'
-		ifAbsent: [ ast parent parentLabelled: 'LetStatement' ifAbsent: [ nil ] ]
+
+	^ ast detectParent: #isViennaLetNode ifNone: [ nil ]
 ]
 
 { #category : #accessing }
