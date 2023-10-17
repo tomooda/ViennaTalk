@@ -1475,26 +1475,21 @@ ViennaBrowser >> runAllTests [
 	               self changed: #testList.
 	               ast := ViennaVDMParser new parse:
 		                      animation specification.
-	               ast := ViennaVDMParser new parse:
-		                      animation specification.
 	               (ast isPetit2Success and: [ ast notEmpty ]) ifTrue: [
-		               (ast at: 1) isViennaModuleNode
-			               ifTrue: [
-				               ast modulesDo: [ :module |
-					               (module identifier endsWith: 'Test') ifTrue: [
-						               module sectionsDo: [ :section |
-							               section isViennaOperationDefinitionsNode
-								               ifTrue: [
-									               section do: [ :operation |
-										               | operationName |
-										               operationName := operation identifier.
-										               (operationName size > 4 and: [
-											                (operationName copyFrom: 1 to: 4) = 'test' ])
-											               ifTrue: [
-											               self
-												               runTestModule: module identifier
-												               operation: operationName ] ] ] ] ] ] ]
-			               ifFalse: [  ] ].
+		               (ast at: 1) isViennaModuleNode ifTrue: [
+			               ast modulesDo: [ :module |
+				               (module identifier endsWith: 'Test') ifTrue: [
+					               module sectionsDo: [ :section |
+						               section isViennaOperationDefinitionsNode ifTrue: [
+							               section do: [ :operation |
+								               | operationName |
+								               operationName := operation identifier.
+								               (operationName size > 4 and: [
+									                (operationName copyFrom: 1 to: 4) = 'test' ])
+									               ifTrue: [
+									               self
+										               runTestModule: module identifier
+										               operation: operationName ] ] ] ] ] ] ] ].
 	               testProcess := nil.
 	               self updateTestLabelIcon ] forkAt:
 		               Processor userBackgroundPriority
@@ -1523,22 +1518,20 @@ ViennaBrowser >> runTestModule: aString [
 	               ast := ViennaVDMParser new parse:
 		                      animation specification.
 	               (ast isPetit2Success and: [ ast notEmpty ]) ifTrue: [
-		               (ast at: 1) isViennaModuleNode
-			               ifTrue: [
-				               (ast moduleNamed: testModuleName) ifNotNil: [
-					               :module |
-					               module sectionsDo: [ :section |
-						               section isViennaOperationDefinitionsNode ifTrue: [
-							               section do: [ :operation |
-								               | operationName |
-								               operationName := operation identifier.
-								               (operationName size > 4 and: [
-									                (operationName copyFrom: 1 to: 4) = 'test' ])
-									               ifTrue: [
-									               self
-										               runTestModule: module identifier
-										               operation: operationName ] ] ] ] ] ]
-			               ifFalse: [  ] ].
+		               (ast at: 1) isViennaModuleNode ifTrue: [
+			               (ast moduleNamed: testModuleName) ifNotNil: [
+				               :module |
+				               module sectionsDo: [ :section |
+					               section isViennaOperationDefinitionsNode ifTrue: [
+						               section do: [ :operation |
+							               | operationName |
+							               operationName := operation identifier.
+							               (operationName size > 4 and: [
+								                (operationName copyFrom: 1 to: 4) = 'test' ])
+								               ifTrue: [
+								               self
+									               runTestModule: module identifier
+									               operation: operationName ] ] ] ] ] ] ].
 	               testProcess := nil.
 	               self updateTestLabelIcon ] forkAt:
 		               Processor userBackgroundPriority
