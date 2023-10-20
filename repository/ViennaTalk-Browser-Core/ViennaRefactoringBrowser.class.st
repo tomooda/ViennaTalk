@@ -1197,30 +1197,31 @@ ViennaRefactoringBrowser >> runAllTests [
 		                            specification:
 			                            (ViennaVDMFormatter format: ast);
 		                            yourself.
-	               (ast at: 1) isViennaModuleNode
-		               ifTrue: [
-			               ast do: [ :moduleNode |
-				               | moduleName |
-				               moduleName := moduleNode first.
-				               (moduleName endsWith: 'Test') ifTrue: [
-					               moduleNode third do: [ :definitionBlockNode |
-						               definitionBlockNode first
-							               isViennaOperationDefinitionsNode ifTrue: [
-							               definitionBlockNode first do: [
-								               :accessOperationDefinitionNode |
-								               | operationName |
-								               operationName := accessOperationDefinitionNode
-									                                second first first.
-								               (operationName size > 4 and: [
-									                (operationName copyFrom: 1 to: 4) = 'test' ])
+	               (ast at: 1) isViennaModuleNode ifTrue: [
+		               ast do: [ :moduleNode |
+			               | moduleName |
+			               moduleName := moduleNode identifier.
+			               (moduleName endsWith: 'Test') ifTrue: [
+				               moduleNode sectionsDo: [ :section |
+					               section isViennaOperationDefinitionsNode
+						               ifTrue: [
+							               section toplevelDefinitionsDo: [
+								               :operationDefinition |
+								               operationDefinition
+									               isViennaExplicitOperationDefinitionNode
 									               ifTrue: [
-										               testResultTable items:
-											               (testResultTable model items copyWith:
-												                (self
-													                 runTestModule: moduleName
-													                 operation: operationName
-													                 animation: animation)) ] ] ] ] ] ] ]
-		               ifFalse: [  ].
+										               | operationName |
+										               operationName := operationDefinition
+											                                identifier.
+										               (operationName size > 4 and: [
+											                (operationName copyFrom: 1 to: 4) = 'test' ])
+											               ifTrue: [
+												               testResultTable items:
+													               (testResultTable model items copyWith:
+														                (self
+															                 runTestModule: moduleName
+															                 operation: operationName
+															                 animation: animation)) ] ] ] ] ] ] ] ].
 	               testProcess := nil ] forkAt:
 		               Processor userBackgroundPriority
 ]
