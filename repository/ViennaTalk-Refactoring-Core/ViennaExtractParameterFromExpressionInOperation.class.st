@@ -52,7 +52,7 @@ ViennaExtractParameterFromExpressionInOperation >> name [
 	  , 'from ' asText
 	  , (self shortDescription: ast source) asText allBold
 	  , ' in operation ' asText
-	  , self definitionNode first asText allBold
+	  , self definitionNode identifier asText allBold
 ]
 
 { #category : #accessing }

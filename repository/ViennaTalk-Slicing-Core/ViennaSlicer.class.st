@@ -230,7 +230,7 @@ ViennaSlicer >> printOn: aStream [
 { #category : #operations }
 ViennaSlicer >> read: aViennaNode [
 
-	reads add: (aViennaNode resolve ifNil: [ self halt ])
+	reads add: aViennaNode resolve
 ]
 
 { #category : #private }
@@ -250,7 +250,7 @@ ViennaSlicer >> slice [
 { #category : #operations }
 ViennaSlicer >> write: aViennaNode [
 
-	writes add: (aViennaNode resolve ifNil: [ self halt ])
+	writes add: aViennaNode resolve
 ]
 
 { #category : #private }
