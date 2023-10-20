@@ -663,25 +663,16 @@ ViennaRefactoringBrowser >> definitionListContextMenu [
 { #category : #private }
 ViennaRefactoringBrowser >> definitionsFromCategory: aViennaNode [
 
-	aViennaNode isViennaNode ifTrue: [
-		aViennaNode isViennaModuleNode ifTrue: [
-			^ ((self module
-				    ifNotNil: [ :ast |
-					    (ast
-						     detect: [ :node |
-						     node isViennaNode and: [ node isViennaModuleBodyNode ] ]
-						     ifNone: [  ])
-						    ifNotNil: [ :body | body collect: [ :node | node first ] ]
-						    ifNil: [ Array new ] ]
-				    ifNil: [ Array new ]) collect: [ :def |
-				   self definitionsFromCategory: def ])
-				  inject: #(  )
-				  into: [ :array :each | array , each ] ].
-		aViennaNode isViennaImportModuleSignatureAllNode ifTrue: [
-			^ Array with: aViennaNode second ].
-		aViennaNode isViennaStateDefinitionNode ifTrue: [ ^ Array new ].
-		^ aViennaNode asArray ].
-	^ Array new
+	^ aViennaNode isViennaNode
+		  ifTrue: [
+			  (aViennaNode isViennaModuleNode or: [
+				   aViennaNode isViennaSectionNode ])
+				  ifTrue: [
+					  Array streamContents: [ :stream |
+						  aViennaNode toplevelDefinitionsDo: [ :node |
+							  stream nextPut: node ] ] ]
+				  ifFalse: [ Array new ] ]
+		  ifFalse: [ Array new ]
 ]
 
 { #category : #private }
@@ -1098,22 +1089,6 @@ ViennaRefactoringBrowser >> model: aViennaNode comment: aString with: anIdentity
 ]
 
 { #category : #accessing }
-ViennaRefactoringBrowser >> model: aViennaNode with: anIdentityDictionary [
-	| module category definition |
-	module := self module.
-	category := self category.
-	definition := self definition.
-	self model: aViennaNode.
-	self updateModuleList.
-	moduleList
-		selectItem: (anIdentityDictionary at: module ifAbsent: [ nil ]).
-	categoryList
-		selectItem: (anIdentityDictionary at: category ifAbsent: [ nil ]).
-	definitionList
-		selectItem: (anIdentityDictionary at: definition ifAbsent: [ nil ])
-]
-
-{ #category : #accessing }
 ViennaRefactoringBrowser >> modelChanged [
 	self updateModuleList
 ]
@@ -1222,30 +1197,31 @@ ViennaRefactoringBrowser >> runAllTests [
 		                            specification:
 			                            (ViennaVDMFormatter format: ast);
 		                            yourself.
-	               (ast at: 1) isViennaModuleNode
-		               ifTrue: [
-			               ast do: [ :moduleNode |
-				               | moduleName |
-				               moduleName := moduleNode first.
-				               (moduleName endsWith: 'Test') ifTrue: [
-					               moduleNode third do: [ :definitionBlockNode |
-						               definitionBlockNode first
-							               isViennaOperationDefinitionsNode ifTrue: [
-							               definitionBlockNode first do: [
-								               :accessOperationDefinitionNode |
-								               | operationName |
-								               operationName := accessOperationDefinitionNode
-									                                second first first.
-								               (operationName size > 4 and: [
-									                (operationName copyFrom: 1 to: 4) = 'test' ])
+	               (ast at: 1) isViennaModuleNode ifTrue: [
+		               ast do: [ :moduleNode |
+			               | moduleName |
+			               moduleName := moduleNode identifier.
+			               (moduleName endsWith: 'Test') ifTrue: [
+				               moduleNode sectionsDo: [ :section |
+					               section isViennaOperationDefinitionsNode
+						               ifTrue: [
+							               section toplevelDefinitionsDo: [
+								               :operationDefinition |
+								               operationDefinition
+									               isViennaExplicitOperationDefinitionNode
 									               ifTrue: [
-										               testResultTable items:
-											               (testResultTable model items copyWith:
-												                (self
-													                 runTestModule: moduleName
-													                 operation: operationName
-													                 animation: animation)) ] ] ] ] ] ] ]
-		               ifFalse: [  ].
+										               | operationName |
+										               operationName := operationDefinition
+											                                identifier.
+										               (operationName size > 4 and: [
+											                (operationName copyFrom: 1 to: 4) = 'test' ])
+											               ifTrue: [
+												               testResultTable items:
+													               (testResultTable model items copyWith:
+														                (self
+															                 runTestModule: moduleName
+															                 operation: operationName
+															                 animation: animation)) ] ] ] ] ] ] ] ].
 	               testProcess := nil ] forkAt:
 		               Processor userBackgroundPriority
 ]

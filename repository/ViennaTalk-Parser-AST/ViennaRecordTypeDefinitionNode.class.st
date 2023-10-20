@@ -93,7 +93,7 @@ ViennaRecordTypeDefinitionNode >> formatWith: aViennaAbstractFormatter [
 		             ifNotNil: [
 			             String cr , aViennaAbstractFormatter indent
 			             , (aViennaAbstractFormatter indentString:
-					              (aViennaAbstractFormatter format: self third)) ]
+					              (aViennaAbstractFormatter format: self inv)) ]
 		             ifNil: [ '' ].
 	^ access , identifier , ' ::'
 	  , ((aViennaAbstractFormatter needsIndent: identifier , fieldList)

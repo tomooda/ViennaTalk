@@ -1475,29 +1475,21 @@ ViennaBrowser >> runAllTests [
 	               self changed: #testList.
 	               ast := ViennaVDMParser new parse:
 		                      animation specification.
-	               ast isPetit2Failure ifTrue: [ ^ nil ].
-	               ast isEmpty ifTrue: [ ^ self ].
-	               (ast at: 1) isViennaModuleNode
-		               ifTrue: [
-			               ast do: [ :moduleNode |
-				               | moduleName |
-				               moduleName := moduleNode first.
-				               (moduleName endsWith: 'Test') ifTrue: [
-					               moduleNode third do: [ :definitionBlockNode |
-						               definitionBlockNode first
-							               isViennaOperationDefinitionsNode ifTrue: [
-							               definitionBlockNode first do: [
-								               :accessOperationDefinitionNode |
+	               (ast isPetit2Success and: [ ast notEmpty ]) ifTrue: [
+		               (ast at: 1) isViennaModuleNode ifTrue: [
+			               ast modulesDo: [ :module |
+				               (module identifier endsWith: 'Test') ifTrue: [
+					               module sectionsDo: [ :section |
+						               section isViennaOperationDefinitionsNode ifTrue: [
+							               section do: [ :operation |
 								               | operationName |
-								               operationName := accessOperationDefinitionNode
-									                                second first first.
+								               operationName := operation identifier.
 								               (operationName size > 4 and: [
 									                (operationName copyFrom: 1 to: 4) = 'test' ])
 									               ifTrue: [
 									               self
-										               runTestModule: moduleName
-										               operation: operationName ] ] ] ] ] ] ]
-		               ifFalse: [  ].
+										               runTestModule: module identifier
+										               operation: operationName ] ] ] ] ] ] ] ].
 	               testProcess := nil.
 	               self updateTestLabelIcon ] forkAt:
 		               Processor userBackgroundPriority
@@ -1525,29 +1517,21 @@ ViennaBrowser >> runTestModule: aString [
 	               self changed: #testList.
 	               ast := ViennaVDMParser new parse:
 		                      animation specification.
-	               ast isPetit2Failure ifTrue: [ ^ nil ].
-	               ast isEmpty ifTrue: [ ^ self ].
-	               (ast at: 1) isViennaModuleNode
-		               ifTrue: [
-			               ast do: [ :moduleNode |
-				               | moduleName |
-				               moduleName := moduleNode first.
-				               moduleName = testModuleName ifTrue: [
-					               moduleNode third do: [ :definitionBlockNode |
-						               definitionBlockNode first
-							               isViennaOperationDefinitionsNode ifTrue: [
-							               definitionBlockNode first do: [
-								               :accessOperationDefinitionNode |
-								               | operationName |
-								               operationName := accessOperationDefinitionNode
-									                                second first first.
-								               (operationName size > 4 and: [
-									                (operationName copyFrom: 1 to: 4) = 'test' ])
-									               ifTrue: [
-									               self
-										               runTestModule: moduleName
-										               operation: operationName ] ] ] ] ] ] ]
-		               ifFalse: [  ].
+	               (ast isPetit2Success and: [ ast notEmpty ]) ifTrue: [
+		               (ast at: 1) isViennaModuleNode ifTrue: [
+			               (ast moduleNamed: testModuleName) ifNotNil: [
+				               :module |
+				               module sectionsDo: [ :section |
+					               section isViennaOperationDefinitionsNode ifTrue: [
+						               section do: [ :operation |
+							               | operationName |
+							               operationName := operation identifier.
+							               (operationName size > 4 and: [
+								                (operationName copyFrom: 1 to: 4) = 'test' ])
+								               ifTrue: [
+								               self
+									               runTestModule: module identifier
+									               operation: operationName ] ] ] ] ] ] ].
 	               testProcess := nil.
 	               self updateTestLabelIcon ] forkAt:
 		               Processor userBackgroundPriority

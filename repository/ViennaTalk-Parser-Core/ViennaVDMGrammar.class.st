@@ -452,10 +452,8 @@ ViennaVDMGrammar >> comma [
 { #category : #'parsers-comments' }
 ViennaVDMGrammar >> comment [
 
-	^ (#space asPParser star
-	   , (self singleLineAnnotation / self multiLineComment
-		    / self singleLineComment)) flatten , #space asPParser star
-	  ==> #first
+	^ self singleLineAnnotation / self multiLineComment
+	  / self singleLineComment
 ]
 
 { #category : #'parsers-symbols' }
@@ -620,7 +618,8 @@ ViennaVDMGrammar >> do [
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> document [
 
-	^ self moduledDocument / self flatDocument , comment starA ==> #first
+	^ comment trim star , (self moduledDocument / self flatDocument)
+	  , comment trim star ==> #second
 ]
 
 { #category : #'parsers-symbols' }
@@ -1250,15 +1249,18 @@ ViennaVDMGrammar >> identifiedField [
 { #category : #accessing }
 ViennaVDMGrammar >> identifier [
 
-	^ (self initialLetter , followingLetter starA) flatten ==> [ :str | 
-	  ((self prefixes anySatisfy: [ :p | 
-		    str size >= p size and: [ 
-			    (1 to: p size) allSatisfy: [ :i | (str at: i) = (p at: i) ] ] ]) 
-		   or: [ self keywords includes: str ])
-		  ifTrue: [ 
-			  PP2Failure message:
-				  'a keyword or prefixed word can not be an identifier' ]
-		  ifFalse: [ str ] ]
+	^ comment trim star
+	  ,
+		  ((self initialLetter , followingLetter starA) flatten
+		   ==> [ :str |
+			   ((self prefixes anySatisfy: [ :p |
+				     str size >= p size and: [
+					     (1 to: p size) allSatisfy: [ :i | (str at: i) = (p at: i) ] ] ])
+				    or: [ self keywords includes: str ])
+				   ifTrue: [
+					   PP2Failure message:
+						   'a keyword or prefixed word can not be an identifier' ]
+				   ifFalse: [ str ] ]) , comment trim star ==> #second
 ]
 
 { #category : #'parsers-definitions' }
@@ -2083,8 +2085,8 @@ ViennaVDMGrammar >> operations [
 { #category : #utilities }
 ViennaVDMGrammar >> operator: aStringOrCharacterOrParser [
 
-	^ comment star , aStringOrCharacterOrParser asPParser trim
-	  ==> #second
+	^ comment trim star , aStringOrCharacterOrParser asPParser trim
+	  , comment trim star ==> #second
 ]
 
 { #category : #'parsers-patterns' }
@@ -2424,9 +2426,9 @@ ViennaVDMGrammar >> renamed [
 { #category : #utilities }
 ViennaVDMGrammar >> reserved: aStringOrParser [
 
-	^ comment star
+	^ comment trim star
 	  , (aStringOrParser asPParser , followingLetter not) trim
-	  ==> [ :triple | triple second first ]
+	  , comment trim star ==> [ :triple | triple second first ]
 ]
 
 { #category : #'parsers-expressions-basics' }

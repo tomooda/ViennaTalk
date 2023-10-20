@@ -65,3 +65,9 @@ ViennaSectionNode >> shortName [
 
 	^ self sectionName
 ]
+
+{ #category : #enumerating }
+ViennaSectionNode >> toplevelDefinitionsDo: aBlock [
+
+	self do: aBlock
+]

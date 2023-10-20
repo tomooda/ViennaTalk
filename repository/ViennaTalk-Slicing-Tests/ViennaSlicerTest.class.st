@@ -1,5 +1,5 @@
 Class {
-	#name : #ViennaIntraOperationSlicerTest,
+	#name : #ViennaSlicerTest,
 	#superclass : #TestCase,
 	#instVars : [
 		'spec',
@@ -17,7 +17,7 @@ Class {
 }
 
 { #category : #tests }
-ViennaIntraOperationSlicerTest >> setUp [
+ViennaSlicerTest >> setUp [
 
 	spec := '
 module A
@@ -60,7 +60,7 @@ end A' asViennaDocumentAst.
 ]
 
 { #category : #tests }
-ViennaIntraOperationSlicerTest >> testAgenda [
+ViennaSlicerTest >> testAgenda [
 
 	| names |
 	names := {
@@ -71,7 +71,7 @@ ViennaIntraOperationSlicerTest >> testAgenda [
 ]
 
 { #category : #tests }
-ViennaIntraOperationSlicerTest >> testBranch [
+ViennaSlicerTest >> testBranch [
 
 	slicer addCriterion: x.
 	slicer onNode: skip1 do: [  ].
@@ -93,7 +93,7 @@ ViennaIntraOperationSlicerTest >> testBranch [
 ]
 
 { #category : #tests }
-ViennaIntraOperationSlicerTest >> testCall [
+ViennaSlicerTest >> testCall [
 
 	slicer operation: op2.
 	slicer criteria: { x }.
@@ -104,7 +104,7 @@ ViennaIntraOperationSlicerTest >> testCall [
 ]
 
 { #category : #tests }
-ViennaIntraOperationSlicerTest >> testContinue [
+ViennaSlicerTest >> testContinue [
 
 	slicer criteria: { x }.
 	slicer read: y.
@@ -122,7 +122,7 @@ ViennaIntraOperationSlicerTest >> testContinue [
 ]
 
 { #category : #tests }
-ViennaIntraOperationSlicerTest >> testCriteria [
+ViennaSlicerTest >> testCriteria [
 
 	| names |
 	names := {
@@ -133,7 +133,7 @@ ViennaIntraOperationSlicerTest >> testCriteria [
 ]
 
 { #category : #tests }
-ViennaIntraOperationSlicerTest >> testCut [
+ViennaSlicerTest >> testCut [
 
 	op statement: 'if z = 0 then op2() else x := y' asViennaStatementAst.
 	op2 statement: 'if z <> 0 then op() else y := z' asViennaStatementAst.
@@ -147,7 +147,7 @@ ViennaIntraOperationSlicerTest >> testCut [
 ]
 
 { #category : #tests }
-ViennaIntraOperationSlicerTest >> testPostCopy [
+ViennaSlicerTest >> testPostCopy [
 
 	| copy |
 	slicer
@@ -179,7 +179,7 @@ ViennaIntraOperationSlicerTest >> testPostCopy [
 ]
 
 { #category : #tests }
-ViennaIntraOperationSlicerTest >> testRead [
+ViennaSlicerTest >> testRead [
 
 	| let a block b |
 	slicer read: x.
@@ -199,7 +199,7 @@ ViennaIntraOperationSlicerTest >> testRead [
 ]
 
 { #category : #tests }
-ViennaIntraOperationSlicerTest >> testSlice [
+ViennaSlicerTest >> testSlice [
 
 	op statement:
 		'if z = 0 then (z := y; op2()) else x := y' asViennaStatementAst.
@@ -214,7 +214,7 @@ ViennaIntraOperationSlicerTest >> testSlice [
 ]
 
 { #category : #tests }
-ViennaIntraOperationSlicerTest >> testWrite [
+ViennaSlicerTest >> testWrite [
 
 	| let a block b |
 	slicer write: x.
