@@ -5,6 +5,6 @@ ViennaNameNode >> sliceWith: aViennaSlicer [
 
 	| resolved |
 	resolved := self resolve.
-	resolved isFunctionDefinition ifTrue: [
-		resolved sliceWith: aViennaSlicer ]
+	(resolved isFunctionDefinition or: [ resolved isValueDefinition ])
+		ifTrue: [ resolved sliceWith: aViennaSlicer ]
 ]

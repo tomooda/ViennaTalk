@@ -29,5 +29,6 @@ ViennaRemove >> findDefinitionNode [
 
 { #category : #accessing }
 ViennaRemove >> name [
-	^ 'Remove ' , self definitionNode name asText allBold
+
+	^ 'Remove ' , self definitionNode identifier asText allBold
 ]

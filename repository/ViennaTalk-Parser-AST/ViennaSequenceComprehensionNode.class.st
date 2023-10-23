@@ -69,9 +69,8 @@ ViennaSequenceComprehensionNode >> freeIdentifiersExcept: aSet do: aBlock [
 	| newBoundIdentifiers |
 	self setSeqBind freeIdentifiersExcept: aSet do: aBlock.
 	newBoundIdentifiers := aSet , self setSeqBind uniqueBoundIdentifiers.
-	self suchthatExpression
-		freeIdentifiersExcept: newBoundIdentifiers
-		do: aBlock.
+	self suchthatExpression ifNotNil: [ :exp |
+		exp freeIdentifiersExcept: newBoundIdentifiers do: aBlock ].
 	self expression freeIdentifiersExcept: newBoundIdentifiers do: aBlock
 ]
 

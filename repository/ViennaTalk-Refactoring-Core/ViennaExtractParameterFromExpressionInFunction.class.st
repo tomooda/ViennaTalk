@@ -48,7 +48,8 @@ ViennaExtractParameterFromExpressionInFunction >> name [
 	  , (newName ifNil: [ '' ] ifNotNil: [ newName , ' ' ])
 	  , 'from ' asText
 	  , (self shortDescription: ast source) asText allBold
-	  , ' in function ' asText , self definitionNode first asText allBold
+	  , ' in function ' asText
+	  , self definitionNode identifier asText allBold
 ]
 
 { #category : #accessing }

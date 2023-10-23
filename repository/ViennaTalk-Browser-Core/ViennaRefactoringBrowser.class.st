@@ -538,6 +538,19 @@ ViennaRefactoringBrowser >> addRecordType [
 		self append: ast to: self category ]
 ]
 
+{ #category : #menus }
+ViennaRefactoringBrowser >> addRefactoringMenuGroupOn: aViennaNode to: aMenuPresenter with: aBlock [
+
+	aMenuPresenter addGroup: [ :group |
+		(ViennaRefactoring sortedInstancesOn: aViennaNode) do: [
+			:refactoring |
+			group addItem: [ :item |
+				item
+					name: refactoring name;
+					action: [ self executeRefactoring: refactoring ] ] ].
+		aBlock cull: group ]
+]
+
 { #category : #operations }
 ViennaRefactoringBrowser >> addTypeAlias [
 
@@ -1283,6 +1296,37 @@ ViennaRefactoringBrowser >> runTestModule: module operation: operation animation
 		message: 'OK'
 ]
 
+{ #category : #operations }
+ViennaRefactoringBrowser >> slice: aViennaNode [
+
+	(aViennaNode
+		 detectParent: #isViennaOperationDefinitionNode
+		 ifNone: [ nil ]) ifNotNil: [ :operation |
+		| slicer |
+		slicer := ViennaSlicer
+			          operation: operation
+			          criteria: { aViennaNode }
+			          startNode: aViennaNode.
+		slicer slice ifNotEmpty: [ :nodes |
+			| source text gray from to |
+			source := sourceText text string asViennaTracingString.
+			sourceText withAdapterDo: [ :a |
+				a widgetDo: [ :w | text := w text ] ].
+			gray := Color gray: 0.9.
+			from := 1.
+			(nodes asSortedCollection: [ :less :more |
+				 less start <= more start ]) do: [ :node |
+				(source intervalForSource: node) key ifNotEmpty: [ :interval |
+					to := interval first - 1.
+					text makeColor: gray from: from to: to.
+					text
+						addAttribute: TextEmphasis bold
+						from: interval first
+						to: interval last.
+					from := interval last + 1 ] ].
+			text makeColor: gray from: from to: text size ] ]
+]
+
 { #category : #accessing }
 ViennaRefactoringBrowser >> source [
 	^ self specification
@@ -1292,21 +1336,20 @@ ViennaRefactoringBrowser >> source [
 
 { #category : #menus }
 ViennaRefactoringBrowser >> sourceTextContextMenu [
+
 	| menu |
 	menu := self newMenu.
 	(sourceText text string asViennaTracingString
-		nodeContaining: sourceText selectionInterval
-		ifAbsent: [ nil ])
-		ifNotNil: [ :node | 
-			menu
-				addGroup: [ :group | 
-					(ViennaRefactoring sortedInstancesOn: node)
-						do: [ :refactoring | 
-							group
-								addItem: [ :item | 
-									item
-										name: refactoring name;
-										action: [ self executeRefactoring: refactoring ] ] ] ] ].
+		 nodeContaining: sourceText selectionInterval
+		 ifAbsent: [ nil ]) ifNotNil: [ :node |
+		self addRefactoringMenuGroupOn: node to: menu with: [ :group |  ].
+		(node detectParent: #isViennaOperationDefinitionNode ifNone: [ nil ])
+			ifNotNil: [
+				menu addGroup: [ :group |
+					group addItem: [ :item |
+						item
+							name: 'Slice';
+							action: [ self slice: node ] ] ] ] ].
 	^ menu
 ]
 

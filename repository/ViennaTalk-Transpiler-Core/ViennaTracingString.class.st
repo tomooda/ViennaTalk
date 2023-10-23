@@ -54,6 +54,12 @@ ViennaTracingString >> = anObject [
 ]
 
 { #category : #converting }
+ViennaTracingString >> asByteArray [
+
+	^ string asByteArray
+]
+
+{ #category : #converting }
 ViennaTracingString >> asString [
 	^ string
 ]
@@ -130,11 +136,10 @@ ViennaTracingString >> initialize [
 
 { #category : #accessing }
 ViennaTracingString >> intervalForSource: anObject [
-	sources
-		do: [ :assoc | 
-			assoc value = anObject
-				ifTrue: [ ^ assoc key ] ].
-	^ 0 to: -1
+
+	^ sources
+		  detect: [ :assoc | assoc value == anObject ]
+		  ifNone: [ (0 to: -1) -> anObject ]
 ]
 
 { #category : #testing }

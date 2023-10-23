@@ -38,9 +38,10 @@ ViennaConvertExplicitFunctionIntoOperation >> execute [
 
 { #category : #accessing }
 ViennaConvertExplicitFunctionIntoOperation >> name [
+
 	^ 'Convert ' asText
-		, (self shortDescription: ast second first first) asText allBold
-		, ' into a pure operation' asText
+	  , (self shortDescription: ast identifier) asText allBold
+	  , ' into a pure operation' asText
 ]
 
 { #category : #accessing }

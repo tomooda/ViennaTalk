@@ -258,7 +258,10 @@ ViennaSlicer >> slice [
 
 	self cut.
 	self interOperationSlicer finishAgenda.
-	^ affectingNodes
+	^ affectingNodes select: [ :node |
+		  (node
+			   detectParent: [ :parent | affectingNodes includes: parent ]
+			   ifNone: [ nil ]) isNil ]
 ]
 
 { #category : #accessing }

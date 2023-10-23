@@ -241,6 +241,12 @@ ViennaImplicitOperationDefinitionNode >> isViennaImplicitOperationDefinitionNode
 ]
 
 { #category : #testing }
+ViennaImplicitOperationDefinitionNode >> isViennaOperationDefinitionNode [
+
+	^ true
+]
+
+{ #category : #testing }
 ViennaImplicitOperationDefinitionNode >> isViennaOperationDefinitionNode: aString [
 
 	^ self identifier = aString

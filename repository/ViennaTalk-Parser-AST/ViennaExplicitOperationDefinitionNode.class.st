@@ -201,6 +201,12 @@ ViennaExplicitOperationDefinitionNode >> isViennaExportableTopLevelDefinitionNod
 ]
 
 { #category : #testing }
+ViennaExplicitOperationDefinitionNode >> isViennaOperationDefinitionNode [
+
+	^ true
+]
+
+{ #category : #testing }
 ViennaExplicitOperationDefinitionNode >> isViennaOperationDefinitionNode: aString [
 
 	^ self identifier = aString

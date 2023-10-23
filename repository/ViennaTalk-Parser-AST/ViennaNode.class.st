@@ -46,7 +46,7 @@ ViennaNode class >> withAll: anArrayOfViennaNode [
 ViennaNode >> = aViennaNode [
 
 	self class = aViennaNode class ifFalse: [ ^ false ].
-	self size = aViennaNode size.
+	self size = aViennaNode size ifFalse: [ ^ false ].
 	1 to: self size do: [ :index |
 		(self at: index) = (aViennaNode at: index) ifFalse: [ ^ false ] ].
 	^ true

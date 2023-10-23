@@ -50,12 +50,12 @@ ViennaSplitLet >> findDefinitionNode [
 { #category : #accessing }
 ViennaSplitLet >> findNewHeadLocalDefinitionIndex [
 
-	1 to: (self definitionNode ifNil: [ ^ nil ]) localDefinitionList size
+	1 to: (self definitionNode ifNil: [ ^ 0 ]) localDefinitionList size
 		do: [ :index |
 			(ast includesParent:
 				 (self definitionNode localDefinitionList at: index)) ifTrue: [
 				^ index ] ].
-	^ nil
+	^ 0
 ]
 
 { #category : #accessing }

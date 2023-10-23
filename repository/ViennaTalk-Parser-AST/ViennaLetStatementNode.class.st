@@ -115,6 +115,12 @@ ViennaLetStatementNode >> localDefinitionList: aViennaLocalDefinitionListNode [
 	self at: 1 put: aViennaLocalDefinitionListNode
 ]
 
+{ #category : #enumerating }
+ViennaLetStatementNode >> localDefinitionsDo: aBlock [
+
+	self localDefinitionList do: aBlock
+]
+
 { #category : #'accessing-definitions' }
 ViennaLetStatementNode >> lookupIdentifier: aString [
 

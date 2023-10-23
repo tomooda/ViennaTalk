@@ -102,13 +102,17 @@ ViennaInlineApplyFunctionAndRemove >> findDefinitionNode [
 
 { #category : #accessing }
 ViennaInlineApplyFunctionAndRemove >> name [
+
 	^ (self
-		hasFreeOccurrencesOf: self definitionNode name
-		in: self definitionNode module)
-		ifTrue: [ 'Inline '
-				, (self shortDescription: self definitionNode name) asText allBold
-				, ' and Remove' ]
-		ifFalse: [ 'Remove ' asText , self definitionNode name asText allBold ]
+		   hasFreeOccurrencesOf: self definitionNode identifier
+		   in: self definitionNode module)
+		  ifTrue: [
+			  'Inline '
+			  ,
+			  (self shortDescription: self definitionNode identifier) asText
+				  allBold , ' and Remove' ]
+		  ifFalse: [
+		  'Remove ' asText , self definitionNode identifier asText allBold ]
 ]
 
 { #category : #accessing }
