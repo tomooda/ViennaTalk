@@ -1,6 +1,6 @@
 Class {
 	#name : #WeblyBrowser,
-	#superclass : #AnObsoleteViennaBrowser,
+	#superclass : #ViennaBrowser,
 	#instVars : [
 		'translationRuleSelection',
 		'portField',
