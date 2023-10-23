@@ -214,6 +214,26 @@ ViennaSlicerTest >> testSlice [
 ]
 
 { #category : #tests }
+ViennaSlicerTest >> testStartNode [
+
+	op statement:
+		'(if z = 0 then x := 1; y := x + 1; op2())' asViennaStatementAst.
+	op2 statement: 'x := z' asViennaStatementAst.
+	slicer operation: op.
+	slicer criteria: { x }.
+	slicer slice.
+	self assert: slicer agenda asSet equals: { z } asSet.
+	slicer := ViennaSlicer new.
+	slicer operation: op.
+	slicer criteria: { x }.
+	slicer startNode: (op statement at: 2).
+	slicer slice.
+	self assert: slicer agenda asSet equals: {
+			x.
+			z } asSet
+]
+
+{ #category : #tests }
 ViennaSlicerTest >> testWrite [
 
 	| let a block b |

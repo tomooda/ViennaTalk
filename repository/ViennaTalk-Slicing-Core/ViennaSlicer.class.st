@@ -4,6 +4,7 @@ Class {
 	#instVars : [
 		'operation',
 		'criteria',
+		'startNode',
 		'agenda',
 		'reads',
 		'writes',
@@ -16,9 +17,19 @@ Class {
 { #category : #'instance creation' }
 ViennaSlicer class >> operation: aViennaNode criteria: aCollectionOfViennaNameNode [
 
+	^ self
+		  operation: aViennaNode
+		  criteria: aCollectionOfViennaNameNode
+		  startNode: nil
+]
+
+{ #category : #'instance creation' }
+ViennaSlicer class >> operation: aViennaNode criteria: aCollectionOfViennaNameNode startNode: aViennaNode2 [
+
 	^ self new
 		  operation: aViennaNode;
 		  criteria: aCollectionOfViennaNameNode;
+		  startNode: aViennaNode2;
 		  yourself
 ]
 
@@ -35,7 +46,8 @@ ViennaSlicer >> = anObject [
 
 	^ self class = anObject class and: [
 		  operation == anObject operation and: [
-			  criteria = anObject criteria ] ]
+			  criteria = anObject criteria and: [
+				  startNode == anObject startNode ] ] ]
 ]
 
 { #category : #private }
@@ -76,24 +88,25 @@ ViennaSlicer >> branch [
 			  block cull: self.
 			  subslicerStream nextPut: self copy ]
 		  ifNil: [
-			  agenda := Set new.
-			  reads := Set new.
-			  writes := Set new.
-			  subslicerStream contents do: [ :subslicer |
-				  agenda addAll: subslicer agenda.
-				  reads addAll: subslicer reads.
-				  writes addAll: subslicer writes ] ] ]
+			  startNode ifNil: [
+				  agenda := Set new.
+				  reads := Set new.
+				  writes := Set new.
+				  subslicerStream contents do: [ :subslicer |
+					  agenda addAll: subslicer agenda.
+					  reads addAll: subslicer reads.
+					  writes addAll: subslicer writes ] ] ] ]
 ]
 
 { #category : #operations }
 ViennaSlicer >> call: aViennaNode [
 
-	aViennaNode isOperationNameNode ifTrue: [
-		| slicer |
-		self continue: (slicer := self interOperationSlicer
-				           slicerOnOperation: aViennaNode resolve
-				           criteria: self agenda
-				           callerSlicer: self) ]
+	startNode ifNil: [
+		aViennaNode isOperationNameNode ifTrue: [
+			self continue: (self interOperationSlicer
+					 slicerOnOperation: aViennaNode resolve
+					 criteria: self agenda
+					 callerSlicer: self) ] ]
 ]
 
 { #category : #operations }
@@ -101,12 +114,14 @@ ViennaSlicer >> continue: aViennaSlicer [
 
 	agenda := aViennaSlicer agenda copy.
 	reads := aViennaSlicer reads copy.
-	writes := aViennaSlicer writes copy
+	writes := aViennaSlicer writes copy.
+	startNode := aViennaSlicer startNode
 ]
 
 { #category : #operations }
 ViennaSlicer >> control: aViennaNode [
 
+	startNode == aViennaNode ifTrue: [ startNode := nil ].
 	agenda add: aViennaNode resolve
 ]
 
@@ -132,16 +147,14 @@ ViennaSlicer >> cut [
 	origin := self copy.
 	self initializeAgenda.
 	operation sliceWith: self.
-	(agenda = origin agenda and: [
-		 affectingNodes = origin affectingNodes ]) ifFalse: [
-		self interOperationSlicer addAgenda: self ].
 	^ affectingNodes
 ]
 
 { #category : #comparing }
 ViennaSlicer >> hash [
 
-	^ (self class hash bitXor: operation hash) bitXor: criteria hash
+	^ ((self class hash bitXor: operation hash) bitXor: criteria hash)
+		  bitXor: startNode hash
 ]
 
 { #category : #initialization }
@@ -180,6 +193,7 @@ ViennaSlicer >> interOperationSlicer: aViennaInterOperationSlicer [
 ViennaSlicer >> onNode: aViennaNode do: aBlock [
 
 	| origin |
+	aViennaNode == startNode ifTrue: [ startNode := nil ].
 	origin := self copy.
 	[ aBlock cull: self ] ensure: [
 		(writes anySatisfy: [ :w | agenda includes: w ])
@@ -245,6 +259,18 @@ ViennaSlicer >> slice [
 	self cut.
 	self interOperationSlicer finishAgenda.
 	^ affectingNodes
+]
+
+{ #category : #accessing }
+ViennaSlicer >> startNode [
+
+	^ startNode
+]
+
+{ #category : #accessing }
+ViennaSlicer >> startNode: aViennaNode [
+
+	startNode := aViennaNode
 ]
 
 { #category : #operations }
