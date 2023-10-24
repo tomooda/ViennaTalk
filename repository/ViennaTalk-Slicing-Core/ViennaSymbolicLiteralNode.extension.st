@@ -1,9 +1,7 @@
 Extension { #name : #ViennaSymbolicLiteralNode }
 
 { #category : #'*ViennaTalk-Slicing-Core' }
-ViennaSymbolicLiteralNode >> sliceWith: aViennaIntraOperationSlicer [
+ViennaSymbolicLiteralNode >> sliceWith: aViennaSlicer [
 
-	aViennaIntraOperationSlicer
-		onNode: self
-		do: [ aViennaIntraOperationSlicer write: self ]
+	aViennaSlicer onNode: self do: [ aViennaSlicer write: self ]
 ]

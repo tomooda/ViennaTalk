@@ -50,6 +50,12 @@ ViennaSlicer >> = anObject [
 				  startNode == anObject startNode ] ] ]
 ]
 
+{ #category : #operations }
+ViennaSlicer >> addAffectingNode: aViennaNode [
+
+	affectingNodes add: aViennaNode
+]
+
 { #category : #private }
 ViennaSlicer >> addCriterion: aViennaNode [
 
@@ -187,6 +193,12 @@ ViennaSlicer >> interOperationSlicer [
 ViennaSlicer >> interOperationSlicer: aViennaInterOperationSlicer [
 
 	interOperationSlicer := aViennaInterOperationSlicer
+]
+
+{ #category : #operations }
+ViennaSlicer >> onNode: aViennaNode [
+
+	aViennaNode == startNode ifTrue: [ startNode := nil ]
 ]
 
 { #category : #operations }

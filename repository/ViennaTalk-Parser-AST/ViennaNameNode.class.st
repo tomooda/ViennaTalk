@@ -18,12 +18,6 @@ ViennaNameNode >> asGlobalName [
 ]
 
 { #category : #testing }
-ViennaNameNode >> isTypeNode [
-
-	parent notNil and: [ parent isViennaTypeNameNode ]
-]
-
-{ #category : #testing }
 ViennaNameNode >> isViennaNameNode [
 
 	^ true

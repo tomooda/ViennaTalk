@@ -4,8 +4,10 @@ Extension { #name : #ViennaAssignStatementNode }
 ViennaAssignStatementNode >> sliceWith: aViennaSlicer [
 
 	aViennaSlicer onNode: self do: [
-		aViennaSlicer
-			write: self stateDesignator;
-			read: self expression ].
+		self stateDesignator
+			sliceWriteWith: aViennaSlicer;
+			sliceReadWith: aViennaSlicer.
+		aViennaSlicer read: self expression ].
+	self stateDesignator sliceArgumentsWith: aViennaSlicer.
 	self expression sliceWith: aViennaSlicer
 ]
