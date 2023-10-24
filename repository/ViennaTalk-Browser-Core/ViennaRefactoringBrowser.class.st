@@ -1307,8 +1307,9 @@ ViennaRefactoringBrowser >> slice: aViennaNode [
 			          operation: operation
 			          criteria: { aViennaNode }
 			          startNode: aViennaNode.
-		slicer slice ifNotEmpty: [ :nodes |
+		slicer sliceNodes ifNotEmpty: [ :nodes |
 			| source text gray from to |
+			slicer inspect.
 			source := sourceText text string asViennaTracingString.
 			sourceText withAdapterDo: [ :a |
 				a widgetDo: [ :w | text := w text ] ].

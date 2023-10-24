@@ -30,7 +30,7 @@ ViennaCompositeTypeNode >> fieldList: aViennaFieldListNode [
 ViennaCompositeTypeNode >> formatWith: aViennaAbstractFormatter [
 
 	| constructor fields |
-	constructor := aViennaAbstractFormatter format: self name.
+	constructor := aViennaAbstractFormatter format: self identifier.
 	fields := aViennaAbstractFormatter format: self fieldList.
 	^ aViennaAbstractFormatter
 		  noIndentString: (aViennaAbstractFormatter

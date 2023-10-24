@@ -266,14 +266,16 @@ ViennaSlicer >> reads [
 ]
 
 { #category : #operations }
-ViennaSlicer >> slice [
+ViennaSlicer >> sliceNodes [
 
 	self cut.
 	self interOperationSlicer finishAgenda.
-	^ affectingNodes select: [ :node |
-		  (node
-			   detectParent: [ :parent | affectingNodes includes: parent ]
-			   ifNone: [ nil ]) isNil ]
+	^ affectingNodes copy
+		  addAll: agenda;
+		  select: [ :node |
+			  (node
+				   detectParent: [ :parent | affectingNodes includes: parent ]
+				   ifNone: [ nil ]) isNil ]
 ]
 
 { #category : #accessing }
