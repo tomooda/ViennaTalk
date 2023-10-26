@@ -779,6 +779,33 @@ ViennaRefactoringBrowser >> getSource: aViennaNode [
 ]
 
 { #category : #operations }
+ViennaRefactoringBrowser >> highlightSlice: aViennaNode [
+
+	(aViennaNode
+		 detectParent: #isViennaOperationDefinitionNode
+		 ifNone: [ nil ]) ifNotNil: [ :operation |
+		| slicer |
+		slicer := ViennaSlicer
+			          operation: operation
+			          criteria: { aViennaNode }
+			          startNode: aViennaNode.
+		slicer sliceNodes , { aViennaNode } ifNotEmpty: [ :nodes |
+			| source text gray textWidget |
+			source := sourceText text string asViennaTracingString.
+			sourceText withAdapterDo: [ :a |
+				a widgetDo: [ :w | textWidget := w ] ].
+			text := textWidget text.
+			gray := Color gray: 0.9.
+			nodes do: [ :node |
+				(source intervalForSource: node) key ifNotEmpty: [ :interval |
+					text
+						addAttribute: TextBackgroundColor yellow
+						from: interval first
+						to: interval last ] ].
+			textWidget textArea ifNotNil: #compose ] ]
+]
+
+{ #category : #operations }
 ViennaRefactoringBrowser >> highlightSourceText [
 
 	highlighterProcess ifNotNil: [ 
@@ -860,26 +887,26 @@ ViennaRefactoringBrowser >> initializePresenters [
 	super initializePresenters.
 	menuBar := self menuBar.
 	historyList := self newDropList
-		               items: { { 
+		               items: { {
 				               DateAndTime now.
 				               'initial'.
 				               self model } };
-		               display: [ :triple | 
+		               display: [ :triple |
 			               | time |
 			               time := DateAndTime now - triple first.
 			               triple second , (time < 1 second
 					                ifTrue: [ '' ]
-					                ifFalse: [ 
+					                ifFalse: [
 						                '('
 						                ,
 							                (time roundTo: 1 second)
 								                humanReadablePrintString , ')' ]) ];
-		               whenSelectionChangedDo: [ 
-			               historyList selectedItem ifNotNil: [ :assoc | 
-					               assoc = historyList listItems last ifFalse: [ 
+		               whenSelectionChangedDo: [
+			               historyList selectedItem ifNotNil: [ :assoc |
+					               assoc = historyList listItems last ifFalse: [
 							               self model: assoc third.
 							               historyList
-								               items: historyList listItems , { { 
+								               items: historyList listItems , { {
 											               DateAndTime now.
 											               'version'.
 											               self model } };
@@ -900,14 +927,14 @@ ViennaRefactoringBrowser >> initializePresenters [
 	definitionList := self newList
 		                  beSingleSelection;
 		                  contextMenu: [ self definitionListContextMenu ];
-		                  display: [ :ast | 
+		                  display: [ :ast |
 			                  ast
 				                  ifNotNil: [ self displayDefinition: ast ]
 				                  ifNil: [ '-' ] ];
 		                  whenSelectionChangedDo: [ self updateSource ].
 	sourceText := self newText
 		              contextMenu: [ self sourceTextContextMenu ];
-						  whenTextChangedDo: [ self onTheFlyCheckSourceText ];
+		              whenTextChangedDo: [ self onTheFlyCheckSourceText ];
 		              whenSubmitDo: [ :text | self accept: text ];
 		              yourself.
 	testResultTable := self newTable
@@ -930,23 +957,22 @@ ViennaRefactoringBrowser >> initializePresenters [
 				                    sortFunction: #message ascending);
 		                   showColumnHeaders;
 		                   beResizable;
-		                   sortingBlock: [ :upper :lower | 
+		                   sortingBlock: [ :upper :lower |
 		                   upper sortingOrder <= lower sortingOrder ];
 		                   contextMenu: [ self testResultTableContextMenu ];
 		                   yourself.
-	self whenBuiltDo: [ :w | 
+	self whenBuiltDo: [ :w |
 		| f |
 		f := ViennaLauncher font.
-		w widget allMorphsDo: [ :m | 
+		w widget allMorphsDo: [ :m |
 			(m respondsTo: #font:) ifTrue: [ m font: f ] ] ]
 ]
 
 { #category : #initialization }
 ViennaRefactoringBrowser >> initializeWindow: aWindowPresenter [
+
 	super initializeWindow: aWindowPresenter.
-	aWindowPresenter
-		title: 'Browser';
-		initialExtent: 800 @ 600
+	aWindowPresenter initialExtent: 800 @ 600
 ]
 
 { #category : #operations }
@@ -1296,38 +1322,6 @@ ViennaRefactoringBrowser >> runTestModule: module operation: operation animation
 		message: 'OK'
 ]
 
-{ #category : #operations }
-ViennaRefactoringBrowser >> slice: aViennaNode [
-
-	(aViennaNode
-		 detectParent: #isViennaOperationDefinitionNode
-		 ifNone: [ nil ]) ifNotNil: [ :operation |
-		| slicer |
-		slicer := ViennaSlicer
-			          operation: operation
-			          criteria: { aViennaNode }
-			          startNode: aViennaNode.
-		slicer sliceNodes ifNotEmpty: [ :nodes |
-			| source text gray from to |
-			slicer inspect.
-			source := sourceText text string asViennaTracingString.
-			sourceText withAdapterDo: [ :a |
-				a widgetDo: [ :w | text := w text ] ].
-			gray := Color gray: 0.9.
-			from := 1.
-			(nodes asSortedCollection: [ :less :more |
-				 less start <= more start ]) do: [ :node |
-				(source intervalForSource: node) key ifNotEmpty: [ :interval |
-					to := interval first - 1.
-					text makeColor: gray from: from to: to.
-					text
-						addAttribute: TextEmphasis bold
-						from: interval first
-						to: interval last.
-					from := interval last + 1 ] ].
-			text makeColor: gray from: from to: text size ] ]
-]
-
 { #category : #accessing }
 ViennaRefactoringBrowser >> source [
 	^ self specification
@@ -1349,8 +1343,8 @@ ViennaRefactoringBrowser >> sourceTextContextMenu [
 				menu addGroup: [ :group |
 					group addItem: [ :item |
 						item
-							name: 'Slice';
-							action: [ self slice: node ] ] ] ] ].
+							name: 'Highlight slice';
+							action: [ self highlightSlice: node ] ] ] ] ].
 	^ menu
 ]
 
@@ -1372,6 +1366,12 @@ ViennaRefactoringBrowser >> testResultTableContextMenu [
 									self
 										jumpToModule: testResultItem module
 										operation: testResultItem operation ] ] ] ]
+]
+
+{ #category : #accessing }
+ViennaRefactoringBrowser >> title [
+
+	^ 'Vienna Refactoring Browser'
 ]
 
 { #category : #updating }
