@@ -37,13 +37,14 @@ ViennaAddExplicitFunctionTest >> findSuccessAst [
 { #category : #accessing }
 ViennaAddExplicitFunctionTest >> resultingSpec [
 
-	^ '
-module A
+	^ 'module A
 exports all
 definitions
 functions
-	f : () -> ?
-	f() == undefined
+    f : () -> ?
+    f() == undefined
+    pre true
+    post false;
 operations
 end A' asViennaDocumentAst
 ]

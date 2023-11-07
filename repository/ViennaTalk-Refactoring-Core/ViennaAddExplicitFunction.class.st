@@ -38,5 +38,5 @@ ViennaAddExplicitFunction >> sortingOrder [
 { #category : #accessing }
 ViennaAddExplicitFunction >> sourceWithNewName: aString [
 
-	^ aString , ' : () -> ? ' , aString , '() == undefined'
+	^ aString , ' : () -> ? ' , aString , '() == undefined pre true post false'
 ]

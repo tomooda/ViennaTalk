@@ -37,5 +37,5 @@ ViennaAddExplicitOperation >> sortingOrder [
 { #category : #accessing }
 ViennaAddExplicitOperation >> sourceWithNewName: aString [
 
-	^ aString , ' : () ==> () ' , aString , '() == skip'
+	^ aString , ' : () ==> () ' , aString , '() == skip pre true post false'
 ]

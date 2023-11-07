@@ -121,7 +121,8 @@ ViennaSlicer >> continue: aViennaSlicer [
 	agenda := aViennaSlicer agenda copy.
 	reads := aViennaSlicer reads copy.
 	writes := aViennaSlicer writes copy.
-	startNode := aViennaSlicer startNode
+	startNode := aViennaSlicer startNode.
+	affectingNodes addAll: aViennaSlicer affectingNodes
 ]
 
 { #category : #operations }
@@ -259,7 +260,9 @@ ViennaSlicer >> printOn: aStream [
 { #category : #operations }
 ViennaSlicer >> read: aViennaNode [
 
-	reads add: aViennaNode resolve
+	| resolved |
+	resolved := aViennaNode resolve.
+	reads add: resolved
 ]
 
 { #category : #private }

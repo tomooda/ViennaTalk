@@ -37,14 +37,15 @@ ViennaAddExplicitOperationTest >> findSuccessAst [
 { #category : #accessing }
 ViennaAddExplicitOperationTest >> resultingSpec [
 
-	^ '
-module A
+	^ 'module A
 exports all
 definitions
 functions
 operations
-	op : () ==> ()
-	op() == skip
+    op : () ==> ()
+    op() == skip
+    pre  true
+    post  false;
 end A' asViennaDocumentAst
 ]
 
