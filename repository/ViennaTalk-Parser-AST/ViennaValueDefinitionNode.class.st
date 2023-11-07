@@ -149,6 +149,12 @@ ViennaValueDefinitionNode >> isViennaExportableTopLevelDefinitionNode [
 ]
 
 { #category : #testing }
+ViennaValueDefinitionNode >> isViennaTopLevelDefinitionNode [
+
+	^ (self detectParent: #isViennaLetNode ifNone: [ nil ]) isNil
+]
+
+{ #category : #testing }
 ViennaValueDefinitionNode >> isViennaValueDefinitionNode [
 
 	^ true

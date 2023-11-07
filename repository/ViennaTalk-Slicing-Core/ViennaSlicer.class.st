@@ -248,7 +248,10 @@ ViennaSlicer >> printOn: aStream [
 	aStream
 		nextPutAll: (operation ifNotNil: #identifier ifNil: [ '()' ]);
 		nextPutAll: '$'.
-	(criteria asArray collect: #identifier) asSortedCollection
+	(criteria asArray collect: [ :node |
+		 node isViennaValueDefinitionNode
+			 ifTrue: [ node pattern printString ]
+			 ifFalse: [ node identifier ] ]) asSortedCollection
 		do: [ :identifier | aStream nextPutAll: identifier ]
 		separatedBy: [ aStream nextPutAll: ',' ]
 ]

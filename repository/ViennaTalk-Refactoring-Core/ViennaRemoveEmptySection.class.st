@@ -25,7 +25,9 @@ ViennaRemoveEmptySection >> findDefinitionNode [
 
 { #category : #accessing }
 ViennaRemoveEmptySection >> name [
-	^ 'Remove ' , self definitionNode name asText allBold, ' section'
+
+	^ 'Remove ' , self definitionNode sectionName asText allBold
+	  , ' section'
 ]
 
 { #category : #accessing }

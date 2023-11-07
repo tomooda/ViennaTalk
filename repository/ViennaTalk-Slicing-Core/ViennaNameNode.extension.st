@@ -18,8 +18,10 @@ ViennaNameNode >> sliceWith: aViennaSlicer [
 	| resolved |
 	resolved := self resolve.
 	aViennaSlicer onNode: self do: [  ].
-	(resolved isFunctionDefinition or: [ resolved isValueDefinition ])
-		ifTrue: [ resolved sliceWith: aViennaSlicer ]
+	(resolved isFunctionDefinition or: [
+		 resolved isValueDefinition and: [
+			 resolved isViennaTopLevelDefinitionNode ] ]) ifTrue: [
+		resolved sliceWith: aViennaSlicer ]
 ]
 
 { #category : #'*ViennaTalk-Slicing-Core' }
