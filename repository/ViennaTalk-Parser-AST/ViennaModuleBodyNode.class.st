@@ -45,6 +45,14 @@ ViennaModuleBodyNode >> sectionsDo: aBlock [
 	self do: aBlock
 ]
 
+{ #category : #accessing }
+ViennaModuleBodyNode >> stateDefinition [
+
+	self sectionsDo: [ :section |
+		section isViennaStateDefinitionNode ifTrue: [ ^ section ] ].
+	^ nil
+]
+
 { #category : #enumerating }
 ViennaModuleBodyNode >> toplevelDefinitionsDo: aBlock [
 

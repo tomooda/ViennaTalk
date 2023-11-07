@@ -19,6 +19,12 @@ ViennaInvariantNode >> boundIdentifiersDo: aBlock [
 	
 ]
 
+{ #category : #accessing }
+ViennaInvariantNode >> expression [
+
+	^ self invariantInitialFunction ifNotNil: #expression
+]
+
 { #category : #'pretty printing' }
 ViennaInvariantNode >> formatWith: aViennaAbstractFormatter [
 
@@ -54,4 +60,16 @@ ViennaInvariantNode >> isViennaInvariantNode [
 ViennaInvariantNode >> label [
 
 	^ 'Invariant'
+]
+
+{ #category : #accessing }
+ViennaInvariantNode >> pattern [
+
+	^ self invariantInitialFunction ifNotNil: #pattern
+]
+
+{ #category : #accessing }
+ViennaInvariantNode >> pattern: aViennaPatternNode [
+
+	^ self invariantInitialFunction pattern: aViennaPatternNode
 ]

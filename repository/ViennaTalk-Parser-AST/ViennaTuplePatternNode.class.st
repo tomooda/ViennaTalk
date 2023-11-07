@@ -13,6 +13,13 @@ ViennaTuplePatternNode class >> patternList: aViennaPatternListNode [
 		  yourself
 ]
 
+{ #category : #'instance creation' }
+ViennaTuplePatternNode class >> withAll: aCollectionOfViennaPatternNode [
+
+	^ self patternList:
+		  (ViennaPatternListNode withAll: aCollectionOfViennaPatternNode)
+]
+
 { #category : #private }
 ViennaTuplePatternNode >> boundIdentifiersDo: aBlock [
 
