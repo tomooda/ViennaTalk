@@ -49,7 +49,7 @@ ViennaInlineTypeAndRemove >> execute [
 ViennaInlineTypeAndRemove >> name [
 
 	ast isViennaRecordTypeDefinitionNode ifTrue: [
-		^ 'Remove record type ' asText , ast first asText allBold ].
+		^ 'Remove record type ' asText , ast identifier asText allBold ].
 	^ 'Inline type definition of ' asText
 	  , (self shortDescription: ast source) asText allBold
 	  , ' and Remove' asText

@@ -10,7 +10,8 @@ Class {
 		'sourceText',
 		'testProcess',
 		'testResultTable',
-		'highlighterProcess'
+		'highlighterProcess',
+		'dirty'
 	],
 	#category : #'ViennaTalk-Browser-Core'
 }
@@ -436,106 +437,8 @@ ViennaRefactoringBrowser >> accept: aStringOrText [
 	copyMap keys do: [ :old |
 		(copyMap at: old) == oldNode ifTrue: [ copyMap at: old put: newNode ] ].
 	self model: newAst comment: 'manual edit' with: copyMap.
+	self setDirty.
 	^ newNode
-]
-
-{ #category : #operations }
-ViennaRefactoringBrowser >> addExplicitFunction [
-
-	(UIManager default request: 'a new function name') ifNotNil: [
-		:functionName |
-		| ast |
-		ast := self parser parse:
-			       functionName , ' : () -> ? ' , functionName
-			       , '() == undefined'.
-		ast isPetit2Failure ifTrue: [ ^ self ].
-		self category isViennaFunctionDefinitionsNode ifFalse: [ ^ self ].
-		(self category module definitionOfLocalName: functionName)
-			ifNotNil: [
-				UIManager default alert: functionName , ' is already defined.'.
-				^ self ].
-		self append: ast to: self category ]
-]
-
-{ #category : #operations }
-ViennaRefactoringBrowser >> addExplicitOperation [
-
-	(UIManager default request: 'a new operation name') ifNotNil: [
-		:operationName |
-		| ast |
-		ast := self parser parse:
-			       operationName , ' : () ==> () ' , operationName
-			       , '() == skip'.
-		ast isPetit2Failure ifTrue: [ ^ self ].
-		self category isViennaOperationDefinitionsNode ifFalse: [ ^ self ].
-		(self category module definitionOfLocalName: operationName)
-			ifNotNil: [
-				UIManager default alert: operationName , ' is already defined.'.
-				^ self ].
-		self append: ast to: self category ]
-]
-
-{ #category : #operations }
-ViennaRefactoringBrowser >> addImplicitFunction [
-
-	(UIManager default request: 'a new function name') ifNotNil: [
-		:functionName |
-		| ast |
-		ast := self parser parse:
-			       'functions ' , functionName , ' () res:? post true'.
-		ast isPetit2Failure ifTrue: [ ^ self ].
-		self category isViennaFunctionDefinitionsNode ifFalse: [ ^ self ].
-		(self category module definitionOfLocalName: functionName)
-			ifNotNil: [
-				UIManager default alert: functionName , ' is already defined.'.
-				^ self ].
-		self append: ast first to: self category ]
-]
-
-{ #category : #operations }
-ViennaRefactoringBrowser >> addImplicitOperation [
-
-	(UIManager default request: 'a new operation name') ifNotNil: [
-		:operationName |
-		| ast |
-		ast := self parser parse:
-			       'operations ' , operationName , ' () post true'.
-		ast isPetit2Failure ifTrue: [ ^ self ].
-		self category isViennaOperationDefinitionsNode ifFalse: [ ^ self ].
-		(self category module definitionOfLocalName: operationName)
-			ifNotNil: [
-				UIManager default alert: operationName , ' is already defined.'.
-				^ self ].
-		self append: ast first to: self category ]
-]
-
-{ #category : #operations }
-ViennaRefactoringBrowser >> addModule [
-
-	(UIManager default request: 'New module name' initialAnswer: '') 
-		ifNotNil: [ :string | 
-			string trim ifNotEmpty: [ :moduleName | 
-				| module |
-				module := ViennaVDMParser new module end parse:
-					          'module ' , moduleName
-					          , ' exports all definitions end ' , moduleName.
-				module isPetit2Failure ifFalse: [ 
-					self append: module to: self specification ] ] ]
-]
-
-{ #category : #operations }
-ViennaRefactoringBrowser >> addRecordType [
-
-	(UIManager default request: 'a new record name') ifNotNil: [
-		:typeName |
-		| ast |
-		ast := self parser parse: typeName , '::'.
-		ast isPetit2Failure ifTrue: [ ^ self ].
-		self category isViennaTypeDefinitionsNode ifFalse: [ ^ self ].
-		(self category module definitionOfLocalName: typeName) ifNotNil: [
-			UIManager default alert: typeName , ' is already defined.'.
-			^ self ].
-		self append: ast to: self category ]
 ]
 
 { #category : #menus }
@@ -549,45 +452,6 @@ ViennaRefactoringBrowser >> addRefactoringMenuGroupOn: aViennaNode to: aMenuPres
 					name: refactoring name;
 					action: [ self executeRefactoring: refactoring ] ] ].
 		aBlock cull: group ]
-]
-
-{ #category : #operations }
-ViennaRefactoringBrowser >> addTypeAlias [
-
-	(UIManager default request: 'a new type name') ifNotNil: [ :typeName |
-		| ast |
-		ast := self parser parse: typeName , ' = token'.
-		ast isPetit2Failure ifTrue: [ ^ self ].
-		self category isViennaTypeDefinitionsNode ifFalse: [ ^ self ].
-		(self category module definitionOfLocalName: typeName) ifNotNil: [
-			UIManager default alert: typeName , ' is already defined.'.
-			^ self ].
-		self append: ast to: self category ]
-]
-
-{ #category : #operations }
-ViennaRefactoringBrowser >> addValue [
-
-	(UIManager default request: 'a new value name') ifNotNil: [
-		:valueName |
-		| ast |
-		ast := self parser parse: valueName , ' = undefined'.
-		ast isPetit2Failure ifTrue: [ ^ self ].
-		self category isViennaValueDefinitionsNode ifFalse: [ ^ self ].
-		(self category module definitionOfLocalName: valueName) ifNotNil: [
-			UIManager default alert: valueName , ' is already defined.'.
-			^ self ].
-		self append: ast to: self category ]
-]
-
-{ #category : #operations }
-ViennaRefactoringBrowser >> append: aViennaNode to: parentNode [
-	| copyMap newAst |
-	copyMap := IdentityDictionary new.
-	newAst := parentNode root copyWhole: copyMap.
-	(copyMap at: parentNode ifAbsent: [ ^ nil ]) add: aViennaNode.
-	self model: newAst comment: 'add ' , aViennaNode name asString with: copyMap.
-	definitionList selectItem: aViennaNode
 ]
 
 { #category : #accessing }
@@ -624,6 +488,12 @@ ViennaRefactoringBrowser >> categoryListContextMenu [
 	^ menu
 ]
 
+{ #category : #private }
+ViennaRefactoringBrowser >> clearDirty [
+
+	dirty := false
+]
+
 { #category : #accessing }
 ViennaRefactoringBrowser >> definition [
 	^ definitionList selection selectedItem
@@ -640,23 +510,6 @@ ViennaRefactoringBrowser >> definitionListContextMenu [
 
 	| menu |
 	menu := self newMenu.
-	self category isViennaTypeDefinitionsNode ifTrue: [
-		menu addGroup: [ :group |
-			group
-				addItem: [ :item |
-					item
-						name: 'New type alias';
-						action: [ self addTypeAlias ] ];
-				addItem: [ :item |
-					item
-						name: 'New record type';
-						action: [ self addRecordType ] ] ] ].
-	self category isViennaValueDefinitionsNode ifTrue: [
-		menu addGroup: [ :group |
-			group addItem: [ :item |
-				item
-					name: 'New value';
-					action: [ self addValue ] ] ] ].
 	self definitionBase ifNotNil: [ :definition |
 		menu addGroup: [ :group |
 			(ViennaRefactoring sortedInstancesOn: definition) do: [
@@ -734,42 +587,55 @@ ViennaRefactoringBrowser >> executeRefactoring: aViennaRefactoring [
 	refactoring check
 		ifFalse: [ ^ false ].
 	refactoring execute.
+	self setDirty.
 	self model: newAst comment: refactoring name with: copyMap
 ]
 
 { #category : #operations }
-ViennaRefactoringBrowser >> exportDirectory [
+ViennaRefactoringBrowser >> export [
+
 	(UIManager default
-		chooseDirectory: 'Export directory'
-		from: FileLocator viennaTalkDocumentDirectory )
-		ifNotNil: [ :dir | 
-			self specification
-				modulesDo: [ :moduleNode | 
-					| file |
-					file := dir / moduleNode name withExtension: 'vdmsl'.
-					file
-						ensureDeleteAll;
-						writeStreamDo: [ :stream | 
-							stream
-								nextPutAll:
-									((ViennaVDMFormatter format: moduleNode)
-										withLineEndings: OSPlatform current lineEnding) ] ].
-			UIManager default message: 'Exported to ' , dir basename , '/.' ]
+		 confirm: 'Export to'
+		 trueChoice: 'Directory'
+		 falseChoice: 'File')
+		ifTrue: [ self exportDirectory ]
+		ifFalse: [ self exportFile ]
+]
+
+{ #category : #operations }
+ViennaRefactoringBrowser >> exportDirectory [
+
+	(UIManager default
+		 chooseDirectory: 'Export directory'
+		 from: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :dir |
+		self specification modulesDo: [ :moduleNode |
+			| file |
+			file := dir / moduleNode name withExtension: 'vdmsl'.
+			file
+				ensureDeleteAll;
+				writeStreamDo: [ :stream |
+					stream nextPutAll:
+							((ViennaVDMFormatter format: moduleNode) withLineEndings:
+									 OSPlatform current lineEnding) ] ].
+		UIManager default message: 'Exported to ' , dir basename , '/.'.
+		self clearDirty ]
 ]
 
 { #category : #operations }
 ViennaRefactoringBrowser >> exportFile [
+
 	(UIManager default
-		chooseForSaveFileReference: 'Export file'
-		extensions: #('vdmsl')
-		path: FileLocator viennaTalkDocumentDirectory asFileReference)
-		ifNotNil: [ :file | 
+		 chooseForSaveFileReference: 'Export file'
+		 extensions: #( 'vdmsl' )
+		 path: FileLocator viennaTalkDocumentDirectory asFileReference)
+		ifNotNil: [ :file |
 			file
 				ensureDeleteAll;
-				writeStreamDo: [ :stream | 
-					stream
-						nextPutAll: (self source withLineEndings: OSPlatform current lineEnding) ].
-			UIManager default message: 'Exported to ' , file basename , '.' ]
+				writeStreamDo: [ :stream |
+					stream nextPutAll:
+							(self source withLineEndings: OSPlatform current lineEnding) ].
+			UIManager default message: 'Exported to ' , file basename , '.'.
+			self clearDirty ]
 ]
 
 { #category : #private }
@@ -882,6 +748,13 @@ ViennaRefactoringBrowser >> importFile [
 ]
 
 { #category : #initialization }
+ViennaRefactoringBrowser >> initialize [
+
+	super initialize.
+	dirty := false
+]
+
+{ #category : #initialization }
 ViennaRefactoringBrowser >> initializePresenters [
 
 	super initializePresenters.
@@ -972,7 +845,21 @@ ViennaRefactoringBrowser >> initializePresenters [
 ViennaRefactoringBrowser >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
-	aWindowPresenter initialExtent: 800 @ 600
+	aWindowPresenter initialExtent: 800 @ 600.
+	aWindowPresenter whenWillCloseDo: [ :willCloseAnnouncement |
+		(willCloseAnnouncement canClose and: [
+			 self isDirty and: [
+				 UIManager default
+					 confirm: 'Export the spec before close?'
+					 orCancel: [
+						 willCloseAnnouncement denyClose.
+						 false ] ] ]) ifTrue: [ self export ] ]
+]
+
+{ #category : #private }
+ViennaRefactoringBrowser >> isDirty [
+
+	^ dirty = true
 ]
 
 { #category : #operations }
@@ -1017,7 +904,8 @@ ViennaRefactoringBrowser >> load: aString [
 				'load'.
 				ast } };
 		selectItem: historyList listItems last.
-	self model: ast
+	self model: ast.
+	self clearDirty
 ]
 
 { #category : #menus }
@@ -1171,44 +1059,6 @@ ViennaRefactoringBrowser >> onTheFlyCheckSourceText [
 	self highlightSourceText
 ]
 
-{ #category : #operations }
-ViennaRefactoringBrowser >> openDirectory [
-	| modelFiles testFiles source |
-	(UIManager default
-		chooseDirectory: 'Open directory'
-		from: FileLocator viennaTalkDocumentDirectory)
-		ifNotNil: [ :dir | 
-			modelFiles := OrderedCollection new.
-			testFiles := OrderedCollection new.
-			dir files
-				do: [ :file | 
-					(file basename endsWith: '.vdmsl')
-						ifTrue: [ (file basename endsWith: 'Test.vdmsl')
-								ifTrue: [ testFiles add: file ]
-								ifFalse: [ modelFiles add: file ] ] ].
-			modelFiles := modelFiles
-				asSortedCollection: [ :less :more | less basename <= more basename ].
-			testFiles := testFiles
-				asSortedCollection: [ :less :more | less basename <= more basename ].
-			source := String
-				streamContents: [ :writeStream | 
-					modelFiles
-						do: [ :file | 
-							writeStream
-								nextPutAll:
-									((file contents copyWith: Character cr)
-										copyReplaceAll: String lf
-										with: String cr) ].
-					testFiles
-						do: [ :file | 
-							writeStream
-								nextPutAll:
-									((file contents copyWith: Character cr)
-										copyReplaceAll: String lf
-										with: String cr) ] ].
-			self load: source ]
-]
-
 { #category : #private }
 ViennaRefactoringBrowser >> parser [
 	| parser |
@@ -1322,6 +1172,12 @@ ViennaRefactoringBrowser >> runTestModule: module operation: operation animation
 		message: 'OK'
 ]
 
+{ #category : #private }
+ViennaRefactoringBrowser >> setDirty [
+
+	dirty := true
+]
+
 { #category : #accessing }
 ViennaRefactoringBrowser >> source [
 	^ self specification
@@ -1427,4 +1283,15 @@ ViennaRefactoringBrowser >> updateSource [
 	self definition
 		ifNotNil: [ :node | sourceText text: (self getSource: node) ]
 		ifNil: [ sourceText text: '' ]
+]
+
+{ #category : #updating }
+ViennaRefactoringBrowser >> windowIsClosing [
+
+	testProcess ifNotNil: [
+		testProcess terminate.
+		testProcess := nil ].
+	highlighterProcess ifNotNil: [
+		highlighterProcess terminate.
+		highlighterProcess := nil ]
 ]
