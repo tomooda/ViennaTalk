@@ -2451,7 +2451,9 @@ ViennaVDM2Smalltalk >> multipleTypeBind: aViennaNode env: aDictionary [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2Smalltalk >> noCheckAssignment: aVarName be: aValString [
-	^ self subclassResponsibility
+
+	^ '[' , aVarName , ' := ' , aValString
+	  , '] on: ViennaRuntimeTypeError do: [ :ex | ex resume ]'
 ]
 
 { #category : #'code generation-statements' }
@@ -3099,15 +3101,15 @@ ViennaVDM2Smalltalk >> source: aString [
 { #category : #'code generation-definitions' }
 ViennaVDM2Smalltalk >> stateDefinition: aViennaNode env: aDictionary [
 	| constructor fieldListNode invNode initNode vars vals recordNode initConstructor expressionListNode patternVar |
-	constructor := aViennaNode first.
-	fieldListNode := aViennaNode second.
-	invNode := aViennaNode third.
-	initNode := aViennaNode fourth.
-	vars := fieldListNode collect: #first.
+	constructor := aViennaNode identifier.
+	fieldListNode := aViennaNode fieldList.
+	invNode := aViennaNode inv.
+	initNode := aViennaNode init.
+	vars := fieldListNode collect: #identifier.
 	initNode ifNil: [ ^ self error: 'initalisation is required in state definition' ].
-	recordNode := initNode first second second.
-	initConstructor := recordNode first first.
-	expressionListNode := recordNode second.
+	recordNode := initNode expression expression2.
+	initConstructor := recordNode name identifier.
+	expressionListNode := recordNode expressionList.
 	initConstructor = constructor
 		ifFalse: [ ^ self
 				error:

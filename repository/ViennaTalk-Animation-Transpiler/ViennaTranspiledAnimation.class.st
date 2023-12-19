@@ -212,7 +212,7 @@ ViennaTranspiledAnimation >> specification: aString ifError: errorBlock [
 		ifNotEmpty: [ | ast |
 			ast := parser parse: aString.
 			ast isPetit2Failure
-				ifTrue: [ ^ errorBlock value: ast message ].
+				ifTrue: [ ^ errorBlock cull: ast message ].
 			object := transpiler generate: ast ].
 	specification := aString.
 	self changed: #specification.
