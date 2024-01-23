@@ -18,7 +18,7 @@ Class {
 { #category : #accessing }
 ViennaTranspiledAnimation class >> useTranspilerByDefault [
 
-	^ UseTranspilerByDefault
+	^ UseTranspilerByDefault = true
 ]
 
 { #category : #accessing }
