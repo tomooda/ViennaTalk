@@ -22,9 +22,12 @@ ViennaAnimation class >> client [
 
 { #category : #'instance creation' }
 ViennaAnimation class >> default [
-	^ self new
-		engine: ViennaEngine default;
-		yourself
+
+	Smalltalk
+		at: #ViennaTranspiledAnimation
+		ifPresent: [ :class |
+		class useTranspilerByDefault ifTrue: [ ^ self transpiler ] ].
+	^ self interpreter
 ]
 
 { #category : #examples }
@@ -72,7 +75,10 @@ operations
 
 { #category : #'instance creation' }
 ViennaAnimation class >> interpreter [
-	^ self default
+
+	^ self new
+		  engine: ViennaEngine default;
+		  yourself
 ]
 
 { #category : #'instance creation' }

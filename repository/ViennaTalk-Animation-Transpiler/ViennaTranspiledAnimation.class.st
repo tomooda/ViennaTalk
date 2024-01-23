@@ -9,8 +9,37 @@ Class {
 		'reader',
 		'writer'
 	],
+	#classVars : [
+		'UseTranspilerByDefault'
+	],
 	#category : #'ViennaTalk-Animation-Transpiler'
 }
+
+{ #category : #accessing }
+ViennaTranspiledAnimation class >> useTranspilerByDefault [
+
+	^ UseTranspilerByDefault
+]
+
+{ #category : #accessing }
+ViennaTranspiledAnimation class >> useTranspilerByDefault: aBoolean [
+
+	UseTranspilerByDefault := aBoolean = true
+]
+
+{ #category : #settings }
+ViennaTranspiledAnimation class >> viennaSettingsOn: aBuilder [
+
+	<systemsettings>
+	(aBuilder setting: #ViennaTalkUseTranspilerByDefault)
+		parent: #ViennaTalkCodeGenerator;
+		target: self;
+		getSelector: #useTranspilerByDefault;
+		setSelector: #useTranspilerByDefault:;
+		description: 'If checked, animation will use transpiler by default';
+		label: 'Use transpiler by default';
+		order: 0.4
+]
 
 { #category : #converting }
 ViennaTranspiledAnimation >> asInterpretedAnimation [
@@ -126,10 +155,12 @@ ViennaTranspiledAnimation >> init [
 
 { #category : #'initialize-release' }
 ViennaTranspiledAnimation >> initialize [
+
 	super initialize.
 	parser := ViennaVDMParser new.
 	reader := ViennaReader new.
-	writer := ViennaUnquoteWriter new
+	writer := ViennaUnquoteWriter new.
+	self specification: String new ifError: [  ]
 ]
 
 { #category : #accessing }
