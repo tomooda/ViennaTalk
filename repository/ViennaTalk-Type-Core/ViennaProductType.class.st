@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'basetypes'
 	],
-	#category : 'ViennaTalk-Type-Core'
+	#category : #'ViennaTalk-Type-Core'
 }
 
 { #category : #accessing }
@@ -42,6 +42,11 @@ ViennaProductType >> -> aViennaType [
 { #category : #comparing }
 ViennaProductType >> = anObject [
 	^ self class = anObject class and: [ basetypes = anObject basetypes ]
+]
+
+{ #category : #arithmetic }
+ViennaProductType >> => aViennaType [
+	^ ViennaOperationType withAll: basetypes with: aViennaType
 ]
 
 { #category : #private }

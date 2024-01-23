@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'runtimeSet'
 	],
-	#category : 'ViennaTalk-Type-Core'
+	#category : #'ViennaTalk-Type-Core'
 }
 
 { #category : #'instance creation' }
@@ -50,6 +50,11 @@ ViennaType class >> nat [
 { #category : #'instance creation' }
 ViennaType class >> nat1 [
 	^ ViennaNat1Type new
+]
+
+{ #category : #'instance creation' }
+ViennaType class >> operation: anArrayOfViennaType to: aViennaType [
+	^ ViennaOperationType withAll: anArrayOfViennaType with: aViennaType
 ]
 
 { #category : #'instance creation' }
@@ -122,6 +127,11 @@ ViennaType class >> union: anArrayOfViennaType [
 	^ ViennaUnionType withAll: anArrayOfViennaType
 ]
 
+{ #category : #'instance creation' }
+ViennaType class >> unit [
+	^ ViennaUnitType new
+]
+
 { #category : #arithmetic }
 ViennaType >> * aViennaType [
 	^ ViennaProductType with: self with: aViennaType
@@ -145,6 +155,11 @@ ViennaType >> < aViennaType [
 { #category : #comparing }
 ViennaType >> <= aViennaType [
 	^ aViennaType >= self
+]
+
+{ #category : #arithmetic }
+ViennaType >> => aViennaType [
+	^ ViennaOperationType withAll: (Array with: self) with: aViennaType
 ]
 
 { #category : #comparing }
