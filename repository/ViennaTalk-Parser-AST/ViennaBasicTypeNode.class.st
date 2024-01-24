@@ -19,6 +19,22 @@ ViennaBasicTypeNode class >> identifier: aString [
 		  yourself
 ]
 
+{ #category : #converting }
+ViennaBasicTypeNode >> asMaximalViennaType [
+
+	| identifier |
+	identifier := self identifier.
+	identifier = 'int' ifTrue: [ ^ ViennaType int ].
+	identifier = 'nat' ifTrue: [ ^ ViennaType nat ].
+	identifier = 'nat1' ifTrue: [ ^ ViennaType nat1 ].
+	identifier = 'real' ifTrue: [ ^ ViennaType real ].
+	identifier = 'rat' ifTrue: [ ^ ViennaType rat ].
+	identifier = 'char' ifTrue: [ ^ ViennaType char ].
+	identifier = 'bool' ifTrue: [ ^ ViennaType bool ].
+	identifier = 'any' ifTrue: [ ^ ViennaType any ].
+	^ self error: 'Unknown basic type'
+]
+
 { #category : #'pretty printing' }
 ViennaBasicTypeNode >> formatWith: aViennaAbstractFormatter [
 

@@ -4,6 +4,11 @@ Class {
 	#category : #'ViennaTalk-Type-Core'
 }
 
+{ #category : #comparing }
+ViennaUnitType >> = anObject [
+	^ self class = anObject class
+]
+
 { #category : #enumerating }
 ViennaUnitType >> basicDo: aBlock [
 

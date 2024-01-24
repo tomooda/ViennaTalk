@@ -158,7 +158,7 @@ ViennaType >> <= aViennaType [
 ]
 
 { #category : #arithmetic }
-ViennaType >> => aViennaType [
+ViennaType >> ==> aViennaType [
 	^ ViennaOperationType withAll: (Array with: self) with: aViennaType
 ]
 

@@ -13,6 +13,12 @@ ViennaTypeNameNode class >> name: aViennaNameNode [
 		  yourself
 ]
 
+{ #category : #converting }
+ViennaTypeNameNode >> asMaximalViennaType [
+
+	^ self resolve asMaximalViennaType
+]
+
 { #category : #'pretty printing' }
 ViennaTypeNameNode >> formatWith: aViennaAbstractFormatter [
 

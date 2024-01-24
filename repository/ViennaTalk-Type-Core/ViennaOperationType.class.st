@@ -72,7 +72,7 @@ ViennaOperationType >> name [
 						nameInPrecedence:
 							(argtypes size = 1
 								ifTrue: [ self class precedence + 1 ]
-								ifFalse: [ ViennaProductType precedence ]) ])) , '=>' , (returntype nameInPrecedence: self class precedence)
+								ifFalse: [ ViennaProductType precedence ]) ])) , '==>' , (returntype nameInPrecedence: self class precedence)
 ]
 
 { #category : #private }

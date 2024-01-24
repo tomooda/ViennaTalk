@@ -15,6 +15,15 @@ ViennaFieldNode class >> identifier: aString equalityAbstraction: aBoolean type:
 		  yourself
 ]
 
+{ #category : #converting }
+ViennaFieldNode >> asMaximalViennaType [
+
+	^ Array
+		  with: self identifier
+		  with: self equalityAbstraction
+		  with: self type asMaximalViennaType
+]
+
 { #category : #private }
 ViennaFieldNode >> boundIdentifiersDo: aBlock [
 

@@ -32,6 +32,16 @@ ViennaAbstractFunctionTypeNode >> argumentType: aViennaTypeNode [
 	self at: 1 put: aViennaTypeNode
 ]
 
+{ #category : #accessing }
+ViennaAbstractFunctionTypeNode >> argumentTypes [
+
+	| argType |
+	argType := self argumentType.
+	^ argType isViennaProductTypeNode
+		  ifTrue: [ argType asArray ]
+		  ifFalse: [ Array with: argType ]
+]
+
 { #category : #private }
 ViennaAbstractFunctionTypeNode >> freeIdentifiersExcept: aSet do: aBlock [
 

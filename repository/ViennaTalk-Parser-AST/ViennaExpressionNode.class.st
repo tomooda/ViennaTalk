@@ -2,6 +2,9 @@ Class {
 	#name : #ViennaExpressionNode,
 	#superclass : #ViennaNode,
 	#type : #variable,
+	#instVars : [
+		'type'
+	],
 	#category : #'ViennaTalk-Parser-AST'
 }
 
@@ -20,4 +23,22 @@ ViennaExpressionNode >> boundIdentifiersDo: aBlock [
 { #category : #testing }
 ViennaExpressionNode >> isViennaExpressionNode [
 	^ true
+]
+
+{ #category : #typechecking }
+ViennaExpressionNode >> type [
+
+	^ type ifNil: [ type := self typecheck ]
+]
+
+{ #category : #typechecking }
+ViennaExpressionNode >> typecheck: aViennaType [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #typechecking }
+ViennaExpressionNode >> untype [
+
+	type := nil
 ]

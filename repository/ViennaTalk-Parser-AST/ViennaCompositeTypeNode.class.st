@@ -14,6 +14,14 @@ ViennaCompositeTypeNode class >> identifier: aString fieldList: aViennaFieldList
 		  yourself
 ]
 
+{ #category : #converting }
+ViennaCompositeTypeNode >> asMaximalViennaType [
+
+	^ ViennaType
+		  compose: self identifier
+		  of: self fieldList asMaximalViennaType
+]
+
 { #category : #accessing }
 ViennaCompositeTypeNode >> fieldList [
 

@@ -13,6 +13,12 @@ ViennaTypeVariableNode class >> variableIdentifier: aString [
 		  yourself
 ]
 
+{ #category : #converting }
+ViennaTypeVariableNode >> asMaximalViennaType [
+
+	^ self error: 'Type variable is not instantiated.'
+]
+
 { #category : #'pretty printing' }
 ViennaTypeVariableNode >> formatWith: aViennaAbstractFormatter [
 

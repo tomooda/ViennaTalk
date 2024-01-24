@@ -5,6 +5,13 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #converting }
+ViennaInmapTypeNode >> asMaximalViennaType [
+
+	^ self domainType asMaximalViennaType inmapTo:
+		  self rangeType asMaximalViennaType
+]
+
 { #category : #'pretty printing' }
 ViennaInmapTypeNode >> formatWith: aViennaAbstractFormatter [
 

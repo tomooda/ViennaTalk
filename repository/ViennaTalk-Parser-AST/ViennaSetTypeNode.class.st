@@ -5,6 +5,12 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #converting }
+ViennaSetTypeNode >> asMaximalViennaType [
+
+	^ self type asMaximalViennaType set
+]
+
 { #category : #'pretty printing' }
 ViennaSetTypeNode >> formatWith: aViennaAbstractFormatter [
 

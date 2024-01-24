@@ -69,6 +69,12 @@ ViennaTypeSynonymNode >> asImportDefinitionIn: moduleNode [
 						     rename: nil)))
 ]
 
+{ #category : #converting }
+ViennaTypeSynonymNode >> asMaximalViennaType [
+
+	^ self type asMaximalViennaType
+]
+
 { #category : #private }
 ViennaTypeSynonymNode >> boundIdentifiersDo: aBlock [
 

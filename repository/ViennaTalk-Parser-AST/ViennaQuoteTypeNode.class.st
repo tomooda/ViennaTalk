@@ -13,6 +13,13 @@ ViennaQuoteTypeNode class >> string: aString [
 		  yourself
 ]
 
+{ #category : #converting }
+ViennaQuoteTypeNode >> asMaximalViennaType [
+
+	^ ViennaType quote:
+		  (self string copyFrom: 2 to: self string size - 1) asSymbol
+]
+
 { #category : #'pretty printing' }
 ViennaQuoteTypeNode >> formatWith: aViennaAbstractFormatter [
 

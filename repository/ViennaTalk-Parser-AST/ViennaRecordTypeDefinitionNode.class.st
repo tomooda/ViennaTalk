@@ -63,6 +63,14 @@ ViennaRecordTypeDefinitionNode >> asImportDefinitionIn: moduleNode [
 						     rename: nil)))
 ]
 
+{ #category : #converting }
+ViennaRecordTypeDefinitionNode >> asMaximalViennaType [
+
+	^ ViennaType
+		  compose: self identifier
+		  of: self fieldList asMaximalViennaType
+]
+
 { #category : #private }
 ViennaRecordTypeDefinitionNode >> boundIdentifiersDo: aBlock [
 

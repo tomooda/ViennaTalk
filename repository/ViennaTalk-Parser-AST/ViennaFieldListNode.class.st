@@ -5,6 +5,12 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #converting }
+ViennaFieldListNode >> asMaximalViennaType [
+
+	^ self collect: #asMaximalViennaType
+]
+
 { #category : #private }
 ViennaFieldListNode >> boundIdentifiersDo: aBlock [
 

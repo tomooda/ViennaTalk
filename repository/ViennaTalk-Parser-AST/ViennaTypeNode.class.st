@@ -11,6 +11,12 @@ ViennaTypeNode class >> isAbstract [
 	^ self = ViennaTypeNode
 ]
 
+{ #category : #converting }
+ViennaTypeNode >> asMaximalViennaType [
+
+	^ self subclassResponsibility
+]
+
 { #category : #private }
 ViennaTypeNode >> boundIdentifiersDo: aBlock [
 

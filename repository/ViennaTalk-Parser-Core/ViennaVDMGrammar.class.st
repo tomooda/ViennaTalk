@@ -2906,6 +2906,13 @@ ViennaVDMGrammar >> typeName [
 			(pair third)} ]) / self typeIdentifier trim
 ]
 
+{ #category : #utilities }
+ViennaVDMGrammar >> typeOrRecordTypeDefinition [
+
+	^ self operationType / self recordTypeDefinition / self type
+	  / self unitType
+]
+
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> typeSynonym [
 	^ ((self decl: self typeIdentifier) trim , eq , type , invariant optional)

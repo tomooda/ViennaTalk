@@ -5,6 +5,13 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #converting }
+ViennaPartialFunctionTypeNode >> asMaximalViennaType [
+
+	^ self argumentType asMaximalViennaType
+	  -> self returnType asMaximalViennaType
+]
+
 { #category : #'pretty printing' }
 ViennaPartialFunctionTypeNode >> formatWith: aViennaAbstractFormatter [
 

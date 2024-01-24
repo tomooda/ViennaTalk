@@ -15,3 +15,9 @@ String >> asViennaExpressionAst [
 String >> asViennaStatementAst [
 	^ ViennaVDMParser new statement end parse: self
 ]
+
+{ #category : #'*ViennaTalk-Parser-Core' }
+String >> asViennaTypeAst [
+
+	^ ViennaVDMParser new typeOrRecordTypeDefinition end parse: self
+]

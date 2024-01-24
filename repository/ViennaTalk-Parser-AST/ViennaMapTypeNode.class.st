@@ -14,6 +14,13 @@ ViennaMapTypeNode class >> domainType: aViennaTypeNode1 rangeType: aViennaTypeNo
 		  yourself
 ]
 
+{ #category : #converting }
+ViennaMapTypeNode >> asMaximalViennaType [
+
+	^ self domainType asMaximalViennaType mapTo:
+		  self rangeType asMaximalViennaType
+]
+
 { #category : #'pretty printing' }
 ViennaMapTypeNode >> formatWith: aViennaAbstractFormatter [
 

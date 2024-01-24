@@ -45,7 +45,7 @@ ViennaProductType >> = anObject [
 ]
 
 { #category : #arithmetic }
-ViennaProductType >> => aViennaType [
+ViennaProductType >> ==> aViennaType [
 	^ ViennaOperationType withAll: basetypes with: aViennaType
 ]
 

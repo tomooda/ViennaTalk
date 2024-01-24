@@ -13,6 +13,12 @@ ViennaTypeVariableIdentifierNode class >> identifier: aString [
 		  yourself
 ]
 
+{ #category : #converting }
+ViennaTypeVariableIdentifierNode >> asMaximalViennaType [
+
+	^ self error: 'Type variable is not instantiated.'
+]
+
 { #category : #private }
 ViennaTypeVariableIdentifierNode >> boundIdentifiersDo: aBlock [
 
