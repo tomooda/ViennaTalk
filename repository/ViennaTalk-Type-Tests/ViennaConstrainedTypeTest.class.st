@@ -5,7 +5,7 @@ Class {
 		'int',
 		'bool'
 	],
-	#category : 'ViennaTalk-Type-Tests'
+	#category : #'ViennaTalk-Type-Tests'
 }
 
 { #category : #running }
@@ -27,6 +27,21 @@ ViennaConstrainedTypeTest >> testDo [
 ViennaConstrainedTypeTest >> testIncludes [
 	self assert: ((int inv: [ :i | i < 0 ]) includes: -1).
 	self deny: ((int inv: [ :i | i < 0 ]) includes: 1)
+]
+
+{ #category : #tests }
+ViennaConstrainedTypeTest >> testIsCompatibleWith [
+
+	self assert:
+		((int inv: [ :i | i odd ]) isCompatibleWith:
+			 (int inv: [ :i | i odd ])).
+	self assert: ((int inv: [ :i | i odd ]) isCompatibleWith:
+			 (int inv: [ :i | i even ])).
+	self assert: ((int inv: [ :i | i odd ]) isCompatibleWith: int).
+	self assert: (int isCompatibleWith: (int inv: [ :i | i odd ])).
+	self assert: ((int inv: [ :i | i odd ]) isCompatibleWith:
+			 (ViennaType nat inv: [ :i | i odd ])).
+	self deny: ((int inv: [ :i | i odd ]) isCompatibleWith: bool)
 ]
 
 { #category : #tests }

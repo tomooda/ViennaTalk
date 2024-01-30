@@ -5,7 +5,7 @@ Class {
 		'bool2optbool',
 		'bool2nat'
 	],
-	#category : 'ViennaTalk-Type-Tests'
+	#category : #'ViennaTalk-Type-Tests'
 }
 
 { #category : #running }
@@ -66,6 +66,13 @@ ViennaMapTypeTest >> testIncludes [
 						at: true put: 1;
 						at: false put: 0.2;
 						yourself))
+]
+
+{ #category : #tests }
+ViennaMapTypeTest >> testIsCompatibleWith [
+
+	self assert: (bool2nat isCompatibleWith: bool2nat).
+	self deny: (bool2nat isCompatibleWith: bool2optbool)
 ]
 
 { #category : #tests }

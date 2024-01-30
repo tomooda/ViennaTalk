@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'composite'
 	],
-	#category : 'ViennaTalk-Type-Tests'
+	#category : #'ViennaTalk-Type-Tests'
 }
 
 { #category : #running }
@@ -66,6 +66,16 @@ ViennaCompositeTypeTest >> testIncludes [
 ]
 
 { #category : #tests }
+ViennaCompositeTypeTest >> testIsCompatibleWith [
+
+	self assert: (composite isCompatibleWith: composite).
+	self deny: (composite isCompatibleWith: (composite copy
+				  setConstructorName: 'T2';
+				  yourself)).
+	self deny: (composite isCompatibleWith: ViennaType nat)
+]
+
+{ #category : #tests }
 ViennaCompositeTypeTest >> testIsEnumerable [
 	self deny: composite isEnumerable.
 	self
@@ -90,7 +100,7 @@ ViennaCompositeTypeTest >> testNumFields [
 	self assert: composite numFields equals: 3
 ]
 
-{ #category : #running }
+{ #category : #tests }
 ViennaCompositeTypeTest >> testRemoveTestHolders [
 	self
 		assert:

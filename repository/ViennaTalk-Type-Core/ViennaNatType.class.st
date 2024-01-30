@@ -1,7 +1,7 @@
 Class {
 	#name : #ViennaNatType,
-	#superclass : #ViennaType,
-	#category : 'ViennaTalk-Type-Core'
+	#superclass : #ViennaBasicType,
+	#category : #'ViennaTalk-Type-Core'
 }
 
 { #category : #accessing }
@@ -37,6 +37,12 @@ ViennaNatType >> basicIsEnumerable [
 { #category : #comparing }
 ViennaNatType >> hash [
 	^ self class hash
+]
+
+{ #category : #testing }
+ViennaNatType >> isCompatibleWith: aViennaType [
+
+	^ aViennaType isRealType or: [ super isCompatibleWith: aViennaType ]
 ]
 
 { #category : #testing }

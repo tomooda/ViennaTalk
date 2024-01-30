@@ -9,12 +9,12 @@ Class {
 
 { #category : #'instance creation' }
 ViennaType class >> any [
-	^ ViennaAnyType new
+	^ ViennaAnyType current
 ]
 
 { #category : #'instance creation' }
 ViennaType class >> bool [
-	^ ViennaBoolType new
+	^ ViennaBoolType current
 ]
 
 { #category : #'instance creation' }
@@ -34,7 +34,8 @@ ViennaType class >> inmap: aViennaType1 to: aViennaType2 [
 
 { #category : #'instance creation' }
 ViennaType class >> int [
-	^ ViennaIntType new
+
+	^ ViennaIntType current
 ]
 
 { #category : #'instance creation' }
@@ -44,12 +45,13 @@ ViennaType class >> map: aViennaType1 to: aViennaType2 [
 
 { #category : #'instance creation' }
 ViennaType class >> nat [
-	^ ViennaNatType new
+
+	^ ViennaNatType current
 ]
 
 { #category : #'instance creation' }
 ViennaType class >> nat1 [
-	^ ViennaNat1Type new
+	^ ViennaNat1Type current
 ]
 
 { #category : #'instance creation' }
@@ -79,17 +81,19 @@ ViennaType class >> product: anArrayOfViennaType [
 
 { #category : #'instance creation' }
 ViennaType class >> quote: aString [
+
 	^ ViennaQuoteType with: aString asSymbol
 ]
 
 { #category : #'instance creation' }
 ViennaType class >> rat [
-	^ ViennaRealType new
+	^ ViennaRatType current
 ]
 
 { #category : #'instance creation' }
 ViennaType class >> real [
-	^ ViennaRealType new
+
+	^ ViennaRealType current
 ]
 
 { #category : #'instance creation' }
@@ -114,7 +118,8 @@ ViennaType class >> setOf: aViennaType [
 
 { #category : #'instance creation' }
 ViennaType class >> token [
-	^ ViennaTokenType new
+
+	^ ViennaTokenType current
 ]
 
 { #category : #'instance creation' }
@@ -129,7 +134,8 @@ ViennaType class >> union: anArrayOfViennaType [
 
 { #category : #'instance creation' }
 ViennaType class >> unit [
-	^ ViennaUnitType new
+
+	^ ViennaUnitType current
 ]
 
 { #category : #arithmetic }
@@ -254,12 +260,44 @@ ViennaType >> inv: aBlock [
 ]
 
 { #category : #testing }
+ViennaType >> isChoiceType [
+
+	^ self isOptionType or: [ self isUnionType ]
+]
+
+{ #category : #testing }
+ViennaType >> isCompatibleWith: aViennaType [
+
+	^ self = aViennaType or: [
+		  (aViennaType isChoiceType or: [ aViennaType isConstrainedType ])
+			  and: [ aViennaType isCompatibleWith: self ] ]
+]
+
+{ #category : #testing }
+ViennaType >> isConstrainedType [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaType >> isEnumerable [
 	^ runtimeSet notNil or: [ self basicIsEnumerable ]
 ]
 
 { #category : #testing }
+ViennaType >> isFunctionType [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaType >> isIntType [
+	^ false
+]
+
+{ #category : #testing }
+ViennaType >> isMapType [
+
 	^ false
 ]
 
@@ -274,12 +312,54 @@ ViennaType >> isNatType [
 ]
 
 { #category : #testing }
+ViennaType >> isOperationType [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaType >> isOptionType [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaType >> isProductType [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaType >> isRealType [
 	^ false
 ]
 
 { #category : #testing }
+ViennaType >> isSeqType [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaType >> isSetType [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaType >> isTypeHolder [
+	^ false
+]
+
+{ #category : #testing }
+ViennaType >> isUnionType [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaType >> isUnitType [
+
 	^ false
 ]
 

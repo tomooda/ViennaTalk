@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'char'
 	],
-	#category : 'ViennaTalk-Type-Tests'
+	#category : #'ViennaTalk-Type-Tests'
 }
 
 { #category : #running }
@@ -22,6 +22,13 @@ ViennaCharTypeTest >> testDo [
 ViennaCharTypeTest >> testIncludes [
 	self deny: (char includes: 1.23).
 	self assert: (char includes: $a)
+]
+
+{ #category : #tests }
+ViennaCharTypeTest >> testIsCompatibleWith [
+
+	self assert: (char isCompatibleWith: char).
+	self deny: (char isCompatibleWith: ViennaType nat)
 ]
 
 { #category : #tests }

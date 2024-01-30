@@ -1,10 +1,10 @@
 Class {
 	#name : #ViennaOptionType,
-	#superclass : #ViennaType,
+	#superclass : #ViennaCompoundType,
 	#instVars : [
 		'basetype'
 	],
-	#category : 'ViennaTalk-Type-Core'
+	#category : #'ViennaTalk-Type-Core'
 }
 
 { #category : #accessing }
@@ -53,6 +53,26 @@ ViennaOptionType >> basicIsEnumerable [
 { #category : #comparing }
 ViennaOptionType >> hash [
 	^ basetype hash bitXor: 16rffff
+]
+
+{ #category : #testing }
+ViennaOptionType >> isChoiceType [
+
+	^ true
+]
+
+{ #category : #testing }
+ViennaOptionType >> isCompatibleWith: aViennaType [
+
+	^ aViennaType isOptionType or: [
+		  (basetype isCompatibleWith: aViennaType) or: [
+			  super isCompatibleWith: aViennaType ] ]
+]
+
+{ #category : #testing }
+ViennaOptionType >> isOptionType [
+
+	^ true
 ]
 
 { #category : #accessing }

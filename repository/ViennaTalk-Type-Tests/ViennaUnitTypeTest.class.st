@@ -9,8 +9,9 @@ Class {
 
 { #category : #running }
 ViennaUnitTypeTest >> setUp [
+
 	super setUp.
-	unit := ViennaUnitType new
+	unit := ViennaUnitType current
 ]
 
 { #category : #tests }
@@ -24,6 +25,15 @@ ViennaUnitTypeTest >> testIncludes [
 
 	self deny: (unit includes: 0).
 	self deny: (unit includes: nil)
+]
+
+{ #category : #tests }
+ViennaUnitTypeTest >> testIsCompatibleWith [
+
+	self assert: (ViennaType unit isCompatibleWith: ViennaType unit).
+	self deny: (ViennaType unit isCompatibleWith: ViennaType char).
+	self deny: (ViennaType unit isCompatibleWith: ViennaType any).
+	self deny: (ViennaType any isCompatibleWith: ViennaType unit)
 ]
 
 { #category : #tests }

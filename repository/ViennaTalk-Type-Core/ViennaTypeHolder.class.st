@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'type'
 	],
-	#category : 'ViennaTalk-Type-Core'
+	#category : #'ViennaTalk-Type-Core'
 }
 
 { #category : #'instance creation' }
@@ -12,6 +12,11 @@ ViennaTypeHolder class >> on: aViennaType [
 	^ self new
 		type: aViennaType;
 		yourself
+]
+
+{ #category : #accessing }
+ViennaTypeHolder class >> precedence [
+	^ 6
 ]
 
 { #category : #converting }

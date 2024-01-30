@@ -5,7 +5,7 @@ Class {
 		'optionNat',
 		'optionQuote'
 	],
-	#category : 'ViennaTalk-Type-Tests'
+	#category : #'ViennaTalk-Type-Tests'
 }
 
 { #category : #running }
@@ -29,6 +29,14 @@ ViennaOptionTypeTest >> testDo [
 ViennaOptionTypeTest >> testIncludes [
 	self assert: (optionNat includes: 1).
 	self assert: (optionNat includes: nil)
+]
+
+{ #category : #tests }
+ViennaOptionTypeTest >> testIsCompatibleWith [
+
+	self assert: (optionNat isCompatibleWith: optionNat).
+	self assert: (optionNat isCompatibleWith: optionQuote).
+	self deny: (optionNat isCompatibleWith: ViennaType char)
 ]
 
 { #category : #tests }

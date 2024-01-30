@@ -4,13 +4,14 @@ Class {
 	#instVars : [
 		'real'
 	],
-	#category : 'ViennaTalk-Type-Tests'
+	#category : #'ViennaTalk-Type-Tests'
 }
 
 { #category : #running }
 ViennaRealTypeTest >> setUp [
+
 	super setUp.
-	real := ViennaRealType new
+	real := ViennaRealType current
 ]
 
 { #category : #tests }
@@ -25,6 +26,15 @@ ViennaRealTypeTest >> testIncludes [
 	self assert: (real includes: 1).
 	self assert: (real includes: 1.23).
 	self deny: (real includes: $a)
+]
+
+{ #category : #tests }
+ViennaRealTypeTest >> testIsCompatibleWith [
+
+	self assert: (real isCompatibleWith: real).
+	self assert: (real isCompatibleWith: ViennaType nat1).
+	self assert: (real isCompatibleWith: ViennaType real).
+	self deny: (real isCompatibleWith: ViennaType char)
 ]
 
 { #category : #tests }

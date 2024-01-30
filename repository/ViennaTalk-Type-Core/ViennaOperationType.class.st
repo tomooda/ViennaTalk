@@ -1,6 +1,6 @@
 Class {
 	#name : #ViennaOperationType,
-	#superclass : #ViennaType,
+	#superclass : #ViennaCompoundType,
 	#instVars : [
 		'returntype',
 		'argtypes'
@@ -60,6 +60,24 @@ ViennaOperationType >> basicIsEnumerable [
 { #category : #comparing }
 ViennaOperationType >> hash [
 	^ argtypes hash bitXor: returntype hash
+]
+
+{ #category : #testing }
+ViennaOperationType >> isCompatibleWith: aViennaType [
+
+	^ (aViennaType isOperationType and: [
+		   self argtypes size = aViennaType argtypes size and: [
+			   ((1 to: self argtypes size) allSatisfy: [ :i |
+				    (self argtypes at: i) isCompatibleWith:
+					    (aViennaType argtypes at: i) ]) and: [
+				   self returntype isCompatibleWith: aViennaType returntype ] ] ])
+		  or: [ super isCompatibleWith: aViennaType ]
+]
+
+{ #category : #testing }
+ViennaOperationType >> isOperationType [
+
+	^ true
 ]
 
 { #category : #accessing }

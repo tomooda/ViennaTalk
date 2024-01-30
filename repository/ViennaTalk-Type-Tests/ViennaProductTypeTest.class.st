@@ -5,7 +5,7 @@ Class {
 		'natBool',
 		'quoteBool'
 	],
-	#category : 'ViennaTalk-Type-Tests'
+	#category : #'ViennaTalk-Type-Tests'
 }
 
 { #category : #running }
@@ -27,6 +27,13 @@ ViennaProductTypeTest >> testDo [
 ViennaProductTypeTest >> testIncludes [
 	self assert: (natBool includes: #(1 true)).
 	self assert: (quoteBool includes: #(#QUOTE false))
+]
+
+{ #category : #tests }
+ViennaProductTypeTest >> testIsCompatibleWith [
+
+	self assert: (natBool isCompatibleWith: natBool).
+	self deny: (natBool isCompatibleWith: quoteBool)
 ]
 
 { #category : #tests }

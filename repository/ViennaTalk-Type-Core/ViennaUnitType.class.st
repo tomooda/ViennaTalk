@@ -1,8 +1,13 @@
 Class {
 	#name : #ViennaUnitType,
-	#superclass : #ViennaType,
+	#superclass : #ViennaBasicType,
 	#category : #'ViennaTalk-Type-Core'
 }
+
+{ #category : #accessing }
+ViennaUnitType class >> precedence [
+	^ 6
+]
 
 { #category : #comparing }
 ViennaUnitType >> = anObject [
@@ -23,6 +28,12 @@ ViennaUnitType >> basicIncludes: anObject [
 
 { #category : #testing }
 ViennaUnitType >> basicIsEnumerable [
+	^ true
+]
+
+{ #category : #testing }
+ViennaUnitType >> isUnitType [
+
 	^ true
 ]
 

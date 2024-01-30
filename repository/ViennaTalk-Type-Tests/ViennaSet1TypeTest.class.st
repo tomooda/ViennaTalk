@@ -5,7 +5,7 @@ Class {
 		'set1ofnat',
 		'set1ofbool'
 	],
-	#category : 'ViennaTalk-Type-Tests'
+	#category : #'ViennaTalk-Type-Tests'
 }
 
 { #category : #running }
@@ -33,6 +33,20 @@ ViennaSet1TypeTest >> testIncludes [
 	self deny: (set1ofnat includes: {} asSet).
 	self assert: (set1ofnat includes: {1} asSet).
 	self deny: (set1ofnat includes: {1 . -1} asSet)
+]
+
+{ #category : #tests }
+ViennaSet1TypeTest >> testIsCompatibleWith [
+
+	self assert:
+		(ViennaType char set1 isCompatibleWith: ViennaType char set1).
+	self assert:
+		(ViennaType char set1 isCompatibleWith: ViennaType char set).
+	self deny: (ViennaType char set1 isCompatibleWith: ViennaType char).
+	self deny:
+		(ViennaType char set1 isCompatibleWith: ViennaType nat set1).
+	self deny:
+		(ViennaType char set1 isCompatibleWith: ViennaType char seq1)
 ]
 
 { #category : #tests }

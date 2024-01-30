@@ -4,13 +4,13 @@ Class {
 	#instVars : [
 		'int'
 	],
-	#category : 'ViennaTalk-Type-Tests'
+	#category : #'ViennaTalk-Type-Tests'
 }
 
 { #category : #running }
 ViennaIntTypeTest >> setUp [
 	super setUp.
-	int := ViennaIntType new
+	int := ViennaIntType current
 ]
 
 { #category : #tests }
@@ -25,6 +25,15 @@ ViennaIntTypeTest >> testIncludes [
 	self assert: (int includes: 1).
 	self deny: (int includes: 1.23).
 	self deny: (int includes: $a)
+]
+
+{ #category : #tests }
+ViennaIntTypeTest >> testIsCompatibleWith [
+
+	self assert: (int isCompatibleWith: int).
+	self assert: (int isCompatibleWith: ViennaType nat).
+	self assert: (int isCompatibleWith: ViennaType real).
+	self deny: (int isCompatibleWith: ViennaType char)
 ]
 
 { #category : #tests }

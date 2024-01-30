@@ -1,10 +1,10 @@
 Class {
 	#name : #ViennaUnionType,
-	#superclass : #ViennaType,
+	#superclass : #ViennaCompoundType,
 	#instVars : [
 		'basetypes'
 	],
-	#category : 'ViennaTalk-Type-Core'
+	#category : #'ViennaTalk-Type-Core'
 }
 
 { #category : #'instance creation' }
@@ -66,6 +66,19 @@ ViennaUnionType >> basicIsEnumerable [
 { #category : #comparing }
 ViennaUnionType >> hash [
 	^ basetypes inject: 0 into: [ :h :t | h bitXor: t hash ]
+]
+
+{ #category : #testing }
+ViennaUnionType >> isCompatibleWith: aViennaType [
+
+	^ basetypes anySatisfy: [ :basetype |
+		  basetype isCompatibleWith: aViennaType ]
+]
+
+{ #category : #testing }
+ViennaUnionType >> isUnionType [
+
+	^ true
 ]
 
 { #category : #accessing }

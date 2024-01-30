@@ -1,8 +1,13 @@
 Class {
 	#name : #ViennaAnyType,
-	#superclass : #ViennaType,
-	#category : 'ViennaTalk-Type-Core'
+	#superclass : #ViennaBasicType,
+	#category : #'ViennaTalk-Type-Core'
 }
+
+{ #category : #accessing }
+ViennaAnyType class >> precedence [
+	^ 6
+]
 
 { #category : #comparing }
 ViennaAnyType >> = anObject [
@@ -32,6 +37,12 @@ ViennaAnyType >> basicIsEnumerable [
 { #category : #comparing }
 ViennaAnyType >> hash [
 	^ self class hash
+]
+
+{ #category : #testing }
+ViennaAnyType >> isCompatibleWith: aViennaType [
+
+	^ aViennaType isUnitType not
 ]
 
 { #category : #accessing }

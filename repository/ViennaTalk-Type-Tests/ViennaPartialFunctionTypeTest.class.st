@@ -7,7 +7,7 @@ Class {
 		'nat1',
 		'int'
 	],
-	#category : 'ViennaTalk-Type-Tests'
+	#category : #'ViennaTalk-Type-Tests'
 }
 
 { #category : #running }
@@ -37,6 +37,16 @@ ViennaPartialFunctionTypeTest >> testIncludes [
 						at: false put: true;
 						yourself)).
 	self assert: (bool -> bool includes: [ :n | n + 1 ])
+]
+
+{ #category : #tests }
+ViennaPartialFunctionTypeTest >> testIsCompatibleWith [
+
+	self assert: (nat * int -> bool isCompatibleWith: nat * int -> bool).
+	self assert: (nat * int -> bool isCompatibleWith: int * nat -> bool).
+	self assert: (nat * int -> bool isCompatibleWith: nat * int +> bool).
+	self deny: (nat * int -> bool isCompatibleWith: bool * int -> bool).
+	self deny: (nat * int -> bool isCompatibleWith: nat * int -> int)
 ]
 
 { #category : #tests }

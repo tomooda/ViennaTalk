@@ -1,10 +1,10 @@
 Class {
 	#name : #ViennaSet1Type,
-	#superclass : #ViennaType,
+	#superclass : #ViennaCompoundType,
 	#instVars : [
 		'basetype'
 	],
-	#category : 'ViennaTalk-Type-Core'
+	#category : #'ViennaTalk-Type-Core'
 }
 
 { #category : #'instance creation' }
@@ -61,6 +61,20 @@ ViennaSet1Type >> basicIsEnumerable [
 { #category : #comparing }
 ViennaSet1Type >> hash [
 	^ basetype hash bitXor: 16rffff
+]
+
+{ #category : #testing }
+ViennaSet1Type >> isCompatibleWith: aViennaType [
+
+	^ (aViennaType isSetType and: [
+		   basetype isCompatibleWith: aViennaType basetype ]) or: [
+		  super isCompatibleWith: aViennaType ]
+]
+
+{ #category : #testing }
+ViennaSet1Type >> isSetType [
+
+	^ true
 ]
 
 { #category : #accessing }

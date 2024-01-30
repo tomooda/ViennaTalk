@@ -1,11 +1,11 @@
 Class {
 	#name : #ViennaPartialFunctionType,
-	#superclass : #ViennaType,
+	#superclass : #ViennaCompoundType,
 	#instVars : [
 		'returntype',
 		'argtypes'
 	],
-	#category : 'ViennaTalk-Type-Core'
+	#category : #'ViennaTalk-Type-Core'
 }
 
 { #category : #accessing }
@@ -60,6 +60,24 @@ ViennaPartialFunctionType >> basicIsEnumerable [
 { #category : #comparing }
 ViennaPartialFunctionType >> hash [
 	^ argtypes hash bitXor: returntype hash
+]
+
+{ #category : #testing }
+ViennaPartialFunctionType >> isCompatibleWith: aViennaType [
+
+	^ (aViennaType isFunctionType and: [
+		   self argtypes size = aViennaType argtypes size and: [
+			   ((1 to: self argtypes size) allSatisfy: [ :i |
+				    (self argtypes at: i) isCompatibleWith:
+					    (aViennaType argtypes at: i) ]) and: [
+				   self returntype isCompatibleWith: aViennaType returntype ] ] ])
+		  or: [ super isCompatibleWith: aViennaType ]
+]
+
+{ #category : #testing }
+ViennaPartialFunctionType >> isFunctionType [
+
+	^ true
 ]
 
 { #category : #accessing }

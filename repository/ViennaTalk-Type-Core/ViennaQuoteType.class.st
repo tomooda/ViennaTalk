@@ -1,10 +1,10 @@
 Class {
 	#name : #ViennaQuoteType,
-	#superclass : #ViennaType,
+	#superclass : #ViennaBasicType,
 	#instVars : [
 		'symbol'
 	],
-	#category : 'ViennaTalk-Type-Core'
+	#category : #'ViennaTalk-Type-Core'
 }
 
 { #category : #accessing }

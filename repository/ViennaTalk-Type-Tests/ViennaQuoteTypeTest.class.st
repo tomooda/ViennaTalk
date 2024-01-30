@@ -4,11 +4,12 @@ Class {
 	#instVars : [
 		'quote'
 	],
-	#category : 'ViennaTalk-Type-Tests'
+	#category : #'ViennaTalk-Type-Tests'
 }
 
 { #category : #running }
 ViennaQuoteTypeTest >> setUp [
+
 	super setUp.
 	quote := ViennaQuoteType with: #QUOTE
 ]
@@ -23,6 +24,17 @@ ViennaQuoteTypeTest >> testIncludes [
 	self assert: (quote includes: #QUOTE).
 	self deny: (quote includes: 'QUOTE').
 	self deny: (quote includes: $a)
+]
+
+{ #category : #tests }
+ViennaQuoteTypeTest >> testIsCompatibleWith [
+
+	self assert: ((ViennaType quote: 'QUOTE') isCompatibleWith:
+			 (ViennaType quote: 'QUOTE')).
+	self deny: ((ViennaType quote: 'QUOTE') isCompatibleWith:
+			 (ViennaType quote: 'QUOTE1')).
+	self deny:
+		((ViennaType quote: 'QUOTE') isCompatibleWith: ViennaType char)
 ]
 
 { #category : #tests }

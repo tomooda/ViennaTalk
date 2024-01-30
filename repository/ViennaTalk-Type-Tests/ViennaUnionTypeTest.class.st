@@ -5,7 +5,7 @@ Class {
 		'natBool',
 		'quoteBool'
 	],
-	#category : 'ViennaTalk-Type-Tests'
+	#category : #'ViennaTalk-Type-Tests'
 }
 
 { #category : #running }
@@ -30,6 +30,23 @@ ViennaUnionTypeTest >> testIncludes [
 	self assert: (quoteBool includes: #QUOTE).
 	self assert: (quoteBool includes: false).
 	self deny: (quoteBool includes: #NOQUOTE)
+]
+
+{ #category : #tests }
+ViennaUnionTypeTest >> testIsCompatibleWith [
+
+	self assert: (ViennaType nat | ViennaType char isCompatibleWith:
+			 ViennaType nat | ViennaType char).
+	self assert:
+		(ViennaType nat | ViennaType char isCompatibleWith: ViennaType nat).
+	self assert:
+		(ViennaType nat isCompatibleWith: ViennaType nat | ViennaType char).
+	self deny: (ViennaType nat | ViennaType char isCompatibleWith:
+			 (ViennaType quote: 'QUOTE') | ViennaType token).
+	self assert: (ViennaType nat optional isCompatibleWith:
+			 ViennaType nat | ViennaType char optional).
+	self assert: (ViennaType nat optional isCompatibleWith:
+			 (ViennaType quote: 'QUOTE') | ViennaType char optional)
 ]
 
 { #category : #tests }

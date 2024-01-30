@@ -4,13 +4,14 @@ Class {
 	#instVars : [
 		'nat'
 	],
-	#category : 'ViennaTalk-Type-Tests'
+	#category : #'ViennaTalk-Type-Tests'
 }
 
 { #category : #running }
 ViennaNatTypeTest >> setUp [
+
 	super setUp.
-	nat := ViennaNatType new
+	nat := ViennaNatType current
 ]
 
 { #category : #tests }
@@ -25,6 +26,15 @@ ViennaNatTypeTest >> testIncludes [
 	self assert: (nat includes: 1).
 	self deny: (nat includes: 1.23).
 	self deny: (nat includes: $a)
+]
+
+{ #category : #tests }
+ViennaNatTypeTest >> testIsCompatibleWith [
+
+	self assert: (nat isCompatibleWith: nat).
+	self assert: (nat isCompatibleWith: ViennaType nat1).
+	self assert: (nat isCompatibleWith: ViennaType real).
+	self deny: (nat isCompatibleWith: ViennaType char)
 ]
 
 { #category : #tests }

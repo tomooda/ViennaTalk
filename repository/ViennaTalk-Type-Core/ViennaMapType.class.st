@@ -1,11 +1,11 @@
 Class {
 	#name : #ViennaMapType,
-	#superclass : #ViennaType,
+	#superclass : #ViennaCompoundType,
 	#instVars : [
 		'keytype',
 		'valuetype'
 	],
-	#category : 'ViennaTalk-Type-Core'
+	#category : #'ViennaTalk-Type-Core'
 }
 
 { #category : #accessing }
@@ -64,6 +64,21 @@ ViennaMapType >> basicIsEnumerable [
 { #category : #comparing }
 ViennaMapType >> hash [
 	^ keytype hash bitXor: valuetype hash
+]
+
+{ #category : #testing }
+ViennaMapType >> isCompatibleWith: aViennaType [
+
+	^ (aViennaType isMapType and: [
+		   (self keytype isCompatibleWith: aViennaType keytype) and: [
+			   self valuetype isCompatibleWith: aViennaType valuetype ] ]) or: [
+		  super isCompatibleWith: aViennaType ]
+]
+
+{ #category : #testing }
+ViennaMapType >> isMapType [
+
+	^ true
 ]
 
 { #category : #private }

@@ -4,13 +4,14 @@ Class {
 	#instVars : [
 		'token'
 	],
-	#category : 'ViennaTalk-Type-Tests'
+	#category : #'ViennaTalk-Type-Tests'
 }
 
 { #category : #running }
 ViennaTokenTypeTest >> setUp [
+
 	super setUp.
-	token := ViennaTokenType new
+	token := ViennaTokenType current
 ]
 
 { #category : #tests }
@@ -22,6 +23,13 @@ ViennaTokenTypeTest >> testDo [
 ViennaTokenTypeTest >> testIncludes [
 	self deny: (token includes: 1.23).
 	self assert: (token includes: (ViennaToken with: 1.23))
+]
+
+{ #category : #tests }
+ViennaTokenTypeTest >> testIsCompatibleWith [
+
+	self assert: (ViennaType token isCompatibleWith: ViennaType token).
+	self deny: (ViennaType token isCompatibleWith: ViennaType char)
 ]
 
 { #category : #tests }

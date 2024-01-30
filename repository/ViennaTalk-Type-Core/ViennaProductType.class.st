@@ -1,6 +1,6 @@
 Class {
 	#name : #ViennaProductType,
-	#superclass : #ViennaType,
+	#superclass : #ViennaCompoundType,
 	#instVars : [
 		'basetypes'
 	],
@@ -79,6 +79,23 @@ ViennaProductType >> basicIsEnumerable [
 { #category : #comparing }
 ViennaProductType >> hash [
 	^ basetypes hash
+]
+
+{ #category : #testing }
+ViennaProductType >> isCompatibleWith: aViennaType [
+
+	^ (aViennaType isProductType and: [
+		   self basetypes size = aViennaType basetypes size and: [
+			   (1 to: self basetypes size) allSatisfy: [ :i |
+				   (self basetypes at: i) isCompatibleWith:
+					   (aViennaType basetypes at: i) ] ] ]) or: [
+		  super isCompatibleWith: aViennaType ]
+]
+
+{ #category : #testing }
+ViennaProductType >> isProductType [
+
+	^ true
 ]
 
 { #category : #accessing }

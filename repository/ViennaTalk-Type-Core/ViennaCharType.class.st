@@ -1,16 +1,11 @@
 Class {
 	#name : #ViennaCharType,
-	#superclass : #ViennaType,
+	#superclass : #ViennaBasicType,
 	#classVars : [
 		'Current'
 	],
-	#category : 'ViennaTalk-Type-Core'
+	#category : #'ViennaTalk-Type-Core'
 }
-
-{ #category : #'instance creation' }
-ViennaCharType class >> current [
-	^ Current ifNil: [ Current := self new ]
-]
 
 { #category : #accessing }
 ViennaCharType class >> precedence [

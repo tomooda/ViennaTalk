@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'seq1ofnat'
 	],
-	#category : 'ViennaTalk-Type-Tests'
+	#category : #'ViennaTalk-Type-Tests'
 }
 
 { #category : #running }
@@ -23,6 +23,20 @@ ViennaSeq1TypeTest >> testIncludes [
 	self deny: (seq1ofnat includes: #() asOrderedCollection).
 	self assert: (seq1ofnat includes: #(1) asOrderedCollection).
 	self deny: (seq1ofnat includes: #(1 2.3) asOrderedCollection)
+]
+
+{ #category : #tests }
+ViennaSeq1TypeTest >> testIsCompatibleWith [
+
+	self assert:
+		(ViennaType char seq1 isCompatibleWith: ViennaType char seq1).
+	self assert:
+		(ViennaType char seq1 isCompatibleWith: ViennaType char seq).
+	self deny: (ViennaType char seq1 isCompatibleWith: ViennaType char).
+	self deny:
+		(ViennaType char seq1 isCompatibleWith: ViennaType nat seq1).
+	self deny:
+		(ViennaType char seq1 isCompatibleWith: ViennaType char set)
 ]
 
 { #category : #tests }

@@ -1,7 +1,7 @@
 Class {
 	#name : #ViennaBoolType,
-	#superclass : #ViennaType,
-	#category : 'ViennaTalk-Type-Core'
+	#superclass : #ViennaBasicType,
+	#category : #'ViennaTalk-Type-Core'
 }
 
 { #category : #accessing }

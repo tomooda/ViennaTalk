@@ -37,6 +37,17 @@ ViennaOperationTypeTest >> testIncludes [
 ]
 
 { #category : #tests }
+ViennaOperationTypeTest >> testIsCompatibleWith [
+
+	self assert:
+		(nat * int ==> bool isCompatibleWith: nat * int ==> bool).
+	self assert:
+		(nat * int ==> bool isCompatibleWith: int * nat ==> bool).
+	self deny: (nat * int ==> bool isCompatibleWith: bool * int ==> bool).
+	self deny: (nat * int ==> bool isCompatibleWith: nat * int ==> int)
+]
+
+{ #category : #tests }
 ViennaOperationTypeTest >> testIsEnumerable [
 	self deny: (bool ==> bool) isEnumerable.
 	self deny: (nat ==> nat) isEnumerable

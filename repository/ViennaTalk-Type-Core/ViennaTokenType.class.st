@@ -1,10 +1,10 @@
 Class {
 	#name : #ViennaTokenType,
-	#superclass : #ViennaType,
+	#superclass : #ViennaBasicType,
 	#classVars : [
 		'Current'
 	],
-	#category : 'ViennaTalk-Type-Core'
+	#category : #'ViennaTalk-Type-Core'
 }
 
 { #category : #accessing }

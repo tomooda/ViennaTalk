@@ -1,11 +1,11 @@
 Class {
 	#name : #ViennaConstrainedType,
-	#superclass : #ViennaType,
+	#superclass : #ViennaCompoundType,
 	#instVars : [
 		'basetype',
 		'invariant'
 	],
-	#category : 'ViennaTalk-Type-Core'
+	#category : #'ViennaTalk-Type-Core'
 }
 
 { #category : #accessing }
@@ -75,6 +75,18 @@ ViennaConstrainedType >> inv: aBlock [
 { #category : #accessing }
 ViennaConstrainedType >> invariant [
 	^ invariant
+]
+
+{ #category : #testing }
+ViennaConstrainedType >> isCompatibleWith: aViennaType [
+
+	^ basetype isCompatibleWith: aViennaType
+]
+
+{ #category : #testing }
+ViennaConstrainedType >> isConstrainedType [
+
+	^ true
 ]
 
 { #category : #testing }

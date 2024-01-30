@@ -1,11 +1,11 @@
 Class {
 	#name : #ViennaCompositeType,
-	#superclass : #ViennaType,
+	#superclass : #ViennaCompoundType,
 	#type : #variable,
 	#instVars : [
 		'constructorName'
 	],
-	#category : 'ViennaTalk-Type-Core'
+	#category : #'ViennaTalk-Type-Core'
 }
 
 { #category : #'instance creation' }
