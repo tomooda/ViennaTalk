@@ -32,6 +32,18 @@ ViennaExpressionNode >> type [
 ]
 
 { #category : #typechecking }
+ViennaExpressionNode >> type: aViennaType [
+
+	type := aViennaType
+]
+
+{ #category : #typechecking }
+ViennaExpressionNode >> typecheck [
+
+	^ self typecheck: ViennaType any
+]
+
+{ #category : #typechecking }
 ViennaExpressionNode >> typecheck: aViennaType [
 
 	^ self subclassResponsibility
