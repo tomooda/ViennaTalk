@@ -34,3 +34,21 @@ ViennaArithmeticIntegerDivisionNode >> operatorPrecedence [
 
 	^ 32
 ]
+
+{ #category : #accessing }
+ViennaArithmeticIntegerDivisionNode >> paramType1 [
+
+	^ ViennaType int
+]
+
+{ #category : #accessing }
+ViennaArithmeticIntegerDivisionNode >> paramType2 [
+
+	^ ViennaType int
+]
+
+{ #category : #accessing }
+ViennaArithmeticIntegerDivisionNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
+
+	^ ViennaType int
+]

@@ -28,3 +28,13 @@ ViennaUnaryMinusNode >> operatorPrecedence [
 
 	^ 36
 ]
+
+{ #category : #typechecking }
+ViennaUnaryMinusNode >> typecheck: aViennaType [
+
+	| type |
+	type := self expression typecheck: aViennaType.
+	^ type isNatType
+		  ifTrue: [ ViennaType int ]
+		  ifFalse: [ type ]
+]

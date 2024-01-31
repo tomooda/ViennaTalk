@@ -34,3 +34,25 @@ ViennaArithmeticModNode >> operatorPrecedence [
 
 	^ 32
 ]
+
+{ #category : #accessing }
+ViennaArithmeticModNode >> paramType1 [
+
+	^ ViennaType real
+]
+
+{ #category : #accessing }
+ViennaArithmeticModNode >> paramType2 [
+
+	^ ViennaType real
+]
+
+{ #category : #accessing }
+ViennaArithmeticModNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
+
+	(aViennaType1 isIntType and: [ aViennaType2 isNatType ]) ifTrue: [
+		^ ViennaType nat ].
+	^ (aViennaType1 isIntType and: [ aViennaType2 isIntType ])
+		  ifTrue: [ ViennaType int ]
+		  ifFalse: [ ViennaType real ]
+]

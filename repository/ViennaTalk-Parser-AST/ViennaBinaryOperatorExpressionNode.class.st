@@ -77,3 +77,38 @@ ViennaBinaryOperatorExpressionNode >> isViennaBinaryOperatorExpressionNode [
 
 	^ true
 ]
+
+{ #category : #accessing }
+ViennaBinaryOperatorExpressionNode >> paramType1 [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
+ViennaBinaryOperatorExpressionNode >> paramType2 [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
+ViennaBinaryOperatorExpressionNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #typechecking }
+ViennaBinaryOperatorExpressionNode >> typecheck: aViennaType [
+
+	| returnType |
+	returnType := self
+		              returnTypeFor:
+		              (self expression1 typecheck: self paramType1)
+		              and: (self expression2 typecheck: self paramType2).
+	(aViennaType isCompatibleWith: returnType) ifFalse: [
+		^ ViennaTypeError
+			  on: self
+			  signal:
+				  'Type mismatch: expected ' , aViennaType printString
+				  , ', but given ' , returnType printString ].
+	^ returnType
+]

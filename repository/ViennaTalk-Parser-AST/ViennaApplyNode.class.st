@@ -98,30 +98,24 @@ ViennaApplyNode >> operatorPrecedence [
 { #category : #typechecking }
 ViennaApplyNode >> typecheck: aViennaType [
 
-	| functionType argumentTypes |
-	functionType := self function type.
-	argumentTypes := self arguments collect: #type.
+	| functionType args |
+	functionType := self function maximalType.
+	args := self arguments.
 	functionType isFunctionType ifTrue: [
 		| paramTypes returnType |
 		paramTypes := functionType argtypes.
 		(paramTypes size = 1 and: [ paramTypes first isUnitType ]) ifTrue: [
 			paramTypes := #(  ) ].
 		returnType := functionType returntype.
-		paramTypes size = argumentTypes size ifFalse: [
+		paramTypes size = args size ifFalse: [
 			^ ViennaTypeError
 				  on: self
 				  signal:
 					  'Wrong number of arguments: expected '
 					  , paramTypes size printString , ' but given '
-					  , argumentTypes size printString ].
+					  , args size printString ].
 		1 to: paramTypes size do: [ :i |
-			((argumentTypes at: i) isCompatibleWith: (paramTypes at: i))
-				ifFalse: [
-					^ ViennaTypeError
-						  on: self
-						  signal: 'The types of the argument #' , i printString
-							  , ' don''t agree: expected ' , (paramTypes at: i) printString
-							  , ' but given ' , (argumentTypes at: i) printString ] ].
+		(args at: i) typecheck: (paramTypes at: i) ].
 		(aViennaType isCompatibleWith: returnType) ifFalse: [
 			^ ViennaTypeError
 				  on: self
@@ -135,21 +129,15 @@ ViennaApplyNode >> typecheck: aViennaType [
 		(paramTypes size = 1 and: [ paramTypes first isUnitType ]) ifTrue: [
 			paramTypes := #(  ) ].
 		returnType := functionType returntype.
-		paramTypes size = argumentTypes size ifFalse: [
+		paramTypes size = args size ifFalse: [
 			^ ViennaTypeError
 				  on: self
 				  signal:
 					  'Wrong number of arguments: expected '
 					  , paramTypes size printString , ' but given '
-					  , argumentTypes size printString ].
+					  , args size printString ].
 		1 to: paramTypes size do: [ :i |
-			((argumentTypes at: i) isCompatibleWith: (paramTypes at: i))
-				ifFalse: [
-					^ ViennaTypeError
-						  on: self
-						  signal: 'The types of the argument #' , i printString
-							  , ' don''t agree: expected ' , (paramTypes at: i) printString
-							  , ' but given ' , (argumentTypes at: i) printString ] ].
+		(args at: i) typecheck: (paramTypes at: i) ].
 		(aViennaType isCompatibleWith: returnType) ifFalse: [
 			^ ViennaTypeError
 				  on: self
@@ -161,44 +149,34 @@ ViennaApplyNode >> typecheck: aViennaType [
 		| paramType returnType |
 		paramType := functionType keytype.
 		returnType := functionType valuetype.
-		argumentTypes size = 1 ifFalse: [
+		args size = 1 ifFalse: [
 			^ ViennaTypeError
 				  on: self
 				  signal: 'Wrong number of arguments: expected 1 but given '
-					  , argumentTypes size printString ].
-		(argumentTypes first isCompatibleWith: paramType) ifFalse: [
-			^ ViennaTypeError
-				  on: self
-				  signal: 'The types of the argument don''t agree: expected '
-					  , paramType printString , ' but given '
-					  , argumentTypes first printString ].
+					  , args size printString ].
+		args first typecheck: paramType.
 		(aViennaType isCompatibleWith: returnType) ifFalse: [
 			^ ViennaTypeError
 				  on: self
 				  signal:
-					  'The return types don''t agree: expected '
-					  , returnType printString , ' but given ' , aViennaType ].
+					  'Type mismatch: expected ' , aViennaType printString
+					  , ' but given ' , returnType printString ].
 		^ returnType ].
 	functionType isSeqType ifTrue: [
 		| returnType |
 		returnType := functionType basetype.
-		argumentTypes size = 1 ifFalse: [
+		args size = 1 ifFalse: [
 			^ ViennaTypeError
 				  on: self
 				  signal: 'Wrong number of arguments: expected 1 but given '
-					  , argumentTypes size printString ].
-		argumentTypes first isRealType ifFalse: [
-			^ ViennaTypeError
-				  on: self
-				  signal:
-					  'The types of the argument don''t agree: expected nat1 but given '
-					  , argumentTypes first printString ].
+					  , args size printString ].
+		args first typecheck: ViennaType nat1.
 		(aViennaType isCompatibleWith: returnType) ifFalse: [
 			^ ViennaTypeError
 				  on: self
 				  signal:
-					  'The return types don''t agree: expected '
-					  , returnType printString , ' but given ' , aViennaType ].
+					  'Type mismatch: expected ' , aViennaType printString
+					  , ' but given ' , returnType printString ].
 		^ returnType ].
-	^ ViennaTypeError on: self function signal: 'Not applicable'
+	^ ViennaTypeError on: self signal: 'Not an applicable type'
 ]

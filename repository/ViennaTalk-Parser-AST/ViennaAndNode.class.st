@@ -28,3 +28,21 @@ ViennaAndNode >> operatorPrecedence [
 
 	^ 14
 ]
+
+{ #category : #accessing }
+ViennaAndNode >> paramType1 [
+
+	^ ViennaType bool
+]
+
+{ #category : #accessing }
+ViennaAndNode >> paramType2 [
+
+	^ ViennaType bool
+]
+
+{ #category : #accessing }
+ViennaAndNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
+
+	^ ViennaType bool
+]

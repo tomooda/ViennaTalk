@@ -36,7 +36,7 @@ ViennaMatchValueNode >> formatWith: aViennaAbstractFormatter [
 
 	| value |
 	value := aViennaAbstractFormatter format: self expression.
-	^ self first isViennaSymbolicLiteralNode
+	^ self expression isViennaSymbolicLiteralNode
 		  ifTrue: [ value ]
 		  ifFalse: [ '(' , value , ')' ]
 ]

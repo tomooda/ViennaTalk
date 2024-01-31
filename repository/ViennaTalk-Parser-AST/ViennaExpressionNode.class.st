@@ -3,7 +3,7 @@ Class {
 	#superclass : #ViennaNode,
 	#type : #variable,
 	#instVars : [
-		'type'
+		'maximalType'
 	],
 	#category : #'ViennaTalk-Parser-AST'
 }
@@ -26,15 +26,15 @@ ViennaExpressionNode >> isViennaExpressionNode [
 ]
 
 { #category : #typechecking }
-ViennaExpressionNode >> type [
+ViennaExpressionNode >> maximalType [
 
-	^ type ifNil: [ type := self typecheck ]
+	^ maximalType ifNil: [ maximalType := self typecheck ]
 ]
 
 { #category : #typechecking }
-ViennaExpressionNode >> type: aViennaType [
+ViennaExpressionNode >> maximalType: aViennaType [
 
-	type := aViennaType
+	maximalType := aViennaType
 ]
 
 { #category : #typechecking }
@@ -46,11 +46,7 @@ ViennaExpressionNode >> typecheck [
 { #category : #typechecking }
 ViennaExpressionNode >> typecheck: aViennaType [
 
+	maximalType ifNotNil: [
+		(maximalType isCompatibleWith: aViennaType) ifTrue: [ ^ maximalType ] ].
 	^ self subclassResponsibility
-]
-
-{ #category : #typechecking }
-ViennaExpressionNode >> untype [
-
-	type := nil
 ]
