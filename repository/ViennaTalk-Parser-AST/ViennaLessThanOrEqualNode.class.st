@@ -28,3 +28,21 @@ ViennaLessThanOrEqualNode >> operatorPrecedence [
 
 	^ 21
 ]
+
+{ #category : #accessing }
+ViennaLessThanOrEqualNode >> paramType1 [
+
+	^ ViennaType real
+]
+
+{ #category : #accessing }
+ViennaLessThanOrEqualNode >> paramType2 [
+
+	^ ViennaType real
+]
+
+{ #category : #accessing }
+ViennaLessThanOrEqualNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
+
+	^ ViennaType bool
+]

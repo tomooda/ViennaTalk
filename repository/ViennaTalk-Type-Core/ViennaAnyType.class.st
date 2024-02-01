@@ -40,6 +40,12 @@ ViennaAnyType >> hash [
 ]
 
 { #category : #testing }
+ViennaAnyType >> isAnyType [
+
+	^ true
+]
+
+{ #category : #testing }
 ViennaAnyType >> isCompatibleWith: aViennaType [
 
 	^ aViennaType isUnitType not

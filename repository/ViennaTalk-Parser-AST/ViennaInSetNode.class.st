@@ -28,3 +28,26 @@ ViennaInSetNode >> operatorPrecedence [
 
 	^ 21
 ]
+
+{ #category : #accessing }
+ViennaInSetNode >> paramType1 [
+
+	^ ViennaType any
+]
+
+{ #category : #accessing }
+ViennaInSetNode >> paramType2 [
+
+	^ ViennaType any set
+]
+
+{ #category : #accessing }
+ViennaInSetNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
+
+	(aViennaType1 isCompatibleWith: aViennaType2 basetype) ifFalse: [
+		^ ViennaTypeError
+			  on: self
+			  signal: 'Type mismatch: ' , aViennaType1 printString
+				  , ' is not a member type of ' , aViennaType2 printString ].
+	^ ViennaType bool
+]

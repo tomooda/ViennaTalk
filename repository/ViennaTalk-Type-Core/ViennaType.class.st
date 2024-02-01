@@ -76,7 +76,11 @@ ViennaType class >> precedence [
 
 { #category : #'instance creation' }
 ViennaType class >> product: anArrayOfViennaType [
-	^ ViennaProductType withAll: anArrayOfViennaType
+
+	^ anArrayOfViennaType ifEmpty: [ self unit ] ifNotEmpty: [
+		  anArrayOfViennaType size = 1
+			  ifTrue: [ anArrayOfViennaType first ]
+			  ifFalse: [ ViennaProductType withAll: anArrayOfViennaType ] ]
 ]
 
 { #category : #'instance creation' }
@@ -260,6 +264,12 @@ ViennaType >> inv: aBlock [
 ]
 
 { #category : #testing }
+ViennaType >> isAnyType [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaType >> isChoiceType [
 
 	^ self isOptionType or: [ self isUnionType ]
@@ -268,9 +278,10 @@ ViennaType >> isChoiceType [
 { #category : #testing }
 ViennaType >> isCompatibleWith: aViennaType [
 
-	^ self = aViennaType or: [
-		  (aViennaType isChoiceType or: [ aViennaType isConstrainedType ])
-			  and: [ aViennaType isCompatibleWith: self ] ]
+	^ aViennaType isAnyType or: [
+		  self = aViennaType or: [
+			  (aViennaType isChoiceType or: [ aViennaType isConstrainedType ])
+				  and: [ aViennaType isCompatibleWith: self ] ] ]
 ]
 
 { #category : #testing }

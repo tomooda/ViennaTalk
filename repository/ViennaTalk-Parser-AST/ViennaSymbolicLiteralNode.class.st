@@ -72,21 +72,21 @@ ViennaSymbolicLiteralNode >> typecheck: aViennaType [
 				  signal: 'Type mismatch: ' , aViennaType printString
 					  , ' expected, but nil given' ].
 		^ ViennaType unit optional ].
-	literal first = '''' ifTrue: [
+	literal first = $' ifTrue: [
 		(aViennaType isCompatibleWith: ViennaType char) ifFalse: [
 			^ ViennaTypeError
 				  on: self
 				  signal: 'Type mismatch: ' , aViennaType printString
 					  , ' expected, but char given' ].
 		^ ViennaType char ].
-	literal first = '"' ifTrue: [
+	literal first = $" ifTrue: [
 		(aViennaType isCompatibleWith: ViennaType char seq) ifFalse: [
 			^ ViennaTypeError
 				  on: self
 				  signal: 'Type mismatch: ' , aViennaType printString
 					  , ' expected, but seq of char given' ].
 		^ ViennaType char seq ].
-	(literal first = '-' or: [ literal first isDigit ]) ifTrue: [
+	(literal first = $- or: [ literal first isDigit ]) ifTrue: [
 		| num type |
 		num := literal asNumber.
 		type := num isInteger

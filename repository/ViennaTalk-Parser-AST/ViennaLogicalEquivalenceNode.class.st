@@ -28,3 +28,21 @@ ViennaLogicalEquivalenceNode >> operatorPrecedence [
 
 	^ 11
 ]
+
+{ #category : #accessing }
+ViennaLogicalEquivalenceNode >> paramType1 [
+
+	^ ViennaType bool
+]
+
+{ #category : #accessing }
+ViennaLogicalEquivalenceNode >> paramType2 [
+
+	^ ViennaType bool
+]
+
+{ #category : #accessing }
+ViennaLogicalEquivalenceNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
+
+	^ ViennaType bool
+]
