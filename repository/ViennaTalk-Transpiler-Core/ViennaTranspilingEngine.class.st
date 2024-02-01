@@ -13,7 +13,7 @@ ViennaTranspilingEngine >> close [
 { #category : #evaluating }
 ViennaTranspilingEngine >> evaluate: expression specification: specification states: states module: module vdm10: vdm10 rtc: rtc [
 
-	| animation result postStates |
+	| animation preStates result postStates |
 	animation := ViennaTranspiledAnimation new.
 	animation specification: specification ifError: [ :msg |
 		^ {
@@ -21,6 +21,10 @@ ViennaTranspilingEngine >> evaluate: expression specification: specification sta
 			  states.
 			  msg.
 			  states } ].
+	preStates := Dictionary new.
+	states keysAndValuesDo: [ :moduleName :binds |
+		binds keysAndValuesDo: [ :shortName :value |
+			animation plainAt: moduleName , '`' , shortName put: value ] ].
 	result := animation
 		          plainEvaluate: expression
 		          in: module
