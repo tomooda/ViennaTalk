@@ -32,6 +32,14 @@ ViennaUnitType >> basicIsEnumerable [
 ]
 
 { #category : #testing }
+ViennaUnitType >> isCompatibleWith: aViennaType [
+
+	^ self = aViennaType or: [
+		  (aViennaType isChoiceType or: [ aViennaType isConstrainedType ])
+			  and: [ aViennaType isCompatibleWith: self ] ]
+]
+
+{ #category : #testing }
 ViennaUnitType >> isUnitType [
 
 	^ true
