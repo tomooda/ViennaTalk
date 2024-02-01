@@ -145,6 +145,7 @@ ViennaVDMJ class >> initialize [
 { #category : #'class initialization' }
 ViennaVDMJ class >> install [
 
+	self isNeeded ifFalse: [ ^self ].
 	self isSupportedEnvironment ifFalse: [ ^ self ].
 	self vdmjPath exists ifFalse: [ 
 		self
@@ -223,6 +224,16 @@ ViennaVDMJ class >> installVDMJ [
 { #category : #testing }
 ViennaVDMJ class >> isInstalled [
 	^ self vdmjPath exists and: [ self json4vdmjPath exists and: [ self jsonicPath exists ] ]
+]
+
+{ #category : #testing }
+ViennaVDMJ class >> isNeeded [
+
+	^ Smalltalk
+		  at: #ViennaTranspiledAnimation
+		  ifPresent: [ :transpilerClass |
+		  transpilerClass useTranspilerByDefault not ]
+		  ifAbsent: [ true ]
 ]
 
 { #category : #testing }
