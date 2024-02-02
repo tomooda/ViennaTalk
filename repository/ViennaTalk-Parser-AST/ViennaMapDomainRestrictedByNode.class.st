@@ -34,3 +34,15 @@ ViennaMapDomainRestrictedByNode >> operatorPrecedence [
 
 	^ 34
 ]
+
+{ #category : #accessing }
+ViennaMapDomainRestrictedByNode >> paramType1 [
+
+	^ ViennaType any set
+]
+
+{ #category : #accessing }
+ViennaMapDomainRestrictedByNode >> paramType2 [
+
+	^ ViennaType any mapTo: ViennaType any
+]

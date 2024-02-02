@@ -85,6 +85,13 @@ ViennaOptionType >> optional [
 	^ self
 ]
 
+{ #category : #enumerating }
+ViennaOptionType >> possibleTypesDo: aBlock [
+
+	self basetype possibleTypesDo: aBlock.
+	aBlock value: ViennaType unit optional
+]
+
 { #category : #private }
 ViennaOptionType >> removeTypeHolders: aSet [
 	(aSet includes: self) ifTrue: [ ^self ].

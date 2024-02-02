@@ -49,3 +49,9 @@ ViennaUnitType >> isUnitType [
 ViennaUnitType >> name [
 	^ '()'
 ]
+
+{ #category : #enumerating }
+ViennaUnitType >> possibleTypesDo: aBlock [
+
+	
+]

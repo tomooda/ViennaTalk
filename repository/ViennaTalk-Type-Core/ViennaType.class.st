@@ -435,6 +435,26 @@ ViennaType >> optional [
 ]
 
 { #category : #accessing }
+ViennaType >> possibleTypes [
+
+	^ Array streamContents: [ :stream |
+		  self possibleTypesDo: [ :type | stream nextPut: type ] ]
+]
+
+{ #category : #enumerating }
+ViennaType >> possibleTypesDo: aBlock [
+
+	aBlock value: self
+]
+
+{ #category : #enumerating }
+ViennaType >> possibleTypesSuchThat: conditionBlock do: aBlock [
+
+	self possibleTypesDo: [ :type |
+		(conditionBlock value: type) ifTrue: [ aBlock value: type ] ]
+]
+
+{ #category : #accessing }
 ViennaType >> precedence [
 	^ self class precedence
 ]

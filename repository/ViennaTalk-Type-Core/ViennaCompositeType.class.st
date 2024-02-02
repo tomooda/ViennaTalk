@@ -123,6 +123,12 @@ ViennaCompositeType >> numFields [
 	^ self size
 ]
 
+{ #category : #enumerating }
+ViennaCompositeType >> possibleTypesDo: aBlock [
+
+	aBlock value: self
+]
+
 { #category : #private }
 ViennaCompositeType >> removeTypeHolders: aSet [
 	(aSet includes: self) ifTrue: [ ^self ].

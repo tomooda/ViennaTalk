@@ -86,6 +86,12 @@ ViennaUnionType >> name [
 	^ '|' join: (basetypes collect: [ :t | t nameInPrecedence: self class precedence ])
 ]
 
+{ #category : #enumerating }
+ViennaUnionType >> possibleTypesDo: aBlock [
+
+	basetypes do: [ :type | type possibleTypesDo: aBlock ]
+]
+
 { #category : #private }
 ViennaUnionType >> removeTypeHolders: aSet [
 	(aSet includes: self) ifTrue: [ ^self ].

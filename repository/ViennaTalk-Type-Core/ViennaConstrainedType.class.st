@@ -114,6 +114,12 @@ ViennaConstrainedType >> name [
 	^ basetype name , ' inv ' , invariant printString
 ]
 
+{ #category : #enumerating }
+ViennaConstrainedType >> possibleTypesDo: aBlock [
+
+	self basetype possibleTypesDo: aBlock
+]
+
 { #category : #private }
 ViennaConstrainedType >> removeTypeHolders: aSet [
 	(aSet includes: self) ifTrue: [ ^self ].
