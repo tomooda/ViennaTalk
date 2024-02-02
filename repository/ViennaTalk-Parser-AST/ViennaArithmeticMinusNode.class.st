@@ -50,7 +50,5 @@ ViennaArithmeticMinusNode >> paramType2 [
 { #category : #accessing }
 ViennaArithmeticMinusNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
 
-	^ (aViennaType1 isIntType and: [ aViennaType2 isIntType ])
-		  ifTrue: [ ViennaType int ]
-		  ifFalse: [ ViennaType real ]
+	^ ViennaType real
 ]

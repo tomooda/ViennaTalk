@@ -13,14 +13,15 @@ ViennaIterateNodeTest >> testTypecheck [
 	x_iterate_2 expression1 maximalType:
 		ViennaType char -> ViennaType char.
 	self
-		assert: (x_iterate_2 typecheck: ViennaType char)
-		equals: ViennaType char.
+		assert: (x_iterate_2 typecheck: ViennaType char -> ViennaType char)
+		equals: ViennaType char -> ViennaType char.
 
 	x_iterate_2 expression1 maximalType:
 		(ViennaType char mapTo: ViennaType char).
 	self
-		assert: (x_iterate_2 typecheck: ViennaType char)
-		equals: ViennaType char.
+		assert:
+		(x_iterate_2 typecheck: (ViennaType char mapTo: ViennaType char))
+		equals: (ViennaType char mapTo: ViennaType char).
 
 	x_iterate_2 expression1 maximalType: ViennaType real.
 	self

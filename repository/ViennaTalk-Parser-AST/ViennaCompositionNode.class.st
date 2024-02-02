@@ -50,54 +50,35 @@ ViennaCompositionNode >> paramType2 [
 { #category : #accessing }
 ViennaCompositionNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
 
-	| type1in type1out type2in type2out |
-	(aViennaType1 isFunctionType or: [ aViennaType1 isOperationType ])
-		ifTrue: [
-			type1in := aViennaType1 argtypes.
-			type1out := aViennaType1 returntype ]
-		ifFalse: [
-			aViennaType1 isMapType
-				ifTrue: [
-					type1in := { aViennaType1 keytype }.
-					type1out := aViennaType1 valuetype ]
-				ifFalse: [
-					aViennaType1 isSeqType
-						ifTrue: [
-							type1in := { ViennaType nat1 }.
-							type1out := aViennaType1 basetype ]
-						ifFalse: [
-							^ ViennaTypeError
-								  on: self expression1
-								  signal: 'Not an applicable type' ] ] ].
-
-	(aViennaType2 isFunctionType or: [ aViennaType2 isOperationType ])
-		ifTrue: [
-			type2in := aViennaType2 argtypes.
-			type2out := aViennaType2 returntype ]
-		ifFalse: [
-			aViennaType2 isMapType
-				ifTrue: [
-					type2in := { aViennaType2 keytype }.
-					type2out := aViennaType2 valuetype ]
-				ifFalse: [
-					aViennaType2 isSeqType
-						ifTrue: [
-							type2in := { ViennaType nat1 }.
-							type2out := aViennaType2 basetype ]
-						ifFalse: [
-							^ ViennaTypeError
-								  on: self expression2
-								  signal: 'Not an applicable type' ] ] ].
-
-	type1in size = 1 ifFalse: [
-		^ ViennaTypeError
-			  on: self expression1
-			  signal: 'Not an one-argument function' ].
-	(type1in first isCompatibleWith: type2out) ifFalse: [
-		^ ViennaTypeError
-			  on: self
-			  signal:
-				  'Type mismatch between ' , type1in first printString , ' and '
-				  , type2out printString ].
-	^ (ViennaType product: type2in) -> type1out
+	^ (Array streamContents: [ :stream |
+		   aViennaType1 possibleTypesDo: [ :f1 |
+			   f1 isFunctionType ifTrue: [
+				   | argtypes1 returntype1 |
+				   argtypes1 := f1 argtypes.
+				   returntype1 := f1 returntype.
+				   argtypes1 size = 1 ifTrue: [
+					   | argtype1 |
+					   argtype1 := argtypes1 first.
+					   aViennaType2 possibleTypesDo: [ :f2 |
+						   f2 isFunctionType ifTrue: [
+							   | argtypes2 returntype2 |
+							   argtypes2 := f2 argtypes.
+							   returntype2 := f2 returntype.
+							   (argtype1 isCompatibleWith: returntype2) ifTrue: [
+								   stream nextPut:
+									   (ViennaType partialFunction: argtypes2 to: returntype1) ] ] ] ] ].
+			   f1 isMapType ifTrue: [
+				   | keytype1 valuetype1 |
+				   keytype1 := f1 keytype.
+				   valuetype1 := f1 valuetype.
+				   aViennaType2 possibleTypesDo: [ :f2 |
+					   f2 isMapType ifTrue: [
+						   | keytype2 valuetype2 |
+						   keytype2 := f2 keytype.
+						   valuetype2 := f2 valuetype.
+						   (keytype1 isCompatibleWith: valuetype2) ifTrue: [
+							   stream nextPut: (ViennaType map: keytype2 to: valuetype1) ] ] ] ] ] ])
+		  ifNotEmpty: [ :types | ViennaType union: types ]
+		  ifEmpty: [
+		  ViennaTypeError on: self signal: 'Composition not applicable' ]
 ]

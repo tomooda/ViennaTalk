@@ -42,6 +42,12 @@ ViennaPartialFunctionType >> argtypes [
 	^ argtypes
 ]
 
+{ #category : #converting }
+ViennaPartialFunctionType >> asPartialFunctionType [
+
+	^ self
+]
+
 { #category : #enumerating }
 ViennaPartialFunctionType >> basicDo: aBlock [
 	^ self shouldNotImplement

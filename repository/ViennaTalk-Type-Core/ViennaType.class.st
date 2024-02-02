@@ -133,7 +133,11 @@ ViennaType class >> totalFunction: anArrayOfViennaType to: aViennaType [
 
 { #category : #'instance creation' }
 ViennaType class >> union: anArrayOfViennaType [
-	^ ViennaUnionType withAll: anArrayOfViennaType
+
+	^ anArrayOfViennaType ifEmpty: [ self unit ] ifNotEmpty: [
+		  anArrayOfViennaType size = 1
+			  ifTrue: [ anArrayOfViennaType first ]
+			  ifFalse: [ ViennaUnionType withAll: anArrayOfViennaType ] ]
 ]
 
 { #category : #'instance creation' }

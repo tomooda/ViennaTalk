@@ -44,11 +44,12 @@ ViennaEqualNode >> paramType2 [
 { #category : #accessing }
 ViennaEqualNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
 
-	(aViennaType1 isCompatibleWith: aViennaType2) ifFalse: [
-		^ ViennaTypeError
-			  on: self
-			  signal:
-				  'Type mismatch between ' , aViennaType1 printString , ' and '
-				  , aViennaType2 printString ].
-	^ ViennaType bool
+	^ (aViennaType1 isCompatibleWith: aViennaType2)
+		  ifTrue: [ ViennaType bool ]
+		  ifFalse: [
+			  ^ ViennaTypeError
+				    on: self
+				    signal:
+					    'Type mismatch between ' , aViennaType1 printString , ' and '
+					    , aViennaType2 printString ]
 ]
