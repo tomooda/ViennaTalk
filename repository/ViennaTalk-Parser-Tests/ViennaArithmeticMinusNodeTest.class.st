@@ -9,7 +9,7 @@ ViennaArithmeticMinusNodeTest >> testTypecheck [
 
 	self
 		assert: ('3 - 2' asViennaExpressionAst typecheck: ViennaType real)
-		equals: ViennaType int.
+		equals: ViennaType real.
 	self
 		assert:
 		('3.14 - 2' asViennaExpressionAst typecheck: ViennaType real)
