@@ -99,16 +99,24 @@ ViennaBinaryOperatorExpressionNode >> returnTypeFor: aViennaType1 and: aViennaTy
 { #category : #typechecking }
 ViennaBinaryOperatorExpressionNode >> typecheck: aViennaType [
 
-	| returnType |
-	returnType := self
-		              returnTypeFor:
-		              (self expression1 typecheck: self paramType1)
-		              and: (self expression2 typecheck: self paramType2).
-	(aViennaType isCompatibleWith: returnType) ifFalse: [
-		^ ViennaTypeError
-			  on: self
-			  signal:
-				  'Type mismatch: expected ' , aViennaType printString
-				  , ', but given ' , returnType printString ].
-	^ returnType
+	^ (Array streamContents: [ :stream |
+		   (self expression1 typecheck: self paramType1) possibleTypesDo: [
+			   :type1 |
+			   (self expression2 typecheck: self paramType2) possibleTypesDo: [
+				   :type2 |
+				   ([ self returnTypeFor: type1 and: type2 ]
+					    on: ViennaTypeError
+					    do: [ :ex | nil ]) ifNotNil: [ :type | stream nextPut: type ] ] ] ])
+		  ifNotEmpty: [ :types |
+			  | type |
+			  type := ViennaType union: types.
+			  (type isCompatibleWith: aViennaType)
+				  ifTrue: [ type ]
+				  ifFalse: [
+					  ViennaTypeError
+						  on: self
+						  signal:
+							  'Type mismatch: expected ' , aViennaType printString
+							  , ' but given ' , type printString ] ]
+		  ifEmpty: [ ViennaTypeError on: self signal: 'Type mismatch' ]
 ]

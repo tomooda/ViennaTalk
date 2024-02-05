@@ -48,21 +48,16 @@ ViennaIterateNode >> paramType2 [
 ]
 
 { #category : #accessing }
-ViennaIterateNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
+ViennaIterateNode >> returnTypeFor: type and: aViennaType2 [
 
-	^ (Array streamContents: [ :stream |
-		   aViennaType1 possibleTypesDo: [ :type |
-			   type isFunctionType ifTrue: [
-				   | argtypes |
-				   argtypes := type argtypes.
-				   (argtypes size = 1 and: [
-					    type returntype isCompatibleWith: argtypes first ]) ifTrue: [
-					   stream nextPut: type asPartialFunctionType ] ].
-			   type isMapType ifTrue: [
-				   (type keytype isCompatibleWith: type valuetype) ifTrue: [
-					   stream nextPut: type ] ].
-			   type isRealType ifTrue: [ stream nextPut: ViennaType real ] ] ])
-		  ifNotEmpty: [ :types | ViennaType union: types ]
-		  ifEmpty: [
-		  ViennaTypeError on: self signal: 'Iteration not applicable' ]
+	type isFunctionType ifTrue: [
+		| argtypes |
+		argtypes := type argtypes.
+		(argtypes size = 1 and: [
+			 type returntype isCompatibleWith: argtypes first ]) ifTrue: [
+			^ type asPartialFunctionType ] ].
+	type isMapType ifTrue: [
+		(type keytype isCompatibleWith: type valuetype) ifTrue: [ ^ type ] ].
+	type isRealType ifTrue: [ ^ ViennaType real ].
+	^ ViennaTypeError signalOn: self
 ]

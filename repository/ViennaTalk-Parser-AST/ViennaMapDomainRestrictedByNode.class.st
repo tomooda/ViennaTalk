@@ -55,9 +55,6 @@ ViennaMapDomainRestrictedByNode >> returnTypeFor: aViennaType1 and: aViennaType2
 	domainbasetype := aViennaType2 keytype.
 	rangebasetype := aViennaType2 valuetype.
 	(setbasetype isCompatibleWith: domainbasetype) ifFalse: [
-		^ ViennaTypeError
-			  on: self
-			  signal: 'Tye mismatch: ' , setbasetype printString , ' and '
-				  , domainbasetype printString ].
+		^ ViennaTypeError signalOn: self ].
 	^ aViennaType2
 ]

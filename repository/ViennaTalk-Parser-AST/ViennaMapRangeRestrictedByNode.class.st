@@ -34,3 +34,27 @@ ViennaMapRangeRestrictedByNode >> operatorPrecedence [
 
 	^ 35
 ]
+
+{ #category : #accessing }
+ViennaMapRangeRestrictedByNode >> paramType1 [
+
+	^ ViennaType any mapTo: ViennaType any
+]
+
+{ #category : #accessing }
+ViennaMapRangeRestrictedByNode >> paramType2 [
+
+	^ ViennaType any set
+]
+
+{ #category : #accessing }
+ViennaMapRangeRestrictedByNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
+
+	| domainbasetype rangebasetype setbasetype |
+	domainbasetype := aViennaType1 keytype.
+	rangebasetype := aViennaType1 valuetype.
+	setbasetype := aViennaType2 basetype.
+	(setbasetype isCompatibleWith: rangebasetype) ifFalse: [
+		^ ViennaTypeError signalOn: self ].
+	^ aViennaType1
+]

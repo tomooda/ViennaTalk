@@ -2,7 +2,7 @@ Class {
 	#name : #ViennaTypeError,
 	#superclass : #Exception,
 	#instVars : [
-		'expressionNode'
+		'node'
 	],
 	#category : #'ViennaTalk-Type-Core'
 }
@@ -11,18 +11,26 @@ Class {
 ViennaTypeError class >> on: aViennaExpressionNode signal: aString [
 
 	^ self new
-		  expressionNode: aViennaExpressionNode;
+		  node: aViennaExpressionNode;
 		  signal: aString
 ]
 
-{ #category : #accessing }
-ViennaTypeError >> expressionNode [
+{ #category : #signaling }
+ViennaTypeError class >> signalOn: aViennaNode [
 
-	^ expressionNode
+	^ self new
+		  node: aViennaNode;
+		  signal
 ]
 
 { #category : #accessing }
-ViennaTypeError >> expressionNode: anObject [
+ViennaTypeError >> node [
 
-	expressionNode := anObject
+	^ node
+]
+
+{ #category : #accessing }
+ViennaTypeError >> node: aViennaNode [
+
+	node := aViennaNode
 ]

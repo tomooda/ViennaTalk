@@ -45,9 +45,6 @@ ViennaInSetNode >> paramType2 [
 ViennaInSetNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
 
 	(aViennaType1 isCompatibleWith: aViennaType2 basetype) ifFalse: [
-		^ ViennaTypeError
-			  on: self
-			  signal: 'Type mismatch: ' , aViennaType1 printString
-				  , ' is not a member type of ' , aViennaType2 printString ].
+		^ ViennaTypeError signalOn: self ].
 	^ ViennaType bool
 ]

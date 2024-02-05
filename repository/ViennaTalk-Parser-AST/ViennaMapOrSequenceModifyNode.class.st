@@ -46,3 +46,43 @@ ViennaMapOrSequenceModifyNode >> label [
 
 	^ 'MapOrSequenceModify'
 ]
+
+{ #category : #accessing }
+ViennaMapOrSequenceModifyNode >> paramType1 [
+
+	^ (ViennaType any mapTo: ViennaType any) | ViennaType any seq
+]
+
+{ #category : #accessing }
+ViennaMapOrSequenceModifyNode >> paramType2 [
+
+	^ ViennaType any mapTo: ViennaType any
+]
+
+{ #category : #accessing }
+ViennaMapOrSequenceModifyNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
+
+	aViennaType1 isMapType ifTrue: [
+		aViennaType2 isMapType ifTrue: [
+			^ (aViennaType1 keytype >= aViennaType2 keytype
+				   ifTrue: [ aViennaType1 keytype ]
+				   ifFalse: [
+					   aViennaType2 keytype >= aViennaType1 keytype
+						   ifTrue: [ aViennaType2 keytype ]
+						   ifFalse: [ aViennaType1 keytype | aViennaType2 keytype ] ]) mapTo:
+				  (aViennaType1 valuetype >= aViennaType2 valuetype
+					   ifTrue: [ aViennaType1 valuetype ]
+					   ifFalse: [
+						   aViennaType2 valuetype >= aViennaType1 valuetype
+							   ifTrue: [ aViennaType2 valuetype ]
+							   ifFalse: [ aViennaType1 valuetype | aViennaType2 valuetype ] ]) ] ].
+	aViennaType1 isSeqType ifTrue: [
+		aViennaType2 isMapType ifTrue: [
+			^ (aViennaType1 basetype >= aViennaType2 valuetype
+				   ifTrue: [ aViennaType1 basetype ]
+				   ifFalse: [
+					   aViennaType2 valuetype >= aViennaType1 basetype
+						   ifTrue: [ aViennaType2 valuetype ]
+						   ifFalse: [ aViennaType1 basetype | aViennaType2 valuetype ] ]) seq ] ].
+	^ ViennaTypeError signalOn: self
+]

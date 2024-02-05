@@ -50,35 +50,28 @@ ViennaCompositionNode >> paramType2 [
 { #category : #accessing }
 ViennaCompositionNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
 
-	^ (Array streamContents: [ :stream |
-		   aViennaType1 possibleTypesDo: [ :f1 |
-			   f1 isFunctionType ifTrue: [
-				   | argtypes1 returntype1 |
-				   argtypes1 := f1 argtypes.
-				   returntype1 := f1 returntype.
-				   argtypes1 size = 1 ifTrue: [
-					   | argtype1 |
-					   argtype1 := argtypes1 first.
-					   aViennaType2 possibleTypesDo: [ :f2 |
-						   f2 isFunctionType ifTrue: [
-							   | argtypes2 returntype2 |
-							   argtypes2 := f2 argtypes.
-							   returntype2 := f2 returntype.
-							   (argtype1 isCompatibleWith: returntype2) ifTrue: [
-								   stream nextPut:
-									   (ViennaType partialFunction: argtypes2 to: returntype1) ] ] ] ] ].
-			   f1 isMapType ifTrue: [
-				   | keytype1 valuetype1 |
-				   keytype1 := f1 keytype.
-				   valuetype1 := f1 valuetype.
-				   aViennaType2 possibleTypesDo: [ :f2 |
-					   f2 isMapType ifTrue: [
-						   | keytype2 valuetype2 |
-						   keytype2 := f2 keytype.
-						   valuetype2 := f2 valuetype.
-						   (keytype1 isCompatibleWith: valuetype2) ifTrue: [
-							   stream nextPut: (ViennaType map: keytype2 to: valuetype1) ] ] ] ] ] ])
-		  ifNotEmpty: [ :types | ViennaType union: types ]
-		  ifEmpty: [
-		  ViennaTypeError on: self signal: 'Composition not applicable' ]
+	aViennaType1 isFunctionType ifTrue: [
+		| argtypes1 returntype1 |
+		argtypes1 := aViennaType1 argtypes.
+		returntype1 := aViennaType1 returntype.
+		argtypes1 size = 1 ifTrue: [
+			| argtype1 |
+			argtype1 := argtypes1 first.
+			aViennaType2 isFunctionType ifTrue: [
+				| argtypes2 returntype2 |
+				argtypes2 := aViennaType2 argtypes.
+				returntype2 := aViennaType2 returntype.
+				(argtype1 isCompatibleWith: returntype2) ifTrue: [
+					^ ViennaType partialFunction: argtypes2 to: returntype1 ] ] ] ].
+	aViennaType1 isMapType ifTrue: [
+		| keytype1 valuetype1 |
+		keytype1 := aViennaType1 keytype.
+		valuetype1 := aViennaType1 valuetype.
+		aViennaType2 isMapType ifTrue: [
+			| keytype2 valuetype2 |
+			keytype2 := aViennaType2 keytype.
+			valuetype2 := aViennaType2 valuetype.
+			(keytype1 isCompatibleWith: valuetype2) ifTrue: [
+				^ ViennaType map: keytype2 to: valuetype1 ] ] ].
+	^ ViennaTypeError on: self signal: 'Composition not applicable'
 ]

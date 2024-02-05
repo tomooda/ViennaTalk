@@ -98,64 +98,57 @@ ViennaApplyNode >> operatorPrecedence [
 { #category : #typechecking }
 ViennaApplyNode >> typecheck: aViennaType [
 
-	| args possibleReturnTypes |
+	| args |
 	args := self arguments.
-	possibleReturnTypes := Array streamContents: [ :stream |
-		                       self function maximalType possibleTypesDo: [
-			                       :functionType |
-			                       [
-			                       functionType isFunctionType ifTrue: [
-				                       | paramTypes returnType |
-				                       paramTypes := functionType argtypes.
-				                       (paramTypes size = 1 and: [
-					                        paramTypes first isUnitType ]) ifTrue: [
-					                       paramTypes := #(  ) ].
-				                       returnType := functionType returntype.
-				                       paramTypes size = args size ifFalse: [
-					                       ^ ViennaTypeError signal ].
-				                       1 to: paramTypes size do: [ :i |
-				                       (args at: i) typecheck: (paramTypes at: i) ].
-				                       (aViennaType isCompatibleWith: returnType)
-					                       ifFalse: [ ^ ViennaTypeError signal ].
-				                       stream nextPut: returnType ].
-			                       functionType isOperationType ifTrue: [
-				                       | paramTypes returnType |
-				                       paramTypes := functionType argtypes.
-				                       (paramTypes size = 1 and: [
-					                        paramTypes first isUnitType ]) ifTrue: [
-					                       paramTypes := #(  ) ].
-				                       returnType := functionType returntype.
-				                       paramTypes size = args size ifFalse: [
-					                       ^ ViennaTypeError signal ].
-				                       1 to: paramTypes size do: [ :i |
-				                       (args at: i) typecheck: (paramTypes at: i) ].
-				                       (aViennaType isCompatibleWith: returnType)
-					                       ifFalse: [ ^ ViennaTypeError signal ].
-				                       stream nextPut: returnType ].
-			                       functionType isMapType ifTrue: [
-				                       | paramType returnType |
-				                       paramType := functionType keytype.
-				                       returnType := functionType valuetype.
-				                       args size = 1 ifFalse: [
-					                       ^ ViennaTypeError signal ].
-				                       args first typecheck: paramType.
-				                       (aViennaType isCompatibleWith: returnType)
-					                       ifFalse: [ ^ ViennaTypeError signal ].
-				                       stream nextPut: returnType ].
-			                       functionType isSeqType ifTrue: [
-				                       | returnType |
-				                       returnType := functionType basetype.
-				                       args size = 1 ifFalse: [
-					                       ^ ViennaTypeError signal ].
-				                       args first typecheck: ViennaType nat1.
-				                       (aViennaType isCompatibleWith: returnType)
-					                       ifFalse: [ ^ ViennaTypeError signal ].
-				                       stream nextPut: returnType ] ]
-				                       on: ViennaTypeError
-				                       do: [ :ex |  ] ] ].
-	possibleReturnTypes ifEmpty: [
-		^ ViennaTypeError on: self signal: 'Not an applicable type' ].
-	^ possibleReturnTypes size > 1
-		  ifTrue: [ ViennaType union: possibleReturnTypes ]
-		  ifFalse: [ possibleReturnTypes first ]
+	^ (Array streamContents: [ :stream |
+		   self function maximalType possibleTypesDo: [ :functionType |
+			   [
+			   functionType isFunctionType ifTrue: [
+				   | paramTypes returnType |
+				   paramTypes := functionType argtypes.
+				   (paramTypes size = 1 and: [ paramTypes first isUnitType ])
+					   ifTrue: [ paramTypes := #(  ) ].
+				   returnType := functionType returntype.
+				   paramTypes size = args size ifFalse: [
+					   ^ ViennaTypeError signal ].
+				   1 to: paramTypes size do: [ :i |
+				   (args at: i) typecheck: (paramTypes at: i) ].
+				   (aViennaType isCompatibleWith: returnType) ifFalse: [
+					   ^ ViennaTypeError signal ].
+				   stream nextPut: returnType ].
+			   functionType isOperationType ifTrue: [
+				   | paramTypes returnType |
+				   paramTypes := functionType argtypes.
+				   (paramTypes size = 1 and: [ paramTypes first isUnitType ])
+					   ifTrue: [ paramTypes := #(  ) ].
+				   returnType := functionType returntype.
+				   paramTypes size = args size ifFalse: [
+					   ^ ViennaTypeError signal ].
+				   1 to: paramTypes size do: [ :i |
+				   (args at: i) typecheck: (paramTypes at: i) ].
+				   (aViennaType isCompatibleWith: returnType) ifFalse: [
+					   ^ ViennaTypeError signal ].
+				   stream nextPut: returnType ].
+			   functionType isMapType ifTrue: [
+				   | paramType returnType |
+				   paramType := functionType keytype.
+				   returnType := functionType valuetype.
+				   args size = 1 ifFalse: [ ^ ViennaTypeError signal ].
+				   args first typecheck: paramType.
+				   (aViennaType isCompatibleWith: returnType) ifFalse: [
+					   ^ ViennaTypeError signal ].
+				   stream nextPut: returnType ].
+			   functionType isSeqType ifTrue: [
+				   | returnType |
+				   returnType := functionType basetype.
+				   args size = 1 ifFalse: [ ^ ViennaTypeError signal ].
+				   args first typecheck: ViennaType nat1.
+				   (aViennaType isCompatibleWith: returnType) ifFalse: [
+					   ^ ViennaTypeError signal ].
+				   stream nextPut: returnType ] ]
+				   on: ViennaTypeError
+				   do: [ :ex |  ] ] ])
+		  ifNotEmpty: [ :types | ViennaType union: types ]
+		  ifEmpty: [
+		  ViennaTypeError on: self signal: 'Not an applicable type' ]
 ]
