@@ -28,3 +28,23 @@ ViennaNotEqualNode >> operatorPrecedence [
 
 	^ 21
 ]
+
+{ #category : #accessing }
+ViennaNotEqualNode >> paramType1 [
+
+	^ ViennaType any
+]
+
+{ #category : #accessing }
+ViennaNotEqualNode >> paramType2 [
+
+	^ ViennaType any
+]
+
+{ #category : #accessing }
+ViennaNotEqualNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
+
+	^ (aViennaType1 isCompatibleWith: aViennaType2)
+		  ifTrue: [ ViennaType bool ]
+		  ifFalse: [ ViennaTypeError signalOn: self ]
+]

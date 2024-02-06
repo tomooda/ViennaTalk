@@ -350,7 +350,19 @@ ViennaType >> isRealType [
 ]
 
 { #category : #testing }
+ViennaType >> isSeq1Type [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaType >> isSeqType [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaType >> isSet1Type [
 
 	^ false
 ]

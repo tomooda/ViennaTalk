@@ -72,6 +72,12 @@ ViennaSet1Type >> isCompatibleWith: aViennaType [
 ]
 
 { #category : #testing }
+ViennaSet1Type >> isSet1Type [
+
+	^ true
+]
+
+{ #category : #testing }
 ViennaSet1Type >> isSetType [
 
 	^ true

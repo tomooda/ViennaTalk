@@ -37,9 +37,9 @@ ViennaMapOrSequenceModifyNodeTest >> testTypecheck [
 		result: (char optional mapTo: nat optional).
 	self assertType1: char seq type2: (nat mapTo: char) result: char seq.
 	self
-		assertType1: char seq
+		assertType1: char seq1
 		type2: (nat mapTo: nat)
-		result: (char | nat) seq.
+		result: (char | nat) seq1.
 	self
 		assertType1: char seq
 		type2: (nat mapTo: char optional)

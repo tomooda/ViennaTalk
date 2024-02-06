@@ -34,3 +34,23 @@ ViennaSetDifferenceNode >> operatorPrecedence [
 
 	^ 31
 ]
+
+{ #category : #accessing }
+ViennaSetDifferenceNode >> paramType1 [
+
+	^ ViennaType any set
+]
+
+{ #category : #accessing }
+ViennaSetDifferenceNode >> paramType2 [
+
+	^ ViennaType any set
+]
+
+{ #category : #accessing }
+ViennaSetDifferenceNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
+
+	^ (aViennaType1 basetype isCompatibleWith: aViennaType2 basetype)
+		  ifTrue: [ aViennaType1 ]
+		  ifFalse: [ ViennaTypeError signalOn: self ]
+]

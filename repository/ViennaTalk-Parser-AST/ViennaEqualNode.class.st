@@ -46,5 +46,5 @@ ViennaEqualNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
 
 	^ (aViennaType1 isCompatibleWith: aViennaType2)
 		  ifTrue: [ ViennaType bool ]
-		  ifFalse: [ ^ ViennaTypeError signalOn: self ]
+		  ifFalse: [ ViennaTypeError signalOn: self ]
 ]

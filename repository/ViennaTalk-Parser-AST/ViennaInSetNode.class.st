@@ -44,7 +44,7 @@ ViennaInSetNode >> paramType2 [
 { #category : #accessing }
 ViennaInSetNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
 
-	(aViennaType1 isCompatibleWith: aViennaType2 basetype) ifFalse: [
-		^ ViennaTypeError signalOn: self ].
-	^ ViennaType bool
+	^ (aViennaType1 isCompatibleWith: aViennaType2 basetype)
+		  ifTrue: [ ViennaType bool ]
+		  ifFalse: [ ViennaTypeError signalOn: self ]
 ]

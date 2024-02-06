@@ -70,6 +70,12 @@ ViennaSeq1Type >> isCompatibleWith: aViennaType [
 ]
 
 { #category : #testing }
+ViennaSeq1Type >> isSeq1Type [
+
+	^ true
+]
+
+{ #category : #testing }
 ViennaSeq1Type >> isSeqType [
 
 	^ true
