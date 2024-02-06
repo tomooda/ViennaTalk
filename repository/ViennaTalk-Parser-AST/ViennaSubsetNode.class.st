@@ -28,3 +28,23 @@ ViennaSubsetNode >> operatorPrecedence [
 
 	^ 21
 ]
+
+{ #category : #accessing }
+ViennaSubsetNode >> paramType1 [
+
+	^ ViennaType any set
+]
+
+{ #category : #accessing }
+ViennaSubsetNode >> paramType2 [
+
+	^ ViennaType any set
+]
+
+{ #category : #accessing }
+ViennaSubsetNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
+
+	^ (aViennaType1 basetype isCompatibleWith: aViennaType2 basetype)
+		  ifTrue: [ ViennaType bool ]
+		  ifFalse: [ ViennaTypeError signalOn: self ]
+]
