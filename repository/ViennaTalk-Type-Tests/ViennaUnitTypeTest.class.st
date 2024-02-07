@@ -53,6 +53,9 @@ ViennaUnitTypeTest >> testRemoveTypeHolders [
 
 { #category : #tests }
 ViennaUnitTypeTest >> testSubtype [
+
 	self assert: unit <= unit.
-	self deny: unit <= ViennaType int
+	self assert: unit <= ViennaType int.
+	self deny: unit >= ViennaType int.
+	self deny: ViennaType int <= unit
 ]

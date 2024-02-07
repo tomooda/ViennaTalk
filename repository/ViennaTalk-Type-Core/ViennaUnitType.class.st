@@ -14,6 +14,12 @@ ViennaUnitType >> = anObject [
 	^ self class = anObject class
 ]
 
+{ #category : #arithmetic }
+ViennaUnitType >> >= aViennaType [
+
+	^ aViennaType isUnitType
+]
+
 { #category : #enumerating }
 ViennaUnitType >> basicDo: aBlock [
 
@@ -54,4 +60,10 @@ ViennaUnitType >> name [
 ViennaUnitType >> possibleTypesDo: aBlock [
 
 	
+]
+
+{ #category : #arithmetic }
+ViennaUnitType >> | aViennaType [
+
+	^ aViennaType
 ]

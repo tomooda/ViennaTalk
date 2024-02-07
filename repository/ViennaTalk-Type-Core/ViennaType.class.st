@@ -152,6 +152,17 @@ ViennaType >> * aViennaType [
 ]
 
 { #category : #arithmetic }
+ViennaType >> + aViennaType [
+
+	^ self >= aViennaType
+		  ifTrue: [ self ]
+		  ifFalse: [
+			  aViennaType >= self
+				  ifTrue: [ aViennaType ]
+				  ifFalse: [ self | aViennaType ] ]
+]
+
+{ #category : #arithmetic }
 ViennaType >> +> aViennaType [
 	^ ViennaTotalFunctionType withAll: (Array with: self) with: aViennaType
 ]
@@ -183,7 +194,11 @@ ViennaType >> > aViennaType [
 
 { #category : #comparing }
 ViennaType >> >= aViennaType [
-	^ self = aViennaType or: [ (aViennaType isKindOf: ViennaConstrainedType) and: [ self >= aViennaType basetype ] ]
+
+	^ self = aViennaType or: [
+		  aViennaType isUnitType or: [
+			  (aViennaType isKindOf: ViennaConstrainedType) and: [
+				  self >= aViennaType basetype ] ] ]
 ]
 
 { #category : #enumerating }
