@@ -51,6 +51,20 @@ ViennaSeqTypeTest >> testName [
 ]
 
 { #category : #tests }
+ViennaSeqTypeTest >> testPlus [
+
+	| nat nat1 char |
+	nat := ViennaType nat.
+	nat1 := ViennaType nat1.
+	char := ViennaType char.
+	self assert: nat seq + nat seq equals: nat seq.
+	self assert: nat seq + nat1 seq equals: nat seq.
+	self assert: nat1 seq + nat seq equals: nat seq.
+	self assert: nat seq + char seq equals: nat seq | char seq.
+	self assert: nat seq + nat seq1 equals: nat seq
+]
+
+{ #category : #tests }
 ViennaSeqTypeTest >> testRemoveTypeHolders [
 	self
 		assert: ViennaType nat asTypeHolder seq removeTypeHolders

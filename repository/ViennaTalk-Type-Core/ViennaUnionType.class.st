@@ -30,6 +30,17 @@ ViennaUnionType class >> withAll: anArrayOfViennaType [
 ]
 
 { #category : #comparing }
+ViennaUnionType >> + aViennaType [
+
+	^ aViennaType isUnionType
+		  ifTrue: [
+			  aViennaType basetypes
+				  inject: self
+				  into: [ :union :type | union + type ] ]
+		  ifFalse: [ super + aViennaType ]
+]
+
+{ #category : #comparing }
 ViennaUnionType >> = anObject [
 	^ self class = anObject class and: [ basetypes = anObject basetypes ]
 ]

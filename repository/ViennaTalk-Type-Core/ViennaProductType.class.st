@@ -49,6 +49,16 @@ ViennaProductType >> ==> aViennaType [
 	^ ViennaOperationType withAll: basetypes with: aViennaType
 ]
 
+{ #category : #comparing }
+ViennaProductType >> >= aViennaType [
+
+	^ super >= aViennaType or: [
+		  aViennaType class = self class and: [
+			  basetypes size = aViennaType basetypes size and: [
+				  (1 to: basetypes size) allSatisfy: [ :i |
+					  (basetypes at: i) >= (aViennaType basetypes at: i) ] ] ] ]
+]
+
 { #category : #private }
 ViennaProductType >> basetypes [
 	^ basetypes

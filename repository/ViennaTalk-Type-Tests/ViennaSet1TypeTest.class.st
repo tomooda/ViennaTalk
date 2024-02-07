@@ -62,6 +62,20 @@ ViennaSet1TypeTest >> testName [
 ]
 
 { #category : #tests }
+ViennaSet1TypeTest >> testPlus [
+
+	| nat nat1 char |
+	nat := ViennaType nat.
+	nat1 := ViennaType nat1.
+	char := ViennaType char.
+	self assert: nat set1 + nat set1 equals: nat set1.
+	self assert: nat set1 + nat1 set1 equals: nat set1.
+	self assert: nat1 set1 + nat set1 equals: nat set1.
+	self assert: nat set1 + char set1 equals: nat set1 | char set1.
+	self assert: nat set1 + nat set equals: nat set
+]
+
+{ #category : #tests }
 ViennaSet1TypeTest >> testRemoveTypeHolders [
 	self
 		assert: ViennaType nat asTypeHolder set1 removeTypeHolders

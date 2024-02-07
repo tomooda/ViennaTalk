@@ -55,6 +55,14 @@ ViennaType class >> nat1 [
 ]
 
 { #category : #'instance creation' }
+ViennaType class >> normalFormUnion: aCollectionOfViennaType [
+
+	^ aCollectionOfViennaType
+		  inject: self unit
+		  into: [ :union :type | union + type ]
+]
+
+{ #category : #'instance creation' }
 ViennaType class >> operation: anArrayOfViennaType to: aViennaType [
 	^ ViennaOperationType withAll: anArrayOfViennaType with: aViennaType
 ]

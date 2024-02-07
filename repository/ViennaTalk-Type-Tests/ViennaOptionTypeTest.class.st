@@ -52,6 +52,25 @@ ViennaOptionTypeTest >> testName [
 ]
 
 { #category : #tests }
+ViennaOptionTypeTest >> testPlus [
+
+	| nat char unit |
+	nat := ViennaType nat.
+	char := ViennaType char.
+	unit := ViennaType unit.
+	self assert: nat optional + nat optional equals: nat optional.
+	self assert: nat optional + nat equals: nat optional.
+	self assert: nat + nat optional equals: nat optional.
+	self
+		assert: nat optional + char optional
+		equals: (nat | char) optional.
+	self assert: nat optional + char equals: (nat | char) optional.
+	self assert: nat + char optional equals: (nat | char) optional.
+	self assert: unit optional + char equals: char optional.
+	self assert: char + unit optional equals: char optional
+]
+
+{ #category : #tests }
 ViennaOptionTypeTest >> testRemoveTypeHolders [
 	self
 		assert: ViennaType nat asTypeHolder optional removeTypeHolders

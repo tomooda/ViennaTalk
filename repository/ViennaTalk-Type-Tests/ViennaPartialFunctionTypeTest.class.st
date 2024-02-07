@@ -64,6 +64,14 @@ ViennaPartialFunctionTypeTest >> testName [
 ]
 
 { #category : #tests }
+ViennaPartialFunctionTypeTest >> testPlus [
+
+	self assert: nat -> nat + (nat -> nat) equals: nat -> nat.
+	self assert: nat -> nat + (nat1 -> nat) equals: nat -> nat.
+	self assert: nat -> nat + (nat -> nat1) equals: nat -> nat
+]
+
+{ #category : #tests }
 ViennaPartialFunctionTypeTest >> testRemoveTypeHolders [
 	self
 		assert: (ViennaType nat asTypeHolder -> ViennaType int asTypeHolder) removeTypeHolders
@@ -73,6 +81,6 @@ ViennaPartialFunctionTypeTest >> testRemoveTypeHolders [
 { #category : #tests }
 ViennaPartialFunctionTypeTest >> testSubtype [
 	self assert: nat * nat -> nat <= (nat * nat -> nat).
-	self assert: int * nat -> nat <= (nat * nat -> nat).
+	self assert: nat * nat -> nat <= (int * nat -> nat).
 	self assert: nat * nat -> nat <= (nat * nat -> int)
 ]

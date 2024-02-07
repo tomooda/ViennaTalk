@@ -148,7 +148,7 @@ ViennaApplyNode >> typecheck: aViennaType [
 				   stream nextPut: returnType ] ]
 				   on: ViennaTypeError
 				   do: [ :ex |  ] ] ])
-		  ifNotEmpty: [ :types | ViennaType union: types ]
+		  ifNotEmpty: [ :types | ViennaType normalFormUnion: types ]
 		  ifEmpty: [
 		  ViennaTypeError on: self signal: 'Not an applicable type' ]
 ]

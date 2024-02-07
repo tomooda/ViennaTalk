@@ -43,6 +43,16 @@ ViennaTokenTypeTest >> testName [
 ]
 
 { #category : #tests }
+ViennaTokenTypeTest >> testPlus [
+
+	| nat |
+	nat := ViennaType nat.
+	self assert: token + token equals: token.
+	self assert: token + nat equals: token | nat.
+	self assert: nat + token equals: nat | token
+]
+
+{ #category : #tests }
 ViennaTokenTypeTest >> testRemoveTypeHolders [
 	self assert: ViennaType token asTypeHolder removeTypeHolders equals: ViennaType token
 ]

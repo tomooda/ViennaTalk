@@ -48,6 +48,16 @@ ViennaQuoteTypeTest >> testName [
 ]
 
 { #category : #tests }
+ViennaQuoteTypeTest >> testPlus [
+
+	| quote1 quote2 |
+	quote1 := ViennaType quote: 'quote1'.
+	quote2 := ViennaType quote: 'quote2'.
+	self assert: quote1 + quote1 equals: quote1.
+	self assert: quote1 + quote2 equals: quote1 | quote2
+]
+
+{ #category : #tests }
 ViennaQuoteTypeTest >> testRemoveTypeHolders [
 	self
 		assert: (ViennaType quote: #Q) asTypeHolder removeTypeHolders

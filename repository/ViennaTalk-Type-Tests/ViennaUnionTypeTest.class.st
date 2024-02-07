@@ -62,6 +62,20 @@ ViennaUnionTypeTest >> testName [
 ]
 
 { #category : #tests }
+ViennaUnionTypeTest >> testPlus [
+
+	| nat char token unit |
+	nat := ViennaType nat.
+	char := ViennaType char.
+	token := ViennaType token.
+	unit := ViennaType unit.
+	self assert: nat | char + (nat | char) equals: nat | char.
+	self assert: nat | char + nat equals: nat | char.
+	self assert: nat | char + (char | nat) equals: nat | char.
+	self assert: nat | char + (nat | token) equals: nat | char | token
+]
+
+{ #category : #tests }
 ViennaUnionTypeTest >> testRemoveTypeHolders [
 	self
 		assert: (ViennaType nat asTypeHolder | ViennaType int asTypeHolder) removeTypeHolders

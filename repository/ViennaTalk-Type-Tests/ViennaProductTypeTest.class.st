@@ -49,6 +49,21 @@ ViennaProductTypeTest >> testName [
 ]
 
 { #category : #tests }
+ViennaProductTypeTest >> testPlus [
+
+	| nat nat1 char |
+	nat := ViennaType nat.
+	nat1 := ViennaType nat1.
+	char := ViennaType char.
+	self assert: nat * char + (nat * char) equals: nat * char.
+	self assert: nat1 * char + (nat * char) equals: nat * char.
+	self assert: nat * char + (nat1 * char) equals: nat * char.
+	self
+		assert: nat * char + (char * char)
+		equals: nat * char | (char * char)
+]
+
+{ #category : #tests }
 ViennaProductTypeTest >> testRemoveTypeHolders [
 	self
 		assert: (ViennaType nat asTypeHolder * ViennaType int asTypeHolder) removeTypeHolders

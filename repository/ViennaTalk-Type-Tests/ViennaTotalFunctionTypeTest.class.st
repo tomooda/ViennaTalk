@@ -64,6 +64,14 @@ ViennaTotalFunctionTypeTest >> testName [
 ]
 
 { #category : #tests }
+ViennaTotalFunctionTypeTest >> testPlus [
+
+	self assert: nat +> nat + (nat +> nat) equals: nat +> nat.
+	self assert: nat +> nat + (nat1 +> nat) equals: nat +> nat.
+	self assert: nat +> nat + (nat +> nat1) equals: nat +> nat
+]
+
+{ #category : #tests }
 ViennaTotalFunctionTypeTest >> testRemoveTypeHolders [
 	self
 		assert: (ViennaType nat asTypeHolder +> ViennaType int asTypeHolder) removeTypeHolders
@@ -73,12 +81,12 @@ ViennaTotalFunctionTypeTest >> testRemoveTypeHolders [
 { #category : #tests }
 ViennaTotalFunctionTypeTest >> testSubtype [
 	self assert: nat * nat -> nat <= (nat * nat -> nat).
-	self assert: int * nat -> nat <= (nat * nat -> nat).
+	self assert: nat * nat -> nat <= (int * nat -> nat).
 	self assert: nat * nat -> nat <= (nat * nat -> int).
 	self assert: nat * nat +> nat <= (nat * nat -> nat).
-	self assert: int * nat +> nat <= (nat * nat -> nat).
+	self assert: nat * nat +> nat <= (int * nat -> nat).
 	self assert: nat * nat +> nat <= (nat * nat -> int).
 	self deny: nat * nat -> nat <= (nat * nat +> nat).
-	self deny: int * nat -> nat <= (nat * nat +> nat).
+	self deny: nat * nat -> nat <= (int * nat +> nat).
 	self deny: nat * nat -> nat <= (nat * nat +> int)
 ]

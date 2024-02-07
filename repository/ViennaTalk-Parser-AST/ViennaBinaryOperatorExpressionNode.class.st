@@ -109,7 +109,7 @@ ViennaBinaryOperatorExpressionNode >> typecheck: aViennaType [
 					    do: [ :ex | nil ]) ifNotNil: [ :type | stream nextPut: type ] ] ] ])
 		  ifNotEmpty: [ :types |
 			  | type |
-			  type := ViennaType union: types.
+			  type := ViennaType normalFormUnion: types.
 			  (type isCompatibleWith: aViennaType)
 				  ifTrue: [ type ]
 				  ifFalse: [
