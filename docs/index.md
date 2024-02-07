@@ -39,6 +39,9 @@ Table of Major Components of ViennaTalk
 What's new in the latest release
 ---
 
+* Codename Firenze has been released. (May 19, 2023)
+  - migration to Pharo 11
+    
 * Codename Graz has been released. (May 5, 2022)
   - migration to Pharo 10
   - IM supports by default
