@@ -78,6 +78,22 @@ ViennaBinaryOperatorExpressionNode >> isViennaBinaryOperatorExpressionNode [
 	^ true
 ]
 
+{ #category : #typechecking }
+ViennaBinaryOperatorExpressionNode >> maximalType [
+
+	^ ViennaType
+		  normalFormUnion: (Array streamContents: [ :stream |
+				   (self expression1 typecheck: self paramType1) possibleTypesDo: [
+					   :type1 |
+					   (self expression2 typecheck: self paramType2)
+						   possibleTypesDo: [ :type2 |
+							   ([ self returnTypeFor: type1 and: type2 ]
+								    on: ViennaTypeError
+								    do: [ :ex | nil ]) ifNotNil: [ :type |
+								   stream nextPut: type ] ] ] ])
+		  ifUnit: [ ViennaTypeError signalOn: self ]
+]
+
 { #category : #accessing }
 ViennaBinaryOperatorExpressionNode >> paramType1 [
 
@@ -94,29 +110,4 @@ ViennaBinaryOperatorExpressionNode >> paramType2 [
 ViennaBinaryOperatorExpressionNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
 
 	^ self subclassResponsibility
-]
-
-{ #category : #typechecking }
-ViennaBinaryOperatorExpressionNode >> typecheck: aViennaType [
-
-	^ (Array streamContents: [ :stream |
-		   (self expression1 typecheck: self paramType1) possibleTypesDo: [
-			   :type1 |
-			   (self expression2 typecheck: self paramType2) possibleTypesDo: [
-				   :type2 |
-				   ([ self returnTypeFor: type1 and: type2 ]
-					    on: ViennaTypeError
-					    do: [ :ex | nil ]) ifNotNil: [ :type | stream nextPut: type ] ] ] ])
-		  ifNotEmpty: [ :types |
-			  | type |
-			  type := ViennaType normalFormUnion: types.
-			  (type isCompatibleWith: aViennaType)
-				  ifTrue: [ type ]
-				  ifFalse: [
-					  ViennaTypeError
-						  on: self
-						  signal:
-							  'Type mismatch: expected ' , aViennaType printString
-							  , ' but given ' , type printString ] ]
-		  ifEmpty: [ ViennaTypeError on: self signal: 'Type mismatch' ]
 ]

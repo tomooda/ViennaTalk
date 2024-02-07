@@ -5,25 +5,19 @@ Class {
 }
 
 { #category : #tests }
-ViennaSubsetNodeTest >> testTypecheck [
+ViennaSubsetNodeTest >> testMaximalType [
 
 	| expr |
 	expr := 's1 subset s2' asViennaExpressionAst.
 	expr expression1 maximalType: ViennaType nat set.
 	expr expression2 maximalType: ViennaType nat set.
-	self
-		assert: (expr typecheck: ViennaType bool)
-		equals: ViennaType bool.
+	self assert: expr maximalType equals: ViennaType bool.
 
 	expr expression1 maximalType: ViennaType nat optional set.
 	expr expression2 maximalType: ViennaType char optional set.
-	self
-		assert: (expr typecheck: ViennaType bool)
-		equals: ViennaType bool.
+	self assert: expr maximalType equals: ViennaType bool.
 
 	expr expression1 maximalType: ViennaType nat set.
 	expr expression2 maximalType: ViennaType char set.
-	self
-		should: [ expr typecheck: ViennaType bool ]
-		raise: ViennaTypeError
+	self should: [ expr maximalType ] raise: ViennaTypeError
 ]

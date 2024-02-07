@@ -28,7 +28,7 @@ ViennaExpressionNode >> isViennaExpressionNode [
 { #category : #typechecking }
 ViennaExpressionNode >> maximalType [
 
-	^ maximalType ifNil: [ maximalType := self typecheck ]
+	^ self subclassResponsibility 
 ]
 
 { #category : #typechecking }
@@ -40,13 +40,20 @@ ViennaExpressionNode >> maximalType: aViennaType [
 { #category : #typechecking }
 ViennaExpressionNode >> typecheck [
 
-	^ self typecheck: ViennaType any
+	^ maximalType ifNil: [ maximalType := self maximalType ]
 ]
 
 { #category : #typechecking }
 ViennaExpressionNode >> typecheck: aViennaType [
 
-	maximalType ifNotNil: [
-		(maximalType isCompatibleWith: aViennaType) ifTrue: [ ^ maximalType ] ].
-	^ self subclassResponsibility
+	| type |
+	type := self typecheck.
+	^ (type isCompatibleWith: aViennaType)
+		  ifTrue: [ type ]
+		  ifFalse: [
+			  ^ ViennaTypeError
+				    on: self
+				    signal:
+					    'Type mismatch: expected ' , aViennaType printString
+					    , ' but actual ' , type printString ]
 ]

@@ -5,31 +5,24 @@ Class {
 }
 
 { #category : #tests }
-ViennaArithmaticMultiplicationNodeTest >> testTypecheck [
+ViennaArithmaticMultiplicationNodeTest >> testMaximalType [
 
 	self
-		assert: ('3 * 2' asViennaExpressionAst typecheck: ViennaType real)
+		assert: '3 * 2' asViennaExpressionAst maximalType
 		equals: ViennaType real.
 	self
-		assert: ('3 * 0' asViennaExpressionAst typecheck: ViennaType real)
+		assert: '3 * 0' asViennaExpressionAst maximalType
 		equals: ViennaType real.
 	self
-		assert: ('3 * -2' asViennaExpressionAst typecheck: ViennaType real)
+		assert: '3 * -2' asViennaExpressionAst maximalType
 		equals: ViennaType real.
 	self
-		assert:
-		('3.14 * 2' asViennaExpressionAst typecheck: ViennaType real)
+		assert: '3.14 * 2' asViennaExpressionAst maximalType
 		equals: ViennaType real.
 	self
-		should: [
-		'3.14 * true' asViennaExpressionAst typecheck: ViennaType real ]
+		should: [ '3.14 * true' asViennaExpressionAst maximalType ]
 		raise: ViennaTypeError.
 	self
-		should: [
-		'true * 2' asViennaExpressionAst typecheck: ViennaType real ]
-		raise: ViennaTypeError.
-	self
-		should: [
-		'3.14 * 2' asViennaExpressionAst typecheck: ViennaType bool ]
+		should: [ 'true * 2' asViennaExpressionAst maximalType ]
 		raise: ViennaTypeError
 ]

@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #tests }
-ViennaMapMergeNodeTest >> testTypecheck [
+ViennaMapMergeNodeTest >> testMaximalType [
 
 	| expr |
 	expr := 'm1 munion m2' asViennaExpressionAst.
@@ -16,7 +16,7 @@ ViennaMapMergeNodeTest >> testTypecheck [
 	expr expression1 maximalType: (ViennaType nat mapTo: ViennaType char).
 	expr expression2 maximalType: (ViennaType nat mapTo: ViennaType char).
 	self
-		assert: (expr typecheck: (ViennaType nat mapTo: ViennaType char))
+		assert: expr maximalType
 		equals: (ViennaType nat mapTo: ViennaType char).
 
 	expr expression1 maximalType:
@@ -24,15 +24,13 @@ ViennaMapMergeNodeTest >> testTypecheck [
 	expr expression2 maximalType:
 		(ViennaType nat mapTo: ViennaType char optional).
 	self
-		assert: (expr typecheck:
-				 (ViennaType nat optional mapTo: ViennaType char optional))
+		assert: expr maximalType
 		equals: (ViennaType nat optional mapTo: ViennaType char optional).
 
 	expr expression1 maximalType: (ViennaType nat mapTo: ViennaType char).
 	expr expression2 maximalType: (ViennaType char mapTo: ViennaType nat).
 	self
-		assert: (expr typecheck: (ViennaType nat | ViennaType char mapTo:
-					  ViennaType nat | ViennaType char))
+		assert: expr maximalType
 		equals: (ViennaType nat | ViennaType char mapTo:
 				 ViennaType char | ViennaType nat)
 ]

@@ -5,16 +5,12 @@ Class {
 }
 
 { #category : #tests }
-ViennaInSetNodeTest >> testTypecheck [
+ViennaInSetNodeTest >> testMaximalType [
 
 	| nil_in_set_xs |
 	nil_in_set_xs := 'nil in set xs' asViennaExpressionAst.
 	nil_in_set_xs expression2 maximalType: ViennaType nat optional set.
-	self
-		assert: (nil_in_set_xs typecheck: ViennaType bool)
-		equals: ViennaType bool.
+	self assert: nil_in_set_xs maximalType equals: ViennaType bool.
 	nil_in_set_xs expression2 maximalType: ViennaType nat set.
-	self
-		should: [ nil_in_set_xs typecheck: ViennaType bool ]
-		raise: ViennaTypeError
+	self should: [ nil_in_set_xs maximalType ] raise: ViennaTypeError
 ]

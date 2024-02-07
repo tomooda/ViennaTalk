@@ -10,15 +10,16 @@ Class {
 { #category : #private }
 ViennaMapOrSequenceModifyNodeTest >> assertType1: aViennaType1 type2: aViennaType2 result: aViennaType3 [
 
-	| expr |
+	| expr type |
 	expr := 'e1 ++ e2' asViennaExpressionAst.
 	expr expression1 maximalType: aViennaType1.
 	expr expression2 maximalType: aViennaType2.
-	self assert: (expr typecheck: aViennaType3) equals: aViennaType3
+	type := expr maximalType.
+	self assert: type equals: aViennaType3
 ]
 
 { #category : #tests }
-ViennaMapOrSequenceModifyNodeTest >> testTypecheck [
+ViennaMapOrSequenceModifyNodeTest >> testMaximalType [
 
 	| char nat |
 	char := ViennaType char.

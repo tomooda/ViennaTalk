@@ -5,13 +5,12 @@ Class {
 }
 
 { #category : #tests }
-ViennaLogicalEquivalenceNodeTest >> testTypecheck [
+ViennaLogicalEquivalenceNodeTest >> testMaximalType [
 
 	self
-		assert: ('true <=> false' asViennaExpressionAst typecheck: ViennaType bool)
+		assert: 'true <=> false' asViennaExpressionAst maximalType
 		equals: ViennaType bool.
 	self
-		should: [
-		'3 <=> 2' asViennaExpressionAst typecheck: ViennaType bool ]
+		should: [ '3 <=> 2' asViennaExpressionAst maximalType ]
 		raise: ViennaTypeError
 ]

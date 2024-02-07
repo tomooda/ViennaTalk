@@ -5,33 +5,24 @@ Class {
 }
 
 { #category : #tests }
-ViennaArithmaticRemNodeTest >> testTypecheck [
+ViennaArithmaticRemNodeTest >> testMaximalType [
 
 	self
-		assert: ('3 rem 2' asViennaExpressionAst typecheck: ViennaType real)
+		assert: '3 rem 2' asViennaExpressionAst maximalType
 		equals: ViennaType real.
 	self
-		assert:
-		('-3 rem 2' asViennaExpressionAst typecheck: ViennaType real)
+		assert: '-3 rem 2' asViennaExpressionAst maximalType
 		equals: ViennaType real.
 	self
-		assert:
-		('3 rem -2' asViennaExpressionAst typecheck: ViennaType real)
+		assert: '3 rem -2' asViennaExpressionAst maximalType
 		equals: ViennaType real.
 	self
-		assert:
-		('3.14 rem 2' asViennaExpressionAst typecheck: ViennaType real)
+		assert: '3.14 rem 2' asViennaExpressionAst maximalType
 		equals: ViennaType real.
 	self
-		should: [
-		'3.14 rem true' asViennaExpressionAst typecheck: ViennaType real ]
+		should: [ '3.14 rem true' asViennaExpressionAst maximalType ]
 		raise: ViennaTypeError.
 	self
-		should: [
-		'true rem 2' asViennaExpressionAst typecheck: ViennaType real ]
-		raise: ViennaTypeError.
-	self
-		should: [
-		'3.14 rem 2' asViennaExpressionAst typecheck: ViennaType bool ]
+		should: [ 'true rem 2' asViennaExpressionAst maximalType ]
 		raise: ViennaTypeError
 ]

@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #tests }
-ViennaMapRangeRestrictedToNodeTest >> testTypecheck [
+ViennaMapRangeRestrictedToNodeTest >> testMaximalType [
 
 	| expr |
 	expr := 'm :> s' asViennaExpressionAst.
@@ -13,16 +13,14 @@ ViennaMapRangeRestrictedToNodeTest >> testTypecheck [
 	expr expression1 maximalType: (ViennaType nat mapTo: ViennaType char).
 	expr expression2 maximalType: ViennaType char set.
 	self
-		assert: (expr typecheck: (ViennaType nat mapTo: ViennaType char))
+		assert: expr maximalType
 		equals: (ViennaType nat mapTo: ViennaType char).
 	expr expression1 maximalType:
 		(ViennaType real mapTo: ViennaType char).
 	self
-		assert: (expr typecheck: (ViennaType real mapTo: ViennaType char))
+		assert: expr maximalType
 		equals: (ViennaType real mapTo: ViennaType char).
 	expr expression1 maximalType: (ViennaType nat mapTo: ViennaType char).
 	expr expression2 maximalType: ViennaType nat set.
-	self
-		should: [ expr typecheck: (ViennaType real mapTo: ViennaType char) ]
-		raise: ViennaTypeError
+	self should: [ expr maximalType ] raise: ViennaTypeError
 ]

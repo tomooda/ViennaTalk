@@ -5,17 +5,15 @@ Class {
 }
 
 { #category : #tests }
-ViennaGreaterThanNodeTest >> testTypecheck [
+ViennaGreaterThanNodeTest >> testMaximalType [
 
 	self
-		assert: ('3 > 2' asViennaExpressionAst typecheck: ViennaType bool)
+		assert: '3 > 2' asViennaExpressionAst maximalType
 		equals: ViennaType bool.
 	self
-		assert:
-		('3.14 > 2' asViennaExpressionAst typecheck: ViennaType bool)
+		assert: '3.14 > 2' asViennaExpressionAst maximalType
 		equals: ViennaType bool.
 	self
-		should: [
-		'3 > true' asViennaExpressionAst typecheck: ViennaType bool ]
+		should: [ '3 > true' asViennaExpressionAst maximalType ]
 		raise: ViennaTypeError
 ]

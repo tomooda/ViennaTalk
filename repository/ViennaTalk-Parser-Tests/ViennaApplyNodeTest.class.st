@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #tests }
-ViennaApplyNodeTest >> testTypecheck [
+ViennaApplyNodeTest >> testMaximalType [
 
 	| f fx fxy |
 	f := 'f()' asViennaExpressionAst.
@@ -16,32 +16,32 @@ ViennaApplyNodeTest >> testTypecheck [
 	self assert: fxy isViennaApplyNode.
 
 	f expression maximalType: ViennaType unit -> ViennaType char.
-	self assert: f typecheck equals: ViennaType char.
+	self assert: f maximalType equals: ViennaType char.
 
 	fx expression maximalType: ViennaType nat -> ViennaType char.
 	fx arguments first maximalType: ViennaType real.
-	self assert: fx typecheck equals: ViennaType char.
+	self assert: fx maximalType equals: ViennaType char.
 
 	fxy expression maximalType:
 		ViennaType nat * ViennaType token optional -> ViennaType char.
 	fxy arguments first maximalType: ViennaType real.
 	fxy arguments second maximalType: ViennaType token.
-	self assert: fxy typecheck equals: ViennaType char.
+	self assert: fxy maximalType equals: ViennaType char.
 
 	f expression maximalType: ViennaType nat -> ViennaType char.
-	self should: [ f typecheck ] raise: ViennaTypeError.
+	self should: [ f maximalType ] raise: ViennaTypeError.
 
 	fx expression maximalType: ViennaType unit -> ViennaType char.
 	fx arguments first maximalType: ViennaType unit.
-	self should: [ fx typecheck ] raise: ViennaTypeError.
+	self should: [ fx maximalType ] raise: ViennaTypeError.
 
 	fx expression maximalType:
 		ViennaType nat * ViennaType token optional -> ViennaType char.
 	fx arguments first maximalType: ViennaType real.
-	self should: [ fx typecheck ] raise: ViennaTypeError.
+	self should: [ fx maximalType ] raise: ViennaTypeError.
 
 	fxy expression maximalType: ViennaType nat -> ViennaType char.
 	fxy arguments first maximalType: ViennaType real.
 	fxy arguments second maximalType: ViennaType token.
-	self should: [ fxy typecheck ] raise: ViennaTypeError
+	self should: [ fxy maximalType ] raise: ViennaTypeError
 ]

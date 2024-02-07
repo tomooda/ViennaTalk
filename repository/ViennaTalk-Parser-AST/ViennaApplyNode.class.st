@@ -89,19 +89,13 @@ ViennaApplyNode >> label [
 	^ 'Apply'
 ]
 
-{ #category : #'pretty printing' }
-ViennaApplyNode >> operatorPrecedence [
-
-	^ 40
-]
-
 { #category : #typechecking }
-ViennaApplyNode >> typecheck: aViennaType [
+ViennaApplyNode >> maximalType [
 
 	| args |
 	args := self arguments.
 	^ (Array streamContents: [ :stream |
-		   self function maximalType possibleTypesDo: [ :functionType |
+		   self function typecheck possibleTypesDo: [ :functionType |
 			   [
 			   functionType isFunctionType ifTrue: [
 				   | paramTypes returnType |
@@ -113,8 +107,6 @@ ViennaApplyNode >> typecheck: aViennaType [
 					   ^ ViennaTypeError signal ].
 				   1 to: paramTypes size do: [ :i |
 				   (args at: i) typecheck: (paramTypes at: i) ].
-				   (aViennaType isCompatibleWith: returnType) ifFalse: [
-					   ^ ViennaTypeError signal ].
 				   stream nextPut: returnType ].
 			   functionType isOperationType ifTrue: [
 				   | paramTypes returnType |
@@ -126,8 +118,6 @@ ViennaApplyNode >> typecheck: aViennaType [
 					   ^ ViennaTypeError signal ].
 				   1 to: paramTypes size do: [ :i |
 				   (args at: i) typecheck: (paramTypes at: i) ].
-				   (aViennaType isCompatibleWith: returnType) ifFalse: [
-					   ^ ViennaTypeError signal ].
 				   stream nextPut: returnType ].
 			   functionType isMapType ifTrue: [
 				   | paramType returnType |
@@ -135,20 +125,22 @@ ViennaApplyNode >> typecheck: aViennaType [
 				   returnType := functionType valuetype.
 				   args size = 1 ifFalse: [ ^ ViennaTypeError signal ].
 				   args first typecheck: paramType.
-				   (aViennaType isCompatibleWith: returnType) ifFalse: [
-					   ^ ViennaTypeError signal ].
 				   stream nextPut: returnType ].
 			   functionType isSeqType ifTrue: [
 				   | returnType |
 				   returnType := functionType basetype.
 				   args size = 1 ifFalse: [ ^ ViennaTypeError signal ].
 				   args first typecheck: ViennaType nat1.
-				   (aViennaType isCompatibleWith: returnType) ifFalse: [
-					   ^ ViennaTypeError signal ].
 				   stream nextPut: returnType ] ]
 				   on: ViennaTypeError
 				   do: [ :ex |  ] ] ])
 		  ifNotEmpty: [ :types | ViennaType normalFormUnion: types ]
 		  ifEmpty: [
 		  ViennaTypeError on: self signal: 'Not an applicable type' ]
+]
+
+{ #category : #'pretty printing' }
+ViennaApplyNode >> operatorPrecedence [
+
+	^ 40
 ]

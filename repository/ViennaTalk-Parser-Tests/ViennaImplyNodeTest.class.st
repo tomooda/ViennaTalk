@@ -5,22 +5,15 @@ Class {
 }
 
 { #category : #tests }
-ViennaImplyNodeTest >> testTypecheck [
+ViennaImplyNodeTest >> testMaximalType [
 
 	self
-		assert:
-		('true => false' asViennaExpressionAst typecheck: ViennaType bool)
+		assert: 'true => false' asViennaExpressionAst maximalType
 		equals: ViennaType bool.
 	self
-		should: [
-		'1 => false' asViennaExpressionAst typecheck: ViennaType bool ]
+		should: [ '1 => false' asViennaExpressionAst maximalType ]
 		raise: ViennaTypeError.
 	self
-		should: [
-		'true => 0' asViennaExpressionAst typecheck: ViennaType bool ]
-		raise: ViennaTypeError.
-	self
-		should: [
-		'true => false' asViennaExpressionAst typecheck: ViennaType real ]
+		should: [ 'true => 0' asViennaExpressionAst maximalType ]
 		raise: ViennaTypeError
 ]

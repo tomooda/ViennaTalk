@@ -63,6 +63,16 @@ ViennaType class >> normalFormUnion: aCollectionOfViennaType [
 ]
 
 { #category : #'instance creation' }
+ViennaType class >> normalFormUnion: aCollectionOfViennaType ifUnit: aBlock [
+
+	| union |
+	union := self normalFormUnion: aCollectionOfViennaType.
+	^ union isUnitType
+		  ifTrue: aBlock
+		  ifFalse: [ union ]
+]
+
+{ #category : #'instance creation' }
 ViennaType class >> operation: anArrayOfViennaType to: aViennaType [
 	^ ViennaOperationType withAll: anArrayOfViennaType with: aViennaType
 ]
