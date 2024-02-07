@@ -83,6 +83,12 @@ ViennaType class >> option: aViennaType [
 ]
 
 { #category : #'instance creation' }
+ViennaType class >> parametric: aString [
+
+	^ ViennaParametricType with: aString
+]
+
+{ #category : #'instance creation' }
 ViennaType class >> partialFunction: anArrayOfViennaType to: aViennaType [
 	^ ViennaPartialFunctionType withAll: anArrayOfViennaType with: aViennaType
 ]

@@ -7,6 +7,12 @@ Class {
 	#category : #'ViennaTalk-Type-Core'
 }
 
+{ #category : #'instance creation' }
+ViennaQuoteType class >> current [
+
+	^ self shouldNotImplement
+]
+
 { #category : #accessing }
 ViennaQuoteType class >> precedence [
 	^ 6
