@@ -19,7 +19,7 @@ You can freely try VDMPad without any registration at [Public VDMPad server](htt
 
 Platform
 ---
-ViennaTalk works on [Pharo 10](http://pharo.org/) .
+ViennaTalk works on [Pharo 11](http://pharo.org/) .
 MacOSX and Linux is supported. Windows platforms are partially supported; a local VDMJ process does not work on Widnows due to limitation of OSSubprocess's piping functions.
 
 License
