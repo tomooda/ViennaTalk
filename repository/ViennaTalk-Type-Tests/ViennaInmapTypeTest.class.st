@@ -88,6 +88,13 @@ ViennaInmapTypeTest >> testName [
 ]
 
 { #category : #tests }
+ViennaInmapTypeTest >> testPlus [
+
+	self assert: bool2nat + bool2nat equals: bool2nat.
+	self assert: bool2nat + bool2optbool equals: bool2nat | bool2optbool
+]
+
+{ #category : #tests }
 ViennaInmapTypeTest >> testRemoveTypeHolders [
 	self
 		assert: (ViennaType int asTypeHolder inmapTo: ViennaType nat asTypeHolder) removeTypeHolders

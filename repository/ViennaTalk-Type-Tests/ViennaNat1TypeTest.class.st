@@ -47,6 +47,14 @@ ViennaNat1TypeTest >> testName [
 ]
 
 { #category : #tests }
+ViennaNat1TypeTest >> testPlus [
+
+	self assert: nat1 + nat1 equals: nat1.
+	self assert: nat1 + ViennaType real equals: ViennaType real.
+	self assert: nat1 + ViennaType char equals: nat1 | ViennaType char
+]
+
+{ #category : #tests }
 ViennaNat1TypeTest >> testRemoveTypeHolders [
 	self assert: nat1 asTypeHolder removeTypeHolders equals: nat1
 ]

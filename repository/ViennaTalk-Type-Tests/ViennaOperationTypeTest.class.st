@@ -62,6 +62,14 @@ ViennaOperationTypeTest >> testName [
 ]
 
 { #category : #tests }
+ViennaOperationTypeTest >> testPlus [
+
+	self assert: nat ==> nat + (nat ==> nat) equals: nat ==> nat.
+	self assert: nat ==> nat + (nat1 ==> nat) equals: nat ==> nat.
+	self assert: nat ==> nat + (nat ==> nat1) equals: nat ==> nat
+]
+
+{ #category : #tests }
 ViennaOperationTypeTest >> testRemoveTypeHolders [
 	self
 		assert: (ViennaType nat asTypeHolder ==> ViennaType int asTypeHolder) removeTypeHolders
@@ -71,6 +79,6 @@ ViennaOperationTypeTest >> testRemoveTypeHolders [
 { #category : #tests }
 ViennaOperationTypeTest >> testSubtype [
 	self assert: nat * nat ==> nat <= (nat * nat ==> nat).
-	self assert: int * nat ==> nat <= (nat * nat ==> nat).
+	self assert: nat * nat ==> nat <= (int * nat ==> nat).
 	self assert: nat * nat ==> nat <= (nat * nat ==> int)
 ]

@@ -47,6 +47,15 @@ ViennaIntTypeTest >> testName [
 ]
 
 { #category : #tests }
+ViennaIntTypeTest >> testPlus [
+
+	self assert: int + int equals: int.
+	self assert: int + ViennaType nat equals: int.
+	self assert: int + ViennaType real equals: ViennaType real.
+	self assert: int + ViennaType char equals: int | ViennaType char
+]
+
+{ #category : #tests }
 ViennaIntTypeTest >> testRemoveTypeHolders [
 	self assert: int asTypeHolder removeTypeHolders equals: int
 ]

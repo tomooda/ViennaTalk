@@ -19,6 +19,12 @@ ViennaOptionType class >> with: aViennaType [
 		yourself
 ]
 
+{ #category : #arithmetic }
+ViennaOptionType >> + aViennaType [
+
+	^ (self basetype + aViennaType) optional
+]
+
 { #category : #comparing }
 ViennaOptionType >> = anObject [
 	^ self class = anObject class and: [ basetype = anObject basetype ]

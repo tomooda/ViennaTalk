@@ -101,6 +101,15 @@ ViennaCompositeTypeTest >> testNumFields [
 ]
 
 { #category : #tests }
+ViennaCompositeTypeTest >> testPlus [
+
+	self assert: composite + composite equals: composite.
+	self
+		assert: composite + ViennaType char
+		equals: composite | ViennaType char
+]
+
+{ #category : #tests }
 ViennaCompositeTypeTest >> testRemoveTestHolders [
 	self
 		assert:

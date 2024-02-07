@@ -154,12 +154,15 @@ ViennaType >> * aViennaType [
 { #category : #arithmetic }
 ViennaType >> + aViennaType [
 
-	^ self >= aViennaType
+	^ (aViennaType isUnitType or: [ self >= aViennaType ])
 		  ifTrue: [ self ]
 		  ifFalse: [
 			  aViennaType >= self
 				  ifTrue: [ aViennaType ]
-				  ifFalse: [ self | aViennaType ] ]
+				  ifFalse: [
+					  aViennaType isOptionType
+						  ifTrue: [ (self + aViennaType basetype) optional ]
+						  ifFalse: [ self | aViennaType ] ] ]
 ]
 
 { #category : #arithmetic }

@@ -9,6 +9,12 @@ ViennaUnitType class >> precedence [
 	^ 6
 ]
 
+{ #category : #arithmetic }
+ViennaUnitType >> + aViennaType [
+
+	^ aViennaType
+]
+
 { #category : #comparing }
 ViennaUnitType >> = anObject [
 	^ self class = anObject class

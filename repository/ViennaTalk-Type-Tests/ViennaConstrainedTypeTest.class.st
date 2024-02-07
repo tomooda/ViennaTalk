@@ -56,6 +56,15 @@ ViennaConstrainedTypeTest >> testName [
 ]
 
 { #category : #tests }
+ViennaConstrainedTypeTest >> testPlus [
+
+	self assert: (int inv: #odd) + int equals: int.
+	self
+		assert: (int inv: #odd) + (int inv: #even)
+		equals: (int inv: #odd) | (int inv: #even)
+]
+
+{ #category : #tests }
 ViennaConstrainedTypeTest >> testRemoveTypeHolders [
 	| inv |
 	inv := [ :i | true ].

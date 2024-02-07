@@ -42,6 +42,20 @@ ViennaCharTypeTest >> testName [
 ]
 
 { #category : #tests }
+ViennaCharTypeTest >> testPlus [
+
+	self
+		assert: ViennaType char + ViennaType char
+		equals: ViennaType char.
+	self
+		assert: ViennaType char + ViennaType nat
+		equals: ViennaType char | ViennaType nat.
+	self
+		assert: ViennaType char + ViennaType unit
+		equals: ViennaType char
+]
+
+{ #category : #tests }
 ViennaCharTypeTest >> testRemoveTestHolders [
 	self assert: char removeTypeHolders equals: char
 ]
