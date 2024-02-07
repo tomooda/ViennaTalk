@@ -31,6 +31,12 @@ ViennaLocalNameNode >> asGlobalName [
 									  identifier: self identifier ] ] ] ] ]
 ]
 
+{ #category : #accessing }
+ViennaLocalNameNode >> definition [
+
+	^ self definitionOfLocalName: self identifier
+]
+
 { #category : #'pretty printing' }
 ViennaLocalNameNode >> formatWith: aViennaAbstractFormatter [
 
@@ -142,6 +148,12 @@ ViennaLocalNameNode >> label [
 ViennaLocalNameNode >> localResolve [
 
 	^ self localResolveIdentifier: self identifier
+]
+
+{ #category : #accessing }
+ViennaLocalNameNode >> maximalType [
+
+	^ self definition maximalType
 ]
 
 { #category : #accessing }

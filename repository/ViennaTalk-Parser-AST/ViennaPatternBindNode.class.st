@@ -28,3 +28,15 @@ ViennaPatternBindNode >> isViennaPatternHolderNode [
 
 	^ true
 ]
+
+{ #category : #accessing }
+ViennaPatternBindNode >> maximalType [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
+ViennaPatternBindNode >> maximalType: aViennaType [
+
+	^ self subclassResponsibility
+]
