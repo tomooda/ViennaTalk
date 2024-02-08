@@ -12,6 +12,20 @@ ViennaEqualDefinitionListNode >> boundIdentifiersDo: aBlock [
 		equalDefinition boundIdentifiersDo: aBlock ]
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaEqualDefinitionListNode >> definitionOfLocalName: aString for: aViennaNode [
+
+	(self indexOf: aViennaNode ifAbsent: [ nil ]) ifNotNil: [ :until |
+		until - 1 to: 1 do: [ :index |
+			(self at: index) patternOrBind
+				allDescendantsSuchThat: [ :n |
+				n isViennaPatternIdentifierNode: aString ]
+				do: [ :n | ^ n ] ].
+		^ parent ifNotNil: [
+			  parent definitionOfLocalName: aString for: aViennaNode ] ].
+	^ self definitionOfLocalName: aString
+]
+
 { #category : #'pretty printing' }
 ViennaEqualDefinitionListNode >> formatWith: aViennaAbstractFormatter [
 
@@ -37,6 +51,14 @@ ViennaEqualDefinitionListNode >> freeIdentifiersExcept: aSet do: aBlock [
 		equalDefinition expression
 			freeIdentifiersExcept: boundIdentifiers
 			do: aBlock ]
+]
+
+{ #category : #accessing }
+ViennaEqualDefinitionListNode >> indexOf: aViennaNode ifAbsent: errorBlock [
+
+	1 to: self size do: [ :index |
+	aViennaNode == (self at: index) ifTrue: [ ^ index ] ].
+	^ errorBlock value
 ]
 
 { #category : #testing }

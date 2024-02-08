@@ -2,6 +2,9 @@ Class {
 	#name : #ViennaPatternIdentifierNode,
 	#superclass : #ViennaPatternNode,
 	#type : #variable,
+	#instVars : [
+		'maximalType'
+	],
 	#category : #'ViennaTalk-Parser-AST'
 }
 
@@ -67,6 +70,12 @@ ViennaPatternIdentifierNode >> isViennaPatternIdentifierNode: aString [
 ViennaPatternIdentifierNode >> label [
 
 	^ 'PatternIdentifier'
+]
+
+{ #category : #typechecking }
+ViennaPatternIdentifierNode >> maximalType [
+
+	^ maximalType ifNil: [ maximalType := ViennaType any ]
 ]
 
 { #category : #typechecking }

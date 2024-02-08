@@ -25,6 +25,12 @@ ViennaDefStatementNode >> definitionOfLocalName: aString [
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaDefStatementNode >> definitionOfLocalName: aString for: aViennaNode [
+
+	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
+]
+
 { #category : #accessing }
 ViennaDefStatementNode >> equalDefinitionList [
 

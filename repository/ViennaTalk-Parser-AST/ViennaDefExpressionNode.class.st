@@ -24,6 +24,12 @@ ViennaDefExpressionNode >> definitionOfLocalName: aString [
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaDefExpressionNode >> definitionOfLocalName: aString for: aViennaNode [
+
+	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
+]
+
 { #category : #accessing }
 ViennaDefExpressionNode >> equalDefinitionList [
 
@@ -107,6 +113,13 @@ ViennaDefExpressionNode >> lookupIdentifier: aString [
 		(equalDefinition bindsIdentifier: aString) ifTrue: [
 			^ equalDefinition ] ].
 	^ nil
+]
+
+{ #category : #typechecking }
+ViennaDefExpressionNode >> maximalType [
+
+	self equalDefinitionList do: [ :equalDef | equalDef typecheck ].
+	^ self expression maximalType
 ]
 
 { #category : #'pretty printing' }
