@@ -25,18 +25,43 @@ ViennaProductType class >> withAll: anArrayOfViennaType [
 ]
 
 { #category : #arithmetic }
+ViennaProductType >> & aViennaType [
+
+	(aViennaType isProductType and: [
+		 basetypes size = aViennaType basetypes size ]) ifTrue: [
+		| types |
+		types := (1 to: basetypes size) collect: [ :i |
+			         (basetypes at: i) & (aViennaType basetypes at: i) ].
+		(types allSatisfy: #notUnitType) ifTrue: [
+			^ ViennaType product: types ] ].
+	^ ViennaType unit
+]
+
+{ #category : #arithmetic }
 ViennaProductType >> * aViennaType [
-	^ self copy setBasetypes: (basetypes copyWith: aViennaType)
+
+	^ aViennaType isUnitType
+		  ifTrue: [ ViennaType unit ]
+		  ifFalse: [
+		  self copy setBasetypes: (basetypes copyWith: aViennaType) ]
 ]
 
 { #category : #arithmetic }
 ViennaProductType >> +> aViennaType [
-	^ ViennaTotalFunctionType withAll: basetypes with: aViennaType
+
+	^ aViennaType isUnitType
+		  ifTrue: [ ViennaType unit ]
+		  ifFalse: [
+		  ViennaTotalFunctionType withAll: basetypes with: aViennaType ]
 ]
 
 { #category : #arithmetic }
 ViennaProductType >> -> aViennaType [
-	^ ViennaPartialFunctionType withAll: basetypes with: aViennaType
+
+	^ aViennaType isUnitType
+		  ifTrue: [ ViennaType unit ]
+		  ifFalse: [
+		  ViennaPartialFunctionType withAll: basetypes with: aViennaType ]
 ]
 
 { #category : #comparing }

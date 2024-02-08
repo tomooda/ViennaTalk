@@ -20,6 +20,22 @@ ViennaOperationType class >> withAll: anArrayOfViennaType with: aViennaType [
 		yourself
 ]
 
+{ #category : #arithmetic }
+ViennaOperationType >> & aViennaType [
+
+	(aViennaType isOperationType and: [
+		 self argtypes size = aViennaType argtypes size ]) ifTrue: [
+		| types |
+		types := (1 to: argtypes size) collect: [ :i |
+			         (self argtypes at: i) & (aViennaType argtypes at: i) ].
+		(types allSatisfy: #notUnitType) ifTrue: [
+			(returntype isUnitType and: [ aViennaType returntype isUnitType ])
+				ifTrue: [ ^ ViennaType operation: types to: ViennaType unit ].
+			self returntype & aViennaType returntype ifNotUnit: [ :type |
+				^ ViennaType operation: types to: type ] ] ].
+	^ ViennaType unit
+]
+
 { #category : #comparing }
 ViennaOperationType >> = anObject [
 	^ self class = anObject class and: [ argtypes = anObject argtypes and: [ returntype = anObject returntype ] ]

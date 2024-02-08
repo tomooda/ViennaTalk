@@ -29,6 +29,14 @@ ViennaUnionType class >> withAll: anArrayOfViennaType [
 		yourself
 ]
 
+{ #category : #arithmetic }
+ViennaUnionType >> & aViennaType [
+
+	^ basetypes
+		  inject: ViennaType unit
+		  into: [ :union :type | union + (type & aViennaType) ]
+]
+
 { #category : #comparing }
 ViennaUnionType >> + aViennaType [
 

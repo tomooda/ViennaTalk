@@ -27,6 +27,22 @@ ViennaTotalFunctionType class >> withAll: anArrayOfViennaType with: aViennaType 
 		yourself
 ]
 
+{ #category : #arithmetic }
+ViennaTotalFunctionType >> & aViennaType [
+
+	(aViennaType isFunctionType and: [
+		 self argtypes size = aViennaType argtypes size ]) ifTrue: [
+		| types |
+		types := (1 to: argtypes size) collect: [ :i |
+			         (self argtypes at: i) & (aViennaType argtypes at: i) ].
+		(types allSatisfy: #notUnitType) ifTrue: [
+			self returntype & aViennaType returntype ifNotUnit: [ :type |
+				^ aViennaType isTotalFunctionType
+					  ifTrue: [ ViennaType totalFunction: types to: type ]
+					  ifFalse: [ ViennaType partialFunction: types to: type ] ] ] ].
+	^ ViennaType unit
+]
+
 { #category : #comparing }
 ViennaTotalFunctionType >> = anObject [
 	^ self class = anObject class and: [ argtypes = anObject argtypes and: [ returntype = anObject returntype ] ]
@@ -90,6 +106,12 @@ ViennaTotalFunctionType >> isCompatibleWith: aViennaType [
 
 { #category : #testing }
 ViennaTotalFunctionType >> isFunctionType [
+
+	^ true
+]
+
+{ #category : #testing }
+ViennaTotalFunctionType >> isTotalFunctionType [
 
 	^ true
 ]

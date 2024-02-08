@@ -20,6 +20,12 @@ ViennaConstrainedType class >> with: aViennaType with: aBlock [
 		yourself
 ]
 
+{ #category : #arithmetic }
+ViennaConstrainedType >> & aViennaType [
+
+	^ basetype & aViennaType ifNotUnit: [ :type | type inv: invariant ]
+]
+
 { #category : #comparing }
 ViennaConstrainedType >> = anObject [
 	^ self class = anObject class and: [ basetype = anObject basetype and: [ invariant = anObject invariant ] ]

@@ -16,6 +16,19 @@ ViennaOptionTypeTest >> setUp [
 ]
 
 { #category : #tests }
+ViennaOptionTypeTest >> testAmpersand [
+
+	| nat real char unit |
+	nat := ViennaType nat.
+	real := ViennaType real.
+	char := ViennaType char.
+	unit := ViennaType unit.
+	self assert: nat optional & nat optional equals: nat optional.
+	self assert: nat optional & char optional equals: unit optional.
+	self assert: nat optional & nat equals: nat
+]
+
+{ #category : #tests }
 ViennaOptionTypeTest >> testDo [
 	self should: [ optionNat do: [ :i |  ] ] raise: ShouldNotImplement.
 	self

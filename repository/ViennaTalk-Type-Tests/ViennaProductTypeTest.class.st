@@ -16,6 +16,21 @@ ViennaProductTypeTest >> setUp [
 ]
 
 { #category : #tests }
+ViennaProductTypeTest >> testAmpersand [
+
+	| nat real char unit |
+	nat := ViennaType nat.
+	real := ViennaType real.
+	char := ViennaType char.
+	unit := ViennaType unit.
+	self assert: nat * nat & (nat * nat) equals: nat * nat.
+	self assert: real * nat & (nat * real) equals: nat * nat.
+	self
+		assert: nat * (char | nat) & (nat | char * nat)
+		equals: nat * nat
+]
+
+{ #category : #tests }
 ViennaProductTypeTest >> testDo [
 	self should: [ natBool do: [ :i |  ] ] raise: ShouldNotImplement.
 	self

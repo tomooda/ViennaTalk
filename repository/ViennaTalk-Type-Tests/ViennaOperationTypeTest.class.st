@@ -20,6 +20,30 @@ ViennaOperationTypeTest >> setUp [
 ]
 
 { #category : #tests }
+ViennaOperationTypeTest >> testAmpersand [
+
+	| real char unit |
+	real := ViennaType real.
+	char := ViennaType char.
+	unit := ViennaType unit.
+	self
+		assert: nat * nat ==> nat & (nat * nat ==> nat)
+		equals: nat * nat ==> nat.
+	self
+		assert: nat * nat ==> unit & (nat * nat ==> unit)
+		equals: nat * nat ==> unit.
+	self assert: unit ==> nat & (unit ==> nat) equals: unit ==> nat.
+	self
+		assert: nat * real ==> nat & (real * nat ==> nat optional)
+		equals: nat * nat ==> nat.
+	self assert: nat * char ==> nat & (nat * nat ==> nat) equals: unit.
+	self assert: nat * nat ==> char & (nat * nat ==> nat) equals: unit.
+	self
+		assert: nat * nat ==> char & (nat * nat * nat ==> char)
+		equals: unit
+]
+
+{ #category : #tests }
 ViennaOperationTypeTest >> testDo [
 	self should: [ bool ==> bool do: [ :f |  ] ] raise: ShouldNotImplement
 ]

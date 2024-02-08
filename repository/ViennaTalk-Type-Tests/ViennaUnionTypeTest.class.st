@@ -16,6 +16,20 @@ ViennaUnionTypeTest >> setUp [
 ]
 
 { #category : #tests }
+ViennaUnionTypeTest >> testAmpersand [
+
+	| nat real char unit |
+	nat := ViennaType nat.
+	real := ViennaType real.
+	char := ViennaType char.
+	unit := ViennaType unit.
+	self assert: nat | char & (nat | char) equals: nat | char.
+	self
+		assert: char | unit | nat & (real | (real | char optional))
+		equals: char | nat
+]
+
+{ #category : #tests }
 ViennaUnionTypeTest >> testDo [
 	self should: [ natBool do: [ :i |  ] ] raise: ShouldNotImplement.
 	self

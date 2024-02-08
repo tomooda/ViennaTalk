@@ -15,6 +15,16 @@ ViennaUnitTypeTest >> setUp [
 ]
 
 { #category : #tests }
+ViennaUnitTypeTest >> testAmpersand [
+
+	| any |
+	any := ViennaType any.
+	self assert: unit & unit equals: unit.
+	self assert: unit & any equals: unit.
+	self assert: any & unit equals: unit
+]
+
+{ #category : #tests }
 ViennaUnitTypeTest >> testDo [
 
 	unit do: [ :x | self fail ]

@@ -26,6 +26,17 @@ ViennaSeqType class >> with: aViennaType [
 		yourself
 ]
 
+{ #category : #arithmetic }
+ViennaSeqType >> & aViennaType [
+
+	^ aViennaType isSeq1Type
+		  ifTrue: [ (basetype & aViennaType basetype) seq1 ]
+		  ifFalse: [
+			  aViennaType isSeqType
+				  ifTrue: [ (basetype & aViennaType basetype) seq ]
+				  ifFalse: [ ViennaType unit ] ]
+]
+
 { #category : #comparing }
 ViennaSeqType >> = anObject [
 	^ self class = anObject class and: [ basetype = anObject basetype ]

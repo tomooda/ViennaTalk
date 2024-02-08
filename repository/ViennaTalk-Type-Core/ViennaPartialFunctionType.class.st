@@ -20,6 +20,20 @@ ViennaPartialFunctionType class >> withAll: anArrayOfViennaType with: aViennaTyp
 		yourself
 ]
 
+{ #category : #arithmetic }
+ViennaPartialFunctionType >> & aViennaType [
+
+	(aViennaType isFunctionType and: [
+		 self argtypes size = aViennaType argtypes size ]) ifTrue: [
+		| types |
+		types := (1 to: argtypes size) collect: [ :i |
+			         (self argtypes at: i) & (aViennaType argtypes at: i) ].
+		(types allSatisfy: #notUnitType) ifTrue: [
+			self returntype & aViennaType returntype ifNotUnit: [ :type |
+				^ ViennaType partialFunction: types to: type ] ] ].
+	^ ViennaType unit
+]
+
 { #category : #comparing }
 ViennaPartialFunctionType >> = anObject [
 	^ self class = anObject class and: [ argtypes = anObject argtypes and: [ returntype = anObject returntype ] ]

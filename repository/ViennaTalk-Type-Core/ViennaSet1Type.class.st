@@ -26,6 +26,14 @@ ViennaSet1Type class >> with: aViennaType [
 		yourself
 ]
 
+{ #category : #arithmetic }
+ViennaSet1Type >> & aViennaType [
+
+	^ aViennaType isSetType
+		  ifTrue: [ (basetype & aViennaType basetype) set1 ]
+		  ifFalse: [ ViennaType unit ]
+]
+
 { #category : #comparing }
 ViennaSet1Type >> = anObject [
 	^ self class = anObject class and: [ basetype = anObject basetype ]

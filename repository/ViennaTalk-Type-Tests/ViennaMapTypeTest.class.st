@@ -16,6 +16,23 @@ ViennaMapTypeTest >> setUp [
 ]
 
 { #category : #tests }
+ViennaMapTypeTest >> testAmpersand [
+
+	| nat real char unit |
+	nat := ViennaType nat.
+	real := ViennaType real.
+	char := ViennaType char.
+	unit := ViennaType unit.
+	self
+		assert: (nat mapTo: char) & (nat mapTo: char)
+		equals: (nat mapTo: char).
+	self
+		assert: (real mapTo: char) & (nat inmapTo: char optional)
+		equals: (nat inmapTo: char).
+	self assert: (nat mapTo: char) & (char mapTo: char) equals: unit
+]
+
+{ #category : #tests }
 ViennaMapTypeTest >> testDo [
 	self should: [ bool2nat do: [ :i |  ] ] raise: ShouldNotImplement.
 	self

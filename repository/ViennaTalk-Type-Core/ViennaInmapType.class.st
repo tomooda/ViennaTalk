@@ -20,6 +20,20 @@ ViennaInmapType class >> with: aViennaType1 with: aViennaType2 [
 		yourself
 ]
 
+{ #category : #arithmetic }
+ViennaInmapType >> & aViennaType [
+
+	^ aViennaType isMapType
+		  ifTrue: [
+			  self keytype & aViennaType keytype
+				  ifNotUnit: [ :k |
+					  self valuetype & aViennaType valuetype
+						  ifNotUnit: [ :v | k inmapTo: v ]
+						  ifUnit: [ ViennaType unit ] ]
+				  ifUnit: [ ViennaType unit ] ]
+		  ifFalse: [ ViennaType unit ]
+]
+
 { #category : #comparing }
 ViennaInmapType >> = anObject [
 	^ self class = anObject class and: [ keytype = anObject keytype and: [ valuetype = anObject valuetype ] ]
@@ -71,6 +85,12 @@ ViennaInmapType >> isCompatibleWith: aViennaType [
 		   (self keytype isCompatibleWith: aViennaType keytype) and: [
 			   self valuetype isCompatibleWith: aViennaType valuetype ] ]) or: [
 		  super isCompatibleWith: aViennaType ]
+]
+
+{ #category : #testing }
+ViennaInmapType >> isInmapType [
+
+	^ true
 ]
 
 { #category : #testing }

@@ -101,10 +101,13 @@ ViennaType class >> precedence [
 { #category : #'instance creation' }
 ViennaType class >> product: anArrayOfViennaType [
 
-	^ anArrayOfViennaType ifEmpty: [ self unit ] ifNotEmpty: [
-		  anArrayOfViennaType size = 1
-			  ifTrue: [ anArrayOfViennaType first ]
-			  ifFalse: [ ViennaProductType withAll: anArrayOfViennaType ] ]
+	^ (anArrayOfViennaType anySatisfy: #isUnitType)
+		  ifTrue: [ ViennaType unit ]
+		  ifFalse: [
+			  anArrayOfViennaType ifEmpty: [ self unit ] ifNotEmpty: [
+				  anArrayOfViennaType size = 1
+					  ifTrue: [ anArrayOfViennaType first ]
+					  ifFalse: [ ViennaProductType withAll: anArrayOfViennaType ] ] ]
 ]
 
 { #category : #'instance creation' }
@@ -171,8 +174,22 @@ ViennaType class >> unit [
 ]
 
 { #category : #arithmetic }
+ViennaType >> & aViennaType [
+
+	^ ViennaType normalFormUnion: (Array streamContents: [ :stream |
+			   self possibleTypesDo: [ :type1 |
+				   aViennaType possibleTypesDo: [ :type2 |
+					   type1 >= type2
+						   ifTrue: [ stream nextPut: type2 ]
+						   ifFalse: [ type2 >= type1 ifTrue: [ stream nextPut: type1 ] ] ] ] ])
+]
+
+{ #category : #arithmetic }
 ViennaType >> * aViennaType [
-	^ ViennaProductType with: self with: aViennaType
+
+	^ aViennaType isUnitType
+		  ifTrue: [ ViennaType unit ]
+		  ifFalse: [ ViennaProductType with: self with: aViennaType ]
 ]
 
 { #category : #arithmetic }
@@ -191,12 +208,24 @@ ViennaType >> + aViennaType [
 
 { #category : #arithmetic }
 ViennaType >> +> aViennaType [
-	^ ViennaTotalFunctionType withAll: (Array with: self) with: aViennaType
+
+	^ aViennaType isUnitType
+		  ifTrue: [ ViennaType unit ]
+		  ifFalse: [
+			  ViennaTotalFunctionType
+				  withAll: (Array with: self)
+				  with: aViennaType ]
 ]
 
 { #category : #arithmetic }
 ViennaType >> -> aViennaType [
-	^ ViennaPartialFunctionType withAll: (Array with: self) with: aViennaType
+
+	^ aViennaType isUnitType
+		  ifTrue: [ ViennaType unit ]
+		  ifFalse: [
+			  ViennaPartialFunctionType
+				  withAll: (Array with: self)
+				  with: aViennaType ]
 ]
 
 { #category : #comparing }
@@ -294,6 +323,30 @@ ViennaType >> do: aBlock [
 	runtimeSet ifNotNil: [ runtimeSet do: aBlock ] ifNil: [ self basicDo: aBlock ]
 ]
 
+{ #category : #controling }
+ViennaType >> ifNotUnit: aBlock [
+
+	^ aBlock cull: self
+]
+
+{ #category : #controling }
+ViennaType >> ifNotUnit: aBlock ifUnit: anotherBlock [
+
+	^ aBlock cull: self
+]
+
+{ #category : #controling }
+ViennaType >> ifUnit: aBlock [
+
+	
+]
+
+{ #category : #controling }
+ViennaType >> ifUnit: aBlock ifNotUnit: anotherBlock [
+
+	^ anotherBlock cull: self
+]
+
 { #category : #testing }
 ViennaType >> includes: anObject [
 	^ runtimeSet ifNotNil: [ runtimeSet includes: anObject ] ifNil: [ self basicIncludes: anObject ]
@@ -343,6 +396,12 @@ ViennaType >> isEnumerable [
 
 { #category : #testing }
 ViennaType >> isFunctionType [
+
+	^ false
+]
+
+{ #category : #testing }
+ViennaType >> isInmapType [
 
 	^ false
 ]
@@ -416,6 +475,12 @@ ViennaType >> isSetType [
 ]
 
 { #category : #testing }
+ViennaType >> isTotalFunctionType [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaType >> isTypeHolder [
 	^ false
 ]
@@ -467,6 +532,12 @@ ViennaType >> nameInPrecedence: anInteger [
 	^ self precedence < anInteger
 		ifTrue: [ '(' , self shortName , ')' ]
 		ifFalse: [ self shortName ]
+]
+
+{ #category : #testing }
+ViennaType >> notUnitType [
+
+	^ self isUnitType not
 ]
 
 { #category : #enumerating }

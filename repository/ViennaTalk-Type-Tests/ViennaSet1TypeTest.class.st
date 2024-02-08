@@ -16,6 +16,19 @@ ViennaSet1TypeTest >> setUp [
 ]
 
 { #category : #tests }
+ViennaSet1TypeTest >> testAmpersand [
+
+	| nat real char unit |
+	nat := ViennaType nat.
+	real := ViennaType real.
+	char := ViennaType char.
+	unit := ViennaType unit.
+	self assert: nat set1 & nat set1 equals: nat set1.
+	self assert: real set1 & nat set equals: nat set1.
+	self assert: nat set1 & char set equals: unit
+]
+
+{ #category : #tests }
 ViennaSet1TypeTest >> testDo [
 	self should: [ set1ofnat do: [ :i |  ] ] raise: ShouldNotImplement.
 	self

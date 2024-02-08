@@ -2,6 +2,9 @@ Class {
 	#name : #ViennaPatternNode,
 	#superclass : #ViennaPatternBindNode,
 	#type : #variable,
+	#instVars : [
+		'maximalType'
+	],
 	#category : #'ViennaTalk-Parser-AST'
 }
 
@@ -15,6 +18,12 @@ ViennaPatternNode class >> isAbstract [
 ViennaPatternNode >> isViennaPatternNode [
 
 	^ true
+]
+
+{ #category : #typechecking }
+ViennaPatternNode >> maximalType [
+
+	^ maximalType ifNil: [ maximalType := ViennaType unit ]
 ]
 
 { #category : #accessing }

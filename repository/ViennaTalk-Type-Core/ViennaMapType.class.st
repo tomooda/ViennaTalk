@@ -20,6 +20,23 @@ ViennaMapType class >> with: aViennaType1 with: aViennaType2 [
 		yourself
 ]
 
+{ #category : #arithmetic }
+ViennaMapType >> & aViennaType [
+
+	^ aViennaType isMapType
+		  ifTrue: [
+			  self keytype & aViennaType keytype
+				  ifNotUnit: [ :k |
+					  self valuetype & aViennaType valuetype
+						  ifNotUnit: [ :v |
+							  aViennaType isInmapType
+								  ifTrue: [ k inmapTo: v ]
+								  ifFalse: [ k mapTo: v ] ]
+						  ifUnit: [ ViennaType unit ] ]
+				  ifUnit: [ ViennaType unit ] ]
+		  ifFalse: [ ViennaType unit ]
+]
+
 { #category : #comparing }
 ViennaMapType >> = anObject [
 	^ self class = anObject class and: [ keytype = anObject keytype and: [ valuetype = anObject valuetype ] ]

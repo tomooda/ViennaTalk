@@ -5,6 +5,27 @@ Class {
 }
 
 { #category : #tests }
+ViennaParametricTypeTest >> testAmpersand [
+
+	| nat real char unit |
+	nat := ViennaType nat.
+	real := ViennaType real.
+	char := ViennaType char.
+	unit := ViennaType unit.
+	self
+		assert: nat * nat -> nat & (nat * nat -> nat)
+		equals: nat * nat -> nat.
+	self
+		assert: nat * real -> nat & (real * nat -> nat optional)
+		equals: nat * nat -> nat.
+	self assert: nat * char -> nat & (nat * nat -> nat) equals: unit.
+	self assert: nat * nat -> char & (nat * nat -> nat) equals: unit.
+	self
+		assert: nat * nat -> char & (nat * nat * nat -> char)
+		equals: unit
+]
+
+{ #category : #tests }
 ViennaParametricTypeTest >> testIsCompatibleWith [
 
 	| t1 t2 |

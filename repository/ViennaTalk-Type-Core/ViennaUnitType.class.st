@@ -10,14 +10,50 @@ ViennaUnitType class >> precedence [
 ]
 
 { #category : #arithmetic }
+ViennaUnitType >> & aViennaType [
+
+	^ self
+]
+
+{ #category : #arithmetic }
+ViennaUnitType >> * aViennaType [
+
+	^ self
+]
+
+{ #category : #arithmetic }
 ViennaUnitType >> + aViennaType [
 
 	^ aViennaType
 ]
 
+{ #category : #arithmetic }
+ViennaUnitType >> +> aViennaType [
+
+	^ aViennaType isUnitType
+		  ifTrue: [ ViennaType unit ]
+		  ifFalse: [
+		  ViennaTotalFunctionType withAll: Array new with: aViennaType ]
+]
+
+{ #category : #arithmetic }
+ViennaUnitType >> -> aViennaType [
+
+	^ aViennaType isUnitType
+		  ifTrue: [ ViennaType unit ]
+		  ifFalse: [
+		  ViennaPartialFunctionType withAll: Array new with: aViennaType ]
+]
+
 { #category : #comparing }
 ViennaUnitType >> = anObject [
 	^ self class = anObject class
+]
+
+{ #category : #arithmetic }
+ViennaUnitType >> ==> aViennaType [
+
+	^ ViennaOperationType withAll: Array new with: aViennaType
 ]
 
 { #category : #arithmetic }
@@ -43,6 +79,28 @@ ViennaUnitType >> basicIsEnumerable [
 	^ true
 ]
 
+{ #category : #controling }
+ViennaUnitType >> ifNotUnit: aBlock [
+]
+
+{ #category : #controling }
+ViennaUnitType >> ifNotUnit: aBlock ifUnit: anotherBlock [
+
+	^ anotherBlock cull: self
+]
+
+{ #category : #controling }
+ViennaUnitType >> ifUnit: aBlock [
+
+	aBlock cull: self
+]
+
+{ #category : #controling }
+ViennaUnitType >> ifUnit: aBlock ifNotUnit: anotherBlock [
+
+	^ aBlock cull: self
+]
+
 { #category : #testing }
 ViennaUnitType >> isCompatibleWith: aViennaType [
 
@@ -66,6 +124,18 @@ ViennaUnitType >> name [
 ViennaUnitType >> possibleTypesDo: aBlock [
 
 	
+]
+
+{ #category : #arithmetic }
+ViennaUnitType >> seq1 [
+
+	^ self
+]
+
+{ #category : #arithmetic }
+ViennaUnitType >> set1 [
+
+	^ self
 ]
 
 { #category : #arithmetic }
