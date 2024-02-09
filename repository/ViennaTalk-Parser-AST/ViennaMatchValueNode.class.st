@@ -58,3 +58,15 @@ ViennaMatchValueNode >> label [
 
 	^ 'MatchValue'
 ]
+
+{ #category : #typechecking }
+ViennaMatchValueNode >> maximalType [
+
+	^ self expression typecheck
+]
+
+{ #category : #typechecking }
+ViennaMatchValueNode >> maximalType: aViennaType [
+
+	super maximalType: self maximalType
+]

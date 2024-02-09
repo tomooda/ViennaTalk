@@ -29,25 +29,25 @@ ViennaPatternBindNode >> isViennaPatternHolderNode [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : #typechecking }
 ViennaPatternBindNode >> maximalType [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : #typechecking }
 ViennaPatternBindNode >> maximalType: aViennaType [
 
-	^ self subclassResponsibility
+	maximalType := aViennaType
 ]
 
-{ #category : #accessing }
+{ #category : #typechecking }
 ViennaPatternBindNode >> typecheck [
 
-	^ self maximalType
+	^ maximalType ifNil: [ maximalType := self maximalType ]
 ]
 
-{ #category : #accessing }
+{ #category : #typechecking }
 ViennaPatternBindNode >> typecheck: aViennaType [
 
 	| type |

@@ -49,6 +49,37 @@ ViennaMapMunionPatternNode >> label [
 	^ 'MapMunionPattern'
 ]
 
+{ #category : #typechecking }
+ViennaMapMunionPatternNode >> maximalType [
+
+	| keytype valuetype |
+	keytype := ViennaType unit.
+	valuetype := ViennaType unit.
+	self pattern1 typecheck possibleTypesDo: [ :type |
+		type isMapType ifTrue: [
+			keytype := keytype + type keytype.
+			valuetype := valuetype + type valuetype ].
+		type isAnyType ifTrue: [
+			keytype := ViennaType any.
+			valuetype := ViennaType any ] ].
+	self pattern2 typecheck possibleTypesDo: [ :type |
+		type isMapType ifTrue: [
+			keytype := keytype + type keytype.
+			valuetype := valuetype + type valuetype ].
+		type isAnyType ifTrue: [
+			keytype := ViennaType any.
+			valuetype := ViennaType any ] ].
+	^ keytype mapTo: valuetype
+]
+
+{ #category : #typechecking }
+ViennaMapMunionPatternNode >> maximalType: aViennaType [
+
+	self pattern1 maximalType: aViennaType.
+	self pattern2 maximalType: aViennaType.
+	super maximalType: self maximalType
+]
+
 { #category : #accessing }
 ViennaMapMunionPatternNode >> pattern1 [
 

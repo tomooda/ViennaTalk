@@ -6,7 +6,8 @@ Class {
 		'parent',
 		'start',
 		'end',
-		'annotations'
+		'annotations',
+		'maximalType'
 	],
 	#category : #'ViennaTalk-Parser-AST'
 }

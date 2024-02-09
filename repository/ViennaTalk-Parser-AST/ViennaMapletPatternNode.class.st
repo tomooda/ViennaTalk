@@ -61,6 +61,27 @@ ViennaMapletPatternNode >> label [
 	^ 'MapletPattern'
 ]
 
+{ #category : #typechecking }
+ViennaMapletPatternNode >> maximalType [
+
+	^ self keyPattern typecheck mapTo: self valuePattern typecheck
+]
+
+{ #category : #typechecking }
+ViennaMapletPatternNode >> maximalType: aViennaType [
+
+	| keyType valueType |
+	keyType := ViennaType unit.
+	valueType := ViennaType unit.
+	aViennaType possibleTypesDo: [ :type |
+		type isMapType ifTrue: [
+			keyType := keyType + type keytype.
+			valueType := valueType + type valuetype ] ].
+	self keyPattern maximalType: keyType.
+	self valuePattern maximalType: valueType.
+	super maximalType: self maximalType
+]
+
 { #category : #accessing }
 ViennaMapletPatternNode >> valuePattern [
 

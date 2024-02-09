@@ -40,3 +40,31 @@ ViennaSeqConcPatternNode >> label [
 
 	^ 'SeqConcPattern'
 ]
+
+{ #category : #typechecking }
+ViennaSeqConcPatternNode >> maximalType [
+
+	| basetype isSeq1 |
+	basetype := ViennaType unit.
+	isSeq1 := false.
+	self do: [ :pattern |
+		pattern typecheck possibleTypesDo: [ :type |
+			type isSeqType ifTrue: [
+				basetype := basetype + type basetype.
+				isSeq1 := isSeq1 or: [ type isSeq1Type ] ].
+			type isAnyType ifTrue: [ basetype := ViennaType any ] ] ].
+	^ isSeq1
+		  ifTrue: [ basetype seq1 ]
+		  ifFalse: [ basetype seq ]
+]
+
+{ #category : #typechecking }
+ViennaSeqConcPatternNode >> maximalType: aViennaType [
+
+	| type |
+	type := ViennaType unit.
+	aViennaType possibleTypesDo: [ :seqType |
+		seqType isSeqType ifTrue: [ type := type + seqType ] ].
+	self do: [ :pattern | pattern maximalType: aViennaType ].
+	super maximalType: self maximalType
+]

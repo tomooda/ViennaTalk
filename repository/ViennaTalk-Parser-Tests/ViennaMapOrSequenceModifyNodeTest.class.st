@@ -14,7 +14,7 @@ ViennaMapOrSequenceModifyNodeTest >> assertType1: aViennaType1 type2: aViennaTyp
 	expr := 'e1 ++ e2' asViennaExpressionAst.
 	expr expression1 maximalType: aViennaType1.
 	expr expression2 maximalType: aViennaType2.
-	type := expr maximalType.
+	type := expr typecheck.
 	self assert: type equals: aViennaType3
 ]
 

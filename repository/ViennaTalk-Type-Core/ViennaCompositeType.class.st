@@ -100,6 +100,12 @@ ViennaCompositeType >> indicesAndFieldsDo: aBlock [
 			value: field third ]
 ]
 
+{ #category : #testing }
+ViennaCompositeType >> isCompositeType [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaCompositeType >> name [
 	^ 'compose ' , constructorName , ' of '

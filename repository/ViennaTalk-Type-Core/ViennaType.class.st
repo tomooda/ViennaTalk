@@ -384,6 +384,12 @@ ViennaType >> isCompatibleWith: aViennaType [
 ]
 
 { #category : #testing }
+ViennaType >> isCompositeType [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaType >> isConstrainedType [
 
 	^ false

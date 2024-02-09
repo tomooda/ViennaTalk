@@ -38,3 +38,32 @@ ViennaMapEnumerationPatternNode >> label [
 
 	^ 'MapEnumerationPattern'
 ]
+
+{ #category : #typechecking }
+ViennaMapEnumerationPatternNode >> maximalType [
+
+	| keyType valueType |
+	keyType := ViennaType unit.
+	valueType := ViennaType unit.
+	self do: [ :mapletPattern |
+		mapletPattern typecheck possibleTypesDo: [ :type |
+			type isMapType ifTrue: [
+				keyType := keyType + type keytype.
+				valueType := valueType + type valuetype ] ] ].
+	^ keyType mapTo: valueType
+]
+
+{ #category : #typechecking }
+ViennaMapEnumerationPatternNode >> maximalType: aViennaType [
+
+	| keyType valueType mapType |
+	keyType := ViennaType unit.
+	valueType := ViennaType unit.
+	aViennaType possibleTypesDo: [ :type |
+		type isMapType ifTrue: [
+			keyType := keyType + type keytype.
+			valueType := valueType + type valuetype ] ].
+	mapType := keyType mapTo: valueType.
+	self do: [ :mapletPattern | mapletPattern maximalType: mapType ].
+	super maximalType: self maximalType
+]

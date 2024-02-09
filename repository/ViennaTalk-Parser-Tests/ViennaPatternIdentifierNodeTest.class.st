@@ -14,5 +14,5 @@ ViennaPatternIdentifierNodeTest >> testMaximalType [
 	p := ViennaPatternIdentifierNode identifier: 'p'.
 	self assert: p maximalType equals: ViennaType any.
 	p maximalType: ViennaType char.
-	self assert: p maximalType equals: ViennaType char
+	self assert: p typecheck equals: ViennaType char
 ]

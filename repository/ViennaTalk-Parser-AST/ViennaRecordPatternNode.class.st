@@ -54,6 +54,23 @@ ViennaRecordPatternNode >> label [
 	^ 'RecordPattern'
 ]
 
+{ #category : #typechecking }
+ViennaRecordPatternNode >> maximalType [
+
+	^ self name resolve asMaximalViennaType
+]
+
+{ #category : #typechecking }
+ViennaRecordPatternNode >> maximalType: aViennaType [
+
+	aViennaType possibleTypesDo: [ :type |
+		self maximalType = aViennaType ifTrue: [
+			1 to: self patternList size do: [ :index |
+				(self patternList at: index) maximalType:
+					(aViennaType basetypeAt: index) ] ] ].
+	super maximalType: self maximalType
+]
+
 { #category : #accessing }
 ViennaRecordPatternNode >> name [
 

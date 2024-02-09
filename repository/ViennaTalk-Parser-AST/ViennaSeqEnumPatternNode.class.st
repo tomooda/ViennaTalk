@@ -36,3 +36,28 @@ ViennaSeqEnumPatternNode >> label [
 
 	^ 'SeqEnumPattern'
 ]
+
+{ #category : #typechecking }
+ViennaSeqEnumPatternNode >> maximalType [
+
+	^ self
+		  ifNotEmpty: [
+			  | basetype |
+			  basetype := ViennaType unit.
+			  self do: [ :pattern |
+				  pattern typecheck possibleTypesDo: [ :type |
+					  basetype := basetype + type ] ].
+			  basetype seq1 ]
+		  ifEmpty: [ ViennaType unit seq ]
+]
+
+{ #category : #typechecking }
+ViennaSeqEnumPatternNode >> maximalType: aViennaType [
+
+	| basetype |
+	basetype := ViennaType unit.
+	aViennaType possibleTypesDo: [ :type |
+		type isSeqType ifTrue: [ basetype := basetype + type basetype ] ].
+	self do: [ :pattern | pattern maximalType: basetype ].
+	super maximalType: self maximalType
+]

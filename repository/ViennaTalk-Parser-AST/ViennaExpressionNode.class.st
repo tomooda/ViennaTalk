@@ -2,9 +2,6 @@ Class {
 	#name : #ViennaExpressionNode,
 	#superclass : #ViennaNode,
 	#type : #variable,
-	#instVars : [
-		'maximalType'
-	],
 	#category : #'ViennaTalk-Parser-AST'
 }
 
