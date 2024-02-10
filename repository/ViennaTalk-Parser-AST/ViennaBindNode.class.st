@@ -23,6 +23,18 @@ ViennaBindNode >> isViennaBindNode [
 	^ true
 ]
 
+{ #category : #typechecking }
+ViennaBindNode >> maximalType [
+
+	^ self pattern maximalType
+]
+
+{ #category : #typechecking }
+ViennaBindNode >> maximalType: aViennaType [
+
+	self pattern maximalType: aViennaType
+]
+
 { #category : #accessing }
 ViennaBindNode >> pattern [
 

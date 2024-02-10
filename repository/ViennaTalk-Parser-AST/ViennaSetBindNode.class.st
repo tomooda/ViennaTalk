@@ -25,3 +25,26 @@ ViennaSetBindNode >> label [
 
 	^ 'SetBind'
 ]
+
+{ #category : #typechecking }
+ViennaSetBindNode >> maximalType [
+
+	| basetype |
+	basetype := ViennaType unit.
+	self expression typecheck possibleTypesDo: [ :type |
+		type isSetType ifTrue: [ basetype := basetype + type basetype ].
+		type isAnyType ifTrue: [ basetype := ViennaType any ] ].
+	self pattern maximalType: basetype.
+	^ self pattern typecheck
+]
+
+{ #category : #typechecking }
+ViennaSetBindNode >> maximalType: aViennaType [
+
+	| basetype |
+	basetype := ViennaType unit.
+	self expression typecheck possibleTypesDo: [ :type |
+		type isSetType ifTrue: [ basetype := basetype + type basetype ].
+		type isAnyType ifTrue: [ basetype := ViennaType any ] ].
+	super maximalType: basetype & aViennaType
+]

@@ -42,6 +42,21 @@ ViennaTypeBindNode >> label [
 	^ 'TypeBind'
 ]
 
+{ #category : #typechecking }
+ViennaTypeBindNode >> maximalType [
+
+	self pattern maximalType: self type asMaximalViennaType.
+	^ self pattern typecheck
+]
+
+{ #category : #typechecking }
+ViennaTypeBindNode >> maximalType: aViennaType [
+
+	| basetype |
+	basetype := self type asMaximalViennaType.
+	super maximalType: basetype & aViennaType
+]
+
 { #category : #accessing }
 ViennaTypeBindNode >> type [
 

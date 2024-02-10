@@ -53,3 +53,15 @@ ViennaSetEnumerationNode >> label [
 
 	^ 'SetEnumeration'
 ]
+
+{ #category : #typechecking }
+ViennaSetEnumerationNode >> maximalType [
+
+	| basetype |
+	basetype := ViennaType unit.
+	self expressionList do: [ :expr |
+		basetype := basetype + expr typecheck ].
+	^ self expressionList
+		  ifEmpty: [ basetype set ]
+		  ifNotEmpty: [ basetype set1 ]
+]

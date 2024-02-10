@@ -53,3 +53,15 @@ ViennaSequenceEnumerationNode >> label [
 
 	^ 'SequenceEnumeration'
 ]
+
+{ #category : #typechecking }
+ViennaSequenceEnumerationNode >> maximalType [
+
+	| basetype |
+	basetype := ViennaType unit.
+	self expressionList do: [ :expr |
+		basetype := basetype + expr typecheck ].
+	^ self expressionList
+		  ifEmpty: [ basetype seq ]
+		  ifNotEmpty: [ basetype seq1 ]
+]
