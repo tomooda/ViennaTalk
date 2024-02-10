@@ -49,6 +49,34 @@ ViennaSetUnionPatternNode >> label [
 	^ 'SetUnionPattern'
 ]
 
+{ #category : #typechecking }
+ViennaSetUnionPatternNode >> maximalType [
+
+	| basetype isSet1 |
+	basetype := ViennaType unit.
+	isSet1 := false.
+	self do: [ :pattern |
+		pattern typecheck possibleTypesDo: [ :type |
+			type isSetType ifTrue: [
+				basetype := basetype + type basetype.
+				isSet1 := isSet1 or: [ type isSet1Type ] ].
+			type isAnyType ifTrue: [ basetype := ViennaType any ] ] ].
+	^ isSet1
+		  ifTrue: [ basetype set1 ]
+		  ifFalse: [ basetype set ]
+]
+
+{ #category : #typechecking }
+ViennaSetUnionPatternNode >> maximalType: aViennaType [
+
+	| type |
+	type := ViennaType unit.
+	aViennaType possibleTypesDo: [ :setType |
+		setType isSetType ifTrue: [ type := type + setType ] ].
+	self do: [ :pattern | pattern maximalType: aViennaType ].
+	super maximalType: self maximalType
+]
+
 { #category : #accessing }
 ViennaSetUnionPatternNode >> pattern1 [
 

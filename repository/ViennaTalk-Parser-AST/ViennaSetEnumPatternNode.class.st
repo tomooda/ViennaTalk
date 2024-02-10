@@ -36,3 +36,28 @@ ViennaSetEnumPatternNode >> label [
 
 	^ 'SetEnumPattern'
 ]
+
+{ #category : #typechecking }
+ViennaSetEnumPatternNode >> maximalType [
+
+	^ self
+		  ifNotEmpty: [
+			  | basetype |
+			  basetype := ViennaType unit.
+			  self do: [ :pattern |
+				  pattern typecheck possibleTypesDo: [ :type |
+					  basetype := basetype + type ] ].
+			  basetype set1 ]
+		  ifEmpty: [ ViennaType unit set ]
+]
+
+{ #category : #typechecking }
+ViennaSetEnumPatternNode >> maximalType: aViennaType [
+
+	| basetype |
+	basetype := ViennaType unit.
+	aViennaType possibleTypesDo: [ :type |
+		type isSetType ifTrue: [ basetype := basetype + type basetype ] ].
+	self do: [ :pattern | pattern maximalType: basetype ].
+	super maximalType: self maximalType
+]

@@ -56,6 +56,29 @@ ViennaTuplePatternNode >> label [
 	^ 'TuplePattern'
 ]
 
+{ #category : #typechecking }
+ViennaTuplePatternNode >> maximalType [
+
+	^ ViennaType product: (self patternList collect: #typecheck)
+]
+
+{ #category : #typechecking }
+ViennaTuplePatternNode >> maximalType: aViennaType [
+
+	| arity types |
+	arity := self patternList size.
+	types := Array new: arity withAll: ViennaType unit.
+	aViennaType possibleTypesDo: [ :type |
+		(type isProductType and: [ type basetypes size = arity ]) ifTrue: [
+			1 to: arity do: [ :index |
+				types
+					at: index
+					put: (types at: index) + (type basetypes at: index) ] ] ].
+	1 to: arity do: [ :index |
+		(self patternList at: index) maximalType: (types at: index) ].
+	^ super maximalType: self maximalType
+]
+
 { #category : #accessing }
 ViennaTuplePatternNode >> patternList [
 
