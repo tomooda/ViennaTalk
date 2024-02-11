@@ -82,6 +82,15 @@ ViennaPartialFunctionType >> hash [
 	^ argtypes hash bitXor: returntype hash
 ]
 
+{ #category : #accessing }
+ViennaPartialFunctionType >> instantiate: aDictionary [
+
+	^ self class
+		  withAll:
+		  (self argtypes collect: [ :t | t instantiate: aDictionary ])
+		  with: (self returntype instantiate: aDictionary)
+]
+
 { #category : #testing }
 ViennaPartialFunctionType >> isCompatibleWith: aViennaType [
 

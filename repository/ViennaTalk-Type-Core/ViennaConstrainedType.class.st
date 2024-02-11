@@ -73,6 +73,14 @@ ViennaConstrainedType >> hash [
 	^ basetype hash bitXor: invariant hash
 ]
 
+{ #category : #accessing }
+ViennaConstrainedType >> instantiate: aDictionary [
+
+	^ self class
+		  with: (self basetype instantiate: aDictionary)
+		  with: self invariant
+]
+
 { #category : #arithmetic }
 ViennaConstrainedType >> inv: aBlock [
 	^ self class with: basetype with: [ :v | (invariant value: v) and: [ aBlock value: v ] ]

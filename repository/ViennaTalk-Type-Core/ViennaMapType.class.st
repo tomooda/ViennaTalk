@@ -83,6 +83,14 @@ ViennaMapType >> hash [
 	^ keytype hash bitXor: valuetype hash
 ]
 
+{ #category : #accessing }
+ViennaMapType >> instantiate: aDictionary [
+
+	^ self class
+		  with: (self keytype instantiate: aDictionary)
+		  with: (self valuetype instantiate: aDictionary)
+]
+
 { #category : #testing }
 ViennaMapType >> isCompatibleWith: aViennaType [
 

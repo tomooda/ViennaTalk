@@ -92,6 +92,15 @@ ViennaTotalFunctionType >> hash [
 	^ argtypes hash bitXor: returntype hash
 ]
 
+{ #category : #accessing }
+ViennaTotalFunctionType >> instantiate: aDictionary [
+
+	^ self class
+		  withAll:
+		  (self argtypes collect: [ :t | t instantiate: aDictionary ])
+		  with: (self returntype instantiate: aDictionary)
+]
+
 { #category : #testing }
 ViennaTotalFunctionType >> isCompatibleWith: aViennaType [
 

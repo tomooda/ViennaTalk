@@ -69,6 +69,12 @@ ViennaOptionType >> hash [
 	^ basetype hash bitXor: 16rffff
 ]
 
+{ #category : #accessing }
+ViennaOptionType >> instantiate: aDictionary [
+
+	^ self class with: (self basetype instantiate: aDictionary)
+]
+
 { #category : #testing }
 ViennaOptionType >> isChoiceType [
 

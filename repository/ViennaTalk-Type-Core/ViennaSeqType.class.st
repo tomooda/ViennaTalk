@@ -73,6 +73,12 @@ ViennaSeqType >> hash [
 	^ basetype hash bitXor: 16rffff
 ]
 
+{ #category : #accessing }
+ViennaSeqType >> instantiate: aDictionary [
+
+	^ self class with: (self basetype instantiate: aDictionary)
+]
+
 { #category : #testing }
 ViennaSeqType >> isCompatibleWith: aViennaType [
 

@@ -116,6 +116,13 @@ ViennaProductType >> hash [
 	^ basetypes hash
 ]
 
+{ #category : #accessing }
+ViennaProductType >> instantiate: aDictionary [
+
+	^ self class withAll:
+		  (self basetypes collect: [ :t | t instantiate: aDictionary ])
+]
+
 { #category : #testing }
 ViennaProductType >> isCompatibleWith: aViennaType [
 

@@ -32,6 +32,7 @@ ViennaBasicTypeNode >> asMaximalViennaType [
 	identifier = 'char' ifTrue: [ ^ ViennaType char ].
 	identifier = 'bool' ifTrue: [ ^ ViennaType bool ].
 	identifier = 'any' ifTrue: [ ^ ViennaType any ].
+	identifier = 'token' ifTrue: [ ^ ViennaType token ].
 	^ self error: 'Unknown basic type'
 ]
 

@@ -87,6 +87,13 @@ ViennaUnionType >> hash [
 	^ basetypes inject: 0 into: [ :h :t | h bitXor: t hash ]
 ]
 
+{ #category : #accessing }
+ViennaUnionType >> instantiate: aDictionary [
+
+	^ self class withAll:
+		  (self basetypes collect: [ :t | t instantiate: aDictionary ])
+]
+
 { #category : #testing }
 ViennaUnionType >> isCompatibleWith: aViennaType [
 

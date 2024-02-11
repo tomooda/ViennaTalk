@@ -357,6 +357,12 @@ ViennaType >> inmapTo: aViennaType [
 	^ ViennaInmapType with: self with: aViennaType
 ]
 
+{ #category : #accessing }
+ViennaType >> instantiate: aDictionary [
+
+	^ self subclassResponsibility
+]
+
 { #category : #arithmetic }
 ViennaType >> inv: aBlock [
 	^ ViennaConstrainedType with: self with: aBlock

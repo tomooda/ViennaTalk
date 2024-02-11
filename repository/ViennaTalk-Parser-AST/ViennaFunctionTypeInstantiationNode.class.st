@@ -72,6 +72,37 @@ ViennaFunctionTypeInstantiationNode >> label [
 	^ 'FunctionTypeInstantiation'
 ]
 
+{ #category : #typechecking }
+ViennaFunctionTypeInstantiationNode >> maximalType [
+
+	| functionDefinition params args type |
+	functionDefinition := self expression resolve ifNil: [
+		                      ^ ViennaTypeError
+			                        on: self
+			                        signal:
+			                        'Unresolved polymorphic function definition' ].
+	functionDefinition isFunctionDefinition ifFalse: [
+		^ ViennaTypeError
+			  on: self
+			  signal: 'Non-function can not be instantiated.' ].
+	functionDefinition isViennaExplicitFunctionDefinitionNode ifFalse: [
+		^ ViennaTypeError
+			  on: self
+			  signal: 'Only explicit functions can be instantiated' ].
+	params := functionDefinition typeVariableList collect:
+		          #asMaximalViennaType.
+	args := self functionTypeArgs collect: #asMaximalViennaType.
+	params size = args size ifFalse: [
+		^ ViennaTypeError
+			  on: self
+			  signal:
+			  'The number of type parameters and the given type arguments do not agree' ].
+	type := functionDefinition type asMaximalViennaType.
+	^ type instantiate: ((1 to: params size) collect: [ :index |
+			   Association key: (params at: index) value: (args at: index) ])
+			  asDictionary
+]
+
 { #category : #'pretty printing' }
 ViennaFunctionTypeInstantiationNode >> operatorPrecedence [
 

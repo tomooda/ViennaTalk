@@ -78,6 +78,15 @@ ViennaOperationType >> hash [
 	^ argtypes hash bitXor: returntype hash
 ]
 
+{ #category : #accessing }
+ViennaOperationType >> instantiate: aDictionary [
+
+	^ self class
+		  withAll:
+		  (self argtypes collect: [ :t | t instantiate: aDictionary ])
+		  with: (self returntype instantiate: aDictionary)
+]
+
 { #category : #testing }
 ViennaOperationType >> isCompatibleWith: aViennaType [
 

@@ -68,6 +68,12 @@ ViennaParametricType >> identifier: aString [
 ]
 
 { #category : #accessing }
+ViennaParametricType >> instantiate: aDictionary [
+
+	^ aDictionary at: self ifAbsent: [ self ]
+]
+
+{ #category : #accessing }
 ViennaParametricType >> name [
 	^ identifier
 ]

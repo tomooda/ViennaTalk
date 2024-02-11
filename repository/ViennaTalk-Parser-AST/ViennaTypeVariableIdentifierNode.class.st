@@ -16,7 +16,7 @@ ViennaTypeVariableIdentifierNode class >> identifier: aString [
 { #category : #converting }
 ViennaTypeVariableIdentifierNode >> asMaximalViennaType [
 
-	^ self error: 'Type variable is not instantiated.'
+	^ ViennaType parametric: self identifier
 ]
 
 { #category : #private }

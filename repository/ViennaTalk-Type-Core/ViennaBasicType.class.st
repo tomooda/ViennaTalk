@@ -18,3 +18,9 @@ ViennaBasicType class >> isAbstract [
 
 	^ self = ViennaBasicType
 ]
+
+{ #category : #accessing }
+ViennaBasicType >> instantiate: aDictionary [
+
+	^ self
+]

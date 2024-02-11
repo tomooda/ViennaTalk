@@ -100,6 +100,18 @@ ViennaCompositeType >> indicesAndFieldsDo: aBlock [
 			value: field third ]
 ]
 
+{ #category : #accessing }
+ViennaCompositeType >> instantiate: aDictionary [
+
+	^ self class
+		  constructorName: self constructorName
+		  withAll: (self fieldsCollect: [ :f :e :t |
+				   {
+					   f.
+					   e.
+					   (t instantiate: aDictionary) } ])
+]
+
 { #category : #testing }
 ViennaCompositeType >> isCompositeType [
 
