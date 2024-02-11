@@ -47,7 +47,7 @@ ViennaSeqEnumPatternNode >> maximalType [
 			  self do: [ :pattern |
 				  pattern typecheck possibleTypesDo: [ :type |
 					  basetype := basetype + type ] ].
-			  basetype seq1 ]
+			  basetype ifNotUnit: #seq1 ]
 		  ifEmpty: [ ViennaType unit seq ]
 ]
 

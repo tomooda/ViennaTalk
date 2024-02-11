@@ -40,3 +40,19 @@ ViennaPatternListNode >> label [
 
 	^ 'PatternList'
 ]
+
+{ #category : #typechecking }
+ViennaPatternListNode >> maximalType [
+
+	| type |
+	type := ViennaType unit.
+	self do: [ :pattern | type := type + pattern typecheck ].
+	^ type
+]
+
+{ #category : #typechecking }
+ViennaPatternListNode >> maximalType: aViennaType [
+
+	self do: [ :pattern | pattern maximalType: aViennaType ].
+	super maximalType: self maximalType
+]

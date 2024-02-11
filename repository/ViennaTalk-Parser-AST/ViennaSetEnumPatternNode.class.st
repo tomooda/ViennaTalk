@@ -47,7 +47,7 @@ ViennaSetEnumPatternNode >> maximalType [
 			  self do: [ :pattern |
 				  pattern typecheck possibleTypesDo: [ :type |
 					  basetype := basetype + type ] ].
-			  basetype set1 ]
+			  basetype ifNotUnit: #set1 ]
 		  ifEmpty: [ ViennaType unit set ]
 ]
 

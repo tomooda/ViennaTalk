@@ -23,6 +23,13 @@ ViennaMultipleBindNode >> isViennaMultipleBindNode [
 	^ true
 ]
 
+{ #category : #typechecking }
+ViennaMultipleBindNode >> maximalType: aViennaType [
+
+	self patternsDo: [ :pattern | pattern maximalType: aViennaType ].
+	super maximalType: self maximalType
+]
+
 { #category : #accessing }
 ViennaMultipleBindNode >> patternList [
 

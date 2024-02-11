@@ -35,7 +35,15 @@ ViennaSetBindNode >> maximalType [
 		type isSetType ifTrue: [ basetype := basetype + type basetype ].
 		type isAnyType ifTrue: [ basetype := ViennaType any ] ].
 	self pattern maximalType: basetype.
-	^ self pattern typecheck
+	[ self pattern typecheck: basetype ]
+		on: ViennaTypeError
+		do: [ :ex |
+			ViennaTypeError
+				on: self
+				signal:
+					'Bind mismatch: Pattern ' , self pattern source
+					, ' not agree with ' , basetype printString ].
+	^ ViennaType unit
 ]
 
 { #category : #typechecking }

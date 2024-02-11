@@ -61,9 +61,10 @@ ViennaSetUnionPatternNode >> maximalType [
 				basetype := basetype + type basetype.
 				isSet1 := isSet1 or: [ type isSet1Type ] ].
 			type isAnyType ifTrue: [ basetype := ViennaType any ] ] ].
-	^ isSet1
-		  ifTrue: [ basetype set1 ]
-		  ifFalse: [ basetype set ]
+	^ basetype ifNotUnit: [
+		  isSet1
+			  ifTrue: [ basetype set1 ]
+			  ifFalse: [ basetype set ] ]
 ]
 
 { #category : #typechecking }

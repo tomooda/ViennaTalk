@@ -69,7 +69,9 @@ ViennaMapMunionPatternNode >> maximalType [
 		type isAnyType ifTrue: [
 			keytype := ViennaType any.
 			valuetype := ViennaType any ] ].
-	^ keytype mapTo: valuetype
+	^ (keytype isUnitType or: [ valuetype isUnitType ])
+		  ifFalse: [ keytype mapTo: valuetype ]
+		  ifTrue: [ ViennaType unit ]
 ]
 
 { #category : #typechecking }

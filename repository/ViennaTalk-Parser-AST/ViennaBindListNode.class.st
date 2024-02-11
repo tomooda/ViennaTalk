@@ -40,3 +40,17 @@ ViennaBindListNode >> label [
 
 	^ 'BindList'
 ]
+
+{ #category : #private }
+ViennaBindListNode >> maximalType [
+
+	self do: [ :bind | bind typecheck: ViennaType unit ].
+	^ ViennaType unit
+]
+
+{ #category : #private }
+ViennaBindListNode >> maximalType: aViennaType [
+
+	self do: [ :bind | bind maximalType: aViennaType ].
+	super maximalType: self maximalType
+]

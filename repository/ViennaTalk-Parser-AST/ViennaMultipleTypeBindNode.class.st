@@ -42,6 +42,32 @@ ViennaMultipleTypeBindNode >> label [
 	^ 'MultipleTypeBind'
 ]
 
+{ #category : #typechecking }
+ViennaMultipleTypeBindNode >> maximalType [
+
+	| type |
+	type := self type asMaximalViennaType.
+	self patternsDo: [ :pattern |
+		pattern maximalType: type.
+		[ pattern typecheck: type ]
+			on: ViennaTypeError
+			do: [ :ex |
+				ViennaTypeError
+					on: self
+					signal:
+						'Bind mismatch: Pattern ' , pattern source , ' not agree with '
+						, type printString ] ].
+	^ ViennaType unit
+]
+
+{ #category : #typechecking }
+ViennaMultipleTypeBindNode >> maximalType: aViennaType [
+
+	| basetype |
+	basetype := self type asMaximalViennaType.
+	super maximalType: basetype & aViennaType
+]
+
 { #category : #accessing }
 ViennaMultipleTypeBindNode >> type [
 

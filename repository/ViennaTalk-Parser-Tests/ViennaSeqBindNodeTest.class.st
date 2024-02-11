@@ -9,13 +9,16 @@ ViennaSeqBindNodeTest >> testMaximalType [
 
 	| bind |
 	bind := ViennaVDMParser new bind end parse: 'x in seq [1,2,3]'.
-	self assert: bind typecheck equals: ViennaType nat1.
-	self assert: bind pattern typecheck equals: ViennaType nat1.
-	bind maximalType: ViennaType real.
+	self
+		shouldnt: [ bind typecheck: ViennaType unit ]
+		raise: ViennaTypeError.
 	self assert: bind pattern typecheck equals: ViennaType nat1.
 	bind := ViennaVDMParser new bind end parse: 'x in seq [1,2.2,nil]'.
-	self assert: bind typecheck equals: ViennaType real optional.
+	self
+		shouldnt: [ bind typecheck: ViennaType unit ]
+		raise: ViennaTypeError.
 	self assert: bind pattern typecheck equals: ViennaType real optional.
-	bind maximalType: (ViennaType real | ViennaType char) optional.
-	self assert: bind pattern typecheck equals: ViennaType real optional
+	bind := ViennaVDMParser new multipleBind end parse:
+		        'mk_(y, z) in seq [1,2,3]'.
+	self should: [ bind typecheck ] raise: ViennaTypeError
 ]

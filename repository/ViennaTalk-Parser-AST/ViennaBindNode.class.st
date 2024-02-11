@@ -24,15 +24,10 @@ ViennaBindNode >> isViennaBindNode [
 ]
 
 { #category : #typechecking }
-ViennaBindNode >> maximalType [
-
-	^ self pattern maximalType
-]
-
-{ #category : #typechecking }
 ViennaBindNode >> maximalType: aViennaType [
 
-	self pattern maximalType: aViennaType
+	self pattern maximalType: aViennaType.
+	super maximalType: self maximalType
 ]
 
 { #category : #accessing }

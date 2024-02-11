@@ -53,9 +53,10 @@ ViennaSeqConcPatternNode >> maximalType [
 				basetype := basetype + type basetype.
 				isSeq1 := isSeq1 or: [ type isSeq1Type ] ].
 			type isAnyType ifTrue: [ basetype := ViennaType any ] ] ].
-	^ isSeq1
-		  ifTrue: [ basetype seq1 ]
-		  ifFalse: [ basetype seq ]
+	^ basetype ifNotUnit: [
+		  isSeq1
+			  ifTrue: [ basetype seq1 ]
+			  ifFalse: [ basetype seq ] ]
 ]
 
 { #category : #typechecking }
@@ -65,6 +66,6 @@ ViennaSeqConcPatternNode >> maximalType: aViennaType [
 	type := ViennaType unit.
 	aViennaType possibleTypesDo: [ :seqType |
 		seqType isSeqType ifTrue: [ type := type + seqType ] ].
-	self do: [ :pattern | pattern maximalType: aViennaType ].
+	self do: [ :pattern | pattern maximalType: type ].
 	super maximalType: self maximalType
 ]
