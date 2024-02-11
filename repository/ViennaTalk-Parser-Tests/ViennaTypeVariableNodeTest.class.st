@@ -8,6 +8,6 @@ Class {
 ViennaTypeVariableNodeTest >> testAsMaximalViennaType [
 
 	self
-		should: [ '@T' asViennaTypeAst asMaximalViennaType ]
-		raise: Error
+		assert: '@T' asViennaTypeAst asMaximalViennaType
+		equals: (ViennaType parametric: '@T')
 ]
