@@ -103,6 +103,13 @@ ViennaExists1ExpressionNode >> lookupIdentifier: aString [
 		  ifFalse: [ nil ]
 ]
 
+{ #category : #typechecking }
+ViennaExists1ExpressionNode >> maximalType [
+
+	self bind typecheck.
+	^ self expression typecheck: ViennaType bool
+]
+
 { #category : #'pretty printing' }
 ViennaExists1ExpressionNode >> operatorPrecedence [
 

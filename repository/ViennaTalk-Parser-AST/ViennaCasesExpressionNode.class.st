@@ -87,7 +87,9 @@ ViennaCasesExpressionNode >> maximalType [
 				   self casesExpressionAlternatives do: [ :alternative |
 					   alternative patternList do: [ :pattern |
 						   pattern maximalType: caseType ].
-					   stream nextPut: alternative expression typecheck ] ])
+					   stream nextPut: alternative expression typecheck ].
+				   self othersExpression ifNotNil: [ :others |
+					   stream nextPut: others expression typecheck ] ])
 		  ifUnit: [ ViennaTypeError signalOn: self ]
 ]
 

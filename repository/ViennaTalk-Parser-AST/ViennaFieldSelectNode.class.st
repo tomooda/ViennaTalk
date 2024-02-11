@@ -71,6 +71,21 @@ ViennaFieldSelectNode >> label [
 	^ 'FieldSelect'
 ]
 
+{ #category : #accessing }
+ViennaFieldSelectNode >> maximalType [
+
+	| type |
+	type := ViennaType unit.
+	self expression typecheck possibleTypesDo: [ :basetype |
+		basetype isCompositeType ifTrue: [
+			basetype fieldsDo: [ :f :e :t |
+				f = self field ifTrue: [ type := type + t ] ] ] ].
+	^ type ifUnit: [
+		  ViennaTypeError
+			  on: self
+			  signal: 'The field ' , self field , ' is not accessible' ]
+]
+
 { #category : #'pretty printing' }
 ViennaFieldSelectNode >> operatorPrecedence [
 
