@@ -9,7 +9,7 @@ ViennaArithmeticMinusNodeTest >> testMaximalType [
 
 	self
 		assert: '3 - 2' asViennaExpressionAst maximalType
-		equals: ViennaType real.
+		equals: ViennaType int.
 	self
 		assert: '3.14 - 2' asViennaExpressionAst maximalType
 		equals: ViennaType real.

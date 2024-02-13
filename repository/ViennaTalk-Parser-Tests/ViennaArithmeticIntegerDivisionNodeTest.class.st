@@ -9,9 +9,9 @@ ViennaArithmeticIntegerDivisionNodeTest >> testMaximalType [
 
 	self
 		assert: '3 div 2' asViennaExpressionAst maximalType
-		equals: ViennaType int.
+		equals: ViennaType nat.
 	self
-		assert: '3 div 2' asViennaExpressionAst maximalType
+		assert: '-3 div -2' asViennaExpressionAst maximalType
 		equals: ViennaType int.
 	self
 		should: [ '3 div true' asViennaExpressionAst maximalType ]

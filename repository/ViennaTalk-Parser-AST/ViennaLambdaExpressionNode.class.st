@@ -94,6 +94,15 @@ ViennaLambdaExpressionNode >> lookupIdentifier: aString [
 	^ nil
 ]
 
+{ #category : #typechecking }
+ViennaLambdaExpressionNode >> maximalType [
+
+	self typeBindList typecheck.
+	^ (ViennaType product:
+		   (self typeBindList collect: [ :typeBind |
+			    typeBind pattern typecheck ])) -> self expression typecheck
+]
+
 { #category : #'pretty printing' }
 ViennaLambdaExpressionNode >> operatorPrecedence [
 

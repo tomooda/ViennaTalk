@@ -50,5 +50,13 @@ ViennaArithmeticMultiplicationNode >> paramType2 [
 { #category : #accessing }
 ViennaArithmeticMultiplicationNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
 
-	^ ViennaType real
+	^ (aViennaType1 isIntType and: [ aViennaType2 isIntType ])
+		  ifTrue: [
+			  (aViennaType1 isNatType and: [ aViennaType2 isNatType ])
+				  ifTrue: [
+					  (aViennaType1 isNat1Type and: [ aViennaType2 isNat1Type ])
+						  ifTrue: [ ViennaType nat1 ]
+						  ifFalse: [ ViennaType nat ] ]
+				  ifFalse: [ ViennaType int ] ]
+		  ifFalse: [ ViennaType real ]
 ]

@@ -9,20 +9,17 @@ ViennaArithmaticModNodeTest >> testMaximalType [
 
 	self
 		assert: '3 mod 2' asViennaExpressionAst maximalType
-		equals: ViennaType real.
+		equals: ViennaType nat.
 	self
 		assert: '-3 mod 2' asViennaExpressionAst maximalType
-		equals: ViennaType real.
+		equals: ViennaType nat.
 	self
 		assert: '3 mod -2' asViennaExpressionAst maximalType
-		equals: ViennaType real.
+		equals: ViennaType int.
 	self
-		assert: '3.14 mod 2' asViennaExpressionAst maximalType
-		equals: ViennaType real.
-	self
-		should: [ '3.14 mod true' asViennaExpressionAst maximalType ]
+		should: [ 'nil mod 2' asViennaExpressionAst maximalType ]
 		raise: ViennaTypeError.
 	self
-		should: [ 'true mod 2' asViennaExpressionAst maximalType ]
+		should: [ '2 mod nil' asViennaExpressionAst maximalType ]
 		raise: ViennaTypeError
 ]

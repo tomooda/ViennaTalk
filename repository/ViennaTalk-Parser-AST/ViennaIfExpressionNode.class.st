@@ -84,6 +84,13 @@ ViennaIfExpressionNode >> label [
 	^ 'IfExpression'
 ]
 
+{ #category : #typechecking }
+ViennaIfExpressionNode >> maximalType [
+
+	^ self conditionalExpressionList typecheck
+	  + self expression typecheck
+]
+
 { #category : #'pretty printing' }
 ViennaIfExpressionNode >> operatorPrecedence [
 

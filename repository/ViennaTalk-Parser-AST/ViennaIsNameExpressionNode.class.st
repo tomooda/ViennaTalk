@@ -60,6 +60,24 @@ ViennaIsNameExpressionNode >> label [
 ]
 
 { #category : #accessing }
+ViennaIsNameExpressionNode >> maximalType [
+
+	self name resolve
+		ifNotNil: [ :node |
+			(node isViennaTypeSynonymNode or: [
+				 node isViennaRecordTypeDefinitionNode ]) ifFalse: [
+				ViennaTypeError
+					on: self
+					signal: self name source , ' is not a type name' ] ]
+		ifNil: [
+			ViennaTypeError
+				on: self
+				signal: 'Type name ' , self name source , ' could not be resolved' ].
+	self expression typecheck.
+	^ ViennaType bool
+]
+
+{ #category : #accessing }
 ViennaIsNameExpressionNode >> name [
 
 	^ self at: 1

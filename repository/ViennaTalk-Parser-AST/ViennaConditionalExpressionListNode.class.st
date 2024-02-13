@@ -34,3 +34,12 @@ ViennaConditionalExpressionListNode >> label [
 
 	^ 'ConditionalExpressionList'
 ]
+
+{ #category : #typechecking }
+ViennaConditionalExpressionListNode >> maximalType [
+
+	^ self
+		  inject: ViennaType unit
+		  into: [ :type :conditionalExpression |
+			  type + conditionalExpression typecheck ]
+]

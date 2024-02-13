@@ -72,3 +72,10 @@ ViennaConditionalExpressionNode >> label [
 
 	^ 'ConditionalExpression'
 ]
+
+{ #category : #typechecking }
+ViennaConditionalExpressionNode >> maximalType [
+
+	self condition typecheck: ViennaType bool.
+	^ self expression typecheck
+]

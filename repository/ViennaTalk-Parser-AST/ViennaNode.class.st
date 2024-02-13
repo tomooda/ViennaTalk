@@ -2436,6 +2436,18 @@ ViennaNode >> lookupIdentifier: aString [
 	^ nil
 ]
 
+{ #category : #typechecking }
+ViennaNode >> maximalType [
+
+	^ self subclassResponsibility 
+]
+
+{ #category : #typechecking }
+ViennaNode >> maximalType: aViennaType [
+
+	maximalType := aViennaType
+]
+
 { #category : #accessing }
 ViennaNode >> module [
 
@@ -2701,6 +2713,27 @@ ViennaNode >> stateVariablesDo: aBlock [
 { #category : #accessing }
 ViennaNode >> third [
 	^ self at: 3
+]
+
+{ #category : #typechecking }
+ViennaNode >> typecheck [
+
+	^ maximalType ifNil: [ maximalType := self maximalType ]
+]
+
+{ #category : #typechecking }
+ViennaNode >> typecheck: aViennaType [
+
+	| type |
+	type := self typecheck.
+	^ (type isCompatibleWith: aViennaType)
+		  ifTrue: [ type ]
+		  ifFalse: [
+			  ^ ViennaTypeError
+				    on: self
+				    signal:
+					    'Type mismatch: expected ' , aViennaType printString
+					    , ' but actual ' , type printString ]
 ]
 
 { #category : #'accessing-definitions' }

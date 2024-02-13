@@ -50,5 +50,7 @@ ViennaArithmeticIntegerDivisionNode >> paramType2 [
 { #category : #accessing }
 ViennaArithmeticIntegerDivisionNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
 
-	^ ViennaType int
+	^ (aViennaType1 isNatType and: [ aViennaType2 isNatType ])
+		  ifTrue: [ ViennaType nat ]
+		  ifFalse: [ ViennaType int ]
 ]

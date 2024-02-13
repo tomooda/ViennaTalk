@@ -9,16 +9,16 @@ ViennaArithmaticPlusNodeTest >> testMaximalType [
 
 	self
 		assert: '3 + 2' asViennaExpressionAst maximalType
-		equals: ViennaType real.
+		equals: ViennaType nat1.
 	self
 		assert: '3 + 0' asViennaExpressionAst maximalType
-		equals: ViennaType real.
+		equals: ViennaType nat1.
 	self
 		assert: '0 + 0' asViennaExpressionAst maximalType
-		equals: ViennaType real.
+		equals: ViennaType nat.
 	self
 		assert: '3 + -2' asViennaExpressionAst maximalType
-		equals: ViennaType real.
+		equals: ViennaType int.
 	self
 		assert: '3.14 + 2' asViennaExpressionAst maximalType
 		equals: ViennaType real.

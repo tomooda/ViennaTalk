@@ -38,17 +38,19 @@ ViennaArithmeticModNode >> operatorPrecedence [
 { #category : #accessing }
 ViennaArithmeticModNode >> paramType1 [
 
-	^ ViennaType real
+	^ ViennaType int
 ]
 
 { #category : #accessing }
 ViennaArithmeticModNode >> paramType2 [
 
-	^ ViennaType real
+	^ ViennaType int
 ]
 
 { #category : #accessing }
 ViennaArithmeticModNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
 
-	^ ViennaType real
+	^ aViennaType2 isNatType
+		  ifTrue: [ ViennaType nat ]
+		  ifFalse: [ ViennaType int ]
 ]

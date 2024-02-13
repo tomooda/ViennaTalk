@@ -102,6 +102,14 @@ ViennaIotaExpressionNode >> lookupIdentifier: aString [
 		  ifFalse: [ nil ]
 ]
 
+{ #category : #typechecking }
+ViennaIotaExpressionNode >> maximalType [
+
+	self bind typecheck.
+	self expression typecheck: ViennaType bool.
+	^ self bind pattern typecheck
+]
+
 { #category : #'pretty printing' }
 ViennaIotaExpressionNode >> operatorPrecedence [
 
