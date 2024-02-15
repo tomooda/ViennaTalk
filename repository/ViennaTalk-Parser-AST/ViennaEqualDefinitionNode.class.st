@@ -71,6 +71,15 @@ ViennaEqualDefinitionNode >> label [
 	^ 'EqualDefinition'
 ]
 
+{ #category : #typechecking }
+ViennaEqualDefinitionNode >> maximalType [
+
+	| leftType rightType |
+	leftType := self patternOrBind typecheck.
+	rightType := self expression typecheck: leftType.
+	^ self patternOrBind maximalType: rightType
+]
+
 { #category : #'parsers-patterns' }
 ViennaEqualDefinitionNode >> patternOrBind [
 
@@ -81,13 +90,4 @@ ViennaEqualDefinitionNode >> patternOrBind [
 ViennaEqualDefinitionNode >> patternOrBind: aViennaPatternNodeOrViennaBindNode [
 
 	self at: 1 put: aViennaPatternNodeOrViennaBindNode
-]
-
-{ #category : #typechecking }
-ViennaEqualDefinitionNode >> typecheck [
-
-	| leftType rightType |
-	leftType := self patternOrBind typecheck.
-	rightType := self expression typecheck: leftType.
-	^ self patternOrBind maximalType: rightType
 ]

@@ -27,6 +27,7 @@ ViennaProductType class >> withAll: anArrayOfViennaType [
 { #category : #arithmetic }
 ViennaProductType >> & aViennaType [
 
+	aViennaType isAnyType ifTrue: [ ^ self ].
 	(aViennaType isProductType and: [
 		 basetypes size = aViennaType basetypes size ]) ifTrue: [
 		| types |

@@ -26,3 +26,18 @@ ViennaResultExpressionNode >> label [
 
 	^ 'ResultExpression'
 ]
+
+{ #category : #typechecking }
+ViennaResultExpressionNode >> maximalType [
+
+	^ (self
+		   detectParent: [ :node |
+			   node isFunctionDefinition or: [ node isOperationDefinition ] ]
+		   ifNone: [ nil ])
+		  ifNotNil: [ :definitionNode |
+		  definitionNode returnType asMaximalViennaType ]
+		  ifNil: [
+			  ViennaTypeError
+				  on: self
+				  signal: 'RESULT out of function/operation definition' ]
+]

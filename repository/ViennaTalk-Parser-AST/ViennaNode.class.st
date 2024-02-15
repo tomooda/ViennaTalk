@@ -2727,7 +2727,7 @@ ViennaNode >> typecheck: aViennaType [
 	| type |
 	type := self typecheck.
 	^ (type isCompatibleWith: aViennaType)
-		  ifTrue: [ type ]
+		  ifTrue: [ type & aViennaType ]
 		  ifFalse: [
 			  ^ ViennaTypeError
 				    on: self

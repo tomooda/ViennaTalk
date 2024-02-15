@@ -29,9 +29,15 @@ ViennaSeq1Type class >> with: aViennaType [
 { #category : #arithmetic }
 ViennaSeq1Type >> & aViennaType [
 
-	^ aViennaType isSeqType
-		  ifTrue: [ (basetype & aViennaType basetype) seq1 ]
-		  ifFalse: [ ViennaType unit ]
+	^ aViennaType isAnyType
+		  ifTrue: [ self ]
+		  ifFalse: [
+			  | btype |
+			  btype := ViennaType unit.
+			  aViennaType possibleTypesDo: [ :type |
+				  type isSeqType ifTrue: [ btype := btype + type basetype ] ].
+			  btype := btype & self basetype.
+			  btype ifNotUnit: [ :t | t seq1 ] ]
 ]
 
 { #category : #comparing }

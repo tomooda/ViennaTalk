@@ -23,6 +23,7 @@ ViennaPartialFunctionType class >> withAll: anArrayOfViennaType with: aViennaTyp
 { #category : #arithmetic }
 ViennaPartialFunctionType >> & aViennaType [
 
+	aViennaType isAnyType ifTrue: [ ^ self ].
 	(aViennaType isFunctionType and: [
 		 self argtypes size = aViennaType argtypes size ]) ifTrue: [
 		| types |

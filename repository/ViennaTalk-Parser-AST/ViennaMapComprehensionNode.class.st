@@ -126,6 +126,14 @@ ViennaMapComprehensionNode >> lookupIdentifier: aString [
 	^ nil
 ]
 
+{ #category : #typechecking }
+ViennaMapComprehensionNode >> maximalType [
+
+	self bindList typecheck.
+	self suchthatExpression typecheck: ViennaType bool.
+	^ self keyExpression typecheck mapTo: self valueExpression typecheck
+]
+
 { #category : #enumerating }
 ViennaMapComprehensionNode >> multipleBindsDo: aBlock [
 

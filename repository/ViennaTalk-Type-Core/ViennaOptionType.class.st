@@ -22,9 +22,12 @@ ViennaOptionType class >> with: aViennaType [
 { #category : #arithmetic }
 ViennaOptionType >> & aViennaType [
 
-	^ aViennaType isOptionType
-		  ifTrue: [ (basetype & aViennaType basetype) optional ]
-		  ifFalse: [ basetype & aViennaType ]
+	^ aViennaType isAnyType
+		  ifTrue: [ self ]
+		  ifFalse: [
+			  aViennaType isOptionType
+				  ifTrue: [ (basetype & aViennaType basetype) optional ]
+				  ifFalse: [ basetype & aViennaType ] ]
 ]
 
 { #category : #arithmetic }

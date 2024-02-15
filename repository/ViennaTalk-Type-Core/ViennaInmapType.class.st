@@ -23,15 +23,18 @@ ViennaInmapType class >> with: aViennaType1 with: aViennaType2 [
 { #category : #arithmetic }
 ViennaInmapType >> & aViennaType [
 
-	^ aViennaType isMapType
-		  ifTrue: [
-			  self keytype & aViennaType keytype
-				  ifNotUnit: [ :k |
-					  self valuetype & aViennaType valuetype
-						  ifNotUnit: [ :v | k inmapTo: v ]
+	^ aViennaType isAnyType
+		  ifTrue: [ self ]
+		  ifFalse: [
+			  aViennaType isMapType
+				  ifTrue: [
+					  self keytype & aViennaType keytype
+						  ifNotUnit: [ :k |
+							  self valuetype & aViennaType valuetype
+								  ifNotUnit: [ :v | k inmapTo: v ]
+								  ifUnit: [ ViennaType unit ] ]
 						  ifUnit: [ ViennaType unit ] ]
-				  ifUnit: [ ViennaType unit ] ]
-		  ifFalse: [ ViennaType unit ]
+				  ifFalse: [ ViennaType unit ] ]
 ]
 
 { #category : #comparing }

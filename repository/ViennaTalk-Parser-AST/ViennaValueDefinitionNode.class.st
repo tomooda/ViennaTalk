@@ -166,6 +166,20 @@ ViennaValueDefinitionNode >> label [
 	^ 'ValueDefinition'
 ]
 
+{ #category : #typechecking }
+ViennaValueDefinitionNode >> maximalType [
+
+	| leftType rightType |
+	leftType := self pattern maximalType
+	            &
+	            (self type
+		             ifNotNil: #asMaximalViennaType
+		             ifNil: [ ViennaType any ]).
+	rightType := self expression typecheck: leftType.
+	self pattern maximalType: rightType.
+	^ ViennaType unit
+]
+
 { #category : #accessing }
 ViennaValueDefinitionNode >> pattern [
 

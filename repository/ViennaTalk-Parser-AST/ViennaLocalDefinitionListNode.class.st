@@ -44,3 +44,9 @@ ViennaLocalDefinitionListNode >> label [
 
 	^ 'LocalDefinitionList'
 ]
+
+{ #category : #typechecking }
+ViennaLocalDefinitionListNode >> maximalType [
+
+	self do: #typecheck
+]

@@ -100,6 +100,14 @@ ViennaSequenceComprehensionNode >> lookupIdentifier: aString [
 	^ nil
 ]
 
+{ #category : #typechecking }
+ViennaSequenceComprehensionNode >> maximalType [
+
+	self setSeqBind typecheck.
+	self suchthatExpression typecheck: ViennaType bool.
+	^ self expression typecheck seq
+]
+
 { #category : #accessing }
 ViennaSequenceComprehensionNode >> pattern [
 

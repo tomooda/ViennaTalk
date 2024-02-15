@@ -122,8 +122,6 @@ ViennaUnitType >> name [
 
 { #category : #enumerating }
 ViennaUnitType >> possibleTypesDo: aBlock [
-
-	
 ]
 
 { #category : #arithmetic }

@@ -32,3 +32,15 @@ ViennaMapEnumerationNode >> label [
 
 	^ 'MapEnumeration'
 ]
+
+{ #category : #typechecking }
+ViennaMapEnumerationNode >> maximalType [
+
+	| keytype valuetype |
+	keytype := ViennaType unit.
+	valuetype := ViennaType unit.
+	self do: [ :maplet |
+		keytype := keytype + maplet keyExpression typecheck.
+		valuetype := valuetype + maplet valueExpression typecheck ].
+	^ keytype mapTo: valuetype
+]

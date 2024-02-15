@@ -29,12 +29,23 @@ ViennaSetType class >> with: aViennaType [
 { #category : #arithmetic }
 ViennaSetType >> & aViennaType [
 
-	^ aViennaType isSet1Type
-		  ifTrue: [ (basetype & aViennaType basetype) set1 ]
+	^ aViennaType isAnyType
+		  ifTrue: [ self ]
 		  ifFalse: [
-			  aViennaType isSetType
-				  ifTrue: [ (basetype & aViennaType basetype) set ]
-				  ifFalse: [ ViennaType unit ] ]
+			  | btype isSet1 |
+			  btype := ViennaType unit.
+			  isSet1 := true.
+			  aViennaType possibleTypesDo: [ :type |
+				  type isSetType ifTrue: [
+					  btype := btype + type basetype.
+					  type isSet1Type ifFalse: [ isSet1 := false ] ] ].
+			  btype := btype & self basetype.
+			  btype
+				  ifNotUnit: [ :t |
+					  isSet1
+						  ifTrue: [ t set1 ]
+						  ifFalse: [ t set ] ]
+				  ifUnit: #set ]
 ]
 
 { #category : #comparing }

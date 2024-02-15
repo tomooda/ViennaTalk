@@ -40,6 +40,14 @@ ViennaCompositeType >> basetypeAt: anIndex [
 	^ (self at: anIndex) third
 ]
 
+{ #category : #accessing }
+ViennaCompositeType >> basetypeAtName: aString ifAbsent: errorBlock [
+
+	1 to: self size do: [ :index |
+		(self at: index) first = aString ifTrue: [ ^ (self at: index) third ] ].
+	^ errorBlock value
+]
+
 { #category : #enumerating }
 ViennaCompositeType >> basicDo: aBlock [
 	| blockGenerator block |
@@ -86,6 +94,14 @@ ViennaCompositeType >> fieldsDo: aBlock [
 { #category : #comparing }
 ViennaCompositeType >> hash [
 	^ (1 to: self size) inject: constructorName hash into: [ :hash :field | hash bitXor: field hash ]
+]
+
+{ #category : #testing }
+ViennaCompositeType >> includesField: aString [
+
+	1 to: self size do: [ :index |
+	aString = (self at: index) first ifTrue: [ ^ true ] ].
+	^ false
 ]
 
 { #category : #private }

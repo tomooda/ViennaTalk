@@ -58,6 +58,13 @@ ViennaSetRangeExpressionNode >> label [
 	^ 'SetRangeExpression'
 ]
 
+{ #category : #typechecking }
+ViennaSetRangeExpressionNode >> maximalType [
+
+	^ ((self startExpression typecheck: ViennaType real)
+	   + (self endExpression typecheck: ViennaType real)) set
+]
+
 { #category : #accessing }
 ViennaSetRangeExpressionNode >> startExpression [
 

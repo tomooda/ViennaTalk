@@ -83,6 +83,13 @@ ViennaMultipleBindQuantifierNode >> lookupIdentifier: aString [
 	^ nil
 ]
 
+{ #category : #typechecking }
+ViennaMultipleBindQuantifierNode >> maximalType [
+
+	self bindList typecheck.
+	^ self expression typecheck: ViennaType bool
+]
+
 { #category : #enumerating }
 ViennaMultipleBindQuantifierNode >> multipleBindsDo: aBlock [
 

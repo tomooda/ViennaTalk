@@ -60,6 +60,30 @@ ViennaRecordConstructorNode >> label [
 	^ 'RecordConstructor'
 ]
 
+{ #category : #typechecking }
+ViennaRecordConstructorNode >> maximalType [
+
+	^ (self name resolve ifNotNil: #asMaximalViennaType)
+		  ifNotNil: [ :recordType |
+			  recordType size = self expressionList size
+				  ifTrue: [
+					  1 to: self expressionList size do: [ :index |
+						  (self expressionList at: index) typecheck:
+							  (recordType basetypeAt: index) ].
+					  recordType ]
+				  ifFalse: [
+					  ViennaTypeError
+						  on: self
+						  signal:
+							  'Wrong number of arguments: ' , recordType size printString
+							  , ' declared but ' , self expressionList size printString
+							  , ' given' ] ]
+		  ifNil: [
+			  ViennaTypeError
+				  on: self
+				  signal: 'Record type ' , self name source , ' is not defined' ]
+]
+
 { #category : #accessing }
 ViennaRecordConstructorNode >> name [
 

@@ -71,3 +71,20 @@ ViennaRecordModifierNode >> mapletList: aViennaMapletListNode [
 
 	self at: 2 put: aViennaMapletListNode
 ]
+
+{ #category : #typechecking }
+ViennaRecordModifierNode >> maximalType [
+
+	| type |
+	type := ViennaType unit.
+	self expression typecheck possibleTypesDo: [ :recordType |
+		(recordType isCompositeType and: [
+			 self mapletList allSatisfy: [ :maplet |
+				 (recordType
+					  basetypeAtName: maplet keyExpression identifier
+					  ifAbsent: [ nil ])
+					 ifNotNil: [ :fieldtype |
+						 maplet valueExpression typecheck isCompatibleWith: fieldtype ]
+					 ifNil: [ false ] ] ]) ifTrue: [ type := type + recordType ] ].
+	^ type
+]

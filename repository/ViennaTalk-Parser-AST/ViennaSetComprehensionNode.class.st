@@ -115,6 +115,14 @@ ViennaSetComprehensionNode >> lookupIdentifier: aString [
 	^ nil
 ]
 
+{ #category : #typechecking }
+ViennaSetComprehensionNode >> maximalType [
+
+	self bindList typecheck.
+	self suchthatExpression typecheck: ViennaType bool.
+	^ self expression typecheck set
+]
+
 { #category : #enumerating }
 ViennaSetComprehensionNode >> multipleBindsDo: aBlock [
 

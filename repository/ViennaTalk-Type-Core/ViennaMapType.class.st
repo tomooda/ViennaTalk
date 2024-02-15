@@ -23,18 +23,25 @@ ViennaMapType class >> with: aViennaType1 with: aViennaType2 [
 { #category : #arithmetic }
 ViennaMapType >> & aViennaType [
 
-	^ aViennaType isMapType
-		  ifTrue: [
-			  self keytype & aViennaType keytype
+	^ aViennaType isAnyType
+		  ifTrue: [ self ]
+		  ifFalse: [
+			  | ktype vtype |
+			  ktype := ViennaType unit.
+			  vtype := ViennaType unit.
+			  aViennaType possibleTypesDo: [ :type |
+				  type isMapType ifTrue: [
+					  ktype := ktype + type keytype.
+					  vtype := vtype + type valuetype ] ].
+			  self keytype & ktype
 				  ifNotUnit: [ :k |
-					  self valuetype & aViennaType valuetype
+					  self valuetype & valuetype
 						  ifNotUnit: [ :v |
 							  aViennaType isInmapType
 								  ifTrue: [ k inmapTo: v ]
 								  ifFalse: [ k mapTo: v ] ]
 						  ifUnit: [ ViennaType unit ] ]
 				  ifUnit: [ ViennaType unit ] ]
-		  ifFalse: [ ViennaType unit ]
 ]
 
 { #category : #comparing }
@@ -95,9 +102,13 @@ ViennaMapType >> instantiate: aDictionary [
 ViennaMapType >> isCompatibleWith: aViennaType [
 
 	^ (aViennaType isMapType and: [
-		   (self keytype isCompatibleWith: aViennaType keytype) and: [
-			   self valuetype isCompatibleWith: aViennaType valuetype ] ]) or: [
-		  super isCompatibleWith: aViennaType ]
+		   (self keytype isAnyType or: [
+			    aViennaType keytype isAnyType or: [
+				    self keytype isCompatibleWith: aViennaType keytype ] ]) and: [
+			   self valuetype isAnyType or: [
+				   aViennaType valuetype isAnyType or: [
+					   self valuetype isCompatibleWith: aViennaType valuetype ] ] ] ])
+		  or: [ super isCompatibleWith: aViennaType ]
 ]
 
 { #category : #testing }

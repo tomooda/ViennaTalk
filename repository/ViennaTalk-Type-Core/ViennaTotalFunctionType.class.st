@@ -30,6 +30,7 @@ ViennaTotalFunctionType class >> withAll: anArrayOfViennaType with: aViennaType 
 { #category : #arithmetic }
 ViennaTotalFunctionType >> & aViennaType [
 
+	aViennaType isAnyType ifTrue: [ ^ self ].
 	(aViennaType isFunctionType and: [
 		 self argtypes size = aViennaType argtypes size ]) ifTrue: [
 		| types |

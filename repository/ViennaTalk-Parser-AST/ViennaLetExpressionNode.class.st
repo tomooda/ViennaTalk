@@ -140,6 +140,13 @@ ViennaLetExpressionNode >> lookupIdentifier: aString [
 	^ nil
 ]
 
+{ #category : #typechecking }
+ViennaLetExpressionNode >> maximalType [
+
+	self localDefinitionList typecheck.
+	^ self body typecheck
+]
+
 { #category : #'pretty printing' }
 ViennaLetExpressionNode >> operatorPrecedence [
 
