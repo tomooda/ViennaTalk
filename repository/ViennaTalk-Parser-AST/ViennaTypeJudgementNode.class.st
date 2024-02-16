@@ -62,6 +62,19 @@ ViennaTypeJudgementNode >> label [
 	^ 'TypeJudgement'
 ]
 
+{ #category : #typechecking }
+ViennaTypeJudgementNode >> maximalType [
+
+	self expression typecheck.
+	(self type resolve
+		 ifNotNil: [ :def | def isTypeDefinition ]
+		 ifNil: [ false ]) ifFalse: [
+		^ ViennaTypeError
+			  on: self
+			  signal: 'Unresolved type: ' , self type source ].
+	^ ViennaType bool
+]
+
 { #category : #accessing }
 ViennaTypeJudgementNode >> type [
 

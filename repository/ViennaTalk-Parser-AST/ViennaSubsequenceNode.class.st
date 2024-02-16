@@ -78,6 +78,18 @@ ViennaSubsequenceNode >> label [
 	^ 'Subsequence'
 ]
 
+{ #category : #typechecking }
+ViennaSubsequenceNode >> maximalType [
+
+	| seqType |
+	seqType := self sequenceExpression typecheck: ViennaType any seq.
+	self startExpression typecheck: ViennaType nat1.
+	self endExpression typecheck: ViennaType nat1.
+	^ ViennaType normalFormUnion: (Array streamContents: [ :stream |
+			   seqType possibleTypesDo: [ :type |
+				   type isSeqType ifTrue: [ stream nextPut: type basetype seq ] ] ])
+]
+
 { #category : #'pretty printing' }
 ViennaSubsequenceNode >> operatorPrecedence [
 

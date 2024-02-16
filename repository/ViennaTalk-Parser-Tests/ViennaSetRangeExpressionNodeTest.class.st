@@ -1,11 +1,11 @@
 Class {
-	#name : #ViennaSetRangeNodeTest,
+	#name : #ViennaSetRangeExpressionNodeTest,
 	#superclass : #TestCase,
 	#category : #'ViennaTalk-Parser-Tests'
 }
 
 { #category : #tests }
-ViennaSetRangeNodeTest >> testMaximalType [
+ViennaSetRangeExpressionNodeTest >> testMaximalType [
 
 	self
 		assert: '{1,...,10}' asViennaExpressionAst maximalType

@@ -151,12 +151,6 @@ ViennaLocalNameNode >> localResolve [
 ]
 
 { #category : #accessing }
-ViennaLocalNameNode >> maximalType [
-
-	^ self definition typecheck
-]
-
-{ #category : #accessing }
 ViennaLocalNameNode >> resolve [
 
 	^ self resolveIdentifier: self identifier

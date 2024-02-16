@@ -271,16 +271,7 @@ ViennaNode >> deepFindResolverForIdentifier: aString [
 { #category : #'accessing-definitions' }
 ViennaNode >> definitionOfGlobalName: shortName module: moduleName [
 
-	self module interface importDefinitionList ifNotNil: [
-		:importDefinitionList |
-		importDefinitionList do: [ :importDef |
-			importDef moduleIdentifier = moduleName ifTrue: [
-				importDef importModuleSignature isViennaImportModuleSignatureNode
-					ifTrue: [
-						importDef importModuleSignature do: [ :imports |
-							imports do: [ :import |
-								import name identifier = shortName ifTrue: [ ^ import ] ] ] ] ] ] ].
-	^ nil
+	^ (self moduleNamed: moduleName) definitionOfLocalName: shortName
 ]
 
 { #category : #'accessing-definitions' }

@@ -1,7 +1,7 @@
-Extension { #name : #ViennaSetRangeNodeTest }
+Extension { #name : #ViennaSetRangeExpressionNodeTest }
 
 { #category : #'*ViennaTalk-Slicing-Tests' }
-ViennaSetRangeNodeTest >> testSliceWith [
+ViennaSetRangeExpressionNodeTest >> testSliceWith [
 
 	| spec op statement slicer |
 	spec := '

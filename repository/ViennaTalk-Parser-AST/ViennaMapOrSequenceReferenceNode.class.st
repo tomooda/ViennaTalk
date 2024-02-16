@@ -70,6 +70,30 @@ ViennaMapOrSequenceReferenceNode >> localResolve [
 	^ self stateDesignator localResolve
 ]
 
+{ #category : #typechecking }
+ViennaMapOrSequenceReferenceNode >> maximalType [
+
+	^ (Array streamContents: [ :stream |
+		   self stateDesignator typecheck possibleTypesDo: [ :designatorType |
+			   [
+			   designatorType isMapType ifTrue: [
+				   | paramType returnType |
+				   paramType := designatorType keytype.
+				   returnType := designatorType valuetype.
+				   self argumentExpression typecheck: paramType.
+				   stream nextPut: returnType ].
+			   designatorType isSeqType ifTrue: [
+				   | returnType |
+				   returnType := designatorType basetype.
+				   self argumentExpression typecheck: ViennaType nat1.
+				   stream nextPut: returnType ] ]
+				   on: ViennaTypeError
+				   do: [ :ex |  ] ] ])
+		  ifNotEmpty: [ :types | ViennaType normalFormUnion: types ]
+		  ifEmpty: [
+		  ViennaTypeError on: self signal: 'Not an applicable type' ]
+]
+
 { #category : #'pretty printing' }
 ViennaMapOrSequenceReferenceNode >> operatorPrecedence [
 

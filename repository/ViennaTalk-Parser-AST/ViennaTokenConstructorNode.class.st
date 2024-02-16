@@ -54,3 +54,10 @@ ViennaTokenConstructorNode >> label [
 
 	^ 'TokenConstructor'
 ]
+
+{ #category : #typechecking }
+ViennaTokenConstructorNode >> maximalType [
+
+	self expression typecheck.
+	^ ViennaType token
+]

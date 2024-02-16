@@ -22,3 +22,12 @@ ViennaNameNode >> isViennaNameNode [
 
 	^ true
 ]
+
+{ #category : #typechecking }
+ViennaNameNode >> maximalType [
+
+	^ self definition ifNotNil: #typecheck ifNil: [
+		  ViennaTypeError
+			  on: self
+			  signal: 'Unresolved local name: ' , self source ]
+]

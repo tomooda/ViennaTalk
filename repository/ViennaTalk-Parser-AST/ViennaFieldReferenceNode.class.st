@@ -62,6 +62,21 @@ ViennaFieldReferenceNode >> localResolve [
 	^ self stateDesignator localResolve
 ]
 
+{ #category : #typechecking }
+ViennaFieldReferenceNode >> maximalType [
+
+	| type |
+	type := ViennaType unit.
+	self stateDesignator typecheck possibleTypesDo: [ :basetype |
+		basetype isCompositeType ifTrue: [
+			basetype fieldsDo: [ :f :e :t |
+				f = self field ifTrue: [ type := type + t ] ] ] ].
+	^ type ifUnit: [
+		  ViennaTypeError
+			  on: self
+			  signal: 'The field ' , self field , ' is not accessible' ]
+]
+
 { #category : #'accessing-definitions' }
 ViennaFieldReferenceNode >> resolve [
 

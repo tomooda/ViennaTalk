@@ -61,6 +61,29 @@ ViennaFlatDocumentNode >> deepFindResolverForIdentifier: aString [
 ]
 
 { #category : #'accessing-definitions' }
+ViennaFlatDocumentNode >> definitionOfLocalName: aString [
+
+	self sectionsDo: [ :section |
+		section isViennaStateDefinitionNode
+			ifTrue: [
+				section identifier = aString ifTrue: [ ^ section ].
+				section fieldList do: [ :field |
+					field identifier = aString ifTrue: [ ^ field ] ] ]
+			ifFalse: [
+				section do: [ :def |
+					(def isViennaTypeSynonymNode: aString) ifTrue: [ ^ def ].
+					(def isViennaRecordTypeDefinitionNode: aString) ifTrue: [ ^ def ].
+					def isViennaValueDefinitionNode ifTrue: [
+						def pattern
+							allDescendantsSuchThat: [ :n |
+							n isViennaPatternIdentifierNode: aString ]
+							do: [ :n | ^ n ] ].
+					(def isViennaFunctionDefinitionNode: aString) ifTrue: [ ^ def ].
+					(def isViennaOperationDefinitionNode: aString) ifTrue: [ ^ def ] ] ] ].
+	^ nil
+]
+
+{ #category : #'accessing-definitions' }
 ViennaFlatDocumentNode >> findResolverForIdentifier: aString [
 
 	^ (self lookupIdentifier: aString) ifNotNil: [ self ]

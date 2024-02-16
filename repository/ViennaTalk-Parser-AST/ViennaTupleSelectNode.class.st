@@ -64,3 +64,18 @@ ViennaTupleSelectNode >> label [
 
 	^ 'TupleSelect'
 ]
+
+{ #category : #typechecking }
+ViennaTupleSelectNode >> maximalType [
+
+	| i basetype |
+	i := self index asInteger.
+	i > 0 ifFalse: [
+		^ ViennaTypeError on: self signal: 'Index must be nat1' ].
+	basetype := ViennaType unit.
+	self expression typecheck possibleTypesDo: [ :type |
+		(type isProductType and: [ type basetypes size >= i ]) ifTrue: [
+			basetype := basetype + (type basetypes at: i) ] ].
+	^ basetype ifUnit: [
+		  ViennaTypeError on: self signal: 'Index out of bounds' ]
+]

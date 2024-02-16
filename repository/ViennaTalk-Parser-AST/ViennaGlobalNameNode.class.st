@@ -20,6 +20,14 @@ ViennaGlobalNameNode >> asGlobalName [
 	^ self
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaGlobalNameNode >> definition [
+
+	^ self
+		  definitionOfGlobalName: self identifier
+		  module: self moduleIdentifier
+]
+
 { #category : #'pretty printing' }
 ViennaGlobalNameNode >> formatWith: aViennaAbstractFormatter [
 
