@@ -23,25 +23,31 @@ ViennaMapType class >> with: aViennaType1 with: aViennaType2 [
 { #category : #arithmetic }
 ViennaMapType >> & aViennaType [
 
-	^ aViennaType isAnyType
-		  ifTrue: [ self ]
-		  ifFalse: [
-			  | ktype vtype |
-			  ktype := ViennaType unit.
-			  vtype := ViennaType unit.
-			  aViennaType possibleTypesDo: [ :type |
-				  type isMapType ifTrue: [
-					  ktype := ktype + type keytype.
-					  vtype := vtype + type valuetype ] ].
-			  self keytype & ktype
-				  ifNotUnit: [ :k |
-					  self valuetype & valuetype
-						  ifNotUnit: [ :v |
-							  aViennaType isInmapType
-								  ifTrue: [ k inmapTo: v ]
-								  ifFalse: [ k mapTo: v ] ]
-						  ifUnit: [ ViennaType unit ] ]
-				  ifUnit: [ ViennaType unit ] ]
+	| ktype vtype |
+	aViennaType isAnyType ifTrue: [ ^ self ].
+	ktype := ViennaType unit.
+	vtype := ViennaType unit.
+	aViennaType possibleTypesDo: [ :type |
+		type isMapType ifTrue: [
+			ktype := ktype + type keytype.
+			vtype := vtype + type valuetype ] ].
+	ktype := ktype isAnyType
+		         ifTrue: [ self keytype ]
+		         ifFalse: [
+			         self keytype isAnyType
+				         ifTrue: [ ktype ]
+				         ifFalse: [
+				         ktype & self keytype ifUnit: [ ^ ViennaType unit ] ] ].
+	vtype := vtype isAnyType
+		         ifTrue: [ self valuetype ]
+		         ifFalse: [
+			         self valuetype isAnyType
+				         ifTrue: [ vtype ]
+				         ifFalse: [
+				         vtype & self valuetype ifUnit: [ ^ ViennaType unit ] ] ].
+	^ aViennaType isInmapType
+		  ifTrue: [ ktype inmapTo: vtype ]
+		  ifFalse: [ ktype mapTo: vtype ]
 ]
 
 { #category : #comparing }

@@ -96,7 +96,9 @@ ViennaSetType >> instantiate: aDictionary [
 ViennaSetType >> isCompatibleWith: aViennaType [
 
 	^ (aViennaType isSetType and: [
-		   basetype isCompatibleWith: aViennaType basetype ]) or: [
+		   self basetype isAnyType or: [
+			   aViennaType basetype isAnyType or: [
+				   basetype isCompatibleWith: aViennaType basetype ] ] ]) or: [
 		  super isCompatibleWith: aViennaType ]
 ]
 

@@ -28,3 +28,15 @@ ViennaDistributedSetUnionNode >> operatorPrecedence [
 
 	^ 36
 ]
+
+{ #category : #typechecking }
+ViennaDistributedSetUnionNode >> paramType [
+
+	^ ViennaType any set set
+]
+
+{ #category : #typechecking }
+ViennaDistributedSetUnionNode >> returnTypeFor: aViennaType [
+
+	^ aViennaType basetype
+]

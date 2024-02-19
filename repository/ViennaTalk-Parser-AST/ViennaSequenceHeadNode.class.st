@@ -28,3 +28,15 @@ ViennaSequenceHeadNode >> operatorPrecedence [
 
 	^ 36
 ]
+
+{ #category : #typechecking }
+ViennaSequenceHeadNode >> paramType [
+
+	^ ViennaType any seq1
+]
+
+{ #category : #typechecking }
+ViennaSequenceHeadNode >> returnTypeFor: aViennaType [
+
+	^ aViennaType basetype
+]

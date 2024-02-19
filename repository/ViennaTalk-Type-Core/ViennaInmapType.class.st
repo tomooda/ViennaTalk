@@ -23,18 +23,29 @@ ViennaInmapType class >> with: aViennaType1 with: aViennaType2 [
 { #category : #arithmetic }
 ViennaInmapType >> & aViennaType [
 
-	^ aViennaType isAnyType
-		  ifTrue: [ self ]
-		  ifFalse: [
-			  aViennaType isMapType
-				  ifTrue: [
-					  self keytype & aViennaType keytype
-						  ifNotUnit: [ :k |
-							  self valuetype & aViennaType valuetype
-								  ifNotUnit: [ :v | k inmapTo: v ]
-								  ifUnit: [ ViennaType unit ] ]
-						  ifUnit: [ ViennaType unit ] ]
-				  ifFalse: [ ViennaType unit ] ]
+	| ktype vtype |
+	aViennaType isAnyType ifTrue: [ ^ self ].
+	ktype := ViennaType unit.
+	vtype := ViennaType unit.
+	aViennaType possibleTypesDo: [ :type |
+		type isMapType ifTrue: [
+			ktype := ktype + type keytype.
+			vtype := vtype + type valuetype ] ].
+	ktype := ktype isAnyType
+		         ifTrue: [ self keytype ]
+		         ifFalse: [
+			         self keytype isAnyType
+				         ifTrue: [ ktype ]
+				         ifFalse: [
+				         ktype & self keytype ifUnit: [ ^ ViennaType unit ] ] ].
+	vtype := vtype isAnyType
+		         ifTrue: [ self valuetype ]
+		         ifFalse: [
+			         self valuetype isAnyType
+				         ifTrue: [ vtype ]
+				         ifFalse: [
+				         vtype & self valuetype ifUnit: [ ^ ViennaType unit ] ] ].
+	^ ktype inmapTo: vtype
 ]
 
 { #category : #comparing }
@@ -93,9 +104,13 @@ ViennaInmapType >> instantiate: aDictionary [
 ViennaInmapType >> isCompatibleWith: aViennaType [
 
 	^ (aViennaType isMapType and: [
-		   (self keytype isCompatibleWith: aViennaType keytype) and: [
-			   self valuetype isCompatibleWith: aViennaType valuetype ] ]) or: [
-		  super isCompatibleWith: aViennaType ]
+		   (self keytype isAnyType or: [
+			    aViennaType keytype isAnyType or: [
+				    self keytype isCompatibleWith: aViennaType keytype ] ]) and: [
+			   self valuetype isAnyType or: [
+				   aViennaType valuetype isAnyType or: [
+					   self valuetype isCompatibleWith: aViennaType valuetype ] ] ] ])
+		  or: [ super isCompatibleWith: aViennaType ]
 ]
 
 { #category : #testing }

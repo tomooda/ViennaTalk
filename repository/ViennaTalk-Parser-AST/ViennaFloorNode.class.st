@@ -28,3 +28,17 @@ ViennaFloorNode >> operatorPrecedence [
 
 	^ 36
 ]
+
+{ #category : #typechecking }
+ViennaFloorNode >> paramType [
+
+	^ ViennaType real
+]
+
+{ #category : #typechecking }
+ViennaFloorNode >> returnTypeFor: aViennaType [
+
+	^ aViennaType isIntType
+		  ifTrue: [ aViennaType ]
+		  ifFalse: [ ViennaType int ]
+]

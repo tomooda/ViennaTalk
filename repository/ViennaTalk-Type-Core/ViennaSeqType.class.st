@@ -94,7 +94,9 @@ ViennaSeqType >> instantiate: aDictionary [
 ViennaSeqType >> isCompatibleWith: aViennaType [
 
 	^ (aViennaType isSeqType and: [
-		   basetype isCompatibleWith: aViennaType basetype ]) or: [
+		   basetype isAnyType or: [
+			   aViennaType basetype isAnyType or: [
+				   basetype isCompatibleWith: aViennaType basetype ] ] ]) or: [
 		  super isCompatibleWith: aViennaType ]
 ]
 

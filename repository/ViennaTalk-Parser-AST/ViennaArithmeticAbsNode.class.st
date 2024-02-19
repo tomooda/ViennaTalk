@@ -28,3 +28,17 @@ ViennaArithmeticAbsNode >> operatorPrecedence [
 
 	^ 36
 ]
+
+{ #category : #typechecking }
+ViennaArithmeticAbsNode >> paramType [
+
+	^ ViennaType real
+]
+
+{ #category : #typechecking }
+ViennaArithmeticAbsNode >> returnTypeFor: aViennaType [
+
+	^ aViennaType isIntType
+		  ifTrue: [ aViennaType & ViennaType nat ]
+		  ifFalse: [ aViennaType ]
+]

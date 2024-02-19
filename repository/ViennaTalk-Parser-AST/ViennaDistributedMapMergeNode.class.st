@@ -28,3 +28,15 @@ ViennaDistributedMapMergeNode >> operatorPrecedence [
 
 	^ 36
 ]
+
+{ #category : #typechecking }
+ViennaDistributedMapMergeNode >> paramType [
+
+	^ (ViennaType any mapTo: ViennaType any) set
+]
+
+{ #category : #typechecking }
+ViennaDistributedMapMergeNode >> returnTypeFor: aViennaType [
+
+	^ aViennaType basetype
+]

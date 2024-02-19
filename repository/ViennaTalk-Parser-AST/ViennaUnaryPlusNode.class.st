@@ -28,3 +28,15 @@ ViennaUnaryPlusNode >> operatorPrecedence [
 
 	^ 36
 ]
+
+{ #category : #typechecking }
+ViennaUnaryPlusNode >> paramType [
+
+	^ ViennaType real
+]
+
+{ #category : #typechecking }
+ViennaUnaryPlusNode >> returnTypeFor: aViennaType [
+
+	^ aViennaType
+]

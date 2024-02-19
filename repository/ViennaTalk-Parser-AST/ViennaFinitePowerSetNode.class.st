@@ -28,3 +28,15 @@ ViennaFinitePowerSetNode >> operatorPrecedence [
 
 	^ 36
 ]
+
+{ #category : #typechecking }
+ViennaFinitePowerSetNode >> paramType [
+
+	^ ViennaType any set
+]
+
+{ #category : #typechecking }
+ViennaFinitePowerSetNode >> returnTypeFor: aViennaType [
+
+	^ aViennaType basetype set set1
+]

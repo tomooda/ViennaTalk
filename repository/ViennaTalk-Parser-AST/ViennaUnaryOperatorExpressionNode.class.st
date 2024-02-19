@@ -55,3 +55,28 @@ ViennaUnaryOperatorExpressionNode >> isViennaUnaryOperatorExpressionNode [
 
 	^ true
 ]
+
+{ #category : #typechecking }
+ViennaUnaryOperatorExpressionNode >> maximalType [
+
+	^ ViennaType
+		  normalFormUnion: (Array streamContents: [ :stream |
+				   (self expression typecheck: self paramType) possibleTypesDo: [
+					   :argtype |
+					   ([ self returnTypeFor: argtype ]
+						    on: ViennaTypeError
+						    do: [ :ex | nil ]) ifNotNil: [ :type | stream nextPut: type ] ] ])
+		  ifUnit: [ ViennaTypeError signalOn: self ]
+]
+
+{ #category : #typechecking }
+ViennaUnaryOperatorExpressionNode >> paramType [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #typechecking }
+ViennaUnaryOperatorExpressionNode >> returnTypeFor: aViennaType [
+
+	^ self subclassResponsibility
+]

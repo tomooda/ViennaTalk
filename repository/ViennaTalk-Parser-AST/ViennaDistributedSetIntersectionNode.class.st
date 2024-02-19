@@ -28,3 +28,15 @@ ViennaDistributedSetIntersectionNode >> operatorPrecedence [
 
 	^ 36
 ]
+
+{ #category : #typechecking }
+ViennaDistributedSetIntersectionNode >> paramType [
+
+	^ ViennaType any set set
+]
+
+{ #category : #typechecking }
+ViennaDistributedSetIntersectionNode >> returnTypeFor: aViennaType [
+
+	^ aViennaType basetype basetype set
+]

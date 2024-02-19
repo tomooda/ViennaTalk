@@ -28,3 +28,15 @@ ViennaMapRangeNode >> operatorPrecedence [
 
 	^ 36
 ]
+
+{ #category : #typechecking }
+ViennaMapRangeNode >> paramType [
+
+	^ ViennaType any mapTo: ViennaType any
+]
+
+{ #category : #typechecking }
+ViennaMapRangeNode >> returnTypeFor: aViennaType [
+
+	^ aViennaType valuetype set
+]

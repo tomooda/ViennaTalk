@@ -28,3 +28,17 @@ ViennaSetCardinalityNode >> operatorPrecedence [
 
 	^ 36
 ]
+
+{ #category : #typechecking }
+ViennaSetCardinalityNode >> paramType [
+
+	^ ViennaType any set
+]
+
+{ #category : #typechecking }
+ViennaSetCardinalityNode >> returnTypeFor: aViennaType [
+
+	^ aViennaType isSet1Type
+		  ifTrue: [ ViennaType nat1 ]
+		  ifFalse: [ ViennaType nat ]
+]

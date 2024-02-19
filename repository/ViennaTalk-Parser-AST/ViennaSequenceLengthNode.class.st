@@ -28,3 +28,17 @@ ViennaSequenceLengthNode >> operatorPrecedence [
 
 	^ 36
 ]
+
+{ #category : #typechecking }
+ViennaSequenceLengthNode >> paramType [
+
+	^ ViennaType any seq
+]
+
+{ #category : #typechecking }
+ViennaSequenceLengthNode >> returnTypeFor: aViennaType [
+
+	^ aViennaType isSeq1Type
+		  ifTrue: [ ViennaType nat1 ]
+		  ifFalse: [ ViennaType nat ]
+]

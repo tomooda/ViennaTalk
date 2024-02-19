@@ -23,18 +23,22 @@ ViennaUnaryMinusNode >> label [
 	^ 'UnaryMinus'
 ]
 
-{ #category : #typechecking }
-ViennaUnaryMinusNode >> maximalType [
-
-	| type |
-	type := self expression typecheck.
-	^ type isNatType
-		  ifTrue: [ ViennaType int ]
-		  ifFalse: [ type ]
-]
-
 { #category : #'pretty printing' }
 ViennaUnaryMinusNode >> operatorPrecedence [
 
 	^ 36
+]
+
+{ #category : #typechecking }
+ViennaUnaryMinusNode >> paramType [
+
+	^ ViennaType real
+]
+
+{ #category : #typechecking }
+ViennaUnaryMinusNode >> returnTypeFor: aViennaType [
+
+	^ aViennaType isIntType
+		  ifTrue: [ ViennaType int ]
+		  ifFalse: [ aViennaType ]
 ]

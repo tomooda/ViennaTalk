@@ -28,3 +28,15 @@ ViennaNotNode >> operatorPrecedence [
 
 	^ 15
 ]
+
+{ #category : #typechecking }
+ViennaNotNode >> paramType [
+
+	^ ViennaType bool
+]
+
+{ #category : #typechecking }
+ViennaNotNode >> returnTypeFor: aViennaType [
+
+	^ ViennaType bool
+]

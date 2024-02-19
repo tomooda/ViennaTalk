@@ -28,3 +28,15 @@ ViennaDistributedSequenceConcatenationNode >> operatorPrecedence [
 
 	^ 36
 ]
+
+{ #category : #typechecking }
+ViennaDistributedSequenceConcatenationNode >> paramType [
+
+	^ ViennaType any seq seq
+]
+
+{ #category : #typechecking }
+ViennaDistributedSequenceConcatenationNode >> returnTypeFor: aViennaType [
+
+	^ aViennaType basetype
+]

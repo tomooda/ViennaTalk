@@ -28,3 +28,15 @@ ViennaMapDomainNode >> operatorPrecedence [
 
 	^ 36
 ]
+
+{ #category : #typechecking }
+ViennaMapDomainNode >> paramType [
+
+	^ ViennaType any mapTo: ViennaType any
+]
+
+{ #category : #typechecking }
+ViennaMapDomainNode >> returnTypeFor: aViennaType [
+
+	^ aViennaType keytype set
+]

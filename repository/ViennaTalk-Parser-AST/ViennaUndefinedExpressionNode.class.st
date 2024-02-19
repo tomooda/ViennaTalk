@@ -26,3 +26,9 @@ ViennaUndefinedExpressionNode >> label [
 
 	^ 'UndefinedExpression'
 ]
+
+{ #category : #typechecking }
+ViennaUndefinedExpressionNode >> maximalType [
+
+	^ ViennaType any
+]

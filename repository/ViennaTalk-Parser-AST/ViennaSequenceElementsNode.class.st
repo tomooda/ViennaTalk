@@ -28,3 +28,17 @@ ViennaSequenceElementsNode >> operatorPrecedence [
 
 	^ 36
 ]
+
+{ #category : #typechecking }
+ViennaSequenceElementsNode >> paramType [
+
+	^ ViennaType any seq
+]
+
+{ #category : #typechecking }
+ViennaSequenceElementsNode >> returnTypeFor: aViennaType [
+
+	^ aViennaType isSeq1Type
+		  ifTrue: [ aViennaType basetype set1 ]
+		  ifFalse: [ aViennaType basetype set ]
+]

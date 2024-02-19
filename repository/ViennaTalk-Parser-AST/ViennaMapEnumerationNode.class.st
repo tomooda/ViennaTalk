@@ -21,6 +21,15 @@ ViennaMapEnumerationNode >> freeIdentifiersExcept: aSet do: aBlock [
 	self do: [ :maplet | maplet freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
+{ #category : #private }
+ViennaMapEnumerationNode >> isLiteralInmap [
+
+	self do: [ :maplet |
+		maplet valueExpression isViennaSymbolicLiteralNode ifFalse: [
+			^ false ] ].
+	^ (self collect: #valueExpression) asSet size = self size
+]
+
 { #category : #accessing }
 ViennaMapEnumerationNode >> isViennaMapEnumerationNode [
 
@@ -42,5 +51,7 @@ ViennaMapEnumerationNode >> maximalType [
 	self do: [ :maplet |
 		keytype := keytype + maplet keyExpression typecheck.
 		valuetype := valuetype + maplet valueExpression typecheck ].
-	^ keytype mapTo: valuetype
+	^ self isLiteralInmap
+		  ifTrue: [ keytype inmapTo: valuetype ]
+		  ifFalse: [ keytype mapTo: valuetype ]
 ]

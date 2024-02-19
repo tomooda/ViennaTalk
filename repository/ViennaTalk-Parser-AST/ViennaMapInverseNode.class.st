@@ -35,3 +35,17 @@ ViennaMapInverseNode >> operatorPrecedence [
 
 	^ 33
 ]
+
+{ #category : #typechecking }
+ViennaMapInverseNode >> paramType [
+
+	^ ViennaType any inmapTo: ViennaType any
+]
+
+{ #category : #typechecking }
+ViennaMapInverseNode >> returnTypeFor: aViennaType [
+
+	^ aViennaType isInmapType
+		  ifTrue: [ aViennaType valuetype inmapTo: aViennaType keytype ]
+		  ifFalse: [ ViennaType unit ]
+]
