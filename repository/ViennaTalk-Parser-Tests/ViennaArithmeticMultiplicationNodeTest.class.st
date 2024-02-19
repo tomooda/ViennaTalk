@@ -1,11 +1,11 @@
 Class {
-	#name : #ViennaArithmaticMultiplicationNodeTest,
+	#name : #ViennaArithmeticMultiplicationNodeTest,
 	#superclass : #TestCase,
 	#category : #'ViennaTalk-Parser-Tests'
 }
 
 { #category : #tests }
-ViennaArithmaticMultiplicationNodeTest >> testMaximalType [
+ViennaArithmeticMultiplicationNodeTest >> testMaximalType [
 
 	self
 		assert: '3 * 2' asViennaExpressionAst maximalType
