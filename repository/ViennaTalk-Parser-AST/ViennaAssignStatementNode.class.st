@@ -54,6 +54,17 @@ ViennaAssignStatementNode >> label [
 	^ 'AssignStatement'
 ]
 
+{ #category : #typechecking }
+ViennaAssignStatementNode >> maximalType [
+
+	self stateDesignator isAssignable ifFalse: [
+		^ ViennaTypeError
+			  on: self
+			  signal: 'Can not assign to ' , self stateDesignator source ].
+	self expression typecheck: self stateDesignator typecheck.
+	^ ViennaType unit
+]
+
 { #category : #accessing }
 ViennaAssignStatementNode >> stateDesignator [
 

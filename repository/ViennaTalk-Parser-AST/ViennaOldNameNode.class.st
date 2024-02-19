@@ -20,6 +20,12 @@ ViennaOldNameNode >> formatWith: aViennaAbstractFormatter [
 ]
 
 { #category : #testing }
+ViennaOldNameNode >> isAssignable [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaOldNameNode >> isBlockVariableNameNode [
 
 	^ false

@@ -48,15 +48,14 @@ ViennaTypeBindNode >> maximalType [
 	| basetype |
 	basetype := self type asMaximalViennaType.
 	self pattern maximalType: basetype.
-	[ self pattern typecheck: basetype ]
-		on: ViennaTypeError
-		do: [ :ex |
-			ViennaTypeError
-				on: self
-				signal:
-					'Bind mismatch: Pattern ' , self pattern source
-					, ' not agree with ' , basetype printString ].
-	^ ViennaType unit
+	^ [ self pattern typecheck: basetype ]
+		  on: ViennaTypeError
+		  do: [ :ex |
+			  ViennaTypeError
+				  on: self
+				  signal:
+					  'Bind mismatch: Pattern ' , self pattern source
+					  , ' not agree with ' , basetype printString ]
 ]
 
 { #category : #typechecking }

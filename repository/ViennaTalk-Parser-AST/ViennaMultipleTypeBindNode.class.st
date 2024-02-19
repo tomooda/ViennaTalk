@@ -57,7 +57,7 @@ ViennaMultipleTypeBindNode >> maximalType [
 					signal:
 						'Bind mismatch: Pattern ' , pattern source , ' not agree with '
 						, type printString ] ].
-	^ ViennaType unit
+	^ type
 ]
 
 { #category : #typechecking }

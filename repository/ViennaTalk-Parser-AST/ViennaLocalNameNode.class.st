@@ -63,6 +63,12 @@ ViennaLocalNameNode >> identifier: aString [
 ]
 
 { #category : #testing }
+ViennaLocalNameNode >> isAssignable [
+
+	^ self isStateVariableNameNode or: [ self isBlockVariableNameNode ]
+]
+
+{ #category : #testing }
 ViennaLocalNameNode >> isBlockVariableNameNode [
 
 	(self definitionOfLocalName: self identifier) ifNotNil: [ :defNode |
@@ -100,7 +106,7 @@ ViennaLocalNameNode >> isOperationNameNode [
 { #category : #testing }
 ViennaLocalNameNode >> isStateVariableNameNode [
 
-	^ self resolve isViennaFieldNode
+	^ self resolve ifNotNil: #isViennaFieldNode ifNil: [ false ]
 ]
 
 { #category : #testing }

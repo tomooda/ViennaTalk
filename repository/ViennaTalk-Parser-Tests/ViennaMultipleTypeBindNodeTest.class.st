@@ -9,19 +9,15 @@ ViennaMultipleTypeBindNodeTest >> testMaximalType [
 
 	| bind |
 	bind := ViennaVDMParser new multipleBind end parse: 'x, y, z : nat1'.
-	self
-		shouldnt: [ bind typecheck: ViennaType unit ]
-		raise: ViennaTypeError.
+	self assert: bind maximalType equals: ViennaType nat1.
 	bind patternsDo: [ :pattern |
 		self assert: pattern typecheck equals: ViennaType nat1 ].
 	bind := ViennaVDMParser new multipleBind end parse:
 		        'x, y, z : [real]'.
-	self
-		shouldnt: [ bind typecheck: ViennaType unit ]
-		raise: ViennaTypeError.
+	self assert: bind maximalType equals: ViennaType real optional.
 	bind patternsDo: [ :pattern |
 		self assert: pattern typecheck equals: ViennaType real optional ].
 	bind := ViennaVDMParser new multipleBind end parse:
 		        'x, mk_(y, z) : [real]'.
-	self should: [ bind typecheck ] raise: ViennaTypeError
+	self should: [ bind maximalType ] raise: ViennaTypeError
 ]

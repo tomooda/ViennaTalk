@@ -45,6 +45,12 @@ ViennaFieldReferenceNode >> freeIdentifiersExcept: aSet do: aBlock [
 ]
 
 { #category : #testing }
+ViennaFieldReferenceNode >> isAssignable [
+
+	^ self stateDesignator isAssignable
+]
+
+{ #category : #testing }
 ViennaFieldReferenceNode >> isViennaFieldReferenceNode [
 
 	^ true

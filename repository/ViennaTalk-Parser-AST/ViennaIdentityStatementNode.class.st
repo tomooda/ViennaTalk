@@ -26,3 +26,9 @@ ViennaIdentityStatementNode >> label [
 
 	^ 'IdentityStatement'
 ]
+
+{ #category : #typechecking }
+ViennaIdentityStatementNode >> maximalType [
+
+	^ ViennaType unit
+]

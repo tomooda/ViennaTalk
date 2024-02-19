@@ -52,6 +52,12 @@ ViennaMapOrSequenceReferenceNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRigh
 	^ aBlock1 value
 ]
 
+{ #category : #testing }
+ViennaMapOrSequenceReferenceNode >> isAssignable [
+
+	^ self stateDesignator isAssignable
+]
+
 { #category : #accessing }
 ViennaMapOrSequenceReferenceNode >> isViennaMapOrSequenceReferenceNode [
 

@@ -63,3 +63,10 @@ ViennaDclStatementNode >> label [
 
 	^ 'DclStatement'
 ]
+
+{ #category : #typechecking }
+ViennaDclStatementNode >> maximalType [
+
+	self do: #typecheck.
+	^ ViennaType unit
+]

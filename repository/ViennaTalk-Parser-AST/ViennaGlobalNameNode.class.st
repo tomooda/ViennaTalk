@@ -51,6 +51,12 @@ ViennaGlobalNameNode >> identifier: aString [
 ]
 
 { #category : #testing }
+ViennaGlobalNameNode >> isAssignable [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaGlobalNameNode >> isExportedNameNode [
 
 	^ true

@@ -86,3 +86,10 @@ ViennaBlockStatementNode >> lookupIdentifier: aString [
 					^ assignmentDefinition ] ] ] ].
 	^ super findResolverForIdentifier: aString
 ]
+
+{ #category : #typechecking }
+ViennaBlockStatementNode >> maximalType [
+
+	self do: #typecheck.
+	^ ViennaType unit
+]

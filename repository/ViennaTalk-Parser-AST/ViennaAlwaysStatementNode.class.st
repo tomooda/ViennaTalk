@@ -76,3 +76,10 @@ ViennaAlwaysStatementNode >> label [
 
 	^ 'AlwaysStatement'
 ]
+
+{ #category : #typechecking }
+ViennaAlwaysStatementNode >> maximalType [
+
+	self entailingStatement typecheck.
+	^ self bodyStatement typecheck
+]

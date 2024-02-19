@@ -44,7 +44,7 @@ ViennaBindListNode >> label [
 { #category : #private }
 ViennaBindListNode >> maximalType [
 
-	self do: [ :bind | bind typecheck: ViennaType unit ].
+	self do: #typecheck.
 	^ ViennaType unit
 ]
 

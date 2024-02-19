@@ -97,6 +97,13 @@ ViennaDefStatementNode >> lookupIdentifier: aString [
 	^ nil
 ]
 
+{ #category : #typechecking }
+ViennaDefStatementNode >> maximalType [
+
+	self equalDefinitionList do: [ :equalDef | equalDef typecheck ].
+	^ self statement typecheck
+]
+
 { #category : #accessing }
 ViennaDefStatementNode >> statement [
 
