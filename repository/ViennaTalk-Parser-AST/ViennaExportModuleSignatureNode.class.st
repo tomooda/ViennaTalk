@@ -38,6 +38,13 @@ ViennaExportModuleSignatureNode >> label [
 	^ 'ExportModuleSignature'
 ]
 
+{ #category : #typechecking }
+ViennaExportModuleSignatureNode >> maximalType [
+
+	self do: #typecheck.
+	^ ViennaType unit
+]
+
 { #category : #removing }
 ViennaExportModuleSignatureNode >> removeIdentifier: aString [
 

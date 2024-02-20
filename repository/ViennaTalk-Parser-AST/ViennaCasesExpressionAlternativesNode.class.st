@@ -37,3 +37,11 @@ ViennaCasesExpressionAlternativesNode >> label [
 
 	^ 'CasesExpressionAlternatives'
 ]
+
+{ #category : #typechecking }
+ViennaCasesExpressionAlternativesNode >> maximalType [
+
+	^ self
+		  inject: ViennaType unit
+		  into: [ :type :alternative | type + alternative typecheck ]
+]

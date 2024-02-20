@@ -54,3 +54,9 @@ ViennaExceptionsNode >> label [
 
 	^ 'Exceptions'
 ]
+
+{ #category : #typechecking }
+ViennaExceptionsNode >> maximalType [
+
+	^ self errorList typecheck
+]

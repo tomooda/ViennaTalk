@@ -23,6 +23,13 @@ ViennaModularDocumentNode >> isViennaModularDocumentNode [
 	^ true
 ]
 
+{ #category : #typechecking }
+ViennaModularDocumentNode >> maximalType [
+
+	self modulesDo: #typecheck.
+	^ ViennaType unit
+]
+
 { #category : #accessing }
 ViennaModularDocumentNode >> modules [
 

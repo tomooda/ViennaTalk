@@ -28,3 +28,11 @@ ViennaDummyNode >> label [
 
 	^ '--DUMMY--'
 ]
+
+{ #category : #typechecking }
+ViennaDummyNode >> maximalType [
+
+	^ ViennaTypeError
+		  on: self
+		  signal: 'Dummy node can not be typechecked'
+]

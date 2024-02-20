@@ -62,6 +62,12 @@ ViennaInvariantNode >> label [
 	^ 'Invariant'
 ]
 
+{ #category : #typechecking }
+ViennaInvariantNode >> maximalType [
+
+	^ self invariantInitialFunction typecheck
+]
+
 { #category : #accessing }
 ViennaInvariantNode >> pattern [
 

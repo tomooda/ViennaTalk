@@ -84,6 +84,13 @@ ViennaInvariantInitialFunctionNode >> lookupIdentifier: aString [
 	^ (self pattern bindsIdentifier: aString) ifTrue: [ self pattern ]
 ]
 
+{ #category : #typechecking }
+ViennaInvariantInitialFunctionNode >> maximalType [
+
+	self pattern maximalType: self expression typecheck.
+	^ self expression typecheck
+]
+
 { #category : #accessing }
 ViennaInvariantInitialFunctionNode >> pattern [
 

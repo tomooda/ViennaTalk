@@ -62,6 +62,12 @@ ViennaInitialisationNode >> label [
 	^ 'Initialisation'
 ]
 
+{ #category : #typechecking }
+ViennaInitialisationNode >> maximalType [
+
+	^ self invariantInitialFunction typecheck
+]
+
 { #category : #accessing }
 ViennaInitialisationNode >> pattern [
 

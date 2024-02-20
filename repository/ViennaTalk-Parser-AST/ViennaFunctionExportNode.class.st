@@ -51,6 +51,36 @@ ViennaFunctionExportNode >> label [
 	^ 'FunctionExport'
 ]
 
+{ #category : #typechecking }
+ViennaFunctionExportNode >> maximalType [
+
+	self nameList do: [ :name |
+		name typecheck.
+		name resolve
+			ifNotNil: [ :def |
+				def isFunctionDefinition ifFalse: [
+					^ ViennaTypeError
+						  on: self
+						  signal: 'Not a function: ' , name source ].
+				def typeVariableList = self typeVariableList ifFalse: [
+					^ ViennaTypeError
+						  on: self
+						  signal:
+							  'Type variables mismatch: defined '
+							  , def typeVariableList source , ' but exported '
+							  , self typeVariableList source ].
+				def type = self type ifFalse: [
+					^ ViennaTypeError
+						  on: self
+						  signal: 'Function type mismatch: defined ' , def type source
+							  , ' but exported ' , self type source ] ]
+			ifNil: [
+				^ ViennaTypeError
+					  on: self
+					  signal: 'Unresolved function: ' , name source ] ].
+	^ ViennaType unit
+]
+
 { #category : #accessing }
 ViennaFunctionExportNode >> nameList [
 

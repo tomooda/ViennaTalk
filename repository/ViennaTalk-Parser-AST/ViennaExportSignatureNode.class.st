@@ -23,6 +23,13 @@ ViennaExportSignatureNode >> exportedIdentifiersDo: aBlock [
 	^ self do: [ :export | export exportedIdentifiersDo: aBlock ]
 ]
 
+{ #category : #typechecking }
+ViennaExportSignatureNode >> maximalType [
+
+	self do: #typecheck.
+	^ ViennaType unit
+]
+
 { #category : #removing }
 ViennaExportSignatureNode >> removeIdentifier: aString [
 

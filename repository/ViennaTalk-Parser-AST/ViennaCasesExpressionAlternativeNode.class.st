@@ -97,6 +97,12 @@ ViennaCasesExpressionAlternativeNode >> lookupIdentifier: aString [
 		  ifFalse: [ nil ]
 ]
 
+{ #category : #typechecking }
+ViennaCasesExpressionAlternativeNode >> maximalType [
+
+	^ self expression typecheck
+]
+
 { #category : #accessing }
 ViennaCasesExpressionAlternativeNode >> patternList [
 

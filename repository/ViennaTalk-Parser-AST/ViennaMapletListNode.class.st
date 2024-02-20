@@ -40,3 +40,16 @@ ViennaMapletListNode >> label [
 
 	^ 'MapletList'
 ]
+
+{ #category : #typechecking }
+ViennaMapletListNode >> maximalType [
+
+	self do: #typecheck.
+	^ (self
+		   inject: ViennaType unit
+		   into: [ :type :maplet | type + maplet keyExpression typecheck ])
+		  mapTo: (self
+				   inject: ViennaType unit
+				   into: [ :type :maplet |
+				   type + maplet valueExpression typecheck ])
+]

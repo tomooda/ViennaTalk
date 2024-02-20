@@ -67,6 +67,12 @@ ViennaExportDefinitionNode >> label [
 	^ 'ExportDefinition'
 ]
 
+{ #category : #typechecking }
+ViennaExportDefinitionNode >> maximalType [
+
+	^ self exportModuleSignature typecheck
+]
+
 { #category : #removing }
 ViennaExportDefinitionNode >> removeIdentifier: aString [
 

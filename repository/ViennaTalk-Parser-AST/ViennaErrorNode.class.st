@@ -83,3 +83,11 @@ ViennaErrorNode >> label [
 
 	^ 'Error'
 ]
+
+{ #category : #typechecking }
+ViennaErrorNode >> maximalType [
+
+	self expression1 typecheck: ViennaType bool.
+	self expression2 typecheck: ViennaType bool.
+	^ ViennaType unit
+]

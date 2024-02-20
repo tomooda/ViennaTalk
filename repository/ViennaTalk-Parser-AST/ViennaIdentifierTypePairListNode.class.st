@@ -57,6 +57,12 @@ ViennaIdentifierTypePairListNode >> label [
 	^ 'IdentifierTypePairList'
 ]
 
+{ #category : #typechecking }
+ViennaIdentifierTypePairListNode >> maximalType [
+
+	^ ViennaType product: (self types collect: #asMaximalViennaType)
+]
+
 { #category : #accessing }
 ViennaIdentifierTypePairListNode >> type [
 

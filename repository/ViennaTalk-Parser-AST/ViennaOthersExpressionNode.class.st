@@ -58,3 +58,9 @@ ViennaOthersExpressionNode >> label [
 
 	^ 'OthersExpression'
 ]
+
+{ #category : #typechecking }
+ViennaOthersExpressionNode >> maximalType [
+
+	^ self expression typecheck
+]

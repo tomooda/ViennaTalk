@@ -82,15 +82,15 @@ ViennaCasesExpressionNode >> maximalType [
 
 	| caseType |
 	caseType := self expression typecheck.
-	^ ViennaType
-		  normalFormUnion: (Array streamContents: [ :stream |
-				   self casesExpressionAlternatives do: [ :alternative |
-					   alternative patternList do: [ :pattern |
-						   pattern maximalType: caseType ].
-					   stream nextPut: alternative expression typecheck ].
-				   self othersExpression ifNotNil: [ :others |
-					   stream nextPut: others expression typecheck ] ])
-		  ifUnit: [ ViennaTypeError signalOn: self ]
+	self casesExpressionAlternatives do: [ :alternative |
+		alternative patternList do: [ :pattern |
+			pattern maximalType: caseType ] ].
+
+	^ self casesExpressionAlternatives typecheck
+	  +
+	  (self othersExpression
+		   ifNotNil: #typecheck
+		   ifNil: [ ViennaType unit ])
 ]
 
 { #category : #accessing }

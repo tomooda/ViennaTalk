@@ -47,10 +47,10 @@ ViennaOthersStatementNode >> label [
 	^ 'OthersStatement'
 ]
 
-{ #category : #'as yet unclassified' }
-ViennaOthersStatementNode >> sliceWith: aViennaSlicer [
+{ #category : #typechecking }
+ViennaOthersStatementNode >> maximalType [
 
-	self statement sliceWith: aViennaSlicer
+	^ self statement typecheck
 ]
 
 { #category : #accessing }

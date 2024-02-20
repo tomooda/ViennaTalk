@@ -42,3 +42,9 @@ ViennaExpressionListNode >> label [
 
 	^ 'ExpressionList'
 ]
+
+{ #category : #typechecking }
+ViennaExpressionListNode >> maximalType [
+
+	^ ViennaType product: (self collect: #typecheck)
+]

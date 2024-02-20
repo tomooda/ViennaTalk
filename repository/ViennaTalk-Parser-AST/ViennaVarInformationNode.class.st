@@ -52,6 +52,13 @@ ViennaVarInformationNode >> label [
 	^ 'VarInformation'
 ]
 
+{ #category : #typechecking }
+ViennaVarInformationNode >> maximalType [
+
+	self nameList maximalType: self type asMaximalViennaType.
+	^ self nameList typecheck
+]
+
 { #category : #accessing }
 ViennaVarInformationNode >> mode [
 

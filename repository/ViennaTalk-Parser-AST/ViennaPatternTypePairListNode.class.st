@@ -51,6 +51,17 @@ ViennaPatternTypePairListNode >> label [
 	^ 'PatternTypePairList'
 ]
 
+{ #category : #typechecking }
+ViennaPatternTypePairListNode >> maximalType [
+
+	^ ViennaType product: ((1 to: self size by: 2) collect: [ :index |
+			   | pattern type |
+			   pattern := self at: index.
+			   type := self at: index + 1.
+			   pattern maximalType: type asMaximalViennaType.
+			   pattern typecheck ])
+]
+
 { #category : #private }
 ViennaPatternTypePairListNode >> parameters [
 

@@ -50,6 +50,29 @@ ViennaOperationExportNode >> label [
 	^ 'OperationExport'
 ]
 
+{ #category : #typechecking }
+ViennaOperationExportNode >> maximalType [
+
+	self nameList do: [ :name |
+		name typecheck.
+		name resolve
+			ifNotNil: [ :def |
+				def isOperationDefinition ifFalse: [
+					^ ViennaTypeError
+						  on: self
+						  signal: 'Not an operation :' , name source ].
+				def type = self type ifFalse: [
+					^ ViennaTypeError
+						  on: self
+						  signal: 'Operation type mismatch: defined ' , def type source
+							  , ' but exported ' , self type source ] ]
+			ifNil: [
+				^ ViennaTypeError
+					  on: self
+					  signal: 'Unresolved function: ' , name source ] ].
+	^ ViennaType unit
+]
+
 { #category : #accessing }
 ViennaOperationExportNode >> nameList [
 

@@ -48,5 +48,6 @@ ViennaLocalDefinitionListNode >> label [
 { #category : #typechecking }
 ViennaLocalDefinitionListNode >> maximalType [
 
-	self do: #typecheck
+	self do: #typecheck.
+	^ ViennaType unit
 ]

@@ -36,3 +36,9 @@ ViennaParametersNode >> label [
 
 	^ 'Parameters'
 ]
+
+{ #category : #typechecking }
+ViennaParametersNode >> maximalType [
+
+	^ ViennaType product: (self collect: #typecheck)
+]

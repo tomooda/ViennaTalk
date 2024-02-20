@@ -60,6 +60,12 @@ ViennaMapletNode >> label [
 	^ 'Maplet'
 ]
 
+{ #category : #typechecking }
+ViennaMapletNode >> maximalType [
+
+	^ self keyExpression typecheck mapTo: self valueExpression typecheck
+]
+
 { #category : #accessing }
 ViennaMapletNode >> valueExpression [
 

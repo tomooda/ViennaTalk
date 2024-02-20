@@ -50,6 +50,30 @@ ViennaValueExportNode >> label [
 	^ 'ValueExport'
 ]
 
+{ #category : #typechecking }
+ViennaValueExportNode >> maximalType [
+
+	self nameList do: [ :name |
+		name typecheck.
+		name resolve
+			ifNotNil: [ :def |
+				def isValueDefinition ifFalse: [
+					^ ViennaTypeError
+						  on: self
+						  signal: 'Not a value definition: ' , name source ].
+				def type = self type ifFalse: [
+					^ ViennaTypeError
+						  on: self
+						  signal:
+							  'Type mismatch: defined ' , def type source
+							  , ' but exported ' , self type source ] ]
+			ifNil: [
+				^ ViennaTypeError
+					  on: self
+					  signal: 'Unresolved function: ' , name source ] ].
+	^ ViennaType unit
+]
+
 { #category : #accessing }
 ViennaValueExportNode >> nameList [
 

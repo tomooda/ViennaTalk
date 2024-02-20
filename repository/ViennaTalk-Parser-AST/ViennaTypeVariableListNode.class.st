@@ -39,3 +39,9 @@ ViennaTypeVariableListNode >> label [
 
 	^ 'TypeVariableList'
 ]
+
+{ #category : #typechecking }
+ViennaTypeVariableListNode >> maximalType [
+
+	^ ViennaType product: (self collect: #typecheck)
+]

@@ -42,3 +42,9 @@ ViennaAccessNode >> label [
 
 	^ 'Access'
 ]
+
+{ #category : #typechecking }
+ViennaAccessNode >> maximalType [
+
+	^ ViennaType unit
+]

@@ -107,6 +107,13 @@ ViennaFlatDocumentNode >> lookupIdentifier: aString [
 	^ nil
 ]
 
+{ #category : #typechecking }
+ViennaFlatDocumentNode >> maximalType [
+
+	self sectionsDo: #typecheck.
+	^ ViennaType unit
+]
+
 { #category : #accessing }
 ViennaFlatDocumentNode >> moduleOrFlatDocument [
 

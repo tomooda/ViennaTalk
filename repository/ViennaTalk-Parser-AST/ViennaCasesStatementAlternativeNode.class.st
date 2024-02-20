@@ -85,6 +85,12 @@ ViennaCasesStatementAlternativeNode >> lookupIdentifier: aString [
 		  ifFalse: [ nil ]
 ]
 
+{ #category : #typechecking }
+ViennaCasesStatementAlternativeNode >> maximalType [
+
+	^ self statement typecheck
+]
+
 { #category : #'pretty printing' }
 ViennaCasesStatementAlternativeNode >> patternList [
 

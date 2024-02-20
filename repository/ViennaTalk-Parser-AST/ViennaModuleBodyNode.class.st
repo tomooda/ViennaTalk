@@ -39,6 +39,13 @@ ViennaModuleBodyNode >> label [
 	^ 'ModuleBody'
 ]
 
+{ #category : #typechecking }
+ViennaModuleBodyNode >> maximalType [
+
+	self do: #typecheck.
+	^ ViennaType unit
+]
+
 { #category : #enumerating }
 ViennaModuleBodyNode >> sectionsDo: aBlock [
 

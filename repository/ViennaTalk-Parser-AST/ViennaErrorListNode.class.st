@@ -14,7 +14,7 @@ ViennaErrorListNode >> boundIdentifiersDo: aBlock [
 { #category : #'pretty printing' }
 ViennaErrorListNode >> formatWith: aViennaAbstractFormatter [
 
-	^ self asArray inject: '' into: [ :string :node |
+	^ self inject: '' into: [ :string :node |
 		  string , ' ' , (aViennaAbstractFormatter format: node) ]
 ]
 
@@ -34,4 +34,11 @@ ViennaErrorListNode >> isViennaErrorListNode [
 ViennaErrorListNode >> label [
 
 	^ 'ErrorList'
+]
+
+{ #category : #typechecking }
+ViennaErrorListNode >> maximalType [
+
+	self do: #typecheck.
+	^ ViennaType unit
 ]

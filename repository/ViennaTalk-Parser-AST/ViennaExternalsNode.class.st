@@ -37,3 +37,10 @@ ViennaExternalsNode >> label [
 
 	^ 'Externals'
 ]
+
+{ #category : #typechecking }
+ViennaExternalsNode >> maximalType [
+
+	self do: #typecheck.
+	^ ViennaType unit
+]

@@ -36,3 +36,9 @@ ViennaFunctionTypeArgsNode >> label [
 
 	^ 'FunctionTypeArgs'
 ]
+
+{ #category : #typechecking }
+ViennaFunctionTypeArgsNode >> maximalType [
+
+	^ ViennaType product: (self collect: #typecheck)
+]

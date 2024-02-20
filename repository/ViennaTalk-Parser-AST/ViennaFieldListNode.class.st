@@ -46,3 +46,9 @@ ViennaFieldListNode >> label [
 
 	^ 'FieldList'
 ]
+
+{ #category : #typechecking }
+ViennaFieldListNode >> maximalType [
+
+	^ ViennaType product: (self collect: #typecheck)
+]

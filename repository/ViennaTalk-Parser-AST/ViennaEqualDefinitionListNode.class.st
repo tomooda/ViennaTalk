@@ -72,3 +72,10 @@ ViennaEqualDefinitionListNode >> label [
 
 	^ 'EqualDefinitionList'
 ]
+
+{ #category : #typechecking }
+ViennaEqualDefinitionListNode >> maximalType [
+
+	self do: #typecheck.
+	^ ViennaType unit
+]

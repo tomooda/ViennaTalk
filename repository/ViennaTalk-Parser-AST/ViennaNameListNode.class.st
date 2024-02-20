@@ -43,6 +43,21 @@ ViennaNameListNode >> label [
 	^ 'NameList'
 ]
 
+{ #category : #typechecking }
+ViennaNameListNode >> maximalType [
+
+	^ self
+		  inject: ViennaType unit
+		  into: [ :type :name | type + name typecheck ]
+]
+
+{ #category : #typechecking }
+ViennaNameListNode >> maximalType: aViennaType [
+
+	self do: [ :name | name maximalType: aViennaType ].
+	super maximalType: aViennaType
+]
+
 { #category : #removing }
 ViennaNameListNode >> removeIdentifier: aString [
 
