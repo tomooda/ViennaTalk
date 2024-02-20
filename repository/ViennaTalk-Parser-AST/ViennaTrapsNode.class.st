@@ -47,6 +47,17 @@ ViennaTrapsNode >> label [
 	^ 'Traps'
 ]
 
+{ #category : #typechecking }
+ViennaTrapsNode >> maximalType [
+
+	| type |
+	type := ViennaType unit.
+	self patternsAndStatementsDo: [ :patternBind :statement |
+		patternBind typecheck.
+		type := type + statement typecheck ].
+	^ type
+]
+
 { #category : #accessing }
 ViennaTrapsNode >> patterns [
 

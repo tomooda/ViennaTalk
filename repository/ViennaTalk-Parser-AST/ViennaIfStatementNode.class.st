@@ -85,6 +85,13 @@ ViennaIfStatementNode >> label [
 	^ 'IfStatement'
 ]
 
+{ #category : #typechecking }
+ViennaIfStatementNode >> maximalType [
+
+	^ self conditionalStatementList typecheck
+	  + (self statement ifNotNil: #typecheck ifNil: [ ViennaType unit ])
+]
+
 { #category : #accessing }
 ViennaIfStatementNode >> statement [
 

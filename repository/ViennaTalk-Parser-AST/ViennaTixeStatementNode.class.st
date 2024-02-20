@@ -15,6 +15,17 @@ ViennaTixeStatementNode class >> traps: aViennaTrapsNode statement: aViennaState
 ]
 
 { #category : #'accessing-definitions' }
+ViennaTixeStatementNode >> definitionOfLocalName: aString [
+
+	self traps patternsAndStatementsDo: [ :patternBind :statement |
+		patternBind
+			allDescendantsSuchThat: [ :n |
+			n isViennaPatternIdentifierNode: aString ]
+			do: [ :n | ^ n ] ].
+	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
+]
+
+{ #category : #'accessing-definitions' }
 ViennaTixeStatementNode >> findResolverForIdentifier: aString [
 
 	self traps patternsAndStatementsDo: [ :pattern :statement |
@@ -65,6 +76,12 @@ ViennaTixeStatementNode >> lookupIdentifier: aString [
 	self traps patternsAndStatementsDo: [ :pattern :statement |
 		(pattern bindsIdentifier: aString) ifTrue: [ ^ self ] ].
 	^ nil
+]
+
+{ #category : #typechecking }
+ViennaTixeStatementNode >> maximalType [
+
+	^ self traps typecheck + self statement typecheck
 ]
 
 { #category : #accessing }

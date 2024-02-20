@@ -103,6 +103,18 @@ ViennaSequenceForLoopNode >> lookupIdentifier: aString [
 	^ nil
 ]
 
+{ #category : #typechecking }
+ViennaSequenceForLoopNode >> maximalType [
+
+	self patternOrBind maximalType:
+		(ViennaType normalFormUnion: (Array streamContents: [ :stream |
+				  (self expression typecheck: ViennaType any seq)
+					  possibleTypesDo: [ :type |
+					  type isSeqType ifTrue: [ stream nextPut: type basetype ] ] ])).
+	self patternOrBind typecheck: ViennaType any.
+	^ self statement typecheck
+]
+
 { #category : #accessing }
 ViennaSequenceForLoopNode >> patternOrBind [
 

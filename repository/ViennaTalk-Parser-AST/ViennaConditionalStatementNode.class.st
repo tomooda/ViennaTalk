@@ -61,6 +61,13 @@ ViennaConditionalStatementNode >> label [
 	^ 'ConditionalStatement'
 ]
 
+{ #category : #typechecking }
+ViennaConditionalStatementNode >> maximalType [
+
+	self condition typecheck: ViennaType bool.
+	^ self statement typecheck
+]
+
 { #category : #accessing }
 ViennaConditionalStatementNode >> statement [
 

@@ -46,8 +46,9 @@ ViennaTypeBindNode >> label [
 ViennaTypeBindNode >> maximalType [
 
 	| basetype |
-	basetype := self type asMaximalViennaType.
+	basetype := self type asMaximalViennaType & self pattern maximalType.
 	self pattern maximalType: basetype.
+	self pattern typecheck: ViennaType any.
 	^ [ self pattern typecheck: basetype ]
 		  on: ViennaTypeError
 		  do: [ :ex |

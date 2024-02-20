@@ -1000,7 +1000,7 @@ ViennaVDMParser >> indexForLoop [
 
 	^ super indexForLoop =>> [ :start :end :array |
 	  (ViennaIndexForLoopNode
-		   identifier: array first
+		   patternIdentifier: array first
 		   startExpression: array second
 		   endExpression: array third
 		   stepExpression: array fourth

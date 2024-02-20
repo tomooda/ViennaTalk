@@ -60,6 +60,13 @@ ViennaWhileLoopNode >> label [
 	^ 'WhileLoop'
 ]
 
+{ #category : #typechecking }
+ViennaWhileLoopNode >> maximalType [
+
+	self expression typecheck: ViennaType bool.
+	^ self statement typecheck
+]
+
 { #category : #accessing }
 ViennaWhileLoopNode >> statement [
 

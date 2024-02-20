@@ -37,9 +37,7 @@ ViennaLetStatementNode >> body: aViennaStatementNode [
 { #category : #'accessing-definitions' }
 ViennaLetStatementNode >> definitionOfLocalName: aString [
 
-	self localDefinitionList do: [ :localDef |
-		| def |
-		def := localDef first.
+	self localDefinitionList do: [ :def |
 		def isViennaValueDefinitionNode ifTrue: [
 			def pattern
 				allDescendantsSuchThat: [ :n |
@@ -128,6 +126,13 @@ ViennaLetStatementNode >> lookupIdentifier: aString [
 		(localDefinition bindsIdentifier: aString) ifTrue: [
 			^ localDefinition ] ].
 	^ nil
+]
+
+{ #category : #typechecking }
+ViennaLetStatementNode >> maximalType [
+
+	self localDefinitionList typecheck.
+	^ self body typecheck
 ]
 
 { #category : #accessing }

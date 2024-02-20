@@ -52,3 +52,10 @@ ViennaExitStatementNode >> label [
 
 	^ 'ExitStatement'
 ]
+
+{ #category : #typechecking }
+ViennaExitStatementNode >> maximalType [
+
+	self expression typecheck.
+	^ ViennaType unit
+]

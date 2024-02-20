@@ -108,6 +108,15 @@ ViennaLetBeStatementNode >> lookupIdentifier: aString [
 		  ifFalse: [ nil ]
 ]
 
+{ #category : #typechecking }
+ViennaLetBeStatementNode >> maximalType [
+
+	self multipleBind typecheck.
+	self conditionExpression ifNotNil: [ :condition |
+		condition typecheck: ViennaType bool ].
+	^ self statement typecheck
+]
+
 { #category : #accessing }
 ViennaLetBeStatementNode >> multipleBind [
 

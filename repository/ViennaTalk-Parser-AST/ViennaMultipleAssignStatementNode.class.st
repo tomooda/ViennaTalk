@@ -38,3 +38,11 @@ ViennaMultipleAssignStatementNode >> label [
 
 	^ 'MultipleAssignStatement'
 ]
+
+{ #category : #typechecking }
+ViennaMultipleAssignStatementNode >> maximalType [
+
+	^ self
+		  inject: ViennaType unit
+		  into: [ :type :statement | type + statement typecheck ]
+]

@@ -38,3 +38,11 @@ ViennaNondeterministicStatementNode >> label [
 
 	^ 'NondeterministicStatement'
 ]
+
+{ #category : #typechecking }
+ViennaNondeterministicStatementNode >> maximalType [
+
+	^ self
+		  inject: ViennaType unit
+		  into: [ :type :statement | type + statement typecheck ]
+]

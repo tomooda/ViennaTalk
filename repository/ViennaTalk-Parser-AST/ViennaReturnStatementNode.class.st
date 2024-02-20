@@ -50,3 +50,22 @@ ViennaReturnStatementNode >> label [
 
 	^ 'ReturnStatement'
 ]
+
+{ #category : #typechecking }
+ViennaReturnStatementNode >> maximalType [
+
+	| opReturnType |
+	opReturnType := (self detectParent: #isOperationDefinition ifNone: [
+		                 ^ ViennaTypeError
+			                   on: self
+			                   signal:
+			                   'Return statement out of operation definition' ])
+		                returnType asMaximalViennaType.
+	^ self expression
+		  ifNotNil: [ :returnValue | returnValue typecheck: opReturnType ]
+		  ifNil: [
+			  opReturnType ifNotUnit: [
+				  ViennaTypeError
+					  on: self
+					  signal: 'Return value in an operation with a unit return type' ] ]
+]

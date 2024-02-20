@@ -108,6 +108,18 @@ ViennaSetForLoopNode >> lookupIdentifier: aString [
 	^ (self pattern bindsIdentifier: aString) ifTrue: [ self pattern ]
 ]
 
+{ #category : #typechecking }
+ViennaSetForLoopNode >> maximalType [
+
+	self pattern maximalType:
+		(ViennaType normalFormUnion: (Array streamContents: [ :stream |
+				  (self expression typecheck: ViennaType any set)
+					  possibleTypesDo: [ :type |
+					  type isSetType ifTrue: [ stream nextPut: type basetype ] ] ])).
+	self pattern typecheck: ViennaType any.
+	^ self statement typecheck
+]
+
 { #category : #accessing }
 ViennaSetForLoopNode >> pattern [
 
@@ -118,30 +130,6 @@ ViennaSetForLoopNode >> pattern [
 ViennaSetForLoopNode >> pattern: aViennaPatternNode [
 
 	self at: 1 put: aViennaPatternNode
-]
-
-{ #category : #'as yet unclassified' }
-ViennaSetForLoopNode >> sliceWith: aViennaSlicer [
-
-	| needsControl |
-	needsControl := false.
-	[
-	| origin |
-	origin := aViennaSlicer copy.
-	aViennaSlicer branch
-		value: [ :subslicer | subslicer ];
-		value: [ :subslicer |
-			self statement sliceWith: subslicer.
-			subslicer onNode: self do: [  ] ];
-		value: nil.
-	aViennaSlicer agenda ~= origin agenda ] whileTrue: [
-		needsControl := true ].
-	aViennaSlicer onNode: self do: [
-		aViennaSlicer write: self pattern.
-		aViennaSlicer read: self expression ].
-	needsControl ifTrue: [ aViennaSlicer control: self expression ].
-	self pattern sliceWith: aViennaSlicer.
-	self expression sliceWith: aViennaSlicer
 ]
 
 { #category : #accessing }

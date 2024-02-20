@@ -34,3 +34,9 @@ ViennaErrorStatementNode >> label [
 
 	^ 'ErrorStatement'
 ]
+
+{ #category : #typechecking }
+ViennaErrorStatementNode >> maximalType [
+
+	^ ViennaType unit
+]

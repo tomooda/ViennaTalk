@@ -6,10 +6,10 @@ Class {
 }
 
 { #category : #'instance creation' }
-ViennaIndexForLoopNode class >> identifier: aString startExpression: aViennaExpressionNode1 endExpression: aViennaExpressionNode2 stepExpression: aViennaExpressionNode3 statement: aViennaStatementNode [
+ViennaIndexForLoopNode class >> patternIdentifier: aString startExpression: aViennaExpressionNode1 endExpression: aViennaExpressionNode2 stepExpression: aViennaExpressionNode3 statement: aViennaStatementNode [
 
 	^ (self new: 5)
-		  identifier: aString;
+		  patternIdentifier: aString;
 		  startExpression: aViennaExpressionNode1;
 		  endExpression: aViennaExpressionNode2;
 		  stepExpression: aViennaExpressionNode3;
@@ -20,7 +20,7 @@ ViennaIndexForLoopNode class >> identifier: aString startExpression: aViennaExpr
 { #category : #'accessing-definitions' }
 ViennaIndexForLoopNode >> definitionOfLocalName: aString [
 
-	self identifier = aString ifTrue: [ ^ self ].
+	self identifier = aString ifTrue: [ ^ self patternIdentifier ].
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
@@ -95,13 +95,13 @@ ViennaIndexForLoopNode >> hasScope [
 { #category : #accessing }
 ViennaIndexForLoopNode >> identifier [
 
-	^ self at: 1
+	^ self patternIdentifier identifier
 ]
 
 { #category : #accessing }
 ViennaIndexForLoopNode >> identifier: aString [
 
-	self at: 1 put: aString
+	self patternIdentifier identifier: aString
 ]
 
 { #category : #testing }
@@ -120,6 +120,33 @@ ViennaIndexForLoopNode >> label [
 ViennaIndexForLoopNode >> lookupIdentifier: aString [
 
 	^ self identifier = aString ifTrue: [ self ]
+]
+
+{ #category : #typechecking }
+ViennaIndexForLoopNode >> maximalType [
+
+	| indexType |
+	indexType := (self startExpression typecheck: ViennaType real)
+	             + (self endExpression typecheck: ViennaType real).
+	self stepExpression ifNotNil: [ :exp |
+		| stepType |
+		stepType := exp typecheck: ViennaType real.
+		(indexType isIntType and: [ stepType isIntType ]) ifFalse: [
+			indexType := indexType + stepType ] ].
+	self patternIdentifier maximalType: indexType.
+	^ self statement typecheck
+]
+
+{ #category : #accessing }
+ViennaIndexForLoopNode >> patternIdentifier [
+
+	^ self at: 1
+]
+
+{ #category : #accessing }
+ViennaIndexForLoopNode >> patternIdentifier: aString [
+
+	self at: 1 put: aString
 ]
 
 { #category : #accessing }

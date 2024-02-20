@@ -1413,14 +1413,16 @@ ViennaVDMGrammar >> inSet: arg1 and: arg2 [
 
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> indexForLoop [
-	^ (self for , (self decl: identifier) trim , eq , expression , self to , expression
-		, ((self by , expression) ==> #second) optional , self do , statement)
-		==> [ :array | 
-			{(array second).
-			(array fourth).
-			(array sixth).
-			(array seventh).
-			(array ninth)} ]
+
+	^ self for , self patternIdentifier trim , eq , expression , self to
+	  , expression , (self by , expression ==> #second) optional
+	  , self do , statement ==> [ :array |
+	  {
+		  array second.
+		  array fourth.
+		  array sixth.
+		  array seventh.
+		  array ninth } ]
 ]
 
 { #category : #'parsers-symbols' }
@@ -2770,7 +2772,7 @@ ViennaVDMGrammar >> trap [
 
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> trapStatement [
-	^ (self trap , pattern , self with , statement , self in , statement)
+	^ (self trap , patternBind , self with , statement , self in , statement)
 		==> [ :array | 
 			{array second.
 			array fourth.
@@ -2779,20 +2781,19 @@ ViennaVDMGrammar >> trapStatement [
 
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> traps [
-	^ (lbrace
-		,
-			((pattern , self mapletArrow , statement)
-				==> [ :triple | 
-					{triple first.
-					triple third} ] separatedBy: comma) withoutSeparators , rbrace)
-		==> [ :triple | 
-			| array |
-			array := Array new: triple second size * 2.
-			triple second
-				keysAndValuesDo: [ :index :pair | 
-					array at: index * 2 - 1 put: pair first.
-					array at: index * 2 put: pair second ].
-			array ]
+
+	^ lbrace
+	  , (patternBind , self mapletArrow , statement ==> [ :triple |
+		   {
+			   triple first.
+			   triple third } ] separatedBy: comma) withoutSeparators , rbrace
+	  ==> [ :triple |
+		  | array |
+		  array := Array new: triple second size * 2.
+		  triple second keysAndValuesDo: [ :index :pair |
+			  array at: index * 2 - 1 put: pair first.
+			  array at: index * 2 put: pair second ].
+		  array ]
 ]
 
 { #category : #'parsers-expressions-basics' }
