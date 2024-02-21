@@ -1223,8 +1223,7 @@ ViennaVDM2Smalltalk >> extendedExplicitOperationDefinition: aViennaNode env: aDi
 					            ((1 to: identifierTypePairList size by: 2) collect: [
 						             :index |
 						             {
-							             (ViennaPatternIdentifierNode identifier:
-								              (identifierTypePairList at: index)).
+							             (identifierTypePairList at: index).
 							             (identifierTypePairList at: index + 1) } ])
 			            body: postBody
 			            varGenerator: varGenerator
