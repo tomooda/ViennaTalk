@@ -63,7 +63,7 @@ ViennaRecordConstructorNode >> label [
 { #category : #typechecking }
 ViennaRecordConstructorNode >> maximalType [
 
-	^ (self name resolve ifNotNil: #asMaximalViennaType)
+	^ (self name resolve ifNotNil: #typecheck)
 		  ifNotNil: [ :recordType |
 			  recordType size = self expressionList size
 				  ifTrue: [

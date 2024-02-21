@@ -40,7 +40,7 @@ ViennaTypeExportNode >> isViennaTypeExportNode [
 { #category : #typechecking }
 ViennaTypeExportNode >> maximalType [
 
-	self name resolved
+	self name resolve
 		ifNotNil: [ :def |
 			def isTypeDefinition ifFalse: [
 				^ ViennaTypeError

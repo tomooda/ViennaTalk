@@ -61,6 +61,15 @@ ViennaTypeNameNode >> localResolve [
 	^ self name localResolve
 ]
 
+{ #category : #typechecking }
+ViennaTypeNameNode >> maximalType [
+
+	^ self resolve ifNotNil: #typecheck ifNil: [
+		  ViennaTypeError
+			  on: self
+			  signal: 'Unresolved type name: ' , self name source ]
+]
+
 { #category : #accessing }
 ViennaTypeNameNode >> name [
 

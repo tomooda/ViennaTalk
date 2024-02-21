@@ -50,6 +50,13 @@ ViennaImportModuleSignatureNode >> label [
 	^ 'ImportModuleSignature'
 ]
 
+{ #category : #typechecking }
+ViennaImportModuleSignatureNode >> maximalType [
+
+	self do: #typecheck.
+	^ ViennaType unit
+]
+
 { #category : #accessing }
 ViennaImportModuleSignatureNode >> moduleIdentifier [
 

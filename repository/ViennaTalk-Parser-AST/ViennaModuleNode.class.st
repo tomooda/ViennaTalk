@@ -361,6 +361,12 @@ ViennaModuleNode >> exportDefinition [
 	^ self interface exportDefinition
 ]
 
+{ #category : #testing }
+ViennaModuleNode >> exportsIdentifier: aString [
+
+	^ self exportDefinition exportsIdentifier: aString
+]
+
 { #category : #'accessing-definitions' }
 ViennaModuleNode >> findResolverForIdentifier: aString [
 
@@ -533,6 +539,14 @@ ViennaModuleNode >> lookupIdentifier: aString [
 			(import rename notNil and: [ import rename identifier = aString ])
 				ifTrue: [ ^ import ] ] ].
 	^ nil
+]
+
+{ #category : #typechecking }
+ViennaModuleNode >> maximalType [
+
+	self interface typecheck.
+	self moduleBody typecheck.
+	^ ViennaType unit
 ]
 
 { #category : #accessing }

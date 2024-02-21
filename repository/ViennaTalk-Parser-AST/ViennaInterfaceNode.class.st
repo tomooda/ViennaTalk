@@ -85,3 +85,11 @@ ViennaInterfaceNode >> label [
 
 	^ 'Interface'
 ]
+
+{ #category : #typechecking }
+ViennaInterfaceNode >> maximalType [
+
+	self importDefinitionList typecheck.
+	self exportDefinition typecheck.
+	^ ViennaType unit
+]

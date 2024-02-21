@@ -70,6 +70,22 @@ ViennaExtendedExplicitFunctionDefinitionNode >> boundIdentifiersDo: aBlock [
 		aBlock cull: 'post_' , self identifier cull: self ]
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaExtendedExplicitFunctionDefinitionNode >> definitionOfLocalName: aString [
+
+	self typeVariableList do: [ :typeVariable |
+		(typeVariable bindsIdentifier: aString) ifTrue: [ ^ typeVariable ] ].
+	self patternTypePairList
+		allDescendantsSuchThat: [ :n |
+		n isViennaPatternIdentifierNode: aString ]
+		do: [ :n | ^ n ].
+	self identifierTypePairList
+		allDescendantsSuchThat: [ :n |
+		n isViennaPatternIdentifierNode: aString ]
+		do: [ :n | ^ n ].
+	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
+]
+
 { #category : #accessing }
 ViennaExtendedExplicitFunctionDefinitionNode >> expression [
 
@@ -222,6 +238,21 @@ ViennaExtendedExplicitFunctionDefinitionNode >> lookupIdentifier: aString [
 	(self identifierTypePairList bindsIdentifier: aString) ifTrue: [
 		^ self ].
 	^ nil
+]
+
+{ #category : #typechecking }
+ViennaExtendedExplicitFunctionDefinitionNode >> maximalType [
+
+	self typeVariableList typecheck.
+	self patternTypePairList typecheck.
+	self identifierTypePairList typecheck.
+	self expression typecheck.
+	self pre ifNotNil: [ :pre | pre typecheck: ViennaType bool ].
+	self post ifNotNil: [ :post | post typecheck: ViennaType bool ].
+	self measure ifNotNil: [ :measure |
+		measure typecheck:
+			self type argumentType typecheck -> ViennaType nat ].
+	^ self type typecheck
 ]
 
 { #category : #accessing }

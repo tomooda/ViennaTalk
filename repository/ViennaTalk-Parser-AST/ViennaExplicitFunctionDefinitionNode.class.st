@@ -255,6 +255,42 @@ ViennaExplicitFunctionDefinitionNode >> lookupIdentifier: aString [
 	^ nil
 ]
 
+{ #category : #typechecking }
+ViennaExplicitFunctionDefinitionNode >> maximalType [
+
+	| functionType returnType |
+	self typeVariableList typecheck.
+	functionType := self type typecheck.
+	returnType := functionType.
+	self parametersList do: [ :parameters |
+		returnType isFunctionType
+			ifTrue: [
+				returnType argtypes size = parameters size
+					ifTrue: [
+						1 to: parameters size do: [ :index |
+							(parameters at: index) maximalType:
+								(returnType argtypes at: index) ].
+						returnType := returnType returntype ]
+					ifFalse: [
+						^ ViennaTypeError
+							  on: self
+							  signal: 'Type mismatch: parameters are ' , parameters source
+								  , ' but the type is declared ' , returnType printString ] ]
+			ifFalse: [
+				^ ViennaTypeError
+					  on: self
+					  signal: 'Type mismatch: the order of the parameters is '
+						  , self parametersList size printString
+						  , ' but the type is declared ' , self type source ] ].
+	self expression typecheck: returnType.
+	self pre ifNotNil: [ :pre | pre typecheck: ViennaType bool ].
+	self post ifNotNil: [ :post | post typecheck: ViennaType bool ].
+	self measure ifNotNil: [ :measure |
+		measure typecheck:
+			self type argumentType typecheck -> ViennaType nat ].
+	^ functionType
+]
+
 { #category : #accessing }
 ViennaExplicitFunctionDefinitionNode >> measure [
 
@@ -312,7 +348,10 @@ ViennaExplicitFunctionDefinitionNode >> returnIdentifiers [
 { #category : #accessing }
 ViennaExplicitFunctionDefinitionNode >> returnType [
 
-	^ self type returnType
+	^ self parametersList inject: self type into: [ :t :params |
+		  t isViennaFunctionTypeNode
+			  ifTrue: [ t returnType ]
+			  ifFalse: [ ^ nil ] ]
 ]
 
 { #category : #'accessing-definitions' }

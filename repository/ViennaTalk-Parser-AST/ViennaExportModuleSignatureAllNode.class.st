@@ -17,6 +17,12 @@ ViennaExportModuleSignatureAllNode >> exportedIdentifiersDo: aBlock [
 	self module uniqueBoundIdentifiersDo: aBlock
 ]
 
+{ #category : #testing }
+ViennaExportModuleSignatureAllNode >> exportsIdentifier: aString [
+
+	^ true
+]
+
 { #category : #'pretty printing' }
 ViennaExportModuleSignatureAllNode >> formatWith: aViennaAbstractFormatter [
 

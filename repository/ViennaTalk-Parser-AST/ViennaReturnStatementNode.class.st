@@ -60,7 +60,7 @@ ViennaReturnStatementNode >> maximalType [
 			                   on: self
 			                   signal:
 			                   'Return statement out of operation definition' ])
-		                returnType asMaximalViennaType.
+		                returnType typecheck.
 	^ self expression
 		  ifNotNil: [ :returnValue | returnValue typecheck: opReturnType ]
 		  ifNil: [

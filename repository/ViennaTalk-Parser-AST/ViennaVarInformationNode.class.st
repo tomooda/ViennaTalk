@@ -55,8 +55,25 @@ ViennaVarInformationNode >> label [
 { #category : #typechecking }
 ViennaVarInformationNode >> maximalType [
 
-	self nameList maximalType: self type asMaximalViennaType.
-	^ self nameList typecheck
+	self nameList do: [ :name |
+		name resolve
+			ifNotNil: [ :def |
+				def isViennaFieldNode ifFalse: [
+					^ ViennaTypeError
+						  on: self
+						  signal: 'Not a state variable: ' , name source ].
+				self type ifNotNil: [
+					def type = self type ifFalse: [
+						^ ViennaTypeError
+							  on: self
+							  signal:
+							  'Type mismatch: ' , name source , ' is defined as '
+							  , def type source ] ] ]
+			ifNil: [
+				^ ViennaTypeError
+					  on: self
+					  signal: 'Unresolved state variable: ' , name source ] ].
+	^ ViennaType unit
 ]
 
 { #category : #accessing }

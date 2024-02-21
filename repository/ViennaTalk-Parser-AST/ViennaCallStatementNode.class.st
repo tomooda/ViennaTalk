@@ -64,7 +64,7 @@ ViennaCallStatementNode >> maximalType [
 			  op isOperationDefinition
 				  ifTrue: [
 					  | argtype |
-					  argtype := op argumentType asMaximalViennaType.
+					  argtype := op argumentType typecheck.
 					  argtype isProductType
 						  ifTrue: [
 							  argtype basetypes size = self expressionList size
@@ -72,7 +72,7 @@ ViennaCallStatementNode >> maximalType [
 									  argtype basetypes
 										  with: self expressionList
 										  do: [ :ptype :arg | arg typecheck: ptype ].
-									  op returnType asMaximalViennaType ]
+									  op returnType typecheck ]
 								  ifFalse: [
 									  ViennaTypeError
 										  on: self
@@ -86,7 +86,7 @@ ViennaCallStatementNode >> maximalType [
 									  self expressionList size = 1
 										  ifTrue: [
 											  self expressionList first typecheck: argtype.
-											  op returnType asMaximalViennaType ]
+											  op returnType typecheck ]
 										  ifFalse: [
 											  ViennaTypeError
 												  on: self
@@ -95,7 +95,7 @@ ViennaCallStatementNode >> maximalType [
 													  , self expressionList source ] ]
 								  ifUnit: [
 									  self expressionList size = 0
-										  ifTrue: [ op returnType asMaximalViennaType ]
+										  ifTrue: [ op returnType typecheck ]
 										  ifFalse: [
 											  ViennaTypeError
 												  on: self

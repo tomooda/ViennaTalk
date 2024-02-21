@@ -29,6 +29,13 @@ ViennaImportSignatureNode >> isViennaImportSignatureNode [
 	^ true
 ]
 
+{ #category : #typechecking }
+ViennaImportSignatureNode >> maximalType [
+
+	self do: #typecheck.
+	^ ViennaType unit
+]
+
 { #category : #accessing }
 ViennaImportSignatureNode >> moduleIdentifier [
 

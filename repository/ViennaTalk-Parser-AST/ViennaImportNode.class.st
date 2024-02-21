@@ -14,9 +14,11 @@ ViennaImportNode class >> isAbstract [
 { #category : #converting }
 ViennaImportNode >> asGlobalName [
 
-	^ ViennaGlobalNameNode
-		  moduleIdentifier: self moduleIdentifier
-		  identifier: self identifier
+	^ (ViennaGlobalNameNode
+		   moduleIdentifier: self moduleIdentifier
+		   identifier: self identifier)
+		  parent: self;
+		  yourself
 ]
 
 { #category : #private }

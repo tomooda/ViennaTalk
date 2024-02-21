@@ -20,6 +20,16 @@ ViennaInvariantInitialFunctionNode >> boundIdentifiersDo: aBlock [
 	
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaInvariantInitialFunctionNode >> definitionOfLocalName: aString [
+
+	self pattern
+		allDescendantsSuchThat: [ :n |
+		n isViennaPatternIdentifierNode: aString ]
+		do: [ :n | ^ n ].
+	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
+]
+
 { #category : #accessing }
 ViennaInvariantInitialFunctionNode >> expression [
 

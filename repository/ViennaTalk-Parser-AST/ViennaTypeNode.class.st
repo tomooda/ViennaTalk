@@ -28,3 +28,9 @@ ViennaTypeNode >> isViennaTypeNode [
 
 	^ true
 ]
+
+{ #category : #typechecking }
+ViennaTypeNode >> maximalType [
+
+	^ self asMaximalViennaType
+]

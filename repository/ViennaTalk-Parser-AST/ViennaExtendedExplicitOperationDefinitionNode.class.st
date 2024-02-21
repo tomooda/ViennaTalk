@@ -70,6 +70,20 @@ ViennaExtendedExplicitOperationDefinitionNode >> boundIdentifiersDo: aBlock [
 		aBlock cull: 'post_' , self identifier cull: self ]
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaExtendedExplicitOperationDefinitionNode >> definitionOfLocalName: aString [
+
+	self patternTypePairList
+		allDescendantsSuchThat: [ :n |
+		n isViennaPatternIdentifierNode: aString ]
+		do: [ :n | ^ n ].
+	self identifierTypePairList
+		allDescendantsSuchThat: [ :n |
+		n isViennaPatternIdentifierNode: aString ]
+		do: [ :n | ^ n ].
+	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
+]
+
 { #category : #accessing }
 ViennaExtendedExplicitOperationDefinitionNode >> exceptions [
 
@@ -241,6 +255,19 @@ ViennaExtendedExplicitOperationDefinitionNode >> lookupIdentifier: aString [
 	(self identifierTypePairList bindsIdentifier: aString) ifTrue: [
 		^ self ].
 	^ nil
+]
+
+{ #category : #typechecking }
+ViennaExtendedExplicitOperationDefinitionNode >> maximalType [
+
+	self patternTypePairList typecheck.
+	self identifierTypePairList typecheck.
+	self externals ifNotNil: #typecheck.
+	self exceptions ifNotNil: #typecheck.
+	self statement typecheck: self type typecheck returntype.
+	self pre ifNotNil: [ :pre | pre typecheck: ViennaType bool ].
+	self post ifNotNil: [ :post | post typecheck: ViennaType bool ].
+	^ self type typecheck
 ]
 
 { #category : #accessing }

@@ -58,7 +58,7 @@ ViennaPatternTypePairListNode >> maximalType [
 			   | pattern type |
 			   pattern := self at: index.
 			   type := self at: index + 1.
-			   pattern maximalType: type asMaximalViennaType.
+			   pattern maximalType: type typecheck.
 			   pattern typecheck ])
 ]
 

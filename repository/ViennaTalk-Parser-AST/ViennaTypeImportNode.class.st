@@ -58,6 +58,37 @@ ViennaTypeImportNode >> label [
 	^ 'TypeImport'
 ]
 
+{ #category : #typechecking }
+ViennaTypeImportNode >> maximalType [
+
+	^ (self document moduleNamed: self moduleIdentifier)
+		  ifNotNil: [ :module |
+			  (module exportsIdentifier: self name identifier)
+				  ifTrue: [
+					  self asGlobalName resolve
+						  ifNotNil: [ :def |
+							  def isTypeDefinition
+								  ifTrue: [
+									  def typecheck.
+									  ViennaType unit ]
+								  ifFalse: [
+									  ViennaTypeError
+										  on: self
+										  signal: 'Not a type:' , self asGlobalName source ] ]
+						  ifNil: [
+							  ViennaTypeError
+								  on: self
+								  signal: 'Unresolved import: ' , self asGlobalName source ] ]
+				  ifFalse: [
+					  ViennaTypeError
+						  on: self
+						  signal: 'Not exported: ' , self asGlobalName source ] ]
+		  ifNil: [
+			  ViennaTypeError
+				  on: self
+				  signal: 'Unresolved module: ' , self moduleIdentifier ]
+]
+
 { #category : #accessing }
 ViennaTypeImportNode >> name [
 

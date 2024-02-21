@@ -57,6 +57,45 @@ ViennaOperationImportNode >> label [
 	^ 'OperationImport'
 ]
 
+{ #category : #typechecking }
+ViennaOperationImportNode >> maximalType [
+
+	^ (self document moduleNamed: self moduleIdentifier)
+		  ifNotNil: [ :module |
+			  (module exportsIdentifier: self name identifier)
+				  ifTrue: [
+					  self asGlobalName resolve
+						  ifNotNil: [ :def |
+							  def isOperationDefinition
+								  ifTrue: [
+									  def type = self type
+										  ifTrue: [
+											  def typecheck.
+											  ViennaType unit ]
+										  ifFalse: [
+											  ViennaTypeError
+												  on: self
+												  signal:
+													  'Type mismatch: defined ' , def type source
+													  , ' but imported as ' , self type source ] ]
+								  ifFalse: [
+									  ViennaTypeError
+										  on: self
+										  signal: 'Not an operation: ' , self asGlobalName source ] ]
+						  ifNil: [
+							  ViennaTypeError
+								  on: self
+								  signal: 'Unresolved import: ' , self asGlobalName source ] ]
+				  ifFalse: [
+					  ViennaTypeError
+						  on: self
+						  signal: 'Not exported: ' , self asGlobalName source ] ]
+		  ifNil: [
+			  ViennaTypeError
+				  on: self
+				  signal: 'Unresolved module: ' , self moduleIdentifier ]
+]
+
 { #category : #accessing }
 ViennaOperationImportNode >> name [
 

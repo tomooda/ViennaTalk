@@ -540,7 +540,7 @@ ViennaVDM2SmalltalkClass >> extendedExplicitOperationDefinition: aViennaNode env
 		                           Array new ].
 	retVar := aViennaNode identifierTypePairList
 		          ifNil: [ 'RESULT' ]
-		          ifNotNil: [ :node | node first ].
+		          ifNotNil: [ :node | node first identifier].
 	retTypeNode := aViennaNode identifierTypePairList
 		               ifNil: [ ViennaUnitTypeNode new ]
 		               ifNotNil: [ :node | node second ].
@@ -777,7 +777,7 @@ ViennaVDM2SmalltalkClass >> implicitOperationDefinition: aViennaNode env: aDicti
 	| opname patternTypePairListNode retVar retTypeNode bodyNode body preNode postNode varGenerator binds theClass |
 	opname := aViennaNode identifier.
 	patternTypePairListNode := aViennaNode patternTypePairList.
-	retVar := aViennaNode identifierTypePairList first.
+	retVar := aViennaNode identifierTypePairList first identifier.
 	retTypeNode := aViennaNode identifierTypePairList second.
 	bodyNode := aViennaNode.
 	body := 'ViennaImplicitEvaluationError signal: '

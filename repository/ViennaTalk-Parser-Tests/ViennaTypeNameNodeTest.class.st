@@ -14,3 +14,21 @@ ViennaTypeNameNodeTest >> testAsMaximalViennaType [
 				asMaximalViennaType
 		equals: ViennaType nat * ViennaType int
 ]
+
+{ #category : #test }
+ViennaTypeNameNodeTest >> testMaximalType [
+
+	| spec |
+	spec := 'types N = nat' asViennaDocumentAst.
+	self
+		assert: ('N' asViennaTypeAst
+				 parent: spec;
+				 maximalType)
+		equals: ViennaType nat.
+	self
+		should: [
+			'N2' asViennaTypeAst
+				parent: spec;
+				maximalType ]
+		raise: ViennaTypeError
+]

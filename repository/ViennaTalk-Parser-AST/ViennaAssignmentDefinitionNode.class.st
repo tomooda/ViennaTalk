@@ -98,7 +98,7 @@ ViennaAssignmentDefinitionNode >> label [
 ViennaAssignmentDefinitionNode >> maximalType [
 
 	| t |
-	t := self type asMaximalViennaType.
+	t := self type typecheck.
 	self expression ifNotNil: [ :expr | expr typecheck: t ].
 	^ t
 ]

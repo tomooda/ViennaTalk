@@ -38,5 +38,5 @@ ViennaIsNotYetSpecifiedNode >> label [
 { #category : #typechecking }
 ViennaIsNotYetSpecifiedNode >> maximalType [
 
-	^ ViennaType unit
+	^ ViennaType any
 ]

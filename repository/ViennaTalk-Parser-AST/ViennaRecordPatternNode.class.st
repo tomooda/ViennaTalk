@@ -57,7 +57,7 @@ ViennaRecordPatternNode >> label [
 { #category : #typechecking }
 ViennaRecordPatternNode >> maximalType [
 
-	^ self name resolve asMaximalViennaType
+	^ self name resolve typecheck
 ]
 
 { #category : #typechecking }

@@ -128,15 +128,13 @@ ViennaTotalFunctionType >> isTotalFunctionType [
 
 { #category : #accessing }
 ViennaTotalFunctionType >> name [
-	^ ('*'
-		join:
-			(argtypes
-				collect: [ :t | 
-					t
-						nameInPrecedence:
-							(argtypes size = 1
-								ifTrue: [ self class precedence + 1 ]
-								ifFalse: [ ViennaProductType precedence ]) ])) , '+>' , (returntype nameInPrecedence: self class precedence)
+
+	^ ('*' join:
+		   ((argtypes ifEmpty: [ { ViennaType unit } ]) collect: [ :t |
+			    t nameInPrecedence: (argtypes size = 1
+					     ifTrue: [ self class precedence + 1 ]
+					     ifFalse: [ ViennaProductType precedence ]) ])) , '+>'
+	  , (returntype nameInPrecedence: self class precedence)
 ]
 
 { #category : #private }

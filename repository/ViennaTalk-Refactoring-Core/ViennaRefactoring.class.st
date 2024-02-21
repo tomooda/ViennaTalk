@@ -578,7 +578,7 @@ ViennaRefactoring >> freeOccurrencesOf: aString inImplicitFunctionDefinition: aV
 	aViennaNode identifierTypePairList ifNotEmpty: [
 		:identifierTypePairList |
 		1 to: identifierTypePairList size by: 2 do: [ :index |
-			(identifierTypePairList at: index) = aString ifTrue: [ ^ self ] ] ].
+			(identifierTypePairList at: index) identifier = aString ifTrue: [ ^ self ] ] ].
 	self freeOccurrencesOf: aString in: aViennaNode post do: aBlock
 ]
 

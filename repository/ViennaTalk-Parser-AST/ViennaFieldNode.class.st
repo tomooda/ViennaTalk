@@ -88,7 +88,7 @@ ViennaFieldNode >> label [
 { #category : #typechecking }
 ViennaFieldNode >> maximalType [
 
-	^ self type asMaximalViennaType
+	^ self type typecheck
 ]
 
 { #category : #accessing }

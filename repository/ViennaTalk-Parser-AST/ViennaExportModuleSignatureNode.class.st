@@ -18,6 +18,14 @@ ViennaExportModuleSignatureNode >> exportedIdentifiersDo: aBlock [
 		exportSignature exportedIdentifiersDo: aBlock ]
 ]
 
+{ #category : #enumerating }
+ViennaExportModuleSignatureNode >> exportsIdentifier: aString [
+
+	self exportedIdentifiersDo: [ :identifier |
+		identifier = aString ifTrue: [ ^ true ] ].
+	^ false
+]
+
 { #category : #'pretty printing' }
 ViennaExportModuleSignatureNode >> formatWith: aViennaAbstractFormatter [
 

@@ -1102,7 +1102,7 @@ ViennaVDM2Smalltalk >> extendedExplicitFunctionDefinition: aViennaNode env: aDic
 						             :index |
 						             {
 							             (ViennaPatternIdentifierNode identifier:
-								              (identifierTypePairList at: index)).
+								              (identifierTypePairList at: index) identifier).
 							             (identifierTypePairList at: index + 1) } ])
 			            body: postBody
 			            varGenerator: varGenerator
@@ -1134,9 +1134,10 @@ ViennaVDM2Smalltalk >> extendedExplicitOperationDefinition: aViennaNode env: aDi
 	patternTypePairList := aViennaNode patternTypePairList.
 	identifierTypePairList := aViennaNode identifierTypePairList ifNil: [
 		                          {
-			                          'RESULT'.
+			                          (ViennaPatternIdentifierNode identifier:
+				                           'RESULT').
 			                          ViennaUnitTypeNode new } ].
-	retVarName := identifierTypePairList first.
+	retVarName := identifierTypePairList first identifier.
 	retTypeNode := identifierTypePairList second.
 	body := '[|_opContext| _opContext := thisContext. '
 	        , (self generate: aViennaNode statement env: aDictionary)
@@ -1150,7 +1151,7 @@ ViennaVDM2Smalltalk >> extendedExplicitOperationDefinition: aViennaNode env: aDi
 			           types size = 1
 				           ifTrue: [ types first ]
 				           ifFalse: [ ViennaProductTypeNode withAll: types ] ].
-	retValue := identifierTypePairList first.
+	retValue := identifierTypePairList first identifier.
 	retType := identifierTypePairList second.
 	preNode ifNotNil: [
 		preBody := self generate: preNode env: aDictionary.
@@ -1672,7 +1673,7 @@ ViennaVDM2Smalltalk >> implicitFunctionDefinition: aViennaNode env: aDictionary 
 						             collect: [ :index |
 							             {
 								             (ViennaPatternIdentifierNode identifier:
-									              (identifierTypePairListNode at: index)).
+									              (identifierTypePairListNode at: index) identifier).
 								             (identifierTypePairListNode at: index + 1) } ])
 			            body: postBody
 			            varGenerator: varGenerator
@@ -1706,9 +1707,10 @@ ViennaVDM2Smalltalk >> implicitOperationDefinition: aViennaNode env: aDictionary
 	identifierTypePairListNode := aViennaNode identifierTypePairList
 		                              ifNil: [
 			                              {
-				                              'RESULT'.
+				                              (ViennaPatternIdentifierNode
+					                               identifier: 'RESULT').
 				                              ViennaUnitTypeNode new } ].
-	retVarName := identifierTypePairListNode first.
+	retVarName := identifierTypePairListNode first identifier.
 	retTypeNode := identifierTypePairListNode second.
 	preNode := aViennaNode pre.
 	postNode := aViennaNode post.
@@ -1751,7 +1753,8 @@ ViennaVDM2Smalltalk >> implicitOperationDefinition: aViennaNode env: aDictionary
 						             collect: [ :index |
 							             {
 								             (ViennaPatternIdentifierNode identifier:
-									              (identifierTypePairListNode at: index)).
+									              (identifierTypePairListNode at: index)
+										              identifier).
 								             (identifierTypePairListNode at: index + 1) } ])
 			            body: postBody
 			            varGenerator: varGenerator

@@ -227,6 +227,32 @@ ViennaExplicitOperationDefinitionNode >> lookupIdentifier: aString [
 	^ nil
 ]
 
+{ #category : #typechecking }
+ViennaExplicitOperationDefinitionNode >> maximalType [
+
+	| operationType |
+	operationType := self type typecheck.
+	operationType isOperationType ifFalse: [
+		^ ViennaTypeError
+			  on: self
+			  signal: 'Not an operation type: ' , self type source ].
+	operationType argtypes size = self parameters size
+		ifTrue: [
+			1 to: self parameters size do: [ :index |
+				(self parameters at: index) maximalType:
+					(operationType argtypes at: index) ] ]
+		ifFalse: [
+			^ ViennaTypeError
+				  on: self
+				  signal: 'Type mismatch: ' , self parameters size printString
+					  , ' parameter(s) declared, but the type is '
+					  , operationType argtypes size printString , '-arity' ].
+	self statement typecheck: operationType returntype.
+	self pre ifNotNil: [ :pre | pre typecheck: ViennaType bool ].
+	self post ifNotNil: [ :post | post typecheck: ViennaType bool ].
+	^ operationType
+]
+
 { #category : #accessing }
 ViennaExplicitOperationDefinitionNode >> parameters [
 

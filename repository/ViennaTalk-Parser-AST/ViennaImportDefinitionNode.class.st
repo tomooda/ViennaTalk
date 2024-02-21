@@ -69,6 +69,13 @@ ViennaImportDefinitionNode >> label [
 	^ 'ImportDefinition'
 ]
 
+{ #category : #typechecking }
+ViennaImportDefinitionNode >> maximalType [
+
+	self importModuleSignature typecheck.
+	^ ViennaType unit
+]
+
 { #category : #'parsers-symbols' }
 ViennaImportDefinitionNode >> moduleIdentifier [
 

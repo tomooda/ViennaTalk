@@ -179,6 +179,15 @@ ViennaRecordTypeDefinitionNode >> label [
 	^ 'RecordTypeDefinition'
 ]
 
+{ #category : #typechecking }
+ViennaRecordTypeDefinitionNode >> maximalType [
+
+	maximalType := self asMaximalViennaType.
+	self fieldList typecheck.
+	self inv ifNotNil: [ :inv | inv typecheck: ViennaType bool ].
+	^ maximalType
+]
+
 { #category : #'accessing-definitions' }
 ViennaRecordTypeDefinitionNode >> shortName [
 

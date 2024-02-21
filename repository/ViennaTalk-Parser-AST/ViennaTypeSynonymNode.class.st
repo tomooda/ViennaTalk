@@ -72,7 +72,7 @@ ViennaTypeSynonymNode >> asImportDefinitionIn: moduleNode [
 { #category : #converting }
 ViennaTypeSynonymNode >> asMaximalViennaType [
 
-	^ self type asMaximalViennaType
+	^ self type typecheck
 ]
 
 { #category : #private }
@@ -164,6 +164,14 @@ ViennaTypeSynonymNode >> isViennaTypeSynonymNode: aString [
 ViennaTypeSynonymNode >> label [
 
 	^ 'TypeSynonym'
+]
+
+{ #category : #typechecking }
+ViennaTypeSynonymNode >> maximalType [
+
+	maximalType := self type typecheck.
+	self inv ifNotNil: [ :inv | inv typecheck: ViennaType bool ].
+	^ maximalType
 ]
 
 { #category : #'accessing-definitions' }

@@ -17,6 +17,12 @@ ViennaNameNode >> asGlobalName [
 	^ self subclassResponsibility
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaNameNode >> definition [
+
+	^ self subclassResponsibility
+]
+
 { #category : #testing }
 ViennaNameNode >> isViennaNameNode [
 

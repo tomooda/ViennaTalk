@@ -42,6 +42,13 @@ ViennaSectionNode >> isViennaSectionNode [
 	^ true
 ]
 
+{ #category : #typechecking }
+ViennaSectionNode >> maximalType [
+
+	self do: #typecheck.
+	^ ViennaType unit
+]
+
 { #category : #private }
 ViennaSectionNode >> remove [
 

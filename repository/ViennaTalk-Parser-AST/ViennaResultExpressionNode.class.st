@@ -34,8 +34,7 @@ ViennaResultExpressionNode >> maximalType [
 		   detectParent: [ :node |
 			   node isFunctionDefinition or: [ node isOperationDefinition ] ]
 		   ifNone: [ nil ])
-		  ifNotNil: [ :definitionNode |
-		  definitionNode returnType asMaximalViennaType ]
+		  ifNotNil: [ :definitionNode | definitionNode returnType typecheck ]
 		  ifNil: [
 			  ViennaTypeError
 				  on: self

@@ -87,12 +87,14 @@ ViennaImplicitOperationDefinitionNode >> boundIdentifiersDo: aBlock [
 { #category : #'accessing-definitions' }
 ViennaImplicitOperationDefinitionNode >> definitionOfLocalName: aString [
 
-	self patternTypePairList do: [ :patList |
-		patList isViennaPatternListNode ifTrue: [
-			patList allDescendantsDo: [ :n |
-				(n isViennaPatternIdentifier: aString) ifTrue: [ ^ n ] ] ] ].
-	self identifierTypePairList do: [ :n |
-		n = aString ifTrue: [ ^ self ] ].
+	self patternTypePairList
+		allDescendantsSuchThat: [ :n |
+		n isViennaPatternIdentifierNode: aString ]
+		do: [ :n | ^ n ].
+	self identifierTypePairList
+		allDescendantsSuchThat: [ :n |
+		n isViennaPatternIdentifierNode: aString ]
+		do: [ :n | ^ n ].
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
@@ -266,6 +268,18 @@ ViennaImplicitOperationDefinitionNode >> lookupIdentifier: aString [
 	(self identifierTypePairList bindsIdentifier: aString) ifTrue: [
 		^ self ].
 	^ nil
+]
+
+{ #category : #typechecking }
+ViennaImplicitOperationDefinitionNode >> maximalType [
+
+	self patternTypePairList typecheck.
+	self identifierTypePairList typecheck.
+	self externals ifNotNil: #typecheck.
+	self exceptions ifNotNil: #typecheck.
+	self pre ifNotNil: [ :pre | pre typecheck: ViennaType bool ].
+	self post ifNotNil: [ :post | post typecheck: ViennaType bool ].
+	^ self type typecheck
 ]
 
 { #category : #accessing }

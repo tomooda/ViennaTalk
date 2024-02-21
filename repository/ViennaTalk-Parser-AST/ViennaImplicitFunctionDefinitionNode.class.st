@@ -93,13 +93,17 @@ ViennaImplicitFunctionDefinitionNode >> boundIdentifiersDo: aBlock [
 { #category : #'accessing-definitions' }
 ViennaImplicitFunctionDefinitionNode >> definitionOfLocalName: aString [
 
-	self patternTypePairList do: [ :patList |
-		patList isViennaPatternListNode ifTrue: [
-			patList
-				allDescendantsSuchThat: [ :n | n isPatternIdentifier: aString ]
-				do: [ :n | ^ n ] ] ].
-	self identifierTypePairList do: [ :n |
-		n = aString ifTrue: [ ^ self ] ]
+	self typeVariableList do: [ :typeVariable |
+		(typeVariable bindsIdentifier: aString) ifTrue: [ ^ typeVariable ] ].
+	self patternTypePairList
+		allDescendantsSuchThat: [ :n |
+		n isViennaPatternIdentifierNode: aString ]
+		do: [ :n | ^ n ].
+	self identifierTypePairList
+		allDescendantsSuchThat: [ :n |
+		n isViennaPatternIdentifierNode: aString ]
+		do: [ :n | ^ n ].
+	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
 { #category : #accessing }
@@ -244,6 +248,20 @@ ViennaImplicitFunctionDefinitionNode >> lookupIdentifier: aString [
 	(self identifierTypePairList bindsIdentifier: aString) ifTrue: [
 		^ self ].
 	^ nil
+]
+
+{ #category : #typechecking }
+ViennaImplicitFunctionDefinitionNode >> maximalType [
+
+	self typeVariableList typecheck.
+	self patternTypePairList typecheck.
+	self identifierTypePairList typecheck.
+	self pre ifNotNil: [ :pre | pre typecheck: ViennaType bool ].
+	self post ifNotNil: [ :post | post typecheck: ViennaType bool ].
+	self measure ifNotNil: [ :measure |
+		measure typecheck:
+			self type argumentType typecheck -> ViennaType nat ].
+	^ self type typecheck
 ]
 
 { #category : #accessing }

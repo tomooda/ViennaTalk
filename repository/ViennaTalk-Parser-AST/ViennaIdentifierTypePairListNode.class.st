@@ -42,7 +42,8 @@ ViennaIdentifierTypePairListNode >> freeIdentifiersExcept: aSet do: aBlock [
 { #category : #private }
 ViennaIdentifierTypePairListNode >> identifiers [
 
-	^ (1 to: self size by: 2) collect: [ :index | self at: index ]
+	^ (1 to: self size by: 2) collect: [ :index |
+		  (self at: index) identifier ]
 ]
 
 { #category : #testing }
@@ -60,7 +61,18 @@ ViennaIdentifierTypePairListNode >> label [
 { #category : #typechecking }
 ViennaIdentifierTypePairListNode >> maximalType [
 
-	^ ViennaType product: (self types collect: #asMaximalViennaType)
+	^ ViennaType product: ((1 to: self size by: 2) collect: [ :index |
+			   | pattern type |
+			   pattern := self at: index.
+			   type := self at: index + 1.
+			   pattern maximalType: type typecheck.
+			   pattern typecheck ])
+]
+
+{ #category : #private }
+ViennaIdentifierTypePairListNode >> patternIdentifiers [
+
+	^ (1 to: self size by: 2) collect: [ :index | self at: index ]
 ]
 
 { #category : #accessing }

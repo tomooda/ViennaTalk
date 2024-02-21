@@ -33,6 +33,14 @@ ViennaStateDefinitionNode class >> identifier: aString fieldList: aViennaFieldLi
 		  yourself
 ]
 
+{ #category : #converting }
+ViennaStateDefinitionNode >> asMaximalViennaType [
+
+	^ ViennaType
+		  compose: self identifier
+		  of: self fieldList asMaximalViennaType
+]
+
 { #category : #private }
 ViennaStateDefinitionNode >> boundIdentifiersDo: aBlock [
 
@@ -152,6 +160,16 @@ ViennaStateDefinitionNode >> isViennaStateDefinitionNode [
 ViennaStateDefinitionNode >> label [
 
 	^ 'StateDefinition'
+]
+
+{ #category : #typechecking }
+ViennaStateDefinitionNode >> maximalType [
+
+	self fieldList typecheck.
+	maximalType := self asMaximalViennaType.
+	self init ifNotNil: [ :init | init typecheck: ViennaType bool ].
+	self inv ifNotNil: [ :inv | inv typecheck: ViennaType bool ].
+	^ maximalType
 ]
 
 { #category : #'accessing-definitions' }

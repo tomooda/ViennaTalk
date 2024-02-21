@@ -43,3 +43,10 @@ ViennaImportDefinitionListNode >> label [
 
 	^ 'ImportDefinitionList'
 ]
+
+{ #category : #typechecking }
+ViennaImportDefinitionListNode >> maximalType [
+
+	self do: #typecheck.
+	^ ViennaType unit
+]

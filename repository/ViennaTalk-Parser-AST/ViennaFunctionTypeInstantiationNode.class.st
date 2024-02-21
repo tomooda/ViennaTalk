@@ -89,15 +89,14 @@ ViennaFunctionTypeInstantiationNode >> maximalType [
 		^ ViennaTypeError
 			  on: self
 			  signal: 'Only explicit functions can be instantiated' ].
-	params := functionDefinition typeVariableList collect:
-		          #asMaximalViennaType.
-	args := self functionTypeArgs collect: #asMaximalViennaType.
+	params := functionDefinition typeVariableList collect: #typecheck.
+	args := self functionTypeArgs collect: #typecheck.
 	params size = args size ifFalse: [
 		^ ViennaTypeError
 			  on: self
 			  signal:
 			  'The number of type parameters and the given type arguments do not agree' ].
-	type := functionDefinition type asMaximalViennaType.
+	type := functionDefinition type typecheck.
 	^ type instantiate: ((1 to: params size) collect: [ :index |
 			   Association key: (params at: index) value: (args at: index) ])
 			  asDictionary
