@@ -97,6 +97,10 @@ ViennaApplyNode >> maximalType [
 	^ (Array streamContents: [ :stream |
 		   self function typecheck possibleTypesDo: [ :functionType |
 			   [
+			   functionType isAnyType ifTrue: [
+				   stream nextPut:
+					   (ViennaType product: (args collect: #typecheck))
+					   -> ViennaType any ].
 			   functionType isFunctionType ifTrue: [
 				   | paramTypes returnType |
 				   paramTypes := functionType argtypes.

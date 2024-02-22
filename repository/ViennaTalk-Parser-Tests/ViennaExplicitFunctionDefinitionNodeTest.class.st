@@ -24,6 +24,11 @@ ViennaExplicitFunctionDefinitionNodeTest >> testMaximalType [
 				 resolveIdentifier: 'f') maximalType
 		equals: ViennaType unit -> ViennaType nat.
 	self
+		assert:
+			('functions sum:seq of real->real sum(xs) == cases xs: [x]^rest -> x + sum(rest), others -> 0 end'
+				 asViennaDocumentAst resolveIdentifier: 'sum') maximalType
+		equals: ViennaType real seq -> ViennaType real.
+	self
 		should: [
 			('functions f:nat->nat f(x) == if x = nil then 1 else 2'
 				 asViennaDocumentAst resolveIdentifier: 'f') maximalType ]

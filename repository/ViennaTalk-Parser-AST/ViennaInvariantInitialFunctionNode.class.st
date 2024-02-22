@@ -97,8 +97,15 @@ ViennaInvariantInitialFunctionNode >> lookupIdentifier: aString [
 { #category : #typechecking }
 ViennaInvariantInitialFunctionNode >> maximalType [
 
-	self pattern maximalType: self expression typecheck.
-	^ self expression typecheck
+	self pattern typecheck.
+	self expression typecheck: ViennaType bool.
+	^ self pattern typecheck
+]
+
+{ #category : #typechecking }
+ViennaInvariantInitialFunctionNode >> maximalType: aViennaType [
+
+	self pattern maximalType: aViennaType
 ]
 
 { #category : #accessing }

@@ -170,7 +170,10 @@ ViennaTypeSynonymNode >> label [
 ViennaTypeSynonymNode >> maximalType [
 
 	maximalType := self type typecheck.
-	self inv ifNotNil: [ :inv | inv typecheck: ViennaType bool ].
+	self inv ifNotNil: [ :inv |
+		inv
+			maximalType: maximalType;
+			typecheck: maximalType ].
 	^ maximalType
 ]
 

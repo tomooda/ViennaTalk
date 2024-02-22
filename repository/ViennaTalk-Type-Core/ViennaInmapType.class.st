@@ -104,12 +104,16 @@ ViennaInmapType >> instantiate: aDictionary [
 ViennaInmapType >> isCompatibleWith: aViennaType [
 
 	^ (aViennaType isMapType and: [
-		   (self keytype isAnyType or: [
-			    aViennaType keytype isAnyType or: [
-				    self keytype isCompatibleWith: aViennaType keytype ] ]) and: [
-			   self valuetype isAnyType or: [
-				   aViennaType valuetype isAnyType or: [
-					   self valuetype isCompatibleWith: aViennaType valuetype ] ] ] ])
+		   (keytype isUnitType and: [ valuetype isUnitType ]) or: [
+			   (aViennaType keytype isUnitType and: [
+				    aViennaType valuetype isUnitType ]) or: [
+				   (self keytype isAnyType or: [
+					    aViennaType keytype isAnyType or: [
+						    self keytype isCompatibleWith: aViennaType keytype ] ])
+					   and: [
+						   self valuetype isAnyType or: [
+							   aViennaType valuetype isAnyType or: [
+								   self valuetype isCompatibleWith: aViennaType valuetype ] ] ] ] ] ])
 		  or: [ super isCompatibleWith: aViennaType ]
 ]
 

@@ -96,8 +96,10 @@ ViennaSeqType >> isCompatibleWith: aViennaType [
 	^ (aViennaType isSeqType and: [
 		   basetype isAnyType or: [
 			   aViennaType basetype isAnyType or: [
-				   basetype isCompatibleWith: aViennaType basetype ] ] ]) or: [
-		  super isCompatibleWith: aViennaType ]
+				   basetype isUnitType or: [
+					   aViennaType basetype isUnitType or: [
+						   basetype isCompatibleWith: aViennaType basetype ] ] ] ] ])
+		  or: [ super isCompatibleWith: aViennaType ]
 ]
 
 { #category : #testing }

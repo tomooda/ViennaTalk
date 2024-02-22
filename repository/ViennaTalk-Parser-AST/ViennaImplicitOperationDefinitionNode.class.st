@@ -273,13 +273,14 @@ ViennaImplicitOperationDefinitionNode >> lookupIdentifier: aString [
 { #category : #typechecking }
 ViennaImplicitOperationDefinitionNode >> maximalType [
 
+	self maximalType: self type typecheck.
 	self patternTypePairList typecheck.
 	self identifierTypePairList typecheck.
 	self externals ifNotNil: #typecheck.
 	self exceptions ifNotNil: #typecheck.
 	self pre ifNotNil: [ :pre | pre typecheck: ViennaType bool ].
 	self post ifNotNil: [ :post | post typecheck: ViennaType bool ].
-	^ self type typecheck
+	^ maximalType
 ]
 
 { #category : #accessing }

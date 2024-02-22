@@ -167,8 +167,14 @@ ViennaStateDefinitionNode >> maximalType [
 
 	self fieldList typecheck.
 	maximalType := self asMaximalViennaType.
-	self init ifNotNil: [ :init | init typecheck: ViennaType bool ].
-	self inv ifNotNil: [ :inv | inv typecheck: ViennaType bool ].
+	self init ifNotNil: [ :init |
+		init
+			maximalType: maximalType;
+			typecheck: maximalType ].
+	self inv ifNotNil: [ :inv |
+		inv
+			maximalType: maximalType;
+			typecheck: maximalType ].
 	^ maximalType
 ]
 

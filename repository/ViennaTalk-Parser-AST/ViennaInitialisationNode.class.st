@@ -68,6 +68,12 @@ ViennaInitialisationNode >> maximalType [
 	^ self invariantInitialFunction typecheck
 ]
 
+{ #category : #typechecking }
+ViennaInitialisationNode >> maximalType: aViennaType [
+
+	self invariantInitialFunction maximalType: aViennaType
+]
+
 { #category : #accessing }
 ViennaInitialisationNode >> pattern [
 

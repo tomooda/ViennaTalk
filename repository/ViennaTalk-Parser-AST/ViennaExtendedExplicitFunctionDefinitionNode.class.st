@@ -243,6 +243,7 @@ ViennaExtendedExplicitFunctionDefinitionNode >> lookupIdentifier: aString [
 { #category : #typechecking }
 ViennaExtendedExplicitFunctionDefinitionNode >> maximalType [
 
+	self maximalType: self type typecheck.
 	self typeVariableList typecheck.
 	self patternTypePairList typecheck.
 	self identifierTypePairList typecheck.
@@ -252,7 +253,7 @@ ViennaExtendedExplicitFunctionDefinitionNode >> maximalType [
 	self measure ifNotNil: [ :measure |
 		measure typecheck:
 			self type argumentType typecheck -> ViennaType nat ].
-	^ self type typecheck
+	^ maximalType
 ]
 
 { #category : #accessing }

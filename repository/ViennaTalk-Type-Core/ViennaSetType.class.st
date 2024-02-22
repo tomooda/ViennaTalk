@@ -96,10 +96,12 @@ ViennaSetType >> instantiate: aDictionary [
 ViennaSetType >> isCompatibleWith: aViennaType [
 
 	^ (aViennaType isSetType and: [
-		   self basetype isAnyType or: [
+		   basetype isAnyType or: [
 			   aViennaType basetype isAnyType or: [
-				   basetype isCompatibleWith: aViennaType basetype ] ] ]) or: [
-		  super isCompatibleWith: aViennaType ]
+				   basetype isUnitType or: [
+					   aViennaType basetype isUnitType or: [
+						   basetype isCompatibleWith: aViennaType basetype ] ] ] ] ])
+		  or: [ super isCompatibleWith: aViennaType ]
 ]
 
 { #category : #testing }

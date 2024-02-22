@@ -258,10 +258,10 @@ ViennaExplicitFunctionDefinitionNode >> lookupIdentifier: aString [
 { #category : #typechecking }
 ViennaExplicitFunctionDefinitionNode >> maximalType [
 
-	| functionType returnType |
+	| returnType |
 	self typeVariableList typecheck.
-	functionType := self type typecheck.
-	returnType := functionType.
+	self maximalType: self type typecheck.
+	returnType := maximalType.
 	self parametersList do: [ :parameters |
 		returnType isFunctionType
 			ifTrue: [
@@ -288,7 +288,7 @@ ViennaExplicitFunctionDefinitionNode >> maximalType [
 	self measure ifNotNil: [ :measure |
 		measure typecheck:
 			self type argumentType typecheck -> ViennaType nat ].
-	^ functionType
+	^ maximalType
 ]
 
 { #category : #accessing }

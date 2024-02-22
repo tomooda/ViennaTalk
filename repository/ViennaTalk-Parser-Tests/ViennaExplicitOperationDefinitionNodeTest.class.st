@@ -20,6 +20,11 @@ ViennaExplicitOperationDefinitionNodeTest >> testMaximalType [
 				 asViennaDocumentAst resolveIdentifier: 'op') maximalType
 		equals: ViennaType nat ==> ViennaType char optional.
 	self
+		assert:
+			('operations sum:seq of real==>real sum(xs) == cases xs: [x]^rest -> return x+sum(rest), others -> return 0 end'
+				 asViennaDocumentAst resolveIdentifier: 'sum') maximalType
+		equals: ViennaType real seq ==> ViennaType real.
+	self
 		should: [
 			('operations op:()==>() op(x) == skip' asViennaDocumentAst
 				 resolveIdentifier: 'op') maximalType ]

@@ -253,6 +253,7 @@ ViennaImplicitFunctionDefinitionNode >> lookupIdentifier: aString [
 { #category : #typechecking }
 ViennaImplicitFunctionDefinitionNode >> maximalType [
 
+	self maximalType: self type typecheck.
 	self typeVariableList typecheck.
 	self patternTypePairList typecheck.
 	self identifierTypePairList typecheck.
@@ -261,7 +262,7 @@ ViennaImplicitFunctionDefinitionNode >> maximalType [
 	self measure ifNotNil: [ :measure |
 		measure typecheck:
 			self type argumentType typecheck -> ViennaType nat ].
-	^ self type typecheck
+	^ maximalType
 ]
 
 { #category : #accessing }
