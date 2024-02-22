@@ -75,7 +75,19 @@ ViennaProductTypeTest >> testPlus [
 	self assert: nat * char + (nat1 * char) equals: nat * char.
 	self
 		assert: nat * char + (char * char)
-		equals: nat * char | (char * char)
+		equals: nat | char * char
+]
+
+{ #category : #test }
+ViennaProductTypeTest >> testPossibleTypesDo [
+
+	self
+		assert: (ViennaType union: (ViennaType nat | ViennaType char
+				  * (ViennaType nat seq | ViennaType char seq)
+				  * (ViennaType nat set | ViennaType char set)) possibleTypes)
+		equals:
+			'nat*seq of nat*set of nat|char*seq of nat*set of nat|nat*seq of char*set of nat|char*seq of char*set of nat|nat*seq of nat*set of char|char*seq of nat*set of char|nat*seq of char*set of char|char*seq of char*set of char'
+				asViennaTypeAst asMaximalViennaType
 ]
 
 { #category : #tests }

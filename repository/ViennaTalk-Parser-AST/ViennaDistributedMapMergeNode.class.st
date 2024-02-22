@@ -32,7 +32,7 @@ ViennaDistributedMapMergeNode >> operatorPrecedence [
 { #category : #typechecking }
 ViennaDistributedMapMergeNode >> paramType [
 
-	^ (ViennaType any mapTo: ViennaType any) set
+	^ (ViennaType any mapTo: ViennaType any) set1
 ]
 
 { #category : #typechecking }

@@ -63,7 +63,7 @@ ViennaTypeImportNode >> maximalType [
 
 	^ (self document moduleNamed: self moduleIdentifier)
 		  ifNotNil: [ :module |
-			  (module exportsIdentifier: self name identifier)
+			  (module exportsIdentifier: self identifier)
 				  ifTrue: [
 					  self asGlobalName resolve
 						  ifNotNil: [ :def |
@@ -92,7 +92,12 @@ ViennaTypeImportNode >> maximalType [
 { #category : #accessing }
 ViennaTypeImportNode >> name [
 
-	^ self typeName name
+	^ self typeName isViennaTypeNameNode
+		  ifTrue: [ self typeName name ]
+		  ifFalse: [
+			  (ViennaLocalNameNode identifier: self typeName identifier)
+				  parent: self;
+				  yourself ]
 ]
 
 { #category : #accessing }

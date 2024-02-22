@@ -119,7 +119,8 @@ ViennaSetComprehensionNode >> lookupIdentifier: aString [
 ViennaSetComprehensionNode >> maximalType [
 
 	self bindList typecheck.
-	self suchthatExpression typecheck: ViennaType bool.
+	self suchthatExpression ifNotNil: [ :exp |
+		exp typecheck: ViennaType bool ].
 	^ self expression typecheck set
 ]
 

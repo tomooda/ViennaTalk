@@ -73,7 +73,7 @@ ViennaFunctionImportNode >> maximalType [
 						  ifNotNil: [ :def |
 							  def isFunctionDefinition
 								  ifTrue: [
-									  def type = self type
+									  def type typecheck = self type typecheck
 										  ifTrue: [
 											  def typeVariableList = self typeVariableList
 												  ifTrue: [

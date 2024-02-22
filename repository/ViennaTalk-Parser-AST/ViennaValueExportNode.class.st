@@ -61,12 +61,13 @@ ViennaValueExportNode >> maximalType [
 					^ ViennaTypeError
 						  on: self
 						  signal: 'Not a value definition: ' , name source ].
-				def type = self type ifFalse: [
-					^ ViennaTypeError
-						  on: self
-						  signal:
-							  'Type mismatch: defined ' , def type source
-							  , ' but exported ' , self type source ] ]
+				self type ifNotNil: [ :t |
+					(name typecheck isCompatibleWith: t typecheck) ifFalse: [
+						^ ViennaTypeError
+							  on: self
+							  signal:
+								  'Type mismatch: defined ' , def type source
+								  , ' but exported ' , self type source ] ] ]
 			ifNil: [
 				^ ViennaTypeError
 					  on: self

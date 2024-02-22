@@ -61,7 +61,7 @@ ViennaOperationExportNode >> maximalType [
 					^ ViennaTypeError
 						  on: self
 						  signal: 'Not an operation :' , name source ].
-				def type = self type ifFalse: [
+				def type typecheck = self type typecheck ifFalse: [
 					^ ViennaTypeError
 						  on: self
 						  signal: 'Operation type mismatch: defined ' , def type source

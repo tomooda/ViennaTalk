@@ -63,7 +63,7 @@ ViennaVarInformationNode >> maximalType [
 						  on: self
 						  signal: 'Not a state variable: ' , name source ].
 				self type ifNotNil: [
-					def type = self type ifFalse: [
+					def type typecheck = self type typecheck ifFalse: [
 						^ ViennaTypeError
 							  on: self
 							  signal:

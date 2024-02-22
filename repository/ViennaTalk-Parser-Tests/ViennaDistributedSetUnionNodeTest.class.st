@@ -16,10 +16,6 @@ ViennaDistributedSetUnionNodeTest >> testMaximalType [
 		equals: ViennaType unit set.
 
 	self
-		should: [ 'dunion {}' asViennaExpressionAst maximalType ]
-		raise: ViennaTypeError.
-
-	self
 		should: [ 'dunion []' asViennaExpressionAst maximalType ]
 		raise: ViennaTypeError
 ]

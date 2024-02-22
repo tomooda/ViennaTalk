@@ -130,7 +130,8 @@ ViennaMapComprehensionNode >> lookupIdentifier: aString [
 ViennaMapComprehensionNode >> maximalType [
 
 	self bindList typecheck.
-	self suchthatExpression typecheck: ViennaType bool.
+	self suchthatExpression ifNotNil: [ :exp |
+		exp typecheck: ViennaType bool ].
 	^ self keyExpression typecheck mapTo: self valueExpression typecheck
 ]
 

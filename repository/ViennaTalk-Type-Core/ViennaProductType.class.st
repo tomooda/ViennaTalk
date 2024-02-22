@@ -48,6 +48,17 @@ ViennaProductType >> * aViennaType [
 ]
 
 { #category : #arithmetic }
+ViennaProductType >> + aViennaType [
+
+	^ (aViennaType isProductType and: [
+		   basetypes size = aViennaType basetypes size ])
+		  ifTrue: [
+			  ViennaType product: ((1 to: basetypes size) collect: [ :index |
+					   (basetypes at: index) + (aViennaType basetypes at: index) ]) ]
+		  ifFalse: [ super + aViennaType ]
+]
+
+{ #category : #arithmetic }
 ViennaProductType >> +> aViennaType [
 
 	^ aViennaType isUnitType
@@ -144,6 +155,25 @@ ViennaProductType >> isProductType [
 { #category : #accessing }
 ViennaProductType >> name [
 	^ '*' join: (basetypes collect: [ :t | t nameInPrecedence: self class precedence ])
+]
+
+{ #category : #enumerating }
+ViennaProductType >> possibleTypesDo: aBlock [
+
+	| possibleTypesArray divArray totalNum |
+	possibleTypesArray := (1 to: basetypes size) collect: [ :index |
+		                      (basetypes at: index) possibleTypes ].
+	divArray := Array new: possibleTypesArray size.
+	totalNum := 1.
+	1 to: possibleTypesArray size do: [ :index |
+		divArray at: index put: totalNum.
+		totalNum := totalNum * (possibleTypesArray at: index) size ].
+	0 to: totalNum - 1 do: [ :n |
+		aBlock value:
+			(self class withAll: ((1 to: basetypes size) collect: [ :index |
+					  (possibleTypesArray at: index) at:
+						  n // (divArray at: index)
+						  % (possibleTypesArray at: index) size + 1 ])) ]
 ]
 
 { #category : #private }

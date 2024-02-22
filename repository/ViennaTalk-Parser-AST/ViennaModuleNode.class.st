@@ -544,8 +544,9 @@ ViennaModuleNode >> lookupIdentifier: aString [
 { #category : #typechecking }
 ViennaModuleNode >> maximalType [
 
-	self interface typecheck.
+	self interface importDefinitionList ifNotNil: #typecheck.
 	self moduleBody typecheck.
+	self interface exportDefinition ifNotNil: #typecheck.
 	^ ViennaType unit
 ]
 

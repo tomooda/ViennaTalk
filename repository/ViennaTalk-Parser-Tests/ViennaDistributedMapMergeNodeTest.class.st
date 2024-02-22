@@ -17,10 +17,6 @@ ViennaDistributedMapMergeNodeTest >> testMaximalType [
 		equals: (ViennaType unit inmapTo: ViennaType unit).
 
 	self
-		should: [ 'merge {}' asViennaExpressionAst maximalType ]
-		raise: ViennaTypeError.
-
-	self
 		should: [ 'merge []' asViennaExpressionAst maximalType ]
 		raise: ViennaTypeError
 ]

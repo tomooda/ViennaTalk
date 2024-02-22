@@ -287,7 +287,7 @@ ViennaExplicitFunctionDefinitionNode >> maximalType [
 	self post ifNotNil: [ :post | post typecheck: ViennaType bool ].
 	self measure ifNotNil: [ :measure |
 		measure typecheck:
-			self type argumentType typecheck -> ViennaType nat ].
+			self type argumentType typecheck -> ViennaType nat + ViennaType nat ].
 	^ maximalType
 ]
 

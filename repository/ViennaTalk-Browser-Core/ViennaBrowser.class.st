@@ -162,15 +162,14 @@ ViennaBrowser class >> initialize [
 
 { #category : #'class initialization' }
 ViennaBrowser class >> installEventHandlers [
-	ExternalDropHandler
-		registerHandler:
-			(ExternalDropHandler
-				type: nil
-				extension: 'vdmsl'
-				action: [ :stream :pasteUp :event | 
-					(ViennaBrowser on: ViennaAnimation default)
-						openLabel: stream name;
-						acceptCode: stream contents ])
+
+	ExternalDropHandler registerHandler: (ExternalDropHandler
+			 type: nil
+			 extension: 'vdmsl'
+			 action: [ :stream :pasteUp :event |
+				 (ViennaBrowser on: ViennaAnimation default)
+					 openLabel: stream fullName;
+					 acceptCode: stream contents ])
 ]
 
 { #category : #menu }

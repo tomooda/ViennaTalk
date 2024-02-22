@@ -16,10 +16,6 @@ ViennaDistributedSequenceConcatenationNodeTest >> testMaximalType [
 		equals: ViennaType unit seq.
 
 	self
-		should: [ 'conc []' asViennaExpressionAst maximalType ]
-		raise: ViennaTypeError.
-
-	self
 		should: [ 'conc {}' asViennaExpressionAst maximalType ]
 		raise: ViennaTypeError
 ]

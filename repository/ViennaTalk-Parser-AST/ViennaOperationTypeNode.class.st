@@ -8,8 +8,14 @@ Class {
 { #category : #converting }
 ViennaOperationTypeNode >> asMaximalViennaType [
 
-	^ self argumentType asMaximalViennaType
-	  ==> self returnType asMaximalViennaType
+	^ ViennaOperationType
+		  withAll: (self argumentType isViennaUnitTypeNode
+				   ifTrue: [ {  } ]
+				   ifFalse: [
+					   self argumentType isViennaProductTypeNode
+						   ifTrue: [ self argumentType collect: #asMaximalViennaType ]
+						   ifFalse: [ { self argumentType asMaximalViennaType } ] ])
+		  with: self returnType asMaximalViennaType
 ]
 
 { #category : #'pretty printing' }

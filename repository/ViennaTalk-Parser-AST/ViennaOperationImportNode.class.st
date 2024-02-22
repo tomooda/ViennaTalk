@@ -68,7 +68,7 @@ ViennaOperationImportNode >> maximalType [
 						  ifNotNil: [ :def |
 							  def isOperationDefinition
 								  ifTrue: [
-									  def type = self type
+									  def type typecheck = self type typecheck
 										  ifTrue: [
 											  def typecheck.
 											  ViennaType unit ]

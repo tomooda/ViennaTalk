@@ -16,10 +16,6 @@ ViennaDistributedSetIntersectionNodeTest >> testMaximalType [
 		equals: ViennaType unit set.
 
 	self
-		should: [ 'dinter {}' asViennaExpressionAst maximalType ]
-		raise: ViennaTypeError.
-
-	self
 		should: [ 'dinter []' asViennaExpressionAst maximalType ]
 		raise: ViennaTypeError
 ]

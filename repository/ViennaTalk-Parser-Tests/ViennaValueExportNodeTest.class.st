@@ -8,14 +8,14 @@ Class {
 ViennaValueExportNodeTest >> testMaximalType [
 
 	self
-		assert: ('module A exports values v:nat definitions values v:nat = 1 end A'
+		assert:
+			('module A exports values v:nat definitions values v:nat = 1 end A'
 				 asViennaDocumentAst moduleNamed: 'A') exportDefinition first
 				first first maximalType
 		equals: ViennaType unit.
 	self
 		should: [
 			('module A exports values v:char definitions values v:nat = 1 end A'
-				 asViennaDocumentAst moduleNamed: 'A') exportDefinition first
-				first first maximalType ]
+				 asViennaDocumentAst moduleNamed: 'A') maximalType ]
 		raise: ViennaTypeError
 ]
