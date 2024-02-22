@@ -104,7 +104,8 @@ ViennaSequenceComprehensionNode >> lookupIdentifier: aString [
 ViennaSequenceComprehensionNode >> maximalType [
 
 	self setSeqBind typecheck.
-	self suchthatExpression typecheck: ViennaType bool.
+	self suchthatExpression ifNotNil: [ :exp |
+		exp typecheck: ViennaType bool ].
 	^ self expression typecheck seq
 ]
 

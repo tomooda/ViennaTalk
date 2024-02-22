@@ -54,6 +54,8 @@ ViennaSymbolicLiteralNode >> maximalType [
 		^ literal size > 2
 			  ifTrue: [ ViennaType char seq1 ]
 			  ifFalse: [ ViennaType unit seq ] ].
+	literal first = $< ifTrue: [
+		^ ViennaType quote: (literal copyFrom: 2 to: literal size - 1) ].
 	(literal first = $- or: [ literal first isDigit ]) ifTrue: [
 		| num |
 		num := literal asNumber.
