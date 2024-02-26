@@ -2157,6 +2157,12 @@ ViennaNode >> isViennaTotalFunctionTypeNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaTracesDefinitionsNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaTrapStatementNode [
 
 	^ false
