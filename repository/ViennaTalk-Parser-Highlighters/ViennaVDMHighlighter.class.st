@@ -484,6 +484,11 @@ ViennaVDMHighlighter >> to [
 ]
 
 { #category : #'parsers-keywords' }
+ViennaVDMHighlighter >> traces [
+	^ self keyword: super traces
+]
+
+{ #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> trap [
 	^ self keyword: super trap
 ]

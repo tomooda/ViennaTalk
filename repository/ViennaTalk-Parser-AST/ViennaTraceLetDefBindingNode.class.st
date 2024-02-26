@@ -1,21 +1,21 @@
 Class {
-	#name : #ViennaTraceLetDefBinding,
+	#name : #ViennaTraceLetDefBindingNode,
 	#superclass : #ViennaTraceBindingDefinitionNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }
 
 { #category : #'instance creation' }
-ViennaTraceLetDefBinding class >> localDefinitionList: aViennaLocalDefinitionListNode traceDefinition: aViennaTraceDefinitionNode [
+ViennaTraceLetDefBindingNode class >> localDefinitionList: aViennaLocalDefinitionListNode traceDefinition: aViennaTraceDefinitionNode [
 
-	^ self new
+	^ (self new: 2)
 		  localDefinitionList: aViennaLocalDefinitionListNode;
 		  traceDefinition: aViennaTraceDefinitionNode;
 		  yourself
 ]
 
 { #category : #'pretty printing' }
-ViennaTraceLetDefBinding >> formatWith: aViennaAbstractFormatter [
+ViennaTraceLetDefBindingNode >> formatWith: aViennaAbstractFormatter [
 
 	| localDefinitionList traceDefinition |
 	localDefinitionList := aViennaAbstractFormatter format:
@@ -32,7 +32,7 @@ ViennaTraceLetDefBinding >> formatWith: aViennaAbstractFormatter [
 ]
 
 { #category : #private }
-ViennaTraceLetDefBinding >> freeIdentifiersExcept: aSet do: aBlock [
+ViennaTraceLetDefBindingNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	| boundIdentifiers |
 	boundIdentifiers := aSet
@@ -46,25 +46,25 @@ ViennaTraceLetDefBinding >> freeIdentifiersExcept: aSet do: aBlock [
 ]
 
 { #category : #accessing }
-ViennaTraceLetDefBinding >> label [
+ViennaTraceLetDefBindingNode >> label [
 
 	^ 'TraceLetDefBinding'
 ]
 
 { #category : #'parsers-definitions' }
-ViennaTraceLetDefBinding >> localDefinitionList [
+ViennaTraceLetDefBindingNode >> localDefinitionList [
 
 	^ self at: 1
 ]
 
 { #category : #'parsers-definitions' }
-ViennaTraceLetDefBinding >> localDefinitionList: aViennaLocalDefinitionListNode [
+ViennaTraceLetDefBindingNode >> localDefinitionList: aViennaLocalDefinitionListNode [
 
 	self at: 1 put: aViennaLocalDefinitionListNode
 ]
 
 { #category : #typechecking }
-ViennaTraceLetDefBinding >> maximalType [
+ViennaTraceLetDefBindingNode >> maximalType [
 
 	self localDefinitionList typecheck.
 	self traceDefinition typecheck.
@@ -72,13 +72,13 @@ ViennaTraceLetDefBinding >> maximalType [
 ]
 
 { #category : #'parsers-definitions' }
-ViennaTraceLetDefBinding >> traceDefinition [
+ViennaTraceLetDefBindingNode >> traceDefinition [
 
 	^ self at: 2
 ]
 
 { #category : #'parsers-definitions' }
-ViennaTraceLetDefBinding >> traceDefinition: aViennaTraceDefinitionNode [
+ViennaTraceLetDefBindingNode >> traceDefinition: aViennaTraceDefinitionNode [
 
 	self at: 2 put: aViennaTraceDefinitionNode
 ]

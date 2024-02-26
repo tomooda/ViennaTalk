@@ -8,7 +8,7 @@ Class {
 { #category : #operators }
 ViennaTraceRepeatRangePatternNode class >> from: anInteger to: anotherInteger [
 
-	^ self new
+	^ (self new: 2)
 		  times1: anInteger;
 		  times2: anotherInteger;
 		  yourself
@@ -17,7 +17,7 @@ ViennaTraceRepeatRangePatternNode class >> from: anInteger to: anotherInteger [
 { #category : #operators }
 ViennaTraceRepeatRangePatternNode class >> times: anInteger [
 
-	^ self new
+	^ (self new: 1)
 		  times1: anInteger;
 		  yourself
 ]
@@ -40,10 +40,11 @@ ViennaTraceRepeatRangePatternNode >> label [
 { #category : #enumerating }
 ViennaTraceRepeatRangePatternNode >> numbersDo: aBlock [
 
-	self times2
-		ifNotNil: [ :n |
-		(self times1 min: n) to: (self times1 max: n) do: aBlock ]
-		ifNil: [ aBlock value: self times1 ]
+	self size = 1
+		ifTrue: [ aBlock value: self times1 ]
+		ifFalse: [
+			(self times1 min: self times2) to: (self times1 max: self times2)
+			do: aBlock ]
 ]
 
 { #category : #accessing }

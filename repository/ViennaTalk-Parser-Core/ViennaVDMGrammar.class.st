@@ -49,7 +49,9 @@ Class {
 		'connectiveExpression',
 		'relationExpression',
 		'nameList',
-		'comment'
+		'comment',
+		'traceDefinition',
+		'traceDefinitionList'
 	],
 	#category : #'ViennaTalk-Parser-Core'
 }
@@ -560,7 +562,7 @@ ViennaVDMGrammar >> defStatement [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> definitionBlock [
-	^ (self typeDefinitions / self valueDefinitions / self functionDefinitions / self operationDefinitions / self stateDefinition) trim
+	^ (self typeDefinitions / self valueDefinitions / self functionDefinitions / self operationDefinitions / self stateDefinition / self tracesDefinitions) trim
 ]
 
 { #category : #'parsers-keywords' }
@@ -577,6 +579,12 @@ ViennaVDMGrammar >> diff: arg1 and: arg2 [
 { #category : #'parsers-symbols' }
 ViennaVDMGrammar >> diffOp [
 	^ self operator: $\
+]
+
+{ #category : #'parsers-traces' }
+ViennaVDMGrammar >> digits [
+
+	^ ($0 asPParser not , #digit asPParser plus) flatten
 ]
 
 { #category : #'parsers-symbols' }
@@ -1992,6 +2000,18 @@ ViennaVDMGrammar >> nameList [
 	^ (name separatedBy: comma) withoutSeparators
 ]
 
+{ #category : #'parsers-traces' }
+ViennaVDMGrammar >> namedTrace [
+
+	^ comment trim star
+	  ,
+	  (self initialLetter , (followingLetter / '/' asPParser) starA)
+		  flatten , self colon , traceDefinitionList ==> [ :array |
+	  {
+		  array second.
+		  array fourth } ]
+]
+
 { #category : #'parsers-statements' }
 ViennaVDMGrammar >> nondeterministicStatement [
 	^ (self doublebar , lparen , (statement separatedBy: comma) withoutSeparators , rparen) ==> #third
@@ -2763,6 +2783,132 @@ ViennaVDMGrammar >> totalFunctionType [
 		==> [ :triple | 
 			{(triple first).
 			(triple third)} ]
+]
+
+{ #category : #'parsers-traces' }
+ViennaVDMGrammar >> traceApplyExpression [
+
+	^ self callStatement
+]
+
+{ #category : #'parsers-traces' }
+ViennaVDMGrammar >> traceBindingDefinition [
+
+	^ self traceLetDefBinding / self traceLetBestBinding
+]
+
+{ #category : #'parsers-traces' }
+ViennaVDMGrammar >> traceBracketedExpression [
+
+	^ lparen , traceDefinitionList , rparen ==> #second
+]
+
+{ #category : #'parsers-traces' }
+ViennaVDMGrammar >> traceConcurrentExpression [
+
+	^ (self operator: '||') , lparen , traceDefinition , comma
+	  , (traceDefinition separatedBy: comma) withoutSeparators , rparen
+	  ==> [ :array | { array third } , array fourth ]
+]
+
+{ #category : #'parsers-traces' }
+ViennaVDMGrammar >> traceCoreDefinition [
+
+	^ self traceApplyExpression / self traceConcurrentExpression
+	  / self traceBracketedExpression
+]
+
+{ #category : #'parsers-traces' }
+ViennaVDMGrammar >> traceDefinition [
+
+	^ self traceBindingDefinition / self traceRepeatDefinition
+]
+
+{ #category : #'parsers-traces' }
+ViennaVDMGrammar >> traceDefinitionList [
+
+	^ (self traceDefinitionTerm separatedBy: self semicolon)
+		  withoutSeparators
+]
+
+{ #category : #'parsers-traces' }
+ViennaVDMGrammar >> traceDefinitionTerm [
+
+	^ (traceDefinition separatedBy: self bar) withoutSeparators
+]
+
+{ #category : #'parsers-traces' }
+ViennaVDMGrammar >> traceLetBestBinding [
+
+	^ self let , self multipleBind
+	  , (self best , self expression ==> #second) optional , self in
+	  , traceDefinition ==> [ :array |
+	  {
+		  array second.
+		  array third.
+		  array fifth } ]
+]
+
+{ #category : #'parsers-traces' }
+ViennaVDMGrammar >> traceLetDefBinding [
+
+	^ self let , self localDefinitionList , self in , traceDefinition
+	  ==> [ :array |
+		  {
+			  array second.
+			  array fourth } ]
+]
+
+{ #category : #'parsers-traces' }
+ViennaVDMGrammar >> traceRepeatDefinition [
+
+	^ self traceCoreDefinition , self traceRepeatPattern optional
+]
+
+{ #category : #'parsers-traces' }
+ViennaVDMGrammar >> traceRepeatOptionalPattern [
+
+	^ self operator: '?'
+]
+
+{ #category : #'parsers-traces' }
+ViennaVDMGrammar >> traceRepeatPattern [
+
+	^ self traceRepeatStarPattern / self traceRepeatPlusPattern
+	  / self traceRepeatOptionalPattern / self traceRepeatRangePattern
+]
+
+{ #category : #'parsers-traces' }
+ViennaVDMGrammar >> traceRepeatPlusPattern [
+
+	^ self operator: '+'
+]
+
+{ #category : #'parsers-traces' }
+ViennaVDMGrammar >> traceRepeatRangePattern [
+
+	^ self lbrace , self digits , (self comma , self digits) optional
+	  , self rbrace
+]
+
+{ #category : #'parsers-traces' }
+ViennaVDMGrammar >> traceRepeatStarPattern [
+
+	^ self operator: '*'
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMGrammar >> traces [
+
+	^ self reserved: 'traces'
+]
+
+{ #category : #'parsers-traces' }
+ViennaVDMGrammar >> tracesDefinitions [
+
+	^ self traces
+	  , (self namedTrace separatedBy: self semicolon) withoutSeparators
+	  ==> #second
 ]
 
 { #category : #'parsers-keywords' }

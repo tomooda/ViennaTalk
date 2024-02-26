@@ -8,7 +8,7 @@ Class {
 { #category : #'instance creation' }
 ViennaTraceRepeatDefinitionNode class >> traceCoreDefinition: aViennaTraceCoreDefinitionNode traceRepeatPattern: aViennaTraceRepeatPatternNode [
 
-	^ self new
+	^ (self new: 2)
 		  traceCoreDefinition: aViennaTraceCoreDefinitionNode;
 		  traceRepeatPattern: aViennaTraceRepeatPatternNode;
 		  yourself

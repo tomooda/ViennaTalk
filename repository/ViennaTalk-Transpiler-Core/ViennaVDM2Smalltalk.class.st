@@ -564,11 +564,7 @@ ViennaVDM2Smalltalk >> defaultEnv: aDictionary [
 { #category : #utilities }
 ViennaVDM2Smalltalk >> definitions: aViennaNode do: aBlock [
 
-	(aViennaNode isViennaAccessFunctionDefinitionNode or: [
-		 aViennaNode isViennaAccessOperationDefinitionNode or: [
-			 aViennaNode isViennaAccessTypeDefinitionNode or: [
-				 aViennaNode isViennaAccessValueDefinitionNode or: [
-					 aViennaNode isViennaStateDefinitionNode ] ] ] ]) ifTrue: [
+	aViennaNode isViennaTopLevelDefinitionNode ifTrue: [
 		^ aBlock value: aViennaNode ].
 	aViennaNode do: [ :node | self definitions: node do: aBlock ]
 ]
@@ -2451,6 +2447,12 @@ ViennaVDM2Smalltalk >> multipleTypeBind: aViennaNode env: aDictionary [
 	^ self generateAll: aViennaNode env: aDictionary
 ]
 
+{ #category : #'code generation-traces' }
+ViennaVDM2Smalltalk >> namedTrace: aViennaNode env: aDictionary [
+
+	^ nil
+]
+
 { #category : #'code generation-definitions' }
 ViennaVDM2Smalltalk >> noCheckAssignment: aVarName be: aValString [
 
@@ -3261,6 +3263,12 @@ ViennaVDM2Smalltalk >> totalFunctionType: aViennaNode env: aDictionary [
 	argType := self generate: aViennaNode first env: aDictionary.
 	returnType := self generate: aViennaNode second env: aDictionary.
 	^ '(' , argType , ' +> ' , returnType , ')'
+]
+
+{ #category : #'code generation-traces' }
+ViennaVDM2Smalltalk >> tracesDefinitions: aViennaNode env: aDictionary [
+
+	^ nil
 ]
 
 { #category : #'code generation-statements' }

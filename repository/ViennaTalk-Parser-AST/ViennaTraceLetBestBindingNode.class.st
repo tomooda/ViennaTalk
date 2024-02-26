@@ -1,14 +1,14 @@
 Class {
-	#name : #ViennaTraceLetBestBinding,
+	#name : #ViennaTraceLetBestBindingNode,
 	#superclass : #ViennaTraceBindingDefinitionNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }
 
 { #category : #'instance creation' }
-ViennaTraceLetBestBinding class >> multipleBind: aViennaMultipleBindNode conditionExpression: aViennaExpressionNode traceDefinition: aViennaTraceDefinitionNode [
+ViennaTraceLetBestBindingNode class >> multipleBind: aViennaMultipleBindNode conditionExpression: aViennaExpressionNode traceDefinition: aViennaTraceDefinitionNode [
 
-	^ self new
+	^ (self new: 3)
 		  multipleBind: aViennaMultipleBindNode;
 		  conditionExpression: aViennaExpressionNode;
 		  traceDefinition: aViennaTraceDefinitionNode;
@@ -16,19 +16,19 @@ ViennaTraceLetBestBinding class >> multipleBind: aViennaMultipleBindNode conditi
 ]
 
 { #category : #accessing }
-ViennaTraceLetBestBinding >> conditionExpression [
+ViennaTraceLetBestBindingNode >> conditionExpression [
 
 	^ self at: 2
 ]
 
 { #category : #accessing }
-ViennaTraceLetBestBinding >> conditionExpression: aViennaExpression [
+ViennaTraceLetBestBindingNode >> conditionExpression: aViennaExpression [
 
 	self at: 2 put: aViennaExpression
 ]
 
 { #category : #'pretty printing' }
-ViennaTraceLetBestBinding >> formatWith: aViennaAbstractFormatter [
+ViennaTraceLetBestBindingNode >> formatWith: aViennaAbstractFormatter [
 
 	| multipleBind guard trace |
 	multipleBind := aViennaAbstractFormatter
@@ -51,7 +51,7 @@ ViennaTraceLetBestBinding >> formatWith: aViennaAbstractFormatter [
 ]
 
 { #category : #private }
-ViennaTraceLetBestBinding >> freeIdentifiersExcept: aSet do: aBlock [
+ViennaTraceLetBestBindingNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	| boundIdentifiers |
 	self multipleBind freeIdentifiersExcept: aSet do: aBlock.
@@ -65,13 +65,13 @@ ViennaTraceLetBestBinding >> freeIdentifiersExcept: aSet do: aBlock [
 ]
 
 { #category : #accessing }
-ViennaTraceLetBestBinding >> label [
+ViennaTraceLetBestBindingNode >> label [
 
 	^ 'TraceLetBestBinding'
 ]
 
 { #category : #typechecking }
-ViennaTraceLetBestBinding >> maximalType [
+ViennaTraceLetBestBindingNode >> maximalType [
 
 	self multipleBind typecheck.
 	self conditionExpression ifNotNil: [ :condition |
@@ -81,25 +81,25 @@ ViennaTraceLetBestBinding >> maximalType [
 ]
 
 { #category : #accessing }
-ViennaTraceLetBestBinding >> multipleBind [
+ViennaTraceLetBestBindingNode >> multipleBind [
 
 	^ self at: 1
 ]
 
 { #category : #accessing }
-ViennaTraceLetBestBinding >> multipleBind: aViennaMultipleBindNode [
+ViennaTraceLetBestBindingNode >> multipleBind: aViennaMultipleBindNode [
 
 	self at: 1 put: aViennaMultipleBindNode
 ]
 
 { #category : #accessing }
-ViennaTraceLetBestBinding >> traceDefinition [
+ViennaTraceLetBestBindingNode >> traceDefinition [
 
 	^ self at: 3
 ]
 
 { #category : #accessing }
-ViennaTraceLetBestBinding >> traceDefinition: aViennaTraceDefinitionNode [
+ViennaTraceLetBestBindingNode >> traceDefinition: aViennaTraceDefinitionNode [
 
 	self at: 3 put: aViennaTraceDefinitionNode
 ]

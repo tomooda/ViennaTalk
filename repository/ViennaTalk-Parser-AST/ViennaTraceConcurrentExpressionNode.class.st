@@ -1,12 +1,12 @@
 Class {
-	#name : #ViennaTraceConcurrentExpression,
+	#name : #ViennaTraceConcurrentExpressionNode,
 	#superclass : #ViennaTraceCoreDefinitionNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }
 
 { #category : #'pretty printing' }
-ViennaTraceConcurrentExpression >> formatWith: aViennaAbstractFormatter [
+ViennaTraceConcurrentExpressionNode >> formatWith: aViennaAbstractFormatter [
 
 	| traceDefinitions |
 	traceDefinitions := aViennaAbstractFormatter formatAll: self.
@@ -21,19 +21,19 @@ ViennaTraceConcurrentExpression >> formatWith: aViennaAbstractFormatter [
 ]
 
 { #category : #private }
-ViennaTraceConcurrentExpression >> freeIdentifiersExcept: aSet do: aBlock [
+ViennaTraceConcurrentExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self do: [ :node | node freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
 { #category : #accessing }
-ViennaTraceConcurrentExpression >> label [
+ViennaTraceConcurrentExpressionNode >> label [
 
 	^ 'TraceConcurrentExpression'
 ]
 
 { #category : #typechecking }
-ViennaTraceConcurrentExpression >> maximalType [
+ViennaTraceConcurrentExpressionNode >> maximalType [
 
 	self do: #typecheck.
 	^ ViennaType unit

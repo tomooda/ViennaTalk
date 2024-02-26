@@ -315,6 +315,12 @@ ViennaVDMParser >> diff: arg1 and: arg2 [
 	^ ViennaSetDifferenceNode expression: arg1 expression: arg2
 ]
 
+{ #category : #'parsers-traces' }
+ViennaVDMParser >> digits [
+
+	^ super digits ==> #asInteger
+]
+
 { #category : #'parsers-expressions-operators' }
 ViennaVDMParser >> dinter: arg [
 
@@ -1473,6 +1479,15 @@ ViennaVDMParser >> nameList [
 		  yourself ]
 ]
 
+{ #category : #'parsers-traces' }
+ViennaVDMParser >> namedTrace [
+
+	^ super namedTrace ==> [ :pair |
+	  ViennaNamedTraceNode
+		  identifier: pair first
+		  traceDefinitionList: pair second ]
+]
+
 { #category : #'parsers-statements' }
 ViennaVDMParser >> nondeterministicStatement [
 
@@ -2072,6 +2087,108 @@ ViennaVDMParser >> totalFunctionType [
 		   returnType: array second)
 		  start: start end: end;
 		  yourself ]
+]
+
+{ #category : #'parsers-traces' }
+ViennaVDMParser >> traceApplyExpression [
+
+	^ super traceApplyExpression ==> [ :callStatement |
+	  ViennaTraceApplyExpressionNode callStatement: callStatement ]
+]
+
+{ #category : #'parsers-traces' }
+ViennaVDMParser >> traceBracketedExpression [
+
+	^ super traceBracketedExpression ==> [ :traceDefs |
+	  ViennaTraceBracketedExpressionNode traceDefinitionList: traceDefs ]
+]
+
+{ #category : #'parsers-traces' }
+ViennaVDMParser >> traceConcurrentExpression [
+
+	^ super traceConcurrentExpression
+	  ==> [ :traceDefs |
+	  ViennaTraceConcurrentExpressionNode withAll: traceDefs ]
+]
+
+{ #category : #'parsers-traces' }
+ViennaVDMParser >> traceDefinitionList [
+
+	^ super traceDefinitionList
+	  ==> [ :defs | ViennaTraceDefinitionListNode withAll: defs ]
+]
+
+{ #category : #'parsers-traces' }
+ViennaVDMParser >> traceDefinitionTerm [
+
+	^ super traceDefinitionTerm
+	  ==> [ :defs | ViennaTraceDefinitionTermNode withAll: defs ]
+]
+
+{ #category : #'parsers-traces' }
+ViennaVDMParser >> traceLetBestBinding [
+
+	^ super traceLetBestBinding ==> [ :triple |
+	  ViennaTraceLetBestBindingNode
+		  multipleBind: triple first
+		  conditionExpression: triple second
+		  traceDefinition: triple third ]
+]
+
+{ #category : #'parsers-traces' }
+ViennaVDMParser >> traceLetDefBinding [
+
+	^ super traceLetDefBinding ==> [ :pair |
+	  ViennaTraceLetDefBindingNode
+		  localDefinitionList: pair first
+		  traceDefinition: pair second ]
+]
+
+{ #category : #'parsers-traces' }
+ViennaVDMParser >> traceRepeatDefinition [
+
+	^ super traceRepeatDefinition ==> [ :pair |
+	  ViennaTraceRepeatDefinitionNode
+		  traceCoreDefinition: pair first
+		  traceRepeatPattern: pair second ]
+]
+
+{ #category : #'parsers-traces' }
+ViennaVDMParser >> traceRepeatOptionalPattern [
+
+	^ super traceRepeatOptionalPattern
+	  ==> [ :opt | ViennaTraceRepeatOptionalPatternNode empty ]
+]
+
+{ #category : #'parsers-traces' }
+ViennaVDMParser >> traceRepeatPlusPattern [
+
+	^ super traceRepeatPlusPattern
+	  ==> [ :plus | ViennaTraceRepeatPlusPatternNode empty ]
+]
+
+{ #category : #'parsers-traces' }
+ViennaVDMParser >> traceRepeatRangePattern [
+
+	^ super traceRepeatRangePattern ==> [ :pair |
+	  pair second
+		  ifNotNil: [
+		  ViennaTraceRepeatRangePatternNode from: pair first to: pair second ]
+		  ifNil: [ ViennaTraceRepeatRangePatternNode times: pair first ] ]
+]
+
+{ #category : #'parsers-traces' }
+ViennaVDMParser >> traceRepeatStarPattern [
+
+	^ super traceRepeatStarPattern
+	  ==> [ :star | ViennaTraceRepeatStarPatternNode empty ]
+]
+
+{ #category : #'parsers-traces' }
+ViennaVDMParser >> tracesDefinitions [
+
+	^ super tracesDefinitions
+	  ==> [ :array | ViennaTracesDefinitionsNode withAll: array ]
 ]
 
 { #category : #'parsers-statements' }

@@ -8,7 +8,7 @@ Class {
 { #category : #'instance creation' }
 ViennaNamedTraceNode class >> identifier: aString traceDefinitionList: aViennaTraceDefinitionList [
 
-	^ self new
+	^ (self new: 2)
 		  identifier: aString;
 		  traceDefinitionList: aViennaTraceDefinitionList;
 		  yourself
