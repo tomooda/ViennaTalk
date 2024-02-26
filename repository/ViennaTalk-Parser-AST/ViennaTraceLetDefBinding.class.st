@@ -5,6 +5,15 @@ Class {
 	#category : #'ViennaTalk-Parser-AST'
 }
 
+{ #category : #'instance creation' }
+ViennaTraceLetDefBinding class >> localDefinitionList: aViennaLocalDefinitionListNode traceDefinition: aViennaTraceDefinitionNode [
+
+	^ self new
+		  localDefinitionList: aViennaLocalDefinitionListNode;
+		  traceDefinition: aViennaTraceDefinitionNode;
+		  yourself
+]
+
 { #category : #'pretty printing' }
 ViennaTraceLetDefBinding >> formatWith: aViennaAbstractFormatter [
 

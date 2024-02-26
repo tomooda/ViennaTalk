@@ -1,9 +1,18 @@
 Class {
 	#name : #ViennaNamedTraceNode,
-	#superclass : #ViennaDefinitionComponentNode,
+	#superclass : #ViennaTopLevelDefinitionNode,
 	#type : #variable,
 	#category : #'ViennaTalk-Parser-AST'
 }
+
+{ #category : #'instance creation' }
+ViennaNamedTraceNode class >> identifier: aString traceDefinitionList: aViennaTraceDefinitionList [
+
+	^ self new
+		  identifier: aString;
+		  traceDefinitionList: aViennaTraceDefinitionList;
+		  yourself
+]
 
 { #category : #private }
 ViennaNamedTraceNode >> boundIdentifiersDo: aBlock [
@@ -35,6 +44,12 @@ ViennaNamedTraceNode >> identifier [
 ViennaNamedTraceNode >> identifier: aString [
 
 	self at: 1 put: aString
+]
+
+{ #category : #testing }
+ViennaNamedTraceNode >> isViennaExportableTopLevelDefinitionNode [
+
+	^ false
 ]
 
 { #category : #accessing }
