@@ -10,18 +10,6 @@ Class {
 }
 
 { #category : #menu }
-ViennaLiveSmalltalkTranslationEditor class >> VDM2SmalltalkTranslatorMenuOn: aBuilder [
-
-	<worldMenu>
-	(aBuilder item: #'VDM->Smalltalk translator')
-		action: [ self new open ];
-		order: 0.2;
-		parent: #VienntaTalkDev;
-		help: 'VDM-SL to Smalltalk LIVE translating editor';
-		icon: nil
-]
-
-{ #category : #menu }
 ViennaLiveSmalltalkTranslationEditor class >> codeTextMenuFor: aModel [
 	^ (PragmaMenuBuilder pragmaKeyword: self codeTextMenuKeyword model: aModel) menuSpec
 ]
@@ -132,7 +120,20 @@ ViennaLiveSmalltalkTranslationEditor class >> viennaDevMenuOn: aBuilder [
 	<ViennaDev>
 	(aBuilder item: #'VDM->Smalltalk translator')
 		action: [ self new open ];
+		order: 0.21;
+		withSeparatorAfter;
+		help: 'VDM-SL to Smalltalk LIVE translating editor';
+		icon: nil
+]
+
+{ #category : #menu }
+ViennaLiveSmalltalkTranslationEditor class >> worldMenuOn: aBuilder [
+
+	<worldMenu>
+	(aBuilder item: #'VDM->Smalltalk translator')
+		action: [ self new open ];
 		order: 0.2;
+		parent: #ViennaTalkObsolete;
 		help: 'VDM-SL to Smalltalk LIVE translating editor';
 		icon: nil
 ]

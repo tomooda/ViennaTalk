@@ -33,17 +33,6 @@ Class {
 	#category : #'ViennaTalk-Browser-Core'
 }
 
-{ #category : #'world menu' }
-ViennaBrowser class >> VDMBrowserMenuOn: aBuilder [
-	<worldMenu>
-	(aBuilder item: #'VDM Browser')
-		action: [ self open ];
-		order: 0.1;
-		parent: #ViennaTalk;
-		help: 'VDM-SL browser';
-		icon: nil
-]
-
 { #category : #accessing }
 ViennaBrowser class >> autoFormat [
 	^ AutoFormat ifNil: [ AutoFormat := true ]
@@ -328,6 +317,16 @@ ViennaBrowser class >> valuePaneMenu: aBuilder [
 		selector: #cancel
 ]
 
+{ #category : #'world menu' }
+ViennaBrowser class >> viennaDevMenuOn: aBuilder [
+	<ViennaDev>
+	(aBuilder item: #'VDM Browser')
+		action: [ self open ];
+		order: 0.1;
+		help: 'VDM-SL browser';
+		icon: nil
+]
+
 { #category : #settings }
 ViennaBrowser class >> viennaSettingsOn: aBuilder [
 	<systemsettings>
@@ -356,16 +355,6 @@ ViennaBrowser class >> viennaSettingsOn: aBuilder [
 		description: 'If checked, then VDMBrowser will automatically format the VDM source.';
 		label: 'Auto format in VDM Browser';
 		order: 0.50
-]
-
-{ #category : #'world menu' }
-ViennaBrowser class >> viennaToolsMenuOn: aBuilder [
-	<ViennaToolsMenu>
-	(aBuilder item: #'VDM Browser')
-		action: [ self open ];
-		order: 0.1;
-		help: 'VDM-SL browser';
-		icon: nil
 ]
 
 { #category : #menu }
@@ -422,6 +411,23 @@ ViennaBrowser class >> workspacePaneMenu: aBuilder [
 	(aBuilder item: #Cancel translated)
 		keyText: 'l';
 		selector: #cancel
+]
+
+{ #category : #'world menu' }
+ViennaBrowser class >> worldMenuOn: aBuilder [
+
+	<worldMenu>
+	(aBuilder item: #ViennaTalkObsolete)
+		label: 'obsolete';
+		parent: #ViennaTalk;
+		order: 1.1;
+		withSeparatorAfter;
+		with: [
+			(aBuilder item: #'VDM Browser')
+				action: [ self open ];
+				order: 0.1;
+				help: 'VDM-SL browser';
+				icon: nil ]
 ]
 
 { #category : #'value pane' }

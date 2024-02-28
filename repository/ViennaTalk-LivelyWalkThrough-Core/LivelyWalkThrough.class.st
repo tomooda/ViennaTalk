@@ -49,17 +49,6 @@ LivelyWalkThrough class >> installEventHandlers [
 				action: [ :stream :pasteUp :event | LivelyWalkThrough openDefault director loadStream: stream ])
 ]
 
-{ #category : #'world menu' }
-LivelyWalkThrough class >> livelyWalkThroughMenuOn: aBuilder [
-	<worldMenu>
-	(aBuilder item: #'Lively WalkThrough')
-		action: [ self openDefault ];
-		order: 0.2;
-		parent: #ViennaTalk;
-		help: 'Lively Walk-Through, a UI prototyping environment using VDM-SL';
-		icon: nil
-]
-
 { #category : #'instance creation' }
 LivelyWalkThrough class >> on: aLWTDirector [
 	^ self new director: aLWTDirector
@@ -88,6 +77,17 @@ LivelyWalkThrough class >> viennaToolsMenuOn: aBuilder [
 	(aBuilder item: #'Lively WalkThrough')
 		action: [ self openDefault ];
 		order: 0.2;
+		help: 'Lively Walk-Through, a UI prototyping environment using VDM-SL';
+		icon: nil
+]
+
+{ #category : #'world menu' }
+LivelyWalkThrough class >> worldMenuOn: aBuilder [
+	<worldMenu>
+	(aBuilder item: #'Lively WalkThrough')
+		action: [ self openDefault ];
+		order: 0.3;
+		parent: #ViennaTalk;
 		help: 'Lively Walk-Through, a UI prototyping environment using VDM-SL';
 		icon: nil
 ]

@@ -17,17 +17,6 @@ Class {
 	#category : #'ViennaTalk-Browser-Core'
 }
 
-{ #category : #'world menu' }
-ViennaDirectoryBrowser class >> VDMBrowserMenuOn: aBuilder [
-	<worldMenu>
-	(aBuilder item: #'VDM Directory Browser')
-		action: [ self open ];
-		order: 0.11;
-		parent: #ViennaTalk;
-		help: 'File-based VDM-SL browser';
-		icon: nil
-]
-
 { #category : #accessing }
 ViennaDirectoryBrowser class >> defaultBasePath [
 
@@ -95,11 +84,25 @@ ViennaDirectoryBrowser class >> moduleListMenu: aBuilder [
 ]
 
 { #category : #'world menu' }
-ViennaDirectoryBrowser class >> viennaToolsMenuOn: aBuilder [
-	<ViennaToolsMenu>
+ViennaDirectoryBrowser class >> viennaDevMenuOn: aBuilder [
+
+	<ViennaDev>
 	(aBuilder item: #'VDM Directory Browser')
 		action: [ self open ];
 		order: 0.11;
+		withSeparatorAfter;
+		help: 'File-based VDM-SL browser';
+		icon: nil
+]
+
+{ #category : #'world menu' }
+ViennaDirectoryBrowser class >> worldMenuOn: aBuilder [
+
+	<worldMenu>
+	(aBuilder item: #'VDM Directory Browser')
+		action: [ self open ];
+		order: 0.2;
+		parent: #ViennaTalkObsolete;
 		help: 'File-based VDM-SL browser';
 		icon: nil
 ]

@@ -16,18 +16,6 @@ Class {
 	#category : #'ViennaTalk-Browser-Core'
 }
 
-{ #category : #menus }
-ViennaRefactoringBrowser class >> VDMBrowserMenuOn: aBuilder [
-
-	<worldMenu>
-	(aBuilder item: #'VDM Refactoring Browser')
-		action: [ self empty open ];
-		order: 0.12;
-		parent: #ViennaTalk;
-		help: 'AST-based VDM-SL browser with refactoring support';
-		icon: nil
-]
-
 { #category : #layout }
 ViennaRefactoringBrowser class >> defaultLayout [
 
@@ -403,7 +391,7 @@ ViennaRefactoringBrowser class >> viennaDevMenuOn: aBuilder [
 	<ViennaDev>
 	(aBuilder item: #'Refactoring example (ATC)')
 		action: [ self exampleATC  ];
-		order: 1.1;
+		order: 3;
 		help: 'Example spec on refactoring borwser';
 		icon: nil
 ]
@@ -414,7 +402,19 @@ ViennaRefactoringBrowser class >> viennaToolsMenuOn: aBuilder [
 	<ViennaToolsMenu>
 	(aBuilder item: #'VDM Refactoring Browser')
 		action: [ self empty open ];
-		order: 0.12;
+		order: 0.1;
+		help: 'AST-based VDM-SL browser with refactoring support';
+		icon: nil
+]
+
+{ #category : #menus }
+ViennaRefactoringBrowser class >> worldMenuOn: aBuilder [
+
+	<worldMenu>
+	(aBuilder item: #'VDM Refactoring Browser')
+		action: [ self empty open ];
+		order: 0.1;
+		parent: #ViennaTalk;
 		help: 'AST-based VDM-SL browser with refactoring support';
 		icon: nil
 ]

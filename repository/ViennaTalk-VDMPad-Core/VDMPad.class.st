@@ -178,7 +178,7 @@ VDMPad class >> worldMenuOn: aBuilder [
 	<worldMenu>
 	(aBuilder item: #'VDMPad server')
 		parent: #ViennaTalk;
-		withSeparatorAfter;
+		order: 0.2;
 		with: [ 
 					(aBuilder item: #VDMPadStart)
 						label: 'start';

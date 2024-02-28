@@ -171,23 +171,26 @@ ViennaLauncher class >> viennaSettingsOn: aBuilder [
 
 { #category : #menu }
 ViennaLauncher class >> worldMenuOn: aBuilder [
+
 	<worldMenu>
 	(aBuilder item: #ViennaTalk)
 		icon: self viennaIcon;
 		withSeparatorAfter;
-		with: [ (aBuilder item: #Settings)
+		with: [
+			(aBuilder item: #ViennaLauncher)
+				parent: #ViennaTalk;
+				withSeparatorAfter;
+				action: [ self open ];
+				order: 0.9;
+				help: 'open a ViennaTalk launcher';
+				icon: nil.
+			(aBuilder item: #Settings)
 				parent: #ViennaTalk;
 				action: [ self showSettingBrowser ];
 				order: 0.0;
 				help: 'open the preferences on ViennaTalk';
 				iconName: #smallConfigurationIcon;
-				withSeparatorAfter.
-			(aBuilder item: #ViennaLauncher)
-				parent: #ViennaTalk;
-				action: [ self open ];
-				order: 0.1;
-				help: 'open a ViennaTalk launcher';
-				icon: nil ]
+				withSeparatorAfter ]
 ]
 
 { #category : #'interface opening' }
