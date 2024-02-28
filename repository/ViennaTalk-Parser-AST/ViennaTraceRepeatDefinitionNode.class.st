@@ -18,8 +18,10 @@ ViennaTraceRepeatDefinitionNode class >> traceCoreDefinition: aViennaTraceCoreDe
 ViennaTraceRepeatDefinitionNode >> formatWith: aViennaAbstractFormatter [
 
 	^ (aViennaAbstractFormatter format: self traceCoreDefinition)
-	  , (self traceRepeatPattern ifNotNil: [ :pattern |
-			   ' ' , (aViennaAbstractFormatter format: pattern) ]) ifNil: [ '' ]
+	  , (self traceRepeatPattern
+			   ifNotNil: [ :pattern |
+			   ' ' , (aViennaAbstractFormatter format: pattern) ]
+			   ifNil: [ '' ])
 ]
 
 { #category : #private }

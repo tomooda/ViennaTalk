@@ -7,7 +7,7 @@ Class {
 		'specification',
 		'viennaEnv'
 	],
-	#category : 'ViennaTalk-Transpiler-Core'
+	#category : #'ViennaTalk-Transpiler-Core'
 }
 
 { #category : #specification }
@@ -147,6 +147,12 @@ ViennaTranspiledObject >> evaluateStatement: aString with: aViennaVDM2SmalltalkC
 		source: src;
 		receiver: self;
 		evaluate
+]
+
+{ #category : #accessing }
+ViennaTranspiledObject >> inv [
+
+	
 ]
 
 { #category : #private }

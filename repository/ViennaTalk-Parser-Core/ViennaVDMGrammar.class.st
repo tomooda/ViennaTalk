@@ -2908,7 +2908,7 @@ ViennaVDMGrammar >> tracesDefinitions [
 
 	^ self traces
 	  , (self namedTrace separatedBy: self semicolon) withoutSeparators
-	  ==> #second
+	  , self semicolon trimBlanks star ==> #second
 ]
 
 { #category : #'parsers-keywords' }
