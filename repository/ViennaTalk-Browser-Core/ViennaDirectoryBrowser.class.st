@@ -84,12 +84,12 @@ ViennaDirectoryBrowser class >> moduleListMenu: aBuilder [
 ]
 
 { #category : #'world menu' }
-ViennaDirectoryBrowser class >> viennaDevMenuOn: aBuilder [
+ViennaDirectoryBrowser class >> viennaToolsMenuOn: aBuilder [
 
-	<ViennaDev>
+	<ViennaToolsMenu>
 	(aBuilder item: #'VDM Directory Browser')
 		action: [ self open ];
-		order: 0.11;
+		order: 0.12;
 		withSeparatorAfter;
 		help: 'File-based VDM-SL browser';
 		icon: nil
@@ -101,8 +101,9 @@ ViennaDirectoryBrowser class >> worldMenuOn: aBuilder [
 	<worldMenu>
 	(aBuilder item: #'VDM Directory Browser')
 		action: [ self open ];
-		order: 0.2;
-		parent: #ViennaTalkObsolete;
+		order: 0.12;
+		withSeparatorAfter;
+		parent: #ViennaTalk;
 		help: 'File-based VDM-SL browser';
 		icon: nil
 ]

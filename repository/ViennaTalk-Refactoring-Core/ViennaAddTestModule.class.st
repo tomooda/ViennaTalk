@@ -23,11 +23,11 @@ ViennaAddTestModule >> findNewName [
 
 { #category : #accessing }
 ViennaAddTestModule >> name [
-	^ 'Add test module for ', ast name
+	^ 'Add test module for ', ast identifier
 ]
 
 { #category : #accessing }
 ViennaAddTestModule >> sourceWithNewName: aString [
 
-	^ 'module ' , aString , ' imports from UnitTesting operations assert : bool * seq of char ==> () renamed assert; assertEquals  : ? * ? * seq of char ==> () renamed assertEquals; assertApproxEquals : real * real * real * seq of char ==> () renamed assertApproxEquals exports all definitions end ' , aString
+	^ 'module ' , aString , ' imports from ', ast identifier, ' all, from UnitTesting operations assert : bool * seq of char ==> () renamed assert; assertEquals  : ? * ? * seq of char ==> () renamed assertEquals; assertApproxEquals : real * real * real * seq of char ==> () renamed assertApproxEquals exports all definitions operations end ' , aString
 ]

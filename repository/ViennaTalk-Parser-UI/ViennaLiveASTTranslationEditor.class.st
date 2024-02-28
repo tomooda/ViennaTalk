@@ -25,12 +25,17 @@ ViennaLiveASTTranslationEditor class >> viennaDevMenuOn: aBuilder [
 ViennaLiveASTTranslationEditor class >> worldMenuOn: aBuilder [
 
 	<worldMenu>
-	(aBuilder item: #'VDM->AST translator')
-		action: [ self new open ];
-		order: 0.1;
-		parent: #ViennaTalkObsolete;
-		help: 'VDM-SL to AST LIVE translating editor';
-		icon: nil
+	(aBuilder item: #ViennaTalkObsolete)
+		label: 'obsolete';
+		parent: #ViennaTalk;
+		order: 1.1;
+		withSeparatorAfter;
+		with: [
+			(aBuilder item: #'VDM->AST translator')
+				action: [ self new open ];
+				order: 0.1;
+				help: 'VDM-SL to AST LIVE translating editor';
+				icon: nil ]
 ]
 
 { #category : #private }

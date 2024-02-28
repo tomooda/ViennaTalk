@@ -10,6 +10,9 @@ Class {
 		'sourceText',
 		'testProcess',
 		'testResultTable',
+		'greenButton',
+		'yellowButton',
+		'redButton',
 		'highlighterProcess',
 		'dirty'
 	],
@@ -874,7 +877,7 @@ ViennaRefactoringBrowser >> jumpToModule: aString operation: anotherString [
 	definitionList
 		selectItem:
 			(definitionList items
-				detect: [ :item | item name = anotherString ]
+				detect: [ :item | item identifier = anotherString ]
 				ifNone: [ ^ self ]).
 	self updateSource
 ]

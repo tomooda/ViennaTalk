@@ -263,12 +263,13 @@ ViennaBrowser class >> testPaneMenu: aBuilder [
 
 { #category : #menu }
 ViennaBrowser class >> valuePaneMenu: aBuilder [
+
 	<contextMenu>
 	<viennaBrowserValuePaneMenu>
 	(aBuilder item: #'Find...' translated)
 		keyText: 'f';
 		selector: #find;
-		icon: Smalltalk ui icons smallFindIcon.
+		icon: (Smalltalk ui iconNamed: #smallFindIcon).
 	(aBuilder item: #'Find again' translated)
 		keyText: 'g';
 		selector: #findAgain;
@@ -317,16 +318,6 @@ ViennaBrowser class >> valuePaneMenu: aBuilder [
 		selector: #cancel
 ]
 
-{ #category : #'world menu' }
-ViennaBrowser class >> viennaDevMenuOn: aBuilder [
-	<ViennaDev>
-	(aBuilder item: #'VDM Browser')
-		action: [ self open ];
-		order: 0.1;
-		help: 'VDM-SL browser';
-		icon: nil
-]
-
 { #category : #settings }
 ViennaBrowser class >> viennaSettingsOn: aBuilder [
 	<systemsettings>
@@ -357,14 +348,25 @@ ViennaBrowser class >> viennaSettingsOn: aBuilder [
 		order: 0.50
 ]
 
+{ #category : #'world menu' }
+ViennaBrowser class >> viennaToolsMenuOn: aBuilder [
+	<ViennaToolsMenu>
+	(aBuilder item: #'VDM Browser')
+		action: [ self open ];
+		order: 0.11;
+		help: 'VDM-SL browser';
+		icon: nil
+]
+
 { #category : #menu }
 ViennaBrowser class >> workspacePaneMenu: aBuilder [
+
 	<contextMenu>
 	<viennaBrowserWorkspacePaneMenu>
 	(aBuilder item: #'Find...' translated)
 		keyText: 'f';
 		selector: #find;
-		icon: Smalltalk ui icons smallFindIcon.
+		icon: (Smalltalk ui iconNamed: #smallFindIcon).
 	(aBuilder item: #'Find again' translated)
 		keyText: 'g';
 		selector: #findAgain;
@@ -417,17 +419,12 @@ ViennaBrowser class >> workspacePaneMenu: aBuilder [
 ViennaBrowser class >> worldMenuOn: aBuilder [
 
 	<worldMenu>
-	(aBuilder item: #ViennaTalkObsolete)
-		label: 'obsolete';
+	(aBuilder item: #'VDM Browser')
 		parent: #ViennaTalk;
-		order: 1.1;
-		withSeparatorAfter;
-		with: [
-			(aBuilder item: #'VDM Browser')
-				action: [ self open ];
-				order: 0.1;
-				help: 'VDM-SL browser';
-				icon: nil ]
+		action: [ self open ];
+		order: 0.11;
+		help: 'VDM-SL browser';
+		icon: nil
 ]
 
 { #category : #'value pane' }

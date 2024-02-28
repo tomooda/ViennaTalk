@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'viennaEnv'
 	],
-	#category : 'ViennaTalk-Transpiler-Core'
+	#category : #'ViennaTalk-Transpiler-Core'
 }
 
 { #category : #'instance creation' }
@@ -74,6 +74,10 @@ ViennaTranspiledModularDocument >> evaluateStatement: aString with: aViennaVDM2S
 ViennaTranspiledModularDocument >> initialize [
 	super initialize.
 	viennaEnv := Dictionary new
+]
+
+{ #category : #private }
+ViennaTranspiledModularDocument >> inv [
 ]
 
 { #category : #copying }
