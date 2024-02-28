@@ -47,15 +47,19 @@ functions
 	f : nat -> nat
 	f(x) == x + 1;
 end A
-' , ViennaModuleNode unitTestingSource, '
+' , ViennaModuleNode unitTestingSource , '
 module ATest
-imports 
-	from UnitTesting 
-		operations assert : bool * seq of char ==> () renamed assert;
-		assertEquals  : ? * ? * seq of char ==> () renamed assertEquals;
-		assertApproxEquals : real * real * real * seq of char ==> () renamed assertApproxEquals
-exports all 
-definitions 
+imports
+    from A all,
+    from UnitTesting
+        operations
+            assert: bool* seq of char ==> () renamed assert;
+            assertEquals: ?* ?* seq of char ==> () renamed assertEquals;
+            assertApproxEquals: real* real* real* seq of char ==> ()
+                renamed assertApproxEquals;
+exports all
+definitions
+operations
 end ATest') asViennaDocumentAst
 ]
 
