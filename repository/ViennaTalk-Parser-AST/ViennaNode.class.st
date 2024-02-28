@@ -333,6 +333,18 @@ ViennaNode >> first [
 	^ self at: 1
 ]
 
+{ #category : #typechecking }
+ViennaNode >> flushMaximalType [
+
+	maximalType := nil
+]
+
+{ #category : #typechecking }
+ViennaNode >> forgetTypecheck [
+
+	self allDescendantsDo: [ :node | node flushMaximalType ]
+]
+
 { #category : #'pretty printing' }
 ViennaNode >> formatWith: aViennaAbstractFormatter [
 

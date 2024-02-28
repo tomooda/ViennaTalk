@@ -10,14 +10,41 @@ Class {
 		'sourceText',
 		'testProcess',
 		'testResultTable',
-		'greenButton',
-		'yellowButton',
-		'redButton',
+		'sourceSignalButton',
+		'pendingSyntaxError',
+		'pendingTypeError',
 		'highlighterProcess',
 		'dirty'
 	],
+	#classVars : [
+		'GreenSignalIcon',
+		'RedSignalIcon',
+		'YellowSignalIcon'
+	],
 	#category : #'ViennaTalk-Browser-Core'
 }
+
+{ #category : #icons }
+ViennaRefactoringBrowser class >> createSignalIcon: color1 with: color2 with: color3 [
+
+	| form |
+	form := Form extent: 42 @ 12 depth: 32.
+	form getCanvas
+		fillColor: Color transparent;
+		fillOval: (1 @ 0 extent: 12 @ 12)
+		color: color1
+		borderWidth: 1
+		borderColor: color1 darker;
+		fillOval: (15 @ 0 extent: 12 @ 12)
+		color: color2
+		borderWidth: 1
+		borderColor: color2 darker;
+		fillOval: (29 @ 0 extent: 12 @ 12)
+		color: color3
+		borderWidth: 1
+		borderColor: color3 darker.
+	^ form
+]
 
 { #category : #layout }
 ViennaRefactoringBrowser class >> defaultLayout [
@@ -34,7 +61,12 @@ ViennaRefactoringBrowser class >> defaultLayout [
 						    add: #definitionList);
 				   add: (SpPanedLayout newHorizontal
 						    positionOfSlider: 0.8;
-						    add: #sourceText;
+						    add: (SpBoxLayout newVertical
+								     add: (SpBoxLayout newHorizontal
+										      add: #sourceSignalButton width: 48;
+										      yourself)
+								     height: 16;
+								     add: #sourceText);
 						    add: #testResultTable))
 ]
 
@@ -389,6 +421,26 @@ end CounterTest
 ')) open
 ]
 
+{ #category : #icons }
+ViennaRefactoringBrowser class >> greenSignalIcon [
+
+	^ GreenSignalIcon ifNil: [
+		  GreenSignalIcon := self
+			                     createSignalIcon: Color green lighter
+			                     with: Color darkGray
+			                     with: Color darkGray ]
+]
+
+{ #category : #icons }
+ViennaRefactoringBrowser class >> redSignalIcon [
+
+	^ RedSignalIcon ifNil: [
+		  RedSignalIcon := self
+			                   createSignalIcon: Color darkGray
+			                   with: Color darkGray
+			                   with: Color red lighter ]
+]
+
 { #category : #menus }
 ViennaRefactoringBrowser class >> viennaDevMenuOn: aBuilder [
 	<ViennaDev>
@@ -420,6 +472,16 @@ ViennaRefactoringBrowser class >> worldMenuOn: aBuilder [
 		parent: #ViennaTalk;
 		help: 'AST-based VDM-SL browser with refactoring support';
 		icon: nil
+]
+
+{ #category : #icons }
+ViennaRefactoringBrowser class >> yellowSignalIcon [
+
+	^ YellowSignalIcon ifNil: [
+		  YellowSignalIcon := self
+			                      createSignalIcon: Color darkGray
+			                      with: Color yellow lighter
+			                      with: Color darkGray ]
 ]
 
 { #category : #operations }
@@ -677,10 +739,10 @@ ViennaRefactoringBrowser >> highlightSlice: aViennaNode [
 { #category : #operations }
 ViennaRefactoringBrowser >> highlightSourceText [
 
-	highlighterProcess ifNotNil: [ 
+	highlighterProcess ifNotNil: [
 		highlighterProcess terminate.
 		highlighterProcess := nil ].
-	highlighterProcess := [ 
+	highlighterProcess := [
 	                      | source highlighter context result |
 	                      source := sourceText text asString copy.
 	                      highlighter := ViennaVDMHighlighter new.
@@ -689,18 +751,21 @@ ViennaRefactoringBrowser >> highlightSourceText [
 	                      result := highlighter
 		                                parse: source
 		                                withContext: context.
-	                      result isPetit2Failure ifTrue: [ 
-		                      highlighter text
-			                      makeColor: Color red
-			                      from:
-			                      (context furthestPosition
-				                       min: source size
-				                       max: 1)
-			                      to: source size ].
-	                      source size = highlighter text runs size 
-		                      ifTrue: [ 
-			                      sourceText withAdapterDo: [ :a | 
-				                      a widgetDo: [ :w | 
+	                      result isPetit2Failure
+		                      ifTrue: [
+			                      self notifySintaxError: result.
+			                      highlighter text
+				                      makeColor: Color red
+				                      from:
+				                      (context furthestPosition
+					                       min: source size
+					                       max: 1)
+				                      to: source size ]
+		                      ifFalse: [ self notifySintaxError: nil ].
+	                      source size = highlighter text runs size
+		                      ifTrue: [
+			                      sourceText withAdapterDo: [ :a |
+				                      a widgetDo: [ :w |
 					                      w text runs: highlighter text runs.
 					                      w changed ] ] ].
 	                      highlighterProcess := nil ] forkAt:
@@ -808,6 +873,11 @@ ViennaRefactoringBrowser >> initializePresenters [
 				                  ifNotNil: [ self displayDefinition: ast ]
 				                  ifNil: [ '-' ] ];
 		                  whenSelectionChangedDo: [ self updateSource ].
+	sourceSignalButton := self newButton
+		                      color: Color transparent;
+		                      icon: self class greenSignalIcon;
+		                      action: [ self sourceSignalButtonPressed ];
+		                      yourself.
 	sourceText := self newText
 		              contextMenu: [ self sourceTextContextMenu ];
 		              whenTextChangedDo: [ self onTheFlyCheckSourceText ];
@@ -1020,7 +1090,9 @@ ViennaRefactoringBrowser >> model: aViennaNode comment: aString with: anIdentity
 
 { #category : #accessing }
 ViennaRefactoringBrowser >> modelChanged [
-	self updateModuleList
+
+	self updateModuleList.
+	[ self typecheck ] forkAt: Processor userBackgroundPriority
 ]
 
 { #category : #accessing }
@@ -1055,6 +1127,19 @@ ViennaRefactoringBrowser >> moduleListContextMenu [
 				name: 'inspect';
 				action: [ self module inspect ] ] ].
 	^ menu
+]
+
+{ #category : #'operations-source signal' }
+ViennaRefactoringBrowser >> notifySintaxError: aPP2Failure [
+	pendingSyntaxError := aPP2Failure.
+	self updateSourceSignalButton
+]
+
+{ #category : #'operations-source signal' }
+ViennaRefactoringBrowser >> notifyTypeError: aViennaTypeError [
+
+	pendingTypeError := aViennaTypeError.
+	self updateSourceSignalButton
 ]
 
 { #category : #operations }
@@ -1188,6 +1273,10 @@ ViennaRefactoringBrowser >> source [
 		ifNotNil: [ :ast | ViennaVDMFormatter format: ast ]
 ]
 
+{ #category : #'operations-source signal' }
+ViennaRefactoringBrowser >> sourceSignalButtonPressed [
+]
+
 { #category : #menus }
 ViennaRefactoringBrowser >> sourceTextContextMenu [
 
@@ -1231,6 +1320,18 @@ ViennaRefactoringBrowser >> testResultTableContextMenu [
 ViennaRefactoringBrowser >> title [
 
 	^ 'Vienna Refactoring Browser'
+]
+
+{ #category : #operations }
+ViennaRefactoringBrowser >> typecheck [
+
+	[
+	self model
+		forgetTypecheck;
+		typecheck.
+	self notifyTypeError: nil ]
+		on: ViennaTypeError
+		do: [ :ex | self notifyTypeError: ex ]
 ]
 
 { #category : #updating }
@@ -1286,6 +1387,16 @@ ViennaRefactoringBrowser >> updateSource [
 	self definition
 		ifNotNil: [ :node | sourceText text: (self getSource: node) ]
 		ifNil: [ sourceText text: '' ]
+]
+
+{ #category : #'operations-source signal' }
+ViennaRefactoringBrowser >> updateSourceSignalButton [
+
+	pendingSyntaxError ifNotNil: [
+		^ sourceSignalButton icon: self class redSignalIcon ].
+	pendingTypeError ifNotNil: [
+		^ sourceSignalButton icon: self class yellowSignalIcon ].
+	^ sourceSignalButton icon: self class greenSignalIcon
 ]
 
 { #category : #updating }
