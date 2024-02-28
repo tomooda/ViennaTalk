@@ -3,7 +3,7 @@ sudo: false
 addons:
   apt:
     packages:
-      - default-jre
+      - openjdk-8-jre
 os:
   - linux
   - osx
