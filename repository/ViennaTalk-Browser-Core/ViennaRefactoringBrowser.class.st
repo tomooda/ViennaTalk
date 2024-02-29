@@ -752,22 +752,15 @@ ViennaRefactoringBrowser >> highlightSourceText [
 		                                parse: source
 		                                withContext: context.
 	                      result isPetit2Failure
-		                      ifTrue: [
-			                      self notifySintaxError: result.
-			                      highlighter text
-				                      makeColor: Color red
-				                      from:
-				                      (context furthestPosition
-					                       min: source size
-					                       max: 1)
-				                      to: source size ]
-		                      ifFalse: [ self notifySintaxError: nil ].
-	                      source size = highlighter text runs size
-		                      ifTrue: [
-			                      sourceText withAdapterDo: [ :a |
-				                      a widgetDo: [ :w |
-					                      w text runs: highlighter text runs.
-					                      w changed ] ] ].
+		                      ifTrue: [ self notifySintaxError: result ]
+		                      ifFalse: [
+			                      self notifySintaxError: nil.
+			                      source size = highlighter text runs size
+				                      ifTrue: [
+					                      sourceText withAdapterDo: [ :a |
+						                      a widgetDo: [ :w |
+							                      w text runs: highlighter text runs.
+							                      w changed ] ] ] ].
 	                      highlighterProcess := nil ] forkAt:
 		                      Processor userBackgroundPriority
 ]
@@ -1131,15 +1124,39 @@ ViennaRefactoringBrowser >> moduleListContextMenu [
 
 { #category : #'operations-source signal' }
 ViennaRefactoringBrowser >> notifySintaxError: aPP2Failure [
+
 	pendingSyntaxError := aPP2Failure.
-	self updateSourceSignalButton
+	self updateSourceSignalButton.
+	pendingSyntaxError ifNotNil: [
+		| source textWidget |
+		source := sourceText text asText.
+		sourceText withAdapterDo: [ :a |
+			a widgetDo: [ :w | textWidget := w ] ].
+		source
+			makeColor: Color red
+			from: (aPP2Failure furthestPosition min: source size max: 1)
+			to: source size.
+		textWidget text runs: source runs.
+		textWidget changed ]
 ]
 
 { #category : #'operations-source signal' }
 ViennaRefactoringBrowser >> notifyTypeError: aViennaTypeError [
 
 	pendingTypeError := aViennaTypeError.
-	self updateSourceSignalButton
+	self updateSourceSignalButton.
+	(pendingTypeError ifNotNil: #node) ifNotNil: [ :node |
+		| source text textWidget |
+		source := sourceText text string asViennaTracingString.
+		sourceText withAdapterDo: [ :a |
+			a widgetDo: [ :w | textWidget := w ] ].
+		text := textWidget text.
+		(source intervalForSource: node) key ifNotEmpty: [ :interval |
+			text
+				addAttribute: (TextBackgroundColor color: Color yellow darker)
+				from: interval first
+				to: interval last ].
+		textWidget textArea ifNotNil: #compose ]
 ]
 
 { #category : #operations }
