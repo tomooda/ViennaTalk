@@ -1,6 +1,6 @@
 Class {
 	#name : #ViennaVDMHighlighter,
-	#superclass : #ViennaVDMGrammar,
+	#superclass : #ViennaVDMParser,
 	#instVars : [
 		'text',
 		'identifierAttribute',

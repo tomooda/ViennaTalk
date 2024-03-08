@@ -743,7 +743,7 @@ ViennaRefactoringBrowser >> highlightSourceText [
 		highlighterProcess terminate.
 		highlighterProcess := nil ].
 	highlighterProcess := [
-	                      | source highlighter context result |
+	                      | source highlighter context result newNode newAst copyMap parent oldNode |
 	                      source := sourceText text asString copy.
 	                      highlighter := ViennaVDMHighlighter new.
 	                      highlighter text: source asText.
@@ -760,7 +760,28 @@ ViennaRefactoringBrowser >> highlightSourceText [
 					                      sourceText withAdapterDo: [ :a |
 						                      a widgetDo: [ :w |
 							                      w text runs: highlighter text runs.
-							                      w changed ] ] ] ].
+							                      w changed ] ] ].
+			                      newNode := result returnValue.
+			                      copyMap := IdentityDictionary new.
+			                      newAst := self specification copyWhole:
+				                                copyMap.
+			                      oldNode := copyMap
+				                                 at: self definition
+				                                 ifAbsent: [  ].
+			                      oldNode class = newNode class ifTrue: [
+				                      parent := oldNode parent.
+				                      1 to: parent size do: [ :index |
+					                      (parent at: index) == oldNode ifTrue: [
+						                      parent at: index put: newNode ] ].
+				                      copyMap keys do: [ :old |
+					                      (copyMap at: old) == oldNode ifTrue: [
+						                      copyMap at: old put: newNode ] ].
+				                      [
+				                      newNode typecheck.
+				                      self notifyTypeError: nil ]
+					                      on: ViennaTypeError
+					                      do: [ :ex |
+					                      self notifyTypeError: ex source: source ] ] ].
 	                      highlighterProcess := nil ] forkAt:
 		                      Processor userBackgroundPriority
 ]
@@ -1143,20 +1164,34 @@ ViennaRefactoringBrowser >> notifySintaxError: aPP2Failure [
 { #category : #'operations-source signal' }
 ViennaRefactoringBrowser >> notifyTypeError: aViennaTypeError [
 
+	self notifyTypeError: aViennaTypeError source: sourceText text string
+]
+
+{ #category : #'operations-source signal' }
+ViennaRefactoringBrowser >> notifyTypeError: aViennaTypeError source: aString [
+
+	| text textWidget |
 	pendingTypeError := aViennaTypeError.
 	self updateSourceSignalButton.
+	sourceText withAdapterDo: [ :a |
+		a widgetDo: [ :w | textWidget := w ] ].
+	textWidget ifNil: [ ^self ].
+	text := textWidget text.
 	(pendingTypeError ifNotNil: #node) ifNotNil: [ :node |
-		| source text textWidget |
-		source := sourceText text string asViennaTracingString.
-		sourceText withAdapterDo: [ :a |
-			a widgetDo: [ :w | textWidget := w ] ].
-		text := textWidget text.
-		(source intervalForSource: node) key ifNotEmpty: [ :interval |
+		| from to |
+		from := node start.
+		to := node end.
+		(from isNil or: [ to isNil ]) ifTrue: [
+			(aString asViennaTracingString intervalForSource: node) key
+				ifNotEmpty: [ :interval |
+					from := interval first.
+					to := interval last ] ].
+		(from notNil and: [ to notNil ]) ifTrue: [
 			text
 				addAttribute: (TextBackgroundColor color: Color yellow darker)
-				from: interval first
-				to: interval last ].
-		textWidget textArea ifNotNil: #compose ]
+				from: from
+				to: to ] ].
+	textWidget textArea ifNotNil: #compose
 ]
 
 { #category : #operations }

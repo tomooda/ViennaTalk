@@ -16,7 +16,10 @@ ViennaTypeNameNode class >> name: aViennaNameNode [
 { #category : #converting }
 ViennaTypeNameNode >> asMaximalViennaType [
 
-	^ self resolve asMaximalViennaType
+	^ self resolve
+		  ifNotNil: #asMaximalViennaType
+		  ifNil: [
+		  ViennaTypeError on: self signal: 'Unresolved type: ' , self source ]
 ]
 
 { #category : #'pretty printing' }
