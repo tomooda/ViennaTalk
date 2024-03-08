@@ -11,6 +11,7 @@ Class {
 		'testProcess',
 		'testResultTable',
 		'sourceSignalButton',
+		'talkbackLabel',
 		'pendingSyntaxError',
 		'pendingTypeError',
 		'highlighterProcess',
@@ -64,6 +65,7 @@ ViennaRefactoringBrowser class >> defaultLayout [
 						    add: (SpBoxLayout newVertical
 								     add: (SpBoxLayout newHorizontal
 										      add: #sourceSignalButton width: 48;
+										      add: #talkbackLabel;
 										      yourself)
 								     height: 16;
 								     add: #sourceText);
@@ -892,6 +894,16 @@ ViennaRefactoringBrowser >> initializePresenters [
 		                      icon: self class greenSignalIcon;
 		                      action: [ self sourceSignalButtonPressed ];
 		                      yourself.
+	talkbackLabel := self newLabel
+		                 label: '';
+		                 displayBackgroundColor: [
+			                 self pendingSyntaxError
+				                 ifNotNil: [ Color red lighter ]
+				                 ifNil: [
+					                 self pendingTypeError
+						                 ifNotNil: [ Color yellow lighter ]
+						                 ifNil: [ Color transparent ] ] ];
+		                 yourself.
 	sourceText := self newText
 		              contextMenu: [ self sourceTextContextMenu ];
 		              whenTextChangedDo: [ self onTheFlyCheckSourceText ];
@@ -1214,6 +1226,18 @@ ViennaRefactoringBrowser >> parser [
 		/ parser operationImport end
 ]
 
+{ #category : #accessing }
+ViennaRefactoringBrowser >> pendingSyntaxError [
+
+	^ pendingSyntaxError
+]
+
+{ #category : #accessing }
+ViennaRefactoringBrowser >> pendingTypeError [
+
+	^ pendingTypeError
+]
+
 { #category : #operations }
 ViennaRefactoringBrowser >> runAllTests [
 
@@ -1445,9 +1469,12 @@ ViennaRefactoringBrowser >> updateSource [
 ViennaRefactoringBrowser >> updateSourceSignalButton [
 
 	pendingSyntaxError ifNotNil: [
+		talkbackLabel label: pendingSyntaxError printString.
 		^ sourceSignalButton icon: self class redSignalIcon ].
 	pendingTypeError ifNotNil: [
+		talkbackLabel label: pendingTypeError printString.
 		^ sourceSignalButton icon: self class yellowSignalIcon ].
+	talkbackLabel label: ''.
 	^ sourceSignalButton icon: self class greenSignalIcon
 ]
 
