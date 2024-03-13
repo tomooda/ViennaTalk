@@ -26,5 +26,5 @@ ViennaUseTypeSynonymInAllOccurrences >> findDefinitionNode [
 
 { #category : #accessing }
 ViennaUseTypeSynonymInAllOccurrences >> identifier [
-	^ self definitionNode ifNotNil: #first
+	^ self definitionNode ifNotNil: #identifier
 ]

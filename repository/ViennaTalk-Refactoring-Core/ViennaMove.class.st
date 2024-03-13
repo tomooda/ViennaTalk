@@ -123,7 +123,7 @@ ViennaMove >> findOkToAddImports [
 ViennaMove >> name [
 
 	^ 'Move ' asText , (', ' asText join:
-		   (self definitionNames collect: [ :name | name asText allBold ]))
+		   (self definitionNames collect: [ :name | (name ifNil: [ '-' ]) asText allBold ]))
 	  , ' to ' , (destinationModule
 		   ifNil: [ 'another module' ]
 		   ifNotNil: [ 'module ' , destinationModule name ]) asText
