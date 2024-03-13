@@ -646,16 +646,24 @@ ViennaRefactoringBrowser >> displayDefinition: aViennaNode [
 
 { #category : #operations }
 ViennaRefactoringBrowser >> executeRefactoring: aViennaRefactoring [
-	| newAst copyMap refactoring |
+
+	| newAst copyMap refactoring result |
 	copyMap := IdentityDictionary new.
 	newAst := self specification copyWhole: copyMap.
-	refactoring := aViennaRefactoring class new
-		ast: (copyMap at: aViennaRefactoring ast ifAbsent: [ ^ false ]).
-	refactoring check
-		ifFalse: [ ^ false ].
-	refactoring execute.
+	refactoring := aViennaRefactoring class new ast:
+		               (copyMap
+			                at: aViennaRefactoring ast
+			                ifAbsent: [ ^ false ]).
+	refactoring check ifFalse: [ ^ false ].
+	result := refactoring execute.
 	self setDirty.
-	self model: newAst comment: refactoring name with: copyMap
+	self model: newAst comment: refactoring name with: copyMap.
+	result ifNotNil: [
+		moduleList selectItem: result module.
+		categoryList selectItem:
+			(result section ifNil: [ moduleList selectedItem ]).
+		definitionList selectItem:
+			(result topLevelDefinition ifNil: [ categoryList selectedItem ]) ]
 ]
 
 { #category : #operations }

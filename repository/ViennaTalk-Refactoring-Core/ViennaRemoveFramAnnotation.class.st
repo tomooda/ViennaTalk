@@ -27,7 +27,8 @@ ViennaRemoveFramAnnotation >> check [
 { #category : #operations }
 ViennaRemoveFramAnnotation >> execute [
 
-	^ self definitionNode removeAnnotation: self annotation
+	self definitionNode removeAnnotation: self annotation.
+	^ self definitionNode
 ]
 
 { #category : #accessing }

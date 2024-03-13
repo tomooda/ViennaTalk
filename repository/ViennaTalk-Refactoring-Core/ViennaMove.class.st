@@ -79,7 +79,8 @@ ViennaMove >> execute [
 		removeImportInDestination;
 		removeExportInSource;
 		rewriteImports;
-		removeSource
+		removeSource.
+	^ newDefinitionNode
 ]
 
 { #category : #accessing }

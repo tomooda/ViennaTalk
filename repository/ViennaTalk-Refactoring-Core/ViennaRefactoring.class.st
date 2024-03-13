@@ -1065,6 +1065,12 @@ ViennaRefactoring >> nameForGlobalName: globalNameNode in: moduleNode [
 	^ nil
 ]
 
+{ #category : #accessing }
+ViennaRefactoring >> newAst [
+
+	^ nil
+]
+
 { #category : #'visiting-labels' }
 ViennaRefactoring >> patternIdentifiersWith: aString in: aViennaNode do: aBlock [
 

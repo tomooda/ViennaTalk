@@ -2676,6 +2676,14 @@ ViennaNode >> second [
 	^ self at: 2
 ]
 
+{ #category : #accessing }
+ViennaNode >> section [
+
+	^ self isViennaSectionNode
+		  ifTrue: [ self ]
+		  ifFalse: [ parent ifNotNil: #section ]
+]
+
 { #category : #enumerating }
 ViennaNode >> select: aBlock [
 
@@ -2722,6 +2730,14 @@ ViennaNode >> stateVariablesDo: aBlock [
 { #category : #accessing }
 ViennaNode >> third [
 	^ self at: 3
+]
+
+{ #category : #accessing }
+ViennaNode >> topLevelDefinition [
+
+	^ self isViennaTopLevelDefinitionNode
+		  ifTrue: [ self ]
+		  ifFalse: [ parent ifNotNil: #topLevelDefinition ]
 ]
 
 { #category : #typechecking }

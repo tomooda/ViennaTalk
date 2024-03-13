@@ -40,28 +40,28 @@ ViennaInlineApplyFunction >> definitionNode: aViennaNode [
 ViennaInlineApplyFunction >> execute [
 
 	self definitionNode ifNil: [ ^ nil ].
-	self replaceNode: self callerNode with: (ViennaLetExpressionNode
-			 localDefinitionList: (ViennaLocalDefinitionListNode withAll:
-					  ((1 to: self callerNode argumentExpressionList size) collect: [
-						   :index |
-						   | param type arg |
-						   param := (self definitionNode parametersList first at: index)
-							            copyFragment.
-						   type := self callerNode argumentExpressionList size = 1
-							           ifTrue: [ self definitionNode type argumentType ]
-							           ifFalse: [
-								           self definitionNode type argumentType
-									           isViennaProductTypeNode
-									           ifTrue: [
-									           self definitionNode type argumentType at: index ]
-									           ifFalse: [ nil ] ].
-						   arg := (self callerNode argumentExpressionList at: index)
-							          copyFragment.
-						   ViennaValueDefinitionNode
-							   pattern: param
-							   type: type
-							   expression: arg ]))
-			 expression: self definitionNode expression)
+	^ self replaceNode: self callerNode with: (ViennaLetExpressionNode
+			   localDefinitionList: (ViennaLocalDefinitionListNode withAll:
+					    ((1 to: self callerNode argumentExpressionList size)
+						     collect: [ :index |
+							     | param type arg |
+							     param := (self definitionNode parametersList first at:
+								               index) copyFragment.
+							     type := self callerNode argumentExpressionList size = 1
+								             ifTrue: [ self definitionNode type argumentType ]
+								             ifFalse: [
+									             self definitionNode type argumentType
+										             isViennaProductTypeNode
+										             ifTrue: [
+										             self definitionNode type argumentType at: index ]
+										             ifFalse: [ nil ] ].
+							     arg := (self callerNode argumentExpressionList at: index)
+								            copyFragment.
+							     ViennaValueDefinitionNode
+								     pattern: param
+								     type: type
+								     expression: arg ]))
+			   expression: self definitionNode expression)
 ]
 
 { #category : #accessing }

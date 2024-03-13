@@ -28,8 +28,8 @@ ViennaAdd >> containerNode [
 { #category : #operations }
 ViennaAdd >> execute [
 
-	(self containerNode ifNil: [ ^ self ]) add:
-		(self newAst ifNil: [ ^ nil ])
+	^ self containerNode ifNotNil: [ :container |
+		  self newAst ifNotNil: [ :n | container add: n ] ]
 ]
 
 { #category : #accessing }

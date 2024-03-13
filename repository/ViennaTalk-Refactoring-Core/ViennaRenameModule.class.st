@@ -29,7 +29,8 @@ ViennaRenameModule >> execute [
 		module moduleBody allDescendantsDo: [ :node |
 			(node isViennaGlobalNameNode and: [
 				 node moduleIdentifier = self oldName ]) ifTrue: [
-				node moduleIdentifier: self newName ] ] ]
+				node moduleIdentifier: self newName ] ] ].
+	^ nil
 ]
 
 { #category : #accessing }

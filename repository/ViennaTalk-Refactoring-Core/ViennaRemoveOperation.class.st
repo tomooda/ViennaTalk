@@ -21,8 +21,8 @@ ViennaRemoveOperation >> execute [
 		 ifNone: [ nil ]) ifNotNil: [ :operationDefinitions |
 		operationDefinitions remove: self definitionNode.
 		operationDefinitions ifEmpty: [
-			operationDefinitions parent parent remove:
-				operationDefinitions parent ] ]
+			operationDefinitions parent remove: operationDefinitions ] ].
+	^ nil
 ]
 
 { #category : #accessing }

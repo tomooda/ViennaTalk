@@ -15,7 +15,9 @@ ViennaRemoveModule >> check [
 { #category : #operations }
 ViennaRemoveModule >> execute [
 
-	^ self definitionNode parent remove: self definitionNode
+	^ self definitionNode parent
+		  remove: self definitionNode;
+		  yourself
 ]
 
 { #category : #accessing }

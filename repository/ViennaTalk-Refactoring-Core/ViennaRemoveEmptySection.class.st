@@ -12,7 +12,8 @@ ViennaRemoveEmptySection >> check [
 { #category : #operations }
 ViennaRemoveEmptySection >> execute [
 
-	self definitionNode parent remove: self definitionNode
+	self definitionNode parent remove: self definitionNode.
+	^ nil
 ]
 
 { #category : #accessing }

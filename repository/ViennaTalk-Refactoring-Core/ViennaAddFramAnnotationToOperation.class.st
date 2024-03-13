@@ -10,8 +10,9 @@ Class {
 { #category : #execution }
 ViennaAddFramAnnotationToOperation >> execute [
 
-	(self containerNode ifNil: [ ^ self ]) addAnnotation:
-		(self newAst ifNil: [ ^ nil ])
+	^ self containerNode ifNotNil: [ :container |
+		  self newAst ifNotNil: [ :annotation |
+			  container addAnnotation: annotation ] ]
 ]
 
 { #category : #accessing }

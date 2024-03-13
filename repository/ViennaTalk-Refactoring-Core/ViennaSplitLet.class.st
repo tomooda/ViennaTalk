@@ -37,7 +37,8 @@ ViennaSplitLet >> execute [
 				  copyFrom: self newHeadLocalDefinitionIndex
 				  to: localDefinitions size)).
 	innerLet body: self definitionNode body.
-	self definitionNode body: innerLet
+	self definitionNode body: innerLet.
+	^ innerLet
 ]
 
 { #category : #accessing }

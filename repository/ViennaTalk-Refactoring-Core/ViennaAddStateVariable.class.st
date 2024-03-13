@@ -10,24 +10,28 @@ Class {
 { #category : #operations }
 ViennaAddStateVariable >> execute [
 
-	self containerNode ifNotNil: [ :stateDefinition |
-		self newAst ifNotNil: [ :stateField |
-			(stateDefinition bindsIdentifier: stateField identifier) ifFalse: [
-				stateDefinition fieldList add: self newAst.
-				stateDefinition inv ifNotNil: [ :inv |
-					| pattern |
-					pattern := inv pattern.
-					(pattern isViennaRecordPatternNode and: [
-						 pattern name identifier = stateDefinition identifier ])
-						ifTrue: [
-						pattern patternList add: ViennaPatternIdentifierNode anonymous ] ].
-				stateDefinition init ifNotNil: [ :initializer |
-					initializer expression ifNotNil: [ :eq |
-						eq isViennaEqualNode ifTrue: [
-							eq expression2 ifNotNil: [ :record |
-								record name identifier = stateDefinition identifier ifTrue: [
-									self initialValue ifNotNil: [ :value |
-										record expressionList add: value ] ] ] ] ] ] ] ] ]
+	^ self containerNode ifNotNil: [ :stateDefinition |
+		  self newAst ifNotNil: [ :stateField |
+			  (stateDefinition bindsIdentifier: stateField identifier)
+				  ifFalse: [
+					  stateDefinition fieldList add: self newAst.
+					  stateDefinition inv ifNotNil: [ :inv |
+						  | pattern |
+						  pattern := inv pattern.
+						  (pattern isViennaRecordPatternNode and: [
+							   pattern name identifier = stateDefinition identifier ])
+							  ifTrue: [
+							  pattern patternList add:
+								  ViennaPatternIdentifierNode anonymous ] ].
+					  stateDefinition init ifNotNil: [ :initializer |
+						  initializer expression ifNotNil: [ :eq |
+							  eq isViennaEqualNode ifTrue: [
+								  eq expression2 ifNotNil: [ :record |
+									  record name identifier = stateDefinition identifier
+										  ifTrue: [
+											  self initialValue ifNotNil: [ :value |
+												  record expressionList add: value ] ] ] ] ] ] ].
+			  stateField ] ]
 ]
 
 { #category : #accessing }
