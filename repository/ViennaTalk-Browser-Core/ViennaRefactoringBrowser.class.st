@@ -790,8 +790,7 @@ ViennaRefactoringBrowser >> highlightSourceText [
 				                      newNode typecheck.
 				                      self notifyTypeError: nil ]
 					                      on: ViennaTypeError
-					                      do: [ :ex |
-					                      self notifyTypeError: ex source: source ] ] ].
+					                      do: [ :ex | self notifyTypeError: ex ] ] ].
 	                      highlighterProcess := nil ] forkAt:
 		                      Processor userBackgroundPriority
 ]
@@ -1184,33 +1183,30 @@ ViennaRefactoringBrowser >> notifySintaxError: aPP2Failure [
 { #category : #'operations-source signal' }
 ViennaRefactoringBrowser >> notifyTypeError: aViennaTypeError [
 
-	self notifyTypeError: aViennaTypeError source: sourceText text string
-]
-
-{ #category : #'operations-source signal' }
-ViennaRefactoringBrowser >> notifyTypeError: aViennaTypeError source: aString [
-
 	| text textWidget |
 	pendingTypeError := aViennaTypeError.
 	self updateSourceSignalButton.
 	sourceText withAdapterDo: [ :a |
-		a widgetDo: [ :w | textWidget := w ] ].
-	textWidget ifNil: [ ^self ].
+		a widgetDo: [ :w |
+			textWidget := w.
+			textWidget textArea segments copy do: [ :s | s delete ] ] ].
+	textWidget ifNil: [ ^ self ].
 	text := textWidget text.
-	(pendingTypeError ifNotNil: #node) ifNotNil: [ :node |
-		| from to |
-		from := node start.
-		to := node end.
-		(from isNil or: [ to isNil ]) ifTrue: [
-			(aString asViennaTracingString intervalForSource: node) key
-				ifNotEmpty: [ :interval |
-					from := interval first.
-					to := interval last ] ].
-		(from notNil and: [ to notNil ]) ifTrue: [
-			text
-				addAttribute: (TextBackgroundColor color: Color yellow darker)
-				from: from
-				to: to ] ].
+	textWidget textArea handleParagraphChange: [
+		(pendingTypeError ifNotNil: #node) ifNotNil: [ :node |
+			| from to |
+			from := node start.
+			to := node end.
+			(from isNil or: [ to isNil ]) ifTrue: [
+				(text asString asViennaTracingString intervalForSource: node) key
+					ifNotEmpty: [ :interval |
+						from := interval first.
+						to := interval last ] ].
+			(from notNil and: [ to notNil ]) ifTrue: [
+				text
+					addAttribute: (TextBackgroundColor color: Color yellow darker)
+					from: from
+					to: to ] ] ].
 	textWidget textArea ifNotNil: #compose
 ]
 
