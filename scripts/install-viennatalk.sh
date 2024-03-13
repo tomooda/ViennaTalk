@@ -1,7 +1,7 @@
 #!/bin/bash
 mkdir viennatalk
 cd viennatalk
-curl -k -L https://get.pharo.org/64/90+vm | bash
+curl -k -L https://get.pharo.org/64/110+vm | bash
 ./pharo Pharo.image metacello install github://tomooda/ViennaTalk:main BaselineOfViennaTalk
 cat <<EOF > viennatalk
 #!/bin/bash
