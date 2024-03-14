@@ -29,6 +29,14 @@ ViennaSequenceConcatenateNode >> label [
 	^ 'SequenceConcatenate'
 ]
 
+{ #category : #accessing }
+ViennaSequenceConcatenateNode >> maximalType: aViennaType [
+
+	self expression1 maximalType: aViennaType.
+	self expression2 maximalType: aViennaType.
+	super maximalType: aViennaType
+]
+
 { #category : #'pretty printing' }
 ViennaSequenceConcatenateNode >> operatorPrecedence [
 

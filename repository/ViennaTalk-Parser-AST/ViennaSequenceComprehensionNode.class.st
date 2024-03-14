@@ -109,6 +109,19 @@ ViennaSequenceComprehensionNode >> maximalType [
 	^ self expression typecheck seq
 ]
 
+{ #category : #typechecking }
+ViennaSequenceComprehensionNode >> maximalType: aViennaType [
+
+	| basetype |
+	self setSeqBind typecheck.
+	basetype := ViennaType unit.
+	aViennaType
+		possibleTypesSuchThat: #isSeqType
+		do: [ :seqType | basetype := basetype + seqType basetype ].
+	self expression maximalType: basetype.
+	super maximalType: aViennaType
+]
+
 { #category : #accessing }
 ViennaSequenceComprehensionNode >> pattern [
 

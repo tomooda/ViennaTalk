@@ -12,11 +12,10 @@ ViennaNotNodeTest >> testMaximalType [
 		equals: ViennaType bool.
 
 	self
-		assert:
-		'not (if 1 > 0 then true else nil)' asViennaExpressionAst
-			maximalType
-		equals: ViennaType bool.
-
+		should: [
+			'not (if 1 > 0 then true else nil)' asViennaExpressionAst
+				maximalType ]
+		raise: ViennaTypeError.
 	self
 		should: [ 'not nil' asViennaExpressionAst maximalType ]
 		raise: ViennaTypeError

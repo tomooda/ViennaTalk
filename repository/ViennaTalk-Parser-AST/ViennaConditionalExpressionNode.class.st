@@ -79,3 +79,9 @@ ViennaConditionalExpressionNode >> maximalType [
 	self condition typecheck: ViennaType bool.
 	^ self expression typecheck
 ]
+
+{ #category : #typechecking }
+ViennaConditionalExpressionNode >> maximalType: aViennaType [
+
+	^ self expression maximalType: aViennaType
+]

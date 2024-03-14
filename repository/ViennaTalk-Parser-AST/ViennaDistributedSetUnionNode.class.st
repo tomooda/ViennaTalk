@@ -23,6 +23,13 @@ ViennaDistributedSetUnionNode >> label [
 	^ 'DistributedSetUnion'
 ]
 
+{ #category : #typechecking }
+ViennaDistributedSetUnionNode >> maximalType: aViennaType [
+
+	self expression maximalType: aViennaType set.
+	super maximalType: aViennaType
+]
+
 { #category : #'pretty printing' }
 ViennaDistributedSetUnionNode >> operatorPrecedence [
 

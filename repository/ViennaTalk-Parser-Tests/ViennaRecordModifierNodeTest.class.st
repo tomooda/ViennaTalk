@@ -18,11 +18,11 @@ ViennaRecordModifierNodeTest >> testMaximalType [
 	expression := 'mu(x, f1 |-> 2, f3 |-> 3)' asViennaExpressionAst
 		              parent: spec;
 		              yourself.
-	expression expression maximalType: r1 | r2.
+	expression expression setMaximalType: r1 | r2.
 	self assert: expression maximalType equals: r2.
 	expression := 'mu(x, f1 |-> 2+nil, f3 |-> 3)' asViennaExpressionAst
 		              parent: spec;
 		              yourself.
-	expression expression maximalType: r1 | r2.
+	expression expression setMaximalType: r1 | r2.
 	self should: [ expression maximalType ] raise: ViennaTypeError
 ]

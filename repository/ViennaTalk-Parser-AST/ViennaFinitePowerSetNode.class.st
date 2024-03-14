@@ -23,6 +23,18 @@ ViennaFinitePowerSetNode >> label [
 	^ 'FinitePowerSet'
 ]
 
+{ #category : #typechecking }
+ViennaFinitePowerSetNode >> maximalType: aViennaType [
+
+	| basetype |
+	basetype := ViennaType unit.
+	aViennaType
+		possibleTypesSuchThat: #isSetType
+		do: [ :setType | basetype := basetype + setType basetype ].
+	self expression maximalType: basetype.
+	super maximalType: aViennaType
+]
+
 { #category : #'pretty printing' }
 ViennaFinitePowerSetNode >> operatorPrecedence [
 

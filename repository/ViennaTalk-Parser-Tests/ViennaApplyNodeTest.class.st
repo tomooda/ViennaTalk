@@ -15,33 +15,33 @@ ViennaApplyNodeTest >> testMaximalType [
 	self assert: fx isViennaApplyNode.
 	self assert: fxy isViennaApplyNode.
 
-	f expression maximalType: ViennaType unit -> ViennaType char.
+	f expression setMaximalType: ViennaType unit -> ViennaType char.
 	self assert: f maximalType equals: ViennaType char.
 
-	fx expression maximalType: ViennaType nat -> ViennaType char.
-	fx arguments first maximalType: ViennaType real.
+	fx expression setMaximalType: ViennaType nat -> ViennaType char.
+	fx arguments first setMaximalType: ViennaType real.
 	self assert: fx maximalType equals: ViennaType char.
 
-	fxy expression maximalType:
+	fxy expression setMaximalType:
 		ViennaType nat * ViennaType token optional -> ViennaType char.
-	fxy arguments first maximalType: ViennaType real.
-	fxy arguments second maximalType: ViennaType token.
+	fxy arguments first setMaximalType: ViennaType real.
+	fxy arguments second setMaximalType: ViennaType token.
 	self assert: fxy maximalType equals: ViennaType char.
 
-	f expression maximalType: ViennaType nat -> ViennaType char.
+	f expression setMaximalType: ViennaType nat -> ViennaType char.
 	self should: [ f maximalType ] raise: ViennaTypeError.
 
-	fx expression maximalType: ViennaType unit -> ViennaType char.
-	fx arguments first maximalType: ViennaType unit.
+	fx expression setMaximalType: ViennaType unit -> ViennaType char.
+	fx arguments first setMaximalType: ViennaType unit.
 	self should: [ fx maximalType ] raise: ViennaTypeError.
 
-	fx expression maximalType:
+	fx expression setMaximalType:
 		ViennaType nat * ViennaType token optional -> ViennaType char.
-	fx arguments first maximalType: ViennaType real.
+	fx arguments first setMaximalType: ViennaType real.
 	self should: [ fx maximalType ] raise: ViennaTypeError.
 
-	fxy expression maximalType: ViennaType nat -> ViennaType char.
-	fxy arguments first maximalType: ViennaType real.
-	fxy arguments second maximalType: ViennaType token.
+	fxy expression setMaximalType: ViennaType nat -> ViennaType char.
+	fxy arguments first setMaximalType: ViennaType real.
+	fxy arguments second setMaximalType: ViennaType token.
 	self should: [ fxy maximalType ] raise: ViennaTypeError
 ]

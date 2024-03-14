@@ -23,6 +23,13 @@ ViennaDistributedSequenceConcatenationNode >> label [
 	^ 'DistributedSequenceConcatenation'
 ]
 
+{ #category : #typechecking }
+ViennaDistributedSequenceConcatenationNode >> maximalType: aViennaType [
+
+	self expression maximalType: aViennaType seq.
+	super maximalType: aViennaType
+]
+
 { #category : #'pretty printing' }
 ViennaDistributedSequenceConcatenationNode >> operatorPrecedence [
 

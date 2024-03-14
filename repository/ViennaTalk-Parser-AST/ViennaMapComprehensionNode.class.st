@@ -135,6 +135,21 @@ ViennaMapComprehensionNode >> maximalType [
 	^ self keyExpression typecheck mapTo: self valueExpression typecheck
 ]
 
+{ #category : #typechecking }
+ViennaMapComprehensionNode >> maximalType: aViennaType [
+
+	| keytype valuetype |
+	self bindList typecheck.
+	keytype := ViennaType unit.
+	valuetype := ViennaType unit.
+	aViennaType possibleTypesSuchThat: #isMapType do: [ :mapType |
+		keytype := keytype + mapType keytype.
+		valuetype := valuetype + mapType valuetype ].
+	self keyExpression maximalType: keytype.
+	self valueExpression maximalType: valuetype.
+	super maximalType: aViennaType
+]
+
 { #category : #enumerating }
 ViennaMapComprehensionNode >> multipleBindsDo: aBlock [
 

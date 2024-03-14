@@ -93,6 +93,15 @@ ViennaCasesExpressionNode >> maximalType [
 		   ifNil: [ ViennaType unit ])
 ]
 
+{ #category : #typechecking }
+ViennaCasesExpressionNode >> maximalType: aViennaType [
+
+	self casesExpressionAlternatives maximalType: aViennaType.
+	self othersExpression ifNotNil: [ :exp |
+		exp maximalType: aViennaType ].
+	super maximalType: aViennaType
+]
+
 { #category : #accessing }
 ViennaCasesExpressionNode >> othersExpression [
 	^ self at: 3

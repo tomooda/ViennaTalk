@@ -29,6 +29,14 @@ ViennaMapMergeNode >> label [
 	^ 'MapMerge'
 ]
 
+{ #category : #accessing }
+ViennaMapMergeNode >> maximalType: aViennaType [
+
+	self expression1 maximalType: aViennaType.
+	self expression2 maximalType: aViennaType.
+	super maximalType: aViennaType
+]
+
 { #category : #'pretty printing' }
 ViennaMapMergeNode >> operatorPrecedence [
 

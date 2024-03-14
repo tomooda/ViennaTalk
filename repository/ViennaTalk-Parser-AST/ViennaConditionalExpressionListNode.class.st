@@ -43,3 +43,10 @@ ViennaConditionalExpressionListNode >> maximalType [
 		  into: [ :type :conditionalExpression |
 			  type + conditionalExpression typecheck ]
 ]
+
+{ #category : #typechecking }
+ViennaConditionalExpressionListNode >> maximalType: aViennaType [
+
+	^ self do: [ :conditionalExpression |
+		  conditionalExpression maximalType: aViennaType ]
+]

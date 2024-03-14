@@ -2692,6 +2692,12 @@ ViennaNode >> select: aBlock [
 			  (aBlock value: child) ifTrue: [ stream nextPut: child ] ] ]
 ]
 
+{ #category : #private }
+ViennaNode >> setMaximalType: aViennaType [
+
+	maximalType := aViennaType
+]
+
 { #category : #accessing }
 ViennaNode >> seventh [
 	^ self at: 7

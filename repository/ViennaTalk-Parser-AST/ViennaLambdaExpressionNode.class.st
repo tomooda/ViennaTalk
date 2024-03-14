@@ -103,6 +103,14 @@ ViennaLambdaExpressionNode >> maximalType [
 			    typeBind pattern typecheck ])) -> self expression typecheck
 ]
 
+{ #category : #typechecking }
+ViennaLambdaExpressionNode >> maximalType: aViennaType [
+
+	self typeBindList typecheck.
+	self expression maximalType: aViennaType.
+	super maximalType: aViennaType
+]
+
 { #category : #'pretty printing' }
 ViennaLambdaExpressionNode >> operatorPrecedence [
 

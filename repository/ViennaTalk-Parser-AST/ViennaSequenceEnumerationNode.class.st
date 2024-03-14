@@ -65,3 +65,15 @@ ViennaSequenceEnumerationNode >> maximalType [
 		  ifEmpty: [ basetype seq ]
 		  ifNotEmpty: [ basetype seq1 ]
 ]
+
+{ #category : #typechecking }
+ViennaSequenceEnumerationNode >> maximalType: aViennaType [
+
+	| basetype |
+	basetype := ViennaType unit.
+	aViennaType
+		possibleTypesSuchThat: #isSeqType
+		do: [ :seqType | basetype := basetype + seqType basetype ].
+	self do: [ :exp | exp maximalType: basetype ].
+	super maximalType: aViennaType
+]

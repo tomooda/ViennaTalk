@@ -23,6 +23,14 @@ ViennaSetUnionNode >> label [
 	^ 'SetUnion'
 ]
 
+{ #category : #typechecking }
+ViennaSetUnionNode >> maximalType: aViennaType [
+
+	self expression1 maximalType: aViennaType.
+	self expression2 maximalType: aViennaType.
+	super maximalType: aViennaType
+]
+
 { #category : #'pretty printing' }
 ViennaSetUnionNode >> operatorPrecedence [
 

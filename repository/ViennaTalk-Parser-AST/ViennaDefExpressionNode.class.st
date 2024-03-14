@@ -122,6 +122,13 @@ ViennaDefExpressionNode >> maximalType [
 	^ self expression typecheck
 ]
 
+{ #category : #typechecking }
+ViennaDefExpressionNode >> maximalType: aViennaType [
+
+	self expression maximalType: aViennaType.
+	super maximalType: aViennaType
+]
+
 { #category : #'pretty printing' }
 ViennaDefExpressionNode >> operatorPrecedence [
 

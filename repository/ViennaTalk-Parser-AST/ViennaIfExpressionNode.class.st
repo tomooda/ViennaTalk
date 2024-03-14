@@ -91,6 +91,14 @@ ViennaIfExpressionNode >> maximalType [
 	  + self expression typecheck
 ]
 
+{ #category : #typechecking }
+ViennaIfExpressionNode >> maximalType: aViennaType [
+
+	self conditionalExpressionList maximalType: aViennaType.
+	self expression maximalType: aViennaType.
+	super maximalType: aViennaType
+]
+
 { #category : #'pretty printing' }
 ViennaIfExpressionNode >> operatorPrecedence [
 

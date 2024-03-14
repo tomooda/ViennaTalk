@@ -23,6 +23,13 @@ ViennaSequenceReverseNode >> label [
 	^ 'SequenceReverse'
 ]
 
+{ #category : #typechecking }
+ViennaSequenceReverseNode >> maximalType: aViennaType [
+
+	self expression maximalType: aViennaType.
+	super maximalType: aViennaType
+]
+
 { #category : #'pretty printing' }
 ViennaSequenceReverseNode >> operatorPrecedence [
 

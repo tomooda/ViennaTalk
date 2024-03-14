@@ -371,7 +371,7 @@ ViennaAbstractFormatter >> mu [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> mul [
-	^ '*'
+	^ ' *'
 ]
 
 { #category : #'symbol access' }

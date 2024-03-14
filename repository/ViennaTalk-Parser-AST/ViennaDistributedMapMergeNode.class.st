@@ -23,6 +23,13 @@ ViennaDistributedMapMergeNode >> label [
 	^ 'DistributedMapMerge'
 ]
 
+{ #category : #typechecking }
+ViennaDistributedMapMergeNode >> maximalType: aViennaType [
+
+	self expression maximalType: aViennaType set1.
+	super maximalType: aViennaType
+]
+
 { #category : #'pretty printing' }
 ViennaDistributedMapMergeNode >> operatorPrecedence [
 

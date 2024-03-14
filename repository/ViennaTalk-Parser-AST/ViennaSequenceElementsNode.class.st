@@ -23,6 +23,21 @@ ViennaSequenceElementsNode >> label [
 	^ 'SequenceElements'
 ]
 
+{ #category : #typechecking }
+ViennaSequenceElementsNode >> maximalType: aViennaType [
+
+	| basetype isSet1Type |
+	basetype := ViennaType unit.
+	isSet1Type := true.
+	aViennaType possibleTypesSuchThat: #isSetType do: [ :setType |
+		basetype := basetype + setType basetype.
+		setType isSeq1Type ifFalse: [ isSet1Type := false ] ].
+	self expression maximalType: (isSet1Type
+			 ifTrue: [ basetype seq1 ]
+			 ifFalse: [ basetype seq ]).
+	super maximalType: aViennaType
+]
+
 { #category : #'pretty printing' }
 ViennaSequenceElementsNode >> operatorPrecedence [
 
@@ -38,7 +53,13 @@ ViennaSequenceElementsNode >> paramType [
 { #category : #typechecking }
 ViennaSequenceElementsNode >> returnTypeFor: aViennaType [
 
-	^ aViennaType isSeq1Type
-		  ifTrue: [ aViennaType basetype set1 ]
-		  ifFalse: [ aViennaType basetype set ]
+	| basetype isSeq1Type |
+	basetype := ViennaType unit.
+	isSeq1Type := true.
+	aViennaType possibleTypesSuchThat: #isSeqType do: [ :seqType |
+		basetype := basetype + seqType basetype.
+		seqType isSeq1Type ifFalse: [ isSeq1Type := false ] ].
+	^ isSeq1Type
+		  ifTrue: [ basetype set1 ]
+		  ifFalse: [ basetype set ]
 ]

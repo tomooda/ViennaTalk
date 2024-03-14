@@ -23,6 +23,18 @@ ViennaMapDomainNode >> label [
 	^ 'MapDomain'
 ]
 
+{ #category : #typechecking }
+ViennaMapDomainNode >> maximalType: aViennaType [
+
+	| keytype |
+	keytype := ViennaType unit.
+	aViennaType
+		possibleTypesSuchThat: #isMapType
+		do: [ :mapType | keytype := keytype + mapType keytype ].
+	self expression maximalType: keytype.
+	super maximalType: aViennaType
+]
+
 { #category : #'pretty printing' }
 ViennaMapDomainNode >> operatorPrecedence [
 

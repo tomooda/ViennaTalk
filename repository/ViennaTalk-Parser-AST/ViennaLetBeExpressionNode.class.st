@@ -129,6 +129,14 @@ ViennaLetBeExpressionNode >> maximalType [
 	^ self expression typecheck
 ]
 
+{ #category : #typechecking }
+ViennaLetBeExpressionNode >> maximalType: aViennaType [
+
+	self multipleBind typecheck.
+	self expression maximalType: aViennaType.
+	super maximalType: aViennaType
+]
+
 { #category : #accessing }
 ViennaLetBeExpressionNode >> multipleBind [
 

@@ -23,6 +23,18 @@ ViennaMapRangeNode >> label [
 	^ 'MapRange'
 ]
 
+{ #category : #typechecking }
+ViennaMapRangeNode >> maximalType: aViennaType [
+
+	| valuetype |
+	valuetype := ViennaType unit.
+	aViennaType
+		possibleTypesSuchThat: #isMapType
+		do: [ :mapType | valuetype := valuetype + mapType valuetype ].
+	self expression maximalType: valuetype.
+	super maximalType: aViennaType
+]
+
 { #category : #'pretty printing' }
 ViennaMapRangeNode >> operatorPrecedence [
 

@@ -15,19 +15,19 @@ ViennaFieldSelectNodeTest >> testMaximalType [
 	expr := 'f.x' asViennaExpressionAst
 		        parent: spec;
 		        yourself.
-	expr expression maximalType:
+	expr expression setMaximalType:
 		point | point3d | (ViennaType quote: 'quote').
 	self assert: expr maximalType equals: ViennaType real.
 	expr := 'f.z' asViennaExpressionAst
 		        parent: spec;
 		        yourself.
-	expr expression maximalType:
+	expr expression setMaximalType:
 		point | point3d | (ViennaType quote: 'quote').
 	self assert: expr maximalType equals: ViennaType int.
 	expr := 'f.w' asViennaExpressionAst
 		        parent: spec;
 		        yourself.
-	expr expression maximalType:
+	expr expression setMaximalType:
 		point | point3d | (ViennaType quote: 'quote').
 	self should: [ expr typecheck ] raise: ViennaTypeError
 ]

@@ -147,6 +147,14 @@ ViennaLetExpressionNode >> maximalType [
 	^ self body typecheck
 ]
 
+{ #category : #typechecking }
+ViennaLetExpressionNode >> maximalType: aViennaType [
+
+	self localDefinitionList typecheck.
+	self expression maximalType: aViennaType.
+	super maximalType: aViennaType
+]
+
 { #category : #'pretty printing' }
 ViennaLetExpressionNode >> operatorPrecedence [
 

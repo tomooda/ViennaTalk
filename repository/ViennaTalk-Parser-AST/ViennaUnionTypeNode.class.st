@@ -16,7 +16,7 @@ ViennaUnionTypeNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter
 		  formatEnumerate: (aViennaAbstractFormatter formatAll: self)
-		  separator: '|'
+		  separator: ' |'
 		  ifEmpty: [ '' ]
 ]
 
