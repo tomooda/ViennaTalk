@@ -58,7 +58,8 @@ ViennaTranspiledAnimation >> asTranspiledAnimation [
 
 { #category : #accessing }
 ViennaTranspiledAnimation >> at: aString ifAbsent: aBlock [
-	^ self at: aString ifPresent: [ :value | ] ifAbsent: aBlock
+
+	^ self at: aString ifPresent: #yourself ifAbsent: aBlock
 ]
 
 { #category : #accessing }

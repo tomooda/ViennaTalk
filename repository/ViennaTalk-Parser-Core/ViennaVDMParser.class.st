@@ -2012,11 +2012,11 @@ ViennaVDMParser >> stateDefinition [
 { #category : #'parsers-types' }
 ViennaVDMParser >> stateField [
 
-	^ super field =>> [ :start :end :array |
+	^ super stateField =>> [ :start :end :array |
 	  (ViennaFieldNode
 		   identifier: array first
-		   equalityAbstraction: array second
-		   type: array third)
+		   equalityAbstraction: false
+		   type: array second)
 		  start: start end: end;
 		  yourself ]
 ]
