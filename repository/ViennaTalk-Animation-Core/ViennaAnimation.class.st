@@ -291,8 +291,13 @@ ViennaAnimation >> plainEvaluate: aString ifError: errorBlock [
 
 { #category : #evaluating }
 ViennaAnimation >> plainEvaluate: aString in: moduleName ifError: errorBlock [
+
 	| result |
-	lock critical: [ result := self basicPlainEvaluate: aString in: moduleName ifError: [ :msg | ^ errorBlock cull: msg ] ].
+	lock critical: [
+		result := self
+			          basicPlainEvaluate: aString
+			          in: (moduleName ifNil: [ self defaultModule ])
+			          ifError: [ :msg | ^ errorBlock cull: msg ] ].
 	self changed: #state.
 	^ result
 ]
@@ -332,25 +337,27 @@ ViennaAnimation >> specification: aString [
 ]
 
 { #category : #accessing }
-ViennaAnimation >> specification: aString ifError: errorBlock [
-	specification ~= aString
-		ifTrue: [ 
-			| oldState |
-			lock
-				critical: [ 
-					| oldSpec |
-					oldSpec := specification.
-					oldState := state copy.
-					specification := aString.
-					self
-						basicPlainEvaluate: 'nil'
-						in: self defaultModule
-						ifError: [ :msg | 
-							specification := oldSpec.
-							^ errorBlock cull: msg ] ].
-			self changed: #specification.
-			oldState ~= state
-				ifTrue: [ self changed: #state ] ]
+ViennaAnimation >> specification: aStringOrViennaNode ifError: errorBlock [
+
+	| source |
+	source := aStringOrViennaNode isViennaNode
+		          ifTrue: [ aStringOrViennaNode source ]
+		          ifFalse: [ aStringOrViennaNode asString ].
+	specification ~= source ifTrue: [
+		| oldState |
+		lock critical: [
+			| oldSpec |
+			oldSpec := specification.
+			oldState := state copy.
+			specification := source.
+			self
+				basicPlainEvaluate: 'nil'
+				in: self defaultModule
+				ifError: [ :msg |
+					specification := oldSpec.
+					^ errorBlock cull: msg ] ].
+		self changed: #specification.
+		oldState ~= state ifTrue: [ self changed: #state ] ]
 ]
 
 { #category : #private }

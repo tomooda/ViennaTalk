@@ -933,7 +933,8 @@ ViennaBrowser >> doItIn: aPluggableTextMorph [
 ]
 
 { #category : #private }
-ViennaBrowser >> evaluate: aString [ 
+ViennaBrowser >> evaluate: aString [
+
 	^ self evaluate: aString ifError: [ :msg | msg ]
 ]
 

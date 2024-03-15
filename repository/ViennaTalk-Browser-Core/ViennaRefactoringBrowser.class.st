@@ -2,7 +2,9 @@ Class {
 	#name : #ViennaRefactoringBrowser,
 	#superclass : #SpPresenterWithModel,
 	#instVars : [
+		'animation',
 		'menuBar',
+		'notebook',
 		'historyList',
 		'moduleList',
 		'categoryList',
@@ -15,8 +17,7 @@ Class {
 		'pendingSyntaxError',
 		'pendingTypeError',
 		'highlighterProcess',
-		'dirty',
-		'notebook'
+		'dirty'
 	],
 	#classVars : [
 		'GreenSignalIcon',
@@ -755,6 +756,15 @@ ViennaRefactoringBrowser >> displayDefinition: aViennaNode [
 ]
 
 { #category : #operations }
+ViennaRefactoringBrowser >> evaluate: aString [
+
+	^ animation
+		  plainEvaluate: aString
+		  in: (moduleList selectedItem ifNotNil: #identifier)
+		  ifError: [ :msg | msg ]
+]
+
+{ #category : #operations }
 ViennaRefactoringBrowser >> executeRefactoring: aViennaRefactoring [
 
 	| newAst copyMap refactoring result |
@@ -952,6 +962,7 @@ ViennaRefactoringBrowser >> importFile [
 ViennaRefactoringBrowser >> initialize [
 
 	super initialize.
+	animation := ViennaAnimation default.
 	dirty := false
 ]
 
@@ -1021,7 +1032,11 @@ ViennaRefactoringBrowser >> initializePresenters [
 						                 ifNotNil: [ Color yellow lighter ]
 						                 ifNil: [ Color transparent ] ] ];
 		                 yourself.
-	sourceText := self newText
+	sourceText := self newCode
+		              clearInteractionModel;
+		              overridingContextMenu;
+		              withoutSyntaxHighlight;
+		              withoutSmartCharacters;
 		              contextMenu: [ self sourceTextContextMenu ];
 		              whenTextChangedDo: [ self onTheFlyCheckSourceText ];
 		              whenSubmitDo: [ :text | self accept: text ];
@@ -1241,7 +1256,10 @@ ViennaRefactoringBrowser >> model: aViennaNode comment: aString with: anIdentity
 ViennaRefactoringBrowser >> modelChanged [
 
 	self updateModuleList.
-	[ self typecheck ] forkAt: Processor userBackgroundPriority
+	[
+	self
+		typecheck;
+		updateAnimation ] forkAt: Processor userBackgroundPriority
 ]
 
 { #category : #accessing }
@@ -1276,6 +1294,11 @@ ViennaRefactoringBrowser >> moduleListContextMenu [
 				name: 'inspect';
 				action: [ self module inspect ] ] ].
 	^ menu
+]
+
+{ #category : #'operations-source signal' }
+ViennaRefactoringBrowser >> notifyAnimationError: aString [
+
 ]
 
 { #category : #'operations-source signal' }
@@ -1356,6 +1379,25 @@ ViennaRefactoringBrowser >> pendingSyntaxError [
 ViennaRefactoringBrowser >> pendingTypeError [
 
 	^ pendingTypeError
+]
+
+{ #category : #operations }
+ViennaRefactoringBrowser >> popup: aString [
+
+	sourceText insertPopoverAfterCurrentSelection:
+		(self newLabel label: aString)
+	"self newPopover
+		addStyle: 'error';
+		bePositionRight;
+		relativeTo: sourceText;
+		presenter: (self newLabel label: aString);
+		popup"
+]
+
+{ #category : #operations }
+ViennaRefactoringBrowser >> printIt: aString [
+
+	self popup: (self evaluate: aString)
 ]
 
 { #category : #operations }
@@ -1481,7 +1523,7 @@ ViennaRefactoringBrowser >> sourcePageLayout [
 				   add: categoryList;
 				   add: definitionList);
 		  add: (SpPanedLayout newHorizontal
-				   positionOfSlider: 0.7;
+				   positionOfSlider: 0.6;
 				   add: (SpBoxLayout newVertical
 						    add: (SpBoxLayout newHorizontal
 								     add: sourceSignalButton width: 48;
@@ -1490,6 +1532,14 @@ ViennaRefactoringBrowser >> sourcePageLayout [
 						    height: 16;
 						    add: sourceText);
 				   add: testResultTable)
+]
+
+{ #category : #accessing }
+ViennaRefactoringBrowser >> sourceSelection [
+
+	^ sourceText text string asViennaTracingString
+		  nodeContaining: sourceText selectionInterval
+		  ifAbsent: [ nil ]
 ]
 
 { #category : #'operations-source signal' }
@@ -1501,9 +1551,12 @@ ViennaRefactoringBrowser >> sourceTextContextMenu [
 
 	| menu |
 	menu := self newMenu.
-	(sourceText text string asViennaTracingString
-		 nodeContaining: sourceText selectionInterval
-		 ifAbsent: [ nil ]) ifNotNil: [ :node |
+	self sourceSelection ifNotNil: [ :node |
+		menu addGroup: [ :group |
+			group addItem: [ :item |
+				item
+					name: 'Type it';
+					action: [ self typeIt: node ] ] ].
 		self addRefactoringMenuGroupOn: node to: menu with: [ :group |  ].
 		(node detectParent: #isViennaOperationDefinitionNode ifNone: [ nil ])
 			ifNotNil: [
@@ -1549,6 +1602,12 @@ ViennaRefactoringBrowser >> title [
 ]
 
 { #category : #operations }
+ViennaRefactoringBrowser >> typeIt: aViennaNode [
+
+	self popup: aViennaNode typecheck printString
+]
+
+{ #category : #operations }
 ViennaRefactoringBrowser >> typecheck [
 
 	[
@@ -1558,6 +1617,14 @@ ViennaRefactoringBrowser >> typecheck [
 	self notifyTypeError: nil ]
 		on: ViennaTypeError
 		do: [ :ex | self notifyTypeError: ex ]
+]
+
+{ #category : #updating }
+ViennaRefactoringBrowser >> updateAnimation [
+
+	animation
+		specification: self specification
+		ifError: [ :msg | self notifyAnimationError: msg ]
 ]
 
 { #category : #updating }

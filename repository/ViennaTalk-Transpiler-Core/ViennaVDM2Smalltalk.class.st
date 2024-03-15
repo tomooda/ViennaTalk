@@ -781,7 +781,7 @@ ViennaVDM2Smalltalk >> explicitFunctionDefinition: aViennaNode env: aDictionary 
 	preNode ifNotNil: [
 		preBody := self generate: preNode env: aDictionary.
 		runtimeAssertionCheck = true ifTrue: [
-			body := preBody , 'ifFalse: [ViennaPreconditionViolation signal]. '
+			body := preBody , ' ifFalse: [ViennaPreconditionViolation signal]. '
 			        , body asViennaTracingString: preNode ] ].
 	postNode
 		ifNotNil: [
@@ -832,9 +832,12 @@ ViennaVDM2Smalltalk >> explicitFunctionDefinition: aViennaNode env: aDictionary 
 						         (parametersNode at: index).
 						         (argType at: index) } ] ]
 			         ifFalse: [
-				         { {
-					         parametersNode first.
-					         argType } } ].
+				         argType isViennaUnitTypeNode
+					         ifTrue: [ {  } ]
+					         ifFalse: [
+						         { {
+							         parametersNode first.
+							         argType } } ] ].
 		body := self
 			        closureFromFlatBinds: binds
 			        body: body
@@ -1018,7 +1021,7 @@ ViennaVDM2Smalltalk >> extendedExplicitFunctionDefinition: aViennaNode env: aDic
 	preNode ifNotNil: [
 		preBody := self generate: preNode env: aDictionary.
 		runtimeAssertionCheck = true ifTrue: [
-			body := preBody , 'ifFalse: [ViennaPreconditionViolation signal]. '
+			body := preBody , ' ifFalse: [ViennaPreconditionViolation signal]. '
 			        , body asViennaTracingString: preNode ] ].
 	postNode
 		ifNotNil: [
@@ -1152,7 +1155,7 @@ ViennaVDM2Smalltalk >> extendedExplicitOperationDefinition: aViennaNode env: aDi
 	preNode ifNotNil: [
 		preBody := self generate: preNode env: aDictionary.
 		runtimeAssertionCheck = true ifTrue: [
-			body := preBody , 'ifFalse: [ViennaPreconditionViolation signal]. '
+			body := preBody , ' ifFalse: [ViennaPreconditionViolation signal]. '
 			        , body ] ].
 	postNode
 		ifNotNil: [
