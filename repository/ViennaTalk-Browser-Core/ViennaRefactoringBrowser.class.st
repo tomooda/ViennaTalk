@@ -20,10 +20,23 @@ Class {
 	#classVars : [
 		'GreenSignalIcon',
 		'RedSignalIcon',
+		'TrafficSide',
 		'YellowSignalIcon'
 	],
 	#category : #'ViennaTalk-Browser-Core'
 }
+
+{ #category : #settings }
+ViennaRefactoringBrowser class >> beLeftSideTraffic [
+
+	self trafficSide: #left
+]
+
+{ #category : #settings }
+ViennaRefactoringBrowser class >> beRightSideTraffic [
+
+	self trafficSide: #right
+]
 
 { #category : #icons }
 ViennaRefactoringBrowser class >> createSignalIcon: color1 with: color2 with: color3 [
@@ -70,6 +83,12 @@ ViennaRefactoringBrowser class >> defaultLayout [
 								     height: 16;
 								     add: #sourceText);
 						    add: #testResultTable))
+]
+
+{ #category : #settings }
+ViennaRefactoringBrowser class >> defaultTrafficSide [
+
+	^ #left
 ]
 
 { #category : #'instance creation' }
@@ -428,9 +447,25 @@ ViennaRefactoringBrowser class >> greenSignalIcon [
 
 	^ GreenSignalIcon ifNil: [
 		  GreenSignalIcon := self
-			                     createSignalIcon: Color green lighter
-			                     with: Color darkGray
-			                     with: Color darkGray ]
+			                     ifLeftSideTraffic: [
+				                     self
+					                     createSignalIcon: Color green lighter
+					                     with: Color darkGray
+					                     with: Color darkGray ]
+			                     ifRightSideTraffic: [
+				                     self
+					                     createSignalIcon: Color darkGray
+					                     with: Color darkGray
+					                     with: Color green lighter ] ]
+]
+
+{ #category : #settings }
+ViennaRefactoringBrowser class >> ifLeftSideTraffic: leftBlock ifRightSideTraffic: rightBlock [
+
+	^ (TrafficSide ifNil: [ TrafficSide := self defaultTrafficSide ])
+	  = #left
+		  ifTrue: leftBlock
+		  ifFalse: rightBlock
 ]
 
 { #category : #icons }
@@ -438,9 +473,40 @@ ViennaRefactoringBrowser class >> redSignalIcon [
 
 	^ RedSignalIcon ifNil: [
 		  RedSignalIcon := self
-			                   createSignalIcon: Color darkGray
-			                   with: Color darkGray
-			                   with: Color red lighter ]
+			                   ifLeftSideTraffic: [
+				                   self
+					                   createSignalIcon: Color darkGray
+					                   with: Color darkGray
+					                   with: Color red lighter ]
+			                   ifRightSideTraffic: [
+				                   self
+					                   createSignalIcon: Color red lighter
+					                   with: Color darkGray
+					                   with: Color darkGray ] ]
+]
+
+{ #category : #settings }
+ViennaRefactoringBrowser class >> trafficSide [
+
+	^ TrafficSide ifNil: [ TrafficSide := self defaultTrafficSide ]
+]
+
+{ #category : #settings }
+ViennaRefactoringBrowser class >> trafficSide: aSymbol [
+
+	TrafficSide := aSymbol = #left
+		               ifTrue: [ #left ]
+		               ifFalse: [ #right ].
+	GreenSignalIcon := nil.
+	YellowSignalIcon := nil.
+	RedSignalIcon := nil.
+	self allInstancesDo: [ :browser | browser updateSourceSignalButton ]
+]
+
+{ #category : #settings }
+ViennaRefactoringBrowser class >> trafficSides [
+
+	^ #( left right )
 ]
 
 { #category : #menus }
@@ -451,6 +517,20 @@ ViennaRefactoringBrowser class >> viennaDevMenuOn: aBuilder [
 		order: 3;
 		help: 'Example spec on refactoring borwser';
 		icon: nil
+]
+
+{ #category : #settings }
+ViennaRefactoringBrowser class >> viennaSettingsOn: aBuilder [
+
+	<systemsettings>
+	(aBuilder pickOne: #trafficSide)
+		parent: #ViennaTalkAppearances;
+		target: self;
+		description: 'The look of traffic signal';
+		label: 'Traffic side';
+		domainValues: self trafficSides;
+		default: self trafficSide;
+		order: 0.9
 ]
 
 { #category : #menus }
@@ -481,9 +561,16 @@ ViennaRefactoringBrowser class >> yellowSignalIcon [
 
 	^ YellowSignalIcon ifNil: [
 		  YellowSignalIcon := self
-			                      createSignalIcon: Color darkGray
-			                      with: Color yellow lighter
-			                      with: Color darkGray ]
+			                      ifLeftSideTraffic: [
+				                      self
+					                      createSignalIcon: Color darkGray
+					                      with: Color yellow lighter
+					                      with: Color darkGray ]
+			                      ifRightSideTraffic: [
+				                      self
+					                      createSignalIcon: Color darkGray
+					                      with: Color yellow lighter
+					                      with: Color darkGray ] ]
 ]
 
 { #category : #operations }
@@ -1469,7 +1556,7 @@ ViennaRefactoringBrowser >> updateSource [
 		ifNil: [ sourceText text: '' ]
 ]
 
-{ #category : #'operations-source signal' }
+{ #category : #updating }
 ViennaRefactoringBrowser >> updateSourceSignalButton [
 
 	pendingSyntaxError ifNotNil: [

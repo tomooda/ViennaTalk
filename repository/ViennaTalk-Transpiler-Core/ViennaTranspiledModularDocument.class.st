@@ -70,6 +70,13 @@ ViennaTranspiledModularDocument >> evaluateStatement: aString with: aViennaVDM2S
 		evaluate
 ]
 
+{ #category : #private }
+ViennaTranspiledModularDocument >> init [
+	"The transpiler should generate code that overrides me."
+
+	^ self subclassResponsibility
+]
+
 { #category : #initialize }
 ViennaTranspiledModularDocument >> initialize [
 	super initialize.

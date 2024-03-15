@@ -149,6 +149,13 @@ ViennaTranspiledObject >> evaluateStatement: aString with: aViennaVDM2SmalltalkC
 		evaluate
 ]
 
+{ #category : #private }
+ViennaTranspiledObject >> init [
+	"The transpiler should generate code that overrides me."
+
+	^ self subclassResponsibility
+]
+
 { #category : #accessing }
 ViennaTranspiledObject >> inv [
 
