@@ -164,7 +164,8 @@ ViennaVDMGrammar >> andOp [
 
 { #category : #'parsers-types' }
 ViennaVDMGrammar >> anonymousField [
-	^ type
+
+	^ self type: type
 ]
 
 { #category : #'parsers-expressions' }
@@ -289,8 +290,11 @@ ViennaVDMGrammar >> basicType [
 
 { #category : #'parsers-types' }
 ViennaVDMGrammar >> basicTypeName [
-	^ 'bool' asPParser / 'nat1' asPParser / 'nat' asPParser / 'int' asPParser / 'real' asPParser
-		/ 'char' asPParser / 'token' asPParser / ('?' asPParser ==> [ :questionMark | 'any' ])
+
+	^ self type: 'bool' asPParser / 'nat1' asPParser / 'nat' asPParser
+		  / 'int' asPParser / 'real' asPParser / 'char' asPParser
+		  / 'token' asPParser
+		  / ('?' asPParser ==> [ :questionMark | 'any' ])
 ]
 
 { #category : #'parsers-keywords' }
@@ -737,10 +741,12 @@ ViennaVDMGrammar >> equalDefinitionList [
 
 { #category : #'parsers-types' }
 ViennaVDMGrammar >> equalityAbstractionField [
-	^ ((self decl: identifier) trim , (self operator: ':-') , type)
-		==> [ :triple | 
-			{(triple first).
-			(triple third)} ]
+
+	^ (self decl: identifier) trim , (self operator: ':-')
+	  , (self type: type) ==> [ :triple |
+	  {
+		  triple first.
+		  triple third } ]
 ]
 
 { #category : #'parsers-expressions-operators' }
@@ -1248,10 +1254,12 @@ ViennaVDMGrammar >> hd: arg [
 
 { #category : #'parsers-types' }
 ViennaVDMGrammar >> identifiedField [
-	^ ((self decl: identifier) trim , colon , type)
-		==> [ :triple | 
-			{(triple first).
-			(triple third)} ]
+
+	^ (self decl: identifier) trim , colon , (self type: type)
+	  ==> [ :triple |
+		  {
+			  triple first.
+			  triple third } ]
 ]
 
 { #category : #accessing }
@@ -1556,10 +1564,12 @@ ViennaVDMGrammar >> isExpression [
 
 { #category : #'parsers-expressions-type discriminations' }
 ViennaVDMGrammar >> isNameExpression [
-	^ ('is_' asPParser , name , lparen , expression , rparen)
-		==> [ :quin | 
-			{(quin second).
-			(quin fourth)} ]
+
+	^ 'is_' asPParser , (self type: name) , lparen , expression , rparen
+	  ==> [ :quin |
+		  {
+			  quin second.
+			  quin fourth } ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -2312,7 +2322,7 @@ ViennaVDMGrammar >> quantifiedExpression [
 
 { #category : #'parsers-types' }
 ViennaVDMGrammar >> quoteType [
-	^ self quoteLiteral
+	^ self type: self quoteLiteral
 ]
 
 { #category : #'parsers-symbols' }
@@ -2332,10 +2342,12 @@ ViennaVDMGrammar >> rd [
 
 { #category : #'parsers-expressions-basics' }
 ViennaVDMGrammar >> recordConstructor [
-	^ ('mk_' asPParser , name , lparen , expressionList , rparen)
-		==> [ :array | 
-			{(array second).
-			(array fourth)} ]
+
+	^ 'mk_' asPParser , (self type: name) , lparen , expressionList
+	  , rparen ==> [ :array |
+	  {
+		  array second.
+		  array fourth } ]
 ]
 
 { #category : #'parsers-expressions-basics' }
@@ -2348,11 +2360,14 @@ ViennaVDMGrammar >> recordModifier [
 
 { #category : #'parsers-patterns' }
 ViennaVDMGrammar >> recordPattern [
-	^ (('mk_' asPParser , name , lparen) ==> #second , (patternList optional ==> [ :single | single ifNil: [ Array new ] ])
-		, rparen)
-		==> [ :triple | 
-			{(triple first).
-			(triple second)} ]
+
+	^ 'mk_' asPParser , (self type: name) , lparen ==> #second
+	  ,
+	  (patternList optional ==> [ :single | single ifNil: [ Array new ] ])
+	  , rparen ==> [ :triple |
+	  {
+		  triple first.
+		  triple second } ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -2693,10 +2708,12 @@ ViennaVDMGrammar >> stateDesignator [
 
 { #category : #'parsers-definitions' }
 ViennaVDMGrammar >> stateField [
-	^ ((self decl: identifier) trim , colon , type trim)
-		==> [ :triple | 
-			{(triple first).
-			(triple third)} ]
+
+	^ (self decl: identifier) trim , colon , (self type: type) trim
+	  ==> [ :triple |
+		  {
+			  triple first.
+			  triple third } ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -2993,6 +3010,11 @@ ViennaVDMGrammar >> type3 [
 		/ self typeVariable / ((lparen , type , rparen) ==> #second)
 ]
 
+{ #category : #'parsers-expressions-type discriminations' }
+ViennaVDMGrammar >> type: aParser [
+	^ aParser
+]
+
 { #category : #'parsers-patterns' }
 ViennaVDMGrammar >> typeBind [
 	^ (pattern , colon , type)
@@ -3023,18 +3045,26 @@ ViennaVDMGrammar >> typeDefinitions [
 
 { #category : #'parsers-interfaces' }
 ViennaVDMGrammar >> typeExport [
-	^ self struct optional , name
+
+	^ self struct optional , (self type: name)
 ]
 
 { #category : #'parsers-types' }
 ViennaVDMGrammar >> typeIdentifier [
-	^ identifier
+
+	^ self type: identifier
 ]
 
 { #category : #'parsers-interfaces' }
 ViennaVDMGrammar >> typeImport [
-	^ (self typeDefinition , ((self renamed , (self decl: name)) ==> #second) optional)
-		/ (self typeName , ((self renamed , (self decl: name)) ==> #second) optional)
+
+	^ self typeDefinition
+	  ,
+	  (self renamed , (self type: (self decl: name)) ==> #second)
+		  optional / (self typeName
+	   ,
+	   (self renamed , (self type: (self decl: name)) ==> #second)
+		   optional)
 ]
 
 { #category : #'parsers-expressions-type discriminations' }
@@ -3137,7 +3167,9 @@ ViennaVDMGrammar >> unionType [
 
 { #category : #'parsers-types' }
 ViennaVDMGrammar >> unitType [
-	^ ((self operator: $() , (self operator: $))) ==> [ :pair | nil ]
+
+	^ self type:
+		  (self operator: $() , (self operator: $)) ==> [ :pair | nil ]
 ]
 
 { #category : #'parsers-definitions' }

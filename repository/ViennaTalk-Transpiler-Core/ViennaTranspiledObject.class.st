@@ -103,6 +103,21 @@ ViennaTranspiledObject class >> viennaEnv: aDictionary [
 ]
 
 { #category : #evaluating }
+ViennaTranspiledObject >> debugExpression: aString with: aViennaVDM2SmalltalkClass ifError: errorBlock [
+
+	| src |
+	src := 'self halt. ' , (self class
+		        transpileExpression: aString
+		        with: aViennaVDM2SmalltalkClass
+		        ifError: [ :msg | ^ errorBlock cull: msg ]).
+	^ OpalCompiler new
+		  source: src;
+		  logged: false;
+		  receiver: self;
+		  evaluate
+]
+
+{ #category : #evaluating }
 ViennaTranspiledObject >> evaluateExpression: aString [
 	^ self evaluateExpression: aString ifError: [ :msg | self error: msg ]
 ]

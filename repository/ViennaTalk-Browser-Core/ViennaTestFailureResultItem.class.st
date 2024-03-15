@@ -1,7 +1,7 @@
 Class {
 	#name : #ViennaTestFailureResultItem,
 	#superclass : #ViennaTestResultItem,
-	#category : #'ViennaTalk-Browser-Core'
+	#category : #'ViennaTalk-Browser-Core-TestRunner'
 }
 
 { #category : #accessing }

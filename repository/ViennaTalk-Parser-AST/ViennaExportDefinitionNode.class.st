@@ -44,6 +44,12 @@ ViennaExportDefinitionNode >> exportedIdentifiersDo: aBlock [
 	self exportModuleSignature exportedIdentifiersDo: aBlock
 ]
 
+{ #category : #accessing }
+ViennaExportDefinitionNode >> exportsIdentifier: aString [
+
+	^ self exportModuleSignature exportsIdentifier: aString
+]
+
 { #category : #'pretty printing' }
 ViennaExportDefinitionNode >> formatWith: aViennaAbstractFormatter [
 

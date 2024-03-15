@@ -24,6 +24,21 @@ ViennaTranspiledModularDocument >> buildViennaEnv [
 ]
 
 { #category : #evaluating }
+ViennaTranspiledModularDocument >> debugExpression: aString with: aViennaVDM2SmalltalkClass ifError: errorBlock [
+
+	| src |
+	src := 'self halt. ' , (self
+		        transpileExpression: aString
+		        with: aViennaVDM2SmalltalkClass
+		        ifError: [ :msg | ^ errorBlock cull: msg ]).
+	^ OpalCompiler new
+		  source: src;
+		  logged: false;
+		  receiver: self;
+		  evaluate
+]
+
+{ #category : #evaluating }
 ViennaTranspiledModularDocument >> evaluateExpression: aString [
 	^ self evaluateExpression: aString ifError: [ :msg | self error: msg ]
 ]

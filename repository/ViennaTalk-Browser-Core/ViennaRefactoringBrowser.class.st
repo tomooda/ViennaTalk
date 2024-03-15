@@ -15,7 +15,8 @@ Class {
 		'pendingSyntaxError',
 		'pendingTypeError',
 		'highlighterProcess',
-		'dirty'
+		'dirty',
+		'notebook'
 	],
 	#classVars : [
 		'GreenSignalIcon',
@@ -23,7 +24,7 @@ Class {
 		'TrafficSide',
 		'YellowSignalIcon'
 	],
-	#category : #'ViennaTalk-Browser-Core'
+	#category : #'ViennaTalk-Browser-Core-Browsers'
 }
 
 { #category : #settings }
@@ -62,6 +63,14 @@ ViennaRefactoringBrowser class >> createSignalIcon: color1 with: color2 with: co
 
 { #category : #layout }
 ViennaRefactoringBrowser class >> defaultLayout [
+
+	^ SpBoxLayout newVertical
+		  add: #menuBar height: self buttonHeight;
+		  add: #notebook
+]
+
+{ #category : #layout }
+ViennaRefactoringBrowser class >> defaultLayout2 [
 
 	^ SpBoxLayout newVertical
 		  add: #menuBar height: self buttonHeight;
@@ -648,6 +657,20 @@ ViennaRefactoringBrowser >> clearDirty [
 	dirty := false
 ]
 
+{ #category : #'private-unit testing' }
+ViennaRefactoringBrowser >> debugTestResultItem: aViennaTestResultItem [
+
+	| animation |
+	animation := ViennaTranspiledAnimation new
+		             specification: self specification
+		             ifError: [ :msg | ^ nil ];
+		             yourself.
+	^ animation
+		  debug: aViennaTestResultItem operation , '()'
+		  in: aViennaTestResultItem module
+		  ifError: [ :msg | msg ]
+]
+
 { #category : #accessing }
 ViennaRefactoringBrowser >> definition [
 	^ definitionList selection selectedItem
@@ -1027,6 +1050,12 @@ ViennaRefactoringBrowser >> initializePresenters [
 		                   upper sortingOrder <= lower sortingOrder ];
 		                   contextMenu: [ self testResultTableContextMenu ];
 		                   yourself.
+	notebook := self newNotebook
+		            addPageTitle: 'Source' provider: [
+			            SpPresenter new
+				            layout: self sourcePageLayout;
+				            yourself ];
+		            yourself.
 	self whenBuiltDo: [ :w |
 		| f |
 		f := ViennaLauncher font.
@@ -1440,6 +1469,29 @@ ViennaRefactoringBrowser >> source [
 		ifNotNil: [ :ast | ViennaVDMFormatter format: ast ]
 ]
 
+{ #category : #layouts }
+ViennaRefactoringBrowser >> sourcePageLayout [
+
+	^ SpPanedLayout newVertical
+		  positionOfSlider: 0.3;
+		  add: (SpBoxLayout newHorizontal
+				   add: (SpBoxLayout newVertical
+						    add: historyList expand: false;
+						    add: moduleList);
+				   add: categoryList;
+				   add: definitionList);
+		  add: (SpPanedLayout newHorizontal
+				   positionOfSlider: 0.7;
+				   add: (SpBoxLayout newVertical
+						    add: (SpBoxLayout newHorizontal
+								     add: sourceSignalButton width: 48;
+								     add: talkbackLabel;
+								     yourself)
+						    height: 16;
+						    add: sourceText);
+				   add: testResultTable)
+]
+
 { #category : #'operations-source signal' }
 ViennaRefactoringBrowser >> sourceSignalButtonPressed [
 ]
@@ -1470,17 +1522,24 @@ ViennaRefactoringBrowser >> specification [
 
 { #category : #menus }
 ViennaRefactoringBrowser >> testResultTableContextMenu [
-	^ self newMenu
-		addGroup: [ :group | 
-			group
-				addItem: [ :item | 
-					item
-						name: 'Jump to test operation';
-						action: [ testResultTable selection selectedItem
-								ifNotNil: [ :testResultItem | 
-									self
-										jumpToModule: testResultItem module
-										operation: testResultItem operation ] ] ] ]
+
+	^ self newMenu addGroup: [ :group |
+		  group
+			  addItem: [ :item |
+				  item
+					  name: 'Debug it with transpiler';
+					  action: [
+						  testResultTable selection selectedItem ifNotNil: [
+								  :testResultItem | self debugTestResultItem: testResultItem ] ] ];
+			  addItem: [ :item |
+				  item
+					  name: 'Jump to test operation';
+					  action: [
+						  testResultTable selection selectedItem ifNotNil: [
+								  :testResultItem |
+								  self
+									  jumpToModule: testResultItem module
+									  operation: testResultItem operation ] ] ] ]
 ]
 
 { #category : #accessing }
