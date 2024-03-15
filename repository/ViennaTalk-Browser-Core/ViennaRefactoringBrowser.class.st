@@ -15,8 +15,7 @@ Class {
 		'pendingSyntaxError',
 		'pendingTypeError',
 		'highlighterProcess',
-		'dirty',
-		'notebook'
+		'dirty'
 	],
 	#classVars : [
 		'GreenSignalIcon',
@@ -24,7 +23,7 @@ Class {
 		'TrafficSide',
 		'YellowSignalIcon'
 	],
-	#category : #'ViennaTalk-Browser-Core-Browsers'
+	#category : #'ViennaTalk-Browser-Core'
 }
 
 { #category : #settings }
