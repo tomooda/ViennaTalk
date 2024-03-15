@@ -123,6 +123,26 @@ ViennaTranspiledAnimation >> copyForTest [
 	^ self copy
 ]
 
+{ #category : #evaluating }
+ViennaTranspiledAnimation >> debug: aString in: moduleName ifError: errorBlock [
+
+	Cursor wait showWhile: [
+		| result |
+		result := (moduleName = self defaultModule
+			           ifTrue: [ object ]
+			           ifFalse: [
+				           object
+					           at: moduleName
+					           ifAbsent: [ ^ errorBlock value: 'unknown module name' ] ])
+			          debugExpression: aString
+			          with: transpiler
+			          ifError: [ :msg | ^ errorBlock cull: msg ].
+		self changed: #state.
+		^ result == object
+			  ifTrue: [ nil ]
+			  ifFalse: [ result ] ]
+]
+
 { #category : #private }
 ViennaTranspiledAnimation >> defaultModule [
 	^ 'DEFAULT'
@@ -238,14 +258,18 @@ ViennaTranspiledAnimation >> specification: aString [
 
 { #category : #accessing }
 ViennaTranspiledAnimation >> specification: aString ifError: errorBlock [
+
 	transpiler := ViennaVDM2SmalltalkObject new.
-	aString
-		ifEmpty: [ object := ViennaTranspiledObject new ]
-		ifNotEmpty: [ | ast |
-			ast := parser parse: aString.
-			ast isPetit2Failure
-				ifTrue: [ ^ errorBlock cull: ast message ].
-			object := transpiler generate: ast ].
+	aString isViennaNode
+		ifTrue: [ object := transpiler generate: aString ]
+		ifFalse: [
+			aString
+				ifEmpty: [ object := ViennaTranspiledObject new ]
+				ifNotEmpty: [
+					| ast |
+					ast := parser parse: aString.
+					ast isPetit2Failure ifTrue: [ ^ errorBlock cull: ast message ].
+					object := transpiler generate: ast ] ].
 	specification := aString.
 	self changed: #specification.
 	self changed: #state

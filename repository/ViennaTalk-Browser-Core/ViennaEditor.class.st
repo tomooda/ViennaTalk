@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'template'
 	],
-	#category : #'ViennaTalk-Browser-Core'
+	#category : #'ViennaTalk-Browser-Core-Morphic'
 }
 
 { #category : #'class initialization' }

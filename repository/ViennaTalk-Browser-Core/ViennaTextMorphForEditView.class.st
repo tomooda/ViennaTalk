@@ -1,7 +1,7 @@
 Class {
 	#name : #ViennaTextMorphForEditView,
 	#superclass : #RubEditingArea,
-	#category : #'ViennaTalk-Browser-Core'
+	#category : #'ViennaTalk-Browser-Core-Morphic'
 }
 
 { #category : #'class access' }

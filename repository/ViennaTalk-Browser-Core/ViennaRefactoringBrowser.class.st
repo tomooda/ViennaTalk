@@ -15,15 +15,29 @@ Class {
 		'pendingSyntaxError',
 		'pendingTypeError',
 		'highlighterProcess',
-		'dirty'
+		'dirty',
+		'notebook'
 	],
 	#classVars : [
 		'GreenSignalIcon',
 		'RedSignalIcon',
+		'TrafficSide',
 		'YellowSignalIcon'
 	],
-	#category : #'ViennaTalk-Browser-Core'
+	#category : #'ViennaTalk-Browser-Core-Browsers'
 }
+
+{ #category : #settings }
+ViennaRefactoringBrowser class >> beLeftSideTraffic [
+
+	self trafficSide: #left
+]
+
+{ #category : #settings }
+ViennaRefactoringBrowser class >> beRightSideTraffic [
+
+	self trafficSide: #right
+]
 
 { #category : #icons }
 ViennaRefactoringBrowser class >> createSignalIcon: color1 with: color2 with: color3 [
@@ -52,6 +66,14 @@ ViennaRefactoringBrowser class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		  add: #menuBar height: self buttonHeight;
+		  add: #notebook
+]
+
+{ #category : #layout }
+ViennaRefactoringBrowser class >> defaultLayout2 [
+
+	^ SpBoxLayout newVertical
+		  add: #menuBar height: self buttonHeight;
 		  add: (SpPanedLayout newVertical
 				   positionOfSlider: 0.5;
 				   add: (SpBoxLayout newHorizontal
@@ -70,6 +92,12 @@ ViennaRefactoringBrowser class >> defaultLayout [
 								     height: 16;
 								     add: #sourceText);
 						    add: #testResultTable))
+]
+
+{ #category : #settings }
+ViennaRefactoringBrowser class >> defaultTrafficSide [
+
+	^ #left
 ]
 
 { #category : #'instance creation' }
@@ -428,9 +456,25 @@ ViennaRefactoringBrowser class >> greenSignalIcon [
 
 	^ GreenSignalIcon ifNil: [
 		  GreenSignalIcon := self
-			                     createSignalIcon: Color green lighter
-			                     with: Color darkGray
-			                     with: Color darkGray ]
+			                     ifLeftSideTraffic: [
+				                     self
+					                     createSignalIcon: Color green lighter
+					                     with: Color darkGray
+					                     with: Color darkGray ]
+			                     ifRightSideTraffic: [
+				                     self
+					                     createSignalIcon: Color darkGray
+					                     with: Color darkGray
+					                     with: Color green lighter ] ]
+]
+
+{ #category : #settings }
+ViennaRefactoringBrowser class >> ifLeftSideTraffic: leftBlock ifRightSideTraffic: rightBlock [
+
+	^ (TrafficSide ifNil: [ TrafficSide := self defaultTrafficSide ])
+	  = #left
+		  ifTrue: leftBlock
+		  ifFalse: rightBlock
 ]
 
 { #category : #icons }
@@ -438,9 +482,40 @@ ViennaRefactoringBrowser class >> redSignalIcon [
 
 	^ RedSignalIcon ifNil: [
 		  RedSignalIcon := self
-			                   createSignalIcon: Color darkGray
-			                   with: Color darkGray
-			                   with: Color red lighter ]
+			                   ifLeftSideTraffic: [
+				                   self
+					                   createSignalIcon: Color darkGray
+					                   with: Color darkGray
+					                   with: Color red lighter ]
+			                   ifRightSideTraffic: [
+				                   self
+					                   createSignalIcon: Color red lighter
+					                   with: Color darkGray
+					                   with: Color darkGray ] ]
+]
+
+{ #category : #settings }
+ViennaRefactoringBrowser class >> trafficSide [
+
+	^ TrafficSide ifNil: [ TrafficSide := self defaultTrafficSide ]
+]
+
+{ #category : #settings }
+ViennaRefactoringBrowser class >> trafficSide: aSymbol [
+
+	TrafficSide := aSymbol = #left
+		               ifTrue: [ #left ]
+		               ifFalse: [ #right ].
+	GreenSignalIcon := nil.
+	YellowSignalIcon := nil.
+	RedSignalIcon := nil.
+	self allInstancesDo: [ :browser | browser updateSourceSignalButton ]
+]
+
+{ #category : #settings }
+ViennaRefactoringBrowser class >> trafficSides [
+
+	^ #( left right )
 ]
 
 { #category : #menus }
@@ -451,6 +526,20 @@ ViennaRefactoringBrowser class >> viennaDevMenuOn: aBuilder [
 		order: 3;
 		help: 'Example spec on refactoring borwser';
 		icon: nil
+]
+
+{ #category : #settings }
+ViennaRefactoringBrowser class >> viennaSettingsOn: aBuilder [
+
+	<systemsettings>
+	(aBuilder pickOne: #trafficSide)
+		parent: #ViennaTalkAppearances;
+		target: self;
+		description: 'The look of traffic signal';
+		label: 'Traffic side';
+		domainValues: self trafficSides;
+		default: self trafficSide;
+		order: 0.9
 ]
 
 { #category : #menus }
@@ -481,9 +570,16 @@ ViennaRefactoringBrowser class >> yellowSignalIcon [
 
 	^ YellowSignalIcon ifNil: [
 		  YellowSignalIcon := self
-			                      createSignalIcon: Color darkGray
-			                      with: Color yellow lighter
-			                      with: Color darkGray ]
+			                      ifLeftSideTraffic: [
+				                      self
+					                      createSignalIcon: Color darkGray
+					                      with: Color yellow lighter
+					                      with: Color darkGray ]
+			                      ifRightSideTraffic: [
+				                      self
+					                      createSignalIcon: Color darkGray
+					                      with: Color yellow lighter
+					                      with: Color darkGray ] ]
 ]
 
 { #category : #operations }
@@ -559,6 +655,20 @@ ViennaRefactoringBrowser >> categoryListContextMenu [
 ViennaRefactoringBrowser >> clearDirty [
 
 	dirty := false
+]
+
+{ #category : #'private-unit testing' }
+ViennaRefactoringBrowser >> debugTestResultItem: aViennaTestResultItem [
+
+	| animation |
+	animation := ViennaTranspiledAnimation new
+		             specification: self specification
+		             ifError: [ :msg | ^ nil ];
+		             yourself.
+	^ animation
+		  debug: aViennaTestResultItem operation , '()'
+		  in: aViennaTestResultItem module
+		  ifError: [ :msg | msg ]
 ]
 
 { #category : #accessing }
@@ -940,6 +1050,12 @@ ViennaRefactoringBrowser >> initializePresenters [
 		                   upper sortingOrder <= lower sortingOrder ];
 		                   contextMenu: [ self testResultTableContextMenu ];
 		                   yourself.
+	notebook := self newNotebook
+		            addPageTitle: 'Source' provider: [
+			            SpPresenter new
+				            layout: self sourcePageLayout;
+				            yourself ];
+		            yourself.
 	self whenBuiltDo: [ :w |
 		| f |
 		f := ViennaLauncher font.
@@ -1353,6 +1469,29 @@ ViennaRefactoringBrowser >> source [
 		ifNotNil: [ :ast | ViennaVDMFormatter format: ast ]
 ]
 
+{ #category : #layouts }
+ViennaRefactoringBrowser >> sourcePageLayout [
+
+	^ SpPanedLayout newVertical
+		  positionOfSlider: 0.3;
+		  add: (SpBoxLayout newHorizontal
+				   add: (SpBoxLayout newVertical
+						    add: historyList expand: false;
+						    add: moduleList);
+				   add: categoryList;
+				   add: definitionList);
+		  add: (SpPanedLayout newHorizontal
+				   positionOfSlider: 0.7;
+				   add: (SpBoxLayout newVertical
+						    add: (SpBoxLayout newHorizontal
+								     add: sourceSignalButton width: 48;
+								     add: talkbackLabel;
+								     yourself)
+						    height: 16;
+						    add: sourceText);
+				   add: testResultTable)
+]
+
 { #category : #'operations-source signal' }
 ViennaRefactoringBrowser >> sourceSignalButtonPressed [
 ]
@@ -1383,17 +1522,24 @@ ViennaRefactoringBrowser >> specification [
 
 { #category : #menus }
 ViennaRefactoringBrowser >> testResultTableContextMenu [
-	^ self newMenu
-		addGroup: [ :group | 
-			group
-				addItem: [ :item | 
-					item
-						name: 'Jump to test operation';
-						action: [ testResultTable selection selectedItem
-								ifNotNil: [ :testResultItem | 
-									self
-										jumpToModule: testResultItem module
-										operation: testResultItem operation ] ] ] ]
+
+	^ self newMenu addGroup: [ :group |
+		  group
+			  addItem: [ :item |
+				  item
+					  name: 'Debug it with transpiler';
+					  action: [
+						  testResultTable selection selectedItem ifNotNil: [
+								  :testResultItem | self debugTestResultItem: testResultItem ] ] ];
+			  addItem: [ :item |
+				  item
+					  name: 'Jump to test operation';
+					  action: [
+						  testResultTable selection selectedItem ifNotNil: [
+								  :testResultItem |
+								  self
+									  jumpToModule: testResultItem module
+									  operation: testResultItem operation ] ] ] ]
 ]
 
 { #category : #accessing }
@@ -1469,7 +1615,7 @@ ViennaRefactoringBrowser >> updateSource [
 		ifNil: [ sourceText text: '' ]
 ]
 
-{ #category : #'operations-source signal' }
+{ #category : #updating }
 ViennaRefactoringBrowser >> updateSourceSignalButton [
 
 	pendingSyntaxError ifNotNil: [

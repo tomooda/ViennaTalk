@@ -9,7 +9,7 @@ Class {
 	#classVars : [
 		'DefaultHighlightingEnabled'
 	],
-	#category : #'ViennaTalk-Browser-Core'
+	#category : #'ViennaTalk-Browser-Core-Morphic'
 }
 
 { #category : #accessing }

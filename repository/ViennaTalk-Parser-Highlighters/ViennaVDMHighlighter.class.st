@@ -46,11 +46,6 @@ ViennaVDMHighlighter >> arrow [
 	^ self keyword: super arrow
 ]
 
-{ #category : #'parsers-types' }
-ViennaVDMHighlighter >> basicTypeName [
-	^ self type: super basicTypeName
-]
-
 { #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> best [
 	^ self keyword: super best
@@ -146,14 +141,6 @@ ViennaVDMHighlighter >> endKeyword [
 	^ self keyword: super endKeyword
 ]
 
-{ #category : #'parsers-types' }
-ViennaVDMHighlighter >> equalityAbstractionField [
-	^ ((identifier trim , (self operator: ':-')) and , (self decl: identifier) trim , (self operator: ':-') , type)
-		==> [ :quatro | 
-			{(quatro second).
-			(quatro fourth)} ]
-]
-
 { #category : #'parsers-statements' }
 ViennaVDMHighlighter >> errorStatement [
 	^ self keyword: super errorStatement
@@ -219,14 +206,6 @@ ViennaVDMHighlighter >> highlight: aParser with: aTextAttributeOrCollection [
 			result ]
 ]
 
-{ #category : #'parsers-types' }
-ViennaVDMHighlighter >> identifiedField [
-	^ ((identifier trim , colon) and , (self decl: identifier) trim , colon , type)
-		==> [ :quatro | 
-			{(quatro second).
-			(quatro fourth)} ]
-]
-
 { #category : #'parsers-symbols' }
 ViennaVDMHighlighter >> identifier [
 	^ self identifier: super identifier
@@ -272,14 +251,6 @@ ViennaVDMHighlighter >> inv [
 { #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> iota [
 	^ self keyword: super iota
-]
-
-{ #category : #'parsers-expressions' }
-ViennaVDMHighlighter >> isNameExpression [
-	^ ('is_' asPParser , (self type: name) , lparen , expression , rparen)
-		==> [ :quin | 
-			{(quin second).
-			(quin fourth)} ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -385,31 +356,9 @@ ViennaVDMHighlighter >> pre [
 	^ self keyword: super pre
 ]
 
-{ #category : #'parsers-types' }
-ViennaVDMHighlighter >> quoteType [
-	^ self type: super quoteType
-]
-
 { #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> rd [
 	^ self keyword: super rd
-]
-
-{ #category : #'parsers-expressions' }
-ViennaVDMHighlighter >> recordConstructor [
-	^ ('mk_' asPParser , self typeName , lparen , expressionList , rparen)
-		==> [ :array | 
-			{(array second).
-			(array fourth)} ]
-]
-
-{ #category : #'parsers-patterns' }
-ViennaVDMHighlighter >> recordPattern [
-	^ (('mk_' asPParser , self typeName , lparen) ==> #second
-		, (patternList optional ==> [ :single | single ifNil: [ Array new ] ]) , rparen)
-		==> [ :triple | 
-			{(triple first).
-			(triple second)} ]
 ]
 
 { #category : #'parsers-keywords' }
@@ -505,22 +454,6 @@ ViennaVDMHighlighter >> typeAttribute [
 				color: (Color cyan mixed: 0.4 with: UITheme current textColor) ]
 ]
 
-{ #category : #'parsers-interfaces' }
-ViennaVDMHighlighter >> typeExport [
-	^ self struct optional , (self type: name)
-]
-
-{ #category : #'parsers-types' }
-ViennaVDMHighlighter >> typeIdentifier [
-	^ self type: super typeIdentifier
-]
-
-{ #category : #'parsers-interfaces' }
-ViennaVDMHighlighter >> typeImport [
-	^ (self typeDefinition , ((self renamed , (self decl: (self type: name))) ==> #second) optional)
-		/ (self typeName , ((self renamed , (self decl: (self type: name))) ==> #second) optional)
-]
-
 { #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> types [
 	^ self keyword: super types
@@ -529,11 +462,6 @@ ViennaVDMHighlighter >> types [
 { #category : #'parsers-expressions' }
 ViennaVDMHighlighter >> undefinedExpression [
 	^ self keyword: super undefinedExpression
-]
-
-{ #category : #'parsers-types' }
-ViennaVDMHighlighter >> unitType [
-	^ self type: super unitType
 ]
 
 { #category : #'parsers-keywords' }

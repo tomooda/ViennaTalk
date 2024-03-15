@@ -14,7 +14,7 @@ Class {
 	#classVars : [
 		'DefaultBasePath'
 	],
-	#category : #'ViennaTalk-Browser-Core'
+	#category : #'ViennaTalk-Browser-Core-Browsers'
 }
 
 { #category : #accessing }

@@ -103,6 +103,21 @@ ViennaTranspiledObject class >> viennaEnv: aDictionary [
 ]
 
 { #category : #evaluating }
+ViennaTranspiledObject >> debugExpression: aString with: aViennaVDM2SmalltalkClass ifError: errorBlock [
+
+	| src |
+	src := 'self halt. ' , (self class
+		        transpileExpression: aString
+		        with: aViennaVDM2SmalltalkClass
+		        ifError: [ :msg | ^ errorBlock cull: msg ]).
+	^ OpalCompiler new
+		  source: src;
+		  logged: false;
+		  receiver: self;
+		  evaluate
+]
+
+{ #category : #evaluating }
 ViennaTranspiledObject >> evaluateExpression: aString [
 	^ self evaluateExpression: aString ifError: [ :msg | self error: msg ]
 ]
@@ -147,6 +162,13 @@ ViennaTranspiledObject >> evaluateStatement: aString with: aViennaVDM2SmalltalkC
 		source: src;
 		receiver: self;
 		evaluate
+]
+
+{ #category : #private }
+ViennaTranspiledObject >> init [
+	"The transpiler should generate code that overrides me."
+
+	^ self subclassResponsibility
 ]
 
 { #category : #accessing }

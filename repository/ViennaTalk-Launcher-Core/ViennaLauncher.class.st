@@ -174,6 +174,7 @@ ViennaLauncher class >> worldMenuOn: aBuilder [
 
 	<worldMenu>
 	(aBuilder item: #ViennaTalk)
+		order: 0.01;
 		icon: self viennaIcon;
 		withSeparatorAfter;
 		with: [
