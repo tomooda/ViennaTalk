@@ -16,6 +16,12 @@ ViennaRenameStateConstructor >> construct [
 	^ 'state constructor'
 ]
 
+{ #category : #testing }
+ViennaRenameStateConstructor >> isForCategoryList [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaRenameStateConstructor >> sortingOrder [
 	^ 1.21

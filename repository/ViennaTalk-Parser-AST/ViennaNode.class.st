@@ -2679,7 +2679,7 @@ ViennaNode >> second [
 { #category : #accessing }
 ViennaNode >> section [
 
-	^ self isViennaSectionNode
+	^ (self isViennaSectionNode or: [ self isViennaStateDefinitionNode ])
 		  ifTrue: [ self ]
 		  ifFalse: [ parent ifNotNil: #section ]
 ]

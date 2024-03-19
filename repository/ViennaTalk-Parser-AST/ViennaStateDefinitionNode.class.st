@@ -183,3 +183,9 @@ ViennaStateDefinitionNode >> shortName [
 
 	^ self identifier
 ]
+
+{ #category : #enumerating }
+ViennaStateDefinitionNode >> toplevelDefinitionsDo: aBlock [
+
+	
+]

@@ -24,6 +24,17 @@ ViennaRefactoring class >> on: aViennaNode do: aBlock [
 ]
 
 { #category : #utilities }
+ViennaRefactoring class >> on: aViennaNode suchthat: conditionBlock do: aBlock [
+
+	self allSubclassesDo: [ :class |
+		class isAbstract ifFalse: [
+			| refactoring |
+			refactoring := class new ast: aViennaNode.
+			((conditionBlock value: refactoring) and: [ refactoring check ])
+				ifTrue: [ aBlock value: refactoring ] ] ]
+]
+
+{ #category : #utilities }
 ViennaRefactoring class >> sortedInstancesOn: aViennaNode [
 	^ (Array
 		streamContents: [ :stream | 
@@ -31,6 +42,18 @@ ViennaRefactoring class >> sortedInstancesOn: aViennaNode [
 				on: aViennaNode
 				do: [ :refactoring | stream nextPut: refactoring ] ])
 		sorted: [ :less :more | less sortingOrder <= more sortingOrder ]
+]
+
+{ #category : #utilities }
+ViennaRefactoring class >> sortedInstancesOn: aViennaNode suchthat: aBlock [
+
+	^ (Array streamContents: [ :stream |
+		   self
+			   on: aViennaNode
+			   suchthat: aBlock
+			   do: [ :refactoring | stream nextPut: refactoring ] ]) sorted: [
+		  :less
+		  :more | less sortingOrder <= more sortingOrder ]
 ]
 
 { #category : #'visiting-definitions' }

@@ -628,24 +628,26 @@ ViennaRefactoringBrowser >> categoryListContextMenu [
 
 	| menu |
 	menu := self newMenu.
-	self category
-		ifNotNil: [ :category | 
-			menu addGroup: [ :group | 
-				(ViennaRefactoring sortedInstancesOn: category) do: [ :refactoring | 
-					group addItem: [ :item | 
-						item
-							name: refactoring name;
-							action: [ self executeRefactoring: refactoring ] ] ] ] ]
-		ifNil: [ 
-			menu addGroup: [ :group | 
-				(ViennaRefactoring sortedInstancesOn: self specification) do: [ 
-					:refactoring | 
-					group addItem: [ :item | 
-						item
-							name: refactoring name;
-							action: [ self executeRefactoring: refactoring ] ] ] ] ].
-	menu addGroup: [ :group | 
-		menu addItem: [ :item | 
+	self category ifNotNil: [ :category |
+		menu addGroup: [ :group |
+			(ViennaRefactoring
+				 sortedInstancesOn: category
+				 suchthat: #isForCategoryList) do: [ :refactoring |
+				group addItem: [ :item |
+					item
+						name: refactoring name;
+						action: [ self executeRefactoring: refactoring ] ] ] ] ].
+	self category == self module ifFalse: [
+		menu addGroup: [ :group |
+			(ViennaRefactoring
+				 sortedInstancesOn: self module
+				 suchthat: #isForCategoryList) do: [ :refactoring |
+				group addItem: [ :item |
+					item
+						name: refactoring name;
+						action: [ self executeRefactoring: refactoring ] ] ] ] ].
+	menu addGroup: [ :group |
+		menu addItem: [ :item |
 			item
 				name: 'inspect';
 				action: [ self category inspect ] ] ].
@@ -690,8 +692,9 @@ ViennaRefactoringBrowser >> definitionListContextMenu [
 	menu := self newMenu.
 	self definitionBase ifNotNil: [ :definition |
 		menu addGroup: [ :group |
-			(ViennaRefactoring sortedInstancesOn: definition) do: [
-				:refactoring |
+			(ViennaRefactoring
+				 sortedInstancesOn: definition
+				 suchthat: #isForDefinitionList) do: [ :refactoring |
 				group addItem: [ :item |
 					item
 						name: refactoring name;
@@ -1279,23 +1282,26 @@ ViennaRefactoringBrowser >> moduleListContextMenu [
 	| menu |
 	menu := self newMenu.
 	self module
-		ifNotNil: [ :module | 
-			menu addGroup: [ :group | 
-				(ViennaRefactoring sortedInstancesOn: module) do: [ :refactoring | 
-					group addItem: [ :item | 
+		ifNotNil: [ :module |
+			menu addGroup: [ :group |
+				(ViennaRefactoring
+					 sortedInstancesOn: module
+					 suchthat: #isForModuleList) do: [ :refactoring |
+					group addItem: [ :item |
 						item
 							name: refactoring name;
 							action: [ self executeRefactoring: refactoring ] ] ] ] ]
-		ifNil: [ 
-			menu addGroup: [ :group | 
-				(ViennaRefactoring sortedInstancesOn: self specification) do: [ 
-					:refactoring | 
-					group addItem: [ :item | 
+		ifNil: [
+			menu addGroup: [ :group |
+				(ViennaRefactoring
+					 sortedInstancesOn: self specification
+					 suchthat: #isForModuleList) do: [ :refactoring |
+					group addItem: [ :item |
 						item
 							name: refactoring name;
 							action: [ self executeRefactoring: refactoring ] ] ] ] ].
-	menu addGroup: [ :group | 
-		menu addItem: [ :item | 
+	menu addGroup: [ :group |
+		menu addItem: [ :item |
 			item
 				name: 'inspect';
 				action: [ self module inspect ] ] ].

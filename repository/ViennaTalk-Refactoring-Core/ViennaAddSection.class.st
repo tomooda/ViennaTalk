@@ -14,8 +14,10 @@ ViennaAddSection class >> isAbstract [
 ViennaAddSection >> findContainerNode [
 
 	ast ifNil: [ ^ nil ].
-	ast isViennaModuleNode ifTrue: [ ^ ast third ].
-	^ nil
+	(ast isViennaDocumentNode or: [
+		 ast isViennaModuleNode or: [ ast isViennaSectionNode ] ]) ifFalse: [
+		^ nil ].
+	^ ast module ifNotNil: #moduleBody
 ]
 
 { #category : #'instance creation' }

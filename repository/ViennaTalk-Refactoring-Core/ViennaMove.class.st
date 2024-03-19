@@ -119,6 +119,12 @@ ViennaMove >> findOkToAddImports [
 		  'OK to add import in ' , self destinationModule identifier
 ]
 
+{ #category : #testing }
+ViennaMove >> isForDefinitionList [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaMove >> name [
 

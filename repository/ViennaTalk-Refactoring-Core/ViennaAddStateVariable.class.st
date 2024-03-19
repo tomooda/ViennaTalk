@@ -2,7 +2,8 @@ Class {
 	#name : #ViennaAddStateVariable,
 	#superclass : #ViennaAdd,
 	#instVars : [
-		'initialValue'
+		'initialValue',
+		'newType'
 	],
 	#category : #'ViennaTalk-Refactoring-Core'
 }
@@ -14,7 +15,7 @@ ViennaAddStateVariable >> execute [
 		  self newAst ifNotNil: [ :stateField |
 			  (stateDefinition bindsIdentifier: stateField identifier)
 				  ifFalse: [
-					  stateDefinition fieldList add: self newAst.
+					  stateDefinition fieldList add: stateField.
 					  stateDefinition inv ifNotNil: [ :inv |
 						  | pattern |
 						  pattern := inv pattern.
@@ -63,6 +64,14 @@ ViennaAddStateVariable >> findNewName [
 ]
 
 { #category : #accessing }
+ViennaAddStateVariable >> findNewType [
+
+	(UIManager default request: self newTypeQuery initialAnswer: '?')
+		ifNotNil: [ :ans | ans trim ifNotEmpty: [ :name | ^ name ] ].
+	^ nil
+]
+
+{ #category : #accessing }
 ViennaAddStateVariable >> initialValue [
 
 	^ initialValue ifNil: [ initialValue := self findInitialValue ]
@@ -75,9 +84,34 @@ ViennaAddStateVariable >> name [
 ]
 
 { #category : #accessing }
+ViennaAddStateVariable >> newAst [
+
+	| newAst |
+	newAst := self parser parse:
+		          (self sourceWithNewName:
+			           (self newName ifNil: [ ^ nil ]) , ' : '
+			           , (self newType ifNil: [ ^ nil ])).
+	^ newAst isPetit2Failure
+		  ifTrue: [ nil ]
+		  ifFalse: [ newAst ]
+]
+
+{ #category : #accessing }
 ViennaAddStateVariable >> newNameQuery [
 
 	^ 'a new state variable name'
+]
+
+{ #category : #accessing }
+ViennaAddStateVariable >> newType [
+
+	^ newType ifNil: [ newType := self findNewType ]
+]
+
+{ #category : #accessing }
+ViennaAddStateVariable >> newTypeQuery [
+
+	^ 'type of the new variable'
 ]
 
 { #category : #accessing }

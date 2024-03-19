@@ -17,7 +17,7 @@ ViennaAddExplicitOperation >> name [
 	^ 'Add explicit operation ' , (newName ifNil: [ '' ])
 ]
 
-{ #category : #'instance creation' }
+{ #category : #accessing }
 ViennaAddExplicitOperation >> newNameQuery [
 
 	^ 'a new explicit operation name'
