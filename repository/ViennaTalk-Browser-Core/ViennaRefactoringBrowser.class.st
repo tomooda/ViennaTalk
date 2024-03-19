@@ -765,6 +765,12 @@ ViennaRefactoringBrowser >> evaluate: aString [
 ]
 
 { #category : #operations }
+ViennaRefactoringBrowser >> evaluateIt: aString in: aSpCodePresenter [
+
+	self popup: (self evaluate: aString) in: aSpCodePresenter
+]
+
+{ #category : #operations }
 ViennaRefactoringBrowser >> executeRefactoring: aViennaRefactoring [
 
 	| newAst copyMap refactoring result |
@@ -1382,22 +1388,10 @@ ViennaRefactoringBrowser >> pendingTypeError [
 ]
 
 { #category : #operations }
-ViennaRefactoringBrowser >> popup: aString [
+ViennaRefactoringBrowser >> popup: aString in: aSpCodePresenter [
 
-	sourceText insertPopoverAfterCurrentSelection:
+	aSpCodePresenter insertPopoverAfterCurrentSelection:
 		(self newLabel label: aString)
-	"self newPopover
-		addStyle: 'error';
-		bePositionRight;
-		relativeTo: sourceText;
-		presenter: (self newLabel label: aString);
-		popup"
-]
-
-{ #category : #operations }
-ViennaRefactoringBrowser >> printIt: aString [
-
-	self popup: (self evaluate: aString)
 ]
 
 { #category : #operations }
@@ -1405,10 +1399,10 @@ ViennaRefactoringBrowser >> runAllTests [
 
 	testProcess ifNotNil: [ testProcess terminate ].
 	testProcess := [
-	               | ast animation |
+	               | ast testAnimation |
 	               testResultTable items: #(  ).
 	               ast := self specification ifNil: [ ^ nil ].
-	               animation := ViennaAnimation default
+	               testAnimation := ViennaAnimation default
 		                            specification:
 			                            (ViennaVDMFormatter format: ast);
 		                            yourself.
@@ -1436,7 +1430,7 @@ ViennaRefactoringBrowser >> runAllTests [
 														                (self
 															                 runTestModule: moduleName
 															                 operation: operationName
-															                 animation: animation)) ] ] ] ] ] ] ] ].
+															                 animation: testAnimation)) ] ] ] ] ] ] ] ].
 	               testProcess := nil ] forkAt:
 		               Processor userBackgroundPriority
 ]
@@ -1553,10 +1547,15 @@ ViennaRefactoringBrowser >> sourceTextContextMenu [
 	menu := self newMenu.
 	self sourceSelection ifNotNil: [ :node |
 		menu addGroup: [ :group |
-			group addItem: [ :item |
-				item
-					name: 'Type it';
-					action: [ self typeIt: node ] ] ].
+			group
+				addItem: [ :item |
+					item
+						name: 'Evaluate it';
+						action: [ self evaluateIt: node source in: sourceText ] ];
+				addItem: [ :item |
+					item
+						name: 'Type it';
+						action: [ self typeIt: node in: sourceText ] ] ].
 		self addRefactoringMenuGroupOn: node to: menu with: [ :group |  ].
 		(node detectParent: #isViennaOperationDefinitionNode ifNone: [ nil ])
 			ifNotNil: [
@@ -1602,9 +1601,9 @@ ViennaRefactoringBrowser >> title [
 ]
 
 { #category : #operations }
-ViennaRefactoringBrowser >> typeIt: aViennaNode [
+ViennaRefactoringBrowser >> typeIt: aViennaNode in: aSpCodePresenter [
 
-	self popup: aViennaNode typecheck printString
+	self popup: aViennaNode typecheck printString in: aSpCodePresenter
 ]
 
 { #category : #operations }
