@@ -10,12 +10,13 @@ Class {
 		'categoryList',
 		'definitionList',
 		'sourceText',
-		'testProcess',
 		'testResultTable',
 		'sourceSignalButton',
 		'talkbackLabel',
+		'playgroundText',
 		'pendingSyntaxError',
 		'pendingTypeError',
+		'testProcess',
 		'highlighterProcess',
 		'dirty'
 	],
@@ -67,32 +68,16 @@ ViennaRefactoringBrowser class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		  add: #menuBar height: self buttonHeight;
-		  add: #notebook
-]
-
-{ #category : #layout }
-ViennaRefactoringBrowser class >> defaultLayout2 [
-
-	^ SpBoxLayout newVertical
-		  add: #menuBar height: self buttonHeight;
 		  add: (SpPanedLayout newVertical
-				   positionOfSlider: 0.5;
+				   positionOfSlider: 0.3;
 				   add: (SpBoxLayout newHorizontal
 						    add: (SpBoxLayout newVertical
-								     add: #historyList height: self buttonHeight;
+								     add: #historyList expand: false;
 								     add: #moduleList);
 						    add: #categoryList;
 						    add: #definitionList);
-				   add: (SpPanedLayout newHorizontal
-						    positionOfSlider: 0.8;
-						    add: (SpBoxLayout newVertical
-								     add: (SpBoxLayout newHorizontal
-										      add: #sourceSignalButton width: 48;
-										      add: #talkbackLabel;
-										      yourself)
-								     height: 16;
-								     add: #sourceText);
-						    add: #testResultTable))
+				   add: #notebook);
+		  yourself
 ]
 
 { #category : #settings }
@@ -637,15 +622,6 @@ ViennaRefactoringBrowser >> categoryListContextMenu [
 					item
 						name: refactoring name;
 						action: [ self executeRefactoring: refactoring ] ] ] ] ].
-	self category == self module ifFalse: [
-		menu addGroup: [ :group |
-			(ViennaRefactoring
-				 sortedInstancesOn: self module
-				 suchthat: #isForCategoryList) do: [ :refactoring |
-				group addItem: [ :item |
-					item
-						name: refactoring name;
-						action: [ self executeRefactoring: refactoring ] ] ] ] ].
 	menu addGroup: [ :group |
 		menu addItem: [ :item |
 			item
@@ -1074,11 +1050,23 @@ ViennaRefactoringBrowser >> initializePresenters [
 		                   upper sortingOrder <= lower sortingOrder ];
 		                   contextMenu: [ self testResultTableContextMenu ];
 		                   yourself.
+	playgroundText := self newCode
+		                  clearInteractionModel;
+		                  overridingContextMenu;
+		                  withoutLineNumbers;
+		                  withoutSyntaxHighlight;
+		                  withoutSmartCharacters;
+		                  contextMenu: [ self playgroundTextContextMenu ];
+		                  yourself.
 	notebook := self newNotebook
 		            addPageTitle: 'Source' provider: [
 			            SpPresenter new
 				            layout: self sourcePageLayout;
 				            yourself ];
+		            addPageTitle: 'Playground' provider: [
+		            SpPresenter new
+			            layout: self playgroundPageLayout;
+			            yourself ];
 		            yourself.
 	self whenBuiltDo: [ :w |
 		| f |
@@ -1393,6 +1381,57 @@ ViennaRefactoringBrowser >> pendingTypeError [
 	^ pendingTypeError
 ]
 
+{ #category : #layouts }
+ViennaRefactoringBrowser >> playgroundPageLayout [
+
+	^ SpBoxLayout newHorizontal
+		  add: playgroundText;
+		  yourself
+]
+
+{ #category : #accessing }
+ViennaRefactoringBrowser >> playgroundSelection [
+
+	| text start end node |
+	text := playgroundText text asString.
+	playgroundText selectionInterval in: [ :interval |
+		start := interval first.
+		end := interval last ].
+	start > end ifTrue: [
+		[ start > 1 and: [ (text at: start - 1) ~= Character cr ] ]
+			whileTrue: [ start := start - 1 ].
+		[ end < text size and: [ (text at: end + 1) ~= Character cr ] ]
+			whileTrue: [ end := end + 1 ].
+		playgroundText selectionInterval: (start to: end) ].
+	node := ViennaVDMParser new expression parse:
+		        (text copyFrom: start to: end).
+	^ node isPetit2Failure
+		  ifTrue: [ nil ]
+		  ifFalse: [
+			  node
+				  parent: self module;
+				  yourself ]
+]
+
+{ #category : #menus }
+ViennaRefactoringBrowser >> playgroundTextContextMenu [
+
+	| menu |
+	menu := self newMenu.
+	self playgroundSelection ifNotNil: [ :node |
+		menu addGroup: [ :group |
+			group
+				addItem: [ :item |
+					item
+						name: 'Evaluate it';
+						action: [ self evaluateIt: node source in: sourceText ] ];
+				addItem: [ :item |
+					item
+						name: 'Type it';
+						action: [ self typeIt: node in: sourceText ] ] ] ].
+	^ menu
+]
+
 { #category : #operations }
 ViennaRefactoringBrowser >> popup: aString in: aSpCodePresenter [
 
@@ -1514,24 +1553,16 @@ ViennaRefactoringBrowser >> source [
 { #category : #layouts }
 ViennaRefactoringBrowser >> sourcePageLayout [
 
-	^ SpPanedLayout newVertical
-		  positionOfSlider: 0.3;
-		  add: (SpBoxLayout newHorizontal
-				   add: (SpBoxLayout newVertical
-						    add: historyList expand: false;
-						    add: moduleList);
-				   add: categoryList;
-				   add: definitionList);
-		  add: (SpPanedLayout newHorizontal
-				   positionOfSlider: 0.6;
-				   add: (SpBoxLayout newVertical
-						    add: (SpBoxLayout newHorizontal
-								     add: sourceSignalButton width: 48;
-								     add: talkbackLabel;
-								     yourself)
-						    height: 16;
-						    add: sourceText);
-				   add: testResultTable)
+	^ SpPanedLayout newHorizontal
+		  positionOfSlider: 0.6;
+		  add: (SpBoxLayout newVertical
+				   add: (SpBoxLayout newHorizontal
+						    add: sourceSignalButton width: 48;
+						    add: talkbackLabel;
+						    yourself)
+				   height: 16;
+				   add: sourceText);
+		  add: testResultTable
 ]
 
 { #category : #accessing }
@@ -1609,7 +1640,11 @@ ViennaRefactoringBrowser >> title [
 { #category : #operations }
 ViennaRefactoringBrowser >> typeIt: aViennaNode in: aSpCodePresenter [
 
-	self popup: aViennaNode typecheck printString in: aSpCodePresenter
+	self
+		popup: ([ aViennaNode maximalType ]
+				 on: ViennaTypeError
+				 do: [ :ex | ex ]) printString
+		in: aSpCodePresenter
 ]
 
 { #category : #operations }
