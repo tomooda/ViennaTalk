@@ -1017,14 +1017,16 @@ ViennaRefactoringBrowser >> initializePresenters [
 						                 ifNotNil: [ Color yellow lighter ]
 						                 ifNil: [ Color transparent ] ] ];
 		                 yourself.
-	sourceText := self newCode
-		              clearInteractionModel;
-		              overridingContextMenu;
-		              withoutSyntaxHighlight;
-		              withoutSmartCharacters;
+	sourceText := self newVDMSource
 		              contextMenu: [ self sourceTextContextMenu ];
 		              whenTextChangedDo: [ self onTheFlyCheckSourceText ];
 		              whenSubmitDo: [ :text | self accept: text ];
+		              bindKeyCombination: $p command toAction: [
+			              self sourceSelection ifNotNil: [ :node |
+					              self evaluateIt: node source in: sourceText ] ];
+		              bindKeyCombination: $t command toAction: [
+			              self sourceSelection ifNotNil: [ :node |
+					              self typeIt: node in: sourceText ] ];
 		              yourself.
 	testResultTable := self newTable
 		                   addColumn:
@@ -1050,13 +1052,15 @@ ViennaRefactoringBrowser >> initializePresenters [
 		                   upper sortingOrder <= lower sortingOrder ];
 		                   contextMenu: [ self testResultTableContextMenu ];
 		                   yourself.
-	playgroundText := self newCode
-		                  clearInteractionModel;
-		                  overridingContextMenu;
+	playgroundText := self newVDMSource
 		                  withoutLineNumbers;
-		                  withoutSyntaxHighlight;
-		                  withoutSmartCharacters;
 		                  contextMenu: [ self playgroundTextContextMenu ];
+		                  bindKeyCombination: $p command toAction: [
+			                  self playgroundSelection ifNotNil: [ :node |
+					                  self evaluateIt: node source in: playgroundText ] ];
+		                  bindKeyCombination: $t command toAction: [
+			                  self playgroundSelection ifNotNil: [ :node |
+					                  self typeIt: node in: playgroundText ] ];
 		                  yourself.
 	notebook := self newNotebook
 		            addPageTitle: 'Source' provider: [
@@ -1088,6 +1092,14 @@ ViennaRefactoringBrowser >> initializeWindow: aWindowPresenter [
 					 orCancel: [
 						 willCloseAnnouncement denyClose.
 						 false ] ] ]) ifTrue: [ self export ] ]
+]
+
+{ #category : #'instance creation' }
+ViennaRefactoringBrowser >> instantiate: aPresenterClass [
+
+	^ (super instantiate: aPresenterClass)
+		  font: ViennaLauncher font;
+		  yourself
 ]
 
 { #category : #private }
@@ -1296,6 +1308,12 @@ ViennaRefactoringBrowser >> moduleListContextMenu [
 	^ menu
 ]
 
+{ #category : #'instance creation' }
+ViennaRefactoringBrowser >> newVDMSource [
+
+	^ self instantiate: ViennaVDMSourcePresenter
+]
+
 { #category : #'operations-source signal' }
 ViennaRefactoringBrowser >> notifyAnimationError: aString [
 
@@ -1424,19 +1442,20 @@ ViennaRefactoringBrowser >> playgroundTextContextMenu [
 				addItem: [ :item |
 					item
 						name: 'Evaluate it';
-						action: [ self evaluateIt: node source in: sourceText ] ];
+						action: [ self evaluateIt: node source in: playgroundText ] ];
 				addItem: [ :item |
 					item
 						name: 'Type it';
-						action: [ self typeIt: node in: sourceText ] ] ] ].
+						action: [ self typeIt: node in: playgroundText ] ] ] ].
 	^ menu
 ]
 
 { #category : #operations }
 ViennaRefactoringBrowser >> popup: aString in: aSpCodePresenter [
 
-	aSpCodePresenter insertPopoverAfterCurrentSelection:
-		(self newLabel label: aString)
+	aSpCodePresenter
+		insertPopoverAfterCurrentSelection: (self newLabel label: aString)
+		style: 'print'
 ]
 
 { #category : #operations }
