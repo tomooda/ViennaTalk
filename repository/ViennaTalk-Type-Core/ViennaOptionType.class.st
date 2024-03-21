@@ -100,6 +100,7 @@ ViennaOptionType >> isOptionType [
 
 { #category : #accessing }
 ViennaOptionType >> name [
+
 	^ '[' , basetype name , ']'
 ]
 
@@ -113,6 +114,14 @@ ViennaOptionType >> possibleTypesDo: aBlock [
 
 	self basetype possibleTypesDo: aBlock.
 	aBlock value: ViennaType unit optional
+]
+
+{ #category : #printing }
+ViennaOptionType >> printOn: aStream [
+
+	basetype isUnitType
+		ifTrue: [ aStream nextPutAll: 'nil' ]
+		ifFalse: [ super printOn: aStream ]
 ]
 
 { #category : #private }

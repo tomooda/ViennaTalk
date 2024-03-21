@@ -5,13 +5,26 @@ Class {
 		'animation',
 		'module'
 	],
-	#category : #'ViennaTalk-Browser-Core-Browsers'
+	#category : #'ViennaTalk-Browser-Core-Spec2'
 }
 
 { #category : #commands }
 ViennaVDMSourcePresenter class >> buildCommandsGroupWith: presenter forRoot: aCmCommandsGroup [
 
-	
+	| group |
+	group := (CmCommandGroup named: 'Selection action commands')
+		         asSpecGroup.
+	group
+		description: 'Actions on code selection.';
+		beDisplayedAsGroup.
+
+	{
+		ViennaEvaluateItCommand.
+		ViennaTypeItCommand.
+		ViennaExecuteItCommand } do: [ :cmdClass |
+		group register: (cmdClass forSpecContext: presenter) ].
+	aCmCommandsGroup register: group.
+	^ group
 ]
 
 { #category : #accessing }
@@ -100,7 +113,7 @@ ViennaVDMSourcePresenter >> evaluateExpression: aString ifError: errorBlock [
 		do: [ :ex | ^ errorBlock cull: ex messageText ].
 	^ (animation value ifNil: [ ViennaAnimation default ])
 		  plainExecute: node
-		  in: node module identifier
+		  in: (node module ifNotNil: #identifier)
 		  ifError: errorBlock
 ]
 
@@ -125,13 +138,8 @@ ViennaVDMSourcePresenter >> initialize [
 
 	super initialize.
 	self
-		clearInteractionModel;
-		overridingContextMenu;
 		withoutSyntaxHighlight;
-		withoutSmartCharacters;
-		bindKeyCombination: $p command toAction: [ self doEvaluateIt ];
-		bindKeyCombination: $d command toAction: [ self doExecuteIt ];
-		bindKeyCombination: $t command toAction: [ self doTypeIt ]
+		withoutSmartCharacters
 ]
 
 { #category : #accessing }

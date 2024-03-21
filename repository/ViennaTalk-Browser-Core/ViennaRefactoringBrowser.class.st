@@ -1050,7 +1050,7 @@ ViennaRefactoringBrowser >> initializePresenters [
 		                  animation: [ animation ];
 		                  module: [ self module ];
 		                  withoutLineNumbers;
-		                  contextMenu: [ self playgroundTextContextMenu ];
+		                 " contextMenu: [ self playgroundTextContextMenu ];"
 		                  yourself.
 	stateTable := self newTable
 		              addColumn: (SpStringTableColumn
