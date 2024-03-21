@@ -178,6 +178,12 @@ ViennaStateDefinitionNode >> maximalType [
 	^ maximalType
 ]
 
+{ #category : #accessing }
+ViennaStateDefinitionNode >> parser [
+
+	^ ViennaVDMParser new stateDefinition end
+]
+
 { #category : #'accessing-definitions' }
 ViennaStateDefinitionNode >> shortName [
 

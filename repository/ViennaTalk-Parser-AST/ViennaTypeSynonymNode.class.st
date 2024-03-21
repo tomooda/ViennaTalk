@@ -177,6 +177,12 @@ ViennaTypeSynonymNode >> maximalType [
 	^ maximalType
 ]
 
+{ #category : #accessing }
+ViennaTypeSynonymNode >> parser [
+
+	^ ViennaVDMParser new typeDefinition
+]
+
 { #category : #'accessing-definitions' }
 ViennaTypeSynonymNode >> shortName [
 

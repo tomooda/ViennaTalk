@@ -102,6 +102,22 @@ ViennaAnimation class >> vdmj [
 		yourself
 ]
 
+{ #category : #announcement }
+ViennaAnimation >> announceSpecificationChanged [
+
+	self announcer announce: (ViennaSpecificationChanged new
+			 animation: self;
+			 yourself)
+]
+
+{ #category : #announcement }
+ViennaAnimation >> announceStateChanged [
+
+	self announcer announce: (ViennaStateChanged new
+			 animation: self;
+			 yourself)
+]
+
 { #category : #converting }
 ViennaAnimation >> asInterpretedAnimation [
 	^ self
@@ -121,10 +137,10 @@ ViennaAnimation >> at: aString ifAbsent: errorBlock [
 
 { #category : #accessing }
 ViennaAnimation >> at: aString ifAbsentPut: errorBlock [
-	^ self
-		at: aString
-		ifPresent: [ :value | value ]
-		ifAbsent: [ state at: aString put: (writer stringify: errorBlock value) ]
+
+	^ self at: aString ifPresent: [ :value | value ] ifAbsent: [
+		  state at: aString put: (writer stringify: errorBlock value).
+		  self announceStateChanged ]
 ]
 
 { #category : #accessing }
@@ -144,41 +160,41 @@ ViennaAnimation >> at: aString put: anObject [
 
 { #category : #evaluating }
 ViennaAnimation >> basicPlainEvaluate: aString in: moduleName ifError: errorBlock [
-	Cursor wait
-		showWhile: [ | preState result postState |
-			preState := Dictionary new.
-			state
-				keysAndValuesDo: [ :key :value | 
-					| module var |
-					(key includes: $`)
-						ifTrue: [ | index |
-							index := key indexOf: $`.
-							module := key copyFrom: 1 to: index - 1.
-							var := key copyFrom: index + 1 to: key size ]
-						ifFalse: [ module := self defaultModule.
-							var := key ].
-					(preState at: module ifAbsentPut: [ Dictionary new ])
-						at: var
-						put: value ].
-			result := engine
-				evaluate: aString
-				specification: self specification
-				states: preState
-				module: moduleName.
-			result third ifNotEmpty: [ :msg | ^ errorBlock value: msg ].
-			postState := Dictionary new.
-			result second
-				keysAndValuesDo: [ :module :binds | 
-					binds
-						keysAndValuesDo: [ :var :value | 
-							postState
-								at:
-									(var = self defaultModule
-										ifTrue: [ var ]
-										ifFalse: [ module , '`' , var ])
-								put: value ] ].
-			state := postState.
-			^ result first ]
+
+	Cursor wait showWhile: [
+		| preState result postState |
+		preState := Dictionary new.
+		state keysAndValuesDo: [ :key :value |
+			| module var |
+			(key includes: $`)
+				ifTrue: [
+					| index |
+					index := key indexOf: $`.
+					module := key copyFrom: 1 to: index - 1.
+					var := key copyFrom: index + 1 to: key size ]
+				ifFalse: [
+					module := self defaultModule.
+					var := key ].
+			(preState at: module ifAbsentPut: [ Dictionary new ])
+				at: var
+				put: value ].
+		result := engine
+			          evaluate: aString
+			          specification: self specification
+			          states: preState
+			          module: moduleName.
+		result third ifNotEmpty: [ :msg | ^ errorBlock value: msg ].
+		postState := Dictionary new.
+		result second keysAndValuesDo: [ :module :binds |
+			binds keysAndValuesDo: [ :var :value |
+				postState
+					at: (var = self defaultModule
+							 ifTrue: [ var ]
+							 ifFalse: [ module , '`' , var ])
+					put: value ] ].
+		state := postState.
+		self announceStateChanged.
+		^ result first ]
 ]
 
 { #category : #private }
@@ -218,23 +234,24 @@ ViennaAnimation >> evaluate: aString [
 
 { #category : #evaluating }
 ViennaAnimation >> init [
-	lock
-		critical: [ 
-			| result postState |
-			result := engine evaluate: String new specification: self specification states: Dictionary new.
-			result third ifNotEmpty: [ :msg | ^ Error signal: msg ].
-			postState := Dictionary new.
-			result second
-				keysAndValuesDo: [ :module :binds | 
-					binds
-						keysAndValuesDo: [ :var :value | 
-							postState
-								at:
-									(var = self defaultModule
-										ifTrue: [ var ]
-										ifFalse: [ module , '`' , var ])
-								put: value ] ].
-			state := postState ]
+
+	lock critical: [
+		| result postState |
+		result := engine
+			          evaluate: String new
+			          specification: self specification
+			          states: Dictionary new.
+		result third ifNotEmpty: [ :msg | ^ Error signal: msg ].
+		postState := Dictionary new.
+		result second keysAndValuesDo: [ :module :binds |
+			binds keysAndValuesDo: [ :var :value |
+				postState
+					at: (var = self defaultModule
+							 ifTrue: [ var ]
+							 ifFalse: [ module , '`' , var ])
+					put: value ] ].
+		state := postState.
+		self announceStateChanged ]
 ]
 
 { #category : #'initialize-release' }
@@ -272,7 +289,10 @@ ViennaAnimation >> plainAt: aString ifAbsent: errorBlock [
 
 { #category : #'accessing-plain' }
 ViennaAnimation >> plainAt: aString ifAbsentPut: errorBlock [
-	^ self plainAt: aString ifPresent: [ :value | value ] ifAbsent: [ state at: aString put: errorBlock value ]
+
+	^ self plainAt: aString ifPresent: [ :value | value ] ifAbsent: [
+		  state at: aString put: errorBlock value.
+		  self announceStateChanged ]
 ]
 
 { #category : #'accessing-plain' }
@@ -282,7 +302,10 @@ ViennaAnimation >> plainAt: aString ifPresent: aBlock ifAbsent: errorBlock [
 
 { #category : #'accessing-plain' }
 ViennaAnimation >> plainAt: aString put: anObject [
-	^ state at: aString put: anObject
+
+	state at: aString put: anObject.
+	self announceStateChanged.
+	^ anObject
 ]
 
 { #category : #evaluating }
@@ -347,8 +370,10 @@ ViennaAnimation >> specification [
 
 { #category : #accessing }
 ViennaAnimation >> specification: aString [
+
 	specification := aString.
-	self changed: #specification
+	self changed: #specification.
+	self announceSpecificationChanged
 ]
 
 { #category : #accessing }
@@ -372,7 +397,10 @@ ViennaAnimation >> specification: aStringOrViennaNode ifError: errorBlock [
 					specification := oldSpec.
 					^ errorBlock cull: msg ] ].
 		self changed: #specification.
-		oldState ~= state ifTrue: [ self changed: #state ] ]
+		self announceSpecificationChanged.
+		oldState ~= state ifTrue: [
+			self changed: #state.
+			self announceStateChanged ] ]
 ]
 
 { #category : #private }
@@ -382,7 +410,9 @@ ViennaAnimation >> state [
 
 { #category : #accessing }
 ViennaAnimation >> state: aDictionary [
-	state := aDictionary copy
+
+	state := aDictionary copy.
+	self announceStateChanged
 ]
 
 { #category : #private }

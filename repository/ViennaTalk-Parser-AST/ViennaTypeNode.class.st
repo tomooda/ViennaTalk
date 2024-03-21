@@ -34,3 +34,9 @@ ViennaTypeNode >> maximalType [
 
 	^ self asMaximalViennaType
 ]
+
+{ #category : #accessing }
+ViennaTypeNode >> parser [
+
+	^ ViennaVDMParser new type end
+]

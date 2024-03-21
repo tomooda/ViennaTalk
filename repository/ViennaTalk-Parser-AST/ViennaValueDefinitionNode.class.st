@@ -179,6 +179,12 @@ ViennaValueDefinitionNode >> maximalType [
 ]
 
 { #category : #accessing }
+ViennaValueDefinitionNode >> parser [
+
+	^ ViennaVDMParser new valueDefinition
+]
+
+{ #category : #accessing }
 ViennaValueDefinitionNode >> pattern [
 
 	^ self at: 2

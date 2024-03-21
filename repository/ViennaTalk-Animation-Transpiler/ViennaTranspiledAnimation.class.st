@@ -41,6 +41,22 @@ ViennaTranspiledAnimation class >> viennaSettingsOn: aBuilder [
 		order: 0.4
 ]
 
+{ #category : #announcement }
+ViennaTranspiledAnimation >> announceSpecificationChanged [
+
+	self announcer announce: (ViennaSpecificationChanged new
+			 animation: self;
+			 yourself)
+]
+
+{ #category : #announcement }
+ViennaTranspiledAnimation >> announceStateChanged [
+
+	self announcer announce: (ViennaStateChanged new
+			 animation: self;
+			 yourself)
+]
+
 { #category : #converting }
 ViennaTranspiledAnimation >> asInterpretedAnimation [
 	| animation |
@@ -88,20 +104,27 @@ ViennaTranspiledAnimation >> at: aString ifPresent: presentBlock ifAbsent: absen
 
 { #category : #accessing }
 ViennaTranspiledAnimation >> at: aString put: anObject [
+
 	| separatorIndex target name value |
 	separatorIndex := aString indexOf: $`.
 	separatorIndex = 0
-		ifTrue: [ target := object.
+		ifTrue: [
+			target := object.
 			name := aString ]
-		ifFalse: [ | moduleName |
+		ifFalse: [
+			| moduleName |
 			moduleName := aString copyFrom: 1 to: separatorIndex - 1.
 			target := moduleName = self defaultModule
-				ifTrue: [ object ]
-				ifFalse: [ object at: (aString copyFrom: 1 to: separatorIndex - 1) ifAbsent: [ ^ nil ] ].
+				          ifTrue: [ object ]
+				          ifFalse: [
+					          object
+						          at: (aString copyFrom: 1 to: separatorIndex - 1)
+						          ifAbsent: [ ^ nil ] ].
 			name := aString copyFrom: separatorIndex + 1 to: aString size ].
 	[ value := target instVarNamed: name put: anObject ]
 		on: Error
 		do: [ :ex | ^ nil ].
+	self announceStateChanged.
 	^ value
 ]
 
@@ -138,6 +161,7 @@ ViennaTranspiledAnimation >> debug: aString in: moduleName ifError: errorBlock [
 			          with: transpiler
 			          ifError: [ :msg | ^ errorBlock cull: msg ].
 		self changed: #state.
+		self announceStateChanged.
 		^ result == object
 			  ifTrue: [ nil ]
 			  ifFalse: [ result ] ]
@@ -168,6 +192,7 @@ ViennaTranspiledAnimation >> evaluate: aString in: moduleName ifError: errorBloc
 			          with: transpiler
 			          ifError: [ :msg | ^ errorBlock cull: msg ].
 		self changed: #state.
+		self announceStateChanged.
 		^ result == object
 			  ifTrue: [ nil ]
 			  ifFalse: [ result ] ]
@@ -188,6 +213,7 @@ ViennaTranspiledAnimation >> execute: aViennaNode in: moduleName ifError: errorB
 			          with: transpiler
 			          ifError: [ :msg | ^ errorBlock cull: msg ].
 		self changed: #state.
+		self announceStateChanged.
 		^ result ]
 ]
 
@@ -243,6 +269,7 @@ ViennaTranspiledAnimation >> plainAt: aString ifPresent: presentBlock ifAbsent: 
 
 { #category : #accessing }
 ViennaTranspiledAnimation >> plainAt: aString put: aVDMString [
+
 	^ self at: aString put: (reader parse: aVDMString)
 ]
 
@@ -325,7 +352,9 @@ ViennaTranspiledAnimation >> specification: aString ifError: errorBlock [
 					object := transpiler generate: ast ] ].
 	specification := aString.
 	self changed: #specification.
-	self changed: #state
+	self announceSpecificationChanged.
+	self changed: #state.
+	self announceStateChanged
 ]
 
 { #category : #private }

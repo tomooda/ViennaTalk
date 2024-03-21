@@ -191,6 +191,12 @@ ViennaRecordTypeDefinitionNode >> maximalType [
 	^ maximalType
 ]
 
+{ #category : #accessing }
+ViennaRecordTypeDefinitionNode >> parser [
+
+	^ ViennaVDMParser new typeDefinition end
+]
+
 { #category : #'accessing-definitions' }
 ViennaRecordTypeDefinitionNode >> shortName [
 

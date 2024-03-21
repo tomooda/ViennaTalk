@@ -40,6 +40,12 @@ ViennaExpressionNode >> maximalType: aViennaType [
 				  , ' but actual ' , maximalType printString ]
 ]
 
+{ #category : #accessing }
+ViennaExpressionNode >> parser [
+
+	^ ViennaVDMParser new expression end
+]
+
 { #category : #typechecking }
 ViennaExpressionNode >> typecheck [
 

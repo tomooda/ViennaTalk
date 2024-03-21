@@ -575,6 +575,12 @@ ViennaModuleNode >> moduleOrFlatDocument [
 ]
 
 { #category : #accessing }
+ViennaModuleNode >> parser [
+
+	^ ViennaVDMParser new module end
+]
+
+{ #category : #accessing }
 ViennaModuleNode >> sections [
 
 	^ self moduleBody asArray

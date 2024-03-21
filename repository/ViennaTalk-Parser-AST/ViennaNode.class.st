@@ -2519,6 +2519,12 @@ ViennaNode >> parentsDo: aBlock [
 ]
 
 { #category : #accessing }
+ViennaNode >> parser [
+
+	^ nil
+]
+
+{ #category : #accessing }
 ViennaNode >> patternIdentifierNames [
 	^ self patternIdentifiers collect: #first
 ]

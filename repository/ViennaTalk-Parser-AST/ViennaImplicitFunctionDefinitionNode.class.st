@@ -296,6 +296,12 @@ ViennaImplicitFunctionDefinitionNode >> parametersList [
 ]
 
 { #category : #accessing }
+ViennaImplicitFunctionDefinitionNode >> parser [
+
+	^ ViennaVDMParser new functionDefinition end
+]
+
+{ #category : #accessing }
 ViennaImplicitFunctionDefinitionNode >> patternTypePairList [
 
 	^ self at: 4
