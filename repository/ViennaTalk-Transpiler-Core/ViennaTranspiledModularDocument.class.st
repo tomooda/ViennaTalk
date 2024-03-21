@@ -63,6 +63,36 @@ ViennaTranspiledModularDocument >> evaluateExpression: aString with: aViennaVDM2
 ]
 
 { #category : #evaluating }
+ViennaTranspiledModularDocument >> evaluateNode: aViennaNode [
+
+	^ self evaluateNode: aViennaNode ifError: [ :msg | self error: msg ]
+]
+
+{ #category : #evaluating }
+ViennaTranspiledModularDocument >> evaluateNode: aViennaNode ifError: errorBlock [
+
+	^ self
+		  evaluateNode: aViennaNode
+		  with: ViennaVDM2SmalltalkClass new
+		  ifError: errorBlock
+]
+
+{ #category : #evaluating }
+ViennaTranspiledModularDocument >> evaluateNode: aViennaNode with: aViennaVDM2SmalltalkClass ifError: errorBlock [
+
+	| src |
+	src := self
+		       transpileNode: aViennaNode
+		       with: aViennaVDM2SmalltalkClass
+		       ifError: [ :msg | ^ errorBlock cull: msg ].
+	^ OpalCompiler new
+		  source: src;
+		  logged: false;
+		  receiver: self;
+		  evaluate
+]
+
+{ #category : #evaluating }
 ViennaTranspiledModularDocument >> evaluateStatement: aString [
 	^ self evaluateStatement: aString ifError: [ :msg | self error: msg ]
 ]
@@ -75,21 +105,21 @@ ViennaTranspiledModularDocument >> evaluateStatement: aString ifError: errorBloc
 { #category : #evaluating }
 ViennaTranspiledModularDocument >> evaluateStatement: aString with: aViennaVDM2SmalltalkClass ifError: errorBlock [
 	| src |
-	src := self class
+	src := self
 		transpileStatement: aString
 		with: aViennaVDM2SmalltalkClass
 		ifError: [ :msg | ^ errorBlock cull: msg ].
 	^ OpalCompiler new
 		source: src;
+		logged: false;
 		receiver: self;
 		evaluate
 ]
 
 { #category : #private }
 ViennaTranspiledModularDocument >> init [
-	"The transpiler should generate code that overrides me."
 
-	^ self subclassResponsibility
+	self valuesDo: #init
 ]
 
 { #category : #initialize }
@@ -126,9 +156,17 @@ ViennaTranspiledModularDocument >> transpileExpression: aString with: transpiler
 ]
 
 { #category : #transpiling }
+ViennaTranspiledModularDocument >> transpileNode: aViennaNode with: transpiler ifError: errorBlock [
+
+	^ transpiler
+		  defaultEnv: viennaEnv;
+		  generate: aViennaNode
+]
+
+{ #category : #transpiling }
 ViennaTranspiledModularDocument >> transpileStatement: aString with: transpiler ifError: errorBlock [
 	| ast |
-	ast := ViennaVDMParser new expression end parse: aString.
+	ast := ViennaVDMParser new statement end parse: aString.
 	ast isPetit2Failure
 		ifTrue: [ ^ errorBlock cull: ast message ].
 	^ transpiler

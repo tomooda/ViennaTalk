@@ -14,11 +14,14 @@ Class {
 		'sourceSignalButton',
 		'talkbackLabel',
 		'playgroundText',
+		'stateTable',
+		'initStateButton',
 		'pendingSyntaxError',
 		'pendingTypeError',
 		'testProcess',
 		'highlighterProcess',
-		'dirty'
+		'dirty',
+		'refreshStateButton'
 	],
 	#classVars : [
 		'GreenSignalIcon',
@@ -734,19 +737,52 @@ ViennaRefactoringBrowser >> displayDefinition: aViennaNode [
 	^ '-'
 ]
 
-{ #category : #operations }
+{ #category : #'operations-evaluating' }
 ViennaRefactoringBrowser >> evaluate: aString [
 
-	^ animation
-		  plainEvaluate: aString
-		  in: (moduleList selectedItem ifNotNil: #identifier)
-		  ifError: [ :msg | msg ]
+	| node result |
+	node := ViennaVDMParser new expression end parse: aString.
+	node isPetit2Failure ifTrue: [ ^ node printString ].
+	node parent: self module.
+	[ node typecheck ]
+		on: ViennaTypeError
+		do: [ :ex | ^ ex messageText ].
+	result := animation
+		          plainExecute: node
+		          in: (moduleList selectedItem ifNotNil: #identifier)
+		          ifError: [ :msg | msg ].
+	self updateStateTable.
+	^ result
 ]
 
-{ #category : #operations }
+{ #category : #'operations-evaluating' }
 ViennaRefactoringBrowser >> evaluateIt: aString in: aSpCodePresenter [
 
 	self popup: (self evaluate: aString) in: aSpCodePresenter
+]
+
+{ #category : #'operations-evaluating' }
+ViennaRefactoringBrowser >> execute: aString [
+
+	| node result |
+	node := ViennaVDMParser new statement end parse: aString.
+	node isPetit2Failure ifTrue: [ ^ node printString ].
+	node parent: self module.
+	[ node typecheck ]
+		on: ViennaTypeError
+		do: [ :ex | ^ ex messageText ].
+	result := animation asTranspiledAnimation
+		          plainExecute: node
+		          in: (moduleList selectedItem ifNotNil: #identifier)
+		          ifError: [ :msg | msg ].
+	self updateStateTable.
+	^ result
+]
+
+{ #category : #'operations-evaluating' }
+ViennaRefactoringBrowser >> executeIt: aString in: aSpCodePresenter [
+
+	self popup: (self execute: aString) in: aSpCodePresenter
 ]
 
 { #category : #operations }
@@ -943,6 +979,13 @@ ViennaRefactoringBrowser >> importFile [
 		self load: file contents withInternalLineEndings ]
 ]
 
+{ #category : #operations }
+ViennaRefactoringBrowser >> initState [
+
+	animation init.
+	self updateStateTable
+]
+
 { #category : #initialization }
 ViennaRefactoringBrowser >> initialize [
 
@@ -1021,12 +1064,12 @@ ViennaRefactoringBrowser >> initializePresenters [
 		              contextMenu: [ self sourceTextContextMenu ];
 		              whenTextChangedDo: [ self onTheFlyCheckSourceText ];
 		              whenSubmitDo: [ :text | self accept: text ];
-		              bindKeyCombination: $p command toAction: [
-			              self sourceSelection ifNotNil: [ :node |
-					              self evaluateIt: node source in: sourceText ] ];
-		              bindKeyCombination: $t command toAction: [
-			              self sourceSelection ifNotNil: [ :node |
-					              self typeIt: node in: sourceText ] ];
+		              bindKeyCombination: $p command
+		              toAction: [ self sourceEvaluateIt ];
+		              bindKeyCombination: $d command
+		              toAction: [ self sourceExecuteIt ];
+		              bindKeyCombination: $t command
+		              toAction: [ self sourceTypeIt ];
 		              yourself.
 	testResultTable := self newTable
 		                   addColumn:
@@ -1055,13 +1098,36 @@ ViennaRefactoringBrowser >> initializePresenters [
 	playgroundText := self newVDMSource
 		                  withoutLineNumbers;
 		                  contextMenu: [ self playgroundTextContextMenu ];
-		                  bindKeyCombination: $p command toAction: [
-			                  self playgroundSelection ifNotNil: [ :node |
-					                  self evaluateIt: node source in: playgroundText ] ];
-		                  bindKeyCombination: $t command toAction: [
-			                  self playgroundSelection ifNotNil: [ :node |
-					                  self typeIt: node in: playgroundText ] ];
+		                  bindKeyCombination: $p command
+		                  toAction: [ self playgroundEvaluateIt ];
+		                  bindKeyCombination: $d command
+		                  toAction: [ self playgroundExecuteIt ];
+		                  bindKeyCombination: $t command
+		                  toAction: [ self playgroundTypeIt ];
 		                  yourself.
+	stateTable := self newTable
+		              addColumn: (SpStringTableColumn
+				               title: 'module'
+				               evaluated: [ :string |
+					               string copyFrom: 1 to: (string indexOf: $`) - 1 ]);
+		              addColumn: (SpStringTableColumn
+				               title: 'variable'
+				               evaluated: [ :string |
+					               string
+						               copyFrom: (string indexOf: $`) + 1
+						               to: string size ]);
+		              addColumn: (SpStringTableColumn
+				               title: 'value'
+				               evaluated: [ :string | animation plainAt: string ]);
+		              yourself.
+	initStateButton := self newButton
+		                   icon: (Smalltalk ui iconNamed: #refresh);
+		                   action: [ self initState ];
+		                   yourself.
+	refreshStateButton := self newButton
+		                      icon: (Smalltalk ui iconNamed: #smallUpdate);
+		                      action: [ self updateStateTableItems ];
+		                      yourself.
 	notebook := self newNotebook
 		            addPageTitle: 'Source' provider: [
 			            SpPresenter new
@@ -1399,11 +1465,34 @@ ViennaRefactoringBrowser >> pendingTypeError [
 	^ pendingTypeError
 ]
 
+{ #category : #'operations-evaluating' }
+ViennaRefactoringBrowser >> playgroundEvaluateIt [
+
+	self playgroundSelectionText ifNotNil: [ :text |
+		self evaluateIt: text in: playgroundText ]
+]
+
+{ #category : #'operations-evaluating' }
+ViennaRefactoringBrowser >> playgroundExecuteIt [
+
+	self playgroundSelectionText ifNotEmpty: [ :source |
+		self executeIt: source in: playgroundText ]
+]
+
 { #category : #layouts }
 ViennaRefactoringBrowser >> playgroundPageLayout [
 
-	^ SpBoxLayout newHorizontal
+	^ SpPanedLayout newHorizontal
+		  positionOfSlider: 0.6;
 		  add: playgroundText;
+		  add: (SpBoxLayout newVertical
+				   add: stateTable;
+				   add: (SpBoxLayout newHorizontal
+						    add: refreshStateButton;
+						    add: initStateButton;
+						    yourself)
+				   expand: false;
+				   yourself);
 		  yourself
 ]
 
@@ -1431,6 +1520,23 @@ ViennaRefactoringBrowser >> playgroundSelection [
 				  yourself ]
 ]
 
+{ #category : #accessing }
+ViennaRefactoringBrowser >> playgroundSelectionText [
+
+	| text start end |
+	text := playgroundText text asString.
+	playgroundText selectionInterval in: [ :interval |
+		start := interval first.
+		end := interval last ].
+	start > end ifTrue: [
+		[ start > 1 and: [ (text at: start - 1) ~= Character cr ] ]
+			whileTrue: [ start := start - 1 ].
+		[ end < text size and: [ (text at: end + 1) ~= Character cr ] ]
+			whileTrue: [ end := end + 1 ].
+		playgroundText selectionInterval: (start to: end) ].
+	^ (text copyFrom: start to: end) trim
+]
+
 { #category : #menus }
 ViennaRefactoringBrowser >> playgroundTextContextMenu [
 
@@ -1442,20 +1548,32 @@ ViennaRefactoringBrowser >> playgroundTextContextMenu [
 				addItem: [ :item |
 					item
 						name: 'Evaluate it';
-						action: [ self evaluateIt: node source in: playgroundText ] ];
+						action: [ self playgroundEvaluateIt ] ];
 				addItem: [ :item |
 					item
 						name: 'Type it';
-						action: [ self typeIt: node in: playgroundText ] ] ] ].
+						action: [ self playgroundTypeIt ] ];
+				addItem: [ :item |
+					item
+						name: 'Execute it';
+						action: [ self playgroundExecuteIt ] ] ] ].
 	^ menu
 ]
 
-{ #category : #operations }
+{ #category : #'operations-evaluating' }
+ViennaRefactoringBrowser >> playgroundTypeIt [
+
+	self playgroundSelection ifNotNil: [ :node |
+		self typeIt: node in: playgroundText ]
+]
+
+{ #category : #'operations-evaluating' }
 ViennaRefactoringBrowser >> popup: aString in: aSpCodePresenter [
 
-	aSpCodePresenter
-		insertPopoverAfterCurrentSelection: (self newLabel label: aString)
-		style: 'print'
+	aString ifNotNil: [
+		aSpCodePresenter
+			insertPopoverAfterCurrentSelection: (self newLabel label: aString)
+			style: 'print' ]
 ]
 
 { #category : #operations }
@@ -1569,6 +1687,20 @@ ViennaRefactoringBrowser >> source [
 		ifNotNil: [ :ast | ViennaVDMFormatter format: ast ]
 ]
 
+{ #category : #'operations-evaluating' }
+ViennaRefactoringBrowser >> sourceEvaluateIt [
+
+	self sourceSelection ifNotNil: [ :node |
+		self evaluateIt: node source in: sourceText ]
+]
+
+{ #category : #'operations-evaluating' }
+ViennaRefactoringBrowser >> sourceExecuteIt [
+
+	self sourceSelection ifNotNil: [ :node |
+		self executeIt: node source in: sourceText ]
+]
+
 { #category : #layouts }
 ViennaRefactoringBrowser >> sourcePageLayout [
 
@@ -1590,6 +1722,23 @@ ViennaRefactoringBrowser >> sourceSelection [
 	^ sourceText text string asViennaTracingString
 		  nodeContaining: sourceText selectionInterval
 		  ifAbsent: [ nil ]
+]
+
+{ #category : #accessing }
+ViennaRefactoringBrowser >> sourceSelectionText [
+
+	| text start end |
+	text := sourceText text asString.
+	sourceText selectionInterval in: [ :interval |
+		start := interval first.
+		end := interval last ].
+	start > end ifTrue: [
+		[ start > 1 and: [ (text at: start - 1) ~= Character cr ] ]
+			whileTrue: [ start := start - 1 ].
+		[ end < text size and: [ (text at: end + 1) ~= Character cr ] ]
+			whileTrue: [ end := end + 1 ].
+		sourceText selectionInterval: (start to: end) ].
+	^ (text copyFrom: start to: end) trim
 ]
 
 { #category : #'operations-source signal' }
@@ -1621,6 +1770,13 @@ ViennaRefactoringBrowser >> sourceTextContextMenu [
 							name: 'Highlight slice';
 							action: [ self highlightSlice: node ] ] ] ] ].
 	^ menu
+]
+
+{ #category : #'operations-evaluating' }
+ViennaRefactoringBrowser >> sourceTypeIt [
+
+	self sourceSelection ifNotNil: [ :node |
+		self typeIt: node in: sourceText ]
 ]
 
 { #category : #accessing }
@@ -1656,7 +1812,7 @@ ViennaRefactoringBrowser >> title [
 	^ 'Vienna Refactoring Browser'
 ]
 
-{ #category : #operations }
+{ #category : #'operations-evaluating' }
 ViennaRefactoringBrowser >> typeIt: aViennaNode in: aSpCodePresenter [
 
 	self
@@ -1683,7 +1839,8 @@ ViennaRefactoringBrowser >> updateAnimation [
 
 	animation
 		specification: self specification
-		ifError: [ :msg | self notifyAnimationError: msg ]
+		ifError: [ :msg | self notifyAnimationError: msg ].
+	self updateStateTableItems
 ]
 
 { #category : #updating }
@@ -1752,6 +1909,18 @@ ViennaRefactoringBrowser >> updateSourceSignalButton [
 		^ sourceSignalButton icon: self class yellowSignalIcon ].
 	talkbackLabel label: ''.
 	^ sourceSignalButton icon: self class greenSignalIcon
+]
+
+{ #category : #updating }
+ViennaRefactoringBrowser >> updateStateTable [
+
+	stateTable refresh
+]
+
+{ #category : #updating }
+ViennaRefactoringBrowser >> updateStateTableItems [
+
+	stateTable items: animation state keys asSortedCollection
 ]
 
 { #category : #updating }

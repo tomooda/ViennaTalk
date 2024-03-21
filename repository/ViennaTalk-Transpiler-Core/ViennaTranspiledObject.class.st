@@ -82,9 +82,16 @@ ViennaTranspiledObject class >> transpileExpression: aString with: transpiler if
 ]
 
 { #category : #transpiling }
+ViennaTranspiledObject class >> transpileNode: aViennaNode with: transpiler ifError: errorBlock [
+	^ transpiler
+		defaultEnv: viennaEnv;
+		generate: aViennaNode
+]
+
+{ #category : #transpiling }
 ViennaTranspiledObject class >> transpileStatement: aString with: transpiler ifError: errorBlock [
 	| ast |
-	ast := ViennaVDMParser new expression end parse: aString.
+	ast := ViennaVDMParser new statement end parse: aString.
 	ast isPetit2Failure
 		ifTrue: [ ^ errorBlock cull: ast message ].
 	^ transpiler
@@ -142,6 +149,26 @@ ViennaTranspiledObject >> evaluateExpression: aString with: aViennaVDM2Smalltalk
 ]
 
 { #category : #evaluating }
+ViennaTranspiledObject >> evaluateNode: aViennaNode ifError: errorBlock [
+	^ self evaluateNode: aViennaNode with: ViennaVDM2SmalltalkClass new ifError: errorBlock
+]
+
+{ #category : #evaluating }
+ViennaTranspiledObject >> evaluateNode: aViennaNode with: aViennaVDM2SmalltalkClass ifError: errorBlock [
+
+	| src |
+	src := self class
+		       transpileNode: aViennaNode
+		       with: aViennaVDM2SmalltalkClass
+		       ifError: [ :msg | ^ errorBlock cull: msg ].
+	^ OpalCompiler new
+		  source: src;
+		  logged: false;
+		  receiver: self;
+		  evaluate
+]
+
+{ #category : #evaluating }
 ViennaTranspiledObject >> evaluateStatement: aString [
 	^ self evaluateStatement: aString ifError: [ :msg | self error: msg ]
 ]
@@ -153,15 +180,17 @@ ViennaTranspiledObject >> evaluateStatement: aString ifError: errorBlock [
 
 { #category : #evaluating }
 ViennaTranspiledObject >> evaluateStatement: aString with: aViennaVDM2SmalltalkClass ifError: errorBlock [
+
 	| src |
 	src := self class
-		transpileStatement: aString
-		with: aViennaVDM2SmalltalkClass
-		ifError: [ :msg | ^ errorBlock cull: msg ].
+		       transpileStatement: aString
+		       with: aViennaVDM2SmalltalkClass
+		       ifError: [ :msg | ^ errorBlock cull: msg ].
 	^ OpalCompiler new
-		source: src;
-		receiver: self;
-		evaluate
+		  source: src;
+		  logged: false;
+		  receiver: self;
+		  evaluate
 ]
 
 { #category : #private }

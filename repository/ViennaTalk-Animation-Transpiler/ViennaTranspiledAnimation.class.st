@@ -155,18 +155,40 @@ ViennaTranspiledAnimation >> engineType [
 
 { #category : #evaluating }
 ViennaTranspiledAnimation >> evaluate: aString in: moduleName ifError: errorBlock [
-	Cursor wait
-		showWhile: [ | result |
-			result := (moduleName = self defaultModule
-				ifTrue: [ object ]
-				ifFalse: [ object at: moduleName ifAbsent: [ ^ errorBlock value: 'unknown module name' ] ])
-				evaluateExpression: aString
-				with: transpiler
-				ifError: [ :msg | ^ errorBlock cull: msg ].
-			self changed: #state.
-			^ result == object
-				ifTrue: [ nil ]
-				ifFalse: [ result ] ]
+
+	Cursor wait showWhile: [
+		| result |
+		result := (moduleName = self defaultModule
+			           ifTrue: [ object ]
+			           ifFalse: [
+				           object
+					           at: moduleName
+					           ifAbsent: [ ^ errorBlock value: 'unknown module name' ] ])
+			          evaluateExpression: aString
+			          with: transpiler
+			          ifError: [ :msg | ^ errorBlock cull: msg ].
+		self changed: #state.
+		^ result == object
+			  ifTrue: [ nil ]
+			  ifFalse: [ result ] ]
+]
+
+{ #category : #evaluating }
+ViennaTranspiledAnimation >> execute: aViennaNode in: moduleName ifError: errorBlock [
+
+	Cursor wait showWhile: [
+		| result |
+		result := (moduleName = self defaultModule
+			           ifTrue: [ object ]
+			           ifFalse: [
+				           object
+					           at: moduleName
+					           ifAbsent: [ ^ errorBlock cull: 'unknown module name' ] ])
+			          evaluateNode: aViennaNode
+			          with: transpiler
+			          ifError: [ :msg | ^ errorBlock cull: msg ].
+		self changed: #state.
+		^ result ]
 ]
 
 { #category : #evaluating }
@@ -182,6 +204,12 @@ ViennaTranspiledAnimation >> initialize [
 	reader := ViennaReader new.
 	writer := ViennaUnquoteWriter new.
 	self specification: String new ifError: [  ]
+]
+
+{ #category : #testing }
+ViennaTranspiledAnimation >> isTranspiledAnimation [
+
+	^ true
 ]
 
 { #category : #accessing }
@@ -231,12 +259,34 @@ ViennaTranspiledAnimation >> plainEvaluate: aString ifError: errorBlock [
 { #category : #evaluating }
 ViennaTranspiledAnimation >> plainEvaluate: aString in: moduleName ifError: errorBlock [
 
-	| result |
-	result := writer stringify: (self
-			           evaluate: aString
-			           in: (moduleName ifNil: [ self defaultModule ])
-			           ifError: [ :msg | ^ errorBlock value: msg ]).
-	^ result
+	^ writer stringify: (self
+			   evaluate: aString
+			   in: (moduleName ifNil: [ self defaultModule ])
+			   ifError: [ :msg | ^ errorBlock value: msg ])
+]
+
+{ #category : #evaluating }
+ViennaTranspiledAnimation >> plainExecute: aViennaNode [
+
+	^ self plainExecute: aViennaNode ifError: [ :msg | self error: msg ]
+]
+
+{ #category : #evaluating }
+ViennaTranspiledAnimation >> plainExecute: aViennaNode ifError: errorBlock [
+
+	^ self
+		  plainExecute: aViennaNode
+		  in: self defaultModule
+		  ifError: errorBlock
+]
+
+{ #category : #evaluating }
+ViennaTranspiledAnimation >> plainExecute: aViennaNode in: moduleName ifError: errorBlock [
+
+	^ writer stringify: (self
+			   execute: aViennaNode
+			   in: (moduleName ifNil: [ self defaultModule ])
+			   ifError: [ :msg | ^ errorBlock value: msg ])
 ]
 
 { #category : #copying }

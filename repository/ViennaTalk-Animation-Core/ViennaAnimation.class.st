@@ -247,6 +247,12 @@ ViennaAnimation >> initialize [
 	writer := ViennaWriter new
 ]
 
+{ #category : #testing }
+ViennaAnimation >> isTranspiledAnimation [
+
+	^ false
+]
+
 { #category : #private }
 ViennaAnimation >> parseJson: aJsonString [
 	^ NeoJSONReader fromString: aJsonString
@@ -300,6 +306,15 @@ ViennaAnimation >> plainEvaluate: aString in: moduleName ifError: errorBlock [
 			          ifError: [ :msg | ^ errorBlock cull: msg ] ].
 	self changed: #state.
 	^ result
+]
+
+{ #category : #evaluating }
+ViennaAnimation >> plainExecute: aViennaNode in: moduleName ifError: errorBlock [
+
+	^ self
+		  plainEvaluate: aViennaNode source
+		  in: moduleName
+		  ifError: errorBlock
 ]
 
 { #category : #copying }
