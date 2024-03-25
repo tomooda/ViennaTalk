@@ -589,7 +589,6 @@ ViennaRefactoringBrowser >> accept: aStringOrText [
 	copyMap keys do: [ :old |
 		(copyMap at: old) == oldNode ifTrue: [ copyMap at: old put: newNode ] ].
 	self model: newAst comment: 'manual edit' with: copyMap.
-	self setDirty.
 	^ newNode
 ]
 
@@ -749,7 +748,6 @@ ViennaRefactoringBrowser >> executeRefactoring: aViennaRefactoring [
 			                ifAbsent: [ ^ false ]).
 	refactoring check ifFalse: [ ^ false ].
 	result := refactoring execute.
-	self setDirty.
 	self model: newAst comment: refactoring name with: copyMap.
 	result ifNotNil: [
 		moduleList selectItem: result module.
@@ -1096,15 +1094,7 @@ ViennaRefactoringBrowser >> initializePresenters [
 ViennaRefactoringBrowser >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
-	aWindowPresenter initialExtent: 800 @ 600.
-	aWindowPresenter whenWillCloseDo: [ :willCloseAnnouncement |
-		(willCloseAnnouncement canClose and: [
-			 self isDirty and: [
-				 UIManager default
-					 confirm: 'Export the spec before close?'
-					 orCancel: [
-						 willCloseAnnouncement denyClose.
-						 false ] ] ]) ifTrue: [ self export ] ]
+	aWindowPresenter initialExtent: 800 @ 600
 ]
 
 { #category : #'instance creation' }
@@ -1277,6 +1267,7 @@ ViennaRefactoringBrowser >> model: aViennaNode comment: aString with: anIdentity
 { #category : #accessing }
 ViennaRefactoringBrowser >> modelChanged [
 
+	self setDirty.
 	self updateModuleList.
 	[
 	self
@@ -1378,6 +1369,16 @@ ViennaRefactoringBrowser >> notifyTypeError: aViennaTypeError [
 					from: from
 					to: to ] ] ].
 	textWidget textArea ifNotNil: #compose
+]
+
+{ #category : #private }
+ViennaRefactoringBrowser >> okToClose [
+
+	self isDirty ifFalse: [ ^ true ].
+	(UIManager default
+		 confirm: 'Export the spec before close?'
+		 orCancel: [ ^ false ]) ifTrue: [ self export ].
+	^ true
 ]
 
 { #category : #operations }
