@@ -74,9 +74,7 @@ ViennaRefactoringBrowser class >> defaultLayout [
 		  add: (SpPanedLayout newVertical
 				   positionOfSlider: 0.3;
 				   add: (SpBoxLayout newHorizontal
-						    add: (SpBoxLayout newVertical
-								     add: #historyList expand: false;
-								     add: #moduleList);
+						    add: #moduleList;
 						    add: #categoryList;
 						    add: #definitionList);
 				   add: #notebook);
@@ -736,6 +734,12 @@ ViennaRefactoringBrowser >> displayDefinition: aViennaNode [
 	^ '-'
 ]
 
+{ #category : #layouts }
+ViennaRefactoringBrowser >> epilogPageLayout [
+
+	^ SpBoxLayout newHorizontal add: historyList
+]
+
 { #category : #operations }
 ViennaRefactoringBrowser >> executeRefactoring: aViennaRefactoring [
 
@@ -952,7 +956,7 @@ ViennaRefactoringBrowser >> initializePresenters [
 
 	super initializePresenters.
 	menuBar := self menuBar.
-	historyList := self newDropList
+	historyList := self newList
 		               items: { {
 				               DateAndTime now.
 				               'initial'.
@@ -969,14 +973,14 @@ ViennaRefactoringBrowser >> initializePresenters [
 								                humanReadablePrintString , ')' ]) ];
 		               whenSelectionChangedDo: [
 			               historyList selectedItem ifNotNil: [ :assoc |
-					               assoc = historyList listItems last ifFalse: [
+					               assoc = historyList items last ifFalse: [
 							               self model: assoc third.
 							               historyList
-								               items: historyList listItems , { {
+								               items: historyList items , { {
 											               DateAndTime now.
 											               'version'.
 											               self model } };
-								               selectItem: historyList listItems last ] ] ];
+								               selectItem: historyList items last ] ] ];
 		               yourself.
 	moduleList := self newList
 		              beSingleSelection;
@@ -1048,8 +1052,8 @@ ViennaRefactoringBrowser >> initializePresenters [
 		                  animation: [ animation ];
 		                  module: [ self module ];
 		                  withoutLineNumbers;
-		                 " contextMenu: [ self playgroundTextContextMenu ];"
-		                  yourself.
+		                  " contextMenu: [ self playgroundTextContextMenu ];"
+			                  yourself.
 	stateTable := self newTable
 		              addColumn: (SpStringTableColumn
 				               title: 'module'
@@ -1067,10 +1071,12 @@ ViennaRefactoringBrowser >> initializePresenters [
 		              yourself.
 	initStateButton := self newButton
 		                   icon: (Smalltalk ui iconNamed: #refresh);
+		                   label: 'refresh';
 		                   action: [ self initState ];
 		                   yourself.
 	refreshStateButton := self newButton
 		                      icon: (Smalltalk ui iconNamed: #smallUpdate);
+		                      label: 'initialize';
 		                      action: [ self updateStateTableItems ];
 		                      yourself.
 	notebook := self newNotebook
@@ -1081,6 +1087,10 @@ ViennaRefactoringBrowser >> initializePresenters [
 		            addPageTitle: 'Playground' provider: [
 		            SpPresenter new
 			            layout: self playgroundPageLayout;
+			            yourself ];
+		            addPageTitle: 'EpiLog' provider: [
+		            SpPresenter new
+			            layout: self epilogPageLayout;
 			            yourself ];
 		            yourself.
 	self whenBuiltDo: [ :w |
@@ -1241,27 +1251,26 @@ ViennaRefactoringBrowser >> mergeOperationsFromFRAM [
 
 { #category : #accessing }
 ViennaRefactoringBrowser >> model: aViennaNode comment: aString with: anIdentityDictionary [
+
 	| module category definition |
 	module := self module.
 	category := self category.
 	definition := self definition.
 	self model: aViennaNode.
 	historyList
-		items:
-			historyList listItems
-				,
-					{{DateAndTime now.
+		items: historyList items , { {
+					DateAndTime now.
 					aString.
-					aViennaNode}};
-		selectItem: historyList listItems last.
+					aViennaNode } };
+		selectItem: historyList items last.
 	UIManager default inform: aString.
 	self updateModuleList.
-	moduleList
-		selectItem: (anIdentityDictionary at: module ifAbsent: [ nil ]).
-	categoryList
-		selectItem: (anIdentityDictionary at: category ifAbsent: [ nil ]).
-	definitionList
-		selectItem: (anIdentityDictionary at: definition ifAbsent: [ nil ])
+	moduleList selectItem:
+		(anIdentityDictionary at: module ifAbsent: [ nil ]).
+	categoryList selectItem:
+		(anIdentityDictionary at: category ifAbsent: [ nil ]).
+	definitionList selectItem:
+		(anIdentityDictionary at: definition ifAbsent: [ nil ])
 ]
 
 { #category : #accessing }
