@@ -3,8 +3,10 @@ Class {
 	#superclass : #SpPresenterWithModel,
 	#instVars : [
 		'animation',
+		'epiLog',
 		'menuBar',
 		'notebook',
+		'epiLogList',
 		'historyList',
 		'moduleList',
 		'categoryList',
@@ -572,10 +574,13 @@ ViennaRefactoringBrowser class >> yellowSignalIcon [
 { #category : #operations }
 ViennaRefactoringBrowser >> accept: aStringOrText [
 
-	| newNode newAst copyMap parent oldNode |
+	| newNode newAst copyMap parent oldNode module category definition |
 	newNode := self parser
 		           parse: aStringOrText asString
 		           onError: [ ^ false ].
+	module := self module.
+	category := self category.
+	definition := self definition.
 	copyMap := IdentityDictionary new.
 	newAst := self specification copyWhole: copyMap.
 	oldNode := copyMap at: self definition ifAbsent: [ ^ false ].
@@ -586,7 +591,13 @@ ViennaRefactoringBrowser >> accept: aStringOrText [
 			parent at: index put: newNode ] ].
 	copyMap keys do: [ :old |
 		(copyMap at: old) == oldNode ifTrue: [ copyMap at: old put: newNode ] ].
-	self model: newAst comment: 'manual edit' with: copyMap.
+	self epiLog: ((epiLog newModification: newAst)
+			 comment: 'manual edit';
+			 yourself).
+	self updateModuleList.
+	moduleList selectItem: (copyMap at: module ifAbsent: [ nil ]).
+	categoryList selectItem: (copyMap at: category ifAbsent: [ nil ]).
+	definitionList selectItem: (copyMap at: definition ifAbsent: [ nil ]).
 	^ newNode
 ]
 
@@ -734,10 +745,40 @@ ViennaRefactoringBrowser >> displayDefinition: aViennaNode [
 	^ '-'
 ]
 
+{ #category : #accessing }
+ViennaRefactoringBrowser >> epiLog: aViennaEpiLog [
+
+	epiLog := aViennaEpiLog.
+	epiLogList items: epiLog asArray.
+	self model: epiLog specification.
+	self setDirty.
+	self typecheck.
+	animation ifNotNil: [
+		animation
+			specification: self specification
+			ifError: [ :msg | self notifyAnimationError: msg ] ].
+	epiLog state: animation state.
+	UIManager default inform: epiLog printString , ' - ' , epiLog comment
+]
+
+{ #category : #menus }
+ViennaRefactoringBrowser >> epiLogListContextMenu [
+
+	| menu |
+	menu := self newMenu.
+	epiLogList selectedItem ifNotNil: [ :epilog |
+		menu addGroup: [ :group |
+			group addItem: [ :item |
+				item
+					name: 'Revert to';
+					action: [ self revertTo: epilog ] ] ] ].
+	^ menu
+]
+
 { #category : #layouts }
 ViennaRefactoringBrowser >> epilogPageLayout [
 
-	^ SpBoxLayout newHorizontal add: historyList
+	^ SpBoxLayout newHorizontal add: epiLogList
 ]
 
 { #category : #operations }
@@ -752,8 +793,11 @@ ViennaRefactoringBrowser >> executeRefactoring: aViennaRefactoring [
 			                ifAbsent: [ ^ false ]).
 	refactoring check ifFalse: [ ^ false ].
 	result := refactoring execute.
-	self model: newAst comment: refactoring name with: copyMap.
+	self epiLog: ((epiLog newModification: newAst)
+			 comment: refactoring name;
+			 yourself).
 	result ifNotNil: [
+		self updateModuleList.
 		moduleList selectItem: result module.
 		categoryList selectItem:
 			(result section ifNil: [ moduleList selectedItem ]).
@@ -944,6 +988,7 @@ ViennaRefactoringBrowser >> initState [
 ViennaRefactoringBrowser >> initialize [
 
 	super initialize.
+	epiLog := ViennaEpiLog vanilla.
 	animation := ViennaAnimation default.
 	animation announcer
 		when: ViennaStateChanged do: [ self updateStateTable ];
@@ -956,32 +1001,22 @@ ViennaRefactoringBrowser >> initializePresenters [
 
 	super initializePresenters.
 	menuBar := self menuBar.
-	historyList := self newList
-		               items: { {
-				               DateAndTime now.
-				               'initial'.
-				               self model } };
-		               display: [ :triple |
-			               | time |
-			               time := DateAndTime now - triple first.
-			               triple second , (time < 1 second
-					                ifTrue: [ '' ]
-					                ifFalse: [
-						                '('
-						                ,
-							                (time roundTo: 1 second)
-								                humanReadablePrintString , ')' ]) ];
-		               whenSelectionChangedDo: [
-			               historyList selectedItem ifNotNil: [ :assoc |
-					               assoc = historyList items last ifFalse: [
-							               self model: assoc third.
-							               historyList
-								               items: historyList items , { {
-											               DateAndTime now.
-											               'version'.
-											               self model } };
-								               selectItem: historyList items last ] ] ];
-		               yourself.
+	epiLogList := self newTable
+		              hideColumnHeaders;
+		              addColumn:
+			              (SpStringTableColumn evaluated: [ :epilog |
+					               | time |
+					               time := DateAndTime now - epilog timestamp.
+					               time < 1 minutes
+						               ifTrue: [ 'seconds ago' ]
+						               ifFalse: [
+							               (time roundTo: 1 minute)
+								               humanReadablePrintString , ' ago' ] ]);
+		              addColumn:
+			              (SpStringTableColumn evaluated: #printString);
+		              addColumn: (SpStringTableColumn evaluated: #comment);
+		              contextMenu: [ self epiLogListContextMenu ];
+		              yourself.
 	moduleList := self newList
 		              beSingleSelection;
 		              contextMenu: [ self moduleListContextMenu ];
@@ -1156,14 +1191,8 @@ ViennaRefactoringBrowser >> load: aString [
 							         (ViennaExportDefinitionNode exportModuleSignature:
 								          ViennaExportModuleSignatureAllNode new))
 				        moduleBody: (ViennaModuleBodyNode withAll: ast asArray)) ].
-	historyList
-		resetSelection;
-		items: { {
-				DateAndTime now.
-				'load'.
-				ast } };
-		selectItem: historyList listItems last.
-	self model: ast.
+	self epiLog: (epiLog newLoading: ast).
+	self updateModuleList.
 	self clearDirty
 ]
 
@@ -1239,49 +1268,30 @@ ViennaRefactoringBrowser >> mergeOperationsFromFRAM [
 	(UIManager default
 		 chooseExistingFileReference: 'Import directory'
 		 extensions: #( 'xfmv' )
-		 path: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :ref | 
+		 path: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :ref |
 		fram := ViennaFRAMModel fromFile: ref ].
-	fram ifNil: [ ^ nil ].
-	copyMap := IdentityDictionary new.
-	newAst := self specification copyWhole: copyMap.
-	fram appendToSpec: newAst.
-	self model: newAst comment: 'merge from FRAM' with: copyMap.
-	^ newAst
-]
-
-{ #category : #accessing }
-ViennaRefactoringBrowser >> model: aViennaNode comment: aString with: anIdentityDictionary [
-
-	| module category definition |
-	module := self module.
-	category := self category.
-	definition := self definition.
-	self model: aViennaNode.
-	historyList
-		items: historyList items , { {
-					DateAndTime now.
-					aString.
-					aViennaNode } };
-		selectItem: historyList items last.
-	UIManager default inform: aString.
-	self updateModuleList.
-	moduleList selectItem:
-		(anIdentityDictionary at: module ifAbsent: [ nil ]).
-	categoryList selectItem:
-		(anIdentityDictionary at: category ifAbsent: [ nil ]).
-	definitionList selectItem:
-		(anIdentityDictionary at: definition ifAbsent: [ nil ])
+	^ fram ifNotNil: [
+		  | module category definition |
+		  module := self module.
+		  category := self category.
+		  definition := self definition.
+		  copyMap := IdentityDictionary new.
+		  newAst := self specification copyWhole: copyMap.
+		  fram appendToSpec: newAst.
+		  self epiLog: ((epiLog newModification: newAst)
+				   comment: 'merge from FRAM';
+				   yourself).
+		  moduleList selectItem: (copyMap at: module ifAbsent: [ nil ]).
+		  categoryList selectItem: (copyMap at: category ifAbsent: [ nil ]).
+		  definitionList selectItem:
+			  (copyMap at: definition ifAbsent: [ nil ]).
+		  newAst ]
 ]
 
 { #category : #accessing }
 ViennaRefactoringBrowser >> modelChanged [
 
-	self setDirty.
-	self updateModuleList.
-	[
-	self
-		typecheck;
-		updateAnimation ] forkAt: Processor userBackgroundPriority
+
 ]
 
 { #category : #accessing }
@@ -1501,6 +1511,13 @@ ViennaRefactoringBrowser >> playgroundTextContextMenu [
 						name: 'Execute it';
 						action: [ playgroundText doExecuteIt ] ] ] ].
 	^ menu
+]
+
+{ #category : #operations }
+ViennaRefactoringBrowser >> revertTo: aViennaEpiLog [
+
+	self epiLog: (epiLog newRevertion: aViennaEpiLog).
+	self updateModuleList
 ]
 
 { #category : #operations }
@@ -1728,14 +1745,6 @@ ViennaRefactoringBrowser >> typecheck [
 	self notifyTypeError: nil ]
 		on: ViennaTypeError
 		do: [ :ex | self notifyTypeError: ex ]
-]
-
-{ #category : #updating }
-ViennaRefactoringBrowser >> updateAnimation [
-
-	animation
-		specification: self specification
-		ifError: [ :msg | self notifyAnimationError: msg ]
 ]
 
 { #category : #updating }
