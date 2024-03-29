@@ -3,11 +3,9 @@ Class {
 	#superclass : #SpPresenterWithModel,
 	#instVars : [
 		'animation',
-		'epiLog',
 		'menuBar',
 		'notebook',
 		'epiLogList',
-		'historyList',
 		'moduleList',
 		'categoryList',
 		'definitionList',
@@ -93,7 +91,7 @@ ViennaRefactoringBrowser class >> defaultTrafficSide [
 ViennaRefactoringBrowser class >> empty [
 
 	<script: 'ViennaRefactoringBrowser empty open'>
-	^ self on: ViennaModularDocumentNode empty
+	^ self new
 ]
 
 { #category : #examples }
@@ -591,7 +589,7 @@ ViennaRefactoringBrowser >> accept: aStringOrText [
 			parent at: index put: newNode ] ].
 	copyMap keys do: [ :old |
 		(copyMap at: old) == oldNode ifTrue: [ copyMap at: old put: newNode ] ].
-	self epiLog: ((epiLog newModification: newAst)
+	self epiLog: ((self epiLog newModification: newAst)
 			 comment: 'manual edit';
 			 yourself).
 	self updateModuleList.
@@ -650,12 +648,9 @@ ViennaRefactoringBrowser >> clearDirty [
 { #category : #'private-unit testing' }
 ViennaRefactoringBrowser >> debugTestResultItem: aViennaTestResultItem [
 
-	| animation |
-	animation := ViennaTranspiledAnimation new
-		             specification: self specification
-		             ifError: [ :msg | ^ nil ];
-		             yourself.
-	^ animation
+	^ (ViennaTranspiledAnimation new
+		   specification: self specification ifError: [ :msg | ^ nil ];
+		   yourself)
 		  debug: aViennaTestResultItem operation , '()'
 		  in: aViennaTestResultItem module
 		  ifError: [ :msg | msg ]
@@ -746,19 +741,15 @@ ViennaRefactoringBrowser >> displayDefinition: aViennaNode [
 ]
 
 { #category : #accessing }
+ViennaRefactoringBrowser >> epiLog [
+
+	^ self model
+]
+
+{ #category : #accessing }
 ViennaRefactoringBrowser >> epiLog: aViennaEpiLog [
 
-	epiLog := aViennaEpiLog.
-	epiLogList items: epiLog asArray.
-	self model: epiLog specification.
-	self setDirty.
-	self typecheck.
-	animation ifNotNil: [
-		animation
-			specification: self specification
-			ifError: [ :msg | self notifyAnimationError: msg ] ].
-	epiLog state: animation state.
-	UIManager default inform: epiLog printString , ' - ' , epiLog comment
+	self model: aViennaEpiLog
 ]
 
 { #category : #menus }
@@ -793,7 +784,7 @@ ViennaRefactoringBrowser >> executeRefactoring: aViennaRefactoring [
 			                ifAbsent: [ ^ false ]).
 	refactoring check ifFalse: [ ^ false ].
 	result := refactoring execute.
-	self epiLog: ((epiLog newModification: newAst)
+	self epiLog: ((self epiLog newModification: newAst)
 			 comment: refactoring name;
 			 yourself).
 	result ifNotNil: [
@@ -981,18 +972,19 @@ ViennaRefactoringBrowser >> importFile [
 ViennaRefactoringBrowser >> initState [
 
 	animation init.
-	self updateStateTable
+	self updateStateTable.
+	self epiLog: (self epiLog newInitialization: animation state)
 ]
 
 { #category : #initialization }
 ViennaRefactoringBrowser >> initialize [
 
-	super initialize.
-	epiLog := ViennaEpiLog vanilla.
 	animation := ViennaAnimation default.
 	animation announcer
 		when: ViennaStateChanged do: [ self updateStateTable ];
 		when: ViennaSpecificationChanged do: [ self updateStateTableItems ].
+	super initialize.
+	self epiLog: ViennaEpiLog vanilla.
 	dirty := false
 ]
 
@@ -1057,6 +1049,13 @@ ViennaRefactoringBrowser >> initializePresenters [
 		              module: [ self module ];
 		              whenTextChangedDo: [ self onTheFlyCheckSourceText ];
 		              whenSubmitDo: [ :text | self accept: text ];
+		              whenEvaluatedDo: [ :expression |
+			              self epiLog: (self epiLog newEvaluation: expression) ];
+		              whenExecutedDo: [ :statement |
+			              self epiLog:
+					              (self epiLog
+						               newExecution: statement
+						               state: animation state) ];
 		              contextMenu: [ self sourceTextContextMenu ];
 		              yourself.
 	testResultTable := self newTable
@@ -1087,8 +1086,15 @@ ViennaRefactoringBrowser >> initializePresenters [
 		                  animation: [ animation ];
 		                  module: [ self module ];
 		                  withoutLineNumbers;
-		                  " contextMenu: [ self playgroundTextContextMenu ];"
-			                  yourself.
+		                  whenEvaluatedDo: [ :expression |
+			                  self epiLog:
+					                  (self epiLog newEvaluation: expression) ];
+		                  whenExecutedDo: [ :statement |
+			                  self epiLog:
+					                  (self epiLog
+						                   newExecution: statement
+						                   state: animation state) ];
+		                  yourself.
 	stateTable := self newTable
 		              addColumn: (SpStringTableColumn
 				               title: 'module'
@@ -1106,12 +1112,12 @@ ViennaRefactoringBrowser >> initializePresenters [
 		              yourself.
 	initStateButton := self newButton
 		                   icon: (Smalltalk ui iconNamed: #refresh);
-		                   label: 'refresh';
+		                   label: 'initialize';
 		                   action: [ self initState ];
 		                   yourself.
 	refreshStateButton := self newButton
 		                      icon: (Smalltalk ui iconNamed: #smallUpdate);
-		                      label: 'initialize';
+		                      label: 'refresh';
 		                      action: [ self updateStateTableItems ];
 		                      yourself.
 	notebook := self newNotebook
@@ -1191,7 +1197,7 @@ ViennaRefactoringBrowser >> load: aString [
 							         (ViennaExportDefinitionNode exportModuleSignature:
 								          ViennaExportModuleSignatureAllNode new))
 				        moduleBody: (ViennaModuleBodyNode withAll: ast asArray)) ].
-	self epiLog: (epiLog newLoading: ast).
+	self epiLog: (self epiLog newLoading: ast).
 	self updateModuleList.
 	self clearDirty
 ]
@@ -1278,7 +1284,7 @@ ViennaRefactoringBrowser >> mergeOperationsFromFRAM [
 		  copyMap := IdentityDictionary new.
 		  newAst := self specification copyWhole: copyMap.
 		  fram appendToSpec: newAst.
-		  self epiLog: ((epiLog newModification: newAst)
+		  self epiLog: ((self epiLog newModification: newAst)
 				   comment: 'merge from FRAM';
 				   yourself).
 		  moduleList selectItem: (copyMap at: module ifAbsent: [ nil ]).
@@ -1291,7 +1297,20 @@ ViennaRefactoringBrowser >> mergeOperationsFromFRAM [
 { #category : #accessing }
 ViennaRefactoringBrowser >> modelChanged [
 
-
+	self model ifNotNil: [ :epiLog |
+		self updateEpiLogList.
+		self setDirty.
+		self typecheck.
+		animation ifNotNil: [
+			| state |
+			state := epiLog state.
+			animation
+				specification: self specification
+				ifError: [ :msg | self notifyAnimationError: msg ].
+			animation state: state.
+			epiLog state: animation state ].
+		UIManager default inform:
+			epiLog printString , ' - ' , epiLog comment ]
 ]
 
 { #category : #accessing }
@@ -1516,7 +1535,7 @@ ViennaRefactoringBrowser >> playgroundTextContextMenu [
 { #category : #operations }
 ViennaRefactoringBrowser >> revertTo: aViennaEpiLog [
 
-	self epiLog: (epiLog newRevertion: aViennaEpiLog).
+	self epiLog: (self epiLog newRevertion: aViennaEpiLog).
 	self updateModuleList
 ]
 
@@ -1529,31 +1548,30 @@ ViennaRefactoringBrowser >> runAllTests [
 	               testResultTable items: #(  ).
 	               ast := self specification ifNil: [ ^ nil ].
 	               testAnimation := ViennaAnimation default
-		                            specification:
-			                            (ViennaVDMFormatter format: ast);
-		                            yourself.
+		                                specification:
+			                                (ViennaVDMFormatter format: ast);
+		                                yourself.
 	               (ast at: 1) isViennaModuleNode ifTrue: [
 		               ast do: [ :moduleNode |
 			               | moduleName |
 			               moduleName := moduleNode identifier.
 			               (moduleName endsWith: 'Test') ifTrue: [
 				               moduleNode sectionsDo: [ :section |
-					               section isViennaOperationDefinitionsNode
-						               ifTrue: [
-							               section toplevelDefinitionsDo: [
-								               :operationDefinition |
-								               operationDefinition
-									               isViennaExplicitOperationDefinitionNode
-									               ifTrue: [
-										               | operationName |
-										               operationName := operationDefinition
-											                                identifier.
-										               (operationName size > 4 and: [
-											                (operationName copyFrom: 1 to: 4) = 'test' ])
-											               ifTrue: [
-												               testResultTable items:
-													               (testResultTable model items copyWith:
-														                (self
+					               section isViennaOperationDefinitionsNode ifTrue: [
+						               section toplevelDefinitionsDo: [
+							               :operationDefinition |
+							               operationDefinition
+								               isViennaExplicitOperationDefinitionNode
+								               ifTrue: [
+									               | operationName |
+									               operationName := operationDefinition
+										                                identifier.
+									               (operationName size > 4 and: [
+										                (operationName copyFrom: 1 to: 4) = 'test' ])
+										               ifTrue: [
+											               testResultTable items:
+												               (testResultTable specification items
+													                copyWith: (self
 															                 runTestModule: moduleName
 															                 operation: operationName
 															                 animation: testAnimation)) ] ] ] ] ] ] ] ].
@@ -1704,7 +1722,8 @@ ViennaRefactoringBrowser >> sourceTextContextMenu [
 
 { #category : #accessing }
 ViennaRefactoringBrowser >> specification [
-	^ self model
+
+	^ self epiLog specification
 ]
 
 { #category : #menus }
@@ -1739,7 +1758,7 @@ ViennaRefactoringBrowser >> title [
 ViennaRefactoringBrowser >> typecheck [
 
 	[
-	self model
+	self specification
 		forgetTypecheck;
 		typecheck.
 	self notifyTypeError: nil ]
@@ -1778,6 +1797,12 @@ ViennaRefactoringBrowser >> updateDefinitionList [
 	(newItems includes: oldSelection)
 		ifTrue: [ definitionList selectItem: oldSelection ]
 		ifFalse: [ definitionList unselectAll ]
+]
+
+{ #category : #updating }
+ViennaRefactoringBrowser >> updateEpiLogList [
+
+	epiLogList items: self epiLog asArray
 ]
 
 { #category : #updating }

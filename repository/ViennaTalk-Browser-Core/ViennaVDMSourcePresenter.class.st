@@ -42,32 +42,32 @@ ViennaVDMSourcePresenter >> animation: aBlock [
 { #category : #evaluating }
 ViennaVDMSourcePresenter >> doEvaluateIt [
 
-	| result |
-	result := self
-		          evaluateExpression: self selectedTextOrLine
-		          ifError: [ :msg |
-			          self
-				          insertPopoverAfterCurrentSelection:
-				          (self newLabel label: msg)
-				          style: 'error'.
-			          ^ nil ].
-	self
-		insertPopoverAfterCurrentSelection: (self newLabel label: result)
-		style: 'print'
+	self selectedTextOrLine trim ifNotEmpty: [ :expression |
+		| result |
+		result := self
+			          evaluateExpression: self selectedTextOrLine
+			          ifError: [ :msg |
+				          self
+					          insertPopoverAfterCurrentSelection:
+					          (self newLabel label: msg)
+					          style: 'error'.
+				          ^ nil ].
+		self
+			insertPopoverAfterCurrentSelection: (self newLabel label: result)
+			style: 'print'.
+		self announcer announce: (ViennaEvaluated expression: expression) ]
 ]
 
 { #category : #evaluating }
 ViennaVDMSourcePresenter >> doExecuteIt [
 
-	| result |
-	result := self
-		          evaluateStatement: self selectedTextOrLine
-		          ifError: [ :msg |
-			          self
-				          insertPopoverAfterCurrentSelection:
-				          (self newLabel label: msg)
-				          style: 'error'.
-			          ^ nil ]
+	self selectedTextOrLine trim ifNotEmpty: [ :statement |
+		self evaluateStatement: statement ifError: [ :msg |
+			self
+				insertPopoverAfterCurrentSelection: (self newLabel label: msg)
+				style: 'error'.
+			^ nil ].
+		self announcer announce: (ViennaExecuted statement: statement) ]
 ]
 
 { #category : #evaluating }
@@ -164,4 +164,20 @@ ViennaVDMSourcePresenter >> typecheckExpression: aString ifError: errorBlock [
 	^ [ node typecheck printString ]
 		  on: ViennaTypeError
 		  do: [ :ex | errorBlock cull: ex messageText ]
+]
+
+{ #category : #'api - events' }
+ViennaVDMSourcePresenter >> whenEvaluatedDo: aBlock [
+
+	self announcer
+		when: ViennaEvaluated
+		do: [ :announcement | aBlock cull: announcement expression ]
+]
+
+{ #category : #'api - events' }
+ViennaVDMSourcePresenter >> whenExecutedDo: aBlock [
+
+	self announcer
+		when: ViennaExecuted
+		do: [ :announcement | aBlock cull: announcement statement ]
 ]
