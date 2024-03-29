@@ -123,11 +123,26 @@ ViennaValueDefinitionNode >> hasOnlyOnePatternIdentifier [
 ]
 
 { #category : #accessing }
+ViennaValueDefinitionNode >> identifier [
+
+	^ self pattern source
+]
+
+{ #category : #accessing }
 ViennaValueDefinitionNode >> identifier: aString [
 
 	self hasOnlyOnePatternIdentifier ifTrue: [
 		self pattern boundIdentifiersDo: [ :identifier :pattern |
 			pattern identifier: aString ] ]
+]
+
+{ #category : #accessing }
+ViennaValueDefinitionNode >> identifiers [
+
+	^ Array streamContents: [ :stream |
+		  self pattern
+			  allDescendantsSuchThat: #isViennaPatternIdentifierNode
+			  do: [ :node | stream nextPut: node identifier ] ]
 ]
 
 { #category : #testing }

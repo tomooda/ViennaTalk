@@ -11,6 +11,18 @@ ViennaTopLevelDefinitionNode class >> isAbstract [
 	^ self = ViennaTopLevelDefinitionNode
 ]
 
+{ #category : #accessing }
+ViennaTopLevelDefinitionNode >> identifier [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
+ViennaTopLevelDefinitionNode >> identifiers [
+
+	^ { self identifier }
+]
+
 { #category : #testing }
 ViennaTopLevelDefinitionNode >> isViennaExportableTopLevelDefinitionNode [
 

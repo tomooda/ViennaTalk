@@ -5,7 +5,6 @@ Class {
 		'animation',
 		'menuBar',
 		'notebook',
-		'epiLogList',
 		'moduleList',
 		'categoryList',
 		'definitionList',
@@ -21,7 +20,11 @@ Class {
 		'testProcess',
 		'highlighterProcess',
 		'dirty',
-		'refreshStateButton'
+		'refreshStateButton',
+		'showsTimeLineButton',
+		'showsConstructionLineButton',
+		'epiLogMatcherDropList',
+		'epiLogList'
 	],
 	#classVars : [
 		'GreenSignalIcon',
@@ -769,7 +772,15 @@ ViennaRefactoringBrowser >> epiLogListContextMenu [
 { #category : #layouts }
 ViennaRefactoringBrowser >> epilogPageLayout [
 
-	^ SpBoxLayout newHorizontal add: epiLogList
+	^ SpBoxLayout newVertical
+		  add: (SpBoxLayout newHorizontal
+				   add: showsTimeLineButton expand: false;
+				   add: showsConstructionLineButton expand: false;
+				   add: epiLogMatcherDropList expand: false;
+				   yourself)
+		  expand: false;
+		  add: epiLogList;
+		  yourself
 ]
 
 { #category : #operations }
@@ -925,6 +936,15 @@ ViennaRefactoringBrowser >> highlightSourceText [
 		                      Processor userBackgroundPriority
 ]
 
+{ #category : #controlling }
+ViennaRefactoringBrowser >> ifShowsTimeLine: timeLineBlock ifShowsConstructionLine: constructionLineBlock [
+
+	showsTimeLineButton state = true ifTrue: [ ^ timeLineBlock value ].
+	showsConstructionLineButton state = true ifTrue: [
+		^ constructionLineBlock value ].
+	^ nil
+]
+
 { #category : #operations }
 ViennaRefactoringBrowser >> importDirectory [
 	| modelFiles testFiles source |
@@ -989,10 +1009,25 @@ ViennaRefactoringBrowser >> initialize [
 ]
 
 { #category : #initialization }
-ViennaRefactoringBrowser >> initializePresenters [
+ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 
-	super initializePresenters.
-	menuBar := self menuBar.
+	showsTimeLineButton := self newRadioButton
+		                       label: 'time line';
+		                       whenActivatedDo: [ self updateEpiLogList ];
+		                       yourself.
+	showsConstructionLineButton := self newRadioButton
+		                               label: 'construction line';
+		                               whenActivatedDo: [
+			                               self updateEpiLogList ];
+		                               yourself.
+	showsTimeLineButton associatedRadioButtons:
+		{ showsConstructionLineButton }.
+	epiLogMatcherDropList := self newDropList
+		                         items: { ViennaEpiLogMatcher all };
+		                         startWithSelection;
+		                         whenSelectionChangedDo: [
+			                         self updateEpiLogList ];
+		                         yourself.
 	epiLogList := self newTable
 		              hideColumnHeaders;
 		              addColumn:
@@ -1009,11 +1044,65 @@ ViennaRefactoringBrowser >> initializePresenters [
 		              addColumn: (SpStringTableColumn evaluated: #comment);
 		              contextMenu: [ self epiLogListContextMenu ];
 		              yourself.
+	epiLogList whenBuiltDo: [ self updateEpiLogList ]
+]
+
+{ #category : #initialization }
+ViennaRefactoringBrowser >> initializePlaygroundPagePresenters [
+
+	playgroundText := self newVDMSource
+		                  animation: [ animation ];
+		                  module: [ self module ];
+		                  withoutLineNumbers;
+		                  whenEvaluatedDo: [ :expression |
+			                  self epiLog:
+					                  (self epiLog newEvaluation: expression) ];
+		                  whenExecutedDo: [ :statement |
+			                  self epiLog:
+					                  (self epiLog
+						                   newExecution: statement
+						                   state: animation state) ];
+		                  yourself.
+	stateTable := self newTable
+		              addColumn: (SpStringTableColumn
+				               title: 'module'
+				               evaluated: [ :string |
+					               string copyFrom: 1 to: (string indexOf: $`) - 1 ]);
+		              addColumn: (SpStringTableColumn
+				               title: 'variable'
+				               evaluated: [ :string |
+					               string
+						               copyFrom: (string indexOf: $`) + 1
+						               to: string size ]);
+		              addColumn: (SpStringTableColumn
+				               title: 'value'
+				               evaluated: [ :string | animation plainAt: string ]);
+		              yourself.
+	initStateButton := self newButton
+		                   icon: (Smalltalk ui iconNamed: #refresh);
+		                   label: 'initialize';
+		                   action: [ self initState ];
+		                   yourself.
+	refreshStateButton := self newButton
+		                      icon: (Smalltalk ui iconNamed: #smallUpdate);
+		                      label: 'refresh';
+		                      action: [ self updateStateTableItems ];
+		                      yourself
+]
+
+{ #category : #initialization }
+ViennaRefactoringBrowser >> initializePresenters [
+
+	super initializePresenters.
+	menuBar := self menuBar.
 	moduleList := self newList
 		              beSingleSelection;
 		              contextMenu: [ self moduleListContextMenu ];
 		              display: [ :ast | ast ifNil: [ '-' ] ifNotNil: #first ];
-		              whenSelectionChangedDo: [ self updateCategoryList ];
+		              whenSelectionChangedDo: [
+			              self
+				              updateCategoryList;
+				              updateEpiLogMatcherDropList ];
 		              yourself.
 	categoryList := self newList
 		                beSingleSelection;
@@ -1028,7 +1117,37 @@ ViennaRefactoringBrowser >> initializePresenters [
 			                  ast
 				                  ifNotNil: [ self displayDefinition: ast ]
 				                  ifNil: [ '-' ] ];
-		                  whenSelectionChangedDo: [ self updateSource ].
+		                  whenSelectionChangedDo: [
+			                  self
+				                  updateSource;
+				                  updateEpiLogMatcherDropList ].
+	self initializeSourcePagePresenters.
+	self initializePlaygroundPagePresenters.
+	self initializeEpiLogPagePresenters.
+	notebook := self newNotebook
+		            addPageTitle: 'Source' provider: [
+			            SpPresenter new
+				            layout: self sourcePageLayout;
+				            yourself ];
+		            addPageTitle: 'Playground' provider: [
+		            SpPresenter new
+			            layout: self playgroundPageLayout;
+			            yourself ];
+		            addPageTitle: 'EpiLog' provider: [
+		            SpPresenter new
+			            layout: self epilogPageLayout;
+			            yourself ];
+		            yourself.
+	self whenBuiltDo: [ :w |
+		| f |
+		f := ViennaLauncher font.
+		w widget allMorphsDo: [ :m |
+			(m respondsTo: #font:) ifTrue: [ m font: f ] ] ]
+]
+
+{ #category : #initialization }
+ViennaRefactoringBrowser >> initializeSourcePagePresenters [
+
 	sourceSignalButton := self newButton
 		                      color: Color transparent;
 		                      icon: self class greenSignalIcon;
@@ -1081,64 +1200,7 @@ ViennaRefactoringBrowser >> initializePresenters [
 		                   sortingBlock: [ :upper :lower |
 		                   upper sortingOrder <= lower sortingOrder ];
 		                   contextMenu: [ self testResultTableContextMenu ];
-		                   yourself.
-	playgroundText := self newVDMSource
-		                  animation: [ animation ];
-		                  module: [ self module ];
-		                  withoutLineNumbers;
-		                  whenEvaluatedDo: [ :expression |
-			                  self epiLog:
-					                  (self epiLog newEvaluation: expression) ];
-		                  whenExecutedDo: [ :statement |
-			                  self epiLog:
-					                  (self epiLog
-						                   newExecution: statement
-						                   state: animation state) ];
-		                  yourself.
-	stateTable := self newTable
-		              addColumn: (SpStringTableColumn
-				               title: 'module'
-				               evaluated: [ :string |
-					               string copyFrom: 1 to: (string indexOf: $`) - 1 ]);
-		              addColumn: (SpStringTableColumn
-				               title: 'variable'
-				               evaluated: [ :string |
-					               string
-						               copyFrom: (string indexOf: $`) + 1
-						               to: string size ]);
-		              addColumn: (SpStringTableColumn
-				               title: 'value'
-				               evaluated: [ :string | animation plainAt: string ]);
-		              yourself.
-	initStateButton := self newButton
-		                   icon: (Smalltalk ui iconNamed: #refresh);
-		                   label: 'initialize';
-		                   action: [ self initState ];
-		                   yourself.
-	refreshStateButton := self newButton
-		                      icon: (Smalltalk ui iconNamed: #smallUpdate);
-		                      label: 'refresh';
-		                      action: [ self updateStateTableItems ];
-		                      yourself.
-	notebook := self newNotebook
-		            addPageTitle: 'Source' provider: [
-			            SpPresenter new
-				            layout: self sourcePageLayout;
-				            yourself ];
-		            addPageTitle: 'Playground' provider: [
-		            SpPresenter new
-			            layout: self playgroundPageLayout;
-			            yourself ];
-		            addPageTitle: 'EpiLog' provider: [
-		            SpPresenter new
-			            layout: self epilogPageLayout;
-			            yourself ];
-		            yourself.
-	self whenBuiltDo: [ :w |
-		| f |
-		f := ViennaLauncher font.
-		w widget allMorphsDo: [ :m |
-			(m respondsTo: #font:) ifTrue: [ m font: f ] ] ]
+		                   yourself
 ]
 
 { #category : #initialization }
@@ -1802,7 +1864,33 @@ ViennaRefactoringBrowser >> updateDefinitionList [
 { #category : #updating }
 ViennaRefactoringBrowser >> updateEpiLogList [
 
-	epiLogList items: self epiLog asArray
+	epiLogList ifNotNil: [
+		epiLogList items:
+			((self epiLog ifNil: [ #(  ) ] ifNotNil: [ :epiLog |
+				  self
+					  ifShowsTimeLine: [ epiLog timeLine ]
+					  ifShowsConstructionLine: [ epiLog constructionLine ] ])
+				 select:
+				 (epiLogMatcherDropList selectedItem ifNil: [ [ :epilog | true ] ])) ]
+]
+
+{ #category : #updating }
+ViennaRefactoringBrowser >> updateEpiLogMatcherDropList [
+
+	| selection |
+	selection := epiLogMatcherDropList selectedItem.
+	epiLogMatcherDropList items: (Array streamContents: [ :stream |
+			 stream nextPut: ViennaEpiLogMatcher all.
+			 moduleList selectedItem ifNotNil: [ :module |
+				 stream nextPut: (ViennaEpiLogMatcher module: module identifier) ].
+			 definitionList selectedItem ifNotNil: [ :definition |
+				 definition isViennaTopLevelDefinitionNode ifTrue: [
+					 definition identifiers do: [ :identifier |
+						 stream nextPut: (ViennaEpiLogMatcher
+								  identifier: identifier
+								  module: definition module identifier) ] ] ] ]) sorted.
+	(epiLogMatcherDropList items includes: selection) ifTrue: [
+		epiLogMatcherDropList selectItem: selection ]
 ]
 
 { #category : #updating }

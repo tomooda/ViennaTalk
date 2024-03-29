@@ -26,10 +26,20 @@ ViennaModificationEpiLog class >> after: aViennaEpiLog specification: aViennaMod
 ]
 
 { #category : #testing }
+ViennaModificationEpiLog >> hasChangeAt: aString module: anotherString [
+
+	^ ((specification moduleNamed: anotherString) ifNotNil: [ :m |
+		   m resolveIdentifier: aString ])
+	  ~=
+		  ((prev ifNotNil: [ prev specification moduleNamed: anotherString ])
+			   ifNotNil: [ :m | m resolveIdentifier: aString ])
+]
+
+{ #category : #testing }
 ViennaModificationEpiLog >> hasChangeAtModule: aString [
 
 	^ (specification moduleNamed: aString)
-	  ~= (prev specification moduleNamed: aString)
+	  ~= (prev ifNotNil: [ prev specification moduleNamed: aString ])
 ]
 
 { #category : #testing }

@@ -28,6 +28,16 @@ ViennaRevertionEpiLog >> destination: aViennaEpiLog [
 ]
 
 { #category : #testing }
+ViennaRevertionEpiLog >> hasChangeAt: aString module: anotherString [
+
+	^ ((destination specification moduleNamed: anotherString) ifNotNil: [
+		   :m | m resolveIdentifier: aString ])
+	  ~=
+		  ((prev specification moduleNamed: anotherString) ifNotNil: [ :m |
+			   m resolveIdentifier: aString ])
+]
+
+{ #category : #testing }
 ViennaRevertionEpiLog >> hasChangeAtModule: aString [
 
 	^ (destination specification moduleNamed: aString)
@@ -50,6 +60,14 @@ ViennaRevertionEpiLog >> hasStateChange [
 ViennaRevertionEpiLog >> isRevertionEpiLog [
 
 	^ true
+]
+
+{ #category : #accessing }
+ViennaRevertionEpiLog >> pred [
+
+	^ destination isRevertionEpiLog
+		  ifTrue: [ destination pred ]
+		  ifFalse: [ destination ]
 ]
 
 { #category : #printing }

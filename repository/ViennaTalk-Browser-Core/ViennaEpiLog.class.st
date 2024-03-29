@@ -19,6 +19,12 @@ ViennaEpiLog class >> after: aViennaEpiLog [
 		  yourself
 ]
 
+{ #category : #testing }
+ViennaEpiLog class >> isAbstract [
+
+	^ self = ViennaEpiLog
+]
+
 { #category : #'instance creation' }
 ViennaEpiLog class >> vanilla [
 
@@ -37,17 +43,6 @@ ViennaEpiLog >> = aComparable [
 	^ super = aComparable
 ]
 
-{ #category : #converting }
-ViennaEpiLog >> asArray [
-
-	^ Array streamContents: [ :stream |
-		  | epiLog |
-		  epiLog := self.
-		  [ epiLog notNil ] whileTrue: [
-			  stream nextPut: epiLog.
-			  epiLog := epiLog prev ] ]
-]
-
 { #category : #accessing }
 ViennaEpiLog >> comment [
 
@@ -60,10 +55,27 @@ ViennaEpiLog >> comment: anObject [
 	comment := anObject
 ]
 
+{ #category : #converting }
+ViennaEpiLog >> constructionLine [
+
+	^ Array streamContents: [ :stream |
+		  | epiLog |
+		  epiLog := self.
+		  [ epiLog notNil ] whileTrue: [
+			  stream nextPut: epiLog.
+			  epiLog := epiLog pred ] ]
+]
+
 { #category : #defaults }
 ViennaEpiLog >> defaultComment [
 
 	^ ''
+]
+
+{ #category : #testing }
+ViennaEpiLog >> hasChangeAt: aString module: anotherString [
+
+	^ false
 ]
 
 { #category : #testing }
@@ -204,6 +216,15 @@ ViennaEpiLog >> newRevertion: aViennaEpiLog [
 ]
 
 { #category : #accessing }
+ViennaEpiLog >> pred [
+
+	^ prev ifNotNil: [
+		  prev isRevertionEpiLog
+			  ifTrue: [ prev pred ]
+			  ifFalse: [ prev ] ]
+]
+
+{ #category : #accessing }
 ViennaEpiLog >> prev [
 
 	^ prev
@@ -239,6 +260,17 @@ ViennaEpiLog >> state [
 ViennaEpiLog >> state: aDictionary [
 
 	
+]
+
+{ #category : #converting }
+ViennaEpiLog >> timeLine [
+
+	^ Array streamContents: [ :stream |
+		  | epiLog |
+		  epiLog := self.
+		  [ epiLog notNil ] whileTrue: [
+			  stream nextPut: epiLog.
+			  epiLog := epiLog prev ] ]
 ]
 
 { #category : #accessing }
