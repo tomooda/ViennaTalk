@@ -622,6 +622,22 @@ ViennaModuleNode >> toplevelDefinitionsDo: aBlock [
 	self moduleBody toplevelDefinitionsDo: aBlock
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaModuleNode >> toplevelIdentifiers [
+
+	^ Array streamContents: [ :stream |
+		  self toplevelIdentifiersDo: [ :i | stream nextPut: i ] ]
+]
+
+{ #category : #'accessing-definitions' }
+ViennaModuleNode >> toplevelIdentifiersDo: aBlock [
+
+	self toplevelDefinitionsDo: [ :toplevelDefinition |
+		toplevelDefinition isViennaValueDefinitionNode
+			ifTrue: [ toplevelDefinition identifiers do: aBlock ]
+			ifFalse: [ aBlock value: toplevelDefinition identifier ] ]
+]
+
 { #category : #accessing }
 ViennaModuleNode >> uniqueImportedIdentifiers [
 

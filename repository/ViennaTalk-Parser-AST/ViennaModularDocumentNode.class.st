@@ -31,6 +31,12 @@ ViennaModularDocumentNode >> maximalType [
 ]
 
 { #category : #accessing }
+ViennaModularDocumentNode >> moduleNames [
+
+	^ self collect: #identifier
+]
+
+{ #category : #accessing }
 ViennaModularDocumentNode >> modules [
 
 	^ self asArray

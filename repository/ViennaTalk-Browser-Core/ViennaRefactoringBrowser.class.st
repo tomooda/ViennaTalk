@@ -24,7 +24,8 @@ Class {
 		'showsTimeLineButton',
 		'showsConstructionLineButton',
 		'epiLogMatcherDropList',
-		'epiLogList'
+		'epiLogList',
+		'epiLogDiffList'
 	],
 	#classVars : [
 		'GreenSignalIcon',
@@ -827,14 +828,18 @@ ViennaRefactoringBrowser >> epiLogRevertion: aViennaEpiLog [
 { #category : #layouts }
 ViennaRefactoringBrowser >> epilogPageLayout [
 
-	^ SpBoxLayout newVertical
-		  add: (SpBoxLayout newHorizontal
-				   add: showsTimeLineButton expand: false;
-				   add: showsConstructionLineButton expand: false;
+	^ SpPanedLayout newHorizontal
+		  positionOfSlider: 0.4;
+		  add: (SpBoxLayout newVertical
+				   add: (SpBoxLayout newHorizontal
+						    add: showsTimeLineButton;
+						    add: showsConstructionLineButton;
+						    yourself)
+				   expand: false;
 				   add: epiLogMatcherDropList expand: false;
-				   yourself)
-		  expand: false;
-		  add: epiLogList;
+				   add: epiLogList;
+				   yourself);
+		  add: (SpBoxLayout newVertical add: epiLogDiffList);
 		  yourself
 ]
 
@@ -1083,6 +1088,7 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 		                         yourself.
 	epiLogList := self newTable
 		              hideColumnHeaders;
+		              beResizable;
 		              addColumn:
 			              (SpStringTableColumn evaluated: [ :epilog |
 					               | time |
@@ -1094,7 +1100,32 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 			              (SpStringTableColumn evaluated: #printString);
 		              addColumn: (SpStringTableColumn evaluated: #comment);
 		              contextMenu: [ self epiLogListContextMenu ];
+		              whenSelectionChangedDo: [ self updateEpiLogDiffList ];
 		              yourself.
+	epiLogDiffList := self newTable
+		                  hideColumnHeaders;
+		                  addColumn:
+			                  ((SpStringTableColumn evaluated: [ :assoc |
+					                    assoc key
+						                    ifNil: [ 'added' ]
+						                    ifNotNil: [
+							                    assoc value
+								                    ifNil: [ 'deleted' ]
+								                    ifNotNil: [ 'modified' ] ] ]) width: 50);
+		                  addColumn:
+			                  (SpStringTableColumn evaluated: [ :assoc |
+					                   assoc value
+						                   ifNotNil: [ :node |
+							                   node isViennaModuleNode
+								                   ifTrue: [ 'module ' , node identifier ]
+								                   ifFalse: [
+									                   node isViennaStateDefinitionNode
+										                   ifTrue: [ 'state ' , node identifier ]
+										                   ifFalse: [
+											                   node section sectionName , ' '
+											                   , (' ' join: node identifiers) ] ] ]
+						                   ifNil: [ assoc key identifier ] ]);
+		                  yourself.
 	epiLogList whenBuiltDo: [ self updateEpiLogList ]
 ]
 
@@ -1905,6 +1936,19 @@ ViennaRefactoringBrowser >> updateDefinitionList [
 	(newItems includes: oldSelection)
 		ifTrue: [ definitionList selectItem: oldSelection ]
 		ifFalse: [ definitionList unselectAll ]
+]
+
+{ #category : #updating }
+ViennaRefactoringBrowser >> updateEpiLogDiffList [
+
+	epiLogList selectedItem ifNotNil: [ :epilog |
+		| diff |
+		diff := ViennaNodeDiff
+			        key: (epilog prev
+					         ifNotNil: #specification
+					         ifNil: [ ViennaModularDocumentNode new ])
+			        value: epilog specification.
+		epiLogDiffList items: diff modules ]
 ]
 
 { #category : #updating }
