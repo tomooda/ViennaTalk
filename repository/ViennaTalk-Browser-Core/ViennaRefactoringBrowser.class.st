@@ -592,9 +592,7 @@ ViennaRefactoringBrowser >> accept: aStringOrText [
 			parent at: index put: newNode ] ].
 	copyMap keys do: [ :old |
 		(copyMap at: old) == oldNode ifTrue: [ copyMap at: old put: newNode ] ].
-	self epiLog: ((self epiLog newModification: newAst)
-			 comment: 'manual edit';
-			 yourself).
+	self epiLogManualEdit: newAst.
 	self updateModuleList.
 	moduleList selectItem: (copyMap at: module ifAbsent: [ nil ]).
 	categoryList selectItem: (copyMap at: category ifAbsent: [ nil ]).
@@ -755,6 +753,24 @@ ViennaRefactoringBrowser >> epiLog: aViennaEpiLog [
 	self model: aViennaEpiLog
 ]
 
+{ #category : #'operations-epiLog' }
+ViennaRefactoringBrowser >> epiLogEvaluation: aString [
+
+	self epiLog: (self epiLog newEvaluation: aString)
+]
+
+{ #category : #'operations-epiLog' }
+ViennaRefactoringBrowser >> epiLogExecution: aString state: aDictionary [
+
+	self epiLog: (self epiLog newExecution: aString state: aDictionary)
+]
+
+{ #category : #'operations-epiLog' }
+ViennaRefactoringBrowser >> epiLogInitialization: aDictionary [
+
+	self epiLog: (self epiLog newInitialization: aDictionary)
+]
+
 { #category : #menus }
 ViennaRefactoringBrowser >> epiLogListContextMenu [
 
@@ -767,6 +783,45 @@ ViennaRefactoringBrowser >> epiLogListContextMenu [
 					name: 'Revert to';
 					action: [ self revertTo: epilog ] ] ] ].
 	^ menu
+]
+
+{ #category : #'operations-epiLog' }
+ViennaRefactoringBrowser >> epiLogLoading: aViennaModularDocumentNode [
+
+	self epiLog: (self epiLog newLoading: aViennaModularDocumentNode)
+]
+
+{ #category : #'operations-epiLog' }
+ViennaRefactoringBrowser >> epiLogManualEdit: aViennaModularDocumentNode [
+
+	self epiLog:
+		((self epiLog newModification: aViennaModularDocumentNode)
+			 comment: 'manual edit';
+			 yourself)
+]
+
+{ #category : #'operations-epiLog' }
+ViennaRefactoringBrowser >> epiLogMergeFRAM: aViennaModularDocumentNode [
+
+	self epiLog:
+		((self epiLog newModification: aViennaModularDocumentNode)
+			 comment: 'merge from FRAM';
+			 yourself)
+]
+
+{ #category : #'operations-epiLog' }
+ViennaRefactoringBrowser >> epiLogRefactoring: aViennaModularDocumentNode with: aViennaRefactoring [
+
+	self epiLog:
+		((self epiLog newModification: aViennaModularDocumentNode)
+			 comment: aViennaRefactoring name;
+			 yourself)
+]
+
+{ #category : #'operations-epiLog' }
+ViennaRefactoringBrowser >> epiLogRevertion: aViennaEpiLog [
+
+	self epiLog: (self epiLog newRevertion: aViennaEpiLog)
 ]
 
 { #category : #layouts }
@@ -795,9 +850,7 @@ ViennaRefactoringBrowser >> executeRefactoring: aViennaRefactoring [
 			                ifAbsent: [ ^ false ]).
 	refactoring check ifFalse: [ ^ false ].
 	result := refactoring execute.
-	self epiLog: ((self epiLog newModification: newAst)
-			 comment: refactoring name;
-			 yourself).
+	self epiLogRefactoring: newAst with: refactoring.
 	result ifNotNil: [
 		self updateModuleList.
 		moduleList selectItem: result module.
@@ -993,7 +1046,7 @@ ViennaRefactoringBrowser >> initState [
 
 	animation init.
 	self updateStateTable.
-	self epiLog: (self epiLog newInitialization: animation state)
+	self epiLogInitialization: animation state
 ]
 
 { #category : #initialization }
@@ -1035,10 +1088,8 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 					               | time |
 					               time := DateAndTime now - epilog timestamp.
 					               time < 1 minutes
-						               ifTrue: [ 'seconds ago' ]
-						               ifFalse: [
-							               (time roundTo: 1 minute)
-								               humanReadablePrintString , ' ago' ] ]);
+						               ifTrue: [ 'now' ]
+						               ifFalse: [ time printRoughly , ' ago' ] ]);
 		              addColumn:
 			              (SpStringTableColumn evaluated: #printString);
 		              addColumn: (SpStringTableColumn evaluated: #comment);
@@ -1055,13 +1106,11 @@ ViennaRefactoringBrowser >> initializePlaygroundPagePresenters [
 		                  module: [ self module ];
 		                  withoutLineNumbers;
 		                  whenEvaluatedDo: [ :expression |
-			                  self epiLog:
-					                  (self epiLog newEvaluation: expression) ];
+			                  self epiLogEvaluation: expression ];
 		                  whenExecutedDo: [ :statement |
-			                  self epiLog:
-					                  (self epiLog
-						                   newExecution: statement
-						                   state: animation state) ];
+			                  self
+				                  epiLogExecution: statement
+				                  state: animation state ];
 		                  yourself.
 	stateTable := self newTable
 		              addColumn: (SpStringTableColumn
@@ -1169,12 +1218,11 @@ ViennaRefactoringBrowser >> initializeSourcePagePresenters [
 		              whenTextChangedDo: [ self onTheFlyCheckSourceText ];
 		              whenSubmitDo: [ :text | self accept: text ];
 		              whenEvaluatedDo: [ :expression |
-			              self epiLog: (self epiLog newEvaluation: expression) ];
+			              self epiLogEvaluation: expression ];
 		              whenExecutedDo: [ :statement |
-			              self epiLog:
-					              (self epiLog
-						               newExecution: statement
-						               state: animation state) ];
+			              self
+				              epiLogExecution: statement
+				              state: animation state ];
 		              contextMenu: [ self sourceTextContextMenu ];
 		              yourself.
 	testResultTable := self newTable
@@ -1259,7 +1307,7 @@ ViennaRefactoringBrowser >> load: aString [
 							         (ViennaExportDefinitionNode exportModuleSignature:
 								          ViennaExportModuleSignatureAllNode new))
 				        moduleBody: (ViennaModuleBodyNode withAll: ast asArray)) ].
-	self epiLog: (self epiLog newLoading: ast).
+	self epiLogLoading: ast.
 	self updateModuleList.
 	self clearDirty
 ]
@@ -1346,9 +1394,7 @@ ViennaRefactoringBrowser >> mergeOperationsFromFRAM [
 		  copyMap := IdentityDictionary new.
 		  newAst := self specification copyWhole: copyMap.
 		  fram appendToSpec: newAst.
-		  self epiLog: ((self epiLog newModification: newAst)
-				   comment: 'merge from FRAM';
-				   yourself).
+		  self epiLogMergeFRAM: newAst.
 		  moduleList selectItem: (copyMap at: module ifAbsent: [ nil ]).
 		  categoryList selectItem: (copyMap at: category ifAbsent: [ nil ]).
 		  definitionList selectItem:
@@ -1597,7 +1643,7 @@ ViennaRefactoringBrowser >> playgroundTextContextMenu [
 { #category : #operations }
 ViennaRefactoringBrowser >> revertTo: aViennaEpiLog [
 
-	self epiLog: (self epiLog newRevertion: aViennaEpiLog).
+	self epiLogRevertion: aViennaEpiLog.
 	self updateModuleList
 ]
 
