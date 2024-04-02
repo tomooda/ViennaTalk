@@ -72,6 +72,26 @@ ViennaEpiLog >> defaultComment [
 	^ ''
 ]
 
+{ #category : #accessing }
+ViennaEpiLog >> diffSetFromPred [
+
+	^ ViennaNodeDiffSet
+		  from: (self pred
+				   ifNotNil: #specification
+				   ifNil: [ ViennaModularDocumentNode new ])
+		  to: self specification
+]
+
+{ #category : #accessing }
+ViennaEpiLog >> diffSetFromPrev [
+
+	^ ViennaNodeDiffSet
+		  from: (self prev
+				   ifNotNil: #specification
+				   ifNil: [ ViennaModularDocumentNode new ])
+		  to: self specification
+]
+
 { #category : #testing }
 ViennaEpiLog >> hasChangeAt: aString module: anotherString [
 

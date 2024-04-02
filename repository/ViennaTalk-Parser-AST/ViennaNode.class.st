@@ -191,6 +191,14 @@ ViennaNode >> asImportDefinitionIn: moduleNode [
 ]
 
 { #category : #accessing }
+ViennaNode >> at: anInteger ifAbsent: aBlock [
+
+	^ self size >= anInteger
+		  ifTrue: [ self at: anInteger ]
+		  ifFalse: aBlock
+]
+
+{ #category : #accessing }
 ViennaNode >> at: anInteger put: anObject [
 
 	anObject isViennaNode ifTrue: [ anObject parent: self ].
@@ -304,6 +312,24 @@ ViennaNode >> detectParent: aBlock ifNone: errorBlock [
 		(aBlock value: node) ifTrue: [ ^ node ].
 		node := node parent ].
 	^ errorBlock value
+]
+
+{ #category : #enumerating }
+ViennaNode >> diffFrom: aViennaNode changesDo: aBlock [
+
+	self = aViennaNode ifTrue: [ ^ self ].
+	(self class = aViennaNode class and: [ self size = aViennaNode size ])
+		ifTrue: [
+			self with: aViennaNode do: [ :node1 :node2 |
+				(node1 ~= node2 and: [
+					 node1 isViennaNode not or: [ node2 isViennaNode not ] ])
+					ifTrue: [
+						aBlock cull: self cull: aViennaNode.
+						^ self ] ].
+			self with: aViennaNode do: [ :node1 :node2 |
+				(node1 isViennaNode and: [ node2 isViennaNode ]) ifTrue: [
+					node1 diffFrom: node2 changesDo: aBlock ] ] ]
+		ifFalse: [ aBlock cull: self cull: aViennaNode ]
 ]
 
 { #category : #enumerating }
@@ -2813,4 +2839,11 @@ ViennaNode >> uniqueFreeIdentifiersDo: aBlock [
 		(done includes: identifier) ifFalse: [
 			done add: identifier.
 			aBlock value: identifier ] ]
+]
+
+{ #category : #enumerating }
+ViennaNode >> with: aViennaNode do: aBlock [
+
+	1 to: (self size min: aViennaNode size) do: [ :index |
+		aBlock value: (self at: index) value: (aViennaNode at: index) ]
 ]

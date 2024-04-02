@@ -422,6 +422,12 @@ ViennaModuleNode >> identifier: aString [
 ]
 
 { #category : #accessing }
+ViennaModuleNode >> identifiers [
+
+	^ { self identifier }
+]
+
+{ #category : #accessing }
 ViennaModuleNode >> importAtModuleIdentifier: aString identifier: anotherString [
 
 	(self importDefinitionAtModuleIdentifier: aString) ifNotNil: [

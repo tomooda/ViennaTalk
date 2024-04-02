@@ -25,7 +25,8 @@ Class {
 		'showsConstructionLineButton',
 		'epiLogMatcherDropList',
 		'epiLogList',
-		'epiLogDiffList'
+		'epiLogDiffList',
+		'epiLogDiffText'
 	],
 	#classVars : [
 		'GreenSignalIcon',
@@ -839,7 +840,10 @@ ViennaRefactoringBrowser >> epilogPageLayout [
 				   add: epiLogMatcherDropList expand: false;
 				   add: epiLogList;
 				   yourself);
-		  add: (SpBoxLayout newVertical add: epiLogDiffList);
+		  add: (SpPanedLayout newVertical
+				   positionOfSlider: 0.3;
+				   add: epiLogDiffList;
+				   add: epiLogDiffText);
 		  yourself
 ]
 
@@ -1104,28 +1108,15 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 		              yourself.
 	epiLogDiffList := self newTable
 		                  hideColumnHeaders;
+		                  beResizable;
 		                  addColumn:
-			                  ((SpStringTableColumn evaluated: [ :assoc |
-					                    assoc key
-						                    ifNil: [ 'added' ]
-						                    ifNotNil: [
-							                    assoc value
-								                    ifNil: [ 'deleted' ]
-								                    ifNotNil: [ 'modified' ] ] ]) width: 50);
+			                  (SpStringTableColumn evaluated: #printSummary);
 		                  addColumn:
-			                  (SpStringTableColumn evaluated: [ :assoc |
-					                   assoc value
-						                   ifNotNil: [ :node |
-							                   node isViennaModuleNode
-								                   ifTrue: [ 'module ' , node identifier ]
-								                   ifFalse: [
-									                   node isViennaStateDefinitionNode
-										                   ifTrue: [ 'state ' , node identifier ]
-										                   ifFalse: [
-											                   node section sectionName , ' '
-											                   , (' ' join: node identifiers) ] ] ]
-						                   ifNil: [ assoc key identifier ] ]);
+			                  (SpStringTableColumn evaluated: #printNames);
+		                  whenSelectionChangedDo: [
+			                  self updateEpiLogDiffText ];
 		                  yourself.
+	epiLogDiffText := self newText.
 	epiLogList whenBuiltDo: [ self updateEpiLogList ]
 ]
 
@@ -1942,26 +1933,39 @@ ViennaRefactoringBrowser >> updateDefinitionList [
 ViennaRefactoringBrowser >> updateEpiLogDiffList [
 
 	epiLogList selectedItem ifNotNil: [ :epilog |
-		| diff |
-		diff := ViennaNodeDiff
-			        key: (epilog prev
-					         ifNotNil: #specification
-					         ifNil: [ ViennaModularDocumentNode new ])
-			        value: epilog specification.
-		epiLogDiffList items: diff modules ]
+		epiLogDiffList
+			items: (Array streamContents: [ :stream |
+						 epilog diffSetFromPrev changesDo: [ :change |
+								 stream nextPut: change ] ]);
+			selectIndex: 1 ]
+]
+
+{ #category : #updating }
+ViennaRefactoringBrowser >> updateEpiLogDiffText [
+
+	epiLogDiffList selectedItem
+		ifNotNil: [ :diff |
+			| text |
+			text := diff sourceDiffText.
+			epiLogDiffText text: text asString.
+			epiLogDiffText withAdapterDo: [ :a |
+				a widgetDo: [ :w | w text runs: text runs ] ] ]
+		ifNil: [ epiLogDiffText text: '' ]
 ]
 
 { #category : #updating }
 ViennaRefactoringBrowser >> updateEpiLogList [
 
 	epiLogList ifNotNil: [
-		epiLogList items:
-			((self epiLog ifNil: [ #(  ) ] ifNotNil: [ :epiLog |
-				  self
-					  ifShowsTimeLine: [ epiLog timeLine ]
-					  ifShowsConstructionLine: [ epiLog constructionLine ] ])
-				 select:
-				 (epiLogMatcherDropList selectedItem ifNil: [ [ :epilog | true ] ])) ]
+		epiLogList
+			items: ((self epiLog ifNil: [ #(  ) ] ifNotNil: [ :epiLog |
+						  self
+							  ifShowsTimeLine: [ epiLog timeLine ]
+							  ifShowsConstructionLine: [ epiLog constructionLine ] ])
+					 select:
+						 (epiLogMatcherDropList selectedItem ifNil: [
+								  [ :epilog | true ] ]));
+			selectIndex: 1 ]
 ]
 
 { #category : #updating }
