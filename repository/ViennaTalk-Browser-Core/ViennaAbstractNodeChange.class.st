@@ -3,10 +3,19 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'from',
-		'to'
+		'to',
+		'sourceDiffText'
 	],
 	#category : #'ViennaTalk-Browser-Core-Diff'
 }
+
+{ #category : #utilities }
+ViennaAbstractNodeChange class >> flushSourceDiffText [
+
+	<script: 'self flushSourceDiffText'>
+	self allSubclassesDo: [ :c |
+		c allInstancesDo: [ :i | i flushSourceDiffText ] ]
+]
 
 { #category : #'instance creation' }
 ViennaAbstractNodeChange class >> from: aViennaNode to: anotherViennaNode [
@@ -14,6 +23,12 @@ ViennaAbstractNodeChange class >> from: aViennaNode to: anotherViennaNode [
 	^ self new
 		  setFrom: aViennaNode to: anotherViennaNode;
 		  yourself
+]
+
+{ #category : #private }
+ViennaAbstractNodeChange >> flushSourceDiffText [
+
+	sourceDiffText := nil
 ]
 
 { #category : #accessing }
@@ -61,32 +76,36 @@ ViennaAbstractNodeChange >> setFrom: aViennaNode to: anotherViennaNode [
 { #category : #printing }
 ViennaAbstractNodeChange >> sourceDiffText [
 
-	| diffMap source |
-	from ifNil: [
-		^ to highlightedSource
-			  addAttribute: TextEmphasis bold;
-			  yourself ].
-	to ifNil: [
-		^ from highlightedSource
-			  addAttribute: TextEmphasis struckOut;
-			  yourself ].
-	diffMap := IdentityDictionary new.
-	to
-		diffFrom: from
-		changesDo: [ :toNode :fromNode | diffMap at: toNode put: fromNode ].
-	source := to tracingHighlightedSource.
-	diffMap keysAndValuesDo: [ :toNode :fromNode |
-		(source string intervalForSource: toNode) key ifNotEmpty: [
-			:interval |
-			source := (source copyFrom: 1 to: interval first - 1)
-			          , (fromNode source asText
-					           addAttribute: TextEmphasis struckOut;
-					           yourself)
-			          ,
-				          ((source copyFrom: interval first to: interval last)
-					           addAttribute: TextEmphasis bold)
-			          , (source copyFrom: interval last + 1 to: source size) ] ].
-	^ source
+	^ sourceDiffText ifNil: [
+		  | diffMap source |
+		  from ifNil: [
+			  ^ to highlightedSource
+				    addAttribute: TextEmphasis bold;
+				    yourself ].
+		  to ifNil: [
+			  ^ from highlightedSource
+				    addAttribute: TextEmphasis struckOut;
+				    yourself ].
+		  diffMap := IdentityDictionary new.
+		  to
+			  diffFrom: from
+			  changesDo: [ :toNode :fromNode |
+			  diffMap at: toNode put: fromNode ].
+		  source := to tracingHighlightedSource.
+		  diffMap keysAndValuesDo: [ :toNode :fromNode |
+			  (source string intervalForSource: toNode) key ifNotEmpty: [
+				  :interval |
+				  source := (source copyFrom: 1 to: interval first - 1)
+				            , (fromNode source asText
+						             addAttribute: TextEmphasis struckOut;
+						             yourself)
+				            ,
+					            ((source copyFrom: interval first to: interval last)
+						             addAttribute: TextEmphasis underlined)
+				            , (source copyFrom: interval last + 1 to: source size) ] ].
+		  sourceDiffText := source string asString asString asText
+			                    runs: source runs;
+			                    yourself ]
 ]
 
 { #category : #accessing }

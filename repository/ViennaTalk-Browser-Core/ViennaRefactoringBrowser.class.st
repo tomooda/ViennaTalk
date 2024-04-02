@@ -1909,35 +1909,30 @@ ViennaRefactoringBrowser >> updateCategoryList [
 				            stream nextPut: section ] ] ].
 	oldSelection := categoryList selection selectedItem.
 	categoryList items: newItems.
-	(newItems includes: oldSelection)
-		ifTrue: [ categoryList selectItem: oldSelection ]
-		ifFalse: [ categoryList unselectAll ]
+	(newItems includes: oldSelection) ifTrue: [
+		categoryList selectItem: oldSelection ]
 ]
 
 { #category : #updating }
 ViennaRefactoringBrowser >> updateDefinitionList [
+
 	| newItems oldSelection |
-	newItems := (Array with: self category)
-		,
-			(self category
-				ifNotNil: [ :ast | self definitionsFromCategory: ast ]
-				ifNil: [ Array new ]).
+	newItems := (Array with: self category) , (self category
+		             ifNotNil: [ :ast | self definitionsFromCategory: ast ]
+		             ifNil: [ Array new ]).
 	oldSelection := definitionList selection selectedItem.
 	definitionList items: newItems.
-	(newItems includes: oldSelection)
-		ifTrue: [ definitionList selectItem: oldSelection ]
-		ifFalse: [ definitionList unselectAll ]
+	(newItems includes: oldSelection) ifTrue: [
+		definitionList selectItem: oldSelection ]
 ]
 
 { #category : #updating }
 ViennaRefactoringBrowser >> updateEpiLogDiffList [
 
 	epiLogList selectedItem ifNotNil: [ :epilog |
-		epiLogDiffList
-			items: (Array streamContents: [ :stream |
-						 epilog diffSetFromPrev changesDo: [ :change |
-								 stream nextPut: change ] ]);
-			selectIndex: 1 ]
+		epiLogDiffList items: (Array streamContents: [ :stream |
+				 epilog diffSetFromPrev changesDo: [ :change |
+					 stream nextPut: change ] ]) ]
 ]
 
 { #category : #updating }
@@ -1947,9 +1942,11 @@ ViennaRefactoringBrowser >> updateEpiLogDiffText [
 		ifNotNil: [ :diff |
 			| text |
 			text := diff sourceDiffText.
-			epiLogDiffText text: text asString.
+			epiLogDiffText text: text string asString asText.
 			epiLogDiffText withAdapterDo: [ :a |
-				a widgetDo: [ :w | w text runs: text runs ] ] ]
+				a widgetDo: [ :w |
+					w text runs: text runs.
+					w textArea compose ] ] ]
 		ifNil: [ epiLogDiffText text: '' ]
 ]
 
@@ -1959,13 +1956,12 @@ ViennaRefactoringBrowser >> updateEpiLogList [
 	epiLogList ifNotNil: [
 		epiLogList
 			items: ((self epiLog ifNil: [ #(  ) ] ifNotNil: [ :epiLog |
-						  self
-							  ifShowsTimeLine: [ epiLog timeLine ]
-							  ifShowsConstructionLine: [ epiLog constructionLine ] ])
+					  self
+						  ifShowsTimeLine: [ epiLog timeLine ]
+						  ifShowsConstructionLine: [ epiLog constructionLine ] ])
 					 select:
-						 (epiLogMatcherDropList selectedItem ifNil: [
-								  [ :epilog | true ] ]));
-			selectIndex: 1 ]
+					 (epiLogMatcherDropList selectedItem ifNil: [ [ :epilog | true ] ]))
+			selectsFirst: true ]
 ]
 
 { #category : #updating }
@@ -1997,9 +1993,8 @@ ViennaRefactoringBrowser >> updateModuleList [
 		            ifNil: [ Array with: nil ].
 	oldSelection := moduleList selection selectedItem.
 	moduleList items: newItems.
-	(newItems includes: oldSelection)
-		ifTrue: [ moduleList selectItem: oldSelection ]
-		ifFalse: [ moduleList unselectAll ]
+	(newItems includes: oldSelection) ifTrue: [
+		moduleList selectItem: oldSelection ]
 ]
 
 { #category : #updating }

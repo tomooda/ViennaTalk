@@ -1460,6 +1460,10 @@ ViennaVDM2Smalltalk >> functionTypeInstantiation: aViennaNode env: aDictionary [
 
 { #category : #'code generation' }
 ViennaVDM2Smalltalk >> generate: aViennaNode [
+
+	[ aViennaNode typecheck ]
+		on: ViennaTypeError
+		do: [ :ex | ^ nil ].
 	^ self generate: aViennaNode env: defaultEnv
 ]
 

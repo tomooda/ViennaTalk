@@ -6,7 +6,9 @@ Class {
 	#instVars : [
 		'timestamp',
 		'comment',
-		'prev'
+		'prev',
+		'diffSetFromPred',
+		'diffSetFromPrev'
 	],
 	#category : #'ViennaTalk-Browser-Core-EpiLog'
 }
@@ -75,21 +77,23 @@ ViennaEpiLog >> defaultComment [
 { #category : #accessing }
 ViennaEpiLog >> diffSetFromPred [
 
-	^ ViennaNodeDiffSet
-		  from: (self pred
-				   ifNotNil: #specification
-				   ifNil: [ ViennaModularDocumentNode new ])
-		  to: self specification
+	^ diffSetFromPred ifNil: [
+		  diffSetFromPred := ViennaNodeDiffSet
+			                     from: (self pred
+					                      ifNotNil: #specification
+					                      ifNil: [ ViennaModularDocumentNode new ])
+			                     to: self specification ]
 ]
 
 { #category : #accessing }
 ViennaEpiLog >> diffSetFromPrev [
 
-	^ ViennaNodeDiffSet
-		  from: (self prev
-				   ifNotNil: #specification
-				   ifNil: [ ViennaModularDocumentNode new ])
-		  to: self specification
+	^ diffSetFromPrev ifNil: [
+		  diffSetFromPrev := ViennaNodeDiffSet
+			                     from: (self prev
+					                      ifNotNil: #specification
+					                      ifNil: [ ViennaModularDocumentNode new ])
+			                     to: self specification ]
 ]
 
 { #category : #testing }
