@@ -339,17 +339,23 @@ ViennaTranspiledAnimation >> specification: aString [
 { #category : #accessing }
 ViennaTranspiledAnimation >> specification: aString ifError: errorBlock [
 
+	| ast |
 	transpiler := ViennaVDM2SmalltalkObject new.
-	aString isViennaNode
-		ifTrue: [ object := transpiler generate: aString ]
-		ifFalse: [
-			aString
-				ifEmpty: [ object := ViennaTranspiledObject new ]
-				ifNotEmpty: [
-					| ast |
-					ast := parser parse: aString.
-					ast isPetit2Failure ifTrue: [ ^ errorBlock cull: ast message ].
-					object := transpiler generate: ast ] ].
+	ast := aString isViennaNode
+		       ifTrue: [ aString ]
+		       ifFalse: [
+			       aString
+				       ifNotEmpty: [
+					       | result |
+					       result := parser parse: aString.
+					       result isPetit2Failure ifTrue: [
+						       ^ errorBlock cull: result message ].
+					       result ]
+				       ifEmpty: [ ViennaModularDocumentNode empty ] ].
+	[ ast typecheck ]
+		on: ViennaTypeError
+		do: [ :typeError | ^ errorBlock cull: typeError messageText ].
+	object := transpiler generate: ast.
 	specification := aString.
 	self changed: #specification.
 	self announceSpecificationChanged.
