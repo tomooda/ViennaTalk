@@ -20,8 +20,10 @@ ViennaRemoveOperation >> execute [
 		 detectParent: #isViennaOperationDefinitionsNode
 		 ifNone: [ nil ]) ifNotNil: [ :operationDefinitions |
 		operationDefinitions remove: self definitionNode.
-		operationDefinitions ifEmpty: [
-			operationDefinitions parent remove: operationDefinitions ] ].
+		^ operationDefinitions ifEmpty: [
+			  operationDefinitions parent
+				  remove: operationDefinitions;
+				  yourself ] ].
 	^ nil
 ]
 
