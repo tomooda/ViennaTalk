@@ -42,6 +42,12 @@ ViennaTypeBindListNode >> label [
 	^ 'TypeBindList'
 ]
 
+{ #category : #private }
+ViennaTypeBindListNode >> listDelimiter [
+
+	^ ', '
+]
+
 { #category : #typechecking }
 ViennaTypeBindListNode >> maximalType [
 

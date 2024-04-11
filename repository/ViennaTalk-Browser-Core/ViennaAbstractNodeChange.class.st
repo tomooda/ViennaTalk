@@ -80,7 +80,7 @@ ViennaAbstractNodeChange >> sourceDiffText [
 		  | diffMap source |
 		  from ifNil: [
 			  ^ to highlightedSource
-				    addAttribute: TextEmphasis bold;
+				    addAttribute: TextEmphasis underlined;
 				    yourself ].
 		  to ifNil: [
 			  ^ from highlightedSource
@@ -89,16 +89,19 @@ ViennaAbstractNodeChange >> sourceDiffText [
 		  diffMap := IdentityDictionary new.
 		  to
 			  diffFrom: from
-			  changesDo: [ :toNode :fromNode |
-			  diffMap at: toNode put: fromNode ].
+			  changesDo: [ :toNode :fromNodes |
+			  diffMap at: toNode put: fromNodes ].
 		  source := to tracingHighlightedSource.
-		  diffMap keysAndValuesDo: [ :toNode :fromNode |
+		  diffMap keysAndValuesDo: [ :toNode :fromNodes |
 			  (source string intervalForSource: toNode) key ifNotEmpty: [
 				  :interval |
 				  source := (source copyFrom: 1 to: interval first - 1)
-				            , (fromNode source asText
+				            , ((toNode parent listDelimiter join:
+							              (fromNodes collect: [ :fromNode |
+									               fromNode source ])) asText
 						             addAttribute: TextEmphasis struckOut;
 						             yourself)
+				            , (toNode ifNotEmpty: [ ' ' ] ifEmpty: [ '' ])
 				            ,
 					            ((source copyFrom: interval first to: interval last)
 						             addAttribute: TextEmphasis underlined)

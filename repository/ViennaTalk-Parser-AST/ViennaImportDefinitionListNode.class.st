@@ -44,6 +44,12 @@ ViennaImportDefinitionListNode >> label [
 	^ 'ImportDefinitionList'
 ]
 
+{ #category : #private }
+ViennaImportDefinitionListNode >> listDelimiter [
+
+	^ ', '
+]
+
 { #category : #typechecking }
 ViennaImportDefinitionListNode >> maximalType [
 

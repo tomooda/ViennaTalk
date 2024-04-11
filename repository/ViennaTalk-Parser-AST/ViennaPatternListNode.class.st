@@ -41,6 +41,12 @@ ViennaPatternListNode >> label [
 	^ 'PatternList'
 ]
 
+{ #category : #private }
+ViennaPatternListNode >> listDelimiter [
+
+	^ ', '
+]
+
 { #category : #typechecking }
 ViennaPatternListNode >> maximalType [
 

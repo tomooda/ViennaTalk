@@ -73,6 +73,12 @@ ViennaEqualDefinitionListNode >> label [
 	^ 'EqualDefinitionList'
 ]
 
+{ #category : #private }
+ViennaEqualDefinitionListNode >> listDelimiter [
+
+	^ ';' , String cr
+]
+
 { #category : #typechecking }
 ViennaEqualDefinitionListNode >> maximalType [
 

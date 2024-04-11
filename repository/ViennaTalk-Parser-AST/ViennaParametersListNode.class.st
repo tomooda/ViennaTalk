@@ -38,6 +38,12 @@ ViennaParametersListNode >> label [
 	^ 'ParametersList'
 ]
 
+{ #category : #private }
+ViennaParametersListNode >> listDelimiter [
+
+	^ ''
+]
+
 { #category : #typechecking }
 ViennaParametersListNode >> maximalType [
 

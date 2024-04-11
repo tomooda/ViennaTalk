@@ -43,6 +43,12 @@ ViennaExpressionListNode >> label [
 	^ 'ExpressionList'
 ]
 
+{ #category : #private }
+ViennaExpressionListNode >> listDelimiter [
+
+	^ ', '
+]
+
 { #category : #typechecking }
 ViennaExpressionListNode >> maximalType [
 

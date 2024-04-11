@@ -45,6 +45,12 @@ ViennaLocalDefinitionListNode >> label [
 	^ 'LocalDefinitionList'
 ]
 
+{ #category : #private }
+ViennaLocalDefinitionListNode >> listDelimiter [
+
+	^ ',' , String cr
+]
+
 { #category : #typechecking }
 ViennaLocalDefinitionListNode >> maximalType [
 

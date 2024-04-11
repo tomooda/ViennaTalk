@@ -58,6 +58,12 @@ ViennaIdentifierTypePairListNode >> label [
 	^ 'IdentifierTypePairList'
 ]
 
+{ #category : #private }
+ViennaIdentifierTypePairListNode >> listDelimiter [
+
+	^ ', '
+]
+
 { #category : #typechecking }
 ViennaIdentifierTypePairListNode >> maximalType [
 

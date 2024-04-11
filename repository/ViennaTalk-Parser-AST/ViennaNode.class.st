@@ -318,18 +318,33 @@ ViennaNode >> detectParent: aBlock ifNone: errorBlock [
 ViennaNode >> diffFrom: aViennaNode changesDo: aBlock [
 
 	self = aViennaNode ifTrue: [ ^ self ].
-	(self class = aViennaNode class and: [ self size = aViennaNode size ])
+	self class = aViennaNode class
 		ifTrue: [
-			self with: aViennaNode do: [ :node1 :node2 |
-				(node1 ~= node2 and: [
-					 node1 isViennaNode not or: [ node2 isViennaNode not ] ])
-					ifTrue: [
-						aBlock cull: self cull: aViennaNode.
-						^ self ] ].
-			self with: aViennaNode do: [ :node1 :node2 |
-				(node1 isViennaNode and: [ node2 isViennaNode ]) ifTrue: [
-					node1 diffFrom: node2 changesDo: aBlock ] ] ]
-		ifFalse: [ aBlock cull: self cull: aViennaNode ]
+			self size = aViennaNode size
+				ifTrue: [
+					self with: aViennaNode do: [ :node1 :node2 |
+						(node1 ~= node2 and: [
+							 node1 isViennaNode not or: [ node2 isViennaNode not ] ])
+							ifTrue: [
+								aBlock value: self value: { aViennaNode }.
+								^ self ] ].
+					self with: aViennaNode do: [ :node1 :node2 |
+						(node1 isViennaNode and: [ node2 isViennaNode ]) ifTrue: [
+							node1 diffFrom: node2 changesDo: aBlock ] ] ]
+				ifFalse: [
+					| nodes1 nodes2 |
+					nodes1 := self asArray readStream.
+					nodes2 := aViennaNode asArray.
+					[ nodes1 atEnd ] whileFalse: [
+						| node index |
+						node := nodes1 next.
+						index := nodes2 indexOf: node.
+						index > 1 ifTrue: [
+							aBlock value: node value: (nodes2 first: index).
+							nodes2 := nodes2 allButFirst: index ].
+						index = 1 ifTrue: [ nodes2 := nodes2 allButFirst ].
+						index = 0 ifTrue: [ aBlock value: node value: {  } ] ] ] ]
+		ifFalse: [ aBlock value: self value: { aViennaNode } ]
 ]
 
 { #category : #enumerating }
@@ -2443,6 +2458,12 @@ ViennaNode >> label [
 { #category : #accessing }
 ViennaNode >> last [
 	^ self at: self size
+]
+
+{ #category : #private }
+ViennaNode >> listDelimiter [
+
+	^ ' '
 ]
 
 { #category : #accessing }

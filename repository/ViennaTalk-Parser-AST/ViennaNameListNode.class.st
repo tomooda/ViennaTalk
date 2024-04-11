@@ -43,6 +43,12 @@ ViennaNameListNode >> label [
 	^ 'NameList'
 ]
 
+{ #category : #private }
+ViennaNameListNode >> listDelimiter [
+
+	^ ', '
+]
+
 { #category : #typechecking }
 ViennaNameListNode >> maximalType [
 

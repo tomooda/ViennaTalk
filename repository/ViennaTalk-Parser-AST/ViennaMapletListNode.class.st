@@ -41,6 +41,12 @@ ViennaMapletListNode >> label [
 	^ 'MapletList'
 ]
 
+{ #category : #private }
+ViennaMapletListNode >> listDelimiter [
+
+	^ ', '
+]
+
 { #category : #typechecking }
 ViennaMapletListNode >> maximalType [
 

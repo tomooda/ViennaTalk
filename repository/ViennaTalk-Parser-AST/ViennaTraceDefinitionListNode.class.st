@@ -31,6 +31,12 @@ ViennaTraceDefinitionListNode >> label [
 	^ 'TraceDefinitionList'
 ]
 
+{ #category : #private }
+ViennaTraceDefinitionListNode >> listDelimiter [
+
+	^ ';', String cr
+]
+
 { #category : #typechecking }
 ViennaTraceDefinitionListNode >> maximalType [
 
