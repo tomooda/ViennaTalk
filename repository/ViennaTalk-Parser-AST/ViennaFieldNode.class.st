@@ -24,6 +24,15 @@ ViennaFieldNode >> asMaximalViennaType [
 		  with: self type asMaximalViennaType
 ]
 
+{ #category : #converting }
+ViennaFieldNode >> asMaximalViennaTypeAny [
+
+	^ Array
+		  with: self identifier
+		  with: self equalityAbstraction
+		  with: ViennaType any
+]
+
 { #category : #private }
 ViennaFieldNode >> boundIdentifiersDo: aBlock [
 

@@ -66,9 +66,12 @@ ViennaRecordTypeDefinitionNode >> asImportDefinitionIn: moduleNode [
 { #category : #converting }
 ViennaRecordTypeDefinitionNode >> asMaximalViennaType [
 
-	^ ViennaType
-		  compose: self identifier
-		  of: self fieldList asMaximalViennaType
+	self maximalType: (ViennaType
+			 compose: self identifier
+			 of: (self fieldList collect: #asMaximalViennaTypeAny)).
+	^ maximalType
+		  basetypes: self fieldList asMaximalViennaType;
+		  yourself
 ]
 
 { #category : #private }

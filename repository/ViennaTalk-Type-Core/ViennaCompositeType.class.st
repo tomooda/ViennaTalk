@@ -48,6 +48,13 @@ ViennaCompositeType >> basetypeAtName: aString ifAbsent: errorBlock [
 	^ errorBlock value
 ]
 
+{ #category : #accessing }
+ViennaCompositeType >> basetypes: anArrayOfViennaType [
+
+	1 to: self size do: [ :index |
+	self at: index put: (anArrayOfViennaType at: index) ]
+]
+
 { #category : #enumerating }
 ViennaCompositeType >> basicDo: aBlock [
 	| blockGenerator block |

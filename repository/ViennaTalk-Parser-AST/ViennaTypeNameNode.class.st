@@ -17,7 +17,7 @@ ViennaTypeNameNode class >> name: aViennaNameNode [
 ViennaTypeNameNode >> asMaximalViennaType [
 
 	^ self resolve
-		  ifNotNil: #asMaximalViennaType
+		  ifNotNil: #typecheck
 		  ifNil: [
 		  ViennaTypeError on: self signal: 'Unresolved type: ' , self source ]
 ]
