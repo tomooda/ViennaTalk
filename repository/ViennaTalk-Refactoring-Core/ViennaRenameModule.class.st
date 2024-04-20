@@ -30,7 +30,7 @@ ViennaRenameModule >> execute [
 			(node isViennaGlobalNameNode and: [
 				 node moduleIdentifier = self oldName ]) ifTrue: [
 				node moduleIdentifier: self newName ] ] ].
-	^ nil
+	^ self definitionNode
 ]
 
 { #category : #accessing }

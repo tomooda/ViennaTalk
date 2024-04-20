@@ -184,6 +184,12 @@ ViennaStateDefinitionNode >> parser [
 	^ ViennaVDMParser new stateDefinition end
 ]
 
+{ #category : #'pretty printing' }
+ViennaStateDefinitionNode >> sectionName [
+
+	^ 'state'
+]
+
 { #category : #'accessing-definitions' }
 ViennaStateDefinitionNode >> shortName [
 

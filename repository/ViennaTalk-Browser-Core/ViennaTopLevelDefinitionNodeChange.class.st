@@ -11,7 +11,7 @@ ViennaTopLevelDefinitionNodeChange >> printNamesOn: aStream [
 	node := from ifNil: [ to ].
 	aStream
 		nextPutAll: '        ';
-		nextPutAll: node section sectionName;
+		nextPutAll: (node section ifNotNil: #sectionName ifNil: ['state']);
 		space;
 		nextPutAll: (', ' join: node identifiers)
 ]

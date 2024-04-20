@@ -860,8 +860,8 @@ ViennaRefactoringBrowser >> executeRefactoring: aViennaRefactoring [
 	refactoring check ifFalse: [ ^ false ].
 	result := refactoring execute.
 	self epiLogRefactoring: newAst with: refactoring.
+	self updateModuleList.
 	result ifNotNil: [
-		self updateModuleList.
 		moduleList selectItem: result module.
 		categoryList selectItem:
 			(result section ifNil: [ moduleList selectedItem ]).
