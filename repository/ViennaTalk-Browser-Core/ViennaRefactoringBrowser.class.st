@@ -2,6 +2,7 @@ Class {
 	#name : #ViennaRefactoringBrowser,
 	#superclass : #SpPresenterWithModel,
 	#instVars : [
+		'fileReference',
 		'animation',
 		'menuBar',
 		'notebook',
@@ -872,12 +873,15 @@ ViennaRefactoringBrowser >> executeRefactoring: aViennaRefactoring [
 { #category : #operations }
 ViennaRefactoringBrowser >> export [
 
-	(UIManager default
-		 confirm: 'Export to'
-		 trueChoice: 'Directory'
-		 falseChoice: 'File')
-		ifTrue: [ self exportDirectory ]
-		ifFalse: [ self exportFile ]
+	self hasFileReference
+		ifTrue: [ self exportToDisk ]
+		ifFalse: [
+			(UIManager default
+				 confirm: 'Export to'
+				 trueChoice: 'Directory'
+				 falseChoice: 'File')
+				ifTrue: [ self exportDirectory ]
+				ifFalse: [ self exportFile ] ]
 ]
 
 { #category : #operations }
@@ -916,10 +920,42 @@ ViennaRefactoringBrowser >> exportFile [
 			self clearDirty ]
 ]
 
+{ #category : #operations }
+ViennaRefactoringBrowser >> exportToDisk [
+
+	fileReference ifNotNil: [ :ref |
+		ref isDirectory
+			ifTrue: [
+				self specification modulesDo: [ :moduleNode |
+					| file |
+					file := ref / moduleNode name withExtension: 'vdmsl'.
+					file
+						ensureDeleteAll;
+						writeStreamDo: [ :stream |
+							stream nextPutAll:
+									((ViennaVDMFormatter format: moduleNode) withLineEndings:
+											 OSPlatform current lineEnding) ] ].
+				UIManager default message: 'Exported to ' , ref basename , '/.' ]
+			ifFalse: [
+				ref
+					ensureDeleteAll;
+					writeStreamDo: [ :stream |
+						stream nextPutAll:
+								(self source withLineEndings: OSPlatform current lineEnding) ].
+				UIManager default message: 'Exported to ' , ref basename , '.' ].
+		self clearDirty ]
+]
+
 { #category : #private }
 ViennaRefactoringBrowser >> getSource: aViennaNode [
 	aViennaNode ifNil: [ ^ String ].
 	^ aViennaNode tracingHighlightedSource
+]
+
+{ #category : #testing }
+ViennaRefactoringBrowser >> hasFileReference [
+
+	^ fileReference notNil and: [ fileReference exists ]
 ]
 
 { #category : #operations }
@@ -1009,35 +1045,12 @@ ViennaRefactoringBrowser >> ifShowsTimeLine: timeLineBlock ifShowsConstructionLi
 
 { #category : #operations }
 ViennaRefactoringBrowser >> importDirectory [
-	| modelFiles testFiles source |
+
 	(UIManager default
-		chooseDirectory: 'Import directory'
-		from: FileLocator viennaTalkDocumentDirectory)
-		ifNotNil: [ :dir | 
-			modelFiles := OrderedCollection new.
-			testFiles := OrderedCollection new.
-			dir files
-				do: [ :file | 
-					(file basename endsWith: '.vdmsl')
-						ifTrue: [ (file basename endsWith: 'Test.vdmsl')
-								ifTrue: [ testFiles add: file ]
-								ifFalse: [ modelFiles add: file ] ] ].
-			modelFiles := modelFiles
-				asSortedCollection: [ :less :more | less basename <= more basename ].
-			testFiles := testFiles
-				asSortedCollection: [ :less :more | less basename <= more basename ].
-			source := String
-				streamContents: [ :writeStream | 
-					modelFiles
-						do: [ :file | 
-							writeStream
-								nextPutAll: (file contents copyWith: Character cr) withInternalLineEndings ].
-					testFiles
-						do: [ :file | 
-							writeStream
-								nextPutAll:
-									(file contents copyWith: Character cr) withInternalLineEndings ] ].
-			self load: source ]
+		 chooseDirectory: 'Import directory'
+		 from: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :dir |
+		fileReference := dir.
+		self importFromDisk ]
 ]
 
 { #category : #operations }
@@ -1046,8 +1059,40 @@ ViennaRefactoringBrowser >> importFile [
 	(UIManager default
 		 chooseExistingFileReference: 'Import directory'
 		 extensions: #( 'vdmsl' )
-		 path: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :file | 
-		self load: file contents withInternalLineEndings ]
+		 path: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :file |
+		fileReference := file.
+		self importFromDisk ]
+]
+
+{ #category : #operations }
+ViennaRefactoringBrowser >> importFromDisk [
+
+	fileReference ifNotNil: [ :ref |
+		ref isDirectory
+			ifTrue: [
+				| modelFiles testFiles source |
+				modelFiles := OrderedCollection new.
+				testFiles := OrderedCollection new.
+				ref files do: [ :file |
+					(file basename endsWith: '.vdmsl') ifTrue: [
+						(file basename endsWith: 'Test.vdmsl')
+							ifTrue: [ testFiles add: file ]
+							ifFalse: [ modelFiles add: file ] ] ].
+				modelFiles := modelFiles asSortedCollection: [ :less :more |
+					              less basename <= more basename ].
+				testFiles := testFiles asSortedCollection: [ :less :more |
+					             less basename <= more basename ].
+				source := String streamContents: [ :writeStream |
+					          modelFiles do: [ :file |
+						          writeStream nextPutAll:
+							          (file contents copyWith: Character cr)
+								          withInternalLineEndings ].
+					          testFiles do: [ :file |
+						          writeStream nextPutAll:
+							          (file contents copyWith: Character cr)
+								          withInternalLineEndings ] ].
+				self load: source ]
+			ifFalse: [ self load: ref contents withInternalLineEndings ] ]
 ]
 
 { #category : #operations }
@@ -1338,45 +1383,51 @@ ViennaRefactoringBrowser >> load: aString [
 { #category : #menus }
 ViennaRefactoringBrowser >> menuBar [
 
-	^ self newMenuBar addGroup: [ :group | 
+	^ self newMenuBar addGroup: [ :group |
 		  group
-			  addItem: [ :item | 
+			  addItem: [ :item |
 				  item
 					  name: 'File';
 					  subMenu: (self newMenu
-							   addGroup: [ :g | 
+							   addGroup: [ :g |
 								   g
-									   addItem: [ :i | 
+									   addItem: [ :i |
 										   i
-											   name: 'Import from Directory...';
+											   name: 'Reload';
+											   action: [ self importFromDisk ];
+											   enabled: [ self hasFileReference ] ];
+									   addItem: [ :i |
+										   i
+											   name: 'Load from Directory...';
 											   action: [ self importDirectory ] ];
-									   addItem: [ :i | 
+									   addItem: [ :i |
 										   i
-											   name: 'Import from File...';
+											   name: 'Load from File...';
 											   action: [ self importFile ] ];
-									   addItem: [ :i | 
+									   addItem: [ :i |
 										   i
-											   name: 'Export to Directory...';
-											   action: [ self exportDirectory ] ];
-									   addItem: [ :i | 
+											   name: 'Save';
+											   action: [ self exportToDisk ];
+											   enabled: [ self hasFileReference ] ];
+									   addItem: [ :i |
 										   i
-											   name: 'Export to File...';
-											   action: [ self exportFile ] ] ];
-							   addGroup: [ :g | 
+											   name: 'Save As...';
+											   action: [ self export ] ] ];
+							   addGroup: [ :g |
 								   g
-									   addItem: [ :i | 
+									   addItem: [ :i |
 										   i
 											   name: 'Merge annotations into FRAM...';
 											   action: [ self mergeAnnotationsIntoFRAM ] ];
-									   addItem: [ :i | 
+									   addItem: [ :i |
 										   i
 											   name: 'Merge operations from FRAM...';
 											   action: [ self mergeOperationsFromFRAM ] ] ]) ];
-			  addItem: [ :item | 
+			  addItem: [ :item |
 				  item
 					  name: 'Test';
-					  subMenu: (self newMenu addGroup: [ :g | 
-								   g addItem: [ :i | 
+					  subMenu: (self newMenu addGroup: [ :g |
+								   g addItem: [ :i |
 										   i
 											   name: 'Run all tests';
 											   action: [ self runAllTests ] ] ]) ] ]
