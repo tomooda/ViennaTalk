@@ -1147,7 +1147,8 @@ ViennaRefactoringBrowser >> initializePlaygroundPagePresenters [
 						               to: string size ]);
 		              addColumn: (SpStringTableColumn
 				               title: 'value'
-				               evaluated: [ :string | animation plainAt: string ]);
+				               evaluated: [ :string |
+					               animation plainAt: string ifAbsent: [ '-' ] ]);
 		              yourself.
 	initStateButton := self newButton
 		                   icon: (Smalltalk ui iconNamed: #refresh);
@@ -1512,31 +1513,9 @@ ViennaRefactoringBrowser >> notifySintaxError: aPP2Failure [
 { #category : #'operations-source signal' }
 ViennaRefactoringBrowser >> notifyTypeError: aViennaTypeError [
 
-	| text textWidget |
 	pendingTypeError := aViennaTypeError.
 	self updateSourceSignalButton.
-	sourceText withAdapterDo: [ :a |
-		a widgetDo: [ :w |
-			textWidget := w.
-			textWidget textArea segments copy do: [ :s | s delete ] ] ].
-	textWidget ifNil: [ ^ self ].
-	text := textWidget text.
-	textWidget textArea handleParagraphChange: [
-		(pendingTypeError ifNotNil: #node) ifNotNil: [ :node |
-			| from to |
-			from := node start.
-			to := node end.
-			(from isNil or: [ to isNil ]) ifTrue: [
-				(text asString asViennaTracingString intervalForSource: node) key
-					ifNotEmpty: [ :interval |
-						from := interval first.
-						to := interval last ] ].
-			(from notNil and: [ to notNil ]) ifTrue: [
-				text
-					addAttribute: (TextBackgroundColor color: Color yellow darker)
-					from: from
-					to: to ] ] ].
-	textWidget textArea ifNotNil: #compose
+	self updateSourceWithTypeError
 ]
 
 { #category : #private }
@@ -1999,8 +1978,11 @@ ViennaRefactoringBrowser >> updateModuleList [
 
 { #category : #updating }
 ViennaRefactoringBrowser >> updateSource [
+
 	self definition
-		ifNotNil: [ :node | sourceText text: (self getSource: node) ]
+		ifNotNil: [ :node |
+			sourceText text: (self getSource: node).
+			self updateSourceWithTypeError ]
 		ifNil: [ sourceText text: '' ]
 ]
 
@@ -2015,6 +1997,36 @@ ViennaRefactoringBrowser >> updateSourceSignalButton [
 		^ sourceSignalButton icon: self class yellowSignalIcon ].
 	talkbackLabel label: ''.
 	^ sourceSignalButton icon: self class greenSignalIcon
+]
+
+{ #category : #updating }
+ViennaRefactoringBrowser >> updateSourceWithTypeError [
+
+	| text textWidget |
+	sourceText withAdapterDo: [ :a |
+		a widgetDo: [ :w |
+			textWidget := w.
+			textWidget textArea segments copy do: [ :s | s delete ] ] ].
+	textWidget ifNil: [ ^ self ].
+	text := sourceText text isText
+		        ifTrue: [ sourceText text ]
+		        ifFalse: [ textWidget text ].
+	textWidget textArea handleParagraphChange: [
+		(pendingTypeError ifNotNil: #node) ifNotNil: [ :node |
+			| from to |
+			(from isNil or: [ to isNil ]) ifTrue: [
+				(text asString asViennaTracingString intervalForSource: node) key
+					ifNotEmpty: [ :interval |
+						from := interval first.
+						to := interval last ] ].
+			(from notNil and: [
+				 (from between: 1 and: text size) and: [
+					 to notNil and: [ to between: 1 and: text size ] ] ]) ifTrue: [
+				textWidget text
+					addAttribute: (TextBackgroundColor color: Color yellow darker)
+					from: from
+					to: to ] ] ].
+	textWidget textArea ifNotNil: #compose
 ]
 
 { #category : #updating }

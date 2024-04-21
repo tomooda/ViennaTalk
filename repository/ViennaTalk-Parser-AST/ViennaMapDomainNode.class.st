@@ -29,9 +29,9 @@ ViennaMapDomainNode >> maximalType: aViennaType [
 	| keytype |
 	keytype := ViennaType unit.
 	aViennaType
-		possibleTypesSuchThat: #isMapType
-		do: [ :mapType | keytype := keytype + mapType keytype ].
-	self expression maximalType: keytype.
+		possibleTypesSuchThat: #isSetType
+		do: [ :setType | keytype := keytype + setType basetype ].
+	self expression maximalType: (keytype mapTo: ViennaType any).
 	super maximalType: aViennaType
 ]
 
