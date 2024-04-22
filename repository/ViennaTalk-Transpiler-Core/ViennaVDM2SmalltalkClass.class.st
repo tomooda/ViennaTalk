@@ -261,7 +261,7 @@ ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass proto
 						 isFirstArg := false ].
 				 tuplePattern := ViennaTuplePatternNode patternList:
 					                 (ViennaPatternListNode withAll:
-						                  matchPatternNodes).
+						                  (matchPatternNodes collect: #copyFragment)).
 				 matchVars := tuplePattern uniqueBoundIdentifiers.
 				 stream cr.
 				 matchVars
@@ -1056,6 +1056,14 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 			in: newClass
 			protocol: 'state'
 			node: nil ]
+]
+
+{ #category : #'code generation-definitions' }
+ViennaVDM2SmalltalkClass >> noCheckAssignment: aVarName be: aValString [
+
+	^ 'self class slotNamed: ' , aVarName storeString
+	  , ' ifFound: [ :slot | slot basicWrite: (' , aValString
+	  , ') to: self]'
 ]
 
 { #category : #'code generation-interfaces' }

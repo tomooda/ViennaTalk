@@ -1,8 +1,14 @@
 Class {
 	#name : #ViennaStateSlot,
 	#superclass : #InstanceVariableSlot,
-	#category : 'ViennaTalk-Value-Core'
+	#category : #'ViennaTalk-Value-Core'
 }
+
+{ #category : #'meta-object-protocol' }
+ViennaStateSlot >> basicWrite: aValue to: anObject [
+
+	^ super write: aValue to: anObject
+]
 
 { #category : #'code generation' }
 ViennaStateSlot >> emitStore: aMethodBuilder [

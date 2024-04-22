@@ -451,7 +451,8 @@ ViennaVDM2Smalltalk >> closureFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode 
 						  nextPutAll: ' :';
 						  nextPutAll: tmpVar ] ].
 		  tuplePattern := ViennaTuplePatternNode patternList:
-			                  (ViennaPatternListNode withAll: matchPatternNodes).
+			                  (ViennaPatternListNode withAll:
+				                   (matchPatternNodes collect: #copyFragment)).
 		  matchVars := tuplePattern uniqueBoundIdentifiers.
 		  anArrayOfPatternNodeAndTypeSetNode ifNotEmpty: [
 			  stream nextPutAll: ' | ' ].
@@ -1549,7 +1550,8 @@ ViennaVDM2Smalltalk >> generatorFromFlatBinds: anArrayOfPatternNodeAndTypeSetNod
 				  stream nextPutAll: ' | '.
 				  numParens := numParens + 1 ].
 		  tuplePattern := ViennaTuplePatternNode patternList:
-			                  (ViennaPatternListNode withAll: matchPatternNodes).
+			                  (ViennaPatternListNode withAll:
+				                   (matchPatternNodes collect: #copyFragment)).
 		  matchVars := tuplePattern uniqueBoundIdentifiers.
 		  matchVars notEmpty ifTrue: [
 			  stream nextPutAll: ' | '.

@@ -5,7 +5,7 @@ Class {
 	#instVars : [
 		'specials'
 	],
-	#category : 'ViennaTalk-Value-Core'
+	#category : #'ViennaTalk-Value-Core'
 }
 
 { #category : #accessing }
@@ -87,7 +87,8 @@ ViennaWriter >> stringifyToNumber: aNumber into: aStream [
 
 { #category : #stringifying }
 ViennaWriter >> stringifyToQuote: aSymbol into: aStream [
-	(aSymbol allSatisfy: #isLetter)
+
+	(aSymbol allSatisfy: [ :char | char isLetter or: [ char = $_ ] ])
 		ifFalse: [ ^ self error: 'Invalid character in a VDM quote ' ].
 	aStream
 		nextPut: $<;

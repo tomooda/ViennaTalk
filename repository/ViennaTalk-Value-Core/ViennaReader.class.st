@@ -5,7 +5,7 @@ Class {
 	#instVars : [
 		'specials'
 	],
-	#category : 'ViennaTalk-Value-Core'
+	#category : #'ViennaTalk-Value-Core'
 }
 
 { #category : #'initialize-release' }
@@ -135,13 +135,16 @@ ViennaReader >> parseOn: aStream [
 
 { #category : #parsing }
 ViennaReader >> parseQuoteOn: aStream [
+
 	| quote |
-	(aStream nextMatchAll: '<')
-		ifFalse: [ ^ self error: 'expected <' ].
+	(aStream nextMatchAll: '<') ifFalse: [ ^ self error: 'expected <' ].
 	quote := aStream upTo: $>.
-	(quote allSatisfy: #isLetter)
+	(quote allSatisfy: [ :char | char isLetter or: [ char = $_ ] ])
 		ifFalse: [ ^ self error: 'Invalid char in quote' ].
-	^ specials at: #<> ifPresent: [ :block | block value: quote ] ifAbsent: [ quote asSymbol ]
+	^ specials
+		  at: #'<>'
+		  ifPresent: [ :block | block value: quote ]
+		  ifAbsent: [ quote asSymbol ]
 ]
 
 { #category : #parsing }
