@@ -62,9 +62,12 @@ ViennaMapEnumerationNode >> maximalType: aViennaType [
 	| keytype valuetype |
 	keytype := ViennaType unit.
 	valuetype := ViennaType unit.
-	aViennaType possibleTypesSuchThat: #isMapType do: [ :mapType |
-		keytype := keytype + mapType keytype.
-		valuetype := valuetype + mapType valuetype ].
+	aViennaType isAnyType
+		ifTrue: [ keytype := valuetype := ViennaType any ]
+		ifFalse: [
+			aViennaType possibleTypesSuchThat: #isMapType do: [ :mapType |
+				keytype := keytype + mapType keytype.
+				valuetype := valuetype + mapType valuetype ] ].
 	self do: [ :maplet |
 		maplet keyExpression maximalType: keytype.
 		maplet valueExpression maximalType: valuetype ].

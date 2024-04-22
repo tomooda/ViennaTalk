@@ -69,10 +69,13 @@ ViennaSetRangeExpressionNode >> maximalType [
 ViennaSetRangeExpressionNode >> maximalType: aViennaType [
 
 	| basetype |
-	basetype := ViennaType unit.
-	aViennaType
-		possibleTypesSuchThat: #isSetType
-		do: [ :setType | basetype := basetype + setType basetype ].
+	aViennaType isAnyType
+		ifTrue: [ basetype := ViennaType any ]
+		ifFalse: [
+			basetype := ViennaType unit.
+			aViennaType
+				possibleTypesSuchThat: #isSetType
+				do: [ :setType | basetype := basetype + setType basetype ] ].
 	self startExpression maximalType: basetype.
 	self endExpression maximalType: basetype.
 	super maximalType: aViennaType

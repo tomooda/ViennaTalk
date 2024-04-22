@@ -27,11 +27,16 @@ ViennaSequenceElementsNode >> label [
 ViennaSequenceElementsNode >> maximalType: aViennaType [
 
 	| basetype isSet1Type |
-	basetype := ViennaType unit.
-	isSet1Type := true.
-	aViennaType possibleTypesSuchThat: #isSetType do: [ :setType |
-		basetype := basetype + setType basetype.
-		setType isSeq1Type ifFalse: [ isSet1Type := false ] ].
+	aViennaType isAnyType
+		ifTrue: [
+			isSet1Type := false.
+			basetype := ViennaType any ]
+		ifFalse: [
+			basetype := ViennaType unit.
+			isSet1Type := true.
+			aViennaType possibleTypesSuchThat: #isSetType do: [ :setType |
+				basetype := basetype + setType basetype.
+				setType isSeq1Type ifFalse: [ isSet1Type := false ] ] ].
 	self expression maximalType: (isSet1Type
 			 ifTrue: [ basetype seq1 ]
 			 ifFalse: [ basetype seq ]).
@@ -54,11 +59,16 @@ ViennaSequenceElementsNode >> paramType [
 ViennaSequenceElementsNode >> returnTypeFor: aViennaType [
 
 	| basetype isSeq1Type |
-	basetype := ViennaType unit.
-	isSeq1Type := true.
-	aViennaType possibleTypesSuchThat: #isSeqType do: [ :seqType |
-		basetype := basetype + seqType basetype.
-		seqType isSeq1Type ifFalse: [ isSeq1Type := false ] ].
+	aViennaType isAnyType
+		ifTrue: [
+			isSeq1Type := false.
+			basetype := ViennaType any ]
+		ifFalse: [
+			basetype := ViennaType unit.
+			isSeq1Type := true.
+			aViennaType possibleTypesSuchThat: #isSeqType do: [ :seqType |
+				basetype := basetype + seqType basetype.
+				seqType isSeq1Type ifFalse: [ isSeq1Type := false ] ] ].
 	^ isSeq1Type
 		  ifTrue: [ basetype set1 ]
 		  ifFalse: [ basetype set ]

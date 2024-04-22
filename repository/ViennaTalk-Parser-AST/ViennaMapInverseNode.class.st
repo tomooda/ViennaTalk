@@ -36,9 +36,12 @@ ViennaMapInverseNode >> maximalType: aViennaType [
 	| keytype valuetype |
 	keytype := ViennaType unit.
 	valuetype := ViennaType unit.
-	aViennaType possibleTypesSuchThat: #isMapType do: [ :mapType |
-		keytype := keytype + mapType keytype.
-		valuetype := valuetype + mapType valuetype ].
+	aViennaType isAnyType
+		ifTrue: [ keytype := valuetype := ViennaType any ]
+		ifFalse: [
+			aViennaType possibleTypesSuchThat: #isMapType do: [ :mapType |
+				keytype := keytype + mapType keytype.
+				valuetype := valuetype + mapType valuetype ] ].
 	self expression maximalType: (valuetype mapTo: keytype).
 	super maximalType: aViennaType
 ]
@@ -59,11 +62,14 @@ ViennaMapInverseNode >> paramType [
 ViennaMapInverseNode >> returnTypeFor: aViennaType [
 
 	| keytype valuetype |
-	keytype := ViennaType unit.
-	valuetype := ViennaType unit.
-	aViennaType possibleTypesSuchThat: #isMapType do: [ :mapType |
-		keytype := keytype + mapType keytype.
-		valuetype := valuetype + mapType valuetype ].
+	aViennaType isAnyType
+		ifTrue: [ keytype := valuetype := ViennaType any ]
+		ifFalse: [
+			keytype := ViennaType unit.
+			valuetype := ViennaType unit.
+			aViennaType possibleTypesSuchThat: #isMapType do: [ :mapType |
+				keytype := keytype + mapType keytype.
+				valuetype := valuetype + mapType valuetype ] ].
 	^ aViennaType isInmapType
 		  ifTrue: [ valuetype inmapTo: keytype ]
 		  ifFalse: [ ViennaType unit ]

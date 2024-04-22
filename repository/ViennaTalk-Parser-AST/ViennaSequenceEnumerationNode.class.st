@@ -70,10 +70,13 @@ ViennaSequenceEnumerationNode >> maximalType [
 ViennaSequenceEnumerationNode >> maximalType: aViennaType [
 
 	| basetype |
-	basetype := ViennaType unit.
-	aViennaType
-		possibleTypesSuchThat: #isSeqType
-		do: [ :seqType | basetype := basetype + seqType basetype ].
+	aViennaType isAnyType
+		ifTrue: [ basetype := ViennaType any ]
+		ifFalse: [
+			basetype := ViennaType unit.
+			aViennaType
+				possibleTypesSuchThat: #isSeqType
+				do: [ :seqType | basetype := basetype + seqType basetype ] ].
 	self do: [ :exp | exp maximalType: basetype ].
 	super maximalType: aViennaType
 ]

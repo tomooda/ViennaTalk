@@ -71,9 +71,12 @@ ViennaSetEnumerationNode >> maximalType: aViennaType [
 
 	| basetype |
 	basetype := ViennaType unit.
-	aViennaType
-		possibleTypesSuchThat: #isSetType
-		do: [ :setType | basetype := basetype + setType basetype ].
+	aViennaType isAnyType
+		ifTrue: [ basetype := ViennaType any ]
+		ifFalse: [
+			aViennaType
+				possibleTypesSuchThat: #isSetType
+				do: [ :setType | basetype := basetype + setType basetype ] ].
 	self do: [ :exp | exp maximalType: basetype ].
 	super maximalType: aViennaType
 ]

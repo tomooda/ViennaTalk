@@ -27,10 +27,13 @@ ViennaFinitePowerSetNode >> label [
 ViennaFinitePowerSetNode >> maximalType: aViennaType [
 
 	| basetype |
-	basetype := ViennaType unit.
-	aViennaType
-		possibleTypesSuchThat: #isSetType
-		do: [ :setType | basetype := basetype + setType basetype ].
+	aViennaType isAnyType
+		ifTrue: [ basetype := ViennaType any ]
+		ifFalse: [
+			basetype := ViennaType unit.
+			aViennaType
+				possibleTypesSuchThat: #isSetType
+				do: [ :setType | basetype := basetype + setType basetype ] ].
 	self expression maximalType: basetype.
 	super maximalType: aViennaType
 ]
