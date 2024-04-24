@@ -423,7 +423,7 @@ ViennaVDM2Smalltalk >> casesStatementAlternatives: aViennaNode env: aDictionary 
 { #category : #utilities }
 ViennaVDM2Smalltalk >> checkInvariant [
 
-	^ 'inv value: state value) = true ifFalse: [ViennaRuntimeTypeError signal].'
+	^ '(inv value: state value) = true ifFalse: [ViennaRuntimeTypeError signal].'
 ]
 
 { #category : #utilities }
