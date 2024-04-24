@@ -10,14 +10,12 @@ ViennaMultipleAssignStatementNode >> formatWith: aViennaAbstractFormatter [
 
 	| statements |
 	statements := aViennaAbstractFormatter formatAll: self.
-	^ 'atomic(' , ((aViennaAbstractFormatter anyNeedsIndent: statements)
-		   ifTrue: [
-			   aViennaAbstractFormatter
-				   join: ';' , String cr , aViennaAbstractFormatter indent
-				   withAll: (statements collect: [ :statement |
-						    aViennaAbstractFormatter indentString: statement ]) ]
-		   ifFalse: [
-		   aViennaAbstractFormatter join: '; ' withAll: statements ]) , ')'
+	^ aViennaAbstractFormatter
+		  indentString: 'atomic('
+		  insertCrIfNeeded:
+			  (aViennaAbstractFormatter
+				   join: ';' , String cr
+				   withAll: statements) , ')'
 ]
 
 { #category : #private }

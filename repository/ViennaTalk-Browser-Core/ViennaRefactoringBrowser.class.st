@@ -934,15 +934,13 @@ ViennaRefactoringBrowser >> exportToDisk [
 						writeStreamDo: [ :stream |
 							stream nextPutAll:
 									((ViennaVDMFormatter format: moduleNode) withLineEndings:
-											 OSPlatform current lineEnding) ] ].
-				UIManager default message: 'Exported to ' , ref basename , '/.' ]
+											 OSPlatform current lineEnding) ] ] ]
 			ifFalse: [
 				ref
 					ensureDeleteAll;
 					writeStreamDo: [ :stream |
 						stream nextPutAll:
-								(self source withLineEndings: OSPlatform current lineEnding) ].
-				UIManager default message: 'Exported to ' , ref basename , '.' ].
+								(self source withLineEndings: OSPlatform current lineEnding) ] ].
 		self clearDirty ]
 ]
 
@@ -1180,6 +1178,7 @@ ViennaRefactoringBrowser >> initializePlaygroundPagePresenters [
 				                  state: animation state ];
 		                  yourself.
 	stateTable := self newTable
+		              beResizable;
 		              addColumn: (SpStringTableColumn
 				               title: 'module'
 				               evaluated: [ :string |
@@ -1482,6 +1481,7 @@ ViennaRefactoringBrowser >> modelChanged [
 	self model ifNotNil: [ :epiLog |
 		self updateEpiLogList.
 		self setDirty.
+		epiLog hasSpecificationChange ifTrue: [ self exportToDisk ].
 		self typecheck.
 		animation ifNotNil: [
 			| state |
