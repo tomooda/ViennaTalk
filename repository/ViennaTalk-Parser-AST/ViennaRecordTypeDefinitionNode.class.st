@@ -77,7 +77,9 @@ ViennaRecordTypeDefinitionNode >> asMaximalViennaType [
 { #category : #private }
 ViennaRecordTypeDefinitionNode >> boundIdentifiersDo: aBlock [
 
-	aBlock cull: self identifier cull: self
+	aBlock cull: self identifier cull: self.
+	self inv ifNotNil: [
+		aBlock cull: 'inv_' , self identifier cull: self ]
 ]
 
 { #category : #accessing }

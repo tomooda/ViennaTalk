@@ -92,7 +92,9 @@ ViennaExplicitFunctionDefinitionNode >> boundIdentifiersDo: aBlock [
 	self pre ifNotNil: [
 		aBlock cull: 'pre_' , self identifier cull: self ].
 	self post ifNotNil: [
-		aBlock cull: 'post_' , self identifier cull: self ]
+		aBlock cull: 'post_' , self identifier cull: self ].
+	self measure ifNotNil: [
+		aBlock cull: 'measure_' , self identifier cull: self ]
 ]
 
 { #category : #'accessing-definitions' }

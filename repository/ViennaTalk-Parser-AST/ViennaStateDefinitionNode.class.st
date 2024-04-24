@@ -46,7 +46,11 @@ ViennaStateDefinitionNode >> boundIdentifiersDo: aBlock [
 
 	aBlock cull: self identifier cull: self.
 	self fieldList do: [ :field |
-		aBlock cull: field identifier cull: self ]
+		aBlock cull: field identifier cull: self ].
+	self inv ifNotNil: [
+		aBlock cull: 'inv_' , self identifier cull: self ].
+	self init ifNotNil: [
+		aBlock cull: 'init_' , self identifier cull: self ]
 ]
 
 { #category : #accessing }

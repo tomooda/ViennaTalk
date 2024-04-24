@@ -47,6 +47,12 @@ ViennaVDM2SmalltalkClass >> callStatement: aViennaNode env: aDictionary [
 ]
 
 { #category : #utilities }
+ViennaVDM2SmalltalkClass >> checkInvariant [
+
+	^ 'self inv.'
+]
+
+{ #category : #utilities }
 ViennaVDM2SmalltalkClass >> closureFromMethodSource: aString binds: binds [
 	| header |
 	header := ((aString readStream upTo: Character cr) trim readStream
