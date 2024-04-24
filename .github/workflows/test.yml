@@ -33,7 +33,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: 'oracle'
-          java-version: '8'
+          java-version: '17'
       - uses: hpi-swa/setup-smalltalkCI@v1
         id: smalltalkci
         with:
