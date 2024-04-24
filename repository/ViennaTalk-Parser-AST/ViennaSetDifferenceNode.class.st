@@ -51,6 +51,6 @@ ViennaSetDifferenceNode >> paramType2 [
 ViennaSetDifferenceNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
 
 	^ (aViennaType1 basetype isCompatibleWith: aViennaType2 basetype)
-		  ifTrue: [ aViennaType1 ]
+		  ifTrue: [ aViennaType1 basetype set]
 		  ifFalse: [ ViennaTypeError signalOn: self ]
 ]
