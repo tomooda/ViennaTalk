@@ -682,7 +682,7 @@ ViennaVDM2SmalltalkClass >> flatDocument: aViennaNode env: aDictionary [
 				at: stateDefinition first
 				put: 'self ' , stateDefinition identifier ].
 		section isViennaTypeDefinitionsNode ifTrue: [
-			typeNames nextPutAll: section uniqueBoundIdentifiers ] ].
+			section do: [ :typeDef | typeNames nextPut: typeDef identifier ] ] ].
 	typeNames := typeNames contents.
 	instVars := aViennaNode uniqueBoundIdentifiers copyWithoutAll:
 		            stateVars.
@@ -918,76 +918,69 @@ ViennaVDM2SmalltalkClass >> initialize [
 
 { #category : #'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> modularDocument: aViennaNode env: aDictionary [
+
 	| moduleNames classNames documentClass |
-	moduleNames := aViennaNode collect: #first.
-	documentClass := self
-		createDocumentClassWithInstVars: (moduleNames collect: #uncapitalized).
-	classNames := moduleNames
-		collect: [ :moduleName | 
-			(self requestClassName: moduleName for: moduleName , ' module')
-				ifNil: [ ^ nil ]
-				ifNotNil: [ :name | 
-					aDictionary at: moduleName put: name.
-					name ] ].
+	moduleNames := aViennaNode collect: #identifier.
+	documentClass := self createDocumentClassWithInstVars:
+		                 (moduleNames collect: #uncapitalized).
+	classNames := moduleNames collect: [ :moduleName |
+		              (self
+			               requestClassName: moduleName
+			               for: moduleName , ' module')
+			              ifNil: [ ^ nil ]
+			              ifNotNil: [ :name |
+				              aDictionary at: moduleName put: name.
+				              name ] ].
 	aViennaNode do: [ :node | self generate: node env: aDictionary ].
 	self
-		defineMethod:
-			(self
-				stringStreamContents: [ :stream | 
-					stream
-						nextPutAll: 'initialize';
-						cr;
-						nextPutAll: 'super initialize.';
-						cr.
-					moduleNames
-						with: classNames
-						do: [ :moduleName :className | 
-							stream
-								nextPutAll: moduleName uncapitalized;
-								nextPutAll: ' := ';
-								nextPutAll: className;
-								nextPutAll: ' new.';
-								cr ].
-					aViennaNode
-						do: [ :moduleNode | 
-							| moduleName |
-							moduleName := moduleNode first.
-							moduleNode second first
-								ifNotNil: [ :importDefinitionListNode | 
-									importDefinitionListNode
-										do: [ :importDefinitionNode | 
-											| importedModuleName |
-											importedModuleName := importDefinitionNode first.
-											stream
-												nextPutAll: moduleName uncapitalized;
-												nextPutAll: String space;
-												nextPutAll: importedModuleName;
-												nextPutAll: ': ';
-												nextPutAll: importedModuleName uncapitalized;
-												nextPutAll: '.';
-												cr ] ] ].
-					moduleNames
-						do: [ :moduleName | 
-							stream
-								nextPutAll: moduleName uncapitalized;
-								nextPutAll: ' initTypes.';
-								cr ].
-					moduleNames
-						do: [ :moduleName | 
-							stream
-								nextPutAll: moduleName uncapitalized;
-								nextPutAll: ' init.';
-								cr ] ])
+		defineMethod: (self stringStreamContents: [ :stream |
+				 stream
+					 nextPutAll: 'initialize';
+					 cr;
+					 nextPutAll: 'super initialize.';
+					 cr.
+				 moduleNames with: classNames do: [ :moduleName :className |
+					 stream
+						 nextPutAll: moduleName uncapitalized;
+						 nextPutAll: ' := ';
+						 nextPutAll: className;
+						 nextPutAll: ' new.';
+						 cr ].
+				 aViennaNode do: [ :moduleNode |
+					 | moduleName |
+					 moduleName := moduleNode identifier.
+					 moduleNode interface importDefinitionList ifNotNil: [
+						 :importDefinitionListNode |
+						 importDefinitionListNode do: [ :importDefinitionNode |
+							 | importedModuleName |
+							 importedModuleName := importDefinitionNode first.
+							 stream
+								 nextPutAll: moduleName uncapitalized;
+								 nextPutAll: String space;
+								 nextPutAll: importedModuleName;
+								 nextPutAll: ': ';
+								 nextPutAll: importedModuleName uncapitalized;
+								 nextPutAll: '.';
+								 cr ] ] ].
+				 moduleNames do: [ :moduleName |
+					 stream
+						 nextPutAll: moduleName uncapitalized;
+						 nextPutAll: ' initTypes.';
+						 cr ].
+				 moduleNames do: [ :moduleName |
+					 stream
+						 nextPutAll: moduleName uncapitalized;
+						 nextPutAll: ' init.';
+						 cr ] ])
 		in: documentClass
 		protocol: 'initialize-release'
 		node: nil.
-	moduleNames
-		do: [ :moduleName | 
-			self
-				defineMethod: moduleName , ' ^' , moduleName uncapitalized
-				in: documentClass
-				protocol: 'accessing'
-				node: nil ].
+	moduleNames do: [ :moduleName |
+		self
+			defineMethod: moduleName , ' ^' , moduleName uncapitalized
+			in: documentClass
+			protocol: 'accessing'
+			node: nil ].
 	documentClass viennaEnv: aDictionary.
 	^ documentClass
 ]
@@ -1026,7 +1019,7 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 				section uniqueBoundIdentifiersDo: [ :ident |
 					env at: ident put: 'self ' , ident ] ].
 		section isViennaTypeDefinitionsNode ifTrue: [
-			typeNames nextPutAll: section uniqueBoundIdentifiers ] ].
+			section do: [ :typeDef | typeNames nextPut: typeDef identifier ] ] ].
 	typeNames := typeNames contents.
 	instVars := moduleBodyNode uniqueBoundIdentifiers copyWithoutAll:
 		            stateVars.

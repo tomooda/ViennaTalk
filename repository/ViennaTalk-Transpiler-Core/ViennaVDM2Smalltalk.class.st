@@ -423,7 +423,7 @@ ViennaVDM2Smalltalk >> casesStatementAlternatives: aViennaNode env: aDictionary 
 { #category : #utilities }
 ViennaVDM2Smalltalk >> checkInvariant [
 
-	^ '(inv value: state value) = true ifFalse: [ViennaRuntimeTypeError signal].'
+	^ ''
 ]
 
 { #category : #utilities }
@@ -3169,7 +3169,7 @@ ViennaVDM2Smalltalk >> stateDefinition: aViennaNode env: aDictionary [
 				    stream
 					    nextPutAll: 'inv_';
 					    nextPutAll: constructor;
-					    nextPutAll: ' := inv := ';
+					    nextPutAll: ' := ';
 					    nextPutAll: (self generate: invNode first env: aDictionary) ])
 				   asViennaTracingString: invNode ]).
 		  (String new: 1024 streamContents: [ :stream |
