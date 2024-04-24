@@ -229,11 +229,12 @@ ViennaVDMJ class >> isInstalled [
 { #category : #testing }
 ViennaVDMJ class >> isNeeded [
 
-	^ Smalltalk
-		  at: #ViennaTranspiledAnimation
-		  ifPresent: [ :transpilerClass |
-		  transpilerClass useTranspilerByDefault not ]
-		  ifAbsent: [ true ]
+	^ (Smalltalk
+		   at: #ViennaTranspiledAnimation
+		   ifPresent: [ :transpilerClass |
+		   transpilerClass useTranspilerByDefault not ]
+		   ifAbsent: [ true ]) and: [
+		  self alwaysUsesViennaServerAsDefault not ]
 ]
 
 { #category : #testing }
