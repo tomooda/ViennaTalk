@@ -1851,6 +1851,9 @@ ViennaRefactoringBrowser >> sourceSelectionText [
 
 { #category : #'operations-source signal' }
 ViennaRefactoringBrowser >> sourceSignalButtonPressed [
+
+	pendingSyntaxError ifNotNil: [ pendingSyntaxError inspect ].
+	pendingTypeError ifNotNil: [ pendingTypeError inspect ]
 ]
 
 { #category : #menus }

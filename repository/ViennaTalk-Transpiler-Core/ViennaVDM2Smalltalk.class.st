@@ -537,7 +537,7 @@ ViennaVDM2Smalltalk >> defExpression: aViennaNode env: aDictionary [
 
 	| definitionList defs expr vars |
 	definitionList := aViennaNode equalDefinitionList class withAll:
-		                  (self reorderDefinitions: aViennaNode first).
+		                  (self reorderDefinitions: aViennaNode equalDefinitionList).
 	defs := self generate: definitionList env: aDictionary.
 	expr := self generate: aViennaNode second env: aDictionary.
 	vars := aViennaNode equalDefinitionList uniqueBoundIdentifiers.
@@ -1156,14 +1156,15 @@ ViennaVDM2Smalltalk >> extendedExplicitOperationDefinition: aViennaNode env: aDi
 		           ifNotEmpty: [ :types |
 			           types size = 1
 				           ifTrue: [ types first ]
-				           ifFalse: [ ViennaProductTypeNode withAll: types ] ].
+				           ifFalse: [
+				           ViennaProductTypeNode withAll: types copyFragment ] ].
 	retValue := identifierTypePairList first identifier.
 	retType := identifierTypePairList second.
 	preNode ifNotNil: [
 		preBody := self generate: preNode env: aDictionary.
 		runtimeAssertionCheck = true ifTrue: [
-			body := preBody , ' ifFalse: [ViennaPreconditionViolation signal]. '
-			        , body ] ].
+			body := preBody
+			        , ' ifFalse: [ViennaPreconditionViolation signal]. ' , body ] ].
 	postNode
 		ifNotNil: [
 			postBody := self generate: postNode env: aDictionary.
@@ -2131,7 +2132,8 @@ ViennaVDM2Smalltalk >> letExpression: aViennaNode env: aDictionary [
 
 	| definitionList localDefinitions body vars |
 	definitionList := aViennaNode localDefinitionList class withAll:
-		                  (self reorderDefinitions: aViennaNode first).
+		                  (self reorderDefinitions:
+			                   aViennaNode localDefinitionList copyFragment).
 	localDefinitions := self generate: definitionList env: aDictionary.
 	body := self generate: aViennaNode expression env: aDictionary.
 	vars := definitionList uniqueBoundIdentifiers.
@@ -2145,7 +2147,7 @@ ViennaVDM2Smalltalk >> letStatement: aViennaNode env: aDictionary [
 	| definitionList localDefinitions body vars |
 	definitionList := aViennaNode localDefinitionList class withAll:
 		                  (self reorderDefinitions:
-			                   aViennaNode localDefinitionList).
+			                   aViennaNode localDefinitionList copyFragment).
 	localDefinitions := self generate: definitionList env: aDictionary.
 	body := self generate: aViennaNode statement env: aDictionary.
 	vars := definitionList uniqueBoundIdentifiers.
