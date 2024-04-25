@@ -119,26 +119,24 @@ ViennaVDM2SmalltalkClass >> createModuleClassWithInstVars: anArrayOfString forMo
 
 { #category : #utilities }
 ViennaVDM2SmalltalkClass >> createModuleClassWithInstVars: anArrayOfString1 stateVars: anArrayOfString2 forModule: aString env: aDictionary [
+
 	| className |
-	className := aDictionary at: aString ifAbsent: [ aString ].
-	^ (ShiftClassInstaller
-		make: [ :builder | 
-	builder
-		name: className asSymbol;
-		superclass: ViennaTranspiledObject;
-		slots:
-			(anArrayOfString1 asArray
-				collect: [ :instVarName | InstanceVariableSlot named: instVarName asSymbol ])
-				,
-					(anArrayOfString2 asArray
-						collect: [ :instVarName | 
-							(runtimeAssertionCheck = true
-								ifTrue: [ ViennaStateSlot ]
-								ifFalse: [ InstanceVariableSlot ]) named: instVarName asSymbol ]);
-		category: 'Auto Generated from VDM' ])
-		viennaEnv: aDictionary;
-		specification: source;
-		yourself
+	className := aString.
+	^ (ShiftClassInstaller make: [ :builder |
+			   builder
+				   name: className asSymbol;
+				   superclass: ViennaTranspiledObject;
+				   slots: (anArrayOfString1 asArray collect: [ :instVarName |
+							    InstanceVariableSlot named: instVarName asSymbol ])
+					   , (anArrayOfString2 asArray collect: [ :instVarName |
+								    (runtimeAssertionCheck = true
+									     ifTrue: [ ViennaStateSlot ]
+									     ifFalse: [ InstanceVariableSlot ]) named:
+										    instVarName asSymbol ]);
+				   category: 'Auto Generated from VDM' ])
+		  viennaEnv: aDictionary;
+		  specification: source;
+		  yourself
 ]
 
 { #category : #utilities }
@@ -266,8 +264,8 @@ ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass proto
 								 nextPutAll: tmpVar ].
 						 isFirstArg := false ].
 				 tuplePattern := ViennaTuplePatternNode patternList:
-					                 (ViennaPatternListNode withAll:
-						                  (matchPatternNodes collect: #copyFragment)).
+					                 (ViennaPatternListNode keepParentsWithAll:
+						                  matchPatternNodes).
 				 matchVars := tuplePattern uniqueBoundIdentifiers.
 				 stream cr.
 				 matchVars
@@ -1260,9 +1258,9 @@ ViennaVDM2SmalltalkClass >> typeSynonym: aViennaNode env: aDictionary [
 
 { #category : #utilities }
 ViennaVDM2SmalltalkClass >> validateClassName: aString [
+
 	aString ifEmpty: [ ^ false ].
-	aString first canBeGlobalVarInitial
-		ifFalse: [ ^ false ].
+	aString first isUppercase ifFalse: [ ^ false ].
 	(aString allSatisfy: [ :char | char isAlphaNumeric or: [ char = $_ ] ])
 		ifFalse: [ ^ false ].
 	^ true

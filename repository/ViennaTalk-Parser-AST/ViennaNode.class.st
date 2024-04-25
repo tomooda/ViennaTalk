@@ -25,6 +25,16 @@ ViennaNode class >> isAbstract [
 ]
 
 { #category : #'instance creation' }
+ViennaNode class >> keepParentsWithAll: anArrayOfViennaNode [
+
+	| node |
+	node := self new: anArrayOfViennaNode size.
+	1 to: anArrayOfViennaNode size do: [ :index |
+	node basicAt: index put: (anArrayOfViennaNode at: index) ].
+	^ node
+]
+
+{ #category : #'instance creation' }
 ViennaNode class >> with: aViennaNode [
 
 	| node |

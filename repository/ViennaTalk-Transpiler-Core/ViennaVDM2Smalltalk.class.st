@@ -457,8 +457,8 @@ ViennaVDM2Smalltalk >> closureFromFlatBinds: anArrayOfPatternNodeAndTypeSetNode 
 						  nextPutAll: ' :';
 						  nextPutAll: tmpVar ] ].
 		  tuplePattern := ViennaTuplePatternNode patternList:
-			                  (ViennaPatternListNode withAll:
-				                   (matchPatternNodes collect: #copyFragment)).
+			                  (ViennaPatternListNode keepParentsWithAll:
+				                   matchPatternNodes).
 		  matchVars := tuplePattern uniqueBoundIdentifiers.
 		  anArrayOfPatternNodeAndTypeSetNode ifNotEmpty: [
 			  stream nextPutAll: ' | ' ].
@@ -1157,7 +1157,7 @@ ViennaVDM2Smalltalk >> extendedExplicitOperationDefinition: aViennaNode env: aDi
 			           types size = 1
 				           ifTrue: [ types first ]
 				           ifFalse: [
-				           ViennaProductTypeNode withAll: types copyFragment ] ].
+				           ViennaProductTypeNode keepParentsWithAll: types ] ].
 	retValue := identifierTypePairList first identifier.
 	retType := identifierTypePairList second.
 	preNode ifNotNil: [
@@ -1557,8 +1557,8 @@ ViennaVDM2Smalltalk >> generatorFromFlatBinds: anArrayOfPatternNodeAndTypeSetNod
 				  stream nextPutAll: ' | '.
 				  numParens := numParens + 1 ].
 		  tuplePattern := ViennaTuplePatternNode patternList:
-			                  (ViennaPatternListNode withAll:
-				                   (matchPatternNodes collect: #copyFragment)).
+			                  (ViennaPatternListNode keepParentsWithAll:
+				                   matchPatternNodes).
 		  matchVars := tuplePattern uniqueBoundIdentifiers.
 		  matchVars notEmpty ifTrue: [
 			  stream nextPutAll: ' | '.
@@ -2131,9 +2131,10 @@ ViennaVDM2Smalltalk >> letBeStatement: aViennaNode env: aDictionary [
 ViennaVDM2Smalltalk >> letExpression: aViennaNode env: aDictionary [
 
 	| definitionList localDefinitions body vars |
-	definitionList := aViennaNode localDefinitionList class withAll:
+	definitionList := aViennaNode localDefinitionList class
+		                  keepParentsWithAll:
 		                  (self reorderDefinitions:
-			                   aViennaNode localDefinitionList copyFragment).
+			                   aViennaNode localDefinitionList).
 	localDefinitions := self generate: definitionList env: aDictionary.
 	body := self generate: aViennaNode expression env: aDictionary.
 	vars := definitionList uniqueBoundIdentifiers.
@@ -2145,9 +2146,10 @@ ViennaVDM2Smalltalk >> letExpression: aViennaNode env: aDictionary [
 ViennaVDM2Smalltalk >> letStatement: aViennaNode env: aDictionary [
 
 	| definitionList localDefinitions body vars |
-	definitionList := aViennaNode localDefinitionList class withAll:
+	definitionList := aViennaNode localDefinitionList class
+		                  keepParentsWithAll:
 		                  (self reorderDefinitions:
-			                   aViennaNode localDefinitionList copyFragment).
+			                   aViennaNode localDefinitionList).
 	localDefinitions := self generate: definitionList env: aDictionary.
 	body := self generate: aViennaNode statement env: aDictionary.
 	vars := definitionList uniqueBoundIdentifiers.
