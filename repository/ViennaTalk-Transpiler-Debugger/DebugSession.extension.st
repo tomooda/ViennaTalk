@@ -36,7 +36,7 @@ DebugSession >> vdmRangeForContext: aContext [
 		format: aContext specificationContext specification.
 	formattedSource asViennaTracingString sources
 		do: [ :assoc | 
-			assoc value == currentNode
+			assoc value = currentNode
 				ifTrue: [ ^ assoc key ] ].
 	currentNode := currentNode parent.
 	currentNode notNil ] whileTrue.
@@ -49,21 +49,21 @@ DebugSession >> vdmStepInto: aContext [
 	the method invoked to allow further step or send."
 
 	| specificationContext node newContext newNode |
-	(self isContextPostMortem: aContext)
-		ifTrue: [ ^ self ].
-	aContext isDead
-		ifTrue: [ ^ self ].
+	(self isContextPostMortem: aContext) ifTrue: [ ^ self ].
+	aContext isDead ifTrue: [ ^ self ].
 	specificationContext := aContext specificationContext.
 	specificationContext ifNil: [ ^ self ].
 	node := self vdmPcNodeForContext: aContext.
-	[ interruptedProcess step.
-	newContext := self stepToFirstInterestingBytecodeIn: interruptedProcess.
+	[
+	interruptedProcess step.
+	newContext := self stepToFirstInterestingBytecodeIn:
+		              interruptedProcess.
 	newNode := self vdmPcNodeForContext: newContext.
-	(self isContextPostMortem: aContext)
-		or: [ newNode notNil
-				and: [ newContext specificationContext ~~ specificationContext or: [ newNode ~~ node ] ] ] ]
-		whileFalse: [ self updateContextTo: newContext.
-			self triggerEvent: #stepInto ].
+	(self isContextPostMortem: aContext) or: [
+		newNode notNil and: [
+			newContext specificationContext ~~ specificationContext or: [
+				newNode ~~ node ] ] ] ] whileFalse: [
+		self updateContextTo: newContext ].
 	self updateContextTo: newContext.
 	self triggerEvent: #stepInto
 ]
@@ -74,22 +74,22 @@ DebugSession >> vdmStepOver: aContext [
 	after the invoked method returns."
 
 	| newContext specificationContext node newNode |
-	(self isContextPostMortem: aContext)
-		ifTrue: [ ^ self ].
-	aContext isDead
-		ifTrue: [ ^ self ].
+	(self isContextPostMortem: aContext) ifTrue: [ ^ self ].
+	aContext isDead ifTrue: [ ^ self ].
 	specificationContext := aContext specificationContext.
 	specificationContext ifNil: [ ^ self ].
 	node := self vdmPcNodeForContext: aContext.
-	[ newContext := interruptedProcess completeStep: aContext.
-	newContext == aContext
-		ifTrue: [ newContext := self stepToFirstInterestingBytecodeIn: interruptedProcess ].
+	[
+	newContext := interruptedProcess completeStep: aContext.
+	newContext == aContext ifTrue: [
+		newContext := self stepToFirstInterestingBytecodeIn:
+			              interruptedProcess ].
 	newNode := self vdmPcNodeForContext: newContext.
-	(self isContextPostMortem: aContext)
-		or: [ newNode notNil
-				and: [ newContext specificationContext ~~ specificationContext or: [ newNode ~~ node ] ] ] ]
-		whileFalse: [ self updateContextTo: newContext.
-			self triggerEvent: #stepOver ].
+	(self isContextPostMortem: aContext) or: [
+		newNode notNil and: [
+			newContext specificationContext ~~ specificationContext or: [
+				newNode ~~ node ] ] ] ] whileFalse: [
+		self updateContextTo: newContext ].
 	self updateContextTo: newContext.
 	self triggerEvent: #stepOver
 ]
