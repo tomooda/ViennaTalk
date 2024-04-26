@@ -70,10 +70,7 @@ ViennaVDMGrammar class >> addSelectorSilently: selector withMethod: compiledMeth
 { #category : #accessing }
 ViennaVDMGrammar class >> current [
 
-	^ current ifNil: [
-		  current := self new
-			             optimize;
-			             yourself ]
+	^ current ifNil: [ current := self new ]
 ]
 
 { #category : #'parsers-symbols' }
