@@ -1896,9 +1896,10 @@ ViennaVDM2Smalltalk >> indicesExpression: aViennaNode env: aDictionary [
 
 { #category : #'initialize-release' }
 ViennaVDM2Smalltalk >> initialize [
+
 	super initialize.
 	defaultEnv := Dictionary new.
-	decoder := ViennaVDMValueDecoder new.
+	decoder := ViennaVDMValueDecoder current.
 	runtimeAssertionCheck := self class defaultRuntimeAssertionCheck.
 	runtimeTypeCheck := self class defaultRuntimeAssertionCheck
 ]

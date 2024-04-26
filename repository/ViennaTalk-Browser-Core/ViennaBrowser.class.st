@@ -503,12 +503,12 @@ ViennaBrowser >> acceptCode: aStringOrText [
 { #category : #'code pane' }
 ViennaBrowser >> acceptCode: aStringOrText newModuleAndSourceDo: aBlock [
 
-	self animation ifNotNil: [ 
+	self animation ifNotNil: [
 		| code oldModulePositions newModulePositions newModuleNames oldSpec newSpec |
 		code := (self autoFormat
-			         ifTrue: [ 
-				         (ViennaVDMParser new format: aStringOrText) in: [ 
-					         :formatted | 
+			         ifTrue: [
+				         (ViennaVDMParser current format: aStringOrText) in: [
+					         :formatted |
 					         formatted isPetit2Failure
 						         ifTrue: [ aStringOrText ]
 						         ifFalse: [ formatted ] ] ]
@@ -518,31 +518,31 @@ ViennaBrowser >> acceptCode: aStringOrText newModuleAndSourceDo: aBlock [
 		oldModulePositions := self modulePositionsFrom: oldSpec.
 		newModulePositions := self modulePositionsFrom: code.
 		newModuleNames := (newModulePositions collect: #key) asSet.
-		newSpec := String new: 1024 streamContents: [ :stream | 
+		newSpec := String new: 1024 streamContents: [ :stream |
 			           stream nextPutAll: code.
-			           oldModulePositions do: [ :assoc | 
-				           (newModuleNames includes: assoc key) ifFalse: [ 
+			           oldModulePositions do: [ :assoc |
+				           (newModuleNames includes: assoc key) ifFalse: [
 					           stream nextPutAll:
 						           (oldSpec
 							            copyFrom: assoc value first
 							            to: assoc value last) ] ] ].
 		codePane hasUnacceptedEdits: false.
-		(self animation specification: newSpec ifError: [ nil ]) ifNil: [ 
+		(self animation specification: newSpec ifError: [ nil ]) ifNil: [
 			self animation state: Dictionary new.
-			self animation specification: newSpec ifError: [ :msg | 
+			self animation specification: newSpec ifError: [ :msg |
 				| posStrIndex charPos message |
 				charPos := 0.
 				message := msg.
 				posStrIndex := msg
 					               findLastOccurrenceOfString: 'at line '
 					               startingAt: 1.
-				posStrIndex > 0 ifTrue: [ 
+				posStrIndex > 0 ifTrue: [
 					| colonIndex |
 					colonIndex := msg indexOf: $: startingAt: posStrIndex + 9.
-					colonIndex > 0 ifTrue: [ 
+					colonIndex > 0 ifTrue: [
 						| linePos colPos lines |
 						message := msg copyFrom: 1 to: posStrIndex - 1.
-						(message includes: $() ifTrue: [ 
+						(message includes: $() ifTrue: [
 							message := message
 								           copyFrom: 1
 								           to:
@@ -553,22 +553,22 @@ ViennaBrowser >> acceptCode: aStringOrText newModuleAndSourceDo: aBlock [
 							           asInteger.
 						colPos := (msg copyFrom: colonIndex + 1 to: msg size) asInteger.
 						lines := code lines.
-						linePos <= lines size ifTrue: [ 
+						linePos <= lines size ifTrue: [
 							charPos := (((lines copyFrom: 1 to: linePos - 1) collect: #size)
 								            ifEmpty: [ 0 ]
 								            ifNotEmpty: #sum) + 1 + colPos ] ] ].
-				^ codePane handleEdit: [ 
+				^ codePane handleEdit: [
 					  codePane notify: message at: charPos in: code readStream ] ] ].
 		codePane hasUnacceptedEdits: false.
 		self selectModuleNamed: (newModulePositions
 				 ifEmpty: [ nil ]
 				 ifNotEmpty: [ newModulePositions first key ]).
-		aBlock ifNotNil: [ 
-			newModulePositions do: [ :assoc | 
+		aBlock ifNotNil: [
+			newModulePositions do: [ :assoc |
 				aBlock
 					cull: assoc key
 					cull: (code copyFrom: assoc value first to: assoc value last) ] ].
-		self autoTest ifTrue: [ 
+		self autoTest ifTrue: [
 			self autoFullTest
 				ifTrue: [ self runAllTests ]
 				ifFalse: [ self runTestModule ] ].
@@ -1006,28 +1006,30 @@ ViennaBrowser >> font [
 
 { #category : #'module list menu' }
 ViennaBrowser >> generateSmalltalkClasses [
+
 	| ast |
-	ast := ViennaVDMParser new parse: animation specification.
-	ast isPetit2Failure
-		ifTrue: [ ^ UIManager default
-				alert: 'Failed to generate a code : ' , ast message
-				title: 'ViennaTalk' ].
+	ast := ViennaVDMParser current parse: animation specification.
+	ast isPetit2Failure ifTrue: [
+		^ UIManager default
+			  alert: 'Failed to generate a code : ' , ast message
+			  title: 'ViennaTalk' ].
 	(ViennaVDM2SmalltalkClass new
-		source: animation specification;
-		generate: ast) ifNotNil: [ :class | class browse ]
+		 source: animation specification;
+		 generate: ast) ifNotNil: [ :class | class browse ]
 ]
 
 { #category : #'module list menu' }
 ViennaBrowser >> generateSmalltalkObject [
+
 	| ast |
-	ast := ViennaVDMParser new parse: animation specification.
-	ast isPetit2Failure
-		ifTrue: [ ^ UIManager default
-				alert: 'Failed to generate a code : ' , ast message
-				title: 'ViennaTalk' ].
+	ast := ViennaVDMParser current parse: animation specification.
+	ast isPetit2Failure ifTrue: [
+		^ UIManager default
+			  alert: 'Failed to generate a code : ' , ast message
+			  title: 'ViennaTalk' ].
 	(ViennaVDM2SmalltalkObject new
-		source: animation specification;
-		generate: ast) ifNotNil: [ :object | object inspect ]
+		 source: animation specification;
+		 generate: ast) ifNotNil: [ :object | object inspect ]
 ]
 
 { #category : #'module list menu' }
@@ -1038,7 +1040,7 @@ ViennaBrowser >> generateSmalltalkScript [
 			 detect: [ :assoc | assoc key = module ]
 			 ifNone: [  ]) ifNotNil: [ :assoc |
 			| ast |
-			ast := ViennaVDMParser new parse: (animation specification
+			ast := ViennaVDMParser current parse: (animation specification
 					        copyFrom: assoc value first
 					        to: assoc value last).
 			ast isPetit2Failure ifTrue: [
@@ -1061,7 +1063,7 @@ ViennaBrowser >> generateViennaDocSourceScript [
 		do: [ :stream |
 			| source ast sources walker |
 			source := animation specification.
-			ast := ViennaVDMParser new parse: source.
+			ast := ViennaVDMParser current parse: source.
 			ast isPetit2Failure ifTrue: [ ^ self ].
 			sources := Dictionary new.
 			walker := [ :node :module |
@@ -1250,7 +1252,7 @@ ViennaBrowser >> mergeAnnotationsIntoFRAM [
 		extensions: #( 'xfmv' )
 		do: [ :stream | fram := ViennaFRAMModel fromXML: stream ].
 	fram ifNil: [ ^ nil ].
-	ast := ViennaVDMParser new parse: animation specification.
+	ast := ViennaVDMParser current parse: animation specification.
 	ast isPetit2Failure ifTrue: [ ^ nil ].
 	fram loadSpec: ast.
 	self

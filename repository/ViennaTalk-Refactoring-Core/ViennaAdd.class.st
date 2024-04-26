@@ -41,11 +41,11 @@ ViennaAdd >> findContainerNode [
 { #category : #accessing }
 ViennaAdd >> findNewName [
 
-	(UIManager default request: self newNameQuery initialAnswer: '') 
-		ifNotNil: [ :ans | 
-			ans trim ifNotEmpty: [ :name | 
-				(ViennaVDMParser new identifier end parse: name) isPetit2Failure 
-					ifFalse: [ ^ name ] ] ].
+	(UIManager default request: self newNameQuery initialAnswer: '')
+		ifNotNil: [ :ans |
+			ans trim ifNotEmpty: [ :name |
+				(ViennaVDMParser current identifier end parse: name)
+					isPetit2Failure ifFalse: [ ^ name ] ] ].
 	^ nil
 ]
 

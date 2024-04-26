@@ -26,7 +26,7 @@ ViennaAddValue >> newNameQuery [
 { #category : #accessing }
 ViennaAddValue >> parser [
 
-	^ ViennaVDMParser new accessValueDefinition end
+	^ ViennaVDMParser current accessValueDefinition end
 ]
 
 { #category : #accessing }

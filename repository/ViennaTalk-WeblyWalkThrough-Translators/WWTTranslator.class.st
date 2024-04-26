@@ -18,8 +18,9 @@ WWTTranslator class >> withAll: anArrayOfPairOfWWTTranslationMatcher [
 
 { #category : #'initialize-release' }
 WWTTranslator >> initialize [
+
 	super initialize.
-	vdmDecoder := ViennaVDMValueDecoder new.
+	vdmDecoder := ViennaVDMValueDecoder current.
 	matcherPairs := Array new.
 	source := String new
 ]

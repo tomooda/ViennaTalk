@@ -153,5 +153,7 @@ WWTTranslationRuleParser >> vdmTuple [
 
 { #category : #parsers }
 WWTTranslationRuleParser >> vdmValue [
-	^ ViennaVDMValueDecoder new expression ==> [ :obj | WWTTranslationObjectMatcher with: obj ]
+
+	^ ViennaVDMValueDecoder current expression
+	  ==> [ :obj | WWTTranslationObjectMatcher with: obj ]
 ]

@@ -36,7 +36,7 @@ ViennaAddModule >> newNameQuery [
 { #category : #accessing }
 ViennaAddModule >> parser [
 
-	^ ViennaVDMParser new module end
+	^ ViennaVDMParser current module end
 ]
 
 { #category : #accessing }

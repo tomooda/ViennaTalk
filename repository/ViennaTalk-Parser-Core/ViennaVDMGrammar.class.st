@@ -53,8 +53,24 @@ Class {
 		'traceDefinition',
 		'traceDefinitionList'
 	],
+	#classInstVars : [
+		'current'
+	],
 	#category : #'ViennaTalk-Parser-Core'
 }
+
+{ #category : #'accessing - method dictionary' }
+ViennaVDMGrammar class >> addSelectorSilently: selector withMethod: compiledMethod [
+
+	current := nil.
+	^ super addSelectorSilently: selector withMethod: compiledMethod
+]
+
+{ #category : #accessing }
+ViennaVDMGrammar class >> current [
+
+	^ current ifNil: [ self new ]
+]
 
 { #category : #'parsers-symbols' }
 ViennaVDMGrammar >> abs [

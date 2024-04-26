@@ -26,7 +26,7 @@ ViennaAddExplicitOperation >> newNameQuery [
 { #category : #accessing }
 ViennaAddExplicitOperation >> parser [
 
-	^ ViennaVDMParser new accessOperationDefinition end
+	^ ViennaVDMParser current accessOperationDefinition end
 ]
 
 { #category : #accessing }

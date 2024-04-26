@@ -26,7 +26,7 @@ ViennaAddImplicitFunction >> newNameQuery [
 { #category : #accessing }
 ViennaAddImplicitFunction >> parser [
 
-	^ ViennaVDMParser new accessFunctionDefinition end
+	^ ViennaVDMParser current accessFunctionDefinition end
 ]
 
 { #category : #accessing }

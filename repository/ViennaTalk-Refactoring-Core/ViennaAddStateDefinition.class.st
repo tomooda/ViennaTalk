@@ -29,7 +29,7 @@ ViennaAddStateDefinition >> newNameQuery [
 { #category : #accessing }
 ViennaAddStateDefinition >> parser [
 
-	^ ViennaVDMParser new definitionBlock end
+	^ ViennaVDMParser current definitionBlock end
 ]
 
 { #category : #accessing }

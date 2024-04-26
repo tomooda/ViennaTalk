@@ -39,5 +39,5 @@ ViennaAddSection >> newNameQuery [
 { #category : #accessing }
 ViennaAddSection >> parser [
 
-	^ ViennaVDMParser new definitionBlock end
+	^ ViennaVDMParser current definitionBlock end
 ]

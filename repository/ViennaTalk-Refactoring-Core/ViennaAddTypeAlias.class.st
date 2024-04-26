@@ -26,7 +26,7 @@ ViennaAddTypeAlias >> newNameQuery [
 { #category : #accessing }
 ViennaAddTypeAlias >> parser [
 
-	^ ViennaVDMParser new accessTypeDefinition end
+	^ ViennaVDMParser current accessTypeDefinition end
 ]
 
 { #category : #accessing }

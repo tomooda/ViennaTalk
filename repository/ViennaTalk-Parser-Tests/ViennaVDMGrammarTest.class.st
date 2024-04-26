@@ -9,7 +9,7 @@ Class {
 
 { #category : #running }
 ViennaVDMGrammarTest >> setUp [
-	grammar := ViennaVDMGrammar new
+	grammar := ViennaVDMGrammar current
 ]
 
 { #category : #'tests-definitions' }
@@ -793,7 +793,7 @@ ViennaVDMGrammarTest >> testInterface [
 { #category : #'tests-types' }
 ViennaVDMGrammarTest >> testInvariantInitialFunction [
 	self
-		assert: (ViennaVDMGrammar new invariantInitialFunction end parse: 'p == e')
+		assert: (ViennaVDMGrammar current invariantInitialFunction end parse: 'p == e')
 		equals:
 			{'p'.
 			'e'}
@@ -1311,7 +1311,7 @@ ViennaVDMGrammarTest >> testReqExpression3 [
 
 { #category : #'tests-statements' }
 ViennaVDMGrammarTest >> testReturnStatement [
-	self assert: (ViennaVDMGrammar new statement parse: 'return 1') equals: '1'
+	self assert: (ViennaVDMGrammar current statement parse: 'return 1') equals: '1'
 ]
 
 { #category : #'tests-types' }

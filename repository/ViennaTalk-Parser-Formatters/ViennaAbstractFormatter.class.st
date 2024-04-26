@@ -28,10 +28,10 @@ ViennaAbstractFormatter class >> format: aViennaNode [
 
 { #category : #utilities }
 ViennaAbstractFormatter class >> formatSource: aString ifError: errorBlock [
+
 	| ast |
-	ast := ViennaVDMParser new parse: aString asString.
-	ast isPetit2Failure
-		ifTrue: [ ^ errorBlock value ].
+	ast := ViennaVDMParser current parse: aString asString.
+	ast isPetit2Failure ifTrue: [ ^ errorBlock value ].
 	^ self format: ast
 ]
 

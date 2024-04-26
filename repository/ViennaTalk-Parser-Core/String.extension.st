@@ -3,21 +3,21 @@ Extension { #name : #String }
 { #category : #'*ViennaTalk-Parser-Core' }
 String >> asViennaDocumentAst [
 
-	^ ViennaVDMParser new document end parse: self trim
+	^ ViennaVDMParser current document end parse: self trim
 ]
 
 { #category : #'*ViennaTalk-Parser-Core' }
 String >> asViennaExpressionAst [
-	^ ViennaVDMParser new expression end parse: self
+	^ ViennaVDMParser current expression end parse: self
 ]
 
 { #category : #'*ViennaTalk-Parser-Core' }
 String >> asViennaStatementAst [
-	^ ViennaVDMParser new statement end parse: self
+	^ ViennaVDMParser current statement end parse: self
 ]
 
 { #category : #'*ViennaTalk-Parser-Core' }
 String >> asViennaTypeAst [
 
-	^ ViennaVDMParser new typeOrRecordTypeDefinition end parse: self
+	^ ViennaVDMParser current typeOrRecordTypeDefinition end parse: self
 ]

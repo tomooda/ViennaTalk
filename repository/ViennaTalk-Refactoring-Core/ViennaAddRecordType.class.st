@@ -26,7 +26,7 @@ ViennaAddRecordType >> newNameQuery [
 { #category : #accessing }
 ViennaAddRecordType >> parser [
 
-	^ ViennaVDMParser new accessTypeDefinition end
+	^ ViennaVDMParser current accessTypeDefinition end
 ]
 
 { #category : #accessing }

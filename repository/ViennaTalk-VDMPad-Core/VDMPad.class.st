@@ -2585,31 +2585,33 @@ VDMPad >> fileService: aZnRequest [
 
 { #category : #'request handling-api' }
 VDMPad >> format: aZnRequest [
+
 	| parser params source formattedSource message json |
-	parser := ViennaVDMParser new.
+	parser := ViennaVDMParser current.
 	params := self getParamsFrom: aZnRequest.
 	source := (params at: 'source' ifAbsent: [ String new ]) trimmed
-		copyReplaceAll: String lf
-		with: String cr.
+		          copyReplaceAll: String lf
+		          with: String cr.
 	message := String new.
 	formattedSource := [ parser format: source width: 70 ]
-		on: Error
-		do: [ :ex | source ].
-	formattedSource isPetit2Failure
-		ifTrue: [ formattedSource := parser debug: source.
-			message := String
-				streamContents: [ :stream | 
-					stream nextPutAll: 'Syntax Error at line '.
-					(self charPositionToPoint: formattedSource furthestPosition in: source)
-						in: [ :position | 
-							stream
-								nextPutAll: position y printString;
-								nextPut: $:;
-								nextPutAll: position x printString ] ].
-			formattedSource := source ].
+		                   on: Error
+		                   do: [ :ex | source ].
+	formattedSource isPetit2Failure ifTrue: [
+		formattedSource := parser debug: source.
+		message := String streamContents: [ :stream |
+			           stream nextPutAll: 'Syntax Error at line '.
+			           (self
+				            charPositionToPoint: formattedSource furthestPosition
+				            in: source) in: [ :position |
+				           stream
+					           nextPutAll: position y printString;
+					           nextPut: $:;
+					           nextPutAll: position x printString ] ].
+		formattedSource := source ].
 	json := params copy.
 	json
-		at: 'source' put: (formattedSource copyReplaceAll: String cr with: String lf);
+		at: 'source'
+		put: (formattedSource copyReplaceAll: String cr with: String lf);
 		at: 'message' put: message;
 		at: 'value' put: (params at: 'value' ifAbsent: [ String new ]).
 	^ self responseJSON: json

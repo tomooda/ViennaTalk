@@ -50,7 +50,7 @@ ViennaAddStateVariable >> findInitialValue [
 		 initialAnswer: '') ifNotNil: [ :ans |
 		ans trim ifNotEmpty: [ :expr |
 			| value |
-			value := ViennaVDMParser new expression end parse: expr.
+			value := ViennaVDMParser current expression end parse: expr.
 			value isPetit2Success ifTrue: [ ^ value ] ] ].
 	^ nil
 ]
@@ -117,7 +117,7 @@ ViennaAddStateVariable >> newTypeQuery [
 { #category : #accessing }
 ViennaAddStateVariable >> parser [
 
-	^ ViennaVDMParser new stateField end
+	^ ViennaVDMParser current stateField end
 ]
 
 { #category : #accessing }
