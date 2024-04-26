@@ -928,7 +928,7 @@ ViennaRefactoringBrowser >> exportToDisk [
 			ifTrue: [
 				self specification modulesDo: [ :moduleNode |
 					| file |
-					file := ref / moduleNode name withExtension: 'vdmsl'.
+					file := ref / moduleNode identifier withExtension: 'vdmsl'.
 					file
 						ensureDeleteAll;
 						writeStreamDo: [ :stream |
