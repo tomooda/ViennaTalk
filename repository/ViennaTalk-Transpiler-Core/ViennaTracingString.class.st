@@ -253,6 +253,17 @@ ViennaTracingString >> postCopy [
 	sources := sources copy
 ]
 
+{ #category : #'as yet unclassified' }
+ViennaTracingString >> scanCharactersFrom: anInteger to: anInteger2 with: aCompositionScanner rightX: anInteger4 font: aLogicalFont [
+
+	^ string
+		  scanCharactersFrom: anInteger
+		  to: anInteger2
+		  with: aCompositionScanner
+		  rightX: anInteger4
+		  font: aLogicalFont
+]
+
 { #category : #private }
 ViennaTracingString >> setSources: aCollection [
 	sources := aCollection

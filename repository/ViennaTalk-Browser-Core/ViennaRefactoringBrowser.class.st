@@ -740,7 +740,8 @@ ViennaRefactoringBrowser >> displayDefinition: aViennaNode [
 		node isViennaImportNode ifTrue: [
 			^ node rename
 				  ifNotNil: [ :localName | localName shortName ]
-				  ifNil: [ node module identifier , '`' , node identifier ] ] ].
+				  ifNil: [ node module identifier , '`' , node identifier ] ].
+		node isViennaNamedTraceNode ifTrue: [ ^ node identifier ] ].
 	^ '-'
 ]
 
@@ -1586,17 +1587,20 @@ ViennaRefactoringBrowser >> onTheFlyCheckSourceText [
 
 { #category : #private }
 ViennaRefactoringBrowser >> parser [
+
 	| parser |
 	parser := ViennaVDMParser new.
-	^ parser module end / parser typeDefinitions end
-		/ parser valueDefinitions end / parser functionDefinitions end
-		/ parser operationDefinitions end / parser stateDefinition end
-		/ parser document end / parser importModuleSignature end
-		/ parser accessTypeDefinition end / parser accessValueDefinition end
-		/ parser stateDefinition end / parser accessFunctionDefinition end
-		/ parser accessOperationDefinition end / parser typeImport end
-		/ parser valueImport end / parser functionImport end
-		/ parser operationImport end
+	^ parser tracesDefinitions end / parser namedTrace end
+	  / parser module end / parser typeDefinitions end
+	  / parser valueDefinitions end / parser functionDefinitions end
+	  / parser operationDefinitions end / parser stateDefinition end
+	  / parser document end / parser importModuleSignature end
+	  / parser accessTypeDefinition end
+	  / parser accessValueDefinition end / parser stateDefinition end
+	  / parser accessFunctionDefinition end
+	  / parser accessOperationDefinition end / parser typeImport end
+	  / parser valueImport end / parser functionImport end
+	  / parser operationImport end
 ]
 
 { #category : #accessing }

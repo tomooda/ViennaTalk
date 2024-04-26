@@ -1717,6 +1717,12 @@ ViennaNode >> isViennaNameNode [
 ]
 
 { #category : #testing }
+ViennaNode >> isViennaNamedTraceNode [
+
+	^ false
+]
+
+{ #category : #testing }
 ViennaNode >> isViennaNode [
 	^ true
 ]

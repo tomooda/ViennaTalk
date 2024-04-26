@@ -52,6 +52,12 @@ ViennaNamedTraceNode >> isViennaExportableTopLevelDefinitionNode [
 	^ false
 ]
 
+{ #category : #testing }
+ViennaNamedTraceNode >> isViennaNamedTraceNode [
+
+	^ true
+]
+
 { #category : #accessing }
 ViennaNamedTraceNode >> label [
 

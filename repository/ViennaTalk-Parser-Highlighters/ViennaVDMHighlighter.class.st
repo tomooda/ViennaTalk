@@ -378,13 +378,15 @@ ViennaVDMHighlighter >> skip [
 
 { #category : #parsing }
 ViennaVDMHighlighter >> start [
-	^ document end / self importModuleSignature end
-		/ self accessTypeDefinition end / self accessValueDefinition end
-		/ self stateDefinition end / self accessFunctionDefinition end
-		/ self accessOperationDefinition end / self statement end
-		/ self expression end / self importDefinition end
-		/ self typeImport end / self valueImport end
-		/ self functionImport end / self operationImport end
+
+	^ document end / self namedTrace end / self importModuleSignature end
+	  / self accessTypeDefinition end / self accessValueDefinition end
+	  / self stateDefinition end / self accessFunctionDefinition end
+	  / self accessOperationDefinition end / self statement end
+	  / self expression end / self importDefinition end
+	  / self typeImport end / self valueImport end
+	  / self functionImport end / self operationImport
+	  
 ]
 
 { #category : #'parsers-keywords' }
