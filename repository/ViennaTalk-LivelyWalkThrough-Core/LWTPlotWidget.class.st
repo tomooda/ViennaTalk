@@ -35,30 +35,28 @@ LWTPlotWidget >> basename [
 
 { #category : #operations }
 LWTPlotWidget >> bigDot [
-	dotRadius := 4
+	dotRadius := 4.
 	self changed
 ]
 
 { #category : #operations }
 LWTPlotWidget >> changeColor [
+
 	| dialog |
 	dialog := ColorSelectorDialogWindow new
-		title: 'Choose a color for the sensor';
-		selectedColor: self color.
-	self openModal: dialog.
-	dialog cancelled
-		ifFalse: [ self color: dialog selectedColor ]
+		          title: 'Choose a color for the sensor';
+		          selectedColor: self color.
+	dialog openModal.
+	dialog cancelled ifFalse: [ self color: dialog selectedColor ]
 ]
 
 { #category : #operations }
 LWTPlotWidget >> changeTextFont [
-	self
-		openModal:
-			(FontChooser
-				openWithWindowTitle: 'Choose a font for the text'
-				for: self
-				setSelector: #textFont:
-				getSelector: #textFont)
+
+	FontChooser
+		openModalWithTitle: 'Choose a font for the text'
+		initialFont: self textFont
+		onAcceptDo: [ :f | self textFont: f ]
 ]
 
 { #category : #accessing }

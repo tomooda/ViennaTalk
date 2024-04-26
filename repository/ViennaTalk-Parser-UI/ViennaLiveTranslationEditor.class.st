@@ -47,48 +47,48 @@ ViennaLiveTranslationEditor class >> sourceTextMenuOn: aBuilder [
 		keyText: 'p';
 		selector: #viennaItInSourceText;
 		help: nil;
-		icon: Smalltalk ui icons smallPrintItIcon;
+		icon: (self iconNamed: #smallPrintItIcon);
 		withSeparatorAfter.
 	(aBuilder item: #'Find...' translated)
 		keyText: 'f';
 		selector: #find;
 		help: nil;
-		icon: Smalltalk ui icons smallFindIcon.
+		icon: (self iconNamed: #smallFindIcon).
 	(aBuilder item: #'Find again' translated)
 		keyText: 'g';
 		selector: #findAgain;
 		help: nil;
-		icon: Smalltalk ui icons smallFindIcon.
+		icon: (self iconNamed: #smallFindIcon).
 	(aBuilder item: #'Do again' translated)
 		keyText: 'j';
 		selector: #again;
 		help: nil;
-		icon: Smalltalk ui icons smallRedoIcon.
+		icon: (self iconNamed: #smallRedoIcon).
 	(aBuilder item: #Undo translated)
 		keyText: 'z';
 		selector: #undo;
 		help: nil;
-		icon: Smalltalk ui icons smallUndoIcon;
+		icon: (self iconNamed: #smallUndoIcon);
 		withSeparatorAfter.
 	(aBuilder item: #Copy translated)
 		keyText: 'c';
 		selector: #copySelection;
 		help: nil;
-		icon: Smalltalk ui icons smallCopyIcon.
+		icon: (self iconNamed: #smallCopyIcon).
 	(aBuilder item: #Cut translated)
 		keyText: 'x';
 		selector: #cut;
 		help: nil;
-		icon: Smalltalk ui icons smallCutIcon.
+		icon: (self iconNamed: #smallCutIcon).
 	(aBuilder item: #Paste translated)
 		keyText: 'v';
 		selector: #paste;
 		help: nil;
-		icon: Smalltalk ui icons smallPasteIcon.
+		icon: (self iconNamed: #smallPasteIcon).
 	(aBuilder item: #'Paste...' translated)
 		selector: #pasteRecent;
 		help: nil;
-		icon: Smalltalk ui icons smallCopyIcon;
+		icon: (self iconNamed: #smallCopyIcon);
 		withSeparatorAfter
 ]
 

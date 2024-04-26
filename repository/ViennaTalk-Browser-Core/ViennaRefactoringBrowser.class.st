@@ -1196,12 +1196,12 @@ ViennaRefactoringBrowser >> initializePlaygroundPagePresenters [
 					               animation plainAt: string ifAbsent: [ '-' ] ]);
 		              yourself.
 	initStateButton := self newButton
-		                   icon: (Smalltalk ui iconNamed: #refresh);
+		                   icon: (self iconNamed: #refresh);
 		                   label: 'initialize';
 		                   action: [ self initState ];
 		                   yourself.
 	refreshStateButton := self newButton
-		                      icon: (Smalltalk ui iconNamed: #smallUpdate);
+		                      icon: (self iconNamed: #smallUpdate);
 		                      label: 'refresh';
 		                      action: [ self updateStateTableItems ];
 		                      yourself

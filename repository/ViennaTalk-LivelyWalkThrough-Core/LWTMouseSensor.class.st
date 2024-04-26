@@ -94,24 +94,24 @@ LWTMouseSensor >> borderWidth: aNumber [
 
 { #category : #operations }
 LWTMouseSensor >> changeBorderColor [
+
 	| dialog |
 	dialog := ColorSelectorDialogWindow new
-		title: 'Choose a border color for the sensor';
-		selectedColor: self borderColor.
-	self openModal: dialog.
-	dialog cancelled
-		ifFalse: [ self borderColor: dialog selectedColor ]
+		          title: 'Choose a border color for the sensor';
+		          selectedColor: self borderColor.
+	dialog openModal.
+	dialog cancelled ifFalse: [ self borderColor: dialog selectedColor ]
 ]
 
 { #category : #operations }
 LWTMouseSensor >> changeColor [
+
 	| dialog |
 	dialog := ColorSelectorDialogWindow new
-		title: 'Choose a color for the sensor';
-		selectedColor: self color.
-	self openModal: dialog.
-	dialog cancelled
-		ifFalse: [ self color: dialog selectedColor ]
+		          title: 'Choose a color for the sensor';
+		          selectedColor: self color.
+	dialog openModal.
+	dialog cancelled ifFalse: [ self color: dialog selectedColor ]
 ]
 
 { #category : #'event handling' }

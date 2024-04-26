@@ -79,6 +79,12 @@ ViennaUnitType >> basicIsEnumerable [
 	^ true
 ]
 
+{ #category : #comparing }
+ViennaUnitType >> hash [
+
+	^ self class hash
+]
+
 { #category : #controling }
 ViennaUnitType >> ifNotUnit: aBlock [
 ]

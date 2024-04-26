@@ -309,10 +309,11 @@ LWTDirector >> load [
 
 { #category : #operations }
 LWTDirector >> loadStream: aStream [
-	
-					[ self fromJsonObject: (NeoJSONReader on: aStream) next ]
-						on: Error
-						do: [ :ex | UIManager alert: 'Can not load ' , filepath pathString ] 
+
+	[ self fromJsonObject: (NeoJSONReader on: aStream) next ]
+		on: Error
+		do: [ :ex |
+			UIManager default alert: 'Can not load ' , filepath pathString ]
 ]
 
 { #category : #'accessing-morphs' }
@@ -492,13 +493,12 @@ LWTDirector >> startStepping [
 
 { #category : #stepping }
 LWTDirector >> step [
+
 	| m |
 	m := self owner.
-	[ 
-	m isNil
-		ifTrue: [ self releaseHandlers ].
-	m == World
-		ifTrue: [ ^ self ].
+	[
+	m isNil ifTrue: [ self releaseHandlers ].
+	m == self world ifTrue: [ ^ self ].
 	m := m owner ] repeat
 ]
 

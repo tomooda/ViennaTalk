@@ -24,6 +24,30 @@ ViennaTypeHolder >> asTypeHolder [
 	^ self
 ]
 
+{ #category : #enumerating }
+ViennaTypeHolder >> basicDo: aBlock [
+
+	type basicDo: aBlock
+]
+
+{ #category : #testing }
+ViennaTypeHolder >> basicIncludes: anObject [
+
+	^ type basicIncludes: anObject
+]
+
+{ #category : #testing }
+ViennaTypeHolder >> basicIsEnumerable [
+
+	^ type basicIsEnumerable
+]
+
+{ #category : #accessing }
+ViennaTypeHolder >> instantiate: aDictionary [
+
+	^ type instantiate: aDictionary
+]
+
 { #category : #accessing }
 ViennaTypeHolder >> name [
 	^ type ifNil: [ '[]' ] ifNotNil: [ type name ]

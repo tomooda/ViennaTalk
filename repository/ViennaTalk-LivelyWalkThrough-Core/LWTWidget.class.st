@@ -53,11 +53,6 @@ LWTWidget class >> fromJsonObject: aDictionary on: aLWTDirector [
 	^ widget
 ]
 
-{ #category : #events }
-LWTWidget >> actionSelectorsForEvent: aSymbol do: aBlock [
-	self eventActionDict in: [ :actionDict | (actionDict at: aSymbol ifAbsent: [ #() ]) do: aBlock ]
-]
-
 { #category : #json }
 LWTWidget >> asJsonObject [
 	^ Dictionary new
@@ -89,24 +84,22 @@ LWTWidget >> changeName [
 
 { #category : #operations }
 LWTWidget >> changeNameColor [
+
 	| dialog |
 	dialog := ColorSelectorDialogWindow new
-		title: 'Choose a color for name';
-		selectedColor: self nameColor.
-	self openModal: dialog.
-	dialog cancelled
-		ifFalse: [ self nameColor: dialog selectedColor ]
+		          title: 'Choose a color for name';
+		          selectedColor: self nameColor.
+	dialog openModal.
+	dialog cancelled ifFalse: [ self nameColor: dialog selectedColor ]
 ]
 
 { #category : #operations }
 LWTWidget >> changeNameFont [
-	self
-		openModal:
-			(FontChooser
-				openWithWindowTitle: 'Choose a font for the name'
-				for: self
-				setSelector: #nameFont:
-				getSelector: #nameFont)
+
+	FontChooser
+		openModalWithTitle: 'Choose a font for the name'
+		initialFont: self nameFont
+		onAcceptDo: [ :f | self nameFont: f ]
 ]
 
 { #category : #json }
@@ -252,17 +245,18 @@ LWTWidget >> handleMouseDown: aMouseEvent [
 { #category : #'event handling' }
 LWTWidget >> handleMouseLeave: aMouseEvent [
 
-	World activeHand showTemporaryCursor: Cursor normal
+	self world activeHand showTemporaryCursor: Cursor normal
 ]
 
 { #category : #'event handling' }
 LWTWidget >> handleMouseMove: aMouseEvent [
 
-	self moveable = true ifTrue: [ 
+	self moveable = true ifTrue: [
 		(self edgeName: aMouseEvent position)
-			ifEmpty: [ World activeHand showTemporaryCursor: Cursor normal ]
-			ifNotEmpty: [ :edge | 
-				World activeHand showTemporaryCursor:
+			ifEmpty: [
+			self world activeHand showTemporaryCursor: Cursor normal ]
+			ifNotEmpty: [ :edge |
+				self world activeHand showTemporaryCursor:
 					(Cursor perform: ('resize' , edge) asSymbol) ] ]
 ]
 
@@ -292,11 +286,11 @@ LWTWidget >> makeUniqueName [
 	| prefix random uniqueName |
 	prefix := self basename.
 	random := Random new.
-	[ 
+	[
 	uniqueName := prefix , (random nextInteger: 999999) printString.
-	(self director ifNil: [ World ])
-		findDeepSubmorphThat: [ :m | 
-			m ~~ self and: [ 
+	(self director ifNil: [ self world ])
+		findDeepSubmorphThat: [ :m |
+			m ~~ self and: [
 				(m isKindOf: LWTWidget) and: [ m name = uniqueName ] ] ]
 		ifAbsent: [ ^ uniqueName ] ] repeat
 ]

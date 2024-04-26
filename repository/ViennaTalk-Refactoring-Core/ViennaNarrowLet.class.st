@@ -37,6 +37,12 @@ ViennaNarrowLet >> definitionNode: aViennaNode [
 ]
 
 { #category : #accessing }
+ViennaNarrowLet >> findDefinitionNode [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
 ViennaNarrowLet >> name [
 	^ 'Narrow ' , (self shortDescription: ast source) asText allBold
 ]

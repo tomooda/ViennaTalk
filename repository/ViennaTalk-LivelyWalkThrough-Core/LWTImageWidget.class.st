@@ -32,7 +32,9 @@ LWTImageWidget >> base64Form [
 
 { #category : #private }
 LWTImageWidget >> base64Form: aString [
-	form := PNGReadWriter formFromStream: (Base64MimeConverter mimeDecodeToBytes: aString readStream)
+
+	form := PNGReadWriter formFromStream:
+		        (Base64MimeConverter mimeDecodeToBytes: aString readStream)
 ]
 
 { #category : #accessing }

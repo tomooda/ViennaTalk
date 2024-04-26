@@ -42,7 +42,7 @@ ViennaEpiLog >> < aViennaEpiLog [
 { #category : #comparing }
 ViennaEpiLog >> = aComparable [
 
-	^ super = aComparable
+	^ self == aComparable
 ]
 
 { #category : #accessing }
@@ -118,6 +118,13 @@ ViennaEpiLog >> hasSpecificationChange [
 ViennaEpiLog >> hasStateChange [
 
 	^ false
+]
+
+{ #category : #comparing }
+ViennaEpiLog >> hash [
+	"Hash must be redefined whenever = is redefined."
+
+	^ self identityHash
 ]
 
 { #category : #initialization }

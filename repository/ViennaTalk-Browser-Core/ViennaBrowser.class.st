@@ -65,16 +65,17 @@ ViennaBrowser class >> autoTest: aBoolean [
 
 { #category : #menu }
 ViennaBrowser class >> codePaneMenu: aBuilder [
+
 	<contextMenu>
 	<viennaBrowserCodePaneMenu>
 	(aBuilder item: #'Find...' translated)
 		keyText: 'f';
 		selector: #find;
-		icon: Smalltalk ui icons smallFindIcon.
+		icon: (self iconNamed: #smallFindIcon).
 	(aBuilder item: #'Find again' translated)
 		keyText: 'g';
 		selector: #findAgain;
-		icon: Smalltalk ui icons smallFindIcon.
+		icon: (self iconNamed: #smallFindIcon).
 	(aBuilder item: #'Set search string' translated)
 		keyText: 'h';
 		selector: #setSearchString;
@@ -82,38 +83,36 @@ ViennaBrowser class >> codePaneMenu: aBuilder [
 	(aBuilder item: #'Do again' translated)
 		keyText: 'j';
 		selector: #again;
-		icon: Smalltalk ui icons smallRedoIcon.
+		icon: (self iconNamed: #smallRedoIcon).
 	(aBuilder item: #Undo translated)
 		keyText: 'z';
 		selector: #undo;
-		icon: Smalltalk ui icons smallUndoIcon;
+		icon: (self iconNamed: #smallUndoIcon);
 		withSeparatorAfter.
 	(aBuilder item: #Copy translated)
 		keyText: 'c';
 		selector: #copySelection;
-		icon: Smalltalk ui icons smallCopyIcon.
+		icon: (self iconNamed: #smallCopyIcon).
 	(aBuilder item: #Cut translated)
 		keyText: 'x';
 		selector: #cut;
-		icon: Smalltalk ui icons smallCutIcon.
+		icon: (self iconNamed: #smallCutIcon).
 	(aBuilder item: #Paste translated)
 		keyText: 'v';
 		selector: #paste;
-		icon: Smalltalk ui icons smallPasteIcon.
+		icon: (self iconNamed: #smallPasteIcon).
 	(aBuilder item: #'Paste...' translated)
 		selector: #pasteRecent;
-		icon: Smalltalk ui icons smallPasteIcon;
+		icon: (self iconNamed: #smallPasteIcon);
 		withSeparatorAfter.
-	aBuilder model otherModules
-		ifNotEmpty: [ :modules | 
-			(aBuilder
-				item: #'Insert module...' translated;
-				withSeparatorAfter)
-				with: [ modules
-						do: [ :module | 
-							(aBuilder item: module asSymbol)
-								selector: #insertModuleSource:;
-								arguments: (Array with: module asString) ] ] ].
+	aBuilder model otherModules ifNotEmpty: [ :modules |
+		(aBuilder
+			 item: #'Insert module...' translated;
+			 withSeparatorAfter) with: [
+			modules do: [ :module |
+				(aBuilder item: module asSymbol)
+					selector: #insertModuleSource:;
+					arguments: (Array with: module asString) ] ] ].
 	(aBuilder item: #Format translated)
 		keyText: 'F';
 		selector: #prettyPrint;
@@ -269,11 +268,11 @@ ViennaBrowser class >> valuePaneMenu: aBuilder [
 	(aBuilder item: #'Find...' translated)
 		keyText: 'f';
 		selector: #find;
-		icon: (Smalltalk ui iconNamed: #smallFindIcon).
+		icon: (self iconNamed: #smallFindIcon).
 	(aBuilder item: #'Find again' translated)
 		keyText: 'g';
 		selector: #findAgain;
-		icon: Smalltalk ui icons smallFindIcon.
+		icon: (self iconNamed: #smallFindIcon).
 	(aBuilder item: #'Set search string' translated)
 		keyText: 'h';
 		selector: #setSearchString;
@@ -281,27 +280,27 @@ ViennaBrowser class >> valuePaneMenu: aBuilder [
 	(aBuilder item: #'Do again' translated)
 		keyText: 'j';
 		selector: #again;
-		icon: Smalltalk ui icons smallRedoIcon.
+		icon: (self iconNamed: #smallRedoIcon).
 	(aBuilder item: #Undo translated)
 		keyText: 'z';
 		selector: #undo;
-		icon: Smalltalk ui icons smallUndoIcon;
+		icon: (self iconNamed: #smallUndoIcon);
 		withSeparatorAfter.
 	(aBuilder item: #Copy translated)
 		keyText: 'c';
 		selector: #copySelection;
-		icon: Smalltalk ui icons smallCopyIcon.
+		icon: (self iconNamed: #smallCopyIcon).
 	(aBuilder item: #Cut translated)
 		keyText: 'x';
 		selector: #cut;
-		icon: Smalltalk ui icons smallCutIcon.
+		icon: (self iconNamed: #smallCutIcon).
 	(aBuilder item: #Paste translated)
 		keyText: 'v';
 		selector: #paste;
-		icon: Smalltalk ui icons smallPasteIcon.
+		icon: (self iconNamed: #smallPasteIcon).
 	(aBuilder item: #'Paste...' translated)
 		selector: #pasteRecent;
-		icon: Smalltalk ui icons smallPasteIcon;
+		icon: (self iconNamed: #smallPasteIcon);
 		withSeparatorAfter.
 	(aBuilder item: #'Do it' translated)
 		keyText: 'd';
@@ -366,11 +365,11 @@ ViennaBrowser class >> workspacePaneMenu: aBuilder [
 	(aBuilder item: #'Find...' translated)
 		keyText: 'f';
 		selector: #find;
-		icon: (Smalltalk ui iconNamed: #smallFindIcon).
+		icon: (self iconNamed: #smallFindIcon).
 	(aBuilder item: #'Find again' translated)
 		keyText: 'g';
 		selector: #findAgain;
-		icon: Smalltalk ui icons smallFindIcon.
+		icon: (self iconNamed: #smallFindIcon).
 	(aBuilder item: #'Set search string' translated)
 		keyText: 'h';
 		selector: #setSearchString;
@@ -378,27 +377,27 @@ ViennaBrowser class >> workspacePaneMenu: aBuilder [
 	(aBuilder item: #'Do again' translated)
 		keyText: 'j';
 		selector: #again;
-		icon: Smalltalk ui icons smallRedoIcon.
+		icon: (self iconNamed: #smallRedoIcon).
 	(aBuilder item: #Undo translated)
 		keyText: 'z';
 		selector: #undo;
-		icon: Smalltalk ui icons smallUndoIcon;
+		icon: (self iconNamed: #smallUndoIcon);
 		withSeparatorAfter.
 	(aBuilder item: #Copy translated)
 		keyText: 'c';
 		selector: #copySelection;
-		icon: Smalltalk ui icons smallCopyIcon.
+		icon: (self iconNamed: #smallCopyIcon).
 	(aBuilder item: #Cut translated)
 		keyText: 'x';
 		selector: #cut;
-		icon: Smalltalk ui icons smallCutIcon.
+		icon: (self iconNamed: #smallCutIcon).
 	(aBuilder item: #Paste translated)
 		keyText: 'v';
 		selector: #paste;
-		icon: Smalltalk ui icons smallPasteIcon.
+		icon: (self iconNamed: #smallPasteIcon).
 	(aBuilder item: #'Paste...' translated)
 		selector: #pasteRecent;
-		icon: Smalltalk ui icons smallPasteIcon;
+		icon: (self iconNamed: #smallPasteIcon);
 		withSeparatorAfter.
 	(aBuilder item: #'Do it' translated)
 		keyText: 'd';

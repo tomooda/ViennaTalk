@@ -27,11 +27,12 @@ Object >> viennaString [
 
 { #category : #'*ViennaTalk-Value-Core' }
 Object >> viennaStringOn: aStream [
+
 	aStream nextPutAll: 'mk_'.
 	aStream nextPutAll: self class name.
 	aStream nextPut: $(.
 	(1 to: self class instSize)
-		do: [ :index | self stringify: (self instVarAt: index) into: aStream ]
+		do: [ :index | (self instVarAt: index) viennaStringOn: aStream ]
 		separatedBy: [ aStream nextPut: $, ].
 	aStream nextPut: $)
 ]

@@ -12,7 +12,7 @@ Class {
 }
 
 { #category : #'menu declaration' }
-LWTFieldWidget class >> textEditorMenuOn: aBuilder [ 
+LWTFieldWidget class >> textEditorMenuOn: aBuilder [
 	"Specify the menu used when writing text. Try it with:
 	(PragmaMenuBuilder 
 		pragmaKeyword: 'textEditorMenu'
@@ -20,52 +20,51 @@ LWTFieldWidget class >> textEditorMenuOn: aBuilder [
 
 	<contextMenu>
 	<vdmTextEditorMenu>
-
-	(aBuilder item: #'Find...' translated) 
+	(aBuilder item: #'Find...' translated)
 		keyText: 'f';
-		selector: #find; 
-		icon: Smalltalk ui icons smallFindIcon.
-	(aBuilder item: #'Find again' translated) 
+		selector: #find;
+		icon: (self iconNamed: #smallFindIcon).
+	(aBuilder item: #'Find again' translated)
 		keyText: 'g';
-		selector: #findAgain; 
-		icon: Smalltalk ui icons smallFindIcon.
-	(aBuilder item: #'Set search string' translated) 
+		selector: #findAgain;
+		icon: (self iconNamed: #smallFindIcon).
+	(aBuilder item: #'Set search string' translated)
 		keyText: 'h';
 		selector: #setSearchString.
-	(aBuilder item: #'Do again' translated) 
+	(aBuilder item: #'Do again' translated)
 		keyText: 'j';
-		selector: #again; 
-		icon: Smalltalk ui icons smallRedoIcon.
-	(aBuilder item: #'Undo' translated) 
+		selector: #again;
+		icon: (self iconNamed: #smallRedoIcon).
+	(aBuilder item: #Undo translated)
 		keyText: 'z';
-		selector: #undo; 
-		icon: Smalltalk ui icons smallUndoIcon; 
+		selector: #undo;
+		icon: (self iconNamed: #smallUndoIcon);
 		withSeparatorAfter.
-	
-	(aBuilder item: #'Copy' translated) 
+
+	(aBuilder item: #Copy translated)
 		keyText: 'c';
-		selector: #copySelection; 
-		icon: Smalltalk ui icons smallCopyIcon.
-	(aBuilder item: #'Cut' translated) 
+		selector: #copySelection;
+		icon: (self iconNamed: #smallCopyIcon).
+	(aBuilder item: #Cut translated)
 		keyText: 'x';
-		selector: #cut; 
-		icon: Smalltalk ui icons smallCutIcon.
-	(aBuilder item: #'Paste' translated) 
+		selector: #cut;
+		icon: (self iconNamed: #smallCutIcon).
+	(aBuilder item: #Paste translated)
 		keyText: 'v';
-		selector: #paste; 
-		icon: Smalltalk ui icons smallPasteIcon.
-	(aBuilder item: #'Paste...' translated) 
-		selector: #pasteRecent; 
-		icon: Smalltalk ui icons smallCopyIcon; 
+		selector: #paste;
+		icon: (self iconNamed: #smallPasteIcon).
+	(aBuilder item: #'Paste...' translated)
+		selector: #pasteRecent;
+		icon: (self iconNamed: #smallCopyIcon);
 		withSeparatorAfter.
-	(aBuilder item: #'Accept' translated) 
+	(aBuilder item: #Accept translated)
 		keyText: 's';
-		selector: #accept; 
-		icon: Smalltalk ui icons smallOkIcon.
-	(aBuilder item: #'Cancel' translated) 
+		selector: #accept;
+		icon: (self iconNamed: #smallOkIcon).
+	(aBuilder item: #Cancel translated)
 		keyText: 'l';
-		selector: #cancel; 
-		icon: Smalltalk ui icons smallCancelIcon.
+		selector: #cancel;
+		icon: (self iconNamed: #smallCancelIcon)
 ]
 
 { #category : #'menu declaration' }
@@ -146,13 +145,11 @@ LWTFieldWidget >> changeStringType [
 
 { #category : #operations }
 LWTFieldWidget >> changeTextFont [
-	self
-		openModal:
-			(FontChooser
-				openWithWindowTitle: 'Choose a font for the text'
-				for: self
-				setSelector: #textFont:
-				getSelector: #textFont)
+
+	FontChooser
+		openModalWithTitle: 'Choose a font for the text'
+		initialFont: self textFont
+		onAcceptDo: [ :f | self textFont: f ]
 ]
 
 { #category : #operations }
@@ -232,9 +229,10 @@ LWTFieldWidget >> hideName [
 
 { #category : #'initialize-release' }
 LWTFieldWidget >> initialize [
+
 	super initialize.
 	showsDiagram := false.
-	type = self defaultType.
+	type := self defaultType.
 	self buildTextPane
 ]
 

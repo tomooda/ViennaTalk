@@ -5,7 +5,7 @@ Class {
 		'morphName',
 		'event'
 	],
-	#category : 'ViennaTalk-LivelyWalkThrough-Core'
+	#category : #'ViennaTalk-LivelyWalkThrough-Core'
 }
 
 { #category : #'instance creation' }
@@ -42,8 +42,8 @@ LWTEventFrame >> morphName: aString [
 
 { #category : #'interface opening' }
 LWTEventFrame >> openBrowser [
-	^ LWTEventActionEditor open model selectMorphNamed: morphName;
-		 selectEventNamed: event
+
+	
 ]
 
 { #category : #printing }

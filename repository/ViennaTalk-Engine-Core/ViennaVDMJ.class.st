@@ -284,7 +284,9 @@ ViennaVDMJ class >> new [
 
 { #category : #utilities }
 ViennaVDMJ class >> proceed: aText title: aString [
-	<script: 'ViennaVDMJ proceed:ViennaVDMJ aboutJson4VDMJ title: ''title'''>
+
+	<script:
+	'ViennaVDMJ proceed:ViennaVDMJ aboutJson4VDMJ title: ''title'''>
 	| dialog |
 	dialog := ProceedDialogWindow newWithTheme: Smalltalk ui theme.
 	dialog title: aString.
@@ -292,15 +294,11 @@ ViennaVDMJ class >> proceed: aText title: aString [
 	dialog textFont: TextStyle default defaultFont.
 	dialog text: aText asText.
 	dialog textMorph contents removeAttribute: TextAlignment centered.
-	dialog textMorph height > 300
-		ifTrue: [ "dialog textMorph delete.
-		dialog textMorph autoFit: false.
-		dialog textMorph height: 600."
-			dialog textMorph owner
-				addMorphBack:
-					((dialog newScrollPaneFor: dialog textMorph)
-						extent: (dialog textMorph width + 100) @ 300;
-						yourself) ].
+	dialog textMorph height > 300 ifTrue: [
+		dialog textMorph owner addMorphBack:
+			((dialog newScrollPaneFor: dialog textMorph)
+				 extent: dialog textMorph width + 100 @ 300;
+				 yourself) ].
 	^ dialog openModal cancelled not
 ]
 

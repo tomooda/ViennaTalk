@@ -732,19 +732,19 @@ ViennaVDMParser >> format: aString width: anInteger [
 	ast := self parse: aString.
 	^ ast isPetit2Failure
 		  ifTrue: [ ast ]
-		  ifFalse: [ 
+		  ifFalse: [
 			  (self scanCommentsOn: aString)
-				  inject: (ast formatWidth: anInteger)
-				  into: [ :source :posAndComment | 
+				  inject: (ast formatWith: self)
+				  into: [ :source :posAndComment |
 					  posAndComment key
 						  ifNil: [ posAndComment value , String cr , source ]
-						  ifNotNil: [ 
+						  ifNotNil: [
 							  | char count commentString index |
 							  char := posAndComment key key.
 							  count := posAndComment key value.
 							  commentString := posAndComment value.
 							  index := 0.
-							  count timesRepeat: [ 
+							  count timesRepeat: [
 								  index := source indexOf: char startingAt: index + 1 ].
 							  (source copyFrom: 1 to: index) , commentString
 							  , (source copyFrom: index + 1 to: source size) ] ] ]

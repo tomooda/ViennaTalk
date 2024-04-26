@@ -42,7 +42,7 @@ ViennaMapOrSequenceReferenceNode >> formatWith: aViennaAbstractFormatter [
 { #category : #private }
 ViennaMapOrSequenceReferenceNode >> freeIdentifiersExcept: aSet do: aBlock [
 
-	self expression freeIdentifiersExcept: aSet do: aBlock.
+	self stateDesignator freeIdentifiersExcept: aSet do: aBlock.
 	self argumentExpression freeIdentifiersExcept: aSet do: aBlock
 ]
 

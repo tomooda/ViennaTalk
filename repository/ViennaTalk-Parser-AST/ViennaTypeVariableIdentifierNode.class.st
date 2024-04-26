@@ -59,7 +59,7 @@ ViennaTypeVariableIdentifierNode >> isViennaTypeVariableIdentifierNode [
 { #category : #testing }
 ViennaTypeVariableIdentifierNode >> isViennaTypeVariableIdentifierNode: aString [
 
-	^ self string = aString
+	^ self identifier = aString
 ]
 
 { #category : #accessing }

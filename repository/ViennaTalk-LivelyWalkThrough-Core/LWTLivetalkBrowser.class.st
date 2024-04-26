@@ -187,8 +187,8 @@ LWTLivetalkBrowser >> inspectDirector [
 
 { #category : #'script list menu' }
 LWTLivetalkBrowser >> inspectIt [
-	self selectedScript
-		ifNotNilDo: [:script | script value inspect]
+
+	self selectedScript ifNotNil: [ :script | script value inspect ]
 ]
 
 { #category : #'user interface' }

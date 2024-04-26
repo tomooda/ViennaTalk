@@ -10,12 +10,12 @@ Class {
 
 { #category : #settings }
 ViennaLauncher class >> chooseFont [
+
 	FreeTypeFontProvider current updateFromSystem.
 	FontChooser
-		openWithWindowTitle: 'Choose Font for VDM source...'
-		for: self
-		setSelector: #font:
-		getSelector: #font
+		openWithTitle: 'Choose Font for VDM source...'
+		initialFont: self font
+		onAcceptDo: [ :f | self font: f ]
 ]
 
 { #category : #'user interface' }
