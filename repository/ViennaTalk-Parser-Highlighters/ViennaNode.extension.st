@@ -12,10 +12,10 @@ ViennaNode >> highlightedSource [
 
 { #category : #'*ViennaTalk-Parser-Highlighters' }
 ViennaNode >> tracingHighlightedSource [
-	^ self tracingSource
-		in: [ :source | 
-			ViennaVDMHighlighter new
-				text: source asText;
-				parse: source asString;
-				text ]
+
+	^ self tracingSource in: [ :source |
+		  ViennaVDMHighlighter new
+			  text: source asText;
+			  parse: source asString;
+			  text ]
 ]

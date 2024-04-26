@@ -30,15 +30,15 @@ ViennaVDMTaggedElementDecoder >> contents [
 ]
 
 { #category : #parsing }
+ViennaVDMTaggedElementDecoder >> default [
+	^ ( self textLiteral / taggedElement) end
+]
+
+{ #category : #parsing }
 ViennaVDMTaggedElementDecoder >> eventHandlers [
 	^ (lbrace
 		, (self quoteLiteral separatedBy: comma) withoutSeparators optional
 		, rbrace) ==> [ :triple | triple second ifNil: [ Array new ] ]
-]
-
-{ #category : #parsing }
-ViennaVDMTaggedElementDecoder >> start [
-	^ ( self textLiteral / taggedElement) end
 ]
 
 { #category : #parsing }

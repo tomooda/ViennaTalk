@@ -4,6 +4,7 @@ Class {
 	#traits : 'TViennaVDMLiteralParser @ {#basicSymbolicLiteral->#symbolicLiteral}',
 	#classTraits : 'TViennaVDMLiteralParser classTrait',
 	#instVars : [
+		'default',
 		'document',
 		'name',
 		'expression',
@@ -69,7 +70,10 @@ ViennaVDMGrammar class >> addSelectorSilently: selector withMethod: compiledMeth
 { #category : #accessing }
 ViennaVDMGrammar class >> current [
 
-	^ current ifNil: [ self new ]
+	^ current ifNil: [
+		  current := self new
+			             optimize;
+			             yourself ]
 ]
 
 { #category : #'parsers-symbols' }
@@ -578,6 +582,11 @@ ViennaVDMGrammar >> defStatement [
 			bodyStatement := quatro fourth.
 			{defs.
 			bodyStatement} ]
+]
+
+{ #category : #parsing }
+ViennaVDMGrammar >> default [
+	^ document end
 ]
 
 { #category : #'parsers-definitions' }
@@ -2686,7 +2695,7 @@ ViennaVDMGrammar >> starOp [
 
 { #category : #parsing }
 ViennaVDMGrammar >> start [
-	^ document end
+	^ default
 ]
 
 { #category : #'parsers-keywords' }

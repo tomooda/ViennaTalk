@@ -1,7 +1,7 @@
 Class {
 	#name : #ViennaVDMValueDecoder,
 	#superclass : #ViennaVDMGrammar,
-	#category : 'ViennaTalk-Parser-Core'
+	#category : #'ViennaTalk-Parser-Core'
 }
 
 { #category : #'parsers-definitions' }
@@ -32,6 +32,11 @@ ViennaVDMValueDecoder >> characterLiteral [
 { #category : #'parsers-expressions' }
 ViennaVDMValueDecoder >> decimalLiteral [
 	^ ($- asPParser optional , super decimalLiteral) flatten trim ==> [ :str | str trim asNumber ]
+]
+
+{ #category : #parsing }
+ViennaVDMValueDecoder >> default [
+	^ expression end
 ]
 
 { #category : #'parsers-definitions' }
@@ -126,11 +131,6 @@ ViennaVDMValueDecoder >> sequenceEnumeration [
 { #category : #'parsers-expressions' }
 ViennaVDMValueDecoder >> setEnumeration [
 	^ super setEnumeration ==> [ :elems | elems asSet ]
-]
-
-{ #category : #parsing }
-ViennaVDMValueDecoder >> start [
-	^ expression end
 ]
 
 { #category : #'parsers-definitions' }
