@@ -16,7 +16,9 @@ ViennaTraceBracketedExpressionNode class >> traceDefinitionList: aViennaTraceDef
 { #category : #'pretty printing' }
 ViennaTraceBracketedExpressionNode >> formatWith: aViennaAbstractFormatter [
 
-	^ self traceDefinitionList formatWith: aViennaAbstractFormatter
+	^ '('
+	  , (self traceDefinitionList formatWith: aViennaAbstractFormatter)
+	  , ')'
 ]
 
 { #category : #private }

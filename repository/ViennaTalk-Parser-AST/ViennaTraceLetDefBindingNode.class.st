@@ -14,6 +14,27 @@ ViennaTraceLetDefBindingNode class >> localDefinitionList: aViennaLocalDefinitio
 		  yourself
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaTraceLetDefBindingNode >> definitionOfLocalName: aString [
+
+	self localDefinitionList do: [ :def |
+		def isViennaValueDefinitionNode ifTrue: [
+			def pattern
+				allDescendantsSuchThat: [ :n |
+				n isViennaPatternIdentifierNode: aString ]
+				do: [ :n | ^ n ] ].
+		(def isViennaFunctionDefinitionNode: aString) ifTrue: [ ^ def ] ].
+	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
+]
+
+{ #category : #'accessing-definitions' }
+ViennaTraceLetDefBindingNode >> findResolverForIdentifier: aString [
+
+	^ (self localDefinitionList bindsIdentifier: aString)
+		  ifTrue: [ self ]
+		  ifFalse: [ super findResolverForIdentifier: aString ]
+]
+
 { #category : #'pretty printing' }
 ViennaTraceLetDefBindingNode >> formatWith: aViennaAbstractFormatter [
 
@@ -51,16 +72,25 @@ ViennaTraceLetDefBindingNode >> label [
 	^ 'TraceLetDefBinding'
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : #accessing }
 ViennaTraceLetDefBindingNode >> localDefinitionList [
 
 	^ self at: 1
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : #accessing }
 ViennaTraceLetDefBindingNode >> localDefinitionList: aViennaLocalDefinitionListNode [
 
 	self at: 1 put: aViennaLocalDefinitionListNode
+]
+
+{ #category : #'accessing-definitions' }
+ViennaTraceLetDefBindingNode >> lookupIdentifier: aString [
+
+	self localDefinitionList do: [ :localDefinition |
+		(localDefinition bindsIdentifier: aString) ifTrue: [
+			^ localDefinition ] ].
+	^ nil
 ]
 
 { #category : #typechecking }
@@ -71,13 +101,13 @@ ViennaTraceLetDefBindingNode >> maximalType [
 	^ ViennaType unit
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : #accessing }
 ViennaTraceLetDefBindingNode >> traceDefinition [
 
 	^ self at: 2
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : #accessing }
 ViennaTraceLetDefBindingNode >> traceDefinition: aViennaTraceDefinitionNode [
 
 	self at: 2 put: aViennaTraceDefinitionNode

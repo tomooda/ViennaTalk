@@ -27,6 +27,26 @@ ViennaTraceLetBestBindingNode >> conditionExpression: aViennaExpression [
 	self at: 2 put: aViennaExpression
 ]
 
+{ #category : #'accessing-definitions' }
+ViennaTraceLetBestBindingNode >> definitionOfLocalName: aString [
+
+	| valDef |
+	valDef := self first.
+	valDef
+		allDescendantsSuchThat: [ :n |
+		n isViennaPatternIdentifierNode: aString ]
+		do: [ :n | ^ n ].
+	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
+]
+
+{ #category : #'accessing-definitions' }
+ViennaTraceLetBestBindingNode >> findResolverForIdentifier: aString [
+
+	^ (self multipleBind bindsIdentifier: aString)
+		  ifTrue: [ self ]
+		  ifFalse: [ super findResolverForIdentifier: aString ]
+]
+
 { #category : #'pretty printing' }
 ViennaTraceLetBestBindingNode >> formatWith: aViennaAbstractFormatter [
 
@@ -68,6 +88,14 @@ ViennaTraceLetBestBindingNode >> freeIdentifiersExcept: aSet do: aBlock [
 ViennaTraceLetBestBindingNode >> label [
 
 	^ 'TraceLetBestBinding'
+]
+
+{ #category : #'accessing-definitions' }
+ViennaTraceLetBestBindingNode >> lookupIdentifier: aString [
+
+	^ (self multipleBind bindsIdentifier: aString)
+		  ifTrue: [ self multipleBind ]
+		  ifFalse: [ nil ]
 ]
 
 { #category : #typechecking }
