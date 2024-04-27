@@ -33,11 +33,15 @@ BaselineOfViennaTalk >> baseline: spec [
 					spec requires:
 							#( 'ViennaTalk-Animation-Core' 'ViennaTalk-Parser-Core'
 							   'ViennaTalk-Transpiler-Core' 'ViennaTalk-Transpiler-Debugger' ) ];
+				package: 'ViennaTalk-Engine-Transpiler' with: [
+					spec requires:
+							#( 'ViennaTalk-Animation-Transpiler'
+							   'ViennaTalk-Engine-Core' ) ];
 				package: 'ViennaTalk-Browser-Core' with: [
 					spec requires:
 							#( 'ViennaTalk-Animation-Core' 'ViennaTalk-Animation-Transpiler'
 							   'ViennaTalk-Launcher-Core' 'ViennaTalk-Parser-Core'
-							   'ViennaTalk-Parser-AST' 'ViennaTalk-Parser-Formatters'
+							   'ViennaTalk-AST-Core' 'ViennaTalk-Parser-Formatters'
 							   'ViennaTalk-Parser-Highlighters'
 							   'ViennaTalk-Refactoring-Core' 'ViennaTalk-Transpiler-Core'
 							   'ViennaTalk-Value-Core' ) ];
@@ -64,13 +68,15 @@ BaselineOfViennaTalk >> baseline: spec [
 			   'ViennaTalk-Browser-Core' 'ViennaTalk-Launcher-Core'
 			   'PetitParser2' ) ];
 		package: 'ViennaTalk-Parser-Core' with: [
-		spec requires: #( 'ViennaTalk-Parser-AST' 'ViennaTalk-Value-Core'
+		spec requires: #( 'ViennaTalk-AST-Core' 'ViennaTalk-Value-Core'
 			   'PetitParser2' ) ];
-		package: 'ViennaTalk-Parser-AST' with: [  ];
+		package: 'ViennaTalk-AST-Core' with: [  ];
 		package: 'ViennaTalk-Parser-Formatters'
 		with: [ spec requires: #( 'ViennaTalk-Parser-Core' ) ];
 		package: 'ViennaTalk-Parser-Highlighters'
 		with: [ spec requires: #( 'ViennaTalk-Parser-Core' ) ];
+		package: 'ViennaTalk-AST-Tests'
+		with: [ spec requires: #( 'ViennaTalk-AST-Core' ) ];
 		package: 'ViennaTalk-Parser-Tests'
 		with: [
 		spec requires: #( 'ViennaTalk-Parser-Core' 'ViennaTalk-Parser-UI' ) ];
@@ -79,12 +85,14 @@ BaselineOfViennaTalk >> baseline: spec [
 		package: 'ViennaTalk-Refactoring-Core'
 		with: [ spec requires: #( 'ViennaTalk-Parser-Core' ) ];
 		package: 'ViennaTalk-Slicing-Core'
-		with: [ spec requires: #( 'ViennaTalk-Parser-AST' ) ];
+		with: [ spec requires: #( 'ViennaTalk-AST-Core' ) ];
 		package: 'ViennaTalk-Slicing-Tests' with: [
 		spec requires: #( 'ViennaTalk-Slicing-Core'
-			   'ViennaTalk-Parser-AST' 'ViennaTalk-Parser-Core' 'ViennaTalk-Parser-Tests') ];
+			   'ViennaTalk-AST-Core' 'ViennaTalk-Parser-Core'
+			   'ViennaTalk-Parser-Tests' ) ];
 		package: 'ViennaTalk-Transpiler-Core' with: [
-		spec requires: #( 'ViennaTalk-Parser-Core' 'ViennaTalk-Value-Core' 'ViennaTalk-Engine-Core') ];
+		spec requires: #( 'ViennaTalk-Parser-Core' 'ViennaTalk-Value-Core'
+			   'ViennaTalk-Engine-Core' ) ];
 		package: 'ViennaTalk-Transpiler-Debugger' with: [
 		spec requires:
 			#( 'ViennaTalk-Parser-Core' 'ViennaTalk-Parser-Formatters'
@@ -128,7 +136,8 @@ BaselineOfViennaTalk >> baseline: spec [
 		group: 'Transpiler'
 		with:
 			#( 'ViennaTalk-Animation-Transpiler'
-			   'ViennaTalk-Transpiler-Core' 'ViennaTalk-Transpiler-Debugger' );
+			   'ViennaTalk-Engine-Transpiler' 'ViennaTalk-Transpiler-Core'
+			   'ViennaTalk-Transpiler-Debugger' );
 		group: 'VDMPad' with: #( 'ViennaTalk-VDMPad-Core' );
 		group: 'WeblyWalkThrough'
 		with: #( 'ViennaTalk-WeblyWalkThrough-Server' );

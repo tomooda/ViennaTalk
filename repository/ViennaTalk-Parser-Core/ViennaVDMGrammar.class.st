@@ -1502,7 +1502,14 @@ ViennaVDMGrammar >> inmapType [
 ]
 
 { #category : #'parsers-keywords' }
+ViennaVDMGrammar >> inseq [
+
+	^ (self reserved: 'in') , (self reserved: 'seq')
+]
+
+{ #category : #'parsers-keywords' }
 ViennaVDMGrammar >> inset [
+
 	^ (self reserved: 'in') , (self reserved: 'set')
 ]
 
@@ -1986,18 +1993,22 @@ ViennaVDMGrammar >> multipleBind [
 
 { #category : #'parsers-patterns' }
 ViennaVDMGrammar >> multipleSeqBind [
-	^ (patternList , (self reserved: 'in') , (self reserved: 'seq') , expressionExceptEquality)
-		==> [ :quatro | 
-			{(quatro first).
-			(quatro fourth)} ]
+
+	^ patternList , self inseq , expressionExceptEquality
+	  ==> [ :triple |
+		  {
+			  triple first.
+			  triple third } ]
 ]
 
 { #category : #'parsers-patterns' }
 ViennaVDMGrammar >> multipleSetBind [
-	^ (patternList , (self reserved: 'in') , (self reserved: 'set') , expressionExceptEquality)
-		==> [ :quatro | 
-			{(quatro first).
-			(quatro fourth)} ]
+
+	^ patternList , self inset , expressionExceptEquality
+	  ==> [ :triple |
+		  {
+			  triple first.
+			  triple third } ]
 ]
 
 { #category : #'parsers-patterns' }
@@ -2542,10 +2553,11 @@ ViennaVDMGrammar >> seq1Type [
 
 { #category : #'parsers-patterns' }
 ViennaVDMGrammar >> seqBind [
-	^ (pattern , (self reserved: 'in') , (self reserved: 'seq') , expressionExceptEquality)
-		==> [ :quatro | 
-			{(quatro first).
-			(quatro fourth)} ]
+
+	^ pattern , self inseq , expressionExceptEquality ==> [ :triple |
+	  {
+		  triple first.
+		  triple third } ]
 ]
 
 { #category : #'parsers-patterns' }
@@ -2595,10 +2607,11 @@ ViennaVDMGrammar >> set1Type [
 
 { #category : #'parsers-patterns' }
 ViennaVDMGrammar >> setBind [
-	^ (pattern , (self reserved: 'in') , (self reserved: 'set') , expressionExceptEquality)
-		==> [ :quatro | 
-			{(quatro first).
-			(quatro fourth)} ]
+
+	^ pattern , self inset , expressionExceptEquality ==> [ :triple |
+	  {
+		  triple first.
+		  triple third } ]
 ]
 
 { #category : #'parsers-expressions-basics' }

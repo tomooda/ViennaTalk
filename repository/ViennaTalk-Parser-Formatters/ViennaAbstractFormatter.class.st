@@ -61,7 +61,8 @@ ViennaAbstractFormatter >> anyNeedsIndent: anArrayOfString [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> anyType [
-	^ '?'
+
+	^ self typeName: '?'
 ]
 
 { #category : #'symbol access' }
@@ -71,7 +72,8 @@ ViennaAbstractFormatter >> arrow [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> bool [
-	^ 'bool'
+
+	^ self typeName: 'bool'
 ]
 
 { #category : #'symbol access' }
@@ -106,12 +108,14 @@ ViennaAbstractFormatter >> domainRestrictedTo [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> dot [
-	^ '&'
+
+	^ self keyword: '&'
 ]
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> dots [
-	^ '...'
+
+	^ self keyword: '...'
 ]
 
 { #category : #'symbol access' }
@@ -131,17 +135,20 @@ ViennaAbstractFormatter >> escapeString: aString [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> exists [
-	^ 'exists'
+
+	^ self keyword: 'exists'
 ]
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> exists1 [
-	^ 'exists1'
+
+	^ self keyword: 'exists1'
 ]
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> forall [
-	^ 'forall'
+
+	^ self keyword: 'forall'
 ]
 
 { #category : #formatting }
@@ -214,6 +221,12 @@ ViennaAbstractFormatter >> formatEnumerate: anArrayOfString separator: aString i
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> greaterThanOrEqual [
 	^ '>='
+]
+
+{ #category : #formatting }
+ViennaAbstractFormatter >> identifier: aString [
+
+	^ aString
 ]
 
 { #category : #'symbol access' }
@@ -291,17 +304,20 @@ ViennaAbstractFormatter >> inmapPrefix [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> inseq [
-	^ 'in seq'
+
+	^ self keyword: 'in seq'
 ]
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> inset [
-	^ 'in set'
+
+	^ self keyword: 'in set'
 ]
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> int [
-	^ 'int'
+
+	^ self typeName: 'int'
 ]
 
 { #category : #'symbol access' }
@@ -311,12 +327,14 @@ ViennaAbstractFormatter >> inter [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> inverse: aString [
-	^ 'inverse ', aString
+
+	^ 'inverse ' , aString
 ]
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> iota [
-	^ 'iota'
+
+	^ self keyword: 'iota'
 ]
 
 { #category : #'symbol access' }
@@ -329,14 +347,27 @@ ViennaAbstractFormatter >> join: aString withAll: aCollectionOfString [
 	^ aString join: aCollectionOfString
 ]
 
+{ #category : #formatting }
+ViennaAbstractFormatter >> keyword: aString [
+
+	^ aString
+]
+
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> lambda [
-	^ 'lambda'
+
+	^ self keyword: 'lambda'
 ]
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> lessThanOrEqual [
 	^ '<='
+]
+
+{ #category : #formatting }
+ViennaAbstractFormatter >> literal: aString [
+
+	^ aString
 ]
 
 { #category : #'symbol access' }
@@ -364,9 +395,16 @@ ViennaAbstractFormatter >> maxSizePerLine: anInteger [
 	maxSizePerLine := anInteger
 ]
 
+{ #category : #formatting }
+ViennaAbstractFormatter >> moduleName: aString [
+
+	^ aString
+]
+
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> mu [
-	^ 'mu'
+
+	^ self keyword: 'mu'
 ]
 
 { #category : #'symbol access' }
@@ -381,12 +419,14 @@ ViennaAbstractFormatter >> munion [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> nat [
-	^ 'nat'
+
+	^ self typeName: 'nat'
 ]
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> nat1 [
-	^ 'nat1'
+
+	^ self typeName: 'nat1'
 ]
 
 { #category : #private }
@@ -476,7 +516,8 @@ ViennaAbstractFormatter >> notEqual [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> notInSet [
-	^ 'not in set'
+
+	^ self keyword: 'not in set'
 ]
 
 { #category : #'symbol access' }
@@ -536,7 +577,8 @@ ViennaAbstractFormatter >> rangeRestrictedTo [
 
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> real [
-	^ 'real'
+
+	^ self typeName: 'real'
 ]
 
 { #category : #'symbol access' }
@@ -585,6 +627,12 @@ ViennaAbstractFormatter >> setPrefix [
 ]
 
 { #category : #'symbol access' }
+ViennaAbstractFormatter >> skip [
+
+	^ self keyword: 'skip'
+]
+
+{ #category : #'symbol access' }
 ViennaAbstractFormatter >> space [
 	^ ' '
 ]
@@ -609,6 +657,12 @@ ViennaAbstractFormatter >> subset [
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> totalFunction [
 	^ '+>'
+]
+
+{ #category : #formatting }
+ViennaAbstractFormatter >> typeName: aString [
+
+	^ aString
 ]
 
 { #category : #'symbol access' }

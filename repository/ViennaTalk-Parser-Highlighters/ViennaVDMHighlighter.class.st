@@ -258,6 +258,18 @@ ViennaVDMHighlighter >> init [
 ]
 
 { #category : #'parsers-keywords' }
+ViennaVDMHighlighter >> inseq [
+
+	^ (self keyword: 'in') , (self keyword: 'seq')
+]
+
+{ #category : #'parsers-keywords' }
+ViennaVDMHighlighter >> inset [
+
+	^ (self keyword: 'in') , (self keyword: 'set')
+]
+
+{ #category : #'parsers-keywords' }
 ViennaVDMHighlighter >> inv [
 	^ self keyword: super inv
 ]

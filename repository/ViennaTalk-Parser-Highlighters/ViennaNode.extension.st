@@ -13,9 +13,12 @@ ViennaNode >> highlightedSource [
 { #category : #'*ViennaTalk-Parser-Highlighters' }
 ViennaNode >> tracingHighlightedSource [
 
-	^ self tracingSource in: [ :source |
-		  ViennaVDMHighlighter new
-			  text: source asText;
-			  parse: source asString;
-			  text ]
+	| text source whole |
+	text := ViennaVDMTracingHighligtingFormatter format: self.
+	source := text string.
+	source mergeSources.
+	whole := 1 to: source size.
+	source sources addAll:
+		(self allParents collect: [ :node | whole -> node ]).
+	^ text
 ]

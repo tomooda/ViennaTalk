@@ -37,15 +37,25 @@ ViennaTracingString class >> string: aString sources: aCollection [
 ]
 
 { #category : #copying }
-ViennaTracingString >> , aString [
-	^ aString isViennaTracingString
-		ifTrue: [ | size newSources |
-			size := string size.
-			newSources := OrderedCollection new: sources size + aString sources size.
-			newSources addAll: sources.
-			aString sources do: [ :assoc | newSources add: assoc key + size -> assoc value ].
-			self class string: string , aString string sources: newSources ]
-		ifFalse: [ self class string: string , aString sources: sources copy]
+ViennaTracingString >> , aStringOrText [
+
+	^ aStringOrText isText
+		  ifTrue: [ self asText , aStringOrText ]
+		  ifFalse: [
+			  aStringOrText isViennaTracingString
+				  ifTrue: [
+					  | size newSources |
+					  size := string size.
+					  newSources := OrderedCollection new:
+						                sources size + aStringOrText sources size.
+					  newSources addAll: sources.
+					  aStringOrText sources do: [ :assoc |
+						  newSources add: assoc key + size -> assoc value ].
+					  self class
+						  string: string , aStringOrText string
+						  sources: newSources ]
+				  ifFalse: [
+				  self class string: string , aStringOrText sources: sources copy ] ]
 ]
 
 { #category : #comparing }
