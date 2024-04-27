@@ -33,7 +33,7 @@ ViennaDocumentNode >> findResolverForIdentifier: aString [
 ViennaDocumentNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter
-		  join: String cr
+		  join: aViennaAbstractFormatter cr
 		  withAll: (aViennaAbstractFormatter formatAll: self)
 ]
 

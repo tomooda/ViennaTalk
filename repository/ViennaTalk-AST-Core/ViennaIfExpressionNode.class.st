@@ -54,11 +54,13 @@ ViennaIfExpressionNode >> formatWith: aViennaAbstractFormatter [
 			  ifTrue: [
 				  (aViennaAbstractFormatter
 					   indentString: (aViennaAbstractFormatter keyword: 'if')
-					   insertCr: cond) , String cr , (aViennaAbstractFormatter
-					   indentString: (aViennaAbstractFormatter keyword: 'then')
-					   insertCr: expr) , String cr , (aViennaAbstractFormatter
-					   indentString: (aViennaAbstractFormatter keyword: 'else')
-					   insertCr: default) ]
+					   insertCr: cond) , aViennaAbstractFormatter cr
+				  , (aViennaAbstractFormatter
+						   indentString: (aViennaAbstractFormatter keyword: 'then')
+						   insertCr: expr) , aViennaAbstractFormatter cr
+				  , (aViennaAbstractFormatter
+						   indentString: (aViennaAbstractFormatter keyword: 'else')
+						   insertCr: default) ]
 			  ifFalse: [
 				  (aViennaAbstractFormatter keyword: 'if ') , cond
 				  , (aViennaAbstractFormatter keyword: ' then ') , expr
@@ -66,9 +68,9 @@ ViennaIfExpressionNode >> formatWith: aViennaAbstractFormatter [
 	^ (aViennaAbstractFormatter
 		   indentString: (aViennaAbstractFormatter keyword: 'if ') , cond
 		   insertCr: (aViennaAbstractFormatter keyword: 'then ') , expr)
-	  , String cr
+	  , aViennaAbstractFormatter cr
 	  , (aViennaAbstractFormatter join: String cr withAll: elseifs)
-	  , String cr , (aViennaAbstractFormatter
+	  , aViennaAbstractFormatter cr , (aViennaAbstractFormatter
 		   indentString: (aViennaAbstractFormatter keyword: 'else')
 		   insertCr: default)
 ]

@@ -15,7 +15,7 @@ ViennaParametersListNode >> boundIdentifiersDo: aBlock [
 ViennaParametersListNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter
-		  join: ''
+		  join: aViennaAbstractFormatter empty
 		  withAll: (aViennaAbstractFormatter formatAll: self)
 ]
 

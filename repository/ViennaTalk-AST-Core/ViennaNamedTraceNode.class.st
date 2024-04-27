@@ -25,7 +25,7 @@ ViennaNamedTraceNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter indentString:
 		  (aViennaAbstractFormatter identifier: self identifier) , ':'
-		  , String cr
+		  , aViennaAbstractFormatter cr
 		  , (aViennaAbstractFormatter format: self traceDefinitionList)
 ]
 

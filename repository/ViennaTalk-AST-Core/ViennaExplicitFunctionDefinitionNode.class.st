@@ -134,7 +134,8 @@ ViennaExplicitFunctionDefinitionNode >> formatWith: aViennaAbstractFormatter [
 
 	| access identifier typeVariableList functionType parametersList expression pre post measure |
 	access := (aViennaAbstractFormatter format: self access) trim
-		          ifNotEmpty: [ :string | string , ' ' ].
+		          ifNotEmpty: [ :string |
+		          string , aViennaAbstractFormatter space ].
 	identifier := aViennaAbstractFormatter identifier: self identifier.
 	typeVariableList := aViennaAbstractFormatter format:
 		                    self typeVariableList.
@@ -144,22 +145,24 @@ ViennaExplicitFunctionDefinitionNode >> formatWith: aViennaAbstractFormatter [
 	expression := aViennaAbstractFormatter format: self expression.
 	pre := self pre
 		       ifNotNil: [ :node |
-			       String cr , (aViennaAbstractFormatter keyword: 'pre ')
+			       aViennaAbstractFormatter cr
+			       , (aViennaAbstractFormatter keyword: 'pre ')
 			       , (aViennaAbstractFormatter format: node) ]
-		       ifNil: [ '' ].
+		       ifNil: [ aViennaAbstractFormatter empty ].
 	post := self post
 		        ifNotNil: [ :node |
-			        String cr , (aViennaAbstractFormatter keyword: 'post ')
+			        aViennaAbstractFormatter cr
+			        , (aViennaAbstractFormatter keyword: 'post ')
 			        , (aViennaAbstractFormatter format: node) ]
-		        ifNil: [ '' ].
+		        ifNil: [ aViennaAbstractFormatter empty ].
 	measure := self measure
 		           ifNotNil: [ :node |
-			           String cr
+			           aViennaAbstractFormatter cr
 			           , (aViennaAbstractFormatter keyword: 'measure ')
 			           , (aViennaAbstractFormatter format: node) ]
-		           ifNil: [ '' ].
+		           ifNil: [ aViennaAbstractFormatter empty ].
 	^ access , identifier , typeVariableList , ' : ' , functionType
-	  , String cr , (aViennaAbstractFormatter
+	  , aViennaAbstractFormatter cr , (aViennaAbstractFormatter
 		   indentString: identifier , parametersList , ' =='
 		   insertCrIfNeeded: expression) , pre , post , measure
 ]

@@ -14,7 +14,10 @@ ViennaPreconditionExpressionNode >> formatWith: aViennaAbstractFormatter [
 	  , ((aViennaAbstractFormatter anyNeedsIndent: expressions)
 			   ifTrue: [
 				   aViennaAbstractFormatter
-					   join: ',' , String cr , aViennaAbstractFormatter indent
+					   join:
+						   aViennaAbstractFormatter empty , ','
+						   , aViennaAbstractFormatter cr
+						   , aViennaAbstractFormatter indent
 					   withAll: (expressions collect: [ :expression |
 							    aViennaAbstractFormatter indentString: expression ]) ]
 			   ifFalse: [

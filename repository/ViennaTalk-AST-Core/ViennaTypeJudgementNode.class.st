@@ -40,7 +40,7 @@ ViennaTypeJudgementNode >> formatWith: aViennaAbstractFormatter [
 			   ifTrue: [
 				   String cr , aViennaAbstractFormatter indent
 				   , (aViennaAbstractFormatter indentString: expression) ]
-			   ifFalse: [ expression ]) , ',' , String cr
+			   ifFalse: [ expression ]) , ',' , aViennaAbstractFormatter cr
 	  , aViennaAbstractFormatter indent
 	  , (aViennaAbstractFormatter indentString: type) , ')'
 ]

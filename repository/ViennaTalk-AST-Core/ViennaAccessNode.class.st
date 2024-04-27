@@ -21,7 +21,7 @@ ViennaAccessNode >> boundIdentifiersDo: aBlock [
 ViennaAccessNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter
-		  join: ' '
+		  join: aViennaAbstractFormatter space
 		  withAll: (aViennaAbstractFormatter formatAll: self)
 ]
 

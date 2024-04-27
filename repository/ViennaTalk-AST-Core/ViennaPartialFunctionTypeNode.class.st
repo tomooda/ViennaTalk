@@ -21,8 +21,10 @@ ViennaPartialFunctionTypeNode >> asMaximalViennaType [
 { #category : #'pretty printing' }
 ViennaPartialFunctionTypeNode >> formatWith: aViennaAbstractFormatter [
 
-	^ (aViennaAbstractFormatter format: self argumentType) , ' '
-	  , aViennaAbstractFormatter partialFunction , ' '
+	^ (aViennaAbstractFormatter format: self argumentType)
+	  , aViennaAbstractFormatter space
+	  , aViennaAbstractFormatter partialFunction
+	  , aViennaAbstractFormatter space
 	  , (aViennaAbstractFormatter format: self returnType)
 ]
 

@@ -17,9 +17,10 @@ ViennaBindListNode >> formatWith: aViennaAbstractFormatter [
 	| binds |
 	binds := aViennaAbstractFormatter formatAll: self.
 	^ aViennaAbstractFormatter
-		  join: ',' , ((aViennaAbstractFormatter anyNeedsIndent: binds)
-				   ifTrue: [ String cr ]
-				   ifFalse: [ String space ])
+		  join: aViennaAbstractFormatter empty , ','
+			  , ((aViennaAbstractFormatter anyNeedsIndent: binds)
+					   ifTrue: [ aViennaAbstractFormatter cr ]
+					   ifFalse: [ aViennaAbstractFormatter space ])
 		  withAll: binds
 ]
 

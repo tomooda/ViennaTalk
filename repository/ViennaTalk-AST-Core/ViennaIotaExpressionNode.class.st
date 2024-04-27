@@ -62,8 +62,9 @@ ViennaIotaExpressionNode >> formatWith: aViennaAbstractFormatter [
 	bind := aViennaAbstractFormatter format: self bind.
 	expression := aViennaAbstractFormatter format: self expression.
 	^ aViennaAbstractFormatter
-		  indentString: aViennaAbstractFormatter iota , ' ' , bind , ' '
-			  , aViennaAbstractFormatter dot
+		  indentString:
+			  aViennaAbstractFormatter empty , aViennaAbstractFormatter iota
+			  , ' ' , bind , ' ' , aViennaAbstractFormatter dot
 		  insertCrIfNeeded: expression
 ]
 

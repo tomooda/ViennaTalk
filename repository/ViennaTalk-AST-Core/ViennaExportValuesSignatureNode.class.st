@@ -12,9 +12,10 @@ ViennaExportValuesSignatureNode >> formatWith: aViennaAbstractFormatter [
 	signatures := aViennaAbstractFormatter formatAll: self.
 	^ aViennaAbstractFormatter
 		  indentString: (aViennaAbstractFormatter keyword: 'values')
-		  insertCrIfNeeded:
-			  (aViennaAbstractFormatter
-				   join: ';' , String cr
+		  insertCrIfNeeded: (aViennaAbstractFormatter
+				   join:
+				   aViennaAbstractFormatter empty , ';'
+				   , aViennaAbstractFormatter cr
 				   withAll: signatures) , ';'
 ]
 

@@ -44,7 +44,7 @@ ViennaFieldSelectNode >> formatWith: aViennaAbstractFormatter [
 	| record field |
 	record := aViennaAbstractFormatter format: self expression.
 	field := aViennaAbstractFormatter format: self field.
-	^ record , '.' , field
+	^ aViennaAbstractFormatter empty , record , '.' , field
 ]
 
 { #category : #private }

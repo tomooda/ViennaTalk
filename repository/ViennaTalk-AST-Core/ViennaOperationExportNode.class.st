@@ -26,7 +26,7 @@ ViennaOperationExportNode >> formatWith: aViennaAbstractFormatter [
 	| name type |
 	name := aViennaAbstractFormatter format: self nameList.
 	type := self type
-		        ifNil: [ '' ]
+		        ifNil: [ aViennaAbstractFormatter empty ]
 		        ifNotNil: [ :node |
 		        ' : ' , (aViennaAbstractFormatter format: node) ].
 	^ name , type

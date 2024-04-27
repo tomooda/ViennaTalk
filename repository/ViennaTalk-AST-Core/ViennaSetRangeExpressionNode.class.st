@@ -34,9 +34,11 @@ ViennaSetRangeExpressionNode >> formatWith: aViennaAbstractFormatter [
 		                   self startExpression.
 	endExpression := aViennaAbstractFormatter format: self endExpression.
 	^ aViennaAbstractFormatter
-		  noIndentString: '{' , startExpression , ','
+		  noIndentString:
+		  aViennaAbstractFormatter empty , '{' , startExpression , ','
 		  insertCrIfNeeded:
-		  aViennaAbstractFormatter dots , ', ' , endExpression , '}'
+			  aViennaAbstractFormatter empty , aViennaAbstractFormatter dots
+			  , ', ' , endExpression , '}'
 ]
 
 { #category : #private }

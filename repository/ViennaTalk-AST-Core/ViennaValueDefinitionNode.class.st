@@ -95,10 +95,12 @@ ViennaValueDefinitionNode >> formatWith: aViennaAbstractFormatter [
 
 	| access pattern type expression |
 	access := (aViennaAbstractFormatter format: self access) trim
-		          ifNotEmpty: [ :string | string , ' ' ].
+		          ifNotEmpty: [ :string |
+			          aViennaAbstractFormatter empty , string
+			          , aViennaAbstractFormatter space ].
 	pattern := aViennaAbstractFormatter format: self pattern.
 	type := self type
-		        ifNil: [ '' ]
+		        ifNil: [ aViennaAbstractFormatter empty ]
 		        ifNotNil: [ :node |
 		        ' : ' , (aViennaAbstractFormatter format: node) ].
 	expression := aViennaAbstractFormatter format: self expression.

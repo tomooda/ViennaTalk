@@ -43,9 +43,10 @@ ViennaTixeStatementNode >> formatWith: aViennaAbstractFormatter [
 		  ifTrue: [
 			  (aViennaAbstractFormatter
 				   indentString: (aViennaAbstractFormatter keyword: 'tixe')
-				   insertCr: traps) , String cr , (aViennaAbstractFormatter
-				   indentString: (aViennaAbstractFormatter keyword: 'in')
-				   insertCr: statement) ]
+				   insertCr: traps) , aViennaAbstractFormatter cr
+			  , (aViennaAbstractFormatter
+					   indentString: (aViennaAbstractFormatter keyword: 'in')
+					   insertCr: statement) ]
 		  ifFalse: [
 			  aViennaAbstractFormatter
 				  indentString:

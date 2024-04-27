@@ -62,13 +62,14 @@ ViennaMapComprehensionNode >> formatWith: aViennaAbstractFormatter [
 		 keyExpression , valueExpression , bindList , guard) ifFalse: [
 		^ '{' , keyExpression , ' ' , aViennaAbstractFormatter maplet , ' '
 		  , valueExpression , ' | ' , bindList , guard , '}' ].
-	^ '{' , (aViennaAbstractFormatter
+	^ aViennaAbstractFormatter empty , '{' , (aViennaAbstractFormatter
 		   noIndentString: (aViennaAbstractFormatter
 				    noIndentString: keyExpression
 				    insertCrIfNeeded:
 				    aViennaAbstractFormatter maplet , ' ' , valueExpression)
 		   insertCrIfNeeded: (aViennaAbstractFormatter
-				    noIndentString: '| ' , bindList
+				    noIndentString:
+				    aViennaAbstractFormatter empty , '| ' , bindList
 				    insertCrIfNeeded: guard)) , '}'
 ]
 

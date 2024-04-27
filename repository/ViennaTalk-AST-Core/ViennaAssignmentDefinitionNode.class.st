@@ -49,8 +49,9 @@ ViennaAssignmentDefinitionNode >> formatWith: aViennaAbstractFormatter [
 	^ (aViennaAbstractFormatter identifier: self identifier) , ':'
 	  , (aViennaAbstractFormatter format: self type) , (self expression
 		   ifNotNil: [ :exp |
-		   ' := ' , (aViennaAbstractFormatter format: exp) ]
-		   ifNil: [ '' ])
+			   aViennaAbstractFormatter empty , ' := '
+			   , (aViennaAbstractFormatter format: exp) ]
+		   ifNil: [ aViennaAbstractFormatter empty ])
 ]
 
 { #category : #private }

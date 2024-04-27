@@ -35,7 +35,7 @@ ViennaFieldReferenceNode >> formatWith: aViennaAbstractFormatter [
 	field := aViennaAbstractFormatter format: self field.
 	^ aViennaAbstractFormatter
 		  indentString: stateDesignator
-		  insertCrIfNeeded: '.' , field
+		  insertCrIfNeeded: aViennaAbstractFormatter empty , '.' , field
 ]
 
 { #category : #private }

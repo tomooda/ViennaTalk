@@ -14,7 +14,7 @@ ViennaParametersNode >> boundIdentifiersDo: aBlock [
 { #category : #'pretty printing' }
 ViennaParametersNode >> formatWith: aViennaAbstractFormatter [
 
-	^ '(' , (aViennaAbstractFormatter
+	^ aViennaAbstractFormatter empty , '(' , (aViennaAbstractFormatter
 		   join: ', '
 		   withAll: (aViennaAbstractFormatter formatAll: self)) , ')'
 ]

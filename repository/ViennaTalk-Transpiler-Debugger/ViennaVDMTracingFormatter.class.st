@@ -11,11 +11,13 @@ ViennaVDMTracingFormatter >> format: aViennaNode [
 
 { #category : #private }
 ViennaVDMTracingFormatter >> join: aString withAll: aCollectionOfString [
+
 	^ aCollectionOfString
-		ifNotEmpty: [ | string |
-			string := aCollectionOfString first.
-			2 to: aCollectionOfString size do:
-				[ :index | string := string , aString , (aCollectionOfString at: index) ].
-			string ]
-		ifEmpty: [ '' ]
+		  ifNotEmpty: [
+			  | string |
+			  string := self empty , aCollectionOfString first.
+			  2 to: aCollectionOfString size do: [ :index |
+				  string := string , aString , (aCollectionOfString at: index) ].
+			  string ]
+		  ifEmpty: [ self empty ]
 ]

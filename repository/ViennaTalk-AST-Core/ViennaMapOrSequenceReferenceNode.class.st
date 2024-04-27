@@ -34,8 +34,10 @@ ViennaMapOrSequenceReferenceNode >> formatWith: aViennaAbstractFormatter [
 	arg := aViennaAbstractFormatter format: self argumentExpression.
 	^ (aViennaAbstractFormatter needsIndent: ref , arg)
 		  ifTrue: [
-			  ref , String cr , aViennaAbstractFormatter indent
-			  , (aViennaAbstractFormatter indentString: '(' , arg , ')') ]
+			  ref , aViennaAbstractFormatter cr
+			  , aViennaAbstractFormatter indent
+			  , (aViennaAbstractFormatter indentString:
+					   aViennaAbstractFormatter empty , '(' , arg , ')') ]
 		  ifFalse: [ ref , '(' , arg , ')' ]
 ]
 

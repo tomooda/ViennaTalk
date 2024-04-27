@@ -14,15 +14,15 @@ ViennaTrapsNode >> boundIdentifiersDo: aBlock [
 { #category : #'pretty printing' }
 ViennaTrapsNode >> formatWith: aViennaAbstractFormatter [
 
-	^ '{' , (self
+	^ aViennaAbstractFormatter empty , '{' , (self
 		   ifNotEmpty: [
 			   aViennaAbstractFormatter
-				   join: ',' , String cr
+				   join: ',' , aViennaAbstractFormatter cr
 				   withAll: ((1 to: self size by: 2) collect: [ :index |
 						    (aViennaAbstractFormatter format: (self at: index))
 						    , ' |-> ' , (aViennaAbstractFormatter indentString:
 							     (aViennaAbstractFormatter format: (self at: index + 1))) ]) ]
-		   ifEmpty: [ '' ]) , '}'
+		   ifEmpty: [ aViennaAbstractFormatter empty ]) , '}'
 ]
 
 { #category : #private }

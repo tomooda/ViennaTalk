@@ -30,13 +30,13 @@ ViennaDclStatementNode >> formatWith: aViennaAbstractFormatter [
 	^ (aViennaAbstractFormatter keyword: 'dcl')
 	  , ((aViennaAbstractFormatter anyNeedsIndent: assigns)
 			   ifTrue: [
-				   String cr , aViennaAbstractFormatter indent
+				   aViennaAbstractFormatter cr , aViennaAbstractFormatter indent
 				   ,
 				   (aViennaAbstractFormatter
 					    indentAllStrings: assigns
 					    withSeparator: ',') ]
 			   ifFalse: [
-				   String space
+				   aViennaAbstractFormatter space
 				   , (aViennaAbstractFormatter join: ', ' withAll: assigns) ])
 ]
 

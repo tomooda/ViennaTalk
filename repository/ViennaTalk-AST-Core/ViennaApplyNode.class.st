@@ -53,7 +53,7 @@ ViennaApplyNode >> formatWith: aViennaAbstractFormatter [
 	^ expression , '('
 	  , ((aViennaAbstractFormatter needsIndent: expression , args)
 			   ifTrue: [
-				   String cr , aViennaAbstractFormatter indent
+				   aViennaAbstractFormatter cr , aViennaAbstractFormatter indent
 				   , (aViennaAbstractFormatter indentString: args) ]
 			   ifFalse: [ args ]) , ')'
 ]

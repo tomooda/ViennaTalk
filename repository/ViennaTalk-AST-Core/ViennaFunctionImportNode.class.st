@@ -22,16 +22,18 @@ ViennaFunctionImportNode >> formatWith: aViennaAbstractFormatter [
 	| name typeVariableList type rename |
 	name := aViennaAbstractFormatter format: self name.
 	typeVariableList := self typeVariableList
-		                    ifNil: [ '' ]
+		                    ifNil: [ aViennaAbstractFormatter empty ]
 		                    ifNotNil: [ :node |
 		                    aViennaAbstractFormatter format: node ].
 	type := self type
-		        ifNil: [ '' ]
+		        ifNil: [ aViennaAbstractFormatter empty ]
 		        ifNotNil: [ :node |
 		        ': ' , (aViennaAbstractFormatter format: node) ].
-	rename := self rename ifNil: [ '' ] ifNotNil: [ :node |
-		          (aViennaAbstractFormatter keyword: 'renamed ')
-		          , (aViennaAbstractFormatter format: node) ].
+	rename := self rename
+		          ifNil: [ aViennaAbstractFormatter empty ]
+		          ifNotNil: [ :node |
+			          (aViennaAbstractFormatter keyword: 'renamed ')
+			          , (aViennaAbstractFormatter format: node) ].
 	^ aViennaAbstractFormatter
 		  indentString: name , typeVariableList , type
 		  insertCrIfNeeded: rename

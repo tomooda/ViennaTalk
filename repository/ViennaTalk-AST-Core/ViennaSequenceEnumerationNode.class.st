@@ -30,10 +30,9 @@ ViennaSequenceEnumerationNode >> formatWith: aViennaAbstractFormatter [
 
 	| elements |
 	elements := aViennaAbstractFormatter formatAll: self expressionList.
-	^ '['
-	  ,
-	  (aViennaAbstractFormatter formatEnumerate: elements ifEmpty: [ '' ])
-	  , ']'
+	^ aViennaAbstractFormatter empty , '[' , (aViennaAbstractFormatter
+		   formatEnumerate: elements
+		   ifEmpty: [ aViennaAbstractFormatter empty ]) , ']'
 ]
 
 { #category : #private }

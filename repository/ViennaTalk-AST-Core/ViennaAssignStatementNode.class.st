@@ -32,8 +32,8 @@ ViennaAssignStatementNode >> formatWith: aViennaAbstractFormatter [
 	^ aViennaAbstractFormatter
 		  indentString:
 		  (aViennaAbstractFormatter format: self stateDesignator)
-		  insertCrIfNeeded:
-		  ':= ' , (aViennaAbstractFormatter format: self expression)
+		  insertCrIfNeeded: aViennaAbstractFormatter empty , ':= '
+			  , (aViennaAbstractFormatter format: self expression)
 ]
 
 { #category : #private }

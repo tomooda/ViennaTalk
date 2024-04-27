@@ -15,7 +15,7 @@ ViennaTraceDefinitionListNode >> boundIdentifiersDo: aBlock [
 ViennaTraceDefinitionListNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter
-		  join: ';' , String cr
+		  join: ';' , aViennaAbstractFormatter cr
 		  withAll: (aViennaAbstractFormatter formatAll: self)
 ]
 

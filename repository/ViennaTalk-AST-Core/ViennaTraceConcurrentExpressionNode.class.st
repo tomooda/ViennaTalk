@@ -14,7 +14,10 @@ ViennaTraceConcurrentExpressionNode >> formatWith: aViennaAbstractFormatter [
 	  , ((aViennaAbstractFormatter anyNeedsIndent: traceDefinitions)
 			   ifTrue: [
 				   aViennaAbstractFormatter
-					   join: ',' , String cr , aViennaAbstractFormatter indent
+					   join:
+						   aViennaAbstractFormatter empty , ','
+						   , aViennaAbstractFormatter cr
+						   , aViennaAbstractFormatter indent
 					   withAll: (traceDefinitions collect: [ :statement |
 							    aViennaAbstractFormatter indentString: statement ]) ]
 			   ifFalse: [

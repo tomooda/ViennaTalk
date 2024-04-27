@@ -17,7 +17,9 @@ ViennaImportModuleSignatureNode >> formatWith: aViennaAbstractFormatter [
 
 	| importSignatures |
 	importSignatures := aViennaAbstractFormatter formatAll: self.
-	^ aViennaAbstractFormatter join: String cr withAll: importSignatures
+	^ aViennaAbstractFormatter
+		  join: aViennaAbstractFormatter cr
+		  withAll: importSignatures
 ]
 
 { #category : #accessing }

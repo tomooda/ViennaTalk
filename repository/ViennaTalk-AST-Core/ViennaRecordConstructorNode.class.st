@@ -36,7 +36,7 @@ ViennaRecordConstructorNode >> formatWith: aViennaAbstractFormatter [
 	^ (aViennaAbstractFormatter keyword: 'mk_') , constructor , '('
 	  , ((aViennaAbstractFormatter needsIndent: expressionList)
 			   ifTrue: [
-				   String cr , aViennaAbstractFormatter indent
+				   aViennaAbstractFormatter cr , aViennaAbstractFormatter indent
 				   , (aViennaAbstractFormatter indentString: expressionList) ]
 			   ifFalse: [ expressionList ]) , ')'
 ]

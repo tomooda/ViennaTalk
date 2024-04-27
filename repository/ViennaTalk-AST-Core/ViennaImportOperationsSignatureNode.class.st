@@ -13,7 +13,9 @@ ViennaImportOperationsSignatureNode >> formatWith: aViennaAbstractFormatter [
 	^ aViennaAbstractFormatter
 		  indentString: (aViennaAbstractFormatter keyword: 'operations')
 		  insertCrIfNeeded: (aViennaAbstractFormatter
-				   join: ';' , String cr
+				   join:
+				   aViennaAbstractFormatter empty , ';'
+				   , aViennaAbstractFormatter cr
 				   withAll: operationImports) , ';'
 ]
 

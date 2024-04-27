@@ -19,10 +19,11 @@ ViennaImportDefinitionListNode >> formatWith: aViennaAbstractFormatter [
 	definitions := aViennaAbstractFormatter formatAll: self.
 	^ aViennaAbstractFormatter
 		  indentString: (aViennaAbstractFormatter keyword: 'imports')
-		  insertCrIfNeeded:
-		  (aViennaAbstractFormatter
-			   join: ',' , String cr
-			   withAll: definitions)
+		  insertCrIfNeeded: (aViennaAbstractFormatter
+				   join:
+				   aViennaAbstractFormatter empty , ','
+				   , aViennaAbstractFormatter cr
+				   withAll: definitions)
 ]
 
 { #category : #enumerating }

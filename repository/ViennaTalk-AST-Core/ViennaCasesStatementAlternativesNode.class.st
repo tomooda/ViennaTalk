@@ -15,7 +15,8 @@ ViennaCasesStatementAlternativesNode >> boundIdentifiersDo: aBlock [
 ViennaCasesStatementAlternativesNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter
-		  join: ',' , String cr
+		  join:
+		  aViennaAbstractFormatter empty , ',' , aViennaAbstractFormatter cr
 		  withAll: (aViennaAbstractFormatter formatAll: self)
 ]
 

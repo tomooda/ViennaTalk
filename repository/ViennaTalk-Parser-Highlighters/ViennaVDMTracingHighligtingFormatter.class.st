@@ -10,6 +10,18 @@ Class {
 	#category : #'ViennaTalk-Parser-Highlighters'
 }
 
+{ #category : #'symbol access' }
+ViennaVDMTracingHighligtingFormatter >> cr [
+
+	^ super cr asText
+]
+
+{ #category : #formatting }
+ViennaVDMTracingHighligtingFormatter >> empty [
+
+	^ ViennaTracingString new asText
+]
+
 { #category : #formatting }
 ViennaVDMTracingHighligtingFormatter >> format: aViennaNode [
 
@@ -34,13 +46,15 @@ ViennaVDMTracingHighligtingFormatter >> identifierAttribute [
 
 { #category : #private }
 ViennaVDMTracingHighligtingFormatter >> join: aString withAll: aCollectionOfString [
+
 	^ aCollectionOfString
-		ifNotEmpty: [ | string |
-			string := aCollectionOfString first.
-			2 to: aCollectionOfString size do:
-				[ :index | string := string , aString , (aCollectionOfString at: index) ].
-			string ]
-		ifEmpty: [ '' ]
+		  ifNotEmpty: [
+			  | string |
+			  string := self empty , aCollectionOfString first.
+			  2 to: aCollectionOfString size do: [ :index |
+				  string := string , aString , (aCollectionOfString at: index) ].
+			  string ]
+		  ifEmpty: [ self empty ]
 ]
 
 { #category : #formatting }
@@ -73,6 +87,12 @@ ViennaVDMTracingHighligtingFormatter >> moduleAttribute [
 ViennaVDMTracingHighligtingFormatter >> moduleName: aString [
 
 	^ aString asText addAttribute: self moduleAttribute
+]
+
+{ #category : #'symbol access' }
+ViennaVDMTracingHighligtingFormatter >> space [
+
+	^ super space asText
 ]
 
 { #category : #accessing }

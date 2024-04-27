@@ -20,7 +20,9 @@ ViennaLocalDefinitionListNode >> formatWith: aViennaAbstractFormatter [
 	^ (aViennaAbstractFormatter anyNeedsIndent: localDefinitions)
 		  ifTrue: [
 			  aViennaAbstractFormatter
-				  join: ',' , String cr
+				  join:
+				  aViennaAbstractFormatter empty , ','
+				  , aViennaAbstractFormatter cr
 				  withAll: localDefinitions ]
 		  ifFalse: [
 		  aViennaAbstractFormatter join: ', ' withAll: localDefinitions ]

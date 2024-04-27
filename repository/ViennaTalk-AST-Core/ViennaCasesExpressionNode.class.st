@@ -46,9 +46,11 @@ ViennaCasesExpressionNode >> formatWith: aViennaAbstractFormatter [
 	alternatives := aViennaAbstractFormatter format:
 		                self casesExpressionAlternatives.
 	others := self othersExpression
-		          ifNil: [ '' ]
+		          ifNil: [ aViennaAbstractFormatter empty ]
 		          ifNotNil: [ :node |
-		          ',' , String cr , (aViennaAbstractFormatter format: node) ].
+			          aViennaAbstractFormatter empty , ','
+			          , aViennaAbstractFormatter cr
+			          , (aViennaAbstractFormatter format: node) ].
 	^ aViennaAbstractFormatter indentString:
 		  (aViennaAbstractFormatter keyword: 'cases ') , value , ':'
 		  , String cr , alternatives , others , String cr

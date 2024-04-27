@@ -12,9 +12,10 @@ ViennaImportTypesSignatureNode >> formatWith: aViennaAbstractFormatter [
 	typeImports := aViennaAbstractFormatter formatAll: self.
 	^ aViennaAbstractFormatter
 		  indentString: (aViennaAbstractFormatter keyword: 'types')
-		  insertCrIfNeeded:
-			  (aViennaAbstractFormatter
-				   join: ';' , String cr
+		  insertCrIfNeeded: (aViennaAbstractFormatter
+				   join:
+				   aViennaAbstractFormatter empty , ';'
+				   , aViennaAbstractFormatter cr
 				   withAll: typeImports) , ';'
 ]
 

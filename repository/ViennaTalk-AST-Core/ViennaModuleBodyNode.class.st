@@ -16,7 +16,9 @@ ViennaModuleBodyNode >> formatWith: aViennaAbstractFormatter [
 
 	| definitionBlocks |
 	definitionBlocks := aViennaAbstractFormatter formatAll: self.
-	^ (aViennaAbstractFormatter keyword: 'definitions') , String cr
+	^ aViennaAbstractFormatter empty
+	  , (aViennaAbstractFormatter keyword: 'definitions')
+	  , aViennaAbstractFormatter cr
 	  ,
 	  (aViennaAbstractFormatter join: String cr withAll: definitionBlocks)
 ]

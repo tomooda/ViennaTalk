@@ -99,7 +99,9 @@ ViennaRecordTypeDefinitionNode >> formatWith: aViennaAbstractFormatter [
 
 	| access identifier fieldList invariant |
 	access := (aViennaAbstractFormatter format: self access) trim
-		          ifNotEmpty: [ :string | string , ' ' ].
+		          ifNotEmpty: [ :string |
+			          aViennaAbstractFormatter empty , string
+			          , aViennaAbstractFormatter space ].
 	identifier := aViennaAbstractFormatter format: self identifier.
 	fieldList := aViennaAbstractFormatter format: self fieldList.
 	invariant := self inv
@@ -107,13 +109,14 @@ ViennaRecordTypeDefinitionNode >> formatWith: aViennaAbstractFormatter [
 			             String cr , aViennaAbstractFormatter indent
 			             , (aViennaAbstractFormatter indentString:
 					              (aViennaAbstractFormatter format: self inv)) ]
-		             ifNil: [ '' ].
+		             ifNil: [ aViennaAbstractFormatter empty ].
 	^ access , identifier , ' ::'
 	  , ((aViennaAbstractFormatter needsIndent: identifier , fieldList)
 			   ifTrue: [
-				   String cr , aViennaAbstractFormatter indent
+				   aViennaAbstractFormatter cr , aViennaAbstractFormatter indent
 				   , (aViennaAbstractFormatter indentString: fieldList) ]
-			   ifFalse: [ String space , fieldList ]) , invariant
+			   ifFalse: [ aViennaAbstractFormatter space , fieldList ])
+	  , invariant
 ]
 
 { #category : #private }

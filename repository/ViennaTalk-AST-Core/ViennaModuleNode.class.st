@@ -389,7 +389,8 @@ ViennaModuleNode >> formatWith: aViennaAbstractFormatter [
 		              ifNil: [ '' ]
 		              ifNotNil: [ :node |
 		              String cr , (aViennaAbstractFormatter format: node) ].
-	^ (aViennaAbstractFormatter keyword: 'module ') , identifier
+	^ aViennaAbstractFormatter empty
+	  , (aViennaAbstractFormatter keyword: 'module ') , identifier
 	  , String cr , interface , moduleBody , String cr
 	  , (aViennaAbstractFormatter keyword: 'end ') , identifier
 ]

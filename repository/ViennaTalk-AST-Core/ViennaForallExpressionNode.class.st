@@ -18,13 +18,14 @@ ViennaForallExpressionNode class >> bindList: aViennaBindListNode expression: aV
 ViennaForallExpressionNode >> formatWith: aViennaAbstractFormatter [
 
 	| bindList expression |
-	bindList := aViennaAbstractFormatter format: self first.
-	expression := aViennaAbstractFormatter format: self second.
+	bindList := aViennaAbstractFormatter format: self bindList.
+	expression := aViennaAbstractFormatter format: self expression.
 	^ aViennaAbstractFormatter
 		  indentString: (aViennaAbstractFormatter
 				   indentString: aViennaAbstractFormatter forall
 				   insertCrIfNeeded:
-				   bindList trim , ' ' , aViennaAbstractFormatter dot)
+					   bindList trim , aViennaAbstractFormatter space
+					   , aViennaAbstractFormatter dot)
 		  insertCrIfNeeded: expression
 ]
 

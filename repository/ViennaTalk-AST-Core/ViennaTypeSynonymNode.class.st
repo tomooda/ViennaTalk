@@ -89,11 +89,12 @@ ViennaTypeSynonymNode >> formatWith: aViennaAbstractFormatter [
 
 	| access typeName baseType invariant |
 	access := (aViennaAbstractFormatter format: self access) trim
-		          ifNotEmpty: [ :string | string , ' ' ].
+		          ifNotEmpty: [ :string |
+		          string , aViennaAbstractFormatter space ].
 	typeName := aViennaAbstractFormatter typeName: self identifier.
 	baseType := aViennaAbstractFormatter format: self type.
 	invariant := self inv
-		             ifNil: [ '' ]
+		             ifNil: [ aViennaAbstractFormatter empty ]
 		             ifNotNil: [ :node |
 		             aViennaAbstractFormatter format: node ].
 	^ aViennaAbstractFormatter

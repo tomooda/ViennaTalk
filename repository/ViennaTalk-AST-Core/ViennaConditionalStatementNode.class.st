@@ -37,8 +37,8 @@ ViennaConditionalStatementNode >> formatWith: aViennaAbstractFormatter [
 
 	^ (aViennaAbstractFormatter keyword: 'elseif ')
 	  , (aViennaAbstractFormatter indentString:
-			   (aViennaAbstractFormatter format: self condition)) , String cr
-	  , aViennaAbstractFormatter indent
+			   (aViennaAbstractFormatter format: self condition))
+	  , aViennaAbstractFormatter cr , aViennaAbstractFormatter indent
 	  , (aViennaAbstractFormatter keyword: 'then ')
 	  , (aViennaAbstractFormatter indentString:
 			   (aViennaAbstractFormatter format: self statement))

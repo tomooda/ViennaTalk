@@ -30,7 +30,7 @@ ViennaPatternIdentifierNode >> boundIdentifiersDo: aBlock [
 ViennaPatternIdentifierNode >> formatWith: aViennaAbstractFormatter [
 
 	^ self identifier
-		  ifNil: [ '-' ]
+		  ifNil: [ aViennaAbstractFormatter empty , '-' ]
 		  ifNotNil: [ :identifier |
 		  aViennaAbstractFormatter format: identifier ]
 ]

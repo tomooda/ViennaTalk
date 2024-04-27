@@ -58,7 +58,7 @@ ViennaFieldNode >> formatWith: aViennaAbstractFormatter [
 	name := self identifier.
 	equalityAbstraction := self equalityAbstraction.
 	type := aViennaAbstractFormatter format: self type.
-	^ (name ifNil: [ '' ] ifNotNil: [
+	^ (name ifNil: [ aViennaAbstractFormatter empty ] ifNotNil: [
 		   name , (equalityAbstraction
 			    ifTrue: [ ' :- ' ]
 			    ifFalse: [ ' : ' ]) ]) , type

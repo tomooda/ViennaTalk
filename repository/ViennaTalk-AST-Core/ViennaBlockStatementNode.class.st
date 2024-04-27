@@ -36,8 +36,10 @@ ViennaBlockStatementNode >> findResolverForIdentifier: aString [
 { #category : #'pretty printing' }
 ViennaBlockStatementNode >> formatWith: aViennaAbstractFormatter [
 
-	^ '(' , (aViennaAbstractFormatter
-		   join: ';' , String cr
+	^ aViennaAbstractFormatter empty , '(' , (aViennaAbstractFormatter
+		   join:
+		   aViennaAbstractFormatter empty , ';'
+		   , aViennaAbstractFormatter cr
 		   withAll: (aViennaAbstractFormatter formatAll: self)) , ')'
 ]
 

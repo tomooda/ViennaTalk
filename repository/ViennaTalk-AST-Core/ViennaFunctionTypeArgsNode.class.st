@@ -14,7 +14,7 @@ ViennaFunctionTypeArgsNode >> boundIdentifiersDo: aBlock [
 { #category : #'pretty printing' }
 ViennaFunctionTypeArgsNode >> formatWith: aViennaAbstractFormatter [
 
-	^ '[' , (aViennaAbstractFormatter
+	^ aViennaAbstractFormatter empty , '[' , (aViennaAbstractFormatter
 		   join: ', '
 		   withAll: (aViennaAbstractFormatter formatAll: self)) , ']'
 ]

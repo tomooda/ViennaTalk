@@ -30,8 +30,8 @@ ViennaVarInformationNode >> formatWith: aViennaAbstractFormatter [
 	type := self type
 		        ifNotNil: [ :node |
 		        ':' , (aViennaAbstractFormatter format: node) ]
-		        ifNil: [ String new ].
-	^ mode , ' ' , nameList , type
+		        ifNil: [ aViennaAbstractFormatter empty ].
+	^ mode , aViennaAbstractFormatter space , nameList , type
 ]
 
 { #category : #private }

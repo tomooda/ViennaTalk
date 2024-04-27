@@ -14,7 +14,8 @@ ViennaOptionalTypeNode >> asMaximalViennaType [
 { #category : #'pretty printing' }
 ViennaOptionalTypeNode >> formatWith: aViennaAbstractFormatter [
 
-	^ '[' , (aViennaAbstractFormatter format: self type) , ']'
+	^ aViennaAbstractFormatter empty , '['
+	  , (aViennaAbstractFormatter format: self type) , ']'
 ]
 
 { #category : #testing }

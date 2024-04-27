@@ -118,16 +118,16 @@ ViennaExplicitOperationDefinitionNode >> formatWith: aViennaAbstractFormatter [
 	statement := aViennaAbstractFormatter format: self statement.
 	pre := self pre
 		       ifNotNil: [ :node |
-			       String cr , (aViennaAbstractFormatter
+			       aViennaAbstractFormatter cr , (aViennaAbstractFormatter
 				        indentString: (aViennaAbstractFormatter keyword: 'pre ')
 				        insertCrIfNeeded: (aViennaAbstractFormatter format: node)) ]
-		       ifNil: [ '' ].
+		       ifNil: [ aViennaAbstractFormatter empty ].
 	post := self post
 		        ifNotNil: [ :node |
-			        String cr , (aViennaAbstractFormatter
+			        aViennaAbstractFormatter cr , (aViennaAbstractFormatter
 				         indentString: (aViennaAbstractFormatter keyword: 'post ')
 				         insertCrIfNeeded: (aViennaAbstractFormatter format: node)) ]
-		        ifNil: [ '' ].
+		        ifNil: [ aViennaAbstractFormatter empty ].
 	^ access , identifier , ' : ' , operationType , String cr
 	  , (aViennaAbstractFormatter
 			   indentString: identifier , parameters , ' =='

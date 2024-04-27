@@ -40,7 +40,8 @@ ViennaUnaryOperatorExpressionNode >> formatOperatorWith: aViennaAbstractFormatte
 { #category : #'pretty printing' }
 ViennaUnaryOperatorExpressionNode >> formatWith: aViennaAbstractFormatter [
 
-	^ (self formatOperatorWith: aViennaAbstractFormatter) , ' '
+	^ (self formatOperatorWith: aViennaAbstractFormatter)
+	  , aViennaAbstractFormatter space
 	  , (aViennaAbstractFormatter format: self expression)
 ]
 

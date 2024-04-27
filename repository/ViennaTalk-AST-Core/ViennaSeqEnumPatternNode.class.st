@@ -14,9 +14,9 @@ ViennaSeqEnumPatternNode >> boundIdentifiersDo: aBlock [
 { #category : #'pretty printing' }
 ViennaSeqEnumPatternNode >> formatWith: aViennaAbstractFormatter [
 
-	^ '[' , (aViennaAbstractFormatter
+	^ aViennaAbstractFormatter empty , '[' , (aViennaAbstractFormatter
 		   formatEnumerate: (aViennaAbstractFormatter formatAll: self)
-		   ifEmpty: [ '' ]) , ']'
+		   ifEmpty: [ aViennaAbstractFormatter empty ]) , ']'
 ]
 
 { #category : #private }

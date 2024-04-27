@@ -34,7 +34,7 @@ ViennaTuplePatternNode >> formatWith: aViennaAbstractFormatter [
 	^ (aViennaAbstractFormatter keyword: 'mk_') , '('
 	  , ((aViennaAbstractFormatter needsIndent: patternList)
 			   ifTrue: [
-				   String cr , aViennaAbstractFormatter indent
+				   aViennaAbstractFormatter cr , aViennaAbstractFormatter indent
 				   , (aViennaAbstractFormatter indentString: patternList) ]
 			   ifFalse: [ patternList ]) , ')'
 ]

@@ -15,7 +15,7 @@ ViennaMapEnumerationPatternNode >> boundIdentifiersDo: aBlock [
 { #category : #'pretty printing' }
 ViennaMapEnumerationPatternNode >> formatWith: aViennaAbstractFormatter [
 
-	^ '{' , (aViennaAbstractFormatter
+	^ aViennaAbstractFormatter empty , '{' , (aViennaAbstractFormatter
 		   formatEnumerate: (aViennaAbstractFormatter formatAll: self)
 		   ifEmpty: [ aViennaAbstractFormatter maplet ]) , '}'
 ]

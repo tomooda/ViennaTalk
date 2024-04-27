@@ -17,7 +17,7 @@ ViennaProductTypeNode >> formatWith: aViennaAbstractFormatter [
 	^ aViennaAbstractFormatter
 		  formatEnumerate: (aViennaAbstractFormatter formatAll: self)
 		  separator: aViennaAbstractFormatter mul
-		  ifEmpty: [ '' ]
+		  ifEmpty: [ aViennaAbstractFormatter empty ]
 ]
 
 { #category : #private }

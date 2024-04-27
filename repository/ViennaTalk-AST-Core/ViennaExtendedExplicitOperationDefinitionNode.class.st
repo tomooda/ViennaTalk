@@ -122,7 +122,8 @@ ViennaExtendedExplicitOperationDefinitionNode >> formatWith: aViennaAbstractForm
 
 	| access identifier patternTypePairList identifierTypePairList operationBody externals pre post exceptions |
 	access := (aViennaAbstractFormatter format: self access) trim
-		          ifNotEmpty: [ :string | string , ' ' ].
+		          ifNotEmpty: [ :string |
+		          string , aViennaAbstractFormatter space ].
 	identifier := aViennaAbstractFormatter format: self identifier.
 	patternTypePairList := aViennaAbstractFormatter format:
 		                       self patternTypePairList.
@@ -131,24 +132,26 @@ ViennaExtendedExplicitOperationDefinitionNode >> formatWith: aViennaAbstractForm
 	operationBody := aViennaAbstractFormatter format: self statement.
 	externals := self externals
 		             ifNotNil: [
-		             String cr
-		             , (aViennaAbstractFormatter format: self externals) ]
-		             ifNil: [ '' ].
+			             aViennaAbstractFormatter cr
+			             , (aViennaAbstractFormatter format: self externals) ]
+		             ifNil: [ aViennaAbstractFormatter empty ].
 	pre := self pre
 		       ifNotNil: [
-			       String cr , (aViennaAbstractFormatter keyword: 'pre ')
+			       aViennaAbstractFormatter cr
+			       , (aViennaAbstractFormatter keyword: 'pre ')
 			       , (aViennaAbstractFormatter format: self pre) ]
-		       ifNil: [ '' ].
+		       ifNil: [ aViennaAbstractFormatter empty ].
 	post := self post
 		        ifNotNil: [
-			        String cr , (aViennaAbstractFormatter keyword: 'post ')
+			        aViennaAbstractFormatter cr
+			        , (aViennaAbstractFormatter keyword: 'post ')
 			        , (aViennaAbstractFormatter format: self post) ]
-		        ifNil: [ '' ].
+		        ifNil: [ aViennaAbstractFormatter empty ].
 	exceptions := self exceptions
 		              ifNotNil: [
-		              String cr
-		              , (aViennaAbstractFormatter format: self exceptions) ]
-		              ifNil: [ '' ].
+			              aViennaAbstractFormatter cr
+			              , (aViennaAbstractFormatter format: self exceptions) ]
+		              ifNil: [ aViennaAbstractFormatter empty ].
 	^ access , (aViennaAbstractFormatter format: identifier)
 	  , (aViennaAbstractFormatter format: patternTypePairList)
 	  , (aViennaAbstractFormatter format: identifierTypePairList) , ' =='

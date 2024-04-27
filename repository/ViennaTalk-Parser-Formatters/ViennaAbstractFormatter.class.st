@@ -81,6 +81,12 @@ ViennaAbstractFormatter >> concat [
 	^ '^'
 ]
 
+{ #category : #'symbol access' }
+ViennaAbstractFormatter >> cr [
+
+	^ String cr
+]
+
 { #category : #defaults }
 ViennaAbstractFormatter >> defaultIndent [
 	^ '    '
@@ -121,6 +127,12 @@ ViennaAbstractFormatter >> dots [
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> dunion [
 	^ 'dunion'
+]
+
+{ #category : #formatting }
+ViennaAbstractFormatter >> empty [
+
+	^ ''
 ]
 
 { #category : #'symbol access' }
@@ -241,7 +253,8 @@ ViennaAbstractFormatter >> indent [
 
 { #category : #accessing }
 ViennaAbstractFormatter >> indent: aString [
-	indent := aString
+
+	indent := self empty , aString
 ]
 
 { #category : #private }
@@ -265,31 +278,35 @@ ViennaAbstractFormatter >> indentAllStrings: anArrayOfString withTerminator: ter
 
 { #category : #private }
 ViennaAbstractFormatter >> indentString: aString [
-	^ self join: String cr , indent withAll: aString lines
+
+	^ self join: self cr , indent withAll: aString lines
 ]
 
 { #category : #private }
 ViennaAbstractFormatter >> indentString: aString insertCr: anotherString [
-	^ anotherString ifEmpty: [ aString ] ifNotEmpty: [ aString , String cr , indent , (self indentString: anotherString) ]
+
+	^ anotherString ifEmpty: [ self empty , aString ] ifNotEmpty: [
+		  self empty , aString , String cr , indent
+		  , (self indentString: anotherString) ]
 ]
 
 { #category : #private }
 ViennaAbstractFormatter >> indentString: aString insertCrIfNeeded: anotherString [
-	^ anotherString
-		ifEmpty: [ aString ]
-		ifNotEmpty: [ 
-			aString
-				,
-					((self needsIndent: aString , anotherString)
-						ifTrue: [ String cr , indent , (self indentString: anotherString) ]
-						ifFalse: [ String space , anotherString ]) ]
+
+	^ anotherString ifEmpty: [ self empty , aString ] ifNotEmpty: [
+		  self empty , aString
+		  , ((self needsIndent: aString , anotherString)
+				   ifTrue: [
+				   self cr , indent , (self indentString: anotherString) ]
+				   ifFalse: [ self space , anotherString ]) ]
 ]
 
 { #category : #'initialize-release' }
 ViennaAbstractFormatter >> initialize [
+
 	super initialize.
 	maxSizePerLine := self defaultMaxSizePerLine.
-	indent := self defaultIndent
+	indent := self empty , self defaultIndent
 ]
 
 { #category : #'symbol access' }
@@ -344,7 +361,8 @@ ViennaAbstractFormatter >> iterate [
 
 { #category : #private }
 ViennaAbstractFormatter >> join: aString withAll: aCollectionOfString [
-	^ aString join: aCollectionOfString
+
+	^ self empty , aString join: aCollectionOfString
 ]
 
 { #category : #formatting }
@@ -489,7 +507,8 @@ ViennaAbstractFormatter >> newlineIndentAllStrings: anArrayOfString [
 
 { #category : #private }
 ViennaAbstractFormatter >> newlineIndentString: aString [
-	^ String cr , indent , (self indentString: aString)
+
+	^ self cr , indent , (self indentString: aString)
 ]
 
 { #category : #private }

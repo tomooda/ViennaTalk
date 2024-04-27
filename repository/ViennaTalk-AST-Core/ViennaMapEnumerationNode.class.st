@@ -10,7 +10,7 @@ ViennaMapEnumerationNode >> formatWith: aViennaAbstractFormatter [
 
 	| elements |
 	elements := aViennaAbstractFormatter formatAll: self.
-	^ '{' , (aViennaAbstractFormatter
+	^ aViennaAbstractFormatter empty , '{' , (aViennaAbstractFormatter
 		   formatEnumerate: elements
 		   ifEmpty: [ aViennaAbstractFormatter maplet ]) , '}'
 ]

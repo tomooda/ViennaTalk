@@ -17,9 +17,10 @@ ViennaMapletListNode >> formatWith: aViennaAbstractFormatter [
 	| maplets |
 	maplets := aViennaAbstractFormatter formatAll: self.
 	^ aViennaAbstractFormatter
-		  join: ',' , ((aViennaAbstractFormatter anyNeedsIndent: maplets)
-				   ifTrue: [ String cr ]
-				   ifFalse: [ String space ])
+		  join: aViennaAbstractFormatter empty , ','
+			  , ((aViennaAbstractFormatter anyNeedsIndent: maplets)
+					   ifTrue: [ aViennaAbstractFormatter cr ]
+					   ifFalse: [ aViennaAbstractFormatter space ])
 		  withAll: maplets
 ]
 

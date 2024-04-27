@@ -66,13 +66,16 @@ ViennaSetComprehensionNode >> formatWith: aViennaAbstractFormatter [
 	bindList := aViennaAbstractFormatter format: self bindList.
 	guard := self suchthatExpression
 		         ifNotNil: [ :node |
-			         aViennaAbstractFormatter dot , ' '
+			         aViennaAbstractFormatter empty
+			         , aViennaAbstractFormatter dot
+			         , aViennaAbstractFormatter space
 			         , (aViennaAbstractFormatter format: node) ]
 		         ifNil: [ '' ].
-	^ '{' , (aViennaAbstractFormatter
+	^ aViennaAbstractFormatter empty , '{' , (aViennaAbstractFormatter
 		   indentString: (aViennaAbstractFormatter
 				    indentString: expression
-				    insertCrIfNeeded: '| ' , bindList)
+				    insertCrIfNeeded:
+				    aViennaAbstractFormatter empty , '| ' , bindList)
 		   insertCrIfNeeded: guard) , '}'
 ]
 

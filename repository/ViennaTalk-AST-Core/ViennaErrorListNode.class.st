@@ -14,8 +14,11 @@ ViennaErrorListNode >> boundIdentifiersDo: aBlock [
 { #category : #'pretty printing' }
 ViennaErrorListNode >> formatWith: aViennaAbstractFormatter [
 
-	^ self inject: '' into: [ :string :node |
-		  string , ' ' , (aViennaAbstractFormatter format: node) ]
+	^ self
+		  inject: aViennaAbstractFormatter empty
+		  into: [ :string :node |
+			  string , aViennaAbstractFormatter space
+			  , (aViennaAbstractFormatter format: node) ]
 ]
 
 { #category : #private }

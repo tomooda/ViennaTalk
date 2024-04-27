@@ -46,10 +46,10 @@ ViennaInterfaceNode >> formatWith: aViennaAbstractFormatter [
 
 	| importDefinitionList exportDefinition |
 	importDefinitionList := self importDefinitionList
-		                        ifNil: [ '' ]
+		                        ifNil: [ aViennaAbstractFormatter empty ]
 		                        ifNotNil: [ :defList |
-		                        (aViennaAbstractFormatter format: defList)
-		                        , String cr ].
+			                        (aViennaAbstractFormatter format: defList)
+			                        , aViennaAbstractFormatter cr ].
 	exportDefinition := aViennaAbstractFormatter format:
 		                    self exportDefinition.
 	^ importDefinitionList , exportDefinition

@@ -8,7 +8,7 @@ Class {
 { #category : #'pretty printing' }
 ViennaTraceRepeatPlusPatternNode >> formatWith: aViennaAbstractFormatter [
 
-	^ '+'
+	^ aViennaAbstractFormatter empty , '+'
 ]
 
 { #category : #accessing }

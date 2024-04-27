@@ -31,7 +31,9 @@ ViennaExportModuleSignatureNode >> formatWith: aViennaAbstractFormatter [
 
 	| exportSignatures |
 	exportSignatures := aViennaAbstractFormatter formatAll: self.
-	^ aViennaAbstractFormatter join: String cr withAll: exportSignatures
+	^ aViennaAbstractFormatter
+		  join: aViennaAbstractFormatter cr
+		  withAll: exportSignatures
 ]
 
 { #category : #testing }

@@ -56,10 +56,12 @@ ViennaTraceLetBestBindingNode >> formatWith: aViennaAbstractFormatter [
 		                (aViennaAbstractFormatter keyword: 'let')
 		                insertCrIfNeeded:
 		                (aViennaAbstractFormatter format: self multipleBind).
-	guard := self conditionExpression ifNil: [ '' ] ifNotNil: [ :node |
-		         aViennaAbstractFormatter
-			         indentString: (aViennaAbstractFormatter keyword: 'be st')
-			         insertCrIfNeeded: (aViennaAbstractFormatter format: node) ].
+	guard := self conditionExpression
+		         ifNil: [ aViennaAbstractFormatter empty ]
+		         ifNotNil: [ :node |
+			         aViennaAbstractFormatter
+				         indentString: (aViennaAbstractFormatter keyword: 'be st')
+				         insertCrIfNeeded: (aViennaAbstractFormatter format: node) ].
 	trace := aViennaAbstractFormatter
 		         indentString: (aViennaAbstractFormatter keyword: 'in')
 		         insertCrIfNeeded:

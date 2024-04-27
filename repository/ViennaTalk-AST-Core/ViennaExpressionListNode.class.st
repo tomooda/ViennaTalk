@@ -17,10 +17,10 @@ ViennaExpressionListNode >> formatWith: aViennaAbstractFormatter [
 	| expressions |
 	expressions := aViennaAbstractFormatter formatAll: self.
 	^ aViennaAbstractFormatter
-		  join:
-			  ',' , ((aViennaAbstractFormatter anyNeedsIndent: expressions)
-				   ifTrue: [ String cr ]
-				   ifFalse: [ String space ])
+		  join: aViennaAbstractFormatter empty , ','
+			  , ((aViennaAbstractFormatter anyNeedsIndent: expressions)
+					   ifTrue: [ aViennaAbstractFormatter cr ]
+					   ifFalse: [ aViennaAbstractFormatter space ])
 		  withAll: expressions
 ]
 

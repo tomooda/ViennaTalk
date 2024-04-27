@@ -16,7 +16,7 @@ ViennaPatternTypePairListNode >> boundIdentifiersDo: aBlock [
 ViennaPatternTypePairListNode >> formatWith: aViennaAbstractFormatter [
 
 	| string |
-	string := ''.
+	string := aViennaAbstractFormatter empty.
 	self ifNotEmpty: [
 		1 to: self size - 2 by: 2 do: [ :index |
 			string := string

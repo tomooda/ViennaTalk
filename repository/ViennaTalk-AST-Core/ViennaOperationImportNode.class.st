@@ -21,12 +21,14 @@ ViennaOperationImportNode >> formatWith: aViennaAbstractFormatter [
 	| name type rename |
 	name := aViennaAbstractFormatter format: self name.
 	type := self type
-		        ifNil: [ '' ]
+		        ifNil: [ aViennaAbstractFormatter empty ]
 		        ifNotNil: [ :node |
 		        ': ' , (aViennaAbstractFormatter format: node) ].
-	rename := self rename ifNil: [ '' ] ifNotNil: [ :node |
-		          (aViennaAbstractFormatter keyword: 'renamed ')
-		          , (aViennaAbstractFormatter format: node) ].
+	rename := self rename
+		          ifNil: [ aViennaAbstractFormatter empty ]
+		          ifNotNil: [ :node |
+			          (aViennaAbstractFormatter keyword: 'renamed ')
+			          , (aViennaAbstractFormatter format: node) ].
 	^ aViennaAbstractFormatter
 		  indentString: name , type
 		  insertCrIfNeeded: rename

@@ -34,7 +34,7 @@ ViennaTokenConstructorNode >> formatWith: aViennaAbstractFormatter [
 	  , (aViennaAbstractFormatter typeName: 'token') , '('
 	  , ((aViennaAbstractFormatter needsIndent: expression)
 			   ifTrue: [
-				   String cr , aViennaAbstractFormatter indent
+				   aViennaAbstractFormatter cr , aViennaAbstractFormatter indent
 				   , (aViennaAbstractFormatter indentString: expression) ]
 			   ifFalse: [ expression ]) , ')'
 ]

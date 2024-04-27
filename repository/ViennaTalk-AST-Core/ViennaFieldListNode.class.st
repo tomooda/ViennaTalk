@@ -24,8 +24,8 @@ ViennaFieldListNode >> formatWith: aViennaAbstractFormatter [
 	fields := aViennaAbstractFormatter formatAll: self.
 	^ aViennaAbstractFormatter
 		  join: ((aViennaAbstractFormatter anyNeedsIndent: fields)
-				   ifTrue: [ String cr ]
-				   ifFalse: [ String space ])
+				   ifTrue: [ aViennaAbstractFormatter cr ]
+				   ifFalse: [ aViennaAbstractFormatter space ])
 		  withAll: fields
 ]
 

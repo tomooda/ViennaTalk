@@ -21,8 +21,9 @@ ViennaOperationTypeNode >> asMaximalViennaType [
 { #category : #'pretty printing' }
 ViennaOperationTypeNode >> formatWith: aViennaAbstractFormatter [
 
-	^ (aViennaAbstractFormatter format: self argumentType) , ' '
-	  , aViennaAbstractFormatter oparrow , ' '
+	^ (aViennaAbstractFormatter format: self argumentType)
+	  , aViennaAbstractFormatter space , aViennaAbstractFormatter oparrow
+	  , aViennaAbstractFormatter space
 	  , (aViennaAbstractFormatter format: self returnType)
 ]
 

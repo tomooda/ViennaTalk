@@ -77,19 +77,20 @@ ViennaStateDefinitionNode >> formatWith: aViennaAbstractFormatter [
 	| identifier stateFieldList invariant initialisation |
 	identifier := aViennaAbstractFormatter format: self identifier.
 	stateFieldList := aViennaAbstractFormatter
-		                  join: String cr
+		                  join: aViennaAbstractFormatter cr
 		                  withAll:
 		                  (aViennaAbstractFormatter formatAll:
 			                   self fieldList).
 	invariant := self inv
-		             ifNil: [ '' ]
+		             ifNil: [ aViennaAbstractFormatter empty ]
 		             ifNotNil: [ :node |
-		             String cr , (aViennaAbstractFormatter format: node) ].
+			             aViennaAbstractFormatter cr
+			             , (aViennaAbstractFormatter format: node) ].
 	initialisation := self init
-		                  ifNil: [ '' ]
+		                  ifNil: [ aViennaAbstractFormatter empty ]
 		                  ifNotNil: [ :node |
-		                  String cr
-		                  , (aViennaAbstractFormatter format: node) ].
+			                  aViennaAbstractFormatter cr
+			                  , (aViennaAbstractFormatter format: node) ].
 	^ (aViennaAbstractFormatter keyword: 'state ')
 	  , (aViennaAbstractFormatter identifier: identifier)
 	  , (aViennaAbstractFormatter keyword: ' of') , String cr

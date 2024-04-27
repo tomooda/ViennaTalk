@@ -135,14 +135,16 @@ ViennaImplicitFunctionDefinitionNode >> formatWith: aViennaAbstractFormatter [
 		                          self identifierTypePairList.
 	pre := self pre
 		       ifNotNil: [
-			       String cr , (aViennaAbstractFormatter keyword: 'pre ')
+			       aViennaAbstractFormatter cr
+			       , (aViennaAbstractFormatter keyword: 'pre ')
 			       , (aViennaAbstractFormatter format: self pre) ]
-		       ifNil: [ '' ].
+		       ifNil: [ aViennaAbstractFormatter empty ].
 	post := self post
 		        ifNotNil: [
-			        String cr , (aViennaAbstractFormatter keyword: 'post ')
+			        aViennaAbstractFormatter cr
+			        , (aViennaAbstractFormatter keyword: 'post ')
 			        , (aViennaAbstractFormatter format: self post) ]
-		        ifNil: [ '' ].
+		        ifNil: [ aViennaAbstractFormatter empty ].
 	^ identifier , (aViennaAbstractFormatter format: typeVariableList)
 	  , (aViennaAbstractFormatter format: patternTypePairList)
 	  , (aViennaAbstractFormatter format: identifierTypePairList) , pre

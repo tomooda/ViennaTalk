@@ -18,7 +18,7 @@ ViennaIdentifierTypePairListNode >> formatWith: aViennaAbstractFormatter [
 	^ self
 		  ifNotEmpty: [
 			  | string |
-			  string := ''.
+			  string := aViennaAbstractFormatter empty.
 			  1 to: self size - 2 by: 2 do: [ :index |
 				  string := string
 				            , (aViennaAbstractFormatter format: (self at: index))

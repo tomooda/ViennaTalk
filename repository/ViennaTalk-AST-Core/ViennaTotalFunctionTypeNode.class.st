@@ -21,8 +21,10 @@ ViennaTotalFunctionTypeNode >> asMaximalViennaType [
 { #category : #'pretty printing' }
 ViennaTotalFunctionTypeNode >> formatWith: aViennaAbstractFormatter [
 
-	^ (aViennaAbstractFormatter format: self argumentType) , ' '
-	  , aViennaAbstractFormatter totalFunction , ' '
+	^ (aViennaAbstractFormatter format: self argumentType)
+	  , aViennaAbstractFormatter space
+	  , aViennaAbstractFormatter totalFunction
+	  , aViennaAbstractFormatter space
 	  , (aViennaAbstractFormatter format: self returnType)
 ]
 

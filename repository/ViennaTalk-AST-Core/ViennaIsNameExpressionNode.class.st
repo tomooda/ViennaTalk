@@ -32,10 +32,11 @@ ViennaIsNameExpressionNode >> formatWith: aViennaAbstractFormatter [
 	| name expression |
 	name := aViennaAbstractFormatter format: self name.
 	expression := aViennaAbstractFormatter format: self expression.
-	^ (aViennaAbstractFormatter keyword: 'is_') , name , '('
+	^ aViennaAbstractFormatter empty
+	  , (aViennaAbstractFormatter keyword: 'is_') , name , '('
 	  , ((aViennaAbstractFormatter needsIndent: expression)
 			   ifTrue: [
-				   String cr , aViennaAbstractFormatter indent
+				   aViennaAbstractFormatter cr , aViennaAbstractFormatter indent
 				   , (aViennaAbstractFormatter indentString: expression) ]
 			   ifFalse: [ expression ]) , ')'
 ]

@@ -16,10 +16,10 @@ ViennaTypeVariableListNode >> formatWith: aViennaAbstractFormatter [
 
 	^ self size > 0
 		  ifTrue: [
-			  '[' , (aViennaAbstractFormatter
-				   join: String space
+			  aViennaAbstractFormatter empty , '[' , (aViennaAbstractFormatter
+				   join: aViennaAbstractFormatter space
 				   withAll: (aViennaAbstractFormatter formatAll: self)) , ']' ]
-		  ifFalse: [ '' ]
+		  ifFalse: [ aViennaAbstractFormatter empty ]
 ]
 
 { #category : #private }
