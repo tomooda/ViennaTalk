@@ -14,9 +14,9 @@ ViennaExportFunctionsSignatureNode >> formatWith: aViennaAbstractFormatter [
 		  indentString: (aViennaAbstractFormatter keyword: 'functions')
 		  insertCrIfNeeded: (aViennaAbstractFormatter
 				   join:
-				   aViennaAbstractFormatter empty , ';'
-				   , aViennaAbstractFormatter cr
-				   withAll: functionExports) , ';'
+				   aViennaAbstractFormatter empty ++ ';'
+				   ++ aViennaAbstractFormatter cr
+				   withAll: functionExports) ++ ';'
 ]
 
 { #category : #accessing }

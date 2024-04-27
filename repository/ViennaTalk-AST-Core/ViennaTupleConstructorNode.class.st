@@ -31,12 +31,12 @@ ViennaTupleConstructorNode >> formatWith: aViennaAbstractFormatter [
 	| expressionList |
 	expressionList := aViennaAbstractFormatter format:
 		                  self expressionList.
-	^ (aViennaAbstractFormatter keyword: 'mk_') , '('
-	  , ((aViennaAbstractFormatter needsIndent: expressionList)
+	^ (aViennaAbstractFormatter keyword: 'mk_') ++ '('
+	  ++ ((aViennaAbstractFormatter needsIndent: expressionList)
 			   ifTrue: [
-				   aViennaAbstractFormatter cr , aViennaAbstractFormatter indent
-				   , (aViennaAbstractFormatter indentString: expressionList) ]
-			   ifFalse: [ expressionList ]) , ')'
+				   aViennaAbstractFormatter cr ++ aViennaAbstractFormatter indent
+				   ++ (aViennaAbstractFormatter indentString: expressionList) ]
+			   ifFalse: [ expressionList ]) ++ ')'
 ]
 
 { #category : #private }

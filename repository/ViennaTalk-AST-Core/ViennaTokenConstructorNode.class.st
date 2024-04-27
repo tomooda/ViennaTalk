@@ -31,12 +31,12 @@ ViennaTokenConstructorNode >> formatWith: aViennaAbstractFormatter [
 	| expression |
 	expression := aViennaAbstractFormatter format: self expression.
 	^ (aViennaAbstractFormatter keyword: 'mk_')
-	  , (aViennaAbstractFormatter typeName: 'token') , '('
-	  , ((aViennaAbstractFormatter needsIndent: expression)
+	  ++ (aViennaAbstractFormatter typeName: 'token') ++ '('
+	  ++ ((aViennaAbstractFormatter needsIndent: expression)
 			   ifTrue: [
-				   aViennaAbstractFormatter cr , aViennaAbstractFormatter indent
-				   , (aViennaAbstractFormatter indentString: expression) ]
-			   ifFalse: [ expression ]) , ')'
+				   aViennaAbstractFormatter cr ++ aViennaAbstractFormatter indent
+				   ++ (aViennaAbstractFormatter indentString: expression) ]
+			   ifFalse: [ expression ]) ++ ')'
 ]
 
 { #category : #private }

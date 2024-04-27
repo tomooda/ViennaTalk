@@ -31,7 +31,7 @@ ViennaExitStatementNode >> formatWith: aViennaAbstractFormatter [
 	^ self expression
 		  ifNotNil: [ :expression |
 			  (aViennaAbstractFormatter keyword: 'exit ')
-			  , (aViennaAbstractFormatter indentString:
+			  ++ (aViennaAbstractFormatter indentString:
 					   (aViennaAbstractFormatter format: expression)) ]
 		  ifNil: [ aViennaAbstractFormatter keyword: 'exit' ]
 ]

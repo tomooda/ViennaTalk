@@ -48,11 +48,11 @@ ViennaConditionalExpressionNode >> expression: aViennaExpressionNode [
 ViennaConditionalExpressionNode >> formatWith: aViennaAbstractFormatter [
 
 	^ (aViennaAbstractFormatter keyword: 'elseif ')
-	  , (aViennaAbstractFormatter indentString:
+	  ++ (aViennaAbstractFormatter indentString:
 			   (aViennaAbstractFormatter format: self condition))
-	  , aViennaAbstractFormatter cr , aViennaAbstractFormatter indent
-	  , (aViennaAbstractFormatter keyword: 'then ')
-	  , (aViennaAbstractFormatter indentString:
+	  ++ aViennaAbstractFormatter cr ++ aViennaAbstractFormatter indent
+	  ++ (aViennaAbstractFormatter keyword: 'then ')
+	  ++ (aViennaAbstractFormatter indentString:
 			   (aViennaAbstractFormatter format: self expression))
 ]
 

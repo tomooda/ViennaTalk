@@ -46,8 +46,8 @@ ViennaCompositeTypeNode >> formatWith: aViennaAbstractFormatter [
 	^ aViennaAbstractFormatter
 		  noIndentString: (aViennaAbstractFormatter
 				   indentString:
-					   (aViennaAbstractFormatter keyword: 'compose ') , constructor
-					   , (aViennaAbstractFormatter keyword: ' of')
+					   (aViennaAbstractFormatter keyword: 'compose ') ++ constructor
+					   ++ (aViennaAbstractFormatter keyword: ' of')
 				   insertCrIfNeeded: fields)
 		  insertCrIfNeeded: (aViennaAbstractFormatter keyword: 'end')
 ]

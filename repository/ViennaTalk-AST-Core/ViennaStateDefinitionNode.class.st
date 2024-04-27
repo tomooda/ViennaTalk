@@ -85,19 +85,19 @@ ViennaStateDefinitionNode >> formatWith: aViennaAbstractFormatter [
 		             ifNil: [ aViennaAbstractFormatter empty ]
 		             ifNotNil: [ :node |
 			             aViennaAbstractFormatter cr
-			             , (aViennaAbstractFormatter format: node) ].
+			             ++ (aViennaAbstractFormatter format: node) ].
 	initialisation := self init
 		                  ifNil: [ aViennaAbstractFormatter empty ]
 		                  ifNotNil: [ :node |
 			                  aViennaAbstractFormatter cr
-			                  , (aViennaAbstractFormatter format: node) ].
+			                  ++ (aViennaAbstractFormatter format: node) ].
 	^ (aViennaAbstractFormatter keyword: 'state ')
-	  , (aViennaAbstractFormatter identifier: identifier)
-	  , (aViennaAbstractFormatter keyword: ' of') , String cr
-	  , aViennaAbstractFormatter indent
-	  , (aViennaAbstractFormatter indentString: stateFieldList)
-	  , invariant , initialisation , String cr
-	  , (aViennaAbstractFormatter keyword: 'end')
+	  ++ (aViennaAbstractFormatter identifier: identifier)
+	  ++ (aViennaAbstractFormatter keyword: ' of') ++ String cr
+	  ++ aViennaAbstractFormatter indent
+	  ++ (aViennaAbstractFormatter indentString: stateFieldList)
+	  ++ invariant ++ initialisation ++ String cr
+	  ++ (aViennaAbstractFormatter keyword: 'end')
 ]
 
 { #category : #private }

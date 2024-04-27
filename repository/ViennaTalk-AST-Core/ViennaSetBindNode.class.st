@@ -41,8 +41,8 @@ ViennaSetBindNode >> maximalType [
 			  ViennaTypeError
 				  on: self
 				  signal:
-					  'Bind mismatch: Pattern ' , self pattern source
-					  , ' not agree with ' , basetype printString ]
+					  'Bind mismatch: Pattern ' ++ self pattern source
+					  ++ ' not agree with ' ++ basetype printString ]
 ]
 
 { #category : #typechecking }

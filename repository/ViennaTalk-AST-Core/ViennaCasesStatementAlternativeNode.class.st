@@ -45,7 +45,7 @@ ViennaCasesStatementAlternativeNode >> formatWith: aViennaAbstractFormatter [
 	patternList := aViennaAbstractFormatter format: self patternList.
 	statement := aViennaAbstractFormatter format: self statement.
 	^ aViennaAbstractFormatter
-		  indentString: patternList , ' ' , aViennaAbstractFormatter arrow
+		  indentString: patternList ++ ' ' ++ aViennaAbstractFormatter arrow
 		  insertCrIfNeeded: statement
 ]
 

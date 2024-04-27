@@ -10,19 +10,19 @@ ViennaPreconditionExpressionNode >> formatWith: aViennaAbstractFormatter [
 
 	| expressions |
 	expressions := aViennaAbstractFormatter formatAll: self.
-	^ (aViennaAbstractFormatter keyword: 'pre_') , '('
-	  , ((aViennaAbstractFormatter anyNeedsIndent: expressions)
+	^ (aViennaAbstractFormatter keyword: 'pre_') ++ '('
+	  ++ ((aViennaAbstractFormatter anyNeedsIndent: expressions)
 			   ifTrue: [
 				   aViennaAbstractFormatter
 					   join:
-						   aViennaAbstractFormatter empty , ','
-						   , aViennaAbstractFormatter cr
-						   , aViennaAbstractFormatter indent
+						   aViennaAbstractFormatter empty ++ ','
+						   ++ aViennaAbstractFormatter cr
+						   ++ aViennaAbstractFormatter indent
 					   withAll: (expressions collect: [ :expression |
 							    aViennaAbstractFormatter indentString: expression ]) ]
 			   ifFalse: [
 			   aViennaAbstractFormatter join: ', ' withAll: expressions ])
-	  , ')'
+	  ++ ')'
 ]
 
 { #category : #private }

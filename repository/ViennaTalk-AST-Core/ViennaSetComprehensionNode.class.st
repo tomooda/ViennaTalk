@@ -67,16 +67,16 @@ ViennaSetComprehensionNode >> formatWith: aViennaAbstractFormatter [
 	guard := self suchthatExpression
 		         ifNotNil: [ :node |
 			         aViennaAbstractFormatter empty
-			         , aViennaAbstractFormatter dot
-			         , aViennaAbstractFormatter space
-			         , (aViennaAbstractFormatter format: node) ]
+			         ++ aViennaAbstractFormatter dot
+			         ++ aViennaAbstractFormatter space
+			         ++ (aViennaAbstractFormatter format: node) ]
 		         ifNil: [ '' ].
-	^ aViennaAbstractFormatter empty , '{' , (aViennaAbstractFormatter
+	^ aViennaAbstractFormatter empty ++ '{' ++ (aViennaAbstractFormatter
 		   indentString: (aViennaAbstractFormatter
 				    indentString: expression
 				    insertCrIfNeeded:
-				    aViennaAbstractFormatter empty , '| ' , bindList)
-		   insertCrIfNeeded: guard) , '}'
+				    aViennaAbstractFormatter empty ++ '| ' ++ bindList)
+		   insertCrIfNeeded: guard) ++ '}'
 ]
 
 { #category : #private }

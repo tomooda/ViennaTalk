@@ -28,16 +28,16 @@ ViennaDclStatementNode >> formatWith: aViennaAbstractFormatter [
 	| assigns |
 	assigns := aViennaAbstractFormatter formatAll: self.
 	^ (aViennaAbstractFormatter keyword: 'dcl')
-	  , ((aViennaAbstractFormatter anyNeedsIndent: assigns)
+	  ++ ((aViennaAbstractFormatter anyNeedsIndent: assigns)
 			   ifTrue: [
-				   aViennaAbstractFormatter cr , aViennaAbstractFormatter indent
-				   ,
+				   aViennaAbstractFormatter cr ++ aViennaAbstractFormatter indent
+				   ++
 				   (aViennaAbstractFormatter
 					    indentAllStrings: assigns
 					    withSeparator: ',') ]
 			   ifFalse: [
 				   aViennaAbstractFormatter space
-				   , (aViennaAbstractFormatter join: ', ' withAll: assigns) ])
+				   ++ (aViennaAbstractFormatter join: ', ' withAll: assigns) ])
 ]
 
 { #category : #private }

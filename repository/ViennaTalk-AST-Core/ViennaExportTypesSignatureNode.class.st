@@ -14,9 +14,9 @@ ViennaExportTypesSignatureNode >> formatWith: aViennaAbstractFormatter [
 		  indentString: (aViennaAbstractFormatter keyword: 'types')
 		  insertCrIfNeeded: (aViennaAbstractFormatter
 				   join:
-				   aViennaAbstractFormatter empty , ';'
-				   , aViennaAbstractFormatter cr
-				   withAll: typeExports) , ';'
+				   aViennaAbstractFormatter empty ++ ';'
+				   ++ aViennaAbstractFormatter cr
+				   withAll: typeExports) ++ ';'
 ]
 
 { #category : #testing }

@@ -32,17 +32,17 @@ ViennaTypeJudgementNode >> formatWith: aViennaAbstractFormatter [
 	| type expression |
 	expression := aViennaAbstractFormatter format: self expression.
 	type := aViennaAbstractFormatter format: self type.
-	(aViennaAbstractFormatter needsIndent: expression , type) ifFalse: [
-		^ (aViennaAbstractFormatter keyword: 'is_') , '(' , expression
-		  , ', ' , type , ')' ].
-	^ (aViennaAbstractFormatter keyword: 'is_') , '('
-	  , ((aViennaAbstractFormatter needsIndent: expression)
+	(aViennaAbstractFormatter needsIndent: expression ++ type) ifFalse: [
+		^ (aViennaAbstractFormatter keyword: 'is_') ++ '(' ++ expression
+		  ++ ', ' ++ type ++ ')' ].
+	^ (aViennaAbstractFormatter keyword: 'is_') ++ '('
+	  ++ ((aViennaAbstractFormatter needsIndent: expression)
 			   ifTrue: [
-				   String cr , aViennaAbstractFormatter indent
-				   , (aViennaAbstractFormatter indentString: expression) ]
-			   ifFalse: [ expression ]) , ',' , aViennaAbstractFormatter cr
-	  , aViennaAbstractFormatter indent
-	  , (aViennaAbstractFormatter indentString: type) , ')'
+				   String cr ++ aViennaAbstractFormatter indent
+				   ++ (aViennaAbstractFormatter indentString: expression) ]
+			   ifFalse: [ expression ]) ++ ',' ++ aViennaAbstractFormatter cr
+	  ++ aViennaAbstractFormatter indent
+	  ++ (aViennaAbstractFormatter indentString: type) ++ ')'
 ]
 
 { #category : #private }

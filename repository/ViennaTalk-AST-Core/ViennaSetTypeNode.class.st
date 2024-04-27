@@ -15,8 +15,8 @@ ViennaSetTypeNode >> asMaximalViennaType [
 ViennaSetTypeNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter setPrefix
-	  , (aViennaAbstractFormatter format: self type)
-	  , aViennaAbstractFormatter setPostfix
+	  ++ (aViennaAbstractFormatter format: self type)
+	  ++ aViennaAbstractFormatter setPostfix
 ]
 
 { #category : #testing }

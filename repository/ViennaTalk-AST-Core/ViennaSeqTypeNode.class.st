@@ -15,8 +15,8 @@ ViennaSeqTypeNode >> asMaximalViennaType [
 ViennaSeqTypeNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter seqPrefix
-	  , (aViennaAbstractFormatter format: self type)
-	  , aViennaAbstractFormatter seqPostfix
+	  ++ (aViennaAbstractFormatter format: self type)
+	  ++ aViennaAbstractFormatter seqPostfix
 ]
 
 { #category : #testing }

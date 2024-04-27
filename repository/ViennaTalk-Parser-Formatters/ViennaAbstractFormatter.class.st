@@ -169,17 +169,17 @@ ViennaAbstractFormatter >> format: aViennaNode [
 	| string |
 	aViennaNode isString ifTrue: [ ^ aViennaNode ].
 	string := (aViennaNode annotations
-		           ifNil: [ '' ]
+		           ifNil: [ self empty ]
 		           ifNotNil: [ :annotations |
-			           String streamContents: [ :stream |
-				           annotations do: [ :annotation |
-					           stream
-						           nextPutAll: '--@';
-						           nextPutAll: annotation;
-						           nextPutAll: String cr ] ] ])
-	          , (aViennaNode formatWith: self).
+			           self empty ++ (String streamContents: [ :stream |
+				            annotations do: [ :annotation |
+					            stream
+						            nextPutAll: '--@';
+						            nextPutAll: annotation;
+						            nextPutAll: self cr ] ]) ])
+	          ++ (aViennaNode formatWith: self).
 	(self needsParen: aViennaNode) ifTrue: [
-		string := '(' , (self indentString: string) , ')' ].
+		string := '(' ++ (self indentString: string) ++ ')' ].
 	^ string
 ]
 
@@ -218,8 +218,8 @@ ViennaAbstractFormatter >> formatEnumerate: anArrayOfString separator: aString i
 						line := '' ]
 					ifFalse: [ | origLine |
 						origLine := line.
-						line := line , (line ifNotEmpty: [ aString , String space ])
-							, element.
+						line := line ++ (line ifNotEmpty: [ aString ++ String space ])
+							++ element.
 						(self needsIndent: line)
 							ifTrue: [ origLine
 									ifEmpty: [ stream nextPut: line.
@@ -227,7 +227,7 @@ ViennaAbstractFormatter >> formatEnumerate: anArrayOfString separator: aString i
 									ifNotEmpty: [ stream nextPut: origLine.
 										line := element ] ] ] ].
 			line ifNotEmpty: [ stream nextPut: line ] ].
-	^ self join: aString , String cr withAll: lines
+	^ self join: aString ++ String cr withAll: lines
 ]
 
 { #category : #'symbol access' }
@@ -254,51 +254,51 @@ ViennaAbstractFormatter >> indent [
 { #category : #accessing }
 ViennaAbstractFormatter >> indent: aString [
 
-	indent := self empty , aString
+	indent := self empty ++ aString
 ]
 
 { #category : #private }
 ViennaAbstractFormatter >> indentAllStrings: anArrayOfString [
 	^ self
-		join: String cr , indent
+		join: String cr ++ indent
 		withAll: (anArrayOfString collect: [ :string | self indentString: string ])
 ]
 
 { #category : #private }
 ViennaAbstractFormatter >> indentAllStrings: anArrayOfString withSeparator: separator [
 	^ self
-		join: separator , String cr , indent
+		join: separator ++ String cr ++ indent
 		withAll: (anArrayOfString collect: [ :string | self indentString: string ])
 ]
 
 { #category : #private }
 ViennaAbstractFormatter >> indentAllStrings: anArrayOfString withTerminator: terminator [
-	^ (self indentAllStrings: anArrayOfString withSeparator: terminator) , terminator
+	^ (self indentAllStrings: anArrayOfString withSeparator: terminator) ++ terminator
 ]
 
 { #category : #private }
 ViennaAbstractFormatter >> indentString: aString [
 
-	^ self join: self cr , indent withAll: aString lines
+	^ self join: self cr ++ indent withAll: aString lines
 ]
 
 { #category : #private }
 ViennaAbstractFormatter >> indentString: aString insertCr: anotherString [
 
-	^ anotherString ifEmpty: [ self empty , aString ] ifNotEmpty: [
-		  self empty , aString , String cr , indent
-		  , (self indentString: anotherString) ]
+	^ anotherString ifEmpty: [ self empty ++ aString ] ifNotEmpty: [
+		  self empty ++ aString ++ String cr ++ indent
+		  ++ (self indentString: anotherString) ]
 ]
 
 { #category : #private }
 ViennaAbstractFormatter >> indentString: aString insertCrIfNeeded: anotherString [
 
-	^ anotherString ifEmpty: [ self empty , aString ] ifNotEmpty: [
-		  self empty , aString
-		  , ((self needsIndent: aString , anotherString)
+	^ anotherString ifEmpty: [ self empty ++ aString ] ifNotEmpty: [
+		  self empty ++ aString
+		  ++ ((self needsIndent: aString ++ anotherString)
 				   ifTrue: [
-				   self cr , indent , (self indentString: anotherString) ]
-				   ifFalse: [ self space , anotherString ]) ]
+				   self cr ++ indent ++ (self indentString: anotherString) ]
+				   ifFalse: [ self space ++ anotherString ]) ]
 ]
 
 { #category : #'initialize-release' }
@@ -306,7 +306,7 @@ ViennaAbstractFormatter >> initialize [
 
 	super initialize.
 	maxSizePerLine := self defaultMaxSizePerLine.
-	indent := self empty , self defaultIndent
+	indent := self empty ++ self defaultIndent
 ]
 
 { #category : #'symbol access' }
@@ -345,7 +345,7 @@ ViennaAbstractFormatter >> inter [
 { #category : #'symbol access' }
 ViennaAbstractFormatter >> inverse: aString [
 
-	^ 'inverse ' , aString
+	^ 'inverse ' ++ aString
 ]
 
 { #category : #'symbol access' }
@@ -362,7 +362,7 @@ ViennaAbstractFormatter >> iterate [
 { #category : #private }
 ViennaAbstractFormatter >> join: aString withAll: aCollectionOfString [
 
-	^ self empty , aString join: aCollectionOfString
+	^ self empty ++ aString join: aCollectionOfString
 ]
 
 { #category : #formatting }
@@ -508,7 +508,7 @@ ViennaAbstractFormatter >> newlineIndentAllStrings: anArrayOfString [
 { #category : #private }
 ViennaAbstractFormatter >> newlineIndentString: aString [
 
-	^ self cr , indent , (self indentString: aString)
+	^ self cr ++ indent ++ (self indentString: aString)
 ]
 
 { #category : #private }
@@ -517,10 +517,10 @@ ViennaAbstractFormatter >> noIndentString: aString insertCrIfNeeded: anotherStri
 		ifEmpty: [ aString ]
 		ifNotEmpty: [ 
 			aString
-				,
-					((self needsIndent: aString , anotherString)
+				++
+					((self needsIndent: aString ++ anotherString)
 						ifTrue: [ String cr ]
-						ifFalse: [ String space ]) , anotherString ]
+						ifFalse: [ String space ]) ++ anotherString ]
 ]
 
 { #category : #'symbol access' }
@@ -566,17 +566,17 @@ ViennaAbstractFormatter >> power [
 
 { #category : #private }
 ViennaAbstractFormatter >> print: argString1 infix: opString arg: argString2 [
-	^ (self needsIndent: argString1 , argString2)
-		ifTrue: [ argString1 , String cr , opString , String space , argString2 ]
-		ifFalse: [ argString1 , String space , opString , String space , argString2 ]
+	^ (self needsIndent: argString1 ++ argString2)
+		ifTrue: [ argString1 ++ String cr ++ opString ++ String space ++ argString2 ]
+		ifFalse: [ argString1 ++ String space ++ opString ++ String space ++ argString2 ]
 ]
 
 { #category : #private }
 ViennaAbstractFormatter >> print: aString withChildren: anArrayOfString [
 	^ (self anyNeedsIndent: (anArrayOfString copyWith: aString))
-		ifTrue: [ aString , (self newlineIndentAllStrings: anArrayOfString) ]
-		ifFalse: [ aString , String space
-				, (self join: String space withAll: anArrayOfString) ]
+		ifTrue: [ aString ++ (self newlineIndentAllStrings: anArrayOfString) ]
+		ifFalse: [ aString ++ String space
+				++ (self join: String space withAll: anArrayOfString) ]
 ]
 
 { #category : #'symbol access' }

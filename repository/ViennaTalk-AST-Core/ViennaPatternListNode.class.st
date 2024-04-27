@@ -17,8 +17,8 @@ ViennaPatternListNode >> formatWith: aViennaAbstractFormatter [
 	| patterns |
 	patterns := aViennaAbstractFormatter formatAll: self.
 	^ aViennaAbstractFormatter
-		  join: aViennaAbstractFormatter empty , ','
-			  , ((aViennaAbstractFormatter anyNeedsIndent: patterns)
+		  join: aViennaAbstractFormatter empty ++ ','
+			  ++ ((aViennaAbstractFormatter anyNeedsIndent: patterns)
 					   ifTrue: [ aViennaAbstractFormatter cr ]
 					   ifFalse: [ aViennaAbstractFormatter space ])
 		  withAll: patterns

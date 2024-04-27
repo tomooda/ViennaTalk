@@ -44,35 +44,35 @@ ViennaTrapStatementNode >> formatWith: aViennaAbstractFormatter [
 		  ifTrue: [
 			  (aViennaAbstractFormatter
 				   indentString: (aViennaAbstractFormatter keyword: 'trap')
-				   insertCr: pattern) , aViennaAbstractFormatter cr
-			  , (aViennaAbstractFormatter
+				   insertCr: pattern) ++ aViennaAbstractFormatter cr
+			  ++ (aViennaAbstractFormatter
 					   indentString: (aViennaAbstractFormatter keyword: 'with')
-					   insertCr: handler) , aViennaAbstractFormatter cr
-			  , (aViennaAbstractFormatter
+					   insertCr: handler) ++ aViennaAbstractFormatter cr
+			  ++ (aViennaAbstractFormatter
 					   indentString: (aViennaAbstractFormatter keyword: 'in')
 					   insertCr: statement) ]
 		  ifFalse: [
 			  | trap |
-			  trap := (aViennaAbstractFormatter keyword: 'trap ') , pattern.
-			  (aViennaAbstractFormatter needsIndent: trap , handler)
+			  trap := (aViennaAbstractFormatter keyword: 'trap ') ++ pattern.
+			  (aViennaAbstractFormatter needsIndent: trap ++ handler)
 				  ifTrue: [
-					  trap , aViennaAbstractFormatter cr , (aViennaAbstractFormatter
+					  trap ++ aViennaAbstractFormatter cr ++ (aViennaAbstractFormatter
 						   indentString: (aViennaAbstractFormatter keyword: 'with')
-						   insertCr: handler) , aViennaAbstractFormatter cr
-					  , (aViennaAbstractFormatter
+						   insertCr: handler) ++ aViennaAbstractFormatter cr
+					  ++ (aViennaAbstractFormatter
 							   indentString: (aViennaAbstractFormatter keyword: 'in')
 							   insertCr: statement) ]
 				  ifFalse: [
-					  trap := trap , (aViennaAbstractFormatter keyword: ' with ')
-					          , handler.
-					  (aViennaAbstractFormatter needsIndent: trap , statement)
+					  trap := trap ++ (aViennaAbstractFormatter keyword: ' with ')
+					          ++ handler.
+					  (aViennaAbstractFormatter needsIndent: trap ++ statement)
 						  ifTrue: [
-							  trap , aViennaAbstractFormatter cr
-							  , (aViennaAbstractFormatter
+							  trap ++ aViennaAbstractFormatter cr
+							  ++ (aViennaAbstractFormatter
 									   indentString: (aViennaAbstractFormatter keyword: 'in')
 									   insertCr: statement) ]
 						  ifFalse: [
-						  trap , (aViennaAbstractFormatter keyword: ' in ') , statement ] ] ]
+						  trap ++ (aViennaAbstractFormatter keyword: ' in ') ++ statement ] ] ]
 ]
 
 { #category : #accessing }

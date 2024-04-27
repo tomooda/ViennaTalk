@@ -17,8 +17,8 @@ ViennaErrorListNode >> formatWith: aViennaAbstractFormatter [
 	^ self
 		  inject: aViennaAbstractFormatter empty
 		  into: [ :string :node |
-			  string , aViennaAbstractFormatter space
-			  , (aViennaAbstractFormatter format: node) ]
+			  string ++ aViennaAbstractFormatter space
+			  ++ (aViennaAbstractFormatter format: node) ]
 ]
 
 { #category : #private }

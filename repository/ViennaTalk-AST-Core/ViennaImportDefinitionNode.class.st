@@ -25,7 +25,7 @@ ViennaImportDefinitionNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter
 		  indentString: (aViennaAbstractFormatter keyword: 'from ')
-			  , (aViennaAbstractFormatter moduleName: self moduleIdentifier)
+			  ++ (aViennaAbstractFormatter moduleName: self moduleIdentifier)
 		  insertCrIfNeeded:
 		  (aViennaAbstractFormatter format: self importModuleSignature)
 ]

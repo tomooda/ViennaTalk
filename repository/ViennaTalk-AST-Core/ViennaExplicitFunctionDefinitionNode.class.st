@@ -135,7 +135,7 @@ ViennaExplicitFunctionDefinitionNode >> formatWith: aViennaAbstractFormatter [
 	| access identifier typeVariableList functionType parametersList expression pre post measure |
 	access := (aViennaAbstractFormatter format: self access) trim
 		          ifNotEmpty: [ :string |
-		          string , aViennaAbstractFormatter space ].
+		          string ++ aViennaAbstractFormatter space ].
 	identifier := aViennaAbstractFormatter identifier: self identifier.
 	typeVariableList := aViennaAbstractFormatter format:
 		                    self typeVariableList.
@@ -146,25 +146,25 @@ ViennaExplicitFunctionDefinitionNode >> formatWith: aViennaAbstractFormatter [
 	pre := self pre
 		       ifNotNil: [ :node |
 			       aViennaAbstractFormatter cr
-			       , (aViennaAbstractFormatter keyword: 'pre ')
-			       , (aViennaAbstractFormatter format: node) ]
+			       ++ (aViennaAbstractFormatter keyword: 'pre ')
+			       ++ (aViennaAbstractFormatter format: node) ]
 		       ifNil: [ aViennaAbstractFormatter empty ].
 	post := self post
 		        ifNotNil: [ :node |
 			        aViennaAbstractFormatter cr
-			        , (aViennaAbstractFormatter keyword: 'post ')
-			        , (aViennaAbstractFormatter format: node) ]
+			        ++ (aViennaAbstractFormatter keyword: 'post ')
+			        ++ (aViennaAbstractFormatter format: node) ]
 		        ifNil: [ aViennaAbstractFormatter empty ].
 	measure := self measure
 		           ifNotNil: [ :node |
 			           aViennaAbstractFormatter cr
-			           , (aViennaAbstractFormatter keyword: 'measure ')
-			           , (aViennaAbstractFormatter format: node) ]
+			           ++ (aViennaAbstractFormatter keyword: 'measure ')
+			           ++ (aViennaAbstractFormatter format: node) ]
 		           ifNil: [ aViennaAbstractFormatter empty ].
-	^ access , identifier , typeVariableList , ' : ' , functionType
-	  , aViennaAbstractFormatter cr , (aViennaAbstractFormatter
-		   indentString: identifier , parametersList , ' =='
-		   insertCrIfNeeded: expression) , pre , post , measure
+	^ access ++ identifier ++ typeVariableList ++ ' : ' ++ functionType
+	  ++ aViennaAbstractFormatter cr ++ (aViennaAbstractFormatter
+		   indentString: identifier ++ parametersList ++ ' =='
+		   insertCrIfNeeded: expression) ++ pre ++ post ++ measure
 ]
 
 { #category : #private }

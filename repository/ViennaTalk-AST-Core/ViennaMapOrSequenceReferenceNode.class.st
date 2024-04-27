@@ -32,13 +32,13 @@ ViennaMapOrSequenceReferenceNode >> formatWith: aViennaAbstractFormatter [
 	| ref arg |
 	ref := aViennaAbstractFormatter format: self stateDesignator.
 	arg := aViennaAbstractFormatter format: self argumentExpression.
-	^ (aViennaAbstractFormatter needsIndent: ref , arg)
+	^ (aViennaAbstractFormatter needsIndent: ref ++ arg)
 		  ifTrue: [
-			  ref , aViennaAbstractFormatter cr
-			  , aViennaAbstractFormatter indent
-			  , (aViennaAbstractFormatter indentString:
-					   aViennaAbstractFormatter empty , '(' , arg , ')') ]
-		  ifFalse: [ ref , '(' , arg , ')' ]
+			  ref ++ aViennaAbstractFormatter cr
+			  ++ aViennaAbstractFormatter indent
+			  ++ (aViennaAbstractFormatter indentString:
+					   aViennaAbstractFormatter empty ++ '(' ++ arg ++ ')') ]
+		  ifFalse: [ ref ++ '(' ++ arg ++ ')' ]
 ]
 
 { #category : #private }

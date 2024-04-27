@@ -22,9 +22,9 @@ ViennaOperationTypeNode >> asMaximalViennaType [
 ViennaOperationTypeNode >> formatWith: aViennaAbstractFormatter [
 
 	^ (aViennaAbstractFormatter format: self argumentType)
-	  , aViennaAbstractFormatter space , aViennaAbstractFormatter oparrow
-	  , aViennaAbstractFormatter space
-	  , (aViennaAbstractFormatter format: self returnType)
+	  ++ aViennaAbstractFormatter space ++ aViennaAbstractFormatter oparrow
+	  ++ aViennaAbstractFormatter space
+	  ++ (aViennaAbstractFormatter format: self returnType)
 ]
 
 { #category : #testing }

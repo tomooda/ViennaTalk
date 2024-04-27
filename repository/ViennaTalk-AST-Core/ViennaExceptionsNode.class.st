@@ -35,7 +35,7 @@ ViennaExceptionsNode >> errorList: aViennaErrorListNode [
 ViennaExceptionsNode >> formatWith: aViennaAbstractFormatter [
 
 	^ (aViennaAbstractFormatter keyword: 'errs')
-	  , (aViennaAbstractFormatter format: self errorList)
+	  ++ (aViennaAbstractFormatter format: self errorList)
 ]
 
 { #category : #private }

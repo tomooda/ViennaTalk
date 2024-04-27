@@ -38,7 +38,7 @@ ViennaOthersExpressionNode >> formatWith: aViennaAbstractFormatter [
 	expression := aViennaAbstractFormatter format: self expression.
 	^ aViennaAbstractFormatter
 		  indentString: (aViennaAbstractFormatter keyword: 'others ')
-			  , aViennaAbstractFormatter arrow
+			  ++ aViennaAbstractFormatter arrow
 		  insertCrIfNeeded: expression
 ]
 

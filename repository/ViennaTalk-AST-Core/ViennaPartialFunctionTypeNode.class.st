@@ -22,10 +22,10 @@ ViennaPartialFunctionTypeNode >> asMaximalViennaType [
 ViennaPartialFunctionTypeNode >> formatWith: aViennaAbstractFormatter [
 
 	^ (aViennaAbstractFormatter format: self argumentType)
-	  , aViennaAbstractFormatter space
-	  , aViennaAbstractFormatter partialFunction
-	  , aViennaAbstractFormatter space
-	  , (aViennaAbstractFormatter format: self returnType)
+	  ++ aViennaAbstractFormatter space
+	  ++ aViennaAbstractFormatter partialFunction
+	  ++ aViennaAbstractFormatter space
+	  ++ (aViennaAbstractFormatter format: self returnType)
 ]
 
 { #category : #testing }

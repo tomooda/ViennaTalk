@@ -53,8 +53,8 @@ ViennaLambdaExpressionNode >> formatWith: aViennaAbstractFormatter [
 	expression := aViennaAbstractFormatter format: self expression.
 	^ aViennaAbstractFormatter
 		  indentString:
-			  aViennaAbstractFormatter empty , aViennaAbstractFormatter lambda
-			  , ' ' , typeBind , ' ' , aViennaAbstractFormatter dot
+			  aViennaAbstractFormatter empty ++ aViennaAbstractFormatter lambda
+			  ++ ' ' ++ typeBind ++ ' ' ++ aViennaAbstractFormatter dot
 		  insertCrIfNeeded: expression
 ]
 

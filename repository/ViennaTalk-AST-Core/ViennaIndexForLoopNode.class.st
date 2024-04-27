@@ -65,8 +65,8 @@ ViennaIndexForLoopNode >> formatWith: aViennaAbstractFormatter [
 		  noIndentString: (aViennaAbstractFormatter
 				   noIndentString: (aViennaAbstractFormatter
 						    indentString:
-						    (aViennaAbstractFormatter keyword: 'for ') , identifier
-						    insertCrIfNeeded: '= ' , startExpression)
+						    (aViennaAbstractFormatter keyword: 'for ') ++ identifier
+						    insertCrIfNeeded: '= ' ++ startExpression)
 				   insertCrIfNeeded: (aViennaAbstractFormatter
 						    noIndentString: (aViennaAbstractFormatter
 								     indentString: (aViennaAbstractFormatter keyword: 'to ')

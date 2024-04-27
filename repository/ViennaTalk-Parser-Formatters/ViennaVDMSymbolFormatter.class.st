@@ -111,7 +111,7 @@ ViennaVDMSymbolFormatter >> inter [
 
 { #category : #'symbol access' }
 ViennaVDMSymbolFormatter >> inverse: aString [
-	^ aString, '⁻¹'
+	^ aString++ '⁻¹'
 ]
 
 { #category : #'symbol access' }

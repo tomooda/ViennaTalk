@@ -29,8 +29,8 @@ ViennaFunctionExportNode >> formatWith: aViennaAbstractFormatter [
 	typeVarList := aViennaAbstractFormatter format: self typeVariableList.
 	functionType := aViennaAbstractFormatter format: self type.
 	^ aViennaAbstractFormatter
-		  indentString: nameList , typeVarList
-		  insertCrIfNeeded: ': ' , functionType
+		  indentString: nameList ++ typeVarList
+		  insertCrIfNeeded: ': ' ++ functionType
 ]
 
 { #category : #testing }

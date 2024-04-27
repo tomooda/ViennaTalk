@@ -1,6 +1,12 @@
 Extension { #name : #Text }
 
 { #category : #'*ViennaTalk-Parser-Highlighters' }
+Text >> ++ aTextOrString [
+
+	^ self , aTextOrString
+]
+
+{ #category : #'*ViennaTalk-Parser-Highlighters' }
 Text >> lines [
 	"Answer an array of lines composing this receiver without the line ending delimiters"
 

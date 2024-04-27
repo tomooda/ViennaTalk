@@ -10,19 +10,19 @@ ViennaTraceConcurrentExpressionNode >> formatWith: aViennaAbstractFormatter [
 
 	| traceDefinitions |
 	traceDefinitions := aViennaAbstractFormatter formatAll: self.
-	^ (aViennaAbstractFormatter keyword: '||') , '('
-	  , ((aViennaAbstractFormatter anyNeedsIndent: traceDefinitions)
+	^ (aViennaAbstractFormatter keyword: '||') ++ '('
+	  ++ ((aViennaAbstractFormatter anyNeedsIndent: traceDefinitions)
 			   ifTrue: [
 				   aViennaAbstractFormatter
 					   join:
-						   aViennaAbstractFormatter empty , ','
-						   , aViennaAbstractFormatter cr
-						   , aViennaAbstractFormatter indent
+						   aViennaAbstractFormatter empty ++ ','
+						   ++ aViennaAbstractFormatter cr
+						   ++ aViennaAbstractFormatter indent
 					   withAll: (traceDefinitions collect: [ :statement |
 							    aViennaAbstractFormatter indentString: statement ]) ]
 			   ifFalse: [
 			   aViennaAbstractFormatter join: ', ' withAll: traceDefinitions ])
-	  , ')'
+	  ++ ')'
 ]
 
 { #category : #private }

@@ -26,7 +26,7 @@ ViennaOthersStatementNode >> formatWith: aViennaAbstractFormatter [
 	statement := aViennaAbstractFormatter format: self statement.
 	^ aViennaAbstractFormatter
 		  indentString: (aViennaAbstractFormatter keyword: 'others ')
-			  , aViennaAbstractFormatter arrow
+			  ++ aViennaAbstractFormatter arrow
 		  insertCrIfNeeded: statement
 ]
 

@@ -22,10 +22,10 @@ ViennaTotalFunctionTypeNode >> asMaximalViennaType [
 ViennaTotalFunctionTypeNode >> formatWith: aViennaAbstractFormatter [
 
 	^ (aViennaAbstractFormatter format: self argumentType)
-	  , aViennaAbstractFormatter space
-	  , aViennaAbstractFormatter totalFunction
-	  , aViennaAbstractFormatter space
-	  , (aViennaAbstractFormatter format: self returnType)
+	  ++ aViennaAbstractFormatter space
+	  ++ aViennaAbstractFormatter totalFunction
+	  ++ aViennaAbstractFormatter space
+	  ++ (aViennaAbstractFormatter format: self returnType)
 ]
 
 { #category : #testing }

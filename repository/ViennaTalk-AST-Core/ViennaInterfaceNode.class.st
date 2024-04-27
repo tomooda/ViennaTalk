@@ -49,10 +49,10 @@ ViennaInterfaceNode >> formatWith: aViennaAbstractFormatter [
 		                        ifNil: [ aViennaAbstractFormatter empty ]
 		                        ifNotNil: [ :defList |
 			                        (aViennaAbstractFormatter format: defList)
-			                        , aViennaAbstractFormatter cr ].
+			                        ++ aViennaAbstractFormatter cr ].
 	exportDefinition := aViennaAbstractFormatter format:
 		                    self exportDefinition.
-	^ importDefinitionList , exportDefinition
+	^ importDefinitionList ++ exportDefinition
 ]
 
 { #category : #accessing }

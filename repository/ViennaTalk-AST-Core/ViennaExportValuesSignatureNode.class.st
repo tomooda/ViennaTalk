@@ -14,9 +14,9 @@ ViennaExportValuesSignatureNode >> formatWith: aViennaAbstractFormatter [
 		  indentString: (aViennaAbstractFormatter keyword: 'values')
 		  insertCrIfNeeded: (aViennaAbstractFormatter
 				   join:
-				   aViennaAbstractFormatter empty , ';'
-				   , aViennaAbstractFormatter cr
-				   withAll: signatures) , ';'
+				   aViennaAbstractFormatter empty ++ ';'
+				   ++ aViennaAbstractFormatter cr
+				   withAll: signatures) ++ ';'
 ]
 
 { #category : #testing }

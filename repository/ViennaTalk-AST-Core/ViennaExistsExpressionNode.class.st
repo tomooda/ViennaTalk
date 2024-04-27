@@ -24,7 +24,7 @@ ViennaExistsExpressionNode >> formatWith: aViennaAbstractFormatter [
 		  indentString: (aViennaAbstractFormatter
 				   indentString: aViennaAbstractFormatter exists
 				   insertCrIfNeeded:
-				   bindList trim , ' ' , aViennaAbstractFormatter dot)
+				   bindList trim ++ ' ' ++ aViennaAbstractFormatter dot)
 		  insertCrIfNeeded: expression
 ]
 

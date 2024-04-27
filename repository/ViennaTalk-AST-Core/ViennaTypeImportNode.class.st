@@ -23,7 +23,7 @@ ViennaTypeImportNode >> formatWith: aViennaAbstractFormatter [
 		          ifNil: [ aViennaAbstractFormatter empty ]
 		          ifNotNil: [ :node |
 			          (aViennaAbstractFormatter keyword: 'renamed ')
-			          , (aViennaAbstractFormatter format: node) ].
+			          ++ (aViennaAbstractFormatter format: node) ].
 	^ aViennaAbstractFormatter
 		  indentString: type
 		  insertCrIfNeeded: rename

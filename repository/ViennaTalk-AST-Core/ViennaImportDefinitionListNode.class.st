@@ -21,8 +21,8 @@ ViennaImportDefinitionListNode >> formatWith: aViennaAbstractFormatter [
 		  indentString: (aViennaAbstractFormatter keyword: 'imports')
 		  insertCrIfNeeded: (aViennaAbstractFormatter
 				   join:
-				   aViennaAbstractFormatter empty , ','
-				   , aViennaAbstractFormatter cr
+				   aViennaAbstractFormatter empty ++ ','
+				   ++ aViennaAbstractFormatter cr
 				   withAll: definitions)
 ]
 

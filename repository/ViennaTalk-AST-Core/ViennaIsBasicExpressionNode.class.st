@@ -45,12 +45,12 @@ ViennaIsBasicExpressionNode >> formatWith: aViennaAbstractFormatter [
 	name := aViennaAbstractFormatter format: self basicTypeName.
 	expression := aViennaAbstractFormatter format: self expression.
 	^ aViennaAbstractFormatter empty
-	  , (aViennaAbstractFormatter keyword: 'is_') , name , '('
-	  , ((aViennaAbstractFormatter needsIndent: expression)
+	  ++ (aViennaAbstractFormatter keyword: 'is_') ++ name ++ '('
+	  ++ ((aViennaAbstractFormatter needsIndent: expression)
 			   ifTrue: [
-				   aViennaAbstractFormatter cr , aViennaAbstractFormatter indent
-				   , (aViennaAbstractFormatter indentString: expression) ]
-			   ifFalse: [ expression ]) , ')'
+				   aViennaAbstractFormatter cr ++ aViennaAbstractFormatter indent
+				   ++ (aViennaAbstractFormatter indentString: expression) ]
+			   ifFalse: [ expression ]) ++ ')'
 ]
 
 { #category : #private }

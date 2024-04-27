@@ -29,7 +29,7 @@ ViennaInitialisationNode >> expression [
 ViennaInitialisationNode >> formatWith: aViennaAbstractFormatter [
 
 	^ (aViennaAbstractFormatter keyword: 'init ')
-	  , (aViennaAbstractFormatter format: self invariantInitialFunction)
+	  ++ (aViennaAbstractFormatter format: self invariantInitialFunction)
 ]
 
 { #category : #private }

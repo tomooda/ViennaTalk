@@ -17,9 +17,9 @@ ViennaExternalsNode >> formatWith: aViennaAbstractFormatter [
 	^ self asArray
 		  inject: (aViennaAbstractFormatter keyword: 'ext')
 		  into: [ :str :node |
-			  aViennaAbstractFormatter empty , str
-			  , aViennaAbstractFormatter space
-			  , (aViennaAbstractFormatter format: node) ]
+			  aViennaAbstractFormatter empty ++ str
+			  ++ aViennaAbstractFormatter space
+			  ++ (aViennaAbstractFormatter format: node) ]
 ]
 
 { #category : #private }

@@ -31,10 +31,10 @@ ViennaCallStatementNode >> formatWith: aViennaAbstractFormatter [
 
 	| args |
 	args := aViennaAbstractFormatter format: self expressionList.
-	^ (aViennaAbstractFormatter format: self name) , '('
-	  , ((aViennaAbstractFormatter needsIndent: args)
+	^ (aViennaAbstractFormatter format: self name) ++ '('
+	  ++ ((aViennaAbstractFormatter needsIndent: args)
 			   ifTrue: [ aViennaAbstractFormatter newlineIndentString: args ]
-			   ifFalse: [ args ]) , ')'
+			   ifFalse: [ args ]) ++ ')'
 ]
 
 { #category : #private }

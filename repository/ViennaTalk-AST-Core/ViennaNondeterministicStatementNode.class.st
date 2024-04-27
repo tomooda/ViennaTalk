@@ -10,15 +10,15 @@ ViennaNondeterministicStatementNode >> formatWith: aViennaAbstractFormatter [
 
 	| statements |
 	statements := aViennaAbstractFormatter formatAll: self.
-	^ (aViennaAbstractFormatter keyword: '||') , '('
-	  , ((aViennaAbstractFormatter anyNeedsIndent: statements)
+	^ (aViennaAbstractFormatter keyword: '||') ++ '('
+	  ++ ((aViennaAbstractFormatter anyNeedsIndent: statements)
 			   ifTrue: [
 				   aViennaAbstractFormatter
-					   join: ',' , String cr , aViennaAbstractFormatter indent
+					   join: ',' ++ String cr ++ aViennaAbstractFormatter indent
 					   withAll: (statements collect: [ :statement |
 							    aViennaAbstractFormatter indentString: statement ]) ]
 			   ifFalse: [
-			   aViennaAbstractFormatter join: ', ' withAll: statements ]) , ')'
+			   aViennaAbstractFormatter join: ', ' withAll: statements ]) ++ ')'
 ]
 
 { #category : #private }

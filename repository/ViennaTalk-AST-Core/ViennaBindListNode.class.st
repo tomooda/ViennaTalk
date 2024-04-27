@@ -17,8 +17,8 @@ ViennaBindListNode >> formatWith: aViennaAbstractFormatter [
 	| binds |
 	binds := aViennaAbstractFormatter formatAll: self.
 	^ aViennaAbstractFormatter
-		  join: aViennaAbstractFormatter empty , ','
-			  , ((aViennaAbstractFormatter anyNeedsIndent: binds)
+		  join: aViennaAbstractFormatter empty ++ ','
+			  ++ ((aViennaAbstractFormatter anyNeedsIndent: binds)
 					   ifTrue: [ aViennaAbstractFormatter cr ]
 					   ifFalse: [ aViennaAbstractFormatter space ])
 		  withAll: binds

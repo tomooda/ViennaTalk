@@ -116,7 +116,7 @@ ViennaExtendedExplicitFunctionDefinitionNode >> formatWith: aViennaAbstractForma
 	| access identifier typeVariableList patternTypePairList identifierTypePairList expression pre post |
 	access := (aViennaAbstractFormatter format: self access) trim
 		          ifNotEmpty: [ :string |
-		          string , aViennaAbstractFormatter space ].
+		          string ++ aViennaAbstractFormatter space ].
 	identifier := aViennaAbstractFormatter format: self identifier.
 	typeVariableList := aViennaAbstractFormatter format:
 		                    self typeVariableList.
@@ -128,19 +128,19 @@ ViennaExtendedExplicitFunctionDefinitionNode >> formatWith: aViennaAbstractForma
 	pre := self pre
 		       ifNotNil: [
 			       aViennaAbstractFormatter cr
-			       , (aViennaAbstractFormatter keyword: 'pre ')
-			       , (aViennaAbstractFormatter format: self pre) ]
+			       ++ (aViennaAbstractFormatter keyword: 'pre ')
+			       ++ (aViennaAbstractFormatter format: self pre) ]
 		       ifNil: [ aViennaAbstractFormatter empty ].
 	post := self post
 		        ifNotNil: [
 			        aViennaAbstractFormatter cr
-			        , (aViennaAbstractFormatter keyword: 'post ')
-			        , aViennaAbstractFormatter format: self post ]
+			        ++ (aViennaAbstractFormatter keyword: 'post ')
+			        ++ aViennaAbstractFormatter format: self post ]
 		        ifNil: [ aViennaAbstractFormatter empty ].
-	^ access , identifier , typeVariableList , patternTypePairList
-	  , identifierTypePairList , ' ==' , String cr
-	  , aViennaAbstractFormatter indent
-	  , (aViennaAbstractFormatter indentString: expression) , pre , post
+	^ access ++ identifier ++ typeVariableList ++ patternTypePairList
+	  ++ identifierTypePairList ++ ' ==' ++ String cr
+	  ++ aViennaAbstractFormatter indent
+	  ++ (aViennaAbstractFormatter indentString: expression) ++ pre ++ post
 ]
 
 { #category : #private }

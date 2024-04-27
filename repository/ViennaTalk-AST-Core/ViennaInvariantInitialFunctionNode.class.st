@@ -57,7 +57,7 @@ ViennaInvariantInitialFunctionNode >> formatWith: aViennaAbstractFormatter [
 	pattern := aViennaAbstractFormatter format: self pattern.
 	expression := aViennaAbstractFormatter format: self expression.
 	^ aViennaAbstractFormatter
-		  indentString: pattern , ' =='
+		  indentString: pattern ++ ' =='
 		  insertCrIfNeeded: expression
 ]
 

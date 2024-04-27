@@ -20,15 +20,15 @@ ViennaPatternTypePairListNode >> formatWith: aViennaAbstractFormatter [
 	self ifNotEmpty: [
 		1 to: self size - 2 by: 2 do: [ :index |
 			string := string
-			          , (aViennaAbstractFormatter format: (self at: index))
-			          , ':'
-			          , (aViennaAbstractFormatter format: (self at: index + 1))
-			          , ', ' ].
+			          ++ (aViennaAbstractFormatter format: (self at: index))
+			          ++ ':'
+			          ++ (aViennaAbstractFormatter format: (self at: index + 1))
+			          ++ ', ' ].
 		string := string
-		          ,
+		          ++
 		          (aViennaAbstractFormatter format: (self at: self size - 1))
-		          , ':'
-		          , (aViennaAbstractFormatter format: (self at: self size)) ].
+		          ++ ':'
+		          ++ (aViennaAbstractFormatter format: (self at: self size)) ].
 	^ string
 ]
 

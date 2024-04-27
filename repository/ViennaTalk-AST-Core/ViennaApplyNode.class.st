@@ -50,12 +50,12 @@ ViennaApplyNode >> formatWith: aViennaAbstractFormatter [
 	| expression args |
 	expression := aViennaAbstractFormatter format: self expression.
 	args := aViennaAbstractFormatter format: self argumentExpressionList.
-	^ expression , '('
-	  , ((aViennaAbstractFormatter needsIndent: expression , args)
+	^ expression ++ '('
+	  ++ ((aViennaAbstractFormatter needsIndent: expression ++ args)
 			   ifTrue: [
-				   aViennaAbstractFormatter cr , aViennaAbstractFormatter indent
-				   , (aViennaAbstractFormatter indentString: args) ]
-			   ifFalse: [ args ]) , ')'
+				   aViennaAbstractFormatter cr ++ aViennaAbstractFormatter indent
+				   ++ (aViennaAbstractFormatter indentString: args) ]
+			   ifFalse: [ args ]) ++ ')'
 ]
 
 { #category : #private }

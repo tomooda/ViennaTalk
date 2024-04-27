@@ -19,7 +19,7 @@ ViennaSeqConcPatternNode >> formatWith: aViennaAbstractFormatter [
 	^ aViennaAbstractFormatter
 		  join: ((aViennaAbstractFormatter anyNeedsIndent: patterns)
 				   ifTrue: [
-				   aViennaAbstractFormatter cr , aViennaAbstractFormatter concat ]
+				   aViennaAbstractFormatter cr ++ aViennaAbstractFormatter concat ]
 				   ifFalse: [ aViennaAbstractFormatter concat ])
 		  withAll: patterns
 ]

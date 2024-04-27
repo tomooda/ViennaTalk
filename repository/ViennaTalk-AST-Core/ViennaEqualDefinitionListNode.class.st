@@ -33,9 +33,9 @@ ViennaEqualDefinitionListNode >> formatWith: aViennaAbstractFormatter [
 	defs := aViennaAbstractFormatter formatAll: self.
 	^ (aViennaAbstractFormatter
 		   join:
-		   aViennaAbstractFormatter empty , ';'
-		   , aViennaAbstractFormatter cr
-		   withAll: defs) , ';'
+		   aViennaAbstractFormatter empty ++ ';'
+		   ++ aViennaAbstractFormatter cr
+		   withAll: defs) ++ ';'
 ]
 
 { #category : #private }

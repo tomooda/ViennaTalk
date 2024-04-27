@@ -28,7 +28,7 @@ ViennaReturnStatementNode >> expression: aViennaExpressionNode [
 { #category : #'pretty printing' }
 ViennaReturnStatementNode >> formatWith: aViennaAbstractFormatter [
 
-	^ (aViennaAbstractFormatter keyword: 'return ') , (self expression
+	^ (aViennaAbstractFormatter keyword: 'return ') ++ (self expression
 		   ifNil: [ aViennaAbstractFormatter empty ]
 		   ifNotNil: [ :arg |
 			   aViennaAbstractFormatter indentString:

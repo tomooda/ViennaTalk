@@ -16,7 +16,7 @@ ViennaCasesExpressionAlternativesNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter
 		  join:
-		  aViennaAbstractFormatter empty , ',' , aViennaAbstractFormatter cr
+		  aViennaAbstractFormatter empty ++ ',' ++ aViennaAbstractFormatter cr
 		  withAll: (aViennaAbstractFormatter formatAll: self)
 ]
 

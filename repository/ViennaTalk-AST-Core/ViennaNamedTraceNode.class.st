@@ -24,9 +24,9 @@ ViennaNamedTraceNode >> boundIdentifiersDo: aBlock [
 ViennaNamedTraceNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter indentString:
-		  (aViennaAbstractFormatter identifier: self identifier) , ':'
-		  , aViennaAbstractFormatter cr
-		  , (aViennaAbstractFormatter format: self traceDefinitionList)
+		  (aViennaAbstractFormatter identifier: self identifier) ++ ':'
+		  ++ aViennaAbstractFormatter cr
+		  ++ (aViennaAbstractFormatter format: self traceDefinitionList)
 ]
 
 { #category : #private }

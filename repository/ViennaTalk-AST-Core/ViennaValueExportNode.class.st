@@ -28,8 +28,8 @@ ViennaValueExportNode >> formatWith: aViennaAbstractFormatter [
 	type := self type
 		        ifNil: [ aViennaAbstractFormatter empty ]
 		        ifNotNil: [ :node |
-		        ' : ' , (aViennaAbstractFormatter format: node) ].
-	^ nameList , type
+		        ' : ' ++ (aViennaAbstractFormatter format: node) ].
+	^ nameList ++ type
 ]
 
 { #category : #testing }

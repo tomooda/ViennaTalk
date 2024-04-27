@@ -33,12 +33,12 @@ ViennaRecordConstructorNode >> formatWith: aViennaAbstractFormatter [
 	constructor := aViennaAbstractFormatter format: self name.
 	expressionList := aViennaAbstractFormatter format:
 		                  self expressionList.
-	^ (aViennaAbstractFormatter keyword: 'mk_') , constructor , '('
-	  , ((aViennaAbstractFormatter needsIndent: expressionList)
+	^ (aViennaAbstractFormatter keyword: 'mk_') ++ constructor ++ '('
+	  ++ ((aViennaAbstractFormatter needsIndent: expressionList)
 			   ifTrue: [
-				   aViennaAbstractFormatter cr , aViennaAbstractFormatter indent
-				   , (aViennaAbstractFormatter indentString: expressionList) ]
-			   ifFalse: [ expressionList ]) , ')'
+				   aViennaAbstractFormatter cr ++ aViennaAbstractFormatter indent
+				   ++ (aViennaAbstractFormatter indentString: expressionList) ]
+			   ifFalse: [ expressionList ]) ++ ')'
 ]
 
 { #category : #private }

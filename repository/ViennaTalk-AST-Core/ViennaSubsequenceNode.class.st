@@ -36,20 +36,20 @@ ViennaSubsequenceNode >> formatWith: aViennaAbstractFormatter [
 		                   self startExpression.
 	endExpression := aViennaAbstractFormatter format: self endExpression.
 	(aViennaAbstractFormatter needsIndent:
-		 sequence , startExpression , endExpression) ifFalse: [
-		^ sequence , '(' , startExpression , ','
-		  , aViennaAbstractFormatter dots , ',' , endExpression , ')' ].
+		 sequence ++ startExpression ++ endExpression) ifFalse: [
+		^ sequence ++ '(' ++ startExpression ++ ','
+		  ++ aViennaAbstractFormatter dots ++ ',' ++ endExpression ++ ')' ].
 	(aViennaAbstractFormatter needsIndent:
-		 startExpression , endExpression) ifFalse: [
-		^ sequence , '(' , String cr , aViennaAbstractFormatter indent
-		  , (aViennaAbstractFormatter indentString:
-				   startExpression , ',' , aViennaAbstractFormatter dots , ', '
-				   , endExpression , ')') ].
-	^ sequence , '(' , String cr , aViennaAbstractFormatter indent
-	  , ((aViennaAbstractFormatter indentString: startExpression , ',')
-		   , String cr , aViennaAbstractFormatter indent
-		   , aViennaAbstractFormatter dots , ', '
-		   , (aViennaAbstractFormatter indentString: endExpression , ')'))
+		 startExpression ++ endExpression) ifFalse: [
+		^ sequence ++ '(' ++ String cr ++ aViennaAbstractFormatter indent
+		  ++ (aViennaAbstractFormatter indentString:
+				   startExpression ++ ',' ++ aViennaAbstractFormatter dots ++ ', '
+				   ++ endExpression ++ ')') ].
+	^ sequence ++ '(' ++ String cr ++ aViennaAbstractFormatter indent
+	  ++ ((aViennaAbstractFormatter indentString: startExpression ++ ',')
+		   ++ String cr ++ aViennaAbstractFormatter indent
+		   ++ aViennaAbstractFormatter dots ++ ', '
+		   ++ (aViennaAbstractFormatter indentString: endExpression ++ ')'))
 ]
 
 { #category : #private }

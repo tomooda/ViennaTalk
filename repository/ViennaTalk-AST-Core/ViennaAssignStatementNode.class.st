@@ -32,8 +32,8 @@ ViennaAssignStatementNode >> formatWith: aViennaAbstractFormatter [
 	^ aViennaAbstractFormatter
 		  indentString:
 		  (aViennaAbstractFormatter format: self stateDesignator)
-		  insertCrIfNeeded: aViennaAbstractFormatter empty , ':= '
-			  , (aViennaAbstractFormatter format: self expression)
+		  insertCrIfNeeded: aViennaAbstractFormatter empty ++ ':= '
+			  ++ (aViennaAbstractFormatter format: self expression)
 ]
 
 { #category : #private }
@@ -61,7 +61,7 @@ ViennaAssignStatementNode >> maximalType [
 	self stateDesignator isAssignable ifFalse: [
 		^ ViennaTypeError
 			  on: self
-			  signal: 'Can not assign to ' , self stateDesignator source ].
+			  signal: 'Can not assign to ' ++ self stateDesignator source ].
 	self expression typecheck: self stateDesignator typecheck.
 	^ ViennaType unit
 ]

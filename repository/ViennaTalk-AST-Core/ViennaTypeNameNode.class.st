@@ -30,7 +30,7 @@ ViennaTypeNameNode >> formatWith: aViennaAbstractFormatter [
 	^ name isViennaGlobalNameNode
 		  ifTrue: [
 			  (aViennaAbstractFormatter moduleName: name moduleIdentifier)
-			  , '`' , (aViennaAbstractFormatter typeName: name identifier) ]
+			  ++ '`' ++ (aViennaAbstractFormatter typeName: name identifier) ]
 		  ifFalse: [ aViennaAbstractFormatter typeName: name identifier ]
 ]
 

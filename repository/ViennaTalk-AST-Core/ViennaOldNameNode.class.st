@@ -17,7 +17,7 @@ ViennaOldNameNode class >> identifier: aString [
 ViennaOldNameNode >> formatWith: aViennaAbstractFormatter [
 
 	^ (aViennaAbstractFormatter identifier: self identifier)
-	  , (aViennaAbstractFormatter keyword: '~')
+	  ++ (aViennaAbstractFormatter keyword: '~')
 ]
 
 { #category : #testing }

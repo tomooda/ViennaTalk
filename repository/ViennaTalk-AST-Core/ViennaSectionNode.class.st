@@ -24,13 +24,13 @@ ViennaSectionNode >> formatWith: aViennaAbstractFormatter [
 		  indentString: (aViennaAbstractFormatter keyword: self sectionName)
 		  insertCr: (aViennaAbstractFormatter
 				   join:
-				   ';' , aViennaAbstractFormatter cr , aViennaAbstractFormatter cr
+				   ';' ++ aViennaAbstractFormatter cr ++ aViennaAbstractFormatter cr
 				   withAll: (aViennaAbstractFormatter formatAll: self))
-			  , (self isEmpty
+			  ++ (self isEmpty
 					   ifTrue: [ aViennaAbstractFormatter empty ]
 					   ifFalse: [
-					   aViennaAbstractFormatter empty , ';'
-					   , aViennaAbstractFormatter cr ])
+					   aViennaAbstractFormatter empty ++ ';'
+					   ++ aViennaAbstractFormatter cr ])
 ]
 
 { #category : #private }

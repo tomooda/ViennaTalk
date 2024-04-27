@@ -46,11 +46,11 @@ ViennaAssignmentDefinitionNode >> expression: aViennaExpressionNode [
 { #category : #'pretty printing' }
 ViennaAssignmentDefinitionNode >> formatWith: aViennaAbstractFormatter [
 
-	^ (aViennaAbstractFormatter identifier: self identifier) , ':'
-	  , (aViennaAbstractFormatter format: self type) , (self expression
+	^ (aViennaAbstractFormatter identifier: self identifier) ++ ':'
+	  ++ (aViennaAbstractFormatter format: self type) ++ (self expression
 		   ifNotNil: [ :exp |
-			   aViennaAbstractFormatter empty , ' := '
-			   , (aViennaAbstractFormatter format: exp) ]
+			   aViennaAbstractFormatter empty ++ ' := '
+			   ++ (aViennaAbstractFormatter format: exp) ]
 		   ifNil: [ aViennaAbstractFormatter empty ])
 ]
 

@@ -31,8 +31,8 @@ ViennaGlobalNameNode >> definition [
 { #category : #'pretty printing' }
 ViennaGlobalNameNode >> formatWith: aViennaAbstractFormatter [
 
-	^ (aViennaAbstractFormatter moduleName: self moduleIdentifier) , '`'
-	  , (aViennaAbstractFormatter identifier: self identifier)
+	^ (aViennaAbstractFormatter moduleName: self moduleIdentifier) ++ '`'
+	  ++ (aViennaAbstractFormatter identifier: self identifier)
 ]
 
 { #category : #private }

@@ -24,8 +24,8 @@ ViennaForallExpressionNode >> formatWith: aViennaAbstractFormatter [
 		  indentString: (aViennaAbstractFormatter
 				   indentString: aViennaAbstractFormatter forall
 				   insertCrIfNeeded:
-					   bindList trim , aViennaAbstractFormatter space
-					   , aViennaAbstractFormatter dot)
+					   bindList trim ++ aViennaAbstractFormatter space
+					   ++ aViennaAbstractFormatter dot)
 		  insertCrIfNeeded: expression
 ]
 

@@ -45,7 +45,7 @@ ViennaEqualDefinitionNode >> formatWith: aViennaAbstractFormatter [
 	patternOrBind := aViennaAbstractFormatter format: self patternOrBind.
 	expression := aViennaAbstractFormatter format: self expression.
 	^ aViennaAbstractFormatter
-		  indentString: patternOrBind , ' = '
+		  indentString: patternOrBind ++ ' = '
 		  insertCrIfNeeded: expression
 ]
 

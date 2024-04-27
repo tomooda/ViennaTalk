@@ -90,7 +90,7 @@ ViennaTypeSynonymNode >> formatWith: aViennaAbstractFormatter [
 	| access typeName baseType invariant |
 	access := (aViennaAbstractFormatter format: self access) trim
 		          ifNotEmpty: [ :string |
-		          string , aViennaAbstractFormatter space ].
+		          string ++ aViennaAbstractFormatter space ].
 	typeName := aViennaAbstractFormatter typeName: self identifier.
 	baseType := aViennaAbstractFormatter format: self type.
 	invariant := self inv
@@ -99,7 +99,7 @@ ViennaTypeSynonymNode >> formatWith: aViennaAbstractFormatter [
 		             aViennaAbstractFormatter format: node ].
 	^ aViennaAbstractFormatter
 		  indentString: (aViennaAbstractFormatter
-				   indentString: access , typeName , ' ='
+				   indentString: access ++ typeName ++ ' ='
 				   insertCrIfNeeded: baseType)
 		  insertCrIfNeeded: invariant
 ]

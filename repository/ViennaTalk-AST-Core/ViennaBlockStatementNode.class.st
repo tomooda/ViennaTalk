@@ -36,11 +36,11 @@ ViennaBlockStatementNode >> findResolverForIdentifier: aString [
 { #category : #'pretty printing' }
 ViennaBlockStatementNode >> formatWith: aViennaAbstractFormatter [
 
-	^ aViennaAbstractFormatter empty , '(' , (aViennaAbstractFormatter
+	^ aViennaAbstractFormatter empty ++ '(' ++ (aViennaAbstractFormatter
 		   join:
-		   aViennaAbstractFormatter empty , ';'
-		   , aViennaAbstractFormatter cr
-		   withAll: (aViennaAbstractFormatter formatAll: self)) , ')'
+		   aViennaAbstractFormatter empty ++ ';'
+		   ++ aViennaAbstractFormatter cr
+		   withAll: (aViennaAbstractFormatter formatAll: self)) ++ ')'
 ]
 
 { #category : #private }

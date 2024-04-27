@@ -49,16 +49,16 @@ ViennaAlwaysStatementNode >> formatWith: aViennaAbstractFormatter [
 		  ifTrue: [
 			  (aViennaAbstractFormatter
 				   indentString: (aViennaAbstractFormatter keyword: 'always')
-				   insertCr: entailingStatement) , aViennaAbstractFormatter cr
-			  , (aViennaAbstractFormatter
+				   insertCr: entailingStatement) ++ aViennaAbstractFormatter cr
+			  ++ (aViennaAbstractFormatter
 					   indentString: (aViennaAbstractFormatter keyword: 'in')
 					   insertCr: statement) ]
 		  ifFalse: [
 			  aViennaAbstractFormatter
 				  indentString:
 					  (aViennaAbstractFormatter keyword: 'always ')
-					  , entailingStatement
-					  , (aViennaAbstractFormatter keyword: ' in')
+					  ++ entailingStatement
+					  ++ (aViennaAbstractFormatter keyword: ' in')
 				  insertCrIfNeeded: statement ]
 ]
 

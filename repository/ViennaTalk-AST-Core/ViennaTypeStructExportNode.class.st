@@ -11,10 +11,10 @@ ViennaTypeStructExportNode >> formatWith: aViennaAbstractFormatter [
 	| name |
 	name := self name.
 	^ (aViennaAbstractFormatter keyword: 'struct ')
-	  , (name isViennaGlobalNameNode
+	  ++ (name isViennaGlobalNameNode
 			   ifTrue: [
 				   (aViennaAbstractFormatter moduleName: name moduleIdentifier)
-				   , '`' , (aViennaAbstractFormatter typeName: name identifier) ]
+				   ++ '`' ++ (aViennaAbstractFormatter typeName: name identifier) ]
 			   ifFalse: [ aViennaAbstractFormatter typeName: name identifier ])
 ]
 

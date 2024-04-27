@@ -21,8 +21,8 @@ ViennaLocalDefinitionListNode >> formatWith: aViennaAbstractFormatter [
 		  ifTrue: [
 			  aViennaAbstractFormatter
 				  join:
-				  aViennaAbstractFormatter empty , ','
-				  , aViennaAbstractFormatter cr
+				  aViennaAbstractFormatter empty ++ ','
+				  ++ aViennaAbstractFormatter cr
 				  withAll: localDefinitions ]
 		  ifFalse: [
 		  aViennaAbstractFormatter join: ', ' withAll: localDefinitions ]

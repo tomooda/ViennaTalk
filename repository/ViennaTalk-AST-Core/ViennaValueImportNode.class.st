@@ -23,14 +23,14 @@ ViennaValueImportNode >> formatWith: aViennaAbstractFormatter [
 	type := self type
 		        ifNil: [ aViennaAbstractFormatter empty ]
 		        ifNotNil: [ :node |
-		        ': ' , (aViennaAbstractFormatter format: node) ].
+		        ': ' ++ (aViennaAbstractFormatter format: node) ].
 	rename := self rename
 		          ifNil: [ aViennaAbstractFormatter empty ]
 		          ifNotNil: [ :node |
 			          (aViennaAbstractFormatter keyword: 'renamed ')
-			          , (aViennaAbstractFormatter format: node) ].
+			          ++ (aViennaAbstractFormatter format: node) ].
 	^ aViennaAbstractFormatter
-		  indentString: name , type
+		  indentString: name ++ type
 		  insertCrIfNeeded: rename
 ]
 

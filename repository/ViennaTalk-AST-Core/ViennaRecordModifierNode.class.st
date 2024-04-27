@@ -32,13 +32,13 @@ ViennaRecordModifierNode >> formatWith: aViennaAbstractFormatter [
 	| record mapletList |
 	record := aViennaAbstractFormatter format: self expression.
 	mapletList := aViennaAbstractFormatter format: self mapletList.
-	^ aViennaAbstractFormatter empty , aViennaAbstractFormatter mu , '('
-	  , record , ','
-	  , ((aViennaAbstractFormatter needsIndent: record , mapletList)
+	^ aViennaAbstractFormatter empty ++ aViennaAbstractFormatter mu ++ '('
+	  ++ record ++ ','
+	  ++ ((aViennaAbstractFormatter needsIndent: record ++ mapletList)
 			   ifTrue: [
-				   aViennaAbstractFormatter cr , aViennaAbstractFormatter indent
-				   , (aViennaAbstractFormatter indentString: mapletList) ]
-			   ifFalse: [ mapletList ]) , ')'
+				   aViennaAbstractFormatter cr ++ aViennaAbstractFormatter indent
+				   ++ (aViennaAbstractFormatter indentString: mapletList) ]
+			   ifFalse: [ mapletList ]) ++ ')'
 ]
 
 { #category : #accessing }

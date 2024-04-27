@@ -35,10 +35,10 @@ ViennaSetRangeExpressionNode >> formatWith: aViennaAbstractFormatter [
 	endExpression := aViennaAbstractFormatter format: self endExpression.
 	^ aViennaAbstractFormatter
 		  noIndentString:
-		  aViennaAbstractFormatter empty , '{' , startExpression , ','
+		  aViennaAbstractFormatter empty ++ '{' ++ startExpression ++ ','
 		  insertCrIfNeeded:
-			  aViennaAbstractFormatter empty , aViennaAbstractFormatter dots
-			  , ', ' , endExpression , '}'
+			  aViennaAbstractFormatter empty ++ aViennaAbstractFormatter dots
+			  ++ ', ' ++ endExpression ++ '}'
 ]
 
 { #category : #private }

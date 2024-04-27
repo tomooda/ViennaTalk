@@ -54,15 +54,15 @@ ViennaSequenceComprehensionNode >> formatWith: aViennaAbstractFormatter [
 	guard := self suchthatExpression
 		         ifNotNil: [ :node |
 			         aViennaAbstractFormatter empty
-			         , aViennaAbstractFormatter dot
-			         , aViennaAbstractFormatter space
-			         , (aViennaAbstractFormatter format: node) ]
+			         ++ aViennaAbstractFormatter dot
+			         ++ aViennaAbstractFormatter space
+			         ++ (aViennaAbstractFormatter format: node) ]
 		         ifNil: [ aViennaAbstractFormatter empty ].
-	^ aViennaAbstractFormatter empty , '[' , (aViennaAbstractFormatter
+	^ aViennaAbstractFormatter empty ++ '[' ++ (aViennaAbstractFormatter
 		   indentString: expression
 		   insertCrIfNeeded: (aViennaAbstractFormatter
-				    indentString: '| ' , setBind
-				    insertCrIfNeeded: guard)) , ']'
+				    indentString: '| ' ++ setBind
+				    insertCrIfNeeded: guard)) ++ ']'
 ]
 
 { #category : #private }

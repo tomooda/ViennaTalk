@@ -41,8 +41,8 @@ ViennaUnaryOperatorExpressionNode >> formatOperatorWith: aViennaAbstractFormatte
 ViennaUnaryOperatorExpressionNode >> formatWith: aViennaAbstractFormatter [
 
 	^ (self formatOperatorWith: aViennaAbstractFormatter)
-	  , aViennaAbstractFormatter space
-	  , (aViennaAbstractFormatter format: self expression)
+	  ++ aViennaAbstractFormatter space
+	  ++ (aViennaAbstractFormatter format: self expression)
 ]
 
 { #category : #private }

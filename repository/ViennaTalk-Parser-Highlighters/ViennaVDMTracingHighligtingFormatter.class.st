@@ -50,9 +50,9 @@ ViennaVDMTracingHighligtingFormatter >> join: aString withAll: aCollectionOfStri
 	^ aCollectionOfString
 		  ifNotEmpty: [
 			  | string |
-			  string := self empty , aCollectionOfString first.
+			  string := self empty ++ aCollectionOfString first.
 			  2 to: aCollectionOfString size do: [ :index |
-				  string := string , aString , (aCollectionOfString at: index) ].
+				  string := string ++ aString ++ (aCollectionOfString at: index) ].
 			  string ]
 		  ifEmpty: [ self empty ]
 ]

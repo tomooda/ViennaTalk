@@ -26,13 +26,13 @@ ViennaRecordPatternNode >> formatWith: aViennaAbstractFormatter [
 	| constructor patternList |
 	constructor := aViennaAbstractFormatter format: self name.
 	patternList := aViennaAbstractFormatter format: self patternList.
-	^ (aViennaAbstractFormatter keyword: 'mk_') , constructor , '('
-	  ,
-		  ((aViennaAbstractFormatter needsIndent: constructor , patternList)
+	^ (aViennaAbstractFormatter keyword: 'mk_') ++ constructor ++ '('
+	  ++
+		  ((aViennaAbstractFormatter needsIndent: constructor ++ patternList)
 			   ifTrue: [
-				   String cr , aViennaAbstractFormatter indent
-				   , (aViennaAbstractFormatter indentString: patternList) ]
-			   ifFalse: [ patternList ]) , ')'
+				   String cr ++ aViennaAbstractFormatter indent
+				   ++ (aViennaAbstractFormatter indentString: patternList) ]
+			   ifFalse: [ patternList ]) ++ ')'
 ]
 
 { #category : #private }

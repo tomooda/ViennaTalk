@@ -31,12 +31,12 @@ ViennaTuplePatternNode >> formatWith: aViennaAbstractFormatter [
 
 	| patternList |
 	patternList := aViennaAbstractFormatter format: self patternList.
-	^ (aViennaAbstractFormatter keyword: 'mk_') , '('
-	  , ((aViennaAbstractFormatter needsIndent: patternList)
+	^ (aViennaAbstractFormatter keyword: 'mk_') ++ '('
+	  ++ ((aViennaAbstractFormatter needsIndent: patternList)
 			   ifTrue: [
-				   aViennaAbstractFormatter cr , aViennaAbstractFormatter indent
-				   , (aViennaAbstractFormatter indentString: patternList) ]
-			   ifFalse: [ patternList ]) , ')'
+				   aViennaAbstractFormatter cr ++ aViennaAbstractFormatter indent
+				   ++ (aViennaAbstractFormatter indentString: patternList) ]
+			   ifFalse: [ patternList ]) ++ ')'
 ]
 
 { #category : #private }

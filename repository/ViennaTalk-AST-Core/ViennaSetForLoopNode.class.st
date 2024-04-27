@@ -53,17 +53,17 @@ ViennaSetForLoopNode >> formatWith: aViennaAbstractFormatter [
 	expression := aViennaAbstractFormatter format: self expression.
 	statement := aViennaAbstractFormatter format: self statement.
 	(aViennaAbstractFormatter needsIndent:
-		 pattern , expression , statement) ifFalse: [
-		^ (aViennaAbstractFormatter keyword: 'for all ') , pattern , ' '
-		  , aViennaAbstractFormatter inset , ' ' , expression
-		  , (aViennaAbstractFormatter keyword: ' do ') , statement ].
-	(aViennaAbstractFormatter needsIndent: pattern , expression)
+		 pattern ++ expression ++ statement) ifFalse: [
+		^ (aViennaAbstractFormatter keyword: 'for all ') ++ pattern ++ ' '
+		  ++ aViennaAbstractFormatter inset ++ ' ' ++ expression
+		  ++ (aViennaAbstractFormatter keyword: ' do ') ++ statement ].
+	(aViennaAbstractFormatter needsIndent: pattern ++ expression)
 		ifFalse: [
-			^ (aViennaAbstractFormatter keyword: 'for all ') , pattern , ' '
-			  , (aViennaAbstractFormatter inset , ' ') , expression
-			  , (aViennaAbstractFormatter keyword: ' do') , String cr
-			  , aViennaAbstractFormatter indent
-			  , (aViennaAbstractFormatter indentString: statement) ].
+			^ (aViennaAbstractFormatter keyword: 'for all ') ++ pattern ++ ' '
+			  ++ (aViennaAbstractFormatter inset ++ ' ') ++ expression
+			  ++ (aViennaAbstractFormatter keyword: ' do') ++ String cr
+			  ++ aViennaAbstractFormatter indent
+			  ++ (aViennaAbstractFormatter indentString: statement) ].
 	^ aViennaAbstractFormatter
 		  noIndentString: (aViennaAbstractFormatter
 				   noIndentString: (aViennaAbstractFormatter

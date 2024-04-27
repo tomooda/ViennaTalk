@@ -32,7 +32,7 @@ ViennaFunctionTypeInstantiationNode >> formatWith: aViennaAbstractFormatter [
 	| function typeArgs |
 	function := aViennaAbstractFormatter format: self expression.
 	typeArgs := aViennaAbstractFormatter format: self functionTypeArgs.
-	^ function , typeArgs
+	^ function ++ typeArgs
 ]
 
 { #category : #private }

@@ -48,9 +48,9 @@ ViennaErrorNode >> expression2: aViennaExpressionNode [
 { #category : #'pretty printing' }
 ViennaErrorNode >> formatWith: aViennaAbstractFormatter [
 
-	^ self identifier , ':'
-	  , (aViennaAbstractFormatter format: self expression1) , '->'
-	  , (aViennaAbstractFormatter format: self expression2)
+	^ self identifier ++ ':'
+	  ++ (aViennaAbstractFormatter format: self expression1) ++ '->'
+	  ++ (aViennaAbstractFormatter format: self expression2)
 ]
 
 { #category : #private }

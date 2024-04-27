@@ -16,9 +16,9 @@ ViennaTypeVariableListNode >> formatWith: aViennaAbstractFormatter [
 
 	^ self size > 0
 		  ifTrue: [
-			  aViennaAbstractFormatter empty , '[' , (aViennaAbstractFormatter
+			  aViennaAbstractFormatter empty ++ '[' ++ (aViennaAbstractFormatter
 				   join: aViennaAbstractFormatter space
-				   withAll: (aViennaAbstractFormatter formatAll: self)) , ']' ]
+				   withAll: (aViennaAbstractFormatter formatAll: self)) ++ ']' ]
 		  ifFalse: [ aViennaAbstractFormatter empty ]
 ]
 

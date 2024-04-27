@@ -16,9 +16,9 @@ ViennaInmapTypeNode >> asMaximalViennaType [
 ViennaInmapTypeNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter inmapPrefix
-	  , (aViennaAbstractFormatter format: self domainType) , ' '
-	  , aViennaAbstractFormatter inmapInfix , ' '
-	  , (aViennaAbstractFormatter format: self rangeType)
+	  ++ (aViennaAbstractFormatter format: self domainType) ++ ' '
+	  ++ aViennaAbstractFormatter inmapInfix ++ ' '
+	  ++ (aViennaAbstractFormatter format: self rangeType)
 ]
 
 { #category : #testing }

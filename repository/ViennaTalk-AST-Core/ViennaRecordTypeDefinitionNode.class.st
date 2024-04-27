@@ -100,23 +100,23 @@ ViennaRecordTypeDefinitionNode >> formatWith: aViennaAbstractFormatter [
 	| access identifier fieldList invariant |
 	access := (aViennaAbstractFormatter format: self access) trim
 		          ifNotEmpty: [ :string |
-			          aViennaAbstractFormatter empty , string
-			          , aViennaAbstractFormatter space ].
+			          aViennaAbstractFormatter empty ++ string
+			          ++ aViennaAbstractFormatter space ].
 	identifier := aViennaAbstractFormatter format: self identifier.
 	fieldList := aViennaAbstractFormatter format: self fieldList.
 	invariant := self inv
 		             ifNotNil: [
-			             String cr , aViennaAbstractFormatter indent
-			             , (aViennaAbstractFormatter indentString:
+			             String cr ++ aViennaAbstractFormatter indent
+			             ++ (aViennaAbstractFormatter indentString:
 					              (aViennaAbstractFormatter format: self inv)) ]
 		             ifNil: [ aViennaAbstractFormatter empty ].
-	^ access , identifier , ' ::'
-	  , ((aViennaAbstractFormatter needsIndent: identifier , fieldList)
+	^ access ++ identifier ++ ' ::'
+	  ++ ((aViennaAbstractFormatter needsIndent: identifier ++ fieldList)
 			   ifTrue: [
-				   aViennaAbstractFormatter cr , aViennaAbstractFormatter indent
-				   , (aViennaAbstractFormatter indentString: fieldList) ]
-			   ifFalse: [ aViennaAbstractFormatter space , fieldList ])
-	  , invariant
+				   aViennaAbstractFormatter cr ++ aViennaAbstractFormatter indent
+				   ++ (aViennaAbstractFormatter indentString: fieldList) ]
+			   ifFalse: [ aViennaAbstractFormatter space ++ fieldList ])
+	  ++ invariant
 ]
 
 { #category : #private }

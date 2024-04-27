@@ -56,21 +56,21 @@ ViennaMapComprehensionNode >> formatWith: aViennaAbstractFormatter [
 		                   self valueExpression.
 	bindList := aViennaAbstractFormatter format: self bindList.
 	guard := self suchthatExpression ifNil: [ '' ] ifNotNil: [ :node |
-		         aViennaAbstractFormatter dot , ' '
-		         , (aViennaAbstractFormatter format: node) ].
+		         aViennaAbstractFormatter dot ++ ' '
+		         ++ (aViennaAbstractFormatter format: node) ].
 	(aViennaAbstractFormatter needsIndent:
-		 keyExpression , valueExpression , bindList , guard) ifFalse: [
-		^ '{' , keyExpression , ' ' , aViennaAbstractFormatter maplet , ' '
-		  , valueExpression , ' | ' , bindList , guard , '}' ].
-	^ aViennaAbstractFormatter empty , '{' , (aViennaAbstractFormatter
+		 keyExpression ++ valueExpression ++ bindList ++ guard) ifFalse: [
+		^ '{' ++ keyExpression ++ ' ' ++ aViennaAbstractFormatter maplet ++ ' '
+		  ++ valueExpression ++ ' | ' ++ bindList ++ guard ++ '}' ].
+	^ aViennaAbstractFormatter empty ++ '{' ++ (aViennaAbstractFormatter
 		   noIndentString: (aViennaAbstractFormatter
 				    noIndentString: keyExpression
 				    insertCrIfNeeded:
-				    aViennaAbstractFormatter maplet , ' ' , valueExpression)
+				    aViennaAbstractFormatter maplet ++ ' ' ++ valueExpression)
 		   insertCrIfNeeded: (aViennaAbstractFormatter
 				    noIndentString:
-				    aViennaAbstractFormatter empty , '| ' , bindList
-				    insertCrIfNeeded: guard)) , '}'
+				    aViennaAbstractFormatter empty ++ '| ' ++ bindList
+				    insertCrIfNeeded: guard)) ++ '}'
 ]
 
 { #category : #private }
