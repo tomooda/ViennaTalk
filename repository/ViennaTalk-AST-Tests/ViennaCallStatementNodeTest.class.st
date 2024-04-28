@@ -4,7 +4,7 @@ Class {
 	#category : #'ViennaTalk-AST-Tests'
 }
 
-{ #category : #typechecking }
+{ #category : #tests }
 ViennaCallStatementNodeTest >> testMaximalType [
 
 	| spec |

@@ -15,7 +15,7 @@ ViennaTypeNameNodeTest >> testAsMaximalViennaType [
 		equals: ViennaType nat * ViennaType int
 ]
 
-{ #category : #test }
+{ #category : #tests }
 ViennaTypeNameNodeTest >> testMaximalType [
 
 	| spec |

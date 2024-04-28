@@ -1,20 +1,6 @@
 Extension { #name : #ViennaTrapStatementNodeTest }
 
 { #category : #'*ViennaTalk-Slicing-Tests' }
-ViennaTrapStatementNodeTest >> testMaximalType [
-
-	self
-		assert: 'trap p with skip in skip' asViennaStatementAst maximalType
-		equals: ViennaType unit.
-	self
-		assert:
-			('operations op:()==>real op() == trap p:nat with return p in skip'
-				 asViennaDocumentAst resolveIdentifier: 'op') statement
-				maximalType
-		equals: ViennaType nat
-]
-
-{ #category : #'*ViennaTalk-Slicing-Tests' }
 ViennaTrapStatementNodeTest >> testSliceWith [
 
 	| spec op statement slicer |

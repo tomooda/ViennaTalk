@@ -7,7 +7,7 @@ Class {
 	#category : #'ViennaTalk-AST-Tests'
 }
 
-{ #category : #test }
+{ #category : #tests }
 ViennaResultExpressionNodeTest >> testMaximalType [
 
 	| spec result |

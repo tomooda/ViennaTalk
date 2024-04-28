@@ -4,7 +4,7 @@ Class {
 	#category : #'ViennaTalk-AST-Tests'
 }
 
-{ #category : #test }
+{ #category : #tests }
 ViennaSequenceComprehensionNodeTest >> testMaximalType [
 
 	self
