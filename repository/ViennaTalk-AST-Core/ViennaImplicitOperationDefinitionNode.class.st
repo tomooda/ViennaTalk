@@ -306,12 +306,6 @@ ViennaImplicitOperationDefinitionNode >> parameters [
 ]
 
 { #category : #accessing }
-ViennaImplicitOperationDefinitionNode >> parser [
-
-	^ ViennaVDMParser new operationDefinition end
-]
-
-{ #category : #accessing }
 ViennaImplicitOperationDefinitionNode >> patternTypePairList [
 
 	^ self at: 3

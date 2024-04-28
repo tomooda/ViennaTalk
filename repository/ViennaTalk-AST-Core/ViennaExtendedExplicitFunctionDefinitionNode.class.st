@@ -292,12 +292,6 @@ ViennaExtendedExplicitFunctionDefinitionNode >> parametersList [
 ]
 
 { #category : #accessing }
-ViennaExtendedExplicitFunctionDefinitionNode >> parser [
-
-	^ ViennaVDMParser new functionDefinition end
-]
-
-{ #category : #accessing }
 ViennaExtendedExplicitFunctionDefinitionNode >> patternTypePairList [
 
 	^ self at: 4

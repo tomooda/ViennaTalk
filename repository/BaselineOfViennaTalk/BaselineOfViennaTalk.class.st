@@ -70,7 +70,7 @@ BaselineOfViennaTalk >> baseline: spec [
 		package: 'ViennaTalk-Parser-Core' with: [
 		spec requires: #( 'ViennaTalk-AST-Core' 'ViennaTalk-Value-Core'
 			   'PetitParser2' ) ];
-		package: 'ViennaTalk-AST-Core' with: [  ];
+		package: 'ViennaTalk-AST-Core' with: [ 'ViennaTalk-Type-Core' ];
 		package: 'ViennaTalk-Parser-Formatters'
 		with: [ spec requires: #( 'ViennaTalk-Parser-Core' ) ];
 		package: 'ViennaTalk-Parser-Highlighters'
@@ -156,7 +156,7 @@ BaselineOfViennaTalk >> baseline: spec [
 			   'ViennaTalk-Parser-Tests' 'ViennaTalk-Type-Tests'
 			   'ViennaTalk-Animation-Tests' 'ViennaTalk-Transpiler-Tests'
 			   'ViennaTalk-FRAM-Tests' 'ViennaTalk-Slicing-Tests'
-			   'ViennaTalk-Refactoring-Tests' )
+			   'ViennaTalk-Refactoring-Tests' 'ViennaTalk-AST-Tests' )
 ]
 
 { #category : #accessing }

@@ -22,9 +22,3 @@ ViennaStatementNode >> isViennaStatementNode [
 
 	^ true
 ]
-
-{ #category : #accessing }
-ViennaStatementNode >> parser [
-
-	^ ViennaVDMParser new statement end
-]

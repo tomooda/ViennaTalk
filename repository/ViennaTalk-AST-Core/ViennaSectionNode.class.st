@@ -52,12 +52,6 @@ ViennaSectionNode >> maximalType [
 	^ ViennaType unit
 ]
 
-{ #category : #accessing }
-ViennaSectionNode >> parser [
-
-	^ ViennaVDMParser new definitionBlock end
-]
-
 { #category : #private }
 ViennaSectionNode >> remove [
 

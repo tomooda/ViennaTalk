@@ -323,12 +323,6 @@ ViennaExplicitFunctionDefinitionNode >> parametersList: aViennaParametersListNod
 ]
 
 { #category : #accessing }
-ViennaExplicitFunctionDefinitionNode >> parser [
-
-	^ ViennaVDMParser new functionDefinition end
-]
-
-{ #category : #accessing }
 ViennaExplicitFunctionDefinitionNode >> post [
 
 	^ self at: 9

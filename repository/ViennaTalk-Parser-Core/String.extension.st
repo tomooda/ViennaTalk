@@ -12,6 +12,12 @@ String >> asViennaExpressionAst [
 ]
 
 { #category : #'*ViennaTalk-Parser-Core' }
+String >> asViennaModuleAst [
+
+	^ ViennaVDMParser current module end parse: self trim
+]
+
+{ #category : #'*ViennaTalk-Parser-Core' }
 String >> asViennaStatementAst [
 	^ ViennaVDMParser current statement end parse: self
 ]

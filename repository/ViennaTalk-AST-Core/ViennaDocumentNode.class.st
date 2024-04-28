@@ -60,9 +60,3 @@ ViennaDocumentNode >> label [
 
 	^ 'Document'
 ]
-
-{ #category : #accessing }
-ViennaDocumentNode >> parser [
-
-	^ ViennaVDMParser new document end
-]

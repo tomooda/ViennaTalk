@@ -265,12 +265,6 @@ ViennaExplicitOperationDefinitionNode >> parameters: aViennaParametersNode [
 ]
 
 { #category : #accessing }
-ViennaExplicitOperationDefinitionNode >> parser [
-
-	^ ViennaVDMParser new operationDefinition end
-]
-
-{ #category : #accessing }
 ViennaExplicitOperationDefinitionNode >> post [
 
 	^ self at: 8

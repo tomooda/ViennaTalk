@@ -73,12 +73,6 @@ ViennaNamedTraceNode >> maximalType [
 ]
 
 { #category : #accessing }
-ViennaNamedTraceNode >> parser [
-
-	^ ViennaVDMParser new namedTrace end
-]
-
-{ #category : #accessing }
 ViennaNamedTraceNode >> traceDefinitionList [
 
 	^ self at: 2

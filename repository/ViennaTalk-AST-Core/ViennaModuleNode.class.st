@@ -40,7 +40,7 @@ ViennaModuleNode class >> identifier: aString moduleBody: aViennaModuleBodyNode 
 { #category : #'instance creation' }
 ViennaModuleNode class >> unitTesting [
 
-	^ ViennaVDMParser new module end parse: self unitTestingSource
+	^ self unitTestingSource asViennaModuleAst
 ]
 
 { #category : #'instance creation' }
@@ -580,12 +580,6 @@ ViennaModuleNode >> moduleBody: aViennaModuleBodyNode [
 ViennaModuleNode >> moduleOrFlatDocument [
 
 	^ self
-]
-
-{ #category : #accessing }
-ViennaModuleNode >> parser [
-
-	^ ViennaVDMParser new module end
 ]
 
 { #category : #accessing }
