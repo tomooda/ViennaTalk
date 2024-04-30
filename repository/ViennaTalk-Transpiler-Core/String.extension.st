@@ -2,9 +2,13 @@ Extension { #name : #String }
 
 { #category : #'*ViennaTalk-Transpiler-Core' }
 String >> , aString [
-	^ aString isViennaTracingString
-		ifTrue: [ self asViennaTracingString , aString ]
-		ifFalse: [ super , aString ]
+
+	^ [
+	  aString isViennaTracingString
+		  ifTrue: [ self asViennaTracingString , aString ]
+		  ifFalse: [ super , aString ] ]
+		  on: Error
+		  do: [ :ex | super , aString ]
 ]
 
 { #category : #'*ViennaTalk-Transpiler-Core' }
