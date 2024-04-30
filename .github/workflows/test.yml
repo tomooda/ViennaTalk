@@ -21,9 +21,9 @@ jobs:
       matrix:
         include: # windows platform is excluded because ProcessWrapper provides only 32bit DLL
           - os: ubuntu-latest
-            smalltalk: Pharo64-11
+            smalltalk: Pharo64-12
           - os: macos-latest
-            smalltalk: Pharo64-11
+            smalltalk: Pharo64-12
           #- os: windows-latest
           #  smalltalk: Pharo64-11
     runs-on: ${{ matrix.os }}
