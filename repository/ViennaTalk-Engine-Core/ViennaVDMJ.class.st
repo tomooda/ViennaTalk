@@ -251,7 +251,7 @@ ViennaVDMJ class >> jarDirectory [
 
 { #category : 'accessing' }
 ViennaVDMJ class >> javaPath [
-	^ 'java'
+	^ '/uar/bin/java'
 ]
 
 { #category : 'accessing' }
