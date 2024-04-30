@@ -1,14 +1,16 @@
 Class {
-	#name : #ViennaExecutionEpiLog,
-	#superclass : #ViennaEpiLog,
+	#name : 'ViennaExecutionEpiLog',
+	#superclass : 'ViennaEpiLog',
 	#instVars : [
 		'statement',
 		'state'
 	],
-	#category : #'ViennaTalk-Browser-Core-EpiLog'
+	#category : 'ViennaTalk-Browser-Core-EpiLog',
+	#package : 'ViennaTalk-Browser-Core',
+	#tag : 'EpiLog'
 }
 
-{ #category : #'instance creaiton' }
+{ #category : 'instance creaiton' }
 ViennaExecutionEpiLog class >> after: aViennaEpiLog statement: aString [
 
 	^ (self after: aViennaEpiLog)
@@ -16,7 +18,7 @@ ViennaExecutionEpiLog class >> after: aViennaEpiLog statement: aString [
 		  yourself
 ]
 
-{ #category : #'instance creaiton' }
+{ #category : 'instance creaiton' }
 ViennaExecutionEpiLog class >> after: aViennaEpiLog statement: aString state: aDictionary [
 
 	^ (self after: aViennaEpiLog)
@@ -25,19 +27,19 @@ ViennaExecutionEpiLog class >> after: aViennaEpiLog statement: aString state: aD
 		  yourself
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExecutionEpiLog >> hasStateChange [
 
 	^ state notNil and: [ prev isNil or: [ prev state ~= state ] ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExecutionEpiLog >> isExecutionEpiLog [
 
 	^ true
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 ViennaExecutionEpiLog >> printOn: aStream [
 
 	aStream
@@ -45,25 +47,25 @@ ViennaExecutionEpiLog >> printOn: aStream [
 		nextPutAll: statement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExecutionEpiLog >> state [
 
 	^ state ifNil: [ prev ifNotNil: #state ifNil: [ Dictionary new ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExecutionEpiLog >> state: aDictionary [
 
 	self state ~= aDictionary ifTrue: [ state := aDictionary ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExecutionEpiLog >> statement [
 
 	^ statement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExecutionEpiLog >> statement: aString [
 
 	statement := aString

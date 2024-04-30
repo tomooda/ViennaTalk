@@ -1,6 +1,6 @@
-Extension { #name : #ViennaAddToplevelDefinition }
+Extension { #name : 'ViennaAddToplevelDefinition' }
 
-{ #category : #'*ViennaTalk-Browser-Core' }
+{ #category : '*ViennaTalk-Browser-Core' }
 ViennaAddToplevelDefinition >> isForDefinitionList [
 
 	^ true

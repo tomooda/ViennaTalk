@@ -1,34 +1,36 @@
 Class {
-	#name : #ViennaEvaluateItCommand,
-	#superclass : #CmCommand,
-	#category : #'ViennaTalk-Browser-Core-Spec2'
+	#name : 'ViennaEvaluateItCommand',
+	#superclass : 'CmCommand',
+	#category : 'ViennaTalk-Browser-Core-Spec2',
+	#package : 'ViennaTalk-Browser-Core',
+	#tag : 'Spec2'
 }
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 ViennaEvaluateItCommand class >> defaultDescription [
 
 	^ 'Evaluate the selected expression and print it'
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 ViennaEvaluateItCommand class >> defaultIconName [
 
 	^ #smallPrintIt
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 ViennaEvaluateItCommand class >> defaultName [
 
 	^ 'Evaluate it'
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 ViennaEvaluateItCommand class >> defaultShortcut [
 
 	^ $p command
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaEvaluateItCommand class >> forSpecContext: anObject [
 
 	^ (super forSpecContext: anObject)
@@ -37,7 +39,7 @@ ViennaEvaluateItCommand class >> forSpecContext: anObject [
 		  yourself
 ]
 
-{ #category : #executing }
+{ #category : 'executing' }
 ViennaEvaluateItCommand >> execute [
 
 	context ifNotNil: #doEvaluateIt

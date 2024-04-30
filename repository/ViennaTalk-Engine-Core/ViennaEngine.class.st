@@ -1,13 +1,14 @@
 Class {
-	#name : #ViennaEngine,
-	#superclass : #Object,
+	#name : 'ViennaEngine',
+	#superclass : 'Object',
 	#classVars : [
 		'AlwaysUsesViennaServerAsDefault'
 	],
-	#category : 'ViennaTalk-Engine-Core'
+	#category : 'ViennaTalk-Engine-Core',
+	#package : 'ViennaTalk-Engine-Core'
 }
 
-{ #category : #settings }
+{ #category : 'settings' }
 ViennaEngine class >> alwaysUsesViennaServerAsDefault [
 
 	^ ViennaVDMJ isSupportedEnvironment not or: [ 
@@ -15,12 +16,12 @@ ViennaEngine class >> alwaysUsesViennaServerAsDefault [
 			  AlwaysUsesViennaServerAsDefault := false ] ]
 ]
 
-{ #category : #settings }
+{ #category : 'settings' }
 ViennaEngine class >> alwaysUsesViennaServerAsDefault: aBoolean [
 	^ AlwaysUsesViennaServerAsDefault := aBoolean = true
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 ViennaEngine class >> default [
 	^ (self alwaysUsesViennaServerAsDefault
 		or: [ ViennaVDMJ isInstalled not ])
@@ -28,7 +29,7 @@ ViennaEngine class >> default [
 		ifFalse: [ ViennaVDMJ new ]
 ]
 
-{ #category : #settings }
+{ #category : 'settings' }
 ViennaEngine class >> viennaSettingsOn: aBuilder [
 	<systemsettings>
 	(aBuilder setting: #viennaTalkAlwaysUseServer)
@@ -41,27 +42,27 @@ ViennaEngine class >> viennaSettingsOn: aBuilder [
 		order: 0.5
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaEngine >> close [
 	^ self subclassResponsibility
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaEngine >> evaluate: expression specification: spec states: states [ 
 	^ self evaluate: expression specification: spec states: states vdm10: true rtc: true 
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaEngine >> evaluate: expression specification: spec states: states module: module [
 	^ self evaluate: expression specification: spec states: states module: module vdm10: true rtc: true 
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaEngine >> evaluate: expression specification: specification states: states module: module vdm10: vdm10 rtc: rtc [
 	^ self subclassResponsibility
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaEngine >> evaluate: expression specification: specification states: states vdm10: vdm10 rtc: rtc [
 	^ self
 		evaluate: expression

@@ -1,21 +1,22 @@
 Class {
-	#name : #ViennaServer,
-	#superclass : #ViennaEngine,
+	#name : 'ViennaServer',
+	#superclass : 'ViennaEngine',
 	#instVars : [
 		'engine'
 	],
 	#classVars : [
 		'Server'
 	],
-	#category : 'ViennaTalk-Engine-Core'
+	#category : 'ViennaTalk-Engine-Core',
+	#package : 'ViennaTalk-Engine-Core'
 }
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 ViennaServer class >> defaultPort [
 	^ 8801
 ]
 
-{ #category : #servicing }
+{ #category : 'servicing' }
 ViennaServer class >> ensureServeIn: aBlock [
 	| isRunning |
 	isRunning := self isRunning.
@@ -26,7 +27,7 @@ ViennaServer class >> ensureServeIn: aBlock [
 				ifFalse: [ self flushServer ] ]
 ]
 
-{ #category : #servicing }
+{ #category : 'servicing' }
 ViennaServer class >> flushServer [
 	"ViennaServer flushServer"
 
@@ -38,31 +39,31 @@ ViennaServer class >> flushServer [
 			Server := nil ]
 ]
 
-{ #category : #servicing }
+{ #category : 'servicing' }
 ViennaServer class >> installHandler [
 	"ViennaServer installHandler"
 
 	self server delegate map: 'eval' to: self new
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaServer class >> isRunning [
 	^ Server notNil and: [ Server isRunning ]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaServer class >> new: anInteger [
 	^ self on: (ViennaVDMJ bank: anInteger)
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaServer class >> on: aViennaEngine [
 	^ self new
 		engine: aViennaEngine;
 		yourself
 ]
 
-{ #category : #servicing }
+{ #category : 'servicing' }
 ViennaServer class >> server [
 	^ Server
 		ifNil: [ Server := (ZnMultiThreadedServer defaultOn: self defaultPort)
@@ -72,29 +73,29 @@ ViennaServer class >> server [
 				yourself ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaServer >> close [
 	engine
 		ifNotNil: [ engine close.
 			engine := nil ]
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 ViennaServer >> defaultEngine [
 	^ ViennaVDMJ bank: 16
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaServer >> engine [
 	^ engine ifNil: [ engine := self defaultEngine ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaServer >> engine: aViennaEngine [
 	engine := aViennaEngine
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaServer >> evaluate: expression specification: specification states: states module: module vdm10: vdm10 rtc: rtc [
 	^ self engine
 		evaluate: expression
@@ -105,7 +106,7 @@ ViennaServer >> evaluate: expression specification: specification states: states
 		rtc: rtc
 ]
 
-{ #category : #'request handling' }
+{ #category : 'request handling' }
 ViennaServer >> handleRequest: aZnRequest [
 	| json |
 	aZnRequest entity
@@ -153,7 +154,7 @@ ViennaServer >> handleRequest: aZnRequest [
 	^ ZnResponse notFound: aZnRequest url
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaServer >> stringify: aJsonObject [
 	^ String
 		streamContents: [ :stream | 
@@ -162,7 +163,7 @@ ViennaServer >> stringify: aJsonObject [
 				nextPut: aJsonObject ]
 ]
 
-{ #category : #'request handling' }
+{ #category : 'request handling' }
 ViennaServer >> value: aZnRequest [
 	^ self handleRequest: aZnRequest
 ]

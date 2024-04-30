@@ -1,18 +1,20 @@
 Class {
-	#name : #ViennaEditor,
-	#superclass : #RubTextEditor,
+	#name : 'ViennaEditor',
+	#superclass : 'RubTextEditor',
 	#instVars : [
 		'template'
 	],
-	#category : #'ViennaTalk-Browser-Core-Morphic'
+	#category : 'ViennaTalk-Browser-Core-Morphic',
+	#package : 'ViennaTalk-Browser-Core',
+	#tag : 'Morphic'
 }
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 ViennaEditor class >> initialize [
 	super initialize
 ]
 
-{ #category : #notifying }
+{ #category : 'notifying' }
 ViennaEditor >> notify: aString at: anInteger in: aStream [
 	| pos |
 	pos := self selectionInterval notEmpty
@@ -21,7 +23,7 @@ ViennaEditor >> notify: aString at: anInteger in: aStream [
 	self insertAndSelect: aString at: (pos max: 1)
 ]
 
-{ #category : #'typing support' }
+{ #category : 'typing support' }
 ViennaEditor >> openTypeIn [
 	"Set up startOfTyping to keep track of the leftmost backspace.
 	 You can't undo typing until after closeTypeIn."
@@ -32,7 +34,7 @@ ViennaEditor >> openTypeIn [
 	^ super openTypeIn
 ]
 
-{ #category : #'editing keys' }
+{ #category : 'editing keys' }
 ViennaEditor >> prettyPrint [
 
 	[ 
@@ -46,21 +48,21 @@ ViennaEditor >> prettyPrint [
 		do: [ :ex |  ]
 ]
 
-{ #category : #'editing keys' }
+{ #category : 'editing keys' }
 ViennaEditor >> save: aKeyboardEvent [
 	self closeTypeIn.
 	self accept.
 	^ true
 ]
 
-{ #category : #'editing keys' }
+{ #category : 'editing keys' }
 ViennaEditor >> template [
 	template := ViennaSyntaxTemplate current.
 	self selection ifEmpty: [ self selectWord ].
 	self replaceSelectionWith: (template at: self selection asString ifAbsent: [ ^ nil ])
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaEditor >> viennaTextMorph [
 	| textMorph |
 	textMorph := self morph.

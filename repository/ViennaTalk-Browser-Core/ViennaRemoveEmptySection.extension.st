@@ -1,6 +1,6 @@
-Extension { #name : #ViennaRemoveEmptySection }
+Extension { #name : 'ViennaRemoveEmptySection' }
 
-{ #category : #'*ViennaTalk-Browser-Core' }
+{ #category : '*ViennaTalk-Browser-Core' }
 ViennaRemoveEmptySection >> isForCategoryList [
 
 	^ true

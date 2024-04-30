@@ -1,13 +1,15 @@
 Class {
-	#name : #ViennaRevertionEpiLog,
-	#superclass : #ViennaEpiLog,
+	#name : 'ViennaRevertionEpiLog',
+	#superclass : 'ViennaEpiLog',
 	#instVars : [
 		'destination'
 	],
-	#category : #'ViennaTalk-Browser-Core-EpiLog'
+	#category : 'ViennaTalk-Browser-Core-EpiLog',
+	#package : 'ViennaTalk-Browser-Core',
+	#tag : 'EpiLog'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaRevertionEpiLog class >> after: aViennaEpiLog destination: anotherViennaEpiLog [
 
 	^ (self after: aViennaEpiLog)
@@ -15,19 +17,19 @@ ViennaRevertionEpiLog class >> after: aViennaEpiLog destination: anotherViennaEp
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRevertionEpiLog >> destination [
 
 	^ destination
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRevertionEpiLog >> destination: aViennaEpiLog [
 
 	destination := aViennaEpiLog
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaRevertionEpiLog >> hasChangeAt: aString module: anotherString [
 
 	^ ((destination specification moduleNamed: anotherString) ifNotNil: [
@@ -37,32 +39,32 @@ ViennaRevertionEpiLog >> hasChangeAt: aString module: anotherString [
 			   m resolveIdentifier: aString ])
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaRevertionEpiLog >> hasChangeAtModule: aString [
 
 	^ (destination specification moduleNamed: aString)
 	  ~= (prev specification moduleNamed: aString)
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaRevertionEpiLog >> hasSpecificationChange [
 
 	^ destination specification ~= prev specification
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaRevertionEpiLog >> hasStateChange [
 
 	^ destination state ~= prev state
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaRevertionEpiLog >> isRevertionEpiLog [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRevertionEpiLog >> pred [
 
 	^ destination isRevertionEpiLog
@@ -70,7 +72,7 @@ ViennaRevertionEpiLog >> pred [
 		  ifFalse: [ destination ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 ViennaRevertionEpiLog >> printOn: aStream [
 
 	aStream nextPutAll: 'Revert to "'.
@@ -78,19 +80,19 @@ ViennaRevertionEpiLog >> printOn: aStream [
 	aStream nextPut: $"
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRevertionEpiLog >> revertDestination [
 
 	^ destination
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRevertionEpiLog >> specification [
 
 	^ destination specification
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRevertionEpiLog >> state [
 
 	^ destination state

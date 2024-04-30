@@ -1,6 +1,6 @@
-Extension { #name : #ViennaAddStateVariable }
+Extension { #name : 'ViennaAddStateVariable' }
 
-{ #category : #'*ViennaTalk-Browser-Core' }
+{ #category : '*ViennaTalk-Browser-Core' }
 ViennaAddStateVariable >> isForDefinitionList [
 
 	^ true

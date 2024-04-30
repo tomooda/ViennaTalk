@@ -1,6 +1,6 @@
-Extension { #name : #ViennaOperationDefinitionsNode }
+Extension { #name : 'ViennaOperationDefinitionsNode' }
 
-{ #category : #'*ViennaTalk-Browser-Core' }
+{ #category : '*ViennaTalk-Browser-Core' }
 ViennaOperationDefinitionsNode >> refactoringBrowserSectionName [
 
 	^ 'operations'

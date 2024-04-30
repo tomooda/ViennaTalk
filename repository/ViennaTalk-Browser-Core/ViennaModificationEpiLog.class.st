@@ -1,14 +1,16 @@
 Class {
-	#name : #ViennaModificationEpiLog,
-	#superclass : #ViennaEpiLog,
+	#name : 'ViennaModificationEpiLog',
+	#superclass : 'ViennaEpiLog',
 	#instVars : [
 		'specification',
 		'state'
 	],
-	#category : #'ViennaTalk-Browser-Core-EpiLog'
+	#category : 'ViennaTalk-Browser-Core-EpiLog',
+	#package : 'ViennaTalk-Browser-Core',
+	#tag : 'EpiLog'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaModificationEpiLog class >> after: aViennaEpiLog specification: aViennaModularDocumentNode [
 
 	^ (self after: aViennaEpiLog)
@@ -16,7 +18,7 @@ ViennaModificationEpiLog class >> after: aViennaEpiLog specification: aViennaMod
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaModificationEpiLog class >> after: aViennaEpiLog specification: aViennaModularDocumentNode state: aDictionary [
 
 	^ (self after: aViennaEpiLog)
@@ -25,7 +27,7 @@ ViennaModificationEpiLog class >> after: aViennaEpiLog specification: aViennaMod
 		  yourself
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaModificationEpiLog >> hasChangeAt: aString module: anotherString [
 
 	^ ((specification moduleNamed: anotherString) ifNotNil: [ :m |
@@ -35,56 +37,56 @@ ViennaModificationEpiLog >> hasChangeAt: aString module: anotherString [
 			   ifNotNil: [ :m | m resolveIdentifier: aString ])
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaModificationEpiLog >> hasChangeAtModule: aString [
 
 	^ (specification moduleNamed: aString)
 	  ~= (prev ifNotNil: [ prev specification moduleNamed: aString ])
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaModificationEpiLog >> hasSpecificationChange [
 
 	^ prev isNil or: [ prev specification ~= specification ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaModificationEpiLog >> hasStateChange [
 
 	^ state notNil and: [ prev isNil or: [ prev state ~= state ] ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaModificationEpiLog >> isModificationEpiLog [
 
 	^ true
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 ViennaModificationEpiLog >> printOn: aStream [
 
 	aStream nextPutAll: 'Edit'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaModificationEpiLog >> specification [
 
 	^ specification
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaModificationEpiLog >> specification: aViennaModularDocumentNode [
 
 	specification := aViennaModularDocumentNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaModificationEpiLog >> state [
 
 	^ state ifNil: [ prev ifNotNil: #state ifNil: [ Dictionary new ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaModificationEpiLog >> state: aDictionary [
 
 	self state ~= aDictionary ifTrue: [ state := aDictionary ]

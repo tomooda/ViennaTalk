@@ -1,6 +1,6 @@
-Extension { #name : #ViennaInline }
+Extension { #name : 'ViennaInline' }
 
-{ #category : #'*ViennaTalk-Browser-Core' }
+{ #category : '*ViennaTalk-Browser-Core' }
 ViennaInline >> isForDefinitionList [
 
 	^ true

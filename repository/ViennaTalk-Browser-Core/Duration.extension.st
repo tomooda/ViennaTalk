@@ -1,12 +1,12 @@
-Extension { #name : #Duration }
+Extension { #name : 'Duration' }
 
-{ #category : #'*ViennaTalk-Browser-Core' }
+{ #category : '*ViennaTalk-Browser-Core' }
 Duration >> printRoughly [
 
 	^ String streamContents: [ :stream | self printRoughlyOn: stream ]
 ]
 
-{ #category : #'*ViennaTalk-Browser-Core' }
+{ #category : '*ViennaTalk-Browser-Core' }
 Duration >> printRoughlyOn: stream [
 
 	| count |

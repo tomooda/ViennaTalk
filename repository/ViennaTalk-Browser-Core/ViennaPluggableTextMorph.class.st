@@ -1,6 +1,6 @@
 Class {
-	#name : #ViennaPluggableTextMorph,
-	#superclass : #RubPluggableTextMorph,
+	#name : 'ViennaPluggableTextMorph',
+	#superclass : 'RubPluggableTextMorph',
 	#instVars : [
 		'highlighter',
 		'wantsHighlighting',
@@ -9,20 +9,22 @@ Class {
 	#classVars : [
 		'DefaultHighlightingEnabled'
 	],
-	#category : #'ViennaTalk-Browser-Core-Morphic'
+	#category : 'ViennaTalk-Browser-Core-Morphic',
+	#package : 'ViennaTalk-Browser-Core',
+	#tag : 'Morphic'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaPluggableTextMorph class >> defaultHighlightingEnabled [
 	^ DefaultHighlightingEnabled ifNil: [ DefaultHighlightingEnabled := true ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaPluggableTextMorph class >> defaultHighlightingEnabled: aBoolean [
 	DefaultHighlightingEnabled := aBoolean ~= false
 ]
 
-{ #category : #settings }
+{ #category : 'settings' }
 ViennaPluggableTextMorph class >> viennaSettingsOn: aBuilder [
 	<systemsettings>
 	(aBuilder setting: #syntaxHighlighting)
@@ -35,17 +37,17 @@ ViennaPluggableTextMorph class >> viennaSettingsOn: aBuilder [
 		order: 0.6
 ]
 
-{ #category : #'enabling/disabling' }
+{ #category : 'enabling/disabling' }
 ViennaPluggableTextMorph >> disableHighlighting [
 	self highlightingEnabled: false
 ]
 
-{ #category : #'enabling/disabling' }
+{ #category : 'enabling/disabling' }
 ViennaPluggableTextMorph >> enableHighlighting [
 	self highlightingEnabled: true
 ]
 
-{ #category : #'editor access' }
+{ #category : 'editor access' }
 ViennaPluggableTextMorph >> handleEdit: aBlock [
 	| result |
 
@@ -58,7 +60,7 @@ ViennaPluggableTextMorph >> handleEdit: aBlock [
 	^ result
 ]
 
-{ #category : #'stepping and presenter' }
+{ #category : 'stepping and presenter' }
 ViennaPluggableTextMorph >> highlight [
 	| source |
 	highlighter ifNil: [ ^ self stopStepping ].
@@ -75,12 +77,12 @@ ViennaPluggableTextMorph >> highlight [
 	self changed ] forkAt: Processor userBackgroundPriority
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaPluggableTextMorph >> highlightingEnabled [
 	^ highlighter notNil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaPluggableTextMorph >> highlightingEnabled: aBoolean [
 	aBoolean = true
 		ifTrue: [ 
@@ -91,60 +93,60 @@ ViennaPluggableTextMorph >> highlightingEnabled: aBoolean [
 			[self text runs: self text asString asText runs ] on: Error do: [:ex |]]
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 ViennaPluggableTextMorph >> initialize [
 	super initialize.
 	wantsHighlighting := false.
 	self highlightingEnabled: self class defaultHighlightingEnabled 
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 ViennaPluggableTextMorph >> keyStroke: aKeyboardEvent [
 	wantsHighlighting := true.
 	^ super keyStroke: aKeyboardEvent
 ]
 
-{ #category : #'menu commands' }
+{ #category : 'menu commands' }
 ViennaPluggableTextMorph >> prettyPrint [
 	self handleEdit: [ self textMorph editor prettyPrint ].
 	self wantsHighlighting: true
 ]
 
-{ #category : #'stepping and presenter' }
+{ #category : 'stepping and presenter' }
 ViennaPluggableTextMorph >> step [
 	self wantsHighlighting
 		ifTrue: [ self highlight  ].
 	
 ]
 
-{ #category : #'stepping and presenter' }
+{ #category : 'stepping and presenter' }
 ViennaPluggableTextMorph >> stepTime [
 	^ 1000
 ]
 
-{ #category : #'menu commands' }
+{ #category : 'menu commands' }
 ViennaPluggableTextMorph >> template [
 	self handleEdit: [ self textMorph editor template ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 ViennaPluggableTextMorph >> textAreaClass [
 	^ ViennaTextMorphForEditView
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 ViennaPluggableTextMorph >> textMorphClass [
 	"Answer the class used to create the receiver's textMorph"
 	
 	^ViennaTextMorphForEditView 
 ]
 
-{ #category : #'enabling/disabling' }
+{ #category : 'enabling/disabling' }
 ViennaPluggableTextMorph >> toggleHighlighting [
 	self highlightingEnabled: self highlightingEnabled not
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 ViennaPluggableTextMorph >> update: aSymbol [
 	(aSymbol == getTextSelector and: [ self canDiscardEdits not ])
 		ifTrue: [ | choice |
@@ -163,23 +165,23 @@ ViennaPluggableTextMorph >> update: aSymbol [
 	^ super update: aSymbol
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaPluggableTextMorph >> updateTextWith: stringOrText [
 	super updateTextWith: stringOrText.
 	self highlight
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaPluggableTextMorph >> wantsHighlighting [
 	^ wantsHighlighting = true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaPluggableTextMorph >> wantsHighlighting: aBoolean [
 	wantsHighlighting := aBoolean = true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaPluggableTextMorph >> wantsSteps [
 	^ self highlightingEnabled
 ]

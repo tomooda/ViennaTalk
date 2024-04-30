@@ -1,18 +1,20 @@
 Class {
-	#name : #ViennaEpiLogMatcher,
-	#superclass : #Object,
+	#name : 'ViennaEpiLogMatcher',
+	#superclass : 'Object',
 	#traits : 'TComparable',
 	#classTraits : 'TComparable classTrait',
-	#category : #'ViennaTalk-Browser-Core-EpiLog'
+	#category : 'ViennaTalk-Browser-Core-EpiLog',
+	#package : 'ViennaTalk-Browser-Core',
+	#tag : 'EpiLog'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaEpiLogMatcher class >> all [
 
 	^ ViennaEpiLogAllMatcher new
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaEpiLogMatcher class >> identifier: aString module: anotherString [
 
 	^ ViennaEpiLogDefinitionMatcher new
@@ -21,13 +23,13 @@ ViennaEpiLogMatcher class >> identifier: aString module: anotherString [
 		  yourself
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaEpiLogMatcher class >> isAbstract [
 
 	^ self = ViennaEpiLogMatcher
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaEpiLogMatcher class >> module: aString [
 
 	^ ViennaEpiLogModuleMatcher new
@@ -35,7 +37,7 @@ ViennaEpiLogMatcher class >> module: aString [
 		  yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaEpiLogMatcher >> < aViennaEpiLog [
 	"Answer whether the receiver is less than the argument."
 
@@ -44,7 +46,7 @@ ViennaEpiLogMatcher >> < aViennaEpiLog [
 			  self name < aViennaEpiLog name ] ]
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaEpiLogMatcher >> = aViennaEpiLog [
 
 	^ self class = aViennaEpiLog class and: [
@@ -52,31 +54,31 @@ ViennaEpiLogMatcher >> = aViennaEpiLog [
 			  self name = aViennaEpiLog name ] ]
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaEpiLogMatcher >> hash [
 
 	^ self order hash bitXor: self name hash
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaEpiLogMatcher >> name [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaEpiLogMatcher >> order [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 ViennaEpiLogMatcher >> printOn: aStream [
 
 	aStream nextPutAll: self name
 ]
 
-{ #category : #evaluation }
+{ #category : 'evaluation' }
 ViennaEpiLogMatcher >> value: aViennaEpiLog [
 
 	^ self subclassResponsibility

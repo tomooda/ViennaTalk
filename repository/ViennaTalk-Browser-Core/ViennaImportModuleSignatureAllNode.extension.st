@@ -1,6 +1,6 @@
-Extension { #name : #ViennaImportModuleSignatureAllNode }
+Extension { #name : 'ViennaImportModuleSignatureAllNode' }
 
-{ #category : #'*ViennaTalk-Browser-Core' }
+{ #category : '*ViennaTalk-Browser-Core' }
 ViennaImportModuleSignatureAllNode >> refactoringBrowserSectionName [
 
 	^ 'all'

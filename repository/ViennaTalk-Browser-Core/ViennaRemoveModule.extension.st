@@ -1,6 +1,6 @@
-Extension { #name : #ViennaRemoveModule }
+Extension { #name : 'ViennaRemoveModule' }
 
-{ #category : #'*ViennaTalk-Browser-Core' }
+{ #category : '*ViennaTalk-Browser-Core' }
 ViennaRemoveModule >> isForModuleList [
 
 	^ true

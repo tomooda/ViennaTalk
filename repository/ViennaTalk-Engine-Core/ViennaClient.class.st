@@ -1,55 +1,56 @@
 Class {
-	#name : #ViennaClient,
-	#superclass : #ViennaEngine,
+	#name : 'ViennaClient',
+	#superclass : 'ViennaEngine',
 	#instVars : [
 		'http'
 	],
 	#classVars : [
 		'DefaultUrl'
 	],
-	#category : #'ViennaTalk-Engine-Core'
+	#category : 'ViennaTalk-Engine-Core',
+	#package : 'ViennaTalk-Engine-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaClient class >> default [
 	^ self on: self defaultUrl
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 ViennaClient class >> defaultUrl [
 	^ DefaultUrl ifNil: [ DefaultUrl := 'http://vdmpad.viennatalk.org/' asUrl ]
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 ViennaClient class >> defaultUrl: aString [
 	DefaultUrl := aString
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 ViennaClient class >> defaultUrlString [
 	^ self defaultUrl printString
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 ViennaClient class >> defaultUrlString: aString [
 	self defaultUrl: aString asZnUrl
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaClient class >> localhost [
 	"ViennaClient localhost evaluate: '1+2' specification: '' states: Dictionary new"
 
 	^ self on: 'http://localhost:8801/'
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaClient class >> on: aUrlOfVDMPadServer [
 	^ self new
 		url: aUrlOfVDMPadServer;
 		yourself
 ]
 
-{ #category : #settings }
+{ #category : 'settings' }
 ViennaClient class >> viennaSettingsOn: aBuilder [
 	<systemsettings>
 	(aBuilder setting: #defaultViennaServerUrl)
@@ -62,12 +63,12 @@ ViennaClient class >> viennaSettingsOn: aBuilder [
 		order: 0.4
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaClient >> close [
 	
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaClient >> evaluate: expression specification: specification states: states module: moduleName vdm10: vdm10 rtc: rtc [
 	| json response |
 	json := Dictionary new.
@@ -99,18 +100,18 @@ ViennaClient >> evaluate: expression specification: specification states: states
 		with: (json at: 'prestates' ifAbsent: [ Dictionary new ])
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 ViennaClient >> initialize [
 	super initialize.
 	http := ZnClient new.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaClient >> parseJson: aJsonString [
 	^ NeoJSONReader fromString: aJsonString
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaClient >> stateFromJson: aDictionary [
 	| states |
 	states := Dictionary new.
@@ -126,19 +127,19 @@ ViennaClient >> stateFromJson: aDictionary [
 	^ states
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaClient >> stringify: aJsonObject [
 	^ String streamContents: [ :stream |
 			(NeoJSONWriter on: stream) asciiOnly: true; nextPut: aJsonObject ]
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaClient >> url [
 	^ http url directory
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaClient >> url: aUrlOfVDMPadServer [
 	http url: aUrlOfVDMPadServer asUrl / 'eval'
 ]

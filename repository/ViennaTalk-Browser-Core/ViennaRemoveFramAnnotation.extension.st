@@ -1,6 +1,6 @@
-Extension { #name : #ViennaRemoveFramAnnotation }
+Extension { #name : 'ViennaRemoveFramAnnotation' }
 
-{ #category : #'*ViennaTalk-Browser-Core' }
+{ #category : '*ViennaTalk-Browser-Core' }
 ViennaRemoveFramAnnotation >> isForDefinitionList [
 
 	^ true

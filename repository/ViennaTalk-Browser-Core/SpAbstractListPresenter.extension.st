@@ -1,6 +1,6 @@
-Extension { #name : #SpAbstractListPresenter }
+Extension { #name : 'SpAbstractListPresenter' }
 
-{ #category : #'*ViennaTalk-Browser-Core' }
+{ #category : '*ViennaTalk-Browser-Core' }
 SpAbstractListPresenter >> items: aSequenceableCollection selectsFirst: aBoolean [
 
 	model collection: aSequenceableCollection.

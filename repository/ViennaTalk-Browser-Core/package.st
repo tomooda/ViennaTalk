@@ -1,1 +1,1 @@
-Package { #name : #'ViennaTalk-Browser-Core' }
+Package { #name : 'ViennaTalk-Browser-Core' }

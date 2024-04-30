@@ -1,6 +1,6 @@
-Extension { #name : #ViennaAddFramAnnotationToOperation }
+Extension { #name : 'ViennaAddFramAnnotationToOperation' }
 
-{ #category : #'*ViennaTalk-Browser-Core' }
+{ #category : '*ViennaTalk-Browser-Core' }
 ViennaAddFramAnnotationToOperation >> isForDefinitionList [
 
 	^ true

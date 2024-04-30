@@ -1,6 +1,6 @@
-Extension { #name : #SpWindowPresenter }
+Extension { #name : 'SpWindowPresenter' }
 
-{ #category : #'*ViennaTalk-Browser-Core' }
+{ #category : '*ViennaTalk-Browser-Core' }
 SpWindowPresenter >> okToClose [
 
 	^ presenter ifNotNil: #okToClose ifNil: [ super okToClose ]

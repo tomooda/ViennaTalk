@@ -1,22 +1,24 @@
 Class {
-	#name : #ViennaEpiLogAllMatcher,
-	#superclass : #ViennaEpiLogMatcher,
-	#category : #'ViennaTalk-Browser-Core-EpiLog'
+	#name : 'ViennaEpiLogAllMatcher',
+	#superclass : 'ViennaEpiLogMatcher',
+	#category : 'ViennaTalk-Browser-Core-EpiLog',
+	#package : 'ViennaTalk-Browser-Core',
+	#tag : 'EpiLog'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaEpiLogAllMatcher >> name [
 
 	^ '-- all --'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaEpiLogAllMatcher >> order [
 
 	^ 0
 ]
 
-{ #category : #evaluation }
+{ #category : 'evaluation' }
 ViennaEpiLogAllMatcher >> value: aViennaEpiLog [
 
 	^ true

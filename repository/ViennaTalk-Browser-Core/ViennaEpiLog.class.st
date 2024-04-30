@@ -1,6 +1,6 @@
 Class {
-	#name : #ViennaEpiLog,
-	#superclass : #Object,
+	#name : 'ViennaEpiLog',
+	#superclass : 'Object',
 	#traits : 'TComparable',
 	#classTraits : 'TComparable classTrait',
 	#instVars : [
@@ -10,10 +10,12 @@ Class {
 		'diffSetFromPred',
 		'diffSetFromPrev'
 	],
-	#category : #'ViennaTalk-Browser-Core-EpiLog'
+	#category : 'ViennaTalk-Browser-Core-EpiLog',
+	#package : 'ViennaTalk-Browser-Core',
+	#tag : 'EpiLog'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaEpiLog class >> after: aViennaEpiLog [
 
 	^ self new
@@ -21,43 +23,43 @@ ViennaEpiLog class >> after: aViennaEpiLog [
 		  yourself
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaEpiLog class >> isAbstract [
 
 	^ self = ViennaEpiLog
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaEpiLog class >> vanilla [
 
 	^ ViennaVanillaEpiLog new
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaEpiLog >> < aViennaEpiLog [
 
 	^ timestamp < aViennaEpiLog timestamp
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaEpiLog >> = aComparable [
 
 	^ self == aComparable
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaEpiLog >> comment [
 
 	^ comment
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaEpiLog >> comment: anObject [
 
 	comment := anObject
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaEpiLog >> constructionLine [
 
 	^ Array streamContents: [ :stream |
@@ -68,13 +70,13 @@ ViennaEpiLog >> constructionLine [
 			  epiLog := epiLog pred ] ]
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 ViennaEpiLog >> defaultComment [
 
 	^ ''
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaEpiLog >> diffSetFromPred [
 
 	^ diffSetFromPred ifNil: [
@@ -85,7 +87,7 @@ ViennaEpiLog >> diffSetFromPred [
 			                     to: self specification ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaEpiLog >> diffSetFromPrev [
 
 	^ diffSetFromPrev ifNil: [
@@ -96,38 +98,38 @@ ViennaEpiLog >> diffSetFromPrev [
 			                     to: self specification ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaEpiLog >> hasChangeAt: aString module: anotherString [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaEpiLog >> hasChangeAtModule: aString [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaEpiLog >> hasSpecificationChange [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaEpiLog >> hasStateChange [
 
 	^ false
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaEpiLog >> hash [
 	"Hash must be redefined whenever = is redefined."
 
 	^ self identityHash
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 ViennaEpiLog >> initialize [
 
 	super initialize.
@@ -135,55 +137,55 @@ ViennaEpiLog >> initialize [
 	timestamp := DateAndTime now
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaEpiLog >> isEvaluationEpiLog [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaEpiLog >> isExecutionEpiLog [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaEpiLog >> isInitializationEpiLog [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaEpiLog >> isLoadEpiLog [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaEpiLog >> isModificationEpiLog [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaEpiLog >> isRevertionEpiLog [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaEpiLog >> isVanillaEpiLog [
 
 	^ false
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaEpiLog >> newEvaluation: aString [
 
 	^ ViennaEvaluationEpiLog after: self expression: aString
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaEpiLog >> newExecution: aString state: aDictionary [
 
 	^ ViennaExecutionEpiLog
@@ -194,13 +196,13 @@ ViennaEpiLog >> newExecution: aString state: aDictionary [
 				   ifFalse: [ aDictionary ])
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaEpiLog >> newInitialization: aDictionary [
 
 	^ ViennaInitializationEpiLog after: self state: aDictionary
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaEpiLog >> newLoading: aViennaModularDocumentNode [
 
 	^ ViennaLoadingEpiLog
@@ -208,7 +210,7 @@ ViennaEpiLog >> newLoading: aViennaModularDocumentNode [
 		  specification: aViennaModularDocumentNode
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaEpiLog >> newLoading: aViennaModularDocumentNode state: aDictionary [
 
 	^ ViennaLoadingEpiLog
@@ -219,7 +221,7 @@ ViennaEpiLog >> newLoading: aViennaModularDocumentNode state: aDictionary [
 				   ifFalse: [ aDictionary ])
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaEpiLog >> newModification: aViennaModularDocumentNode [
 
 	^ ViennaModificationEpiLog
@@ -227,7 +229,7 @@ ViennaEpiLog >> newModification: aViennaModularDocumentNode [
 		  specification: aViennaModularDocumentNode
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaEpiLog >> newModification: aViennaModularDocumentNode state: aDictionary [
 
 	^ ViennaModificationEpiLog
@@ -238,7 +240,7 @@ ViennaEpiLog >> newModification: aViennaModularDocumentNode state: aDictionary [
 				   ifFalse: [ aDictionary ])
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaEpiLog >> newRevertion: aViennaEpiLog [
 
 	^ ViennaRevertionEpiLog
@@ -246,7 +248,7 @@ ViennaEpiLog >> newRevertion: aViennaEpiLog [
 		  destination: aViennaEpiLog revertDestination
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaEpiLog >> pred [
 
 	^ prev ifNotNil: [
@@ -255,25 +257,25 @@ ViennaEpiLog >> pred [
 			  ifFalse: [ prev ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaEpiLog >> prev [
 
 	^ prev
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaEpiLog >> prev: aViennaEpiLog [
 
 	prev := aViennaEpiLog
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaEpiLog >> revertDestination [
 
 	^ self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaEpiLog >> specification [
 
 	^ prev
@@ -281,19 +283,19 @@ ViennaEpiLog >> specification [
 		  ifNil: [ ViennaModularDocumentNode new ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaEpiLog >> state [
 
 	^ prev ifNotNil: #state ifNil: [ Dictionary new ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaEpiLog >> state: aDictionary [
 
 	
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaEpiLog >> timeLine [
 
 	^ Array streamContents: [ :stream |
@@ -304,7 +306,7 @@ ViennaEpiLog >> timeLine [
 			  epiLog := epiLog prev ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaEpiLog >> timestamp [
 
 	^ timestamp

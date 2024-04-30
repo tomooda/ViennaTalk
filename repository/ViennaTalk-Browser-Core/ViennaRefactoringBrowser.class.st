@@ -1,6 +1,6 @@
 Class {
-	#name : #ViennaRefactoringBrowser,
-	#superclass : #SpPresenterWithModel,
+	#name : 'ViennaRefactoringBrowser',
+	#superclass : 'SpPresenterWithModel',
 	#instVars : [
 		'fileReference',
 		'animation',
@@ -35,22 +35,24 @@ Class {
 		'TrafficSide',
 		'YellowSignalIcon'
 	],
-	#category : #'ViennaTalk-Browser-Core-Browsers'
+	#category : 'ViennaTalk-Browser-Core-Browsers',
+	#package : 'ViennaTalk-Browser-Core',
+	#tag : 'Browsers'
 }
 
-{ #category : #settings }
+{ #category : 'settings' }
 ViennaRefactoringBrowser class >> beLeftSideTraffic [
 
 	self trafficSide: #left
 ]
 
-{ #category : #settings }
+{ #category : 'settings' }
 ViennaRefactoringBrowser class >> beRightSideTraffic [
 
 	self trafficSide: #right
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 ViennaRefactoringBrowser class >> createSignalIcon: color1 with: color2 with: color3 [
 
 	| form |
@@ -72,7 +74,7 @@ ViennaRefactoringBrowser class >> createSignalIcon: color1 with: color2 with: co
 	^ form
 ]
 
-{ #category : #layout }
+{ #category : 'layout' }
 ViennaRefactoringBrowser class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
@@ -87,20 +89,20 @@ ViennaRefactoringBrowser class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #settings }
+{ #category : 'settings' }
 ViennaRefactoringBrowser class >> defaultTrafficSide [
 
 	^ #left
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaRefactoringBrowser class >> empty [
 
 	<script: 'ViennaRefactoringBrowser empty open'>
 	^ self new
 ]
 
-{ #category : #examples }
+{ #category : 'examples' }
 ViennaRefactoringBrowser class >> exampleATC [
 
 	(ViennaRefactoringBrowser on: (ViennaVDMParser new parse:
@@ -388,7 +390,7 @@ operations
 end ATC')) open
 ]
 
-{ #category : #examples }
+{ #category : 'examples' }
 ViennaRefactoringBrowser class >> exampleCounter [
 
 	(ViennaRefactoringBrowser on:
@@ -444,7 +446,7 @@ end CounterTest
 ')) open
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 ViennaRefactoringBrowser class >> greenSignalIcon [
 
 	^ GreenSignalIcon ifNil: [
@@ -461,7 +463,7 @@ ViennaRefactoringBrowser class >> greenSignalIcon [
 					                     with: Color green lighter ] ]
 ]
 
-{ #category : #settings }
+{ #category : 'settings' }
 ViennaRefactoringBrowser class >> ifLeftSideTraffic: leftBlock ifRightSideTraffic: rightBlock [
 
 	^ (TrafficSide ifNil: [ TrafficSide := self defaultTrafficSide ])
@@ -470,7 +472,7 @@ ViennaRefactoringBrowser class >> ifLeftSideTraffic: leftBlock ifRightSideTraffi
 		  ifFalse: rightBlock
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 ViennaRefactoringBrowser class >> redSignalIcon [
 
 	^ RedSignalIcon ifNil: [
@@ -487,13 +489,13 @@ ViennaRefactoringBrowser class >> redSignalIcon [
 					                   with: Color darkGray ] ]
 ]
 
-{ #category : #settings }
+{ #category : 'settings' }
 ViennaRefactoringBrowser class >> trafficSide [
 
 	^ TrafficSide ifNil: [ TrafficSide := self defaultTrafficSide ]
 ]
 
-{ #category : #settings }
+{ #category : 'settings' }
 ViennaRefactoringBrowser class >> trafficSide: aSymbol [
 
 	TrafficSide := aSymbol = #left
@@ -505,13 +507,13 @@ ViennaRefactoringBrowser class >> trafficSide: aSymbol [
 	self allInstancesDo: [ :browser | browser updateSourceSignalButton ]
 ]
 
-{ #category : #settings }
+{ #category : 'settings' }
 ViennaRefactoringBrowser class >> trafficSides [
 
 	^ #( left right )
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 ViennaRefactoringBrowser class >> viennaDevMenuOn: aBuilder [
 	<ViennaDev>
 	(aBuilder item: #'Refactoring example (ATC)')
@@ -521,7 +523,7 @@ ViennaRefactoringBrowser class >> viennaDevMenuOn: aBuilder [
 		icon: nil
 ]
 
-{ #category : #settings }
+{ #category : 'settings' }
 ViennaRefactoringBrowser class >> viennaSettingsOn: aBuilder [
 
 	<systemsettings>
@@ -535,7 +537,7 @@ ViennaRefactoringBrowser class >> viennaSettingsOn: aBuilder [
 		order: 0.9
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 ViennaRefactoringBrowser class >> viennaToolsMenuOn: aBuilder [
 
 	<ViennaToolsMenu>
@@ -546,7 +548,7 @@ ViennaRefactoringBrowser class >> viennaToolsMenuOn: aBuilder [
 		icon: nil
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 ViennaRefactoringBrowser class >> worldMenuOn: aBuilder [
 
 	<worldMenu>
@@ -558,7 +560,7 @@ ViennaRefactoringBrowser class >> worldMenuOn: aBuilder [
 		icon: nil
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 ViennaRefactoringBrowser class >> yellowSignalIcon [
 
 	^ YellowSignalIcon ifNil: [
@@ -575,7 +577,7 @@ ViennaRefactoringBrowser class >> yellowSignalIcon [
 					                      with: Color darkGray ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRefactoringBrowser >> accept: aStringOrText [
 
 	| newNode newAst copyMap parent oldNode module category definition |
@@ -603,7 +605,7 @@ ViennaRefactoringBrowser >> accept: aStringOrText [
 	^ newNode
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 ViennaRefactoringBrowser >> addRefactoringMenuGroupOn: aViennaNode to: aMenuPresenter with: aBlock [
 
 	aMenuPresenter addGroup: [ :group |
@@ -616,12 +618,12 @@ ViennaRefactoringBrowser >> addRefactoringMenuGroupOn: aViennaNode to: aMenuPres
 		aBlock cull: group ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRefactoringBrowser >> category [
 	^ categoryList selection selectedItem
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 ViennaRefactoringBrowser >> categoryListContextMenu [
 
 	| menu |
@@ -643,13 +645,13 @@ ViennaRefactoringBrowser >> categoryListContextMenu [
 	^ menu
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaRefactoringBrowser >> clearDirty [
 
 	dirty := false
 ]
 
-{ #category : #'private-unit testing' }
+{ #category : 'private-unit testing' }
 ViennaRefactoringBrowser >> debugTestResultItem: aViennaTestResultItem [
 
 	^ (ViennaTranspiledAnimation new
@@ -660,18 +662,18 @@ ViennaRefactoringBrowser >> debugTestResultItem: aViennaTestResultItem [
 		  ifError: [ :msg | msg ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRefactoringBrowser >> definition [
 	^ definitionList selection selectedItem
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRefactoringBrowser >> definitionBase [
 
 	^ self definition
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 ViennaRefactoringBrowser >> definitionListContextMenu [
 
 	| menu |
@@ -693,7 +695,7 @@ ViennaRefactoringBrowser >> definitionListContextMenu [
 	^ menu
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaRefactoringBrowser >> definitionsFromCategory: aViennaNode [
 
 	^ aViennaNode isViennaNode
@@ -708,7 +710,7 @@ ViennaRefactoringBrowser >> definitionsFromCategory: aViennaNode [
 		  ifFalse: [ Array new ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaRefactoringBrowser >> displayCategory: aViennaNode [
 
 	aViennaNode ifNil: [ ^ '-' ].
@@ -718,7 +720,7 @@ ViennaRefactoringBrowser >> displayCategory: aViennaNode [
 	^ aViennaNode refactoringBrowserSectionName ifNil: [ '?' ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaRefactoringBrowser >> displayDefinition: aViennaNode [
 
 	aViennaNode allDescendantsDo: [ :node |
@@ -745,37 +747,37 @@ ViennaRefactoringBrowser >> displayDefinition: aViennaNode [
 	^ '-'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRefactoringBrowser >> epiLog [
 
 	^ self model
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRefactoringBrowser >> epiLog: aViennaEpiLog [
 
 	self model: aViennaEpiLog
 ]
 
-{ #category : #'operations-epiLog' }
+{ #category : 'operations-epiLog' }
 ViennaRefactoringBrowser >> epiLogEvaluation: aString [
 
 	self epiLog: (self epiLog newEvaluation: aString)
 ]
 
-{ #category : #'operations-epiLog' }
+{ #category : 'operations-epiLog' }
 ViennaRefactoringBrowser >> epiLogExecution: aString state: aDictionary [
 
 	self epiLog: (self epiLog newExecution: aString state: aDictionary)
 ]
 
-{ #category : #'operations-epiLog' }
+{ #category : 'operations-epiLog' }
 ViennaRefactoringBrowser >> epiLogInitialization: aDictionary [
 
 	self epiLog: (self epiLog newInitialization: aDictionary)
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 ViennaRefactoringBrowser >> epiLogListContextMenu [
 
 	| menu |
@@ -789,13 +791,13 @@ ViennaRefactoringBrowser >> epiLogListContextMenu [
 	^ menu
 ]
 
-{ #category : #'operations-epiLog' }
+{ #category : 'operations-epiLog' }
 ViennaRefactoringBrowser >> epiLogLoading: aViennaModularDocumentNode [
 
 	self epiLog: (self epiLog newLoading: aViennaModularDocumentNode)
 ]
 
-{ #category : #'operations-epiLog' }
+{ #category : 'operations-epiLog' }
 ViennaRefactoringBrowser >> epiLogManualEdit: aViennaModularDocumentNode [
 
 	self epiLog:
@@ -804,7 +806,7 @@ ViennaRefactoringBrowser >> epiLogManualEdit: aViennaModularDocumentNode [
 			 yourself)
 ]
 
-{ #category : #'operations-epiLog' }
+{ #category : 'operations-epiLog' }
 ViennaRefactoringBrowser >> epiLogMergeFRAM: aViennaModularDocumentNode [
 
 	self epiLog:
@@ -813,7 +815,7 @@ ViennaRefactoringBrowser >> epiLogMergeFRAM: aViennaModularDocumentNode [
 			 yourself)
 ]
 
-{ #category : #'operations-epiLog' }
+{ #category : 'operations-epiLog' }
 ViennaRefactoringBrowser >> epiLogRefactoring: aViennaModularDocumentNode with: aViennaRefactoring [
 
 	self epiLog:
@@ -822,13 +824,13 @@ ViennaRefactoringBrowser >> epiLogRefactoring: aViennaModularDocumentNode with: 
 			 yourself)
 ]
 
-{ #category : #'operations-epiLog' }
+{ #category : 'operations-epiLog' }
 ViennaRefactoringBrowser >> epiLogRevertion: aViennaEpiLog [
 
 	self epiLog: (self epiLog newRevertion: aViennaEpiLog)
 ]
 
-{ #category : #layouts }
+{ #category : 'layouts' }
 ViennaRefactoringBrowser >> epilogPageLayout [
 
 	^ SpPanedLayout newHorizontal
@@ -849,7 +851,7 @@ ViennaRefactoringBrowser >> epilogPageLayout [
 		  yourself
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRefactoringBrowser >> executeRefactoring: aViennaRefactoring [
 
 	| newAst copyMap refactoring result |
@@ -871,7 +873,7 @@ ViennaRefactoringBrowser >> executeRefactoring: aViennaRefactoring [
 			(result topLevelDefinition ifNil: [ categoryList selectedItem ]) ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRefactoringBrowser >> export [
 
 	self hasFileReference
@@ -885,7 +887,7 @@ ViennaRefactoringBrowser >> export [
 				ifFalse: [ self exportFile ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRefactoringBrowser >> exportDirectory [
 
 	(UIManager default
@@ -904,7 +906,7 @@ ViennaRefactoringBrowser >> exportDirectory [
 		self clearDirty ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRefactoringBrowser >> exportFile [
 
 	(UIManager default
@@ -921,7 +923,7 @@ ViennaRefactoringBrowser >> exportFile [
 			self clearDirty ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRefactoringBrowser >> exportToDisk [
 
 	fileReference ifNotNil: [ :ref |
@@ -945,19 +947,19 @@ ViennaRefactoringBrowser >> exportToDisk [
 		self clearDirty ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaRefactoringBrowser >> getSource: aViennaNode [
 	aViennaNode ifNil: [ ^ String ].
 	^ aViennaNode tracingHighlightedSource
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaRefactoringBrowser >> hasFileReference [
 
 	^ fileReference notNil and: [ fileReference exists ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRefactoringBrowser >> highlightSlice: aViennaNode [
 
 	(aViennaNode
@@ -984,7 +986,7 @@ ViennaRefactoringBrowser >> highlightSlice: aViennaNode [
 			textWidget textArea ifNotNil: #compose ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRefactoringBrowser >> highlightSourceText [
 
 	highlighterProcess ifNotNil: [
@@ -1033,7 +1035,7 @@ ViennaRefactoringBrowser >> highlightSourceText [
 		                      Processor userBackgroundPriority
 ]
 
-{ #category : #controlling }
+{ #category : 'controlling' }
 ViennaRefactoringBrowser >> ifShowsTimeLine: timeLineBlock ifShowsConstructionLine: constructionLineBlock [
 
 	showsTimeLineButton state = true ifTrue: [ ^ timeLineBlock value ].
@@ -1042,7 +1044,7 @@ ViennaRefactoringBrowser >> ifShowsTimeLine: timeLineBlock ifShowsConstructionLi
 	^ nil
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRefactoringBrowser >> importDirectory [
 
 	(UIManager default
@@ -1052,7 +1054,7 @@ ViennaRefactoringBrowser >> importDirectory [
 		self importFromDisk ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRefactoringBrowser >> importFile [
 
 	(UIManager default
@@ -1063,7 +1065,7 @@ ViennaRefactoringBrowser >> importFile [
 		self importFromDisk ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRefactoringBrowser >> importFromDisk [
 
 	fileReference ifNotNil: [ :ref |
@@ -1094,7 +1096,7 @@ ViennaRefactoringBrowser >> importFromDisk [
 			ifFalse: [ self load: ref contents withInternalLineEndings ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRefactoringBrowser >> initState [
 
 	animation init.
@@ -1102,19 +1104,21 @@ ViennaRefactoringBrowser >> initState [
 	self epiLogInitialization: animation state
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 ViennaRefactoringBrowser >> initialize [
 
 	animation := ViennaAnimation default.
 	animation announcer
-		when: ViennaStateChanged do: [ self updateStateTable ];
-		when: ViennaSpecificationChanged do: [ self updateStateTableItems ].
+		when: ViennaStateChanged do: [ self updateStateTable ] for: self;
+		when: ViennaSpecificationChanged
+		do: [ self updateStateTableItems ]
+		for: self.
 	super initialize.
 	self epiLog: ViennaEpiLog vanilla.
 	dirty := false
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 
 	showsTimeLineButton := self newRadioButton
@@ -1164,7 +1168,7 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 	epiLogList whenBuiltDo: [ self updateEpiLogList ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 ViennaRefactoringBrowser >> initializePlaygroundPagePresenters [
 
 	playgroundText := self newVDMSource
@@ -1207,7 +1211,7 @@ ViennaRefactoringBrowser >> initializePlaygroundPagePresenters [
 		                      yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 ViennaRefactoringBrowser >> initializePresenters [
 
 	super initializePresenters.
@@ -1262,7 +1266,7 @@ ViennaRefactoringBrowser >> initializePresenters [
 			(m respondsTo: #font:) ifTrue: [ m font: f ] ] ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 ViennaRefactoringBrowser >> initializeSourcePagePresenters [
 
 	sourceSignalButton := self newButton
@@ -1319,14 +1323,14 @@ ViennaRefactoringBrowser >> initializeSourcePagePresenters [
 		                   yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 ViennaRefactoringBrowser >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter initialExtent: 800 @ 600
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaRefactoringBrowser >> instantiate: aPresenterClass [
 
 	^ (super instantiate: aPresenterClass)
@@ -1334,13 +1338,13 @@ ViennaRefactoringBrowser >> instantiate: aPresenterClass [
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaRefactoringBrowser >> isDirty [
 
 	^ dirty = true
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRefactoringBrowser >> jumpToModule: aString operation: anotherString [
 	| moduleNode |
 	moduleNode := (self specification moduleNamed: aString)
@@ -1357,7 +1361,7 @@ ViennaRefactoringBrowser >> jumpToModule: aString operation: anotherString [
 	self updateSource
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRefactoringBrowser >> load: aString [
 
 	| ast |
@@ -1380,7 +1384,7 @@ ViennaRefactoringBrowser >> load: aString [
 	self clearDirty
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 ViennaRefactoringBrowser >> menuBar [
 
 	^ self newMenuBar addGroup: [ :group |
@@ -1433,7 +1437,7 @@ ViennaRefactoringBrowser >> menuBar [
 											   action: [ self runAllTests ] ] ]) ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRefactoringBrowser >> mergeAnnotationsIntoFRAM [
 
 	| fram |
@@ -1451,7 +1455,7 @@ ViennaRefactoringBrowser >> mergeAnnotationsIntoFRAM [
 		fram writeXMLFile: ref ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRefactoringBrowser >> mergeOperationsFromFRAM [
 
 	| fram copyMap newAst |
@@ -1476,7 +1480,7 @@ ViennaRefactoringBrowser >> mergeOperationsFromFRAM [
 		  newAst ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRefactoringBrowser >> modelChanged [
 
 	self model ifNotNil: [ :epiLog |
@@ -1496,12 +1500,12 @@ ViennaRefactoringBrowser >> modelChanged [
 			epiLog printString , ' - ' , epiLog comment ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRefactoringBrowser >> module [
 	^ moduleList selection selectedItem
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 ViennaRefactoringBrowser >> moduleListContextMenu [
 
 	| menu |
@@ -1533,18 +1537,18 @@ ViennaRefactoringBrowser >> moduleListContextMenu [
 	^ menu
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaRefactoringBrowser >> newVDMSource [
 
 	^ self instantiate: ViennaVDMSourcePresenter
 ]
 
-{ #category : #'operations-source signal' }
+{ #category : 'operations-source signal' }
 ViennaRefactoringBrowser >> notifyAnimationError: aString [
 
 ]
 
-{ #category : #'operations-source signal' }
+{ #category : 'operations-source signal' }
 ViennaRefactoringBrowser >> notifySintaxError: aPP2Failure [
 
 	pendingSyntaxError := aPP2Failure.
@@ -1562,7 +1566,7 @@ ViennaRefactoringBrowser >> notifySintaxError: aPP2Failure [
 		textWidget changed ]
 ]
 
-{ #category : #'operations-source signal' }
+{ #category : 'operations-source signal' }
 ViennaRefactoringBrowser >> notifyTypeError: aViennaTypeError [
 
 	pendingTypeError := aViennaTypeError.
@@ -1570,7 +1574,7 @@ ViennaRefactoringBrowser >> notifyTypeError: aViennaTypeError [
 	self updateSourceWithTypeError
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaRefactoringBrowser >> okToClose [
 
 	self isDirty ifFalse: [ ^ true ].
@@ -1580,12 +1584,12 @@ ViennaRefactoringBrowser >> okToClose [
 	^ true
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRefactoringBrowser >> onTheFlyCheckSourceText [
 	self highlightSourceText
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaRefactoringBrowser >> parser [
 
 	| parser |
@@ -1603,19 +1607,19 @@ ViennaRefactoringBrowser >> parser [
 	  / parser operationImport end
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRefactoringBrowser >> pendingSyntaxError [
 
 	^ pendingSyntaxError
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRefactoringBrowser >> pendingTypeError [
 
 	^ pendingTypeError
 ]
 
-{ #category : #layouts }
+{ #category : 'layouts' }
 ViennaRefactoringBrowser >> playgroundPageLayout [
 
 	^ SpPanedLayout newHorizontal
@@ -1632,7 +1636,7 @@ ViennaRefactoringBrowser >> playgroundPageLayout [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRefactoringBrowser >> playgroundSelection [
 
 	| text start end node |
@@ -1656,7 +1660,7 @@ ViennaRefactoringBrowser >> playgroundSelection [
 				  yourself ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRefactoringBrowser >> playgroundSelectionText [
 
 	| text start end |
@@ -1673,7 +1677,7 @@ ViennaRefactoringBrowser >> playgroundSelectionText [
 	^ (text copyFrom: start to: end) trim
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 ViennaRefactoringBrowser >> playgroundTextContextMenu [
 
 	| menu |
@@ -1696,14 +1700,14 @@ ViennaRefactoringBrowser >> playgroundTextContextMenu [
 	^ menu
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRefactoringBrowser >> revertTo: aViennaEpiLog [
 
 	self epiLogRevertion: aViennaEpiLog.
 	self updateModuleList
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRefactoringBrowser >> runAllTests [
 
 	testProcess ifNotNil: [ testProcess terminate ].
@@ -1743,7 +1747,7 @@ ViennaRefactoringBrowser >> runAllTests [
 		               Processor userBackgroundPriority
 ]
 
-{ #category : #'private-unit testing' }
+{ #category : 'private-unit testing' }
 ViennaRefactoringBrowser >> runTestModule: module operation: operation animation: aViennaAnimation [
 	| header |
 	header := 'Runtime: Error 4129: Exit '.
@@ -1800,20 +1804,20 @@ ViennaRefactoringBrowser >> runTestModule: module operation: operation animation
 		message: 'OK'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaRefactoringBrowser >> setDirty [
 
 	dirty := true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRefactoringBrowser >> source [
 	^ self specification
 		ifNil: [ String new ]
 		ifNotNil: [ :ast | ViennaVDMFormatter format: ast ]
 ]
 
-{ #category : #layouts }
+{ #category : 'layouts' }
 ViennaRefactoringBrowser >> sourcePageLayout [
 
 	^ SpPanedLayout newHorizontal
@@ -1828,7 +1832,7 @@ ViennaRefactoringBrowser >> sourcePageLayout [
 		  add: testResultTable
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRefactoringBrowser >> sourceSelection [
 
 	^ sourceText text string asViennaTracingString
@@ -1836,7 +1840,7 @@ ViennaRefactoringBrowser >> sourceSelection [
 		  ifAbsent: [ nil ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRefactoringBrowser >> sourceSelectionText [
 
 	| text start end |
@@ -1853,14 +1857,14 @@ ViennaRefactoringBrowser >> sourceSelectionText [
 	^ (text copyFrom: start to: end) trim
 ]
 
-{ #category : #'operations-source signal' }
+{ #category : 'operations-source signal' }
 ViennaRefactoringBrowser >> sourceSignalButtonPressed [
 
 	pendingSyntaxError ifNotNil: [ pendingSyntaxError inspect ].
 	pendingTypeError ifNotNil: [ pendingTypeError inspect ]
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 ViennaRefactoringBrowser >> sourceTextContextMenu [
 
 	| menu |
@@ -1887,13 +1891,13 @@ ViennaRefactoringBrowser >> sourceTextContextMenu [
 	^ menu
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRefactoringBrowser >> specification [
 
 	^ self epiLog specification
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 ViennaRefactoringBrowser >> testResultTableContextMenu [
 
 	^ self newMenu addGroup: [ :group |
@@ -1915,13 +1919,13 @@ ViennaRefactoringBrowser >> testResultTableContextMenu [
 									  operation: testResultItem operation ] ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRefactoringBrowser >> title [
 
 	^ 'Vienna Refactoring Browser'
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRefactoringBrowser >> typecheck [
 
 	[
@@ -1933,7 +1937,7 @@ ViennaRefactoringBrowser >> typecheck [
 		do: [ :ex | self notifyTypeError: ex ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 ViennaRefactoringBrowser >> updateCategoryList [
 
 	| newItems oldSelection |
@@ -1950,7 +1954,7 @@ ViennaRefactoringBrowser >> updateCategoryList [
 		categoryList selectItem: oldSelection ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 ViennaRefactoringBrowser >> updateDefinitionList [
 
 	| newItems oldSelection |
@@ -1963,7 +1967,7 @@ ViennaRefactoringBrowser >> updateDefinitionList [
 		definitionList selectItem: oldSelection ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 ViennaRefactoringBrowser >> updateEpiLogDiffList [
 
 	epiLogList selectedItem ifNotNil: [ :epilog |
@@ -1972,7 +1976,7 @@ ViennaRefactoringBrowser >> updateEpiLogDiffList [
 					 stream nextPut: change ] ]) ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 ViennaRefactoringBrowser >> updateEpiLogDiffText [
 
 	epiLogDiffList selectedItem
@@ -1987,7 +1991,7 @@ ViennaRefactoringBrowser >> updateEpiLogDiffText [
 		ifNil: [ epiLogDiffText text: '' ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 ViennaRefactoringBrowser >> updateEpiLogList [
 
 	epiLogList ifNotNil: [
@@ -2001,7 +2005,7 @@ ViennaRefactoringBrowser >> updateEpiLogList [
 			selectsFirst: true ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 ViennaRefactoringBrowser >> updateEpiLogMatcherDropList [
 
 	| selection |
@@ -2020,7 +2024,7 @@ ViennaRefactoringBrowser >> updateEpiLogMatcherDropList [
 		epiLogMatcherDropList selectItem: selection ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 ViennaRefactoringBrowser >> updateModuleList [
 
 	| newItems oldSelection |
@@ -2034,7 +2038,7 @@ ViennaRefactoringBrowser >> updateModuleList [
 		moduleList selectItem: oldSelection ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 ViennaRefactoringBrowser >> updateSource [
 
 	self definition
@@ -2044,7 +2048,7 @@ ViennaRefactoringBrowser >> updateSource [
 		ifNil: [ sourceText text: '' ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 ViennaRefactoringBrowser >> updateSourceSignalButton [
 
 	pendingSyntaxError ifNotNil: [
@@ -2057,7 +2061,7 @@ ViennaRefactoringBrowser >> updateSourceSignalButton [
 	^ sourceSignalButton icon: self class greenSignalIcon
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 ViennaRefactoringBrowser >> updateSourceWithTypeError [
 
 	| text textWidget |
@@ -2087,19 +2091,19 @@ ViennaRefactoringBrowser >> updateSourceWithTypeError [
 	textWidget textArea ifNotNil: #compose
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 ViennaRefactoringBrowser >> updateStateTable [
 
 	stateTable refresh
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 ViennaRefactoringBrowser >> updateStateTableItems [
 
 	stateTable items: animation state keys asSortedCollection
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 ViennaRefactoringBrowser >> windowIsClosing [
 
 	testProcess ifNotNil: [

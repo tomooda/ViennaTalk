@@ -1,6 +1,6 @@
-Extension { #name : #ViennaTracesDefinitionsNode }
+Extension { #name : 'ViennaTracesDefinitionsNode' }
 
-{ #category : #'*ViennaTalk-Browser-Core' }
+{ #category : '*ViennaTalk-Browser-Core' }
 ViennaTracesDefinitionsNode >> refactoringBrowserSectionName [
 
 	^ 'traces'

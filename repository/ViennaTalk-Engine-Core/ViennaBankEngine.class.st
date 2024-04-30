@@ -1,30 +1,31 @@
 Class {
-	#name : #ViennaBankEngine,
-	#superclass : #ViennaEngine,
+	#name : 'ViennaBankEngine',
+	#superclass : 'ViennaEngine',
 	#instVars : [
 		'engines',
 		'ringBufferIndex',
 		'lock'
 	],
-	#category : 'ViennaTalk-Engine-Core'
+	#category : 'ViennaTalk-Engine-Core',
+	#package : 'ViennaTalk-Engine-Core'
 }
 
-{ #category : #'adding/removing' }
+{ #category : 'adding/removing' }
 ViennaBankEngine >> add: aViennaBankEngine [
 	lock critical: [ ^ engines add: aViennaBankEngine ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaBankEngine >> close [
 	engines do: [ :engine | engine close ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaBankEngine >> enginesDo: aBlock [
 	engines do: aBlock
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaBankEngine >> evaluate: expression specification: specification states: states module: module vdm10: vdm10 rtc: rtc [
 	| engine |
 	lock
@@ -41,7 +42,7 @@ ViennaBankEngine >> evaluate: expression specification: specification states: st
 		rtc: rtc
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 ViennaBankEngine >> initialize [
 	super initialize.
 	lock := Semaphore forMutualExclusion.
@@ -49,7 +50,7 @@ ViennaBankEngine >> initialize [
 	ringBufferIndex := 0
 ]
 
-{ #category : #'adding/removing' }
+{ #category : 'adding/removing' }
 ViennaBankEngine >> remove: aViennaBankEngine ifAbsent: errorBlock [
 	lock critical: [ ^ engines remove: aViennaBankEngine ifAbsent: errorBlock ]
 ]

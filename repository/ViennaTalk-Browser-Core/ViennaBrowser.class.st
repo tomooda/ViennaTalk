@@ -1,6 +1,6 @@
 Class {
-	#name : #ViennaBrowser,
-	#superclass : #Model,
+	#name : 'ViennaBrowser',
+	#superclass : 'Model',
 	#instVars : [
 		'cachedSpec',
 		'cachedModulePositions',
@@ -30,40 +30,42 @@ Class {
 		'AutoFullTest',
 		'AutoTest'
 	],
-	#category : #'ViennaTalk-Browser-Core-Browsers'
+	#category : 'ViennaTalk-Browser-Core-Browsers',
+	#package : 'ViennaTalk-Browser-Core',
+	#tag : 'Browsers'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaBrowser class >> autoFormat [
 	^ AutoFormat ifNil: [ AutoFormat := true ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaBrowser class >> autoFormat: aBoolean [
 	AutoFormat := aBoolean ~= false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaBrowser class >> autoFullTest [
 	^ AutoFullTest ifNil: [ AutoFullTest := false ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaBrowser class >> autoFullTest: aBoolean [
 	AutoFullTest := true == aBoolean
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaBrowser class >> autoTest [
 	^ AutoTest ifNil: [ AutoTest := false ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaBrowser class >> autoTest: aBoolean [
 	AutoTest := true == aBoolean
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 ViennaBrowser class >> codePaneMenu: aBuilder [
 
 	<contextMenu>
@@ -132,23 +134,23 @@ ViennaBrowser class >> codePaneMenu: aBuilder [
 		selector: #cancel
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 ViennaBrowser class >> defaultFormatWidth [
 	^ 65
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 ViennaBrowser class >> defaultLabel [
 	^ 'VDM Browser'
 ]
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 ViennaBrowser class >> initialize [
 	self installEventHandlers.
 	Smalltalk at: #ViennaLauncher ifPresent: [ :launcherClass | launcherClass reopen ]
 ]
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 ViennaBrowser class >> installEventHandlers [
 
 	ExternalDropHandler registerHandler: (ExternalDropHandler
@@ -160,7 +162,7 @@ ViennaBrowser class >> installEventHandlers [
 					 acceptCode: stream contents ])
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 ViennaBrowser class >> moduleListMenu: aBuilder [
 
 	<contextMenu>
@@ -231,36 +233,36 @@ ViennaBrowser class >> moduleListMenu: aBuilder [
 					arguments: (Array with: module asString) ] ] ]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaBrowser class >> on: aViennaAnimation [
 	^ self new animation: aViennaAnimation
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaBrowser class >> open [
 	"ViennaBrowser open"
 
 	^ self openOn: ViennaAnimation default
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaBrowser class >> openOn: aViennaAnimation [
 	^ self openOn: aViennaAnimation withLabel: self defaultLabel
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaBrowser class >> openOn: aViennaAnimation withLabel: label [
 	^ (self on: aViennaAnimation) openLabel: label
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 ViennaBrowser class >> testPaneMenu: aBuilder [
 	<contextMenu>
 	<viennaBrowserTestPaneMenu>
 	(aBuilder item: #jump translated) selector: #jumpToSpec
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 ViennaBrowser class >> valuePaneMenu: aBuilder [
 
 	<contextMenu>
@@ -317,7 +319,7 @@ ViennaBrowser class >> valuePaneMenu: aBuilder [
 		selector: #cancel
 ]
 
-{ #category : #settings }
+{ #category : 'settings' }
 ViennaBrowser class >> viennaSettingsOn: aBuilder [
 	<systemsettings>
 	(aBuilder group: #ViennaTalkUnitTesting)
@@ -347,7 +349,7 @@ ViennaBrowser class >> viennaSettingsOn: aBuilder [
 		order: 0.50
 ]
 
-{ #category : #'world menu' }
+{ #category : 'world menu' }
 ViennaBrowser class >> viennaToolsMenuOn: aBuilder [
 	<ViennaToolsMenu>
 	(aBuilder item: #'VDM Browser')
@@ -357,7 +359,7 @@ ViennaBrowser class >> viennaToolsMenuOn: aBuilder [
 		icon: nil
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 ViennaBrowser class >> workspacePaneMenu: aBuilder [
 
 	<contextMenu>
@@ -414,7 +416,7 @@ ViennaBrowser class >> workspacePaneMenu: aBuilder [
 		selector: #cancel
 ]
 
-{ #category : #'world menu' }
+{ #category : 'world menu' }
 ViennaBrowser class >> worldMenuOn: aBuilder [
 
 	<worldMenu>
@@ -426,7 +428,7 @@ ViennaBrowser class >> worldMenuOn: aBuilder [
 		icon: nil
 ]
 
-{ #category : #'value pane' }
+{ #category : 'value pane' }
 ViennaBrowser >> accept: aString var: varName [
 	| oldValue |
 	oldValue := animation plainAt: varName ifAbsent: [ ^ false ].
@@ -445,7 +447,7 @@ ViennaBrowser >> accept: aString var: varName [
 	^ true
 ]
 
-{ #category : #'value pane' }
+{ #category : 'value pane' }
 ViennaBrowser >> accept: aString var: varName in: moduleName [
 	| key oldValue |
 	key := moduleName , '`' , varName.
@@ -465,7 +467,7 @@ ViennaBrowser >> accept: aString var: varName in: moduleName [
 	^ true
 ]
 
-{ #category : #'value pane' }
+{ #category : 'value pane' }
 ViennaBrowser >> acceptBindings: aString in: moduleName [
 	| newBindings oldBindings prefix |
 	newBindings := self
@@ -494,12 +496,12 @@ ViennaBrowser >> acceptBindings: aString in: moduleName [
 	^ true
 ]
 
-{ #category : #'code pane' }
+{ #category : 'code pane' }
 ViennaBrowser >> acceptCode: aStringOrText [
 	^ self acceptCode: aStringOrText newModuleAndSourceDo: nil
 ]
 
-{ #category : #'code pane' }
+{ #category : 'code pane' }
 ViennaBrowser >> acceptCode: aStringOrText newModuleAndSourceDo: aBlock [
 
 	self animation ifNotNil: [
@@ -575,7 +577,7 @@ ViennaBrowser >> acceptCode: aStringOrText newModuleAndSourceDo: aBlock [
 	^ false
 ]
 
-{ #category : #'value pane' }
+{ #category : 'value pane' }
 ViennaBrowser >> acceptGlobalBindings: aString [
 	| newBindings oldBindings |
 	newBindings := self
@@ -603,7 +605,7 @@ ViennaBrowser >> acceptGlobalBindings: aString [
 	^ true
 ]
 
-{ #category : #'value pane' }
+{ #category : 'value pane' }
 ViennaBrowser >> acceptValue: aString [
 	^ self selectedModule
 		ifNil: [ 
@@ -616,7 +618,7 @@ ViennaBrowser >> acceptValue: aString [
 				ifNotNil: [ :field | self accept: aString asString var: field in: module ] ]
 ]
 
-{ #category : #'workspace pane' }
+{ #category : 'workspace pane' }
 ViennaBrowser >> acceptWorkspace: aStringOrText [
 	| oldWorkspace |
 	oldWorkspace := workspace.
@@ -626,19 +628,19 @@ ViennaBrowser >> acceptWorkspace: aStringOrText [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaBrowser >> animation [
 	^ animation
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaBrowser >> animation: aViennaAnimation [
 	animation ifNotNil: [ animation removeDependent: self ].
 	animation := aViennaAnimation.
 	aViennaAnimation addDependent: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaBrowser >> animationClassForType: aSymbol [
 	aSymbol = #transpiler
 		ifTrue: [ Smalltalk
@@ -647,22 +649,22 @@ ViennaBrowser >> animationClassForType: aSymbol [
 	^ ViennaAnimation
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaBrowser >> autoFormat [
 	^ self class autoFormat
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaBrowser >> autoFullTest [
 	^ self class autoFullTest
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaBrowser >> autoTest [
 	^ self class autoTest
 ]
 
-{ #category : #'test pane menu' }
+{ #category : 'test pane menu' }
 ViennaBrowser >> basicRunTestModule: module operation: operation [
 	| header testAnimation |
 	header := 'Runtime: Error 4129: Exit '.
@@ -714,7 +716,7 @@ ViennaBrowser >> basicRunTestModule: module operation: operation [
 	^ ViennaTestSuccessResultItem module: module operation: operation message: 'OK'
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 ViennaBrowser >> build [
 	| pane upper |
 	moduleListPane := self buildModuleList.
@@ -768,7 +770,7 @@ ViennaBrowser >> build [
 	^ pane
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 ViennaBrowser >> buildCodePane [
 	^ (ViennaPluggableTextMorph
 		on: self
@@ -791,7 +793,7 @@ ViennaBrowser >> buildCodePane [
 		yourself
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 ViennaBrowser >> buildFieldList [
 	^ (PluggableListMorph
 		on: self
@@ -803,7 +805,7 @@ ViennaBrowser >> buildFieldList [
 		yourself
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 ViennaBrowser >> buildModuleList [
 	^ (PluggableListMorph
 		on: self
@@ -815,7 +817,7 @@ ViennaBrowser >> buildModuleList [
 		yourself
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 ViennaBrowser >> buildTestPane [
 	^ (PluggableIconListMorph
 		on: self
@@ -828,7 +830,7 @@ ViennaBrowser >> buildTestPane [
 		yourself
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 ViennaBrowser >> buildValuePane [
 	^ (ViennaPluggableTextMorph
 		on: self
@@ -847,7 +849,7 @@ ViennaBrowser >> buildValuePane [
 		yourself
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 ViennaBrowser >> buildWorkspacePane [
 	^ (ViennaPluggableTextMorph
 		on: self
@@ -866,7 +868,7 @@ ViennaBrowser >> buildWorkspacePane [
 		yourself
 ]
 
-{ #category : #'code pane' }
+{ #category : 'code pane' }
 ViennaBrowser >> code [
 	| section module |
 	animation ifNil: [ ^ String new ].
@@ -878,39 +880,39 @@ ViennaBrowser >> code [
 	^ (animation specification copyFrom: section first to: section last) asText makeAllColor: Color black
 ]
 
-{ #category : #'code pane menu' }
+{ #category : 'code pane menu' }
 ViennaBrowser >> codePaneDoIt [
 	self doItIn: codePane
 ]
 
-{ #category : #'code pane menu' }
+{ #category : 'code pane menu' }
 ViennaBrowser >> codePaneMenu: aMenu shifted: aBoolean [
 	^ aMenu addAllFromPragma: 'viennaBrowserCodePaneMenu' target: self
 ]
 
-{ #category : #'code pane menu' }
+{ #category : 'code pane menu' }
 ViennaBrowser >> codePanePrintIt [
 	^ self printItIn: codePane
 ]
 
-{ #category : #'code pane' }
+{ #category : 'code pane' }
 ViennaBrowser >> codeSelection [
 	^ codeSelection ifNil: [ codeSelection := 1 to: 0 ]
 ]
 
-{ #category : #'code pane' }
+{ #category : 'code pane' }
 ViennaBrowser >> codeSelection: aSelection [
 	codeSelection := aSelection
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaBrowser >> directory [
 
 	^ directory ifNil: [ 
 		  directory := FileLocator viennaTalkDocumentDirectory ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaBrowser >> doItIn: aPluggableTextMorph [
 	aPluggableTextMorph
 		handleEdit: [ | editor error |
@@ -931,20 +933,20 @@ ViennaBrowser >> doItIn: aPluggableTextMorph [
 						to: selectionInterval last ] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaBrowser >> evaluate: aString [
 
 	^ self evaluate: aString ifError: [ :msg | msg ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaBrowser >> evaluate: aString ifError: errorBlock [
 	^ selectedModule
 		ifNil: [ animation plainEvaluate: aString ifError: errorBlock ]
 		ifNotNil: [ :m | animation plainEvaluate: aString in: m ifError: errorBlock ]
 ]
 
-{ #category : #'field list' }
+{ #category : 'field list' }
 ViennaBrowser >> fieldList [
 	^ self selectedModule
 		ifNil: [ animation state keys asSortedCollection asArray ]
@@ -956,17 +958,17 @@ ViennaBrowser >> fieldList [
 				thenCollect: [ :name | name copyFrom: m size + 1 to: name size ]) asSortedCollection asArray ]
 ]
 
-{ #category : #'field list' }
+{ #category : 'field list' }
 ViennaBrowser >> fieldSelectionIndex [
 	^ self fieldList indexOf: self selectedField
 ]
 
-{ #category : #'field list' }
+{ #category : 'field list' }
 ViennaBrowser >> fieldSelectionIndex: anInteger [
 	self selectFieldNamed: (self fieldList at: anInteger ifAbsent: [])
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaBrowser >> fileOpen: title extensions: anArrayOfString do: aBlock [
 	(UIManager default
 		chooseExistingFileReference: title
@@ -980,7 +982,7 @@ ViennaBrowser >> fileOpen: title extensions: anArrayOfString do: aBlock [
 					[ :stream | aBlock value: stream contents withInternalLineEndings readStream ] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaBrowser >> fileSave: title extensions: anArrayOfString do: aBlock [
 	(UIManager default
 		chooseForSaveFileReference: title
@@ -998,12 +1000,12 @@ ViennaBrowser >> fileSave: title extensions: anArrayOfString do: aBlock [
 								with: String lf) ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaBrowser >> font [
 	^ ViennaLauncher font
 ]
 
-{ #category : #'module list menu' }
+{ #category : 'module list menu' }
 ViennaBrowser >> generateSmalltalkClasses [
 
 	| ast |
@@ -1017,7 +1019,7 @@ ViennaBrowser >> generateSmalltalkClasses [
 		 generate: ast) ifNotNil: [ :class | class browse ]
 ]
 
-{ #category : #'module list menu' }
+{ #category : 'module list menu' }
 ViennaBrowser >> generateSmalltalkObject [
 
 	| ast |
@@ -1031,7 +1033,7 @@ ViennaBrowser >> generateSmalltalkObject [
 		 generate: ast) ifNotNil: [ :object | object inspect ]
 ]
 
-{ #category : #'module list menu' }
+{ #category : 'module list menu' }
 ViennaBrowser >> generateSmalltalkScript [
 
 	self selectedModule ifNotNil: [ :module |
@@ -1053,7 +1055,7 @@ ViennaBrowser >> generateSmalltalkScript [
 					(RBParser parseExpression: script) formattedCode ] ] ]
 ]
 
-{ #category : #'module list menu' }
+{ #category : 'module list menu' }
 ViennaBrowser >> generateViennaDocSourceScript [
 
 	self
@@ -1133,19 +1135,19 @@ ViennaBrowser >> generateViennaDocSourceScript [
 					nextPut: Character lf ] ]
 ]
 
-{ #category : #'module list menu' }
+{ #category : 'module list menu' }
 ViennaBrowser >> importUnitTestingModule [
 
 	self acceptCode: ViennaModuleNode unitTestingSource
 ]
 
-{ #category : #'module list menu' }
+{ #category : 'module list menu' }
 ViennaBrowser >> importViennaDOMModule [
 
 	self acceptCode: ViennaModuleNode viennaDOMSource
 ]
 
-{ #category : #'module list menu' }
+{ #category : 'module list menu' }
 ViennaBrowser >> importerModules [
 	| parser |
 	self selectedModule isNil
@@ -1162,7 +1164,7 @@ ViennaBrowser >> importerModules [
 						notEmpty ] ]) collect: [ :assoc | assoc key ]
 ]
 
-{ #category : #'code pane menu' }
+{ #category : 'code pane menu' }
 ViennaBrowser >> insertModuleSource: moduleName [
 	| section moduleSource editor |
 	section := ((self modulePositionsFrom: animation specification)
@@ -1177,7 +1179,7 @@ ViennaBrowser >> insertModuleSource: moduleName [
 		selectInterval: (editor selectionInterval first to: editor selectionInterval first + moduleSource size - 1)
 ]
 
-{ #category : #'test pane menu' }
+{ #category : 'test pane menu' }
 ViennaBrowser >> jumpToSpec [
 	| results |
 	results := self testList.
@@ -1194,7 +1196,7 @@ ViennaBrowser >> jumpToSpec [
 					lowerTabPane selectedPageIndex: 1 ] ]
 ]
 
-{ #category : #'module list menu' }
+{ #category : 'module list menu' }
 ViennaBrowser >> loadAndMergeFromFile [
 	self
 		fileOpen: 'Load and merge ...'
@@ -1202,7 +1204,7 @@ ViennaBrowser >> loadAndMergeFromFile [
 		do: [ :stream | self acceptCode: stream contents ]
 ]
 
-{ #category : #'module list menu' }
+{ #category : 'module list menu' }
 ViennaBrowser >> loadSnapshotFromFile [
 	self
 		fileOpen: 'Open snapshot...'
@@ -1225,7 +1227,7 @@ ViennaBrowser >> loadSnapshotFromFile [
 			self acceptWorkspace: (json at: 'workspace' ifAbsent: [ '' ]) ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaBrowser >> matches: aParser in: anObject [
 	"Search anObject repeatedly for the matches of the receiver. Answered an OrderedCollection of the matched parse-trees."
 
@@ -1235,14 +1237,14 @@ ViennaBrowser >> matches: aParser in: anObject [
 	^ result
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaBrowser >> matches: aParser in: aStream do: aBlock [
 	"Search anObject repeatedly for the matches of the receiver. Evaluate aBlock for each match with the matched parse-tree as the argument. Make sure to always consume exactly one character with each step, to not miss any match."
 
 	((aParser and ==> aBlock , #any asPParser) / #any asPParser) star parse: aStream
 ]
 
-{ #category : #'module list menu' }
+{ #category : 'module list menu' }
 ViennaBrowser >> mergeAnnotationsIntoFRAM [
 
 	| fram ast |
@@ -1260,7 +1262,7 @@ ViennaBrowser >> mergeAnnotationsIntoFRAM [
 		do: [ :stream | fram writeXMLOn: stream ]
 ]
 
-{ #category : #'module list menu' }
+{ #category : 'module list menu' }
 ViennaBrowser >> mergeOperationsFromFRAM [
 
 	| fram ast |
@@ -1276,17 +1278,17 @@ ViennaBrowser >> mergeOperationsFromFRAM [
 
 ]
 
-{ #category : #'module list' }
+{ #category : 'module list' }
 ViennaBrowser >> moduleList [
 	^ animation ifNil: [ Array new ] ifNotNil: [ ((self modulePositionsFrom: animation specification) collect: #key) asSortedCollection asArray]
 ]
 
-{ #category : #'module list menu' }
+{ #category : 'module list menu' }
 ViennaBrowser >> moduleListMenu: aMenu [
 	^ aMenu addAllFromPragma: 'viennaBrowserModuleListMenu' target: self
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaBrowser >> modulePositionsFrom: aString [
 	^ aString = cachedSpec
 		ifTrue: [ cachedModulePositions ]
@@ -1343,12 +1345,12 @@ ViennaBrowser >> modulePositionsFrom: aString [
 				collect: [ :index | (modulesAndPositions at: index) key -> ((modulesAndPositions at: index) value to: (ends at: index)) ] ]
 ]
 
-{ #category : #'module list' }
+{ #category : 'module list' }
 ViennaBrowser >> moduleSelectionIndex [
 	^ self moduleList indexOf: self selectedModule
 ]
 
-{ #category : #'module list' }
+{ #category : 'module list' }
 ViennaBrowser >> moduleSelectionIndex: anInteger [ 
 	^ self
 		selectModuleNamed: (self moduleList
@@ -1356,7 +1358,7 @@ ViennaBrowser >> moduleSelectionIndex: anInteger [
 				ifAbsent: [])
 ]
 
-{ #category : #'module list menu' }
+{ #category : 'module list menu' }
 ViennaBrowser >> newAndLoadFromFile [
 	self
 		fileOpen: 'New and load from...'
@@ -1372,7 +1374,7 @@ ViennaBrowser >> newAndLoadFromFile [
 							codePane hasUnacceptedEdits: true ] ] ]
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 ViennaBrowser >> okToChange [
 	^ (codePane okToChange and: [ workspacePane okToChange ])
 		or: [ UIManager default
@@ -1381,17 +1383,17 @@ ViennaBrowser >> okToChange [
 Do you want to discard it to close?' ]
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 ViennaBrowser >> openLabel: aString [
 	(self build openInWindowLabeled: aString) model: self
 ]
 
-{ #category : #'module list' }
+{ #category : 'module list' }
 ViennaBrowser >> otherModules [
 	^ self moduleList copyWithout: self selectedModule
 ]
 
-{ #category : #'value pane' }
+{ #category : 'value pane' }
 ViennaBrowser >> parseBindings: aString ifError: errorBlock [
 	| reader bindings stream readName |
 	reader := ViennaReader new.
@@ -1429,7 +1431,7 @@ ViennaBrowser >> parseBindings: aString ifError: errorBlock [
 	^ errorBlock value: aString size value: 'Unexpected end before reaching to "}"'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaBrowser >> printItIn: aPluggableTextMorph [
 	aPluggableTextMorph
 		handleEdit: [ | editor result selectionInterval |
@@ -1445,7 +1447,7 @@ ViennaBrowser >> printItIn: aPluggableTextMorph [
 				to: selectionInterval last ]
 ]
 
-{ #category : #'module list menu' }
+{ #category : 'module list menu' }
 ViennaBrowser >> removeModule [
 	self selectedModule
 		ifNotNil: [ :moduleName | 
@@ -1468,7 +1470,7 @@ ViennaBrowser >> removeModule [
 			^ true ]
 ]
 
-{ #category : #'test pane menu' }
+{ #category : 'test pane menu' }
 ViennaBrowser >> runAllTests [
 
 	testProcess ifNotNil: [ testProcess terminate ].
@@ -1499,7 +1501,7 @@ ViennaBrowser >> runAllTests [
 		               Processor userBackgroundPriority
 ]
 
-{ #category : #'test pane menu' }
+{ #category : 'test pane menu' }
 ViennaBrowser >> runTestModule [
 	testResult := Array new.
 	self changed: #testList.
@@ -1507,7 +1509,7 @@ ViennaBrowser >> runTestModule [
 	self runTestModule: self selectedModule
 ]
 
-{ #category : #'test pane menu' }
+{ #category : 'test pane menu' }
 ViennaBrowser >> runTestModule: aString [
 
 	| testModuleName |
@@ -1541,7 +1543,7 @@ ViennaBrowser >> runTestModule: aString [
 		               Processor userBackgroundPriority
 ]
 
-{ #category : #'test pane menu' }
+{ #category : 'test pane menu' }
 ViennaBrowser >> runTestModule: module operation: operation [
 	testResult := testResult
 		copyWith: (self basicRunTestModule: module operation: operation).
@@ -1549,7 +1551,7 @@ ViennaBrowser >> runTestModule: module operation: operation [
 	self changed: #testList
 ]
 
-{ #category : #'module list menu' }
+{ #category : 'module list menu' }
 ViennaBrowser >> saveAModuleToFile [
 
 	self selectedModule ifNotNil: [ :module | 
@@ -1565,7 +1567,7 @@ ViennaBrowser >> saveAModuleToFile [
 							 to: assoc value last) ] ] ]
 ]
 
-{ #category : #'module list menu' }
+{ #category : 'module list menu' }
 ViennaBrowser >> saveAllModulesToFile [
 	self
 		fileSave: 'Save all modules to...'
@@ -1576,7 +1578,7 @@ ViennaBrowser >> saveAllModulesToFile [
 				close ]
 ]
 
-{ #category : #'module list menu' }
+{ #category : 'module list menu' }
 ViennaBrowser >> saveSnapshotToFile [
 	| json |
 	json := Dictionary new.
@@ -1590,7 +1592,7 @@ ViennaBrowser >> saveSnapshotToFile [
 		do: [ :stream | (NeoJSONWriter on: stream) nextPut: json ]
 ]
 
-{ #category : #'field list' }
+{ #category : 'field list' }
 ViennaBrowser >> selectFieldNamed: aString [
 	| oldSelection |
 	oldSelection := selectedField.
@@ -1602,7 +1604,7 @@ ViennaBrowser >> selectFieldNamed: aString [
 			self changed: #value ]
 ]
 
-{ #category : #'module list' }
+{ #category : 'module list' }
 ViennaBrowser >> selectModuleNamed: aString [
 	| oldSelection |
 	oldSelection := selectedModule.
@@ -1617,17 +1619,17 @@ ViennaBrowser >> selectModuleNamed: aString [
 			self changed: #value ]
 ]
 
-{ #category : #'field list' }
+{ #category : 'field list' }
 ViennaBrowser >> selectedField [
 	^ selectedField
 ]
 
-{ #category : #'module list' }
+{ #category : 'module list' }
 ViennaBrowser >> selectedModule [
 	^ selectedModule
 ]
 
-{ #category : #'code pane' }
+{ #category : 'code pane' }
 ViennaBrowser >> specificationTemplate [
 	^ 'module <module name>
 exports all
@@ -1655,33 +1657,33 @@ end <module name>
 ' asText makeAllColor: Color gray
 ]
 
-{ #category : #'test pane' }
+{ #category : 'test pane' }
 ViennaBrowser >> testList [
 	^ (testResult ifNil: [ Array new ]) copy
 ]
 
-{ #category : #'test pane menu' }
+{ #category : 'test pane menu' }
 ViennaBrowser >> testPaneMenu: aMenu [
 	^ aMenu addAllFromPragma: 'viennaBrowserTestPaneMenu' target: self
 ]
 
-{ #category : #'test pane' }
+{ #category : 'test pane' }
 ViennaBrowser >> testResultIconFor: aViennaTestResultItem [
 	^ aViennaTestResultItem icon
 ]
 
-{ #category : #'test pane' }
+{ #category : 'test pane' }
 ViennaBrowser >> testSelectionIndex [
 	^ testSelectionIndex ifNil: [ testSelectionIndex := 0 ]
 ]
 
-{ #category : #'test pane' }
+{ #category : 'test pane' }
 ViennaBrowser >> testSelectionIndex: anInteger [
 	testSelectionIndex := anInteger.
 	self changed: #testSelectionIndex
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 ViennaBrowser >> update: aSymbol [
 	aSymbol = #specification
 		ifTrue: [ 
@@ -1694,7 +1696,7 @@ ViennaBrowser >> update: aSymbol [
 		ifTrue: [ self changed: #value ]
 ]
 
-{ #category : #'test pane' }
+{ #category : 'test pane' }
 ViennaBrowser >> updateTestLabelIcon [
 	| level |
 	level := 0.
@@ -1719,17 +1721,17 @@ ViennaBrowser >> updateTestLabelIcon [
 	testLabel changed
 ]
 
-{ #category : #'module list menu' }
+{ #category : 'module list menu' }
 ViennaBrowser >> useInterpreter [
 	self animation: self animation asInterpretedAnimation 
 ]
 
-{ #category : #'module list menu' }
+{ #category : 'module list menu' }
 ViennaBrowser >> useTranspiler [
 	self animation: self animation asTranspiledAnimation
 ]
 
-{ #category : #'value pane' }
+{ #category : 'value pane' }
 ViennaBrowser >> value [
 	^ self selectedModule
 		ifNil: [ 
@@ -1756,37 +1758,37 @@ ViennaBrowser >> value [
 				ifNotNil: [ :field | animation plainAt: module , '`' , field ifAbsent: [ String new ] ] ]
 ]
 
-{ #category : #'value pane menu' }
+{ #category : 'value pane menu' }
 ViennaBrowser >> valuePaneAccept [
 	^ self acceptValue: valuePane text asString
 ]
 
-{ #category : #'value pane menu' }
+{ #category : 'value pane menu' }
 ViennaBrowser >> valuePaneDoIt [
 	self doItIn: valuePane
 ]
 
-{ #category : #'value pane menu' }
+{ #category : 'value pane menu' }
 ViennaBrowser >> valuePaneMenu: aMenu shifted: aBoolean [
 	^ aMenu addAllFromPragma: 'viennaBrowserValuePaneMenu' target: self
 ]
 
-{ #category : #'value pane menu' }
+{ #category : 'value pane menu' }
 ViennaBrowser >> valuePanePrintIt [
 	^ self printItIn: valuePane
 ]
 
-{ #category : #'value pane' }
+{ #category : 'value pane' }
 ViennaBrowser >> valueSelection [
 	^ valueSelection ifNil: [ valueSelection := 1 to: 0 ]
 ]
 
-{ #category : #'value pane' }
+{ #category : 'value pane' }
 ViennaBrowser >> valueSelection: aSelection [
 	valueSelection := aSelection
 ]
 
-{ #category : #resources }
+{ #category : 'resources' }
 ViennaBrowser >> viennaIcon [
 	^ (Form
 	extent: (16@16)
@@ -1795,37 +1797,37 @@ ViennaBrowser >> viennaIcon [
 	offset: (0@0))
 ]
 
-{ #category : #'workspace pane' }
+{ #category : 'workspace pane' }
 ViennaBrowser >> workspace [
 	^ workspace asString
 ]
 
-{ #category : #'workspace pane menu' }
+{ #category : 'workspace pane menu' }
 ViennaBrowser >> workspacePaneAccept [
 	^ self acceptWorkspace: workspacePane text asString
 ]
 
-{ #category : #'workspace pane menu' }
+{ #category : 'workspace pane menu' }
 ViennaBrowser >> workspacePaneDoIt [
 	self doItIn: workspacePane
 ]
 
-{ #category : #'workspace pane menu' }
+{ #category : 'workspace pane menu' }
 ViennaBrowser >> workspacePaneMenu: aMenu shifted: aBoolean [
 	^ aMenu addAllFromPragma: 'viennaBrowserWorkspacePaneMenu' target: self
 ]
 
-{ #category : #'workspace pane menu' }
+{ #category : 'workspace pane menu' }
 ViennaBrowser >> workspacePanePrintIt [
 	self printItIn: workspacePane
 ]
 
-{ #category : #'workspace pane' }
+{ #category : 'workspace pane' }
 ViennaBrowser >> workspaceSelection [
 	^ workspaceSelection ifNil: [ workspaceSelection := 1 to: 0 ]
 ]
 
-{ #category : #'workspace pane' }
+{ #category : 'workspace pane' }
 ViennaBrowser >> workspaceSelection: anInterval [
 	workspaceSelection := anInterval
 ]

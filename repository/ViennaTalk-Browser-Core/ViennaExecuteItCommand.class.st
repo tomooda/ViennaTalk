@@ -1,34 +1,36 @@
 Class {
-	#name : #ViennaExecuteItCommand,
-	#superclass : #CmCommand,
-	#category : #'ViennaTalk-Browser-Core-Spec2'
+	#name : 'ViennaExecuteItCommand',
+	#superclass : 'CmCommand',
+	#category : 'ViennaTalk-Browser-Core-Spec2',
+	#package : 'ViennaTalk-Browser-Core',
+	#tag : 'Spec2'
 }
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 ViennaExecuteItCommand class >> defaultDescription [
 
 	^ 'Execute the selected statement and print it'
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 ViennaExecuteItCommand class >> defaultIconName [
 
 	^ #smallDoIt
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 ViennaExecuteItCommand class >> defaultName [
 
 	^ 'Execute it'
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 ViennaExecuteItCommand class >> defaultShortcut [
 
 	^ $d command
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaExecuteItCommand class >> forSpecContext: anObject [
 
 	^ (super forSpecContext: anObject)
@@ -37,7 +39,7 @@ ViennaExecuteItCommand class >> forSpecContext: anObject [
 		  yourself
 ]
 
-{ #category : #executing }
+{ #category : 'executing' }
 ViennaExecuteItCommand >> execute [
 
 	context ifNotNil: #doExecuteIt

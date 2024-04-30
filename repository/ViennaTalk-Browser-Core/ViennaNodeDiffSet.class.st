@@ -1,13 +1,15 @@
 Class {
-	#name : #ViennaNodeDiffSet,
-	#superclass : #Object,
+	#name : 'ViennaNodeDiffSet',
+	#superclass : 'Object',
 	#instVars : [
 		'changes'
 	],
-	#category : #'ViennaTalk-Browser-Core-Diff'
+	#category : 'ViennaTalk-Browser-Core-Diff',
+	#package : 'ViennaTalk-Browser-Core',
+	#tag : 'Diff'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaNodeDiffSet class >> from: aViennaModularDocumentNode to: anotherViennaModularDocumentNode [
 
 	^ self new
@@ -15,13 +17,13 @@ ViennaNodeDiffSet class >> from: aViennaModularDocumentNode to: anotherViennaMod
 		  to: anotherViennaModularDocumentNode
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaNodeDiffSet >> changesDo: aBlock [
 
 	changes do: aBlock
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaNodeDiffSet >> from: aViennaModularDocumentNode to: anotherViennaModularDocumentNode [
 
 	(aViennaModularDocumentNode moduleNames
@@ -47,7 +49,7 @@ ViennaNodeDiffSet >> from: aViennaModularDocumentNode to: anotherViennaModularDo
 							 to: definition2) ] ] ] ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 ViennaNodeDiffSet >> initialize [
 
 	super initialize.

@@ -1,10 +1,12 @@
 Class {
-	#name : #ViennaVanillaEpiLog,
-	#superclass : #ViennaModificationEpiLog,
-	#category : #'ViennaTalk-Browser-Core-EpiLog'
+	#name : 'ViennaVanillaEpiLog',
+	#superclass : 'ViennaModificationEpiLog',
+	#category : 'ViennaTalk-Browser-Core-EpiLog',
+	#package : 'ViennaTalk-Browser-Core',
+	#tag : 'EpiLog'
 }
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 ViennaVanillaEpiLog >> initialize [
 
 	super initialize.
@@ -12,13 +14,13 @@ ViennaVanillaEpiLog >> initialize [
 	state := Dictionary new
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaVanillaEpiLog >> isVanillaEpiLog [
 
 	^ true
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 ViennaVanillaEpiLog >> printOn: aStream [
 
 	aStream nextPutAll: 'Vanilla'

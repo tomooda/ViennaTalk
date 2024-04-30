@@ -6,18 +6,20 @@ Each module is saved as an individual file named <module name>.vdmsl.
 The content  of workspace is also saved into .workspace file in the same directory.
 "
 Class {
-	#name : #ViennaDirectoryBrowser,
-	#superclass : #ViennaBrowser,
+	#name : 'ViennaDirectoryBrowser',
+	#superclass : 'ViennaBrowser',
 	#instVars : [
 		'basePath'
 	],
 	#classVars : [
 		'DefaultBasePath'
 	],
-	#category : #'ViennaTalk-Browser-Core-Browsers'
+	#category : 'ViennaTalk-Browser-Core-Browsers',
+	#package : 'ViennaTalk-Browser-Core',
+	#tag : 'Browsers'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaDirectoryBrowser class >> defaultBasePath [
 
 	(DefaultBasePath isNil or: [ DefaultBasePath isDirectory not ]) 
@@ -26,12 +28,12 @@ ViennaDirectoryBrowser class >> defaultBasePath [
 	^ DefaultBasePath
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaDirectoryBrowser class >> defaultBasePath: aFileReference [
 	DefaultBasePath := aFileReference
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 ViennaDirectoryBrowser class >> moduleListMenu: aBuilder [
 
 	<contextMenu>
@@ -83,7 +85,7 @@ ViennaDirectoryBrowser class >> moduleListMenu: aBuilder [
 					arguments: (Array with: module asString) ] ] ]
 ]
 
-{ #category : #'world menu' }
+{ #category : 'world menu' }
 ViennaDirectoryBrowser class >> viennaToolsMenuOn: aBuilder [
 
 	<ViennaToolsMenu>
@@ -95,7 +97,7 @@ ViennaDirectoryBrowser class >> viennaToolsMenuOn: aBuilder [
 		icon: nil
 ]
 
-{ #category : #'world menu' }
+{ #category : 'world menu' }
 ViennaDirectoryBrowser class >> worldMenuOn: aBuilder [
 
 	<worldMenu>
@@ -108,12 +110,12 @@ ViennaDirectoryBrowser class >> worldMenuOn: aBuilder [
 		icon: nil
 ]
 
-{ #category : #'code pane' }
+{ #category : 'code pane' }
 ViennaDirectoryBrowser >> acceptCode: aStringOrText [
 	^ self acceptCode: aStringOrText newModuleAndSourceDo: [ :module | self saveModule: module ]
 ]
 
-{ #category : #'workspace pane' }
+{ #category : 'workspace pane' }
 ViennaDirectoryBrowser >> acceptWorkspace: aStringOrText [
 	super acceptWorkspace: aStringOrText.
 	self basePath / '.workspace'
@@ -124,34 +126,34 @@ ViennaDirectoryBrowser >> acceptWorkspace: aStringOrText [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaDirectoryBrowser >> basePath [
 	[ basePath isNil or: [ basePath isDirectory not ] ]
 		whileTrue: [ basePath := self requestBasePath ].
 	^ basePath
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaDirectoryBrowser >> basePath: aFileReference [
 	basePath := aFileReference
 ]
 
-{ #category : #'code pane' }
+{ #category : 'code pane' }
 ViennaDirectoryBrowser >> basicAcceptCode: aStringOrText [
 	^ self acceptCode: aStringOrText newModuleAndSourceDo: nil
 ]
 
-{ #category : #'workspace pane' }
+{ #category : 'workspace pane' }
 ViennaDirectoryBrowser >> basicAcceptWorkspace: aStringOrText [
 	super acceptWorkspace: aStringOrText
 ]
 
-{ #category : #'module list menu' }
+{ #category : 'module list menu' }
 ViennaDirectoryBrowser >> moduleListMenu: aMenu [
 	^ aMenu addAllFromPragma: 'viennaDirectoryBrowserModuleListMenu' target: self
 ]
 
-{ #category : #'module list menu' }
+{ #category : 'module list menu' }
 ViennaDirectoryBrowser >> openDirectory [
 	self requestBasePath
 		ifNotNil: [ :dirRef | 
@@ -174,7 +176,7 @@ ViennaDirectoryBrowser >> openDirectory [
 								basicAcceptWorkspace: (workspaceFile contents replaceAll: Character lf with: Character cr) ] ] ]
 ]
 
-{ #category : #'module list menu' }
+{ #category : 'module list menu' }
 ViennaDirectoryBrowser >> removeModule [
 	^ self selectedModule
 		ifNotNil: [ :module | 
@@ -187,14 +189,14 @@ ViennaDirectoryBrowser >> removeModule [
 		ifNil: [ false ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaDirectoryBrowser >> requestBasePath [
 	^ (UIManager default
 		chooseDirectory: 'Choose a VDM spec directory'
 		from: self class defaultBasePath) ifNotNil: [ :dir | DefaultBasePath := dir ]
 ]
 
-{ #category : #'module list menu' }
+{ #category : 'module list menu' }
 ViennaDirectoryBrowser >> saveModule: aString [
 	((self modulePositionsFrom: animation specification)
 		detect: [ :assoc | assoc key = aString ]

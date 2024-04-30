@@ -1,16 +1,18 @@
 Class {
-	#name : #ViennaLoadingEpiLog,
-	#superclass : #ViennaModificationEpiLog,
-	#category : #'ViennaTalk-Browser-Core-EpiLog'
+	#name : 'ViennaLoadingEpiLog',
+	#superclass : 'ViennaModificationEpiLog',
+	#category : 'ViennaTalk-Browser-Core-EpiLog',
+	#package : 'ViennaTalk-Browser-Core',
+	#tag : 'EpiLog'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaLoadingEpiLog >> isLoadEpiLog [
 
 	^ false
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 ViennaLoadingEpiLog >> printOn: aStream [
 
 	aStream nextPutAll: 'Load'

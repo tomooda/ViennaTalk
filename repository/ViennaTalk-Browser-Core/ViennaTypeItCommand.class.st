@@ -1,34 +1,36 @@
 Class {
-	#name : #ViennaTypeItCommand,
-	#superclass : #CmCommand,
-	#category : #'ViennaTalk-Browser-Core-Spec2'
+	#name : 'ViennaTypeItCommand',
+	#superclass : 'CmCommand',
+	#category : 'ViennaTalk-Browser-Core-Spec2',
+	#package : 'ViennaTalk-Browser-Core',
+	#tag : 'Spec2'
 }
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 ViennaTypeItCommand class >> defaultDescription [
 
 	^ 'Typecheck the selected expression and print it'
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 ViennaTypeItCommand class >> defaultIconName [
 
 	^ #smallPrintIt
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 ViennaTypeItCommand class >> defaultName [
 
 	^ 'Type it'
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 ViennaTypeItCommand class >> defaultShortcut [
 
 	^ $t command
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaTypeItCommand class >> forSpecContext: anObject [
 
 	^ (super forSpecContext: anObject)
@@ -37,7 +39,7 @@ ViennaTypeItCommand class >> forSpecContext: anObject [
 		  yourself
 ]
 
-{ #category : #executing }
+{ #category : 'executing' }
 ViennaTypeItCommand >> execute [
 
 	context ifNotNil: #doTypeIt

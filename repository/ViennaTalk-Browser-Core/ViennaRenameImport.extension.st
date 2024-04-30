@@ -1,6 +1,6 @@
-Extension { #name : #ViennaRenameImport }
+Extension { #name : 'ViennaRenameImport' }
 
-{ #category : #'*ViennaTalk-Browser-Core' }
+{ #category : '*ViennaTalk-Browser-Core' }
 ViennaRenameImport >> isForDefinitionList [
 
 	^ true

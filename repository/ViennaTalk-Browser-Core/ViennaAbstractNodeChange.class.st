@@ -1,15 +1,17 @@
 Class {
-	#name : #ViennaAbstractNodeChange,
-	#superclass : #Object,
+	#name : 'ViennaAbstractNodeChange',
+	#superclass : 'Object',
 	#instVars : [
 		'from',
 		'to',
 		'sourceDiffText'
 	],
-	#category : #'ViennaTalk-Browser-Core-Diff'
+	#category : 'ViennaTalk-Browser-Core-Diff',
+	#package : 'ViennaTalk-Browser-Core',
+	#tag : 'Diff'
 }
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 ViennaAbstractNodeChange class >> flushSourceDiffText [
 
 	<script: 'self flushSourceDiffText'>
@@ -17,7 +19,7 @@ ViennaAbstractNodeChange class >> flushSourceDiffText [
 		c allInstancesDo: [ :i | i flushSourceDiffText ] ]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaAbstractNodeChange class >> from: aViennaNode to: anotherViennaNode [
 
 	^ self new
@@ -25,37 +27,37 @@ ViennaAbstractNodeChange class >> from: aViennaNode to: anotherViennaNode [
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaAbstractNodeChange >> flushSourceDiffText [
 
 	sourceDiffText := nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAbstractNodeChange >> from [
 
 	^ from
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 ViennaAbstractNodeChange >> printNames [
 
 	^ String streamContents: [ :stream | self printNamesOn: stream ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 ViennaAbstractNodeChange >> printNamesOn: aStream [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 ViennaAbstractNodeChange >> printSummary [
 
 	^ String streamContents: [ :stream | self printSummaryOn: stream ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 ViennaAbstractNodeChange >> printSummaryOn: aStream [
 
 	from
@@ -66,14 +68,14 @@ ViennaAbstractNodeChange >> printSummaryOn: aStream [
 				ifNotNil: [ aStream nextPutAll: 'modified' ] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaAbstractNodeChange >> setFrom: aViennaNode to: anotherViennaNode [
 
 	from := aViennaNode.
 	to := anotherViennaNode
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 ViennaAbstractNodeChange >> sourceDiffText [
 
 	^ sourceDiffText ifNil: [
@@ -111,7 +113,7 @@ ViennaAbstractNodeChange >> sourceDiffText [
 			                    yourself ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAbstractNodeChange >> to [
 
 	^ to

@@ -1,5 +1,5 @@
-Extension { #name : #SpAbstractPresenter }
+Extension { #name : 'SpAbstractPresenter' }
 
-{ #category : #'*ViennaTalk-Browser-Core' }
+{ #category : '*ViennaTalk-Browser-Core' }
 SpAbstractPresenter >> font: aFont [
 ]

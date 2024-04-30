@@ -1,13 +1,15 @@
 Class {
-	#name : #ViennaEvaluationEpiLog,
-	#superclass : #ViennaEpiLog,
+	#name : 'ViennaEvaluationEpiLog',
+	#superclass : 'ViennaEpiLog',
 	#instVars : [
 		'expression'
 	],
-	#category : #'ViennaTalk-Browser-Core-EpiLog'
+	#category : 'ViennaTalk-Browser-Core-EpiLog',
+	#package : 'ViennaTalk-Browser-Core',
+	#tag : 'EpiLog'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaEvaluationEpiLog class >> after: aViennaEpiLog expression: aString [
 
 	^ (self after: aViennaEpiLog)
@@ -15,25 +17,25 @@ ViennaEvaluationEpiLog class >> after: aViennaEpiLog expression: aString [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaEvaluationEpiLog >> expression [
 
 	^ expression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaEvaluationEpiLog >> expression: aString [
 
 	expression := aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaEvaluationEpiLog >> isEvaluationEpiLog [
 
 	^ true
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 ViennaEvaluationEpiLog >> printOn: aStream [
 
 	aStream

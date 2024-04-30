@@ -1,13 +1,15 @@
 Class {
-	#name : #ViennaEvaluated,
-	#superclass : #Announcement,
+	#name : 'ViennaEvaluated',
+	#superclass : 'Announcement',
 	#instVars : [
 		'expression'
 	],
-	#category : #'ViennaTalk-Browser-Core-Spec2'
+	#category : 'ViennaTalk-Browser-Core-Spec2',
+	#package : 'ViennaTalk-Browser-Core',
+	#tag : 'Spec2'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaEvaluated class >> expression: aString [
 
 	^ self new
@@ -15,13 +17,13 @@ ViennaEvaluated class >> expression: aString [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaEvaluated >> expression [
 
 	^ expression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaEvaluated >> expression: aString [
 
 	expression := aString

@@ -1,10 +1,12 @@
 Class {
-	#name : #ViennaModuleNodeChange,
-	#superclass : #ViennaAbstractNodeChange,
-	#category : #'ViennaTalk-Browser-Core-Diff'
+	#name : 'ViennaModuleNodeChange',
+	#superclass : 'ViennaAbstractNodeChange',
+	#category : 'ViennaTalk-Browser-Core-Diff',
+	#package : 'ViennaTalk-Browser-Core',
+	#tag : 'Diff'
 }
 
-{ #category : #printing }
+{ #category : 'printing' }
 ViennaModuleNodeChange >> printNamesOn: aStream [
 
 	aStream

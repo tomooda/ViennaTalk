@@ -1,6 +1,6 @@
-Extension { #name : #ViennaNode }
+Extension { #name : 'ViennaNode' }
 
-{ #category : #'*ViennaTalk-Browser-Core' }
+{ #category : '*ViennaTalk-Browser-Core' }
 ViennaNode >> refactoringBrowserSectionName [
 
 	^ nil

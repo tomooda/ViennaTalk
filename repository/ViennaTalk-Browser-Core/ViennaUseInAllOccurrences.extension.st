@@ -1,6 +1,6 @@
-Extension { #name : #ViennaUseInAllOccurrences }
+Extension { #name : 'ViennaUseInAllOccurrences' }
 
-{ #category : #'*ViennaTalk-Browser-Core' }
+{ #category : '*ViennaTalk-Browser-Core' }
 ViennaUseInAllOccurrences >> isForDefinitionList [
 
 	^ true

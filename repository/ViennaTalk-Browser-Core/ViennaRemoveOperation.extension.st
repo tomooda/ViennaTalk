@@ -1,6 +1,6 @@
-Extension { #name : #ViennaRemoveOperation }
+Extension { #name : 'ViennaRemoveOperation' }
 
-{ #category : #'*ViennaTalk-Browser-Core' }
+{ #category : '*ViennaTalk-Browser-Core' }
 ViennaRemoveOperation >> isForDefinitionList [
 
 	^ true

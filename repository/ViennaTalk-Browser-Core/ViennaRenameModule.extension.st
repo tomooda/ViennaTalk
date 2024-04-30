@@ -1,6 +1,6 @@
-Extension { #name : #ViennaRenameModule }
+Extension { #name : 'ViennaRenameModule' }
 
-{ #category : #'*ViennaTalk-Browser-Core' }
+{ #category : '*ViennaTalk-Browser-Core' }
 ViennaRenameModule >> isForModuleList [
 
 	^ true

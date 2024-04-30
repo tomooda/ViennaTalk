@@ -1,14 +1,16 @@
 Class {
-	#name : #ViennaVDMSourcePresenter,
-	#superclass : #SpCodePresenter,
+	#name : 'ViennaVDMSourcePresenter',
+	#superclass : 'SpCodePresenter',
 	#instVars : [
 		'animation',
 		'module'
 	],
-	#category : #'ViennaTalk-Browser-Core-Spec2'
+	#category : 'ViennaTalk-Browser-Core-Spec2',
+	#package : 'ViennaTalk-Browser-Core',
+	#tag : 'Spec2'
 }
 
-{ #category : #commands }
+{ #category : 'commands' }
 ViennaVDMSourcePresenter class >> buildCommandsGroupWith: presenter forRoot: aCmCommandsGroup [
 
 	| group |
@@ -27,19 +29,19 @@ ViennaVDMSourcePresenter class >> buildCommandsGroupWith: presenter forRoot: aCm
 	^ group
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaVDMSourcePresenter >> animation [
 
 	^ animation
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaVDMSourcePresenter >> animation: aBlock [
 
 	animation := aBlock
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaVDMSourcePresenter >> doEvaluateIt [
 
 	self selectedTextOrLine trim ifNotEmpty: [ :expression |
@@ -58,7 +60,7 @@ ViennaVDMSourcePresenter >> doEvaluateIt [
 		self announcer announce: (ViennaEvaluated expression: expression) ]
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaVDMSourcePresenter >> doExecuteIt [
 
 	self selectedTextOrLine trim ifNotEmpty: [ :statement |
@@ -70,7 +72,7 @@ ViennaVDMSourcePresenter >> doExecuteIt [
 		self announcer announce: (ViennaExecuted statement: statement) ]
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaVDMSourcePresenter >> doTypeIt [
 
 	| result |
@@ -101,7 +103,7 @@ ViennaVDMSourcePresenter >> doTypeIt [
 		style: 'print'
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaVDMSourcePresenter >> evaluateExpression: aString ifError: errorBlock [
 
 	| node |
@@ -117,7 +119,7 @@ ViennaVDMSourcePresenter >> evaluateExpression: aString ifError: errorBlock [
 		  ifError: errorBlock
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaVDMSourcePresenter >> evaluateStatement: aString ifError: errorBlock [
 
 	| node |
@@ -133,7 +135,7 @@ ViennaVDMSourcePresenter >> evaluateStatement: aString ifError: errorBlock [
 		  ifError: errorBlock
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 ViennaVDMSourcePresenter >> initialize [
 
 	super initialize.
@@ -142,19 +144,19 @@ ViennaVDMSourcePresenter >> initialize [
 		withoutSmartCharacters
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaVDMSourcePresenter >> module [
 
 	^ module
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaVDMSourcePresenter >> module: aBlock [
 
 	module := aBlock
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaVDMSourcePresenter >> typecheckExpression: aString ifError: errorBlock [
 
 	| node |
@@ -166,18 +168,20 @@ ViennaVDMSourcePresenter >> typecheckExpression: aString ifError: errorBlock [
 		  do: [ :ex | errorBlock cull: ex messageText ]
 ]
 
-{ #category : #'api - events' }
+{ #category : 'api - events' }
 ViennaVDMSourcePresenter >> whenEvaluatedDo: aBlock [
 
 	self announcer
 		when: ViennaEvaluated
 		do: [ :announcement | aBlock cull: announcement expression ]
+		for: self
 ]
 
-{ #category : #'api - events' }
+{ #category : 'api - events' }
 ViennaVDMSourcePresenter >> whenExecutedDo: aBlock [
 
 	self announcer
 		when: ViennaExecuted
 		do: [ :announcement | aBlock cull: announcement statement ]
+		for: self
 ]

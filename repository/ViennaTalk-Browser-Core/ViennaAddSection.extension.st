@@ -1,6 +1,6 @@
-Extension { #name : #ViennaAddSection }
+Extension { #name : 'ViennaAddSection' }
 
-{ #category : #'*ViennaTalk-Browser-Core' }
+{ #category : '*ViennaTalk-Browser-Core' }
 ViennaAddSection >> isForCategoryList [
 
 	^ true

@@ -1,10 +1,12 @@
 Class {
-	#name : #ViennaTopLevelDefinitionNodeChange,
-	#superclass : #ViennaAbstractNodeChange,
-	#category : #'ViennaTalk-Browser-Core-Diff'
+	#name : 'ViennaTopLevelDefinitionNodeChange',
+	#superclass : 'ViennaAbstractNodeChange',
+	#category : 'ViennaTalk-Browser-Core-Diff',
+	#package : 'ViennaTalk-Browser-Core',
+	#tag : 'Diff'
 }
 
-{ #category : #printing }
+{ #category : 'printing' }
 ViennaTopLevelDefinitionNodeChange >> printNamesOn: aStream [
 
 	| node |
