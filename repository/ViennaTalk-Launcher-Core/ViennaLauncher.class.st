@@ -1,14 +1,15 @@
 Class {
-	#name : #ViennaLauncher,
-	#superclass : #StandardWindow,
+	#name : 'ViennaLauncher',
+	#superclass : 'StandardWindow',
 	#classVars : [
 		'Current',
 		'Font'
 	],
-	#category : #'ViennaTalk-Launcher-Core'
+	#category : 'ViennaTalk-Launcher-Core',
+	#package : 'ViennaTalk-Launcher-Core'
 }
 
-{ #category : #settings }
+{ #category : 'settings' }
 ViennaLauncher class >> chooseFont [
 
 	FreeTypeFontProvider current updateFromSystem.
@@ -18,7 +19,7 @@ ViennaLauncher class >> chooseFont [
 		onAcceptDo: [ :f | self font: f ]
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 ViennaLauncher class >> close [
 	Current
 		ifNotNil: [ 
@@ -26,12 +27,12 @@ ViennaLauncher class >> close [
 			Current := nil ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLauncher class >> current [
 	^ Current ifNil: [ Current := self new ]
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 ViennaLauncher class >> deploy [
 	<script>
 	GraphicFontSettings setFontsToStyleNamed: #small.
@@ -60,33 +61,33 @@ ViennaLauncher class >> deploy [
 			[ "PharoCommandLineHandler forcePreferencesOmission: true" Smalltalk garbageCollect ]
 ]
 
-{ #category : #settings }
+{ #category : 'settings' }
 ViennaLauncher class >> font [
 	^ Font ifNil: [ Font := StandardFonts codeFont ]
 ]
 
-{ #category : #settings }
+{ #category : 'settings' }
 ViennaLauncher class >> font: aFont [
 	Font := aFont
 ]
 
-{ #category : #settings }
+{ #category : 'settings' }
 ViennaLauncher class >> fontFamilyName [
 	^ self font familyName
 ]
 
-{ #category : #settings }
+{ #category : 'settings' }
 ViennaLauncher class >> fontSize [
 	^ self font pointSize
 ]
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 ViennaLauncher class >> initialize [
 	self installDesktopLogo.
 	self open
 ]
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 ViennaLauncher class >> installDesktopLogo [
 
 	<script: 'ViennaLauncher installDesktopLogo'>
@@ -108,12 +109,12 @@ ViennaLauncher class >> installDesktopLogo [
 				backgroundImage fullName ]
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 ViennaLauncher class >> open [
 	^ self current openInWorld
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 ViennaLauncher class >> reopen [
 	Current
 		ifNotNil: [ 
@@ -122,7 +123,7 @@ ViennaLauncher class >> reopen [
 	^ self current openInWorld
 ]
 
-{ #category : #'menu operations' }
+{ #category : 'menu operations' }
 ViennaLauncher class >> showSettingBrowser [
 	SettingBrowser new
 		changePackageSet:
@@ -135,7 +136,7 @@ ViennaLauncher class >> showSettingBrowser [
 		open
 ]
 
-{ #category : #resources }
+{ #category : 'resources' }
 ViennaLauncher class >> viennaIcon [
 	^ Form
 		extent: 16 @ 16
@@ -145,7 +146,7 @@ ViennaLauncher class >> viennaIcon [
 		offset: 0 @ 0
 ]
 
-{ #category : #resources }
+{ #category : 'resources' }
 ViennaLauncher class >> viennaLogo [
 	^ Form
 		fromBinaryStream:
@@ -153,7 +154,7 @@ ViennaLauncher class >> viennaLogo [
 				readStream
 ]
 
-{ #category : #settings }
+{ #category : 'settings' }
 ViennaLauncher class >> viennaSettingsOn: aBuilder [
 	<systemsettings>
 	(aBuilder group: #ViennaTalk)
@@ -169,7 +170,7 @@ ViennaLauncher class >> viennaSettingsOn: aBuilder [
 			(aBuilder group: #ViennaTalkServices) label: 'Services' ]
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 ViennaLauncher class >> worldMenuOn: aBuilder [
 
 	<worldMenu>
@@ -194,22 +195,22 @@ ViennaLauncher class >> worldMenuOn: aBuilder [
 				withSeparatorAfter ]
 ]
 
-{ #category : #'interface opening' }
+{ #category : 'interface opening' }
 ViennaLauncher >> close [
 	self class close
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLauncher >> codename [
-	^ 'Firenze'
+	^ 'Lyon'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLauncher >> defaultTitle [
 	^ 'ViennaTalk ', self codename
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 ViennaLauncher >> initialize [
 	| systemMenu toolsMenu devMenu tools dock image extent |
 	super initialize.
@@ -272,7 +273,7 @@ ViennaLauncher >> initialize [
 		themeChanged
 ]
 
-{ #category : #'menu operations' }
+{ #category : 'menu operations' }
 ViennaLauncher >> loadHead [
 	Metacello new
 		baseline: 'ViennaTalk';
@@ -281,24 +282,24 @@ ViennaLauncher >> loadHead [
 		load
 ]
 
-{ #category : #'interface opening' }
+{ #category : 'interface opening' }
 ViennaLauncher >> openInWorld [
 
 	self extent: self extent.
 	^ super openInWorld
 ]
 
-{ #category : #'interface opening' }
+{ #category : 'interface opening' }
 ViennaLauncher >> reopen [
 	^ self class reopen
 ]
 
-{ #category : #'menu operations' }
+{ #category : 'menu operations' }
 ViennaLauncher >> showSettingBrowser [
 	^ self class showSettingBrowser 
 ]
 
-{ #category : #resources }
+{ #category : 'resources' }
 ViennaLauncher >> viennaLogo [
 	^ self class viennaLogo
 ]
