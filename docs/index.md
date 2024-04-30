@@ -9,10 +9,10 @@ ViennaTalk ~ Live and Formal
 ViennaTalk is a Smalltalk library to handle VDM-SL specifications.
 
 * The pre-built packages of the latest release: [<kbd> <br> Lyon <br> &nbsp; </kbd>](https://github.com/tomooda/ViennaTalk/releases/latest/)
-   * macOS / AppleSilicon [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://github.com/tomooda/ViennaTalk/releases/latest/download/viennatalk-mac-arm64.dmg)
-   * macOS / Intel processor [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://github.com/tomooda/ViennaTalk/releases/latest/download/viennatalk-mac-x64.dmg)
-   * Linux / Intel processor [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://github.com/tomooda/ViennaTalk/releases/latest/download/viennatalk-linux-x64.tar.bz2)
-   * windows64 / Intel processor [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://github.com/tomooda/ViennaTalk/releases/latest/download/viennatalk-win-x64.zip)
+   - macOS / AppleSilicon [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://github.com/tomooda/ViennaTalk/releases/latest/download/viennatalk-mac-arm64.dmg)
+   - macOS / Intel processor [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://github.com/tomooda/ViennaTalk/releases/latest/download/viennatalk-mac-x64.dmg)
+   - Linux / Intel processor [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://github.com/tomooda/ViennaTalk/releases/latest/download/viennatalk-linux-x64.tar.bz2)
+   - windows64 / Intel processor [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://github.com/tomooda/ViennaTalk/releases/latest/download/viennatalk-win-x64.zip)
 
 * Try [Open VDMPad server](https://vdmpad.viennatalk.org) to experience VDM-SL. No registration/no installation is required.
 * [VDM cheatsheet](https://viennatalk.org/ViennaDoc/cheatsheet-en/) provides major VDM-SL constructs with evaluatable examples. ([🇬🇧English version](https://viennatalk.org/ViennaDoc/cheatsheet-en/) [🇯🇵 Japanese version](https://viennatalk.org/ViennaDoc/cheatsheet-ja/))
