@@ -39,6 +39,15 @@ Table of Major Components of ViennaTalk
 What's new in the latest release
 ---
 
+* Codename Lyon has been released. (Apr 30, 2024)
+   - Specification slicing for VDM-SL
+   - New UI design for Refactoring Browser
+      - Playground with state variables table
+      - EpiLog to journal and version specification changes and evaluations
+   - ranspiler can be used as an alternative interpreter.
+   - Support traces definitions
+   - Migration to Pharo 12
+
 * Codename Firenze has been released. (May 19, 2023)
   - migration to Pharo 11
     
