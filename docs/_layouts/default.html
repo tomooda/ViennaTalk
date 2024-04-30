@@ -23,14 +23,12 @@
           <h2>{{ page.description | default: site.description | default: site.github.project_tagline }}</h2>
         </header>
         <section id="downloads" class="clearfix">
-          {% if site.show_downloads %}
           <a href="{{ site.github.arm_mac_url }}" id="download-arm-mac" class="button"><span>ARM mac</span></a>
           <a href="{{ site.github.intel_mac_url }}" id="download-intel-mac" class="button"><span>Intel mac</span></a>
           <a href="{{ site.github.linux_url }}" id="download-linux" class="button"><span>Linux</span></a>
           <a href="{{ site.github.windows_url }}" id="download-windows" class="button"><span>Windows</span></a>
-          {% endif %}
-        <a href="{{ site.github.repository_url }}" id="view-on-github" class="button"><span>View on GitHub</span></a>
-	      </section>
+          <a href="{{ site.github.repository_url }}" id="view-on-github" class="button"><span>View on GitHub</span></a>
+	</section>
         <hr>
         <section id="main_content">
           {{ content }}
