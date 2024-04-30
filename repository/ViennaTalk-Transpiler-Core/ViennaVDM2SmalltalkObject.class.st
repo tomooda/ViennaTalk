@@ -1,15 +1,16 @@
 Class {
-	#name : #ViennaVDM2SmalltalkObject,
-	#superclass : #ViennaVDM2SmalltalkClass,
-	#category : #'ViennaTalk-Transpiler-Core'
+	#name : 'ViennaVDM2SmalltalkObject',
+	#superclass : 'ViennaVDM2SmalltalkClass',
+	#category : 'ViennaTalk-Transpiler-Core',
+	#package : 'ViennaTalk-Transpiler-Core'
 }
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 ViennaVDM2SmalltalkObject >> createDocumentClassWithInstVars: anArrayOfString [
 	^ self createDocumentClassWithInstVars: anArrayOfString stateVars: #()
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 ViennaVDM2SmalltalkObject >> createDocumentClassWithInstVars: anArrayOfString1 stateVars: anArrayOfString2 [
 	^ ShiftAnonymousClassInstaller
 		make: [ :builder | 
@@ -27,7 +28,7 @@ ViennaVDM2SmalltalkObject >> createDocumentClassWithInstVars: anArrayOfString1 s
 				category: 'Auto Generated from VDM' ]
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 ViennaVDM2SmalltalkObject >> createModuleClassWithInstVars: anArrayOfString1 stateVars: anArrayOfString2 forModule: aString env: aDictionary [
 	^ (ShiftAnonymousClassInstaller
 		make: [ :builder | 
@@ -47,12 +48,12 @@ ViennaVDM2SmalltalkObject >> createModuleClassWithInstVars: anArrayOfString1 sta
 		yourself
 ]
 
-{ #category : #'code generation-definitions' }
+{ #category : 'code generation-definitions' }
 ViennaVDM2SmalltalkObject >> flatDocument: aViennaNode env: aDictionary [
 	^ (super flatDocument: aViennaNode env: aDictionary) ifNotNil: [ :anonymousClass | anonymousClass new ]
 ]
 
-{ #category : #'code generation-definitions' }
+{ #category : 'code generation-definitions' }
 ViennaVDM2SmalltalkObject >> modularDocument: aViennaNode env: aDictionary [
 
 	| objects |

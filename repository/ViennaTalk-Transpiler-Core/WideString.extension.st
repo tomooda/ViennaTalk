@@ -1,6 +1,6 @@
-Extension { #name : #WideString }
+Extension { #name : 'WideString' }
 
-{ #category : #'*ViennaTalk-Transpiler-Core' }
+{ #category : '*ViennaTalk-Transpiler-Core' }
 WideString >> join: aCollection [
 	^ (aCollection anySatisfy: #isViennaTracingString)
 		ifTrue: [ self asViennaTracingString join: aCollection ]

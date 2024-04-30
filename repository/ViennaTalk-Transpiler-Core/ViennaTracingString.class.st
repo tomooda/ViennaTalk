@@ -1,42 +1,43 @@
 Class {
-	#name : #ViennaTracingString,
-	#superclass : #String,
+	#name : 'ViennaTracingString',
+	#superclass : 'String',
 	#instVars : [
 		'string',
 		'sources'
 	],
-	#category : #'ViennaTalk-Transpiler-Core'
+	#category : 'ViennaTalk-Transpiler-Core',
+	#package : 'ViennaTalk-Transpiler-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaTracingString class >> fromString: aString [
 	^ super basicNew
 		initialize;
 		setString: aString
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaTracingString class >> new [
 	^ self basicNew
 		initialize;
 		setString: String new
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaTracingString class >> new: anInteger [
 	^ self basicNew
 		initialize;
 		setString: (String new: anInteger)
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaTracingString class >> string: aString sources: aCollection [
 	^ self basicNew
 		setString: aString;
 		setSources: aCollection
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 ViennaTracingString >> , aStringOrText [
 
 	^ aStringOrText isText
@@ -58,64 +59,64 @@ ViennaTracingString >> , aStringOrText [
 				  self class string: string , aStringOrText sources: sources copy ] ]
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaTracingString >> = anObject [
 	^ anObject = string
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaTracingString >> asByteArray [
 
 	^ string asByteArray
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaTracingString >> asString [
 
 	^ string
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaTracingString >> asViennaTracingString [
 	^ self
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaTracingString >> asViennaTracingString: anObject [
 	sources add: (1 to: string size) -> anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTracingString >> at: anInteger [
 	^ string at: anInteger
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTracingString >> at: anInteger put: aCharacter [
 	^ string at: anInteger put: aCharacter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTracingString >> basicAt: anInteger [
 	^ (string at: anInteger) asciiValue
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTracingString >> byteAt: index [
 	^ string byteAt: index
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTracingString >> byteAt: index put: value [
 	^ string byteAt: index put: value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTracingString >> byteSize [
 	^ string byteSize
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 ViennaTracingString >> copyFrom: start to: end [
 	| newSources |
 	newSources := OrderedCollection new: sources size.
@@ -129,23 +130,23 @@ ViennaTracingString >> copyFrom: start to: end [
 	^ self class string: (string copyFrom: start to: end) sources: newSources
 ]
 
-{ #category : #streaming }
+{ #category : 'streaming' }
 ViennaTracingString >> cr [
 	^ self nextPut: Character cr
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaTracingString >> hash [
 	^ string hash
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 ViennaTracingString >> initialize [
 	super initialize.
 	sources := OrderedCollection new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTracingString >> intervalForSource: anObject [
 
 	^ sources
@@ -153,12 +154,12 @@ ViennaTracingString >> intervalForSource: anObject [
 		  ifNone: [ (0 to: -1) -> anObject ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTracingString >> isViennaTracingString [
 	^ true
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 ViennaTracingString >> join: aCollection [
 	| newSources offset |
 	newSources := OrderedCollection
@@ -179,7 +180,7 @@ ViennaTracingString >> join: aCollection [
 	^ self class string: (string join: (aCollection collect: #asString)) sources: newSources
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTracingString >> mergeSources [
 	| newSources |
 	newSources := OrderedCollection new: sources size.
@@ -199,12 +200,12 @@ ViennaTracingString >> mergeSources [
 	sources := newSources reverse
 ]
 
-{ #category : #streaming }
+{ #category : 'streaming' }
 ViennaTracingString >> nextPut: aCharacter [
 	string := string copyWith: aCharacter
 ]
 
-{ #category : #streaming }
+{ #category : 'streaming' }
 ViennaTracingString >> nextPutAll: aString [
 	aString isViennaTracingString
 		ifTrue: [ | size |
@@ -214,7 +215,7 @@ ViennaTracingString >> nextPutAll: aString [
 		ifFalse: [ string := string , aString ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTracingString >> nodeAt: anInteger ifAbsent: errorBlock [
 	sources
 		do: [ :assoc | 
@@ -223,7 +224,7 @@ ViennaTracingString >> nodeAt: anInteger ifAbsent: errorBlock [
 	^ errorBlock value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTracingString >> nodeContaining: anInterval ifAbsent: errorBlock [
 	| start end nodes |
 	start := anInterval first.
@@ -246,7 +247,7 @@ ViennaTracingString >> nodeContaining: anInterval ifAbsent: errorBlock [
 	^ nodes ifNotEmpty: #first ifEmpty: [ errorBlock value ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTracingString >> nodesContaining: anInterval [
 	| start end |
 	start := anInterval first.
@@ -258,13 +259,13 @@ ViennaTracingString >> nodesContaining: anInterval [
 		thenCollect: #value
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 ViennaTracingString >> postCopy [
 	string := string copy.
 	sources := sources copy
 ]
 
-{ #category : #scanning }
+{ #category : 'scanning' }
 ViennaTracingString >> scanCharactersFrom: anInteger to: anInteger2 with: aCompositionScanner rightX: anInteger4 font: aLogicalFont [
 
 	^ string
@@ -275,22 +276,22 @@ ViennaTracingString >> scanCharactersFrom: anInteger to: anInteger2 with: aCompo
 		  font: aLogicalFont
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTracingString >> setSources: aCollection [
 	sources := aCollection
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTracingString >> setString: aString [
 	string := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTracingString >> size [
 	^ string size
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTracingString >> sourceAt: anInteger ifAbsent: errorBlock [
 	sources
 		do: [ :assoc | 
@@ -299,29 +300,29 @@ ViennaTracingString >> sourceAt: anInteger ifAbsent: errorBlock [
 	^ errorBlock value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTracingString >> sources [
 	^ sources
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTracingString >> sourcesAt: anInteger [
 	^ sources
 		select: [ :assoc | assoc key includes: anInteger ]
 		thenCollect: #value
 ]
 
-{ #category : #streaming }
+{ #category : 'streaming' }
 ViennaTracingString >> space [
 	self nextPut: Character space
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTracingString >> string [
 	^ string
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTracingString >> writeStream [
 	^ self
 ]

@@ -1,6 +1,6 @@
-Extension { #name : #String }
+Extension { #name : 'String' }
 
-{ #category : #'*ViennaTalk-Transpiler-Core' }
+{ #category : '*ViennaTalk-Transpiler-Core' }
 String >> , aString [
 
 	^ [
@@ -11,7 +11,7 @@ String >> , aString [
 		  do: [ :ex | super , aString ]
 ]
 
-{ #category : #'*ViennaTalk-Transpiler-Core' }
+{ #category : '*ViennaTalk-Transpiler-Core' }
 String >> asViennaExpression [
 	^ OpalCompiler new
 		source: (ViennaVDM2SmalltalkScript new generate: self asViennaExpressionAst);
@@ -20,7 +20,7 @@ String >> asViennaExpression [
 		evaluate
 ]
 
-{ #category : #'*ViennaTalk-Transpiler-Core' }
+{ #category : '*ViennaTalk-Transpiler-Core' }
 String >> asViennaStatement [
 	^ OpalCompiler new
 		source: (ViennaVDM2SmalltalkScript new generate: self asViennaStatementAst);
@@ -29,12 +29,12 @@ String >> asViennaStatement [
 		evaluate
 ]
 
-{ #category : #'*ViennaTalk-Transpiler-Core' }
+{ #category : '*ViennaTalk-Transpiler-Core' }
 String >> asViennaTracingString [
 	^ ViennaTracingString fromString: self
 ]
 
-{ #category : #'*ViennaTalk-Transpiler-Core' }
+{ #category : '*ViennaTalk-Transpiler-Core' }
 String >> asViennaTracingString: anObject [
 	^ ViennaTracingString
 		string: self

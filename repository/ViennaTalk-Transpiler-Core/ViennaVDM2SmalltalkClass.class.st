@@ -1,13 +1,14 @@
 Class {
-	#name : #ViennaVDM2SmalltalkClass,
-	#superclass : #ViennaVDM2Smalltalk,
+	#name : 'ViennaVDM2SmalltalkClass',
+	#superclass : 'ViennaVDM2Smalltalk',
 	#instVars : [
 		'classes'
 	],
-	#category : #'ViennaTalk-Transpiler-Core'
+	#category : 'ViennaTalk-Transpiler-Core',
+	#package : 'ViennaTalk-Transpiler-Core'
 }
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 ViennaVDM2SmalltalkClass >> buildEnv: aViennaNode [
 
 	| envs |
@@ -36,7 +37,7 @@ ViennaVDM2SmalltalkClass >> buildEnv: aViennaNode [
 	^ envs
 ]
 
-{ #category : #'code generation-statements' }
+{ #category : 'code generation-statements' }
 ViennaVDM2SmalltalkClass >> callStatement: aViennaNode env: aDictionary [
 	| callee args |
 	callee := self generate: aViennaNode first env: aDictionary.
@@ -46,13 +47,13 @@ ViennaVDM2SmalltalkClass >> callStatement: aViennaNode env: aDictionary [
 		ifNotEmpty: [ '(', callee , ' value: ', (' value: ' join: args), ')' ]
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 ViennaVDM2SmalltalkClass >> checkInvariant [
 
 	^ 'self inv.'
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 ViennaVDM2SmalltalkClass >> closureFromMethodSource: aString binds: binds [
 	| header |
 	header := ((aString readStream upTo: Character cr) trim readStream
@@ -79,12 +80,12 @@ ViennaVDM2SmalltalkClass >> closureFromMethodSource: aString binds: binds [
 			stream nextPutAll: ']' ]
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 ViennaVDM2SmalltalkClass >> createDocumentClassWithInstVars: anArrayOfString [
 	^ self createDocumentClassWithInstVars: anArrayOfString stateVars: #()
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 ViennaVDM2SmalltalkClass >> createDocumentClassWithInstVars: anArrayOfString1 stateVars: anArrayOfString2 [
 	| documentClassName |
 	documentClassName := self requestClassName: '' for: 'Document'.
@@ -108,7 +109,7 @@ ViennaVDM2SmalltalkClass >> createDocumentClassWithInstVars: anArrayOfString1 st
 		yourself
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 ViennaVDM2SmalltalkClass >> createModuleClassWithInstVars: anArrayOfString forModule: aString env: aDictionary [
 	^ self
 		createModuleClassWithInstVars: anArrayOfString
@@ -117,7 +118,7 @@ ViennaVDM2SmalltalkClass >> createModuleClassWithInstVars: anArrayOfString forMo
 		env: aDictionary
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 ViennaVDM2SmalltalkClass >> createModuleClassWithInstVars: anArrayOfString1 stateVars: anArrayOfString2 forModule: aString env: aDictionary [
 
 	| className |
@@ -139,7 +140,7 @@ ViennaVDM2SmalltalkClass >> createModuleClassWithInstVars: anArrayOfString1 stat
 		  yourself
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 ViennaVDM2SmalltalkClass >> defineInitTypeMethodForTypeNames: typeNames in: aClass protocol: protocol node: aViennaNode [
 	self
 		defineMethod:
@@ -154,7 +155,7 @@ ViennaVDM2SmalltalkClass >> defineInitTypeMethodForTypeNames: typeNames in: aCla
 		node: aViennaNode
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 ViennaVDM2SmalltalkClass >> defineLazyMethodNamed: selector initializer: initializer in: aClass protocol: protocol node: aViennaNode [
 	^ self
 		defineMethod:
@@ -164,7 +165,7 @@ ViennaVDM2SmalltalkClass >> defineLazyMethodNamed: selector initializer: initial
 		node: aViennaNode
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 ViennaVDM2SmalltalkClass >> defineMethod: sourceString in: aClass protocol: protocol node: aViennaNode [
 	| sourceAST formattedSource formattedAST formatMap map selector |
 	selector := aClass
@@ -205,7 +206,7 @@ ViennaVDM2SmalltalkClass >> defineMethod: sourceString in: aClass protocol: prot
 	aClass debuggerNodeMapAt: selector put: map
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 ViennaVDM2SmalltalkClass >> defineMethodFromExplicitOperation: opName in: theClass protocol: protocolString fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode body: bodyString pre: preString post: postString retType: typeNode varGenerator: varGenerator env: aDictionary node: aViennaNode [
 
 	^ self
@@ -224,7 +225,7 @@ ViennaVDM2SmalltalkClass >> defineMethodFromExplicitOperation: opName in: theCla
 		  bodyNode: aViennaNode statement
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass protocol: protocolString fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode body: bodyString pre: preString post: postString retVar: retVarName retType: typeNode varGenerator: varGenerator env: aDictionary node: aViennaNode bodyNode: aViennaNode2 [
 
 	| tmpVars matchPatternNodes isFirstArg tuplePattern matchVars argVars formalArgs |
@@ -343,7 +344,7 @@ ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass proto
 		  node: aViennaNode2
 ]
 
-{ #category : #'code generation-definitions' }
+{ #category : 'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> explicitFunctionDefinition: aViennaNode env: aDictionary [
 
 	| identifier initializer theClass |
@@ -374,7 +375,7 @@ ViennaVDM2SmalltalkClass >> explicitFunctionDefinition: aViennaNode env: aDictio
 			node: aViennaNode post ]
 ]
 
-{ #category : #'code generation-definitions' }
+{ #category : 'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> explicitOperationDefinition: aViennaNode env: aDictionary [
 
 	| opname typeNode paramsNode body preNode postNode varGenerator argTypeNode retTypeNode binds theClass |
@@ -504,7 +505,7 @@ ViennaVDM2SmalltalkClass >> explicitOperationDefinition: aViennaNode env: aDicti
 			node: postNode ]
 ]
 
-{ #category : #'code generation-definitions' }
+{ #category : 'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> extendedExplicitFunctionDefinition: aViennaNode env: aDictionary [
 
 	| identifier initializer theClass |
@@ -535,7 +536,7 @@ ViennaVDM2SmalltalkClass >> extendedExplicitFunctionDefinition: aViennaNode env:
 			node: aViennaNode post ]
 ]
 
-{ #category : #'code generation-definitions' }
+{ #category : 'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> extendedExplicitOperationDefinition: aViennaNode env: aDictionary [
 
 	| opname patternTypePairListNode retVar retTypeNode bodyNode body preNode postNode varGenerator binds theClass |
@@ -664,7 +665,7 @@ ViennaVDM2SmalltalkClass >> extendedExplicitOperationDefinition: aViennaNode env
 			node: postNode ]
 ]
 
-{ #category : #'code generation-definitions' }
+{ #category : 'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> flatDocument: aViennaNode env: aDictionary [
 
 	| env instVars stateVars typeNames newClass |
@@ -714,7 +715,7 @@ ViennaVDM2SmalltalkClass >> flatDocument: aViennaNode env: aDictionary [
 	^ newClass
 ]
 
-{ #category : #'code generation-interfaces' }
+{ #category : 'code generation-interfaces' }
 ViennaVDM2SmalltalkClass >> functionImport: aViennaNode env: aDictionary [
 
 	| moduleName |
@@ -732,19 +733,19 @@ ViennaVDM2SmalltalkClass >> functionImport: aViennaNode env: aDictionary [
 			put: moduleName , String space , aViennaNode first first ]
 ]
 
-{ #category : #'code generation-definitions' }
+{ #category : 'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> getStateCode [
 	^ 'self state'
 ]
 
-{ #category : #'code generation-expressions' }
+{ #category : 'code generation-expressions' }
 ViennaVDM2SmalltalkClass >> globalName: aViennaNode env: aDictionary [
 	^ aDictionary
 		at: aViennaNode first , '`' , aViennaNode second
 		ifAbsent: [ (aDictionary at: aViennaNode first ifAbsent: [ aViennaNode first ]) , String space , aViennaNode second ]
 ]
 
-{ #category : #'code generation-definitions' }
+{ #category : 'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> implicitFunctionDefinition: aViennaNode env: aDictionary [
 
 	| identifier initializer theClass |
@@ -775,7 +776,7 @@ ViennaVDM2SmalltalkClass >> implicitFunctionDefinition: aViennaNode env: aDictio
 			node: aViennaNode post ]
 ]
 
-{ #category : #'code generation-definitions' }
+{ #category : 'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> implicitOperationDefinition: aViennaNode env: aDictionary [
 
 	| opname patternTypePairListNode retVar retTypeNode bodyNode body preNode postNode varGenerator binds theClass |
@@ -900,7 +901,7 @@ ViennaVDM2SmalltalkClass >> implicitOperationDefinition: aViennaNode env: aDicti
 			node: postNode ]
 ]
 
-{ #category : #'code generation-interfaces' }
+{ #category : 'code generation-interfaces' }
 ViennaVDM2SmalltalkClass >> importDefinition: aViennaNode env: aDictionary [
 	| moduleName importModuleSignatureNode |
 	moduleName := aViennaNode first.
@@ -908,13 +909,13 @@ ViennaVDM2SmalltalkClass >> importDefinition: aViennaNode env: aDictionary [
 	importModuleSignatureNode do: [ :node | self generate: node env: aDictionary ]
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 ViennaVDM2SmalltalkClass >> initialize [
 	super initialize.
 	classes := Dictionary new
 ]
 
-{ #category : #'code generation-definitions' }
+{ #category : 'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> modularDocument: aViennaNode env: aDictionary [
 
 	| moduleNames classNames documentClass |
@@ -983,7 +984,7 @@ ViennaVDM2SmalltalkClass >> modularDocument: aViennaNode env: aDictionary [
 	^ documentClass
 ]
 
-{ #category : #'code generation-definitions' }
+{ #category : 'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 
 	| env moduleName interfaceNode moduleBodyNode importModuleNames importClassNames instVars stateVars typeNames newClass |
@@ -1055,7 +1056,7 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 			node: nil ]
 ]
 
-{ #category : #'code generation-definitions' }
+{ #category : 'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> noCheckAssignment: aVarName be: aValString [
 
 	^ 'self class slotNamed: ' , aVarName storeString
@@ -1063,7 +1064,7 @@ ViennaVDM2SmalltalkClass >> noCheckAssignment: aVarName be: aValString [
 	  , ') to: self]'
 ]
 
-{ #category : #'code generation-interfaces' }
+{ #category : 'code generation-interfaces' }
 ViennaVDM2SmalltalkClass >> operationImport: aViennaNode env: aDictionary [
 
 	| moduleName |
@@ -1081,7 +1082,7 @@ ViennaVDM2SmalltalkClass >> operationImport: aViennaNode env: aDictionary [
 			put: moduleName , String space , aViennaNode first first ]
 ]
 
-{ #category : #'code generation-definitions' }
+{ #category : 'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> recordTypeDefinition: aViennaNode env: aDictionary [
 
 	| identifier fieldList type initializer theClass |
@@ -1103,7 +1104,7 @@ ViennaVDM2SmalltalkClass >> recordTypeDefinition: aViennaNode env: aDictionary [
 		node: aViennaNode
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 ViennaVDM2SmalltalkClass >> requestClassName: defaultClassName for: aString [
 	| className |
 	className := defaultClassName.
@@ -1127,7 +1128,7 @@ ViennaVDM2SmalltalkClass >> requestClassName: defaultClassName for: aString [
 	^ className
 ]
 
-{ #category : #'code generation-statements' }
+{ #category : 'code generation-statements' }
 ViennaVDM2SmalltalkClass >> returnStatement: aViennaNode env: aDictionary [
 	^ '^ '
 		,
@@ -1136,7 +1137,7 @@ ViennaVDM2SmalltalkClass >> returnStatement: aViennaNode env: aDictionary [
 				ifNotNil: [ :arg | self generate: arg env: aDictionary ])
 ]
 
-{ #category : #'code generation-definitions' }
+{ #category : 'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> stateDefinition: aViennaNode env: aDictionary [
 
 	| theClass stateConstructor quin |
@@ -1213,12 +1214,12 @@ ViennaVDM2SmalltalkClass >> stateDefinition: aViennaNode env: aDictionary [
 		node: aViennaNode
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 ViennaVDM2SmalltalkClass >> tracingString [
 	^ ViennaTracingString new
 ]
 
-{ #category : #'code generation-interfaces' }
+{ #category : 'code generation-interfaces' }
 ViennaVDM2SmalltalkClass >> typeImport: aViennaNode env: aDictionary [
 
 	| moduleName |
@@ -1236,7 +1237,7 @@ ViennaVDM2SmalltalkClass >> typeImport: aViennaNode env: aDictionary [
 			put: moduleName , String space , aViennaNode first first first ]
 ]
 
-{ #category : #'code generation-definitions' }
+{ #category : 'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> typeSynonym: aViennaNode env: aDictionary [
 
 	| identifier type inv initializer theClass |
@@ -1256,7 +1257,7 @@ ViennaVDM2SmalltalkClass >> typeSynonym: aViennaNode env: aDictionary [
 		node: aViennaNode
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 ViennaVDM2SmalltalkClass >> validateClassName: aString [
 
 	aString ifEmpty: [ ^ false ].
@@ -1266,7 +1267,7 @@ ViennaVDM2SmalltalkClass >> validateClassName: aString [
 	^ true
 ]
 
-{ #category : #'code generation-definitions' }
+{ #category : 'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> valueDefinitions: aViennaNode env: aDictionary [
 
 	| theClass initializer |
@@ -1282,7 +1283,7 @@ ViennaVDM2SmalltalkClass >> valueDefinitions: aViennaNode env: aDictionary [
 				node: node ] ]
 ]
 
-{ #category : #'code generation-interfaces' }
+{ #category : 'code generation-interfaces' }
 ViennaVDM2SmalltalkClass >> valueImport: aViennaNode env: aDictionary [
 
 	| moduleName |

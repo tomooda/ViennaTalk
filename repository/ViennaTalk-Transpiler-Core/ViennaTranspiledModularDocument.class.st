@@ -1,13 +1,14 @@
 Class {
-	#name : #ViennaTranspiledModularDocument,
-	#superclass : #Dictionary,
+	#name : 'ViennaTranspiledModularDocument',
+	#superclass : 'Dictionary',
 	#instVars : [
 		'viennaEnv'
 	],
-	#category : #'ViennaTalk-Transpiler-Core'
+	#category : 'ViennaTalk-Transpiler-Core',
+	#package : 'ViennaTalk-Transpiler-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaTranspiledModularDocument class >> from: aDictionary [
 	| doc |
 	doc := self new.
@@ -15,7 +16,7 @@ ViennaTranspiledModularDocument class >> from: aDictionary [
 	^ doc
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTranspiledModularDocument >> buildViennaEnv [
 	| env |
 	env := Dictionary new.
@@ -23,7 +24,7 @@ ViennaTranspiledModularDocument >> buildViennaEnv [
 	viennaEnv := env
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaTranspiledModularDocument >> debugExpression: aString with: aViennaVDM2SmalltalkClass ifError: errorBlock [
 
 	| src |
@@ -38,17 +39,17 @@ ViennaTranspiledModularDocument >> debugExpression: aString with: aViennaVDM2Sma
 		  evaluate
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaTranspiledModularDocument >> evaluateExpression: aString [
 	^ self evaluateExpression: aString ifError: [ :msg | self error: msg ]
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaTranspiledModularDocument >> evaluateExpression: aString ifError: errorBlock [
 	^ self evaluateExpression: aString with: ViennaVDM2SmalltalkClass new ifError: errorBlock
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaTranspiledModularDocument >> evaluateExpression: aString with: aViennaVDM2SmalltalkClass ifError: errorBlock [
 	| src |
 	src := self
@@ -62,13 +63,13 @@ ViennaTranspiledModularDocument >> evaluateExpression: aString with: aViennaVDM2
 		evaluate
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaTranspiledModularDocument >> evaluateNode: aViennaNode [
 
 	^ self evaluateNode: aViennaNode ifError: [ :msg | self error: msg ]
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaTranspiledModularDocument >> evaluateNode: aViennaNode ifError: errorBlock [
 
 	^ self
@@ -77,7 +78,7 @@ ViennaTranspiledModularDocument >> evaluateNode: aViennaNode ifError: errorBlock
 		  ifError: errorBlock
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaTranspiledModularDocument >> evaluateNode: aViennaNode with: aViennaVDM2SmalltalkClass ifError: errorBlock [
 
 	| src |
@@ -92,17 +93,17 @@ ViennaTranspiledModularDocument >> evaluateNode: aViennaNode with: aViennaVDM2Sm
 		  evaluate
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaTranspiledModularDocument >> evaluateStatement: aString [
 	^ self evaluateStatement: aString ifError: [ :msg | self error: msg ]
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaTranspiledModularDocument >> evaluateStatement: aString ifError: errorBlock [
 	^ self evaluateStatement: aString with: ViennaVDM2SmalltalkClass new ifError: errorBlock
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaTranspiledModularDocument >> evaluateStatement: aString with: aViennaVDM2SmalltalkClass ifError: errorBlock [
 	| src |
 	src := self
@@ -116,23 +117,23 @@ ViennaTranspiledModularDocument >> evaluateStatement: aString with: aViennaVDM2S
 		evaluate
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTranspiledModularDocument >> init [
 
 	self valuesDo: #init
 ]
 
-{ #category : #initialize }
+{ #category : 'initialize' }
 ViennaTranspiledModularDocument >> initialize [
 	super initialize.
 	viennaEnv := Dictionary new
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTranspiledModularDocument >> inv [
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 ViennaTranspiledModularDocument >> postCopy [
 	super postCopy.
 	self keys do: [ :key | self at: key put: (self at: key) copy ].
@@ -144,7 +145,7 @@ ViennaTranspiledModularDocument >> postCopy [
 						ifTrue: [ module perform: (key , ':') asSymbol with: (self at: key) ] ] ]
 ]
 
-{ #category : #transpiling }
+{ #category : 'transpiling' }
 ViennaTranspiledModularDocument >> transpileExpression: aString with: transpiler ifError: errorBlock [
 	| ast |
 	ast := ViennaVDMParser new expression end parse: aString.
@@ -155,7 +156,7 @@ ViennaTranspiledModularDocument >> transpileExpression: aString with: transpiler
 		generate: ast
 ]
 
-{ #category : #transpiling }
+{ #category : 'transpiling' }
 ViennaTranspiledModularDocument >> transpileNode: aViennaNode with: transpiler ifError: errorBlock [
 
 	^ transpiler
@@ -163,7 +164,7 @@ ViennaTranspiledModularDocument >> transpileNode: aViennaNode with: transpiler i
 		  generate: aViennaNode
 ]
 
-{ #category : #transpiling }
+{ #category : 'transpiling' }
 ViennaTranspiledModularDocument >> transpileStatement: aString with: transpiler ifError: errorBlock [
 	| ast |
 	ast := ViennaVDMParser new statement end parse: aString.
@@ -174,12 +175,12 @@ ViennaTranspiledModularDocument >> transpileStatement: aString with: transpiler 
 		generate: ast
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTranspiledModularDocument >> viennaEnv [
 	^ viennaEnv
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTranspiledModularDocument >> viennaEnv: aDictionary [
 	viennaEnv := aDictionary
 ]

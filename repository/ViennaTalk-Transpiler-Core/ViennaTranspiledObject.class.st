@@ -1,76 +1,77 @@
 Class {
-	#name : #ViennaTranspiledObject,
-	#superclass : #Object,
+	#name : 'ViennaTranspiledObject',
+	#superclass : 'Object',
 	#classInstVars : [
 		'specificationDict',
 		'debuggerNodeMapDict',
 		'specification',
 		'viennaEnv'
 	],
-	#category : #'ViennaTalk-Transpiler-Core'
+	#category : 'ViennaTalk-Transpiler-Core',
+	#package : 'ViennaTalk-Transpiler-Core'
 }
 
-{ #category : #specification }
+{ #category : 'specification' }
 ViennaTranspiledObject class >> debuggerNodeMapAt: aSymbol [
 	^ self debuggerNodeMapDict at: aSymbol asSymbol
 ]
 
-{ #category : #specification }
+{ #category : 'specification' }
 ViennaTranspiledObject class >> debuggerNodeMapAt: aSymbol put: anIdentityDictionary [
 	^ self debuggerNodeMapDict at: aSymbol asSymbol put: anIdentityDictionary
 ]
 
-{ #category : #specification }
+{ #category : 'specification' }
 ViennaTranspiledObject class >> debuggerNodeMapDict [
 	^ debuggerNodeMapDict ifNil: [ debuggerNodeMapDict := Dictionary new ]
 ]
 
-{ #category : #specification }
+{ #category : 'specification' }
 ViennaTranspiledObject class >> includesSpecificationFor: aSymbol [
 	^ self specificationDict includesKey: aSymbol asSymbol
 ]
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 ViennaTranspiledObject class >> initialize [
 	specificationDict := Dictionary new.
 ]
 
-{ #category : #specification }
+{ #category : 'specification' }
 ViennaTranspiledObject class >> specification [
 	^ specification
 ]
 
-{ #category : #specification }
+{ #category : 'specification' }
 ViennaTranspiledObject class >> specification: aViennaNode [
 	specification := aViennaNode
 ]
 
-{ #category : #specification }
+{ #category : 'specification' }
 ViennaTranspiledObject class >> specificationAt: aSymbol [
 	^ self specificationDict at: aSymbol asSymbol
 ]
 
-{ #category : #specification }
+{ #category : 'specification' }
 ViennaTranspiledObject class >> specificationAt: aSelector put: aViennaNode [
 	^ self specificationDict at: aSelector asSymbol put: aViennaNode
 ]
 
-{ #category : #specification }
+{ #category : 'specification' }
 ViennaTranspiledObject class >> specificationDict [
 	^ specificationDict ifNil: [ specificationDict := Dictionary new ]
 ]
 
-{ #category : #specification }
+{ #category : 'specification' }
 ViennaTranspiledObject class >> specificationSource [
 	^ specification ifNotNil: #source ifNil: [  ]
 ]
 
-{ #category : #specification }
+{ #category : 'specification' }
 ViennaTranspiledObject class >> specificationSourceAt: aSelector [
 	^ (self specificationAt: aSelector) source
 ]
 
-{ #category : #transpiling }
+{ #category : 'transpiling' }
 ViennaTranspiledObject class >> transpileExpression: aString with: transpiler ifError: errorBlock [
 	| ast |
 	ast := ViennaVDMParser new expression end parse: aString.
@@ -81,14 +82,14 @@ ViennaTranspiledObject class >> transpileExpression: aString with: transpiler if
 		generate: ast
 ]
 
-{ #category : #transpiling }
+{ #category : 'transpiling' }
 ViennaTranspiledObject class >> transpileNode: aViennaNode with: transpiler ifError: errorBlock [
 	^ transpiler
 		defaultEnv: viennaEnv;
 		generate: aViennaNode
 ]
 
-{ #category : #transpiling }
+{ #category : 'transpiling' }
 ViennaTranspiledObject class >> transpileStatement: aString with: transpiler ifError: errorBlock [
 	| ast |
 	ast := ViennaVDMParser new statement end parse: aString.
@@ -99,17 +100,17 @@ ViennaTranspiledObject class >> transpileStatement: aString with: transpiler ifE
 		generate: ast
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTranspiledObject class >> viennaEnv [
 	^ viennaEnv
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTranspiledObject class >> viennaEnv: aDictionary [
 	viennaEnv := aDictionary
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaTranspiledObject >> debugExpression: aString with: aViennaVDM2SmalltalkClass ifError: errorBlock [
 
 	| src |
@@ -124,17 +125,17 @@ ViennaTranspiledObject >> debugExpression: aString with: aViennaVDM2SmalltalkCla
 		  evaluate
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaTranspiledObject >> evaluateExpression: aString [
 	^ self evaluateExpression: aString ifError: [ :msg | self error: msg ]
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaTranspiledObject >> evaluateExpression: aString ifError: errorBlock [
 	^ self evaluateExpression: aString with: ViennaVDM2SmalltalkClass new ifError: errorBlock
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaTranspiledObject >> evaluateExpression: aString with: aViennaVDM2SmalltalkClass ifError: errorBlock [
 	| src |
 	src := self class
@@ -148,12 +149,12 @@ ViennaTranspiledObject >> evaluateExpression: aString with: aViennaVDM2Smalltalk
 		evaluate
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaTranspiledObject >> evaluateNode: aViennaNode ifError: errorBlock [
 	^ self evaluateNode: aViennaNode with: ViennaVDM2SmalltalkClass new ifError: errorBlock
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaTranspiledObject >> evaluateNode: aViennaNode with: aViennaVDM2SmalltalkClass ifError: errorBlock [
 
 	| src |
@@ -168,17 +169,17 @@ ViennaTranspiledObject >> evaluateNode: aViennaNode with: aViennaVDM2SmalltalkCl
 		  evaluate
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaTranspiledObject >> evaluateStatement: aString [
 	^ self evaluateStatement: aString ifError: [ :msg | self error: msg ]
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaTranspiledObject >> evaluateStatement: aString ifError: errorBlock [
 	^ self evaluateStatement: aString with: ViennaVDM2SmalltalkClass new ifError: errorBlock
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaTranspiledObject >> evaluateStatement: aString with: aViennaVDM2SmalltalkClass ifError: errorBlock [
 
 	| src |
@@ -193,25 +194,25 @@ ViennaTranspiledObject >> evaluateStatement: aString with: aViennaVDM2SmalltalkC
 		  evaluate
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTranspiledObject >> init [
 	"The transpiler should generate code that overrides me."
 
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTranspiledObject >> inv [
 
 	
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTranspiledObject >> state [
 	^ (ViennaComposite constructorName: '')
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 ViennaTranspiledObject >> viennaStringOn: aStream [
 	aStream nextPutAll: '()'
 ]
