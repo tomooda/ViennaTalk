@@ -1,4 +1,4 @@
-[![Pharo version](https://img.shields.io/badge/Pharo-11-87CEFA.svg)](https://pharo.org/download)
+[![Pharo version](https://img.shields.io/badge/Pharo-12-87CEFA.svg)](https://pharo.org/download)
 [![CI](https://github.com/tomooda/ViennaTalk/actions/workflows/test.yml/badge.svg)](https://github.com/tomooda/ViennaTalk/actions/workflows/test.yml)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/cormas/cormas/master/LICENSE)
 
@@ -19,7 +19,7 @@ You can freely try VDMPad without any registration at [Public VDMPad server](htt
 
 Platform
 ---
-ViennaTalk works on [Pharo 11](http://pharo.org/) .
+ViennaTalk works on [Pharo 12](http://pharo.org/) .
 MacOSX and Linux is supported. Windows platforms are partially supported; a local VDMJ process does not work on Widnows due to limitation of OSSubprocess's piping functions.
 
 License
