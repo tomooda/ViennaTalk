@@ -73,8 +73,9 @@ BaselineOfViennaTalk >> baseline: spec [
 		package: 'ViennaTalk-AST-Core' with: [ 'ViennaTalk-Type-Core' ];
 		package: 'ViennaTalk-Parser-Formatters'
 		with: [ spec requires: #( 'ViennaTalk-Parser-Core' ) ];
-		package: 'ViennaTalk-Parser-Highlighters'
-		with: [ spec requires: #( 'ViennaTalk-Parser-Core' ) ];
+		package: 'ViennaTalk-Parser-Highlighters' with: [
+		spec requires: #( 'ViennaTalk-AST-Core' 'ViennaTalk-Parser-Core'
+			   'ViennaTalk-Parser-Formatters' ) ];
 		package: 'ViennaTalk-AST-Tests'
 		with: [ spec requires: #( 'ViennaTalk-AST-Core' ) ];
 		package: 'ViennaTalk-Parser-Tests'
