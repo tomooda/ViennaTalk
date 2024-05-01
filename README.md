@@ -1,4 +1,4 @@
-[![Pharo version](https://img.shields.io/badge/Pharo-11-87CEFA.svg)](https://pharo.org/download)
+[![Pharo version](https://img.shields.io/badge/Pharo-12-87CEFA.svg)](https://pharo.org/download)
 [![CI](https://github.com/tomooda/ViennaTalk/actions/workflows/test.yml/badge.svg)](https://github.com/tomooda/ViennaTalk/actions/workflows/test.yml)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/cormas/cormas/master/LICENSE)
 
@@ -7,6 +7,15 @@
 ViennaTalk ~ Live and Formal
 ===
 ViennaTalk is a Smalltalk library to handle VDM-SL specifications.
+
+Downloads
+---
+
+The latest release: [<kbd> <br> Lyon <br> &nbsp; </kbd>](https://github.com/tomooda/ViennaTalk/releases/latest/)
+   * macOS / AppleSilicon [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://github.com/tomooda/ViennaTalk/releases/latest/download/viennatalk-mac-arm64.dmg)
+   * macOS / Intel processor [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://github.com/tomooda/ViennaTalk/releases/latest/download/viennatalk-mac-x64.dmg)
+   * Linux / Intel processor [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://github.com/tomooda/ViennaTalk/releases/latest/download/viennatalk-linux-x64.tar.bz2)
+   * windows64 / Intel processor [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://github.com/tomooda/ViennaTalk/releases/latest/download/viennatalk-win-x64.zip)
 
 Documentation
 ---
@@ -19,7 +28,7 @@ You can freely try VDMPad without any registration at [Public VDMPad server](htt
 
 Platform
 ---
-ViennaTalk works on [Pharo 11](http://pharo.org/) .
+ViennaTalk works on [Pharo 12](http://pharo.org/) .
 MacOSX and Linux is supported. Windows platforms are partially supported; a local VDMJ process does not work on Widnows due to limitation of OSSubprocess's piping functions.
 
 License
