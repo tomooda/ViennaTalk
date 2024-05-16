@@ -1,25 +1,26 @@
 Class {
-	#name : #ViennaLiveSmalltalkTranslationEditor,
-	#superclass : #ViennaLiveTranslationEditor,
+	#name : 'ViennaLiveSmalltalkTranslationEditor',
+	#superclass : 'ViennaLiveTranslationEditor',
 	#instVars : [
 		'codeText',
 		'runtimeTypeCheck',
 		'runtimeAssertionCheck'
 	],
-	#category : #'ViennaTalk-Parser-UI'
+	#category : 'ViennaTalk-Parser-UI',
+	#package : 'ViennaTalk-Parser-UI'
 }
 
-{ #category : #menu }
+{ #category : 'menu' }
 ViennaLiveSmalltalkTranslationEditor class >> codeTextMenuFor: aModel [
 	^ (PragmaMenuBuilder pragmaKeyword: self codeTextMenuKeyword model: aModel) menuSpec
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 ViennaLiveSmalltalkTranslationEditor class >> codeTextMenuKeyword [
 	^ 'viennaCodeTextMenu'
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 ViennaLiveSmalltalkTranslationEditor class >> codeTextMenuOn: aBuilder [
 	"Specify the menu used when writing code. Try it with:
 	(PragmaMenuBuilder 
@@ -91,7 +92,7 @@ ViennaLiveSmalltalkTranslationEditor class >> codeTextMenuOn: aBuilder [
 		withSeparatorAfter
 ]
 
-{ #category : #specs }
+{ #category : 'specs' }
 ViennaLiveSmalltalkTranslationEditor class >> defaultLayout [
 
 	<spec: #default>
@@ -108,13 +109,13 @@ ViennaLiveSmalltalkTranslationEditor class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 ViennaLiveSmalltalkTranslationEditor class >> initialize [
 	super initialize.
 	Smalltalk at: #ViennaLauncher ifPresent: [ :launcherClass | launcherClass reopen ]
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 ViennaLiveSmalltalkTranslationEditor class >> viennaDevMenuOn: aBuilder [
 
 	<ViennaDev>
@@ -126,7 +127,7 @@ ViennaLiveSmalltalkTranslationEditor class >> viennaDevMenuOn: aBuilder [
 		icon: nil
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 ViennaLiveSmalltalkTranslationEditor class >> worldMenuOn: aBuilder [
 
 	<worldMenu>
@@ -138,17 +139,17 @@ ViennaLiveSmalltalkTranslationEditor class >> worldMenuOn: aBuilder [
 		icon: nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLiveSmalltalkTranslationEditor >> codeText [
 	^ codeText
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 ViennaLiveSmalltalkTranslationEditor >> codeTextMenu [
 	^ self class codeTextMenuFor: self
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaLiveSmalltalkTranslationEditor >> createTranslator [
 	^ [ :string | 
 	| generator |
@@ -164,17 +165,17 @@ ViennaLiveSmalltalkTranslationEditor >> createTranslator [
 				ifError: [ ViennaVDM2SmalltalkScript translateExpression: string ifError: [ :err | err ] ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLiveSmalltalkTranslationEditor >> defaultTitle [
 	^ 'VDM -> Smalltalk'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLiveSmalltalkTranslationEditor >> format: aString [
 	^ (RBParser parseExpression: aString) formattedCode
 ]
 
-{ #category : #'VDM manipulations' }
+{ #category : 'VDM manipulations' }
 ViennaLiveSmalltalkTranslationEditor >> formatSelectionInCodeText [
 	| parser editor ast result |
 	parser := ViennaVDMParser new.
@@ -193,7 +194,7 @@ ViennaLiveSmalltalkTranslationEditor >> formatSelectionInCodeText [
 	^ true
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 ViennaLiveSmalltalkTranslationEditor >> initializeWidgets [
 
 	super initializeWidgets.
@@ -202,7 +203,6 @@ ViennaLiveSmalltalkTranslationEditor >> initializeWidgets [
 	codeText
 		help: 'VDM expression/statement/type to evaluate';
 		autoAccept: true;
-		wantsVisualFeedback: true;
 		overridingContextMenu;
 		contextMenu: [ self codeTextMenu ];
 		bindKeyCombination: $f shift command
@@ -213,9 +213,9 @@ ViennaLiveSmalltalkTranslationEditor >> initializeWidgets [
 		toAction: [ self viennaItInCodeText ];
 		bindKeyCombination: $t command toAction: [ self translateIt ];
 		bindKeyCombination: $t control toAction: [ self translateIt ];
-		whenBuiltDo: [ 
-			codeText withWidgetDo: [ :widget | 
-					widget font: ViennaLauncher font ] ].
+		whenBuiltDo: [
+			codeText withAdapterDo: [ :a |
+					a widgetDo: [ :widget | widget font: ViennaLauncher font ] ] ].
 	runtimeTypeCheck := self newCheckBox.
 	runtimeTypeCheck
 		label: 'runtime type check';
@@ -228,17 +228,17 @@ ViennaLiveSmalltalkTranslationEditor >> initializeWidgets [
 		whenChangedDo: [ self translate ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLiveSmalltalkTranslationEditor >> runtimeAssertionCheck [
 	^ runtimeAssertionCheck
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLiveSmalltalkTranslationEditor >> runtimeTypeCheck [
 	^ runtimeTypeCheck
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaLiveSmalltalkTranslationEditor >> translateIt [
 	| parser editor ast codeFromSelection |
 	parser := ViennaVDMParser new.
@@ -256,7 +256,7 @@ ViennaLiveSmalltalkTranslationEditor >> translateIt [
 	^ true
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaLiveSmalltalkTranslationEditor >> viennaItInCodeText [
 	^ self viennaItIn: codeText
 ]

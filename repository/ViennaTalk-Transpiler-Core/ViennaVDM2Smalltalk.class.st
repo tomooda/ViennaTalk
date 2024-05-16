@@ -2469,7 +2469,13 @@ ViennaVDM2Smalltalk >> multipleTypeBind: aViennaNode env: aDictionary [
 { #category : 'code generation-traces' }
 ViennaVDM2Smalltalk >> namedTrace: aViennaNode env: aDictionary [
 
-	^ nil
+	^ self stringStreamContents: [ :stream |
+		  stream
+			  nextPutAll: aViennaNode identifier;
+			  nextPutAll: ' := [';
+			  nextPutAll:
+				  (self generate: aViennaNode traceDefinitionList env: aDictionary).
+		  stream nextPutAll: '].' ]
 ]
 
 { #category : 'code generation-definitions' }
@@ -3153,7 +3159,7 @@ ViennaVDM2Smalltalk >> stateDefinition: aViennaNode env: aDictionary [
 					    nextPutAll: (self noCheckAssignment: var be: val);
 					    nextPutAll: '.' , String cr ] ]) asViennaTracingString:
 			   initNode).
-		  ((String new: 1024 streamContents: [ :stream |
+		  ((self stringStreamContents: [ :stream |
 			    stream
 				    nextPutAll: initConstructor;
 				    nextPutAll: ' := ViennaCompositeType constructorName: ';
@@ -3162,7 +3168,7 @@ ViennaVDM2Smalltalk >> stateDefinition: aViennaNode env: aDictionary [
 				    nextPutAll:
 					    (' . ' join: (self generate: fieldListNode env: aDictionary));
 				    nextPutAll: '}' ]) asViennaTracingString: aViennaNode).
-		  ((String new: 1024 streamContents: [ :stream |
+		  ((self stringStreamContents: [ :stream |
 			    patternVar := initNode first first first.
 			    stream
 				    nextPutAll: 'init_';
@@ -3171,20 +3177,28 @@ ViennaVDM2Smalltalk >> stateDefinition: aViennaNode env: aDictionary [
 				    nextPutAll: (self generate: initNode first env: aDictionary) ])
 			   asViennaTracingString: initNode).
 		  (invNode ifNotNil: [
-			   (String new: 1024 streamContents: [ :stream |
+			   (self stringStreamContents: [ :stream |
 				    stream
 					    nextPutAll: 'inv_';
 					    nextPutAll: constructor;
 					    nextPutAll: ' := ';
 					    nextPutAll: (self generate: invNode first env: aDictionary) ])
 				   asViennaTracingString: invNode ]).
-		  (String new: 1024 streamContents: [ :stream |
+		  (self stringStreamContents: [ :stream |
 			   stream
 				   nextPutAll:
 					   (aDictionary at: constructor ifAbsent: [ constructor ]);
 				   nextPutAll: ' applyTo: {';
 				   nextPutAll: (' . ' join: vars);
-				   nextPutAll: '}' ]) }
+				   nextPutAll: '}' ]).
+		  (self stringStreamContents: [ :stream |
+			   vars
+				   do: [ :var |
+					   stream
+						   nextPutAll: var;
+						   nextPutAll: ' := _state at: ';
+						   nextPutAll: var storeString ]
+				   separatedBy: [ stream nextPutAll: '. ' ] ]) }
 ]
 
 { #category : 'utilities' }
@@ -3280,9 +3294,19 @@ ViennaVDM2Smalltalk >> totalFunctionType: aViennaNode env: aDictionary [
 ]
 
 { #category : 'code generation-traces' }
+ViennaVDM2Smalltalk >> traceDefinitionList: aViennaNode env: aDictionary [
+
+	^ self stringStreamContents: [ :stream |
+		  aViennaNode
+			  do: [ :node |
+			  stream nextPutAll: (self generate: node env: aDictionary) ]
+			  separatedBy: [ stream nextPutAll: '. ' ] ]
+]
+
+{ #category : 'code generation-traces' }
 ViennaVDM2Smalltalk >> tracesDefinitions: aViennaNode env: aDictionary [
 
-	^ nil
+	aViennaNode do: [ :node | self generate: node env: aDictionary ]
 ]
 
 { #category : 'code generation-statements' }

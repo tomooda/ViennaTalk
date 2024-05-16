@@ -1,16 +1,17 @@
 Class {
-	#name : #ViennaLiveASTTranslationEditor,
-	#superclass : #ViennaLiveTranslationEditor,
-	#category : #'ViennaTalk-Parser-UI'
+	#name : 'ViennaLiveASTTranslationEditor',
+	#superclass : 'ViennaLiveTranslationEditor',
+	#category : 'ViennaTalk-Parser-UI',
+	#package : 'ViennaTalk-Parser-UI'
 }
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 ViennaLiveASTTranslationEditor class >> initialize [
 	super initialize.
 	Smalltalk at: #ViennaLauncher ifPresent: [ :launcherClass | launcherClass reopen ]
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 ViennaLiveASTTranslationEditor class >> viennaDevMenuOn: aBuilder [
 
 	<ViennaDev>
@@ -21,7 +22,7 @@ ViennaLiveASTTranslationEditor class >> viennaDevMenuOn: aBuilder [
 		icon: nil
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 ViennaLiveASTTranslationEditor class >> worldMenuOn: aBuilder [
 
 	<worldMenu>
@@ -38,24 +39,24 @@ ViennaLiveASTTranslationEditor class >> worldMenuOn: aBuilder [
 				icon: nil ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaLiveASTTranslationEditor >> createTranslator [
 	| parser |
 	parser := ViennaVDMParser new.
 	^ [ :string | parser document end / parser statement end / parser expression end parse: string ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLiveASTTranslationEditor >> defaultTitle [
 	^ 'VDM -> AST'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLiveASTTranslationEditor >> format: aViennaNode [
 	^ aViennaNode printString
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 ViennaLiveASTTranslationEditor >> initializeWidgets [
 	super initializeWidgets.
 	targetText help: 'AST'

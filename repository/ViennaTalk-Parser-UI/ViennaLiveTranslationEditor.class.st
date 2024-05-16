@@ -1,16 +1,17 @@
 Class {
-	#name : #ViennaLiveTranslationEditor,
-	#superclass : #SpPresenter,
+	#name : 'ViennaLiveTranslationEditor',
+	#superclass : 'SpPresenter',
 	#instVars : [
 		'sourceText',
 		'targetText',
 		'translator',
 		'process'
 	],
-	#category : #'ViennaTalk-Parser-UI'
+	#category : 'ViennaTalk-Parser-UI',
+	#package : 'ViennaTalk-Parser-UI'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 ViennaLiveTranslationEditor class >> defaultLayout [
 	<spec: #default>
 	^ SpPanedLayout newHorizontal
@@ -19,17 +20,17 @@ ViennaLiveTranslationEditor class >> defaultLayout [
 		yourself
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 ViennaLiveTranslationEditor class >> sourceTextMenuFor: aModel [
 	^ (PragmaMenuBuilder pragmaKeyword: self sourceTextMenuKeyword model: aModel) menuSpec
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 ViennaLiveTranslationEditor class >> sourceTextMenuKeyword [
 	^ 'viennaSourceTextMenu'
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 ViennaLiveTranslationEditor class >> sourceTextMenuOn: aBuilder [
 	"Specify the menu used when writing code. Try it with:
 	(PragmaMenuBuilder 
@@ -92,27 +93,27 @@ ViennaLiveTranslationEditor class >> sourceTextMenuOn: aBuilder [
 		withSeparatorAfter
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaLiveTranslationEditor >> createTranslator [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLiveTranslationEditor >> defaultTitle [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLiveTranslationEditor >> format: aString [
 	^ aString
 ]
 
-{ #category : #'VDM manipulations' }
+{ #category : 'VDM manipulations' }
 ViennaLiveTranslationEditor >> formatSourceText [
 	^ sourceText text: (ViennaVDMParser new format: sourceText text asString) 
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 ViennaLiveTranslationEditor >> initializeWidgets [
 
 	sourceText := self newText.
@@ -127,40 +128,42 @@ ViennaLiveTranslationEditor >> initializeWidgets [
 		toAction: [ self viennaItInSourceText ];
 		bindKeyCombination: $p control
 		toAction: [ self viennaItInSourceText ];
-		whenTextChangedDo: [ 
+		whenTextChangedDo: [
 			[ self translate ] forkAt: Processor userBackgroundPriority ];
-		whenBuiltDo: [ 
-			sourceText withWidgetDo: [ :w | w font: ViennaLauncher font ] ].
+		whenBuiltDo: [
+			sourceText withAdapterDo: [ :a |
+					a widgetDo: [ :w | w font: ViennaLauncher font ] ] ].
 	targetText := self newText.
 	targetText
 		help: 'Translation output';
-		whenBuiltDo: [ 
-			targetText withWidgetDo: [ :w | w font: ViennaLauncher font ] ]
+		whenBuiltDo: [
+			targetText withAdapterDo: [ :a |
+					a widgetDo: [ :w | w font: ViennaLauncher font ] ] ]
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 ViennaLiveTranslationEditor >> initializeWindow: aSpWindowPresenter [
 
 	super initializeWindow: aSpWindowPresenter.
 	aSpWindowPresenter title: self defaultTitle
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLiveTranslationEditor >> sourceText [
 	^ sourceText
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 ViennaLiveTranslationEditor >> sourceTextMenu [
 	^ self class sourceTextMenuFor: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLiveTranslationEditor >> targetText [
 	^ targetText
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaLiveTranslationEditor >> translate [
 
 	| source |
@@ -180,7 +183,7 @@ ViennaLiveTranslationEditor >> translate [
 		do: [ :ex |  ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLiveTranslationEditor >> translate: aTextOrString ifError: errorBlock [
 	^ (self translator value: aTextOrString asString)
 		in: [ :result | 
@@ -189,25 +192,25 @@ ViennaLiveTranslationEditor >> translate: aTextOrString ifError: errorBlock [
 				ifFalse: [ self format: result ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLiveTranslationEditor >> translator [
 	^ translator ifNil: [ translator := self createTranslator ]
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaLiveTranslationEditor >> viennaItIn: aTextModel [
 
 	| parser codeFromSource editor ast codeFromSelection result |
 	parser := ViennaVDMParser new.
 	codeFromSource := targetText text asString.
-	aTextModel withWidgetDo: [ :widget | 
-		editor := widget widget textMorph editor ].
+	aTextModel withAdapterDo: [ :a |
+		a widgetDo: [ :widget | editor := widget widget textMorph editor ] ].
 	editor lineSelectAndEmptyCheck: [ ^ '' ].
-	ast := parser expression end / parser statement end / parser type end 
+	ast := parser expression end / parser statement end / parser type end
 		       parse: (aTextModel text asString
 				        copyFrom: editor startIndex
 				        to: editor stopIndex - 1) trim.
-	ast isPetit2Failure ifTrue: [ 
+	ast isPetit2Failure ifTrue: [
 		^ aTextModel
 			  notify: ast message
 			  at: ast position + 1
@@ -217,14 +220,15 @@ ViennaLiveTranslationEditor >> viennaItIn: aTextModel [
 		           source: codeFromSource , '.' , codeFromSelection;
 		           evaluate) viennaString.
 	editor afterSelectionInsertAndSelect: result.
-	aTextModel withWidgetDo: [ :widget | 
-		widget widget
-			selectFrom: editor startIndex to: editor stopIndex - 1;
-			textChanged ].
+	aTextModel withAdapterDo: [ :a |
+		a widgetDo: [ :widget |
+			widget widget
+				selectFrom: editor startIndex to: editor stopIndex - 1;
+				textChanged ] ].
 	^ true
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaLiveTranslationEditor >> viennaItInSourceText [
 	^ self viennaItIn: sourceText
 ]

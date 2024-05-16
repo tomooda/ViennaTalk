@@ -145,6 +145,19 @@ ViennaTranspiledModularDocument >> postCopy [
 						ifTrue: [ module perform: (key , ':') asSymbol with: (self at: key) ] ] ]
 ]
 
+{ #category : 'accessing' }
+ViennaTranspiledModularDocument >> state [
+
+	^ self collect: [ :module | module state ]
+]
+
+{ #category : 'accessing' }
+ViennaTranspiledModularDocument >> state: aDictionary [
+
+	aDictionary keysAndValuesDo: [ :moduleName :state |
+		self at: moduleName ifPresent: [ :module | module state: state ] ]
+]
+
 { #category : 'transpiling' }
 ViennaTranspiledModularDocument >> transpileExpression: aString with: transpiler ifError: errorBlock [
 	| ast |

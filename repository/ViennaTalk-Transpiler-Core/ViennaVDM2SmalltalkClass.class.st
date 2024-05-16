@@ -1056,6 +1056,22 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 			node: nil ]
 ]
 
+{ #category : 'code generation-traces' }
+ViennaVDM2SmalltalkClass >> namedTrace: aViennaNode env: aDictionary [
+
+	| name body theClass |
+	name := aViennaNode identifier.
+	body := self
+		        generate: aViennaNode traceDefinitionList
+		        env: aDictionary.
+	theClass := classes at: (aViennaNode module ifNotNil: #identifier).
+	self
+		defineMethod: name , String cr , body
+		in: theClass
+		protocol: 'traces'
+		node: aViennaNode
+]
+
 { #category : 'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> noCheckAssignment: aVarName be: aValString [
 
@@ -1140,35 +1156,35 @@ ViennaVDM2SmalltalkClass >> returnStatement: aViennaNode env: aDictionary [
 { #category : 'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> stateDefinition: aViennaNode env: aDictionary [
 
-	| theClass stateConstructor quin |
+	| theClass stateConstructor hexa |
 	theClass := classes at: (aViennaNode module ifNotNil: #identifier).
 	stateConstructor := aViennaNode identifier.
-	quin := super stateDefinition: aViennaNode env: aDictionary.
+	hexa := super stateDefinition: aViennaNode env: aDictionary.
 	self
-		defineMethod: 'init' , String cr , quin first
+		defineMethod: 'init' , String cr , hexa first
 		in: theClass
 		protocol: 'state'
 		node: aViennaNode.
 	self
 		defineLazyMethodNamed: stateConstructor
-		initializer: quin second
+		initializer: hexa second
 		in: theClass
 		protocol: 'state'
 		node: aViennaNode.
 	aDictionary at: stateConstructor put: 'self ' , stateConstructor.
 	self
 		defineLazyMethodNamed: 'init_' , stateConstructor
-		initializer: quin third
+		initializer: hexa third
 		in: theClass
 		protocol: 'state'
 		node: aViennaNode init.
 	aDictionary
 		at: 'inv_' , stateConstructor
 		put: 'self inv_' , stateConstructor.
-	quin fourth ifNotNil: [
+	hexa fourth ifNotNil: [
 		self
 			defineLazyMethodNamed: 'inv_' , stateConstructor
-			initializer: quin fourth
+			initializer: hexa fourth
 			in: theClass
 			protocol: 'state'
 			node: aViennaNode inv ].
@@ -1184,13 +1200,13 @@ ViennaVDM2SmalltalkClass >> stateDefinition: aViennaNode env: aDictionary [
 		in: theClass
 		protocol: 'state'
 		node: aViennaNode.
-	(quin fourth notNil or: [ runtimeTypeCheck = true ]) ifTrue: [
+	(hexa fourth notNil or: [ runtimeTypeCheck = true ]) ifTrue: [
 		self
 			defineMethod: (self stringStreamContents: [ :stream |
 					 stream
 						 nextPutAll: 'inv';
 						 cr.
-					 quin fourth ifNotNil: [
+					 hexa fourth ifNotNil: [
 						 stream
 							 nextPutAll: ('(self inv_' , stateConstructor
 								  ,
@@ -1208,7 +1224,12 @@ ViennaVDM2SmalltalkClass >> stateDefinition: aViennaNode env: aDictionary [
 			protocol: 'state'
 			node: aViennaNode ].
 	self
-		defineMethod: 'state' , String cr , '    ^' , quin fifth
+		defineMethod: 'state' , String cr , '    ^' , hexa fifth
+		in: theClass
+		protocol: 'state'
+		node: aViennaNode.
+	self
+		defineMethod: 'state: _state' , String cr , '    ^' , hexa sixth
 		in: theClass
 		protocol: 'state'
 		node: aViennaNode

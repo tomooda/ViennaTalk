@@ -36,7 +36,7 @@ ViennaVDM2SmalltalkScript >> flatDocument: aViennaNode env: aDictionary [
 	| vars lazyDefs eagerDefs |
 	aViennaNode isViennaFlatDocumentNode ifFalse: [
 		^ self error: 'This is not a flat spec.' ].
-	vars := aViennaNode uniqueBoundIdentifiers , { 'state' }.
+	vars := aViennaNode uniqueBoundIdentifiers , { 'state'. '_state' }.
 	lazyDefs := OrderedCollection new.
 	eagerDefs := OrderedCollection new.
 	self definitions: aViennaNode do: [ :node |
@@ -100,26 +100,29 @@ ViennaVDM2SmalltalkScript >> operationImport: aViennaNode env: aDictionary [
 
 { #category : 'code generation-definitions' }
 ViennaVDM2SmalltalkScript >> stateDefinition: aViennaNode env: aDictionary [
-	| quin |
-	quin := super stateDefinition: aViennaNode env: aDictionary.
-	^ self
-		stringStreamContents: [ :stream | 
-			stream
-				nextPutAll: quin first;
-				nextPutAll: quin second;
-				nextPutAll: '.';
-				cr;
-				nextPutAll: quin third.
-			quin fourth
-				ifNotNil: [ :inv | 
-					stream
-						nextPutAll: '.';
-						cr;
-						nextPutAll: inv ].
-			stream
-				nextPutAll: '. state := [';
-				nextPutAll: quin fifth;
-				nextPutAll: ']' ]
+
+	| hexa |
+	hexa := super stateDefinition: aViennaNode env: aDictionary.
+	^ self stringStreamContents: [ :stream |
+		  stream
+			  nextPutAll: hexa first;
+			  nextPutAll: hexa second;
+			  nextPutAll: '.';
+			  cr;
+			  nextPutAll: hexa third.
+		  hexa fourth ifNotNil: [ :inv |
+			  stream
+				  nextPutAll: '.';
+				  cr;
+				  nextPutAll: inv ].
+		  stream
+			  nextPutAll: '. state := [';
+			  nextPutAll: hexa fifth;
+			  nextPutAll: '].';
+			  cr;
+			  nextPutAll: '_state := [:_state |';
+			  nextPutAll: hexa sixth;
+			  nextPutAll: ']' ]
 ]
 
 { #category : 'utilities' }
