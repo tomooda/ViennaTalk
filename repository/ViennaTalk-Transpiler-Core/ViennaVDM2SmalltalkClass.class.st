@@ -122,7 +122,7 @@ ViennaVDM2SmalltalkClass >> createModuleClassWithInstVars: anArrayOfString forMo
 ViennaVDM2SmalltalkClass >> createModuleClassWithInstVars: anArrayOfString1 stateVars: anArrayOfString2 forModule: aString env: aDictionary [
 
 	| className |
-	className := aString.
+	className := aDictionary at: aString ifAbsent: [ aString ].
 	^ (ShiftClassInstaller make: [ :builder |
 			   builder
 				   name: className asSymbol;
@@ -980,6 +980,22 @@ ViennaVDM2SmalltalkClass >> modularDocument: aViennaNode env: aDictionary [
 			in: documentClass
 			protocol: 'accessing'
 			node: nil ].
+	self
+		defineMethod:
+			'state ^ {' , ('.' join: (moduleNames collect: [ :name |
+					  name storeString , '->' , name uncapitalized , ' state' ]))
+			, '} asDictionary'
+		in: documentClass
+		protocol: 'accessing'
+		node: nil.
+	self
+		defineMethod:
+			'state: _state ' , ('. ' join: (moduleNames collect: [ :name |
+					  '_state at: ' , name storeString , ' ifPresent: [:s | '
+					  , name uncapitalized , ' state: s]' ]))
+		in: documentClass
+		protocol: 'accessing'
+		node: nil.
 	documentClass viennaEnv: aDictionary.
 	^ documentClass
 ]
@@ -989,10 +1005,10 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 
 	| env moduleName interfaceNode moduleBodyNode importModuleNames importClassNames instVars stateVars typeNames newClass |
 	env := aDictionary copy.
-	self generate: aViennaNode second env: env.
-	moduleName := aViennaNode first.
-	interfaceNode := aViennaNode second.
-	moduleBodyNode := aViennaNode third.
+	moduleName := aViennaNode identifier.
+	interfaceNode := aViennaNode interface.
+	moduleBodyNode := aViennaNode moduleBody.
+	self generate: interfaceNode env: env.
 	importModuleNames := interfaceNode first
 		                     ifNil: [ Array new ]
 		                     ifNotNil: [ :importDefinitionListNode |
@@ -1229,7 +1245,7 @@ ViennaVDM2SmalltalkClass >> stateDefinition: aViennaNode env: aDictionary [
 		protocol: 'state'
 		node: aViennaNode.
 	self
-		defineMethod: 'state: _state' , String cr , '    ^' , hexa sixth
+		defineMethod: 'state: _state' , String cr , hexa sixth
 		in: theClass
 		protocol: 'state'
 		node: aViennaNode

@@ -1,6 +1,9 @@
 Class {
 	#name : 'ViennaTranspiledObject',
 	#superclass : 'Object',
+	#instVars : [
+		'_document'
+	],
 	#classInstVars : [
 		'specificationDict',
 		'debuggerNodeMapDict',
@@ -108,6 +111,18 @@ ViennaTranspiledObject class >> viennaEnv [
 { #category : 'accessing' }
 ViennaTranspiledObject class >> viennaEnv: aDictionary [
 	viennaEnv := aDictionary
+]
+
+{ #category : 'private' }
+ViennaTranspiledObject >> _document [
+
+	^ _document
+]
+
+{ #category : 'private' }
+ViennaTranspiledObject >> _document: aViennaTranspiledModularDocument [
+
+	_document := aViennaTranspiledModularDocument
 ]
 
 { #category : 'evaluating' }
