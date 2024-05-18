@@ -1,41 +1,42 @@
 Class {
-	#name : #ViennaSetCardinalityNode,
-	#superclass : #ViennaUnaryOperatorExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaSetCardinalityNode',
+	#superclass : 'ViennaUnaryOperatorExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSetCardinalityNode >> formatOperatorWith: aViennaAbstractFormatter [
 
 	^ 'card'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSetCardinalityNode >> isViennaSetCardinalityNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSetCardinalityNode >> label [
 
 	^ 'SetCardinality'
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSetCardinalityNode >> operatorPrecedence [
 
 	^ 36
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaSetCardinalityNode >> paramType [
 
 	^ ViennaType any set
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaSetCardinalityNode >> returnTypeFor: aViennaType [
 
 	^ aViennaType isSet1Type

@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaSequenceEnumerationNode,
-	#superclass : #ViennaExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaSequenceEnumerationNode',
+	#superclass : 'ViennaExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaSequenceEnumerationNode class >> expressionList: aViennaExpressionListNode [
 
 	^ (self new: 1)
@@ -13,19 +14,19 @@ ViennaSequenceEnumerationNode class >> expressionList: aViennaExpressionListNode
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSequenceEnumerationNode >> expressionList [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSequenceEnumerationNode >> expressionList: aViennaExpressionListNode [
 
 	self at: 1 put: aViennaExpressionListNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSequenceEnumerationNode >> formatWith: aViennaAbstractFormatter [
 
 	| elements |
@@ -35,25 +36,25 @@ ViennaSequenceEnumerationNode >> formatWith: aViennaAbstractFormatter [
 		   ifEmpty: [ aViennaAbstractFormatter empty ]) ++ ']'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaSequenceEnumerationNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self expressionList freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaSequenceEnumerationNode >> isViennaSequenceEnumerationNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSequenceEnumerationNode >> label [
 
 	^ 'SequenceEnumeration'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaSequenceEnumerationNode >> maximalType [
 
 	| basetype |
@@ -65,7 +66,7 @@ ViennaSequenceEnumerationNode >> maximalType [
 		  ifNotEmpty: [ basetype seq1 ]
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaSequenceEnumerationNode >> maximalType: aViennaType [
 
 	| basetype |

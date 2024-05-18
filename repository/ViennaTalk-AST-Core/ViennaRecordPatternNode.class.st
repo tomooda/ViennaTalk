@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaRecordPatternNode,
-	#superclass : #ViennaPatternNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaRecordPatternNode',
+	#superclass : 'ViennaPatternNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaRecordPatternNode class >> name: aViennaNameNode patternList: aViennaPatternListNode [
 
 	^ (self new: 2)
@@ -14,13 +15,13 @@ ViennaRecordPatternNode class >> name: aViennaNameNode patternList: aViennaPatte
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaRecordPatternNode >> boundIdentifiersDo: aBlock [
 
 	self patternList boundIdentifiersDo: aBlock
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaRecordPatternNode >> formatWith: aViennaAbstractFormatter [
 
 	| constructor patternList |
@@ -35,32 +36,32 @@ ViennaRecordPatternNode >> formatWith: aViennaAbstractFormatter [
 			   ifFalse: [ patternList ]) ++ ')'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaRecordPatternNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self name freeIdentifiersExcept: aSet do: aBlock.
 	self patternList freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaRecordPatternNode >> isViennaRecordPatternNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRecordPatternNode >> label [
 
 	^ 'RecordPattern'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaRecordPatternNode >> maximalType [
 
 	^ self name resolve typecheck
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaRecordPatternNode >> maximalType: aViennaType [
 
 	aViennaType possibleTypesDo: [ :type |
@@ -71,25 +72,25 @@ ViennaRecordPatternNode >> maximalType: aViennaType [
 	super maximalType: self maximalType
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRecordPatternNode >> name [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRecordPatternNode >> name: aViennaNameNode [
 
 	self at: 1 put: aViennaNameNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRecordPatternNode >> patternList [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRecordPatternNode >> patternList: aViennaPatternListNode [
 
 	self at: 2 put: aViennaPatternListNode

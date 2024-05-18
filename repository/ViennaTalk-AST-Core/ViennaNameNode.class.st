@@ -1,35 +1,36 @@
 Class {
-	#name : #ViennaNameNode,
-	#superclass : #ViennaStateDesignatorNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaNameNode',
+	#superclass : 'ViennaStateDesignatorNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNameNode class >> isAbstract [
 
 	^ self = ViennaNameNode
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaNameNode >> asGlobalName [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaNameNode >> definition [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNameNode >> isViennaNameNode [
 
 	^ true
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaNameNode >> maximalType [
 
 	^ self definition ifNotNil: #typecheck ifNil: [

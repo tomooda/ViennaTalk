@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaTraceLetBestBindingNode,
-	#superclass : #ViennaTraceBindingDefinitionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaTraceLetBestBindingNode',
+	#superclass : 'ViennaTraceBindingDefinitionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaTraceLetBestBindingNode class >> multipleBind: aViennaMultipleBindNode conditionExpression: aViennaExpressionNode traceDefinition: aViennaTraceDefinitionNode [
 
 	^ (self new: 3)
@@ -15,19 +16,19 @@ ViennaTraceLetBestBindingNode class >> multipleBind: aViennaMultipleBindNode con
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTraceLetBestBindingNode >> conditionExpression [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTraceLetBestBindingNode >> conditionExpression: aViennaExpression [
 
 	self at: 2 put: aViennaExpression
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaTraceLetBestBindingNode >> definitionOfLocalName: aString [
 
 	| valDef |
@@ -39,7 +40,7 @@ ViennaTraceLetBestBindingNode >> definitionOfLocalName: aString [
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaTraceLetBestBindingNode >> findResolverForIdentifier: aString [
 
 	^ (self multipleBind bindsIdentifier: aString)
@@ -47,7 +48,7 @@ ViennaTraceLetBestBindingNode >> findResolverForIdentifier: aString [
 		  ifFalse: [ super findResolverForIdentifier: aString ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaTraceLetBestBindingNode >> formatWith: aViennaAbstractFormatter [
 
 	| multipleBind guard trace |
@@ -73,7 +74,7 @@ ViennaTraceLetBestBindingNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: trace
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTraceLetBestBindingNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	| boundIdentifiers |
@@ -87,13 +88,13 @@ ViennaTraceLetBestBindingNode >> freeIdentifiersExcept: aSet do: aBlock [
 		do: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTraceLetBestBindingNode >> label [
 
 	^ 'TraceLetBestBinding'
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaTraceLetBestBindingNode >> lookupIdentifier: aString [
 
 	^ (self multipleBind bindsIdentifier: aString)
@@ -101,7 +102,7 @@ ViennaTraceLetBestBindingNode >> lookupIdentifier: aString [
 		  ifFalse: [ nil ]
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaTraceLetBestBindingNode >> maximalType [
 
 	self multipleBind typecheck.
@@ -111,25 +112,25 @@ ViennaTraceLetBestBindingNode >> maximalType [
 	^ ViennaType unit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTraceLetBestBindingNode >> multipleBind [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTraceLetBestBindingNode >> multipleBind: aViennaMultipleBindNode [
 
 	self at: 1 put: aViennaMultipleBindNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTraceLetBestBindingNode >> traceDefinition [
 
 	^ self at: 3
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTraceLetBestBindingNode >> traceDefinition: aViennaTraceDefinitionNode [
 
 	self at: 3 put: aViennaTraceDefinitionNode

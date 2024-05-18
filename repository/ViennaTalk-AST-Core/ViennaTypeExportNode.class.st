@@ -1,17 +1,18 @@
 Class {
-	#name : #ViennaTypeExportNode,
-	#superclass : #ViennaExportNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaTypeExportNode',
+	#superclass : 'ViennaExportNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTypeExportNode class >> isAbstract [
 
 	^ self = ViennaTypeExportNode
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaTypeExportNode class >> name: aViennaNameNode [
 
 	^ (self new: 1)
@@ -19,25 +20,25 @@ ViennaTypeExportNode class >> name: aViennaNameNode [
 		  yourself
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaTypeExportNode >> exportedIdentifiersDo: aBlock [
 
 	aBlock value: self identifier
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTypeExportNode >> identifier [
 
 	^ self name identifier
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTypeExportNode >> isViennaTypeExportNode [
 
 	^ true
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaTypeExportNode >> maximalType [
 
 	self name resolve
@@ -53,19 +54,19 @@ ViennaTypeExportNode >> maximalType [
 	^ ViennaType unit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTypeExportNode >> name [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTypeExportNode >> name: aViennaNameNode [
 
 	self at: 1 put: aViennaNameNode
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 ViennaTypeExportNode >> removeIdentifier: aString [
 
 	self identifier = aString ifTrue: [

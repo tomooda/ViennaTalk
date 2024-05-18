@@ -1,17 +1,18 @@
 Class {
-	#name : #ViennaFunctionTypeArgsNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaFunctionTypeArgsNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaFunctionTypeArgsNode >> boundIdentifiersDo: aBlock [
 
 	self do: [ :typeArg | typeArg boundIdentifiersDo: aBlock ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaFunctionTypeArgsNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter empty ++ '[' ++ (aViennaAbstractFormatter
@@ -19,25 +20,25 @@ ViennaFunctionTypeArgsNode >> formatWith: aViennaAbstractFormatter [
 		   withAll: (aViennaAbstractFormatter formatAll: self)) ++ ']'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaFunctionTypeArgsNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self do: [ :arg | arg freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaFunctionTypeArgsNode >> isViennaFunctionTypeArgsNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFunctionTypeArgsNode >> label [
 
 	^ 'FunctionTypeArgs'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaFunctionTypeArgsNode >> maximalType [
 
 	^ ViennaType product: (self collect: #typecheck)

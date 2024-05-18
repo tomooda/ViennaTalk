@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaMapEnumerationNode,
-	#superclass : #ViennaExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaMapEnumerationNode',
+	#superclass : 'ViennaExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaMapEnumerationNode >> formatWith: aViennaAbstractFormatter [
 
 	| elements |
@@ -15,13 +16,13 @@ ViennaMapEnumerationNode >> formatWith: aViennaAbstractFormatter [
 		   ifEmpty: [ aViennaAbstractFormatter maplet ]) ++ '}'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaMapEnumerationNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self do: [ :maplet | maplet freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaMapEnumerationNode >> isLiteralInmap [
 
 	self do: [ :maplet |
@@ -30,19 +31,19 @@ ViennaMapEnumerationNode >> isLiteralInmap [
 	^ (self collect: #valueExpression) asSet size = self size
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapEnumerationNode >> isViennaMapEnumerationNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapEnumerationNode >> label [
 
 	^ 'MapEnumeration'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaMapEnumerationNode >> maximalType [
 
 	| keytype valuetype |
@@ -56,7 +57,7 @@ ViennaMapEnumerationNode >> maximalType [
 		  ifFalse: [ keytype mapTo: valuetype ]
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaMapEnumerationNode >> maximalType: aViennaType [
 
 	| keytype valuetype |

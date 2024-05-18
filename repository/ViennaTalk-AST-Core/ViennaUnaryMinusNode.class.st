@@ -1,41 +1,42 @@
 Class {
-	#name : #ViennaUnaryMinusNode,
-	#superclass : #ViennaUnaryOperatorExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaUnaryMinusNode',
+	#superclass : 'ViennaUnaryOperatorExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaUnaryMinusNode >> formatOperatorWith: aViennaAbstractFormatter [
 
 	^ '-'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaUnaryMinusNode >> isViennaUnaryMinusNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUnaryMinusNode >> label [
 
 	^ 'UnaryMinus'
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaUnaryMinusNode >> operatorPrecedence [
 
 	^ 36
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaUnaryMinusNode >> paramType [
 
 	^ ViennaType real
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaUnaryMinusNode >> returnTypeFor: aViennaType [
 
 	^ aViennaType isIntType

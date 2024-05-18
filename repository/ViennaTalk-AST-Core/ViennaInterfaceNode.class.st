@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaInterfaceNode,
-	#superclass : #ViennaInterfaceComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaInterfaceNode',
+	#superclass : 'ViennaInterfaceComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaInterfaceNode class >> exportsAll [
 
 	^ self
@@ -13,7 +14,7 @@ ViennaInterfaceNode class >> exportsAll [
 		  exportDefinition: ViennaExportDefinitionNode all
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaInterfaceNode class >> importDefinitionList: aViennaImportDefinitionListNode exportDefinition: aViennaExportDefinitionNode [
 
 	^ (self new: 2)
@@ -22,26 +23,26 @@ ViennaInterfaceNode class >> importDefinitionList: aViennaImportDefinitionListNo
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaInterfaceNode >> boundIdentifiersDo: aBlock [
 
 	self importDefinitionList ifNotNil: [ :importDefinitionList |
 		importDefinitionList boundIdentifiersDo: aBlock ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInterfaceNode >> exportDefinition [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInterfaceNode >> exportDefinition: aViennaExportDefinitionNode [
 
 	self at: 2 put: aViennaExportDefinitionNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaInterfaceNode >> formatWith: aViennaAbstractFormatter [
 
 	| importDefinitionList exportDefinition |
@@ -55,38 +56,38 @@ ViennaInterfaceNode >> formatWith: aViennaAbstractFormatter [
 	^ importDefinitionList ++ exportDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInterfaceNode >> importDefinitionList [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInterfaceNode >> importDefinitionList: aViennaImportDefinitionListNode [
 
 	self at: 1 put: aViennaImportDefinitionListNode
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaInterfaceNode >> importSignaturesDo: aBlock [
 
 	self importDefinitionList ifNotNil: [ :importDefinitionList |
 		importDefinitionList importSignaturesDo: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaInterfaceNode >> isViennaInterfaceNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaInterfaceNode >> label [
 
 	^ 'Interface'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaInterfaceNode >> maximalType [
 
 	self importDefinitionList ifNotNil: #typecheck.

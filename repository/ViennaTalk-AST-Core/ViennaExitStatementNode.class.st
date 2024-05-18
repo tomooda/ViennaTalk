@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaExitStatementNode,
-	#superclass : #ViennaStatementNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaExitStatementNode',
+	#superclass : 'ViennaStatementNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaExitStatementNode class >> expression: aViennaExpressionNode [
 
 	^ (self new: 1)
@@ -13,19 +14,19 @@ ViennaExitStatementNode class >> expression: aViennaExpressionNode [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExitStatementNode >> expression [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExitStatementNode >> expression: aViennaExpressionNode [
 
 	self at: 1 put: aViennaExpressionNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaExitStatementNode >> formatWith: aViennaAbstractFormatter [
 
 	^ self expression
@@ -36,25 +37,25 @@ ViennaExitStatementNode >> formatWith: aViennaAbstractFormatter [
 		  ifNil: [ aViennaAbstractFormatter keyword: 'exit' ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaExitStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self expression freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExitStatementNode >> isViennaExitStatementNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExitStatementNode >> label [
 
 	^ 'ExitStatement'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaExitStatementNode >> maximalType [
 
 	self expression typecheck.

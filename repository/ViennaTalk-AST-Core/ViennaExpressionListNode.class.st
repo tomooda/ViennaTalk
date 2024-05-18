@@ -1,17 +1,18 @@
 Class {
-	#name : #ViennaExpressionListNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaExpressionListNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaExpressionListNode >> boundIdentifiersDo: aBlock [
 
 	
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaExpressionListNode >> formatWith: aViennaAbstractFormatter [
 
 	| expressions |
@@ -24,32 +25,32 @@ ViennaExpressionListNode >> formatWith: aViennaAbstractFormatter [
 		  withAll: expressions
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaExpressionListNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self do: [ :expression |
 		expression freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExpressionListNode >> isViennaExpressionListNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExpressionListNode >> label [
 
 	^ 'ExpressionList'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaExpressionListNode >> listDelimiter [
 
 	^ ', '
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaExpressionListNode >> maximalType [
 
 	^ ViennaType product: (self collect: #typecheck)

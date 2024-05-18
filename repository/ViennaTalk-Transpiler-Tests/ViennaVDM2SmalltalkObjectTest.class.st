@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaVDM2SmalltalkObjectTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-Transpiler-Tests'
+	#name : 'ViennaVDM2SmalltalkObjectTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-Transpiler-Tests',
+	#package : 'ViennaTalk-Transpiler-Tests'
 }
 
-{ #category : #'tests-postconditions' }
+{ #category : 'tests-postconditions' }
 ViennaVDM2SmalltalkObjectTest >> testExplicitFunctionPostcondition [
 	| obj |
 	obj := self
@@ -20,7 +21,7 @@ ViennaVDM2SmalltalkObjectTest >> testExplicitFunctionPostcondition [
 	self should: [ obj evaluateExpression: 'pred(0)' ] raise: ViennaPostconditionViolation
 ]
 
-{ #category : #'tests-postconditions' }
+{ #category : 'tests-postconditions' }
 ViennaVDM2SmalltalkObjectTest >> testExtendedExplicitFunctionPostcondition [
 	| obj |
 	obj := self
@@ -35,7 +36,7 @@ ViennaVDM2SmalltalkObjectTest >> testExtendedExplicitFunctionPostcondition [
 	self should: [ obj evaluateExpression: 'pred(0)' ] raise: ViennaPostconditionViolation
 ]
 
-{ #category : #'tests-type checking' }
+{ #category : 'tests-type checking' }
 ViennaVDM2SmalltalkObjectTest >> testExtendedExplicitOperation [
 	| obj |
 	obj := self
@@ -57,7 +58,7 @@ ViennaVDM2SmalltalkObjectTest >> testExtendedExplicitOperation [
 		equals: true
 ]
 
-{ #category : #'tests-postconditions' }
+{ #category : 'tests-postconditions' }
 ViennaVDM2SmalltalkObjectTest >> testFunctionPostcondition [
 	| obj |
 	obj := self
@@ -73,7 +74,7 @@ ViennaVDM2SmalltalkObjectTest >> testFunctionPostcondition [
 	self should: [ obj evaluateExpression: 'pred(0)' ] raise: ViennaPostconditionViolation
 ]
 
-{ #category : #'tests-preconditions' }
+{ #category : 'tests-preconditions' }
 ViennaVDM2SmalltalkObjectTest >> testFunctionPrecondition [
 	| obj |
 	obj := self
@@ -89,7 +90,7 @@ ViennaVDM2SmalltalkObjectTest >> testFunctionPrecondition [
 	self should: [ obj evaluateExpression: 'pred(-1)' ] raise: ViennaPreconditionViolation
 ]
 
-{ #category : #'tests-type checking' }
+{ #category : 'tests-type checking' }
 ViennaVDM2SmalltalkObjectTest >> testFunctionTypecheck [
 	| obj |
 	obj := self
@@ -105,7 +106,7 @@ ViennaVDM2SmalltalkObjectTest >> testFunctionTypecheck [
 	self should: [ obj evaluateExpression: 'pred(-1)' ] raise: ViennaRuntimeTypeError
 ]
 
-{ #category : #'tests-postconditions' }
+{ #category : 'tests-postconditions' }
 ViennaVDM2SmalltalkObjectTest >> testImplilcitFunctionPostcondition [
 	| obj |
 	obj := self
@@ -121,7 +122,7 @@ ViennaVDM2SmalltalkObjectTest >> testImplilcitFunctionPostcondition [
 	self should: [ obj evaluateExpression: 'pred(0)' ] raise: ViennaImplicitEvaluationError
 ]
 
-{ #category : #'tests-postconditions' }
+{ #category : 'tests-postconditions' }
 ViennaVDM2SmalltalkObjectTest >> testImplilcitOperationPostcondition [
 	| obj |
 	obj := self
@@ -139,7 +140,7 @@ ViennaVDM2SmalltalkObjectTest >> testImplilcitOperationPostcondition [
 	self should: [ obj evaluateExpression: 'pred(0)' ] raise: ViennaPreconditionViolation
 ]
 
-{ #category : #'tests-imports' }
+{ #category : 'tests-imports' }
 ViennaVDM2SmalltalkObjectTest >> testImportsFunctions [
 	| obj |
 	obj := self
@@ -168,7 +169,7 @@ ViennaVDM2SmalltalkObjectTest >> testImportsFunctions [
 		raise: ViennaRuntimeTypeError
 ]
 
-{ #category : #'tests-imports' }
+{ #category : 'tests-imports' }
 ViennaVDM2SmalltalkObjectTest >> testImportsOperations [
 	| obj |
 	obj := self
@@ -199,7 +200,7 @@ ViennaVDM2SmalltalkObjectTest >> testImportsOperations [
 	self assert: (obj evaluateExpression: 'M`next()' ifError: [  ]) equals: 2
 ]
 
-{ #category : #'tests-imports' }
+{ #category : 'tests-imports' }
 ViennaVDM2SmalltalkObjectTest >> testImportsTypes [
 	| obj |
 	obj := self
@@ -225,7 +226,7 @@ ViennaVDM2SmalltalkObjectTest >> testImportsTypes [
 	self should: [ obj evaluateExpression: 'M`succ(-1)' ] raise: ViennaRuntimeTypeError
 ]
 
-{ #category : #'tests-imports' }
+{ #category : 'tests-imports' }
 ViennaVDM2SmalltalkObjectTest >> testImportsValues [
 	| obj |
 	obj := self
@@ -251,7 +252,7 @@ ViennaVDM2SmalltalkObjectTest >> testImportsValues [
 	self assert: (obj evaluateExpression: 'M`isZero(0)') equals: true
 ]
 
-{ #category : #'tests-postconditions' }
+{ #category : 'tests-postconditions' }
 ViennaVDM2SmalltalkObjectTest >> testOperationPostcondition [
 	| obj |
 	obj := self
@@ -271,7 +272,7 @@ ViennaVDM2SmalltalkObjectTest >> testOperationPostcondition [
 	self should: [ obj evaluateExpression: 'sub(9)' ] raise: ViennaPostconditionViolation
 ]
 
-{ #category : #'tests-preconditions' }
+{ #category : 'tests-preconditions' }
 ViennaVDM2SmalltalkObjectTest >> testOperationPrecondition [
 	| obj |
 	obj := self
@@ -291,7 +292,7 @@ ViennaVDM2SmalltalkObjectTest >> testOperationPrecondition [
 	self should: [ obj evaluateExpression: 'sub(9)' ] raise: ViennaPreconditionViolation
 ]
 
-{ #category : #'tests-type checking' }
+{ #category : 'tests-type checking' }
 ViennaVDM2SmalltalkObjectTest >> testOperationTypecheck [
 	| obj |
 	obj := self
@@ -312,7 +313,7 @@ ViennaVDM2SmalltalkObjectTest >> testOperationTypecheck [
 	self should: [ obj evaluateExpression: 'sub(9)' ] raise: ViennaRuntimeTypeError
 ]
 
-{ #category : #'tests-imports' }
+{ #category : 'tests-imports' }
 ViennaVDM2SmalltalkObjectTest >> testRenamedFunctions [
 	| obj |
 	obj := self
@@ -339,7 +340,7 @@ ViennaVDM2SmalltalkObjectTest >> testRenamedFunctions [
 	self should: [ obj evaluateExpression: 'M`next(-1)' ] raise: ViennaRuntimeTypeError
 ]
 
-{ #category : #'tests-imports' }
+{ #category : 'tests-imports' }
 ViennaVDM2SmalltalkObjectTest >> testRenamedOperations [
 	| obj |
 	obj := self
@@ -370,7 +371,7 @@ ViennaVDM2SmalltalkObjectTest >> testRenamedOperations [
 	self assert: (obj evaluateExpression: 'M`next()') equals: 2
 ]
 
-{ #category : #'tests-imports' }
+{ #category : 'tests-imports' }
 ViennaVDM2SmalltalkObjectTest >> testRenamedTypes [
 	| obj |
 	obj := self
@@ -396,7 +397,7 @@ ViennaVDM2SmalltalkObjectTest >> testRenamedTypes [
 	self should: [ obj evaluateExpression: 'M`succ(-1)' ] raise: ViennaRuntimeTypeError
 ]
 
-{ #category : #'tests-imports' }
+{ #category : 'tests-imports' }
 ViennaVDM2SmalltalkObjectTest >> testRenamedValues [
 	| obj |
 	obj := self
@@ -422,7 +423,7 @@ ViennaVDM2SmalltalkObjectTest >> testRenamedValues [
 	self assert: (obj evaluateExpression: 'M`isZero(0)') equals: true
 ]
 
-{ #category : #'tests-invariants' }
+{ #category : 'tests-invariants' }
 ViennaVDM2SmalltalkObjectTest >> testStateInvariant [
 	| obj |
 	obj := self
@@ -443,7 +444,7 @@ ViennaVDM2SmalltalkObjectTest >> testStateInvariant [
 	self should: [ obj evaluateExpression: 'sub(9)' ] raise: ViennaStateInvariantViolation
 ]
 
-{ #category : #'tests-invariants' }
+{ #category : 'tests-invariants' }
 ViennaVDM2SmalltalkObjectTest >> testTypeInvariant [
 	| obj |
 	obj := self
@@ -466,7 +467,7 @@ ViennaVDM2SmalltalkObjectTest >> testTypeInvariant [
 	self assert: (obj evaluateExpression: 'is_N0(-1)') equals: false
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaVDM2SmalltalkObjectTest >> transpile: aString runtimeTypeCheck: aBoolean1 runtimeAssertionCheck: aBoolean2 [
 	| ast transpiler |
 	ast := ViennaVDMParser new parse: aString.

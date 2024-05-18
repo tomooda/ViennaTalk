@@ -110,19 +110,20 @@ ViennaVDM2SmalltalkClass >> createDocumentClassWithInstVars: anArrayOfString1 st
 ]
 
 { #category : 'utilities' }
-ViennaVDM2SmalltalkClass >> createModuleClassWithInstVars: anArrayOfString forModule: aString env: aDictionary [
+ViennaVDM2SmalltalkClass >> createModuleClass: aString withInstVars: anArrayOfString env: aDictionary [
+
 	^ self
-		createModuleClassWithInstVars: anArrayOfString
-		stateVars: #()
-		forModule: aString
-		env: aDictionary
+		  createModuleClass: aString
+		  withInstVars: anArrayOfString
+		  stateVars: #(  )
+		  env: aDictionary
 ]
 
 { #category : 'utilities' }
-ViennaVDM2SmalltalkClass >> createModuleClassWithInstVars: anArrayOfString1 stateVars: anArrayOfString2 forModule: aString env: aDictionary [
+ViennaVDM2SmalltalkClass >> createModuleClass: aString withInstVars: anArrayOfString1 stateVars: anArrayOfString2 env: aDictionary [
 
 	| className |
-	className := aDictionary at: aString ifAbsent: [ aString ].
+	className := aString.
 	^ (ShiftClassInstaller make: [ :builder |
 			   builder
 				   name: className asSymbol;
@@ -943,7 +944,7 @@ ViennaVDM2SmalltalkClass >> modularDocument: aViennaNode env: aDictionary [
 						 nextPutAll: moduleName uncapitalized;
 						 nextPutAll: ' := ';
 						 nextPutAll: className;
-						 nextPutAll: ' new.';
+						 nextPutAll: ' new _document: self; yourself.';
 						 cr ].
 				 aViennaNode do: [ :moduleNode |
 					 | moduleName |
@@ -1039,10 +1040,10 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 	instVars := moduleBodyNode uniqueBoundIdentifiers copyWithoutAll:
 		            stateVars.
 	newClass := self
-		            createModuleClassWithInstVars:
-		            importClassNames , instVars
+		            createModuleClass:
+		            (defaultEnv at: moduleName ifAbsent: [ moduleName ])
+		            withInstVars: importClassNames , instVars
 		            stateVars: stateVars
-		            forModule: moduleName
 		            env: env.
 	classes at: moduleName put: newClass.
 	importModuleNames
@@ -1249,6 +1250,57 @@ ViennaVDM2SmalltalkClass >> stateDefinition: aViennaNode env: aDictionary [
 		in: theClass
 		protocol: 'state'
 		node: aViennaNode
+]
+
+{ #category : 'code generation-traces' }
+ViennaVDM2SmalltalkClass >> traceConcurrentExpression: aViennaNode env: aDictionary [
+
+	| codes |
+	codes := aViennaNode collect: [ :trace |
+		         self generate: trace env: aDictionary ].
+	^ self stringStreamContents: [ :stream |
+		  stream nextPutAll: '[ | state | state := self _docuemnt state. '.
+		  (1 to: aViennaNode size) permutationsDo: [ :indices |
+			  indices do: [ :index |
+				  stream
+					  nextPutAll: (codes at: index);
+					  nextPutAll: '. ' ].
+			  stream nextPutAll: ' self _document state: state' ].
+		  stream nextPutAll: '] value' ]
+]
+
+{ #category : 'code generation-traces' }
+ViennaVDM2SmalltalkClass >> traceDefinitionTerm: aViennaNode env: aDictionary [
+
+	^ self stringStreamContents: [ :stream |
+		  stream nextPutAll: '[ | state | state := self _document state. '.
+		  aViennaNode asArray
+			  do: [ :node |
+			  stream nextPutAll: (self generate: node env: aDictionary) ]
+			  separatedBy: [
+			  stream nextPutAll: '. self _document state: state. ' ].
+		  stream nextPutAll: '] value. ' ]
+]
+
+{ #category : 'code generation-traces' }
+ViennaVDM2SmalltalkClass >> traceRepeatDefinition: aViennaNode env: aDictionary [
+
+	^ aViennaNode traceRepeatPattern
+		  ifNotNil: [ :repeatPattern |
+			  self stringStreamContents: [ :stream |
+				  stream nextPutAll: '[ | state | state := self _document state. '.
+				  repeatPattern numbersDo: [ :n |
+					  n printOn: stream.
+					  stream
+						  nextPutAll: ' timesRepeat: [';
+						  nextPutAll:
+							  (self
+								   generate: aViennaNode traceCoreDefinition
+								   env: aDictionary);
+						  nextPutAll: ']. self _document state: state.' ].
+				  stream nextPutAll: '] value' ] ]
+		  ifNil: [
+		  self generate: aViennaNode traceCoreDefinition env: aDictionary ]
 ]
 
 { #category : 'utilities' }

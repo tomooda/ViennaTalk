@@ -1,35 +1,36 @@
 Class {
-	#name : #ViennaSequenceConcatenateNode,
-	#superclass : #ViennaBinaryOperatorExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaSequenceConcatenateNode',
+	#superclass : 'ViennaBinaryOperatorExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSequenceConcatenateNode >> formatOperatorWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter concat
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSequenceConcatenateNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
 
 	^ aBlock1 value
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaSequenceConcatenateNode >> isViennaSequenceConcatenateNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSequenceConcatenateNode >> label [
 
 	^ 'SequenceConcatenate'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSequenceConcatenateNode >> maximalType: aViennaType [
 
 	self expression1 maximalType: aViennaType.
@@ -37,25 +38,25 @@ ViennaSequenceConcatenateNode >> maximalType: aViennaType [
 	super maximalType: aViennaType
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSequenceConcatenateNode >> operatorPrecedence [
 
 	^ 31
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSequenceConcatenateNode >> paramType1 [
 
 	^ ViennaType any seq
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSequenceConcatenateNode >> paramType2 [
 
 	^ ViennaType any seq
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSequenceConcatenateNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
 
 	| basetype |

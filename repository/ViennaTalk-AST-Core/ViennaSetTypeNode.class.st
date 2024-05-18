@@ -1,17 +1,18 @@
 Class {
-	#name : #ViennaSetTypeNode,
-	#superclass : #ViennaUnaryTypeConstructorNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaSetTypeNode',
+	#superclass : 'ViennaUnaryTypeConstructorNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaSetTypeNode >> asMaximalViennaType [
 
 	^ self type asMaximalViennaType set
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSetTypeNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter setPrefix
@@ -19,19 +20,19 @@ ViennaSetTypeNode >> formatWith: aViennaAbstractFormatter [
 	  ++ aViennaAbstractFormatter setPostfix
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaSetTypeNode >> isViennaSetTypeNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSetTypeNode >> label [
 
 	^ 'SetType'
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSetTypeNode >> operatorPrecedence [
 
 	^ 5

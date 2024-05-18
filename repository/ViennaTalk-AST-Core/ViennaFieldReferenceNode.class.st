@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaFieldReferenceNode,
-	#superclass : #ViennaStateDesignatorNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaFieldReferenceNode',
+	#superclass : 'ViennaStateDesignatorNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaFieldReferenceNode class >> stateDesignator: aViennaStateDesignatorNode field: aString [
 
 	^ (self new: 2)
@@ -14,19 +15,19 @@ ViennaFieldReferenceNode class >> stateDesignator: aViennaStateDesignatorNode fi
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFieldReferenceNode >> field [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFieldReferenceNode >> field: aString [
 
 	self at: 2 put: aString
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaFieldReferenceNode >> formatWith: aViennaAbstractFormatter [
 
 	| stateDesignator field |
@@ -38,37 +39,37 @@ ViennaFieldReferenceNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: aViennaAbstractFormatter empty ++ '.' ++ field
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaFieldReferenceNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self stateDesignator freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaFieldReferenceNode >> isAssignable [
 
 	^ self stateDesignator isAssignable
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaFieldReferenceNode >> isViennaFieldReferenceNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFieldReferenceNode >> label [
 
 	^ 'FieldReference'
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaFieldReferenceNode >> localResolve [
 
 	^ self stateDesignator localResolve
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaFieldReferenceNode >> maximalType [
 
 	| type |
@@ -83,19 +84,19 @@ ViennaFieldReferenceNode >> maximalType [
 			  signal: 'The field ' , self field , ' is not accessible' ]
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaFieldReferenceNode >> resolve [
 
 	^ self stateDesignator resolve
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFieldReferenceNode >> stateDesignator [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFieldReferenceNode >> stateDesignator: aViennaStateDesignatorNode [
 
 	self at: 1 put: aViennaStateDesignatorNode

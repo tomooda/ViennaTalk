@@ -1,17 +1,18 @@
 Class {
-	#name : #ViennaPatternListNode,
-	#superclass : #ViennaPatternBindNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaPatternListNode',
+	#superclass : 'ViennaPatternBindNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaPatternListNode >> boundIdentifiersDo: aBlock [
 
 	self do: [ :pattern | pattern boundIdentifiersDo: aBlock ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaPatternListNode >> formatWith: aViennaAbstractFormatter [
 
 	| patterns |
@@ -24,31 +25,31 @@ ViennaPatternListNode >> formatWith: aViennaAbstractFormatter [
 		  withAll: patterns
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaPatternListNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self do: [ :pattern | pattern freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaPatternListNode >> isViennaPatternListNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaPatternListNode >> label [
 
 	^ 'PatternList'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaPatternListNode >> listDelimiter [
 
 	^ ', '
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaPatternListNode >> maximalType [
 
 	| type |
@@ -57,7 +58,7 @@ ViennaPatternListNode >> maximalType [
 	^ type
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaPatternListNode >> maximalType: aViennaType [
 
 	self do: [ :pattern | pattern maximalType: aViennaType ].

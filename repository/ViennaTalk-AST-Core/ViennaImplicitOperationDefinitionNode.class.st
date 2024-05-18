@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaImplicitOperationDefinitionNode,
-	#superclass : #ViennaTopLevelDefinitionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaImplicitOperationDefinitionNode',
+	#superclass : 'ViennaTopLevelDefinitionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaImplicitOperationDefinitionNode class >> access: aViennaAccessNode identifier: aString patternTypePairList: aViennaPatternTypePairListNode identifierTypePairList: aViennaIdentifierTypePairListNode externals: aViennaExternalsNode pre: aViennaExpression1 post: aViennaExpression2 exceptions: aViennaExceptionsNode [
 
 	^ (self new: 8)
@@ -20,7 +21,7 @@ ViennaImplicitOperationDefinitionNode class >> access: aViennaAccessNode identif
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaImplicitOperationDefinitionNode class >> identifier: aString patternTypePairList: aViennaPatternTypePairListNode identifierTypePairList: aViennaIdentifierTypePairListNode externals: aViennaExternalsNode pre: aViennaExpression1 post: aViennaExpression2 exceptions: aViennaExceptionsNode [
 
 	^ self
@@ -34,25 +35,25 @@ ViennaImplicitOperationDefinitionNode class >> identifier: aString patternTypePa
 		  exceptions: aViennaExceptionsNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaImplicitOperationDefinitionNode >> access [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaImplicitOperationDefinitionNode >> access: aViennaAccessNode [
 
 	self at: 1 put: aViennaAccessNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaImplicitOperationDefinitionNode >> argumentType [
 
 	^ self patternTypePairList type
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaImplicitOperationDefinitionNode >> asExport [
 
 	^ ViennaOperationExportNode
@@ -61,7 +62,7 @@ ViennaImplicitOperationDefinitionNode >> asExport [
 		  type: self type
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaImplicitOperationDefinitionNode >> asImportDefinitionIn: moduleNode [
 
 	^ ViennaImportDefinitionNode
@@ -74,7 +75,7 @@ ViennaImplicitOperationDefinitionNode >> asImportDefinitionIn: moduleNode [
 						     rename: nil)))
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaImplicitOperationDefinitionNode >> boundIdentifiersDo: aBlock [
 
 	aBlock cull: self identifier cull: self.
@@ -84,7 +85,7 @@ ViennaImplicitOperationDefinitionNode >> boundIdentifiersDo: aBlock [
 		aBlock cull: 'post_' , self identifier cull: self ]
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaImplicitOperationDefinitionNode >> definitionOfLocalName: aString [
 
 	self patternTypePairList
@@ -98,31 +99,31 @@ ViennaImplicitOperationDefinitionNode >> definitionOfLocalName: aString [
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaImplicitOperationDefinitionNode >> exceptions [
 
 	^ self at: 8
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaImplicitOperationDefinitionNode >> exceptions: aViennaExceptionsNode [
 
 	self at: 8 put: aViennaExceptionsNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaImplicitOperationDefinitionNode >> externals [
 
 	^ self at: 5
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaImplicitOperationDefinitionNode >> externals: aViennaExternalsNode [
 
 	self at: 5 put: aViennaExternalsNode
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaImplicitOperationDefinitionNode >> findResolverForIdentifier: aString [
 
 	^ ((self returnIdentifiers includes: aString) or: [
@@ -131,7 +132,7 @@ ViennaImplicitOperationDefinitionNode >> findResolverForIdentifier: aString [
 		  ifFalse: [ super findResolverForIdentifier: aString ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaImplicitOperationDefinitionNode >> formatWith: aViennaAbstractFormatter [
 
 	| access identifier patternTypePairList identifierTypePairList externals pre post exceptions |
@@ -170,7 +171,7 @@ ViennaImplicitOperationDefinitionNode >> formatWith: aViennaAbstractFormatter [
 	  ++ post ++ exceptions
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaImplicitOperationDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	| boundIdentifiers |
@@ -186,85 +187,85 @@ ViennaImplicitOperationDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock 
 		post freeIdentifiersExcept: boundIdentifiers do: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaImplicitOperationDefinitionNode >> hasScope [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaImplicitOperationDefinitionNode >> identifier [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaImplicitOperationDefinitionNode >> identifier: aString [
 
 	self at: 2 put: aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaImplicitOperationDefinitionNode >> identifierTypePairList [
 
 	^ self at: 4
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaImplicitOperationDefinitionNode >> identifierTypePairList: aViennaIdentifierTypePairListNode [
 
 	self at: 4 put: aViennaIdentifierTypePairListNode
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaImplicitOperationDefinitionNode >> isOperationDefinition [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaImplicitOperationDefinitionNode >> isViennaAccessOperationDefinitionNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaImplicitOperationDefinitionNode >> isViennaExportableTopLevelDefinitionNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaImplicitOperationDefinitionNode >> isViennaImplicitOperationDefinitionNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaImplicitOperationDefinitionNode >> isViennaImplicitOperationDefinitionNode: aString [
 
 	^ self identifier = aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaImplicitOperationDefinitionNode >> isViennaOperationDefinitionNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaImplicitOperationDefinitionNode >> isViennaOperationDefinitionNode: aString [
 
 	^ self identifier = aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaImplicitOperationDefinitionNode >> label [
 
 	^ 'ImplicitOperationDefinition'
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaImplicitOperationDefinitionNode >> lookupIdentifier: aString [
 
 	self patternTypePairList patternsDo: [ :pattern |
@@ -274,7 +275,7 @@ ViennaImplicitOperationDefinitionNode >> lookupIdentifier: aString [
 	^ nil
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaImplicitOperationDefinitionNode >> maximalType [
 
 	self maximalType: self type typecheck.
@@ -287,85 +288,85 @@ ViennaImplicitOperationDefinitionNode >> maximalType [
 	^ maximalType
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaImplicitOperationDefinitionNode >> parameterTypes [
 
 	^ self at: 3
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaImplicitOperationDefinitionNode >> parameterTypes: aViennaParameterTypesNode [
 
 	self at: 3 put: aViennaParameterTypesNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaImplicitOperationDefinitionNode >> parameters [
 
 	^ self patternTypePairList parameters
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaImplicitOperationDefinitionNode >> patternTypePairList [
 
 	^ self at: 3
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaImplicitOperationDefinitionNode >> patternTypePairList: aViennaPatternTypePairListNode [
 
 	self at: 3 put: aViennaPatternTypePairListNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaImplicitOperationDefinitionNode >> post [
 
 	^ self at: 7
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaImplicitOperationDefinitionNode >> post: aViennaExpressionNode [
 
 	self at: 7 put: aViennaExpressionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaImplicitOperationDefinitionNode >> pre [
 
 	^ self at: 6
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaImplicitOperationDefinitionNode >> pre: aViennaExpression [
 
 	self at: 6 put: aViennaExpression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaImplicitOperationDefinitionNode >> returnIdentifiers [
 
 	^ self identifierTypePairList identifiers
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaImplicitOperationDefinitionNode >> returnType [
 
 	^ self identifierTypePairList type
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaImplicitOperationDefinitionNode >> shortName [
 
 	^ self identifier
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaImplicitOperationDefinitionNode >> statement [
 
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaImplicitOperationDefinitionNode >> type [
 
 	^ (ViennaOperationTypeNode

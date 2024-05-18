@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaGlobalNameNode,
-	#superclass : #ViennaNameNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaGlobalNameNode',
+	#superclass : 'ViennaNameNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaGlobalNameNode class >> moduleIdentifier: aString1 identifier: aString2 [
 
 	^ (self new: 2)
@@ -14,13 +15,13 @@ ViennaGlobalNameNode class >> moduleIdentifier: aString1 identifier: aString2 [
 		  yourself
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaGlobalNameNode >> asGlobalName [
 
 	^ self
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaGlobalNameNode >> definition [
 
 	^ self
@@ -28,42 +29,42 @@ ViennaGlobalNameNode >> definition [
 		  module: self moduleIdentifier
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaGlobalNameNode >> formatWith: aViennaAbstractFormatter [
 
 	^ (aViennaAbstractFormatter moduleName: self moduleIdentifier) ++ '`'
 	  ++ (aViennaAbstractFormatter identifier: self identifier)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaGlobalNameNode >> freeIdentifiersExcept: aSet do: aBlock [
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaGlobalNameNode >> identifier [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaGlobalNameNode >> identifier: aString [
 
 	self at: 2 put: aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaGlobalNameNode >> isAssignable [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaGlobalNameNode >> isExportedNameNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaGlobalNameNode >> isFunctionNameNode [
 
 	^ self resolve
@@ -71,7 +72,7 @@ ViennaGlobalNameNode >> isFunctionNameNode [
 		  ifNil: [ false ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaGlobalNameNode >> isOperationNameNode [
 
 	^ self resolve
@@ -79,7 +80,7 @@ ViennaGlobalNameNode >> isOperationNameNode [
 		  ifNil: [ false ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaGlobalNameNode >> isTypeNameNode [
 
 	^ self resolve
@@ -87,7 +88,7 @@ ViennaGlobalNameNode >> isTypeNameNode [
 		  ifNil: [ false ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaGlobalNameNode >> isValueNameNode [
 
 	^ self resolve
@@ -95,26 +96,26 @@ ViennaGlobalNameNode >> isValueNameNode [
 		  ifNil: [ false ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaGlobalNameNode >> isViennaGlobalNameNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaGlobalNameNode >> isViennaGlobalNameNode: aString identifier: anotherString [
 
 	^ self moduleIdentifier = aString and: [
 		  self identifier = anotherString ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaGlobalNameNode >> label [
 
 	^ 'GlobalName'
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaGlobalNameNode >> localResolve [
 
 	^ (self module importDefinitionAtModuleIdentifier:
@@ -128,26 +129,26 @@ ViennaGlobalNameNode >> localResolve [
 						  ifNone: [ nil ] ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaGlobalNameNode >> moduleIdentifier [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaGlobalNameNode >> moduleIdentifier: aString [
 
 	self at: 1 put: aString
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaGlobalNameNode >> resolve [
 
 	^ (self moduleNamed: self moduleIdentifier) ifNotNil: [ :module |
 		  module resolveIdentifier: self identifier ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaGlobalNameNode >> shortName [
 
 	^ self moduleIdentifier , '`' , self identifier

@@ -1,41 +1,42 @@
 Class {
-	#name : #ViennaSequenceIndicesNode,
-	#superclass : #ViennaUnaryOperatorExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaSequenceIndicesNode',
+	#superclass : 'ViennaUnaryOperatorExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSequenceIndicesNode >> formatOperatorWith: aViennaAbstractFormatter [
 
 	^ 'inds'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaSequenceIndicesNode >> isViennaSequenceIndicesNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSequenceIndicesNode >> label [
 
 	^ 'SequenceIndices'
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSequenceIndicesNode >> operatorPrecedence [
 
 	^ 36
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaSequenceIndicesNode >> paramType [
 
 	^ ViennaType any seq
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaSequenceIndicesNode >> returnTypeFor: aViennaType [
 
 	^ aViennaType isSeq1Type

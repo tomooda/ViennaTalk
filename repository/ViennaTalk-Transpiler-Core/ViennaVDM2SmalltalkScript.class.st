@@ -87,6 +87,18 @@ ViennaVDM2SmalltalkScript >> module: aViennaNode env: aDictionary [
 	
 ]
 
+{ #category : 'code generation-traces' }
+ViennaVDM2SmalltalkScript >> namedTrace: aViennaNode env: aDictionary [
+
+	^ self stringStreamContents: [ :stream |
+		  stream
+			  nextPutAll: aViennaNode identifier;
+			  nextPutAll: ' := [';
+			  nextPutAll:
+				  (self generate: aViennaNode traceDefinitionList env: aDictionary).
+		  stream nextPutAll: '].' ]
+]
+
 { #category : 'code generation-definitions' }
 ViennaVDM2SmalltalkScript >> operationDefinitions: aViennaNode env: aDictionary [
 	^ '.' , String cr join: (aViennaNode collect: [ :node | self generate: node env: aDictionary ])
@@ -123,6 +135,56 @@ ViennaVDM2SmalltalkScript >> stateDefinition: aViennaNode env: aDictionary [
 			  nextPutAll: '_state := [:_state |';
 			  nextPutAll: hexa sixth;
 			  nextPutAll: ']' ]
+]
+
+{ #category : 'code generation-traces' }
+ViennaVDM2SmalltalkScript >> traceConcurrentExpression: aViennaNode env: aDictionary [
+
+	| codes |
+	codes := aViennaNode collect: [ :trace |
+		         self generate: trace env: aDictionary ].
+	^ self stringStreamContents: [ :stream |
+		  stream nextPutAll: '[ | __state | __state := state value. '.
+		  (1 to: aViennaNode size) permutationsDo: [ :indices |
+			  indices do: [ :index |
+				  stream
+					  nextPutAll: (codes at: index);
+					  nextPutAll: '. ' ].
+			  stream nextPutAll: ' _state value: __state' ].
+		  stream nextPutAll: '] value' ]
+]
+
+{ #category : 'code generation-traces' }
+ViennaVDM2SmalltalkScript >> traceDefinitionTerm: aViennaNode env: aDictionary [
+
+	^ self stringStreamContents: [ :stream |
+		  stream nextPutAll: '[ | __state | __state := state value. '.
+		  aViennaNode asArray
+			  do: [ :node |
+			  stream nextPutAll: (self generate: node env: aDictionary) ]
+			  separatedBy: [ stream nextPutAll: '. _state value: __state.  ' ].
+		  stream nextPutAll: '] value. ' ]
+]
+
+{ #category : 'code generation-traces' }
+ViennaVDM2SmalltalkScript >> traceRepeatDefinition: aViennaNode env: aDictionary [
+
+	^ aViennaNode traceRepeatPattern
+		  ifNotNil: [ :repeatPattern |
+			  self stringStreamContents: [ :stream |
+				  stream nextPutAll: '[ | __state | __state := state value. '.
+				  repeatPattern numbersDo: [ :n |
+					  n printOn: stream.
+					  stream
+						  nextPutAll: ' timesRepeat: [';
+						  nextPutAll:
+							  (self
+								   generate: aViennaNode traceCoreDefinition
+								   env: aDictionary);
+						  nextPutAll: ']. _state value: __state.' ].
+				  stream nextPutAll: '] value' ] ]
+		  ifNil: [
+		  self generate: aViennaNode traceCoreDefinition env: aDictionary ]
 ]
 
 { #category : 'utilities' }

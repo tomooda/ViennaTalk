@@ -1,17 +1,18 @@
 Class {
-	#name : #ViennaImportNode,
-	#superclass : #ViennaImportComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaImportNode',
+	#superclass : 'ViennaImportComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaImportNode class >> isAbstract [
 
 	^ self = ViennaImportNode
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaImportNode >> asGlobalName [
 
 	^ (ViennaGlobalNameNode
@@ -21,56 +22,56 @@ ViennaImportNode >> asGlobalName [
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaImportNode >> boundIdentifiersDo: aBlock [
 
 	self rename ifNotNil: [ :name |
 		aBlock cull: name identifier cull: self ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaImportNode >> identifier [
 
 	^ self name identifier
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaImportNode >> identifier: aString [
 
 	^ self name identifier: aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaImportNode >> isViennaImportNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaImportNode >> isViennaImportNode: aString [
 
 	^ self identifier = aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaImportNode >> moduleIdentifier [
 
 	^ parent ifNotNil: #moduleIdentifier
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaImportNode >> name [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaImportNode >> rename [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaImportNode >> shortName [
 
 	^ self name shortName

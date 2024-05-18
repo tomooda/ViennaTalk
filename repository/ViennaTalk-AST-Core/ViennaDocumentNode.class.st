@@ -1,35 +1,36 @@
 Class {
-	#name : #ViennaDocumentNode,
-	#superclass : #ViennaNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaDocumentNode',
+	#superclass : 'ViennaNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaDocumentNode class >> isAbstract [
 
 	^ self = ViennaDocumentNode
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaDocumentNode >> boundIdentifiersDo: aBlock [
 
 	self do: [ :node | node boundIdentifiersDo: aBlock ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaDocumentNode >> document [
 
 	^ self
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaDocumentNode >> findResolverForIdentifier: aString [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaDocumentNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter
@@ -37,25 +38,25 @@ ViennaDocumentNode >> formatWith: aViennaAbstractFormatter [
 		  withAll: (aViennaAbstractFormatter formatAll: self)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaDocumentNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self do: [ :node | node freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaDocumentNode >> hasScope [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaDocumentNode >> isViennaDocumentNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaDocumentNode >> label [
 
 	^ 'Document'

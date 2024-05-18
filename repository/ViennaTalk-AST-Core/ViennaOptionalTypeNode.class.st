@@ -1,30 +1,31 @@
 Class {
-	#name : #ViennaOptionalTypeNode,
-	#superclass : #ViennaUnaryTypeConstructorNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaOptionalTypeNode',
+	#superclass : 'ViennaUnaryTypeConstructorNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaOptionalTypeNode >> asMaximalViennaType [
 
 	^ self type asMaximalViennaType optional
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaOptionalTypeNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter empty ++ '['
 	  ++ (aViennaAbstractFormatter format: self type) ++ ']'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaOptionalTypeNode >> isViennaOptionalTypeNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaOptionalTypeNode >> label [
 
 	^ 'OptionalType'

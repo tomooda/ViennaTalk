@@ -1,18 +1,19 @@
 Class {
-	#name : #ViennaLocalDefinitionListNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaLocalDefinitionListNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaLocalDefinitionListNode >> boundIdentifiersDo: aBlock [
 
 	self do: [ :localDefinition |
 		localDefinition boundIdentifiersDo: aBlock ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaLocalDefinitionListNode >> formatWith: aViennaAbstractFormatter [
 
 	| localDefinitions |
@@ -28,32 +29,32 @@ ViennaLocalDefinitionListNode >> formatWith: aViennaAbstractFormatter [
 		  aViennaAbstractFormatter join: ', ' withAll: localDefinitions ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaLocalDefinitionListNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self do: [ :localDefinition |
 		localDefinition freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaLocalDefinitionListNode >> isViennaLocalDefinitionListNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLocalDefinitionListNode >> label [
 
 	^ 'LocalDefinitionList'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaLocalDefinitionListNode >> listDelimiter [
 
 	^ ',' , String cr
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaLocalDefinitionListNode >> maximalType [
 
 	self do: #typecheck.

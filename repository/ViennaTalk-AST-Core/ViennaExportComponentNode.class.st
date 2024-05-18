@@ -1,17 +1,18 @@
 Class {
-	#name : #ViennaExportComponentNode,
-	#superclass : #ViennaInterfaceComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaExportComponentNode',
+	#superclass : 'ViennaInterfaceComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExportComponentNode class >> isAbstract [
 
 	^ self = ViennaExportComponentNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExportComponentNode >> exportedIdentifiers [
 
 	| identifiers |
@@ -21,13 +22,13 @@ ViennaExportComponentNode >> exportedIdentifiers [
 	^ identifiers asArray
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaExportComponentNode >> exportedIdentifiersDo: aBlock [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExportComponentNode >> exportsIdentifier: aString [
 
 	self exportedIdentifiersDo: [ :identifier |
@@ -35,7 +36,7 @@ ViennaExportComponentNode >> exportsIdentifier: aString [
 	^ false
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 ViennaExportComponentNode >> removeIdentifier: aString [
 
 	^ self subclassResponsibility

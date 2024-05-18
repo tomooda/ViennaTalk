@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaCasesStatementAlternativeNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaCasesStatementAlternativeNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaCasesStatementAlternativeNode class >> patternList: aViennaPatternListNode statement: aViennaStatementNode [
 
 	^ (self new: 2)
@@ -14,13 +15,13 @@ ViennaCasesStatementAlternativeNode class >> patternList: aViennaPatternListNode
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaCasesStatementAlternativeNode >> boundIdentifiersDo: aBlock [
 
 	
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaCasesStatementAlternativeNode >> definitionOfLocalName: aString [
 
 	self patternList
@@ -30,7 +31,7 @@ ViennaCasesStatementAlternativeNode >> definitionOfLocalName: aString [
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaCasesStatementAlternativeNode >> findResolverForIdentifier: aString [
 
 	^ (self patternList bindsIdentifier: aString)
@@ -38,7 +39,7 @@ ViennaCasesStatementAlternativeNode >> findResolverForIdentifier: aString [
 		  ifFalse: [ super findResolverForIdentifier: aString ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaCasesStatementAlternativeNode >> formatWith: aViennaAbstractFormatter [
 
 	| patternList statement |
@@ -49,7 +50,7 @@ ViennaCasesStatementAlternativeNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: statement
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaCasesStatementAlternativeNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self patternList freeIdentifiersExcept: aSet do: aBlock.
@@ -59,25 +60,25 @@ ViennaCasesStatementAlternativeNode >> freeIdentifiersExcept: aSet do: aBlock [
 		do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaCasesStatementAlternativeNode >> hasScope [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaCasesStatementAlternativeNode >> isViennaCasesStatementAlternativeNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCasesStatementAlternativeNode >> label [
 
 	^ 'CasesStatementAlternative'
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaCasesStatementAlternativeNode >> lookupIdentifier: aString [
 
 	^ (self bindsIdentifier: aString)
@@ -85,31 +86,31 @@ ViennaCasesStatementAlternativeNode >> lookupIdentifier: aString [
 		  ifFalse: [ nil ]
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaCasesStatementAlternativeNode >> maximalType [
 
 	^ self statement typecheck
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaCasesStatementAlternativeNode >> patternList [
 
 	^ self at: 1
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaCasesStatementAlternativeNode >> patternList: aViennaPatternListNode [
 
 	self at: 1 put: aViennaPatternListNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaCasesStatementAlternativeNode >> statement [
 
 	^ self at: 2
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaCasesStatementAlternativeNode >> statement: aViennaStatementNode [
 
 	self at: 2 put: aViennaStatementNode

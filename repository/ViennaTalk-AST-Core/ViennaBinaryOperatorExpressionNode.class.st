@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaBinaryOperatorExpressionNode,
-	#superclass : #ViennaExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaBinaryOperatorExpressionNode',
+	#superclass : 'ViennaExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaBinaryOperatorExpressionNode class >> expression: aViennaExpressionNode1 expression: aViennaExpressionNode2 [
 
 	^ (self new: 2)
@@ -14,43 +15,43 @@ ViennaBinaryOperatorExpressionNode class >> expression: aViennaExpressionNode1 e
 		  yourself
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaBinaryOperatorExpressionNode class >> isAbstract [
 
 	^ self = ViennaBinaryOperatorExpressionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaBinaryOperatorExpressionNode >> expression1 [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaBinaryOperatorExpressionNode >> expression1: aViennaExpressionNode [
 
 	self at: 1 put: aViennaExpressionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaBinaryOperatorExpressionNode >> expression2 [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaBinaryOperatorExpressionNode >> expression2: aViennaExpressionNode [
 
 	self at: 2 put: aViennaExpressionNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaBinaryOperatorExpressionNode >> formatOperatorWith: aViennaAbstractFormatter [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaBinaryOperatorExpressionNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter
@@ -59,26 +60,26 @@ ViennaBinaryOperatorExpressionNode >> formatWith: aViennaAbstractFormatter [
 		  arg: (aViennaAbstractFormatter format: self expression2)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaBinaryOperatorExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self expression1 freeIdentifiersExcept: aSet do: aBlock.
 	self expression2 freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaBinaryOperatorExpressionNode >> isViennaBinaryOperatorExpression [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaBinaryOperatorExpressionNode >> isViennaBinaryOperatorExpressionNode [
 
 	^ true
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaBinaryOperatorExpressionNode >> maximalType [
 
 	^ ViennaType
@@ -94,19 +95,19 @@ ViennaBinaryOperatorExpressionNode >> maximalType [
 		  ifUnit: [ ViennaTypeError signalOn: self ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaBinaryOperatorExpressionNode >> paramType1 [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaBinaryOperatorExpressionNode >> paramType2 [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaBinaryOperatorExpressionNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
 
 	^ self subclassResponsibility

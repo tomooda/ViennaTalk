@@ -1,41 +1,42 @@
 Class {
-	#name : #ViennaSequenceHeadNode,
-	#superclass : #ViennaUnaryOperatorExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaSequenceHeadNode',
+	#superclass : 'ViennaUnaryOperatorExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSequenceHeadNode >> formatOperatorWith: aViennaAbstractFormatter [
 
 	^ 'hd'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSequenceHeadNode >> isViennaSequenceHeadNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSequenceHeadNode >> label [
 
 	^ 'SequenceHead'
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSequenceHeadNode >> operatorPrecedence [
 
 	^ 36
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaSequenceHeadNode >> paramType [
 
 	^ ViennaType any seq1
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaSequenceHeadNode >> returnTypeFor: aViennaType [
 
 	^ aViennaType basetype

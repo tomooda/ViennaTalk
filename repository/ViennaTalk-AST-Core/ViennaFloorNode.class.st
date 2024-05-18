@@ -1,41 +1,42 @@
 Class {
-	#name : #ViennaFloorNode,
-	#superclass : #ViennaUnaryOperatorExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaFloorNode',
+	#superclass : 'ViennaUnaryOperatorExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaFloorNode >> formatOperatorWith: aViennaAbstractFormatter [
 
 	^ 'floor'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaFloorNode >> isViennaFloorNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFloorNode >> label [
 
 	^ 'Floor'
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaFloorNode >> operatorPrecedence [
 
 	^ 36
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaFloorNode >> paramType [
 
 	^ ViennaType real
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaFloorNode >> returnTypeFor: aViennaType [
 
 	^ aViennaType isIntType

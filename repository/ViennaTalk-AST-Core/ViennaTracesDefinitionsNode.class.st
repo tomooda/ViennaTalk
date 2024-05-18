@@ -1,23 +1,24 @@
 Class {
-	#name : #ViennaTracesDefinitionsNode,
-	#superclass : #ViennaSectionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaTracesDefinitionsNode',
+	#superclass : 'ViennaSectionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTracesDefinitionsNode >> isViennaTracesDefinitionsNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTracesDefinitionsNode >> label [
 
 	^ 'TracesDefinitions'
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaTracesDefinitionsNode >> sectionName [
 
 	^ 'traces'

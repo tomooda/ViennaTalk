@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaOthersStatementNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaOthersStatementNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaOthersStatementNode class >> statement: aViennaStatementNode [
 
 	^ (self new: 1)
@@ -13,13 +14,13 @@ ViennaOthersStatementNode class >> statement: aViennaStatementNode [
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaOthersStatementNode >> boundIdentifiersDo: aBlock [
 
 	
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaOthersStatementNode >> formatWith: aViennaAbstractFormatter [
 
 	| statement |
@@ -30,37 +31,37 @@ ViennaOthersStatementNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: statement
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaOthersStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self statement freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaOthersStatementNode >> isViennaOthersStatementNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaOthersStatementNode >> label [
 
 	^ 'OthersStatement'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaOthersStatementNode >> maximalType [
 
 	^ self statement typecheck
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaOthersStatementNode >> statement [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaOthersStatementNode >> statement: aViennaStatementNode [
 
 	self at: 1 put: aViennaStatementNode

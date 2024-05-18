@@ -1,47 +1,48 @@
 Class {
-	#name : #ViennaSetIntersectionNode,
-	#superclass : #ViennaBinaryOperatorExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaSetIntersectionNode',
+	#superclass : 'ViennaBinaryOperatorExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSetIntersectionNode >> formatOperatorWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter inter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSetIntersectionNode >> isViennaSetIntersectionNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSetIntersectionNode >> label [
 
 	^ 'SetIntersection'
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSetIntersectionNode >> operatorPrecedence [
 
 	^ 32
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSetIntersectionNode >> paramType1 [
 
 	^ ViennaType any set
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSetIntersectionNode >> paramType2 [
 
 	^ ViennaType any set
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSetIntersectionNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
 
 	^ (aViennaType1 basetype isCompatibleWith: aViennaType2 basetype)

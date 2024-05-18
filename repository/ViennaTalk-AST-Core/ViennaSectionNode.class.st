@@ -1,23 +1,24 @@
 Class {
-	#name : #ViennaSectionNode,
-	#superclass : #ViennaNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaSectionNode',
+	#superclass : 'ViennaNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaSectionNode class >> isAbstract [
 
 	^ self = ViennaSectionNode
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaSectionNode >> boundIdentifiersDo: aBlock [
 
 	self do: [ :node | node boundIdentifiersDo: aBlock ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSectionNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter
@@ -33,50 +34,50 @@ ViennaSectionNode >> formatWith: aViennaAbstractFormatter [
 					   ++ aViennaAbstractFormatter cr ])
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaSectionNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self do: [ :node | node freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaSectionNode >> isViennaSectionNode [
 
 	^ true
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaSectionNode >> maximalType [
 
 	self do: #typecheck.
 	^ ViennaType unit
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaSectionNode >> remove [
 
 	self parent remove: self
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaSectionNode >> removeIfEmpty [
 
 	self ifEmpty: [ self remove ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSectionNode >> sectionName [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSectionNode >> shortName [
 
 	^ self sectionName
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaSectionNode >> toplevelDefinitionsDo: aBlock [
 
 	self do: aBlock

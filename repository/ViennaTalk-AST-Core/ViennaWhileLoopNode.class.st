@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaWhileLoopNode,
-	#superclass : #ViennaStatementNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaWhileLoopNode',
+	#superclass : 'ViennaStatementNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaWhileLoopNode class >> expression: aViennaExpressionNode statement: aViennaStatementNode [
 
 	^ (self new: 2)
@@ -14,19 +15,19 @@ ViennaWhileLoopNode class >> expression: aViennaExpressionNode statement: aVienn
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaWhileLoopNode >> expression [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaWhileLoopNode >> expression: aViennaExpressionNode [
 
 	self at: 1 put: aViennaExpressionNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaWhileLoopNode >> formatWith: aViennaAbstractFormatter [
 
 	| expression statement |
@@ -41,39 +42,39 @@ ViennaWhileLoopNode >> formatWith: aViennaAbstractFormatter [
 				   insertCrIfNeeded: statement)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaWhileLoopNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self expression freeIdentifiersExcept: aSet do: aBlock.
 	self statement freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaWhileLoopNode >> isViennaWhileLoopNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaWhileLoopNode >> label [
 
 	^ 'WhileLoop'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaWhileLoopNode >> maximalType [
 
 	self expression typecheck: ViennaType bool.
 	^ self statement typecheck
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaWhileLoopNode >> statement [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaWhileLoopNode >> statement: aViennaStatementNode [
 
 	self at: 2 put: aViennaStatementNode

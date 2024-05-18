@@ -1,18 +1,19 @@
 Class {
-	#name : #ViennaBlockStatementNode,
-	#superclass : #ViennaStatementNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaBlockStatementNode',
+	#superclass : 'ViennaStatementNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaBlockStatementNode >> dclStatement [
 
 	^ (self notEmpty and: [ self first isViennaDclStatementNode ])
 		  ifTrue: [ self first ]
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaBlockStatementNode >> definitionOfLocalName: aString [
 
 	self do: [ :statement |
@@ -25,7 +26,7 @@ ViennaBlockStatementNode >> definitionOfLocalName: aString [
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaBlockStatementNode >> findResolverForIdentifier: aString [
 
 	self dclStatement ifNotNil: [ :dclStatement |
@@ -33,7 +34,7 @@ ViennaBlockStatementNode >> findResolverForIdentifier: aString [
 	^ super findResolverForIdentifier: aString
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaBlockStatementNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter empty ++ '(' ++ (aViennaAbstractFormatter
@@ -43,7 +44,7 @@ ViennaBlockStatementNode >> formatWith: aViennaAbstractFormatter [
 		   withAll: (aViennaAbstractFormatter formatAll: self)) ++ ')'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaBlockStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	| boundIdentifiers |
@@ -54,31 +55,31 @@ ViennaBlockStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
 		(self at: index) freeIdentifiersExcept: boundIdentifiers do: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaBlockStatementNode >> hasDclStatement [
 
 	^ self notEmpty and: [ self first isViennaDclStatementNode ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaBlockStatementNode >> hasScope [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaBlockStatementNode >> isViennaBlockStatementNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaBlockStatementNode >> label [
 
 	^ 'BlockStatement'
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaBlockStatementNode >> lookupIdentifier: aString [
 
 	self dclStatement ifNotNil: [ :dclStatement |
@@ -89,7 +90,7 @@ ViennaBlockStatementNode >> lookupIdentifier: aString [
 	^ super findResolverForIdentifier: aString
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaBlockStatementNode >> maximalType [
 
 	self do: #typecheck.

@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaStateDefinitionNode,
-	#superclass : #ViennaTopLevelDefinitionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaStateDefinitionNode',
+	#superclass : 'ViennaTopLevelDefinitionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaStateDefinitionNode class >> empty [
 
 	^ self
@@ -22,7 +23,7 @@ ViennaStateDefinitionNode class >> empty [
 									      expressionList: ViennaExpressionListNode empty))))
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaStateDefinitionNode class >> identifier: aString fieldList: aViennaFieldListNode inv: aViennaInvariantNode init: aViennaInitialisationNode [
 
 	^ (self new: 4)
@@ -33,7 +34,7 @@ ViennaStateDefinitionNode class >> identifier: aString fieldList: aViennaFieldLi
 		  yourself
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaStateDefinitionNode >> asMaximalViennaType [
 
 	^ ViennaType
@@ -41,7 +42,7 @@ ViennaStateDefinitionNode >> asMaximalViennaType [
 		  of: self fieldList asMaximalViennaType
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaStateDefinitionNode >> boundIdentifiersDo: aBlock [
 
 	aBlock cull: self identifier cull: self.
@@ -53,25 +54,25 @@ ViennaStateDefinitionNode >> boundIdentifiersDo: aBlock [
 		aBlock cull: 'init_' , self identifier cull: self ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaStateDefinitionNode >> fieldList [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaStateDefinitionNode >> fieldList: aViennaFieldListNode [
 
 	self at: 2 put: aViennaFieldListNode
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaStateDefinitionNode >> fieldsDo: aBlock [
 
 	self fieldList do: aBlock
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaStateDefinitionNode >> formatWith: aViennaAbstractFormatter [
 
 	| identifier stateFieldList invariant initialisation |
@@ -100,7 +101,7 @@ ViennaStateDefinitionNode >> formatWith: aViennaAbstractFormatter [
 	  ++ (aViennaAbstractFormatter keyword: 'end')
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaStateDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self fieldList freeIdentifiersExcept: aSet do: aBlock.
@@ -110,67 +111,67 @@ ViennaStateDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
 		init freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaStateDefinitionNode >> hasStateVariableIdentifier: aString [
 
 	^ self fieldList anySatisfy: [ :field | field identifier = aString ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaStateDefinitionNode >> identifier [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaStateDefinitionNode >> identifier: aString [
 
 	self at: 1 put: aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaStateDefinitionNode >> init [
 
 	^ self at: 4
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaStateDefinitionNode >> init: aViennaInitialisationNode [
 
 	self at: 4 put: aViennaInitialisationNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaStateDefinitionNode >> inv [
 
 	^ self at: 3
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaStateDefinitionNode >> inv: aViennaInvariantNode [
 
 	self at: 3 put: aViennaInvariantNode
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaStateDefinitionNode >> isViennaExportableTopLevelDefinitionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaStateDefinitionNode >> isViennaStateDefinitionNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaStateDefinitionNode >> label [
 
 	^ 'StateDefinition'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaStateDefinitionNode >> maximalType [
 
 	self fieldList typecheck.
@@ -186,19 +187,19 @@ ViennaStateDefinitionNode >> maximalType [
 	^ maximalType
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaStateDefinitionNode >> sectionName [
 
 	^ 'state'
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaStateDefinitionNode >> shortName [
 
 	^ self identifier
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaStateDefinitionNode >> toplevelDefinitionsDo: aBlock [
 
 	

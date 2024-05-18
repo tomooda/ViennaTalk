@@ -1,29 +1,30 @@
 Class {
-	#name : #ViennaSequenceElementsNode,
-	#superclass : #ViennaUnaryOperatorExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaSequenceElementsNode',
+	#superclass : 'ViennaUnaryOperatorExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSequenceElementsNode >> formatOperatorWith: aViennaAbstractFormatter [
 
 	^ 'elems'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaSequenceElementsNode >> isViennaSequenceElementsNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSequenceElementsNode >> label [
 
 	^ 'SequenceElements'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaSequenceElementsNode >> maximalType: aViennaType [
 
 	| basetype isSet1Type |
@@ -43,19 +44,19 @@ ViennaSequenceElementsNode >> maximalType: aViennaType [
 	super maximalType: aViennaType
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSequenceElementsNode >> operatorPrecedence [
 
 	^ 36
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaSequenceElementsNode >> paramType [
 
 	^ ViennaType any seq
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaSequenceElementsNode >> returnTypeFor: aViennaType [
 
 	| basetype isSeq1Type |

@@ -1,23 +1,24 @@
 Class {
-	#name : #ViennaValueDefinitionsNode,
-	#superclass : #ViennaSectionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaValueDefinitionsNode',
+	#superclass : 'ViennaSectionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaValueDefinitionsNode >> isViennaValueDefinitionsNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaValueDefinitionsNode >> label [
 
 	^ 'ValueDefinitions'
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaValueDefinitionsNode >> sectionName [
 
 	^ 'values'

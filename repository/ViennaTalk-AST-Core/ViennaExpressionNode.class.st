@@ -1,34 +1,35 @@
 Class {
-	#name : #ViennaExpressionNode,
-	#superclass : #ViennaNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaExpressionNode',
+	#superclass : 'ViennaNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExpressionNode class >> isAbstract [
 
 	^ self = ViennaExpressionNode
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaExpressionNode >> boundIdentifiersDo: aBlock [
 
 	
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExpressionNode >> isViennaExpressionNode [
 	^ true
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaExpressionNode >> maximalType [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaExpressionNode >> maximalType: aViennaType [
 
 	super maximalType: self maximalType.
@@ -40,7 +41,7 @@ ViennaExpressionNode >> maximalType: aViennaType [
 				  , ' but actual ' , maximalType printString ]
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaExpressionNode >> typecheck [
 
 	^ super typecheck ifUnit: [
@@ -49,7 +50,7 @@ ViennaExpressionNode >> typecheck [
 			  signal: 'An expression can not be of unit type' ]
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaExpressionNode >> typecheck: aViennaType [
 
 	maximalType ifNil: [ self maximalType: aViennaType ].

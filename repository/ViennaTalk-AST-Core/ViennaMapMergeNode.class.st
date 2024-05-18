@@ -1,35 +1,36 @@
 Class {
-	#name : #ViennaMapMergeNode,
-	#superclass : #ViennaBinaryOperatorExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaMapMergeNode',
+	#superclass : 'ViennaBinaryOperatorExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaMapMergeNode >> formatOperatorWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter munion
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaMapMergeNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
 
 	^ aBlock1 value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapMergeNode >> isViennaMapMergeNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapMergeNode >> label [
 
 	^ 'MapMerge'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapMergeNode >> maximalType: aViennaType [
 
 	self expression1 maximalType: aViennaType.
@@ -37,25 +38,25 @@ ViennaMapMergeNode >> maximalType: aViennaType [
 	super maximalType: aViennaType
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaMapMergeNode >> operatorPrecedence [
 
 	^ 31
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapMergeNode >> paramType1 [
 
 	^ ViennaType any mapTo: ViennaType any
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapMergeNode >> paramType2 [
 
 	^ ViennaType any mapTo: ViennaType any
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapMergeNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
 
 	| domaintype1 domaintype2 domaintype rangetype1 rangetype2 rangetype |

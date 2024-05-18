@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaConditionalStatementNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaConditionalStatementNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaConditionalStatementNode class >> condition: aViennaExpressionNode statement: aViennaStatementNode [
 
 	^ (self new: 2)
@@ -14,25 +15,25 @@ ViennaConditionalStatementNode class >> condition: aViennaExpressionNode stateme
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaConditionalStatementNode >> boundIdentifiersDo: aBlock [
 
 	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaConditionalStatementNode >> condition [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaConditionalStatementNode >> condition: aViennaExpressionNode [
 
 	self at: 1 put: aViennaExpressionNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaConditionalStatementNode >> formatWith: aViennaAbstractFormatter [
 
 	^ (aViennaAbstractFormatter keyword: 'elseif ')
@@ -44,39 +45,39 @@ ViennaConditionalStatementNode >> formatWith: aViennaAbstractFormatter [
 			   (aViennaAbstractFormatter format: self statement))
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaConditionalStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self condition freeIdentifiersExcept: aSet do: aBlock.
 	self statement freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaConditionalStatementNode >> isViennaConditionalStatementNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaConditionalStatementNode >> label [
 
 	^ 'ConditionalStatement'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaConditionalStatementNode >> maximalType [
 
 	self condition typecheck: ViennaType bool.
 	^ self statement typecheck
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaConditionalStatementNode >> statement [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaConditionalStatementNode >> statement: aViennaStatementNode [
 
 	self at: 2 put: aViennaStatementNode

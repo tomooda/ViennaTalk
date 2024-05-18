@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaValueExportNode,
-	#superclass : #ViennaExportNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaValueExportNode',
+	#superclass : 'ViennaExportNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaValueExportNode class >> nameList: aViennaNameListNode type: aViennaTypeNode [
 
 	^ (self new: 2)
@@ -14,13 +15,13 @@ ViennaValueExportNode class >> nameList: aViennaNameListNode type: aViennaTypeNo
 		  yourself
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaValueExportNode >> exportedIdentifiersDo: aBlock [
 
 	self nameList do: [ :name | aBlock value: name identifier ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaValueExportNode >> formatWith: aViennaAbstractFormatter [
 
 	| nameList type |
@@ -32,25 +33,25 @@ ViennaValueExportNode >> formatWith: aViennaAbstractFormatter [
 	^ nameList ++ type
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaValueExportNode >> isEmpty [
 
 	^ self nameList isEmpty
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaValueExportNode >> isViennaValueExportNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaValueExportNode >> label [
 
 	^ 'ValueExport'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaValueExportNode >> maximalType [
 
 	self nameList do: [ :name |
@@ -75,32 +76,32 @@ ViennaValueExportNode >> maximalType [
 	^ ViennaType unit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaValueExportNode >> nameList [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaValueExportNode >> nameList: aViennaNameListNode [
 
 	self at: 1 put: aViennaNameListNode
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 ViennaValueExportNode >> removeIdentifier: aString [
 
 	self nameList removeIdentifier: aString.
 	self nameList ifEmpty: [ parent ifNotNil: [ parent remove: self ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaValueExportNode >> type [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaValueExportNode >> type: aViennaTypeNode [
 
 	self at: 2 put: aViennaTypeNode

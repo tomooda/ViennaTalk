@@ -1,41 +1,42 @@
 Class {
-	#name : #ViennaArithmeticAbsNode,
-	#superclass : #ViennaUnaryOperatorExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaArithmeticAbsNode',
+	#superclass : 'ViennaUnaryOperatorExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaArithmeticAbsNode >> formatOperatorWith: aViennaAbstractFormatter [
 
 	^ 'abs'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaArithmeticAbsNode >> isViennaArithmeticAbsNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaArithmeticAbsNode >> label [
 
 	^ 'ArithmeticAbs'
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaArithmeticAbsNode >> operatorPrecedence [
 
 	^ 36
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaArithmeticAbsNode >> paramType [
 
 	^ ViennaType real
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaArithmeticAbsNode >> returnTypeFor: aViennaType [
 
 	^ aViennaType isIntType

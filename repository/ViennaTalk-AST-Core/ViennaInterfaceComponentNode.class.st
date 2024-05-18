@@ -1,21 +1,22 @@
 Class {
-	#name : #ViennaInterfaceComponentNode,
-	#superclass : #ViennaNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaInterfaceComponentNode',
+	#superclass : 'ViennaNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaInterfaceComponentNode class >> isAbstract [
 
 	^ self = ViennaInterfaceComponentNode
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaInterfaceComponentNode >> freeIdentifiersExcept: aSet do: aBlock [
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaInterfaceComponentNode >> isViennaInterfaceComponentNode [
 
 	^ true

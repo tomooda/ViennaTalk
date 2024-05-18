@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaLetBeExpressionNode,
-	#superclass : #ViennaExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaLetBeExpressionNode',
+	#superclass : 'ViennaExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaLetBeExpressionNode class >> multipleBind: aViennaMultipleBindNode conditionExpression: aViennaExpressionNode1 expression: aViennaExpressionNode2 [
 
 	^ (self new: 3)
@@ -15,19 +16,19 @@ ViennaLetBeExpressionNode class >> multipleBind: aViennaMultipleBindNode conditi
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLetBeExpressionNode >> conditionExpression [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLetBeExpressionNode >> conditionExpression: aViennaExpressionNode [
 
 	self at: 2 put: aViennaExpressionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLetBeExpressionNode >> definitionOfLocalName: aString [
 
 	| valDef |
@@ -39,19 +40,19 @@ ViennaLetBeExpressionNode >> definitionOfLocalName: aString [
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLetBeExpressionNode >> expression [
 
 	^ self at: 3
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLetBeExpressionNode >> expression: aViennaExpressionNode [
 
 	self at: 3 put: aViennaExpressionNode
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaLetBeExpressionNode >> findResolverForIdentifier: aString [
 
 	^ (self multipleBind bindsIdentifier: aString)
@@ -59,7 +60,7 @@ ViennaLetBeExpressionNode >> findResolverForIdentifier: aString [
 		  ifFalse: [ super findResolverForIdentifier: aString ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaLetBeExpressionNode >> formatWith: aViennaAbstractFormatter [
 
 	| multipleBind guard expression |
@@ -83,7 +84,7 @@ ViennaLetBeExpressionNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: expression
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaLetBeExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	| boundIdentifiers |
@@ -95,25 +96,25 @@ ViennaLetBeExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
 	self expression freeIdentifiersExcept: boundIdentifiers do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaLetBeExpressionNode >> hasScope [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLetBeExpressionNode >> isViennaLetBeExpressionNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLetBeExpressionNode >> label [
 
 	^ 'LetBeExpression'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaLetBeExpressionNode >> lookupIdentifier: aString [
 
 	^ (self multipleBind bindsIdentifier: aString)
@@ -121,7 +122,7 @@ ViennaLetBeExpressionNode >> lookupIdentifier: aString [
 		  ifFalse: [ nil ]
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaLetBeExpressionNode >> maximalType [
 
 	self multipleBind typecheck.
@@ -130,7 +131,7 @@ ViennaLetBeExpressionNode >> maximalType [
 	^ self expression typecheck
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaLetBeExpressionNode >> maximalType: aViennaType [
 
 	self multipleBind typecheck.
@@ -138,19 +139,19 @@ ViennaLetBeExpressionNode >> maximalType: aViennaType [
 	super maximalType: aViennaType
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLetBeExpressionNode >> multipleBind [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLetBeExpressionNode >> multipleBind: aViennaMultipleBindNode [
 
 	self at: 1 put: aViennaMultipleBindNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaLetBeExpressionNode >> operatorPrecedence [
 
 	^ 10

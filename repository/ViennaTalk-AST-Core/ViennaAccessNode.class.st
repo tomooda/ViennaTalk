@@ -1,23 +1,24 @@
 Class {
-	#name : #ViennaAccessNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaAccessNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaAccessNode class >> pure [
 
 	^ self with: 'pure'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaAccessNode >> boundIdentifiersDo: aBlock [
 
 	
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaAccessNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter
@@ -25,25 +26,25 @@ ViennaAccessNode >> formatWith: aViennaAbstractFormatter [
 		  withAll: (aViennaAbstractFormatter formatAll: self)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaAccessNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaAccessNode >> isViennaAccessNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAccessNode >> label [
 
 	^ 'Access'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaAccessNode >> maximalType [
 
 	^ ViennaType unit

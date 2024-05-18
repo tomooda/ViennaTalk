@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaFlatDocumentNode,
-	#superclass : #ViennaDocumentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaFlatDocumentNode',
+	#superclass : 'ViennaDocumentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaFlatDocumentNode >> addFunctionDefinition: aViennaNode [
 
 	(self detect: #isViennaFunctionDefinitionsNode ifNone: [
@@ -15,7 +16,7 @@ ViennaFlatDocumentNode >> addFunctionDefinition: aViennaNode [
 		 section ]) add: aViennaNode
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaFlatDocumentNode >> addOperationDefinition: aViennaNode [
 
 	(self detect: #isViennaOperationDefinitionsNode ifNone: [
@@ -25,7 +26,7 @@ ViennaFlatDocumentNode >> addOperationDefinition: aViennaNode [
 		 section ]) add: aViennaNode
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaFlatDocumentNode >> addTypeDefinition: aViennaNode [
 
 	(self detect: #isViennaTypeDefinitionsNode ifNone: [
@@ -35,7 +36,7 @@ ViennaFlatDocumentNode >> addTypeDefinition: aViennaNode [
 		 section ]) add: aViennaNode
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaFlatDocumentNode >> addValueDefinition: aViennaNode [
 
 	(self detect: #isViennaValueDefinitionsNode ifNone: [
@@ -45,7 +46,7 @@ ViennaFlatDocumentNode >> addValueDefinition: aViennaNode [
 		 section ]) add: aViennaNode
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaFlatDocumentNode >> asModularDocument [
 
 	^ ViennaModularDocumentNode withAll: (ViennaModuleNode
@@ -54,13 +55,13 @@ ViennaFlatDocumentNode >> asModularDocument [
 			   (ViennaModuleBodyNode withAll: (self collect: #copyFragment)))
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaFlatDocumentNode >> deepFindResolverForIdentifier: aString [
 
 	^ self findResolverForIdentifier: aString
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaFlatDocumentNode >> definitionOfLocalName: aString [
 
 	self sectionsDo: [ :section |
@@ -83,19 +84,19 @@ ViennaFlatDocumentNode >> definitionOfLocalName: aString [
 	^ nil
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaFlatDocumentNode >> findResolverForIdentifier: aString [
 
 	^ (self lookupIdentifier: aString) ifNotNil: [ self ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaFlatDocumentNode >> isViennaFlatDocumentNode [
 
 	^ true
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaFlatDocumentNode >> lookupIdentifier: aString [
 
 	self toplevelDefinitionsDo: [ :definition |
@@ -107,26 +108,26 @@ ViennaFlatDocumentNode >> lookupIdentifier: aString [
 	^ nil
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaFlatDocumentNode >> maximalType [
 
 	self sectionsDo: #typecheck.
 	^ ViennaType unit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFlatDocumentNode >> moduleOrFlatDocument [
 
 	^ self
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaFlatDocumentNode >> sectionsDo: aBlock [
 
 	self do: aBlock
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaFlatDocumentNode >> stateDefinition [
 
 	self sectionsDo: [ :section |
@@ -134,7 +135,7 @@ ViennaFlatDocumentNode >> stateDefinition [
 	^ nil
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaFlatDocumentNode >> stateDefinitionIfAbsentPut: errorBlock [
 
 	^ self stateDefinition ifNil: [
@@ -144,7 +145,7 @@ ViennaFlatDocumentNode >> stateDefinitionIfAbsentPut: errorBlock [
 		  def ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaFlatDocumentNode >> toplevelDefinitionsDo: aBlock [
 
 	self sectionsDo: [ :section |

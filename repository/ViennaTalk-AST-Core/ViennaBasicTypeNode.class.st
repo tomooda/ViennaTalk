@@ -1,17 +1,18 @@
 Class {
-	#name : #ViennaBasicTypeNode,
-	#superclass : #ViennaTypeNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaBasicTypeNode',
+	#superclass : 'ViennaTypeNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaBasicTypeNode class >> any [
 
 	^ self identifier: 'any'
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaBasicTypeNode class >> identifier: aString [
 
 	^ (self new: 1)
@@ -19,7 +20,7 @@ ViennaBasicTypeNode class >> identifier: aString [
 		  yourself
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaBasicTypeNode >> asMaximalViennaType [
 
 	| identifier |
@@ -36,7 +37,7 @@ ViennaBasicTypeNode >> asMaximalViennaType [
 	^ self error: 'Unknown basic type'
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaBasicTypeNode >> formatWith: aViennaAbstractFormatter [
 
 	| type |
@@ -50,29 +51,29 @@ ViennaBasicTypeNode >> formatWith: aViennaAbstractFormatter [
 	^ aViennaAbstractFormatter typeName: type
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaBasicTypeNode >> freeIdentifiersExcept: aSet do: aBlock [
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaBasicTypeNode >> identifier [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaBasicTypeNode >> identifier: aString [
 
 	self at: 1 put: aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaBasicTypeNode >> isViennaBasicTypeNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaBasicTypeNode >> label [
 
 	^ 'BasicType'

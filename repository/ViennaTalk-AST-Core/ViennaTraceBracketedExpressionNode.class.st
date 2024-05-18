@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaTraceBracketedExpressionNode,
-	#superclass : #ViennaTraceCoreDefinitionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaTraceBracketedExpressionNode',
+	#superclass : 'ViennaTraceCoreDefinitionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaTraceBracketedExpressionNode class >> traceDefinitionList: aViennaTraceDefinitionList [
 
 	^ (self new: 1)
@@ -13,7 +14,7 @@ ViennaTraceBracketedExpressionNode class >> traceDefinitionList: aViennaTraceDef
 		  yourself
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaTraceBracketedExpressionNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter empty ++ '('
@@ -21,32 +22,32 @@ ViennaTraceBracketedExpressionNode >> formatWith: aViennaAbstractFormatter [
 	  ++ ')'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTraceBracketedExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self traceDefinitionList freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTraceBracketedExpressionNode >> label [
 
 	^ 'TraceBracketedExpression'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaTraceBracketedExpressionNode >> maximalType [
 
 	self traceDefinitionList typecheck.
 	^ ViennaType unit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTraceBracketedExpressionNode >> traceDefinitionList [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTraceBracketedExpressionNode >> traceDefinitionList: aViennaTraceDefinitionList [
 
 	self at: 1 put: aViennaTraceDefinitionList

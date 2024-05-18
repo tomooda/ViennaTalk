@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaSequenceForLoopNode,
-	#superclass : #ViennaStatementNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaSequenceForLoopNode',
+	#superclass : 'ViennaStatementNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 ViennaSequenceForLoopNode class >> patternOrBind: aViennaPatternNodeOrViennaBindNode expression: aViennaExpressionNode statement: aViennaStatementNode [
 
 	^ (self new: 3)
@@ -15,7 +16,7 @@ ViennaSequenceForLoopNode class >> patternOrBind: aViennaPatternNodeOrViennaBind
 		  yourself
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaSequenceForLoopNode >> definitionOfLocalName: aString [
 
 	self patternOrBind
@@ -25,19 +26,19 @@ ViennaSequenceForLoopNode >> definitionOfLocalName: aString [
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSequenceForLoopNode >> expression [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSequenceForLoopNode >> expression: aViennaExpressionNode [
 
 	self at: 2 put: aViennaExpressionNode
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaSequenceForLoopNode >> findResolverForIdentifier: aString [
 
 	^ (self patternOrBind bindsIdentifier: aString)
@@ -45,7 +46,7 @@ ViennaSequenceForLoopNode >> findResolverForIdentifier: aString [
 		  ifFalse: [ super findResolverForIdentifier: aString ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSequenceForLoopNode >> formatWith: aViennaAbstractFormatter [
 
 	| patternBind expression statement |
@@ -65,7 +66,7 @@ ViennaSequenceForLoopNode >> formatWith: aViennaAbstractFormatter [
 				   insertCrIfNeeded: statement)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaSequenceForLoopNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self expression freeIdentifiersExcept: aSet do: aBlock.
@@ -76,25 +77,25 @@ ViennaSequenceForLoopNode >> freeIdentifiersExcept: aSet do: aBlock [
 		do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaSequenceForLoopNode >> hasScope [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaSequenceForLoopNode >> isViennaSequenceForLoopNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSequenceForLoopNode >> label [
 
 	^ 'SequenceForLoop'
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaSequenceForLoopNode >> lookupIdentifier: aString [
 
 	| pattern |
@@ -103,7 +104,7 @@ ViennaSequenceForLoopNode >> lookupIdentifier: aString [
 	^ nil
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaSequenceForLoopNode >> maximalType [
 
 	self patternOrBind maximalType:
@@ -115,25 +116,25 @@ ViennaSequenceForLoopNode >> maximalType [
 	^ self statement typecheck
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSequenceForLoopNode >> patternOrBind [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSequenceForLoopNode >> patternOrBind: aViennaPatternNodeOrViennaBindNode [
 
 	self at: 1 put: aViennaPatternNodeOrViennaBindNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSequenceForLoopNode >> statement [
 
 	^ self at: 3
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSequenceForLoopNode >> statement: aViennaStatementNode [
 
 	self at: 3 put: aViennaStatementNode

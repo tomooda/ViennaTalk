@@ -1,18 +1,19 @@
 Class {
-	#name : #ViennaInmapTypeNode,
-	#superclass : #ViennaAbstractMapTypeNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaInmapTypeNode',
+	#superclass : 'ViennaAbstractMapTypeNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaInmapTypeNode >> asMaximalViennaType [
 
 	^ self domainType asMaximalViennaType inmapTo:
 		  self rangeType asMaximalViennaType
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaInmapTypeNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter inmapPrefix
@@ -21,13 +22,13 @@ ViennaInmapTypeNode >> formatWith: aViennaAbstractFormatter [
 	  ++ (aViennaAbstractFormatter format: self rangeType)
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaInmapTypeNode >> isViennaInmapTypeNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInmapTypeNode >> label [
 
 	^ 'InmapType'

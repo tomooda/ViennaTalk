@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaFunctionTypeInstantiationNode,
-	#superclass : #ViennaExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaFunctionTypeInstantiationNode',
+	#superclass : 'ViennaExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaFunctionTypeInstantiationNode class >> expression: aViennaExpression functionTypeArgs: aViennaFunctionTypeArgsNode [
 
 	^ (self new: 2)
@@ -14,19 +15,19 @@ ViennaFunctionTypeInstantiationNode class >> expression: aViennaExpression funct
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFunctionTypeInstantiationNode >> expression [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFunctionTypeInstantiationNode >> expression: aViennaExpressionNode [
 
 	self at: 1 put: aViennaExpressionNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaFunctionTypeInstantiationNode >> formatWith: aViennaAbstractFormatter [
 
 	| function typeArgs |
@@ -35,44 +36,44 @@ ViennaFunctionTypeInstantiationNode >> formatWith: aViennaAbstractFormatter [
 	^ function ++ typeArgs
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaFunctionTypeInstantiationNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self expression freeIdentifiersExcept: aSet do: aBlock.
 	self functionTypeArgs freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFunctionTypeInstantiationNode >> functionTypeArgs [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFunctionTypeInstantiationNode >> functionTypeArgs: aViennaFunctionTypeArgsNode [
 
 	self at: 2 put: aViennaFunctionTypeArgsNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaFunctionTypeInstantiationNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
 
 	^ aBlock1 value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFunctionTypeInstantiationNode >> isViennaFunctionTypeInstantiationNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFunctionTypeInstantiationNode >> label [
 
 	^ 'FunctionTypeInstantiation'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaFunctionTypeInstantiationNode >> maximalType [
 
 	| functionDefinition params args type |
@@ -102,13 +103,13 @@ ViennaFunctionTypeInstantiationNode >> maximalType [
 			  asDictionary
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaFunctionTypeInstantiationNode >> operatorPrecedence [
 
 	^ 40
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFunctionTypeInstantiationNode >> resolve [
 
 	^ self expression resolve

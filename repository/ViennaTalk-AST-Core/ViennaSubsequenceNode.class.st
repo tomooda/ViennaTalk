@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaSubsequenceNode,
-	#superclass : #ViennaExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaSubsequenceNode',
+	#superclass : 'ViennaExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaSubsequenceNode class >> sequenceExpression: aViennaExpression1 startExpression: aViennaExpression2 endExpression: aViennaExpression3 [
 
 	^ (self new: 3)
@@ -15,19 +16,19 @@ ViennaSubsequenceNode class >> sequenceExpression: aViennaExpression1 startExpre
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSubsequenceNode >> endExpression [
 
 	^ self at: 3
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSubsequenceNode >> endExpression: aViennaExpressionNode [
 
 	self at: 3 put: aViennaExpressionNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSubsequenceNode >> formatWith: aViennaAbstractFormatter [
 
 	| sequence startExpression endExpression |
@@ -52,7 +53,7 @@ ViennaSubsequenceNode >> formatWith: aViennaAbstractFormatter [
 		   ++ (aViennaAbstractFormatter indentString: endExpression ++ ')'))
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaSubsequenceNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self sequenceExpression freeIdentifiersExcept: aSet do: aBlock.
@@ -60,25 +61,25 @@ ViennaSubsequenceNode >> freeIdentifiersExcept: aSet do: aBlock [
 	self endExpression freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSubsequenceNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
 
 	^ aBlock1 value
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaSubsequenceNode >> isViennaSubsequenceNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSubsequenceNode >> label [
 
 	^ 'Subsequence'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaSubsequenceNode >> maximalType [
 
 	| seqType |
@@ -90,31 +91,31 @@ ViennaSubsequenceNode >> maximalType [
 				   type isSeqType ifTrue: [ stream nextPut: type basetype seq ] ] ])
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSubsequenceNode >> operatorPrecedence [
 
 	^ 40
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSubsequenceNode >> sequenceExpression [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSubsequenceNode >> sequenceExpression: aViennaExpressionNode [
 
 	self at: 1 put: aViennaExpressionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSubsequenceNode >> startExpression [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSubsequenceNode >> startExpression: aViennaExpressionNode [
 
 	self at: 2 put: aViennaExpressionNode

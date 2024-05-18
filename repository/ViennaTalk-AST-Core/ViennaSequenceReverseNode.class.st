@@ -1,48 +1,49 @@
 Class {
-	#name : #ViennaSequenceReverseNode,
-	#superclass : #ViennaUnaryOperatorExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaSequenceReverseNode',
+	#superclass : 'ViennaUnaryOperatorExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSequenceReverseNode >> formatOperatorWith: aViennaAbstractFormatter [
 
 	^ 'reverse'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaSequenceReverseNode >> isViennaSequenceReverseNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSequenceReverseNode >> label [
 
 	^ 'SequenceReverse'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaSequenceReverseNode >> maximalType: aViennaType [
 
 	self expression maximalType: aViennaType.
 	super maximalType: aViennaType
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSequenceReverseNode >> operatorPrecedence [
 
 	^ 36
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaSequenceReverseNode >> paramType [
 
 	^ ViennaType any seq
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaSequenceReverseNode >> returnTypeFor: aViennaType [
 
 	^ aViennaType

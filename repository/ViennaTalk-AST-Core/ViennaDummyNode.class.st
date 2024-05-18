@@ -1,35 +1,36 @@
 Class {
-	#name : #ViennaDummyNode,
-	#superclass : #ViennaNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaDummyNode',
+	#superclass : 'ViennaNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaDummyNode >> boundIdentifiersDo: aBlock [
 
 	
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaDummyNode >> formatWith: aViennaAbstractFormatter [
 
 	^ '--dummy--'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaDummyNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaDummyNode >> label [
 
 	^ '--DUMMY--'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaDummyNode >> maximalType [
 
 	^ ViennaTypeError

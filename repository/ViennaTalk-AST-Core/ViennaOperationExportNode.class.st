@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaOperationExportNode,
-	#superclass : #ViennaExportNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaOperationExportNode',
+	#superclass : 'ViennaExportNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaOperationExportNode class >> nameList: aViennaNameListNode type: aViennaOperationTypeNode [
 
 	^ (self new: 2)
@@ -14,13 +15,13 @@ ViennaOperationExportNode class >> nameList: aViennaNameListNode type: aViennaOp
 		  yourself
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaOperationExportNode >> exportedIdentifiersDo: aBlock [
 
 	self nameList do: [ :name | aBlock value: name identifier ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaOperationExportNode >> formatWith: aViennaAbstractFormatter [
 
 	| name type |
@@ -32,25 +33,25 @@ ViennaOperationExportNode >> formatWith: aViennaAbstractFormatter [
 	^ name ++ type
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaOperationExportNode >> isEmpty [
 
 	^ self nameList isEmpty
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaOperationExportNode >> isViennaOperationExportNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaOperationExportNode >> label [
 
 	^ 'OperationExport'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaOperationExportNode >> maximalType [
 
 	self nameList do: [ :name |
@@ -73,32 +74,32 @@ ViennaOperationExportNode >> maximalType [
 	^ ViennaType unit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaOperationExportNode >> nameList [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaOperationExportNode >> nameList: aViennaNameListNode [
 
 	self at: 1 put: aViennaNameListNode
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 ViennaOperationExportNode >> removeIdentifier: aString [
 
 	self nameList removeIdentifier: aString.
 	self nameList ifEmpty: [ parent ifNotNil: [ parent remove: self ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaOperationExportNode >> type [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaOperationExportNode >> type: aViennaOperationTypeNode [
 
 	self at: 2 put: aViennaOperationTypeNode

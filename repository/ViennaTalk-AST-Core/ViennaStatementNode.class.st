@@ -1,23 +1,24 @@
 Class {
-	#name : #ViennaStatementNode,
-	#superclass : #ViennaNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaStatementNode',
+	#superclass : 'ViennaNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaStatementNode class >> isAbstract [
 
 	^ self = ViennaStatementNode
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaStatementNode >> boundIdentifiersDo: aBlock [
 
 	
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaStatementNode >> isViennaStatementNode [
 
 	^ true

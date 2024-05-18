@@ -1,65 +1,66 @@
 Class {
-	#name : #ViennaMapOrSequenceModifyNode,
-	#superclass : #ViennaBinaryOperatorExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaMapOrSequenceModifyNode',
+	#superclass : 'ViennaBinaryOperatorExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapOrSequenceModifyNode >> expression1 [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapOrSequenceModifyNode >> expression1: aViennaExpressionNode [
 
 	self at: 1 put: aViennaExpressionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapOrSequenceModifyNode >> expression2 [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapOrSequenceModifyNode >> expression2: aViennaExpressionNode [
 
 	self at: 2 put: aViennaExpressionNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaMapOrSequenceModifyNode >> formatOperatorWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter override
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapOrSequenceModifyNode >> isViennaMapOrSequenceModifyNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapOrSequenceModifyNode >> label [
 
 	^ 'MapOrSequenceModify'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapOrSequenceModifyNode >> paramType1 [
 
 	^ (ViennaType any mapTo: ViennaType any) | ViennaType any seq
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapOrSequenceModifyNode >> paramType2 [
 
 	^ ViennaType any mapTo: ViennaType any
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapOrSequenceModifyNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
 
 	aViennaType1 isMapType ifTrue: [

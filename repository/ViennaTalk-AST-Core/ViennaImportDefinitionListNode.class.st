@@ -1,18 +1,19 @@
 Class {
-	#name : #ViennaImportDefinitionListNode,
-	#superclass : #ViennaImportComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaImportDefinitionListNode',
+	#superclass : 'ViennaImportComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaImportDefinitionListNode >> boundIdentifiersDo: aBlock [
 
 	self do: [ :importDefinition |
 		importDefinition boundIdentifiersDo: aBlock ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaImportDefinitionListNode >> formatWith: aViennaAbstractFormatter [
 
 	| definitions |
@@ -26,32 +27,32 @@ ViennaImportDefinitionListNode >> formatWith: aViennaAbstractFormatter [
 				   withAll: definitions)
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaImportDefinitionListNode >> importSignaturesDo: aBlock [
 
 	self do: [ :importDefinition |
 		importDefinition importSignaturesDo: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaImportDefinitionListNode >> isViennaImportDefinitionListNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaImportDefinitionListNode >> label [
 
 	^ 'ImportDefinitionList'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaImportDefinitionListNode >> listDelimiter [
 
 	^ ', '
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaImportDefinitionListNode >> maximalType [
 
 	self do: #typecheck.

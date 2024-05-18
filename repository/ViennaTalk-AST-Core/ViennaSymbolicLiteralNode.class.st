@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaSymbolicLiteralNode,
-	#superclass : #ViennaExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaSymbolicLiteralNode',
+	#superclass : 'ViennaExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSymbolicLiteralNode class >> string: aString [
 
 	^ (self new: 1)
@@ -13,35 +14,35 @@ ViennaSymbolicLiteralNode class >> string: aString [
 		  yourself
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSymbolicLiteralNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter literal: self string trim
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaSymbolicLiteralNode >> freeIdentifiersExcept: aSet do: aBlock [
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaSymbolicLiteralNode >> isViennaSymbolicLiteralNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaSymbolicLiteralNode >> isViennaSymbolicLiteralNode: aString [
 
 	^ aString = self string
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSymbolicLiteralNode >> label [
 
 	^ 'SymbolicLiteral'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaSymbolicLiteralNode >> maximalType [
 
 	| literal |
@@ -73,13 +74,13 @@ ViennaSymbolicLiteralNode >> maximalType [
 					  ifFalse: [ ViennaType real ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSymbolicLiteralNode >> string [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSymbolicLiteralNode >> string: aString [
 
 	self at: 1 put: aString

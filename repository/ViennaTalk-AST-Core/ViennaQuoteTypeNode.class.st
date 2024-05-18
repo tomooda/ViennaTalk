@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaQuoteTypeNode,
-	#superclass : #ViennaTypeNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaQuoteTypeNode',
+	#superclass : 'ViennaTypeNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaQuoteTypeNode class >> string: aString [
 
 	^ (self new: 1)
@@ -13,48 +14,48 @@ ViennaQuoteTypeNode class >> string: aString [
 		  yourself
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaQuoteTypeNode >> asMaximalViennaType [
 
 	^ ViennaType quote:
 		  (self string copyFrom: 2 to: self string size - 1) asSymbol
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaQuoteTypeNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter typeName: self string
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaQuoteTypeNode >> freeIdentifiersExcept: aSet do: aBlock [
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaQuoteTypeNode >> isViennaQuoteTypeNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaQuoteTypeNode >> isViennaQuoteTypeNode: aString [
 
 	^ self string = aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaQuoteTypeNode >> label [
 
 	^ 'QuoteType'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaQuoteTypeNode >> string [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaQuoteTypeNode >> string: aString [
 
 	self at: 1 put: aString

@@ -1,23 +1,24 @@
 Class {
-	#name : #ViennaTraceRepeatOptionalPatternNode,
-	#superclass : #ViennaTraceRepeatPatternNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaTraceRepeatOptionalPatternNode',
+	#superclass : 'ViennaTraceRepeatPatternNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaTraceRepeatOptionalPatternNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter empty ++ '?'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTraceRepeatOptionalPatternNode >> label [
 
 	^ 'TraceRepeatOptionalPattern'
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaTraceRepeatOptionalPatternNode >> numbersDo: aBlock [
 
 	aBlock

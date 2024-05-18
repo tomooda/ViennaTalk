@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaMapletPatternNode,
-	#superclass : #ViennaPatternNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaMapletPatternNode',
+	#superclass : 'ViennaPatternNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaMapletPatternNode class >> keyPattern: aViennaPatternNode1 valuePattern: aViennaPatternNode2 [
 
 	^ (self new: 2)
@@ -14,14 +15,14 @@ ViennaMapletPatternNode class >> keyPattern: aViennaPatternNode1 valuePattern: a
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaMapletPatternNode >> boundIdentifiersDo: aBlock [
 
 	self keyPattern boundIdentifiersDo: aBlock.
 	self valuePattern boundIdentifiersDo: aBlock
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaMapletPatternNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter
@@ -30,44 +31,44 @@ ViennaMapletPatternNode >> formatWith: aViennaAbstractFormatter [
 		  arg: (aViennaAbstractFormatter format: self valuePattern)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaMapletPatternNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self keyPattern freeIdentifiersExcept: aSet do: aBlock.
 	self valuePattern freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaMapletPatternNode >> isViennaMapletPatternNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapletPatternNode >> keyPattern [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapletPatternNode >> keyPattern: aViennaPatternNode [
 
 	self at: 1 put: aViennaPatternNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapletPatternNode >> label [
 
 	^ 'MapletPattern'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaMapletPatternNode >> maximalType [
 
 	^ self keyPattern typecheck mapTo: self valuePattern typecheck
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaMapletPatternNode >> maximalType: aViennaType [
 
 	| keyType valueType |
@@ -82,13 +83,13 @@ ViennaMapletPatternNode >> maximalType: aViennaType [
 	super maximalType: self maximalType
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapletPatternNode >> valuePattern [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapletPatternNode >> valuePattern: aViennaPatternNode [
 
 	self at: 2 put: aViennaPatternNode

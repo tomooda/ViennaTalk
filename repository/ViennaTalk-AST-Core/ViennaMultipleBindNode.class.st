@@ -1,49 +1,56 @@
 Class {
-	#name : #ViennaMultipleBindNode,
-	#superclass : #ViennaPatternBindNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaMultipleBindNode',
+	#superclass : 'ViennaPatternBindNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaMultipleBindNode class >> isAbstract [
 
 	^ self = ViennaMultipleBindNode
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaMultipleBindNode >> boundIdentifiersDo: aBlock [
 
 	self patternList boundIdentifiersDo: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaMultipleBindNode >> isViennaMultipleBindNode [
 
 	^ true
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaMultipleBindNode >> maximalType: aViennaType [
 
 	self patternsDo: [ :pattern | pattern maximalType: aViennaType ].
 	super maximalType: self maximalType
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMultipleBindNode >> patternList [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMultipleBindNode >> patternList: aViennaPatternListNode [
 
 	self at: 1 put: aViennaPatternListNode
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaMultipleBindNode >> patternsDo: aBlock [
 
 	self patternList do: aBlock
+]
+
+{ #category : 'accessing' }
+ViennaMultipleBindNode >> typeOrExpression [
+
+	^ self at: 2
 ]

@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaOldNameNode,
-	#superclass : #ViennaLocalNameNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaOldNameNode',
+	#superclass : 'ViennaLocalNameNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaOldNameNode class >> identifier: aString [
 
 	^ (self new: 1)
@@ -13,74 +14,74 @@ ViennaOldNameNode class >> identifier: aString [
 		  yourself
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaOldNameNode >> formatWith: aViennaAbstractFormatter [
 
 	^ (aViennaAbstractFormatter identifier: self identifier)
 	  ++ (aViennaAbstractFormatter keyword: '~')
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaOldNameNode >> isAssignable [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaOldNameNode >> isBlockVariableNameNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaOldNameNode >> isExportedNameNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaOldNameNode >> isFunctionNameNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaOldNameNode >> isLocalValueNameNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaOldNameNode >> isOperationNameNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaOldNameNode >> isStateVariableNameNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaOldNameNode >> isTypeNameNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaOldNameNode >> isValueNameNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaOldNameNode >> isViennaOldNameNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaOldNameNode >> label [
 
 	^ 'OldName'

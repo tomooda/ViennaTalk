@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaTypeBindNode,
-	#superclass : #ViennaBindNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaTypeBindNode',
+	#superclass : 'ViennaBindNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaTypeBindNode class >> pattern: aViennaPatternNode type: aViennaTypeNode [
 
 	^ (self new: 2)
@@ -14,7 +15,7 @@ ViennaTypeBindNode class >> pattern: aViennaPatternNode type: aViennaTypeNode [
 		  yourself
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaTypeBindNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter
@@ -23,26 +24,26 @@ ViennaTypeBindNode >> formatWith: aViennaAbstractFormatter [
 		  arg: (aViennaAbstractFormatter format: self type)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTypeBindNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self pattern freeIdentifiersExcept: aSet do: aBlock.
 	self type freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTypeBindNode >> isViennaTypeBindNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTypeBindNode >> label [
 
 	^ 'TypeBind'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaTypeBindNode >> maximalType [
 
 	| basetype |
@@ -59,7 +60,7 @@ ViennaTypeBindNode >> maximalType [
 					  , ' not agree with ' , basetype printString ]
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaTypeBindNode >> maximalType: aViennaType [
 
 	| basetype |
@@ -67,13 +68,13 @@ ViennaTypeBindNode >> maximalType: aViennaType [
 	super maximalType: basetype & aViennaType
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTypeBindNode >> type [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTypeBindNode >> type: aViennaTypeNode [
 
 	self at: 2 put: aViennaTypeNode

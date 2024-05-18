@@ -1,17 +1,18 @@
 Class {
-	#name : #ViennaSeqConcPatternNode,
-	#superclass : #ViennaPatternNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaSeqConcPatternNode',
+	#superclass : 'ViennaPatternNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaSeqConcPatternNode >> boundIdentifiersDo: aBlock [
 
 	self do: [ :pattern | pattern boundIdentifiersDo: aBlock ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSeqConcPatternNode >> formatWith: aViennaAbstractFormatter [
 
 	| patterns |
@@ -24,25 +25,25 @@ ViennaSeqConcPatternNode >> formatWith: aViennaAbstractFormatter [
 		  withAll: patterns
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaSeqConcPatternNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self do: [ :pattern | pattern freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaSeqConcPatternNode >> isViennaSeqConcPatternNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSeqConcPatternNode >> label [
 
 	^ 'SeqConcPattern'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaSeqConcPatternNode >> maximalType [
 
 	| basetype isSeq1 |
@@ -60,7 +61,7 @@ ViennaSeqConcPatternNode >> maximalType [
 			  ifFalse: [ basetype seq ] ]
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaSeqConcPatternNode >> maximalType: aViennaType [
 
 	| type |

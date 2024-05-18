@@ -1,35 +1,36 @@
 Class {
-	#name : #ViennaTopLevelDefinitionNode,
-	#superclass : #ViennaNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaTopLevelDefinitionNode',
+	#superclass : 'ViennaNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTopLevelDefinitionNode class >> isAbstract [
 
 	^ self = ViennaTopLevelDefinitionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTopLevelDefinitionNode >> identifier [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTopLevelDefinitionNode >> identifiers [
 
 	^ { self identifier }
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTopLevelDefinitionNode >> isViennaExportableTopLevelDefinitionNode [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTopLevelDefinitionNode >> isViennaTopLevelDefinitionNode [
 
 	^ true

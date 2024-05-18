@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaOperationTypeNode,
-	#superclass : #ViennaAbstractFunctionTypeNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaOperationTypeNode',
+	#superclass : 'ViennaAbstractFunctionTypeNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaOperationTypeNode >> asMaximalViennaType [
 
 	^ ViennaOperationType
@@ -18,7 +19,7 @@ ViennaOperationTypeNode >> asMaximalViennaType [
 		  with: self returnType asMaximalViennaType
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaOperationTypeNode >> formatWith: aViennaAbstractFormatter [
 
 	^ (aViennaAbstractFormatter format: self argumentType)
@@ -27,13 +28,13 @@ ViennaOperationTypeNode >> formatWith: aViennaAbstractFormatter [
 	  ++ (aViennaAbstractFormatter format: self returnType)
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaOperationTypeNode >> isViennaOperationTypeNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaOperationTypeNode >> label [
 
 	^ 'OperationType'

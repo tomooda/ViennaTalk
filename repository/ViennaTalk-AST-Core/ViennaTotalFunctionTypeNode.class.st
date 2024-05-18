@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaTotalFunctionTypeNode,
-	#superclass : #ViennaFunctionTypeNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaTotalFunctionTypeNode',
+	#superclass : 'ViennaFunctionTypeNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaTotalFunctionTypeNode >> asMaximalViennaType [
 
 	^ ViennaTotalFunctionType
@@ -18,7 +19,7 @@ ViennaTotalFunctionTypeNode >> asMaximalViennaType [
 		  with: self returnType asMaximalViennaType
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaTotalFunctionTypeNode >> formatWith: aViennaAbstractFormatter [
 
 	^ (aViennaAbstractFormatter format: self argumentType)
@@ -28,13 +29,13 @@ ViennaTotalFunctionTypeNode >> formatWith: aViennaAbstractFormatter [
 	  ++ (aViennaAbstractFormatter format: self returnType)
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTotalFunctionTypeNode >> isViennaTotalFunctionTypeNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTotalFunctionTypeNode >> label [
 
 	^ 'TotalFunctionType'

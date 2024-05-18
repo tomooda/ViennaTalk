@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaEqualDefinitionNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaEqualDefinitionNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaEqualDefinitionNode class >> patternOrBind: aViennaPatternNodeOrViennaBindNode expression: aViennaExpressionNode [
 
 	^ (self new: 2)
@@ -14,31 +15,31 @@ ViennaEqualDefinitionNode class >> patternOrBind: aViennaPatternNodeOrViennaBind
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaEqualDefinitionNode >> boundIdentifiersDo: aBlock [
 
 	self patternOrBind boundIdentifiersDo: aBlock
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaEqualDefinitionNode >> definitionOfLocalName: aString [
 
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString for: self ]
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : 'parsers-patterns' }
 ViennaEqualDefinitionNode >> expression [
 
 	^ self at: 2
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : 'parsers-patterns' }
 ViennaEqualDefinitionNode >> expression: aViennaExpressionNode [
 
 	self at: 2 put: aViennaExpressionNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaEqualDefinitionNode >> formatWith: aViennaAbstractFormatter [
 
 	| patternOrBind expression |
@@ -49,7 +50,7 @@ ViennaEqualDefinitionNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: expression
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaEqualDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self patternOrBind freeIdentifiersExcept: aSet do: aBlock.
@@ -59,19 +60,19 @@ ViennaEqualDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
 		do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaEqualDefinitionNode >> isViennaEqualDefinitionNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaEqualDefinitionNode >> label [
 
 	^ 'EqualDefinition'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaEqualDefinitionNode >> maximalType [
 
 	| leftType rightType |
@@ -80,13 +81,13 @@ ViennaEqualDefinitionNode >> maximalType [
 	^ self patternOrBind maximalType: rightType
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : 'parsers-patterns' }
 ViennaEqualDefinitionNode >> patternOrBind [
 
 	^ self at: 1
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : 'parsers-patterns' }
 ViennaEqualDefinitionNode >> patternOrBind: aViennaPatternNodeOrViennaBindNode [
 
 	self at: 1 put: aViennaPatternNodeOrViennaBindNode

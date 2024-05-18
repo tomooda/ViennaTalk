@@ -1,48 +1,49 @@
 Class {
-	#name : #ViennaModularDocumentNode,
-	#superclass : #ViennaDocumentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaModularDocumentNode',
+	#superclass : 'ViennaDocumentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaModularDocumentNode >> deepFindResolverForIdentifier: aString [
 
 	^ nil
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaModularDocumentNode >> findResolverForIdentifier: aString [
 
 	^ nil
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaModularDocumentNode >> isViennaModularDocumentNode [
 
 	^ true
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaModularDocumentNode >> maximalType [
 
 	self modulesDo: #typecheck.
 	^ ViennaType unit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaModularDocumentNode >> moduleNames [
 
 	^ self collect: #identifier
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaModularDocumentNode >> modules [
 
 	^ self asArray
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaModularDocumentNode >> modulesDo: aBlock [
 
 	self do: aBlock

@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaCasesStatementNode,
-	#superclass : #ViennaStatementNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaCasesStatementNode',
+	#superclass : 'ViennaStatementNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaCasesStatementNode class >> expression: aViennaExpressionNode casesStatementAlternatives: aViennaCasesStatementAlternativesNode othersStatement: aViennaOthersStatementNode [
 
 	^ (self new: 3)
@@ -15,31 +16,31 @@ ViennaCasesStatementNode class >> expression: aViennaExpressionNode casesStateme
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCasesStatementNode >> casesStatementAlternatives [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCasesStatementNode >> casesStatementAlternatives: aViennaCasesStatementAlternativesNode [
 
 	self at: 2 put: aViennaCasesStatementAlternativesNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCasesStatementNode >> expression [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCasesStatementNode >> expression: aViennaExpressionNode [
 
 	self at: 1 put: aViennaExpressionNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaCasesStatementNode >> formatWith: aViennaAbstractFormatter [
 
 	| value alternatives others |
@@ -59,7 +60,7 @@ ViennaCasesStatementNode >> formatWith: aViennaAbstractFormatter [
 		  ++ (aViennaAbstractFormatter keyword: 'end')
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaCasesStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self expression freeIdentifiersExcept: aSet do: aBlock.
@@ -70,19 +71,19 @@ ViennaCasesStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
 		others freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaCasesStatementNode >> isViennaCasesStatementNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCasesStatementNode >> label [
 
 	^ 'CasesStatement'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaCasesStatementNode >> maximalType [
 
 	| caseType |
@@ -97,13 +98,13 @@ ViennaCasesStatementNode >> maximalType [
 		   ifNil: [ ViennaType unit ])
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCasesStatementNode >> othersStatement [
 
 	^ self at: 3
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCasesStatementNode >> othersStatement: aViennaOthersStatementNode [
 
 	self at: 3 put: aViennaOthersStatementNode

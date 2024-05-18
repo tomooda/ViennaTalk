@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaConditionalExpressionNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaConditionalExpressionNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaConditionalExpressionNode class >> condition: aViennaExpressionNode1 expression: aViennaExpressionNode2 [
 
 	^ (self new: 2)
@@ -14,37 +15,37 @@ ViennaConditionalExpressionNode class >> condition: aViennaExpressionNode1 expre
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaConditionalExpressionNode >> boundIdentifiersDo: aBlock [
 
 	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaConditionalExpressionNode >> condition [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaConditionalExpressionNode >> condition: aViennaExpressionNode [
 
 	self at: 1 put: aViennaExpressionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaConditionalExpressionNode >> expression [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaConditionalExpressionNode >> expression: aViennaExpressionNode [
 
 	self at: 2 put: aViennaExpressionNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaConditionalExpressionNode >> formatWith: aViennaAbstractFormatter [
 
 	^ (aViennaAbstractFormatter keyword: 'elseif ')
@@ -56,33 +57,33 @@ ViennaConditionalExpressionNode >> formatWith: aViennaAbstractFormatter [
 			   (aViennaAbstractFormatter format: self expression))
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaConditionalExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self condition freeIdentifiersExcept: aSet do: aBlock.
 	self expression freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaConditionalExpressionNode >> isViennaConditionalExpressionNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaConditionalExpressionNode >> label [
 
 	^ 'ConditionalExpression'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaConditionalExpressionNode >> maximalType [
 
 	self condition typecheck: ViennaType bool.
 	^ self expression typecheck
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaConditionalExpressionNode >> maximalType: aViennaType [
 
 	^ self expression maximalType: aViennaType

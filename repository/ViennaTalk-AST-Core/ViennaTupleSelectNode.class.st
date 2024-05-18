@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaTupleSelectNode,
-	#superclass : #ViennaExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaTupleSelectNode',
+	#superclass : 'ViennaExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaTupleSelectNode class >> expression: aViennaExpressionNode index: aString [
 
 	^ (self new: 2)
@@ -14,19 +15,19 @@ ViennaTupleSelectNode class >> expression: aViennaExpressionNode index: aString 
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTupleSelectNode >> expression [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTupleSelectNode >> expression: aViennaExpressionNode [
 
 	self at: 1 put: aViennaExpressionNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaTupleSelectNode >> formatWith: aViennaAbstractFormatter [
 
 	| tuple int |
@@ -35,37 +36,37 @@ ViennaTupleSelectNode >> formatWith: aViennaAbstractFormatter [
 	^ aViennaAbstractFormatter print: tuple infix: '.#' arg: int
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTupleSelectNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self expression freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTupleSelectNode >> index [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTupleSelectNode >> index: aString [
 
 	self at: 2 put: aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTupleSelectNode >> isViennaTupleSelectNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTupleSelectNode >> label [
 
 	^ 'TupleSelect'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaTupleSelectNode >> maximalType [
 
 	| i basetype |

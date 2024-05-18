@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaIfExpressionNode,
-	#superclass : #ViennaExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaIfExpressionNode',
+	#superclass : 'ViennaExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaIfExpressionNode class >> conditionalExpressionList: aViennaConditionalExpressionListNode expression: aViennaExpressionNode [
 
 	^ (self new: 2)
@@ -14,31 +15,31 @@ ViennaIfExpressionNode class >> conditionalExpressionList: aViennaConditionalExp
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIfExpressionNode >> conditionalExpressionList [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIfExpressionNode >> conditionalExpressionList: aViennaConditionalExpressionListNode [
 
 	self at: 1 put: aViennaConditionalExpressionListNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIfExpressionNode >> expression [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIfExpressionNode >> expression: aViennaExpressionNode [
 
 	self at: 2 put: aViennaExpressionNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaIfExpressionNode >> formatWith: aViennaAbstractFormatter [
 
 	| cond expr default elseifs |
@@ -75,33 +76,33 @@ ViennaIfExpressionNode >> formatWith: aViennaAbstractFormatter [
 		   insertCr: default)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaIfExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self conditionalExpressionList freeIdentifiersExcept: aSet do: aBlock.
 	self expression freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaIfExpressionNode >> isViennaIfExpressionNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIfExpressionNode >> label [
 
 	^ 'IfExpression'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaIfExpressionNode >> maximalType [
 
 	^ self conditionalExpressionList typecheck
 	  + self expression typecheck
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaIfExpressionNode >> maximalType: aViennaType [
 
 	self conditionalExpressionList maximalType: aViennaType.
@@ -109,7 +110,7 @@ ViennaIfExpressionNode >> maximalType: aViennaType [
 	super maximalType: aViennaType
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaIfExpressionNode >> operatorPrecedence [
 
 	^ 10

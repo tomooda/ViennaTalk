@@ -1,29 +1,30 @@
 Class {
-	#name : #ViennaMapRangeNode,
-	#superclass : #ViennaUnaryOperatorExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaMapRangeNode',
+	#superclass : 'ViennaUnaryOperatorExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaMapRangeNode >> formatOperatorWith: aViennaAbstractFormatter [
 
 	^ 'rng'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapRangeNode >> isViennaMapRangeNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapRangeNode >> label [
 
 	^ 'MapRange'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaMapRangeNode >> maximalType: aViennaType [
 
 	| valuetype |
@@ -38,19 +39,19 @@ ViennaMapRangeNode >> maximalType: aViennaType [
 	super maximalType: aViennaType
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaMapRangeNode >> operatorPrecedence [
 
 	^ 36
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaMapRangeNode >> paramType [
 
 	^ ViennaType any mapTo: ViennaType any
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaMapRangeNode >> returnTypeFor: aViennaType [
 
 	^ aViennaType valuetype set

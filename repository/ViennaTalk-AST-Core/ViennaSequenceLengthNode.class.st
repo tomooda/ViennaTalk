@@ -1,41 +1,42 @@
 Class {
-	#name : #ViennaSequenceLengthNode,
-	#superclass : #ViennaUnaryOperatorExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaSequenceLengthNode',
+	#superclass : 'ViennaUnaryOperatorExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSequenceLengthNode >> formatOperatorWith: aViennaAbstractFormatter [
 
 	^ 'len'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaSequenceLengthNode >> isViennaSequenceLengthNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSequenceLengthNode >> label [
 
 	^ 'SequenceLength'
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSequenceLengthNode >> operatorPrecedence [
 
 	^ 36
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaSequenceLengthNode >> paramType [
 
 	^ ViennaType any seq
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaSequenceLengthNode >> returnTypeFor: aViennaType [
 
 	^ aViennaType isSeq1Type

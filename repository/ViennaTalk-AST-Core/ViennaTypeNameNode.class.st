@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaTypeNameNode,
-	#superclass : #ViennaTypeNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaTypeNameNode',
+	#superclass : 'ViennaTypeNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaTypeNameNode class >> name: aViennaNameNode [
 
 	^ (self new: 1)
@@ -13,7 +14,7 @@ ViennaTypeNameNode class >> name: aViennaNameNode [
 		  yourself
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaTypeNameNode >> asMaximalViennaType [
 
 	^ self resolve
@@ -22,7 +23,7 @@ ViennaTypeNameNode >> asMaximalViennaType [
 		  ViennaTypeError on: self signal: 'Unresolved type: ' , self source ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaTypeNameNode >> formatWith: aViennaAbstractFormatter [
 
 	| name |
@@ -34,43 +35,43 @@ ViennaTypeNameNode >> formatWith: aViennaAbstractFormatter [
 		  ifFalse: [ aViennaAbstractFormatter typeName: name identifier ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTypeNameNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self name freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTypeNameNode >> identifier [
 
 	^ self name identifier
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTypeNameNode >> isViennaTypeNameNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTypeNameNode >> isViennaTypeNameNode: aString [
 
 	^ self identifier = aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTypeNameNode >> label [
 
 	^ 'TypeName'
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaTypeNameNode >> localResolve [
 
 	^ self name localResolve
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaTypeNameNode >> maximalType [
 
 	^ self resolve ifNotNil: #typecheck ifNil: [
@@ -79,19 +80,19 @@ ViennaTypeNameNode >> maximalType [
 			  signal: 'Unresolved type name: ' , self name source ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTypeNameNode >> name [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTypeNameNode >> name: aViennaNameNode [
 
 	self at: 1 put: aViennaNameNode
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaTypeNameNode >> resolve [
 
 	^ self name resolve

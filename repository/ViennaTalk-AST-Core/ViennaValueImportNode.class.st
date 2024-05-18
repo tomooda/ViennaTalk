@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaValueImportNode,
-	#superclass : #ViennaImportNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaValueImportNode',
+	#superclass : 'ViennaImportNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaValueImportNode class >> name: aViennaNameNode1 type: aViennaTypeNode rename: aViennaNameNode2 [
 
 	^ (self new: 3)
@@ -15,7 +16,7 @@ ViennaValueImportNode class >> name: aViennaNameNode1 type: aViennaTypeNode rena
 		  yourself
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaValueImportNode >> formatWith: aViennaAbstractFormatter [
 
 	| name type rename |
@@ -34,31 +35,31 @@ ViennaValueImportNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: rename
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaValueImportNode >> isViennaValueImportNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaValueImportNode >> isViennaValueImportNode: aString [
 
 	^ self identifier = aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaValueImportNode >> isViennaValueImportNodeRenamed: aString [
 
 	^ self rename identifier = aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaValueImportNode >> label [
 
 	^ 'ValueImport'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaValueImportNode >> maximalType [
 
 	^ (self document moduleNamed: self moduleIdentifier)
@@ -96,37 +97,37 @@ ViennaValueImportNode >> maximalType [
 				  signal: 'Unresolved module: ' , self moduleIdentifier ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaValueImportNode >> name [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaValueImportNode >> name: aViennaNameNode [
 
 	self at: 1 put: aViennaNameNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaValueImportNode >> rename [
 
 	^ self at: 3
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaValueImportNode >> rename: aViennaNameNode [
 
 	self at: 3 put: aViennaNameNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaValueImportNode >> type [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaValueImportNode >> type: aViennaTypeNode [
 
 	self at: 2 put: aViennaTypeNode

@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaCallStatementNode,
-	#superclass : #ViennaStatementNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaCallStatementNode',
+	#superclass : 'ViennaStatementNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaCallStatementNode class >> name: aViennaNameNode expressionList: aViennaExpressionListNode [
 
 	^ (self new: 2)
@@ -14,19 +15,19 @@ ViennaCallStatementNode class >> name: aViennaNameNode expressionList: aViennaEx
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCallStatementNode >> expressionList [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCallStatementNode >> expressionList: aViennaExpressionListNode [
 
 	self at: 2 put: aViennaExpressionListNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaCallStatementNode >> formatWith: aViennaAbstractFormatter [
 
 	| args |
@@ -37,26 +38,26 @@ ViennaCallStatementNode >> formatWith: aViennaAbstractFormatter [
 			   ifFalse: [ args ]) ++ ')'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaCallStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self name freeIdentifiersExcept: aSet do: aBlock.
 	self expressionList freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaCallStatementNode >> isViennaCallStatementNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCallStatementNode >> label [
 
 	^ 'CallStatement'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaCallStatementNode >> maximalType [
 
 	^ self name resolve
@@ -113,13 +114,13 @@ ViennaCallStatementNode >> maximalType [
 				  signal: 'Unresolved operation: ' , self name source ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCallStatementNode >> name [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCallStatementNode >> name: aViennaNameNode [
 
 	self at: 1 put: aViennaNameNode

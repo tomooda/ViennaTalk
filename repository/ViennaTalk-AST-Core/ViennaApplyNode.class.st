@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaApplyNode,
-	#superclass : #ViennaExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaApplyNode',
+	#superclass : 'ViennaExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaApplyNode class >> expression: aViennaExpressionNode argumentExpressionList: aViennaExpressionListNode [
 
 	^ (self new: 2)
@@ -14,37 +15,37 @@ ViennaApplyNode class >> expression: aViennaExpressionNode argumentExpressionLis
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaApplyNode >> argumentExpressionList [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaApplyNode >> argumentExpressionList: aViennaExpressionListNode [
 
 	self at: 2 put: aViennaExpressionListNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaApplyNode >> arguments [
 
 	^ self argumentExpressionList asArray
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaApplyNode >> expression [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaApplyNode >> expression: aString [
 
 	self at: 1 put: aString
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaApplyNode >> formatWith: aViennaAbstractFormatter [
 
 	| expression args |
@@ -58,38 +59,38 @@ ViennaApplyNode >> formatWith: aViennaAbstractFormatter [
 			   ifFalse: [ args ]) ++ ')'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaApplyNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self expression freeIdentifiersExcept: aSet do: aBlock.
 	self argumentExpressionList freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaApplyNode >> function [
 
 	^ self expression
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaApplyNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
 
 	^ aBlock1 value
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaApplyNode >> isViennaApplyNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaApplyNode >> label [
 
 	^ 'Apply'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaApplyNode >> maximalType [
 
 	| args |
@@ -143,7 +144,7 @@ ViennaApplyNode >> maximalType [
 		  ViennaTypeError on: self signal: 'Not an applicable type' ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaApplyNode >> operatorPrecedence [
 
 	^ 40

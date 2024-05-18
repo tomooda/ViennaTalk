@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaExplicitOperationDefinitionNode,
-	#superclass : #ViennaTopLevelDefinitionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaExplicitOperationDefinitionNode',
+	#superclass : 'ViennaTopLevelDefinitionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaExplicitOperationDefinitionNode class >> access: aViennaAccessNode identifier: aString type: aViennaTypeNode parameters: aViennaParametersNode statement: aViennaStatementNode pre: aViennaExpresssionNode1 post: aViennaExpressionNode2 [
 
 	^ (self new: 8)
@@ -19,7 +20,7 @@ ViennaExplicitOperationDefinitionNode class >> access: aViennaAccessNode identif
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaExplicitOperationDefinitionNode class >> identifier: aString type: aViennaTypeNode parameters: aViennaParametersNode statement: aViennaStatementNode pre: aViennaExpresssionNode1 post: aViennaExpressionNode2 [
 
 	^ self
@@ -32,31 +33,31 @@ ViennaExplicitOperationDefinitionNode class >> identifier: aString type: aVienna
 		  post: aViennaExpressionNode2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitOperationDefinitionNode >> access [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitOperationDefinitionNode >> access: aViennaAccessNode [
 
 	self at: 1 put: aViennaAccessNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitOperationDefinitionNode >> argumentType [
 
 	^ self type argumentType
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaExplicitOperationDefinitionNode >> asAccessDefinition [
 
 	^ self
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaExplicitOperationDefinitionNode >> asExport [
 
 	^ ViennaOperationExportNode
@@ -65,7 +66,7 @@ ViennaExplicitOperationDefinitionNode >> asExport [
 		  type: (self type ifNotNil: #copyFragment)
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaExplicitOperationDefinitionNode >> asImportDefinitionIn: moduleNode [
 
 	^ ViennaImportDefinitionNode
@@ -78,7 +79,7 @@ ViennaExplicitOperationDefinitionNode >> asImportDefinitionIn: moduleNode [
 						     rename: nil)))
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaExplicitOperationDefinitionNode >> boundIdentifiersDo: aBlock [
 
 	aBlock cull: self identifier cull: self.
@@ -88,7 +89,7 @@ ViennaExplicitOperationDefinitionNode >> boundIdentifiersDo: aBlock [
 		aBlock cull: 'post_' , self identifier cull: self ]
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaExplicitOperationDefinitionNode >> definitionOfLocalName: aString [
 
 	self parameters
@@ -98,7 +99,7 @@ ViennaExplicitOperationDefinitionNode >> definitionOfLocalName: aString [
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaExplicitOperationDefinitionNode >> findResolverForIdentifier: aString [
 
 	^ (aString = 'RESULT' or: [ self parameters bindsIdentifier: aString ])
@@ -106,7 +107,7 @@ ViennaExplicitOperationDefinitionNode >> findResolverForIdentifier: aString [
 		  ifFalse: [ super findResolverForIdentifier: aString ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaExplicitOperationDefinitionNode >> formatWith: aViennaAbstractFormatter [
 
 	| access identifier operationType parameters statement pre post |
@@ -134,7 +135,7 @@ ViennaExplicitOperationDefinitionNode >> formatWith: aViennaAbstractFormatter [
 			   insertCrIfNeeded: statement) ++ pre ++ post
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaExplicitOperationDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	| boundIdentifiers |
@@ -150,19 +151,19 @@ ViennaExplicitOperationDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock 
 		post freeIdentifiersExcept: boundIdentifiers do: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExplicitOperationDefinitionNode >> hasScope [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitOperationDefinitionNode >> identifier [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitOperationDefinitionNode >> identifier: aString [
 
 	self
@@ -170,55 +171,55 @@ ViennaExplicitOperationDefinitionNode >> identifier: aString [
 		at: 4 put: aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExplicitOperationDefinitionNode >> isOperationDefinition [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExplicitOperationDefinitionNode >> isViennaAccessOperationDefinitionNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExplicitOperationDefinitionNode >> isViennaExplicitOperationDefinitionNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExplicitOperationDefinitionNode >> isViennaExplicitOperationDefinitionNode: aString [
 
 	^ self identifier = aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExplicitOperationDefinitionNode >> isViennaExportableTopLevelDefinitionNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExplicitOperationDefinitionNode >> isViennaOperationDefinitionNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExplicitOperationDefinitionNode >> isViennaOperationDefinitionNode: aString [
 
 	^ self identifier = aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitOperationDefinitionNode >> label [
 
 	^ 'ExplicitOperationDefinition'
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaExplicitOperationDefinitionNode >> lookupIdentifier: aString [
 
 	aString = 'RESULT' ifTrue: [ ^ self ].
@@ -227,7 +228,7 @@ ViennaExplicitOperationDefinitionNode >> lookupIdentifier: aString [
 	^ nil
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaExplicitOperationDefinitionNode >> maximalType [
 
 	self maximalType: self type typecheck.
@@ -252,79 +253,79 @@ ViennaExplicitOperationDefinitionNode >> maximalType [
 	^ maximalType
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitOperationDefinitionNode >> parameters [
 
 	^ self at: 5
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitOperationDefinitionNode >> parameters: aViennaParametersNode [
 
 	self at: 5 put: aViennaParametersNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitOperationDefinitionNode >> post [
 
 	^ self at: 8
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitOperationDefinitionNode >> post: aViennaExpressionNode [
 
 	self at: 8 put: aViennaExpressionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitOperationDefinitionNode >> pre [
 
 	^ self at: 7
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitOperationDefinitionNode >> pre: aViennaExpression [
 
 	self at: 7 put: aViennaExpression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitOperationDefinitionNode >> returnIdentifiers [
 
 	^ #( 'RESULT' )
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitOperationDefinitionNode >> returnType [
 
 	^ self type returnType
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaExplicitOperationDefinitionNode >> shortName [
 
 	^ self identifier
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaExplicitOperationDefinitionNode >> statement [
 
 	^ self at: 6
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaExplicitOperationDefinitionNode >> statement: aViennaStatementNode [
 
 	^ self at: 6 put: aViennaStatementNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitOperationDefinitionNode >> type [
 
 	^ self at: 3
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitOperationDefinitionNode >> type: aViennaTypeNode [
 
 	self at: 3 put: aViennaTypeNode

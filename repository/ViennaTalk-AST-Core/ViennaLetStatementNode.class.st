@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaLetStatementNode,
-	#superclass : #ViennaStatementNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaLetStatementNode',
+	#superclass : 'ViennaStatementNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaLetStatementNode class >> localDefinitionList: aViennaLocalDefinitionListNode body: aViennaStatementNode [
 
 	^ self
@@ -13,7 +14,7 @@ ViennaLetStatementNode class >> localDefinitionList: aViennaLocalDefinitionListN
 		  statement: aViennaStatementNode
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaLetStatementNode class >> localDefinitionList: aViennaLocalDefinitionListNode statement: aViennaStatementNode [
 
 	^ (self new: 2)
@@ -22,19 +23,19 @@ ViennaLetStatementNode class >> localDefinitionList: aViennaLocalDefinitionListN
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLetStatementNode >> body [
 
 	^ self statement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLetStatementNode >> body: aViennaStatementNode [
 
 	^ self statement: aViennaStatementNode
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaLetStatementNode >> definitionOfLocalName: aString [
 
 	self localDefinitionList do: [ :def |
@@ -47,7 +48,7 @@ ViennaLetStatementNode >> definitionOfLocalName: aString [
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaLetStatementNode >> findResolverForIdentifier: aString [
 
 	^ (self localDefinitionList bindsIdentifier: aString)
@@ -55,7 +56,7 @@ ViennaLetStatementNode >> findResolverForIdentifier: aString [
 		  ifFalse: [ super findResolverForIdentifier: aString ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaLetStatementNode >> formatWith: aViennaAbstractFormatter [
 
 	| localDefinitionList statement |
@@ -71,7 +72,7 @@ ViennaLetStatementNode >> formatWith: aViennaAbstractFormatter [
 				   insertCrIfNeeded: statement)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaLetStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	| boundIdentifiers |
@@ -83,43 +84,43 @@ ViennaLetStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
 	self statement freeIdentifiersExcept: boundIdentifiers do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaLetStatementNode >> hasScope [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaLetStatementNode >> isViennaLetStatementNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLetStatementNode >> label [
 
 	^ 'LetStatement'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLetStatementNode >> localDefinitionList [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLetStatementNode >> localDefinitionList: aViennaLocalDefinitionListNode [
 
 	self at: 1 put: aViennaLocalDefinitionListNode
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaLetStatementNode >> localDefinitionsDo: aBlock [
 
 	self localDefinitionList do: aBlock
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaLetStatementNode >> lookupIdentifier: aString [
 
 	self localDefinitionList do: [ :localDefinition |
@@ -128,20 +129,20 @@ ViennaLetStatementNode >> lookupIdentifier: aString [
 	^ nil
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaLetStatementNode >> maximalType [
 
 	self localDefinitionList typecheck.
 	^ self body typecheck
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLetStatementNode >> statement [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLetStatementNode >> statement: aViennaStatementNode [
 
 	self at: 2 put: aViennaStatementNode

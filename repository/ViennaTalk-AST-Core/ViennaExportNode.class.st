@@ -1,17 +1,18 @@
 Class {
-	#name : #ViennaExportNode,
-	#superclass : #ViennaExportComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaExportNode',
+	#superclass : 'ViennaExportComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExportNode class >> isAbstract [
 
 	^ self = ViennaExportNode
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaExportNode >> boundIdentifiersDo: aBlock [
 
 	

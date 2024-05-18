@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaIfStatementNode,
-	#superclass : #ViennaStatementNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaIfStatementNode',
+	#superclass : 'ViennaStatementNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaIfStatementNode class >> conditionalStatementList: aViennaConditionalStatementListNode statement: aViennaStatementNode [
 
 	^ (self new: 2)
@@ -14,19 +15,19 @@ ViennaIfStatementNode class >> conditionalStatementList: aViennaConditionalState
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIfStatementNode >> conditionalStatementList [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIfStatementNode >> conditionalStatementList: aViennaConditionalStatementListNode [
 
 	self at: 1 put: aViennaConditionalStatementListNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaIfStatementNode >> formatWith: aViennaAbstractFormatter [
 
 	| cond statement default elseifs |
@@ -72,39 +73,39 @@ ViennaIfStatementNode >> formatWith: aViennaAbstractFormatter [
 			    insertCr: default) ])
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaIfStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self conditionalStatementList freeIdentifiersExcept: aSet do: aBlock.
 	self statement freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaIfStatementNode >> isViennaIfStatementNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIfStatementNode >> label [
 
 	^ 'IfStatement'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaIfStatementNode >> maximalType [
 
 	^ self conditionalStatementList typecheck
 	  + (self statement ifNotNil: #typecheck ifNil: [ ViennaType unit ])
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIfStatementNode >> statement [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIfStatementNode >> statement: aViennaStatementNode [
 
 	self at: 2 put: aViennaStatementNode

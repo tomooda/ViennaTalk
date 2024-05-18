@@ -1,23 +1,24 @@
 Class {
-	#name : #ViennaFieldListNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaFieldListNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaFieldListNode >> asMaximalViennaType [
 
 	^ self collect: #asMaximalViennaType
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaFieldListNode >> boundIdentifiersDo: aBlock [
 
 	
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaFieldListNode >> formatWith: aViennaAbstractFormatter [
 
 	| fields |
@@ -29,25 +30,25 @@ ViennaFieldListNode >> formatWith: aViennaAbstractFormatter [
 		  withAll: fields
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaFieldListNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self do: [ :field | field freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaFieldListNode >> isViennaFieldListNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFieldListNode >> label [
 
 	^ 'FieldList'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaFieldListNode >> maximalType [
 
 	^ ViennaType product: (self collect: #typecheck)

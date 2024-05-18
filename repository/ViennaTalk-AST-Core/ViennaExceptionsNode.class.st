@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaExceptionsNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaExceptionsNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaExceptionsNode class >> errorList: aViennaErrorListNode [
 
 	^ (self new: 1)
@@ -13,50 +14,50 @@ ViennaExceptionsNode class >> errorList: aViennaErrorListNode [
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaExceptionsNode >> boundIdentifiersDo: aBlock [
 
 	self errorList boundIdentifiersDo: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExceptionsNode >> errorList [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExceptionsNode >> errorList: aViennaErrorListNode [
 
 	self at: 1 put: aViennaErrorListNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaExceptionsNode >> formatWith: aViennaAbstractFormatter [
 
 	^ (aViennaAbstractFormatter keyword: 'errs')
 	  ++ (aViennaAbstractFormatter format: self errorList)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaExceptionsNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self errorList freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExceptionsNode >> isViennaExceptionsNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExceptionsNode >> label [
 
 	^ 'Exceptions'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaExceptionsNode >> maximalType [
 
 	^ self errorList typecheck

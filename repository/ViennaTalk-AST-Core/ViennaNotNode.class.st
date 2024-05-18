@@ -1,41 +1,42 @@
 Class {
-	#name : #ViennaNotNode,
-	#superclass : #ViennaUnaryOperatorExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaNotNode',
+	#superclass : 'ViennaUnaryOperatorExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaNotNode >> formatOperatorWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter not
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNotNode >> isViennaNotNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNotNode >> label [
 
 	^ 'Not'
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaNotNode >> operatorPrecedence [
 
 	^ 15
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaNotNode >> paramType [
 
 	^ ViennaType bool
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaNotNode >> returnTypeFor: aViennaType [
 
 	^ ViennaType bool

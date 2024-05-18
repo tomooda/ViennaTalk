@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaForallExpressionNode,
-	#superclass : #ViennaMultipleBindQuantifierNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaForallExpressionNode',
+	#superclass : 'ViennaMultipleBindQuantifierNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaForallExpressionNode class >> bindList: aViennaBindListNode expression: aViennaExpressionNode [
 
 	^ (self new: 2)
@@ -14,7 +15,7 @@ ViennaForallExpressionNode class >> bindList: aViennaBindListNode expression: aV
 		  yourself
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaForallExpressionNode >> formatWith: aViennaAbstractFormatter [
 
 	| bindList expression |
@@ -29,19 +30,19 @@ ViennaForallExpressionNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: expression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaForallExpressionNode >> isViennaForallExpressionNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaForallExpressionNode >> label [
 
 	^ 'ForallExpression'
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaForallExpressionNode >> operatorPrecedence [
 
 	^ 10

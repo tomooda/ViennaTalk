@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaFunctionImportNode,
-	#superclass : #ViennaImportNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaFunctionImportNode',
+	#superclass : 'ViennaImportNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaFunctionImportNode class >> name: aViennaNameNode1 typeVariableList: aViennaTypeVariableListNode type: aViennaFunctionType rename: aViennaNameNode2 [
 
 	^ (self new: 4)
@@ -16,7 +17,7 @@ ViennaFunctionImportNode class >> name: aViennaNameNode1 typeVariableList: aVien
 		  yourself
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaFunctionImportNode >> formatWith: aViennaAbstractFormatter [
 
 	| name typeVariableList type rename |
@@ -39,31 +40,31 @@ ViennaFunctionImportNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: rename
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaFunctionImportNode >> isViennaFunctionImportNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaFunctionImportNode >> isViennaFunctionImportNode: aString [
 
 	^ self identifier = aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaFunctionImportNode >> isViennaFunctionImportNodeRenamed: aString [
 
 	^ self rename identifier = aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFunctionImportNode >> label [
 
 	^ 'FunctionImport'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaFunctionImportNode >> maximalType [
 
 	^ (self document moduleNamed: self moduleIdentifier)
@@ -110,49 +111,49 @@ ViennaFunctionImportNode >> maximalType [
 				  signal: 'Unresolved module: ' , self moduleIdentifier ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFunctionImportNode >> name [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFunctionImportNode >> name: aViennaNameNode [
 
 	self at: 1 put: aViennaNameNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFunctionImportNode >> rename [
 
 	^ self at: 4
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFunctionImportNode >> rename: aViennaNameNode [
 
 	self at: 4 put: aViennaNameNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFunctionImportNode >> type [
 
 	^ self at: 3
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFunctionImportNode >> type: aViennaFunctionTypeNode [
 
 	self at: 3 put: aViennaFunctionTypeNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFunctionImportNode >> typeVariableList [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFunctionImportNode >> typeVariableList: aViennaTypeVariableListNode [
 
 	self at: 2 put: aViennaTypeVariableListNode

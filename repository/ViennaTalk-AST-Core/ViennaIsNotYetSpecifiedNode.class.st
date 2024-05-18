@@ -1,41 +1,42 @@
 Class {
-	#name : #ViennaIsNotYetSpecifiedNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaIsNotYetSpecifiedNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaIsNotYetSpecifiedNode >> boundIdentifiersDo: aBlock [
 
 	
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaIsNotYetSpecifiedNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter keyword: 'is not yet specified'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaIsNotYetSpecifiedNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaIsNotYetSpecifiedNode >> isViennaIsNotYetSpecifiedNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIsNotYetSpecifiedNode >> label [
 
 	^ 'IsNotYetSpecified'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaIsNotYetSpecifiedNode >> maximalType [
 
 	^ ViennaType any

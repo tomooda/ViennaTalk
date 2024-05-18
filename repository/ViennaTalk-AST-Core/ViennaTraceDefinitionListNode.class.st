@@ -1,17 +1,18 @@
 Class {
-	#name : #ViennaTraceDefinitionListNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaTraceDefinitionListNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTraceDefinitionListNode >> boundIdentifiersDo: aBlock [
 
 	self do: [ :node | node boundIdentifiersDo: aBlock ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaTraceDefinitionListNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter
@@ -19,25 +20,25 @@ ViennaTraceDefinitionListNode >> formatWith: aViennaAbstractFormatter [
 		  withAll: (aViennaAbstractFormatter formatAll: self)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTraceDefinitionListNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self do: [ :node | node freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTraceDefinitionListNode >> label [
 
 	^ 'TraceDefinitionList'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTraceDefinitionListNode >> listDelimiter [
 
 	^ ';', String cr
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaTraceDefinitionListNode >> maximalType [
 
 	self do: #typecheck.

@@ -1,29 +1,30 @@
 Class {
-	#name : #ViennaPatternBindNode,
-	#superclass : #ViennaNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaPatternBindNode',
+	#superclass : 'ViennaNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaPatternBindNode class >> isAbstract [
 
 	^ self = ViennaPatternBindNode
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaPatternBindNode >> boundIdentifiersDo: aBlock [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaPatternBindNode >> isViennaPatternBindNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaPatternBindNode >> isViennaPatternHolderNode [
 
 	^ true

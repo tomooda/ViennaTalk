@@ -1,17 +1,18 @@
 Class {
-	#name : #ViennaVDM2SmalltalkScriptTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-Transpiler-Tests'
+	#name : 'ViennaVDM2SmalltalkScriptTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-Transpiler-Tests',
+	#package : 'ViennaTalk-Transpiler-Tests'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaVDM2SmalltalkScriptTest >> evaluate: aString [
 	^ OpalCompiler new
 		source: aString;
 		evaluate
 ]
 
-{ #category : #'tests-code generation-statements' }
+{ #category : 'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testAlwaysStatementEnv [
 	self
 		assert:
@@ -45,7 +46,7 @@ ViennaVDM2SmalltalkScriptTest >> testAlwaysStatementEnv [
 		equals: 2
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testAndEnv [
 
 	| node |
@@ -82,7 +83,7 @@ ViennaVDM2SmalltalkScriptTest >> testAndEnv [
 		raise: ViennaUndefinedEvaluationError
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testApplyEnv [
 
 	| node |
@@ -95,7 +96,7 @@ ViennaVDM2SmalltalkScriptTest >> testApplyEnv [
 		equals: 2
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testArithmeticAbsEnv [
 
 	| node |
@@ -108,7 +109,7 @@ ViennaVDM2SmalltalkScriptTest >> testArithmeticAbsEnv [
 		equals: 1
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testArithmeticDivideEnv [
 
 	| node |
@@ -121,7 +122,7 @@ ViennaVDM2SmalltalkScriptTest >> testArithmeticDivideEnv [
 		equals: 1.5
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testArithmeticIntegerDivisionEnv [
 
 	| node |
@@ -134,7 +135,7 @@ ViennaVDM2SmalltalkScriptTest >> testArithmeticIntegerDivisionEnv [
 		equals: 1
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testArithmeticMinusEnv [
 
 	| node |
@@ -147,7 +148,7 @@ ViennaVDM2SmalltalkScriptTest >> testArithmeticMinusEnv [
 		equals: 1
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testArithmeticModEnv [
 
 	| node |
@@ -160,7 +161,7 @@ ViennaVDM2SmalltalkScriptTest >> testArithmeticModEnv [
 		equals: 1
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testArithmeticMultiplicationEnv [
 
 	| node |
@@ -173,7 +174,7 @@ ViennaVDM2SmalltalkScriptTest >> testArithmeticMultiplicationEnv [
 		equals: 6
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testArithmeticPlusEnv [
 
 	| node |
@@ -186,7 +187,7 @@ ViennaVDM2SmalltalkScriptTest >> testArithmeticPlusEnv [
 		equals: 5
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testArithmeticRemEnv [
 
 	| node |
@@ -199,7 +200,7 @@ ViennaVDM2SmalltalkScriptTest >> testArithmeticRemEnv [
 		equals: 1
 ]
 
-{ #category : #'tests-code generation-statements' }
+{ #category : 'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testAssignStatementEnv [
 	| node |
 	node := ViennaVDMParser new statement end parse: 'x := 1'.
@@ -208,7 +209,7 @@ ViennaVDM2SmalltalkScriptTest >> testAssignStatementEnv [
 	self assert: (self evaluate: '|x|' , (ViennaVDM2SmalltalkScript new generate: node) , '. x') equals: 1
 ]
 
-{ #category : #'tests-code generation-types' }
+{ #category : 'tests-code generation-types' }
 ViennaVDM2SmalltalkScriptTest >> testBasicTypeEnv [
 
 	| node |
@@ -221,7 +222,7 @@ ViennaVDM2SmalltalkScriptTest >> testBasicTypeEnv [
 		equals: ViennaType int
 ]
 
-{ #category : #'tests-code generation-statements' }
+{ #category : 'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testBlockStatementEnv [
 
 	| node |
@@ -235,7 +236,7 @@ ViennaVDM2SmalltalkScriptTest >> testBlockStatementEnv [
 		equals: 3
 ]
 
-{ #category : #'tests-code generation-statements' }
+{ #category : 'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testCallStatementEnv [
 
 	| node |
@@ -248,7 +249,7 @@ ViennaVDM2SmalltalkScriptTest >> testCallStatementEnv [
 		equals: 1
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testCasesExpressionEnv [
 
 	| node |
@@ -262,7 +263,7 @@ ViennaVDM2SmalltalkScriptTest >> testCasesExpressionEnv [
 		equals: 3
 ]
 
-{ #category : #'tests-code generation-statements' }
+{ #category : 'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testCasesStatementEnv [
 
 	| node |
@@ -293,7 +294,7 @@ ViennaVDM2SmalltalkScriptTest >> testCasesStatementEnv [
 		raise: ViennaNoMatch
 ]
 
-{ #category : #'tests-code generation-types' }
+{ #category : 'tests-code generation-types' }
 ViennaVDM2SmalltalkScriptTest >> testCompositeTypeEnv [
 
 	| node |
@@ -319,7 +320,7 @@ ViennaVDM2SmalltalkScriptTest >> testCompositeTypeEnv [
 						 ViennaType char } })
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testCompositionEnv [
 
 	| node |
@@ -333,7 +334,7 @@ ViennaVDM2SmalltalkScriptTest >> testCompositionEnv [
 		equals: 7
 ]
 
-{ #category : #'tests-code generation-statements' }
+{ #category : 'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testDclStatementEnv [
 
 	| node |
@@ -347,7 +348,7 @@ ViennaVDM2SmalltalkScriptTest >> testDclStatementEnv [
 		equals: 3
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testDefExpressionEnv [
 
 	| node |
@@ -369,7 +370,7 @@ ViennaVDM2SmalltalkScriptTest >> testDefExpressionEnv [
 		equals: 3
 ]
 
-{ #category : #'tests-code generation-statements' }
+{ #category : 'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testDefStatementEnv [
 
 	| node |
@@ -385,7 +386,7 @@ ViennaVDM2SmalltalkScriptTest >> testDefStatementEnv [
 		equals: 3
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testDistributedMapMergeEnv [
 
 	| node |
@@ -401,7 +402,7 @@ ViennaVDM2SmalltalkScriptTest >> testDistributedMapMergeEnv [
 				(2 -> 3) } asDictionary
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testDistributedSequenceConcatenationEnv [
 
 	| node |
@@ -415,7 +416,7 @@ ViennaVDM2SmalltalkScriptTest >> testDistributedSequenceConcatenationEnv [
 		equals: { 1. 2. 3. 4. 5. 6 } asOrderedCollection
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testDistributedSetIntersectionEnv [
 
 	| node |
@@ -429,7 +430,7 @@ ViennaVDM2SmalltalkScriptTest >> testDistributedSetIntersectionEnv [
 		equals: { 2. 3 } asSet
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testDistributedSetUnionEnv [
 
 	| node |
@@ -443,7 +444,7 @@ ViennaVDM2SmalltalkScriptTest >> testDistributedSetUnionEnv [
 		equals: { 1. 2. 3. 4 } asSet
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testEqualEnv [
 
 	| node |
@@ -463,7 +464,7 @@ ViennaVDM2SmalltalkScriptTest >> testEqualEnv [
 		equals: false
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testExists1ExpressionEnv [
 
 	| node |
@@ -493,7 +494,7 @@ ViennaVDM2SmalltalkScriptTest >> testExists1ExpressionEnv [
 		equals: false
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testExistsExpressionEnv [
 
 	| node |
@@ -523,7 +524,7 @@ ViennaVDM2SmalltalkScriptTest >> testExistsExpressionEnv [
 		equals: false
 ]
 
-{ #category : #'tests-code generation-statements' }
+{ #category : 'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testExitStatementEnv [
 
 	| node |
@@ -537,7 +538,7 @@ ViennaVDM2SmalltalkScriptTest >> testExitStatementEnv [
 		withExceptionDo: [ :ex | self assert: ex expression equals: 1 ]
 ]
 
-{ #category : #'tests-code generation-definitions' }
+{ #category : 'tests-code generation-definitions' }
 ViennaVDM2SmalltalkScriptTest >> testExtendedExplicitFunction [
 	| code |
 	code := ViennaVDM2SmalltalkScript new
@@ -552,7 +553,7 @@ ViennaVDM2SmalltalkScriptTest >> testExtendedExplicitFunction [
 	self deny: (self evaluate: code , '. post_succ value: 0 value: 2')
 ]
 
-{ #category : #'tests-code generation-definitions' }
+{ #category : 'tests-code generation-definitions' }
 ViennaVDM2SmalltalkScriptTest >> testExtendedExplicitOperation [
 	| code |
 	code := ViennaVDM2SmalltalkScript new
@@ -568,7 +569,7 @@ ViennaVDM2SmalltalkScriptTest >> testExtendedExplicitOperation [
 	self deny: (self evaluate: code , '. post_succ value: 0 value: 2 value: nil value: nil')
 ]
 
-{ #category : #'tests-code generation-statements' }
+{ #category : 'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testFieldReferenceEnv [
 
 	| node |
@@ -583,7 +584,7 @@ ViennaVDM2SmalltalkScriptTest >> testFieldReferenceEnv [
 		equals: { 1. 2 }
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testFieldSelectEnv [
 
 	| node |
@@ -602,7 +603,7 @@ ViennaVDM2SmalltalkScriptTest >> testFieldSelectEnv [
 		equals: 1
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testFinitePowerSetEnv [
 
 	| node |
@@ -619,7 +620,7 @@ ViennaVDM2SmalltalkScriptTest >> testFinitePowerSetEnv [
 				 with: (Set with: 1 with: 2))
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testFloorEnv [
 
 	| node |
@@ -632,7 +633,7 @@ ViennaVDM2SmalltalkScriptTest >> testFloorEnv [
 		equals: 1
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testForallExpressionEnv [
 
 	| node |
@@ -654,7 +655,7 @@ ViennaVDM2SmalltalkScriptTest >> testForallExpressionEnv [
 		equals: false
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testGreaterThanEnv [
 
 	| node |
@@ -681,7 +682,7 @@ ViennaVDM2SmalltalkScriptTest >> testGreaterThanEnv [
 		equals: false
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testGreaterThanOrEqualEnv [
 
 	| node |
@@ -708,7 +709,7 @@ ViennaVDM2SmalltalkScriptTest >> testGreaterThanOrEqualEnv [
 		equals: false
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testIfExpressionEnv [
 
 	| node |
@@ -733,7 +734,7 @@ ViennaVDM2SmalltalkScriptTest >> testIfExpressionEnv [
 		equals: #negative
 ]
 
-{ #category : #'tests-code generation-statements' }
+{ #category : 'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testIfStatementEnv [
 
 	| node |
@@ -756,7 +757,7 @@ ViennaVDM2SmalltalkScriptTest >> testIfStatementEnv [
 		equals: 2
 ]
 
-{ #category : #'tests-code generation-definitions' }
+{ #category : 'tests-code generation-definitions' }
 ViennaVDM2SmalltalkScriptTest >> testImplicitFunctionPostcondition [
 	| code |
 	code := ViennaVDM2SmalltalkScript new
@@ -773,7 +774,7 @@ ViennaVDM2SmalltalkScriptTest >> testImplicitFunctionPostcondition [
 	self deny: (self evaluate: code , '. post_succ value: 0 value: 2')
 ]
 
-{ #category : #'tests-code generation-definitions' }
+{ #category : 'tests-code generation-definitions' }
 ViennaVDM2SmalltalkScriptTest >> testImplicitOperationPostcondition [
 	| code |
 	code := ViennaVDM2SmalltalkScript new
@@ -800,7 +801,7 @@ ViennaVDM2SmalltalkScriptTest >> testImplicitOperationPostcondition [
 				evaluate: code , '. post_succ value: 0 value: 2 value: (S value: 0) value: (S value: 0)')
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testImplyEnv [
 	| node |
 	node := ViennaVDMParser new expression end parse: 'x => y'.
@@ -868,7 +869,7 @@ ViennaVDM2SmalltalkScriptTest >> testImplyEnv [
 		raise: ViennaUndefinedEvaluationError
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testInSetEnv [
 
 	| node |
@@ -888,7 +889,7 @@ ViennaVDM2SmalltalkScriptTest >> testInSetEnv [
 		equals: false
 ]
 
-{ #category : #'tests-code generation-statements' }
+{ #category : 'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testIndexForLoop [
 
 	| node |
@@ -903,7 +904,7 @@ ViennaVDM2SmalltalkScriptTest >> testIndexForLoop [
 		equals: 1 + 3 + 5 + 7 + 9
 ]
 
-{ #category : #'tests-code generation-types' }
+{ #category : 'tests-code generation-types' }
 ViennaVDM2SmalltalkScriptTest >> testInmapTypeEnv [
 
 	| node |
@@ -916,7 +917,7 @@ ViennaVDM2SmalltalkScriptTest >> testInmapTypeEnv [
 		equals: (ViennaType nat inmapTo: ViennaType int)
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testIotaExpressionEnv [
 
 	| node |
@@ -939,7 +940,7 @@ ViennaVDM2SmalltalkScriptTest >> testIotaExpressionEnv [
 		raise: ViennaNoMatch
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testIsBasicExpressionEnv [
 
 	| node |
@@ -959,7 +960,7 @@ ViennaVDM2SmalltalkScriptTest >> testIsBasicExpressionEnv [
 		equals: false
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testIsNameExpressionEnv [
 
 	| node |
@@ -981,7 +982,7 @@ ViennaVDM2SmalltalkScriptTest >> testIsNameExpressionEnv [
 		equals: false
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testIsNotYetSpecifiedEnv [
 
 	| node |
@@ -997,7 +998,7 @@ ViennaVDM2SmalltalkScriptTest >> testIsNotYetSpecifiedEnv [
 		raise: NotYetImplemented
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testIterateEnv [
 
 	| node |
@@ -1016,7 +1017,7 @@ ViennaVDM2SmalltalkScriptTest >> testIterateEnv [
 				(5 -> 3) } asDictionary
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testLambdaExpressionEnv [
 
 	| node |
@@ -1031,7 +1032,7 @@ ViennaVDM2SmalltalkScriptTest >> testLambdaExpressionEnv [
 		equals: 6
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testLessThanEnv [
 
 	| node |
@@ -1058,7 +1059,7 @@ ViennaVDM2SmalltalkScriptTest >> testLessThanEnv [
 		equals: true
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testLessThanOrEqualEnv [
 
 	| node |
@@ -1085,7 +1086,7 @@ ViennaVDM2SmalltalkScriptTest >> testLessThanOrEqualEnv [
 		equals: true
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testLetBeExpressionEnv [
 
 	| node |
@@ -1099,7 +1100,7 @@ ViennaVDM2SmalltalkScriptTest >> testLetBeExpressionEnv [
 		equals: 3
 ]
 
-{ #category : #'tests-code generation-statements' }
+{ #category : 'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testLetBeStatementEnv [
 
 	| node |
@@ -1115,7 +1116,7 @@ ViennaVDM2SmalltalkScriptTest >> testLetBeStatementEnv [
 		equals: 3
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testLetExpressionEnv [
 
 	| node |
@@ -1129,7 +1130,7 @@ ViennaVDM2SmalltalkScriptTest >> testLetExpressionEnv [
 		equals: 7
 ]
 
-{ #category : #'tests-code generation-statements' }
+{ #category : 'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testLetStatementEnv [
 
 	| node |
@@ -1145,7 +1146,7 @@ ViennaVDM2SmalltalkScriptTest >> testLetStatementEnv [
 		equals: 7
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testLocalNameEnv [
 
 	| node |
@@ -1159,7 +1160,7 @@ ViennaVDM2SmalltalkScriptTest >> testLocalNameEnv [
 		equals: 1
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testLogicalEquivalenceEnv [
 
 	| node |
@@ -1210,7 +1211,7 @@ ViennaVDM2SmalltalkScriptTest >> testLogicalEquivalenceEnv [
 		raise: ViennaUndefinedEvaluationError
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testMapComprehensionEnv [
 
 	| node |
@@ -1229,7 +1230,7 @@ ViennaVDM2SmalltalkScriptTest >> testMapComprehensionEnv [
 				(5 -> 1) } asDictionary
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testMapDomainEnv [
 
 	| node |
@@ -1243,7 +1244,7 @@ ViennaVDM2SmalltalkScriptTest >> testMapDomainEnv [
 		equals: { 1. 2. 3 } asSet
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testMapDomainRestrictedByEnv [
 
 	| node |
@@ -1259,7 +1260,7 @@ ViennaVDM2SmalltalkScriptTest >> testMapDomainRestrictedByEnv [
 				(2 -> #two) } asDictionary
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testMapDomainRestrictedToEnv [
 
 	| node |
@@ -1275,7 +1276,7 @@ ViennaVDM2SmalltalkScriptTest >> testMapDomainRestrictedToEnv [
 				(3 -> #three) } asDictionary
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testMapEnumerationEnv [
 
 	| node |
@@ -1292,7 +1293,7 @@ ViennaVDM2SmalltalkScriptTest >> testMapEnumerationEnv [
 				(3 -> #three) } asDictionary
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testMapEnumerationPatternEnv [
 
 	| node |
@@ -1307,7 +1308,7 @@ ViennaVDM2SmalltalkScriptTest >> testMapEnumerationPatternEnv [
 		equals: 3
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testMapInverseEnv [
 
 	| node |
@@ -1324,7 +1325,7 @@ ViennaVDM2SmalltalkScriptTest >> testMapInverseEnv [
 				(#three -> 3) } asDictionary
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testMapMergeEnv [
 
 	| node |
@@ -1341,7 +1342,7 @@ ViennaVDM2SmalltalkScriptTest >> testMapMergeEnv [
 				(3 -> #three) } asDictionary
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testMapMunionPatternEnv [
 
 	| node |
@@ -1356,7 +1357,7 @@ ViennaVDM2SmalltalkScriptTest >> testMapMunionPatternEnv [
 		equals: 3
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testMapOrSequenceModifyEnv [
 
 	| node |
@@ -1382,7 +1383,7 @@ ViennaVDM2SmalltalkScriptTest >> testMapOrSequenceModifyEnv [
 		equals: { #one. #two. #three } asOrderedCollection
 ]
 
-{ #category : #'tests-code generation-statements' }
+{ #category : 'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testMapOrSequenceReferenceEnv [
 
 	| node |
@@ -1405,7 +1406,7 @@ ViennaVDM2SmalltalkScriptTest >> testMapOrSequenceReferenceEnv [
 		equals: { 1. 2 }
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testMapRangeEnv [
 
 	| node |
@@ -1419,7 +1420,7 @@ ViennaVDM2SmalltalkScriptTest >> testMapRangeEnv [
 		equals: { #one. #two. #three } asSet
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testMapRangeRestrictedByEnv [
 
 	| node |
@@ -1435,7 +1436,7 @@ ViennaVDM2SmalltalkScriptTest >> testMapRangeRestrictedByEnv [
 				(2 -> #two) } asDictionary
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testMapRangeRestrictedToEnv [
 
 	| node |
@@ -1451,7 +1452,7 @@ ViennaVDM2SmalltalkScriptTest >> testMapRangeRestrictedToEnv [
 				(2 -> #two) } asDictionary
 ]
 
-{ #category : #'tests-code generation-types' }
+{ #category : 'tests-code generation-types' }
 ViennaVDM2SmalltalkScriptTest >> testMapTypeEnv [
 
 	| node |
@@ -1464,7 +1465,7 @@ ViennaVDM2SmalltalkScriptTest >> testMapTypeEnv [
 		equals: (ViennaType nat mapTo: ViennaType int)
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testMatchValueEnv [
 
 	| node |
@@ -1479,7 +1480,7 @@ ViennaVDM2SmalltalkScriptTest >> testMatchValueEnv [
 		equals: 3
 ]
 
-{ #category : #'tests-code generation-statements' }
+{ #category : 'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testMultipleAssignStatementEnv [
 
 	| node |
@@ -1493,7 +1494,7 @@ ViennaVDM2SmalltalkScriptTest >> testMultipleAssignStatementEnv [
 		equals: { 2. 1 }
 ]
 
-{ #category : #'tests-code generation-statements' }
+{ #category : 'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testNondeterministicStatementEnv [
 
 	| node |
@@ -1508,7 +1509,7 @@ ViennaVDM2SmalltalkScriptTest >> testNondeterministicStatementEnv [
 		equals: #( 1 2 3 ) asSet
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testNotEnv [
 
 	| node |
@@ -1528,7 +1529,7 @@ ViennaVDM2SmalltalkScriptTest >> testNotEnv [
 		equals: true
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testNotEqualEnv [
 
 	| node |
@@ -1548,7 +1549,7 @@ ViennaVDM2SmalltalkScriptTest >> testNotEqualEnv [
 		equals: true
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testNotInSetEnv [
 
 	| node |
@@ -1570,7 +1571,7 @@ ViennaVDM2SmalltalkScriptTest >> testNotInSetEnv [
 		equals: true
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testOldNameEnv [
 
 	| node |
@@ -1586,7 +1587,7 @@ ViennaVDM2SmalltalkScriptTest >> testOldNameEnv [
 		equals: 1
 ]
 
-{ #category : #'tests-code generation-types' }
+{ #category : 'tests-code generation-types' }
 ViennaVDM2SmalltalkScriptTest >> testOptionalTypeEnv [
 
 	| node |
@@ -1599,7 +1600,7 @@ ViennaVDM2SmalltalkScriptTest >> testOptionalTypeEnv [
 		equals: ViennaType nat optional
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testOrEnv [
 
 	| node |
@@ -1650,7 +1651,7 @@ ViennaVDM2SmalltalkScriptTest >> testOrEnv [
 		equals: true
 ]
 
-{ #category : #'tests-code generation-types' }
+{ #category : 'tests-code generation-types' }
 ViennaVDM2SmalltalkScriptTest >> testPartialFunctionTypeEnv [
 
 	| node |
@@ -1663,7 +1664,7 @@ ViennaVDM2SmalltalkScriptTest >> testPartialFunctionTypeEnv [
 		equals: ViennaType nat * ViennaType int -> ViennaType real
 ]
 
-{ #category : #'tests-code generation-types' }
+{ #category : 'tests-code generation-types' }
 ViennaVDM2SmalltalkScriptTest >> testProductTypeEnv [
 
 	| node |
@@ -1676,7 +1677,7 @@ ViennaVDM2SmalltalkScriptTest >> testProductTypeEnv [
 		equals: ViennaType nat * ViennaType int
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testProperSubsetEnv [
 
 	| node |
@@ -1706,7 +1707,7 @@ ViennaVDM2SmalltalkScriptTest >> testProperSubsetEnv [
 		equals: false
 ]
 
-{ #category : #'tests-code generation-types' }
+{ #category : 'tests-code generation-types' }
 ViennaVDM2SmalltalkScriptTest >> testQuoteTypeEnv [
 
 	| node |
@@ -1719,7 +1720,7 @@ ViennaVDM2SmalltalkScriptTest >> testQuoteTypeEnv [
 		equals: (ViennaType quote: #quote)
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testRecordConstructorEnv [
 
 	| node |
@@ -1746,7 +1747,7 @@ ViennaVDM2SmalltalkScriptTest >> testRecordConstructorEnv [
 				 yourself)
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testRecordModifierEnv [
 
 	| node |
@@ -1774,7 +1775,7 @@ ViennaVDM2SmalltalkScriptTest >> testRecordModifierEnv [
 				 yourself)
 ]
 
-{ #category : #'tests-code generation-patterns' }
+{ #category : 'tests-code generation-patterns' }
 ViennaVDM2SmalltalkScriptTest >> testRecordPatternEnv [
 
 	| node |
@@ -1793,7 +1794,7 @@ ViennaVDM2SmalltalkScriptTest >> testRecordPatternEnv [
 		equals: 3
 ]
 
-{ #category : #'tests-code generation-types' }
+{ #category : 'tests-code generation-types' }
 ViennaVDM2SmalltalkScriptTest >> testRecordTypeDefinitionEnv [
 
 	| node |
@@ -1819,7 +1820,7 @@ ViennaVDM2SmalltalkScriptTest >> testRecordTypeDefinitionEnv [
 						 ViennaType char } })
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testResultExpressionEnv [
 
 	| node |
@@ -1833,7 +1834,7 @@ ViennaVDM2SmalltalkScriptTest >> testResultExpressionEnv [
 		equals: 1
 ]
 
-{ #category : #'tests-code generation-statements' }
+{ #category : 'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testReturnStatementEnv [
 
 	| node |
@@ -1846,7 +1847,7 @@ ViennaVDM2SmalltalkScriptTest >> testReturnStatementEnv [
 		equals: 1
 ]
 
-{ #category : #'tests-code generation-types' }
+{ #category : 'tests-code generation-types' }
 ViennaVDM2SmalltalkScriptTest >> testSeq1TypeEnv [
 
 	| node |
@@ -1859,7 +1860,7 @@ ViennaVDM2SmalltalkScriptTest >> testSeq1TypeEnv [
 		equals: ViennaType nat seq1
 ]
 
-{ #category : #'tests-code generation-patterns' }
+{ #category : 'tests-code generation-patterns' }
 ViennaVDM2SmalltalkScriptTest >> testSeqConcPatternEnv [
 
 	| node |
@@ -1874,7 +1875,7 @@ ViennaVDM2SmalltalkScriptTest >> testSeqConcPatternEnv [
 		equals: 3
 ]
 
-{ #category : #'tests-code generation-patterns' }
+{ #category : 'tests-code generation-patterns' }
 ViennaVDM2SmalltalkScriptTest >> testSeqEnumPatternEnv [
 
 	| node |
@@ -1889,7 +1890,7 @@ ViennaVDM2SmalltalkScriptTest >> testSeqEnumPatternEnv [
 		equals: 3
 ]
 
-{ #category : #'tests-code generation-types' }
+{ #category : 'tests-code generation-types' }
 ViennaVDM2SmalltalkScriptTest >> testSeqTypeEnv [
 
 	| node |
@@ -1902,7 +1903,7 @@ ViennaVDM2SmalltalkScriptTest >> testSeqTypeEnv [
 		equals: ViennaType nat seq
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testSequenceComprehensionEnv [
 
 	| node |
@@ -1948,7 +1949,7 @@ ViennaVDM2SmalltalkScriptTest >> testSequenceComprehensionEnv [
 		equals: { 8. 4 } asOrderedCollection
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testSequenceConcatenateEnv [
 	| node |
 	node := ViennaVDMParser new expression end parse: '[1,2,3]^[4,5,6]'.
@@ -1965,7 +1966,7 @@ ViennaVDM2SmalltalkScriptTest >> testSequenceConcatenateEnv [
 			6} asOrderedCollection
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testSequenceElementsEnv [
 
 	| node |
@@ -1978,7 +1979,7 @@ ViennaVDM2SmalltalkScriptTest >> testSequenceElementsEnv [
 		equals: { 4. 5. 6 } asSet
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testSequenceEnumerationEnv [
 
 	| node |
@@ -1991,7 +1992,7 @@ ViennaVDM2SmalltalkScriptTest >> testSequenceEnumerationEnv [
 		equals: { 4. 5. 6 } asOrderedCollection
 ]
 
-{ #category : #'tests-code generation-statements' }
+{ #category : 'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testSequenceForLoopEnv [
 
 	| node |
@@ -2015,7 +2016,7 @@ ViennaVDM2SmalltalkScriptTest >> testSequenceForLoopEnv [
 		equals: 8
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testSequenceHeadEnv [
 
 	| node |
@@ -2028,7 +2029,7 @@ ViennaVDM2SmalltalkScriptTest >> testSequenceHeadEnv [
 		equals: 4
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testSequenceIndicesEnv [
 
 	| node |
@@ -2041,7 +2042,7 @@ ViennaVDM2SmalltalkScriptTest >> testSequenceIndicesEnv [
 		equals: { 1. 2. 3 } asSet
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testSequenceLengthEnv [
 
 	| node |
@@ -2054,7 +2055,7 @@ ViennaVDM2SmalltalkScriptTest >> testSequenceLengthEnv [
 		equals: 3
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testSequenceReverseEnv [
 
 	| node |
@@ -2067,7 +2068,7 @@ ViennaVDM2SmalltalkScriptTest >> testSequenceReverseEnv [
 		equals: { 6. 5. 4 } asOrderedCollection
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testSequenceTailEnv [
 
 	| node |
@@ -2080,7 +2081,7 @@ ViennaVDM2SmalltalkScriptTest >> testSequenceTailEnv [
 		equals: { 5. 6 } asOrderedCollection
 ]
 
-{ #category : #'tests-code generation-types' }
+{ #category : 'tests-code generation-types' }
 ViennaVDM2SmalltalkScriptTest >> testSet1TypeEnv [
 
 	| node |
@@ -2093,7 +2094,7 @@ ViennaVDM2SmalltalkScriptTest >> testSet1TypeEnv [
 		equals: ViennaType nat set1
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testSetCardinalityEnv [
 
 	| node |
@@ -2106,7 +2107,7 @@ ViennaVDM2SmalltalkScriptTest >> testSetCardinalityEnv [
 		equals: 3
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testSetComprehensionEnv [
 
 	| node |
@@ -2128,7 +2129,7 @@ ViennaVDM2SmalltalkScriptTest >> testSetComprehensionEnv [
 		equals: { 2. 6 } asSet
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testSetDifferenceEnv [
 
 	| node |
@@ -2142,7 +2143,7 @@ ViennaVDM2SmalltalkScriptTest >> testSetDifferenceEnv [
 		equals: { 1 } asSet
 ]
 
-{ #category : #'tests-code generation-patterns' }
+{ #category : 'tests-code generation-patterns' }
 ViennaVDM2SmalltalkScriptTest >> testSetEnumPatternEnv [
 
 	| node |
@@ -2157,7 +2158,7 @@ ViennaVDM2SmalltalkScriptTest >> testSetEnumPatternEnv [
 		equals: 3
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testSetEnumerationEnv [
 
 	| node |
@@ -2170,7 +2171,7 @@ ViennaVDM2SmalltalkScriptTest >> testSetEnumerationEnv [
 		equals: { 4. 5. 6 } asSet
 ]
 
-{ #category : #'tests-code generation-statements' }
+{ #category : 'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testSetForLoopEnv [
 
 	| node |
@@ -2203,7 +2204,7 @@ ViennaVDM2SmalltalkScriptTest >> testSetForLoopEnv [
 		equals: 8
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testSetIntersectionEnv [
 
 	| node |
@@ -2217,7 +2218,7 @@ ViennaVDM2SmalltalkScriptTest >> testSetIntersectionEnv [
 		equals: { 2. 3 } asSet
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testSetRangeExpressionEnv [
 
 	| node |
@@ -2230,7 +2231,7 @@ ViennaVDM2SmalltalkScriptTest >> testSetRangeExpressionEnv [
 		equals: { 1. 2. 3. 4 } asSet
 ]
 
-{ #category : #'tests-code generation-types' }
+{ #category : 'tests-code generation-types' }
 ViennaVDM2SmalltalkScriptTest >> testSetTypeEnv [
 
 	| node |
@@ -2243,7 +2244,7 @@ ViennaVDM2SmalltalkScriptTest >> testSetTypeEnv [
 		equals: ViennaType nat set
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testSetUnionEnv [
 
 	| node |
@@ -2257,7 +2258,7 @@ ViennaVDM2SmalltalkScriptTest >> testSetUnionEnv [
 		equals: { 1. 2. 3. 4 } asSet
 ]
 
-{ #category : #'tests-code generation-patterns' }
+{ #category : 'tests-code generation-patterns' }
 ViennaVDM2SmalltalkScriptTest >> testSetUnionPatternEnv [
 
 	| node |
@@ -2272,7 +2273,7 @@ ViennaVDM2SmalltalkScriptTest >> testSetUnionPatternEnv [
 		equals: 3
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testSubsequenceEnv [
 
 	| node |
@@ -2286,7 +2287,7 @@ ViennaVDM2SmalltalkScriptTest >> testSubsequenceEnv [
 		equals: { 5. 6. 7 } asOrderedCollection
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testSubsetEnv [
 
 	| node |
@@ -2316,7 +2317,7 @@ ViennaVDM2SmalltalkScriptTest >> testSubsetEnv [
 		equals: false
 ]
 
-{ #category : #'tests-code generation-statements' }
+{ #category : 'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testTixeStatementEnv [
 	self
 		assert:
@@ -2328,7 +2329,7 @@ ViennaVDM2SmalltalkScriptTest >> testTixeStatementEnv [
 
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testTokenConstructorEnv [
 
 	| node |
@@ -2341,7 +2342,7 @@ ViennaVDM2SmalltalkScriptTest >> testTokenConstructorEnv [
 		equals: (ViennaToken with: 1)
 ]
 
-{ #category : #'tests-code generation-types' }
+{ #category : 'tests-code generation-types' }
 ViennaVDM2SmalltalkScriptTest >> testTotalFunctionTypeEnv [
 
 	| node |
@@ -2354,7 +2355,7 @@ ViennaVDM2SmalltalkScriptTest >> testTotalFunctionTypeEnv [
 		equals: ViennaType nat * ViennaType int +> ViennaType real
 ]
 
-{ #category : #'tests-code generation-statements' }
+{ #category : 'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testTrapStatementEnv [
 	self
 		assert:
@@ -2372,7 +2373,7 @@ ViennaVDM2SmalltalkScriptTest >> testTrapStatementEnv [
 		equals: 1
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testTupleConstructorEnv [
 
 	| node |
@@ -2385,7 +2386,7 @@ ViennaVDM2SmalltalkScriptTest >> testTupleConstructorEnv [
 		equals: { 1. 2. 3 }
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testTuplePatternEnv [
 
 	| node |
@@ -2401,7 +2402,7 @@ ViennaVDM2SmalltalkScriptTest >> testTuplePatternEnv [
 		equals: 3
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testTupleSelectEnv [
 
 	| node |
@@ -2414,7 +2415,7 @@ ViennaVDM2SmalltalkScriptTest >> testTupleSelectEnv [
 		equals: 5
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testTypeJudgementEnv [
 
 	| node |
@@ -2434,7 +2435,7 @@ ViennaVDM2SmalltalkScriptTest >> testTypeJudgementEnv [
 		equals: false
 ]
 
-{ #category : #'tests-code generation-types' }
+{ #category : 'tests-code generation-types' }
 ViennaVDM2SmalltalkScriptTest >> testTypeNameEnv [
 
 	| node |
@@ -2448,7 +2449,7 @@ ViennaVDM2SmalltalkScriptTest >> testTypeNameEnv [
 		equals: ViennaType nat
 ]
 
-{ #category : #'tests-code generation-types' }
+{ #category : 'tests-code generation-types' }
 ViennaVDM2SmalltalkScriptTest >> testTypeVariableEnv [
 
 	| node |
@@ -2462,7 +2463,7 @@ ViennaVDM2SmalltalkScriptTest >> testTypeVariableEnv [
 		equals: ViennaType nat
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testUnaryMinusEnv [
 
 	| node |
@@ -2475,7 +2476,7 @@ ViennaVDM2SmalltalkScriptTest >> testUnaryMinusEnv [
 		equals: -1
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testUnaryPlusEnv [
 
 	| node |
@@ -2488,7 +2489,7 @@ ViennaVDM2SmalltalkScriptTest >> testUnaryPlusEnv [
 		equals: 1
 ]
 
-{ #category : #'tests-code generation-expressions' }
+{ #category : 'tests-code generation-expressions' }
 ViennaVDM2SmalltalkScriptTest >> testUndefinedExpressionEnv [
 
 	| node |
@@ -2502,7 +2503,7 @@ ViennaVDM2SmalltalkScriptTest >> testUndefinedExpressionEnv [
 		raise: ViennaUndefinedEvaluationError
 ]
 
-{ #category : #'tests-code generation-types' }
+{ #category : 'tests-code generation-types' }
 ViennaVDM2SmalltalkScriptTest >> testUnionTypeEnv [
 
 	| node |
@@ -2515,7 +2516,7 @@ ViennaVDM2SmalltalkScriptTest >> testUnionTypeEnv [
 		equals: ViennaType nat | ViennaType int
 ]
 
-{ #category : #'tests-code generation-statements' }
+{ #category : 'tests-code generation-statements' }
 ViennaVDM2SmalltalkScriptTest >> testWhileLoopEnv [
 
 	| node |
@@ -2530,7 +2531,7 @@ ViennaVDM2SmalltalkScriptTest >> testWhileLoopEnv [
 		equals: 18
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaVDM2SmalltalkScriptTest >> undefined [
 	^ ViennaVDM2SmalltalkScript new generate: (ViennaVDMParser new expression parse: 'undefined')
 ]

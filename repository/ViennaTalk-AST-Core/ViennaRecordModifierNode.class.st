@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaRecordModifierNode,
-	#superclass : #ViennaExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaRecordModifierNode',
+	#superclass : 'ViennaExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaRecordModifierNode class >> expression: aViennaExpressionNode mapletList: aViennaMapletListNode [
 
 	^ (self new: 2)
@@ -14,19 +15,19 @@ ViennaRecordModifierNode class >> expression: aViennaExpressionNode mapletList: 
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRecordModifierNode >> expression [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRecordModifierNode >> expression: aViennaExpressionNode [
 
 	self at: 1 put: aViennaExpressionNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaRecordModifierNode >> formatWith: aViennaAbstractFormatter [
 
 	| record mapletList |
@@ -41,7 +42,7 @@ ViennaRecordModifierNode >> formatWith: aViennaAbstractFormatter [
 			   ifFalse: [ mapletList ]) ++ ')'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRecordModifierNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self expression freeIdentifiersExcept: aSet do: aBlock.
@@ -49,31 +50,31 @@ ViennaRecordModifierNode >> freeIdentifiersExcept: aSet do: aBlock [
 		maplet valueExpression freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaRecordModifierNode >> isViennaRecordModifierNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRecordModifierNode >> label [
 
 	^ 'RecordModifier'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRecordModifierNode >> mapletList [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRecordModifierNode >> mapletList: aViennaMapletListNode [
 
 	self at: 2 put: aViennaMapletListNode
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaRecordModifierNode >> maximalType [
 
 	| type |

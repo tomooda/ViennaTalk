@@ -1,17 +1,18 @@
 Class {
-	#name : #ViennaParametersNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaParametersNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaParametersNode >> boundIdentifiersDo: aBlock [
 
 	self do: [ :pattern | pattern boundIdentifiersDo: aBlock ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaParametersNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter empty ++ '(' ++ (aViennaAbstractFormatter
@@ -19,25 +20,25 @@ ViennaParametersNode >> formatWith: aViennaAbstractFormatter [
 		   withAll: (aViennaAbstractFormatter formatAll: self)) ++ ')'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaParametersNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self do: [ :pattern | pattern freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaParametersNode >> isViennaParametersNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaParametersNode >> label [
 
 	^ 'Parameters'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaParametersNode >> maximalType [
 
 	^ ViennaType product: (self collect: #typecheck)

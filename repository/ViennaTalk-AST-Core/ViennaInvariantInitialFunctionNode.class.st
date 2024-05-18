@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaInvariantInitialFunctionNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaInvariantInitialFunctionNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaInvariantInitialFunctionNode class >> pattern: aViennaPatternNode expression: aViennaExpressionNode [
 
 	^ (self new: 2)
@@ -14,13 +15,13 @@ ViennaInvariantInitialFunctionNode class >> pattern: aViennaPatternNode expressi
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaInvariantInitialFunctionNode >> boundIdentifiersDo: aBlock [
 
 	
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaInvariantInitialFunctionNode >> definitionOfLocalName: aString [
 
 	self pattern
@@ -30,19 +31,19 @@ ViennaInvariantInitialFunctionNode >> definitionOfLocalName: aString [
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInvariantInitialFunctionNode >> expression [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInvariantInitialFunctionNode >> expression: aViennaExpressionNode [
 
 	self at: 2 put: aViennaExpressionNode
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaInvariantInitialFunctionNode >> findResolverForIdentifier: aString [
 
 	^ (self pattern bindsIdentifier: aString)
@@ -50,7 +51,7 @@ ViennaInvariantInitialFunctionNode >> findResolverForIdentifier: aString [
 		  ifFalse: [ super findResolverForIdentifier: aString ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaInvariantInitialFunctionNode >> formatWith: aViennaAbstractFormatter [
 
 	| pattern expression |
@@ -61,7 +62,7 @@ ViennaInvariantInitialFunctionNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: expression
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaInvariantInitialFunctionNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self pattern freeIdentifiersExcept: aSet do: aBlock.
@@ -70,31 +71,31 @@ ViennaInvariantInitialFunctionNode >> freeIdentifiersExcept: aSet do: aBlock [
 		do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaInvariantInitialFunctionNode >> hasScope [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaInvariantInitialFunctionNode >> isViennaInvariantInitialFunctionNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInvariantInitialFunctionNode >> label [
 
 	^ 'InvariantInitialFunction'
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaInvariantInitialFunctionNode >> lookupIdentifier: aString [
 
 	^ (self pattern bindsIdentifier: aString) ifTrue: [ self pattern ]
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaInvariantInitialFunctionNode >> maximalType [
 
 	self pattern typecheck.
@@ -102,19 +103,19 @@ ViennaInvariantInitialFunctionNode >> maximalType [
 	^ self pattern typecheck
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaInvariantInitialFunctionNode >> maximalType: aViennaType [
 
 	self pattern maximalType: aViennaType
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInvariantInitialFunctionNode >> pattern [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInvariantInitialFunctionNode >> pattern: aViennaPatternNode [
 
 	self at: 1 put: aViennaPatternNode
