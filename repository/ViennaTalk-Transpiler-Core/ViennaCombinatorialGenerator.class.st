@@ -11,31 +11,31 @@ ViennaCombinatorialGenerator class >> isAbstract [
 	^ self = ViennaCombinatorialGenerator
 ]
 
-{ #category : 'accessing' }
-ViennaCombinatorialGenerator >> next [
+{ #category : 'operations' }
+ViennaCombinatorialGenerator >> next: aDictionary [
+	"execute the current trace path and step to the next path"
 
-	| result |
-	result := self peek.
-	self step.
-	^ result
+	self value: aDictionary.
+	^ self step: aDictionary
 ]
 
-{ #category : 'accessing' }
-ViennaCombinatorialGenerator >> peek [
-	"Answers an evaluatable (responds to value: env) to perform the current trace path, or nil if all the combination has been exhausted"
-
-	^ self subclassResponsibility
-]
-
-{ #category : 'accessing' }
+{ #category : 'operations' }
 ViennaCombinatorialGenerator >> reset [
+	"reset the enumeration of the trace paths"
 
 	^ self subclassResponsibility
 ]
 
-{ #category : 'accessing' }
-ViennaCombinatorialGenerator >> step [
-	"step to the next trace path"
+{ #category : 'operations' }
+ViennaCombinatorialGenerator >> step: aDictionary [
+	"step to the next trace path, and answers whether the trace path is available or not"
+
+	^ self subclassResponsibility
+]
+
+{ #category : 'operations' }
+ViennaCombinatorialGenerator >> value: aDictionary [
+	"execute the current trace path, or nil if all the combination has been exhausted"
 
 	^ self subclassResponsibility
 ]

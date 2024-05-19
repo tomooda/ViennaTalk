@@ -25,32 +25,23 @@ ViennaSequentialCombinatorialGenerator >> initialize [
 	isDone := true
 ]
 
-{ #category : 'accessing' }
-ViennaSequentialCombinatorialGenerator >> peek [
-
-	| values |
-	isDone ifTrue: [ ^ nil ].
-	values := subgenerators collect: #peek.
-	^ [ :env | values do: [ :valuable | valuable value: env ] ]
-]
-
-{ #category : 'accessing' }
+{ #category : 'operations' }
 ViennaSequentialCombinatorialGenerator >> reset [
 
 	subgenerators do: #reset.
 	isDone := false
 ]
 
-{ #category : 'accessing' }
-ViennaSequentialCombinatorialGenerator >> step [
+{ #category : 'operations' }
+ViennaSequentialCombinatorialGenerator >> step: aDictionary [
 	"step to the next trace path"
 
-	isDone ifTrue: [ ^ self ].
+	isDone ifTrue: [ ^ false ].
 	subgenerators do: [ :generator |
-		generator step.
-		generator peek ifNotNil: [ ^ self ].
+		(generator step: aDictionary) ifTrue: [ ^ true ].
 		generator reset ].
-	isDone := true
+	isDone := true.
+	^ false
 ]
 
 { #category : 'accessing' }
@@ -64,4 +55,11 @@ ViennaSequentialCombinatorialGenerator >> subgenerators: anArrayOfViennaCombinat
 
 	subgenerators := anArrayOfViennaCombinatorialGenerator.
 	isDone := false
+]
+
+{ #category : 'operations' }
+ViennaSequentialCombinatorialGenerator >> value: aDictionary [
+
+	isDone ifTrue: [ ^ nil ].
+	subgenerators do: [ :generator | generator value: aDictionary ]
 ]

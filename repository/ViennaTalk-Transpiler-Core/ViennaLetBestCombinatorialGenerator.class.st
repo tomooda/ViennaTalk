@@ -3,6 +3,7 @@ Class {
 	#superclass : 'ViennaCombinatorialGenerator',
 	#instVars : [
 		'bindSubgenerators',
+		'isBindReady',
 		'isDone',
 		'guardBlock',
 		'subgenerator'
@@ -58,24 +59,25 @@ ViennaLetBestCombinatorialGenerator >> initialize [
 
 	super initialize.
 	bindSubgenerators := Array new.
+	guardBlock := [ :value | true ].
+	isBindReady := false.
+	isDone := true
+]
+
+{ #category : 'operations' }
+ViennaLetBestCombinatorialGenerator >> nextBind: aDictionary [
+
+	| env |
+	isDone ifTrue: [ ^ false ].
+	env := aDictionary copy.
+	bindSubgenerators do: [ :generator |
+		isBindReady := false.
+		(generator step: env) ifTrue: [ ^ true ] ].
 	isDone := true.
-	guardBlock := [ :value | true ]
+	^ false
 ]
 
-{ #category : 'initialization' }
-ViennaLetBestCombinatorialGenerator >> peek [
-
-	| binders body |
-	isDone ifTrue: [ ^ nil ].
-	[ binders := bindSubgenerators collect: #peek ] whileFalse: [
-		self step ].
-	body := subgenerator peek.
-	^ [ :env |
-	  binders do: [ :bind | bind value: env ].
-	  (guardBlock value: env) ifTrue: [ body value: env ] ]
-]
-
-{ #category : 'initialization' }
+{ #category : 'operations' }
 ViennaLetBestCombinatorialGenerator >> reset [
 
 	bindSubgenerators do: #reset.
@@ -83,18 +85,20 @@ ViennaLetBestCombinatorialGenerator >> reset [
 	subgenerator reset
 ]
 
-{ #category : 'initialization' }
-ViennaLetBestCombinatorialGenerator >> step [
+{ #category : 'operations' }
+ViennaLetBestCombinatorialGenerator >> step: aDictionary [
 
 	isDone ifTrue: [ ^ self ].
-	subgenerator step.
-	subgenerator peek ifNotNil: [ ^ self ].
+	(subgenerator step: aDictionary copy) ifTrue: [
+		isBindReady := true.
+		^ true ].
 	subgenerator reset.
-	bindSubgenerators do: [ :generator |
-		generator step.
-		generator peek ifNotNil: [ ^ self ].
-		generator reset ].
-	isDone := true
+	[ self nextBind: aDictionary ] whileTrue: [
+		(self valueGuard: aDictionary) ifTrue: [
+			isBindReady := true.
+			^ true ] ].
+	isDone := true.
+	^ false
 ]
 
 { #category : 'accessing' }
@@ -107,4 +111,34 @@ ViennaLetBestCombinatorialGenerator >> subgenerator [
 ViennaLetBestCombinatorialGenerator >> subgenerator: aVIennaCombinatorialGenerator [
 
 	subgenerator := aVIennaCombinatorialGenerator
+]
+
+{ #category : 'operations' }
+ViennaLetBestCombinatorialGenerator >> value: aDictionary [
+
+	| env |
+	isBindReady ifFalse: [
+		[ self valueGuard: aDictionary ] whileTrue: [
+			(self nextBind: aDictionary) ifFalse: [ ^ nil ] ].
+		isBindReady := true ].
+	isDone ifTrue: [ ^ nil ].
+	env := aDictionary copy.
+	self valueBind: env.
+	^ subgenerator value: env
+]
+
+{ #category : 'operations' }
+ViennaLetBestCombinatorialGenerator >> valueBind: aDictionary [
+
+	isDone ifTrue: [ ^ nil ].
+	bindSubgenerators do: [ :generator | generator value: aDictionary ]
+]
+
+{ #category : 'operations' }
+ViennaLetBestCombinatorialGenerator >> valueGuard: aDictionary [
+
+	| env |
+	env := aDictionary copy.
+	self valueBind: env.
+	^ guardBlock value: env
 ]

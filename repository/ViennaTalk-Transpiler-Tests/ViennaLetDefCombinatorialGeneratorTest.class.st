@@ -8,42 +8,40 @@ Class {
 { #category : 'tests' }
 ViennaLetDefCombinatorialGeneratorTest >> testNext [
 
-	| generator |
+	| generator result |
 	generator := ViennaLetDefCombinatorialGenerator
 		             on: [ :env | env at: 'x' put: 1 ]
 		             in:
 		             (ViennaCallCombinatorialGenerator on: [ :env |
-			              env at: 'x' ]).
-	self deny: generator peek isNil.
-	self assert: (generator next value: {  } asDictionary) equals: 1.
-	self assert: generator next isNil
-]
-
-{ #category : 'tests' }
-ViennaLetDefCombinatorialGeneratorTest >> testPeek [
-
-	| generator |
-	generator := ViennaLetDefCombinatorialGenerator
-		             on: [ :env | env at: 'x' put: 1 ]
-		             in:
-		             (ViennaCallCombinatorialGenerator on: [ :env |
-			              env at: 'x' ]).
-	self deny: generator peek isNil.
-	self assert: (generator peek value: {  } asDictionary) equals: 1.
-	generator step.
-	self assert: generator peek isNil
+			              result := env at: 'x' ]).
+	result := nil.
+	self deny: (generator next: {  } asDictionary).
+	self assert: result equals: 1
 ]
 
 { #category : 'tests' }
 ViennaLetDefCombinatorialGeneratorTest >> testStep [
 
-	| generator |
+	| generator result |
 	generator := ViennaLetDefCombinatorialGenerator
 		             on: [ :env | env at: 'x' put: 1 ]
 		             in:
 		             (ViennaCallCombinatorialGenerator on: [ :env |
-			              env at: 'x' ]).
-	self deny: generator peek isNil.
-	generator step.
-	self assert: generator peek isNil
+			              result := env at: 'x' ]).
+	result := nil.
+	self deny: (generator step: Dictionary new)
+]
+
+{ #category : 'tests' }
+ViennaLetDefCombinatorialGeneratorTest >> testValue [
+
+	| generator result |
+	generator := ViennaLetDefCombinatorialGenerator
+		             on: [ :env | env at: 'x' put: 1 ]
+		             in:
+		             (ViennaCallCombinatorialGenerator on: [ :env |
+			              result := env at: 'x' ]).
+	result := nil.
+	self assert: (generator value: {  } asDictionary) notNil.
+	self assert: result equals: 1
 ]

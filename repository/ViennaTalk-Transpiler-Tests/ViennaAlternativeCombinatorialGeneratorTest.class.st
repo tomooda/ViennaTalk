@@ -8,63 +8,57 @@ Class {
 { #category : 'tests' }
 ViennaAlternativeCombinatorialGeneratorTest >> testNext [
 
-	| generator set |
-	set := Set new.
+	| env generator result |
+	env := {
+		       ('x' -> 1).
+		       ('y' -> 2) } asDictionary.
 	generator := ViennaAlternativeCombinatorialGenerator withAll: {
-			             (ViennaSequentialCombinatorialGenerator withAll: {
-					              (ViennaCallCombinatorialGenerator on: [ :env |
-						               set add: (env at: 'x') ]).
-					              (ViennaCallCombinatorialGenerator on: [ :env |
-						               set add: (env at: 'y') ]) }).
-			             (ViennaCallCombinatorialGenerator on: [ :env |
-				              set add: (env at: 'z') ]) }.
-	generator next value: {
-			('x' -> 1).
-			('y' -> 2).
-			('z' -> 3) } asDictionary.
-	self assert: set equals: { 1. 2 } asSet.
-	set removeAll.
-	generator next value: {
-			('x' -> 1).
-			('y' -> 2).
-			('z' -> 3) } asDictionary.
-	self assert: set equals: { 3 } asSet.
-	self assert: generator peek isNil
+			             (ViennaCallCombinatorialGenerator on: [ :e |
+				              result := e at: 'x' ]).
+			             (ViennaCallCombinatorialGenerator on: [ :e |
+				              result := e at: 'y' ]) }.
+	result := nil.
+	self assert: (generator next: env).
+	self assert: result equals: 1.
+	self deny: (generator next: env).
+	self assert: result equals: 2
 ]
 
 { #category : 'tests' }
 ViennaAlternativeCombinatorialGeneratorTest >> testPeek [
 
-	| generator set |
-	set := Set new.
+	| env generator result |
+	env := {
+		       ('x' -> 1).
+		       ('y' -> 2) } asDictionary.
 	generator := ViennaAlternativeCombinatorialGenerator withAll: {
-			             (ViennaCallCombinatorialGenerator on: [ :env |
-				              set add: (env at: 'x') ]).
-			             (ViennaCallCombinatorialGenerator on: [ :env |
-				              set add: (env at: 'y') ]) }.
-	self deny: generator peek isNil.
-	generator peek value: {
-			('x' -> 1).
-			('y' -> 2) } asDictionary.
-	generator step.
-	generator peek value: {
-			('x' -> 1).
-			('y' -> 2) } asDictionary.
-	generator step.
-	self assert: generator peek isNil.
-	self assert: set equals: { 1. 2 } asSet
+			             (ViennaCallCombinatorialGenerator on: [ :e |
+				              result := e at: 'x' ]).
+			             (ViennaCallCombinatorialGenerator on: [ :e |
+				              result := e at: 'y' ]) }.
+	result := nil.
+	generator value: env.
+	self assert: result equals: 1.
+	generator value: env.
+	self assert: result equals: 1.
+	self assert: (generator step: env).
+	generator value: env.
+	self assert: result equals: 2
 ]
 
 { #category : 'tests' }
 ViennaAlternativeCombinatorialGeneratorTest >> testStep [
 
-	| generator |
+	| env generator result |
+	env := {
+		       ('x' -> 1).
+		       ('y' -> 2) } asDictionary.
 	generator := ViennaAlternativeCombinatorialGenerator withAll: {
-			             (ViennaCallCombinatorialGenerator on: [ :env |  ]).
-			             (ViennaCallCombinatorialGenerator on: [ :env |  ]) }.
-	self deny: generator peek isNil.
-	generator step.
-	self deny: generator peek isNil.
-	generator step.
-	self assert: generator peek isNil
+			             (ViennaCallCombinatorialGenerator on: [ :e |
+				              result := e at: 'x' ]).
+			             (ViennaCallCombinatorialGenerator on: [ :e |
+				              result := e at: 'y' ]) }.
+	result := nil.
+	self assert: (generator step: env).
+	self deny: (generator step: env)
 ]

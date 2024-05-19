@@ -17,13 +17,13 @@ ViennaCallCombinatorialGenerator class >> on: aBlock [
 		  yourself
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ViennaCallCombinatorialGenerator >> block [
 
 	^ block
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ViennaCallCombinatorialGenerator >> block: aBlock [
 
 	block := aBlock.
@@ -38,20 +38,21 @@ ViennaCallCombinatorialGenerator >> initialize [
 	isDone := false
 ]
 
-{ #category : 'initialization' }
-ViennaCallCombinatorialGenerator >> peek [
-
-	^ isDone ifFalse: [ block ]
-]
-
-{ #category : 'initialization' }
+{ #category : 'operations' }
 ViennaCallCombinatorialGenerator >> reset [
 
 	isDone := false
 ]
 
-{ #category : 'initialization' }
-ViennaCallCombinatorialGenerator >> step [
+{ #category : 'operations' }
+ViennaCallCombinatorialGenerator >> step: aDictionary [
 
-	isDone := true
+	isDone := true.
+	^ false
+]
+
+{ #category : 'operations' }
+ViennaCallCombinatorialGenerator >> value: aDictionary [
+
+	^ isDone ifFalse: [ block value: aDictionary copy ]
 ]

@@ -26,13 +26,13 @@ ViennaLetDefCombinatorialGenerator class >> on: aBlock in: aViennaCombinatorialG
 		  yourself
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ViennaLetDefCombinatorialGenerator >> block [
 
 	^ block
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ViennaLetDefCombinatorialGenerator >> block: aBlock [
 
 	block := aBlock
@@ -45,25 +45,16 @@ ViennaLetDefCombinatorialGenerator >> initialize [
 	block := [ :env |  ]
 ]
 
-{ #category : 'initialization' }
-ViennaLetDefCombinatorialGenerator >> peek [
-
-	^ subgenerator peek ifNotNil: [ :valuable |
-		  [ :env |
-		  block value: env.
-		  valuable value: env ] ]
-]
-
-{ #category : 'initialization' }
+{ #category : 'operations' }
 ViennaLetDefCombinatorialGenerator >> reset [
 
 	subgenerator reset
 ]
 
-{ #category : 'initialization' }
-ViennaLetDefCombinatorialGenerator >> step [
+{ #category : 'operations' }
+ViennaLetDefCombinatorialGenerator >> step: aDictionary [
 
-	subgenerator step
+	^ subgenerator step: aDictionary
 ]
 
 { #category : 'accessing' }
@@ -76,4 +67,13 @@ ViennaLetDefCombinatorialGenerator >> subgenerator [
 ViennaLetDefCombinatorialGenerator >> subgenerator: aVIennaCombinatorialGenerator [
 
 	subgenerator := aVIennaCombinatorialGenerator
+]
+
+{ #category : 'operations' }
+ViennaLetDefCombinatorialGenerator >> value: aDictionary [
+
+	| env |
+	env := aDictionary copy.
+	block value: env.
+	^ subgenerator value: env
 ]

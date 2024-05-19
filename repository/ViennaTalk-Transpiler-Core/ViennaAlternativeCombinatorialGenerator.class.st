@@ -25,26 +25,19 @@ ViennaAlternativeCombinatorialGenerator >> initialize [
 	index := 1
 ]
 
-{ #category : 'initialization' }
-ViennaAlternativeCombinatorialGenerator >> peek [
-
-	^ (subgenerators at: index ifAbsent: [ ^ nil ]) peek
-]
-
-{ #category : 'accessing' }
+{ #category : 'operations' }
 ViennaAlternativeCombinatorialGenerator >> reset [
 
 	subgenerators do: #reset.
 	index := 1
 ]
 
-{ #category : 'accessing' }
-ViennaAlternativeCombinatorialGenerator >> step [
+{ #category : 'operations' }
+ViennaAlternativeCombinatorialGenerator >> step: aDictionary [
 
-	index <= subgenerators size ifTrue: [
-		((subgenerators at: index)
-			 step;
-			 peek) ifNil: [ index := index + 1 ] ]
+	^ index <= subgenerators size and: [
+		  ((subgenerators at: index) step: aDictionary copy) or: [
+			  (index := index + 1) <= subgenerators size ] ]
 ]
 
 { #category : 'accessing' }
@@ -58,4 +51,11 @@ ViennaAlternativeCombinatorialGenerator >> subgenerators: anArrayOfViennaCombina
 
 	subgenerators := anArrayOfViennaCombinatorialGenerator.
 	index := 1
+]
+
+{ #category : 'operations' }
+ViennaAlternativeCombinatorialGenerator >> value: aDictionary [
+
+	^ (subgenerators at: index ifAbsent: [ ^ nil ]) value:
+		  aDictionary copy
 ]
