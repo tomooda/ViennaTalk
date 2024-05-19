@@ -13,18 +13,11 @@ Class {
 }
 
 { #category : 'instance creation' }
-ViennaLetBestCombinatorialGenerator class >> on: aBlock [
+ViennaLetBestCombinatorialGenerator class >> multibind: aCollectionOfViennaBindCombinatorialGenerator suchthat: aBlock in: aViennaCombinatorialGenerator [
 
 	^ self new
-		  block: aBlock;
-		  yourself
-]
-
-{ #category : 'instance creation' }
-ViennaLetBestCombinatorialGenerator class >> on: aBlock in: aViennaCombinatorialGenerator [
-
-	^ self new
-		  block: aBlock;
+		  bindSubgenerators: aCollectionOfViennaBindCombinatorialGenerator;
+		  guardBlock: aBlock;
 		  subgenerator: aViennaCombinatorialGenerator;
 		  yourself
 ]
@@ -65,19 +58,6 @@ ViennaLetBestCombinatorialGenerator >> initialize [
 ]
 
 { #category : 'operations' }
-ViennaLetBestCombinatorialGenerator >> nextBind: aDictionary [
-
-	| env |
-	isDone ifTrue: [ ^ false ].
-	env := aDictionary copy.
-	bindSubgenerators do: [ :generator |
-		isBindReady := false.
-		(generator step: env) ifTrue: [ ^ true ] ].
-	isDone := true.
-	^ false
-]
-
-{ #category : 'operations' }
 ViennaLetBestCombinatorialGenerator >> reset [
 
 	bindSubgenerators do: #reset.
@@ -89,14 +69,32 @@ ViennaLetBestCombinatorialGenerator >> reset [
 ViennaLetBestCombinatorialGenerator >> step: aDictionary [
 
 	isDone ifTrue: [ ^ self ].
+	isBindReady ifFalse: [
+		[ self valueGuard: aDictionary ] whileFalse: [
+			(self stepBind: aDictionary) ifFalse: [ ^ nil ] ].
+		isBindReady := true ].
 	(subgenerator step: aDictionary copy) ifTrue: [
 		isBindReady := true.
 		^ true ].
 	subgenerator reset.
-	[ self nextBind: aDictionary ] whileTrue: [
+	[ self stepBind: aDictionary ] whileTrue: [
 		(self valueGuard: aDictionary) ifTrue: [
 			isBindReady := true.
 			^ true ] ].
+	isDone := true.
+	^ false
+]
+
+{ #category : 'operations' }
+ViennaLetBestCombinatorialGenerator >> stepBind: aDictionary [
+
+	| env |
+	isDone ifTrue: [ ^ false ].
+	env := aDictionary copy.
+	bindSubgenerators do: [ :generator |
+		isBindReady := false.
+		(generator step: env) ifTrue: [ ^ true ].
+		generator reset ].
 	isDone := true.
 	^ false
 ]
@@ -118,8 +116,8 @@ ViennaLetBestCombinatorialGenerator >> value: aDictionary [
 
 	| env |
 	isBindReady ifFalse: [
-		[ self valueGuard: aDictionary ] whileTrue: [
-			(self nextBind: aDictionary) ifFalse: [ ^ nil ] ].
+		[ self valueGuard: aDictionary ] whileFalse: [
+			(self stepBind: aDictionary) ifFalse: [ ^ nil ] ].
 		isBindReady := true ].
 	isDone ifTrue: [ ^ nil ].
 	env := aDictionary copy.
