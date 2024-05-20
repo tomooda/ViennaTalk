@@ -1,28 +1,29 @@
 Class {
-	#name : 'ViennaSequentialCombinatorialGeneratorTest',
+	#name : 'ViennaRepeatCombinatorialGeneratorTest',
 	#superclass : 'TestCase',
 	#category : 'ViennaTalk-Transpiler-Tests',
 	#package : 'ViennaTalk-Transpiler-Tests'
 }
 
 { #category : 'tests' }
-ViennaSequentialCombinatorialGeneratorTest >> testNext [
+ViennaRepeatCombinatorialGeneratorTest >> testNext [
 
-	| generator result1 result2 |
-	generator := ViennaSequentialCombinatorialGenerator withAll: {
-			             (ViennaBlockCombinatorialGenerator on: [ :env |
-				              result1 := env at: 'x' ]).
-			             (ViennaBlockCombinatorialGenerator on: [ :env |
-				              result2 := env at: 'y' ]) }.
-	self deny: (generator next: {
-				 ('x' -> 1).
-				 ('y' -> 2) } asDictionary).
-	self assert: result1 equals: 1.
-	self assert: result2 equals: 2
+	| generator result |
+	result := 0.
+	generator := ViennaRepeatCombinatorialGenerator
+		             range: (0 to: 2)
+		             with: (ViennaBlockCombinatorialGenerator on: [ :env |
+				              result := result + (env at: 'x') ]).
+	self assert: (generator next: { ('x' -> 1) } asDictionary).
+	self assert: result equals: 0.
+	self assert: (generator next: { ('x' -> 1) } asDictionary).
+	self assert: result equals: 1.
+	self deny: (generator next: { ('x' -> 1) } asDictionary).
+	self assert: result equals: 3
 ]
 
 { #category : 'tests' }
-ViennaSequentialCombinatorialGeneratorTest >> testStep [
+ViennaRepeatCombinatorialGeneratorTest >> testStep [
 
 	| generator result1 result2 |
 	generator := ViennaSequentialCombinatorialGenerator withAll: {
@@ -36,7 +37,7 @@ ViennaSequentialCombinatorialGeneratorTest >> testStep [
 ]
 
 { #category : 'tests' }
-ViennaSequentialCombinatorialGeneratorTest >> testValue [
+ViennaRepeatCombinatorialGeneratorTest >> testValue [
 
 	| generator result1 result2 |
 	generator := ViennaSequentialCombinatorialGenerator withAll: {

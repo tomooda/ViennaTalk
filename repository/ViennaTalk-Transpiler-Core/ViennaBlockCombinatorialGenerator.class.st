@@ -1,5 +1,5 @@
 Class {
-	#name : 'ViennaCallCombinatorialGenerator',
+	#name : 'ViennaBlockCombinatorialGenerator',
 	#superclass : 'ViennaCombinatorialGenerator',
 	#instVars : [
 		'block',
@@ -10,7 +10,7 @@ Class {
 }
 
 { #category : 'instance creation' }
-ViennaCallCombinatorialGenerator class >> on: aBlock [
+ViennaBlockCombinatorialGenerator class >> on: aBlock [
 
 	^ self new
 		  block: aBlock;
@@ -18,20 +18,20 @@ ViennaCallCombinatorialGenerator class >> on: aBlock [
 ]
 
 { #category : 'accessing' }
-ViennaCallCombinatorialGenerator >> block [
+ViennaBlockCombinatorialGenerator >> block [
 
 	^ block
 ]
 
 { #category : 'accessing' }
-ViennaCallCombinatorialGenerator >> block: aBlock [
+ViennaBlockCombinatorialGenerator >> block: aBlock [
 
 	block := aBlock.
 	isDone := false
 ]
 
 { #category : 'initialization' }
-ViennaCallCombinatorialGenerator >> initialize [
+ViennaBlockCombinatorialGenerator >> initialize [
 
 	super initialize.
 	block := [ :env |  ].
@@ -39,20 +39,20 @@ ViennaCallCombinatorialGenerator >> initialize [
 ]
 
 { #category : 'operations' }
-ViennaCallCombinatorialGenerator >> reset [
+ViennaBlockCombinatorialGenerator >> reset [
 
 	isDone := false
 ]
 
 { #category : 'operations' }
-ViennaCallCombinatorialGenerator >> step: aDictionary [
+ViennaBlockCombinatorialGenerator >> step: aDictionary [
 
 	isDone := true.
 	^ false
 ]
 
 { #category : 'operations' }
-ViennaCallCombinatorialGenerator >> value: aDictionary [
+ViennaBlockCombinatorialGenerator >> value: aDictionary [
 
 	^ isDone ifFalse: [ block value: aDictionary copy ]
 ]

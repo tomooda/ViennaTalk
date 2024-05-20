@@ -26,13 +26,13 @@ ViennaLetBestCombinatorialGeneratorTest >> testNext [
 		             suchthat: [ :e | (e at: 'x') < (e at: 'y') ]
 		             in:
 			             (ViennaAlternativeCombinatorialGenerator withAll: {
-					              (ViennaCallCombinatorialGenerator on: [ :e |
+					              (ViennaBlockCombinatorialGenerator on: [ :e |
 						               e at: 'a' put: 100.
 						               result := {
 							                         (e at: 'x').
 							                         (e at: 'y').
 							                         1 } ]).
-					              (ViennaCallCombinatorialGenerator on: [ :e |
+					              (ViennaBlockCombinatorialGenerator on: [ :e |
 						               e at: 'a' put: 200.
 						               result := {
 							                         (e at: 'x').
@@ -65,13 +65,13 @@ ViennaLetBestCombinatorialGeneratorTest >> testStep [
 		             suchthat: [ :e | (e at: 'x') < (e at: 'y') ]
 		             in:
 			             (ViennaAlternativeCombinatorialGenerator withAll: {
-					              (ViennaCallCombinatorialGenerator on: [ :e |
+					              (ViennaBlockCombinatorialGenerator on: [ :e |
 						               e at: 'a' put: 100.
 						               result := {
 							                         (e at: 'x').
 							                         (e at: 'y').
 							                         1 } ]).
-					              (ViennaCallCombinatorialGenerator on: [ :e |
+					              (ViennaBlockCombinatorialGenerator on: [ :e |
 						               e at: 'a' put: 200.
 						               result := {
 							                         (e at: 'x').
@@ -102,13 +102,13 @@ ViennaLetBestCombinatorialGeneratorTest >> testValue [
 		             suchthat: [ :e | (e at: 'x') < (e at: 'y') ]
 		             in:
 			             (ViennaAlternativeCombinatorialGenerator withAll: {
-					              (ViennaCallCombinatorialGenerator on: [ :e |
+					              (ViennaBlockCombinatorialGenerator on: [ :e |
 						               e at: 'a' put: 100.
 						               result := {
 							                         (e at: 'x').
 							                         (e at: 'y').
 							                         1 } ]).
-					              (ViennaCallCombinatorialGenerator on: [ :e |
+					              (ViennaBlockCombinatorialGenerator on: [ :e |
 						               e at: 'a' put: 200.
 						               result := {
 							                         (e at: 'x').

@@ -57,6 +57,14 @@ ViennaLetBestCombinatorialGenerator >> initialize [
 	isDone := true
 ]
 
+{ #category : 'copying' }
+ViennaLetBestCombinatorialGenerator >> postCopy [
+
+	super postCopy.
+	bindSubgenerators := bindSubgenerators collect: #copy.
+	subgenerator := subgenerator ifNotNil: #copy
+]
+
 { #category : 'operations' }
 ViennaLetBestCombinatorialGenerator >> reset [
 

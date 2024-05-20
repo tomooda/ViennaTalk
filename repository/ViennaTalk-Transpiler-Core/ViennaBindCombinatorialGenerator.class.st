@@ -41,6 +41,14 @@ ViennaBindCombinatorialGenerator >> initialize [
 	isBindReady := false
 ]
 
+{ #category : 'copying' }
+ViennaBindCombinatorialGenerator >> postCopy [
+
+	super postCopy.
+	valueStream := valueStream ifNotNil: #copy.
+	bindStream := bindStream ifNotNil: #copy
+]
+
 { #category : 'operations' }
 ViennaBindCombinatorialGenerator >> reset [
 	"reset the enumeration of the trace paths"

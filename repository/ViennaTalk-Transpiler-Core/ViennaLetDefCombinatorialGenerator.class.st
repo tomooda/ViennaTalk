@@ -45,6 +45,13 @@ ViennaLetDefCombinatorialGenerator >> initialize [
 	block := [ :env |  ]
 ]
 
+{ #category : 'copying' }
+ViennaLetDefCombinatorialGenerator >> postCopy [
+
+	super postCopy.
+	subgenerator := subgenerator ifNotNil: #copy
+]
+
 { #category : 'operations' }
 ViennaLetDefCombinatorialGenerator >> reset [
 

@@ -25,6 +25,13 @@ ViennaAlternativeCombinatorialGenerator >> initialize [
 	index := 1
 ]
 
+{ #category : 'copying' }
+ViennaAlternativeCombinatorialGenerator >> postCopy [
+
+	super postCopy.
+	subgenerators := subgenerators collect: #copy
+]
+
 { #category : 'operations' }
 ViennaAlternativeCombinatorialGenerator >> reset [
 

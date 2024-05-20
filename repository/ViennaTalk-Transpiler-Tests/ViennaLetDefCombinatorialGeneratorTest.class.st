@@ -12,7 +12,7 @@ ViennaLetDefCombinatorialGeneratorTest >> testNext [
 	generator := ViennaLetDefCombinatorialGenerator
 		             on: [ :env | env at: 'x' put: 1 ]
 		             in:
-		             (ViennaCallCombinatorialGenerator on: [ :env |
+		             (ViennaBlockCombinatorialGenerator on: [ :env |
 			              result := env at: 'x' ]).
 	result := nil.
 	self deny: (generator next: {  } asDictionary).
@@ -26,7 +26,7 @@ ViennaLetDefCombinatorialGeneratorTest >> testStep [
 	generator := ViennaLetDefCombinatorialGenerator
 		             on: [ :env | env at: 'x' put: 1 ]
 		             in:
-		             (ViennaCallCombinatorialGenerator on: [ :env |
+		             (ViennaBlockCombinatorialGenerator on: [ :env |
 			              result := env at: 'x' ]).
 	result := nil.
 	self deny: (generator step: Dictionary new)
@@ -39,7 +39,7 @@ ViennaLetDefCombinatorialGeneratorTest >> testValue [
 	generator := ViennaLetDefCombinatorialGenerator
 		             on: [ :env | env at: 'x' put: 1 ]
 		             in:
-		             (ViennaCallCombinatorialGenerator on: [ :env |
+		             (ViennaBlockCombinatorialGenerator on: [ :env |
 			              result := env at: 'x' ]).
 	result := nil.
 	self assert: (generator value: {  } asDictionary) notNil.

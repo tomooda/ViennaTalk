@@ -13,9 +13,9 @@ ViennaAlternativeCombinatorialGeneratorTest >> testNext [
 		       ('x' -> 1).
 		       ('y' -> 2) } asDictionary.
 	generator := ViennaAlternativeCombinatorialGenerator withAll: {
-			             (ViennaCallCombinatorialGenerator on: [ :e |
+			             (ViennaBlockCombinatorialGenerator on: [ :e |
 				              result := e at: 'x' ]).
-			             (ViennaCallCombinatorialGenerator on: [ :e |
+			             (ViennaBlockCombinatorialGenerator on: [ :e |
 				              result := e at: 'y' ]) }.
 	result := nil.
 	self assert: (generator next: env).
@@ -32,9 +32,9 @@ ViennaAlternativeCombinatorialGeneratorTest >> testStep [
 		       ('x' -> 1).
 		       ('y' -> 2) } asDictionary.
 	generator := ViennaAlternativeCombinatorialGenerator withAll: {
-			             (ViennaCallCombinatorialGenerator on: [ :e |
+			             (ViennaBlockCombinatorialGenerator on: [ :e |
 				              result := e at: 'x' ]).
-			             (ViennaCallCombinatorialGenerator on: [ :e |
+			             (ViennaBlockCombinatorialGenerator on: [ :e |
 				              result := e at: 'y' ]) }.
 	result := nil.
 	self assert: (generator step: env).
@@ -49,9 +49,9 @@ ViennaAlternativeCombinatorialGeneratorTest >> testValue [
 		       ('x' -> 1).
 		       ('y' -> 2) } asDictionary.
 	generator := ViennaAlternativeCombinatorialGenerator withAll: {
-			             (ViennaCallCombinatorialGenerator on: [ :e |
+			             (ViennaBlockCombinatorialGenerator on: [ :e |
 				              result := e at: 'x' ]).
-			             (ViennaCallCombinatorialGenerator on: [ :e |
+			             (ViennaBlockCombinatorialGenerator on: [ :e |
 				              result := e at: 'y' ]) }.
 	result := nil.
 	generator value: env.

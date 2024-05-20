@@ -25,6 +25,13 @@ ViennaSequentialCombinatorialGenerator >> initialize [
 	isDone := true
 ]
 
+{ #category : 'copying' }
+ViennaSequentialCombinatorialGenerator >> postCopy [
+
+	super postCopy.
+	subgenerators := subgenerators collect: #copy
+]
+
 { #category : 'operations' }
 ViennaSequentialCombinatorialGenerator >> reset [
 
