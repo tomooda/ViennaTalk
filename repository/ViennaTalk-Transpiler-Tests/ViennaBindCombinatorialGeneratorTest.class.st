@@ -14,7 +14,7 @@ ViennaBindCombinatorialGeneratorTest >> testNext [
 	| rootEnv env generator |
 	rootEnv := { ('a' -> 1) } asDictionary.
 	generator := ViennaBindCombinatorialGenerator
-		             withAll: { 10. 20 }
+		             collection: { 10. 20 }
 		             bindBlock: [ :e :v |
 			             {
 				             { ('x' -> v) } asDictionary.
@@ -46,7 +46,7 @@ ViennaBindCombinatorialGeneratorTest >> testStep [
 	| rootEnv env generator |
 	rootEnv := { ('a' -> 1) } asDictionary.
 	generator := ViennaBindCombinatorialGenerator
-		             withAll: { 10. 20 }
+		             collection: { 10. 20 }
 		             bindBlock: [ :e :v |
 			             {
 				             { ('x' -> v) } asDictionary.
@@ -79,7 +79,7 @@ ViennaBindCombinatorialGeneratorTest >> testValue [
 	| env generator |
 	env := { ('a' -> 1) } asDictionary.
 	generator := ViennaBindCombinatorialGenerator
-		             withAll: { 10. 20. 30 }
+		             collection: { 10. 20. 30 }
 		             bindBlock: [ :e :v |
 			             {
 				             { ('x' -> v) } asDictionary.

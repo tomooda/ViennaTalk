@@ -16,11 +16,11 @@ ViennaLetBestCombinatorialGeneratorTest >> testNext [
 	generator := ViennaLetBestCombinatorialGenerator
 		             multibind: {
 				             (ViennaBindCombinatorialGenerator
-					              withAll: { 1. 2 }
+					              collection: { 1. 2 }
 					              bindBlock: [ :e :v |
 					              { { ('x' -> v) } asDictionary } ]).
 				             (ViennaBindCombinatorialGenerator
-					              withAll: { 1. 2 }
+					              collection: { 1. 2 }
 					              bindBlock: [ :e :v |
 					              { { ('y' -> v) } asDictionary } ]) }
 		             suchthat: [ :e | (e at: 'x') < (e at: 'y') ]
@@ -55,11 +55,11 @@ ViennaLetBestCombinatorialGeneratorTest >> testStep [
 	generator := ViennaLetBestCombinatorialGenerator
 		             multibind: {
 				             (ViennaBindCombinatorialGenerator
-					              withAll: { 1. 2 }
+					              collection: { 1. 2 }
 					              bindBlock: [ :e :v |
 					              { { ('x' -> v) } asDictionary } ]).
 				             (ViennaBindCombinatorialGenerator
-					              withAll: { 1. 2 }
+					              collection: { 1. 2 }
 					              bindBlock: [ :e :v |
 					              { { ('y' -> v) } asDictionary } ]) }
 		             suchthat: [ :e | (e at: 'x') < (e at: 'y') ]
@@ -92,11 +92,11 @@ ViennaLetBestCombinatorialGeneratorTest >> testValue [
 	generator := ViennaLetBestCombinatorialGenerator
 		             multibind: {
 				             (ViennaBindCombinatorialGenerator
-					              withAll: { 1. 2 }
+					              collection: { 1. 2 }
 					              bindBlock: [ :e :v |
 					              { { ('x' -> v) } asDictionary } ]).
 				             (ViennaBindCombinatorialGenerator
-					              withAll: { 1. 2 }
+					              collection: { 1. 2 }
 					              bindBlock: [ :e :v |
 					              { { ('y' -> v) } asDictionary } ]) }
 		             suchthat: [ :e | (e at: 'x') < (e at: 'y') ]

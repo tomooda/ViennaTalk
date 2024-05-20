@@ -1269,40 +1269,6 @@ ViennaVDM2SmalltalkClass >> traceConcurrentExpression: aViennaNode env: aDiction
 		  stream nextPutAll: '] value' ]
 ]
 
-{ #category : 'code generation-traces' }
-ViennaVDM2SmalltalkClass >> traceDefinitionTerm: aViennaNode env: aDictionary [
-
-	^ self stringStreamContents: [ :stream |
-		  stream nextPutAll: '[ | state | state := self _document state. '.
-		  aViennaNode asArray
-			  do: [ :node |
-			  stream nextPutAll: (self generate: node env: aDictionary) ]
-			  separatedBy: [
-			  stream nextPutAll: '. self _document state: state. ' ].
-		  stream nextPutAll: '] value. ' ]
-]
-
-{ #category : 'code generation-traces' }
-ViennaVDM2SmalltalkClass >> traceRepeatDefinition: aViennaNode env: aDictionary [
-
-	^ aViennaNode traceRepeatPattern
-		  ifNotNil: [ :repeatPattern |
-			  self stringStreamContents: [ :stream |
-				  stream nextPutAll: '[ | state | state := self _document state. '.
-				  repeatPattern numbersDo: [ :n |
-					  n printOn: stream.
-					  stream
-						  nextPutAll: ' timesRepeat: [';
-						  nextPutAll:
-							  (self
-								   generate: aViennaNode traceCoreDefinition
-								   env: aDictionary);
-						  nextPutAll: ']. self _document state: state.' ].
-				  stream nextPutAll: '] value' ] ]
-		  ifNil: [
-		  self generate: aViennaNode traceCoreDefinition env: aDictionary ]
-]
-
 { #category : 'utilities' }
 ViennaVDM2SmalltalkClass >> tracingString [
 	^ ViennaTracingString new

@@ -12,7 +12,7 @@ Class {
 }
 
 { #category : 'instance creation' }
-ViennaBindCombinatorialGenerator class >> withAll: aCollection bindBlock: aBlock [
+ViennaBindCombinatorialGenerator class >> collection: aCollection bindBlock: aBlock [
 
 	^ self new
 		  set: aCollection;
@@ -85,7 +85,7 @@ ViennaBindCombinatorialGenerator >> stepBind: aDictionary [
 
 	[ bindStream atEnd ] whileTrue: [
 		valueStream atEnd ifTrue: [ ^ false ].
-		bindStream := (bindBlock value: aDictionary value: valueStream next)
+		bindStream := (bindBlock value: valueStream next)
 			              readStream ].
 	isBindReady := true.
 	^ true

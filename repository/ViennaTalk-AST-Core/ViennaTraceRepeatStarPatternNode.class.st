@@ -18,8 +18,8 @@ ViennaTraceRepeatStarPatternNode >> label [
 	^ 'TraceRepeatStarPattern'
 ]
 
-{ #category : 'enumerating' }
-ViennaTraceRepeatStarPatternNode >> numbersDo: aBlock [
+{ #category : 'accessing' }
+ViennaTraceRepeatStarPatternNode >> range [
 
-	0 to: self timesUpperbound do: aBlock
+	^ 0 to: self timesUpperbound
 ]

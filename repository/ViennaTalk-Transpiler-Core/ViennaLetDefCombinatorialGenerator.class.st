@@ -10,15 +10,7 @@ Class {
 }
 
 { #category : 'instance creation' }
-ViennaLetDefCombinatorialGenerator class >> on: aBlock [
-
-	^ self new
-		  block: aBlock;
-		  yourself
-]
-
-{ #category : 'instance creation' }
-ViennaLetDefCombinatorialGenerator class >> on: aBlock in: aViennaCombinatorialGenerator [
+ViennaLetDefCombinatorialGenerator class >> bindBlock: aBlock in: aViennaCombinatorialGenerator [
 
 	^ self new
 		  block: aBlock;

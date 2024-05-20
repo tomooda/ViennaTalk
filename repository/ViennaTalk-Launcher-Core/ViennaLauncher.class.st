@@ -191,7 +191,7 @@ ViennaLauncher class >> worldMenuOn: aBuilder [
 				action: [ self showSettingBrowser ];
 				order: 0.0;
 				help: 'open the preferences on ViennaTalk';
-				iconName: #smallConfigurationIcon;
+				iconName: #smallConfiguration;
 				withSeparatorAfter ]
 ]
 

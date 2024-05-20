@@ -38,14 +38,13 @@ ViennaTraceRepeatRangePatternNode >> label [
 	^ 'TraceRepeatRangePattern'
 ]
 
-{ #category : 'enumerating' }
-ViennaTraceRepeatRangePatternNode >> numbersDo: aBlock [
+{ #category : 'accessing' }
+ViennaTraceRepeatRangePatternNode >> range [
 
-	self size = 1
-		ifTrue: [ aBlock value: self times1 ]
-		ifFalse: [
-			(self times1 min: self times2) to: (self times1 max: self times2)
-			do: aBlock ]
+	^ self size = 1
+		  ifTrue: [ { self times1 } ]
+		  ifFalse: [
+		  (self times1 min: self times2) to: (self times1 max: self times2) ]
 ]
 
 { #category : 'accessing' }

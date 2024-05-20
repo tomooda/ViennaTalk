@@ -76,10 +76,10 @@ ViennaLetBestCombinatorialGenerator >> reset [
 { #category : 'operations' }
 ViennaLetBestCombinatorialGenerator >> step: aDictionary [
 
-	isDone ifTrue: [ ^ self ].
+	isDone ifTrue: [ ^ false ].
 	isBindReady ifFalse: [
 		[ self valueGuard: aDictionary ] whileFalse: [
-			(self stepBind: aDictionary) ifFalse: [ ^ nil ] ].
+			(self stepBind: aDictionary) ifFalse: [ ^ false ] ].
 		isBindReady := true ].
 	(subgenerator step: aDictionary copy) ifTrue: [
 		isBindReady := true.
@@ -123,6 +123,7 @@ ViennaLetBestCombinatorialGenerator >> subgenerator: aVIennaCombinatorialGenerat
 ViennaLetBestCombinatorialGenerator >> value: aDictionary [
 
 	| env |
+	isDone ifTrue: [ ^ nil ].
 	isBindReady ifFalse: [
 		[ self valueGuard: aDictionary ] whileFalse: [
 			(self stepBind: aDictionary) ifFalse: [ ^ nil ] ].

@@ -18,10 +18,8 @@ ViennaTraceRepeatOptionalPatternNode >> label [
 	^ 'TraceRepeatOptionalPattern'
 ]
 
-{ #category : 'enumerating' }
-ViennaTraceRepeatOptionalPatternNode >> numbersDo: aBlock [
+{ #category : 'accessing' }
+ViennaTraceRepeatOptionalPatternNode >> range [
 
-	aBlock
-		value: 0;
-		value: 1
+	^ 0 to: 1
 ]

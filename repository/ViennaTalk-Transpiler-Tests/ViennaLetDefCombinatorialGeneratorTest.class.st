@@ -10,7 +10,7 @@ ViennaLetDefCombinatorialGeneratorTest >> testNext [
 
 	| generator result |
 	generator := ViennaLetDefCombinatorialGenerator
-		             on: [ :env | env at: 'x' put: 1 ]
+		             bindBlock: [ :env | env at: 'x' put: 1 ]
 		             in:
 		             (ViennaBlockCombinatorialGenerator on: [ :env |
 			              result := env at: 'x' ]).
@@ -24,7 +24,7 @@ ViennaLetDefCombinatorialGeneratorTest >> testStep [
 
 	| generator result |
 	generator := ViennaLetDefCombinatorialGenerator
-		             on: [ :env | env at: 'x' put: 1 ]
+		             bindBlock: [ :env | env at: 'x' put: 1 ]
 		             in:
 		             (ViennaBlockCombinatorialGenerator on: [ :env |
 			              result := env at: 'x' ]).
@@ -37,7 +37,7 @@ ViennaLetDefCombinatorialGeneratorTest >> testValue [
 
 	| generator result |
 	generator := ViennaLetDefCombinatorialGenerator
-		             on: [ :env | env at: 'x' put: 1 ]
+		             bindBlock: [ :env | env at: 'x' put: 1 ]
 		             in:
 		             (ViennaBlockCombinatorialGenerator on: [ :env |
 			              result := env at: 'x' ]).

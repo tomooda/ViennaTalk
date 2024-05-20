@@ -9,7 +9,7 @@ Class {
 	#package : 'ViennaTalk-Transpiler-Core'
 }
 
-{ #category : 'instance creation' }
+{ #category : 'as yet unclassified' }
 ViennaBlockCombinatorialGenerator class >> on: aBlock [
 
 	^ self new

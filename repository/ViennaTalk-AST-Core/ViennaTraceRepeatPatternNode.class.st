@@ -36,8 +36,8 @@ ViennaTraceRepeatPatternNode >> maximalType [
 	^ ViennaType unit
 ]
 
-{ #category : 'enumerating' }
-ViennaTraceRepeatPatternNode >> numbersDo: aBlock [
+{ #category : 'accessing' }
+ViennaTraceRepeatPatternNode >> range [
 
 	^ self subclassResponsibility
 ]
