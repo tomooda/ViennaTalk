@@ -204,7 +204,7 @@ ViennaLiveTranslationEditor >> viennaItIn: aTextModel [
 	parser := ViennaVDMParser new.
 	codeFromSource := targetText text asString.
 	aTextModel withAdapterDo: [ :a |
-		a widgetDo: [ :widget | editor := widget widget textMorph editor ] ].
+		a widgetDo: [ :widget | editor := widget  textMorph editor ] ].
 	editor lineSelectAndEmptyCheck: [ ^ '' ].
 	ast := parser expression end / parser statement end / parser type end
 		       parse: (aTextModel text asString

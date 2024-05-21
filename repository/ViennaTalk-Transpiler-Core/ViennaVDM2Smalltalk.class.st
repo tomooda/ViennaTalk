@@ -253,14 +253,21 @@ ViennaVDM2Smalltalk >> blockStatement: aViennaNode env: aDictionary [
 
 { #category : 'code generation-statements' }
 ViennaVDM2Smalltalk >> callStatement: aViennaNode env: aDictionary [
-	| callee args |
-	callee := self generate: aViennaNode first env: aDictionary.
-	args := self generate: aViennaNode second env: aDictionary.
-	^ args
-		ifEmpty: [ callee , ' value' ]
-		ifNotEmpty: [ args size <= 4
-				ifTrue: [ callee , ' value: ' , (' value: ' join: args) ]
-				ifFalse: [ callee , 'valueWithArguments: {' , (' . ' join: args) , '}' ] ]
+
+	             | callee args |
+	             callee := self
+		                       generate: aViennaNode name
+		                       env: aDictionary.
+	             args := self
+		                     generate: aViennaNode expressionList
+		                     env: aDictionary.
+	             ^ args ifEmpty: [ callee , ' value' ] ifNotEmpty: [
+		               args size <= 4
+			               ifTrue: [
+			               callee , ' value: ' , (' value: ' join: args) ]
+			               ifFalse: [
+			               callee , 'valueWithArguments: {'
+			               , (' . ' join: args) , '}' ] ]
 ]
 
 { #category : 'code generation-expressions' }
@@ -2690,27 +2697,31 @@ ViennaVDM2Smalltalk >> recordTypeDefinition: aViennaNode env: aDictionary [
 { #category : 'private' }
 ViennaVDM2Smalltalk >> reorderDefinitions: aCollectionOfViennaNode [
 
-	| originalDefs boundVars freeVars newDefs |
-	aCollectionOfViennaNode size <= 1 ifTrue: [
-		^ aCollectionOfViennaNode ].
-	originalDefs := Array withAll: aCollectionOfViennaNode.
-	boundVars := (originalDefs collect: [ :def |
-		              def -> def uniqueBoundIdentifiers ]) asDictionary.
-	freeVars := (originalDefs collect: [ :def |
-		             def -> def uniqueFreeIdentifiers ]) asDictionary.
-	newDefs := OrderedCollection new: originalDefs size.
-	[ originalDefs notEmpty ] whileTrue: [
-		| allBoundVars index |
-		allBoundVars := Set new: 1024.
-		originalDefs do: [ :def | allBoundVars addAll: (boundVars at: def) ].
-		index := (1 to: originalDefs size)
-			         detect: [ :i |
-				         ((freeVars at: (originalDefs at: i)) contains: [ :var |
-					          allBoundVars includes: var ]) not ]
-			         ifNone: [ ^ self error: 'Cyclic definition' ].
-		newDefs add: (originalDefs at: index).
-		originalDefs := originalDefs copyWithoutIndex: index ].
-	^ newDefs asArray
+	             | originalDefs boundVars freeVars newDefs |
+	             aCollectionOfViennaNode size <= 1 ifTrue: [
+		             ^ aCollectionOfViennaNode ].
+	             originalDefs := Array withAll: aCollectionOfViennaNode.
+	             boundVars := (originalDefs collect: [ :def |
+		                           def -> def uniqueBoundIdentifiers ])
+		                          asDictionary.
+	             freeVars := (originalDefs collect: [ :def |
+		                          def -> def uniqueFreeIdentifiers ])
+		                         asDictionary.
+	             newDefs := OrderedCollection new: originalDefs size.
+	             [ originalDefs notEmpty ] whileTrue: [
+		             | allBoundVars index |
+		             allBoundVars := Set new: 1024.
+		             originalDefs do: [ :def |
+			             allBoundVars addAll: (boundVars at: def) ].
+		             index := (1 to: originalDefs size)
+			                      detect: [ :i |
+				                      ((freeVars at: (originalDefs at: i))
+					                       contains: [ :var |
+					                       allBoundVars includes: var ]) not ]
+			                      ifNone: [ ^ self error: 'Cyclic definition' ].
+		             newDefs add: (originalDefs at: index).
+		             originalDefs := originalDefs copyWithoutIndex: index ].
+	             ^ newDefs asArray
 ]
 
 { #category : 'code generation-expressions' }
@@ -3133,75 +3144,86 @@ ViennaVDM2Smalltalk >> source: aString [
 { #category : 'code generation-definitions' }
 ViennaVDM2Smalltalk >> stateDefinition: aViennaNode env: aDictionary [
 
-	| constructor fieldListNode invNode initNode vars vals recordNode initConstructor expressionListNode patternVar |
-	constructor := aViennaNode identifier.
-	fieldListNode := aViennaNode fieldList.
-	invNode := aViennaNode inv.
-	initNode := aViennaNode init.
-	vars := fieldListNode collect: #identifier.
-	initNode ifNil: [
-		^ self error: 'initalisation is required in state definition' ].
-	recordNode := initNode expression expression2.
-	initConstructor := recordNode name identifier.
-	expressionListNode := recordNode expressionList.
-	initConstructor = constructor ifFalse: [
-		^ self error:
-			  'Constructor must be the same name as state definition: '
-			  , constructor , ', ' , initConstructor ].
-	vars size = expressionListNode size ifFalse: [
-		^ self error:
-			  'Number of state variables and number of arguments must agree: '
-			  , vars size printString , ', '
-			  , expressionListNode size printString ].
-	vals := expressionListNode collect: [ :node |
-		        self generate: node env: aDictionary ].
-	^ {
-		  ((self stringStreamContents: [ :stream |
-			    vars with: vals do: [ :var :val |
-				    stream
-					    nextPutAll: (self noCheckAssignment: var be: val);
-					    nextPutAll: '.' , String cr ] ]) asViennaTracingString:
-			   initNode).
-		  ((self stringStreamContents: [ :stream |
-			    stream
-				    nextPutAll: initConstructor;
-				    nextPutAll: ' := ViennaCompositeType constructorName: ';
-				    nextPutAll: initConstructor storeString;
-				    nextPutAll: ' withAll: {';
-				    nextPutAll:
-					    (' . ' join: (self generate: fieldListNode env: aDictionary));
-				    nextPutAll: '}' ]) asViennaTracingString: aViennaNode).
-		  ((self stringStreamContents: [ :stream |
-			    patternVar := initNode first first first.
-			    stream
-				    nextPutAll: 'init_';
-				    nextPutAll: initConstructor;
-				    nextPutAll: ' := ';
-				    nextPutAll: (self generate: initNode first env: aDictionary) ])
-			   asViennaTracingString: initNode).
-		  (invNode ifNotNil: [
-			   (self stringStreamContents: [ :stream |
-				    stream
-					    nextPutAll: 'inv_';
-					    nextPutAll: constructor;
-					    nextPutAll: ' := ';
-					    nextPutAll: (self generate: invNode first env: aDictionary) ])
-				   asViennaTracingString: invNode ]).
-		  (self stringStreamContents: [ :stream |
-			   stream
-				   nextPutAll:
-					   (aDictionary at: constructor ifAbsent: [ constructor ]);
-				   nextPutAll: ' applyTo: {';
-				   nextPutAll: (' . ' join: vars);
-				   nextPutAll: '}' ]).
-		  (self stringStreamContents: [ :stream |
-			   vars
-				   do: [ :var |
-					   stream
-						   nextPutAll: var;
-						   nextPutAll: ' := _state at: ';
-						   nextPutAll: var storeString ]
-				   separatedBy: [ stream nextPutAll: '. ' ] ]) }
+	             | constructor fieldListNode invNode initNode vars vals recordNode initConstructor expressionListNode patternVar |
+	             constructor := aViennaNode identifier.
+	             fieldListNode := aViennaNode fieldList.
+	             invNode := aViennaNode inv.
+	             initNode := aViennaNode init.
+	             vars := fieldListNode collect: #identifier.
+	             initNode ifNil: [
+		             ^ self error:
+			               'initalisation is required in state definition' ].
+	             recordNode := initNode expression expression2.
+	             initConstructor := recordNode name identifier.
+	             expressionListNode := recordNode expressionList.
+	             initConstructor = constructor ifFalse: [
+		             ^ self error:
+			               'Constructor must be the same name as state definition: '
+			               , constructor , ', ' , initConstructor ].
+	             vars size = expressionListNode size ifFalse: [
+		             ^ self error:
+			               'Number of state variables and number of arguments must agree: '
+			               , vars size printString , ', '
+			               , expressionListNode size printString ].
+	             vals := expressionListNode collect: [ :node |
+		                     self generate: node env: aDictionary ].
+	             ^ {
+		               ((self stringStreamContents: [ :stream |
+			                 vars with: vals do: [ :var :val |
+				                 stream
+					                 nextPutAll:
+						                 (self noCheckAssignment: var be: val);
+					                 nextPutAll: '.' , String cr ] ])
+			                asViennaTracingString: initNode).
+		               ((self stringStreamContents: [ :stream |
+			                 stream
+				                 nextPutAll: initConstructor;
+				                 nextPutAll:
+					                 ' := ViennaCompositeType constructorName: ';
+				                 nextPutAll: initConstructor storeString;
+				                 nextPutAll: ' withAll: {';
+				                 nextPutAll:
+					                 (' . ' join:
+							                  (self
+								                   generate: fieldListNode
+								                   env: aDictionary));
+				                 nextPutAll: '}' ]) asViennaTracingString:
+			                aViennaNode).
+		               ((self stringStreamContents: [ :stream |
+			                 patternVar := initNode first first first.
+			                 stream
+				                 nextPutAll: 'init_';
+				                 nextPutAll: initConstructor;
+				                 nextPutAll: ' := ';
+				                 nextPutAll:
+					                 (self generate: initNode first env: aDictionary) ])
+			                asViennaTracingString: initNode).
+		               (invNode ifNotNil: [
+			                (self stringStreamContents: [ :stream |
+				                 stream
+					                 nextPutAll: 'inv_';
+					                 nextPutAll: constructor;
+					                 nextPutAll: ' := ';
+					                 nextPutAll:
+						                 (self generate: invNode first env: aDictionary) ])
+				                asViennaTracingString: invNode ]).
+		               (self stringStreamContents: [ :stream |
+			                stream
+				                nextPutAll:
+					                (aDictionary
+						                 at: constructor
+						                 ifAbsent: [ constructor ]);
+				                nextPutAll: ' applyTo: {';
+				                nextPutAll: (' . ' join: vars);
+				                nextPutAll: '}' ]).
+		               (self stringStreamContents: [ :stream |
+			                vars
+				                do: [ :var |
+					                stream
+						                nextPutAll: var;
+						                nextPutAll: ' := _state at: ';
+						                nextPutAll: var storeString ]
+				                separatedBy: [ stream nextPutAll: '. ' ] ]) }
 ]
 
 { #category : 'utilities' }
@@ -3404,13 +3426,16 @@ ViennaVDM2Smalltalk >> traceLetDefBinding: aViennaNode env: aDictionary [
 { #category : 'code generation-traces' }
 ViennaVDM2Smalltalk >> traceRepeatDefinition: aViennaNode env: aDictionary [
 
-	| trace |
-	trace := self generate: aViennaNode traceCoreDefinition.
-	^ aViennaNode traceRepeatPattern
-		  ifNotNil: [ :repeatPattern |
-			  '(ViennaRepeatCombinatorialGenerator range: '
-			  , repeatPattern range storeString , 'with: ' , trace , ')' ]
-		  ifNil: [ trace ]
+	             | trace |
+	             trace := self
+		                      generate: aViennaNode traceCoreDefinition
+		                      env: aDictionary.
+	             ^ aViennaNode traceRepeatPattern
+		               ifNotNil: [ :repeatPattern |
+			               '(ViennaRepeatCombinatorialGenerator range: '
+			               , repeatPattern range storeString , 'with: ' , trace
+			               , ')' ]
+		               ifNil: [ trace ]
 ]
 
 { #category : 'code generation-traces' }

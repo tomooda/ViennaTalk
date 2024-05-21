@@ -104,11 +104,15 @@ ViennaStateDefinitionNode >> formatWith: aViennaAbstractFormatter [
 { #category : 'private' }
 ViennaStateDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
 
-	self fieldList freeIdentifiersExcept: aSet do: aBlock.
-	self inv ifNotNil: [ :inv |
-		inv freeIdentifiersExcept: aSet do: aBlock ].
-	self init ifNotNil: [ :init |
-		init freeIdentifiersExcept: aSet do: aBlock ]
+	             | withConstructor |
+	             withConstructor := aSet copy
+		                                add: self identifier;
+		                                yourself.
+	             self fieldList freeIdentifiersExcept: aSet do: aBlock.
+	             self inv ifNotNil: [ :inv |
+		             inv freeIdentifiersExcept: withConstructor do: aBlock ].
+	             self init ifNotNil: [ :init |
+		             init freeIdentifiersExcept: withConstructor do: aBlock ]
 ]
 
 { #category : 'testing' }

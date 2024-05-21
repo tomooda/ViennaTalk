@@ -91,6 +91,12 @@ ViennaFlatDocumentNode >> findResolverForIdentifier: aString [
 ]
 
 { #category : 'testing' }
+ViennaFlatDocumentNode >> hasStateDefinition [
+
+	     ^ self anySatisfy: #isViennaStateDefinitionNode
+]
+
+{ #category : 'testing' }
 ViennaFlatDocumentNode >> isViennaFlatDocumentNode [
 
 	^ true
