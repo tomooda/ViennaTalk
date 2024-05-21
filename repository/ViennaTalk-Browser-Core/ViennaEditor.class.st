@@ -55,6 +55,12 @@ ViennaEditor >> save: aKeyboardEvent [
 	^ true
 ]
 
+{ #category : 'selection' }
+ViennaEditor >> selectionAsStream [
+
+	^ self selection readStream
+]
+
 { #category : 'editing keys' }
 ViennaEditor >> template [
 	template := ViennaSyntaxTemplate current.

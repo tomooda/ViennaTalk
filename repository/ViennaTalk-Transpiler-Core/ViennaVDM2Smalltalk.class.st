@@ -2310,12 +2310,15 @@ ViennaVDM2Smalltalk >> mapMunionPattern: aViennaNode env: aDictionary [
 
 { #category : 'code generation-expressions' }
 ViennaVDM2Smalltalk >> mapOrSequenceModify: aViennaNode env: aDictionary [
+
 	| arg1 arg2 varGenerator |
 	arg1 := self generate: aViennaNode first env: aDictionary.
 	arg2 := self generate: aViennaNode second env: aDictionary.
-	varGenerator := self varNameGenerator: 'override' uniqueIn: (Array with: arg1 with: arg2).
-	^ '[:mapOrSeq :map | map keysAndValuesDo: [:k :v | mapOrSeq at: k put: v]. mapOrSeq] value: ' , arg1 , ' copy value: '
-		, arg2
+	varGenerator := self
+		                varNameGenerator: 'override'
+		                uniqueIn: (Array with: arg1 with: arg2).
+	^ '([:mapOrSeq :map | map keysAndValuesDo: [:k :v | mapOrSeq at: k put: v]. mapOrSeq] value: '
+	  , arg1 , ' copy value: ' , arg2 , ')'
 ]
 
 { #category : 'code generation-statements' }
@@ -3381,7 +3384,8 @@ ViennaVDM2Smalltalk >> traceLetBestBinding: aViennaNode env: aDictionary [
 	collection := self
 		              generate: aViennaNode multipleBind typeOrExpression
 		              env: aDictionary.
-	guard := self generate: aViennaNode conditionExpression env: env.
+	guard := (self generate: aViennaNode conditionExpression env: env)
+		         ifNil: [ 'true' ].
 	traceDefinition := self
 		                   generate: aViennaNode traceDefinition
 		                   env: env.
