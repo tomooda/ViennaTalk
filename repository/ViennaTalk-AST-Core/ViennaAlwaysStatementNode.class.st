@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaAlwaysStatementNode,
-	#superclass : #ViennaStatementNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaAlwaysStatementNode',
+	#superclass : 'ViennaStatementNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaAlwaysStatementNode class >> entailingStatement: aViennaStatementNode1 bodyStatement: aViennaStatement2 [
 
 	^ (self new: 2)
@@ -14,31 +15,31 @@ ViennaAlwaysStatementNode class >> entailingStatement: aViennaStatementNode1 bod
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAlwaysStatementNode >> bodyStatement [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAlwaysStatementNode >> bodyStatement: aViennaStatementNode [
 
 	self at: 2 put: aViennaStatementNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAlwaysStatementNode >> entailingStatement [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAlwaysStatementNode >> entailingStatement: aViennaStatementNode [
 
 	self at: 1 put: aViennaStatementNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaAlwaysStatementNode >> formatWith: aViennaAbstractFormatter [
 
 	| entailingStatement statement |
@@ -62,26 +63,26 @@ ViennaAlwaysStatementNode >> formatWith: aViennaAbstractFormatter [
 				  insertCrIfNeeded: statement ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaAlwaysStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self bodyStatement freeIdentifiersExcept: aSet do: aBlock.
 	self entailingStatement freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaAlwaysStatementNode >> isViennaAlwaysStatementNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAlwaysStatementNode >> label [
 
 	^ 'AlwaysStatement'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaAlwaysStatementNode >> maximalType [
 
 	self entailingStatement typecheck.

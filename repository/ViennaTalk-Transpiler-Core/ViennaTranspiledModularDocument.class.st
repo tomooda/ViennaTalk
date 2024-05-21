@@ -10,9 +10,12 @@ Class {
 
 { #category : 'instance creation' }
 ViennaTranspiledModularDocument class >> from: aDictionary [
+
 	| doc |
 	doc := self new.
-	aDictionary keysAndValuesDo: [ :key :value | doc at: key put: value ].
+	aDictionary keysAndValuesDo: [ :key :value |
+		doc at: key put: value.
+		value _document: doc ].
 	^ doc
 ]
 

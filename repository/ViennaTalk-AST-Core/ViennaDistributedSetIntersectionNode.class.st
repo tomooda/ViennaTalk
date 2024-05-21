@@ -1,41 +1,42 @@
 Class {
-	#name : #ViennaDistributedSetIntersectionNode,
-	#superclass : #ViennaUnaryOperatorExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaDistributedSetIntersectionNode',
+	#superclass : 'ViennaUnaryOperatorExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaDistributedSetIntersectionNode >> formatOperatorWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter dinter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaDistributedSetIntersectionNode >> isViennaDistributedSetIntersectionNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaDistributedSetIntersectionNode >> label [
 
 	^ 'DistributedSetIntersection'
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaDistributedSetIntersectionNode >> operatorPrecedence [
 
 	^ 36
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaDistributedSetIntersectionNode >> paramType [
 
 	^ ViennaType any set set
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaDistributedSetIntersectionNode >> returnTypeFor: aViennaType [
 
 	^ aViennaType basetype basetype set

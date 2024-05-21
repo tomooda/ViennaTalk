@@ -33,21 +33,23 @@ ViennaVDM2SmalltalkScript class >> translateStatement: aString ifError: aBlock [
 { #category : 'code generation-definitions' }
 ViennaVDM2SmalltalkScript >> flatDocument: aViennaNode env: aDictionary [
 
-	| vars lazyDefs eagerDefs |
-	aViennaNode isViennaFlatDocumentNode ifFalse: [
-		^ self error: 'This is not a flat spec.' ].
-	vars := aViennaNode uniqueBoundIdentifiers , { 'state'. '_state' }.
-	lazyDefs := OrderedCollection new.
-	eagerDefs := OrderedCollection new.
-	self definitions: aViennaNode do: [ :node |
-		((node isViennaAccessFunctionDefinitionNode or: [
-			  node isViennaAccessOperationDefinitionNode ])
-			 ifTrue: [ lazyDefs ]
-			 ifFalse: [ eagerDefs ]) add: node ].
-	^ '| ' , (' ' join: vars) , ' |' , String cr
-	  , ('.' , String cr join:
-			   (lazyDefs , (self reorderDefinitions: eagerDefs) collect: [
-				    :node | self generate: node env: aDictionary ]))
+	     | vars lazyDefs eagerDefs |
+	     aViennaNode isViennaFlatDocumentNode ifFalse: [
+		     ^ self error: 'This is not a flat spec.' ].
+	     vars := aViennaNode uniqueBoundIdentifiers.
+	     aViennaNode hasStateDefinition ifTrue: [
+		     vars := vars , { 'state'. '_state'. 'init' } ].
+	     lazyDefs := OrderedCollection new.
+	     eagerDefs := OrderedCollection new.
+	     self definitions: aViennaNode do: [ :node |
+		     ((node isViennaAccessFunctionDefinitionNode or: [
+			       node isViennaAccessOperationDefinitionNode ])
+			      ifTrue: [ lazyDefs ]
+			      ifFalse: [ eagerDefs ]) add: node ].
+	     ^ '| ' , (' ' join: vars) , ' |' , String cr
+	       , ('.' , String cr join:
+			        (lazyDefs , (self reorderDefinitions: eagerDefs) collect: [
+				         :node | self generate: node env: aDictionary ]))
 ]
 
 { #category : 'code generation-definitions' }
@@ -87,6 +89,21 @@ ViennaVDM2SmalltalkScript >> module: aViennaNode env: aDictionary [
 	
 ]
 
+{ #category : 'code generation-traces' }
+ViennaVDM2SmalltalkScript >> namedTrace: aViennaNode env: aDictionary [
+
+	             ^ self stringStreamContents: [ :stream |
+		               stream
+			               nextPutAll: aViennaNode identifier;
+			               nextPutAll: ' := [|_generator | _generator := ';
+			               nextPutAll:
+				               (self
+					                generate: aViennaNode traceDefinitionList
+					                env: aDictionary);
+			               nextPutAll:
+				               '. [init value. _generator next: Dictionary new] whileTrue]' ]
+]
+
 { #category : 'code generation-definitions' }
 ViennaVDM2SmalltalkScript >> operationDefinitions: aViennaNode env: aDictionary [
 	^ '.' , String cr join: (aViennaNode collect: [ :node | self generate: node env: aDictionary ])
@@ -101,28 +118,35 @@ ViennaVDM2SmalltalkScript >> operationImport: aViennaNode env: aDictionary [
 { #category : 'code generation-definitions' }
 ViennaVDM2SmalltalkScript >> stateDefinition: aViennaNode env: aDictionary [
 
-	| hexa |
-	hexa := super stateDefinition: aViennaNode env: aDictionary.
-	^ self stringStreamContents: [ :stream |
-		  stream
-			  nextPutAll: hexa first;
-			  nextPutAll: hexa second;
-			  nextPutAll: '.';
-			  cr;
-			  nextPutAll: hexa third.
-		  hexa fourth ifNotNil: [ :inv |
-			  stream
-				  nextPutAll: '.';
-				  cr;
-				  nextPutAll: inv ].
-		  stream
-			  nextPutAll: '. state := [';
-			  nextPutAll: hexa fifth;
-			  nextPutAll: '].';
-			  cr;
-			  nextPutAll: '_state := [:_state |';
-			  nextPutAll: hexa sixth;
-			  nextPutAll: ']' ]
+	             | hexa |
+	             hexa := super
+		                     stateDefinition: aViennaNode
+		                     env: aDictionary.
+	             ^ self stringStreamContents: [ :stream |
+		               stream nextPutAll: 'init := ['.
+		               stream
+			               nextPutAll: hexa first;
+			               nextPutAll: '].';
+			               cr;
+			               nextPutAll: 'init value.';
+			               cr;
+			               nextPutAll: hexa second;
+			               nextPutAll: '.';
+			               cr;
+			               nextPutAll: hexa third.
+		               hexa fourth ifNotNil: [ :inv |
+			               stream
+				               nextPutAll: '.';
+				               cr;
+				               nextPutAll: inv ].
+		               stream
+			               nextPutAll: '. state := [';
+			               nextPutAll: hexa fifth;
+			               nextPutAll: '].';
+			               cr;
+			               nextPutAll: '_state := [:_state |';
+			               nextPutAll: hexa sixth;
+			               nextPutAll: ']' ]
 ]
 
 { #category : 'utilities' }

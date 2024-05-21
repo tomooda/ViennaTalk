@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaImportComponentNode,
-	#superclass : #ViennaInterfaceComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaImportComponentNode',
+	#superclass : 'ViennaInterfaceComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaImportComponentNode class >> isAbstract [
 
 	^ self = ViennaImportComponentNode

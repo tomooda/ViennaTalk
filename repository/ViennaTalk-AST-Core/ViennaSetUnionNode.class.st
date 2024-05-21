@@ -1,29 +1,30 @@
 Class {
-	#name : #ViennaSetUnionNode,
-	#superclass : #ViennaBinaryOperatorExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaSetUnionNode',
+	#superclass : 'ViennaBinaryOperatorExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSetUnionNode >> formatOperatorWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter union
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSetUnionNode >> isViennaSetUnionNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSetUnionNode >> label [
 
 	^ 'SetUnion'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaSetUnionNode >> maximalType: aViennaType [
 
 	self expression1 maximalType: aViennaType.
@@ -31,25 +32,25 @@ ViennaSetUnionNode >> maximalType: aViennaType [
 	super maximalType: aViennaType
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSetUnionNode >> operatorPrecedence [
 
 	^ 31
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSetUnionNode >> paramType1 [
 
 	^ ViennaType any set
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSetUnionNode >> paramType2 [
 
 	^ ViennaType any set
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSetUnionNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
 
 	| basetype |

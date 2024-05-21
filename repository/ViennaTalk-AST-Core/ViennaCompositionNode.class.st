@@ -1,53 +1,54 @@
 Class {
-	#name : #ViennaCompositionNode,
-	#superclass : #ViennaBinaryOperatorExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaCompositionNode',
+	#superclass : 'ViennaBinaryOperatorExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaCompositionNode >> formatOperatorWith: aViennaAbstractFormatter [
 
 	^ 'comp'
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaCompositionNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
 
 	^ aBlock2 value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCompositionNode >> isViennaCompositionNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCompositionNode >> label [
 
 	^ 'Composition'
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaCompositionNode >> operatorPrecedence [
 
 	^ 51
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCompositionNode >> paramType1 [
 
 	^ ViennaType any
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCompositionNode >> paramType2 [
 
 	^ ViennaType any
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCompositionNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
 
 	aViennaType1 isFunctionType ifTrue: [

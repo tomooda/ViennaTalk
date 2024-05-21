@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaTypeJudgementNode,
-	#superclass : #ViennaExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaTypeJudgementNode',
+	#superclass : 'ViennaExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaTypeJudgementNode class >> expression: aViennaExpressionNode type: aViennaTypeNode [
 
 	^ (self new: 2)
@@ -14,19 +15,19 @@ ViennaTypeJudgementNode class >> expression: aViennaExpressionNode type: aVienna
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTypeJudgementNode >> expression [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTypeJudgementNode >> expression: aViennaExpressionNode [
 
 	self at: 1 put: aViennaExpressionNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaTypeJudgementNode >> formatWith: aViennaAbstractFormatter [
 
 	| type expression |
@@ -45,26 +46,26 @@ ViennaTypeJudgementNode >> formatWith: aViennaAbstractFormatter [
 	  ++ (aViennaAbstractFormatter indentString: type) ++ ')'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTypeJudgementNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self expression freeIdentifiersExcept: aSet do: aBlock.
 	self type freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTypeJudgementNode >> isViennaTypeJudgementNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTypeJudgementNode >> label [
 
 	^ 'TypeJudgement'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaTypeJudgementNode >> maximalType [
 
 	self expression typecheck.
@@ -77,13 +78,13 @@ ViennaTypeJudgementNode >> maximalType [
 	^ ViennaType bool
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTypeJudgementNode >> type [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTypeJudgementNode >> type: aViennaTypeNode [
 
 	self at: 2 put: aViennaTypeNode

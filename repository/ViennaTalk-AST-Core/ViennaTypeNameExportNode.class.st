@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaTypeNameExportNode,
-	#superclass : #ViennaTypeExportNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaTypeNameExportNode',
+	#superclass : 'ViennaTypeExportNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaTypeNameExportNode >> formatWith: aViennaAbstractFormatter [
 
 	| name |
@@ -17,13 +18,13 @@ ViennaTypeNameExportNode >> formatWith: aViennaAbstractFormatter [
 		  ifFalse: [ aViennaAbstractFormatter typeName: name identifier ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTypeNameExportNode >> isViennaTypeNameExportNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTypeNameExportNode >> label [
 
 	^ 'TypeNameExport'

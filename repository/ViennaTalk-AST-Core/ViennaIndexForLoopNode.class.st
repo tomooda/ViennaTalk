@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaIndexForLoopNode,
-	#superclass : #ViennaStatementNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaIndexForLoopNode',
+	#superclass : 'ViennaStatementNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaIndexForLoopNode class >> patternIdentifier: aString startExpression: aViennaExpressionNode1 endExpression: aViennaExpressionNode2 stepExpression: aViennaExpressionNode3 statement: aViennaStatementNode [
 
 	^ (self new: 5)
@@ -17,26 +18,26 @@ ViennaIndexForLoopNode class >> patternIdentifier: aString startExpression: aVie
 		  yourself
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaIndexForLoopNode >> definitionOfLocalName: aString [
 
 	self identifier = aString ifTrue: [ ^ self patternIdentifier ].
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIndexForLoopNode >> endExpression [
 
 	^ self at: 3
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIndexForLoopNode >> endExpression: aViennaExpressionNode [
 
 	self at: 3 put: aViennaExpressionNode
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaIndexForLoopNode >> findResolverForIdentifier: aString [
 
 	^ self identifier = aString
@@ -44,7 +45,7 @@ ViennaIndexForLoopNode >> findResolverForIdentifier: aString [
 		  ifFalse: [ super findResolverForIdentifier: aString ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaIndexForLoopNode >> formatWith: aViennaAbstractFormatter [
 
 	| identifier startExpression endExpression stepExpression statement |
@@ -77,7 +78,7 @@ ViennaIndexForLoopNode >> formatWith: aViennaAbstractFormatter [
 				   insertCrIfNeeded: statement)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaIndexForLoopNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self startExpression freeIdentifiersExcept: aSet do: aBlock.
@@ -88,43 +89,43 @@ ViennaIndexForLoopNode >> freeIdentifiersExcept: aSet do: aBlock [
 		do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaIndexForLoopNode >> hasScope [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIndexForLoopNode >> identifier [
 
 	^ self patternIdentifier identifier
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIndexForLoopNode >> identifier: aString [
 
 	self patternIdentifier identifier: aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaIndexForLoopNode >> isViennaIndexForLoopNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIndexForLoopNode >> label [
 
 	^ 'IndexForLoop'
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaIndexForLoopNode >> lookupIdentifier: aString [
 
 	^ self identifier = aString ifTrue: [ self ]
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaIndexForLoopNode >> maximalType [
 
 	| indexType |
@@ -139,49 +140,49 @@ ViennaIndexForLoopNode >> maximalType [
 	^ self statement typecheck
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIndexForLoopNode >> patternIdentifier [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIndexForLoopNode >> patternIdentifier: aString [
 
 	self at: 1 put: aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIndexForLoopNode >> startExpression [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIndexForLoopNode >> startExpression: aViennaExpressionNode [
 
 	self at: 2 put: aViennaExpressionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIndexForLoopNode >> statement [
 
 	^ self at: 5
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIndexForLoopNode >> statement: aViennaStatementNode [
 
 	self at: 5 put: aViennaStatementNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIndexForLoopNode >> stepExpression [
 
 	^ self at: 4
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIndexForLoopNode >> stepExpression: aViennaExpressionNode [
 
 	self at: 4 put: aViennaExpressionNode

@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaExportTypesSignatureNode,
-	#superclass : #ViennaExportSignatureNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaExportTypesSignatureNode',
+	#superclass : 'ViennaExportSignatureNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaExportTypesSignatureNode >> formatWith: aViennaAbstractFormatter [
 
 	| typeExports |
@@ -19,13 +20,13 @@ ViennaExportTypesSignatureNode >> formatWith: aViennaAbstractFormatter [
 				   withAll: typeExports) ++ ';'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExportTypesSignatureNode >> isViennaExportTypesSignatureNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExportTypesSignatureNode >> label [
 
 	^ 'ExportTypesSignature'

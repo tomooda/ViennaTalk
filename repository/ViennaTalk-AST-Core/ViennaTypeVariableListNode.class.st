@@ -1,17 +1,18 @@
 Class {
-	#name : #ViennaTypeVariableListNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaTypeVariableListNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTypeVariableListNode >> boundIdentifiersDo: aBlock [
 
 	self do: [ :typeVariable | typeVariable boundIdentifiersDo: aBlock ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaTypeVariableListNode >> formatWith: aViennaAbstractFormatter [
 
 	^ self size > 0
@@ -22,25 +23,25 @@ ViennaTypeVariableListNode >> formatWith: aViennaAbstractFormatter [
 		  ifFalse: [ aViennaAbstractFormatter empty ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTypeVariableListNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTypeVariableListNode >> isViennaTypeVariableListNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTypeVariableListNode >> label [
 
 	^ 'TypeVariableList'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaTypeVariableListNode >> maximalType [
 
 	^ ViennaType product: (self collect: #typecheck)

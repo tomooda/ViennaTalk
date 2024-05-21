@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaSetUnionPatternNode,
-	#superclass : #ViennaPatternNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaSetUnionPatternNode',
+	#superclass : 'ViennaPatternNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaSetUnionPatternNode class >> pattern: aViennaPatternNode1 pattern: aViennaPatternNode2 [
 
 	^ (self new: 2)
@@ -14,14 +15,14 @@ ViennaSetUnionPatternNode class >> pattern: aViennaPatternNode1 pattern: aVienna
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaSetUnionPatternNode >> boundIdentifiersDo: aBlock [
 
 	self pattern1 boundIdentifiersDo: aBlock.
 	self pattern2 boundIdentifiersDo: aBlock
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSetUnionPatternNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter
@@ -30,26 +31,26 @@ ViennaSetUnionPatternNode >> formatWith: aViennaAbstractFormatter [
 		  arg: (aViennaAbstractFormatter format: self pattern2)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaSetUnionPatternNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self pattern1 freeIdentifiersExcept: aSet do: aBlock.
 	self pattern2 freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaSetUnionPatternNode >> isViennaSetUnionPatternNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSetUnionPatternNode >> label [
 
 	^ 'SetUnionPattern'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaSetUnionPatternNode >> maximalType [
 
 	| basetype isSet1 |
@@ -67,7 +68,7 @@ ViennaSetUnionPatternNode >> maximalType [
 			  ifFalse: [ basetype set ] ]
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaSetUnionPatternNode >> maximalType: aViennaType [
 
 	| type |
@@ -78,25 +79,25 @@ ViennaSetUnionPatternNode >> maximalType: aViennaType [
 	super maximalType: self maximalType
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSetUnionPatternNode >> pattern1 [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSetUnionPatternNode >> pattern1: aViennaPatternNode [
 
 	self at: 1 put: aViennaPatternNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSetUnionPatternNode >> pattern2 [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSetUnionPatternNode >> pattern2: aViennaPatternNode [
 
 	self at: 2 put: aViennaPatternNode

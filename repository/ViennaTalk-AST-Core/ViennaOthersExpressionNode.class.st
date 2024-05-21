@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaOthersExpressionNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaOthersExpressionNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaOthersExpressionNode class >> expression: aViennaExpressionNode [
 
 	^ (self new: 1)
@@ -13,25 +14,25 @@ ViennaOthersExpressionNode class >> expression: aViennaExpressionNode [
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaOthersExpressionNode >> boundIdentifiersDo: aBlock [
 
 	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaOthersExpressionNode >> expression [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaOthersExpressionNode >> expression: aViennaExpressionNode [
 
 	self at: 1 put: aViennaExpressionNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaOthersExpressionNode >> formatWith: aViennaAbstractFormatter [
 
 	| expression |
@@ -42,25 +43,25 @@ ViennaOthersExpressionNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: expression
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaOthersExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self expression freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaOthersExpressionNode >> isViennaOthersExpressionNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaOthersExpressionNode >> label [
 
 	^ 'OthersExpression'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaOthersExpressionNode >> maximalType [
 
 	^ self expression typecheck

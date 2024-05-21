@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaLambdaExpressionNode,
-	#superclass : #ViennaExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaLambdaExpressionNode',
+	#superclass : 'ViennaExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaLambdaExpressionNode class >> typeBindList: aViennaTypeBindListNode expression: aViennaExpressionNode [
 
 	^ (self new: 2)
@@ -14,7 +15,7 @@ ViennaLambdaExpressionNode class >> typeBindList: aViennaTypeBindListNode expres
 		  yourself
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaLambdaExpressionNode >> definitionOfLocalName: aString [
 
 	self patternsDo: [ :pattern |
@@ -25,19 +26,19 @@ ViennaLambdaExpressionNode >> definitionOfLocalName: aString [
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLambdaExpressionNode >> expression [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLambdaExpressionNode >> expression: aViennaExpressionNode [
 
 	self at: 2 put: aViennaExpressionNode
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaLambdaExpressionNode >> findResolverForIdentifier: aString [
 
 	^ (self typeBindList bindsIdentifier: aString)
@@ -45,7 +46,7 @@ ViennaLambdaExpressionNode >> findResolverForIdentifier: aString [
 		  ifFalse: [ super findResolverForIdentifier: aString ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaLambdaExpressionNode >> formatWith: aViennaAbstractFormatter [
 
 	| typeBind expression |
@@ -58,7 +59,7 @@ ViennaLambdaExpressionNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: expression
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaLambdaExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self typeBindList freeIdentifiersExcept: aSet do: aBlock.
@@ -68,25 +69,25 @@ ViennaLambdaExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
 		do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaLambdaExpressionNode >> hasScope [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLambdaExpressionNode >> isViennaLambdaExpressionNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLambdaExpressionNode >> label [
 
 	^ 'LambdaExpression'
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaLambdaExpressionNode >> lookupIdentifier: aString [
 
 	self typeBindList do: [ :typeBind |
@@ -94,7 +95,7 @@ ViennaLambdaExpressionNode >> lookupIdentifier: aString [
 	^ nil
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaLambdaExpressionNode >> maximalType [
 
 	self typeBindList typecheck.
@@ -103,7 +104,7 @@ ViennaLambdaExpressionNode >> maximalType [
 			    typeBind pattern typecheck ])) -> self expression typecheck
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaLambdaExpressionNode >> maximalType: aViennaType [
 
 	self typeBindList typecheck.
@@ -111,31 +112,31 @@ ViennaLambdaExpressionNode >> maximalType: aViennaType [
 	super maximalType: aViennaType
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaLambdaExpressionNode >> operatorPrecedence [
 
 	^ 10
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaLambdaExpressionNode >> patternsDo: aBlock [
 
 	self typeBindList do: [ :typeBind | aBlock value: typeBind pattern ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLambdaExpressionNode >> typeBindList [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLambdaExpressionNode >> typeBindList: aViennaTypeBindListNode [
 
 	self at: 1 put: aViennaTypeBindListNode
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaLambdaExpressionNode >> typeBindsDo: aBlock [
 
 	self typeBindList do: aBlock

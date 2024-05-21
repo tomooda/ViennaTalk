@@ -1,17 +1,18 @@
 Class {
-	#name : #ViennaModuleBodyNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaModuleBodyNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaModuleBodyNode >> boundIdentifiersDo: aBlock [
 
 	self do: [ :node | node boundIdentifiersDo: aBlock ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaModuleBodyNode >> formatWith: aViennaAbstractFormatter [
 
 	| definitionBlocks |
@@ -23,38 +24,38 @@ ViennaModuleBodyNode >> formatWith: aViennaAbstractFormatter [
 	  (aViennaAbstractFormatter join: String cr withAll: definitionBlocks)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaModuleBodyNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self do: [ :node | node freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaModuleBodyNode >> isViennaModuleBodyNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaModuleBodyNode >> label [
 
 	^ 'ModuleBody'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaModuleBodyNode >> maximalType [
 
 	self do: #typecheck.
 	^ ViennaType unit
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaModuleBodyNode >> sectionsDo: aBlock [
 
 	self do: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaModuleBodyNode >> stateDefinition [
 
 	self sectionsDo: [ :section |
@@ -62,7 +63,7 @@ ViennaModuleBodyNode >> stateDefinition [
 	^ nil
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaModuleBodyNode >> toplevelDefinitionsDo: aBlock [
 
 	self sectionsDo: [ :section |

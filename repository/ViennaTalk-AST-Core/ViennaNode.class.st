@@ -1,7 +1,7 @@
 Class {
-	#name : #ViennaNode,
-	#superclass : #Object,
-	#type : #variable,
+	#name : 'ViennaNode',
+	#superclass : 'Object',
+	#type : 'variable',
 	#instVars : [
 		'parent',
 		'start',
@@ -9,22 +9,23 @@ Class {
 		'annotations',
 		'maximalType'
 	],
-	#category : #'ViennaTalk-AST-Core'
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaNode class >> empty [
 
 	^ self new: 0
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode class >> isAbstract [
 
 	^ self = ViennaNode
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaNode class >> keepParentsWithAll: anArrayOfViennaNode [
 
 	| node |
@@ -34,7 +35,7 @@ ViennaNode class >> keepParentsWithAll: anArrayOfViennaNode [
 	^ node
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaNode class >> with: aViennaNode [
 
 	| node |
@@ -43,7 +44,7 @@ ViennaNode class >> with: aViennaNode [
 	^ node
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaNode class >> withAll: anArrayOfViennaNode [
 
 	| node |
@@ -53,7 +54,7 @@ ViennaNode class >> withAll: anArrayOfViennaNode [
 	^ node
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaNode >> = aViennaNode [
 
 	self class = aViennaNode class ifFalse: [ ^ false ].
@@ -63,7 +64,7 @@ ViennaNode >> = aViennaNode [
 	^ true
 ]
 
-{ #category : #'adding/removing' }
+{ #category : 'adding/removing' }
 ViennaNode >> add: anObject [
 
 	| array |
@@ -77,7 +78,7 @@ ViennaNode >> add: anObject [
 	^ anObject
 ]
 
-{ #category : #'adding/removing' }
+{ #category : 'adding/removing' }
 ViennaNode >> addAll: aCollection [
 
 	| array |
@@ -91,7 +92,7 @@ ViennaNode >> addAll: aCollection [
 	^ aCollection
 ]
 
-{ #category : #'adding/removing' }
+{ #category : 'adding/removing' }
 ViennaNode >> addAnnotation: aString [
 
 	annotations := annotations ifNil: [ { aString } ] ifNotNil: [ 
@@ -101,7 +102,7 @@ ViennaNode >> addAnnotation: aString [
 	^ aString
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaNode >> allDescendantsDo: aBlock [
 	aBlock value: self.
 	self
@@ -110,14 +111,14 @@ ViennaNode >> allDescendantsDo: aBlock [
 				ifTrue: [ node allDescendantsDo: aBlock ] ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaNode >> allDescendantsSuchThat: aBlock1 do: aBlock2 [
 
 	self allDescendantsDo: [ :node |
 		(aBlock1 value: node) ifTrue: [ aBlock2 value: node ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNode >> allParents [
 	^ Array
 		streamContents: [ :stream | 
@@ -128,7 +129,7 @@ ViennaNode >> allParents [
 					node := node parent ] ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaNode >> allSatisfy: aBlock [
 	self
 		do: [ :node | 
@@ -137,19 +138,19 @@ ViennaNode >> allSatisfy: aBlock [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNode >> annotations [
 
 	^ annotations
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNode >> annotations: anArrayOfString [
 
 	annotations := anArrayOfString
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaNode >> anySatisfy: aBlockClosure [
 	self
 		do: [ :child | 
@@ -158,13 +159,13 @@ ViennaNode >> anySatisfy: aBlockClosure [
 	^ false
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaNode >> asAccessDefinition [
 
 	^ nil
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaNode >> asArray [
 	| array |
 	array := Array new: self size.
@@ -172,13 +173,13 @@ ViennaNode >> asArray [
 	^ array
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaNode >> asExport [
 
 	^ nil
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaNode >> asExportSignature [
 
 	self asExport ifNotNil: [ :export |
@@ -194,13 +195,13 @@ ViennaNode >> asExportSignature [
 	^ nil
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaNode >> asImportDefinitionIn: moduleNode [
 
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNode >> at: anInteger ifAbsent: aBlock [
 
 	^ self size >= anInteger
@@ -208,14 +209,14 @@ ViennaNode >> at: anInteger ifAbsent: aBlock [
 		  ifFalse: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNode >> at: anInteger put: anObject [
 
 	anObject isViennaNode ifTrue: [ anObject parent: self ].
 	^ super at: anInteger put: anObject
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaNode >> bindHolderNode [
 
 	(parent notNil and: [ self isViennaPatternBindNode ]) ifTrue: [
@@ -223,7 +224,7 @@ ViennaNode >> bindHolderNode [
 	^ self
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> bindsIdentifier: aString [
 
 	self boundIdentifiersDo: [ :identifier |
@@ -231,24 +232,24 @@ ViennaNode >> bindsIdentifier: aString [
 	^ false
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaNode >> boundIdentifiersDo: aBlock [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaNode >> collect: aBlock [
 	^ (1 to: self size) collect: [ :index | aBlock value: (self at: index) ]
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 ViennaNode >> copyFragment [
 
 	^ self shallowCopy postCopyFragment parent: nil
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 ViennaNode >> copyWhole [
 	| map |
 	map := IdentityDictionary new.
@@ -256,7 +257,7 @@ ViennaNode >> copyWhole [
 	^ map at: self ifAbsent: [ nil ]
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 ViennaNode >> copyWhole: aDictionary [
 	| copy |
 	copy := self shallowCopy.
@@ -273,7 +274,7 @@ ViennaNode >> copyWhole: aDictionary [
 	^ copy
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaNode >> deepFindResolverForIdentifier: aString [
 
 	| resolver node |
@@ -286,25 +287,25 @@ ViennaNode >> deepFindResolverForIdentifier: aString [
 	^ resolver
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaNode >> definitionOfGlobalName: shortName module: moduleName [
 
 	^ (self moduleNamed: moduleName) definitionOfLocalName: shortName
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaNode >> definitionOfLocalName: aString [
 
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaNode >> detect: aBlock [
 	self do: [ :node | (aBlock value: node) ifTrue: [ ^node ] ].
 	^ NotFound signalFor: self
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaNode >> detect: aBlock ifNone: errorBlock [
 	self
 		do: [ :node | 
@@ -313,7 +314,7 @@ ViennaNode >> detect: aBlock ifNone: errorBlock [
 	^ errorBlock value
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaNode >> detectParent: aBlock ifNone: errorBlock [
 
 	| node |
@@ -324,7 +325,7 @@ ViennaNode >> detectParent: aBlock ifNone: errorBlock [
 	^ errorBlock value
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaNode >> diffFrom: aViennaNode changesDo: aBlock [
 
 	self = aViennaNode ifTrue: [ ^ self ].
@@ -357,76 +358,85 @@ ViennaNode >> diffFrom: aViennaNode changesDo: aBlock [
 		ifFalse: [ aBlock value: self value: { aViennaNode } ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaNode >> do: aBlock [
 	1 to: self size do: [ :index | aBlock value: (self at: index) ]
 ]
 
-{ #category : #accessing }
+{ #category : 'enumerating' }
+ViennaNode >> do: aBlock separatedBy: anotherBlock [
+
+	self ifNotEmpty: [ aBlock value: self first ].
+	2 to: self size do: [ :index |
+		anotherBlock value.
+		aBlock value: (self at: index) ]
+]
+
+{ #category : 'accessing' }
 ViennaNode >> document [
 
 	^ parent ifNotNil: #document
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNode >> end [
 	^ end
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaNode >> findResolverForIdentifier: aString [
 
 	^ parent ifNotNil: [ parent findResolverForIdentifier: aString ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNode >> first [
 	^ self at: 1
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaNode >> flushMaximalType [
 
 	maximalType := nil
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaNode >> forgetTypecheck [
 
 	self allDescendantsDo: [ :node | node flushMaximalType ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaNode >> formatWith: aViennaAbstractFormatter [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNode >> fourth [
 	^ self at: 4
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> hasAnyDescendantsSuchThat: aBlock [
 
 	self allDescendantsSuchThat: aBlock do: [ :node | ^ true ].
 	^ false
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaNode >> hasDescendantSuchThat: aBlock [
 	self allDescendantsDo: [ :n | (aBlock value: n) ifTrue: [ ^true ] ].
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> hasFreeIdentifier: aString [
 
 	self
@@ -435,7 +445,7 @@ ViennaNode >> hasFreeIdentifier: aString [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> hasGlobalReferenceToModule: moduleIdentifier identifier: identifier [
 
 	self
@@ -447,13 +457,13 @@ ViennaNode >> hasGlobalReferenceToModule: moduleIdentifier identifier: identifie
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> hasScope [
 
 	^ false
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaNode >> hasStatefulReference [
 
 	self uniqueFreeIdentifiersDo: [ :identifier |
@@ -463,7 +473,7 @@ ViennaNode >> hasStatefulReference [
 	^ false
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaNode >> hash [
 
 	^ self
@@ -471,47 +481,47 @@ ViennaNode >> hash [
 		  into: [ :hash :node | hash bitXor: node hash ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
 
 	^ aBlock3 value
 ]
 
-{ #category : #controlling }
+{ #category : 'controlling' }
 ViennaNode >> ifEmpty: aBlock [
 	^ self isEmpty
 		ifTrue: [ aBlock cull: self ]
 		ifFalse: [ self ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> ifEmpty: emptyBlock ifNotEmpty: nonEmptyBlock [
 	^ self isEmpty
 		ifTrue: [ emptyBlock value ]
 		ifFalse: [ nonEmptyBlock cull: self ]
 ]
 
-{ #category : #controlling }
+{ #category : 'controlling' }
 ViennaNode >> ifNotEmpty: aBlock [
 	^ self isEmpty
 		ifTrue: [ self ]
 		ifFalse: [ aBlock cull: self ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> ifNotEmpty: nonEmptyBlock ifEmpty: emptyBlock [
 	^ self isEmpty
 		ifTrue: [ emptyBlock value ]
 		ifFalse: [ nonEmptyBlock cull: self ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaNode >> imports [
 
 	^ self module interface importDefinitionList
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaNode >> importsFrom: aString do: aBlock [
 	self module second first
 		ifNotNil: [ :importDefinitionList | 
@@ -521,7 +531,7 @@ ViennaNode >> importsFrom: aString do: aBlock [
 						ifTrue: [ aBlock value: importDefinition second ] ] ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> includesParent: aViennaNode [
 	self
 		parentsDo: [ :node | 
@@ -530,7 +540,7 @@ ViennaNode >> includesParent: aViennaNode [
 	^ false
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaNode >> inject: anObject into: aBlock [
 
 	| value |
@@ -539,54 +549,54 @@ ViennaNode >> inject: anObject into: aBlock [
 	^ value
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isBlockVariableNameNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isEmpty [
 	^ self size = 0
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isExportedNameNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isFunctionDefinition [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isFunctionNameNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isLocalValueNameNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isOperationDefinition [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isOperationNameNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isReferenced [
 
 	self document ifNil: [ ^ false ].
@@ -597,7 +607,7 @@ ViennaNode >> isReferenced [
 	^ false
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaNode >> isRelocatable [
 
 	self uniqueFreeIdentifiersDo: [ :identifier |
@@ -606,1927 +616,1927 @@ ViennaNode >> isRelocatable [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isStateVariableNameNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isTypeDefinition [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isTypeNameNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isValueDefinition [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isValueNameNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaAbstractFunctionTypeNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaAbstractMapTypeNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaAccessFunctionDefinitionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaAccessNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaAccessOperationDefinitionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaAccessTypeDefinitionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaAccessValueDefinitionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaAndNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaApplyNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaArithmeticAbsNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaArithmeticDivideNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaArithmeticIntegerDivisionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaArithmeticMinusNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaArithmeticModNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaArithmeticMultiplicationNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaArithmeticPlusNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaArithmeticRemNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaAssignStatementNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaAssignmentDefinitionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaAssignmentDefinitionNode: aString [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaBasicTypeNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaBinaryOperatorExpression [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaBinaryOperatorExpressionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaBindListNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaBindNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaBlockStatementNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaCallStatementNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaCasesExpressionAlternativeNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaCasesExpressionAlternativesNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaCasesExpressionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaCasesStatementAlternativeNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaCasesStatementAlternativesNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaCasesStatementNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaCompositeTypeNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaCompositionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaConditionalExpressionListNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaConditionalExpressionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaConditionalStatementListNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaConditionalStatementNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaDclStatementNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaDefExpressionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaDefStatementNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaDefinitionBlockNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaDefinitionComponentNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaDistributedMapMergeNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaDistributedSequenceConcatenationNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaDistributedSetIntersectionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaDistributedSetUnionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaDocumentNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaEqualDefinitionListNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaEqualDefinitionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaEqualNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaErrorListNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaErrorNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaErrorStatementNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaExceptionsNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaExists1ExpressionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaExistsExpressionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaExitStatementNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaExplicitFunctionDefinitionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaExplicitFunctionDefinitionNode: aString [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaExplicitOperationDefinitionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaExplicitOperationDefinitionNode: aString [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaExportDefinitionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaExportFunctionsSignatureNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaExportModuleSignatureAllNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaExportModuleSignatureNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaExportOperationsSignatureNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaExportTypesSignatureNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaExportValuesSignatureNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaExportableTopLevelDefinitionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaExpressionListNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaExpressionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaExtendedExplicitFunctionDefinitionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaExtendedExplicitFunctionDefinitionNode: aString [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaExtendedExplicitOperationDefinitionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaExternalsNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaFieldListNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaFieldNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaFieldPatternListNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaFieldPatternNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaFieldReferenceNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaFieldSelectNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaFinitePowerSetNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaFlatDocumentNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaFloorNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaForallExpressionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaFunctionDefinitionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaFunctionDefinitionNode: aString [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaFunctionDefinitionsNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaFunctionExportNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaFunctionImportNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaFunctionImportNode: aString [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaFunctionImportNodeRenamed: aString [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaFunctionTypeArgsNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaFunctionTypeInstantiationNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaFunctionTypeNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaGlobalNameNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaGlobalNameNode: aString identifier: anotherString [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaGreaterThanNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaGreaterThanOrEqualNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaIdentifierTypePairListNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaIdentityStatementNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaIfExpressionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaIfStatementNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaImplicitFunctionDefinitionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaImplicitFunctionDefinitionNode: aString [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaImplicitOperationBodyNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaImplicitOperationDefinitionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaImplicitOperationDefinitionNode: aString [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaImplyNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaImportDefinitionListNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaImportDefinitionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaImportFunctionsSignatureNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaImportModuleSignatureAllNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaImportModuleSignatureNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaImportNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaImportNode: aString [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaImportOperationsSignatureNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaImportSignatureNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaImportTypesSignatureNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaImportValuesSignatureNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaInSetNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaIndexForLoopNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaInitialisationNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaInmapTypeNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaInterfaceComponentNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaInterfaceNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaInvariantInitialFunctionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaInvariantNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaIotaExpressionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaIsBasicExpressionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaIsNameExpressionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaIsNotYetSpecifiedNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaIterateNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaLambdaExpressionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaLessThanNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaLessThanOrEqualNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaLetBeExpressionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaLetBeStatementNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaLetExpressionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaLetNode [
 
 	^ self isViennaLetExpressionNode or: [ self isViennaLetStatementNode ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaLetStatementNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaLocalDefinitionListNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaLocalDefinitionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaLocalNameNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaLocalNameNode: aString [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaLogicalEquivalenceNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaMapComprehensionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaMapDomainNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaMapDomainRestrictedByNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaMapDomainRestrictedToNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaMapEnumerationNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaMapEnumerationPatternNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaMapInverseNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaMapMergeNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaMapMunionPatternNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaMapOrSequenceModifyNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaMapOrSequenceReferenceNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaMapRangeNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaMapRangeRestrictedByNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaMapRangeRestrictedToNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaMapTypeNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaMapletListNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaMapletNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaMapletPatternNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaMatchValueNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaModularDocumentNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaModuleBodyNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaModuleNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaModuleNode: aString [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaMultipleAssignStatementNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaMultipleBindNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaMultipleBindQuantifierNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaMultipleSeqBindNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaMultipleSetBindNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaMultipleSetSeqBindNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaMultipleTypeBindNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaNameListNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaNameNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaNamedTraceNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaNode [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaNondeterministicStatementNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaNotEqualNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaNotInSetNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaNotNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaObsoleteNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaOldNameNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaOperationBodyNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaOperationDefinitionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaOperationDefinitionNode: aString [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaOperationDefinitionsNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaOperationExportNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaOperationImportNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaOperationImportNode: aString [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaOperationImportNodeRenamed: aString [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaOperationTypeNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaOptionalTypeNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaOrNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaOthersExpressionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaOthersStatementNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaParameterTypesNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaParametersListNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaParametersNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaPartialFunctionTypeNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaPatternBindNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaPatternHolderNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaPatternIdentifierNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaPatternIdentifierNode: aString [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaPatternListNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaPatternNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaPatternTypePairListNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaPreconditionExpressionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaProductTypeNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaProperSubsetNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaQuoteTypeNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaQuoteTypeNode: aString [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaRecordConstructorNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaRecordModifierNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaRecordPatternNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaRecordTypeDefinitionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaRecordTypeDefinitionNode: aString [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaResultExpressionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaReturnStatementNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaSectionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaSeq1TypeNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaSeqBindNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaSeqConcPatternNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaSeqEnumPatternNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaSeqTypeNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaSequenceComprehensionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaSequenceConcatenateNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaSequenceElementsNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaSequenceEnumerationNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaSequenceForLoopNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaSequenceHeadNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaSequenceIndicesNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaSequenceLengthNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaSequenceReverseNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaSequenceTailNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaSet1TypeNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaSetBindNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaSetCardinalityNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaSetComprehensionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaSetDifferenceNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaSetEnumPatternNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaSetEnumerationNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaSetForLoopNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaSetIntersectionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaSetRangeExpressionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaSetSeqBindNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaSetTypeNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaSetUnionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaSetUnionPatternNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaStateDefinitionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaStateDesignatorNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaStatementNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaSubsequenceNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaSubsetNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaSymbolicLiteralNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaSymbolicLiteralNode: aString [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaTixeStatementNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaTokenConstructorNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaTopLevelDefinitionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaTotalFunctionTypeNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaTracesDefinitionsNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaTrapStatementNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaTrapsNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaTupleConstructorNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaTuplePatternNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaTupleSelectNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaTypeBindListNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaTypeBindNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaTypeDefinitionsNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaTypeExportNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaTypeImportNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaTypeImportNode: aString [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaTypeImportNodeRenamed: aString [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaTypeJudgementNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaTypeNameExportNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaTypeNameNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaTypeNameNode: aString [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaTypeNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaTypeStructExportNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaTypeSynonymNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaTypeSynonymNode: aString [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaTypeVariableIdentifierNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaTypeVariableIdentifierNode: aString [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaTypeVariableListNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaTypeVariableNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaTypeVariableNode: aString [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaUnaryMinusNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaUnaryOperatorExpressionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaUnaryPlusNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaUnaryTypeConstructorNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaUndefinedExpressionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaUnionTypeNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaUnitTypeNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaValueDefinitionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaValueDefinitionsNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaValueExportNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaValueImportNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaValueImportNodeRenamed: aString [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaVarInformationNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> isViennaWhileLoopNode [
 
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNode >> label [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNode >> last [
 	^ self at: self size
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaNode >> listDelimiter [
 
 	^ ' '
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNode >> localName [
 
 	self allDescendantsDo: [ :n |
 		n isViennaLocalNameNode ifTrue: [ ^ n ] ]
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaNode >> localResolve [
 
 	^ self
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaNode >> localResolveIdentifier: aString [
 
 	^ (self findResolverForIdentifier: aString) ifNotNil: [ :resolver |
 		  resolver lookupIdentifier: aString ]
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaNode >> lookupIdentifier: aString [
 
 	^ nil
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaNode >> maximalType [
 
 	^ self subclassResponsibility 
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaNode >> maximalType: aViennaType [
 
 	maximalType := aViennaType
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNode >> module [
 
 	^ parent ifNotNil: #module
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNode >> moduleNamed: aString [
 
 	self document do: [ :module |
@@ -2534,44 +2544,44 @@ ViennaNode >> moduleNamed: aString [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNode >> moduleOrFlatDocument [
 
 	^ parent ifNotNil: #moduleOrFlatDocument
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNode >> modulesDo: aBlock [
 	self document do: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNode >> ninth [
 	^ self at: 9
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNode >> notEmpty [
 	^ self isEmpty not
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaNode >> operatorPrecedence [
 
 	^ 0
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNode >> parent [
 	^ parent
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNode >> parent: aViennaNode [
 	parent := aViennaNode
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaNode >> parentsDo: aBlock [
 	| node |
 	node := self.
@@ -2581,12 +2591,12 @@ ViennaNode >> parentsDo: aBlock [
 			node := node parent ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNode >> patternIdentifierNames [
 	^ self patternIdentifiers collect: #first
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNode >> patternIdentifiers [
 
 	^ Array streamContents: [ :stream |
@@ -2596,7 +2606,7 @@ ViennaNode >> patternIdentifiers [
 			  do: [ :node | stream nextPut: node ] ]
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 ViennaNode >> postCopyFragment [
 	1 to: self size do: [ :index | 
 		| node |
@@ -2609,7 +2619,7 @@ ViennaNode >> postCopyFragment [
 					ifFalse: [ node copy ]) ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 ViennaNode >> printOn: aStream [
 
 	| substrings |
@@ -2636,7 +2646,7 @@ ViennaNode >> printOn: aStream [
 	aStream nextPut: $)
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaNode >> referenceNodesDo: aBlock [
 
 	self
@@ -2645,7 +2655,7 @@ ViennaNode >> referenceNodesDo: aBlock [
 		do: aBlock
 ]
 
-{ #category : #'adding/removing' }
+{ #category : 'adding/removing' }
 ViennaNode >> remove: anObject [
 
 	| array |
@@ -2659,7 +2669,7 @@ ViennaNode >> remove: anObject [
 	^ anObject
 ]
 
-{ #category : #'adding/removing' }
+{ #category : 'adding/removing' }
 ViennaNode >> removeAfterIndex: anInteger [
 
 	| array |
@@ -2673,7 +2683,7 @@ ViennaNode >> removeAfterIndex: anInteger [
 	^ anInteger
 ]
 
-{ #category : #'adding/removing' }
+{ #category : 'adding/removing' }
 ViennaNode >> removeAll: aCollection [
 
 	aCollection ifNotEmpty: [
@@ -2688,7 +2698,7 @@ ViennaNode >> removeAll: aCollection [
 	^ aCollection
 ]
 
-{ #category : #'adding/removing' }
+{ #category : 'adding/removing' }
 ViennaNode >> removeAnnotation: aString [
 
 	annotations ifNotNil: [ 
@@ -2697,13 +2707,13 @@ ViennaNode >> removeAnnotation: aString [
 	^ aString
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaNode >> resolve [
 
 	^ self
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaNode >> resolveIdentifier: aString [
 
 	^ (self localResolveIdentifier: aString) ifNotNil: [ :node |
@@ -2714,17 +2724,17 @@ ViennaNode >> resolveIdentifier: aString [
 			  ifFalse: [ node ] ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaNode >> reverseDo: aBlock [
 	self size to: 1 by: -1 do: [ :index | aBlock value: (self at: index) ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNode >> root [
 	^ parent ifNil: [ self ] ifNotNil: #root
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaNode >> scopesDo: aBlock [
 
 	| node |
@@ -2734,12 +2744,12 @@ ViennaNode >> scopesDo: aBlock [
 		node := node parent ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNode >> second [
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNode >> section [
 
 	^ (self isViennaSectionNode or: [ self isViennaStateDefinitionNode ])
@@ -2747,7 +2757,7 @@ ViennaNode >> section [
 		  ifFalse: [ parent ifNotNil: #section ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaNode >> select: aBlock [
 
 	^ Array streamContents: [ :stream |
@@ -2755,40 +2765,40 @@ ViennaNode >> select: aBlock [
 			  (aBlock value: child) ifTrue: [ stream nextPut: child ] ] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaNode >> setMaximalType: aViennaType [
 
 	maximalType := aViennaType
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNode >> seventh [
 	^ self at: 7
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaNode >> shortName [
 
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNode >> sixth [
 	^ self at: 6
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNode >> start [
 	^ start
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNode >> start: anInteger1 end: anInteger2 [
 	start := anInteger1.
 	end := anInteger2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNode >> stateVariablesDo: aBlock [
 
 	self moduleOrFlatDocument stateDefinition ifNotNil: [ :stateDefinition |
@@ -2796,12 +2806,12 @@ ViennaNode >> stateVariablesDo: aBlock [
 			aBlock value: field identifier ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNode >> third [
 	^ self at: 3
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNode >> topLevelDefinition [
 
 	^ self isViennaTopLevelDefinitionNode
@@ -2809,13 +2819,13 @@ ViennaNode >> topLevelDefinition [
 		  ifFalse: [ parent ifNotNil: #topLevelDefinition ]
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaNode >> typecheck [
 
 	^ maximalType ifNil: [ maximalType := self maximalType ]
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaNode >> typecheck: aViennaType [
 
 	| type |
@@ -2830,7 +2840,7 @@ ViennaNode >> typecheck: aViennaType [
 					    , ' but actual ' , type printString ]
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaNode >> uniqueBoundIdentifiers [
 
 	| identifiers |
@@ -2839,7 +2849,7 @@ ViennaNode >> uniqueBoundIdentifiers [
 	^ identifiers asArray
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaNode >> uniqueBoundIdentifiersDo: aBlock [
 
 	| done |
@@ -2850,7 +2860,7 @@ ViennaNode >> uniqueBoundIdentifiersDo: aBlock [
 			aBlock value: identifier ] ]
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaNode >> uniqueFreeIdentifiers [
 
 	| identifiers |
@@ -2861,7 +2871,7 @@ ViennaNode >> uniqueFreeIdentifiers [
 	^ identifiers asArray
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaNode >> uniqueFreeIdentifiersDo: aBlock [
 
 	| done |
@@ -2872,7 +2882,7 @@ ViennaNode >> uniqueFreeIdentifiersDo: aBlock [
 			aBlock value: identifier ] ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaNode >> with: aViennaNode do: aBlock [
 
 	1 to: (self size min: aViennaNode size) do: [ :index |

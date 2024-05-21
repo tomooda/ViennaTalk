@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaTixeStatementNode,
-	#superclass : #ViennaStatementNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaTixeStatementNode',
+	#superclass : 'ViennaStatementNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaTixeStatementNode class >> traps: aViennaTrapsNode statement: aViennaStatementNode [
 
 	^ (self new: 2)
@@ -14,7 +15,7 @@ ViennaTixeStatementNode class >> traps: aViennaTrapsNode statement: aViennaState
 		  yourself
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaTixeStatementNode >> definitionOfLocalName: aString [
 
 	self traps patternsAndStatementsDo: [ :patternBind :statement |
@@ -25,7 +26,7 @@ ViennaTixeStatementNode >> definitionOfLocalName: aString [
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaTixeStatementNode >> findResolverForIdentifier: aString [
 
 	self traps patternsAndStatementsDo: [ :pattern :statement |
@@ -33,7 +34,7 @@ ViennaTixeStatementNode >> findResolverForIdentifier: aString [
 	^ super findResolverForIdentifier: aString
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaTixeStatementNode >> formatWith: aViennaAbstractFormatter [
 
 	| traps statement |
@@ -55,26 +56,26 @@ ViennaTixeStatementNode >> formatWith: aViennaAbstractFormatter [
 				  insertCrIfNeeded: statement ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTixeStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self traps freeIdentifiersExcept: aSet do: aBlock.
 	self statement freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTixeStatementNode >> isViennaTixeStatementNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTixeStatementNode >> label [
 
 	^ 'TixeStatement'
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaTixeStatementNode >> lookupIdentifier: aString [
 
 	self traps patternsAndStatementsDo: [ :pattern :statement |
@@ -82,13 +83,13 @@ ViennaTixeStatementNode >> lookupIdentifier: aString [
 	^ nil
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaTixeStatementNode >> maximalType [
 
 	^ self traps typecheck + self statement typecheck
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTixeStatementNode >> narrowestStatementWithFreeIdentifiers: anArrayOfString [
 
 	(self traps patterns uniqueBoundIdentifiers includesAnyOf:
@@ -108,31 +109,31 @@ ViennaTixeStatementNode >> narrowestStatementWithFreeIdentifiers: anArrayOfStrin
 		  ifEmpty: [ nil ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaTixeStatementNode >> patternsAndStatementsDo: aBlock [
 
 	self traps patternsAndStatementsDo: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTixeStatementNode >> statement [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTixeStatementNode >> statement: aViennaStatementNode [
 
 	self at: 2 put: aViennaStatementNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTixeStatementNode >> traps [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTixeStatementNode >> traps: aViennaTrapsNode [
 
 	self at: 1 put: aViennaTrapsNode

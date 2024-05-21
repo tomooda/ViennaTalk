@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaErrorNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaErrorNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaErrorNode class >> identifier: aString expression: aViennaExpressionNode1 expression: aViennaExpressionNode2 [
 
 	^ (self new: 3)
@@ -15,37 +16,37 @@ ViennaErrorNode class >> identifier: aString expression: aViennaExpressionNode1 
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaErrorNode >> boundIdentifiersDo: aBlock [
 
 	aBlock cull: self identifier cull: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaErrorNode >> expression1 [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaErrorNode >> expression1: aViennaExpressionNode [
 
 	self at: 2 put: aViennaExpressionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaErrorNode >> expression2 [
 
 	^ self at: 3
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaErrorNode >> expression2: aViennaExpressionNode [
 
 	self at: 3 put: aViennaExpressionNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaErrorNode >> formatWith: aViennaAbstractFormatter [
 
 	^ self identifier ++ ':'
@@ -53,38 +54,38 @@ ViennaErrorNode >> formatWith: aViennaAbstractFormatter [
 	  ++ (aViennaAbstractFormatter format: self expression2)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaErrorNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self expression1 freeIdentifiersExcept: aSet do: aBlock.
 	self expression2 freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaErrorNode >> identifier [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaErrorNode >> identifier: aString [
 
 	self at: 1 put: aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaErrorNode >> isViennaErrorNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaErrorNode >> label [
 
 	^ 'Error'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaErrorNode >> maximalType [
 
 	self expression1 typecheck: ViennaType bool.

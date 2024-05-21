@@ -1,18 +1,19 @@
 Class {
-	#name : #ViennaDclStatementNode,
-	#superclass : #ViennaStatementNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaDclStatementNode',
+	#superclass : 'ViennaStatementNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaDclStatementNode >> boundIdentifiersDo: aBlock [
 
 	self do: [ :assignmentDefinition |
 		assignmentDefinition boundIdentifiersDo: aBlock ]
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaDclStatementNode >> definitionOfLocalName: aString [
 
 	^ self
@@ -22,7 +23,7 @@ ViennaDclStatementNode >> definitionOfLocalName: aString [
 		  parent ifNotNil: [ parent definitionOfLocalName: aString ] ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaDclStatementNode >> formatWith: aViennaAbstractFormatter [
 
 	| assigns |
@@ -40,7 +41,7 @@ ViennaDclStatementNode >> formatWith: aViennaAbstractFormatter [
 				   ++ (aViennaAbstractFormatter join: ', ' withAll: assigns) ])
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaDclStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	| boundIdentifiers |
@@ -53,19 +54,19 @@ ViennaDclStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
 			do: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaDclStatementNode >> isViennaDclStatementNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaDclStatementNode >> label [
 
 	^ 'DclStatement'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaDclStatementNode >> maximalType [
 
 	self do: #typecheck.

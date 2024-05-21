@@ -1,47 +1,48 @@
 Class {
-	#name : #ViennaInSetNode,
-	#superclass : #ViennaBinaryOperatorExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaInSetNode',
+	#superclass : 'ViennaBinaryOperatorExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaInSetNode >> formatOperatorWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter inset
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInSetNode >> isViennaInSetNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInSetNode >> label [
 
 	^ 'InSet'
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaInSetNode >> operatorPrecedence [
 
 	^ 21
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInSetNode >> paramType1 [
 
 	^ ViennaType any
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInSetNode >> paramType2 [
 
 	^ ViennaType any set
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInSetNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
 
 	^ (aViennaType1 isCompatibleWith: aViennaType2 basetype)

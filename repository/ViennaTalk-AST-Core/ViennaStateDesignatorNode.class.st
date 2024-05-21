@@ -1,35 +1,36 @@
 Class {
-	#name : #ViennaStateDesignatorNode,
-	#superclass : #ViennaExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaStateDesignatorNode',
+	#superclass : 'ViennaExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaStateDesignatorNode class >> isAbstract [
 
 	^ self = ViennaStateDesignatorNode
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaStateDesignatorNode >> isAssignable [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaStateDesignatorNode >> isViennaStateDesignatorNode [
 
 	^ true
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaStateDesignatorNode >> localResolve [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaStateDesignatorNode >> resolve [
 
 	^ self subclassResponsibility

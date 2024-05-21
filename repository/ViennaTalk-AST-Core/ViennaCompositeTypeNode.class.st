@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaCompositeTypeNode,
-	#superclass : #ViennaTypeNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaCompositeTypeNode',
+	#superclass : 'ViennaTypeNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaCompositeTypeNode class >> identifier: aString fieldList: aViennaFieldListNode [
 
 	^ (self new: 2)
@@ -14,7 +15,7 @@ ViennaCompositeTypeNode class >> identifier: aString fieldList: aViennaFieldList
 		  yourself
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaCompositeTypeNode >> asMaximalViennaType [
 
 	self maximalType: (ViennaType
@@ -25,19 +26,19 @@ ViennaCompositeTypeNode >> asMaximalViennaType [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCompositeTypeNode >> fieldList [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCompositeTypeNode >> fieldList: aViennaFieldListNode [
 
 	self at: 2 put: aViennaFieldListNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaCompositeTypeNode >> formatWith: aViennaAbstractFormatter [
 
 	| constructor fields |
@@ -52,31 +53,31 @@ ViennaCompositeTypeNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: (aViennaAbstractFormatter keyword: 'end')
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaCompositeTypeNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self fieldList freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCompositeTypeNode >> identifier [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCompositeTypeNode >> identifier: aString [
 
 	self at: 1 put: aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaCompositeTypeNode >> isViennaCompositeTypeNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCompositeTypeNode >> label [
 
 	^ 'CompositeType'

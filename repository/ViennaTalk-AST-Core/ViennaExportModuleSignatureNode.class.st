@@ -1,24 +1,25 @@
 Class {
-	#name : #ViennaExportModuleSignatureNode,
-	#superclass : #ViennaExportComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaExportModuleSignatureNode',
+	#superclass : 'ViennaExportComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaExportModuleSignatureNode >> boundIdentifiersDo: aBlock [
 
 	
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaExportModuleSignatureNode >> exportedIdentifiersDo: aBlock [
 
 	self do: [ :exportSignature |
 		exportSignature exportedIdentifiersDo: aBlock ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaExportModuleSignatureNode >> exportsIdentifier: aString [
 
 	self exportedIdentifiersDo: [ :identifier |
@@ -26,7 +27,7 @@ ViennaExportModuleSignatureNode >> exportsIdentifier: aString [
 	^ false
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaExportModuleSignatureNode >> formatWith: aViennaAbstractFormatter [
 
 	| exportSignatures |
@@ -36,26 +37,26 @@ ViennaExportModuleSignatureNode >> formatWith: aViennaAbstractFormatter [
 		  withAll: exportSignatures
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExportModuleSignatureNode >> isViennaExportModuleSignatureNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExportModuleSignatureNode >> label [
 
 	^ 'ExportModuleSignature'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaExportModuleSignatureNode >> maximalType [
 
 	self do: #typecheck.
 	^ ViennaType unit
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 ViennaExportModuleSignatureNode >> removeIdentifier: aString [
 
 	(self exportsIdentifier: aString) ifTrue: [

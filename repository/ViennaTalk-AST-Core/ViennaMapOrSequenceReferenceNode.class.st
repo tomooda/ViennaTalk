@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaMapOrSequenceReferenceNode,
-	#superclass : #ViennaStateDesignatorNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaMapOrSequenceReferenceNode',
+	#superclass : 'ViennaStateDesignatorNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaMapOrSequenceReferenceNode class >> stateDesignator: aViennaStateDesignatorNode1 argumentExpression: aViennaExpressionNode2 [
 
 	^ (self new: 2)
@@ -14,19 +15,19 @@ ViennaMapOrSequenceReferenceNode class >> stateDesignator: aViennaStateDesignato
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapOrSequenceReferenceNode >> argumentExpression [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapOrSequenceReferenceNode >> argumentExpression: aViennaExpressionNode [
 
 	self at: 2 put: aViennaExpressionNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaMapOrSequenceReferenceNode >> formatWith: aViennaAbstractFormatter [
 
 	| ref arg |
@@ -41,44 +42,44 @@ ViennaMapOrSequenceReferenceNode >> formatWith: aViennaAbstractFormatter [
 		  ifFalse: [ ref ++ '(' ++ arg ++ ')' ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaMapOrSequenceReferenceNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self stateDesignator freeIdentifiersExcept: aSet do: aBlock.
 	self argumentExpression freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaMapOrSequenceReferenceNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
 
 	^ aBlock1 value
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaMapOrSequenceReferenceNode >> isAssignable [
 
 	^ self stateDesignator isAssignable
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapOrSequenceReferenceNode >> isViennaMapOrSequenceReferenceNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapOrSequenceReferenceNode >> label [
 
 	^ 'MapOrSequenceReference'
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaMapOrSequenceReferenceNode >> localResolve [
 
 	^ self stateDesignator localResolve
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaMapOrSequenceReferenceNode >> maximalType [
 
 	^ (Array streamContents: [ :stream |
@@ -102,25 +103,25 @@ ViennaMapOrSequenceReferenceNode >> maximalType [
 		  ViennaTypeError on: self signal: 'Not an applicable type' ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaMapOrSequenceReferenceNode >> operatorPrecedence [
 
 	^ 31
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaMapOrSequenceReferenceNode >> resolve [
 
 	^ self stateDesignator resolve
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapOrSequenceReferenceNode >> stateDesignator [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapOrSequenceReferenceNode >> stateDesignator: aViennaStateDesignatorNode [
 
 	self at: 1 put: aViennaStateDesignatorNode

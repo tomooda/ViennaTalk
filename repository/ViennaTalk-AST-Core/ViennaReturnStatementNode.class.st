@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaReturnStatementNode,
-	#superclass : #ViennaStatementNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaReturnStatementNode',
+	#superclass : 'ViennaStatementNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaReturnStatementNode class >> expression: aViennaExpressionNode [
 
 	^ (self new: 1)
@@ -13,19 +14,19 @@ ViennaReturnStatementNode class >> expression: aViennaExpressionNode [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaReturnStatementNode >> expression [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaReturnStatementNode >> expression: aViennaExpressionNode [
 
 	self at: 1 put: aViennaExpressionNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaReturnStatementNode >> formatWith: aViennaAbstractFormatter [
 
 	^ (aViennaAbstractFormatter keyword: 'return ') ++ (self expression
@@ -35,25 +36,25 @@ ViennaReturnStatementNode >> formatWith: aViennaAbstractFormatter [
 				   (aViennaAbstractFormatter format: arg) ])
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaReturnStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self expression freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaReturnStatementNode >> isViennaReturnStatementNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaReturnStatementNode >> label [
 
 	^ 'ReturnStatement'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaReturnStatementNode >> maximalType [
 
 	| opReturnType |

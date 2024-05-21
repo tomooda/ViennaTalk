@@ -1,51 +1,52 @@
 Class {
-	#name : #ViennaImportModuleSignatureAllNode,
-	#superclass : #ViennaImportComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaImportModuleSignatureAllNode',
+	#superclass : 'ViennaImportComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaImportModuleSignatureAllNode >> boundIdentifiersDo: aBlock [
 
 	
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaImportModuleSignatureAllNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter keyword: 'all'
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaImportModuleSignatureAllNode >> importSignaturesDo: aBlock [
 
 	
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaImportModuleSignatureAllNode >> importsDo: aBlock [
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaImportModuleSignatureAllNode >> isViennaImportModuleSignatureAllNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaImportModuleSignatureAllNode >> label [
 
 	^ 'ImportModuleSignatureAll'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaImportModuleSignatureAllNode >> maximalType [
 
 	^ ViennaType unit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaImportModuleSignatureAllNode >> moduleIdentifier [
 
 	^ parent ifNotNil: #moduleIdentifier

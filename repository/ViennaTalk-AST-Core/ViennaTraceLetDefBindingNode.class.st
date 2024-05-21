@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaTraceLetDefBindingNode,
-	#superclass : #ViennaTraceBindingDefinitionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaTraceLetDefBindingNode',
+	#superclass : 'ViennaTraceBindingDefinitionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaTraceLetDefBindingNode class >> localDefinitionList: aViennaLocalDefinitionListNode traceDefinition: aViennaTraceDefinitionNode [
 
 	^ (self new: 2)
@@ -14,7 +15,7 @@ ViennaTraceLetDefBindingNode class >> localDefinitionList: aViennaLocalDefinitio
 		  yourself
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaTraceLetDefBindingNode >> definitionOfLocalName: aString [
 
 	self localDefinitionList do: [ :def |
@@ -27,7 +28,7 @@ ViennaTraceLetDefBindingNode >> definitionOfLocalName: aString [
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaTraceLetDefBindingNode >> findResolverForIdentifier: aString [
 
 	^ (self localDefinitionList bindsIdentifier: aString)
@@ -35,7 +36,7 @@ ViennaTraceLetDefBindingNode >> findResolverForIdentifier: aString [
 		  ifFalse: [ super findResolverForIdentifier: aString ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaTraceLetDefBindingNode >> formatWith: aViennaAbstractFormatter [
 
 	| localDefinitionList traceDefinition |
@@ -52,7 +53,7 @@ ViennaTraceLetDefBindingNode >> formatWith: aViennaAbstractFormatter [
 				   insertCrIfNeeded: traceDefinition)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTraceLetDefBindingNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	| boundIdentifiers |
@@ -66,25 +67,25 @@ ViennaTraceLetDefBindingNode >> freeIdentifiersExcept: aSet do: aBlock [
 		do: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTraceLetDefBindingNode >> label [
 
 	^ 'TraceLetDefBinding'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTraceLetDefBindingNode >> localDefinitionList [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTraceLetDefBindingNode >> localDefinitionList: aViennaLocalDefinitionListNode [
 
 	self at: 1 put: aViennaLocalDefinitionListNode
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaTraceLetDefBindingNode >> lookupIdentifier: aString [
 
 	self localDefinitionList do: [ :localDefinition |
@@ -93,7 +94,7 @@ ViennaTraceLetDefBindingNode >> lookupIdentifier: aString [
 	^ nil
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaTraceLetDefBindingNode >> maximalType [
 
 	self localDefinitionList typecheck.
@@ -101,13 +102,13 @@ ViennaTraceLetDefBindingNode >> maximalType [
 	^ ViennaType unit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTraceLetDefBindingNode >> traceDefinition [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTraceLetDefBindingNode >> traceDefinition: aViennaTraceDefinitionNode [
 
 	self at: 2 put: aViennaTraceDefinitionNode

@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaExplicitFunctionDefinitionNode,
-	#superclass : #ViennaTopLevelDefinitionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaExplicitFunctionDefinitionNode',
+	#superclass : 'ViennaTopLevelDefinitionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaExplicitFunctionDefinitionNode class >> access: aViennaAccessNode identifier: aString typeVariableList: aViennaTypeVariableListNode type: aViennaTypeNode parametersList: aViennaParametersListNode expression: aViennaExpressionNode1 pre: aViennaExpressionNode2 post: aViennaExpressionNode3 measure: aViennaExpressionNode4 [
 
 	^ (self new: 10)
@@ -21,7 +22,7 @@ ViennaExplicitFunctionDefinitionNode class >> access: aViennaAccessNode identifi
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaExplicitFunctionDefinitionNode class >> identifier: aString typeVariableList: aViennaTypeVariableListNode type: aViennaTypeNode parametersList: aViennaParametersListNode expression: aViennaExpressionNode1 pre: aViennaExpressionNode2 post: aViennaExpressionNode3 measure: aViennaExpressionNode4 [
 
 	^ self
@@ -36,31 +37,31 @@ ViennaExplicitFunctionDefinitionNode class >> identifier: aString typeVariableLi
 		  measure: aViennaExpressionNode4
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitFunctionDefinitionNode >> access [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitFunctionDefinitionNode >> access: aViennaAccessNode [
 
 	self at: 1 put: aViennaAccessNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitFunctionDefinitionNode >> argumentType [
 
 	^ self type argumentType
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaExplicitFunctionDefinitionNode >> asAccessDefinition [
 
 	^ self
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaExplicitFunctionDefinitionNode >> asExport [
 
 	^ ViennaFunctionExportNode
@@ -70,7 +71,7 @@ ViennaExplicitFunctionDefinitionNode >> asExport [
 		  type: (self type ifNotNil: #copyFragment)
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaExplicitFunctionDefinitionNode >> asImportDefinitionIn: moduleName [
 
 	^ ViennaImportDefinitionNode
@@ -85,7 +86,7 @@ ViennaExplicitFunctionDefinitionNode >> asImportDefinitionIn: moduleName [
 						     rename: nil)))
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaExplicitFunctionDefinitionNode >> boundIdentifiersDo: aBlock [
 
 	aBlock cull: self identifier cull: self.
@@ -97,7 +98,7 @@ ViennaExplicitFunctionDefinitionNode >> boundIdentifiersDo: aBlock [
 		aBlock cull: 'measure_' , self identifier cull: self ]
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaExplicitFunctionDefinitionNode >> definitionOfLocalName: aString [
 
 	self parametersList
@@ -107,19 +108,19 @@ ViennaExplicitFunctionDefinitionNode >> definitionOfLocalName: aString [
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitFunctionDefinitionNode >> expression [
 
 	^ self at: 7
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitFunctionDefinitionNode >> expression: aViennaExpressionNode [
 
 	self at: 7 put: aViennaExpressionNode
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaExplicitFunctionDefinitionNode >> findResolverForIdentifier: aString [
 
 	^ (aString = 'RESULT' or: [
@@ -129,7 +130,7 @@ ViennaExplicitFunctionDefinitionNode >> findResolverForIdentifier: aString [
 		  ifFalse: [ super findResolverForIdentifier: aString ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaExplicitFunctionDefinitionNode >> formatWith: aViennaAbstractFormatter [
 
 	| access identifier typeVariableList functionType parametersList expression pre post measure |
@@ -167,7 +168,7 @@ ViennaExplicitFunctionDefinitionNode >> formatWith: aViennaAbstractFormatter [
 		   insertCrIfNeeded: expression) ++ pre ++ post ++ measure
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaExplicitFunctionDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	| boundIdentifiers |
@@ -188,19 +189,19 @@ ViennaExplicitFunctionDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
 		measure freeIdentifiersExcept: boundIdentifiers do: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExplicitFunctionDefinitionNode >> hasScope [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitFunctionDefinitionNode >> identifier [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitFunctionDefinitionNode >> identifier: aString [
 
 	self
@@ -208,49 +209,49 @@ ViennaExplicitFunctionDefinitionNode >> identifier: aString [
 		at: 5 put: aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExplicitFunctionDefinitionNode >> isFunctionDefinition [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExplicitFunctionDefinitionNode >> isViennaAccessFunctionDefinitionNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExplicitFunctionDefinitionNode >> isViennaExplicitFunctionDefinitionNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExplicitFunctionDefinitionNode >> isViennaExplicitFunctionDefinitionNode: aString [
 
 	^ self identifier = aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExplicitFunctionDefinitionNode >> isViennaExportableTopLevelDefinitionNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExplicitFunctionDefinitionNode >> isViennaFunctionDefinitionNode: aString [
 
 	^ self identifier = aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitFunctionDefinitionNode >> label [
 
 	^ 'ExplicitFunctionDefinition'
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaExplicitFunctionDefinitionNode >> lookupIdentifier: aString [
 
 	aString = 'RESULT' ifTrue: [ ^ self ].
@@ -262,7 +263,7 @@ ViennaExplicitFunctionDefinitionNode >> lookupIdentifier: aString [
 	^ nil
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaExplicitFunctionDefinitionNode >> maximalType [
 
 	| returnType |
@@ -298,61 +299,61 @@ ViennaExplicitFunctionDefinitionNode >> maximalType [
 	^ maximalType
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitFunctionDefinitionNode >> measure [
 
 	^ self at: 10
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitFunctionDefinitionNode >> measure: aViennaExpressionNode [
 
 	self at: 10 put: aViennaExpressionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitFunctionDefinitionNode >> parametersList [
 
 	^ self at: 6
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitFunctionDefinitionNode >> parametersList: aViennaParametersListNode [
 
 	self at: 6 put: aViennaParametersListNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitFunctionDefinitionNode >> post [
 
 	^ self at: 9
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitFunctionDefinitionNode >> post: aViennaExpressionNode [
 
 	self at: 9 put: aViennaExpressionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitFunctionDefinitionNode >> pre [
 
 	^ self at: 8
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitFunctionDefinitionNode >> pre: aViennaExpressionNode [
 
 	self at: 8 put: aViennaExpressionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitFunctionDefinitionNode >> returnIdentifiers [
 
 	^ #( 'RESULT' )
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitFunctionDefinitionNode >> returnType [
 
 	^ self parametersList inject: self type into: [ :t :params |
@@ -361,31 +362,31 @@ ViennaExplicitFunctionDefinitionNode >> returnType [
 			  ifFalse: [ ^ nil ] ]
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaExplicitFunctionDefinitionNode >> shortName [
 
 	^ self identifier
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitFunctionDefinitionNode >> type [
 
 	^ self at: 4
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitFunctionDefinitionNode >> type: aViennaTypeNode [
 
 	self at: 4 put: aViennaTypeNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitFunctionDefinitionNode >> typeVariableList [
 
 	^ self at: 3
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExplicitFunctionDefinitionNode >> typeVariableList: aViennaTypeVariableListNode [
 
 	self at: 3 put: aViennaTypeVariableListNode

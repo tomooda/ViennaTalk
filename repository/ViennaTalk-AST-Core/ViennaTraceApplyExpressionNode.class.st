@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaTraceApplyExpressionNode,
-	#superclass : #ViennaTraceCoreDefinitionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaTraceApplyExpressionNode',
+	#superclass : 'ViennaTraceCoreDefinitionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaTraceApplyExpressionNode class >> callStatement: aViennaCallStatementNode [
 
 	^ (self new: 1)
@@ -13,37 +14,37 @@ ViennaTraceApplyExpressionNode class >> callStatement: aViennaCallStatementNode 
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTraceApplyExpressionNode >> callStatement [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTraceApplyExpressionNode >> callStatement: aViennaCallStatementNode [
 
 	self at: 1 put: aViennaCallStatementNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaTraceApplyExpressionNode >> formatWith: aViennaAbstractFormatter [
 
 	^ self callStatement formatWith: aViennaAbstractFormatter
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTraceApplyExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self callStatement freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTraceApplyExpressionNode >> label [
 
 	^ 'TraceApplyExpression'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaTraceApplyExpressionNode >> maximalType [
 
 	self callStatement typecheck.

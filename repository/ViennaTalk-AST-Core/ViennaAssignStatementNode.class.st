@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaAssignStatementNode,
-	#superclass : #ViennaStatementNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaAssignStatementNode',
+	#superclass : 'ViennaStatementNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaAssignStatementNode class >> stateDesignator: aViennaStateDesignatorNode expression: aViennaExpressionNode [
 
 	^ (self new: 2)
@@ -14,19 +15,19 @@ ViennaAssignStatementNode class >> stateDesignator: aViennaStateDesignatorNode e
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAssignStatementNode >> expression [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAssignStatementNode >> expression: aViennaExpressionNode [
 
 	^ self at: 2 put: aViennaExpressionNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaAssignStatementNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter
@@ -36,26 +37,26 @@ ViennaAssignStatementNode >> formatWith: aViennaAbstractFormatter [
 			  ++ (aViennaAbstractFormatter format: self expression)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaAssignStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self stateDesignator freeIdentifiersExcept: aSet do: aBlock.
 	self expression freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaAssignStatementNode >> isViennaAssignStatementNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAssignStatementNode >> label [
 
 	^ 'AssignStatement'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaAssignStatementNode >> maximalType [
 
 	self stateDesignator isAssignable ifFalse: [
@@ -66,13 +67,13 @@ ViennaAssignStatementNode >> maximalType [
 	^ ViennaType unit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAssignStatementNode >> stateDesignator [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAssignStatementNode >> stateDesignator: aViennaStateDesignatorNode [
 
 	^ self at: 1 put: aViennaStateDesignatorNode

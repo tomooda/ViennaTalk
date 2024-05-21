@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaRecordTypeDefinitionNode,
-	#superclass : #ViennaTopLevelDefinitionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaRecordTypeDefinitionNode',
+	#superclass : 'ViennaTopLevelDefinitionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaRecordTypeDefinitionNode class >> access: aViennaAccessNode identifier: aString fieldList: aViennaFieldListNode inv: aViennaInvariantNode [
 
 	^ (self new: 4)
@@ -16,7 +17,7 @@ ViennaRecordTypeDefinitionNode class >> access: aViennaAccessNode identifier: aS
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaRecordTypeDefinitionNode class >> identifier: aString fieldList: aViennaFieldListNode inv: aViennaInvariantNode [
 
 	^ self
@@ -26,32 +27,32 @@ ViennaRecordTypeDefinitionNode class >> identifier: aString fieldList: aViennaFi
 		  inv: aViennaInvariantNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRecordTypeDefinitionNode >> access [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRecordTypeDefinitionNode >> access: aViennaAccessNode [
 
 	self at: 1 put: aViennaAccessNode
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaRecordTypeDefinitionNode >> asAccessDefinition [
 
 	^ self
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaRecordTypeDefinitionNode >> asExport [
 
 	^ ViennaTypeStructExportNode name:
 		  (ViennaLocalNameNode identifier: self identifier)
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaRecordTypeDefinitionNode >> asImportDefinitionIn: moduleNode [
 
 	^ ViennaImportDefinitionNode
@@ -63,7 +64,7 @@ ViennaRecordTypeDefinitionNode >> asImportDefinitionIn: moduleNode [
 						     rename: nil)))
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaRecordTypeDefinitionNode >> asMaximalViennaType [
 
 	self maximalType: (ViennaType
@@ -74,7 +75,7 @@ ViennaRecordTypeDefinitionNode >> asMaximalViennaType [
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaRecordTypeDefinitionNode >> boundIdentifiersDo: aBlock [
 
 	aBlock cull: self identifier cull: self.
@@ -82,19 +83,19 @@ ViennaRecordTypeDefinitionNode >> boundIdentifiersDo: aBlock [
 		aBlock cull: 'inv_' , self identifier cull: self ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRecordTypeDefinitionNode >> fieldList [
 
 	^ self at: 3
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRecordTypeDefinitionNode >> fieldList: aViennaFieldListNode [
 
 	self at: 3 put: aViennaFieldListNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaRecordTypeDefinitionNode >> formatWith: aViennaAbstractFormatter [
 
 	| access identifier fieldList invariant |
@@ -119,7 +120,7 @@ ViennaRecordTypeDefinitionNode >> formatWith: aViennaAbstractFormatter [
 	  ++ invariant
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaRecordTypeDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self fieldList freeIdentifiersExcept: aSet do: aBlock.
@@ -127,67 +128,67 @@ ViennaRecordTypeDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
 		inv freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRecordTypeDefinitionNode >> identifier [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRecordTypeDefinitionNode >> identifier: aString [
 
 	self at: 2 put: aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRecordTypeDefinitionNode >> inv [
 
 	^ self at: 4
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRecordTypeDefinitionNode >> inv: aViennaInvariantNode [
 
 	self at: 4 put: aViennaInvariantNode
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaRecordTypeDefinitionNode >> isTypeDefinition [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaRecordTypeDefinitionNode >> isViennaAccessTypeDefinitionNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaRecordTypeDefinitionNode >> isViennaExportableTopLevelDefinitionNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaRecordTypeDefinitionNode >> isViennaRecordTypeDefinitionNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaRecordTypeDefinitionNode >> isViennaRecordTypeDefinitionNode: aString [
 
 	^ self identifier = aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRecordTypeDefinitionNode >> label [
 
 	^ 'RecordTypeDefinition'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaRecordTypeDefinitionNode >> maximalType [
 
 	maximalType := self asMaximalViennaType.
@@ -199,13 +200,13 @@ ViennaRecordTypeDefinitionNode >> maximalType [
 	^ maximalType
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaRecordTypeDefinitionNode >> shortName [
 
 	^ self identifier
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRecordTypeDefinitionNode >> type [
 
 	^ nil

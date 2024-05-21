@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaLocalNameNode,
-	#superclass : #ViennaNameNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaLocalNameNode',
+	#superclass : 'ViennaNameNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaLocalNameNode class >> identifier: aString [
 
 	^ (self new: 1)
@@ -13,7 +14,7 @@ ViennaLocalNameNode class >> identifier: aString [
 		  yourself
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaLocalNameNode >> asGlobalName [
 
 	^ (self findResolverForIdentifier: self identifier) ifNotNil: [
@@ -31,44 +32,44 @@ ViennaLocalNameNode >> asGlobalName [
 									  identifier: self identifier ] ] ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLocalNameNode >> definition [
 
 	^ self definitionOfLocalName: self identifier
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaLocalNameNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter identifier: self identifier
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaLocalNameNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	(aSet includes: self identifier) ifFalse: [
 		aBlock cull: self identifier cull: self ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLocalNameNode >> identifier [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLocalNameNode >> identifier: aString [
 
 	self at: 1 put: aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaLocalNameNode >> isAssignable [
 
 	^ self isStateVariableNameNode or: [ self isBlockVariableNameNode ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaLocalNameNode >> isBlockVariableNameNode [
 
 	(self definitionOfLocalName: self identifier) ifNotNil: [ :defNode |
@@ -76,20 +77,20 @@ ViennaLocalNameNode >> isBlockVariableNameNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaLocalNameNode >> isExportedNameNode [
 
 	^ self module interface exportDefinition exportsIdentifier:
 		  self identifier
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaLocalNameNode >> isFunctionNameNode [
 
 	^ self resolve ifNotNil: #isFunctionDefinition ifNil: [ false ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaLocalNameNode >> isLocalValueNameNode [
 
 	(self definitionOfLocalName: self identifier) ifNotNil: [ :defNode |
@@ -97,19 +98,19 @@ ViennaLocalNameNode >> isLocalValueNameNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaLocalNameNode >> isOperationNameNode [
 
 	^ self resolve isOperationDefinition
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaLocalNameNode >> isStateVariableNameNode [
 
 	^ self resolve ifNotNil: #isViennaFieldNode ifNil: [ false ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaLocalNameNode >> isTypeNameNode [
 
 	(self definitionOfLocalName: self identifier) ifNotNil: [ :defNode |
@@ -121,7 +122,7 @@ ViennaLocalNameNode >> isTypeNameNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaLocalNameNode >> isValueNameNode [
 
 	(self definitionOfLocalName: self identifier) ifNotNil: [ :defNode |
@@ -132,37 +133,37 @@ ViennaLocalNameNode >> isValueNameNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaLocalNameNode >> isViennaLocalNameNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaLocalNameNode >> isViennaLocalNameNode: aString [
 
 	^ self identifier = aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLocalNameNode >> label [
 
 	^ 'LocalName'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLocalNameNode >> localResolve [
 
 	^ self localResolveIdentifier: self identifier
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLocalNameNode >> resolve [
 
 	^ self resolveIdentifier: self identifier
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLocalNameNode >> shortName [
 
 	^ self identifier

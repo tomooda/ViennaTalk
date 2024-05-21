@@ -1,17 +1,18 @@
 Class {
-	#name : #ViennaPatternIdentifierNode,
-	#superclass : #ViennaPatternNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaPatternIdentifierNode',
+	#superclass : 'ViennaPatternNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaPatternIdentifierNode class >> anonymous [
 
 	^ self identifier: nil
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaPatternIdentifierNode class >> identifier: aString [
 
 	^ (self new: 1)
@@ -19,14 +20,14 @@ ViennaPatternIdentifierNode class >> identifier: aString [
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaPatternIdentifierNode >> boundIdentifiersDo: aBlock [
 
 	self identifier ifNotNil: [ :identifier |
 		aBlock cull: identifier cull: self ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaPatternIdentifierNode >> formatWith: aViennaAbstractFormatter [
 
 	^ self identifier
@@ -35,47 +36,47 @@ ViennaPatternIdentifierNode >> formatWith: aViennaAbstractFormatter [
 		  aViennaAbstractFormatter format: identifier ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaPatternIdentifierNode >> freeIdentifiersExcept: aSet do: aBlock [
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaPatternIdentifierNode >> identifier [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaPatternIdentifierNode >> identifier: aString [
 
 	self at: 1 put: aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaPatternIdentifierNode >> isViennaPatternIdentifierNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaPatternIdentifierNode >> isViennaPatternIdentifierNode: aString [
 
 	^ self identifier = aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaPatternIdentifierNode >> label [
 
 	^ 'PatternIdentifier'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaPatternIdentifierNode >> maximalType [
 
 	^ ViennaType any
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaPatternIdentifierNode >> shortName [
 
 	^ self identifier

@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaMultipleTypeBindNode,
-	#superclass : #ViennaMultipleBindNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaMultipleTypeBindNode',
+	#superclass : 'ViennaMultipleBindNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaMultipleTypeBindNode class >> patternList: aViennaPatternListNode type: aViennaTypeNode [
 
 	^ (self new: 2)
@@ -14,7 +15,7 @@ ViennaMultipleTypeBindNode class >> patternList: aViennaPatternListNode type: aV
 		  yourself
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaMultipleTypeBindNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter
@@ -23,26 +24,26 @@ ViennaMultipleTypeBindNode >> formatWith: aViennaAbstractFormatter [
 		  arg: (aViennaAbstractFormatter format: self type)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaMultipleTypeBindNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self patternList freeIdentifiersExcept: aSet do: aBlock.
 	self type freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaMultipleTypeBindNode >> isViennaMultipleTypeBindNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMultipleTypeBindNode >> label [
 
 	^ 'MultipleTypeBind'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaMultipleTypeBindNode >> maximalType [
 
 	| type |
@@ -60,7 +61,7 @@ ViennaMultipleTypeBindNode >> maximalType [
 	^ type
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaMultipleTypeBindNode >> maximalType: aViennaType [
 
 	| basetype |
@@ -68,13 +69,13 @@ ViennaMultipleTypeBindNode >> maximalType: aViennaType [
 	super maximalType: basetype & aViennaType
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMultipleTypeBindNode >> type [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMultipleTypeBindNode >> type: aViennaTypeNode [
 
 	self at: 2 put: aViennaTypeNode

@@ -1,29 +1,30 @@
 Class {
-	#name : #ViennaMapDomainNode,
-	#superclass : #ViennaUnaryOperatorExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaMapDomainNode',
+	#superclass : 'ViennaUnaryOperatorExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaMapDomainNode >> formatOperatorWith: aViennaAbstractFormatter [
 
 	^ 'dom'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaMapDomainNode >> isViennaMapDomainNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapDomainNode >> label [
 
 	^ 'MapDomain'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaMapDomainNode >> maximalType: aViennaType [
 
 	| keytype |
@@ -38,19 +39,19 @@ ViennaMapDomainNode >> maximalType: aViennaType [
 	super maximalType: aViennaType
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaMapDomainNode >> operatorPrecedence [
 
 	^ 36
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaMapDomainNode >> paramType [
 
 	^ ViennaType any mapTo: ViennaType any
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaMapDomainNode >> returnTypeFor: aViennaType [
 
 	^ aViennaType keytype set

@@ -1,17 +1,18 @@
 Class {
-	#name : #ViennaCasesStatementAlternativesNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaCasesStatementAlternativesNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaCasesStatementAlternativesNode >> boundIdentifiersDo: aBlock [
 
 	
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaCasesStatementAlternativesNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter
@@ -20,26 +21,26 @@ ViennaCasesStatementAlternativesNode >> formatWith: aViennaAbstractFormatter [
 		  withAll: (aViennaAbstractFormatter formatAll: self)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaCasesStatementAlternativesNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self do: [ :alternative |
 		alternative freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaCasesStatementAlternativesNode >> isViennaCasesStatementAlternativesNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCasesStatementAlternativesNode >> label [
 
 	^ 'CasesStatementAlternatives'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaCasesStatementAlternativesNode >> maximalType [
 
 	^ self

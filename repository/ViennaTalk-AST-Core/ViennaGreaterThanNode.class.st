@@ -1,47 +1,48 @@
 Class {
-	#name : #ViennaGreaterThanNode,
-	#superclass : #ViennaBinaryOperatorExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaGreaterThanNode',
+	#superclass : 'ViennaBinaryOperatorExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaGreaterThanNode >> formatOperatorWith: aViennaAbstractFormatter [
 
 	^ '>'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaGreaterThanNode >> isViennaGreaterThanNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaGreaterThanNode >> label [
 
 	^ 'GreaterThan'
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaGreaterThanNode >> operatorPrecedence [
 
 	^ 21
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaGreaterThanNode >> paramType1 [
 
 	^ ViennaType real
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaGreaterThanNode >> paramType2 [
 
 	^ ViennaType real
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaGreaterThanNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
 
 	^ ViennaType bool

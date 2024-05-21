@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaExistsExpressionNode,
-	#superclass : #ViennaMultipleBindQuantifierNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaExistsExpressionNode',
+	#superclass : 'ViennaMultipleBindQuantifierNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaExistsExpressionNode class >> bindList: aViennaBindListNode expression: aViennaExpressionNode [
 
 	^ (self new: 2)
@@ -14,7 +15,7 @@ ViennaExistsExpressionNode class >> bindList: aViennaBindListNode expression: aV
 		  yourself
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaExistsExpressionNode >> formatWith: aViennaAbstractFormatter [
 
 	| bindList expression |
@@ -28,19 +29,19 @@ ViennaExistsExpressionNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: expression
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExistsExpressionNode >> isViennaExistsExpressionNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExistsExpressionNode >> label [
 
 	^ 'ExistsExpression'
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaExistsExpressionNode >> operatorPrecedence [
 
 	^ 10

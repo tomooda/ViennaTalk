@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaMultipleAssignStatementNode,
-	#superclass : #ViennaStatementNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaMultipleAssignStatementNode',
+	#superclass : 'ViennaStatementNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaMultipleAssignStatementNode >> formatWith: aViennaAbstractFormatter [
 
 	| statements |
@@ -19,26 +20,26 @@ ViennaMultipleAssignStatementNode >> formatWith: aViennaAbstractFormatter [
 				   withAll: statements) ++ ')'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaMultipleAssignStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self do: [ :assignmentStatement |
 		assignmentStatement freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaMultipleAssignStatementNode >> isViennaMultipleAssignStatementNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMultipleAssignStatementNode >> label [
 
 	^ 'MultipleAssignStatement'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaMultipleAssignStatementNode >> maximalType [
 
 	^ self

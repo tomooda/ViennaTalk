@@ -1,41 +1,42 @@
 Class {
-	#name : #ViennaConditionalStatementListNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaConditionalStatementListNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaConditionalStatementListNode >> boundIdentifiersDo: aBlock [
 
 	
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaConditionalStatementListNode >> formatWith: aViennaAbstractFormatter [
 
 	
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaConditionalStatementListNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self do: [ :node | node freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaConditionalStatementListNode >> isViennaConditionalStatementListNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaConditionalStatementListNode >> label [
 
 	^ 'ConditionalStatementList'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaConditionalStatementListNode >> maximalType [
 
 	^ self

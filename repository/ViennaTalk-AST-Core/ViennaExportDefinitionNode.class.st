@@ -1,18 +1,19 @@
 Class {
-	#name : #ViennaExportDefinitionNode,
-	#superclass : #ViennaExportComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaExportDefinitionNode',
+	#superclass : 'ViennaExportComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'formatting-interfaces' }
+{ #category : 'formatting-interfaces' }
 ViennaExportDefinitionNode class >> all [
 
 	^ self exportModuleSignature:
 		  ViennaExportModuleSignatureAllNode empty
 ]
 
-{ #category : #'formatting-interfaces' }
+{ #category : 'formatting-interfaces' }
 ViennaExportDefinitionNode class >> exportModuleSignature: aViennaExportModuleSignature [
 
 	^ (self new: 1)
@@ -20,37 +21,37 @@ ViennaExportDefinitionNode class >> exportModuleSignature: aViennaExportModuleSi
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaExportDefinitionNode >> boundIdentifiersDo: aBlock [
 
 	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExportDefinitionNode >> exportModuleSignature [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExportDefinitionNode >> exportModuleSignature: aViennaExportModuleSignature [
 
 	self at: 1 put: aViennaExportModuleSignature
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaExportDefinitionNode >> exportedIdentifiersDo: aBlock [
 
 	self exportModuleSignature exportedIdentifiersDo: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExportDefinitionNode >> exportsIdentifier: aString [
 
 	^ self exportModuleSignature exportsIdentifier: aString
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaExportDefinitionNode >> formatWith: aViennaAbstractFormatter [
 
 	| exportSig |
@@ -61,25 +62,25 @@ ViennaExportDefinitionNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: exportSig
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExportDefinitionNode >> isViennaExportDefinitionNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExportDefinitionNode >> label [
 
 	^ 'ExportDefinition'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaExportDefinitionNode >> maximalType [
 
 	^ self exportModuleSignature typecheck
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 ViennaExportDefinitionNode >> removeIdentifier: aString [
 
 	self exportModuleSignature removeIdentifier: aString

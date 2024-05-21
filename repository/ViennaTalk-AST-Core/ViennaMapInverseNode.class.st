@@ -1,36 +1,37 @@
 Class {
-	#name : #ViennaMapInverseNode,
-	#superclass : #ViennaUnaryOperatorExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaMapInverseNode',
+	#superclass : 'ViennaUnaryOperatorExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaMapInverseNode >> formatOperatorWith: aViennaAbstractFormatter [
 
 	^ self shouldNotImplement
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaMapInverseNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter inverse:
 		  (aViennaAbstractFormatter format: self expression)
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaMapInverseNode >> isViennaMapInverseNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapInverseNode >> label [
 
 	^ 'MapInverse'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaMapInverseNode >> maximalType: aViennaType [
 
 	| keytype valuetype |
@@ -46,19 +47,19 @@ ViennaMapInverseNode >> maximalType: aViennaType [
 	super maximalType: aViennaType
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaMapInverseNode >> operatorPrecedence [
 
 	^ 33
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaMapInverseNode >> paramType [
 
 	^ ViennaType any inmapTo: ViennaType any
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaMapInverseNode >> returnTypeFor: aViennaType [
 
 	| keytype valuetype |

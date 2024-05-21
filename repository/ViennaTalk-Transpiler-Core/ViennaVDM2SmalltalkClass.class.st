@@ -39,12 +39,19 @@ ViennaVDM2SmalltalkClass >> buildEnv: aViennaNode [
 
 { #category : 'code generation-statements' }
 ViennaVDM2SmalltalkClass >> callStatement: aViennaNode env: aDictionary [
-	| callee args |
-	callee := self generate: aViennaNode first env: aDictionary.
-	args := self generate: aViennaNode second env: aDictionary.
-	^ args
-		ifEmpty: [ callee , ' value' ]
-		ifNotEmpty: [ '(', callee , ' value: ', (' value: ' join: args), ')' ]
+
+	             | callee args |
+	             callee := self
+		                       generate: aViennaNode name
+		                       env: aDictionary.
+	             args := self
+		                     generate: aViennaNode expressionList
+		                     env: aDictionary.
+	             ^ args
+		               ifEmpty: [ callee , ' value' ]
+		               ifNotEmpty: [
+		               '(' , callee , ' value: ' , (' value: ' join: args)
+		               , ')' ]
 ]
 
 { #category : 'utilities' }
@@ -110,19 +117,20 @@ ViennaVDM2SmalltalkClass >> createDocumentClassWithInstVars: anArrayOfString1 st
 ]
 
 { #category : 'utilities' }
-ViennaVDM2SmalltalkClass >> createModuleClassWithInstVars: anArrayOfString forModule: aString env: aDictionary [
+ViennaVDM2SmalltalkClass >> createModuleClass: aString withInstVars: anArrayOfString env: aDictionary [
+
 	^ self
-		createModuleClassWithInstVars: anArrayOfString
-		stateVars: #()
-		forModule: aString
-		env: aDictionary
+		  createModuleClass: aString
+		  withInstVars: anArrayOfString
+		  stateVars: #(  )
+		  env: aDictionary
 ]
 
 { #category : 'utilities' }
-ViennaVDM2SmalltalkClass >> createModuleClassWithInstVars: anArrayOfString1 stateVars: anArrayOfString2 forModule: aString env: aDictionary [
+ViennaVDM2SmalltalkClass >> createModuleClass: aString withInstVars: anArrayOfString1 stateVars: anArrayOfString2 env: aDictionary [
 
 	| className |
-	className := aDictionary at: aString ifAbsent: [ aString ].
+	className := aString.
 	^ (ShiftClassInstaller make: [ :builder |
 			   builder
 				   name: className asSymbol;
@@ -943,7 +951,7 @@ ViennaVDM2SmalltalkClass >> modularDocument: aViennaNode env: aDictionary [
 						 nextPutAll: moduleName uncapitalized;
 						 nextPutAll: ' := ';
 						 nextPutAll: className;
-						 nextPutAll: ' new.';
+						 nextPutAll: ' new _document: self; yourself.';
 						 cr ].
 				 aViennaNode do: [ :moduleNode |
 					 | moduleName |
@@ -1039,10 +1047,10 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 	instVars := moduleBodyNode uniqueBoundIdentifiers copyWithoutAll:
 		            stateVars.
 	newClass := self
-		            createModuleClassWithInstVars:
-		            importClassNames , instVars
+		            createModuleClass:
+		            (defaultEnv at: moduleName ifAbsent: [ moduleName ])
+		            withInstVars: importClassNames , instVars
 		            stateVars: stateVars
-		            forModule: moduleName
 		            env: env.
 	classes at: moduleName put: newClass.
 	importModuleNames
@@ -1075,17 +1083,28 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 { #category : 'code generation-traces' }
 ViennaVDM2SmalltalkClass >> namedTrace: aViennaNode env: aDictionary [
 
-	| name body theClass |
-	name := aViennaNode identifier.
-	body := self
-		        generate: aViennaNode traceDefinitionList
-		        env: aDictionary.
-	theClass := classes at: (aViennaNode module ifNotNil: #identifier).
-	self
-		defineMethod: name , String cr , body
-		in: theClass
-		protocol: 'traces'
-		node: aViennaNode
+                | name body theClass |
+                name := aViennaNode identifier.
+                body := self stringStreamContents: [ :stream |
+                           stream
+                              nextPutAll:
+                                 '|_generator | _generator := ';
+                              nextPutAll:
+                                 (self
+                                     generate:
+                                        aViennaNode
+                                           traceDefinitionList
+                                     env: aDictionary);
+                              nextPutAll:
+                                 '. [self init. _generator next: Dictionary new] whileTrue' ].
+                theClass := classes at:
+                               (aViennaNode module ifNotNil:
+                                   #identifier).
+                self
+                   defineMethod: name , String cr , body
+                   in: theClass
+                   protocol: 'traces'
+                   node: aViennaNode
 ]
 
 { #category : 'code generation-definitions' }

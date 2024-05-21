@@ -1,18 +1,19 @@
 Class {
-	#name : #ViennaIdentifierTypePairListNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaIdentifierTypePairListNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaIdentifierTypePairListNode >> boundIdentifiersDo: aBlock [
 
 	1 to: self size by: 2 do: [ :index |
 	aBlock cull: (self at: index) cull: self ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaIdentifierTypePairListNode >> formatWith: aViennaAbstractFormatter [
 
 	^ self
@@ -32,39 +33,39 @@ ViennaIdentifierTypePairListNode >> formatWith: aViennaAbstractFormatter [
 		  ifEmpty: [ '' ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaIdentifierTypePairListNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	2 to: self size by: 2 do: [ :index |
 	(self at: index) freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaIdentifierTypePairListNode >> identifiers [
 
 	^ (1 to: self size by: 2) collect: [ :index |
 		  (self at: index) identifier ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaIdentifierTypePairListNode >> isViennaIdentifierTypePairListNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIdentifierTypePairListNode >> label [
 
 	^ 'IdentifierTypePairList'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaIdentifierTypePairListNode >> listDelimiter [
 
 	^ ', '
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaIdentifierTypePairListNode >> maximalType [
 
 	^ ViennaType product: ((1 to: self size by: 2) collect: [ :index |
@@ -75,13 +76,13 @@ ViennaIdentifierTypePairListNode >> maximalType [
 			   pattern typecheck ])
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaIdentifierTypePairListNode >> patternIdentifiers [
 
 	^ (1 to: self size by: 2) collect: [ :index | self at: index ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIdentifierTypePairListNode >> type [
 
 	^ (((2 to: self size by: 2) collect: [ :index |
@@ -95,7 +96,7 @@ ViennaIdentifierTypePairListNode >> type [
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaIdentifierTypePairListNode >> types [
 
 	^ (2 to: self size by: 2) collect: [ :index | self at: index ]

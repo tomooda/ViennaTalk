@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaTypeVariableIdentifierNode,
-	#superclass : #ViennaTypeNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaTypeVariableIdentifierNode',
+	#superclass : 'ViennaTypeNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaTypeVariableIdentifierNode class >> identifier: aString [
 
 	^ (self new: 1)
@@ -13,62 +14,62 @@ ViennaTypeVariableIdentifierNode class >> identifier: aString [
 		  yourself
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaTypeVariableIdentifierNode >> asMaximalViennaType [
 
 	^ ViennaType parametric: self identifier
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTypeVariableIdentifierNode >> boundIdentifiersDo: aBlock [
 
 	aBlock cull: self identifier cull: self
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaTypeVariableIdentifierNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter typeName: self identifier
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTypeVariableIdentifierNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	(aSet includes: self identifier) ifFalse: [
 		aBlock value: self identifier ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTypeVariableIdentifierNode >> identifier [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTypeVariableIdentifierNode >> identifier: aString [
 
 	self at: 1 put: aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTypeVariableIdentifierNode >> isViennaTypeVariableIdentifierNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTypeVariableIdentifierNode >> isViennaTypeVariableIdentifierNode: aString [
 
 	^ self identifier = aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTypeVariableIdentifierNode >> label [
 
 	^ 'TypeVariableIdentifier'
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaTypeVariableIdentifierNode >> resolve [
 
 	^ self resolveIdentifier: self identifier

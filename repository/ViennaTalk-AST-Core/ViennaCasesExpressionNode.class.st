@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaCasesExpressionNode,
-	#superclass : #ViennaExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaCasesExpressionNode',
+	#superclass : 'ViennaExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaCasesExpressionNode class >> expression: aViennaExpressionNode casesExpressionAlternatives: aViennaCasesExpressionAlternativesNode othersExpression: aViennaOthersExpressionNode [
 
 	^ (self new: 3)
@@ -16,29 +17,29 @@ ViennaCasesExpressionNode class >> expression: aViennaExpressionNode casesExpres
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCasesExpressionNode >> casesExpressionAlternatives [
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCasesExpressionNode >> casesExpressionAlternatives: aViennaCasesExpressionAlternativesNode [
 
 	self at: 2 put: aViennaCasesExpressionAlternativesNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCasesExpressionNode >> expression [
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCasesExpressionNode >> expression: aViennaExpression [
 
 	self at: 1 put: aViennaExpression
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaCasesExpressionNode >> formatWith: aViennaAbstractFormatter [
 
 	| value alternatives others |
@@ -57,7 +58,7 @@ ViennaCasesExpressionNode >> formatWith: aViennaAbstractFormatter [
 		  ++ (aViennaAbstractFormatter keyword: 'end')
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaCasesExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self expression freeIdentifiersExcept: aSet do: aBlock.
@@ -68,19 +69,19 @@ ViennaCasesExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
 		others freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaCasesExpressionNode >> isViennaCasesExpressionNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCasesExpressionNode >> label [
 
 	^ 'CasesExpression'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaCasesExpressionNode >> maximalType [
 
 	| caseType |
@@ -96,7 +97,7 @@ ViennaCasesExpressionNode >> maximalType [
 		   ifNil: [ ViennaType unit ])
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaCasesExpressionNode >> maximalType: aViennaType [
 
 	self casesExpressionAlternatives maximalType: aViennaType.
@@ -105,12 +106,12 @@ ViennaCasesExpressionNode >> maximalType: aViennaType [
 	super maximalType: aViennaType
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCasesExpressionNode >> othersExpression [
 	^ self at: 3
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCasesExpressionNode >> othersExpression: aViennaOthersExpressionNode [
 
 	self at: 3 put: aViennaOthersExpressionNode

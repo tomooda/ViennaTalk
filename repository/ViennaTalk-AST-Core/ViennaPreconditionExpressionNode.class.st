@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaPreconditionExpressionNode,
-	#superclass : #ViennaExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaPreconditionExpressionNode',
+	#superclass : 'ViennaExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaPreconditionExpressionNode >> formatWith: aViennaAbstractFormatter [
 
 	| expressions |
@@ -25,26 +26,26 @@ ViennaPreconditionExpressionNode >> formatWith: aViennaAbstractFormatter [
 	  ++ ')'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaPreconditionExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self do: [ :expression |
 		expression freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaPreconditionExpressionNode >> isViennaPreconditionExpressionNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaPreconditionExpressionNode >> label [
 
 	^ 'PreconditionExpression'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaPreconditionExpressionNode >> maximalType [
 
 	self do: [ :exp | exp typecheck ].

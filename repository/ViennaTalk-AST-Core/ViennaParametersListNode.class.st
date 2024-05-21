@@ -1,17 +1,18 @@
 Class {
-	#name : #ViennaParametersListNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaParametersListNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaParametersListNode >> boundIdentifiersDo: aBlock [
 
 	self do: [ :parameters | parameters boundIdentifiersDo: aBlock ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaParametersListNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter
@@ -19,32 +20,32 @@ ViennaParametersListNode >> formatWith: aViennaAbstractFormatter [
 		  withAll: (aViennaAbstractFormatter formatAll: self)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaParametersListNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self do: [ :parameters |
 		parameters freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaParametersListNode >> isViennaParametersListNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaParametersListNode >> label [
 
 	^ 'ParametersList'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaParametersListNode >> listDelimiter [
 
 	^ ''
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaParametersListNode >> maximalType [
 
 	^ ViennaType product: (self collect: #typecheck)

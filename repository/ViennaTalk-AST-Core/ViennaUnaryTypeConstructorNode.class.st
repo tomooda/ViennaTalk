@@ -1,17 +1,18 @@
 Class {
-	#name : #ViennaUnaryTypeConstructorNode,
-	#superclass : #ViennaTypeNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaUnaryTypeConstructorNode',
+	#superclass : 'ViennaTypeNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaUnaryTypeConstructorNode class >> isAbstract [
 
 	^ self = ViennaUnaryTypeConstructorNode
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaUnaryTypeConstructorNode class >> type: aViennaTypeNode [
 
 	^ (self new: 1)
@@ -19,25 +20,25 @@ ViennaUnaryTypeConstructorNode class >> type: aViennaTypeNode [
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaUnaryTypeConstructorNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self type freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaUnaryTypeConstructorNode >> isViennaUnaryTypeConstructorNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUnaryTypeConstructorNode >> type [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUnaryTypeConstructorNode >> type: aViennaTypeNode [
 
 	self at: 1 put: aViennaTypeNode

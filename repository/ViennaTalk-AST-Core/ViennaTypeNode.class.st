@@ -1,35 +1,36 @@
 Class {
-	#name : #ViennaTypeNode,
-	#superclass : #ViennaNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaTypeNode',
+	#superclass : 'ViennaNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTypeNode class >> isAbstract [
 
 	^ self = ViennaTypeNode
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaTypeNode >> asMaximalViennaType [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTypeNode >> boundIdentifiersDo: aBlock [
 
 	
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTypeNode >> isViennaTypeNode [
 
 	^ true
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaTypeNode >> maximalType [
 
 	^ self asMaximalViennaType

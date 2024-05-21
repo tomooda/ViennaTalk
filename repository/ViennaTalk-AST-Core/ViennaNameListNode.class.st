@@ -1,17 +1,18 @@
 Class {
-	#name : #ViennaNameListNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaNameListNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaNameListNode >> boundIdentifiersDo: aBlock [
 
 	
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaNameListNode >> formatWith: aViennaAbstractFormatter [
 
 	| names |
@@ -19,37 +20,37 @@ ViennaNameListNode >> formatWith: aViennaAbstractFormatter [
 	^ aViennaAbstractFormatter join: ', ' withAll: names
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaNameListNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self do: [ :name | name freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNameListNode >> includesIdentifier: aString [
 
 	^ self anySatisfy: [ :name | name identifier = aString ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNameListNode >> isViennaNameListNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNameListNode >> label [
 
 	^ 'NameList'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaNameListNode >> listDelimiter [
 
 	^ ', '
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaNameListNode >> maximalType [
 
 	^ self
@@ -57,14 +58,14 @@ ViennaNameListNode >> maximalType [
 		  into: [ :type :name | type + name typecheck ]
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaNameListNode >> maximalType: aViennaType [
 
 	self do: [ :name | name maximalType: aViennaType ].
 	super maximalType: aViennaType
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 ViennaNameListNode >> removeIdentifier: aString [
 
 	(self includesIdentifier: aString) ifTrue: [

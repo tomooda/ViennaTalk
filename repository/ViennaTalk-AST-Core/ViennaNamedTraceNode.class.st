@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaNamedTraceNode,
-	#superclass : #ViennaTopLevelDefinitionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaNamedTraceNode',
+	#superclass : 'ViennaTopLevelDefinitionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaNamedTraceNode class >> identifier: aString traceDefinitionList: aViennaTraceDefinitionList [
 
 	^ (self new: 2)
@@ -14,13 +15,13 @@ ViennaNamedTraceNode class >> identifier: aString traceDefinitionList: aViennaTr
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaNamedTraceNode >> boundIdentifiersDo: aBlock [
 
 	aBlock cull: self identifier cull: self
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaNamedTraceNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter indentString:
@@ -29,56 +30,56 @@ ViennaNamedTraceNode >> formatWith: aViennaAbstractFormatter [
 		  ++ (aViennaAbstractFormatter format: self traceDefinitionList)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaNamedTraceNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self traceDefinitionList freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNamedTraceNode >> identifier [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNamedTraceNode >> identifier: aString [
 
 	self at: 1 put: aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNamedTraceNode >> isViennaExportableTopLevelDefinitionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNamedTraceNode >> isViennaNamedTraceNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNamedTraceNode >> label [
 
 	^ 'NamedTrace'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaNamedTraceNode >> maximalType [
 
 	self traceDefinitionList typecheck.
 	^ ViennaType unit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNamedTraceNode >> traceDefinitionList [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNamedTraceNode >> traceDefinitionList: aViennaTraceDefinitionListNode [
 
 	self at: 2 put: aViennaTraceDefinitionListNode

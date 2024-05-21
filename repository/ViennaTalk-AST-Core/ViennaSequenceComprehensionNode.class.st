@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaSequenceComprehensionNode,
-	#superclass : #ViennaExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaSequenceComprehensionNode',
+	#superclass : 'ViennaExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaSequenceComprehensionNode class >> expression: aViennaExpressionNode1 setSeqBind: aViennaSetSeqBindNode suchthatExpression: aViennaExpressionNode2 [
 
 	^ (self new: 3)
@@ -15,7 +16,7 @@ ViennaSequenceComprehensionNode class >> expression: aViennaExpressionNode1 setS
 		  yourself
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaSequenceComprehensionNode >> definitionOfLocalName: aString [
 
 	self pattern
@@ -25,19 +26,19 @@ ViennaSequenceComprehensionNode >> definitionOfLocalName: aString [
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSequenceComprehensionNode >> expression [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSequenceComprehensionNode >> expression: aViennaExpressionNode [
 
 	self at: 1 put: aViennaExpressionNode
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaSequenceComprehensionNode >> findResolverForIdentifier: aString [
 
 	^ (self setSeqBind bindsIdentifier: aString)
@@ -45,7 +46,7 @@ ViennaSequenceComprehensionNode >> findResolverForIdentifier: aString [
 		  ifFalse: [ super findResolverForIdentifier: aString ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSequenceComprehensionNode >> formatWith: aViennaAbstractFormatter [
 
 	| expression setBind guard |
@@ -65,7 +66,7 @@ ViennaSequenceComprehensionNode >> formatWith: aViennaAbstractFormatter [
 				    insertCrIfNeeded: guard)) ++ ']'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaSequenceComprehensionNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	| newBoundIdentifiers |
@@ -76,25 +77,25 @@ ViennaSequenceComprehensionNode >> freeIdentifiersExcept: aSet do: aBlock [
 	self expression freeIdentifiersExcept: newBoundIdentifiers do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaSequenceComprehensionNode >> hasScope [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaSequenceComprehensionNode >> isViennaSequenceComprehensionNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSequenceComprehensionNode >> label [
 
 	^ 'SequenceComprehension'
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaSequenceComprehensionNode >> lookupIdentifier: aString [
 
 	(self setSeqBind pattern bindsIdentifier: aString) ifTrue: [
@@ -102,7 +103,7 @@ ViennaSequenceComprehensionNode >> lookupIdentifier: aString [
 	^ nil
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaSequenceComprehensionNode >> maximalType [
 
 	self setSeqBind typecheck.
@@ -111,7 +112,7 @@ ViennaSequenceComprehensionNode >> maximalType [
 	^ self expression typecheck seq
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaSequenceComprehensionNode >> maximalType: aViennaType [
 
 	| basetype |
@@ -127,31 +128,31 @@ ViennaSequenceComprehensionNode >> maximalType: aViennaType [
 	super maximalType: aViennaType
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSequenceComprehensionNode >> pattern [
 
 	^ self setSeqBind pattern
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSequenceComprehensionNode >> setSeqBind [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSequenceComprehensionNode >> setSeqBind: aViennaSetSeqBindNode [
 
 	self at: 2 put: aViennaSetSeqBindNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSequenceComprehensionNode >> suchthatExpression [
 
 	^ self at: 3
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSequenceComprehensionNode >> suchthatExpression: aViennaExpressionNode [
 
 	self at: 3 put: aViennaExpressionNode

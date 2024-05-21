@@ -1,17 +1,18 @@
 Class {
-	#name : #ViennaMapletListNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaMapletListNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaMapletListNode >> boundIdentifiersDo: aBlock [
 
 	
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaMapletListNode >> formatWith: aViennaAbstractFormatter [
 
 	| maplets |
@@ -24,31 +25,31 @@ ViennaMapletListNode >> formatWith: aViennaAbstractFormatter [
 		  withAll: maplets
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaMapletListNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self do: [ :maplet | maplet freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaMapletListNode >> isViennaMapletListNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapletListNode >> label [
 
 	^ 'MapletList'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaMapletListNode >> listDelimiter [
 
 	^ ', '
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaMapletListNode >> maximalType [
 
 	self do: #typecheck.

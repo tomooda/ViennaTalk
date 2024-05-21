@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaExists1ExpressionNode,
-	#superclass : #ViennaExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaExists1ExpressionNode',
+	#superclass : 'ViennaExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaExists1ExpressionNode class >> bind: aViennaBindNode expression: aViennaExpressionNode [
 
 	^ (self new: 2)
@@ -14,19 +15,19 @@ ViennaExists1ExpressionNode class >> bind: aViennaBindNode expression: aViennaEx
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExists1ExpressionNode >> bind [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExists1ExpressionNode >> bind: aViennaBindNode [
 
 	self at: 1 put: aViennaBindNode
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaExists1ExpressionNode >> definitionOfLocalName: aString [
 
 	self pattern
@@ -35,19 +36,19 @@ ViennaExists1ExpressionNode >> definitionOfLocalName: aString [
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExists1ExpressionNode >> expression [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExists1ExpressionNode >> expression: aViennaExpressionNode [
 
 	self at: 2 put: aViennaExpressionNode
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaExists1ExpressionNode >> findResolverForIdentifier: aString [
 
 	^ (self pattern bindsIdentifier: aString)
@@ -55,7 +56,7 @@ ViennaExists1ExpressionNode >> findResolverForIdentifier: aString [
 		  ifFalse: [ super findResolverForIdentifier: aString ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaExists1ExpressionNode >> formatWith: aViennaAbstractFormatter [
 
 	| bind expression |
@@ -68,7 +69,7 @@ ViennaExists1ExpressionNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: expression
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaExists1ExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self bind freeIdentifiersExcept: aSet do: aBlock.
@@ -77,25 +78,25 @@ ViennaExists1ExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
 		do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExists1ExpressionNode >> hasScope [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExists1ExpressionNode >> isViennaExists1ExpressionNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExists1ExpressionNode >> label [
 
 	^ 'Exists1Expression'
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaExists1ExpressionNode >> lookupIdentifier: aString [
 
 	^ (self pattern bindsIdentifier: aString)
@@ -103,20 +104,20 @@ ViennaExists1ExpressionNode >> lookupIdentifier: aString [
 		  ifFalse: [ nil ]
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaExists1ExpressionNode >> maximalType [
 
 	self bind typecheck.
 	^ self expression typecheck: ViennaType bool
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaExists1ExpressionNode >> operatorPrecedence [
 
 	^ 10
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExists1ExpressionNode >> pattern [
 
 	^ self bind pattern

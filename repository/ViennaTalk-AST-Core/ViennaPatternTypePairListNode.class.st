@@ -1,18 +1,19 @@
 Class {
-	#name : #ViennaPatternTypePairListNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaPatternTypePairListNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaPatternTypePairListNode >> boundIdentifiersDo: aBlock [
 
 	1 to: self size by: 2 do: [ :index |
 	(self at: index) boundIdentifiersDo: aBlock ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaPatternTypePairListNode >> formatWith: aViennaAbstractFormatter [
 
 	| string |
@@ -32,32 +33,32 @@ ViennaPatternTypePairListNode >> formatWith: aViennaAbstractFormatter [
 	^ string
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaPatternTypePairListNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self do: [ :patternOrType |
 		patternOrType freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaPatternTypePairListNode >> isViennaPatternTypePairListNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaPatternTypePairListNode >> label [
 
 	^ 'PatternTypePairList'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaPatternTypePairListNode >> listDelimiter [
 
 	^ ', '
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaPatternTypePairListNode >> maximalType [
 
 	^ ViennaType product: ((1 to: self size by: 2) collect: [ :index |
@@ -68,7 +69,7 @@ ViennaPatternTypePairListNode >> maximalType [
 			   pattern typecheck ])
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaPatternTypePairListNode >> parameters [
 
 	^ (ViennaParametersNode withAll:
@@ -76,13 +77,13 @@ ViennaPatternTypePairListNode >> parameters [
 			    (self at: index) copyFragment ])) parent: parent
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaPatternTypePairListNode >> patternsDo: aBlock [
 
 	1 to: self size by: 2 do: [ :index | aBlock value: (self at: index) ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaPatternTypePairListNode >> type [
 
 	^ (((2 to: self size by: 2) collect: [ :index |

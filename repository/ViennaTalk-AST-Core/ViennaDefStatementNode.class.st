@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaDefStatementNode,
-	#superclass : #ViennaStatementNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaDefStatementNode',
+	#superclass : 'ViennaStatementNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaDefStatementNode class >> equalDefinitionList: aViennaEqualDefinitionListNode statement: aViennaStatementNode [
 
 	^ (self new: 2)
@@ -14,7 +15,7 @@ ViennaDefStatementNode class >> equalDefinitionList: aViennaEqualDefinitionListN
 		  yourself
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaDefStatementNode >> definitionOfLocalName: aString [
 
 	self equalDefinitionList reverseDo: [ :equalDefinition |
@@ -25,25 +26,25 @@ ViennaDefStatementNode >> definitionOfLocalName: aString [
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaDefStatementNode >> definitionOfLocalName: aString for: aViennaNode [
 
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaDefStatementNode >> equalDefinitionList [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaDefStatementNode >> equalDefinitionList: aViennaEqualDefinitionListNode [
 
 	^ self at: 1 put: aViennaEqualDefinitionListNode
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaDefStatementNode >> findResolverForIdentifier: aString [
 
 	^ (self equalDefinitionList bindsIdentifier: aString)
@@ -51,7 +52,7 @@ ViennaDefStatementNode >> findResolverForIdentifier: aString [
 		  ifFalse: [ super findResolverForIdentifier: aString ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaDefStatementNode >> formatWith: aViennaAbstractFormatter [
 
 	| equalDefinitionList statement |
@@ -67,7 +68,7 @@ ViennaDefStatementNode >> formatWith: aViennaAbstractFormatter [
 				   insertCrIfNeeded: statement)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaDefStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self equalDefinitionList freeIdentifiersExcept: aSet do: aBlock.
@@ -77,19 +78,19 @@ ViennaDefStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
 		do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaDefStatementNode >> isViennaDefStatementNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaDefStatementNode >> label [
 
 	^ 'DefStatement'
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaDefStatementNode >> lookupIdentifier: aString [
 
 	self equalDefinitionList do: [ :equalDefinition |
@@ -98,20 +99,20 @@ ViennaDefStatementNode >> lookupIdentifier: aString [
 	^ nil
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaDefStatementNode >> maximalType [
 
 	self equalDefinitionList do: [ :equalDef | equalDef typecheck ].
 	^ self statement typecheck
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaDefStatementNode >> statement [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaDefStatementNode >> statement: aViennaStatementNode [
 
 	self at: 2 put: aViennaStatementNode

@@ -1,47 +1,48 @@
 Class {
-	#name : #ViennaLessThanNode,
-	#superclass : #ViennaBinaryOperatorExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaLessThanNode',
+	#superclass : 'ViennaBinaryOperatorExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaLessThanNode >> formatOperatorWith: aViennaAbstractFormatter [
 
 	^ '<'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLessThanNode >> isViennaLessThanNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLessThanNode >> label [
 
 	^ 'LessThan'
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaLessThanNode >> operatorPrecedence [
 
 	^ 21
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLessThanNode >> paramType1 [
 
 	^ ViennaType real
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLessThanNode >> paramType2 [
 
 	^ ViennaType real
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLessThanNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
 
 	^ ViennaType bool

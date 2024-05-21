@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaIotaExpressionNode,
-	#superclass : #ViennaExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaIotaExpressionNode',
+	#superclass : 'ViennaExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaIotaExpressionNode class >> bind: aViennaBindNode expression: aViennaExpressionNode [
 
 	^ (self new: 2)
@@ -14,19 +15,19 @@ ViennaIotaExpressionNode class >> bind: aViennaBindNode expression: aViennaExpre
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIotaExpressionNode >> bind [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIotaExpressionNode >> bind: aViennaBindNode [
 
 	self at: 1 put: aViennaBindNode
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaIotaExpressionNode >> definitionOfLocalName: aString [
 
 	self pattern
@@ -35,19 +36,19 @@ ViennaIotaExpressionNode >> definitionOfLocalName: aString [
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIotaExpressionNode >> expression [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIotaExpressionNode >> expression: aViennaExpressionNode [
 
 	self at: 2 put: aViennaExpressionNode
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaIotaExpressionNode >> findResolverForIdentifier: aString [
 
 	^ (self bind bindsIdentifier: aString)
@@ -55,7 +56,7 @@ ViennaIotaExpressionNode >> findResolverForIdentifier: aString [
 		  ifFalse: [ super findResolverForIdentifier: aString ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaIotaExpressionNode >> formatWith: aViennaAbstractFormatter [
 
 	| bind expression |
@@ -68,7 +69,7 @@ ViennaIotaExpressionNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: expression
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaIotaExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self bind freeIdentifiersExcept: aSet do: aBlock.
@@ -77,25 +78,25 @@ ViennaIotaExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
 		do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaIotaExpressionNode >> hasScope [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIotaExpressionNode >> isViennaIotaExpressionNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIotaExpressionNode >> label [
 
 	^ 'IotaExpression'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaIotaExpressionNode >> lookupIdentifier: aString [
 
 	^ (self bind bindsIdentifier: aString)
@@ -103,7 +104,7 @@ ViennaIotaExpressionNode >> lookupIdentifier: aString [
 		  ifFalse: [ nil ]
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaIotaExpressionNode >> maximalType [
 
 	self bind typecheck.
@@ -111,13 +112,13 @@ ViennaIotaExpressionNode >> maximalType [
 	^ self bind pattern typecheck
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaIotaExpressionNode >> operatorPrecedence [
 
 	^ 30
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIotaExpressionNode >> pattern [
 
 	^ self bind pattern

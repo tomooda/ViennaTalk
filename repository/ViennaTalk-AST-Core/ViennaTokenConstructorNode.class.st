@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaTokenConstructorNode,
-	#superclass : #ViennaExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaTokenConstructorNode',
+	#superclass : 'ViennaExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaTokenConstructorNode class >> expression: aViennaExpressionNode [
 
 	^ (self new: 1)
@@ -13,19 +14,19 @@ ViennaTokenConstructorNode class >> expression: aViennaExpressionNode [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTokenConstructorNode >> expression [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTokenConstructorNode >> expression: aViennaExpressionNode [
 
 	self at: 1 put: aViennaExpressionNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaTokenConstructorNode >> formatWith: aViennaAbstractFormatter [
 
 	| expression |
@@ -39,25 +40,25 @@ ViennaTokenConstructorNode >> formatWith: aViennaAbstractFormatter [
 			   ifFalse: [ expression ]) ++ ')'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTokenConstructorNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self expression freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTokenConstructorNode >> isViennaTokenConstructorNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTokenConstructorNode >> label [
 
 	^ 'TokenConstructor'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaTokenConstructorNode >> maximalType [
 
 	self expression typecheck.

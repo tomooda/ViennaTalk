@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaVarInformationNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaVarInformationNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaVarInformationNode class >> mode: aString nameList: aViennaNameListNode type: aViennaTypeNode [
 
 	^ (self new: 3)
@@ -15,13 +16,13 @@ ViennaVarInformationNode class >> mode: aString nameList: aViennaNameListNode ty
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaVarInformationNode >> boundIdentifiersDo: aBlock [
 
 	self nameList do: [ :identifier | aBlock cull: identifier cull: self ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaVarInformationNode >> formatWith: aViennaAbstractFormatter [
 
 	| mode nameList type |
@@ -34,25 +35,25 @@ ViennaVarInformationNode >> formatWith: aViennaAbstractFormatter [
 	^ mode ++ aViennaAbstractFormatter space ++ nameList ++ type
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaVarInformationNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self type freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaVarInformationNode >> isViennaVarInformationNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaVarInformationNode >> label [
 
 	^ 'VarInformation'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaVarInformationNode >> maximalType [
 
 	self nameList do: [ :name |
@@ -76,37 +77,37 @@ ViennaVarInformationNode >> maximalType [
 	^ ViennaType unit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaVarInformationNode >> mode [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaVarInformationNode >> mode: aString [
 
 	self at: 1 put: aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaVarInformationNode >> nameList [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaVarInformationNode >> nameList: aViennaNameListNode [
 
 	self at: 2 put: aViennaNameListNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaVarInformationNode >> type [
 
 	^ self at: 3
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaVarInformationNode >> type: aViennaTypeNode [
 
 	self at: 3 put: aViennaTypeNode

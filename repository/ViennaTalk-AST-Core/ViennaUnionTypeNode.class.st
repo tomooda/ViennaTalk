@@ -1,17 +1,18 @@
 Class {
-	#name : #ViennaUnionTypeNode,
-	#superclass : #ViennaTypeNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaUnionTypeNode',
+	#superclass : 'ViennaTypeNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaUnionTypeNode >> asMaximalViennaType [
 
 	^ ViennaType union: (self collect: #asMaximalViennaType)
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaUnionTypeNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter
@@ -20,25 +21,25 @@ ViennaUnionTypeNode >> formatWith: aViennaAbstractFormatter [
 		  ifEmpty: [ aViennaAbstractFormatter empty ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaUnionTypeNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self do: [ :type | type freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaUnionTypeNode >> isViennaUnionTypeNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUnionTypeNode >> label [
 
 	^ 'UnionType'
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaUnionTypeNode >> operatorPrecedence [
 
 	^ 2

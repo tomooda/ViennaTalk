@@ -1,33 +1,34 @@
 Class {
-	#name : #ViennaUnitTypeNode,
-	#superclass : #ViennaTypeNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaUnitTypeNode',
+	#superclass : 'ViennaTypeNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaUnitTypeNode >> asMaximalViennaType [
 
 	^ ViennaType unit
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaUnitTypeNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter typeName: '()'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaUnitTypeNode >> freeIdentifiersExcept: aSet do: aBlock [
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaUnitTypeNode >> isViennaUnitTypeNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUnitTypeNode >> label [
 
 	^ 'UnitType'

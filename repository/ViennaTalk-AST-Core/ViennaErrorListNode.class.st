@@ -1,17 +1,18 @@
 Class {
-	#name : #ViennaErrorListNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaErrorListNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaErrorListNode >> boundIdentifiersDo: aBlock [
 
 	self do: [ :error | error boundIdentifiersDo: aBlock ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaErrorListNode >> formatWith: aViennaAbstractFormatter [
 
 	^ self
@@ -21,25 +22,25 @@ ViennaErrorListNode >> formatWith: aViennaAbstractFormatter [
 			  ++ (aViennaAbstractFormatter format: node) ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaErrorListNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self do: [ :error | error freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaErrorListNode >> isViennaErrorListNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaErrorListNode >> label [
 
 	^ 'ErrorList'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaErrorListNode >> maximalType [
 
 	self do: #typecheck.

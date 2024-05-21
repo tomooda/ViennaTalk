@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaSetBindNode,
-	#superclass : #ViennaSetSeqBindNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaSetBindNode',
+	#superclass : 'ViennaSetSeqBindNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSetBindNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter
@@ -14,19 +15,19 @@ ViennaSetBindNode >> formatWith: aViennaAbstractFormatter [
 		  arg: (aViennaAbstractFormatter format: self expression)
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaSetBindNode >> isViennaSetBindNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSetBindNode >> label [
 
 	^ 'SetBind'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaSetBindNode >> maximalType [
 
 	| basetype |
@@ -45,7 +46,7 @@ ViennaSetBindNode >> maximalType [
 					  ++ ' not agree with ' ++ basetype printString ]
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaSetBindNode >> maximalType: aViennaType [
 
 	| basetype |

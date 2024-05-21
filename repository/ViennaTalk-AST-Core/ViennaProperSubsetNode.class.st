@@ -1,47 +1,48 @@
 Class {
-	#name : #ViennaProperSubsetNode,
-	#superclass : #ViennaBinaryOperatorExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaProperSubsetNode',
+	#superclass : 'ViennaBinaryOperatorExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaProperSubsetNode >> formatOperatorWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter psubset
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaProperSubsetNode >> isViennaProperSubsetNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaProperSubsetNode >> label [
 
 	^ 'ProperSubset'
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaProperSubsetNode >> operatorPrecedence [
 
 	^ 21
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaProperSubsetNode >> paramType1 [
 
 	^ ViennaType any set
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaProperSubsetNode >> paramType2 [
 
 	^ ViennaType any set
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaProperSubsetNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
 
 	^ (aViennaType1 basetype isCompatibleWith: aViennaType2 basetype)

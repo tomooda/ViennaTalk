@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaUnaryOperatorExpressionNode,
-	#superclass : #ViennaExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaUnaryOperatorExpressionNode',
+	#superclass : 'ViennaExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaUnaryOperatorExpressionNode class >> expression: aViennaExpressionNode [
 
 	^ (self new: 1)
@@ -13,31 +14,31 @@ ViennaUnaryOperatorExpressionNode class >> expression: aViennaExpressionNode [
 		  yourself
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaUnaryOperatorExpressionNode class >> isAbstract [
 
 	^ self = ViennaUnaryOperatorExpressionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUnaryOperatorExpressionNode >> expression [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUnaryOperatorExpressionNode >> expression: aViennaExpressionNode [
 
 	self at: 1 put: aViennaExpressionNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaUnaryOperatorExpressionNode >> formatOperatorWith: aViennaAbstractFormatter [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaUnaryOperatorExpressionNode >> formatWith: aViennaAbstractFormatter [
 
 	^ (self formatOperatorWith: aViennaAbstractFormatter)
@@ -45,19 +46,19 @@ ViennaUnaryOperatorExpressionNode >> formatWith: aViennaAbstractFormatter [
 	  ++ (aViennaAbstractFormatter format: self expression)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaUnaryOperatorExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self expression freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaUnaryOperatorExpressionNode >> isViennaUnaryOperatorExpressionNode [
 
 	^ true
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaUnaryOperatorExpressionNode >> maximalType [
 
 	^ ViennaType
@@ -70,13 +71,13 @@ ViennaUnaryOperatorExpressionNode >> maximalType [
 		  ifUnit: [ ViennaTypeError signalOn: self ]
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaUnaryOperatorExpressionNode >> paramType [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaUnaryOperatorExpressionNode >> returnTypeFor: aViennaType [
 
 	^ self subclassResponsibility

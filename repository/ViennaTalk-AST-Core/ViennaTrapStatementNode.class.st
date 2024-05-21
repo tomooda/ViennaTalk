@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaTrapStatementNode,
-	#superclass : #ViennaStatementNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaTrapStatementNode',
+	#superclass : 'ViennaStatementNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaTrapStatementNode class >> pattern: aViennaPatternNode handlerStatement: aViennaStatementNode1 statement: aViennaStatementNode2 [
 
 	^ (self new: 3)
@@ -15,7 +16,7 @@ ViennaTrapStatementNode class >> pattern: aViennaPatternNode handlerStatement: a
 		  yourself
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaTrapStatementNode >> definitionOfLocalName: aString [
 
 	self pattern
@@ -25,7 +26,7 @@ ViennaTrapStatementNode >> definitionOfLocalName: aString [
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaTrapStatementNode >> findResolverForIdentifier: aString [
 
 	^ (self pattern bindsIdentifier: aString)
@@ -33,7 +34,7 @@ ViennaTrapStatementNode >> findResolverForIdentifier: aString [
 		  ifFalse: [ super findResolverForIdentifier: aString ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaTrapStatementNode >> formatWith: aViennaAbstractFormatter [
 
 	| pattern handler statement |
@@ -75,7 +76,7 @@ ViennaTrapStatementNode >> formatWith: aViennaAbstractFormatter [
 						  trap ++ (aViennaAbstractFormatter keyword: ' in ') ++ statement ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTrapStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self statement freeIdentifiersExcept: aSet do: aBlock.
@@ -85,31 +86,31 @@ ViennaTrapStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
 		do: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTrapStatementNode >> handlerStatement [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTrapStatementNode >> handlerStatement: aViennaStatementNode [
 
 	self at: 2 put: aViennaStatementNode
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTrapStatementNode >> isViennaTrapStatementNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTrapStatementNode >> label [
 
 	^ 'TrapStatement'
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaTrapStatementNode >> lookupIdentifier: aString [
 
 	^ (self pattern bindsIdentifier: aString)
@@ -117,14 +118,14 @@ ViennaTrapStatementNode >> lookupIdentifier: aString [
 		  ifFalse: [ nil ]
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaTrapStatementNode >> maximalType [
 
 	self pattern typecheck.
 	^ self handlerStatement typecheck + self statement typecheck
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTrapStatementNode >> narrowestStatementWithFreeIdentifiers: anArrayOfString [
 
 	| s1 s2 |
@@ -140,25 +141,25 @@ ViennaTrapStatementNode >> narrowestStatementWithFreeIdentifiers: anArrayOfStrin
 	^ s1 ifNotNil: [ s2 ifNotNil: [ self ] ifNil: [ s1 ] ] ifNil: [ s2 ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTrapStatementNode >> pattern [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTrapStatementNode >> pattern: aViennaPatternNode [
 
 	self at: 1 put: aViennaPatternNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTrapStatementNode >> statement [
 
 	^ self at: 3
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTrapStatementNode >> statement: aViennaStatementNode [
 
 	self at: 3 put: aViennaStatementNode

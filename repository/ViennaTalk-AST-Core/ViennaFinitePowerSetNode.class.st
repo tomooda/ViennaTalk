@@ -1,29 +1,30 @@
 Class {
-	#name : #ViennaFinitePowerSetNode,
-	#superclass : #ViennaUnaryOperatorExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaFinitePowerSetNode',
+	#superclass : 'ViennaUnaryOperatorExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaFinitePowerSetNode >> formatOperatorWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter power
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaFinitePowerSetNode >> isViennaFinitePowerSetNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFinitePowerSetNode >> label [
 
 	^ 'FinitePowerSet'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaFinitePowerSetNode >> maximalType: aViennaType [
 
 	| basetype |
@@ -38,19 +39,19 @@ ViennaFinitePowerSetNode >> maximalType: aViennaType [
 	super maximalType: aViennaType
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaFinitePowerSetNode >> operatorPrecedence [
 
 	^ 36
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaFinitePowerSetNode >> paramType [
 
 	^ ViennaType any set
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaFinitePowerSetNode >> returnTypeFor: aViennaType [
 
 	^ aViennaType basetype set set1

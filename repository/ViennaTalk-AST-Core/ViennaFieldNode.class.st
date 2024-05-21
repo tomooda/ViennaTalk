@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaFieldNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaFieldNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaFieldNode class >> identifier: aString equalityAbstraction: aBoolean type: aViennaTypeNode [
 
 	^ (self new: 3)
@@ -15,7 +16,7 @@ ViennaFieldNode class >> identifier: aString equalityAbstraction: aBoolean type:
 		  yourself
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaFieldNode >> asMaximalViennaType [
 
 	^ Array
@@ -24,7 +25,7 @@ ViennaFieldNode >> asMaximalViennaType [
 		  with: self type asMaximalViennaType
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaFieldNode >> asMaximalViennaTypeAny [
 
 	^ Array
@@ -33,25 +34,25 @@ ViennaFieldNode >> asMaximalViennaTypeAny [
 		  with: ViennaType any
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaFieldNode >> boundIdentifiersDo: aBlock [
 
 	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFieldNode >> equalityAbstraction [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFieldNode >> equalityAbstraction: aBoolean [
 
 	self at: 2 put: aBoolean
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaFieldNode >> formatWith: aViennaAbstractFormatter [
 
 	| name equalityAbstraction type |
@@ -64,49 +65,49 @@ ViennaFieldNode >> formatWith: aViennaAbstractFormatter [
 			    ifFalse: [ ' : ' ]) ]) ++ type
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaFieldNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self type freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFieldNode >> identifier [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFieldNode >> identifier: aString [
 
 	self at: 1 put: aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaFieldNode >> isViennaFieldNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFieldNode >> label [
 
 	^ 'Field'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaFieldNode >> maximalType [
 
 	^ self type typecheck
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFieldNode >> type [
 
 	^ self at: 3
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFieldNode >> type: aViennaTypeNode [
 
 	self at: 3 put: aViennaTypeNode

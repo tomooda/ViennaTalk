@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaMapMunionPatternNode,
-	#superclass : #ViennaPatternNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaMapMunionPatternNode',
+	#superclass : 'ViennaPatternNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaMapMunionPatternNode class >> pattern: aViennaPatternNode1 pattern: aViennaPatternNode2 [
 
 	^ (self new: 2)
@@ -14,14 +15,14 @@ ViennaMapMunionPatternNode class >> pattern: aViennaPatternNode1 pattern: aVienn
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaMapMunionPatternNode >> boundIdentifiersDo: aBlock [
 
 	self pattern1 boundIdentifiersDo: aBlock.
 	self pattern2 boundIdentifiersDo: aBlock
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaMapMunionPatternNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter
@@ -30,26 +31,26 @@ ViennaMapMunionPatternNode >> formatWith: aViennaAbstractFormatter [
 		  arg: (aViennaAbstractFormatter format: self pattern2)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaMapMunionPatternNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self pattern1 freeIdentifiersExcept: aSet do: aBlock.
 	self pattern2 freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaMapMunionPatternNode >> isViennaMapMunionPatternNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapMunionPatternNode >> label [
 
 	^ 'MapMunionPattern'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaMapMunionPatternNode >> maximalType [
 
 	| keytype valuetype |
@@ -74,7 +75,7 @@ ViennaMapMunionPatternNode >> maximalType [
 		  ifTrue: [ ViennaType unit ]
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaMapMunionPatternNode >> maximalType: aViennaType [
 
 	self pattern1 maximalType: aViennaType.
@@ -82,25 +83,25 @@ ViennaMapMunionPatternNode >> maximalType: aViennaType [
 	super maximalType: self maximalType
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapMunionPatternNode >> pattern1 [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapMunionPatternNode >> pattern1: aViennaPatternNode [
 
 	self at: 1 put: aViennaPatternNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapMunionPatternNode >> pattern2 [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapMunionPatternNode >> pattern2: aViennaPatternNode [
 
 	self at: 2 put: aViennaPatternNode

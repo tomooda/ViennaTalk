@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaTuplePatternNode,
-	#superclass : #ViennaPatternNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaTuplePatternNode',
+	#superclass : 'ViennaPatternNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaTuplePatternNode class >> patternList: aViennaPatternListNode [
 
 	^ (self new: 1)
@@ -13,20 +14,20 @@ ViennaTuplePatternNode class >> patternList: aViennaPatternListNode [
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaTuplePatternNode class >> withAll: aCollectionOfViennaPatternNode [
 
 	^ self patternList:
 		  (ViennaPatternListNode withAll: aCollectionOfViennaPatternNode)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTuplePatternNode >> boundIdentifiersDo: aBlock [
 
 	self patternList boundIdentifiersDo: aBlock
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaTuplePatternNode >> formatWith: aViennaAbstractFormatter [
 
 	| patternList |
@@ -39,31 +40,31 @@ ViennaTuplePatternNode >> formatWith: aViennaAbstractFormatter [
 			   ifFalse: [ patternList ]) ++ ')'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTuplePatternNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self patternList freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTuplePatternNode >> isViennaTuplePatternNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTuplePatternNode >> label [
 
 	^ 'TuplePattern'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaTuplePatternNode >> maximalType [
 
 	^ ViennaType product: (self patternList collect: #typecheck)
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaTuplePatternNode >> maximalType: aViennaType [
 
 	| arity types |
@@ -80,13 +81,13 @@ ViennaTuplePatternNode >> maximalType: aViennaType [
 	^ super maximalType: self maximalType
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTuplePatternNode >> patternList [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTuplePatternNode >> patternList: aViennaPatternListNode [
 
 	self at: 1 put: aViennaPatternListNode

@@ -1,47 +1,48 @@
 Class {
-	#name : #ViennaNotEqualNode,
-	#superclass : #ViennaBinaryOperatorExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaNotEqualNode',
+	#superclass : 'ViennaBinaryOperatorExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaNotEqualNode >> formatOperatorWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter notEqual
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNotEqualNode >> isViennaNotEqualNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNotEqualNode >> label [
 
 	^ 'NotEqual'
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaNotEqualNode >> operatorPrecedence [
 
 	^ 21
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNotEqualNode >> paramType1 [
 
 	^ ViennaType any
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNotEqualNode >> paramType2 [
 
 	^ ViennaType any
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNotEqualNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
 
 	^ (aViennaType1 isCompatibleWith: aViennaType2)

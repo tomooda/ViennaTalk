@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaTraceRepeatRangePatternNode,
-	#superclass : #ViennaTraceRepeatPatternNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaTraceRepeatRangePatternNode',
+	#superclass : 'ViennaTraceRepeatPatternNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #operators }
+{ #category : 'operators' }
 ViennaTraceRepeatRangePatternNode class >> from: anInteger to: anotherInteger [
 
 	^ (self new: 2)
@@ -14,7 +15,7 @@ ViennaTraceRepeatRangePatternNode class >> from: anInteger to: anotherInteger [
 		  yourself
 ]
 
-{ #category : #operators }
+{ #category : 'operators' }
 ViennaTraceRepeatRangePatternNode class >> times: anInteger [
 
 	^ (self new: 1)
@@ -22,7 +23,7 @@ ViennaTraceRepeatRangePatternNode class >> times: anInteger [
 		  yourself
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaTraceRepeatRangePatternNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter empty ++ '{' ++ self times1 printString
@@ -31,41 +32,40 @@ ViennaTraceRepeatRangePatternNode >> formatWith: aViennaAbstractFormatter [
 			   ifNil: [ aViennaAbstractFormatter empty ]) ++ '}'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTraceRepeatRangePatternNode >> label [
 
 	^ 'TraceRepeatRangePattern'
 ]
 
-{ #category : #enumerating }
-ViennaTraceRepeatRangePatternNode >> numbersDo: aBlock [
+{ #category : 'accessing' }
+ViennaTraceRepeatRangePatternNode >> range [
 
-	self size = 1
-		ifTrue: [ aBlock value: self times1 ]
-		ifFalse: [
-			(self times1 min: self times2) to: (self times1 max: self times2)
-			do: aBlock ]
+	^ self size = 1
+		  ifTrue: [ { self times1 } ]
+		  ifFalse: [
+		  (self times1 min: self times2) to: (self times1 max: self times2) ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTraceRepeatRangePatternNode >> times1 [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTraceRepeatRangePatternNode >> times1: anInteger [
 
 	self at: 1 put: anInteger
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTraceRepeatRangePatternNode >> times2 [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTraceRepeatRangePatternNode >> times2: anInteger [
 
 	self at: 2 put: anInteger

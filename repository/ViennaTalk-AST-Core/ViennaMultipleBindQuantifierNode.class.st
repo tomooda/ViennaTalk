@@ -1,29 +1,30 @@
 Class {
-	#name : #ViennaMultipleBindQuantifierNode,
-	#superclass : #ViennaExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaMultipleBindQuantifierNode',
+	#superclass : 'ViennaExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaMultipleBindQuantifierNode class >> isAbstract [
 
 	^ self = ViennaMultipleBindQuantifierNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMultipleBindQuantifierNode >> bindList [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMultipleBindQuantifierNode >> bindList: aViennaBindListNode [
 
 	self at: 1 put: aViennaBindListNode
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaMultipleBindQuantifierNode >> definitionOfLocalName: aString [
 
 	self patternsDo: [ :pattern |
@@ -33,19 +34,19 @@ ViennaMultipleBindQuantifierNode >> definitionOfLocalName: aString [
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMultipleBindQuantifierNode >> expression [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMultipleBindQuantifierNode >> expression: aViennaExpressionNode [
 
 	self at: 2 put: aViennaExpressionNode
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaMultipleBindQuantifierNode >> findResolverForIdentifier: aString [
 
 	^ (self bindList bindsIdentifier: aString)
@@ -53,7 +54,7 @@ ViennaMultipleBindQuantifierNode >> findResolverForIdentifier: aString [
 		  ifFalse: [ super findResolverForIdentifier: aString ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaMultipleBindQuantifierNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self bindList freeIdentifiersExcept: aSet do: aBlock.
@@ -62,19 +63,19 @@ ViennaMultipleBindQuantifierNode >> freeIdentifiersExcept: aSet do: aBlock [
 		do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaMultipleBindQuantifierNode >> hasScope [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaMultipleBindQuantifierNode >> isViennaMultipleBindQuantifierNode [
 
 	^ true
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaMultipleBindQuantifierNode >> lookupIdentifier: aString [
 
 	self multipleBindsDo: [ :multibind |
@@ -83,20 +84,20 @@ ViennaMultipleBindQuantifierNode >> lookupIdentifier: aString [
 	^ nil
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaMultipleBindQuantifierNode >> maximalType [
 
 	self bindList typecheck.
 	^ self expression typecheck: ViennaType bool
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaMultipleBindQuantifierNode >> multipleBindsDo: aBlock [
 
 	self bindList do: aBlock
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaMultipleBindQuantifierNode >> patternsDo: aBlock [
 
 	self multipleBindsDo: [ :multipleBind |

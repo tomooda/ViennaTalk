@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaRecordConstructorNode,
-	#superclass : #ViennaExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaRecordConstructorNode',
+	#superclass : 'ViennaExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaRecordConstructorNode class >> name: aViennaNameNode expressionList: aViennaExpressionListNode [
 
 	^ (self new: 2)
@@ -14,19 +15,19 @@ ViennaRecordConstructorNode class >> name: aViennaNameNode expressionList: aVien
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRecordConstructorNode >> expressionList [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRecordConstructorNode >> expressionList: aViennaExpressionListNode [
 
 	self at: 2 put: aViennaExpressionListNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaRecordConstructorNode >> formatWith: aViennaAbstractFormatter [
 
 	| constructor expressionList |
@@ -41,26 +42,26 @@ ViennaRecordConstructorNode >> formatWith: aViennaAbstractFormatter [
 			   ifFalse: [ expressionList ]) ++ ')'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaRecordConstructorNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self name freeIdentifiersExcept: aSet do: aBlock.
 	self expressionList freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRecordConstructorNode >> isViennaRecordConstructorNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRecordConstructorNode >> label [
 
 	^ 'RecordConstructor'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaRecordConstructorNode >> maximalType [
 
 	^ (self name resolve ifNotNil: #typecheck)
@@ -84,13 +85,13 @@ ViennaRecordConstructorNode >> maximalType [
 				  signal: 'Record type ' , self name source , ' is not defined' ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRecordConstructorNode >> name [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRecordConstructorNode >> name: aViennaNameNode [
 
 	self at: 1 put: aViennaNameNode

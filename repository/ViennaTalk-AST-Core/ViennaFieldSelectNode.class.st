@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaFieldSelectNode,
-	#superclass : #ViennaExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaFieldSelectNode',
+	#superclass : 'ViennaExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaFieldSelectNode class >> expression: aViennaExpression field: aString [
 
 	^ (self new: 2)
@@ -14,31 +15,31 @@ ViennaFieldSelectNode class >> expression: aViennaExpression field: aString [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFieldSelectNode >> expression [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFieldSelectNode >> expression: aViennaExpressionNode [
 
 	self at: 1 put: aViennaExpressionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFieldSelectNode >> field [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFieldSelectNode >> field: aString [
 
 	self at: 2 put: aString
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaFieldSelectNode >> formatWith: aViennaAbstractFormatter [
 
 	| record field |
@@ -47,31 +48,31 @@ ViennaFieldSelectNode >> formatWith: aViennaAbstractFormatter [
 	^ aViennaAbstractFormatter empty ++ record ++ '.' ++ field
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaFieldSelectNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self expression freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaFieldSelectNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
 
 	^ aBlock1 value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFieldSelectNode >> isViennaFieldSelectNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFieldSelectNode >> label [
 
 	^ 'FieldSelect'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFieldSelectNode >> maximalType [
 
 	| type |
@@ -86,7 +87,7 @@ ViennaFieldSelectNode >> maximalType [
 			  signal: 'The field ' , self field , ' is not accessible' ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaFieldSelectNode >> operatorPrecedence [
 
 	^ 40

@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaAbstractFunctionTypeNode,
-	#superclass : #ViennaTypeNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaAbstractFunctionTypeNode',
+	#superclass : 'ViennaTypeNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaAbstractFunctionTypeNode class >> argumentType: aViennaTypeNode1 returnType: aViennaTypeNode2 [
 
 	^ (self new: 2)
@@ -14,25 +15,25 @@ ViennaAbstractFunctionTypeNode class >> argumentType: aViennaTypeNode1 returnTyp
 		  yourself
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaAbstractFunctionTypeNode class >> isAbstract [
 
 	^ self = ViennaAbstractFunctionTypeNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAbstractFunctionTypeNode >> argumentType [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAbstractFunctionTypeNode >> argumentType: aViennaTypeNode [
 
 	self at: 1 put: aViennaTypeNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAbstractFunctionTypeNode >> argumentTypes [
 
 	| argType |
@@ -42,26 +43,26 @@ ViennaAbstractFunctionTypeNode >> argumentTypes [
 		  ifFalse: [ Array with: argType ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaAbstractFunctionTypeNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self argumentType freeIdentifiersExcept: aSet do: aBlock.
 	self returnType freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaAbstractFunctionTypeNode >> isViennaAbstractFunctionTypeNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAbstractFunctionTypeNode >> returnType [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAbstractFunctionTypeNode >> returnType: aViennaTypeNode [
 
 	self at: 2 put: aViennaTypeNode

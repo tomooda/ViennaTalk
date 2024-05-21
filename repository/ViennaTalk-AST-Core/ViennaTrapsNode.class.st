@@ -1,17 +1,18 @@
 Class {
-	#name : #ViennaTrapsNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaTrapsNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTrapsNode >> boundIdentifiersDo: aBlock [
 
 	
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaTrapsNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter empty ++ '{' ++ (self
@@ -25,7 +26,7 @@ ViennaTrapsNode >> formatWith: aViennaAbstractFormatter [
 		   ifEmpty: [ aViennaAbstractFormatter empty ]) ++ '}'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTrapsNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self patternsAndStatementsDo: [ :pattern :statement |
@@ -35,19 +36,19 @@ ViennaTrapsNode >> freeIdentifiersExcept: aSet do: aBlock [
 			do: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTrapsNode >> isViennaTrapsNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTrapsNode >> label [
 
 	^ 'Traps'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaTrapsNode >> maximalType [
 
 	| type |
@@ -58,7 +59,7 @@ ViennaTrapsNode >> maximalType [
 	^ type
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTrapsNode >> patterns [
 
 	^ Array streamContents: [ :stream |
@@ -66,7 +67,7 @@ ViennaTrapsNode >> patterns [
 			  stream nextPut: pattern ] ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaTrapsNode >> patternsAndStatementsDo: aBlock [
 
 	1 to: self size by: 2 do: [ :index |
@@ -76,7 +77,7 @@ ViennaTrapsNode >> patternsAndStatementsDo: aBlock [
 		aBlock value: pattern value: statement ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTrapsNode >> statements [
 
 	^ Array streamContents: [ :stream |

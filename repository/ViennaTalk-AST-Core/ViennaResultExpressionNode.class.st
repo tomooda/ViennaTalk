@@ -1,33 +1,34 @@
 Class {
-	#name : #ViennaResultExpressionNode,
-	#superclass : #ViennaExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaResultExpressionNode',
+	#superclass : 'ViennaExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaResultExpressionNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter keyword: 'RESULT'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaResultExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaResultExpressionNode >> isViennaResultExpressionNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaResultExpressionNode >> label [
 
 	^ 'ResultExpression'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaResultExpressionNode >> maximalType [
 
 	^ (self

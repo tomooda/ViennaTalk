@@ -1,18 +1,19 @@
 Class {
-	#name : #ViennaEqualDefinitionListNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaEqualDefinitionListNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaEqualDefinitionListNode >> boundIdentifiersDo: aBlock [
 
 	self do: [ :equalDefinition |
 		equalDefinition boundIdentifiersDo: aBlock ]
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaEqualDefinitionListNode >> definitionOfLocalName: aString for: aViennaNode [
 
 	(self indexOf: aViennaNode ifAbsent: [ nil ]) ifNotNil: [ :until |
@@ -26,7 +27,7 @@ ViennaEqualDefinitionListNode >> definitionOfLocalName: aString for: aViennaNode
 	^ self definitionOfLocalName: aString
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaEqualDefinitionListNode >> formatWith: aViennaAbstractFormatter [
 
 	| defs |
@@ -38,7 +39,7 @@ ViennaEqualDefinitionListNode >> formatWith: aViennaAbstractFormatter [
 		   withAll: defs) ++ ';'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaEqualDefinitionListNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	| boundIdentifiers |
@@ -56,7 +57,7 @@ ViennaEqualDefinitionListNode >> freeIdentifiersExcept: aSet do: aBlock [
 			do: aBlock ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaEqualDefinitionListNode >> indexOf: aViennaNode ifAbsent: errorBlock [
 
 	1 to: self size do: [ :index |
@@ -64,25 +65,25 @@ ViennaEqualDefinitionListNode >> indexOf: aViennaNode ifAbsent: errorBlock [
 	^ errorBlock value
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaEqualDefinitionListNode >> isViennaEqualDefinitionListNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaEqualDefinitionListNode >> label [
 
 	^ 'EqualDefinitionList'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaEqualDefinitionListNode >> listDelimiter [
 
 	^ ';' , String cr
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaEqualDefinitionListNode >> maximalType [
 
 	self do: #typecheck.

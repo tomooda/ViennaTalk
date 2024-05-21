@@ -1,41 +1,42 @@
 Class {
-	#name : #ViennaConditionalExpressionListNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaConditionalExpressionListNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaConditionalExpressionListNode >> boundIdentifiersDo: aBlock [
 
 	
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaConditionalExpressionListNode >> formatWith: aViennaAbstractFormatter [
 
 	
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaConditionalExpressionListNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self do: [ :node | node freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaConditionalExpressionListNode >> isViennaConditionalExpressionListNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaConditionalExpressionListNode >> label [
 
 	^ 'ConditionalExpressionList'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaConditionalExpressionListNode >> maximalType [
 
 	^ self
@@ -44,7 +45,7 @@ ViennaConditionalExpressionListNode >> maximalType [
 			  type + conditionalExpression typecheck ]
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaConditionalExpressionListNode >> maximalType: aViennaType [
 
 	^ self do: [ :conditionalExpression |

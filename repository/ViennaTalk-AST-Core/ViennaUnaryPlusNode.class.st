@@ -1,41 +1,42 @@
 Class {
-	#name : #ViennaUnaryPlusNode,
-	#superclass : #ViennaUnaryOperatorExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaUnaryPlusNode',
+	#superclass : 'ViennaUnaryOperatorExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaUnaryPlusNode >> formatOperatorWith: aViennaAbstractFormatter [
 
 	^ '+'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaUnaryPlusNode >> isViennaUnaryPlusNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUnaryPlusNode >> label [
 
 	^ 'UnaryPlus'
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaUnaryPlusNode >> operatorPrecedence [
 
 	^ 36
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaUnaryPlusNode >> paramType [
 
 	^ ViennaType real
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaUnaryPlusNode >> returnTypeFor: aViennaType [
 
 	^ aViennaType

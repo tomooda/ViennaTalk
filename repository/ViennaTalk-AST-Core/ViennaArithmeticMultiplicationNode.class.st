@@ -1,53 +1,54 @@
 Class {
-	#name : #ViennaArithmeticMultiplicationNode,
-	#superclass : #ViennaBinaryOperatorExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaArithmeticMultiplicationNode',
+	#superclass : 'ViennaBinaryOperatorExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaArithmeticMultiplicationNode >> formatOperatorWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter mul
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaArithmeticMultiplicationNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
 
 	^ aBlock1 value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaArithmeticMultiplicationNode >> isViennaArithmeticMultiplicationNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaArithmeticMultiplicationNode >> label [
 
 	^ 'ArithmeticMultiplication'
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaArithmeticMultiplicationNode >> operatorPrecedence [
 
 	^ 32
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaArithmeticMultiplicationNode >> paramType1 [
 
 	^ ViennaType real
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaArithmeticMultiplicationNode >> paramType2 [
 
 	^ ViennaType real
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaArithmeticMultiplicationNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
 
 	^ (aViennaType1 isIntType and: [ aViennaType2 isIntType ])

@@ -1,17 +1,18 @@
 Class {
-	#name : #ViennaSetEnumPatternNode,
-	#superclass : #ViennaPatternNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaSetEnumPatternNode',
+	#superclass : 'ViennaPatternNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaSetEnumPatternNode >> boundIdentifiersDo: aBlock [
 
 	self do: [ :pattern | pattern boundIdentifiersDo: aBlock ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSetEnumPatternNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter empty ++ '{' ++ (aViennaAbstractFormatter
@@ -19,25 +20,25 @@ ViennaSetEnumPatternNode >> formatWith: aViennaAbstractFormatter [
 		   ifEmpty: [ aViennaAbstractFormatter empty ]) ++ '}'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaSetEnumPatternNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self do: [ :pattern | pattern freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaSetEnumPatternNode >> isViennaSetEnumPatternNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSetEnumPatternNode >> label [
 
 	^ 'SetEnumPattern'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaSetEnumPatternNode >> maximalType [
 
 	^ self
@@ -51,7 +52,7 @@ ViennaSetEnumPatternNode >> maximalType [
 		  ifEmpty: [ ViennaType unit set ]
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaSetEnumPatternNode >> maximalType: aViennaType [
 
 	| basetype |

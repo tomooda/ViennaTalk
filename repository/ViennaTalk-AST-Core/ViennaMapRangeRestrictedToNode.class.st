@@ -1,53 +1,54 @@
 Class {
-	#name : #ViennaMapRangeRestrictedToNode,
-	#superclass : #ViennaBinaryOperatorExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaMapRangeRestrictedToNode',
+	#superclass : 'ViennaBinaryOperatorExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaMapRangeRestrictedToNode >> formatOperatorWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter rangeRestrictedTo
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaMapRangeRestrictedToNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
 
 	^ aBlock1 value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapRangeRestrictedToNode >> isViennaMapRangeRestrictedToNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapRangeRestrictedToNode >> label [
 
 	^ 'MapRangeRestrictedTo'
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaMapRangeRestrictedToNode >> operatorPrecedence [
 
 	^ 35
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapRangeRestrictedToNode >> paramType1 [
 
 	^ ViennaType any mapTo: ViennaType any
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapRangeRestrictedToNode >> paramType2 [
 
 	^ ViennaType any set
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapRangeRestrictedToNode >> returnTypeFor: aViennaType1 and: aViennaType2 [
 
 	| domainbasetype rangebasetype setbasetype |

@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaValueDefinitionNode,
-	#superclass : #ViennaTopLevelDefinitionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaValueDefinitionNode',
+	#superclass : 'ViennaTopLevelDefinitionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaValueDefinitionNode class >> access: aViennaAccessNode pattern: aViennaPatternNode type: aViennaTypeNode expression: aViennaExpressionNode [
 
 	^ (self new: 4)
@@ -16,7 +17,7 @@ ViennaValueDefinitionNode class >> access: aViennaAccessNode pattern: aViennaPat
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaValueDefinitionNode class >> pattern: aViennaPatternNode type: aViennaTypeNode expression: aViennaExpressionNode [
 
 	^ self
@@ -26,25 +27,25 @@ ViennaValueDefinitionNode class >> pattern: aViennaPatternNode type: aViennaType
 		  expression: aViennaExpressionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaValueDefinitionNode >> access [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaValueDefinitionNode >> access: aViennaAccessNode [
 
 	self at: 1 put: aViennaAccessNode
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaValueDefinitionNode >> asAccessDefinition [
 
 	^ self
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaValueDefinitionNode >> asExport [
 
 	^ ViennaValueExportNode
@@ -56,7 +57,7 @@ ViennaValueDefinitionNode >> asExport [
 				   ifFalse: [ nil ])
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaValueDefinitionNode >> asImportDefinitionIn: moduleNode [
 
 	^ ViennaImportDefinitionNode
@@ -72,25 +73,25 @@ ViennaValueDefinitionNode >> asImportDefinitionIn: moduleNode [
 							     rename: nil ])))
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaValueDefinitionNode >> boundIdentifiersDo: aBlock [
 
 	self pattern boundIdentifiersDo: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaValueDefinitionNode >> expression [
 
 	^ self at: 4
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaValueDefinitionNode >> expression: aViennaExpressionNode [
 
 	self at: 4 put: aViennaExpressionNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaValueDefinitionNode >> formatWith: aViennaAbstractFormatter [
 
 	| access pattern type expression |
@@ -109,7 +110,7 @@ ViennaValueDefinitionNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: expression
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaValueDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self pattern freeIdentifiersExcept: aSet do: aBlock.
@@ -118,19 +119,19 @@ ViennaValueDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
 	self expression freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaValueDefinitionNode >> hasOnlyOnePatternIdentifier [
 
 	^ self pattern uniqueBoundIdentifiers size = 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaValueDefinitionNode >> identifier [
 
 	^ self pattern source
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaValueDefinitionNode >> identifier: aString [
 
 	self hasOnlyOnePatternIdentifier ifTrue: [
@@ -138,7 +139,7 @@ ViennaValueDefinitionNode >> identifier: aString [
 			pattern identifier: aString ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaValueDefinitionNode >> identifiers [
 
 	^ Array streamContents: [ :stream |
@@ -147,43 +148,43 @@ ViennaValueDefinitionNode >> identifiers [
 			  do: [ :node | stream nextPut: node identifier ] ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaValueDefinitionNode >> isValueDefinition [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaValueDefinitionNode >> isViennaAccessValueDefinitionNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaValueDefinitionNode >> isViennaExportableTopLevelDefinitionNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaValueDefinitionNode >> isViennaTopLevelDefinitionNode [
 
 	^ (self detectParent: #isViennaLetNode ifNone: [ nil ]) isNil
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaValueDefinitionNode >> isViennaValueDefinitionNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaValueDefinitionNode >> label [
 
 	^ 'ValueDefinition'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaValueDefinitionNode >> maximalType [
 
 	| leftType rightType |
@@ -195,19 +196,19 @@ ViennaValueDefinitionNode >> maximalType [
 	^ ViennaType unit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaValueDefinitionNode >> pattern [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaValueDefinitionNode >> pattern: aViennaPatternNode [
 
 	self at: 2 put: aViennaPatternNode
 ]
 
-{ #category : #'class membership' }
+{ #category : 'class membership' }
 ViennaValueDefinitionNode >> respondsTo: aSymbol [
 
 	aSymbol = #identifier: ifTrue: [
@@ -215,13 +216,13 @@ ViennaValueDefinitionNode >> respondsTo: aSymbol [
 	^ super respondsTo: aSymbol
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaValueDefinitionNode >> type [
 
 	^ self at: 3
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaValueDefinitionNode >> type: aViennaTypeNode [
 
 	self at: 3 put: aViennaTypeNode

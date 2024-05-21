@@ -1,17 +1,18 @@
 Class {
-	#name : #ViennaSeqTypeNode,
-	#superclass : #ViennaUnaryTypeConstructorNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaSeqTypeNode',
+	#superclass : 'ViennaUnaryTypeConstructorNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaSeqTypeNode >> asMaximalViennaType [
 
 	^ self type asMaximalViennaType seq
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSeqTypeNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter seqPrefix
@@ -19,19 +20,19 @@ ViennaSeqTypeNode >> formatWith: aViennaAbstractFormatter [
 	  ++ aViennaAbstractFormatter seqPostfix
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaSeqTypeNode >> isViennaSeqTypeNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSeqTypeNode >> label [
 
 	^ 'SeqType'
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSeqTypeNode >> operatorPrecedence [
 
 	^ 5

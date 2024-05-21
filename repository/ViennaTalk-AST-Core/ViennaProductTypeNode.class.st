@@ -1,17 +1,18 @@
 Class {
-	#name : #ViennaProductTypeNode,
-	#superclass : #ViennaTypeNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaProductTypeNode',
+	#superclass : 'ViennaTypeNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaProductTypeNode >> asMaximalViennaType [
 
 	^ ViennaType product: (self collect: #asMaximalViennaType)
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaProductTypeNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter
@@ -20,25 +21,25 @@ ViennaProductTypeNode >> formatWith: aViennaAbstractFormatter [
 		  ifEmpty: [ aViennaAbstractFormatter empty ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaProductTypeNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self do: [ :type | type freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaProductTypeNode >> isViennaProductTypeNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaProductTypeNode >> label [
 
 	^ 'ProductType'
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaProductTypeNode >> operatorPrecedence [
 
 	^ 3

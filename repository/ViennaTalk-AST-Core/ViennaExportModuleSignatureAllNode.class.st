@@ -1,53 +1,54 @@
 Class {
-	#name : #ViennaExportModuleSignatureAllNode,
-	#superclass : #ViennaExportComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaExportModuleSignatureAllNode',
+	#superclass : 'ViennaExportComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaExportModuleSignatureAllNode >> boundIdentifiersDo: aBlock [
 
 	
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaExportModuleSignatureAllNode >> exportedIdentifiersDo: aBlock [
 
 	self module uniqueBoundIdentifiersDo: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExportModuleSignatureAllNode >> exportsIdentifier: aString [
 
 	^ true
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaExportModuleSignatureAllNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter keyword: 'all'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExportModuleSignatureAllNode >> isViennaExportModuleSignatureAllNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExportModuleSignatureAllNode >> label [
 
 	^ 'ExportModuleSignatureAll'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaExportModuleSignatureAllNode >> maximalType [
 
 	^ ViennaType unit
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 ViennaExportModuleSignatureAllNode >> removeIdentifier: aString [
 
 	

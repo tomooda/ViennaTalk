@@ -1,23 +1,24 @@
 Class {
-	#name : #ViennaTypeDefinitionsNode,
-	#superclass : #ViennaSectionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaTypeDefinitionsNode',
+	#superclass : 'ViennaSectionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTypeDefinitionsNode >> isViennaTypeDefinitionsNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTypeDefinitionsNode >> label [
 
 	^ 'TypeDefinitions'
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaTypeDefinitionsNode >> sectionName [
 
 	^ 'types'

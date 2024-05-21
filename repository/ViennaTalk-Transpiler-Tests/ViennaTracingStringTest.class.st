@@ -1,27 +1,28 @@
 Class {
-	#name : #ViennaTracingStringTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-Transpiler-Tests'
+	#name : 'ViennaTracingStringTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-Transpiler-Tests',
+	#package : 'ViennaTalk-Transpiler-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaTracingStringTest >> testAsString [
 	self assert: ('abc' , ('xyz' asViennaTracingString: 1)) asString equals: 'abc' , 'xyz'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaTracingStringTest >> testAsViennaTracingString [
 	| abc |
 	abc := 'abc' asViennaTracingString: 1.
 	self assert: abc asViennaTracingString == abc
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaTracingStringTest >> testAt [
 	self assert: ('abc' asViennaTracingString at: 2) equals: ('abc' at: 2)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaTracingStringTest >> testAtPut [
 	self
 		assert:
@@ -34,12 +35,12 @@ ViennaTracingStringTest >> testAtPut [
 				yourself)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaTracingStringTest >> testBasicAt [
 	self assert: ('abc' asViennaTracingString basicAt: 2) equals: ('abc' basicAt: 2)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaTracingStringTest >> testComma [
 	| abc xyz abcxyz |
 	abc := 'abc' asViennaTracingString: 1.
@@ -53,7 +54,7 @@ ViennaTracingStringTest >> testComma [
 	self assert: abcxyz sources equals: (OrderedCollection with: (1 to: 3) -> 1 with: (4 to: 6) -> 2)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaTracingStringTest >> testCopyFromTo [
 	| abcxyz bcxy |
 	abcxyz := ('abc' asViennaTracingString: 1), ('xyz' asViennaTracingString: 2).
@@ -69,7 +70,7 @@ ViennaTracingStringTest >> testCopyFromTo [
 	
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaTracingStringTest >> testCr [
 	| abc |
 	abc := ('abc' asViennaTracingString: 1).
@@ -85,21 +86,21 @@ ViennaTracingStringTest >> testCr [
 	
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaTracingStringTest >> testEquals [
 	self assert: 'abc' asViennaTracingString = 'abc'.
 	self assert: 'abc' asViennaTracingString = ('abc' asViennaTracingString: 1).
 	self assert: 'abc' = 'abc' asViennaTracingString
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaTracingStringTest >> testHash [
 	| abc |
 	abc := 'abc' asViennaTracingString: 1.
 	self assert: abc hash equals: 'abc' hash
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaTracingStringTest >> testIsViennaTracingString [
 	| abc |
 	abc := 'abc' asViennaTracingString: 1.
@@ -108,7 +109,7 @@ ViennaTracingStringTest >> testIsViennaTracingString [
 	self deny: Object new isViennaTracingString
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaTracingStringTest >> testJoin [
 	| a b c abc |
 	a := 'a' asViennaTracingString: 1.
@@ -124,7 +125,7 @@ ViennaTracingStringTest >> testJoin [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaTracingStringTest >> testNextPut [
 	| stream |
 	stream := 'abc' asViennaTracingString: 1.
@@ -133,7 +134,7 @@ ViennaTracingStringTest >> testNextPut [
 	self assert: stream sources equals: (OrderedCollection with: (1 to: 3) -> 1)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaTracingStringTest >> testNextPutAll [
 	| stream |
 	stream := 'abc' asViennaTracingString: 1.
@@ -143,7 +144,7 @@ ViennaTracingStringTest >> testNextPutAll [
 	
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaTracingStringTest >> testPostCopy [
 	| abc copy |
 	abc := 'abc' asViennaTracingString.
@@ -153,12 +154,12 @@ ViennaTracingStringTest >> testPostCopy [
 	self assert: copy asString equals: 'abc'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaTracingStringTest >> testSize [
 	self assert: 'abc' asViennaTracingString size equals: 3
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaTracingStringTest >> testSourceAtIfAbsent [
 	| abc xyz abcxyz |
 	abc := 'abc' asViennaTracingString: 1.
@@ -169,7 +170,7 @@ ViennaTracingStringTest >> testSourceAtIfAbsent [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaTracingStringTest >> testSpace [
 	| abc |
 	abc := ('abc' asViennaTracingString: 1).

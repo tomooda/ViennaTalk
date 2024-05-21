@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaDefExpressionNode,
-	#superclass : #ViennaExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaDefExpressionNode',
+	#superclass : 'ViennaExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaDefExpressionNode class >> equalDefinitionList: aViennaEqualDefinitionListNode expression: aViennaExpressionNode [
 
 	^ (self new: 2)
@@ -14,7 +15,7 @@ ViennaDefExpressionNode class >> equalDefinitionList: aViennaEqualDefinitionList
 		  yourself
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaDefExpressionNode >> definitionOfLocalName: aString [
 
 	self patternOrBindReverseDo: [ :patternOrBind |
@@ -24,43 +25,43 @@ ViennaDefExpressionNode >> definitionOfLocalName: aString [
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaDefExpressionNode >> definitionOfLocalName: aString for: aViennaNode [
 
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaDefExpressionNode >> equalDefinitionList [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaDefExpressionNode >> equalDefinitionList: aViennaEqualDefinitionListNode [
 
 	self at: 1 put: aViennaEqualDefinitionListNode
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaDefExpressionNode >> equalDefinitionListReverseDo: aBlock [
 
 	self equalDefinitionList reverseDo: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaDefExpressionNode >> expression [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaDefExpressionNode >> expression: aViennaExpressionNode [
 
 	self at: 2 put: aViennaExpressionNode
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaDefExpressionNode >> findResolverForIdentifier: aString [
 
 	^ (self equalDefinitionList bindsIdentifier: aString)
@@ -68,7 +69,7 @@ ViennaDefExpressionNode >> findResolverForIdentifier: aString [
 		  ifFalse: [ super findResolverForIdentifier: aString ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaDefExpressionNode >> formatWith: aViennaAbstractFormatter [
 
 	| defs expression |
@@ -83,7 +84,7 @@ ViennaDefExpressionNode >> formatWith: aViennaAbstractFormatter [
 				   insertCrIfNeeded: expression)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaDefExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self equalDefinitionList freeIdentifiersExcept: aSet do: aBlock.
@@ -93,19 +94,19 @@ ViennaDefExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
 		do: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaDefExpressionNode >> isViennaDefExpressionNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaDefExpressionNode >> label [
 
 	^ 'DefExpression'
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaDefExpressionNode >> lookupIdentifier: aString [
 
 	self equalDefinitionList do: [ :equalDefinition |
@@ -114,27 +115,27 @@ ViennaDefExpressionNode >> lookupIdentifier: aString [
 	^ nil
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaDefExpressionNode >> maximalType [
 
 	self equalDefinitionList do: [ :equalDef | equalDef typecheck ].
 	^ self expression typecheck
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaDefExpressionNode >> maximalType: aViennaType [
 
 	self expression maximalType: aViennaType.
 	super maximalType: aViennaType
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaDefExpressionNode >> operatorPrecedence [
 
 	^ 10
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaDefExpressionNode >> patternOrBindReverseDo: aBlock [
 
 	self equalDefinitionListReverseDo: [ :equalDefinition |

@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaMatchValueNode,
-	#superclass : #ViennaPatternNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaMatchValueNode',
+	#superclass : 'ViennaPatternNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMatchValueNode class >> expression: aViennaExpressionNode [
 
 	^ (self new: 1)
@@ -13,25 +14,25 @@ ViennaMatchValueNode class >> expression: aViennaExpressionNode [
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaMatchValueNode >> boundIdentifiersDo: aBlock [
 
 	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMatchValueNode >> expression [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMatchValueNode >> expression: aViennaExpressionNode [
 
 	self at: 1 put: aViennaExpressionNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaMatchValueNode >> formatWith: aViennaAbstractFormatter [
 
 	| value |
@@ -41,31 +42,31 @@ ViennaMatchValueNode >> formatWith: aViennaAbstractFormatter [
 		  ifFalse: [ aViennaAbstractFormatter empty ++ '(' ++ value ++ ')' ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaMatchValueNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self expression freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaMatchValueNode >> isViennaMatchValueNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMatchValueNode >> label [
 
 	^ 'MatchValue'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaMatchValueNode >> maximalType [
 
 	^ self expression typecheck
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaMatchValueNode >> maximalType: aViennaType [
 
 	super maximalType: self maximalType

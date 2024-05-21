@@ -1,36 +1,37 @@
 Class {
-	#name : #ViennaExportSignatureNode,
-	#superclass : #ViennaExportComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaExportSignatureNode',
+	#superclass : 'ViennaExportComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExportSignatureNode class >> isAbstract [
 
 	^ self = ViennaExportSignatureNode
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaExportSignatureNode >> boundIdentifiersDo: aBlock [
 
 	
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaExportSignatureNode >> exportedIdentifiersDo: aBlock [
 
 	^ self do: [ :export | export exportedIdentifiersDo: aBlock ]
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaExportSignatureNode >> maximalType [
 
 	self do: #typecheck.
 	^ ViennaType unit
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 ViennaExportSignatureNode >> removeIdentifier: aString [
 
 	(self exportsIdentifier: aString) ifTrue: [

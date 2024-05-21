@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaInvariantNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaInvariantNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInvariantNode class >> invariantInitialFunction: aViennaInvariantInitialFunctionNode [
 
 	^ (self new: 1)
@@ -13,74 +14,74 @@ ViennaInvariantNode class >> invariantInitialFunction: aViennaInvariantInitialFu
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaInvariantNode >> boundIdentifiersDo: aBlock [
 
 	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInvariantNode >> expression [
 
 	^ self invariantInitialFunction ifNotNil: #expression
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaInvariantNode >> formatWith: aViennaAbstractFormatter [
 
 	^ (aViennaAbstractFormatter keyword: 'inv ')
 	  ++ (aViennaAbstractFormatter format: self invariantInitialFunction)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaInvariantNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self invariantInitialFunction freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInvariantNode >> invariantInitialFunction [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInvariantNode >> invariantInitialFunction: aViennaInvariantInitialFunctionNode [
 
 	self at: 1 put: aViennaInvariantInitialFunctionNode
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaInvariantNode >> isViennaInvariantNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInvariantNode >> label [
 
 	^ 'Invariant'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaInvariantNode >> maximalType [
 
 	^ self invariantInitialFunction typecheck
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaInvariantNode >> maximalType: aViennaType [
 
 	self invariantInitialFunction maximalType: aViennaType
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInvariantNode >> pattern [
 
 	^ self invariantInitialFunction ifNotNil: #pattern
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInvariantNode >> pattern: aViennaPatternNode [
 
 	^ self invariantInitialFunction pattern: aViennaPatternNode

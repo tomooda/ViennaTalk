@@ -1,23 +1,24 @@
 Class {
-	#name : #ViennaPatternNode,
-	#superclass : #ViennaPatternBindNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaPatternNode',
+	#superclass : 'ViennaPatternBindNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaPatternNode class >> isAbstract [
 
 	^ self = ViennaPatternNode
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaPatternNode >> isViennaPatternNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaPatternNode >> pattern [
 
 	^ self

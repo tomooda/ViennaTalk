@@ -1,41 +1,42 @@
 Class {
-	#name : #ViennaErrorStatementNode,
-	#superclass : #ViennaStatementNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaErrorStatementNode',
+	#superclass : 'ViennaStatementNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaErrorStatementNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter keyword: 'error'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaErrorStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaErrorStatementNode >> isViennaErrorNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaErrorStatementNode >> isViennaErrorStatementNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaErrorStatementNode >> label [
 
 	^ 'ErrorStatement'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaErrorStatementNode >> maximalType [
 
 	^ ViennaType unit

@@ -1,48 +1,49 @@
 Class {
-	#name : #ViennaDistributedSequenceConcatenationNode,
-	#superclass : #ViennaUnaryOperatorExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaDistributedSequenceConcatenationNode',
+	#superclass : 'ViennaUnaryOperatorExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaDistributedSequenceConcatenationNode >> formatOperatorWith: aViennaAbstractFormatter [
 
 	^ 'conc'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaDistributedSequenceConcatenationNode >> isViennaDistributedSequenceConcatenationNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaDistributedSequenceConcatenationNode >> label [
 
 	^ 'DistributedSequenceConcatenation'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaDistributedSequenceConcatenationNode >> maximalType: aViennaType [
 
 	self expression maximalType: aViennaType seq.
 	super maximalType: aViennaType
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaDistributedSequenceConcatenationNode >> operatorPrecedence [
 
 	^ 36
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaDistributedSequenceConcatenationNode >> paramType [
 
 	^ ViennaType any seq seq
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaDistributedSequenceConcatenationNode >> returnTypeFor: aViennaType [
 
 	^ aViennaType basetype

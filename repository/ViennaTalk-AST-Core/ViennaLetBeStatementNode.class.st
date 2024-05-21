@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaLetBeStatementNode,
-	#superclass : #ViennaStatementNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaLetBeStatementNode',
+	#superclass : 'ViennaStatementNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaLetBeStatementNode class >> multipleBind: aViennaMultipleBindNode conditionExpression: aViennaExpressionNode statement: aViennaStatementNode [
 
 	^ (self new: 3)
@@ -15,19 +16,19 @@ ViennaLetBeStatementNode class >> multipleBind: aViennaMultipleBindNode conditio
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLetBeStatementNode >> conditionExpression [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLetBeStatementNode >> conditionExpression: aViennaExpressionNode [
 
 	self at: 2 put: aViennaExpressionNode
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaLetBeStatementNode >> definitionOfLocalName: aString [
 
 	| multipleBind |
@@ -39,7 +40,7 @@ ViennaLetBeStatementNode >> definitionOfLocalName: aString [
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaLetBeStatementNode >> findResolverForIdentifier: aString [
 
 	^ (self multipleBind bindsIdentifier: aString)
@@ -47,7 +48,7 @@ ViennaLetBeStatementNode >> findResolverForIdentifier: aString [
 		  ifFalse: [ super findResolverForIdentifier: aString ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaLetBeStatementNode >> formatWith: aViennaAbstractFormatter [
 
 	| multipleBind guard statement |
@@ -71,7 +72,7 @@ ViennaLetBeStatementNode >> formatWith: aViennaAbstractFormatter [
 		  insertCrIfNeeded: statement
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaLetBeStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	| boundIdentifiers |
@@ -83,25 +84,25 @@ ViennaLetBeStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
 	self statement freeIdentifiersExcept: boundIdentifiers do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaLetBeStatementNode >> hasScope [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaLetBeStatementNode >> isViennaLetBeStatementNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLetBeStatementNode >> label [
 
 	^ 'LetBeStatement'
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaLetBeStatementNode >> lookupIdentifier: aString [
 
 	^ (self multipleBind bindsIdentifier: aString)
@@ -109,7 +110,7 @@ ViennaLetBeStatementNode >> lookupIdentifier: aString [
 		  ifFalse: [ nil ]
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaLetBeStatementNode >> maximalType [
 
 	self multipleBind typecheck.
@@ -118,25 +119,25 @@ ViennaLetBeStatementNode >> maximalType [
 	^ self statement typecheck
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLetBeStatementNode >> multipleBind [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLetBeStatementNode >> multipleBind: aViennaMultipleBindNode [
 
 	self at: 1 put: aViennaMultipleBindNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLetBeStatementNode >> statement [
 
 	^ self at: 3
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLetBeStatementNode >> statement: aViennaExpressionNode [
 
 	self at: 3 put: aViennaExpressionNode

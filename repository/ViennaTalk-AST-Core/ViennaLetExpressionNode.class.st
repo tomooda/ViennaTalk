@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaLetExpressionNode,
-	#superclass : #ViennaExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaLetExpressionNode',
+	#superclass : 'ViennaExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaLetExpressionNode class >> localDefinitionList: aViennaLocalDefinitionListNode body: aViennaExpressionNode [
 
 	^ self
@@ -13,7 +14,7 @@ ViennaLetExpressionNode class >> localDefinitionList: aViennaLocalDefinitionList
 		  expression: aViennaExpressionNode
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaLetExpressionNode class >> localDefinitionList: aViennaLocalDefinitionListNode expression: aViennaExpressionNode [
 
 	^ (self new: 2)
@@ -22,19 +23,19 @@ ViennaLetExpressionNode class >> localDefinitionList: aViennaLocalDefinitionList
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLetExpressionNode >> body [
 
 	^ self expression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLetExpressionNode >> body: aViennaExpressionNode [
 
 	^ self expression: aViennaExpressionNode
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaLetExpressionNode >> definitionOfLocalName: aString [
 
 	self localDefinitionList do: [ :def |
@@ -47,19 +48,19 @@ ViennaLetExpressionNode >> definitionOfLocalName: aString [
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLetExpressionNode >> expression [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLetExpressionNode >> expression: aViennaExpressionNode [
 
 	self at: 2 put: aViennaExpressionNode
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaLetExpressionNode >> findResolverForIdentifier: aString [
 
 	^ (self localDefinitionList bindsIdentifier: aString)
@@ -67,7 +68,7 @@ ViennaLetExpressionNode >> findResolverForIdentifier: aString [
 		  ifFalse: [ super findResolverForIdentifier: aString ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaLetExpressionNode >> formatWith: aViennaAbstractFormatter [
 
 	| localDefinitionList expression |
@@ -83,7 +84,7 @@ ViennaLetExpressionNode >> formatWith: aViennaAbstractFormatter [
 				   insertCrIfNeeded: expression)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaLetExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	| boundIdentifiers |
@@ -95,43 +96,43 @@ ViennaLetExpressionNode >> freeIdentifiersExcept: aSet do: aBlock [
 	self expression freeIdentifiersExcept: boundIdentifiers do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaLetExpressionNode >> hasScope [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLetExpressionNode >> isViennaLetExpressionNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLetExpressionNode >> label [
 
 	^ 'LetExpression'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLetExpressionNode >> localDefinitionList [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaLetExpressionNode >> localDefinitionList: aViennaLocalDefinitionListNode [
 
 	self at: 1 put: aViennaLocalDefinitionListNode
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaLetExpressionNode >> localDefinitionsDo: aBlock [
 
 	self localDefinitionList do: aBlock
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaLetExpressionNode >> lookupIdentifier: aString [
 
 	self localDefinitionList do: [ :localDefinition |
@@ -140,14 +141,14 @@ ViennaLetExpressionNode >> lookupIdentifier: aString [
 	^ nil
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaLetExpressionNode >> maximalType [
 
 	self localDefinitionList typecheck.
 	^ self body typecheck
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaLetExpressionNode >> maximalType: aViennaType [
 
 	self localDefinitionList typecheck.
@@ -155,7 +156,7 @@ ViennaLetExpressionNode >> maximalType: aViennaType [
 	super maximalType: aViennaType
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaLetExpressionNode >> operatorPrecedence [
 
 	^ 10

@@ -1,16 +1,17 @@
 Class {
-	#name : #ViennaTraceDefinitionNode,
-	#superclass : #ViennaNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaTraceDefinitionNode',
+	#superclass : 'ViennaNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTraceDefinitionNode class >> isAbstract [
 
 	^ self = ViennaTraceDefinitionNode
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTraceDefinitionNode >> boundIdentifiersDo: aBlock [
 ]

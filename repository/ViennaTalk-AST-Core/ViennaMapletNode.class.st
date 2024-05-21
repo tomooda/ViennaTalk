@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaMapletNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaMapletNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaMapletNode class >> keyExpression: aViennaExpressionNode1 valueExpression: aViennaExpressionNode2 [
 
 	^ (self new: 2)
@@ -14,13 +15,13 @@ ViennaMapletNode class >> keyExpression: aViennaExpressionNode1 valueExpression:
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaMapletNode >> boundIdentifiersDo: aBlock [
 
 	
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaMapletNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter
@@ -29,50 +30,50 @@ ViennaMapletNode >> formatWith: aViennaAbstractFormatter [
 		  arg: (aViennaAbstractFormatter format: self valueExpression)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaMapletNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self keyExpression freeIdentifiersExcept: aSet do: aBlock.
 	self valueExpression freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaMapletNode >> isViennaMapletNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapletNode >> keyExpression [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapletNode >> keyExpression: aViennaExpressionNode [
 
 	self at: 1 put: aViennaExpressionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapletNode >> label [
 
 	^ 'Maplet'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaMapletNode >> maximalType [
 
 	^ self keyExpression typecheck mapTo: self valueExpression typecheck
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapletNode >> valueExpression [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapletNode >> valueExpression: aViennaExpressionNode [
 
 	self at: 2 put: aViennaExpressionNode

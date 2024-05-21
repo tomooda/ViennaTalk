@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaAssignmentDefinitionNode,
-	#superclass : #ViennaDefinitionComponentNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaAssignmentDefinitionNode',
+	#superclass : 'ViennaDefinitionComponentNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaAssignmentDefinitionNode class >> identifier: aString type: aViennaTypeNode expression: aViennaExpressionNode [
 
 	^ (self new: 3)
@@ -15,7 +16,7 @@ ViennaAssignmentDefinitionNode class >> identifier: aString type: aViennaTypeNod
 		  yourself
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaAssignmentDefinitionNode >> asViennaAssignStatementNode [
 
 	^ self expression ifNotNil: [
@@ -25,25 +26,25 @@ ViennaAssignmentDefinitionNode >> asViennaAssignStatementNode [
 			  expression: self expression ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaAssignmentDefinitionNode >> boundIdentifiersDo: aBlock [
 
 	aBlock cull: self identifier cull: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAssignmentDefinitionNode >> expression [
 
 	^ self at: 3
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAssignmentDefinitionNode >> expression: aViennaExpressionNode [
 
 	self at: 3 put: aViennaExpressionNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaAssignmentDefinitionNode >> formatWith: aViennaAbstractFormatter [
 
 	^ (aViennaAbstractFormatter identifier: self identifier) ++ ':'
@@ -54,7 +55,7 @@ ViennaAssignmentDefinitionNode >> formatWith: aViennaAbstractFormatter [
 		   ifNil: [ aViennaAbstractFormatter empty ])
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaAssignmentDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	| boundIdentifiers |
@@ -65,37 +66,37 @@ ViennaAssignmentDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
 		expression freeIdentifiersExcept: boundIdentifiers do: aBlock ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAssignmentDefinitionNode >> identifier [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAssignmentDefinitionNode >> identifier: aString [
 
 	self at: 1 put: aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaAssignmentDefinitionNode >> isViennaAssignmentDefinitionNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaAssignmentDefinitionNode >> isViennaAssignmentDefinitionNode: aString [
 
 	^ self identifier = aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAssignmentDefinitionNode >> label [
 
 	^ 'AssignmentDefinition'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaAssignmentDefinitionNode >> maximalType [
 
 	| t |
@@ -104,19 +105,19 @@ ViennaAssignmentDefinitionNode >> maximalType [
 	^ t
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAssignmentDefinitionNode >> type [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAssignmentDefinitionNode >> type: aViennaTypeNode [
 
 	self at: 2 put: aViennaTypeNode
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaAssignmentDefinitionNode >> withoutInitialization [
 
 	^ self class

@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaSetEnumerationNode,
-	#superclass : #ViennaExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaSetEnumerationNode',
+	#superclass : 'ViennaExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaSetEnumerationNode class >> expressionList: aViennaExpressionListNode [
 
 	^ (self new: 1)
@@ -13,19 +14,19 @@ ViennaSetEnumerationNode class >> expressionList: aViennaExpressionListNode [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSetEnumerationNode >> expressionList [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSetEnumerationNode >> expressionList: aViennaExpressionListNode [
 
 	self at: 1 put: aViennaExpressionListNode
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSetEnumerationNode >> formatWith: aViennaAbstractFormatter [
 
 	| elements |
@@ -35,25 +36,25 @@ ViennaSetEnumerationNode >> formatWith: aViennaAbstractFormatter [
 		   ifEmpty: [ aViennaAbstractFormatter empty ]) ++ '}'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaSetEnumerationNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self expressionList freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaSetEnumerationNode >> isViennaSetEnumerationNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSetEnumerationNode >> label [
 
 	^ 'SetEnumeration'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaSetEnumerationNode >> maximalType [
 
 	| basetype |
@@ -65,7 +66,7 @@ ViennaSetEnumerationNode >> maximalType [
 		  ifNotEmpty: [ basetype set1 ]
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaSetEnumerationNode >> maximalType: aViennaType [
 
 	| basetype |

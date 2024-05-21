@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaMapComprehensionNode,
-	#superclass : #ViennaExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaMapComprehensionNode',
+	#superclass : 'ViennaExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaMapComprehensionNode class >> keyExpression: aViennaExpressionNode1 valueExpression: aViennaExpressionNode2 bindList: aViennaBindListNode suchthatExpression: aViennaExpressionNode3 [
 
 	^ (self new: 4)
@@ -16,19 +17,19 @@ ViennaMapComprehensionNode class >> keyExpression: aViennaExpressionNode1 valueE
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapComprehensionNode >> bindList [
 
 	^ self at: 3
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapComprehensionNode >> bindList: aViennaBindListNode [
 
 	self at: 3 put: aViennaBindListNode
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaMapComprehensionNode >> definitionOfLocalName: aString [
 
 	self patternsDo: [ :pattern |
@@ -39,7 +40,7 @@ ViennaMapComprehensionNode >> definitionOfLocalName: aString [
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaMapComprehensionNode >> findResolverForIdentifier: aString [
 
 	^ (self bindList bindsIdentifier: aString)
@@ -47,7 +48,7 @@ ViennaMapComprehensionNode >> findResolverForIdentifier: aString [
 		  ifFalse: [ super findResolverForIdentifier: aString ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaMapComprehensionNode >> formatWith: aViennaAbstractFormatter [
 
 	| keyExpression valueExpression bindList guard |
@@ -73,7 +74,7 @@ ViennaMapComprehensionNode >> formatWith: aViennaAbstractFormatter [
 				    insertCrIfNeeded: guard)) ++ '}'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaMapComprehensionNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	| boundIdentifiers |
@@ -88,37 +89,37 @@ ViennaMapComprehensionNode >> freeIdentifiersExcept: aSet do: aBlock [
 		do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaMapComprehensionNode >> hasScope [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapComprehensionNode >> isViennaMapComprehensionNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapComprehensionNode >> keyExpression [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapComprehensionNode >> keyExpression: aViennaExpressionNode [
 
 	self at: 1 put: aViennaExpressionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapComprehensionNode >> label [
 
 	^ 'MapComprehension'
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaMapComprehensionNode >> lookupIdentifier: aString [
 
 	self bindList do: [ :multiplebind |
@@ -127,7 +128,7 @@ ViennaMapComprehensionNode >> lookupIdentifier: aString [
 	^ nil
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaMapComprehensionNode >> maximalType [
 
 	self bindList typecheck.
@@ -136,7 +137,7 @@ ViennaMapComprehensionNode >> maximalType [
 	^ self keyExpression typecheck mapTo: self valueExpression typecheck
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaMapComprehensionNode >> maximalType: aViennaType [
 
 	| keytype valuetype |
@@ -154,38 +155,38 @@ ViennaMapComprehensionNode >> maximalType: aViennaType [
 	super maximalType: aViennaType
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaMapComprehensionNode >> multipleBindsDo: aBlock [
 
 	self bindList do: aBlock
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaMapComprehensionNode >> patternsDo: aBlock [
 
 	self multipleBindsDo: [ :multipleBind |
 		multipleBind patternsDo: aBlock ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapComprehensionNode >> suchthatExpression [
 
 	^ self at: 4
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapComprehensionNode >> suchthatExpression: aViennaExpressionNode [
 
 	self at: 4 put: aViennaExpressionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapComprehensionNode >> valueExpression [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMapComprehensionNode >> valueExpression: aViennaExpressionNode [
 
 	self at: 2 put: aViennaExpressionNode

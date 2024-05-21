@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaTypeVariableNode,
-	#superclass : #ViennaTypeNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaTypeVariableNode',
+	#superclass : 'ViennaTypeNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaTypeVariableNode class >> variableIdentifier: aString [
 
 	^ (self new: 1)
@@ -13,67 +14,67 @@ ViennaTypeVariableNode class >> variableIdentifier: aString [
 		  yourself
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaTypeVariableNode >> asMaximalViennaType [
 
 	^ self variableIdentifier asMaximalViennaType
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaTypeVariableNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter typeName: self identifier
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTypeVariableNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self variableIdentifier freeIdentifiersExcept: aSet do: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTypeVariableNode >> identifier [
 
 	^ self variableIdentifier identifier
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTypeVariableNode >> identifier: aString [
 
 	self variableIdentifier identifier: aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTypeVariableNode >> isViennaTypeVariableNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTypeVariableNode >> isViennaTypeVariableNode: aString [
 
 	^ self identifier = aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTypeVariableNode >> label [
 
 	^ 'TypeVariable'
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaTypeVariableNode >> resolve [
 
 	^ self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTypeVariableNode >> variableIdentifier [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTypeVariableNode >> variableIdentifier: aString [
 
 	self at: 1 put: aString

@@ -1,53 +1,54 @@
 Class {
-	#name : #ViennaIterateNode,
-	#superclass : #ViennaBinaryOperatorExpressionNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaIterateNode',
+	#superclass : 'ViennaBinaryOperatorExpressionNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaIterateNode >> formatOperatorWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter iterate
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaIterateNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
 
 	^ aBlock2 value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIterateNode >> isViennaIterateNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIterateNode >> label [
 
 	^ 'Iterate'
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaIterateNode >> operatorPrecedence [
 
 	^ 52
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIterateNode >> paramType1 [
 
 	^ ViennaType any
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIterateNode >> paramType2 [
 
 	^ ViennaType real
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIterateNode >> returnTypeFor: type and: aViennaType2 [
 
 	type isFunctionType ifTrue: [

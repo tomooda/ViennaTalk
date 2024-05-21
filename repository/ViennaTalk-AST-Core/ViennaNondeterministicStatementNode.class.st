@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaNondeterministicStatementNode,
-	#superclass : #ViennaStatementNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaNondeterministicStatementNode',
+	#superclass : 'ViennaStatementNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaNondeterministicStatementNode >> formatWith: aViennaAbstractFormatter [
 
 	| statements |
@@ -21,26 +22,26 @@ ViennaNondeterministicStatementNode >> formatWith: aViennaAbstractFormatter [
 			   aViennaAbstractFormatter join: ', ' withAll: statements ]) ++ ')'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaNondeterministicStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self do: [ :statement |
 		statement freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNondeterministicStatementNode >> isViennaNondeterministicStatementNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNondeterministicStatementNode >> label [
 
 	^ 'NondeterministicStatement'
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaNondeterministicStatementNode >> maximalType [
 
 	^ self

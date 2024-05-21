@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaSetForLoopNode,
-	#superclass : #ViennaStatementNode,
-	#type : #variable,
-	#category : #'ViennaTalk-AST-Core'
+	#name : 'ViennaSetForLoopNode',
+	#superclass : 'ViennaStatementNode',
+	#type : 'variable',
+	#category : 'ViennaTalk-AST-Core',
+	#package : 'ViennaTalk-AST-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaSetForLoopNode class >> pattern: aViennaPatternNode expression: aViennaExpressionNode statement: aViennaStatementNode [
 
 	^ (self new: 3)
@@ -15,7 +16,7 @@ ViennaSetForLoopNode class >> pattern: aViennaPatternNode expression: aViennaExp
 		  yourself
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaSetForLoopNode >> definitionOfLocalName: aString [
 
 	self pattern
@@ -25,19 +26,19 @@ ViennaSetForLoopNode >> definitionOfLocalName: aString [
 	^ parent ifNotNil: [ parent definitionOfLocalName: aString ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSetForLoopNode >> expression [
 
 	^ self at: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSetForLoopNode >> expression: aViennaExpressionNode [
 
 	self at: 2 put: aViennaExpressionNode
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaSetForLoopNode >> findResolverForIdentifier: aString [
 
 	^ (self pattern bindsIdentifier: aString)
@@ -45,7 +46,7 @@ ViennaSetForLoopNode >> findResolverForIdentifier: aString [
 		  ifFalse: [ super findResolverForIdentifier: aString ]
 ]
 
-{ #category : #'pretty printing' }
+{ #category : 'pretty printing' }
 ViennaSetForLoopNode >> formatWith: aViennaAbstractFormatter [
 
 	| pattern expression statement |
@@ -77,7 +78,7 @@ ViennaSetForLoopNode >> formatWith: aViennaAbstractFormatter [
 				   insertCrIfNeeded: statement)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaSetForLoopNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self expression freeIdentifiersExcept: aSet do: aBlock.
@@ -87,31 +88,31 @@ ViennaSetForLoopNode >> freeIdentifiersExcept: aSet do: aBlock [
 		do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaSetForLoopNode >> hasScope [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaSetForLoopNode >> isViennaSetForLoopNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSetForLoopNode >> label [
 
 	^ 'SetForLoop'
 ]
 
-{ #category : #'accessing-definitions' }
+{ #category : 'accessing-definitions' }
 ViennaSetForLoopNode >> lookupIdentifier: aString [
 
 	^ (self pattern bindsIdentifier: aString) ifTrue: [ self pattern ]
 ]
 
-{ #category : #typechecking }
+{ #category : 'typechecking' }
 ViennaSetForLoopNode >> maximalType [
 
 	self pattern maximalType:
@@ -123,25 +124,25 @@ ViennaSetForLoopNode >> maximalType [
 	^ self statement typecheck
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSetForLoopNode >> pattern [
 
 	^ self at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSetForLoopNode >> pattern: aViennaPatternNode [
 
 	self at: 1 put: aViennaPatternNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSetForLoopNode >> statement [
 
 	^ self at: 3
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSetForLoopNode >> statement: aViennaStatementNode [
 
 	self at: 3 put: aViennaStatementNode
