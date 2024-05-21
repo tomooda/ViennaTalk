@@ -3333,6 +3333,21 @@ ViennaVDM2Smalltalk >> traceBracketedExpression: aViennaNode env: aDictionary [
 ]
 
 { #category : 'code generation-traces' }
+ViennaVDM2Smalltalk >> traceConcurrentExpression: aViennaNode env: aDictionary [
+
+                ^ aViennaNode size = 1
+                     ifTrue: [
+                     self generate: aViennaNode first env: aDictionary ]
+                     ifFalse: [
+                        '(ViennaConcurrentCombinatorialGenerator withAll: { '
+                        , ('. ' join:
+                               (aViennaNode collect: [ :node |
+                                   self
+                                      generate: node
+                                      env: aDictionary ])) , '})' ]
+]
+
+{ #category : 'code generation-traces' }
 ViennaVDM2Smalltalk >> traceDefinitionList: aViennaNode env: aDictionary [
 
 	^ aViennaNode size = 1

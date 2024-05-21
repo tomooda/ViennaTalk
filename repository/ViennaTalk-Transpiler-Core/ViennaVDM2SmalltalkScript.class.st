@@ -149,23 +149,6 @@ ViennaVDM2SmalltalkScript >> stateDefinition: aViennaNode env: aDictionary [
 			               nextPutAll: ']' ]
 ]
 
-{ #category : 'code generation-traces' }
-ViennaVDM2SmalltalkScript >> traceConcurrentExpression: aViennaNode env: aDictionary [
-
-	| codes |
-	codes := aViennaNode collect: [ :trace |
-		         self generate: trace env: aDictionary ].
-	^ self stringStreamContents: [ :stream |
-		  stream nextPutAll: '[ | __state | __state := state value. '.
-		  (1 to: aViennaNode size) permutationsDo: [ :indices |
-			  indices do: [ :index |
-				  stream
-					  nextPutAll: (codes at: index);
-					  nextPutAll: '. ' ].
-			  stream nextPutAll: ' _state value: __state' ].
-		  stream nextPutAll: '] value' ]
-]
-
 { #category : 'utilities' }
 ViennaVDM2SmalltalkScript >> translate: aString [
 	^ self translate: aString ifError: [  ]
