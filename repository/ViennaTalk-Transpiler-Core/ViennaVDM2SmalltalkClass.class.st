@@ -1083,28 +1083,23 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 { #category : 'code generation-traces' }
 ViennaVDM2SmalltalkClass >> namedTrace: aViennaNode env: aDictionary [
 
-                | name body theClass |
-                name := aViennaNode identifier.
-                body := self stringStreamContents: [ :stream |
-                           stream
-                              nextPutAll:
-                                 '|_generator | _generator := ';
-                              nextPutAll:
-                                 (self
-                                     generate:
-                                        aViennaNode
-                                           traceDefinitionList
-                                     env: aDictionary);
-                              nextPutAll:
-                                 '. [self init. _generator next: Dictionary new] whileTrue' ].
-                theClass := classes at:
-                               (aViennaNode module ifNotNil:
-                                   #identifier).
-                self
-                   defineMethod: name , String cr , body
-                   in: theClass
-                   protocol: 'traces'
-                   node: aViennaNode
+	| name body theClass |
+	name := aViennaNode identifier.
+	body := self stringStreamContents: [ :stream |
+		        stream
+			        nextPutAll: '|_generator | _generator := ';
+			        nextPutAll:
+				        (self
+					         generate: aViennaNode traceDefinitionList
+					         env: aDictionary);
+			        nextPutAll:
+				        '. [self init. _generator next: Dictionary new] whileTrue' ].
+	theClass := classes at: (aViennaNode module ifNotNil: #identifier).
+	self
+		defineMethod: name , String cr , body
+		in: theClass
+		protocol: 'traces'
+		node: aViennaNode
 ]
 
 { #category : 'code generation-definitions' }

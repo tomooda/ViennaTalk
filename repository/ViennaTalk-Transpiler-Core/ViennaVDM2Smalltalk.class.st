@@ -3335,16 +3335,13 @@ ViennaVDM2Smalltalk >> traceBracketedExpression: aViennaNode env: aDictionary [
 { #category : 'code generation-traces' }
 ViennaVDM2Smalltalk >> traceConcurrentExpression: aViennaNode env: aDictionary [
 
-                ^ aViennaNode size = 1
-                     ifTrue: [
-                     self generate: aViennaNode first env: aDictionary ]
-                     ifFalse: [
-                        '(ViennaConcurrentCombinatorialGenerator withAll: { '
-                        , ('. ' join:
-                               (aViennaNode collect: [ :node |
-                                   self
-                                      generate: node
-                                      env: aDictionary ])) , '})' ]
+	^ aViennaNode size = 1
+		  ifTrue: [ self generate: aViennaNode first env: aDictionary ]
+		  ifFalse: [
+			  '(ViennaConcurrentCombinatorialGenerator withAll: { '
+			  , ('. ' join:
+					   (aViennaNode collect: [ :node |
+						    self generate: node env: aDictionary ])) , '})' ]
 ]
 
 { #category : 'code generation-traces' }
@@ -3441,16 +3438,15 @@ ViennaVDM2Smalltalk >> traceLetDefBinding: aViennaNode env: aDictionary [
 { #category : 'code generation-traces' }
 ViennaVDM2Smalltalk >> traceRepeatDefinition: aViennaNode env: aDictionary [
 
-	             | trace |
-	             trace := self
-		                      generate: aViennaNode traceCoreDefinition
-		                      env: aDictionary.
-	             ^ aViennaNode traceRepeatPattern
-		               ifNotNil: [ :repeatPattern |
-			               '(ViennaRepeatCombinatorialGenerator range: '
-			               , repeatPattern range storeString , 'with: ' , trace
-			               , ')' ]
-		               ifNil: [ trace ]
+	| trace |
+	trace := self
+		         generate: aViennaNode traceCoreDefinition
+		         env: aDictionary.
+	^ aViennaNode traceRepeatPattern
+		  ifNotNil: [ :repeatPattern |
+			  '(ViennaRepeatCombinatorialGenerator range: '
+			  , repeatPattern range storeString , 'with: ' , trace , ')' ]
+		  ifNil: [ trace ]
 ]
 
 { #category : 'code generation-traces' }

@@ -92,16 +92,14 @@ ViennaVDM2SmalltalkScript >> module: aViennaNode env: aDictionary [
 { #category : 'code generation-traces' }
 ViennaVDM2SmalltalkScript >> namedTrace: aViennaNode env: aDictionary [
 
-	             ^ self stringStreamContents: [ :stream |
-		               stream
-			               nextPutAll: aViennaNode identifier;
-			               nextPutAll: ' := [|_generator | _generator := ';
-			               nextPutAll:
-				               (self
-					                generate: aViennaNode traceDefinitionList
-					                env: aDictionary);
-			               nextPutAll:
-				               '. [init value. _generator next: Dictionary new] whileTrue]' ]
+	^ self stringStreamContents: [ :stream |
+		  stream
+			  nextPutAll: aViennaNode identifier;
+			  nextPutAll: ' := [|_generator | _generator := ';
+			  nextPutAll:
+				  (self generate: aViennaNode traceDefinitionList env: aDictionary);
+			  nextPutAll:
+				  '. [init value. _generator next: Dictionary new] whileTrue]' ]
 ]
 
 { #category : 'code generation-definitions' }
