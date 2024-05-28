@@ -94,26 +94,24 @@ ViennaVDM2SmalltalkClass >> createDocumentClassWithInstVars: anArrayOfString [
 
 { #category : 'utilities' }
 ViennaVDM2SmalltalkClass >> createDocumentClassWithInstVars: anArrayOfString1 stateVars: anArrayOfString2 [
+
 	| documentClassName |
 	documentClassName := self requestClassName: '' for: 'Document'.
 	documentClassName ifNil: [ ^ nil ].
-	^ (ShiftClassInstaller
-		make: [ :builder | 
-	builder
-		name: documentClassName asSymbol;
-		superclass: ViennaTranspiledObject;
-		slots:
-			(anArrayOfString1 asArray
-				collect: [ :instVarName | InstanceVariableSlot named: instVarName asSymbol ])
-				,
-					(anArrayOfString2 asArray
-						collect: [ :instVarName | 
-							(runtimeAssertionCheck = true
-								ifTrue: [ ViennaStateSlot ]
-								ifFalse: [ InstanceVariableSlot ]) named: instVarName asSymbol ]);
-		category: 'Auto Generated from VDM' ])
-		specification: source;
-		yourself
+	^ (ShiftClassInstaller make: [ :builder |
+			   builder
+				   name: documentClassName asSymbol;
+				   superclass: ViennaTranspiledObject;
+				   slots: (anArrayOfString1 asArray collect: [ :instVarName |
+							    InstanceVariableSlot named: instVarName asSymbol ])
+					   , (anArrayOfString2 asArray collect: [ :instVarName |
+								    (runtimeAssertionCheck = true
+									     ifTrue: [ ViennaStateSlot ]
+									     ifFalse: [ InstanceVariableSlot ]) named:
+										    instVarName asSymbol ]);
+				   package: 'Auto Generated from VDM' ])
+		  specification: source;
+		  yourself
 ]
 
 { #category : 'utilities' }

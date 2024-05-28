@@ -12,20 +12,18 @@ ViennaVDM2SmalltalkObject >> createDocumentClassWithInstVars: anArrayOfString [
 
 { #category : 'utilities' }
 ViennaVDM2SmalltalkObject >> createDocumentClassWithInstVars: anArrayOfString1 stateVars: anArrayOfString2 [
-	^ ShiftAnonymousClassInstaller
-		make: [ :builder | 
-			builder
-				superclass: ViennaTranspiledObject;
-				slots:
-					(anArrayOfString1 asArray
-						collect: [ :instVarName | InstanceVariableSlot named: instVarName asSymbol ])
-						,
-							(anArrayOfString2 asArray
-								collect: [ :instVarName | 
-									(runtimeAssertionCheck = true
-										ifTrue: [ ViennaStateSlot ]
-										ifFalse: [ InstanceVariableSlot ]) named: instVarName asSymbol ]);
-				category: 'Auto Generated from VDM' ]
+
+	^ ShiftAnonymousClassInstaller make: [ :builder |
+		  builder
+			  superclass: ViennaTranspiledObject;
+			  slots: (anArrayOfString1 asArray collect: [ :instVarName |
+						   InstanceVariableSlot named: instVarName asSymbol ])
+				  , (anArrayOfString2 asArray collect: [ :instVarName |
+							   (runtimeAssertionCheck = true
+								    ifTrue: [ ViennaStateSlot ]
+								    ifFalse: [ InstanceVariableSlot ]) named:
+									   instVarName asSymbol ]);
+			  package: 'Auto Generated from VDM' ]
 ]
 
 { #category : 'utilities' }
