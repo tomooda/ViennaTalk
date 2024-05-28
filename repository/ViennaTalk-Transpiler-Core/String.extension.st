@@ -8,7 +8,7 @@ String >> , aString [
 		       ifTrue: [ aString string ]
 		       ifFalse: [ aString ].
 	^ [
-	  str isViennaTracingString
+	  str class name = #ViennaTracingString
 		  ifTrue: [ self asViennaTracingString , aString ]
 		  ifFalse: [ super , aString ] ]
 		  on: Error
