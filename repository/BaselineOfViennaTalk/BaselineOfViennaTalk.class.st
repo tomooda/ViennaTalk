@@ -1,10 +1,11 @@
 Class {
-	#name : #BaselineOfViennaTalk,
-	#superclass : #BaselineOf,
-	#category : #BaselineOfViennaTalk
+	#name : 'BaselineOfViennaTalk',
+	#superclass : 'BaselineOf',
+	#category : 'BaselineOfViennaTalk',
+	#package : 'BaselineOfViennaTalk'
 }
 
-{ #category : #baselines }
+{ #category : 'baselines' }
 BaselineOfViennaTalk >> baseline: spec [
 
 	<baseline>
@@ -70,7 +71,8 @@ BaselineOfViennaTalk >> baseline: spec [
 		package: 'ViennaTalk-Parser-Core' with: [
 		spec requires: #( 'ViennaTalk-AST-Core' 'ViennaTalk-Value-Core'
 			   'PetitParser2' ) ];
-		package: 'ViennaTalk-AST-Core' with: [ 'ViennaTalk-Type-Core' ];
+		package: 'ViennaTalk-AST-Core'
+		with: [ spec requires: #( 'ViennaTalk-Type-Core' ) ];
 		package: 'ViennaTalk-Parser-Formatters'
 		with: [ spec requires: #( 'ViennaTalk-Parser-Core' ) ];
 		package: 'ViennaTalk-Parser-Highlighters' with: [
@@ -160,7 +162,7 @@ BaselineOfViennaTalk >> baseline: spec [
 			   'ViennaTalk-Refactoring-Tests' 'ViennaTalk-AST-Tests' )
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BaselineOfViennaTalk >> customProjectAttributes [
 	Smalltalk os isWindows
 		ifTrue: [ ^ #(#Windows) ].

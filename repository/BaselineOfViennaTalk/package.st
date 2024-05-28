@@ -1,1 +1,1 @@
-Package { #name : #BaselineOfViennaTalk }
+Package { #name : 'BaselineOfViennaTalk' }
