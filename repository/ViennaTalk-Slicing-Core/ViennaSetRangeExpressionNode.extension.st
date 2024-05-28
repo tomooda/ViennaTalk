@@ -1,6 +1,6 @@
-Extension { #name : #ViennaSetRangeExpressionNode }
+Extension { #name : 'ViennaSetRangeExpressionNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaSetRangeExpressionNode >> sliceWith: aViennaSlicer [
 
 	aViennaSlicer onNode: self do: [

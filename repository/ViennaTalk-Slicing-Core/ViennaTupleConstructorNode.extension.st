@@ -1,6 +1,6 @@
-Extension { #name : #ViennaTupleConstructorNode }
+Extension { #name : 'ViennaTupleConstructorNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaTupleConstructorNode >> sliceWith: aViennaSlicer [
 
 	aViennaSlicer onNode: self do: [

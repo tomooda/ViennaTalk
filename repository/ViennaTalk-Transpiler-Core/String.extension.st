@@ -3,12 +3,16 @@ Extension { #name : 'String' }
 { #category : '*ViennaTalk-Transpiler-Core' }
 String >> , aString [
 
+	| str |
+	str := aString isText
+		       ifTrue: [ aString string ]
+		       ifFalse: [ aString ].
 	^ [
-	  aString isViennaTracingString
+	  str isViennaTracingString
 		  ifTrue: [ self asViennaTracingString , aString ]
 		  ifFalse: [ super , aString ] ]
 		  on: Error
-		  do: [ :ex | super , aString ]
+		  do: [ :ex | super , str ]
 ]
 
 { #category : '*ViennaTalk-Transpiler-Core' }
@@ -39,4 +43,23 @@ String >> asViennaTracingString: anObject [
 	^ ViennaTracingString
 		string: self
 		sources: (OrderedCollection with: (1 to: self size) -> anObject)
+]
+
+{ #category : '*ViennaTalk-Transpiler-Core' }
+String >> copyReplaceFrom: start to: stop with: replacementCollection [
+
+	^ replacementCollection isViennaTracingString
+		  ifTrue: [
+			  self asViennaTracingString
+				  copyReplaceFrom: start
+				  to: stop
+				  with: replacementCollection ]
+		  ifFalse: [
+		  super copyReplaceFrom: start to: stop with: replacementCollection ]
+]
+
+{ #category : '*ViennaTalk-Transpiler-Core' }
+String >> ifTracingString: aBlock [
+
+	
 ]

@@ -1,6 +1,6 @@
-Extension { #name : #ViennaWhileLoopNode }
+Extension { #name : 'ViennaWhileLoopNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaWhileLoopNode >> sliceWith: aViennaSlicer [
 
 	[

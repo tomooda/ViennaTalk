@@ -1,6 +1,6 @@
-Extension { #name : #ViennaTypeNode }
+Extension { #name : 'ViennaTypeNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaTypeNode >> sliceWith: aViennaSlicer [
 
 	^ self subclassResponsibility

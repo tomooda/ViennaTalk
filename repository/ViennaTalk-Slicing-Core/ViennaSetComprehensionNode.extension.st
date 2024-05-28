@@ -1,6 +1,6 @@
-Extension { #name : #ViennaSetComprehensionNode }
+Extension { #name : 'ViennaSetComprehensionNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaSetComprehensionNode >> sliceWith: aViennaSlicer [
 
 	aViennaSlicer onNode: self do: [
@@ -13,7 +13,8 @@ ViennaSetComprehensionNode >> sliceWith: aViennaSlicer [
 	| origin |
 	origin := aViennaSlicer copy.
 	self expression sliceWith: aViennaSlicer.
-	self suchthatExpression sliceWith: aViennaSlicer.
+	self suchthatExpression ifNotNil: [ :node |
+		node sliceWith: aViennaSlicer ].
 	aViennaSlicer agenda ~= origin agenda ] whileTrue.
 	self bindList reverseDo: [ :bind | bind sliceWith: aViennaSlicer ]
 ]

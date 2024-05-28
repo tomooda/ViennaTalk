@@ -1,6 +1,6 @@
-Extension { #name : #ViennaRecordModifierNode }
+Extension { #name : 'ViennaRecordModifierNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaRecordModifierNode >> sliceWith: aViennaSlicer [
 
 	aViennaSlicer onNode: self do: [

@@ -1,6 +1,6 @@
-Extension { #name : #ViennaSequenceForLoopNode }
+Extension { #name : 'ViennaSequenceForLoopNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaSequenceForLoopNode >> sliceWith: aViennaSlicer [
 
 	| needsControl |

@@ -1,6 +1,6 @@
-Extension { #name : #ViennaFieldNode }
+Extension { #name : 'ViennaFieldNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaFieldNode >> sliceWith: aViennaSlicer [
 
 	aViennaSlicer addAffectingNode: self.

@@ -1,6 +1,6 @@
-Extension { #name : #ViennaCasesExpressionNode }
+Extension { #name : 'ViennaCasesExpressionNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaCasesExpressionNode >> sliceWith: aViennaSlicer [
 
 	| branchSlicer |

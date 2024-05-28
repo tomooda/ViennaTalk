@@ -1,6 +1,6 @@
-Extension { #name : #ViennaRecordTypeDefinitionNode }
+Extension { #name : 'ViennaRecordTypeDefinitionNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaRecordTypeDefinitionNode >> sliceWith: aViennaSlicer [
 
 	aViennaSlicer onNode: self do: [

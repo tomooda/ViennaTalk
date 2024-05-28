@@ -1,6 +1,6 @@
-Extension { #name : #ViennaTypeVariableNode }
+Extension { #name : 'ViennaTypeVariableNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaTypeVariableNode >> sliceWith: aViennaSlicer [
 
 	| typeVar |

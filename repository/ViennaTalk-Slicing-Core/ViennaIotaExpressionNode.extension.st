@@ -1,6 +1,6 @@
-Extension { #name : #ViennaIotaExpressionNode }
+Extension { #name : 'ViennaIotaExpressionNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaIotaExpressionNode >> sliceWith: aViennaSlicer [
 
 	aViennaSlicer onNode: self do: [

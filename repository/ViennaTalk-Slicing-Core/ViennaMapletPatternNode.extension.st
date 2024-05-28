@@ -1,6 +1,6 @@
-Extension { #name : #ViennaMapletPatternNode }
+Extension { #name : 'ViennaMapletPatternNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaMapletPatternNode >> sliceWith: aViennaSlicer [
 
 	aViennaSlicer onNode: self do: [

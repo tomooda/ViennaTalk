@@ -1,6 +1,6 @@
-Extension { #name : #ViennaTrapStatementNode }
+Extension { #name : 'ViennaTrapStatementNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaTrapStatementNode >> sliceWith: aViennaSlicer [
 
 	| exits branchSlicer |

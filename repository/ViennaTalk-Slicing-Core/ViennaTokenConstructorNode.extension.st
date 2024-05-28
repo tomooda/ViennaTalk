@@ -1,6 +1,6 @@
-Extension { #name : #ViennaTokenConstructorNode }
+Extension { #name : 'ViennaTokenConstructorNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaTokenConstructorNode >> sliceWith: aViennaSlicer [
 
 	aViennaSlicer onNode: self do: [

@@ -130,6 +130,13 @@ ViennaTracingString >> copyFrom: start to: end [
 	^ self class string: (string copyFrom: start to: end) sources: newSources
 ]
 
+{ #category : 'copying' }
+ViennaTracingString >> copyReplaceFrom: start to: stop with: replacementCollection [
+
+	^ (self copyFrom: 1 to: start - 1) , replacementCollection
+	  , (self copyFrom: stop + 1 to: self size)
+]
+
 { #category : 'streaming' }
 ViennaTracingString >> cr [
 	^ self nextPut: Character cr
@@ -138,6 +145,12 @@ ViennaTracingString >> cr [
 { #category : 'comparing' }
 ViennaTracingString >> hash [
 	^ string hash
+]
+
+{ #category : 'controlling' }
+ViennaTracingString >> ifTracingString: aBlock [
+
+	aBlock cull: self
 ]
 
 { #category : 'initialize-release' }

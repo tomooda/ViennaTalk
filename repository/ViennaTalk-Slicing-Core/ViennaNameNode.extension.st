@@ -1,18 +1,18 @@
-Extension { #name : #ViennaNameNode }
+Extension { #name : 'ViennaNameNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaNameNode >> sliceArgumentsWith: aViennaSlicer [
 
 	
 ]
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaNameNode >> sliceReadWith: aViennaSlicer [
 
 	aViennaSlicer onNode: self
 ]
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaNameNode >> sliceWith: aViennaSlicer [
 
 	| resolved |
@@ -24,7 +24,7 @@ ViennaNameNode >> sliceWith: aViennaSlicer [
 		resolved sliceWith: aViennaSlicer ]
 ]
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaNameNode >> sliceWriteWith: aViennaSlicer [
 
 	aViennaSlicer onNode: self.

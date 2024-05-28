@@ -1,6 +1,6 @@
-Extension { #name : #ViennaFieldSelectNode }
+Extension { #name : 'ViennaFieldSelectNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaFieldSelectNode >> sliceWith: aViennaSlicer [
 
 	aViennaSlicer onNode: self do: [

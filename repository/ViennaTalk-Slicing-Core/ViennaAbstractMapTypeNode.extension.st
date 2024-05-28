@@ -1,6 +1,6 @@
-Extension { #name : #ViennaAbstractMapTypeNode }
+Extension { #name : 'ViennaAbstractMapTypeNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaAbstractMapTypeNode >> sliceWith: aViennaSlicer [
 
 	aViennaSlicer onNode: self do: [

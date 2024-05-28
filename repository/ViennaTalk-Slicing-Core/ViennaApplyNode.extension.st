@@ -1,6 +1,6 @@
-Extension { #name : #ViennaApplyNode }
+Extension { #name : 'ViennaApplyNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaApplyNode >> sliceWith: aViennaSlicer [
 
 	| callee |

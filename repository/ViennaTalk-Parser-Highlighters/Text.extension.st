@@ -1,12 +1,18 @@
-Extension { #name : #Text }
+Extension { #name : 'Text' }
 
-{ #category : #'*ViennaTalk-Parser-Highlighters' }
+{ #category : '*ViennaTalk-Parser-Highlighters' }
 Text >> ++ aTextOrString [
 
 	^ self , aTextOrString
 ]
 
-{ #category : #'*ViennaTalk-Parser-Highlighters' }
+{ #category : '*ViennaTalk-Parser-Highlighters' }
+Text >> asViennaTracingString [
+
+	^ string asViennaTracingString
+]
+
+{ #category : '*ViennaTalk-Parser-Highlighters' }
 Text >> lines [
 	"Answer an array of lines composing this receiver without the line ending delimiters"
 
@@ -17,7 +23,7 @@ Text >> lines [
 			  lines nextPut: (stream upTo: Character cr) ] ]
 ]
 
-{ #category : #'*ViennaTalk-Parser-Highlighters' }
+{ #category : '*ViennaTalk-Parser-Highlighters' }
 Text >> string: aString [
 
 	string := aString

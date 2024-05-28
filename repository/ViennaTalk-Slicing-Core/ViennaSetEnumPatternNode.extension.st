@@ -1,6 +1,6 @@
-Extension { #name : #ViennaSetEnumPatternNode }
+Extension { #name : 'ViennaSetEnumPatternNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaSetEnumPatternNode >> sliceWith: aViennaSlicer [
 
 	aViennaSlicer onNode: self do: [

@@ -1,6 +1,6 @@
-Extension { #name : #ViennaReturnStatementNode }
+Extension { #name : 'ViennaReturnStatementNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaReturnStatementNode >> sliceWith: aViennaSlicer [
 
 	aViennaSlicer initializeAgenda.

@@ -1,15 +1,16 @@
 Class {
-	#name : #ViennaInterOperationSlicer,
-	#superclass : #Object,
+	#name : 'ViennaInterOperationSlicer',
+	#superclass : 'Object',
 	#instVars : [
 		'agenda',
 		'slicers',
 		'dependency'
 	],
-	#category : #'ViennaTalk-Slicing-Core'
+	#category : 'ViennaTalk-Slicing-Core',
+	#package : 'ViennaTalk-Slicing-Core'
 }
 
-{ #category : #slicing }
+{ #category : 'slicing' }
 ViennaInterOperationSlicer >> addAgenda: aViennaIntraOperationSlicer [
 
 	agenda add: aViennaIntraOperationSlicer.
@@ -18,7 +19,7 @@ ViennaInterOperationSlicer >> addAgenda: aViennaIntraOperationSlicer [
 		ifPresent: [ :dependentSlicers | agenda addAll: dependentSlicers ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaInterOperationSlicer >> addSlicer: aViennaSlicer [
 
 	slicers
@@ -28,7 +29,7 @@ ViennaInterOperationSlicer >> addSlicer: aViennaSlicer [
 		put: aViennaSlicer
 ]
 
-{ #category : #slicing }
+{ #category : 'slicing' }
 ViennaInterOperationSlicer >> finishAgenda [
 
 	[ agenda notEmpty ] whileTrue: [
@@ -38,7 +39,7 @@ ViennaInterOperationSlicer >> finishAgenda [
 		slicer cut ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 ViennaInterOperationSlicer >> initialize [
 
 	super initialize.
@@ -47,7 +48,7 @@ ViennaInterOperationSlicer >> initialize [
 	dependency := IdentityDictionary new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInterOperationSlicer >> slicerOnOperation: aViennaNode criteria: aCollectionOfViennaNode callerSlicer: aViennaSlicer [
 
 	| key newSlicer |

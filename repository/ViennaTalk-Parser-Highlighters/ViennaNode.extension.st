@@ -1,6 +1,6 @@
-Extension { #name : #ViennaNode }
+Extension { #name : 'ViennaNode' }
 
-{ #category : #'*ViennaTalk-Parser-Highlighters' }
+{ #category : '*ViennaTalk-Parser-Highlighters' }
 ViennaNode >> highlightedSource [
 	^ self source
 		in: [ :source | 
@@ -10,7 +10,7 @@ ViennaNode >> highlightedSource [
 				text ]
 ]
 
-{ #category : #'*ViennaTalk-Parser-Highlighters' }
+{ #category : '*ViennaTalk-Parser-Highlighters' }
 ViennaNode >> tracingHighlightedSource [
 
 	| text source whole |

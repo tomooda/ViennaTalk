@@ -1,6 +1,6 @@
-Extension { #name : #ViennaInvariantNode }
+Extension { #name : 'ViennaInvariantNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaInvariantNode >> sliceWith: aViennaSlicer [
 
 	aViennaSlicer onNode: self do: [

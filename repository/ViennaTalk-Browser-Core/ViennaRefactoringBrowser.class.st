@@ -949,7 +949,8 @@ ViennaRefactoringBrowser >> exportToDisk [
 
 { #category : 'private' }
 ViennaRefactoringBrowser >> getSource: aViennaNode [
-	aViennaNode ifNil: [ ^ String ].
+
+	aViennaNode ifNil: [ ^ String new ].
 	^ aViennaNode tracingHighlightedSource
 ]
 
@@ -972,7 +973,7 @@ ViennaRefactoringBrowser >> highlightSlice: aViennaNode [
 			          startNode: aViennaNode.
 		slicer sliceNodes , { aViennaNode } ifNotEmpty: [ :nodes |
 			| source text gray textWidget |
-			source := sourceText text string asViennaTracingString.
+			source := sourceText tracingSource.
 			sourceText withAdapterDo: [ :a |
 				a widgetDo: [ :w | textWidget := w ] ].
 			text := textWidget text.
@@ -994,7 +995,7 @@ ViennaRefactoringBrowser >> highlightSourceText [
 		highlighterProcess := nil ].
 	highlighterProcess := [
 	                      | source highlighter context result newNode newAst copyMap parent oldNode |
-	                      source := sourceText text asString copy.
+	                      source := sourceText text asString asString copy.
 	                      highlighter := ViennaVDMHighlighter new.
 	                      highlighter text: source asText.
 	                      context := ViennaPP2HighlightingContext new.
@@ -1586,7 +1587,7 @@ ViennaRefactoringBrowser >> okToClose [
 
 { #category : 'operations' }
 ViennaRefactoringBrowser >> onTheFlyCheckSourceText [
-	self highlightSourceText
+	"self highlightSourceText"
 ]
 
 { #category : 'private' }
@@ -1700,15 +1701,55 @@ ViennaRefactoringBrowser >> playgroundTextContextMenu [
 	^ menu
 ]
 
-{ #category : 'operations' }
+{ #category : 'operations-epiLog' }
 ViennaRefactoringBrowser >> revertTo: aViennaEpiLog [
 
 	self epiLogRevertion: aViennaEpiLog.
 	self updateModuleList
 ]
 
-{ #category : 'operations' }
+{ #category : 'operations-tests' }
 ViennaRefactoringBrowser >> runAllTests [
+
+	testProcess ifNotNil: [ testProcess terminate ].
+	testProcess := [
+	               | ast testAnimation |
+	               testResultTable items: #(  ).
+	               ast := self specification ifNil: [ ^ nil ].
+	               testAnimation := ViennaAnimation default
+		                                specification:
+			                                (ViennaVDMFormatter format: ast);
+		                                yourself.
+	               (ast at: 1) isViennaModuleNode ifTrue: [
+		               ast do: [ :moduleNode |
+			               | moduleName |
+			               moduleName := moduleNode identifier.
+			               (moduleName endsWith: 'Test') ifTrue: [
+				               moduleNode sectionsDo: [ :section |
+					               section isViennaOperationDefinitionsNode ifTrue: [
+						               section toplevelDefinitionsDo: [
+							               :operationDefinition |
+							               operationDefinition
+								               isViennaExplicitOperationDefinitionNode
+								               ifTrue: [
+									               | operationName |
+									               operationName := operationDefinition
+										                                identifier.
+									               (operationName size > 4 and: [
+										                (operationName copyFrom: 1 to: 4) = 'test' ])
+										               ifTrue: [
+											               testResultTable items:
+												               (testResultTable specification items
+													                copyWith: (self
+															                 runTestModule: moduleName
+															                 operation: operationName
+															                 animation: testAnimation)) ] ] ] ] ] ] ] ].
+	               testProcess := nil ] forkAt:
+		               Processor userBackgroundPriority
+]
+
+{ #category : 'operations-tests' }
+ViennaRefactoringBrowser >> runAllUnitTests [
 
 	testProcess ifNotNil: [ testProcess terminate ].
 	testProcess := [
@@ -1835,7 +1876,7 @@ ViennaRefactoringBrowser >> sourcePageLayout [
 { #category : 'accessing' }
 ViennaRefactoringBrowser >> sourceSelection [
 
-	^ sourceText text string asViennaTracingString
+	^ sourceText tracingSource
 		  nodeContaining: sourceText selectionInterval
 		  ifAbsent: [ nil ]
 ]
@@ -1870,16 +1911,6 @@ ViennaRefactoringBrowser >> sourceTextContextMenu [
 	| menu |
 	menu := self newMenu.
 	self sourceSelection ifNotNil: [ :node |
-		menu addGroup: [ :group |
-			group
-				addItem: [ :item |
-					item
-						name: 'Evaluate it';
-						action: [ sourceText doEvaluateIt ] ];
-				addItem: [ :item |
-					item
-						name: 'Type it';
-						action: [ sourceText doTypeIt ] ] ].
 		self addRefactoringMenuGroupOn: node to: menu with: [ :group |  ].
 		(node detectParent: #isViennaOperationDefinitionNode ifNone: [ nil ])
 			ifNotNil: [

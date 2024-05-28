@@ -1,6 +1,6 @@
-Extension { #name : #ViennaIfStatementNode }
+Extension { #name : 'ViennaIfStatementNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaIfStatementNode >> sliceWith: aViennaSlicer [
 
 	| branchSlicer |

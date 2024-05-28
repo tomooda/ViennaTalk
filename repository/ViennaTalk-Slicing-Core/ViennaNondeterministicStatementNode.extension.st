@@ -1,6 +1,6 @@
-Extension { #name : #ViennaNondeterministicStatementNode }
+Extension { #name : 'ViennaNondeterministicStatementNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaNondeterministicStatementNode >> sliceWith: aViennaSlicer [
 
 	| branchSlicer |

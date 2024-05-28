@@ -1,6 +1,6 @@
 Class {
-	#name : #ViennaSlicer,
-	#superclass : #Object,
+	#name : 'ViennaSlicer',
+	#superclass : 'Object',
 	#instVars : [
 		'operation',
 		'criteria',
@@ -11,10 +11,11 @@ Class {
 		'interOperationSlicer',
 		'affectingNodes'
 	],
-	#category : #'ViennaTalk-Slicing-Core'
+	#category : 'ViennaTalk-Slicing-Core',
+	#package : 'ViennaTalk-Slicing-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaSlicer class >> operation: aViennaNode criteria: aCollectionOfViennaNameNode [
 
 	^ self
@@ -23,7 +24,7 @@ ViennaSlicer class >> operation: aViennaNode criteria: aCollectionOfViennaNameNo
 		  startNode: nil
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaSlicer class >> operation: aViennaNode criteria: aCollectionOfViennaNameNode startNode: aViennaNode2 [
 
 	^ self new
@@ -33,7 +34,7 @@ ViennaSlicer class >> operation: aViennaNode criteria: aCollectionOfViennaNameNo
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaSlicer class >> withAll: aCollectionOfViennaNameNode [
 
 	^ self new
@@ -41,7 +42,7 @@ ViennaSlicer class >> withAll: aCollectionOfViennaNameNode [
 		  yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaSlicer >> = anObject [
 
 	^ self class = anObject class and: [
@@ -50,38 +51,38 @@ ViennaSlicer >> = anObject [
 				  startNode == anObject startNode ] ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaSlicer >> addAffectingNode: aViennaNode [
 
 	affectingNodes add: aViennaNode
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaSlicer >> addCriterion: aViennaNode [
 
 	criteria add: aViennaNode resolve.
 	agenda := criteria copy
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSlicer >> affectingNodes [
 
 	^ affectingNodes
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSlicer >> agenda [
 
 	^ agenda
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSlicer >> agenda: aCollectionOfViennaNameNode [
 
 	agenda := Set withAll: aCollectionOfViennaNameNode
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaSlicer >> branch [
 
 	| subslicerStream origin |
@@ -104,7 +105,7 @@ ViennaSlicer >> branch [
 					  writes addAll: subslicer writes ] ] ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaSlicer >> call: aViennaNode [
 
 	startNode ifNil: [
@@ -115,7 +116,7 @@ ViennaSlicer >> call: aViennaNode [
 					 callerSlicer: self) ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaSlicer >> continue: aViennaSlicer [
 
 	agenda := aViennaSlicer agenda copy.
@@ -125,20 +126,20 @@ ViennaSlicer >> continue: aViennaSlicer [
 	affectingNodes addAll: aViennaSlicer affectingNodes
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaSlicer >> control: aViennaNode [
 
 	startNode == aViennaNode ifTrue: [ startNode := nil ].
 	agenda add: aViennaNode resolve
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSlicer >> criteria [
 
 	^ criteria
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSlicer >> criteria: aCollectionOfViennaNode [
 
 	criteria := IdentitySet withAll:
@@ -146,7 +147,7 @@ ViennaSlicer >> criteria: aCollectionOfViennaNode [
 	agenda := criteria copy
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaSlicer >> cut [
 
 	| origin |
@@ -157,14 +158,14 @@ ViennaSlicer >> cut [
 	^ affectingNodes
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaSlicer >> hash [
 
 	^ ((self class hash bitXor: operation hash) bitXor: criteria hash)
 		  bitXor: startNode hash
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 ViennaSlicer >> initialize [
 
 	super initialize.
@@ -175,13 +176,13 @@ ViennaSlicer >> initialize [
 	writes := Set new
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaSlicer >> initializeAgenda [
 
 	agenda := criteria copy
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSlicer >> interOperationSlicer [
 
 	^ interOperationSlicer ifNil: [
@@ -190,19 +191,19 @@ ViennaSlicer >> interOperationSlicer [
 			                          yourself ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSlicer >> interOperationSlicer: aViennaInterOperationSlicer [
 
 	interOperationSlicer := aViennaInterOperationSlicer
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaSlicer >> onNode: aViennaNode [
 
 	aViennaNode == startNode ifTrue: [ startNode := nil ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaSlicer >> onNode: aViennaNode do: aBlock [
 
 	| origin |
@@ -221,19 +222,19 @@ ViennaSlicer >> onNode: aViennaNode do: aBlock [
 		writes removeAll ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSlicer >> operation [
 
 	^ operation
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSlicer >> operation: aViennaNode [
 
 	operation := aViennaNode resolve
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 ViennaSlicer >> postCopy [
 
 	criteria := criteria copy.
@@ -243,7 +244,7 @@ ViennaSlicer >> postCopy [
 	writes := writes copy
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 ViennaSlicer >> printOn: aStream [
 
 	aStream
@@ -257,21 +258,22 @@ ViennaSlicer >> printOn: aStream [
 		separatedBy: [ aStream nextPutAll: ',' ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaSlicer >> read: aViennaNode [
 
-	| resolved |
-	resolved := aViennaNode resolve.
-	reads add: resolved
+	aViennaNode ifNotNil: [
+		| resolved |
+		resolved := aViennaNode resolve.
+		reads add: resolved ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaSlicer >> reads [
 
 	^ reads
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaSlicer >> sliceNodes [
 
 	self cut.
@@ -284,25 +286,25 @@ ViennaSlicer >> sliceNodes [
 				   ifNone: [ nil ]) isNil ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSlicer >> startNode [
 
 	^ startNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSlicer >> startNode: aViennaNode [
 
 	startNode := aViennaNode
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaSlicer >> write: aViennaNode [
 
-	writes add: aViennaNode resolve
+	aViennaNode ifNotNil: [ writes add: aViennaNode resolve ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaSlicer >> writes [
 
 	^ writes

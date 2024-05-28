@@ -80,9 +80,8 @@ ViennaTraceLetBestBindingNode >> freeIdentifiersExcept: aSet do: aBlock [
 	| boundIdentifiers |
 	self multipleBind freeIdentifiersExcept: aSet do: aBlock.
 	boundIdentifiers := aSet , self multipleBind uniqueBoundIdentifiers.
-	self conditionExpression
-		freeIdentifiersExcept: boundIdentifiers
-		do: aBlock.
+	self conditionExpression ifNotNil: [ :expression |
+		expression freeIdentifiersExcept: boundIdentifiers do: aBlock ].
 	self traceDefinition
 		freeIdentifiersExcept: boundIdentifiers
 		do: aBlock

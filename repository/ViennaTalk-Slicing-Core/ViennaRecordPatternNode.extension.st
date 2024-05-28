@@ -1,6 +1,6 @@
-Extension { #name : #ViennaRecordPatternNode }
+Extension { #name : 'ViennaRecordPatternNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaRecordPatternNode >> sliceWith: aViennaSlicer [
 
 	| type |

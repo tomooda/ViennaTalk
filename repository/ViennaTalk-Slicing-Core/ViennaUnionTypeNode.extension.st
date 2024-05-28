@@ -1,6 +1,6 @@
-Extension { #name : #ViennaUnionTypeNode }
+Extension { #name : 'ViennaUnionTypeNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaUnionTypeNode >> sliceWith: aViennaSlicer [
 
 	aViennaSlicer onNode: self do: [

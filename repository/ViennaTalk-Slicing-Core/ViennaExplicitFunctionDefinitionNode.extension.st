@@ -1,6 +1,6 @@
-Extension { #name : #ViennaExplicitFunctionDefinitionNode }
+Extension { #name : 'ViennaExplicitFunctionDefinitionNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaExplicitFunctionDefinitionNode >> sliceWith: aViennaSlicer [
 
 	aViennaSlicer onNode: self do: [

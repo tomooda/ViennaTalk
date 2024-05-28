@@ -1,6 +1,6 @@
-Extension { #name : #ViennaLetStatementNode }
+Extension { #name : 'ViennaLetStatementNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaLetStatementNode >> sliceWith: aViennaSlicer [
 
 	self statement sliceWith: aViennaSlicer.

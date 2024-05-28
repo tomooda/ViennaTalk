@@ -1,6 +1,6 @@
-Extension { #name : #String }
+Extension { #name : 'String' }
 
-{ #category : #'*ViennaTalk-Parser-Highlighters' }
+{ #category : '*ViennaTalk-Parser-Highlighters' }
 String >> ++ aTextOrString [
 
 	^ aTextOrString isText

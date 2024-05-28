@@ -1,6 +1,6 @@
-Extension { #name : #ViennaSetEnumerationNode }
+Extension { #name : 'ViennaSetEnumerationNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaSetEnumerationNode >> sliceWith: aViennaSlicer [
 
 	aViennaSlicer onNode: self do: [

@@ -1,6 +1,6 @@
-Extension { #name : #ViennaPreconditionExpressionNode }
+Extension { #name : 'ViennaPreconditionExpressionNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaPreconditionExpressionNode >> sliceWith: aViennaSlicer [
 
 	aViennaSlicer onNode: self do: [

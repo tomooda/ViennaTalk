@@ -1,6 +1,6 @@
-Extension { #name : #ViennaBinaryOperatorExpressionNode }
+Extension { #name : 'ViennaBinaryOperatorExpressionNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaBinaryOperatorExpressionNode >> sliceWith: aViennaSlicer [
 
 	aViennaSlicer onNode: self do: [

@@ -1,6 +1,6 @@
-Extension { #name : #ViennaFunctionTypeInstantiationNode }
+Extension { #name : 'ViennaFunctionTypeInstantiationNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaFunctionTypeInstantiationNode >> sliceWith: aViennaSlicer [
 
 	| functionDefinition |

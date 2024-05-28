@@ -1,6 +1,6 @@
-Extension { #name : #ViennaMultipleSetSeqBindNode }
+Extension { #name : 'ViennaMultipleSetSeqBindNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaMultipleSetSeqBindNode >> sliceWith: aViennaSlicer [
 
 	aViennaSlicer onNode: self do: [

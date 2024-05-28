@@ -1,6 +1,6 @@
-Extension { #name : #ViennaTypeJudgementNode }
+Extension { #name : 'ViennaTypeJudgementNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaTypeJudgementNode >> sliceWith: aViennaSlicer [
 
 	aViennaSlicer onNode: self do: [

@@ -1,6 +1,6 @@
-Extension { #name : #ViennaTypeBindListNode }
+Extension { #name : 'ViennaTypeBindListNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaTypeBindListNode >> sliceWith: aViennaSlicer [
 
 	aViennaSlicer onNode: self do: [

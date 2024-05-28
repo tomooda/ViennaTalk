@@ -1,6 +1,6 @@
-Extension { #name : #ViennaDclStatementNode }
+Extension { #name : 'ViennaDclStatementNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaDclStatementNode >> sliceWith: aViennaSlicer [
 
 	self reverseDo: [ :assignmentDefinition |

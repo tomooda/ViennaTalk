@@ -1,6 +1,6 @@
-Extension { #name : #ViennaTypeSynonymNode }
+Extension { #name : 'ViennaTypeSynonymNode' }
 
-{ #category : #'*ViennaTalk-Slicing-Core' }
+{ #category : '*ViennaTalk-Slicing-Core' }
 ViennaTypeSynonymNode >> sliceWith: aViennaSlicer [
 
 	aViennaSlicer onNode: self do: [

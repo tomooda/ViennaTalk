@@ -3,7 +3,8 @@ Class {
 	#superclass : 'SpCodePresenter',
 	#instVars : [
 		'animation',
-		'module'
+		'module',
+		'tracingSource'
 	],
 	#category : 'ViennaTalk-Browser-Core-Spec2',
 	#package : 'ViennaTalk-Browser-Core',
@@ -154,6 +155,21 @@ ViennaVDMSourcePresenter >> module [
 ViennaVDMSourcePresenter >> module: aBlock [
 
 	module := aBlock
+]
+
+{ #category : 'api' }
+ViennaVDMSourcePresenter >> text: aStringOrText [
+
+	| t |
+	t := aStringOrText asText.
+	t string isViennaTracingString ifTrue: [ tracingSource := t string ].
+	^ super text: (Text string: t string asString runs: t runs)
+]
+
+{ #category : 'api' }
+ViennaVDMSourcePresenter >> tracingSource [
+
+	^ tracingSource ifNil: [ self text asString asViennaTracingString ]
 ]
 
 { #category : 'evaluating' }
