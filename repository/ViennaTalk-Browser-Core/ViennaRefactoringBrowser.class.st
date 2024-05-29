@@ -1538,12 +1538,6 @@ ViennaRefactoringBrowser >> moduleListContextMenu [
 	^ menu
 ]
 
-{ #category : 'instance creation' }
-ViennaRefactoringBrowser >> newVDMSource [
-
-	^ self instantiate: ViennaVDMSourcePresenter
-]
-
 { #category : 'operations-source signal' }
 ViennaRefactoringBrowser >> notifyAnimationError: aString [
 

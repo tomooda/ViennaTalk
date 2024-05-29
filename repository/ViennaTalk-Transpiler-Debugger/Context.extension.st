@@ -1,16 +1,16 @@
-Extension { #name : #Context }
+Extension { #name : 'Context' }
 
-{ #category : #'*ViennaTalk-Transpiler-Debugger' }
+{ #category : '*ViennaTalk-Transpiler-Debugger' }
 Context >> basicSpecification [
 	^ self methodClass specificationAt: self selector
 ]
 
-{ #category : #'*ViennaTalk-Transpiler-Debugger' }
+{ #category : '*ViennaTalk-Transpiler-Debugger' }
 Context >> specification [
 	^ self specificationContext ifNotNil: #basicSpecification
 ]
 
-{ #category : #'*ViennaTalk-Transpiler-Debugger' }
+{ #category : '*ViennaTalk-Transpiler-Debugger' }
 Context >> specificationContext [
 	| context |
 	context := self.

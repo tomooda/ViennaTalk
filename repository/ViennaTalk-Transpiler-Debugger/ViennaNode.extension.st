@@ -1,6 +1,6 @@
-Extension { #name : #ViennaNode }
+Extension { #name : 'ViennaNode' }
 
-{ #category : #'*ViennaTalk-Transpiler-Debugger' }
+{ #category : '*ViennaTalk-Transpiler-Debugger' }
 ViennaNode >> debuggerSource [
 	^ (ViennaVDMTracingFormatter format: self)
 		in: [ :source | 
@@ -10,7 +10,7 @@ ViennaNode >> debuggerSource [
 				text ]
 ]
 
-{ #category : #'*ViennaTalk-Transpiler-Debugger' }
+{ #category : '*ViennaTalk-Transpiler-Debugger' }
 ViennaNode >> tracingSource [
 	| source whole |
 	source := (ViennaVDMTracingFormatter format: self)

@@ -1,15 +1,16 @@
 Class {
-	#name : #ViennaVDMTracingFormatter,
-	#superclass : #ViennaVDMFormatter,
-	#category : #'ViennaTalk-Transpiler-Debugger'
+	#name : 'ViennaVDMTracingFormatter',
+	#superclass : 'ViennaVDMFormatter',
+	#category : 'ViennaTalk-Transpiler-Debugger',
+	#package : 'ViennaTalk-Transpiler-Debugger'
 }
 
-{ #category : #formatting }
+{ #category : 'formatting' }
 ViennaVDMTracingFormatter >> format: aViennaNode [
 	^ (super format: aViennaNode) asViennaTracingString: aViennaNode
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaVDMTracingFormatter >> join: aString withAll: aCollectionOfString [
 
 	^ aCollectionOfString

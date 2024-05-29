@@ -1,1 +1,1 @@
-Package { #name : #'ViennaTalk-Transpiler-Debugger' }
+Package { #name : 'ViennaTalk-Transpiler-Debugger' }

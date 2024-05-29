@@ -1,11 +1,11 @@
-Extension { #name : #DebugSession }
+Extension { #name : 'DebugSession' }
 
-{ #category : #'*ViennaTalk-Transpiler-Debugger' }
+{ #category : '*ViennaTalk-Transpiler-Debugger' }
 DebugSession >> selectedVDMRangeForContext: selectedContext [
 	^ self vdmRangeForContext: selectedContext
 ]
 
-{ #category : #'*ViennaTalk-Transpiler-Debugger' }
+{ #category : '*ViennaTalk-Transpiler-Debugger' }
 DebugSession >> vdmPcNodeForContext: aContext [
 	| smalltalkNode specificationContext vdmNode map currentNode |
 	specificationContext := aContext specificationContext.
@@ -27,7 +27,7 @@ DebugSession >> vdmPcNodeForContext: aContext [
 	^ currentNode
 ]
 
-{ #category : #'*ViennaTalk-Transpiler-Debugger' }
+{ #category : '*ViennaTalk-Transpiler-Debugger' }
 DebugSession >> vdmRangeForContext: aContext [
 
 	| currentNode formattedSource |
@@ -43,7 +43,7 @@ DebugSession >> vdmRangeForContext: aContext [
 	^ 1 to: 0
 ]
 
-{ #category : #'*ViennaTalk-Transpiler-Debugger' }
+{ #category : '*ViennaTalk-Transpiler-Debugger' }
 DebugSession >> vdmStepInto: aContext [
 	"Send the selected message in selectedContext, and take control in 
 	the method invoked to allow further step or send."
@@ -68,7 +68,7 @@ DebugSession >> vdmStepInto: aContext [
 	self triggerEvent: #stepInto
 ]
 
-{ #category : #'*ViennaTalk-Transpiler-Debugger' }
+{ #category : '*ViennaTalk-Transpiler-Debugger' }
 DebugSession >> vdmStepOver: aContext [
 	"Send the selected message in selectedContext, and regain control 
 	after the invoked method returns."

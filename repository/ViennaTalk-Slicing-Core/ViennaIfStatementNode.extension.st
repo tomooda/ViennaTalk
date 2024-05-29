@@ -12,7 +12,7 @@ ViennaIfStatementNode >> sliceWith: aViennaSlicer [
 				| origin needsControl |
 				origin := slicer copy.
 				statement sliceWith: slicer.
-				needsControl := slicer agenda ~= origin agenda.
+				needsControl := slicer affectingNodes ~= origin affectingNodes.
 				self conditionalStatementList reverseDo: [ :conditionalStatement |
 					needsControl ifTrue: [
 						slicer control: conditionalStatement condition ].
@@ -23,7 +23,7 @@ ViennaIfStatementNode >> sliceWith: aViennaSlicer [
 			origin := slicer copy.
 			(self conditionalStatementList at: index) statement sliceWith:
 				slicer.
-			needsControl := slicer agenda ~= origin agenda.
+			needsControl := slicer affectingNodes ~= origin affectingNodes.
 			index to: 1 by: -1 do: [ :i |
 				| conditionalStatement |
 				conditionalStatement := self conditionalStatementList at: i.

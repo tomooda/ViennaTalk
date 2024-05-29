@@ -14,7 +14,7 @@ ViennaSequenceForLoopNode >> sliceWith: aViennaSlicer [
 			self statement sliceWith: subslicer.
 			subslicer onNode: self do: [  ] ];
 		value: nil.
-	aViennaSlicer agenda ~= origin agenda ] whileTrue: [
+	aViennaSlicer affectingNodes ~= origin affectingNodes ] whileTrue: [
 		needsControl := true ].
 	aViennaSlicer onNode: self do: [
 		aViennaSlicer write: self patternOrBind.
