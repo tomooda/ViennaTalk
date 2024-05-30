@@ -947,6 +947,15 @@ ViennaRefactoringBrowser >> exportToDisk [
 		self clearDirty ]
 ]
 
+{ #category : 'operations' }
+ViennaRefactoringBrowser >> generateSmalltalkClasses [
+
+	self specification ifNotNil: [ :ast |
+		(ViennaVDM2SmalltalkClass new
+			 source: animation specification;
+			 generate: ast) ifNotNil: [ :class | class browse ] ]
+]
+
 { #category : 'private' }
 ViennaRefactoringBrowser >> getSource: aViennaNode [
 
@@ -1435,7 +1444,15 @@ ViennaRefactoringBrowser >> menuBar [
 								   g addItem: [ :i |
 										   i
 											   name: 'Run all tests';
-											   action: [ self runAllTests ] ] ]) ] ]
+											   action: [ self runAllTests ] ] ]) ];
+			  addItem: [ :item |
+				  item
+					  name: 'Smalltalk';
+					  subMenu: (self newMenu addGroup: [ :g |
+								   g addItem: [ :i |
+										   i
+											   name: 'Generate Smalltalk classes';
+											   action: [ self generateSmalltalkClasses ] ] ]) ] ]
 ]
 
 { #category : 'operations' }
