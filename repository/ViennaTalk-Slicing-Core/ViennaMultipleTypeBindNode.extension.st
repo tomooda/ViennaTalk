@@ -9,5 +9,7 @@ ViennaMultipleTypeBindNode >> sliceWith: aViennaSlicer [
 		self patternList do: [ :pattern | aViennaSlicer read: pattern ] ].
 	self patternList reverseDo: [ :pattern |
 		pattern sliceWith: aViennaSlicer ].
-	self type sliceWith: aViennaSlicer
+	self type sliceWith: aViennaSlicer.
+	(self type resolve ifNotNil: #inv) ifNotNil: [ :inv |
+		inv sliceWith: aViennaSlicer ]
 ]

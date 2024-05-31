@@ -11,6 +11,5 @@ ViennaRecordConstructorNode >> sliceWith: aViennaSlicer [
 			aViennaSlicer read: expression ].
 		type inv ifNotNil: [ :inv | aViennaSlicer read: inv ] ].
 	self expressionList reverseDo: [ :expression |
-		expression sliceWith: aViennaSlicer ].
-	type inv ifNotNil: [ :inv | inv sliceWith: aViennaSlicer ]
+		expression sliceWith: aViennaSlicer ]
 ]

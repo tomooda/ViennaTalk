@@ -8,5 +8,7 @@ ViennaTypeBindNode >> sliceWith: aViennaSlicer [
 		aViennaSlicer read: self type.
 		aViennaSlicer read: self pattern ].
 	self pattern sliceWith: aViennaSlicer.
-	self type sliceWith: aViennaSlicer
+	self type sliceWith: aViennaSlicer.
+	(self type resolve ifNotNil: #inv) ifNotNil: [ :inv |
+		inv sliceWith: aViennaSlicer ]
 ]

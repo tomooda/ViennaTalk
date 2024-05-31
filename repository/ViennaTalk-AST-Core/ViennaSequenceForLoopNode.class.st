@@ -100,7 +100,7 @@ ViennaSequenceForLoopNode >> lookupIdentifier: aString [
 
 	| pattern |
 	pattern := self patternOrBind pattern.
-	(pattern bindsIdentifier: aString) ifTrue: [ ^ pattern ].
+	(pattern bindsIdentifier: aString) ifTrue: [ ^ self patternOrBind ].
 	^ nil
 ]
 

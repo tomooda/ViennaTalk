@@ -80,7 +80,7 @@ ViennaMultipleBindQuantifierNode >> lookupIdentifier: aString [
 
 	self multipleBindsDo: [ :multibind |
 		multibind patternList do: [ :pattern |
-			(pattern bindsIdentifier: aString) ifTrue: [ ^ pattern ] ] ].
+			(pattern bindsIdentifier: aString) ifTrue: [ ^ multibind ] ] ].
 	^ nil
 ]
 
