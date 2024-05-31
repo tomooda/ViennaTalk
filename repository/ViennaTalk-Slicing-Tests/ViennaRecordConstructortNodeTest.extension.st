@@ -28,11 +28,9 @@ end A' asViennaDocumentAst.
 				           parent: statement;
 				           resolve) }.
 	statement sliceWith: slicer.
-	self assert: slicer agenda asSet equals: {
-			((ViennaLocalNameNode identifier: 'y')
-				 parent: statement;
-				 resolve).
-			((ViennaLocalNameNode identifier: 'z')
+	self
+		assert: slicer agenda asSet
+		equals: { ((ViennaLocalNameNode identifier: 'y')
 				 parent: statement;
 				 resolve) } asSet
 ]

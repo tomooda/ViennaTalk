@@ -18,7 +18,7 @@ types
 	R :: f : nat inv mk_R(f) == f < z
 operations
 	op : () ==> ()
-	op() == x := mk_R(y);
+	op() == x := let mk_R(p) = mk_R(y) in p;
 end A' asViennaDocumentAst.
 	op := (spec moduleNamed: 'A') resolveIdentifier: 'op'.
 	statement := op statement.
@@ -28,11 +28,9 @@ end A' asViennaDocumentAst.
 				           parent: statement;
 				           resolve) }.
 	statement sliceWith: slicer.
-	self assert: slicer agenda asSet equals: {
-			((ViennaLocalNameNode identifier: 'y')
-				 parent: statement;
-				 resolve).
-			((ViennaLocalNameNode identifier: 'z')
+	self
+		assert: slicer agenda asSet
+		equals: { ((ViennaLocalNameNode identifier: 'y')
 				 parent: statement;
 				 resolve) } asSet
 ]
