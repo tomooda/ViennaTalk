@@ -2,33 +2,43 @@ Class {
 	#name : 'ViennaSlicer',
 	#superclass : 'Object',
 	#instVars : [
-		'operation',
 		'criteria',
 		'startNode',
 		'agenda',
 		'reads',
 		'writes',
 		'interOperationSlicer',
-		'affectingNodes'
+		'affectingNodes',
+		'toplevelDefinition'
 	],
 	#category : 'ViennaTalk-Slicing-Core',
 	#package : 'ViennaTalk-Slicing-Core'
 }
 
 { #category : 'instance creation' }
-ViennaSlicer class >> operation: aViennaNode criteria: aCollectionOfViennaNameNode [
+ViennaSlicer class >> on: aViennaNode [
+
+	^ self new
+		  toplevelDefinition: aViennaNode topLevelDefinition;
+		  criteria: { aViennaNode };
+		  startNode: aViennaNode;
+		  yourself
+]
+
+{ #category : 'instance creation' }
+ViennaSlicer class >> toplevelDefinition: aViennaNode criteria: aCollectionOfViennaNameNode [
 
 	^ self
-		  operation: aViennaNode
+		  toplevelDefinition: aViennaNode
 		  criteria: aCollectionOfViennaNameNode
 		  startNode: nil
 ]
 
 { #category : 'instance creation' }
-ViennaSlicer class >> operation: aViennaNode criteria: aCollectionOfViennaNameNode startNode: aViennaNode2 [
+ViennaSlicer class >> toplevelDefinition: aViennaNode criteria: aCollectionOfViennaNameNode startNode: aViennaNode2 [
 
 	^ self new
-		  operation: aViennaNode;
+		  toplevelDefinition: aViennaNode;
 		  criteria: aCollectionOfViennaNameNode;
 		  startNode: aViennaNode2;
 		  yourself
@@ -46,7 +56,7 @@ ViennaSlicer class >> withAll: aCollectionOfViennaNameNode [
 ViennaSlicer >> = anObject [
 
 	^ self class = anObject class and: [
-		  operation == anObject operation and: [
+		  toplevelDefinition == anObject toplevelDefinition and: [
 			  criteria = anObject criteria and: [
 				  startNode == anObject startNode ] ] ]
 ]
@@ -154,14 +164,14 @@ ViennaSlicer >> cut [
 	self interOperationSlicer.
 	origin := self copy.
 	self initializeAgenda.
-	operation sliceWith: self.
+	toplevelDefinition sliceWith: self.
 	^ affectingNodes
 ]
 
 { #category : 'comparing' }
 ViennaSlicer >> hash [
 
-	^ ((self class hash bitXor: operation hash) bitXor: criteria hash)
+	^ ((self class hash bitXor: toplevelDefinition hash) bitXor: criteria hash)
 		  bitXor: startNode hash
 ]
 
@@ -222,18 +232,6 @@ ViennaSlicer >> onNode: aViennaNode do: aBlock [
 		writes removeAll ]
 ]
 
-{ #category : 'accessing' }
-ViennaSlicer >> operation [
-
-	^ operation
-]
-
-{ #category : 'accessing' }
-ViennaSlicer >> operation: aViennaNode [
-
-	operation := aViennaNode resolve
-]
-
 { #category : 'copying' }
 ViennaSlicer >> postCopy [
 
@@ -248,7 +246,7 @@ ViennaSlicer >> postCopy [
 ViennaSlicer >> printOn: aStream [
 
 	aStream
-		nextPutAll: (operation ifNotNil: #identifier ifNil: [ '()' ]);
+		nextPutAll: (toplevelDefinition ifNotNil: #identifier ifNil: [ '()' ]);
 		nextPutAll: '$'.
 	(criteria asArray collect: [ :node |
 		 node isViennaValueDefinitionNode
@@ -296,6 +294,18 @@ ViennaSlicer >> startNode [
 ViennaSlicer >> startNode: aViennaNode [
 
 	startNode := aViennaNode
+]
+
+{ #category : 'accessing' }
+ViennaSlicer >> toplevelDefinition [
+
+	^ toplevelDefinition
+]
+
+{ #category : 'accessing' }
+ViennaSlicer >> toplevelDefinition: aViennaNode [
+
+	toplevelDefinition := aViennaNode resolve
 ]
 
 { #category : 'operations' }

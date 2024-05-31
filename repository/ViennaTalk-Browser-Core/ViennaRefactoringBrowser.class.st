@@ -972,28 +972,22 @@ ViennaRefactoringBrowser >> hasFileReference [
 { #category : 'operations' }
 ViennaRefactoringBrowser >> highlightSlice: aViennaNode [
 
-	(aViennaNode
-		 detectParent: #isViennaOperationDefinitionNode
-		 ifNone: [ nil ]) ifNotNil: [ :operation |
-		| slicer |
-		slicer := ViennaSlicer
-			          operation: operation
-			          criteria: { aViennaNode }
-			          startNode: aViennaNode.
-		slicer sliceNodes , { aViennaNode } ifNotEmpty: [ :nodes |
-			| source text gray textWidget |
-			source := sourceText tracingSource.
-			sourceText withAdapterDo: [ :a |
-				a widgetDo: [ :w | textWidget := w ] ].
-			text := textWidget text.
-			gray := Color gray: 0.9.
-			nodes do: [ :node |
-				(source intervalForSource: node) key ifNotEmpty: [ :interval |
-					text
-						addAttribute: TextBackgroundColor yellow
-						from: interval first
-						to: interval last ] ].
-			textWidget textArea ifNotNil: #compose ] ]
+	| slicer |
+	slicer := ViennaSlicer on: aViennaNode.
+	slicer sliceNodes , { aViennaNode } ifNotEmpty: [ :nodes |
+		| source text gray textWidget |
+		source := sourceText tracingSource.
+		sourceText withAdapterDo: [ :a |
+			a widgetDo: [ :w | textWidget := w ] ].
+		text := textWidget text.
+		gray := Color gray: 0.9.
+		nodes do: [ :node |
+			(source intervalForSource: node) key ifNotEmpty: [ :interval |
+				text
+					addAttribute: TextBackgroundColor yellow
+					from: interval first
+					to: interval last ] ].
+		textWidget textArea ifNotNil: #compose ]
 ]
 
 { #category : 'operations' }
@@ -1923,13 +1917,12 @@ ViennaRefactoringBrowser >> sourceTextContextMenu [
 	menu := self newMenu.
 	self sourceSelection ifNotNil: [ :node |
 		self addRefactoringMenuGroupOn: node to: menu with: [ :group |  ].
-		(node detectParent: #isViennaOperationDefinitionNode ifNone: [ nil ])
-			ifNotNil: [
-				menu addGroup: [ :group |
-					group addItem: [ :item |
-						item
-							name: 'Highlight slice';
-							action: [ self highlightSlice: node ] ] ] ] ].
+		node topLevelDefinition isViennaStateDefinitionNode ifFalse: [
+			menu addGroup: [ :group |
+				group addItem: [ :item |
+					item
+						name: 'Highlight slice';
+						action: [ self highlightSlice: node ] ] ] ] ].
 	^ menu
 ]
 

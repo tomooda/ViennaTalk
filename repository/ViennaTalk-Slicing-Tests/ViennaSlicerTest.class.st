@@ -1,6 +1,6 @@
 Class {
-	#name : #ViennaSlicerTest,
-	#superclass : #TestCase,
+	#name : 'ViennaSlicerTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'spec',
 		'op',
@@ -13,10 +13,11 @@ Class {
 		'skip3',
 		'slicer'
 	],
-	#category : #'ViennaTalk-Slicing-Tests'
+	#category : 'ViennaTalk-Slicing-Tests',
+	#package : 'ViennaTalk-Slicing-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaSlicerTest >> setUp [
 
 	spec := '
@@ -59,7 +60,7 @@ end A' asViennaDocumentAst.
 	slicer := ViennaSlicer new
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaSlicerTest >> testAgenda [
 
 	| names |
@@ -70,7 +71,7 @@ ViennaSlicerTest >> testAgenda [
 	self assert: slicer agenda asSet equals: names
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaSlicerTest >> testBranch [
 
 	slicer addCriterion: x.
@@ -92,10 +93,10 @@ ViennaSlicerTest >> testBranch [
 			y } asSet
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaSlicerTest >> testCall [
 
-	slicer operation: op2.
+	slicer toplevelDefinition: op2.
 	slicer criteria: { x }.
 	slicer call: ('op' asViennaExpressionAst
 			 parent: op2 statement;
@@ -103,7 +104,7 @@ ViennaSlicerTest >> testCall [
 	self assert: slicer agenda asSet equals: { y } asSet
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaSlicerTest >> testContinue [
 
 	slicer criteria: { x }.
@@ -121,7 +122,7 @@ ViennaSlicerTest >> testContinue [
 	self assert: slicer writes asSet equals: { z } asSet
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaSlicerTest >> testCriteria [
 
 	| names |
@@ -132,12 +133,12 @@ ViennaSlicerTest >> testCriteria [
 	self assert: slicer criteria asSet equals: names
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaSlicerTest >> testCut [
 
 	op statement: 'if z = 0 then op2() else x := y' asViennaStatementAst.
 	op2 statement: 'if z <> 0 then op() else y := z' asViennaStatementAst.
-	slicer operation: op2.
+	slicer toplevelDefinition: op2.
 	slicer criteria: { x }.
 	slicer cut.
 	self assert: slicer agenda equals: {
@@ -146,7 +147,7 @@ ViennaSlicerTest >> testCut [
 			z } asSet
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaSlicerTest >> testPostCopy [
 
 	| copy |
@@ -178,7 +179,7 @@ ViennaSlicerTest >> testPostCopy [
 		identicalTo: (slicer instVarNamed: 'writes')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaSlicerTest >> testRead [
 
 	| let a block b |
@@ -198,13 +199,13 @@ ViennaSlicerTest >> testRead [
 	self assert: (slicer reads includes: b resolve)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaSlicerTest >> testSliceNodes [
 
 	op statement:
 		'if z = 0 then (z := y; op2()) else x := y' asViennaStatementAst.
 	op2 statement: 'if z <> 0 then op()' asViennaStatementAst.
-	slicer operation: op2.
+	slicer toplevelDefinition: op2.
 	slicer criteria: { x }.
 	slicer sliceNodes.
 	self assert: slicer agenda asSet equals: {
@@ -213,18 +214,18 @@ ViennaSlicerTest >> testSliceNodes [
 			z } asSet
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaSlicerTest >> testStartNode [
 
 	op statement:
 		'(if z = 0 then x := 1; y := x + 1; op2())' asViennaStatementAst.
 	op2 statement: 'x := z' asViennaStatementAst.
-	slicer operation: op.
+	slicer toplevelDefinition: op.
 	slicer criteria: { x }.
 	slicer sliceNodes.
 	self assert: slicer agenda asSet equals: { z } asSet.
 	slicer := ViennaSlicer new.
-	slicer operation: op.
+	slicer toplevelDefinition: op.
 	slicer criteria: { x }.
 	slicer startNode: (op statement at: 2).
 	slicer sliceNodes.
@@ -233,7 +234,7 @@ ViennaSlicerTest >> testStartNode [
 			z } asSet
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaSlicerTest >> testWrite [
 
 	| let a block b |

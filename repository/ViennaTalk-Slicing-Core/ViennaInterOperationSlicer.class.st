@@ -24,7 +24,7 @@ ViennaInterOperationSlicer >> addSlicer: aViennaSlicer [
 
 	slicers
 		at: {
-				aViennaSlicer operation.
+				aViennaSlicer toplevelDefinition.
 				aViennaSlicer criteria copy }
 		put: aViennaSlicer
 ]
@@ -60,7 +60,7 @@ ViennaInterOperationSlicer >> slicerOnOperation: aViennaNode criteria: aCollecti
 		(dependency at: slicer ifAbsentPut: [ Set new ]) add: aViennaSlicer.
 		^ slicer ].
 	newSlicer := (ViennaSlicer
-		              operation: aViennaNode
+		              toplevelDefinition: aViennaNode
 		              criteria: aCollectionOfViennaNode)
 		             interOperationSlicer: self.
 	slicers at: key put: newSlicer.

@@ -1,1 +1,1 @@
-Package { #name : #'ViennaTalk-Slicing-Tests' }
+Package { #name : 'ViennaTalk-Slicing-Tests' }

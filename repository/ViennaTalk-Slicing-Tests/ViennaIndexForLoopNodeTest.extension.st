@@ -1,6 +1,6 @@
-Extension { #name : #ViennaIndexForLoopNodeTest }
+Extension { #name : 'ViennaIndexForLoopNodeTest' }
 
-{ #category : #'*ViennaTalk-Slicing-Tests' }
+{ #category : '*ViennaTalk-Slicing-Tests' }
 ViennaIndexForLoopNodeTest >> testSliceWith [
 
 	| spec op op2 statement slicer |
@@ -24,7 +24,7 @@ end A
 	op := (spec moduleNamed: 'A') resolveIdentifier: 'op'.
 	statement := op statement.
 	slicer := ViennaSlicer
-		          operation: op
+		          toplevelDefinition: op
 		          criteria: { ((ViennaLocalNameNode identifier: 'x')
 				           parent: (spec moduleNamed: 'A');
 				           resolve) }.
@@ -42,7 +42,7 @@ end A
 	op2 := (spec moduleNamed: 'A') resolveIdentifier: 'op2'.
 	statement := op2 statement.
 	slicer := ViennaSlicer
-		          operation: op2
+		          toplevelDefinition: op2
 		          criteria: { ((ViennaLocalNameNode identifier: 'x')
 				           parent: (spec moduleNamed: 'A');
 				           resolve) }.

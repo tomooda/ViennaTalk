@@ -1,6 +1,6 @@
-Extension { #name : #ViennaCasesExpressionNodeTest }
+Extension { #name : 'ViennaCasesExpressionNodeTest' }
 
-{ #category : #'*ViennaTalk-Slicing-Tests' }
+{ #category : '*ViennaTalk-Slicing-Tests' }
 ViennaCasesExpressionNodeTest >> testSliceWith [
 
 	| spec op statement slicer |
@@ -24,7 +24,7 @@ end A' asViennaDocumentAst.
 	op := (spec moduleNamed: 'A') resolveIdentifier: 'op'.
 	statement := op statement.
 	slicer := ViennaSlicer
-		          operation: op
+		          toplevelDefinition: op
 		          criteria: { ((ViennaLocalNameNode identifier: 'x')
 				           parent: statement;
 				           resolve) }.

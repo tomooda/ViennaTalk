@@ -59,7 +59,7 @@ ViennaVDMDebuggerPresenter >> extractSliceOf: aViennaNode [
 		 ifNone: [ nil ]) ifNotNil: [ :operation |
 		| slicer |
 		slicer := ViennaSlicer
-			          operation: operation
+			          toplevelDefinition: operation
 			          criteria: { aViennaNode }
 			          startNode: aViennaNode.
 		self sliceNodes: slicer sliceNodes , { aViennaNode } ]

@@ -114,7 +114,7 @@ ViennaSetComprehensionNode >> lookupIdentifier: aString [
 
 	self bindList do: [ :multiplebind |
 		multiplebind patternList do: [ :pattern |
-			(pattern bindsIdentifier: aString) ifTrue: [ ^ pattern ] ] ].
+			(pattern bindsIdentifier: aString) ifTrue: [ ^ multiplebind ] ] ].
 	^ nil
 ]
 

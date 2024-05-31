@@ -99,7 +99,7 @@ ViennaSequenceComprehensionNode >> label [
 ViennaSequenceComprehensionNode >> lookupIdentifier: aString [
 
 	(self setSeqBind pattern bindsIdentifier: aString) ifTrue: [
-		^ self setSeqBind pattern ].
+		^ self setSeqBind ].
 	^ nil
 ]
 

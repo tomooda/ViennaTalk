@@ -1,6 +1,6 @@
-Extension { #name : #ViennaWhileStatementNodeTest }
+Extension { #name : 'ViennaWhileStatementNodeTest' }
 
-{ #category : #'*ViennaTalk-Slicing-Tests' }
+{ #category : '*ViennaTalk-Slicing-Tests' }
 ViennaWhileStatementNodeTest >> testSliceWith [
 
 	| spec op2 statement slicer |
@@ -25,7 +25,7 @@ end A
 	op2 := (spec moduleNamed: 'A') resolveIdentifier: 'op2'.
 	statement := op2 statement.
 	slicer := ViennaSlicer
-		          operation: op2
+		          toplevelDefinition: op2
 		          criteria: { ((ViennaLocalNameNode identifier: 'x')
 				           parent: (spec moduleNamed: 'A');
 				           resolve) }.
