@@ -7,7 +7,8 @@ Class {
 		'vdmSource',
 		'toolbar',
 		'sliceNodes',
-		'tracingSource'
+		'tracingSource',
+		'sliceAttribute'
 	],
 	#category : 'ViennaTalk-Transpiler-Debugger',
 	#package : 'ViennaTalk-Transpiler-Debugger'
@@ -88,7 +89,7 @@ ViennaVDMDebuggerPresenter >> highlightVDMSource [
 		sliceNodes do: [ :node |
 			(tracingSource intervalForSource: node) key ifNotEmpty: [ :interval |
 				highlighter text
-					addAttribute: TextBackgroundColor yellow
+					addAttribute: self sliceAttribute
 					from: interval first
 					to: interval last ] ] ].
 	source size = highlighter text runs size ifTrue: [
@@ -129,6 +130,14 @@ ViennaVDMDebuggerPresenter >> initializeToolbar [
 ViennaVDMDebuggerPresenter >> setModelBeforeInitialization: aDebugger [
 
 	debugger := aDebugger
+]
+
+{ #category : 'slicing' }
+ViennaVDMDebuggerPresenter >> sliceAttribute [
+
+	^ sliceAttribute ifNil: [
+		  sliceAttribute := TextBackgroundColor color:
+			                    (Color cyan mixed: 0.2 with: Color white) ]
 ]
 
 { #category : 'slicing' }

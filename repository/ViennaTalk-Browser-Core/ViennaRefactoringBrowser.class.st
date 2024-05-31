@@ -27,7 +27,9 @@ Class {
 		'epiLogMatcherDropList',
 		'epiLogList',
 		'epiLogDiffList',
-		'epiLogDiffText'
+		'epiLogDiffText',
+		'sliceNodes',
+		'sliceAttribute'
 	],
 	#classVars : [
 		'GreenSignalIcon',
@@ -618,6 +620,15 @@ ViennaRefactoringBrowser >> addRefactoringMenuGroupOn: aViennaNode to: aMenuPres
 		aBlock cull: group ]
 ]
 
+{ #category : 'operations-slicing' }
+ViennaRefactoringBrowser >> addSlice: aViennaNode [
+
+	| slicer |
+	slicer := ViennaSlicer on: aViennaNode.
+	sliceNodes addAll: slicer sliceNodes , { aViennaNode }.
+	self sliceNodesChanged
+]
+
 { #category : 'accessing' }
 ViennaRefactoringBrowser >> category [
 	^ categoryList selection selectedItem
@@ -649,6 +660,13 @@ ViennaRefactoringBrowser >> categoryListContextMenu [
 ViennaRefactoringBrowser >> clearDirty [
 
 	dirty := false
+]
+
+{ #category : 'operations-slicing' }
+ViennaRefactoringBrowser >> clearSlice [
+
+	sliceNodes removeAll.
+	self sliceNodesChanged
 ]
 
 { #category : 'private-unit testing' }
@@ -970,27 +988,6 @@ ViennaRefactoringBrowser >> hasFileReference [
 ]
 
 { #category : 'operations' }
-ViennaRefactoringBrowser >> highlightSlice: aViennaNode [
-
-	| slicer |
-	slicer := ViennaSlicer on: aViennaNode.
-	slicer sliceNodes , { aViennaNode } ifNotEmpty: [ :nodes |
-		| source text gray textWidget |
-		source := sourceText tracingSource.
-		sourceText withAdapterDo: [ :a |
-			a widgetDo: [ :w | textWidget := w ] ].
-		text := textWidget text.
-		gray := Color gray: 0.9.
-		nodes do: [ :node |
-			(source intervalForSource: node) key ifNotEmpty: [ :interval |
-				text
-					addAttribute: TextBackgroundColor yellow
-					from: interval first
-					to: interval last ] ].
-		textWidget textArea ifNotNil: #compose ]
-]
-
-{ #category : 'operations' }
 ViennaRefactoringBrowser >> highlightSourceText [
 
 	highlighterProcess ifNotNil: [
@@ -1119,7 +1116,8 @@ ViennaRefactoringBrowser >> initialize [
 		for: self.
 	super initialize.
 	self epiLog: ViennaEpiLog vanilla.
-	dirty := false
+	dirty := false.
+	sliceNodes := IdentitySet new
 ]
 
 { #category : 'initialization' }
@@ -1856,6 +1854,20 @@ ViennaRefactoringBrowser >> setDirty [
 	dirty := true
 ]
 
+{ #category : 'operations-slicing' }
+ViennaRefactoringBrowser >> sliceAttribute [
+
+	^ sliceAttribute ifNil: [
+		  sliceAttribute := TextBackgroundColor color:
+			                    (Color cyan mixed: 0.2 with: Color white) ]
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> sliceNodesChanged [
+
+	self updateSource
+]
+
 { #category : 'accessing' }
 ViennaRefactoringBrowser >> source [
 	^ self specification
@@ -1913,16 +1925,24 @@ ViennaRefactoringBrowser >> sourceSignalButtonPressed [
 { #category : 'menus' }
 ViennaRefactoringBrowser >> sourceTextContextMenu [
 
-	| menu |
+	| menu node topLevelDefinition |
 	menu := self newMenu.
-	self sourceSelection ifNotNil: [ :node |
-		self addRefactoringMenuGroupOn: node to: menu with: [ :group |  ].
-		node topLevelDefinition isViennaStateDefinitionNode ifFalse: [
-			menu addGroup: [ :group |
-				group addItem: [ :item |
-					item
-						name: 'Highlight slice';
-						action: [ self highlightSlice: node ] ] ] ] ].
+	node := self sourceSelection.
+	topLevelDefinition := node ifNotNil: [ node topLevelDefinition ].
+	node ifNotNil: [
+		self addRefactoringMenuGroupOn: node to: menu with: [ :group |  ] ].
+	menu addGroup: [ :group |
+		(topLevelDefinition notNil and: [
+			 topLevelDefinition isViennaStateDefinitionNode not ]) ifTrue: [
+			group addItem: [ :item |
+				item
+					name: 'Add slice';
+					action: [ self addSlice: node ] ] ].
+		sliceNodes notEmpty ifTrue: [
+			group addItem: [ :item |
+				item
+					name: 'Clear slice';
+					action: [ self clearSlice ] ] ] ].
 	^ menu
 ]
 
@@ -2108,6 +2128,8 @@ ViennaRefactoringBrowser >> updateSourceWithTypeError [
 	text := sourceText text isText
 		        ifTrue: [ sourceText text ]
 		        ifFalse: [ textWidget text ].
+	textWidget text string asString = text string asString ifTrue: [
+		textWidget text runs: text runs ].
 	textWidget textArea handleParagraphChange: [
 		(pendingTypeError ifNotNil: #node) ifNotNil: [ :node |
 			| from to |
@@ -2122,7 +2144,15 @@ ViennaRefactoringBrowser >> updateSourceWithTypeError [
 				textWidget text
 					addAttribute: (TextBackgroundColor color: Color yellow darker)
 					from: from
-					to: to ] ] ].
+					to: to ] ].
+		sliceNodes ifNotNil: [
+			sliceNodes do: [ :node |
+				(sourceText tracingSource intervalForSource: node) key
+					ifNotEmpty: [ :interval |
+						textWidget text
+							addAttribute: self sliceAttribute
+							from: interval first
+							to: interval last ] ] ] ].
 	textWidget textArea ifNotNil: #compose
 ]
 
