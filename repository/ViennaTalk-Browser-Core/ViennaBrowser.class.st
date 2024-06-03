@@ -684,14 +684,14 @@ ViennaBrowser >> basicRunTestModule: module operation: operation [
 			exception expression
 				in: [ :expr | 
 					(expr isViennaComposite and: [ expr constructorName = 'AssertFailure' ])
-						ifTrue: [ ^ (ViennaTestFailureResultItem
+						ifTrue: [ ^ (ViennaUnitTestFailureResultItem
 								module: module
 								operation: operation
 								message: 'assertion failed: ' , (expr at: 1) asString)
 								inform;
 								yourself ].
 					(expr isViennaComposite and: [ expr constructorName = 'AssertEqualsFailure' ])
-						ifTrue: [ ^ (ViennaTestFailureResultItem
+						ifTrue: [ ^ (ViennaUnitTestFailureResultItem
 								module: module
 								operation: operation
 								message:
@@ -699,7 +699,7 @@ ViennaBrowser >> basicRunTestModule: module operation: operation [
 								, ' actual: ' , (expr at: 1) viennaString)
 								inform;
 								yourself ].
-					^ (ViennaTestErrorResultItem
+					^ (ViennaUnitTestErrorResultItem
 						module: module
 						operation: operation
 						message: expr viennaString)
@@ -707,13 +707,13 @@ ViennaBrowser >> basicRunTestModule: module operation: operation [
 						yourself ] ] ]
 		on: Error
 		do: [ :exception | 
-			^ (ViennaTestErrorResultItem
+			^ (ViennaUnitTestErrorResultItem
 				module: module
 				operation: operation
 				message: exception printString)
 				inform;
 				yourself ].
-	^ ViennaTestSuccessResultItem module: module operation: operation message: 'OK'
+	^ ViennaUnitTestSuccessResultItem module: module operation: operation message: 'OK'
 ]
 
 { #category : 'user interface' }
@@ -750,7 +750,7 @@ ViennaBrowser >> build [
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		addMorphBack: 'UnitTests' asMorph;
-		addMorphBack: (testLabelIcon := ViennaTestResultItem icon asMorph);
+		addMorphBack: (testLabelIcon := ViennaUnitTestResultItem icon asMorph);
 		computeBounds;
 		disableTableLayout;
 		yourself.
@@ -1709,15 +1709,15 @@ ViennaBrowser >> updateTestLabelIcon [
 			item isError
 				ifTrue: [ level := level max: 3 ] ].
 	level = 0
-		ifTrue: [ testLabelIcon form: ViennaTestResultItem icon ].
+		ifTrue: [ testLabelIcon form: ViennaUnitTestResultItem icon ].
 	level = 1
 		ifTrue: [ (testProcess isNil or: [ testProcess isTerminated ])
-				ifTrue: [ testLabelIcon form: ViennaTestSuccessResultItem icon ]
-				ifFalse: [ testLabelIcon form: ViennaTestResultItem icon ] ].
+				ifTrue: [ testLabelIcon form: ViennaUnitTestSuccessResultItem icon ]
+				ifFalse: [ testLabelIcon form: ViennaUnitTestResultItem icon ] ].
 	level = 2
-		ifTrue: [ testLabelIcon form: ViennaTestFailureResultItem icon ].
+		ifTrue: [ testLabelIcon form: ViennaUnitTestFailureResultItem icon ].
 	level = 3
-		ifTrue: [ testLabelIcon form: ViennaTestErrorResultItem icon ].
+		ifTrue: [ testLabelIcon form: ViennaUnitTestErrorResultItem icon ].
 	testLabel changed
 ]
 

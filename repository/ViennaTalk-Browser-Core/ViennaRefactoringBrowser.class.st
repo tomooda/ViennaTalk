@@ -1310,9 +1310,9 @@ ViennaRefactoringBrowser >> initializeSourcePagePresenters [
 				                    title: 'module';
 				                    sortFunction: #module ascending);
 		                   addColumn:
-			                   ((SpStringTableColumn evaluated: #operation)
-				                    title: 'operation';
-				                    sortFunction: #operation ascending);
+			                   ((SpStringTableColumn evaluated: #testName)
+				                    title: 'test';
+				                    sortFunction: #testName ascending);
 		                   addColumn:
 			                   ((SpStringTableColumn evaluated: #message)
 				                    title: 'message';
@@ -1811,7 +1811,7 @@ ViennaRefactoringBrowser >> runTestModule: module operation: operation animation
 				in: [ :expr | 
 					(expr isViennaComposite
 						and: [ expr constructorName = 'AssertFailure' ])
-						ifTrue: [ ^ (ViennaTestFailureResultItem
+						ifTrue: [ ^ (ViennaUnitTestFailureResultItem
 								module: module
 								operation: operation
 								message: 'assertion failed: ' , (expr at: 1) asString)
@@ -1819,7 +1819,7 @@ ViennaRefactoringBrowser >> runTestModule: module operation: operation animation
 								yourself ].
 					(expr isViennaComposite
 						and: [ expr constructorName = 'AssertEqualsFailure' ])
-						ifTrue: [ ^ (ViennaTestFailureResultItem
+						ifTrue: [ ^ (ViennaUnitTestFailureResultItem
 								module: module
 								operation: operation
 								message:
@@ -1828,7 +1828,7 @@ ViennaRefactoringBrowser >> runTestModule: module operation: operation animation
 								, (expr at: 1) viennaString)
 								inform;
 								yourself ].
-					^ (ViennaTestErrorResultItem
+					^ (ViennaUnitTestErrorResultItem
 						module: module
 						operation: operation
 						message: expr viennaString)
@@ -1836,13 +1836,13 @@ ViennaRefactoringBrowser >> runTestModule: module operation: operation animation
 						yourself ] ] ]
 		on: Error
 		do: [ :exception | 
-			^ (ViennaTestErrorResultItem
+			^ (ViennaUnitTestErrorResultItem
 				module: module
 				operation: operation
 				message: exception printString)
 				inform;
 				yourself ].
-	^ ViennaTestSuccessResultItem
+	^ ViennaUnitTestSuccessResultItem
 		module: module
 		operation: operation
 		message: 'OK'

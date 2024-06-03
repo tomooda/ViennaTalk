@@ -2,141 +2,147 @@ Class {
 	#name : 'ViennaTestResultItem',
 	#superclass : 'Object',
 	#instVars : [
-		'module',
-		'operation',
-		'message'
+		'module'
 	],
 	#classInstVars : [
-		'icon'
+		'OffIcon',
+		'SuccessIcon',
+		'FailureIcon',
+		'ErrorIcon'
 	],
 	#category : 'ViennaTalk-Browser-Core-TestRunner',
 	#package : 'ViennaTalk-Browser-Core',
 	#tag : 'TestRunner'
 }
 
-{ #category : 'accessing' }
-ViennaTestResultItem class >> createIcon [
+{ #category : 'private' }
+ViennaTestResultItem class >> createIcon: aColor [
+
 	| form |
 	form := Form extent: self iconExtent depth: 32.
 	form getCanvas
 		fillColor: Color transparent;
 		fillOval: (0 @ 0 extent: self iconExtent)
-			color: self iconColor
-			borderWidth: 1
-			borderColor: self iconColor darker.
+		color: aColor
+		borderWidth: 1
+		borderColor: aColor darker.
 	^ form
 ]
 
 { #category : 'accessing' }
-ViennaTestResultItem class >> flushIcon [
-	icon := nil
+ViennaTestResultItem class >> errorIcon [
+
+	^ ErrorIcon ifNil: [
+		  ErrorIcon := self createIcon: self errorIconColor ]
 ]
 
 { #category : 'accessing' }
+ViennaTestResultItem class >> errorIconColor [
+
+	^ Color red
+]
+
+{ #category : 'accessing' }
+ViennaTestResultItem class >> failureIcon [
+
+	^ FailureIcon ifNil: [
+		  FailureIcon := self createIcon: self failureIconColor ]
+]
+
+{ #category : 'accessing' }
+ViennaTestResultItem class >> failureIconColor [
+
+	^ Color yellow
+]
+
+{ #category : 'utilities' }
 ViennaTestResultItem class >> flushIcons [
+
 	<script: 'ViennaTestResultItem flushIcons'>
-	self flushIcon.
-	self allSubclassesDo: [ :c | c flushIcon ]
-]
-
-{ #category : 'accessing' }
-ViennaTestResultItem class >> icon [
-	^ icon ifNil: [ self createIcon ]
-]
-
-{ #category : 'accessing' }
-ViennaTestResultItem class >> iconColor [
-	^ Color darkGray
+	OffIcon := SuccessIcon := FailureIcon := ErrorIcon := nil
 ]
 
 { #category : 'accessing' }
 ViennaTestResultItem class >> iconExtent [
+
 	^ (ViennaLauncher font height * 0.7 max: 5) asPoint
 ]
 
-{ #category : 'instance creation' }
-ViennaTestResultItem class >> module: module operation: operation message: message [
-	^ self new
-		module: module;
-		operation: operation;
-		message: message;
-		yourself
+{ #category : 'testing' }
+ViennaTestResultItem class >> isAbstract [
+
+	^ self = ViennaTestResultItem
 ]
 
 { #category : 'accessing' }
-ViennaTestResultItem >> icon [
-	^ self class icon
+ViennaTestResultItem class >> offIcon [
+
+	^ OffIcon ifNil: [ OffIcon := self createIcon: self offIconColor ]
 ]
 
-{ #category : 'notification' }
-ViennaTestResultItem >> inform [
-	GrowlMorph
-		openWithLabel: 'Failed: ' , module , '`' , operation
-		contents: (message lines first readStream next: 100)
-		color: (Color lightGray mixed: 0.5 with: self class iconColor)
+{ #category : 'accessing' }
+ViennaTestResultItem class >> offIconColor [
+
+	^ Color darkGray
 ]
 
-{ #category : 'testing' }
-ViennaTestResultItem >> isError [
-	^ false
+{ #category : 'accessing' }
+ViennaTestResultItem class >> successIcon [
+
+	^ SuccessIcon ifNil: [
+		  SuccessIcon := self createIcon: self successIconColor ]
 ]
 
-{ #category : 'testing' }
-ViennaTestResultItem >> isFailure [
-	^ false
+{ #category : 'accessing' }
+ViennaTestResultItem class >> successIconColor [
+
+	^ Color green
 ]
 
-{ #category : 'testing' }
-ViennaTestResultItem >> isSuccess [
-	^ false
+{ #category : 'accessing' }
+ViennaTestResultItem >> errorIcon [
+
+	^ self class errorIcon
+]
+
+{ #category : 'accessing' }
+ViennaTestResultItem >> failureIcon [
+
+	^ self class failureIcon
 ]
 
 { #category : 'accessing' }
 ViennaTestResultItem >> message [
-	^ message
-]
 
-{ #category : 'accessing' }
-ViennaTestResultItem >> message: aString [
-	message := aString
+	^ self subclassResponsibility
 ]
 
 { #category : 'accessing' }
 ViennaTestResultItem >> module [
+
 	^ module
 ]
 
 { #category : 'accessing' }
 ViennaTestResultItem >> module: aString [
+
 	module := aString
 ]
 
 { #category : 'accessing' }
-ViennaTestResultItem >> operation [
-	^ operation
+ViennaTestResultItem >> offIcon [
+
+	^ self class offIcon
 ]
 
 { #category : 'accessing' }
-ViennaTestResultItem >> operation: aString [
-	operation := aString
-]
+ViennaTestResultItem >> successIcon [
 
-{ #category : 'printing' }
-ViennaTestResultItem >> printOn: aStream [
-	aStream space.
-	module
-		ifNotNil: [ aStream
-				nextPutAll: module;
-				nextPut: $` ].
-	operation
-		ifNotNil: [ aStream
-				nextPutAll: operation;
-				nextPutAll: '()' ].
-	aStream nextPutAll: ' -> '.
-	message ifNotNil: [ aStream nextPutAll: message ]
+	^ self class successIcon
 ]
 
 { #category : 'accessing' }
-ViennaTestResultItem >> sortingOrder [
+ViennaTestResultItem >> testName [
+
 	^ self subclassResponsibility
 ]
