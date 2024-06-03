@@ -3324,9 +3324,10 @@ ViennaVDM2Smalltalk >> totalFunctionType: aViennaNode env: aDictionary [
 { #category : 'code generation-traces' }
 ViennaVDM2Smalltalk >> traceApplyExpression: aViennaNode env: aDictionary [
 
-	^ '(ViennaBlockCombinatorialGenerator on: [ :env | '
+	^ '(ViennaBlockCombinatorialGenerator on: [ :env | ['
 	  , (self generate: aViennaNode callStatement env: aDictionary)
-	  , '])'
+	  ,
+	  '] on: Exception do: [:ex | (ViennaTraceException on: ex env: env) signal]])'
 ]
 
 { #category : 'code generation-traces' }

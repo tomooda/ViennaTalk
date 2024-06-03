@@ -1081,20 +1081,42 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 { #category : 'code generation-traces' }
 ViennaVDM2SmalltalkClass >> namedTrace: aViennaNode env: aDictionary [
 
-	| name body theClass |
+	| name trace theClass |
 	name := aViennaNode identifier.
-	body := self stringStreamContents: [ :stream |
-		        stream
-			        nextPutAll: '|_generator | _generator := ';
-			        nextPutAll:
-				        (self
-					         generate: aViennaNode traceDefinitionList
-					         env: aDictionary);
-			        nextPutAll:
-				        '. [self init. _generator next: Dictionary new] whileTrue' ].
+	trace := self
+		         generate: aViennaNode traceDefinitionList
+		         env: aDictionary.
 	theClass := classes at: (aViennaNode module ifNotNil: #identifier).
 	self
-		defineMethod: name , String cr , body
+		defineMethod:
+			name , ': _interimBlock onError: _handlerBlock' , String cr
+			, '|_generator | _generator := ' , trace
+			,
+			'. [[self init. _generator next: (Dictionary new)] whileTrue: _interimBlock] on: ViennaTraceException do: [:_ex | _handlerBlock cull: _ex]'
+		in: theClass
+		protocol: 'traces'
+		node: aViennaNode.
+
+	self
+		defineMethod:
+			name , ': _interimBlock' , String cr
+			, '|_generator | _generator := ' , trace
+			,
+			'. [self init. _generator next: Dictionary new] whileTrue: _interimBlock'
+		in: theClass
+		protocol: 'traces'
+		node: aViennaNode.
+	self
+		defineMethod:
+			name , ': _interimBlock' , String cr
+			, '|_generator | _generator := ' , trace
+			,
+			'. [self init. _generator next: Dictionary new] whileTrue: _interimBlock'
+		in: theClass
+		protocol: 'traces'
+		node: aViennaNode.
+	self
+		defineMethod: name , String cr , 'self ' , name , ': []'
 		in: theClass
 		protocol: 'traces'
 		node: aViennaNode
