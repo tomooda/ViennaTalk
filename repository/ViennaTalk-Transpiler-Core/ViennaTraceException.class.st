@@ -39,5 +39,5 @@ ViennaTraceException >> exception [
 { #category : 'accessing' }
 ViennaTraceException >> exception: anException [
 
-	exception := anException
+	exception := anException freeze
 ]

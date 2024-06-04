@@ -1727,66 +1727,37 @@ ViennaRefactoringBrowser >> runAllTests [
 		               ast do: [ :moduleNode |
 			               | moduleName |
 			               moduleName := moduleNode identifier.
-			               (moduleName endsWith: 'Test') ifTrue: [
-				               moduleNode sectionsDo: [ :section |
-					               section isViennaOperationDefinitionsNode ifTrue: [
-						               section toplevelDefinitionsDo: [
-							               :operationDefinition |
-							               operationDefinition
-								               isViennaExplicitOperationDefinitionNode
-								               ifTrue: [
-									               | operationName |
-									               operationName := operationDefinition
-										                                identifier.
-									               (operationName size > 4 and: [
-										                (operationName copyFrom: 1 to: 4) = 'test' ])
-										               ifTrue: [
-											               testResultTable items:
-												               (testResultTable specification items
-													                copyWith: (self
+			               (moduleName endsWith: 'Test')
+				               ifTrue: [
+					               moduleNode sectionsDo: [ :section |
+						               section isViennaOperationDefinitionsNode ifTrue: [
+							               section toplevelDefinitionsDo: [
+								               :operationDefinition |
+								               operationDefinition
+									               isViennaExplicitOperationDefinitionNode
+									               ifTrue: [
+										               | operationName |
+										               operationName := operationDefinition
+											                                identifier.
+										               (operationName size > 4 and: [
+											                (operationName copyFrom: 1 to: 4) = 'test' ])
+											               ifTrue: [
+												               testResultTable items:
+													               (testResultTable items copyWith: (self
 															                 runTestModule: moduleName
 															                 operation: operationName
-															                 animation: testAnimation)) ] ] ] ] ] ] ] ].
-	               testProcess := nil ] forkAt:
-		               Processor userBackgroundPriority
-]
-
-{ #category : 'operations-tests' }
-ViennaRefactoringBrowser >> runAllUnitTests [
-
-	testProcess ifNotNil: [ testProcess terminate ].
-	testProcess := [
-	               | ast testAnimation |
-	               testResultTable items: #(  ).
-	               ast := self specification ifNil: [ ^ nil ].
-	               testAnimation := ViennaAnimation default
-		                                specification:
-			                                (ViennaVDMFormatter format: ast);
-		                                yourself.
-	               (ast at: 1) isViennaModuleNode ifTrue: [
-		               ast do: [ :moduleNode |
-			               | moduleName |
-			               moduleName := moduleNode identifier.
-			               (moduleName endsWith: 'Test') ifTrue: [
-				               moduleNode sectionsDo: [ :section |
-					               section isViennaOperationDefinitionsNode ifTrue: [
-						               section toplevelDefinitionsDo: [
-							               :operationDefinition |
-							               operationDefinition
-								               isViennaExplicitOperationDefinitionNode
-								               ifTrue: [
-									               | operationName |
-									               operationName := operationDefinition
-										                                identifier.
-									               (operationName size > 4 and: [
-										                (operationName copyFrom: 1 to: 4) = 'test' ])
-										               ifTrue: [
-											               testResultTable items:
-												               (testResultTable specification items
-													                copyWith: (self
-															                 runTestModule: moduleName
-															                 operation: operationName
-															                 animation: testAnimation)) ] ] ] ] ] ] ] ].
+															                 animation: testAnimation)) ] ] ] ] ] ]
+				               ifFalse: [
+					               moduleNode sectionsDo: [ :section |
+						               section isViennaTracesDefinitionsNode ifTrue: [
+							               section do: [ :namedTraceNode |
+								               | item |
+								               item := ViennaCombinatorialTestResultItem on:
+									                       namedTraceNode.
+								               testResultTable items:
+									               (testResultTable items copyWith: item).
+								               item run.
+								               testResultTable refresh ] ] ] ] ] ].
 	               testProcess := nil ] forkAt:
 		               Processor userBackgroundPriority
 ]
@@ -1846,6 +1817,11 @@ ViennaRefactoringBrowser >> runTestModule: module operation: operation animation
 		module: module
 		operation: operation
 		message: 'OK'
+]
+
+{ #category : 'private-combinatorial testing' }
+ViennaRefactoringBrowser >> runTrace: aViennaNamedTraceNode interim: aBlock [
+	
 ]
 
 { #category : 'private' }
@@ -1955,23 +1931,11 @@ ViennaRefactoringBrowser >> specification [
 { #category : 'menus' }
 ViennaRefactoringBrowser >> testResultTableContextMenu [
 
-	^ self newMenu addGroup: [ :group |
-		  group
-			  addItem: [ :item |
-				  item
-					  name: 'Debug it with transpiler';
-					  action: [
-						  testResultTable selection selectedItem ifNotNil: [
-								  :testResultItem | self debugTestResultItem: testResultItem ] ] ];
-			  addItem: [ :item |
-				  item
-					  name: 'Jump to test operation';
-					  action: [
-						  testResultTable selection selectedItem ifNotNil: [
-								  :testResultItem |
-								  self
-									  jumpToModule: testResultItem module
-									  operation: testResultItem operation ] ] ] ]
+	| menu |
+	menu := self newMenu.
+	testResultTable selection selectedItem ifNotNil: [ :item |
+		item buildContextMenu: menu for: self ].
+	^ menu
 ]
 
 { #category : 'accessing' }

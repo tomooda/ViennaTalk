@@ -99,6 +99,12 @@ ViennaTestResultItem class >> successIconColor [
 	^ Color green
 ]
 
+{ #category : 'menus' }
+ViennaTestResultItem >> buildContextMenu: aSpMenuPresenter for: aViennaRefactoringBrowser [
+
+	^ self subclassResponsibility
+]
+
 { #category : 'accessing' }
 ViennaTestResultItem >> errorIcon [
 

@@ -4,13 +4,22 @@ Class {
 	#instVars : [
 		'trace',
 		'failures',
-		'numSuccesses',
-		'isRunning'
+		'numTests',
+		'isRunning',
+		'traceNode'
 	],
 	#category : 'ViennaTalk-Browser-Core-TestRunner',
 	#package : 'ViennaTalk-Browser-Core',
 	#tag : 'TestRunner'
 }
+
+{ #category : 'instance creation' }
+ViennaCombinatorialTestResultItem class >> on: aViennaNamedTraceNode [
+
+	^ self new
+		  initializeWith: aViennaNamedTraceNode;
+		  yourself
+]
 
 { #category : 'adding' }
 ViennaCombinatorialTestResultItem >> addFailure: aViennaTraceException [
@@ -19,9 +28,18 @@ ViennaCombinatorialTestResultItem >> addFailure: aViennaTraceException [
 ]
 
 { #category : 'adding' }
-ViennaCombinatorialTestResultItem >> addSuccess [
+ViennaCombinatorialTestResultItem >> addTest [
 
-	numSuccesses := numSuccesses + 1
+	numTests := numTests + 1
+]
+
+{ #category : 'menus' }
+ViennaCombinatorialTestResultItem >> buildContextMenu: aSpMenuPresenter for: aViennaRefactoringBrowser [
+
+	aSpMenuPresenter addItem: [ :item |
+		item
+			name: 'Open failures';
+			action: [ (ViennaCombinatorialTestResultViewer on: self) open ] ]
 ]
 
 { #category : 'accessing' }
@@ -45,12 +63,15 @@ ViennaCombinatorialTestResultItem >> icon [
 ]
 
 { #category : 'initialization' }
-ViennaCombinatorialTestResultItem >> initialize [
+ViennaCombinatorialTestResultItem >> initializeWith: aViennaNamedTraceNode [
 
 	super initialize.
-	module := 'DEFAULT'.
-	trace := '-'.
-	numSuccesses := 0.
+	module := aViennaNamedTraceNode module
+		          ifNotNil: #identifier
+		          ifNil: [ 'DEFAULT' ].
+	trace := aViennaNamedTraceNode identifier.
+	traceNode := aViennaNamedTraceNode.
+	numTests := 0.
 	failures := OrderedCollection new.
 	isRunning := false
 ]
@@ -85,20 +106,35 @@ ViennaCombinatorialTestResultItem >> numFailures [
 { #category : 'accessing' }
 ViennaCombinatorialTestResultItem >> numSuccesses [
 
-	^ numSuccesses
+	^ self numTests - self numFailures
 ]
 
 { #category : 'accessing' }
 ViennaCombinatorialTestResultItem >> numTests [
 
-	^ self numSuccesses + self numFailures
+	^ numTests
 ]
 
 { #category : 'operations' }
-ViennaCombinatorialTestResultItem >> run: aBlock [
+ViennaCombinatorialTestResultItem >> run [
 
 	self startRunning.
-	aBlock ensure: [ self stopRunning ]
+	[
+	traceNode
+		run: [
+			self addTest.
+			Processor yield ]
+		onError: [ :ex |
+			self addFailure: ex.
+			ex resume ] ] ensure: [ self stopRunning ]
+]
+
+{ #category : 'accessing' }
+ViennaCombinatorialTestResultItem >> sortingOrder [
+
+	^ self numFailures > 0
+		  ifTrue: [ 2 ]
+		  ifFalse: [ 0 ]
 ]
 
 { #category : 'operations' }
@@ -129,4 +165,10 @@ ViennaCombinatorialTestResultItem >> trace [
 ViennaCombinatorialTestResultItem >> trace: aString [
 
 	trace := aString
+]
+
+{ #category : 'accessing' }
+ViennaCombinatorialTestResultItem >> traceNode [
+
+	^ traceNode
 ]
