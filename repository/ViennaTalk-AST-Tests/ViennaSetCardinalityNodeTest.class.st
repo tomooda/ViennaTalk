@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaSetCardinalityNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaSetCardinalityNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaSetCardinalityNodeTest >> testMaximalType [
 
 	self

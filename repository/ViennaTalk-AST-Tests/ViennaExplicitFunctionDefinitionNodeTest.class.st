@@ -2,12 +2,13 @@
 A ViennaExplicitFunctionDefinitionNodeTest is a test class for testing the behavior of ViennaExplicitFunctionDefinitionNode
 "
 Class {
-	#name : #ViennaExplicitFunctionDefinitionNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaExplicitFunctionDefinitionNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaExplicitFunctionDefinitionNodeTest >> testMaximalType [
 
 	self

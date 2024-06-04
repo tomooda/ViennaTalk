@@ -2,12 +2,13 @@
 A ViennaExplicitOperationDefinitionNodeTest is a test class for testing the behavior of ViennaExplicitOperationDefinitionNode
 "
 Class {
-	#name : #ViennaExplicitOperationDefinitionNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaExplicitOperationDefinitionNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaExplicitOperationDefinitionNodeTest >> testMaximalType [
 
 	self

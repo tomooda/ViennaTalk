@@ -2,12 +2,13 @@
 A ViennaRecordModifierNodeTest is a test class for testing the behavior of ViennaRecordModifierNode
 "
 Class {
-	#name : #ViennaRecordModifierNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaRecordModifierNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaRecordModifierNodeTest >> testMaximalType [
 
 	| spec expression r1 r2 |

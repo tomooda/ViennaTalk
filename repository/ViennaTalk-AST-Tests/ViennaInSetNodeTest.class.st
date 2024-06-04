@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaInSetNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaInSetNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaInSetNodeTest >> testMaximalType [
 
 	| nil_in_set_xs |

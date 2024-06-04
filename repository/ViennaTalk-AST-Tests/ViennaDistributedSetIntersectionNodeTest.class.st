@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaDistributedSetIntersectionNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaDistributedSetIntersectionNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaDistributedSetIntersectionNodeTest >> testMaximalType [
 
 	self

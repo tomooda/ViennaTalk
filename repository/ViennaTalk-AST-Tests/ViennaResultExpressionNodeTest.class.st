@@ -2,12 +2,13 @@
 A ViennaResultExpressionNodeTest is a test class for testing the behavior of ViennaResultExpressionNode
 "
 Class {
-	#name : #ViennaResultExpressionNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaResultExpressionNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaResultExpressionNodeTest >> testMaximalType [
 
 	| spec result |

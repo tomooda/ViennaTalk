@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaDistributedMapMergeNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaDistributedMapMergeNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaDistributedMapMergeNodeTest >> testMaximalType [
 
 	self

@@ -2,12 +2,13 @@
 A ViennaMapEnumerationPatternNodeTest is a test class for testing the behavior of ViennaMapEnumerationPatternNode
 "
 Class {
-	#name : #ViennaMapEnumerationPatternNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaMapEnumerationPatternNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaMapEnumerationPatternNodeTest >> testMaximalType [
 
 	| pattern |

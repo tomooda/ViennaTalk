@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaMapMunionPatternNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaMapMunionPatternNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaMapMunionPatternNodeTest >> testMaximalType [
 
 	| pattern |

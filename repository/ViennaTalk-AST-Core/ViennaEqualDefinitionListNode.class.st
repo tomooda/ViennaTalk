@@ -17,7 +17,7 @@ ViennaEqualDefinitionListNode >> boundIdentifiersDo: aBlock [
 ViennaEqualDefinitionListNode >> definitionOfLocalName: aString for: aViennaNode [
 
 	(self indexOf: aViennaNode ifAbsent: [ nil ]) ifNotNil: [ :until |
-		until - 1 to: 1 do: [ :index |
+		until - 1 to: 1 by: -1 do: [ :index |
 			(self at: index) patternOrBind
 				allDescendantsSuchThat: [ :n |
 				n isViennaPatternIdentifierNode: aString ]

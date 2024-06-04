@@ -2,12 +2,13 @@
 A ViennaPatternIdentifierNodeTest is a test class for testing the behavior of ViennaPatternIdentifierNode
 "
 Class {
-	#name : #ViennaPatternIdentifierNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaPatternIdentifierNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaPatternIdentifierNodeTest >> testMaximalType [
 
 	| p |

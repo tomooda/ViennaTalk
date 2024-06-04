@@ -2,12 +2,13 @@
 A ViennaFieldReferenceNodeTest is a test class for testing the behavior of ViennaFieldReferenceNode
 "
 Class {
-	#name : #ViennaFieldReferenceNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaFieldReferenceNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaFieldReferenceNodeTest >> testMaximalType [
 
 	| spec |

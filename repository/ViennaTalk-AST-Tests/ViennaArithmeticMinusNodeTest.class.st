@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaArithmeticMinusNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaArithmeticMinusNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaArithmeticMinusNodeTest >> testMaximalType [
 
 	self

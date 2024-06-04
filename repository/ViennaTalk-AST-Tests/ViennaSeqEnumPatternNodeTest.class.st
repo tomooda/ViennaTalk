@@ -2,12 +2,13 @@
 A ViennaSeqEnumPatternNodeTest is a test class for testing the behavior of ViennaSeqEnumPatternNode
 "
 Class {
-	#name : #ViennaSeqEnumPatternNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaSeqEnumPatternNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaSeqEnumPatternNodeTest >> testMaximalType [
 
 	| pattern |

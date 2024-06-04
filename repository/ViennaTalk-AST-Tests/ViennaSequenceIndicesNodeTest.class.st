@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaSequenceIndicesNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaSequenceIndicesNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaSequenceIndicesNodeTest >> testMaximalType [
 
 	self

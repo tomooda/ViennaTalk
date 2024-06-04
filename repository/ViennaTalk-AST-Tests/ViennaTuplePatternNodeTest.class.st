@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaTuplePatternNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaTuplePatternNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaTuplePatternNodeTest >> testMaximalType [
 
 	| pattern |

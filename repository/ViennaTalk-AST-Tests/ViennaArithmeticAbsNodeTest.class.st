@@ -2,12 +2,13 @@
 A ViennaArithmeticAbsNodeTest is a test class for testing the behavior of ViennaArithmeticAbsNode
 "
 Class {
-	#name : #ViennaArithmeticAbsNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaArithmeticAbsNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaArithmeticAbsNodeTest >> testMaximalType [
 
 	self

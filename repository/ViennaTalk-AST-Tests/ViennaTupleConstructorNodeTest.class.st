@@ -2,12 +2,13 @@
 A ViennaTupleConstructorNodeTest is a test class for testing the behavior of ViennaTupleConstructorNode
 "
 Class {
-	#name : #ViennaTupleConstructorNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaTupleConstructorNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaTupleConstructorNodeTest >> testMaximalType [
 
 	self

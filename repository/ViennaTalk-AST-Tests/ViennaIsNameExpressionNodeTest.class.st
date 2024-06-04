@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaIsNameExpressionNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaIsNameExpressionNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaIsNameExpressionNodeTest >> testMaximalType [
 
 	| spec expr |

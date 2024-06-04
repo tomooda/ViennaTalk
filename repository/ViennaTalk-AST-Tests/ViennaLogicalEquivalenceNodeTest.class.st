@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaLogicalEquivalenceNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaLogicalEquivalenceNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaLogicalEquivalenceNodeTest >> testMaximalType [
 
 	self

@@ -2,12 +2,13 @@
 A ViennaTypeNameExportNodeTest is a test class for testing the behavior of ViennaTypeNameExportNode
 "
 Class {
-	#name : #ViennaTypeNameExportNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaTypeNameExportNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaTypeNameExportNodeTest >> testMaximalType [
 
 	self

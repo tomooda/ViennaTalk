@@ -2,12 +2,13 @@
 A ViennaMapDomainRestrictedByNodeTest is a test class for testing the behavior of ViennaMapDomainRestrictedByNode
 "
 Class {
-	#name : #ViennaMapDomainRestrictedByNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaMapDomainRestrictedByNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaMapDomainRestrictedByNodeTest >> testMaximalType [
 
 	| expr |

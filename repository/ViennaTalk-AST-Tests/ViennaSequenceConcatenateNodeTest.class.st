@@ -2,12 +2,13 @@
 A ViennaSequenceConcatenateNodeTest is a test class for testing the behavior of ViennaSequenceConcatenateNode
 "
 Class {
-	#name : #ViennaSequenceConcatenateNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaSequenceConcatenateNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaSequenceConcatenateNodeTest >> testMaximalType [
 
 	| expr |

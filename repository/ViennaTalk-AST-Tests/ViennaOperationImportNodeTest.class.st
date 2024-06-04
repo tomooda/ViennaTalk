@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaOperationImportNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaOperationImportNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaOperationImportNodeTest >> testMaximalType [
 
 	self
@@ -13,7 +14,7 @@ ViennaOperationImportNodeTest >> testMaximalType [
 				  asViennaDocumentAst moduleNamed: 'B')
 				 importDefinitionAtModuleIdentifier: 'A') second first first
 				maximalType
-		equals: ViennaType unit.
+		equals: ViennaType unit ==> ViennaType unit.
 	self
 		should: [
 			(('module A exports operations op:()==>() definitions operations op:()==>() op()==skip end A module B imports from A operations op:()==>nat exports all definitions end B'

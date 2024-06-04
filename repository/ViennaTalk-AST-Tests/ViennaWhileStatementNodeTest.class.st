@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaWhileStatementNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaWhileStatementNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaWhileStatementNodeTest >> testMaximalType [
 
 	self

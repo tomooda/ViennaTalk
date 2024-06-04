@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaTupleSelectNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaTupleSelectNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaTupleSelectNodeTest >> testMaximalType [
 
 	self

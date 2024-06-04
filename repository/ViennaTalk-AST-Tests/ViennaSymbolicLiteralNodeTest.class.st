@@ -2,12 +2,13 @@
 A ViennaSymbolicLiteralNodeTest is a test class for testing the behavior of ViennaSymbolicLiteralNode
 "
 Class {
-	#name : #ViennaSymbolicLiteralNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaSymbolicLiteralNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaSymbolicLiteralNodeTest >> testMaximalType [
 
 	self

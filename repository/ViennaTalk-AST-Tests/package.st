@@ -1,1 +1,1 @@
-Package { #name : #'ViennaTalk-AST-Tests' }
+Package { #name : 'ViennaTalk-AST-Tests' }

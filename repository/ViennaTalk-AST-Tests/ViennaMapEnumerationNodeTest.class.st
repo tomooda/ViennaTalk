@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaMapEnumerationNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaMapEnumerationNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaMapEnumerationNodeTest >> testMaximalType [
 
 	self

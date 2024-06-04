@@ -2,12 +2,13 @@
 A ViennaMapOrSequenceReferenceNodeTest is a test class for testing the behavior of ViennaMapOrSequenceReferenceNode
 "
 Class {
-	#name : #ViennaMapOrSequenceReferenceNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaMapOrSequenceReferenceNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaMapOrSequenceReferenceNodeTest >> testMaximalType [
 
 	| spec |

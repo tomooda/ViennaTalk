@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaIterateNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaIterateNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaIterateNodeTest >> testMaximalType [
 
 	| x_iterate_2 |

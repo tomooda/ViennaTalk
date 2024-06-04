@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaDclStatementNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaDclStatementNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaDclStatementNodeTest >> testMaximalType [
 
 	self

@@ -2,12 +2,13 @@
 A ViennaOldNameNodeTest is a test class for testing the behavior of ViennaOldNameNode
 "
 Class {
-	#name : #ViennaOldNameNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaOldNameNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaOldNameNodeTest >> testMaximalType [
 
 	| spec |

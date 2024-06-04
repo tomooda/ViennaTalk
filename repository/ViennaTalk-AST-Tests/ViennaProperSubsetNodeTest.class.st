@@ -2,12 +2,13 @@
 A ViennaProperSubsetNodeTest is a test class for testing the behavior of ViennaProperSubsetNode
 "
 Class {
-	#name : #ViennaProperSubsetNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaProperSubsetNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaProperSubsetNodeTest >> testMaximalType [
 
 	| expr |

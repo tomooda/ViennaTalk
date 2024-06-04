@@ -2,12 +2,13 @@
 A ViennaNotEqualNodeTest is a test class for testing the behavior of ViennaNotEqualNode
 "
 Class {
-	#name : #ViennaNotEqualNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaNotEqualNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaNotEqualNodeTest >> testMaximalType [
 
 	self

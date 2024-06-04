@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaCompositionNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaCompositionNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaCompositionNodeTest >> testMaximalType [
 
 	| f_comp_g |

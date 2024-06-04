@@ -2,12 +2,13 @@
 A ViennaMapMergeNodeTest is a test class for testing the behavior of ViennaMapMergeNode
 "
 Class {
-	#name : #ViennaMapMergeNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaMapMergeNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaMapMergeNodeTest >> testMaximalType [
 
 	| expr |

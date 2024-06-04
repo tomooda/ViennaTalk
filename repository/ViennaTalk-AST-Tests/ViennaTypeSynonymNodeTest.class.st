@@ -2,12 +2,13 @@
 A ViennaTypeSynonymNodeTest is a test class for testing the behavior of ViennaTypeSynonymNode
 "
 Class {
-	#name : #ViennaTypeSynonymNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaTypeSynonymNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaTypeSynonymNodeTest >> testMaximalType [
 
 	self

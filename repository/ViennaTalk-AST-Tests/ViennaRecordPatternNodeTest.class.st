@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaRecordPatternNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaRecordPatternNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaRecordPatternNodeTest >> testMaximalType [
 
 	| spec pattern r |

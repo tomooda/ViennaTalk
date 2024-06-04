@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaNondeterministicStatementNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaNondeterministicStatementNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaNondeterministicStatementNodeTest >> testMaximalType [
 
 	| spec |

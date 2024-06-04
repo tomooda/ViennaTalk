@@ -2,12 +2,13 @@
 A ViennaMatchValueNodeTest is a test class for testing the behavior of ViennaMatchValueNode
 "
 Class {
-	#name : #ViennaMatchValueNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaMatchValueNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaMatchValueNodeTest >> testMaximalType [
 
 	| matchValue |

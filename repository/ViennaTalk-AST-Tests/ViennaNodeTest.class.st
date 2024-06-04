@@ -1,14 +1,15 @@
 Class {
-	#name : #ViennaNodeTest,
-	#superclass : #TestCase,
+	#name : 'ViennaNodeTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'ast',
 		'skip'
 	],
-	#category : #'ViennaTalk-AST-Tests'
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #running }
+{ #category : 'running' }
 ViennaNodeTest >> setUp [
 
 	ast := ViennaVDMParser new parse: 'module A
@@ -65,7 +66,7 @@ end B'.
 		n isViennaIdentityStatementNode ifTrue: [ skip := n ] ]
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 ViennaNodeTest >> testAsGlobalName [
 
 	| localName globalName |
@@ -100,7 +101,7 @@ ViennaNodeTest >> testAsGlobalName [
 		equals: (globalName value: 'B' value: 'opi')
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 ViennaNodeTest >> testCopyFragment [
 
 	| op1 op2 |
@@ -113,7 +114,7 @@ ViennaNodeTest >> testCopyFragment [
 	self deny: op1 identicalTo: op2
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 ViennaNodeTest >> testCopyWhole [
 
 	| op1 op2 |
@@ -127,7 +128,7 @@ ViennaNodeTest >> testCopyWhole [
 	self deny: op1 root identicalTo: op2 root
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 ViennaNodeTest >> testDefinitionOfLocalName [
 
 	self assert: (skip definitionOfLocalName: 'nothing') isNil.
@@ -153,7 +154,7 @@ ViennaNodeTest >> testDefinitionOfLocalName [
 		(skip definitionOfLocalName: 'opi') isViennaOperationImportNode
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 ViennaNodeTest >> testEquals [
 
 	self
@@ -164,7 +165,7 @@ ViennaNodeTest >> testEquals [
 		equals: '1 + 2 = 4' asViennaExpressionAst
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 ViennaNodeTest >> testIsExportedNameNode [
 
 	| localName |
@@ -191,7 +192,7 @@ ViennaNodeTest >> testIsExportedNameNode [
 	self deny: localName isExportedNameNode
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 ViennaNodeTest >> testIsFunctionNameNode [
 
 	| opcall1 opcall2 funcall |
@@ -210,7 +211,7 @@ ViennaNodeTest >> testIsFunctionNameNode [
 	self assert: funcall expression isFunctionNameNode
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 ViennaNodeTest >> testIsOperationNameNode [
 
 	| opcall1 opcall2 funcall globalopcall |
@@ -241,7 +242,7 @@ ViennaNodeTest >> testIsOperationNameNode [
 	self assert: globalopcall first isOperationNameNode
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 ViennaNodeTest >> testIsStateVariableNameNode [
 
 	| opcall1 opcall1arg funcall funcallarg returnarg |
@@ -261,7 +262,7 @@ ViennaNodeTest >> testIsStateVariableNameNode [
 	self deny: returnarg isStateVariableNameNode
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 ViennaNodeTest >> testIsTypeNameNode [
 
 	| localName |
@@ -278,7 +279,7 @@ ViennaNodeTest >> testIsTypeNameNode [
 	self deny: localName isTypeNameNode
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 ViennaNodeTest >> testIsValueNameNode [
 
 	| opcall1 opcall1arg funcall funcallarg returnarg |

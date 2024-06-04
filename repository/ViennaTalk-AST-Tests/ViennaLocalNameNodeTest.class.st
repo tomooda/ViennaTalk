@@ -2,12 +2,13 @@
 A ViennaLocalNameNodeTest is a test class for testing the behavior of ViennaLocalNameNode
 "
 Class {
-	#name : #ViennaLocalNameNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaLocalNameNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaLocalNameNodeTest >> testMaximalType [
 
 	| spec |

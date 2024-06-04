@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaRecordTypeDefinitionNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaRecordTypeDefinitionNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaRecordTypeDefinitionNodeTest >> testAsMaximalViennaType [
 
 	self
@@ -25,7 +26,7 @@ ViennaRecordTypeDefinitionNodeTest >> testAsMaximalViennaType [
 						 ViennaType int } })
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaRecordTypeDefinitionNodeTest >> testMaximalType [
 
 	self

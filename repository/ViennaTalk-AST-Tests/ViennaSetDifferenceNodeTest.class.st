@@ -2,12 +2,13 @@
 A ViennaSetDifferenceNodeTest is a test class for testing the behavior of ViennaSetDifferenceNode
 "
 Class {
-	#name : #ViennaSetDifferenceNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaSetDifferenceNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaSetDifferenceNodeTest >> testMaximalType [
 
 	| expr |

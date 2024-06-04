@@ -32,19 +32,13 @@ ViennaUnitTestResultItem class >> module: module operation: operation message: m
 { #category : 'menus' }
 ViennaUnitTestResultItem >> buildContextMenu: aSpMenuPresenter for: aViennaRefactoringBrowser [
 
-	aSpMenuPresenter
-		addGroup: [ :group |
-			group addItem: [ :item |
-					item
-						name: 'Debug it with transpiler';
-						action: [ aViennaRefactoringBrowser debugTestResultItem: self ] ] ];
-		addItem: [ :item |
-			item
-				name: 'Jump to test operation';
-				action: [
-					aViennaRefactoringBrowser
-						jumpToModule: self module
-						operation: self operation ] ]
+	aSpMenuPresenter addItem: [ :item |
+		item
+			name: 'Jump to test operation';
+			action: [
+				aViennaRefactoringBrowser
+					jumpToModule: self module
+					operation: self operation ] ]
 ]
 
 { #category : 'accessing' }

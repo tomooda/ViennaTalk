@@ -93,6 +93,7 @@ ViennaBlockStatementNode >> lookupIdentifier: aString [
 { #category : 'typechecking' }
 ViennaBlockStatementNode >> maximalType [
 
-	self do: #typecheck.
-	^ ViennaType unit
+	| ret |
+	self do: [ :statement | ret := statement typecheck ].
+	^ ret
 ]

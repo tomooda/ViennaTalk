@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaFinitePowerSetNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaFinitePowerSetNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaFinitePowerSetNodeTest >> testMaximalType [
 
 	self

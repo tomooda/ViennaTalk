@@ -2,12 +2,13 @@
 A ViennaStateDefinitionNodeTest is a test class for testing the behavior of ViennaStateDefinitionNode
 "
 Class {
-	#name : #ViennaStateDefinitionNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaStateDefinitionNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaStateDefinitionNodeTest >> testMaximalType [
 
 	self

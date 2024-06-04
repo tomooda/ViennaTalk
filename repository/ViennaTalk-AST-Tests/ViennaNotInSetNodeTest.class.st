@@ -2,12 +2,13 @@
 A ViennaNotInSetNodeTest is a test class for testing the behavior of ViennaNotInSetNode
 "
 Class {
-	#name : #ViennaNotInSetNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaNotInSetNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaNotInSetNodeTest >> testMaximalType [
 
 	| nil_in_set_xs |

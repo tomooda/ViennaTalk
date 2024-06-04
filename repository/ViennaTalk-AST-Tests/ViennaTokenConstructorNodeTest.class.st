@@ -2,12 +2,13 @@
 A ViennaTokenConstructorNodeTest is a test class for testing the behavior of ViennaTokenConstructorNode
 "
 Class {
-	#name : #ViennaTokenConstructorNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaTokenConstructorNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaTokenConstructorNodeTest >> testMaximalType [
 
 	self

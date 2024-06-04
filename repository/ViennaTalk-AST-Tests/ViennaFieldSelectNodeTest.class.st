@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaFieldSelectNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaFieldSelectNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaFieldSelectNodeTest >> testMaximalType [
 
 	| spec point point3d expr |

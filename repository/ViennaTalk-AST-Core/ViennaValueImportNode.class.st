@@ -70,8 +70,12 @@ ViennaValueImportNode >> maximalType [
 						  ifNotNil: [ :def |
 							  def isValueDefinition
 								  ifTrue: [
-									  def type typecheck = self type typecheck
-										  ifTrue: [ def typecheck ]
+									  (self type isNil or: [
+										   def type typecheck = self type typecheck ])
+										  ifTrue: [
+											  def typecheck.
+											  (def pattern definitionOfLocalName: self name identifier)
+												  typecheck ]
 										  ifFalse: [
 											  ViennaTypeError
 												  on: self

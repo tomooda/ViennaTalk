@@ -2,12 +2,13 @@
 A ViennaGlobalNameNodeTest is a test class for testing the behavior of ViennaGlobalNameNode
 "
 Class {
-	#name : #ViennaGlobalNameNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaGlobalNameNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaGlobalNameNodeTest >> testMaximalType [
 
 	| spec |

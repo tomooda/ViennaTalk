@@ -2,12 +2,13 @@
 A ViennaMapOrSequenceModifyNodeTest is a test class for testing the behavior of ViennaMapOrSequenceModifyNode
 "
 Class {
-	#name : #ViennaMapOrSequenceModifyNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaMapOrSequenceModifyNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaMapOrSequenceModifyNodeTest >> assertType1: aViennaType1 type2: aViennaType2 result: aViennaType3 [
 
 	| expr type |
@@ -18,7 +19,7 @@ ViennaMapOrSequenceModifyNodeTest >> assertType1: aViennaType1 type2: aViennaTyp
 	self assert: type equals: aViennaType3
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaMapOrSequenceModifyNodeTest >> testMaximalType [
 
 	| char nat |

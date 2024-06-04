@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaBlockStatementNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaBlockStatementNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaBlockStatementNodeTest >> testMaximalType [
 	self assert: '(skip; skip)' asViennaStatementAst maximalType equals: ViennaType unit.
 	self assert: '(dcl x:nat; x := 1)' asViennaStatementAst maximalType equals: ViennaType unit.

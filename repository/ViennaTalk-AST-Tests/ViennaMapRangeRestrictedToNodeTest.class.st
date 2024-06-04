@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaMapRangeRestrictedToNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaMapRangeRestrictedToNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaMapRangeRestrictedToNodeTest >> testMaximalType [
 
 	| expr |

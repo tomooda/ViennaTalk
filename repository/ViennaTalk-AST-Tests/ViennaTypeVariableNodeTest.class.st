@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaTypeVariableNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaTypeVariableNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaTypeVariableNodeTest >> testAsMaximalViennaType [
 
 	self

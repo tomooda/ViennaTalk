@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaTypeNameNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaTypeNameNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaTypeNameNodeTest >> testAsMaximalViennaType [
 
 	self
@@ -15,7 +16,7 @@ ViennaTypeNameNodeTest >> testAsMaximalViennaType [
 		equals: ViennaType nat * ViennaType int
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaTypeNameNodeTest >> testMaximalType [
 
 	| spec |

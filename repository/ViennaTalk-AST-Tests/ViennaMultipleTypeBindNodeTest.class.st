@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaMultipleTypeBindNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaMultipleTypeBindNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaMultipleTypeBindNodeTest >> testMaximalType [
 
 	| bind |

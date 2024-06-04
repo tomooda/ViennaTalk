@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaRecordConstructortNodeTest,
-	#superclass : #TestCase,
-	#category : #'ViennaTalk-AST-Tests'
+	#name : 'ViennaRecordConstructortNodeTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-AST-Tests',
+	#package : 'ViennaTalk-AST-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaRecordConstructortNodeTest >> testMaximalType [
 
 	| spec r |
