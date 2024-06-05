@@ -37,6 +37,12 @@ ViennaUnitTestFailureResultItem >> buildContextMenu: aSpMenuPresenter for: aVien
 ]
 
 { #category : 'accessing' }
+ViennaUnitTestFailureResultItem >> color [
+
+	^ self class failureIconColor
+]
+
+{ #category : 'accessing' }
 ViennaUnitTestFailureResultItem >> exception [
 
 	^ exception

@@ -12,6 +12,12 @@ ViennaUnitTestSuccessResultItem class >> icon [
 	^ self successIcon
 ]
 
+{ #category : 'accessing' }
+ViennaUnitTestSuccessResultItem >> color [
+
+	^ self class successIconColor
+]
+
 { #category : 'testing' }
 ViennaUnitTestSuccessResultItem >> isSuccess [
 	^ true

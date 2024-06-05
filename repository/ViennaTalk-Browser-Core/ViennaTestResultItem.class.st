@@ -112,6 +112,12 @@ ViennaTestResultItem >> errorIcon [
 ]
 
 { #category : 'accessing' }
+ViennaTestResultItem >> exception [
+
+	^ nil
+]
+
+{ #category : 'accessing' }
 ViennaTestResultItem >> failureIcon [
 
 	^ self class failureIcon

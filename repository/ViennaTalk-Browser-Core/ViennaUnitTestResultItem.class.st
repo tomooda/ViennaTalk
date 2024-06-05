@@ -42,16 +42,23 @@ ViennaUnitTestResultItem >> buildContextMenu: aSpMenuPresenter for: aViennaRefac
 ]
 
 { #category : 'accessing' }
+ViennaUnitTestResultItem >> color [
+
+	^ self class offIconColor
+]
+
+{ #category : 'accessing' }
 ViennaUnitTestResultItem >> icon [
 	^ self class icon
 ]
 
 { #category : 'notification' }
 ViennaUnitTestResultItem >> inform [
+
 	GrowlMorph
 		openWithLabel: 'Failed: ' , module , '`' , operation
 		contents: (message lines first readStream next: 100)
-		color: (Color lightGray mixed: 0.5 with: self class iconColor)
+		color: (Color lightGray mixed: 0.5 with: self color)
 ]
 
 { #category : 'testing' }

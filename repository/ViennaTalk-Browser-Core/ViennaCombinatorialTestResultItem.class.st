@@ -43,6 +43,12 @@ ViennaCombinatorialTestResultItem >> buildContextMenu: aSpMenuPresenter for: aVi
 ]
 
 { #category : 'accessing' }
+ViennaCombinatorialTestResultItem >> exception [
+
+	^ failures ifNotEmpty: [ failures first exception ] ifEmpty: [ nil ]
+]
+
+{ #category : 'accessing' }
 ViennaCombinatorialTestResultItem >> failures [
 
 	^ failures

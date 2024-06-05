@@ -913,7 +913,7 @@ ViennaRefactoringBrowser >> exportDirectory [
 		 from: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :dir |
 		self specification modulesDo: [ :moduleNode |
 			| file |
-			file := dir / moduleNode name withExtension: 'vdmsl'.
+			file := dir / moduleNode identifier withExtension: 'vdmsl'.
 			file
 				ensureDeleteAll;
 				writeStreamDo: [ :stream |
@@ -963,6 +963,35 @@ ViennaRefactoringBrowser >> exportToDisk [
 						stream nextPutAll:
 								(self source withLineEndings: OSPlatform current lineEnding) ] ].
 		self clearDirty ]
+]
+
+{ #category : 'private' }
+ViennaRefactoringBrowser >> findIntervalFromContext: aContext source: aViennaTracingSource [
+
+	| context smalltalkNode specificationContext vdmNode map currentNode |
+	context := aContext.
+	[
+	[
+	(context receiver isKindOf: ViennaTranspiledObject) and: [
+		context selector ~= #inv ] ] whileFalse: [
+		context := context sender.
+		context ifNil: [ ^ 0 to: -1 ] ].
+	specificationContext := context specificationContext.
+	specificationContext ifNil: [ ^ 0 to: -1 ].
+	smalltalkNode := specificationContext method sourceNodeForPC:
+		                 specificationContext pc.
+	vdmNode := specificationContext specification.
+	map := specificationContext methodClass debuggerNodeMapAt:
+		       specificationContext selector.
+	currentNode := nil.
+	map keysAndValuesDo: [ :sNode :vNode |
+		(sNode = smalltalkNode and: [ sNode start = smalltalkNode start ])
+			ifTrue: [ currentNode := vNode ] ].
+	(aViennaTracingSource intervalForSource: currentNode) key
+		ifNotEmpty: [ :interval | ^ interval ].
+	context := context sender.
+	context notNil ] whileTrue.
+	^ 0 to: -1
 ]
 
 { #category : 'operations' }
@@ -1322,6 +1351,7 @@ ViennaRefactoringBrowser >> initializeSourcePagePresenters [
 		                   sortingBlock: [ :upper :lower |
 		                   upper sortingOrder <= lower sortingOrder ];
 		                   contextMenu: [ self testResultTableContextMenu ];
+		                   whenSelectionChangedDo: [ self testResultChanged ];
 		                   yourself
 ]
 
@@ -1719,9 +1749,8 @@ ViennaRefactoringBrowser >> runAllTests [
 	               | ast testAnimation |
 	               testResultTable items: #(  ).
 	               ast := self specification ifNil: [ ^ nil ].
-	               testAnimation := ViennaAnimation default
-		                                specification:
-			                                (ViennaVDMFormatter format: ast);
+	               testAnimation := ViennaAnimation transpiler
+		                                specification: ast;
 		                                yourself.
 	               (ast at: 1) isViennaModuleNode ifTrue: [
 		               ast do: [ :moduleNode |
@@ -1940,6 +1969,12 @@ ViennaRefactoringBrowser >> specification [
 	^ self epiLog specification
 ]
 
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> testResultChanged [
+
+	self updateSourceWithTypeError
+]
+
 { #category : 'menus' }
 ViennaRefactoringBrowser >> testResultTableContextMenu [
 
@@ -2109,11 +2144,10 @@ ViennaRefactoringBrowser >> updateSourceWithTypeError [
 	textWidget textArea handleParagraphChange: [
 		(pendingTypeError ifNotNil: #node) ifNotNil: [ :node |
 			| from to |
-			(from isNil or: [ to isNil ]) ifTrue: [
-				(text asString asViennaTracingString intervalForSource: node) key
-					ifNotEmpty: [ :interval |
-						from := interval first.
-						to := interval last ] ].
+			(sourceText tracingSource intervalForSource: node) key ifNotEmpty: [
+				:interval |
+				from := interval first.
+				to := interval last ].
 			(from notNil and: [
 				 (from between: 1 and: text size) and: [
 					 to notNil and: [ to between: 1 and: text size ] ] ]) ifTrue: [
@@ -2128,7 +2162,16 @@ ViennaRefactoringBrowser >> updateSourceWithTypeError [
 						textWidget text
 							addAttribute: self sliceAttribute
 							from: interval first
-							to: interval last ] ] ] ].
+							to: interval last ] ] ].
+		testResultTable selectedItem ifNotNil: [ :testResult |
+			testResult exception ifNotNil: [ :exception |
+				(self
+					 findIntervalFromContext: exception signalerContext
+					 source: sourceText tracingSource) ifNotEmpty: [ :interval |
+					textWidget text
+						addAttribute: (TextBackgroundColor color: Color red muchLighter)
+						from: interval first
+						to: interval last ] ] ] ].
 	textWidget textArea ifNotNil: #compose
 ]
 
