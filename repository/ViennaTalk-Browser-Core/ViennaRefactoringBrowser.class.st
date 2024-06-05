@@ -29,7 +29,10 @@ Class {
 		'epiLogDiffList',
 		'epiLogDiffText',
 		'sliceNodes',
-		'sliceAttribute'
+		'sliceAttribute',
+		'runsAllTests',
+		'autoTestButton',
+		'runTestButton'
 	],
 	#classVars : [
 		'GreenSignalIcon',
@@ -1143,6 +1146,7 @@ ViennaRefactoringBrowser >> initialize [
 		when: ViennaSpecificationChanged
 		do: [ self updateStateTableItems ]
 		for: self.
+	runsAllTests := false.
 	super initialize.
 	self epiLog: ViennaEpiLog vanilla.
 	dirty := false.
@@ -1328,6 +1332,16 @@ ViennaRefactoringBrowser >> initializeSourcePagePresenters [
 				              state: animation state ];
 		              contextMenu: [ self sourceTextContextMenu ];
 		              yourself.
+	autoTestButton := self newButton
+		                  label: 'auto run';
+		                  icon: (self iconNamed: #smallUpdate);
+		                  action: [ self toggleRunsAllTests ];
+		                  yourself.
+	runTestButton := self newButton
+		                 label: 'run';
+		                 icon: (self iconNamed: #smallDoIt);
+		                 action: [ self runAllTests ];
+		                 yourself.
 	testResultTable := self newTable
 		                   addColumn:
 			                   ((SpImageTableColumn evaluated: #icon)
@@ -1536,6 +1550,8 @@ ViennaRefactoringBrowser >> modelChanged [
 				ifError: [ :msg | self notifyAnimationError: msg ].
 			animation state: state.
 			epiLog state: animation state ].
+		(epiLog hasSpecificationChange and: [ runsAllTests ]) ifTrue: [
+			self runAllTests ].
 		UIManager default inform:
 			epiLog printString , ' - ' , epiLog comment ]
 ]
@@ -1904,7 +1920,14 @@ ViennaRefactoringBrowser >> sourcePageLayout [
 						    yourself)
 				   height: 16;
 				   add: sourceText);
-		  add: testResultTable
+		  add: (SpBoxLayout newVertical
+				   add: (SpBoxLayout newHorizontal
+						    add: autoTestButton expand: false;
+						    add: runTestButton expand: false)
+				   expand: false;
+				   add: testResultTable;
+				   yourself);
+		  yourself
 ]
 
 { #category : 'accessing' }
@@ -1989,6 +2012,13 @@ ViennaRefactoringBrowser >> testResultTableContextMenu [
 ViennaRefactoringBrowser >> title [
 
 	^ 'Vienna Refactoring Browser'
+]
+
+{ #category : 'operations-tests' }
+ViennaRefactoringBrowser >> toggleRunsAllTests [
+
+	autoTestButton state: (runsAllTests := runsAllTests not).
+	self runAllTests
 ]
 
 { #category : 'operations' }
@@ -2170,8 +2200,8 @@ ViennaRefactoringBrowser >> updateSourceWithTypeError [
 					 source: sourceText tracingSource) ifNotEmpty: [ :interval |
 					textWidget text
 						addAttribute: (TextBackgroundColor color: Color red muchLighter)
-						from: interval first
-						to: interval last ] ] ] ].
+						from: (interval first max: 1)
+						to: (interval last min: textWidget text size) ] ] ] ].
 	textWidget textArea ifNotNil: #compose
 ]
 
