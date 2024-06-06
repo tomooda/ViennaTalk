@@ -48,6 +48,16 @@ ViennaEpiLog >> = aComparable [
 ]
 
 { #category : 'accessing' }
+ViennaEpiLog >> basicPred [
+
+	^ prev
+]
+
+{ #category : 'accessing' }
+ViennaEpiLog >> basicPred: aViennaEpiLog [
+]
+
+{ #category : 'accessing' }
 ViennaEpiLog >> comment [
 
 	^ comment
@@ -251,10 +261,10 @@ ViennaEpiLog >> newRevertion: aViennaEpiLog [
 { #category : 'accessing' }
 ViennaEpiLog >> pred [
 
-	^ prev ifNotNil: [
-		  prev isRevertionEpiLog
-			  ifTrue: [ prev pred ]
-			  ifFalse: [ prev ] ]
+	^ self basicPred ifNotNil: [ :pred |
+		  pred isRevertionEpiLog
+			  ifTrue: [ pred pred ]
+			  ifFalse: [ pred ] ]
 ]
 
 { #category : 'accessing' }

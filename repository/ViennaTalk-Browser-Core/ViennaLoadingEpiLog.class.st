@@ -6,6 +6,12 @@ Class {
 	#tag : 'EpiLog'
 }
 
+{ #category : 'accessing' }
+ViennaLoadingEpiLog >> basicPred [
+
+	^ nil
+]
+
 { #category : 'testing' }
 ViennaLoadingEpiLog >> isLoadEpiLog [
 

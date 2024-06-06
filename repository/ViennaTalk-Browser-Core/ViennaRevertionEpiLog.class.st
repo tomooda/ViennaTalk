@@ -18,6 +18,18 @@ ViennaRevertionEpiLog class >> after: aViennaEpiLog destination: anotherViennaEp
 ]
 
 { #category : 'accessing' }
+ViennaRevertionEpiLog >> basicPred [
+
+	^ destination
+]
+
+{ #category : 'accessing' }
+ViennaRevertionEpiLog >> basicPred: aViennaEpiLog [
+
+	destination := aViennaEpiLog
+]
+
+{ #category : 'accessing' }
 ViennaRevertionEpiLog >> destination [
 
 	^ destination

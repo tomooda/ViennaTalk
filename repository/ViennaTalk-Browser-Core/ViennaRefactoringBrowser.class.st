@@ -25,6 +25,7 @@ Class {
 		'showsTimeLineButton',
 		'showsConstructionLineButton',
 		'epiLogMatcherDropList',
+		'epiLogTags',
 		'epiLogList',
 		'epiLogDiffList',
 		'epiLogDiffText',
@@ -32,7 +33,13 @@ Class {
 		'sliceAttribute',
 		'runsAllTests',
 		'autoTestButton',
-		'runTestButton'
+		'runTestButton',
+		'namedEpiLogDropList',
+		'revertEpiLogButton',
+		'removeEpiLogButton',
+		'removeEpiLogTagButton',
+		'addEpiLogTagButton',
+		'editEpiLogCommentButton'
 	],
 	#classVars : [
 		'GreenSignalIcon',
@@ -610,6 +617,16 @@ ViennaRefactoringBrowser >> accept: aStringOrText [
 	^ newNode
 ]
 
+{ #category : 'operations-epiLog' }
+ViennaRefactoringBrowser >> addEpiLogTag [
+
+	epiLogList selectedItem ifNotNil: [ :epiLog |
+		(UIManager default request: 'Tag' initialAnswer: 'tag') ifNotNil: [
+			:name |
+			epiLogTags at: name put: epiLog.
+			self updateNamedEpiLogDropList ] ]
+]
+
 { #category : 'menus' }
 ViennaRefactoringBrowser >> addRefactoringMenuGroupOn: aViennaNode to: aMenuPresenter with: aBlock [
 
@@ -768,6 +785,15 @@ ViennaRefactoringBrowser >> displayDefinition: aViennaNode [
 	^ '-'
 ]
 
+{ #category : 'operations-epiLog' }
+ViennaRefactoringBrowser >> editEpiLogComment [
+
+	epiLogList selectedItem ifNotNil: [ :epiLog |
+		(UIManager default request: 'Comment' initialAnswer: epiLog comment)
+			ifNotNil: [ :comment | epiLog comment: comment ].
+		epiLogList refresh ]
+]
+
 { #category : 'accessing' }
 ViennaRefactoringBrowser >> epiLog [
 
@@ -804,12 +830,36 @@ ViennaRefactoringBrowser >> epiLogListContextMenu [
 	| menu |
 	menu := self newMenu.
 	epiLogList selectedItem ifNotNil: [ :epilog |
-		menu addGroup: [ :group |
-			group addItem: [ :item |
-				item
-					name: 'Revert to';
-					action: [ self revertTo: epilog ] ] ] ].
+		menu
+			addGroup: [ :group |
+				group
+					addItem: [ :item |
+						item
+							name: 'Revert to';
+							action: [ self revertTo: epilog ] ];
+					addItem: [ :item |
+						item
+							name: 'Comment';
+							action: [ self editEpiLogComment ] ];
+					addItem: [ :item |
+						item
+							name: 'Remove';
+							action: [ self removeEpiLog ] ] ];
+			addGroup: [ :group |
+				group addItem: [ :item |
+					item
+						name: 'Tag';
+						action: [ self addEpiLogTag ] ] ] ].
 	^ menu
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> epiLogListSelectionChanged [
+
+	self
+		updateEpiLogDiffList;
+		updateNamedEpiLog;
+		updateEpiLogButtons
 ]
 
 { #category : 'operations-epiLog' }
@@ -864,6 +914,18 @@ ViennaRefactoringBrowser >> epilogPageLayout [
 				   expand: false;
 				   add: epiLogMatcherDropList expand: false;
 				   add: epiLogList;
+				   add: (SpBoxLayout newHorizontal
+						    add: namedEpiLogDropList;
+						    add: addEpiLogTagButton width: self class buttonHeight;
+						    add: removeEpiLogTagButton width: self class buttonHeight;
+						    yourself)
+				   expand: false;
+				   add: (SpBoxLayout newHorizontal
+						    add: revertEpiLogButton;
+						    add: editEpiLogCommentButton expand: false;
+						    add: removeEpiLogButton expand: false;
+						    yourself)
+				   expand: false;
 				   yourself);
 		  add: (SpPanedLayout newVertical
 				   positionOfSlider: 0.3;
@@ -1149,6 +1211,7 @@ ViennaRefactoringBrowser >> initialize [
 	runsAllTests := false.
 	super initialize.
 	self epiLog: ViennaEpiLog vanilla.
+	epiLogTags := Dictionary new.
 	dirty := false.
 	sliceNodes := IdentitySet new
 ]
@@ -1158,12 +1221,14 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 
 	showsTimeLineButton := self newRadioButton
 		                       label: 'time line';
-		                       whenActivatedDo: [ self updateEpiLogList ];
+		                       whenActivatedDo: [
+			                       self updateEpiLogListTimeLine ];
 		                       yourself.
 	showsConstructionLineButton := self newRadioButton
 		                               label: 'construction line';
 		                               whenActivatedDo: [
-			                               self updateEpiLogList ];
+			                               self
+				                               updateEpiLogListConstructionLine ];
 		                               yourself.
 	showsTimeLineButton associatedRadioButtons:
 		{ showsConstructionLineButton }.
@@ -1187,7 +1252,8 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 			              (SpStringTableColumn evaluated: #printString);
 		              addColumn: (SpStringTableColumn evaluated: #comment);
 		              contextMenu: [ self epiLogListContextMenu ];
-		              whenSelectionChangedDo: [ self updateEpiLogDiffList ];
+		              whenSelectionChangedDo: [
+			              self epiLogListSelectionChanged ];
 		              yourself.
 	epiLogDiffList := self newTable
 		                  hideColumnHeaders;
@@ -1199,6 +1265,33 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 		                  whenSelectionChangedDo: [
 			                  self updateEpiLogDiffText ];
 		                  yourself.
+	namedEpiLogDropList := self newDropList
+		                       display: [ :assoc | assoc key ];
+		                       startWithoutSelection;
+		                       whenSelectedItemChangedDo: [
+			                       self namedEpiLogChanged ];
+		                       yourself.
+	revertEpiLogButton := self newButton
+		                      icon: (self iconNamed: #smallRedo);
+		                      action: [ self revertToEpiLog ];
+		                      yourself.
+	removeEpiLogButton := self newButton
+		                      icon: (self iconNamed: #smallDelete);
+		                      action: [ self removeEpiLog ];
+		                      yourself.
+	editEpiLogCommentButton := self newButton
+		                           icon: (self iconNamed: #edit);
+		                           action: [ self editEpiLogComment ];
+		                           yourself.
+	addEpiLogTagButton := self newButton
+		                      icon: (self iconNamed: #smallAdd);
+		                      action: [ self addEpiLogTag ];
+		                      yourself.
+	removeEpiLogTagButton := self newButton
+		                         icon: (self iconNamed: #smallCancel);
+		                         action: [ self removeEpiLogTag ];
+		                         yourself.
+
 	epiLogDiffText := self newText.
 	epiLogList whenBuiltDo: [ self updateEpiLogList ]
 ]
@@ -1538,7 +1631,9 @@ ViennaRefactoringBrowser >> mergeOperationsFromFRAM [
 ViennaRefactoringBrowser >> modelChanged [
 
 	self model ifNotNil: [ :epiLog |
-		self updateEpiLogList.
+		self
+			updateEpiLogList;
+			updateNamedEpiLogDropList.
 		self setDirty.
 		epiLog hasSpecificationChange ifTrue: [ self exportToDisk ].
 		self typecheck.
@@ -1591,6 +1686,14 @@ ViennaRefactoringBrowser >> moduleListContextMenu [
 				name: 'inspect';
 				action: [ self module inspect ] ] ].
 	^ menu
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> namedEpiLogChanged [
+
+	namedEpiLogDropList selectedItem value ifNotNil: [ :epiLog |
+		epiLogList selectItem: epiLog ].
+	self updateEpiLogButtons
 ]
 
 { #category : 'operations-source signal' }
@@ -1751,10 +1854,39 @@ ViennaRefactoringBrowser >> playgroundTextContextMenu [
 ]
 
 { #category : 'operations-epiLog' }
+ViennaRefactoringBrowser >> removeEpiLog [
+
+	epiLogList selectedItem ifNotNil: [ :epiLog |
+		(UIManager default proceed: 'Remove from EpiLog?' title: 'EpiLog')
+			ifTrue: [
+				self epiLog timeLine do: [ :log |
+					log prev == epiLog ifTrue: [ log prev: epiLog prev ].
+					log basicPred == epiLog ifTrue: [
+						log basicPred: epiLog basicPred ] ].
+				self
+					updateEpiLogList;
+					updateNamedEpiLogDropList ] ]
+]
+
+{ #category : 'operations-epiLog' }
+ViennaRefactoringBrowser >> removeEpiLogTag [
+
+	namedEpiLogDropList selectedItem key ifNotEmpty: [ :name |
+		epiLogTags removeKey: name.
+		self updateNamedEpiLogDropList ]
+]
+
+{ #category : 'operations-epiLog' }
 ViennaRefactoringBrowser >> revertTo: aViennaEpiLog [
 
 	self epiLogRevertion: aViennaEpiLog.
 	self updateModuleList
+]
+
+{ #category : 'operations-epiLog' }
+ViennaRefactoringBrowser >> revertToEpiLog [
+
+	epiLogList selectedItem ifNotNil: [ :epiLog | self revertTo: epiLog ]
 ]
 
 { #category : 'operations-tests' }
@@ -2064,6 +2196,20 @@ ViennaRefactoringBrowser >> updateDefinitionList [
 ]
 
 { #category : 'updating' }
+ViennaRefactoringBrowser >> updateEpiLogButtons [
+
+	removeEpiLogTagButton enabled: (epiLogTags includesKey:
+			 (namedEpiLogDropList selectedItem ifNotNil: #key)).
+	epiLogList selectedItem ~~ self epiLog
+		ifTrue: [
+			revertEpiLogButton enable.
+			removeEpiLogButton enable ]
+		ifFalse: [
+			revertEpiLogButton disable.
+			removeEpiLogButton disable ]
+]
+
+{ #category : 'updating' }
 ViennaRefactoringBrowser >> updateEpiLogDiffList [
 
 	epiLogList selectedItem ifNotNil: [ :epilog |
@@ -2090,15 +2236,36 @@ ViennaRefactoringBrowser >> updateEpiLogDiffText [
 { #category : 'updating' }
 ViennaRefactoringBrowser >> updateEpiLogList [
 
+	self
+		ifShowsTimeLine: [ self updateEpiLogListTimeLine ]
+		ifShowsConstructionLine: [ self updateEpiLogListConstructionLine ]
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> updateEpiLogListConstructionLine [
+
 	epiLogList ifNotNil: [
 		epiLogList
-			items: ((self epiLog ifNil: [ #(  ) ] ifNotNil: [ :epiLog |
-					  self
-						  ifShowsTimeLine: [ epiLog timeLine ]
-						  ifShowsConstructionLine: [ epiLog constructionLine ] ])
-					 select:
+			items: ((self epiLog
+					  ifNil: [ #(  ) ]
+					  ifNotNil: [ :epiLog | epiLog constructionLine ]) select:
 					 (epiLogMatcherDropList selectedItem ifNil: [ [ :epilog | true ] ]))
-			selectsFirst: true ]
+			selectsFirst: true ].
+	self updateEpiLogButtons
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> updateEpiLogListTimeLine [
+
+	epiLogList ifNotNil: [
+		epiLogList
+			items:
+				((self epiLog
+					  ifNil: [ #(  ) ]
+					  ifNotNil: [ :epiLog | epiLog timeLine ]) select:
+					 (epiLogMatcherDropList selectedItem ifNil: [ [ :epilog | true ] ]))
+			selectsFirst: true ].
+	self updateEpiLogButtons
 ]
 
 { #category : 'updating' }
@@ -2132,6 +2299,30 @@ ViennaRefactoringBrowser >> updateModuleList [
 	moduleList items: newItems.
 	(newItems includes: oldSelection) ifTrue: [
 		moduleList selectItem: oldSelection ]
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> updateNamedEpiLog [
+
+	namedEpiLogDropList selectIndex:
+		((namedEpiLogDropList items collect: #value) indexOf:
+			 epiLogList selectedItem)
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> updateNamedEpiLogDropList [
+
+	namedEpiLogDropList items: (Array streamContents: [ :stream |
+			 | preds headId |
+			 preds := IdentitySet new.
+			 self epiLog timeLine do: [ :epiLog | preds add: epiLog basicPred ].
+			 headId := 0.
+			 self epiLog timeLine do: [ :epiLog |
+				 (preds includes: epiLog) ifFalse: [
+					 stream nextPut:
+						 'HEAD-' , (headId := headId + 1) printString -> epiLog ].
+				 epiLogTags keysAndValuesDo: [ :tag :log |
+					 epiLog == log ifTrue: [ stream nextPut: tag -> epiLog ] ] ] ])
 ]
 
 { #category : 'updating' }

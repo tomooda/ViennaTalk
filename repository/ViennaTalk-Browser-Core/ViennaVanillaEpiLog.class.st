@@ -6,6 +6,12 @@ Class {
 	#tag : 'EpiLog'
 }
 
+{ #category : 'accessing' }
+ViennaVanillaEpiLog >> basicPred [
+
+	^ nil
+]
+
 { #category : 'initialization' }
 ViennaVanillaEpiLog >> initialize [
 
