@@ -1436,6 +1436,7 @@ ViennaRefactoringBrowser >> initializeSourcePagePresenters [
 		                 action: [ self runAllTests ];
 		                 yourself.
 	testResultTable := self newTable
+		                   beResizable;
 		                   addColumn:
 			                   ((SpImageTableColumn evaluated: #icon)
 				                    title: '';
