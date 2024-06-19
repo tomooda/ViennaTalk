@@ -2180,8 +2180,9 @@ ViennaRefactoringBrowser >> updateCategoryList [
 				            stream nextPut: section ] ] ].
 	oldSelection := categoryList selection selectedItem.
 	categoryList items: newItems.
-	(newItems includes: oldSelection) ifTrue: [
-		categoryList selectItem: oldSelection ]
+	(newItems includes: oldSelection)
+		ifTrue: [ categoryList selectItem: oldSelection ]
+		ifFalse: [ categoryList selectIndex: 1 ]
 ]
 
 { #category : 'updating' }
@@ -2193,8 +2194,9 @@ ViennaRefactoringBrowser >> updateDefinitionList [
 		             ifNil: [ Array new ]).
 	oldSelection := definitionList selection selectedItem.
 	definitionList items: newItems.
-	(newItems includes: oldSelection) ifTrue: [
-		definitionList selectItem: oldSelection ]
+	(newItems includes: oldSelection)
+		ifTrue: [ definitionList selectItem: oldSelection ]
+		ifFalse: [ definitionList selectIndex: 1 ]
 ]
 
 { #category : 'updating' }
