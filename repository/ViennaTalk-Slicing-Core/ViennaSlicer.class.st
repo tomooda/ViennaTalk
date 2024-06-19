@@ -232,6 +232,26 @@ ViennaSlicer >> onNode: aViennaNode do: aBlock [
 		writes removeAll ]
 ]
 
+{ #category : 'operations' }
+ViennaSlicer >> onNodes: aCollectionOfViennaNode do: aBlock [
+
+	| origin |
+	(aCollectionOfViennaNode anySatisfy: [ :n | n == startNode ])
+		ifTrue: [ startNode := nil ].
+	origin := self copy.
+	[ aBlock cull: self ] ensure: [
+		(writes anySatisfy: [ :w | agenda includes: w ])
+			ifTrue: [
+				agenda removeAllFoundIn: writes.
+				agenda addAll: reads.
+				affectingNodes addAll: aCollectionOfViennaNode ]
+			ifFalse: [
+				affectingNodes ~= origin affectingNodes ifTrue: [
+					affectingNodes addAll: aCollectionOfViennaNode ] ].
+		reads removeAll.
+		writes removeAll ]
+]
+
 { #category : 'copying' }
 ViennaSlicer >> postCopy [
 

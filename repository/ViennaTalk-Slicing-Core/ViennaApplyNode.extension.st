@@ -27,10 +27,14 @@ ViennaApplyNode >> sliceWith: aViennaSlicer [
 		self argumentExpressionList asArray
 			with: callee parameters asArray
 			do: [ :arg :param |
-				aViennaSlicer onNode: self do: [
-					aViennaSlicer
-						write: param;
-						read: arg ] ] ].
+				aViennaSlicer
+					onNodes: {
+							self.
+							param }
+					do: [
+						aViennaSlicer
+							write: param;
+							read: arg ] ] ].
 	self arguments do: [ :expression |
 		expression sliceWith: aViennaSlicer ]
 ]
