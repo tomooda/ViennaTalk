@@ -1740,7 +1740,8 @@ ViennaRefactoringBrowser >> okToClose [
 
 { #category : 'operations' }
 ViennaRefactoringBrowser >> onTheFlyCheckSourceText [
-	"self highlightSourceText"
+
+	self highlightSourceText
 ]
 
 { #category : 'private' }
