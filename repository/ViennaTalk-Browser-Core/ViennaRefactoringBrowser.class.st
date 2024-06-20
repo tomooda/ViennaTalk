@@ -1044,7 +1044,7 @@ ViennaRefactoringBrowser >> findIntervalFromContext: aContext source: aViennaTra
 	specificationContext := context specificationContext.
 	specificationContext ifNil: [ ^ 0 to: -1 ].
 	smalltalkNode := specificationContext method sourceNodeForPC:
-		                 specificationContext pc.
+		                 specificationContext pc - 1.
 	vdmNode := specificationContext specification.
 	map := specificationContext methodClass debuggerNodeMapAt:
 		       specificationContext selector.
@@ -2394,7 +2394,8 @@ ViennaRefactoringBrowser >> updateSourceWithTypeError [
 					 findIntervalFromContext: exception signalerContext
 					 source: sourceText tracingSource) ifNotEmpty: [ :interval |
 					textWidget text
-						addAttribute: (TextBackgroundColor color: Color red muchLighter)
+						addAttribute:
+						(TextBackgroundColor color: (Color red muchLighter alpha: 0.5))
 						from: (interval first max: 1)
 						to: (interval last min: textWidget text size) ] ] ] ].
 	textWidget textArea ifNotNil: #compose
