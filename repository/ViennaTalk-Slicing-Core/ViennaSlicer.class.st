@@ -123,6 +123,11 @@ ViennaSlicer >> call: aViennaNode [
 			self continue: (self interOperationSlicer
 					 slicerOnOperation: aViennaNode resolve
 					 criteria: self agenda
+					 callerSlicer: self) ].
+		aViennaNode isViennaOperationDefinitionNode ifTrue: [
+			self continue: (self interOperationSlicer
+					 slicerOnOperation: aViennaNode
+					 criteria: self agenda
 					 callerSlicer: self) ] ]
 ]
 

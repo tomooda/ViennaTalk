@@ -15,6 +15,14 @@ ViennaMapMunionPatternNode class >> pattern: aViennaPatternNode1 pattern: aVienn
 		  yourself
 ]
 
+{ #category : 'converting' }
+ViennaMapMunionPatternNode >> asExpression [
+
+	^ ViennaMapMergeNode
+		  expression: self pattern1 asExpression
+		  expression: self pattern2 asExpression
+]
+
 { #category : 'private' }
 ViennaMapMunionPatternNode >> boundIdentifiersDo: aBlock [
 

@@ -20,6 +20,12 @@ ViennaPatternIdentifierNode class >> identifier: aString [
 		  yourself
 ]
 
+{ #category : 'converting' }
+ViennaPatternIdentifierNode >> asExpression [
+
+	^ ViennaLocalNameNode identifier: self identifier
+]
+
 { #category : 'private' }
 ViennaPatternIdentifierNode >> boundIdentifiersDo: aBlock [
 

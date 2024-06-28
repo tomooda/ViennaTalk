@@ -6,6 +6,18 @@ Class {
 	#package : 'ViennaTalk-AST-Core'
 }
 
+{ #category : 'converting' }
+ViennaSeqConcPatternNode >> asExpression [
+
+	| exp |
+	exp := self first asExpression.
+	2 to: self size do: [ :index |
+		exp := ViennaSequenceConcatenateNode
+			       expression: exp
+			       expression: (self at: index) asExpression ].
+	^ exp
+]
+
 { #category : 'private' }
 ViennaSeqConcPatternNode >> boundIdentifiersDo: aBlock [
 

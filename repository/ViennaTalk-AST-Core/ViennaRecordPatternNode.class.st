@@ -15,6 +15,14 @@ ViennaRecordPatternNode class >> name: aViennaNameNode patternList: aViennaPatte
 		  yourself
 ]
 
+{ #category : 'converting' }
+ViennaRecordPatternNode >> asExpression [
+
+	^ ViennaRecordConstructorNode
+		  name: self name
+		  expressionList: self patternList asExpression
+]
+
 { #category : 'private' }
 ViennaRecordPatternNode >> boundIdentifiersDo: aBlock [
 

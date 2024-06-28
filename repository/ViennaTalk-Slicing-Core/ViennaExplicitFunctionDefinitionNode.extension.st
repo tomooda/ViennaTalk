@@ -4,8 +4,18 @@ Extension { #name : 'ViennaExplicitFunctionDefinitionNode' }
 ViennaExplicitFunctionDefinitionNode >> sliceWith: aViennaSlicer [
 
 	aViennaSlicer onNode: self do: [
+		aViennaSlicer write: self.
+		aViennaSlicer startNode ifNotNil: [ :startNode |
+			self pre ifNotNil: [ :pre |
+				(startNode includesParent: pre) ifTrue: [
+					^ startNode sliceWith: aViennaSlicer ] ].
+			self post ifNotNil: [ :post |
+				(startNode includesParent: post) ifTrue: [
+					^ startNode sliceWith: aViennaSlicer ] ].
+			self measure ifNotNil: [ :measure |
+				(startNode includesParent: measure) ifTrue: [
+					^ startNode sliceWith: aViennaSlicer ] ] ].
 		aViennaSlicer
-			write: self;
 			read: self expression;
 			read: self type.
 		self typeVariableList do: [ :typeVariable |

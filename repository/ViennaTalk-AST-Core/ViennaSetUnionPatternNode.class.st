@@ -15,6 +15,14 @@ ViennaSetUnionPatternNode class >> pattern: aViennaPatternNode1 pattern: aVienna
 		  yourself
 ]
 
+{ #category : 'converting' }
+ViennaSetUnionPatternNode >> asExpression [
+
+	^ ViennaSetUnionNode
+		  expression: self pattern1 asExpression
+		  expression: self pattern2 asExpression
+]
+
 { #category : 'private' }
 ViennaSetUnionPatternNode >> boundIdentifiersDo: aBlock [
 

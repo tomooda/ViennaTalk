@@ -61,6 +61,12 @@ ViennaExtendedExplicitFunctionDefinitionNode >> asAccessDefinition [
 	^ self
 ]
 
+{ #category : 'accessing' }
+ViennaExtendedExplicitFunctionDefinitionNode >> body [
+
+	^ self expression
+]
+
 { #category : 'private' }
 ViennaExtendedExplicitFunctionDefinitionNode >> boundIdentifiersDo: aBlock [
 

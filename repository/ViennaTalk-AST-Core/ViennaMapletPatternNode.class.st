@@ -15,6 +15,14 @@ ViennaMapletPatternNode class >> keyPattern: aViennaPatternNode1 valuePattern: a
 		  yourself
 ]
 
+{ #category : 'converting' }
+ViennaMapletPatternNode >> asExpression [
+
+	^ ViennaMapletNode
+		  keyExpression: self keyPattern asExpression
+		  valueExpression: self valuePattern asExpression
+]
+
 { #category : 'private' }
 ViennaMapletPatternNode >> boundIdentifiersDo: aBlock [
 

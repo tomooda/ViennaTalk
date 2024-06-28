@@ -21,6 +21,13 @@ ViennaTuplePatternNode class >> withAll: aCollectionOfViennaPatternNode [
 		  (ViennaPatternListNode withAll: aCollectionOfViennaPatternNode)
 ]
 
+{ #category : 'converting' }
+ViennaTuplePatternNode >> asExpression [
+
+	^ ViennaTupleConstructorNode expressionList:
+		  self patternList asExpression
+]
+
 { #category : 'private' }
 ViennaTuplePatternNode >> boundIdentifiersDo: aBlock [
 

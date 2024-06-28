@@ -86,6 +86,12 @@ ViennaExplicitFunctionDefinitionNode >> asImportDefinitionIn: moduleName [
 						     rename: nil)))
 ]
 
+{ #category : 'accessing' }
+ViennaExplicitFunctionDefinitionNode >> body [
+
+	^ self expression
+]
+
 { #category : 'private' }
 ViennaExplicitFunctionDefinitionNode >> boundIdentifiersDo: aBlock [
 

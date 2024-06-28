@@ -6,6 +6,12 @@ Class {
 	#package : 'ViennaTalk-AST-Core'
 }
 
+{ #category : 'converting' }
+ViennaSetEnumPatternNode >> asExpression [
+
+	^ ViennaSetEnumerationNode withAll: (self collect: #asExpression)
+]
+
 { #category : 'private' }
 ViennaSetEnumPatternNode >> boundIdentifiersDo: aBlock [
 

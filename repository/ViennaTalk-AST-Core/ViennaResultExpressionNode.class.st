@@ -41,3 +41,13 @@ ViennaResultExpressionNode >> maximalType [
 				  on: self
 				  signal: 'RESULT out of function/operation definition' ]
 ]
+
+{ #category : 'accessing' }
+ViennaResultExpressionNode >> resolve [
+
+	^ self
+		  detectParent: [ :node |
+			  node isViennaFunctionDefinitionNode or: [
+				  node isViennaOperationDefinitionNode ] ]
+		  ifNone: [ nil ]
+]

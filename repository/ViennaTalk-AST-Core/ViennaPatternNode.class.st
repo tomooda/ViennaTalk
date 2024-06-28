@@ -12,6 +12,12 @@ ViennaPatternNode class >> isAbstract [
 	^ self = ViennaPatternNode
 ]
 
+{ #category : 'converting' }
+ViennaPatternNode >> asExpression [
+
+	^ self subclassResponsibility
+]
+
 { #category : 'testing' }
 ViennaPatternNode >> isViennaPatternNode [
 
