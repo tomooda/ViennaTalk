@@ -1,27 +1,28 @@
 Class {
-	#name : #ViennaUseTypeSynonym,
-	#superclass : #ViennaUse,
+	#name : 'ViennaUseTypeSynonym',
+	#superclass : 'ViennaUse',
 	#instVars : [
 		'typeSynonyms',
 		'typeSynonymIndex'
 	],
-	#category : #'ViennaTalk-Refactoring-Core'
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaUseTypeSynonym >> check [
 
 	^ self typeSynonyms notEmpty
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaUseTypeSynonym >> execute [
 
 	^ self replaceNode: ast with: (ViennaTypeNameNode name:
 			   (ViennaLocalNameNode identifier: self definitionNode identifier))
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUseTypeSynonym >> findDefinitionNode [
 
 	^ self typeSynonyms
@@ -30,7 +31,7 @@ ViennaUseTypeSynonym >> findDefinitionNode [
 		  ifEmpty: [ nil ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUseTypeSynonym >> findTypeSynonymIndex [
 
 	^ UIManager default
@@ -41,7 +42,7 @@ ViennaUseTypeSynonym >> findTypeSynonymIndex [
 		  title: 'Use type synonym'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUseTypeSynonym >> findTypeSynonyms [
 
 	ast ifNil: [ ^ Array new ].
@@ -53,33 +54,33 @@ ViennaUseTypeSynonym >> findTypeSynonyms [
 				  stream nextPut: synonym ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUseTypeSynonym >> name [
 
 	^ 'Use type synonym for '
 	  , (self shortDescription: self ast source) asText allBold
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUseTypeSynonym >> typeSynonymIndex [
 
 	^ typeSynonymIndex ifNil: [
 		  typeSynonymIndex := self findTypeSynonymIndex ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUseTypeSynonym >> typeSynonymIndex: anInteger [
 
 	typeSynonymIndex := anInteger
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUseTypeSynonym >> typeSynonyms [
 
 	^ typeSynonyms ifNil: [ typeSynonyms := self findTypeSynonyms ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaUseTypeSynonym >> typeSynonymsDo: aBlock [
 
 	self ast module sectionsDo: [ :section |

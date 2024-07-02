@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaInlineType,
-	#superclass : #ViennaInline,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaInlineType',
+	#superclass : 'ViennaInline',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaInlineType >> check [
 
 	ast ifNil: [ ^ false ].
@@ -18,7 +19,7 @@ ViennaInlineType >> check [
 					  ifFalse: [ false ] ] ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaInlineType >> execute [
 
 	^ self
@@ -26,7 +27,7 @@ ViennaInlineType >> execute [
 		  with: (ast resolveIdentifier: ast identifier) type copyFragment
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInlineType >> sortingOrder [
 	^ 2.11
 ]

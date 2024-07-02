@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaAddRecordType,
-	#superclass : #ViennaAddToplevelDefinition,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaAddRecordType',
+	#superclass : 'ViennaAddToplevelDefinition',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddRecordType >> findContainerNode [
 
 	ast ifNil: [ ^ nil ].
@@ -12,29 +13,29 @@ ViennaAddRecordType >> findContainerNode [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddRecordType >> name [
 	^ 'Add record type ' , (newName ifNil: [ '' ])
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaAddRecordType >> newNameQuery [
 
 	^ 'New record name'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddRecordType >> parser [
 
 	^ ViennaVDMParser current accessTypeDefinition end
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddRecordType >> sortingOrder [
 	^ 0.01
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddRecordType >> sourceWithNewName: aString [
 
 	^ aString , '::'

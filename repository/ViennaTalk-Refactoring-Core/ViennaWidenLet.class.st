@@ -1,29 +1,30 @@
 Class {
-	#name : #ViennaWidenLet,
-	#superclass : #ViennaRefactoring,
+	#name : 'ViennaWidenLet',
+	#superclass : 'ViennaRefactoring',
 	#instVars : [
 		'definitionNode'
 	],
-	#category : #'ViennaTalk-Refactoring-Core'
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaWidenLet class >> isAbstract [
 	^ self = ViennaWidenLet
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaWidenLet >> acceptsDefinitionNode: aViennaNode [
 	^ self subclassResponsibility
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaWidenLet >> acceptsNode: aViennaNode [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaWidenLet >> check [
 
 	ast ifNil: [ ^ false ].
@@ -32,17 +33,17 @@ ViennaWidenLet >> check [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaWidenLet >> definitionNode [
 	^ definitionNode ifNil: [ definitionNode := self findDefinitionNode ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaWidenLet >> definitionNode: aViennaNode [
 	definitionNode := aViennaNode
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaWidenLet >> execute [
 
 	| dummy base |
@@ -54,7 +55,7 @@ ViennaWidenLet >> execute [
 	^ self replaceNode: dummy with: ast
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaWidenLet >> findDefinitionNode [
 	| node |
 	node := ast parent.
@@ -64,7 +65,7 @@ ViennaWidenLet >> findDefinitionNode [
 	^ node
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaWidenLet >> name [
 	^ 'Widen ' , (self shortDescription: ast source) asText allBold
 ]

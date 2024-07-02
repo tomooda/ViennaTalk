@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaInlineValueAndRemove,
-	#superclass : #ViennaInline,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaInlineValueAndRemove',
+	#superclass : 'ViennaInline',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaInlineValueAndRemove >> check [
 
 	| moduleIdentifier identifier |
@@ -22,7 +23,7 @@ ViennaInlineValueAndRemove >> check [
 	^ true
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaInlineValueAndRemove >> execute [
 
 	| valueName valueBody |
@@ -39,7 +40,7 @@ ViennaInlineValueAndRemove >> execute [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInlineValueAndRemove >> name [
 
 	^ 'Inline value definition of ' asText
@@ -47,7 +48,7 @@ ViennaInlineValueAndRemove >> name [
 	  , ' and Remove' asText
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInlineValueAndRemove >> sortingOrder [
 	^ 2.15
 ]

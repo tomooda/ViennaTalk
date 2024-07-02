@@ -1,15 +1,16 @@
 Class {
-	#name : #ViennaExtractParameterFromExpressionInFunction,
-	#superclass : #ViennaExtractParameter,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaExtractParameterFromExpressionInFunction',
+	#superclass : 'ViennaExtractParameter',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExtractParameterFromExpressionInFunction class >> isAbstract [
 	^ self == ViennaExtractParameterFromExpressionInFunction
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaExtractParameterFromExpressionInFunction >> check [
 
 	| moduleName identifier |
@@ -25,7 +26,7 @@ ViennaExtractParameterFromExpressionInFunction >> check [
 	^ true
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaExtractParameterFromExpressionInFunction >> executeCallers [
 
 	| moduleName shortName |
@@ -41,7 +42,7 @@ ViennaExtractParameterFromExpressionInFunction >> executeCallers [
 		do: [ :node | node argumentExpressionList add: ast copyFragment ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractParameterFromExpressionInFunction >> name [
 
 	^ 'Extract parameter '
@@ -52,7 +53,7 @@ ViennaExtractParameterFromExpressionInFunction >> name [
 	  , self definitionNode identifier asText allBold
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractParameterFromExpressionInFunction >> sortingOrder [
 	^ 2.183
 ]

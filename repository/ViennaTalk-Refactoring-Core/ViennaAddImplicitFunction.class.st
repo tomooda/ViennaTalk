@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaAddImplicitFunction,
-	#superclass : #ViennaAddToplevelDefinition,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaAddImplicitFunction',
+	#superclass : 'ViennaAddToplevelDefinition',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddImplicitFunction >> findContainerNode [
 
 	ast ifNil: [ ^ nil ].
@@ -12,29 +13,29 @@ ViennaAddImplicitFunction >> findContainerNode [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddImplicitFunction >> name [
 	^ 'Add implicit function ' , (newName ifNil: [ '' ])
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaAddImplicitFunction >> newNameQuery [
 
 	^ 'a new implicit function name'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddImplicitFunction >> parser [
 
 	^ ViennaVDMParser current accessFunctionDefinition end
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddImplicitFunction >> sortingOrder [
 	^ 0.01
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddImplicitFunction >> sourceWithNewName: aString [
 
 	^ aString , '() res:? post true'

@@ -1,6 +1,6 @@
-Extension { #name : #ViennaMultipleAssignStatementNode }
+Extension { #name : 'ViennaMultipleAssignStatementNode' }
 
-{ #category : #'*ViennaTalk-Refactoring-Core' }
+{ #category : '*ViennaTalk-Refactoring-Core' }
 ViennaMultipleAssignStatementNode >> narrowestStatementWithFreeIdentifiers: anArrayOfString [
 
 	^ (self uniqueFreeIdentifiers includesAnyOf: anArrayOfString)

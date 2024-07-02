@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaMoveFunction,
-	#superclass : #ViennaMove,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaMoveFunction',
+	#superclass : 'ViennaMove',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMoveFunction >> findDefinitionNode [
 
 	ast ifNil: [ ^ nil ].

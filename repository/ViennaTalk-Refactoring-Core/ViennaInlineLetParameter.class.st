@@ -1,28 +1,29 @@
 Class {
-	#name : #ViennaInlineLetParameter,
-	#superclass : #ViennaInline,
+	#name : 'ViennaInlineLetParameter',
+	#superclass : 'ViennaInline',
 	#instVars : [
 		'definitionNode'
 	],
-	#category : #'ViennaTalk-Refactoring-Core'
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaInlineLetParameter >> check [
 	^ self definitionNode notNil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInlineLetParameter >> definitionNode [
 	^ definitionNode ifNil: [ definitionNode := self findDefinitionNode ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInlineLetParameter >> definitionNode: anObject [
 	definitionNode := anObject
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaInlineLetParameter >> execute [
 
 	| expr |
@@ -43,7 +44,7 @@ ViennaInlineLetParameter >> execute [
 	^ self definitionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInlineLetParameter >> findDefinitionNode [
 
 	ast ifNil: [ ^ nil ].
@@ -59,7 +60,7 @@ ViennaInlineLetParameter >> findDefinitionNode [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInlineLetParameter >> sortingOrder [
 	^ 2.18
 ]

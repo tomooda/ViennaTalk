@@ -1,23 +1,24 @@
 Class {
-	#name : #ViennaInlineBlockStatement,
-	#superclass : #ViennaInline,
+	#name : 'ViennaInlineBlockStatement',
+	#superclass : 'ViennaInline',
 	#instVars : [
 		'blockNode'
 	],
-	#category : #'ViennaTalk-Refactoring-Core'
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInlineBlockStatement >> blockNode [
 	^ blockNode ifNil: [ blockNode := self findBlockNode ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInlineBlockStatement >> blockNode: aViennaNode [
 	blockNode := aViennaNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInlineBlockStatement >> blockVariables: aViennaNode [
 
 	aViennaNode isViennaBlockStatementNode ifFalse: [ ^ Array new ].
@@ -29,7 +30,7 @@ ViennaInlineBlockStatement >> blockVariables: aViennaNode [
 						  stream nextPut: assignment identifier ] ] ] ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaInlineBlockStatement >> check [
 
 	self blockNode ifNil: [ ^ false ].
@@ -46,7 +47,7 @@ ViennaInlineBlockStatement >> check [
 	^ true
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaInlineBlockStatement >> execute [
 
 	| assignmentDefinitions |
@@ -84,7 +85,7 @@ ViennaInlineBlockStatement >> execute [
 								    ifFalse: [ stream nextPut: outerStatement ] ] ] ]))
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInlineBlockStatement >> findBlockNode [
 
 	ast ifNil: [ ^ nil ].
@@ -92,13 +93,13 @@ ViennaInlineBlockStatement >> findBlockNode [
 	^ ast detectParent: #isViennaBlockStatementNode ifNone: [ nil ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInlineBlockStatement >> name [
 	^ 'Inline '
 		, (self shortDescription: self blockNode source) asText allBold
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInlineBlockStatement >> sortingOrder [
 	^ 6.5
 ]

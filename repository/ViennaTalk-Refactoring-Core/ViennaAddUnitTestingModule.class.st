@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaAddUnitTestingModule,
-	#superclass : #ViennaAddModule,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaAddUnitTestingModule',
+	#superclass : 'ViennaAddModule',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddUnitTestingModule >> findContainerNode [
 
 	^ super findContainerNode ifNotNil: [ :document | 
@@ -13,23 +14,23 @@ ViennaAddUnitTestingModule >> findContainerNode [
 			  ifNil: [ document ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddUnitTestingModule >> findNewName [
 
 	^ 'UnitTesting'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddUnitTestingModule >> name [
 	^ 'Add UnitTesting module'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddUnitTestingModule >> sortingOrder [
 	^ 0.01
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddUnitTestingModule >> sourceWithNewName: aString [
 
 	^ ViennaModuleNode unitTestingSource

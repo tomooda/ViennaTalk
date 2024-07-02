@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaUseTypeSynonymInAllOccurrences,
-	#superclass : #ViennaUseInAllOccurrences,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaUseTypeSynonymInAllOccurrences',
+	#superclass : 'ViennaUseInAllOccurrences',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaUseTypeSynonymInAllOccurrences >> execute [
 
 	ast module allDescendantsDo: [ :node |
@@ -15,7 +16,7 @@ ViennaUseTypeSynonymInAllOccurrences >> execute [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUseTypeSynonymInAllOccurrences >> findDefinitionNode [
 
 	ast ifNil: [ ^ nil ].
@@ -24,7 +25,7 @@ ViennaUseTypeSynonymInAllOccurrences >> findDefinitionNode [
 			  def ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUseTypeSynonymInAllOccurrences >> identifier [
 	^ self definitionNode ifNotNil: #identifier
 ]

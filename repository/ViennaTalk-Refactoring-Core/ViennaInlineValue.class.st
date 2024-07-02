@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaInlineValue,
-	#superclass : #ViennaInline,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaInlineValue',
+	#superclass : 'ViennaInline',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaInlineValue >> check [
 
 	^ ast notNil and: [
@@ -15,7 +16,7 @@ ViennaInlineValue >> check [
 					  valueDefinition pattern isViennaPatternIdentifierNode ] ] ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaInlineValue >> execute [
 
 	^ (ast resolveIdentifier: ast identifier) ifNotNil: [
@@ -25,7 +26,7 @@ ViennaInlineValue >> execute [
 			  with: valueDefinition expression copyFragment ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInlineValue >> sortingOrder [
 	^ 2.14
 ]

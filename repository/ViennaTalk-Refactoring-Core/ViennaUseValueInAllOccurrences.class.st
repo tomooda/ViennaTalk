@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaUseValueInAllOccurrences,
-	#superclass : #ViennaUseInAllOccurrences,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaUseValueInAllOccurrences',
+	#superclass : 'ViennaUseInAllOccurrences',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUseValueInAllOccurrences >> execute [
 
 	ast module allDescendantsDo: [ :node |
@@ -22,7 +23,7 @@ ViennaUseValueInAllOccurrences >> execute [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUseValueInAllOccurrences >> findDefinitionNode [
 
 	ast ifNil: [ ^ nil ].
@@ -30,7 +31,7 @@ ViennaUseValueInAllOccurrences >> findDefinitionNode [
 		  def isViennaValueDefinitionNode ifTrue: [ def ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUseValueInAllOccurrences >> identifier [
 
 	^ (self definitionNode ifNotNil: #pattern) source

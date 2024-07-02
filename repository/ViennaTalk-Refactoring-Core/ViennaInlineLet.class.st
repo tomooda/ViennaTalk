@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaInlineLet,
-	#superclass : #ViennaInline,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaInlineLet',
+	#superclass : 'ViennaInline',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaInlineLet >> check [
 
 	ast ifNil: [ ^ false ].
@@ -17,7 +18,7 @@ ViennaInlineLet >> check [
 	^ true
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaInlineLet >> execute [
 
 	| defs |
@@ -45,7 +46,7 @@ ViennaInlineLet >> execute [
 	^ self replaceNode: ast with: ast body
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInlineLet >> sortingOrder [
 	^ 2.17
 ]

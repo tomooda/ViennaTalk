@@ -1,16 +1,17 @@
 Class {
-	#name : #ViennaConvertExplicitFunctionIntoOperation,
-	#superclass : #ViennaRefactoring,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaConvertExplicitFunctionIntoOperation',
+	#superclass : 'ViennaRefactoring',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaConvertExplicitFunctionIntoOperation >> check [
 
 	^ ast isViennaNode and: [ ast isViennaExplicitFunctionDefinitionNode ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaConvertExplicitFunctionIntoOperation >> execute [
 
 	| module explicitOperationDefinition |
@@ -36,7 +37,7 @@ ViennaConvertExplicitFunctionIntoOperation >> execute [
 	^ explicitOperationDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaConvertExplicitFunctionIntoOperation >> name [
 
 	^ 'Convert ' asText
@@ -44,7 +45,7 @@ ViennaConvertExplicitFunctionIntoOperation >> name [
 	  , ' into a pure operation' asText
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaConvertExplicitFunctionIntoOperation >> sortingOrder [
 	^ 2.51
 ]

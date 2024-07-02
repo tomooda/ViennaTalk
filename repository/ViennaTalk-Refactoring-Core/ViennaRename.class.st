@@ -1,35 +1,36 @@
 Class {
-	#name : #ViennaRename,
-	#superclass : #ViennaRefactoring,
+	#name : 'ViennaRename',
+	#superclass : 'ViennaRefactoring',
 	#instVars : [
 		'oldName',
 		'newName',
 		'definitionNode'
 	],
-	#category : #'ViennaTalk-Refactoring-Core'
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaRename class >> isAbstract [
 	^ self = ViennaRename
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRename >> construct [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRename >> definitionNode [
 	^ definitionNode ifNil: [ definitionNode := self findDefinitionNode ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRename >> findDefinitionNode [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRename >> findNewName [
 	(UIManager default
 		request: 'new name'
@@ -38,12 +39,12 @@ ViennaRename >> findNewName [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRename >> findOldName [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRename >> name [
 	^ 'Rename ' asText , self construct asText , ' '
 		, self oldName asText allBold
@@ -53,22 +54,22 @@ ViennaRename >> name [
 				ifNil: [ '' asText ])
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRename >> newName [
 	^ newName ifNil: [ newName := self findNewName ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRename >> newName: aString [
 	newName := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRename >> oldName [
 	^ oldName ifNil: [ oldName := self findOldName ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRename >> oldName: aString [
 	oldName := aString
 ]

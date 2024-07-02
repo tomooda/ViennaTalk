@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaExtractValue,
-	#superclass : #ViennaExtract,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaExtractValue',
+	#superclass : 'ViennaExtract',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaExtractValue >> check [
 
 	ast isViennaExpressionNode ifFalse: [ ^ false ].
@@ -14,7 +15,7 @@ ViennaExtractValue >> check [
 	^ true
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaExtractValue >> execute [
 
 	| module valueDefinition |
@@ -33,7 +34,7 @@ ViennaExtractValue >> execute [
 	^ valueDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractValue >> findNewName [
 	(UIManager default
 		request: 'name of toplevel value for ' , self ast source
@@ -42,7 +43,7 @@ ViennaExtractValue >> findNewName [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractValue >> name [
 
 	^ 'Extract value '
@@ -51,7 +52,7 @@ ViennaExtractValue >> name [
 	  , (self shortDescription: ast source) asText allBold
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractValue >> sortingOrder [
 	^ 2.53
 ]

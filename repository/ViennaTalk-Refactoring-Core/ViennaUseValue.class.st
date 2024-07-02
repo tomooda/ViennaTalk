@@ -1,20 +1,21 @@
 Class {
-	#name : #ViennaUseValue,
-	#superclass : #ViennaUse,
+	#name : 'ViennaUseValue',
+	#superclass : 'ViennaUse',
 	#instVars : [
 		'values',
 		'valuesIndex'
 	],
-	#category : #'ViennaTalk-Refactoring-Core'
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaUseValue >> check [
 
 	^ self values notEmpty
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaUseValue >> execute [
 
 	| binds expression |
@@ -28,7 +29,7 @@ ViennaUseValue >> execute [
 	^ self replaceNode: ast with: expression
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaUseValue >> findDefinitionNode [
 
 	^ self values
@@ -36,7 +37,7 @@ ViennaUseValue >> findDefinitionNode [
 		  ifEmpty: [ nil ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUseValue >> findValues [
 
 	ast ifNil: [ ^ Array new ].
@@ -48,7 +49,7 @@ ViennaUseValue >> findValues [
 				  stream nextPut: valueDefinition ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUseValue >> findValuesIndex [
 
 	^ UIManager default
@@ -59,33 +60,33 @@ ViennaUseValue >> findValuesIndex [
 		  title: 'Use value name'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUseValue >> name [
 
 	^ 'Use value name for '
 	  , (self shortDescription: self ast source) asText allBold
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaUseValue >> valueDefinitionsDo: aBlock [
 
 	self ast module sectionsDo: [ :section |
 		section isViennaValueDefinitionsNode ifTrue: [ section do: aBlock ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUseValue >> values [
 
 	^ values ifNil: [ values := self findValues ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUseValue >> valuesIndex [
 
 	^ valuesIndex ifNil: [ valuesIndex := self findValuesIndex ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUseValue >> valuesIndex: anInteger [
 
 	valuesIndex := anInteger

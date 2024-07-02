@@ -1,13 +1,14 @@
 Class {
-	#name : #ViennaExtractLetStatement,
-	#superclass : #ViennaExtract,
+	#name : 'ViennaExtractLetStatement',
+	#superclass : 'ViennaExtract',
 	#instVars : [
 		'statementNode'
 	],
-	#category : #'ViennaTalk-Refactoring-Core'
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaExtractLetStatement >> check [
 	ast isViennaExpressionNode
 		ifFalse: [ ^ false ].
@@ -17,7 +18,7 @@ ViennaExtractLetStatement >> check [
 	^ true
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaExtractLetStatement >> execute [
 
 	| dummy |
@@ -39,7 +40,7 @@ ViennaExtractLetStatement >> execute [
 			   statement: self statementNode)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractLetStatement >> findNewName [
 	(UIManager default
 		request: 'local name for ' , self ast source
@@ -48,7 +49,7 @@ ViennaExtractLetStatement >> findNewName [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractLetStatement >> findStatementNode [
 	| node |
 	node := ast parent.
@@ -57,7 +58,7 @@ ViennaExtractLetStatement >> findStatementNode [
 	^ node
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractLetStatement >> name [
 
 	^ 'Extract let statement with ' asText
@@ -65,17 +66,17 @@ ViennaExtractLetStatement >> name [
 	  , (self shortDescription: ast source) asText allBold
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractLetStatement >> sortingOrder [
 	^ 2.58
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractLetStatement >> statementNode [
 	^ statementNode ifNil: [ statementNode := self findStatementNode ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractLetStatement >> statementNode: anObject [
 	statementNode := anObject
 ]

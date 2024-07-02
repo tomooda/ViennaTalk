@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaExtractLocalDefinitionFromExpressionInLet,
-	#superclass : #ViennaExtractParameter,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaExtractLocalDefinitionFromExpressionInLet',
+	#superclass : 'ViennaExtractParameter',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaExtractLocalDefinitionFromExpressionInLet >> check [
 
 	ast ifNil: [ ^ false ].
@@ -16,12 +17,12 @@ ViennaExtractLocalDefinitionFromExpressionInLet >> check [
 	^ true
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaExtractLocalDefinitionFromExpressionInLet >> executeCallers [
 	
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaExtractLocalDefinitionFromExpressionInLet >> executeDefinition [
 
 	self newName ifNil: [ ^ nil ].
@@ -32,13 +33,13 @@ ViennaExtractLocalDefinitionFromExpressionInLet >> executeDefinition [
 	^ self definitionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractLocalDefinitionFromExpressionInLet >> findDefinitionNode [
 
 	^ ast detectParent: #isViennaLetNode ifNone: [ nil ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractLocalDefinitionFromExpressionInLet >> name [
 
 	^ 'Extract local definition ' asText
@@ -47,7 +48,7 @@ ViennaExtractLocalDefinitionFromExpressionInLet >> name [
 	  , ' in a LET expression' asText
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractLocalDefinitionFromExpressionInLet >> sortingOrder [
 	^ 2.187
 ]

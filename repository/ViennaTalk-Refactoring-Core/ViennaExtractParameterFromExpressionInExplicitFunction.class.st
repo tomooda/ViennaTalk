@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaExtractParameterFromExpressionInExplicitFunction,
-	#superclass : #ViennaExtractParameterFromExpressionInFunction,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaExtractParameterFromExpressionInExplicitFunction',
+	#superclass : 'ViennaExtractParameterFromExpressionInFunction',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaExtractParameterFromExpressionInExplicitFunction >> executeDefinition [
 
 	self newName ifNil: [ ^ nil ].
@@ -20,7 +21,7 @@ ViennaExtractParameterFromExpressionInExplicitFunction >> executeDefinition [
 	^ self definitionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractParameterFromExpressionInExplicitFunction >> findDefinitionNode [
 
 	^ ast parent

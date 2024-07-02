@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaAddTypeAlias,
-	#superclass : #ViennaAddToplevelDefinition,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaAddTypeAlias',
+	#superclass : 'ViennaAddToplevelDefinition',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddTypeAlias >> findContainerNode [
 
 	ast ifNil: [ ^ nil ].
@@ -12,29 +13,29 @@ ViennaAddTypeAlias >> findContainerNode [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddTypeAlias >> name [
 	^ 'Add type alias ' , (newName ifNil: [ '' ])
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddTypeAlias >> newNameQuery [
 
 	^ 'New type name'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddTypeAlias >> parser [
 
 	^ ViennaVDMParser current accessTypeDefinition end
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddTypeAlias >> sortingOrder [
 	^ 0.0
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddTypeAlias >> sourceWithNewName: aString [
 
 	^ aString , ' = ?'

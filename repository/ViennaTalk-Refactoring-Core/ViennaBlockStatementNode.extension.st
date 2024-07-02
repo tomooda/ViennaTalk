@@ -1,6 +1,6 @@
-Extension { #name : #ViennaBlockStatementNode }
+Extension { #name : 'ViennaBlockStatementNode' }
 
-{ #category : #'*ViennaTalk-Refactoring-Core' }
+{ #category : '*ViennaTalk-Refactoring-Core' }
 ViennaBlockStatementNode >> narrowestStatementWithFreeIdentifiers: anArrayOfString [
 
 	self dclStatement ifNotNil: [ :dcl |

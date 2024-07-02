@@ -1,16 +1,17 @@
 Class {
-	#name : #ViennaUseFunctionInAllOccurrences,
-	#superclass : #ViennaUseInAllOccurrences,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaUseFunctionInAllOccurrences',
+	#superclass : 'ViennaUseInAllOccurrences',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaUseFunctionInAllOccurrences >> execute [
 	[ self executeOne notNil ] whileTrue.
 	^ nil
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaUseFunctionInAllOccurrences >> executeOne [
 
 	self definitionNode module allDescendantsDo: [ :node |
@@ -33,7 +34,7 @@ ViennaUseFunctionInAllOccurrences >> executeOne [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUseFunctionInAllOccurrences >> findDefinitionNode [
 
 	ast ifNil: [ ^ nil ].
@@ -41,7 +42,7 @@ ViennaUseFunctionInAllOccurrences >> findDefinitionNode [
 		  (def isFunctionDefinition and: [ def pre isNil ]) ifTrue: [ def ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUseFunctionInAllOccurrences >> identifier [
 
 	^ self definitionNode ifNotNil: #identifier

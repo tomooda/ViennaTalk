@@ -1,13 +1,14 @@
 Class {
-	#name : #ViennaInlineApplyFunctionAndRemove,
-	#superclass : #ViennaInline,
+	#name : 'ViennaInlineApplyFunctionAndRemove',
+	#superclass : 'ViennaInline',
 	#instVars : [
 		'definitionNode'
 	],
-	#category : #'ViennaTalk-Refactoring-Core'
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaInlineApplyFunctionAndRemove >> callerNodesDo: aBlock [
 
 	ast ifNil: [ ^ nil ].
@@ -18,7 +19,7 @@ ViennaInlineApplyFunctionAndRemove >> callerNodesDo: aBlock [
 		do: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInlineApplyFunctionAndRemove >> check [
 
 	| identifier moduleName |
@@ -39,17 +40,17 @@ ViennaInlineApplyFunctionAndRemove >> check [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInlineApplyFunctionAndRemove >> definitionNode [
 	^ definitionNode ifNil: [ definitionNode := self findDefinitionNode ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInlineApplyFunctionAndRemove >> definitionNode: aViennaNode [
 	definitionNode := aViennaNode
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaInlineApplyFunctionAndRemove >> execute [
 
 	| functionName |
@@ -87,7 +88,7 @@ ViennaInlineApplyFunctionAndRemove >> execute [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInlineApplyFunctionAndRemove >> findDefinitionNode [
 
 	| identifier |
@@ -100,7 +101,7 @@ ViennaInlineApplyFunctionAndRemove >> findDefinitionNode [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInlineApplyFunctionAndRemove >> name [
 
 	^ (self
@@ -115,7 +116,7 @@ ViennaInlineApplyFunctionAndRemove >> name [
 		  'Remove ' asText , self definitionNode identifier asText allBold ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInlineApplyFunctionAndRemove >> sortingOrder [
 	^ 2.15
 ]

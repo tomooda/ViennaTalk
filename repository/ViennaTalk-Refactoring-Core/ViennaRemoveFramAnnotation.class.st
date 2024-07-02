@@ -1,37 +1,38 @@
 Class {
-	#name : #ViennaRemoveFramAnnotation,
-	#superclass : #ViennaRemove,
+	#name : 'ViennaRemoveFramAnnotation',
+	#superclass : 'ViennaRemove',
 	#instVars : [
 		'annotation'
 	],
-	#category : #'ViennaTalk-Refactoring-Core'
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRemoveFramAnnotation >> annotation [
 
 	^ annotation
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRemoveFramAnnotation >> annotation: aString [
 
 	annotation := aString
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRemoveFramAnnotation >> check [
 	^ self definitionNode notNil
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRemoveFramAnnotation >> execute [
 
 	self definitionNode removeAnnotation: self annotation.
 	^ self definitionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRemoveFramAnnotation >> findAnnotation [
 
 	^ annotation ifNotNil: [
@@ -45,7 +46,7 @@ ViennaRemoveFramAnnotation >> findAnnotation [
 						                ifFalse: [ nil ] ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRemoveFramAnnotation >> findDefinitionNode [
 
 	ast ifNil: [ ^ nil ].
@@ -55,12 +56,12 @@ ViennaRemoveFramAnnotation >> findDefinitionNode [
 	^ ast
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRemoveFramAnnotation >> name [
 	^ 'Remove FRAM annotation from ', ast name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRemoveFramAnnotation >> sortingOrder [
 	^ 10.1
 ]

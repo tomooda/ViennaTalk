@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaAddModule,
-	#superclass : #ViennaAdd,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaAddModule',
+	#superclass : 'ViennaAdd',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddModule >> findContainerNode [
 
 	ast ifNil: [ ^ nil ].
@@ -13,7 +14,7 @@ ViennaAddModule >> findContainerNode [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddModule >> findNewName [
 
 	^ super findNewName ifNotNil: [ :name | 
@@ -22,29 +23,29 @@ ViennaAddModule >> findNewName [
 			  nil ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddModule >> name [
 	^ 'Add new module ' , (newName ifNil: [ '' ])
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddModule >> newNameQuery [
 
 	^ 'new module name'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddModule >> parser [
 
 	^ ViennaVDMParser current module end
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddModule >> sortingOrder [
 	^ 0.0
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddModule >> sourceWithNewName: aString [
 
 	^ 'module ' , aString , ' exports all definitions end ' , aString

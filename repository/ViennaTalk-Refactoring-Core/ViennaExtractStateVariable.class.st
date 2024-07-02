@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaExtractStateVariable,
-	#superclass : #ViennaExtract,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaExtractStateVariable',
+	#superclass : 'ViennaExtract',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaExtractStateVariable >> check [
 
 	ast isViennaExpressionNode ifFalse: [ ^ false ].
@@ -14,7 +15,7 @@ ViennaExtractStateVariable >> check [
 	^ true
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaExtractStateVariable >> execute [
 
 	| module stateDefinition |
@@ -39,7 +40,7 @@ ViennaExtractStateVariable >> execute [
 	^ stateDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractStateVariable >> findNewName [
 	(UIManager default
 		request: 'name of state variable for ' , self ast source
@@ -48,7 +49,7 @@ ViennaExtractStateVariable >> findNewName [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractStateVariable >> name [
 
 	^ 'Extract state variable '
@@ -57,7 +58,7 @@ ViennaExtractStateVariable >> name [
 	  , (self shortDescription: ast source) asText allBold
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractStateVariable >> sortingOrder [
 	^ 2.54
 ]

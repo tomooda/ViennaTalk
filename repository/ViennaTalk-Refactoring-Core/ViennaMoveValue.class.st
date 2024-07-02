@@ -1,16 +1,17 @@
 Class {
-	#name : #ViennaMoveValue,
-	#superclass : #ViennaMove,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaMoveValue',
+	#superclass : 'ViennaMove',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMoveValue >> definitionNames [
 
 	^ self definitionNode patternIdentifiers collect: #identifier
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMoveValue >> findDefinitionNode [
 
 	ast ifNil: [ ^ nil ].

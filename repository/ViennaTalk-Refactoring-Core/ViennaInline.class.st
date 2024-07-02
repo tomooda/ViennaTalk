@@ -1,15 +1,16 @@
 Class {
-	#name : #ViennaInline,
-	#superclass : #ViennaRefactoring,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaInline',
+	#superclass : 'ViennaRefactoring',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaInline class >> isAbstract [ 
 	^ self == ViennaInline
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInline >> name [
 	^ 'Inline ' , (self shortDescription: ast source) asText allBold
 ]

@@ -1,18 +1,19 @@
 Class {
-	#name : #ViennaRefactoring,
-	#superclass : #Object,
+	#name : 'ViennaRefactoring',
+	#superclass : 'Object',
 	#instVars : [
 		'ast'
 	],
-	#category : #'ViennaTalk-Refactoring-Core'
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaRefactoring class >> isAbstract [
 	^ self = ViennaRefactoring
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 ViennaRefactoring class >> on: aViennaNode do: aBlock [
 	self
 		allSubclassesDo: [ :class | 
@@ -23,7 +24,7 @@ ViennaRefactoring class >> on: aViennaNode do: aBlock [
 						ifTrue: [ aBlock value: refactoring ] ] ]
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 ViennaRefactoring class >> on: aViennaNode suchthat: conditionBlock do: aBlock [
 
 	self allSubclassesDo: [ :class |
@@ -34,7 +35,7 @@ ViennaRefactoring class >> on: aViennaNode suchthat: conditionBlock do: aBlock [
 				ifTrue: [ aBlock value: refactoring ] ] ]
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 ViennaRefactoring class >> sortedInstancesOn: aViennaNode [
 	^ (Array
 		streamContents: [ :stream | 
@@ -44,7 +45,7 @@ ViennaRefactoring class >> sortedInstancesOn: aViennaNode [
 		sorted: [ :less :more | less sortingOrder <= more sortingOrder ]
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 ViennaRefactoring class >> sortedInstancesOn: aViennaNode suchthat: aBlock [
 
 	^ (Array streamContents: [ :stream |
@@ -56,7 +57,7 @@ ViennaRefactoring class >> sortedInstancesOn: aViennaNode suchthat: aBlock [
 		  :more | less sortingOrder <= more sortingOrder ]
 ]
 
-{ #category : #'visiting-definitions' }
+{ #category : 'visiting-definitions' }
 ViennaRefactoring >> addDefinition: aViennaNode in: moduleNode [
 
 	aViennaNode isViennaAccessTypeDefinitionNode ifTrue: [
@@ -84,41 +85,41 @@ ViennaRefactoring >> addDefinition: aViennaNode in: moduleNode [
 	^ nil
 ]
 
-{ #category : #'visiting-definitions' }
+{ #category : 'visiting-definitions' }
 ViennaRefactoring >> addFunctionDefinition: aViennaNode in: moduleNode [
 
 	moduleNode addFunctionDefinition: aViennaNode
 ]
 
-{ #category : #'visiting-definitions' }
+{ #category : 'visiting-definitions' }
 ViennaRefactoring >> addOperationDefinition: aViennaNode in: moduleNode [
 
 	moduleNode addOperationDefinition: aViennaNode
 ]
 
-{ #category : #'visiting-definitions' }
+{ #category : 'visiting-definitions' }
 ViennaRefactoring >> addTypeDefinition: aViennaNode in: moduleNode [
 
 	moduleNode addTypeDefinition: aViennaNode
 ]
 
-{ #category : #'visiting-definitions' }
+{ #category : 'visiting-definitions' }
 ViennaRefactoring >> addValueDefinition: aViennaNode in: moduleNode [
 
 	moduleNode addValueDefinition: aViennaNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRefactoring >> ast [
 	^ ast
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRefactoring >> ast: aViennaNode [
 	ast := aViennaNode
 ]
 
-{ #category : #'visiting-bindings' }
+{ #category : 'visiting-bindings' }
 ViennaRefactoring >> bindingOf: aString in: aViennaNode do: aBlock [
 	| selector |
 	aViennaNode isViennaNode
@@ -135,7 +136,7 @@ ViennaRefactoring >> bindingOf: aString in: aViennaNode do: aBlock [
 				do: [ :node | self bindingOf: aString in: node do: aBlock ] ]
 ]
 
-{ #category : #'visiting-bindings' }
+{ #category : 'visiting-bindings' }
 ViennaRefactoring >> bindingOf: aString inAssignmentDefinition: aViennaNode do: aBlock [
 
 	aViennaNode identifier = aString ifTrue: [ aBlock value: aViennaNode ].
@@ -143,7 +144,7 @@ ViennaRefactoring >> bindingOf: aString inAssignmentDefinition: aViennaNode do: 
 		self bindingOf: aString in: node do: aBlock ]
 ]
 
-{ #category : #'visiting-bindings' }
+{ #category : 'visiting-bindings' }
 ViennaRefactoring >> bindingOf: aString inError: aViennaNode do: aBlock [
 
 	aViennaNode identifier = aString ifTrue: [ aBlock value: aViennaNode ].
@@ -151,7 +152,7 @@ ViennaRefactoring >> bindingOf: aString inError: aViennaNode do: aBlock [
 		self bindingOf: aString in: node do: aBlock ]
 ]
 
-{ #category : #'visiting-bindings' }
+{ #category : 'visiting-bindings' }
 ViennaRefactoring >> bindingOf: aString inExplicitFunctionDefinition: aViennaNode do: aBlock [
 
 	aViennaNode identifier = aString ifTrue: [ aBlock value: aViennaNode ].
@@ -159,7 +160,7 @@ ViennaRefactoring >> bindingOf: aString inExplicitFunctionDefinition: aViennaNod
 		self bindingOf: aString in: node do: aBlock ]
 ]
 
-{ #category : #'visiting-bindings' }
+{ #category : 'visiting-bindings' }
 ViennaRefactoring >> bindingOf: aString inExplicitOperationDefinition: aViennaNode do: aBlock [
 
 	aViennaNode identifier = aString ifTrue: [ aBlock value: aViennaNode ].
@@ -167,7 +168,7 @@ ViennaRefactoring >> bindingOf: aString inExplicitOperationDefinition: aViennaNo
 		self bindingOf: aString in: node do: aBlock ]
 ]
 
-{ #category : #'visiting-bindings' }
+{ #category : 'visiting-bindings' }
 ViennaRefactoring >> bindingOf: aString inImplicitFunctionDefinition: aViennaNode do: aBlock [
 
 	aViennaNode identifier = aString ifTrue: [ aBlock value: aViennaNode ].
@@ -175,7 +176,7 @@ ViennaRefactoring >> bindingOf: aString inImplicitFunctionDefinition: aViennaNod
 		self bindingOf: aString in: node do: aBlock ]
 ]
 
-{ #category : #'visiting-bindings' }
+{ #category : 'visiting-bindings' }
 ViennaRefactoring >> bindingOf: aString inImplicitOperationDefinition: aViennaNode do: aBlock [
 
 	aViennaNode identifier = aString ifTrue: [ aBlock value: aViennaNode ].
@@ -183,7 +184,7 @@ ViennaRefactoring >> bindingOf: aString inImplicitOperationDefinition: aViennaNo
 		self bindingOf: aString in: node do: aBlock ]
 ]
 
-{ #category : #'visiting-bindings' }
+{ #category : 'visiting-bindings' }
 ViennaRefactoring >> bindingOf: aString inIndexForLoop: aViennaNode do: aBlock [
 
 	aViennaNode identifier = aString ifTrue: [ aBlock value: aViennaNode ].
@@ -191,7 +192,7 @@ ViennaRefactoring >> bindingOf: aString inIndexForLoop: aViennaNode do: aBlock [
 		self bindingOf: aString in: node do: aBlock ]
 ]
 
-{ #category : #'visiting-bindings' }
+{ #category : 'visiting-bindings' }
 ViennaRefactoring >> bindingOf: aString inPatternIdentifier: aViennaNode do: aBlock [
 
 	aViennaNode identifier = aString ifTrue: [ aBlock value: aViennaNode ].
@@ -199,7 +200,7 @@ ViennaRefactoring >> bindingOf: aString inPatternIdentifier: aViennaNode do: aBl
 		self bindingOf: aString in: node do: aBlock ]
 ]
 
-{ #category : #'visiting-bindings' }
+{ #category : 'visiting-bindings' }
 ViennaRefactoring >> bindingOf: aString inRecordTypeDefinition: aViennaNode do: aBlock [
 
 	aViennaNode identifier = aString ifTrue: [ aBlock value: aViennaNode ].
@@ -207,7 +208,7 @@ ViennaRefactoring >> bindingOf: aString inRecordTypeDefinition: aViennaNode do: 
 		self bindingOf: aString in: node do: aBlock ]
 ]
 
-{ #category : #'visiting-bindings' }
+{ #category : 'visiting-bindings' }
 ViennaRefactoring >> bindingOf: aString inStateDefinition: aViennaNode do: aBlock [
 
 	aViennaNode identifier = aString ifTrue: [ aBlock value: aViennaNode ].
@@ -217,7 +218,7 @@ ViennaRefactoring >> bindingOf: aString inStateDefinition: aViennaNode do: aBloc
 		self bindingOf: aString in: node do: aBlock ]
 ]
 
-{ #category : #'visiting-bindings' }
+{ #category : 'visiting-bindings' }
 ViennaRefactoring >> bindingOf: aString inTypeSynonym: aViennaNode do: aBlock [
 
 	aViennaNode identifier = aString ifTrue: [ aBlock value: aViennaNode ].
@@ -225,7 +226,7 @@ ViennaRefactoring >> bindingOf: aString inTypeSynonym: aViennaNode do: aBlock [
 		self bindingOf: aString in: node do: aBlock ]
 ]
 
-{ #category : #'visiting-bindings' }
+{ #category : 'visiting-bindings' }
 ViennaRefactoring >> bindingOf: aString inTypeVariableIdentifier: aViennaNode do: aBlock [
 	aViennaNode first = aString
 		ifTrue: [ aBlock value: aViennaNode ].
@@ -233,12 +234,12 @@ ViennaRefactoring >> bindingOf: aString inTypeVariableIdentifier: aViennaNode do
 		do: [ :node | self bindingOf: aString in: node do: aBlock ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRefactoring >> check [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'visiting-interface' }
+{ #category : 'visiting-interface' }
 ViennaRefactoring >> ensureExport: aViennaNode [
 
 	aViennaNode isViennaGlobalNameNode ifTrue: [ ^ aViennaNode ].
@@ -250,7 +251,7 @@ ViennaRefactoring >> ensureExport: aViennaNode [
 	^ nil
 ]
 
-{ #category : #'visiting-interface' }
+{ #category : 'visiting-interface' }
 ViennaRefactoring >> ensureExportSignature: aViennaNode in: moduleNode [
 
 	| exportModuleSignature |
@@ -266,7 +267,7 @@ ViennaRefactoring >> ensureExportSignature: aViennaNode in: moduleNode [
 	^ aViennaNode
 ]
 
-{ #category : #'visiting-interface' }
+{ #category : 'visiting-interface' }
 ViennaRefactoring >> ensureImport: aViennaNode in: moduleNode [
 
 	| importModuleSignature |
@@ -294,7 +295,7 @@ ViennaRefactoring >> ensureImport: aViennaNode in: moduleNode [
 					 in: importModuleSignature) addAll: signatures ] ] ]
 ]
 
-{ #category : #'visiting-interface' }
+{ #category : 'visiting-interface' }
 ViennaRefactoring >> ensureImportDefinitionFrom: aString in: moduleNode [
 
 	| last srcName |
@@ -315,7 +316,7 @@ ViennaRefactoring >> ensureImportDefinitionFrom: aString in: moduleNode [
 	^ last
 ]
 
-{ #category : #'visiting-interface' }
+{ #category : 'visiting-interface' }
 ViennaRefactoring >> ensureImportSignatureFor: importSignatureNode in: importModuleSignatureNode [
 
 	^ importModuleSignatureNode asArray
@@ -328,12 +329,12 @@ ViennaRefactoring >> ensureImportSignatureFor: importSignatureNode in: importMod
 			  importSignature ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRefactoring >> execute [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'visiting-pattern matching' }
+{ #category : 'visiting-pattern matching' }
 ViennaRefactoring >> expressionFromPattern: aViennaNode bindings: aDictionary [
 
 	aViennaNode isViennaPatternIdentifierNode ifTrue: [
@@ -409,7 +410,7 @@ ViennaRefactoring >> expressionFromPattern: aViennaNode bindings: aDictionary [
 	^ self error: 'Unknown pattern syntax'
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString in: aViennaNode do: aBlock [
 	| selector |
 	aViennaNode isViennaNode
@@ -426,7 +427,7 @@ ViennaRefactoring >> freeOccurrencesOf: aString in: aViennaNode do: aBlock [
 				do: [ :node | self freeOccurrencesOf: aString in: node do: aBlock ] ]
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inBlockStatement: aViennaNode do: aBlock [
 
 	aViennaNode first isViennaDclStatementNode ifTrue: [
@@ -442,7 +443,7 @@ ViennaRefactoring >> freeOccurrencesOf: aString inBlockStatement: aViennaNode do
 		self freeOccurrencesOf: aString in: node do: aBlock ]
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inCasesAlternative: aViennaNode do: aBlock [
 
 	self
@@ -456,7 +457,7 @@ ViennaRefactoring >> freeOccurrencesOf: aString inCasesAlternative: aViennaNode 
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inCasesExpressionAlternative: aViennaNode do: aBlock [
 	^ self
 		freeOccurrencesOf: aString
@@ -464,7 +465,7 @@ ViennaRefactoring >> freeOccurrencesOf: aString inCasesExpressionAlternative: aV
 		do: aBlock
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inCasesStatementAlternative: aViennaNode do: aBlock [
 	^ self
 		freeOccurrencesOf: aString
@@ -472,7 +473,7 @@ ViennaRefactoring >> freeOccurrencesOf: aString inCasesStatementAlternative: aVi
 		do: aBlock
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inDef: aViennaNode do: aBlock [
 
 	aViennaNode equalDefinitionList do: [ :equalDefinition |
@@ -484,17 +485,17 @@ ViennaRefactoring >> freeOccurrencesOf: aString inDef: aViennaNode do: aBlock [
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inDefExpression: aViennaNode do: aBlock [
 	^ self freeOccurrencesOf: aString inDef: aViennaNode do: aBlock
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inDefStatement: aViennaNode do: aBlock [
 	^ self freeOccurrencesOf: aString inDef: aViennaNode do: aBlock
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inExists1Expression: aViennaNode do: aBlock [
 	^ self
 		freeOccurrencesOf: aString
@@ -502,7 +503,7 @@ ViennaRefactoring >> freeOccurrencesOf: aString inExists1Expression: aViennaNode
 		do: aBlock
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inExistsExpression: aViennaNode do: aBlock [
 	^ self
 		freeOccurrencesOf: aString
@@ -510,7 +511,7 @@ ViennaRefactoring >> freeOccurrencesOf: aString inExistsExpression: aViennaNode 
 		do: aBlock
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inExplicitFunctionDefinition: aViennaNode do: aBlock [
 
 	aViennaNode typeVariableList do: [ :n |
@@ -534,7 +535,7 @@ ViennaRefactoring >> freeOccurrencesOf: aString inExplicitFunctionDefinition: aV
 	self freeOccurrencesOf: aString in: aViennaNode post do: aBlock
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inExplicitOperationDefinition: aViennaNode do: aBlock [
 
 	self freeOccurrencesOf: aString in: aViennaNode type do: aBlock.
@@ -548,7 +549,7 @@ ViennaRefactoring >> freeOccurrencesOf: aString inExplicitOperationDefinition: a
 	self freeOccurrencesOf: aString in: aViennaNode post do: aBlock
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inForallExpression: aViennaNode do: aBlock [
 	^ self
 		freeOccurrencesOf: aString
@@ -556,7 +557,7 @@ ViennaRefactoring >> freeOccurrencesOf: aString inForallExpression: aViennaNode 
 		do: aBlock
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inFullQuantifierExpression: aViennaNode do: aBlock [
 
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
@@ -569,14 +570,14 @@ ViennaRefactoring >> freeOccurrencesOf: aString inFullQuantifierExpression: aVie
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inFunctionImport: aViennaNode do: aBlock [
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode third do: aBlock
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inImplicitFunctionDefinition: aViennaNode do: aBlock [
 
 	self
@@ -605,7 +606,7 @@ ViennaRefactoring >> freeOccurrencesOf: aString inImplicitFunctionDefinition: aV
 	self freeOccurrencesOf: aString in: aViennaNode post do: aBlock
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inImplicitOperationDefinition: aViennaNode do: aBlock [
 
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock.
@@ -637,7 +638,7 @@ ViennaRefactoring >> freeOccurrencesOf: aString inImplicitOperationDefinition: a
 		do: aBlock
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inIndexForLoop: aViennaNode do: aBlock [
 
 	self
@@ -656,7 +657,7 @@ ViennaRefactoring >> freeOccurrencesOf: aString inIndexForLoop: aViennaNode do: 
 	self freeOccurrencesOf: aString in: aViennaNode statement do: aBlock
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inInvariantInitialFunction: aViennaNode do: aBlock [
 
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
@@ -667,7 +668,7 @@ ViennaRefactoring >> freeOccurrencesOf: aString inInvariantInitialFunction: aVie
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inIotaExpression: aViennaNode do: aBlock [
 	^ self
 		freeOccurrencesOf: aString
@@ -675,7 +676,7 @@ ViennaRefactoring >> freeOccurrencesOf: aString inIotaExpression: aViennaNode do
 		do: aBlock
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inLambdaExpression: aViennaNode do: aBlock [
 
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
@@ -687,7 +688,7 @@ ViennaRefactoring >> freeOccurrencesOf: aString inLambdaExpression: aViennaNode 
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inLet: aViennaNode do: aBlock [
 
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
@@ -702,7 +703,7 @@ ViennaRefactoring >> freeOccurrencesOf: aString inLet: aViennaNode do: aBlock [
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inLetBe: aViennaNode do: aBlock [
 
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
@@ -714,33 +715,33 @@ ViennaRefactoring >> freeOccurrencesOf: aString inLetBe: aViennaNode do: aBlock 
 	self freeOccurrencesOf: aString in: aViennaNode third do: aBlock
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inLetBeExpression: aViennaNode do: aBlock [
 	^ self freeOccurrencesOf: aString inLetBe: aViennaNode do: aBlock
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inLetBeStatement: aViennaNode do: aBlock [
 	^ self freeOccurrencesOf: aString inLetBe: aViennaNode do: aBlock
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inLetExpression: aViennaNode do: aBlock [
 	^ self freeOccurrencesOf: aString inLet: aViennaNode do: aBlock
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inLetStatement: aViennaNode do: aBlock [
 	^ self freeOccurrencesOf: aString inLet: aViennaNode do: aBlock
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inLocalName: aViennaNode do: aBlock [
 	aViennaNode first = aString
 		ifTrue: [ aBlock value: aViennaNode ]
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inMapComprehension: aViennaNode do: aBlock [
 
 	self freeOccurrencesOf: aString in: aViennaNode third do: aBlock.
@@ -755,19 +756,19 @@ ViennaRefactoring >> freeOccurrencesOf: aString inMapComprehension: aViennaNode 
 	self freeOccurrencesOf: aString in: aViennaNode fourth do: aBlock
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inOldName: aViennaNode do: aBlock [
 	aViennaNode first = aString
 		ifTrue: [ aBlock value: aViennaNode ]
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inOperationImport: aViennaNode do: aBlock [
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inSequenceComprehension: aViennaNode do: aBlock [
 
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock.
@@ -779,7 +780,7 @@ ViennaRefactoring >> freeOccurrencesOf: aString inSequenceComprehension: aVienna
 	self freeOccurrencesOf: aString in: aViennaNode third do: aBlock
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inSequenceForLoop: aViennaNode do: aBlock [
 
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
@@ -791,7 +792,7 @@ ViennaRefactoring >> freeOccurrencesOf: aString inSequenceForLoop: aViennaNode d
 	self freeOccurrencesOf: aString in: aViennaNode third do: aBlock
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inSetComprehension: aViennaNode do: aBlock [
 
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock.
@@ -805,7 +806,7 @@ ViennaRefactoring >> freeOccurrencesOf: aString inSetComprehension: aViennaNode 
 	self freeOccurrencesOf: aString in: aViennaNode third do: aBlock
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inSetForLoop: aViennaNode do: aBlock [
 
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
@@ -817,7 +818,7 @@ ViennaRefactoring >> freeOccurrencesOf: aString inSetForLoop: aViennaNode do: aB
 	self freeOccurrencesOf: aString in: aViennaNode third do: aBlock
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inSingleQuantifierExpression: aViennaNode do: aBlock [
 
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
@@ -828,18 +829,18 @@ ViennaRefactoring >> freeOccurrencesOf: aString inSingleQuantifierExpression: aV
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inTypeImport: aViennaNode do: aBlock [
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> freeOccurrencesOf: aString inValueImport: aViennaNode do: aBlock [
 	self freeOccurrencesOf: aString in: aViennaNode first do: aBlock.
 	self freeOccurrencesOf: aString in: aViennaNode second do: aBlock
 ]
 
-{ #category : #'visiting-free occurrences' }
+{ #category : 'visiting-free occurrences' }
 ViennaRefactoring >> hasFreeOccurrencesOf: aString in: aViennaNode [
 	self
 		freeOccurrencesOf: aString
@@ -848,13 +849,13 @@ ViennaRefactoring >> hasFreeOccurrencesOf: aString in: aViennaNode [
 	^ false
 ]
 
-{ #category : #'visiting-bindings' }
+{ #category : 'visiting-bindings' }
 ViennaRefactoring >> hasLocalBindingOf: aString in: aViennaNode [
 	self bindingOf: aString in: aViennaNode do: [ :n | ^ true ].
 	^ false
 ]
 
-{ #category : #'visiting-scopes' }
+{ #category : 'visiting-scopes' }
 ViennaRefactoring >> localScopeBy: aViennaNode do: aBlock [
 	| selector |
 	aViennaNode isViennaNode
@@ -864,42 +865,42 @@ ViennaRefactoring >> localScopeBy: aViennaNode do: aBlock [
 		ifTrue: [ self perform: selector with: aViennaNode with: aBlock ]
 ]
 
-{ #category : #'visiting-scopes' }
+{ #category : 'visiting-scopes' }
 ViennaRefactoring >> localScopeByBlockStatement: aViennaNode do: aBlock [
 	aBlock value: aViennaNode
 ]
 
-{ #category : #'visiting-scopes' }
+{ #category : 'visiting-scopes' }
 ViennaRefactoring >> localScopeByCasesExpressionAlternative: aViennaNode do: aBlock [
 	aBlock value: aViennaNode second
 ]
 
-{ #category : #'visiting-scopes' }
+{ #category : 'visiting-scopes' }
 ViennaRefactoring >> localScopeByCasesStatementAlternative: aViennaNode do: aBlock [
 	aBlock value: aViennaNode second
 ]
 
-{ #category : #'visiting-scopes' }
+{ #category : 'visiting-scopes' }
 ViennaRefactoring >> localScopeByDefExpression: aViennaNode do: aBlock [
 	aBlock value: aViennaNode
 ]
 
-{ #category : #'visiting-scopes' }
+{ #category : 'visiting-scopes' }
 ViennaRefactoring >> localScopeByDefStatement: aViennaNode do: aBlock [
 	aBlock value: aViennaNode
 ]
 
-{ #category : #'visiting-scopes' }
+{ #category : 'visiting-scopes' }
 ViennaRefactoring >> localScopeByExists1Expression: aViennaNode do: aBlock [
 	aBlock value: aViennaNode second
 ]
 
-{ #category : #'visiting-scopes' }
+{ #category : 'visiting-scopes' }
 ViennaRefactoring >> localScopeByExistsExpression: aViennaNode do: aBlock [
 	aBlock value: aViennaNode second
 ]
 
-{ #category : #'visiting-scopes' }
+{ #category : 'visiting-scopes' }
 ViennaRefactoring >> localScopeByExplicitFunctionDefinition: aViennaNode do: aBlock [
 
 	aBlock value: aViennaNode expression.
@@ -907,7 +908,7 @@ ViennaRefactoring >> localScopeByExplicitFunctionDefinition: aViennaNode do: aBl
 	aBlock value: aViennaNode post
 ]
 
-{ #category : #'visiting-scopes' }
+{ #category : 'visiting-scopes' }
 ViennaRefactoring >> localScopeByExplicitOperationDefinition: aViennaNode do: aBlock [
 
 	aBlock value: aViennaNode statement.
@@ -915,96 +916,96 @@ ViennaRefactoring >> localScopeByExplicitOperationDefinition: aViennaNode do: aB
 	aBlock value: aViennaNode post
 ]
 
-{ #category : #'visiting-scopes' }
+{ #category : 'visiting-scopes' }
 ViennaRefactoring >> localScopeByForallExpression: aViennaNode do: aBlock [
 	aBlock value: aViennaNode second
 ]
 
-{ #category : #'visiting-scopes' }
+{ #category : 'visiting-scopes' }
 ViennaRefactoring >> localScopeByImplicitFunctionDefinition: aViennaNode do: aBlock [
 
 	aBlock value: aViennaNode pre.
 	aBlock value: aViennaNode post
 ]
 
-{ #category : #'visiting-scopes' }
+{ #category : 'visiting-scopes' }
 ViennaRefactoring >> localScopeByImplicitOperationDefinition: aViennaNode do: aBlock [
 	aBlock value: aViennaNode fourth second.
 	aBlock value: aViennaNode fourth third.
 	aBlock value: aViennaNode fourth fourth
 ]
 
-{ #category : #'visiting-scopes' }
+{ #category : 'visiting-scopes' }
 ViennaRefactoring >> localScopeByIndexForLoopDefinition: aViennaNode do: aBlock [
 
 	aBlock value: aViennaNode statement
 ]
 
-{ #category : #'visiting-scopes' }
+{ #category : 'visiting-scopes' }
 ViennaRefactoring >> localScopeByInvariantInitialFunction: aViennaNode do: aBlock [
 	aBlock value: aViennaNode second
 ]
 
-{ #category : #'visiting-scopes' }
+{ #category : 'visiting-scopes' }
 ViennaRefactoring >> localScopeByIotaExpression: aViennaNode do: aBlock [
 	aBlock value: aViennaNode second
 ]
 
-{ #category : #'visiting-scopes' }
+{ #category : 'visiting-scopes' }
 ViennaRefactoring >> localScopeByLambdaExpression: aViennaNode do: aBlock [
 	aBlock value: aViennaNode second
 ]
 
-{ #category : #'visiting-scopes' }
+{ #category : 'visiting-scopes' }
 ViennaRefactoring >> localScopeByLetBeExpression: aViennaNode do: aBlock [
 	aBlock value: aViennaNode
 ]
 
-{ #category : #'visiting-scopes' }
+{ #category : 'visiting-scopes' }
 ViennaRefactoring >> localScopeByLetBeStatement: aViennaNode do: aBlock [
 	aBlock value: aViennaNode
 ]
 
-{ #category : #'visiting-scopes' }
+{ #category : 'visiting-scopes' }
 ViennaRefactoring >> localScopeByLetExpression: aViennaNode do: aBlock [
 	aBlock value: aViennaNode
 ]
 
-{ #category : #'visiting-scopes' }
+{ #category : 'visiting-scopes' }
 ViennaRefactoring >> localScopeByLetStatement: aViennaNode do: aBlock [
 	aBlock value: aViennaNode
 ]
 
-{ #category : #'visiting-scopes' }
+{ #category : 'visiting-scopes' }
 ViennaRefactoring >> localScopeByMapComprehension: aViennaNode do: aBlock [
 	aBlock value: aViennaNode first.
 	aBlock value: aViennaNode second.
 	aBlock value: aViennaNode fourth
 ]
 
-{ #category : #'visiting-scopes' }
+{ #category : 'visiting-scopes' }
 ViennaRefactoring >> localScopeBySequenceComprehension: aViennaNode do: aBlock [
 	aBlock value: aViennaNode first.
 	aBlock value: aViennaNode third
 ]
 
-{ #category : #'visiting-scopes' }
+{ #category : 'visiting-scopes' }
 ViennaRefactoring >> localScopeBySequenceForLoop: aViennaNode do: aBlock [
 	aBlock value: aViennaNode third
 ]
 
-{ #category : #'visiting-scopes' }
+{ #category : 'visiting-scopes' }
 ViennaRefactoring >> localScopeBySetComprehension: aViennaNode do: aBlock [
 	aBlock value: aViennaNode first.
 	aBlock value: aViennaNode third
 ]
 
-{ #category : #'visiting-scopes' }
+{ #category : 'visiting-scopes' }
 ViennaRefactoring >> localScopeBySetForLoop: aViennaNode do: aBlock [
 	aBlock value: aViennaNode third
 ]
 
-{ #category : #'visiting-pattern matching' }
+{ #category : 'visiting-pattern matching' }
 ViennaRefactoring >> match: aViennaNode with: anotherViennaNode bindings: aDictionary [
 
 	aViennaNode isViennaLocalNameNode ifTrue: [
@@ -1039,7 +1040,7 @@ ViennaRefactoring >> match: aViennaNode with: anotherViennaNode bindings: aDicti
 			  ifFalse: [ node1 = node2 ] ]
 ]
 
-{ #category : #'visiting-interface' }
+{ #category : 'visiting-interface' }
 ViennaRefactoring >> migrate: aViennaNode into: moduleNode [
 
 	aViennaNode module == moduleNode ifTrue: [ ^ aViennaNode ].
@@ -1059,12 +1060,12 @@ ViennaRefactoring >> migrate: aViennaNode into: moduleNode [
 	^ aViennaNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRefactoring >> name [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'visiting-interface' }
+{ #category : 'visiting-interface' }
 ViennaRefactoring >> nameForGlobalName: globalNameNode in: moduleNode [
 
 	globalNameNode moduleIdentifier = moduleNode identifier ifTrue: [
@@ -1088,13 +1089,13 @@ ViennaRefactoring >> nameForGlobalName: globalNameNode in: moduleNode [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRefactoring >> newAst [
 
 	^ nil
 ]
 
-{ #category : #'visiting-labels' }
+{ #category : 'visiting-labels' }
 ViennaRefactoring >> patternIdentifiersWith: aString in: aViennaNode do: aBlock [
 
 	(aViennaNode isViennaPatternIdentifierNode: aString) ifTrue: [
@@ -1105,12 +1106,12 @@ ViennaRefactoring >> patternIdentifiersWith: aString in: aViennaNode do: aBlock 
 		do: [ :node | aBlock cull: node ]
 ]
 
-{ #category : #signaling }
+{ #category : 'signaling' }
 ViennaRefactoring >> refactoringError: aViennaNode [
 	^ (ViennaRefactoringError refactoring: self node: aViennaNode) signal
 ]
 
-{ #category : #'visiting-definitions' }
+{ #category : 'visiting-definitions' }
 ViennaRefactoring >> removeFunctionDefinition: aViennaNode [
 
 	| section |
@@ -1119,7 +1120,7 @@ ViennaRefactoring >> removeFunctionDefinition: aViennaNode [
 	section ifEmpty: [ section parent remove: section ]
 ]
 
-{ #category : #'visiting-definitions' }
+{ #category : 'visiting-definitions' }
 ViennaRefactoring >> removeOperationDefinition: aViennaNode [
 
 	| section |
@@ -1128,7 +1129,7 @@ ViennaRefactoring >> removeOperationDefinition: aViennaNode [
 	section ifEmpty: [ section parent remove: section ]
 ]
 
-{ #category : #'visiting-definitions' }
+{ #category : 'visiting-definitions' }
 ViennaRefactoring >> removeTypeDefinition: aViennaNode [
 
 	| section |
@@ -1137,7 +1138,7 @@ ViennaRefactoring >> removeTypeDefinition: aViennaNode [
 	section ifEmpty: [ section parent remove: section ]
 ]
 
-{ #category : #'visiting-definitions' }
+{ #category : 'visiting-definitions' }
 ViennaRefactoring >> removeValueDefinition: aViennaNode [
 
 	| section |
@@ -1146,7 +1147,7 @@ ViennaRefactoring >> removeValueDefinition: aViennaNode [
 	section ifEmpty: [ section parent remove: section ]
 ]
 
-{ #category : #'visiting-manipulations' }
+{ #category : 'visiting-manipulations' }
 ViennaRefactoring >> replaceNode: aViennaNode with: anotherViennaNode [
 	aViennaNode ~~ anotherViennaNode
 		ifTrue: [ | parent |
@@ -1157,7 +1158,7 @@ ViennaRefactoring >> replaceNode: aViennaNode with: anotherViennaNode [
 	^ anotherViennaNode
 ]
 
-{ #category : #'visiting-interface' }
+{ #category : 'visiting-interface' }
 ViennaRefactoring >> retractExport: aViennaNode [
 
 	aViennaNode isViennaGlobalNameNode ifTrue: [ ^ aViennaNode ].
@@ -1169,7 +1170,7 @@ ViennaRefactoring >> retractExport: aViennaNode [
 	^ nil
 ]
 
-{ #category : #'visiting-interface' }
+{ #category : 'visiting-interface' }
 ViennaRefactoring >> retractExportSignature: aViennaNode in: moduleNode [
 
 	aViennaNode exportedIdentifiers do: [ :identifier |
@@ -1177,7 +1178,7 @@ ViennaRefactoring >> retractExportSignature: aViennaNode in: moduleNode [
 			identifier ]
 ]
 
-{ #category : #'visiting-interface' }
+{ #category : 'visiting-interface' }
 ViennaRefactoring >> retractImport: aViennaNode in: moduleNode [
 
 	aViennaNode isViennaGlobalNameNode ifTrue: [ ^ aViennaNode ].
@@ -1189,7 +1190,7 @@ ViennaRefactoring >> retractImport: aViennaNode in: moduleNode [
 	^ nil
 ]
 
-{ #category : #'visiting-interface' }
+{ #category : 'visiting-interface' }
 ViennaRefactoring >> retractImportDefinition: aViennaNode in: moduleNode [
 
 	moduleNode
@@ -1210,21 +1211,21 @@ ViennaRefactoring >> retractImportDefinition: aViennaNode in: moduleNode [
 						importModuleSignature parent parent parent at: 1 put: nil ] ] ] ]
 ]
 
-{ #category : #'visiting-scopes' }
+{ #category : 'visiting-scopes' }
 ViennaRefactoring >> scopeOf: aViennaNode [
 
 	aViennaNode scopesDo: [ :node | ^ node ].
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRefactoring >> shortDescription: aString [
 	^ aString size > 50
 		ifTrue: [ (aString first: 50) , '...' ]
 		ifFalse: [ aString ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRefactoring >> sortingOrder [
 	^ self subclassResponsibility
 ]

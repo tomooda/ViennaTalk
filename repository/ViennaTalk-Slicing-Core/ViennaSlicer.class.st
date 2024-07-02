@@ -119,12 +119,14 @@ ViennaSlicer >> branch [
 ViennaSlicer >> call: aViennaNode [
 
 	startNode ifNil: [
-		aViennaNode isOperationNameNode ifTrue: [
+		(aViennaNode isOperationNameNode or: [
+			 aViennaNode isFunctionNameNode ]) ifTrue: [
 			self continue: (self interOperationSlicer
 					 slicerOnOperation: aViennaNode resolve
 					 criteria: self agenda
 					 callerSlicer: self) ].
-		aViennaNode isViennaOperationDefinitionNode ifTrue: [
+		(aViennaNode isViennaOperationDefinitionNode or: [
+			 aViennaNode isViennaFunctionDefinitionNode ]) ifTrue: [
 			self continue: (self interOperationSlicer
 					 slicerOnOperation: aViennaNode
 					 criteria: self agenda

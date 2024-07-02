@@ -1,44 +1,45 @@
 Class {
-	#name : #ViennaAdd,
-	#superclass : #ViennaRefactoring,
+	#name : 'ViennaAdd',
+	#superclass : 'ViennaRefactoring',
 	#instVars : [
 		'newName',
 		'containerNode'
 	],
-	#category : #'ViennaTalk-Refactoring-Core'
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaAdd class >> isAbstract [
 	^ self == ViennaAdd
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaAdd >> check [
 
 	^ ast notNil and: [ self containerNode notNil ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAdd >> containerNode [
 
 	^ containerNode ifNil: [ containerNode := self findContainerNode ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaAdd >> execute [
 
 	^ self containerNode ifNotNil: [ :container |
 		  self newAst ifNotNil: [ :n | container add: n ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAdd >> findContainerNode [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAdd >> findNewName [
 
 	(UIManager default request: self newNameQuery initialAnswer: '')
@@ -49,7 +50,7 @@ ViennaAdd >> findNewName [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAdd >> newAst [
 
 	| newAst |
@@ -60,29 +61,29 @@ ViennaAdd >> newAst [
 		  ifFalse: [ newAst ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAdd >> newName [
 	^ newName ifNil: [ newName := self findNewName ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAdd >> newName: aString [
 	newName := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAdd >> newNameQuery [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAdd >> parser [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAdd >> sourceWithNewName: aString [
 
 	^ self subclassResponsibility

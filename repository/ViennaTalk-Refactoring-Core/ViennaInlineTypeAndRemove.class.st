@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaInlineTypeAndRemove,
-	#superclass : #ViennaInline,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaInlineTypeAndRemove',
+	#superclass : 'ViennaInline',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaInlineTypeAndRemove >> check [
 
 	| moduleName shortName |
@@ -29,7 +30,7 @@ ViennaInlineTypeAndRemove >> check [
 	^ true
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaInlineTypeAndRemove >> execute [
 
 	| typeName typeBody |
@@ -45,7 +46,7 @@ ViennaInlineTypeAndRemove >> execute [
 		  typesSection removeIfEmpty ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInlineTypeAndRemove >> name [
 
 	ast isViennaRecordTypeDefinitionNode ifTrue: [
@@ -55,7 +56,7 @@ ViennaInlineTypeAndRemove >> name [
 	  , ' and Remove' asText
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInlineTypeAndRemove >> sortingOrder [
 	^ 2.12
 ]

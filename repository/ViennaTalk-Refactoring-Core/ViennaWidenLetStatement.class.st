@@ -1,21 +1,22 @@
 Class {
-	#name : #ViennaWidenLetStatement,
-	#superclass : #ViennaWidenLet,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaWidenLetStatement',
+	#superclass : 'ViennaWidenLet',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaWidenLetStatement >> acceptsDefinitionNode: aViennaNode [
 	^ aViennaNode isViennaStatementNode
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaWidenLetStatement >> acceptsNode: aViennaNode [
 
 	^ aViennaNode isViennaLetStatementNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaWidenLetStatement >> sortingOrder [
 	^ 3.61
 ]

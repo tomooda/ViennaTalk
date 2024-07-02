@@ -1,6 +1,6 @@
 Class {
-	#name : #ViennaMove,
-	#superclass : #ViennaRefactoring,
+	#name : 'ViennaMove',
+	#superclass : 'ViennaRefactoring',
 	#instVars : [
 		'definitionNode',
 		'newDefinitionNode',
@@ -8,15 +8,16 @@ Class {
 		'destinationModule',
 		'okToAddImports'
 	],
-	#category : #'ViennaTalk-Refactoring-Core'
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaMove class >> isAbstract [
 	^ self == ViennaMove
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaMove >> check [
 
 	ast ifNil: [ ^ false ].
@@ -28,7 +29,7 @@ ViennaMove >> check [
 	^ true
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaMove >> defineDestination [
 
 	newDefinitionNode := self definitionNode copyFragment.
@@ -43,33 +44,33 @@ ViennaMove >> defineDestination [
 	self updateName: self destinationModule moduleBody
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMove >> definitionNames [
 
 	^ Array with: self definitionNode identifier
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMove >> definitionNode [
 	^ definitionNode ifNil: [ definitionNode := self findDefinitionNode ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMove >> definitionNode: aViennaNode [
 	definitionNode := aViennaNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMove >> destinationModule [
 	^ destinationModule ifNil: [ destinationModule := self findDestinationModule ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMove >> destinationModule: aViennaNode [
 	destinationModule := aViennaNode
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaMove >> execute [
 
 	self destinationModule ifNil: [ ^ nil ].
@@ -83,12 +84,12 @@ ViennaMove >> execute [
 	^ newDefinitionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMove >> findDefinitionNode [
 	^ self subclassResponsibility 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMove >> findDestinationModule [
 	| choices |
 	choices := Array
@@ -112,20 +113,20 @@ ViennaMove >> findDestinationModule [
 						, (',' join: self definitionNames) , ' to.')
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaMove >> findOkToAddImports [
 
 	^ UIManager default confirm:
 		  'OK to add import in ' , self destinationModule identifier
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaMove >> isForDefinitionList [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMove >> name [
 
 	^ 'Move ' asText , (', ' asText join:
@@ -135,28 +136,28 @@ ViennaMove >> name [
 		   ifNotNil: [ 'module ' , destinationModule name ]) asText
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMove >> okToAddImports [
 	^ okToAddImports ifNil: [ okToAddImports := self findOkToAddImports ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMove >> okToAddImports: aBoolean [
 	okToAddImports := aBoolean
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaMove >> removeExportInSource [
 	^ self retractExport: self definitionNode
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaMove >> removeImportInDestination [
 
 	self retractImport: self definitionNode in: self destinationModule
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaMove >> removeSource [
 
 	| section |
@@ -165,7 +166,7 @@ ViennaMove >> removeSource [
 	section ifEmpty: [ section parent remove: section ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaMove >> rewriteImports [
 
 	| names |
@@ -205,22 +206,22 @@ ViennaMove >> rewriteImports [
 					 importModuleSignature: newImportModuleSignature) ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMove >> sortingOrder [
 	^ 0.0
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMove >> sourceModule [
 	^ sourceModule ifNil: [ sourceModule := ast ifNotNil: #module ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaMove >> sourceModule: aViennaNode [
 	sourceModule := aViennaNode
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaMove >> updateName: aViennaNode [
 
 	aViennaNode = self definitionNode ifTrue: [ ^ self ].

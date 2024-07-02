@@ -1,6 +1,6 @@
-Extension { #name : #ViennaIndexForLoopNode }
+Extension { #name : 'ViennaIndexForLoopNode' }
 
-{ #category : #'*ViennaTalk-Refactoring-Core' }
+{ #category : '*ViennaTalk-Refactoring-Core' }
 ViennaIndexForLoopNode >> narrowestStatementWithFreeIdentifiers: anArrayOfString [
 
 	(self startExpression uniqueBoundIdentifiers includesAnyOf:

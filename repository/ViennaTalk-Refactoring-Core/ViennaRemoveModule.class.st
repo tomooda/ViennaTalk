@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaRemoveModule,
-	#superclass : #ViennaRemove,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaRemoveModule',
+	#superclass : 'ViennaRemove',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRemoveModule >> check [
 
 	self definitionNode ifNil: [ ^ false ].
@@ -12,7 +13,7 @@ ViennaRemoveModule >> check [
 	^ true
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRemoveModule >> execute [
 
 	^ self definitionNode parent
@@ -20,14 +21,14 @@ ViennaRemoveModule >> execute [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRemoveModule >> findDefinitionNode [
 
 	ast isViennaModuleNode ifTrue: [ ^ ast ].
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRemoveModule >> sortingOrder [
 	^ 10.0
 ]

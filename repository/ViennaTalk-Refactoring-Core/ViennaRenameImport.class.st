@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaRenameImport,
-	#superclass : #ViennaRename,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaRenameImport',
+	#superclass : 'ViennaRename',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRenameImport >> check [
 
 	^ self definitionNode notNil and: [
@@ -12,7 +13,7 @@ ViennaRenameImport >> check [
 			  self definitionNode rename isNil ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRenameImport >> construct [
 
 	self definitionNode ifNil: [ ^ nil ].
@@ -26,7 +27,7 @@ ViennaRenameImport >> construct [
 	^ nil
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRenameImport >> execute [
 
 	self newName ifNil: [ ^ nil ].
@@ -41,7 +42,7 @@ ViennaRenameImport >> execute [
 	^ ast
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRenameImport >> executeOnDefinition [
 
 	self newName ifNil: [ ^ nil ].
@@ -51,7 +52,7 @@ ViennaRenameImport >> executeOnDefinition [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRenameImport >> findDefinitionNode [
 
 	ast ifNil: [ ^ nil ].
@@ -65,31 +66,31 @@ ViennaRenameImport >> findDefinitionNode [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRenameImport >> findNewName [
 	(UIManager default request: 'new name' initialAnswer: self shortName)
 		ifNotNil: [ :ans | ans trim ifNotEmpty: [ :name | ^ name ] ].
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRenameImport >> findOldName [
 	ast ifNil: [ ^ nil ].
 	^ self moduleName , '`' , self shortName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRenameImport >> moduleName [
 	^ self definitionNode parent parent parent first
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRenameImport >> shortName [
 
 	^ self definitionNode identifier
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRenameImport >> sortingOrder [
 	^ 1.1
 ]

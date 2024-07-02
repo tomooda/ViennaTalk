@@ -1,6 +1,6 @@
-Extension { #name : #ViennaWhileLoopNode }
+Extension { #name : 'ViennaWhileLoopNode' }
 
-{ #category : #'*ViennaTalk-Refactoring-Core' }
+{ #category : '*ViennaTalk-Refactoring-Core' }
 ViennaWhileLoopNode >> narrowestStatementWithFreeIdentifiers: anArrayOfString [
 
 	(self expression uniqueFreeIdentifiers includesAnyOf: anArrayOfString)

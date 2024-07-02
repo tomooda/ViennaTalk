@@ -1,20 +1,21 @@
 Class {
-	#name : #ViennaRenameModule,
-	#superclass : #ViennaRename,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaRenameModule',
+	#superclass : 'ViennaRename',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRenameModule >> check [
 	^ self definitionNode notNil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRenameModule >> construct [
 	^ 'module'
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRenameModule >> execute [
 
 	self definitionNode ifNil: [ ^ nil ].
@@ -33,7 +34,7 @@ ViennaRenameModule >> execute [
 	^ self definitionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRenameModule >> findDefinitionNode [
 
 	ast ifNil: [ ^ nil ].
@@ -41,7 +42,7 @@ ViennaRenameModule >> findDefinitionNode [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRenameModule >> findNewName [
 
 	^ super findNewName ifNotNil: [ :name | 
@@ -53,14 +54,14 @@ ViennaRenameModule >> findNewName [
 			  ifNil: [ name ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRenameModule >> findOldName [
 
 	ast ifNotNil: [ ast isViennaModuleNode ifTrue: [ ^ ast identifier ] ].
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRenameModule >> sortingOrder [
 	^ 1.2
 ]

@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaRenameLocal,
-	#superclass : #ViennaRename,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaRenameLocal',
+	#superclass : 'ViennaRename',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRenameLocal >> check [
 
 	^ self definitionNode notNil and: [
@@ -12,12 +13,12 @@ ViennaRenameLocal >> check [
 			  #identifier: ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRenameLocal >> construct [
 	^ 'local variable'
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRenameLocal >> execute [
 
 	self newName ifNil: [ ^ nil ].
@@ -31,7 +32,7 @@ ViennaRenameLocal >> execute [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRenameLocal >> findDefinitionNode [
 
 	ast ifNil: [ ^ nil ].
@@ -42,13 +43,13 @@ ViennaRenameLocal >> findDefinitionNode [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRenameLocal >> findOldName [
 
 	^ ast ifNotNil: #identifier
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRenameLocal >> sortingOrder [
 	^ 1.2
 ]

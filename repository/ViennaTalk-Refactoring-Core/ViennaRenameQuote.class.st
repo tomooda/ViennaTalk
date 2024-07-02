@@ -1,21 +1,22 @@
 Class {
-	#name : #ViennaRenameQuote,
-	#superclass : #ViennaRename,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaRenameQuote',
+	#superclass : 'ViennaRename',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRenameQuote >> check [
 
 	^ self oldName notNil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRenameQuote >> construct [
 	^ 'quote'
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRenameQuote >> execute [
 
 	self newName ifNil: [ ^ nil ].
@@ -27,12 +28,12 @@ ViennaRenameQuote >> execute [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRenameQuote >> findDefinitionNode [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRenameQuote >> findNewName [
 	(UIManager default
 		request: 'rename quote'
@@ -41,7 +42,7 @@ ViennaRenameQuote >> findNewName [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRenameQuote >> findOldName [
 
 	ast isViennaQuoteTypeNode ifTrue: [ ^ ast string ].
@@ -52,7 +53,7 @@ ViennaRenameQuote >> findOldName [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRenameQuote >> sortingOrder [
 	^ 1.5
 ]

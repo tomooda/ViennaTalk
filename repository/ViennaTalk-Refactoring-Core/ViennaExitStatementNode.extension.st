@@ -1,6 +1,6 @@
-Extension { #name : #ViennaExitStatementNode }
+Extension { #name : 'ViennaExitStatementNode' }
 
-{ #category : #'*ViennaTalk-Refactoring-Core' }
+{ #category : '*ViennaTalk-Refactoring-Core' }
 ViennaExitStatementNode >> narrowestStatementWithFreeIdentifiers: anArrayOfString [
 
 	^ (self expression uniqueFreeIdentifiers includesAnyOf:

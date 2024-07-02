@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaExtractType,
-	#superclass : #ViennaExtract,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaExtractType',
+	#superclass : 'ViennaExtract',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaExtractType >> check [
 
 	ast isViennaTypeNode ifFalse: [ ^ false ].
@@ -12,7 +13,7 @@ ViennaExtractType >> check [
 	^ true
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaExtractType >> execute [
 
 	| module typeDefinition |
@@ -28,7 +29,7 @@ ViennaExtractType >> execute [
 	^ typeDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractType >> findNewName [
 	(UIManager default
 		request: 'type name for ' , self ast source
@@ -37,7 +38,7 @@ ViennaExtractType >> findNewName [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractType >> name [
 
 	^ 'Extract type '
@@ -46,7 +47,7 @@ ViennaExtractType >> name [
 	  , (self shortDescription: ast source) asText allBold
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractType >> sortingOrder [
 	^ 2.51
 ]

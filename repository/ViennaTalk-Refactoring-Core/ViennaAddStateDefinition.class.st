@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaAddStateDefinition,
-	#superclass : #ViennaAddToplevelDefinition,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaAddStateDefinition',
+	#superclass : 'ViennaAddToplevelDefinition',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddStateDefinition >> findContainerNode [
 
 	ast ifNil: [ ^ nil ].
@@ -15,29 +16,29 @@ ViennaAddStateDefinition >> findContainerNode [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddStateDefinition >> name [
 	^ 'Add state section ' , (newName ifNil: [ '' ])
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddStateDefinition >> newNameQuery [
 
 	^ 'a state constructor name'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddStateDefinition >> parser [
 
 	^ ViennaVDMParser current definitionBlock end
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddStateDefinition >> sortingOrder [
 	^ 0.08
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddStateDefinition >> sourceWithNewName: aString [
 
 	^ 'state ' , aString , ' of init s == s = mk_' , aString , '() end'

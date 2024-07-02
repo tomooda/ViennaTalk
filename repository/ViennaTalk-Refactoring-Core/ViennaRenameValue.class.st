@@ -1,21 +1,22 @@
 Class {
-	#name : #ViennaRenameValue,
-	#superclass : #ViennaRenameToplevel,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaRenameValue',
+	#superclass : 'ViennaRenameToplevel',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaRenameValue >> acceptsDefinitionNode: aViennaNode [
 
 	^ aViennaNode isViennaAccessValueDefinitionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRenameValue >> construct [
 	^ 'constant value'
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRenameValue >> executeOnDefinition [
 
 	self definitionNode ifNotNil: [ :valueDefinition |
@@ -24,7 +25,7 @@ ViennaRenameValue >> executeOnDefinition [
 				pattern identifier: self newName ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRenameValue >> sortingOrder [
 	^ 1.4
 ]

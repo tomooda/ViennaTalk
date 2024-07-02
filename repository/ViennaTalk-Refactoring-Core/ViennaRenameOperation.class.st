@@ -1,22 +1,23 @@
 Class {
-	#name : #ViennaRenameOperation,
-	#superclass : #ViennaRenameToplevel,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaRenameOperation',
+	#superclass : 'ViennaRenameToplevel',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaRenameOperation >> acceptsDefinitionNode: aViennaNode [
 
 	^ aViennaNode isViennaAccessOperationDefinitionNode and: [
 		  aViennaNode identifier = self oldName ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRenameOperation >> construct [
 	^ 'operation'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRenameOperation >> sortingOrder [
 	^ 1.11
 ]

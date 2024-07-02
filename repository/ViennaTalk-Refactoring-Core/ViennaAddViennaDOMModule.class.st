@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaAddViennaDOMModule,
-	#superclass : #ViennaAddModule,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaAddViennaDOMModule',
+	#superclass : 'ViennaAddModule',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddViennaDOMModule >> findContainerNode [
 
 	^ super findContainerNode ifNotNil: [ :document | 
@@ -13,23 +14,23 @@ ViennaAddViennaDOMModule >> findContainerNode [
 			  ifNil: [ document ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddViennaDOMModule >> findNewName [
 
 	^ 'ViennaDOM'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddViennaDOMModule >> name [
 	^ 'Add ViennaDOM module'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddViennaDOMModule >> sortingOrder [
 	^ 0.02
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddViennaDOMModule >> sourceWithNewName: aString [
 
 	^ 'module ViennaDOM

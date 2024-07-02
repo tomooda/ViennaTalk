@@ -1,16 +1,17 @@
 Class {
-	#name : #ViennaNarrowLetStatement,
-	#superclass : #ViennaNarrowLet,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaNarrowLetStatement',
+	#superclass : 'ViennaNarrowLet',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaNarrowLetStatement >> acceptsNode: aViennaNode [
 
 	^ aViennaNode isViennaLetStatementNode
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaNarrowLetStatement >> execute [
 
 	| dummy base |
@@ -21,7 +22,7 @@ ViennaNarrowLetStatement >> execute [
 	^ self replaceNode: dummy with: base
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNarrowLetStatement >> findDefinitionNode [
 
 	| statement |
@@ -35,7 +36,7 @@ ViennaNarrowLetStatement >> findDefinitionNode [
 		  ifFalse: [ statement ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaNarrowLetStatement >> sortingOrder [
 	^ 3.51
 ]

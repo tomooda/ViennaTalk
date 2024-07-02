@@ -1,28 +1,29 @@
 Class {
-	#name : #ViennaRenameStateConstructor,
-	#superclass : #ViennaRenameToplevel,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaRenameStateConstructor',
+	#superclass : 'ViennaRenameToplevel',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaRenameStateConstructor >> acceptsDefinitionNode: aViennaNode [
 
 	^ aViennaNode isViennaStateDefinitionNode and: [
 		  aViennaNode identifier = self oldName ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRenameStateConstructor >> construct [
 	^ 'state constructor'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaRenameStateConstructor >> isForCategoryList [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRenameStateConstructor >> sortingOrder [
 	^ 1.21
 ]

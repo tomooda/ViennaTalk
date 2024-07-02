@@ -1,16 +1,17 @@
 Class {
-	#name : #ViennaAddToplevelDefinition,
-	#superclass : #ViennaAdd,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaAddToplevelDefinition',
+	#superclass : 'ViennaAdd',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaAddToplevelDefinition class >> isAbstract [
 
 	^ self == ViennaAddToplevelDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddToplevelDefinition >> findNewName [
 
 	^ super findNewName ifNotNil: [ :name |

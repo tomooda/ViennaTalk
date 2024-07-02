@@ -1,33 +1,34 @@
 Class {
-	#name : #ViennaRenameStateVariable,
-	#superclass : #ViennaRenameToplevel,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaRenameStateVariable',
+	#superclass : 'ViennaRenameToplevel',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaRenameStateVariable >> acceptsDefinitionNode: aViennaNode [
 
 	^ aViennaNode isViennaFieldNode and: [
 		  aViennaNode identifier = self oldName ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRenameStateVariable >> construct [
 	^ 'state variable'
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRenameStateVariable >> executeOnDefinition [
 
 	self definitionNode ifNotNil: [ :field |
 		field identifier: self newName ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRenameStateVariable >> executeOnImports [
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRenameStateVariable >> sortingOrder [
 	^ 1.22
 ]

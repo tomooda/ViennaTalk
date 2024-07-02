@@ -1,24 +1,25 @@
 Class {
-	#name : #ViennaInlineApplyFunction,
-	#superclass : #ViennaInline,
+	#name : 'ViennaInlineApplyFunction',
+	#superclass : 'ViennaInline',
 	#instVars : [
 		'callerNode',
 		'definitionNode'
 	],
-	#category : #'ViennaTalk-Refactoring-Core'
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInlineApplyFunction >> callerNode [
 	^ callerNode ifNil: [ callerNode := self findCallerNode ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInlineApplyFunction >> callerNode: aViennaNode [
 	callerNode := aViennaNode
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaInlineApplyFunction >> check [
 	ast ifNil: [ ^ false ].
 	self callerNode ifNil: [ ^ false ].
@@ -26,17 +27,17 @@ ViennaInlineApplyFunction >> check [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInlineApplyFunction >> definitionNode [
 	^ definitionNode ifNil: [ definitionNode := self findDefinitionNode ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInlineApplyFunction >> definitionNode: aViennaNode [
 	definitionNode := aViennaNode
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaInlineApplyFunction >> execute [
 
 	self definitionNode ifNil: [ ^ nil ].
@@ -64,7 +65,7 @@ ViennaInlineApplyFunction >> execute [
 			   expression: self definitionNode expression)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInlineApplyFunction >> findCallerNode [
 
 	| node |
@@ -78,7 +79,7 @@ ViennaInlineApplyFunction >> findCallerNode [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInlineApplyFunction >> findDefinitionNode [
 
 	self callerNode ifNil: [ ^ nil ].
@@ -98,13 +99,13 @@ ViennaInlineApplyFunction >> findDefinitionNode [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInlineApplyFunction >> name [
 	^ 'Inline '
-		, (self shortDescription: self definitionNode name) asText allBold
+		, (self shortDescription: self definitionNode identifier) asText allBold
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInlineApplyFunction >> sortingOrder [
 	^ 2.14
 ]

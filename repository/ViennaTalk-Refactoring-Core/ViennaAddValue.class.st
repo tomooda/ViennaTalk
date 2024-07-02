@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaAddValue,
-	#superclass : #ViennaAddToplevelDefinition,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaAddValue',
+	#superclass : 'ViennaAddToplevelDefinition',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddValue >> findContainerNode [
 
 	ast ifNil: [ ^ nil ].
@@ -12,29 +13,29 @@ ViennaAddValue >> findContainerNode [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddValue >> name [
 	^ 'Add value ' , (newName ifNil: [ '' ])
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddValue >> newNameQuery [
 
 	^ 'New value name'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddValue >> parser [
 
 	^ ViennaVDMParser current accessValueDefinition end
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddValue >> sortingOrder [
 	^ 0.0
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddValue >> sourceWithNewName: aString [
 
 	^ aString , ': ? = undefined'

@@ -1,16 +1,17 @@
 Class {
-	#name : #ViennaAddSection,
-	#superclass : #ViennaAdd,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaAddSection',
+	#superclass : 'ViennaAdd',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaAddSection class >> isAbstract [
 
 	^ self == ViennaAddSection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddSection >> findContainerNode [
 
 	ast ifNil: [ ^ nil ].
@@ -20,7 +21,7 @@ ViennaAddSection >> findContainerNode [
 	^ ast module ifNotNil: #moduleBody
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaAddSection >> newAst [
 
 	| newAst |
@@ -30,13 +31,13 @@ ViennaAddSection >> newAst [
 		  ifFalse: [ newAst ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddSection >> newNameQuery [
 
 	^ ''
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddSection >> parser [
 
 	^ ViennaVDMParser current definitionBlock end

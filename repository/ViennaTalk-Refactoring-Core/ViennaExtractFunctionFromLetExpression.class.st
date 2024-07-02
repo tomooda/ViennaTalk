@@ -1,13 +1,14 @@
 Class {
-	#name : #ViennaExtractFunctionFromLetExpression,
-	#superclass : #ViennaExtract,
+	#name : 'ViennaExtractFunctionFromLetExpression',
+	#superclass : 'ViennaExtract',
 	#instVars : [
 		'freeIdentifiers'
 	],
-	#category : #'ViennaTalk-Refactoring-Core'
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractFunctionFromLetExpression >> arguments [
 
 	^ ViennaExpressionListNode withAll:
@@ -17,7 +18,7 @@ ViennaExtractFunctionFromLetExpression >> arguments [
 				   ViennaLocalNameNode identifier: identifier ])
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaExtractFunctionFromLetExpression >> check [
 
 	| params |
@@ -33,7 +34,7 @@ ViennaExtractFunctionFromLetExpression >> check [
 	^ true
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaExtractFunctionFromLetExpression >> execute [
 
 	| module explicitFunctionDefinition |
@@ -58,7 +59,7 @@ ViennaExtractFunctionFromLetExpression >> execute [
 	^ explicitFunctionDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractFunctionFromLetExpression >> findNewName [
 	(UIManager default
 		request: 'name of toplevel function for ' , self ast source
@@ -67,12 +68,12 @@ ViennaExtractFunctionFromLetExpression >> findNewName [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractFunctionFromLetExpression >> functionBody [
 	^ ast second
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractFunctionFromLetExpression >> functionParametersList [
 
 	^ ViennaParametersListNode with: (ViennaParametersNode withAll:
@@ -82,7 +83,7 @@ ViennaExtractFunctionFromLetExpression >> functionParametersList [
 					    ViennaPatternIdentifierNode identifier: identifier ]))
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractFunctionFromLetExpression >> functionType [
 
 	^ ViennaPartialFunctionTypeNode
@@ -97,7 +98,7 @@ ViennaExtractFunctionFromLetExpression >> functionType [
 		  returnType: ViennaBasicTypeNode any
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractFunctionFromLetExpression >> name [
 
 	^ 'Extract function '
@@ -105,17 +106,17 @@ ViennaExtractFunctionFromLetExpression >> name [
 	  , 'from let expression' asText
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractFunctionFromLetExpression >> newName [
 	^ newName ifNil: [ newName := self findNewName ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractFunctionFromLetExpression >> newName: aString [
 	newName := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractFunctionFromLetExpression >> sortingOrder [
 	^ 2.55
 ]

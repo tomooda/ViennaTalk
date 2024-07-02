@@ -1,13 +1,14 @@
 Class {
-	#name : #ViennaExtractOperationFromLetExpression,
-	#superclass : #ViennaExtract,
+	#name : 'ViennaExtractOperationFromLetExpression',
+	#superclass : 'ViennaExtract',
 	#instVars : [
 		'freeIdentifiers'
 	],
-	#category : #'ViennaTalk-Refactoring-Core'
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractOperationFromLetExpression >> arguments [
 
 	^ ViennaExpressionListNode withAll:
@@ -17,7 +18,7 @@ ViennaExtractOperationFromLetExpression >> arguments [
 				   ViennaLocalNameNode identifier: identifier ])
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaExtractOperationFromLetExpression >> check [
 
 	| params |
@@ -32,7 +33,7 @@ ViennaExtractOperationFromLetExpression >> check [
 	^ true
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaExtractOperationFromLetExpression >> execute [
 
 	| module explicitOperationDefinition |
@@ -58,7 +59,7 @@ ViennaExtractOperationFromLetExpression >> execute [
 	^ explicitOperationDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractOperationFromLetExpression >> findNewName [
 	(UIManager default
 		request: 'name of pure operation for ' , self ast source
@@ -67,7 +68,7 @@ ViennaExtractOperationFromLetExpression >> findNewName [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractOperationFromLetExpression >> name [
 
 	^ 'Extract a pure operation '
@@ -75,17 +76,17 @@ ViennaExtractOperationFromLetExpression >> name [
 	  , 'from let expression ' asText
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractOperationFromLetExpression >> newName [
 	^ newName ifNil: [ newName := self findNewName ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractOperationFromLetExpression >> newName: aString [
 	newName := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractOperationFromLetExpression >> operationParametersList [
 
 	^ ViennaParametersNode withAll:
@@ -94,7 +95,7 @@ ViennaExtractOperationFromLetExpression >> operationParametersList [
 				   ViennaPatternIdentifierNode identifier: identifier ])
 ]
 
-{ #category : #'parsers-types' }
+{ #category : 'parsers-types' }
 ViennaExtractOperationFromLetExpression >> operationType [
 
 	^ ViennaOperationTypeNode
@@ -109,12 +110,12 @@ ViennaExtractOperationFromLetExpression >> operationType [
 		  returnType: ViennaBasicTypeNode any
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractOperationFromLetExpression >> sortingOrder [
 	^ 2.56
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractOperationFromLetExpression >> statement [
 
 	^ ViennaReturnStatementNode expression: ast second

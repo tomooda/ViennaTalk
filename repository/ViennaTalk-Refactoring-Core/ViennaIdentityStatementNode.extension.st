@@ -1,6 +1,6 @@
-Extension { #name : #ViennaIdentityStatementNode }
+Extension { #name : 'ViennaIdentityStatementNode' }
 
-{ #category : #'*ViennaTalk-Refactoring-Core' }
+{ #category : '*ViennaTalk-Refactoring-Core' }
 ViennaIdentityStatementNode >> narrowestStatementWithFreeIdentifiers: anArrayOfString [
 
 	^ nil

@@ -1,14 +1,15 @@
 Class {
-	#name : #ViennaRefactoringError,
-	#superclass : #Error,
+	#name : 'ViennaRefactoringError',
+	#superclass : 'Error',
 	#instVars : [
 		'refactoring',
 		'node'
 	],
-	#category : #'ViennaTalk-Refactoring-Core'
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #exceptioninstantiator }
+{ #category : 'exceptioninstantiator' }
 ViennaRefactoringError class >> refactoring: aViennaRefactoring node: aViennaNode [
 	^ self new
 		refactoring: aViennaRefactoring;
@@ -16,22 +17,22 @@ ViennaRefactoringError class >> refactoring: aViennaRefactoring node: aViennaNod
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRefactoringError >> node [
 	^ node
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRefactoringError >> node: aViennaNode [
 	node := aViennaNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRefactoringError >> refactoring [
 	^ refactoring
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRefactoringError >> refactoring: aViennaRefactoring [
 	refactoring := aViennaRefactoring
 ]

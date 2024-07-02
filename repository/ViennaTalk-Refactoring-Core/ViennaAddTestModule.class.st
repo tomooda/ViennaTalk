@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaAddTestModule,
-	#superclass : #ViennaAddModule,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaAddTestModule',
+	#superclass : 'ViennaAddModule',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddTestModule >> findContainerNode [
 
 	ast ifNil: [ ^ nil ].
@@ -15,18 +16,18 @@ ViennaAddTestModule >> findContainerNode [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddTestModule >> findNewName [
 
 	^ ast identifier ifNotNil: [ :name | name , 'Test' ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddTestModule >> name [
 	^ 'Add test module for ', ast identifier
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddTestModule >> sourceWithNewName: aString [
 
 	^ 'module ' , aString , ' imports from ', ast identifier, ' all, from UnitTesting operations assert : bool * seq of char ==> () renamed assert; assertEquals  : ? * ? * seq of char ==> () renamed assertEquals; assertApproxEquals : real * real * real * seq of char ==> () renamed assertApproxEquals exports all definitions operations end ' , aString

@@ -1,6 +1,6 @@
-Extension { #name : #ViennaDefStatementNode }
+Extension { #name : 'ViennaDefStatementNode' }
 
-{ #category : #'*ViennaTalk-Refactoring-Core' }
+{ #category : '*ViennaTalk-Refactoring-Core' }
 ViennaDefStatementNode >> narrowestStatementWithFreeIdentifiers: anArrayOfString [
 
 	(self equalDefinitionList uniqueFreeIdentifiers includesAnyOf:

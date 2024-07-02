@@ -1,13 +1,14 @@
 Class {
-	#name : #ViennaAddFramAnnotationToOperation,
-	#superclass : #ViennaAdd,
+	#name : 'ViennaAddFramAnnotationToOperation',
+	#superclass : 'ViennaAdd',
 	#instVars : [
 		'newAspect'
 	],
-	#category : #'ViennaTalk-Refactoring-Core'
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #execution }
+{ #category : 'execution' }
 ViennaAddFramAnnotationToOperation >> execute [
 
 	^ self containerNode ifNotNil: [ :container |
@@ -15,7 +16,7 @@ ViennaAddFramAnnotationToOperation >> execute [
 			  container addAnnotation: annotation ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddFramAnnotationToOperation >> findContainerNode [
 
 	ast ifNil: [ ^ nil ].
@@ -24,7 +25,7 @@ ViennaAddFramAnnotationToOperation >> findContainerNode [
 	^ ast
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddFramAnnotationToOperation >> findNewAspect [
 
 	| aspects |
@@ -34,32 +35,32 @@ ViennaAddFramAnnotationToOperation >> findNewAspect [
 		  ifNotNil: [ :index | aspects at: index ifAbsent: [ nil ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddFramAnnotationToOperation >> findNewName [
 
 	^ newAspect ifNotNil: [ 
 		  UIManager default request: self newNameQuery initialAnswer: '' ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddFramAnnotationToOperation >> name [
 
 	^ 'Add FRAM annotation to ', ast identifier
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddFramAnnotationToOperation >> newAspect [
 
 	^ newAspect ifNil: [ newAspect := self findNewAspect ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddFramAnnotationToOperation >> newAspect: aString [
 
 	newAspect := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddFramAnnotationToOperation >> newAst [
 
 	^ (self newAspect notNil and: [ self newName notNil ])
@@ -67,24 +68,24 @@ ViennaAddFramAnnotationToOperation >> newAst [
 		  ifFalse: [ nil ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddFramAnnotationToOperation >> newNameQuery [
 
 	^ 'new ' , (newAspect ifNil: [ '' ]) , ' name'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddFramAnnotationToOperation >> parser [
 
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddFramAnnotationToOperation >> sortingOrder [
 	^ 10.0
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddFramAnnotationToOperation >> sourceWithNewName: aString [
 
 	^ '--@FRAM ' , (self newAspect ifNil: [ '' ]) , aString

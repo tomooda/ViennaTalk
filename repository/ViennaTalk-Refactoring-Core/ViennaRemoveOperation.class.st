@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaRemoveOperation,
-	#superclass : #ViennaRemove,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaRemoveOperation',
+	#superclass : 'ViennaRemove',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRemoveOperation >> check [
 
 	ast ifNil: [ ^ false ].
@@ -13,7 +14,7 @@ ViennaRemoveOperation >> check [
 	^ true
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRemoveOperation >> execute [
 
 	(self definitionNode
@@ -27,7 +28,7 @@ ViennaRemoveOperation >> execute [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRemoveOperation >> findDefinitionNode [
 
 	ast ifNil: [ ^ nil ].
@@ -37,7 +38,7 @@ ViennaRemoveOperation >> findDefinitionNode [
 			  ifFalse: [ nil ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRemoveOperation >> sortingOrder [
 	^ 1.2
 ]

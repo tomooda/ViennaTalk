@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaExtractLetExpression,
-	#superclass : #ViennaExtract,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaExtractLetExpression',
+	#superclass : 'ViennaExtract',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaExtractLetExpression >> check [
 
 	^ ast isViennaExpressionNode and: [
@@ -12,7 +13,7 @@ ViennaExtractLetExpression >> check [
 			  ast isOperationNameNode not ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaExtractLetExpression >> execute [
 
 	self newName ifNil: [ ^ nil ].
@@ -27,7 +28,7 @@ ViennaExtractLetExpression >> execute [
 			   expression: (ViennaLocalNameNode identifier: self newName))
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractLetExpression >> findNewName [
 	(UIManager default
 		request: 'local name for ' , self ast source
@@ -36,7 +37,7 @@ ViennaExtractLetExpression >> findNewName [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractLetExpression >> name [
 
 	^ 'Extract let expression with ' asText
@@ -44,7 +45,7 @@ ViennaExtractLetExpression >> name [
 	  , (self shortDescription: ast source) asText allBold
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractLetExpression >> sortingOrder [
 	^ 2.52
 ]

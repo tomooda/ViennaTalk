@@ -16,6 +16,7 @@ ViennaApplyNode >> sliceWith: aViennaSlicer [
 	self expression sliceWith: aViennaSlicer.
 	callee := self expression resolve.
 	callee isFunctionDefinition ifTrue: [
+		aViennaSlicer onNode: self do: [ aViennaSlicer write: callee ].
 		self argumentExpressionList asArray
 			with: callee parametersList first asArray
 			do: [ :arg :param |

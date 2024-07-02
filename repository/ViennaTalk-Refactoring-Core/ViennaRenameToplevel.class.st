@@ -1,26 +1,27 @@
 Class {
-	#name : #ViennaRenameToplevel,
-	#superclass : #ViennaRename,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaRenameToplevel',
+	#superclass : 'ViennaRename',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaRenameToplevel class >> isAbstract [
 	^ self = ViennaRenameToplevel
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaRenameToplevel >> acceptsDefinitionNode: aViennaNode [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRenameToplevel >> check [
 	^ self definitionNode notNil
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRenameToplevel >> execute [
 
 	self newName ifNil: [ ^ nil ].
@@ -33,14 +34,14 @@ ViennaRenameToplevel >> execute [
 	^ nil
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRenameToplevel >> executeOnDefinition [
 
 	self definitionNode ifNotNil: [ :definition |
 		definition identifier: self newName ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRenameToplevel >> executeOnGlobalNames [
 
 	^ ast root allDescendantsDo: [ :node |
@@ -50,7 +51,7 @@ ViennaRenameToplevel >> executeOnGlobalNames [
 			  node identifier: self newName ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRenameToplevel >> executeOnImports [
 
 	self ast document modulesDo: [ :module |
@@ -60,7 +61,7 @@ ViennaRenameToplevel >> executeOnImports [
 			import identifier: self newName ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRenameToplevel >> executeOnReferences [
 
 	self ast document
@@ -71,7 +72,7 @@ ViennaRenameToplevel >> executeOnReferences [
 		do: [ :node | node identifier: self newName ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRenameToplevel >> findDefinitionNode [
 
 	self oldName ifNil: [ ^ nil ].
@@ -82,7 +83,7 @@ ViennaRenameToplevel >> findDefinitionNode [
 			  ifFalse: [ nil ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRenameToplevel >> findOldName [
 
 	^ (ast respondsTo: #identifier)

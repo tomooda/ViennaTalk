@@ -1,6 +1,6 @@
-Extension { #name : #ViennaSetForLoopNode }
+Extension { #name : 'ViennaSetForLoopNode' }
 
-{ #category : #'*ViennaTalk-Refactoring-Core' }
+{ #category : '*ViennaTalk-Refactoring-Core' }
 ViennaSetForLoopNode >> narrowestStatementWithFreeIdentifiers: anArrayOfString [
 
 	(self expression uniqueFreeIdentifiers includesAnyOf: anArrayOfString)

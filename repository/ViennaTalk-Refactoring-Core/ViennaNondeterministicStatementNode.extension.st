@@ -1,6 +1,6 @@
-Extension { #name : #ViennaNondeterministicStatementNode }
+Extension { #name : 'ViennaNondeterministicStatementNode' }
 
-{ #category : #'*ViennaTalk-Refactoring-Core' }
+{ #category : '*ViennaTalk-Refactoring-Core' }
 ViennaNondeterministicStatementNode >> narrowestStatementWithFreeIdentifiers: anArrayOfString [
 
 	^ ((self asArray collect: [ :statement |

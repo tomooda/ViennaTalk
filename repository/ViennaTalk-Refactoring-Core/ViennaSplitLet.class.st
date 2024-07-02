@@ -1,26 +1,27 @@
 Class {
-	#name : #ViennaSplitLet,
-	#superclass : #ViennaRefactoring,
+	#name : 'ViennaSplitLet',
+	#superclass : 'ViennaRefactoring',
 	#instVars : [
 		'definitionNode',
 		'newHeadLocalDefinitionIndex'
 	],
-	#category : #'ViennaTalk-Refactoring-Core'
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaSplitLet >> check [
 
 	self definitionNode ifNil: [ ^ false ].
 	^ self newHeadLocalDefinitionIndex >= 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSplitLet >> definitionNode [
 	^ definitionNode ifNil: [ definitionNode := self findDefinitionNode ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaSplitLet >> execute [
 
 	| innerLet localDefinitions |
@@ -41,14 +42,14 @@ ViennaSplitLet >> execute [
 	^ innerLet
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSplitLet >> findDefinitionNode [
 
 	ast ifNil: [ ^ nil ].
 	^ ast detectParent: #isViennaLetNode ifNone: [ nil ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSplitLet >> findNewHeadLocalDefinitionIndex [
 
 	1 to: (self definitionNode ifNil: [ ^ 0 ]) localDefinitionList size
@@ -59,12 +60,12 @@ ViennaSplitLet >> findNewHeadLocalDefinitionIndex [
 	^ 0
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSplitLet >> name [
 	^ 'Split let'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSplitLet >> newHeadLocalDefinitionIndex [
 
 	^ newHeadLocalDefinitionIndex ifNil: [
@@ -72,7 +73,7 @@ ViennaSplitLet >> newHeadLocalDefinitionIndex [
 			                                 findNewHeadLocalDefinitionIndex ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSplitLet >> sortingOrder [
 	^ 3.63
 ]

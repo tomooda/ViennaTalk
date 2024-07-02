@@ -1,20 +1,21 @@
 Class {
-	#name : #ViennaAddFunctionsSection,
-	#superclass : #ViennaAddSection,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaAddFunctionsSection',
+	#superclass : 'ViennaAddSection',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddFunctionsSection >> name [
 	^ 'Add functions section'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddFunctionsSection >> sortingOrder [
 	^ 0.07
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddFunctionsSection >> sourceWithNewName: aString [
 
 	^ 'functions'

@@ -1,14 +1,15 @@
 Class {
-	#name : #ViennaSplitBlockStatement,
-	#superclass : #ViennaRefactoring,
+	#name : 'ViennaSplitBlockStatement',
+	#superclass : 'ViennaRefactoring',
 	#instVars : [
 		'definitionNode',
 		'newHeadStatementIndex'
 	],
-	#category : #'ViennaTalk-Refactoring-Core'
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaSplitBlockStatement >> check [
 
 	self definitionNode ifNil: [ ^ false ].
@@ -19,13 +20,13 @@ ViennaSplitBlockStatement >> check [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSplitBlockStatement >> definitionNode [
 
 	^ definitionNode ifNil: [ definitionNode := self findDefinitionNode ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaSplitBlockStatement >> execute [
 
 	| dclStatement newBlockStatement1 newBlockStatement2 |
@@ -48,14 +49,14 @@ ViennaSplitBlockStatement >> execute [
 						   newBlockStatement2 })
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSplitBlockStatement >> findDefinitionNode [
 
 	ast ifNil: [ ^ nil ].
 	^ ast detectParent: #isViennaBlockStatementNode ifNone: [ nil ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSplitBlockStatement >> findNewHeadStatementIndex [
 
 	1 to: (self definitionNode ifNil: [ ^ nil ]) size do: [ :index |
@@ -64,19 +65,19 @@ ViennaSplitBlockStatement >> findNewHeadStatementIndex [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSplitBlockStatement >> name [
 
 	^ 'Split block'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSplitBlockStatement >> newHeadStatementIndex [
 	^ newHeadStatementIndex
 		ifNil: [ newHeadStatementIndex := self findNewHeadStatementIndex ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSplitBlockStatement >> sortingOrder [
 	^ 6.3
 ]

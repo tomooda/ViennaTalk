@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaExtractValueAndReplaceAll,
-	#superclass : #ViennaExtractValue,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaExtractValueAndReplaceAll',
+	#superclass : 'ViennaExtractValue',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaExtractValueAndReplaceAll >> execute [
 
 	| module valueDefinition |
@@ -25,7 +26,7 @@ ViennaExtractValueAndReplaceAll >> execute [
 	^ valueDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractValueAndReplaceAll >> name [
 
 	^ 'Extract value '
@@ -35,7 +36,7 @@ ViennaExtractValueAndReplaceAll >> name [
 	  , ' and Replace all' asText
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractValueAndReplaceAll >> sortingOrder [
 	^ 2.54
 ]

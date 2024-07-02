@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaExtractTypeAndReplaceAll,
-	#superclass : #ViennaExtractType,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaExtractTypeAndReplaceAll',
+	#superclass : 'ViennaExtractType',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaExtractTypeAndReplaceAll >> execute [
 
 	| module typeDefinition |
@@ -22,7 +23,7 @@ ViennaExtractTypeAndReplaceAll >> execute [
 	^ typeDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractTypeAndReplaceAll >> name [
 
 	^ 'Extract type '
@@ -32,7 +33,7 @@ ViennaExtractTypeAndReplaceAll >> name [
 	  , ' and Replace all' asText
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractTypeAndReplaceAll >> sortingOrder [
 	^ 2.52
 ]

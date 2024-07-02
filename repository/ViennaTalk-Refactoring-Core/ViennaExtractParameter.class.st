@@ -1,28 +1,29 @@
 Class {
-	#name : #ViennaExtractParameter,
-	#superclass : #ViennaExtract,
+	#name : 'ViennaExtractParameter',
+	#superclass : 'ViennaExtract',
 	#instVars : [
 		'definitionNode'
 	],
-	#category : #'ViennaTalk-Refactoring-Core'
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExtractParameter class >> isAbstract [ 
 	^ self == ViennaExtractParameter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractParameter >> definitionNode [
 	^ definitionNode ifNil: [ definitionNode := self findDefinitionNode ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractParameter >> definitionNode: aViennaNode [
 	definitionNode := aViennaNode
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaExtractParameter >> execute [
 	self newName ifNil: [ ^ nil ].
 	self executeReplacement.
@@ -30,17 +31,17 @@ ViennaExtractParameter >> execute [
 	^ self executeDefinition
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaExtractParameter >> executeCallers [
 	^ self subclassResponsibility
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaExtractParameter >> executeDefinition [
 	^ self subclassResponsibility
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaExtractParameter >> executeReplacement [
 
 	self newName ifNil: [ ^ nil ].
@@ -49,12 +50,12 @@ ViennaExtractParameter >> executeReplacement [
 		  with: (ViennaLocalNameNode identifier: self newName)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractParameter >> findDefinitionNode [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractParameter >> findNewName [
 	(UIManager default
 		request: 'new parameter name for ' , self ast source
@@ -63,12 +64,12 @@ ViennaExtractParameter >> findNewName [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractParameter >> newName [
 	^ newName ifNil: [ newName := self findNewName ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtractParameter >> newName: aString [
 	newName := aString
 ]

@@ -1,14 +1,15 @@
 Class {
-	#name : #ViennaAddStateVariable,
-	#superclass : #ViennaAdd,
+	#name : 'ViennaAddStateVariable',
+	#superclass : 'ViennaAdd',
 	#instVars : [
 		'initialValue',
 		'newType'
 	],
-	#category : #'ViennaTalk-Refactoring-Core'
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaAddStateVariable >> execute [
 
 	^ self containerNode ifNotNil: [ :stateDefinition |
@@ -35,14 +36,14 @@ ViennaAddStateVariable >> execute [
 			  stateField ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddStateVariable >> findContainerNode [
 
 	^ ast ifNotNil: [
 		  ast module ifNotNil: [ :module | module stateDefinition ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddStateVariable >> findInitialValue [
 
 	(UIManager default
@@ -55,7 +56,7 @@ ViennaAddStateVariable >> findInitialValue [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddStateVariable >> findNewName [
 
 	(UIManager default request: self newNameQuery initialAnswer: '')
@@ -63,7 +64,7 @@ ViennaAddStateVariable >> findNewName [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddStateVariable >> findNewType [
 
 	(UIManager default request: self newTypeQuery initialAnswer: '?')
@@ -71,19 +72,19 @@ ViennaAddStateVariable >> findNewType [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddStateVariable >> initialValue [
 
 	^ initialValue ifNil: [ initialValue := self findInitialValue ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddStateVariable >> name [
 
 	^ 'Add a state variable with a type'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddStateVariable >> newAst [
 
 	| newAst |
@@ -96,36 +97,36 @@ ViennaAddStateVariable >> newAst [
 		  ifFalse: [ newAst ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddStateVariable >> newNameQuery [
 
 	^ 'a new state variable name'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddStateVariable >> newType [
 
 	^ newType ifNil: [ newType := self findNewType ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddStateVariable >> newTypeQuery [
 
 	^ 'type of the new variable'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddStateVariable >> parser [
 
 	^ ViennaVDMParser current stateField end
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddStateVariable >> sortingOrder [
 	^ 0.08
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddStateVariable >> sourceWithNewName: aString [
 
 	^ aString

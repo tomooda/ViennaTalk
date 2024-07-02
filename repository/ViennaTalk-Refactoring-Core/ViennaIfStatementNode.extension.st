@@ -1,6 +1,6 @@
-Extension { #name : #ViennaIfStatementNode }
+Extension { #name : 'ViennaIfStatementNode' }
 
-{ #category : #'*ViennaTalk-Refactoring-Core' }
+{ #category : '*ViennaTalk-Refactoring-Core' }
 ViennaIfStatementNode >> narrowestStatementWithFreeIdentifiers: anArrayOfString [
 
 	(self conditionalStatementList asArray anySatisfy: [ :conditional |

@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaAddExplicitOperation,
-	#superclass : #ViennaAddToplevelDefinition,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaAddExplicitOperation',
+	#superclass : 'ViennaAddToplevelDefinition',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddExplicitOperation >> findContainerNode [
 
 	ast ifNil: [ ^ nil ].
@@ -12,29 +13,29 @@ ViennaAddExplicitOperation >> findContainerNode [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddExplicitOperation >> name [
 	^ 'Add explicit operation ' , (newName ifNil: [ '' ])
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddExplicitOperation >> newNameQuery [
 
 	^ 'a new explicit operation name'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddExplicitOperation >> parser [
 
 	^ ViennaVDMParser current accessOperationDefinition end
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddExplicitOperation >> sortingOrder [
 	^ 0.0
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAddExplicitOperation >> sourceWithNewName: aString [
 
 	^ aString , ' : () ==> () ' , aString , '() == skip pre true post false'

@@ -1,15 +1,16 @@
 Class {
-	#name : #ViennaRemoveEmptySection,
-	#superclass : #ViennaRemove,
-	#category : #'ViennaTalk-Refactoring-Core'
+	#name : 'ViennaRemoveEmptySection',
+	#superclass : 'ViennaRemove',
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRemoveEmptySection >> check [
 	^ self definitionNode notNil
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaRemoveEmptySection >> execute [
 
 	^ self definitionNode parent
@@ -17,7 +18,7 @@ ViennaRemoveEmptySection >> execute [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRemoveEmptySection >> findDefinitionNode [
 
 	ast isViennaSectionNode ifFalse: [ ^ nil ].
@@ -25,14 +26,14 @@ ViennaRemoveEmptySection >> findDefinitionNode [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRemoveEmptySection >> name [
 
 	^ 'Remove ' , self definitionNode sectionName asText allBold
 	  , ' section'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRemoveEmptySection >> sortingOrder [
 	^ 0.1
 ]

@@ -1,28 +1,29 @@
 Class {
-	#name : #ViennaExtract,
-	#superclass : #ViennaRefactoring,
+	#name : 'ViennaExtract',
+	#superclass : 'ViennaRefactoring',
 	#instVars : [
 		'newName'
 	],
-	#category : #'ViennaTalk-Refactoring-Core'
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaExtract class >> isAbstract [
 	^ self == ViennaExtract
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtract >> findNewName [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtract >> newName [
 	^ newName ifNil: [ newName := self findNewName ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaExtract >> newName: aString [
 	newName := aString
 ]

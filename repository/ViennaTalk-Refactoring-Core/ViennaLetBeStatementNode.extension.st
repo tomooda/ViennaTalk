@@ -1,6 +1,6 @@
-Extension { #name : #ViennaLetBeStatementNode }
+Extension { #name : 'ViennaLetBeStatementNode' }
 
-{ #category : #'*ViennaTalk-Refactoring-Core' }
+{ #category : '*ViennaTalk-Refactoring-Core' }
 ViennaLetBeStatementNode >> narrowestStatementWithFreeIdentifiers: anArrayOfString [
 
 	(self multipleBind uniqueFreeIdentifiers includesAnyOf:

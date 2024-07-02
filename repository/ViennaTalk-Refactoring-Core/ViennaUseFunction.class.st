@@ -1,20 +1,21 @@
 Class {
-	#name : #ViennaUseFunction,
-	#superclass : #ViennaUse,
+	#name : 'ViennaUseFunction',
+	#superclass : 'ViennaUse',
 	#instVars : [
 		'functionsAndBinds',
 		'functionsAndBindsIndex'
 	],
-	#category : #'ViennaTalk-Refactoring-Core'
+	#category : 'ViennaTalk-Refactoring-Core',
+	#package : 'ViennaTalk-Refactoring-Core'
 }
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaUseFunction >> check [
 
 	^ self functionsAndBinds notEmpty
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 ViennaUseFunction >> execute [
 
 	| binds args |
@@ -28,7 +29,7 @@ ViennaUseFunction >> execute [
 			   argumentExpressionList: (ViennaExpressionListNode withAll: args))
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaUseFunction >> explicitFunctionsDo: aBlock [
 
 	self ast parentsDo: [ :node |
@@ -44,7 +45,7 @@ ViennaUseFunction >> explicitFunctionsDo: aBlock [
 						definition expression ifNotNil: [ aBlock value: definition ] ] ] ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUseFunction >> findDefinitionNode [
 
 	^ self functionsAndBinds
@@ -54,7 +55,7 @@ ViennaUseFunction >> findDefinitionNode [
 		  ifEmpty: [ nil ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUseFunction >> findFunctionsAndBinds [
 
 	ast ifNil: [ ^ Array new ].
@@ -70,7 +71,7 @@ ViennaUseFunction >> findFunctionsAndBinds [
 				  ifTrue: [ stream nextPut: function -> binds ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUseFunction >> findFunctionsAndBindsIndex [
 
 	^ UIManager default
@@ -82,25 +83,25 @@ ViennaUseFunction >> findFunctionsAndBindsIndex [
 		  title: 'Use function'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUseFunction >> functionsAndBinds [ 
 	^ functionsAndBinds ifNil: [ functionsAndBinds := self findFunctionsAndBinds ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUseFunction >> functionsAndBindsIndex [
 
 	^ functionsAndBindsIndex ifNil: [
 		  functionsAndBindsIndex := self findFunctionsAndBindsIndex ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUseFunction >> functionsAndBindsIndex: anInteger [
 
 	functionsAndBindsIndex := anInteger
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaUseFunction >> name [
 
 	^ 'Use function application for '
