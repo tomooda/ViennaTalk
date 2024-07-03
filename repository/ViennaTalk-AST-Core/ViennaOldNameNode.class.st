@@ -86,3 +86,9 @@ ViennaOldNameNode >> label [
 
 	^ 'OldName'
 ]
+
+{ #category : 'accessing-definitions' }
+ViennaOldNameNode >> resolve [
+
+	^ self
+]

@@ -10,6 +10,6 @@ ViennaExplicitOperationDefinitionNode >> sliceWith: aViennaSlicer [
 				^ startNode sliceWith: aViennaSlicer ] ].
 		self post ifNotNil: [ :post |
 			(startNode includesParent: post) ifTrue: [
-				^ startNode sliceWith: aViennaSlicer ] ] ].
+				startNode sliceWith: aViennaSlicer ] ] ].
 	self statement sliceWith: aViennaSlicer
 ]
