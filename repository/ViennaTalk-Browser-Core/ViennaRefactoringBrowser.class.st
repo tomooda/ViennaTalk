@@ -52,6 +52,16 @@ Class {
 	#tag : 'Browsers'
 }
 
+{ #category : 'services' }
+ViennaRefactoringBrowser class >> acceptExternalDrop: aString extension: anotherString [
+
+	<fileService>
+	anotherString = 'vdmsl' ifTrue: [ ^ self fileServices ].
+	aString asFileReference ifNotNil: [ :ref |
+		ref isDirectory ifTrue: [ ^ self directoryServices ] ].
+	^ #(  )
+]
+
 { #category : 'settings' }
 ViennaRefactoringBrowser class >> beLeftSideTraffic [
 
@@ -105,6 +115,19 @@ ViennaRefactoringBrowser class >> defaultLayout [
 ViennaRefactoringBrowser class >> defaultTrafficSide [
 
 	^ #left
+]
+
+{ #category : 'services' }
+ViennaRefactoringBrowser class >> directoryServices [
+
+	^ { ((SimpleServiceEntry
+		    provider: self
+		    label: 'VDM Refactoring Browser'
+		    selector: #openFromDisk:
+		    description:
+		    'Open a VDM Refactoring Browser on this directory, allowing you to view and edit its source'
+		    buttonLabel: 'VDM') argumentGetter: [ :file |
+		   file asFileReference ]) }
 ]
 
 { #category : 'instance creation' }
@@ -458,6 +481,19 @@ end CounterTest
 ')) open
 ]
 
+{ #category : 'services' }
+ViennaRefactoringBrowser class >> fileServices [
+
+	^ { ((SimpleServiceEntry
+		    provider: self
+		    label: 'VDM Refactoring Browser'
+		    selector: #openFromDisk:
+		    description:
+		    'Open a VDM Refactoring Browser on this file, allowing you to view and edit its source'
+		    buttonLabel: 'VDM') argumentGetter: [ :file |
+		   file asFileReference ]) }
+]
+
 { #category : 'icons' }
 ViennaRefactoringBrowser class >> greenSignalIcon [
 
@@ -482,6 +518,22 @@ ViennaRefactoringBrowser class >> ifLeftSideTraffic: leftBlock ifRightSideTraffi
 	  = #left
 		  ifTrue: leftBlock
 		  ifFalse: rightBlock
+]
+
+{ #category : 'class initialization' }
+ViennaRefactoringBrowser class >> initialize [
+
+	Smalltalk
+		at: #ViennaLauncher
+		ifPresent: [ :launcherClass | launcherClass reopen ]
+]
+
+{ #category : 'services' }
+ViennaRefactoringBrowser class >> openFromDisk: aFileReference [
+
+	^ self new
+		  importFromDisk: aFileReference;
+		  open
 ]
 
 { #category : 'icons' }
@@ -1221,6 +1273,13 @@ ViennaRefactoringBrowser >> importFromDisk [
 								          withInternalLineEndings ] ].
 				self load: source ]
 			ifFalse: [ self load: ref contents withInternalLineEndings ] ]
+]
+
+{ #category : 'operations' }
+ViennaRefactoringBrowser >> importFromDisk: aFileReference [
+
+	fileReference := aFileReference.
+	self importFromDisk
 ]
 
 { #category : 'operations' }
@@ -2138,8 +2197,7 @@ ViennaRefactoringBrowser >> sourceTextContextMenu [
 	node ifNotNil: [
 		self addRefactoringMenuGroupOn: node to: menu with: [ :group |  ] ].
 	menu addGroup: [ :group |
-		(topLevelDefinition notNil and: [
-			 topLevelDefinition isViennaStateDefinitionNode not ]) ifTrue: [
+		topLevelDefinition ifNotNil: [
 			group addItem: [ :item |
 				item
 					name: 'Add slice';
