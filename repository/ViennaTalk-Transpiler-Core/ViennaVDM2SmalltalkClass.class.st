@@ -301,13 +301,15 @@ ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass proto
 								  , ') ifFalse: [ViennaRuntimeTypeError signal].'
 									  asViennaTracingString: triple second) ] ].
 				 preString ifNotNil: [
-					 stream nextPutAll:
-						 ('(' , preString
-						  , ') ifFalse: [ViennaPreconditionViolation signal].'
-							  asViennaTracingString:
-								  (preString asViennaTracingString sources
-									   ifNotEmpty: [ :sources | sources last value ]
-									   ifEmpty: [ aViennaNode ])) ].
+					 (preString isArray
+						  ifTrue: [ preString ]
+						  ifFalse: [ { preString } ]) do: [ :pre |
+						 stream nextPutAll:
+							 ('(' , pre
+							  , ') ifFalse: [ViennaPreconditionViolation signal].'
+								  asViennaTracingString: (pre asViennaTracingString sources
+										   ifNotEmpty: [ :sources | sources last value ]
+										   ifEmpty: [ aViennaNode ])) ] ].
 				 stream
 					 nextPutAll: '_oldState := self state. ';
 					 nextPutAll:
@@ -322,12 +324,15 @@ ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass proto
 						  , ') ifFalse: [ViennaRuntimeTypeError signal].'
 							  asViennaTracingString: typeNode) ].
 				 postString ifNotNil: [
-					 stream nextPutAll: ('(' , postString
-						  , ') ifFalse: [ViennaPostconditionViolation signal].'
-							  asViennaTracingString:
-								  (postString asViennaTracingString sources
-									   ifNotEmpty: [ :sources | sources last value ]
-									   ifEmpty: [ aViennaNode ])) ].
+					 (postString isArray
+						  ifTrue: [ postString ]
+						  ifFalse: [ { postString } ]) do: [ :post |
+						 stream nextPutAll:
+							 ('(' , post
+							  , ') ifFalse: [ViennaPostconditionViolation signal].'
+								  asViennaTracingString: (post asViennaTracingString sources
+										   ifNotEmpty: [ :sources | sources last value ]
+										   ifEmpty: [ aViennaNode ])) ] ].
 				 stream nextPutAll: '^ ' , retVarName ])
 		in: theClass
 		protocol: protocolString
@@ -419,14 +424,16 @@ ViennaVDM2SmalltalkClass >> explicitOperationDefinition: aViennaNode env: aDicti
 		pre: (preNode ifNotNil: [
 				 runtimeAssertionCheck = true
 					 ifTrue: [
-						 (self generate: preNode env: aDictionary)
-							 asViennaTracingString: preNode ]
+						 preNode asArrayOfConjuncts collect: [ :pre |
+							 (self generate: pre env: aDictionary) asViennaTracingString:
+								 pre ] ]
 					 ifFalse: [ nil ] ])
 		post: (postNode ifNotNil: [
 				 runtimeAssertionCheck = true
 					 ifTrue: [
-						 (self generate: postNode env: aDictionary)
-							 asViennaTracingString: postNode ]
+						 postNode asArrayOfConjuncts collect: [ :post |
+							 (self generate: post env: aDictionary) asViennaTracingString:
+								 post ] ]
 					 ifFalse: [ nil ] ])
 		retType: retTypeNode
 		varGenerator: varGenerator
@@ -551,7 +558,7 @@ ViennaVDM2SmalltalkClass >> extendedExplicitOperationDefinition: aViennaNode env
 		                           Array new ].
 	retVar := aViennaNode identifierTypePairList
 		          ifNil: [ 'RESULT' ]
-		          ifNotNil: [ :node | node first identifier].
+		          ifNotNil: [ :node | node first identifier ].
 	retTypeNode := aViennaNode identifierTypePairList
 		               ifNil: [ ViennaUnitTypeNode new ]
 		               ifNotNil: [ :node | node second ].
@@ -580,11 +587,15 @@ ViennaVDM2SmalltalkClass >> extendedExplicitOperationDefinition: aViennaNode env
 		body: body
 		pre: (preNode ifNotNil: [
 				 runtimeAssertionCheck = true
-					 ifTrue: [ self generate: preNode env: aDictionary ]
+					 ifTrue: [
+						 preNode asArrayOfConjuncts collect: [ :pre |
+							 self generate: pre env: aDictionary ] ]
 					 ifFalse: [ nil ] ])
 		post: (postNode ifNotNil: [
 				 runtimeAssertionCheck = true
-					 ifTrue: [ self generate: postNode env: aDictionary ]
+					 ifTrue: [
+						 postNode asArrayOfConjuncts collect: [ :post |
+							 self generate: post env: aDictionary ] ]
 					 ifFalse: [ nil ] ])
 		retVar: retVar
 		retType: retTypeNode
@@ -816,11 +827,15 @@ ViennaVDM2SmalltalkClass >> implicitOperationDefinition: aViennaNode env: aDicti
 		body: body
 		pre: (preNode ifNotNil: [
 				 runtimeAssertionCheck = true
-					 ifTrue: [ self generate: preNode env: aDictionary ]
+					 ifTrue: [
+						 preNode asArrayOfConjuncts collect: [ :pre |
+							 self generate: pre env: aDictionary ] ]
 					 ifFalse: [ nil ] ])
 		post: (postNode ifNotNil: [
 				 runtimeAssertionCheck = true
-					 ifTrue: [ self generate: postNode env: aDictionary ]
+					 ifTrue: [
+						 postNode asArrayOfConjuncts collect: [ :post |
+							 self generate: post env: aDictionary ] ]
 					 ifFalse: [ nil ] ])
 		retVar: retVar
 		retType: retTypeNode
@@ -1257,11 +1272,23 @@ ViennaVDM2SmalltalkClass >> stateDefinition: aViennaNode env: aDictionary [
 						 nextPutAll: 'inv';
 						 cr.
 					 hexa fourth ifNotNil: [
+						 | patternNode varGenerator |
+						 patternNode := aViennaNode inv invariantInitialFunction pattern.
+						 varGenerator := self varNameGenerator: 'func' uniqueIn: {  }.
 						 stream
-							 nextPutAll: ('(self inv_' , stateConstructor
-								  ,
-									  ' value: self state) ifFalse: [self stateInvariantViolation].'
-									  asViennaTracingString: aViennaNode inv);
+							 nextPutAll: (self
+									  closureFromFlatBinds:
+										  (Array with: (Array with: patternNode with: nil))
+									  body: ('. ' join:
+												   (aViennaNode inv expression asArrayOfConjuncts
+													    collect: [ :inv |
+														    '(' , (self generate: inv env: aDictionary)
+														    ,
+															    ') ifFalse: [ViennaStateInvariantViolation signal]'
+															    asViennaTracingString: inv ]))
+									  varGenerator: varGenerator
+									  env: aDictionary);
+							 nextPutAll: ' value: self state.';
 							 cr ].
 					 runtimeTypeCheck = true ifTrue: [
 						 aViennaNode fieldList do: [ :field |

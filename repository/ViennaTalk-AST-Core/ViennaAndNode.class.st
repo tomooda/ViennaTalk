@@ -6,6 +6,13 @@ Class {
 	#package : 'ViennaTalk-AST-Core'
 }
 
+{ #category : 'converting' }
+ViennaAndNode >> asArrayOfConjuncts [
+
+	^ self expression1 asArrayOfConjuncts
+	  , self expression2 asArrayOfConjuncts
+]
+
 { #category : 'pretty printing' }
 ViennaAndNode >> formatOperatorWith: aViennaAbstractFormatter [
 

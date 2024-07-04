@@ -803,8 +803,10 @@ ViennaVDM2Smalltalk >> explicitFunctionDefinition: aViennaNode env: aDictionary 
 	preNode ifNotNil: [
 		preBody := self generate: preNode env: aDictionary.
 		runtimeAssertionCheck = true ifTrue: [
-			body := preBody , ' ifFalse: [ViennaPreconditionViolation signal]. '
-			        , body asViennaTracingString: preNode ] ].
+			preNode asArrayOfConjuncts do: [ :pre |
+				body := ((self generate: pre env: aDictionary)
+				         , ' ifFalse: [ViennaPreconditionViolation signal]. '
+					         asViennaTracingString: preNode) , body ] ] ].
 	postNode
 		ifNotNil: [
 			postBody := self generate: postNode env: aDictionary.
@@ -816,16 +818,19 @@ ViennaVDM2Smalltalk >> explicitFunctionDefinition: aViennaNode env: aDictionary 
 							        , (' (' , (self generate: retType env: aDictionary)
 								         ,
 								         ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal].'
-									         asViennaTracingString: retType) , ('(' , postBody
-							         ,
-							         ') ifFalse: [ViennaPostconditionViolation signal]. RESULT] value'
-								         asViennaTracingString: postNode) ]
-						ifFalse: [
-							body := '[|RESULT| RESULT := [' , body , '] value.'
-							        ,
-								        ('(' , postBody
+									         asViennaTracingString: retType).
+							postNode asArrayOfConjuncts do: [ :post |
+								body := body , ('(' , (self generate: post env: aDictionary)
 								         , ') ifFalse: [ViennaPostconditionViolation signal].'
-									         asViennaTracingString: postNode) , ' RESULT] value' ] ]
+									         asViennaTracingString: post) ].
+							body := body , 'RESULT] value' ]
+						ifFalse: [
+							body := '[|RESULT| RESULT := [' , body , '] value.'.
+							postNode asArrayOfConjuncts do: [ :post |
+								body := body , ('(' , (self generate: post env: aDictionary)
+								         , ') ifFalse: [ViennaPostconditionViolation signal].'
+									         asViennaTracingString: postNode) ].
+							body := body , ' RESULT] value' ] ]
 				ifFalse: [
 					runtimeTypeCheck = true ifTrue: [
 						body := '[|RESULT| RESULT := [' , body , '] value.'
@@ -919,8 +924,10 @@ ViennaVDM2Smalltalk >> explicitOperationDefinition: aViennaNode env: aDictionary
 	preNode ifNotNil: [
 		preBody := self generate: preNode env: aDictionary.
 		runtimeAssertionCheck = true ifTrue: [
-			body := preBody
-			        , ' ifFalse: [ViennaPreconditionViolation signal]. ' , body ] ].
+			preNode asArrayOfConjuncts do: [ :pre |
+				body := ((self generate: pre env: aDictionary)
+				         , ' ifFalse: [ViennaPreconditionViolation signal]. '
+					         asViennaTracingString: pre) , body ] ] ].
 	postNode
 		ifNotNil: [
 			postBody := self generate: postNode env: aDictionary.
@@ -932,15 +939,20 @@ ViennaVDM2Smalltalk >> explicitOperationDefinition: aViennaNode env: aDictionary
 							        , '. RESULT := [' , body , '] value. ('
 							        , (self generate: retTypeNode env: aDictionary)
 							        ,
-							        ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. ('
-							        , postBody
-							        ,
-							        ') ifFalse: [ViennaPostconditionViolation signal]. RESULT] value' ]
+							        ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. '.
+							postNode asArrayOfConjuncts do: [ :post |
+								body := body , ('(' , (self generate: post env: aDictionary)
+								         ,
+								         ') ifFalse: [ViennaPostconditionViolation signal]. ') ].
+							body := body , 'RESULT] value' ]
 						ifFalse: [
 							body := '[|_oldState RESULT| _oldState := ' , self getStateCode
-							        , '. RESULT := [' , body , '] value. (' , postBody
-							        ,
-							        ') ifFalse: [ViennaPostconditionViolation signal]. RESULT] value' ] ]
+							        , '. RESULT := [' , body , '] value. '.
+							postNode asArrayOfConjuncts do: [ :post |
+								body := body , (('(' , postBody asViennaTracingString: post)
+								         ,
+								         ') ifFalse: [ViennaPostconditionViolation signal]. ') ].
+							body := body , 'RESULT] value' ] ]
 				ifFalse: [
 					runtimeTypeCheck = true ifTrue: [
 						body := '[|RESULT| RESULT := [' , body , '] value. ('

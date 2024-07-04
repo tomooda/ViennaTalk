@@ -1059,6 +1059,38 @@ ViennaRefactoringBrowser >> findIntervalFromContext: aContext source: aViennaTra
 	^ 0 to: -1
 ]
 
+{ #category : 'private' }
+ViennaRefactoringBrowser >> findIntervalsFromContext: aContext source: aViennaTracingSource [
+
+	| intervals context smalltalkNode specificationContext vdmNode map currentNode |
+	intervals := OrderedCollection new.
+	context := aContext.
+	[
+	[ context receiver isKindOf: ViennaTranspiledObject ] whileFalse: [
+		context := context sender.
+		context ifNil: [ ^ intervals ] ].
+	specificationContext := context specificationContext.
+	specificationContext ifNil: [ ^ intervals ].
+	smalltalkNode := specificationContext method sourceNodeForPC:
+		                 specificationContext pc - 1.
+	vdmNode := specificationContext specification.
+	map := specificationContext methodClass debuggerNodeMapAt:
+		       specificationContext selector.
+	currentNode := nil.
+	map keysAndValuesDo: [ :sNode :vNode |
+		(sNode = smalltalkNode and: [ sNode start = smalltalkNode start ])
+			ifTrue: [ currentNode := vNode ] ].
+	(aViennaTracingSource intervalForSource: currentNode) key
+		ifNotEmpty: [ :interval |
+			(intervals anySatisfy: [ :i |
+				 (interval rangeIncludes: i first) or: [
+					 interval rangeIncludes: i last ] ]) ifFalse: [
+				intervals add: interval ] ].
+	context := context sender.
+	context notNil ] whileTrue.
+	^ intervals
+]
+
 { #category : 'operations' }
 ViennaRefactoringBrowser >> generateSmalltalkClasses [
 
@@ -2391,8 +2423,8 @@ ViennaRefactoringBrowser >> updateSourceWithTypeError [
 		testResultTable selectedItem ifNotNil: [ :testResult |
 			testResult exception ifNotNil: [ :exception |
 				(self
-					 findIntervalFromContext: exception signalerContext
-					 source: sourceText tracingSource) ifNotEmpty: [ :interval |
+					 findIntervalsFromContext: exception signalerContext
+					 source: sourceText tracingSource) do: [ :interval |
 					textWidget text
 						addAttribute:
 						(TextBackgroundColor color: (Color red muchLighter alpha: 0.5))

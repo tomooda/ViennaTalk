@@ -12,6 +12,12 @@ ViennaExpressionNode class >> isAbstract [
 	^ self = ViennaExpressionNode
 ]
 
+{ #category : 'converting' }
+ViennaExpressionNode >> asArrayOfConjuncts [
+
+	^ { self }
+]
+
 { #category : 'private' }
 ViennaExpressionNode >> boundIdentifiersDo: aBlock [
 
