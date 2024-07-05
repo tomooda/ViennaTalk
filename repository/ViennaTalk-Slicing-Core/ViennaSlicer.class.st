@@ -173,12 +173,13 @@ ViennaSlicer >> cut [
 	self initializeAgenda.
 	toplevelDefinition isViennaStateDefinitionNode
 		ifTrue: [
-			toplevelDefinition module toplevelDefinitionsDo: [ :toplevel |
-				toplevel isViennaExplicitOperationDefinitionNode ifTrue: [
-					self continue: (self interOperationSlicer
-							 slicerOnOperation: toplevel
-							 criteria: self criteria
-							 callerSlicer: self) ] ] ]
+			toplevelDefinition document modulesDo: [ :module |
+				module toplevelDefinitionsDo: [ :toplevel |
+					toplevel isViennaExplicitOperationDefinitionNode ifTrue: [
+						self continue: (self interOperationSlicer
+								 slicerOnOperation: toplevel
+								 criteria: self criteria
+								 callerSlicer: self) ] ] ] ]
 		ifFalse: [ toplevelDefinition sliceWith: self ].
 	^ affectingNodes
 ]

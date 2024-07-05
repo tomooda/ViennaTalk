@@ -1438,6 +1438,12 @@ ViennaRefactoringBrowser >> initializePresenters [
 	moduleList := self newList
 		              beSingleSelection;
 		              contextMenu: [ self moduleListContextMenu ];
+		              displayBackgroundColor: [ :ast |
+			              (ast notNil and: [
+					               ast hasAnyDescendantsSuchThat: [ :node |
+							               sliceNodes includes: node ] ])
+				              ifTrue: [ self sliceColor ]
+				              ifFalse: [ Color transparent ] ];
 		              display: [ :ast | ast ifNil: [ '-' ] ifNotNil: #first ];
 		              whenSelectionChangedDo: [
 			              self
@@ -1447,11 +1453,23 @@ ViennaRefactoringBrowser >> initializePresenters [
 	categoryList := self newList
 		                beSingleSelection;
 		                contextMenu: [ self categoryListContextMenu ];
+		                displayBackgroundColor: [ :ast |
+			                (ast notNil and: [
+					                 ast hasAnyDescendantsSuchThat: [ :node |
+							                 sliceNodes includes: node ] ])
+				                ifTrue: [ self sliceColor ]
+				                ifFalse: [ Color transparent ] ];
 		                display: [ :ast | self displayCategory: ast ];
 		                whenSelectionChangedDo: [ self updateDefinitionList ];
 		                yourself.
 	definitionList := self newList
 		                  beSingleSelection;
+		                  displayBackgroundColor: [ :ast |
+			                  (ast notNil and: [
+					                   ast hasAnyDescendantsSuchThat: [ :node |
+							                   sliceNodes includes: node ] ])
+				                  ifTrue: [ self sliceColor ]
+				                  ifFalse: [ Color transparent ] ];
 		                  contextMenu: [ self definitionListContextMenu ];
 		                  display: [ :ast |
 			                  ast
@@ -2116,13 +2134,21 @@ ViennaRefactoringBrowser >> setDirty [
 ViennaRefactoringBrowser >> sliceAttribute [
 
 	^ sliceAttribute ifNil: [
-		  sliceAttribute := TextBackgroundColor color:
-			                    (Color cyan mixed: 0.2 with: Color white) ]
+		  sliceAttribute := TextBackgroundColor color: self sliceColor ]
+]
+
+{ #category : 'operations-slicing' }
+ViennaRefactoringBrowser >> sliceColor [
+
+	^ Color cyan alpha: 0.2
 ]
 
 { #category : 'updating' }
 ViennaRefactoringBrowser >> sliceNodesChanged [
 
+	moduleList refresh.
+	categoryList refresh.
+	definitionList refresh.
 	self updateSource
 ]
 
