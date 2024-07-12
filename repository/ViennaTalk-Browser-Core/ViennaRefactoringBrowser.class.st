@@ -701,6 +701,91 @@ ViennaRefactoringBrowser >> addSlice: aViennaNode [
 	self sliceNodesChanged
 ]
 
+{ #category : 'menus' }
+ViennaRefactoringBrowser >> addSliceMenuOnOperation: aViennaExplicitOperationDefinitionNode [
+
+	| menu |
+	menu := self newMenu.
+	aViennaExplicitOperationDefinitionNode module stateDefinition
+		ifNotNil: [ :stateDefinition |
+			menu addGroup: [ :group |
+				stateDefinition fieldList do: [ :field |
+					group addItem: [ :item |
+						item
+							name: field identifier;
+							action: [
+								self
+									addSliceOnOperation: aViennaExplicitOperationDefinitionNode
+									criteria:
+										{ ((ViennaLocalNameNode identifier: field identifier)
+											 parent: aViennaExplicitOperationDefinitionNode;
+											 resolve) } ] ] ].
+				group addItem: [ :item |
+					item
+						name: 'all state variables';
+						action: [
+							self
+								addSliceOnOperation: aViennaExplicitOperationDefinitionNode
+								criteria: (stateDefinition fieldList collect: [ :field |
+											 (ViennaLocalNameNode identifier: field identifier)
+												 parent: aViennaExplicitOperationDefinitionNode;
+												 resolve ]) ] ] ] ].
+	^ menu
+]
+
+{ #category : 'menus' }
+ViennaRefactoringBrowser >> addSliceMenuOnState: aViennaStateDefinitionNode [
+
+	| menu |
+	menu := self newMenu.
+	menu addGroup: [ :group |
+		aViennaStateDefinitionNode fieldList do: [ :field |
+			group addItem: [ :item |
+				item
+					name: field identifier;
+					action: [
+						self
+							addSliceOnOperation: aViennaStateDefinitionNode
+							criteria:
+								{ ((ViennaLocalNameNode identifier: field identifier)
+									 parent: aViennaStateDefinitionNode;
+									 resolve) } ] ] ].
+		group addItem: [ :item |
+			item
+				name: 'all state variables';
+				action: [
+					self
+						addSliceOnOperation: aViennaStateDefinitionNode
+						criteria:
+							(aViennaStateDefinitionNode fieldList collect: [ :field |
+									 (ViennaLocalNameNode identifier: field identifier)
+										 parent: aViennaStateDefinitionNode;
+										 resolve ]) ] ] ].
+	^ menu
+]
+
+{ #category : 'operations-slicing' }
+ViennaRefactoringBrowser >> addSliceOnOperation: aViennaExplicitOperationDefinitionNode criteria: aCollectionOfViennaNode [
+
+	| slicer |
+	slicer := ViennaSlicer
+		          toplevelDefinition: aViennaExplicitOperationDefinitionNode
+		          criteria: aCollectionOfViennaNode.
+	sliceNodes addAll: slicer sliceNodes , slicer criteria.
+	self sliceNodesChanged
+]
+
+{ #category : 'operations-slicing' }
+ViennaRefactoringBrowser >> addSliceOnState: aViennaStateDefinitionNode criteria: aCollectionOfViennaNode [
+
+	| slicer |
+	slicer := ViennaSlicer
+		          toplevelDefinition: aViennaStateDefinitionNode
+		          criteria: aCollectionOfViennaNode.
+	sliceNodes addAll: slicer sliceNodes , slicer criteria.
+	self sliceNodesChanged
+]
+
 { #category : 'accessing' }
 ViennaRefactoringBrowser >> category [
 	^ categoryList selection selectedItem
@@ -776,7 +861,23 @@ ViennaRefactoringBrowser >> definitionListContextMenu [
 				group addItem: [ :item |
 					item
 						name: refactoring name;
-						action: [ self executeRefactoring: refactoring ] ] ] ] ].
+						action: [ self executeRefactoring: refactoring ] ] ] ].
+		menu addGroup: [ :group |
+			definition isViennaExplicitOperationDefinitionNode ifTrue: [
+				group addItem: [ :item |
+					item
+						name: 'Add slice for ...';
+						subMenu: (self addSliceMenuOnOperation: definition) ] ].
+			definition isViennaStateDefinitionNode ifTrue: [
+				group addItem: [ :item |
+					item
+						name: 'Add slice for ...';
+						subMenu: (self addSliceMenuOnState: definition) ] ].
+			sliceNodes ifNotEmpty: [
+				group addItem: [ :item |
+					item
+						name: 'Clear slices';
+						action: [ self clearSlice ] ] ] ] ].
 	menu addGroup: [ :group |
 		menu addItem: [ :item |
 			item
@@ -2226,12 +2327,12 @@ ViennaRefactoringBrowser >> sourceTextContextMenu [
 		topLevelDefinition ifNotNil: [
 			group addItem: [ :item |
 				item
-					name: 'Add slice';
+					name: 'Add slice for selection';
 					action: [ self addSlice: node ] ] ].
 		sliceNodes notEmpty ifTrue: [
 			group addItem: [ :item |
 				item
-					name: 'Clear slice';
+					name: 'Clear slices';
 					action: [ self clearSlice ] ] ] ].
 	^ menu
 ]
