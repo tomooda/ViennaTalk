@@ -287,7 +287,7 @@ ViennaSlicer >> printOn: aStream [
 	(criteria asArray collect: [ :node |
 		 node isViennaValueDefinitionNode
 			 ifTrue: [ node pattern printString ]
-			 ifFalse: [ node identifier ] ]) asSortedCollection
+			 ifFalse: [ node source ] ]) asSortedCollection
 		do: [ :identifier | aStream nextPutAll: identifier ]
 		separatedBy: [ aStream nextPutAll: ',' ]
 ]

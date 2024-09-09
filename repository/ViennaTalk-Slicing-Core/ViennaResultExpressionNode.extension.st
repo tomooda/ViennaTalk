@@ -21,17 +21,8 @@ ViennaResultExpressionNode >> sliceWith: aViennaSlicer [
 	(self
 		 detectParent: #isViennaExplicitOperationDefinitionNode
 		 ifNone: [ nil ]) ifNotNil: [ :operationDefinition |
-		| apply |
 		aViennaSlicer onNode: self do: [
-			apply := ViennaApplyNode
-				         expression:
-				         (ViennaLocalNameNode identifier:
-					          operationDefinition identifier)
-				         argumentExpressionList:
-				         operationDefinition parameters asExpression.
-			apply parent: self.
-			aViennaSlicer write: self.
-			aViennaSlicer read: apply.
-			^ apply sliceWith: aViennaSlicer ] ].
+			aViennaSlicer call: operationDefinition.
+			aViennaSlicer write: self ] ].
 	aViennaSlicer onNode: self do: [ aViennaSlicer write: self ]
 ]
