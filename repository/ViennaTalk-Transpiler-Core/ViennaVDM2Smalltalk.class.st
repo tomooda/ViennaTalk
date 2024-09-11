@@ -541,7 +541,9 @@ ViennaVDM2Smalltalk >> conditionalStatement: aViennaNode env: aDictionary [
 
 { #category : 'code generation-statements' }
 ViennaVDM2Smalltalk >> dclStatement: aViennaNode env: aDictionary [
-	^ '. ' join: (self generateAll: aViennaNode env: aDictionary)
+
+	^ '. ' join:
+		  ((self generateAll: aViennaNode env: aDictionary) reject: #isNil)
 ]
 
 { #category : 'code generation-expressions' }
