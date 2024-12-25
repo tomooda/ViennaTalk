@@ -13,6 +13,8 @@ BaselineOfViennaTalk >> baseline: spec [
 		for: #common do: [
 			spec blessing: #baseline.
 			spec
+				baseline: 'HiDeHo'
+				with: [ spec repository: 'github://tomooda/HiDeHo:main/src' ];
 				baseline: 'FRAM'
 				with: [ spec repository: 'github://tomooda/FRAM:main/src' ];
 				baseline: 'Pharo9UTF8Path'
@@ -45,7 +47,7 @@ BaselineOfViennaTalk >> baseline: spec [
 							   'ViennaTalk-AST-Core' 'ViennaTalk-Parser-Formatters'
 							   'ViennaTalk-Parser-Highlighters'
 							   'ViennaTalk-Refactoring-Core' 'ViennaTalk-Transpiler-Core'
-							   'ViennaTalk-Value-Core' ) ];
+							   'ViennaTalk-Value-Core' 'HiDeHo' ) ];
 				package: 'ViennaTalk-Engine-Core'
 				with: [ spec requires: #( 'NeoJSON' 'ZincHTTPComponents' ) ];
 				for: #Unix do: [
