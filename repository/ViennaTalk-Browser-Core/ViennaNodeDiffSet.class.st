@@ -2,7 +2,8 @@ Class {
 	#name : 'ViennaNodeDiffSet',
 	#superclass : 'Object',
 	#instVars : [
-		'changes'
+		'changes',
+		'changedGlobalNames'
 	],
 	#category : 'ViennaTalk-Browser-Core-Diff',
 	#package : 'ViennaTalk-Browser-Core',
@@ -17,10 +18,27 @@ ViennaNodeDiffSet class >> from: aViennaModularDocumentNode to: anotherViennaMod
 		  to: anotherViennaModularDocumentNode
 ]
 
+{ #category : 'accessing' }
+ViennaNodeDiffSet >> changedGlobalNames [
+
+	^ changedGlobalNames ifNil: [
+		  changedGlobalNames := self computeChangedGlobalNames ]
+]
+
 { #category : 'enumerating' }
 ViennaNodeDiffSet >> changesDo: aBlock [
 
 	changes do: aBlock
+]
+
+{ #category : 'accessing' }
+ViennaNodeDiffSet >> computeChangedGlobalNames [
+
+	| globalNames |
+	globalNames := Set new.
+	self changesDo: [ :change |
+		change changedGlobalNamesDo: [ :name | globalNames add: name ] ].
+	^ globalNames
 ]
 
 { #category : 'operations' }

@@ -27,6 +27,12 @@ ViennaAbstractNodeChange class >> from: aViennaNode to: anotherViennaNode [
 		  yourself
 ]
 
+{ #category : 'enumerating' }
+ViennaAbstractNodeChange >> changedGlobalNamesDo: aBlock [
+
+	^ self subclassResponsibility
+]
+
 { #category : 'private' }
 ViennaAbstractNodeChange >> flushSourceDiffText [
 
@@ -37,6 +43,18 @@ ViennaAbstractNodeChange >> flushSourceDiffText [
 ViennaAbstractNodeChange >> from [
 
 	^ from
+]
+
+{ #category : 'testing' }
+ViennaAbstractNodeChange >> isViennaModuleNodeChange [
+
+	^ false
+]
+
+{ #category : 'testing' }
+ViennaAbstractNodeChange >> isViennaTopLevelDefinitionNodeChange [
+
+	^ false
 ]
 
 { #category : 'printing' }

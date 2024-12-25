@@ -72,12 +72,7 @@ ViennaEpiLog >> comment: anObject [
 { #category : 'converting' }
 ViennaEpiLog >> constructionLine [
 
-	^ Array streamContents: [ :stream |
-		  | epiLog |
-		  epiLog := self.
-		  [ epiLog notNil ] whileTrue: [
-			  stream nextPut: epiLog.
-			  epiLog := epiLog pred ] ]
+	^ ViennaEpiLogConstructionLineEnumerator current arrayFrom: self
 ]
 
 { #category : 'defaults' }
@@ -308,12 +303,7 @@ ViennaEpiLog >> state: aDictionary [
 { #category : 'converting' }
 ViennaEpiLog >> timeLine [
 
-	^ Array streamContents: [ :stream |
-		  | epiLog |
-		  epiLog := self.
-		  [ epiLog notNil ] whileTrue: [
-			  stream nextPut: epiLog.
-			  epiLog := epiLog prev ] ]
+	^ ViennaEpiLogTimeLineEnumerator current arrayFrom: self
 ]
 
 { #category : 'accessing' }

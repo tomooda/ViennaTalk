@@ -959,6 +959,16 @@ ViennaRefactoringBrowser >> epiLog: aViennaEpiLog [
 	self model: aViennaEpiLog
 ]
 
+{ #category : 'accessing' }
+ViennaRefactoringBrowser >> epiLogEnumerator [
+
+	showsTimeLineButton state = true ifTrue: [
+		^ ViennaEpiLogTimeLineEnumerator current ].
+	showsConstructionLineButton state = true ifTrue: [
+		^ ViennaEpiLogConstructionLineEnumerator current ].
+	^ nil
+]
+
 { #category : 'operations-epiLog' }
 ViennaRefactoringBrowser >> epiLogEvaluation: aString [
 
@@ -1413,14 +1423,12 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 
 	showsTimeLineButton := self newRadioButton
 		                       label: 'time line';
-		                       whenActivatedDo: [
-			                       self updateEpiLogListTimeLine ];
+		                       whenActivatedDo: [ self updateEpiLogList ];
 		                       yourself.
 	showsConstructionLineButton := self newRadioButton
 		                               label: 'construction line';
 		                               whenActivatedDo: [
-			                               self
-				                               updateEpiLogListConstructionLine ];
+			                               self updateEpiLogList ];
 		                               yourself.
 	showsTimeLineButton associatedRadioButtons:
 		{ showsConstructionLineButton }.
@@ -2435,7 +2443,7 @@ ViennaRefactoringBrowser >> updateEpiLogDiffList [
 
 	epiLogList selectedItem ifNotNil: [ :epilog |
 		epiLogDiffList items: (Array streamContents: [ :stream |
-				 epilog diffSetFromPrev changesDo: [ :change |
+				 (self epiLogEnumerator diffSet: epilog) changesDo: [ :change |
 					 stream nextPut: change ] ]) ]
 ]
 
@@ -2457,33 +2465,12 @@ ViennaRefactoringBrowser >> updateEpiLogDiffText [
 { #category : 'updating' }
 ViennaRefactoringBrowser >> updateEpiLogList [
 
-	self
-		ifShowsTimeLine: [ self updateEpiLogListTimeLine ]
-		ifShowsConstructionLine: [ self updateEpiLogListConstructionLine ]
-]
-
-{ #category : 'updating' }
-ViennaRefactoringBrowser >> updateEpiLogListConstructionLine [
-
 	epiLogList ifNotNil: [
 		epiLogList
 			items: ((self epiLog
 					  ifNil: [ #(  ) ]
-					  ifNotNil: [ :epiLog | epiLog constructionLine ]) select:
-					 (epiLogMatcherDropList selectedItem ifNil: [ [ :epilog | true ] ]))
-			selectsFirst: true ].
-	self updateEpiLogButtons
-]
-
-{ #category : 'updating' }
-ViennaRefactoringBrowser >> updateEpiLogListTimeLine [
-
-	epiLogList ifNotNil: [
-		epiLogList
-			items:
-				((self epiLog
-					  ifNil: [ #(  ) ]
-					  ifNotNil: [ :epiLog | epiLog timeLine ]) select:
+					  ifNotNil: [ :epiLog | self epiLogEnumerator arrayFrom: epiLog ])
+					 select:
 					 (epiLogMatcherDropList selectedItem ifNil: [ [ :epilog | true ] ]))
 			selectsFirst: true ].
 	self updateEpiLogButtons
