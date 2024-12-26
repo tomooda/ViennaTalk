@@ -18,6 +18,12 @@ ViennaLoadingEpiLog >> isLoadEpiLog [
 	^ false
 ]
 
+{ #category : 'testing' }
+ViennaLoadingEpiLog >> isSyntacticClosureMember [
+
+	^ false
+]
+
 { #category : 'printing' }
 ViennaLoadingEpiLog >> printOn: aStream [
 

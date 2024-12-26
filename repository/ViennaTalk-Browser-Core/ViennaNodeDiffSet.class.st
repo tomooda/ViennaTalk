@@ -18,11 +18,26 @@ ViennaNodeDiffSet class >> from: aViennaModularDocumentNode to: anotherViennaMod
 		  to: anotherViennaModularDocumentNode
 ]
 
+{ #category : 'instance creation' }
+ViennaNodeDiffSet class >> fromNodeChanges: aCollectionOfViennaAbstractNodeChange [
+
+	^ self new
+		  setChanges:
+			  (OrderedCollection withAll: aCollectionOfViennaAbstractNodeChange);
+		  yourself
+]
+
 { #category : 'accessing' }
 ViennaNodeDiffSet >> changedGlobalNames [
 
 	^ changedGlobalNames ifNil: [
 		  changedGlobalNames := self computeChangedGlobalNames ]
+]
+
+{ #category : 'private' }
+ViennaNodeDiffSet >> changes [
+
+	^ changes
 ]
 
 { #category : 'enumerating' }
@@ -39,6 +54,23 @@ ViennaNodeDiffSet >> computeChangedGlobalNames [
 	self changesDo: [ :change |
 		change changedGlobalNamesDo: [ :name | globalNames add: name ] ].
 	^ globalNames
+]
+
+{ #category : 'operations' }
+ViennaNodeDiffSet >> condenseChanges [
+
+	| newChanges |
+	newChanges := OrderedCollection new.
+	changes do: [ :change |
+		(newChanges
+			 detect: [ :oldChange | change overwrites: oldChange ]
+			 ifNone: [ nil ])
+			ifNotNil: [ :oldChange |
+				newChanges
+					at: (newChanges indexOf: oldChange)
+					put: oldChange , change ]
+			ifNil: [ newChanges addLast: change ] ].
+	^ changes := newChanges
 ]
 
 { #category : 'operations' }
@@ -72,4 +104,11 @@ ViennaNodeDiffSet >> initialize [
 
 	super initialize.
 	changes := OrderedCollection new
+]
+
+{ #category : 'private' }
+ViennaNodeDiffSet >> setChanges: anOrderedCollectionOfViennaAbstractNodeChange [
+
+	changes := anOrderedCollectionOfViennaAbstractNodeChange.
+	changedGlobalNames := nil
 ]

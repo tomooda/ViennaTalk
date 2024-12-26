@@ -27,6 +27,14 @@ ViennaAbstractNodeChange class >> from: aViennaNode to: anotherViennaNode [
 		  yourself
 ]
 
+{ #category : 'copying' }
+ViennaAbstractNodeChange >> , aViennaAbstractNodeChange [
+
+	^ (self class = aViennaAbstractNodeChange class and: [
+		   to = aViennaAbstractNodeChange from ]) ifTrue: [
+		  self class from: self from to: aViennaAbstractNodeChange to ]
+]
+
 { #category : 'enumerating' }
 ViennaAbstractNodeChange >> changedGlobalNamesDo: aBlock [
 
@@ -55,6 +63,13 @@ ViennaAbstractNodeChange >> isViennaModuleNodeChange [
 ViennaAbstractNodeChange >> isViennaTopLevelDefinitionNodeChange [
 
 	^ false
+]
+
+{ #category : 'testing' }
+ViennaAbstractNodeChange >> overwrites: aViennaAbstractNodeChange [
+
+	^ self class = aViennaAbstractNodeChange class and: [
+		  from = aViennaAbstractNodeChange to ]
 ]
 
 { #category : 'printing' }

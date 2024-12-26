@@ -179,6 +179,12 @@ ViennaEpiLog >> isRevertionEpiLog [
 ]
 
 { #category : 'testing' }
+ViennaEpiLog >> isSyntacticClosureMember [
+
+	^ false
+]
+
+{ #category : 'testing' }
 ViennaEpiLog >> isVanillaEpiLog [
 
 	^ false

@@ -62,6 +62,12 @@ ViennaModificationEpiLog >> isModificationEpiLog [
 	^ true
 ]
 
+{ #category : 'testing' }
+ViennaModificationEpiLog >> isSyntacticClosureMember [
+
+	^ true
+]
+
 { #category : 'printing' }
 ViennaModificationEpiLog >> printOn: aStream [
 
