@@ -1,20 +1,21 @@
 Class {
-	#name : #ViennaException,
-	#superclass : #Exception,
+	#name : 'ViennaException',
+	#superclass : 'Exception',
 	#instVars : [
 		'expression'
 	],
-	#category : 'ViennaTalk-Value-Core'
+	#category : 'ViennaTalk-Value-Core',
+	#package : 'ViennaTalk-Value-Core'
 }
 
-{ #category : #signaling }
+{ #category : 'signaling' }
 ViennaException class >> expression: anObject [
 	^ self new
 		expression: anObject;
 		signal
 ]
 
-{ #category : #controlling }
+{ #category : 'controlling' }
 ViennaException class >> tixe: anArrayOfAssociations in: aBlock [
 	| theBlock |
 	theBlock := aBlock.
@@ -30,7 +31,7 @@ ViennaException class >> tixe: anArrayOfAssociations in: aBlock [
 			ex pass ]
 ]
 
-{ #category : #controlling }
+{ #category : 'controlling' }
 ViennaException class >> trap: matcherBlock with: handlerBlock in: aBlock [
 	^ aBlock
 		on: self
@@ -40,17 +41,17 @@ ViennaException class >> trap: matcherBlock with: handlerBlock in: aBlock [
 				ifNil: [ ex pass ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaException >> defaultAction [
 	^ UnhandledError signalForException: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaException >> expression [
 	^ expression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaException >> expression: anObject [
 	expression := anObject.
 	self messageText: expression viennaString

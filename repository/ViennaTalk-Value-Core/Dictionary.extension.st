@@ -1,6 +1,6 @@
-Extension { #name : #Dictionary }
+Extension { #name : 'Dictionary' }
 
-{ #category : #'*ViennaTalk-Value-Core' }
+{ #category : '*ViennaTalk-Value-Core' }
 Dictionary >> ** anInteger [
 	| dict |
 	dict := Dictionary new.
@@ -13,19 +13,19 @@ Dictionary >> ** anInteger [
 	^ dict
 ]
 
-{ #category : #'*ViennaTalk-Value-Core' }
+{ #category : '*ViennaTalk-Value-Core' }
 Dictionary >> applyTo: anArray [
 	^ anArray size = 1
 		ifTrue: [ self at: anArray first ]
 		ifFalse: [ self error: 'One argument is expected.' ]
 ]
 
-{ #category : #'*ViennaTalk-Value-Core' }
+{ #category : '*ViennaTalk-Value-Core' }
 Dictionary >> comp: applicative [
 	^ ViennaComposition with: self with: applicative
 ]
 
-{ #category : #'*ViennaTalk-Value-Core' }
+{ #category : '*ViennaTalk-Value-Core' }
 Dictionary >> inversed [
 	| dict |
 	dict := Dictionary new.
@@ -33,12 +33,12 @@ Dictionary >> inversed [
 	^ dict
 ]
 
-{ #category : #'*ViennaTalk-Value-Core' }
+{ #category : '*ViennaTalk-Value-Core' }
 Dictionary >> value: anObject [
 	^ self at: anObject
 ]
 
-{ #category : #'*ViennaTalk-Value-Core' }
+{ #category : '*ViennaTalk-Value-Core' }
 Dictionary >> viennaStringOn: aStream [
 	aStream nextPutAll: '{'.
 	self isEmpty

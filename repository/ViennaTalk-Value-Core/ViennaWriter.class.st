@@ -1,35 +1,36 @@
 Class {
-	#name : #ViennaWriter,
-	#superclass : #Object,
-	#type : #variable,
+	#name : 'ViennaWriter',
+	#superclass : 'Object',
+	#type : 'variable',
 	#instVars : [
 		'specials'
 	],
-	#category : #'ViennaTalk-Value-Core'
+	#category : 'ViennaTalk-Value-Core',
+	#package : 'ViennaTalk-Value-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaWriter >> at: aClassNameSymbol put: aTwoArgumentBlockOrSelector [
 	specials at: aClassNameSymbol put: aTwoArgumentBlockOrSelector
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 ViennaWriter >> initialize [
 	super initialize.
 	specials := Dictionary new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaWriter >> remove: aClassNameSymbol [
 	specials removeKey: aClassNameSymbol ifAbsent: [  ]
 ]
 
-{ #category : #stringifying }
+{ #category : 'stringifying' }
 ViennaWriter >> stringify: anObject [
 	^ String streamContents: [ :stream | self stringify: anObject into: stream ]
 ]
 
-{ #category : #stringifying }
+{ #category : 'stringifying' }
 ViennaWriter >> stringify: anObject into: aStream [
 	specials
 		at: anObject class name
@@ -58,14 +59,14 @@ ViennaWriter >> stringify: anObject into: aStream [
 	^ anObject viennaStringOn: aStream
 ]
 
-{ #category : #stringifying }
+{ #category : 'stringifying' }
 ViennaWriter >> stringifyToChar: aCharacter into: aStream [
 	aStream nextPut: $'.
 	self writeChar: aCharacter into: aStream.
 	aStream nextPut: $'
 ]
 
-{ #category : #stringifying }
+{ #category : 'stringifying' }
 ViennaWriter >> stringifyToMap: aDictionary into: aStream [
 	aStream nextPut: ${.
 	aDictionary
@@ -80,12 +81,12 @@ ViennaWriter >> stringifyToMap: aDictionary into: aStream [
 	aStream nextPut: $}
 ]
 
-{ #category : #stringifying }
+{ #category : 'stringifying' }
 ViennaWriter >> stringifyToNumber: aNumber into: aStream [
 	aNumber printOn: aStream
 ]
 
-{ #category : #stringifying }
+{ #category : 'stringifying' }
 ViennaWriter >> stringifyToQuote: aSymbol into: aStream [
 
 	(aSymbol allSatisfy: [ :char | char isLetter or: [ char = $_ ] ])
@@ -96,28 +97,28 @@ ViennaWriter >> stringifyToQuote: aSymbol into: aStream [
 		nextPut: $>
 ]
 
-{ #category : #stringifying }
+{ #category : 'stringifying' }
 ViennaWriter >> stringifyToSeq: anOrderedCollection into: aStream [
 	aStream nextPut: $[.
 	anOrderedCollection do: [ :obj | self stringify: obj into: aStream ] separatedBy: [ aStream nextPut: $, ].
 	aStream nextPut: $]
 ]
 
-{ #category : #stringifying }
+{ #category : 'stringifying' }
 ViennaWriter >> stringifyToSet: aSet into: aStream [
 	aStream nextPut: ${.
 	aSet do: [ :obj | self stringify: obj into: aStream ] separatedBy: [ aStream nextPut: $, ].
 	aStream nextPut: $}
 ]
 
-{ #category : #stringifying }
+{ #category : 'stringifying' }
 ViennaWriter >> stringifyToString: aString into: aStream [
 	aStream nextPut: $".
 	aString do: [ :char | self writeChar: char into: aStream ].
 	aStream nextPut: $"
 ]
 
-{ #category : #stringifying }
+{ #category : 'stringifying' }
 ViennaWriter >> stringifyToTuple: anArray into: aStream [
 	anArray size < 2 ifTrue: [ ^ self error: 'A tuple must have more than one argument.' ].
 	 aStream nextPutAll: 'mk_('.
@@ -125,7 +126,7 @@ ViennaWriter >> stringifyToTuple: anArray into: aStream [
 	aStream nextPut: $)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaWriter >> writeChar: aCharacter into: aStream [
 	aCharacter codePoint
 		in: [ :code | 

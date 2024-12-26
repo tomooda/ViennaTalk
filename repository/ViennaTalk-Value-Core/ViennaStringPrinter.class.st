@@ -1,31 +1,32 @@
 Class {
-	#name : #ViennaStringPrinter,
-	#superclass : #Object,
-	#type : #variable,
+	#name : 'ViennaStringPrinter',
+	#superclass : 'Object',
+	#type : 'variable',
 	#instVars : [
 		'value'
 	],
-	#category : 'ViennaTalk-Value-Core'
+	#category : 'ViennaTalk-Value-Core',
+	#package : 'ViennaTalk-Value-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaStringPrinter class >> on: anObject [
 	^ self new
 		value: anObject;
 		yourself
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 ViennaStringPrinter >> printOn: aStream [
 	value viennaStringOn: aStream
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaStringPrinter >> value [
 	^ value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaStringPrinter >> value: anObject [
 	value := anObject
 ]

@@ -39,7 +39,9 @@ Class {
 		'removeEpiLogButton',
 		'removeEpiLogTagButton',
 		'addEpiLogTagButton',
-		'editEpiLogCommentButton'
+		'editEpiLogCommentButton',
+		'showsSingleEpiLogButton',
+		'showsSyntacticClosureButton'
 	],
 	#classVars : [
 		'GreenSignalIcon',
@@ -960,6 +962,15 @@ ViennaRefactoringBrowser >> epiLog: aViennaEpiLog [
 ]
 
 { #category : 'accessing' }
+ViennaRefactoringBrowser >> epiLogChanges [
+
+	^ Array streamContents: [ :stream |
+		  epiLogList selectedItem ifNotNil: [ :epilog |
+			  (self epiLogEnumerator diffSet: epilog) changesDo: [ :change |
+				  stream nextPut: change ] ] ]
+]
+
+{ #category : 'accessing' }
 ViennaRefactoringBrowser >> epiLogEnumerator [
 
 	showsTimeLineButton state = true ifTrue: [
@@ -1090,10 +1101,17 @@ ViennaRefactoringBrowser >> epilogPageLayout [
 						    yourself)
 				   expand: false;
 				   yourself);
-		  add: (SpPanedLayout newVertical
-				   positionOfSlider: 0.3;
-				   add: epiLogDiffList;
-				   add: epiLogDiffText);
+		  add: (SpBoxLayout newVertical
+				   add: (SpBoxLayout newHorizontal
+						    add: showsSingleEpiLogButton;
+						    add: showsSyntacticClosureButton;
+						    yourself)
+				   expand: false;
+				   add: (SpPanedLayout newVertical
+						    positionOfSlider: 0.3;
+						    add: epiLogDiffList;
+						    add: epiLogDiffText);
+				   yourself);
 		  yourself
 ]
 
@@ -1455,6 +1473,18 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 		              whenSelectionChangedDo: [
 			              self epiLogListSelectionChanged ];
 		              yourself.
+	showsSingleEpiLogButton := self newRadioButton
+		                           label: 'single';
+		                           whenActivatedDo: [
+			                           self updateEpiLogDiffList ];
+		                           yourself.
+	showsSyntacticClosureButton := self newRadioButton
+		                               label: 'syntactic closure';
+		                               whenActivatedDo: [
+			                               self updateEpiLogDiffList ];
+		                               yourself.
+	showsSingleEpiLogButton associatedRadioButtons:
+		{ showsSyntacticClosureButton }.
 	epiLogDiffList := self newTable
 		                  hideColumnHeaders;
 		                  beResizable;
@@ -1465,6 +1495,8 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 		                  whenSelectionChangedDo: [
 			                  self updateEpiLogDiffText ];
 		                  yourself.
+	epiLogDiffText := self newText.
+	epiLogList whenBuiltDo: [ self updateEpiLogList ].
 	namedEpiLogDropList := self newDropList
 		                       display: [ :assoc | assoc key ];
 		                       startWithoutSelection;
@@ -1490,10 +1522,7 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 	removeEpiLogTagButton := self newButton
 		                         icon: (self iconNamed: #smallCancel);
 		                         action: [ self removeEpiLogTag ];
-		                         yourself.
-
-	epiLogDiffText := self newText.
-	epiLogList whenBuiltDo: [ self updateEpiLogList ]
+		                         yourself
 ]
 
 { #category : 'initialization' }
@@ -2441,10 +2470,7 @@ ViennaRefactoringBrowser >> updateEpiLogButtons [
 { #category : 'updating' }
 ViennaRefactoringBrowser >> updateEpiLogDiffList [
 
-	epiLogList selectedItem ifNotNil: [ :epilog |
-		epiLogDiffList items: (Array streamContents: [ :stream |
-				 (self epiLogEnumerator diffSet: epilog) changesDo: [ :change |
-					 stream nextPut: change ] ]) ]
+	epiLogDiffList items: self epiLogChanges
 ]
 
 { #category : 'updating' }

@@ -1,36 +1,37 @@
 Class {
-	#name : #ViennaComposite,
-	#superclass : #Object,
-	#type : #variable,
+	#name : 'ViennaComposite',
+	#superclass : 'Object',
+	#type : 'variable',
 	#instVars : [
 		'namedFields',
 		'equalityFields',
 		'constructorName'
 	],
-	#category : 'ViennaTalk-Value-Core'
+	#category : 'ViennaTalk-Value-Core',
+	#package : 'ViennaTalk-Value-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaComposite class >> constructorName: aString [
 	^ self constructorName: aString withAll: Array new
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaComposite class >> constructorName: aString with: anObject [
 	^ self constructorName: aString withAll: (Array with:anObject)
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaComposite class >> constructorName: aString with: anObject1 with: anObject2 [
 	^ self constructorName: aString withAll: (Array with: anObject1 with: anObject2)
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaComposite class >> constructorName: aString with: anObject1 with: anObject2 with: anObject3 [
 	^ self constructorName: aString withAll: (Array with: anObject1 with: anObject2 with: anObject3)
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaComposite class >> constructorName: aString with: anObject1 with: anObject2 with: anObject3 with: anObject4 with: anObject5 [
 	^ self
 		constructorName: aString
@@ -43,7 +44,7 @@ ViennaComposite class >> constructorName: aString with: anObject1 with: anObject
 				with: anObject5)
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaComposite class >> constructorName: aString withAll: anArray [
 	| composite |
 	composite := self new: anArray size.
@@ -52,7 +53,7 @@ ViennaComposite class >> constructorName: aString withAll: anArray [
 	^ composite
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaComposite class >> consturctorName: aString with: anObject1 with: anObject2 with: anObject3 with: anObject4 [
 	^ self
 		constructorName: aString
@@ -64,7 +65,7 @@ ViennaComposite class >> consturctorName: aString with: anObject1 with: anObject
 				with: anObject4)
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaComposite >> = anObject [
 	^ self == anObject
 		or: [ anObject isViennaComposite
@@ -73,7 +74,7 @@ ViennaComposite >> = anObject [
 								and: [ equalityFields allSatisfy: [ :index | (self at: index) = (anObject at: index) ] ] ] ] ]
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaComposite >> asArray [
 	| array |
 	array := Array new: self size.
@@ -81,7 +82,7 @@ ViennaComposite >> asArray [
 	^ array
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaComposite >> at: anIntegerOrString [
 	^ super
 		at:
@@ -90,7 +91,7 @@ ViennaComposite >> at: anIntegerOrString [
 				ifFalse: [ anIntegerOrString ])
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaComposite >> at: anIntegerOrString put: anObject [
 	^ super
 		at:
@@ -100,19 +101,19 @@ ViennaComposite >> at: anIntegerOrString put: anObject [
 		put: anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaComposite >> constructorName [
 	^ constructorName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaComposite >> copyAt: anIntegerOrString put: anObject [
 	^ self copy
 		at: anIntegerOrString put: anObject;
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaComposite >> copyAtPath: anArrayOfKey put: anObject [
 	| copy |
 	copy := self copy.
@@ -122,18 +123,18 @@ ViennaComposite >> copyAtPath: anArrayOfKey put: anObject [
 	^ copy
 ]
 
-{ #category : #'accessing-field types' }
+{ #category : 'accessing-field types' }
 ViennaComposite >> equalityAbstractionFieldNameAt: anInteger put: aString [
 	namedFields at: aString put: anInteger.
 	equalityFields := equalityFields copyWithout: anInteger
 ]
 
-{ #category : #'accessing-field types' }
+{ #category : 'accessing-field types' }
 ViennaComposite >> fieldNameAt: anInteger put: aString [
 	namedFields at: aString put: anInteger
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaComposite >> hash [
 	| hash |
 	hash := constructorName hash.
@@ -141,37 +142,37 @@ ViennaComposite >> hash [
 	^ hash
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 ViennaComposite >> initialize [
 	super initialize.
 	namedFields := Dictionary new.
 	equalityFields := (1 to: self size) asArray
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaComposite >> isViennaComposite [
 	^ true
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaComposite >> namedFields [
 	^ namedFields
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 ViennaComposite >> neoJsonOn: neoJSONWriter [
 	(Dictionary new
 		at: constructorName put: self asArray;
 		yourself) neoJsonOn: neoJSONWriter
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 ViennaComposite >> postCopy [
 	namedFields := namedFields copy.
 	equalityFields := namedFields copy
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 ViennaComposite >> printOn: aStream [
 	aStream nextPutAll: self class name.
 	aStream nextPut: $(.
@@ -179,12 +180,12 @@ ViennaComposite >> printOn: aStream [
 	aStream nextPut: $)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaComposite >> setConstructorName: aString [
 	constructorName := aString
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 ViennaComposite >> viennaStringOn: aStream [
 	aStream
 		nextPutAll: 'mk_';

@@ -1,13 +1,14 @@
 Class {
-	#name : #ViennaRuntimeUtil,
-	#superclass : #Object,
+	#name : 'ViennaRuntimeUtil',
+	#superclass : 'Object',
 	#classInstVars : [
 		'random'
 	],
-	#category : #'ViennaTalk-Value-Core'
+	#category : 'ViennaTalk-Value-Core',
+	#package : 'ViennaTalk-Value-Core'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaRuntimeUtil class >> aggregateBinding: aDictionary1 with: aDictionary2 [
 	| dict |
 	dict := aDictionary1 copy.
@@ -21,7 +22,7 @@ ViennaRuntimeUtil class >> aggregateBinding: aDictionary1 with: aDictionary2 [
 	^ dict
 ]
 
-{ #category : #'pattern matching' }
+{ #category : 'pattern matching' }
 ViennaRuntimeUtil class >> match: aBlock1 conc: aBlock2 [
 	^ [ :value | 
 	(value isSequence and: [ value notEmpty ])
@@ -42,7 +43,7 @@ ViennaRuntimeUtil class >> match: aBlock1 conc: aBlock2 [
 		ifFalse: [ Array new ] ]
 ]
 
-{ #category : #'pattern matching' }
+{ #category : 'pattern matching' }
 ViennaRuntimeUtil class >> match: aBlock1 conc: aBlock2 left: anInteger [
 	^ [ :value | 
 	(value isSequence and: [ value notEmpty ])
@@ -62,7 +63,7 @@ ViennaRuntimeUtil class >> match: aBlock1 conc: aBlock2 left: anInteger [
 		ifFalse: [ Array new ] ]
 ]
 
-{ #category : #'pattern matching' }
+{ #category : 'pattern matching' }
 ViennaRuntimeUtil class >> match: aBlock1 conc: aBlock2 left: anInteger1 right: anInteger2 [
 	^ [ :value | 
 	(value isSequence and: [ value notEmpty and: [ value size = (anInteger1 + anInteger2) ] ])
@@ -82,7 +83,7 @@ ViennaRuntimeUtil class >> match: aBlock1 conc: aBlock2 left: anInteger1 right: 
 		ifFalse: [ Array new ] ]
 ]
 
-{ #category : #'pattern matching' }
+{ #category : 'pattern matching' }
 ViennaRuntimeUtil class >> match: aBlock1 conc: aBlock2 right: anInteger [
 	^ [ :value | 
 	(value isSequence and: [ value notEmpty ])
@@ -102,7 +103,7 @@ ViennaRuntimeUtil class >> match: aBlock1 conc: aBlock2 right: anInteger [
 		ifFalse: [ Array new ] ]
 ]
 
-{ #category : #'pattern matching' }
+{ #category : 'pattern matching' }
 ViennaRuntimeUtil class >> match: aBlock1 munion: aBlock2 [
 	^ [ :value | 
 	(value isDictionary and: [ value notEmpty ])
@@ -127,7 +128,7 @@ ViennaRuntimeUtil class >> match: aBlock1 munion: aBlock2 [
 		ifFalse: [ Array new ] ]
 ]
 
-{ #category : #'pattern matching' }
+{ #category : 'pattern matching' }
 ViennaRuntimeUtil class >> match: aBlock1 munion: aBlock2 left: anInteger [
 	^ [ :dict | 
 	(dict isDictionary and: [ dict size >= anInteger ])
@@ -161,7 +162,7 @@ ViennaRuntimeUtil class >> match: aBlock1 munion: aBlock2 left: anInteger [
 		ifFalse: [ Array new ] ]
 ]
 
-{ #category : #'pattern matching' }
+{ #category : 'pattern matching' }
 ViennaRuntimeUtil class >> match: aBlock1 munion: aBlock2 left: anInteger1 right: anInteger2 [
 	^ [ :dict | 
 	(dict isDictionary and: [ dict size = (anInteger1 + anInteger2) ])
@@ -195,7 +196,7 @@ ViennaRuntimeUtil class >> match: aBlock1 munion: aBlock2 left: anInteger1 right
 		ifFalse: [ Array new ] ]
 ]
 
-{ #category : #'pattern matching' }
+{ #category : 'pattern matching' }
 ViennaRuntimeUtil class >> match: aBlock1 munion: aBlock2 right: anInteger [
 	^ [ :dict | 
 	(dict isDictionary and: [ dict size >= anInteger ])
@@ -229,7 +230,7 @@ ViennaRuntimeUtil class >> match: aBlock1 munion: aBlock2 right: anInteger [
 		ifFalse: [ Array new ] ]
 ]
 
-{ #category : #'pattern matching' }
+{ #category : 'pattern matching' }
 ViennaRuntimeUtil class >> match: aBlock1 union: aBlock2 [
 	^ [ :value | 
 	(value isSet and: [ value notEmpty ])
@@ -249,7 +250,7 @@ ViennaRuntimeUtil class >> match: aBlock1 union: aBlock2 [
 		ifFalse: [ Array new ] ]
 ]
 
-{ #category : #'pattern matching' }
+{ #category : 'pattern matching' }
 ViennaRuntimeUtil class >> match: aBlock1 union: aBlock2 left: anInteger [
 	^ [ :set | 
 	(set isSet and: [ set notEmpty ])
@@ -283,7 +284,7 @@ ViennaRuntimeUtil class >> match: aBlock1 union: aBlock2 left: anInteger [
 		ifFalse: [ Array new ] ]
 ]
 
-{ #category : #'pattern matching' }
+{ #category : 'pattern matching' }
 ViennaRuntimeUtil class >> match: aBlock1 union: aBlock2 left: anInteger1 right: anInteger2 [
 	^ [ :set | 
 	(set isSet and: [ set size = (anInteger1 + anInteger2) ])
@@ -317,7 +318,7 @@ ViennaRuntimeUtil class >> match: aBlock1 union: aBlock2 left: anInteger1 right:
 		ifFalse: [ Array new ] ]
 ]
 
-{ #category : #'pattern matching' }
+{ #category : 'pattern matching' }
 ViennaRuntimeUtil class >> match: aBlock1 union: aBlock2 right: anInteger [
 	^ [ :set | 
 	(set isSet and: [ set notEmpty ])
@@ -351,7 +352,7 @@ ViennaRuntimeUtil class >> match: aBlock1 union: aBlock2 right: anInteger [
 		ifFalse: [ Array new ] ]
 ]
 
-{ #category : #'pattern matching' }
+{ #category : 'pattern matching' }
 ViennaRuntimeUtil class >> matchIdentifier: aStringOrNil [
 	^ [ :value | 
 	aStringOrNil
@@ -364,7 +365,7 @@ ViennaRuntimeUtil class >> matchIdentifier: aStringOrNil [
 						yourself) ] ]
 ]
 
-{ #category : #'pattern matching' }
+{ #category : 'pattern matching' }
 ViennaRuntimeUtil class >> matchMapEnumeration: anArrayOfPairOfBlock [
 	^ [ :value | 
 	(value isDictionary and: [ value size = anArrayOfPairOfBlock size ])
@@ -437,7 +438,7 @@ ViennaRuntimeUtil class >> matchMapEnumeration: anArrayOfPairOfBlock [
 		ifFalse: [ Array new ] ]
 ]
 
-{ #category : #'pattern matching' }
+{ #category : 'pattern matching' }
 ViennaRuntimeUtil class >> matchRecord: aString args: anArrayOfBlock [
 	^ [ :value | 
 	(value isViennaComposite and: [ value size = anArrayOfBlock size and: [ value constructorName = aString ] ])
@@ -460,7 +461,7 @@ ViennaRuntimeUtil class >> matchRecord: aString args: anArrayOfBlock [
 		ifFalse: [ Array new ] ]
 ]
 
-{ #category : #'pattern matching' }
+{ #category : 'pattern matching' }
 ViennaRuntimeUtil class >> matchSequenceEnumeration: anArrayOfBlock [
 	^ [ :value | 
 	(value isSequence and: [ value size = anArrayOfBlock size ])
@@ -482,7 +483,7 @@ ViennaRuntimeUtil class >> matchSequenceEnumeration: anArrayOfBlock [
 		ifFalse: [ Array new ] ]
 ]
 
-{ #category : #'pattern matching' }
+{ #category : 'pattern matching' }
 ViennaRuntimeUtil class >> matchSetEnumeration: anArrayOfBlock [
 	^ [ :value | 
 	(value isSet and: [ value size = anArrayOfBlock size ])
@@ -539,7 +540,7 @@ ViennaRuntimeUtil class >> matchSetEnumeration: anArrayOfBlock [
 		ifFalse: [ Array new ] ]
 ]
 
-{ #category : #'pattern matching' }
+{ #category : 'pattern matching' }
 ViennaRuntimeUtil class >> matchTuple: anArrayOfBlock [
 	^ [ :value | 
 	(value isArray and: [ value size = anArrayOfBlock size ])
@@ -562,7 +563,7 @@ ViennaRuntimeUtil class >> matchTuple: anArrayOfBlock [
 		ifFalse: [ Array new ] ]
 ]
 
-{ #category : #'pattern matching' }
+{ #category : 'pattern matching' }
 ViennaRuntimeUtil class >> matchValue: anObject [
 	^ [ :value | 
 	anObject = value
@@ -570,7 +571,7 @@ ViennaRuntimeUtil class >> matchValue: anObject [
 		ifFalse: [ Array new ] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaRuntimeUtil class >> nonEmptyPowersetOf: anArray withComplementsDo: aBlock [
 	1 to: (1 << anArray size) - 2 do: [ :index | 
 		| array1 array2 |
@@ -583,7 +584,7 @@ ViennaRuntimeUtil class >> nonEmptyPowersetOf: anArray withComplementsDo: aBlock
 		aBlock value: array1 contents value: array2 contents ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaRuntimeUtil class >> powersetOf: anArray do: aBlock [
 	0 to: (1 << anArray size) - 1 do: [ :index | 
 		aBlock
@@ -596,7 +597,7 @@ ViennaRuntimeUtil class >> powersetOf: anArray do: aBlock [
 								ifTrue: [ stream nextPut: (anArray at: bit) ] ] ]) ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaRuntimeUtil class >> powersetOf: anArray withComplementsDo: aBlock [
 	0 to: (1 << anArray size) - 1 do: [ :index | 
 		| array1 array2 |
@@ -609,23 +610,23 @@ ViennaRuntimeUtil class >> powersetOf: anArray withComplementsDo: aBlock [
 		aBlock value: array1 contents value: array2 contents ]
 ]
 
-{ #category : #randomization }
+{ #category : 'randomization' }
 ViennaRuntimeUtil class >> random [
 	^ random ifNil: [ random := Random new ]
 ]
 
-{ #category : #randomization }
+{ #category : 'randomization' }
 ViennaRuntimeUtil class >> randomInt: anInteger [
 
 	^ self random nextInteger: anInteger
 ]
 
-{ #category : #randomization }
+{ #category : 'randomization' }
 ViennaRuntimeUtil class >> seed: anInteger [
 	self random seed: anInteger
 ]
 
-{ #category : #randomization }
+{ #category : 'randomization' }
 ViennaRuntimeUtil class >> shuffleDo: anArrayOfBlock [
 	(anArrayOfBlock collect: [ :block | self random next -> block ]) asSortedCollection do: [ :assoc | assoc value value ]
 ]

@@ -1,15 +1,16 @@
 Class {
-	#name : #ViennaUnicode,
-	#superclass : #Unicode,
-	#category : 'ViennaTalk-Value-Core'
+	#name : 'ViennaUnicode',
+	#superclass : 'Unicode',
+	#category : 'ViennaTalk-Value-Core',
+	#package : 'ViennaTalk-Value-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaUnicode class >> isDigit: aCharacter [
 	^ aCharacter charCode between: $0 charCode and: $9 charCode
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaUnicode class >> isFollowingLetter: aCharacter [
 	| code codeCategory |
 	(#($$ $_ $') includes: aCharacter)
@@ -33,7 +34,7 @@ ViennaUnicode class >> isFollowingLetter: aCharacter [
 			Cn} includes: codeCategory) not ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaUnicode class >> isHexadecimalDigit: aCharacter [
 	^ (aCharacter charCode between: $0 charCode and: $9 charCode)
 		or: [ 
@@ -41,7 +42,7 @@ ViennaUnicode class >> isHexadecimalDigit: aCharacter [
 				or: [ aCharacter charCode between: $A charCode and: $F charCode ] ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaUnicode class >> isInitialLetter: aCharacter [
 	| code codeCategory |
 	aCharacter = $$
@@ -66,7 +67,7 @@ ViennaUnicode class >> isInitialLetter: aCharacter [
 			Pc} includes: codeCategory) not ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaUnicode class >> isOctalDigit: aCharacter [
 	^ aCharacter charCode between: $0 charCode and: $7 charCode
 ]

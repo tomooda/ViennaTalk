@@ -1,25 +1,26 @@
 Class {
-	#name : #ViennaReader,
-	#superclass : #Object,
-	#type : #variable,
+	#name : 'ViennaReader',
+	#superclass : 'Object',
+	#type : 'variable',
 	#instVars : [
 		'specials'
 	],
-	#category : #'ViennaTalk-Value-Core'
+	#category : 'ViennaTalk-Value-Core',
+	#package : 'ViennaTalk-Value-Core'
 }
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 ViennaReader >> initialize [
 	super initialize.
 	specials := Dictionary new
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaReader >> parse: aString [
 	^ self parseOn: aString readStream
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaReader >> parseCharOn: aStream [
 	| char |
 	(aStream nextMatchAll: '''')
@@ -30,7 +31,7 @@ ViennaReader >> parseCharOn: aStream [
 	^ specials at: #char ifPresent: [ :block | block value: char ] ifAbsent: [ char ]
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaReader >> parseCompositeOn: aStream [
 	(aStream nextMatchAll: 'mk_')
 		ifFalse: [ ^ self error: 'expected mk_' ].
@@ -61,14 +62,14 @@ ViennaReader >> parseCompositeOn: aStream [
 				ifAbsent: [ ViennaComposite constructorName: typeName withAll: args ] ]
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaReader >> parseFalseOn: aStream [
 	(aStream nextMatchAll: 'false')
 		ifFalse: [ ^ self error: 'expected false' ].
 	^ specials at: #false ifAbsent: [ false ]
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaReader >> parseMapOn: aStream with: first [
 	| args |
 	(aStream nextMatchAll: '|->')
@@ -94,19 +95,19 @@ ViennaReader >> parseMapOn: aStream with: first [
 	^ specials at: #set ifPresent: [ :block | block value: args ] ifAbsent: [ args asDictionary ]
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaReader >> parseNilOn: aStream [
 	(aStream nextMatchAll: 'nil')
 		ifFalse: [ ^ self error: 'expected nil' ].
 	^ specials at: #nil ifAbsent: [ nil ]
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaReader >> parseNumberOn: aStream [
 	^ Number readFrom: aStream ifFail: [ self error: 'number expected' ]
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaReader >> parseOn: aStream [
 	aStream skipSeparatorsAndPeekNext
 		in: [ :char | 
@@ -133,7 +134,7 @@ ViennaReader >> parseOn: aStream [
 			^ self error: 'Unexpected character in VDM value: ' , aStream upToEnd ]
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaReader >> parseQuoteOn: aStream [
 
 	| quote |
@@ -147,7 +148,7 @@ ViennaReader >> parseQuoteOn: aStream [
 		  ifAbsent: [ quote asSymbol ]
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaReader >> parseSeqOn: aStream [
 	| args |
 	(aStream nextMatchAll: '[')
@@ -166,7 +167,7 @@ ViennaReader >> parseSeqOn: aStream [
 	^ specials at: #seq ifPresent: [ :block | block valueWithArguments: args ] ifAbsent: [ args asOrderedCollection ]
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaReader >> parseSetOn: aStream with: first [
 	| args |
 	(aStream nextMatchAll: ',')
@@ -184,7 +185,7 @@ ViennaReader >> parseSetOn: aStream with: first [
 	^ specials at: #set ifPresent: [ :block | block value: args ] ifAbsent: [ args asSet ]
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaReader >> parseSetOrMapOn: aStream [
 	| first |
 	(aStream nextMatchAll: '{')
@@ -213,7 +214,7 @@ ViennaReader >> parseSetOrMapOn: aStream [
 	^ self error: 'Expected , or |->'
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaReader >> parseStringOn: aStream [
 	| string |
 	(aStream nextMatchAll: '"')
@@ -225,14 +226,14 @@ ViennaReader >> parseStringOn: aStream [
 	^ specials at: #'seq of char' ifPresent: [ :block | block value: string ] ifAbsent: [ string ]
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaReader >> parseTrueOn: aStream [
 	(aStream nextMatchAll: 'true')
 		ifFalse: [ ^ self error: 'expected true' ].
 	^ specials at: #true ifAbsent: [ true ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaReader >> readCharOn: aStream [
 	| char |
 	char := aStream next.
@@ -272,7 +273,7 @@ ViennaReader >> readCharOn: aStream [
 	^ self error: 'unexpected escape char: ' , char asString
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaReader >> skipCommentOn: aStream [
 	(aStream nextMatchAll: '/*')
 		ifFalse: [ ^ self error: 'expected /*' ].
@@ -284,7 +285,7 @@ ViennaReader >> skipCommentOn: aStream [
 	^ self error: 'unexpected EOF before */'
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaReader >> skipLineCommentOn: aStream [
 	| crlf |
 	(aStream nextMatchAll: '--')
