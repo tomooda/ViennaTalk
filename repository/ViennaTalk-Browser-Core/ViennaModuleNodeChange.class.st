@@ -9,15 +9,7 @@ Class {
 { #category : 'enumerating' }
 ViennaModuleNodeChange >> changedGlobalNamesDo: aBlock [
 
-	from ifNil: [
-		aBlock value: to identifier.
-		^ self ].
-	to ifNil: [
-		aBlock value: from identifier.
-		^ self ].
-	from identifier ~= to identifier ifTrue: [
-		aBlock value: from identifier.
-		aBlock value: to identifier ]
+	
 ]
 
 { #category : 'testing' }

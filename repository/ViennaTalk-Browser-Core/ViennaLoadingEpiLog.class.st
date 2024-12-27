@@ -19,6 +19,12 @@ ViennaLoadingEpiLog >> isLoadEpiLog [
 ]
 
 { #category : 'testing' }
+ViennaLoadingEpiLog >> isSemanticClosureMember [
+
+	^ false
+]
+
+{ #category : 'testing' }
 ViennaLoadingEpiLog >> isSyntacticClosureMember [
 
 	^ false

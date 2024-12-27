@@ -63,6 +63,12 @@ ViennaModificationEpiLog >> isModificationEpiLog [
 ]
 
 { #category : 'testing' }
+ViennaModificationEpiLog >> isSemanticClosureMember [
+
+	^ true
+]
+
+{ #category : 'testing' }
 ViennaModificationEpiLog >> isSyntacticClosureMember [
 
 	^ true

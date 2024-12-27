@@ -41,7 +41,8 @@ Class {
 		'addEpiLogTagButton',
 		'editEpiLogCommentButton',
 		'showsSingleEpiLogButton',
-		'showsSyntacticClosureButton'
+		'showsSyntacticClosureButton',
+		'showsSemanticClosureButton'
 	],
 	#classVars : [
 		'GreenSignalIcon',
@@ -1035,6 +1036,20 @@ ViennaRefactoringBrowser >> epiLogListContextMenu [
 	^ menu
 ]
 
+{ #category : 'private' }
+ViennaRefactoringBrowser >> epiLogListItemsFrom: epiLog [
+
+	showsSyntacticClosureButton state ifTrue: [
+		^ ViennaHiDeSorter
+			  syntacticClosureFrom: epiLog
+			  withEnumerator: self epiLogEnumerator ].
+	showsSemanticClosureButton state ifTrue: [
+		^ ViennaHiDeSorter
+			  semanticClosureFrom: epiLog
+			  withEnumerator: self epiLogEnumerator ].
+	^ self epiLogEnumerator arrayFrom: epiLog
+]
+
 { #category : 'updating' }
 ViennaRefactoringBrowser >> epiLogListSelectionChanged [
 
@@ -1103,6 +1118,7 @@ ViennaRefactoringBrowser >> epilogPageLayout [
 				   add: (SpBoxLayout newHorizontal
 						    add: showsSingleEpiLogButton;
 						    add: showsSyntacticClosureButton;
+						    add: showsSemanticClosureButton;
 						    yourself)
 				   expand: false;
 				   add: epiLogMatcherDropList expand: false;
@@ -1470,6 +1486,11 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 		                               whenDeactivatedDo: [
 			                               self updateEpiLogList ];
 		                               yourself.
+	showsSemanticClosureButton := self newRadioButton
+		                              label: 'semantic closure';
+		                              whenDeactivatedDo: [
+			                              self updateEpiLogList ];
+		                              yourself.
 	epiLogMatcherDropList := self newDropList
 		                         items: { ViennaEpiLogMatcher all };
 		                         startWithSelection;
@@ -1534,8 +1555,9 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 		                         yourself.
 	showsTimeLineButton associatedRadioButtons:
 		{ showsConstructionLineButton }.
-	showsSingleEpiLogButton associatedRadioButtons:
-		{ showsSyntacticClosureButton }
+	showsSingleEpiLogButton associatedRadioButtons: {
+			showsSyntacticClosureButton.
+			showsSemanticClosureButton }
 ]
 
 { #category : 'initialization' }
@@ -2507,13 +2529,9 @@ ViennaRefactoringBrowser >> updateEpiLogList [
 
 	epiLogList ifNotNil: [
 		epiLogList
-			items: ((self epiLog ifNil: [ #(  ) ] ifNotNil: [ :epiLog |
-					  showsSyntacticClosureButton state
-						  ifTrue: [
-							  ViennaHiDeSorter
-								  syntacticClosureFrom: epiLog
-								  withEnumerator: self epiLogEnumerator ]
-						  ifFalse: [ self epiLogEnumerator arrayFrom: epiLog ] ])
+			items: ((self epiLog
+					  ifNil: [ #(  ) ]
+					  ifNotNil: [ :epiLog | self epiLogListItemsFrom: epiLog ])
 					 select:
 					 (epiLogMatcherDropList selectedItem ifNil: [ [ :epilog | true ] ]))
 			selectsFirst: true ].

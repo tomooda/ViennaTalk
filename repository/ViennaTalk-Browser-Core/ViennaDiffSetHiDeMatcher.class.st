@@ -26,3 +26,22 @@ ViennaDiffSetHiDeMatcher >> epiLogEnumerator: aViennaEpiLogEnumerator [
 
 	epiLogEnumerator := aViennaEpiLogEnumerator
 ]
+
+{ #category : 'accessing' }
+ViennaDiffSetHiDeMatcher >> impactOf: aViennaEpiLog [
+
+	^ self subclassResponsibility
+]
+
+{ #category : 'accessing' }
+ViennaDiffSetHiDeMatcher >> prevFrom: aViennaEpiLog [
+
+	^ epiLogEnumerator prevFrom: aViennaEpiLog
+]
+
+{ #category : 'evaluating' }
+ViennaDiffSetHiDeMatcher >> value: aViennaEpiLog value: anotherViennaEpiLog [
+
+	^ (self impactOf: aViennaEpiLog) includesAny:
+		  (self impactOf: anotherViennaEpiLog)
+]
