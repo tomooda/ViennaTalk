@@ -148,6 +148,13 @@ ViennaGlobalNameNode >> resolve [
 		  module resolveIdentifier: self identifier ]
 ]
 
+{ #category : 'accessing-definitions' }
+ViennaGlobalNameNode >> resolveIn: aViennaDocumentNode [
+
+	^ (aViennaDocumentNode moduleNamed: self moduleIdentifier) ifNotNil: [
+		  :module | module resolveIdentifier: self identifier ]
+]
+
 { #category : 'pretty printing' }
 ViennaGlobalNameNode >> shortName [
 

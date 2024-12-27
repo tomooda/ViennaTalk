@@ -1,6 +1,6 @@
-Extension { #name : #Boolean }
+Extension { #name : 'Boolean' }
 
-{ #category : #'*ViennaTalk-Value-Core' }
+{ #category : '*ViennaTalk-Value-Core' }
 Boolean >> viennaStringOn: aStream [
 	self printOn: aStream
 ]

@@ -1,6 +1,6 @@
-Extension { #name : #Symbol }
+Extension { #name : 'Symbol' }
 
-{ #category : #'*ViennaTalk-Value-Core' }
+{ #category : '*ViennaTalk-Value-Core' }
 Symbol >> viennaStringOn: aStream [
 	aStream nextPut: $<; nextPutAll: self; nextPut: $>
 ]

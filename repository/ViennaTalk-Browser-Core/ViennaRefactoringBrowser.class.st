@@ -39,7 +39,10 @@ Class {
 		'removeEpiLogButton',
 		'removeEpiLogTagButton',
 		'addEpiLogTagButton',
-		'editEpiLogCommentButton'
+		'editEpiLogCommentButton',
+		'showsSingleEpiLogButton',
+		'showsSyntacticClosureButton',
+		'showsSemanticClosureButton'
 	],
 	#classVars : [
 		'GreenSignalIcon',
@@ -959,6 +962,33 @@ ViennaRefactoringBrowser >> epiLog: aViennaEpiLog [
 	self model: aViennaEpiLog
 ]
 
+{ #category : 'accessing' }
+ViennaRefactoringBrowser >> epiLogChanges [
+
+	^ (ViennaNodeDiffSet fromNodeChanges:
+		   (Array streamContents: [ :stream |
+			    (epiLogList selectedItems asSortedCollection: [ :older :newer |
+				     older timestamp <= newer timestamp ]) do: [ :epilog |
+				    (self epiLogEnumerator diffSet: epilog) changesDo: [ :change |
+					    stream nextPut: change ] ] ])) condenseChanges
+]
+
+{ #category : 'accessing' }
+ViennaRefactoringBrowser >> epiLogConstructionLineEnumerator [
+
+	^ ViennaEpiLogConstructionLineEnumerator current
+]
+
+{ #category : 'accessing' }
+ViennaRefactoringBrowser >> epiLogEnumerator [
+
+	showsTimeLineButton state = true ifTrue: [
+		^ self epiLogTimeLineEnumerator ].
+	showsConstructionLineButton state = true ifTrue: [
+		^ self epiLogConstructionLineEnumerator ].
+	^ nil
+]
+
 { #category : 'operations-epiLog' }
 ViennaRefactoringBrowser >> epiLogEvaluation: aString [
 
@@ -1004,6 +1034,20 @@ ViennaRefactoringBrowser >> epiLogListContextMenu [
 						name: 'Tag';
 						action: [ self addEpiLogTag ] ] ] ].
 	^ menu
+]
+
+{ #category : 'private' }
+ViennaRefactoringBrowser >> epiLogListItemsFrom: epiLog [
+
+	showsSyntacticClosureButton state ifTrue: [
+		^ ViennaHiDeSorter
+			  syntacticClosureFrom: epiLog
+			  withEnumerator: self epiLogEnumerator ].
+	showsSemanticClosureButton state ifTrue: [
+		^ ViennaHiDeSorter
+			  semanticClosureFrom: epiLog
+			  withEnumerator: self epiLogEnumerator ].
+	^ self epiLogEnumerator arrayFrom: epiLog
 ]
 
 { #category : 'updating' }
@@ -1054,6 +1098,12 @@ ViennaRefactoringBrowser >> epiLogRevertion: aViennaEpiLog [
 	self epiLog: (self epiLog newRevertion: aViennaEpiLog)
 ]
 
+{ #category : 'accessing' }
+ViennaRefactoringBrowser >> epiLogTimeLineEnumerator [
+
+	^ ViennaEpiLogTimeLineEnumerator current
+]
+
 { #category : 'layouts' }
 ViennaRefactoringBrowser >> epilogPageLayout [
 
@@ -1063,6 +1113,12 @@ ViennaRefactoringBrowser >> epilogPageLayout [
 				   add: (SpBoxLayout newHorizontal
 						    add: showsTimeLineButton;
 						    add: showsConstructionLineButton;
+						    yourself)
+				   expand: false;
+				   add: (SpBoxLayout newHorizontal
+						    add: showsSingleEpiLogButton;
+						    add: showsSyntacticClosureButton;
+						    add: showsSemanticClosureButton;
 						    yourself)
 				   expand: false;
 				   add: epiLogMatcherDropList expand: false;
@@ -1401,11 +1457,11 @@ ViennaRefactoringBrowser >> initialize [
 		do: [ self updateStateTableItems ]
 		for: self.
 	runsAllTests := false.
-	super initialize.
 	self epiLog: ViennaEpiLog vanilla.
 	epiLogTags := Dictionary new.
 	dirty := false.
-	sliceNodes := IdentitySet new
+	sliceNodes := IdentitySet new.
+	super initialize
 ]
 
 { #category : 'initialization' }
@@ -1413,17 +1469,28 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 
 	showsTimeLineButton := self newRadioButton
 		                       label: 'time line';
-		                       whenActivatedDo: [
-			                       self updateEpiLogListTimeLine ];
+		                       whenDeactivatedDo: [ self updateEpiLogList ];
 		                       yourself.
 	showsConstructionLineButton := self newRadioButton
 		                               label: 'construction line';
-		                               whenActivatedDo: [
-			                               self
-				                               updateEpiLogListConstructionLine ];
+		                               whenDeactivatedDo: [
+			                               self updateEpiLogList ];
 		                               yourself.
-	showsTimeLineButton associatedRadioButtons:
-		{ showsConstructionLineButton }.
+	showsSingleEpiLogButton := self newRadioButton
+		                           label: 'single';
+		                           whenDeactivatedDo: [
+			                           self updateEpiLogList ];
+		                           yourself.
+	showsSyntacticClosureButton := self newRadioButton
+		                               label: 'syntactic closure';
+		                               whenDeactivatedDo: [
+			                               self updateEpiLogList ];
+		                               yourself.
+	showsSemanticClosureButton := self newRadioButton
+		                              label: 'semantic closure';
+		                              whenDeactivatedDo: [
+			                              self updateEpiLogList ];
+		                              yourself.
 	epiLogMatcherDropList := self newDropList
 		                         items: { ViennaEpiLogMatcher all };
 		                         startWithSelection;
@@ -1431,6 +1498,7 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 			                         self updateEpiLogList ];
 		                         yourself.
 	epiLogList := self newTable
+		              beMultipleSelection;
 		              hideColumnHeaders;
 		              beResizable;
 		              addColumn:
@@ -1457,6 +1525,8 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 		                  whenSelectionChangedDo: [
 			                  self updateEpiLogDiffText ];
 		                  yourself.
+	epiLogDiffText := self newText.
+	epiLogList whenBuiltDo: [ self updateEpiLogList ].
 	namedEpiLogDropList := self newDropList
 		                       display: [ :assoc | assoc key ];
 		                       startWithoutSelection;
@@ -1483,9 +1553,11 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 		                         icon: (self iconNamed: #smallCancel);
 		                         action: [ self removeEpiLogTag ];
 		                         yourself.
-
-	epiLogDiffText := self newText.
-	epiLogList whenBuiltDo: [ self updateEpiLogList ]
+	showsTimeLineButton associatedRadioButtons:
+		{ showsConstructionLineButton }.
+	showsSingleEpiLogButton associatedRadioButtons: {
+			showsSyntacticClosureButton.
+			showsSemanticClosureButton }
 ]
 
 { #category : 'initialization' }
@@ -2433,10 +2505,8 @@ ViennaRefactoringBrowser >> updateEpiLogButtons [
 { #category : 'updating' }
 ViennaRefactoringBrowser >> updateEpiLogDiffList [
 
-	epiLogList selectedItem ifNotNil: [ :epilog |
-		epiLogDiffList items: (Array streamContents: [ :stream |
-				 epilog diffSetFromPrev changesDo: [ :change |
-					 stream nextPut: change ] ]) ]
+	epiLogDiffList items: self epiLogChanges.
+	self updateEpiLogDiffText
 ]
 
 { #category : 'updating' }
@@ -2457,36 +2527,16 @@ ViennaRefactoringBrowser >> updateEpiLogDiffText [
 { #category : 'updating' }
 ViennaRefactoringBrowser >> updateEpiLogList [
 
-	self
-		ifShowsTimeLine: [ self updateEpiLogListTimeLine ]
-		ifShowsConstructionLine: [ self updateEpiLogListConstructionLine ]
-]
-
-{ #category : 'updating' }
-ViennaRefactoringBrowser >> updateEpiLogListConstructionLine [
-
 	epiLogList ifNotNil: [
 		epiLogList
 			items: ((self epiLog
 					  ifNil: [ #(  ) ]
-					  ifNotNil: [ :epiLog | epiLog constructionLine ]) select:
+					  ifNotNil: [ :epiLog | self epiLogListItemsFrom: epiLog ])
+					 select:
 					 (epiLogMatcherDropList selectedItem ifNil: [ [ :epilog | true ] ]))
 			selectsFirst: true ].
-	self updateEpiLogButtons
-]
-
-{ #category : 'updating' }
-ViennaRefactoringBrowser >> updateEpiLogListTimeLine [
-
-	epiLogList ifNotNil: [
-		epiLogList
-			items:
-				((self epiLog
-					  ifNil: [ #(  ) ]
-					  ifNotNil: [ :epiLog | epiLog timeLine ]) select:
-					 (epiLogMatcherDropList selectedItem ifNil: [ [ :epilog | true ] ]))
-			selectsFirst: true ].
-	self updateEpiLogButtons
+	self updateEpiLogButtons.
+	self updateEpiLogDiffList
 ]
 
 { #category : 'updating' }

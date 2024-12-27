@@ -1,27 +1,28 @@
 Class {
-	#name : #ViennaComposition,
-	#superclass : #Object,
-	#type : #variable,
+	#name : 'ViennaComposition',
+	#superclass : 'Object',
+	#type : 'variable',
 	#instVars : [
 		'arg1',
 		'arg2'
 	],
-	#category : 'ViennaTalk-Value-Core'
+	#category : 'ViennaTalk-Value-Core',
+	#package : 'ViennaTalk-Value-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaComposition class >> with: aDictionaryOrBlock1 with: aDictionaryOrBlock2 [
 	^ self new
 		setArg1: aDictionaryOrBlock1 arg2: aDictionaryOrBlock2;
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaComposition >> ** anInteger [
 	^ ViennaIteration with: self with: anInteger
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaComposition >> applyTo: anArray [
 	| t |
 	t := arg2 applyTo: anArray.
@@ -30,45 +31,45 @@ ViennaComposition >> applyTo: anArray [
 	^ arg1 applyTo: t
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaComposition >> comp: applicative [
 	^ ViennaComposition with: self with: applicative
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaComposition >> isFunction [
 	^ arg1 isFunction or: [ arg2 isFunction ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaComposition >> numArgs [
 	^ arg2 isFunction
 		ifTrue: [ arg2 numArgs ]
 		ifFalse: [ 1 ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaComposition >> setArg1: f arg2: g [
 	arg1 := f.
 	arg2 := g
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaComposition >> value: anObject [
 	^ self applyTo: (Array with: anObject)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaComposition >> value: anObject1 value: anObject2 [
 	^ self applyTo: (Array with: anObject1 with: anObject2)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaComposition >> value: anObject1 value: anObject2 value: anObject3 [
 	^ self applyTo: (Array with: anObject1 with: anObject2 with: anObject3)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaComposition >> value: anObject1 value: anObject2 value: anObject3 value: anObject4 [
 	^ self
 		applyTo:
@@ -79,12 +80,12 @@ ViennaComposition >> value: anObject1 value: anObject2 value: anObject3 value: a
 				with: anObject4)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaComposition >> valueWithArguments: anArray [
 	^ self applyTo: anArray
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 ViennaComposition >> viennaStringOn: aStream [
 	arg1 viennaStringOn: aStream.
 	aStream nextPutAll: ' comp '.

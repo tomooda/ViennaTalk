@@ -1,6 +1,6 @@
-Extension { #name : #Character }
+Extension { #name : 'Character' }
 
-{ #category : #'*ViennaTalk-Value-Core' }
+{ #category : '*ViennaTalk-Value-Core' }
 Character >> viennaStringOn: aStream [
 	aStream nextPut: $'.
 	self = Character cr

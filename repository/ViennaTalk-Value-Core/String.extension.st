@@ -1,11 +1,11 @@
-Extension { #name : #String }
+Extension { #name : 'String' }
 
-{ #category : #'*ViennaTalk-Value-Core' }
+{ #category : '*ViennaTalk-Value-Core' }
 String >> isSequence [
 	^ true
 ]
 
-{ #category : #'*ViennaTalk-Value-Core' }
+{ #category : '*ViennaTalk-Value-Core' }
 String >> viennaStringOn: aStream [
 	aStream nextPutAll: '"'.
 	self

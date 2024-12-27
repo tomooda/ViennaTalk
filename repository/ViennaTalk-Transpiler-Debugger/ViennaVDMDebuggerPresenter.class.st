@@ -40,6 +40,12 @@ ViennaVDMDebuggerPresenter >> accept: aVisitor [
 	^ aVisitor visitVDM: self
 ]
 
+{ #category : 'testing' }
+ViennaVDMDebuggerPresenter >> canExecuteDebugCommand [
+
+	^ false
+]
+
 { #category : 'slicing' }
 ViennaVDMDebuggerPresenter >> clearSlice [
 

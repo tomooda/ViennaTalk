@@ -1,6 +1,6 @@
-Extension { #name : #UndefinedObject }
+Extension { #name : 'UndefinedObject' }
 
-{ #category : #'*ViennaTalk-Value-Core' }
+{ #category : '*ViennaTalk-Value-Core' }
 UndefinedObject >> viennaStringOn: aStream [
 	self printOn: aStream
 ]

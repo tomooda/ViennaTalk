@@ -6,6 +6,18 @@ Class {
 	#tag : 'Diff'
 }
 
+{ #category : 'enumerating' }
+ViennaModuleNodeChange >> changedGlobalNamesDo: aBlock [
+
+	
+]
+
+{ #category : 'testing' }
+ViennaModuleNodeChange >> isViennaModuleNodeChange [
+
+	^ true
+]
+
 { #category : 'printing' }
 ViennaModuleNodeChange >> printNamesOn: aStream [
 

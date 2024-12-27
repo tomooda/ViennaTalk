@@ -1,11 +1,12 @@
 Class {
-	#name : #ViennaUnquoteWriter,
-	#superclass : #ViennaWriter,
-	#type : #variable,
-	#category : 'ViennaTalk-Value-Core'
+	#name : 'ViennaUnquoteWriter',
+	#superclass : 'ViennaWriter',
+	#type : 'variable',
+	#category : 'ViennaTalk-Value-Core',
+	#package : 'ViennaTalk-Value-Core'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaUnquoteWriter >> writeChar: aCharacter into: aStream [
 	aCharacter codePoint
 		in: [ :code | 

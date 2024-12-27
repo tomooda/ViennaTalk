@@ -1,6 +1,6 @@
-Extension { #name : #Collection }
+Extension { #name : 'Collection' }
 
-{ #category : #'*ViennaTalk-Value-Core' }
+{ #category : '*ViennaTalk-Value-Core' }
 Collection >> copyAt: anInteger put: anObject [
 	| copy |
 	copy := self copy.
@@ -8,7 +8,7 @@ Collection >> copyAt: anInteger put: anObject [
 	^ copy
 ]
 
-{ #category : #'*ViennaTalk-Value-Core' }
+{ #category : '*ViennaTalk-Value-Core' }
 Collection >> copyAtPath: anArrayOfKey put: anObject [
 	| copy |
 	copy := self copy.
@@ -18,7 +18,7 @@ Collection >> copyAtPath: anArrayOfKey put: anObject [
 	^ copy
 ]
 
-{ #category : #'*ViennaTalk-Value-Core' }
+{ #category : '*ViennaTalk-Value-Core' }
 Collection >> onlyOneSatisfy: aBlock [
 	"Evaluate aBlock with the elements of the receiver.
 	If aBlock returns true for the only one element return true.
@@ -36,7 +36,7 @@ Collection >> onlyOneSatisfy: aBlock [
 	^ found
 ]
 
-{ #category : #'*ViennaTalk-Value-Core' }
+{ #category : '*ViennaTalk-Value-Core' }
 Collection >> power [
 	| array size power |
 	array := self asArray.
@@ -52,7 +52,7 @@ Collection >> power [
 	^ power
 ]
 
-{ #category : #'*ViennaTalk-Value-Core' }
+{ #category : '*ViennaTalk-Value-Core' }
 Collection >> powerDo: aBlock [
 	self asArray powerDo: aBlock
 ]

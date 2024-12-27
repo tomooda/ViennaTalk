@@ -12,6 +12,17 @@ ViennaTopLevelDefinitionNode class >> isAbstract [
 	^ self = ViennaTopLevelDefinitionNode
 ]
 
+{ #category : 'enumerating' }
+ViennaTopLevelDefinitionNode >> globalNamesDo: aBlock [
+
+	self identifiers do: [ :identifier |
+		aBlock value: ((ViennaGlobalNameNode
+				  moduleIdentifier: self module identifier
+				  identifier: identifier)
+				 parent: self document;
+				 yourself) ]
+]
+
 { #category : 'accessing' }
 ViennaTopLevelDefinitionNode >> identifier [
 

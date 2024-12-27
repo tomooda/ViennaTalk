@@ -1,27 +1,28 @@
 Class {
-	#name : #ViennaIteration,
-	#superclass : #Object,
-	#type : #variable,
+	#name : 'ViennaIteration',
+	#superclass : 'Object',
+	#type : 'variable',
 	#instVars : [
 		'block',
 		'n'
 	],
-	#category : 'ViennaTalk-Value-Core'
+	#category : 'ViennaTalk-Value-Core',
+	#package : 'ViennaTalk-Value-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaIteration class >> with: aBlock with: anInteger [
 	^ self new
 		setBlock: aBlock n: anInteger;
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIteration >> ** anInteger [
 	^ ViennaIteration with: block with: anInteger * n
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIteration >> applyTo: anArray [
 	| result |
 	result := anArray.
@@ -33,43 +34,43 @@ ViennaIteration >> applyTo: anArray [
 	^ result
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIteration >> comp: applicative [
 	^ ViennaComposition with: self with: applicative
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaIteration >> isFunction [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIteration >> numArgs [
 	^ block numArgs
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaIteration >> setBlock: aBlock n: anInteger [
 	block := aBlock.
 	n := anInteger
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIteration >> value: anObject [
 	^ self applyTo: (Array with: anObject)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIteration >> value: anObject1 value: anObject2 [
 	^ self applyTo: (Array with: anObject1 with: anObject2)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIteration >> value: anObject1 value: anObject2 value: anObject3 [
 	^ self applyTo: (Array with: anObject1 with: anObject2 with: anObject3)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIteration >> value: anObject1 value: anObject2 value: anObject3 value: anObject4 [
 	^ self
 		applyTo:
@@ -80,12 +81,12 @@ ViennaIteration >> value: anObject1 value: anObject2 value: anObject3 value: anO
 				with: anObject4)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaIteration >> valueWithArguments: anArray [
 	^ self applyTo: anArray
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 ViennaIteration >> viennaStringOn: aStream [
 	block viennaStringOn: aStream.
 	aStream nextPutAll: ' ** '.

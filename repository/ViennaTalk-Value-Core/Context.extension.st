@@ -1,6 +1,6 @@
-Extension { #name : #Context }
+Extension { #name : 'Context' }
 
-{ #category : #'*ViennaTalk-Value-Core' }
+{ #category : '*ViennaTalk-Value-Core' }
 Context >> checkMeasure [
 	| context |
 	context := self sender.
@@ -21,7 +21,7 @@ Context >> checkMeasure [
 	^ true
 ]
 
-{ #category : #'*ViennaTalk-Value-Core' }
+{ #category : '*ViennaTalk-Value-Core' }
 Context >> viennaReturn: anObject [
 	| scope |
 	scope := self sourceNode scope.
