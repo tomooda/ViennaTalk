@@ -6,7 +6,7 @@ Object >> isFunction [
 ]
 
 { #category : '*ViennaTalk-Value-Core' }
-Object >> isHiDeClosure [
+Object >> isSequence [
 	^ false
 ]
 
