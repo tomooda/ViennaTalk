@@ -42,7 +42,8 @@ Class {
 		'editEpiLogCommentButton',
 		'showsSingleEpiLogButton',
 		'showsSyntacticClosureButton',
-		'showsSemanticClosureButton'
+		'showsSemanticClosureButton',
+		'showsContextualClosureButton'
 	],
 	#classVars : [
 		'GreenSignalIcon',
@@ -1047,6 +1048,10 @@ ViennaRefactoringBrowser >> epiLogListItemsFrom: epiLog [
 		^ ViennaHiDeSorter
 			  semanticClosureFrom: epiLog
 			  withEnumerator: self epiLogEnumerator ].
+	showsContextualClosureButton state ifTrue: [
+		^ ViennaHiDeSorter
+			  contextualClosureFrom: epiLog
+			  withEnumerator: self epiLogEnumerator ].
 	^ self epiLogEnumerator arrayFrom: epiLog
 ]
 
@@ -1119,6 +1124,7 @@ ViennaRefactoringBrowser >> epilogPageLayout [
 						    add: showsSingleEpiLogButton;
 						    add: showsSyntacticClosureButton;
 						    add: showsSemanticClosureButton;
+						    add: showsContextualClosureButton;
 						    yourself)
 				   expand: false;
 				   add: epiLogMatcherDropList expand: false;
@@ -1491,6 +1497,11 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 		                              whenDeactivatedDo: [
 			                              self updateEpiLogList ];
 		                              yourself.
+	showsContextualClosureButton := self newRadioButton
+		                                label: 'contextual closure';
+		                                whenDeactivatedDo: [
+			                                self updateEpiLogList ];
+		                                yourself.
 	epiLogMatcherDropList := self newDropList
 		                         items: { ViennaEpiLogMatcher all };
 		                         startWithSelection;
@@ -1557,7 +1568,8 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 		{ showsConstructionLineButton }.
 	showsSingleEpiLogButton associatedRadioButtons: {
 			showsSyntacticClosureButton.
-			showsSemanticClosureButton }
+			showsSemanticClosureButton.
+			showsContextualClosureButton }
 ]
 
 { #category : 'initialization' }
@@ -1664,7 +1676,7 @@ ViennaRefactoringBrowser >> initializePresenters [
 		            SpPresenter new
 			            layout: self playgroundPageLayout;
 			            yourself ];
-		            addPageTitle: 'EpiLog' provider: [
+		            addPageTitle: 'HiDeHo' provider: [
 		            SpPresenter new
 			            layout: self epilogPageLayout;
 			            yourself ];

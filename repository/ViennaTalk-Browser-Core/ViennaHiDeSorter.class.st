@@ -7,6 +7,25 @@ Class {
 }
 
 { #category : 'utilities' }
+ViennaHiDeSorter class >> contextualClosureFrom: aViennaEpiLog withEnumerator: aViennaEpiLogEnumerator [
+
+	| matcher sorter |
+	matcher := ViennaContextualHiDeMatcher new
+		           epiLogEnumerator: aViennaEpiLogEnumerator;
+		           yourself.
+	sorter := self new
+		          matcher: matcher;
+		          yourself.
+	aViennaEpiLogEnumerator from: aViennaEpiLog do: [ :epiLog |
+		epiLog isSemanticClosureMember ifTrue: [ sorter add: epiLog ] ].
+	^ Array streamContents: [ :stream |
+		  (sorter
+			   nodeAt: (sorter identityIndexOf: aViennaEpiLog)
+			   ifAbsent: [ { aViennaEpiLog } ]) do: [ :epiLog |
+			  stream nextPut: epiLog ] ]
+]
+
+{ #category : 'utilities' }
 ViennaHiDeSorter class >> semanticClosureFrom: aViennaEpiLog withEnumerator: aViennaEpiLogEnumerator [
 
 	| matcher sorter |

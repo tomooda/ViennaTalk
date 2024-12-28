@@ -11,3 +11,9 @@ ViennaSyntacticHiDeMatcher >> impactOf: aViennaEpiLog [
 
 	^ (self diffSet: aViennaEpiLog) changedGlobalNames
 ]
+
+{ #category : 'enumerfating' }
+ViennaSyntacticHiDeMatcher >> transitionsFrom: aViennaGlobalName in: aViennaEpiLog do: aBlock [
+
+	
+]
