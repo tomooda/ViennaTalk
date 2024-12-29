@@ -23,6 +23,14 @@ ViennaEpiLogMatcher class >> identifier: aString module: anotherString [
 		  yourself
 ]
 
+{ #category : 'instance creation' }
+ViennaEpiLogMatcher class >> impactClosureFrom: aViennaEpiLog enumerator: aViennaEpiLogEnumerator [
+
+	^ ViennaEpiLogImpactClosureMatcher
+		  fromEpiLog: aViennaEpiLog
+		  enumerator: aViennaEpiLogEnumerator
+]
+
 { #category : 'testing' }
 ViennaEpiLogMatcher class >> isAbstract [
 
