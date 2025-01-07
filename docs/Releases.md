@@ -1,12 +1,20 @@
 Major releases of ViennaTalk (lastest top)
 ---
 
+* Codename Waikiki has been released. (Jan 7, 2025)
+   - EpiLog/HiDeHo for exploration support
+      - Dynamic and contextual extraction of a series of versions
+   - Refactoring browser as the default editor for VDM-SL
+   - Unit tests and traces are run integrated in the test runner on the Refactoring browser.
+   - The execution contexts of failed tests are saved and directly debuggable
+   - Adopted the new Pharo debugger architecture in Pharo 12
+
 * Codename Lyon has been released. (Apr 30, 2024)
    - Specification slicing for VDM-SL
    - New UI design for Refactoring Browser
       - Playground with state variables table
       - EpiLog to journal and version specification changes and evaluations
-   - ranspiler can be used as an alternative interpreter.
+   - Transpiler can be used as an alternative interpreter.
    - Support traces definitions
    - Migration to Pharo 12
 
