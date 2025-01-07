@@ -202,7 +202,7 @@ ViennaLauncher >> close [
 
 { #category : 'accessing' }
 ViennaLauncher >> codename [
-	^ 'Lyon'
+	^ 'Waikiki'
 ]
 
 { #category : 'accessing' }
