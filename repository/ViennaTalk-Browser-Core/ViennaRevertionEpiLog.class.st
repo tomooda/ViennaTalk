@@ -18,6 +18,12 @@ ViennaRevertionEpiLog class >> after: aViennaEpiLog destination: anotherViennaEp
 ]
 
 { #category : 'accessing' }
+ViennaRevertionEpiLog class >> metadataName [
+
+	^ 'Reversion'
+]
+
+{ #category : 'accessing' }
 ViennaRevertionEpiLog >> basicPred [
 
 	^ destination
@@ -68,6 +74,24 @@ ViennaRevertionEpiLog >> hasSpecificationChange [
 ViennaRevertionEpiLog >> hasStateChange [
 
 	^ destination state ~= prev state
+]
+
+{ #category : 'hideho-operations' }
+ViennaRevertionEpiLog >> hideLoad: aFileReference storage: aHiDeStorage [
+
+	hideMetadata
+		at: 'destination'
+		ifPresent: [ :id | destination := aHiDeStorage chronicleAt: id ]
+]
+
+{ #category : 'hideho-operations' }
+ViennaRevertionEpiLog >> hideUpdateMetadataStorage: aHiDeStorage [
+
+	super hideUpdateMetadataStorage: aHiDeStorage.
+	destination ifNotNil: [
+		hideMetadata
+			at: 'destination'
+			put: destination hideMetadata identity ]
 ]
 
 { #category : 'testing' }

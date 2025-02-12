@@ -39,7 +39,8 @@ Class {
 		'removeEpiLogButton',
 		'removeEpiLogTagButton',
 		'addEpiLogTagButton',
-		'editEpiLogCommentButton'
+		'editEpiLogCommentButton',
+		'hideStorage'
 	],
 	#classVars : [
 		'GreenSignalIcon',
@@ -1427,6 +1428,9 @@ ViennaRefactoringBrowser >> initState [
 { #category : 'initialization' }
 ViennaRefactoringBrowser >> initialize [
 
+	hideStorage := ViennaHiDeStorage new
+		               basepath: FileLocator viennaTalkDirectory;
+		               yourself.
 	animation := ViennaAnimation default.
 	animation announcer
 		when: ViennaStateChanged do: [ self updateStateTable ] for: self;
@@ -1434,7 +1438,7 @@ ViennaRefactoringBrowser >> initialize [
 		do: [ self updateStateTableItems ]
 		for: self.
 	runsAllTests := false.
-	self epiLog: ViennaEpiLog vanilla.
+	self epiLog: (ViennaEpiLog vanilla hideStorage: hideStorage).
 	epiLogTags := Dictionary new.
 	dirty := false.
 	sliceNodes := IdentitySet new.
@@ -1873,6 +1877,7 @@ ViennaRefactoringBrowser >> mergeOperationsFromFRAM [
 ViennaRefactoringBrowser >> modelChanged [
 
 	self model ifNotNil: [ :epiLog |
+		epiLog hideSave.
 		self
 			updateEpiLogMatcherDropList;
 			updateEpiLogList;

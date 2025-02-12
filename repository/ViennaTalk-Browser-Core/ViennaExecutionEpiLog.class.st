@@ -27,10 +27,40 @@ ViennaExecutionEpiLog class >> after: aViennaEpiLog statement: aString state: aD
 		  yourself
 ]
 
+{ #category : 'accessing' }
+ViennaExecutionEpiLog class >> metadataName [
+
+	^ 'Execution'
+]
+
 { #category : 'testing' }
 ViennaExecutionEpiLog >> hasStateChange [
 
 	^ state notNil and: [ prev isNil or: [ prev state ~= state ] ]
+]
+
+{ #category : 'hideho-operations' }
+ViennaExecutionEpiLog >> hideLoad: aFileReference storage: aHiDeStorage [
+
+	super hideLoad: aFileReference storage: aHiDeStorage.
+	aFileReference / 'statement.txt' ifExists: [ :ref |
+		statement := ref contents ].
+	aFileReference / 'state.json' ifExists: [ :ref |
+		ref readStreamDo: [ :stream | state := STONJSON fromStream: stream ] ]
+]
+
+{ #category : 'hideho-operations' }
+ViennaExecutionEpiLog >> hideSave: aFileReference storage: aHiDeStorage [
+
+	super hideSave: aFileReference storage: aHiDeStorage.
+	statement ifNotNil: [
+		(aFileReference / 'statement.txt')
+			ensureDelete;
+			writeStreamDo: [ :stream | stream nextPutAll: statement ] ].
+	state ifNotNil: [
+		(aFileReference / 'state.json')
+			ensureDelete;
+			writeStreamDo: [ :stream | STONJSON put: state onStream: stream ] ]
 ]
 
 { #category : 'testing' }

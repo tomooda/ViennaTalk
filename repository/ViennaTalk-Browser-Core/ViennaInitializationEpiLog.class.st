@@ -18,6 +18,12 @@ ViennaInitializationEpiLog class >> after: aViennaEpiLog state: aDictionary [
 ]
 
 { #category : 'accessing' }
+ViennaInitializationEpiLog class >> metadataName [
+
+	^ 'Initialization'
+]
+
+{ #category : 'accessing' }
 ViennaInitializationEpiLog >> defaultComment [
 
 	^ 'Init'
@@ -27,6 +33,24 @@ ViennaInitializationEpiLog >> defaultComment [
 ViennaInitializationEpiLog >> hasStateChange [
 
 	^ true
+]
+
+{ #category : 'hideho-operations' }
+ViennaInitializationEpiLog >> hideLoad: aFileReference storage: aHiDeStorage [
+
+	super hideLoad: aFileReference storage: aHiDeStorage.
+	aFileReference / 'state.json' ifExists: [ :ref |
+		ref readStreamDo: [ :stream | state := STONJSON fromStream: stream ] ]
+]
+
+{ #category : 'hideho-operations' }
+ViennaInitializationEpiLog >> hideSave: aFileReference storage: aHiDeStorage [
+
+	super hideSave: aFileReference storage: aHiDeStorage.
+	state ifNotNil: [
+		(aFileReference / 'state.json')
+			ensureDelete;
+			writeStreamDo: [ :stream | STONJSON put: state onStream: stream ] ]
 ]
 
 { #category : 'testing' }

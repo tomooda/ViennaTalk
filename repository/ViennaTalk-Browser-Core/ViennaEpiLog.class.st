@@ -1,11 +1,9 @@
 Class {
 	#name : 'ViennaEpiLog',
 	#superclass : 'Object',
-	#traits : 'TComparable',
-	#classTraits : 'TComparable classTrait',
+	#traits : 'TComparable + THiDePersistency',
+	#classTraits : 'TComparable classTrait + THiDePersistency classTrait',
 	#instVars : [
-		'timestamp',
-		'comment',
 		'prev',
 		'diffSetFromPred',
 		'diffSetFromPrev'
@@ -19,14 +17,30 @@ Class {
 ViennaEpiLog class >> after: aViennaEpiLog [
 
 	^ self new
+		  hideStorage: aViennaEpiLog hideStorage;
 		  prev: aViennaEpiLog;
 		  yourself
+]
+
+{ #category : 'class access' }
+ViennaEpiLog class >> classFor: aString [
+
+	self allSubclassesDo: [ :class |
+		(class isAbstract not and: [ aString = class metadataName ])
+			ifTrue: [ ^ class ] ].
+	^ nil
 ]
 
 { #category : 'testing' }
 ViennaEpiLog class >> isAbstract [
 
 	^ self = ViennaEpiLog
+]
+
+{ #category : 'accessing' }
+ViennaEpiLog class >> metadataName [
+
+	^ self subclassResponsibility
 ]
 
 { #category : 'instance creation' }
@@ -38,7 +52,7 @@ ViennaEpiLog class >> vanilla [
 { #category : 'comparing' }
 ViennaEpiLog >> < aViennaEpiLog [
 
-	^ timestamp < aViennaEpiLog timestamp
+	^ self timestamp < aViennaEpiLog timestamp
 ]
 
 { #category : 'comparing' }
@@ -60,13 +74,15 @@ ViennaEpiLog >> basicPred: aViennaEpiLog [
 { #category : 'accessing' }
 ViennaEpiLog >> comment [
 
-	^ comment
+	^ hideMetadata at: 'comment' ifAbsent: [ '' ]
 ]
 
 { #category : 'accessing' }
-ViennaEpiLog >> comment: anObject [
+ViennaEpiLog >> comment: aString [
 
-	comment := anObject
+	(aString isNil or: [ aString isEmpty ])
+		ifTrue: [ hideMetadata removeKey: 'comment' ]
+		ifFalse: [ hideMetadata at: 'comment' put: aString ]
 ]
 
 { #category : 'converting' }
@@ -134,12 +150,34 @@ ViennaEpiLog >> hash [
 	^ self identityHash
 ]
 
+{ #category : 'hideho-operations' }
+ViennaEpiLog >> hideLoad: aFileReference storage: aHiDeStorage [
+
+	hideMetadata
+		at: 'prev'
+		ifPresent: [ :id | prev := aHiDeStorage chronicleAt: id ]
+]
+
+{ #category : 'hideho-operations' }
+ViennaEpiLog >> hideSave: aFileReference storage: aHiDeStorage [
+
+	
+]
+
+{ #category : 'hideho-operations' }
+ViennaEpiLog >> hideUpdateMetadataStorage: aHiDeStorage [
+
+	hideMetadata at: 'class' put: self metadataName.
+	prev ifNotNil: [
+		hideMetadata at: 'prev' put: prev hideMetadata identity ]
+]
+
 { #category : 'initialization' }
 ViennaEpiLog >> initialize [
 
 	super initialize.
-	comment := self defaultComment.
-	timestamp := DateAndTime now
+	self initializeHideMetadata.
+	self comment: self defaultComment
 ]
 
 { #category : 'testing' }
@@ -194,6 +232,12 @@ ViennaEpiLog >> isSyntacticClosureMember [
 ViennaEpiLog >> isVanillaEpiLog [
 
 	^ false
+]
+
+{ #category : 'accessing' }
+ViennaEpiLog >> metadataName [
+
+	^ self class metadataName
 ]
 
 { #category : 'instance creation' }
@@ -321,5 +365,5 @@ ViennaEpiLog >> timeLine [
 { #category : 'accessing' }
 ViennaEpiLog >> timestamp [
 
-	^ timestamp
+	^ hideMetadata timestamp
 ]

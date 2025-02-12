@@ -27,6 +27,12 @@ ViennaModificationEpiLog class >> after: aViennaEpiLog specification: aViennaMod
 		  yourself
 ]
 
+{ #category : 'accessing' }
+ViennaModificationEpiLog class >> metadataName [
+
+	^ 'Modification'
+]
+
 { #category : 'testing' }
 ViennaModificationEpiLog >> hasChangeAt: aString module: anotherString [
 
@@ -54,6 +60,31 @@ ViennaModificationEpiLog >> hasSpecificationChange [
 ViennaModificationEpiLog >> hasStateChange [
 
 	^ state notNil and: [ prev isNil or: [ prev state ~= state ] ]
+]
+
+{ #category : 'hideho-operations' }
+ViennaModificationEpiLog >> hideLoad: aFileReference storage: aHiDeStorage [
+
+	super hideLoad: aFileReference storage: aHiDeStorage.
+	aFileReference / 'source.vdmsl' ifExists: [ :ref |
+		ref readStreamDo: [ :stream |
+			specification := ref contents asViennaDocumentAst ] ].
+	aFileReference / 'state.json' ifExists: [ :ref |
+		ref readStreamDo: [ :stream | state := STONJSON fromStream: stream ] ]
+]
+
+{ #category : 'hideho-operations' }
+ViennaModificationEpiLog >> hideSave: aFileReference storage: aHiDeStorage [
+
+	super hideSave: aFileReference storage: aHiDeStorage.
+	specification ifNotNil: [
+		(aFileReference / 'source.vdmsl')
+			ensureDelete;
+			writeStreamDo: [ :stream | stream nextPutAll: specification source ] ].
+	state ifNotNil: [
+		(aFileReference / 'state.json')
+			ensureDelete;
+			writeStreamDo: [ :stream | STONJSON put: state onStream: stream ] ]
 ]
 
 { #category : 'testing' }

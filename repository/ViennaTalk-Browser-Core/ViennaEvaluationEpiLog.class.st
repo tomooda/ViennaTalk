@@ -18,6 +18,12 @@ ViennaEvaluationEpiLog class >> after: aViennaEpiLog expression: aString [
 ]
 
 { #category : 'accessing' }
+ViennaEvaluationEpiLog class >> metadataName [
+
+	^ 'Evaluation'
+]
+
+{ #category : 'accessing' }
 ViennaEvaluationEpiLog >> expression [
 
 	^ expression
@@ -27,6 +33,24 @@ ViennaEvaluationEpiLog >> expression [
 ViennaEvaluationEpiLog >> expression: aString [
 
 	expression := aString
+]
+
+{ #category : 'hideho-operations' }
+ViennaEvaluationEpiLog >> hideLoad: aFileReference storage: aHiDeStorage [
+
+	super hideLoad: aFileReference storage: aHiDeStorage.
+	aFileReference / 'expression.txt' ifExists: [ :ref |
+		expression := ref contents ]
+]
+
+{ #category : 'hideho-operations' }
+ViennaEvaluationEpiLog >> hideSave: aFileReference storage: aHiDeStorage [
+
+	super hideSave: aFileReference storage: aHiDeStorage.
+	expression ifNotNil: [
+		(aFileReference / 'expression.txt')
+			ensureDelete;
+			writeStreamDo: [ :stream | stream nextPutAll: expression ] ]
 ]
 
 { #category : 'testing' }

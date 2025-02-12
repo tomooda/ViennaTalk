@@ -7,6 +7,12 @@ Class {
 }
 
 { #category : 'accessing' }
+ViennaLoadingEpiLog class >> metadataName [
+
+	^ 'Loading'
+]
+
+{ #category : 'accessing' }
 ViennaLoadingEpiLog >> basicPred [
 
 	^ nil
