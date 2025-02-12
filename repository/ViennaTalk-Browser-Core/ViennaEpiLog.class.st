@@ -81,7 +81,7 @@ ViennaEpiLog >> comment [
 ViennaEpiLog >> comment: aString [
 
 	(aString isNil or: [ aString isEmpty ])
-		ifTrue: [ hideMetadata removeKey: 'comment' ]
+		ifTrue: [ hideMetadata removeKey: 'comment' ifAbsent: [  ] ]
 		ifFalse: [ hideMetadata at: 'comment' put: aString ]
 ]
 

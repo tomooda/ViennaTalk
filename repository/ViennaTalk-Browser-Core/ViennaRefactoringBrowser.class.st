@@ -1429,7 +1429,7 @@ ViennaRefactoringBrowser >> initState [
 ViennaRefactoringBrowser >> initialize [
 
 	hideStorage := ViennaHiDeStorage new
-		               basepath: FileLocator viennaTalkDirectory;
+		               basepath: FileLocator viennaTalkDocumentDirectory;
 		               yourself.
 	animation := ViennaAnimation default.
 	animation announcer
