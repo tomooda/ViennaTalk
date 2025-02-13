@@ -1,21 +1,60 @@
 Class {
 	#name : 'ViennaHiDeStorage',
 	#superclass : 'HiDeStorage',
-	#classInstVars : [
-		'current'
-	],
 	#category : 'ViennaTalk-Browser-Core-HiDeHo',
 	#package : 'ViennaTalk-Browser-Core',
 	#tag : 'HiDeHo'
 }
 
-{ #category : 'sole instance' }
-ViennaHiDeStorage class >> current [
+{ #category : 'instance creation' }
+ViennaHiDeStorage class >> for: aFileReferenceOrNil [
 
-	^ current ifNil: [
-		  current := self new
-			             basepath: FileLocator viennaTalkDocumentDirectory;
-			             yourself ]
+	| basepath |
+	basepath := aFileReferenceOrNil
+		            ifNotNil: [
+			            ((aFileReferenceOrNil isFile
+				              ifTrue: [ aFileReferenceOrNil parent ]
+				              ifFalse: [ aFileReferenceOrNil ]) / '.hideho')
+				            ensureCreateDirectory;
+				            yourself ]
+		            ifNil: [ FileSystem memory root ].
+	^ self new
+		  basepath: basepath;
+		  loadChronicle;
+		  yourself
+]
+
+{ #category : 'instance creation' }
+ViennaHiDeStorage class >> memory [
+
+	^ self new
+		  basepath: FileSystem memory root;
+		  yourself
+]
+
+{ #category : 'operations' }
+ViennaHiDeStorage >> chronicleSuchThat: aBlock [
+
+	| payloads |
+	payloads := chronicle values select: [ :payload |
+		            aBlock value: payload hideMetadata ].
+	^ payloads asSortedCollection: [ :newer :older |
+		  older hideMetadata timestamp <= newer hideMetadata timestamp ]
+]
+
+{ #category : 'operations' }
+ViennaHiDeStorage >> chronicleTail [
+
+	| tail tailtime |
+	chronicle ifEmpty: [ ^ ViennaVanillaEpiLog new hideStorage: self ].
+	tail := chronicle values anyOne.
+	tailtime := tail hideMetadata timestamp.
+	chronicle valuesDo: [ :persistency |
+		| time |
+		tailtime < (time := persistency hideMetadata timestamp) ifTrue: [
+			tail := persistency.
+			tailtime := time ] ].
+	^ tail
 ]
 
 { #category : 'class access' }

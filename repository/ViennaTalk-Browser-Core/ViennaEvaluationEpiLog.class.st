@@ -26,6 +26,7 @@ ViennaEvaluationEpiLog class >> metadataName [
 { #category : 'accessing' }
 ViennaEvaluationEpiLog >> expression [
 
+	expression ifNil: [ self hideLoad ].
 	^ expression
 ]
 
@@ -64,5 +65,5 @@ ViennaEvaluationEpiLog >> printOn: aStream [
 
 	aStream
 		nextPutAll: 'Eval ';
-		nextPutAll: expression
+		nextPutAll: self expression
 ]

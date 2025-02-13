@@ -533,7 +533,7 @@ ViennaRefactoringBrowser class >> initialize [
 ViennaRefactoringBrowser class >> openFromDisk: aFileReference [
 
 	^ self new
-		  importFromDisk: aFileReference;
+		  load: aFileReference;
 		  open
 ]
 
@@ -646,6 +646,7 @@ ViennaRefactoringBrowser class >> yellowSignalIcon [
 ViennaRefactoringBrowser >> accept: aStringOrText [
 
 	| newNode newAst copyMap parent oldNode module category definition |
+TimeProfiler spyOn:[		
 	newNode := self parser
 		           parse: aStringOrText asString
 		           onError: [ ^ false ].
@@ -666,7 +667,7 @@ ViennaRefactoringBrowser >> accept: aStringOrText [
 	self updateModuleList.
 	moduleList selectItem: (copyMap at: module ifAbsent: [ nil ]).
 	categoryList selectItem: (copyMap at: category ifAbsent: [ nil ]).
-	definitionList selectItem: (copyMap at: definition ifAbsent: [ nil ]).
+	definitionList selectItem: (copyMap at: definition ifAbsent: [ nil ])].
 	^ newNode
 ]
 
@@ -1046,7 +1047,9 @@ ViennaRefactoringBrowser >> epiLogListSelectionChanged [
 { #category : 'operations-epiLog' }
 ViennaRefactoringBrowser >> epiLogLoading: aViennaModularDocumentNode [
 
-	self epiLog: (self epiLog newLoading: aViennaModularDocumentNode)
+	self epiLog: (self epiLog
+			 newLoading: aViennaModularDocumentNode
+			 after: (ViennaHiDeStorage for: fileReference) chronicleTail)
 ]
 
 { #category : 'operations-epiLog' }
@@ -1086,6 +1089,12 @@ ViennaRefactoringBrowser >> epiLogRevertion: aViennaEpiLog [
 ViennaRefactoringBrowser >> epiLogTimeLineEnumerator [
 
 	^ ViennaEpiLogTimeLineEnumerator current
+]
+
+{ #category : 'operations-epiLog' }
+ViennaRefactoringBrowser >> epiLogVanilla [
+
+	self epiLog: ViennaEpiLog vanilla
 ]
 
 { #category : 'layouts' }
@@ -1143,78 +1152,10 @@ ViennaRefactoringBrowser >> executeRefactoring: aViennaRefactoring [
 			(result topLevelDefinition ifNil: [ categoryList selectedItem ]) ]
 ]
 
-{ #category : 'operations' }
-ViennaRefactoringBrowser >> export [
+{ #category : 'accessing' }
+ViennaRefactoringBrowser >> fileReference: aFileReference [
 
-	self hasFileReference
-		ifTrue: [ self exportToDisk ]
-		ifFalse: [
-			(UIManager default
-				 confirm: 'Export to'
-				 trueChoice: 'Directory'
-				 falseChoice: 'File')
-				ifTrue: [ self exportDirectory ]
-				ifFalse: [ self exportFile ] ]
-]
-
-{ #category : 'operations' }
-ViennaRefactoringBrowser >> exportDirectory [
-
-	(UIManager default
-		 chooseDirectory: 'Export directory'
-		 from: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :dir |
-		self specification modulesDo: [ :moduleNode |
-			| file |
-			file := dir / moduleNode identifier withExtension: 'vdmsl'.
-			file
-				ensureDeleteAll;
-				writeStreamDo: [ :stream |
-					stream nextPutAll:
-							((ViennaVDMFormatter format: moduleNode) withLineEndings:
-									 OSPlatform current lineEnding) ] ].
-		UIManager default message: 'Exported to ' , dir basename , '/.'.
-		self clearDirty ]
-]
-
-{ #category : 'operations' }
-ViennaRefactoringBrowser >> exportFile [
-
-	(UIManager default
-		 chooseForSaveFileReference: 'Export file'
-		 extensions: #( 'vdmsl' )
-		 path: FileLocator viennaTalkDocumentDirectory asFileReference)
-		ifNotNil: [ :file |
-			file
-				ensureDeleteAll;
-				writeStreamDo: [ :stream |
-					stream nextPutAll:
-							(self source withLineEndings: OSPlatform current lineEnding) ].
-			UIManager default message: 'Exported to ' , file basename , '.'.
-			self clearDirty ]
-]
-
-{ #category : 'operations' }
-ViennaRefactoringBrowser >> exportToDisk [
-
-	fileReference ifNotNil: [ :ref |
-		ref isDirectory
-			ifTrue: [
-				self specification modulesDo: [ :moduleNode |
-					| file |
-					file := ref / moduleNode identifier withExtension: 'vdmsl'.
-					file
-						ensureDeleteAll;
-						writeStreamDo: [ :stream |
-							stream nextPutAll:
-									((ViennaVDMFormatter format: moduleNode) withLineEndings:
-											 OSPlatform current lineEnding) ] ] ]
-			ifFalse: [
-				ref
-					ensureDeleteAll;
-					writeStreamDo: [ :stream |
-						stream nextPutAll:
-								(self source withLineEndings: OSPlatform current lineEnding) ] ].
-		self clearDirty ]
+	fileReference := aFileReference
 ]
 
 { #category : 'private' }
@@ -1359,65 +1300,6 @@ ViennaRefactoringBrowser >> ifShowsTimeLine: timeLineBlock ifShowsConstructionLi
 ]
 
 { #category : 'operations' }
-ViennaRefactoringBrowser >> importDirectory [
-
-	(UIManager default
-		 chooseDirectory: 'Import directory'
-		 from: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :dir |
-		fileReference := dir.
-		self importFromDisk ]
-]
-
-{ #category : 'operations' }
-ViennaRefactoringBrowser >> importFile [
-
-	(UIManager default
-		 chooseExistingFileReference: 'Import directory'
-		 extensions: #( 'vdmsl' )
-		 path: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :file |
-		fileReference := file.
-		self importFromDisk ]
-]
-
-{ #category : 'operations' }
-ViennaRefactoringBrowser >> importFromDisk [
-
-	fileReference ifNotNil: [ :ref |
-		ref isDirectory
-			ifTrue: [
-				| modelFiles testFiles source |
-				modelFiles := OrderedCollection new.
-				testFiles := OrderedCollection new.
-				ref files do: [ :file |
-					(file basename endsWith: '.vdmsl') ifTrue: [
-						(file basename endsWith: 'Test.vdmsl')
-							ifTrue: [ testFiles add: file ]
-							ifFalse: [ modelFiles add: file ] ] ].
-				modelFiles := modelFiles asSortedCollection: [ :less :more |
-					              less basename <= more basename ].
-				testFiles := testFiles asSortedCollection: [ :less :more |
-					             less basename <= more basename ].
-				source := String streamContents: [ :writeStream |
-					          modelFiles do: [ :file |
-						          writeStream nextPutAll:
-							          (file contents copyWith: Character cr)
-								          withInternalLineEndings ].
-					          testFiles do: [ :file |
-						          writeStream nextPutAll:
-							          (file contents copyWith: Character cr)
-								          withInternalLineEndings ] ].
-				self load: source ]
-			ifFalse: [ self load: ref contents withInternalLineEndings ] ]
-]
-
-{ #category : 'operations' }
-ViennaRefactoringBrowser >> importFromDisk: aFileReference [
-
-	fileReference := aFileReference.
-	self importFromDisk
-]
-
-{ #category : 'operations' }
 ViennaRefactoringBrowser >> initState [
 
 	animation init.
@@ -1428,9 +1310,6 @@ ViennaRefactoringBrowser >> initState [
 { #category : 'initialization' }
 ViennaRefactoringBrowser >> initialize [
 
-	hideStorage := ViennaHiDeStorage new
-		               basepath: FileLocator viennaTalkDocumentDirectory;
-		               yourself.
 	animation := ViennaAnimation default.
 	animation announcer
 		when: ViennaStateChanged do: [ self updateStateTable ] for: self;
@@ -1438,7 +1317,7 @@ ViennaRefactoringBrowser >> initialize [
 		do: [ self updateStateTableItems ]
 		for: self.
 	runsAllTests := false.
-	self epiLog: (ViennaEpiLog vanilla hideStorage: hideStorage).
+	self epiLogVanilla.
 	epiLogTags := Dictionary new.
 	dirty := false.
 	sliceNodes := IdentitySet new.
@@ -1747,7 +1626,33 @@ ViennaRefactoringBrowser >> jumpToModule: aString operation: anotherString [
 ]
 
 { #category : 'operations' }
-ViennaRefactoringBrowser >> load: aString [
+ViennaRefactoringBrowser >> load: aFileReference [
+TimeProfiler spyOn: [ 
+	self fileReference: aFileReference.
+	self reload]
+]
+
+{ #category : 'operations' }
+ViennaRefactoringBrowser >> loadFromDirectory [
+
+	(UIManager default
+		 chooseDirectory: 'Import directory'
+		 from: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :dir |
+		self load: dir ]
+]
+
+{ #category : 'operations' }
+ViennaRefactoringBrowser >> loadFromFile [
+
+	(UIManager default
+		 chooseExistingFileReference: 'Import directory'
+		 extensions: #( 'vdmsl' )
+		 path: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :file |
+		self load: file ]
+]
+
+{ #category : 'operations' }
+ViennaRefactoringBrowser >> loadSource: aString [
 
 	| ast |
 	ast := ViennaVDMParser new document end parse: aString.
@@ -1783,25 +1688,25 @@ ViennaRefactoringBrowser >> menuBar [
 									   addItem: [ :i |
 										   i
 											   name: 'Reload';
-											   action: [ self importFromDisk ];
+											   action: [ self reload ];
 											   enabled: [ self hasFileReference ] ];
 									   addItem: [ :i |
 										   i
 											   name: 'Load from Directory...';
-											   action: [ self importDirectory ] ];
+											   action: [ self loadFromDirectory ] ];
 									   addItem: [ :i |
 										   i
 											   name: 'Load from File...';
-											   action: [ self importFile ] ];
+											   action: [ self loadFromFile ] ];
 									   addItem: [ :i |
 										   i
 											   name: 'Save';
-											   action: [ self exportToDisk ];
+											   action: [ self save ];
 											   enabled: [ self hasFileReference ] ];
 									   addItem: [ :i |
 										   i
 											   name: 'Save As...';
-											   action: [ self export ] ] ];
+											   action: [ self saveAs ] ] ];
 							   addGroup: [ :g |
 								   g
 									   addItem: [ :i |
@@ -1883,7 +1788,7 @@ ViennaRefactoringBrowser >> modelChanged [
 			updateEpiLogList;
 			updateNamedEpiLogDropList.
 		self setDirty.
-		epiLog hasSpecificationChange ifTrue: [ self exportToDisk ].
+		epiLog hasSpecificationChange ifTrue: [ self save ].
 		self typecheck.
 		animation ifNotNil: [
 			| state |
@@ -1981,7 +1886,7 @@ ViennaRefactoringBrowser >> okToClose [
 	self isDirty ifFalse: [ ^ true ].
 	(UIManager default
 		 confirm: 'Export the spec before close?'
-		 orCancel: [ ^ false ]) ifTrue: [ self export ].
+		 orCancel: [ ^ false ]) ifTrue: [ self save ].
 	^ true
 ]
 
@@ -2100,6 +2005,13 @@ ViennaRefactoringBrowser >> playgroundTextContextMenu [
 						name: 'Execute it';
 						action: [ playgroundText doExecuteIt ] ] ] ].
 	^ menu
+]
+
+{ #category : 'operations' }
+ViennaRefactoringBrowser >> reload [
+
+	^ fileReference ifNotNil: [ :ref |
+		  self loadSource: (self sourceFrom: ref) ]
 ]
 
 { #category : 'operations-epiLog' }
@@ -2262,6 +2174,79 @@ ViennaRefactoringBrowser >> runTrace: aViennaNamedTraceNode interim: aBlock [
 	
 ]
 
+{ #category : 'operations' }
+ViennaRefactoringBrowser >> save [
+
+	fileReference ifNotNil: [ :ref |
+		ref isDirectory
+			ifTrue: [
+				self specification modulesDo: [ :moduleNode |
+					| file |
+					file := ref / moduleNode identifier withExtension: 'vdmsl'.
+					file
+						ensureDeleteAll;
+						writeStreamDo: [ :stream |
+							stream nextPutAll:
+									((ViennaVDMFormatter format: moduleNode) withLineEndings:
+											 OSPlatform current lineEnding) ] ] ]
+			ifFalse: [
+				ref
+					ensureDeleteAll;
+					writeStreamDo: [ :stream |
+						stream nextPutAll:
+								(self source withLineEndings: OSPlatform current lineEnding) ] ].
+		self clearDirty ]
+]
+
+{ #category : 'operations' }
+ViennaRefactoringBrowser >> saveAs [
+
+	(UIManager default
+		 confirm: 'Save to'
+		 trueChoice: 'Directory'
+		 falseChoice: 'File')
+		ifTrue: [ self saveAsDirectory ]
+		ifFalse: [ self saveAsFile ]
+]
+
+{ #category : 'operations' }
+ViennaRefactoringBrowser >> saveAsDirectory [
+
+	(UIManager default
+		 chooseDirectory: 'Directory to save'
+		 from: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :dir |
+		self specification modulesDo: [ :moduleNode |
+			| file |
+			file := dir / moduleNode identifier withExtension: 'vdmsl'.
+			file
+				ensureDeleteAll;
+				writeStreamDo: [ :stream |
+					stream nextPutAll:
+							((ViennaVDMFormatter format: moduleNode) withLineEndings:
+									 OSPlatform current lineEnding) ] ].
+		UIManager default message: 'Save to ' , dir basename , '/.'.
+		self fileReference: dir.
+		self clearDirty ]
+]
+
+{ #category : 'operations' }
+ViennaRefactoringBrowser >> saveAsFile [
+
+	(UIManager default
+		 chooseForSaveFileReference: 'File to save'
+		 extensions: #( 'vdmsl' )
+		 path: FileLocator viennaTalkDocumentDirectory asFileReference)
+		ifNotNil: [ :file |
+			file
+				ensureDeleteAll;
+				writeStreamDo: [ :stream |
+					stream nextPutAll:
+							(self source withLineEndings: OSPlatform current lineEnding) ].
+			UIManager default message: 'Save to ' , file basename , '.'.
+			self fileReference: file.
+			self clearDirty ]
+]
+
 { #category : 'private' }
 ViennaRefactoringBrowser >> setDirty [
 
@@ -2295,6 +2280,36 @@ ViennaRefactoringBrowser >> source [
 	^ self specification
 		ifNil: [ String new ]
 		ifNotNil: [ :ast | ViennaVDMFormatter format: ast ]
+]
+
+{ #category : 'private' }
+ViennaRefactoringBrowser >> sourceFrom: aFileReference [
+
+	^ aFileReference ifNotNil: [ :ref |
+		  ref isDirectory
+			  ifTrue: [
+				  | modelFiles testFiles |
+				  modelFiles := OrderedCollection new.
+				  testFiles := OrderedCollection new.
+				  ref files do: [ :file |
+					  (file basename endsWith: '.vdmsl') ifTrue: [
+						  (file basename endsWith: 'Test.vdmsl')
+							  ifTrue: [ testFiles add: file ]
+							  ifFalse: [ modelFiles add: file ] ] ].
+				  modelFiles := modelFiles asSortedCollection: [ :less :more |
+					                less basename <= more basename ].
+				  testFiles := testFiles asSortedCollection: [ :less :more |
+					               less basename <= more basename ].
+				  String streamContents: [ :writeStream |
+					  modelFiles do: [ :file |
+						  writeStream nextPutAll:
+							  (file contents copyWith: Character cr)
+								  withInternalLineEndings ].
+					  testFiles do: [ :file |
+						  writeStream nextPutAll:
+							  (file contents copyWith: Character cr)
+								  withInternalLineEndings ] ] ]
+			  ifFalse: [ ref contents withInternalLineEndings ] ]
 ]
 
 { #category : 'layouts' }

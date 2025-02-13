@@ -12,12 +12,6 @@ ViennaLoadingEpiLog class >> metadataName [
 	^ 'Loading'
 ]
 
-{ #category : 'accessing' }
-ViennaLoadingEpiLog >> basicPred [
-
-	^ nil
-]
-
 { #category : 'testing' }
 ViennaLoadingEpiLog >> isLoadEpiLog [
 

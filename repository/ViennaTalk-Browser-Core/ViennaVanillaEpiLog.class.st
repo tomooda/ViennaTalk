@@ -32,6 +32,12 @@ ViennaVanillaEpiLog >> isVanillaEpiLog [
 	^ true
 ]
 
+{ #category : 'accessing' }
+ViennaVanillaEpiLog >> prev [
+
+	^ nil
+]
+
 { #category : 'printing' }
 ViennaVanillaEpiLog >> printOn: aStream [
 

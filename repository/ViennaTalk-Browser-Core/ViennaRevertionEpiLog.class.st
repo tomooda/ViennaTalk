@@ -26,7 +26,7 @@ ViennaRevertionEpiLog class >> metadataName [
 { #category : 'accessing' }
 ViennaRevertionEpiLog >> basicPred [
 
-	^ destination
+	^ self destination
 ]
 
 { #category : 'accessing' }
@@ -38,6 +38,7 @@ ViennaRevertionEpiLog >> basicPred: aViennaEpiLog [
 { #category : 'accessing' }
 ViennaRevertionEpiLog >> destination [
 
+	destination ifNil: [ self hideLoad ].
 	^ destination
 ]
 
@@ -50,30 +51,30 @@ ViennaRevertionEpiLog >> destination: aViennaEpiLog [
 { #category : 'testing' }
 ViennaRevertionEpiLog >> hasChangeAt: aString module: anotherString [
 
-	^ ((destination specification moduleNamed: anotherString) ifNotNil: [
-		   :m | m resolveIdentifier: aString ])
+	^ ((self destination specification moduleNamed: anotherString)
+		   ifNotNil: [ :m | m resolveIdentifier: aString ])
 	  ~=
-		  ((prev specification moduleNamed: anotherString) ifNotNil: [ :m |
-			   m resolveIdentifier: aString ])
+		  ((self prev specification moduleNamed: anotherString) ifNotNil: [
+			   :m | m resolveIdentifier: aString ])
 ]
 
 { #category : 'testing' }
 ViennaRevertionEpiLog >> hasChangeAtModule: aString [
 
-	^ (destination specification moduleNamed: aString)
-	  ~= (prev specification moduleNamed: aString)
+	^ (self destination specification moduleNamed: aString)
+	  ~= (self prev specification moduleNamed: aString)
 ]
 
 { #category : 'testing' }
 ViennaRevertionEpiLog >> hasSpecificationChange [
 
-	^ destination specification ~= prev specification
+	^ self destination specification ~= self prev specification
 ]
 
 { #category : 'testing' }
 ViennaRevertionEpiLog >> hasStateChange [
 
-	^ destination state ~= prev state
+	^ self destination state ~= self prev state
 ]
 
 { #category : 'hideho-operations' }
@@ -89,6 +90,8 @@ ViennaRevertionEpiLog >> hideUpdateMetadataStorage: aHiDeStorage [
 
 	super hideUpdateMetadataStorage: aHiDeStorage.
 	destination ifNotNil: [
+		destination hideStorage = aHiDeStorage ifFalse: [
+			hideStorage chronicleSave: destination ].
 		hideMetadata
 			at: 'destination'
 			put: destination hideMetadata identity ]
@@ -103,33 +106,33 @@ ViennaRevertionEpiLog >> isRevertionEpiLog [
 { #category : 'accessing' }
 ViennaRevertionEpiLog >> pred [
 
-	^ destination isRevertionEpiLog
-		  ifTrue: [ destination pred ]
-		  ifFalse: [ destination ]
+	^ self destination isRevertionEpiLog
+		  ifTrue: [ self destination pred ]
+		  ifFalse: [ self destination ]
 ]
 
 { #category : 'printing' }
 ViennaRevertionEpiLog >> printOn: aStream [
 
 	aStream nextPutAll: 'Revert to "'.
-	destination printOn: aStream.
+	self destination printOn: aStream.
 	aStream nextPut: $"
 ]
 
 { #category : 'accessing' }
 ViennaRevertionEpiLog >> revertDestination [
 
-	^ destination
+	^ self destination
 ]
 
 { #category : 'accessing' }
 ViennaRevertionEpiLog >> specification [
 
-	^ destination specification
+	^ self destination specification
 ]
 
 { #category : 'accessing' }
 ViennaRevertionEpiLog >> state [
 
-	^ destination state
+	^ self destination state
 ]

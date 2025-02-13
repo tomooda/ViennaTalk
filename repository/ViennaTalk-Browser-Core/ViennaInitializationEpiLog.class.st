@@ -68,6 +68,7 @@ ViennaInitializationEpiLog >> printOn: aStream [
 { #category : 'accessing' }
 ViennaInitializationEpiLog >> state [
 
+	state ifNil: [ self hideLoad ].
 	^ state
 ]
 

@@ -36,30 +36,33 @@ ViennaModificationEpiLog class >> metadataName [
 { #category : 'testing' }
 ViennaModificationEpiLog >> hasChangeAt: aString module: anotherString [
 
-	^ ((specification moduleNamed: anotherString) ifNotNil: [ :m |
-		   m resolveIdentifier: aString ])
-	  ~=
-		  ((prev ifNotNil: [ prev specification moduleNamed: anotherString ])
-			   ifNotNil: [ :m | m resolveIdentifier: aString ])
+	^ ((self specification moduleNamed: anotherString) ifNotNil: [ :m |
+		   m resolveIdentifier: aString ]) ~= ((self prev ifNotNil: [
+		    self prev specification moduleNamed: anotherString ]) ifNotNil: [
+		   :m | m resolveIdentifier: aString ])
 ]
 
 { #category : 'testing' }
 ViennaModificationEpiLog >> hasChangeAtModule: aString [
 
-	^ (specification moduleNamed: aString)
-	  ~= (prev ifNotNil: [ prev specification moduleNamed: aString ])
+	^ (self specification moduleNamed: aString)
+	  ~=
+	  (self prev ifNotNil: [
+		   self prev specification moduleNamed: aString ])
 ]
 
 { #category : 'testing' }
 ViennaModificationEpiLog >> hasSpecificationChange [
 
-	^ prev isNil or: [ prev specification ~= specification ]
+	^ self prev isNil or: [
+		  self prev specification ~= self specification ]
 ]
 
 { #category : 'testing' }
 ViennaModificationEpiLog >> hasStateChange [
 
-	^ state notNil and: [ prev isNil or: [ prev state ~= state ] ]
+	^ self state notNil and: [
+		  self prev isNil or: [ self prev state ~= self state ] ]
 ]
 
 { #category : 'hideho-operations' }
@@ -114,6 +117,7 @@ ViennaModificationEpiLog >> printOn: aStream [
 { #category : 'accessing' }
 ViennaModificationEpiLog >> specification [
 
+	specification ifNil: [ self hideLoad ].
 	^ specification
 ]
 
@@ -126,7 +130,9 @@ ViennaModificationEpiLog >> specification: aViennaModularDocumentNode [
 { #category : 'accessing' }
 ViennaModificationEpiLog >> state [
 
-	^ state ifNil: [ prev ifNotNil: #state ifNil: [ Dictionary new ] ]
+	self specification.
+	^ state ifNil: [
+		  self prev ifNotNil: #state ifNil: [ Dictionary new ] ]
 ]
 
 { #category : 'accessing' }

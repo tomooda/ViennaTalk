@@ -36,7 +36,8 @@ ViennaExecutionEpiLog class >> metadataName [
 { #category : 'testing' }
 ViennaExecutionEpiLog >> hasStateChange [
 
-	^ state notNil and: [ prev isNil or: [ prev state ~= state ] ]
+	^ self state notNil and: [
+		  self prev isNil or: [ self prev state ~= self state ] ]
 ]
 
 { #category : 'hideho-operations' }
@@ -74,13 +75,15 @@ ViennaExecutionEpiLog >> printOn: aStream [
 
 	aStream
 		nextPutAll: 'Exec ';
-		nextPutAll: statement
+		nextPutAll: self statement
 ]
 
 { #category : 'accessing' }
 ViennaExecutionEpiLog >> state [
 
-	^ state ifNil: [ prev ifNotNil: #state ifNil: [ Dictionary new ] ]
+	self statement.
+	^ state ifNil: [
+		  self prev ifNotNil: #state ifNil: [ Dictionary new ] ]
 ]
 
 { #category : 'accessing' }
@@ -92,6 +95,7 @@ ViennaExecutionEpiLog >> state: aDictionary [
 { #category : 'accessing' }
 ViennaExecutionEpiLog >> statement [
 
+	statement ifNil: [ self hideLoad ].
 	^ statement
 ]
 
