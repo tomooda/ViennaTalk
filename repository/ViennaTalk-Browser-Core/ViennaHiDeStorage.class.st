@@ -46,7 +46,11 @@ ViennaHiDeStorage >> chronicleSuchThat: aBlock [
 ViennaHiDeStorage >> chronicleTail [
 
 	| tail tailtime |
-	chronicle ifEmpty: [ ^ ViennaVanillaEpiLog new hideStorage: self ].
+	chronicle ifEmpty: [
+		^ ViennaVanillaEpiLog new
+			  hideStorage: self;
+			  hideSave;
+			  yourself ].
 	tail := chronicle values anyOne.
 	tailtime := tail hideMetadata timestamp.
 	chronicle valuesDo: [ :persistency |

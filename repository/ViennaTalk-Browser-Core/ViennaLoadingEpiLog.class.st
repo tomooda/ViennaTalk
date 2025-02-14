@@ -13,9 +13,9 @@ ViennaLoadingEpiLog class >> metadataName [
 ]
 
 { #category : 'testing' }
-ViennaLoadingEpiLog >> isLoadEpiLog [
+ViennaLoadingEpiLog >> isLoadingEpiLog [
 
-	^ false
+	^ true
 ]
 
 { #category : 'testing' }

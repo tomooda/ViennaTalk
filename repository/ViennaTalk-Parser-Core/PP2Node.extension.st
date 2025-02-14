@@ -1,23 +1,23 @@
-Extension { #name : #PP2Node }
+Extension { #name : 'PP2Node' }
 
-{ #category : #'*ViennaTalk-Parser-Core' }
+{ #category : '*ViennaTalk-Parser-Core' }
 PP2Node >> =>> aBlock [
 	"Answer a new parser that performs aBlock as action handler on success."
 
 	^ ViennaPositionParser on: self block: aBlock
 ]
 
-{ #category : #'*ViennaTalk-Parser-Core' }
+{ #category : '*ViennaTalk-Parser-Core' }
 PP2Node >> plusA [
 	^ self plus ==> #asArray
 ]
 
-{ #category : #'*ViennaTalk-Parser-Core' }
+{ #category : '*ViennaTalk-Parser-Core' }
 PP2Node >> starA [
 	^ self star ==> #asArray
 ]
 
-{ #category : #'*ViennaTalk-Parser-Core' }
+{ #category : '*ViennaTalk-Parser-Core' }
 PP2Node >> withoutSeparators [
 	^ self
 		==> [ :items | 

@@ -1,6 +1,6 @@
-Extension { #name : #ViennaNode }
+Extension { #name : 'ViennaNode' }
 
-{ #category : #'*ViennaTalk-Parser-Core' }
+{ #category : '*ViennaTalk-Parser-Core' }
 ViennaNode >> parser [
 
 	^ nil

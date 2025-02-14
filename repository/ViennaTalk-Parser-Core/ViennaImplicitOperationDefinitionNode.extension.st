@@ -1,6 +1,6 @@
-Extension { #name : #ViennaImplicitOperationDefinitionNode }
+Extension { #name : 'ViennaImplicitOperationDefinitionNode' }
 
-{ #category : #'*ViennaTalk-Parser-Core' }
+{ #category : '*ViennaTalk-Parser-Core' }
 ViennaImplicitOperationDefinitionNode >> parser [
 
 	^ ViennaVDMParser new operationDefinition end

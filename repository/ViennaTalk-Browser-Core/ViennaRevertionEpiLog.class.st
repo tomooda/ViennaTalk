@@ -2,7 +2,7 @@ Class {
 	#name : 'ViennaRevertionEpiLog',
 	#superclass : 'ViennaEpiLog',
 	#instVars : [
-		'destination'
+		'#destination => HiDePersistencySlot'
 	],
 	#category : 'ViennaTalk-Browser-Core-EpiLog',
 	#package : 'ViennaTalk-Browser-Core',
@@ -26,7 +26,7 @@ ViennaRevertionEpiLog class >> metadataName [
 { #category : 'accessing' }
 ViennaRevertionEpiLog >> basicPred [
 
-	^ self destination
+	^ destination
 ]
 
 { #category : 'accessing' }
@@ -38,7 +38,6 @@ ViennaRevertionEpiLog >> basicPred: aViennaEpiLog [
 { #category : 'accessing' }
 ViennaRevertionEpiLog >> destination [
 
-	destination ifNil: [ self hideLoad ].
 	^ destination
 ]
 
@@ -51,30 +50,30 @@ ViennaRevertionEpiLog >> destination: aViennaEpiLog [
 { #category : 'testing' }
 ViennaRevertionEpiLog >> hasChangeAt: aString module: anotherString [
 
-	^ ((self destination specification moduleNamed: anotherString)
-		   ifNotNil: [ :m | m resolveIdentifier: aString ])
+	^ ((destination specification moduleNamed: anotherString) ifNotNil: [
+		   :m | m resolveIdentifier: aString ])
 	  ~=
-		  ((self prev specification moduleNamed: anotherString) ifNotNil: [
-			   :m | m resolveIdentifier: aString ])
+		  ((prev specification moduleNamed: anotherString) ifNotNil: [ :m |
+			   m resolveIdentifier: aString ])
 ]
 
 { #category : 'testing' }
 ViennaRevertionEpiLog >> hasChangeAtModule: aString [
 
-	^ (self destination specification moduleNamed: aString)
-	  ~= (self prev specification moduleNamed: aString)
+	^ (destination specification moduleNamed: aString)
+	  ~= (prev specification moduleNamed: aString)
 ]
 
 { #category : 'testing' }
 ViennaRevertionEpiLog >> hasSpecificationChange [
 
-	^ self destination specification ~= self prev specification
+	^ destination specification ~= prev specification
 ]
 
 { #category : 'testing' }
 ViennaRevertionEpiLog >> hasStateChange [
 
-	^ self destination state ~= self prev state
+	^ destination state ~= prev state
 ]
 
 { #category : 'hideho-operations' }
@@ -103,36 +102,28 @@ ViennaRevertionEpiLog >> isRevertionEpiLog [
 	^ true
 ]
 
-{ #category : 'accessing' }
-ViennaRevertionEpiLog >> pred [
-
-	^ self destination isRevertionEpiLog
-		  ifTrue: [ self destination pred ]
-		  ifFalse: [ self destination ]
-]
-
 { #category : 'printing' }
 ViennaRevertionEpiLog >> printOn: aStream [
 
 	aStream nextPutAll: 'Revert to "'.
-	self destination printOn: aStream.
+	destination printOn: aStream.
 	aStream nextPut: $"
 ]
 
 { #category : 'accessing' }
 ViennaRevertionEpiLog >> revertDestination [
 
-	^ self destination
+	^ destination
 ]
 
 { #category : 'accessing' }
 ViennaRevertionEpiLog >> specification [
 
-	^ self destination specification
+	^ destination specification
 ]
 
 { #category : 'accessing' }
 ViennaRevertionEpiLog >> state [
 
-	^ self destination state
+	^ destination state
 ]

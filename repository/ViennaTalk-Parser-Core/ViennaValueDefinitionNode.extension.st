@@ -1,6 +1,6 @@
-Extension { #name : #ViennaValueDefinitionNode }
+Extension { #name : 'ViennaValueDefinitionNode' }
 
-{ #category : #'*ViennaTalk-Parser-Core' }
+{ #category : '*ViennaTalk-Parser-Core' }
 ViennaValueDefinitionNode >> parser [
 
 	^ ViennaVDMParser new valueDefinition

@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaPositionAction,
-	#superclass : #PP2Strategy,
-	#category : #'ViennaTalk-Parser-Core'
+	#name : 'ViennaPositionAction',
+	#superclass : 'PP2Strategy',
+	#category : 'ViennaTalk-Parser-Core',
+	#package : 'ViennaTalk-Parser-Core'
 }
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaPositionAction >> parseOn: aPP2Context [
 	| start element end |
 	start := aPP2Context position + 1.

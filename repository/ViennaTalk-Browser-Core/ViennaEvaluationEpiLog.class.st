@@ -2,7 +2,7 @@ Class {
 	#name : 'ViennaEvaluationEpiLog',
 	#superclass : 'ViennaEpiLog',
 	#instVars : [
-		'expression'
+		'#expression => HiDePersistencySlot'
 	],
 	#category : 'ViennaTalk-Browser-Core-EpiLog',
 	#package : 'ViennaTalk-Browser-Core',
@@ -26,7 +26,6 @@ ViennaEvaluationEpiLog class >> metadataName [
 { #category : 'accessing' }
 ViennaEvaluationEpiLog >> expression [
 
-	expression ifNil: [ self hideLoad ].
 	^ expression
 ]
 

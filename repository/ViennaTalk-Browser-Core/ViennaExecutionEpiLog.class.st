@@ -2,8 +2,8 @@ Class {
 	#name : 'ViennaExecutionEpiLog',
 	#superclass : 'ViennaEpiLog',
 	#instVars : [
-		'statement',
-		'state'
+		'#statement => HiDePersistencySlot',
+		'#state => HiDePersistencySlot'
 	],
 	#category : 'ViennaTalk-Browser-Core-EpiLog',
 	#package : 'ViennaTalk-Browser-Core',
@@ -36,8 +36,7 @@ ViennaExecutionEpiLog class >> metadataName [
 { #category : 'testing' }
 ViennaExecutionEpiLog >> hasStateChange [
 
-	^ self state notNil and: [
-		  self prev isNil or: [ self prev state ~= self state ] ]
+	^ state notNil and: [ prev isNil or: [ prev state ~= state ] ]
 ]
 
 { #category : 'hideho-operations' }
@@ -81,21 +80,18 @@ ViennaExecutionEpiLog >> printOn: aStream [
 { #category : 'accessing' }
 ViennaExecutionEpiLog >> state [
 
-	self statement.
-	^ state ifNil: [
-		  self prev ifNotNil: #state ifNil: [ Dictionary new ] ]
+	^ state ifNil: [ prev ifNotNil: #state ifNil: [ Dictionary new ] ]
 ]
 
 { #category : 'accessing' }
 ViennaExecutionEpiLog >> state: aDictionary [
 
-	self state ~= aDictionary ifTrue: [ state := aDictionary ]
+	state ~= aDictionary ifTrue: [ state := aDictionary ]
 ]
 
 { #category : 'accessing' }
 ViennaExecutionEpiLog >> statement [
 
-	statement ifNil: [ self hideLoad ].
 	^ statement
 ]
 

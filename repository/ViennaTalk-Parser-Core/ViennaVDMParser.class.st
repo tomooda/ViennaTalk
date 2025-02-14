@@ -1,25 +1,26 @@
 Class {
-	#name : #ViennaVDMParser,
-	#superclass : #ViennaVDMGrammar,
+	#name : 'ViennaVDMParser',
+	#superclass : 'ViennaVDMGrammar',
 	#instVars : [
 		'annotations'
 	],
-	#category : #'ViennaTalk-Parser-Core'
+	#category : 'ViennaTalk-Parser-Core',
+	#package : 'ViennaTalk-Parser-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaVDMParser class >> ignoredNames [
 
 	^ super ignoredNames , #( 'annotations' )
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> abs: arg [
 
 	^ ViennaArithmeticAbsNode expression: arg
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> access [
 
 	^ super access =>> [ :start :end :string |
@@ -28,7 +29,7 @@ ViennaVDMParser >> access [
 		  yourself ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> accessFunctionDefinition [
 
 	self flushAnnotations.
@@ -40,7 +41,7 @@ ViennaVDMParser >> accessFunctionDefinition [
 		  yourself ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> accessOperationDefinition [
 
 	self flushAnnotations.
@@ -52,7 +53,7 @@ ViennaVDMParser >> accessOperationDefinition [
 		  yourself ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> accessTypeDefinition [
 
 	self flushAnnotations.
@@ -64,7 +65,7 @@ ViennaVDMParser >> accessTypeDefinition [
 		  yourself ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> accessValueDefinition [
 
 	self flushAnnotations.
@@ -76,14 +77,14 @@ ViennaVDMParser >> accessValueDefinition [
 		  yourself ]
 ]
 
-{ #category : #annotations }
+{ #category : 'annotations' }
 ViennaVDMParser >> addAnnotation: aString [
 
 	annotations add: aString.
 	^ aString
 ]
 
-{ #category : #'parsers-statements' }
+{ #category : 'parsers-statements' }
 ViennaVDMParser >> alwaysStatement [
 
 	^ super alwaysStatement =>> [ :start :end :pair |
@@ -94,13 +95,13 @@ ViennaVDMParser >> alwaysStatement [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> and: arg1 and: arg2 [
 
 	^ ViennaAndNode expression: arg1 expression: arg2
 ]
 
-{ #category : #'parsers-types' }
+{ #category : 'parsers-types' }
 ViennaVDMParser >> anonymousField [
 	^ super anonymousField
 		=>> [ :start :end :typeNode | 
@@ -111,13 +112,13 @@ ViennaVDMParser >> anonymousField [
 				yourself)} ]
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> apply: func args: args [
 
 	^ ViennaApplyNode expression: func argumentExpressionList: args
 ]
 
-{ #category : #'parsers-statements' }
+{ #category : 'parsers-statements' }
 ViennaVDMParser >> assignStatement [
 
 	^ super assignStatement =>> [ :start :end :pair |
@@ -128,7 +129,7 @@ ViennaVDMParser >> assignStatement [
 		  yourself ]
 ]
 
-{ #category : #'parsers-statements' }
+{ #category : 'parsers-statements' }
 ViennaVDMParser >> assignmentDefinition [
 
 	^ super assignmentDefinition =>> [ :start :end :array |
@@ -140,7 +141,7 @@ ViennaVDMParser >> assignmentDefinition [
 		  yourself ]
 ]
 
-{ #category : #'parsers-types' }
+{ #category : 'parsers-types' }
 ViennaVDMParser >> basicType [
 
 	^ super basicType =>> [ :start :end :ast |
@@ -149,7 +150,7 @@ ViennaVDMParser >> basicType [
 		  yourself ]
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : 'parsers-patterns' }
 ViennaVDMParser >> bindList [
 
 	^ super bindList =>> [ :start :end :array |
@@ -158,7 +159,7 @@ ViennaVDMParser >> bindList [
 		  yourself ]
 ]
 
-{ #category : #'parsers-statements' }
+{ #category : 'parsers-statements' }
 ViennaVDMParser >> blockStatement [
 
 	^ super blockStatement =>> [ :start :end :array |
@@ -167,7 +168,7 @@ ViennaVDMParser >> blockStatement [
 		  yourself ]
 ]
 
-{ #category : #'parsers-statements' }
+{ #category : 'parsers-statements' }
 ViennaVDMParser >> callStatement [
 
 	^ super callStatement =>> [ :start :end :array |
@@ -178,13 +179,13 @@ ViennaVDMParser >> callStatement [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> card: arg [
 
 	^ ViennaSetCardinalityNode expression: arg
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> casesExpression [
 
 	^ super casesExpression =>> [ :start :end :triple |
@@ -196,7 +197,7 @@ ViennaVDMParser >> casesExpression [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> casesExpressionAlternative [
 
 	^ super casesExpressionAlternative =>> [ :start :end :pair |
@@ -207,7 +208,7 @@ ViennaVDMParser >> casesExpressionAlternative [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> casesExpressionAlternatives [
 
 	^ super casesExpressionAlternatives =>> [ :start :end :array |
@@ -216,7 +217,7 @@ ViennaVDMParser >> casesExpressionAlternatives [
 		  yourself ]
 ]
 
-{ #category : #'parsers-statements' }
+{ #category : 'parsers-statements' }
 ViennaVDMParser >> casesStatement [
 
 	^ super casesStatement =>> [ :start :end :array |
@@ -228,7 +229,7 @@ ViennaVDMParser >> casesStatement [
 		  yourself ]
 ]
 
-{ #category : #'parsers-statements' }
+{ #category : 'parsers-statements' }
 ViennaVDMParser >> casesStatementAlternative [
 
 	^ super casesStatementAlternative =>> [ :start :end :array |
@@ -239,7 +240,7 @@ ViennaVDMParser >> casesStatementAlternative [
 		  yourself ]
 ]
 
-{ #category : #'parsers-statements' }
+{ #category : 'parsers-statements' }
 ViennaVDMParser >> casesStatementAlternatives [
 
 	^ super casesStatementAlternatives =>> [ :start :end :array |
@@ -248,7 +249,7 @@ ViennaVDMParser >> casesStatementAlternatives [
 		  yourself ]
 ]
 
-{ #category : #'parsers-types' }
+{ #category : 'parsers-types' }
 ViennaVDMParser >> compositeType [
 
 	^ super compositeType =>> [ :start :end :array |
@@ -259,25 +260,25 @@ ViennaVDMParser >> compositeType [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> compositionExpression: expr1 and: expr2 [
 
 	^ ViennaCompositionNode expression: expr1 expression: expr2
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> conc: arg [
 
 	^ ViennaDistributedSequenceConcatenationNode expression: arg
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> concat: arg1 and: arg2 [
 
 	^ ViennaSequenceConcatenateNode expression: arg1 expression: arg2
 ]
 
-{ #category : #'parsers-statements' }
+{ #category : 'parsers-statements' }
 ViennaVDMParser >> dclStatement [
 
 	^ super dclStatement =>> [ :start :end :array |
@@ -286,7 +287,7 @@ ViennaVDMParser >> dclStatement [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> defExpression [
 
 	^ super defExpression =>> [ :start :end :array |
@@ -298,7 +299,7 @@ ViennaVDMParser >> defExpression [
 		  yourself ]
 ]
 
-{ #category : #'parsers-statements' }
+{ #category : 'parsers-statements' }
 ViennaVDMParser >> defStatement [
 
 	^ super defStatement =>> [ :start :end :pair |
@@ -309,25 +310,25 @@ ViennaVDMParser >> defStatement [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> diff: arg1 and: arg2 [
 
 	^ ViennaSetDifferenceNode expression: arg1 expression: arg2
 ]
 
-{ #category : #'parsers-traces' }
+{ #category : 'parsers-traces' }
 ViennaVDMParser >> digits [
 
 	^ super digits ==> #asInteger
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> dinter: arg [
 
 	^ ViennaDistributedSetIntersectionNode expression: arg
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> div: arg1 and: arg2 [
 
 	^ ViennaArithmeticIntegerDivisionNode
@@ -335,31 +336,31 @@ ViennaVDMParser >> div: arg1 and: arg2 [
 		  expression: arg2
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> dom: arg [
 
 	^ ViennaMapDomainNode expression: arg
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> dunion: arg [
 
 	^ ViennaDistributedSetUnionNode expression: arg
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> elems: arg [
 
 	^ ViennaSequenceElementsNode expression: arg
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> equal: arg1 and: arg2 [
 
 	^ ViennaEqualNode expression: arg1 expression: arg2
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> equalDefinition [
 
 	^ super equalDefinition =>> [ :start :end :array |
@@ -370,7 +371,7 @@ ViennaVDMParser >> equalDefinition [
 		  yourself ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> equalDefinitionList [
 
 	^ super equalDefinitionList =>> [ :start :end :array |
@@ -379,7 +380,7 @@ ViennaVDMParser >> equalDefinitionList [
 		  yourself ]
 ]
 
-{ #category : #'parsers-types' }
+{ #category : 'parsers-types' }
 ViennaVDMParser >> equalityAbstractionField [
 	^ super equalityAbstractionField
 		==> [ :pair | 
@@ -391,13 +392,13 @@ ViennaVDMParser >> equalityAbstractionField [
 			fieldType} ]
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> equiv: arg1 and: arg2 [
 
 	^ ViennaLogicalEquivalenceNode expression: arg1 expression: arg2
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> error [
 
 	^ super error =>> [ :start :end :array |
@@ -409,7 +410,7 @@ ViennaVDMParser >> error [
 		  yourself ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> errorList [
 
 	^ super errorList =>> [ :start :end :array |
@@ -418,7 +419,7 @@ ViennaVDMParser >> errorList [
 		  yourself ]
 ]
 
-{ #category : #'parsers-statements' }
+{ #category : 'parsers-statements' }
 ViennaVDMParser >> errorStatement [
 
 	^ super errorStatement =>> [ :start :end :string |
@@ -427,7 +428,7 @@ ViennaVDMParser >> errorStatement [
 		  yourself ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> exceptions [
 
 	^ super exceptions =>> [ :start :end :errorList |
@@ -436,7 +437,7 @@ ViennaVDMParser >> exceptions [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> exists1Expression [
 
 	^ super exists1Expression =>> [ :start :end :array |
@@ -447,7 +448,7 @@ ViennaVDMParser >> exists1Expression [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> existsExpression [
 
 	^ super existsExpression =>> [ :start :end :array |
@@ -458,7 +459,7 @@ ViennaVDMParser >> existsExpression [
 		  yourself ]
 ]
 
-{ #category : #'parsers-statements' }
+{ #category : 'parsers-statements' }
 ViennaVDMParser >> exitStatement [
 
 	^ super exitStatement =>> [ :start :end :expr |
@@ -467,7 +468,7 @@ ViennaVDMParser >> exitStatement [
 		  yourself ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> explicitFunctionDefinition [
 
 	^ super explicitFunctionDefinition =>> [ :start :end :array |
@@ -484,7 +485,7 @@ ViennaVDMParser >> explicitFunctionDefinition [
 		  yourself ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> explicitOperationDefinition [
 
 	^ super explicitOperationDefinition =>> [ :start :end :array |
@@ -499,7 +500,7 @@ ViennaVDMParser >> explicitOperationDefinition [
 		  yourself ]
 ]
 
-{ #category : #'parsers-interfaces' }
+{ #category : 'parsers-interfaces' }
 ViennaVDMParser >> exportDefinition [
 
 	^ super exportDefinition =>> [ :start :end :moduleSignature |
@@ -508,7 +509,7 @@ ViennaVDMParser >> exportDefinition [
 		  yourself ]
 ]
 
-{ #category : #'parsers-interfaces' }
+{ #category : 'parsers-interfaces' }
 ViennaVDMParser >> exportFunctionsSignature [
 
 	^ super exportFunctionsSignature =>> [ :start :end :array |
@@ -517,7 +518,7 @@ ViennaVDMParser >> exportFunctionsSignature [
 		  yourself ]
 ]
 
-{ #category : #'parsers-interfaces' }
+{ #category : 'parsers-interfaces' }
 ViennaVDMParser >> exportModuleSignature [
 
 	^ super exportModuleSignature =>> [ :start :end :array |
@@ -532,7 +533,7 @@ ViennaVDMParser >> exportModuleSignature [
 				  yourself ] ]
 ]
 
-{ #category : #'parsers-interfaces' }
+{ #category : 'parsers-interfaces' }
 ViennaVDMParser >> exportOperationsSignature [
 
 	^ super exportOperationsSignature =>> [ :start :end :array |
@@ -541,7 +542,7 @@ ViennaVDMParser >> exportOperationsSignature [
 		  yourself ]
 ]
 
-{ #category : #'parsers-interfaces' }
+{ #category : 'parsers-interfaces' }
 ViennaVDMParser >> exportTypesSignature [
 
 	^ super exportTypesSignature =>> [ :start :end :array |
@@ -550,7 +551,7 @@ ViennaVDMParser >> exportTypesSignature [
 		  yourself ]
 ]
 
-{ #category : #'parsers-interfaces' }
+{ #category : 'parsers-interfaces' }
 ViennaVDMParser >> exportValuesSignature [
 
 	^ super exportValuesSignature =>> [ :start :end :array |
@@ -559,7 +560,7 @@ ViennaVDMParser >> exportValuesSignature [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 ViennaVDMParser >> expression [
 	^ super expression
 		=>> [ :start :end :node | 
@@ -568,7 +569,7 @@ ViennaVDMParser >> expression [
 				yourself ]
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 ViennaVDMParser >> expressionExceptEquality [
 	^ super expressionExceptEquality
 		=>> [ :start :end :node | 
@@ -577,7 +578,7 @@ ViennaVDMParser >> expressionExceptEquality [
 				yourself ]
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> expressionList [
 
 	^ super expressionList =>> [ :start :end :array |
@@ -586,7 +587,7 @@ ViennaVDMParser >> expressionList [
 		  yourself ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> extendedExplicitFunctionDefinition [
 
 	^ super extendedExplicitFunctionDefinition
@@ -604,7 +605,7 @@ ViennaVDMParser >> extendedExplicitFunctionDefinition [
 			  yourself ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> extendedExplicitOperationDefinition [
 
 	^ super extendedExplicitOperationDefinition
@@ -622,7 +623,7 @@ ViennaVDMParser >> extendedExplicitOperationDefinition [
 			  yourself ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> externals [
 
 	^ super externals =>> [ :start :end :array |
@@ -631,7 +632,7 @@ ViennaVDMParser >> externals [
 		  yourself ]
 ]
 
-{ #category : #'parsers-types' }
+{ #category : 'parsers-types' }
 ViennaVDMParser >> field [
 
 	^ super field =>> [ :start :end :array |
@@ -643,7 +644,7 @@ ViennaVDMParser >> field [
 		  yourself ]
 ]
 
-{ #category : #'parsers-types' }
+{ #category : 'parsers-types' }
 ViennaVDMParser >> fieldList [
 
 	^ super fieldList =>> [ :start :end :array |
@@ -652,19 +653,19 @@ ViennaVDMParser >> fieldList [
 		  yourself ]
 ]
 
-{ #category : #'parsers-statements' }
+{ #category : 'parsers-statements' }
 ViennaVDMParser >> fieldReference: stateDesig with: field [
 
 	^ ViennaFieldReferenceNode stateDesignator: stateDesig field: field
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> fieldSelect: record with: field [
 
 	^ ViennaFieldSelectNode expression: record field: field
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> flatDocument [
 
 	^ super flatDocument =>> [ :start :end :array |
@@ -673,13 +674,13 @@ ViennaVDMParser >> flatDocument [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> floor: arg [
 
 	^ ViennaFloorNode expression: arg
 ]
 
-{ #category : #annotations }
+{ #category : 'annotations' }
 ViennaVDMParser >> flushAnnotations [
 
 	| result |
@@ -688,7 +689,7 @@ ViennaVDMParser >> flushAnnotations [
 	^ result
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> forallExpression [
 
 	^ super forallExpression =>> [ :start :end :array |
@@ -699,7 +700,7 @@ ViennaVDMParser >> forallExpression [
 		  yourself ]
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaVDMParser >> format: aString [
 
 	| ast |
@@ -725,7 +726,7 @@ ViennaVDMParser >> format: aString [
 							  , (source copyFrom: index + 1 to: source size) ] ] ]
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaVDMParser >> format: aString width: anInteger [
 
 	| ast |
@@ -750,13 +751,13 @@ ViennaVDMParser >> format: aString width: anInteger [
 							  , (source copyFrom: index + 1 to: source size) ] ] ]
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> fraction: arg1 and: arg2 [
 
 	^ ViennaArithmeticDivideNode expression: arg1 expression: arg2
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> functionDefinition [
 
 	^ super functionDefinition =>> [ :start :end :body |
@@ -765,7 +766,7 @@ ViennaVDMParser >> functionDefinition [
 		  yourself ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> functionDefinitions [
 
 	^ super functionDefinitions =>> [ :start :end :array |
@@ -774,7 +775,7 @@ ViennaVDMParser >> functionDefinitions [
 		  yourself ]
 ]
 
-{ #category : #'parsers-interfaces' }
+{ #category : 'parsers-interfaces' }
 ViennaVDMParser >> functionExport [
 
 	^ super functionExport =>> [ :start :end :array |
@@ -786,7 +787,7 @@ ViennaVDMParser >> functionExport [
 		  yourself ]
 ]
 
-{ #category : #'parsers-interfaces' }
+{ #category : 'parsers-interfaces' }
 ViennaVDMParser >> functionImport [
 
 	^ super functionImport =>> [ :start :end :array |
@@ -799,7 +800,7 @@ ViennaVDMParser >> functionImport [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> functionTypeInstantiation: func args: args [
 
 	^ ViennaFunctionTypeInstantiationNode
@@ -807,25 +808,25 @@ ViennaVDMParser >> functionTypeInstantiation: func args: args [
 		  functionTypeArgs: (ViennaFunctionTypeArgsNode withAll: args)
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> greater: arg1 and: arg2 [
 
 	^ ViennaGreaterThanNode expression: arg1 expression: arg2
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> greaterEq: arg1 and: arg2 [
 
 	^ ViennaGreaterThanOrEqualNode expression: arg1 expression: arg2
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> hd: arg [
 
 	^ ViennaSequenceHeadNode expression: arg
 ]
 
-{ #category : #'parsers-types' }
+{ #category : 'parsers-types' }
 ViennaVDMParser >> identifiedField [
 	^ super identifiedField
 		==> [ :pair | 
@@ -837,7 +838,7 @@ ViennaVDMParser >> identifiedField [
 			fieldType} ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> identifierTypePairList [
 
 	^ super identifierTypePairList =>> [ :start :end :array |
@@ -846,7 +847,7 @@ ViennaVDMParser >> identifierTypePairList [
 		  yourself ]
 ]
 
-{ #category : #'parsers-statements' }
+{ #category : 'parsers-statements' }
 ViennaVDMParser >> identityStatement [
 
 	^ super identityStatement =>> [ :start :end :ignore |
@@ -855,7 +856,7 @@ ViennaVDMParser >> identityStatement [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> ifExpression [
 
 	^ super ifExpression =>> [ :start :end :array |
@@ -871,7 +872,7 @@ ViennaVDMParser >> ifExpression [
 		  yourself ]
 ]
 
-{ #category : #'parsers-statements' }
+{ #category : 'parsers-statements' }
 ViennaVDMParser >> ifStatement [
 
 	^ super ifStatement =>> [ :start :end :array |
@@ -887,13 +888,13 @@ ViennaVDMParser >> ifStatement [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> imp: arg1 and: arg2 [
 
 	^ ViennaImplyNode expression: arg1 expression: arg2
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> implicitFunctionDefinition [
 
 	^ super implicitFunctionDefinition =>> [ :start :end :array |
@@ -908,7 +909,7 @@ ViennaVDMParser >> implicitFunctionDefinition [
 		  yourself ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> implicitOperationDefinition [
 
 	^ super implicitOperationDefinition =>> [ :start :end :array |
@@ -924,7 +925,7 @@ ViennaVDMParser >> implicitOperationDefinition [
 		  yourself ]
 ]
 
-{ #category : #'parsers-interfaces' }
+{ #category : 'parsers-interfaces' }
 ViennaVDMParser >> importDefinition [
 
 	^ super importDefinition =>> [ :start :end :array |
@@ -935,7 +936,7 @@ ViennaVDMParser >> importDefinition [
 		  yourself ]
 ]
 
-{ #category : #'parsers-interfaces' }
+{ #category : 'parsers-interfaces' }
 ViennaVDMParser >> importDefinitionList [
 
 	^ super importDefinitionList =>> [ :start :end :array |
@@ -944,7 +945,7 @@ ViennaVDMParser >> importDefinitionList [
 		  yourself ]
 ]
 
-{ #category : #'parsers-interfaces' }
+{ #category : 'parsers-interfaces' }
 ViennaVDMParser >> importFunctionsSignature [
 
 	^ super importFunctionsSignature =>> [ :start :end :array |
@@ -953,7 +954,7 @@ ViennaVDMParser >> importFunctionsSignature [
 		  yourself ]
 ]
 
-{ #category : #'parsers-interfaces' }
+{ #category : 'parsers-interfaces' }
 ViennaVDMParser >> importModuleSignature [
 
 	^ super importModuleSignature =>> [ :start :end :array |
@@ -968,7 +969,7 @@ ViennaVDMParser >> importModuleSignature [
 				  yourself ] ]
 ]
 
-{ #category : #'parsers-interfaces' }
+{ #category : 'parsers-interfaces' }
 ViennaVDMParser >> importOperationsSignature [
 
 	^ super importOperationsSignature =>> [ :start :end :array |
@@ -977,7 +978,7 @@ ViennaVDMParser >> importOperationsSignature [
 		  yourself ]
 ]
 
-{ #category : #'parsers-interfaces' }
+{ #category : 'parsers-interfaces' }
 ViennaVDMParser >> importTypesSignature [
 
 	^ super importTypesSignature =>> [ :start :end :array |
@@ -986,7 +987,7 @@ ViennaVDMParser >> importTypesSignature [
 		  yourself ]
 ]
 
-{ #category : #'parsers-interfaces' }
+{ #category : 'parsers-interfaces' }
 ViennaVDMParser >> importValuesSignature [
 
 	^ super importValuesSignature =>> [ :start :end :array |
@@ -995,13 +996,13 @@ ViennaVDMParser >> importValuesSignature [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> inSet: arg1 and: arg2 [
 
 	^ ViennaInSetNode expression: arg1 expression: arg2
 ]
 
-{ #category : #'parsers-statements' }
+{ #category : 'parsers-statements' }
 ViennaVDMParser >> indexForLoop [
 
 	^ super indexForLoop =>> [ :start :end :array |
@@ -1015,13 +1016,13 @@ ViennaVDMParser >> indexForLoop [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> inds: arg [
 
 	^ ViennaSequenceIndicesNode expression: arg
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> initialisation [
 
 	^ super initialisation =>> [ :start :end :invFunc |
@@ -1030,14 +1031,14 @@ ViennaVDMParser >> initialisation [
 		  yourself ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 ViennaVDMParser >> initialize [
 
 	super initialize.
 	annotations := OrderedCollection new
 ]
 
-{ #category : #'parsers-types' }
+{ #category : 'parsers-types' }
 ViennaVDMParser >> inmapType [
 
 	^ super inmapType =>> [ :start :end :array |
@@ -1048,13 +1049,13 @@ ViennaVDMParser >> inmapType [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> inter: arg1 and: arg2 [
 
 	^ ViennaSetIntersectionNode expression: arg1 expression: arg2
 ]
 
-{ #category : #'parsers-interfaces' }
+{ #category : 'parsers-interfaces' }
 ViennaVDMParser >> interface [
 
 	^ super interface =>> [ :start :end :array |
@@ -1065,7 +1066,7 @@ ViennaVDMParser >> interface [
 		  yourself ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> invariant [
 
 	^ super invariant =>> [ :start :end :inv |
@@ -1074,7 +1075,7 @@ ViennaVDMParser >> invariant [
 		  end: end ]
 ]
 
-{ #category : #'parsers-types' }
+{ #category : 'parsers-types' }
 ViennaVDMParser >> invariantInitialFunction [
 
 	^ super invariantInitialFunction =>> [ :start :end :array |
@@ -1085,13 +1086,13 @@ ViennaVDMParser >> invariantInitialFunction [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> inverse: arg [
 
 	^ ViennaMapInverseNode expression: arg
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> iotaExpression [
 
 	^ super iotaExpression =>> [ :start :end :array |
@@ -1102,7 +1103,7 @@ ViennaVDMParser >> iotaExpression [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-type discriminations' }
+{ #category : 'parsers-expressions-type discriminations' }
 ViennaVDMParser >> isBasicExpression [
 
 	^ super isBasicExpression =>> [ :start :end :array |
@@ -1113,7 +1114,7 @@ ViennaVDMParser >> isBasicExpression [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-type discriminations' }
+{ #category : 'parsers-expressions-type discriminations' }
 ViennaVDMParser >> isNameExpression [
 
 	^ super isNameExpression =>> [ :start :end :array |
@@ -1124,7 +1125,7 @@ ViennaVDMParser >> isNameExpression [
 		  yourself ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> isNotYetSpecified [
 
 	^ super isNotYetSpecified =>> [ :start :end :ignore |
@@ -1133,13 +1134,13 @@ ViennaVDMParser >> isNotYetSpecified [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> iterateExpression: expr1 and: expr2 [
 
 	^ ViennaIterateNode expression: expr1 expression: expr2
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> lambdaExpression [
 
 	^ super lambdaExpression =>> [ :start :end :array |
@@ -1150,25 +1151,25 @@ ViennaVDMParser >> lambdaExpression [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> len: arg [
 
 	^ ViennaSequenceLengthNode expression: arg
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> less: arg1 and: arg2 [
 
 	^ ViennaLessThanNode expression: arg1 expression: arg2
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> lessEq: arg1 and: arg2 [
 
 	^ ViennaLessThanOrEqualNode expression: arg1 expression: arg2
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> letBeExpression [
 
 	^ super letBeExpression =>> [ :start :end :array |
@@ -1180,7 +1181,7 @@ ViennaVDMParser >> letBeExpression [
 		  yourself ]
 ]
 
-{ #category : #'parsers-statements' }
+{ #category : 'parsers-statements' }
 ViennaVDMParser >> letBeStatement [
 
 	^ super letBeStatement =>> [ :start :end :array |
@@ -1192,7 +1193,7 @@ ViennaVDMParser >> letBeStatement [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> letExpression [
 
 	^ super letExpression =>> [ :start :end :array |
@@ -1203,7 +1204,7 @@ ViennaVDMParser >> letExpression [
 		  yourself ]
 ]
 
-{ #category : #'parsers-statements' }
+{ #category : 'parsers-statements' }
 ViennaVDMParser >> letStatement [
 
 	^ super letStatement =>> [ :start :end :pair |
@@ -1214,7 +1215,7 @@ ViennaVDMParser >> letStatement [
 		  yourself ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> localDefinitionList [
 
 	^ super localDefinitionList =>> [ :start :end :array |
@@ -1223,31 +1224,31 @@ ViennaVDMParser >> localDefinitionList [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> map: arg1 domainRestrictedBy: arg2 [
 
 	^ ViennaMapDomainRestrictedByNode expression: arg1 expression: arg2
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> map: arg1 domainRestrictedTo: arg2 [
 
 	^ ViennaMapDomainRestrictedToNode expression: arg1 expression: arg2
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> map: arg1 rangeRestrictedBy: arg2 [
 
 	^ ViennaMapRangeRestrictedByNode expression: arg1 expression: arg2
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> map: arg1 rangeRestrictedTo: arg2 [
 
 	^ ViennaMapRangeRestrictedToNode expression: arg1 expression: arg2
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> mapComprehension [
 
 	^ super mapComprehension =>> [ :start :end :array |
@@ -1260,7 +1261,7 @@ ViennaVDMParser >> mapComprehension [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> mapEnumeration [
 
 	^ super mapEnumeration =>> [ :start :end :array |
@@ -1269,7 +1270,7 @@ ViennaVDMParser >> mapEnumeration [
 		  yourself ]
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : 'parsers-patterns' }
 ViennaVDMParser >> mapEnumerationPattern [
 
 	^ super mapEnumerationPattern =>> [ :start :end :array |
@@ -1278,7 +1279,7 @@ ViennaVDMParser >> mapEnumerationPattern [
 		  yourself ]
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : 'parsers-patterns' }
 ViennaVDMParser >> mapMunionPattern [
 
 	^ super mapMunionPattern =>> [ :start :end :array |
@@ -1289,7 +1290,7 @@ ViennaVDMParser >> mapMunionPattern [
 		  yourself ]
 ]
 
-{ #category : #'parsers-statements' }
+{ #category : 'parsers-statements' }
 ViennaVDMParser >> mapOrSequenceReference: stateDesig with: expr [
 
 	^ ViennaMapOrSequenceReferenceNode
@@ -1297,7 +1298,7 @@ ViennaVDMParser >> mapOrSequenceReference: stateDesig with: expr [
 		  argumentExpression: expr
 ]
 
-{ #category : #'parsers-types' }
+{ #category : 'parsers-types' }
 ViennaVDMParser >> mapType [
 
 	^ super mapType =>> [ :start :end :array |
@@ -1306,7 +1307,7 @@ ViennaVDMParser >> mapType [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> maplet [
 
 	^ super maplet =>> [ :start :end :array |
@@ -1317,7 +1318,7 @@ ViennaVDMParser >> maplet [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> mapletList [
 
 	^ super mapletList =>> [ :start :end :array |
@@ -1326,7 +1327,7 @@ ViennaVDMParser >> mapletList [
 		  yourself ]
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : 'parsers-patterns' }
 ViennaVDMParser >> mapletPattern [
 
 	^ super mapletPattern =>> [ :start :end :array |
@@ -1337,7 +1338,7 @@ ViennaVDMParser >> mapletPattern [
 		  yourself ]
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : 'parsers-patterns' }
 ViennaVDMParser >> matchValue [
 
 	^ super matchValue =>> [ :start :end :ast |
@@ -1346,31 +1347,31 @@ ViennaVDMParser >> matchValue [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> mconcat: arg1 and: arg2 [
 
 	^ ViennaMapOrSequenceModifyNode expression: arg1 expression: arg2
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> merge: arg [
 
 	^ ViennaDistributedMapMergeNode expression: arg
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> minus: arg1 and: arg2 [
 
 	^ ViennaArithmeticMinusNode expression: arg1 expression: arg2
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> mod: arg1 and: arg2 [
 
 	^ ViennaArithmeticModNode expression: arg1 expression: arg2
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> module [
 
 	^ super module =>> [ :start :end :array |
@@ -1382,7 +1383,7 @@ ViennaVDMParser >> module [
 		  yourself ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> moduleBody [
 
 	^ super moduleBody =>> [ :start :end :array |
@@ -1391,7 +1392,7 @@ ViennaVDMParser >> moduleBody [
 		  yourself ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> moduledDocument [
 
 	^ super moduledDocument =>> [ :start :end :array |
@@ -1400,7 +1401,7 @@ ViennaVDMParser >> moduledDocument [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> mul: arg1 and: arg2 [
 
 	^ ViennaArithmeticMultiplicationNode
@@ -1408,7 +1409,7 @@ ViennaVDMParser >> mul: arg1 and: arg2 [
 		  expression: arg2
 ]
 
-{ #category : #'parsers-statements' }
+{ #category : 'parsers-statements' }
 ViennaVDMParser >> multipleAssignStatement [
 
 	^ super multipleAssignStatement =>> [ :start :end :array |
@@ -1417,7 +1418,7 @@ ViennaVDMParser >> multipleAssignStatement [
 		  yourself ]
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : 'parsers-patterns' }
 ViennaVDMParser >> multipleSeqBind [
 
 	^ super multipleSeqBind =>> [ :start :end :array |
@@ -1428,7 +1429,7 @@ ViennaVDMParser >> multipleSeqBind [
 		  yourself ]
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : 'parsers-patterns' }
 ViennaVDMParser >> multipleSetBind [
 
 	^ super multipleSetBind =>> [ :start :end :array |
@@ -1439,7 +1440,7 @@ ViennaVDMParser >> multipleSetBind [
 		  yourself ]
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : 'parsers-patterns' }
 ViennaVDMParser >> multipleTypeBind [
 
 	^ super multipleTypeBind =>> [ :start :end :array |
@@ -1450,13 +1451,13 @@ ViennaVDMParser >> multipleTypeBind [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> munion: arg1 and: arg2 [
 
 	^ ViennaMapMergeNode expression: arg1 expression: arg2
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> name [
 
 	^ super name =>> [ :start :end :array |
@@ -1470,7 +1471,7 @@ ViennaVDMParser >> name [
 		  yourself ]
 ]
 
-{ #category : #'parsers-interfaces' }
+{ #category : 'parsers-interfaces' }
 ViennaVDMParser >> nameList [
 
 	^ super nameList =>> [ :start :end :array |
@@ -1479,7 +1480,7 @@ ViennaVDMParser >> nameList [
 		  yourself ]
 ]
 
-{ #category : #'parsers-traces' }
+{ #category : 'parsers-traces' }
 ViennaVDMParser >> namedTrace [
 
 	^ super namedTrace ==> [ :pair |
@@ -1488,7 +1489,7 @@ ViennaVDMParser >> namedTrace [
 		  traceDefinitionList: pair second ]
 ]
 
-{ #category : #'parsers-statements' }
+{ #category : 'parsers-statements' }
 ViennaVDMParser >> nondeterministicStatement [
 
 	^ super nondeterministicStatement =>> [ :start :end :array |
@@ -1497,25 +1498,25 @@ ViennaVDMParser >> nondeterministicStatement [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> not: arg [
 
 	^ ViennaNotNode expression: arg
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> notEqual: arg1 and: arg2 [
 
 	^ ViennaNotEqualNode expression: arg1 expression: arg2
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> notInSet: arg1 and: arg2 [
 
 	^ ViennaNotInSetNode expression: arg1 expression: arg2
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> oldName [
 
 	^ super oldName =>> [ :start :end :string |
@@ -1524,7 +1525,7 @@ ViennaVDMParser >> oldName [
 		  yourself ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> operationDefinition [
 
 	^ super operationDefinition =>> [ :start :end :def |
@@ -1533,7 +1534,7 @@ ViennaVDMParser >> operationDefinition [
 		  yourself ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> operationDefinitions [
 
 	^ super operationDefinitions =>> [ :start :end :array |
@@ -1542,7 +1543,7 @@ ViennaVDMParser >> operationDefinitions [
 		  yourself ]
 ]
 
-{ #category : #'parsers-interfaces' }
+{ #category : 'parsers-interfaces' }
 ViennaVDMParser >> operationExport [
 
 	^ super operationExport =>> [ :start :end :array |
@@ -1553,7 +1554,7 @@ ViennaVDMParser >> operationExport [
 		  yourself ]
 ]
 
-{ #category : #'parsers-interfaces' }
+{ #category : 'parsers-interfaces' }
 ViennaVDMParser >> operationImport [
 
 	^ super operationImport =>> [ :start :end :array |
@@ -1565,7 +1566,7 @@ ViennaVDMParser >> operationImport [
 		  yourself ]
 ]
 
-{ #category : #'parsers-types' }
+{ #category : 'parsers-types' }
 ViennaVDMParser >> operationType [
 
 	^ super operationType =>> [ :start :end :array |
@@ -1576,7 +1577,7 @@ ViennaVDMParser >> operationType [
 		  yourself ]
 ]
 
-{ #category : #'parsers-types' }
+{ #category : 'parsers-types' }
 ViennaVDMParser >> optionalType [
 
 	^ super optionalType =>> [ :start :end :ast |
@@ -1585,13 +1586,13 @@ ViennaVDMParser >> optionalType [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> or: arg1 and: arg2 [
 
 	^ ViennaOrNode expression: arg1 expression: arg2
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> othersExpression [
 
 	^ super othersExpression =>> [ :start :end :expr |
@@ -1600,7 +1601,7 @@ ViennaVDMParser >> othersExpression [
 		  yourself ]
 ]
 
-{ #category : #'parsers-statements' }
+{ #category : 'parsers-statements' }
 ViennaVDMParser >> othersStatement [
 
 	^ super othersStatement =>> [ :start :end :bodyStatement |
@@ -1609,7 +1610,7 @@ ViennaVDMParser >> othersStatement [
 		  yourself ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> parameters [
 
 	^ super parameters =>> [ :start :end :array |
@@ -1618,7 +1619,7 @@ ViennaVDMParser >> parameters [
 		  yourself ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> parametersList [
 
 	^ super parametersList =>> [ :start :end :array |
@@ -1627,7 +1628,7 @@ ViennaVDMParser >> parametersList [
 		  yourself ]
 ]
 
-{ #category : #'parsers-types' }
+{ #category : 'parsers-types' }
 ViennaVDMParser >> partialFunctionType [
 
 	^ super partialFunctionType =>> [ :start :end :array |
@@ -1638,7 +1639,7 @@ ViennaVDMParser >> partialFunctionType [
 		  yourself ]
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : 'parsers-patterns' }
 ViennaVDMParser >> patternIdentifier [
 
 	^ super patternIdentifier =>> [ :start :end :stringOrNil |
@@ -1647,7 +1648,7 @@ ViennaVDMParser >> patternIdentifier [
 		  yourself ]
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : 'parsers-patterns' }
 ViennaVDMParser >> patternList [
 
 	^ super patternList =>> [ :start :end :array |
@@ -1656,7 +1657,7 @@ ViennaVDMParser >> patternList [
 		  yourself ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> patternTypePairList [
 
 	^ super patternTypePairList =>> [ :start :end :array |
@@ -1665,19 +1666,19 @@ ViennaVDMParser >> patternTypePairList [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> plus: arg1 and: arg2 [
 
 	^ ViennaArithmeticPlusNode expression: arg1 expression: arg2
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> power: arg [
 
 	^ ViennaFinitePowerSetNode expression: arg
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> preconditionExpression [
 
 	^ super preconditionExpression =>> [ :start :end :array |
@@ -1686,7 +1687,7 @@ ViennaVDMParser >> preconditionExpression [
 		  yourself ]
 ]
 
-{ #category : #'parsers-types' }
+{ #category : 'parsers-types' }
 ViennaVDMParser >> productType [
 
 	^ super productType =>> [ :start :end :array |
@@ -1695,13 +1696,13 @@ ViennaVDMParser >> productType [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> psubset: arg1 and: arg2 [
 
 	^ ViennaProperSubsetNode expression: arg1 expression: arg2
 ]
 
-{ #category : #'parsers-types' }
+{ #category : 'parsers-types' }
 ViennaVDMParser >> quoteType [
 
 	^ super quoteType =>> [ :start :end :string |
@@ -1710,7 +1711,7 @@ ViennaVDMParser >> quoteType [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> recordConstructor [
 
 	^ super recordConstructor =>> [ :start :end :array |
@@ -1721,7 +1722,7 @@ ViennaVDMParser >> recordConstructor [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> recordModifier [
 
 	^ super recordModifier =>> [ :start :end :array |
@@ -1732,7 +1733,7 @@ ViennaVDMParser >> recordModifier [
 		  yourself ]
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : 'parsers-patterns' }
 ViennaVDMParser >> recordPattern [
 
 	^ super recordPattern =>> [ :start :end :array |
@@ -1743,7 +1744,7 @@ ViennaVDMParser >> recordPattern [
 		  yourself ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> recordTypeDefinition [
 
 	^ super recordTypeDefinition =>> [ :start :end :array |
@@ -1755,13 +1756,13 @@ ViennaVDMParser >> recordTypeDefinition [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> rem: arg1 and: arg2 [
 
 	^ ViennaArithmeticRemNode expression: arg1 expression: arg2
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> resultExpression [
 
 	^ super resultExpression =>> [ :start :end :array |
@@ -1770,7 +1771,7 @@ ViennaVDMParser >> resultExpression [
 		  yourself ]
 ]
 
-{ #category : #'parsers-statements' }
+{ #category : 'parsers-statements' }
 ViennaVDMParser >> returnStatement [
 
 	^ super returnStatement =>> [ :start :end :expr |
@@ -1779,19 +1780,19 @@ ViennaVDMParser >> returnStatement [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> reverse: arg [
 
 	^ ViennaSequenceReverseNode expression: arg
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> rng: arg [
 
 	^ ViennaMapRangeNode expression: arg
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaVDMParser >> scanCommentsOn: aStream [
 	| sourceStream source |
 	sourceStream := aStream asPetit2Stream.
@@ -1820,7 +1821,7 @@ ViennaVDMParser >> scanCommentsOn: aStream [
 				starA end parse: sourceStream ]
 ]
 
-{ #category : #'parsers-types' }
+{ #category : 'parsers-types' }
 ViennaVDMParser >> seq1Type [
 
 	^ super seq1Type =>> [ :start :end :ast |
@@ -1829,7 +1830,7 @@ ViennaVDMParser >> seq1Type [
 		  yourself ]
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : 'parsers-patterns' }
 ViennaVDMParser >> seqBind [
 
 	^ super seqBind =>> [ :start :end :array |
@@ -1838,7 +1839,7 @@ ViennaVDMParser >> seqBind [
 		  yourself ]
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : 'parsers-patterns' }
 ViennaVDMParser >> seqConcPattern [
 
 	^ super seqConcPattern =>> [ :start :end :array |
@@ -1847,7 +1848,7 @@ ViennaVDMParser >> seqConcPattern [
 		  yourself ]
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : 'parsers-patterns' }
 ViennaVDMParser >> seqEnumPattern [
 
 	^ super seqEnumPattern =>> [ :start :end :array |
@@ -1856,7 +1857,7 @@ ViennaVDMParser >> seqEnumPattern [
 		  yourself ]
 ]
 
-{ #category : #'parsers-types' }
+{ #category : 'parsers-types' }
 ViennaVDMParser >> seqType [
 
 	^ super seqType =>> [ :start :end :ast |
@@ -1865,7 +1866,7 @@ ViennaVDMParser >> seqType [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> sequenceComprehension [
 
 	^ super sequenceComprehension =>> [ :start :end :array |
@@ -1877,7 +1878,7 @@ ViennaVDMParser >> sequenceComprehension [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> sequenceEnumeration [
 
 	^ super sequenceEnumeration =>> [ :start :end :array |
@@ -1886,7 +1887,7 @@ ViennaVDMParser >> sequenceEnumeration [
 		  yourself ]
 ]
 
-{ #category : #'parsers-statements' }
+{ #category : 'parsers-statements' }
 ViennaVDMParser >> sequenceForLoop [
 
 	^ super sequenceForLoop =>> [ :start :end :array |
@@ -1898,7 +1899,7 @@ ViennaVDMParser >> sequenceForLoop [
 		  yourself ]
 ]
 
-{ #category : #'parsers-types' }
+{ #category : 'parsers-types' }
 ViennaVDMParser >> set1Type [
 
 	^ super set1Type =>> [ :start :end :ast |
@@ -1907,7 +1908,7 @@ ViennaVDMParser >> set1Type [
 		  yourself ]
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : 'parsers-patterns' }
 ViennaVDMParser >> setBind [
 
 	^ super setBind =>> [ :start :end :array |
@@ -1916,7 +1917,7 @@ ViennaVDMParser >> setBind [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> setComprehension [
 
 	^ super setComprehension =>> [ :start :end :array |
@@ -1928,7 +1929,7 @@ ViennaVDMParser >> setComprehension [
 		  yourself ]
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : 'parsers-patterns' }
 ViennaVDMParser >> setEnumPattern [
 
 	^ super setEnumPattern =>> [ :start :end :array |
@@ -1937,7 +1938,7 @@ ViennaVDMParser >> setEnumPattern [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> setEnumeration [
 
 	^ super setEnumeration =>> [ :start :end :array |
@@ -1946,7 +1947,7 @@ ViennaVDMParser >> setEnumeration [
 		  yourself ]
 ]
 
-{ #category : #'parsers-statements' }
+{ #category : 'parsers-statements' }
 ViennaVDMParser >> setForLoop [
 
 	^ super setForLoop =>> [ :start :end :array |
@@ -1958,7 +1959,7 @@ ViennaVDMParser >> setForLoop [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> setRangeExpression [
 
 	^ super setRangeExpression =>> [ :start :end :array |
@@ -1969,7 +1970,7 @@ ViennaVDMParser >> setRangeExpression [
 		  yourself ]
 ]
 
-{ #category : #'parsers-types' }
+{ #category : 'parsers-types' }
 ViennaVDMParser >> setType [
 
 	^ super setType =>> [ :start :end :ast |
@@ -1978,7 +1979,7 @@ ViennaVDMParser >> setType [
 		  yourself ]
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : 'parsers-patterns' }
 ViennaVDMParser >> setUnionPattern [
 
 	^ super setUnionPattern =>> [ :start :end :array |
@@ -1989,14 +1990,14 @@ ViennaVDMParser >> setUnionPattern [
 		  yourself ]
 ]
 
-{ #category : #'parsers-comments' }
+{ #category : 'parsers-comments' }
 ViennaVDMParser >> singleLineAnnotation [
 
 	^ super singleLineAnnotation
 	  ==> [ :string | self addAnnotation: string ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> stateDefinition [
 
 	^ super stateDefinition =>> [ :start :end :array |
@@ -2009,7 +2010,7 @@ ViennaVDMParser >> stateDefinition [
 		  yourself ]
 ]
 
-{ #category : #'parsers-types' }
+{ #category : 'parsers-types' }
 ViennaVDMParser >> stateField [
 
 	^ super stateField =>> [ :start :end :array |
@@ -2021,7 +2022,7 @@ ViennaVDMParser >> stateField [
 		  yourself ]
 ]
 
-{ #category : #'parsers-types' }
+{ #category : 'parsers-types' }
 ViennaVDMParser >> stateFieldList [
 
 	^ super stateFieldList =>> [ :start :end :array |
@@ -2030,7 +2031,7 @@ ViennaVDMParser >> stateFieldList [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> subsequence: sequence from: start to: end [
 
 	^ ViennaSubsequenceNode
@@ -2039,13 +2040,13 @@ ViennaVDMParser >> subsequence: sequence from: start to: end [
 		  endExpression: end
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> subset: arg1 and: arg2 [
 
 	^ ViennaSubsetNode expression: arg1 expression: arg2
 ]
 
-{ #category : #'parsers-literals' }
+{ #category : 'parsers-literals' }
 ViennaVDMParser >> symbolicLiteral [
 
 	^ super symbolicLiteral flatten =>> [ :start :end :string |
@@ -2054,7 +2055,7 @@ ViennaVDMParser >> symbolicLiteral [
 		  yourself ]
 ]
 
-{ #category : #'parsers-statements' }
+{ #category : 'parsers-statements' }
 ViennaVDMParser >> tixeStatement [
 
 	^ super tixeStatement =>> [ :start :end :pair |
@@ -2063,13 +2064,13 @@ ViennaVDMParser >> tixeStatement [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> tl: arg [
 
 	^ ViennaSequenceTailNode expression: arg
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> tokenConstructor [
 
 	^ super tokenConstructor =>> [ :start :end :exp |
@@ -2078,7 +2079,7 @@ ViennaVDMParser >> tokenConstructor [
 		  yourself ]
 ]
 
-{ #category : #'parsers-types' }
+{ #category : 'parsers-types' }
 ViennaVDMParser >> totalFunctionType [
 
 	^ super totalFunctionType =>> [ :start :end :array |
@@ -2089,21 +2090,21 @@ ViennaVDMParser >> totalFunctionType [
 		  yourself ]
 ]
 
-{ #category : #'parsers-traces' }
+{ #category : 'parsers-traces' }
 ViennaVDMParser >> traceApplyExpression [
 
 	^ super traceApplyExpression ==> [ :callStatement |
 	  ViennaTraceApplyExpressionNode callStatement: callStatement ]
 ]
 
-{ #category : #'parsers-traces' }
+{ #category : 'parsers-traces' }
 ViennaVDMParser >> traceBracketedExpression [
 
 	^ super traceBracketedExpression ==> [ :traceDefs |
 	  ViennaTraceBracketedExpressionNode traceDefinitionList: traceDefs ]
 ]
 
-{ #category : #'parsers-traces' }
+{ #category : 'parsers-traces' }
 ViennaVDMParser >> traceConcurrentExpression [
 
 	^ super traceConcurrentExpression
@@ -2111,21 +2112,21 @@ ViennaVDMParser >> traceConcurrentExpression [
 	  ViennaTraceConcurrentExpressionNode withAll: traceDefs ]
 ]
 
-{ #category : #'parsers-traces' }
+{ #category : 'parsers-traces' }
 ViennaVDMParser >> traceDefinitionList [
 
 	^ super traceDefinitionList
 	  ==> [ :defs | ViennaTraceDefinitionListNode withAll: defs ]
 ]
 
-{ #category : #'parsers-traces' }
+{ #category : 'parsers-traces' }
 ViennaVDMParser >> traceDefinitionTerm [
 
 	^ super traceDefinitionTerm
 	  ==> [ :defs | ViennaTraceDefinitionTermNode withAll: defs ]
 ]
 
-{ #category : #'parsers-traces' }
+{ #category : 'parsers-traces' }
 ViennaVDMParser >> traceLetBestBinding [
 
 	^ super traceLetBestBinding ==> [ :triple |
@@ -2135,7 +2136,7 @@ ViennaVDMParser >> traceLetBestBinding [
 		  traceDefinition: triple third ]
 ]
 
-{ #category : #'parsers-traces' }
+{ #category : 'parsers-traces' }
 ViennaVDMParser >> traceLetDefBinding [
 
 	^ super traceLetDefBinding ==> [ :pair |
@@ -2144,7 +2145,7 @@ ViennaVDMParser >> traceLetDefBinding [
 		  traceDefinition: pair second ]
 ]
 
-{ #category : #'parsers-traces' }
+{ #category : 'parsers-traces' }
 ViennaVDMParser >> traceRepeatDefinition [
 
 	^ super traceRepeatDefinition ==> [ :pair |
@@ -2153,21 +2154,21 @@ ViennaVDMParser >> traceRepeatDefinition [
 		  traceRepeatPattern: pair second ]
 ]
 
-{ #category : #'parsers-traces' }
+{ #category : 'parsers-traces' }
 ViennaVDMParser >> traceRepeatOptionalPattern [
 
 	^ super traceRepeatOptionalPattern
 	  ==> [ :opt | ViennaTraceRepeatOptionalPatternNode empty ]
 ]
 
-{ #category : #'parsers-traces' }
+{ #category : 'parsers-traces' }
 ViennaVDMParser >> traceRepeatPlusPattern [
 
 	^ super traceRepeatPlusPattern
 	  ==> [ :plus | ViennaTraceRepeatPlusPatternNode empty ]
 ]
 
-{ #category : #'parsers-traces' }
+{ #category : 'parsers-traces' }
 ViennaVDMParser >> traceRepeatRangePattern [
 
 	^ super traceRepeatRangePattern ==> [ :pair |
@@ -2177,21 +2178,21 @@ ViennaVDMParser >> traceRepeatRangePattern [
 		  ifNil: [ ViennaTraceRepeatRangePatternNode times: pair first ] ]
 ]
 
-{ #category : #'parsers-traces' }
+{ #category : 'parsers-traces' }
 ViennaVDMParser >> traceRepeatStarPattern [
 
 	^ super traceRepeatStarPattern
 	  ==> [ :star | ViennaTraceRepeatStarPatternNode empty ]
 ]
 
-{ #category : #'parsers-traces' }
+{ #category : 'parsers-traces' }
 ViennaVDMParser >> tracesDefinitions [
 
 	^ super tracesDefinitions
 	  ==> [ :array | ViennaTracesDefinitionsNode withAll: array ]
 ]
 
-{ #category : #'parsers-statements' }
+{ #category : 'parsers-statements' }
 ViennaVDMParser >> trapStatement [
 
 	^ super trapStatement =>> [ :start :end :triple |
@@ -2203,7 +2204,7 @@ ViennaVDMParser >> trapStatement [
 		  yourself ]
 ]
 
-{ #category : #'parsers-statements' }
+{ #category : 'parsers-statements' }
 ViennaVDMParser >> traps [
 
 	^ super traps =>> [ :start :end :array |
@@ -2212,7 +2213,7 @@ ViennaVDMParser >> traps [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> tupleConstructor [
 
 	^ super tupleConstructor =>> [ :start :end :array |
@@ -2222,7 +2223,7 @@ ViennaVDMParser >> tupleConstructor [
 		  yourself ]
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : 'parsers-patterns' }
 ViennaVDMParser >> tuplePattern [
 
 	^ super tuplePattern =>> [ :start :end :array |
@@ -2232,13 +2233,13 @@ ViennaVDMParser >> tuplePattern [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> tupleSelect: tuple with: index [
 
 	^ ViennaTupleSelectNode expression: tuple index: index
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : 'parsers-patterns' }
 ViennaVDMParser >> typeBind [
 
 	^ super typeBind =>> [ :start :end :array |
@@ -2247,7 +2248,7 @@ ViennaVDMParser >> typeBind [
 		  yourself ]
 ]
 
-{ #category : #'parsers-patterns' }
+{ #category : 'parsers-patterns' }
 ViennaVDMParser >> typeBindList [
 
 	^ super typeBindList =>> [ :start :end :array |
@@ -2256,7 +2257,7 @@ ViennaVDMParser >> typeBindList [
 		  yourself ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> typeDefinitions [
 
 	^ super typeDefinitions =>> [ :start :end :array |
@@ -2265,7 +2266,7 @@ ViennaVDMParser >> typeDefinitions [
 		  yourself ]
 ]
 
-{ #category : #'parsers-interfaces' }
+{ #category : 'parsers-interfaces' }
 ViennaVDMParser >> typeExport [
 
 	^ super typeExport =>> [ :start :end :array |
@@ -2280,7 +2281,7 @@ ViennaVDMParser >> typeExport [
 				  yourself ] ]
 ]
 
-{ #category : #'parsers-interfaces' }
+{ #category : 'parsers-interfaces' }
 ViennaVDMParser >> typeImport [
 
 	^ super typeImport =>> [ :start :end :array |
@@ -2289,7 +2290,7 @@ ViennaVDMParser >> typeImport [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-type discriminations' }
+{ #category : 'parsers-expressions-type discriminations' }
 ViennaVDMParser >> typeJudgement [
 
 	^ super typeJudgement =>> [ :start :end :array |
@@ -2298,7 +2299,7 @@ ViennaVDMParser >> typeJudgement [
 		  yourself ]
 ]
 
-{ #category : #'parsers-types' }
+{ #category : 'parsers-types' }
 ViennaVDMParser >> typeName [
 
 	^ super typeName =>> [ :start :end :array |
@@ -2317,7 +2318,7 @@ ViennaVDMParser >> typeName [
 		  yourself ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> typeSynonym [
 
 	^ super typeSynonym =>> [ :start :end :array |
@@ -2329,7 +2330,7 @@ ViennaVDMParser >> typeSynonym [
 		  yourself ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> typeVariable [
 
 	^ super typeVariable =>> [ :start :end :typeVariableIdentifier |
@@ -2338,7 +2339,7 @@ ViennaVDMParser >> typeVariable [
 		  yourself ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> typeVariableIdentifier [
 
 	^ super typeVariableIdentifier =>> [ :start :end :string |
@@ -2347,7 +2348,7 @@ ViennaVDMParser >> typeVariableIdentifier [
 		  yourself ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> typeVariableList [
 
 	^ super typeVariableList =>> [ :start :end :array |
@@ -2356,32 +2357,32 @@ ViennaVDMParser >> typeVariableList [
 		  yourself ]
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> unaryMinus: arg [
 
 	^ ViennaUnaryMinusNode expression: arg
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> unaryPlus: arg [
 
 	^ ViennaUnaryPlusNode expression: arg
 ]
 
-{ #category : #'parsers-expressions-basics' }
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> undefinedExpression [
 
 	^ super undefinedExpression =>> [ :start :end :array |
 	  ViennaUndefinedExpressionNode new start: start end: end ]
 ]
 
-{ #category : #'parsers-expressions-operators' }
+{ #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> union: arg1 and: arg2 [
 
 	^ ViennaSetUnionNode expression: arg1 expression: arg2
 ]
 
-{ #category : #'parsers-types' }
+{ #category : 'parsers-types' }
 ViennaVDMParser >> unionType [
 
 	^ super unionType =>> [ :start :end :array |
@@ -2390,7 +2391,7 @@ ViennaVDMParser >> unionType [
 		  yourself ]
 ]
 
-{ #category : #'parsers-types' }
+{ #category : 'parsers-types' }
 ViennaVDMParser >> unitType [
 
 	^ super unitType =>> [ :start :end :ignore |
@@ -2399,7 +2400,7 @@ ViennaVDMParser >> unitType [
 		  yourself ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> valueDefinition [
 
 	^ super valueDefinition =>> [ :start :end :array |
@@ -2411,7 +2412,7 @@ ViennaVDMParser >> valueDefinition [
 		  yourself ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> valueDefinitions [
 
 	^ super valueDefinitions =>> [ :start :end :array |
@@ -2420,7 +2421,7 @@ ViennaVDMParser >> valueDefinitions [
 		  yourself ]
 ]
 
-{ #category : #'parsers-interfaces' }
+{ #category : 'parsers-interfaces' }
 ViennaVDMParser >> valueExport [
 
 	^ super valueExport =>> [ :start :end :array |
@@ -2429,7 +2430,7 @@ ViennaVDMParser >> valueExport [
 		  yourself ]
 ]
 
-{ #category : #'parsers-interfaces' }
+{ #category : 'parsers-interfaces' }
 ViennaVDMParser >> valueImport [
 
 	^ super valueImport =>> [ :start :end :array |
@@ -2441,7 +2442,7 @@ ViennaVDMParser >> valueImport [
 		  yourself ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMParser >> varInformation [
 
 	^ super varInformation =>> [ :start :end :array |
@@ -2453,7 +2454,7 @@ ViennaVDMParser >> varInformation [
 		  yourself ]
 ]
 
-{ #category : #'parsers-statements' }
+{ #category : 'parsers-statements' }
 ViennaVDMParser >> whileLoop [
 
 	^ super whileLoop =>> [ :start :end :pair |

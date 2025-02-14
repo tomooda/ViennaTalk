@@ -1,6 +1,6 @@
-Extension { #name : #ViennaImplicitFunctionDefinitionNode }
+Extension { #name : 'ViennaImplicitFunctionDefinitionNode' }
 
-{ #category : #'*ViennaTalk-Parser-Core' }
+{ #category : '*ViennaTalk-Parser-Core' }
 ViennaImplicitFunctionDefinitionNode >> parser [
 
 	^ ViennaVDMParser new functionDefinition end

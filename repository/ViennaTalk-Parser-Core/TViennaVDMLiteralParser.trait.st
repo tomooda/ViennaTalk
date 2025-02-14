@@ -1,37 +1,38 @@
 Trait {
-	#name : #TViennaVDMLiteralParser,
-	#category : 'ViennaTalk-Parser-Core'
+	#name : 'TViennaVDMLiteralParser',
+	#category : 'ViennaTalk-Parser-Core',
+	#package : 'ViennaTalk-Parser-Core'
 }
 
-{ #category : #'parsers-literals' }
+{ #category : 'parsers-literals' }
 TViennaVDMLiteralParser >> booleanLiteral [
 	^ ((('true' asPParser , self endOfWord) ==> [ :t | true ]) / (('false' asPParser , self endOfWord) ==> [ :t | false ]))
 		trim
 ]
 
-{ #category : #'parsers-literals' }
+{ #category : 'parsers-literals' }
 TViennaVDMLiteralParser >> char [
 	^ self escapeSequence / (($" asPParser not , $' asPParser not , #any asPParser) ==> #third)
 ]
 
-{ #category : #'parsers-literals' }
+{ #category : 'parsers-literals' }
 TViennaVDMLiteralParser >> characterLiteral [
 	^ (($' asPParser , (self char / $" asPParser) , $' asPParser) ==> #second) trim
 ]
 
-{ #category : #'parsers-literals' }
+{ #category : 'parsers-literals' }
 TViennaVDMLiteralParser >> decimalLiteral [
 	^ (#digit asPParser plusA , ((self operator: $.) , #digit asPParser plusA) optional
 		, ($e asPParser / $E asPParser , ($+ asPParser / $- asPParser) optional , #digit asPParser plusA) optional) flatten trim
 		==> #asLowercase
 ]
 
-{ #category : #'parsers-literals' }
+{ #category : 'parsers-literals' }
 TViennaVDMLiteralParser >> endOfWord [
 	^ (PP2PredicateObjectNode  on: [ :c | ViennaUnicode isFollowingLetter: c ] message: 'identifier expected') not
 ]
 
-{ #category : #'parsers-literals' }
+{ #category : 'parsers-literals' }
 TViennaVDMLiteralParser >> escapeSequence [
 	| octal |
 	octal := $0 asPParser / $1 asPParser / $2 asPParser / $3 asPParser / $4 asPParser / $5 asPParser / $6 asPParser / $7 asPParser.
@@ -56,23 +57,23 @@ TViennaVDMLiteralParser >> escapeSequence [
 				/ ($" asPParser ==> [ :c | $" ]) / ($' asPParser ==> [ :c | $' ]))) ==> #second
 ]
 
-{ #category : #'parsers-literals' }
+{ #category : 'parsers-literals' }
 TViennaVDMLiteralParser >> hexadecimalLiteral [
 	^ (('0x' asPParser / '0X' asPParser , #hex asPParser plusA flatten)
 		==> #second) trim
 ]
 
-{ #category : #'parsers-literals' }
+{ #category : 'parsers-literals' }
 TViennaVDMLiteralParser >> nilLiteral [
 	^ ('nil' asPParser , self endOfWord) trim ==> [ :t | nil ]
 ]
 
-{ #category : #'parsers-literals' }
+{ #category : 'parsers-literals' }
 TViennaVDMLiteralParser >> numericLiteral [
 	^ self hexadecimalLiteral / self decimalLiteral
 ]
 
-{ #category : #'parsers-literals' }
+{ #category : 'parsers-literals' }
 TViennaVDMLiteralParser >> quoteLiteral [
 	^ ($< asPParser
 		,
@@ -85,13 +86,13 @@ TViennaVDMLiteralParser >> quoteLiteral [
 						message: 'identifier expected') starA) , $> asPParser) flatten trim
 ]
 
-{ #category : #'parsers-literals' }
+{ #category : 'parsers-literals' }
 TViennaVDMLiteralParser >> symbolicLiteral [
 	^ self numericLiteral / self booleanLiteral / self nilLiteral / self characterLiteral / self textLiteral
 		/ self quoteLiteral
 ]
 
-{ #category : #'parsers-literals' }
+{ #category : 'parsers-literals' }
 TViennaVDMLiteralParser >> textLiteral [
 	^ (($" asPParser
 		, ((self char / $' asPParser) starA ==> [ :chars | String withAll: chars ])

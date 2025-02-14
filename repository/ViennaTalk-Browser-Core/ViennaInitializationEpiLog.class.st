@@ -2,7 +2,7 @@ Class {
 	#name : 'ViennaInitializationEpiLog',
 	#superclass : 'ViennaEpiLog',
 	#instVars : [
-		'state'
+		'#state => HiDePersistencySlot'
 	],
 	#category : 'ViennaTalk-Browser-Core-EpiLog',
 	#package : 'ViennaTalk-Browser-Core',
@@ -68,7 +68,6 @@ ViennaInitializationEpiLog >> printOn: aStream [
 { #category : 'accessing' }
 ViennaInitializationEpiLog >> state [
 
-	state ifNil: [ self hideLoad ].
 	^ state
 ]
 

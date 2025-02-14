@@ -4,9 +4,9 @@ Class {
 	#traits : 'TComparable + THiDePersistency',
 	#classTraits : 'TComparable classTrait + THiDePersistency classTrait',
 	#instVars : [
-		'prev',
-		'diffSetFromPred',
-		'diffSetFromPrev'
+		'#prev => HiDePersistencySlot',
+		'#diffSetFromPred',
+		'#diffSetFromPrev'
 	],
 	#category : 'ViennaTalk-Browser-Core-EpiLog',
 	#package : 'ViennaTalk-Browser-Core',
@@ -66,7 +66,7 @@ ViennaEpiLog >> = aComparable [
 { #category : 'accessing' }
 ViennaEpiLog >> basicPred [
 
-	^ self prev
+	^ prev
 ]
 
 { #category : 'accessing' }
@@ -115,7 +115,7 @@ ViennaEpiLog >> diffSetFromPrev [
 
 	^ diffSetFromPrev ifNil: [
 		  diffSetFromPrev := ViennaNodeDiffSet
-			                     from: (self prev
+			                     from: (prev
 					                      ifNotNil: #specification
 					                      ifNil: [ ViennaModularDocumentNode new ])
 			                     to: self specification ]
@@ -172,13 +172,14 @@ ViennaEpiLog >> hideUpdateMetadataStorage: aHiDeStorage [
 	hideMetadata at: 'class' put: self metadataName.
 	prev ifNotNil: [
 		prev hideStorage = aHiDeStorage ifFalse: [
-			hideStorage chronicleSave: prev ].
+			aHiDeStorage chronicleSave: prev ].
 		hideMetadata at: 'prev' put: prev hideMetadata identity ]
 ]
 
 { #category : 'initialization' }
 ViennaEpiLog >> initialize [
 
+	self class initializeSlots: self.
 	super initialize.
 	self initializeHideMetadata.
 	self comment: self defaultComment
@@ -203,7 +204,7 @@ ViennaEpiLog >> isInitializationEpiLog [
 ]
 
 { #category : 'testing' }
-ViennaEpiLog >> isLoadEpiLog [
+ViennaEpiLog >> isLoadingEpiLog [
 
 	^ false
 ]
@@ -325,7 +326,7 @@ ViennaEpiLog >> newRevertion: aViennaEpiLog [
 ViennaEpiLog >> pred [
 
 	^ self basicPred ifNotNil: [ :pred |
-		  pred isRevertionEpiLog
+		  (pred isRevertionEpiLog or: [ pred isLoadingEpiLog ])
 			  ifTrue: [ pred pred ]
 			  ifFalse: [ pred ] ]
 ]
@@ -333,7 +334,6 @@ ViennaEpiLog >> pred [
 { #category : 'accessing' }
 ViennaEpiLog >> prev [
 
-	prev ifNil: [ self hideLoad ].
 	^ prev
 ]
 
@@ -352,7 +352,7 @@ ViennaEpiLog >> revertDestination [
 { #category : 'accessing' }
 ViennaEpiLog >> specification [
 
-	^ self prev
+	^ prev
 		  ifNotNil: #specification
 		  ifNil: [ ViennaModularDocumentNode new ]
 ]
@@ -360,7 +360,7 @@ ViennaEpiLog >> specification [
 { #category : 'accessing' }
 ViennaEpiLog >> state [
 
-	^ self prev ifNotNil: #state ifNil: [ Dictionary new ]
+	^ prev ifNotNil: #state ifNil: [ Dictionary new ]
 ]
 
 { #category : 'accessing' }

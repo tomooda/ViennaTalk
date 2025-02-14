@@ -2,8 +2,8 @@ Class {
 	#name : 'ViennaModificationEpiLog',
 	#superclass : 'ViennaEpiLog',
 	#instVars : [
-		'specification',
-		'state'
+		'#specification => HiDePersistencySlot',
+		'#state => HiDePersistencySlot'
 	],
 	#category : 'ViennaTalk-Browser-Core-EpiLog',
 	#package : 'ViennaTalk-Browser-Core',
@@ -37,32 +37,29 @@ ViennaModificationEpiLog class >> metadataName [
 ViennaModificationEpiLog >> hasChangeAt: aString module: anotherString [
 
 	^ ((self specification moduleNamed: anotherString) ifNotNil: [ :m |
-		   m resolveIdentifier: aString ]) ~= ((self prev ifNotNil: [
-		    self prev specification moduleNamed: anotherString ]) ifNotNil: [
-		   :m | m resolveIdentifier: aString ])
+		   m resolveIdentifier: aString ])
+	  ~=
+		  ((prev ifNotNil: [ prev specification moduleNamed: anotherString ])
+			   ifNotNil: [ :m | m resolveIdentifier: aString ])
 ]
 
 { #category : 'testing' }
 ViennaModificationEpiLog >> hasChangeAtModule: aString [
 
 	^ (self specification moduleNamed: aString)
-	  ~=
-	  (self prev ifNotNil: [
-		   self prev specification moduleNamed: aString ])
+	  ~= (prev ifNotNil: [ prev specification moduleNamed: aString ])
 ]
 
 { #category : 'testing' }
 ViennaModificationEpiLog >> hasSpecificationChange [
 
-	^ self prev isNil or: [
-		  self prev specification ~= self specification ]
+	^ prev isNil or: [ prev specification ~= self specification ]
 ]
 
 { #category : 'testing' }
 ViennaModificationEpiLog >> hasStateChange [
 
-	^ self state notNil and: [
-		  self prev isNil or: [ self prev state ~= self state ] ]
+	^ state notNil and: [ prev isNil or: [ prev state ~= state ] ]
 ]
 
 { #category : 'hideho-operations' }
@@ -117,7 +114,6 @@ ViennaModificationEpiLog >> printOn: aStream [
 { #category : 'accessing' }
 ViennaModificationEpiLog >> specification [
 
-	specification ifNil: [ self hideLoad ].
 	^ specification
 ]
 
@@ -130,13 +126,11 @@ ViennaModificationEpiLog >> specification: aViennaModularDocumentNode [
 { #category : 'accessing' }
 ViennaModificationEpiLog >> state [
 
-	self specification.
-	^ state ifNil: [
-		  self prev ifNotNil: #state ifNil: [ Dictionary new ] ]
+	^ state ifNil: [ prev ifNotNil: #state ifNil: [ Dictionary new ] ]
 ]
 
 { #category : 'accessing' }
 ViennaModificationEpiLog >> state: aDictionary [
 
-	self state ~= aDictionary ifTrue: [ state := aDictionary ]
+	state ~= aDictionary ifTrue: [ state := aDictionary ]
 ]
