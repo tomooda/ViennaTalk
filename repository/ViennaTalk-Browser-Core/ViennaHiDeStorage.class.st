@@ -33,6 +33,12 @@ ViennaHiDeStorage class >> memory [
 ]
 
 { #category : 'operations' }
+ViennaHiDeStorage >> chronicleAt: aString ifAbsent: errorBlock [
+
+	^ chronicle at: aString ifAbsent: errorBlock
+]
+
+{ #category : 'operations' }
 ViennaHiDeStorage >> chronicleSuchThat: aBlock [
 
 	| payloads |

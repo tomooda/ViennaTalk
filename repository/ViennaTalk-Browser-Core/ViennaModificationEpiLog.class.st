@@ -13,9 +13,10 @@ Class {
 { #category : 'instance creation' }
 ViennaModificationEpiLog class >> after: aViennaEpiLog specification: aViennaModularDocumentNode [
 
-	^ (self after: aViennaEpiLog)
-		  specification: aViennaModularDocumentNode;
-		  yourself
+	^ self
+		  after: aViennaEpiLog
+		  specification: aViennaModularDocumentNode
+		  state: Dictionary new
 ]
 
 { #category : 'instance creation' }
@@ -87,6 +88,13 @@ ViennaModificationEpiLog >> hideSave: aFileReference storage: aHiDeStorage [
 			writeStreamDo: [ :stream | STONJSON put: state onStream: stream ] ]
 ]
 
+{ #category : 'initialization' }
+ViennaModificationEpiLog >> initialize [
+
+	self class initializeSlots: self.
+	super initialize.
+]
+
 { #category : 'testing' }
 ViennaModificationEpiLog >> isModificationEpiLog [
 
@@ -132,5 +140,5 @@ ViennaModificationEpiLog >> state [
 { #category : 'accessing' }
 ViennaModificationEpiLog >> state: aDictionary [
 
-	state ~= aDictionary ifTrue: [ state := aDictionary ]
+	state := aDictionary
 ]

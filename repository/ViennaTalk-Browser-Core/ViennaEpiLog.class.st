@@ -4,9 +4,9 @@ Class {
 	#traits : 'TComparable + THiDePersistency',
 	#classTraits : 'TComparable classTrait + THiDePersistency classTrait',
 	#instVars : [
-		'#prev => HiDePersistencySlot',
-		'#diffSetFromPred',
-		'#diffSetFromPrev'
+		'prev',
+		'diffSetFromPred',
+		'diffSetFromPrev'
 	],
 	#category : 'ViennaTalk-Browser-Core-EpiLog',
 	#package : 'ViennaTalk-Browser-Core',
@@ -179,7 +179,6 @@ ViennaEpiLog >> hideUpdateMetadataStorage: aHiDeStorage [
 { #category : 'initialization' }
 ViennaEpiLog >> initialize [
 
-	self class initializeSlots: self.
 	super initialize.
 	self initializeHideMetadata.
 	self comment: self defaultComment
@@ -271,17 +270,16 @@ ViennaEpiLog >> newInitialization: aDictionary [
 { #category : 'instance creation' }
 ViennaEpiLog >> newLoading: aViennaModularDocumentNode [
 
-	^ ViennaLoadingEpiLog
-		  after: self
-		  specification: aViennaModularDocumentNode
+	^ self newLoading: aViennaModularDocumentNode after: self
 ]
 
 { #category : 'instance creation' }
 ViennaEpiLog >> newLoading: aViennaModularDocumentNode after: aViennaEpiLog [
 
-	^ ViennaLoadingEpiLog
+	^ self
+		  newLoading: aViennaModularDocumentNode
+		  state: self state
 		  after: aViennaEpiLog
-		  specification: aViennaModularDocumentNode
 ]
 
 { #category : 'instance creation' }
@@ -290,17 +288,13 @@ ViennaEpiLog >> newLoading: aViennaModularDocumentNode state: aDictionary after:
 	^ ViennaLoadingEpiLog
 		  after: aViennaEpiLog
 		  specification: aViennaModularDocumentNode
-		  state: (self state = aDictionary
-				   ifTrue: [ nil ]
-				   ifFalse: [ aDictionary ])
+		  state: aDictionary
 ]
 
 { #category : 'instance creation' }
 ViennaEpiLog >> newModification: aViennaModularDocumentNode [
 
-	^ ViennaModificationEpiLog
-		  after: self
-		  specification: aViennaModularDocumentNode
+	^ self newModification: aViennaModularDocumentNode state: self state
 ]
 
 { #category : 'instance creation' }
@@ -309,9 +303,7 @@ ViennaEpiLog >> newModification: aViennaModularDocumentNode state: aDictionary [
 	^ ViennaModificationEpiLog
 		  after: self
 		  specification: aViennaModularDocumentNode
-		  state: (self state = aDictionary
-				   ifTrue: [ nil ]
-				   ifFalse: [ aDictionary ])
+		  state: aDictionary
 ]
 
 { #category : 'instance creation' }

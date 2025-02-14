@@ -53,6 +53,13 @@ ViennaInitializationEpiLog >> hideSave: aFileReference storage: aHiDeStorage [
 			writeStreamDo: [ :stream | STONJSON put: state onStream: stream ] ]
 ]
 
+{ #category : 'initialization' }
+ViennaInitializationEpiLog >> initialize [
+
+	self class initializeSlots: self.
+	super initialize.
+]
+
 { #category : 'testing' }
 ViennaInitializationEpiLog >> isInitializationEpiLog [
 

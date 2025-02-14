@@ -2,7 +2,7 @@ Class {
 	#name : 'ViennaRevertionEpiLog',
 	#superclass : 'ViennaEpiLog',
 	#instVars : [
-		'#destination => HiDePersistencySlot'
+		'destination'
 	],
 	#category : 'ViennaTalk-Browser-Core-EpiLog',
 	#package : 'ViennaTalk-Browser-Core',

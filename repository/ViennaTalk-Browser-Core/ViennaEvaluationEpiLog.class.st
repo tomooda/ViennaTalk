@@ -53,6 +53,13 @@ ViennaEvaluationEpiLog >> hideSave: aFileReference storage: aHiDeStorage [
 			writeStreamDo: [ :stream | stream nextPutAll: expression ] ]
 ]
 
+{ #category : 'initialization' }
+ViennaEvaluationEpiLog >> initialize [
+
+	self class initializeSlots: self.
+	super initialize.
+]
+
 { #category : 'testing' }
 ViennaEvaluationEpiLog >> isEvaluationEpiLog [
 

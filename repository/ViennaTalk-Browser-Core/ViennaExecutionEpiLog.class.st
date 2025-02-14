@@ -11,14 +11,6 @@ Class {
 }
 
 { #category : 'instance creaiton' }
-ViennaExecutionEpiLog class >> after: aViennaEpiLog statement: aString [
-
-	^ (self after: aViennaEpiLog)
-		  statement: aString;
-		  yourself
-]
-
-{ #category : 'instance creaiton' }
 ViennaExecutionEpiLog class >> after: aViennaEpiLog statement: aString state: aDictionary [
 
 	^ (self after: aViennaEpiLog)
@@ -63,6 +55,13 @@ ViennaExecutionEpiLog >> hideSave: aFileReference storage: aHiDeStorage [
 			writeStreamDo: [ :stream | STONJSON put: state onStream: stream ] ]
 ]
 
+{ #category : 'initialization' }
+ViennaExecutionEpiLog >> initialize [
+
+	self class initializeSlots: self.
+	super initialize.
+]
+
 { #category : 'testing' }
 ViennaExecutionEpiLog >> isExecutionEpiLog [
 
@@ -86,7 +85,7 @@ ViennaExecutionEpiLog >> state [
 { #category : 'accessing' }
 ViennaExecutionEpiLog >> state: aDictionary [
 
-	state ~= aDictionary ifTrue: [ state := aDictionary ]
+	state := aDictionary
 ]
 
 { #category : 'accessing' }
