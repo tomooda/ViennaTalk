@@ -85,6 +85,15 @@ ViennaRevertionEpiLog >> hideLoad: aFileReference storage: aHiDeStorage [
 ]
 
 { #category : 'hideho-operations' }
+ViennaRevertionEpiLog >> hideMetadataLoaded [
+
+	super hideMetadataLoaded.
+	hideMetadata
+		at: 'destination'
+		ifPresent: [ :id | destination := hideStorage chronicleAt: id ]
+]
+
+{ #category : 'hideho-operations' }
 ViennaRevertionEpiLog >> hideUpdateMetadataStorage: aHiDeStorage [
 
 	super hideUpdateMetadataStorage: aHiDeStorage.
@@ -94,6 +103,12 @@ ViennaRevertionEpiLog >> hideUpdateMetadataStorage: aHiDeStorage [
 		hideMetadata
 			at: 'destination'
 			put: destination hideMetadata identity ]
+]
+
+{ #category : 'testing' }
+ViennaRevertionEpiLog >> isPredEpiLog [
+
+	^ false
 ]
 
 { #category : 'testing' }

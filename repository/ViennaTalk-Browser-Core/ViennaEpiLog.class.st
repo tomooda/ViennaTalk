@@ -155,9 +155,15 @@ ViennaEpiLog >> hash [
 { #category : 'hideho-operations' }
 ViennaEpiLog >> hideLoad: aFileReference storage: aHiDeStorage [
 
+
+]
+
+{ #category : 'hideho-operations' }
+ViennaEpiLog >> hideMetadataLoaded [
+
 	hideMetadata
 		at: 'prev'
-		ifPresent: [ :id | prev := aHiDeStorage chronicleAt: id ]
+		ifPresent: [ :id | prev := hideStorage chronicleAt: id ]
 ]
 
 { #category : 'hideho-operations' }
@@ -212,6 +218,12 @@ ViennaEpiLog >> isLoadingEpiLog [
 ViennaEpiLog >> isModificationEpiLog [
 
 	^ false
+]
+
+{ #category : 'testing' }
+ViennaEpiLog >> isPredEpiLog [
+
+	^ true
 ]
 
 { #category : 'testing' }
@@ -318,9 +330,9 @@ ViennaEpiLog >> newRevertion: aViennaEpiLog [
 ViennaEpiLog >> pred [
 
 	^ self basicPred ifNotNil: [ :pred |
-		  (pred isRevertionEpiLog or: [ pred isLoadingEpiLog ])
-			  ifTrue: [ pred pred ]
-			  ifFalse: [ pred ] ]
+		  pred isPredEpiLog
+			  ifTrue: [ pred ]
+			  ifFalse: [ pred pred ] ]
 ]
 
 { #category : 'accessing' }

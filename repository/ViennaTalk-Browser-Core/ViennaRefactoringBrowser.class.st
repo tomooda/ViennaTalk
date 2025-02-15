@@ -1046,9 +1046,17 @@ ViennaRefactoringBrowser >> epiLogListSelectionChanged [
 { #category : 'operations-epiLog' }
 ViennaRefactoringBrowser >> epiLogLoading: aViennaModularDocumentNode [
 
+	| storage |
+	storage := ViennaHiDeStorage for: fileReference.
 	self epiLog: (self epiLog
 			 newLoading: aViennaModularDocumentNode
-			 after: (ViennaHiDeStorage for: fileReference) chronicleTail)
+			 after: (storage chronicleTail ifNil: [
+					  ViennaEpiLog vanilla
+						  specification: aViennaModularDocumentNode;
+						  state: Dictionary new;
+						  hideStorage: storage;
+						  hideSave;
+						  yourself ]))
 ]
 
 { #category : 'operations-epiLog' }
@@ -1094,6 +1102,15 @@ ViennaRefactoringBrowser >> epiLogTimeLineEnumerator [
 ViennaRefactoringBrowser >> epiLogVanilla [
 
 	self epiLog: ViennaEpiLog vanilla
+]
+
+{ #category : 'operations-epiLog' }
+ViennaRefactoringBrowser >> epiLogVanilla: aViennaModularDocumentNode state: aDictionary [
+
+	self epiLog: (ViennaEpiLog vanilla
+			 specification: aViennaModularDocumentNode;
+			 state: aDictionary;
+			 yourself)
 ]
 
 { #category : 'layouts' }
@@ -1333,11 +1350,11 @@ ViennaRefactoringBrowser >> initialize [
 ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 
 	showsTimeLineButton := self newRadioButton
-		                       label: 'time line';
+		                       label: 'user timeline';
 		                       whenDeactivatedDo: [ self updateEpiLogList ];
 		                       yourself.
 	showsConstructionLineButton := self newRadioButton
-		                               label: 'construction line';
+		                               label: 'artifact timeline';
 		                               whenDeactivatedDo: [
 			                               self updateEpiLogList ];
 		                               yourself.

@@ -2,8 +2,8 @@ Class {
 	#name : 'ViennaExecutionEpiLog',
 	#superclass : 'ViennaEpiLog',
 	#instVars : [
-		'#statement => HiDePersistencySlot',
-		'#state => HiDePersistencySlot'
+		'#statement => HiDePersistencySlot loader: #hideLoadStatement',
+		'#state => HiDePersistencySlot loader: #hideLoadState'
 	],
 	#category : 'ViennaTalk-Browser-Core-EpiLog',
 	#package : 'ViennaTalk-Browser-Core',
@@ -39,6 +39,22 @@ ViennaExecutionEpiLog >> hideLoad: aFileReference storage: aHiDeStorage [
 		statement := ref contents ].
 	aFileReference / 'state.json' ifExists: [ :ref |
 		ref readStreamDo: [ :stream | state := STONJSON fromStream: stream ] ]
+]
+
+{ #category : 'hideho-operations' }
+ViennaExecutionEpiLog >> hideLoadState [
+
+	hideStorage chronicleFileReferenceFor: hideMetadata do: [ :baseref |
+		baseref / 'state.json' ifExists: [ :ref |
+			ref readStreamDo: [ :stream | state := STONJSON fromStream: stream ] ] ]
+]
+
+{ #category : 'hideho-operations' }
+ViennaExecutionEpiLog >> hideLoadStatement [
+
+	hideStorage chronicleFileReferenceFor: hideMetadata do: [ :baseref |
+		baseref / 'statement.txt' ifExists: [ :ref |
+			statement := ref contents ] ]
 ]
 
 { #category : 'hideho-operations' }

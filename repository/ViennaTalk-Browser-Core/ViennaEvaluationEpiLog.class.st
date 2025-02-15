@@ -2,7 +2,7 @@ Class {
 	#name : 'ViennaEvaluationEpiLog',
 	#superclass : 'ViennaEpiLog',
 	#instVars : [
-		'#expression => HiDePersistencySlot'
+		'#expression => HiDePersistencySlot loader: #hideLoadExpression'
 	],
 	#category : 'ViennaTalk-Browser-Core-EpiLog',
 	#package : 'ViennaTalk-Browser-Core',
@@ -39,6 +39,21 @@ ViennaEvaluationEpiLog >> expression: aString [
 ViennaEvaluationEpiLog >> hideLoad: aFileReference storage: aHiDeStorage [
 
 	super hideLoad: aFileReference storage: aHiDeStorage.
+	aFileReference / 'expression.txt' ifExists: [ :ref |
+		expression := ref contents ]
+]
+
+{ #category : 'hideho-operations' }
+ViennaEvaluationEpiLog >> hideLoadExpression [
+
+	hideStorage chronicleFileReferenceFor: hideMetadata do: [ :baseref |
+		baseref / 'expression.txt' ifExists: [ :ref |
+			expression := ref contents ] ]
+]
+
+{ #category : 'hideho-operations' }
+ViennaEvaluationEpiLog >> hideLoadExpression: aFileReference [
+
 	aFileReference / 'expression.txt' ifExists: [ :ref |
 		expression := ref contents ]
 ]

@@ -52,11 +52,7 @@ ViennaHiDeStorage >> chronicleSuchThat: aBlock [
 ViennaHiDeStorage >> chronicleTail [
 
 	| tail tailtime |
-	chronicle ifEmpty: [
-		^ ViennaVanillaEpiLog new
-			  hideStorage: self;
-			  hideSave;
-			  yourself ].
+	chronicle ifEmpty: [ ^ nil ].
 	tail := chronicle values anyOne.
 	tailtime := tail hideMetadata timestamp.
 	chronicle valuesDo: [ :persistency |
@@ -65,6 +61,13 @@ ViennaHiDeStorage >> chronicleTail [
 			tail := persistency.
 			tailtime := time ] ].
 	^ tail
+]
+
+{ #category : 'operations' }
+ViennaHiDeStorage >> loadChronicle [
+
+	super loadChronicle.
+	chronicle valuesDo: [ :payload | payload hideMetadataLoaded ]
 ]
 
 { #category : 'class access' }

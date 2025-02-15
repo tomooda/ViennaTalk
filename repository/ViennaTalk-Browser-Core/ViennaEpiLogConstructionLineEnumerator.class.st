@@ -6,6 +6,12 @@ Class {
 	#tag : 'EpiLog'
 }
 
+{ #category : 'testing' }
+ViennaEpiLogConstructionLineEnumerator >> accepts: aViennaEpiLog [
+
+	^ aViennaEpiLog isPredEpiLog
+]
+
 { #category : 'accessing' }
 ViennaEpiLogConstructionLineEnumerator >> diffSet: aViennaEpiLog [
 

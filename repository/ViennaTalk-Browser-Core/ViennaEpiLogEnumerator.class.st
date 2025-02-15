@@ -21,6 +21,12 @@ ViennaEpiLogEnumerator class >> isAbstract [
 	^ self == ViennaEpiLogEnumerator
 ]
 
+{ #category : 'testing' }
+ViennaEpiLogEnumerator >> accepts: aViennaEpiLog [
+
+	^ self subclassResponsibility
+]
+
 { #category : 'accessing' }
 ViennaEpiLogEnumerator >> arrayFrom: aViennaEpiLog [
 
@@ -40,7 +46,7 @@ ViennaEpiLogEnumerator >> from: aViennaEpiLog do: aBlock [
 	| epilog |
 	epilog := aViennaEpiLog.
 	[ epilog notNil ] whileTrue: [
-		aBlock value: epilog.
+		(self accepts: epilog) ifTrue: [ aBlock value: epilog ].
 		epilog := self prevFrom: epilog ]
 ]
 

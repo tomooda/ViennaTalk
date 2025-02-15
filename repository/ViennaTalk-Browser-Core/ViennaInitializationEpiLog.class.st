@@ -2,7 +2,7 @@ Class {
 	#name : 'ViennaInitializationEpiLog',
 	#superclass : 'ViennaEpiLog',
 	#instVars : [
-		'#state => HiDePersistencySlot'
+		'#state => HiDePersistencySlot loader: #hideLoadState'
 	],
 	#category : 'ViennaTalk-Browser-Core-EpiLog',
 	#package : 'ViennaTalk-Browser-Core',
@@ -41,6 +41,14 @@ ViennaInitializationEpiLog >> hideLoad: aFileReference storage: aHiDeStorage [
 	super hideLoad: aFileReference storage: aHiDeStorage.
 	aFileReference / 'state.json' ifExists: [ :ref |
 		ref readStreamDo: [ :stream | state := STONJSON fromStream: stream ] ]
+]
+
+{ #category : 'hideho-operations' }
+ViennaInitializationEpiLog >> hideLoadState [
+
+	hideStorage chronicleFileReferenceFor: hideMetadata do: [ :baseref |
+		baseref / 'state.json' ifExists: [ :ref |
+			ref readStreamDo: [ :stream | state := STONJSON fromStream: stream ] ] ]
 ]
 
 { #category : 'hideho-operations' }

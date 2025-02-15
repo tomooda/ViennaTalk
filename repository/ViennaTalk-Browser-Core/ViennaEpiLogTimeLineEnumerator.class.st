@@ -6,6 +6,12 @@ Class {
 	#tag : 'EpiLog'
 }
 
+{ #category : 'testing' }
+ViennaEpiLogTimeLineEnumerator >> accepts: aViennaEpiLog [
+
+	^ true
+]
+
 { #category : 'accessing' }
 ViennaEpiLogTimeLineEnumerator >> diffSet: aViennaEpiLog [
 
