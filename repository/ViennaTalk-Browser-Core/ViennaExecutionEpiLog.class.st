@@ -32,35 +32,44 @@ ViennaExecutionEpiLog >> hasStateChange [
 ]
 
 { #category : 'hideho-operations' }
-ViennaExecutionEpiLog >> hideLoad: aFileReference storage: aHiDeStorage [
+ViennaExecutionEpiLog >> hideLoad: aFileReference [
 
-	super hideLoad: aFileReference storage: aHiDeStorage.
-	aFileReference / 'statement.txt' ifExists: [ :ref |
-		statement := ref contents ].
-	aFileReference / 'state.json' ifExists: [ :ref |
-		ref readStreamDo: [ :stream | state := STONJSON fromStream: stream ] ]
+	super hideLoad: aFileReference.
+	self
+		hideLoadStatement: aFileReference;
+		hideLoadState: aFileReference
 ]
 
 { #category : 'hideho-operations' }
 ViennaExecutionEpiLog >> hideLoadState [
 
-	hideStorage chronicleFileReferenceFor: hideMetadata do: [ :baseref |
-		baseref / 'state.json' ifExists: [ :ref |
-			ref readStreamDo: [ :stream | state := STONJSON fromStream: stream ] ] ]
+	self hideBaseDirectoryDo: [ :ref | self hideLoadState: ref ]
+]
+
+{ #category : 'hideho-operations' }
+ViennaExecutionEpiLog >> hideLoadState: aFileReference [
+
+	aFileReference / 'state.json' ifExists: [ :ref |
+		ref readStreamDo: [ :stream | state := STONJSON fromStream: stream ] ]
 ]
 
 { #category : 'hideho-operations' }
 ViennaExecutionEpiLog >> hideLoadStatement [
 
-	hideStorage chronicleFileReferenceFor: hideMetadata do: [ :baseref |
-		baseref / 'statement.txt' ifExists: [ :ref |
-			statement := ref contents ] ]
+	self hideBaseDirectoryDo: [ :ref | self hideLoadStatement: ref ]
 ]
 
 { #category : 'hideho-operations' }
-ViennaExecutionEpiLog >> hideSave: aFileReference storage: aHiDeStorage [
+ViennaExecutionEpiLog >> hideLoadStatement: aFileReference [
 
-	super hideSave: aFileReference storage: aHiDeStorage.
+	aFileReference / 'statement.txt' ifExists: [ :ref |
+		statement := ref contents ]
+]
+
+{ #category : 'hideho-operations' }
+ViennaExecutionEpiLog >> hideSave: aFileReference [
+
+	super hideSave: aFileReference.
 	statement ifNotNil: [
 		(aFileReference / 'statement.txt')
 			ensureDelete;

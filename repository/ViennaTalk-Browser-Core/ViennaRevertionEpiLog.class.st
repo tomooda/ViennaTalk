@@ -77,14 +77,6 @@ ViennaRevertionEpiLog >> hasStateChange [
 ]
 
 { #category : 'hideho-operations' }
-ViennaRevertionEpiLog >> hideLoad: aFileReference storage: aHiDeStorage [
-
-	hideMetadata
-		at: 'destination'
-		ifPresent: [ :id | destination := aHiDeStorage chronicleAt: id ]
-]
-
-{ #category : 'hideho-operations' }
 ViennaRevertionEpiLog >> hideMetadataLoaded [
 
 	super hideMetadataLoaded.

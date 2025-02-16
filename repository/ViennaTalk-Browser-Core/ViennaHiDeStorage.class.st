@@ -33,37 +33,6 @@ ViennaHiDeStorage class >> memory [
 ]
 
 { #category : 'operations' }
-ViennaHiDeStorage >> chronicleAt: aString ifAbsent: errorBlock [
-
-	^ chronicle at: aString ifAbsent: errorBlock
-]
-
-{ #category : 'operations' }
-ViennaHiDeStorage >> chronicleSuchThat: aBlock [
-
-	| payloads |
-	payloads := chronicle values select: [ :payload |
-		            aBlock value: payload hideMetadata ].
-	^ payloads asSortedCollection: [ :newer :older |
-		  older hideMetadata timestamp <= newer hideMetadata timestamp ]
-]
-
-{ #category : 'operations' }
-ViennaHiDeStorage >> chronicleTail [
-
-	| tail tailtime |
-	chronicle ifEmpty: [ ^ nil ].
-	tail := chronicle values anyOne.
-	tailtime := tail hideMetadata timestamp.
-	chronicle valuesDo: [ :persistency |
-		| time |
-		tailtime < (time := persistency hideMetadata timestamp) ifTrue: [
-			tail := persistency.
-			tailtime := time ] ].
-	^ tail
-]
-
-{ #category : 'operations' }
 ViennaHiDeStorage >> loadChronicle [
 
 	super loadChronicle.

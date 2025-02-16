@@ -64,37 +64,45 @@ ViennaModificationEpiLog >> hasStateChange [
 ]
 
 { #category : 'hideho-operations' }
-ViennaModificationEpiLog >> hideLoad: aFileReference storage: aHiDeStorage [
+ViennaModificationEpiLog >> hideLoad: aFileReference [
 
-	super hideLoad: aFileReference storage: aHiDeStorage.
-	aFileReference / 'source.vdmsl' ifExists: [ :ref |
-		ref readStreamDo: [ :stream |
-			specification := ref contents asViennaDocumentAst ] ].
-	aFileReference / 'state.json' ifExists: [ :ref |
-		ref readStreamDo: [ :stream | state := STONJSON fromStream: stream ] ]
+	super hideLoad: aFileReference.
+	self
+		hideLoadSpecification: aFileReference;
+		hideLoadState: aFileReference
 ]
 
 { #category : 'hideho-operations' }
 ViennaModificationEpiLog >> hideLoadSpecification [
 
-	hideStorage chronicleFileReferenceFor: hideMetadata do: [ :baseref |
-		baseref / 'source.vdmsl' ifExists: [ :ref |
-			ref readStreamDo: [ :stream |
-				specification := ref contents asViennaDocumentAst ] ] ]
+	self hideBaseDirectoryDo: [ :ref | self hideLoadSpecification: ref ]
+]
+
+{ #category : 'hideho-operations' }
+ViennaModificationEpiLog >> hideLoadSpecification: aFileReference [
+
+	aFileReference / 'source.vdmsl' ifExists: [ :ref |
+		ref readStreamDo: [ :stream |
+			specification := ref contents asViennaDocumentAst ] ]
 ]
 
 { #category : 'hideho-operations' }
 ViennaModificationEpiLog >> hideLoadState [
 
-	hideStorage chronicleFileReferenceFor: hideMetadata do: [ :baseref |
-		baseref / 'state.json' ifExists: [ :ref |
-			ref readStreamDo: [ :stream | state := STONJSON fromStream: stream ] ] ]
+	self hideBaseDirectoryDo: [ :ref | self hideLoadState: ref ]
 ]
 
 { #category : 'hideho-operations' }
-ViennaModificationEpiLog >> hideSave: aFileReference storage: aHiDeStorage [
+ViennaModificationEpiLog >> hideLoadState: aFileReference [
 
-	super hideSave: aFileReference storage: aHiDeStorage.
+	aFileReference / 'state.json' ifExists: [ :ref |
+		ref readStreamDo: [ :stream | state := STONJSON fromStream: stream ] ]
+]
+
+{ #category : 'hideho-operations' }
+ViennaModificationEpiLog >> hideSave: aFileReference [
+
+	super hideSave: aFileReference.
 	specification ifNotNil: [
 		(aFileReference / 'source.vdmsl')
 			ensureDelete;

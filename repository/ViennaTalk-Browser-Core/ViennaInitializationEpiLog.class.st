@@ -36,25 +36,29 @@ ViennaInitializationEpiLog >> hasStateChange [
 ]
 
 { #category : 'hideho-operations' }
-ViennaInitializationEpiLog >> hideLoad: aFileReference storage: aHiDeStorage [
+ViennaInitializationEpiLog >> hideLoad: aFileReference [
 
-	super hideLoad: aFileReference storage: aHiDeStorage.
-	aFileReference / 'state.json' ifExists: [ :ref |
-		ref readStreamDo: [ :stream | state := STONJSON fromStream: stream ] ]
+	super hideLoad: aFileReference.
+	self hideLoadState: aFileReference
 ]
 
 { #category : 'hideho-operations' }
 ViennaInitializationEpiLog >> hideLoadState [
 
-	hideStorage chronicleFileReferenceFor: hideMetadata do: [ :baseref |
-		baseref / 'state.json' ifExists: [ :ref |
-			ref readStreamDo: [ :stream | state := STONJSON fromStream: stream ] ] ]
+	self hideBaseDirectoryDo: [ :ref | self hideLoadState: ref ]
 ]
 
 { #category : 'hideho-operations' }
-ViennaInitializationEpiLog >> hideSave: aFileReference storage: aHiDeStorage [
+ViennaInitializationEpiLog >> hideLoadState: aFileReference [
 
-	super hideSave: aFileReference storage: aHiDeStorage.
+	aFileReference / 'state.json' ifExists: [ :ref |
+		ref readStreamDo: [ :stream | state := STONJSON fromStream: stream ] ]
+]
+
+{ #category : 'hideho-operations' }
+ViennaInitializationEpiLog >> hideSave: aFileReference [
+
+	super hideSave: aFileReference.
 	state ifNotNil: [
 		(aFileReference / 'state.json')
 			ensureDelete;

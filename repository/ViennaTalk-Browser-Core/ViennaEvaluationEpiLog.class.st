@@ -36,19 +36,16 @@ ViennaEvaluationEpiLog >> expression: aString [
 ]
 
 { #category : 'hideho-operations' }
-ViennaEvaluationEpiLog >> hideLoad: aFileReference storage: aHiDeStorage [
+ViennaEvaluationEpiLog >> hideLoad: aFileReference [
 
-	super hideLoad: aFileReference storage: aHiDeStorage.
-	aFileReference / 'expression.txt' ifExists: [ :ref |
-		expression := ref contents ]
+	super hideLoad: aFileReference.
+	self hideLoadExpression: aFileReference
 ]
 
 { #category : 'hideho-operations' }
 ViennaEvaluationEpiLog >> hideLoadExpression [
 
-	hideStorage chronicleFileReferenceFor: hideMetadata do: [ :baseref |
-		baseref / 'expression.txt' ifExists: [ :ref |
-			expression := ref contents ] ]
+	self hideBaseDirectoryDo: [ :ref | self hideLoadExpression: ref ]
 ]
 
 { #category : 'hideho-operations' }
@@ -59,9 +56,9 @@ ViennaEvaluationEpiLog >> hideLoadExpression: aFileReference [
 ]
 
 { #category : 'hideho-operations' }
-ViennaEvaluationEpiLog >> hideSave: aFileReference storage: aHiDeStorage [
+ViennaEvaluationEpiLog >> hideSave: aFileReference [
 
-	super hideSave: aFileReference storage: aHiDeStorage.
+	super hideSave: aFileReference.
 	expression ifNotNil: [
 		(aFileReference / 'expression.txt')
 			ensureDelete;

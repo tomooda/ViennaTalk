@@ -153,9 +153,9 @@ ViennaEpiLog >> hash [
 ]
 
 { #category : 'hideho-operations' }
-ViennaEpiLog >> hideLoad: aFileReference storage: aHiDeStorage [
+ViennaEpiLog >> hideLoad: aFileReference [
 
-
+	
 ]
 
 { #category : 'hideho-operations' }
@@ -167,8 +167,7 @@ ViennaEpiLog >> hideMetadataLoaded [
 ]
 
 { #category : 'hideho-operations' }
-ViennaEpiLog >> hideSave: aFileReference storage: aHiDeStorage [
-
+ViennaEpiLog >> hideSave: aFileReference [
 	
 ]
 
