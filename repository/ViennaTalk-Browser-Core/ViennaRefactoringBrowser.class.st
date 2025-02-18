@@ -1132,14 +1132,18 @@ ViennaRefactoringBrowser >> epiLogVanilla: aViennaModularDocumentNode state: aDi
 ViennaRefactoringBrowser >> epilogPageLayout [
 
 	^ SpPanedLayout newHorizontal
-		  positionOfSlider: 0.4;
+		  positionOfSlider: 0.5;
 		  add: (SpBoxLayout newVertical
 				   add: (SpBoxLayout newHorizontal
 						    add: showsTimeLineButton;
 						    add: showsConstructionLineButton;
 						    yourself)
 				   expand: false;
-				   add: epiLogMatcherDropList expand: false;
+				   add: (SpBoxLayout newHorizontal
+						    add: self filterIcon expand: false;
+						    add: '  ' asPresenter expand: false;
+						    add: epiLogMatcherDropList)
+				   expand: false;
 				   add: epiLogList;
 				   add: namedEpiLogDropList expand: false;
 				   add: (SpBoxLayout newHorizontal
@@ -1184,6 +1188,32 @@ ViennaRefactoringBrowser >> executeRefactoring: aViennaRefactoring [
 ViennaRefactoringBrowser >> fileReference: aFileReference [
 
 	fileReference := aFileReference
+]
+
+{ #category : 'icons' }
+ViennaRefactoringBrowser >> filterIcon [
+
+	| form fillColor a b c |
+	fillColor := Color white.
+	form := Form extent: 32 @ 32 depth: 32.
+	a := 3.
+	b := 2.
+	c := 32.
+	form getCanvas
+		drawPolygon: {
+				( a @ (1+a)).
+				( a @ 1).
+				(c - a @ 1).
+				(c - a @ (1+a)).
+				(c // 2 + b @ (c // 2)).
+				(c // 2 + b @ (c - a - b)).
+				(c // 2 - b @ (c - a)).
+				(c // 2 - b @ (c // 2)) }
+		color: (Color gray: 0.7)
+		borderWidth: 3
+		borderColor: Color gray;
+		flush.
+	^ form scaledToExactSize: 16 @ 16
 ]
 
 { #category : 'private' }
@@ -1645,7 +1675,7 @@ ViennaRefactoringBrowser >> initializeSourcePagePresenters [
 ViennaRefactoringBrowser >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
-	aWindowPresenter initialExtent: 800 @ 600
+	aWindowPresenter initialExtent: 1000 @ 800
 ]
 
 { #category : 'instance creation' }
@@ -2068,15 +2098,13 @@ ViennaRefactoringBrowser >> reload [
 ViennaRefactoringBrowser >> removeEpiLog [
 
 	epiLogList selectedItem ifNotNil: [ :epiLog |
-		(UIManager default proceed: 'Remove from EpiLog?' title: 'EpiLog')
-			ifTrue: [
-				self epiLog timeLine do: [ :log |
-					log prev == epiLog ifTrue: [ log prev: epiLog prev ].
-					log basicPred == epiLog ifTrue: [
-						log basicPred: epiLog basicPred ] ].
-				self
-					updateEpiLogList;
-					updateNamedEpiLogDropList ] ]
+		self epiLog == epiLog ifFalse: [
+			(UIManager default proceed: 'Remove from EpiLog?' title: 'EpiLog')
+				ifTrue: [
+					epiLog hideRemove.
+					self
+						updateEpiLogList;
+						updateNamedEpiLogDropList ] ] ]
 ]
 
 { #category : 'operations-epiLog' }

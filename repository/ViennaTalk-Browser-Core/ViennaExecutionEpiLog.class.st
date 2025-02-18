@@ -93,6 +93,12 @@ ViennaExecutionEpiLog >> isExecutionEpiLog [
 	^ true
 ]
 
+{ #category : 'testing' }
+ViennaExecutionEpiLog >> isRemovable [
+
+	^ true
+]
+
 { #category : 'printing' }
 ViennaExecutionEpiLog >> printOn: aStream [
 

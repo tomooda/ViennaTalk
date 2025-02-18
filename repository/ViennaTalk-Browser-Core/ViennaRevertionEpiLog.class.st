@@ -104,6 +104,12 @@ ViennaRevertionEpiLog >> isPredEpiLog [
 ]
 
 { #category : 'testing' }
+ViennaRevertionEpiLog >> isRemovable [
+
+	^ destination == prev
+]
+
+{ #category : 'testing' }
 ViennaRevertionEpiLog >> isRevertionEpiLog [
 
 	^ true

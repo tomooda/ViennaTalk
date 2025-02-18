@@ -1,6 +1,6 @@
 Class {
 	#name : 'ViennaVanillaEpiLog',
-	#superclass : 'ViennaModificationEpiLog',
+	#superclass : 'ViennaAbstractModificationEpiLog',
 	#category : 'ViennaTalk-Browser-Core-EpiLog',
 	#package : 'ViennaTalk-Browser-Core',
 	#tag : 'EpiLog'
@@ -28,6 +28,12 @@ ViennaVanillaEpiLog >> initialize [
 
 { #category : 'testing' }
 ViennaVanillaEpiLog >> isExecutionClosureMember [
+
+	^ false
+]
+
+{ #category : 'testing' }
+ViennaVanillaEpiLog >> isRemovable [
 
 	^ false
 ]

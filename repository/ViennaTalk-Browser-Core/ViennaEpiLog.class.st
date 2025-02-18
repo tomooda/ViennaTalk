@@ -167,6 +167,26 @@ ViennaEpiLog >> hideMetadataLoaded [
 ]
 
 { #category : 'hideho-operations' }
+ViennaEpiLog >> hideRemove [
+
+	self isRemovable ifTrue: [
+		| newPrev newPred |
+		newPrev := prev.
+		newPred := self basicPred.
+		hideStorage chronicle do: [ :epiLog |
+			| changed |
+			changed := false.
+			epiLog prev == self ifTrue: [
+				epiLog prev: newPrev.
+				changed := true ].
+			epiLog basicPred == self ifTrue: [
+				epiLog basicPred: newPred.
+				changed := true ].
+			changed ifTrue: [ hideStorage chronicleSave: epiLog ] ].
+		hideStorage chronicleRemove: self ]
+]
+
+{ #category : 'hideho-operations' }
 ViennaEpiLog >> hideSave: aFileReference [
 	
 ]
@@ -187,6 +207,12 @@ ViennaEpiLog >> initialize [
 	super initialize.
 	self initializeHideMetadata.
 	self comment: self defaultComment
+]
+
+{ #category : 'testing' }
+ViennaEpiLog >> isAbstractModificationEpiLog [
+
+	^ false
 ]
 
 { #category : 'testing' }
@@ -229,6 +255,12 @@ ViennaEpiLog >> isModificationEpiLog [
 ViennaEpiLog >> isPredEpiLog [
 
 	^ true
+]
+
+{ #category : 'testing' }
+ViennaEpiLog >> isRemovable [
+
+	^ self subclassResponsibility
 ]
 
 { #category : 'testing' }

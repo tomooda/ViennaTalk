@@ -78,6 +78,12 @@ ViennaInitializationEpiLog >> isInitializationEpiLog [
 	^ true
 ]
 
+{ #category : 'testing' }
+ViennaInitializationEpiLog >> isRemovable [
+
+	^ true
+]
+
 { #category : 'printing' }
 ViennaInitializationEpiLog >> printOn: aStream [
 

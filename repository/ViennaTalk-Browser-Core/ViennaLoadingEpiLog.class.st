@@ -1,6 +1,6 @@
 Class {
 	#name : 'ViennaLoadingEpiLog',
-	#superclass : 'ViennaModificationEpiLog',
+	#superclass : 'ViennaAbstractModificationEpiLog',
 	#category : 'ViennaTalk-Browser-Core-EpiLog',
 	#package : 'ViennaTalk-Browser-Core',
 	#tag : 'EpiLog'
@@ -28,6 +28,12 @@ ViennaLoadingEpiLog >> isLoadingEpiLog [
 ViennaLoadingEpiLog >> isPredEpiLog [
 
 	^ false
+]
+
+{ #category : 'testing' }
+ViennaLoadingEpiLog >> isRemovable [
+
+	^ self hasSpecificationChange not and: [ self hasStateChange not ]
 ]
 
 { #category : 'testing' }

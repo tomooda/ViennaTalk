@@ -78,6 +78,12 @@ ViennaEvaluationEpiLog >> isEvaluationEpiLog [
 	^ true
 ]
 
+{ #category : 'testing' }
+ViennaEvaluationEpiLog >> isRemovable [
+
+	^ true
+]
+
 { #category : 'printing' }
 ViennaEvaluationEpiLog >> printOn: aStream [
 

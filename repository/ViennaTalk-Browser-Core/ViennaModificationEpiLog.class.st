@@ -1,10 +1,6 @@
 Class {
 	#name : 'ViennaModificationEpiLog',
-	#superclass : 'ViennaEpiLog',
-	#instVars : [
-		'#specification => HiDePersistencySlot loader: #hideLoadSpecification',
-		'#state => HiDePersistencySlot loader: #hideLoadState'
-	],
+	#superclass : 'ViennaAbstractModificationEpiLog',
 	#category : 'ViennaTalk-Browser-Core-EpiLog',
 	#package : 'ViennaTalk-Browser-Core',
 	#tag : 'EpiLog'
@@ -35,92 +31,6 @@ ViennaModificationEpiLog class >> metadataName [
 ]
 
 { #category : 'testing' }
-ViennaModificationEpiLog >> hasChangeAt: aString module: anotherString [
-
-	^ ((self specification moduleNamed: anotherString) ifNotNil: [ :m |
-		   m resolveIdentifier: aString ])
-	  ~=
-		  ((prev ifNotNil: [ prev specification moduleNamed: anotherString ])
-			   ifNotNil: [ :m | m resolveIdentifier: aString ])
-]
-
-{ #category : 'testing' }
-ViennaModificationEpiLog >> hasChangeAtModule: aString [
-
-	^ (self specification moduleNamed: aString)
-	  ~= (prev ifNotNil: [ prev specification moduleNamed: aString ])
-]
-
-{ #category : 'testing' }
-ViennaModificationEpiLog >> hasSpecificationChange [
-
-	^ prev isNil or: [ prev specification ~= self specification ]
-]
-
-{ #category : 'testing' }
-ViennaModificationEpiLog >> hasStateChange [
-
-	^ state notNil and: [ prev isNil or: [ prev state ~= state ] ]
-]
-
-{ #category : 'hideho-operations' }
-ViennaModificationEpiLog >> hideLoad: aFileReference [
-
-	super hideLoad: aFileReference.
-	self
-		hideLoadSpecification: aFileReference;
-		hideLoadState: aFileReference
-]
-
-{ #category : 'hideho-operations' }
-ViennaModificationEpiLog >> hideLoadSpecification [
-
-	self hideBaseDirectoryDo: [ :ref | self hideLoadSpecification: ref ]
-]
-
-{ #category : 'hideho-operations' }
-ViennaModificationEpiLog >> hideLoadSpecification: aFileReference [
-
-	aFileReference / 'source.vdmsl' ifExists: [ :ref |
-		ref readStreamDo: [ :stream |
-			specification := ref contents asViennaDocumentAst ] ]
-]
-
-{ #category : 'hideho-operations' }
-ViennaModificationEpiLog >> hideLoadState [
-
-	self hideBaseDirectoryDo: [ :ref | self hideLoadState: ref ]
-]
-
-{ #category : 'hideho-operations' }
-ViennaModificationEpiLog >> hideLoadState: aFileReference [
-
-	aFileReference / 'state.json' ifExists: [ :ref |
-		ref readStreamDo: [ :stream | state := STONJSON fromStream: stream ] ]
-]
-
-{ #category : 'hideho-operations' }
-ViennaModificationEpiLog >> hideSave: aFileReference [
-
-	super hideSave: aFileReference.
-	specification ifNotNil: [
-		(aFileReference / 'source.vdmsl')
-			ensureDelete;
-			writeStreamDo: [ :stream | stream nextPutAll: specification source ] ].
-	state ifNotNil: [
-		(aFileReference / 'state.json')
-			ensureDelete;
-			writeStreamDo: [ :stream | STONJSON put: state onStream: stream ] ]
-]
-
-{ #category : 'initialization' }
-ViennaModificationEpiLog >> initialize [
-
-	self class initializeSlots: self.
-	super initialize.
-]
-
-{ #category : 'testing' }
 ViennaModificationEpiLog >> isExecutionClosureMember [
 
 	^ true
@@ -129,6 +39,19 @@ ViennaModificationEpiLog >> isExecutionClosureMember [
 { #category : 'testing' }
 ViennaModificationEpiLog >> isModificationEpiLog [
 
+	^ true
+]
+
+{ #category : 'testing' }
+ViennaModificationEpiLog >> isRemovable [
+
+	(self hasSpecificationChange not and: [ self hasStateChange not ])
+		ifTrue: [ ^ true ].
+	hideStorage chronicle do: [ :epiLog |
+		epiLog prev == self ifTrue: [
+			epiLog isModificationEpiLog ifFalse: [ ^ false ] ].
+		epiLog basicPred == self ifTrue: [
+			epiLog isModificationEpiLog ifFalse: [ ^ false ] ] ].
 	^ true
 ]
 
