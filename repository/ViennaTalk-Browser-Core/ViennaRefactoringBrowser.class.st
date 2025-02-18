@@ -41,7 +41,8 @@ Class {
 		'removeEpiLogButton',
 		'editEpiLogCommentButton',
 		'hideStorage',
-		'editEpiLogTagButton'
+		'editEpiLogTagButton',
+		'updateEpiLogButton'
 	],
 	#classVars : [
 		'GreenSignalIcon',
@@ -1141,8 +1142,9 @@ ViennaRefactoringBrowser >> epilogPageLayout [
 				   add: epiLogList;
 				   add: namedEpiLogDropList expand: false;
 				   add: (SpBoxLayout newHorizontal
+						    add: updateEpiLogButton expand: false;
 						    add: revertEpiLogButton;
-						    add: editEpiLogTagButton width: self class buttonHeight;
+						    add: editEpiLogTagButton expand: false;
 						    add: editEpiLogCommentButton expand: false;
 						    add: removeEpiLogButton expand: false;
 						    yourself)
@@ -1377,15 +1379,11 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 		              beMultipleSelection;
 		              showColumnHeaders;
 		              beResizable;
-		              addColumn:
-			              ((SpStringTableColumn
+		              addColumn: ((SpStringTableColumn
 				                title: 'timestamp'
 				                evaluated: [ :epilog |
-					                | time |
-					                time := DateAndTime now - epilog timestamp.
-					                time < 1 minutes
-						                ifTrue: [ 'now' ]
-						                ifFalse: [ time printRoughly , ' ago' ] ])
+					                ViennaLauncher formatDateAndTime:
+							                epilog timestamp ])
 				               beNotExpandable;
 				               yourself);
 		              addColumn:
@@ -1425,6 +1423,11 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 		                       whenSelectedItemChangedDo: [
 			                       self namedEpiLogChanged ];
 		                       yourself.
+	updateEpiLogButton := self newButton
+		                      icon: (self iconNamed: #refreshCircling);
+		                      label: 'Update';
+		                      action: [ self updateEpiLogList ];
+		                      yourself.
 	revertEpiLogButton := self newButton
 		                      icon: (self iconNamed: #smallRedo);
 		                      label: 'Revert';
@@ -1432,12 +1435,12 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 		                      yourself.
 	editEpiLogTagButton := self newButton
 		                       icon: self tagIcon;
-		                       label: 'Edit tags';
+		                       label: 'Tags';
 		                       action: [ self editEpiLogTag ];
 		                       yourself.
 	editEpiLogCommentButton := self newButton
 		                           icon: (self iconNamed: #edit);
-		                           label: 'Edit comment';
+		                           label: 'Comment';
 		                           action: [ self editEpiLogComment ];
 		                           yourself.
 	removeEpiLogButton := self newButton

@@ -3,11 +3,22 @@ Class {
 	#superclass : 'StandardWindow',
 	#classVars : [
 		'Current',
+		'DateAndTimeFormat',
 		'Font'
 	],
 	#category : 'ViennaTalk-Launcher-Core',
 	#package : 'ViennaTalk-Launcher-Core'
 }
+
+{ #category : 'settings' }
+ViennaLauncher class >> availableDateAndTimeFormats [
+
+	^ {
+		  ('10:24:45 1 Apr 2025' -> #HMSDMY).
+		  ('10:24:45 Apr 1, 2025' -> #HMSMDY).
+		  ('2025/04/01 10:24:45' -> #YMDHMS).
+		  ('10 days ago' -> #ago) }
+]
 
 { #category : 'settings' }
 ViennaLauncher class >> chooseFont [
@@ -30,6 +41,18 @@ ViennaLauncher class >> close [
 { #category : 'accessing' }
 ViennaLauncher class >> current [
 	^ Current ifNil: [ Current := self new ]
+]
+
+{ #category : 'settings' }
+ViennaLauncher class >> dateAndTimeFormat [
+
+	^ DateAndTimeFormat
+]
+
+{ #category : 'settings' }
+ViennaLauncher class >> dateAndTimeFormat: aSymbol [
+
+	DateAndTimeFormat := aSymbol asSymbol
 ]
 
 { #category : 'utilities' }
@@ -81,6 +104,79 @@ ViennaLauncher class >> fontSize [
 	^ self font pointSize
 ]
 
+{ #category : 'formatting' }
+ViennaLauncher class >> formatDateAndTime: aDateAndTime [
+
+	DateAndTimeFormat = #HMSDMY ifTrue: [
+		^ self formatHMSDMY: aDateAndTime ].
+	DateAndTimeFormat = #HMSMDY ifTrue: [
+		^ self formatHMSMDY: aDateAndTime ].
+	DateAndTimeFormat = #YMDHMS ifTrue: [
+		^ self formatYMDHMS: aDateAndTime ].
+	^ self formatRoughly: aDateAndTime
+]
+
+{ #category : 'formatting' }
+ViennaLauncher class >> formatHMSDMY: aDateAndTime [
+
+	^ String streamContents: [ :stream |
+		  aDateAndTime hour printOn: stream base: 10 nDigits: 2.
+		  stream nextPut: $:.
+		  aDateAndTime minute printOn: stream base: 10 nDigits: 2.
+		  stream nextPut: $:.
+		  aDateAndTime second printOn: stream base: 10 nDigits: 2.
+		  stream space.
+		  aDateAndTime day printOn: stream.
+		  stream space.
+		  stream nextPutAll: aDateAndTime monthAbbreviation.
+		  stream space.
+		  aDateAndTime year printOn: stream ]
+]
+
+{ #category : 'formatting' }
+ViennaLauncher class >> formatHMSMDY: aDateAndTime [
+
+	^ String streamContents: [ :stream |
+		  aDateAndTime hour printOn: stream base: 10 nDigits: 2.
+		  stream nextPut: $:.
+		  aDateAndTime minute printOn: stream base: 10 nDigits: 2.
+		  stream nextPut: $:.
+		  aDateAndTime second printOn: stream base: 10 nDigits: 2.
+		  stream space.
+		  stream nextPutAll: aDateAndTime monthAbbreviation.
+		  stream space.
+		  aDateAndTime day printOn: stream.
+		  stream nextPutAll: ', '.
+		  aDateAndTime year printOn: stream ]
+]
+
+{ #category : 'formatting' }
+ViennaLauncher class >> formatRoughly: aDateAndTime [
+
+	| time |
+	time := DateAndTime now - aDateAndTime.
+	^ time < 1 minutes
+		  ifTrue: [ 'now' ]
+		  ifFalse: [ time printRoughly , ' ago' ]
+]
+
+{ #category : 'formatting' }
+ViennaLauncher class >> formatYMDHMS: aDateAndTime [
+
+	^ String streamContents: [ :stream |
+		  aDateAndTime year printOn: stream.
+		  stream nextPut: $/.
+		  aDateAndTime month printOn: stream base: 10 nDigits: 2.
+		  stream nextPut: $/.
+		  aDateAndTime dayOfMonth printOn: stream base: 10 nDigits: 2.
+		  stream space.
+		  aDateAndTime hour printOn: stream base: 10 nDigits: 2.
+		  stream nextPut: $:.
+		  aDateAndTime minute printOn: stream base: 10 nDigits: 2.
+		  stream nextPut: $:.
+		  aDateAndTime second printOn: stream base: 10 nDigits: 2 ]
+]
+
 { #category : 'class initialization' }
 ViennaLauncher class >> initialize [
 	self installDesktopLogo.
@@ -125,14 +221,16 @@ ViennaLauncher class >> reopen [
 
 { #category : 'menu operations' }
 ViennaLauncher class >> showSettingBrowser [
+
 	SettingBrowser new
-		changePackageSet:
-				{(RPackageOrganizer default packageNamed: #'ViennaTalk-Launcher-Core').
-					(RPackageOrganizer default packageNamed: #'ViennaTalk-Browser-Core').
-					(RPackageOrganizer default packageNamed: #'ViennaTalk-Engine-Core').
-					(RPackageOrganizer default packageNamed: #'ViennaTalk-Parser-Core').
-					(RPackageOrganizer default packageNamed: #'ViennaTalk-VDMPad-Core').
-					(RPackageOrganizer default packageNamed: #'Network-Kernel')};
+		changePackageSet: {
+				(PackageOrganizer default packageNamed:
+						 #'ViennaTalk-Launcher-Core').
+				(PackageOrganizer default packageNamed: #'ViennaTalk-Browser-Core').
+				(PackageOrganizer default packageNamed: #'ViennaTalk-Engine-Core').
+				(PackageOrganizer default packageNamed: #'ViennaTalk-Parser-Core').
+				(PackageOrganizer default packageNamed: #'ViennaTalk-VDMPad-Core').
+				(PackageOrganizer default packageNamed: #'Network-Kernel') };
 		open
 ]
 
@@ -156,16 +254,27 @@ ViennaLauncher class >> viennaLogo [
 
 { #category : 'settings' }
 ViennaLauncher class >> viennaSettingsOn: aBuilder [
+
 	<systemsettings>
 	(aBuilder group: #ViennaTalk)
 		label: 'ViennaTalk';
-		with: [ (aBuilder group: #ViennaTalkAppearances)
+		with: [
+			(aBuilder group: #ViennaTalkAppearances)
 				label: 'Appearances';
-				with: [ (aBuilder setting: #font)
+				with: [
+					(aBuilder setting: #font)
+						label: 'Font';
 						target: self;
 						description: 'The default font for VDM sources';
-						label: 'Font';
-						order: 0.1 ].
+						order: 0.1 ];
+				with: [
+					(aBuilder pickOne: #dateAndTimeFormat)
+						label: 'Date-Time format';
+						target: self;
+						default: #ago;
+						domainValues: self availableDateAndTimeFormats;
+						description: 'The format to print a calendar date and time';
+						order: 0.5 ].
 			(aBuilder group: #ViennaTalkCodeGenerator) label: 'Code Generator'.
 			(aBuilder group: #ViennaTalkServices) label: 'Services' ]
 ]
