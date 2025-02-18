@@ -27,6 +27,24 @@ ViennaVanillaEpiLog >> initialize [
 ]
 
 { #category : 'testing' }
+ViennaVanillaEpiLog >> isExecutionClosureMember [
+
+	^ false
+]
+
+{ #category : 'testing' }
+ViennaVanillaEpiLog >> isSemanticClosureMember [
+
+	^ false
+]
+
+{ #category : 'testing' }
+ViennaVanillaEpiLog >> isSyntacticClosureMember [
+
+	^ false
+]
+
+{ #category : 'testing' }
 ViennaVanillaEpiLog >> isVanillaEpiLog [
 
 	^ true

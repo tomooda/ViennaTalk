@@ -121,6 +121,12 @@ ViennaModificationEpiLog >> initialize [
 ]
 
 { #category : 'testing' }
+ViennaModificationEpiLog >> isExecutionClosureMember [
+
+	^ true
+]
+
+{ #category : 'testing' }
 ViennaModificationEpiLog >> isModificationEpiLog [
 
 	^ true

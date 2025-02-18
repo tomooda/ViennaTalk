@@ -13,6 +13,12 @@ ViennaLoadingEpiLog class >> metadataName [
 ]
 
 { #category : 'testing' }
+ViennaLoadingEpiLog >> isExecutionClosureMember [
+
+	^ false
+]
+
+{ #category : 'testing' }
 ViennaLoadingEpiLog >> isLoadingEpiLog [
 
 	^ true

@@ -1054,6 +1054,7 @@ ViennaRefactoringBrowser >> epiLogListSelectionChanged [
 
 	self
 		updateEpiLogDiffList;
+		updateEpiLogMatcherDropList;
 		updateEpiLogButtons
 ]
 
@@ -1384,18 +1385,20 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 				                evaluated: [ :epilog |
 					                ViennaLauncher formatDateAndTime:
 							                epilog timestamp ])
-				               beNotExpandable;
+				               beExpandable;
 				               yourself);
 		              addColumn:
 			              ((SpStringTableColumn
 				                title: 'operation'
 				                evaluated: #printString)
-				               beNotExpandable;
+				               beExpandable;
 				               yourself);
 		              addColumn:
-		              (SpStringTableColumn
-			               title: 'comment'
-			               evaluated: #comment);
+			              ((SpStringTableColumn
+				                title: 'comment'
+				                evaluated: #comment)
+				               beExpandable;
+				               yourself);
 		              contextMenu: [ self epiLogListContextMenu ];
 		              whenSelectionChangedDo: [
 		              self epiLogListSelectionChanged ];
@@ -2574,23 +2577,33 @@ ViennaRefactoringBrowser >> updateEpiLogList [
 { #category : 'updating' }
 ViennaRefactoringBrowser >> updateEpiLogMatcherDropList [
 
-	| selection |
-	selection := epiLogMatcherDropList selectedItem.
-	epiLogMatcherDropList items: (Array streamContents: [ :stream |
-			 stream nextPut: ViennaEpiLogMatcher all.
-			 stream nextPut: (ViennaEpiLogMatcher
-					  impactClosureFrom: self epiLog
-					  enumerator: self epiLogEnumerator).
-			 moduleList selectedItem ifNotNil: [ :module |
-				 stream nextPut: (ViennaEpiLogMatcher module: module identifier) ].
-			 definitionList selectedItem ifNotNil: [ :definition |
-				 definition isViennaTopLevelDefinitionNode ifTrue: [
-					 definition identifiers do: [ :identifier |
-						 stream nextPut: (ViennaEpiLogMatcher
-								  identifier: identifier
-								  module: definition module identifier) ] ] ] ]) sorted.
-	(epiLogMatcherDropList items includes: selection) ifTrue: [
-		epiLogMatcherDropList selectItem: selection ]
+	self ifHiDeHoVisible: [
+		| selection |
+		selection := epiLogMatcherDropList selectedItem.
+		epiLogMatcherDropList items: (Array streamContents: [ :stream |
+				 stream nextPut: ViennaEpiLogMatcher all.
+				 stream nextPut: (ViennaEpiLogMatcher
+						  executionClosureFrom: self epiLog
+						  enumerator: self epiLogEnumerator
+						  at: (epiLogList selectedItem ifNil: [ self epiLog ])).
+				 stream nextPut: (ViennaEpiLogMatcher
+						  semanticClosureFrom: self epiLog
+						  enumerator: self epiLogEnumerator
+						  at: (epiLogList selectedItem ifNil: [ self epiLog ])).
+				 stream nextPut: (ViennaEpiLogMatcher
+						  syntacticClosureFrom: self epiLog
+						  enumerator: self epiLogEnumerator
+						  at: (epiLogList selectedItem ifNil: [ self epiLog ])).
+				 moduleList selectedItem ifNotNil: [ :module |
+					 stream nextPut: (ViennaEpiLogMatcher module: module identifier) ].
+				 definitionList selectedItem ifNotNil: [ :definition |
+					 definition isViennaTopLevelDefinitionNode ifTrue: [
+						 definition identifiers do: [ :identifier |
+							 stream nextPut: (ViennaEpiLogMatcher
+									  identifier: identifier
+									  module: definition module identifier) ] ] ] ]) sorted.
+		(epiLogMatcherDropList items includes: selection) ifTrue: [
+			epiLogMatcherDropList selectItem: selection ] ]
 ]
 
 { #category : 'updating' }

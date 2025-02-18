@@ -112,9 +112,19 @@ ViennaRevertionEpiLog >> isRevertionEpiLog [
 { #category : 'printing' }
 ViennaRevertionEpiLog >> printOn: aStream [
 
-	aStream nextPutAll: 'Revert to "'.
-	destination printOn: aStream.
-	aStream nextPut: $"
+	| steps epilog |
+	aStream nextPutAll: 'Revert '.
+	steps := 1.
+	epilog := prev.
+	[ epilog isNil or: [ steps >= 100 or: [ destination == epilog ] ] ]
+		whileFalse: [
+			epilog := epilog prev.
+			steps := steps + 1 ].
+	epilog ifNil: [ destination printOn: aStream ] ifNotNil: [
+		steps >= 100
+			ifTrue: [ aStream nextPutAll: '100+' ]
+			ifFalse: [ steps printOn: aStream ].
+		aStream nextPutAll: ' steps back' ]
 ]
 
 { #category : 'accessing' }

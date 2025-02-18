@@ -7,26 +7,26 @@ Class {
 }
 
 { #category : 'utilities' }
-ViennaHiDeSorter class >> contextualClosureFrom: aViennaEpiLog withEnumerator: aViennaEpiLogEnumerator [
+ViennaHiDeSorter class >> executionClosureFrom: aViennaEpiLog withEnumerator: aViennaEpiLogEnumerator at: anotherViennaEpiLog [
 
 	| matcher sorter |
-	matcher := ViennaContextualHiDeMatcher new
+	matcher := ViennaExecutionHiDeMatcher new
 		           epiLogEnumerator: aViennaEpiLogEnumerator;
 		           yourself.
 	sorter := self new
 		          matcher: matcher;
 		          yourself.
 	aViennaEpiLogEnumerator from: aViennaEpiLog do: [ :epiLog |
-		epiLog isSemanticClosureMember ifTrue: [ sorter add: epiLog ] ].
+		epiLog isExecutionClosureMember ifTrue: [ sorter add: epiLog ] ].
 	^ Array streamContents: [ :stream |
 		  (sorter
-			   nodeAt: (sorter identityIndexOf: aViennaEpiLog)
-			   ifAbsent: [ { aViennaEpiLog } ]) do: [ :epiLog |
+			   nodeAt: (sorter identityIndexOf: anotherViennaEpiLog)
+			   ifAbsent: [ { anotherViennaEpiLog } ]) do: [ :epiLog |
 			  stream nextPut: epiLog ] ]
 ]
 
 { #category : 'utilities' }
-ViennaHiDeSorter class >> semanticClosureFrom: aViennaEpiLog withEnumerator: aViennaEpiLogEnumerator [
+ViennaHiDeSorter class >> semanticClosureFrom: aViennaEpiLog withEnumerator: aViennaEpiLogEnumerator at: anotherViennaEpiLog [
 
 	| matcher sorter |
 	matcher := ViennaSemanticHiDeMatcher new
@@ -39,13 +39,13 @@ ViennaHiDeSorter class >> semanticClosureFrom: aViennaEpiLog withEnumerator: aVi
 		epiLog isSemanticClosureMember ifTrue: [ sorter add: epiLog ] ].
 	^ Array streamContents: [ :stream |
 		  (sorter
-			   nodeAt: (sorter identityIndexOf: aViennaEpiLog)
-			   ifAbsent: [ { aViennaEpiLog } ]) do: [ :epiLog |
+			   nodeAt: (sorter identityIndexOf: anotherViennaEpiLog)
+			   ifAbsent: [ { anotherViennaEpiLog } ]) do: [ :epiLog |
 			  stream nextPut: epiLog ] ]
 ]
 
 { #category : 'utilities' }
-ViennaHiDeSorter class >> syntacticClosureFrom: aViennaEpiLog withEnumerator: aViennaEpiLogEnumerator [
+ViennaHiDeSorter class >> syntacticClosureFrom: aViennaEpiLog withEnumerator: aViennaEpiLogEnumerator at: anotherViennaEpiLog [
 
 	| matcher sorter |
 	matcher := ViennaSyntacticHiDeMatcher new
@@ -58,8 +58,8 @@ ViennaHiDeSorter class >> syntacticClosureFrom: aViennaEpiLog withEnumerator: aV
 		epiLog isSyntacticClosureMember ifTrue: [ sorter add: epiLog ] ].
 	^ Array streamContents: [ :stream |
 		  (sorter
-			   nodeAt: (sorter identityIndexOf: aViennaEpiLog)
-			   ifAbsent: [ { aViennaEpiLog } ]) do: [ :epiLog |
+			   nodeAt: (sorter identityIndexOf: anotherViennaEpiLog)
+			   ifAbsent: [ { anotherViennaEpiLog } ]) do: [ :epiLog |
 			  stream nextPut: epiLog ] ]
 ]
 

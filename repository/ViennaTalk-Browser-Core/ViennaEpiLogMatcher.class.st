@@ -15,20 +15,21 @@ ViennaEpiLogMatcher class >> all [
 ]
 
 { #category : 'instance creation' }
+ViennaEpiLogMatcher class >> executionClosureFrom: aViennaEpiLog enumerator: aViennaEpiLogEnumerator at: anotherViennaEpiLog [
+
+	^ ViennaEpiLogExecutionClosureMatcher
+		  fromEpiLog: aViennaEpiLog
+		  enumerator: aViennaEpiLogEnumerator
+		  at: anotherViennaEpiLog
+]
+
+{ #category : 'instance creation' }
 ViennaEpiLogMatcher class >> identifier: aString module: anotherString [
 
 	^ ViennaEpiLogDefinitionMatcher new
 		  identifier: aString;
 		  moduleName: anotherString;
 		  yourself
-]
-
-{ #category : 'instance creation' }
-ViennaEpiLogMatcher class >> impactClosureFrom: aViennaEpiLog enumerator: aViennaEpiLogEnumerator [
-
-	^ ViennaEpiLogImpactClosureMatcher
-		  fromEpiLog: aViennaEpiLog
-		  enumerator: aViennaEpiLogEnumerator
 ]
 
 { #category : 'testing' }
@@ -43,6 +44,24 @@ ViennaEpiLogMatcher class >> module: aString [
 	^ ViennaEpiLogModuleMatcher new
 		  moduleName: aString;
 		  yourself
+]
+
+{ #category : 'instance creation' }
+ViennaEpiLogMatcher class >> semanticClosureFrom: aViennaEpiLog enumerator: aViennaEpiLogEnumerator at: anotherViennaEpiLog [
+
+	^ ViennaEpiLogSemanticClosureMatcher
+		  fromEpiLog: aViennaEpiLog
+		  enumerator: aViennaEpiLogEnumerator
+		  at: anotherViennaEpiLog
+]
+
+{ #category : 'instance creation' }
+ViennaEpiLogMatcher class >> syntacticClosureFrom: aViennaEpiLog enumerator: aViennaEpiLogEnumerator at: anotherViennaEpiLog [
+
+	^ ViennaEpiLogSyntacticClosureMatcher
+		  fromEpiLog: aViennaEpiLog
+		  enumerator: aViennaEpiLogEnumerator
+		  at: anotherViennaEpiLog
 ]
 
 { #category : 'comparing' }

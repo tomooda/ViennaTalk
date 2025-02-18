@@ -196,6 +196,12 @@ ViennaEpiLog >> isEvaluationEpiLog [
 ]
 
 { #category : 'testing' }
+ViennaEpiLog >> isExecutionClosureMember [
+
+	^ false
+]
+
+{ #category : 'testing' }
 ViennaEpiLog >> isExecutionEpiLog [
 
 	^ false
