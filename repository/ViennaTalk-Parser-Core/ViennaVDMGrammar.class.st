@@ -653,7 +653,7 @@ ViennaVDMGrammar >> do [
 { #category : 'parsers-definitions' }
 ViennaVDMGrammar >> document [
 
-	^ comment trim star , (self moduledDocument / self flatDocument)
+	^ comment trim star , (self flatDocument / self moduledDocument)
 	  , comment trim star ==> #second
 ]
 
@@ -1127,7 +1127,7 @@ ViennaVDMGrammar >> fieldSelect: record with: field [
 
 { #category : 'parsers-definitions' }
 ViennaVDMGrammar >> flatDocument [
-	^ self definitionBlock starA trim
+	^ self definitionBlock plusA trim
 ]
 
 { #category : 'parsers-symbols' }

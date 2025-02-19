@@ -2115,11 +2115,11 @@ ViennaRefactoringBrowser >> reload [
 { #category : 'operations-epiLog' }
 ViennaRefactoringBrowser >> removeEpiLog [
 
-	epiLogList selectedItem ifNotNil: [ :epiLog |
-		self epiLog == epiLog ifFalse: [
-			(UIManager default proceed: 'Remove from EpiLog?' title: 'EpiLog')
-				ifTrue: [
-					epiLog hideRemove.
+	epiLogList selectedItems ifNotEmpty: [ :epiLogs |
+		(UIManager default proceed: 'Remove from EpiLog?' title: 'EpiLog')
+			ifTrue: [
+				epiLogs do: [ :epiLog |
+					self epiLog == epiLog ifFalse: [ epiLog hideRemove ].
 					self
 						updateEpiLogList;
 						updateNamedEpiLogDropList ] ] ]
