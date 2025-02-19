@@ -11,7 +11,7 @@ ViennaTalk is a Smalltalk library to handle VDM-SL specifications.
 Downloads
 ---
 
-The latest release: [<kbd> <br> Lyon <br> &nbsp; </kbd>](https://github.com/tomooda/ViennaTalk/releases/latest/)
+The latest release: [<kbd> <br> Waikiki <br> &nbsp; </kbd>](https://github.com/tomooda/ViennaTalk/releases/latest/)
    * macOS / AppleSilicon [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://github.com/tomooda/ViennaTalk/releases/latest/download/viennatalk-mac-arm64.dmg)
    * macOS / Intel processor [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://github.com/tomooda/ViennaTalk/releases/latest/download/viennatalk-mac-x64.dmg)
    * Linux / Intel processor [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://github.com/tomooda/ViennaTalk/releases/latest/download/viennatalk-linux-x64.tar.bz2)
