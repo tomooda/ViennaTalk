@@ -6,24 +6,6 @@ Class {
 	#tag : 'EpiLog'
 }
 
-{ #category : 'instance creation' }
-ViennaModificationEpiLog class >> after: aViennaEpiLog specification: aViennaModularDocumentNode [
-
-	^ self
-		  after: aViennaEpiLog
-		  specification: aViennaModularDocumentNode
-		  state: Dictionary new
-]
-
-{ #category : 'instance creation' }
-ViennaModificationEpiLog class >> after: aViennaEpiLog specification: aViennaModularDocumentNode state: aDictionary [
-
-	^ (self after: aViennaEpiLog)
-		  specification: aViennaModularDocumentNode;
-		  state: aDictionary;
-		  yourself
-]
-
 { #category : 'accessing' }
 ViennaModificationEpiLog class >> metadataName [
 
