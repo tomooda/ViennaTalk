@@ -1,6 +1,6 @@
 Class {
-	#name : #ViennaTranspiledAnimation,
-	#superclass : #Model,
+	#name : 'ViennaTranspiledAnimation',
+	#superclass : 'Model',
 	#instVars : [
 		'specification',
 		'object',
@@ -12,22 +12,23 @@ Class {
 	#classVars : [
 		'UseTranspilerByDefault'
 	],
-	#category : #'ViennaTalk-Animation-Transpiler'
+	#category : 'ViennaTalk-Animation-Transpiler',
+	#package : 'ViennaTalk-Animation-Transpiler'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTranspiledAnimation class >> useTranspilerByDefault [
 
 	^ UseTranspilerByDefault = true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTranspiledAnimation class >> useTranspilerByDefault: aBoolean [
 
 	UseTranspilerByDefault := aBoolean = true
 ]
 
-{ #category : #settings }
+{ #category : 'settings' }
 ViennaTranspiledAnimation class >> viennaSettingsOn: aBuilder [
 
 	<systemsettings>
@@ -41,7 +42,7 @@ ViennaTranspiledAnimation class >> viennaSettingsOn: aBuilder [
 		order: 0.4
 ]
 
-{ #category : #announcement }
+{ #category : 'announcement' }
 ViennaTranspiledAnimation >> announceSpecificationChanged [
 
 	self announcer announce: (ViennaSpecificationChanged new
@@ -49,7 +50,7 @@ ViennaTranspiledAnimation >> announceSpecificationChanged [
 			 yourself)
 ]
 
-{ #category : #announcement }
+{ #category : 'announcement' }
 ViennaTranspiledAnimation >> announceStateChanged [
 
 	self announcer announce: (ViennaStateChanged new
@@ -57,7 +58,7 @@ ViennaTranspiledAnimation >> announceStateChanged [
 			 yourself)
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaTranspiledAnimation >> asInterpretedAnimation [
 	| animation |
 	animation := ViennaAnimation default.
@@ -67,23 +68,29 @@ ViennaTranspiledAnimation >> asInterpretedAnimation [
 	^ animation
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaTranspiledAnimation >> asTranspiledAnimation [
 	^ self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
+ViennaTranspiledAnimation >> at: aString [
+
+	^ self at: aString ifPresent: #yourself ifAbsent: [  ]
+]
+
+{ #category : 'accessing' }
 ViennaTranspiledAnimation >> at: aString ifAbsent: aBlock [
 
 	^ self at: aString ifPresent: #yourself ifAbsent: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTranspiledAnimation >> at: aString ifPresent: aBlock [
 	^ self at: aString ifPresent: aBlock ifAbsent: [  ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTranspiledAnimation >> at: aString ifPresent: presentBlock ifAbsent: absentBlock [
 	| separatorIndex target name value |
 	separatorIndex := aString indexOf: $`.
@@ -102,7 +109,7 @@ ViennaTranspiledAnimation >> at: aString ifPresent: presentBlock ifAbsent: absen
 	^ presentBlock value: value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTranspiledAnimation >> at: aString put: anObject [
 
 	| separatorIndex target name value |
@@ -128,7 +135,7 @@ ViennaTranspiledAnimation >> at: aString put: anObject [
 	^ value
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTranspiledAnimation >> becomeInterpretedAnimation [
 	| animation |
 	animation := self asInterpretedAnimation.
@@ -136,17 +143,17 @@ ViennaTranspiledAnimation >> becomeInterpretedAnimation [
 	self become: animation
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTranspiledAnimation >> becomeTranspiledAnimation [
 	^ self
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaTranspiledAnimation >> copyForTest [
 	^ self copy
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaTranspiledAnimation >> debug: aString in: moduleName ifError: errorBlock [
 
 	Cursor wait showWhile: [
@@ -167,17 +174,26 @@ ViennaTranspiledAnimation >> debug: aString in: moduleName ifError: errorBlock [
 			  ifFalse: [ result ] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTranspiledAnimation >> defaultModule [
 	^ 'DEFAULT'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTranspiledAnimation >> engineType [
 	^ #transpiler
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
+ViennaTranspiledAnimation >> evaluate: aString [
+
+	^ self
+		  evaluate: aString
+		  in: self defaultModule
+		  ifError: [ :msg | self error: msg ]
+]
+
+{ #category : 'evaluating' }
 ViennaTranspiledAnimation >> evaluate: aString in: moduleName ifError: errorBlock [
 
 	Cursor wait showWhile: [
@@ -198,7 +214,7 @@ ViennaTranspiledAnimation >> evaluate: aString in: moduleName ifError: errorBloc
 			  ifFalse: [ result ] ]
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaTranspiledAnimation >> execute: aViennaNode in: moduleName ifError: errorBlock [
 
 	Cursor wait showWhile: [
@@ -217,12 +233,12 @@ ViennaTranspiledAnimation >> execute: aViennaNode in: moduleName ifError: errorB
 		^ result ]
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaTranspiledAnimation >> init [
 	object init
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 ViennaTranspiledAnimation >> initialize [
 
 	super initialize.
@@ -232,18 +248,18 @@ ViennaTranspiledAnimation >> initialize [
 	self specification: String new ifError: [  ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTranspiledAnimation >> isTranspiledAnimation [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTranspiledAnimation >> plainAt: aString [
 	^ self plainAt: aString ifPresent: [ :value | value ] ifAbsent: [  ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTranspiledAnimation >> plainAt: aString ifAbsent: absentBlock [
 	^ self
 		plainAt: aString
@@ -251,7 +267,7 @@ ViennaTranspiledAnimation >> plainAt: aString ifAbsent: absentBlock [
 		ifAbsent: absentBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTranspiledAnimation >> plainAt: aString ifPresent: presentBlock [
 	^ self
 		plainAt: aString
@@ -259,7 +275,7 @@ ViennaTranspiledAnimation >> plainAt: aString ifPresent: presentBlock [
 		ifAbsent: [  ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTranspiledAnimation >> plainAt: aString ifPresent: presentBlock ifAbsent: absentBlock [
 	^ self
 		at: aString
@@ -267,23 +283,23 @@ ViennaTranspiledAnimation >> plainAt: aString ifPresent: presentBlock ifAbsent: 
 		ifAbsent: absentBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTranspiledAnimation >> plainAt: aString put: aVDMString [
 
 	^ self at: aString put: (reader parse: aVDMString)
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaTranspiledAnimation >> plainEvaluate: aString [
 	^ self plainEvaluate: aString ifError: [ :msg | self error: msg ]
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaTranspiledAnimation >> plainEvaluate: aString ifError: errorBlock [
 	^ self plainEvaluate: aString in: self defaultModule ifError: errorBlock
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaTranspiledAnimation >> plainEvaluate: aString in: moduleName ifError: errorBlock [
 
 	^ writer stringify: (self
@@ -292,13 +308,13 @@ ViennaTranspiledAnimation >> plainEvaluate: aString in: moduleName ifError: erro
 			   ifError: [ :msg | ^ errorBlock value: msg ])
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaTranspiledAnimation >> plainExecute: aViennaNode [
 
 	^ self plainExecute: aViennaNode ifError: [ :msg | self error: msg ]
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaTranspiledAnimation >> plainExecute: aViennaNode ifError: errorBlock [
 
 	^ self
@@ -307,7 +323,7 @@ ViennaTranspiledAnimation >> plainExecute: aViennaNode ifError: errorBlock [
 		  ifError: errorBlock
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaTranspiledAnimation >> plainExecute: aViennaNode in: moduleName ifError: errorBlock [
 
 	^ writer stringify: (self
@@ -316,7 +332,7 @@ ViennaTranspiledAnimation >> plainExecute: aViennaNode in: moduleName ifError: e
 			   ifError: [ :msg | ^ errorBlock value: msg ])
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 ViennaTranspiledAnimation >> postCopy [
 	| oldState oldSpec |
 	oldState := self state.
@@ -326,17 +342,17 @@ ViennaTranspiledAnimation >> postCopy [
 	self state: oldState
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTranspiledAnimation >> specification [
 	^ specification ifNil: [ '' ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTranspiledAnimation >> specification: aString [
 	self specification: aString ifError: [ :msg | ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTranspiledAnimation >> specification: aString ifError: errorBlock [
 
 	| ast |
@@ -363,7 +379,7 @@ ViennaTranspiledAnimation >> specification: aString ifError: errorBlock [
 	self announceStateChanged
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTranspiledAnimation >> state [
 	| state |
 	state := Dictionary new.
@@ -384,7 +400,7 @@ ViennaTranspiledAnimation >> state [
 	^ state
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTranspiledAnimation >> state: aDictionary [
 	object
 		viennaAtomic: [ aDictionary keysAndValuesDo: [ :var :val | [self at: var put: (reader parse: val)] on: Error do: [ :ex | ex resume ] ] ]

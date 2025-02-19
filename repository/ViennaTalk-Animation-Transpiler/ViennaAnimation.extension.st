@@ -1,6 +1,6 @@
-Extension { #name : #ViennaAnimation }
+Extension { #name : 'ViennaAnimation' }
 
-{ #category : #'*ViennaTalk-Animation-Transpiler' }
+{ #category : '*ViennaTalk-Animation-Transpiler' }
 ViennaAnimation >> asTranspiledAnimation [
 	| animation |
 	animation := ViennaTranspiledAnimation new.
@@ -10,7 +10,7 @@ ViennaAnimation >> asTranspiledAnimation [
 	^ animation
 ]
 
-{ #category : #'*ViennaTalk-Animation-Transpiler' }
+{ #category : '*ViennaTalk-Animation-Transpiler' }
 ViennaAnimation >> becomeTranspiledAnimation [
 	| animation |
 	animation := self asTranspiledAnimation.
@@ -18,7 +18,7 @@ ViennaAnimation >> becomeTranspiledAnimation [
 	self become: animation
 ]
 
-{ #category : #'*ViennaTalk-Animation-Transpiler' }
+{ #category : '*ViennaTalk-Animation-Transpiler' }
 ViennaAnimation class >> transpiler [
 	^ ViennaTranspiledAnimation new
 ]
