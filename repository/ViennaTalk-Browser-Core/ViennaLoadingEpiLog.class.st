@@ -33,7 +33,7 @@ ViennaLoadingEpiLog >> isPredEpiLog [
 { #category : 'testing' }
 ViennaLoadingEpiLog >> isRemovable [
 
-	^ self hasSpecificationChange not and: [ self hasStateChange not ]
+	^ self hasSpecificationChange not
 ]
 
 { #category : 'testing' }

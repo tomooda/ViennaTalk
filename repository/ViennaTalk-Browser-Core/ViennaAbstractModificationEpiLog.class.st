@@ -2,8 +2,8 @@ Class {
 	#name : 'ViennaAbstractModificationEpiLog',
 	#superclass : 'ViennaEpiLog',
 	#instVars : [
-		'state',
-		'specification'
+		'#state => HiDePersistencySlot loader: #hideLoadState',
+		'#specification => HiDePersistencySlot loader: #hideLoadSpecification'
 	],
 	#category : 'ViennaTalk-Browser-Core-EpiLog',
 	#package : 'ViennaTalk-Browser-Core',

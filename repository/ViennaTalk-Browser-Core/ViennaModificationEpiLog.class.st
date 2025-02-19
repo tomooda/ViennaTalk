@@ -27,8 +27,7 @@ ViennaModificationEpiLog >> isModificationEpiLog [
 { #category : 'testing' }
 ViennaModificationEpiLog >> isRemovable [
 
-	(self hasSpecificationChange not and: [ self hasStateChange not ])
-		ifTrue: [ ^ true ].
+	self hasSpecificationChange ifFalse: [ ^ true ].
 	hideStorage chronicle do: [ :epiLog |
 		epiLog prev == self ifTrue: [
 			epiLog isModificationEpiLog ifFalse: [ ^ false ] ].
