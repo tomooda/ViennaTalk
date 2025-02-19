@@ -31,6 +31,8 @@ Class {
 		'epiLogList',
 		'epiLogDiffList',
 		'epiLogDiffText',
+		'epiLogSourceText',
+		'epiLogNotebook',
 		'sliceNodes',
 		'sliceAttribute',
 		'runsAllTests',
@@ -1026,26 +1028,29 @@ ViennaRefactoringBrowser >> epiLogListContextMenu [
 	| menu |
 	menu := self newMenu.
 	epiLogList selectedItem ifNotNil: [ :epilog |
-		menu
-			addGroup: [ :group |
-				group
-					addItem: [ :item |
-						item
-							name: 'Revert to';
-							action: [ self revertTo: epilog ] ];
-					addItem: [ :item |
-						item
-							name: 'Comment';
-							action: [ self editEpiLogComment ] ];
-					addItem: [ :item |
-						item
-							name: 'Remove';
-							action: [ self removeEpiLog ] ] ];
-			addGroup: [ :group |
-				group addItem: [ :item |
+		menu addGroup: [ :group |
+			group
+				addItem: [ :item |
+					item
+						name: 'Revert to';
+						action: [ self revertTo: epilog ] ];
+				addItem: [ :item |
+					item
+						name: 'Comment';
+						action: [ self editEpiLogComment ] ];
+				addItem: [ :item |
+					item
+						name: 'Remove';
+						action: [ self removeEpiLog ] ];
+				addItem: [ :item |
 					item
 						name: 'Tag';
-						action: [ self editEpiLogTag ] ] ] ].
+						action: [ self editEpiLogTag ] ] ].
+		menu addGroup: [ :group |
+			group addItem: [ :item |
+				item
+					name: 'Unselect';
+					action: [ epiLogList unselectAll ] ] ] ].
 	^ menu
 ]
 
@@ -1053,6 +1058,7 @@ ViennaRefactoringBrowser >> epiLogListContextMenu [
 ViennaRefactoringBrowser >> epiLogListSelectionChanged [
 
 	self
+		updateEpiLogSourceText;
 		updateEpiLogDiffList;
 		updateEpiLogMatcherDropList;
 		updateEpiLogButtons
@@ -1155,10 +1161,7 @@ ViennaRefactoringBrowser >> epilogPageLayout [
 						    yourself)
 				   expand: false;
 				   yourself);
-		  add: (SpPanedLayout newVertical
-				   positionOfSlider: 0.3;
-				   add: epiLogDiffList;
-				   add: epiLogDiffText);
+		  add: epiLogNotebook;
 		  yourself
 ]
 
@@ -1430,6 +1433,8 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 				               beExpandable;
 				               yourself);
 		              contextMenu: [ self epiLogListContextMenu ];
+		              bindKeyCombination: Character escape
+		              toAction: [ epiLogList unselectAll ];
 		              whenSelectionChangedDo: [
 		              self epiLogListSelectionChanged ];
 		              yourself.
@@ -1444,7 +1449,18 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 			                  self updateEpiLogDiffText ];
 		                  yourself.
 	epiLogDiffText := self newText.
-	epiLogList whenBuiltDo: [ self updateEpiLogList ].
+	epiLogSourceText := self newVDMSource.
+	epiLogNotebook := self newNotebook
+		                  addPageTitle: 'Version Source'
+		                  provider: [ epiLogSourceText ];
+		                  addPageTitle: 'Diff' provider: [
+			                  SpPresenter new
+				                  layout: (SpPanedLayout newVertical
+						                   positionOfSlider: 0.3;
+						                   add: epiLogDiffList;
+						                   add: epiLogDiffText);
+				                  yourself ];
+		                  yourself.
 	namedEpiLogDropList := self newDropList
 		                       items: { ('' -> nil) };
 		                       display: [ :assoc | assoc key ];
@@ -1482,7 +1498,8 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 		                      action: [ self removeEpiLog ];
 		                      yourself.
 	showsTimeLineButton associatedRadioButtons:
-		{ showsConstructionLineButton }
+		{ showsConstructionLineButton }.
+	epiLogList whenBuiltDo: [ self updateEpiLogList ]
 ]
 
 { #category : 'initialization' }
@@ -1546,7 +1563,8 @@ ViennaRefactoringBrowser >> initializePresenters [
 		              whenSelectionChangedDo: [
 			              self
 				              updateCategoryList;
-				              updateEpiLogMatcherDropList ];
+				              updateEpiLogMatcherDropList;
+				              updateEpiLogSourceText ];
 		              yourself.
 	categoryList := self newList
 		                beSingleSelection;
@@ -2641,7 +2659,22 @@ ViennaRefactoringBrowser >> updateEpiLogPage [
 		self
 			updateEpiLogMatcherDropList;
 			updateEpiLogList;
-			updateNamedEpiLogDropList ]
+			updateNamedEpiLogDropList;
+			updateEpiLogSourceText ]
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> updateEpiLogSourceText [
+
+	self ifHiDeHoVisible: [
+		self definition ifNotNil: [ :definition |
+			(epiLogList selectedItem ifNil: [ self epiLog ]) specification
+				ifNotNil: [ :spec |
+					(spec moduleNamed: definition module identifier) ifNotNil: [
+						:module |
+						epiLogSourceText text: module tracingHighlightedSource.
+						^ self ] ] ].
+		epiLogSourceText text: '' ]
 ]
 
 { #category : 'updating' }
