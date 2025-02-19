@@ -125,3 +125,27 @@ ViennaAbstractModificationEpiLog >> isAbstractModificationEpiLog [
 
 	^ true
 ]
+
+{ #category : 'accessing' }
+ViennaAbstractModificationEpiLog >> specification [
+
+	^ specification
+]
+
+{ #category : 'accessing' }
+ViennaAbstractModificationEpiLog >> specification: aViennaModularDocumentNode [
+
+	specification := aViennaModularDocumentNode
+]
+
+{ #category : 'accessing' }
+ViennaAbstractModificationEpiLog >> state [
+
+	^ state ifNil: [ prev ifNotNil: #state ifNil: [ Dictionary new ] ]
+]
+
+{ #category : 'accessing' }
+ViennaAbstractModificationEpiLog >> state: aDictionary [
+
+	state := aDictionary
+]

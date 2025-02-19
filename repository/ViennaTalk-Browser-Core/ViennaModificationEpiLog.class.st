@@ -54,27 +54,3 @@ ViennaModificationEpiLog >> printOn: aStream [
 
 	aStream nextPutAll: 'Edit'
 ]
-
-{ #category : 'accessing' }
-ViennaModificationEpiLog >> specification [
-
-	^ specification
-]
-
-{ #category : 'accessing' }
-ViennaModificationEpiLog >> specification: aViennaModularDocumentNode [
-
-	specification := aViennaModularDocumentNode
-]
-
-{ #category : 'accessing' }
-ViennaModificationEpiLog >> state [
-
-	^ state ifNil: [ prev ifNotNil: #state ifNil: [ Dictionary new ] ]
-]
-
-{ #category : 'accessing' }
-ViennaModificationEpiLog >> state: aDictionary [
-
-	state := aDictionary
-]
