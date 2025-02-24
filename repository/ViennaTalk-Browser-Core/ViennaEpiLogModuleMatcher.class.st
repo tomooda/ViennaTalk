@@ -10,6 +10,12 @@ Class {
 }
 
 { #category : 'accessing' }
+ViennaEpiLogModuleMatcher >> icon [
+
+	^ Smalltalk ui iconNamed: #package
+]
+
+{ #category : 'accessing' }
 ViennaEpiLogModuleMatcher >> moduleName [
 
 	^ moduleName ifNil: [ '-' ]

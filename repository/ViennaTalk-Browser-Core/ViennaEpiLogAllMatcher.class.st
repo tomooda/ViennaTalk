@@ -7,6 +7,12 @@ Class {
 }
 
 { #category : 'accessing' }
+ViennaEpiLogAllMatcher >> icon [
+
+	^ Smalltalk ui iconNamed: #dropDown
+]
+
+{ #category : 'accessing' }
 ViennaEpiLogAllMatcher >> name [
 
 	^ '-- all --'

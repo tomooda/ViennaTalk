@@ -31,6 +31,12 @@ ViennaEpiLogSemanticClosureMatcher >> closure: aCollectionOfViennaEpiLog [
 	closure := aCollectionOfViennaEpiLog
 ]
 
+{ #category : 'accessing' }
+ViennaEpiLogSemanticClosureMatcher >> icon [
+
+	^ Smalltalk ui iconNamed: #exception
+]
+
 { #category : 'initialization' }
 ViennaEpiLogSemanticClosureMatcher >> initializeWithEpiLog: aViennaEpiLog enumerator: aViennaEpiLogEnumerator at: anotherViennaEpiLog [
 
@@ -49,7 +55,7 @@ ViennaEpiLogSemanticClosureMatcher >> name [
 { #category : 'accessing' }
 ViennaEpiLogSemanticClosureMatcher >> order [
 
-	^ 5
+	^ 71
 ]
 
 { #category : 'evaluation' }

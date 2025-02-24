@@ -63,6 +63,12 @@ ViennaEpiLog >> = aComparable [
 	^ self == aComparable
 ]
 
+{ #category : 'converting' }
+ViennaEpiLog >> artifactTimeline [
+
+	^ ViennaEpiLogArtifactTimelineEnumerator current arrayFrom: self
+]
+
 { #category : 'accessing' }
 ViennaEpiLog >> basicPred [
 
@@ -85,12 +91,6 @@ ViennaEpiLog >> comment: aString [
 	(aString isNil or: [ aString isEmpty ])
 		ifTrue: [ hideMetadata removeKey: 'comment' ifAbsent: [  ] ]
 		ifFalse: [ hideMetadata at: 'comment' put: aString asString ]
-]
-
-{ #category : 'converting' }
-ViennaEpiLog >> constructionLine [
-
-	^ ViennaEpiLogConstructionLineEnumerator current arrayFrom: self
 ]
 
 { #category : 'defaults' }
@@ -143,6 +143,12 @@ ViennaEpiLog >> hasSpecificationChange [
 ViennaEpiLog >> hasStateChange [
 
 	^ false
+]
+
+{ #category : 'testing' }
+ViennaEpiLog >> hasTag: aString [
+
+	^ hideMetadata hasTag: aString
 ]
 
 { #category : 'comparing' }
@@ -410,14 +416,20 @@ ViennaEpiLog >> state: aDictionary [
 	
 ]
 
-{ #category : 'converting' }
-ViennaEpiLog >> timeLine [
+{ #category : 'accessing' }
+ViennaEpiLog >> tags [
 
-	^ ViennaEpiLogTimeLineEnumerator current arrayFrom: self
+	^ hideMetadata tags
 ]
 
 { #category : 'accessing' }
 ViennaEpiLog >> timestamp [
 
 	^ hideMetadata timestamp
+]
+
+{ #category : 'converting' }
+ViennaEpiLog >> userTimeline [
+
+	^ ViennaEpiLogUserTimelineEnumerator current arrayFrom: self
 ]
