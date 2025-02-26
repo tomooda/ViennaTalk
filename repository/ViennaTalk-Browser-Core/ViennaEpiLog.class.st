@@ -152,6 +152,12 @@ ViennaEpiLog >> hash [
 	^ self identityHash
 ]
 
+{ #category : 'hideho-testing' }
+ViennaEpiLog >> hideIsAutoExpirable [
+
+	^ false
+]
+
 { #category : 'hideho-operations' }
 ViennaEpiLog >> hideLoad: aFileReference [
 
