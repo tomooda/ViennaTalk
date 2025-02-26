@@ -46,7 +46,8 @@ Class {
 		'showsUserTimelineButton',
 		'narrativeDropList',
 		'createNewNarrativeButton',
-		'removeNarrativeButton'
+		'removeNarrativeButton',
+		'epiLogListSizeDropList'
 	],
 	#classVars : [
 		'GreenSignalIcon',
@@ -1219,9 +1220,14 @@ ViennaRefactoringBrowser >> epilogPageLayout [
 						    yourself)
 				   expand: false;
 				   add: (SpBoxLayout newHorizontal
+						    vAlignEnd;
 						    add: self filterIcon expand: false;
 						    add: '  ' asPresenter expand: false;
-						    add: epiLogMatcherDropList)
+						    add: epiLogMatcherDropList;
+						    add: ' show ' asPresenter expand: false;
+						    add: epiLogListSizeDropList expand: false;
+						    add: ' items' asPresenter expand: false;
+						    yourself)
 				   expand: false;
 				   add: epiLogList;
 				   add: (SpBoxLayout newHorizontal
@@ -1495,6 +1501,17 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 		                         whenSelectionChangedDo: [
 			                         self updateEpiLogList ];
 		                         yourself.
+	epiLogListSizeDropList := self newDropList
+		                          display: [ :assoc | assoc key ];
+		                          items: {
+				                          ('~50' -> 50).
+				                          ('~100' -> 100).
+				                          ('~1,000' -> 1000).
+				                          ('all' -> nil) };
+		                          startWithSelection;
+		                          whenSelectionChangedDo: [
+			                          self updateEpiLogList ];
+		                          yourself.
 	epiLogList := self newTable
 		              beMultipleSelection;
 		              showColumnHeaders;
@@ -2728,6 +2745,9 @@ ViennaRefactoringBrowser >> updateEpiLogList [
 			          self epiLogEnumerator arrayFrom: epiLog ]) select:
 			         (epiLogMatcherDropList selectedItem ifNil: [
 				          [ :epilog | true ] ]).
+		(epiLogListSizeDropList selectedItem ifNotNil: #value) ifNotNil: [
+			:limit |
+			items size > limit ifTrue: [ items := items first: limit ] ].
 		epiLogList items: items.
 		selection ifNotNil: [
 			(items includes: selection)
