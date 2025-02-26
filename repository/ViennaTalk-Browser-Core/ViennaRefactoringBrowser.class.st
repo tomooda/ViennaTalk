@@ -24,10 +24,7 @@ Class {
 		'highlighterProcess',
 		'dirty',
 		'refreshStateButton',
-		'showsTimeLineButton',
-		'showsConstructionLineButton',
 		'epiLogMatcherDropList',
-		'epiLogTags',
 		'epiLogList',
 		'epiLogDiffList',
 		'epiLogDiffText',
@@ -38,13 +35,18 @@ Class {
 		'runsAllTests',
 		'autoTestButton',
 		'runTestButton',
-		'namedEpiLogDropList',
 		'revertEpiLogButton',
 		'removeEpiLogButton',
 		'editEpiLogCommentButton',
 		'hideStorage',
 		'editEpiLogTagButton',
-		'updateEpiLogButton'
+		'addToNarrativeButton',
+		'updateEpiLogButton',
+		'showsArtifactTimelineButton',
+		'showsUserTimelineButton',
+		'narrativeDropList',
+		'createNewNarrativeButton',
+		'removeNarrativeButton'
 	],
 	#classVars : [
 		'GreenSignalIcon',
@@ -781,6 +783,43 @@ ViennaRefactoringBrowser >> addSliceOnState: aViennaStateDefinitionNode criteria
 	self sliceNodesChanged
 ]
 
+{ #category : 'operations-epiLog' }
+ViennaRefactoringBrowser >> addToNarrativeMenu [
+
+	| currentNarrative storage |
+	currentNarrative := narrativeDropList selectedItem ifNotNil:
+		                    #narrative.
+	storage := self epiLog hideStorage.
+	epiLogList selectedItems ifNotEmpty: [ :epiLog |
+		^ self newMenu
+			  addGroup: [ :group |
+				  storage narratives do: [ :narrative |
+						  currentNarrative = narrative ifFalse: [
+								  group addItem: [ :item |
+										  item
+											  icon: (self iconNamed: #forward);
+											  name: narrative name;
+											  action: [ narrative addAll: epiLog ] ] ] ] ];
+			  addGroup: [ :group |
+				  group addItem: [ :item |
+					  item
+						  name: 'New timeline...';
+						  icon: (self iconNamed: #add);
+						  action: [
+							  self createNewNarrativeDo: [ :narrative |
+									  narrative addAll: epiLog.
+									  self updateEpiLogList ] ] ] ] ].
+	^ nil
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> artifactTimelineSelected [
+
+	showsUserTimelineButton state: false.
+	narrativeDropList resetSelection.
+	self selectedTimelineChanged
+]
+
 { #category : 'accessing' }
 ViennaRefactoringBrowser >> category [
 	^ categoryList selection selectedItem
@@ -819,6 +858,36 @@ ViennaRefactoringBrowser >> clearSlice [
 
 	sliceNodes removeAll.
 	self sliceNodesChanged
+]
+
+{ #category : 'operations-epiLog' }
+ViennaRefactoringBrowser >> createNewNarrative [
+
+	self createNewNarrativeDo: [  ]
+]
+
+{ #category : 'operations-epiLog' }
+ViennaRefactoringBrowser >> createNewNarrativeDo: aBlock [
+
+	self epiLog ifNotNil: [ :epiLog |
+		| storage |
+		storage := epiLog hideStorage.
+		[
+		(UIManager default
+			 request: 'New timeline name'
+			 initialAnswer: 'my timeline'
+			 title: 'EpiLog') ifNil: [ ^ self ] ifNotNil: [ :name |
+			(storage hasNarrativeNamed: name) ifFalse: [
+				| id narrative result |
+				id := (narrative := storage newNarrativeNamed: name) identity.
+				narrativeDropList selectItem: (narrativeDropList items
+						 detect: [ :assoc | assoc value = id ]
+						 ifNone: [ nil ]).
+				result := aBlock cull: narrative.
+				self updateNarrativeDropList: narrative.
+				^ result ].
+			UIManager default alert: name , ' is already used.' title: 'EpiLog' ] ]
+			repeat ]
 ]
 
 { #category : 'private-unit testing' }
@@ -951,7 +1020,7 @@ ViennaRefactoringBrowser >> editEpiLogTag [
 		self
 			editTags: tags
 			on: epiLog
-			okAction: [ self updateNamedEpiLogDropList ] ]
+			okAction: [ self updateEpiLogMatcherDropList ] ]
 ]
 
 { #category : 'operations-epiLog' }
@@ -978,6 +1047,12 @@ ViennaRefactoringBrowser >> epiLog: aViennaEpiLog [
 ]
 
 { #category : 'accessing' }
+ViennaRefactoringBrowser >> epiLogArtifactTimelineEnumerator [
+
+	^ ViennaEpiLogArtifactTimelineEnumerator current
+]
+
+{ #category : 'accessing' }
 ViennaRefactoringBrowser >> epiLogChanges [
 
 	^ (ViennaNodeDiffSet fromNodeChanges:
@@ -989,19 +1064,13 @@ ViennaRefactoringBrowser >> epiLogChanges [
 ]
 
 { #category : 'accessing' }
-ViennaRefactoringBrowser >> epiLogConstructionLineEnumerator [
-
-	^ ViennaEpiLogConstructionLineEnumerator current
-]
-
-{ #category : 'accessing' }
 ViennaRefactoringBrowser >> epiLogEnumerator [
 
-	showsTimeLineButton state = true ifTrue: [
-		^ self epiLogTimeLineEnumerator ].
-	showsConstructionLineButton state = true ifTrue: [
-		^ self epiLogConstructionLineEnumerator ].
-	^ nil
+	showsUserTimelineButton state = true ifTrue: [
+		^ self epiLogUserTimelineEnumerator ].
+	showsArtifactTimelineButton state = true ifTrue: [
+		^ self epiLogArtifactTimelineEnumerator ].
+	^ narrativeDropList selectedItem
 ]
 
 { #category : 'operations-epiLog' }
@@ -1114,9 +1183,9 @@ ViennaRefactoringBrowser >> epiLogRevertion: aViennaEpiLog [
 ]
 
 { #category : 'accessing' }
-ViennaRefactoringBrowser >> epiLogTimeLineEnumerator [
+ViennaRefactoringBrowser >> epiLogUserTimelineEnumerator [
 
-	^ ViennaEpiLogTimeLineEnumerator current
+	^ ViennaEpiLogUserTimelineEnumerator current
 ]
 
 { #category : 'operations-epiLog' }
@@ -1138,11 +1207,15 @@ ViennaRefactoringBrowser >> epiLogVanilla: aViennaModularDocumentNode state: aDi
 ViennaRefactoringBrowser >> epilogPageLayout [
 
 	^ SpPanedLayout newHorizontal
-		  positionOfSlider: 0.5;
+		  positionOfSlider: 0.6;
 		  add: (SpBoxLayout newVertical
 				   add: (SpBoxLayout newHorizontal
-						    add: showsTimeLineButton;
-						    add: showsConstructionLineButton;
+						    add: showsUserTimelineButton width: 150;
+						    add: showsArtifactTimelineButton width: 150;
+						    add: narrativeDropList;
+						    add: createNewNarrativeButton
+						    width: self class buttonHeight;
+						    add: removeNarrativeButton width: self class buttonHeight;
 						    yourself)
 				   expand: false;
 				   add: (SpBoxLayout newHorizontal
@@ -1151,12 +1224,12 @@ ViennaRefactoringBrowser >> epilogPageLayout [
 						    add: epiLogMatcherDropList)
 				   expand: false;
 				   add: epiLogList;
-				   add: namedEpiLogDropList expand: false;
 				   add: (SpBoxLayout newHorizontal
 						    add: updateEpiLogButton expand: false;
 						    add: revertEpiLogButton;
 						    add: editEpiLogTagButton expand: false;
 						    add: editEpiLogCommentButton expand: false;
+						    add: addToNarrativeButton expand: false;
 						    add: removeEpiLogButton expand: false;
 						    yourself)
 				   expand: false;
@@ -1354,16 +1427,8 @@ ViennaRefactoringBrowser >> highlightSourceText [
 { #category : 'updating' }
 ViennaRefactoringBrowser >> ifHiDeHoVisible: aBlock [
 
-	(notebook selectedPage ifNotNil: #title) = 'HiDeHo' ifTrue: aBlock
-]
-
-{ #category : 'controlling' }
-ViennaRefactoringBrowser >> ifShowsTimeLine: timeLineBlock ifShowsConstructionLine: constructionLineBlock [
-
-	showsTimeLineButton state = true ifTrue: [ ^ timeLineBlock value ].
-	showsConstructionLineButton state = true ifTrue: [
-		^ constructionLineBlock value ].
-	^ nil
+	notebook ifNotNil: [
+		(notebook selectedPage ifNotNil: #title) = 'HiDeHo' ifTrue: aBlock ]
 ]
 
 { #category : 'operations' }
@@ -1385,7 +1450,6 @@ ViennaRefactoringBrowser >> initialize [
 		for: self.
 	runsAllTests := false.
 	self epiLogVanilla.
-	epiLogTags := Dictionary new.
 	dirty := false.
 	sliceNodes := IdentitySet new.
 	super initialize
@@ -1394,16 +1458,38 @@ ViennaRefactoringBrowser >> initialize [
 { #category : 'initialization' }
 ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 
-	showsTimeLineButton := self newRadioButton
-		                       label: 'user timeline';
-		                       whenDeactivatedDo: [ self updateEpiLogList ];
-		                       yourself.
-	showsConstructionLineButton := self newRadioButton
+	showsUserTimelineButton := self newCheckBox
+		                           label: 'user timeline';
+		                           state: true;
+		                           whenActivatedDo: [
+			                           self userTimelineSelected ];
+		                           yourself.
+	showsArtifactTimelineButton := self newCheckBox
 		                               label: 'artifact timeline';
-		                               whenDeactivatedDo: [
-			                               self updateEpiLogList ];
+		                               state: false;
+		                               whenActivatedDo: [
+			                               self artifactTimelineSelected ];
 		                               yourself.
+	narrativeDropList := self newDropList
+		                     display: [ :narrativeEnumerator |
+			                     narrativeEnumerator name ];
+		                     displayIcon: [ :narrativeEnumerator |
+			                     narrativeEnumerator icon ];
+		                     startWithoutSelection;
+		                     whenSelectedItemChangedDo: [ :item |
+			                     item ifNotNil: [
+					                     self narrativeTimelineSelected ] ];
+		                     yourself.
+	createNewNarrativeButton := self newButton
+		                            icon: (self iconNamed: #add);
+		                            action: [ self createNewNarrative ];
+		                            yourself.
+	removeNarrativeButton := self newButton
+		                         icon: (self iconNamed: #remove);
+		                         action: [ self removeNarrative ];
+		                         yourself.
 	epiLogMatcherDropList := self newDropList
+		                         displayIcon: [ :matcher | matcher icon ];
 		                         items: { ViennaEpiLogMatcher all };
 		                         startWithSelection;
 		                         whenSelectionChangedDo: [
@@ -1451,8 +1537,6 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 	epiLogDiffText := self newText.
 	epiLogSourceText := self newVDMSource.
 	epiLogNotebook := self newNotebook
-		                  addPageTitle: 'Version Source'
-		                  provider: [ epiLogSourceText ];
 		                  addPageTitle: 'Diff' provider: [
 			                  SpPresenter new
 				                  layout: (SpPanedLayout newVertical
@@ -1460,18 +1544,9 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 						                   add: epiLogDiffList;
 						                   add: epiLogDiffText);
 				                  yourself ];
+		                  addPageTitle: 'Version Source'
+		                  provider: [ epiLogSourceText ];
 		                  yourself.
-	namedEpiLogDropList := self newDropList
-		                       items: { ('' -> nil) };
-		                       display: [ :assoc | assoc key ];
-		                       displayIcon: [ :assoc |
-			                       assoc value isBlock
-				                       ifTrue: [ self tagIcon ]
-				                       ifFalse: [ nil ] ];
-		                       startWithSelection;
-		                       whenSelectedItemChangedDo: [
-			                       self namedEpiLogChanged ];
-		                       yourself.
 	updateEpiLogButton := self newButton
 		                      icon: (self iconNamed: #refreshCircling);
 		                      label: 'Update';
@@ -1492,14 +1567,19 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 		                           label: 'Comment';
 		                           action: [ self editEpiLogComment ];
 		                           yourself.
+	addToNarrativeButton := self newButton
+		                        icon: (self iconNamed: #folder);
+		                        label: 'Add to..';
+		                        action: [
+			                        self addToNarrativeMenu
+				                        openWithSpecAtPointer ];
+		                        yourself.
 	removeEpiLogButton := self newButton
 		                      icon: (self iconNamed: #smallDelete);
 		                      label: 'Delete';
 		                      action: [ self removeEpiLog ];
 		                      yourself.
-	showsTimeLineButton associatedRadioButtons:
-		{ showsConstructionLineButton }.
-	epiLogList whenBuiltDo: [ self updateEpiLogList ]
+	epiLogList whenBuiltDo: [ self userTimelineSelected ]
 ]
 
 { #category : 'initialization' }
@@ -1942,9 +2022,11 @@ ViennaRefactoringBrowser >> moduleListContextMenu [
 ]
 
 { #category : 'updating' }
-ViennaRefactoringBrowser >> namedEpiLogChanged [
+ViennaRefactoringBrowser >> narrativeTimelineSelected [
 
-	self updateEpiLogList
+	showsUserTimelineButton state: false.
+	showsArtifactTimelineButton state: false.
+	self selectedTimelineChanged
 ]
 
 { #category : 'operations-source signal' }
@@ -2115,14 +2197,47 @@ ViennaRefactoringBrowser >> reload [
 { #category : 'operations-epiLog' }
 ViennaRefactoringBrowser >> removeEpiLog [
 
+	narrativeDropList selectedItem
+		ifNotNil: [ :enumerator |
+		self removeEpiLogFromNarrative: enumerator narrative ]
+		ifNil: [ self removeEpiLogFromChronicle ]
+]
+
+{ #category : 'operations-epiLog' }
+ViennaRefactoringBrowser >> removeEpiLogFromChronicle [
+
 	epiLogList selectedItems ifNotEmpty: [ :epiLogs |
 		(UIManager default proceed: 'Remove from EpiLog?' title: 'EpiLog')
 			ifTrue: [
 				epiLogs do: [ :epiLog |
 					self epiLog == epiLog ifFalse: [ epiLog hideRemove ].
-					self
-						updateEpiLogList;
-						updateNamedEpiLogDropList ] ] ]
+					self updateEpiLogList ] ] ]
+]
+
+{ #category : 'operations-epiLog' }
+ViennaRefactoringBrowser >> removeEpiLogFromNarrative: aHiDeNarrative [
+
+	(epiLogList selectedItems copyWithout: self epiLog) ifNotEmpty: [
+		:epiLogs |
+		(UIManager default
+			 proceed: 'Remove from ' , aHiDeNarrative name , '?'
+			 title: 'EpiLog') ifTrue: [
+			aHiDeNarrative removeAll: epiLogs.
+			self updateEpiLogList ] ]
+]
+
+{ #category : 'operations-epiLog' }
+ViennaRefactoringBrowser >> removeNarrative [
+
+	narrativeDropList selectedItem ifNotNil: [ :enumerator |
+		| narrative |
+		narrative := enumerator narrative.
+		(UIManager default
+			 confirm: 'Remove ' , narrative name , '?'
+			 label: 'EpiLog') ifTrue: [
+			narrative storage removeNarrative: narrative.
+			self updateNarrativeDropList: nil.
+			showsArtifactTimelineButton state: true ] ]
 ]
 
 { #category : 'operations-epiLog' }
@@ -2333,6 +2448,14 @@ ViennaRefactoringBrowser >> saveAsFile [
 			UIManager default message: 'Save to ' , file basename , '.'.
 			self fileReference: file.
 			self clearDirty ]
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> selectedTimelineChanged [
+
+	^ self
+		  updateEpiLogMatcherDropList;
+		  updateEpiLogList
 ]
 
 { #category : 'private' }
@@ -2605,12 +2728,6 @@ ViennaRefactoringBrowser >> updateEpiLogList [
 			          self epiLogEnumerator arrayFrom: epiLog ]) select:
 			         (epiLogMatcherDropList selectedItem ifNil: [
 				          [ :epilog | true ] ]).
-		namedEpiLogDropList selectedItem ifNotNil: [ :assoc |
-			assoc value ifNotNil: [ :setOrBlock |
-				items := setOrBlock isBlock
-					         ifTrue: [ items select: setOrBlock ]
-					         ifFalse: [
-					         items select: [ :item | setOrBlock includes: item ] ] ] ].
 		epiLogList items: items.
 		selection ifNotNil: [
 			(items includes: selection)
@@ -2624,10 +2741,22 @@ ViennaRefactoringBrowser >> updateEpiLogList [
 ViennaRefactoringBrowser >> updateEpiLogMatcherDropList [
 
 	self ifHiDeHoVisible: [
-		| selection |
+		| selection epiLogs |
 		selection := epiLogMatcherDropList selectedItem.
 		epiLogMatcherDropList items: (Array streamContents: [ :stream |
+				 | tags |
+				 tags := Set new.
+				 (epiLogs := self epiLog ifNil: [ #(  ) ] ifNotNil: [ :epiLog |
+					             self epiLogEnumerator
+						             ifNotNil: [ :enumerator |
+						             enumerator arrayFrom: epiLog ]
+						             ifNil: [ #(  ) ] ]) do: [ :epiLog |
+					 tags addAll: epiLog tags ].
+				 tags do: [ :tag | stream nextPut: (ViennaEpiLogMatcher tag: tag) ].
 				 stream nextPut: ViennaEpiLogMatcher all.
+				 epiLogs ifNotEmpty: [
+					 stream nextPut: (ViennaEpiLogMatcher heads: epiLogs first).
+					 stream nextPut: (ViennaEpiLogMatcher branches: epiLogs first) ].
 				 stream nextPut: (ViennaEpiLogMatcher
 						  executionClosureFrom: self epiLog
 						  enumerator: self epiLogEnumerator
@@ -2640,6 +2769,9 @@ ViennaRefactoringBrowser >> updateEpiLogMatcherDropList [
 						  syntacticClosureFrom: self epiLog
 						  enumerator: self epiLogEnumerator
 						  at: (epiLogList selectedItem ifNil: [ self epiLog ])).
+
+
+
 				 moduleList selectedItem ifNotNil: [ :module |
 					 stream nextPut: (ViennaEpiLogMatcher module: module identifier) ].
 				 definitionList selectedItem ifNotNil: [ :definition |
@@ -2657,9 +2789,9 @@ ViennaRefactoringBrowser >> updateEpiLogPage [
 
 	self ifHiDeHoVisible: [
 		self
+			updateNarrativeDropList;
 			updateEpiLogMatcherDropList;
 			updateEpiLogList;
-			updateNamedEpiLogDropList;
 			updateEpiLogSourceText ]
 ]
 
@@ -2692,19 +2824,28 @@ ViennaRefactoringBrowser >> updateModuleList [
 ]
 
 { #category : 'updating' }
-ViennaRefactoringBrowser >> updateNamedEpiLogDropList [
+ViennaRefactoringBrowser >> updateNarrativeDropList [
 
-	| tags heads preds |
-	tags := self epiLog hideStorage chronicleTags collect: [ :tag |
-		        tag -> [ :epilog | epilog hideMetadata hasTag: tag ] ].
-	heads := IdentitySet new.
-	preds := IdentitySet new.
-	self epiLog timeLine do: [ :epiLog | preds add: epiLog basicPred ].
-	self epiLog timeLine do: [ :epiLog |
-		(preds includes: epiLog) ifFalse: [ heads add: epiLog ] ].
-	namedEpiLogDropList items: {
-			('' -> nil).
-			('HEADS' -> heads) } , tags
+	self updateNarrativeDropList:
+		(narrativeDropList selectedItem ifNotNil: #narrative)
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> updateNarrativeDropList: aHiDeNarrative [
+
+	self epiLog
+		ifNotNil: [ :epiLog |
+			| items selection |
+			items := epiLog hideStorage narratives collect: [ :narrative |
+				         ViennaEpiLogNarrativeTimelineEnumerator on: narrative ].
+			selection := items
+				             detect: [ :enumerator |
+				             enumerator narrative = aHiDeNarrative ]
+				             ifNone: [ nil ].
+			selection ifNil: [ narrativeDropList resetSelection ].
+			narrativeDropList items: items.
+			selection ifNotNil: [ narrativeDropList selectItem: selection ] ]
+		ifNil: [ narrativeDropList items: {  } ]
 ]
 
 { #category : 'updating' }
@@ -2789,6 +2930,14 @@ ViennaRefactoringBrowser >> updateStateTable [
 ViennaRefactoringBrowser >> updateStateTableItems [
 
 	stateTable items: animation state keys asSortedCollection
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> userTimelineSelected [
+
+	showsArtifactTimelineButton state: false.
+	narrativeDropList resetSelection.
+	self selectedTimelineChanged
 ]
 
 { #category : 'updating' }

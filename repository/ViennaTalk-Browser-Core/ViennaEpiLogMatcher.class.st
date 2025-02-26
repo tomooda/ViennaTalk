@@ -15,12 +15,24 @@ ViennaEpiLogMatcher class >> all [
 ]
 
 { #category : 'instance creation' }
+ViennaEpiLogMatcher class >> branches: aViennaEpiLog [
+
+	^ ViennaEpiLogBranchMatcher from: aViennaEpiLog
+]
+
+{ #category : 'instance creation' }
 ViennaEpiLogMatcher class >> executionClosureFrom: aViennaEpiLog enumerator: aViennaEpiLogEnumerator at: anotherViennaEpiLog [
 
 	^ ViennaEpiLogExecutionClosureMatcher
 		  fromEpiLog: aViennaEpiLog
 		  enumerator: aViennaEpiLogEnumerator
 		  at: anotherViennaEpiLog
+]
+
+{ #category : 'instance creation' }
+ViennaEpiLogMatcher class >> heads: aViennaEpiLog [
+
+	^ ViennaEpiLogHeadMatcher from: aViennaEpiLog
 ]
 
 { #category : 'instance creation' }
@@ -64,6 +76,14 @@ ViennaEpiLogMatcher class >> syntacticClosureFrom: aViennaEpiLog enumerator: aVi
 		  at: anotherViennaEpiLog
 ]
 
+{ #category : 'instance creation' }
+ViennaEpiLogMatcher class >> tag: aString [
+
+	^ ViennaEpiLogTagMatcher new
+		  tag: aString;
+		  yourself
+]
+
 { #category : 'comparing' }
 ViennaEpiLogMatcher >> < aViennaEpiLog [
 	"Answer whether the receiver is less than the argument."
@@ -85,6 +105,12 @@ ViennaEpiLogMatcher >> = aViennaEpiLog [
 ViennaEpiLogMatcher >> hash [
 
 	^ self order hash bitXor: self name hash
+]
+
+{ #category : 'accessing' }
+ViennaEpiLogMatcher >> icon [
+
+	^ nil
 ]
 
 { #category : 'accessing' }

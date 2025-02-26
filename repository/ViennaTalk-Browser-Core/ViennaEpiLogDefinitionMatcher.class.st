@@ -11,6 +11,12 @@ Class {
 }
 
 { #category : 'accessing' }
+ViennaEpiLogDefinitionMatcher >> icon [
+
+	^ Smalltalk ui iconNamed: #protocolPublic
+]
+
+{ #category : 'accessing' }
 ViennaEpiLogDefinitionMatcher >> identifier [
 
 	^ identifier ifNil: [ '-' ]
