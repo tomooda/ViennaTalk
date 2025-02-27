@@ -85,31 +85,6 @@ ViennaDirectoryBrowser class >> moduleListMenu: aBuilder [
 					arguments: (Array with: module asString) ] ] ]
 ]
 
-{ #category : 'world menu' }
-ViennaDirectoryBrowser class >> viennaToolsMenuOn: aBuilder [
-
-	<ViennaToolsMenu>
-	(aBuilder item: #'VDM Directory Browser')
-		action: [ self open ];
-		order: 0.12;
-		withSeparatorAfter;
-		help: 'File-based VDM-SL browser';
-		icon: nil
-]
-
-{ #category : 'world menu' }
-ViennaDirectoryBrowser class >> worldMenuOn: aBuilder [
-
-	<worldMenu>
-	(aBuilder item: #'VDM Directory Browser')
-		action: [ self open ];
-		order: 0.12;
-		withSeparatorAfter;
-		parent: #ViennaTalk;
-		help: 'File-based VDM-SL browser';
-		icon: nil
-]
-
 { #category : 'code pane' }
 ViennaDirectoryBrowser >> acceptCode: aStringOrText [
 	^ self acceptCode: aStringOrText newModuleAndSourceDo: [ :module | self saveModule: module ]

@@ -1,6 +1,13 @@
 Class {
 	#name : 'ViennaLauncher',
-	#superclass : 'StandardWindow',
+	#superclass : 'SpPresenter',
+	#instVars : [
+		'openButton',
+		'vdmpadButton',
+		'logoImage',
+		'systemButton',
+		'toolsButton'
+	],
 	#classVars : [
 		'Current',
 		'DateAndTimeFormat',
@@ -32,10 +39,10 @@ ViennaLauncher class >> chooseFont [
 
 { #category : 'user interface' }
 ViennaLauncher class >> close [
-	Current
-		ifNotNil: [ 
-			Current delete.
-			Current := nil ]
+
+	Current ifNotNil: [
+		Current close.
+		Current := nil ]
 ]
 
 { #category : 'accessing' }
@@ -207,16 +214,21 @@ ViennaLauncher class >> installDesktopLogo [
 
 { #category : 'user interface' }
 ViennaLauncher class >> open [
-	^ self current openInWorld
+
+	<script: 'ViennaLauncher open'>
+	self current window ifNotNil: [ :window |
+		window isOpen ifTrue: [ ^ self ] ].
+	self current open
 ]
 
 { #category : 'user interface' }
 ViennaLauncher class >> reopen [
-	Current
-		ifNotNil: [ 
-			Current delete.
-			Current := nil ].
-	^ self current openInWorld
+
+	<script: 'ViennaLauncher reopen'>
+	Current ifNotNil: [
+		Current close.
+		Current := nil ].
+	^ self open
 ]
 
 { #category : 'menu operations' }
@@ -304,14 +316,82 @@ ViennaLauncher class >> worldMenuOn: aBuilder [
 				withSeparatorAfter ]
 ]
 
+{ #category : 'menu operations' }
+ViennaLauncher >> browseDirectory [
+
+	(UIManager default
+		 chooseDirectory: 'Directory to open'
+		 from: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :dir |
+		ViennaRefactoringBrowser new
+			load: dir;
+			open ]
+]
+
+{ #category : 'menu operations' }
+ViennaLauncher >> browseFile [
+
+	(UIManager default
+		 chooseExistingFileReference: 'Directory to open'
+		 extensions: #( 'vdmsl' )
+		 path: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :file |
+		ViennaRefactoringBrowser new
+			load: file;
+			open ]
+]
+
+{ #category : 'resources' }
+ViennaLauncher >> browseFileIcon [
+
+	| file search form |
+	file := Smalltalk ui iconNamed: #smallLeftFlush.
+	search := (Smalltalk ui iconNamed: #search) scaledToSize: 10 @ 10.
+	form := Form extent: 16 @ 16 depth: 32.
+	form getCanvas
+		fillColor: Color transparent;
+		drawImage: file at: 0 @ 0;
+		drawImage: search at: 6 @ 6.
+	^ form
+]
+
+{ #category : 'resources' }
+ViennaLauncher >> browseFolderIcon [
+
+	| folder search form |
+	folder := Smalltalk ui iconNamed: #folder.
+	search := (Smalltalk ui iconNamed: #search) scaledToSize: 10 @ 10.
+	form := Form extent: 16 @ 16 depth: 32.
+	form getCanvas
+		fillColor: Color transparent;
+		drawImage: folder at: 0 @ 0;
+		drawImage: search at: 6 @ 6.
+	^ form
+]
+
 { #category : 'interface opening' }
 ViennaLauncher >> close [
-	self class close
+
+	self window ifNotNil: #close
 ]
 
 { #category : 'accessing' }
 ViennaLauncher >> codename [
-	^ 'Waikiki'
+	^ 'Nowhere'
+]
+
+{ #category : 'layout' }
+ViennaLauncher >> defaultLayout [
+
+	<script: 'ViennaLauncher reopen'>
+	^ SpBoxLayout newVertical
+		  add: (SpBoxLayout newHorizontal
+				   add: #openButton expand: false;
+				   add: #toolsButton expand: false;
+				   addLast: #systemButton
+				   withConstraints: [ :constraints |
+					   constraints width: self class buttonHeight ];
+				   yourself)
+		  expand: false;
+		  add: logoImage
 ]
 
 { #category : 'accessing' }
@@ -319,67 +399,55 @@ ViennaLauncher >> defaultTitle [
 	^ 'ViennaTalk ', self codename
 ]
 
+{ #category : 'menus' }
+ViennaLauncher >> devMenu [
+
+	^ self newMenu
+		  addAllFromPragma: #ViennaDevMenu target: self;
+		  yourself
+]
+
 { #category : 'initialize-release' }
-ViennaLauncher >> initialize [
-	| systemMenu toolsMenu devMenu tools dock image extent |
-	super initialize.
-	self title: self defaultTitle.
-	systemMenu := self newMenu
-		add: 'settings...' target: self selector: #showSettingBrowser;
-		addLine;
-		add: 'update to the head on github' target: self selector: #loadHead;
-		addLine;
-		add: 'reopen' target: self selector: #reopen;
-		add: 'close' target: self selector: #close;
-		yourself.
-	toolsMenu := self newMenu
-		addAllFromPragma: #ViennaToolsMenu target: self;
-		yourself.
-	devMenu := self newMenu
-		addAllFromPragma: #ViennaDev target: self;
-		yourself.
-	tools := OrderedCollection new.
-	Smalltalk
-		at: #VDMPad
-		ifPresent: [ :vdmpad | 
-			tools
-				add:
-					(self
-						newButtonFor: vdmpad
-						getState: #isRunning
-						action: #toggleStartStop
-						arguments: nil
-						getEnabled: nil
-						label: 'VDMPad'
-						help: 'start/stop VDMPad server' translated) ].
-	dock := self newToolDockingBar.
-	dock
-		add: 'System' translated
-			font: self theme menuBarFont
-			icon: nil
-			help: 'ViennaTalk system operations'
-			subMenu: systemMenu;
-		add: 'Tools' translated
-			font: self theme menuBarFont
-			icon: nil
-			help: 'ViennaTalk tools'
-			subMenu: toolsMenu;
-		add: 'Dev' translated
-			font: self theme menuBarFont
-			icon: nil
-			help: 'ViennaTalk developers'' utilities'
-			subMenu: devMenu.
-	tools do: [ :morph | dock addMorphBack: morph ].
-	image := self newImage: self viennaLogo.
-	extent := image extent + (4 @ (dock minExtent y + 32)).
-	self
-		addMorph: dock fullFrame: ((0 @ 0 corner: 1 @ 0) asLayoutFrame bottomOffset: dock minExtent y);
-		addMorph: image fullFrame: ((0 @ 0 corner: 1 @ 1) asLayoutFrame topOffset: dock minExtent y);
-		beUnresizeable;
-		extent: extent;
-		maximumExtent: extent;
-		minimumExtent: extent;
-		themeChanged
+ViennaLauncher >> initializePresenters [
+
+	super initializePresenters.
+	openButton := self newButton
+		              icon: (self iconNamed: #folder);
+		              label: 'Models';
+		              action: [
+			              self openMenu openWithSpecAt:
+					              openButton adapter widget bounds bottomLeft ];
+		              yourself.
+	toolsButton := self newButton
+		               iconName: #tools;
+		               label: 'Tools';
+		               action: [
+			               self toolsMenu openWithSpecAt:
+					               toolsButton adapter widget bounds bottomLeft ];
+		               yourself.
+	systemButton := self newButton
+		                iconName: #preferences;
+		                action: [
+			                self systemMenu openWithSpecAt:
+					                systemButton adapter widget bounds bottomLeft ];
+		                yourself.
+	vdmpadButton := self newToggleButton
+		                label: 'VDMPad';
+		                action: [ self toggleVDMPad ];
+		                yourself.
+	logoImage := self newImage
+		             image: self viennaLogo;
+		             autoScale: false;
+		             yourself
+]
+
+{ #category : 'initialize-release' }
+ViennaLauncher >> initializeWindow: aSpWindowPresenter [
+
+	aSpWindowPresenter
+		title: self defaultTitle;
+		beNotResizable;
+		initialExtent: logoImage image extent + (4 @ 50)
 ]
 
 { #category : 'menu operations' }
@@ -391,21 +459,89 @@ ViennaLauncher >> loadHead [
 		load
 ]
 
-{ #category : 'interface opening' }
-ViennaLauncher >> openInWorld [
+{ #category : 'menus' }
+ViennaLauncher >> openMenu [
 
-	self extent: self extent.
-	^ super openInWorld
+	^ self newMenu
+		  addGroup: [ :group |
+			  (FileLocator viennaTalkDocumentDirectory directories
+				   asSortedCollection: #basename ascending) do: [ :dir |
+					  (dir filesMatching: '*.vdmsl') ifNotEmpty: [
+							  group addItem: [ :item |
+									  item
+										  name: dir basename;
+										  iconName: #folder;
+										  action: [
+											  ViennaRefactoringBrowser new
+												  load: dir;
+												  open ] ] ] ].
+			  ((FileLocator viennaTalkDocumentDirectory filesMatching:
+				    '*.vdmsl') asSortedCollection: #basename ascending) do: [
+				  :file |
+				  group addItem: [ :item |
+					  item
+						  name: file basename;
+						  iconName: #smallLeftFlush;
+						  action: [
+							  ViennaRefactoringBrowser new
+								  load: file;
+								  open ] ] ] ];
+		  addGroup: [ :group |
+			  group addItem: [ :item |
+				  item
+					  name: 'Open a new model';
+					  icon: (Smalltalk ui iconNamed: #page);
+					  action: [ ViennaRefactoringBrowser new open ] ] ]
 ]
 
 { #category : 'interface opening' }
 ViennaLauncher >> reopen [
+
+	<script: 'ViennaLauncher reopen'>
 	^ self class reopen
 ]
 
 { #category : 'menu operations' }
 ViennaLauncher >> showSettingBrowser [
 	^ self class showSettingBrowser 
+]
+
+{ #category : 'menus' }
+ViennaLauncher >> systemMenu [
+
+	^ self newMenu
+		  addItem: [ :item |
+			  item
+				  name: 'settings...';
+				  action: [ self showSettingBrowser ] ];
+		  addItem: [ :item |
+			  item
+				  name: 'update to the head on github';
+				  action: [ self loadHead ] ];
+		  addItem: [ :item |
+			  item
+				  name: 'reopen';
+				  action: [ self reopen ] ];
+		  addItem: [ :item |
+			  item
+				  name: 'close';
+				  action: [ self close ] ];
+		  yourself
+]
+
+{ #category : 'menu operations' }
+ViennaLauncher >> toggleVDMPad [
+
+	VDMPad toggleStartStop.
+	vdmpadButton state: VDMPad isRunning
+]
+
+{ #category : 'menus' }
+ViennaLauncher >> toolsMenu [
+
+	^ self newMenu
+		  addAllFromPragma: #ViennaToolsMenu target: self;
+		  yourself
 ]
 
 { #category : 'resources' }

@@ -1835,7 +1835,7 @@ ViennaRefactoringBrowser >> load: aFileReference [
 ViennaRefactoringBrowser >> loadFromDirectory [
 
 	(UIManager default
-		 chooseDirectory: 'Import directory'
+		 chooseDirectory: 'Directory to open'
 		 from: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :dir |
 		self load: dir ]
 ]
@@ -1844,7 +1844,7 @@ ViennaRefactoringBrowser >> loadFromDirectory [
 ViennaRefactoringBrowser >> loadFromFile [
 
 	(UIManager default
-		 chooseExistingFileReference: 'Import directory'
+		 chooseExistingFileReference: 'File to open'
 		 extensions: #( 'vdmsl' )
 		 path: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :file |
 		self load: file ]
