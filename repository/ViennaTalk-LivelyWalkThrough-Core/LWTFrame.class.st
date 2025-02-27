@@ -1,54 +1,55 @@
 Class {
-	#name : #LWTFrame,
-	#superclass : #Object,
+	#name : 'LWTFrame',
+	#superclass : 'Object',
 	#instVars : [
 		'timestamp'
 	],
-	#category : 'ViennaTalk-LivelyWalkThrough-Core'
+	#category : 'ViennaTalk-LivelyWalkThrough-Core',
+	#package : 'ViennaTalk-LivelyWalkThrough-Core'
 }
 
-{ #category : #menu }
+{ #category : 'menu' }
 LWTFrame >> addFrameMenu: aMenu [
 	"add nothing by default"
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 LWTFrame >> hasBrowser [
 	^ true
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 LWTFrame >> initialize [
 	super initialize.
 	timestamp := DateAndTime now
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 LWTFrame >> isEventFrame [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 LWTFrame >> isVDMCallFrame [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 LWTFrame >> isVDMStateFrame [
 	^ false
 ]
 
-{ #category : #'interface opening' }
+{ #category : 'interface opening' }
 LWTFrame >> openBrowser [
 	^ self subclassResponsibility
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 LWTFrame >> printOn: aStream [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTFrame >> timestamp [
 	^ timestamp
 ]

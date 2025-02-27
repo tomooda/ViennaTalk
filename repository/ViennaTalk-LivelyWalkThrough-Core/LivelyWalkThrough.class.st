@@ -1,21 +1,22 @@
 Class {
-	#name : #LivelyWalkThrough,
-	#superclass : #Model,
+	#name : 'LivelyWalkThrough',
+	#superclass : 'Model',
 	#instVars : [
 		'director'
 	],
 	#classVars : [
 		'Server'
 	],
-	#category : #'ViennaTalk-LivelyWalkThrough-Core'
+	#category : 'ViennaTalk-LivelyWalkThrough-Core',
+	#package : 'ViennaTalk-LivelyWalkThrough-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 LivelyWalkThrough class >> default [
 	^ self on: LWTDirector default
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 LivelyWalkThrough class >> fileOpen: title extensions: exts path: path preview: preview [
 	"LivelyWalkThrough fileOpen: 'title' extensions: #('png' 'jpg') path: nil preview: #image"
 
@@ -33,13 +34,13 @@ LivelyWalkThrough class >> fileOpen: title extensions: exts path: path preview: 
 	^ (ui openModal: fd) answer ifNotNil: [ :ans | ans asFileReference ]
 ]
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 LivelyWalkThrough class >> initialize [
 	self installEventHandlers.
 	Smalltalk at: #ViennaLauncher ifPresent: [ :launcherClass | launcherClass reopen ]
 ]
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 LivelyWalkThrough class >> installEventHandlers [
 	ExternalDropHandler
 		registerHandler:
@@ -49,29 +50,29 @@ LivelyWalkThrough class >> installEventHandlers [
 				action: [ :stream :pasteUp :event | LivelyWalkThrough openDefault director loadStream: stream ])
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 LivelyWalkThrough class >> on: aLWTDirector [
 	^ self new director: aLWTDirector
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 LivelyWalkThrough class >> openDefault [
 	^ self default open
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 LivelyWalkThrough class >> openVDMJ [
 	^ self vdmj open
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 LivelyWalkThrough class >> vdmj [
 	"LivelyWalkThrough vdmj open"
 
 	^ self on: LWTDirector vdmj
 ]
 
-{ #category : #'world menu' }
+{ #category : 'world menu' }
 LivelyWalkThrough class >> viennaToolsMenuOn: aBuilder [
 	<ViennaToolsMenu>
 	(aBuilder item: #'Lively WalkThrough')
@@ -81,7 +82,7 @@ LivelyWalkThrough class >> viennaToolsMenuOn: aBuilder [
 		icon: nil
 ]
 
-{ #category : #'world menu' }
+{ #category : 'world menu' }
 LivelyWalkThrough class >> worldMenuOn: aBuilder [
 	<worldMenu>
 	(aBuilder item: #'Lively WalkThrough')
@@ -92,7 +93,7 @@ LivelyWalkThrough class >> worldMenuOn: aBuilder [
 		icon: nil
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 LivelyWalkThrough >> build [
 
 	| pane utilsPane |
@@ -123,7 +124,7 @@ LivelyWalkThrough >> build [
 	^ pane
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 LivelyWalkThrough >> buildFilePane [
 	| pane |
 	pane := Morph new.
@@ -162,12 +163,12 @@ LivelyWalkThrough >> buildFilePane [
 	^ pane
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 LivelyWalkThrough >> buildLivetalkBrowserPane [
 	^ (LWTLivetalkBrowser on: self director) build
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 LivelyWalkThrough >> buildSettingsPane [
 
 	| pane urlPrefixPane animationPane |
@@ -216,32 +217,32 @@ LivelyWalkThrough >> buildSettingsPane [
 	^ pane
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 LivelyWalkThrough >> buildVDMBrowserPane [
 	^ (ViennaBrowser on: self director animation) build
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 LivelyWalkThrough >> buildWidgetDispenserPane [
 	^ LWTWidgetDispenser new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LivelyWalkThrough >> director [
 	^ director
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LivelyWalkThrough >> director: aLWTDirector [
 	director := aLWTDirector
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 LivelyWalkThrough >> open [
 	^ self openLabel: 'Lively Walk-Through'
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 LivelyWalkThrough >> openLabel: aString [
 	self build openInWindowLabeled: aString
 ]

@@ -1,6 +1,6 @@
 Class {
-	#name : #LWTDirector,
-	#superclass : #Morph,
+	#name : 'LWTDirector',
+	#superclass : 'Morph',
 	#instVars : [
 		'selectedWidgets',
 		'frames',
@@ -16,20 +16,21 @@ Class {
 	#classVars : [
 		'Server'
 	],
-	#category : #'ViennaTalk-LivelyWalkThrough-Core'
+	#category : 'ViennaTalk-LivelyWalkThrough-Core',
+	#package : 'ViennaTalk-LivelyWalkThrough-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 LWTDirector class >> default [
 	^ self on: ViennaAnimation default
 ]
 
-{ #category : #servicing }
+{ #category : 'servicing' }
 LWTDirector class >> defaultPort [
 	^ 8086
 ]
 
-{ #category : #servicing }
+{ #category : 'servicing' }
 LWTDirector class >> flushServer [
 	"LWTDirector flushServer"
 
@@ -40,12 +41,12 @@ LWTDirector class >> flushServer [
 			Server := nil ]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 LWTDirector class >> on: aViennaAnimation [
 	^ self new animation: aViennaAnimation
 ]
 
-{ #category : #servicing }
+{ #category : 'servicing' }
 LWTDirector class >> server [
 	^ Server
 		ifNil: [ 
@@ -55,12 +56,12 @@ LWTDirector class >> server [
 				yourself ]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 LWTDirector class >> vdmj [
 	^ self on: ViennaAnimation vdmj
 ]
 
-{ #category : #dialogs }
+{ #category : 'dialogs' }
 LWTDirector >> abort: aString [
 	| context |
 	context := thisContext.
@@ -69,44 +70,37 @@ LWTDirector >> abort: aString [
 	context return: nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTDirector >> acceptUrlPrefix: aTextOrString [
 	self urlPrefix: aTextOrString asString trim.
 	^ true
 ]
 
-{ #category : #dependents }
+{ #category : 'private' }
 LWTDirector >> actAsExecutor [
-	super actAsExecutor.
+
 	self breakDependents
 ]
 
-{ #category : #dependents }
-LWTDirector >> addDependent: anObject [
-	(self dependents includes: anObject)
-		ifFalse: [ self myDependents: (self dependents copyWithDependent: anObject) ].
-	^ anObject
-]
-
-{ #category : #'accessing-frames and cuts' }
+{ #category : 'accessing-frames and cuts' }
 LWTDirector >> addFrame: anLWTFrame [
 	frames nextPut: anLWTFrame.
 	lastFrame := anLWTFrame
 ]
 
-{ #category : #'accessing-scripts' }
+{ #category : 'accessing-scripts' }
 LWTDirector >> addScript: aLWTLivetalkScript [
 	^ (scripts at: aLWTLivetalkScript widgetName ifAbsentPut: [ Dictionary new ])
 		at: aLWTLivetalkScript event
 		put: aLWTLivetalkScript
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTDirector >> animation [
 	^ animation ifNil: [ animation := self defaultAnimation ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTDirector >> animation: aViennaAnimation [
 	animation
 		ifNotNil: [ aViennaAnimation specification: animation specification.
@@ -114,7 +108,7 @@ LWTDirector >> animation: aViennaAnimation [
 	animation := aViennaAnimation
 ]
 
-{ #category : #json }
+{ #category : 'json' }
 LWTDirector >> asJsonObject [
 	^ Dictionary new
 		at: 'widgets' put: self widgetsToJsonObject;
@@ -125,18 +119,19 @@ LWTDirector >> asJsonObject [
 		yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTDirector >> classicChanged: aSymbol [
-	self dependents do: [ :aDependent | aDependent update: aSymbol ]
+
+	self changed: aSymbol
 ]
 
-{ #category : #'accessing-frames and cuts' }
+{ #category : 'accessing-frames and cuts' }
 LWTDirector >> clearFrames [
 	frames := Array new writeStream.
 	lastFrame := nil
 ]
 
-{ #category : #'accessing-frames and cuts' }
+{ #category : 'accessing-frames and cuts' }
 LWTDirector >> cutAt: aString [
 	^ aString
 		ifNotNil: [ 
@@ -148,38 +143,38 @@ LWTDirector >> cutAt: aString [
 						yourself ] ]
 ]
 
-{ #category : #'accessing-frames and cuts' }
+{ #category : 'accessing-frames and cuts' }
 LWTDirector >> cutAt: aString ifAbsent: errorBlock [
 	^ aString ifNotNil: [ cuts at: aString ifAbsent: errorBlock ]
 ]
 
-{ #category : #'accessing-frames and cuts' }
+{ #category : 'accessing-frames and cuts' }
 LWTDirector >> cutAt: aString put: anLWTCut [
 	^ aString ifNotNil: [ anLWTCut ifNotNil: [ cuts at: aString put: anLWTCut ] ]
 ]
 
-{ #category : #'accessing-frames and cuts' }
+{ #category : 'accessing-frames and cuts' }
 LWTDirector >> cutNames [
 	^ cuts keys asSortedCollection
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 LWTDirector >> defaultAnimation [
 	^ ViennaAnimation vdmj
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTDirector >> delete [
 	super delete.
 	self releaseHandlers
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTDirector >> directory [
 	^ directory ifNil: [ directory := FileLocator viennaTalkDocumentDirectory  ]
 ]
 
-{ #category : #drawing }
+{ #category : 'drawing' }
 LWTDirector >> drawOn: aCanvas [
 	aCanvas
 		frameAndFillRectangle: self bounds
@@ -188,24 +183,24 @@ LWTDirector >> drawOn: aCanvas [
 		borderColor: Color white
 ]
 
-{ #category : #interpreting }
+{ #category : 'interpreting' }
 LWTDirector >> execDialog: aString [
 	self inform: aString
 ]
 
-{ #category : #interpreting }
+{ #category : 'interpreting' }
 LWTDirector >> execEvent: eventName at: widgetName [
 	^ ((scripts at: widgetName ifAbsent: [ ^ self ]) at: eventName ifAbsent: [ ^ self ]) value
 ]
 
-{ #category : #interpreting }
+{ #category : 'interpreting' }
 LWTDirector >> execLet: aString be: anObject [
 	(self morphNamed: aString ifAbsent: [ self abort: 'Can not assign to an undefined variable: ' , aString ])
 		value: anObject.
 	^ anObject
 ]
 
-{ #category : #interpreting }
+{ #category : 'interpreting' }
 LWTDirector >> execVDM: aString withArguments: anArray [
 	^ aString , '(' , (',' join: anArray) , ')'
 		in: [ :expression | 
@@ -216,12 +211,12 @@ LWTDirector >> execVDM: aString withArguments: anArray [
 			value ]
 ]
 
-{ #category : #interpreting }
+{ #category : 'interpreting' }
 LWTDirector >> execValueOf: aString [
 	^ (self morphNamed: aString ifAbsent: [ self abort: 'Can not read an undefined variable: ' , aString ]) value
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTDirector >> fileSave: title extensions: anArrayOfString do: aBlock [
 	(UIManager default
 		chooseForSaveFileReference: title
@@ -240,19 +235,19 @@ LWTDirector >> fileSave: title extensions: anArrayOfString do: aBlock [
 								with: String lf) ] ]
 ]
 
-{ #category : #'accessing-frames and cuts' }
+{ #category : 'accessing-frames and cuts' }
 LWTDirector >> frames [
 	^ frames contents
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTDirector >> frames: anArrayOfFrame [
 	frames := Array new writeStream.
 	frames nextPutAll: anArrayOfFrame.
 	lastFrame := anArrayOfFrame ifNotEmpty: [ anArrayOfFrame last ] ifEmpty: [ nil ]
 ]
 
-{ #category : #json }
+{ #category : 'json' }
 LWTDirector >> fromJsonObject: aDictionary [
 	self widgetsFromJsonObject: (aDictionary at: 'widgets').
 	self specification: (aDictionary at: 'specification').
@@ -261,17 +256,17 @@ LWTDirector >> fromJsonObject: aDictionary [
 	self urlPrefix: (aDictionary at: 'urlPrefix')
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 LWTDirector >> handlesMouseDown: aMouseEvent [
 	^ false
 ]
 
-{ #category : #'accessing-frames and cuts' }
+{ #category : 'accessing-frames and cuts' }
 LWTDirector >> hasProceededSince: anLWTFrame [
 	^ lastFrame ~~ anLWTFrame
 ]
 
-{ #category : #dialogs }
+{ #category : 'dialogs' }
 LWTDirector >> inform: aString [
 	| context |
 	context := thisContext.
@@ -279,7 +274,7 @@ LWTDirector >> inform: aString [
 	UIManager default alert: aString title: 'Lively Walk-Through: ' , context receiver name
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 LWTDirector >> initialize [
 	super initialize.
 	scripts := Dictionary new.
@@ -288,12 +283,12 @@ LWTDirector >> initialize [
 	cuts := Dictionary new
 ]
 
-{ #category : #'accessing-morphs' }
+{ #category : 'accessing-morphs' }
 LWTDirector >> let: aString be: anObject ifAbsentDo: errorBlock [
 	^ self morphsNamed: aString ifNotEmpty: [ :morph | morph value: anObject ] ifEmpty: [ errorBlock value: anObject ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTDirector >> load [
 	(LivelyWalkThrough
 		fileOpen: (self urlPrefix ifEmpty: [ 'Lively Walk-Through' ])
@@ -307,7 +302,7 @@ LWTDirector >> load [
 					self loadStream: stream ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTDirector >> loadStream: aStream [
 
 	[ self fromJsonObject: (NeoJSONReader on: aStream) next ]
@@ -316,13 +311,13 @@ LWTDirector >> loadStream: aStream [
 			UIManager default alert: 'Can not load ' , filepath pathString ]
 ]
 
-{ #category : #'accessing-morphs' }
+{ #category : 'accessing-morphs' }
 LWTDirector >> morphNamed: aString ifAbsent: errorBlock [
 	self morphsNamed: aString do: [ :morph | ^morph ].
 	^ errorBlock value
 ]
 
-{ #category : #'accessing-morphs' }
+{ #category : 'accessing-morphs' }
 LWTDirector >> morphsNamed: aString do: aBlock [
 	self
 		allMorphsDo: [ :submorph | 
@@ -330,7 +325,7 @@ LWTDirector >> morphsNamed: aString do: aBlock [
 				ifTrue: [ aBlock value: submorph ] ]
 ]
 
-{ #category : #'accessing-morphs' }
+{ #category : 'accessing-morphs' }
 LWTDirector >> morphsNamed: aString ifNotEmpty: aBlock ifEmpty: errorBlock [
 	| any |
 	any := false.
@@ -343,44 +338,28 @@ LWTDirector >> morphsNamed: aString ifNotEmpty: aBlock ifEmpty: errorBlock [
 		ifFalse: [ errorBlock value ]
 ]
 
-{ #category : #private }
-LWTDirector >> myDependents [
-	^ dependents
-]
-
-{ #category : #private }
-LWTDirector >> myDependents: aCollectionOrNil [
-	dependents := aCollectionOrNil
-]
-
-{ #category : #private }
+{ #category : 'private' }
 LWTDirector >> privateDelete [
 	super privateDelete.
 	self releaseHandlers
 ]
 
-{ #category : #'accessing-frames and cuts' }
+{ #category : 'accessing-frames and cuts' }
 LWTDirector >> recordEvent: aSymbol at: aMorph [
 	self addFrame: (LWTEventFrame morphName: aMorph name event: aSymbol)
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 LWTDirector >> releaseHandlers [
 	Server ifNotNil: [ Server delegate prefixMap keysAndValuesRemove: [ :key :value | value == self ] ]
 ]
 
-{ #category : #'accessing-frames and cuts' }
+{ #category : 'accessing-frames and cuts' }
 LWTDirector >> removeCutAt: aString [
 	^ cuts removeKey: aString ifAbsent: [  ]
 ]
 
-{ #category : #dependents }
-LWTDirector >> removeDependent: anObject [
-	self myDependents: ((self dependents reject: [ :each | each == anObject ]) ifNotEmpty: #yourself).
-	^ anObject
-]
-
-{ #category : #'accessing-scripts' }
+{ #category : 'accessing-scripts' }
 LWTDirector >> removeScriptAt: aString ifAbsent: errorBlock [
 	self
 		scriptsDo: [ :script | 
@@ -391,7 +370,7 @@ LWTDirector >> removeScriptAt: aString ifAbsent: errorBlock [
 	^ errorBlock value
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTDirector >> save [
 	(filepath notNil
 		and: [ filepath isFile
@@ -404,7 +383,7 @@ LWTDirector >> save [
 		ifFalse: [ self saveAs ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTDirector >> saveAs [
 	self
 		fileSave: (self urlPrefix ifEmpty: [ 'Lively Walk-Through' ])
@@ -415,7 +394,7 @@ LWTDirector >> saveAs [
 				nextPut: self asJsonObject ]
 ]
 
-{ #category : #'accessing-scripts' }
+{ #category : 'accessing-scripts' }
 LWTDirector >> scriptAt: aString ifAbsent: errorBlock [
 	self
 		scriptsDo: [ :script | 
@@ -424,23 +403,23 @@ LWTDirector >> scriptAt: aString ifAbsent: errorBlock [
 	^ errorBlock value
 ]
 
-{ #category : #'accessing-scripts' }
+{ #category : 'accessing-scripts' }
 LWTDirector >> scriptSelectors [
 	^ (Array new: 10 streamContents: [ :stream | self scriptsDo: [ :script | stream nextPut: script name ] ])
 		asSortedCollection
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTDirector >> scripts: aDictionary [
 	scripts := aDictionary
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTDirector >> scriptsDo: aBlock [
 	scripts valuesDo: [ :scriptDict | scriptDict valuesDo: aBlock ]
 ]
 
-{ #category : #json }
+{ #category : 'json' }
 LWTDirector >> scriptsFromJsonObject: aDictionary [
 	scripts := Dictionary new.
 	aDictionary
@@ -453,7 +432,7 @@ LWTDirector >> scriptsFromJsonObject: aDictionary [
 	self classicChanged: #scriptSelectors
 ]
 
-{ #category : #json }
+{ #category : 'json' }
 LWTDirector >> scriptsToJsonObject [
 	| json |
 	json := Dictionary new.
@@ -461,28 +440,28 @@ LWTDirector >> scriptsToJsonObject [
 	^ json
 ]
 
-{ #category : #'accessing-morphs' }
+{ #category : 'accessing-morphs' }
 LWTDirector >> selectedWidgets: aCollectionOfLWTWidget [
 	selectedWidgets := aCollectionOfLWTWidget.
 	self changed
 ]
 
-{ #category : #'accessing-morphs' }
+{ #category : 'accessing-morphs' }
 LWTDirector >> selectedWidgetsDo: aBlock [
 	selectedWidgets ifNotNil: [ selectedWidgets do: aBlock ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTDirector >> specification [
 	^ self animation specification
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTDirector >> specification: aString [
 	self animation specification: aString
 ]
 
-{ #category : #stepping }
+{ #category : 'stepping' }
 LWTDirector >> startStepping [
 	self
 		startStepping: #stepAt:
@@ -491,7 +470,7 @@ LWTDirector >> startStepping [
 		stepTime: 1000
 ]
 
-{ #category : #stepping }
+{ #category : 'stepping' }
 LWTDirector >> step [
 
 	| m |
@@ -502,12 +481,12 @@ LWTDirector >> step [
 	m := m owner ] repeat
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTDirector >> urlPrefix [
 	^ urlPrefix ifNil: [ String new ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTDirector >> urlPrefix: aString [
 	urlPrefix ~= aString
 		ifTrue: [ 
@@ -517,29 +496,29 @@ LWTDirector >> urlPrefix: aString [
 			self changed: #urlPrefix ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTDirector >> useInterpreter [
 	self animation becomeInterpretedAnimation 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTDirector >> useTranspiler [
 	self animation becomeTranspiledAnimation 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTDirector >> usesTranspiler [
 	^ animation class == ViennaTranspiledAnimation 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTDirector >> usesTranspiler: aBoolean [
 	aBoolean = true
 		ifTrue: [ self useTranspiler ]
 		ifFalse: [ self useInterpreter ]
 ]
 
-{ #category : #'request handling' }
+{ #category : 'request handling' }
 LWTDirector >> value: aZnRequest [
 	^ (aZnRequest uri segments ifNotNil: [ :segments | segments at: 2 ifAbsent: [  ] ])
 		ifNil: [ ZnResponse notFound: aZnRequest uri ]
@@ -556,24 +535,24 @@ LWTDirector >> value: aZnRequest [
 						ifNil: [ ZnResponse ok: (ZnEntity text: morph value) ] ] ]
 ]
 
-{ #category : #'accessing-morphs' }
+{ #category : 'accessing-morphs' }
 LWTDirector >> valueOf: aString ifAbsent: errorBlock [
 	self morphsNamed: aString do: [ :morph | ^ morph value ].
 	^ errorBlock value
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 LWTDirector >> wantsDroppedMorph: aMorph event: aMouseEvent [
 	^ true
 ]
 
-{ #category : #json }
+{ #category : 'json' }
 LWTDirector >> widgetsFromJsonObject: anArray [
 	self removeAllMorphs.
 	anArray do: [ :json | (LWTWidget fromJsonObject: json on: self) ifNotNil: [ :widget | self addMorphBack: widget ] ]
 ]
 
-{ #category : #json }
+{ #category : 'json' }
 LWTDirector >> widgetsToJsonObject [
 	^ (submorphs select: [ :m | m isKindOf: LWTWidget ] thenCollect: [ :m | m asJsonObject ]) asArray
 ]

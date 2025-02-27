@@ -1,16 +1,17 @@
 Class {
-	#name : #LWTMouseSensor,
-	#superclass : #LWTWidget,
+	#name : 'LWTMouseSensor',
+	#superclass : 'LWTWidget',
 	#instVars : [
 		'basename',
 		'point',
 		'borderColor',
 		'borderWidth'
 	],
-	#category : #'ViennaTalk-LivelyWalkThrough-Core'
+	#category : 'ViennaTalk-LivelyWalkThrough-Core',
+	#package : 'ViennaTalk-LivelyWalkThrough-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 LWTMouseSensor class >> area [
 	^ self new
 		basename: 'Area';
@@ -21,7 +22,7 @@ LWTMouseSensor class >> area [
 		yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 LWTMouseSensor class >> button [
 	^ self new
 		basename: 'Button';
@@ -33,7 +34,7 @@ LWTMouseSensor class >> button [
 		yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 LWTMouseSensor class >> pad [
 	^ self new
 		basename: 'MousePad';
@@ -44,7 +45,7 @@ LWTMouseSensor class >> pad [
 		yourself
 ]
 
-{ #category : #json }
+{ #category : 'json' }
 LWTMouseSensor >> asJsonObject [
 	^ super asJsonObject
 		at: 'basename' put: self basename;
@@ -55,44 +56,44 @@ LWTMouseSensor >> asJsonObject [
 		yourself
 ]
 
-{ #category : #events }
+{ #category : 'events' }
 LWTMouseSensor >> availableEventSelectors [
 	^ #(clicked doubleClicked up entered left moved)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTMouseSensor >> basename [
 	^ basename ifNil: [ basename := self defaultBasename ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTMouseSensor >> basename: aString [
 	basename := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTMouseSensor >> borderColor [
 	^ borderColor
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTMouseSensor >> borderColor: aColor [
 	borderColor := aColor.
 	self changed
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTMouseSensor >> borderWidth [
 	^ borderWidth
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTMouseSensor >> borderWidth: aNumber [
 	borderWidth := aNumber.
 	self changed
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTMouseSensor >> changeBorderColor [
 
 	| dialog |
@@ -103,7 +104,7 @@ LWTMouseSensor >> changeBorderColor [
 	dialog cancelled ifFalse: [ self borderColor: dialog selectedColor ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTMouseSensor >> changeColor [
 
 	| dialog |
@@ -114,44 +115,44 @@ LWTMouseSensor >> changeColor [
 	dialog cancelled ifFalse: [ self color: dialog selectedColor ]
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 LWTMouseSensor >> click: aMouseEvent [
 	point := aMouseEvent position.
 	self event: #clicked
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 LWTMouseSensor >> defaultBasename [
 	^ 'MouseSensor'
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 LWTMouseSensor >> defaultBorderColor [
 	^ Color blue
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 LWTMouseSensor >> defaultBorderWidth [
 	^ 3
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 LWTMouseSensor >> defaultColor [
 	^ Color transparent
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 LWTMouseSensor >> defaultExtent [
 	^ 100 @ 100
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 LWTMouseSensor >> doubleClick: aMouseEvent [
 	point := aMouseEvent position.
 	self event: #doubleClicked
 ]
 
-{ #category : #drawing }
+{ #category : 'drawing' }
 LWTMouseSensor >> drawOn: aCanvas [
 	aCanvas
 		frameAndFillRectangle: self bounds
@@ -161,45 +162,45 @@ LWTMouseSensor >> drawOn: aCanvas [
 	super drawOn: aCanvas
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 LWTMouseSensor >> handleMouseDown: aMouseEvent [
 	aMouseEvent hand waitForClicksOrDrag: self event: aMouseEvent.
 	^ super handleMouseDown: aMouseEvent
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 LWTMouseSensor >> handleMouseEnter: aMouseEvent [
 	point := aMouseEvent position.
 	self event: #entered
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 LWTMouseSensor >> handleMouseLeave: aMouseEvent [
 	point := aMouseEvent position.
 	self event: #left
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 LWTMouseSensor >> handleMouseMove: aMouseEvent [
 	point := aMouseEvent position.
 	self event: #moved.
 	^ super handleMouseMove: aMouseEvent
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 LWTMouseSensor >> handleMouseUp: aMouseEvent [
 	point := aMouseEvent position.
 	self event: #up
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 LWTMouseSensor >> initialize [
 	super initialize.
 	self borderColor: self defaultBorderColor.
 	self borderWidth: self defaultBorderWidth
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 LWTMouseSensor >> menu [
 	| menu |
 	menu := super menu.
@@ -218,37 +219,37 @@ LWTMouseSensor >> menu [
 	^ menu
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTMouseSensor >> noBorder [
 	self borderWidth: 0
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTMouseSensor >> point [
 	^ point
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTMouseSensor >> point: aPoint [
 	point := aPoint
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTMouseSensor >> thickBorder [
 	self borderWidth: 3
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTMouseSensor >> thinBorder [
 	self borderWidth: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTMouseSensor >> value [
 	^ 'mk_(' , point x printString , ',' , point y printString , ')'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTMouseSensor >> value: aString [
 	^ self director abort: '[' , self name , '] is readonly widget.' , aString
 ]

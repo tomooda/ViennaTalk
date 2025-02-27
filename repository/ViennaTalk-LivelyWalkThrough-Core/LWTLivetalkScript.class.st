@@ -1,6 +1,6 @@
 Class {
-	#name : #LWTLivetalkScript,
-	#superclass : #Object,
+	#name : 'LWTLivetalkScript',
+	#superclass : 'Object',
 	#instVars : [
 		'widgetName',
 		'event',
@@ -8,10 +8,11 @@ Class {
 		'performer',
 		'compiledMethod'
 	],
-	#category : #'ViennaTalk-LivelyWalkThrough-Core'
+	#category : 'ViennaTalk-LivelyWalkThrough-Core',
+	#package : 'ViennaTalk-LivelyWalkThrough-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 LWTLivetalkScript class >> named: aString on: performer source: source ifFail: errorBlock [
 	| nameString widgetName event |
 	nameString := aString trimmed.
@@ -30,32 +31,32 @@ LWTLivetalkScript class >> named: aString on: performer source: source ifFail: e
 		yourself
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 LWTLivetalkScript class >> scriptCompilerClass [
 	^ LWTLivetalkCompiler
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 LWTLivetalkScript >> displayString [
 	^ source copy
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTLivetalkScript >> event [
 	^ event
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 LWTLivetalkScript >> isLivetalkScriptAction [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTLivetalkScript >> name [
 	^ widgetName , '`' , event
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTLivetalkScript >> setWidgetName: nameString event: eventString performer: anObject source: sourceString ifFail: errorBlock [
 	(self class scriptCompilerClass new
 		compileToSmalltalk: sourceString
@@ -74,22 +75,22 @@ LWTLivetalkScript >> setWidgetName: nameString event: eventString performer: anO
 			source := sourceString ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTLivetalkScript >> source [
 	^ source copy
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTLivetalkScript >> source: aString [
 	source := aString
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 LWTLivetalkScript >> value [
 	^ performer withArgs: #() executeMethod: compiledMethod
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTLivetalkScript >> widgetName [
 	^ widgetName
 ]

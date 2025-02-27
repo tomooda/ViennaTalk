@@ -1,13 +1,14 @@
 Class {
-	#name : #LWTRemoteWidget,
-	#superclass : #LWTFieldWidget,
+	#name : 'LWTRemoteWidget',
+	#superclass : 'LWTFieldWidget',
 	#instVars : [
 		'url'
 	],
-	#category : #'ViennaTalk-LivelyWalkThrough-Core'
+	#category : 'ViennaTalk-LivelyWalkThrough-Core',
+	#package : 'ViennaTalk-LivelyWalkThrough-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTRemoteWidget >> acceptContents: aStringOrText [
 	| oldContents |
 	oldContents := contents.
@@ -16,24 +17,24 @@ LWTRemoteWidget >> acceptContents: aStringOrText [
 	^ true
 ]
 
-{ #category : #json }
+{ #category : 'json' }
 LWTRemoteWidget >> asJsonObject [
 	^ super asJsonObject
 		at: 'url' put: self url;
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTRemoteWidget >> basename [
 	^ 'Remote'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTRemoteWidget >> basicContents [
 	^ super contents
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 LWTRemoteWidget >> buildTextPane [
 
 	textMorph := RubPluggableTextMorph
@@ -55,12 +56,12 @@ LWTRemoteWidget >> buildTextPane [
 	^ textMorph
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTRemoteWidget >> changeUrl [
 	(UIManager default request: 'Enter a new URL' initialAnswer: self url) ifNotNil: [ :newUrl | self url: newUrl ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTRemoteWidget >> contents [
 	| newContents |
 	newContents := [ (ZnEasy get: self url asUrl) entity contents ]
@@ -71,18 +72,18 @@ LWTRemoteWidget >> contents [
 	^ self contentsToValue: newContents
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 LWTRemoteWidget >> handlesMouseDown: anEvent [
 	^ frozen not
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 LWTRemoteWidget >> initialize [
 	super initialize.
 	url := String new
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 LWTRemoteWidget >> menu [
 	| menu |
 	menu := super menu.
@@ -91,12 +92,12 @@ LWTRemoteWidget >> menu [
 	^ menu
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTRemoteWidget >> url [
 	^ url
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTRemoteWidget >> url: aString [
 	url := aString
 ]

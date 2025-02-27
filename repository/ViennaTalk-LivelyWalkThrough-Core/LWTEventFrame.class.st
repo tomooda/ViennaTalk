@@ -1,52 +1,53 @@
 Class {
-	#name : #LWTEventFrame,
-	#superclass : #LWTFrame,
+	#name : 'LWTEventFrame',
+	#superclass : 'LWTFrame',
 	#instVars : [
 		'morphName',
 		'event'
 	],
-	#category : #'ViennaTalk-LivelyWalkThrough-Core'
+	#category : 'ViennaTalk-LivelyWalkThrough-Core',
+	#package : 'ViennaTalk-LivelyWalkThrough-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 LWTEventFrame class >> morphName: aString event: aSymbol [ 
 	^ self new morphName: aString;
 		 event: aSymbol;
 		 yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTEventFrame >> event [
 	^ event
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTEventFrame >> event: aSymbol [
 	event := aSymbol asSymbol
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 LWTEventFrame >> isEventFrame [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTEventFrame >> morphName [
 	^ morphName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTEventFrame >> morphName: aString [
 	morphName := aString asString
 ]
 
-{ #category : #'interface opening' }
+{ #category : 'interface opening' }
 LWTEventFrame >> openBrowser [
 
 	
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 LWTEventFrame >> printOn: aStream [
 	timestamp printOn: aStream.
 	aStream nextPutAll: ' : EVENT : ['.

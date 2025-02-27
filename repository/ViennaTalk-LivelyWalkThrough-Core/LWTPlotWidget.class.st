@@ -1,6 +1,6 @@
 Class {
-	#name : #LWTPlotWidget,
-	#superclass : #LWTWidget,
+	#name : 'LWTPlotWidget',
+	#superclass : 'LWTWidget',
 	#instVars : [
 		'value',
 		'data',
@@ -9,10 +9,11 @@ Class {
 		'lineWidth',
 		'dotRadius'
 	],
-	#category : #'ViennaTalk-LivelyWalkThrough-Core'
+	#category : 'ViennaTalk-LivelyWalkThrough-Core',
+	#package : 'ViennaTalk-LivelyWalkThrough-Core'
 }
 
-{ #category : #json }
+{ #category : 'json' }
 LWTPlotWidget >> asJsonObject [
 	^ super asJsonObject
 		at: 'rawData' put: self rawData;
@@ -22,24 +23,24 @@ LWTPlotWidget >> asJsonObject [
 		yourself
 ]
 
-{ #category : #events }
+{ #category : 'events' }
 LWTPlotWidget >> availableEventSelectors [
 
 	^ #( changed assigned )
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTPlotWidget >> basename [
 	^ 'Plot' copy
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTPlotWidget >> bigDot [
 	dotRadius := 4.
 	self changed
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTPlotWidget >> changeColor [
 
 	| dialog |
@@ -50,7 +51,7 @@ LWTPlotWidget >> changeColor [
 	dialog cancelled ifFalse: [ self color: dialog selectedColor ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTPlotWidget >> changeTextFont [
 
 	FontChooser
@@ -59,7 +60,7 @@ LWTPlotWidget >> changeTextFont [
 		onAcceptDo: [ :f | self textFont: f ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTPlotWidget >> data: anArrayOfNumber [
 	anArrayOfNumber isNumber
 		ifTrue: [ 
@@ -86,7 +87,7 @@ LWTPlotWidget >> data: anArrayOfNumber [
 	data := nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTPlotWidget >> dataBounds [
 	^ dataBounds
 		ifNil: [ 
@@ -120,7 +121,7 @@ LWTPlotWidget >> dataBounds [
 			minX @ minY corner: maxX @ maxY ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 LWTPlotWidget >> dataPointsDo: aBlock [
 	data isNil
 		ifTrue: [ ^ self ].
@@ -140,53 +141,53 @@ LWTPlotWidget >> dataPointsDo: aBlock [
 	^ self
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 LWTPlotWidget >> defaultColor [
 	^ Color blue
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 LWTPlotWidget >> defaultData [
 	^ Array new
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 LWTPlotWidget >> defaultDotRadius [
 	^ 4
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 LWTPlotWidget >> defaultExtent [
 	^ 200 @ 200
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 LWTPlotWidget >> defaultLineWidth [
 	^ 3
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 LWTPlotWidget >> defaultTextFont [
 	^ TextStyle default defaultFont
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 LWTPlotWidget >> defaultValue [
 	^ String new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTPlotWidget >> dotRadius [
 	^ dotRadius 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTPlotWidget >> dotRadius: aNumber [
 	dotRadius := aNumber.
 	self changed
 ]
 
-{ #category : #drawing }
+{ #category : 'drawing' }
 LWTPlotWidget >> drawOn: aCanvas [
 	| font dBounds originX originY scaleX scaleY offsetX offsetY x0 y0 x1 y1 p |
 	font := TextStyle default defaultFont.
@@ -270,7 +271,7 @@ LWTPlotWidget >> drawOn: aCanvas [
 						ifFalse: [ p := nil ] ] ]
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 LWTPlotWidget >> initialize [
 	super initialize.
 	value := self defaultValue.
@@ -281,18 +282,18 @@ LWTPlotWidget >> initialize [
 	textFont := self defaultTextFont
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTPlotWidget >> lineWidth [
 	^ lineWidth
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTPlotWidget >> lineWidth: aNumber [
 	lineWidth := aNumber.
 	self changed
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTPlotWidget >> menu [
 	| menu |
 	menu := super menu.
@@ -325,24 +326,24 @@ LWTPlotWidget >> menu [
 	^ menu
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTPlotWidget >> noDot [
 	dotRadius := 0.
 	self changed
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTPlotWidget >> noLine [
 	lineWidth := 0.
 	self changed
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTPlotWidget >> rawData [
 	^ value
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTPlotWidget >> rawData: aString [
 	value := aString.
 	self
@@ -352,7 +353,7 @@ LWTPlotWidget >> rawData: aString [
 				do: [ :ex | nil ])
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTPlotWidget >> setDataBounds [
 	(UIManager default
 		request: 'data bounds (min x, min y, max x, max y)'
@@ -391,47 +392,47 @@ LWTPlotWidget >> setDataBounds [
 				do: [ :ex | ^ false ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTPlotWidget >> smallDot [
 	dotRadius := 2.
 	self changed
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTPlotWidget >> textFont [
 	^ textFont ifNil: [ textFont := self defaultTextFont ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTPlotWidget >> textFont: aFont [
 	textFont := aFont.
 	self changed
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTPlotWidget >> thickLine [
 	lineWidth := 3.
 	self changed
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTPlotWidget >> thinLine [
 	lineWidth := 1.
 	self changed
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTPlotWidget >> unsetDataBounds [
 	dataBounds := nil.
 	self changed
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTPlotWidget >> value [
 	^ value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTPlotWidget >> value: aVDMValue [
 	| oldValue |
 	oldValue := value.

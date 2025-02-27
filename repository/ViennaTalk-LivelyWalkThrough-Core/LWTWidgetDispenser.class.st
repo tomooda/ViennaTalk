@@ -1,6 +1,6 @@
 Class {
-	#name : #LWTWidgetDispenser,
-	#superclass : #Morph,
+	#name : 'LWTWidgetDispenser',
+	#superclass : 'Morph',
 	#instVars : [
 		'fieldWidget',
 		'plotWidget',
@@ -11,10 +11,11 @@ Class {
 		'areaWidget',
 		'remoteWidget'
 	],
-	#category : 'ViennaTalk-LivelyWalkThrough-Core'
+	#category : 'ViennaTalk-LivelyWalkThrough-Core',
+	#package : 'ViennaTalk-LivelyWalkThrough-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTWidgetDispenser >> areaWidget [
 	^ areaWidget
 		ifNil: [ 
@@ -28,7 +29,7 @@ LWTWidgetDispenser >> areaWidget [
 				yourself ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTWidgetDispenser >> buttonWidget [
 	^ buttonWidget
 		ifNil: [ 
@@ -40,7 +41,7 @@ LWTWidgetDispenser >> buttonWidget [
 				yourself ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTWidgetDispenser >> fieldWidget [
 	^ fieldWidget
 		ifNil: [ 
@@ -52,7 +53,7 @@ LWTWidgetDispenser >> fieldWidget [
 				yourself ]
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 LWTWidgetDispenser >> handleMouseDown: aMouseEvent [
 	| point |
 	aMouseEvent wasHandled: true.
@@ -75,12 +76,12 @@ LWTWidgetDispenser >> handleMouseDown: aMouseEvent [
 		ifTrue: [ LWTRemoteWidget new openInHand ]
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 LWTWidgetDispenser >> handlesMouseDown: aMouseEvent [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTWidgetDispenser >> imageWidget [
 	^ imageWidget
 		ifNil: [ 
@@ -94,7 +95,7 @@ LWTWidgetDispenser >> imageWidget [
 				yourself ]
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 LWTWidgetDispenser >> initialize [
 	super initialize.
 	self color: Color white.
@@ -112,7 +113,7 @@ LWTWidgetDispenser >> initialize [
 	self addMorphBack: self remoteWidget
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTWidgetDispenser >> nameFontForWidgets [
 	^ LogicalFont
 		familyName: TextStyle default defaultFont familyName
@@ -122,7 +123,7 @@ LWTWidgetDispenser >> nameFontForWidgets [
 		slantValue: 0
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTWidgetDispenser >> padWidget [
 	^ padWidget
 		ifNil: [ 
@@ -135,7 +136,7 @@ LWTWidgetDispenser >> padWidget [
 				yourself ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTWidgetDispenser >> plotWidget [
 	^ plotWidget
 		ifNil: [ 
@@ -149,7 +150,7 @@ LWTWidgetDispenser >> plotWidget [
 				yourself ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTWidgetDispenser >> remoteWidget [
 	^ remoteWidget
 		ifNil: [ 
@@ -161,7 +162,7 @@ LWTWidgetDispenser >> remoteWidget [
 				yourself ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTWidgetDispenser >> variableImageWidget [
 	^ variableImageWidget
 		ifNil: [ 

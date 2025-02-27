@@ -1,15 +1,16 @@
 Class {
-	#name : #LWTVariableImageWidget,
-	#superclass : #LWTWidget,
+	#name : 'LWTVariableImageWidget',
+	#superclass : 'LWTWidget',
 	#instVars : [
 		'form',
 		'value',
 		'forms'
 	],
-	#category : #'ViennaTalk-LivelyWalkThrough-Core'
+	#category : 'ViennaTalk-LivelyWalkThrough-Core',
+	#package : 'ViennaTalk-LivelyWalkThrough-Core'
 }
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTVariableImageWidget >> addImage [
 
 	| key |
@@ -31,7 +32,7 @@ LWTVariableImageWidget >> addImage [
 		self updateImage ]
 ]
 
-{ #category : #json }
+{ #category : 'json' }
 LWTVariableImageWidget >> asJsonObject [
 	^ super asJsonObject
 		at: 'base64Forms' put: self base64Forms;
@@ -39,12 +40,12 @@ LWTVariableImageWidget >> asJsonObject [
 		yourself
 ]
 
-{ #category : #events }
+{ #category : 'events' }
 LWTVariableImageWidget >> availableEventSelectors [
 	^ #(#changed #clicked #doubleClicked #entered #moved #left #up)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTVariableImageWidget >> base64Forms [
 	| base64Forms |
 	base64Forms := Dictionary new.
@@ -60,7 +61,7 @@ LWTVariableImageWidget >> base64Forms [
 	^ base64Forms
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTVariableImageWidget >> base64Forms: aDictionary [
 
 	| newForms |
@@ -74,12 +75,12 @@ LWTVariableImageWidget >> base64Forms: aDictionary [
 	self updateImage
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTVariableImageWidget >> basename [
 	^ 'VariableImage'
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTVariableImageWidget >> changeDefaultImage [
 	(LivelyWalkThrough
 		fileOpen: 'Select an image file'
@@ -93,7 +94,7 @@ LWTVariableImageWidget >> changeDefaultImage [
 			self updateImage ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTVariableImageWidget >> changeImageAt: key [
 	(LivelyWalkThrough
 		fileOpen: 'Select an image file'
@@ -107,22 +108,22 @@ LWTVariableImageWidget >> changeImageAt: key [
 			self updateImage ]
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 LWTVariableImageWidget >> click: aMouseEvent [
 	self event: #clicked
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 LWTVariableImageWidget >> defaultExtent [
 	^ 200 @ 200
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 LWTVariableImageWidget >> doubleClick: aMouseEvent [
 	self event: #doubleClicked
 ]
 
-{ #category : #drawing }
+{ #category : 'drawing' }
 LWTVariableImageWidget >> drawOn: aCanvas [
 	form
 		ifNil: [ 
@@ -145,46 +146,46 @@ LWTVariableImageWidget >> drawOn: aCanvas [
 	super drawOn: aCanvas
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 LWTVariableImageWidget >> handleMouseDown: aMouseEvent [
 	aMouseEvent hand waitForClicksOrDrag: self event: aMouseEvent.
 	^ super handleMouseDown: aMouseEvent
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 LWTVariableImageWidget >> handleMouseEnter: aMouseEvent [
 	self event: #entered
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 LWTVariableImageWidget >> handleMouseLeave: aMouseEvent [
 	self event: #left
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 LWTVariableImageWidget >> handleMouseMove: aMouseEvent [
 	self event: #moved.
 	^ super handleMouseMove: aMouseEvent
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 LWTVariableImageWidget >> handleMouseUp: aMouseEvent [
 	self event: #up
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 LWTVariableImageWidget >> initialize [
 	super initialize.
 	forms := Dictionary new
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTVariableImageWidget >> map: aDictionary [
 	forms := Dictionary new.
 	aDictionary keysAndValuesDo: [ :key :imagePath | forms at: key put: (ImageReadWriter formFromFileNamed: imagePath) ]
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 LWTVariableImageWidget >> menu [
 	| menu |
 	menu := super menu.
@@ -216,7 +217,7 @@ LWTVariableImageWidget >> menu [
 	^ menu
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTVariableImageWidget >> path: aString [
 	[ forms at: nil put: (Form fromFileNamed: aString) ]
 		on: Error
@@ -224,24 +225,24 @@ LWTVariableImageWidget >> path: aString [
 	self updateImage
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTVariableImageWidget >> rawValue [
 	^ value
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTVariableImageWidget >> rawValue: aString [
 	value := aString.
 	self updateImage
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTVariableImageWidget >> removeDefaultImage [
 	forms at: nil put: nil.
 	self updateImage
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTVariableImageWidget >> removeImageAt: key [
 	(UIManager default proceed: 'OK to remove mapping from ' , key , '?')
 		ifTrue: [ 
@@ -249,18 +250,18 @@ LWTVariableImageWidget >> removeImageAt: key [
 			self updateImage ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 LWTVariableImageWidget >> updateImage [
 	form := forms at: value ifAbsent: [ forms at: nil ifAbsent: [ nil ] ].
 	self changed
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTVariableImageWidget >> value [
 	^ value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTVariableImageWidget >> value: aString [
 	| oldValue |
 	oldValue := value.

@@ -1,29 +1,30 @@
 Class {
-	#name : #LWTVDMStateFrame,
-	#superclass : #LWTFrame,
+	#name : 'LWTVDMStateFrame',
+	#superclass : 'LWTFrame',
 	#instVars : [
 		'states'
 	],
-	#category : 'ViennaTalk-LivelyWalkThrough-Core'
+	#category : 'ViennaTalk-LivelyWalkThrough-Core',
+	#package : 'ViennaTalk-LivelyWalkThrough-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 LWTVDMStateFrame class >> states: aDictionaryOfBindings [ 
 	^ self new states: aDictionaryOfBindings;
 		 yourself
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 LWTVDMStateFrame >> isVDMStateFrame [
 	^ true
 ]
 
-{ #category : #'interface opening' }
+{ #category : 'interface opening' }
 LWTVDMStateFrame >> openBrowser [
 	^ ViennaBrowser open
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 LWTVDMStateFrame >> printOn: aStream [ 
 	timestamp printOn: aStream.
 	aStream nextPutAll: ' : State : {'.
@@ -41,12 +42,12 @@ LWTVDMStateFrame >> printOn: aStream [
 	aStream nextPutAll: '}'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTVDMStateFrame >> states [
 	^ states
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTVDMStateFrame >> states: aDictionaryOfBindings [
 	states := aDictionaryOfBindings
 ]
