@@ -247,7 +247,7 @@ ViennaLauncher class >> showSettingBrowser [
 { #category : 'class initialization' }
 ViennaLauncher class >> startUp [
 
-	self open
+	Smalltalk isInteractiveGraphic ifTrue: [ self open ]
 ]
 
 { #category : 'resources' }
