@@ -188,7 +188,7 @@ ViennaLauncher class >> formatYMDHMS: aDateAndTime [
 ViennaLauncher class >> initialize [
 
 	self installDesktopLogo.
-	SessionManager default registerToolClassNamed: self name.
+	SessionManager default registerUserClassNamed: self name.
 	self open
 ]
 
@@ -452,7 +452,10 @@ ViennaLauncher >> initializeWindow: aSpWindowPresenter [
 	aSpWindowPresenter
 		title: self defaultTitle;
 		beNotResizable;
-		initialExtent: logoImage image extent + (4 @ 50)
+		initialExtent: logoImage image extent + (4 @ 50);
+		initialPosition: 0 @ 25.
+	aSpWindowPresenter whenOpenedDo: [
+		aSpWindowPresenter resize: logoImage image extent + (4 @ 50) ]
 ]
 
 { #category : 'menu operations' }
