@@ -5,6 +5,84 @@ Class {
 	#package : 'BaselineOfViennaTalk'
 }
 
+{ #category : 'accessing' }
+BaselineOfViennaTalk class >> codename [
+
+	^ 'Nowhere'
+]
+
+{ #category : 'utilities' }
+BaselineOfViennaTalk class >> ensureIcebergRepository [
+
+	^ (IceRepository repositories
+		   detect: [ :repo | repo name = 'ViennaTalk' ]
+		   ifNone: [
+			   | repo |
+			   UIManager default
+				   informUser:
+				   'Cloning repository from the official ViennaTalk repository'
+				   during: [
+					   repo := IceRepositoryCreator new
+						           repository: nil;
+						           remote:
+							           (IceGitRemote url:
+									            'https://github.com/tomooda/ViennaTalk.git');
+						           location:
+							           FileLocator localDirectory / 'iceberg' / 'tomooda'
+							           / 'ViennaTalk';
+						           createRepository ].
+			   repo
+				   register;
+				   yourself ]) ifNotNil: [ :repo |
+		  repo
+			  checkoutBranch: (self isDev
+					   ifTrue: [ 'dev' ]
+					   ifFalse: [ 'main' ]);
+			  yourself ]
+]
+
+{ #category : 'testing' }
+BaselineOfViennaTalk class >> isDev [
+
+	^ self codename = 'Nowhere'
+]
+
+{ #category : 'utilities' }
+BaselineOfViennaTalk class >> updateFromOfficialRepository [
+
+	<script: 'BaselineOfViennaTalk updateFromOfficialRepository'>
+	| repository |
+	repository := self ensureIcebergRepository.
+	[ repository pull ]
+		on: IceExperimentalFeature
+		do: [ :ex | ex resume ].
+	[ (repository packageNamed: 'BaselineOfViennaTalk') reload ]
+		on: MCMergeOrLoadWarning
+		do: [ :ex | ex load ].
+	Cursor wait showWhile: [
+		| maxCount count |
+		maxCount := 5.
+		count := 0.
+		[
+		[
+		Metacello new
+			repository: 'gitlocal://' , (repository location / 'src') fullName;
+			baseline: 'ViennaTalk';
+			onConflictUseIncoming;
+			onWarningLog;
+			load ]
+			on: IceExperimentalFeature
+			do: [ :ex | ex resume ] ]
+			on: Error
+			do: [ :ex |
+				(count := count + 1) < maxCount
+					ifTrue: [
+						2 seconds wait.
+						ex retry ]
+					ifFalse: [ UIManager default alert: 'Failed to update' ] ] ].
+	Smalltalk snapshot: true andQuit: false
+]
+
 { #category : 'baselines' }
 BaselineOfViennaTalk >> baseline: spec [
 

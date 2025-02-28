@@ -235,14 +235,10 @@ ViennaLauncher class >> reopen [
 ViennaLauncher class >> showSettingBrowser [
 
 	SettingBrowser new
-		changePackageSet: {
-				(PackageOrganizer default packageNamed:
-						 #'ViennaTalk-Launcher-Core').
-				(PackageOrganizer default packageNamed: #'ViennaTalk-Browser-Core').
-				(PackageOrganizer default packageNamed: #'ViennaTalk-Engine-Core').
-				(PackageOrganizer default packageNamed: #'ViennaTalk-Parser-Core').
-				(PackageOrganizer default packageNamed: #'ViennaTalk-VDMPad-Core').
-				(PackageOrganizer default packageNamed: #'Network-Kernel') };
+		changePackageSet:
+			(PackageOrganizer default packages select: [ :package |
+					 package name beginsWith: 'ViennaTalk-' ])
+			, { (PackageOrganizer default packageNamed: #'Network-Kernel') };
 		open
 ]
 
@@ -375,7 +371,8 @@ ViennaLauncher >> close [
 
 { #category : 'accessing' }
 ViennaLauncher >> codename [
-	^ 'Nowhere'
+
+	^ BaselineOfViennaTalk codename
 ]
 
 { #category : 'layout' }
@@ -452,11 +449,8 @@ ViennaLauncher >> initializeWindow: aSpWindowPresenter [
 
 { #category : 'menu operations' }
 ViennaLauncher >> loadHead [
-	Metacello new
-		baseline: 'ViennaTalk';
-		repository: 'github://tomooda/ViennaTalk/repository';
-		onConflictUseIncoming;
-		load
+
+	BaselineOfViennaTalk updateFromOfficialRepository
 ]
 
 { #category : 'menus' }
@@ -517,7 +511,7 @@ ViennaLauncher >> systemMenu [
 		  addItem: [ :item |
 			  item
 				  name: 'update to the head on github';
-				  action: [ self loadHead ] ];
+				  action: [ BaselineOfViennaTalk updateFromOfficialRepository ] ];
 		  addItem: [ :item |
 			  item
 				  name: 'reopen';
