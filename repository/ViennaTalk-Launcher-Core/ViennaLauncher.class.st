@@ -186,7 +186,9 @@ ViennaLauncher class >> formatYMDHMS: aDateAndTime [
 
 { #category : 'class initialization' }
 ViennaLauncher class >> initialize [
+
 	self installDesktopLogo.
+	SessionManager default registerToolClassNamed: self name.
 	self open
 ]
 
@@ -240,6 +242,12 @@ ViennaLauncher class >> showSettingBrowser [
 					 package name beginsWith: 'ViennaTalk-' ])
 			, { (PackageOrganizer default packageNamed: #'Network-Kernel') };
 		open
+]
+
+{ #category : 'class initialization' }
+ViennaLauncher class >> startUp [
+
+	self open
 ]
 
 { #category : 'resources' }
