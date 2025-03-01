@@ -14,31 +14,26 @@ BaselineOfViennaTalk class >> codename [
 { #category : 'utilities' }
 BaselineOfViennaTalk class >> ensureIcebergRepository [
 
-	^ (IceRepository repositories
-		   detect: [ :repo | repo name = 'ViennaTalk' ]
-		   ifNone: [
-			   | repo |
-			   UIManager default
-				   informUser:
-				   'Cloning repository from the official ViennaTalk repository'
-				   during: [
-					   repo := IceRepositoryCreator new
-						           repository: nil;
-						           remote:
-							           (IceGitRemote url:
-									            'https://github.com/tomooda/ViennaTalk.git');
-						           location:
-							           FileLocator localDirectory / 'iceberg' / 'tomooda'
-							           / 'ViennaTalk';
-						           createRepository ].
-			   repo
-				   register;
-				   yourself ]) ifNotNil: [ :repo |
-		  repo
-			  checkoutBranch: (self isDev
-					   ifTrue: [ 'dev' ]
-					   ifFalse: [ 'main' ]);
-			  yourself ]
+	^ IceRepository repositories
+		  detect: [ :repo | repo name = 'ViennaTalk' ]
+		  ifNone: [
+			  | repo |
+			  UIManager default
+				  informUser:
+				  'Cloning repository from the official ViennaTalk repository'
+				  during: [
+					  repo := IceRepositoryCreator new
+						          repository: nil;
+						          remote:
+							          (IceGitRemote url:
+									           'https://github.com/tomooda/ViennaTalk.git');
+						          location:
+							          FileLocator localDirectory / 'iceberg' / 'tomooda'
+							          / 'ViennaTalk';
+						          createRepository ].
+			  repo
+				  register;
+				  yourself ]
 ]
 
 { #category : 'testing' }
@@ -51,11 +46,22 @@ BaselineOfViennaTalk class >> isDev [
 BaselineOfViennaTalk class >> updateFromOfficialRepository [
 
 	<script: 'BaselineOfViennaTalk updateFromOfficialRepository'>
-	| repository |
+	| repository branchName |
 	repository := self ensureIcebergRepository.
-	[ repository pull ]
-		on: IceExperimentalFeature
-		do: [ :ex | ex resume ].
+	branchName := self isDev
+		              ifTrue: [ 'dev' ]
+		              ifFalse: [ 'main' ].
+	repository
+		branchNamed: branchName
+		ifPresent: [ :branch |
+			[
+			branch
+				setUpstreamIfMissing: (repository remoteNamed: 'origin');
+				pull ]
+				on: IceExperimentalFeature
+				do: [ :ex | ex resume ] ]
+		ifAbsent: [
+		(repository remoteBranchNamed: 'origin/' , branchName) checkout ].
 	[ (repository packageNamed: 'BaselineOfViennaTalk') reload ]
 		on: MCMergeOrLoadWarning
 		do: [ :ex | ex load ].
