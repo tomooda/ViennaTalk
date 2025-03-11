@@ -104,21 +104,6 @@ ViennaRefactoringBrowser class >> createSignalIcon: color1 with: color2 with: co
 	^ form
 ]
 
-{ #category : 'layout' }
-ViennaRefactoringBrowser class >> defaultLayout [
-
-	^ SpBoxLayout newVertical
-		  add: #menuBar height: self buttonHeight;
-		  add: (SpPanedLayout newVertical
-				   positionOfSlider: 0.3;
-				   add: (SpBoxLayout newHorizontal
-						    add: #moduleList;
-						    add: #categoryList;
-						    add: #definitionList);
-				   add: #notebook);
-		  yourself
-]
-
 { #category : 'settings' }
 ViennaRefactoringBrowser class >> defaultTrafficSide [
 
@@ -902,6 +887,24 @@ ViennaRefactoringBrowser >> debugTestResultItem: aViennaTestResultItem [
 		  ifError: [ :msg | msg ]
 ]
 
+{ #category : 'layouts' }
+ViennaRefactoringBrowser >> defaultLayout [
+
+	^ SpBoxLayout newVertical
+		  add: menuBar height: self class buttonHeight;
+		  add: (SpPanedLayout newVertical
+				   positionOfSlider: 0.3;
+				   add: (SpPanedLayout newHorizontal
+						    positionOfSlider: 0.4;
+						    add: moduleList;
+						    add: (SpPanedLayout newHorizontal
+								     positionOfSlider: 0.3;
+								     add: categoryList;
+								     add: definitionList));
+				   add: notebook);
+		  yourself
+]
+
 { #category : 'accessing' }
 ViennaRefactoringBrowser >> definition [
 	^ definitionList selection selectedItem
@@ -1648,6 +1651,8 @@ ViennaRefactoringBrowser >> initializePresenters [
 	super initializePresenters.
 	menuBar := self menuBar.
 	moduleList := self newList
+		              borderWidth: 1;
+		              borderColor: Color darkGray;
 		              beSingleSelection;
 		              contextMenu: [ self moduleListContextMenu ];
 		              displayBackgroundColor: [ :ast |
@@ -1664,6 +1669,8 @@ ViennaRefactoringBrowser >> initializePresenters [
 				              updateEpiLogSourceText ];
 		              yourself.
 	categoryList := self newList
+		                borderWidth: 1;
+		                borderColor: Color darkGray;
 		                beSingleSelection;
 		                contextMenu: [ self categoryListContextMenu ];
 		                displayBackgroundColor: [ :ast |
@@ -1676,6 +1683,8 @@ ViennaRefactoringBrowser >> initializePresenters [
 		                whenSelectionChangedDo: [ self updateDefinitionList ];
 		                yourself.
 	definitionList := self newList
+		                  borderWidth: 1;
+		                  borderColor: Color darkGray;
 		                  beSingleSelection;
 		                  displayBackgroundColor: [ :ast |
 			                  (ast notNil and: [
@@ -2091,6 +2100,17 @@ ViennaRefactoringBrowser >> okToClose [
 ViennaRefactoringBrowser >> onTheFlyCheckSourceText [
 
 	self highlightSourceText
+]
+
+{ #category : 'interface opening' }
+ViennaRefactoringBrowser >> openInExternalWindow [
+
+	<script: 'ViennaRefactoringBrowser new openInExternalWindow'>
+	| morph |
+	morph := self build.
+	morph
+		openInExternalWindow;
+		layoutFrame: (0 @ 0 extent: 1 @ 1)
 ]
 
 { #category : 'private' }
