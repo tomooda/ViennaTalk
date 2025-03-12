@@ -11,7 +11,8 @@ Class {
 	#classVars : [
 		'Current',
 		'DateAndTimeFormat',
-		'Font'
+		'Font',
+		'MultiWindowMode'
 	],
 	#category : 'ViennaTalk-Launcher-Core',
 	#package : 'ViennaTalk-Launcher-Core'
@@ -214,6 +215,30 @@ ViennaLauncher class >> installDesktopLogo [
 				backgroundImage fullName ]
 ]
 
+{ #category : 'settings' }
+ViennaLauncher class >> isMultiWindowMode [
+
+	^ self multiWindowMode
+]
+
+{ #category : 'settings' }
+ViennaLauncher class >> isSingleWindowMode [
+
+	^ self multiWindowMode not
+]
+
+{ #category : 'settings' }
+ViennaLauncher class >> multiWindowMode [
+
+	^ MultiWindowMode = true
+]
+
+{ #category : 'settings' }
+ViennaLauncher class >> multiWindowMode: aBoolean [
+
+	MultiWindowMode := aBoolean = true
+]
+
 { #category : 'user interface' }
 ViennaLauncher class >> open [
 
@@ -278,11 +303,18 @@ ViennaLauncher class >> viennaSettingsOn: aBuilder [
 			(aBuilder group: #ViennaTalkAppearances)
 				label: 'Appearances';
 				with: [
+					(aBuilder setting: #multiWindowMode)
+						label: 'use Native multi-indows';
+						target: self;
+						description:
+							'Open OS windows if checked. Open in a Pharo window otherwise.';
+						order: 0.1 ];
+				with: [
 					(aBuilder setting: #font)
 						label: 'Font';
 						target: self;
 						description: 'The default font for VDM sources';
-						order: 0.1 ];
+						order: 0.2 ];
 				with: [
 					(aBuilder pickOne: #dateAndTimeFormat)
 						label: 'Date-Time format';
