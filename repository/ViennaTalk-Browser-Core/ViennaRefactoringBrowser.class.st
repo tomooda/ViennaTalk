@@ -2103,6 +2103,18 @@ ViennaRefactoringBrowser >> onTheFlyCheckSourceText [
 ]
 
 { #category : 'interface opening' }
+ViennaRefactoringBrowser >> open [
+
+	Smalltalk at: #ViennaLauncher ifPresent: [ :launcher |
+		launcher isMultiWindowMode ifTrue: [
+			^ self build
+				  openInExternalWindow;
+				  layoutFrame: (0 @ 0 extent: 1 @ 1);
+				  yourself ] ].
+	^ super open
+]
+
+{ #category : 'interface opening' }
 ViennaRefactoringBrowser >> openInExternalWindow [
 
 	<script: 'ViennaRefactoringBrowser new openInExternalWindow'>
