@@ -65,17 +65,17 @@ ViennaLauncher class >> dateAndTimeFormat: aSymbol [
 
 { #category : 'utilities' }
 ViennaLauncher class >> deploy [
+
 	<script>
 	GraphicFontSettings setFontsToStyleNamed: #small.
 	ViennaLauncher font: TextStyle defaultFont.
-	Smalltalk cleanUp: true except: {} confirming: false.
-	MCRepositoryGroup
-		allSubInstancesDo:
-			[ :group | group repositories do: [ :repo | group removeRepository: repo ] ].
+	ViennaLauncher setSingleWindowMode.
+	Smalltalk cleanUp: true except: {  } confirming: false.
+	MCRepositoryGroup allSubInstancesDo: [ :group |
+		group repositories do: [ :repo | group removeRepository: repo ] ].
 	IceRepository registry removeAll.
-	IceCredentialStore current
-		in:
-			[ :store | store allCredentials do: [ :each | each removeFrom: store ] ].
+	IceCredentialStore current in: [ :store |
+		store allCredentials do: [ :each | each removeFrom: store ] ].
 	World closeAllWindowsDiscardingChanges.
 	ViennaLauncher reopen.
 	Deprecation
@@ -87,9 +87,7 @@ ViennaLauncher class >> deploy [
 	Stdio useNullStreams.
 	MCCacheRepository uniqueInstance disable.
 	EpMonitor reset.
-	5
-		timesRepeat:
-			[ "PharoCommandLineHandler forcePreferencesOmission: true" Smalltalk garbageCollect ]
+	5 timesRepeat: [ Smalltalk garbageCollect ]
 ]
 
 { #category : 'settings' }
@@ -256,6 +254,18 @@ ViennaLauncher class >> reopen [
 		Current close.
 		Current := nil ].
 	^ self open
+]
+
+{ #category : 'settings' }
+ViennaLauncher class >> setMultiWindowMode [
+
+	^ self multiWindowMode: true
+]
+
+{ #category : 'settings' }
+ViennaLauncher class >> setSingleWindowMode [
+
+	^ self multiWindowMode: false
 ]
 
 { #category : 'menu operations' }

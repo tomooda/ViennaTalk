@@ -97,6 +97,11 @@ BaselineOfViennaTalk >> baseline: spec [
 		for: #common do: [
 			spec blessing: #baseline.
 			spec
+				baseline: 'ObjCBridge'
+				with: [ spec repository: 'github://tesonep/objcbridge/src' ];
+				baseline: 'ApplicationGenerator'
+				with: [
+					spec repository: 'github://tesonep/PharoApplicationGenerator/src' ];
 				baseline: 'HiDeHo'
 				with: [ spec repository: 'github://tomooda/HiDeHo:main/src' ];
 				baseline: 'FRAM'
@@ -111,6 +116,8 @@ BaselineOfViennaTalk >> baseline: spec [
 				baseline: 'ZincHTTPComponents'
 				with: [ spec repository: 'github://svenvc/zinc/repository' ].
 			spec
+				package: 'ViennaTalk-Application'
+				with: [ spec requires: #( 'ObjCBridge' 'ApplicationGenerator' ) ];
 				package: 'ViennaTalk-Animation-Core' with: [
 					spec requires:
 							#( 'ViennaTalk-Engine-Core' 'ViennaTalk-Value-Core' ) ];
@@ -220,6 +227,7 @@ BaselineOfViennaTalk >> baseline: spec [
 		with: [ spec requires: #( 'ViennaTalk-Refactoring-Core' ) ].
 
 	spec
+		group: 'Application' with: #( 'ViennaTalk-Application' );
 		group: 'ViennaFRAM' with: #( 'ViennaTalk-FRAM-Core' );
 		group: 'LivelyWalkThrough'
 		with: #( 'ViennaTalk-LivelyWalkThrough-Core' );
@@ -240,7 +248,7 @@ BaselineOfViennaTalk >> baseline: spec [
 		group: 'full'
 		with:
 			#( 'core' 'VDMPad' 'LivelyWalkThrough' 'tests' 'WeblyWalkThrough'
-			   'Transpiler' 'ViennaFRAM' );
+			   'Transpiler' 'ViennaFRAM' 'Application' );
 		group: 'tests'
 		with: #( 'ViennaTalk-Engine-Tests' 'ViennaTalk-Value-Tests'
 			   'ViennaTalk-Parser-Tests' 'ViennaTalk-Type-Tests'
