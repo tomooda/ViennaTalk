@@ -7,7 +7,10 @@ Class {
 		'redIcon',
 		'greenIcon',
 		'fileReference',
-		'highlighterProcess'
+		'highlighterProcess',
+		'signalsCache',
+		'removeButton',
+		'addButton'
 	],
 	#category : 'ViennaTalk-Browser-Core-Browsers',
 	#package : 'ViennaTalk-Browser-Core',
@@ -37,7 +40,35 @@ ViennaFileSyntaxDebugger >> accept: aString [
 			writeStreamDo: [ :stream |
 				stream nextPutAll: (aString asString asString withLineEndings:
 								 OSPlatform current lineEnding) ].
+		self flushSignalCache: fileRef.
 		fileList refresh ]
+]
+
+{ #category : 'operations' }
+ViennaFileSyntaxDebugger >> addFile [
+
+	fileReference isDirectory ifTrue: [
+		((self
+			  request: 'File name to create'
+			  initialAnswer: ''
+			  title: 'File Syntax Debugger') ifNotNil: #trim) ifNotNil: [ :name |
+			| newBasename |
+			newBasename := (fileReference / name withExtension: 'vdmsl')
+				               ensureCreateFile;
+				               basename.
+			self updateFileList.
+			fileList selectItem: (fileList items
+					 detect: [ :ref | ref basename = newBasename ]
+					 ifNone: [  ]) ] ]
+]
+
+{ #category : 'private' }
+ViennaFileSyntaxDebugger >> confirm: queryString label: titleString [
+
+	^ self application newConfirm
+		  title: titleString;
+		  label: queryString;
+		  openModal
 ]
 
 { #category : 'layout' }
@@ -45,8 +76,16 @@ ViennaFileSyntaxDebugger >> defaultLayout [
 
 	^ SpPanedLayout newHorizontal
 		  positionOfSlider: 0.3;
-		  add: fileList;
-		  add: sourceText
+		  add: (SpBoxLayout newVertical
+				   add: fileList;
+				   add: (SpBoxLayout newHorizontal
+						    add: addButton width: self class buttonHeight;
+						    add: removeButton width: self class buttonHeight;
+						    yourself)
+				   expand: false;
+				   yourself);
+		  add: sourceText;
+		  yourself
 ]
 
 { #category : 'accessing' }
@@ -65,10 +104,18 @@ ViennaFileSyntaxDebugger >> fileReference: aFileReference [
 { #category : 'updating' }
 ViennaFileSyntaxDebugger >> fileReferenceChanged [
 
-	self updateFileList
+	self
+		updateFileList;
+		updateButtons
 ]
 
-{ #category : 'icons' }
+{ #category : 'private' }
+ViennaFileSyntaxDebugger >> flushSignalCache: aFileReference [
+
+	signalsCache removeKey: aFileReference ifAbsent: [  ]
+]
+
+{ #category : 'accessing' }
 ViennaFileSyntaxDebugger >> greenIcon [
 
 	^ greenIcon ifNil: [
@@ -117,6 +164,13 @@ ViennaFileSyntaxDebugger >> highlightSourceText [
 ]
 
 { #category : 'initialization' }
+ViennaFileSyntaxDebugger >> initialize [
+
+	super initialize.
+	signalsCache := Dictionary new
+]
+
+{ #category : 'initialization' }
 ViennaFileSyntaxDebugger >> initializePresenters [
 
 	fileList := self newTable
@@ -130,6 +184,14 @@ ViennaFileSyntaxDebugger >> initializePresenters [
 				            beExpandable;
 		            whenSelectionChangedDo: [ self selectedFileChanged ];
 		            yourself.
+	addButton := self newButton
+		             icon: (self iconNamed: #add);
+		             action: [ self addFile ];
+		             yourself.
+	removeButton := self newButton
+		                icon: (self iconNamed: #remove);
+		                action: [ self removeFile ];
+		                yourself.
 	sourceText := self newVDMSource
 		              whenTextChangedDo: [ self highlightSourceText ];
 		              whenSubmitDo: [ :text | self accept: text ];
@@ -145,7 +207,7 @@ ViennaFileSyntaxDebugger >> initializeWindow: aSpWindowPresenter [
 		title: 'Syntax Debugger'
 ]
 
-{ #category : 'icons' }
+{ #category : 'accessing' }
 ViennaFileSyntaxDebugger >> redIcon [
 
 	^ redIcon ifNil: [
@@ -159,27 +221,50 @@ ViennaFileSyntaxDebugger >> redIcon [
 		  redIcon ]
 ]
 
+{ #category : 'operations' }
+ViennaFileSyntaxDebugger >> removeFile [
+
+	fileList selectedItem ifNotNil: [ :ref |
+		(self
+			 confirm: 'Remove ' , ref basename , '?'
+			 label: 'File Syntax Debugger') ifTrue: [
+			ref ensureDelete.
+			self updateFileList ] ]
+]
+
 { #category : 'updating' }
 ViennaFileSyntaxDebugger >> selectedFileChanged [
 
-	self updateSourceText
+	self
+		updateSourceText;
+		updateButtons
 ]
 
-{ #category : 'icons' }
+{ #category : 'accessing' }
 ViennaFileSyntaxDebugger >> signalIconFor: aFileReference [
 
 	^ (aFileReference isFile and: [
-		   (ViennaVDMParser current document end parse:
-			    aFileReference contents) isPetit2Success ])
+		   signalsCache at: aFileReference ifAbsentPut: [
+			   (ViennaVDMParser current document end parse:
+				    aFileReference contents) isPetit2Success ] ])
 		  ifTrue: [ self greenIcon ]
 		  ifFalse: [ self redIcon ]
+]
+
+{ #category : 'updating' }
+ViennaFileSyntaxDebugger >> updateButtons [
+
+	addButton enabled: fileReference isDirectory.
+	removeButton enabled:
+		(fileReference isDirectory and: [ fileList selectedItem notNil ])
 ]
 
 { #category : 'updating' }
 ViennaFileSyntaxDebugger >> updateFileList [
 
 	fileReference isDirectory ifTrue: [
-		fileList items: (fileReference filesMatching: '*.vdmsl').
+		fileList
+			items: ((fileReference filesMatching: '*.vdmsl') sorted: #basename ascending).
 		^ self ].
 	fileReference isFile ifTrue: [
 		fileList items: { fileReference }.
