@@ -846,6 +846,15 @@ ViennaRefactoringBrowser >> clearSlice [
 	self sliceNodesChanged
 ]
 
+{ #category : 'private' }
+ViennaRefactoringBrowser >> confirm: queryString label: titleString [
+
+	^ self application newConfirm
+		  title: titleString;
+		  label: queryString;
+		  openModal
+]
+
 { #category : 'operations-epiLog' }
 ViennaRefactoringBrowser >> createNewNarrative [
 
@@ -2253,7 +2262,11 @@ ViennaRefactoringBrowser >> playgroundTextContextMenu [
 ViennaRefactoringBrowser >> reload [
 
 	^ fileReference ifNotNil: [ :ref |
-		  self loadSource: (self sourceFrom: ref) ]
+		  (self loadSource: (self sourceFrom: ref)) ifNil: [
+			  (self
+				   confirm: 'Do you want to open a File syntax debugger?'
+				   label: 'ViennaTalk') ifTrue: [
+				  ViennaFileSyntaxDebugger openOn: ref ] ] ]
 ]
 
 { #category : 'operations-epiLog' }
