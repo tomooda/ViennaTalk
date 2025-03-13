@@ -1384,6 +1384,15 @@ ViennaRefactoringBrowser >> hasFileReference [
 	^ fileReference notNil and: [ fileReference exists ]
 ]
 
+{ #category : 'testing' }
+ViennaRefactoringBrowser >> hasTypeError: aViennaNode [
+
+	^ pendingTypeError notNil and: [
+		  | errorNode |
+		  errorNode := pendingTypeError node.
+		  aViennaNode hasDescendantSuchThat: [ :node | errorNode == node ] ]
+]
+
 { #category : 'operations' }
 ViennaRefactoringBrowser >> highlightSourceText [
 
@@ -1656,12 +1665,9 @@ ViennaRefactoringBrowser >> initializePresenters [
 		              beSingleSelection;
 		              contextMenu: [ self moduleListContextMenu ];
 		              displayBackgroundColor: [ :ast |
-			              (ast notNil and: [
-					               ast hasAnyDescendantsSuchThat: [ :node |
-							               sliceNodes includes: node ] ])
-				              ifTrue: [ self sliceColor ]
-				              ifFalse: [ Color transparent ] ];
+			              self listBackgroundColorFor: ast ];
 		              display: [ :ast | ast ifNil: [ '-' ] ifNotNil: #first ];
+		              sortingBlock: #identifier ascending;
 		              whenSelectionChangedDo: [
 			              self
 				              updateCategoryList;
@@ -1674,11 +1680,7 @@ ViennaRefactoringBrowser >> initializePresenters [
 		                beSingleSelection;
 		                contextMenu: [ self categoryListContextMenu ];
 		                displayBackgroundColor: [ :ast |
-			                (ast notNil and: [
-					                 ast hasAnyDescendantsSuchThat: [ :node |
-							                 sliceNodes includes: node ] ])
-				                ifTrue: [ self sliceColor ]
-				                ifFalse: [ Color transparent ] ];
+			                self listBackgroundColorFor: ast ];
 		                display: [ :ast | self displayCategory: ast ];
 		                whenSelectionChangedDo: [ self updateDefinitionList ];
 		                yourself.
@@ -1687,11 +1689,7 @@ ViennaRefactoringBrowser >> initializePresenters [
 		                  borderColor: Color darkGray;
 		                  beSingleSelection;
 		                  displayBackgroundColor: [ :ast |
-			                  (ast notNil and: [
-					                   ast hasAnyDescendantsSuchThat: [ :node |
-							                   sliceNodes includes: node ] ])
-				                  ifTrue: [ self sliceColor ]
-				                  ifFalse: [ Color transparent ] ];
+			                  self listBackgroundColorFor: ast ];
 		                  contextMenu: [ self definitionListContextMenu ];
 		                  display: [ :ast |
 			                  ast
@@ -1831,6 +1829,18 @@ ViennaRefactoringBrowser >> jumpToModule: aString operation: anotherString [
 				detect: [ :item | item identifier = anotherString ]
 				ifNone: [ ^ self ]).
 	self updateSource
+]
+
+{ #category : 'accessing' }
+ViennaRefactoringBrowser >> listBackgroundColorFor: aViennaNode [
+
+	aViennaNode ifNil: [ ^ Color transparent ].
+	(aViennaNode hasDescendantSuchThat: [ :node |
+		 sliceNodes includes: node ]) ifTrue: [ ^ self sliceColor ].
+	pendingTypeError ifNotNil: [
+		(pendingTypeError node includesParent: aViennaNode) ifTrue: [
+			^ Color yellow ] ].
+	^ Color transparent
 ]
 
 { #category : 'operations' }
@@ -1999,10 +2009,13 @@ ViennaRefactoringBrowser >> modelChanged [
 		animation ifNotNil: [
 			| state |
 			state := epiLog state.
+			[
 			animation
 				specification: self specification
 				ifError: [ :msg | self notifyAnimationError: msg ].
-			animation state: state.
+			animation state: state ]
+				on: Exception
+				do: [ :ex | animation init ].
 			epiLog state: animation state ].
 		(epiLog hasSpecificationChange and: [ runsAllTests ]) ifTrue: [
 			self runAllTests ].
