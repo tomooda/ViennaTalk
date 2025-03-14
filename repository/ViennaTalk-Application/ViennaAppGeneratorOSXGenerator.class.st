@@ -45,7 +45,7 @@ VM_TYPE={VMType}
 # brew install create-dmg
 
 #Clean Up previous build
-rm -f $DMG_NAME
+rm -f *.dmg
 
 mkdir -p $APP_BUNDLE/Contents/Resources/
 
@@ -94,7 +94,7 @@ for ARCH in arm64 x86_64; do
   cp -r $APP_BUNDLE ./dmg/
   mkdir -p ./dmg/$APP_BUNDLE/Contents/MacOS
   cp -Rf pharo-vm-$ARCH/Pharo.app/Contents/MacOS/* ./dmg/$APP_BUNDLE/Contents/MacOS/
-  codesign --force --deep -s ViennaTalk dmg/$APP_BUNDLE
+  codesign --force --deep -s $APP_NAME dmg/$APP_BUNDLE
   create-dmg \\
     --volname "$APP_NAME Installer" \\
     --volicon "installer.icns" \\
@@ -107,7 +107,32 @@ for ARCH in arm64 x86_64; do
     --app-drop-link 450 120 \\
     "$APP_NAME-Installer-mac-$ARCH.dmg" \\
     "dmg/"
-done' withUnixLineEndings
+done
+if [ ! -d "./$APP_NAME-windows" ] 
+then
+    mkdir -p $APP_NAME-windows/Pharo
+    pushd $APP_NAME-windows
+    echo ".\Pharo\Pharo.exe .\$APP_NAME.image" > $APP_NAME.bat
+    cp -rp ../$APP_NAME.app/Contents/Resources/pharo-local .
+    cd Pharo
+    if [ $VM_TYPE -eq "headless" ]; then
+      curl --output vm.zip https://files.pharo.org/vm/pharo-spur64-headless/Windows-x86_64/latest10.zip
+    else
+      curl --output vm.zip https://files.pharo.org/vm/pharo-spur64/Windows-x86_64/stable10.zip
+    fi
+    unzip vm.zip
+    rm vm.zip
+    popd
+fi
+
+rm -rf $APP_NAME
+cp -rp $APP_NAME-windows $APP_NAME
+cp $APP_NAME.app/Contents/Resources/$APP_NAME.image $APP_NAME/
+cp $APP_NAME.app/Contents/Resources/$APP_NAME.changes $APP_NAME/
+cp $APP_NAME.app/Contents/Resources/*.sources $APP_NAME/
+rm -f $APP_NAME-win-x64.zip
+zip -r $APP_NAME-win-x64.zip $APP_NAME
+' withUnixLineEndings
 ]
 
 { #category : 'external resources' }
