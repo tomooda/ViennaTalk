@@ -22,6 +22,7 @@ ViennaCommandLineHandler class >> generateMacOS [
 				(#BundleIdentifier -> 'org.viennatalk.ViennaTalk').
 				(#ShortVersion -> BaselineOfViennaTalk codename).
 				(#DisplayName -> ('ViennaTalk ' , BaselineOfViennaTalk codename)).
+				(#CodesignName -> 'ViennaTalk').
 				(#IconSetFile
 				 ->
 					 ((IceRepository repositoryNamed: 'ViennaTalk') location

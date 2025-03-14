@@ -94,7 +94,7 @@ for ARCH in arm64 x86_64; do
   cp -r $APP_BUNDLE ./dmg/
   mkdir -p ./dmg/$APP_BUNDLE/Contents/MacOS
   cp -Rf pharo-vm-$ARCH/Pharo.app/Contents/MacOS/* ./dmg/$APP_BUNDLE/Contents/MacOS/
-  codesign --force --deep -s $APP_NAME dmg/$APP_BUNDLE
+  codesign --force --deep -s {CodesignName} dmg/$APP_BUNDLE
   create-dmg \\
     --volname "$APP_NAME Installer" \\
     --volicon "installer.icns" \\
@@ -145,7 +145,9 @@ ViennaAppGeneratorOSXGenerator >> externalResourceTargetDirectory [
 ViennaAppGeneratorOSXGenerator >> fillWithDefaults [
 
 	super fillWithDefaults.
-	properties at: #DeployPharoExpression ifAbsentPut: 'nil'
+	properties
+		at: #DeployPharoExpression ifAbsentPut: 'nil';
+		at: #CodesignName ifAbsentPut: '-'
 ]
 
 { #category : 'generating' }
