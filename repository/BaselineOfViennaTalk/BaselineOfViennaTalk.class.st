@@ -99,9 +99,8 @@ BaselineOfViennaTalk >> baseline: spec [
 			spec
 				baseline: 'ObjCBridge'
 				with: [ spec repository: 'github://tesonep/objcbridge/src' ];
-				baseline: 'ApplicationGenerator'
-				with: [
-					spec repository: 'github://tesonep/PharoApplicationGenerator/src' ];
+				baseline: 'Phleeter'
+				with: [ spec repository: 'github://tomooda/Phleeter:main/src' ];
 				baseline: 'HiDeHo'
 				with: [ spec repository: 'github://tomooda/HiDeHo:main/src' ];
 				baseline: 'FRAM'
@@ -117,7 +116,7 @@ BaselineOfViennaTalk >> baseline: spec [
 				with: [ spec repository: 'github://svenvc/zinc/repository' ].
 			spec
 				package: 'ViennaTalk-Application'
-				with: [ spec requires: #( 'ObjCBridge' 'ApplicationGenerator' ) ];
+				with: [ spec requires: #( 'ObjCBridge' 'Phleeter' ) ];
 				package: 'ViennaTalk-Animation-Core' with: [
 					spec requires:
 							#( 'ViennaTalk-Engine-Core' 'ViennaTalk-Value-Core' ) ];

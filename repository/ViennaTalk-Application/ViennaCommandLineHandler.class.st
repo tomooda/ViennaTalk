@@ -15,7 +15,7 @@ ViennaCommandLineHandler class >> commandName [
 ViennaCommandLineHandler class >> generateMacOS [
 
 	<script: 'ViennaCommandLineHandler generateMacOS'>
-	ViennaAppGeneratorOSXGenerator new
+	PhleeterOnOSX new
 		properties: {
 				(#AppName -> 'ViennaTalk').
 				(#InfoString -> 'VDM IDE on Pharo').
