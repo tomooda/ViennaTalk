@@ -27,10 +27,16 @@ ViennaCommandLineHandler class >> generateMacOS [
 				 ->
 					 ((IceRepository repositoryNamed: 'ViennaTalk') location
 					  / 'resources' / 'ViennaTalk.icns')).
+				(#DiskIconSetFile
+				 ->
+					 ((IceRepository repositoryNamed: 'ViennaTalk') location
+					  / 'resources' / 'disk.icns')).
 				(#CommandLineHandler -> self commandName).
 				(#CompanyName -> 'ViennaTalk project').
 				(#DeployPharoExpression -> 'ViennaLauncher deploy') } asDictionary;
-		outputDirectory: FileLocator home / 'src' / 'ViennaTalk' / 'mac';
+		outputDirectory: FileLocator home / 'src' / 'ViennaTalk' / 'build';
+		targetPlatforms:
+			#( 'Darwin-arm64' 'Darwin-x86_64' 'Windows-x86_64' );
 		addExternalFile:
 			(IceRepository repositoryNamed: 'ViennaTalk') location
 			/ 'resources' / 'ViennaTalk-logo-transparent.png'
