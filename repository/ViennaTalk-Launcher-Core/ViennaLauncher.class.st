@@ -450,6 +450,7 @@ ViennaLauncher >> defaultTitle [
 ViennaLauncher >> devMenu [
 
 	^ self newMenu
+		  title: 'Dev';
 		  addAllFromPragma: #ViennaDevMenu target: self;
 		  yourself
 ]
@@ -510,6 +511,7 @@ ViennaLauncher >> loadHead [
 ViennaLauncher >> openMenu [
 
 	^ self newMenu
+		  title: 'Models';
 		  addGroup: [ :group |
 			  (FileLocator viennaTalkDocumentDirectory directories
 				   asSortedCollection: #basename ascending) do: [ :dir |
@@ -557,22 +559,19 @@ ViennaLauncher >> showSettingBrowser [
 ViennaLauncher >> systemMenu [
 
 	^ self newMenu
+		  title: 'System';
 		  addItem: [ :item |
 			  item
-				  name: 'settings...';
+				  name: 'Settings...';
 				  action: [ self showSettingBrowser ] ];
 		  addItem: [ :item |
 			  item
-				  name: 'update to the head on github';
+				  name: 'Update to the head on github';
 				  action: [ BaselineOfViennaTalk updateFromOfficialRepository ] ];
 		  addItem: [ :item |
 			  item
-				  name: 'reopen';
-				  action: [ self reopen ] ];
-		  addItem: [ :item |
-			  item
-				  name: 'close';
-				  action: [ self close ] ];
+				  name: 'Quit';
+				  action: [ Smalltalk snapshot: false andQuit: true ] ];
 		  yourself
 ]
 
@@ -587,6 +586,7 @@ ViennaLauncher >> toggleVDMPad [
 ViennaLauncher >> toolsMenu [
 
 	^ self newMenu
+		  title: 'Tools';
 		  addAllFromPragma: #ViennaToolsMenu target: self;
 		  yourself
 ]

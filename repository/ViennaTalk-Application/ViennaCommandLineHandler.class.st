@@ -55,29 +55,25 @@ ViennaCommandLineHandler >> activate [
 { #category : 'activation' }
 ViennaCommandLineHandler >> installMenu [
 
+	<script: 'ViennaCommandLineHandler new installMenu'>
 	OSWindowDriver current startUp: true.
 	OSPlatform current isMacOSX ifTrue: [
 		| main |
 		main := CocoaMenu new.
 		main
 			title: 'MainMenu';
-			addSubmenu: 'ViennaTalk' with: [ :m |
-				m
-					addItemWithTitle: 'Settings...'
-					action: [ ViennaLauncher showSettingBrowser ];
-					addItemWithTitle: 'Quit'
-					action: [ Smalltalk snapshot: false andQuit: true ]
-					shortcut: 'q' ];
+			add: ViennaLauncher current systemMenu asCocoaMenu;
 			addSubmenu: 'File' with: [ :m |
-			m
-				addItemWithTitle: 'Open Browsesr'
-				action: [ ViennaRefactoringBrowser new open ];
-				addItemWithTitle: 'Open Launcher'
-				action: [ ViennaLauncher reopen ] ];
+				m
+					addItemWithTitle: 'Open Browsesr'
+					action: [ ViennaRefactoringBrowser new open ];
+					addItemWithTitle: 'Open Launcher'
+					action: [ ViennaLauncher reopen ] ];
+			add: ViennaLauncher current toolsMenu asCocoaMenu;
 			addSubmenu: 'Help' with: [ :m |
 			m
-				addItemWithTitle: 'Show Help'
-				action: [ self inform: 'Help' ]
+				addItemWithTitle: 'ViennaTalk docs'
+				action: [MicDocumentBrowserPresenter openDocument: 'github://tomooda/ViennaTalk:main/docs']
 				shortcut: '' ].
 		main setAsMainMenu ]
 ]
