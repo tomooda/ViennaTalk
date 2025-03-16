@@ -246,7 +246,8 @@ ViennaFileSyntaxDebugger >> signalIconFor: aFileReference [
 	^ (aFileReference isFile and: [
 		   signalsCache at: aFileReference ifAbsentPut: [
 			   (ViennaVDMParser current document end parse:
-				    aFileReference contents) isPetit2Success ] ])
+				    aFileReference contents withInternalLineEndings)
+				   isPetit2Success ] ])
 		  ifTrue: [ self greenIcon ]
 		  ifFalse: [ self redIcon ]
 ]
@@ -277,5 +278,5 @@ ViennaFileSyntaxDebugger >> updateSourceText [
 
 	sourceText text: (fileList selectedItem
 			 ifNil: [ Text new ]
-			 ifNotNil: [ :fileRef | fileRef contents ])
+			 ifNotNil: [ :fileRef | fileRef contents withInternetLineEndings ])
 ]
