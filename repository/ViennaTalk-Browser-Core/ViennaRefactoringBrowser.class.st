@@ -49,7 +49,11 @@ Class {
 		'removeNarrativeButton',
 		'epiLogListSizeDropList',
 		'gitRemoteCommitList',
-		'gitOutgoingCommitList'
+		'gitOutgoingCommitList',
+		'gitCommitButton',
+		'gitCommitMenuButton',
+		'gitPullButton',
+		'gitPushButton'
 	],
 	#classVars : [
 		'GreenSignalIcon',
@@ -1390,30 +1394,80 @@ ViennaRefactoringBrowser >> getSource: aViennaNode [
 ]
 
 { #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitCanCommit [
+
+	^ self gitHasDirtyWorkingCopy
+]
+
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitCanPull [
+
+	self icebergRepositoryDo: [ :repository |
+		^ self gitHasDirtyWorkingCopy not and: [
+			  repository branch upstream includesCommit:
+				  repository branch commit ] ].
+	^ false
+]
+
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitCanPush [
+
+	self icebergRepositoryDo: [ :repository |
+		^ repository branch includesCommit:
+			  repository branch upstream commit ].
+	^ false
+]
+
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitCommit [
+
+	self gitCanCommit ifTrue: [
+		| text |
+		(text := self newText) openDialog
+			title: 'Commit Message';
+			okAction: [
+				self gitCommitWithMessage: text text.
+				self updateGitOutgoingCommitList.
+				self updateGitButtons ] ]
+]
+
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitCommitAndPush [
+
+	self
+		gitCommit;
+		gitPush
+]
+
+{ #category : 'operations-git' }
 ViennaRefactoringBrowser >> gitCommitWithMessage: aString [
 
 	self icebergRepositoryDo: [ :repository |
 		repository
-			addFileToIndex: RelativePath new;
+			addFilesToIndex:
+				((repository location filesMatching: '*.vdmsl') collect: #basename);
 			commitIndexWithMessage: aString
-			andParents: { repository branch commit } ]
+			andParents: { repository branch commit }.
+		self updateGitOutgoingCommitList ]
 ]
 
 { #category : 'operations-git' }
 ViennaRefactoringBrowser >> gitFetch [
 
-	self icebergRepositoryDo: #fetch
+	self icebergRepositoryDo: #fetch.
+	self updateGitRemoteCommitList
 ]
 
 { #category : 'operations-git' }
-ViennaRefactoringBrowser >> gitIncomingCommitsDo: aBlock [
+ViennaRefactoringBrowser >> gitHasDirtyWorkingCopy [
 
 	self icebergRepositoryDo: [ :repository |
-		| headId |
-		headId := repository branch commit id.
-		repository branch upstream commits do: [ :commit |
-			commit id = headId ifTrue: [ ^ self ].
-			aBlock cull: commit ] ]
+		| headFileSystem |
+		headFileSystem := repository branch commit fileSystem.
+		(fileReference filesMatching: '*.vdmsl') do: [ :fileRef |
+			fileRef contents ~= (headFileSystem / fileRef basename) contents
+				ifTrue: [ ^ true ] ] ].
+	^ false
 ]
 
 { #category : 'operations-git' }
@@ -1425,20 +1479,13 @@ ViennaRefactoringBrowser >> gitLocalBranchIncludes: anIceCommit [
 ]
 
 { #category : 'operations-git' }
-ViennaRefactoringBrowser >> gitLocalCommitsDo: aBlock [
-
-	self icebergRepositoryDo: [ :repository |
-		repository branch commits do: aBlock ]
-]
-
-{ #category : 'operations-git' }
 ViennaRefactoringBrowser >> gitOutgoingCommitsDo: aBlock [
 
 	self icebergRepositoryDo: [ :repository |
-		| headId |
-		headId := repository branch upstream commit id.
+		| upstreamBranch |
+		upstreamBranch := repository branch upstream.
 		repository branch commits do: [ :commit |
-			commit id = headId ifTrue: [ ^ self ].
+			(upstreamBranch includesCommit: commit) ifTrue: [ ^ self ].
 			aBlock cull: commit ] ]
 ]
 
@@ -1450,10 +1497,20 @@ ViennaRefactoringBrowser >> gitPageLayout [
 		  add: (SpBoxLayout newVertical
 				   add: 'Remote' asPresenter expand: false;
 				   add: gitRemoteCommitList;
+				   add: (SpBoxLayout newHorizontal
+						    add: gitPullButton expand: false;
+						    yourself)
+				   expand: false;
 				   yourself);
 		  add: (SpBoxLayout newVertical
 				   add: 'Local' asPresenter expand: false;
 				   add: gitOutgoingCommitList;
+				   add: (SpBoxLayout newHorizontal
+						    add: gitCommitButton expand: false;
+						    add: gitCommitMenuButton width: 20;
+						    add: gitPushButton expand: false;
+						    yourself)
+				   expand: false;
 				   yourself);
 		  yourself
 ]
@@ -1461,13 +1518,25 @@ ViennaRefactoringBrowser >> gitPageLayout [
 { #category : 'operations-git' }
 ViennaRefactoringBrowser >> gitPull [
 
-	self icebergRepositoryDo: #pull
+	self icebergRepositoryDo: [ :repository |
+		self gitCanPull
+			ifTrue: [
+				repository pull.
+				self reload.
+				self updateGitPage ]
+			ifFalse: [
+			self alert: 'Can not pull into dirty working copy or local commits' ] ]
 ]
 
 { #category : 'operations-git' }
 ViennaRefactoringBrowser >> gitPush [
 
-	self icebergRepositoryDo: #push
+	self gitCanPush ifTrue: [
+		self icebergRepositoryDo: #push.
+		self
+			updateGitOutgoingCommitList;
+			updateGitRemoteCommitList;
+			updateGitButtons ]
 ]
 
 { #category : 'operations-git' }
@@ -1738,7 +1807,6 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 ViennaRefactoringBrowser >> initializeGitPagePresenters [
 
 	gitRemoteCommitList := self newTable
-		                       disable;
 		                       beResizable;
 		                       addColumn: ((SpStringTableColumn
 				                         title: 'date'
@@ -1747,7 +1815,7 @@ ViennaRefactoringBrowser >> initializeGitPagePresenters [
 							                         commit datetime ])
 				                        displayBackgroundColor: [ :commit |
 					                        (self gitLocalBranchIncludes: commit)
-						                        ifTrue: [ Color white ]
+						                        ifTrue: [ Color transparent ]
 						                        ifFalse: [ Color yellow ] ];
 				                        width: 100);
 		                       addColumn:
@@ -1756,7 +1824,7 @@ ViennaRefactoringBrowser >> initializeGitPagePresenters [
 				                         evaluated: #author)
 				                        displayBackgroundColor: [ :commit |
 					                        (self gitLocalBranchIncludes: commit)
-						                        ifTrue: [ Color white ]
+						                        ifTrue: [ Color transparent ]
 						                        ifFalse: [ Color yellow ] ];
 				                        width: 100);
 		                       addColumn:
@@ -1769,14 +1837,13 @@ ViennaRefactoringBrowser >> initializeGitPagePresenters [
 							                          ifFalse: [ '' ]) ])
 				                        displayBackgroundColor: [ :commit |
 					                        (self gitLocalBranchIncludes: commit)
-						                        ifTrue: [ Color white ]
+						                        ifTrue: [ Color transparent ]
 						                        ifFalse: [ Color yellow ] ];
 				                        yourself);
 		                       whenSelectionChangedDo: [
-		                       self selectedGitIncommingCommitChanged ];
+		                       self selectedGitRemoteCommitChanged ];
 		                       yourself.
 	gitOutgoingCommitList := self newTable
-		                         disable;
 		                         beResizable;
 		                         addColumn: ((SpStringTableColumn
 				                           title: 'date'
@@ -1796,8 +1863,24 @@ ViennaRefactoringBrowser >> initializeGitPagePresenters [
 							                           ifTrue: [ '...' ]
 							                           ifFalse: [ '' ]) ]);
 		                         whenSelectionChangedDo: [
-			                         self selectedGitLocalCommitChanged ];
-		                         yourself
+			                         self selectedGitOutgoingCommitChanged ];
+		                         yourself.
+	gitCommitButton := self newButton
+		                   label: 'Commit';
+		                   action: [ self gitCommit ];
+		                   yourself.
+	gitCommitMenuButton := self newButton
+		                       icon: (self iconNamed: #arrowDown);
+		                       action: [ self openGitCommitMenu ];
+		                       yourself.
+	gitPushButton := self newButton
+		                 label: 'Push';
+		                 action: [ self gitPush ];
+		                 yourself.
+	gitPullButton := self newButton
+		                 label: 'Pull';
+		                 action: [ self gitPull ];
+		                 yourself
 ]
 
 { #category : 'initialization' }
@@ -2324,6 +2407,21 @@ ViennaRefactoringBrowser >> open [
 	^ super open
 ]
 
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> openGitCommitMenu [
+
+	(self newMenu addGroup: [ :group |
+		 group
+			 addItem: [ :item |
+				 item
+					 name: 'Commit';
+					 action: [ self gitCommit ] ];
+			 addItem: [ :item |
+				 item
+					 name: 'Commit and Push';
+					 action: [ self gitCommitAndPush ] ] ]) openWithSpecAtPointer
+]
+
 { #category : 'interface opening' }
 ViennaRefactoringBrowser >> openInExternalWindow [
 
@@ -2714,13 +2812,13 @@ ViennaRefactoringBrowser >> saveAsFile [
 ]
 
 { #category : 'updating' }
-ViennaRefactoringBrowser >> selectedGitIncommingCommitChanged [
+ViennaRefactoringBrowser >> selectedGitOutgoingCommitChanged [
 
 	self updateGitButtons
 ]
 
 { #category : 'updating' }
-ViennaRefactoringBrowser >> selectedGitLocalCommitChanged [
+ViennaRefactoringBrowser >> selectedGitRemoteCommitChanged [
 
 	self updateGitButtons
 ]
@@ -3089,6 +3187,15 @@ ViennaRefactoringBrowser >> updateEpiLogSourceText [
 
 { #category : 'updating' }
 ViennaRefactoringBrowser >> updateGitButtons [
+
+	| gitCanCommit gitCanPush gitCanPull |
+	gitCanCommit := self gitCanCommit.
+	gitCanPush := self gitCanPush.
+	gitCanPull := self gitCanPull.
+	gitPullButton enabled: gitCanPull.
+	gitCommitButton enabled: gitCanCommit.
+	gitCommitMenuButton enabled: gitCanCommit & gitCanPush.
+	gitPushButton enabled: gitCanPush
 ]
 
 { #category : 'updating' }
