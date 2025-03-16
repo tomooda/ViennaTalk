@@ -47,7 +47,9 @@ Class {
 		'narrativeDropList',
 		'createNewNarrativeButton',
 		'removeNarrativeButton',
-		'epiLogListSizeDropList'
+		'epiLogListSizeDropList',
+		'gitRemoteCommitList',
+		'gitOutgoingCommitList'
 	],
 	#classVars : [
 		'GreenSignalIcon',
@@ -1387,10 +1389,106 @@ ViennaRefactoringBrowser >> getSource: aViennaNode [
 	^ aViennaNode tracingHighlightedSource
 ]
 
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitCommitWithMessage: aString [
+
+	self icebergRepositoryDo: [ :repository |
+		repository
+			addFileToIndex: RelativePath new;
+			commitIndexWithMessage: aString
+			andParents: { repository branch commit } ]
+]
+
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitFetch [
+
+	self icebergRepositoryDo: #fetch
+]
+
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitIncomingCommitsDo: aBlock [
+
+	self icebergRepositoryDo: [ :repository |
+		| headId |
+		headId := repository branch commit id.
+		repository branch upstream commits do: [ :commit |
+			commit id = headId ifTrue: [ ^ self ].
+			aBlock cull: commit ] ]
+]
+
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitLocalBranchIncludes: anIceCommit [
+
+	self icebergRepositoryDo: [ :repository |
+		^ repository branch includesCommit: anIceCommit ].
+	^ false
+]
+
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitLocalCommitsDo: aBlock [
+
+	self icebergRepositoryDo: [ :repository |
+		repository branch commits do: aBlock ]
+]
+
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitOutgoingCommitsDo: aBlock [
+
+	self icebergRepositoryDo: [ :repository |
+		| headId |
+		headId := repository branch upstream commit id.
+		repository branch commits do: [ :commit |
+			commit id = headId ifTrue: [ ^ self ].
+			aBlock cull: commit ] ]
+]
+
+{ #category : 'layouts' }
+ViennaRefactoringBrowser >> gitPageLayout [
+
+	^ SpPanedLayout newHorizontal
+		  positionOfSlider: 0.5;
+		  add: (SpBoxLayout newVertical
+				   add: 'Remote' asPresenter expand: false;
+				   add: gitRemoteCommitList;
+				   yourself);
+		  add: (SpBoxLayout newVertical
+				   add: 'Local' asPresenter expand: false;
+				   add: gitOutgoingCommitList;
+				   yourself);
+		  yourself
+]
+
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitPull [
+
+	self icebergRepositoryDo: #pull
+]
+
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitPush [
+
+	self icebergRepositoryDo: #push
+]
+
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitRemoteCommitsDo: aBlock [
+
+	self icebergRepositoryDo: [ :repository |
+		| headId |
+		headId := repository branch commit id.
+		repository branch upstream commits do: aBlock ]
+]
+
 { #category : 'testing' }
 ViennaRefactoringBrowser >> hasFileReference [
 
 	^ fileReference notNil and: [ fileReference exists ]
+]
+
+{ #category : 'testing' }
+ViennaRefactoringBrowser >> hasGit [
+
+	^ fileReference notNil and: [ (fileReference / '.git') isDirectory ]
 ]
 
 { #category : 'testing' }
@@ -1449,6 +1547,22 @@ ViennaRefactoringBrowser >> highlightSourceText [
 					                      do: [ :ex | self notifyTypeError: ex ] ] ].
 	                      highlighterProcess := nil ] forkAt:
 		                      Processor userBackgroundPriority
+]
+
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> icebergRepositoryDo: aBlock [
+
+	^ (fileReference notNil and: [ fileReference isDirectory ]) ifTrue: [
+		  (IceRepository repositoryNamed: fileReference basename)
+			  ifNotNil: aBlock
+			  ifNil: [
+				  self hasGit ifTrue: [
+					  aBlock cull: ((IceRepositoryCreator new
+							    repository: nil;
+							    location: fileReference;
+							    createRepository)
+							   register;
+							   yourself) ] ] ]
 ]
 
 { #category : 'updating' }
@@ -1621,6 +1735,72 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 ]
 
 { #category : 'initialization' }
+ViennaRefactoringBrowser >> initializeGitPagePresenters [
+
+	gitRemoteCommitList := self newTable
+		                       disable;
+		                       beResizable;
+		                       addColumn: ((SpStringTableColumn
+				                         title: 'date'
+				                         evaluated: [ :commit |
+					                         ViennaLauncher formatDateAndTime:
+							                         commit datetime ])
+				                        displayBackgroundColor: [ :commit |
+					                        (self gitLocalBranchIncludes: commit)
+						                        ifTrue: [ Color white ]
+						                        ifFalse: [ Color yellow ] ];
+				                        width: 100);
+		                       addColumn:
+			                       ((SpStringTableColumn
+				                         title: 'author'
+				                         evaluated: #author)
+				                        displayBackgroundColor: [ :commit |
+					                        (self gitLocalBranchIncludes: commit)
+						                        ifTrue: [ Color white ]
+						                        ifFalse: [ Color yellow ] ];
+				                        width: 100);
+		                       addColumn:
+			                       ((SpStringTableColumn
+				                         title: 'comment'
+				                         evaluated: [ :commit |
+					                         commit comment lines first
+					                         , (commit comment lines size > 2
+							                          ifTrue: [ '...' ]
+							                          ifFalse: [ '' ]) ])
+				                        displayBackgroundColor: [ :commit |
+					                        (self gitLocalBranchIncludes: commit)
+						                        ifTrue: [ Color white ]
+						                        ifFalse: [ Color yellow ] ];
+				                        yourself);
+		                       whenSelectionChangedDo: [
+		                       self selectedGitIncommingCommitChanged ];
+		                       yourself.
+	gitOutgoingCommitList := self newTable
+		                         disable;
+		                         beResizable;
+		                         addColumn: ((SpStringTableColumn
+				                           title: 'date'
+				                           evaluated: [ :commit |
+					                           ViennaLauncher formatDateAndTime:
+							                           commit datetime ]) width: 100);
+		                         addColumn:
+			                         ((SpStringTableColumn
+				                           title: 'author'
+				                           evaluated: #author) width: 100);
+		                         addColumn:
+			                         (SpStringTableColumn
+				                          title: 'comment'
+				                          evaluated: [ :commit |
+					                          commit comment lines first
+					                          , (commit comment lines size > 2
+							                           ifTrue: [ '...' ]
+							                           ifFalse: [ '' ]) ]);
+		                         whenSelectionChangedDo: [
+			                         self selectedGitLocalCommitChanged ];
+		                         yourself
+]
+
+{ #category : 'initialization' }
 ViennaRefactoringBrowser >> initializePlaygroundPagePresenters [
 
 	playgroundText := self newVDMSource
@@ -1711,6 +1891,7 @@ ViennaRefactoringBrowser >> initializePresenters [
 	self initializeSourcePagePresenters.
 	self initializePlaygroundPagePresenters.
 	self initializeEpiLogPagePresenters.
+	self initializeGitPagePresenters.
 	notebook := self newNotebook
 		            addPageTitle: 'Source' provider: [
 			            SpPresenter new
@@ -1724,7 +1905,14 @@ ViennaRefactoringBrowser >> initializePresenters [
 		            SpPresenter new
 			            layout: self epilogPageLayout;
 			            yourself ];
-		            whenSelectedPageChangedDo: [ self updateEpiLogPage ];
+		            addPageTitle: 'Git' provider: [
+		            SpPresenter new
+			            layout: self gitPageLayout;
+			            yourself ];
+		            whenSelectedPageChangedDo: [
+			            notebook selectedPage ifNotNil: [ :page |
+				            page title = 'EpiLog' ifTrue: [ self updateEpiLogPage ].
+				            page title = 'Git' ifTrue: [ self updateGitPage ] ] ];
 		            yourself.
 	self whenBuiltDo: [ :w |
 		| f |
@@ -2526,6 +2714,18 @@ ViennaRefactoringBrowser >> saveAsFile [
 ]
 
 { #category : 'updating' }
+ViennaRefactoringBrowser >> selectedGitIncommingCommitChanged [
+
+	self updateGitButtons
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> selectedGitLocalCommitChanged [
+
+	self updateGitButtons
+]
+
+{ #category : 'updating' }
 ViennaRefactoringBrowser >> selectedTimelineChanged [
 
 	^ self
@@ -2885,6 +3085,35 @@ ViennaRefactoringBrowser >> updateEpiLogSourceText [
 						epiLogSourceText text: module tracingHighlightedSource.
 						^ self ] ] ].
 		epiLogSourceText text: '' ]
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> updateGitButtons [
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> updateGitOutgoingCommitList [
+
+	gitOutgoingCommitList items: (Array streamContents: [ :stream |
+			 self gitOutgoingCommitsDo: [ :commit | stream nextPut: commit ] ]).
+	gitRemoteCommitList refresh
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> updateGitPage [
+
+	self
+		updateGitRemoteCommitList;
+		updateGitOutgoingCommitList;
+		updateGitButtons
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> updateGitRemoteCommitList [
+
+	gitRemoteCommitList items: (Array streamContents: [ :stream |
+			 self gitRemoteCommitsDo: [ :commit | stream nextPut: commit ] ]).
+	gitOutgoingCommitList refresh
 ]
 
 { #category : 'updating' }
