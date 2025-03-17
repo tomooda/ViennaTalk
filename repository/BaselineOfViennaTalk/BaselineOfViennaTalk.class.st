@@ -97,8 +97,6 @@ BaselineOfViennaTalk >> baseline: spec [
 		for: #common do: [
 			spec blessing: #baseline.
 			spec
-				baseline: 'ObjCBridge'
-				with: [ spec repository: 'github://tesonep/objcbridge/src' ];
 				baseline: 'Phleeter'
 				with: [ spec repository: 'github://tomooda/Phleeter:main/src' ];
 				baseline: 'HiDeHo'
