@@ -53,7 +53,11 @@ Class {
 		'gitCommitButton',
 		'gitCommitMenuButton',
 		'gitPullButton',
-		'gitPushButton'
+		'gitPushButton',
+		'gitMergeButton',
+		'gitFetchButton',
+		'gitDiffList',
+		'gitDiffText'
 	],
 	#classVars : [
 		'GreenSignalIcon',
@@ -1400,12 +1404,23 @@ ViennaRefactoringBrowser >> gitCanCommit [
 ]
 
 { #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitCanCommitAndPush [
+
+	^ self gitHasDirtyWorkingCopy and: [
+		  (self icebergRepositoryDo: [ :repository |
+			   repository branch includesCommit:
+				   repository branch upstream commit ]) = true ]
+]
+
+{ #category : 'operations-git' }
 ViennaRefactoringBrowser >> gitCanPull [
 
 	self icebergRepositoryDo: [ :repository |
 		^ self gitHasDirtyWorkingCopy not and: [
-			  repository branch upstream includesCommit:
-				  repository branch commit ] ].
+			  (repository branch upstream includesCommit:
+				   repository branch commit) and: [
+				  (repository branch includesCommit:
+					   repository branch upstream commit) not ] ] ].
 	^ false
 ]
 
@@ -1413,9 +1428,23 @@ ViennaRefactoringBrowser >> gitCanPull [
 ViennaRefactoringBrowser >> gitCanPush [
 
 	self icebergRepositoryDo: [ :repository |
-		^ repository branch includesCommit:
-			  repository branch upstream commit ].
+		^ (repository branch includesCommit:
+			   repository branch upstream commit) and: [
+			  (repository branch upstream includesCommit:
+				   repository branch commit) not ] ].
 	^ false
+]
+
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitChanges [
+
+	self specification ifNotNil: [ :ast |
+		self icebergRepositoryDo: [ :repository |
+			^ (ViennaNodeDiffSet
+				   from: (self sourceFrom: repository branch commit fileSystem)
+						   asViennaDocumentAst
+				   to: ast) condenseChanges ] ].
+	^ ViennaNodeDiffSet fromNodeChanges: #(  )
 ]
 
 { #category : 'operations-git' }
@@ -1434,9 +1463,16 @@ ViennaRefactoringBrowser >> gitCommit [
 { #category : 'operations-git' }
 ViennaRefactoringBrowser >> gitCommitAndPush [
 
-	self
-		gitCommit;
-		gitPush
+	self gitCanCommitAndPush ifTrue: [
+		| text |
+		(text := self newText) openDialog
+			title: 'Commit Message';
+			okAction: [
+				self gitCommitWithMessage: text text.
+				self icebergRepositoryDo: #push.
+				self updateGitOutgoingCommitList.
+				self updateGitRemoteCommitList.
+				self updateGitButtons ] ]
 ]
 
 { #category : 'operations-git' }
@@ -1455,7 +1491,8 @@ ViennaRefactoringBrowser >> gitCommitWithMessage: aString [
 ViennaRefactoringBrowser >> gitFetch [
 
 	self icebergRepositoryDo: #fetch.
-	self updateGitRemoteCommitList
+	self updateGitRemoteCommitList.
+	self updateGitButtons
 ]
 
 { #category : 'operations-git' }
@@ -1493,22 +1530,40 @@ ViennaRefactoringBrowser >> gitOutgoingCommitsDo: aBlock [
 ViennaRefactoringBrowser >> gitPageLayout [
 
 	^ SpPanedLayout newHorizontal
-		  positionOfSlider: 0.5;
-		  add: (SpBoxLayout newVertical
-				   add: 'Remote' asPresenter expand: false;
-				   add: gitRemoteCommitList;
-				   add: (SpBoxLayout newHorizontal
-						    add: gitPullButton expand: false;
-						    yourself)
-				   expand: false;
+		  positionOfSlider: 0.65;
+		  add: (SpBoxLayout newHorizontal
+				   add: (SpPanedLayout newVertical
+						    positionOfSlider: 0.4;
+						    add: (SpBoxLayout newVertical
+								     add: 'Local' asPresenter expand: false;
+								     add: gitOutgoingCommitList;
+								     add: (SpBoxLayout newHorizontal
+										      add: gitPullButton expand: false;
+										      add: gitPushButton expand: false;
+										      yourself)
+								     expand: false;
+								     yourself);
+						    add: (SpBoxLayout newVertical
+								     add: 'Remote' asPresenter expand: false;
+								     add: gitRemoteCommitList;
+								     add: (SpBoxLayout newHorizontal
+										      add: gitFetchButton expand: false;
+										      add: gitMergeButton expand: false;
+										      yourself)
+								     expand: false;
+								     yourself);
+						    yourself);
+				   add: ' ' asPresenter width: 7;
 				   yourself);
 		  add: (SpBoxLayout newVertical
-				   add: 'Local' asPresenter expand: false;
-				   add: gitOutgoingCommitList;
+				   add: 'Working copy' asPresenter expand: false;
+				   add: (SpPanedLayout newVertical
+						    positionOfSlider: 0.35;
+						    add: gitDiffList;
+						    add: gitDiffText);
 				   add: (SpBoxLayout newHorizontal
 						    add: gitCommitButton expand: false;
 						    add: gitCommitMenuButton width: 20;
-						    add: gitPushButton expand: false;
 						    yourself)
 				   expand: false;
 				   yourself);
@@ -1521,7 +1576,7 @@ ViennaRefactoringBrowser >> gitPull [
 	self icebergRepositoryDo: [ :repository |
 		self gitCanPull
 			ifTrue: [
-				repository pull.
+				repository branch commit: repository branch upstream commit.
 				self reload.
 				self updateGitPage ]
 			ifFalse: [
@@ -1842,6 +1897,8 @@ ViennaRefactoringBrowser >> initializeGitPagePresenters [
 				                        yourself);
 		                       whenSelectionChangedDo: [
 		                       self selectedGitRemoteCommitChanged ];
+		                       whenActivatedDo: [ :selection |
+		                       gitRemoteCommitList unselectAll ];
 		                       yourself.
 	gitOutgoingCommitList := self newTable
 		                         beResizable;
@@ -1864,8 +1921,24 @@ ViennaRefactoringBrowser >> initializeGitPagePresenters [
 							                           ifFalse: [ '' ]) ]);
 		                         whenSelectionChangedDo: [
 			                         self selectedGitOutgoingCommitChanged ];
+		                         activateOnSingleClick;
+		                         whenActivatedDo: [ :selection |
+			                         gitOutgoingCommitList unselectAll ];
 		                         yourself.
+	gitDiffList := self newTable
+		                  hideColumnHeaders;
+		                  beResizable;
+		                  addColumn:
+			                  (SpStringTableColumn evaluated: #printSummary);
+		                  addColumn:
+			                  (SpStringTableColumn evaluated: #printNames);
+		                  whenSelectionChangedDo: [
+			                  self updateGitDiffText ];
+		                  yourself.
+	gitDiffText := self newText.
+
 	gitCommitButton := self newButton
+		                   icon: (self iconNamed: #accept);
 		                   label: 'Commit';
 		                   action: [ self gitCommit ];
 		                   yourself.
@@ -1874,13 +1947,25 @@ ViennaRefactoringBrowser >> initializeGitPagePresenters [
 		                       action: [ self openGitCommitMenu ];
 		                       yourself.
 	gitPushButton := self newButton
+		                 icon: (self iconNamed: #down);
 		                 label: 'Push';
 		                 action: [ self gitPush ];
 		                 yourself.
 	gitPullButton := self newButton
+		                 icon: (self iconNamed: #up);
 		                 label: 'Pull';
 		                 action: [ self gitPull ];
-		                 yourself
+		                 yourself.
+	gitFetchButton := self newButton
+		                  icon: (self iconNamed: #refreshCircling);
+		                  label: 'Fetch';
+		                  action: [ self gitFetch ];
+		                  yourself.
+	gitMergeButton := self newButton
+		                  icon: (self iconNamed: #merge);
+		                  label: 'Merge';
+		                  action: [ self gitMerge ];
+		                  yourself
 ]
 
 { #category : 'initialization' }
@@ -3188,14 +3273,34 @@ ViennaRefactoringBrowser >> updateEpiLogSourceText [
 { #category : 'updating' }
 ViennaRefactoringBrowser >> updateGitButtons [
 
-	| gitCanCommit gitCanPush gitCanPull |
-	gitCanCommit := self gitCanCommit.
-	gitCanPush := self gitCanPush.
-	gitCanPull := self gitCanPull.
-	gitPullButton enabled: gitCanPull.
-	gitCommitButton enabled: gitCanCommit.
-	gitCommitMenuButton enabled: gitCanCommit & gitCanPush.
-	gitPushButton enabled: gitCanPush
+	gitFetchButton enabled: true.
+	gitPullButton enabled: self gitCanPull.
+	gitCommitButton enabled: self gitCanCommit.
+	gitCommitMenuButton enabled: self gitCanCommitAndPush.
+	gitPushButton enabled: self gitCanPush.
+	gitMergeButton disable
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> updateGitDiffList [
+
+	gitDiffList items: self gitChanges.
+	self updateGitDiffText
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> updateGitDiffText [
+
+	gitDiffList selectedItem
+		ifNotNil: [ :diff |
+			| text |
+			text := diff sourceDiffText.
+			gitDiffText text: text string asString asText.
+			gitDiffText withAdapterDo: [ :a |
+				a widgetDo: [ :w |
+					w text runs: text runs.
+					w textArea compose ] ] ]
+		ifNil: [ gitDiffText text: '' ]
 ]
 
 { #category : 'updating' }
@@ -3212,6 +3317,7 @@ ViennaRefactoringBrowser >> updateGitPage [
 	self
 		updateGitRemoteCommitList;
 		updateGitOutgoingCommitList;
+		updateGitDiffList;
 		updateGitButtons
 ]
 
@@ -3219,6 +3325,7 @@ ViennaRefactoringBrowser >> updateGitPage [
 ViennaRefactoringBrowser >> updateGitRemoteCommitList [
 
 	gitRemoteCommitList items: (Array streamContents: [ :stream |
+			 self icebergRepositoryDo: #fetch.
 			 self gitRemoteCommitsDo: [ :commit | stream nextPut: commit ] ]).
 	gitOutgoingCommitList refresh
 ]
