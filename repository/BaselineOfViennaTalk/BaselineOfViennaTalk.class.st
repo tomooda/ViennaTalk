@@ -114,7 +114,7 @@ BaselineOfViennaTalk >> baseline: spec [
 				with: [ spec repository: 'github://svenvc/zinc/repository' ].
 			spec
 				package: 'ViennaTalk-Application'
-				with: [ spec requires: #( 'ObjCBridge' 'Phleeter' ) ];
+				with: [ spec requires: #( 'Phleeter' ) ];
 				package: 'ViennaTalk-Animation-Core' with: [
 					spec requires:
 							#( 'ViennaTalk-Engine-Core' 'ViennaTalk-Value-Core' ) ];
