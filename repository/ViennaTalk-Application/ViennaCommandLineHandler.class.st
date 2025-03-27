@@ -12,9 +12,9 @@ ViennaCommandLineHandler class >> commandName [
 ]
 
 { #category : 'accessing' }
-ViennaCommandLineHandler class >> generateMacOS [
+ViennaCommandLineHandler class >> generate [
 
-	<script: 'ViennaCommandLineHandler generateMacOS'>
+	<script: 'ViennaCommandLineHandler generate'>
 	PhleeterOnOSX new
 		properties: {
 				(#AppName -> 'ViennaTalk').
