@@ -11,7 +11,34 @@ ViennaCommandLineHandler class >> commandName [
 	^ 'ViennaTalk'
 ]
 
-{ #category : 'accessing' }
+{ #category : 'utilities' }
+ViennaCommandLineHandler class >> deploy [
+
+	<script>
+	GraphicFontSettings setFontsToStyleNamed: #small.
+	ViennaLauncher font: TextStyle defaultFont.
+	ViennaLauncher setSingleWindowMode.
+	Smalltalk cleanUp: true except: {  } confirming: false.
+	MCRepositoryGroup allSubInstancesDo: [ :group |
+		group repositories do: [ :repo | group removeRepository: repo ] ].
+	IceRepository registry removeAll.
+	IceCredentialStore current in: [ :store |
+		store allCredentials do: [ :each | each removeFrom: store ] ].
+	World closeAllWindowsDiscardingChanges.
+	ViennaLauncher reopen.
+	Deprecation
+		raiseWarning: false;
+		showWarning: false.
+	NoChangesLog install.
+	"NoPharoFilesOpener install."
+	FFICompilerPlugin install.
+	Stdio useNullStreams.
+	MCCacheRepository uniqueInstance disable.
+	EpMonitor reset.
+	5 timesRepeat: [ Smalltalk garbageCollect ]
+]
+
+{ #category : 'utilities' }
 ViennaCommandLineHandler class >> generate [
 
 	<script: 'ViennaCommandLineHandler generate'>
@@ -33,7 +60,8 @@ ViennaCommandLineHandler class >> generate [
 					  / 'resources' / 'disk.icns')).
 				(#CommandLineHandler -> self commandName).
 				(#CompanyName -> 'ViennaTalk project').
-				(#DeployPharoExpression -> 'ViennaLauncher deploy') } asDictionary;
+				(#DeployPharoExpression -> 'ViennaCommandLineHandler deploy') }
+				asDictionary;
 		outputDirectory: FileLocator home / 'src' / 'ViennaTalk' / 'build';
 		targetPlatforms:
 			#( 'Darwin-arm64' 'Darwin-x86_64' 'Windows-x86_64' );

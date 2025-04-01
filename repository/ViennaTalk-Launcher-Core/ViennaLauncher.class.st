@@ -63,33 +63,6 @@ ViennaLauncher class >> dateAndTimeFormat: aSymbol [
 	DateAndTimeFormat := aSymbol asSymbol
 ]
 
-{ #category : 'utilities' }
-ViennaLauncher class >> deploy [
-
-	<script>
-	GraphicFontSettings setFontsToStyleNamed: #small.
-	ViennaLauncher font: TextStyle defaultFont.
-	ViennaLauncher setSingleWindowMode.
-	Smalltalk cleanUp: true except: {  } confirming: false.
-	MCRepositoryGroup allSubInstancesDo: [ :group |
-		group repositories do: [ :repo | group removeRepository: repo ] ].
-	IceRepository registry removeAll.
-	IceCredentialStore current in: [ :store |
-		store allCredentials do: [ :each | each removeFrom: store ] ].
-	World closeAllWindowsDiscardingChanges.
-	ViennaLauncher reopen.
-	Deprecation
-		raiseWarning: false;
-		showWarning: false.
-	NoChangesLog install.
-	"NoPharoFilesOpener install."
-	FFICompilerPlugin install.
-	Stdio useNullStreams.
-	MCCacheRepository uniqueInstance disable.
-	EpMonitor reset.
-	5 timesRepeat: [ Smalltalk garbageCollect ]
-]
-
 { #category : 'settings' }
 ViennaLauncher class >> font [
 	^ Font ifNil: [ Font := StandardFonts codeFont ]
@@ -455,6 +428,44 @@ ViennaLauncher >> devMenu [
 		  yourself
 ]
 
+{ #category : 'menu operations' }
+ViennaLauncher >> gitClone [
+
+	^ ((self
+		    request: 'URL of the remote git repository'
+		    initialAnswer: 'git@github.com:owner/repository'
+		    title: 'git clone') ifNil: [ '' ] ifNotNil: #trim) ifNotEmpty: [
+		  :urlString |
+		  | local repo |
+		  [
+		  | dirname |
+		  dirname := (self
+			              request: 'New model directory name'
+			              initialAnswer:
+			              (urlString asZnUrl file copyUpToLast: $.)
+			              title: 'git clone') ifNil: [ ^ nil ] ifNotNil: #trim.
+		  dirname notEmpty and: [
+			  local := FileLocator viennaTalkDocumentDirectory / dirname.
+			  local exists not or: [
+				  self alert: dirname , ' already exists.'.
+				  false ] ] ] whileFalse.
+		  self informUser: 'Cloning repository from ' , urlString during: [
+			  repo := [
+			          IceRepositoryCreator new
+				          repository: nil;
+				          remote: (IceGitRemote url: urlString);
+				          location: local;
+				          createRepository ]
+				          on: Error
+				          do: [ :ex |
+					          self alert: 'git clone failed ' , ex messageText.
+					          ^ nil ] ].
+		  repo register.
+		  ViennaRefactoringBrowser new
+			  load: local;
+			  open ]
+]
+
 { #category : 'initialize-release' }
 ViennaLauncher >> initializePresenters [
 
@@ -540,7 +551,13 @@ ViennaLauncher >> openMenu [
 				  item
 					  name: 'Open a new model';
 					  icon: (Smalltalk ui iconNamed: #page);
-					  action: [ ViennaRefactoringBrowser new open ] ] ]
+					  action: [ ViennaRefactoringBrowser new open ] ] ];
+		  addGroup: [ :group |
+			  group addItem: [ :item |
+				  item
+					  name: 'Clone a git repository';
+					  icon: (self iconNamed: #git);
+					  action: [ self gitClone ] ] ]
 ]
 
 { #category : 'interface opening' }
