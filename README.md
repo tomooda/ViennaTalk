@@ -12,9 +12,9 @@ Downloads
 ---
 
 The latest release: [<kbd> <br> Milan <br> &nbsp; </kbd>](https://github.com/tomooda/ViennaTalk/releases/latest/)
-   * macOS / AppleSilicon [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://github.com/tomooda/ViennaTalk/releases/latest/download/ViennaTalk-Installer-Darwin-arm64.dmg)
-   * macOS / Intel processor [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://github.com/tomooda/ViennaTalk/releases/latest/download/ViennaTalk-Installer-Darwin-x86_64.dmg)
-   * windows64 / Intel processor [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://github.com/tomooda/ViennaTalk/releases/latest/download/ViennaTalk-Windows-x86_64.zip)
+   * macOS / AppleSilicon [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://viennatalk.org/builds/viennatalk/latest/ViennaTalk-Installer-Darwin-arm64.dmg)
+   * macOS / Intel processor [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://viennatalk.org/builds/viennatalk/latest/ViennaTalk-Installer-Darwin-x86_64.dmg)
+   * windows64 / Intel processor [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://viennatalk.org/builds/viennatalk/latest/ViennaTalk-Windows-x86_64.zip)
 
 Documentation
 ---
