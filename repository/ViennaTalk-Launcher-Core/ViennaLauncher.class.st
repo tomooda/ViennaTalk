@@ -476,7 +476,7 @@ ViennaLauncher >> initializePresenters [
 		              icon: (self iconNamed: #folder);
 		              label: 'Models';
 		              action: [
-			              self openMenu openWithSpecAt:
+			              self modelMenu openWithSpecAt:
 					              openButton adapter widget bounds bottomLeft ];
 		              yourself.
 	toolsButton := self newButton
@@ -521,7 +521,7 @@ ViennaLauncher >> loadHead [
 ]
 
 { #category : 'menus' }
-ViennaLauncher >> openMenu [
+ViennaLauncher >> modelMenu [
 
 	^ self newMenu
 		  title: 'Models';
