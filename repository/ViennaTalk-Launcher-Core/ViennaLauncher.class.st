@@ -434,36 +434,38 @@ ViennaLauncher >> gitClone [
 	^ ((self
 		    request: 'URL of the remote git repository'
 		    initialAnswer: 'git@github.com:owner/repository'
-		    title: 'git clone') ifNil: [ '' ] ifNotNil: #trim) ifNotEmpty: [
-		  :urlString |
-		  | local repo |
-		  [
-		  | dirname |
-		  dirname := (self
-			              request: 'New model directory name'
-			              initialAnswer:
-			              (urlString asZnUrl file copyUpToLast: $.)
-			              title: 'git clone') ifNil: [ ^ nil ] ifNotNil: #trim.
-		  dirname notEmpty and: [
-			  local := FileLocator viennaTalkDocumentDirectory / dirname.
-			  local exists not or: [
-				  self alert: dirname , ' already exists.'.
-				  false ] ] ] whileFalse.
-		  self informUser: 'Cloning repository from ' , urlString during: [
-			  repo := [
-			          IceRepositoryCreator new
-				          repository: nil;
-				          remote: (IceGitRemote url: urlString);
-				          location: local;
-				          createRepository ]
-				          on: Error
-				          do: [ :ex |
-					          self alert: 'git clone failed ' , ex messageText.
-					          ^ nil ] ].
-		  repo register.
-		  ViennaRefactoringBrowser new
-			  load: local;
-			  open ]
+		    title: 'git clone') ifNil: [ ^ nil ] ifNotNil: #trim)
+		  ifNotEmpty: [ :urlString |
+			  | local repo |
+			  [
+			  | dirname |
+			  dirname := (self
+				              request: 'Directory name'
+				              initialAnswer:
+				              (urlString asZnUrl file copyUpToLast: $.)
+				              title: 'git clone') ifNil: [ ^ nil ] ifNotNil: #trim.
+			  dirname notEmpty and: [
+				  local := FileLocator viennaTalkDocumentDirectory / dirname.
+				  local exists not or: [
+					  self alert: dirname , ' already exists.'.
+					  false ] ] ] whileFalse.
+			  self
+				  informUser: 'Cloning repository from ' , urlString
+				  during: [
+					  repo := [
+					          IceRepositoryCreator new
+						          repository: nil;
+						          remote: (IceGitRemote url: urlString);
+						          location: local;
+						          createRepository ]
+						          on: Error
+						          do: [ :ex |
+							          self alert: 'git clone failed ' , ex messageText.
+							          ^ nil ] ].
+			  repo register.
+			  ViennaRefactoringBrowser new
+				  load: local;
+				  open ]
 ]
 
 { #category : 'initialize-release' }
