@@ -91,17 +91,16 @@ ViennaCommandLineHandler >> installMenu [
 		main
 			title: 'MainMenu';
 			add: ViennaLauncher current systemMenu asCocoaMenu;
-			addSubmenu: 'File' with: [ :m |
-				m
-					addItemWithTitle: 'Open Browsesr'
-					action: [ ViennaRefactoringBrowser new open ];
-					addItemWithTitle: 'Open Launcher'
-					action: [ ViennaLauncher reopen ] ];
-			add: ViennaLauncher current toolsMenu asCocoaMenu;
+			add: (ViennaLauncher current toolsMenu addItem: [ :item |
+						 item
+							 name: 'Launcher';
+							 action: [ ViennaLauncher reopen ] ]) asCocoaMenu;
 			addSubmenu: 'Help' with: [ :m |
 			m
 				addItemWithTitle: 'ViennaTalk docs'
-				action: [MicDocumentBrowserPresenter openDocument: 'github://tomooda/ViennaTalk:main/docs']
+				action: [
+					MicDocumentBrowserPresenter openDocument:
+						'github://tomooda/ViennaTalk:main/docs' ]
 				shortcut: '' ].
 		main setAsMainMenu ]
 ]
