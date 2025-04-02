@@ -5,7 +5,6 @@ title: ViennaTalk
 description: Live and Formal
 release: Waikiki
 gihub:
-  arm_mac_url: https://github.com/tomooda/ViennaTalk/releases/latest/download/viennatalk-mac-arm64.dmg
-  intel_mac_url: https://github.com/tomooda/ViennaTalk/releases/latest/download/viennatalk-mac-x64.dmg
-  linux_url: https://github.com/tomooda/ViennaTalk/releases/latest/download/viennatalk-linux-x64.dmg
-  windows_url: https://github.com/tomooda/ViennaTalk/releases/latest/download/viennatalk-windows-x64.dmg
+  arm_mac_url: https://viennatalk.org/builds/viennatalk/latest/ViennaTalk-Installer-Darwin-arm64.dmg
+  intel_mac_url: https://viennatalk.org/builds/viennatalk/latest/ViennaTalk-Installer-Darwin-x86_64.dmg
+  windows_url: https://viennatalk.org/builds/viennatalk/latest/ViennaTalk-Windows-x86_64.zip
