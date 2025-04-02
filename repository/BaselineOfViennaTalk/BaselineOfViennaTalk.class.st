@@ -8,7 +8,7 @@ Class {
 { #category : 'accessing' }
 BaselineOfViennaTalk class >> codename [
 
-	^ 'Nowhere'
+	^ 'Milan'
 ]
 
 { #category : 'utilities' }
