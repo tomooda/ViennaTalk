@@ -567,6 +567,16 @@ ViennaLauncher >> reopen [
 	^ self class reopen
 ]
 
+{ #category : 'ui requests' }
+ViennaLauncher >> request: request initialAnswer: initialAnwser title: title [
+
+	^ self application newRequest
+		  title: title;
+		  label: request;
+		  text: initialAnwser;
+		  openModal
+]
+
 { #category : 'menu operations' }
 ViennaLauncher >> showSettingBrowser [
 	^ self class showSettingBrowser 
