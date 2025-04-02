@@ -1,6 +1,6 @@
-Extension { #name : #ViennaExplicitFunctionDefinitionNode }
+Extension { #name : 'ViennaExplicitFunctionDefinitionNode' }
 
-{ #category : #'*ViennaTalk-Parser-Core' }
+{ #category : '*ViennaTalk-Parser-Core' }
 ViennaExplicitFunctionDefinitionNode >> parser [
 
 	^ ViennaVDMParser new functionDefinition end

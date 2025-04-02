@@ -331,16 +331,6 @@ ViennaBrowser class >> viennaSettingsOn: aBuilder [
 		order: 0.50
 ]
 
-{ #category : 'world menu' }
-ViennaBrowser class >> viennaToolsMenuOn: aBuilder [
-	<ViennaToolsMenu>
-	(aBuilder item: #'VDM Browser')
-		action: [ self open ];
-		order: 0.11;
-		help: 'VDM-SL browser';
-		icon: nil
-]
-
 { #category : 'menu' }
 ViennaBrowser class >> workspacePaneMenu: aBuilder [
 
@@ -396,18 +386,6 @@ ViennaBrowser class >> workspacePaneMenu: aBuilder [
 	(aBuilder item: #Cancel translated)
 		keyText: 'l';
 		selector: #cancel
-]
-
-{ #category : 'world menu' }
-ViennaBrowser class >> worldMenuOn: aBuilder [
-
-	<worldMenu>
-	(aBuilder item: #'VDM Browser')
-		parent: #ViennaTalk;
-		action: [ self open ];
-		order: 0.11;
-		help: 'VDM-SL browser';
-		icon: nil
 ]
 
 { #category : 'value pane' }

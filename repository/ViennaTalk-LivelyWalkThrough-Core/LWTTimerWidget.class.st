@@ -1,15 +1,16 @@
 Class {
-	#name : #LWTTimerWidget,
-	#superclass : #LWTWidget,
+	#name : 'LWTTimerWidget',
+	#superclass : 'LWTWidget',
 	#instVars : [
 		'value',
 		'stepTime',
 		'stepping'
 	],
-	#category : #'ViennaTalk-LivelyWalkThrough-Core'
+	#category : 'ViennaTalk-LivelyWalkThrough-Core',
+	#package : 'ViennaTalk-LivelyWalkThrough-Core'
 }
 
-{ #category : #json }
+{ #category : 'json' }
 LWTTimerWidget >> asJsonObject [
 	^ super asJsonObject
 		at: 'rawValue' put: self rawValue;
@@ -17,34 +18,34 @@ LWTTimerWidget >> asJsonObject [
 		yourself
 ]
 
-{ #category : #events }
+{ #category : 'events' }
 LWTTimerWidget >> availableEventSelectors [
 
 	^ #( changed assigned )
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTTimerWidget >> basename [
 	^ 'Timer'
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTTimerWidget >> changeStepTime [
 	(UIManager default request: 'Enter interval in msecs' initialAnswer: stepTime printString title: self name)
 		ifNotNil: [ :answer | answer asInteger ifNotNil: [ :newTimeStep | self stepTime: newTimeStep ] ]
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 LWTTimerWidget >> defaultExtent [
 	^ 100@50
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 LWTTimerWidget >> defaultStepTime [
 	^ 100
 ]
 
-{ #category : #drawing }
+{ #category : 'drawing' }
 LWTTimerWidget >> drawOn: aCanvas [
 	| low high left middle right |
 	low := (self bounds bottom * 0.8 + (self bounds top * 0.2)) asInteger.
@@ -103,7 +104,7 @@ LWTTimerWidget >> drawOn: aCanvas [
 				color: Color black ]
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 LWTTimerWidget >> handleMouseDown: aMouseEvent [
 	aMouseEvent yellowButtonPressed
 		ifFalse: [ 
@@ -113,12 +114,12 @@ LWTTimerWidget >> handleMouseDown: aMouseEvent [
 	^ super handleMouseDown: aMouseEvent
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 LWTTimerWidget >> handlesMouseDown: anEvent [
 	^ true
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 LWTTimerWidget >> initialize [
 	super initialize.
 	value := 0.
@@ -126,7 +127,7 @@ LWTTimerWidget >> initialize [
 	stepping := false
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 LWTTimerWidget >> menu [
 	| menu |
 	menu := super menu.
@@ -137,18 +138,18 @@ LWTTimerWidget >> menu [
 	^ menu
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTTimerWidget >> rawValue [
 	^ value
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTTimerWidget >> rawValue: anInteger [
 	value := anInteger.
 	self changed
 ]
 
-{ #category : #stepping }
+{ #category : 'stepping' }
 LWTTimerWidget >> startStepping [
 	"Start getting sent the 'step' message."
 	super stopStepping.
@@ -156,19 +157,19 @@ LWTTimerWidget >> startStepping [
 	self startStepping: #stepAt: at: Time millisecondClockValue arguments: nil stepTime: stepTime.
 ]
 
-{ #category : #stepping }
+{ #category : 'stepping' }
 LWTTimerWidget >> step [
 	value := value + 1.
 	self event: #ticked.
 	self changed
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTTimerWidget >> stepTime [
 	^ stepTime
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTTimerWidget >> stepTime: aNumber [
 	stepTime := aNumber.
 	self stopStepping.
@@ -176,7 +177,7 @@ LWTTimerWidget >> stepTime: aNumber [
 		ifTrue: [ self startStepping ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTTimerWidget >> stepping: aBoolean [
 	stepping := aBoolean.
 	self stopStepping.
@@ -184,18 +185,18 @@ LWTTimerWidget >> stepping: aBoolean [
 		ifTrue: [ self startStepping ]
 ]
 
-{ #category : #stepping }
+{ #category : 'stepping' }
 LWTTimerWidget >> stopStepping [
 	stepping := false.
 	super stopStepping
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTTimerWidget >> value [
 	^ value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTTimerWidget >> value: aString [
 	aString asInteger
 		ifNotNil: [ :i | 
@@ -208,7 +209,7 @@ LWTTimerWidget >> value: aString [
 			self changed ]
 ]
 
-{ #category : #stepping }
+{ #category : 'stepping' }
 LWTTimerWidget >> wantsSteps [
 	^ false
 ]

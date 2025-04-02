@@ -58,13 +58,14 @@ ViennaDiffSetHiDeMatcher >> prevFrom: aViennaEpiLog [
 { #category : 'enumerfating' }
 ViennaDiffSetHiDeMatcher >> refereesFrom: aViennaGlobalName in: aViennaEpiLog do: aBlock [
 
-	self
-		refereesFrom: aViennaGlobalName
-		inDocument: aViennaEpiLog specification
-		do: aBlock;
-		refereesFrom: aViennaGlobalName
-		inDocument: (self prevFrom: aViennaEpiLog) specification
-		do: aBlock
+	(self prevFrom: aViennaEpiLog) ifNotNil: [ :prev |
+		self
+			refereesFrom: aViennaGlobalName
+			inDocument: aViennaEpiLog specification
+			do: aBlock;
+			refereesFrom: aViennaGlobalName
+			inDocument: prev specification
+			do: aBlock ]
 ]
 
 { #category : 'enumerfating' }
@@ -85,13 +86,14 @@ ViennaDiffSetHiDeMatcher >> refereesFrom: aViennaGlobalName inDocument: aViennaD
 { #category : 'enumerfating' }
 ViennaDiffSetHiDeMatcher >> referersTo: aViennaGlobalName in: aViennaEpiLog do: aBlock [
 
-	self
-		referersTo: aViennaGlobalName
-		inDocument: aViennaEpiLog specification
-		do: aBlock;
-		referersTo: aViennaGlobalName
-		inDocument: (self prevFrom: aViennaEpiLog) specification
-		do: aBlock
+	(self prevFrom: aViennaEpiLog) ifNotNil: [ :prev |
+		self
+			referersTo: aViennaGlobalName
+			inDocument: aViennaEpiLog specification
+			do: aBlock;
+			referersTo: aViennaGlobalName
+			inDocument: prev specification
+			do: aBlock ]
 ]
 
 { #category : 'enumerfating' }

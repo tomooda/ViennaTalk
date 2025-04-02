@@ -1,6 +1,6 @@
 Class {
-	#name : #LWTFieldWidget,
-	#superclass : #LWTWidget,
+	#name : 'LWTFieldWidget',
+	#superclass : 'LWTWidget',
 	#instVars : [
 		'contents',
 		'textFont',
@@ -8,10 +8,11 @@ Class {
 		'showsDiagram',
 		'type'
 	],
-	#category : #'ViennaTalk-LivelyWalkThrough-Core'
+	#category : 'ViennaTalk-LivelyWalkThrough-Core',
+	#package : 'ViennaTalk-LivelyWalkThrough-Core'
 }
 
-{ #category : #'menu declaration' }
+{ #category : 'menu declaration' }
 LWTFieldWidget class >> textEditorMenuOn: aBuilder [
 	"Specify the menu used when writing text. Try it with:
 	(PragmaMenuBuilder 
@@ -67,12 +68,12 @@ LWTFieldWidget class >> textEditorMenuOn: aBuilder [
 		icon: (self iconNamed: #smallCancelIcon)
 ]
 
-{ #category : #'menu declaration' }
+{ #category : 'menu declaration' }
 LWTFieldWidget class >> yellowButtonMenu [
 	^ (PragmaMenuBuilder pragmaKeyword: 'vdmTextEditorMenu' model: nil) menu
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTFieldWidget >> acceptContents: aStringOrText [
 	| oldContents |
 	oldContents := contents.
@@ -87,7 +88,7 @@ LWTFieldWidget >> acceptContents: aStringOrText [
 		ifError: [ false ]
 ]
 
-{ #category : #json }
+{ #category : 'json' }
 LWTFieldWidget >> asJsonObject [
 	^ super asJsonObject
 		at: 'contents' put: contents;
@@ -97,17 +98,17 @@ LWTFieldWidget >> asJsonObject [
 		yourself
 ]
 
-{ #category : #events }
+{ #category : 'events' }
 LWTFieldWidget >> availableEventSelectors [
 	^ #(changed)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTFieldWidget >> basename [
 	^ 'Field'
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 LWTFieldWidget >> buildTextPane [
 
 	textMorph := RubPluggableTextMorph
@@ -128,22 +129,22 @@ LWTFieldWidget >> buildTextPane [
 	^ textMorph
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTFieldWidget >> changeAnyType [
 	type := #any
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTFieldWidget >> changeNumberType [
 	type := #number
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTFieldWidget >> changeStringType [
 	type := #string
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTFieldWidget >> changeTextFont [
 
 	FontChooser
@@ -152,50 +153,50 @@ LWTFieldWidget >> changeTextFont [
 		onAcceptDo: [ :f | self textFont: f ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTFieldWidget >> changeVDMType [
 	type := #vdm
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTFieldWidget >> contents [
 	^ contents ifNil: [ self defaultContents ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTFieldWidget >> contents: aStringOrText [
 	contents := aStringOrText.
 	self changed: #contents
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 LWTFieldWidget >> contentsToValue: aString [
 	type = #string
 		ifTrue: [ ^ ViennaWriter new stringify: aString ].
 	^ aString
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 LWTFieldWidget >> defaultContents [
 	^ String new
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 LWTFieldWidget >> defaultExtent [
 	^ 200 @ 68
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 LWTFieldWidget >> defaultTextFont [
 	^ ViennaLauncher font
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 LWTFieldWidget >> defaultType [
 	^ #any
 ]
 
-{ #category : #drawing }
+{ #category : 'drawing' }
 LWTFieldWidget >> drawOn: aCanvas [
 	aCanvas
 		frameAndFillRectangle: self bounds
@@ -205,7 +206,7 @@ LWTFieldWidget >> drawOn: aCanvas [
 	super drawOn: aCanvas
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 LWTFieldWidget >> handlesMouseDown: anEvent [
 	self
 		allMorphsDo: [ :m | 
@@ -214,20 +215,20 @@ LWTFieldWidget >> handlesMouseDown: anEvent [
 	^ super handlesMouseDown: anEvent
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTFieldWidget >> hideDiagram [
 	showsDiagram := false.
 	textMorph ifNotNil: [ textMorph layoutFrame: self layoutFrameForTextPane ].
 	self changed
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTFieldWidget >> hideName [
 	super hideName.
 	textMorph ifNotNil: [ textMorph layoutFrame: self layoutFrameForTextPane ]
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 LWTFieldWidget >> initialize [
 
 	super initialize.
@@ -236,27 +237,27 @@ LWTFieldWidget >> initialize [
 	self buildTextPane
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 LWTFieldWidget >> isAnyType [
 	^ type = #any
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 LWTFieldWidget >> isNumberType [
 	^ type = #number
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 LWTFieldWidget >> isStringType [
 	^ type = #string
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 LWTFieldWidget >> isVDMType [
 	^ type = #vdm
 ]
 
-{ #category : #geometry }
+{ #category : 'geometry' }
 LWTFieldWidget >> layoutFrameForTextPane [
 	^ self showsDiagram
 		ifTrue: [ LayoutFrame identity
@@ -274,7 +275,7 @@ LWTFieldWidget >> layoutFrameForTextPane [
 				yourself ]
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 LWTFieldWidget >> menu [
 	| menu |
 	menu := super menu.
@@ -311,47 +312,47 @@ LWTFieldWidget >> menu [
 	^ menu
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTFieldWidget >> showDiagram [
 	showsDiagram := true.
 	textMorph ifNotNil: [ textMorph layoutFrame: self layoutFrameForTextPane ].
 	self changed
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTFieldWidget >> showName [
 	super showName.
 	textMorph ifNotNil: [ textMorph layoutFrame: self layoutFrameForTextPane ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTFieldWidget >> showsDiagram [
 	^ showsDiagram
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTFieldWidget >> showsDiagram: aBoolean [
 	showsDiagram := aBoolean = true
 ]
 
-{ #category : #geometry }
+{ #category : 'geometry' }
 LWTFieldWidget >> textExtent [
 	^ self width - 6 @ 50
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTFieldWidget >> textFont [
 	^ textFont ifNil: [ textFont := self defaultTextFont ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTFieldWidget >> textFont: aFont [
 	textFont := aFont.
 	textMorph ifNotNil: [ :m | m font: aFont ].
 	self changed
 ]
 
-{ #category : #geometry }
+{ #category : 'geometry' }
 LWTFieldWidget >> textOffset [
 	^ 3
 		@
@@ -362,22 +363,22 @@ LWTFieldWidget >> textOffset [
 						ifFalse: [ 0 ]))
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 LWTFieldWidget >> textPaneMenu: aMenu shifted: aBoolean [
 	^ aMenu addAllFrom: self class yellowButtonMenu
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTFieldWidget >> type [
 	^ type
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTFieldWidget >> type: aSymbol [
 	type := aSymbol
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 LWTFieldWidget >> validate: aString do: aBlock ifError: errorBlock [
 	type = #number
 		ifTrue: [ 
@@ -396,18 +397,18 @@ LWTFieldWidget >> validate: aString do: aBlock ifError: errorBlock [
 	^ aBlock value: aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTFieldWidget >> value [
 	^ self contentsToValue: self contents
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTFieldWidget >> value: aStringOrText [
 	self acceptContents: (self valueToContents: aStringOrText).
 	self changed: #contents
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 LWTFieldWidget >> valueToContents: aString [
 	type = #string
 		ifTrue: [ ^ ViennaReader new parseStringOn: aString trim readStream ].

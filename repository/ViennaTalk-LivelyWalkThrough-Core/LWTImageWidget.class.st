@@ -1,26 +1,27 @@
 Class {
-	#name : #LWTImageWidget,
-	#superclass : #LWTWidget,
+	#name : 'LWTImageWidget',
+	#superclass : 'LWTWidget',
 	#instVars : [
 		'form',
 		'value'
 	],
-	#category : #'ViennaTalk-LivelyWalkThrough-Core'
+	#category : 'ViennaTalk-LivelyWalkThrough-Core',
+	#package : 'ViennaTalk-LivelyWalkThrough-Core'
 }
 
-{ #category : #json }
+{ #category : 'json' }
 LWTImageWidget >> asJsonObject [
 	^ super asJsonObject
 		at: 'base64Form' put: self base64Form;
 		yourself
 ]
 
-{ #category : #events }
+{ #category : 'events' }
 LWTImageWidget >> availableEventSelectors [
 	^ #(#changed #clicked #doubleClicked #entered #moved #left #up)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTImageWidget >> base64Form [
 	^ form
 		ifNotNil: [ 
@@ -30,19 +31,19 @@ LWTImageWidget >> base64Form [
 				multiLine: false) contents ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTImageWidget >> base64Form: aString [
 
 	form := PNGReadWriter formFromStream:
 		        (Base64MimeConverter mimeDecodeToBytes: aString readStream)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTImageWidget >> basename [
 	^ 'Image'
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTImageWidget >> changeImage [
 	(LivelyWalkThrough
 		fileOpen: 'Select an image file'
@@ -55,22 +56,22 @@ LWTImageWidget >> changeImage [
 				do: [ :ex |  ] ]
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 LWTImageWidget >> click: aMouseEvent [
 	self event: #clicked
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 LWTImageWidget >> defaultExtent [
 	^ 200 @ 200
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 LWTImageWidget >> doubleClick: aMouseEvent [
 	self event: #doubleClicked
 ]
 
-{ #category : #drawing }
+{ #category : 'drawing' }
 LWTImageWidget >> drawOn: aCanvas [
 	form
 		ifNil: [ 
@@ -93,40 +94,40 @@ LWTImageWidget >> drawOn: aCanvas [
 	super drawOn: aCanvas
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 LWTImageWidget >> handleMouseDown: aMouseEvent [
 	aMouseEvent hand waitForClicksOrDrag: self event: aMouseEvent.
 	^ super handleMouseDown: aMouseEvent
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 LWTImageWidget >> handleMouseEnter: aMouseEvent [
 	self event: #entered
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 LWTImageWidget >> handleMouseLeave: aMouseEvent [
 	self event: #left
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 LWTImageWidget >> handleMouseMove: aMouseEvent [
 	self event: #moved.
 	^ super handleMouseMove: aMouseEvent
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 LWTImageWidget >> handleMouseUp: aMouseEvent [
 	self event: #up
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 LWTImageWidget >> initialize [
 	super initialize.
 	value := String new
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 LWTImageWidget >> menu [
 	| menu |
 	menu := super menu.
@@ -137,12 +138,12 @@ LWTImageWidget >> menu [
 	^ menu
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTImageWidget >> noImage [
 	form := nil
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTImageWidget >> path: aString [
 	form := [ ImageReadWriter formFromFileNamed: aString ]
 		on: Error
@@ -150,12 +151,12 @@ LWTImageWidget >> path: aString [
 	self changed
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTImageWidget >> value [
 	^ value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTImageWidget >> value: aString [
 	value ~= aString
 		ifTrue: [ 

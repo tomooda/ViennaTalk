@@ -5,6 +5,90 @@ Class {
 	#package : 'BaselineOfViennaTalk'
 }
 
+{ #category : 'accessing' }
+BaselineOfViennaTalk class >> codename [
+
+	^ 'Milan'
+]
+
+{ #category : 'utilities' }
+BaselineOfViennaTalk class >> ensureIcebergRepository [
+
+	^ IceRepository repositories
+		  detect: [ :repo | repo name = 'ViennaTalk' ]
+		  ifNone: [
+			  | repo |
+			  UIManager default
+				  informUser:
+				  'Cloning repository from the official ViennaTalk repository'
+				  during: [
+					  repo := IceRepositoryCreator new
+						          repository: nil;
+						          remote:
+							          (IceGitRemote url:
+									           'https://github.com/tomooda/ViennaTalk.git');
+						          location:
+							          FileLocator localDirectory / 'iceberg' / 'tomooda'
+							          / 'ViennaTalk';
+						          createRepository ].
+			  repo
+				  register;
+				  yourself ]
+]
+
+{ #category : 'testing' }
+BaselineOfViennaTalk class >> isDev [
+
+	^ self codename = 'Nowhere'
+]
+
+{ #category : 'utilities' }
+BaselineOfViennaTalk class >> updateFromOfficialRepository [
+
+	<script: 'BaselineOfViennaTalk updateFromOfficialRepository'>
+	| repository branchName |
+	repository := self ensureIcebergRepository.
+	branchName := self isDev
+		              ifTrue: [ 'dev' ]
+		              ifFalse: [ 'main' ].
+	repository
+		branchNamed: branchName
+		ifPresent: [ :branch |
+			[
+			branch
+				setUpstreamIfMissing: (repository remoteNamed: 'origin');
+				pull ]
+				on: IceExperimentalFeature
+				do: [ :ex | ex resume ] ]
+		ifAbsent: [
+		(repository remoteBranchNamed: 'origin/' , branchName) checkout ].
+	[ (repository packageNamed: 'BaselineOfViennaTalk') reload ]
+		on: MCMergeOrLoadWarning
+		do: [ :ex | ex load ].
+	Cursor wait showWhile: [
+		| maxCount count |
+		maxCount := 5.
+		count := 0.
+		[
+		[
+		Metacello new
+			repository: 'gitlocal://' , (repository location / 'src') fullName;
+			baseline: 'ViennaTalk';
+			onConflictUseIncoming;
+			onWarningLog;
+			load ]
+			on: IceExperimentalFeature
+			do: [ :ex | ex resume ] ]
+			on: Error
+			do: [ :ex |
+				(count := count + 1) < maxCount
+					ifTrue: [
+						2 seconds wait.
+						ex retry ]
+					ifFalse: [ UIManager default alert: 'Failed to update' ] ] ].
+	Smalltalk snapshot: true andQuit: false
+]
+
 { #category : 'baselines' }
 BaselineOfViennaTalk >> baseline: spec [
 
@@ -13,6 +97,8 @@ BaselineOfViennaTalk >> baseline: spec [
 		for: #common do: [
 			spec blessing: #baseline.
 			spec
+				baseline: 'Phleeter'
+				with: [ spec repository: 'github://tomooda/Phleeter:main/src' ];
 				baseline: 'HiDeHo'
 				with: [ spec repository: 'github://tomooda/HiDeHo:main/src' ];
 				baseline: 'FRAM'
@@ -27,6 +113,8 @@ BaselineOfViennaTalk >> baseline: spec [
 				baseline: 'ZincHTTPComponents'
 				with: [ spec repository: 'github://svenvc/zinc/repository' ].
 			spec
+				package: 'ViennaTalk-Application'
+				with: [ spec requires: #( 'Phleeter' ) ];
 				package: 'ViennaTalk-Animation-Core' with: [
 					spec requires:
 							#( 'ViennaTalk-Engine-Core' 'ViennaTalk-Value-Core' ) ];
@@ -136,6 +224,7 @@ BaselineOfViennaTalk >> baseline: spec [
 		with: [ spec requires: #( 'ViennaTalk-Refactoring-Core' ) ].
 
 	spec
+		group: 'Application' with: #( 'ViennaTalk-Application' );
 		group: 'ViennaFRAM' with: #( 'ViennaTalk-FRAM-Core' );
 		group: 'LivelyWalkThrough'
 		with: #( 'ViennaTalk-LivelyWalkThrough-Core' );
@@ -156,7 +245,7 @@ BaselineOfViennaTalk >> baseline: spec [
 		group: 'full'
 		with:
 			#( 'core' 'VDMPad' 'LivelyWalkThrough' 'tests' 'WeblyWalkThrough'
-			   'Transpiler' 'ViennaFRAM' );
+			   'Transpiler' 'ViennaFRAM' 'Application' );
 		group: 'tests'
 		with: #( 'ViennaTalk-Engine-Tests' 'ViennaTalk-Value-Tests'
 			   'ViennaTalk-Parser-Tests' 'ViennaTalk-Type-Tests'

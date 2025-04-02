@@ -1,6 +1,6 @@
-Extension { #name : #Base64MimeConverter }
+Extension { #name : 'Base64MimeConverter' }
 
-{ #category : #'*ViennaTalk-LivelyWalkThrough-Core' }
+{ #category : '*ViennaTalk-LivelyWalkThrough-Core' }
 Base64MimeConverter class >> mimeDecodeToBytes: aStream [
 
 	| decoder byteStream |

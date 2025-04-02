@@ -1,64 +1,38 @@
 Class {
 	#name : 'ViennaModificationEpiLog',
-	#superclass : 'ViennaEpiLog',
-	#instVars : [
-		'specification',
-		'state'
-	],
+	#superclass : 'ViennaAbstractModificationEpiLog',
 	#category : 'ViennaTalk-Browser-Core-EpiLog',
 	#package : 'ViennaTalk-Browser-Core',
 	#tag : 'EpiLog'
 }
 
-{ #category : 'instance creation' }
-ViennaModificationEpiLog class >> after: aViennaEpiLog specification: aViennaModularDocumentNode [
+{ #category : 'accessing' }
+ViennaModificationEpiLog class >> metadataName [
 
-	^ (self after: aViennaEpiLog)
-		  specification: aViennaModularDocumentNode;
-		  yourself
-]
-
-{ #category : 'instance creation' }
-ViennaModificationEpiLog class >> after: aViennaEpiLog specification: aViennaModularDocumentNode state: aDictionary [
-
-	^ (self after: aViennaEpiLog)
-		  specification: aViennaModularDocumentNode;
-		  state: aDictionary;
-		  yourself
+	^ 'Modification'
 ]
 
 { #category : 'testing' }
-ViennaModificationEpiLog >> hasChangeAt: aString module: anotherString [
+ViennaModificationEpiLog >> isExecutionClosureMember [
 
-	^ ((specification moduleNamed: anotherString) ifNotNil: [ :m |
-		   m resolveIdentifier: aString ])
-	  ~=
-		  ((prev ifNotNil: [ prev specification moduleNamed: anotherString ])
-			   ifNotNil: [ :m | m resolveIdentifier: aString ])
-]
-
-{ #category : 'testing' }
-ViennaModificationEpiLog >> hasChangeAtModule: aString [
-
-	^ (specification moduleNamed: aString)
-	  ~= (prev ifNotNil: [ prev specification moduleNamed: aString ])
-]
-
-{ #category : 'testing' }
-ViennaModificationEpiLog >> hasSpecificationChange [
-
-	^ prev isNil or: [ prev specification ~= specification ]
-]
-
-{ #category : 'testing' }
-ViennaModificationEpiLog >> hasStateChange [
-
-	^ state notNil and: [ prev isNil or: [ prev state ~= state ] ]
+	^ true
 ]
 
 { #category : 'testing' }
 ViennaModificationEpiLog >> isModificationEpiLog [
 
+	^ true
+]
+
+{ #category : 'testing' }
+ViennaModificationEpiLog >> isRemovable [
+
+	self hasSpecificationChange ifFalse: [ ^ true ].
+	hideStorage chronicle do: [ :epiLog |
+		epiLog prev == self ifTrue: [
+			epiLog isModificationEpiLog ifFalse: [ ^ false ] ].
+		epiLog basicPred == self ifTrue: [
+			epiLog isModificationEpiLog ifFalse: [ ^ false ] ] ].
 	^ true
 ]
 
@@ -78,28 +52,4 @@ ViennaModificationEpiLog >> isSyntacticClosureMember [
 ViennaModificationEpiLog >> printOn: aStream [
 
 	aStream nextPutAll: 'Edit'
-]
-
-{ #category : 'accessing' }
-ViennaModificationEpiLog >> specification [
-
-	^ specification
-]
-
-{ #category : 'accessing' }
-ViennaModificationEpiLog >> specification: aViennaModularDocumentNode [
-
-	specification := aViennaModularDocumentNode
-]
-
-{ #category : 'accessing' }
-ViennaModificationEpiLog >> state [
-
-	^ state ifNil: [ prev ifNotNil: #state ifNil: [ Dictionary new ] ]
-]
-
-{ #category : 'accessing' }
-ViennaModificationEpiLog >> state: aDictionary [
-
-	self state ~= aDictionary ifTrue: [ state := aDictionary ]
 ]

@@ -1,6 +1,6 @@
-Extension { #name : #ViennaDocumentNode }
+Extension { #name : 'ViennaDocumentNode' }
 
-{ #category : #'*ViennaTalk-Parser-Core' }
+{ #category : '*ViennaTalk-Parser-Core' }
 ViennaDocumentNode >> parser [
 
 	^ ViennaVDMParser new document end

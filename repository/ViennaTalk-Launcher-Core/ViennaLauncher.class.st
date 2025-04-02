@@ -1,13 +1,32 @@
 Class {
 	#name : 'ViennaLauncher',
-	#superclass : 'StandardWindow',
+	#superclass : 'SpPresenter',
+	#instVars : [
+		'openButton',
+		'vdmpadButton',
+		'logoImage',
+		'systemButton',
+		'toolsButton'
+	],
 	#classVars : [
 		'Current',
-		'Font'
+		'DateAndTimeFormat',
+		'Font',
+		'MultiWindowMode'
 	],
 	#category : 'ViennaTalk-Launcher-Core',
 	#package : 'ViennaTalk-Launcher-Core'
 }
+
+{ #category : 'settings' }
+ViennaLauncher class >> availableDateAndTimeFormats [
+
+	^ {
+		  ('10:24:45 1 Apr 2025' -> #HMSDMY).
+		  ('10:24:45 Apr 1, 2025' -> #HMSMDY).
+		  ('2025/04/01 10:24:45' -> #YMDHMS).
+		  ('10 days ago' -> #ago) }
+]
 
 { #category : 'settings' }
 ViennaLauncher class >> chooseFont [
@@ -21,10 +40,10 @@ ViennaLauncher class >> chooseFont [
 
 { #category : 'user interface' }
 ViennaLauncher class >> close [
-	Current
-		ifNotNil: [ 
-			Current delete.
-			Current := nil ]
+
+	Current ifNotNil: [
+		Current close.
+		Current := nil ]
 ]
 
 { #category : 'accessing' }
@@ -32,33 +51,16 @@ ViennaLauncher class >> current [
 	^ Current ifNil: [ Current := self new ]
 ]
 
-{ #category : 'utilities' }
-ViennaLauncher class >> deploy [
-	<script>
-	GraphicFontSettings setFontsToStyleNamed: #small.
-	ViennaLauncher font: TextStyle defaultFont.
-	Smalltalk cleanUp: true except: {} confirming: false.
-	MCRepositoryGroup
-		allSubInstancesDo:
-			[ :group | group repositories do: [ :repo | group removeRepository: repo ] ].
-	IceRepository registry removeAll.
-	IceCredentialStore current
-		in:
-			[ :store | store allCredentials do: [ :each | each removeFrom: store ] ].
-	World closeAllWindowsDiscardingChanges.
-	ViennaLauncher reopen.
-	Deprecation
-		raiseWarning: false;
-		showWarning: false.
-	NoChangesLog install.
-	"NoPharoFilesOpener install."
-	FFICompilerPlugin install.
-	Stdio useNullStreams.
-	MCCacheRepository uniqueInstance disable.
-	EpMonitor reset.
-	5
-		timesRepeat:
-			[ "PharoCommandLineHandler forcePreferencesOmission: true" Smalltalk garbageCollect ]
+{ #category : 'settings' }
+ViennaLauncher class >> dateAndTimeFormat [
+
+	^ DateAndTimeFormat
+]
+
+{ #category : 'settings' }
+ViennaLauncher class >> dateAndTimeFormat: aSymbol [
+
+	DateAndTimeFormat := aSymbol asSymbol
 ]
 
 { #category : 'settings' }
@@ -81,9 +83,84 @@ ViennaLauncher class >> fontSize [
 	^ self font pointSize
 ]
 
+{ #category : 'formatting' }
+ViennaLauncher class >> formatDateAndTime: aDateAndTime [
+
+	DateAndTimeFormat = #HMSDMY ifTrue: [
+		^ self formatHMSDMY: aDateAndTime ].
+	DateAndTimeFormat = #HMSMDY ifTrue: [
+		^ self formatHMSMDY: aDateAndTime ].
+	DateAndTimeFormat = #YMDHMS ifTrue: [
+		^ self formatYMDHMS: aDateAndTime ].
+	^ self formatRoughly: aDateAndTime
+]
+
+{ #category : 'formatting' }
+ViennaLauncher class >> formatHMSDMY: aDateAndTime [
+
+	^ String streamContents: [ :stream |
+		  aDateAndTime hour printOn: stream base: 10 nDigits: 2.
+		  stream nextPut: $:.
+		  aDateAndTime minute printOn: stream base: 10 nDigits: 2.
+		  stream nextPut: $:.
+		  aDateAndTime second printOn: stream base: 10 nDigits: 2.
+		  stream space.
+		  aDateAndTime day printOn: stream.
+		  stream space.
+		  stream nextPutAll: aDateAndTime monthAbbreviation.
+		  stream space.
+		  aDateAndTime year printOn: stream ]
+]
+
+{ #category : 'formatting' }
+ViennaLauncher class >> formatHMSMDY: aDateAndTime [
+
+	^ String streamContents: [ :stream |
+		  aDateAndTime hour printOn: stream base: 10 nDigits: 2.
+		  stream nextPut: $:.
+		  aDateAndTime minute printOn: stream base: 10 nDigits: 2.
+		  stream nextPut: $:.
+		  aDateAndTime second printOn: stream base: 10 nDigits: 2.
+		  stream space.
+		  stream nextPutAll: aDateAndTime monthAbbreviation.
+		  stream space.
+		  aDateAndTime day printOn: stream.
+		  stream nextPutAll: ', '.
+		  aDateAndTime year printOn: stream ]
+]
+
+{ #category : 'formatting' }
+ViennaLauncher class >> formatRoughly: aDateAndTime [
+
+	| time |
+	time := DateAndTime now - aDateAndTime.
+	^ time < 1 minutes
+		  ifTrue: [ 'now' ]
+		  ifFalse: [ time printRoughly , ' ago' ]
+]
+
+{ #category : 'formatting' }
+ViennaLauncher class >> formatYMDHMS: aDateAndTime [
+
+	^ String streamContents: [ :stream |
+		  aDateAndTime year printOn: stream.
+		  stream nextPut: $/.
+		  aDateAndTime month printOn: stream base: 10 nDigits: 2.
+		  stream nextPut: $/.
+		  aDateAndTime dayOfMonth printOn: stream base: 10 nDigits: 2.
+		  stream space.
+		  aDateAndTime hour printOn: stream base: 10 nDigits: 2.
+		  stream nextPut: $:.
+		  aDateAndTime minute printOn: stream base: 10 nDigits: 2.
+		  stream nextPut: $:.
+		  aDateAndTime second printOn: stream base: 10 nDigits: 2 ]
+]
+
 { #category : 'class initialization' }
 ViennaLauncher class >> initialize [
+
 	self installDesktopLogo.
+	SessionManager default registerUserClassNamed: self name.
 	self open
 ]
 
@@ -109,31 +186,76 @@ ViennaLauncher class >> installDesktopLogo [
 				backgroundImage fullName ]
 ]
 
+{ #category : 'settings' }
+ViennaLauncher class >> isMultiWindowMode [
+
+	^ self multiWindowMode
+]
+
+{ #category : 'settings' }
+ViennaLauncher class >> isSingleWindowMode [
+
+	^ self multiWindowMode not
+]
+
+{ #category : 'settings' }
+ViennaLauncher class >> multiWindowMode [
+
+	^ MultiWindowMode = true
+]
+
+{ #category : 'settings' }
+ViennaLauncher class >> multiWindowMode: aBoolean [
+
+	MultiWindowMode := aBoolean = true
+]
+
 { #category : 'user interface' }
 ViennaLauncher class >> open [
-	^ self current openInWorld
+
+	<script: 'ViennaLauncher open'>
+	self current window ifNotNil: [ :window |
+		window isOpen ifTrue: [ ^ self ] ].
+	self current open
 ]
 
 { #category : 'user interface' }
 ViennaLauncher class >> reopen [
-	Current
-		ifNotNil: [ 
-			Current delete.
-			Current := nil ].
-	^ self current openInWorld
+
+	<script: 'ViennaLauncher reopen'>
+	Current ifNotNil: [
+		Current close.
+		Current := nil ].
+	^ self open
+]
+
+{ #category : 'settings' }
+ViennaLauncher class >> setMultiWindowMode [
+
+	^ self multiWindowMode: true
+]
+
+{ #category : 'settings' }
+ViennaLauncher class >> setSingleWindowMode [
+
+	^ self multiWindowMode: false
 ]
 
 { #category : 'menu operations' }
 ViennaLauncher class >> showSettingBrowser [
+
 	SettingBrowser new
 		changePackageSet:
-				{(RPackageOrganizer default packageNamed: #'ViennaTalk-Launcher-Core').
-					(RPackageOrganizer default packageNamed: #'ViennaTalk-Browser-Core').
-					(RPackageOrganizer default packageNamed: #'ViennaTalk-Engine-Core').
-					(RPackageOrganizer default packageNamed: #'ViennaTalk-Parser-Core').
-					(RPackageOrganizer default packageNamed: #'ViennaTalk-VDMPad-Core').
-					(RPackageOrganizer default packageNamed: #'Network-Kernel')};
+			(PackageOrganizer default packages select: [ :package |
+					 package name beginsWith: 'ViennaTalk-' ])
+			, { (PackageOrganizer default packageNamed: #'Network-Kernel') };
 		open
+]
+
+{ #category : 'class initialization' }
+ViennaLauncher class >> startUp [
+
+	Smalltalk isInteractiveGraphic ifTrue: [ self open ]
 ]
 
 { #category : 'resources' }
@@ -156,16 +278,34 @@ ViennaLauncher class >> viennaLogo [
 
 { #category : 'settings' }
 ViennaLauncher class >> viennaSettingsOn: aBuilder [
+
 	<systemsettings>
 	(aBuilder group: #ViennaTalk)
 		label: 'ViennaTalk';
-		with: [ (aBuilder group: #ViennaTalkAppearances)
+		with: [
+			(aBuilder group: #ViennaTalkAppearances)
 				label: 'Appearances';
-				with: [ (aBuilder setting: #font)
+				with: [
+					(aBuilder setting: #multiWindowMode)
+						label: 'use Native multi-indows';
+						target: self;
+						description:
+							'Open OS windows if checked. Open in a Pharo window otherwise.';
+						order: 0.1 ];
+				with: [
+					(aBuilder setting: #font)
+						label: 'Font';
 						target: self;
 						description: 'The default font for VDM sources';
-						label: 'Font';
-						order: 0.1 ].
+						order: 0.2 ];
+				with: [
+					(aBuilder pickOne: #dateAndTimeFormat)
+						label: 'Date-Time format';
+						target: self;
+						default: #ago;
+						domainValues: self availableDateAndTimeFormats;
+						description: 'The format to print a calendar date and time';
+						order: 0.5 ].
 			(aBuilder group: #ViennaTalkCodeGenerator) label: 'Code Generator'.
 			(aBuilder group: #ViennaTalkServices) label: 'Services' ]
 ]
@@ -195,14 +335,83 @@ ViennaLauncher class >> worldMenuOn: aBuilder [
 				withSeparatorAfter ]
 ]
 
+{ #category : 'menu operations' }
+ViennaLauncher >> browseDirectory [
+
+	(UIManager default
+		 chooseDirectory: 'Directory to open'
+		 from: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :dir |
+		ViennaRefactoringBrowser new
+			load: dir;
+			open ]
+]
+
+{ #category : 'menu operations' }
+ViennaLauncher >> browseFile [
+
+	(UIManager default
+		 chooseExistingFileReference: 'Directory to open'
+		 extensions: #( 'vdmsl' )
+		 path: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :file |
+		ViennaRefactoringBrowser new
+			load: file;
+			open ]
+]
+
+{ #category : 'resources' }
+ViennaLauncher >> browseFileIcon [
+
+	| file search form |
+	file := Smalltalk ui iconNamed: #smallLeftFlush.
+	search := (Smalltalk ui iconNamed: #search) scaledToSize: 10 @ 10.
+	form := Form extent: 16 @ 16 depth: 32.
+	form getCanvas
+		fillColor: Color transparent;
+		drawImage: file at: 0 @ 0;
+		drawImage: search at: 6 @ 6.
+	^ form
+]
+
+{ #category : 'resources' }
+ViennaLauncher >> browseFolderIcon [
+
+	| folder search form |
+	folder := Smalltalk ui iconNamed: #folder.
+	search := (Smalltalk ui iconNamed: #search) scaledToSize: 10 @ 10.
+	form := Form extent: 16 @ 16 depth: 32.
+	form getCanvas
+		fillColor: Color transparent;
+		drawImage: folder at: 0 @ 0;
+		drawImage: search at: 6 @ 6.
+	^ form
+]
+
 { #category : 'interface opening' }
 ViennaLauncher >> close [
-	self class close
+
+	self window ifNotNil: #close
 ]
 
 { #category : 'accessing' }
 ViennaLauncher >> codename [
-	^ 'Waikiki'
+
+	^ BaselineOfViennaTalk codename
+]
+
+{ #category : 'layout' }
+ViennaLauncher >> defaultLayout [
+
+	<script: 'ViennaLauncher reopen'>
+	^ SpBoxLayout newVertical
+		  add: (SpBoxLayout newHorizontal
+				   add: #openButton expand: false;
+				   add: #toolsButton expand: false;
+				   addLast: #systemButton
+				   withConstraints: [ :constraints |
+					   constraints width: self class buttonHeight ];
+				   yourself)
+		  expand: false;
+		  add: logoImage
 ]
 
 { #category : 'accessing' }
@@ -210,93 +419,205 @@ ViennaLauncher >> defaultTitle [
 	^ 'ViennaTalk ', self codename
 ]
 
+{ #category : 'menus' }
+ViennaLauncher >> devMenu [
+
+	^ self newMenu
+		  title: 'Dev';
+		  addAllFromPragma: #ViennaDevMenu target: self;
+		  yourself
+]
+
+{ #category : 'menu operations' }
+ViennaLauncher >> gitClone [
+
+	^ ((self
+		    request: 'URL of the remote git repository'
+		    initialAnswer: 'git@github.com:owner/repository'
+		    title: 'git clone') ifNil: [ ^ nil ] ifNotNil: #trim)
+		  ifNotEmpty: [ :urlString |
+			  | local repo |
+			  [
+			  | dirname |
+			  dirname := (self
+				              request: 'Directory name'
+				              initialAnswer:
+				              (urlString asZnUrl file copyUpToLast: $.)
+				              title: 'git clone') ifNil: [ ^ nil ] ifNotNil: #trim.
+			  dirname notEmpty and: [
+				  local := FileLocator viennaTalkDocumentDirectory / dirname.
+				  local exists not or: [
+					  self alert: dirname , ' already exists.'.
+					  false ] ] ] whileFalse.
+			  self
+				  informUser: 'Cloning repository from ' , urlString
+				  during: [
+					  repo := [
+					          IceRepositoryCreator new
+						          repository: nil;
+						          remote: (IceGitRemote url: urlString);
+						          location: local;
+						          createRepository ]
+						          on: Error
+						          do: [ :ex |
+							          self alert: 'git clone failed ' , ex messageText.
+							          ^ nil ] ].
+			  repo register.
+			  ViennaRefactoringBrowser new
+				  load: local;
+				  open ]
+]
+
 { #category : 'initialize-release' }
-ViennaLauncher >> initialize [
-	| systemMenu toolsMenu devMenu tools dock image extent |
-	super initialize.
-	self title: self defaultTitle.
-	systemMenu := self newMenu
-		add: 'settings...' target: self selector: #showSettingBrowser;
-		addLine;
-		add: 'update to the head on github' target: self selector: #loadHead;
-		addLine;
-		add: 'reopen' target: self selector: #reopen;
-		add: 'close' target: self selector: #close;
-		yourself.
-	toolsMenu := self newMenu
-		addAllFromPragma: #ViennaToolsMenu target: self;
-		yourself.
-	devMenu := self newMenu
-		addAllFromPragma: #ViennaDev target: self;
-		yourself.
-	tools := OrderedCollection new.
-	Smalltalk
-		at: #VDMPad
-		ifPresent: [ :vdmpad | 
-			tools
-				add:
-					(self
-						newButtonFor: vdmpad
-						getState: #isRunning
-						action: #toggleStartStop
-						arguments: nil
-						getEnabled: nil
-						label: 'VDMPad'
-						help: 'start/stop VDMPad server' translated) ].
-	dock := self newToolDockingBar.
-	dock
-		add: 'System' translated
-			font: self theme menuBarFont
-			icon: nil
-			help: 'ViennaTalk system operations'
-			subMenu: systemMenu;
-		add: 'Tools' translated
-			font: self theme menuBarFont
-			icon: nil
-			help: 'ViennaTalk tools'
-			subMenu: toolsMenu;
-		add: 'Dev' translated
-			font: self theme menuBarFont
-			icon: nil
-			help: 'ViennaTalk developers'' utilities'
-			subMenu: devMenu.
-	tools do: [ :morph | dock addMorphBack: morph ].
-	image := self newImage: self viennaLogo.
-	extent := image extent + (4 @ (dock minExtent y + 32)).
-	self
-		addMorph: dock fullFrame: ((0 @ 0 corner: 1 @ 0) asLayoutFrame bottomOffset: dock minExtent y);
-		addMorph: image fullFrame: ((0 @ 0 corner: 1 @ 1) asLayoutFrame topOffset: dock minExtent y);
-		beUnresizeable;
-		extent: extent;
-		maximumExtent: extent;
-		minimumExtent: extent;
-		themeChanged
+ViennaLauncher >> initializePresenters [
+
+	super initializePresenters.
+	openButton := self newButton
+		              icon: (self iconNamed: #folder);
+		              label: 'Models';
+		              action: [
+			              self modelMenu openWithSpecAt:
+					              openButton adapter widget bounds bottomLeft ];
+		              yourself.
+	toolsButton := self newButton
+		               iconName: #tools;
+		               label: 'Tools';
+		               action: [
+			               self toolsMenu openWithSpecAt:
+					               toolsButton adapter widget bounds bottomLeft ];
+		               yourself.
+	systemButton := self newButton
+		                iconName: #preferences;
+		                action: [
+			                self systemMenu openWithSpecAt:
+					                systemButton adapter widget bounds bottomLeft ];
+		                yourself.
+	vdmpadButton := self newToggleButton
+		                label: 'VDMPad';
+		                action: [ self toggleVDMPad ];
+		                yourself.
+	logoImage := self newImage
+		             image: self viennaLogo;
+		             autoScale: false;
+		             yourself
+]
+
+{ #category : 'initialize-release' }
+ViennaLauncher >> initializeWindow: aSpWindowPresenter [
+
+	aSpWindowPresenter
+		title: self defaultTitle;
+		beNotResizable;
+		initialExtent: logoImage image extent + (4 @ 50);
+		initialPosition: 0 @ 25.
+	aSpWindowPresenter whenOpenedDo: [
+		aSpWindowPresenter resize: logoImage image extent + (4 @ 50) ]
 ]
 
 { #category : 'menu operations' }
 ViennaLauncher >> loadHead [
-	Metacello new
-		baseline: 'ViennaTalk';
-		repository: 'github://tomooda/ViennaTalk/repository';
-		onConflictUseIncoming;
-		load
+
+	BaselineOfViennaTalk updateFromOfficialRepository
 ]
 
-{ #category : 'interface opening' }
-ViennaLauncher >> openInWorld [
+{ #category : 'menus' }
+ViennaLauncher >> modelMenu [
 
-	self extent: self extent.
-	^ super openInWorld
+	^ self newMenu
+		  title: 'Models';
+		  addGroup: [ :group |
+			  (FileLocator viennaTalkDocumentDirectory directories
+				   asSortedCollection: #basename ascending) do: [ :dir |
+					  (dir filesMatching: '*.vdmsl') ifNotEmpty: [
+							  group addItem: [ :item |
+									  item
+										  name: dir basename;
+										  iconName: #folder;
+										  action: [
+											  ViennaRefactoringBrowser new
+												  load: dir;
+												  open ] ] ] ].
+			  ((FileLocator viennaTalkDocumentDirectory filesMatching:
+				    '*.vdmsl') asSortedCollection: #basename ascending) do: [
+				  :file |
+				  group addItem: [ :item |
+					  item
+						  name: file basename;
+						  iconName: #smallLeftFlush;
+						  action: [
+							  ViennaRefactoringBrowser new
+								  load: file;
+								  open ] ] ] ];
+		  addGroup: [ :group |
+			  group addItem: [ :item |
+				  item
+					  name: 'Open a new model';
+					  icon: (Smalltalk ui iconNamed: #page);
+					  action: [ ViennaRefactoringBrowser new open ] ] ];
+		  addGroup: [ :group |
+			  group addItem: [ :item |
+				  item
+					  name: 'Clone a git repository';
+					  icon: (self iconNamed: #git);
+					  action: [ self gitClone ] ] ]
 ]
 
 { #category : 'interface opening' }
 ViennaLauncher >> reopen [
+
+	<script: 'ViennaLauncher reopen'>
 	^ self class reopen
+]
+
+{ #category : 'ui requests' }
+ViennaLauncher >> request: request initialAnswer: initialAnwser title: title [
+
+	^ self application newRequest
+		  title: title;
+		  label: request;
+		  text: initialAnwser;
+		  openModal
 ]
 
 { #category : 'menu operations' }
 ViennaLauncher >> showSettingBrowser [
 	^ self class showSettingBrowser 
+]
+
+{ #category : 'menus' }
+ViennaLauncher >> systemMenu [
+
+	^ self newMenu
+		  title: 'System';
+		  addItem: [ :item |
+			  item
+				  name: 'Settings...';
+				  action: [ self showSettingBrowser ] ];
+		  addItem: [ :item |
+			  item
+				  name: 'Update to the head on github';
+				  action: [ BaselineOfViennaTalk updateFromOfficialRepository ] ];
+		  addItem: [ :item |
+			  item
+				  name: 'Quit';
+				  action: [ Smalltalk snapshot: false andQuit: true ] ];
+		  yourself
+]
+
+{ #category : 'menu operations' }
+ViennaLauncher >> toggleVDMPad [
+
+	VDMPad toggleStartStop.
+	vdmpadButton state: VDMPad isRunning
+]
+
+{ #category : 'menus' }
+ViennaLauncher >> toolsMenu [
+
+	^ self newMenu
+		  title: 'Tools';
+		  addAllFromPragma: #ViennaToolsMenu target: self;
+		  yourself
 ]
 
 { #category : 'resources' }

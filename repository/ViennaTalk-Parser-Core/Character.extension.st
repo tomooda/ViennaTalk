@@ -1,6 +1,6 @@
-Extension { #name : #Character }
+Extension { #name : 'Character' }
 
-{ #category : #'*ViennaTalk-Parser-Core' }
+{ #category : '*ViennaTalk-Parser-Core' }
 Character >> isSeparator [
 	"Answer whether the receiver is one of the separator characters--space, 
 	cr, tab, line feed, or form feed."

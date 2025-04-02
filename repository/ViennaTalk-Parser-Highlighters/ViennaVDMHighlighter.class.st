@@ -68,11 +68,6 @@ ViennaVDMHighlighter >> cases [
 	^ self keyword: super cases
 ]
 
-{ #category : 'parsers-expressions' }
-ViennaVDMHighlighter >> casesExpressionAlternatives [
-	^ (self casesExpressionAlternative separatedBy: (self keyword: comma)) withoutSeparators
-]
-
 { #category : 'parsers-symbols' }
 ViennaVDMHighlighter >> colon [
 	^ self keyword: super colon

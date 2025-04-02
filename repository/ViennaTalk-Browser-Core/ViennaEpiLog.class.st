@@ -1,11 +1,9 @@
 Class {
 	#name : 'ViennaEpiLog',
 	#superclass : 'Object',
-	#traits : 'TComparable',
-	#classTraits : 'TComparable classTrait',
+	#traits : 'TComparable + THiDePersistency',
+	#classTraits : 'TComparable classTrait + THiDePersistency classTrait',
 	#instVars : [
-		'timestamp',
-		'comment',
 		'prev',
 		'diffSetFromPred',
 		'diffSetFromPrev'
@@ -19,8 +17,18 @@ Class {
 ViennaEpiLog class >> after: aViennaEpiLog [
 
 	^ self new
+		  hideStorage: (aViennaEpiLog ifNotNil: #hideStorage);
 		  prev: aViennaEpiLog;
 		  yourself
+]
+
+{ #category : 'class access' }
+ViennaEpiLog class >> classFor: aString [
+
+	self allSubclassesDo: [ :class |
+		(class isAbstract not and: [ aString = class metadataName ])
+			ifTrue: [ ^ class ] ].
+	^ nil
 ]
 
 { #category : 'testing' }
@@ -29,22 +37,36 @@ ViennaEpiLog class >> isAbstract [
 	^ self = ViennaEpiLog
 ]
 
+{ #category : 'accessing' }
+ViennaEpiLog class >> metadataName [
+
+	^ self subclassResponsibility
+]
+
 { #category : 'instance creation' }
 ViennaEpiLog class >> vanilla [
 
 	^ ViennaVanillaEpiLog new
+		  hideStorage: ViennaHiDeStorage memory;
+		  yourself
 ]
 
 { #category : 'comparing' }
 ViennaEpiLog >> < aViennaEpiLog [
 
-	^ timestamp < aViennaEpiLog timestamp
+	^ self timestamp < aViennaEpiLog timestamp
 ]
 
 { #category : 'comparing' }
 ViennaEpiLog >> = aComparable [
 
 	^ self == aComparable
+]
+
+{ #category : 'converting' }
+ViennaEpiLog >> artifactTimeline [
+
+	^ ViennaEpiLogArtifactTimelineEnumerator current arrayFrom: self
 ]
 
 { #category : 'accessing' }
@@ -60,19 +82,15 @@ ViennaEpiLog >> basicPred: aViennaEpiLog [
 { #category : 'accessing' }
 ViennaEpiLog >> comment [
 
-	^ comment
+	^ hideMetadata at: 'comment' ifAbsent: [ '' ]
 ]
 
 { #category : 'accessing' }
-ViennaEpiLog >> comment: anObject [
+ViennaEpiLog >> comment: aString [
 
-	comment := anObject
-]
-
-{ #category : 'converting' }
-ViennaEpiLog >> constructionLine [
-
-	^ ViennaEpiLogConstructionLineEnumerator current arrayFrom: self
+	(aString isNil or: [ aString isEmpty ])
+		ifTrue: [ hideMetadata removeKey: 'comment' ifAbsent: [  ] ]
+		ifFalse: [ hideMetadata at: 'comment' put: aString asString ]
 ]
 
 { #category : 'defaults' }
@@ -97,7 +115,7 @@ ViennaEpiLog >> diffSetFromPrev [
 
 	^ diffSetFromPrev ifNil: [
 		  diffSetFromPrev := ViennaNodeDiffSet
-			                     from: (self prev
+			                     from: (prev
 					                      ifNotNil: #specification
 					                      ifNil: [ ViennaModularDocumentNode new ])
 			                     to: self specification ]
@@ -127,6 +145,12 @@ ViennaEpiLog >> hasStateChange [
 	^ false
 ]
 
+{ #category : 'testing' }
+ViennaEpiLog >> hasTag: aString [
+
+	^ hideMetadata hasTag: aString
+]
+
 { #category : 'comparing' }
 ViennaEpiLog >> hash [
 	"Hash must be redefined whenever = is redefined."
@@ -134,16 +158,83 @@ ViennaEpiLog >> hash [
 	^ self identityHash
 ]
 
+{ #category : 'hideho-testing' }
+ViennaEpiLog >> hideIsAutoExpirable [
+
+	^ false
+]
+
+{ #category : 'hideho-operations' }
+ViennaEpiLog >> hideLoad: aFileReference [
+
+	
+]
+
+{ #category : 'hideho-operations' }
+ViennaEpiLog >> hideMetadataLoaded [
+
+	hideMetadata
+		at: 'prev'
+		ifPresent: [ :id | prev := hideStorage chronicleAt: id ]
+]
+
+{ #category : 'hideho-operations' }
+ViennaEpiLog >> hideRemove [
+
+	self isRemovable ifTrue: [
+		| newPrev newPred |
+		newPrev := prev.
+		newPred := self basicPred.
+		hideStorage chronicle do: [ :epiLog |
+			| changed |
+			changed := false.
+			epiLog prev == self ifTrue: [
+				epiLog prev: newPrev.
+				changed := true ].
+			epiLog basicPred == self ifTrue: [
+				epiLog basicPred: newPred.
+				changed := true ].
+			changed ifTrue: [ hideStorage chronicleSave: epiLog ] ].
+		hideStorage chronicleRemove: self ]
+]
+
+{ #category : 'hideho-operations' }
+ViennaEpiLog >> hideSave: aFileReference [
+	
+]
+
+{ #category : 'hideho-operations' }
+ViennaEpiLog >> hideUpdateMetadataStorage: aHiDeStorage [
+
+	hideMetadata at: 'class' put: self metadataName.
+	prev ifNotNil: [
+		prev hideStorage = aHiDeStorage ifFalse: [
+			aHiDeStorage chronicleSave: prev ].
+		hideMetadata at: 'prev' put: prev hideMetadata identity ]
+]
+
 { #category : 'initialization' }
 ViennaEpiLog >> initialize [
 
 	super initialize.
-	comment := self defaultComment.
-	timestamp := DateAndTime now
+	self initializeHideMetadata.
+	self comment: self defaultComment
+]
+
+{ #category : 'testing' }
+ViennaEpiLog >> isAbstractModificationEpiLog [
+
+	^ false
 ]
 
 { #category : 'testing' }
 ViennaEpiLog >> isEvaluationEpiLog [
+
+	^ false
+]
+
+{ #category : 'testing' }
+ViennaEpiLog >> isExecutionClosureMember [
 
 	^ false
 ]
@@ -161,7 +252,7 @@ ViennaEpiLog >> isInitializationEpiLog [
 ]
 
 { #category : 'testing' }
-ViennaEpiLog >> isLoadEpiLog [
+ViennaEpiLog >> isLoadingEpiLog [
 
 	^ false
 ]
@@ -170,6 +261,18 @@ ViennaEpiLog >> isLoadEpiLog [
 ViennaEpiLog >> isModificationEpiLog [
 
 	^ false
+]
+
+{ #category : 'testing' }
+ViennaEpiLog >> isPredEpiLog [
+
+	^ true
+]
+
+{ #category : 'testing' }
+ViennaEpiLog >> isRemovable [
+
+	^ self subclassResponsibility
 ]
 
 { #category : 'testing' }
@@ -194,6 +297,12 @@ ViennaEpiLog >> isSyntacticClosureMember [
 ViennaEpiLog >> isVanillaEpiLog [
 
 	^ false
+]
+
+{ #category : 'accessing' }
+ViennaEpiLog >> metadataName [
+
+	^ self class metadataName
 ]
 
 { #category : 'instance creation' }
@@ -222,28 +331,31 @@ ViennaEpiLog >> newInitialization: aDictionary [
 { #category : 'instance creation' }
 ViennaEpiLog >> newLoading: aViennaModularDocumentNode [
 
-	^ ViennaLoadingEpiLog
-		  after: self
-		  specification: aViennaModularDocumentNode
+	^ self newLoading: aViennaModularDocumentNode after: self
 ]
 
 { #category : 'instance creation' }
-ViennaEpiLog >> newLoading: aViennaModularDocumentNode state: aDictionary [
+ViennaEpiLog >> newLoading: aViennaModularDocumentNode after: aViennaEpiLog [
+
+	^ self
+		  newLoading: aViennaModularDocumentNode
+		  state: self state
+		  after: aViennaEpiLog
+]
+
+{ #category : 'instance creation' }
+ViennaEpiLog >> newLoading: aViennaModularDocumentNode state: aDictionary after: aViennaEpiLog [
 
 	^ ViennaLoadingEpiLog
-		  after: self
+		  after: aViennaEpiLog
 		  specification: aViennaModularDocumentNode
-		  state: (self state = aDictionary
-				   ifTrue: [ nil ]
-				   ifFalse: [ aDictionary ])
+		  state: aDictionary
 ]
 
 { #category : 'instance creation' }
 ViennaEpiLog >> newModification: aViennaModularDocumentNode [
 
-	^ ViennaModificationEpiLog
-		  after: self
-		  specification: aViennaModularDocumentNode
+	^ self newModification: aViennaModularDocumentNode state: self state
 ]
 
 { #category : 'instance creation' }
@@ -252,9 +364,7 @@ ViennaEpiLog >> newModification: aViennaModularDocumentNode state: aDictionary [
 	^ ViennaModificationEpiLog
 		  after: self
 		  specification: aViennaModularDocumentNode
-		  state: (self state = aDictionary
-				   ifTrue: [ nil ]
-				   ifFalse: [ aDictionary ])
+		  state: aDictionary
 ]
 
 { #category : 'instance creation' }
@@ -269,9 +379,9 @@ ViennaEpiLog >> newRevertion: aViennaEpiLog [
 ViennaEpiLog >> pred [
 
 	^ self basicPred ifNotNil: [ :pred |
-		  pred isRevertionEpiLog
-			  ifTrue: [ pred pred ]
-			  ifFalse: [ pred ] ]
+		  pred isPredEpiLog
+			  ifTrue: [ pred ]
+			  ifFalse: [ pred pred ] ]
 ]
 
 { #category : 'accessing' }
@@ -312,14 +422,20 @@ ViennaEpiLog >> state: aDictionary [
 	
 ]
 
-{ #category : 'converting' }
-ViennaEpiLog >> timeLine [
+{ #category : 'accessing' }
+ViennaEpiLog >> tags [
 
-	^ ViennaEpiLogTimeLineEnumerator current arrayFrom: self
+	^ hideMetadata tags
 ]
 
 { #category : 'accessing' }
 ViennaEpiLog >> timestamp [
 
-	^ timestamp
+	^ hideMetadata timestamp
+]
+
+{ #category : 'converting' }
+ViennaEpiLog >> userTimeline [
+
+	^ ViennaEpiLogUserTimelineEnumerator current arrayFrom: self
 ]

@@ -1,6 +1,6 @@
 Class {
-	#name : #LWTWidget,
-	#superclass : #Morph,
+	#name : 'LWTWidget',
+	#superclass : 'Morph',
 	#instVars : [
 		'name',
 		'nameFont',
@@ -9,10 +9,11 @@ Class {
 		'showsName',
 		'frozen'
 	],
-	#category : #'ViennaTalk-LivelyWalkThrough-Core'
+	#category : 'ViennaTalk-LivelyWalkThrough-Core',
+	#package : 'ViennaTalk-LivelyWalkThrough-Core'
 }
 
-{ #category : #json }
+{ #category : 'json' }
 LWTWidget class >> attributeFromJsonObject: anObject [
 	anObject isDictionary
 		ifFalse: [ ^ anObject ].
@@ -36,7 +37,7 @@ LWTWidget class >> attributeFromJsonObject: anObject [
 	^ anObject
 ]
 
-{ #category : #json }
+{ #category : 'json' }
 LWTWidget class >> fromJsonObject: aDictionary on: aLWTDirector [
 	| widget |
 	widget := (Smalltalk at: (aDictionary at: '_class') asSymbol) new.
@@ -53,7 +54,7 @@ LWTWidget class >> fromJsonObject: aDictionary on: aLWTDirector [
 	^ widget
 ]
 
-{ #category : #json }
+{ #category : 'json' }
 LWTWidget >> asJsonObject [
 	^ Dictionary new
 		at: '_class' put: self class name asString;
@@ -67,22 +68,22 @@ LWTWidget >> asJsonObject [
 		yourself
 ]
 
-{ #category : #events }
+{ #category : 'events' }
 LWTWidget >> availableEventSelectors [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTWidget >> basename [
 	^ self subclassResponsibility
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTWidget >> changeName [
 	(UIManager default request: 'Enter a new name' initialAnswer: self name) ifNotNil: [ :newName | self name: newName ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTWidget >> changeNameColor [
 
 	| dialog |
@@ -93,7 +94,7 @@ LWTWidget >> changeNameColor [
 	dialog cancelled ifFalse: [ self nameColor: dialog selectedColor ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTWidget >> changeNameFont [
 
 	FontChooser
@@ -102,44 +103,44 @@ LWTWidget >> changeNameFont [
 		onAcceptDo: [ :f | self nameFont: f ]
 ]
 
-{ #category : #json }
+{ #category : 'json' }
 LWTWidget >> colorToJsonObject: aColor [
 	^ Dictionary new
 		at: 'storeString' put: aColor storeString;
 		yourself
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 LWTWidget >> defaultExtent [
 	^ self subclassResponsibility
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 LWTWidget >> defaultMoveable [
 	^ true
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 LWTWidget >> defaultName [
 	^ self makeUniqueName
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 LWTWidget >> defaultNameColor [
 	^ Color lightGray
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 LWTWidget >> defaultNameFont [
 	^ ViennaLauncher font
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 LWTWidget >> defaultShowsName [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTWidget >> director [
 	| director |
 	director := self.
@@ -147,7 +148,7 @@ LWTWidget >> director [
 	^ director
 ]
 
-{ #category : #drawing }
+{ #category : 'drawing' }
 LWTWidget >> drawHighlightedOn: aCanvas [
 	self director
 		ifNotNil: [ :d | 
@@ -157,7 +158,7 @@ LWTWidget >> drawHighlightedOn: aCanvas [
 						ifTrue: [ aCanvas frameRectangle: (self bounds insetBy: -1) width: 3 color: Color blue ] ] ]
 ]
 
-{ #category : #drawing }
+{ #category : 'drawing' }
 LWTWidget >> drawOn: aCanvas [
 	self showsName
 		ifTrue: [ 
@@ -169,7 +170,7 @@ LWTWidget >> drawOn: aCanvas [
 	self drawHighlightedOn: aCanvas
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTWidget >> duplicateAndPlace [
 	^ (UIManager default request: 'Enter a new name' initialAnswer: self name)
 		ifNotNil: [ :newName | 
@@ -181,7 +182,7 @@ LWTWidget >> duplicateAndPlace [
 			duplicate ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTWidget >> edgeName: aPoint [
 	| edge |
 	edge := ''.
@@ -198,17 +199,17 @@ LWTWidget >> edgeName: aPoint [
 	^ edge
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTWidget >> edgePrecision [
 	^ 10
 ]
 
-{ #category : #events }
+{ #category : 'events' }
 LWTWidget >> event: aSymbol [
 	self director ifNotNil: [ :director | director execEvent: aSymbol at: self name ]
 ]
 
-{ #category : #json }
+{ #category : 'json' }
 LWTWidget >> fontToJsonObject: aFont [
 	^ Dictionary new
 		at: 'storeString' put: aFont storeString;
@@ -216,12 +217,12 @@ LWTWidget >> fontToJsonObject: aFont [
 		yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTWidget >> freeze [
 	frozen := true
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 LWTWidget >> handleMouseDown: aMouseEvent [
 	aMouseEvent wasHandled: true.
 	aMouseEvent yellowButtonPressed
@@ -242,13 +243,13 @@ LWTWidget >> handleMouseDown: aMouseEvent [
 	^ true
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 LWTWidget >> handleMouseLeave: aMouseEvent [
 
 	self world activeHand showTemporaryCursor: Cursor normal
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 LWTWidget >> handleMouseMove: aMouseEvent [
 
 	self moveable = true ifTrue: [
@@ -260,18 +261,18 @@ LWTWidget >> handleMouseMove: aMouseEvent [
 					(Cursor perform: ('resize' , edge) asSymbol) ] ]
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 LWTWidget >> handlesMouseDown: anEvent [
 	^ frozen not
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTWidget >> hideName [
 	showsName := false.
 	self changed
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 LWTWidget >> initialize [
 	super initialize.
 	moveable := self defaultMoveable.
@@ -280,7 +281,7 @@ LWTWidget >> initialize [
 	self extent: self defaultExtent
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTWidget >> makeUniqueName [
 
 	| prefix random uniqueName |
@@ -289,13 +290,16 @@ LWTWidget >> makeUniqueName [
 	[
 	uniqueName := prefix , (random nextInteger: 999999) printString.
 	(self director ifNil: [ self world ])
-		findDeepSubmorphThat: [ :m |
-			m ~~ self and: [
-				(m isKindOf: LWTWidget) and: [ m name = uniqueName ] ] ]
-		ifAbsent: [ ^ uniqueName ] ] repeat
+		ifNil: [ ^ uniqueName ]
+		ifNotNil: [ :world |
+			world
+				findDeepSubmorphThat: [ :m |
+					m ~~ self and: [
+						(m isKindOf: LWTWidget) and: [ m name = uniqueName ] ] ]
+				ifAbsent: [ ^ uniqueName ] ] ] repeat
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 LWTWidget >> menu [
 	| menu |
 	menu := MenuMorph new
@@ -319,43 +323,43 @@ LWTWidget >> menu [
 	^ menu
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTWidget >> moveBack [
 	self owner
 		ifNotNil: [ self owner privateAddMorph: self atIndex: ((self owner submorphIndexOf: self) + 2 min: self owner submorphs size + 1) ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTWidget >> moveBackEnd [
 	self owner ifNotNil: [ self owner addMorphBack: self ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTWidget >> moveFront [
 	self owner ifNotNil: [ self owner privateAddMorph: self atIndex: ((self owner submorphIndexOf: self) - 1 max: 1) ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTWidget >> moveFrontEnd [
 	self owner ifNotNil: [ self owner addMorphFront: self ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTWidget >> moveable [
 	^ moveable
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTWidget >> moveable: aBoolean [
 	moveable := aBoolean = true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTWidget >> name [
 	^ name ifNil: [ name := self defaultName ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTWidget >> name: aString [
 	self director
 		ifNotNil: [ :director | 
@@ -371,34 +375,34 @@ LWTWidget >> name: aString [
 			self changed ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTWidget >> nameColor [
 	^ nameColor ifNil: [ nameColor := self defaultNameColor ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTWidget >> nameColor: aColor [
 	nameColor := aColor.
 	self changed
 ]
 
-{ #category : #geometry }
+{ #category : 'geometry' }
 LWTWidget >> nameExtent [
 	^ self nameFont in: [ :font | (font widthOfString: self name) @ font height ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTWidget >> nameFont [
 	^ nameFont ifNil: [ nameFont := self defaultNameFont ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTWidget >> nameFont: aFont [
 	nameFont := aFont.
 	self changed
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 LWTWidget >> nameMenu [
 	| menu |
 	menu := MenuMorph new.
@@ -415,19 +419,19 @@ LWTWidget >> nameMenu [
 	^ menu
 ]
 
-{ #category : #geometry }
+{ #category : 'geometry' }
 LWTWidget >> nameOffset [
 	^ 3 @ 3
 ]
 
-{ #category : #json }
+{ #category : 'json' }
 LWTWidget >> pointToJsonObject: aPoint [
 	^ Dictionary new
 		at: 'storeString' put: aPoint storeString;
 		yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTWidget >> resizeBottom: aMouseEvent [
 	| handle |
 	handle := HandleMorph new forEachPointDo: [ :newPoint | self bounds: (self topLeft corner: self right @ newPoint y) ].
@@ -435,7 +439,7 @@ LWTWidget >> resizeBottom: aMouseEvent [
 	handle startStepping
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTWidget >> resizeBottomLeft: aMouseEvent [
 	| handle |
 	handle := HandleMorph new
@@ -444,7 +448,7 @@ LWTWidget >> resizeBottomLeft: aMouseEvent [
 	handle startStepping
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTWidget >> resizeBottomRight: aMouseEvent [
 	| handle |
 	handle := HandleMorph new forEachPointDo: [ :newPoint | self bounds: (self topLeft corner: newPoint) ].
@@ -452,7 +456,7 @@ LWTWidget >> resizeBottomRight: aMouseEvent [
 	handle startStepping
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTWidget >> resizeLeft: aMouseEvent [
 	| handle |
 	handle := HandleMorph new forEachPointDo: [ :newPoint | self bounds: (newPoint x @ self top corner: self bottomRight) ].
@@ -460,7 +464,7 @@ LWTWidget >> resizeLeft: aMouseEvent [
 	handle startStepping
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTWidget >> resizeRight: aMouseEvent [
 	| handle |
 	handle := HandleMorph new forEachPointDo: [ :newPoint | self bounds: (self topLeft corner: newPoint x @ self bottom) ].
@@ -468,7 +472,7 @@ LWTWidget >> resizeRight: aMouseEvent [
 	handle startStepping
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTWidget >> resizeTop: aMouseEvent [
 	| handle |
 	handle := HandleMorph new
@@ -477,7 +481,7 @@ LWTWidget >> resizeTop: aMouseEvent [
 	handle startStepping
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTWidget >> resizeTopLeft: aMouseEvent [
 	| handle |
 	handle := HandleMorph new forEachPointDo: [ :newPoint | self bounds: (newPoint corner: self bottomRight) ].
@@ -485,7 +489,7 @@ LWTWidget >> resizeTopLeft: aMouseEvent [
 	handle startStepping
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTWidget >> resizeTopRight: aMouseEvent [
 	| handle |
 	handle := HandleMorph new
@@ -494,23 +498,23 @@ LWTWidget >> resizeTopRight: aMouseEvent [
 	handle startStepping
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTWidget >> showName [
 	showsName := true.
 	self changed
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTWidget >> showsName [
 	^ showsName
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LWTWidget >> showsName: aBoolean [
 	showsName := aBoolean = true
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 LWTWidget >> smalltalkMenu [
 	| menu |
 	menu := MenuMorph new
@@ -521,7 +525,7 @@ LWTWidget >> smalltalkMenu [
 	^ menu
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 LWTWidget >> toggleMoveable [
 	self moveable: self moveable not
 ]

@@ -1,23 +1,24 @@
 Class {
-	#name : #LWTLivetalkBrowser,
-	#superclass : #Model,
+	#name : 'LWTLivetalkBrowser',
+	#superclass : 'Model',
 	#instVars : [
 		'director',
 		'codePane',
 		'codeSelection',
 		'selectedScriptSelector'
 	],
-	#category : #'ViennaTalk-LivelyWalkThrough-Core'
+	#category : 'ViennaTalk-LivelyWalkThrough-Core',
+	#package : 'ViennaTalk-LivelyWalkThrough-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 LWTLivetalkBrowser class >> on: aLWTDirector [
 	^ self new
 		director: aLWTDirector;
 		yourself
 ]
 
-{ #category : #'code pane' }
+{ #category : 'code pane' }
 LWTLivetalkBrowser >> acceptCode: aStringOrText [
 	aStringOrText asString ~= self code asString
 		ifTrue: [ 
@@ -39,7 +40,7 @@ LWTLivetalkBrowser >> acceptCode: aStringOrText [
 					^ true ] ]
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 LWTLivetalkBrowser >> build [
 	| scriptList browserPane |
 	scriptList := self buildScriptList.
@@ -54,7 +55,7 @@ LWTLivetalkBrowser >> build [
 	^ browserPane
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 LWTLivetalkBrowser >> buildCodePane [
 	^ (ViennaPluggableTextMorph
 		on: self
@@ -70,7 +71,7 @@ LWTLivetalkBrowser >> buildCodePane [
 		yourself
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 LWTLivetalkBrowser >> buildScriptList [
 	^ (PluggableListMorph
 		on: self
@@ -82,7 +83,7 @@ LWTLivetalkBrowser >> buildScriptList [
 		yourself
 ]
 
-{ #category : #'code pane' }
+{ #category : 'code pane' }
 LWTLivetalkBrowser >> code [
 	^ self selectedScriptSelector
 		ifNotNil: [ :selector | 
@@ -92,7 +93,7 @@ LWTLivetalkBrowser >> code [
 		ifNil: [ self codeTemplate ]
 ]
 
-{ #category : #'code pane menu' }
+{ #category : 'code pane menu' }
 LWTLivetalkBrowser >> codePaneMenu: aMenu shifted: aBoolean [
 	aMenu target: self.
 	aMenu
@@ -123,12 +124,12 @@ LWTLivetalkBrowser >> codePaneMenu: aMenu shifted: aBoolean [
 	^ aMenu
 ]
 
-{ #category : #'code pane' }
+{ #category : 'code pane' }
 LWTLivetalkBrowser >> codeSelection [
 	^ codeSelection ifNil: [ codeSelection := 1 to: 0 ]
 ]
 
-{ #category : #'code pane' }
+{ #category : 'code pane' }
 LWTLivetalkBrowser >> codeSelection: anInterval [
 	codeSelection := anInterval.
 	[ 
@@ -141,7 +142,7 @@ LWTLivetalkBrowser >> codeSelection: anInterval [
 		do: [ :ex | self director selectedWidgets: #() ]
 ]
 
-{ #category : #'code pane' }
+{ #category : 'code pane' }
 LWTLivetalkBrowser >> codeTemplate [
 	^ '<widget name>`<event>
 	<number literal>
@@ -152,51 +153,51 @@ LWTLivetalkBrowser >> codeTemplate [
 	! <expression>' asText makeAllColor: Color gray
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 LWTLivetalkBrowser >> defaultTitle [
 	^ 'Livetalk Browser'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTLivetalkBrowser >> director [
 	^ director
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTLivetalkBrowser >> director: aLWTDirector [
 	director ifNotNil: [ director removeDependent: self ].
 	director := aLWTDirector.
 	director addDependent: self
 ]
 
-{ #category : #'script list menu' }
+{ #category : 'script list menu' }
 LWTLivetalkBrowser >> doIt [
 	self selectedScript
 		ifNotNil: #value
 ]
 
-{ #category : #'script list' }
+{ #category : 'script list' }
 LWTLivetalkBrowser >> hasScriptSelected [
 	^ selectedScriptSelector notNil
 ]
 
-{ #category : #'script list menu' }
+{ #category : 'script list menu' }
 LWTLivetalkBrowser >> inspectDirector [
 	self director inspect
 ]
 
-{ #category : #'script list menu' }
+{ #category : 'script list menu' }
 LWTLivetalkBrowser >> inspectIt [
 
 	self selectedScript ifNotNil: [ :script | script value inspect ]
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 LWTLivetalkBrowser >> openLabel: aString [
 	self build openInWindowLabeled: aString
 ]
 
-{ #category : #'script list menu' }
+{ #category : 'script list menu' }
 LWTLivetalkBrowser >> removeScript [
 	self director
 		removeScriptAt: self selectedScriptSelector
@@ -205,17 +206,17 @@ LWTLivetalkBrowser >> removeScript [
 	self selectScriptNamed: nil
 ]
 
-{ #category : #'script list' }
+{ #category : 'script list' }
 LWTLivetalkBrowser >> scriptList [
 	^ self director scriptSelectors
 ]
 
-{ #category : #'script list' }
+{ #category : 'script list' }
 LWTLivetalkBrowser >> scriptListIndex [
 	^ self scriptList indexOf: self selectedScriptSelector
 ]
 
-{ #category : #'script list' }
+{ #category : 'script list' }
 LWTLivetalkBrowser >> scriptListIndex: anInteger [ 
 	self
 		selectScriptNamed: (self scriptList
@@ -223,7 +224,7 @@ LWTLivetalkBrowser >> scriptListIndex: anInteger [
 				ifAbsent: [])
 ]
 
-{ #category : #'script list menu' }
+{ #category : 'script list menu' }
 LWTLivetalkBrowser >> scriptListMenu: aMenu shifted: shifted [ 
 	"Answer the message-list menu"
 	shifted
@@ -236,7 +237,7 @@ LWTLivetalkBrowser >> scriptListMenu: aMenu shifted: shifted [
 	^ aMenu
 ]
 
-{ #category : #'script list' }
+{ #category : 'script list' }
 LWTLivetalkBrowser >> selectScriptNamed: aSymbol [ 
 	selectedScriptSelector := aSymbol
 				ifNotNil: [:selector | selector asSymbol].
@@ -244,19 +245,19 @@ LWTLivetalkBrowser >> selectScriptNamed: aSymbol [
 	self changed: #code
 ]
 
-{ #category : #'script list' }
+{ #category : 'script list' }
 LWTLivetalkBrowser >> selectedScript [
 	^ self director
 		scriptAt: self selectedScriptSelector
 		ifAbsent: []
 ]
 
-{ #category : #'script list' }
+{ #category : 'script list' }
 LWTLivetalkBrowser >> selectedScriptSelector [
 	^ selectedScriptSelector
 ]
 
-{ #category : #'script list menu' }
+{ #category : 'script list menu' }
 LWTLivetalkBrowser >> shiftedScriptListMenu: aMenu [
 	aMenu addList: #(
 			('inspect editor'		inspect)
@@ -264,7 +265,7 @@ LWTLivetalkBrowser >> shiftedScriptListMenu: aMenu [
 	^ aMenu
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 LWTLivetalkBrowser >> update: aSymbol [
 	aSymbol = #scriptSelectors ifTrue: [ self changed: #scriptList ].
 	^ super update: aSymbol

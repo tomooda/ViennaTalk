@@ -1,6 +1,6 @@
-Extension { #name : #ViennaTypeSynonymNode }
+Extension { #name : 'ViennaTypeSynonymNode' }
 
-{ #category : #'*ViennaTalk-Parser-Core' }
+{ #category : '*ViennaTalk-Parser-Core' }
 ViennaTypeSynonymNode >> parser [
 
 	^ ViennaVDMParser new typeDefinition

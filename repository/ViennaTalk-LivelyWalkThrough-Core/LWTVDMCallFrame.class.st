@@ -1,15 +1,16 @@
 Class {
-	#name : #LWTVDMCallFrame,
-	#superclass : #LWTFrame,
+	#name : 'LWTVDMCallFrame',
+	#superclass : 'LWTFrame',
 	#instVars : [
 		'callee',
 		'expression',
 		'value'
 	],
-	#category : 'ViennaTalk-LivelyWalkThrough-Core'
+	#category : 'ViennaTalk-LivelyWalkThrough-Core',
+	#package : 'ViennaTalk-LivelyWalkThrough-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 LWTVDMCallFrame class >> callee: callee expression: aString value: anotherString [ 
 	^ self new callee: callee;
 		 expression: aString;
@@ -17,39 +18,39 @@ LWTVDMCallFrame class >> callee: callee expression: aString value: anotherString
 		 yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 LWTVDMCallFrame class >> expression: aString value: anotherString [ 
 	^ self new expression: aString;
 		 value: anotherString;
 		 yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTVDMCallFrame >> callee [
 	^ callee
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTVDMCallFrame >> callee: aString [
 	callee := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTVDMCallFrame >> expression [
 	^ expression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTVDMCallFrame >> expression: aString [
 	expression := aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 LWTVDMCallFrame >> isVDMCallFrame [
 	^ true
 ]
 
-{ #category : #'interface opening' }
+{ #category : 'interface opening' }
 LWTVDMCallFrame >> openBrowser [
 	| module |
 	module := (callee indexOf: $`)
@@ -59,7 +60,7 @@ LWTVDMCallFrame >> openBrowser [
 	^ ViennaBrowser open model selectModuleNamed: module
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 LWTVDMCallFrame >> printOn: aStream [ 
 	timestamp printOn: aStream.
 	aStream nextPutAll: ' : VDM : '.
@@ -68,12 +69,12 @@ LWTVDMCallFrame >> printOn: aStream [
 	aStream nextPutAll: value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTVDMCallFrame >> value [
 	^ value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LWTVDMCallFrame >> value: aString [
 	value := aString
 ]

@@ -13,9 +13,17 @@ Duration >> printRoughlyOn: stream [
 	self negative ifTrue: [
 		stream << '- '.
 		^ self abs printRoughlyOn: stream ].
-	#( #( days 'day' ) #( hours 'hour' ) #( minutes 'min' ) ) do: [
-		:each |
-		count := (self perform: each first) truncated.
+	{
+		{
+			[ :d | d days // 365 ].
+			'year' }.
+		{
+			[ :d | d days // 30 ].
+			'month' }.
+		{ #days. 'day' }.
+		{ #hours. 'hour' }.
+		{ #minutes. 'min' } } do: [ :each |
+		count := (each first value: self) truncated.
 		count > 0 ifTrue: [
 			count printWithCommasOn: stream.
 			stream

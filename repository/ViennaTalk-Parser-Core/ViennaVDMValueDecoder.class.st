@@ -1,72 +1,73 @@
 Class {
-	#name : #ViennaVDMValueDecoder,
-	#superclass : #ViennaVDMGrammar,
-	#category : #'ViennaTalk-Parser-Core'
+	#name : 'ViennaVDMValueDecoder',
+	#superclass : 'ViennaVDMGrammar',
+	#category : 'ViennaTalk-Parser-Core',
+	#package : 'ViennaTalk-Parser-Core'
 }
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMValueDecoder >> accessFunctionDefinition [
 	^ PP2FailingNode new
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMValueDecoder >> accessOperationDefinition [
 	^ PP2FailingNode new
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMValueDecoder >> accessTypeDefinition [
 	^ PP2FailingNode new
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 ViennaVDMValueDecoder >> booleanLiteral [
 	^ super booleanLiteral
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 ViennaVDMValueDecoder >> characterLiteral [
 	^ super characterLiteral
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 ViennaVDMValueDecoder >> decimalLiteral [
 	^ ($- asPParser optional , super decimalLiteral) flatten trim ==> [ :str | str trim asNumber ]
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaVDMValueDecoder >> default [
 	^ expression end
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMValueDecoder >> document [
 	^ PP2FailingNode new
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMValueDecoder >> explicitFunctionDefinition [
 	^ PP2FailingNode new
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMValueDecoder >> explicitOperationDefinition [
 	^ PP2FailingNode new
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 ViennaVDMValueDecoder >> expression [
 	^ self mapEnumeration / self setEnumeration / self sequenceEnumeration / self tupleConstructor / self recordConstructor
 		/ self tokenConstructor / self undefinedExpression / symbolicLiteral
 		/ ((lparen , expression , rparen) ==> [ :triple | triple second ])
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMValueDecoder >> functionDefinitions [
 	^ PP2FailingNode new
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 ViennaVDMValueDecoder >> hexadecimalLiteral [
 	^ ($- asPParser optional , super hexadecimalLiteral) trim
 		==> [ :pair | 
@@ -76,12 +77,12 @@ ViennaVDMValueDecoder >> hexadecimalLiteral [
 			nat ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMValueDecoder >> initialisation [
 	^ PP2FailingNode new
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 ViennaVDMValueDecoder >> mapEnumeration [
 	^ super mapEnumeration
 		==> [ :pairs | 
@@ -91,22 +92,22 @@ ViennaVDMValueDecoder >> mapEnumeration [
 			map ]
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 ViennaVDMValueDecoder >> nilLiteral [
 	^ super nilLiteral
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMValueDecoder >> operationDefinitions [
 	^ PP2FailingNode new
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 ViennaVDMValueDecoder >> quoteLiteral [
 	^ super quoteLiteral ==> [ :quote | (quote copyFrom: 2 to: quote size - 1) asSymbol ]
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 ViennaVDMValueDecoder >> recordConstructor [
 	^ super recordConstructor
 		==> [ :constructorAndArgs | 
@@ -118,62 +119,62 @@ ViennaVDMValueDecoder >> recordConstructor [
 			ViennaComposite constructorName: constructorName withAll: args ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMValueDecoder >> recordTypeDefinition [
 	^ PP2FailingNode new
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 ViennaVDMValueDecoder >> sequenceEnumeration [
 	^ super sequenceEnumeration ==> [ :elems | elems asOrderedCollection ]
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 ViennaVDMValueDecoder >> setEnumeration [
 	^ super setEnumeration ==> [ :elems | elems asSet ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMValueDecoder >> stateDefinition [
 	^ PP2FailingNode new
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 ViennaVDMValueDecoder >> textLiteral [
 	^ super textLiteral
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 ViennaVDMValueDecoder >> tokenConstructor [
 	^ super tokenConstructor ==> [ :arg | ViennaToken with: arg ]
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 ViennaVDMValueDecoder >> tupleConstructor [
 	^ super tupleConstructor ==> [ :array | array asArray ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMValueDecoder >> typeDefinitions [
 	^ PP2FailingNode new
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 ViennaVDMValueDecoder >> typeSynonym [
 	^ PP2FailingNode new
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 ViennaVDMValueDecoder >> unaryMinus [
 	^ (self operator: $-) , expression
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 ViennaVDMValueDecoder >> unaryPlus [
 	^ (self operator: $+) , expression
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 ViennaVDMValueDecoder >> undefinedExpression [
 	^ super undefinedExpression ==> [ :t | ViennaUndefinedEvaluationError signal ]
 ]

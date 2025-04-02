@@ -1,6 +1,6 @@
-Extension { #name : #ViennaModuleNode }
+Extension { #name : 'ViennaModuleNode' }
 
-{ #category : #'*ViennaTalk-Parser-Core' }
+{ #category : '*ViennaTalk-Parser-Core' }
 ViennaModuleNode >> parser [
 
 	^ ViennaVDMParser new module end

@@ -1,6 +1,8 @@
 Class {
 	#name : 'ViennaRefactoringBrowser',
 	#superclass : 'SpPresenterWithModel',
+	#traits : 'THiDeEditTags',
+	#classTraits : 'THiDeEditTags classTrait',
 	#instVars : [
 		'fileReference',
 		'animation',
@@ -22,24 +24,40 @@ Class {
 		'highlighterProcess',
 		'dirty',
 		'refreshStateButton',
-		'showsTimeLineButton',
-		'showsConstructionLineButton',
 		'epiLogMatcherDropList',
-		'epiLogTags',
 		'epiLogList',
 		'epiLogDiffList',
 		'epiLogDiffText',
+		'epiLogSourceText',
+		'epiLogNotebook',
 		'sliceNodes',
 		'sliceAttribute',
 		'runsAllTests',
 		'autoTestButton',
 		'runTestButton',
-		'namedEpiLogDropList',
 		'revertEpiLogButton',
 		'removeEpiLogButton',
-		'removeEpiLogTagButton',
-		'addEpiLogTagButton',
-		'editEpiLogCommentButton'
+		'editEpiLogCommentButton',
+		'hideStorage',
+		'editEpiLogTagButton',
+		'addToNarrativeButton',
+		'updateEpiLogButton',
+		'showsArtifactTimelineButton',
+		'showsUserTimelineButton',
+		'narrativeDropList',
+		'createNewNarrativeButton',
+		'removeNarrativeButton',
+		'epiLogListSizeDropList',
+		'gitRemoteCommitList',
+		'gitOutgoingCommitList',
+		'gitCommitButton',
+		'gitCommitMenuButton',
+		'gitPullButton',
+		'gitPushButton',
+		'gitMergeButton',
+		'gitFetchButton',
+		'gitDiffList',
+		'gitDiffText'
 	],
 	#classVars : [
 		'GreenSignalIcon',
@@ -94,21 +112,6 @@ ViennaRefactoringBrowser class >> createSignalIcon: color1 with: color2 with: co
 		borderWidth: 1
 		borderColor: color3 darker.
 	^ form
-]
-
-{ #category : 'layout' }
-ViennaRefactoringBrowser class >> defaultLayout [
-
-	^ SpBoxLayout newVertical
-		  add: #menuBar height: self buttonHeight;
-		  add: (SpPanedLayout newVertical
-				   positionOfSlider: 0.3;
-				   add: (SpBoxLayout newHorizontal
-						    add: #moduleList;
-						    add: #categoryList;
-						    add: #definitionList);
-				   add: #notebook);
-		  yourself
 ]
 
 { #category : 'settings' }
@@ -532,7 +535,7 @@ ViennaRefactoringBrowser class >> initialize [
 ViennaRefactoringBrowser class >> openFromDisk: aFileReference [
 
 	^ self new
-		  importFromDisk: aFileReference;
+		  load: aFileReference;
 		  open
 ]
 
@@ -669,16 +672,6 @@ ViennaRefactoringBrowser >> accept: aStringOrText [
 	^ newNode
 ]
 
-{ #category : 'operations-epiLog' }
-ViennaRefactoringBrowser >> addEpiLogTag [
-
-	epiLogList selectedItem ifNotNil: [ :epiLog |
-		(UIManager default request: 'Tag' initialAnswer: 'tag') ifNotNil: [
-			:name |
-			epiLogTags at: name put: epiLog.
-			self updateNamedEpiLogDropList ] ]
-]
-
 { #category : 'menus' }
 ViennaRefactoringBrowser >> addRefactoringMenuGroupOn: aViennaNode to: aMenuPresenter with: aBlock [
 
@@ -786,6 +779,43 @@ ViennaRefactoringBrowser >> addSliceOnState: aViennaStateDefinitionNode criteria
 	self sliceNodesChanged
 ]
 
+{ #category : 'operations-epiLog' }
+ViennaRefactoringBrowser >> addToNarrativeMenu [
+
+	| currentNarrative storage |
+	currentNarrative := narrativeDropList selectedItem ifNotNil:
+		                    #narrative.
+	storage := self epiLog hideStorage.
+	epiLogList selectedItems ifNotEmpty: [ :epiLog |
+		^ self newMenu
+			  addGroup: [ :group |
+				  storage narratives do: [ :narrative |
+						  currentNarrative = narrative ifFalse: [
+								  group addItem: [ :item |
+										  item
+											  icon: (self iconNamed: #forward);
+											  name: narrative name;
+											  action: [ narrative addAll: epiLog ] ] ] ] ];
+			  addGroup: [ :group |
+				  group addItem: [ :item |
+					  item
+						  name: 'New timeline...';
+						  icon: (self iconNamed: #add);
+						  action: [
+							  self createNewNarrativeDo: [ :narrative |
+									  narrative addAll: epiLog.
+									  self updateEpiLogList ] ] ] ] ].
+	^ nil
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> artifactTimelineSelected [
+
+	showsUserTimelineButton state: false.
+	narrativeDropList resetSelection.
+	self selectedTimelineChanged
+]
+
 { #category : 'accessing' }
 ViennaRefactoringBrowser >> category [
 	^ categoryList selection selectedItem
@@ -826,6 +856,45 @@ ViennaRefactoringBrowser >> clearSlice [
 	self sliceNodesChanged
 ]
 
+{ #category : 'private' }
+ViennaRefactoringBrowser >> confirm: queryString label: titleString [
+
+	^ self application newConfirm
+		  title: titleString;
+		  label: queryString;
+		  openModal
+]
+
+{ #category : 'operations-epiLog' }
+ViennaRefactoringBrowser >> createNewNarrative [
+
+	self createNewNarrativeDo: [  ]
+]
+
+{ #category : 'operations-epiLog' }
+ViennaRefactoringBrowser >> createNewNarrativeDo: aBlock [
+
+	self epiLog ifNotNil: [ :epiLog |
+		| storage |
+		storage := epiLog hideStorage.
+		[
+		(UIManager default
+			 request: 'New timeline name'
+			 initialAnswer: 'my timeline'
+			 title: 'EpiLog') ifNil: [ ^ self ] ifNotNil: [ :name |
+			(storage hasNarrativeNamed: name) ifFalse: [
+				| id narrative result |
+				id := (narrative := storage newNarrativeNamed: name) identity.
+				narrativeDropList selectItem: (narrativeDropList items
+						 detect: [ :assoc | assoc value = id ]
+						 ifNone: [ nil ]).
+				result := aBlock cull: narrative.
+				self updateNarrativeDropList: narrative.
+				^ result ].
+			UIManager default alert: name , ' is already used.' title: 'EpiLog' ] ]
+			repeat ]
+]
+
 { #category : 'private-unit testing' }
 ViennaRefactoringBrowser >> debugTestResultItem: aViennaTestResultItem [
 
@@ -835,6 +904,24 @@ ViennaRefactoringBrowser >> debugTestResultItem: aViennaTestResultItem [
 		  debug: aViennaTestResultItem operation , '()'
 		  in: aViennaTestResultItem module
 		  ifError: [ :msg | msg ]
+]
+
+{ #category : 'layouts' }
+ViennaRefactoringBrowser >> defaultLayout [
+
+	^ SpBoxLayout newVertical
+		  add: menuBar height: self class buttonHeight;
+		  add: (SpPanedLayout newVertical
+				   positionOfSlider: 0.3;
+				   add: (SpPanedLayout newHorizontal
+						    positionOfSlider: 0.4;
+						    add: moduleList;
+						    add: (SpPanedLayout newHorizontal
+								     positionOfSlider: 0.3;
+								     add: categoryList;
+								     add: definitionList));
+				   add: notebook);
+		  yourself
 ]
 
 { #category : 'accessing' }
@@ -947,6 +1034,29 @@ ViennaRefactoringBrowser >> editEpiLogComment [
 		epiLogList refresh ]
 ]
 
+{ #category : 'operations-epiLog' }
+ViennaRefactoringBrowser >> editEpiLogTag [
+
+	epiLogList selectedItem ifNotNil: [ :epiLog |
+		| tags |
+		tags := epiLog hideStorage chronicleTags asSortedCollection.
+		self
+			editTags: tags
+			on: epiLog
+			okAction: [ self updateEpiLogMatcherDropList ] ]
+]
+
+{ #category : 'operations-epiLog' }
+ViennaRefactoringBrowser >> editTags: aCollectionOfAvailableTagString on: aViennaEpiLog okAction: aBlock [
+
+	self
+		editTags: aCollectionOfAvailableTagString
+		on: aViennaEpiLog
+		title: 'Edit tags'
+		createNewTagTitle: 'Create new...'
+		okAction: aBlock
+]
+
 { #category : 'accessing' }
 ViennaRefactoringBrowser >> epiLog [
 
@@ -957,6 +1067,12 @@ ViennaRefactoringBrowser >> epiLog [
 ViennaRefactoringBrowser >> epiLog: aViennaEpiLog [
 
 	self model: aViennaEpiLog
+]
+
+{ #category : 'accessing' }
+ViennaRefactoringBrowser >> epiLogArtifactTimelineEnumerator [
+
+	^ ViennaEpiLogArtifactTimelineEnumerator current
 ]
 
 { #category : 'accessing' }
@@ -971,19 +1087,13 @@ ViennaRefactoringBrowser >> epiLogChanges [
 ]
 
 { #category : 'accessing' }
-ViennaRefactoringBrowser >> epiLogConstructionLineEnumerator [
-
-	^ ViennaEpiLogConstructionLineEnumerator current
-]
-
-{ #category : 'accessing' }
 ViennaRefactoringBrowser >> epiLogEnumerator [
 
-	showsTimeLineButton state = true ifTrue: [
-		^ self epiLogTimeLineEnumerator ].
-	showsConstructionLineButton state = true ifTrue: [
-		^ self epiLogConstructionLineEnumerator ].
-	^ nil
+	showsUserTimelineButton state = true ifTrue: [
+		^ self epiLogUserTimelineEnumerator ].
+	showsArtifactTimelineButton state = true ifTrue: [
+		^ self epiLogArtifactTimelineEnumerator ].
+	^ narrativeDropList selectedItem
 ]
 
 { #category : 'operations-epiLog' }
@@ -1010,26 +1120,29 @@ ViennaRefactoringBrowser >> epiLogListContextMenu [
 	| menu |
 	menu := self newMenu.
 	epiLogList selectedItem ifNotNil: [ :epilog |
-		menu
-			addGroup: [ :group |
-				group
-					addItem: [ :item |
-						item
-							name: 'Revert to';
-							action: [ self revertTo: epilog ] ];
-					addItem: [ :item |
-						item
-							name: 'Comment';
-							action: [ self editEpiLogComment ] ];
-					addItem: [ :item |
-						item
-							name: 'Remove';
-							action: [ self removeEpiLog ] ] ];
-			addGroup: [ :group |
-				group addItem: [ :item |
+		menu addGroup: [ :group |
+			group
+				addItem: [ :item |
+					item
+						name: 'Revert to';
+						action: [ self revertTo: epilog ] ];
+				addItem: [ :item |
+					item
+						name: 'Comment';
+						action: [ self editEpiLogComment ] ];
+				addItem: [ :item |
+					item
+						name: 'Remove';
+						action: [ self removeEpiLog ] ];
+				addItem: [ :item |
 					item
 						name: 'Tag';
-						action: [ self addEpiLogTag ] ] ] ].
+						action: [ self editEpiLogTag ] ] ].
+		menu addGroup: [ :group |
+			group addItem: [ :item |
+				item
+					name: 'Unselect';
+					action: [ epiLogList unselectAll ] ] ] ].
 	^ menu
 ]
 
@@ -1037,15 +1150,26 @@ ViennaRefactoringBrowser >> epiLogListContextMenu [
 ViennaRefactoringBrowser >> epiLogListSelectionChanged [
 
 	self
+		updateEpiLogSourceText;
 		updateEpiLogDiffList;
-		updateNamedEpiLog;
+		updateEpiLogMatcherDropList;
 		updateEpiLogButtons
 ]
 
 { #category : 'operations-epiLog' }
 ViennaRefactoringBrowser >> epiLogLoading: aViennaModularDocumentNode [
 
-	self epiLog: (self epiLog newLoading: aViennaModularDocumentNode)
+	| storage |
+	storage := ViennaHiDeStorage for: fileReference.
+	self epiLog: (self epiLog
+			 newLoading: aViennaModularDocumentNode
+			 after: (storage chronicleTail ifNil: [
+					  ViennaEpiLog vanilla
+						  specification: aViennaModularDocumentNode;
+						  state: Dictionary new;
+						  hideStorage: storage;
+						  hideSave;
+						  yourself ]))
 ]
 
 { #category : 'operations-epiLog' }
@@ -1082,41 +1206,63 @@ ViennaRefactoringBrowser >> epiLogRevertion: aViennaEpiLog [
 ]
 
 { #category : 'accessing' }
-ViennaRefactoringBrowser >> epiLogTimeLineEnumerator [
+ViennaRefactoringBrowser >> epiLogUserTimelineEnumerator [
 
-	^ ViennaEpiLogTimeLineEnumerator current
+	^ ViennaEpiLogUserTimelineEnumerator current
+]
+
+{ #category : 'operations-epiLog' }
+ViennaRefactoringBrowser >> epiLogVanilla [
+
+	self epiLog: ViennaEpiLog vanilla
+]
+
+{ #category : 'operations-epiLog' }
+ViennaRefactoringBrowser >> epiLogVanilla: aViennaModularDocumentNode state: aDictionary [
+
+	self epiLog: (ViennaEpiLog vanilla
+			 specification: aViennaModularDocumentNode;
+			 state: aDictionary;
+			 yourself)
 ]
 
 { #category : 'layouts' }
 ViennaRefactoringBrowser >> epilogPageLayout [
 
 	^ SpPanedLayout newHorizontal
-		  positionOfSlider: 0.4;
+		  positionOfSlider: 0.6;
 		  add: (SpBoxLayout newVertical
 				   add: (SpBoxLayout newHorizontal
-						    add: showsTimeLineButton;
-						    add: showsConstructionLineButton;
+						    add: showsUserTimelineButton width: 150;
+						    add: showsArtifactTimelineButton width: 150;
+						    add: narrativeDropList;
+						    add: createNewNarrativeButton
+						    width: self class buttonHeight;
+						    add: removeNarrativeButton width: self class buttonHeight;
 						    yourself)
 				   expand: false;
-				   add: epiLogMatcherDropList expand: false;
+				   add: (SpBoxLayout newHorizontal
+						    vAlignEnd;
+						    add: self filterIcon expand: false;
+						    add: '  ' asPresenter expand: false;
+						    add: epiLogMatcherDropList;
+						    add: ' show ' asPresenter expand: false;
+						    add: epiLogListSizeDropList expand: false;
+						    add: ' items' asPresenter expand: false;
+						    yourself)
+				   expand: false;
 				   add: epiLogList;
 				   add: (SpBoxLayout newHorizontal
-						    add: namedEpiLogDropList;
-						    add: addEpiLogTagButton width: self class buttonHeight;
-						    add: removeEpiLogTagButton width: self class buttonHeight;
-						    yourself)
-				   expand: false;
-				   add: (SpBoxLayout newHorizontal
+						    add: updateEpiLogButton expand: false;
 						    add: revertEpiLogButton;
+						    add: editEpiLogTagButton expand: false;
 						    add: editEpiLogCommentButton expand: false;
+						    add: addToNarrativeButton expand: false;
 						    add: removeEpiLogButton expand: false;
 						    yourself)
 				   expand: false;
 				   yourself);
-		  add: (SpPanedLayout newVertical
-				   positionOfSlider: 0.3;
-				   add: epiLogDiffList;
-				   add: epiLogDiffText);
+		  add: epiLogNotebook;
 		  yourself
 ]
 
@@ -1142,78 +1288,36 @@ ViennaRefactoringBrowser >> executeRefactoring: aViennaRefactoring [
 			(result topLevelDefinition ifNil: [ categoryList selectedItem ]) ]
 ]
 
-{ #category : 'operations' }
-ViennaRefactoringBrowser >> export [
+{ #category : 'accessing' }
+ViennaRefactoringBrowser >> fileReference: aFileReference [
 
-	self hasFileReference
-		ifTrue: [ self exportToDisk ]
-		ifFalse: [
-			(UIManager default
-				 confirm: 'Export to'
-				 trueChoice: 'Directory'
-				 falseChoice: 'File')
-				ifTrue: [ self exportDirectory ]
-				ifFalse: [ self exportFile ] ]
+	fileReference := aFileReference
 ]
 
-{ #category : 'operations' }
-ViennaRefactoringBrowser >> exportDirectory [
+{ #category : 'icons' }
+ViennaRefactoringBrowser >> filterIcon [
 
-	(UIManager default
-		 chooseDirectory: 'Export directory'
-		 from: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :dir |
-		self specification modulesDo: [ :moduleNode |
-			| file |
-			file := dir / moduleNode identifier withExtension: 'vdmsl'.
-			file
-				ensureDeleteAll;
-				writeStreamDo: [ :stream |
-					stream nextPutAll:
-							((ViennaVDMFormatter format: moduleNode) withLineEndings:
-									 OSPlatform current lineEnding) ] ].
-		UIManager default message: 'Exported to ' , dir basename , '/.'.
-		self clearDirty ]
-]
-
-{ #category : 'operations' }
-ViennaRefactoringBrowser >> exportFile [
-
-	(UIManager default
-		 chooseForSaveFileReference: 'Export file'
-		 extensions: #( 'vdmsl' )
-		 path: FileLocator viennaTalkDocumentDirectory asFileReference)
-		ifNotNil: [ :file |
-			file
-				ensureDeleteAll;
-				writeStreamDo: [ :stream |
-					stream nextPutAll:
-							(self source withLineEndings: OSPlatform current lineEnding) ].
-			UIManager default message: 'Exported to ' , file basename , '.'.
-			self clearDirty ]
-]
-
-{ #category : 'operations' }
-ViennaRefactoringBrowser >> exportToDisk [
-
-	fileReference ifNotNil: [ :ref |
-		ref isDirectory
-			ifTrue: [
-				self specification modulesDo: [ :moduleNode |
-					| file |
-					file := ref / moduleNode identifier withExtension: 'vdmsl'.
-					file
-						ensureDeleteAll;
-						writeStreamDo: [ :stream |
-							stream nextPutAll:
-									((ViennaVDMFormatter format: moduleNode) withLineEndings:
-											 OSPlatform current lineEnding) ] ] ]
-			ifFalse: [
-				ref
-					ensureDeleteAll;
-					writeStreamDo: [ :stream |
-						stream nextPutAll:
-								(self source withLineEndings: OSPlatform current lineEnding) ] ].
-		self clearDirty ]
+	| form fillColor a b c |
+	fillColor := Color white.
+	form := Form extent: 32 @ 32 depth: 32.
+	a := 3.
+	b := 2.
+	c := 32.
+	form getCanvas
+		drawPolygon: {
+				( a @ (1+a)).
+				( a @ 1).
+				(c - a @ 1).
+				(c - a @ (1+a)).
+				(c // 2 + b @ (c // 2)).
+				(c // 2 + b @ (c - a - b)).
+				(c // 2 - b @ (c - a)).
+				(c // 2 - b @ (c // 2)) }
+		color: (Color gray: 0.7)
+		borderWidth: 3
+		borderColor: Color gray;
+		flush.
+	^ form scaledToExactSize: 16 @ 16
 ]
 
 { #category : 'private' }
@@ -1293,10 +1397,231 @@ ViennaRefactoringBrowser >> getSource: aViennaNode [
 	^ aViennaNode tracingHighlightedSource
 ]
 
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitCanCommit [
+
+	^ self gitHasDirtyWorkingCopy
+]
+
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitCanCommitAndPush [
+
+	^ self gitHasDirtyWorkingCopy and: [
+		  (self icebergRepositoryDo: [ :repository |
+			   repository branch includesCommit:
+				   repository branch upstream commit ]) = true ]
+]
+
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitCanPull [
+
+	self icebergRepositoryDo: [ :repository |
+		^ self gitHasDirtyWorkingCopy not and: [
+			  (repository branch upstream includesCommit:
+				   repository branch commit) and: [
+				  (repository branch includesCommit:
+					   repository branch upstream commit) not ] ] ].
+	^ false
+]
+
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitCanPush [
+
+	self icebergRepositoryDo: [ :repository |
+		^ (repository branch includesCommit:
+			   repository branch upstream commit) and: [
+			  (repository branch upstream includesCommit:
+				   repository branch commit) not ] ].
+	^ false
+]
+
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitChanges [
+
+	self specification ifNotNil: [ :ast |
+		self icebergRepositoryDo: [ :repository |
+			^ (ViennaNodeDiffSet
+				   from: (self sourceFrom: repository branch commit fileSystem)
+						   asViennaDocumentAst
+				   to: ast) condenseChanges ] ].
+	^ ViennaNodeDiffSet fromNodeChanges: #(  )
+]
+
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitCommit [
+
+	self gitCanCommit ifTrue: [
+		| text |
+		(text := self newText) openDialog
+			title: 'Commit Message';
+			okAction: [
+				self gitCommitWithMessage: text text.
+				self updateGitOutgoingCommitList.
+				self updateGitButtons ] ]
+]
+
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitCommitAndPush [
+
+	self gitCanCommitAndPush ifTrue: [
+		| text |
+		(text := self newText) openDialog
+			title: 'Commit Message';
+			okAction: [
+				self gitCommitWithMessage: text text.
+				self icebergRepositoryDo: #push.
+				self updateGitOutgoingCommitList.
+				self updateGitRemoteCommitList.
+				self updateGitButtons ] ]
+]
+
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitCommitWithMessage: aString [
+
+	self icebergRepositoryDo: [ :repository |
+		repository
+			addFilesToIndex:
+				((repository location filesMatching: '*.vdmsl') collect: #basename);
+			commitIndexWithMessage: aString
+			andParents: { repository branch commit }.
+		self updateGitOutgoingCommitList ]
+]
+
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitFetch [
+
+	self icebergRepositoryDo: #fetch.
+	self updateGitRemoteCommitList.
+	self updateGitButtons
+]
+
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitHasDirtyWorkingCopy [
+
+	self icebergRepositoryDo: [ :repository |
+		| headFileSystem |
+		headFileSystem := repository branch commit fileSystem.
+		(fileReference filesMatching: '*.vdmsl') do: [ :fileRef |
+			fileRef contents ~= (headFileSystem / fileRef basename) contents
+				ifTrue: [ ^ true ] ] ].
+	^ false
+]
+
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitLocalBranchIncludes: anIceCommit [
+
+	self icebergRepositoryDo: [ :repository |
+		^ repository branch includesCommit: anIceCommit ].
+	^ false
+]
+
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitOutgoingCommitsDo: aBlock [
+
+	self icebergRepositoryDo: [ :repository |
+		| upstreamBranch |
+		upstreamBranch := repository branch upstream.
+		repository branch commits do: [ :commit |
+			(upstreamBranch includesCommit: commit) ifTrue: [ ^ self ].
+			aBlock cull: commit ] ]
+]
+
+{ #category : 'layouts' }
+ViennaRefactoringBrowser >> gitPageLayout [
+
+	^ SpPanedLayout newHorizontal
+		  positionOfSlider: 0.65;
+		  add: (SpBoxLayout newHorizontal
+				   add: (SpPanedLayout newVertical
+						    positionOfSlider: 0.4;
+						    add: (SpBoxLayout newVertical
+								     add: 'Local' asPresenter expand: false;
+								     add: gitOutgoingCommitList;
+								     add: (SpBoxLayout newHorizontal
+										      add: gitPullButton expand: false;
+										      add: gitPushButton expand: false;
+										      yourself)
+								     expand: false;
+								     yourself);
+						    add: (SpBoxLayout newVertical
+								     add: 'Remote' asPresenter expand: false;
+								     add: gitRemoteCommitList;
+								     add: (SpBoxLayout newHorizontal
+										      add: gitFetchButton expand: false;
+										      add: gitMergeButton expand: false;
+										      yourself)
+								     expand: false;
+								     yourself);
+						    yourself);
+				   add: ' ' asPresenter width: 7;
+				   yourself);
+		  add: (SpBoxLayout newVertical
+				   add: 'Working copy' asPresenter expand: false;
+				   add: (SpPanedLayout newVertical
+						    positionOfSlider: 0.35;
+						    add: gitDiffList;
+						    add: gitDiffText);
+				   add: (SpBoxLayout newHorizontal
+						    add: gitCommitButton expand: false;
+						    add: gitCommitMenuButton width: 20;
+						    yourself)
+				   expand: false;
+				   yourself);
+		  yourself
+]
+
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitPull [
+
+	self icebergRepositoryDo: [ :repository |
+		self gitCanPull
+			ifTrue: [
+				repository branch commit: repository branch upstream commit.
+				self reload.
+				self updateGitPage ]
+			ifFalse: [
+			self alert: 'Can not pull into dirty working copy or local commits' ] ]
+]
+
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitPush [
+
+	self gitCanPush ifTrue: [
+		self icebergRepositoryDo: #push.
+		self
+			updateGitOutgoingCommitList;
+			updateGitRemoteCommitList;
+			updateGitButtons ]
+]
+
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitRemoteCommitsDo: aBlock [
+
+	self icebergRepositoryDo: [ :repository |
+		| headId |
+		headId := repository branch commit id.
+		repository branch upstream commits do: aBlock ]
+]
+
 { #category : 'testing' }
 ViennaRefactoringBrowser >> hasFileReference [
 
 	^ fileReference notNil and: [ fileReference exists ]
+]
+
+{ #category : 'testing' }
+ViennaRefactoringBrowser >> hasGit [
+
+	^ fileReference notNil and: [ (fileReference / '.git') isDirectory ]
+]
+
+{ #category : 'testing' }
+ViennaRefactoringBrowser >> hasTypeError: aViennaNode [
+
+	^ pendingTypeError notNil and: [
+		  | errorNode |
+		  errorNode := pendingTypeError node.
+		  aViennaNode hasDescendantSuchThat: [ :node | errorNode == node ] ]
 ]
 
 { #category : 'operations' }
@@ -1348,72 +1673,27 @@ ViennaRefactoringBrowser >> highlightSourceText [
 		                      Processor userBackgroundPriority
 ]
 
-{ #category : 'controlling' }
-ViennaRefactoringBrowser >> ifShowsTimeLine: timeLineBlock ifShowsConstructionLine: constructionLineBlock [
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> icebergRepositoryDo: aBlock [
 
-	showsTimeLineButton state = true ifTrue: [ ^ timeLineBlock value ].
-	showsConstructionLineButton state = true ifTrue: [
-		^ constructionLineBlock value ].
-	^ nil
+	^ (fileReference notNil and: [ fileReference isDirectory ]) ifTrue: [
+		  (IceRepository repositoryNamed: fileReference basename)
+			  ifNotNil: aBlock
+			  ifNil: [
+				  self hasGit ifTrue: [
+					  aBlock cull: ((IceRepositoryCreator new
+							    repository: nil;
+							    location: fileReference;
+							    createRepository)
+							   register;
+							   yourself) ] ] ]
 ]
 
-{ #category : 'operations' }
-ViennaRefactoringBrowser >> importDirectory [
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> ifHiDeHoVisible: aBlock [
 
-	(UIManager default
-		 chooseDirectory: 'Import directory'
-		 from: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :dir |
-		fileReference := dir.
-		self importFromDisk ]
-]
-
-{ #category : 'operations' }
-ViennaRefactoringBrowser >> importFile [
-
-	(UIManager default
-		 chooseExistingFileReference: 'Import directory'
-		 extensions: #( 'vdmsl' )
-		 path: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :file |
-		fileReference := file.
-		self importFromDisk ]
-]
-
-{ #category : 'operations' }
-ViennaRefactoringBrowser >> importFromDisk [
-
-	fileReference ifNotNil: [ :ref |
-		ref isDirectory
-			ifTrue: [
-				| modelFiles testFiles source |
-				modelFiles := OrderedCollection new.
-				testFiles := OrderedCollection new.
-				ref files do: [ :file |
-					(file basename endsWith: '.vdmsl') ifTrue: [
-						(file basename endsWith: 'Test.vdmsl')
-							ifTrue: [ testFiles add: file ]
-							ifFalse: [ modelFiles add: file ] ] ].
-				modelFiles := modelFiles asSortedCollection: [ :less :more |
-					              less basename <= more basename ].
-				testFiles := testFiles asSortedCollection: [ :less :more |
-					             less basename <= more basename ].
-				source := String streamContents: [ :writeStream |
-					          modelFiles do: [ :file |
-						          writeStream nextPutAll:
-							          (file contents copyWith: Character cr)
-								          withInternalLineEndings ].
-					          testFiles do: [ :file |
-						          writeStream nextPutAll:
-							          (file contents copyWith: Character cr)
-								          withInternalLineEndings ] ].
-				self load: source ]
-			ifFalse: [ self load: ref contents withInternalLineEndings ] ]
-]
-
-{ #category : 'operations' }
-ViennaRefactoringBrowser >> importFromDisk: aFileReference [
-
-	fileReference := aFileReference.
-	self importFromDisk
+	notebook ifNotNil: [
+		(notebook selectedPage ifNotNil: #title) = 'HiDeHo' ifTrue: aBlock ]
 ]
 
 { #category : 'operations' }
@@ -1434,8 +1714,7 @@ ViennaRefactoringBrowser >> initialize [
 		do: [ self updateStateTableItems ]
 		for: self.
 	runsAllTests := false.
-	self epiLog: ViennaEpiLog vanilla.
-	epiLogTags := Dictionary new.
+	self epiLogVanilla.
 	dirty := false.
 	sliceNodes := IdentitySet new.
 	super initialize
@@ -1444,38 +1723,82 @@ ViennaRefactoringBrowser >> initialize [
 { #category : 'initialization' }
 ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 
-	showsTimeLineButton := self newRadioButton
-		                       label: 'time line';
-		                       whenDeactivatedDo: [ self updateEpiLogList ];
-		                       yourself.
-	showsConstructionLineButton := self newRadioButton
-		                               label: 'construction line';
-		                               whenDeactivatedDo: [
-			                               self updateEpiLogList ];
+	showsUserTimelineButton := self newCheckBox
+		                           label: 'user timeline';
+		                           state: true;
+		                           whenActivatedDo: [
+			                           self userTimelineSelected ];
+		                           yourself.
+	showsArtifactTimelineButton := self newCheckBox
+		                               label: 'artifact timeline';
+		                               state: false;
+		                               whenActivatedDo: [
+			                               self artifactTimelineSelected ];
 		                               yourself.
+	narrativeDropList := self newDropList
+		                     display: [ :narrativeEnumerator |
+			                     narrativeEnumerator name ];
+		                     displayIcon: [ :narrativeEnumerator |
+			                     narrativeEnumerator icon ];
+		                     startWithoutSelection;
+		                     whenSelectedItemChangedDo: [ :item |
+			                     item ifNotNil: [
+					                     self narrativeTimelineSelected ] ];
+		                     yourself.
+	createNewNarrativeButton := self newButton
+		                            icon: (self iconNamed: #add);
+		                            action: [ self createNewNarrative ];
+		                            yourself.
+	removeNarrativeButton := self newButton
+		                         icon: (self iconNamed: #remove);
+		                         action: [ self removeNarrative ];
+		                         yourself.
 	epiLogMatcherDropList := self newDropList
+		                         displayIcon: [ :matcher | matcher icon ];
 		                         items: { ViennaEpiLogMatcher all };
 		                         startWithSelection;
 		                         whenSelectionChangedDo: [
 			                         self updateEpiLogList ];
 		                         yourself.
+	epiLogListSizeDropList := self newDropList
+		                          display: [ :assoc | assoc key ];
+		                          items: {
+				                          ('~50' -> 50).
+				                          ('~100' -> 100).
+				                          ('~1,000' -> 1000).
+				                          ('all' -> nil) };
+		                          startWithSelection;
+		                          whenSelectionChangedDo: [
+			                          self updateEpiLogList ];
+		                          yourself.
 	epiLogList := self newTable
 		              beMultipleSelection;
-		              hideColumnHeaders;
+		              showColumnHeaders;
 		              beResizable;
+		              addColumn: ((SpStringTableColumn
+				                title: 'timestamp'
+				                evaluated: [ :epilog |
+					                ViennaLauncher formatDateAndTime:
+							                epilog timestamp ])
+				               beExpandable;
+				               yourself);
 		              addColumn:
-			              (SpStringTableColumn evaluated: [ :epilog |
-					               | time |
-					               time := DateAndTime now - epilog timestamp.
-					               time < 1 minutes
-						               ifTrue: [ 'now' ]
-						               ifFalse: [ time printRoughly , ' ago' ] ]);
+			              ((SpStringTableColumn
+				                title: 'operation'
+				                evaluated: #printString)
+				               beExpandable;
+				               yourself);
 		              addColumn:
-			              (SpStringTableColumn evaluated: #printString);
-		              addColumn: (SpStringTableColumn evaluated: #comment);
+			              ((SpStringTableColumn
+				                title: 'comment'
+				                evaluated: #comment)
+				               beExpandable;
+				               yourself);
 		              contextMenu: [ self epiLogListContextMenu ];
+		              bindKeyCombination: Character escape
+		              toAction: [ epiLogList unselectAll ];
 		              whenSelectionChangedDo: [
-			              self epiLogListSelectionChanged ];
+		              self epiLogListSelectionChanged ];
 		              yourself.
 	epiLogDiffList := self newTable
 		                  hideColumnHeaders;
@@ -1488,35 +1811,161 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 			                  self updateEpiLogDiffText ];
 		                  yourself.
 	epiLogDiffText := self newText.
-	epiLogList whenBuiltDo: [ self updateEpiLogList ].
-	namedEpiLogDropList := self newDropList
-		                       display: [ :assoc | assoc key ];
-		                       startWithoutSelection;
-		                       whenSelectedItemChangedDo: [
-			                       self namedEpiLogChanged ];
-		                       yourself.
+	epiLogSourceText := self newVDMSource.
+	epiLogNotebook := self newNotebook
+		                  addPageTitle: 'Diff' provider: [
+			                  SpPresenter new
+				                  layout: (SpPanedLayout newVertical
+						                   positionOfSlider: 0.3;
+						                   add: epiLogDiffList;
+						                   add: epiLogDiffText);
+				                  yourself ];
+		                  addPageTitle: 'Version Source'
+		                  provider: [ epiLogSourceText ];
+		                  yourself.
+	updateEpiLogButton := self newButton
+		                      icon: (self iconNamed: #refreshCircling);
+		                      label: 'Update';
+		                      action: [ self updateEpiLogList ];
+		                      yourself.
 	revertEpiLogButton := self newButton
 		                      icon: (self iconNamed: #smallRedo);
+		                      label: 'Revert';
 		                      action: [ self revertToEpiLog ];
 		                      yourself.
-	removeEpiLogButton := self newButton
-		                      icon: (self iconNamed: #smallDelete);
-		                      action: [ self removeEpiLog ];
-		                      yourself.
+	editEpiLogTagButton := self newButton
+		                       icon: self tagIcon;
+		                       label: 'Tags';
+		                       action: [ self editEpiLogTag ];
+		                       yourself.
 	editEpiLogCommentButton := self newButton
 		                           icon: (self iconNamed: #edit);
+		                           label: 'Comment';
 		                           action: [ self editEpiLogComment ];
 		                           yourself.
-	addEpiLogTagButton := self newButton
-		                      icon: (self iconNamed: #smallAdd);
-		                      action: [ self addEpiLogTag ];
+	addToNarrativeButton := self newButton
+		                        icon: (self iconNamed: #folder);
+		                        label: 'Add to..';
+		                        action: [
+			                        self addToNarrativeMenu
+				                        openWithSpecAtPointer ];
+		                        yourself.
+	removeEpiLogButton := self newButton
+		                      icon: (self iconNamed: #smallDelete);
+		                      label: 'Delete';
+		                      action: [ self removeEpiLog ];
 		                      yourself.
-	removeEpiLogTagButton := self newButton
-		                         icon: (self iconNamed: #smallCancel);
-		                         action: [ self removeEpiLogTag ];
+	epiLogList whenBuiltDo: [ self userTimelineSelected ]
+]
+
+{ #category : 'initialization' }
+ViennaRefactoringBrowser >> initializeGitPagePresenters [
+
+	gitRemoteCommitList := self newTable
+		                       beResizable;
+		                       addColumn: ((SpStringTableColumn
+				                         title: 'date'
+				                         evaluated: [ :commit |
+					                         ViennaLauncher formatDateAndTime:
+							                         commit datetime ])
+				                        displayBackgroundColor: [ :commit |
+					                        (self gitLocalBranchIncludes: commit)
+						                        ifTrue: [ Color transparent ]
+						                        ifFalse: [ Color yellow ] ];
+				                        width: 100);
+		                       addColumn:
+			                       ((SpStringTableColumn
+				                         title: 'author'
+				                         evaluated: #author)
+				                        displayBackgroundColor: [ :commit |
+					                        (self gitLocalBranchIncludes: commit)
+						                        ifTrue: [ Color transparent ]
+						                        ifFalse: [ Color yellow ] ];
+				                        width: 100);
+		                       addColumn:
+			                       ((SpStringTableColumn
+				                         title: 'comment'
+				                         evaluated: [ :commit |
+					                         commit comment lines first
+					                         , (commit comment lines size > 2
+							                          ifTrue: [ '...' ]
+							                          ifFalse: [ '' ]) ])
+				                        displayBackgroundColor: [ :commit |
+					                        (self gitLocalBranchIncludes: commit)
+						                        ifTrue: [ Color transparent ]
+						                        ifFalse: [ Color yellow ] ];
+				                        yourself);
+		                       whenSelectionChangedDo: [
+		                       self selectedGitRemoteCommitChanged ];
+		                       whenActivatedDo: [ :selection |
+		                       gitRemoteCommitList unselectAll ];
+		                       yourself.
+	gitOutgoingCommitList := self newTable
+		                         beResizable;
+		                         addColumn: ((SpStringTableColumn
+				                           title: 'date'
+				                           evaluated: [ :commit |
+					                           ViennaLauncher formatDateAndTime:
+							                           commit datetime ]) width: 100);
+		                         addColumn:
+			                         ((SpStringTableColumn
+				                           title: 'author'
+				                           evaluated: #author) width: 100);
+		                         addColumn:
+			                         (SpStringTableColumn
+				                          title: 'comment'
+				                          evaluated: [ :commit |
+					                          commit comment lines first
+					                          , (commit comment lines size > 2
+							                           ifTrue: [ '...' ]
+							                           ifFalse: [ '' ]) ]);
+		                         whenSelectionChangedDo: [
+			                         self selectedGitOutgoingCommitChanged ];
+		                         activateOnSingleClick;
+		                         whenActivatedDo: [ :selection |
+			                         gitOutgoingCommitList unselectAll ];
 		                         yourself.
-	showsTimeLineButton associatedRadioButtons:
-		{ showsConstructionLineButton }
+	gitDiffList := self newTable
+		                  hideColumnHeaders;
+		                  beResizable;
+		                  addColumn:
+			                  (SpStringTableColumn evaluated: #printSummary);
+		                  addColumn:
+			                  (SpStringTableColumn evaluated: #printNames);
+		                  whenSelectionChangedDo: [
+			                  self updateGitDiffText ];
+		                  yourself.
+	gitDiffText := self newText.
+
+	gitCommitButton := self newButton
+		                   icon: (self iconNamed: #accept);
+		                   label: 'Commit';
+		                   action: [ self gitCommit ];
+		                   yourself.
+	gitCommitMenuButton := self newButton
+		                       icon: (self iconNamed: #arrowDown);
+		                       action: [ self openGitCommitMenu ];
+		                       yourself.
+	gitPushButton := self newButton
+		                 icon: (self iconNamed: #down);
+		                 label: 'Push';
+		                 action: [ self gitPush ];
+		                 yourself.
+	gitPullButton := self newButton
+		                 icon: (self iconNamed: #up);
+		                 label: 'Pull';
+		                 action: [ self gitPull ];
+		                 yourself.
+	gitFetchButton := self newButton
+		                  icon: (self iconNamed: #refreshCircling);
+		                  label: 'Fetch';
+		                  action: [ self gitFetch ];
+		                  yourself.
+	gitMergeButton := self newButton
+		                  icon: (self iconNamed: #merge);
+		                  label: 'Merge';
+		                  action: [ self gitMerge ];
+		                  yourself
 ]
 
 { #category : 'initialization' }
@@ -1568,40 +2017,36 @@ ViennaRefactoringBrowser >> initializePresenters [
 	super initializePresenters.
 	menuBar := self menuBar.
 	moduleList := self newList
+		              borderWidth: 1;
+		              borderColor: Color darkGray;
 		              beSingleSelection;
 		              contextMenu: [ self moduleListContextMenu ];
 		              displayBackgroundColor: [ :ast |
-			              (ast notNil and: [
-					               ast hasAnyDescendantsSuchThat: [ :node |
-							               sliceNodes includes: node ] ])
-				              ifTrue: [ self sliceColor ]
-				              ifFalse: [ Color transparent ] ];
+			              self listBackgroundColorFor: ast ];
 		              display: [ :ast | ast ifNil: [ '-' ] ifNotNil: #first ];
+		              sortingBlock: #identifier ascending;
 		              whenSelectionChangedDo: [
 			              self
 				              updateCategoryList;
-				              updateEpiLogMatcherDropList ];
+				              updateEpiLogMatcherDropList;
+				              updateEpiLogSourceText ];
 		              yourself.
 	categoryList := self newList
+		                borderWidth: 1;
+		                borderColor: Color darkGray;
 		                beSingleSelection;
 		                contextMenu: [ self categoryListContextMenu ];
 		                displayBackgroundColor: [ :ast |
-			                (ast notNil and: [
-					                 ast hasAnyDescendantsSuchThat: [ :node |
-							                 sliceNodes includes: node ] ])
-				                ifTrue: [ self sliceColor ]
-				                ifFalse: [ Color transparent ] ];
+			                self listBackgroundColorFor: ast ];
 		                display: [ :ast | self displayCategory: ast ];
 		                whenSelectionChangedDo: [ self updateDefinitionList ];
 		                yourself.
 	definitionList := self newList
+		                  borderWidth: 1;
+		                  borderColor: Color darkGray;
 		                  beSingleSelection;
 		                  displayBackgroundColor: [ :ast |
-			                  (ast notNil and: [
-					                   ast hasAnyDescendantsSuchThat: [ :node |
-							                   sliceNodes includes: node ] ])
-				                  ifTrue: [ self sliceColor ]
-				                  ifFalse: [ Color transparent ] ];
+			                  self listBackgroundColorFor: ast ];
 		                  contextMenu: [ self definitionListContextMenu ];
 		                  display: [ :ast |
 			                  ast
@@ -1614,6 +2059,7 @@ ViennaRefactoringBrowser >> initializePresenters [
 	self initializeSourcePagePresenters.
 	self initializePlaygroundPagePresenters.
 	self initializeEpiLogPagePresenters.
+	self initializeGitPagePresenters.
 	notebook := self newNotebook
 		            addPageTitle: 'Source' provider: [
 			            SpPresenter new
@@ -1627,6 +2073,14 @@ ViennaRefactoringBrowser >> initializePresenters [
 		            SpPresenter new
 			            layout: self epilogPageLayout;
 			            yourself ];
+		            addPageTitle: 'Git' provider: [
+		            SpPresenter new
+			            layout: self gitPageLayout;
+			            yourself ];
+		            whenSelectedPageChangedDo: [
+			            notebook selectedPage ifNotNil: [ :page |
+				            page title = 'EpiLog' ifTrue: [ self updateEpiLogPage ].
+				            page title = 'Git' ifTrue: [ self updateGitPage ] ] ];
 		            yourself.
 	self whenBuiltDo: [ :w |
 		| f |
@@ -1708,7 +2162,7 @@ ViennaRefactoringBrowser >> initializeSourcePagePresenters [
 ViennaRefactoringBrowser >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
-	aWindowPresenter initialExtent: 800 @ 600
+	aWindowPresenter initialExtent: 1000 @ 800
 ]
 
 { #category : 'instance creation' }
@@ -1742,8 +2196,46 @@ ViennaRefactoringBrowser >> jumpToModule: aString operation: anotherString [
 	self updateSource
 ]
 
+{ #category : 'accessing' }
+ViennaRefactoringBrowser >> listBackgroundColorFor: aViennaNode [
+
+	aViennaNode ifNil: [ ^ Color transparent ].
+	(aViennaNode hasDescendantSuchThat: [ :node |
+		 sliceNodes includes: node ]) ifTrue: [ ^ self sliceColor ].
+	pendingTypeError ifNotNil: [
+		(pendingTypeError node includesParent: aViennaNode) ifTrue: [
+			^ Color yellow ] ].
+	^ Color transparent
+]
+
 { #category : 'operations' }
-ViennaRefactoringBrowser >> load: aString [
+ViennaRefactoringBrowser >> load: aFileReference [
+
+	self fileReference: aFileReference.
+	self reload
+]
+
+{ #category : 'operations' }
+ViennaRefactoringBrowser >> loadFromDirectory [
+
+	(UIManager default
+		 chooseDirectory: 'Directory to open'
+		 from: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :dir |
+		self load: dir ]
+]
+
+{ #category : 'operations' }
+ViennaRefactoringBrowser >> loadFromFile [
+
+	(UIManager default
+		 chooseExistingFileReference: 'File to open'
+		 extensions: #( 'vdmsl' )
+		 path: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :file |
+		self load: file ]
+]
+
+{ #category : 'operations' }
+ViennaRefactoringBrowser >> loadSource: aString [
 
 	| ast |
 	ast := ViennaVDMParser new document end parse: aString.
@@ -1779,25 +2271,25 @@ ViennaRefactoringBrowser >> menuBar [
 									   addItem: [ :i |
 										   i
 											   name: 'Reload';
-											   action: [ self importFromDisk ];
+											   action: [ self reload ];
 											   enabled: [ self hasFileReference ] ];
 									   addItem: [ :i |
 										   i
 											   name: 'Load from Directory...';
-											   action: [ self importDirectory ] ];
+											   action: [ self loadFromDirectory ] ];
 									   addItem: [ :i |
 										   i
 											   name: 'Load from File...';
-											   action: [ self importFile ] ];
+											   action: [ self loadFromFile ] ];
 									   addItem: [ :i |
 										   i
 											   name: 'Save';
-											   action: [ self exportToDisk ];
+											   action: [ self save ];
 											   enabled: [ self hasFileReference ] ];
 									   addItem: [ :i |
 										   i
 											   name: 'Save As...';
-											   action: [ self export ] ] ];
+											   action: [ self saveAs ] ] ];
 							   addGroup: [ :g |
 								   g
 									   addItem: [ :i |
@@ -1873,20 +2365,22 @@ ViennaRefactoringBrowser >> mergeOperationsFromFRAM [
 ViennaRefactoringBrowser >> modelChanged [
 
 	self model ifNotNil: [ :epiLog |
-		self
-			updateEpiLogMatcherDropList;
-			updateEpiLogList;
-			updateNamedEpiLogDropList.
-		self setDirty.
-		epiLog hasSpecificationChange ifTrue: [ self exportToDisk ].
+		epiLog hideSave.
+		self updateEpiLogPage.
+		epiLog hasSpecificationChange ifTrue: [
+			self setDirty.
+			self save ].
 		self typecheck.
 		animation ifNotNil: [
 			| state |
 			state := epiLog state.
+			[
 			animation
 				specification: self specification
 				ifError: [ :msg | self notifyAnimationError: msg ].
-			animation state: state.
+			animation state: state ]
+				on: Exception
+				do: [ :ex | animation init ].
 			epiLog state: animation state ].
 		(epiLog hasSpecificationChange and: [ runsAllTests ]) ifTrue: [
 			self runAllTests ].
@@ -1932,11 +2426,11 @@ ViennaRefactoringBrowser >> moduleListContextMenu [
 ]
 
 { #category : 'updating' }
-ViennaRefactoringBrowser >> namedEpiLogChanged [
+ViennaRefactoringBrowser >> narrativeTimelineSelected [
 
-	namedEpiLogDropList selectedItem value ifNotNil: [ :epiLog |
-		epiLogList selectItem: epiLog ].
-	self updateEpiLogButtons
+	showsUserTimelineButton state: false.
+	showsArtifactTimelineButton state: false.
+	self selectedTimelineChanged
 ]
 
 { #category : 'operations-source signal' }
@@ -1976,7 +2470,7 @@ ViennaRefactoringBrowser >> okToClose [
 	self isDirty ifFalse: [ ^ true ].
 	(UIManager default
 		 confirm: 'Export the spec before close?'
-		 orCancel: [ ^ false ]) ifTrue: [ self export ].
+		 orCancel: [ ^ false ]) ifTrue: [ self save ].
 	^ true
 ]
 
@@ -1984,6 +2478,44 @@ ViennaRefactoringBrowser >> okToClose [
 ViennaRefactoringBrowser >> onTheFlyCheckSourceText [
 
 	self highlightSourceText
+]
+
+{ #category : 'interface opening' }
+ViennaRefactoringBrowser >> open [
+
+	Smalltalk at: #ViennaLauncher ifPresent: [ :launcher |
+		launcher isMultiWindowMode ifTrue: [
+			^ self build
+				  openInExternalWindow;
+				  layoutFrame: (0 @ 0 extent: 1 @ 1);
+				  yourself ] ].
+	^ super open
+]
+
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> openGitCommitMenu [
+
+	(self newMenu addGroup: [ :group |
+		 group
+			 addItem: [ :item |
+				 item
+					 name: 'Commit';
+					 action: [ self gitCommit ] ];
+			 addItem: [ :item |
+				 item
+					 name: 'Commit and Push';
+					 action: [ self gitCommitAndPush ] ] ]) openWithSpecAtPointer
+]
+
+{ #category : 'interface opening' }
+ViennaRefactoringBrowser >> openInExternalWindow [
+
+	<script: 'ViennaRefactoringBrowser new openInExternalWindow'>
+	| morph |
+	morph := self build.
+	morph
+		openInExternalWindow;
+		layoutFrame: (0 @ 0 extent: 1 @ 1)
 ]
 
 { #category : 'private' }
@@ -2097,27 +2629,61 @@ ViennaRefactoringBrowser >> playgroundTextContextMenu [
 	^ menu
 ]
 
-{ #category : 'operations-epiLog' }
-ViennaRefactoringBrowser >> removeEpiLog [
+{ #category : 'operations' }
+ViennaRefactoringBrowser >> reload [
 
-	epiLogList selectedItem ifNotNil: [ :epiLog |
-		(UIManager default proceed: 'Remove from EpiLog?' title: 'EpiLog')
-			ifTrue: [
-				self epiLog timeLine do: [ :log |
-					log prev == epiLog ifTrue: [ log prev: epiLog prev ].
-					log basicPred == epiLog ifTrue: [
-						log basicPred: epiLog basicPred ] ].
-				self
-					updateEpiLogList;
-					updateNamedEpiLogDropList ] ]
+	^ fileReference ifNotNil: [ :ref |
+		  (self loadSource: (self sourceFrom: ref)) ifNil: [
+			  (self
+				   confirm: 'Do you want to open a File syntax debugger?'
+				   label: 'ViennaTalk') ifTrue: [
+				  ViennaFileSyntaxDebugger openOn: ref ] ] ]
 ]
 
 { #category : 'operations-epiLog' }
-ViennaRefactoringBrowser >> removeEpiLogTag [
+ViennaRefactoringBrowser >> removeEpiLog [
 
-	namedEpiLogDropList selectedItem key ifNotEmpty: [ :name |
-		epiLogTags removeKey: name.
-		self updateNamedEpiLogDropList ]
+	narrativeDropList selectedItem
+		ifNotNil: [ :enumerator |
+		self removeEpiLogFromNarrative: enumerator narrative ]
+		ifNil: [ self removeEpiLogFromChronicle ]
+]
+
+{ #category : 'operations-epiLog' }
+ViennaRefactoringBrowser >> removeEpiLogFromChronicle [
+
+	epiLogList selectedItems ifNotEmpty: [ :epiLogs |
+		(UIManager default proceed: 'Remove from EpiLog?' title: 'EpiLog')
+			ifTrue: [
+				epiLogs do: [ :epiLog |
+					self epiLog == epiLog ifFalse: [ epiLog hideRemove ].
+					self updateEpiLogList ] ] ]
+]
+
+{ #category : 'operations-epiLog' }
+ViennaRefactoringBrowser >> removeEpiLogFromNarrative: aHiDeNarrative [
+
+	(epiLogList selectedItems copyWithout: self epiLog) ifNotEmpty: [
+		:epiLogs |
+		(UIManager default
+			 proceed: 'Remove from ' , aHiDeNarrative name , '?'
+			 title: 'EpiLog') ifTrue: [
+			aHiDeNarrative removeAll: epiLogs.
+			self updateEpiLogList ] ]
+]
+
+{ #category : 'operations-epiLog' }
+ViennaRefactoringBrowser >> removeNarrative [
+
+	narrativeDropList selectedItem ifNotNil: [ :enumerator |
+		| narrative |
+		narrative := enumerator narrative.
+		(UIManager default
+			 confirm: 'Remove ' , narrative name , '?'
+			 label: 'EpiLog') ifTrue: [
+			narrative storage removeNarrative: narrative.
+			self updateNarrativeDropList: nil.
+			showsArtifactTimelineButton state: true ] ]
 ]
 
 { #category : 'operations-epiLog' }
@@ -2257,6 +2823,99 @@ ViennaRefactoringBrowser >> runTrace: aViennaNamedTraceNode interim: aBlock [
 	
 ]
 
+{ #category : 'operations' }
+ViennaRefactoringBrowser >> save [
+
+	fileReference ifNotNil: [ :ref |
+		ref isDirectory
+			ifTrue: [
+				self specification modulesDo: [ :moduleNode |
+					| file |
+					file := ref / moduleNode identifier withExtension: 'vdmsl'.
+					file
+						ensureDeleteAll;
+						writeStreamDo: [ :stream |
+							stream nextPutAll:
+									((ViennaVDMFormatter format: moduleNode) withLineEndings:
+											 OSPlatform current lineEnding) ] ] ]
+			ifFalse: [
+				ref
+					ensureDeleteAll;
+					writeStreamDo: [ :stream |
+						stream nextPutAll:
+								(self source withLineEndings: OSPlatform current lineEnding) ] ].
+		self clearDirty ]
+]
+
+{ #category : 'operations' }
+ViennaRefactoringBrowser >> saveAs [
+
+	(UIManager default
+		 confirm: 'Save to'
+		 trueChoice: 'Directory'
+		 falseChoice: 'File')
+		ifTrue: [ self saveAsDirectory ]
+		ifFalse: [ self saveAsFile ]
+]
+
+{ #category : 'operations' }
+ViennaRefactoringBrowser >> saveAsDirectory [
+
+	(UIManager default
+		 chooseDirectory: 'Directory to save'
+		 from: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :dir |
+		self specification modulesDo: [ :moduleNode |
+			| file |
+			file := dir / moduleNode identifier withExtension: 'vdmsl'.
+			file
+				ensureDeleteAll;
+				writeStreamDo: [ :stream |
+					stream nextPutAll:
+							((ViennaVDMFormatter format: moduleNode) withLineEndings:
+									 OSPlatform current lineEnding) ] ].
+		UIManager default message: 'Save to ' , dir basename , '/.'.
+		self fileReference: dir.
+		self clearDirty ]
+]
+
+{ #category : 'operations' }
+ViennaRefactoringBrowser >> saveAsFile [
+
+	(UIManager default
+		 chooseForSaveFileReference: 'File to save'
+		 extensions: #( 'vdmsl' )
+		 path: FileLocator viennaTalkDocumentDirectory asFileReference)
+		ifNotNil: [ :file |
+			file
+				ensureDeleteAll;
+				writeStreamDo: [ :stream |
+					stream nextPutAll:
+							(self source withLineEndings: OSPlatform current lineEnding) ].
+			UIManager default message: 'Save to ' , file basename , '.'.
+			self fileReference: file.
+			self clearDirty ]
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> selectedGitOutgoingCommitChanged [
+
+	self updateGitButtons
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> selectedGitRemoteCommitChanged [
+
+	self updateGitButtons
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> selectedTimelineChanged [
+
+	^ self
+		  updateEpiLogMatcherDropList;
+		  updateEpiLogList
+]
+
 { #category : 'private' }
 ViennaRefactoringBrowser >> setDirty [
 
@@ -2290,6 +2949,36 @@ ViennaRefactoringBrowser >> source [
 	^ self specification
 		ifNil: [ String new ]
 		ifNotNil: [ :ast | ViennaVDMFormatter format: ast ]
+]
+
+{ #category : 'private' }
+ViennaRefactoringBrowser >> sourceFrom: aFileReference [
+
+	^ aFileReference ifNotNil: [ :ref |
+		  ref isDirectory
+			  ifTrue: [
+				  | modelFiles testFiles |
+				  modelFiles := OrderedCollection new.
+				  testFiles := OrderedCollection new.
+				  ref files do: [ :file |
+					  (file basename endsWith: '.vdmsl') ifTrue: [
+						  (file basename endsWith: 'Test.vdmsl')
+							  ifTrue: [ testFiles add: file ]
+							  ifFalse: [ modelFiles add: file ] ] ].
+				  modelFiles := modelFiles asSortedCollection: [ :less :more |
+					                less basename <= more basename ].
+				  testFiles := testFiles asSortedCollection: [ :less :more |
+					               less basename <= more basename ].
+				  String streamContents: [ :writeStream |
+					  modelFiles do: [ :file |
+						  writeStream nextPutAll:
+							  (file contents copyWith: Character cr)
+								  withInternalLineEndings ].
+					  testFiles do: [ :file |
+						  writeStream nextPutAll:
+							  (file contents copyWith: Character cr)
+								  withInternalLineEndings ] ] ]
+			  ifFalse: [ ref contents withInternalLineEndings ] ]
 ]
 
 { #category : 'layouts' }
@@ -2451,8 +3140,9 @@ ViennaRefactoringBrowser >> updateDefinitionList [
 { #category : 'updating' }
 ViennaRefactoringBrowser >> updateEpiLogButtons [
 
-	removeEpiLogTagButton enabled: (epiLogTags includesKey:
-			 (namedEpiLogDropList selectedItem ifNotNil: #key)).
+	epiLogList selectedItem
+		ifNotNil: [ editEpiLogTagButton enable ]
+		ifNil: [ editEpiLogTagButton disable ].
 	epiLogList selectedItem ~~ self epiLog
 		ifTrue: [
 			revertEpiLogButton enable.
@@ -2488,37 +3178,156 @@ ViennaRefactoringBrowser >> updateEpiLogDiffText [
 ViennaRefactoringBrowser >> updateEpiLogList [
 
 	epiLogList ifNotNil: [
-		epiLogList
-			items: ((self epiLog
-					  ifNil: [ #(  ) ]
-					  ifNotNil: [ :epiLog | self epiLogEnumerator arrayFrom: epiLog ])
-					 select:
-					 (epiLogMatcherDropList selectedItem ifNil: [ [ :epilog | true ] ]))
-			selectsFirst: true ].
-	self updateEpiLogButtons.
-	self updateEpiLogDiffList
+		| selection items |
+		selection := epiLogList selectedItem.
+		items := (self epiLog
+			          ifNil: [ #(  ) ]
+			          ifNotNil: [ :epiLog |
+			          self epiLogEnumerator arrayFrom: epiLog ]) select:
+			         (epiLogMatcherDropList selectedItem ifNil: [
+				          [ :epilog | true ] ]).
+		(epiLogListSizeDropList selectedItem ifNotNil: #value) ifNotNil: [
+			:limit |
+			items size > limit ifTrue: [ items := items first: limit ] ].
+		epiLogList items: items.
+		selection ifNotNil: [
+			(items includes: selection)
+				ifTrue: [ epiLogList selectItem: selection ]
+				ifFalse: [ epiLogList unselectAll ] ].
+		self updateEpiLogButtons.
+		self updateEpiLogDiffList ]
 ]
 
 { #category : 'updating' }
 ViennaRefactoringBrowser >> updateEpiLogMatcherDropList [
 
-	| selection |
-	selection := epiLogMatcherDropList selectedItem.
-	epiLogMatcherDropList items: (Array streamContents: [ :stream |
-			 stream nextPut: ViennaEpiLogMatcher all.
-			stream nextPut: (ViennaEpiLogMatcher
-	impactClosureFrom: self epiLog
-	enumerator: self epiLogEnumerator).
-			 moduleList selectedItem ifNotNil: [ :module |
-				 stream nextPut: (ViennaEpiLogMatcher module: module identifier) ].
-			 definitionList selectedItem ifNotNil: [ :definition |
-				 definition isViennaTopLevelDefinitionNode ifTrue: [
-					 definition identifiers do: [ :identifier |
-						 stream nextPut: (ViennaEpiLogMatcher
-								  identifier: identifier
-								  module: definition module identifier) ] ] ] ]) sorted.
-	(epiLogMatcherDropList items includes: selection) ifTrue: [
-		epiLogMatcherDropList selectItem: selection ]
+	self ifHiDeHoVisible: [
+		| selection epiLogs |
+		selection := epiLogMatcherDropList selectedItem.
+		epiLogMatcherDropList items: (Array streamContents: [ :stream |
+				 | tags |
+				 tags := Set new.
+				 (epiLogs := self epiLog ifNil: [ #(  ) ] ifNotNil: [ :epiLog |
+					             self epiLogEnumerator
+						             ifNotNil: [ :enumerator |
+						             enumerator arrayFrom: epiLog ]
+						             ifNil: [ #(  ) ] ]) do: [ :epiLog |
+					 tags addAll: epiLog tags ].
+				 tags do: [ :tag | stream nextPut: (ViennaEpiLogMatcher tag: tag) ].
+				 stream nextPut: ViennaEpiLogMatcher all.
+				 epiLogs ifNotEmpty: [
+					 stream nextPut: (ViennaEpiLogMatcher heads: epiLogs first).
+					 stream nextPut: (ViennaEpiLogMatcher branches: epiLogs first) ].
+				 stream nextPut: (ViennaEpiLogMatcher
+						  executionClosureFrom: self epiLog
+						  enumerator: self epiLogEnumerator
+						  at: (epiLogList selectedItem ifNil: [ self epiLog ])).
+				 stream nextPut: (ViennaEpiLogMatcher
+						  semanticClosureFrom: self epiLog
+						  enumerator: self epiLogEnumerator
+						  at: (epiLogList selectedItem ifNil: [ self epiLog ])).
+				 stream nextPut: (ViennaEpiLogMatcher
+						  syntacticClosureFrom: self epiLog
+						  enumerator: self epiLogEnumerator
+						  at: (epiLogList selectedItem ifNil: [ self epiLog ])).
+
+
+
+				 moduleList selectedItem ifNotNil: [ :module |
+					 stream nextPut: (ViennaEpiLogMatcher module: module identifier) ].
+				 definitionList selectedItem ifNotNil: [ :definition |
+					 definition isViennaTopLevelDefinitionNode ifTrue: [
+						 definition identifiers do: [ :identifier |
+							 stream nextPut: (ViennaEpiLogMatcher
+									  identifier: identifier
+									  module: definition module identifier) ] ] ] ]) sorted.
+		(epiLogMatcherDropList items includes: selection) ifTrue: [
+			epiLogMatcherDropList selectItem: selection ] ]
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> updateEpiLogPage [
+
+	self ifHiDeHoVisible: [
+		self
+			updateNarrativeDropList;
+			updateEpiLogMatcherDropList;
+			updateEpiLogList;
+			updateEpiLogSourceText ]
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> updateEpiLogSourceText [
+
+	self ifHiDeHoVisible: [
+		self definition ifNotNil: [ :definition |
+			(epiLogList selectedItem ifNil: [ self epiLog ]) specification
+				ifNotNil: [ :spec |
+					(spec moduleNamed: definition module identifier) ifNotNil: [
+						:module |
+						epiLogSourceText text: module tracingHighlightedSource.
+						^ self ] ] ].
+		epiLogSourceText text: '' ]
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> updateGitButtons [
+
+	gitFetchButton enabled: true.
+	gitPullButton enabled: self gitCanPull.
+	gitCommitButton enabled: self gitCanCommit.
+	gitCommitMenuButton enabled: self gitCanCommitAndPush.
+	gitPushButton enabled: self gitCanPush.
+	gitMergeButton disable
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> updateGitDiffList [
+
+	gitDiffList items: self gitChanges.
+	self updateGitDiffText
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> updateGitDiffText [
+
+	gitDiffList selectedItem
+		ifNotNil: [ :diff |
+			| text |
+			text := diff sourceDiffText.
+			gitDiffText text: text string asString asText.
+			gitDiffText withAdapterDo: [ :a |
+				a widgetDo: [ :w |
+					w text runs: text runs.
+					w textArea compose ] ] ]
+		ifNil: [ gitDiffText text: '' ]
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> updateGitOutgoingCommitList [
+
+	gitOutgoingCommitList items: (Array streamContents: [ :stream |
+			 self gitOutgoingCommitsDo: [ :commit | stream nextPut: commit ] ]).
+	gitRemoteCommitList refresh
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> updateGitPage [
+
+	self
+		updateGitRemoteCommitList;
+		updateGitOutgoingCommitList;
+		updateGitDiffList;
+		updateGitButtons
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> updateGitRemoteCommitList [
+
+	gitRemoteCommitList items: (Array streamContents: [ :stream |
+			 self icebergRepositoryDo: #fetch.
+			 self gitRemoteCommitsDo: [ :commit | stream nextPut: commit ] ]).
+	gitOutgoingCommitList refresh
 ]
 
 { #category : 'updating' }
@@ -2536,27 +3345,28 @@ ViennaRefactoringBrowser >> updateModuleList [
 ]
 
 { #category : 'updating' }
-ViennaRefactoringBrowser >> updateNamedEpiLog [
+ViennaRefactoringBrowser >> updateNarrativeDropList [
 
-	namedEpiLogDropList selectIndex:
-		((namedEpiLogDropList items collect: #value) indexOf:
-			 epiLogList selectedItem)
+	self updateNarrativeDropList:
+		(narrativeDropList selectedItem ifNotNil: #narrative)
 ]
 
 { #category : 'updating' }
-ViennaRefactoringBrowser >> updateNamedEpiLogDropList [
+ViennaRefactoringBrowser >> updateNarrativeDropList: aHiDeNarrative [
 
-	namedEpiLogDropList items: (Array streamContents: [ :stream |
-			 | preds headId |
-			 preds := IdentitySet new.
-			 self epiLog timeLine do: [ :epiLog | preds add: epiLog basicPred ].
-			 headId := 0.
-			 self epiLog timeLine do: [ :epiLog |
-				 (preds includes: epiLog) ifFalse: [
-					 stream nextPut:
-						 'HEAD-' , (headId := headId + 1) printString -> epiLog ].
-				 epiLogTags keysAndValuesDo: [ :tag :log |
-					 epiLog == log ifTrue: [ stream nextPut: tag -> epiLog ] ] ] ])
+	self epiLog
+		ifNotNil: [ :epiLog |
+			| items selection |
+			items := epiLog hideStorage narratives collect: [ :narrative |
+				         ViennaEpiLogNarrativeTimelineEnumerator on: narrative ].
+			selection := items
+				             detect: [ :enumerator |
+				             enumerator narrative = aHiDeNarrative ]
+				             ifNone: [ nil ].
+			selection ifNil: [ narrativeDropList resetSelection ].
+			narrativeDropList items: items.
+			selection ifNotNil: [ narrativeDropList selectItem: selection ] ]
+		ifNil: [ narrativeDropList items: {  } ]
 ]
 
 { #category : 'updating' }
@@ -2641,6 +3451,14 @@ ViennaRefactoringBrowser >> updateStateTable [
 ViennaRefactoringBrowser >> updateStateTableItems [
 
 	stateTable items: animation state keys asSortedCollection
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> userTimelineSelected [
+
+	showsArtifactTimelineButton state: false.
+	narrativeDropList resetSelection.
+	self selectedTimelineChanged
 ]
 
 { #category : 'updating' }

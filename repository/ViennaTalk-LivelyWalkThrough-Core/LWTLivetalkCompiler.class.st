@@ -1,6 +1,6 @@
 Class {
-	#name : #LWTLivetalkCompiler,
-	#superclass : #Object,
+	#name : 'LWTLivetalkCompiler',
+	#superclass : 'Object',
 	#instVars : [
 		'parser',
 		'numberLiteral',
@@ -14,17 +14,18 @@ Class {
 		'dialog',
 		'step'
 	],
-	#category : 'ViennaTalk-LivelyWalkThrough-Core'
+	#category : 'ViennaTalk-LivelyWalkThrough-Core',
+	#package : 'ViennaTalk-LivelyWalkThrough-Core'
 }
 
-{ #category : #compiling }
+{ #category : 'compiling' }
 LWTLivetalkCompiler >> compileToSmalltalk: aString ifError: errorBlock [
 	| sourceStream |
 	sourceStream := aString readStream asPetit2Stream.
 	^ parser parse: sourceStream onError: [ :msg :position | errorBlock cull: msg cull: position ]
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 LWTLivetalkCompiler >> initialize [
 	| quote nat int decimal escapes |
 	super initialize.

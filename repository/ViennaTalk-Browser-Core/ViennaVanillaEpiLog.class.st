@@ -1,10 +1,16 @@
 Class {
 	#name : 'ViennaVanillaEpiLog',
-	#superclass : 'ViennaModificationEpiLog',
+	#superclass : 'ViennaAbstractModificationEpiLog',
 	#category : 'ViennaTalk-Browser-Core-EpiLog',
 	#package : 'ViennaTalk-Browser-Core',
 	#tag : 'EpiLog'
 }
+
+{ #category : 'accessing' }
+ViennaVanillaEpiLog class >> metadataName [
+
+	^ 'Vanilla'
+]
 
 { #category : 'accessing' }
 ViennaVanillaEpiLog >> basicPred [
@@ -21,9 +27,39 @@ ViennaVanillaEpiLog >> initialize [
 ]
 
 { #category : 'testing' }
+ViennaVanillaEpiLog >> isExecutionClosureMember [
+
+	^ false
+]
+
+{ #category : 'testing' }
+ViennaVanillaEpiLog >> isRemovable [
+
+	^ false
+]
+
+{ #category : 'testing' }
+ViennaVanillaEpiLog >> isSemanticClosureMember [
+
+	^ false
+]
+
+{ #category : 'testing' }
+ViennaVanillaEpiLog >> isSyntacticClosureMember [
+
+	^ false
+]
+
+{ #category : 'testing' }
 ViennaVanillaEpiLog >> isVanillaEpiLog [
 
 	^ true
+]
+
+{ #category : 'accessing' }
+ViennaVanillaEpiLog >> prev [
+
+	^ nil
 ]
 
 { #category : 'printing' }

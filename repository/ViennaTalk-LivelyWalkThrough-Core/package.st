@@ -1,1 +1,1 @@
-Package { #name : #'ViennaTalk-LivelyWalkThrough-Core' }
+Package { #name : 'ViennaTalk-LivelyWalkThrough-Core' }

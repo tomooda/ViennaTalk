@@ -18,6 +18,12 @@ ViennaRevertionEpiLog class >> after: aViennaEpiLog destination: anotherViennaEp
 ]
 
 { #category : 'accessing' }
+ViennaRevertionEpiLog class >> metadataName [
+
+	^ 'Reversion'
+]
+
+{ #category : 'accessing' }
 ViennaRevertionEpiLog >> basicPred [
 
 	^ destination
@@ -70,26 +76,61 @@ ViennaRevertionEpiLog >> hasStateChange [
 	^ destination state ~= prev state
 ]
 
+{ #category : 'hideho-operations' }
+ViennaRevertionEpiLog >> hideMetadataLoaded [
+
+	super hideMetadataLoaded.
+	hideMetadata
+		at: 'destination'
+		ifPresent: [ :id | destination := hideStorage chronicleAt: id ]
+]
+
+{ #category : 'hideho-operations' }
+ViennaRevertionEpiLog >> hideUpdateMetadataStorage: aHiDeStorage [
+
+	super hideUpdateMetadataStorage: aHiDeStorage.
+	destination ifNotNil: [
+		destination hideStorage = aHiDeStorage ifFalse: [
+			hideStorage chronicleSave: destination ].
+		hideMetadata
+			at: 'destination'
+			put: destination hideMetadata identity ]
+]
+
+{ #category : 'testing' }
+ViennaRevertionEpiLog >> isPredEpiLog [
+
+	^ false
+]
+
+{ #category : 'testing' }
+ViennaRevertionEpiLog >> isRemovable [
+
+	^ destination == prev
+]
+
 { #category : 'testing' }
 ViennaRevertionEpiLog >> isRevertionEpiLog [
 
 	^ true
 ]
 
-{ #category : 'accessing' }
-ViennaRevertionEpiLog >> pred [
-
-	^ destination isRevertionEpiLog
-		  ifTrue: [ destination pred ]
-		  ifFalse: [ destination ]
-]
-
 { #category : 'printing' }
 ViennaRevertionEpiLog >> printOn: aStream [
 
-	aStream nextPutAll: 'Revert to "'.
-	destination printOn: aStream.
-	aStream nextPut: $"
+	| steps epilog |
+	aStream nextPutAll: 'Revert '.
+	steps := 1.
+	epilog := prev.
+	[ epilog isNil or: [ steps >= 100 or: [ destination == epilog ] ] ]
+		whileFalse: [
+			epilog := epilog prev.
+			steps := steps + 1 ].
+	epilog ifNil: [ destination printOn: aStream ] ifNotNil: [
+		steps >= 100
+			ifTrue: [ aStream nextPutAll: '100+' ]
+			ifFalse: [ steps printOn: aStream ].
+		aStream nextPutAll: ' steps back' ]
 ]
 
 { #category : 'accessing' }

@@ -1,21 +1,39 @@
 Class {
 	#name : 'ViennaLoadingEpiLog',
-	#superclass : 'ViennaModificationEpiLog',
+	#superclass : 'ViennaAbstractModificationEpiLog',
 	#category : 'ViennaTalk-Browser-Core-EpiLog',
 	#package : 'ViennaTalk-Browser-Core',
 	#tag : 'EpiLog'
 }
 
 { #category : 'accessing' }
-ViennaLoadingEpiLog >> basicPred [
+ViennaLoadingEpiLog class >> metadataName [
 
-	^ nil
+	^ 'Loading'
 ]
 
 { #category : 'testing' }
-ViennaLoadingEpiLog >> isLoadEpiLog [
+ViennaLoadingEpiLog >> isExecutionClosureMember [
 
 	^ false
+]
+
+{ #category : 'testing' }
+ViennaLoadingEpiLog >> isLoadingEpiLog [
+
+	^ true
+]
+
+{ #category : 'testing' }
+ViennaLoadingEpiLog >> isPredEpiLog [
+
+	^ false
+]
+
+{ #category : 'testing' }
+ViennaLoadingEpiLog >> isRemovable [
+
+	^ self hasSpecificationChange not
 ]
 
 { #category : 'testing' }

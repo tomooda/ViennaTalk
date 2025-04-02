@@ -1,1 +1,1 @@
-Package { #name : #'ViennaTalk-VDMPad-Core' }
+Package { #name : 'ViennaTalk-VDMPad-Core' }
