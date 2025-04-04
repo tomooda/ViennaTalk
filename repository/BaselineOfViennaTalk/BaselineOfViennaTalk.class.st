@@ -221,7 +221,10 @@ BaselineOfViennaTalk >> baseline: spec [
 		package: 'ViennaTalk-FRAM-Tests'
 		with: [ spec requires: #( 'ViennaTalk-FRAM-Core' ) ];
 		package: 'ViennaTalk-Refactoring-Tests'
-		with: [ spec requires: #( 'ViennaTalk-Refactoring-Core' ) ].
+		with: [ spec requires: #( 'ViennaTalk-Refactoring-Core' ) ];
+		package: 'ViennaTalk-Profiler-Core' with: [ spec requires: #(  ) ];
+		package: 'ViennaTalk-Profiler-Tests'
+		with: [ spec requires: #( 'ViennaTalk-Profiler-Core' ) ].
 
 	spec
 		group: 'Application' with: #( 'ViennaTalk-Application' );
@@ -232,7 +235,8 @@ BaselineOfViennaTalk >> baseline: spec [
 		with:
 			#( 'ViennaTalk-Animation-Transpiler'
 			   'ViennaTalk-Engine-Transpiler' 'ViennaTalk-Transpiler-Core'
-			   'ViennaTalk-Transpiler-Debugger' );
+			   'ViennaTalk-Transpiler-Debugger'
+			   'ViennaTalk-Profiler-Core' );
 		group: 'VDMPad' with: #( 'ViennaTalk-VDMPad-Core' );
 		group: 'WeblyWalkThrough'
 		with: #( 'ViennaTalk-WeblyWalkThrough-Server' );
@@ -251,7 +255,8 @@ BaselineOfViennaTalk >> baseline: spec [
 			   'ViennaTalk-Parser-Tests' 'ViennaTalk-Type-Tests'
 			   'ViennaTalk-Animation-Tests' 'ViennaTalk-Transpiler-Tests'
 			   'ViennaTalk-FRAM-Tests' 'ViennaTalk-Slicing-Tests'
-			   'ViennaTalk-Refactoring-Tests' 'ViennaTalk-AST-Tests' )
+			   'ViennaTalk-Refactoring-Tests' 'ViennaTalk-AST-Tests'
+			   'ViennaTalk-Profiler-Tests' )
 ]
 
 { #category : 'accessing' }
