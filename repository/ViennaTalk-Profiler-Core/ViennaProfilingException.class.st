@@ -18,6 +18,12 @@ ViennaProfilingException class >> signal: aString module: anotherString [
 		  signal
 ]
 
+{ #category : 'handling' }
+ViennaProfilingException >> defaultAction [
+
+	self resume: 0
+]
+
 { #category : 'accessing' }
 ViennaProfilingException >> identifier [
 
