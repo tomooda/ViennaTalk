@@ -29,14 +29,18 @@ ViennaProfilerTest >> testActRdWrDo [
 		wr: { {
 				obj.
 				#y } }
-		do: [ obj op ].
-	self
-		assert: (profiler numAct: #op module: #ViennaProfilerTestTarget)
-		equals: 1.
-	self
-		assert: (profiler numRd: #x module: #ViennaProfilerTestTarget)
-		equals: 2.
-	self
-		assert: (profiler numWr: #y module: #ViennaProfilerTestTarget)
-		equals: 1
+		do: [
+			obj op.
+			self
+				assert:
+				(ViennaActException signal: #op module: #ViennaProfilerTestTarget)
+				equals: 1.
+			self
+				assert:
+				(ViennaRdException signal: #x module: #ViennaProfilerTestTarget)
+				equals: 2.
+			self
+				assert:
+				(ViennaWrException signal: #y module: #ViennaProfilerTestTarget)
+				equals: 1 ]
 ]

@@ -48,7 +48,10 @@ ViennaProfiler >> act: aCollectionOfModuleObjectAndSelector rd: aCollectionOfMod
 		installAct: aCollectionOfModuleObjectAndSelector
 		rd: aCollectionOfModuleObjectAndVariable
 		wr: anotherCollectionOfModuleObjectAndVariable.
-	aBlock value ] ensure: [ self uninstall ]
+	aBlock
+		on: ViennaProfilingException
+		do: [ :ex | ex resume: (ex value: self) ] ] ensure: [
+		self uninstall ]
 ]
 
 { #category : 'private' }
