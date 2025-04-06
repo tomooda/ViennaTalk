@@ -122,7 +122,10 @@ ViennaVDMJ class >> basicInstallJars [
 	http response code = 200
 		ifTrue: [ self json4vdmjPath binaryWriteStream
 				nextPutAll: http entity bytes;
-				close ]
+				close ].
+  self jsonicPath binaryWriteStream
+		nextPutAll: self jsonicJar;
+		close
 ]
 
 { #category : 'locking' }

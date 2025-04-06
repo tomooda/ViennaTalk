@@ -37,13 +37,13 @@ Table of Major Components of ViennaTalk
 What's new in the latest release
 ---
 
-* Codename Waikiki has been released. (Jan 7, 2025)
-   - EpiLog/HiDeHo for exploration support
-      - Dynamic and contextual extraction of a series of versions
-   - Refactoring browser as the default editor for VDM-SL
-   - Unit tests and traces are run integrated in the test runner on the Refactoring browser.
-   - The execution contexts of failed tests are saved and directly debuggable
-   - Adopted the new Pharo debugger architecture in Pharo 12
+* Codename Milan has been released (Apr 2, 2025) 
+  - new Launcher UI: Models menu for quick access to open your model directories under Documents/ViennaTalk/.
+  - Hi-De-Ho integration: You can manage micro-versions to safely explore design choices.
+  - git repository support: You can clone a git repository to your local directory and push/pull/commit/merge.
+  - on-file syntax debugger: On-file syntax debugger opens when you tried to open a syntactically erroneous model on the Refactoring Browser.
+  - experimental native window support: In the settings dialog, you can turn-on ViennaTalk>>Appearances/use Native multi-windows checkbox to use separate windows.
+  - misc maintenance worksː Lively Walk-Through is now back in operational and minor improvements on GUIs have been done.
 
 * [Past Releases](Releases.md)
 
