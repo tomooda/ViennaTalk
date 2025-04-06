@@ -381,6 +381,7 @@ ViennaTranspiledAnimation >> runTestOperation: aString module: anotherString [
 									globalName identifier asSymbol }.
 								(object at: globalName moduleIdentifier).
 								globalName identifier asSymbol } ] ] ] ].
+	self init.
 	ViennaProfiler
 		act: acts asArray
 		rd: rds asArray
