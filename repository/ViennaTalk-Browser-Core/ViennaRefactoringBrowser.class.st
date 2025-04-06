@@ -2379,7 +2379,7 @@ ViennaRefactoringBrowser >> modelChanged [
 				specification: self specification
 				ifError: [ :msg | self notifyAnimationError: msg ].
 			animation state: state ]
-				on: Exception
+				on: Error
 				do: [ :ex | animation init ].
 			epiLog state: animation state ].
 		(epiLog hasSpecificationChange and: [ runsAllTests ]) ifTrue: [
