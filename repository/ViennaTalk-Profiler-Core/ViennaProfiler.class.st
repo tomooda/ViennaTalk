@@ -13,25 +13,14 @@ Class {
 	#package : 'ViennaTalk-Profiler-Core'
 }
 
-{ #category : 'examples' }
-ViennaProfiler class >> example [
+{ #category : 'profiling' }
+ViennaProfiler class >> act: aCollectionOfModuleObjectAndSelector rd: aCollectionOfModuleObjectAndVariable wr: anotherCollectionOfModuleObjectAndVariable do: aBlock [
 
-	| obj profiler |
-	obj := ViennaProfilerTestTarget new.
-	profiler := ViennaProfiler new.
-	profiler
-		act: { {
-				obj.
-				#op } }
-		rd: { {
-				obj.
-				#x } }
-		wr: { {
-				obj.
-				#y } }
-		do: [
-			obj op.
-			profiler inspect ]
+	^ self new
+		  act: aCollectionOfModuleObjectAndSelector
+		  rd: aCollectionOfModuleObjectAndVariable
+		  wr: anotherCollectionOfModuleObjectAndVariable
+		  do: aBlock
 ]
 
 { #category : 'private' }
@@ -92,13 +81,13 @@ ViennaProfiler >> initialize [
 		          metaObject: self;
 		          selector: #countRd:;
 		          arguments: #( node );
-		          control: #after;
+		          control: #before;
 		          yourself.
 	wrLink := MetaLink new
 		          metaObject: self;
 		          selector: #countWr:;
 		          arguments: #( node );
-		          control: #after;
+		          control: #before;
 		          yourself.
 	act := Bag new.
 	rd := Bag new.

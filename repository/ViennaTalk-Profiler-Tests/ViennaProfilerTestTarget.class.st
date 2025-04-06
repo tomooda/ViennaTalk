@@ -20,5 +20,7 @@ ViennaProfilerTestTarget >> initialize [
 { #category : 'operations' }
 ViennaProfilerTestTarget >> op [
 
-	y := x + x
+	y := x + x.
+	self yourself.
+	^ self
 ]
