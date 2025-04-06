@@ -39,6 +39,13 @@ ViennaTranspiledObject class >> initialize [
 	specificationDict := Dictionary new.
 ]
 
+{ #category : 'accessing' }
+ViennaTranspiledObject class >> name [
+
+	specification ifNotNil: [ ^ specification identifier ].
+	^ super name
+]
+
 { #category : 'specification' }
 ViennaTranspiledObject class >> specification [
 	^ specification

@@ -77,6 +77,13 @@ ViennaVDMParser >> accessValueDefinition [
 		  yourself ]
 ]
 
+{ #category : 'parsers-expressions-basics' }
+ViennaVDMParser >> actExpression [
+
+	^ super actExpression
+	  ==> [ :namelist | ViennaActExpressionNode with: namelist ]
+]
+
 { #category : 'annotations' }
 ViennaVDMParser >> addAnnotation: aString [
 
@@ -1712,6 +1719,13 @@ ViennaVDMParser >> quoteType [
 ]
 
 { #category : 'parsers-expressions-basics' }
+ViennaVDMParser >> rdExpression [
+
+	^ super rdExpression
+	  ==> [ :namelist | ViennaRdExpressionNode with: namelist ]
+]
+
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> recordConstructor [
 
 	^ super recordConstructor =>> [ :start :end :array |
@@ -2461,4 +2475,11 @@ ViennaVDMParser >> whileLoop [
 	  (ViennaWhileLoopNode expression: pair first statement: pair second)
 		  start: start end: end;
 		  yourself ]
+]
+
+{ #category : 'parsers-expressions-basics' }
+ViennaVDMParser >> wrExpression [
+
+	^ super wrExpression
+	  ==> [ :namelist | ViennaWrExpressionNode with: namelist ]
 ]

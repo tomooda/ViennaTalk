@@ -5,6 +5,7 @@ Class {
 		'actLink',
 		'rdLink',
 		'wrLink',
+		'env',
 		'act',
 		'rd',
 		'wr'
@@ -14,29 +15,23 @@ Class {
 }
 
 { #category : 'profiling' }
-ViennaProfiler class >> act: aCollectionOfModuleObjectAndSelector rd: aCollectionOfModuleObjectAndVariable wr: anotherCollectionOfModuleObjectAndVariable do: aBlock [
+ViennaProfiler class >> act: aCollectionOfNameAndModuleObjectAndSelector rd: aCollectionOfNameAndModuleObjectAndVariable wr: anotherCollectionOfNameAndModuleObjectAndVariable do: aBlock [
 
 	^ self new
-		  act: aCollectionOfModuleObjectAndSelector
-		  rd: aCollectionOfModuleObjectAndVariable
-		  wr: anotherCollectionOfModuleObjectAndVariable
+		  act: aCollectionOfNameAndModuleObjectAndSelector
+		  rd: aCollectionOfNameAndModuleObjectAndVariable
+		  wr: anotherCollectionOfNameAndModuleObjectAndVariable
 		  do: aBlock
 ]
 
-{ #category : 'private' }
-ViennaProfiler >> act [
-
-	^ act
-]
-
 { #category : 'profiling' }
-ViennaProfiler >> act: aCollectionOfModuleObjectAndSelector rd: aCollectionOfModuleObjectAndVariable wr: anotherCollectionOfModuleObjectAndVariable do: aBlock [
+ViennaProfiler >> act: aCollectionOfNameAndModuleObjectAndSelector rd: aCollectionOfNameAndModuleObjectAndVariable wr: anotherCollectionOfNameAndModuleObjectAndVariable do: aBlock [
 
 	[
 	self
-		installAct: aCollectionOfModuleObjectAndSelector
-		rd: aCollectionOfModuleObjectAndVariable
-		wr: anotherCollectionOfModuleObjectAndVariable.
+		installAct: aCollectionOfNameAndModuleObjectAndSelector
+		rd: aCollectionOfNameAndModuleObjectAndVariable
+		wr: anotherCollectionOfNameAndModuleObjectAndVariable.
 	aBlock
 		on: ViennaProfilingException
 		do: [ :ex | ex resume: (ex value: self) ] ] ensure: [
@@ -47,7 +42,7 @@ ViennaProfiler >> act: aCollectionOfModuleObjectAndSelector rd: aCollectionOfMod
 ViennaProfiler >> countAct: context [
 
 	act add: {
-			context receiver class name.
+			context receiver class.
 			context selector }
 ]
 
@@ -55,7 +50,7 @@ ViennaProfiler >> countAct: context [
 ViennaProfiler >> countRd: node [
 
 	rd add: {
-			node variable owningClass name.
+			node variable owningClass.
 			node name }
 ]
 
@@ -63,7 +58,7 @@ ViennaProfiler >> countRd: node [
 ViennaProfiler >> countWr: node [
 
 	wr add: {
-			node variable owningClass name.
+			node variable owningClass.
 			node name }
 ]
 
@@ -89,30 +84,41 @@ ViennaProfiler >> initialize [
 		          arguments: #( node );
 		          control: #before;
 		          yourself.
+	env := Dictionary new.
 	act := Bag new.
 	rd := Bag new.
 	wr := Bag new
 ]
 
 { #category : 'reflectivity' }
-ViennaProfiler >> installAct: aCollectionOfModuleObjectAndSelector rd: aCollectionOfModuleObjectAndVariable wr: anotherCollectionOfModuleObjectAndVariable [
+ViennaProfiler >> installAct: aCollectionOfNameAndModuleObjectAndSelector rd: aCollectionOfNameAndModuleObjectAndVariable wr: anotherCollectionOfNameAndModuleObjectAndVariable [
 
-	aCollectionOfModuleObjectAndSelector do: [ :pair |
-		(pair first class lookupSelector: pair second) ifNotNil: [ :method |
+	aCollectionOfNameAndModuleObjectAndSelector do: [ :triple |
+		(triple second class lookupSelector: triple third) ifNotNil: [
+			:method |
+			env at: triple first put: {
+					triple second class.
+					triple third }.
 			method ast link: actLink ] ].
-	aCollectionOfModuleObjectAndVariable do: [ :pair |
+	aCollectionOfNameAndModuleObjectAndVariable do: [ :triple |
 		| class var |
-		class := pair first class.
-		var := pair second.
+		class := triple second class.
+		var := triple third.
 		class slotNamed: var ifFound: [ :slot |
+			env at: triple first put: {
+					triple second class.
+					triple third }.
 			(class allMethodsReadingSlot: slot) do: [ :method |
 				method instanceVariableReadNodes do: [ :node |
 					node name = var ifTrue: [ node link: rdLink ] ] ] ] ].
-	anotherCollectionOfModuleObjectAndVariable do: [ :pair |
+	anotherCollectionOfNameAndModuleObjectAndVariable do: [ :triple |
 		| class var |
-		class := pair first class.
-		var := pair second.
+		class := triple second class.
+		var := triple third.
 		class slotNamed: var ifFound: [ :slot |
+			env at: triple first put: {
+					triple second class.
+					triple third }.
 			(class allMethodsWritingSlot: slot) do: [ :method |
 				method instanceVariableWriteNodes do: [ :node |
 					node name = var ifTrue: [ node link: wrLink ] ] ] ] ]
@@ -121,25 +127,31 @@ ViennaProfiler >> installAct: aCollectionOfModuleObjectAndSelector rd: aCollecti
 { #category : 'accessing' }
 ViennaProfiler >> numAct: opName module: moduleName [
 
-	^ act occurrencesOf: {
-			  moduleName.
-			  opName }
+	^ act occurrencesOf: (env
+			   at: {
+					   moduleName.
+					   opName }
+			   ifAbsent: [ ^ 0 ])
 ]
 
 { #category : 'accessing' }
 ViennaProfiler >> numRd: varName module: moduleName [
 
-	^ rd occurrencesOf: {
-			  moduleName.
-			  varName }
+	^ rd occurrencesOf: (env
+			   at: {
+					   moduleName.
+					   varName }
+			   ifAbsent: [ ^ 0 ])
 ]
 
 { #category : 'accessing' }
 ViennaProfiler >> numWr: varName module: moduleName [
 
-	^ wr occurrencesOf: {
-			  moduleName.
-			  varName }
+	^ wr occurrencesOf: (env
+			   at: {
+					   moduleName.
+					   varName }
+			   ifAbsent: [ ^ 0 ])
 ]
 
 { #category : 'reflectivity' }

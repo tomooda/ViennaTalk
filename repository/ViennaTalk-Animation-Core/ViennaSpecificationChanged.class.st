@@ -1,19 +1,20 @@
 Class {
-	#name : #ViennaSpecificationChanged,
-	#superclass : #Announcement,
+	#name : 'ViennaSpecificationChanged',
+	#superclass : 'Announcement',
 	#instVars : [
 		'animation'
 	],
-	#category : #'ViennaTalk-Animation-Core'
+	#category : 'ViennaTalk-Animation-Core',
+	#package : 'ViennaTalk-Animation-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSpecificationChanged >> animation [
 
 	^ animation
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSpecificationChanged >> animation: aViennaAnimation [
 
 	animation := aViennaAnimation

@@ -1,14 +1,15 @@
 Class {
-	#name : #ViennaResolverTest,
-	#superclass : #TestCase,
+	#name : 'ViennaResolverTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'modularDocument',
 		'flatDocument'
 	],
-	#category : #'ViennaTalk-Parser-Tests'
+	#category : 'ViennaTalk-Parser-Tests',
+	#package : 'ViennaTalk-Parser-Tests'
 }
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 ViennaResolverTest >> f [
 
 	flatDocument
@@ -16,18 +17,18 @@ ViennaResolverTest >> f [
 		do: [ :n | ^ n ]
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 ViennaResolverTest >> moduleA [
 	^ modularDocument moduleNamed: 'A'
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 ViennaResolverTest >> moduleB [
 
 	^ modularDocument moduleNamed: 'B'
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 ViennaResolverTest >> o [
 
 	flatDocument
@@ -35,7 +36,7 @@ ViennaResolverTest >> o [
 		do: [ :n | ^ n ]
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 ViennaResolverTest >> setUp [
 
 	modularDocument := ViennaVDMParser new document parse: '
@@ -91,7 +92,7 @@ operations
 ' trim
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 ViennaResolverTest >> t [
 
 	flatDocument
@@ -99,7 +100,7 @@ ViennaResolverTest >> t [
 		do: [ :n | ^ n ]
 ]
 
-{ #category : #'tests-statements' }
+{ #category : 'tests-statements' }
 ViennaResolverTest >> testBlockStatement [
 
 	| node |
@@ -108,7 +109,7 @@ ViennaResolverTest >> testBlockStatement [
 	self assert: (node second findResolverForIdentifier: 'x') identicalTo: node
 ]
 
-{ #category : #'tests-expressions' }
+{ #category : 'tests-expressions' }
 ViennaResolverTest >> testCasesExpression [
 
 	| node |
@@ -120,7 +121,7 @@ ViennaResolverTest >> testCasesExpression [
 	self assert: (node expression findResolverForIdentifier: 'z') isNil
 ]
 
-{ #category : #'tests-statements' }
+{ #category : 'tests-statements' }
 ViennaResolverTest >> testCasesStatement [
 
 	| node |
@@ -131,7 +132,7 @@ ViennaResolverTest >> testCasesStatement [
 		identicalTo: node
 ]
 
-{ #category : #'tests-modules' }
+{ #category : 'tests-modules' }
 ViennaResolverTest >> testDeepResolveImportedFunction [
 
 	| node |
@@ -139,7 +140,7 @@ ViennaResolverTest >> testDeepResolveImportedFunction [
 	self assert: node identicalTo: self moduleB
 ]
 
-{ #category : #'tests-modules' }
+{ #category : 'tests-modules' }
 ViennaResolverTest >> testDeepResolveImportedOperation [
 
 	| node |
@@ -147,7 +148,7 @@ ViennaResolverTest >> testDeepResolveImportedOperation [
 	self assert: node identicalTo: self moduleB
 ]
 
-{ #category : #'tests-modules' }
+{ #category : 'tests-modules' }
 ViennaResolverTest >> testDeepResolveImportedType [
 
 	| node |
@@ -155,7 +156,7 @@ ViennaResolverTest >> testDeepResolveImportedType [
 	self assert: node identicalTo: self moduleB
 ]
 
-{ #category : #'tests-modules' }
+{ #category : 'tests-modules' }
 ViennaResolverTest >> testDeepResolveImportedValue [
 
 	| node |
@@ -163,7 +164,7 @@ ViennaResolverTest >> testDeepResolveImportedValue [
 	self assert: node identicalTo: self moduleB
 ]
 
-{ #category : #'tests-modules' }
+{ #category : 'tests-modules' }
 ViennaResolverTest >> testDeepResolveLocalFunction [
 
 	| node |
@@ -171,7 +172,7 @@ ViennaResolverTest >> testDeepResolveLocalFunction [
 	self assert: node identicalTo: self moduleA
 ]
 
-{ #category : #'tests-modules' }
+{ #category : 'tests-modules' }
 ViennaResolverTest >> testDeepResolveLocalFunctionParameter [
 
 	| node |
@@ -179,7 +180,7 @@ ViennaResolverTest >> testDeepResolveLocalFunctionParameter [
 	self assert: node isNil
 ]
 
-{ #category : #'tests-modules' }
+{ #category : 'tests-modules' }
 ViennaResolverTest >> testDeepResolveLocalOperation [
 
 	| node |
@@ -187,7 +188,7 @@ ViennaResolverTest >> testDeepResolveLocalOperation [
 	self assert: node identicalTo: self moduleA
 ]
 
-{ #category : #'tests-modules' }
+{ #category : 'tests-modules' }
 ViennaResolverTest >> testDeepResolveLocalStateVariable [
 
 	| node |
@@ -195,7 +196,7 @@ ViennaResolverTest >> testDeepResolveLocalStateVariable [
 	self assert: node identicalTo: self moduleA
 ]
 
-{ #category : #'tests-modules' }
+{ #category : 'tests-modules' }
 ViennaResolverTest >> testDeepResolveLocalType [
 
 	| node |
@@ -203,7 +204,7 @@ ViennaResolverTest >> testDeepResolveLocalType [
 	self assert: node identicalTo: self moduleA
 ]
 
-{ #category : #'tests-modules' }
+{ #category : 'tests-modules' }
 ViennaResolverTest >> testDeepResolveLocalValue [
 
 	| node |
@@ -211,7 +212,7 @@ ViennaResolverTest >> testDeepResolveLocalValue [
 	self assert: node identicalTo: self moduleA
 ]
 
-{ #category : #'tests-expressions' }
+{ #category : 'tests-expressions' }
 ViennaResolverTest >> testExists1Expression [
 
 	| node |
@@ -223,7 +224,7 @@ ViennaResolverTest >> testExists1Expression [
 	self assert: (node expression findResolverForIdentifier: 'z') isNil
 ]
 
-{ #category : #'tests-expressions' }
+{ #category : 'tests-expressions' }
 ViennaResolverTest >> testExistsExpression [
 
 	| node |
@@ -238,7 +239,7 @@ ViennaResolverTest >> testExistsExpression [
 	self assert: (node expression findResolverForIdentifier: 'z') isNil
 ]
 
-{ #category : #'tests-toplevel definitions' }
+{ #category : 'tests-toplevel definitions' }
 ViennaResolverTest >> testExplicitFunctionDefinition [
 
 	| node |
@@ -250,7 +251,7 @@ ViennaResolverTest >> testExplicitFunctionDefinition [
 		identicalTo: node
 ]
 
-{ #category : #'tests-toplevel definitions' }
+{ #category : 'tests-toplevel definitions' }
 ViennaResolverTest >> testExplicitOperationDefinition [
 
 	| node |
@@ -262,7 +263,7 @@ ViennaResolverTest >> testExplicitOperationDefinition [
 		identicalTo: node
 ]
 
-{ #category : #'tests-toplevel definitions' }
+{ #category : 'tests-toplevel definitions' }
 ViennaResolverTest >> testExtendedExplicitFunctionDefinition [
 
 	| node |
@@ -275,7 +276,7 @@ ViennaResolverTest >> testExtendedExplicitFunctionDefinition [
 	self assert: (node post findResolverForIdentifier: 'res') identicalTo: node
 ]
 
-{ #category : #'tests-toplevel definitions' }
+{ #category : 'tests-toplevel definitions' }
 ViennaResolverTest >> testExtendedExplicitOperationDefinition [
 
 	| node |
@@ -287,7 +288,7 @@ ViennaResolverTest >> testExtendedExplicitOperationDefinition [
 	self assert: (node post findResolverForIdentifier: 'res') identicalTo: node
 ]
 
-{ #category : #'tests-expressions' }
+{ #category : 'tests-expressions' }
 ViennaResolverTest >> testForallExpression [
 
 	| node |
@@ -302,7 +303,7 @@ ViennaResolverTest >> testForallExpression [
 	self assert: (node expression findResolverForIdentifier: 'z') isNil
 ]
 
-{ #category : #'tests-toplevel definitions' }
+{ #category : 'tests-toplevel definitions' }
 ViennaResolverTest >> testImplicitFunctionDefinition [
 
 	| node |
@@ -313,7 +314,7 @@ ViennaResolverTest >> testImplicitFunctionDefinition [
 	self assert: (node post findResolverForIdentifier: 'res') identicalTo: node
 ]
 
-{ #category : #'tests-toplevel definitions' }
+{ #category : 'tests-toplevel definitions' }
 ViennaResolverTest >> testImplicitOperationDefinition [
 
 	| node |
@@ -324,7 +325,7 @@ ViennaResolverTest >> testImplicitOperationDefinition [
 	self assert: (node post findResolverForIdentifier: 'a') isNil
 ]
 
-{ #category : #'tests-statements' }
+{ #category : 'tests-statements' }
 ViennaResolverTest >> testIndexForLoop [
 
 	| node |
@@ -335,7 +336,7 @@ ViennaResolverTest >> testIndexForLoop [
 		identicalTo: node
 ]
 
-{ #category : #'tests-others' }
+{ #category : 'tests-others' }
 ViennaResolverTest >> testInvariant [
 
 	| node |
@@ -349,7 +350,7 @@ ViennaResolverTest >> testInvariant [
 		identicalTo: node
 ]
 
-{ #category : #'tests-expressions' }
+{ #category : 'tests-expressions' }
 ViennaResolverTest >> testIotaExpression [
 
 	| node |
@@ -361,7 +362,7 @@ ViennaResolverTest >> testIotaExpression [
 	self assert: (node expression findResolverForIdentifier: 'z') isNil
 ]
 
-{ #category : #'tests-expressions' }
+{ #category : 'tests-expressions' }
 ViennaResolverTest >> testLambdaExpression [
 
 	| node |
@@ -376,7 +377,7 @@ ViennaResolverTest >> testLambdaExpression [
 	self assert: (node expression findResolverForIdentifier: 'z') isNil
 ]
 
-{ #category : #'tests-expressions' }
+{ #category : 'tests-expressions' }
 ViennaResolverTest >> testLetBeExpression [
 
 	| node |
@@ -391,7 +392,7 @@ ViennaResolverTest >> testLetBeExpression [
 	self assert: (node expression findResolverForIdentifier: 'z') isNil
 ]
 
-{ #category : #'tests-statements' }
+{ #category : 'tests-statements' }
 ViennaResolverTest >> testLetBeStatement [
 
 	| node |
@@ -406,7 +407,7 @@ ViennaResolverTest >> testLetBeStatement [
 	self assert: (node statement findResolverForIdentifier: 'z') isNil
 ]
 
-{ #category : #'tests-expressions' }
+{ #category : 'tests-expressions' }
 ViennaResolverTest >> testLetExpression [
 
 	| node |
@@ -421,7 +422,7 @@ ViennaResolverTest >> testLetExpression [
 	self assert: (node expression findResolverForIdentifier: 'z') isNil
 ]
 
-{ #category : #'tests-statements' }
+{ #category : 'tests-statements' }
 ViennaResolverTest >> testLetStatement [
 
 	| node |
@@ -436,7 +437,7 @@ ViennaResolverTest >> testLetStatement [
 	self assert: (node statement findResolverForIdentifier: 'z') isNil
 ]
 
-{ #category : #'tests-flat documents' }
+{ #category : 'tests-flat documents' }
 ViennaResolverTest >> testLookupFlatFunction [
 
 	| node |
@@ -444,7 +445,7 @@ ViennaResolverTest >> testLookupFlatFunction [
 	self assert: node isViennaAccessFunctionDefinitionNode
 ]
 
-{ #category : #'tests-flat documents' }
+{ #category : 'tests-flat documents' }
 ViennaResolverTest >> testLookupFlatFunctionParameter [
 
 	| node |
@@ -452,7 +453,7 @@ ViennaResolverTest >> testLookupFlatFunctionParameter [
 	self assert: node isNil
 ]
 
-{ #category : #'tests-flat documents' }
+{ #category : 'tests-flat documents' }
 ViennaResolverTest >> testLookupFlatOperation [
 
 	| node |
@@ -460,7 +461,7 @@ ViennaResolverTest >> testLookupFlatOperation [
 	self assert: node isViennaAccessOperationDefinitionNode
 ]
 
-{ #category : #'tests-flat documents' }
+{ #category : 'tests-flat documents' }
 ViennaResolverTest >> testLookupFlatStateVariable [
 
 	| node |
@@ -468,7 +469,7 @@ ViennaResolverTest >> testLookupFlatStateVariable [
 	self assert: node isViennaFieldNode
 ]
 
-{ #category : #'tests-flat documents' }
+{ #category : 'tests-flat documents' }
 ViennaResolverTest >> testLookupFlatType [
 
 	| node |
@@ -476,7 +477,7 @@ ViennaResolverTest >> testLookupFlatType [
 	self assert: node isViennaAccessTypeDefinitionNode
 ]
 
-{ #category : #'tests-flat documents' }
+{ #category : 'tests-flat documents' }
 ViennaResolverTest >> testLookupFlatValue [
 
 	| node |
@@ -484,7 +485,7 @@ ViennaResolverTest >> testLookupFlatValue [
 	self assert: node isViennaAccessValueDefinitionNode
 ]
 
-{ #category : #'tests-modules' }
+{ #category : 'tests-modules' }
 ViennaResolverTest >> testLookupImportedFunction [
 
 	| node |
@@ -492,7 +493,7 @@ ViennaResolverTest >> testLookupImportedFunction [
 	self assert: node isViennaFunctionImportNode
 ]
 
-{ #category : #'tests-modules' }
+{ #category : 'tests-modules' }
 ViennaResolverTest >> testLookupImportedOperation [
 
 	| node |
@@ -500,7 +501,7 @@ ViennaResolverTest >> testLookupImportedOperation [
 	self assert: node isViennaOperationImportNode
 ]
 
-{ #category : #'tests-modules' }
+{ #category : 'tests-modules' }
 ViennaResolverTest >> testLookupImportedType [
 
 	| node |
@@ -508,7 +509,7 @@ ViennaResolverTest >> testLookupImportedType [
 	self assert: node isViennaTypeImportNode
 ]
 
-{ #category : #'tests-modules' }
+{ #category : 'tests-modules' }
 ViennaResolverTest >> testLookupImportedValue [
 
 	| node |
@@ -516,7 +517,7 @@ ViennaResolverTest >> testLookupImportedValue [
 	self assert: node isViennaValueImportNode
 ]
 
-{ #category : #'tests-modules' }
+{ #category : 'tests-modules' }
 ViennaResolverTest >> testLookupLocalFunction [
 
 	| node |
@@ -524,7 +525,7 @@ ViennaResolverTest >> testLookupLocalFunction [
 	self assert: node isViennaAccessFunctionDefinitionNode
 ]
 
-{ #category : #'tests-modules' }
+{ #category : 'tests-modules' }
 ViennaResolverTest >> testLookupLocalOperation [
 
 	| node |
@@ -532,7 +533,7 @@ ViennaResolverTest >> testLookupLocalOperation [
 	self assert: node isViennaAccessOperationDefinitionNode
 ]
 
-{ #category : #'tests-modules' }
+{ #category : 'tests-modules' }
 ViennaResolverTest >> testLookupLocalStateVariable [
 
 	| node |
@@ -540,7 +541,7 @@ ViennaResolverTest >> testLookupLocalStateVariable [
 	self assert: node isViennaFieldNode
 ]
 
-{ #category : #'tests-modules' }
+{ #category : 'tests-modules' }
 ViennaResolverTest >> testLookupLocalType [
 
 	| node |
@@ -548,7 +549,7 @@ ViennaResolverTest >> testLookupLocalType [
 	self assert: node isViennaAccessTypeDefinitionNode
 ]
 
-{ #category : #'tests-modules' }
+{ #category : 'tests-modules' }
 ViennaResolverTest >> testLookupLocalValue [
 
 	| node |
@@ -556,7 +557,7 @@ ViennaResolverTest >> testLookupLocalValue [
 	self assert: node isViennaAccessValueDefinitionNode
 ]
 
-{ #category : #'tests-expressions' }
+{ #category : 'tests-expressions' }
 ViennaResolverTest >> testMapComprehension [
 
 	| node |
@@ -571,7 +572,7 @@ ViennaResolverTest >> testMapComprehension [
 	self assert: (node suchthatExpression findResolverForIdentifier: 'z') isNil
 ]
 
-{ #category : #'tests-flat documents' }
+{ #category : 'tests-flat documents' }
 ViennaResolverTest >> testResolveFlatFunction [
 
 	| node |
@@ -579,7 +580,7 @@ ViennaResolverTest >> testResolveFlatFunction [
 	self assert: node identicalTo: node
 ]
 
-{ #category : #'tests-flat documents' }
+{ #category : 'tests-flat documents' }
 ViennaResolverTest >> testResolveFlatFunctionParameter [
 
 	| node |
@@ -587,7 +588,7 @@ ViennaResolverTest >> testResolveFlatFunctionParameter [
 	self assert: node isNil
 ]
 
-{ #category : #'tests-flat documents' }
+{ #category : 'tests-flat documents' }
 ViennaResolverTest >> testResolveFlatOperation [
 
 	| node |
@@ -595,7 +596,7 @@ ViennaResolverTest >> testResolveFlatOperation [
 	self assert: node identicalTo: flatDocument
 ]
 
-{ #category : #'tests-flat documents' }
+{ #category : 'tests-flat documents' }
 ViennaResolverTest >> testResolveFlatStateVariable [
 
 	| node |
@@ -603,7 +604,7 @@ ViennaResolverTest >> testResolveFlatStateVariable [
 	self assert: node identicalTo: node
 ]
 
-{ #category : #'tests-flat documents' }
+{ #category : 'tests-flat documents' }
 ViennaResolverTest >> testResolveFlatType [
 
 	| node |
@@ -611,7 +612,7 @@ ViennaResolverTest >> testResolveFlatType [
 	self assert: node identicalTo: flatDocument
 ]
 
-{ #category : #'tests-flat documents' }
+{ #category : 'tests-flat documents' }
 ViennaResolverTest >> testResolveFlatValue [
 
 	| node |
@@ -619,7 +620,7 @@ ViennaResolverTest >> testResolveFlatValue [
 	self assert: node identicalTo: flatDocument
 ]
 
-{ #category : #'tests-modules' }
+{ #category : 'tests-modules' }
 ViennaResolverTest >> testResolveImportedFunction [
 
 	| node |
@@ -627,7 +628,7 @@ ViennaResolverTest >> testResolveImportedFunction [
 	self assert: node identicalTo: self moduleA
 ]
 
-{ #category : #'tests-modules' }
+{ #category : 'tests-modules' }
 ViennaResolverTest >> testResolveImportedOperation [
 
 	| node |
@@ -635,7 +636,7 @@ ViennaResolverTest >> testResolveImportedOperation [
 	self assert: node identicalTo: self moduleA
 ]
 
-{ #category : #'tests-modules' }
+{ #category : 'tests-modules' }
 ViennaResolverTest >> testResolveImportedType [
 
 	| node |
@@ -643,7 +644,7 @@ ViennaResolverTest >> testResolveImportedType [
 	self assert: node identicalTo: self moduleA
 ]
 
-{ #category : #'tests-modules' }
+{ #category : 'tests-modules' }
 ViennaResolverTest >> testResolveImportedValue [
 
 	| node |
@@ -651,7 +652,7 @@ ViennaResolverTest >> testResolveImportedValue [
 	self assert: node identicalTo: self moduleA
 ]
 
-{ #category : #'tests-modules' }
+{ #category : 'tests-modules' }
 ViennaResolverTest >> testResolveLocalFunction [
 
 	| node |
@@ -659,7 +660,7 @@ ViennaResolverTest >> testResolveLocalFunction [
 	self assert: node identicalTo: self moduleA
 ]
 
-{ #category : #'tests-modules' }
+{ #category : 'tests-modules' }
 ViennaResolverTest >> testResolveLocalFunctionParameter [
 
 	| node |
@@ -667,7 +668,7 @@ ViennaResolverTest >> testResolveLocalFunctionParameter [
 	self assert: node isNil
 ]
 
-{ #category : #'tests-modules' }
+{ #category : 'tests-modules' }
 ViennaResolverTest >> testResolveLocalOperation [
 
 	| node |
@@ -675,7 +676,7 @@ ViennaResolverTest >> testResolveLocalOperation [
 	self assert: node identicalTo: self moduleA
 ]
 
-{ #category : #'tests-modules' }
+{ #category : 'tests-modules' }
 ViennaResolverTest >> testResolveLocalStateVariable [
 
 	| node |
@@ -683,7 +684,7 @@ ViennaResolverTest >> testResolveLocalStateVariable [
 	self assert: node identicalTo: self moduleA
 ]
 
-{ #category : #'tests-modules' }
+{ #category : 'tests-modules' }
 ViennaResolverTest >> testResolveLocalType [
 
 	| node |
@@ -691,7 +692,7 @@ ViennaResolverTest >> testResolveLocalType [
 	self assert: node identicalTo: self moduleA
 ]
 
-{ #category : #'tests-modules' }
+{ #category : 'tests-modules' }
 ViennaResolverTest >> testResolveLocalValue [
 
 	| node |
@@ -699,7 +700,7 @@ ViennaResolverTest >> testResolveLocalValue [
 	self assert: node identicalTo: self moduleA
 ]
 
-{ #category : #'tests-expressions' }
+{ #category : 'tests-expressions' }
 ViennaResolverTest >> testSequenceComprehension [
 
 	| node |
@@ -711,7 +712,7 @@ ViennaResolverTest >> testSequenceComprehension [
 	self assert: (node expression findResolverForIdentifier: 'z') isNil
 ]
 
-{ #category : #'tests-statements' }
+{ #category : 'tests-statements' }
 ViennaResolverTest >> testSequenceForLoop [
 
 	| node |
@@ -726,7 +727,7 @@ ViennaResolverTest >> testSequenceForLoop [
 	self assert: (node statement findResolverForIdentifier: 'z') isNil
 ]
 
-{ #category : #'tests-expressions' }
+{ #category : 'tests-expressions' }
 ViennaResolverTest >> testSetComprehension [
 
 	| node |
@@ -741,7 +742,7 @@ ViennaResolverTest >> testSetComprehension [
 	self assert: (node expression findResolverForIdentifier: 'z') isNil
 ]
 
-{ #category : #'tests-statements' }
+{ #category : 'tests-statements' }
 ViennaResolverTest >> testSetForLoop [
 
 	| node |
@@ -756,7 +757,7 @@ ViennaResolverTest >> testSetForLoop [
 	self assert: (node statement findResolverForIdentifier: 'z') isNil
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 ViennaResolverTest >> v [
 
 	flatDocument

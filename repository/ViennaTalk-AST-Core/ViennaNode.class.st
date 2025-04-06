@@ -689,6 +689,12 @@ ViennaNode >> isViennaAccessValueDefinitionNode [
 ]
 
 { #category : 'testing' }
+ViennaNode >> isViennaActExpressionNode [
+
+	^ false
+]
+
+{ #category : 'testing' }
 ViennaNode >> isViennaAndNode [
 
 	^ false
@@ -1248,6 +1254,12 @@ ViennaNode >> isViennaGreaterThanNode [
 
 { #category : 'testing' }
 ViennaNode >> isViennaGreaterThanOrEqualNode [
+
+	^ false
+]
+
+{ #category : 'testing' }
+ViennaNode >> isViennaHistoryExpressionNode [
 
 	^ false
 ]
@@ -1948,6 +1960,12 @@ ViennaNode >> isViennaQuoteTypeNode: aString [
 ]
 
 { #category : 'testing' }
+ViennaNode >> isViennaRdExpressionNode [
+
+	^ false
+]
+
+{ #category : 'testing' }
 ViennaNode >> isViennaRecordConstructorNode [
 
 	^ false
@@ -2471,6 +2489,12 @@ ViennaNode >> isViennaVarInformationNode [
 
 { #category : 'testing' }
 ViennaNode >> isViennaWhileLoopNode [
+
+	^ false
+]
+
+{ #category : 'testing' }
+ViennaNode >> isViennaWrExpressionNode [
 
 	^ false
 ]

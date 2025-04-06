@@ -2752,22 +2752,10 @@ ViennaRefactoringBrowser >> runAllTests [
 { #category : 'private-unit testing' }
 ViennaRefactoringBrowser >> runTestModule: module operation: operation animation: aViennaAnimation [
 
-	| header result |
-	header := 'Runtime: Error 4129: Exit '.
+	| result |
 	aViennaAnimation state: Dictionary new.
 	[
-	[
-	aViennaAnimation
-		plainEvaluate: operation , '()'
-		in: module
-		ifError: [ :msg |
-			(msg size > header size and: [
-				 (msg copyFrom: 1 to: header size) = header ])
-				ifTrue: [
-					ViennaException expression:
-						(ViennaReader new parse:
-							 (msg copyFrom: header size + 1 to: msg size)) ]
-				ifFalse: [ Error signal: msg ] ] ]
+	[ aViennaAnimation runTestOperation: operation module: module ]
 		on: ViennaException
 		do: [ :exception |
 			exception expression in: [ :expr |

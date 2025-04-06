@@ -1,14 +1,15 @@
 Class {
-	#name : #ViennaVDMFormatterTest,
-	#superclass : #TestCase,
+	#name : 'ViennaVDMFormatterTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'parser',
 		'formatter'
 	],
-	#category : #'ViennaTalk-Parser-Tests'
+	#category : 'ViennaTalk-Parser-Tests',
+	#package : 'ViennaTalk-Parser-Tests'
 }
 
-{ #category : #asserting }
+{ #category : 'asserting' }
 ViennaVDMFormatterTest >> assertParseFormattedSource: aString with: aPP2Node [
 
 	| ast1 source ast2 |
@@ -19,14 +20,14 @@ ViennaVDMFormatterTest >> assertParseFormattedSource: aString with: aPP2Node [
 	self assert: ast1 equals: ast2
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 ViennaVDMFormatterTest >> setUp [
 
 	parser := ViennaVDMParser new.
 	formatter := ViennaVDMFormatter new
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatAnd [
 
 	self
@@ -34,7 +35,7 @@ ViennaVDMFormatterTest >> testFormatAnd [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatApply [
 
 	self assertParseFormattedSource: 'f()' with: parser expression end.
@@ -44,19 +45,19 @@ ViennaVDMFormatterTest >> testFormatApply [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatArithmeticAbs [
 
 	self assertParseFormattedSource: 'abs x' with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatArithmeticDivide [
 
 	self assertParseFormattedSource: 'x / y' with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatArithmeticIntegerDivision [
 
 	self
@@ -64,7 +65,7 @@ ViennaVDMFormatterTest >> testFormatArithmeticIntegerDivision [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatArithmeticMinus [
 
 	self
@@ -72,7 +73,7 @@ ViennaVDMFormatterTest >> testFormatArithmeticMinus [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatArithmeticMod [
 
 	self
@@ -80,28 +81,28 @@ ViennaVDMFormatterTest >> testFormatArithmeticMod [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatArithmeticMultiplication [
 	self
 		assertParseFormattedSource: 'x * y'
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatArithmeticPlus [
 	self
 		assertParseFormattedSource: 'x + y'
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatArithmeticRem [
 	self
 		assertParseFormattedSource: 'x rem y'
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatAssignmentDefinition [
 
 	self
@@ -109,7 +110,7 @@ ViennaVDMFormatterTest >> testFormatAssignmentDefinition [
 		with: parser assignmentDefinition end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatCasesExpression [
 
 	self
@@ -126,7 +127,7 @@ ViennaVDMFormatterTest >> testFormatCasesExpression [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatComposition [
 
 	self
@@ -134,7 +135,7 @@ ViennaVDMFormatterTest >> testFormatComposition [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatDefExpression [
 
 	self
@@ -142,7 +143,7 @@ ViennaVDMFormatterTest >> testFormatDefExpression [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatDistributedMapMerge [
 
 	self
@@ -150,25 +151,25 @@ ViennaVDMFormatterTest >> testFormatDistributedMapMerge [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatDistributedSequenceConcatenation [
 
 	self assertParseFormattedSource: 'conc s' with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatDistributedSetIntersection [
 
 	self assertParseFormattedSource: 'dinter s' with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatDistributedSetUnion [
 
 	self assertParseFormattedSource: 'dunion s' with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatEqual [
 
 	self
@@ -176,7 +177,7 @@ ViennaVDMFormatterTest >> testFormatEqual [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatEqualDefinition [
 
 	self
@@ -184,7 +185,7 @@ ViennaVDMFormatterTest >> testFormatEqualDefinition [
 		with: parser equalDefinition end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatEqualDefinitionList [
 
 	self
@@ -192,7 +193,7 @@ ViennaVDMFormatterTest >> testFormatEqualDefinitionList [
 		with: parser equalDefinitionList end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatError [
 
 	self
@@ -200,7 +201,7 @@ ViennaVDMFormatterTest >> testFormatError [
 		with: parser error end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatErrorList [
 
 	self
@@ -208,7 +209,7 @@ ViennaVDMFormatterTest >> testFormatErrorList [
 		with: parser errorList end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatExists1Expression [
 
 	self
@@ -216,7 +217,7 @@ ViennaVDMFormatterTest >> testFormatExists1Expression [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatExistsExpression [
 
 	self
@@ -224,7 +225,7 @@ ViennaVDMFormatterTest >> testFormatExistsExpression [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatExplicitFunctionDefinition [
 
 	self
@@ -235,7 +236,7 @@ ViennaVDMFormatterTest >> testFormatExplicitFunctionDefinition [
 		with: parser explicitFunctionDefinition end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatFieldSelect [
 
 	self
@@ -243,7 +244,7 @@ ViennaVDMFormatterTest >> testFormatFieldSelect [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatFinitePowerSet [
 
 	self
@@ -251,7 +252,7 @@ ViennaVDMFormatterTest >> testFormatFinitePowerSet [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatFlatDocument [
 
 	self
@@ -259,13 +260,13 @@ ViennaVDMFormatterTest >> testFormatFlatDocument [
 		with: parser document end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatFloor [
 
 	self assertParseFormattedSource: 'floor x' with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatForallExpression [
 
 	self
@@ -273,7 +274,7 @@ ViennaVDMFormatterTest >> testFormatForallExpression [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatFunctionTypeInstantiation [
 
 	self
@@ -281,7 +282,7 @@ ViennaVDMFormatterTest >> testFormatFunctionTypeInstantiation [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatGlobalName [
 
 	self
@@ -289,7 +290,7 @@ ViennaVDMFormatterTest >> testFormatGlobalName [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatGreaterThan [
 
 	self
@@ -297,7 +298,7 @@ ViennaVDMFormatterTest >> testFormatGreaterThan [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatGreaterThanOrEqual [
 
 	self
@@ -305,7 +306,7 @@ ViennaVDMFormatterTest >> testFormatGreaterThanOrEqual [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatIfExpression [
 
 	self
@@ -314,7 +315,7 @@ ViennaVDMFormatterTest >> testFormatIfExpression [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatImply [
 
 	self
@@ -322,7 +323,7 @@ ViennaVDMFormatterTest >> testFormatImply [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatInSet [
 
 	self
@@ -330,7 +331,7 @@ ViennaVDMFormatterTest >> testFormatInSet [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatIotaExpression [
 
 	self
@@ -338,7 +339,7 @@ ViennaVDMFormatterTest >> testFormatIotaExpression [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatIsBasicExpression [
 
 	self
@@ -346,7 +347,7 @@ ViennaVDMFormatterTest >> testFormatIsBasicExpression [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatIsNameExpression [
 
 	self
@@ -354,7 +355,7 @@ ViennaVDMFormatterTest >> testFormatIsNameExpression [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatIsNotYetSpecified [
 
 	self
@@ -362,7 +363,7 @@ ViennaVDMFormatterTest >> testFormatIsNotYetSpecified [
 		with: parser isNotYetSpecified end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatIterate [
 
 	self
@@ -370,7 +371,7 @@ ViennaVDMFormatterTest >> testFormatIterate [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatLambdaExpression [
 
 	self
@@ -378,7 +379,7 @@ ViennaVDMFormatterTest >> testFormatLambdaExpression [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatLessThan [
 
 	self
@@ -386,7 +387,7 @@ ViennaVDMFormatterTest >> testFormatLessThan [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatLessThanOrEqual [
 
 	self
@@ -394,7 +395,7 @@ ViennaVDMFormatterTest >> testFormatLessThanOrEqual [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatLetBeExpression [
 
 	self
@@ -405,7 +406,7 @@ ViennaVDMFormatterTest >> testFormatLetBeExpression [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatLetExpression [
 
 	self
@@ -414,13 +415,13 @@ ViennaVDMFormatterTest >> testFormatLetExpression [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatLocalName [
 
 	self assertParseFormattedSource: 'x' with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatLogicalEquivalence [
 
 	self
@@ -428,7 +429,7 @@ ViennaVDMFormatterTest >> testFormatLogicalEquivalence [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatMapComprehension [
 
 	self
@@ -440,7 +441,7 @@ ViennaVDMFormatterTest >> testFormatMapComprehension [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatMapDomain [
 
 	self
@@ -448,7 +449,7 @@ ViennaVDMFormatterTest >> testFormatMapDomain [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatMapDomainRestrictedBy [
 
 	self
@@ -456,7 +457,7 @@ ViennaVDMFormatterTest >> testFormatMapDomainRestrictedBy [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatMapDomainRestrictedTo [
 
 	self
@@ -464,7 +465,7 @@ ViennaVDMFormatterTest >> testFormatMapDomainRestrictedTo [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatMapEnumeration [
 
 	self
@@ -476,7 +477,7 @@ ViennaVDMFormatterTest >> testFormatMapEnumeration [
 	self assertParseFormattedSource: '{|->}' with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatMapInverse [
 
 	self
@@ -484,7 +485,7 @@ ViennaVDMFormatterTest >> testFormatMapInverse [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatMapMerge [
 
 	self
@@ -492,7 +493,7 @@ ViennaVDMFormatterTest >> testFormatMapMerge [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatMapOrSequenceModify [
 
 	self
@@ -500,7 +501,7 @@ ViennaVDMFormatterTest >> testFormatMapOrSequenceModify [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatMapOrSequenceReference [
 
 	self
@@ -508,7 +509,7 @@ ViennaVDMFormatterTest >> testFormatMapOrSequenceReference [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatMapRange [
 
 	self
@@ -516,7 +517,7 @@ ViennaVDMFormatterTest >> testFormatMapRange [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatMapRangeRestrictedBy [
 
 	self
@@ -524,7 +525,7 @@ ViennaVDMFormatterTest >> testFormatMapRangeRestrictedBy [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatMapRangeRestrictedTo [
 
 	self
@@ -532,7 +533,7 @@ ViennaVDMFormatterTest >> testFormatMapRangeRestrictedTo [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatMaplet [
 
 	self
@@ -540,7 +541,7 @@ ViennaVDMFormatterTest >> testFormatMaplet [
 		with: parser maplet end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatMapletList [
 
 	self
@@ -548,13 +549,13 @@ ViennaVDMFormatterTest >> testFormatMapletList [
 		with: parser mapletList end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatNot [
 
 	self assertParseFormattedSource: 'not e' with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatNotEqual [
 
 	self
@@ -562,7 +563,7 @@ ViennaVDMFormatterTest >> testFormatNotEqual [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatNotInSet [
 
 	self
@@ -570,13 +571,13 @@ ViennaVDMFormatterTest >> testFormatNotInSet [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatOldName [
 
 	self assertParseFormattedSource: 'v~' with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatOr [
 
 	self
@@ -584,7 +585,7 @@ ViennaVDMFormatterTest >> testFormatOr [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatPreconditionExpression [
 
 	self
@@ -592,7 +593,7 @@ ViennaVDMFormatterTest >> testFormatPreconditionExpression [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatProperSubset [
 
 	self
@@ -600,7 +601,7 @@ ViennaVDMFormatterTest >> testFormatProperSubset [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatRecordConstructor [
 
 	self
@@ -608,7 +609,7 @@ ViennaVDMFormatterTest >> testFormatRecordConstructor [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatRecordModifier [
 
 	self
@@ -616,13 +617,13 @@ ViennaVDMFormatterTest >> testFormatRecordModifier [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatResult [
 
 	self assertParseFormattedSource: 'RESULT' with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatSequenceComprehension [
 
 	self
@@ -633,7 +634,7 @@ ViennaVDMFormatterTest >> testFormatSequenceComprehension [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatSequenceConcatenate [
 
 	self
@@ -641,7 +642,7 @@ ViennaVDMFormatterTest >> testFormatSequenceConcatenate [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatSequenceElements [
 
 	self
@@ -649,7 +650,7 @@ ViennaVDMFormatterTest >> testFormatSequenceElements [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatSequenceEnumeration [
 
 	self
@@ -659,43 +660,43 @@ ViennaVDMFormatterTest >> testFormatSequenceEnumeration [
 	self assertParseFormattedSource: '[]' with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatSequenceHead [
 
 	self assertParseFormattedSource: 'hd s' with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatSequenceIndices [
 
 	self assertParseFormattedSource: 'inds s' with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatSequenceLength [
 
 	self assertParseFormattedSource: 'len s' with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatSequenceReverse [
 
 	self assertParseFormattedSource: 'reverse s' with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatSequenceTail [
 
 	self assertParseFormattedSource: 'tl s' with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatSetCardinality [
 
 	self assertParseFormattedSource: 'card s' with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatSetComprehension [
 
 	self
@@ -706,7 +707,7 @@ ViennaVDMFormatterTest >> testFormatSetComprehension [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatSetDifference [
 
 	self
@@ -715,7 +716,7 @@ ViennaVDMFormatterTest >> testFormatSetDifference [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatSetEnumeration [
 
 	self
@@ -725,7 +726,7 @@ ViennaVDMFormatterTest >> testFormatSetEnumeration [
 	self assertParseFormattedSource: '{}' with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatSetIntersection [
 
 	self
@@ -733,7 +734,7 @@ ViennaVDMFormatterTest >> testFormatSetIntersection [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatSetRangeExpression [
 
 	self
@@ -741,7 +742,7 @@ ViennaVDMFormatterTest >> testFormatSetRangeExpression [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatSetUnion [
 
 	self
@@ -749,7 +750,7 @@ ViennaVDMFormatterTest >> testFormatSetUnion [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatSubsequence [
 
 	self
@@ -757,7 +758,7 @@ ViennaVDMFormatterTest >> testFormatSubsequence [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatSubset [
 
 	self
@@ -765,13 +766,13 @@ ViennaVDMFormatterTest >> testFormatSubset [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatSymbolicLiteral [
 
 	self assertParseFormattedSource: 'true' with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatTokenConstructor [
 
 	self
@@ -779,7 +780,7 @@ ViennaVDMFormatterTest >> testFormatTokenConstructor [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatTupleConstructor [
 
 	self
@@ -787,13 +788,13 @@ ViennaVDMFormatterTest >> testFormatTupleConstructor [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatTupleSelect [
 
 	self assertParseFormattedSource: 'v.#1' with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatTypeJudgement [
 
 	self
@@ -801,19 +802,19 @@ ViennaVDMFormatterTest >> testFormatTypeJudgement [
 		with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatUnaryMinus [
 
 	self assertParseFormattedSource: '-v' with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatUnaryPlus [
 
 	self assertParseFormattedSource: '+v' with: parser expression end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaVDMFormatterTest >> testFormatUndefined [
 
 	self

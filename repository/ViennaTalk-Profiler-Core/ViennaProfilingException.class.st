@@ -21,7 +21,7 @@ ViennaProfilingException class >> signal: aString module: anotherString [
 { #category : 'handling' }
 ViennaProfilingException >> defaultAction [
 
-	self resume: 0
+	^ 0
 ]
 
 { #category : 'accessing' }
@@ -33,7 +33,7 @@ ViennaProfilingException >> identifier [
 { #category : 'accessing' }
 ViennaProfilingException >> identifier: aString [
 
-	identifier := aString asString
+	identifier := aString asSymbol
 ]
 
 { #category : 'accessing' }

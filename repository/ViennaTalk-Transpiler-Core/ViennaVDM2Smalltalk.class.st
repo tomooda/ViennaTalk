@@ -77,7 +77,14 @@ ViennaVDM2Smalltalk >> accessValueDefinition: aViennaNode env: aDictionary [
 
 { #category : 'code generation-expressions' }
 ViennaVDM2Smalltalk >> actExpression: aViennaNode env: aDictionary [
-	^ self notYetImplemented
+
+	^ '(' , ('+' join: (aViennaNode nameList collect: [ :name |
+			    name asGlobalName
+				    ifNotNil: [ :globalName |
+					    '(ViennaActException signal: '
+					    , globalName identifier storeString , ' module: '
+					    , globalName moduleIdentifier storeString , ')' ]
+				    ifNil: [ '0' ] ])) , ')'
 ]
 
 { #category : 'code generation-expressions' }
@@ -2662,6 +2669,18 @@ ViennaVDM2Smalltalk >> quoteType: aViennaNode env: aDictionary [
 ]
 
 { #category : 'code generation-expressions' }
+ViennaVDM2Smalltalk >> rdExpression: aViennaNode env: aDictionary [
+
+	^ '(' , ('+' join: (aViennaNode nameList collect: [ :name |
+			    name asGlobalName
+				    ifNotNil: [ :globalName |
+					    '(ViennaRdException signal: '
+					    , globalName identifier storeString , ' module: '
+					    , globalName moduleIdentifier storeString , ')' ]
+				    ifNil: [ '0' ] ])) , ')'
+]
+
+{ #category : 'code generation-expressions' }
 ViennaVDM2Smalltalk >> recordConstructor: aViennaNode env: aDictionary [
 	| constructorName args |
 	constructorName := self generate: aViennaNode first env: aDictionary.
@@ -3686,4 +3705,16 @@ ViennaVDM2Smalltalk >> whileLoop: aViennaNode env: aDictionary [
 	cond := self generate: aViennaNode first env: aDictionary.
 	body := self generate: aViennaNode second env: aDictionary.
 	^ '[' , cond , '] whileTrue: [' , body , ']'
+]
+
+{ #category : 'code generation-expressions' }
+ViennaVDM2Smalltalk >> wrExpression: aViennaNode env: aDictionary [
+
+	^ '(' , ('+' join: (aViennaNode nameList collect: [ :name |
+			    name asGlobalName
+				    ifNotNil: [ :globalName |
+					    '(ViennaWrException signal: '
+					    , globalName identifier storeString , ' module: '
+					    , globalName moduleIdentifier storeString , ')' ]
+				    ifNil: [ '0' ] ])) , ')'
 ]

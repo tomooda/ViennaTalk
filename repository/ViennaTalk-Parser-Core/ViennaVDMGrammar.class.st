@@ -146,6 +146,18 @@ ViennaVDMGrammar >> accessValueDefinition [
 			   pair second } ]) ==> #second
 ]
 
+{ #category : 'parsers-symbols' }
+ViennaVDMGrammar >> act [
+
+	^ self reserved: 'act'
+]
+
+{ #category : 'parsers-expressions-basics' }
+ViennaVDMGrammar >> actExpression [
+
+	^ self sharp , self act , lparen , nameList , rparen ==> #fourth
+]
+
 { #category : 'parsers-keywords' }
 ViennaVDMGrammar >> all [
 	^ self reserved: 'all'
@@ -275,8 +287,8 @@ ViennaVDMGrammar >> atomicExpression [
 	  / self tokenConstructor / self recordModifier
 	  / self lambdaExpression / self resultExpression
 	  / self generalIsExpr / self undefinedExpression
-	  / self preconditionExpression / self oldName / name
-	  / symbolicLiteral
+	  / self preconditionExpression / self historyExpression
+	  / self oldName / name / symbolicLiteral
 	  / (lparen , expression , rparen ==> [ :triple | triple second ])
 ]
 
@@ -1049,6 +1061,7 @@ ViennaVDMGrammar >> exports [
 
 { #category : 'parsers-expressions' }
 ViennaVDMGrammar >> expression [
+
 	^ connectiveExpression
 ]
 
@@ -1273,6 +1286,14 @@ ViennaVDMGrammar >> hd [
 { #category : 'parsers-expressions-operators' }
 ViennaVDMGrammar >> hd: arg [
 	^ arg
+]
+
+{ #category : 'parsers-expressions-basics' }
+ViennaVDMGrammar >> historyExpression [
+
+	^ $# asPParser and
+	  , (self actExpression / self rdExpression / self wrExpression)
+	  ==> #second
 ]
 
 { #category : 'parsers-types' }
@@ -2376,6 +2397,12 @@ ViennaVDMGrammar >> rd [
 ]
 
 { #category : 'parsers-expressions-basics' }
+ViennaVDMGrammar >> rdExpression [
+
+	^ self sharp , self rd , lparen , nameList , rparen ==> #fourth
+]
+
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMGrammar >> recordConstructor [
 
 	^ 'mk_' asPParser , (self type: name) , lparen , expressionList
@@ -2668,6 +2695,12 @@ ViennaVDMGrammar >> setUnionPattern [
 		==> [ :triple | 
 			{(triple first).
 			(triple third)} ]
+]
+
+{ #category : 'parsers-symbols' }
+ViennaVDMGrammar >> sharp [
+
+	^ comment trim star , '#' asPParser ==> #second
 ]
 
 { #category : 'parsers-comments' }
@@ -3272,4 +3305,10 @@ ViennaVDMGrammar >> with [
 { #category : 'parsers-keywords' }
 ViennaVDMGrammar >> wr [
 	^ self reserved: 'wr'
+]
+
+{ #category : 'parsers-expressions-basics' }
+ViennaVDMGrammar >> wrExpression [
+
+	^ self sharp , self wr , lparen , nameList , rparen ==> #fourth
 ]

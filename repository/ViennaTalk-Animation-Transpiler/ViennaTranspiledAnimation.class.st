@@ -19,7 +19,7 @@ Class {
 { #category : 'accessing' }
 ViennaTranspiledAnimation class >> useTranspilerByDefault [
 
-	^ UseTranspilerByDefault = true
+	^ UseTranspilerByDefault ~= false
 ]
 
 { #category : 'accessing' }
@@ -340,6 +340,52 @@ ViennaTranspiledAnimation >> postCopy [
 	super postCopy.
 	object := object copy.
 	self state: oldState
+]
+
+{ #category : 'evaluating' }
+ViennaTranspiledAnimation >> runTestOperation: aString module: anotherString [
+
+	| moduleObject operationNode acts rds wrs |
+	moduleObject := object at: anotherString.
+	operationNode := moduleObject class specificationAt: aString asSymbol.
+	acts := Set new.
+	rds := Set new.
+	wrs := Set new.
+	operationNode
+		allDescendantsSuchThat: #isViennaHistoryExpressionNode
+		do: [ :node |
+			node isViennaActExpressionNode ifTrue: [
+				node nameList do: [ :name |
+					name asGlobalName ifNotNil: [ :globalName |
+						acts add: {
+								{
+									globalName moduleIdentifier asSymbol.
+									globalName identifier asSymbol }.
+								(object at: globalName moduleIdentifier).
+								(globalName identifier , ':') asSymbol } ] ] ].
+			node isViennaRdExpressionNode ifTrue: [
+				node nameList do: [ :name |
+					name asGlobalName ifNotNil: [ :globalName |
+						rds add: {
+								{
+									globalName moduleIdentifier asSymbol.
+									globalName identifier asSymbol }.
+								(object at: globalName moduleIdentifier).
+								globalName identifier asSymbol } ] ] ].
+			node isViennaWrExpressionNode ifTrue: [
+				node nameList do: [ :name |
+					name asGlobalName ifNotNil: [ :globalName |
+						wrs add: {
+								{
+									globalName moduleIdentifier asSymbol.
+									globalName identifier asSymbol }.
+								(object at: globalName moduleIdentifier).
+								globalName identifier asSymbol } ] ] ] ].
+	ViennaProfiler
+		act: acts asArray
+		rd: rds asArray
+		wr: wrs asArray
+		do: [ (moduleObject perform: aString asSymbol) value ]
 ]
 
 { #category : 'accessing' }

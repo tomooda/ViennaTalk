@@ -34,6 +34,12 @@ ViennaVDMHighlighter >> access [
 ]
 
 { #category : 'parsers-keywords' }
+ViennaVDMHighlighter >> act [
+
+	^ self keyword: super act
+]
+
+{ #category : 'parsers-keywords' }
 ViennaVDMHighlighter >> all [
 	^ self keyword: super all
 ]
@@ -396,6 +402,12 @@ ViennaVDMHighlighter >> resultExpression [
 { #category : 'parsers-keywords' }
 ViennaVDMHighlighter >> return [
 	^ self keyword: super return
+]
+
+{ #category : 'parsers-keywords' }
+ViennaVDMHighlighter >> sharp [
+
+	^ self keyword: super sharp
 ]
 
 { #category : 'parsers-keywords' }
