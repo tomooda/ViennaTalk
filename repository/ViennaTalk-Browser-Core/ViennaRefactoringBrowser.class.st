@@ -1413,6 +1413,18 @@ ViennaRefactoringBrowser >> gitCanCommitAndPush [
 ]
 
 { #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitCanMerge [
+
+	self icebergRepositoryDo: [ :repository |
+		^ self gitHasDirtyWorkingCopy not and: [
+			  (repository branch upstream includesCommit:
+				   repository branch commit) not and: [
+				  (repository branch includesCommit:
+					   repository branch upstream commit) not ] ] ].
+	^ false
+]
+
+{ #category : 'operations-git' }
 ViennaRefactoringBrowser >> gitCanPull [
 
 	self icebergRepositoryDo: [ :repository |
@@ -1456,8 +1468,10 @@ ViennaRefactoringBrowser >> gitCommit [
 			title: 'Commit Message';
 			okAction: [
 				self gitCommitWithMessage: text text.
-				self updateGitOutgoingCommitList.
-				self updateGitButtons ] ]
+				self
+					updateGitOutgoingCommitList;
+					updateGitDiffList;
+					updateGitButtons ] ]
 ]
 
 { #category : 'operations-git' }
@@ -1470,9 +1484,11 @@ ViennaRefactoringBrowser >> gitCommitAndPush [
 			okAction: [
 				self gitCommitWithMessage: text text.
 				self icebergRepositoryDo: #push.
-				self updateGitOutgoingCommitList.
-				self updateGitRemoteCommitList.
-				self updateGitButtons ] ]
+				self
+					updateGitOutgoingCommitList;
+					updateGitRemoteCommitList;
+					updateGitDiffList;
+					updateGitButtons ] ]
 ]
 
 { #category : 'operations-git' }
@@ -1513,6 +1529,40 @@ ViennaRefactoringBrowser >> gitLocalBranchIncludes: anIceCommit [
 	self icebergRepositoryDo: [ :repository |
 		^ repository branch includesCommit: anIceCommit ].
 	^ false
+]
+
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitMerge [
+
+	self gitCanMerge ifTrue: [
+		self icebergRepositoryDo: [ :repository |
+			| local remote base baseAst localDiff remoteDiff |
+			local := repository branch commit.
+			remote := repository branch upstream commit.
+			base := local commonAncestorWithCommit: remote.
+			baseAst := (self sourceFrom: base fileSystem) asViennaDocumentAst.
+			localDiff := (ViennaNodeDiffSet
+				              from: baseAst
+				              to:
+				              (self sourceFrom: local fileSystem)
+					              asViennaDocumentAst) condenseChanges select:
+				             #isViennaTopLevelDefinitionNodeChange.
+			remoteDiff := (ViennaNodeDiffSet
+				               from: baseAst
+				               to:
+				               (self sourceFrom: remote fileSystem)
+					               asViennaDocumentAst) condenseChanges select:
+				              #isViennaTopLevelDefinitionNodeChange.
+			(self gitResolveConflictsBetween: localDiff and: remoteDiff)
+				ifNotNil: [ :changes |
+					changes do: [ :change | self applyDiff: change to: baseAst ].
+					self halt ]
+				ifNil: [ ^ nil ] ].
+		self
+			updateGitOutgoingCommitList;
+			updateGitRemoteCommitList;
+			updateGitDiffList;
+			updateGitButtons ]
 ]
 
 { #category : 'operations-git' }
@@ -1591,6 +1641,7 @@ ViennaRefactoringBrowser >> gitPush [
 		self
 			updateGitOutgoingCommitList;
 			updateGitRemoteCommitList;
+			updateGitDiffList;
 			updateGitButtons ]
 ]
 
@@ -1601,6 +1652,12 @@ ViennaRefactoringBrowser >> gitRemoteCommitsDo: aBlock [
 		| headId |
 		headId := repository branch commit id.
 		repository branch upstream commits do: aBlock ]
+]
+
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitResolveConflictsBetween: localDiff and: remoteDiff [
+	| table |
+	table := self newTable
 ]
 
 { #category : 'testing' }
@@ -1871,7 +1928,7 @@ ViennaRefactoringBrowser >> initializeGitPagePresenters [
 				                        displayBackgroundColor: [ :commit |
 					                        (self gitLocalBranchIncludes: commit)
 						                        ifTrue: [ Color transparent ]
-						                        ifFalse: [ Color yellow ] ];
+						                        ifFalse: [ Color yellow alpha: 0.3 ] ];
 				                        width: 100);
 		                       addColumn:
 			                       ((SpStringTableColumn
@@ -1880,7 +1937,7 @@ ViennaRefactoringBrowser >> initializeGitPagePresenters [
 				                        displayBackgroundColor: [ :commit |
 					                        (self gitLocalBranchIncludes: commit)
 						                        ifTrue: [ Color transparent ]
-						                        ifFalse: [ Color yellow ] ];
+						                        ifFalse: [ Color yellow alpha: 0.3 ] ];
 				                        width: 100);
 		                       addColumn:
 			                       ((SpStringTableColumn
@@ -1893,7 +1950,7 @@ ViennaRefactoringBrowser >> initializeGitPagePresenters [
 				                        displayBackgroundColor: [ :commit |
 					                        (self gitLocalBranchIncludes: commit)
 						                        ifTrue: [ Color transparent ]
-						                        ifFalse: [ Color yellow ] ];
+						                        ifFalse: [ Color yellow alpha: 0.3 ] ];
 				                        yourself);
 		                       whenSelectionChangedDo: [
 		                       self selectedGitRemoteCommitChanged ];
@@ -1926,15 +1983,14 @@ ViennaRefactoringBrowser >> initializeGitPagePresenters [
 			                         gitOutgoingCommitList unselectAll ];
 		                         yourself.
 	gitDiffList := self newTable
-		                  hideColumnHeaders;
-		                  beResizable;
-		                  addColumn:
-			                  (SpStringTableColumn evaluated: #printSummary);
-		                  addColumn:
-			                  (SpStringTableColumn evaluated: #printNames);
-		                  whenSelectionChangedDo: [
-			                  self updateGitDiffText ];
-		                  yourself.
+		               hideColumnHeaders;
+		               beResizable;
+		               addColumn:
+			               (SpStringTableColumn evaluated: #printSummary);
+		               addColumn:
+			               (SpStringTableColumn evaluated: #printNames);
+		               whenSelectionChangedDo: [ self updateGitDiffText ];
+		               yourself.
 	gitDiffText := self newText.
 
 	gitCommitButton := self newButton
@@ -3266,7 +3322,7 @@ ViennaRefactoringBrowser >> updateGitButtons [
 	gitCommitButton enabled: self gitCanCommit.
 	gitCommitMenuButton enabled: self gitCanCommitAndPush.
 	gitPushButton enabled: self gitCanPush.
-	gitMergeButton disable
+	gitMergeButton enabled: self gitCanMerge
 ]
 
 { #category : 'updating' }

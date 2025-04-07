@@ -12,6 +12,29 @@ ViennaTopLevelDefinitionNode class >> isAbstract [
 	^ self = ViennaTopLevelDefinitionNode
 ]
 
+{ #category : 'testing' }
+ViennaTopLevelDefinitionNode >> allGlobalNamesSatisfy: aBlock [
+
+	self globalNamesDo: [ :globalName |
+		(aBlock value: globalName) ifFalse: [ ^ false ] ].
+	^ true
+]
+
+{ #category : 'testing' }
+ViennaTopLevelDefinitionNode >> anyGlobalNamesSatisfy: aBlock [
+
+	self globalNamesDo: [ :globalName |
+		(aBlock value: globalName) ifTrue: [ ^ true ] ].
+	^ false
+]
+
+{ #category : 'accessing' }
+ViennaTopLevelDefinitionNode >> globalNames [
+
+	^ Array streamContents: [ :stream |
+		  self globalNamesDo: [ :globalName | stream nextPut: globalName ] ]
+]
+
 { #category : 'enumerating' }
 ViennaTopLevelDefinitionNode >> globalNamesDo: aBlock [
 
