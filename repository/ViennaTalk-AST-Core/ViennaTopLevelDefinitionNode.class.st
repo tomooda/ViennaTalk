@@ -40,7 +40,8 @@ ViennaTopLevelDefinitionNode >> globalNamesDo: aBlock [
 
 	self identifiers do: [ :identifier |
 		aBlock value: ((ViennaGlobalNameNode
-				  moduleIdentifier: self module identifier
+				  moduleIdentifier:
+					  (self module ifNotNil: #identifier ifNil: [ 'DEFAULT' ])
 				  identifier: identifier)
 				 parent: self document;
 				 yourself) ]

@@ -2864,6 +2864,20 @@ ViennaVDMGrammar >> tokenConstructor [
 	^ ((self reserved: 'mk_token' asPParser) , lparen , expression , rparen) ==> #third
 ]
 
+{ #category : 'parsers-definitions' }
+ViennaVDMGrammar >> topLevelDefinition [
+
+	^ self accessTypeDefinition / self accessValueDefinition
+	  / self accessFunctionDefinition / self stateDefinition
+	  / self accessOperationDefinition
+]
+
+{ #category : 'parsers-definitions' }
+ViennaVDMGrammar >> topLevelDefinitionList [
+
+	^ (self topLevelDefinition separatedBy: semicolon) withoutSeparators
+]
+
 { #category : 'parsers-types' }
 ViennaVDMGrammar >> totalFunctionType [
 	^ (self discretionaryType1 , (self operator: '+>') , type)
