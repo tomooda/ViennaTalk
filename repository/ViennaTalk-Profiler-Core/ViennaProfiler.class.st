@@ -108,9 +108,10 @@ ViennaProfiler >> installAct: aCollectionOfNameAndModuleObjectAndSelector rd: aC
 			env at: triple first put: {
 					triple second class.
 					triple third }.
-			(class allMethodsReadingSlot: slot) do: [ :method |
-				method instanceVariableReadNodes do: [ :node |
-					node name = var ifTrue: [ node link: rdLink ] ] ] ] ].
+			class methods do: [ :method |
+				(#( state inv ) includes: method selector) not ifTrue: [
+					method instanceVariableReadNodes do: [ :node |
+						node name = var ifTrue: [ node link: rdLink ] ] ] ] ] ].
 	anotherCollectionOfNameAndModuleObjectAndVariable do: [ :triple |
 		| class var |
 		class := triple second class.
@@ -119,7 +120,7 @@ ViennaProfiler >> installAct: aCollectionOfNameAndModuleObjectAndSelector rd: aC
 			env at: triple first put: {
 					triple second class.
 					triple third }.
-			(class allMethodsWritingSlot: slot) do: [ :method |
+			class methods do: [ :method |
 				method instanceVariableWriteNodes do: [ :node |
 					node name = var ifTrue: [ node link: wrLink ] ] ] ] ]
 ]
