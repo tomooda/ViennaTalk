@@ -141,48 +141,51 @@ ViennaVDMSourcePresenter >> evaluateStatement: aString ifError: errorBlock [
 { #category : 'api' }
 ViennaVDMSourcePresenter >> highlight [
 
-	self highlightWith: ViennaVDMHighlighter new
+	self highlightWith: self highlighter
 ]
 
 { #category : 'api' }
-ViennaVDMSourcePresenter >> highlightWith: aViennaVDMHighlighter [
-
-	^ self
-		  highlightWith: aViennaVDMHighlighter
-		  parser: aViennaVDMHighlighter
-]
-
-{ #category : 'api' }
-ViennaVDMSourcePresenter >> highlightWith: aViennaVDMHighlighter parser: parser [
+ViennaVDMSourcePresenter >> highlightWith: parser [
 
 	highlighterProcess ifNotNil: [
 		highlighterProcess terminate.
 		highlighterProcess := nil ].
 	highlighterProcess := [
-	                      | source highlighter context result |
+	                      | source context result |
 	                      source := self text asString asString copy.
-	                      highlighter := aViennaVDMHighlighter.
-	                      highlighter text: source asText.
+	                      self highlighter text: source asText.
 	                      context := ViennaPP2HighlightingContext new.
 	                      (result := parser
 		                                 parse: source
 		                                 withContext: context)
 		                      isPetit2Failure ifTrue: [
-		                      highlighter text
+		                      self highlighter text
 			                      makeColor: Color red
 			                      from:
 			                      (result furthestPosition - 1
 				                       min: source size
 				                       max: 1)
 			                      to: source size ].
-	                      source size = highlighter text runs size
+	                      source size = self highlighter text runs size
 		                      ifTrue: [
 			                      self withAdapterDo: [ :a |
 				                      a widgetDo: [ :w |
-					                      w text runs: highlighter text runs.
+					                      w text runs: self highlighter text runs.
 					                      w changed ] ] ].
 	                      highlighterProcess := nil ] forkAt:
 		                      Processor userBackgroundPriority
+]
+
+{ #category : 'accessing' }
+ViennaVDMSourcePresenter >> highlighter [
+
+	^ highlighter ifNil: [ highlighter := ViennaVDMHighlighter new ]
+]
+
+{ #category : 'accessing' }
+ViennaVDMSourcePresenter >> highlighter: aViennaVDMHighlighgter [
+
+	highlighter := aViennaVDMHighlighgter
 ]
 
 { #category : 'initialization' }
