@@ -1,13 +1,14 @@
 Class {
-	#name : #ViennaVDMTaggedElementDecoder,
-	#superclass : #ViennaVDMValueDecoder,
+	#name : 'ViennaVDMTaggedElementDecoder',
+	#superclass : 'ViennaVDMValueDecoder',
 	#instVars : [
 		'taggedElement'
 	],
-	#category : #'ViennaTalk-WeblyWalkThrough-Server'
+	#category : 'ViennaTalk-WeblyWalkThrough-Server',
+	#package : 'ViennaTalk-WeblyWalkThrough-Server'
 }
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaVDMTaggedElementDecoder >> attributes [
 	^ (lbrace
 		,
@@ -19,7 +20,7 @@ ViennaVDMTaggedElementDecoder >> attributes [
 		==> [ :triple | triple second asDictionary ]
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaVDMTaggedElementDecoder >> contents [
 	^ ((lbracket
 		,
@@ -29,24 +30,24 @@ ViennaVDMTaggedElementDecoder >> contents [
 		/ ((lbracket , rbracket) ==> [ :pair | Array new ])
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaVDMTaggedElementDecoder >> default [
 	^ ( self textLiteral / taggedElement) end
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaVDMTaggedElementDecoder >> eventHandlers [
 	^ (lbrace
 		, (self quoteLiteral separatedBy: comma) withoutSeparators optional
 		, rbrace) ==> [ :triple | triple second ifNil: [ Array new ] ]
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaVDMTaggedElementDecoder >> tagName [
 	^ self textLiteral
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaVDMTaggedElementDecoder >> taggedElement [
 	^ ('mk_TaggedElement' asPParser , lparen , self tagName , comma
 		, self attributes , comma , self eventHandlers , comma
@@ -62,13 +63,13 @@ ViennaVDMTaggedElementDecoder >> taggedElement [
 				identifier: (array at: 13) asInteger ]
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaVDMTaggedElementDecoder >> token [
 	^ ('mk_token' asPParser , lparen , expression , rparen)
 		==> [ :array | ViennaToken with: array third ]
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaVDMTaggedElementDecoder >> tokens [
 	^ (lbrace
 		, (self token separatedBy: comma) withoutSeparators optional

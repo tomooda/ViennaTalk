@@ -39,7 +39,7 @@ ViennaResolverTest >> o [
 { #category : 'running' }
 ViennaResolverTest >> setUp [
 
-	modularDocument := ViennaVDMParser new document parse: '
+	modularDocument := ViennaVDMParser current document parse: '
 module A
 imports from B types tb renamed tb1; values vb:t renamed vb1; functions fb:nat->nat renamed fb1; operations ob:()==>() renamed ob1
 exports all
@@ -74,7 +74,7 @@ operations
 	ob() == skip
 end B
 ' trim.
-	flatDocument := ViennaVDMParser new document parse: '
+	flatDocument := ViennaVDMParser current document parse: '
 types
 	t = nat
 values
@@ -104,7 +104,7 @@ ViennaResolverTest >> t [
 ViennaResolverTest >> testBlockStatement [
 
 	| node |
-	node := ViennaVDMParser new statement parse:
+	node := ViennaVDMParser current statement parse:
 		        '(dcl x:nat := 0; return x)'.
 	self assert: (node second findResolverForIdentifier: 'x') identicalTo: node
 ]
@@ -113,7 +113,7 @@ ViennaResolverTest >> testBlockStatement [
 ViennaResolverTest >> testCasesExpression [
 
 	| node |
-	node := ViennaVDMParser new casesExpressionAlternative parse:
+	node := ViennaVDMParser current casesExpressionAlternative parse:
 		        'x -> nil'.
 	self
 		assert: (node expression findResolverForIdentifier: 'x')
@@ -125,7 +125,7 @@ ViennaResolverTest >> testCasesExpression [
 ViennaResolverTest >> testCasesStatement [
 
 	| node |
-	node := ViennaVDMParser new casesStatementAlternative parse:
+	node := ViennaVDMParser current casesStatementAlternative parse:
 		        'x -> skip'.
 	self
 		assert: (node statement findResolverForIdentifier: 'x')
@@ -216,7 +216,7 @@ ViennaResolverTest >> testDeepResolveLocalValue [
 ViennaResolverTest >> testExists1Expression [
 
 	| node |
-	node := ViennaVDMParser new expression parse:
+	node := ViennaVDMParser current expression parse:
 		        'exists1 x in set xs & x < 10'.
 	self
 		assert: (node expression findResolverForIdentifier: 'x')
@@ -228,7 +228,7 @@ ViennaResolverTest >> testExists1Expression [
 ViennaResolverTest >> testExistsExpression [
 
 	| node |
-	node := ViennaVDMParser new expression parse:
+	node := ViennaVDMParser current expression parse:
 		        'exists x, y in set s & x + y = z'.
 	self
 		assert: (node expression findResolverForIdentifier: 'x')
@@ -267,7 +267,7 @@ ViennaResolverTest >> testExplicitOperationDefinition [
 ViennaResolverTest >> testExtendedExplicitFunctionDefinition [
 
 	| node |
-	node := ViennaVDMParser new extendedExplicitFunctionDefinition end
+	node := ViennaVDMParser current extendedExplicitFunctionDefinition end
 		        parse: 'f[@T] (x:@T) res:@T == x post res = x'.
 	self assert: (node type findResolverForIdentifier: '@T') identicalTo: node.
 	self
@@ -280,7 +280,7 @@ ViennaResolverTest >> testExtendedExplicitFunctionDefinition [
 ViennaResolverTest >> testExtendedExplicitOperationDefinition [
 
 	| node |
-	node := ViennaVDMParser new extendedExplicitOperationDefinition end
+	node := ViennaVDMParser current extendedExplicitOperationDefinition end
 		        parse: 'o (x:T) res:T == return x post res = x'.
 	self
 		assert: (node statement expression findResolverForIdentifier: 'x')
@@ -292,7 +292,7 @@ ViennaResolverTest >> testExtendedExplicitOperationDefinition [
 ViennaResolverTest >> testForallExpression [
 
 	| node |
-	node := ViennaVDMParser new expression parse:
+	node := ViennaVDMParser current expression parse:
 		        'forall x, y in set s & x + y = z'.
 	self
 		assert: (node expression findResolverForIdentifier: 'x')
@@ -307,7 +307,7 @@ ViennaResolverTest >> testForallExpression [
 ViennaResolverTest >> testImplicitFunctionDefinition [
 
 	| node |
-	node := ViennaVDMParser new implicitFunctionDefinition end parse:
+	node := ViennaVDMParser current implicitFunctionDefinition end parse:
 		        'f[@T] (x:@T) res:@T post res = x'.
 	self assert: (node type findResolverForIdentifier: '@T') identicalTo: node.
 	self assert: (node post findResolverForIdentifier: 'x') identicalTo: node.
@@ -318,7 +318,7 @@ ViennaResolverTest >> testImplicitFunctionDefinition [
 ViennaResolverTest >> testImplicitOperationDefinition [
 
 	| node |
-	node := ViennaVDMParser new implicitOperationDefinition end parse:
+	node := ViennaVDMParser current implicitOperationDefinition end parse:
 		        'o (x:T) res:T ext rd a:T post res = x'.
 	self assert: (node post findResolverForIdentifier: 'x') identicalTo: node.
 	self assert: (node post findResolverForIdentifier: 'res') identicalTo: node.
@@ -329,7 +329,7 @@ ViennaResolverTest >> testImplicitOperationDefinition [
 ViennaResolverTest >> testIndexForLoop [
 
 	| node |
-	node := ViennaVDMParser new statement parse:
+	node := ViennaVDMParser current statement parse:
 		        'for i = 1 to 10 by 2 do skip'.
 	self
 		assert: (node statement findResolverForIdentifier: 'i')
@@ -340,7 +340,7 @@ ViennaResolverTest >> testIndexForLoop [
 ViennaResolverTest >> testInvariant [
 
 	| node |
-	node := ViennaVDMParser new invariantInitialFunction end parse:
+	node := ViennaVDMParser current invariantInitialFunction end parse:
 		        'mk_(x, y) == x = y'.
 	self
 		assert: (node expression findResolverForIdentifier: 'x')
@@ -354,7 +354,7 @@ ViennaResolverTest >> testInvariant [
 ViennaResolverTest >> testIotaExpression [
 
 	| node |
-	node := ViennaVDMParser new expression parse:
+	node := ViennaVDMParser current expression parse:
 		        'iota x in set xs & x < 10'.
 	self
 		assert: (node expression findResolverForIdentifier: 'x')
@@ -366,7 +366,7 @@ ViennaResolverTest >> testIotaExpression [
 ViennaResolverTest >> testLambdaExpression [
 
 	| node |
-	node := ViennaVDMParser new expression parse:
+	node := ViennaVDMParser current expression parse:
 		        'lambda x:nat, y:nat & x + y'.
 	self
 		assert: (node expression findResolverForIdentifier: 'x')
@@ -381,7 +381,7 @@ ViennaResolverTest >> testLambdaExpression [
 ViennaResolverTest >> testLetBeExpression [
 
 	| node |
-	node := ViennaVDMParser new expression parse:
+	node := ViennaVDMParser current expression parse:
 		        'let x, y in set s be st x = y in x + y'.
 	self
 		assert: (node expression findResolverForIdentifier: 'x')
@@ -396,7 +396,7 @@ ViennaResolverTest >> testLetBeExpression [
 ViennaResolverTest >> testLetBeStatement [
 
 	| node |
-	node := ViennaVDMParser new statement parse:
+	node := ViennaVDMParser current statement parse:
 		        'let x, y in set s be st x = y in z := x + y'.
 	self
 		assert: (node statement findResolverForIdentifier: 'x')
@@ -411,7 +411,7 @@ ViennaResolverTest >> testLetBeStatement [
 ViennaResolverTest >> testLetExpression [
 
 	| node |
-	node := ViennaVDMParser new expression parse:
+	node := ViennaVDMParser current expression parse:
 		        'let mk_(x, y) = z in x + y'.
 	self
 		assert: (node expression findResolverForIdentifier: 'x')
@@ -426,7 +426,7 @@ ViennaResolverTest >> testLetExpression [
 ViennaResolverTest >> testLetStatement [
 
 	| node |
-	node := ViennaVDMParser new statement parse:
+	node := ViennaVDMParser current statement parse:
 		        'let mk_(x, y) = z in z := mk_(x + y, x - y)'.
 	self
 		assert: (node statement findResolverForIdentifier: 'x')
@@ -561,7 +561,7 @@ ViennaResolverTest >> testLookupLocalValue [
 ViennaResolverTest >> testMapComprehension [
 
 	| node |
-	node := ViennaVDMParser new expression parse:
+	node := ViennaVDMParser current expression parse:
 		        '{k |-> v | k in set s, v in set s & k = v + z}'.
 	self
 		assert: (node suchthatExpression findResolverForIdentifier: 'k')
@@ -704,7 +704,7 @@ ViennaResolverTest >> testResolveLocalValue [
 ViennaResolverTest >> testSequenceComprehension [
 
 	| node |
-	node := ViennaVDMParser new expression parse:
+	node := ViennaVDMParser current expression parse:
 		        '[x + z | x in set {1, ..., z} & x < z]'.
 	self
 		assert: (node expression findResolverForIdentifier: 'x')
@@ -716,7 +716,7 @@ ViennaResolverTest >> testSequenceComprehension [
 ViennaResolverTest >> testSequenceForLoop [
 
 	| node |
-	node := ViennaVDMParser new statement parse:
+	node := ViennaVDMParser current statement parse:
 		        'for mk_(x, y) in z do z := [mk_(x, y)]'.
 	self
 		assert: (node statement findResolverForIdentifier: 'x')
@@ -731,7 +731,7 @@ ViennaResolverTest >> testSequenceForLoop [
 ViennaResolverTest >> testSetComprehension [
 
 	| node |
-	node := ViennaVDMParser new expression parse:
+	node := ViennaVDMParser current expression parse:
 		        '{x + y + z | x in set {1, ..., z}, y in set {z, ..., 10} & x < y}'.
 	self
 		assert: (node expression findResolverForIdentifier: 'x')
@@ -746,7 +746,7 @@ ViennaResolverTest >> testSetComprehension [
 ViennaResolverTest >> testSetForLoop [
 
 	| node |
-	node := ViennaVDMParser new statement parse:
+	node := ViennaVDMParser current statement parse:
 		        'for all mk_(x, y) in set z do z := {mk_(x, y)}'.
 	self
 		assert: (node statement findResolverForIdentifier: 'x')

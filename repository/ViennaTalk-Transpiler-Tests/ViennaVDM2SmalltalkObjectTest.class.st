@@ -470,7 +470,7 @@ ViennaVDM2SmalltalkObjectTest >> testTypeInvariant [
 { #category : 'private' }
 ViennaVDM2SmalltalkObjectTest >> transpile: aString runtimeTypeCheck: aBoolean1 runtimeAssertionCheck: aBoolean2 [
 	| ast transpiler |
-	ast := ViennaVDMParser new parse: aString.
+	ast := ViennaVDMParser current parse: aString.
 	ast isPetit2Failure
 		ifTrue: [ ^ Error signal: 'syntax error' ].
 	transpiler := ViennaVDM2SmalltalkObject new.

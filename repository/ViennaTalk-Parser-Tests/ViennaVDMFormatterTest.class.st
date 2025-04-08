@@ -23,7 +23,7 @@ ViennaVDMFormatterTest >> assertParseFormattedSource: aString with: aPP2Node [
 { #category : 'running' }
 ViennaVDMFormatterTest >> setUp [
 
-	parser := ViennaVDMParser new.
+	parser := ViennaVDMParser current.
 	formatter := ViennaVDMFormatter new
 ]
 

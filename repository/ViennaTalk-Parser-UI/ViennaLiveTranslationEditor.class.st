@@ -110,7 +110,7 @@ ViennaLiveTranslationEditor >> format: aString [
 
 { #category : 'VDM manipulations' }
 ViennaLiveTranslationEditor >> formatSourceText [
-	^ sourceText text: (ViennaVDMParser new format: sourceText text asString) 
+	^ sourceText text: (ViennaVDMParser current format: sourceText text asString) 
 ]
 
 { #category : 'initialize-release' }
@@ -201,7 +201,7 @@ ViennaLiveTranslationEditor >> translator [
 ViennaLiveTranslationEditor >> viennaItIn: aTextModel [
 
 	| parser codeFromSource editor ast codeFromSelection result |
-	parser := ViennaVDMParser new.
+	parser := ViennaVDMParser current.
 	codeFromSource := targetText text asString.
 	aTextModel withAdapterDo: [ :a |
 		a widgetDo: [ :widget | editor := widget  textMorph editor ] ].

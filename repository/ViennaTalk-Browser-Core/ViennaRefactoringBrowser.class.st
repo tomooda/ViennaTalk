@@ -143,7 +143,7 @@ ViennaRefactoringBrowser class >> empty [
 { #category : 'examples' }
 ViennaRefactoringBrowser class >> exampleATC [
 
-	(ViennaRefactoringBrowser on: (ViennaVDMParser new parse:
+	(ViennaRefactoringBrowser on: (ViennaVDMParser current parse:
 			  'module ATC_TERMINLOGY -- Air-Traffic Control (ATC) System abstract model from the book "ProofinVDM."
 -- This is the top-level specification of the ATC subsystem,
 exports all
@@ -432,7 +432,7 @@ end ATC')) open
 ViennaRefactoringBrowser class >> exampleCounter [
 
 	(ViennaRefactoringBrowser on:
-		 (ViennaVDMParser new parse:
+		 (ViennaVDMParser current parse:
 			  'module Counter exports all definitions
 					types
      Display = seq of char inv display == elems display subset rng nat2char;
@@ -2294,7 +2294,7 @@ ViennaRefactoringBrowser >> loadFromFile [
 ViennaRefactoringBrowser >> loadSource: aString [
 
 	| ast |
-	ast := ViennaVDMParser new document end parse: aString.
+	ast := ViennaVDMParser current document end parse: aString.
 	ast isPetit2Failure ifTrue: [
 		UIManager default alert: 'Failed to parse the source.'.
 		^ nil ].
@@ -2578,7 +2578,7 @@ ViennaRefactoringBrowser >> openInExternalWindow [
 ViennaRefactoringBrowser >> parser [
 
 	| parser |
-	parser := ViennaVDMParser new.
+	parser := ViennaVDMParser current.
 	^ parser tracesDefinitions end / parser namedTrace end
 	  / parser module end / parser typeDefinitions end
 	  / parser valueDefinitions end / parser functionDefinitions end
@@ -2635,7 +2635,7 @@ ViennaRefactoringBrowser >> playgroundSelection [
 		[ end < text size and: [ (text at: end + 1) ~= Character cr ] ]
 			whileTrue: [ end := end + 1 ].
 		playgroundText selectionInterval: (start to: end) ].
-	node := ViennaVDMParser new expression parse:
+	node := ViennaVDMParser current expression parse:
 		        (text copyFrom: start to: end).
 	^ node isPetit2Failure
 		  ifTrue: [ nil ]

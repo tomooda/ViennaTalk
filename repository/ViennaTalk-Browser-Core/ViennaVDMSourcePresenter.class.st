@@ -5,6 +5,7 @@ Class {
 		'animation',
 		'module',
 		'tracingSource',
+		'highlighter',
 		'highlighterProcess'
 	],
 	#category : 'ViennaTalk-Browser-Core-Spec2',
@@ -109,7 +110,7 @@ ViennaVDMSourcePresenter >> doTypeIt [
 ViennaVDMSourcePresenter >> evaluateExpression: aString ifError: errorBlock [
 
 	| node |
-	node := ViennaVDMParser new expression parse: aString.
+	node := ViennaVDMParser current expression parse: aString.
 	node isPetit2Failure ifTrue: [ ^ errorBlock cull: node printString ].
 	node parent: module value.
 	[ node typecheck ]
@@ -125,7 +126,7 @@ ViennaVDMSourcePresenter >> evaluateExpression: aString ifError: errorBlock [
 ViennaVDMSourcePresenter >> evaluateStatement: aString ifError: errorBlock [
 
 	| node |
-	node := ViennaVDMParser new statement parse: aString.
+	node := ViennaVDMParser current statement parse: aString.
 	node isPetit2Failure ifTrue: [ ^ errorBlock cull: node printString ].
 	node parent: module value.
 	[ node typecheck ]
@@ -224,7 +225,7 @@ ViennaVDMSourcePresenter >> tracingSource [
 ViennaVDMSourcePresenter >> typecheckExpression: aString ifError: errorBlock [
 
 	| node |
-	node := ViennaVDMParser new expression parse: aString.
+	node := ViennaVDMParser current expression parse: aString.
 	node isPetit2Failure ifTrue: [ ^ errorBlock cull: node printString ].
 	node parent: module value.
 	^ [ node typecheck printString ]

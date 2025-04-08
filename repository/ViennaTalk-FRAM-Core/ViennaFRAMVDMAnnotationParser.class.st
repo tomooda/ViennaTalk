@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaFRAMVDMAnnotationParser,
-	#superclass : #PP2CompositeNode,
-	#category : #'ViennaTalk-FRAM-Core'
+	#name : 'ViennaFRAMVDMAnnotationParser',
+	#superclass : 'PP2CompositeNode',
+	#category : 'ViennaTalk-FRAM-Core',
+	#package : 'ViennaTalk-FRAM-Core'
 }
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaFRAMVDMAnnotationParser >> followingLetter [
 
 	^ PP2PredicateObjectNode
@@ -12,7 +13,7 @@ ViennaFRAMVDMAnnotationParser >> followingLetter [
 		  message: 'identifier expected'
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaFRAMVDMAnnotationParser >> identifier [
 
 	^ (self initialLetter , self followingLetter starA) flatten ==> [ :str | 
@@ -26,7 +27,7 @@ ViennaFRAMVDMAnnotationParser >> identifier [
 		  ifFalse: [ str ] ]
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaFRAMVDMAnnotationParser >> initialLetter [
 
 	^ PP2PredicateObjectNode
@@ -34,7 +35,7 @@ ViennaFRAMVDMAnnotationParser >> initialLetter [
 		  message: 'identifier expected'
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaFRAMVDMAnnotationParser >> keywords [
 
 	^ #( 'all' 'always' 'and' 'as' 'async' 'atomic' 'be' 'bool' 'by' 'card'
@@ -58,24 +59,24 @@ ViennaFRAMVDMAnnotationParser >> keywords [
 	     'with' 'wr' 'yet' 'RESULT' )
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaFRAMVDMAnnotationParser >> prefixes [
 	^ #('mk_' 'is_' 'obj_' 'narrow_')
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaFRAMVDMAnnotationParser >> start [
 
 	^ self vdmAnnotation
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaFRAMVDMAnnotationParser >> vdmAnnotation [
 
 	^ self vdmGlobalNameAnnotation / self vdmShortNameAnnotation
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaFRAMVDMAnnotationParser >> vdmGlobalNameAnnotation [
 
 	^ '@VDM' asPParser , #blank asPParser plus
@@ -86,7 +87,7 @@ ViennaFRAMVDMAnnotationParser >> vdmGlobalNameAnnotation [
 				   triple third } ]) trimBlanks ==> #third
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaFRAMVDMAnnotationParser >> vdmShortNameAnnotation [
 
 	^ '@VDM' asPParser , #blank asPParser plus

@@ -64,14 +64,28 @@ Class {
 { #category : 'accessing - method dictionary' }
 ViennaVDMGrammar class >> addSelectorSilently: selector withMethod: compiledMethod [
 
-	current := nil.
+	self flushCurrent.
 	^ super addSelectorSilently: selector withMethod: compiledMethod
+]
+
+{ #category : 'accessing' }
+ViennaVDMGrammar class >> basicFlushCurrent [
+
+	current := nil
 ]
 
 { #category : 'accessing' }
 ViennaVDMGrammar class >> current [
 
 	^ current ifNil: [ current := self new ]
+]
+
+{ #category : 'accessing' }
+ViennaVDMGrammar class >> flushCurrent [
+
+	self basicFlushCurrent.
+	self allSubclassesDo: [ :class |
+		class isAbstract ifFalse: [ class basicFlushCurrent ] ]
 ]
 
 { #category : 'parsers-symbols' }

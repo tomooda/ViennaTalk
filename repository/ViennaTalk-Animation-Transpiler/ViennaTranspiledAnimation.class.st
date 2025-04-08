@@ -242,7 +242,7 @@ ViennaTranspiledAnimation >> init [
 ViennaTranspiledAnimation >> initialize [
 
 	super initialize.
-	parser := ViennaVDMParser new.
+	parser := ViennaVDMParser current.
 	reader := ViennaReader new.
 	writer := ViennaUnquoteWriter new.
 	self specification: String new ifError: [  ]

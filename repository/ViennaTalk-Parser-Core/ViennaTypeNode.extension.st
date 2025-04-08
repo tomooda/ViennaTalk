@@ -3,5 +3,5 @@ Extension { #name : 'ViennaTypeNode' }
 { #category : '*ViennaTalk-Parser-Core' }
 ViennaTypeNode >> parser [
 
-	^ ViennaVDMParser new type end
+	^ ViennaVDMParser current type end
 ]

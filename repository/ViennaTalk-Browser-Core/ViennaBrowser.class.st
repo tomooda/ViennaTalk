@@ -1231,11 +1231,10 @@ ViennaBrowser >> mergeOperationsFromFRAM [
 		extensions: #( 'xfmv' )
 		do: [ :stream | fram := ViennaFRAMModel fromXML: stream ].
 	fram ifNil: [ ^ nil ].
-	ast := ViennaVDMParser new parse: animation specification.
+	ast := ViennaVDMParser current parse: animation specification.
 	ast isPetit2Failure ifTrue: [ ^ nil ].
 	fram appendToSpec: ast.
 	animation specification: ast source
-
 ]
 
 { #category : 'module list' }
@@ -1439,7 +1438,7 @@ ViennaBrowser >> runAllTests [
 	               testResult := Array new.
 	               self updateTestLabelIcon.
 	               self changed: #testList.
-	               ast := ViennaVDMParser new parse:
+	               ast := ViennaVDMParser current parse:
 		                      animation specification.
 	               (ast isPetit2Success and: [ ast notEmpty ]) ifTrue: [
 		               (ast at: 1) isViennaModuleNode ifTrue: [
@@ -1481,7 +1480,7 @@ ViennaBrowser >> runTestModule: aString [
 	               | ast |
 	               testResult := Array new.
 	               self changed: #testList.
-	               ast := ViennaVDMParser new parse:
+	               ast := ViennaVDMParser current parse:
 		                      animation specification.
 	               (ast isPetit2Success and: [ ast notEmpty ]) ifTrue: [
 		               (ast at: 1) isViennaModuleNode ifTrue: [
