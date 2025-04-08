@@ -48,6 +48,12 @@ ViennaImplicitOperationDefinitionNode >> access: aViennaAccessNode [
 ]
 
 { #category : 'accessing' }
+ViennaImplicitOperationDefinitionNode >> addToModule: aViennaModuleNode [
+
+	^ aViennaModuleNode module addOperationDefinition: self copyFragment
+]
+
+{ #category : 'accessing' }
 ViennaImplicitOperationDefinitionNode >> argumentType [
 
 	^ self patternTypePairList type

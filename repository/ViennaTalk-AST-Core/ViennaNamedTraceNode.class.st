@@ -15,6 +15,12 @@ ViennaNamedTraceNode class >> identifier: aString traceDefinitionList: aViennaTr
 		  yourself
 ]
 
+{ #category : 'accessing' }
+ViennaNamedTraceNode >> addToModule: aViennaModuleNode [
+
+	^ aViennaModuleNode module addNamedTrace: self copyFragment
+]
+
 { #category : 'private' }
 ViennaNamedTraceNode >> boundIdentifiersDo: aBlock [
 

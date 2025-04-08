@@ -34,6 +34,12 @@ ViennaStateDefinitionNode class >> identifier: aString fieldList: aViennaFieldLi
 		  yourself
 ]
 
+{ #category : 'accessing' }
+ViennaStateDefinitionNode >> addToModule: aViennaModuleNode [
+
+	^ aViennaModuleNode module addStateDefinition: self copyFragment
+]
+
 { #category : 'converting' }
 ViennaStateDefinitionNode >> asMaximalViennaType [
 

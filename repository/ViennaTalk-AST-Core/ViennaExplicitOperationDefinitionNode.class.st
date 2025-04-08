@@ -46,6 +46,12 @@ ViennaExplicitOperationDefinitionNode >> access: aViennaAccessNode [
 ]
 
 { #category : 'accessing' }
+ViennaExplicitOperationDefinitionNode >> addToModule: aViennaModuleNode [
+
+	^ aViennaModuleNode module addOperationDefinition: self copyFragment
+]
+
+{ #category : 'accessing' }
 ViennaExplicitOperationDefinitionNode >> argumentType [
 
 	^ self type argumentType

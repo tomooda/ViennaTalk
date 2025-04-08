@@ -12,6 +12,12 @@ ViennaTopLevelDefinitionNode class >> isAbstract [
 	^ self = ViennaTopLevelDefinitionNode
 ]
 
+{ #category : 'accessing' }
+ViennaTopLevelDefinitionNode >> addToModule: aViennaModuleNode [
+
+	^ self subclassResponsibility
+]
+
 { #category : 'testing' }
 ViennaTopLevelDefinitionNode >> allGlobalNamesSatisfy: aBlock [
 

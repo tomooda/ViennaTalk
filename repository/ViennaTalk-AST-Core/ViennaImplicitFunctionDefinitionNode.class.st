@@ -46,6 +46,12 @@ ViennaImplicitFunctionDefinitionNode >> access: aViennaAccessNode [
 ]
 
 { #category : 'accessing' }
+ViennaImplicitFunctionDefinitionNode >> addToModule: aViennaModuleNode [
+
+	^ aViennaModuleNode module addFunctionDefinition: self copyFragment
+]
+
+{ #category : 'accessing' }
 ViennaImplicitFunctionDefinitionNode >> argumentType [
 
 	^ self patternTypePairList type

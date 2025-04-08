@@ -278,6 +278,12 @@ ViennaModuleNode >> addImportDefinition: aViennaImportDefinitionNode [
 ]
 
 { #category : 'accessing-definitions' }
+ViennaModuleNode >> addNamedTrace: aViennaNode [
+
+	self moduleBody add: aViennaNode
+]
+
+{ #category : 'accessing-definitions' }
 ViennaModuleNode >> addOperationDefinition: aViennaNode [
 
 	(self moduleBody detect: #isViennaOperationDefinitionsNode ifNone: [

@@ -50,6 +50,12 @@ ViennaExplicitFunctionDefinitionNode >> access: aViennaAccessNode [
 ]
 
 { #category : 'accessing' }
+ViennaExplicitFunctionDefinitionNode >> addToModule: aViennaModuleNode [
+
+	^ aViennaModuleNode module addFunctionDefinition: self copyFragment
+]
+
+{ #category : 'accessing' }
 ViennaExplicitFunctionDefinitionNode >> argumentType [
 
 	^ self type argumentType

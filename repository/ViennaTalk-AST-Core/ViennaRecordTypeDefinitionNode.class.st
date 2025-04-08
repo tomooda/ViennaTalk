@@ -39,6 +39,12 @@ ViennaRecordTypeDefinitionNode >> access: aViennaAccessNode [
 	self at: 1 put: aViennaAccessNode
 ]
 
+{ #category : 'accessing' }
+ViennaRecordTypeDefinitionNode >> addToModule: aViennaModuleNode [
+
+	^ aViennaModuleNode module addTypeDefinition: self copyFragment
+]
+
 { #category : 'accessing-definitions' }
 ViennaRecordTypeDefinitionNode >> asAccessDefinition [
 

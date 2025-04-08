@@ -271,6 +271,12 @@ ViennaChangesMerger >> localDefinition [
 ]
 
 { #category : 'accessing' }
+ViennaChangesMerger >> mergedChanges [
+
+	^ mergedChanges asArray
+]
+
+{ #category : 'accessing' }
 ViennaChangesMerger >> mergedDefinition [
 
 	^ self baseDefinition ifNotNil: [ :base |

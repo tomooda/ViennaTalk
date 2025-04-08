@@ -540,6 +540,14 @@ ViennaNode >> includesParent: aViennaNode [
 	^ false
 ]
 
+{ #category : 'accessing' }
+ViennaNode >> indexOf: aViennaNode [
+
+	1 to: self size do: [ :index |
+	(self at: index) == aViennaNode ifTrue: [ ^ index ] ].
+	^ 0
+]
+
 { #category : 'enumerating' }
 ViennaNode >> inject: anObject into: aBlock [
 
@@ -2729,6 +2737,15 @@ ViennaNode >> removeAnnotation: aString [
 		annotations := annotations copyWithout: aString.
 		annotations ifEmpty: [ annotations := nil ] ].
 	^ aString
+]
+
+{ #category : 'accessing' }
+ViennaNode >> replace: aViennaNode with: anotherViennaNode [
+
+	1 to: self size do: [ :index |
+		(self at: index) == aViennaNode ifTrue: [
+			self at: index put: anotherViennaNode.
+			^ self ] ]
 ]
 
 { #category : 'accessing-definitions' }

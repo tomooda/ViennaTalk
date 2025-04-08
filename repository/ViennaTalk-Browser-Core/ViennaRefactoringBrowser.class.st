@@ -808,6 +808,23 @@ ViennaRefactoringBrowser >> addToNarrativeMenu [
 	^ nil
 ]
 
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> applyChange: change to: aViennaNode [
+
+	| from |
+	from := change from.
+	from document == aViennaNode document
+		ifTrue: [
+			aViennaNode allDescendantsDo: [ :node |
+				node == from ifTrue: [
+					node parent replace: node with: change to copyFragment ] ] ]
+		ifFalse: [
+			| moduleName |
+			moduleName := from module identifier.
+			change to addToModule:
+				(aViennaNode document moduleNamed: moduleName) ]
+]
+
 { #category : 'updating' }
 ViennaRefactoringBrowser >> artifactTimelineSelected [
 
@@ -1536,33 +1553,45 @@ ViennaRefactoringBrowser >> gitMerge [
 
 	self gitCanMerge ifTrue: [
 		self icebergRepositoryDo: [ :repository |
-			| local remote base baseAst localDiff remoteDiff |
-			local := repository branch commit.
-			remote := repository branch upstream commit.
-			base := local commonAncestorWithCommit: remote.
-			baseAst := (self sourceFrom: base fileSystem) asViennaDocumentAst.
-			localDiff := (ViennaNodeDiffSet
-				              from: baseAst
-				              to:
-				              (self sourceFrom: local fileSystem)
-					              asViennaDocumentAst) condenseChanges select:
-				             #isViennaTopLevelDefinitionNodeChange.
-			remoteDiff := (ViennaNodeDiffSet
-				               from: baseAst
-				               to:
-				               (self sourceFrom: remote fileSystem)
-					               asViennaDocumentAst) condenseChanges select:
-				              #isViennaTopLevelDefinitionNodeChange.
-			(self gitResolveConflictsBetween: localDiff and: remoteDiff)
-				ifNotNil: [ :changes |
-					changes do: [ :change | self applyDiff: change to: baseAst ].
-					self halt ]
-				ifNil: [ ^ nil ] ].
-		self
-			updateGitOutgoingCommitList;
-			updateGitRemoteCommitList;
-			updateGitDiffList;
-			updateGitButtons ]
+			| localCommit remoteCommit baseCommit baseAst localChanges remoteChanges merger |
+			localCommit := repository branch commit.
+			remoteCommit := repository branch upstream commit.
+			baseCommit := localCommit commonAncestorWithCommit: remoteCommit.
+			baseAst := (self sourceFrom: baseCommit fileSystem)
+				           asViennaDocumentAst.
+			localChanges := (ViennaNodeDiffSet
+				                 from: baseAst
+				                 to:
+				                 (self sourceFrom: localCommit fileSystem)
+					                 asViennaDocumentAst) condenseChanges select:
+				                #isViennaTopLevelDefinitionNodeChange.
+			remoteChanges := (ViennaNodeDiffSet
+				                  from: baseAst
+				                  to:
+				                  (self sourceFrom: remoteCommit fileSystem)
+					                  asViennaDocumentAst) condenseChanges select:
+				                 #isViennaTopLevelDefinitionNodeChange.
+			merger := ViennaChangesMerger
+				          remoteChanges: remoteChanges
+				          localChanges: localChanges.
+			merger openModal okAction: [
+				| mergedChanges mergedCommit |
+				mergedChanges := merger mergedChanges.
+				mergedChanges do: [ :change |
+					self applyChange: change to: baseCommit ].
+				self epiLogManualEdit: baseCommit.
+				self updateModuleList.
+				mergedCommit := repository
+					                commitIndexWithMessage:
+					                'Merge ' , localCommit id asString
+					                andParents: {
+							                remoteCommit.
+							                localCommit }.
+				self
+					updateGitOutgoingCommitList;
+					updateGitRemoteCommitList;
+					updateGitDiffList;
+					updateGitButtons ] ] ]
 ]
 
 { #category : 'operations-git' }
@@ -1652,12 +1681,6 @@ ViennaRefactoringBrowser >> gitRemoteCommitsDo: aBlock [
 		| headId |
 		headId := repository branch commit id.
 		repository branch upstream commits do: aBlock ]
-]
-
-{ #category : 'operations-git' }
-ViennaRefactoringBrowser >> gitResolveConflictsBetween: localDiff and: remoteDiff [
-	| table |
-	table := self newTable
 ]
 
 { #category : 'testing' }
