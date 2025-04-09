@@ -267,7 +267,7 @@ ViennaChangesMerger >> localDefinition [
 		  (localChanges
 			   detect: [ :change |
 			   change from == base or: [ change to == base ] ]
-			   ifNone: [ nil ]) ifNotNil: [ :change | change to ] ]
+			   ifNone: [ base ]) ifNotNil: [ :change | change to ] ]
 ]
 
 { #category : 'accessing' }
@@ -306,7 +306,7 @@ ViennaChangesMerger >> remoteDefinition [
 		  (remoteChanges
 			   detect: [ :change |
 			   change from = base or: [ change to == base ] ]
-			   ifNone: [ nil ]) ifNotNil: [ :change | change to ] ]
+			   ifNone: [ base ]) ifNotNil: [ :change | change to ] ]
 ]
 
 { #category : 'updating' }

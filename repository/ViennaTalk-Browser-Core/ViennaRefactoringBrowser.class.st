@@ -1574,24 +1574,26 @@ ViennaRefactoringBrowser >> gitMerge [
 			merger := ViennaChangesMerger
 				          remoteChanges: remoteChanges
 				          localChanges: localChanges.
-			merger openModal okAction: [
-				| mergedChanges mergedCommit |
-				mergedChanges := merger mergedChanges.
-				mergedChanges do: [ :change |
-					self applyChange: change to: baseCommit ].
-				self epiLogManualEdit: baseCommit.
-				self updateModuleList.
-				mergedCommit := repository
-					                commitIndexWithMessage:
-					                'Merge ' , localCommit id asString
-					                andParents: {
-							                remoteCommit.
-							                localCommit }.
-				self
-					updateGitOutgoingCommitList;
-					updateGitRemoteCommitList;
-					updateGitDiffList;
-					updateGitButtons ] ] ]
+			merger asModalWindow
+				okAction: [
+					| mergedChanges mergedCommit |
+					mergedChanges := merger mergedChanges.
+					mergedChanges do: [ :change |
+							self applyChange: change to: baseAst ].
+					self epiLogManualEdit: baseAst.
+					self updateModuleList.
+					mergedCommit := repository
+						                commitIndexWithMessage:
+							                'Merge ' , localCommit id asString
+						                andParents: {
+								                localCommit.
+								                remoteCommit }.
+					self
+						updateGitOutgoingCommitList;
+						updateGitRemoteCommitList;
+						updateGitDiffList;
+						updateGitButtons ];
+				open ] ]
 ]
 
 { #category : 'operations-git' }
