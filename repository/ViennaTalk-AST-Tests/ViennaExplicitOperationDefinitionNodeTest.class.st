@@ -22,6 +22,30 @@ ViennaExplicitOperationDefinitionNodeTest >> testMaximalType [
 		equals: ViennaType nat ==> ViennaType char optional.
 	self
 		assert:
+			('state S of z : int init s == s = mk_S(0) end operations op:nat==>[char] op(x) == if x = 0 then return nil else return ''c'' pre x > 0 post RESULT <> nil'
+				 asViennaDocumentAst
+				 typecheck;
+				 resolveIdentifier: 'pre_op') maximalType
+		equals: ViennaType nat * (ViennaType compose: 'S' of: { {
+					 'z'.
+					 false.
+					 ViennaType int } }) -> ViennaType bool.
+	self
+		assert:
+			('state S of z : int init s == s = mk_S(0) end operations op:nat==>[char] op(x) == if x = 0 then return nil else return ''c'' pre x > 0 post RESULT <> nil'
+				 asViennaDocumentAst
+				 typecheck;
+				 resolveIdentifier: 'post_op') maximalType
+		equals: ViennaType nat * ViennaType char optional
+			* (ViennaType compose: 'S' of: { {
+						 'z'.
+						 false.
+						 ViennaType int } }) * (ViennaType compose: 'S' of: { {
+					 'z'.
+					 false.
+					 ViennaType int } }) -> ViennaType bool.
+	self
+		assert:
 			('operations sum:seq of real==>real sum(xs) == cases xs: [x]^rest -> return x+sum(rest), others -> return 0 end'
 				 asViennaDocumentAst resolveIdentifier: 'sum') maximalType
 		equals: ViennaType real seq ==> ViennaType real.

@@ -125,8 +125,8 @@ ViennaSlicer >> call: aViennaNode [
 					 slicerOnOperation: aViennaNode resolve
 					 criteria: self agenda
 					 callerSlicer: self) ].
-		(aViennaNode isViennaOperationDefinitionNode or: [
-			 aViennaNode isViennaFunctionDefinitionNode ]) ifTrue: [
+		(aViennaNode isOperationDefinition or: [
+			 aViennaNode isFunctionDefinition ]) ifTrue: [
 			self continue: (self interOperationSlicer
 					 slicerOnOperation: aViennaNode
 					 criteria: self agenda

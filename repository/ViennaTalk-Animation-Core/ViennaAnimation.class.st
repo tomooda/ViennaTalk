@@ -363,7 +363,22 @@ ViennaAnimation >> reader: aViennaReader [
 	reader := aViennaReader
 ]
 
-{ #category : #accessing }
+{ #category : 'evaluating' }
+ViennaAnimation >> runTestOperation: operation module: module [
+
+	| header |
+	header := 'Runtime: Error 4129: Exit '.
+	self plainEvaluate: operation , '()' in: module ifError: [ :msg |
+		(msg size > header size and: [
+			 (msg copyFrom: 1 to: header size) = header ])
+			ifTrue: [
+				ViennaException signal:
+					(ViennaReader new parse:
+						 (msg copyFrom: header size + 1 to: msg size)) ]
+			ifFalse: [ Error signal: msg ] ]
+]
+
+{ #category : 'accessing' }
 ViennaAnimation >> specification [
 	^ specification
 ]

@@ -48,6 +48,7 @@ ViennaPreconditionExpressionNode >> label [
 { #category : 'typechecking' }
 ViennaPreconditionExpressionNode >> maximalType [
 
+	maximalType ifNotNil: [ ^ maximalType ].
 	self do: [ :exp | exp typecheck ].
 	^ ViennaType bool
 ]

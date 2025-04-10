@@ -70,6 +70,7 @@ ViennaTupleSelectNode >> label [
 ViennaTupleSelectNode >> maximalType [
 
 	| i basetype |
+	maximalType ifNotNil: [ ^ maximalType ].
 	i := self index asInteger.
 	i > 0 ifFalse: [
 		^ ViennaTypeError on: self signal: 'Index must be nat1' ].

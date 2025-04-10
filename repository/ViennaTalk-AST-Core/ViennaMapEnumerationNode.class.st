@@ -47,6 +47,7 @@ ViennaMapEnumerationNode >> label [
 ViennaMapEnumerationNode >> maximalType [
 
 	| keytype valuetype |
+	maximalType ifNotNil: [ ^ maximalType ].
 	keytype := ViennaType unit.
 	valuetype := ViennaType unit.
 	self do: [ :maplet |

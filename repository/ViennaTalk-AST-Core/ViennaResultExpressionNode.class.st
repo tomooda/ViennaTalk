@@ -31,6 +31,7 @@ ViennaResultExpressionNode >> label [
 { #category : 'typechecking' }
 ViennaResultExpressionNode >> maximalType [
 
+	maximalType ifNotNil: [ ^ maximalType ].
 	^ (self
 		   detectParent: [ :node |
 			   node isFunctionDefinition or: [ node isOperationDefinition ] ]
@@ -47,7 +48,6 @@ ViennaResultExpressionNode >> resolve [
 
 	^ self
 		  detectParent: [ :node |
-			  node isViennaFunctionDefinitionNode or: [
-				  node isViennaOperationDefinitionNode ] ]
+			  node isFunctionDefinition or: [ node isOperationDefinition ] ]
 		  ifNone: [ nil ]
 ]

@@ -781,9 +781,10 @@ ViennaVDM2Smalltalk >> existsExpression: aViennaNode env: aDictionary [
 
 { #category : 'code generation-statements' }
 ViennaVDM2Smalltalk >> exitStatement: aViennaNode env: aDictionary [
+
 	| expr |
 	expr := self generate: aViennaNode first env: aDictionary.
-	^ '(ViennaException expression: ' , expr , ')'
+	^ '(ViennaException signal: ' , expr , ')'
 ]
 
 { #category : 'code generation-definitions' }
@@ -3601,6 +3602,11 @@ ViennaVDM2Smalltalk >> undefinedExpression: aViennaNode env: aDictionary [
 { #category : 'code generation-types' }
 ViennaVDM2Smalltalk >> unionType: aViennaNode env: aDictionary [
 	^ '(' , ('|' join: (self generateAll: aViennaNode env: aDictionary)) , ')'
+]
+
+{ #category : 'code generation-types' }
+ViennaVDM2Smalltalk >> unitType: aViennaNode env: aDictionary [
+	^ 'ViennaType unit'
 ]
 
 { #category : 'code generation-definitions' }

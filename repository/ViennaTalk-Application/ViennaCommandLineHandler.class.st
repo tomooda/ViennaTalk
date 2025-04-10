@@ -14,7 +14,6 @@ ViennaCommandLineHandler class >> commandName [
 { #category : 'utilities' }
 ViennaCommandLineHandler class >> deploy [
 
-	<script>
 	GraphicFontSettings setFontsToStyleNamed: #small.
 	ViennaLauncher font: TextStyle defaultFont.
 	ViennaLauncher setSingleWindowMode.

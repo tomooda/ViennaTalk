@@ -107,6 +107,7 @@ ViennaExists1ExpressionNode >> lookupIdentifier: aString [
 { #category : 'typechecking' }
 ViennaExists1ExpressionNode >> maximalType [
 
+	maximalType ifNotNil: [ ^ maximalType ].
 	self bind typecheck.
 	^ self expression typecheck: ViennaType bool
 ]

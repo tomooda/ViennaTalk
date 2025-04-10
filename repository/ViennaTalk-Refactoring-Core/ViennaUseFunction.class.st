@@ -35,12 +35,12 @@ ViennaUseFunction >> explicitFunctionsDo: aBlock [
 	self ast parentsDo: [ :node |
 		node isViennaLetNode ifTrue: [
 			node localDefinitionsDo: [ :localDefinition |
-				(localDefinition isViennaFunctionDefinitionNode and: [
+				(localDefinition isFunctionDefinition and: [
 					 localDefinition expression notNil ]) ifTrue: [
 					aBlock value: localDefinition ] ] ].
 		node isViennaModuleNode ifTrue: [
 			node sectionsDo: [ :section |
-				section isViennaFunctionDefinitionsNode ifTrue: [
+				section isFunctionDefinition ifTrue: [
 					section do: [ :definition |
 						definition expression ifNotNil: [ aBlock value: definition ] ] ] ] ] ]
 ]

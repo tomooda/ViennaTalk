@@ -82,6 +82,7 @@ ViennaMapOrSequenceReferenceNode >> localResolve [
 { #category : 'typechecking' }
 ViennaMapOrSequenceReferenceNode >> maximalType [
 
+	maximalType ifNotNil: [ ^ maximalType ].
 	^ (Array streamContents: [ :stream |
 		   self stateDesignator typecheck possibleTypesDo: [ :designatorType |
 			   [

@@ -58,6 +58,7 @@ ViennaSequenceEnumerationNode >> label [
 ViennaSequenceEnumerationNode >> maximalType [
 
 	| basetype |
+	maximalType ifNotNil: [ ^ maximalType ].
 	basetype := ViennaType unit.
 	self expressionList do: [ :expr |
 		basetype := basetype + expr typecheck ].

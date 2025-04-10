@@ -121,6 +121,7 @@ ViennaSetComprehensionNode >> lookupIdentifier: aString [
 { #category : 'typechecking' }
 ViennaSetComprehensionNode >> maximalType [
 
+	maximalType ifNotNil: [ ^ maximalType ].
 	self bindList typecheck.
 	self suchthatExpression ifNotNil: [ :exp |
 		exp typecheck: ViennaType bool ].

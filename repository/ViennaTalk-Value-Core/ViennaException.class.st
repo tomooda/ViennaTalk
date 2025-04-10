@@ -10,9 +10,16 @@ Class {
 
 { #category : 'signaling' }
 ViennaException class >> expression: anObject [
+
 	^ self new
-		expression: anObject;
-		signal
+		  expression: anObject;
+		  yourself
+]
+
+{ #category : 'signaling' }
+ViennaException class >> signal: anObject [
+
+	^ (self expression: anObject) signal
 ]
 
 { #category : 'controlling' }

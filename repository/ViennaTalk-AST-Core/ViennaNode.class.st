@@ -1169,12 +1169,6 @@ ViennaNode >> isViennaForallExpressionNode [
 ]
 
 { #category : 'testing' }
-ViennaNode >> isViennaFunctionDefinitionNode [
-
-	^ false
-]
-
-{ #category : 'testing' }
 ViennaNode >> isViennaFunctionDefinitionNode: aString [
 
 	^ false
@@ -1775,12 +1769,6 @@ ViennaNode >> isViennaOldNameNode [
 
 { #category : 'testing' }
 ViennaNode >> isViennaOperationBodyNode [
-
-	^ false
-]
-
-{ #category : 'testing' }
-ViennaNode >> isViennaOperationDefinitionNode [
 
 	^ false
 ]

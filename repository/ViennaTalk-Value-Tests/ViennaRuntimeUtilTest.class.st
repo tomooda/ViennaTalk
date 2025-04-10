@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaRuntimeUtilTest,
-	#superclass : #TestCase,
-	#category : 'ViennaTalk-Value-Tests'
+	#name : 'ViennaRuntimeUtilTest',
+	#superclass : 'TestCase',
+	#category : 'ViennaTalk-Value-Tests',
+	#package : 'ViennaTalk-Value-Tests'
 }
 
-{ #category : #'tests-matching-sequence' }
+{ #category : 'tests-matching-sequence' }
 ViennaRuntimeUtilTest >> testMatchConc [
 	self
 		assert:
@@ -18,7 +19,7 @@ ViennaRuntimeUtilTest >> testMatchConc [
 				yourself)}
 ]
 
-{ #category : #'tests-matching-sequence' }
+{ #category : 'tests-matching-sequence' }
 ViennaRuntimeUtilTest >> testMatchConc2 [
 	self
 		assert:
@@ -28,7 +29,7 @@ ViennaRuntimeUtilTest >> testMatchConc2 [
 		equals: {}
 ]
 
-{ #category : #'tests-matching-sequence' }
+{ #category : 'tests-matching-sequence' }
 ViennaRuntimeUtilTest >> testMatchConcLeft [
 	self
 		assert:
@@ -43,7 +44,7 @@ ViennaRuntimeUtilTest >> testMatchConcLeft [
 				yourself)}
 ]
 
-{ #category : #'tests-matching-sequence' }
+{ #category : 'tests-matching-sequence' }
 ViennaRuntimeUtilTest >> testMatchConcLeftRight [
 	self
 		assert:
@@ -59,7 +60,7 @@ ViennaRuntimeUtilTest >> testMatchConcLeftRight [
 				yourself)}
 ]
 
-{ #category : #'tests-matching-sequence' }
+{ #category : 'tests-matching-sequence' }
 ViennaRuntimeUtilTest >> testMatchConcRight [
 	self
 		assert:
@@ -74,7 +75,7 @@ ViennaRuntimeUtilTest >> testMatchConcRight [
 				yourself)}
 ]
 
-{ #category : #'tests-matching-basic' }
+{ #category : 'tests-matching-basic' }
 ViennaRuntimeUtilTest >> testMatchIdentifier [
 	self
 		assert: ((ViennaRuntimeUtil matchIdentifier: 'var') value: 1)
@@ -84,7 +85,7 @@ ViennaRuntimeUtilTest >> testMatchIdentifier [
 				yourself)}
 ]
 
-{ #category : #'tests-matching-map' }
+{ #category : 'tests-matching-map' }
 ViennaRuntimeUtilTest >> testMatchMapEnumeration1 [
 	self
 		assert:
@@ -105,7 +106,7 @@ ViennaRuntimeUtilTest >> testMatchMapEnumeration1 [
 				yourself)}
 ]
 
-{ #category : #'tests-matching-map' }
+{ #category : 'tests-matching-map' }
 ViennaRuntimeUtilTest >> testMatchMapEnumeration2 [
 	self
 		assert:
@@ -127,7 +128,7 @@ ViennaRuntimeUtilTest >> testMatchMapEnumeration2 [
 				yourself)}
 ]
 
-{ #category : #'tests-matching-map' }
+{ #category : 'tests-matching-map' }
 ViennaRuntimeUtilTest >> testMatchMapEnumeration3 [
 	self
 		assert:
@@ -157,12 +158,12 @@ ViennaRuntimeUtilTest >> testMatchMapEnumeration3 [
 				yourself)} asSet
 ]
 
-{ #category : #'tests-matching-map' }
+{ #category : 'tests-matching-map' }
 ViennaRuntimeUtilTest >> testMatchMapEnumeration4 [
 	self assert: ((ViennaRuntimeUtil matchMapEnumeration: {}) value: Dictionary new) equals: {(Dictionary new)}
 ]
 
-{ #category : #'tests-matching-map' }
+{ #category : 'tests-matching-map' }
 ViennaRuntimeUtilTest >> testMatchMapEnumeration5 [
 	self
 		assert:
@@ -180,7 +181,7 @@ ViennaRuntimeUtilTest >> testMatchMapEnumeration5 [
 		equals: {}
 ]
 
-{ #category : #'tests-matching-map' }
+{ #category : 'tests-matching-map' }
 ViennaRuntimeUtilTest >> testMatchMapEnumeration6 [
 	self
 		assert:
@@ -199,7 +200,7 @@ ViennaRuntimeUtilTest >> testMatchMapEnumeration6 [
 		equals: {}
 ]
 
-{ #category : #'tests-matching-map' }
+{ #category : 'tests-matching-map' }
 ViennaRuntimeUtilTest >> testMatchMunion [
 	self
 		assert:
@@ -226,7 +227,7 @@ ViennaRuntimeUtilTest >> testMatchMunion [
 				yourself)}
 ]
 
-{ #category : #'tests-matching-map' }
+{ #category : 'tests-matching-map' }
 ViennaRuntimeUtilTest >> testMatchMunion2 [
 	self
 		assert:
@@ -285,7 +286,7 @@ ViennaRuntimeUtilTest >> testMatchMunion2 [
 				yourself} asSet
 ]
 
-{ #category : #'tests-matching-map' }
+{ #category : 'tests-matching-map' }
 ViennaRuntimeUtilTest >> testMatchMunion3 [
 	self
 		assert:
@@ -304,7 +305,7 @@ ViennaRuntimeUtilTest >> testMatchMunion3 [
 		equals: {}
 ]
 
-{ #category : #'tests-matching-map' }
+{ #category : 'tests-matching-map' }
 ViennaRuntimeUtilTest >> testMatchMunionLeft [
 	self
 		assert:
@@ -332,7 +333,7 @@ ViennaRuntimeUtilTest >> testMatchMunionLeft [
 				yourself)}
 ]
 
-{ #category : #'tests-matching-map' }
+{ #category : 'tests-matching-map' }
 ViennaRuntimeUtilTest >> testMatchMunionLeftRight [
 	self
 		assert:
@@ -361,7 +362,7 @@ ViennaRuntimeUtilTest >> testMatchMunionLeftRight [
 				yourself)}
 ]
 
-{ #category : #'tests-matching-map' }
+{ #category : 'tests-matching-map' }
 ViennaRuntimeUtilTest >> testMatchMunionRight [
 	self
 		assert:
@@ -389,7 +390,7 @@ ViennaRuntimeUtilTest >> testMatchMunionRight [
 				yourself)}
 ]
 
-{ #category : #'tests-matching-record' }
+{ #category : 'tests-matching-record' }
 ViennaRuntimeUtilTest >> testMatchRecord1 [
 	self
 		assert:
@@ -404,7 +405,7 @@ ViennaRuntimeUtilTest >> testMatchRecord1 [
 				yourself)}
 ]
 
-{ #category : #'tests-matching-record' }
+{ #category : 'tests-matching-record' }
 ViennaRuntimeUtilTest >> testMatchRecord2 [
 	self
 		assert:
@@ -419,7 +420,7 @@ ViennaRuntimeUtilTest >> testMatchRecord2 [
 				yourself)}
 ]
 
-{ #category : #'tests-matching-record' }
+{ #category : 'tests-matching-record' }
 ViennaRuntimeUtilTest >> testMatchRecord3 [
 	self
 		assert:
@@ -431,7 +432,7 @@ ViennaRuntimeUtilTest >> testMatchRecord3 [
 		equals: {(Dictionary new)}
 ]
 
-{ #category : #'tests-matching-record' }
+{ #category : 'tests-matching-record' }
 ViennaRuntimeUtilTest >> testMatchRecord4 [
 	self
 		assert:
@@ -447,7 +448,7 @@ ViennaRuntimeUtilTest >> testMatchRecord4 [
 				yourself)}
 ]
 
-{ #category : #'tests-matching-record' }
+{ #category : 'tests-matching-record' }
 ViennaRuntimeUtilTest >> testMatchRecord5 [
 	self
 		assert:
@@ -462,7 +463,7 @@ ViennaRuntimeUtilTest >> testMatchRecord5 [
 				yourself)}
 ]
 
-{ #category : #'tests-matching-record' }
+{ #category : 'tests-matching-record' }
 ViennaRuntimeUtilTest >> testMatchRecord6 [
 	self
 		assert:
@@ -474,7 +475,7 @@ ViennaRuntimeUtilTest >> testMatchRecord6 [
 		equals: {}
 ]
 
-{ #category : #'tests-matching-record' }
+{ #category : 'tests-matching-record' }
 ViennaRuntimeUtilTest >> testMatchRecord7 [
 	self
 		assert:
@@ -486,7 +487,7 @@ ViennaRuntimeUtilTest >> testMatchRecord7 [
 		equals: {}
 ]
 
-{ #category : #'tests-matching-record' }
+{ #category : 'tests-matching-record' }
 ViennaRuntimeUtilTest >> testMatchRecord8 [
 	self
 		assert:
@@ -498,7 +499,7 @@ ViennaRuntimeUtilTest >> testMatchRecord8 [
 		equals: {}
 ]
 
-{ #category : #'tests-matching-sequence' }
+{ #category : 'tests-matching-sequence' }
 ViennaRuntimeUtilTest >> testMatchSequenceEnumeration1 [
 	self
 		assert:
@@ -512,7 +513,7 @@ ViennaRuntimeUtilTest >> testMatchSequenceEnumeration1 [
 				yourself)}
 ]
 
-{ #category : #'tests-matching-sequence' }
+{ #category : 'tests-matching-sequence' }
 ViennaRuntimeUtilTest >> testMatchSequenceEnumeration2 [
 	self
 		assert:
@@ -526,7 +527,7 @@ ViennaRuntimeUtilTest >> testMatchSequenceEnumeration2 [
 				yourself)}
 ]
 
-{ #category : #'tests-matching-sequence' }
+{ #category : 'tests-matching-sequence' }
 ViennaRuntimeUtilTest >> testMatchSequenceEnumeration3 [
 	self
 		assert:
@@ -537,7 +538,7 @@ ViennaRuntimeUtilTest >> testMatchSequenceEnumeration3 [
 		equals: {(Dictionary new)}
 ]
 
-{ #category : #'tests-matching-sequence' }
+{ #category : 'tests-matching-sequence' }
 ViennaRuntimeUtilTest >> testMatchSequenceEnumeration4 [
 	self
 		assert:
@@ -551,12 +552,12 @@ ViennaRuntimeUtilTest >> testMatchSequenceEnumeration4 [
 				yourself)}
 ]
 
-{ #category : #'tests-matching-sequence' }
+{ #category : 'tests-matching-sequence' }
 ViennaRuntimeUtilTest >> testMatchSequenceEnumeration5 [
 	self assert: ((ViennaRuntimeUtil matchSequenceEnumeration: {}) value: #() asOrderedCollection) equals: {(Dictionary new)}
 ]
 
-{ #category : #'tests-matching-sequence' }
+{ #category : 'tests-matching-sequence' }
 ViennaRuntimeUtilTest >> testMatchSequenceEnumeration6 [
 	self
 		assert:
@@ -567,7 +568,7 @@ ViennaRuntimeUtilTest >> testMatchSequenceEnumeration6 [
 		equals: {}
 ]
 
-{ #category : #'tests-matching-sequence' }
+{ #category : 'tests-matching-sequence' }
 ViennaRuntimeUtilTest >> testMatchSequenceEnumeration7 [
 	self
 		assert:
@@ -578,7 +579,7 @@ ViennaRuntimeUtilTest >> testMatchSequenceEnumeration7 [
 		equals: {}
 ]
 
-{ #category : #'tests-matching-sequence' }
+{ #category : 'tests-matching-sequence' }
 ViennaRuntimeUtilTest >> testMatchSequenceEnumeration8 [
 	self
 		assert:
@@ -590,7 +591,7 @@ ViennaRuntimeUtilTest >> testMatchSequenceEnumeration8 [
 		equals: {}
 ]
 
-{ #category : #'tests-matching-set' }
+{ #category : 'tests-matching-set' }
 ViennaRuntimeUtilTest >> testMatchSetEnumeration1 [
 	self
 		assert:
@@ -604,7 +605,7 @@ ViennaRuntimeUtilTest >> testMatchSetEnumeration1 [
 				yourself)}
 ]
 
-{ #category : #'tests-matching-set' }
+{ #category : 'tests-matching-set' }
 ViennaRuntimeUtilTest >> testMatchSetEnumeration2 [
 	self
 		assert:
@@ -618,7 +619,7 @@ ViennaRuntimeUtilTest >> testMatchSetEnumeration2 [
 				yourself)}
 ]
 
-{ #category : #'tests-matching-set' }
+{ #category : 'tests-matching-set' }
 ViennaRuntimeUtilTest >> testMatchSetEnumeration3 [
 	self
 		assert:
@@ -629,12 +630,12 @@ ViennaRuntimeUtilTest >> testMatchSetEnumeration3 [
 		equals: {(Dictionary new)}
 ]
 
-{ #category : #'tests-matching-set' }
+{ #category : 'tests-matching-set' }
 ViennaRuntimeUtilTest >> testMatchSetEnumeration4 [
 	self assert: ((ViennaRuntimeUtil matchSetEnumeration: {}) value: #() asSet) equals: {(Dictionary new)}
 ]
 
-{ #category : #'tests-matching-set' }
+{ #category : 'tests-matching-set' }
 ViennaRuntimeUtilTest >> testMatchSetEnumeration5 [
 	self
 		assert:
@@ -648,7 +649,7 @@ ViennaRuntimeUtilTest >> testMatchSetEnumeration5 [
 				yourself)}
 ]
 
-{ #category : #'tests-matching-set' }
+{ #category : 'tests-matching-set' }
 ViennaRuntimeUtilTest >> testMatchSetEnumeration6 [
 	self
 		assert:
@@ -668,7 +669,7 @@ ViennaRuntimeUtilTest >> testMatchSetEnumeration6 [
 				yourself)}
 ]
 
-{ #category : #'tests-matching-set' }
+{ #category : 'tests-matching-set' }
 ViennaRuntimeUtilTest >> testMatchSetEnumeration7 [
 	self
 		assert:
@@ -679,7 +680,7 @@ ViennaRuntimeUtilTest >> testMatchSetEnumeration7 [
 		equals: {}
 ]
 
-{ #category : #'tests-matching-set' }
+{ #category : 'tests-matching-set' }
 ViennaRuntimeUtilTest >> testMatchSetEnumeration8 [
 	self
 		assert:
@@ -690,7 +691,7 @@ ViennaRuntimeUtilTest >> testMatchSetEnumeration8 [
 		equals: {}
 ]
 
-{ #category : #'tests-matching-set' }
+{ #category : 'tests-matching-set' }
 ViennaRuntimeUtilTest >> testMatchSetEnumeration9 [
 	self
 		assert:
@@ -702,7 +703,7 @@ ViennaRuntimeUtilTest >> testMatchSetEnumeration9 [
 		equals: {}
 ]
 
-{ #category : #'tests-matching-tuple' }
+{ #category : 'tests-matching-tuple' }
 ViennaRuntimeUtilTest >> testMatchTuple1 [
 	self
 		assert:
@@ -716,7 +717,7 @@ ViennaRuntimeUtilTest >> testMatchTuple1 [
 				yourself)}
 ]
 
-{ #category : #'tests-matching-tuple' }
+{ #category : 'tests-matching-tuple' }
 ViennaRuntimeUtilTest >> testMatchTuple2 [
 	self
 		assert:
@@ -730,7 +731,7 @@ ViennaRuntimeUtilTest >> testMatchTuple2 [
 				yourself)}
 ]
 
-{ #category : #'tests-matching-tuple' }
+{ #category : 'tests-matching-tuple' }
 ViennaRuntimeUtilTest >> testMatchTuple3 [
 	self
 		assert:
@@ -741,7 +742,7 @@ ViennaRuntimeUtilTest >> testMatchTuple3 [
 		equals: {(Dictionary new)}
 ]
 
-{ #category : #'tests-matching-tuple' }
+{ #category : 'tests-matching-tuple' }
 ViennaRuntimeUtilTest >> testMatchTuple4 [
 	self
 		assert:
@@ -756,7 +757,7 @@ ViennaRuntimeUtilTest >> testMatchTuple4 [
 				yourself)}
 ]
 
-{ #category : #'tests-matching-tuple' }
+{ #category : 'tests-matching-tuple' }
 ViennaRuntimeUtilTest >> testMatchTuple5 [
 	self
 		assert:
@@ -770,7 +771,7 @@ ViennaRuntimeUtilTest >> testMatchTuple5 [
 				yourself)}
 ]
 
-{ #category : #'tests-matching-tuple' }
+{ #category : 'tests-matching-tuple' }
 ViennaRuntimeUtilTest >> testMatchTuple6 [
 	self
 		assert:
@@ -781,7 +782,7 @@ ViennaRuntimeUtilTest >> testMatchTuple6 [
 		equals: {}
 ]
 
-{ #category : #'tests-matching-set' }
+{ #category : 'tests-matching-set' }
 ViennaRuntimeUtilTest >> testMatchUnion [
 	self
 		assert:
@@ -807,7 +808,7 @@ ViennaRuntimeUtilTest >> testMatchUnion [
 				yourself)} asSet
 ]
 
-{ #category : #'tests-matching-set' }
+{ #category : 'tests-matching-set' }
 ViennaRuntimeUtilTest >> testMatchUnion2 [
 	self
 		assert:
@@ -820,7 +821,7 @@ ViennaRuntimeUtilTest >> testMatchUnion2 [
 				yourself)}
 ]
 
-{ #category : #'tests-matching-set' }
+{ #category : 'tests-matching-set' }
 ViennaRuntimeUtilTest >> testMatchUnion3 [
 	self
 		assert:
@@ -830,7 +831,7 @@ ViennaRuntimeUtilTest >> testMatchUnion3 [
 		equals: {Dictionary new at: 'set1' put: Set new; yourself}
 ]
 
-{ #category : #'tests-matching-set' }
+{ #category : 'tests-matching-set' }
 ViennaRuntimeUtilTest >> testMatchUnion4 [
 	self
 		assert:
@@ -840,7 +841,7 @@ ViennaRuntimeUtilTest >> testMatchUnion4 [
 		equals: {}
 ]
 
-{ #category : #'tests-matching-set' }
+{ #category : 'tests-matching-set' }
 ViennaRuntimeUtilTest >> testMatchUnion5 [
 	self
 		assert:
@@ -848,7 +849,7 @@ ViennaRuntimeUtilTest >> testMatchUnion5 [
 		equals: {}
 ]
 
-{ #category : #'tests-matching-set' }
+{ #category : 'tests-matching-set' }
 ViennaRuntimeUtilTest >> testMatchUnionLeft [
 	self
 		assert:
@@ -875,7 +876,7 @@ ViennaRuntimeUtilTest >> testMatchUnionLeft [
 				yourself)} asSet
 ]
 
-{ #category : #'tests-matching-set' }
+{ #category : 'tests-matching-set' }
 ViennaRuntimeUtilTest >> testMatchUnionLeftRight [
 	self
 		assert:
@@ -903,7 +904,7 @@ ViennaRuntimeUtilTest >> testMatchUnionLeftRight [
 				yourself)} asSet
 ]
 
-{ #category : #'tests-matching-set' }
+{ #category : 'tests-matching-set' }
 ViennaRuntimeUtilTest >> testMatchUnionRight [
 	self
 		assert:
@@ -930,12 +931,12 @@ ViennaRuntimeUtilTest >> testMatchUnionRight [
 				yourself)} asSet
 ]
 
-{ #category : #'tests-matching-basic' }
+{ #category : 'tests-matching-basic' }
 ViennaRuntimeUtilTest >> testMatchValue1 [
 	self assert: ((ViennaRuntimeUtil matchValue: 1) value: 1) equals: {(Dictionary new)}
 ]
 
-{ #category : #'tests-matching-basic' }
+{ #category : 'tests-matching-basic' }
 ViennaRuntimeUtilTest >> testMatchValue2 [
 	self assert: ((ViennaRuntimeUtil matchValue: 1) value: 2) equals: {}
 ]

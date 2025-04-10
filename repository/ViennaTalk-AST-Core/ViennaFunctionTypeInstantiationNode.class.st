@@ -77,6 +77,7 @@ ViennaFunctionTypeInstantiationNode >> label [
 ViennaFunctionTypeInstantiationNode >> maximalType [
 
 	| functionDefinition params args type |
+	maximalType ifNotNil: [ ^ maximalType ].
 	functionDefinition := self expression resolve ifNil: [
 		                      ^ ViennaTypeError
 			                        on: self

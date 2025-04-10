@@ -31,5 +31,6 @@ ViennaUndefinedExpressionNode >> label [
 { #category : 'typechecking' }
 ViennaUndefinedExpressionNode >> maximalType [
 
+	maximalType ifNotNil: [ ^ maximalType ].
 	^ ViennaType any
 ]

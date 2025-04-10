@@ -66,7 +66,9 @@ ViennaRecordPatternNode >> label [
 { #category : 'typechecking' }
 ViennaRecordPatternNode >> maximalType [
 
-	^ self name resolve typecheck
+	^ self name resolve
+		  ifNotNil: #typecheck
+		  ifNil: [ ViennaTypeError signalOn: self ]
 ]
 
 { #category : 'typechecking' }
