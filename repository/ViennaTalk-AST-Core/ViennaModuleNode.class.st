@@ -335,6 +335,19 @@ ViennaModuleNode >> deepFindResolverForIdentifier: aString [
 { #category : 'accessing-definitions' }
 ViennaModuleNode >> definitionOfLocalName: aString [
 
+	(aString beginsWith: 'pre_') ifTrue: [
+		| name |
+		name := aString copyFrom: 'pre_' size + 1 to: aString size.
+		self toplevelDefinitionsDo: [ :def |
+			((def isViennaFunctionDefinitionNode: name) or: [
+				 def isViennaOperationDefinitionNode: name ]) ifTrue: [ ^ def pre ] ] ].
+	(aString beginsWith: 'post_') ifTrue: [
+		| name |
+		name := aString copyFrom: 'post_' size + 1 to: aString size.
+		self toplevelDefinitionsDo: [ :def |
+			((def isViennaFunctionDefinitionNode: name) or: [
+				 def isViennaOperationDefinitionNode: name ]) ifTrue: [
+				^ def post ] ] ].
 	self sectionsDo: [ :section |
 		section isViennaStateDefinitionNode
 			ifTrue: [
