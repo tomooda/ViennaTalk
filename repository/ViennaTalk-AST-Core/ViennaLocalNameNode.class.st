@@ -87,7 +87,10 @@ ViennaLocalNameNode >> isExportedNameNode [
 { #category : 'testing' }
 ViennaLocalNameNode >> isFunctionNameNode [
 
-	^ self resolve ifNotNil: #isFunctionDefinition ifNil: [ false ]
+	^ (self identifier beginsWith: 'pre_') or: [
+		  (self identifier beginsWith: 'post_') or: [
+			  (self identifier beginsWith: 'inv_') or: [
+				  self resolve ifNotNil: #isFunctionDefinition ifNil: [ false ] ] ] ]
 ]
 
 { #category : 'testing' }

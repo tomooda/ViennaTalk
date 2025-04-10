@@ -40,7 +40,7 @@ ViennaUseFunction >> explicitFunctionsDo: aBlock [
 					aBlock value: localDefinition ] ] ].
 		node isViennaModuleNode ifTrue: [
 			node sectionsDo: [ :section |
-				section isFunctionDefinition ifTrue: [
+				section isViennaFunctionDefinitionsNode ifTrue: [
 					section do: [ :definition |
 						definition expression ifNotNil: [ aBlock value: definition ] ] ] ] ] ]
 ]
