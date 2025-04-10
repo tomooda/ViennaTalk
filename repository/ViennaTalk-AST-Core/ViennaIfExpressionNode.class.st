@@ -98,6 +98,7 @@ ViennaIfExpressionNode >> label [
 { #category : 'typechecking' }
 ViennaIfExpressionNode >> maximalType [
 
+	maximalType ifNotNil: [ ^ maximalType ].
 	^ self conditionalExpressionList typecheck
 	  + self expression typecheck
 ]

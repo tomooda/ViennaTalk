@@ -44,8 +44,8 @@ ViennaAddTestOperation >> name [
 ViennaAddTestOperation >> newName [
 
 	(ast notNil and: [
-		 ast isViennaFunctionDefinitionNode or: [
-			 ast isViennaOperationDefinitionNode ] ]) ifFalse: [ ^ nil ].
+		 ast isFunctionDefinition or: [ ast isOperationDefinition ] ])
+		ifFalse: [ ^ nil ].
 	^ 'test' , ast identifier capitalized
 ]
 

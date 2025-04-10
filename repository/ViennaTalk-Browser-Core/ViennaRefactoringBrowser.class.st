@@ -1535,8 +1535,10 @@ ViennaRefactoringBrowser >> gitHasDirtyWorkingCopy [
 		| headFileSystem |
 		headFileSystem := repository branch commit fileSystem.
 		(fileReference filesMatching: '*.vdmsl') do: [ :fileRef |
-			fileRef contents ~= (headFileSystem / fileRef basename) contents
-				ifTrue: [ ^ true ] ] ].
+			| wcRef |
+			wcRef := headFileSystem / fileRef basename.
+			(wcRef exists and: [ fileRef contents = wcRef contents ]) ifFalse: [
+				^ true ] ] ].
 	^ false
 ]
 

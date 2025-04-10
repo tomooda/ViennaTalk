@@ -386,7 +386,11 @@ ViennaTranspiledAnimation >> runTestOperation: aString module: anotherString [
 		act: acts asArray
 		rd: rds asArray
 		wr: wrs asArray
-		do: [ (moduleObject perform: aString asSymbol) value ]
+		do: [
+			[ (moduleObject perform: aString asSymbol) value ]
+				on: ViennaAssertionViolation
+				do: [ :ex |
+				ex resignalAs: (ViennaException expression: ex expression) ] ]
 ]
 
 { #category : 'accessing' }

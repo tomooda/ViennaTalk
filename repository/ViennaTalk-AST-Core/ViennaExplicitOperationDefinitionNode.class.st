@@ -214,12 +214,6 @@ ViennaExplicitOperationDefinitionNode >> isViennaExportableTopLevelDefinitionNod
 ]
 
 { #category : 'testing' }
-ViennaExplicitOperationDefinitionNode >> isViennaOperationDefinitionNode [
-
-	^ true
-]
-
-{ #category : 'testing' }
 ViennaExplicitOperationDefinitionNode >> isViennaOperationDefinitionNode: aString [
 
 	^ self identifier = aString
@@ -260,8 +254,28 @@ ViennaExplicitOperationDefinitionNode >> maximalType [
 					  , ' parameter(s) declared, but the type is '
 					  , maximalType argtypes size printString , '-arity' ].
 	self statement typecheck: maximalType returntype.
-	self pre ifNotNil: [ :pre | pre typecheck: ViennaType bool ].
-	self post ifNotNil: [ :post | post typecheck: ViennaType bool ].
+	self pre ifNotNil: [ :pre |
+		| argtypes |
+		argtypes := maximalType argtypes.
+		(self module ifNil: [ self document ]) stateDefinition ifNotNil: [
+			:stateDef | argtypes := argtypes copyWith: stateDef typecheck ].
+		pre
+			setMaximalType: nil;
+			typecheck: ViennaType bool;
+			setMaximalType: (ViennaType product: argtypes) -> ViennaType bool ].
+	self post ifNotNil: [ :post |
+		| argtypes |
+		argtypes := maximalType argtypes.
+		maximalType returntype isUnitType ifFalse: [
+			argtypes := argtypes copyWith: maximalType returntype ].
+		(self module ifNil: [ self document ]) stateDefinition ifNotNil: [
+			:stateDef |
+			argtypes := argtypes copyWithAll:
+				            (Array new: 2 withAll: stateDef typecheck) ].
+		post
+			setMaximalType: nil;
+			typecheck: ViennaType bool;
+			setMaximalType: (ViennaType product: argtypes) -> ViennaType bool ].
 	^ maximalType
 ]
 

@@ -118,6 +118,7 @@ ViennaDefExpressionNode >> lookupIdentifier: aString [
 { #category : 'typechecking' }
 ViennaDefExpressionNode >> maximalType [
 
+	maximalType ifNotNil: [ ^ maximalType ].
 	self equalDefinitionList do: [ :equalDef | equalDef typecheck ].
 	^ self expression typecheck
 ]

@@ -107,6 +107,7 @@ ViennaIotaExpressionNode >> lookupIdentifier: aString [
 { #category : 'typechecking' }
 ViennaIotaExpressionNode >> maximalType [
 
+	maximalType ifNotNil: [ ^ maximalType ].
 	self bind typecheck.
 	self expression typecheck: ViennaType bool.
 	^ self bind pattern typecheck

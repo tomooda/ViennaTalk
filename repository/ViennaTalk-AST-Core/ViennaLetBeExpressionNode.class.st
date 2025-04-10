@@ -125,6 +125,7 @@ ViennaLetBeExpressionNode >> lookupIdentifier: aString [
 { #category : 'typechecking' }
 ViennaLetBeExpressionNode >> maximalType [
 
+	maximalType ifNotNil: [ ^ maximalType ].
 	self multipleBind typecheck.
 	self conditionExpression ifNotNil: [ :condition |
 		condition typecheck: ViennaType bool ].

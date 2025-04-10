@@ -626,54 +626,65 @@ ViennaBrowser >> autoTest [
 
 { #category : 'test pane menu' }
 ViennaBrowser >> basicRunTestModule: module operation: operation [
+
 	| header testAnimation |
 	header := 'Runtime: Error 4129: Exit '.
 	testAnimation := animation copyForTest
-		state: Dictionary new;
-		yourself.
-	[ [ testAnimation
+		                 state: Dictionary new;
+		                 yourself.
+	[
+	[
+	testAnimation
 		plainEvaluate: operation , '()'
 		in: module
-		ifError: [ :msg | 
-			(msg size > header size and: [ (msg copyFrom: 1 to: header size) = header ])
-				ifTrue: [ ViennaException
-						expression: (ViennaReader new parse: (msg copyFrom: header size + 1 to: msg size)) ]
+		ifError: [ :msg |
+			(msg size > header size and: [
+				 (msg copyFrom: 1 to: header size) = header ])
+				ifTrue: [
+					ViennaException signal:
+						(ViennaReader new parse:
+							 (msg copyFrom: header size + 1 to: msg size)) ]
 				ifFalse: [ Error signal: msg ] ] ]
 		on: ViennaException
-		do: [ :exception | 
-			exception expression
-				in: [ :expr | 
-					(expr isViennaComposite and: [ expr constructorName = 'AssertFailure' ])
-						ifTrue: [ ^ (ViennaUnitTestFailureResultItem
-								module: module
-								operation: operation
-								message: 'assertion failed: ' , (expr at: 1) asString)
-								inform;
-								yourself ].
-					(expr isViennaComposite and: [ expr constructorName = 'AssertEqualsFailure' ])
-						ifTrue: [ ^ (ViennaUnitTestFailureResultItem
-								module: module
-								operation: operation
-								message:
-								'assertion failed: ' , (expr at: 3) asString , ' expected: ' , (expr at: 2) viennaString
-								, ' actual: ' , (expr at: 1) viennaString)
-								inform;
-								yourself ].
-					^ (ViennaUnitTestErrorResultItem
-						module: module
-						operation: operation
-						message: expr viennaString)
-						inform;
-						yourself ] ] ]
+		do: [ :exception |
+			exception expression in: [ :expr |
+				(expr isViennaComposite and: [
+					 expr constructorName = 'AssertFailure' ]) ifTrue: [
+					^ (ViennaUnitTestFailureResultItem
+						   module: module
+						   operation: operation
+						   message: 'assertion failed: ' , (expr at: 1) asString)
+						  inform;
+						  yourself ].
+				(expr isViennaComposite and: [
+					 expr constructorName = 'AssertEqualsFailure' ]) ifTrue: [
+					^ (ViennaUnitTestFailureResultItem
+						   module: module
+						   operation: operation
+						   message:
+							   'assertion failed: ' , (expr at: 3) asString , ' expected: '
+							   , (expr at: 2) viennaString , ' actual: '
+							   , (expr at: 1) viennaString)
+						  inform;
+						  yourself ].
+				^ (ViennaUnitTestErrorResultItem
+					   module: module
+					   operation: operation
+					   message: expr viennaString)
+					  inform;
+					  yourself ] ] ]
 		on: Error
-		do: [ :exception | 
+		do: [ :exception |
 			^ (ViennaUnitTestErrorResultItem
-				module: module
-				operation: operation
-				message: exception printString)
-				inform;
-				yourself ].
-	^ ViennaUnitTestSuccessResultItem module: module operation: operation message: 'OK'
+				   module: module
+				   operation: operation
+				   message: exception printString)
+				  inform;
+				  yourself ].
+	^ ViennaUnitTestSuccessResultItem
+		  module: module
+		  operation: operation
+		  message: 'OK'
 ]
 
 { #category : 'user interface' }

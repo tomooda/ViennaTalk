@@ -61,15 +61,14 @@ ViennaVDMDebuggerPresenter >> debuggerExtensionToolName [
 { #category : 'slicing' }
 ViennaVDMDebuggerPresenter >> extractSliceOf: aViennaNode [
 
-	(aViennaNode
-		 detectParent: #isViennaOperationDefinitionNode
-		 ifNone: [ nil ]) ifNotNil: [ :operation |
-		| slicer |
-		slicer := ViennaSlicer
-			          toplevelDefinition: operation
-			          criteria: { aViennaNode }
-			          startNode: aViennaNode.
-		self sliceNodes: slicer sliceNodes , { aViennaNode } ]
+	(aViennaNode detectParent: #isOperationDefinition ifNone: [ nil ])
+		ifNotNil: [ :operation |
+			| slicer |
+			slicer := ViennaSlicer
+				          toplevelDefinition: operation
+				          criteria: { aViennaNode }
+				          startNode: aViennaNode.
+			self sliceNodes: slicer sliceNodes , { aViennaNode } ]
 ]
 
 { #category : 'highlighting' }
@@ -199,13 +198,12 @@ ViennaVDMDebuggerPresenter >> vdmSourceContextMenu [
 	menu := self newMenu.
 	menu addGroup: [ :group |
 		self vdmSourceSelectionNode ifNotNil: [ :node |
-			(node
-				 detectParent: #isViennaOperationDefinitionNode
-				 ifNone: [ nil ]) ifNotNil: [
-				group addItem: [ :item |
-					item
-						name: 'Highlight slice';
-						action: [ self extractSliceOf: node ] ] ] ].
+			(node detectParent: #isOperationDefinition ifNone: [ nil ])
+				ifNotNil: [
+					group addItem: [ :item |
+						item
+							name: 'Highlight slice';
+							action: [ self extractSliceOf: node ] ] ] ].
 		(sliceNodes notNil and: [ sliceNodes notEmpty ]) ifTrue: [
 			group addItem: [ :item |
 				item

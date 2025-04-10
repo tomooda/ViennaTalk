@@ -16,6 +16,18 @@ ViennaExplicitFunctionDefinitionNodeTest >> testMaximalType [
 				 asViennaDocumentAst resolveIdentifier: 'f') maximalType
 		equals: ViennaType nat -> ViennaType nat.
 	self
+		assert: ('functions f:nat->nat f(x) == x pre x > 0 post RESULT > 0'
+				 asViennaDocumentAst
+				 typecheck;
+				 resolveIdentifier: 'pre_f') maximalType
+		equals: ViennaType nat -> ViennaType bool.
+	self
+		assert: ('functions f:nat->nat f(x) == x pre x > 0 post RESULT > 0'
+				 asViennaDocumentAst
+				 typecheck;
+				 resolveIdentifier: 'post_f') maximalType
+		equals: ViennaType nat * ViennaType nat -> ViennaType bool.
+	self
 		assert: ('functions f[@T]:@T->nat f(x) == if x = x then 1 else 0'
 				 asViennaDocumentAst resolveIdentifier: 'f') maximalType
 		equals: (ViennaType parametric: '@T') -> ViennaType nat.

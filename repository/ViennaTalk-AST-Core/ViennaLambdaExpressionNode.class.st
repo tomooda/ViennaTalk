@@ -98,6 +98,7 @@ ViennaLambdaExpressionNode >> lookupIdentifier: aString [
 { #category : 'typechecking' }
 ViennaLambdaExpressionNode >> maximalType [
 
+	maximalType ifNotNil: [ ^ maximalType ].
 	self typeBindList typecheck.
 	^ (ViennaType product:
 		   (self typeBindList collect: [ :typeBind |

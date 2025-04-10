@@ -64,6 +64,7 @@ ViennaSetRangeExpressionNode >> label [
 { #category : 'typechecking' }
 ViennaSetRangeExpressionNode >> maximalType [
 
+	maximalType ifNotNil: [ ^ maximalType ].
 	^ ((self startExpression typecheck: ViennaType real)
 	   + (self endExpression typecheck: ViennaType real)) set
 ]

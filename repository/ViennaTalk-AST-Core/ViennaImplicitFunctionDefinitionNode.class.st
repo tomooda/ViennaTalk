@@ -266,8 +266,18 @@ ViennaImplicitFunctionDefinitionNode >> maximalType [
 	self typeVariableList typecheck.
 	self patternTypePairList typecheck.
 	self identifierTypePairList typecheck.
-	self pre ifNotNil: [ :pre | pre typecheck: ViennaType bool ].
-	self post ifNotNil: [ :post | post typecheck: ViennaType bool ].
+	self pre ifNotNil: [ :pre |
+		pre
+			setMaximalType: nil;
+			typecheck: ViennaType bool;
+			setMaximalType:
+				self argumentType asMaximalViennaType -> ViennaType bool ].
+	self post ifNotNil: [ :post |
+		post
+			setMaximalType: nil;
+			typecheck: ViennaType bool;
+			setMaximalType: self argumentType asMaximalViennaType
+				* self returnType asMaximalViennaType -> ViennaType bool ].
 	self measure ifNotNil: [ :measure |
 		measure typecheck:
 			self type argumentType typecheck -> ViennaType nat ].

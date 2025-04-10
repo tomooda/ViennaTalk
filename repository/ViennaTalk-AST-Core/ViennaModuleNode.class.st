@@ -548,6 +548,14 @@ ViennaModuleNode >> lookupIdentifier: aString [
 			definition isViennaStateDefinitionNode ifTrue: [
 				definition fieldsDo: [ :field |
 					field identifier = aString ifTrue: [ ^ field ] ] ].
+			((aString beginsWith: 'pre_') and: [
+				 definition isFunctionDefinition or: [
+					 definition isOperationDefinition ] ]) ifTrue: [
+				^ definition pre ].
+			((aString beginsWith: 'post_') and: [
+				 definition isFunctionDefinition or: [
+					 definition isOperationDefinition ] ]) ifTrue: [
+				^ definition post ].
 			^ definition ] ].
 	self importDefinitionsDo: [ :importDefinition |
 		importDefinition importsDo: [ :import |

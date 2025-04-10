@@ -373,7 +373,7 @@ ViennaAnimation >> runTestOperation: operation module: module [
 		(msg size > header size and: [
 			 (msg copyFrom: 1 to: header size) = header ])
 			ifTrue: [
-				ViennaException expression:
+				ViennaException signal:
 					(ViennaReader new parse:
 						 (msg copyFrom: header size + 1 to: msg size)) ]
 			ifFalse: [ Error signal: msg ] ]

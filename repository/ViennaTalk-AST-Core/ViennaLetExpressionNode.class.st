@@ -144,6 +144,7 @@ ViennaLetExpressionNode >> lookupIdentifier: aString [
 { #category : 'typechecking' }
 ViennaLetExpressionNode >> maximalType [
 
+	maximalType ifNotNil: [ ^ maximalType ].
 	self localDefinitionList typecheck.
 	^ self body typecheck
 ]

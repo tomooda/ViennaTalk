@@ -130,6 +130,7 @@ ViennaMapComprehensionNode >> lookupIdentifier: aString [
 { #category : 'typechecking' }
 ViennaMapComprehensionNode >> maximalType [
 
+	maximalType ifNotNil: [ ^ maximalType ].
 	self bindList typecheck.
 	self suchthatExpression ifNotNil: [ :exp |
 		exp typecheck: ViennaType bool ].
