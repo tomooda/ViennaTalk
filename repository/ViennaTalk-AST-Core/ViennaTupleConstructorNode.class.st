@@ -61,6 +61,5 @@ ViennaTupleConstructorNode >> label [
 { #category : 'typechecking' }
 ViennaTupleConstructorNode >> maximalType [
 
-	maximalType ifNotNil: [ ^ maximalType ].
 	^ ViennaType product: (self expressionList collect: #typecheck)
 ]

@@ -83,7 +83,6 @@ ViennaSubsequenceNode >> label [
 ViennaSubsequenceNode >> maximalType [
 
 	| seqType |
-	maximalType ifNotNil: [ ^ maximalType ].
 	seqType := self sequenceExpression typecheck: ViennaType any seq.
 	self startExpression typecheck: ViennaType nat1.
 	self endExpression typecheck: ViennaType nat1.

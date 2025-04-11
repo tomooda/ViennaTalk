@@ -73,7 +73,6 @@ ViennaFieldReferenceNode >> localResolve [
 ViennaFieldReferenceNode >> maximalType [
 
 	| type |
-	maximalType ifNotNil: [ ^ maximalType ].
 	type := ViennaType unit.
 	self stateDesignator typecheck possibleTypesDo: [ :basetype |
 		basetype isCompositeType ifTrue: [

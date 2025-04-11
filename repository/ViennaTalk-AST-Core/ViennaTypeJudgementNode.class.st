@@ -68,7 +68,6 @@ ViennaTypeJudgementNode >> label [
 { #category : 'typechecking' }
 ViennaTypeJudgementNode >> maximalType [
 
-	maximalType ifNotNil: [ ^ maximalType ].
 	self expression typecheck.
 	(self type resolve
 		 ifNotNil: [ :def | def isTypeDefinition ]

@@ -94,7 +94,6 @@ ViennaApplyNode >> label [
 ViennaApplyNode >> maximalType [
 
 	| args |
-	maximalType ifNotNil: [ ^ maximalType ].
 	args := self arguments.
 	^ (Array streamContents: [ :stream |
 		   self function typecheck possibleTypesDo: [ :functionType |

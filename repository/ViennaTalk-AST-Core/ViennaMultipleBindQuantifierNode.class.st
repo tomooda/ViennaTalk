@@ -87,7 +87,6 @@ ViennaMultipleBindQuantifierNode >> lookupIdentifier: aString [
 { #category : 'typechecking' }
 ViennaMultipleBindQuantifierNode >> maximalType [
 
-	maximalType ifNotNil: [ ^ maximalType ].
 	self bindList typecheck.
 	^ self expression typecheck: ViennaType bool
 ]
