@@ -224,7 +224,12 @@ BaselineOfViennaTalk >> baseline: spec [
 		with: [ spec requires: #( 'ViennaTalk-Refactoring-Core' ) ];
 		package: 'ViennaTalk-Profiler-Core' with: [ spec requires: #(  ) ];
 		package: 'ViennaTalk-Profiler-Tests'
-		with: [ spec requires: #( 'ViennaTalk-Profiler-Core' ) ].
+		with: [ spec requires: #( 'ViennaTalk-Profiler-Core' ) ];
+		package: 'ViennaTalk-Mutation-Core'
+		with: [ spec requires: #( 'ViennaTalk-AST-Core' ) ];
+		package: 'ViennaTalk-Mutation-Tests'
+		with: [ spec requires: #( 'ViennaTalk-Mutation-Core' ) ];
+		yourself.
 
 	spec
 		group: 'Application' with: #( 'ViennaTalk-Application' );
@@ -244,7 +249,7 @@ BaselineOfViennaTalk >> baseline: spec [
 		with: #( 'ViennaTalk-Engine-Core' 'ViennaTalk-Parser-Core'
 			   'ViennaTalk-Launcher-Core' 'ViennaTalk-Browser-Core'
 			   'ViennaTalk-Parser-Formatters' 'ViennaTalk-Parser-Highlighters'
-			   'ViennaTalk-Slicing-Core' );
+			   'ViennaTalk-Slicing-Core' 'ViennaTalk-Mutation-Core' );
 		group: 'default' with: #( 'full' );
 		group: 'full'
 		with:
@@ -256,7 +261,7 @@ BaselineOfViennaTalk >> baseline: spec [
 			   'ViennaTalk-Animation-Tests' 'ViennaTalk-Transpiler-Tests'
 			   'ViennaTalk-FRAM-Tests' 'ViennaTalk-Slicing-Tests'
 			   'ViennaTalk-Refactoring-Tests' 'ViennaTalk-AST-Tests'
-			   'ViennaTalk-Profiler-Tests' )
+			   'ViennaTalk-Profiler-Tests' 'ViennaTalk-Mutation-Tests' )
 ]
 
 { #category : 'accessing' }
