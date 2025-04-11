@@ -85,7 +85,6 @@ ViennaCasesExpressionNode >> label [
 ViennaCasesExpressionNode >> maximalType [
 
 	| caseType |
-	maximalType ifNotNil: [ ^ maximalType ].
 	caseType := self expression typecheck.
 	self casesExpressionAlternatives do: [ :alternative |
 		alternative patternList do: [ :pattern |

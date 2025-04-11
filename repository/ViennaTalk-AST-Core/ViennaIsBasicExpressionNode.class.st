@@ -75,7 +75,6 @@ ViennaIsBasicExpressionNode >> label [
 { #category : 'typechecking' }
 ViennaIsBasicExpressionNode >> maximalType [
 
-	maximalType ifNotNil: [ ^ maximalType ].
 	self expression typecheck.
 	^ ViennaType bool
 ]

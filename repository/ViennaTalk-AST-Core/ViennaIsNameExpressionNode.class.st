@@ -64,7 +64,6 @@ ViennaIsNameExpressionNode >> label [
 { #category : 'accessing' }
 ViennaIsNameExpressionNode >> maximalType [
 
-	maximalType ifNotNil: [ ^ maximalType ].
 	self name resolve
 		ifNotNil: [ :node |
 			(node isViennaTypeSynonymNode or: [

@@ -61,7 +61,6 @@ ViennaUnaryOperatorExpressionNode >> isViennaUnaryOperatorExpressionNode [
 { #category : 'typechecking' }
 ViennaUnaryOperatorExpressionNode >> maximalType [
 
-	maximalType ifNotNil: [ ^ maximalType ].
 	^ ViennaType
 		  normalFormUnion: (Array streamContents: [ :stream |
 				   (self expression typecheck: self paramType) possibleTypesDo: [

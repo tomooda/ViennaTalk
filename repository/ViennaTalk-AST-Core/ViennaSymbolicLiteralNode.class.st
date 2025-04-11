@@ -46,7 +46,6 @@ ViennaSymbolicLiteralNode >> label [
 ViennaSymbolicLiteralNode >> maximalType [
 
 	| literal |
-	maximalType ifNotNil: [ ^ maximalType ].
 	literal := self string.
 	(literal = 'true' or: [ literal = 'false' ]) ifTrue: [
 		^ ViennaType bool ].

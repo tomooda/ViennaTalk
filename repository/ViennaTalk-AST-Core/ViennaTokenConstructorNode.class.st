@@ -61,7 +61,6 @@ ViennaTokenConstructorNode >> label [
 { #category : 'typechecking' }
 ViennaTokenConstructorNode >> maximalType [
 
-	maximalType ifNotNil: [ ^ maximalType ].
 	self expression typecheck.
 	^ ViennaType token
 ]

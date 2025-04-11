@@ -40,7 +40,6 @@ ViennaHistoryExpressionNode >> isViennaHistoryExpressionNode [
 { #category : 'typechecking' }
 ViennaHistoryExpressionNode >> maximalType [
 
-	maximalType ifNotNil: [ ^ maximalType ].
 	^ ViennaType nat
 ]
 

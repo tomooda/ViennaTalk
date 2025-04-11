@@ -33,7 +33,6 @@ ViennaNameNode >> isViennaNameNode [
 { #category : 'typechecking' }
 ViennaNameNode >> maximalType [
 
-	maximalType ifNotNil: [ ^ maximalType ].
 	^ self definition ifNotNil: #typecheck ifNil: [
 		  ViennaTypeError
 			  on: self

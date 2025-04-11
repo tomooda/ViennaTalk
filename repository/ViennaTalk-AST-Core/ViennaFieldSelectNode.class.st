@@ -76,7 +76,6 @@ ViennaFieldSelectNode >> label [
 ViennaFieldSelectNode >> maximalType [
 
 	| type |
-	maximalType ifNotNil: [ ^ maximalType ].
 	type := ViennaType unit.
 	self expression typecheck possibleTypesDo: [ :basetype |
 		basetype isCompositeType ifTrue: [
