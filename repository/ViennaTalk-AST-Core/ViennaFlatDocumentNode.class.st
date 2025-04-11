@@ -64,6 +64,21 @@ ViennaFlatDocumentNode >> deepFindResolverForIdentifier: aString [
 { #category : 'accessing-definitions' }
 ViennaFlatDocumentNode >> definitionOfLocalName: aString [
 
+	(aString beginsWith: 'pre_') ifTrue: [
+		| name |
+		name := aString copyFrom: 'pre_' size + 1 to: aString size.
+		self toplevelDefinitionsDo: [ :def |
+			((def isViennaFunctionDefinitionNode: name) or: [
+				 def isViennaOperationDefinitionNode: name ]) ifTrue: [
+				^ def preFunction ] ] ].
+	(aString beginsWith: 'post_') ifTrue: [
+		| name |
+		name := aString copyFrom: 'post_' size + 1 to: aString size.
+		self toplevelDefinitionsDo: [ :def |
+			((def isViennaFunctionDefinitionNode: name) or: [
+				 def isViennaOperationDefinitionNode: name ]) ifTrue: [
+				^ def postFunction ] ] ].
+
 	self sectionsDo: [ :section |
 		section isViennaStateDefinitionNode
 			ifTrue: [
@@ -113,11 +128,11 @@ ViennaFlatDocumentNode >> lookupIdentifier: aString [
 			((aString beginsWith: 'pre_') and: [
 				 definition isFunctionDefinition or: [
 					 definition isOperationDefinition ] ]) ifTrue: [
-				^ definition pre ].
+				^ definition preFunction ].
 			((aString beginsWith: 'post_') and: [
 				 definition isFunctionDefinition or: [
 					 definition isOperationDefinition ] ]) ifTrue: [
-				^ definition post ].
+				^ definition postFunction ].
 			^ definition ] ].
 	^ nil
 ]
