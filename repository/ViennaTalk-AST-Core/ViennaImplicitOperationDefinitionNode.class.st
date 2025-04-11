@@ -2,6 +2,8 @@ Class {
 	#name : 'ViennaImplicitOperationDefinitionNode',
 	#superclass : 'ViennaTopLevelDefinitionNode',
 	#type : 'variable',
+	#traits : 'TPrePostFunction',
+	#classTraits : 'TPrePostFunction classTrait',
 	#category : 'ViennaTalk-AST-Core',
 	#package : 'ViennaTalk-AST-Core'
 }
@@ -15,8 +17,8 @@ ViennaImplicitOperationDefinitionNode class >> access: aViennaAccessNode identif
 		  patternTypePairList: aViennaPatternTypePairListNode;
 		  identifierTypePairList: aViennaIdentifierTypePairListNode;
 		  externals: aViennaExternalsNode;
-		  pre: aViennaExpression1;
-		  post: aViennaExpression2;
+		  preFunction: aViennaExpression1;
+		  postFunction: aViennaExpression2;
 		  exceptions: aViennaExceptionsNode;
 		  yourself
 ]
@@ -283,16 +285,22 @@ ViennaImplicitOperationDefinitionNode >> maximalType [
 	self identifierTypePairList typecheck.
 	self externals ifNotNil: #typecheck.
 	self exceptions ifNotNil: #typecheck.
-	self pre ifNotNil: [ :pre |
+	self pre ifNotNil: #typecheck.
+	self post ifNotNil: #typecheck.
+	^ maximalType
+]
+
+{ #category : 'typechecking' }
+ViennaImplicitOperationDefinitionNode >> maximalTypeOfPrePostDefinition: aViennaPrePostDefinitionNode [
+
+	self preFunction == aViennaPrePostDefinitionNode ifTrue: [
 		| argtypes |
 		argtypes := maximalType argtypes.
 		(self module ifNil: [ self document ]) stateDefinition ifNotNil: [
 			:stateDef | argtypes := argtypes copyWith: stateDef typecheck ].
-		pre
-			setMaximalType: nil;
-			typecheck: ViennaType bool;
-			setMaximalType: (ViennaType product: argtypes) -> ViennaType bool ].
-	self post ifNotNil: [ :post |
+		aViennaPrePostDefinitionNode body typecheck: ViennaType bool.
+		^ (ViennaType product: argtypes) -> ViennaType bool ].
+	self postFunction == aViennaPrePostDefinitionNode ifTrue: [
 		| argtypes |
 		argtypes := maximalType argtypes.
 		maximalType returntype isUnitType ifFalse: [
@@ -301,11 +309,9 @@ ViennaImplicitOperationDefinitionNode >> maximalType [
 			:stateDef |
 			argtypes := argtypes copyWithAll:
 				            (Array new: 2 withAll: stateDef typecheck) ].
-		post
-			setMaximalType: nil;
-			typecheck: ViennaType bool;
-			setMaximalType: (ViennaType product: argtypes) -> ViennaType bool ].
-	^ maximalType
+		aViennaPrePostDefinitionNode body typecheck: ViennaType bool.
+		^ (ViennaType product: argtypes) -> ViennaType bool ].
+	^ nil
 ]
 
 { #category : 'accessing' }
@@ -339,27 +345,27 @@ ViennaImplicitOperationDefinitionNode >> patternTypePairList: aViennaPatternType
 ]
 
 { #category : 'accessing' }
-ViennaImplicitOperationDefinitionNode >> post [
+ViennaImplicitOperationDefinitionNode >> postFunction [
 
 	^ self at: 7
 ]
 
 { #category : 'accessing' }
-ViennaImplicitOperationDefinitionNode >> post: aViennaExpressionNode [
+ViennaImplicitOperationDefinitionNode >> postFunction: aViennaPrePostFunctionDefinitionNode [
 
-	self at: 7 put: aViennaExpressionNode
+	self at: 7 put: aViennaPrePostFunctionDefinitionNode
 ]
 
 { #category : 'accessing' }
-ViennaImplicitOperationDefinitionNode >> pre [
+ViennaImplicitOperationDefinitionNode >> preFunction [
 
 	^ self at: 6
 ]
 
 { #category : 'accessing' }
-ViennaImplicitOperationDefinitionNode >> pre: aViennaExpression [
+ViennaImplicitOperationDefinitionNode >> preFunction: aViennaPrePostFunctionDefinitionNode [
 
-	self at: 6 put: aViennaExpression
+	self at: 6 put: aViennaPrePostFunctionDefinitionNode
 ]
 
 { #category : 'accessing' }

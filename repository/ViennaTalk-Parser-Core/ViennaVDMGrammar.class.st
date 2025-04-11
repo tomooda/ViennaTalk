@@ -992,8 +992,8 @@ ViennaVDMGrammar >> explicitFunctionDefinition [
 	  , self functionType trim , (self decl: identifier) trim
 	  , self parametersList , (self operator: '==')
 	  , (expression / self isNotYetSpecified)
-	  , (self pre , expression ==> #second) optional
-	  , (self post , expression ==> #second) optional
+	  , (self pre , self prePostFunctionDefinition ==> #second) optional
+	  , (self post , self prePostFunctionDefinition ==> #second) optional
 	  , (self measure , expression ==> #second) optional ==> [ :array |
 	  array first = array fifth
 		  ifTrue: [
@@ -1014,22 +1014,26 @@ ViennaVDMGrammar >> explicitFunctionDefinition [
 
 { #category : 'parsers-definitions' }
 ViennaVDMGrammar >> explicitOperationDefinition [
-	^ (identifier trim , colon , self operationType
-		, (self decl: identifier) trim , self parameters
-		, (self operator: '==') , self operationBody
-		, ((self pre , expression) ==> #second) optional
-		, ((self post , expression) ==> #second) optional)
-		==> [ :array | 
-			array first = array fourth
-				ifTrue: [ {array first.
-					array third.
-					array fourth.
-					array fifth.
-					array seventh.
-					array eighth.
-					array ninth} ]
-				ifFalse: [ PP2Failure
-						message: 'operation name mismatch : ' , array first , ',' , array fourth ] ]
+
+	^ identifier trim , colon , self operationType
+	  , (self decl: identifier) trim , self parameters
+	  , (self operator: '==') , self operationBody
+	  , (self pre , self prePostFunctionDefinition ==> #second) optional
+	  , (self post , self prePostFunctionDefinition ==> #second) optional
+	  ==> [ :array |
+		  array first = array fourth
+			  ifTrue: [
+				  {
+					  array first.
+					  array third.
+					  array fourth.
+					  array fifth.
+					  array seventh.
+					  array eighth.
+					  array ninth } ]
+			  ifFalse: [
+				  PP2Failure message:
+					  'operation name mismatch : ' , array first , ',' , array fourth ] ]
 ]
 
 { #category : 'parsers-interfaces' }
@@ -1100,8 +1104,9 @@ ViennaVDMGrammar >> extendedExplicitFunctionDefinition [
 	^ identifier trim , self typeVariableList , self parameterTypes
 	  , self identifierTypePairList
 	  , ((self operator: '==') , (expression / self isNotYetSpecified)
-		   ==> #second) , (self pre , expression ==> #second) optional
-	  , (self post , expression ==> #second) optional
+		   ==> #second)
+	  , (self pre , self prePostFunctionDefinition ==> #second) optional
+	  , (self post , self prePostFunctionDefinition ==> #second) optional
 	  , (self measure , expression ==> #second) optional
 ]
 
@@ -1112,8 +1117,8 @@ ViennaVDMGrammar >> extendedExplicitOperationDefinition [
 	  , self identifierTypePairList optional
 	  , ((self operator: '==') , self operationBody ==> #second)
 	  , self externals optional
-	  , (self pre , expression ==> #second) optional
-	  , (self post , expression ==> #second) optional
+	  , (self pre , self prePostFunctionDefinition ==> #second) optional
+	  , (self post , self prePostFunctionDefinition ==> #second) optional
 	  , self exceptions optional
 ]
 
@@ -1408,15 +1413,20 @@ ViennaVDMGrammar >> impOp [
 
 { #category : 'parsers-definitions' }
 ViennaVDMGrammar >> implicitFunctionDefinition [
+
 	^ identifier trim , self typeVariableList , self parameterTypes
-		, self identifierTypePairList , ((self pre , expression) ==> #second) optional
-		, ((self post , expression) ==> #second)
+	  , self identifierTypePairList
+	  , (self pre , self prePostFunctionDefinition ==> #second) optional
+	  , (self post , self prePostFunctionDefinition ==> #second)
 ]
 
 { #category : 'parsers-definitions' }
 ViennaVDMGrammar >> implicitOperationBody [
-	^ self externals optional , ((self pre , expression) ==> #second) optional
-		, ((self post , expression) ==> #second) , self exceptions optional
+
+	^ self externals optional
+	  , (self pre , self prePostFunctionDefinition ==> #second) optional
+	  , (self post , self prePostFunctionDefinition ==> #second)
+	  , self exceptions optional
 ]
 
 { #category : 'parsers-definitions' }
@@ -2328,6 +2338,12 @@ ViennaVDMGrammar >> power: arg [
 { #category : 'parsers-keywords' }
 ViennaVDMGrammar >> pre [
 	^ self reserved: 'pre'
+]
+
+{ #category : 'parsers-definitions' }
+ViennaVDMGrammar >> prePostFunctionDefinition [
+
+	^ expression
 ]
 
 { #category : 'parsers-expressions-basics' }

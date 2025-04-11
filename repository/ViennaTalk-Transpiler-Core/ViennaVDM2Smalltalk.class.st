@@ -2630,6 +2630,12 @@ ViennaVDM2Smalltalk >> patternList: aViennaNode env: aDictionary [
 	^ self generateAll: aViennaNode env: aDictionary
 ]
 
+{ #category : 'code generation-definitions' }
+ViennaVDM2Smalltalk >> prePostFunctionDefinition: aViennaNode env: aDictionary [
+
+	^ self generate: aViennaNode body env: aDictionary
+]
+
 { #category : 'code generation-expressions' }
 ViennaVDM2Smalltalk >> preconditionExpression: aViennaNode env: aDictionary [
 	^ self notYetImplemented

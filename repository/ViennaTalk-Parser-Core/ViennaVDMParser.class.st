@@ -1685,6 +1685,15 @@ ViennaVDMParser >> power: arg [
 	^ ViennaFinitePowerSetNode expression: arg
 ]
 
+{ #category : 'parsers-definitions' }
+ViennaVDMParser >> prePostFunctionDefinition [
+
+	^ super prePostFunctionDefinition =>> [ :start :end :exp |
+	  (ViennaPrePostFunctionDefinitionNode expression: exp)
+		  start: start end: end;
+		  yourself ]
+]
+
 { #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> preconditionExpression [
 

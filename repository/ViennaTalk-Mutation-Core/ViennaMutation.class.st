@@ -24,10 +24,11 @@ ViennaMutation >> allMutationsTo: aViennaNode [
 ViennaMutation >> allMutationsTo: aViennaNode do: aBlock [
 
 	(Array streamContents: [ :stream |
-		 aViennaNode document copyFragment
+		 aViennaNode
 			 allDescendantsSuchThat: [ :node | self canMutate: node ]
-			 do: [ :node | stream nextPut: node ] ]) do: [ :node |
-		| document |
+			 do: [ :node | stream nextPut: node ] ]) do: [ :n |
+		| node document |
+		node := n copyWhole.
 		document := node document.
 		node parent replace: node with: (self mutate: node).
 		aBlock value: (document

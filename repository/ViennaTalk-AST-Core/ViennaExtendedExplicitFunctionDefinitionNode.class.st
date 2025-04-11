@@ -2,6 +2,8 @@ Class {
 	#name : 'ViennaExtendedExplicitFunctionDefinitionNode',
 	#superclass : 'ViennaTopLevelDefinitionNode',
 	#type : 'variable',
+	#traits : 'TPrePostFunction',
+	#classTraits : 'TPrePostFunction classTrait',
 	#category : 'ViennaTalk-AST-Core',
 	#package : 'ViennaTalk-AST-Core'
 }
@@ -16,8 +18,8 @@ ViennaExtendedExplicitFunctionDefinitionNode class >> access: aViennaAccessNode 
 		  patternTypePairList: aViennaPatternTypePairListNode;
 		  identifierTypePairList: aViennaIdentifierTypePairListNode;
 		  expression: aViennaExpressionNode1;
-		  pre: aViennaExpressionNode2;
-		  post: aViennaExpressionNode3;
+		  preFunction: aViennaExpressionNode2;
+		  postFunction: aViennaExpressionNode3;
 		  measure: aViennaExpressionNode4;
 		  yourself
 ]
@@ -266,22 +268,25 @@ ViennaExtendedExplicitFunctionDefinitionNode >> maximalType [
 	self patternTypePairList typecheck.
 	self identifierTypePairList typecheck.
 	self expression typecheck.
-	self pre ifNotNil: [ :pre |
-		pre
-			setMaximalType: nil;
-			typecheck: ViennaType bool;
-			setMaximalType:
-				self argumentType asMaximalViennaType -> ViennaType bool ].
-	self post ifNotNil: [ :post |
-		post
-			setMaximalType: nil;
-			typecheck: ViennaType bool;
-			setMaximalType: self argumentType asMaximalViennaType
-				* self returnType asMaximalViennaType -> ViennaType bool ].
+	self pre ifNotNil: #typecheck.
+	self post ifNotNil: #typecheck.
 	self measure ifNotNil: [ :measure |
 		measure typecheck:
 			self type argumentType typecheck -> ViennaType nat ].
 	^ maximalType
+]
+
+{ #category : 'typechecking' }
+ViennaExtendedExplicitFunctionDefinitionNode >> maximalTypeOfPrePostDefinition: aViennaPrePostDefinitionNode [
+
+	self preFunction == aViennaPrePostDefinitionNode ifTrue: [
+		aViennaPrePostDefinitionNode body typecheck: ViennaType bool.
+		^ self argumentType asMaximalViennaType -> ViennaType bool ].
+	self postFunction == aViennaPrePostDefinitionNode ifTrue: [
+		aViennaPrePostDefinitionNode body typecheck: ViennaType bool.
+		^ self argumentType asMaximalViennaType
+		  * self returnType asMaximalViennaType -> ViennaType bool ].
+	^ nil
 ]
 
 { #category : 'accessing' }
@@ -327,27 +332,27 @@ ViennaExtendedExplicitFunctionDefinitionNode >> patternTypePairList: aViennaPatt
 ]
 
 { #category : 'accessing' }
-ViennaExtendedExplicitFunctionDefinitionNode >> post [
+ViennaExtendedExplicitFunctionDefinitionNode >> postFunction [
 
 	^ self at: 8
 ]
 
 { #category : 'accessing' }
-ViennaExtendedExplicitFunctionDefinitionNode >> post: aViennaExpressionNode [
+ViennaExtendedExplicitFunctionDefinitionNode >> postFunction: aViennaPrePostFunctionDefinitionNode [
 
-	self at: 8 put: aViennaExpressionNode
+	self at: 8 put: aViennaPrePostFunctionDefinitionNode
 ]
 
 { #category : 'accessing' }
-ViennaExtendedExplicitFunctionDefinitionNode >> pre [
+ViennaExtendedExplicitFunctionDefinitionNode >> preFunction [
 
 	^ self at: 7
 ]
 
 { #category : 'accessing' }
-ViennaExtendedExplicitFunctionDefinitionNode >> pre: aViennaExpressionNode [
+ViennaExtendedExplicitFunctionDefinitionNode >> preFunction: aViennaPrePostFunctionDefinitionNode [
 
-	self at: 7 put: aViennaExpressionNode
+	self at: 7 put: aViennaPrePostFunctionDefinitionNode
 ]
 
 { #category : 'accessing' }

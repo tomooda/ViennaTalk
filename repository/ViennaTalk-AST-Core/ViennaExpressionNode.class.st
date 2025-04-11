@@ -18,6 +18,12 @@ ViennaExpressionNode >> asArrayOfConjuncts [
 	^ { self }
 ]
 
+{ #category : 'converting' }
+ViennaExpressionNode >> asViennaPrePostFunctionNode [
+
+	^ ViennaPrePostFunctionDefinitionNode expression: self
+]
+
 { #category : 'private' }
 ViennaExpressionNode >> boundIdentifiersDo: aBlock [
 
