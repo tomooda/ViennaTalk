@@ -31,6 +31,12 @@ ViennaExpressionNode >> boundIdentifiersDo: aBlock [
 ]
 
 { #category : 'testing' }
+ViennaExpressionNode >> isAssignee [
+
+	^ false
+]
+
+{ #category : 'testing' }
 ViennaExpressionNode >> isViennaExpressionNode [
 	^ true
 ]

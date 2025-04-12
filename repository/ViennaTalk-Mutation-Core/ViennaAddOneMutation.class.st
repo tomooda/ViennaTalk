@@ -9,7 +9,8 @@ Class {
 ViennaAddOneMutation >> canMutate: aViennaNode [
 
 	^ aViennaNode isViennaExpressionNode and: [
-		  aViennaNode typecheck isRealType ]
+		  aViennaNode isAssignee not and: [
+			  aViennaNode typecheck isRealType ] ]
 ]
 
 { #category : 'mutating' }
