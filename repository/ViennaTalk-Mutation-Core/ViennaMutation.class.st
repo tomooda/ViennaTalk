@@ -48,6 +48,12 @@ ViennaMutation >> mutate: aViennaNode [
 	^ self subclassResponsibility
 ]
 
+{ #category : 'accessing' }
+ViennaMutation >> name [
+
+	^ self subclassResponsibility
+]
+
 { #category : 'mutating' }
 ViennaMutation >> randomMutationFrom: aViennaNode [
 

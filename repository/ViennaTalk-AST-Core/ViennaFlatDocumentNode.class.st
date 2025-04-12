@@ -182,6 +182,15 @@ ViennaFlatDocumentNode >> stateDefinitionIfAbsentPut: errorBlock [
 ]
 
 { #category : 'enumerating' }
+ViennaFlatDocumentNode >> testOperationsDo: aBlock [
+
+	self toplevelDefinitionsDo: [ :toplevel |
+		toplevel isOperationDefinition and: [
+			(toplevel identifier beginsWith: 'test') ifTrue: [
+				aBlock value: toplevel ] ] ]
+]
+
+{ #category : 'enumerating' }
 ViennaFlatDocumentNode >> toplevelDefinitionsDo: aBlock [
 
 	self sectionsDo: [ :section |

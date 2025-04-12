@@ -20,3 +20,9 @@ ViennaNegateMutation >> mutate: aViennaNode [
 
 	^ ViennaNotNode expression: aViennaNode
 ]
+
+{ #category : 'accessing' }
+ViennaNegateMutation >> name [
+
+	^ 'negate'
+]

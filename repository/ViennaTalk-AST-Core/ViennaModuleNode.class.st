@@ -537,6 +537,13 @@ ViennaModuleNode >> isReferenced [
 ]
 
 { #category : 'testing' }
+ViennaModuleNode >> isTestModuleOrViennaUnit [
+
+	^ (self identifier endsWith: 'Test') or: [
+		  self identifier = 'UnitTesting' ]
+]
+
+{ #category : 'testing' }
 ViennaModuleNode >> isViennaModuleNode [
 
 	^ true

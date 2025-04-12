@@ -2111,6 +2111,7 @@ ViennaRefactoringBrowser >> initializePresenters [
 		              sortingBlock: #identifier ascending;
 		              whenSelectionChangedDo: [
 			              self
+				              updateTestButtons;
 				              updateCategoryList;
 				              updateEpiLogMatcherDropList;
 				              updateEpiLogSourceText ];
@@ -2473,6 +2474,7 @@ ViennaRefactoringBrowser >> modelChanged [
 				on: Error
 				do: [ :ex | animation init ].
 			epiLog state: animation state ].
+		self updateTestButtons.
 		(epiLog hasSpecificationChange and: [ runsAllTests ]) ifTrue: [
 			self runAllTests ].
 		UIManager default inform:
@@ -2527,7 +2529,8 @@ ViennaRefactoringBrowser >> mutatedSpecificationsDo: aBlock [
 				allMutationsTo: (self module
 						 ifNil: [ baseAst ]
 						 ifNotNil: [ :m | baseAst moduleNamed: m identifier ])
-				do: aBlock ] ]
+				do: [ :mutatedAst |
+					aBlock value: baseAst value: mutation value: mutatedAst ] ] ]
 ]
 
 { #category : 'updating' }
@@ -2839,32 +2842,18 @@ ViennaRefactoringBrowser >> runAllTests [
 { #category : 'operations-tests' }
 ViennaRefactoringBrowser >> runMutationTesting [
 
-	| greens reds |
-	greens := Set new.
-	reds := Set new.
-	self mutatedSpecificationsDo: [ :mutatedAst |
-		| mutatedAnimation |
-		mutatedAnimation := ViennaAnimation transpiler
-			                    specification: mutatedAst;
-			                    yourself.
-		[
-		mutatedAst testOperationsDo: [ :operation |
-			mutatedAnimation
-				runTestOperation: operation identifier
-				module: operation module identifier ].
-		mutatedAst namedTracesDo: [ :namedTrace |
-			mutatedAnimation
-				runTrace: namedTrace identifier
-				module: namedTrace module identifier
-				do: [  ]
-				onError: [ :ex | ex pass ] ].
-		greens add: mutatedAst ]
-			on: Exception
-			do: [ :ex |
-				reds add: mutatedAst.
-				ex return: nil ] ].
-	self halt.
-	^ greens asArray
+	| resultViewer |
+	resultViewer := ViennaMutationTestResultViewer new.
+	self mutatedSpecificationsDo: [ :baseAst :mutation :mutatedAst |
+		resultViewer
+			addMutation: mutation
+			baseSpecification: baseAst
+			mutatedSpecification: mutatedAst ].
+	resultViewer open.
+	[
+	resultViewer resultItems do: [ :resultItem |
+		resultItem run.
+		resultViewer refresh ] ] fork
 ]
 
 { #category : 'operations-tests' }
@@ -3556,6 +3545,15 @@ ViennaRefactoringBrowser >> updateStateTable [
 ViennaRefactoringBrowser >> updateStateTableItems [
 
 	stateTable items: animation state keys asSortedCollection
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> updateTestButtons [
+
+	runTestButton enabled: self specification hasTests.
+	runMutationTestingButton enabled: (self module
+			 ifNotNil: [ :m | m isTestModuleOrViennaUnit not ]
+			 ifNil: [ false ])
 ]
 
 { #category : 'updating' }

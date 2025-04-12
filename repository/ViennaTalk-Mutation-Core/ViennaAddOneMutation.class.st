@@ -20,3 +20,9 @@ ViennaAddOneMutation >> mutate: aViennaNode [
 		  expression: aViennaNode
 		  expression: (ViennaSymbolicLiteralNode string: '1')
 ]
+
+{ #category : 'accessing' }
+ViennaAddOneMutation >> name [
+
+	^ 'add-one'
+]
