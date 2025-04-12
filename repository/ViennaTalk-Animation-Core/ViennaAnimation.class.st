@@ -379,6 +379,10 @@ ViennaAnimation >> runTestOperation: operation module: module [
 			ifFalse: [ Error signal: msg ] ]
 ]
 
+{ #category : 'evaluating' }
+ViennaAnimation >> runTrace: aString module: anotherString do: aBlock onError: errorBlock [
+]
+
 { #category : 'accessing' }
 ViennaAnimation >> specification [
 	^ specification

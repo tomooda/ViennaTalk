@@ -151,6 +151,13 @@ ViennaFlatDocumentNode >> moduleOrFlatDocument [
 ]
 
 { #category : 'enumerating' }
+ViennaFlatDocumentNode >> namedTracesDo: aBlock [
+
+	self sectionsDo: [ :section |
+		section isViennaTracesDefinitionsNode ifTrue: [ section do: aBlock ] ]
+]
+
+{ #category : 'enumerating' }
 ViennaFlatDocumentNode >> sectionsDo: aBlock [
 
 	self do: aBlock

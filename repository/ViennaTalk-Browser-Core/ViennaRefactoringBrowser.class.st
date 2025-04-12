@@ -57,7 +57,8 @@ Class {
 		'gitMergeButton',
 		'gitFetchButton',
 		'gitDiffList',
-		'gitDiffText'
+		'gitDiffText',
+		'runMutationTestingButton'
 	],
 	#classVars : [
 		'GreenSignalIcon',
@@ -912,7 +913,7 @@ ViennaRefactoringBrowser >> createNewNarrativeDo: aBlock [
 			repeat ]
 ]
 
-{ #category : 'private-unit testing' }
+{ #category : 'operations-tests' }
 ViennaRefactoringBrowser >> debugTestResultItem: aViennaTestResultItem [
 
 	^ (ViennaTranspiledAnimation new
@@ -2795,46 +2796,28 @@ ViennaRefactoringBrowser >> runAllTests [
 	               testAnimation := ViennaAnimation transpiler
 		                                specification: ast;
 		                                yourself.
-	               (ast at: 1) isViennaModuleNode ifTrue: [
-		               ast do: [ :moduleNode |
-			               | moduleName |
-			               moduleName := moduleNode identifier.
-			               (moduleName endsWith: 'Test')
-				               ifTrue: [
-					               moduleNode sectionsDo: [ :section |
-						               section isViennaOperationDefinitionsNode ifTrue: [
-							               section toplevelDefinitionsDo: [
-								               :operationDefinition |
-								               operationDefinition
-									               isViennaExplicitOperationDefinitionNode
-									               ifTrue: [
-										               | operationName |
-										               operationName := operationDefinition
-											                                identifier.
-										               (operationName size > 4 and: [
-											                (operationName copyFrom: 1 to: 4) = 'test' ])
-											               ifTrue: [
-												               testResultTable items:
-													               (testResultTable items copyWith: (self
-															                 runTestModule: moduleName
-															                 operation: operationName
-															                 animation: testAnimation)) ] ] ] ] ] ]
-				               ifFalse: [
-					               moduleNode sectionsDo: [ :section |
-						               section isViennaTracesDefinitionsNode ifTrue: [
-							               section do: [ :namedTraceNode |
-								               | item |
-								               item := ViennaCombinatorialTestResultItem on:
-									                       namedTraceNode.
-								               testResultTable items:
-									               (testResultTable items copyWith: item).
-								               item run.
-								               testResultTable refresh ] ] ] ] ] ].
+	               ast testOperationsDo: [ :testOperation |
+		               | moduleName operationName |
+		               moduleName := testOperation module identifier.
+		               operationName := testOperation identifier.
+		               testResultTable items:
+			               (testResultTable items copyWith: (self
+					                 runTestModule: moduleName
+					                 operation: operationName
+					                 animation: testAnimation)) ].
+	               ast namedTracesDo: [ :namedTrace |
+		               | item |
+		               item := ViennaCombinatorialTestResultItem on:
+			                       namedTrace.
+		               testResultTable items:
+			               (testResultTable items copyWith: item).
+		               item run.
+		               testResultTable refresh ].
 	               testProcess := nil ] forkAt:
 		               Processor userBackgroundPriority
 ]
 
-{ #category : 'private-unit testing' }
+{ #category : 'operations-tests' }
 ViennaRefactoringBrowser >> runTestModule: module operation: operation animation: aViennaAnimation [
 
 	| result |
@@ -2889,11 +2872,6 @@ ViennaRefactoringBrowser >> runTestModule: module operation: operation animation
 		  module: module
 		  operation: operation
 		  message: 'OK'
-]
-
-{ #category : 'private-combinatorial testing' }
-ViennaRefactoringBrowser >> runTrace: aViennaNamedTraceNode interim: aBlock [
-	
 ]
 
 { #category : 'operations' }

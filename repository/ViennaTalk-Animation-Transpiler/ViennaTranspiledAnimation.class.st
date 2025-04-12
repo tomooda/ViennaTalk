@@ -393,6 +393,15 @@ ViennaTranspiledAnimation >> runTestOperation: aString module: anotherString [
 				ex resignalAs: (ViennaException expression: ex expression) ] ]
 ]
 
+{ #category : 'evaluating' }
+ViennaTranspiledAnimation >> runTrace: aString module: anotherString do: aBlock onError: errorBlock [
+
+	(object at: anotherString)
+		perform: (aString , ':onError:') asSymbol
+		with: aBlock
+		with: errorBlock
+]
+
 { #category : 'accessing' }
 ViennaTranspiledAnimation >> specification [
 	^ specification ifNil: [ '' ]

@@ -611,6 +611,13 @@ ViennaModuleNode >> moduleOrFlatDocument [
 	^ self
 ]
 
+{ #category : 'enumerating' }
+ViennaModuleNode >> namedTracesDo: aBlock [
+
+	self sectionsDo: [ :section |
+		section isViennaTracesDefinitionsNode ifTrue: [ section do: aBlock ] ]
+]
+
 { #category : 'accessing' }
 ViennaModuleNode >> sections [
 
@@ -645,6 +652,15 @@ ViennaModuleNode >> stateDefinitionIfAbsentPut: errorBlock [
 		  def := errorBlock value.
 		  self moduleBody add: def.
 		  def ]
+]
+
+{ #category : 'enumerating' }
+ViennaModuleNode >> testOperationsDo: aBlock [
+
+	self toplevelDefinitionsDo: [ :toplevel |
+		toplevel isOperationDefinition and: [
+			(toplevel identifier beginsWith: 'test') ifTrue: [
+				aBlock value: toplevel ] ] ]
 ]
 
 { #category : 'enumerating' }

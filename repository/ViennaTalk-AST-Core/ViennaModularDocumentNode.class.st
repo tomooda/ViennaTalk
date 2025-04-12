@@ -43,8 +43,27 @@ ViennaModularDocumentNode >> modules [
 	^ self asArray
 ]
 
-{ #category : 'accessing' }
+{ #category : 'enumerating' }
 ViennaModularDocumentNode >> modulesDo: aBlock [
 
 	self do: aBlock
+]
+
+{ #category : 'enumerating' }
+ViennaModularDocumentNode >> namedTracesDo: aBlock [
+
+	self modulesDo: [ :module | module namedTracesDo: aBlock ]
+]
+
+{ #category : 'enumerating' }
+ViennaModularDocumentNode >> testModulesDo: aBlock [
+
+	self modulesDo: [ :module |
+		(module identifier endsWith: 'Test') ifTrue: [ aBlock value: module ] ]
+]
+
+{ #category : 'enumerating' }
+ViennaModularDocumentNode >> testOperationsDo: aBlock [
+
+	self testModulesDo: [ :module | module testOperationsDo: aBlock ]
 ]
