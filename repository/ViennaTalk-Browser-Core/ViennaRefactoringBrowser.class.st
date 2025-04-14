@@ -3312,7 +3312,7 @@ ViennaRefactoringBrowser >> updateEpiLogMatcherDropList [
 				 epiLogs ifNotEmpty: [
 					 stream nextPut: (ViennaEpiLogMatcher heads: epiLogs first).
 					 stream nextPut: (ViennaEpiLogMatcher branches: epiLogs first) ].
-				 stream nextPut: (ViennaEpiLogMatcher
+				 "stream nextPut: (ViennaEpiLogMatcher
 						  executionClosureFrom: self epiLog
 						  enumerator: self epiLogEnumerator
 						  at: (epiLogList selectedItem ifNil: [ self epiLog ])).
@@ -3323,10 +3323,7 @@ ViennaRefactoringBrowser >> updateEpiLogMatcherDropList [
 				 stream nextPut: (ViennaEpiLogMatcher
 						  syntacticClosureFrom: self epiLog
 						  enumerator: self epiLogEnumerator
-						  at: (epiLogList selectedItem ifNil: [ self epiLog ])).
-
-
-
+						  at: (epiLogList selectedItem ifNil: [ self epiLog ]))."
 				 moduleList selectedItem ifNotNil: [ :module |
 					 stream nextPut: (ViennaEpiLogMatcher module: module identifier) ].
 				 definitionList selectedItem ifNotNil: [ :definition |
