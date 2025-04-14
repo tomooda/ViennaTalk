@@ -267,7 +267,9 @@ ViennaChangesMerger >> localDefinition [
 		  (localChanges
 			   detect: [ :change |
 			   change from == base or: [ change to == base ] ]
-			   ifNone: [ base ]) ifNotNil: [ :change | change to ] ]
+			   ifNone: [ nil ])
+			  ifNotNil: [ :change | change to ]
+			  ifNil: [ base ] ]
 ]
 
 { #category : 'accessing' }

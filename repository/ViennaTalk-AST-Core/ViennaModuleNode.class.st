@@ -432,6 +432,22 @@ ViennaModuleNode >> hasScope [
 	^ true
 ]
 
+{ #category : 'testing' }
+ViennaModuleNode >> hasTestTarget [
+
+	^ (self identifier endsWith: 'Test')
+		  ifTrue: [
+			  | targetModuleName |
+			  targetModuleName := self identifier
+				                      copyFrom: 1
+				                      to: self identifier size - 4.
+			  (self document moduleNamed: targetModuleName) notNil ]
+		  ifFalse: [
+			  | testModuleName |
+			  testModuleName := self identifier , 'Test'.
+			  (self document moduleNamed: testModuleName) notNil ]
+]
+
 { #category : 'accessing' }
 ViennaModuleNode >> identifier [
 
@@ -668,6 +684,24 @@ ViennaModuleNode >> testOperationsDo: aBlock [
 		toplevel isOperationDefinition and: [
 			(toplevel identifier beginsWith: 'test') ifTrue: [
 				aBlock value: toplevel ] ] ]
+]
+
+{ #category : 'accessing' }
+ViennaModuleNode >> testTargetModule [
+
+	^ (self identifier endsWith: 'Test')
+		  ifTrue: [
+			  | targetModuleName |
+			  targetModuleName := self identifier
+				                      copyFrom: 1
+				                      to: self identifier size - 4.
+			  self document moduleNamed: targetModuleName ]
+		  ifFalse: [
+			  | testModuleName |
+			  testModuleName := self identifier , 'Test'.
+			  (self document moduleNamed: testModuleName) notNil
+				  ifTrue: [ self ]
+				  ifFalse: [ nil ] ]
 ]
 
 { #category : 'enumerating' }

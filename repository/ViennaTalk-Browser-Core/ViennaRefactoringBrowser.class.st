@@ -2526,7 +2526,7 @@ ViennaRefactoringBrowser >> mutatedSpecificationsDo: aBlock [
 			ViennaAddOneMutation new.
 			ViennaNegateMutation new } do: [ :mutation |
 			mutation
-				allMutationsTo: (self module
+				allMutationsTo: (self module testTargetModule
 						 ifNil: [ baseAst ]
 						 ifNotNil: [ :m | baseAst moduleNamed: m identifier ])
 				do: [ :mutatedAst |
@@ -3548,9 +3548,8 @@ ViennaRefactoringBrowser >> updateStateTableItems [
 ViennaRefactoringBrowser >> updateTestButtons [
 
 	runTestButton enabled: self specification hasTests.
-	runMutationTestingButton enabled: (self module
-			 ifNotNil: [ :m | m isTestModuleOrViennaUnit not ]
-			 ifNil: [ false ])
+	runMutationTestingButton enabled:
+		(self module ifNotNil: [ :m | m hasTestTarget ] ifNil: [ false ])
 ]
 
 { #category : 'updating' }
