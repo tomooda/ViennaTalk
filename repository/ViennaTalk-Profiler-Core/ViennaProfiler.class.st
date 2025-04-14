@@ -109,9 +109,10 @@ ViennaProfiler >> installAct: aCollectionOfNameAndModuleObjectAndSelector rd: aC
 					triple second class.
 					triple third }.
 			class methods do: [ :method |
-				(#( state inv ) includes: method selector) not ifTrue: [
+				(method selector beginsWith: '_') ifTrue: [
 					method instanceVariableReadNodes do: [ :node |
-						node name = var ifTrue: [ node link: rdLink ] ] ] ] ] ].
+						node name = var ifTrue: [
+							node link: rdLink ] ] ] ] ] ].
 	anotherCollectionOfNameAndModuleObjectAndVariable do: [ :triple |
 		| class var |
 		class := triple second class.

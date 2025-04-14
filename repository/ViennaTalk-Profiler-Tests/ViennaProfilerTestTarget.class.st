@@ -9,6 +9,14 @@ Class {
 	#package : 'ViennaTalk-Profiler-Tests'
 }
 
+{ #category : 'operations' }
+ViennaProfilerTestTarget >> _op: dummy [
+
+	y := x + x.
+	self yourself.
+	^ self
+]
+
 { #category : 'initialization' }
 ViennaProfilerTestTarget >> initialize [
 
@@ -20,7 +28,7 @@ ViennaProfilerTestTarget >> initialize [
 { #category : 'operations' }
 ViennaProfilerTestTarget >> op [
 
-	y := x + x.
-	self yourself.
+	x + x.
+	self _op: nil.
 	^ self
 ]
