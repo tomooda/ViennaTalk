@@ -1159,6 +1159,12 @@ ViennaNode >> isViennaFieldSelectNode [
 ]
 
 { #category : 'testing' }
+ViennaNode >> isViennaFinExpressionNode [
+
+	^ false
+]
+
+{ #category : 'testing' }
 ViennaNode >> isViennaFinitePowerSetNode [
 
 	^ false

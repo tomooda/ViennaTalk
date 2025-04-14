@@ -8,28 +8,32 @@ Class {
 		'env',
 		'act',
 		'rd',
-		'wr'
+		'wr',
+		'finLink',
+		'fin'
 	],
 	#category : 'ViennaTalk-Profiler-Core',
 	#package : 'ViennaTalk-Profiler-Core'
 }
 
 { #category : 'profiling' }
-ViennaProfiler class >> act: aCollectionOfNameAndModuleObjectAndSelector rd: aCollectionOfNameAndModuleObjectAndVariable wr: anotherCollectionOfNameAndModuleObjectAndVariable do: aBlock [
+ViennaProfiler class >> act: aCollectionOfNameAndModuleObjectAndSelector fin: anotherCollectionOfNameAndModuleObjectAndSelector rd: aCollectionOfNameAndModuleObjectAndVariable wr: anotherCollectionOfNameAndModuleObjectAndVariable do: aBlock [
 
 	^ self new
 		  act: aCollectionOfNameAndModuleObjectAndSelector
+		  fin: anotherCollectionOfNameAndModuleObjectAndSelector
 		  rd: aCollectionOfNameAndModuleObjectAndVariable
 		  wr: anotherCollectionOfNameAndModuleObjectAndVariable
 		  do: aBlock
 ]
 
 { #category : 'profiling' }
-ViennaProfiler >> act: aCollectionOfNameAndModuleObjectAndSelector rd: aCollectionOfNameAndModuleObjectAndVariable wr: anotherCollectionOfNameAndModuleObjectAndVariable do: aBlock [
+ViennaProfiler >> act: aCollectionOfNameAndModuleObjectAndSelector fin: anotehrCollectionOfNameAndModuleObjectAndSelector rd: aCollectionOfNameAndModuleObjectAndVariable wr: anotherCollectionOfNameAndModuleObjectAndVariable do: aBlock [
 
 	[
 	self
 		installAct: aCollectionOfNameAndModuleObjectAndSelector
+		fin: anotehrCollectionOfNameAndModuleObjectAndSelector
 		rd: aCollectionOfNameAndModuleObjectAndVariable
 		wr: anotherCollectionOfNameAndModuleObjectAndVariable.
 	aBlock
@@ -42,6 +46,14 @@ ViennaProfiler >> act: aCollectionOfNameAndModuleObjectAndSelector rd: aCollecti
 ViennaProfiler >> countAct: context [
 
 	act add: {
+			context receiver class.
+			context selector }
+]
+
+{ #category : 'private' }
+ViennaProfiler >> countFin: context [
+
+	fin add: {
 			context receiver class.
 			context selector }
 ]
@@ -72,6 +84,12 @@ ViennaProfiler >> initialize [
 		           arguments: #( context );
 		           control: #before;
 		           yourself.
+	finLink := MetaLink new
+		           metaObject: self;
+		           selector: #countFin:;
+		           arguments: #( context );
+		           control: #after;
+		           yourself.
 	rdLink := MetaLink new
 		          metaObject: self;
 		          selector: #countRd:;
@@ -86,12 +104,13 @@ ViennaProfiler >> initialize [
 		          yourself.
 	env := Dictionary new.
 	act := Bag new.
+	fin := Bag new.
 	rd := Bag new.
 	wr := Bag new
 ]
 
 { #category : 'reflectivity' }
-ViennaProfiler >> installAct: aCollectionOfNameAndModuleObjectAndSelector rd: aCollectionOfNameAndModuleObjectAndVariable wr: anotherCollectionOfNameAndModuleObjectAndVariable [
+ViennaProfiler >> installAct: aCollectionOfNameAndModuleObjectAndSelector fin: anotherCollectionOfNameAndModuleObjectAndSelector rd: aCollectionOfNameAndModuleObjectAndVariable wr: anotherCollectionOfNameAndModuleObjectAndVariable [
 
 	aCollectionOfNameAndModuleObjectAndSelector do: [ :triple |
 		(triple second class lookupSelector: triple third) ifNotNil: [
@@ -100,6 +119,13 @@ ViennaProfiler >> installAct: aCollectionOfNameAndModuleObjectAndSelector rd: aC
 					triple second class.
 					triple third }.
 			method ast link: actLink ] ].
+	anotherCollectionOfNameAndModuleObjectAndSelector do: [ :triple |
+		(triple second class lookupSelector: triple third) ifNotNil: [
+			:method |
+			env at: triple first put: {
+					triple second class.
+					triple third }.
+			method ast link: finLink ] ].
 	aCollectionOfNameAndModuleObjectAndVariable do: [ :triple |
 		| class var |
 		class := triple second class.
@@ -111,8 +137,7 @@ ViennaProfiler >> installAct: aCollectionOfNameAndModuleObjectAndSelector rd: aC
 			class methods do: [ :method |
 				(method selector beginsWith: '_') ifTrue: [
 					method instanceVariableReadNodes do: [ :node |
-						node name = var ifTrue: [
-							node link: rdLink ] ] ] ] ] ].
+						node name = var ifTrue: [ node link: rdLink ] ] ] ] ] ].
 	anotherCollectionOfNameAndModuleObjectAndVariable do: [ :triple |
 		| class var |
 		class := triple second class.
@@ -130,6 +155,16 @@ ViennaProfiler >> installAct: aCollectionOfNameAndModuleObjectAndSelector rd: aC
 ViennaProfiler >> numAct: opName module: moduleName [
 
 	^ act occurrencesOf: (env
+			   at: {
+					   moduleName.
+					   opName }
+			   ifAbsent: [ ^ 0 ])
+]
+
+{ #category : 'accessing' }
+ViennaProfiler >> numFin: opName module: moduleName [
+
+	^ fin occurrencesOf: (env
 			   at: {
 					   moduleName.
 					   opName }
@@ -160,6 +195,7 @@ ViennaProfiler >> numWr: varName module: moduleName [
 ViennaProfiler >> uninstall [
 
 	actLink uninstall.
+	finLink uninstall.
 	rdLink uninstall.
 	wrLink uninstall
 ]

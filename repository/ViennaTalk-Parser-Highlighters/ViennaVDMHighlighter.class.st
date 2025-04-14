@@ -193,6 +193,12 @@ ViennaVDMHighlighter >> ext [
 ]
 
 { #category : 'parsers-keywords' }
+ViennaVDMHighlighter >> fin [
+
+	^ self keyword: super fin
+]
+
+{ #category : 'parsers-keywords' }
 ViennaVDMHighlighter >> for [
 	^ self keyword: super for
 ]

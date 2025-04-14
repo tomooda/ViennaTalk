@@ -672,6 +672,13 @@ ViennaVDMParser >> fieldSelect: record with: field [
 	^ ViennaFieldSelectNode expression: record field: field
 ]
 
+{ #category : 'parsers-expressions-basics' }
+ViennaVDMParser >> finExpression [
+
+	^ super finExpression
+	  ==> [ :namelist | ViennaFinExpressionNode with: namelist ]
+]
+
 { #category : 'parsers-definitions' }
 ViennaVDMParser >> flatDocument [
 

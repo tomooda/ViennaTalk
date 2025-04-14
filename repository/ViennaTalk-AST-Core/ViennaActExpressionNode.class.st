@@ -12,7 +12,7 @@ ViennaActExpressionNode >> expressionName [
 	^ '#act'
 ]
 
-{ #category : 'testing' }
+{ #category : 'as yet unclassified' }
 ViennaActExpressionNode >> isViennaActExpressionNode [
 
 	^ true

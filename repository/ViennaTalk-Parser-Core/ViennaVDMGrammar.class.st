@@ -1157,6 +1157,18 @@ ViennaVDMGrammar >> fieldSelect: record with: field [
 	field}
 ]
 
+{ #category : 'parsers-symbols' }
+ViennaVDMGrammar >> fin [
+
+	^ self reserved: 'fin'
+]
+
+{ #category : 'parsers-expressions-basics' }
+ViennaVDMGrammar >> finExpression [
+
+	^ self sharp , self fin , lparen , nameList , rparen ==> #fourth
+]
+
 { #category : 'parsers-definitions' }
 ViennaVDMGrammar >> flatDocument [
 	^ self definitionBlock plusA trim

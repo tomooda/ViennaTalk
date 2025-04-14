@@ -345,10 +345,11 @@ ViennaTranspiledAnimation >> postCopy [
 { #category : 'evaluating' }
 ViennaTranspiledAnimation >> runTestOperation: aString module: anotherString [
 
-	| moduleObject operationNode acts rds wrs |
+	| moduleObject operationNode acts fins rds wrs |
 	moduleObject := object at: anotherString.
 	operationNode := moduleObject class specificationAt: aString asSymbol.
 	acts := Set new.
+	fins := Set new.
 	rds := Set new.
 	wrs := Set new.
 	operationNode
@@ -358,6 +359,15 @@ ViennaTranspiledAnimation >> runTestOperation: aString module: anotherString [
 				node nameList do: [ :name |
 					name asGlobalName ifNotNil: [ :globalName |
 						acts add: {
+								{
+									globalName moduleIdentifier asSymbol.
+									globalName identifier asSymbol }.
+								(object at: globalName moduleIdentifier).
+								(globalName identifier , ':') asSymbol } ] ] ].
+			node isViennaFinExpressionNode ifTrue: [
+				node nameList do: [ :name |
+					name asGlobalName ifNotNil: [ :globalName |
+						fins add: {
 								{
 									globalName moduleIdentifier asSymbol.
 									globalName identifier asSymbol }.
@@ -384,6 +394,7 @@ ViennaTranspiledAnimation >> runTestOperation: aString module: anotherString [
 	self init.
 	ViennaProfiler
 		act: acts asArray
+		fin: fins asArray
 		rd: rds asArray
 		wr: wrs asArray
 		do: [
