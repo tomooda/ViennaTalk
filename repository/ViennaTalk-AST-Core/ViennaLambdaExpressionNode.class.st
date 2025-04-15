@@ -108,7 +108,7 @@ ViennaLambdaExpressionNode >> maximalType [
 ViennaLambdaExpressionNode >> maximalType: aViennaType [
 
 	self typeBindList typecheck.
-	self expression maximalType: aViennaType.
+	self expression maximalType: aViennaType returntype.
 	super maximalType: aViennaType
 ]
 
