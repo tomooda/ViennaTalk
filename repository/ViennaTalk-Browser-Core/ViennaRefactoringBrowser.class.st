@@ -1474,7 +1474,7 @@ ViennaRefactoringBrowser >> gitChanges [
 				   from: (self sourceFrom: repository branch commit fileSystem)
 						   asViennaDocumentAst
 				   to: ast) condenseChanges ] ].
-	^ ViennaNodeDiffSet fromNodeChanges: #(  )
+	^ {  }
 ]
 
 { #category : 'operations-git' }
