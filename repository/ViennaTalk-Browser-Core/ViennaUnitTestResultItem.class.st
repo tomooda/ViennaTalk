@@ -43,17 +43,6 @@ ViennaUnitTestResultItem class >> module: module operation: operation message: m
 		  yourself
 ]
 
-{ #category : 'instance creation' }
-ViennaUnitTestResultItem class >> module: module operation: operation message: message animation: aViennaAnimation [
-
-	^ self new
-		  module: module;
-		  operation: operation;
-		  message: message;
-		  animation: aViennaAnimation;
-		  yourself
-]
-
 { #category : 'accessing' }
 ViennaUnitTestResultItem >> animation [
 
