@@ -1,9 +1,6 @@
 Class {
 	#name : 'ViennaUnitTestErrorResultItem',
 	#superclass : 'ViennaUnitTestResultItem',
-	#instVars : [
-		'exception'
-	],
 	#category : 'ViennaTalk-Browser-Core-Testing',
 	#package : 'ViennaTalk-Browser-Core',
 	#tag : 'Testing'
@@ -36,30 +33,9 @@ ViennaUnitTestErrorResultItem >> buildContextMenu: aSpMenuPresenter for: aVienna
 						action: [ aViennaRefactoringBrowser debugTestResultItem: self ] ] ] ]
 ]
 
-{ #category : 'accessing' }
-ViennaUnitTestErrorResultItem >> color [
+{ #category : 'initialization' }
+ViennaUnitTestErrorResultItem >> initialize [
 
-	^ self class errorIconColor
-]
-
-{ #category : 'accessing' }
-ViennaUnitTestErrorResultItem >> exception [
-
-	^ exception
-]
-
-{ #category : 'accessing' }
-ViennaUnitTestErrorResultItem >> exception: anExpcetion [
-
-	exception := anExpcetion freeze
-]
-
-{ #category : 'testing' }
-ViennaUnitTestErrorResultItem >> isError [
-	^ true
-]
-
-{ #category : 'accessing' }
-ViennaUnitTestErrorResultItem >> sortingOrder [
-	^ 0
+	super initialize.
+	result := #error
 ]

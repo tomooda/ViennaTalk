@@ -1,9 +1,6 @@
 Class {
 	#name : 'ViennaUnitTestFailureResultItem',
 	#superclass : 'ViennaUnitTestResultItem',
-	#instVars : [
-		'exception'
-	],
 	#category : 'ViennaTalk-Browser-Core-Testing',
 	#package : 'ViennaTalk-Browser-Core',
 	#tag : 'Testing'
@@ -36,30 +33,9 @@ ViennaUnitTestFailureResultItem >> buildContextMenu: aSpMenuPresenter for: aVien
 						action: [ aViennaRefactoringBrowser debugTestResultItem: self ] ] ] ]
 ]
 
-{ #category : 'accessing' }
-ViennaUnitTestFailureResultItem >> color [
+{ #category : 'initialization' }
+ViennaUnitTestFailureResultItem >> initialize [
 
-	^ self class failureIconColor
-]
-
-{ #category : 'accessing' }
-ViennaUnitTestFailureResultItem >> exception [
-
-	^ exception
-]
-
-{ #category : 'accessing' }
-ViennaUnitTestFailureResultItem >> exception: anExpcetion [
-
-	exception := anExpcetion freeze
-]
-
-{ #category : 'testing' }
-ViennaUnitTestFailureResultItem >> isFailure [
-	^ true
-]
-
-{ #category : 'accessing' }
-ViennaUnitTestFailureResultItem >> sortingOrder [
-	^ 1
+	super initialize.
+	result := #failure
 ]

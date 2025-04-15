@@ -2813,26 +2813,24 @@ ViennaRefactoringBrowser >> runAllTests [
 	testProcess ifNotNil: [ testProcess terminate ].
 	testProcess := [
 	               | ast testAnimation |
-	               testResultTable items: #(  ).
 	               ast := self specification ifNil: [ ^ nil ].
 	               testAnimation := ViennaAnimation transpiler
 		                                specification: ast;
 		                                yourself.
-	               ast testOperationsDo: [ :testOperation |
-		               | moduleName operationName |
-		               moduleName := testOperation module identifier.
-		               operationName := testOperation identifier.
-		               testResultTable items:
-			               (testResultTable items copyWith: (self
-					                 runTestModule: moduleName
-					                 operation: operationName
-					                 animation: testAnimation)) ].
-	               ast namedTracesDo: [ :namedTrace |
-		               | item |
-		               item := ViennaCombinatorialTestResultItem on:
-			                       namedTrace.
-		               testResultTable items:
-			               (testResultTable items copyWith: item).
+	               testResultTable items:
+		               (Array streamContents: [ :stream |
+			                ast testOperationsDo: [ :testOperation |
+				                | moduleName operationName |
+				                moduleName := testOperation module identifier.
+				                operationName := testOperation identifier.
+				                stream nextPut: (ViennaUnitTestResultItem
+						                 module: moduleName
+						                 operation: operationName
+						                 animation: testAnimation) ].
+			                ast namedTracesDo: [ :namedTrace |
+				                stream nextPut:
+					                (ViennaCombinatorialTestResultItem on: namedTrace) ] ]).
+	               testResultTable items do: [ :item |
 		               item run.
 		               testResultTable refresh ].
 	               testProcess := nil ] forkAt:
@@ -2842,75 +2840,22 @@ ViennaRefactoringBrowser >> runAllTests [
 { #category : 'operations-tests' }
 ViennaRefactoringBrowser >> runMutationTesting [
 
-	| resultViewer |
-	resultViewer := ViennaMutationTestResultViewer new.
-	self mutatedSpecificationsDo: [ :baseAst :mutation :mutatedAst |
-		resultViewer
-			addMutation: mutation
-			baseSpecification: baseAst
-			mutatedSpecification: mutatedAst ].
-	resultViewer open.
-	[
-	resultViewer resultItems do: [ :resultItem |
-		resultItem run.
-		resultViewer refresh ] ] fork
-]
-
-{ #category : 'operations-tests' }
-ViennaRefactoringBrowser >> runTestModule: module operation: operation animation: aViennaAnimation [
-
-	| result |
-	aViennaAnimation state: Dictionary new.
-	[
-	[ aViennaAnimation runTestOperation: operation module: module ]
-		on: ViennaException
-		do: [ :exception |
-			exception expression in: [ :expr |
-				(expr isViennaComposite and: [
-					 expr constructorName = 'AssertFailure' ]) ifTrue: [
-					result := ViennaUnitTestFailureResultItem
-						          module: module
-						          operation: operation
-						          message: 'assertion failed: ' , (expr at: 1) asString.
-					aViennaAnimation isTranspiledAnimation ifTrue: [
-						result exception: exception ].
-					result inform.
-					^ result ].
-				(expr isViennaComposite and: [
-					 expr constructorName = 'AssertEqualsFailure' ]) ifTrue: [
-					result := ViennaUnitTestFailureResultItem
-						          module: module
-						          operation: operation
-						          message:
-							          'assertion failed: ' , (expr at: 3) asString
-							          , ' expected: ' , (expr at: 2) viennaString
-							          , ' actual: ' , (expr at: 1) viennaString.
-					aViennaAnimation isTranspiledAnimation ifTrue: [
-						result exception: exception ].
-					result inform.
-					^ result ].
-				result := ViennaUnitTestErrorResultItem
-					          module: module
-					          operation: operation
-					          message: expr viennaString.
-				aViennaAnimation isTranspiledAnimation ifTrue: [
-					result exception: exception ].
-				result inform.
-				^ result ] ] ]
-		on: Error
-		do: [ :exception |
-			result := ViennaUnitTestErrorResultItem
-				          module: module
-				          operation: operation
-				          message: exception printString.
-			aViennaAnimation isTranspiledAnimation ifTrue: [
-				result exception: exception ].
-			result inform.
-			^ result ].
-	^ ViennaUnitTestSuccessResultItem
-		  module: module
-		  operation: operation
-		  message: 'OK'
+	testProcess ifNotNil: [ testProcess terminate ].
+	testProcess := [
+	               | resultViewer |
+	               resultViewer := ViennaMutationTestResultViewer new.
+	               self mutatedSpecificationsDo: [
+		               :baseAst
+		               :mutation
+		               :mutatedAst |
+		               resultViewer
+			               addMutation: mutation
+			               baseSpecification: baseAst
+			               mutatedSpecification: mutatedAst ].
+	               resultViewer open.
+	               resultViewer resultItems do: [ :resultItem |
+		               resultItem run.
+		               resultViewer refresh ] ] fork
 ]
 
 { #category : 'operations' }

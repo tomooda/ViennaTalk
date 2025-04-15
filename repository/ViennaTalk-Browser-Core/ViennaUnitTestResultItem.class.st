@@ -3,7 +3,11 @@ Class {
 	#superclass : 'ViennaTestResultItem',
 	#instVars : [
 		'operation',
-		'message'
+		'message',
+		'result',
+		'isRunning',
+		'animation',
+		'exception'
 	],
 	#classInstVars : [
 		'icon'
@@ -20,6 +24,16 @@ ViennaUnitTestResultItem class >> icon [
 ]
 
 { #category : 'instance creation' }
+ViennaUnitTestResultItem class >> module: module operation: operation animation: aViennaAnimation [
+
+	^ self new
+		  module: module;
+		  operation: operation;
+		  animation: aViennaAnimation;
+		  yourself
+]
+
+{ #category : 'instance creation' }
 ViennaUnitTestResultItem class >> module: module operation: operation message: message [
 
 	^ self new
@@ -27,6 +41,47 @@ ViennaUnitTestResultItem class >> module: module operation: operation message: m
 		  operation: operation;
 		  message: message;
 		  yourself
+]
+
+{ #category : 'instance creation' }
+ViennaUnitTestResultItem class >> module: module operation: operation message: message animation: aViennaAnimation [
+
+	^ self new
+		  module: module;
+		  operation: operation;
+		  message: message;
+		  animation: aViennaAnimation;
+		  yourself
+]
+
+{ #category : 'accessing' }
+ViennaUnitTestResultItem >> animation [
+
+	^ animation
+]
+
+{ #category : 'accessing' }
+ViennaUnitTestResultItem >> animation: aViennaAnimation [
+
+	animation := aViennaAnimation
+]
+
+{ #category : 'testing' }
+ViennaUnitTestResultItem >> beError [
+
+	result := #error
+]
+
+{ #category : 'testing' }
+ViennaUnitTestResultItem >> beFailure [
+
+	result := #failure
+]
+
+{ #category : 'testing' }
+ViennaUnitTestResultItem >> beSuccess [
+
+	result := #success
 ]
 
 { #category : 'menus' }
@@ -44,36 +99,65 @@ ViennaUnitTestResultItem >> buildContextMenu: aSpMenuPresenter for: aViennaRefac
 { #category : 'accessing' }
 ViennaUnitTestResultItem >> color [
 
+	self isSuccess ifTrue: [ ^ self class successIconColor ].
+	self isFailure ifTrue: [ ^ self class failureIconColor ].
+	self isError ifTrue: [ ^ self class errorIconColor ].
 	^ self class offIconColor
 ]
 
 { #category : 'accessing' }
+ViennaUnitTestResultItem >> exception [
+
+	^ exception
+]
+
+{ #category : 'accessing' }
+ViennaUnitTestResultItem >> exception: anException [
+
+	exception := anException freeze
+]
+
+{ #category : 'accessing' }
 ViennaUnitTestResultItem >> icon [
-	^ self class icon
+
+	self isSuccess ifTrue: [ ^ self class successIcon ].
+	self isFailure ifTrue: [ ^ self class failureIcon ].
+	self isError ifTrue: [ ^ self class errorIcon ].
+	^ self class offIcon
 ]
 
 { #category : 'notification' }
 ViennaUnitTestResultItem >> inform [
 
-	GrowlMorph
-		openWithLabel: 'Failed: ' , module , '`' , operation
-		contents: (message lines first readStream next: 100)
-		color: (Color lightGray mixed: 0.5 with: self color)
+	(self isFailure or: [ self isError ]) ifTrue: [
+		^ GrowlMorph
+			  openWithLabel: 'Failed: ' , module , '`' , operation
+			  contents: (message lines first readStream next: 100)
+			  color: (Color lightGray mixed: 0.5 with: self color) ]
 ]
 
 { #category : 'testing' }
 ViennaUnitTestResultItem >> isError [
-	^ false
+
+	^ result = #error
 ]
 
 { #category : 'testing' }
 ViennaUnitTestResultItem >> isFailure [
-	^ false
+
+	^ result = #failure
+]
+
+{ #category : 'testing' }
+ViennaUnitTestResultItem >> isRunning [
+
+	^ isRunning = true
 ]
 
 { #category : 'testing' }
 ViennaUnitTestResultItem >> isSuccess [
-	^ false
+
+	^ result = #success
 ]
 
 { #category : 'accessing' }
@@ -112,8 +196,80 @@ ViennaUnitTestResultItem >> printOn: aStream [
 ]
 
 { #category : 'accessing' }
+ViennaUnitTestResultItem >> result [
+
+	^ result
+]
+
+{ #category : 'accessing' }
+ViennaUnitTestResultItem >> result: aSymbol [
+
+	result := aSymbol
+]
+
+{ #category : 'running' }
+ViennaUnitTestResultItem >> run [
+
+	self startRunning.
+	[
+	animation state: Dictionary new.
+	[
+	[ animation runTestOperation: operation module: module ]
+		on: ViennaException
+		do: [ :ex |
+			ex expression in: [ :expr |
+				(expr isViennaComposite and: [
+					 expr constructorName = 'AssertFailure' ]) ifTrue: [
+					self beFailure.
+					self message: 'assertion failed: ' , (expr at: 1) asString.
+					animation isTranspiledAnimation ifTrue: [ self exception: ex ].
+					self inform.
+					^ self ].
+				(expr isViennaComposite and: [
+					 expr constructorName = 'AssertEqualsFailure' ]) ifTrue: [
+					self beFailure.
+					self message:
+						'assertion failed: ' , (expr at: 3) asString , ' expected: '
+						, (expr at: 2) viennaString , ' actual: '
+						, (expr at: 1) viennaString.
+					animation isTranspiledAnimation ifTrue: [
+						self exception: exception ].
+					self inform.
+					^ self ].
+				self beError.
+				self message: expr viennaString.
+				animation isTranspiledAnimation ifTrue: [
+					self exception: exception ].
+				self inform.
+				^ self ] ] ]
+		on: Error
+		do: [ :ex |
+			self message: ex printString.
+			animation isTranspiledAnimation ifTrue: [ self exception: ex ].
+			self inform.
+			^ self ].
+	self beSuccess ] ensure: [ self stopRunning ]
+]
+
+{ #category : 'accessing' }
 ViennaUnitTestResultItem >> sortingOrder [
-	^ self subclassResponsibility
+
+	self isError ifTrue: [ ^ 0 ].
+	self isFailure ifTrue: [ ^ 1 ].
+	self isSuccess ifTrue: [ ^ 2 ].
+	^ 3
+]
+
+{ #category : 'running' }
+ViennaUnitTestResultItem >> startRunning [
+
+	isRunning := true
+]
+
+{ #category : 'running' }
+ViennaUnitTestResultItem >> stopRunning [
+
+	isRunning := false
 ]
 
 { #category : 'accessing' }

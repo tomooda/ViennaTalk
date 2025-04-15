@@ -12,18 +12,9 @@ ViennaUnitTestSuccessResultItem class >> icon [
 	^ self successIcon
 ]
 
-{ #category : 'accessing' }
-ViennaUnitTestSuccessResultItem >> color [
+{ #category : 'initialization' }
+ViennaUnitTestSuccessResultItem >> initialize [
 
-	^ self class successIconColor
-]
-
-{ #category : 'testing' }
-ViennaUnitTestSuccessResultItem >> isSuccess [
-	^ true
-]
-
-{ #category : 'accessing' }
-ViennaUnitTestSuccessResultItem >> sortingOrder [
-	^ 2
+	super initialize.
+	result := #success
 ]
