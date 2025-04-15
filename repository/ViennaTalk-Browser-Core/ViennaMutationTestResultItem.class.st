@@ -38,6 +38,27 @@ ViennaMutationTestResultItem >> baseSpecification: aViennaNode [
 	self flushDiffSet
 ]
 
+{ #category : 'private' }
+ViennaMutationTestResultItem >> basicRunSpecification: aViennaNode [
+
+	| animation |
+	animation := ViennaAnimation transpiler
+		             specification: aViennaNode;
+		             yourself.
+	aViennaNode testOperationsDo: [ :operation |
+		animation
+			runTestOperation: operation identifier
+			module: operation module identifier.
+		Processor yield ].
+	aViennaNode namedTracesDo: [ :namedTrace |
+		animation
+			runTrace: namedTrace identifier
+			module: namedTrace module identifier
+			do: [  ]
+			onError: [ :ex | ex pass ].
+		Processor yield ]
+]
+
 { #category : 'menus' }
 ViennaMutationTestResultItem >> buildContextMenu: aSpMenuPresenter for: aViennaRefactoringBrowser [
 
@@ -145,18 +166,7 @@ ViennaMutationTestResultItem >> run [
 		                    specification: mutatedSpecification;
 		                    yourself.
 	[
-	mutatedSpecification testOperationsDo: [ :operation |
-		mutatedAnimation
-			runTestOperation: operation identifier
-			module: operation module identifier.
-		Processor yield ].
-	mutatedSpecification namedTracesDo: [ :namedTrace |
-		mutatedAnimation
-			runTrace: namedTrace identifier
-			module: namedTrace module identifier
-			do: [  ]
-			onError: [ :ex | ex pass ].
-		Processor yield ].
+	self basicRunSpecification: mutatedSpecification.
 	isSurviving := true ]
 		on: Exception
 		do: [ :ex |
