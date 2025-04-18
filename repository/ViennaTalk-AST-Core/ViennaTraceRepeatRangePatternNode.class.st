@@ -26,10 +26,11 @@ ViennaTraceRepeatRangePatternNode class >> times: anInteger [
 { #category : 'pretty printing' }
 ViennaTraceRepeatRangePatternNode >> formatWith: aViennaAbstractFormatter [
 
-	^ aViennaAbstractFormatter empty ++ '{' ++ self times1 printString
-	  ++ (self times2
-			   ifNotNil: [ :n | ', ' ++ n printString ]
-			   ifNil: [ aViennaAbstractFormatter empty ]) ++ '}'
+	^ aViennaAbstractFormatter empty ++ '{' ++ (self size = 1
+		   ifTrue: [ self times1 printString ]
+		   ifFalse: [
+		   self times1 printString ++ ', ' ++ self times2 printString ])
+	  ++ '}'
 ]
 
 { #category : 'accessing' }

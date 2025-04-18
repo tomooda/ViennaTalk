@@ -21,13 +21,13 @@ ViennaCombinatorialTestResultItem class >> on: aViennaNamedTraceNode [
 		  yourself
 ]
 
-{ #category : 'adding' }
+{ #category : 'private' }
 ViennaCombinatorialTestResultItem >> addFailure: aViennaTraceException [
 
 	failures add: aViennaTraceException
 ]
 
-{ #category : 'adding' }
+{ #category : 'private' }
 ViennaCombinatorialTestResultItem >> addTest [
 
 	numTests := numTests + 1
