@@ -13,7 +13,7 @@ Class {
 	#tag : 'Testing'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'instance creation' }
 ViennaCombinatorialTestResultItem class >> on: aViennaNamedTraceNode [
 
 	^ self new
@@ -21,13 +21,13 @@ ViennaCombinatorialTestResultItem class >> on: aViennaNamedTraceNode [
 		  yourself
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'private' }
 ViennaCombinatorialTestResultItem >> addFailure: aViennaTraceException [
 
 	failures add: aViennaTraceException
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'private' }
 ViennaCombinatorialTestResultItem >> addTest [
 
 	numTests := numTests + 1
@@ -42,13 +42,13 @@ ViennaCombinatorialTestResultItem >> buildContextMenu: aSpMenuPresenter for: aVi
 			action: [ (ViennaCombinatorialTestResultViewer on: self) open ] ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ViennaCombinatorialTestResultItem >> exception [
 
 	^ failures ifNotEmpty: [ failures first exception ] ifEmpty: [ nil ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ViennaCombinatorialTestResultItem >> failures [
 
 	^ failures
@@ -68,7 +68,7 @@ ViennaCombinatorialTestResultItem >> icon [
 						  ifFalse: [ self successIcon ] ] ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'initialization' }
 ViennaCombinatorialTestResultItem >> initializeWith: aViennaNamedTraceNode [
 
 	super initialize.
@@ -103,19 +103,19 @@ ViennaCombinatorialTestResultItem >> message [
 					  stream nextPutAll: ' tests' ] ] ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ViennaCombinatorialTestResultItem >> numFailures [
 
 	^ failures size
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ViennaCombinatorialTestResultItem >> numSuccesses [
 
 	^ self numTests - self numFailures
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ViennaCombinatorialTestResultItem >> numTests [
 
 	^ numTests
@@ -161,19 +161,19 @@ ViennaCombinatorialTestResultItem >> testName [
 	^ self trace
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ViennaCombinatorialTestResultItem >> trace [
 
 	^ trace
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ViennaCombinatorialTestResultItem >> trace: aString [
 
 	trace := aString
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ViennaCombinatorialTestResultItem >> traceNode [
 
 	^ traceNode

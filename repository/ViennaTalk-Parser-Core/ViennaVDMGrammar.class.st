@@ -3031,7 +3031,10 @@ ViennaVDMGrammar >> traceRepeatPlusPattern [
 ViennaVDMGrammar >> traceRepeatRangePattern [
 
 	^ self lbrace , self digits , (self comma , self digits) optional
-	  , self rbrace
+	  , self rbrace ==> [ :array |
+	  {
+		  array second.
+		  array third } ]
 ]
 
 { #category : 'parsers-traces' }
