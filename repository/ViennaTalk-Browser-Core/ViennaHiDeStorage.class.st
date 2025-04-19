@@ -33,6 +33,23 @@ ViennaHiDeStorage class >> memory [
 ]
 
 { #category : 'operations' }
+ViennaHiDeStorage >> garbageCollect [
+
+	| agenda garbages |
+	agenda := OrderedCollection with: self chronicleTail.
+	narratives valuesDo: [ :narrative | agenda addAll: narrative asArray ].
+	garbages := chronicle values asSet.
+	[ agenda notEmpty ] whileTrue: [
+		| epiLog |
+		epiLog := agenda removeLast.
+		(garbages includes: epiLog) ifTrue: [
+			garbages remove: epiLog ifAbsent: [  ].
+			epiLog prev ifNotNil: [ :prev | agenda addLast: prev ].
+			epiLog pred ifNotNil: [ :pred | agenda addLast: pred ] ] ].
+	garbages do: [ :epiLog | self chronicleRemove: epiLog ]
+]
+
+{ #category : 'operations' }
 ViennaHiDeStorage >> loadChronicle [
 
 	super loadChronicle.

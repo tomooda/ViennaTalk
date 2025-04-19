@@ -375,6 +375,15 @@ ViennaEpiLog >> newRevertion: aViennaEpiLog [
 		  destination: aViennaEpiLog revertDestination
 ]
 
+{ #category : 'instance creation' }
+ViennaEpiLog >> newVanilla: aViennaModularDocumentNode state: aDictionary [
+
+	^ ViennaVanillaEpiLog
+		  after: self
+		  specification: aViennaModularDocumentNode
+		  state: aDictionary
+]
+
 { #category : 'accessing' }
 ViennaEpiLog >> pred [
 
