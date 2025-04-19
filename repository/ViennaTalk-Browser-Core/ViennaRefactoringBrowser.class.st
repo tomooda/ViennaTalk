@@ -58,7 +58,8 @@ Class {
 		'gitFetchButton',
 		'gitDiffList',
 		'gitDiffText',
-		'clearEpiLogCheckBox'
+		'clearEpiLogCheckBox',
+		'removeAllEpiLogButton'
 	],
 	#classVars : [
 		'GreenSignalIcon',
