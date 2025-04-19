@@ -57,7 +57,8 @@ Class {
 		'gitMergeButton',
 		'gitFetchButton',
 		'gitDiffList',
-		'gitDiffText'
+		'gitDiffText',
+		'clearEpiLogCheckBox'
 	],
 	#classVars : [
 		'GreenSignalIcon',
@@ -856,6 +857,12 @@ ViennaRefactoringBrowser >> clearSlice [
 	self sliceNodesChanged
 ]
 
+{ #category : 'testing' }
+ViennaRefactoringBrowser >> clearsEpiLogWhenGitCommit [
+
+	^ clearEpiLogCheckBox state
+]
+
 { #category : 'private' }
 ViennaRefactoringBrowser >> confirm: queryString label: titleString [
 
@@ -1175,9 +1182,17 @@ ViennaRefactoringBrowser >> epiLogLoading: aViennaModularDocumentNode [
 { #category : 'operations-epiLog' }
 ViennaRefactoringBrowser >> epiLogManualEdit: aViennaModularDocumentNode [
 
+	self
+		epiLogManualEdit: aViennaModularDocumentNode
+		comment: 'manual edit'
+]
+
+{ #category : 'operations-epiLog' }
+ViennaRefactoringBrowser >> epiLogManualEdit: aViennaModularDocumentNode comment: aString [
+
 	self epiLog:
 		((self epiLog newModification: aViennaModularDocumentNode)
-			 comment: 'manual edit';
+			 comment: aString;
 			 yourself)
 ]
 
@@ -1220,10 +1235,10 @@ ViennaRefactoringBrowser >> epiLogVanilla [
 { #category : 'operations-epiLog' }
 ViennaRefactoringBrowser >> epiLogVanilla: aViennaModularDocumentNode state: aDictionary [
 
-	self epiLog: (ViennaEpiLog vanilla
-			 specification: aViennaModularDocumentNode;
-			 state: aDictionary;
-			 yourself)
+	self epiLog:
+		(self epiLog
+			 newVanilla: aViennaModularDocumentNode
+			 state: aDictionary)
 ]
 
 { #category : 'layouts' }
@@ -1253,12 +1268,13 @@ ViennaRefactoringBrowser >> epilogPageLayout [
 				   expand: false;
 				   add: epiLogList;
 				   add: (SpBoxLayout newHorizontal
-						    add: updateEpiLogButton expand: false;
+						    add: updateEpiLogButton;
 						    add: revertEpiLogButton;
-						    add: editEpiLogTagButton expand: false;
-						    add: editEpiLogCommentButton expand: false;
-						    add: addToNarrativeButton expand: false;
-						    add: removeEpiLogButton expand: false;
+						    add: editEpiLogTagButton;
+						    add: editEpiLogCommentButton;
+						    add: addToNarrativeButton;
+						    add: removeEpiLogButton;
+						    add: removeAllEpiLogButton;
 						    yourself)
 				   expand: false;
 				   yourself);
@@ -1479,12 +1495,22 @@ ViennaRefactoringBrowser >> gitCommitAndPush [
 ViennaRefactoringBrowser >> gitCommitWithMessage: aString [
 
 	self icebergRepositoryDo: [ :repository |
-		repository
-			addFilesToIndex:
-				((repository location filesMatching: '*.vdmsl') collect: #basename);
-			commitIndexWithMessage: aString
-			andParents: { repository branch commit }.
-		self updateGitOutgoingCommitList ]
+		| newCommit |
+		repository addFilesToIndex:
+			((repository location filesMatching: '*.vdmsl') collect: #basename).
+		newCommit := repository
+			             commitIndexWithMessage: aString
+			             andParents: { repository branch commit }.
+		self updateGitOutgoingCommitList.
+		self clearsEpiLogWhenGitCommit
+			ifTrue: [
+				self epiLogVanilla: self specification state: animation state.
+				self epiLog hideStorage garbageCollect ]
+			ifFalse: [
+				self
+					epiLogManualEdit: self specification
+					comment: 'commit ' , newCommit id asString , String cr , aString ].
+		self updateEpiLogList ]
 ]
 
 { #category : 'operations-git' }
@@ -1566,6 +1592,7 @@ ViennaRefactoringBrowser >> gitPageLayout [
 				   add: (SpBoxLayout newHorizontal
 						    add: gitCommitButton expand: false;
 						    add: gitCommitMenuButton width: 20;
+						    add: clearEpiLogCheckBox expand: false;
 						    yourself)
 				   expand: false;
 				   yourself);
@@ -1857,6 +1884,11 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 		                      label: 'Delete';
 		                      action: [ self removeEpiLog ];
 		                      yourself.
+	removeAllEpiLogButton := self newButton
+		                         icon: (self iconNamed: #delete);
+		                         label: 'Forget all';
+		                         action: [ self removeAllEpiLog ];
+		                         yourself.
 	epiLogList whenBuiltDo: [ self userTimelineSelected ]
 ]
 
@@ -1967,7 +1999,11 @@ ViennaRefactoringBrowser >> initializeGitPagePresenters [
 		                  icon: (self iconNamed: #merge);
 		                  label: 'Merge';
 		                  action: [ self gitMerge ];
-		                  yourself
+		                  yourself.
+	clearEpiLogCheckBox := self newCheckBox
+		                       label: 'Clear EpiLog when commit';
+		                       state: false;
+		                       yourself
 ]
 
 { #category : 'initialization' }
@@ -2242,7 +2278,7 @@ ViennaRefactoringBrowser >> loadSource: aString [
 	| ast |
 	ast := ViennaVDMParser new document end parse: aString.
 	ast isPetit2Failure ifTrue: [
-		UIManager default alert: 'Failed to parse the source.'.
+		self alert: 'Failed to parse the source.'.
 		^ nil ].
 	ast isViennaDocumentNode ifFalse: [ ^ nil ].
 	ast isViennaFlatDocumentNode ifTrue: [
@@ -2640,6 +2676,15 @@ ViennaRefactoringBrowser >> reload [
 				   confirm: 'Do you want to open a File syntax debugger?'
 				   label: 'ViennaTalk') ifTrue: [
 				  ViennaFileSyntaxDebugger openOn: ref ] ] ]
+]
+
+{ #category : 'operations-epiLog' }
+ViennaRefactoringBrowser >> removeAllEpiLog [
+
+	(self confirm: 'Remove all from EpiLog?' label: 'EpiLog') ifTrue: [
+		self epiLogVanilla: self specification state: animation state.
+		self epiLog hideStorage garbageCollect.
+		self updateEpiLogList ]
 ]
 
 { #category : 'operations-epiLog' }

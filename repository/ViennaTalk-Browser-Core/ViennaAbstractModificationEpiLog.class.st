@@ -129,7 +129,7 @@ ViennaAbstractModificationEpiLog >> isAbstractModificationEpiLog [
 { #category : 'accessing' }
 ViennaAbstractModificationEpiLog >> specification [
 
-	^ specification
+	^ specification ifNil: [ prev specification ]
 ]
 
 { #category : 'accessing' }
