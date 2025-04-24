@@ -10,7 +10,9 @@ ViennaAddOneMutation >> canMutate: aViennaNode [
 
 	^ aViennaNode isViennaExpressionNode and: [
 		  aViennaNode isAssignee not and: [
-			  aViennaNode typecheck isRealType ] ]
+			  aViennaNode typecheck isRealType and: [
+				  (aViennaNode hasParentSuchThat: [ :node |
+					   node isViennaNamedTraceNode ]) not ] ] ]
 ]
 
 { #category : 'mutating' }

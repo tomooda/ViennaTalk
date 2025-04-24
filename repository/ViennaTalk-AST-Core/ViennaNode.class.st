@@ -458,6 +458,13 @@ ViennaNode >> hasGlobalReferenceToModule: moduleIdentifier identifier: identifie
 ]
 
 { #category : 'testing' }
+ViennaNode >> hasParentSuchThat: aBlock [
+
+	self parentsDo: [ :node | (aBlock value: node) ifTrue: [ ^ true ] ].
+	^ false
+]
+
+{ #category : 'testing' }
 ViennaNode >> hasScope [
 
 	^ false
@@ -1927,6 +1934,12 @@ ViennaNode >> isViennaPatternNode [
 
 { #category : 'testing' }
 ViennaNode >> isViennaPatternTypePairListNode [
+
+	^ false
+]
+
+{ #category : 'testing' }
+ViennaNode >> isViennaPrePostFunctionDefinitionNode [
 
 	^ false
 ]

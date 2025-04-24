@@ -140,7 +140,7 @@ ViennaVDM2SmalltalkClass >> createModuleClass: aString withInstVars: anArrayOfSt
 									     ifTrue: [ ViennaStateSlot ]
 									     ifFalse: [ InstanceVariableSlot ]) named:
 										    instVarName asSymbol ]);
-				   category: 'Auto Generated from VDM' ])
+				   package: 'Auto Generated from VDM' ])
 		  viennaEnv: aDictionary;
 		  specification: source;
 		  yourself

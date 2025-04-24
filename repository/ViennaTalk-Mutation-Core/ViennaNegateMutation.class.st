@@ -12,7 +12,10 @@ ViennaNegateMutation >> canMutate: aViennaNode [
 		  aViennaNode typecheck = ViennaType bool and: [
 			  aViennaNode isAssignee not and: [
 				  aViennaNode parent isNil or: [
-					  aViennaNode parent isViennaInvariantInitialFunctionNode not ] ] ] ]
+					  aViennaNode parent isViennaInvariantInitialFunctionNode not
+						  and: [
+							  (aViennaNode hasParentSuchThat: [ :node |
+								   node isViennaNamedTraceNode ]) not ] ] ] ] ]
 ]
 
 { #category : 'mutating' }

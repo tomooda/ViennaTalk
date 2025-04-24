@@ -427,6 +427,14 @@ ViennaModuleNode >> freeIdentifiersExcept: aSet do: aBlock [
 ]
 
 { #category : 'testing' }
+ViennaModuleNode >> hasNamedTrace [
+
+	self toplevelDefinitionsDo: [ :node |
+		node isViennaNamedTraceNode ifTrue: [ ^ true ] ].
+	^ false
+]
+
+{ #category : 'testing' }
 ViennaModuleNode >> hasScope [
 
 	^ true
@@ -445,7 +453,8 @@ ViennaModuleNode >> hasTestTarget [
 		  ifFalse: [
 			  | testModuleName |
 			  testModuleName := self identifier , 'Test'.
-			  (self document moduleNamed: testModuleName) notNil ]
+			  (self document moduleNamed: testModuleName) notNil or: [
+				  self hasNamedTrace ] ]
 ]
 
 { #category : 'accessing' }
@@ -699,7 +708,8 @@ ViennaModuleNode >> testTargetModule [
 		  ifFalse: [
 			  | testModuleName |
 			  testModuleName := self identifier , 'Test'.
-			  (self document moduleNamed: testModuleName) notNil
+			  ((self document moduleNamed: testModuleName) notNil or: [
+				   self hasNamedTrace ])
 				  ifTrue: [ self ]
 				  ifFalse: [ nil ] ]
 ]
