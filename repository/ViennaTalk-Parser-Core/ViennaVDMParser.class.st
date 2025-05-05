@@ -2085,6 +2085,15 @@ ViennaVDMParser >> symbolicLiteral [
 		  yourself ]
 ]
 
+{ #category : 'parsers-expressions-basics' }
+ViennaVDMParser >> timeExpression [
+
+	^ super timeExpression =>> [ :start :end :exp |
+	  ViennaTimeExpressionNode empty
+		  start: start end: end;
+		  yourself ]
+]
+
 { #category : 'parsers-statements' }
 ViennaVDMParser >> tixeStatement [
 

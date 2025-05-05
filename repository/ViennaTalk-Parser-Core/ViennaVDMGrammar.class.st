@@ -301,8 +301,8 @@ ViennaVDMGrammar >> atomicExpression [
 	  / self tokenConstructor / self recordModifier
 	  / self lambdaExpression / self resultExpression
 	  / self generalIsExpr / self undefinedExpression
-	  / self preconditionExpression / self historyExpression
-	  / self oldName / name / symbolicLiteral
+	  / self timeExpression / self preconditionExpression
+	  / self historyExpression / self oldName / name / symbolicLiteral
 	  / (lparen , expression , rparen ==> [ :triple | triple second ])
 ]
 
@@ -2871,6 +2871,11 @@ ViennaVDMGrammar >> symbolicLiteral [
 { #category : 'parsers-keywords' }
 ViennaVDMGrammar >> then [
 	^ self reserved: 'then'
+]
+
+{ #category : 'parsers-keywords' }
+ViennaVDMGrammar >> timeExpression [
+	^ self reserved: 'time'
 ]
 
 { #category : 'parsers-keywords' }

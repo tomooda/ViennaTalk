@@ -2245,6 +2245,12 @@ ViennaNode >> isViennaSymbolicLiteralNode: aString [
 ]
 
 { #category : 'testing' }
+ViennaNode >> isViennaTimeExpressionNode [
+
+	^ false
+]
+
+{ #category : 'testing' }
 ViennaNode >> isViennaTixeStatementNode [
 
 	^ false

@@ -3306,7 +3306,7 @@ ViennaVDM2Smalltalk >> threadidExpression: aViennaNode env: aDictionary [
 
 { #category : 'code generation-expressions' }
 ViennaVDM2Smalltalk >> timeExpression: aViennaNode env: aDictionary [
-	^ self notYetImplemented
+	^ '(Time primUTCMicrosecondsClock * 1000)'
 ]
 
 { #category : 'code generation-statements' }

@@ -451,6 +451,12 @@ ViennaVDMHighlighter >> then [
 	^ self keyword: super then
 ]
 
+{ #category : 'parsers-expressions' }
+ViennaVDMHighlighter >> timeExpression [
+
+	^ self keyword: super timeExpression
+]
+
 { #category : 'parsers-keywords' }
 ViennaVDMHighlighter >> tixe [
 	^ self keyword: super tixe
