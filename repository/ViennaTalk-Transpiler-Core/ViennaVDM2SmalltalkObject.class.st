@@ -53,6 +53,9 @@ ViennaVDM2SmalltalkObject >> flatDocument: aViennaNode env: aDictionary [
 ViennaVDM2SmalltalkObject >> modularDocument: aViennaNode env: aDictionary [
 
 	| objects |
+	aViennaNode do: [ :node |
+		(Smalltalk globals includesKey: node identifier asSymbol) ifTrue: [
+			aDictionary at: node identifier put: '_' , node identifier ] ].
 	aViennaNode do: [ :node | self generate: node env: aDictionary ].
 	objects := classes collect: [ :moduleClass | moduleClass new ].
 	aViennaNode do: [ :moduleNode |

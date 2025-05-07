@@ -1038,7 +1038,7 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 				                     importDefinitionNode first ] ].
 	importClassNames := importModuleNames collect: [ :importModuleName |
 		                    env
-			                    at: importModuleName first
+			                    at: importModuleName
 			                    ifAbsent: [ importModuleName ] ].
 	stateVars := #(  ).
 	typeNames := Array new writeStream.
@@ -1071,9 +1071,9 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 		do: [ :importModuleName :importClassName |
 			self
 				defineMethod:
-					importModuleName , ':' , 'a' , importClassName capitalized
-					, String cr , importModuleName , ' := ' , 'a'
-					, importClassName capitalized
+					importModuleName , ':' , 'a' , importModuleName capitalized
+					, String cr , importClassName , ' := ' , 'a'
+					, importModuleName capitalized
 				in: newClass
 				protocol: 'imports'
 				node:
