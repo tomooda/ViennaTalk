@@ -4,6 +4,7 @@ Class {
 	#instVars : [
 		'trace',
 		'failures',
+		'numFailures',
 		'numTests',
 		'isRunning',
 		'traceNode'
@@ -24,7 +25,9 @@ ViennaCombinatorialTestResultItem class >> on: aViennaNamedTraceNode [
 { #category : 'private' }
 ViennaCombinatorialTestResultItem >> addFailure: aViennaTraceException [
 
-	failures add: aViennaTraceException
+	failures size < self maxFailures ifTrue: [
+		failures add: aViennaTraceException ].
+	numFailures := numFailures + 1
 ]
 
 { #category : 'private' }
@@ -79,6 +82,7 @@ ViennaCombinatorialTestResultItem >> initializeWith: aViennaNamedTraceNode [
 	traceNode := aViennaNamedTraceNode.
 	numTests := 0.
 	failures := OrderedCollection new.
+	numFailures := 0.
 	isRunning := false
 ]
 
@@ -86,6 +90,12 @@ ViennaCombinatorialTestResultItem >> initializeWith: aViennaNamedTraceNode [
 ViennaCombinatorialTestResultItem >> isRunning [
 
 	^ isRunning
+]
+
+{ #category : 'accessing' }
+ViennaCombinatorialTestResultItem >> maxFailures [
+
+	^ 10
 ]
 
 { #category : 'accessing' }
@@ -106,7 +116,7 @@ ViennaCombinatorialTestResultItem >> message [
 { #category : 'accessing' }
 ViennaCombinatorialTestResultItem >> numFailures [
 
-	^ failures size
+	^ numFailures
 ]
 
 { #category : 'accessing' }
