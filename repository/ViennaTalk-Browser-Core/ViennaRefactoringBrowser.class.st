@@ -2877,6 +2877,7 @@ ViennaRefactoringBrowser >> save [
 	fileReference ifNotNil: [ :ref |
 		ref isDirectory
 			ifTrue: [
+				(ref filesMatching: '*.vdmsl') do: [ :file | file ensureDeleteAll ].
 				self specification modulesDo: [ :moduleNode |
 					| file |
 					file := ref / moduleNode identifier withExtension: 'vdmsl'.
@@ -2912,6 +2913,7 @@ ViennaRefactoringBrowser >> saveAsDirectory [
 	(UIManager default
 		 chooseDirectory: 'Directory to save'
 		 from: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :dir |
+		(dir filesMatching: '*.vdmsl') do: [ :file | file ensureDeleteAll ].
 		self specification modulesDo: [ :moduleNode |
 			| file |
 			file := dir / moduleNode identifier withExtension: 'vdmsl'.
