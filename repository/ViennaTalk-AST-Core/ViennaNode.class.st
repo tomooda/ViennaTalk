@@ -383,6 +383,12 @@ ViennaNode >> end [
 	^ end
 ]
 
+{ #category : 'accessing' }
+ViennaNode >> ensureModuleNamed: aString [
+
+	^ self document ensureModuleNamed: aString
+]
+
 { #category : 'accessing-definitions' }
 ViennaNode >> findResolverForIdentifier: aString [
 

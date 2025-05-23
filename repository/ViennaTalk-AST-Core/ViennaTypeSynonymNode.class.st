@@ -45,6 +45,12 @@ ViennaTypeSynonymNode >> access: aViennaAccessNode [
 	self at: 1 put: aViennaAccessNode
 ]
 
+{ #category : 'accessing' }
+ViennaTypeSynonymNode >> addToModule: aViennaModuleNode [
+
+	^ aViennaModuleNode module addTypeDefinition: self copyFragment
+]
+
 { #category : 'accessing-definitions' }
 ViennaTypeSynonymNode >> asAccessDefinition [
 

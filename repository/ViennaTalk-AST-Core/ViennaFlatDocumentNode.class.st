@@ -99,6 +99,12 @@ ViennaFlatDocumentNode >> definitionOfLocalName: aString [
 	^ nil
 ]
 
+{ #category : 'accessing' }
+ViennaFlatDocumentNode >> ensureModuleNamed: aString [
+
+	
+]
+
 { #category : 'accessing-definitions' }
 ViennaFlatDocumentNode >> findResolverForIdentifier: aString [
 

@@ -12,6 +12,13 @@ ViennaModularDocumentNode >> deepFindResolverForIdentifier: aString [
 	^ nil
 ]
 
+{ #category : 'accessing' }
+ViennaModularDocumentNode >> ensureModuleNamed: aString [
+
+	^ (self moduleNamed: aString) ifNil: [
+		  self add: (ViennaModuleNode identifier: aString) ]
+]
+
 { #category : 'accessing-definitions' }
 ViennaModularDocumentNode >> findResolverForIdentifier: aString [
 

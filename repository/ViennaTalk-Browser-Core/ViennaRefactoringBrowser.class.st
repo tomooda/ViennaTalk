@@ -28,6 +28,8 @@ Class {
 		'epiLogList',
 		'epiLogDiffList',
 		'epiLogDiffText',
+		'epiLogCherrypickList',
+		'epiLogCherrypickText',
 		'epiLogSourceText',
 		'epiLogNotebook',
 		'sliceNodes',
@@ -60,7 +62,8 @@ Class {
 		'gitDiffText',
 		'runMutationTestingButton',
 		'removeAllEpiLogButton',
-		'clearEpiLogCheckBox'
+		'clearEpiLogCheckBox',
+		'epiLogCherrypickButton'
 	],
 	#classVars : [
 		'GreenSignalIcon',
@@ -863,6 +866,24 @@ ViennaRefactoringBrowser >> categoryListContextMenu [
 	^ menu
 ]
 
+{ #category : 'operations-epiLog' }
+ViennaRefactoringBrowser >> cherrypick [
+
+	epiLogCherrypickList selectedItems ifNotEmpty: [ :diffs |
+		| newDocument map |
+		newDocument := self specification copyWhole:
+			               (map := IdentityDictionary new).
+		diffs do: [ :diff |
+			(diff class
+				 from: (map at: diff from ifAbsent: [ diff from ])
+				 to: diff to) applyTo: newDocument ].
+		self
+			epiLogManualEdit: newDocument
+			comment:
+			'Cherrypick: ' , (', ' join: (diffs collect: #printString)).
+		self updateModuleList ]
+]
+
 { #category : 'private' }
 ViennaRefactoringBrowser >> clearDirty [
 
@@ -1113,6 +1134,17 @@ ViennaRefactoringBrowser >> epiLogChanges [
 ]
 
 { #category : 'accessing' }
+ViennaRefactoringBrowser >> epiLogCherrypickChanges [
+
+	^ epiLogList selectedItem
+		  ifNotNil: [ :epiLog |
+			  (ViennaNodeDiffSet
+				   from: self specification
+				   to: epiLog specification) condenseChanges ]
+		  ifNil: [ Array new ]
+]
+
+{ #category : 'accessing' }
 ViennaRefactoringBrowser >> epiLogEnumerator [
 
 	showsUserTimelineButton state = true ifTrue: [
@@ -1178,6 +1210,7 @@ ViennaRefactoringBrowser >> epiLogListSelectionChanged [
 	self
 		updateEpiLogSourceText;
 		updateEpiLogDiffList;
+		updateEpiLogCherrypickList;
 		updateEpiLogMatcherDropList;
 		updateEpiLogButtons
 ]
@@ -1928,6 +1961,23 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 		                  yourself.
 	epiLogDiffText := self newText.
 	epiLogSourceText := self newVDMSource.
+	epiLogCherrypickList := self newTable
+		                        hideColumnHeaders;
+		                        beMultipleSelection;
+		                        beResizable;
+		                        addColumn:
+			                        (SpStringTableColumn evaluated:
+					                         #printSummary);
+		                        addColumn:
+			                        (SpStringTableColumn evaluated: #printNames);
+		                        whenSelectionChangedDo: [
+			                        self updateEpiLogCherrypickText ];
+		                        yourself.
+	epiLogCherrypickText := self newText.
+	epiLogCherrypickButton := self newButton
+		                          label: 'Cherrypick';
+		                          action: [ self cherrypick ];
+		                          yourself.
 	epiLogNotebook := self newNotebook
 		                  addPageTitle: 'Diff' provider: [
 			                  SpPresenter new
@@ -1938,6 +1988,16 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 				                  yourself ];
 		                  addPageTitle: 'Version Source'
 		                  provider: [ epiLogSourceText ];
+		                  addPageTitle: 'Cherrypick' provider: [
+		                  SpPresenter new
+			                  layout: (SpBoxLayout newVertical
+					                   add: (SpPanedLayout newVertical
+							                    positionOfSlider: 0.3;
+							                    add: epiLogCherrypickList;
+							                    add: epiLogCherrypickText);
+					                   add: epiLogCherrypickButton expand: false;
+					                   yourself);
+			                  yourself ];
 		                  yourself.
 	updateEpiLogButton := self newButton
 		                      icon: (self iconNamed: #refreshCircling);
@@ -3241,6 +3301,28 @@ ViennaRefactoringBrowser >> updateEpiLogButtons [
 ]
 
 { #category : 'updating' }
+ViennaRefactoringBrowser >> updateEpiLogCherrypickList [
+
+	epiLogCherrypickList items: self epiLogCherrypickChanges.
+	self updateEpiLogCherrypickText
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> updateEpiLogCherrypickText [
+
+	epiLogCherrypickList selectedItem
+		ifNotNil: [ :diff |
+			| text |
+			text := diff sourceDiffText.
+			epiLogCherrypickText text: text string asString asText.
+			epiLogCherrypickText withAdapterDo: [ :a |
+				a widgetDo: [ :w |
+					w text runs: text runs.
+					w textArea compose ] ] ]
+		ifNil: [ epiLogCherrypickText text: '' ]
+]
+
+{ #category : 'updating' }
 ViennaRefactoringBrowser >> updateEpiLogDiffList [
 
 	epiLogDiffList items: self epiLogChanges.
@@ -3282,8 +3364,10 @@ ViennaRefactoringBrowser >> updateEpiLogList [
 			(items includes: selection)
 				ifTrue: [ epiLogList selectItem: selection ]
 				ifFalse: [ epiLogList unselectAll ] ].
-		self updateEpiLogButtons.
-		self updateEpiLogDiffList ]
+		self
+			updateEpiLogButtons;
+			updateEpiLogDiffList;
+			updateEpiLogCherrypickList ]
 ]
 
 { #category : 'updating' }

@@ -39,6 +39,12 @@ ViennaValueDefinitionNode >> access: aViennaAccessNode [
 	self at: 1 put: aViennaAccessNode
 ]
 
+{ #category : 'accessing' }
+ViennaValueDefinitionNode >> addToModule: aViennaModuleNode [
+
+	^ aViennaModuleNode module addValueDefinition: self copyFragment
+]
+
 { #category : 'accessing-definitions' }
 ViennaValueDefinitionNode >> asAccessDefinition [
 

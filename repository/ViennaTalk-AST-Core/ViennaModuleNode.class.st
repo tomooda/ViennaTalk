@@ -294,6 +294,14 @@ ViennaModuleNode >> addOperationDefinition: aViennaNode [
 ]
 
 { #category : 'accessing-definitions' }
+ViennaModuleNode >> addStateDefinition: aViennaNode [
+
+	(self moduleBody detect: #isViennaStateDefinitionNode ifNone: [ nil ])
+		ifNotNil: [ :node | self moduleBody replace: node with: aViennaNode ]
+		ifNil: [ self moduleBody add: aViennaNode ]
+]
+
+{ #category : 'accessing-definitions' }
 ViennaModuleNode >> addTypeDefinition: aViennaNode [
 
 	(self moduleBody detect: #isViennaTypeDefinitionsNode ifNone: [
