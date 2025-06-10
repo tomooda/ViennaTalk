@@ -2264,7 +2264,7 @@ ViennaRefactoringBrowser >> initializePresenters [
 			            yourself ];
 		            whenSelectedPageChangedDo: [
 			            notebook selectedPage ifNotNil: [ :page |
-				            page title = 'EpiLog' ifTrue: [ self updateEpiLogPage ].
+				            page title = 'HiDeHo' ifTrue: [ self updateEpiLogPage ].
 				            page title = 'Git' ifTrue: [
 					            [ self updateGitPage ] forkAt:
 						            Processor userBackgroundPriority ] ] ];

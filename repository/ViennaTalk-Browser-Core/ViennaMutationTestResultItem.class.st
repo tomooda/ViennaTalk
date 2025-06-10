@@ -79,7 +79,7 @@ ViennaMutationTestResultItem >> diffSet [
 			  ifFalse: [ nil ] ]
 ]
 
-{ #category : 'accessing' }
+{ #category : 'private' }
 ViennaMutationTestResultItem >> flushDiffSet [
 
 	diffSet := nil.
