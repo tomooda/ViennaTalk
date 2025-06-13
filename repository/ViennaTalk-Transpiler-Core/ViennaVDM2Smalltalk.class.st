@@ -648,6 +648,14 @@ ViennaVDM2Smalltalk >> document: aViennaNode env: aDictionary [
 		  ifFalse: [ self modularDocument: aViennaNode env: aDictionary ]
 ]
 
+{ #category : 'code generation-statements' }
+ViennaVDM2Smalltalk >> durationStatement: aViennaNode env: aDictionary [
+
+	^ '(' , (self generate: aViennaNode expression env: aDictionary)
+	  , ') nanoSeconds wait. '
+	  , (self generate: aViennaNode statement env: aDictionary)
+]
+
 { #category : 'enabling/disabling' }
 ViennaVDM2Smalltalk >> enableRuntimeAssertionCheck [
 	runtimeAssertionCheck := true

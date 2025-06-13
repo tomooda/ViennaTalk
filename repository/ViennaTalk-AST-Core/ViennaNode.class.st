@@ -968,6 +968,12 @@ ViennaNode >> isViennaDocumentNode [
 ]
 
 { #category : 'testing' }
+ViennaNode >> isViennaDurationStatementNode [
+
+	^ false
+]
+
+{ #category : 'testing' }
 ViennaNode >> isViennaEqualDefinitionListNode [
 
 	^ false

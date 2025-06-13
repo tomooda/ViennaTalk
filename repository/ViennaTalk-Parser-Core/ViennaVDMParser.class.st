@@ -355,6 +355,17 @@ ViennaVDMParser >> dunion: arg [
 	^ ViennaDistributedSetUnionNode expression: arg
 ]
 
+{ #category : 'parsers-statements' }
+ViennaVDMParser >> durationStatement [
+
+	^ super durationStatement =>> [ :start :end :array |
+	  (ViennaDurationStatementNode
+		   expression: array first
+		   statement: array second)
+		  start: start end: end;
+		  yourself ]
+]
+
 { #category : 'parsers-expressions-operators' }
 ViennaVDMParser >> elems: arg [
 
