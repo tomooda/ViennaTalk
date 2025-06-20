@@ -24,7 +24,6 @@ ViennaCommandLineHandler class >> deploy [
 	IceCredentialStore current in: [ :store |
 		store allCredentials do: [ :each | each removeFrom: store ] ].
 	World closeAllWindowsDiscardingChanges.
-	ViennaLauncher reopen.
 	Deprecation
 		raiseWarning: false;
 		showWarning: false.
@@ -77,7 +76,8 @@ ViennaCommandLineHandler >> activate [
 
 	self
 		installMenu;
-		installQuitSession
+		installQuitSession.
+	ViennaLauncher reopen
 ]
 
 { #category : 'activation' }
