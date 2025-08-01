@@ -14,32 +14,40 @@ ViennaVDM2SmalltalkObject >> createDocumentClassWithInstVars: anArrayOfString [
 ViennaVDM2SmalltalkObject >> createDocumentClassWithInstVars: anArrayOfString1 stateVars: anArrayOfString2 [
 
 	^ ShiftAnonymousClassInstaller make: [ :builder |
-		  builder
-			  superclass: ViennaTranspiledObject;
-			  slots: (anArrayOfString1 asArray collect: [ :instVarName |
-						   InstanceVariableSlot named: instVarName asSymbol ])
-				  , (anArrayOfString2 asArray collect: [ :instVarName |
-							   (runtimeAssertionCheck = true
-								    ifTrue: [ ViennaStateSlot ]
-								    ifFalse: [ InstanceVariableSlot ]) named:
-									   instVarName asSymbol ]);
-			  package: 'Auto Generated from VDM' ]
+			  builder
+				  superclass: ViennaTranspiledObject;
+				  slots: (anArrayOfString1 asArray collect: [ :instVarName |
+							   InstanceVariableSlot named: instVarName asSymbol ])
+					  , (anArrayOfString2 asArray collect: [ :instVarName |
+									   runtimeAssertionCheck = true
+										   ifTrue: [
+												   (ViennaFullStateVariableSlot named:
+														    instVarName asSymbol)
+													   checksInvariant: runtimeAssertionCheck;
+													   yourself ]
+										   ifFalse: [
+										   ViennaStateVariableSlot named: instVarName asSymbol ] ]);
+				  package: 'Auto Generated from VDM' ]
 ]
 
 { #category : 'utilities' }
-ViennaVDM2SmalltalkObject >> createModuleClass: aStirng withInstVars: anArrayOfString1 stateVars: anArrayOfString2 env: aDictionary [
+ViennaVDM2SmalltalkObject >> createModuleClass: aString withInstVars: anArrayOfString1 stateVars: anArrayOfString2 env: aDictionary [
 
 	^ (ShiftAnonymousClassInstaller make: [ :builder |
-			   builder
-				   superclass: ViennaTranspiledObject;
-				   slots: (anArrayOfString1 asArray collect: [ :instVarName |
-							    InstanceVariableSlot named: instVarName asSymbol ])
-					   , (anArrayOfString2 asArray collect: [ :instVarName |
-								    (runtimeAssertionCheck = true
-									     ifTrue: [ ViennaStateSlot ]
-									     ifFalse: [ InstanceVariableSlot ]) named:
-										    instVarName asSymbol ]);
-				   package: 'Auto Generated from VDM' ])
+				   builder
+					   superclass: ViennaTranspiledObject;
+					   slots: (anArrayOfString1 asArray collect: [ :instVarName |
+								    InstanceVariableSlot named: instVarName asSymbol ])
+						   , (anArrayOfString2 asArray collect: [ :instVarName |
+										    runtimeAssertionCheck = true
+											    ifTrue: [
+													    (ViennaFullStateVariableSlot named:
+															     instVarName asSymbol)
+														    checksInvariant: runtimeAssertionCheck;
+														    yourself ]
+											    ifFalse: [
+											    ViennaStateVariableSlot named: instVarName asSymbol ] ]);
+					   package: 'Auto Generated from VDM' ])
 		  viennaEnv: aDictionary;
 		  yourself
 ]

@@ -2286,13 +2286,6 @@ ViennaRefactoringBrowser >> initializeSourcePagePresenters [
 		                      yourself.
 	talkbackLabel := self newLabel
 		                 label: '';
-		                 displayBackgroundColor: [
-			                 self pendingSyntaxError
-				                 ifNotNil: [ Color red lighter ]
-				                 ifNil: [
-					                 self pendingTypeError
-						                 ifNotNil: [ Color yellow lighter ]
-						                 ifNil: [ Color transparent ] ] ];
 		                 yourself.
 	sourceText := self newVDMSource
 		              animation: [ animation ];
@@ -2344,10 +2337,10 @@ ViennaRefactoringBrowser >> initializeSourcePagePresenters [
 		                   whenSelectionChangedDo: [ self testResultChanged ];
 		                   yourself.
 	runMutationTestingButton := self newButton
-		                         label: 'Mutation testing';
-		                         icon: (self iconNamed: #exception);
-		                         action: [ self runMutationTesting ];
-		                         yourself
+		                            label: 'Mutation testing';
+		                            icon: (self iconNamed: #exception);
+		                            action: [ self runMutationTesting ];
+		                            yourself
 ]
 
 { #category : 'initialization' }

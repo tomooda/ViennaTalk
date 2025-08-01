@@ -151,7 +151,11 @@ ViennaTranspiledModularDocument >> postCopy [
 { #category : 'accessing' }
 ViennaTranspiledModularDocument >> state [
 
-	^ self collect: [ :module | module state ]
+	| states |
+	states := Dictionary new: self size.
+	self keysAndValuesDo: [ :name :module |
+		states at: name put: module state ].
+	^ states
 ]
 
 { #category : 'accessing' }

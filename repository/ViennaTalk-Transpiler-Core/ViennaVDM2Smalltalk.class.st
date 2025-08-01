@@ -3195,86 +3195,75 @@ ViennaVDM2Smalltalk >> source: aString [
 { #category : 'code generation-definitions' }
 ViennaVDM2Smalltalk >> stateDefinition: aViennaNode env: aDictionary [
 
-	             | constructor fieldListNode invNode initNode vars vals recordNode initConstructor expressionListNode patternVar |
-	             constructor := aViennaNode identifier.
-	             fieldListNode := aViennaNode fieldList.
-	             invNode := aViennaNode inv.
-	             initNode := aViennaNode init.
-	             vars := fieldListNode collect: #identifier.
-	             initNode ifNil: [
-		             ^ self error:
-			               'initalisation is required in state definition' ].
-	             recordNode := initNode expression expression2.
-	             initConstructor := recordNode name identifier.
-	             expressionListNode := recordNode expressionList.
-	             initConstructor = constructor ifFalse: [
-		             ^ self error:
-			               'Constructor must be the same name as state definition: '
-			               , constructor , ', ' , initConstructor ].
-	             vars size = expressionListNode size ifFalse: [
-		             ^ self error:
-			               'Number of state variables and number of arguments must agree: '
-			               , vars size printString , ', '
-			               , expressionListNode size printString ].
-	             vals := expressionListNode collect: [ :node |
-		                     self generate: node env: aDictionary ].
-	             ^ {
-		               ((self stringStreamContents: [ :stream |
-			                 vars with: vals do: [ :var :val |
-				                 stream
-					                 nextPutAll:
-						                 (self noCheckAssignment: var be: val);
-					                 nextPutAll: '.' , String cr ] ])
-			                asViennaTracingString: initNode).
-		               ((self stringStreamContents: [ :stream |
-			                 stream
-				                 nextPutAll: initConstructor;
-				                 nextPutAll:
-					                 ' := ViennaCompositeType constructorName: ';
-				                 nextPutAll: initConstructor storeString;
-				                 nextPutAll: ' withAll: {';
-				                 nextPutAll:
-					                 (' . ' join:
-							                  (self
-								                   generate: fieldListNode
-								                   env: aDictionary));
-				                 nextPutAll: '}' ]) asViennaTracingString:
-			                aViennaNode).
-		               ((self stringStreamContents: [ :stream |
-			                 patternVar := initNode first first first.
-			                 stream
-				                 nextPutAll: 'init_';
-				                 nextPutAll: initConstructor;
-				                 nextPutAll: ' := ';
-				                 nextPutAll:
-					                 (self generate: initNode first env: aDictionary) ])
-			                asViennaTracingString: initNode).
-		               (invNode ifNotNil: [
-			                (self stringStreamContents: [ :stream |
-				                 stream
-					                 nextPutAll: 'inv_';
-					                 nextPutAll: constructor;
-					                 nextPutAll: ' := ';
-					                 nextPutAll:
-						                 (self generate: invNode first env: aDictionary) ])
-				                asViennaTracingString: invNode ]).
-		               (self stringStreamContents: [ :stream |
-			                stream
-				                nextPutAll:
-					                (aDictionary
-						                 at: constructor
-						                 ifAbsent: [ constructor ]);
-				                nextPutAll: ' applyTo: {';
-				                nextPutAll: (' . ' join: vars);
-				                nextPutAll: '}' ]).
-		               (self stringStreamContents: [ :stream |
-			                vars
-				                do: [ :var |
-					                stream
-						                nextPutAll: var;
-						                nextPutAll: ' := _state at: ';
-						                nextPutAll: var storeString ]
-				                separatedBy: [ stream nextPutAll: '. ' ] ]) }
+	| constructor fieldListNode invNode initNode vars vals recordNode initConstructor expressionListNode patternVar |
+	constructor := aViennaNode identifier.
+	fieldListNode := aViennaNode fieldList.
+	invNode := aViennaNode inv.
+	initNode := aViennaNode init.
+	vars := fieldListNode collect: #identifier.
+	initNode ifNil: [
+		^ self error: 'initalisation is required in state definition' ].
+	recordNode := initNode expression expression2.
+	initConstructor := recordNode name identifier.
+	expressionListNode := recordNode expressionList.
+	initConstructor = constructor ifFalse: [
+			^ self error:
+				  'Constructor must be the same name as state definition: '
+				  , constructor , ', ' , initConstructor ].
+	vars size = expressionListNode size ifFalse: [
+			^ self error:
+				  'Number of state variables and number of arguments must agree: '
+				  , vars size printString , ', '
+				  , expressionListNode size printString ].
+	vals := expressionListNode collect: [ :node |
+		        self generate: node env: aDictionary ].
+	^ {
+		  ((self stringStreamContents: [ :stream |
+				    vars with: vals do: [ :var :val |
+						    stream
+							    nextPutAll: (self noCheckAssignment: var be: val);
+							    nextPutAll: '.' , String cr ] ]) asViennaTracingString:
+			   initNode).
+		  ((self stringStreamContents: [ :stream |
+				    stream
+					    nextPutAll: initConstructor;
+					    nextPutAll: ' := ViennaCompositeType constructorName: ';
+					    nextPutAll: initConstructor storeString;
+					    nextPutAll: ' withAll: {';
+					    nextPutAll:
+						    (' . ' join: (self generate: fieldListNode env: aDictionary));
+					    nextPutAll: '}' ]) asViennaTracingString: aViennaNode).
+		  ((self stringStreamContents: [ :stream |
+				    patternVar := initNode first first first.
+				    stream
+					    nextPutAll: 'init_';
+					    nextPutAll: initConstructor;
+					    nextPutAll: ' := ';
+					    nextPutAll: (self generate: initNode first env: aDictionary) ])
+			   asViennaTracingString: initNode).
+		  (invNode ifNotNil: [
+				   (self stringStreamContents: [ :stream |
+						    stream
+							    nextPutAll: 'inv_';
+							    nextPutAll: constructor;
+							    nextPutAll: ' := ';
+							    nextPutAll: (self generate: invNode first env: aDictionary) ])
+					   asViennaTracingString: invNode ]).
+		  (self stringStreamContents: [ :stream |
+				   stream
+					   nextPutAll:
+						   (aDictionary at: constructor ifAbsent: [ constructor ]);
+					   nextPutAll: ' applyTo: {';
+					   nextPutAll: (' . ' join: vars);
+					   nextPutAll: '}' ]).
+		  (self stringStreamContents: [ :stream |
+				   vars
+					   do: [ :var |
+							   stream
+								   nextPutAll: var;
+								   nextPutAll: ' := _state at: ';
+								   nextPutAll: var storeString ]
+					   separatedBy: [ stream nextPutAll: '. ' ] ]) }
 ]
 
 { #category : 'utilities' }
