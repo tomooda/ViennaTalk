@@ -61,6 +61,6 @@ ViennaFullStateVariableSlot >> write: aValue to: anObject [
 
 	self basicWrite: aValue to: anObject.
 	checksInvariant ifTrue: [ anObject inv ].
-	records ifTrue: [ ViennaRecordStateNotification signalOn: anObject ].
+	records ifTrue: [ anObject _recordState ].
 	^ aValue
 ]

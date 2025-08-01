@@ -19,11 +19,12 @@ ViennaVDM2SmalltalkObject >> createDocumentClassWithInstVars: anArrayOfString1 s
 				  slots: (anArrayOfString1 asArray collect: [ :instVarName |
 							   InstanceVariableSlot named: instVarName asSymbol ])
 					  , (anArrayOfString2 asArray collect: [ :instVarName |
-									   runtimeAssertionCheck = true
+									   (runtimeAssertionCheck = true or: [ stateRecording = true ])
 										   ifTrue: [
 												   (ViennaFullStateVariableSlot named:
 														    instVarName asSymbol)
 													   checksInvariant: runtimeAssertionCheck;
+													   records: stateRecording;
 													   yourself ]
 										   ifFalse: [
 										   ViennaStateVariableSlot named: instVarName asSymbol ] ]);
@@ -39,11 +40,13 @@ ViennaVDM2SmalltalkObject >> createModuleClass: aString withInstVars: anArrayOfS
 					   slots: (anArrayOfString1 asArray collect: [ :instVarName |
 								    InstanceVariableSlot named: instVarName asSymbol ])
 						   , (anArrayOfString2 asArray collect: [ :instVarName |
-										    runtimeAssertionCheck = true
+										    (runtimeAssertionCheck = true or: [
+												     stateRecording = true ])
 											    ifTrue: [
 													    (ViennaFullStateVariableSlot named:
 															     instVarName asSymbol)
 														    checksInvariant: runtimeAssertionCheck;
+														    records: stateRecording;
 														    yourself ]
 											    ifFalse: [
 											    ViennaStateVariableSlot named: instVarName asSymbol ] ]);

@@ -105,11 +105,13 @@ ViennaVDM2SmalltalkClass >> createDocumentClassWithInstVars: anArrayOfString1 st
 					   slots: (anArrayOfString1 asArray collect: [ :instVarName |
 								    InstanceVariableSlot named: instVarName asSymbol ])
 						   , (anArrayOfString2 asArray collect: [ :instVarName |
-										    runtimeAssertionCheck = true
+										    (runtimeAssertionCheck = true or: [
+												     stateRecording = true ])
 											    ifTrue: [
 													    (ViennaFullStateVariableSlot named:
 															     instVarName asSymbol)
 														    checksInvariant: runtimeAssertionCheck;
+														    records: stateRecording;
 														    yourself ]
 											    ifFalse: [
 											    ViennaStateVariableSlot named: instVarName asSymbol ] ]);
@@ -138,11 +140,13 @@ ViennaVDM2SmalltalkClass >> createModuleClass: aString withInstVars: anArrayOfSt
 					   slots: (anArrayOfString1 asArray collect: [ :instVarName |
 								    InstanceVariableSlot named: instVarName asSymbol ])
 						   , (anArrayOfString2 asArray collect: [ :instVarName |
-										    runtimeAssertionCheck = true
+										    (runtimeAssertionCheck = true or: [
+												     stateRecording = true ])
 											    ifTrue: [
 													    (ViennaFullStateVariableSlot named:
 															     instVarName asSymbol)
 														    checksInvariant: runtimeAssertionCheck;
+														    records: stateRecording;
 														    yourself ]
 											    ifFalse: [
 											    ViennaStateVariableSlot named: instVarName asSymbol ] ]);
@@ -247,115 +251,124 @@ ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass proto
 	formalArgs := OrderedCollection new.
 	self
 		defineMethod: (self stringStreamContents: [ :stream |
-				 stream nextPutAll: opName.
-				 anArrayOfPatternNodeAndTypeSetNode isEmpty ifTrue: [
-					 stream nextPutAll: ': ' , varGenerator value ].
-				 isFirstArg := true.
-				 self
-					 fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode
-					 patternNodeAndSetOrTypeNodeAndBindTypesDo: [
-						 :patternNode
-						 :setNode
-						 :bindType |
-						 bindType = #identifier ifTrue: [
-							 argVars add: patternNode first.
-							 isFirstArg ifFalse: [ stream nextPutAll: ' _' ].
-							 formalArgs add: patternNode first -> setNode.
-							 stream
-								 nextPutAll: ':';
-								 nextPutAll: patternNode first ].
-						 bindType = #compound ifTrue: [
-							 | tmpVar |
-							 argVars addAll: patternNode uniqueBoundIdentifiers.
-							 tmpVar := varGenerator value.
-							 tmpVars add: tmpVar.
-							 formalArgs add: tmpVar -> setNode.
-							 matchPatternNodes add: patternNode.
-							 isFirstArg ifFalse: [ stream nextPutAll: ' _' ].
-							 stream
-								 nextPutAll: ':';
-								 nextPutAll: tmpVar ].
-						 isFirstArg := false ].
-				 tuplePattern := ViennaTuplePatternNode patternList:
-					                 (ViennaPatternListNode keepParentsWithAll:
-						                  matchPatternNodes).
-				 matchVars := tuplePattern uniqueBoundIdentifiers.
-				 stream cr.
-				 matchVars
-					 ifEmpty: [
-					 stream nextPutAll: '| _oldState ' , retVarName , ' |' ]
-					 ifNotEmpty: [
-						 stream nextPutAll: ' | _oldState ' , retVarName , ' '.
-						 matchVars do: [ :var |
-							 stream
-								 nextPutAll: var;
-								 nextPut: Character space ].
-						 stream
-							 nextPutAll: '| ';
-							 nextPutAll: (self
-									  binder: (self generate: tuplePattern env: aDictionary)
-									  with: '{' , (' . ' join: tmpVars) , '}'
-									  vars: matchVars);
-							 nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ].
-				 runtimeTypeCheck = true ifTrue: [
-					 formalArgs
-						 with: anArrayOfPatternNodeAndTypeSetNode
-						 do: [ :assoc :triple |
+					 stream nextPutAll: opName.
+					 anArrayOfPatternNodeAndTypeSetNode isEmpty ifTrue: [
+						 stream nextPutAll: ': ' , varGenerator value ].
+					 isFirstArg := true.
+					 self
+						 fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode
+						 patternNodeAndSetOrTypeNodeAndBindTypesDo: [
+								 :patternNode
+								 :setNode
+								 :bindType |
+								 bindType = #identifier ifTrue: [
+										 argVars add: patternNode first.
+										 isFirstArg ifFalse: [ stream nextPutAll: ' _' ].
+										 formalArgs add: patternNode first -> setNode.
+										 stream
+											 nextPutAll: ':';
+											 nextPutAll: patternNode first ].
+								 bindType = #compound ifTrue: [
+										 | tmpVar |
+										 argVars addAll: patternNode uniqueBoundIdentifiers.
+										 tmpVar := varGenerator value.
+										 tmpVars add: tmpVar.
+										 formalArgs add: tmpVar -> setNode.
+										 matchPatternNodes add: patternNode.
+										 isFirstArg ifFalse: [ stream nextPutAll: ' _' ].
+										 stream
+											 nextPutAll: ':';
+											 nextPutAll: tmpVar ].
+								 isFirstArg := false ].
+					 tuplePattern := ViennaTuplePatternNode patternList:
+						                 (ViennaPatternListNode keepParentsWithAll:
+							                  matchPatternNodes).
+					 matchVars := tuplePattern uniqueBoundIdentifiers.
+					 stream cr.
+					 matchVars
+						 ifEmpty: [
+						 stream nextPutAll: '| _oldState ' , retVarName , ' |' ]
+						 ifNotEmpty: [
+								 stream nextPutAll: ' | _oldState ' , retVarName , ' '.
+								 matchVars do: [ :var |
+										 stream
+											 nextPutAll: var;
+											 nextPut: Character space ].
+								 stream
+									 nextPutAll: '| ';
+									 nextPutAll: (self
+											  binder: (self generate: tuplePattern env: aDictionary)
+											  with: '{' , (' . ' join: tmpVars) , '}'
+											  vars: matchVars);
+									 nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ].
+					 runtimeTypeCheck = true ifTrue: [
+							 formalArgs
+								 with: anArrayOfPatternNodeAndTypeSetNode
+								 do: [ :assoc :triple |
+										 stream nextPutAll:
+											 ('((' , (self generate: assoc value env: aDictionary)
+											  , ') includes: ' , assoc key
+											  , ') ifFalse: [ViennaRuntimeTypeError signal].'
+												  asViennaTracingString: triple second) ] ].
+					 preString ifNotNil: [
+							 (preString isArray
+								  ifTrue: [ preString ]
+								  ifFalse: [ { preString } ]) do: [ :pre |
+									 stream nextPutAll:
+										 ('(' , pre
+										  , ') ifFalse: [ViennaPreconditionViolation signal].'
+											  asViennaTracingString:
+												  (pre asViennaTracingString sources
+													   ifNotEmpty: [ :sources | sources last value ]
+													   ifEmpty: [ aViennaNode ])) ] ].
+					 stream
+						 nextPutAll: '_oldState := self state. ';
+						 nextPutAll:
+							 (retVarName , ' := self _' , opName , ((' _: ' join: argVars)
+									   ifNotEmpty: [ :str | '_: ' , str ]
+									   ifEmpty: [ '' ]) , '.' asViennaTracingString: aViennaNode).
+					 (runtimeTypeCheck = true and: [
+						  typeNode isViennaUnitTypeNode not ]) ifTrue: [
 							 stream nextPutAll:
-								 ('((' , (self generate: assoc value env: aDictionary)
-								  , ') includes: ' , assoc key
+								 ('(' , (self generate: typeNode env: aDictionary)
+								  , ' includes: ' , retVarName
 								  , ') ifFalse: [ViennaRuntimeTypeError signal].'
-									  asViennaTracingString: triple second) ] ].
-				 preString ifNotNil: [
-					 (preString isArray
-						  ifTrue: [ preString ]
-						  ifFalse: [ { preString } ]) do: [ :pre |
-						 stream nextPutAll:
-							 ('(' , pre
-							  , ') ifFalse: [ViennaPreconditionViolation signal].'
-								  asViennaTracingString: (pre asViennaTracingString sources
-										   ifNotEmpty: [ :sources | sources last value ]
-										   ifEmpty: [ aViennaNode ])) ] ].
-				 stream
-					 nextPutAll: '_oldState := self state. ';
-					 nextPutAll:
-						 (retVarName , ' := self _' , opName , ((' _: ' join: argVars)
-								   ifNotEmpty: [ :str | '_: ' , str ]
-								   ifEmpty: [ '' ]) , '.' asViennaTracingString: aViennaNode).
-				 (runtimeTypeCheck = true and: [
-					  typeNode isViennaUnitTypeNode not ]) ifTrue: [
-					 stream nextPutAll:
-						 ('(' , (self generate: typeNode env: aDictionary)
-						  , ' includes: ' , retVarName
-						  , ') ifFalse: [ViennaRuntimeTypeError signal].'
-							  asViennaTracingString: typeNode) ].
-				 postString ifNotNil: [
-					 (postString isArray
-						  ifTrue: [ postString ]
-						  ifFalse: [ { postString } ]) do: [ :post |
-						 stream nextPutAll:
-							 ('(' , post
-							  , ') ifFalse: [ViennaPostconditionViolation signal].'
-								  asViennaTracingString: (post asViennaTracingString sources
-										   ifNotEmpty: [ :sources | sources last value ]
-										   ifEmpty: [ aViennaNode ])) ] ].
-				 stream nextPutAll: '^ ' , retVarName ])
+									  asViennaTracingString: typeNode) ].
+					 postString ifNotNil: [
+							 (postString isArray
+								  ifTrue: [ postString ]
+								  ifFalse: [ { postString } ]) do: [ :post |
+									 stream nextPutAll:
+										 ('(' , post
+										  , ') ifFalse: [ViennaPostconditionViolation signal].'
+											  asViennaTracingString:
+												  (post asViennaTracingString sources
+													   ifNotEmpty: [ :sources | sources last value ]
+													   ifEmpty: [ aViennaNode ])) ] ].
+					 stream nextPutAll: '^ ' , retVarName ])
 		in: theClass
 		protocol: protocolString
 		node: aViennaNode.
 	^ self
 		  defineMethod: ((self stringStreamContents: [ :stream |
-				    stream
-					    nextPut: $_;
-					    nextPutAll: opName.
-				    argVars do: [ :var |
 					    stream
-						    nextPutAll: '_: ';
-						    nextPutAll: var;
-						    nextPutAll: ' ' ].
-				    stream
-					    cr;
-					    nextPutAll: bodyString ]) asViennaTracingString: aViennaNode2)
+						    nextPut: $_;
+						    nextPutAll: opName.
+					    argVars do: [ :var |
+							    stream
+								    nextPutAll: '_: ';
+								    nextPutAll: var;
+								    nextPutAll: ' ' ].
+					    stream
+						    cr;
+						    nextPutAll: (operationRecording = true
+								     ifTrue: [
+										     '[self recordOperationCall: ' , opName storeString
+										     , '. ' , bodyString
+										     , '] ensure: [self recordOperationReturn: '
+										     , opName storeString , ']' ]
+								     ifFalse: [ bodyString ]) ]) asViennaTracingString:
+				   aViennaNode2)
 		  in: theClass
 		  protocol: protocolString
 		  node: aViennaNode2

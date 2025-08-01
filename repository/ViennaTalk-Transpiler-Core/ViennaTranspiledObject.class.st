@@ -132,6 +132,24 @@ ViennaTranspiledObject >> _document: aViennaTranspiledModularDocument [
 	_document := aViennaTranspiledModularDocument
 ]
 
+{ #category : 'recording' }
+ViennaTranspiledObject >> _recordOperationCall: aString [
+
+	_document _recordOperationCall: aString
+]
+
+{ #category : 'recording' }
+ViennaTranspiledObject >> _recordOperationReturn: aString [
+
+	_document _recordOperationCall: aString
+]
+
+{ #category : 'recording' }
+ViennaTranspiledObject >> _recordState [
+
+	_document _recordState
+]
+
 { #category : 'evaluating' }
 ViennaTranspiledObject >> debugExpression: aString with: aViennaVDM2SmalltalkClass ifError: errorBlock [
 
