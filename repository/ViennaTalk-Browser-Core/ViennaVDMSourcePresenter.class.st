@@ -26,7 +26,8 @@ ViennaVDMSourcePresenter class >> buildCommandsGroupWith: presenter forRoot: aCm
 	{
 		ViennaEvaluateItCommand.
 		ViennaTypeItCommand.
-		ViennaExecuteItCommand } do: [ :cmdClass |
+		ViennaExecuteItCommand.
+		ViennaSequenceItCommand } do: [ :cmdClass |
 		group register: (cmdClass forSpecContext: presenter) ].
 	aCmCommandsGroup register: group.
 	^ group
@@ -76,6 +77,17 @@ ViennaVDMSourcePresenter >> doExecuteIt [
 ]
 
 { #category : 'evaluating' }
+ViennaVDMSourcePresenter >> doSequenceIt [
+
+	self selectedTextOrLine trim ifNotEmpty: [ :string |
+			self openSequenceDiagramFrom: string ifError: [ :msg |
+					self
+						insertPopoverAfterCurrentSelection: (self newLabel label: msg)
+						style: 'error'.
+					^ nil ] ]
+]
+
+{ #category : 'evaluating' }
 ViennaVDMSourcePresenter >> doTypeIt [
 
 	| result |
@@ -116,7 +128,7 @@ ViennaVDMSourcePresenter >> evaluateExpression: aString ifError: errorBlock [
 	[ node typecheck ]
 		on: ViennaTypeError
 		do: [ :ex | ^ errorBlock cull: ex messageText ].
-	^ (animation value ifNil: [ ViennaAnimation default ])
+	^ (animation value ifNil: [ ViennaTranspiledAnimation new ])
 		  plainExecute: node
 		  in: (node module ifNotNil: #identifier)
 		  ifError: errorBlock
@@ -134,7 +146,7 @@ ViennaVDMSourcePresenter >> evaluateStatement: aString ifError: errorBlock [
 		do: [ :ex | ^ errorBlock cull: ex messageText ].
 	^ (animation value ifNil: [ ViennaTranspiledAnimation new ])
 		  plainExecute: node
-		  in: node module identifier
+		  in: (node module ifNotNil: #identifier)
 		  ifError: errorBlock
 ]
 
@@ -207,6 +219,27 @@ ViennaVDMSourcePresenter >> module [
 ViennaVDMSourcePresenter >> module: aBlock [
 
 	module := aBlock
+]
+
+{ #category : 'evaluating' }
+ViennaVDMSourcePresenter >> openSequenceDiagramFrom: aString ifError: errorBlock [
+
+	| node |
+	node := ViennaVDMParser current statement
+	        / ViennaVDMParser current expression parse: aString.
+	node isPetit2Failure ifTrue: [ ^ errorBlock cull: node printString ].
+	node parent: module value.
+	[ node typecheck ]
+		on: ViennaTypeError
+		do: [ :ex | ^ errorBlock cull: ex messageText ].
+	animation value ifNotNil: [ :anim |
+			| transpiledSpec |
+			transpiledSpec := ViennaTranspiledModularDocumentForExecutionTracing
+				                  fromAnimation: anim.
+			(transpiledSpec
+				 sequenceDiagramSourceFromNode: node
+				 in: (node module ifNotNil: #identifier)) openMicromaidWithTitle:
+				'Sequence Diagram from ' , aString ]
 ]
 
 { #category : 'api' }

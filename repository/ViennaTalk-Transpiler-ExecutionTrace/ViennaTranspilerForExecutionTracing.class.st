@@ -130,8 +130,8 @@ ViennaTranspilerForExecutionTracing >> defineMethodFromOperation: opName in: the
 						    nextPutAll:
 							    '[_document _recordOperationCall: '
 							    , globalOpName storeString , ' args: thisContext home arguments. ' , bodyString
-							    , '] ensure: [_document _recordOperationReturn: '
-							    , globalOpName storeString , 'value: (thisContext sender at: 1)]' ]) asViennaTracingString:
+							    , '] ensure: [|ret| ret := thisContext viennaReturnValue. _document _recordOperationReturn: '
+							    , globalOpName storeString , 'value: ret]' ]) asViennaTracingString:
 				   aViennaNode2)
 		  in: theClass
 		  protocol: protocolString

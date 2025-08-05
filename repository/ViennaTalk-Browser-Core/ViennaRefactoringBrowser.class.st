@@ -2813,20 +2813,20 @@ ViennaRefactoringBrowser >> playgroundTextContextMenu [
 	| menu |
 	menu := self newMenu.
 	self playgroundSelection ifNotNil: [ :node |
-		menu addGroup: [ :group |
-			group
-				addItem: [ :item |
-					item
-						name: 'Evaluate it';
-						action: [ playgroundText doEvaluateIt ] ];
-				addItem: [ :item |
-					item
-						name: 'Type it';
-						action: [ playgroundText doTypeIt ] ];
-				addItem: [ :item |
-					item
-						name: 'Execute it';
-						action: [ playgroundText doExecuteIt ] ] ] ].
+			menu addGroup: [ :group |
+					group
+						addItem: [ :item |
+								item
+									name: 'Evaluate it';
+									action: [ playgroundText doEvaluateIt ] ];
+						addItem: [ :item |
+								item
+									name: 'Type it';
+									action: [ playgroundText doTypeIt ] ];
+						addItem: [ :item |
+								item
+									name: 'Execute it';
+									action: [ playgroundText doExecuteIt ] ] ] ].
 	^ menu
 ]
 

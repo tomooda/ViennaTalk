@@ -138,6 +138,15 @@ ViennaTranspiledObject >> _stateChanged [
 	self inv
 ]
 
+{ #category : 'accessing' }
+ViennaTranspiledObject >> basicInstVarNamed: aString put: anObject [
+
+	^ self class
+		  slotNamed: aString
+		  ifFound: [ :slot | slot basicWrite: anObject to: self ]
+		  ifNone: [ InstanceVariableNotFound signalFor: aString asString ]
+]
+
 { #category : 'evaluating' }
 ViennaTranspiledObject >> debugExpression: aString with: aViennaVDM2SmalltalkClass ifError: errorBlock [
 
