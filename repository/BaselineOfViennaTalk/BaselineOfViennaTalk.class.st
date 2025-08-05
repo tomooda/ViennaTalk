@@ -247,7 +247,7 @@ BaselineOfViennaTalk >> baseline: spec [
 		with:
 			#( 'ViennaTalk-Animation-Transpiler'
 			   'ViennaTalk-Engine-Transpiler' 'ViennaTalk-Transpiler-Core'
-			   'ViennaTalk-Transpiler-Debugger'
+			   'ViennaTalk-Transpiler-Debugger' 'ViennaTalk-Transpiler-ExecutionTrace'
 			   'ViennaTalk-Profiler-Core' );
 		group: 'VDMPad' with: #( 'ViennaTalk-VDMPad-Core' );
 		group: 'WeblyWalkThrough'
