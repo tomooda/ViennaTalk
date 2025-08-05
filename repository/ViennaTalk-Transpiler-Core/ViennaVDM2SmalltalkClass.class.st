@@ -1157,8 +1157,8 @@ ViennaVDM2SmalltalkClass >> namedTrace: aViennaNode env: aDictionary [
 ViennaVDM2SmalltalkClass >> newStateVariableSlotNamed: aString [
 
 	^ runtimeAssertionCheck
-		  ifTrue: [ ViennaStateVariableSlot named: aString asSymbol ]
-		  ifFalse: [ ViennaFullStateVariableSlot named: aString asSymbol ]
+		  ifTrue: [ ViennaFullStateVariableSlot named: aString asSymbol ]
+		  ifFalse: [ ViennaStateVariableSlot named: aString asSymbol ]
 ]
 
 { #category : 'code generation-definitions' }
