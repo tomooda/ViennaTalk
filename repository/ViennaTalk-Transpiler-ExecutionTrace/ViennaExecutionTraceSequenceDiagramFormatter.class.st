@@ -3,7 +3,8 @@ Class {
 	#superclass : 'ViennaExecutionTraceFormat',
 	#instVars : [
 		'aliases',
-		'callStack'
+		'callStack',
+		'root'
 	],
 	#category : 'ViennaTalk-Transpiler-ExecutionTrace-Formats',
 	#package : 'ViennaTalk-Transpiler-ExecutionTrace',
@@ -17,6 +18,21 @@ ViennaExecutionTraceSequenceDiagramFormatter >> initialize [
 		             addLast: '_';
 		             yourself.
 	aliases := Dictionary new
+]
+
+{ #category : 'accessing' }
+ViennaExecutionTraceSequenceDiagramFormatter >> root [
+
+	^ root
+]
+
+{ #category : 'accessing' }
+ViennaExecutionTraceSequenceDiagramFormatter >> root: aString [
+
+	root := aString.
+	callStack := (OrderedCollection new: 128)
+		             addLast: aString;
+		             yourself
 ]
 
 { #category : 'formatting' }

@@ -72,8 +72,8 @@ ViennaTranspiledModularDocumentForExecutionTracing >> initialize: anInteger [
 	_recorder := ViennaExecutionTraceNullRecorder new
 ]
 
-{ #category : 'evaluating' }
-ViennaTranspiledModularDocumentForExecutionTracing >> sequenceDiagramFromExpression: aString [
+{ #category : 'accessing' }
+ViennaTranspiledModularDocumentForExecutionTracing >> useSequenceDiagramRecorder: aString [
 
-	self evaluateExpression: aString ifError: [ ^ nil ]
+	_recorder := ViennaExecutionTraceRecorder forSequenceDiagram: aString
 ]

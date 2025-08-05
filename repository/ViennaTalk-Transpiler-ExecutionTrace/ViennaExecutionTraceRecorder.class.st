@@ -11,10 +11,10 @@ Class {
 }
 
 { #category : 'instance creation' }
-ViennaExecutionTraceRecorder class >> forSequenceDiagram [
+ViennaExecutionTraceRecorder class >> forSequenceDiagram: aString [
 
 	^ self new
-		  useSequenceDiagramFormat;
+		  useSequenceDiagramFormat: aString;
 		  yourself
 ]
 
@@ -68,7 +68,9 @@ ViennaExecutionTraceRecorder >> state: aDictionary [
 ]
 
 { #category : 'accessing' }
-ViennaExecutionTraceRecorder >> useSequenceDiagramFormat [
+ViennaExecutionTraceRecorder >> useSequenceDiagramFormat: aString [
 
 	format := ViennaExecutionTraceSequenceDiagramFormatter new
+		          root: aString;
+		          yourself
 ]
