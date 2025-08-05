@@ -19,22 +19,6 @@ ViennaTranspiledModularDocument class >> from: aDictionary [
 	^ doc
 ]
 
-{ #category : 'recording' }
-ViennaTranspiledModularDocument >> _recordOperationCall: aString [
-
-	
-]
-
-{ #category : 'recording' }
-ViennaTranspiledModularDocument >> _recordOperationReturn: aString [
-
-	
-]
-
-{ #category : 'recording' }
-ViennaTranspiledModularDocument >> _recordState [
-]
-
 { #category : 'private' }
 ViennaTranspiledModularDocument >> buildViennaEnv [
 	| env |

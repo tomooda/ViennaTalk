@@ -132,22 +132,10 @@ ViennaTranspiledObject >> _document: aViennaTranspiledModularDocument [
 	_document := aViennaTranspiledModularDocument
 ]
 
-{ #category : 'recording' }
-ViennaTranspiledObject >> _recordOperationCall: aString [
+{ #category : 'private' }
+ViennaTranspiledObject >> _stateChanged [
 
-	_document _recordOperationCall: aString
-]
-
-{ #category : 'recording' }
-ViennaTranspiledObject >> _recordOperationReturn: aString [
-
-	_document _recordOperationCall: aString
-]
-
-{ #category : 'recording' }
-ViennaTranspiledObject >> _recordState [
-
-	_document _recordState
+	self inv
 ]
 
 { #category : 'evaluating' }

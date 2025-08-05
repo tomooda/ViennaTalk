@@ -57,7 +57,7 @@ ViennaVDM2SmalltalkClass >> callStatement: aViennaNode env: aDictionary [
 { #category : 'utilities' }
 ViennaVDM2SmalltalkClass >> checkInvariant [
 
-	^ 'self inv.'
+	^ 'self _stateChanged'
 ]
 
 { #category : 'utilities' }
@@ -101,20 +101,30 @@ ViennaVDM2SmalltalkClass >> createDocumentClassWithInstVars: anArrayOfString1 st
 	^ (ShiftClassInstaller make: [ :builder |
 				   builder
 					   name: documentClassName asSymbol;
-					   superclass: ViennaTranspiledObject;
+					   superclass: self documentBaseClass;
 					   slots: (anArrayOfString1 asArray collect: [ :instVarName |
 								    InstanceVariableSlot named: instVarName asSymbol ])
 						   , (anArrayOfString2 asArray collect: [ :instVarName |
-										    (runtimeAssertionCheck = true or: [
-												     stateRecording = true ])
-											    ifTrue: [
-													    (ViennaFullStateVariableSlot named:
-															     instVarName asSymbol)
-														    checksInvariant: runtimeAssertionCheck;
-														    records: stateRecording;
-														    yourself ]
-											    ifFalse: [
-											    ViennaStateVariableSlot named: instVarName asSymbol ] ]);
+									    self newStateVariableSlotNamed: instVarName ]);
+					   package: 'Auto Generated from VDM' ])
+		  specification: source;
+		  yourself
+]
+
+{ #category : 'utilities' }
+ViennaVDM2SmalltalkClass >> createFlatDocumentClassWithInstVars: anArrayOfString1 stateVars: anArrayOfString2 [
+
+	| documentClassName |
+	documentClassName := self requestClassName: '' for: 'Document'.
+	documentClassName ifNil: [ ^ nil ].
+	^ (ShiftClassInstaller make: [ :builder |
+				   builder
+					   name: documentClassName asSymbol;
+					   superclass: self documentBaseClass;
+					   slots: (anArrayOfString1 asArray collect: [ :instVarName |
+								    InstanceVariableSlot named: instVarName asSymbol ])
+						   , (anArrayOfString2 asArray collect: [ :instVarName |
+									    self newStateVariableSlotNamed: instVarName ]);
 					   package: 'Auto Generated from VDM' ])
 		  specification: source;
 		  yourself
@@ -136,20 +146,11 @@ ViennaVDM2SmalltalkClass >> createModuleClass: aString withInstVars: anArrayOfSt
 	^ (ShiftClassInstaller make: [ :builder |
 				   builder
 					   name: aString asSymbol;
-					   superclass: ViennaTranspiledObject;
+					   superclass: self moduleBaseClass;
 					   slots: (anArrayOfString1 asArray collect: [ :instVarName |
 								    InstanceVariableSlot named: instVarName asSymbol ])
 						   , (anArrayOfString2 asArray collect: [ :instVarName |
-										    (runtimeAssertionCheck = true or: [
-												     stateRecording = true ])
-											    ifTrue: [
-													    (ViennaFullStateVariableSlot named:
-															     instVarName asSymbol)
-														    checksInvariant: runtimeAssertionCheck;
-														    records: stateRecording;
-														    yourself ]
-											    ifFalse: [
-											    ViennaStateVariableSlot named: instVarName asSymbol ] ]);
+									    self newStateVariableSlotNamed: instVarName ]);
 					   package: 'Auto Generated from VDM' ])
 		  viennaEnv: aDictionary;
 		  specification: source;
@@ -361,17 +362,17 @@ ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass proto
 								    nextPutAll: ' ' ].
 					    stream
 						    cr;
-						    nextPutAll: (operationRecording = true
-								     ifTrue: [
-										     '[self recordOperationCall: ' , opName storeString
-										     , '. ' , bodyString
-										     , '] ensure: [self recordOperationReturn: '
-										     , opName storeString , ']' ]
-								     ifFalse: [ bodyString ]) ]) asViennaTracingString:
+						    nextPutAll: bodyString ]) asViennaTracingString:
 				   aViennaNode2)
 		  in: theClass
 		  protocol: protocolString
 		  node: aViennaNode2
+]
+
+{ #category : 'class access' }
+ViennaVDM2SmalltalkClass >> documentBaseClass [
+
+	^ ViennaTranspiledObject
 ]
 
 { #category : 'code generation-definitions' }
@@ -722,7 +723,7 @@ ViennaVDM2SmalltalkClass >> flatDocument: aViennaNode env: aDictionary [
 	instVars := aViennaNode uniqueBoundIdentifiers copyWithoutAll:
 		            stateVars.
 	newClass := self
-		            createDocumentClassWithInstVars: instVars
+		            createFlatDocumentClassWithInstVars: instVars
 		            stateVars: stateVars.
 	classes at: nil put: newClass.
 	aViennaNode do: [ :section |
@@ -1112,6 +1113,12 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 			node: nil ]
 ]
 
+{ #category : 'class access' }
+ViennaVDM2SmalltalkClass >> moduleBaseClass [
+
+	^ ViennaTranspiledObject
+]
+
 { #category : 'code generation-traces' }
 ViennaVDM2SmalltalkClass >> namedTrace: aViennaNode env: aDictionary [
 
@@ -1146,12 +1153,20 @@ ViennaVDM2SmalltalkClass >> namedTrace: aViennaNode env: aDictionary [
 		node: aViennaNode
 ]
 
+{ #category : 'instance creation' }
+ViennaVDM2SmalltalkClass >> newStateVariableSlotNamed: aString [
+
+	^ runtimeAssertionCheck
+		  ifTrue: [ ViennaStateVariableSlot named: aString asSymbol ]
+		  ifFalse: [ ViennaFullStateVariableSlot named: aString asSymbol ]
+]
+
 { #category : 'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> noCheckAssignment: aVarName be: aValString [
 
-	^ 'self class slotNamed: ' , aVarName storeString
+	^ '(self class slotNamed: ' , aVarName storeString
 	  , ' ifFound: [ :slot | slot basicWrite: (' , aValString
-	  , ') to: self]'
+	  , ') to: self] ifNone: [' , aVarName , ' := ' , aValString , '])'
 ]
 
 { #category : 'code generation-interfaces' }

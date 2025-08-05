@@ -5,8 +5,6 @@ Class {
 		'decoder',
 		'runtimeAssertionCheck',
 		'runtimeTypeCheck',
-		'stateRecording',
-		'operationRecording',
 		'defaultEnv',
 		'source'
 	],
@@ -600,19 +598,6 @@ ViennaVDM2Smalltalk >> definitions: aViennaNode do: aBlock [
 ]
 
 { #category : 'enabling/disabling' }
-ViennaVDM2Smalltalk >> disableOperationRecording [
-
-	operationRecording := false
-]
-
-{ #category : 'enabling/disabling' }
-ViennaVDM2Smalltalk >> disableRecording [
-
-	stateRecording := false.
-	operationRecording := false
-]
-
-{ #category : 'enabling/disabling' }
 ViennaVDM2Smalltalk >> disableRuntimeAssertionCheck [
 	runtimeAssertionCheck := false
 ]
@@ -626,12 +611,6 @@ ViennaVDM2Smalltalk >> disableRuntimeCheck [
 { #category : 'enabling/disabling' }
 ViennaVDM2Smalltalk >> disableRuntimeTypeCheck [
 	runtimeTypeCheck := false
-]
-
-{ #category : 'enabling/disabling' }
-ViennaVDM2Smalltalk >> disableStateRecording [
-
-	stateRecording := false
 ]
 
 { #category : 'code generation-expressions' }
@@ -678,19 +657,6 @@ ViennaVDM2Smalltalk >> durationStatement: aViennaNode env: aDictionary [
 ]
 
 { #category : 'enabling/disabling' }
-ViennaVDM2Smalltalk >> enableOperationRecording [
-
-	operationRecording := true
-]
-
-{ #category : 'enabling/disabling' }
-ViennaVDM2Smalltalk >> enableRecording [
-
-	stateRecording := true.
-	operationRecording := true
-]
-
-{ #category : 'enabling/disabling' }
 ViennaVDM2Smalltalk >> enableRuntimeAssertionCheck [
 	runtimeAssertionCheck := true
 ]
@@ -704,12 +670,6 @@ ViennaVDM2Smalltalk >> enableRuntimeCheck [
 { #category : 'enabling/disabling' }
 ViennaVDM2Smalltalk >> enableRuntimeTypeCheck [
 	runtimeTypeCheck := true
-]
-
-{ #category : 'enabling/disabling' }
-ViennaVDM2Smalltalk >> enableStateRecording [
-
-	stateRecording := true
 ]
 
 { #category : 'code generation-expressions' }
@@ -974,133 +934,121 @@ ViennaVDM2Smalltalk >> explicitOperationDefinition: aViennaNode env: aDictionary
 	paramsNode := aViennaNode parameters.
 	preNode := aViennaNode pre.
 	postNode := aViennaNode post.
-	operationRecording = true
-		ifTrue: [
-				body := '[|_opContext| _opContext := thisContext. self recordOperationCall: '
-				        , opname storeString , '. '
-				        , (self generate: aViennaNode statement env: aDictionary)
-				        , '] ensure: [self recordOperationReturn: '
-				        , opname storeString , ']' ]
-		ifFalse: [
-				body := '[|_opContext| _opContext := thisContext. '
-				        , (self generate: aViennaNode statement env: aDictionary)
-				        , '] value' ].
+	body := '[|_opContext| _opContext := thisContext. '
+	        , (self generate: aViennaNode statement env: aDictionary)
+	        , '] value'.
 	argTypeNode := typeNode argumentType.
 	retTypeNode := typeNode returnType.
 	preNode ifNotNil: [
-			preBody := self generate: preNode env: aDictionary.
-			runtimeAssertionCheck = true ifTrue: [
-					preNode asArrayOfConjuncts do: [ :pre |
-							body := ((self generate: pre env: aDictionary)
-							         , ' ifFalse: [ViennaPreconditionViolation signal]. '
-								         asViennaTracingString: pre) , body ] ] ].
+		preBody := self generate: preNode env: aDictionary.
+		runtimeAssertionCheck = true ifTrue: [
+			preNode asArrayOfConjuncts do: [ :pre |
+				body := ((self generate: pre env: aDictionary)
+				         , ' ifFalse: [ViennaPreconditionViolation signal]. '
+					         asViennaTracingString: pre) , body ] ] ].
 	postNode
 		ifNotNil: [
-				postBody := self generate: postNode env: aDictionary.
-				runtimeAssertionCheck = true
-					ifTrue: [
-							runtimeTypeCheck = true
-								ifTrue: [
-										body := '[|_oldState RESULT| _oldState := '
-										        , self getStateCode , '. RESULT := [' , body
-										        , '] value. ('
-										        , (self generate: retTypeNode env: aDictionary)
-										        ,
-										        ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. '.
-										postNode asArrayOfConjuncts do: [ :post |
-												body := body
-												        , ('(' , (self generate: post env: aDictionary)
-													         ,
-													         ') ifFalse: [ViennaPostconditionViolation signal]. ') ].
-										body := body , 'RESULT] value' ]
-								ifFalse: [
-										body := '[|_oldState RESULT| _oldState := '
-										        , self getStateCode , '. RESULT := [' , body
-										        , '] value. '.
-										postNode asArrayOfConjuncts do: [ :post |
-												body := body
-												        , (('(' , postBody asViennaTracingString: post)
-													         ,
-													         ') ifFalse: [ViennaPostconditionViolation signal]. ') ].
-										body := body , 'RESULT] value' ] ]
-					ifFalse: [
-							runtimeTypeCheck = true ifTrue: [
-									body := '[|RESULT| RESULT := [' , body , '] value. ('
-									        , (self generate: retTypeNode env: aDictionary)
-									        ,
-									        ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. RESULT] value' ] ] ]
-		ifNil: [
-				(runtimeTypeCheck = true and: [
-					 retTypeNode isViennaUnitTypeNode not ]) ifTrue: [
+			postBody := self generate: postNode env: aDictionary.
+			runtimeAssertionCheck = true
+				ifTrue: [
+					runtimeTypeCheck = true
+						ifTrue: [
+							body := '[|_oldState RESULT| _oldState := ' , self getStateCode
+							        , '. RESULT := [' , body , '] value. ('
+							        , (self generate: retTypeNode env: aDictionary)
+							        ,
+							        ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. '.
+							postNode asArrayOfConjuncts do: [ :post |
+								body := body , ('(' , (self generate: post env: aDictionary)
+								         ,
+								         ') ifFalse: [ViennaPostconditionViolation signal]. ') ].
+							body := body , 'RESULT] value' ]
+						ifFalse: [
+							body := '[|_oldState RESULT| _oldState := ' , self getStateCode
+							        , '. RESULT := [' , body , '] value. '.
+							postNode asArrayOfConjuncts do: [ :post |
+								body := body , (('(' , postBody asViennaTracingString: post)
+								         ,
+								         ') ifFalse: [ViennaPostconditionViolation signal]. ') ].
+							body := body , 'RESULT] value' ] ]
+				ifFalse: [
+					runtimeTypeCheck = true ifTrue: [
 						body := '[|RESULT| RESULT := [' , body , '] value. ('
 						        , (self generate: retTypeNode env: aDictionary)
 						        ,
-						        ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. RESULT] value' ] ].
+						        ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. RESULT] value' ] ] ]
+		ifNil: [
+			(runtimeTypeCheck = true and: [
+				 retTypeNode isViennaUnitTypeNode not ]) ifTrue: [
+				body := '[|RESULT| RESULT := [' , body , '] value. ('
+				        , (self generate: retTypeNode env: aDictionary)
+				        ,
+				        ' includes: RESULT) ifFalse: [ViennaRuntimeTypeError signal]. RESULT] value' ] ].
 	varGenerator := self varNameGenerator: 'op' uniqueIn: {
 			                opname.
 			                body }.
 	binds := argTypeNode isViennaUnitTypeNode
 		         ifTrue: [ {  } ]
 		         ifFalse: [
-				         argTypeNode isViennaProductTypeNode
-					         ifTrue: [
-							         (1 to: argTypeNode size) collect: [ :index |
-									         {
-										         (paramsNode at: index).
-										         (argTypeNode at: index) } ] ]
-					         ifFalse: [
-							         { {
-								         paramsNode first.
-								         argTypeNode } } ] ].
+			         argTypeNode isViennaProductTypeNode
+				         ifTrue: [
+					         (1 to: argTypeNode size) collect: [ :index |
+						         {
+							         (paramsNode at: index).
+							         (argTypeNode at: index) } ] ]
+				         ifFalse: [
+					         { {
+						         paramsNode first.
+						         argTypeNode } } ] ].
 	^ self stringStreamContents: [ :stream |
-			  | env |
-			  env := aDictionary copy.
-			  aViennaNode stateVariablesDo: [ :var |
-				  env at: var put: '(_State at: ' , var storeString , ')' ].
-			  preNode ifNotNil: [
-					  stream
-						  nextPutAll: 'pre_';
-						  nextPutAll: opname;
-						  nextPutAll: ' := ';
-						  nextPutAll: (self
-								   closureFromFlatBinds: binds , { {
-											   (ViennaPatternIdentifierNode identifier: '_State').
-											   nil } }
-								   body: (self generate: preNode env: env)
-								   varGenerator: varGenerator
-								   env: env);
-						  nextPutAll: '. ' ].
-			  postNode ifNotNil: [
-					  stream
-						  nextPutAll: 'post_';
-						  nextPutAll: opname;
-						  nextPutAll: ' := ';
-						  nextPutAll: (self
-								   closureFromFlatBinds:
-									   binds , (retTypeNode isViennaUnitTypeNode
-											    ifTrue: [ {  } ]
-											    ifFalse: [
-													    { {
-														    (ViennaPatternIdentifierNode identifier: 'RESULT').
-														    retTypeNode } } ]) , {
-											   {
-												   (ViennaPatternIdentifierNode identifier: '_State').
-												   nil }.
-											   {
-												   (ViennaPatternIdentifierNode identifier: '_oldState').
-												   nil } }
-								   body: (self generate: postNode env: env)
-								   varGenerator: varGenerator
-								   env: env);
-						  nextPutAll: '. ' ].
+		  | env |
+		  env := aDictionary copy.
+		  aViennaNode stateVariablesDo: [ :var |
+			  env at: var put: '(_State at: ' , var storeString , ')' ].
+		  preNode ifNotNil: [
 			  stream
+				  nextPutAll: 'pre_';
 				  nextPutAll: opname;
 				  nextPutAll: ' := ';
 				  nextPutAll: (self
-						   closureFromFlatBinds: binds
-						   body: body
+						   closureFromFlatBinds: binds , { {
+									   (ViennaPatternIdentifierNode identifier: '_State').
+									   nil } }
+						   body: (self generate: preNode env: env)
 						   varGenerator: varGenerator
-						   env: aDictionary) ]
+						   env: env);
+				  nextPutAll: '. ' ].
+		  postNode ifNotNil: [
+			  stream
+				  nextPutAll: 'post_';
+				  nextPutAll: opname;
+				  nextPutAll: ' := ';
+				  nextPutAll: (self
+						   closureFromFlatBinds:
+							   binds , (retTypeNode isViennaUnitTypeNode
+									    ifTrue: [ {  } ]
+									    ifFalse: [
+										    { {
+											    (ViennaPatternIdentifierNode identifier: 'RESULT').
+											    retTypeNode } } ]) , {
+									   {
+										   (ViennaPatternIdentifierNode identifier: '_State').
+										   nil }.
+									   {
+										   (ViennaPatternIdentifierNode identifier: '_oldState').
+										   nil } }
+						   body: (self generate: postNode env: env)
+						   varGenerator: varGenerator
+						   env: env);
+				  nextPutAll: '. ' ].
+		  stream
+			  nextPutAll: opname;
+			  nextPutAll: ' := ';
+			  nextPutAll: (self
+					   closureFromFlatBinds: binds
+					   body: body
+					   varGenerator: varGenerator
+					   env: aDictionary) ]
 ]
 
 { #category : 'code generation-expressions' }
@@ -1242,17 +1190,9 @@ ViennaVDM2Smalltalk >> extendedExplicitOperationDefinition: aViennaNode env: aDi
 				                          ViennaUnitTypeNode new } ].
 	retVarName := identifierTypePairList first identifier.
 	retTypeNode := identifierTypePairList second.
-	operationRecording = true
-		ifTrue: [
-				body := '[|_opContext| _opContext := thisContext. self recordOperationCall: '
-				        , opName storeString , '. '
-				        , (self generate: aViennaNode statement env: aDictionary)
-				        , '] ensure: [self recordOperationReturn: '
-				        , opName storeString , ']' ]
-		ifFalse: [
-				body := '[|_opContext| _opContext := thisContext. '
-				        , (self generate: aViennaNode statement env: aDictionary)
-				        , '] value' ].
+	body := '[|_opContext| _opContext := thisContext. '
+	        , (self generate: aViennaNode statement env: aDictionary)
+	        , '] value'.
 	preNode := aViennaNode pre.
 	postNode := aViennaNode post.
 	argType := ((2 to: patternTypePairList size by: 2) collect: [ :index |
@@ -2010,9 +1950,7 @@ ViennaVDM2Smalltalk >> initialize [
 	defaultEnv := Dictionary new.
 	decoder := ViennaVDMValueDecoder current.
 	runtimeAssertionCheck := self class defaultRuntimeAssertionCheck.
-	runtimeTypeCheck := self class defaultRuntimeAssertionCheck.
-	stateRecording := false.
-	operationRecording := false
+	runtimeTypeCheck := self class defaultRuntimeAssertionCheck
 ]
 
 { #category : 'code generation-types' }
