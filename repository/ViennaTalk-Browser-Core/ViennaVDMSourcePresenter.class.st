@@ -281,13 +281,14 @@ ViennaVDMSourcePresenter >> openStateDiagramFrom: aString ifError: errorBlock [
 									          :moduleName
 									          :collection |
 									          collection do: [ :expressionString |
-											          | src transpiledModule compiledMethod |
+											          | transpiledModule src compiledMethod |
+											          transpiledModule := transpiledSpec at: moduleName.
 											          src := ViennaTranspilerForExecutionTracing new
 												                 generate:
 													                 (expressionString asViennaExpressionAst
 														                  parent: specification;
-														                  yourself).
-											          transpiledModule := transpiledSpec at: moduleName.
+														                  yourself)
+												                 env: transpiledModule class viennaEnv.
 											          compiledMethod := OpalCompiler new
 												                            source: src;
 												                            logged: false;

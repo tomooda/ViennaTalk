@@ -51,7 +51,7 @@ ViennaExecutionTraceStateDiagramFormatter >> initialize [
 	triggeredByAssignment := true.
 	stateStack := OrderedCollection new: 1024.
 	stateNames := Dictionary new.
-	transitions := Set new
+	transitions := ViennaOrderedSet new
 ]
 
 { #category : 'adding' }
