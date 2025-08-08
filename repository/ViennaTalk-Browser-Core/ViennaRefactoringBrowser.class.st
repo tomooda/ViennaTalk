@@ -3223,12 +3223,6 @@ ViennaRefactoringBrowser >> testResultTableContextMenu [
 	^ menu
 ]
 
-{ #category : 'accessing' }
-ViennaRefactoringBrowser >> title [
-
-	^ 'Vienna Refactoring Browser'
-]
-
 { #category : 'operations-tests' }
 ViennaRefactoringBrowser >> toggleRunsAllTests [
 
@@ -3642,4 +3636,10 @@ ViennaRefactoringBrowser >> windowIsClosing [
 	highlighterProcess ifNotNil: [
 		highlighterProcess terminate.
 		highlighterProcess := nil ]
+]
+
+{ #category : 'accessing' }
+ViennaRefactoringBrowser >> windowTitle [
+
+	^ 'Vienna Refactoring Browser'
 ]
