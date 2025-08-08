@@ -1,5 +1,5 @@
 Class {
-	#name : 'ViennaSequenceItCommand',
+	#name : 'ViennaSequenceDiagramItCommand',
 	#superclass : 'CmCommand',
 	#category : 'ViennaTalk-Browser-Core-Spec2',
 	#package : 'ViennaTalk-Browser-Core',
@@ -7,31 +7,31 @@ Class {
 }
 
 { #category : 'defaults' }
-ViennaSequenceItCommand class >> defaultDescription [
+ViennaSequenceDiagramItCommand class >> defaultDescription [
 
 	^ 'Evaluate the selected expression and open a sequence diagram from it'
 ]
 
 { #category : 'defaults' }
-ViennaSequenceItCommand class >> defaultIconName [
+ViennaSequenceDiagramItCommand class >> defaultIconName [
 
 	^ #inspect
 ]
 
 { #category : 'defaults' }
-ViennaSequenceItCommand class >> defaultName [
+ViennaSequenceDiagramItCommand class >> defaultName [
 
 	^ 'Sequence it'
 ]
 
 { #category : 'defaults' }
-ViennaSequenceItCommand class >> defaultShortcut [
+ViennaSequenceDiagramItCommand class >> defaultShortcut [
 
 	^ nil
 ]
 
 { #category : 'instance creation' }
-ViennaSequenceItCommand class >> forSpecContext: anObject [
+ViennaSequenceDiagramItCommand class >> forSpecContext: anObject [
 
 	^ (super forSpecContext: anObject)
 		  iconName: self defaultIconName;
@@ -40,7 +40,7 @@ ViennaSequenceItCommand class >> forSpecContext: anObject [
 ]
 
 { #category : 'executing' }
-ViennaSequenceItCommand >> execute [
+ViennaSequenceDiagramItCommand >> execute [
 
-	context ifNotNil: #doSequenceIt
+	context ifNotNil: #doSequenceDiagramIt
 ]

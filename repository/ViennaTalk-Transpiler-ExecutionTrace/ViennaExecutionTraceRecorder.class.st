@@ -18,6 +18,14 @@ ViennaExecutionTraceRecorder class >> forSequenceDiagram: aString [
 		  yourself
 ]
 
+{ #category : 'instance creation' }
+ViennaExecutionTraceRecorder class >> forStateDiagram: aCollectionOfBlockClosure [
+
+	^ self new
+		  useStateDiagramFormat: aCollectionOfBlockClosure;
+		  yourself
+]
+
 { #category : 'recording' }
 ViennaExecutionTraceRecorder >> beginRecording [
 
@@ -72,5 +80,13 @@ ViennaExecutionTraceRecorder >> useSequenceDiagramFormat: aString [
 
 	format := ViennaExecutionTraceSequenceDiagramFormatter new
 		          root: aString;
+		          yourself
+]
+
+{ #category : 'accessing' }
+ViennaExecutionTraceRecorder >> useStateDiagramFormat: aCollectionOfBlockClosure [
+
+	format := ViennaExecutionTraceStateDiagramFormatter new
+		          probes: aCollectionOfBlockClosure;
 		          yourself
 ]

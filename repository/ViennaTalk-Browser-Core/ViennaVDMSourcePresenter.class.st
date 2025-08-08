@@ -27,7 +27,8 @@ ViennaVDMSourcePresenter class >> buildCommandsGroupWith: presenter forRoot: aCm
 		ViennaEvaluateItCommand.
 		ViennaTypeItCommand.
 		ViennaExecuteItCommand.
-		ViennaSequenceItCommand } do: [ :cmdClass |
+		ViennaSequenceDiagramItCommand .
+		ViennaStateDiagramItCommand} do: [ :cmdClass |
 		group register: (cmdClass forSpecContext: presenter) ].
 	aCmCommandsGroup register: group.
 	^ group
@@ -77,10 +78,21 @@ ViennaVDMSourcePresenter >> doExecuteIt [
 ]
 
 { #category : 'evaluating' }
-ViennaVDMSourcePresenter >> doSequenceIt [
+ViennaVDMSourcePresenter >> doSequenceDiagramIt [
 
 	self selectedTextOrLine trim ifNotEmpty: [ :string |
 			self openSequenceDiagramFrom: string ifError: [ :msg |
+					self
+						insertPopoverAfterCurrentSelection: (self newLabel label: msg)
+						style: 'error'.
+					^ nil ] ]
+]
+
+{ #category : 'evaluating' }
+ViennaVDMSourcePresenter >> doStateDiagramIt [
+
+	self selectedTextOrLine trim ifNotEmpty: [ :string |
+			self openStateDiagramFrom: string ifError: [ :msg |
 					self
 						insertPopoverAfterCurrentSelection: (self newLabel label: msg)
 						style: 'error'.
@@ -240,6 +252,56 @@ ViennaVDMSourcePresenter >> openSequenceDiagramFrom: aString ifError: errorBlock
 				 sequenceDiagramSourceFromNode: node
 				 in: (node module ifNotNil: #identifier)) openMicromaidWithTitle:
 				'Sequence Diagram from ' , aString ]
+]
+
+{ #category : 'evaluating' }
+ViennaVDMSourcePresenter >> openStateDiagramFrom: aString ifError: errorBlock [
+
+	| node |
+	node := ViennaVDMParser current statement
+	        / ViennaVDMParser current expression parse: aString.
+	node isPetit2Failure ifTrue: [ ^ errorBlock cull: node printString ].
+	node parent: module value.
+	[ node typecheck ]
+		on: ViennaTypeError
+		do: [ :ex | ^ errorBlock cull: ex messageText ].
+	animation value ifNotNil: [ :anim |
+			| specification transpiledSpec probeEditor |
+			specification := anim specification.
+			specification isString ifTrue: [
+				specification := specification asViennaDocumentAst ].
+			transpiledSpec := ViennaTranspiledModularDocumentForExecutionTracing
+				                  fromAnimation: anim.
+			probeEditor := ViennaStateProbeEditor new specification:
+				               anim specification.
+			probeEditor openDialog okAction: [
+					| probes |
+					probes := Array streamContents: [ :stream |
+							          probeEditor probes keysAndValuesDo: [
+									          :moduleName
+									          :collection |
+									          collection do: [ :expressionString |
+											          | src transpiledModule compiledMethod |
+											          src := ViennaTranspilerForExecutionTracing new
+												                 generate:
+													                 (expressionString asViennaExpressionAst
+														                  parent: specification;
+														                  yourself).
+											          transpiledModule := transpiledSpec at: moduleName.
+											          compiledMethod := OpalCompiler new
+												                            source: src;
+												                            logged: false;
+												                            receiver: transpiledModule;
+												                            compile.
+											          stream nextPut: [
+												          transpiledModule
+													          withArgs: #(  )
+													          executeMethod: compiledMethod ] ] ] ].
+					(transpiledSpec
+						 stateDiagramSourceFromNode: node
+						 probes: probes
+						 in: (node module ifNotNil: #identifier))
+						openMicromaidWithTitle: 'State Diagram from ' , aString ] ]
 ]
 
 { #category : 'api' }

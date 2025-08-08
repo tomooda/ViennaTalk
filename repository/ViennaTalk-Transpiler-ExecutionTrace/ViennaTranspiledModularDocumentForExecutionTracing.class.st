@@ -12,9 +12,10 @@ Class {
 { #category : 'instance creation' }
 ViennaTranspiledModularDocumentForExecutionTracing class >> fromAnimation: aViennaAnimation [
 
-	| document reader |
-	document := self transpilerClass new generate:
-		            aViennaAnimation specification.
+	| spec document reader |
+	spec := aViennaAnimation specification.
+	spec isString ifTrue: [ spec := spec asViennaDocumentAst ].
+	document := self transpilerClass new generate: spec.
 	reader := ViennaReader new.
 	aViennaAnimation state keysAndValuesDo: [ :globalName :value |
 			| index moduleName localName |
@@ -131,8 +132,25 @@ ViennaTranspiledModularDocumentForExecutionTracing >> sequenceDiagramSourceFromN
 		  executionTrace
 ]
 
+{ #category : 'user interface' }
+ViennaTranspiledModularDocumentForExecutionTracing >> stateDiagramSourceFromNode: aViennaNode probes: aCollectionOfBlock in: aStringOrNil [
+
+	self useStateDiagramRecorder: aCollectionOfBlock.
+	^ (self at: aStringOrNil ifAbsent: [ self ])
+		  evaluateNode: aViennaNode ifError: [ ^ nil ];
+		  executionTrace
+]
+
 { #category : 'accessing' }
 ViennaTranspiledModularDocumentForExecutionTracing >> useSequenceDiagramRecorder: aString [
 
-	_recorder := ViennaExecutionTraceRecorder forSequenceDiagram: aString
+	^ _recorder := ViennaExecutionTraceRecorder forSequenceDiagram:
+		               aString
+]
+
+{ #category : 'accessing' }
+ViennaTranspiledModularDocumentForExecutionTracing >> useStateDiagramRecorder: aCollectionOfBlockClosure [
+
+	^ _recorder := ViennaExecutionTraceRecorder forStateDiagram:
+		               aCollectionOfBlockClosure asArray
 ]
