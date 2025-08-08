@@ -16,7 +16,7 @@ Class {
 }
 
 { #category : 'operations' }
-ViennaStateProbeEditor >> addProbe [
+ViennaStateProbeEditor >> addExpressionProbe [
 
 	self selectedModuleDo: [ :moduleNode |
 			| expressionString |
@@ -39,20 +39,83 @@ ViennaStateProbeEditor >> addProbe [
 					ifTrue: [
 							expressionNode parent: moduleNode.
 							[
-								| index |
 								expressionNode typecheck.
-								index := probeList selectedIndex.
-								index = 0 ifTrue: [ index := probeList items size + 1 ].
-								(probes
-									 at: moduleNode identifier
-									 ifAbsentPut: [ OrderedCollection new ])
-									add: expressionString
-									beforeIndex: index.
-								self updateProbeList.
-								^ self ]
+								^ self addExpressionProbe: expressionString ]
 								on: ViennaTypeError
 								do: [ :ex | self alert: ex messageText ] ]
 					ifFalse: [ self alert: 'Syntax error' ] ] repeat ]
+]
+
+{ #category : 'operations' }
+ViennaStateProbeEditor >> addExpressionProbe: aString [
+
+	self selectedModuleDo: [ :moduleNode |
+			| index |
+			index := probeList selectedIndex.
+			index = 0 ifTrue: [ index := probeList items size + 1 ].
+			(probes
+				 at: moduleNode identifier
+				 ifAbsentPut: [ OrderedCollection new ])
+				add: aString
+				beforeIndex: index.
+			self updateProbeList.
+			^ self ]
+]
+
+{ #category : 'operations' }
+ViennaStateProbeEditor >> addProbe [
+
+	self addProbeMenu openWithSpecAtPointer
+]
+
+{ #category : 'menus' }
+ViennaStateProbeEditor >> addProbeMenu [
+
+	^ self newMenu
+		  addGroup: [ :group |
+				  group
+					  addItem: [ :item |
+							  item
+								  name: 'state variable';
+								  subMenu: self addStateVariableProbeMenu ];
+					  addItem: [ :item |
+							  item
+								  name: 'pure operation';
+								  subMenu: self addPureOperationProbeMenu ] ];
+		  addGroup: [ :group |
+				  group addItem: [ :item |
+						  item
+							  name: 'Enter an expression...';
+							  action: [ self addExpressionProbe ] ] ];
+		  yourself
+]
+
+{ #category : 'menus' }
+ViennaStateProbeEditor >> addPureOperationProbeMenu [
+
+	^ self newMenu
+		  addGroup: [ :group |
+				  self pureZeroArgOperationsDo: [ :defNode |
+							  group addItem: [ :item |
+										  | expr |
+										  expr := defNode identifier , '()'.
+										  item
+											  name: expr;
+											  action: [ self addExpressionProbe: expr ] ] ] ];
+		  yourself
+]
+
+{ #category : 'menus' }
+ViennaStateProbeEditor >> addStateVariableProbeMenu [
+
+	^ self newMenu
+		  addGroup: [ :group |
+				  self stateVariablesDo: [ :fieldNode |
+							  group addItem: [ :item |
+										  item
+											  name: fieldNode identifier;
+											  action: [ self addExpressionProbe: fieldNode identifier ] ] ] ];
+		  yourself
 ]
 
 { #category : 'layout' }
@@ -150,6 +213,20 @@ ViennaStateProbeEditor >> probes [
 	^ probes
 ]
 
+{ #category : 'enumerating' }
+ViennaStateProbeEditor >> pureZeroArgOperationsDo: aBlock [
+
+	self selectedModuleDo: [ :moduleNode |
+			moduleNode toplevelDefinitionsDo: [ :toplevelDefinitionNode |
+					((toplevelDefinitionNode isViennaExplicitOperationDefinitionNode
+						  or: [
+							  toplevelDefinitionNode
+								  isViennaExtendedExplicitOperationDefinitionNode ]) and: [
+							 toplevelDefinitionNode isPureOperation and: [
+								 toplevelDefinitionNode parameters isEmpty ] ]) ifTrue: [
+						aBlock value: toplevelDefinitionNode ] ] ]
+]
+
 { #category : 'operations' }
 ViennaStateProbeEditor >> removeProbe [
 
@@ -202,6 +279,14 @@ ViennaStateProbeEditor >> specificationChanged [
 	self updateModuleList
 ]
 
+{ #category : 'enumerating' }
+ViennaStateProbeEditor >> stateVariablesDo: aBlock [
+
+	self selectedModuleDo: [ :moduleNode |
+			moduleNode stateDefinition ifNotNil: [ :stateDefinitionNode |
+				stateDefinitionNode fieldsDo: aBlock ] ]
+]
+
 { #category : 'updating' }
 ViennaStateProbeEditor >> updateButtons [
 
@@ -227,4 +312,10 @@ ViennaStateProbeEditor >> updateProbeList [
 			 ifNotNil: [ :moduleName |
 				 probes at: moduleName ifAbsentPut: [ OrderedCollection new ] ]
 			 ifNil: [ #(  ) ])
+]
+
+{ #category : 'accessing' }
+ViennaStateProbeEditor >> windowTitle [
+
+	^ 'Abstract State Probers'
 ]

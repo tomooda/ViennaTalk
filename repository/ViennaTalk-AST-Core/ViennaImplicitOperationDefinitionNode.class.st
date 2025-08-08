@@ -232,6 +232,12 @@ ViennaImplicitOperationDefinitionNode >> isOperationDefinition [
 ]
 
 { #category : 'testing' }
+ViennaImplicitOperationDefinitionNode >> isPureOperation [
+
+	^ self access includes: 'pure'
+]
+
+{ #category : 'testing' }
 ViennaImplicitOperationDefinitionNode >> isViennaAccessOperationDefinitionNode [
 
 	^ true
