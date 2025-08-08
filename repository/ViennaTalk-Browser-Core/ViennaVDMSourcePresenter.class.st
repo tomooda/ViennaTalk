@@ -293,10 +293,9 @@ ViennaVDMSourcePresenter >> openStateDiagramFrom: aString ifError: errorBlock [
 												                            logged: false;
 												                            receiver: transpiledModule;
 												                            compile.
-											          stream nextPut: [
-												          transpiledModule
-													          withArgs: #(  )
-													          executeMethod: compiledMethod ] ] ] ].
+											          stream nextPut: (ViennaCompiledMethodBlock
+													           receiver: transpiledModule
+													           compiledMethod: compiledMethod) ] ] ].
 					(transpiledSpec
 						 stateDiagramSourceFromNode: node
 						 probes: probes

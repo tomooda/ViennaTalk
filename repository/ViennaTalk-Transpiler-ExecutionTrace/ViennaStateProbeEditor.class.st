@@ -23,12 +23,15 @@ ViennaStateProbeEditor >> addProbe [
 			expressionString := ''.
 			[
 				| expressionNode |
-				expressionString := self
-					                    request:
-					                    'probe expression in '
-					                    , moduleNode identifier
-					                    initialAnswer: expressionString
-					                    title: 'Add a probe'.
+				expressionString := [
+					                    self
+						                    request:
+						                    'probe expression in '
+						                    , moduleNode identifier
+						                    initialAnswer: expressionString
+						                    title: 'Add a probe' ]
+					                    on: SpCancelledInteractionError
+					                    do: [ :ex | ex return: nil ].
 				expressionString ifNil: [ ^ self ].
 				expressionNode := ViennaVDMParser current expression parse:
 					                  expressionString.
