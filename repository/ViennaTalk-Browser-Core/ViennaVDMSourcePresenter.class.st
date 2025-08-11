@@ -301,7 +301,8 @@ ViennaVDMSourcePresenter >> openStateDiagramFrom: aString ifError: errorBlock [
 						 stateDiagramSourceFromNode: node
 						 probes: probes
 						 in: (node module ifNotNil: #identifier))
-						openMicromaidWithTitle: 'State Diagram from ' , aString ] ]
+						openMicromaidBuilderWith: [ :builder | builder gap: 120 ]
+						title: 'State Diagram from ' , aString ] ]
 ]
 
 { #category : 'api' }

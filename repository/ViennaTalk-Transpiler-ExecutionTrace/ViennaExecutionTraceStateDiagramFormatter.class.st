@@ -8,6 +8,7 @@ Class {
 		'state',
 		'stateStack',
 		'stateNames',
+		'operationStack',
 		'transitions'
 	],
 	#category : 'ViennaTalk-Transpiler-ExecutionTrace-Formats',
@@ -50,6 +51,7 @@ ViennaExecutionTraceStateDiagramFormatter >> initialize [
 	triggerOperations := Set new.
 	triggeredByAssignment := true.
 	stateStack := OrderedCollection new: 1024.
+	operationStack := OrderedCollection new: 1024.
 	stateNames := Dictionary new.
 	transitions := ViennaOrderedSet new
 ]
@@ -68,16 +70,28 @@ ViennaExecutionTraceStateDiagramFormatter >> transitionFrom: preStateString to: 
 ]
 
 { #category : 'formatting' }
+ViennaExecutionTraceStateDiagramFormatter >> transitionFrom: preStateString to: postStateString operation: operationString [
+
+	^ (preStateString ifNil: [ '[*]' ]) , ' --> '
+	  , (postStateString ifNil: [ '[*]' ])
+	  ,
+	  (operationString
+		   ifNotNil: [ ' : ' , operationString ]
+		   ifNil: [ '' ])
+]
+
+{ #category : 'formatting' }
 ViennaExecutionTraceStateDiagramFormatter >> writeCall: aString args: anArray on: aStream [
 
 	(triggerOperations includes: aString) ifTrue: [
-		stateStack addLast: self abstractState ]
+		stateStack addLast: self abstractState ].
+	operationStack addLast: aString
 ]
 
 { #category : 'formatting' }
 ViennaExecutionTraceStateDiagramFormatter >> writeEndStateOn: aStream [
 
-	transitions add: (self transitionFrom: state to: nil)
+	transitions add: (self transitionFrom: state to: nil operation: nil)
 ]
 
 { #category : 'formatting' }
@@ -105,7 +119,11 @@ ViennaExecutionTraceStateDiagramFormatter >> writeReturn: aString value: anObjec
 			| preState postState |
 			preState := stateStack removeLast.
 			postState := self abstractState.
-			transitions add: (self transitionFrom: preState to: postState) ]
+			transitions add: (self
+					 transitionFrom: preState
+					 to: postState
+					 operation: operationStack last) ].
+	operationStack removeLast
 ]
 
 { #category : 'formatting' }
@@ -113,7 +131,8 @@ ViennaExecutionTraceStateDiagramFormatter >> writeStartStateOn: aStream [
 
 	| initialState |
 	initialState := state := self abstractState.
-	transitions add: (self transitionFrom: nil to: initialState)
+	transitions add:
+		(self transitionFrom: nil to: initialState operation: nil)
 ]
 
 { #category : 'formatting' }
@@ -124,7 +143,10 @@ ViennaExecutionTraceStateDiagramFormatter >> writeState: aDictionary on: outputS
 				| preState postState |
 				preState := state.
 				postState := state := self abstractState.
-				transitions add: (self transitionFrom: preState to: postState) ]
+				transitions add: (self
+						 transitionFrom: preState
+						 to: postState
+						 operation: operationStack last) ]
 		ifFalse: [ state := self abstractState ]
 ]
 
