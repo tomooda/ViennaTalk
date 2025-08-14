@@ -6,6 +6,12 @@ Class {
 	#tag : 'Formats'
 }
 
+{ #category : 'user interface' }
+ViennaExecutionTraceFormat >> open: aViennaExecutionTraceRecorder withTitle: aString [
+
+	^ self subclassResponsibility
+]
+
 { #category : 'formatting' }
 ViennaExecutionTraceFormat >> writeCall: aString args: anArray on: aStream [
 
@@ -31,7 +37,7 @@ ViennaExecutionTraceFormat >> writeReturn: aString value: anObject on: aStream [
 ]
 
 { #category : 'formatting' }
-ViennaExecutionTraceFormat >> writeState: aDictionary on: outputStream [
+ViennaExecutionTraceFormat >> writeStateDiffBlock: aBlock on: aStream [
 
 	^ self subclassResponsibility
 ]

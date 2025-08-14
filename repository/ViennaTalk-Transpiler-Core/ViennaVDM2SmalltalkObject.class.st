@@ -8,16 +8,14 @@ Class {
 { #category : 'utilities' }
 ViennaVDM2SmalltalkObject >> createFlatDocumentClassWithInstVars: anArrayOfString1 stateVars: anArrayOfString2 [
 
-	^ (ShiftAnonymousClassInstaller make: [ :builder |
-				   builder
-					   superclass: self moduleBaseClass;
-					   slots: (anArrayOfString1 asArray collect: [ :instVarName |
-								    InstanceVariableSlot named: instVarName asSymbol ])
-						   , (anArrayOfString2 asArray collect: [ :instVarName |
-									    self newStateVariableSlotNamed: instVarName ]);
-					   package: 'Auto Generated from VDM' ])
-		  specification: source;
-		  yourself
+	^ ShiftAnonymousClassInstaller make: [ :builder |
+			  builder
+				  superclass: self moduleBaseClass;
+				  slots: (anArrayOfString1 asArray collect: [ :instVarName |
+							   InstanceVariableSlot named: instVarName asSymbol ])
+					  , (anArrayOfString2 asArray collect: [ :instVarName |
+								   self newStateVariableSlotNamed: instVarName ]);
+				  package: 'Auto Generated from VDM' ]
 ]
 
 { #category : 'utilities' }

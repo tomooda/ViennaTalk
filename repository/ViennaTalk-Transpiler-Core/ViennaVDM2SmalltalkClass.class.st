@@ -9,6 +9,12 @@ Class {
 }
 
 { #category : 'utilities' }
+ViennaVDM2SmalltalkClass >> afterMultipleAssignment: aViennaMultipleAssignmentStatementNode [
+
+	^ 'self inv'
+]
+
+{ #category : 'utilities' }
 ViennaVDM2SmalltalkClass >> buildEnv: aViennaNode [
 
 	| envs |
@@ -52,12 +58,6 @@ ViennaVDM2SmalltalkClass >> callStatement: aViennaNode env: aDictionary [
 		               ifNotEmpty: [
 		               '(' , callee , ' value: ' , (' value: ' join: args)
 		               , ')' ]
-]
-
-{ #category : 'utilities' }
-ViennaVDM2SmalltalkClass >> checkInvariant [
-
-	^ 'self _stateChanged'
 ]
 
 { #category : 'utilities' }
@@ -117,17 +117,15 @@ ViennaVDM2SmalltalkClass >> createFlatDocumentClassWithInstVars: anArrayOfString
 	| documentClassName |
 	documentClassName := self requestClassName: '' for: 'Document'.
 	documentClassName ifNil: [ ^ nil ].
-	^ (ShiftClassInstaller make: [ :builder |
-				   builder
-					   name: documentClassName asSymbol;
-					   superclass: self documentBaseClass;
-					   slots: (anArrayOfString1 asArray collect: [ :instVarName |
-								    InstanceVariableSlot named: instVarName asSymbol ])
-						   , (anArrayOfString2 asArray collect: [ :instVarName |
-									    self newStateVariableSlotNamed: instVarName ]);
-					   package: 'Auto Generated from VDM' ])
-		  specification: source;
-		  yourself
+	^ ShiftClassInstaller make: [ :builder |
+			  builder
+				  name: documentClassName asSymbol;
+				  superclass: self documentBaseClass;
+				  slots: (anArrayOfString1 asArray collect: [ :instVarName |
+							   InstanceVariableSlot named: instVarName asSymbol ])
+					  , (anArrayOfString2 asArray collect: [ :instVarName |
+								   self newStateVariableSlotNamed: instVarName ]);
+				  package: 'Auto Generated from VDM' ]
 ]
 
 { #category : 'utilities' }
@@ -153,7 +151,6 @@ ViennaVDM2SmalltalkClass >> createModuleClass: aString withInstVars: anArrayOfSt
 									    self newStateVariableSlotNamed: instVarName ]);
 					   package: 'Auto Generated from VDM' ])
 		  viennaEnv: aDictionary;
-		  specification: source;
 		  yourself
 ]
 
@@ -1053,9 +1050,9 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 	importModuleNames := interfaceNode first
 		                     ifNil: [ Array new ]
 		                     ifNotNil: [ :importDefinitionListNode |
-			                     importDefinitionListNode collect: [
-				                     :importDefinitionNode |
-				                     importDefinitionNode first ] ].
+				                     importDefinitionListNode collect: [
+					                     :importDefinitionNode |
+					                     importDefinitionNode first ] ].
 	importClassNames := importModuleNames collect: [ :importModuleName |
 		                    env
 			                    at: importModuleName
@@ -1063,19 +1060,19 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 	stateVars := #(  ).
 	typeNames := Array new writeStream.
 	moduleBodyNode do: [ :section |
-		section isViennaStateDefinitionNode
-			ifTrue: [
-				| stateDefinition |
-				stateDefinition := section.
-				stateVars := stateDefinition fieldList collect: #identifier.
-				env
-					at: stateDefinition identifier
-					put: 'self ' , stateDefinition identifier ]
-			ifFalse: [
-				section uniqueBoundIdentifiersDo: [ :ident |
-					env at: ident put: 'self ' , ident ] ].
-		section isViennaTypeDefinitionsNode ifTrue: [
-			section do: [ :typeDef | typeNames nextPut: typeDef identifier ] ] ].
+			section isViennaStateDefinitionNode
+				ifTrue: [
+						| stateDefinition |
+						stateDefinition := section.
+						stateVars := stateDefinition fieldList collect: #identifier.
+						env
+							at: stateDefinition identifier
+							put: 'self ' , stateDefinition identifier ]
+				ifFalse: [
+						section uniqueBoundIdentifiersDo: [ :ident |
+							env at: ident put: 'self ' , ident ] ].
+			section isViennaTypeDefinitionsNode ifTrue: [
+				section do: [ :typeDef | typeNames nextPut: typeDef identifier ] ] ].
 	typeNames := typeNames contents.
 	instVars := moduleBodyNode uniqueBoundIdentifiers copyWithoutAll:
 		            stateVars.
@@ -1085,20 +1082,21 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 		            withInstVars: importClassNames , instVars
 		            stateVars: stateVars
 		            env: env.
+	newClass specification: aViennaNode.
 	classes at: moduleName put: newClass.
 	importModuleNames
 		with: importClassNames
 		do: [ :importModuleName :importClassName |
-			self
-				defineMethod:
-					importModuleName , ':' , 'a' , importModuleName capitalized
-					, String cr , importClassName , ' := ' , 'a'
-					, importModuleName capitalized
-				in: newClass
-				protocol: 'imports'
-				node:
-				(interfaceNode first detect: [ :node |
-					 node first = importModuleName ]) ].
+				self
+					defineMethod:
+						importModuleName , ':' , 'a' , importModuleName capitalized
+						, String cr , importClassName , ' := ' , 'a'
+						, importModuleName capitalized
+					in: newClass
+					protocol: 'imports'
+					node:
+					(interfaceNode first detect: [ :node |
+						 node first = importModuleName ]) ].
 	moduleBodyNode do: [ :section | self generate: section env: env ].
 	self
 		defineInitTypeMethodForTypeNames: typeNames
@@ -1106,11 +1104,11 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 		protocol: 'initialize-release'
 		node: nil.
 	(newClass includesSelector: #init) ifFalse: [
-		self
-			defineMethod: 'init'
-			in: newClass
-			protocol: 'state'
-			node: nil ]
+			self
+				defineMethod: 'init'
+				in: newClass
+				protocol: 'state'
+				node: nil ]
 ]
 
 { #category : 'class access' }
@@ -1157,7 +1155,7 @@ ViennaVDM2SmalltalkClass >> namedTrace: aViennaNode env: aDictionary [
 ViennaVDM2SmalltalkClass >> newStateVariableSlotNamed: aString [
 
 	^ runtimeAssertionCheck
-		  ifTrue: [ ViennaFullStateVariableSlot named: aString asSymbol ]
+		  ifTrue: [ ViennaStateVariableWithInvSlot named: aString asSymbol ]
 		  ifFalse: [ ViennaStateVariableSlot named: aString asSymbol ]
 ]
 

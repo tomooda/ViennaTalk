@@ -49,6 +49,12 @@ ViennaMapOrSequenceReferenceNode >> freeIdentifiersExcept: aSet do: aBlock [
 	self argumentExpression freeIdentifiersExcept: aSet do: aBlock
 ]
 
+{ #category : 'accessing' }
+ViennaMapOrSequenceReferenceNode >> identifier [
+
+	^ self stateDesignator identifier
+]
+
 { #category : 'pretty printing' }
 ViennaMapOrSequenceReferenceNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 otherwise: aBlock3 [
 

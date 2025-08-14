@@ -25,6 +25,12 @@ ViennaExecutionTraceNullRecorder >> endRecording [
 ]
 
 { #category : 'accessing' }
+ViennaExecutionTraceNullRecorder >> openWithTitle: aString [
+
+	
+]
+
+{ #category : 'accessing' }
 ViennaExecutionTraceNullRecorder >> output [
 
 	^ String new
@@ -43,7 +49,7 @@ ViennaExecutionTraceNullRecorder >> return: aString value: anObject [
 ]
 
 { #category : 'recording' }
-ViennaExecutionTraceNullRecorder >> state: aDictionary [
+ViennaExecutionTraceNullRecorder >> stateDiffBlock: aBlock [
 
 	
 ]

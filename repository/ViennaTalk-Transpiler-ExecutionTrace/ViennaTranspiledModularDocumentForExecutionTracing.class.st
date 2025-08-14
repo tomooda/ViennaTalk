@@ -34,6 +34,12 @@ ViennaTranspiledModularDocumentForExecutionTracing class >> transpilerClass [
 	^ ViennaTranspilerForExecutionTracing
 ]
 
+{ #category : 'accessing' }
+ViennaTranspiledModularDocumentForExecutionTracing >> _executionTrace [
+
+	^ _recorder output
+]
+
 { #category : 'recording' }
 ViennaTranspiledModularDocumentForExecutionTracing >> _recordOperationCall: aString args: anArray [
 
@@ -47,9 +53,9 @@ ViennaTranspiledModularDocumentForExecutionTracing >> _recordOperationReturn: aS
 ]
 
 { #category : 'recording' }
-ViennaTranspiledModularDocumentForExecutionTracing >> _recordState [
+ViennaTranspiledModularDocumentForExecutionTracing >> _recordStateDiff: aBlock [
 
-	_recorder state: self state
+	_recorder stateDiffBlock: aBlock
 ]
 
 { #category : 'accessing' }
@@ -103,12 +109,6 @@ ViennaTranspiledModularDocumentForExecutionTracing >> evaluateStatement: aString
 		  do: [ value ]
 ]
 
-{ #category : 'accessing' }
-ViennaTranspiledModularDocumentForExecutionTracing >> executionTrace [
-
-	^ _recorder output
-]
-
 { #category : 'initialize' }
 ViennaTranspiledModularDocumentForExecutionTracing >> initialize [
 
@@ -129,7 +129,7 @@ ViennaTranspiledModularDocumentForExecutionTracing >> sequenceDiagramSourceFromN
 	self useSequenceDiagramRecorder: aViennaNode source.
 	^ (self at: aStringOrNil ifAbsent: [ self ])
 		  evaluateNode: aViennaNode ifError: [ ^ nil ];
-		  executionTrace
+		  _executionTrace
 ]
 
 { #category : 'user interface' }
@@ -138,7 +138,13 @@ ViennaTranspiledModularDocumentForExecutionTracing >> stateDiagramSourceFromNode
 	self useStateDiagramRecorder: aCollectionOfBlock.
 	^ (self at: aStringOrNil ifAbsent: [ self ])
 		  evaluateNode: aViennaNode ifError: [ ^ nil ];
-		  executionTrace
+		  _executionTrace
+]
+
+{ #category : 'accessing' }
+ViennaTranspiledModularDocumentForExecutionTracing >> useCSVRecorder: aDictionary [
+
+	^ _recorder := ViennaExecutionTraceRecorder forCSV: aDictionary
 ]
 
 { #category : 'accessing' }

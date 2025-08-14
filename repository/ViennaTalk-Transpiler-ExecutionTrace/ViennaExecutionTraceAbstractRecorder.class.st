@@ -25,6 +25,12 @@ ViennaExecutionTraceAbstractRecorder >> endRecording [
 ]
 
 { #category : 'accessing' }
+ViennaExecutionTraceAbstractRecorder >> openWithTitle: aString [
+
+	^ self subclassResponsibility
+]
+
+{ #category : 'accessing' }
 ViennaExecutionTraceAbstractRecorder >> output [
 
 	^ self subclassResponsibility
@@ -46,7 +52,7 @@ ViennaExecutionTraceAbstractRecorder >> return: aString value: anObject [
 ]
 
 { #category : 'recording' }
-ViennaExecutionTraceAbstractRecorder >> state: aDictionary [
+ViennaExecutionTraceAbstractRecorder >> stateDiffBlock: aBlock [
 
 	^ self subclassResponsibility
 ]

@@ -39,20 +39,23 @@ ViennaTranspiledObject class >> initialize [
 	specificationDict := Dictionary new.
 ]
 
-{ #category : 'accessing' }
-ViennaTranspiledObject class >> name [
+{ #category : 'specification' }
+ViennaTranspiledObject class >> moduleName [
 
-	specification ifNotNil: [ ^ specification identifier ].
-	^ super name
+	^ (specification notNil or: [ specification isViennaModuleNode ])
+		  ifTrue: [ specification identifier ]
+		  ifFalse: [ nil ]
 ]
 
 { #category : 'specification' }
 ViennaTranspiledObject class >> specification [
+
 	^ specification
 ]
 
 { #category : 'specification' }
 ViennaTranspiledObject class >> specification: aViennaNode [
+
 	specification := aViennaNode
 ]
 
@@ -130,12 +133,6 @@ ViennaTranspiledObject >> _document [
 ViennaTranspiledObject >> _document: aViennaTranspiledModularDocument [
 
 	_document := aViennaTranspiledModularDocument
-]
-
-{ #category : 'private' }
-ViennaTranspiledObject >> _stateChanged [
-
-	self inv
 ]
 
 { #category : 'accessing' }

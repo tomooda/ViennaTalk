@@ -92,6 +92,12 @@ ViennaVDM2Smalltalk >> activeExpression: aViennaNode env: aDictionary [
 	^ self notYetImplemented
 ]
 
+{ #category : 'utilities' }
+ViennaVDM2Smalltalk >> afterMultipleAssignment: aViennaMultipleAssignmentStatementNode [
+
+	^ ''
+]
+
 { #category : 'code generation-statements' }
 ViennaVDM2Smalltalk >> alwaysStatement: aViennaNode env: aDictionary [
 	| s1 s2 |
@@ -437,12 +443,6 @@ ViennaVDM2Smalltalk >> casesStatementAlternative: aViennaNode env: aDictionary [
 { #category : 'code generation-statements' }
 ViennaVDM2Smalltalk >> casesStatementAlternatives: aViennaNode env: aDictionary [
 	^ self generateAll: aViennaNode env: aDictionary
-]
-
-{ #category : 'utilities' }
-ViennaVDM2Smalltalk >> checkInvariant [
-
-	^ ''
 ]
 
 { #category : 'utilities' }
@@ -2453,53 +2453,53 @@ ViennaVDM2Smalltalk >> multipleAssignStatement: aViennaNode env: aDictionary [
 
 	| assigns |
 	assigns := aViennaNode collect: [ :assign |
-		           {
-			           (self generate: assign first env: aDictionary).
-			           (self generate: assign second env: aDictionary) } ].
+			           {
+				           (self generate: assign stateDesignator env: aDictionary).
+				           (self generate: assign expression env: aDictionary) } ].
 	^ assigns size < 2
 		  ifTrue: [
-			  PP2Failure message:
-				  'atom statement should have more than one statements' ]
+				  PP2Failure message:
+					  'atom statement should have more than one statements' ]
 		  ifFalse: [
-			  | varGenerator tmps |
-			  varGenerator := self
-				                  varNameGenerator: 'atom'
-				                  uniqueIn: (assigns collect: #second).
-			  tmps := assigns collect: [ :assign | varGenerator value ].
-			  self stringStreamContents: [ :stream |
-				  stream nextPutAll: '[| '.
-				  tmps do: [ :tmp |
-					  stream
-						  nextPutAll: tmp;
-						  nextPutAll: ' ' ].
-				  stream nextPutAll: '| '.
-				  tmps with: assigns do: [ :tmp :assign |
-					  stream
-						  nextPutAll: tmp;
-						  nextPutAll: ' := ';
-						  nextPutAll: assign second;
-						  nextPutAll: ' . ' ].
-				  tmps with: assigns do: [ :tmp :assign |
-					  | desig |
-					  desig := assign first.
-					  desig isString
-						  ifTrue: [
-							  stream
-								  nextPutAll: (self noCheckAssignment: desig be: tmp);
-								  nextPutAll: '. ' ]
-						  ifFalse: [
-							  | ident path |
-							  ident := desig first.
-							  path := desig second.
-							  stream
-								  nextPutAll: (self
-										   noCheckAssignment: ident
-										   be:
-											   ident , ' copyAtPath: {' , (' . ' join: path)
-											   , '} put: ' , tmp);
-								  nextPutAll: '. ' ] ].
-				  stream nextPutAll: self checkInvariant.
-				  stream nextPutAll: '] value' ] ]
+				  | varGenerator tmps |
+				  varGenerator := self
+					                  varNameGenerator: 'atom'
+					                  uniqueIn: (assigns collect: #second).
+				  tmps := assigns collect: [ :assign | varGenerator value ].
+				  self stringStreamContents: [ :stream |
+						  stream nextPutAll: '[| '.
+						  tmps do: [ :tmp |
+								  stream
+									  nextPutAll: tmp;
+									  nextPutAll: ' ' ].
+						  stream nextPutAll: '| '.
+						  tmps with: assigns do: [ :tmp :assign |
+								  stream
+									  nextPutAll: tmp;
+									  nextPutAll: ' := ';
+									  nextPutAll: assign second;
+									  nextPutAll: ' . ' ].
+						  tmps with: assigns do: [ :tmp :assign |
+								  | desig |
+								  desig := assign first.
+								  desig isString
+									  ifTrue: [
+											  stream
+												  nextPutAll: (self noCheckAssignment: desig be: tmp);
+												  nextPutAll: '. ' ]
+									  ifFalse: [
+											  | ident path |
+											  ident := desig first.
+											  path := desig second.
+											  stream
+												  nextPutAll: (self
+														   noCheckAssignment: ident
+														   be:
+															   ident , ' copyAtPath: {' , (' . ' join: path)
+															   , '} put: ' , tmp);
+												  nextPutAll: '. ' ] ].
+						  stream nextPutAll: (self afterMultipleAssignment: aViennaNode).
+						  stream nextPutAll: '] value' ] ]
 ]
 
 { #category : 'code generation-patterns' }

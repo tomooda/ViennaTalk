@@ -12,6 +12,12 @@ ViennaStateDesignatorNode class >> isAbstract [
 	^ self = ViennaStateDesignatorNode
 ]
 
+{ #category : 'accessing' }
+ViennaStateDesignatorNode >> identifier [
+
+	^ self subclassResponsibility
+]
+
 { #category : 'testing' }
 ViennaStateDesignatorNode >> isAssignable [
 

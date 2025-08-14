@@ -7,6 +7,14 @@ Class {
 }
 
 { #category : 'utilities' }
+ViennaTranspilerForExecutionTracing >> afterMultipleAssignment: aViennaMultipleAssignmentStatementNode [
+
+	^ 'self _multipleStatesChanged: #(' , (' ' join:
+		   (aViennaMultipleAssignmentStatementNode collect: [ :assign |
+			    assign stateDesignator identifier ])) , ')'
+]
+
+{ #category : 'utilities' }
 ViennaTranspilerForExecutionTracing >> defineMethodFromOperation: opName in: theClass protocol: protocolString fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode body: bodyString pre: preString post: postString retVar: retVarName retType: typeNode varGenerator: varGenerator env: aDictionary node: aViennaNode bodyNode: aViennaNode2 [
 
 	| tmpVars matchPatternNodes isFirstArg tuplePattern matchVars argVars formalArgs globalOpName |
@@ -14,6 +22,7 @@ ViennaTranspilerForExecutionTracing >> defineMethodFromOperation: opName in: the
 	matchPatternNodes := OrderedCollection new.
 	argVars := OrderedCollection new.
 	formalArgs := OrderedCollection new.
+	globalOpName := aViennaNode module identifier , '`' , opName.
 	self
 		defineMethod: (self stringStreamContents: [ :stream |
 					 stream nextPutAll: opName.
@@ -27,12 +36,12 @@ ViennaTranspilerForExecutionTracing >> defineMethodFromOperation: opName in: the
 								 :setNode
 								 :bindType |
 								 bindType = #identifier ifTrue: [
-										 argVars add: patternNode first.
+										 argVars add: patternNode identifier.
 										 isFirstArg ifFalse: [ stream nextPutAll: ' _' ].
-										 formalArgs add: patternNode first -> setNode.
+										 formalArgs add: patternNode identifier -> setNode.
 										 stream
 											 nextPutAll: ':';
-											 nextPutAll: patternNode first ].
+											 nextPutAll: patternNode identifier ].
 								 bindType = #compound ifTrue: [
 										 | tmpVar |
 										 argVars addAll: patternNode uniqueBoundIdentifiers.
@@ -66,6 +75,14 @@ ViennaTranspilerForExecutionTracing >> defineMethodFromOperation: opName in: the
 											  with: '{' , (' . ' join: tmpVars) , '}'
 											  vars: matchVars);
 									 nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ].
+					 stream
+						 cr;
+						 nextPutAll: '_document _recordOperationCall:';
+						 nextPutAll: globalOpName storeString;
+						 nextPutAll: ' args: {';
+						 nextPutAll: (' . ' join: (formalArgs collect: #key));
+						 nextPutAll: '}.';
+						 cr.
 					 runtimeTypeCheck = true ifTrue: [
 							 formalArgs
 								 with: anArrayOfPatternNodeAndTypeSetNode
@@ -110,11 +127,18 @@ ViennaTranspilerForExecutionTracing >> defineMethodFromOperation: opName in: the
 												  (post asViennaTracingString sources
 													   ifNotEmpty: [ :sources | sources last value ]
 													   ifEmpty: [ aViennaNode ])) ] ].
+					 stream cr.
+					 stream
+						 nextPutAll: '_document _recordOperationReturn: ';
+						 nextPutAll: globalOpName storeString;
+						 nextPutAll: ' value: ';
+						 nextPutAll: retVarName;
+						 nextPutAll: '.';
+						 cr.
 					 stream nextPutAll: '^ ' , retVarName ])
 		in: theClass
 		protocol: protocolString
 		node: aViennaNode.
-	globalOpName := aViennaNode module identifier , '`' , opName.
 	^ self
 		  defineMethod: ((self stringStreamContents: [ :stream |
 					    stream
@@ -127,11 +151,7 @@ ViennaTranspilerForExecutionTracing >> defineMethodFromOperation: opName in: the
 								    nextPutAll: ' ' ].
 					    stream
 						    cr;
-						    nextPutAll:
-							    '[_document _recordOperationCall: '
-							    , globalOpName storeString , ' args: thisContext home arguments. ' , bodyString
-							    , '] ensure: [|ret| ret := thisContext viennaReturnValue. _document _recordOperationReturn: '
-							    , globalOpName storeString , 'value: ret]' ]) asViennaTracingString:
+						    nextPutAll: bodyString ]) asViennaTracingString:
 				   aViennaNode2)
 		  in: theClass
 		  protocol: protocolString
@@ -153,5 +173,5 @@ ViennaTranspilerForExecutionTracing >> moduleBaseClass [
 { #category : 'instance creation' }
 ViennaTranspilerForExecutionTracing >> newStateVariableSlotNamed: aString [
 
-	^ ViennaFullStateVariableSlot named: aString asSymbol
+	^ ViennaStateVariableSlotForExecutionTracing named: aString asSymbol
 ]

@@ -1,5 +1,5 @@
 Class {
-	#name : 'ViennaExecutionTraceSequenceDiagramFormatter',
+	#name : 'ViennaExecutionTraceSequenceDiagramFormat',
 	#superclass : 'ViennaExecutionTraceFormat',
 	#instVars : [
 		'aliases',
@@ -12,7 +12,7 @@ Class {
 }
 
 { #category : 'initialization' }
-ViennaExecutionTraceSequenceDiagramFormatter >> initialize [
+ViennaExecutionTraceSequenceDiagramFormat >> initialize [
 
 	callStack := (OrderedCollection new: 128)
 		             addLast: '_';
@@ -20,23 +20,30 @@ ViennaExecutionTraceSequenceDiagramFormatter >> initialize [
 	aliases := Dictionary new
 ]
 
+{ #category : 'user interface' }
+ViennaExecutionTraceSequenceDiagramFormat >> open: aViennaExecutionTraceRecorder withTitle: aString [
+
+	^ aViennaExecutionTraceRecorder output openMicromaidWithTitle:
+		  aString
+]
+
 { #category : 'accessing' }
-ViennaExecutionTraceSequenceDiagramFormatter >> root [
+ViennaExecutionTraceSequenceDiagramFormat >> root [
 
 	^ root
 ]
 
 { #category : 'accessing' }
-ViennaExecutionTraceSequenceDiagramFormatter >> root: aString [
+ViennaExecutionTraceSequenceDiagramFormat >> root: aString [
 
-	root := aString.
+	root := aString copyReplaceAll: String cr with: String space.
 	callStack := (OrderedCollection new: 128)
-		             addLast: aString;
+		             addLast: root;
 		             yourself
 ]
 
 { #category : 'formatting' }
-ViennaExecutionTraceSequenceDiagramFormatter >> writeCall: aString args: anArray on: aStream [
+ViennaExecutionTraceSequenceDiagramFormat >> writeCall: aString args: anArray on: aStream [
 
 	| caller callee |
 	caller := callStack last.
@@ -58,13 +65,13 @@ ViennaExecutionTraceSequenceDiagramFormatter >> writeCall: aString args: anArray
 ]
 
 { #category : 'formatting' }
-ViennaExecutionTraceSequenceDiagramFormatter >> writeFooterOn: aStream [
+ViennaExecutionTraceSequenceDiagramFormat >> writeFooterOn: aStream [
 
 	
 ]
 
 { #category : 'formatting' }
-ViennaExecutionTraceSequenceDiagramFormatter >> writeHeaderOn: aStream [
+ViennaExecutionTraceSequenceDiagramFormat >> writeHeaderOn: aStream [
 
 	aStream
 		nextPutAll: 'sequenceDiagram';
@@ -72,7 +79,7 @@ ViennaExecutionTraceSequenceDiagramFormatter >> writeHeaderOn: aStream [
 ]
 
 { #category : 'formatting' }
-ViennaExecutionTraceSequenceDiagramFormatter >> writeReturn: aString value: anObject on: aStream [
+ViennaExecutionTraceSequenceDiagramFormat >> writeReturn: aString value: anObject on: aStream [
 
 	| callee caller |
 	callee := callStack removeLast.
@@ -87,7 +94,7 @@ ViennaExecutionTraceSequenceDiagramFormatter >> writeReturn: aString value: anOb
 ]
 
 { #category : 'formatting' }
-ViennaExecutionTraceSequenceDiagramFormatter >> writeState: aDictionary on: outputStream [
+ViennaExecutionTraceSequenceDiagramFormat >> writeStateDiffBlock: aDictionary on: aStream [
 
 	
 ]

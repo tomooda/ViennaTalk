@@ -134,6 +134,13 @@ ViennaComposite >> fieldNameAt: anInteger put: aString [
 	namedFields at: aString put: anInteger
 ]
 
+{ #category : 'enumerating' }
+ViennaComposite >> fieldNamesAndValuesDo: aBlock [
+
+	namedFields keysAndValuesDo: [ :name :index |
+		aBlock value: name value: (self basicAt: index) ]
+]
+
 { #category : 'comparing' }
 ViennaComposite >> hash [
 	| hash |

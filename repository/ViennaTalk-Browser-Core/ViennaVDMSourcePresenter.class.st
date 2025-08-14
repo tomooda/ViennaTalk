@@ -27,6 +27,7 @@ ViennaVDMSourcePresenter class >> buildCommandsGroupWith: presenter forRoot: aCm
 		ViennaEvaluateItCommand.
 		ViennaTypeItCommand.
 		ViennaExecuteItCommand.
+		ViennaRecordItCommand .
 		ViennaSequenceDiagramItCommand .
 		ViennaStateDiagramItCommand} do: [ :cmdClass |
 		group register: (cmdClass forSpecContext: presenter) ].
@@ -75,6 +76,17 @@ ViennaVDMSourcePresenter >> doExecuteIt [
 				style: 'error'.
 			^ nil ].
 		self announcer announce: (ViennaExecuted statement: statement) ]
+]
+
+{ #category : 'evaluating' }
+ViennaVDMSourcePresenter >> doRecordIt [
+
+	self selectedTextOrLine trim ifNotEmpty: [ :string |
+			self openCSVFrom: string ifError: [ :msg |
+					self
+						insertPopoverAfterCurrentSelection: (self newLabel label: msg)
+						style: 'error'.
+					^ nil ] ]
 ]
 
 { #category : 'evaluating' }
@@ -234,6 +246,30 @@ ViennaVDMSourcePresenter >> module: aBlock [
 ]
 
 { #category : 'evaluating' }
+ViennaVDMSourcePresenter >> openCSVFrom: aString ifError: errorBlock [
+
+	| node |
+	node := ViennaVDMParser current statement
+	        / ViennaVDMParser current expression parse: aString.
+	node isPetit2Failure ifTrue: [ ^ errorBlock cull: node printString ].
+	node parent: module value.
+	[ node typecheck ]
+		on: ViennaTypeError
+		do: [ :ex | ^ errorBlock cull: ex messageText ].
+	animation value ifNotNil: [ :anim |
+			| transpiledSpec |
+			transpiledSpec := ViennaTranspiledModularDocumentForExecutionTracing
+				                  fromAnimation: anim.
+			transpiledSpec useCSVRecorder: transpiledSpec state.
+			(transpiledSpec
+				 at: (node module ifNotNil: #identifier)
+				 ifAbsent: [ transpiledSpec ])
+				evaluateNode: node
+				ifError: [ ^ nil ].
+			transpiledSpec _recorder openWithTitle: aString ]
+]
+
+{ #category : 'evaluating' }
 ViennaVDMSourcePresenter >> openSequenceDiagramFrom: aString ifError: errorBlock [
 
 	| node |
@@ -248,9 +284,13 @@ ViennaVDMSourcePresenter >> openSequenceDiagramFrom: aString ifError: errorBlock
 			| transpiledSpec |
 			transpiledSpec := ViennaTranspiledModularDocumentForExecutionTracing
 				                  fromAnimation: anim.
+			transpiledSpec useSequenceDiagramRecorder: aString.
 			(transpiledSpec
-				 sequenceDiagramSourceFromNode: node
-				 in: (node module ifNotNil: #identifier)) openMicromaidWithTitle:
+				 at: (node module ifNotNil: #identifier)
+				 ifAbsent: [ transpiledSpec ])
+				evaluateNode: node
+				ifError: [ ^ nil ].
+			transpiledSpec _recorder openWithTitle:
 				'Sequence Diagram from ' , aString ]
 ]
 
@@ -297,12 +337,14 @@ ViennaVDMSourcePresenter >> openStateDiagramFrom: aString ifError: errorBlock [
 											          stream nextPut: (ViennaCompiledMethodBlock
 													           receiver: transpiledModule
 													           compiledMethod: compiledMethod) ] ] ].
+					transpiledSpec useStateDiagramRecorder: probes.
 					(transpiledSpec
-						 stateDiagramSourceFromNode: node
-						 probes: probes
-						 in: (node module ifNotNil: #identifier))
-						openMicromaidBuilderWith: [ :builder | builder gap: 120 ]
-						title: 'State Diagram from ' , aString ] ]
+						 at: (node module ifNotNil: #identifier)
+						 ifAbsent: [ transpiledSpec ])
+						evaluateNode: node
+						ifError: [ ^ nil ].
+					transpiledSpec _recorder openWithTitle:
+						'State Diagram from ' , aString ] ]
 ]
 
 { #category : 'api' }

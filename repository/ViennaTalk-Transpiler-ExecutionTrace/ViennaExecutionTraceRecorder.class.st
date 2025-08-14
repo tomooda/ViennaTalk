@@ -11,6 +11,14 @@ Class {
 }
 
 { #category : 'instance creation' }
+ViennaExecutionTraceRecorder class >> forCSV: aDictionary [
+
+	^ self new
+		  useCSVFormat: aDictionary;
+		  yourself
+]
+
+{ #category : 'instance creation' }
 ViennaExecutionTraceRecorder class >> forSequenceDiagram: aString [
 
 	^ self new
@@ -53,8 +61,14 @@ ViennaExecutionTraceRecorder >> endRecording [
 { #category : 'initialization' }
 ViennaExecutionTraceRecorder >> initialize [
 	super initialize.
-	format := ViennaExecutionTraceSequenceDiagramFormatter new.
+	format := ViennaExecutionTraceSequenceDiagramFormat new.
 	outputStream := self defaultOutputStream
+]
+
+{ #category : 'accessing' }
+ViennaExecutionTraceRecorder >> openWithTitle: aString [
+
+	format open: self withTitle: aString
 ]
 
 { #category : 'accessing' }
@@ -70,15 +84,23 @@ ViennaExecutionTraceRecorder >> return: aString value: anObject [
 ]
 
 { #category : 'recording' }
-ViennaExecutionTraceRecorder >> state: aDictionary [
+ViennaExecutionTraceRecorder >> stateDiffBlock: aBlock [
 
-	format writeState: aDictionary on: outputStream
+	format writeStateDiffBlock: aBlock on: outputStream
+]
+
+{ #category : 'accessing' }
+ViennaExecutionTraceRecorder >> useCSVFormat: aDictionary [
+
+	format := ViennaExecutionTraceCSVFormat new
+		          initialState: aDictionary;
+		          yourself
 ]
 
 { #category : 'accessing' }
 ViennaExecutionTraceRecorder >> useSequenceDiagramFormat: aString [
 
-	format := ViennaExecutionTraceSequenceDiagramFormatter new
+	format := ViennaExecutionTraceSequenceDiagramFormat new
 		          root: aString;
 		          yourself
 ]
@@ -86,7 +108,7 @@ ViennaExecutionTraceRecorder >> useSequenceDiagramFormat: aString [
 { #category : 'accessing' }
 ViennaExecutionTraceRecorder >> useStateDiagramFormat: aCollectionOfBlockClosure [
 
-	format := ViennaExecutionTraceStateDiagramFormatter new
+	format := ViennaExecutionTraceStateDiagramFormat new
 		          probes: aCollectionOfBlockClosure;
 		          yourself
 ]

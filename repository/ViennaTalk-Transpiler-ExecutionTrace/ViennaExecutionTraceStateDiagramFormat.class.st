@@ -1,5 +1,5 @@
 Class {
-	#name : 'ViennaExecutionTraceStateDiagramFormatter',
+	#name : 'ViennaExecutionTraceStateDiagramFormat',
 	#superclass : 'ViennaExecutionTraceFormat',
 	#instVars : [
 		'probes',
@@ -17,7 +17,7 @@ Class {
 }
 
 { #category : 'accessing' }
-ViennaExecutionTraceStateDiagramFormatter >> abstractState [
+ViennaExecutionTraceStateDiagramFormat >> abstractState [
 
 	| abstractState |
 	abstractState := String streamContents: [ :stream |
@@ -31,20 +31,20 @@ ViennaExecutionTraceStateDiagramFormatter >> abstractState [
 ]
 
 { #category : 'adding' }
-ViennaExecutionTraceStateDiagramFormatter >> addProbe: aBlock [
+ViennaExecutionTraceStateDiagramFormat >> addProbe: aBlock [
 
 	probes := probes copyWith: aBlock
 ]
 
 { #category : 'adding' }
-ViennaExecutionTraceStateDiagramFormatter >> addTriggerOperation: aString [
+ViennaExecutionTraceStateDiagramFormat >> addTriggerOperation: aString [
 
 	triggerOperations add: aString.
 	triggeredByAssignment := false
 ]
 
 { #category : 'initialization' }
-ViennaExecutionTraceStateDiagramFormatter >> initialize [
+ViennaExecutionTraceStateDiagramFormat >> initialize [
 
 	super initialize.
 	probes := Array new.
@@ -56,21 +56,29 @@ ViennaExecutionTraceStateDiagramFormatter >> initialize [
 	transitions := ViennaOrderedSet new
 ]
 
+{ #category : 'user interface' }
+ViennaExecutionTraceStateDiagramFormat >> open: aViennaExecutionTraceRecorder withTitle: aString [
+
+	^ aViennaExecutionTraceRecorder output
+		  openMicromaidBuilderWith: [ :builder | builder gap: 120 ]
+		  title: aString
+]
+
 { #category : 'adding' }
-ViennaExecutionTraceStateDiagramFormatter >> probes: aCollectionOfBlockClosure [
+ViennaExecutionTraceStateDiagramFormat >> probes: aCollectionOfBlockClosure [
 
 	probes := aCollectionOfBlockClosure asArray
 ]
 
 { #category : 'formatting' }
-ViennaExecutionTraceStateDiagramFormatter >> transitionFrom: preStateString to: postStateString [
+ViennaExecutionTraceStateDiagramFormat >> transitionFrom: preStateString to: postStateString [
 
 	^ (preStateString ifNil: [ '[*]' ]) , ' --> '
 	  , (postStateString ifNil: [ '[*]' ])
 ]
 
 { #category : 'formatting' }
-ViennaExecutionTraceStateDiagramFormatter >> transitionFrom: preStateString to: postStateString operation: operationString [
+ViennaExecutionTraceStateDiagramFormat >> transitionFrom: preStateString to: postStateString operation: operationString [
 
 	^ (preStateString ifNil: [ '[*]' ]) , ' --> '
 	  , (postStateString ifNil: [ '[*]' ])
@@ -81,21 +89,21 @@ ViennaExecutionTraceStateDiagramFormatter >> transitionFrom: preStateString to: 
 ]
 
 { #category : 'formatting' }
-ViennaExecutionTraceStateDiagramFormatter >> writeCall: aString args: anArray on: aStream [
+ViennaExecutionTraceStateDiagramFormat >> writeCall: aString args: anArray on: aStream [
 
 	(triggerOperations includes: aString) ifTrue: [
 		stateStack addLast: self abstractState ].
 	operationStack addLast: aString
 ]
 
-{ #category : 'formatting' }
-ViennaExecutionTraceStateDiagramFormatter >> writeEndStateOn: aStream [
+{ #category : 'writing' }
+ViennaExecutionTraceStateDiagramFormat >> writeEndStateOn: aStream [
 
 	transitions add: (self transitionFrom: state to: nil operation: nil)
 ]
 
 { #category : 'formatting' }
-ViennaExecutionTraceStateDiagramFormatter >> writeFooterOn: aStream [
+ViennaExecutionTraceStateDiagramFormat >> writeFooterOn: aStream [
 
 	self writeEndStateOn: aStream.
 	self
@@ -104,7 +112,7 @@ ViennaExecutionTraceStateDiagramFormatter >> writeFooterOn: aStream [
 ]
 
 { #category : 'formatting' }
-ViennaExecutionTraceStateDiagramFormatter >> writeHeaderOn: aStream [
+ViennaExecutionTraceStateDiagramFormat >> writeHeaderOn: aStream [
 
 	aStream
 		nextPutAll: 'stateDiagram';
@@ -113,7 +121,7 @@ ViennaExecutionTraceStateDiagramFormatter >> writeHeaderOn: aStream [
 ]
 
 { #category : 'formatting' }
-ViennaExecutionTraceStateDiagramFormatter >> writeReturn: aString value: anObject on: aStream [
+ViennaExecutionTraceStateDiagramFormat >> writeReturn: aString value: anObject on: aStream [
 
 	(triggerOperations includes: aString) ifTrue: [
 			| preState postState |
@@ -126,8 +134,8 @@ ViennaExecutionTraceStateDiagramFormatter >> writeReturn: aString value: anObjec
 	operationStack removeLast
 ]
 
-{ #category : 'formatting' }
-ViennaExecutionTraceStateDiagramFormatter >> writeStartStateOn: aStream [
+{ #category : 'writing' }
+ViennaExecutionTraceStateDiagramFormat >> writeStartStateOn: aStream [
 
 	| initialState |
 	initialState := state := self abstractState.
@@ -136,7 +144,7 @@ ViennaExecutionTraceStateDiagramFormatter >> writeStartStateOn: aStream [
 ]
 
 { #category : 'formatting' }
-ViennaExecutionTraceStateDiagramFormatter >> writeState: aDictionary on: outputStream [
+ViennaExecutionTraceStateDiagramFormat >> writeStateDiffBlock: aBlock on: aStream [
 
 	triggeredByAssignment
 		ifTrue: [
@@ -151,7 +159,7 @@ ViennaExecutionTraceStateDiagramFormatter >> writeState: aDictionary on: outputS
 ]
 
 { #category : 'formatting' }
-ViennaExecutionTraceStateDiagramFormatter >> writeStateNamesOn: aStream [
+ViennaExecutionTraceStateDiagramFormat >> writeStateNamesOn: aStream [
 
 	stateNames keysAndValuesDo: [ :abstractState :name |
 			aStream
@@ -163,7 +171,7 @@ ViennaExecutionTraceStateDiagramFormatter >> writeStateNamesOn: aStream [
 ]
 
 { #category : 'formatting' }
-ViennaExecutionTraceStateDiagramFormatter >> writeTransitionsOn: aStream [
+ViennaExecutionTraceStateDiagramFormat >> writeTransitionsOn: aStream [
 
 	transitions do: [ :string |
 			aStream

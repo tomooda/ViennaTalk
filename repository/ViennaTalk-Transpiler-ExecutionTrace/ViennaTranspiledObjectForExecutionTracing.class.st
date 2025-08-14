@@ -6,11 +6,34 @@ Class {
 	#tag : 'Transpiler'
 }
 
-{ #category : 'private' }
-ViennaTranspiledObjectForExecutionTracing >> _stateChanged [
+{ #category : 'accessing' }
+ViennaTranspiledObjectForExecutionTracing >> _executionTrace [
 
-	super _stateChanged.
-	_document _recordState
+	^ _document _executionTrace
+]
+
+{ #category : 'private' }
+ViennaTranspiledObjectForExecutionTracing >> _multipleStatesChanged: anArrayOfString [
+
+	| moduleName |
+	moduleName := self class moduleName.
+	_document _recordStateDiff: [
+			anArrayOfString collect: [ :varName |
+				moduleName , '`' , varName -> (self instVarNamed: varName) ] ]
+]
+
+{ #category : 'accessing' }
+ViennaTranspiledObjectForExecutionTracing >> _recorder [
+
+	^ _document _recorder
+]
+
+{ #category : 'private' }
+ViennaTranspiledObjectForExecutionTracing >> _stateChanged: aString [
+
+	_document _recordStateDiff: [
+			{ (self class moduleName , '`' , aString
+			 -> (self instVarNamed: aString)) } ]
 ]
 
 { #category : 'evaluating' }
@@ -50,10 +73,4 @@ ViennaTranspiledObjectForExecutionTracing >> evaluateStatement: aString with: aV
 					           with: aViennaVDM2SmalltalkClass
 					           ifError: errorBlock ]
 		  do: [ value ]
-]
-
-{ #category : 'accessing' }
-ViennaTranspiledObjectForExecutionTracing >> executionTrace [
-
-	^ _document executionTrace
 ]

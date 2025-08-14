@@ -1,12 +1,12 @@
 Class {
-	#name : 'ViennaFullStateVariableSlot',
+	#name : 'ViennaStateVariableWithInvSlot',
 	#superclass : 'ViennaStateVariableSlot',
 	#category : 'ViennaTalk-Transpiler-Core',
 	#package : 'ViennaTalk-Transpiler-Core'
 }
 
 { #category : 'code generation' }
-ViennaFullStateVariableSlot >> emitStore: aMethodBuilder [
+ViennaStateVariableWithInvSlot >> emitStore: aMethodBuilder [
 	aMethodBuilder
 		pushLiteral: self;
 		pushReceiver;
@@ -14,9 +14,9 @@ ViennaFullStateVariableSlot >> emitStore: aMethodBuilder [
 ]
 
 { #category : 'meta-object-protocol' }
-ViennaFullStateVariableSlot >> write: aValue to: anObject [
+ViennaStateVariableWithInvSlot >> write: aValue to: anObject [
 
 	self basicWrite: aValue to: anObject.
-	anObject _stateChanged.
+	anObject inv.
 	^ aValue
 ]
