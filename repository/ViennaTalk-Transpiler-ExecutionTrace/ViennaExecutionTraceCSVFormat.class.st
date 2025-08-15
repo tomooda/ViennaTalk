@@ -61,7 +61,7 @@ ViennaExecutionTraceCSVFormat >> writeFooterOn: aStream [
 { #category : 'formatting' }
 ViennaExecutionTraceCSVFormat >> writeHeaderOn: aStream [
 
-	aStream nextPut: $s.
+	aStream nextPut: $i.
 	initialState keysAndValuesDo: [ :moduleName :moduleState |
 			aStream
 				nextPut: $,;
