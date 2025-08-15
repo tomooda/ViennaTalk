@@ -4,6 +4,7 @@ Class {
 	#instVars : [
 		'module',
 		'source',
+		'initialAssignmentEvents',
 		'events'
 	],
 	#category : 'ViennaTalk-Transpiler-ExecutionTrace-Events',
@@ -27,6 +28,18 @@ ViennaExecutionTraceRootEvent >> events [
 ViennaExecutionTraceRootEvent >> events: anArrayOfViennaExecutionTraceEvent [
 
 	events := anArrayOfViennaExecutionTraceEvent
+]
+
+{ #category : 'accessing' }
+ViennaExecutionTraceRootEvent >> initialAssignmentEvents [
+
+	^ initialAssignmentEvents
+]
+
+{ #category : 'accessing' }
+ViennaExecutionTraceRootEvent >> initialAssignmentEvents: anArrayOfViennaExecutionTraceAssignmentEvent [
+
+	initialAssignmentEvents := anArrayOfViennaExecutionTraceAssignmentEvent
 ]
 
 { #category : 'accessing' }
