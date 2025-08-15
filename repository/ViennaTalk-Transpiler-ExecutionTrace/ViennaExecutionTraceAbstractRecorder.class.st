@@ -13,7 +13,7 @@ ViennaExecutionTraceAbstractRecorder >> beginRecording [
 ]
 
 { #category : 'recording' }
-ViennaExecutionTraceAbstractRecorder >> call: aString args: anArray [
+ViennaExecutionTraceAbstractRecorder >> call: aString module: anotherString args: anArray [
 
 	^ self subclassResponsibility
 ]
@@ -46,7 +46,7 @@ ViennaExecutionTraceAbstractRecorder >> record: aBlock do: anotherBlock [
 ]
 
 { #category : 'recording' }
-ViennaExecutionTraceAbstractRecorder >> return: aString value: anObject [
+ViennaExecutionTraceAbstractRecorder >> return: aString module: anotherString value: anObject [
 
 	^ self subclassResponsibility
 ]

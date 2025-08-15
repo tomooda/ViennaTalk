@@ -41,9 +41,13 @@ ViennaExecutionTraceRecorder >> beginRecording [
 ]
 
 { #category : 'recording' }
-ViennaExecutionTraceRecorder >> call: aString args: anArray [
+ViennaExecutionTraceRecorder >> call: aString module: anotherString args: anArray [
 
-	format writeCall: aString args: anArray on: outputStream
+	format
+		writeCall: aString
+		module: anotherString
+		args: anArray
+		on: outputStream
 ]
 
 { #category : 'defaults' }
@@ -78,9 +82,13 @@ ViennaExecutionTraceRecorder >> output [
 ]
 
 { #category : 'recording' }
-ViennaExecutionTraceRecorder >> return: aString value: anObject [
+ViennaExecutionTraceRecorder >> return: aString module: anotherString value: anObject [
 
-	format writeReturn: aString value: anObject on: outputStream
+	format
+		writeReturn: aString
+		module: anotherString
+		value: anObject
+		on: outputStream
 ]
 
 { #category : 'recording' }

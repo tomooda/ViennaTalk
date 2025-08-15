@@ -13,7 +13,7 @@ ViennaExecutionTraceNullRecorder >> beginRecording [
 ]
 
 { #category : 'recording' }
-ViennaExecutionTraceNullRecorder >> call: aString args: anArray [
+ViennaExecutionTraceNullRecorder >> call: aString module: anotherString args: anArray [
 
 	
 ]
@@ -43,7 +43,7 @@ ViennaExecutionTraceNullRecorder >> record: aBlock do: anotherBlock [
 ]
 
 { #category : 'recording' }
-ViennaExecutionTraceNullRecorder >> return: aString value: anObject [
+ViennaExecutionTraceNullRecorder >> return: aString module: anotherString value: anObject [
 
 	
 ]

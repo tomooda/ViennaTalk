@@ -15,11 +15,9 @@ ViennaTranspiledObjectForExecutionTracing >> _executionTrace [
 { #category : 'private' }
 ViennaTranspiledObjectForExecutionTracing >> _multipleStatesChanged: anArrayOfString [
 
-	| moduleName |
-	moduleName := self class moduleName.
 	_document _recordStateDiff: [
-			anArrayOfString collect: [ :varName |
-				moduleName , '`' , varName -> (self instVarNamed: varName) ] ]
+			self class moduleName -> (anArrayOfString collect: [ :varName |
+				 varName -> (self instVarNamed: varName) ]) ]
 ]
 
 { #category : 'accessing' }
@@ -32,8 +30,8 @@ ViennaTranspiledObjectForExecutionTracing >> _recorder [
 ViennaTranspiledObjectForExecutionTracing >> _stateChanged: aString [
 
 	_document _recordStateDiff: [
-			{ (self class moduleName , '`' , aString
-			 -> (self instVarNamed: aString)) } ]
+		self class moduleName
+		-> { (aString -> (self instVarNamed: aString)) } ]
 ]
 
 { #category : 'evaluating' }

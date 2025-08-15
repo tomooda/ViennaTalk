@@ -41,15 +41,15 @@ ViennaTranspiledModularDocumentForExecutionTracing >> _executionTrace [
 ]
 
 { #category : 'recording' }
-ViennaTranspiledModularDocumentForExecutionTracing >> _recordOperationCall: aString args: anArray [
+ViennaTranspiledModularDocumentForExecutionTracing >> _recordOperationCall: aString module: anotherString args: anArray [
 
-	_recorder call: aString args: anArray
+	_recorder call: aString module: anotherString args: anArray
 ]
 
 { #category : 'recording' }
-ViennaTranspiledModularDocumentForExecutionTracing >> _recordOperationReturn: aString value: anObject [
+ViennaTranspiledModularDocumentForExecutionTracing >> _recordOperationReturn: aString module: anotherString value: anObject [
 
-	_recorder return: aString value: anObject
+	_recorder return: aString module: anotherString value: anObject
 ]
 
 { #category : 'recording' }

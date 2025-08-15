@@ -38,10 +38,12 @@ ViennaExecutionTraceCSVFormat >> open: aViennaExecutionTraceRecorder withTitle: 
 ]
 
 { #category : 'formatting' }
-ViennaExecutionTraceCSVFormat >> writeCall: aString args: anArray on: aStream [
+ViennaExecutionTraceCSVFormat >> writeCall: aString module: anotherString args: anArray on: aStream [
 
 	aStream
 		nextPutAll: 'c,';
+		nextPutAll: anotherString;
+		nextPut: $,;
 		nextPutAll: aString.
 	anArray do: [ :arg |
 			aStream
@@ -61,11 +63,12 @@ ViennaExecutionTraceCSVFormat >> writeHeaderOn: aStream [
 
 	aStream nextPut: $s.
 	initialState keysAndValuesDo: [ :moduleName :moduleState |
+			aStream
+				nextPut: $,;
+				nextPutAll: moduleName.
 			moduleState fieldNamesAndValuesDo: [ :variableName :value |
 					aStream
 						nextPut: $,;
-						nextPutAll: moduleName;
-						nextPut: $`;
 						nextPutAll: variableName;
 						nextPutAll: ':=';
 						nextPutAll: (self escape: value viennaString) ] ].
@@ -73,10 +76,12 @@ ViennaExecutionTraceCSVFormat >> writeHeaderOn: aStream [
 ]
 
 { #category : 'formatting' }
-ViennaExecutionTraceCSVFormat >> writeReturn: aString value: anObject on: aStream [
+ViennaExecutionTraceCSVFormat >> writeReturn: aString module: anotherString value: anObject on: aStream [
 
 	aStream
 		nextPutAll: 'r,';
+		nextPutAll: anotherString;
+		nextPut: $,;
 		nextPutAll: aString;
 		nextPut: $,;
 		nextPutAll: (self escape: anObject viennaString);
@@ -86,12 +91,17 @@ ViennaExecutionTraceCSVFormat >> writeReturn: aString value: anObject on: aStrea
 { #category : 'formatting' }
 ViennaExecutionTraceCSVFormat >> writeStateDiffBlock: aBlock on: aStream [
 
+	| moduleAndAssignments |
 	aStream nextPut: $s.
-	aBlock value do: [ :assoc |
+	moduleAndAssignments := aBlock value.
+	aStream
+		nextPut: $,;
+		nextPutAll: moduleAndAssignments key.
+	moduleAndAssignments value do: [ :varAndValue |
 			aStream
 				nextPut: $,;
-				nextPutAll: assoc key;
+				nextPutAll: varAndValue key;
 				nextPutAll: ':=';
-				nextPutAll: (self escape: assoc value viennaString) ].
+				nextPutAll: (self escape: varAndValue value viennaString) ].
 	aStream cr
 ]

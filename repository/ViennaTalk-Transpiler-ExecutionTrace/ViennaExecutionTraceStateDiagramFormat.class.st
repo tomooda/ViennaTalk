@@ -71,9 +71,9 @@ ViennaExecutionTraceStateDiagramFormat >> transitionFrom: preStateString to: pos
 ]
 
 { #category : 'formatting' }
-ViennaExecutionTraceStateDiagramFormat >> writeCall: aString args: anArray on: aStream [
+ViennaExecutionTraceStateDiagramFormat >> writeCall: aString module: anotherString args: anArray on: aStream [
 
-	operationStack addLast: aString
+	operationStack addLast: anotherString , '`' , aString
 ]
 
 { #category : 'writing' }
@@ -101,7 +101,7 @@ ViennaExecutionTraceStateDiagramFormat >> writeHeaderOn: aStream [
 ]
 
 { #category : 'formatting' }
-ViennaExecutionTraceStateDiagramFormat >> writeReturn: aString value: anObject on: aStream [
+ViennaExecutionTraceStateDiagramFormat >> writeReturn: aString module: anotherString value: anObject on: aStream [
 
 	operationStack removeLast
 ]

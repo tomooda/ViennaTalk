@@ -17,12 +17,11 @@ ViennaTranspilerForExecutionTracing >> afterMultipleAssignment: aViennaMultipleA
 { #category : 'utilities' }
 ViennaTranspilerForExecutionTracing >> defineMethodFromOperation: opName in: theClass protocol: protocolString fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode body: bodyString pre: preString post: postString retVar: retVarName retType: typeNode varGenerator: varGenerator env: aDictionary node: aViennaNode bodyNode: aViennaNode2 [
 
-	| tmpVars matchPatternNodes isFirstArg tuplePattern matchVars argVars formalArgs globalOpName |
+	| tmpVars matchPatternNodes isFirstArg tuplePattern matchVars argVars formalArgs |
 	tmpVars := OrderedCollection new.
 	matchPatternNodes := OrderedCollection new.
 	argVars := OrderedCollection new.
 	formalArgs := OrderedCollection new.
-	globalOpName := aViennaNode module identifier , '`' , opName.
 	self
 		defineMethod: (self stringStreamContents: [ :stream |
 					 stream nextPutAll: opName.
@@ -78,7 +77,9 @@ ViennaTranspilerForExecutionTracing >> defineMethodFromOperation: opName in: the
 					 stream
 						 cr;
 						 nextPutAll: '_document _recordOperationCall:';
-						 nextPutAll: globalOpName storeString;
+						 nextPutAll: opName storeString;
+						 nextPutAll: ' module: ';
+						 nextPutAll: aViennaNode module identifier storeString;
 						 nextPutAll: ' args: {';
 						 nextPutAll: (' . ' join: (formalArgs collect: #key));
 						 nextPutAll: '}.';
@@ -130,7 +131,9 @@ ViennaTranspilerForExecutionTracing >> defineMethodFromOperation: opName in: the
 					 stream cr.
 					 stream
 						 nextPutAll: '_document _recordOperationReturn: ';
-						 nextPutAll: globalOpName storeString;
+						 nextPutAll: opName storeString;
+						 nextPutAll: ' module: ';
+						 nextPutAll: aViennaNode module identifier storeString;
 						 nextPutAll: ' value: ';
 						 nextPutAll: retVarName;
 						 nextPutAll: '.';

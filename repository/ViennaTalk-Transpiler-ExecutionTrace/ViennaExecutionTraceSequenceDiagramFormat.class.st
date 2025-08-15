@@ -43,18 +43,19 @@ ViennaExecutionTraceSequenceDiagramFormat >> root: aString [
 ]
 
 { #category : 'formatting' }
-ViennaExecutionTraceSequenceDiagramFormat >> writeCall: aString args: anArray on: aStream [
+ViennaExecutionTraceSequenceDiagramFormat >> writeCall: aString module: anotherString args: anArray on: aStream [
 
 	| caller callee |
 	caller := callStack last.
-	callee := aliases at: aString ifAbsent: [ aString ].
+	callee := anotherString , '`' , aString.
+	aliases at: aString ifPresent: [ :name | callee := name ].
 	callStack addLast: callee.
 	aStream
 		nextPutAll: caller;
 		nextPutAll: ' ->>+ ';
 		nextPutAll: callee;
 		nextPutAll: ' : ';
-		nextPutAll: aString;
+		nextPutAll: callee;
 		nextPut: $(.
 	anArray
 		do: [ :obj | obj viennaStringOn: aStream ]
@@ -79,7 +80,7 @@ ViennaExecutionTraceSequenceDiagramFormat >> writeHeaderOn: aStream [
 ]
 
 { #category : 'formatting' }
-ViennaExecutionTraceSequenceDiagramFormat >> writeReturn: aString value: anObject on: aStream [
+ViennaExecutionTraceSequenceDiagramFormat >> writeReturn: aString module: anotherString value: anObject on: aStream [
 
 	| callee caller |
 	callee := callStack removeLast.

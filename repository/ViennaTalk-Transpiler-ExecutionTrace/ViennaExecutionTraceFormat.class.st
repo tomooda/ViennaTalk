@@ -13,7 +13,7 @@ ViennaExecutionTraceFormat >> open: aViennaExecutionTraceRecorder withTitle: aSt
 ]
 
 { #category : 'formatting' }
-ViennaExecutionTraceFormat >> writeCall: aString args: anArray on: aStream [
+ViennaExecutionTraceFormat >> writeCall: aString module: anotherString args: anArray on: aStream [
 
 	^ self subclassResponsibility
 ]
@@ -31,7 +31,7 @@ ViennaExecutionTraceFormat >> writeHeaderOn: aStream [
 ]
 
 { #category : 'formatting' }
-ViennaExecutionTraceFormat >> writeReturn: aString value: anObject on: aStream [
+ViennaExecutionTraceFormat >> writeReturn: aString module: anotherString value: anObject on: aStream [
 
 	^ self subclassResponsibility
 ]
