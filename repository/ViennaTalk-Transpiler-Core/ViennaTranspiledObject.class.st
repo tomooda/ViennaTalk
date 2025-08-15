@@ -10,8 +10,9 @@ Class {
 		'specification',
 		'viennaEnv'
 	],
-	#category : 'ViennaTalk-Transpiler-Core',
-	#package : 'ViennaTalk-Transpiler-Core'
+	#category : 'ViennaTalk-Transpiler-Core-TranspiledObject',
+	#package : 'ViennaTalk-Transpiler-Core',
+	#tag : 'TranspiledObject'
 }
 
 { #category : 'specification' }

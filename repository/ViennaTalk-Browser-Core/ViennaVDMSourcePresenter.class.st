@@ -312,7 +312,7 @@ ViennaVDMSourcePresenter >> openStateDiagramFrom: aString ifError: errorBlock [
 				specification := specification asViennaDocumentAst ].
 			transpiledSpec := ViennaTranspiledModularDocumentForExecutionTracing
 				                  fromAnimation: anim.
-			probeEditor := ViennaStateProbeEditor new specification:
+			probeEditor := ViennaStateProbeBrowser new specification:
 				               anim specification.
 			probeEditor openDialog okAction: [
 					| probes |

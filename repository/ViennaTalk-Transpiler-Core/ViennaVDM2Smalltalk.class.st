@@ -12,8 +12,9 @@ Class {
 		'DefaultRuntimeAssertionCheck',
 		'DefaultRuntimeTypeCheck'
 	],
-	#category : 'ViennaTalk-Transpiler-Core',
-	#package : 'ViennaTalk-Transpiler-Core'
+	#category : 'ViennaTalk-Transpiler-Core-Transpiler',
+	#package : 'ViennaTalk-Transpiler-Core',
+	#tag : 'Transpiler'
 }
 
 { #category : 'accessing' }

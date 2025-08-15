@@ -33,7 +33,9 @@ ViennaOrderedSet >> asOrderedCollection [
 ViennaOrderedSet >> at: anInteger put: anObject [
 
 	(set includes: anObject)
-		ifTrue: [ self removeIndex: anInteger ]
+		ifTrue: [
+				self removeAt: anInteger.
+				set add: anObject ]
 		ifFalse: [
 				set
 					remove: (self at: anInteger) ifAbsent: [ ];
@@ -81,6 +83,13 @@ ViennaOrderedSet >> remove: oldObject ifAbsent: absentBlock [
 ViennaOrderedSet >> removeAllSuchThat: aBlock [
 
 	[ super removeAllSuchThat: aBlock ] ensure: [ set := self asSet ]
+]
+
+{ #category : 'private' }
+ViennaOrderedSet >> removeAt: removedIndex [
+
+	set remove: (self at: removedIndex) ifAbsent: [ ].
+	^ super removeAt: removedIndex
 ]
 
 { #category : 'removing' }

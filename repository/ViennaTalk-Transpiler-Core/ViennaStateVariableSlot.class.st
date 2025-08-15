@@ -1,8 +1,9 @@
 Class {
 	#name : 'ViennaStateVariableSlot',
 	#superclass : 'InstanceVariableSlot',
-	#category : 'ViennaTalk-Transpiler-Core',
-	#package : 'ViennaTalk-Transpiler-Core'
+	#category : 'ViennaTalk-Transpiler-Core-TranspiledObject',
+	#package : 'ViennaTalk-Transpiler-Core',
+	#tag : 'TranspiledObject'
 }
 
 { #category : 'meta-object-protocol' }
