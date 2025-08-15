@@ -3,8 +3,6 @@ Class {
 	#superclass : 'ViennaExecutionTraceFormat',
 	#instVars : [
 		'probes',
-		'triggeredByAssignment',
-		'triggerOperations',
 		'state',
 		'stateStack',
 		'stateNames',
@@ -36,20 +34,11 @@ ViennaExecutionTraceStateDiagramFormat >> addProbe: aBlock [
 	probes := probes copyWith: aBlock
 ]
 
-{ #category : 'adding' }
-ViennaExecutionTraceStateDiagramFormat >> addTriggerOperation: aString [
-
-	triggerOperations add: aString.
-	triggeredByAssignment := false
-]
-
 { #category : 'initialization' }
 ViennaExecutionTraceStateDiagramFormat >> initialize [
 
 	super initialize.
 	probes := Array new.
-	triggerOperations := Set new.
-	triggeredByAssignment := true.
 	stateStack := OrderedCollection new: 1024.
 	operationStack := OrderedCollection new: 1024.
 	stateNames := Dictionary new.
@@ -71,13 +60,6 @@ ViennaExecutionTraceStateDiagramFormat >> probes: aCollectionOfBlockClosure [
 ]
 
 { #category : 'formatting' }
-ViennaExecutionTraceStateDiagramFormat >> transitionFrom: preStateString to: postStateString [
-
-	^ (preStateString ifNil: [ '[*]' ]) , ' --> '
-	  , (postStateString ifNil: [ '[*]' ])
-]
-
-{ #category : 'formatting' }
 ViennaExecutionTraceStateDiagramFormat >> transitionFrom: preStateString to: postStateString operation: operationString [
 
 	^ (preStateString ifNil: [ '[*]' ]) , ' --> '
@@ -91,8 +73,6 @@ ViennaExecutionTraceStateDiagramFormat >> transitionFrom: preStateString to: pos
 { #category : 'formatting' }
 ViennaExecutionTraceStateDiagramFormat >> writeCall: aString args: anArray on: aStream [
 
-	(triggerOperations includes: aString) ifTrue: [
-		stateStack addLast: self abstractState ].
 	operationStack addLast: aString
 ]
 
@@ -123,14 +103,6 @@ ViennaExecutionTraceStateDiagramFormat >> writeHeaderOn: aStream [
 { #category : 'formatting' }
 ViennaExecutionTraceStateDiagramFormat >> writeReturn: aString value: anObject on: aStream [
 
-	(triggerOperations includes: aString) ifTrue: [
-			| preState postState |
-			preState := stateStack removeLast.
-			postState := self abstractState.
-			transitions add: (self
-					 transitionFrom: preState
-					 to: postState
-					 operation: operationStack last) ].
 	operationStack removeLast
 ]
 
@@ -146,16 +118,13 @@ ViennaExecutionTraceStateDiagramFormat >> writeStartStateOn: aStream [
 { #category : 'formatting' }
 ViennaExecutionTraceStateDiagramFormat >> writeStateDiffBlock: aBlock on: aStream [
 
-	triggeredByAssignment
-		ifTrue: [
-				| preState postState |
-				preState := state.
-				postState := state := self abstractState.
-				transitions add: (self
-						 transitionFrom: preState
-						 to: postState
-						 operation: operationStack last) ]
-		ifFalse: [ state := self abstractState ]
+	| preState postState |
+	preState := state.
+	postState := state := self abstractState.
+	transitions add: (self
+			 transitionFrom: preState
+			 to: postState
+			 operation: operationStack last)
 ]
 
 { #category : 'formatting' }
