@@ -23,6 +23,18 @@ ViennaExecutionTraceAssignmentEvent >> assignments [
 	^ assignments
 ]
 
+{ #category : 'accessing' }
+ViennaExecutionTraceAssignmentEvent >> iconName [
+
+	^ #edit
+]
+
+{ #category : 'testing' }
+ViennaExecutionTraceAssignmentEvent >> isAssignmentEvent [
+
+	^ true
+]
+
 { #category : 'enumerating' }
 ViennaExecutionTraceAssignmentEvent >> modulesAndAssignmentsDo: aBlock [
 

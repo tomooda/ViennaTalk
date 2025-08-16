@@ -53,9 +53,21 @@ ViennaExecutionTraceRootEvent >> events [
 ]
 
 { #category : 'accessing' }
+ViennaExecutionTraceRootEvent >> iconName [
+
+	^ #scriptManager
+]
+
+{ #category : 'accessing' }
 ViennaExecutionTraceRootEvent >> initial [
 
 	^ initial
+]
+
+{ #category : 'testing' }
+ViennaExecutionTraceRootEvent >> isRootEvent [
+
+	^ true
 ]
 
 { #category : 'enumerating' }
@@ -66,6 +78,14 @@ ViennaExecutionTraceRootEvent >> modulesAndAssignmentsDo: aBlock [
 		keysAndValuesDo: [ :mod :dict |
 				dict keysAndValuesDo: [ :var :val |
 					aBlock value: mod value: var value: val ] ]
+]
+
+{ #category : 'accessing' }
+ViennaExecutionTraceRootEvent >> openWithTitle: aString [
+
+	^ (ViennaExecutionTraceEventViewer new
+		   roots: { self };
+		   open) title: aString
 ]
 
 { #category : 'private' }

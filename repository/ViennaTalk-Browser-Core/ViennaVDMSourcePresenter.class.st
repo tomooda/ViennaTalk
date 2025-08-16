@@ -266,7 +266,11 @@ ViennaVDMSourcePresenter >> openCSVFrom: aString ifError: errorBlock [
 				 ifAbsent: [ transpiledSpec ])
 				evaluateNode: node
 				ifError: [ ^ nil ].
-			transpiledSpec _recorder openWithTitle: aString ]
+			(ViennaExecutionTraceEventCSVReader new
+				 inputStream: transpiledSpec _recorder output readStream;
+				 readLine)
+				source: aString;
+				openWithTitle: 'Execution Record from ' , aString ]
 ]
 
 { #category : 'evaluating' }

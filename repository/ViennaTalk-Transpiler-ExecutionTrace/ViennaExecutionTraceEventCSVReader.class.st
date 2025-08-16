@@ -70,11 +70,12 @@ ViennaExecutionTraceEventCSVReader >> readLine [
 	line := self valuesFromLine: (inputStream upTo: Character cr).
 	line ifEmpty: [ ^ nil ].
 	line first = 'i' ifTrue: [ ^ self readRootEvent: line allButFirst ].
-	line first = 'a' ifTrue: [
+	line first = 's' ifTrue: [
 		^ self readAssignmentEvent: line allButFirst ].
 	line first = 'c' ifTrue: [
 		^ self readOperationCallEvent: line allButFirst ].
-	line first = 'r' ifTrue: [ ^ self readReturnEvent: line allButFirst ]
+	line first = 'r' ifTrue: [ ^ self readReturnEvent: line allButFirst ].
+	self error: 'Invalid execution record CSV'
 ]
 
 { #category : 'reading' }

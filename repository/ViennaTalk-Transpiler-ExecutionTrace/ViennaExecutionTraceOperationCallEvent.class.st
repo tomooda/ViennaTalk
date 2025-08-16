@@ -54,6 +54,18 @@ ViennaExecutionTraceOperationCallEvent >> events [
 	^ events
 ]
 
+{ #category : 'accessing' }
+ViennaExecutionTraceOperationCallEvent >> iconName [
+
+	^ #redo
+]
+
+{ #category : 'testing' }
+ViennaExecutionTraceOperationCallEvent >> isOperationCallEvent [
+
+	^ true
+]
+
 { #category : 'enumerating' }
 ViennaExecutionTraceOperationCallEvent >> modulesAndAssignmentsDo: aBlock [
 

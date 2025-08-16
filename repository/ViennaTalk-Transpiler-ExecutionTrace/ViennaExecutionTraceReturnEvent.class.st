@@ -24,6 +24,18 @@ ViennaExecutionTraceReturnEvent >> children [
 	^ #(  )
 ]
 
+{ #category : 'accessing' }
+ViennaExecutionTraceReturnEvent >> iconName [
+
+	^ #undo
+]
+
+{ #category : 'testing' }
+ViennaExecutionTraceReturnEvent >> isReturnEvent [
+
+	^ true
+]
+
 { #category : 'enumerating' }
 ViennaExecutionTraceReturnEvent >> modulesAndAssignmentsDo: aBlock [
 

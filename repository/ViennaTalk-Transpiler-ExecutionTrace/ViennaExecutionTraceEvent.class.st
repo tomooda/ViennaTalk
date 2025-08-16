@@ -22,6 +22,36 @@ ViennaExecutionTraceEvent >> children [
 ]
 
 { #category : 'accessing' }
+ViennaExecutionTraceEvent >> iconName [
+
+	^ self subclassResponsibility
+]
+
+{ #category : 'testing' }
+ViennaExecutionTraceEvent >> isAssignmentEvent [
+
+	^ false
+]
+
+{ #category : 'testing' }
+ViennaExecutionTraceEvent >> isOperationCallEvent [
+
+	^ false
+]
+
+{ #category : 'testing' }
+ViennaExecutionTraceEvent >> isReturnEvent [
+
+	^ false
+]
+
+{ #category : 'testing' }
+ViennaExecutionTraceEvent >> isRootEvent [
+
+	^ false
+]
+
+{ #category : 'accessing' }
 ViennaExecutionTraceEvent >> module [
 
 	^ module
