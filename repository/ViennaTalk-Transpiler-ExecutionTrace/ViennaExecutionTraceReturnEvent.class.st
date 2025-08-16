@@ -2,7 +2,6 @@ Class {
 	#name : 'ViennaExecutionTraceReturnEvent',
 	#superclass : 'ViennaExecutionTraceEvent',
 	#instVars : [
-		'module',
 		'operation',
 		'returnValue'
 	],
@@ -11,22 +10,24 @@ Class {
 	#tag : 'Events'
 }
 
+{ #category : 'instance creation' }
+ViennaExecutionTraceReturnEvent class >> module: aString operation: anotherString returnValue: anObject [
+
+	^ self new
+		  setModule: aString operation: anotherString returnValue: anObject;
+		  yourself
+]
+
 { #category : 'accessing' }
 ViennaExecutionTraceReturnEvent >> children [
 
 	^ #(  )
 ]
 
-{ #category : 'accessing' }
-ViennaExecutionTraceReturnEvent >> module [
+{ #category : 'enumerating' }
+ViennaExecutionTraceReturnEvent >> modulesAndAssignmentsDo: aBlock [
 
-	^ module
-]
-
-{ #category : 'accessing' }
-ViennaExecutionTraceReturnEvent >> module: aString [
-
-	module := aString
+	
 ]
 
 { #category : 'accessing' }
@@ -51,4 +52,18 @@ ViennaExecutionTraceReturnEvent >> returnValue [
 ViennaExecutionTraceReturnEvent >> returnValue: anObject [
 
 	returnValue := anObject
+]
+
+{ #category : 'private' }
+ViennaExecutionTraceReturnEvent >> setModule: aString operation: anotherString returnValue: anObject [
+
+	module := aString.
+	operation := anotherString.
+	returnValue := anObject
+]
+
+{ #category : 'accessing' }
+ViennaExecutionTraceReturnEvent >> source [
+
+	^ 'return ' , returnValue viennaString
 ]

@@ -2,7 +2,6 @@ Class {
 	#name : 'ViennaExecutionTraceAssignmentEvent',
 	#superclass : 'ViennaExecutionTraceEvent',
 	#instVars : [
-		'module',
 		'assignments'
 	],
 	#category : 'ViennaTalk-Transpiler-ExecutionTrace-Events',
@@ -10,26 +9,46 @@ Class {
 	#tag : 'Events'
 }
 
-{ #category : 'accessing' }
+{ #category : 'instance creation' }
+ViennaExecutionTraceAssignmentEvent class >> module: aString assignments: anArrayOfAssociation [
+
+	^ self new
+		  setModule: aString assignments: anArrayOfAssociation;
+		  yourself
+]
+
+{ #category : 'enumerating' }
 ViennaExecutionTraceAssignmentEvent >> assignments [
 
 	^ assignments
 ]
 
-{ #category : 'accessing' }
-ViennaExecutionTraceAssignmentEvent >> assignments: anArrayOfString [
+{ #category : 'enumerating' }
+ViennaExecutionTraceAssignmentEvent >> modulesAndAssignmentsDo: aBlock [
 
-	assignments := anArrayOfString
+	assignments do: [ :assoc |
+		aBlock value: module value: assoc key value: assoc value ]
+]
+
+{ #category : 'private' }
+ViennaExecutionTraceAssignmentEvent >> setModule: aString assignments: anArrayOfAssociation [
+
+	module := aString.
+	assignments := anArrayOfAssociation
 ]
 
 { #category : 'accessing' }
-ViennaExecutionTraceAssignmentEvent >> module [
+ViennaExecutionTraceAssignmentEvent >> source [
 
-	^ module
-]
-
-{ #category : 'accessing' }
-ViennaExecutionTraceAssignmentEvent >> module: aString [
-
-	module := aString
+	^ assignments ifEmpty: [ 'skip' ] ifNotEmpty: [
+			  String streamContents: [ :stream |
+					  assignments size > 1 ifTrue: [ stream nextPutAll: 'atomic(' ].
+					  assignments
+						  do: [ :assoc |
+								  stream
+									  nextPutAll: assoc key;
+									  nextPutAll: ' := '.
+								  assoc value viennaStringOn: stream ]
+						  separatedBy: [ stream nextPutAll: '; ' ].
+					  assignments size > 1 ifTrue: [ stream nextPut: $) ] ] ]
 ]

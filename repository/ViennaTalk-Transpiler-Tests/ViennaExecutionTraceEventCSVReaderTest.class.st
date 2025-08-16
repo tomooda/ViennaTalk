@@ -22,9 +22,11 @@ ViennaExecutionTraceEventCSVReaderTest >> testReadAssignmentEvent [
 		         { 'A'. 'foo:=1'. 'bar:=2'. 'baz:=3'. 'quuux:=<quuux>' }.
 	self assert: event class identicalTo: reader assignmentEventClass.
 	self assert: event module equals: 'A'.
-	self
-		assert: event assignments
-		equals: { 'foo:=1'. 'bar:=2'. 'baz:=3'. 'quuux:=<quuux>' }
+	self assert: event assignments equals: {
+			('foo' -> 1).
+			('bar' -> 2).
+			('baz' -> 3).
+			('quuux' -> #quuux) }
 ]
 
 { #category : 'tests' }
@@ -39,7 +41,7 @@ ViennaExecutionTraceEventCSVReaderTest >> testReadOperationCallEvent [
 	self assert: event class identicalTo: reader operationCallEventClass.
 	self assert: event module equals: 'B'.
 	self assert: event operation equals: 'foo'.
-	self assert: event arguments equals: { '1'. '<quuux>' }.
+	self assert: event arguments equals: { 1. #quuux }.
 	self assert: event events size equals: 2.
 	assign := event events first.
 	ret := event events second.
@@ -55,7 +57,7 @@ ViennaExecutionTraceEventCSVReaderTest >> testReadReturnEvent [
 	self assert: event class identicalTo: reader returnEventClass.
 	self assert: event module equals: 'A'.
 	self assert: event operation equals: 'quuux'.
-	self assert: event returnValue equals: '<quuux>'
+	self assert: event returnValue equals: #quuux
 ]
 
 { #category : 'tests' }
@@ -66,15 +68,17 @@ ViennaExecutionTraceEventCSVReaderTest >> testReadRootEvent [
 	event := reader readRootEvent:
 		         { 'A'. 'foo:=1'. 'bar:=2'. 'B'. 'baz:=3'. 'quuux:=<quuux>' }.
 	self assert: event class identicalTo: reader rootEventClass.
-	self assert: event initialAssignmentEvents size equals: 2.
-	assign1 := event initialAssignmentEvents first.
-	assign2 := event initialAssignmentEvents second.
+	self assert: event initial size equals: 2.
+	assign1 := event initial first.
+	assign2 := event initial second.
 	self assert: assign1 module equals: 'A'.
-	self assert: assign1 assignments equals: { 'foo:=1'. 'bar:=2' }.
+	self assert: assign1 assignments equals: {
+			('foo' -> 1).
+			('bar' -> 2) }.
 	self assert: assign2 module equals: 'B'.
-	self
-		assert: assign2 assignments
-		equals: { 'baz:=3'. 'quuux:=<quuux>' }.
+	self assert: assign2 assignments equals: {
+			('baz' -> 3).
+			('quuux' -> #quuux) }.
 	self assert: event events size equals: 1.
 	self
 		assert: event events first class

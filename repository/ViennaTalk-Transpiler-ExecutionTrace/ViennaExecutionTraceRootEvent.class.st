@@ -2,20 +2,48 @@ Class {
 	#name : 'ViennaExecutionTraceRootEvent',
 	#superclass : 'ViennaExecutionTraceEvent',
 	#instVars : [
-		'module',
 		'source',
-		'initialAssignmentEvents',
-		'events'
+		'events',
+		'modulesAndAssignments',
+		'initial'
 	],
 	#category : 'ViennaTalk-Transpiler-ExecutionTrace-Events',
 	#package : 'ViennaTalk-Transpiler-ExecutionTrace',
 	#tag : 'Events'
 }
 
+{ #category : 'instance creation' }
+ViennaExecutionTraceRootEvent class >> initial: anArrayOfViennaExecutionTraceAssignmentEvents events: anArrayOfViennaExecutionTraceEvents [
+
+	^ self new
+		  setInitial:
+			  anArrayOfViennaExecutionTraceAssignmentEvents
+		  events: anArrayOfViennaExecutionTraceEvents;
+		  yourself
+]
+
 { #category : 'accessing' }
 ViennaExecutionTraceRootEvent >> children [
 
 	^ events
+]
+
+{ #category : 'private' }
+ViennaExecutionTraceRootEvent >> computeModulesAndAssignments [
+
+	| globalState |
+	globalState := OrderedDictionary new.
+	initial do: [ :assignment |
+			assignment modulesAndAssignmentsDo: [ :mod :var :val |
+					(globalState at: mod ifAbsentPut: [ OrderedDictionary new ])
+						at: var
+						put: val ] ].
+	events do: [ :event |
+			event modulesAndAssignmentsDo: [ :mod :var :val |
+					(globalState at: mod ifAbsentPut: [ OrderedDictionary new ])
+						at: var
+						put: val ] ].
+	^ globalState
 ]
 
 { #category : 'accessing' }
@@ -25,33 +53,26 @@ ViennaExecutionTraceRootEvent >> events [
 ]
 
 { #category : 'accessing' }
-ViennaExecutionTraceRootEvent >> events: anArrayOfViennaExecutionTraceEvent [
+ViennaExecutionTraceRootEvent >> initial [
 
-	events := anArrayOfViennaExecutionTraceEvent
+	^ initial
 ]
 
-{ #category : 'accessing' }
-ViennaExecutionTraceRootEvent >> initialAssignmentEvents [
+{ #category : 'enumerating' }
+ViennaExecutionTraceRootEvent >> modulesAndAssignmentsDo: aBlock [
 
-	^ initialAssignmentEvents
+	(modulesAndAssignments ifNil: [
+		 modulesAndAssignments := self computeModulesAndAssignments ])
+		keysAndValuesDo: [ :mod :dict |
+				dict keysAndValuesDo: [ :var :val |
+					aBlock value: mod value: var value: val ] ]
 ]
 
-{ #category : 'accessing' }
-ViennaExecutionTraceRootEvent >> initialAssignmentEvents: anArrayOfViennaExecutionTraceAssignmentEvent [
+{ #category : 'private' }
+ViennaExecutionTraceRootEvent >> setInitial: anArrayOfViennaExecutionTraceAssignmentEvents events: anArrayOfViennaExecutionTraceEvents [
 
-	initialAssignmentEvents := anArrayOfViennaExecutionTraceAssignmentEvent
-]
-
-{ #category : 'accessing' }
-ViennaExecutionTraceRootEvent >> module [
-
-	^ module
-]
-
-{ #category : 'accessing' }
-ViennaExecutionTraceRootEvent >> module: aString [
-
-	module := aString
+	initial := anArrayOfViennaExecutionTraceAssignmentEvents.
+	events := anArrayOfViennaExecutionTraceEvents
 ]
 
 { #category : 'accessing' }

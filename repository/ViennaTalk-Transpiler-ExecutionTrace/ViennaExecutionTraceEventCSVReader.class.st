@@ -3,7 +3,8 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'root',
-		'inputStream'
+		'inputStream',
+		'parser'
 	],
 	#category : 'ViennaTalk-Transpiler-ExecutionTrace-Events',
 	#package : 'ViennaTalk-Transpiler-ExecutionTrace',
@@ -16,11 +17,21 @@ ViennaExecutionTraceEventCSVReader >> assignmentEventClass [
 	^ ViennaExecutionTraceAssignmentEvent
 ]
 
+{ #category : 'private' }
+ViennaExecutionTraceEventCSVReader >> assignmentSourceToAssoc: aString [
+
+	| index |
+	index := aString findString: ':='.
+	index = 0 ifTrue: [ ^ self error: 'Expected assignment' ].
+	^ (aString copyFrom: 1 to: index - 1) trim
+	  -> (parser parse: (aString copyFrom: index + 2 to: aString size))
+]
+
 { #category : 'initialization' }
 ViennaExecutionTraceEventCSVReader >> initialize [
 
 	super initialize.
-	root := self rootEventClass new
+	parser := ViennaVDMValueDecoder current
 ]
 
 { #category : 'accessing' }
@@ -44,9 +55,11 @@ ViennaExecutionTraceEventCSVReader >> operationCallEventClass [
 { #category : 'reading' }
 ViennaExecutionTraceEventCSVReader >> readAssignmentEvent: anArrayOfString [
 
-	^ self assignmentEventClass new
-		  module: anArrayOfString first;
-		  assignments: anArrayOfString allButFirst
+	^ self assignmentEventClass
+		  module: anArrayOfString first
+		  assignments: (Array streamContents: [ :stream |
+					   anArrayOfString allButFirstDo: [ :string |
+						   stream nextPut: (self assignmentSourceToAssoc: string) ] ])
 ]
 
 { #category : 'reading' }
@@ -67,58 +80,52 @@ ViennaExecutionTraceEventCSVReader >> readLine [
 { #category : 'reading' }
 ViennaExecutionTraceEventCSVReader >> readOperationCallEvent: anArrayOfString [
 
-	^ self operationCallEventClass new
-		  module: anArrayOfString first;
-		  operation: anArrayOfString second;
-		  arguments: (anArrayOfString allButFirst: 2);
+	^ self operationCallEventClass
+		  module: anArrayOfString first
+		  operation: anArrayOfString second
+		  arguments: ((anArrayOfString allButFirst: 2) collect: [ :string |
+				   self sourceToObject: string ])
 		  events: (Array streamContents: [ :stream |
-						   [
-							   | event |
-							   event := self readLine.
-							   event notNil ifTrue: [ stream nextPut: event ].
-							   event notNil and: [ event class ~= self returnEventClass ] ]
-							   whileTrue ]);
-		  yourself
+					   [
+						   | event |
+						   event := self readLine.
+						   event notNil and: [
+								   stream nextPut: event.
+								   event class ~= self returnEventClass ] ] whileTrue ])
 ]
 
 { #category : 'reading' }
 ViennaExecutionTraceEventCSVReader >> readReturnEvent: anArrayOfString [
 
-	^ self returnEventClass new
-		  module: anArrayOfString first;
-		  operation: anArrayOfString second;
-		  returnValue: anArrayOfString third;
-		  yourself
+	^ self returnEventClass
+		  module: anArrayOfString first
+		  operation: anArrayOfString second
+		  returnValue: (self sourceToObject: anArrayOfString third)
 ]
 
 { #category : 'reading' }
 ViennaExecutionTraceEventCSVReader >> readRootEvent: anArrayOfString [
 
-	root
-		initialAssignmentEvents: (Array streamContents: [ :stream |
-						 | module assignments |
-						 module := nil.
-						 assignments := OrderedCollection new.
-						 anArrayOfString do: [ :string |
-									 (string includes: $:)
-										 ifTrue: [ assignments addLast: string ]
-										 ifFalse: [
-												 module ifNotNil: [
-															 stream nextPut: (self assignmentEventClass new
-																		  module: module;
-																		  assignments: assignments asArray) ].
-												 module := string.
-												 assignments removeAll ] ].
-						 module ifNotNil: [
-								 stream nextPut: (self assignmentEventClass new
-										  module: module;
-										  assignments: assignments asArray) ] ]);
-		events: (Array streamContents: [ :stream |
-					 | event |
-					 [
-						 event := self readLine.
-						 event notNil ] whileTrue: [ stream nextPut: event ] ]).
-	^ root
+	^ self rootEventClass
+		  initial: (Array streamContents: [ :stream |
+					   | assignments |
+					   assignments := OrderedCollection new.
+					   anArrayOfString do: [ :string |
+							   (string includes: $:)
+								   ifTrue: [ assignments addLast: string ]
+								   ifFalse: [
+										   assignments ifNotEmpty: [
+											   stream nextPut: (self readAssignmentEvent: assignments) ].
+										   assignments
+											   removeAll;
+											   addLast: string ] ].
+					   assignments size >= 2 ifTrue: [
+						   stream nextPut: (self readAssignmentEvent: assignments) ] ])
+		  events: (Array streamContents: [ :stream |
+					   | event |
+					   [
+						   event := self readLine.
+						   event notNil ] whileTrue: [ stream nextPut: event ] ])
 ]
 
 { #category : 'class access' }
@@ -143,6 +150,15 @@ ViennaExecutionTraceEventCSVReader >> root: anObject [
 ViennaExecutionTraceEventCSVReader >> rootEventClass [
 
 	^ ViennaExecutionTraceRootEvent
+]
+
+{ #category : 'private' }
+ViennaExecutionTraceEventCSVReader >> sourceToObject: aString [
+
+	| object |
+	object := parser parse: aString trim.
+	object isPetit2Failure ifTrue: [ ^ Object new ].
+	^ object
 ]
 
 { #category : 'private' }
