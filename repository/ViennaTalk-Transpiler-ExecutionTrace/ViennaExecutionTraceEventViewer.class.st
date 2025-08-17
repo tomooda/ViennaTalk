@@ -20,6 +20,17 @@ ViennaExecutionTraceEventViewer >> defaultLayout [
 		  yourself
 ]
 
+{ #category : 'private' }
+ViennaExecutionTraceEventViewer >> format: aString [
+
+	| node |
+	node := aString asViennaExpressionAst.
+	node isPetit2Success ifTrue: [ ^ node source ].
+	node := aString asViennaStatementAst.
+	node isPetit2Success ifTrue: [ ^ node source ].
+	^ aString
+]
+
 { #category : 'defaults' }
 ViennaExecutionTraceEventViewer >> iconFor: aViennaExecutionTraceEvent [
 
@@ -63,22 +74,58 @@ ViennaExecutionTraceEventViewer >> selectedEventChanged [
 	self updateInfo
 ]
 
+{ #category : 'private' }
+ViennaExecutionTraceEventViewer >> titleLineFor: aViennaExecutionTraceEvent [
+
+	^ aViennaExecutionTraceEvent isRootEvent
+		  ifTrue: [
+				  String streamContents: [ :stream |
+						  stream
+							  nextPutAll: '# Execution';
+							  cr;
+							  nextPutAll: '## source';
+							  cr;
+							  nextPutAll: '```vdmsl';
+							  cr;
+							  nextPutAll: (self format: aViennaExecutionTraceEvent source);
+							  cr;
+							  nextPutAll: '```';
+							  cr.
+						  stream
+							  nextPutAll: '## init';
+							  cr.
+						  aViennaExecutionTraceEvent initial do: [ :assign |
+								  stream
+									  nextPutAll: '* ';
+									  nextPutAll: assign module;
+									  cr.
+								  assign assignmentsDo: [ :var :val |
+										  stream
+											  nextPutAll: '  - ';
+											  nextPutAll: var;
+											  nextPutAll: ' := ';
+											  nextPutAll: val viennaString;
+											  cr ] ] ] ]
+		  ifFalse: [ '# ' , aViennaExecutionTraceEvent source , String cr ]
+]
+
 { #category : 'updating' }
 ViennaExecutionTraceEventViewer >> updateInfo [
 
 	eventTree selectedItem ifNotNil: [ :event |
 			infoMarkdown document: (String streamContents: [ :stream |
+						 stream nextPutAll: (self titleLineFor: event).
 						 stream
-							 nextPutAll: '# writes';
+							 nextPutAll: '## writes';
 							 cr.
 						 event globalWrites keysAndValuesDo: [ :module :localWrites |
 								 stream
-									 nextPutAll: '### ';
+									 nextPutAll: '* ';
 									 nextPutAll: module;
 									 cr.
 								 localWrites keysAndValuesDo: [ :variable :value |
 										 stream
-											 nextPutAll: '* ';
+											 nextPutAll: '  - ';
 											 nextPutAll: variable;
 											 nextPutAll: ' := ';
 											 nextPutAll: value viennaString;

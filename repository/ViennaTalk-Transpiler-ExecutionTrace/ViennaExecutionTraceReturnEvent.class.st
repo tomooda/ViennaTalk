@@ -95,5 +95,7 @@ ViennaExecutionTraceReturnEvent >> setModule: aString operation: anotherString r
 { #category : 'accessing' }
 ViennaExecutionTraceReturnEvent >> source [
 
-	^ 'return ' , returnValue viennaString
+	^ (returnValue isKindOf: ViennaTranspiledObject)
+		  ifTrue: [ 'return' ]
+		  ifFalse: [ 'return ' , returnValue viennaString ]
 ]

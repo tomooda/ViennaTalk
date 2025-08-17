@@ -158,7 +158,7 @@ ViennaExecutionTraceEventCSVReader >> sourceToObject: aString [
 
 	| object |
 	object := parser parse: aString trim.
-	object isPetit2Failure ifTrue: [ ^ Object new ].
+	object isPetit2Failure ifTrue: [ ^ ViennaTranspiledObject new ].
 	^ object
 ]
 
