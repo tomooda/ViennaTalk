@@ -4,8 +4,7 @@ Class {
 	#instVars : [
 		'operation',
 		'arguments',
-		'events',
-		'modulesAndAssignments'
+		'events'
 	],
 	#category : 'ViennaTalk-Transpiler-ExecutionTrace-Events',
 	#package : 'ViennaTalk-Transpiler-ExecutionTrace',
@@ -35,19 +34,6 @@ ViennaExecutionTraceOperationCallEvent >> children [
 	^ events
 ]
 
-{ #category : 'private' }
-ViennaExecutionTraceOperationCallEvent >> computeModulesAndAssignments [
-
-	| globalState |
-	globalState := OrderedDictionary new.
-	events do: [ :event |
-			event modulesAndAssignmentsDo: [ :mod :var :val |
-					(globalState at: mod ifAbsentPut: [ OrderedDictionary new ])
-						at: var
-						put: val ] ].
-	^ globalState
-]
-
 { #category : 'accessing' }
 ViennaExecutionTraceOperationCallEvent >> events [
 
@@ -64,16 +50,6 @@ ViennaExecutionTraceOperationCallEvent >> iconName [
 ViennaExecutionTraceOperationCallEvent >> isOperationCallEvent [
 
 	^ true
-]
-
-{ #category : 'enumerating' }
-ViennaExecutionTraceOperationCallEvent >> modulesAndAssignmentsDo: aBlock [
-
-	(modulesAndAssignments ifNil: [
-		 modulesAndAssignments := self computeModulesAndAssignments ])
-		keysAndValuesDo: [ :mod :dict |
-				dict keysAndValuesDo: [ :var :val |
-					aBlock value: mod value: var value: val ] ]
 ]
 
 { #category : 'accessing' }

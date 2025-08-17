@@ -18,9 +18,28 @@ ViennaExecutionTraceAssignmentEvent class >> module: aString assignments: anArra
 ]
 
 { #category : 'enumerating' }
+ViennaExecutionTraceAssignmentEvent >> allAssignmentChildrenDo: aBlock [
+
+	aBlock value: self
+]
+
+{ #category : 'enumerating' }
+ViennaExecutionTraceAssignmentEvent >> allTipChildrenDo: aBlock [
+
+	aBlock value: self
+]
+
+{ #category : 'accessing' }
 ViennaExecutionTraceAssignmentEvent >> assignments [
 
 	^ assignments
+]
+
+{ #category : 'enumerating' }
+ViennaExecutionTraceAssignmentEvent >> assignmentsDo: aBlock [
+
+	assignments do: [ :assoc |
+		aBlock value: assoc key value: assoc value ]
 ]
 
 { #category : 'accessing' }
@@ -38,8 +57,7 @@ ViennaExecutionTraceAssignmentEvent >> isAssignmentEvent [
 { #category : 'enumerating' }
 ViennaExecutionTraceAssignmentEvent >> modulesAndAssignmentsDo: aBlock [
 
-	assignments do: [ :assoc |
-		aBlock value: module value: assoc key value: assoc value ]
+	^ { (module -> assignments asOrderedDictionary) } asOrderedDictionary
 ]
 
 { #category : 'private' }

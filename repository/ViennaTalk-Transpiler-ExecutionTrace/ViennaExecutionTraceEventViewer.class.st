@@ -2,7 +2,8 @@ Class {
 	#name : 'ViennaExecutionTraceEventViewer',
 	#superclass : 'SpPresenter',
 	#instVars : [
-		'eventTree'
+		'eventTree',
+		'infoMarkdown'
 	],
 	#category : 'ViennaTalk-Transpiler-ExecutionTrace-Events',
 	#package : 'ViennaTalk-Transpiler-ExecutionTrace',
@@ -12,8 +13,10 @@ Class {
 { #category : 'layout' }
 ViennaExecutionTraceEventViewer >> defaultLayout [
 
-	^ SpBoxLayout newHorizontal
-		  add: eventTree expand: true;
+	^ SpPanedLayout newHorizontal
+		  positionOfSlider: 0.5;
+		  add: eventTree;
+		  add: infoMarkdown;
 		  yourself
 ]
 
@@ -37,7 +40,9 @@ ViennaExecutionTraceEventViewer >> initializePresenters [
 				              yourself);
 		             roots: {  };
 		             children: #children;
-		             yourself
+		             whenSelectedItemChangedDo: [ self selectedEventChanged ];
+		             yourself.
+	infoMarkdown := (self instantiate: MicrodownPresenter) 
 ]
 
 { #category : 'accessing' }
@@ -50,4 +55,32 @@ ViennaExecutionTraceEventViewer >> roots [
 ViennaExecutionTraceEventViewer >> roots: anArrayOfViennaExecutionTraceRootEvent [
 
 	eventTree roots: anArrayOfViennaExecutionTraceRootEvent
+]
+
+{ #category : 'updating' }
+ViennaExecutionTraceEventViewer >> selectedEventChanged [
+
+	self updateInfo
+]
+
+{ #category : 'updating' }
+ViennaExecutionTraceEventViewer >> updateInfo [
+
+	eventTree selectedItem ifNotNil: [ :event |
+			infoMarkdown document: (String streamContents: [ :stream |
+						 stream
+							 nextPutAll: '# writes';
+							 cr.
+						 event globalWrites keysAndValuesDo: [ :module :localWrites |
+								 stream
+									 nextPutAll: '### ';
+									 nextPutAll: module;
+									 cr.
+								 localWrites keysAndValuesDo: [ :variable :value |
+										 stream
+											 nextPutAll: '* ';
+											 nextPutAll: variable;
+											 nextPutAll: ' := ';
+											 nextPutAll: value viennaString;
+											 cr ] ] ]) ]
 ]

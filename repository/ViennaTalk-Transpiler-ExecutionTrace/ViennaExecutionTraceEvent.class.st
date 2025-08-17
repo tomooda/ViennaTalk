@@ -15,10 +15,37 @@ ViennaExecutionTraceEvent class >> isAbstract [
 	^ self = ViennaExecutionTraceEvent
 ]
 
+{ #category : 'enumerating' }
+ViennaExecutionTraceEvent >> allAssignmentChildrenDo: aBlock [
+
+	self children do: [ :event | event allAssignmentChildrenDo: aBlock ]
+]
+
+{ #category : 'enumerating' }
+ViennaExecutionTraceEvent >> allTipChildrenDo: aBlock [
+
+	self children do: [ :event | event allTipChildrenDo: aBlock ]
+]
+
 { #category : 'accessing' }
 ViennaExecutionTraceEvent >> children [
 
 	^ #(  )
+]
+
+{ #category : 'enumerating' }
+ViennaExecutionTraceEvent >> globalWrites [
+
+	| globalWrites |
+	globalWrites := OrderedDictionary new.
+	self allAssignmentChildrenDo: [ :assignmentEvent |
+			| localWrites |
+			localWrites := globalWrites
+				               at: assignmentEvent module
+				               ifAbsentPut: [ OrderedDictionary new ].
+			assignmentEvent assignmentsDo: [ :var :val |
+				localWrites at: var put: val ] ].
+	^ globalWrites
 ]
 
 { #category : 'accessing' }
@@ -60,7 +87,9 @@ ViennaExecutionTraceEvent >> module [
 { #category : 'enumerating' }
 ViennaExecutionTraceEvent >> modulesAndAssignmentsDo: aBlock [
 
-	^ self subclassResponsibility
+	self globalWrites keysAndValuesDo: [ :mod :local |
+			local keysAndValuesDo: [ :var :val |
+				aBlock value: mod value: var value: val ] ]
 ]
 
 { #category : 'accessing' }

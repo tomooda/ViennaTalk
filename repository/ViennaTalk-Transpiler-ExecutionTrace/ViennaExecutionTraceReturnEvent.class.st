@@ -18,10 +18,28 @@ ViennaExecutionTraceReturnEvent class >> module: aString operation: anotherStrin
 		  yourself
 ]
 
+{ #category : 'enumerating' }
+ViennaExecutionTraceReturnEvent >> allAssignmentChildrenDo: aBlock [
+
+	
+]
+
+{ #category : 'enumerating' }
+ViennaExecutionTraceReturnEvent >> allTipChildrenDo: aBlock [
+
+	aBlock value: self
+]
+
 { #category : 'accessing' }
 ViennaExecutionTraceReturnEvent >> children [
 
 	^ #(  )
+]
+
+{ #category : 'enumerating' }
+ViennaExecutionTraceReturnEvent >> globalWrites [
+
+	^ OrderedDictionary new
 ]
 
 { #category : 'accessing' }

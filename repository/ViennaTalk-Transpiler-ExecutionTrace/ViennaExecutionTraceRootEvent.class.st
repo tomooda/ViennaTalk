@@ -4,7 +4,6 @@ Class {
 	#instVars : [
 		'source',
 		'events',
-		'modulesAndAssignments',
 		'initial'
 	],
 	#category : 'ViennaTalk-Transpiler-ExecutionTrace-Events',
@@ -28,24 +27,6 @@ ViennaExecutionTraceRootEvent >> children [
 	^ events
 ]
 
-{ #category : 'private' }
-ViennaExecutionTraceRootEvent >> computeModulesAndAssignments [
-
-	| globalState |
-	globalState := OrderedDictionary new.
-	initial do: [ :assignment |
-			assignment modulesAndAssignmentsDo: [ :mod :var :val |
-					(globalState at: mod ifAbsentPut: [ OrderedDictionary new ])
-						at: var
-						put: val ] ].
-	events do: [ :event |
-			event modulesAndAssignmentsDo: [ :mod :var :val |
-					(globalState at: mod ifAbsentPut: [ OrderedDictionary new ])
-						at: var
-						put: val ] ].
-	^ globalState
-]
-
 { #category : 'accessing' }
 ViennaExecutionTraceRootEvent >> events [
 
@@ -64,20 +45,16 @@ ViennaExecutionTraceRootEvent >> initial [
 	^ initial
 ]
 
+{ #category : 'enumerating' }
+ViennaExecutionTraceRootEvent >> initialModulesAndAssignmentsDo: aBlock [
+
+	initial do: [ :assign | assign modulesAndAssignmentsDo: aBlock ]
+]
+
 { #category : 'testing' }
 ViennaExecutionTraceRootEvent >> isRootEvent [
 
 	^ true
-]
-
-{ #category : 'enumerating' }
-ViennaExecutionTraceRootEvent >> modulesAndAssignmentsDo: aBlock [
-
-	(modulesAndAssignments ifNil: [
-		 modulesAndAssignments := self computeModulesAndAssignments ])
-		keysAndValuesDo: [ :mod :dict |
-				dict keysAndValuesDo: [ :var :val |
-					aBlock value: mod value: var value: val ] ]
 ]
 
 { #category : 'accessing' }
