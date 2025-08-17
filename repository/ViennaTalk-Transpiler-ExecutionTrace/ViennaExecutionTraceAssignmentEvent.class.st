@@ -29,6 +29,14 @@ ViennaExecutionTraceAssignmentEvent >> allTipChildrenDo: aBlock [
 	aBlock value: self
 ]
 
+{ #category : 'formatting' }
+ViennaExecutionTraceAssignmentEvent >> applyToFormat: aViennaExecutionRecordFormat on: aStream [
+
+	aViennaExecutionRecordFormat
+		writeStateDiffBlock: module -> assignments
+		on: aStream
+]
+
 { #category : 'accessing' }
 ViennaExecutionTraceAssignmentEvent >> assignments [
 

@@ -30,6 +30,16 @@ ViennaExecutionTraceReturnEvent >> allTipChildrenDo: aBlock [
 	aBlock value: self
 ]
 
+{ #category : 'formatting' }
+ViennaExecutionTraceReturnEvent >> applyToFormat: aViennaExecutionRecordFormat on: aStream [
+
+	^ aViennaExecutionRecordFormat
+		  writeReturn: operation
+		  module: module
+		  value: returnValue
+		  on: aStream
+]
+
 { #category : 'accessing' }
 ViennaExecutionTraceReturnEvent >> children [
 

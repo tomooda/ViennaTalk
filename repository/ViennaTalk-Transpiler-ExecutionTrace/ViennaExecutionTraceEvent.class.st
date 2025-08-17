@@ -27,6 +27,12 @@ ViennaExecutionTraceEvent >> allTipChildrenDo: aBlock [
 	self children do: [ :event | event allTipChildrenDo: aBlock ]
 ]
 
+{ #category : 'formatting' }
+ViennaExecutionTraceEvent >> applyToFormat: aViennaExecutionRecordFormat on: aStream [
+
+	^ self subclassResponsibility
+]
+
 { #category : 'accessing' }
 ViennaExecutionTraceEvent >> children [
 

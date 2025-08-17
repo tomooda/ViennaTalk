@@ -53,7 +53,9 @@ ViennaExecutionTraceEventViewer >> initializePresenters [
 		             children: #children;
 		             whenSelectedItemChangedDo: [ self selectedEventChanged ];
 		             yourself.
-	infoMarkdown := (self instantiate: MicrodownPresenter) 
+	infoMarkdown := (self instantiate: MicrodownPresenter)
+		                instVarNamed: #wrapWord put: false;
+		                yourself
 ]
 
 { #category : 'accessing' }
@@ -72,6 +74,24 @@ ViennaExecutionTraceEventViewer >> roots: anArrayOfViennaExecutionTraceRootEvent
 ViennaExecutionTraceEventViewer >> selectedEventChanged [
 
 	self updateInfo
+]
+
+{ #category : 'private' }
+ViennaExecutionTraceEventViewer >> sequenceDiagramForMicrodownFrom: aViennaExecutionTraceEvent on: aStream [
+
+	| format |
+	format := ViennaExecutionTraceSequenceDiagramFormat new
+		          root: aViennaExecutionTraceEvent source;
+		          yourself.
+	aStream
+		nextPutAll: '```mermaid';
+		cr.
+	format writeHeaderOn: aStream.
+	aViennaExecutionTraceEvent applyToFormat: format on: aStream.
+	format writeFooterOn: aStream.
+	aStream
+		nextPutAll: '```';
+		cr
 ]
 
 { #category : 'private' }
@@ -129,5 +149,15 @@ ViennaExecutionTraceEventViewer >> updateInfo [
 											 nextPutAll: variable;
 											 nextPutAll: ' := ';
 											 nextPutAll: value viennaString;
-											 cr ] ] ]) ]
+											 cr ] ].
+						 stream
+							 nextPutAll: '## Sequence Diagram';
+							 cr.
+						 self sequenceDiagramForMicrodownFrom: event on: stream ]).
+			infoMarkdown withAdapterDo: [ :a |
+					a widgetDo: [ :w |
+							w
+								beNotWrapped;
+								hScrollbarShowAlways.
+							w textArea extent: w textArea paragraph extent ] ] ]
 ]

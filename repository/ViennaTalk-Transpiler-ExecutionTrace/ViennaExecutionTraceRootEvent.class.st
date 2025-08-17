@@ -21,6 +21,13 @@ ViennaExecutionTraceRootEvent class >> initial: anArrayOfViennaExecutionTraceAss
 		  yourself
 ]
 
+{ #category : 'formatting' }
+ViennaExecutionTraceRootEvent >> applyToFormat: aViennaExecutionRecordFormat on: aStream [
+
+	events do: [ :event |
+		event applyToFormat: aViennaExecutionRecordFormat on: aStream ]
+]
+
 { #category : 'accessing' }
 ViennaExecutionTraceRootEvent >> children [
 

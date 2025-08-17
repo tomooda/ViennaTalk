@@ -22,6 +22,18 @@ ViennaExecutionTraceOperationCallEvent class >> module: aString operation: anoth
 		  yourself
 ]
 
+{ #category : 'formatting' }
+ViennaExecutionTraceOperationCallEvent >> applyToFormat: aViennaExecutionRecordFormat on: aStream [
+
+	aViennaExecutionRecordFormat
+		writeCall: operation
+		module: module
+		args: arguments
+		on: aStream.
+	events do: [ :event |
+		event applyToFormat: aViennaExecutionRecordFormat on: aStream ]
+]
+
 { #category : 'accessing' }
 ViennaExecutionTraceOperationCallEvent >> arguments [
 
