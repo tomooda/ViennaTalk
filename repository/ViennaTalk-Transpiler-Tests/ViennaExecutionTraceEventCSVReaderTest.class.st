@@ -34,7 +34,7 @@ ViennaExecutionTraceEventCSVReaderTest >> testReadOperationCallEvent [
 
 	| event assign ret |
 	reader inputStream:
-		('a,B,quuux:=nil' , String cr , 'r,B,foo,()' , String cr
+		('s,B,quuux:=nil' , String cr , 'r,B,foo,()' , String cr
 		 , 'a,A,bar:="baz"') readStream.
 	event := reader readOperationCallEvent:
 		         { 'B'. 'foo'. '1'. '<quuux>' }.
@@ -64,7 +64,7 @@ ViennaExecutionTraceEventCSVReaderTest >> testReadReturnEvent [
 ViennaExecutionTraceEventCSVReaderTest >> testReadRootEvent [
 
 	| event assign1 assign2 |
-	reader inputStream: 'a,B,quuux:=nil' readStream.
+	reader inputStream: 's,B,quuux:=nil' readStream.
 	event := reader readRootEvent:
 		         { 'A'. 'foo:=1'. 'bar:=2'. 'B'. 'baz:=3'. 'quuux:=<quuux>' }.
 	self assert: event class identicalTo: reader rootEventClass.

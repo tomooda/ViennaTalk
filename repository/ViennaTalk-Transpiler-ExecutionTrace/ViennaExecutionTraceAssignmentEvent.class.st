@@ -42,6 +42,12 @@ ViennaExecutionTraceAssignmentEvent >> assignmentsDo: aBlock [
 		aBlock value: assoc key value: assoc value ]
 ]
 
+{ #category : 'enumerating' }
+ViennaExecutionTraceAssignmentEvent >> globalWrites [
+
+	^ { (module -> assignments asOrderedDictionary) } asOrderedDictionary
+]
+
 { #category : 'accessing' }
 ViennaExecutionTraceAssignmentEvent >> iconName [
 
@@ -57,7 +63,8 @@ ViennaExecutionTraceAssignmentEvent >> isAssignmentEvent [
 { #category : 'enumerating' }
 ViennaExecutionTraceAssignmentEvent >> modulesAndAssignmentsDo: aBlock [
 
-	^ { (module -> assignments asOrderedDictionary) } asOrderedDictionary
+	assignments do: [ :assoc |
+		aBlock value: module value: assoc key value: assoc value ]
 ]
 
 { #category : 'private' }
