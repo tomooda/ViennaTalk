@@ -20,6 +20,12 @@ ViennaExecutionTraceEventViewer >> defaultLayout [
 		  yourself
 ]
 
+{ #category : 'operations' }
+ViennaExecutionTraceEventViewer >> expandAll [
+
+	eventTree expandAll
+]
+
 { #category : 'private' }
 ViennaExecutionTraceEventViewer >> format: aString [
 
