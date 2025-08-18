@@ -82,16 +82,17 @@ ViennaExecutionTraceSequenceDiagramFormat >> writeHeaderOn: aStream [
 { #category : 'formatting' }
 ViennaExecutionTraceSequenceDiagramFormat >> writeReturn: aString module: anotherString value: anObject on: aStream [
 
-	| callee caller |
-	callee := callStack removeLast.
-	caller := callStack last.
-	aStream
-		nextPutAll: callee;
-		nextPutAll: ' -->>- ';
-		nextPutAll: caller;
-		nextPutAll: ' : '.
-	anObject viennaStringOn: aStream.
-	aStream cr
+	callStack size >= 2 ifTrue: [
+			| callee caller |
+			callee := callStack removeLast.
+			caller := callStack last.
+			aStream
+				nextPutAll: callee;
+				nextPutAll: ' -->>- ';
+				nextPutAll: caller;
+				nextPutAll: ' : '.
+			anObject viennaStringOn: aStream.
+			aStream cr ]
 ]
 
 { #category : 'formatting' }
