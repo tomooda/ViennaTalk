@@ -10,7 +10,7 @@ Class {
 ViennaStateVariableSlotForExecutionTracing >> write: aValue to: anObject [
 
 	self basicWrite: aValue to: anObject.
-	anObject inv.
+	anObject _document _recorder pauseRecordingDuring: [ anObject inv ].
 	anObject _stateChanged: self name.
 	^ aValue
 ]

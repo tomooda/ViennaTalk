@@ -3,7 +3,9 @@ Class {
 	#superclass : 'ViennaExecutionTraceAbstractRecorder',
 	#instVars : [
 		'format',
-		'outputStream'
+		'outputStream',
+		'forced',
+		'paused'
 	],
 	#category : 'ViennaTalk-Transpiler-ExecutionTrace-Recorder',
 	#package : 'ViennaTalk-Transpiler-ExecutionTrace',
@@ -43,11 +45,12 @@ ViennaExecutionTraceRecorder >> beginRecording [
 { #category : 'recording' }
 ViennaExecutionTraceRecorder >> call: aString module: anotherString args: anArray [
 
-	format
-		writeCall: aString
-		module: anotherString
-		args: anArray
-		on: outputStream
+	(paused not or: [ forced ]) ifTrue: [
+			format
+				writeCall: aString
+				module: anotherString
+				args: anArray
+				on: outputStream ]
 ]
 
 { #category : 'defaults' }
@@ -62,11 +65,20 @@ ViennaExecutionTraceRecorder >> endRecording [
 	format writeFooterOn: outputStream
 ]
 
+{ #category : 'recording' }
+ViennaExecutionTraceRecorder >> forceRecording: aBoolean [
+
+	forced := aBoolean = true
+]
+
 { #category : 'initialization' }
 ViennaExecutionTraceRecorder >> initialize [
+
 	super initialize.
 	format := ViennaExecutionTraceSequenceDiagramFormat new.
-	outputStream := self defaultOutputStream
+	outputStream := self defaultOutputStream.
+	forced := false.
+	paused := false
 ]
 
 { #category : 'accessing' }
@@ -82,19 +94,33 @@ ViennaExecutionTraceRecorder >> output [
 ]
 
 { #category : 'recording' }
+ViennaExecutionTraceRecorder >> pauseRecording [
+
+	paused := true
+]
+
+{ #category : 'recording' }
+ViennaExecutionTraceRecorder >> resumeRecording [
+
+	paused := false
+]
+
+{ #category : 'recording' }
 ViennaExecutionTraceRecorder >> return: aString module: anotherString value: anObject [
 
-	format
-		writeReturn: aString
-		module: anotherString
-		value: anObject
-		on: outputStream
+	(paused not or: [ forced ]) ifTrue: [
+			format
+				writeReturn: aString
+				module: anotherString
+				value: anObject
+				on: outputStream ]
 ]
 
 { #category : 'recording' }
 ViennaExecutionTraceRecorder >> stateDiffBlock: aBlock [
 
-	format writeStateDiffBlock: aBlock on: outputStream
+	(paused not or: [ forced ]) ifTrue: [
+		format writeStateDiffBlock: aBlock on: outputStream ]
 ]
 
 { #category : 'accessing' }

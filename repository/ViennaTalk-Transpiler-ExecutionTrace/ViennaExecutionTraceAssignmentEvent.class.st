@@ -29,12 +29,23 @@ ViennaExecutionTraceAssignmentEvent >> allTipChildrenDo: aBlock [
 	aBlock value: self
 ]
 
-{ #category : 'formatting' }
-ViennaExecutionTraceAssignmentEvent >> applyToFormat: aViennaExecutionRecordFormat on: aStream [
+{ #category : 'evaluating' }
+ViennaExecutionTraceAssignmentEvent >> applyAssignmentTo: aViennaTranspiledModularDocument [
 
+	(aViennaTranspiledModularDocument at: module) ifNotNil: [
+			:transpiledModule |
+			self assignmentsDo: [ :var :val |
+				transpiledModule basicInstVarNamed: var put: val ] ]
+]
+
+{ #category : 'formatting' }
+ViennaExecutionTraceAssignmentEvent >> applyToFormat: aViennaExecutionRecordFormat on: aStream before: aBlock after: anotherBlock [
+
+	aBlock cull: self.
 	aViennaExecutionRecordFormat
 		writeStateDiffBlock: module -> assignments
-		on: aStream
+		on: aStream.
+	anotherBlock cull: self
 ]
 
 { #category : 'accessing' }
@@ -75,6 +86,13 @@ ViennaExecutionTraceAssignmentEvent >> modulesAndAssignmentsDo: aBlock [
 		aBlock value: module value: assoc key value: assoc value ]
 ]
 
+{ #category : 'copying' }
+ViennaExecutionTraceAssignmentEvent >> postCopy [
+
+	super postCopy.
+	assignments := assignments copy
+]
+
 { #category : 'private' }
 ViennaExecutionTraceAssignmentEvent >> setModule: aString assignments: anArrayOfAssociation [
 
@@ -96,4 +114,10 @@ ViennaExecutionTraceAssignmentEvent >> source [
 								  assoc value viennaStringOn: stream ]
 						  separatedBy: [ stream nextPutAll: '; ' ].
 					  assignments size > 1 ifTrue: [ stream nextPut: $) ] ] ]
+]
+
+{ #category : 'private' }
+ViennaExecutionTraceAssignmentEvent >> withinModule [
+
+	
 ]

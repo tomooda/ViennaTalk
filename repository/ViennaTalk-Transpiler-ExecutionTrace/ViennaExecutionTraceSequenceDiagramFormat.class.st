@@ -15,7 +15,7 @@ Class {
 ViennaExecutionTraceSequenceDiagramFormat >> initialize [
 
 	callStack := (OrderedCollection new: 128)
-		             addLast: '_';
+		             addLast: '-';
 		             yourself.
 	aliases := Dictionary new
 ]

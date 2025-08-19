@@ -9,9 +9,10 @@ Class {
 { #category : 'utilities' }
 ViennaTranspilerForExecutionTracing >> afterMultipleAssignment: aViennaMultipleAssignmentStatementNode [
 
-	^ 'self _multipleStatesChanged: #(' , (' ' join:
-		   (aViennaMultipleAssignmentStatementNode collect: [ :assign |
-			    assign stateDesignator identifier ])) , ')'
+	^ '_document _recorder pauseRecordingDuring: [self inv]. self _multipleStatesChanged: #('
+	  , (' ' join:
+			   (aViennaMultipleAssignmentStatementNode collect: [ :assign |
+				    assign stateDesignator identifier ])) , ')'
 ]
 
 { #category : 'utilities' }
@@ -94,6 +95,8 @@ ViennaTranspilerForExecutionTracing >> defineMethodFromOperation: opName in: the
 											  , ') ifFalse: [ViennaRuntimeTypeError signal].'
 												  asViennaTracingString: triple second) ] ].
 					 preString ifNotNil: [
+							 stream nextPutAll:
+								 '_document _recorder pauseRecordingDuring: ['.
 							 (preString isArray
 								  ifTrue: [ preString ]
 								  ifFalse: [ { preString } ]) do: [ :pre |
@@ -103,7 +106,8 @@ ViennaTranspilerForExecutionTracing >> defineMethodFromOperation: opName in: the
 											  asViennaTracingString:
 												  (pre asViennaTracingString sources
 													   ifNotEmpty: [ :sources | sources last value ]
-													   ifEmpty: [ aViennaNode ])) ] ].
+													   ifEmpty: [ aViennaNode ])) ].
+							 stream nextPutAll: '].' ].
 					 stream
 						 nextPutAll: '_oldState := self state. ';
 						 nextPutAll:
@@ -118,6 +122,9 @@ ViennaTranspilerForExecutionTracing >> defineMethodFromOperation: opName in: the
 								  , ') ifFalse: [ViennaRuntimeTypeError signal].'
 									  asViennaTracingString: typeNode) ].
 					 postString ifNotNil: [
+							 stream nextPutAll:
+								 '_document _recorder pauseRecordingDuring: ['.
+
 							 (postString isArray
 								  ifTrue: [ postString ]
 								  ifFalse: [ { postString } ]) do: [ :post |
@@ -127,7 +134,8 @@ ViennaTranspilerForExecutionTracing >> defineMethodFromOperation: opName in: the
 											  asViennaTracingString:
 												  (post asViennaTracingString sources
 													   ifNotEmpty: [ :sources | sources last value ]
-													   ifEmpty: [ aViennaNode ])) ] ].
+													   ifEmpty: [ aViennaNode ])) ].
+							 stream nextPutAll: '].' ].
 					 stream cr.
 					 stream
 						 nextPutAll: '_document _recordOperationReturn: ';

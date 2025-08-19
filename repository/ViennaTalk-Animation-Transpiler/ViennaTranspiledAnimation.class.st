@@ -135,6 +135,29 @@ ViennaTranspiledAnimation >> at: aString put: anObject [
 	^ value
 ]
 
+{ #category : 'accessing' }
+ViennaTranspiledAnimation >> basicAt: aString put: anObject [
+
+	| separatorIndex target name |
+	separatorIndex := aString indexOf: $`.
+	separatorIndex = 0
+		ifTrue: [
+				target := object.
+				name := aString ]
+		ifFalse: [
+				| moduleName |
+				moduleName := aString copyFrom: 1 to: separatorIndex - 1.
+				target := moduleName = self defaultModule
+					          ifTrue: [ object ]
+					          ifFalse: [
+							          object
+								          at: (aString copyFrom: 1 to: separatorIndex - 1)
+								          ifAbsent: [ ^ nil ] ].
+				name := aString copyFrom: separatorIndex + 1 to: aString size ].
+	target basicInstVarNamed: name put: anObject.
+	^ anObject
+]
+
 { #category : 'private' }
 ViennaTranspiledAnimation >> becomeInterpretedAnimation [
 	| animation |
@@ -473,6 +496,9 @@ ViennaTranspiledAnimation >> state [
 
 { #category : 'private' }
 ViennaTranspiledAnimation >> state: aDictionary [
-	object
-		viennaAtomic: [ aDictionary keysAndValuesDo: [ :var :val | [self at: var put: (reader parse: val)] on: Error do: [ :ex | ex resume ] ] ]
+
+	aDictionary keysAndValuesDo: [ :var :val |
+		self basicAt: var put: (reader parse: val) ].
+	object inv.
+	self announceStateChanged
 ]

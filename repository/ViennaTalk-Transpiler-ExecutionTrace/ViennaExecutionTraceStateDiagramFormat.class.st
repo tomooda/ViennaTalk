@@ -53,7 +53,7 @@ ViennaExecutionTraceStateDiagramFormat >> open: aViennaExecutionTraceRecorder wi
 		  title: aString
 ]
 
-{ #category : 'adding' }
+{ #category : 'accessing' }
 ViennaExecutionTraceStateDiagramFormat >> probes: aCollectionOfBlockClosure [
 
 	probes := aCollectionOfBlockClosure asArray

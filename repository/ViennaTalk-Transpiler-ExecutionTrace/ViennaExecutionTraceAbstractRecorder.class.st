@@ -24,6 +24,12 @@ ViennaExecutionTraceAbstractRecorder >> endRecording [
 	^ self subclassResponsibility
 ]
 
+{ #category : 'recording' }
+ViennaExecutionTraceAbstractRecorder >> forceRecording: aBoolean [
+
+	^ self subclassResponsibility
+]
+
 { #category : 'accessing' }
 ViennaExecutionTraceAbstractRecorder >> openWithTitle: aString [
 
@@ -37,12 +43,32 @@ ViennaExecutionTraceAbstractRecorder >> output [
 ]
 
 { #category : 'recording' }
+ViennaExecutionTraceAbstractRecorder >> pauseRecording [
+
+	^ self subclassResponsibility
+]
+
+{ #category : 'evaluating' }
+ViennaExecutionTraceAbstractRecorder >> pauseRecordingDuring: aBlock [
+
+	[
+		self pauseRecording.
+		aBlock value ] ensure: [ self resumeRecording ]
+]
+
+{ #category : 'recording' }
 ViennaExecutionTraceAbstractRecorder >> record: aBlock do: anotherBlock [
 
 	self beginRecording.
 	aBlock ensure: [
 			self endRecording.
 			^ anotherBlock cull: self output ]
+]
+
+{ #category : 'recording' }
+ViennaExecutionTraceAbstractRecorder >> resumeRecording [
+
+	^ self subclassResponsibility
 ]
 
 { #category : 'recording' }

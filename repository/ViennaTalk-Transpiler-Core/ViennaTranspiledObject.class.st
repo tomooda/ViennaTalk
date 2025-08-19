@@ -136,6 +136,24 @@ ViennaTranspiledObject >> _document: aViennaTranspiledModularDocument [
 	_document := aViennaTranspiledModularDocument
 ]
 
+{ #category : 'private' }
+ViennaTranspiledObject >> _state [
+
+	| binds |
+	binds := Dictionary new.
+	self class slots
+		select: [ :slot | slot isKindOf: ViennaStateVariableSlot ]
+		thenDo: [ :slot | binds at: slot name put: (slot read: self) ].
+	^ binds
+]
+
+{ #category : 'private' }
+ViennaTranspiledObject >> _state: aDictionary [
+
+	aDictionary keysAndValuesDo: [ :var :val |
+		self basicInstVarNamed: var put: val ]
+]
+
 { #category : 'accessing' }
 ViennaTranspiledObject >> basicInstVarNamed: aString put: anObject [
 
@@ -245,6 +263,14 @@ ViennaTranspiledObject >> inv [
 { #category : 'private' }
 ViennaTranspiledObject >> state [
 	^ (ViennaComposite constructorName: '')
+]
+
+{ #category : 'private' }
+ViennaTranspiledObject >> state: aViennaComposite [
+
+	aViennaComposite fieldNamesAndValuesDo: [ :var :val |
+		self basicInstVarNamed: var put: val ].
+	self inv
 ]
 
 { #category : 'printing' }

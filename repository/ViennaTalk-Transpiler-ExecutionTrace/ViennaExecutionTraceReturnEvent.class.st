@@ -31,13 +31,15 @@ ViennaExecutionTraceReturnEvent >> allTipChildrenDo: aBlock [
 ]
 
 { #category : 'formatting' }
-ViennaExecutionTraceReturnEvent >> applyToFormat: aViennaExecutionRecordFormat on: aStream [
+ViennaExecutionTraceReturnEvent >> applyToFormat: aViennaExecutionRecordFormat on: aStream before: aBlock after: anotherBlock [
 
-	^ aViennaExecutionRecordFormat
-		  writeReturn: operation
-		  module: module
-		  value: returnValue
-		  on: aStream
+	aBlock cull: self.
+	aViennaExecutionRecordFormat
+		writeReturn: operation
+		module: module
+		value: returnValue
+		on: aStream.
+	anotherBlock cull: self
 ]
 
 { #category : 'accessing' }
@@ -108,4 +110,10 @@ ViennaExecutionTraceReturnEvent >> source [
 	^ (returnValue isKindOf: ViennaTranspiledObject)
 		  ifTrue: [ 'return' ]
 		  ifFalse: [ 'return ' , returnValue viennaString ]
+]
+
+{ #category : 'private' }
+ViennaExecutionTraceReturnEvent >> withinModule [
+
+	
 ]

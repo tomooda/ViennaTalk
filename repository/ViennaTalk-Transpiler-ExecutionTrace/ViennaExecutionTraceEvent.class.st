@@ -22,13 +22,35 @@ ViennaExecutionTraceEvent >> allAssignmentChildrenDo: aBlock [
 ]
 
 { #category : 'enumerating' }
+ViennaExecutionTraceEvent >> allEventsDo: aBlock [
+
+	aBlock value: self.
+	self children do: [ :event | event allEventsDo: aBlock ]
+]
+
+{ #category : 'enumerating' }
 ViennaExecutionTraceEvent >> allTipChildrenDo: aBlock [
 
 	self children do: [ :event | event allTipChildrenDo: aBlock ]
 ]
 
+{ #category : 'evaluating' }
+ViennaExecutionTraceEvent >> applyAssignmentTo: aViennaTranspiledModularDocument [
+	
+]
+
 { #category : 'formatting' }
 ViennaExecutionTraceEvent >> applyToFormat: aViennaExecutionRecordFormat on: aStream [
+
+	self
+		applyToFormat: aViennaExecutionRecordFormat
+		on: aStream
+		before: [ :event |  ]
+		after: [ :event |  ]
+]
+
+{ #category : 'formatting' }
+ViennaExecutionTraceEvent >> applyToFormat: aViennaExecutionRecordFormat on: aStream before: aBlock after: anotherBlock [
 
 	^ self subclassResponsibility
 ]
@@ -37,6 +59,14 @@ ViennaExecutionTraceEvent >> applyToFormat: aViennaExecutionRecordFormat on: aSt
 ViennaExecutionTraceEvent >> children [
 
 	^ #(  )
+]
+
+{ #category : 'copying' }
+ViennaExecutionTraceEvent >> copyWithinModule [
+
+	^ self copy
+		  withinModule;
+		  yourself
 ]
 
 { #category : 'enumerating' }
@@ -100,6 +130,12 @@ ViennaExecutionTraceEvent >> modulesAndAssignmentsDo: aBlock [
 
 { #category : 'accessing' }
 ViennaExecutionTraceEvent >> source [
+
+	^ self subclassResponsibility
+]
+
+{ #category : 'private' }
+ViennaExecutionTraceEvent >> withinModule [
 
 	^ self subclassResponsibility
 ]

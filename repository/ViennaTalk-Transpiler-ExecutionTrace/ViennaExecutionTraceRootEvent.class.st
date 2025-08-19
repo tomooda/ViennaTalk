@@ -2,6 +2,7 @@ Class {
 	#name : 'ViennaExecutionTraceRootEvent',
 	#superclass : 'ViennaExecutionTraceEvent',
 	#instVars : [
+		'specification',
 		'source',
 		'events',
 		'initial'
@@ -22,10 +23,16 @@ ViennaExecutionTraceRootEvent class >> initial: anArrayOfViennaExecutionTraceAss
 ]
 
 { #category : 'formatting' }
-ViennaExecutionTraceRootEvent >> applyToFormat: aViennaExecutionRecordFormat on: aStream [
+ViennaExecutionTraceRootEvent >> applyToFormat: aViennaExecutionRecordFormat on: aStream before: aBlock after: anotherBlock [
 
+	aBlock cull: self.
+	anotherBlock cull: self.
 	events do: [ :event |
-		event applyToFormat: aViennaExecutionRecordFormat on: aStream ]
+			event
+				applyToFormat: aViennaExecutionRecordFormat
+				on: aStream
+				before: aBlock
+				after: anotherBlock ]
 ]
 
 { #category : 'accessing' }
@@ -65,11 +72,26 @@ ViennaExecutionTraceRootEvent >> isRootEvent [
 ]
 
 { #category : 'accessing' }
+ViennaExecutionTraceRootEvent >> module: aString [
+
+	module := aString
+]
+
+{ #category : 'accessing' }
 ViennaExecutionTraceRootEvent >> openWithTitle: aString [
 
 	^ (ViennaExecutionTraceEventViewer new
+		   specification: specification;
 		   roots: { self };
 		   open) title: aString
+]
+
+{ #category : 'copying' }
+ViennaExecutionTraceRootEvent >> postCopy [
+
+	super postCopy.
+	initial := initial collect: #copy.
+	events := events copy
 ]
 
 { #category : 'private' }
@@ -89,4 +111,24 @@ ViennaExecutionTraceRootEvent >> source [
 ViennaExecutionTraceRootEvent >> source: aString [
 
 	source := aString
+]
+
+{ #category : 'accessing' }
+ViennaExecutionTraceRootEvent >> specification [
+
+	^ specification
+]
+
+{ #category : 'accessing' }
+ViennaExecutionTraceRootEvent >> specification: aViennaModularDocumentNode [
+
+	specification := aViennaModularDocumentNode
+]
+
+{ #category : 'private' }
+ViennaExecutionTraceRootEvent >> withinModule [
+
+	events := events
+		          select: [ :event | module = event module ]
+		          thenCollect: #copyWithinModule
 ]

@@ -23,15 +23,21 @@ ViennaExecutionTraceOperationCallEvent class >> module: aString operation: anoth
 ]
 
 { #category : 'formatting' }
-ViennaExecutionTraceOperationCallEvent >> applyToFormat: aViennaExecutionRecordFormat on: aStream [
+ViennaExecutionTraceOperationCallEvent >> applyToFormat: aViennaExecutionRecordFormat on: aStream before: aBlock after: anotherBlock [
 
+	aBlock cull: self.
 	aViennaExecutionRecordFormat
 		writeCall: operation
 		module: module
 		args: arguments
 		on: aStream.
+	anotherBlock cull: self.
 	events do: [ :event |
-		event applyToFormat: aViennaExecutionRecordFormat on: aStream ]
+			event
+				applyToFormat: aViennaExecutionRecordFormat
+				on: aStream
+				before: aBlock
+				after: anotherBlock ]
 ]
 
 { #category : 'accessing' }
@@ -70,6 +76,14 @@ ViennaExecutionTraceOperationCallEvent >> operation [
 	^ operation
 ]
 
+{ #category : 'copying' }
+ViennaExecutionTraceOperationCallEvent >> postCopy [
+
+	super postCopy.
+	arguments := arguments copy.
+	events := events copy
+]
+
 { #category : 'private' }
 ViennaExecutionTraceOperationCallEvent >> setModule: aString operation: anotherString arguments: anArray events: anArrayOfViennaExecutionTraceEvent [
 
@@ -92,4 +106,12 @@ ViennaExecutionTraceOperationCallEvent >> source [
 				  do: [ :value | value viennaStringOn: stream ]
 				  separatedBy: [ stream nextPutAll: ', ' ].
 			  stream nextPut: $) ]
+]
+
+{ #category : 'private' }
+ViennaExecutionTraceOperationCallEvent >> withinModule [
+
+	events := events
+		          select: [ :event | module = event module ]
+		          thenCollect: #copyWithinModule
 ]

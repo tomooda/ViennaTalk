@@ -2,19 +2,55 @@ Class {
 	#name : 'ViennaExecutionTraceEventViewer',
 	#superclass : 'SpPresenter',
 	#instVars : [
+		'specification',
+		'transpiledSpecification',
+		'probeSources',
+		'probes',
 		'eventTree',
-		'infoMarkdown',
 		'expandButton',
 		'stepForwardButton',
 		'stepBackwardButton',
 		'diveIntoButton',
 		'soarUpButton',
-		'collapseButton'
+		'collapseButton',
+		'infoMarkdown',
+		'infoSettingsButton',
+		'openSequenceDiagramButton',
+		'openStateDiagramButton',
+		'exportButton',
+		'isGlobalScope',
+		'showsAggregatedAssignments',
+		'showsSequenceDiagram',
+		'showsStateDiagram'
 	],
 	#category : 'ViennaTalk-Transpiler-ExecutionTrace-Events',
 	#package : 'ViennaTalk-Transpiler-ExecutionTrace',
 	#tag : 'Events'
 }
+
+{ #category : 'generating' }
+ViennaExecutionTraceEventViewer >> aggregatedAssignmentsFrom: aViennaExecutionTraceEvent on: aStream [
+
+	aStream
+		nextPutAll: '## writes';
+		cr;
+		cr.
+	aViennaExecutionTraceEvent globalWrites keysAndValuesDo: [
+			:module
+			:localWrites |
+			aStream
+				nextPutAll: '* ';
+				nextPutAll: module;
+				cr.
+			localWrites keysAndValuesDo: [ :variable :value |
+					aStream
+						nextPutAll: '  - ';
+						nextPutAll: variable;
+						nextPutAll: ' := ';
+						nextPutAll: value viennaString;
+						cr ] ].
+	aStream cr
+]
 
 { #category : 'operations' }
 ViennaExecutionTraceEventViewer >> collapse [
@@ -29,7 +65,7 @@ ViennaExecutionTraceEventViewer >> collapse [
 ViennaExecutionTraceEventViewer >> defaultLayout [
 
 	^ SpPanedLayout newHorizontal
-		  positionOfSlider: 0.5;
+		  positionOfSlider: 0.3;
 		  add: (SpBoxLayout newVertical
 				   add: eventTree expand: true;
 				   add: (SpBoxLayout newHorizontal
@@ -43,8 +79,34 @@ ViennaExecutionTraceEventViewer >> defaultLayout [
 						    yourself)
 				   expand: false;
 				   yourself);
-		  add: infoMarkdown;
+		  add: (SpBoxLayout newVertical
+				   add: (SpBoxLayout newHorizontal
+						    add: infoSettingsButton;
+						    add: openSequenceDiagramButton;
+						    add: openStateDiagramButton;
+						    add: exportButton;
+						    yourself)
+				   expand: false;
+				   add: infoMarkdown expand: true;
+				   yourself);
 		  yourself
+]
+
+{ #category : 'private' }
+ViennaExecutionTraceEventViewer >> defaultProbeSources [
+
+	| dict |
+	dict := OrderedDictionary new.
+	specification ifNotNil: [
+			specification modulesDo: [ :module |
+					module stateDefinition ifNotNil: [ :stateDefinition |
+							| scripts |
+							scripts := dict
+								           at: module identifier
+								           ifAbsentPut: [ OrderedCollection new ].
+							stateDefinition fieldsDo: [ :field |
+								scripts add: field identifier ] ] ] ].
+	^ dict
 ]
 
 { #category : 'operations' }
@@ -52,6 +114,18 @@ ViennaExecutionTraceEventViewer >> diveInto [
 
 	eventTree selection selectedPath ifNotEmpty: [ :path |
 		eventTree selectPath: (path copyWith: 1) ]
+]
+
+{ #category : 'private' }
+ViennaExecutionTraceEventViewer >> dryRunUntil: aViennaExecutionTraceEvent [
+
+	self roots do: [ :root |
+			root isRootEvent ifTrue: [
+					root initial do: [ :event |
+						event applyAssignmentTo: transpiledSpecification ] ].
+			root allEventsDo: [ :event |
+					event == aViennaExecutionTraceEvent ifTrue: [ ^ self ].
+					event applyAssignmentTo: transpiledSpecification ] ]
 ]
 
 { #category : 'operations' }
@@ -65,6 +139,28 @@ ViennaExecutionTraceEventViewer >> expand [
 								w dataSource tableRefresh ] ].
 				eventTree selectPath: path ]
 		ifEmpty: [ eventTree expandAll ]
+]
+
+{ #category : 'menus' }
+ViennaExecutionTraceEventViewer >> exportMenu [
+
+	^ self newMenu
+		  addGroup: [ :group |
+				  group
+					  addItem: [ :item |
+							  item
+								  name: 'CSV file';
+								  action: [ self saveCSV ] ];
+					  addItem: [ :item |
+							  item
+								  name: 'Mermaid sequence diagram file';
+								  action: [ self saveSequenceDiagram ] ];
+					  addItem: [ :item |
+							  item
+								  name: 'Mermaid state diagram file';
+								  action: [ self saveStateDiagram ] ];
+					  yourself ];
+		  yourself
 ]
 
 { #category : 'private' }
@@ -84,6 +180,71 @@ ViennaExecutionTraceEventViewer >> iconFor: aViennaExecutionTraceEvent [
 	^ self iconNamed: aViennaExecutionTraceEvent iconName
 ]
 
+{ #category : 'menus' }
+ViennaExecutionTraceEventViewer >> infoSettingsMenu [
+
+	^ self newMenu
+		  addGroup: [ :group |
+				  group
+					  addItem: [ :item |
+							  item
+								  name: 'Global scope';
+								  state: isGlobalScope;
+								  action: [
+										  isGlobalScope := true.
+										  self updateInfo ] ];
+					  addItem: [ :item |
+							  item
+								  name: 'Module scope';
+								  state: isGlobalScope not;
+								  action: [
+										  isGlobalScope := false.
+										  self updateInfo ] ] ];
+		  addGroup: [ :group |
+				  group
+					  addItem: [ :item |
+							  item
+								  name: '	shows aggregated assignments';
+								  state: showsAggregatedAssignments;
+								  action: [
+										  showsAggregatedAssignments := true.
+										  self updateInfo ] ];
+					  addItem: [ :item |
+							  item
+								  name: 'shows no assignments';
+								  state: showsAggregatedAssignments not;
+								  action: [
+										  showsAggregatedAssignments := false.
+										  self updateInfo ] ] ];
+		  addGroup: [ :group |
+				  group
+					  addItem: [ :item |
+							  item
+								  name: 'shows Sequence Diagram';
+								  state: showsSequenceDiagram;
+								  action: [
+										  showsSequenceDiagram := showsSequenceDiagram not.
+										  self updateInfo ] ];
+					  addItem: [ :item |
+							  item
+								  name: 'shows Abstract State Diagram';
+								  state: showsStateDiagram;
+								  action: [
+										  showsStateDiagram := showsStateDiagram not.
+										  self updateInfo ] ] ];
+		  yourself
+]
+
+{ #category : 'initialization' }
+ViennaExecutionTraceEventViewer >> initialize [
+
+	super initialize.
+	isGlobalScope := true.
+	showsAggregatedAssignments := true.
+	showsSequenceDiagram := false.
+	showsStateDiagram := false
+]
+
 { #category : 'initialization' }
 ViennaExecutionTraceEventViewer >> initializePresenters [
 
@@ -100,9 +261,6 @@ ViennaExecutionTraceEventViewer >> initializePresenters [
 		             children: #children;
 		             whenSelectedItemChangedDo: [ self selectedEventChanged ];
 		             yourself.
-	infoMarkdown := (self instantiate: MicrodownPresenter)
-		                instVarNamed: #wrapWord put: false;
-		                yourself.
 	expandButton := self newButton
 		                icon: (self iconNamed: #dropDown);
 		                label: 'expand';
@@ -136,7 +294,60 @@ ViennaExecutionTraceEventViewer >> initializePresenters [
 		                label: 'caller';
 		                action: [ self soarUp ];
 		                disable;
+		                yourself.
+	infoMarkdown := (self instantiate: MicrodownPresenter)
+		                instVarNamed: #wrapWord put: false;
+		                yourself.
+	infoSettingsButton := self newButton
+		                      icon: (self iconNamed: #configuration);
+		                      label: 'Info settings...';
+		                      action: [
+			                      self infoSettingsMenu openWithSpecAtPointer ];
+		                      yourself.
+	openSequenceDiagramButton := self newButton
+		                             icon: (self iconNamed: #window);
+		                             label: 'Sequence Diagram';
+		                             action: [ self openSequenceDiagram ];
+		                             yourself.
+	openStateDiagramButton := self newButton
+		                          icon: (self iconNamed: #window);
+		                          label: 'State Diagram';
+		                          action: [ self openStateDiagram ];
+		                          yourself.
+	exportButton := self newButton
+		                icon: (self iconNamed: #smallExport);
+		                label: 'Export...';
+		                action: [ self exportMenu openWithSpecAtPointer ];
 		                yourself
+]
+
+{ #category : 'generating' }
+ViennaExecutionTraceEventViewer >> micromaidSequenceDiagramFrom: aViennaExecutionTraceEvent on: aStream [
+
+	| format |
+	format := ViennaExecutionTraceSequenceDiagramFormat new
+		          root: 'caller';
+		          yourself.
+	format writeHeaderOn: aStream.
+	aViennaExecutionTraceEvent applyToFormat: format on: aStream.
+	format writeFooterOn: aStream
+]
+
+{ #category : 'generating' }
+ViennaExecutionTraceEventViewer >> micromaidStateDiagramFrom: aViennaExecutionTraceEvent on: aStream [
+
+	| format |
+	format := ViennaExecutionTraceStateDiagramFormat new
+		          probes: self probes;
+		          yourself.
+	self dryRunUntil: aViennaExecutionTraceEvent.
+	format writeHeaderOn: aStream.
+	aViennaExecutionTraceEvent
+		applyToFormat: format
+		on: aStream
+		before: [ :event | event applyAssignmentTo: transpiledSpecification ]
+		after: [ :event |  ].
+	format writeFooterOn: aStream
 ]
 
 { #category : 'private' }
@@ -151,6 +362,25 @@ ViennaExecutionTraceEventViewer >> nextPath: anArrayOfInteger [
 		path := path allButLast ] repeat
 ]
 
+{ #category : 'operations' }
+ViennaExecutionTraceEventViewer >> openSequenceDiagram [
+
+	eventTree selectedItem ifNotNil: [ :event |
+			(String streamContents: [ :stream |
+				 self micromaidSequenceDiagramFrom: event on: stream ])
+				openMicromaidWithTitle: 'Sequence Diagram from ' , event source ]
+]
+
+{ #category : 'operations' }
+ViennaExecutionTraceEventViewer >> openStateDiagram [
+
+	eventTree selectedItem ifNotNil: [ :event |
+			(String streamContents: [ :stream |
+				 self micromaidStateDiagramFrom: event on: stream ])
+				openMicromaidBuilderWith: [ :builder | builder gap: 120 ]
+				title: 'Abstract State Diagram from ' , event source ]
+]
+
 { #category : 'private' }
 ViennaExecutionTraceEventViewer >> prevPath: anArrayOfInteger [
 
@@ -160,6 +390,33 @@ ViennaExecutionTraceEventViewer >> prevPath: anArrayOfInteger [
 		path := path allButLast ].
 	path ifNotEmpty: [ path at: path size put: path last - 1 ].
 	^ path
+]
+
+{ #category : 'accessing' }
+ViennaExecutionTraceEventViewer >> probes [
+
+	^ probes ifNil: [
+			  probes := Array streamContents: [ :stream |
+					            probeSources keysAndValuesDo: [ :moduleName :collection |
+							            collection do: [ :expressionString |
+									            | transpiledModule src compiledMethod |
+									            transpiledModule := transpiledSpecification at:
+										                                moduleName.
+									            src := ViennaVDM2SmalltalkObject new
+										                   disableRuntimeCheck;
+										                   generate:
+											                   (expressionString asViennaExpressionAst
+												                    parent: specification;
+												                    yourself)
+										                   env: transpiledModule class viennaEnv.
+									            compiledMethod := OpalCompiler new
+										                              source: src;
+										                              logged: false;
+										                              receiver: transpiledModule;
+										                              compile.
+									            stream nextPut: (ViennaCompiledMethodBlock
+											             receiver: transpiledModule
+											             compiledMethod: compiledMethod) ] ] ] ]
 ]
 
 { #category : 'accessing' }
@@ -176,6 +433,34 @@ ViennaExecutionTraceEventViewer >> roots: anArrayOfViennaExecutionTraceRootEvent
 		eventTree selectPath: #( 1 ) ]
 ]
 
+{ #category : 'operations' }
+ViennaExecutionTraceEventViewer >> saveCSV [
+
+	^ self inform: 'Not implemented yet'
+]
+
+{ #category : 'operations' }
+ViennaExecutionTraceEventViewer >> saveSequenceDiagram [
+
+	eventTree selectedItem ifNotNil: [ :event |
+			(self confirm:
+				 'Copy mermaid source for sequence diagram to the copy buffer?')
+				ifTrue: [
+						Clipboard clipboardText: (String streamContents: [ :stream |
+								 self micromaidSequenceDiagramFrom: event on: stream ]) ] ]
+]
+
+{ #category : 'operations' }
+ViennaExecutionTraceEventViewer >> saveStateDiagram [
+
+	eventTree selectedItem ifNotNil: [ :event |
+			(self confirm:
+				 'Copy mermaid source for abstract state diagram to the copy buffer?')
+				ifTrue: [
+						Clipboard clipboardText: (String streamContents: [ :stream |
+								 self micromaidStateDiagramFrom: event on: stream ]) ] ]
+]
+
 { #category : 'updating' }
 ViennaExecutionTraceEventViewer >> selectedEventChanged [
 
@@ -183,22 +468,18 @@ ViennaExecutionTraceEventViewer >> selectedEventChanged [
 	self updateButtons
 ]
 
-{ #category : 'private' }
+{ #category : 'generating' }
 ViennaExecutionTraceEventViewer >> sequenceDiagramForMicrodownFrom: aViennaExecutionTraceEvent on: aStream [
 
-	| format |
-	format := ViennaExecutionTraceSequenceDiagramFormat new
-		          root: aViennaExecutionTraceEvent source;
-		          yourself.
 	aStream
 		nextPutAll: '## sequence diagram';
 		cr.
 	aStream
 		nextPutAll: '```mermaid';
 		cr.
-	format writeHeaderOn: aStream.
-	aViennaExecutionTraceEvent applyToFormat: format on: aStream.
-	format writeFooterOn: aStream.
+	self
+		micromaidSequenceDiagramFrom: aViennaExecutionTraceEvent
+		on: aStream.
 	aStream
 		nextPutAll: '```';
 		cr
@@ -209,6 +490,81 @@ ViennaExecutionTraceEventViewer >> soarUp [
 
 	eventTree selection selectedPath ifNotEmpty: [ :path |
 		eventTree selectPath: path allButLast ]
+]
+
+{ #category : 'generating' }
+ViennaExecutionTraceEventViewer >> sourceFrom: aViennaExecutionTraceEvent on: aStream [
+
+	aViennaExecutionTraceEvent isOperationCallEvent ifTrue: [
+			(self
+				 sourceOfOperation: aViennaExecutionTraceEvent operation
+				 module: aViennaExecutionTraceEvent module) ifNotNil: [ :source |
+					aStream
+						nextPutAll: '## source';
+						cr;
+						cr;
+						nextPutAll: '```vdmsl';
+						cr;
+						nextPutAll: source;
+						cr;
+						nextPutAll: '```';
+						cr;
+						cr ] ].
+	aViennaExecutionTraceEvent isRootEvent ifTrue: [
+			aStream
+				nextPutAll: '## source';
+				cr;
+				cr;
+				nextPutAll: '```vdmsl';
+				cr;
+				nextPutAll: (self format: aViennaExecutionTraceEvent source);
+				cr;
+				nextPutAll: '```';
+				cr;
+				cr ]
+]
+
+{ #category : 'accessing' }
+ViennaExecutionTraceEventViewer >> sourceOfOperation: aString module: anotherString [
+
+	^ specification ifNotNil: [
+			  ((specification moduleNamed: anotherString) ifNotNil: [ :module |
+				   module resolveIdentifier: aString ]) ifNotNil: #source ]
+]
+
+{ #category : 'accessing' }
+ViennaExecutionTraceEventViewer >> specification [
+
+	^ specification
+]
+
+{ #category : 'accessing' }
+ViennaExecutionTraceEventViewer >> specification: aViennaModularDocumentNode [
+
+	specification := aViennaModularDocumentNode.
+	transpiledSpecification := specification ifNotNil: [
+			                           ViennaVDM2SmalltalkObject new
+				                           disableRuntimeCheck;
+				                           generate: specification ].
+	probeSources := self defaultProbeSources.
+	probes := nil
+]
+
+{ #category : 'generating' }
+ViennaExecutionTraceEventViewer >> stateDiagramForMicrodownFrom: aViennaExecutionTraceEvent on: aStream [
+
+	aStream
+		nextPutAll: '## abstract state diagram';
+		cr.
+	aStream
+		nextPutAll: '```mermaid';
+		cr.
+	self
+		micromaidStateDiagramFrom: aViennaExecutionTraceEvent
+		on: aStream.
+	aStream
+		nextPutAll: '```';
+		cr
 ]
 
 { #category : 'operations' }
@@ -225,39 +581,37 @@ ViennaExecutionTraceEventViewer >> stepForward [
 		eventTree selectPath: path ]
 ]
 
-{ #category : 'private' }
-ViennaExecutionTraceEventViewer >> titleLineFor: aViennaExecutionTraceEvent [
+{ #category : 'generating' }
+ViennaExecutionTraceEventViewer >> titleLineFor: aViennaExecutionTraceEvent on: aStream [
 
-	^ aViennaExecutionTraceEvent isRootEvent
-		  ifTrue: [
-				  String streamContents: [ :stream |
-						  stream
-							  nextPutAll: '# Execution';
-							  cr;
-							  nextPutAll: '## source';
-							  cr;
-							  nextPutAll: '```vdmsl';
-							  cr;
-							  nextPutAll: (self format: aViennaExecutionTraceEvent source);
-							  cr;
-							  nextPutAll: '```';
-							  cr.
-						  stream
-							  nextPutAll: '## init';
-							  cr.
-						  aViennaExecutionTraceEvent initial do: [ :assign |
-								  stream
-									  nextPutAll: '* ';
-									  nextPutAll: assign module;
-									  cr.
-								  assign assignmentsDo: [ :var :val |
-										  stream
-											  nextPutAll: '  - ';
-											  nextPutAll: var;
-											  nextPutAll: ' := ';
-											  nextPutAll: val viennaString;
-											  cr ] ] ] ]
-		  ifFalse: [ '# ' , aViennaExecutionTraceEvent source , String cr ]
+	aViennaExecutionTraceEvent isRootEvent
+		ifTrue: [
+				aStream
+					nextPutAll: '# Execution';
+					cr;
+					cr;
+					nextPutAll: '## init';
+					cr;
+					cr.
+				aViennaExecutionTraceEvent initial do: [ :assign |
+						aStream
+							nextPutAll: '* ';
+							nextPutAll: assign module;
+							cr.
+						assign assignmentsDo: [ :var :val |
+								aStream
+									nextPutAll: '  - ';
+									nextPutAll: var;
+									nextPutAll: ' := ';
+									nextPutAll: val viennaString;
+									cr ] ].
+				aStream cr ]
+		ifFalse: [
+				aStream
+					nextPutAll: '# ';
+					nextPutAll: aViennaExecutionTraceEvent source;
+					cr;
+					cr ]
 ]
 
 { #category : 'updating' }
@@ -282,29 +636,22 @@ ViennaExecutionTraceEventViewer >> updateButtons [
 { #category : 'updating' }
 ViennaExecutionTraceEventViewer >> updateInfo [
 
-	eventTree selectedItem ifNotNil: [ :event |
-			infoMarkdown document: (String streamContents: [ :stream |
-						 stream nextPutAll: (self titleLineFor: event).
-						 stream
-							 nextPutAll: '## writes';
-							 cr.
-						 event globalWrites keysAndValuesDo: [ :module :localWrites |
-								 stream
-									 nextPutAll: '* ';
-									 nextPutAll: module;
-									 cr.
-								 localWrites keysAndValuesDo: [ :variable :value |
-										 stream
-											 nextPutAll: '  - ';
-											 nextPutAll: variable;
-											 nextPutAll: ' := ';
-											 nextPutAll: value viennaString;
-											 cr ] ].
-						 self sequenceDiagramForMicrodownFrom: event on: stream ]).
-			infoMarkdown withAdapterDo: [ :a |
-					a widgetDo: [ :w |
-							w
-								beNotWrapped;
-								hScrollbarShowAlways.
-							w textArea extent: w textArea paragraph extent ] ] ]
+	| event |
+	event := eventTree selectedItem ifNil: [ ^ self ].
+	isGlobalScope ifFalse: [ event := event copyWithinModule ].
+	infoMarkdown document: (String streamContents: [ :stream |
+				 self titleLineFor: event on: stream.
+				 self sourceFrom: event on: stream.
+				 showsAggregatedAssignments ifTrue: [
+					 self aggregatedAssignmentsFrom: event on: stream ].
+				 showsSequenceDiagram ifTrue: [
+					 self sequenceDiagramForMicrodownFrom: event on: stream ].
+				 showsStateDiagram ifTrue: [
+					 self stateDiagramForMicrodownFrom: event on: stream ] ]).
+	infoMarkdown withAdapterDo: [ :a |
+			a widgetDo: [ :w |
+					w
+						beNotWrapped;
+						hScrollbarShowAlways.
+					w textArea extent: w textArea paragraph extent ] ]
 ]

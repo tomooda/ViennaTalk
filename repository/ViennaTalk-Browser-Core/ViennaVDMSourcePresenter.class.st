@@ -269,6 +269,8 @@ ViennaVDMSourcePresenter >> openCSVFrom: aString ifError: errorBlock [
 			(ViennaExecutionTraceEventCSVReader new
 				 inputStream: transpiledSpec _recorder output readStream;
 				 readLine)
+				specification: node document;
+				module: node module identifier;
 				source: aString;
 				openWithTitle: 'Execution Record from ' , aString ]
 ]

@@ -24,6 +24,12 @@ ViennaExecutionTraceNullRecorder >> endRecording [
 	
 ]
 
+{ #category : 'recording' }
+ViennaExecutionTraceNullRecorder >> forceRecording: aBoolean [
+
+	
+]
+
 { #category : 'accessing' }
 ViennaExecutionTraceNullRecorder >> openWithTitle: aString [
 
@@ -37,9 +43,21 @@ ViennaExecutionTraceNullRecorder >> output [
 ]
 
 { #category : 'recording' }
+ViennaExecutionTraceNullRecorder >> pauseRecording [
+
+	
+]
+
+{ #category : 'recording' }
 ViennaExecutionTraceNullRecorder >> record: aBlock do: anotherBlock [
 
 	aBlock ensure: [ ^ anotherBlock cull: '' ]
+]
+
+{ #category : 'recording' }
+ViennaExecutionTraceNullRecorder >> resumeRecording [
+
+	
 ]
 
 { #category : 'recording' }
