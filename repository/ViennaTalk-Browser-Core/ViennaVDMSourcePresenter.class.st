@@ -292,27 +292,8 @@ ViennaVDMSourcePresenter >> openStateDiagramFrom: aString ifError: errorBlock [
 				               anim specification.
 			probeEditor openDialog okAction: [
 					| probes |
-					probes := Array streamContents: [ :stream |
-							          probeEditor probes keysAndValuesDo: [
-									          :moduleName
-									          :collection |
-									          collection do: [ :expressionString |
-											          | transpiledModule src compiledMethod |
-											          transpiledModule := transpiledSpec at: moduleName.
-											          src := ViennaTranspilerForExecutionTracing new
-												                 generate:
-													                 (expressionString asViennaExpressionAst
-														                  parent: specification;
-														                  yourself)
-												                 env: transpiledModule class viennaEnv.
-											          compiledMethod := OpalCompiler new
-												                            source: src;
-												                            logged: false;
-												                            receiver: transpiledModule;
-												                            compile.
-											          stream nextPut: (ViennaCompiledMethodBlock
-													           receiver: transpiledModule
-													           compiledMethod: compiledMethod) ] ] ].
+					probes := probeEditor probesWithTranspiledSpecification:
+						          transpiledSpec.
 					transpiledSpec useStateDiagramRecorder: probes.
 					(transpiledSpec
 						 at: (node module ifNotNil: #identifier)

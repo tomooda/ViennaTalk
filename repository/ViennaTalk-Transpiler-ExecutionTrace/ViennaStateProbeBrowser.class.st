@@ -12,20 +12,15 @@ Class {
 	#tag : 'Spec2'
 }
 
-{ #category : 'operations' }
-ViennaStateProbeBrowser >> addExpressionProbe: aString in: aViennaModuleNode [
+{ #category : 'accessing' }
+ViennaStateProbeBrowser >> abstractStateProbes: aCollectionOfViennaAbstractStateProbe [
 
-	| index probes |
-	index := probeList selectedIndex.
-	index = 0 ifTrue: [ index := probeList items size + 1 ].
-	probes := probeList items asOrderedCollection.
-	probes
-		add: aViennaModuleNode identifier -> aString
-		beforeIndex: index.
-	probeList
-		items: probes;
-		selectIndex: index + 1.
-	^ self
+	probeList items:
+		(aCollectionOfViennaAbstractStateProbe collect: [ :probe |
+				 self
+					 newItemWithName: probe name
+					 module: probe moduleName
+					 expression: probe source ])
 ]
 
 { #category : 'operations' }
@@ -35,15 +30,12 @@ ViennaStateProbeBrowser >> addExpressionProbeIn: aViennaModuleNode [
 	expressionString := ''.
 	[
 		| expressionNode |
-		expressionString := [
-			                    self
-				                    request:
-				                    'probe expression in '
-				                    , aViennaModuleNode identifier
-				                    initialAnswer: expressionString
-				                    title: 'Add a probe' ]
-			                    on: SpCancelledInteractionError
-			                    do: [ :ex | ex return: nil ].
+		expressionString := self
+			                    request:
+			                    'probe expression in '
+			                    , aViennaModuleNode identifier
+			                    initialAnswer: expressionString
+			                    title: 'Add a probe'.
 		expressionString ifNil: [ ^ self ].
 		expressionNode := ViennaVDMParser current expression parse:
 			                  expressionString.
@@ -53,8 +45,8 @@ ViennaStateProbeBrowser >> addExpressionProbeIn: aViennaModuleNode [
 					[
 						expressionNode typecheck.
 						^ self
-							  addExpressionProbe: expressionString
-							  in: aViennaModuleNode ]
+							  addProbeWithModule: aViennaModuleNode identifier
+							  expression: expressionString ]
 						on: ViennaTypeError
 						do: [ :ex | self alert: ex messageText ] ]
 			ifFalse: [ self alert: 'Syntax error' ] ] repeat
@@ -99,6 +91,48 @@ ViennaStateProbeBrowser >> addProbeMenu: aViennaModuleNode [
 		  yourself
 ]
 
+{ #category : 'operations' }
+ViennaStateProbeBrowser >> addProbeWithModule: aString expression: anotherString [
+
+	| name |
+	name := anotherString.
+	[
+		name := self
+			        request: 'Abstract field name'
+			        initialAnswer: name
+			        title: 'Add a probe'.
+		name ifNil: [ ^ self ].
+		name := name trim.
+		name ifNotEmpty: [
+				(probeList items anySatisfy: [ :item |
+					 name = (self nameInItem: item) ])
+					ifTrue: [ self alert: name , ' is already used.' ]
+					ifFalse: [
+							^ self
+								  addProbeWithName: name
+								  module: aString
+								  expression: anotherString ] ] ] repeat
+]
+
+{ #category : 'operations' }
+ViennaStateProbeBrowser >> addProbeWithName: aString module: anotherString expression: yetAnotherString [
+
+	| index probes |
+	index := probeList selectedIndex.
+	index = 0 ifTrue: [ index := probeList items size + 1 ].
+	probes := probeList items asOrderedCollection.
+	probes
+		add: (self
+				 newItemWithName: aString
+				 module: anotherString
+				 expression: yetAnotherString)
+		beforeIndex: index.
+	probeList
+		items: probes;
+		selectIndex: index + 1.
+	^ self
+]
+
 { #category : 'menus' }
 ViennaStateProbeBrowser >> addPureOperationProbeMenu: aViennaModuleNode [
 
@@ -113,7 +147,9 @@ ViennaStateProbeBrowser >> addPureOperationProbeMenu: aViennaModuleNode [
 										  item
 											  name: expr;
 											  action: [
-												  self addExpressionProbe: expr in: aViennaModuleNode ] ] ] ];
+												  self
+													  addProbeWithModule: aViennaModuleNode identifier
+													  expression: expr ] ] ] ];
 		  yourself
 ]
 
@@ -127,9 +163,9 @@ ViennaStateProbeBrowser >> addStateVariableProbeMenu: aViennaModuleNode [
 										  item
 											  name: fieldNode identifier;
 											  action: [
-												  self
-													  addExpressionProbe: fieldNode identifier
-													  in: aViennaModuleNode ] ] ] ];
+													  self
+														  addProbeWithModule: aViennaModuleNode identifier
+														  expression: fieldNode identifier ] ] ] ];
 		  yourself
 ]
 
@@ -147,19 +183,27 @@ ViennaStateProbeBrowser >> defaultLayout [
 		  yourself
 ]
 
+{ #category : 'accessing' }
+ViennaStateProbeBrowser >> expressionInItem: anArray [
+
+	^ anArray third
+]
+
 { #category : 'initialization' }
 ViennaStateProbeBrowser >> initializePresenters [
 
 	probeList := self newTable
 		             beSingleSelection;
 		             activateOnDoubleClick;
-		             addColumn:
-			             (SpStringTableColumn
+		             addColumn: (SpStringTableColumn
+				              title: 'name'
+				              evaluated: [ :item | self nameInItem: item ]);
+		             addColumn: (SpStringTableColumn
 				              title: 'module'
-				              evaluated: [ :assoc | assoc key ]);
+				              evaluated: [ :item | self moduleInItem: item ]);
 		             addColumn: (SpStringTableColumn
 				              title: 'expression'
-				              evaluated: [ :assoc | assoc value ]);
+				              evaluated: [ :item | self expressionInItem: item ]);
 		             whenSelectionChangedDo: [ self selectedProbeChanged ];
 		             whenActivatedDo: [ probeList unselectAll ];
 		             yourself.
@@ -176,14 +220,39 @@ ViennaStateProbeBrowser >> initializePresenters [
 ]
 
 { #category : 'accessing' }
+ViennaStateProbeBrowser >> moduleInItem: anArray [
+
+	^ anArray second
+]
+
+{ #category : 'accessing' }
+ViennaStateProbeBrowser >> nameInItem: anArray [
+
+	^ anArray first
+]
+
+{ #category : 'accessing' }
+ViennaStateProbeBrowser >> newItemWithName: aString module: anotherString expression: yetAnotherString [
+
+	^ {
+		  aString.
+		  anotherString.
+		  yetAnotherString }
+]
+
+{ #category : 'accessing' }
 ViennaStateProbeBrowser >> probes [
 
-	| probes |
-	probes := Dictionary new.
-	probeList items do: [ :assoc |
-			(probes at: assoc key ifAbsentPut: [ OrderedCollection new ]) add:
-				assoc value ].
-	^ probes
+	^ probeList items
+]
+
+{ #category : 'accessing' }
+ViennaStateProbeBrowser >> probesWithTranspiledSpecification: aViennaTranspiledModularDocument [
+
+	^ Array streamContents: [ :stream |
+			  self
+				  withTranspiledSpecification: aViennaTranspiledModularDocument
+				  probesDo: [ :probe | stream nextPut: probe ] ]
 ]
 
 { #category : 'enumerating' }
@@ -212,6 +281,19 @@ ViennaStateProbeBrowser >> removeProbe [
 		selectIndex: (index min: probes size)
 ]
 
+{ #category : 'ui requests' }
+ViennaStateProbeBrowser >> request: request initialAnswer: initialAnwser title: title [
+
+	| answer |
+	answer := self application newRequest
+		          title: title;
+		          label: request;
+		          text: initialAnwser;
+		          openModal.
+
+	^ answer
+]
+
 { #category : 'updating' }
 ViennaStateProbeBrowser >> selectedProbeChanged [
 
@@ -234,7 +316,7 @@ ViennaStateProbeBrowser >> specification: aViennaModularDocumentNode [
 { #category : 'updating' }
 ViennaStateProbeBrowser >> specificationChanged [
 
-	
+	self updateProbeList
 ]
 
 { #category : 'enumerating' }
@@ -253,8 +335,35 @@ ViennaStateProbeBrowser >> updateButtons [
 	removeProbeButton enabled: probeSelected
 ]
 
+{ #category : 'updating' }
+ViennaStateProbeBrowser >> updateProbeList [
+
+	probeList items: (Array streamContents: [ :stream |
+				 specification ifNotNil: [
+						 specification modulesDo: [ :module |
+								 module stateDefinition ifNotNil: [ :stateDefinition |
+										 stateDefinition fieldsDo: [ :field |
+												 | identifier |
+												 identifier := field identifier.
+												 stream nextPut: (self
+														  newItemWithName: identifier
+														  module: module identifier
+														  expression: identifier) ] ] ] ] ])
+]
+
 { #category : 'accessing' }
 ViennaStateProbeBrowser >> windowTitle [
 
 	^ 'Abstract State Probers'
+]
+
+{ #category : 'enumerating' }
+ViennaStateProbeBrowser >> withTranspiledSpecification: aViennaTranspiledModularDocument probesDo: aBlock [
+
+	probeList items do: [ :item |
+			(ViennaAbstractStateProbe
+				 name: (self nameInItem: item)
+				 receiver:
+				 (aViennaTranspiledModularDocument at: (self moduleInItem: item))
+				 source: (self expressionInItem: item)) ifCompiledDo: aBlock ]
 ]

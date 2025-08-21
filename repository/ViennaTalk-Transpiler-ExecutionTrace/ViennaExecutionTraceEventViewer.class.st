@@ -21,11 +21,14 @@ Class {
 		'isGlobalScope',
 		'showsAggregatedAssignments',
 		'showsSequenceDiagram',
-		'showsStateDiagram'
+		'showsStateDiagram',
+		'showsProbeNamesInStateDiagram',
+		'showsOperationNamesInStateDiagram',
+		'openStateDiagramExtButton'
 	],
-	#category : 'ViennaTalk-Transpiler-ExecutionTrace-Events',
+	#category : 'ViennaTalk-Transpiler-ExecutionTrace-Spec2',
 	#package : 'ViennaTalk-Transpiler-ExecutionTrace',
-	#tag : 'Events'
+	#tag : 'Spec2'
 }
 
 { #category : 'generating' }
@@ -84,6 +87,9 @@ ViennaExecutionTraceEventViewer >> defaultLayout [
 						    add: infoSettingsButton;
 						    add: openSequenceDiagramButton;
 						    add: openStateDiagramButton;
+						    add: openStateDiagramExtButton
+						    width: self class buttonHeight;
+						    add: '    ' expand: false;
 						    add: exportButton;
 						    yourself)
 				   expand: false;
@@ -92,21 +98,25 @@ ViennaExecutionTraceEventViewer >> defaultLayout [
 		  yourself
 ]
 
-{ #category : 'private' }
-ViennaExecutionTraceEventViewer >> defaultProbeSources [
+{ #category : 'defaults' }
+ViennaExecutionTraceEventViewer >> defaultProbes [
 
-	| dict |
-	dict := OrderedDictionary new.
-	specification ifNotNil: [
-			specification modulesDo: [ :module |
-					module stateDefinition ifNotNil: [ :stateDefinition |
-							| scripts |
-							scripts := dict
-								           at: module identifier
-								           ifAbsentPut: [ OrderedCollection new ].
-							stateDefinition fieldsDo: [ :field |
-								scripts add: field identifier ] ] ] ].
-	^ dict
+	^ Array streamContents: [ :stream |
+			  (specification notNil and: [ transpiledSpecification notNil ])
+				  ifNotNil: [
+						  specification modulesDo: [ :module |
+								  | transpiledModule |
+								  transpiledModule := transpiledSpecification at:
+									                      module identifier.
+								  module stateDefinition ifNotNil: [ :stateDefinition |
+										  stateDefinition fieldsDo: [ :field |
+												  | identifier |
+												  identifier := field identifier.
+												  (ViennaAbstractStateProbe
+													   name: identifier
+													   receiver: transpiledModule
+													   source: identifier) ifCompiledDo: [ :probe |
+													  stream nextPut: probe ] ] ] ] ] ]
 ]
 
 { #category : 'operations' }
@@ -126,6 +136,21 @@ ViennaExecutionTraceEventViewer >> dryRunUntil: aViennaExecutionTraceEvent [
 			root allEventsDo: [ :event |
 					event == aViennaExecutionTraceEvent ifTrue: [ ^ self ].
 					event applyAssignmentTo: transpiledSpecification ] ]
+]
+
+{ #category : 'operations' }
+ViennaExecutionTraceEventViewer >> editProbes [
+
+	| probeBrowser |
+	probeBrowser := ViennaStateProbeBrowser new
+		                specification: specification;
+		                abstractStateProbes: probes;
+		                yourself.
+	probeBrowser asModalWindow
+		okAction: [
+				probes := probeBrowser probesWithTranspiledSpecification:
+						          transpiledSpecification ];
+		open
 ]
 
 { #category : 'operations' }
@@ -242,7 +267,9 @@ ViennaExecutionTraceEventViewer >> initialize [
 	isGlobalScope := true.
 	showsAggregatedAssignments := true.
 	showsSequenceDiagram := false.
-	showsStateDiagram := false
+	showsStateDiagram := false.
+	showsProbeNamesInStateDiagram := false.
+	showsOperationNamesInStateDiagram := false
 ]
 
 { #category : 'initialization' }
@@ -314,6 +341,12 @@ ViennaExecutionTraceEventViewer >> initializePresenters [
 		                          label: 'State Diagram';
 		                          action: [ self openStateDiagram ];
 		                          yourself.
+	openStateDiagramExtButton := self newButton
+		                             icon: (self iconNamed: #dropDown);
+		                             action: [
+			                             self stateDiagramMenu
+				                             openWithSpecAtPointer ];
+		                             yourself.
 	exportButton := self newButton
 		                icon: (self iconNamed: #smallExport);
 		                label: 'Export...';
@@ -339,6 +372,7 @@ ViennaExecutionTraceEventViewer >> micromaidStateDiagramFrom: aViennaExecutionTr
 	| format |
 	format := ViennaExecutionTraceStateDiagramFormat new
 		          probes: self probes;
+		          showsProbeNames: showsProbeNamesInStateDiagram;
 		          yourself.
 	self dryRunUntil: aViennaExecutionTraceEvent.
 	format writeHeaderOn: aStream.
@@ -395,28 +429,7 @@ ViennaExecutionTraceEventViewer >> prevPath: anArrayOfInteger [
 { #category : 'accessing' }
 ViennaExecutionTraceEventViewer >> probes [
 
-	^ probes ifNil: [
-			  probes := Array streamContents: [ :stream |
-					            probeSources keysAndValuesDo: [ :moduleName :collection |
-							            collection do: [ :expressionString |
-									            | transpiledModule src compiledMethod |
-									            transpiledModule := transpiledSpecification at:
-										                                moduleName.
-									            src := ViennaVDM2SmalltalkObject new
-										                   disableRuntimeCheck;
-										                   generate:
-											                   (expressionString asViennaExpressionAst
-												                    parent: specification;
-												                    yourself)
-										                   env: transpiledModule class viennaEnv.
-									            compiledMethod := OpalCompiler new
-										                              source: src;
-										                              logged: false;
-										                              receiver: transpiledModule;
-										                              compile.
-									            stream nextPut: (ViennaCompiledMethodBlock
-											             receiver: transpiledModule
-											             compiledMethod: compiledMethod) ] ] ] ]
+	^ probes ifNil: [ probes := self defaultProbes ]
 ]
 
 { #category : 'accessing' }
@@ -546,8 +559,7 @@ ViennaExecutionTraceEventViewer >> specification: aViennaModularDocumentNode [
 			                           ViennaVDM2SmalltalkObject new
 				                           disableRuntimeCheck;
 				                           generate: specification ].
-	probeSources := self defaultProbeSources.
-	probes := nil
+	probes := self defaultProbes
 ]
 
 { #category : 'generating' }
@@ -565,6 +577,34 @@ ViennaExecutionTraceEventViewer >> stateDiagramForMicrodownFrom: aViennaExecutio
 	aStream
 		nextPutAll: '```';
 		cr
+]
+
+{ #category : 'menus' }
+ViennaExecutionTraceEventViewer >> stateDiagramMenu [
+
+	^ self newMenu
+		  addGroup: [ :group |
+				  group
+					  addItem: [ :item |
+							  item
+								  name: 'Show probe names';
+								  state: showsProbeNamesInStateDiagram;
+								  action: [
+									  showsProbeNamesInStateDiagram := showsProbeNamesInStateDiagram
+										                                   not ] ];
+					  addItem: [ :item |
+							  item
+								  name: 'Show operation names';
+								  state: showsOperationNamesInStateDiagram;
+								  action: [
+										  showsOperationNamesInStateDiagram := showsOperationNamesInStateDiagram
+											                                       not ] ] ];
+		  addGroup: [ :group |
+				  group addItem: [ :item |
+						  item
+							  name: 'Edit abstract state probes...';
+							  action: [ self editProbes ] ] ];
+		  yourself
 ]
 
 { #category : 'operations' }

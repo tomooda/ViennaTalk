@@ -7,7 +7,9 @@ Class {
 		'stateStack',
 		'stateNames',
 		'operationStack',
-		'transitions'
+		'transitions',
+		'showsProbeNames',
+		'showsOperationNames'
 	],
 	#category : 'ViennaTalk-Transpiler-ExecutionTrace-Formats',
 	#package : 'ViennaTalk-Transpiler-ExecutionTrace',
@@ -16,6 +18,34 @@ Class {
 
 { #category : 'accessing' }
 ViennaExecutionTraceStateDiagramFormat >> abstractState [
+
+	^ showsProbeNames
+		  ifTrue: [ self abstractStateWithName ]
+		  ifFalse: [ self abstractStateWithoutName ]
+]
+
+{ #category : 'accessing' }
+ViennaExecutionTraceStateDiagramFormat >> abstractStateWithName [
+
+	| abstractState |
+	abstractState := String streamContents: [ :stream |
+			                 probes
+				                 do: [ :probe |
+						                 stream
+							                 nextPutAll: probe name;
+							                 nextPut: $=.
+						                 probe value viennaStringOn: stream ]
+				                 separatedBy: [
+						                 stream
+							                 nextPut: $,;
+							                 cr ] ].
+	^ stateNames
+		  at: abstractState
+		  ifAbsentPut: [ 's' , (stateNames size + 1) printString ]
+]
+
+{ #category : 'accessing' }
+ViennaExecutionTraceStateDiagramFormat >> abstractStateWithoutName [
 
 	| abstractState |
 	abstractState := String streamContents: [ :stream |
@@ -34,10 +64,24 @@ ViennaExecutionTraceStateDiagramFormat >> addProbe: aBlock [
 	probes := probes copyWith: aBlock
 ]
 
+{ #category : 'accessing' }
+ViennaExecutionTraceStateDiagramFormat >> hideOperationNames [
+
+	showsOperationNames := false
+]
+
+{ #category : 'accessing' }
+ViennaExecutionTraceStateDiagramFormat >> hideProbeNames [
+
+	showsProbeNames := false
+]
+
 { #category : 'initialization' }
 ViennaExecutionTraceStateDiagramFormat >> initialize [
 
 	super initialize.
+	showsProbeNames := false.
+	showsOperationNames := false.
 	probes := Array new.
 	stateStack := OrderedCollection new: 1024.
 	operationStack := OrderedCollection new: 1024.
@@ -57,6 +101,42 @@ ViennaExecutionTraceStateDiagramFormat >> open: aViennaExecutionTraceRecorder wi
 ViennaExecutionTraceStateDiagramFormat >> probes: aCollectionOfBlockClosure [
 
 	probes := aCollectionOfBlockClosure asArray
+]
+
+{ #category : 'accessing' }
+ViennaExecutionTraceStateDiagramFormat >> showOperationNames [
+
+	showsOperationNames := true
+]
+
+{ #category : 'accessing' }
+ViennaExecutionTraceStateDiagramFormat >> showProbeNames [
+
+	showsProbeNames := true
+]
+
+{ #category : 'accessing' }
+ViennaExecutionTraceStateDiagramFormat >> showsOperationNames [
+
+	^ showsOperationNames
+]
+
+{ #category : 'accessing' }
+ViennaExecutionTraceStateDiagramFormat >> showsOperationNames: aBoolean [
+
+	showsOperationNames := aBoolean = true
+]
+
+{ #category : 'accessing' }
+ViennaExecutionTraceStateDiagramFormat >> showsProbeNames [
+
+	^ showsProbeNames
+]
+
+{ #category : 'accessing' }
+ViennaExecutionTraceStateDiagramFormat >> showsProbeNames: aBoolean [
+
+	showsProbeNames := aBoolean = true
 ]
 
 { #category : 'formatting' }
@@ -124,7 +204,9 @@ ViennaExecutionTraceStateDiagramFormat >> writeStateDiffBlock: aBlock on: aStrea
 	transitions add: (self
 			 transitionFrom: preState
 			 to: postState
-			 operation: operationStack last)
+			 operation: (showsOperationNames
+					  ifTrue: [ operationStack last ]
+					  ifFalse: [ nil ]))
 ]
 
 { #category : 'formatting' }

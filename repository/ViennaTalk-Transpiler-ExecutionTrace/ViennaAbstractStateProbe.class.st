@@ -2,6 +2,7 @@ Class {
 	#name : 'ViennaAbstractStateProbe',
 	#superclass : 'ViennaCompiledMethodBlock',
 	#instVars : [
+		'name',
 		'source'
 	],
 	#category : 'ViennaTalk-Transpiler-ExecutionTrace-Utilities',
@@ -10,24 +11,49 @@ Class {
 }
 
 { #category : 'instance creation' }
-ViennaAbstractStateProbe class >> receiver: aViennaTranspiledObject source: aString [
+ViennaAbstractStateProbe class >> name: aString receiver: aViennaTranspiledObject source: anotherString [
 
 	^ self new
+		  name: aString;
 		  receiver: aViennaTranspiledObject;
-		  source: aString;
+		  source: anotherString;
 		  yourself
+]
+
+{ #category : 'controlling' }
+ViennaAbstractStateProbe >> ifCompiledDo: aBlock [
+
+	^ compiledMethod ifNotNil: [ aBlock cull: self ]
+]
+
+{ #category : 'testing' }
+ViennaAbstractStateProbe >> isCompiled [
+
+	^ compiledMethod notNil
 ]
 
 { #category : 'accessing' }
 ViennaAbstractStateProbe >> moduleName [
 
-	^ receiver moduleName
+	^ receiver class moduleName
 ]
 
 { #category : 'accessing' }
 ViennaAbstractStateProbe >> moduleNode [
 
 	^ receiver class specification
+]
+
+{ #category : 'accessing' }
+ViennaAbstractStateProbe >> name [
+
+	^ name
+]
+
+{ #category : 'accessing' }
+ViennaAbstractStateProbe >> name: aString [
+
+	name := aString
 ]
 
 { #category : 'printing' }
@@ -51,6 +77,12 @@ ViennaAbstractStateProbe >> recompile [
 ]
 
 { #category : 'accessing' }
+ViennaAbstractStateProbe >> source [
+
+	^ source
+]
+
+{ #category : 'accessing' }
 ViennaAbstractStateProbe >> source: aString [
 
 	| expressionNode transpiledSource |
@@ -61,12 +93,15 @@ ViennaAbstractStateProbe >> source: aString [
 	expressionNode typecheck.
 	transpiledSource := receiver class
 		                    transpileNode: expressionNode
-		                    with: ViennaTranspilerForExecutionTracing
+		                    with: ViennaTranspilerForExecutionTracing new
 		                    ifError: [ :msg | ^ self error: msg ].
-	compiledMethod := OpalCompiler new
-		                  source: transpiledSource;
-		                  logged: false;
-		                  receiver: receiver;
-		                  compile.
+	compiledMethod := [
+		                  OpalCompiler new
+			                  source: transpiledSource;
+			                  logged: false;
+			                  receiver: receiver;
+			                  compile ]
+		                  on: Error
+		                  do: [ :ex | ex return: nil ].
 	source := aString
 ]
