@@ -1,5 +1,5 @@
 Class {
-	#name : 'ViennaRecordItCommand',
+	#name : 'ViennaTraceItCommand',
 	#superclass : 'CmCommand',
 	#category : 'ViennaTalk-Browser-Core-Spec2',
 	#package : 'ViennaTalk-Browser-Core',
@@ -7,31 +7,31 @@ Class {
 }
 
 { #category : 'defaults' }
-ViennaRecordItCommand class >> defaultDescription [
+ViennaTraceItCommand class >> defaultDescription [
 
 	^ 'Record an execution trace of evaluating the selected expression'
 ]
 
 { #category : 'defaults' }
-ViennaRecordItCommand class >> defaultIconName [
+ViennaTraceItCommand class >> defaultIconName [
 
 	^ #redCircle
 ]
 
 { #category : 'defaults' }
-ViennaRecordItCommand class >> defaultName [
+ViennaTraceItCommand class >> defaultName [
 
-	^ 'Record it'
+	^ 'Trace it'
 ]
 
 { #category : 'defaults' }
-ViennaRecordItCommand class >> defaultShortcut [
+ViennaTraceItCommand class >> defaultShortcut [
 
 	^ nil
 ]
 
 { #category : 'instance creation' }
-ViennaRecordItCommand class >> forSpecContext: anObject [
+ViennaTraceItCommand class >> forSpecContext: anObject [
 
 	^ (super forSpecContext: anObject)
 		  iconName: self defaultIconName;
@@ -40,7 +40,7 @@ ViennaRecordItCommand class >> forSpecContext: anObject [
 ]
 
 { #category : 'executing' }
-ViennaRecordItCommand >> execute [
+ViennaTraceItCommand >> execute [
 
-	context ifNotNil: #doRecordIt
+	context ifNotNil: #doTraceIt
 ]
