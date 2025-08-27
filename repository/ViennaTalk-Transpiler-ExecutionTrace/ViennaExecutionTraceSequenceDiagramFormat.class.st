@@ -58,7 +58,7 @@ ViennaExecutionTraceSequenceDiagramFormat >> writeCall: aString module: anotherS
 		nextPutAll: callee;
 		nextPut: $(.
 	anArray
-		do: [ :obj | obj viennaStringOn: aStream ]
+		do: [ :obj | aStream nextPutAll: obj viennaString asHTMLString ]
 		separatedBy: [ aStream nextPutAll: ', ' ].
 	aStream
 		nextPutAll: ')';
@@ -91,7 +91,7 @@ ViennaExecutionTraceSequenceDiagramFormat >> writeReturn: aString module: anothe
 				nextPutAll: ' -->>- ';
 				nextPutAll: caller;
 				nextPutAll: ' : '.
-			anObject viennaStringOn: aStream.
+			aStream nextPutAll: anObject viennaString asHTMLString.
 			aStream cr ]
 ]
 

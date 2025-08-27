@@ -215,7 +215,7 @@ ViennaExecutionTraceStateDiagramFormat >> writeStateNamesOn: aStream [
 	stateNames keysAndValuesDo: [ :abstractState :name |
 			aStream
 				nextPutAll: '  state "';
-				nextPutAll: abstractState;
+				nextPutAll: abstractState asHTMLString;
 				nextPutAll: '" as ';
 				nextPutAll: name;
 				cr ]
