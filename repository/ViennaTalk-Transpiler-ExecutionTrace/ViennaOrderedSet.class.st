@@ -19,7 +19,9 @@ ViennaOrderedSet >> addFirst: newObject [
 { #category : 'adding' }
 ViennaOrderedSet >> addLast: newObject [
 
-	(set includes: newObject) ifFalse: [ super addLast: newObject ].
+	(set includes: newObject) ifFalse: [
+			super addLast: newObject.
+			set add: newObject ].
 	^ newObject
 ]
 

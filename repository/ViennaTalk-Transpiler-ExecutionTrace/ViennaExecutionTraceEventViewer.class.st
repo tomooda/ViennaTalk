@@ -373,6 +373,7 @@ ViennaExecutionTraceEventViewer >> micromaidStateDiagramFrom: aViennaExecutionTr
 	format := ViennaExecutionTraceStateDiagramFormat new
 		          probes: self probes;
 		          showsProbeNames: showsProbeNamesInStateDiagram;
+		          showsOperationNames: showsOperationNamesInStateDiagram;
 		          yourself.
 	self dryRunUntil: aViennaExecutionTraceEvent.
 	format writeHeaderOn: aStream.
