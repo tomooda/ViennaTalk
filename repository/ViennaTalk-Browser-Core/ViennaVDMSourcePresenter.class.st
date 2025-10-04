@@ -228,6 +228,7 @@ ViennaVDMSourcePresenter >> highlighter: aViennaVDMHighlighgter [
 ViennaVDMSourcePresenter >> initialize [
 
 	super initialize.
+	self font: ViennaLauncher font.
 	self
 		withoutSyntaxHighlight;
 		withoutSmartCharacters
