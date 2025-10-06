@@ -112,3 +112,11 @@ ViennaBinaryOperatorExpressionNode >> returnTypeFor: aViennaType1 and: aViennaTy
 
 	^ self subclassResponsibility
 ]
+
+{ #category : 'typechecking' }
+ViennaBinaryOperatorExpressionNode >> subexpressionsDo: aBlock [
+
+	aBlock
+		value: self expression1;
+		value: self expression2
+]

@@ -149,3 +149,10 @@ ViennaApplyNode >> operatorPrecedence [
 
 	^ 40
 ]
+
+{ #category : 'typechecking' }
+ViennaApplyNode >> subexpressionsDo: aBlock [
+
+	aBlock value: self expression.
+	self argumentExpressionList do: aBlock
+]

@@ -36,6 +36,22 @@ ViennaExpressionNode >> isAssignee [
 	^ false
 ]
 
+{ #category : 'typechecking' }
+ViennaExpressionNode >> isPureExpression [
+
+	self subexpressionsDo: [ :exp |
+		exp isPureExpression ifFalse: [ ^ false ] ].
+	^ true
+]
+
+{ #category : 'typechecking' }
+ViennaExpressionNode >> isTransparentExpression [
+
+	self subexpressionsDo: [ :exp |
+		exp isTransparentExpression ifFalse: [ ^ false ] ].
+	^ true
+]
+
 { #category : 'testing' }
 ViennaExpressionNode >> isViennaExpressionNode [
 	^ true
@@ -57,6 +73,12 @@ ViennaExpressionNode >> maximalType: aViennaType [
 			  signal:
 				  'Type mismatch: expected ' , aViennaType printString
 				  , ' but actual ' , maximalType printString ]
+]
+
+{ #category : 'typechecking' }
+ViennaExpressionNode >> subexpressionsDo: aBlock [
+
+	^ self subclassResponsibility
 ]
 
 { #category : 'typechecking' }

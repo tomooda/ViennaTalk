@@ -116,3 +116,11 @@ ViennaCasesExpressionNode >> othersExpression: aViennaOthersExpressionNode [
 
 	self at: 3 put: aViennaOthersExpressionNode
 ]
+
+{ #category : 'typechecking' }
+ViennaCasesExpressionNode >> subexpressionsDo: aBlock [
+
+	aBlock value: self expression.
+	self casesExpressionAlternatives do: [ :alternative |
+		aBlock value: alternative expression ]
+]
