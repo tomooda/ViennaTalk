@@ -15,6 +15,12 @@ ViennaFieldReferenceNode class >> stateDesignator: aViennaStateDesignatorNode fi
 		  yourself
 ]
 
+{ #category : 'testing' }
+ViennaFieldReferenceNode >> designatesStateVariable [
+
+	^ self stateDesignator designatesStateVariable
+]
+
 { #category : 'accessing' }
 ViennaFieldReferenceNode >> field [
 

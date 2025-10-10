@@ -84,6 +84,15 @@ ViennaTopLevelDefinitionNode >> purityCheck [
 ]
 
 { #category : 'purity and transparency' }
+ViennaTopLevelDefinitionNode >> semanticCheck [
+
+	self
+		transparencyCheck;
+		purityCheck;
+		typecheck
+]
+
+{ #category : 'purity and transparency' }
 ViennaTopLevelDefinitionNode >> transparencyCheck [
 
 	^ self subclassResponsibility

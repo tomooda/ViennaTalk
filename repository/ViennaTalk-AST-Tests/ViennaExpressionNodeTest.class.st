@@ -34,6 +34,12 @@ ViennaExpressionNodeTest >> testPurityCheck [
 				('op() + 1' asViennaExpressionAst
 					 parent: (spec moduleNamed: 'Test');
 					 yourself) purityCheck ]
+		raise: ViennaPurityError.
+	self
+		shouldnt: [
+				('mk_S(1)' asViennaExpressionAst
+					 parent: (spec moduleNamed: 'Test');
+					 yourself) purityCheck ]
 		raise: ViennaPurityError
 ]
 
@@ -64,6 +70,12 @@ ViennaExpressionNodeTest >> testTransparencyCheck [
 	self
 		should: [
 				('op() + 1' asViennaExpressionAst
+					 parent: (spec moduleNamed: 'Test');
+					 yourself) transparencyCheck ]
+		raise: ViennaTransparencyError.
+	self
+		shouldnt: [
+				('mk_S(1)' asViennaExpressionAst
 					 parent: (spec moduleNamed: 'Test');
 					 yourself) transparencyCheck ]
 		raise: ViennaTransparencyError

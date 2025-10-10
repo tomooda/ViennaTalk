@@ -47,7 +47,7 @@ ViennaAssignStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
 { #category : 'purity and transparency' }
 ViennaAssignStatementNode >> isPureComponent [
 
-	^ false
+	^ self stateDesignator designatesStateVariable not
 ]
 
 { #category : 'purity and transparency' }

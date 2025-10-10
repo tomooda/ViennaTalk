@@ -27,6 +27,12 @@ ViennaMapOrSequenceReferenceNode >> argumentExpression: aViennaExpressionNode [
 	self at: 2 put: aViennaExpressionNode
 ]
 
+{ #category : 'testing' }
+ViennaMapOrSequenceReferenceNode >> designatesStateVariable [
+
+	^ self stateDesignator designatesStateVariable
+]
+
 { #category : 'pretty printing' }
 ViennaMapOrSequenceReferenceNode >> formatWith: aViennaAbstractFormatter [
 

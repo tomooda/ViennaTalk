@@ -172,7 +172,7 @@ ViennaStateDefinitionNode >> isPureComponent [
 { #category : 'purity and transparency' }
 ViennaStateDefinitionNode >> isTransparentComponent [
 
-	^ false
+	^ true
 ]
 
 { #category : 'testing' }

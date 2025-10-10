@@ -19,7 +19,6 @@ Class {
 		'stateTable',
 		'initStateButton',
 		'pendingSyntaxError',
-		'pendingTypeError',
 		'testProcess',
 		'highlighterProcess',
 		'dirty',
@@ -63,7 +62,8 @@ Class {
 		'runMutationTestingButton',
 		'removeAllEpiLogButton',
 		'clearEpiLogCheckBox',
-		'epiLogCherrypickButton'
+		'epiLogCherrypickButton',
+		'pendingSemanticError'
 	],
 	#classVars : [
 		'GreenSignalIcon',
@@ -1765,11 +1765,11 @@ ViennaRefactoringBrowser >> hasGit [
 ]
 
 { #category : 'testing' }
-ViennaRefactoringBrowser >> hasTypeError: aViennaNode [
+ViennaRefactoringBrowser >> hasSemanticError: aViennaNode [
 
-	^ pendingTypeError notNil and: [
+	^ pendingSemanticError notNil and: [
 		  | errorNode |
-		  errorNode := pendingTypeError node.
+		  errorNode := pendingSemanticError node.
 		  aViennaNode hasDescendantSuchThat: [ :node | errorNode == node ] ]
 ]
 
@@ -1789,9 +1789,9 @@ ViennaRefactoringBrowser >> highlightSourceText [
 		                                parse: source
 		                                withContext: context.
 	                      result isPetit2Failure
-		                      ifTrue: [ self notifySintaxError: result ]
+		                      ifTrue: [ self notifySyntaxError: result ]
 		                      ifFalse: [
-			                      self notifySintaxError: nil.
+			                      self notifySyntaxError: nil.
 			                      source size = highlighter text runs size
 				                      ifTrue: [
 					                      sourceText withAdapterDo: [ :a |
@@ -1814,10 +1814,10 @@ ViennaRefactoringBrowser >> highlightSourceText [
 					                      (copyMap at: old) == oldNode ifTrue: [
 						                      copyMap at: old put: newNode ] ].
 				                      [
-				                      newNode typecheck.
-				                      self notifyTypeError: nil ]
-					                      on: ViennaTypeError
-					                      do: [ :ex | self notifyTypeError: ex ] ] ].
+				                      newNode semanticCheck.
+				                      self notifySemanticError: nil ]
+					                      on: ViennaSemanticError
+					                      do: [ :ex | self notifySemanticError: ex ] ] ].
 	                      highlighterProcess := nil ] forkAt:
 		                      Processor userBackgroundPriority
 ]
@@ -2387,8 +2387,8 @@ ViennaRefactoringBrowser >> listBackgroundColorFor: aViennaNode [
 	aViennaNode ifNil: [ ^ Color transparent ].
 	(aViennaNode hasDescendantSuchThat: [ :node |
 		 sliceNodes includes: node ]) ifTrue: [ ^ self sliceColor ].
-	pendingTypeError ifNotNil: [
-		(pendingTypeError node includesParent: aViennaNode) ifTrue: [
+	pendingSemanticError ifNotNil: [
+		(pendingSemanticError node includesParent: aViennaNode) ifTrue: [
 			^ Color yellow ] ].
 	^ Color transparent
 ]
@@ -2555,7 +2555,7 @@ ViennaRefactoringBrowser >> modelChanged [
 		epiLog hasSpecificationChange ifTrue: [
 			self setDirty.
 			self save ].
-		self typecheck.
+		self semanticCheck.
 		animation ifNotNil: [
 			| state |
 			state := epiLog state.
@@ -2640,7 +2640,15 @@ ViennaRefactoringBrowser >> notifyAnimationError: aString [
 ]
 
 { #category : 'operations-source signal' }
-ViennaRefactoringBrowser >> notifySintaxError: aPP2Failure [
+ViennaRefactoringBrowser >> notifySemanticError: aViennaSemanticError [
+
+	pendingSemanticError := aViennaSemanticError.
+	self updateSourceSignalButton.
+	self updateSourceWithSemanticError
+]
+
+{ #category : 'operations-source signal' }
+ViennaRefactoringBrowser >> notifySyntaxError: aPP2Failure [
 
 	pendingSyntaxError := aPP2Failure.
 	self updateSourceSignalButton.
@@ -2655,14 +2663,6 @@ ViennaRefactoringBrowser >> notifySintaxError: aPP2Failure [
 			to: source size.
 		textWidget text runs: source runs.
 		textWidget changed ]
-]
-
-{ #category : 'operations-source signal' }
-ViennaRefactoringBrowser >> notifyTypeError: aViennaTypeError [
-
-	pendingTypeError := aViennaTypeError.
-	self updateSourceSignalButton.
-	self updateSourceWithTypeError
 ]
 
 { #category : 'private' }
@@ -2738,15 +2738,15 @@ ViennaRefactoringBrowser >> parser [
 ]
 
 { #category : 'accessing' }
-ViennaRefactoringBrowser >> pendingSyntaxError [
+ViennaRefactoringBrowser >> pendingSemanticError [
 
-	^ pendingSyntaxError
+	^ pendingSemanticError
 ]
 
 { #category : 'accessing' }
-ViennaRefactoringBrowser >> pendingTypeError [
+ViennaRefactoringBrowser >> pendingSyntaxError [
 
-	^ pendingTypeError
+	^ pendingSyntaxError
 ]
 
 { #category : 'layouts' }
@@ -3055,6 +3055,16 @@ ViennaRefactoringBrowser >> selectedTimelineChanged [
 		  updateEpiLogList
 ]
 
+{ #category : 'operations' }
+ViennaRefactoringBrowser >> semanticCheck [
+
+	[
+		self specification semanticCheck.
+		self notifySemanticError: nil ]
+		on: ViennaSemanticError
+		do: [ :ex | self notifySemanticError: ex ]
+]
+
 { #category : 'private' }
 ViennaRefactoringBrowser >> setDirty [
 
@@ -3175,7 +3185,7 @@ ViennaRefactoringBrowser >> sourceSelectionText [
 ViennaRefactoringBrowser >> sourceSignalButtonPressed [
 
 	pendingSyntaxError ifNotNil: [ pendingSyntaxError inspect ].
-	pendingTypeError ifNotNil: [ pendingTypeError inspect ]
+	pendingSemanticError ifNotNil: [ pendingSemanticError inspect ]
 ]
 
 { #category : 'menus' }
@@ -3210,7 +3220,7 @@ ViennaRefactoringBrowser >> specification [
 { #category : 'updating' }
 ViennaRefactoringBrowser >> testResultChanged [
 
-	self updateSourceWithTypeError
+	self updateSourceWithSemanticError
 ]
 
 { #category : 'menus' }
@@ -3228,18 +3238,6 @@ ViennaRefactoringBrowser >> toggleRunsAllTests [
 
 	autoTestButton state: (runsAllTests := runsAllTests not).
 	self runAllTests
-]
-
-{ #category : 'operations' }
-ViennaRefactoringBrowser >> typecheck [
-
-	[
-	self specification
-		forgetTypecheck;
-		typecheck.
-	self notifyTypeError: nil ]
-		on: ViennaTypeError
-		do: [ :ex | self notifyTypeError: ex ]
 ]
 
 { #category : 'updating' }
@@ -3533,7 +3531,7 @@ ViennaRefactoringBrowser >> updateSource [
 	self definition
 		ifNotNil: [ :node |
 			sourceText text: (self getSource: node).
-			self updateSourceWithTypeError ]
+			self updateSourceWithSemanticError ]
 		ifNil: [ sourceText text: '' ]
 ]
 
@@ -3543,15 +3541,15 @@ ViennaRefactoringBrowser >> updateSourceSignalButton [
 	pendingSyntaxError ifNotNil: [
 		talkbackLabel label: pendingSyntaxError printString.
 		^ sourceSignalButton icon: self class redSignalIcon ].
-	pendingTypeError ifNotNil: [
-		talkbackLabel label: pendingTypeError printString.
+	pendingSemanticError ifNotNil: [
+		talkbackLabel label: pendingSemanticError printString.
 		^ sourceSignalButton icon: self class yellowSignalIcon ].
 	talkbackLabel label: ''.
 	^ sourceSignalButton icon: self class greenSignalIcon
 ]
 
 { #category : 'updating' }
-ViennaRefactoringBrowser >> updateSourceWithTypeError [
+ViennaRefactoringBrowser >> updateSourceWithSemanticError [
 
 	| text textWidget |
 	sourceText withAdapterDo: [ :a |
@@ -3565,7 +3563,7 @@ ViennaRefactoringBrowser >> updateSourceWithTypeError [
 	textWidget text string asString = text string asString ifTrue: [
 		textWidget text runs: text runs ].
 	textWidget textArea handleParagraphChange: [
-		(pendingTypeError ifNotNil: #node) ifNotNil: [ :node |
+		(pendingSemanticError ifNotNil: #node) ifNotNil: [ :node |
 			| from to |
 			(sourceText tracingSource intervalForSource: node) key ifNotEmpty: [
 				:interval |

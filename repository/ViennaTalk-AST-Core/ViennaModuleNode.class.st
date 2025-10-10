@@ -658,6 +658,12 @@ ViennaModuleNode >> namedTracesDo: aBlock [
 		section isViennaTracesDefinitionsNode ifTrue: [ section do: aBlock ] ]
 ]
 
+{ #category : 'purity and transparency' }
+ViennaModuleNode >> purityCheck [
+
+	self toplevelDefinitionsDo: #purityCheck
+]
+
 { #category : 'accessing' }
 ViennaModuleNode >> sections [
 
@@ -668,6 +674,15 @@ ViennaModuleNode >> sections [
 ViennaModuleNode >> sectionsDo: aBlock [
 
 	self moduleBody sectionsDo: aBlock
+]
+
+{ #category : 'purity and transparency' }
+ViennaModuleNode >> semanticCheck [
+
+	self
+		transparencyCheck;
+		purityCheck;
+		typecheck
 ]
 
 { #category : 'testing' }
@@ -742,6 +757,12 @@ ViennaModuleNode >> toplevelIdentifiersDo: aBlock [
 		toplevelDefinition isViennaValueDefinitionNode
 			ifTrue: [ toplevelDefinition identifiers do: aBlock ]
 			ifFalse: [ aBlock value: toplevelDefinition identifier ] ]
+]
+
+{ #category : 'purity and transparency' }
+ViennaModuleNode >> transparencyCheck [
+
+	self toplevelDefinitionsDo: #transparencyCheck
 ]
 
 { #category : 'accessing' }

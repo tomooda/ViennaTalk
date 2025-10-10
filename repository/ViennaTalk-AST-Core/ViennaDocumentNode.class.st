@@ -76,8 +76,38 @@ ViennaDocumentNode >> namedTracesDo: aBlock [
 	^ self subclassResponsibility
 ]
 
+{ #category : 'purity and transparency' }
+ViennaDocumentNode >> purityCheck [
+
+	self toplevelDefinitionsDo: [ :toplevelDefinitionNode |
+		toplevelDefinitionNode purityCheck ]
+]
+
+{ #category : 'purity and transparency' }
+ViennaDocumentNode >> semanticCheck [
+
+	self
+		transparencyCheck;
+		purityCheck;
+		forgetTypecheck;
+		typecheck
+]
+
 { #category : 'enumerating' }
 ViennaDocumentNode >> testOperationsDo: aBlock [
 
 	^ self subclassResponsibility
+]
+
+{ #category : 'enumerating' }
+ViennaDocumentNode >> toplevelDefinitionsDo: aBlock [
+
+	^ self subclassResponsibility
+]
+
+{ #category : 'purity and transparency' }
+ViennaDocumentNode >> transparencyCheck [
+
+	self toplevelDefinitionsDo: [ :toplevelDefinitionNode |
+		toplevelDefinitionNode transparencyCheck ]
 ]

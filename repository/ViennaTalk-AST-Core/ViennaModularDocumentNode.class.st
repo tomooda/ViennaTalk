@@ -74,3 +74,10 @@ ViennaModularDocumentNode >> testOperationsDo: aBlock [
 
 	self testModulesDo: [ :module | module testOperationsDo: aBlock ]
 ]
+
+{ #category : 'enumerating' }
+ViennaModularDocumentNode >> toplevelDefinitionsDo: aBlock [
+
+	self modulesDo: [ :moduleNode |
+		moduleNode toplevelDefinitionsDo: aBlock ]
+]

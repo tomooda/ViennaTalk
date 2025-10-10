@@ -342,7 +342,7 @@ ViennaExplicitOperationDefinitionNode >> preFunction: aViennaPrePostFunctionDefi
 { #category : 'purity and transparency' }
 ViennaExplicitOperationDefinitionNode >> purityCheck [
 
-	self statement purityCheck.
+	self isPureOperation ifTrue: [ self statement purityCheck ].
 	self pre ifNotNil: #purityCheck.
 	self post ifNotNil: #purityCheck
 ]

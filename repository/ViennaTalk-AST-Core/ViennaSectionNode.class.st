@@ -52,6 +52,12 @@ ViennaSectionNode >> maximalType [
 	^ ViennaType unit
 ]
 
+{ #category : 'purity and transparency' }
+ViennaSectionNode >> purityCheck [
+
+	self toplevelDefinitionsDo: #purityCheck
+]
+
 { #category : 'private' }
 ViennaSectionNode >> remove [
 
@@ -70,6 +76,15 @@ ViennaSectionNode >> sectionName [
 	^ self subclassResponsibility
 ]
 
+{ #category : 'purity and transparency' }
+ViennaSectionNode >> semanticCheck [
+
+	self
+		transparencyCheck;
+		purityCheck;
+		typecheck
+]
+
 { #category : 'accessing' }
 ViennaSectionNode >> shortName [
 
@@ -80,4 +95,10 @@ ViennaSectionNode >> shortName [
 ViennaSectionNode >> toplevelDefinitionsDo: aBlock [
 
 	self do: aBlock
+]
+
+{ #category : 'purity and transparency' }
+ViennaSectionNode >> transparencyCheck [
+
+	self toplevelDefinitionsDo: #transparencyCheck
 ]
