@@ -163,6 +163,18 @@ ViennaStateDefinitionNode >> inv: aViennaInvariantNode [
 	self at: 3 put: aViennaInvariantNode
 ]
 
+{ #category : 'purity and transparency' }
+ViennaStateDefinitionNode >> isPureComponent [
+
+	^ true
+]
+
+{ #category : 'purity and transparency' }
+ViennaStateDefinitionNode >> isTransparentComponent [
+
+	^ false
+]
+
 { #category : 'testing' }
 ViennaStateDefinitionNode >> isViennaExportableTopLevelDefinitionNode [
 
@@ -197,6 +209,12 @@ ViennaStateDefinitionNode >> maximalType [
 	^ maximalType
 ]
 
+{ #category : 'purity and transparency' }
+ViennaStateDefinitionNode >> purityCheck [
+
+
+]
+
 { #category : 'pretty printing' }
 ViennaStateDefinitionNode >> sectionName [
 
@@ -213,4 +231,11 @@ ViennaStateDefinitionNode >> shortName [
 ViennaStateDefinitionNode >> toplevelDefinitionsDo: aBlock [
 
 	
+]
+
+{ #category : 'purity and transparency' }
+ViennaStateDefinitionNode >> transparencyCheck [
+
+	self inv ifNotNil: #transparencyCheck.
+	self init ifNotNil: #transparencyCheck
 ]

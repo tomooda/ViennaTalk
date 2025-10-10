@@ -355,6 +355,12 @@ ViennaExtendedExplicitFunctionDefinitionNode >> preFunction: aViennaPrePostFunct
 	self at: 7 put: aViennaPrePostFunctionDefinitionNode
 ]
 
+{ #category : 'purity and transparency' }
+ViennaExtendedExplicitFunctionDefinitionNode >> purityCheck [
+
+
+]
+
 { #category : 'accessing' }
 ViennaExtendedExplicitFunctionDefinitionNode >> returnIdentifiers [
 
@@ -365,6 +371,15 @@ ViennaExtendedExplicitFunctionDefinitionNode >> returnIdentifiers [
 ViennaExtendedExplicitFunctionDefinitionNode >> returnType [
 
 	^ self identifierTypePairList type
+]
+
+{ #category : 'purity and transparency' }
+ViennaExtendedExplicitFunctionDefinitionNode >> transparencyCheck [
+
+	self expression transparencyCheck.
+	self pre ifNotNil: #transparencyCheck.
+	self post ifNotNil: #transparencyCheck.
+	self measure ifNotNil: #transparencyCheck
 ]
 
 { #category : 'accessing' }

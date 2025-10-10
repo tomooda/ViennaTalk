@@ -617,6 +617,12 @@ ViennaNode >> isOperationNameNode [
 	^ false
 ]
 
+{ #category : 'purity and transparency' }
+ViennaNode >> isPureComponent [
+
+	^ true
+]
+
 { #category : 'testing' }
 ViennaNode >> isReferenced [
 
@@ -641,6 +647,12 @@ ViennaNode >> isRelocatable [
 ViennaNode >> isStateVariableNameNode [
 
 	^ false
+]
+
+{ #category : 'purity and transparency' }
+ViennaNode >> isTransparentComponent [
+
+	^ true
 ]
 
 { #category : 'testing' }

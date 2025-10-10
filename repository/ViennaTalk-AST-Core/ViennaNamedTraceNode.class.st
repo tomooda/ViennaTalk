@@ -54,6 +54,18 @@ ViennaNamedTraceNode >> identifier: aString [
 	self at: 1 put: aString
 ]
 
+{ #category : 'purity and transparency' }
+ViennaNamedTraceNode >> isPureComponent [
+
+	^ false
+]
+
+{ #category : 'purity and transparency' }
+ViennaNamedTraceNode >> isTransparentComponent [
+
+	^ false
+]
+
 { #category : 'testing' }
 ViennaNamedTraceNode >> isViennaExportableTopLevelDefinitionNode [
 
@@ -77,6 +89,12 @@ ViennaNamedTraceNode >> maximalType [
 
 	self traceDefinitionList typecheck.
 	^ ViennaType unit
+]
+
+{ #category : 'purity and transparency' }
+ViennaNamedTraceNode >> purityCheck [
+
+	
 ]
 
 { #category : 'running' }
@@ -115,4 +133,10 @@ ViennaNamedTraceNode >> traceDefinitionList [
 ViennaNamedTraceNode >> traceDefinitionList: aViennaTraceDefinitionListNode [
 
 	self at: 2 put: aViennaTraceDefinitionListNode
+]
+
+{ #category : 'purity and transparency' }
+ViennaNamedTraceNode >> transparencyCheck [
+
+	
 ]

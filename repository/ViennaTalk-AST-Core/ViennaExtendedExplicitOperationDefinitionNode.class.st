@@ -229,10 +229,22 @@ ViennaExtendedExplicitOperationDefinitionNode >> isOperationDefinition [
 	^ true
 ]
 
+{ #category : 'purity and transparency' }
+ViennaExtendedExplicitOperationDefinitionNode >> isPureComponent [
+
+	^ self isPureOperation
+]
+
 { #category : 'testing' }
 ViennaExtendedExplicitOperationDefinitionNode >> isPureOperation [
 
 	^ self access includes: 'pure'
+]
+
+{ #category : 'purity and transparency' }
+ViennaExtendedExplicitOperationDefinitionNode >> isTransparentComponent [
+
+	^ false
 ]
 
 { #category : 'testing' }
@@ -367,6 +379,14 @@ ViennaExtendedExplicitOperationDefinitionNode >> preFunction: aViennaPrePostFunc
 	self at: 7 put: aViennaPrePostFunctionDefinitionNode
 ]
 
+{ #category : 'purity and transparency' }
+ViennaExtendedExplicitOperationDefinitionNode >> purityCheck [
+
+	self statement purityCheck.
+	self pre ifNotNil: #purityCheck.
+	self post ifNotNil: #purityCheck
+]
+
 { #category : 'accessing' }
 ViennaExtendedExplicitOperationDefinitionNode >> returnIdentifiers [
 
@@ -389,6 +409,12 @@ ViennaExtendedExplicitOperationDefinitionNode >> statement [
 ViennaExtendedExplicitOperationDefinitionNode >> statement: aViennaStatementNode [
 
 	self at: 5 put: aViennaStatementNode
+]
+
+{ #category : 'purity and transparency' }
+ViennaExtendedExplicitOperationDefinitionNode >> transparencyCheck [
+
+	
 ]
 
 { #category : 'accessing' }

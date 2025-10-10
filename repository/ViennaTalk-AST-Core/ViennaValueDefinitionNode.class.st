@@ -214,12 +214,24 @@ ViennaValueDefinitionNode >> pattern: aViennaPatternNode [
 	self at: 2 put: aViennaPatternNode
 ]
 
+{ #category : 'purity and transparency' }
+ViennaValueDefinitionNode >> purityCheck [
+
+	
+]
+
 { #category : 'class membership' }
 ViennaValueDefinitionNode >> respondsTo: aSymbol [
 
 	aSymbol = #identifier: ifTrue: [
 		^ self hasOnlyOnePatternIdentifier ].
 	^ super respondsTo: aSymbol
+]
+
+{ #category : 'purity and transparency' }
+ViennaValueDefinitionNode >> transparencyCheck [
+
+	self expression transparencyCheck
 ]
 
 { #category : 'accessing' }

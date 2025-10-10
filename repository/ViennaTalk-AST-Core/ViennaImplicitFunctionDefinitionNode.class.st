@@ -355,6 +355,12 @@ ViennaImplicitFunctionDefinitionNode >> preFunction: aViennaPrePostFunctionDefin
 	self at: 6 put: aViennaPrePostFunctionDefinitionNode
 ]
 
+{ #category : 'purity and transparency' }
+ViennaImplicitFunctionDefinitionNode >> purityCheck [
+
+	
+]
+
 { #category : 'accessing' }
 ViennaImplicitFunctionDefinitionNode >> returnIdentifiers [
 
@@ -371,6 +377,13 @@ ViennaImplicitFunctionDefinitionNode >> returnType [
 ViennaImplicitFunctionDefinitionNode >> shortName [
 
 	^ self identifier
+]
+
+{ #category : 'purity and transparency' }
+ViennaImplicitFunctionDefinitionNode >> transparencyCheck [
+
+	self pre ifNotNil: #transparencyCheck.
+	self post ifNotNil: #transparencyCheck
 ]
 
 { #category : 'accessing' }

@@ -1,33 +1,34 @@
 Class {
-	#name : #ViennaTotalFunctionType,
-	#superclass : #ViennaCompoundType,
+	#name : 'ViennaTotalFunctionType',
+	#superclass : 'ViennaCompoundType',
 	#instVars : [
 		'returntype',
 		'argtypes'
 	],
-	#category : #'ViennaTalk-Type-Core'
+	#category : 'ViennaTalk-Type-Core',
+	#package : 'ViennaTalk-Type-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaTotalFunctionType class >> from: anArrayOfViennaType to: aViennaType [
 	^ self new
 		setArgtypes: anArrayOfViennaType returntype: aViennaType;
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTotalFunctionType class >> precedence [
 	^ 4
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaTotalFunctionType class >> withAll: anArrayOfViennaType with: aViennaType [
 	^ self new
 		setArgtypes: anArrayOfViennaType returntype: aViennaType;
 		yourself
 ]
 
-{ #category : #arithmetic }
+{ #category : 'arithmetic' }
 ViennaTotalFunctionType >> & aViennaType [
 
 	aViennaType isAnyType ifTrue: [ ^ self ].
@@ -44,12 +45,12 @@ ViennaTotalFunctionType >> & aViennaType [
 	^ ViennaType unit
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaTotalFunctionType >> = anObject [
 	^ self class = anObject class and: [ argtypes = anObject argtypes and: [ returntype = anObject returntype ] ]
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaTotalFunctionType >> >= aViennaType [
 
 	^ super >= aViennaType or: [
@@ -60,12 +61,12 @@ ViennaTotalFunctionType >> >= aViennaType [
 					  returntype >= aViennaType returntype ] ] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTotalFunctionType >> argtypes [
 	^ argtypes
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaTotalFunctionType >> asPartialFunctionType [
 
 	^ ViennaPartialFunctionType
@@ -73,27 +74,27 @@ ViennaTotalFunctionType >> asPartialFunctionType [
 		  with: self returntype
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaTotalFunctionType >> basicDo: aBlock [
 	^ self shouldNotImplement
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTotalFunctionType >> basicIncludes: anObject [
 	^ anObject isFunction and: [ argtypes size = anObject numArgs ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTotalFunctionType >> basicIsEnumerable [
 	^ false
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaTotalFunctionType >> hash [
 	^ argtypes hash bitXor: returntype hash
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTotalFunctionType >> instantiate: aDictionary [
 
 	^ self class
@@ -102,7 +103,7 @@ ViennaTotalFunctionType >> instantiate: aDictionary [
 		  with: (self returntype instantiate: aDictionary)
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTotalFunctionType >> isCompatibleWith: aViennaType [
 
 	^ (aViennaType isFunctionType and: [
@@ -114,19 +115,19 @@ ViennaTotalFunctionType >> isCompatibleWith: aViennaType [
 		  or: [ super isCompatibleWith: aViennaType ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTotalFunctionType >> isFunctionType [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaTotalFunctionType >> isTotalFunctionType [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTotalFunctionType >> name [
 
 	^ ('*' join:
@@ -137,7 +138,7 @@ ViennaTotalFunctionType >> name [
 	  , (returntype nameInPrecedence: self class precedence)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTotalFunctionType >> removeTypeHolders: aSet [
 	(aSet includes: self) ifTrue: [ ^self ].
 	aSet add: self.
@@ -145,12 +146,12 @@ ViennaTotalFunctionType >> removeTypeHolders: aSet [
 	returntype := returntype removeTypeHolders: aSet 
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTotalFunctionType >> returntype [
 	^ returntype
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaTotalFunctionType >> setArgtypes: anArrayOfViennaType returntype: aViennaType [
 	argtypes := anArrayOfViennaType.
 	returntype := aViennaType

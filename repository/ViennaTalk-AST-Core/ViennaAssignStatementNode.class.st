@@ -44,6 +44,18 @@ ViennaAssignStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
 	self expression freeIdentifiersExcept: aSet do: aBlock
 ]
 
+{ #category : 'purity and transparency' }
+ViennaAssignStatementNode >> isPureComponent [
+
+	^ false
+]
+
+{ #category : 'purity and transparency' }
+ViennaAssignStatementNode >> isTransparentComponent [
+
+	^ false
+]
+
 { #category : 'testing' }
 ViennaAssignStatementNode >> isViennaAssignStatementNode [
 

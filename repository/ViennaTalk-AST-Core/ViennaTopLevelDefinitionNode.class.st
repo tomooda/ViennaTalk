@@ -76,3 +76,15 @@ ViennaTopLevelDefinitionNode >> isViennaTopLevelDefinitionNode [
 
 	^ true
 ]
+
+{ #category : 'purity and transparency' }
+ViennaTopLevelDefinitionNode >> purityCheck [
+
+	^ self subclassResponsibility
+]
+
+{ #category : 'purity and transparency' }
+ViennaTopLevelDefinitionNode >> transparencyCheck [
+
+	^ self subclassResponsibility
+]

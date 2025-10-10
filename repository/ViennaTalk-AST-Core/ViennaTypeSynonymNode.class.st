@@ -188,10 +188,22 @@ ViennaTypeSynonymNode >> maximalType [
 	^ maximalType
 ]
 
+{ #category : 'purity and transparency' }
+ViennaTypeSynonymNode >> purityCheck [
+
+	
+]
+
 { #category : 'accessing-definitions' }
 ViennaTypeSynonymNode >> shortName [
 
 	^ self identifier
+]
+
+{ #category : 'purity and transparency' }
+ViennaTypeSynonymNode >> transparencyCheck [
+
+	self inv ifNotNil: #transparencyCheck
 ]
 
 { #category : 'accessing' }

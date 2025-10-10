@@ -206,10 +206,22 @@ ViennaRecordTypeDefinitionNode >> maximalType [
 	^ maximalType
 ]
 
+{ #category : 'purity and transparency' }
+ViennaRecordTypeDefinitionNode >> purityCheck [
+
+	
+]
+
 { #category : 'accessing-definitions' }
 ViennaRecordTypeDefinitionNode >> shortName [
 
 	^ self identifier
+]
+
+{ #category : 'purity and transparency' }
+ViennaRecordTypeDefinitionNode >> transparencyCheck [
+
+	self inv ifNotNil: #transparencyCheck
 ]
 
 { #category : 'accessing' }

@@ -1,14 +1,15 @@
 Class {
-	#name : #ViennaCompositeType,
-	#superclass : #ViennaCompoundType,
-	#type : #variable,
+	#name : 'ViennaCompositeType',
+	#superclass : 'ViennaCompoundType',
+	#type : 'variable',
 	#instVars : [
 		'constructorName'
 	],
-	#category : #'ViennaTalk-Type-Core'
+	#category : 'ViennaTalk-Type-Core',
+	#package : 'ViennaTalk-Type-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaCompositeType class >> constructorName: aString withAll: anArrayOfFieldNameAndEqualityAbstractionAndType [
 	| composite |
 	composite := self new: anArrayOfFieldNameAndEqualityAbstractionAndType size.
@@ -17,12 +18,12 @@ ViennaCompositeType class >> constructorName: aString withAll: anArrayOfFieldNam
 	^ composite
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCompositeType class >> precedence [
 	^ 6
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaCompositeType >> = anObject [
 	^ self class = anObject class
 		and: [ 
@@ -30,17 +31,17 @@ ViennaCompositeType >> = anObject [
 				and: [ (1 to: self size) allSatisfy: [ :i | (self at: i) = (anObject at: i) ] ] ]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaCompositeType >> applyTo: anArray [
 	^ self valueWithArguments: anArray
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCompositeType >> basetypeAt: anIndex [
 	^ (self at: anIndex) third
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCompositeType >> basetypeAtName: aString ifAbsent: errorBlock [
 
 	1 to: self size do: [ :index |
@@ -48,14 +49,14 @@ ViennaCompositeType >> basetypeAtName: aString ifAbsent: errorBlock [
 	^ errorBlock value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCompositeType >> basetypes: anArrayOfViennaType [
 
 	1 to: self size do: [ :index |
 	self at: index put: (anArrayOfViennaType at: index) ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaCompositeType >> basicDo: aBlock [
 	| blockGenerator block |
 	blockGenerator := [ :outerCollection :b | [ :v | outerCollection do: [ :outerValue | b value: (v copyWith: outerValue) ] ] ].
@@ -64,7 +65,7 @@ ViennaCompositeType >> basicDo: aBlock [
 	(self basetypeAt: 1) do: [ :v | block value: (Array with: v) ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaCompositeType >> basicIncludes: anObject [
 	((anObject isKindOf: ViennaComposite)
 		and: [ constructorName = anObject constructorName and: [ self size = anObject size ] ])
@@ -75,7 +76,7 @@ ViennaCompositeType >> basicIncludes: anObject [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaCompositeType >> basicIsEnumerable [
 	1 to: self size do: [ :index | 
 		(self basetypeAt: index) isEnumerable
@@ -83,27 +84,27 @@ ViennaCompositeType >> basicIsEnumerable [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCompositeType >> constructorName [
 	^ constructorName
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaCompositeType >> fieldsCollect: aBlock [
 	^ (1 to: self size) collect: [ :index | aBlock valueWithArguments: (self at: index) ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaCompositeType >> fieldsDo: aBlock [
 	1 to: self size do: [ :index | aBlock valueWithArguments: (self at: index) ]
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaCompositeType >> hash [
 	^ (1 to: self size) inject: constructorName hash into: [ :hash :field | hash bitXor: field hash ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaCompositeType >> includesField: aString [
 
 	1 to: self size do: [ :index |
@@ -111,7 +112,7 @@ ViennaCompositeType >> includesField: aString [
 	^ false
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaCompositeType >> indicesAndFieldsDo: aBlock [
 	1 to: self size do: [ :index | 
 		| field |
@@ -123,7 +124,7 @@ ViennaCompositeType >> indicesAndFieldsDo: aBlock [
 			value: field third ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCompositeType >> instantiate: aDictionary [
 
 	^ self class
@@ -135,13 +136,13 @@ ViennaCompositeType >> instantiate: aDictionary [
 					   (t instantiate: aDictionary) } ])
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaCompositeType >> isCompositeType [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCompositeType >> name [
 	^ 'compose ' , constructorName , ' of '
 		,
@@ -159,12 +160,12 @@ ViennaCompositeType >> name [
 												ifFalse: [ '' ]) ]) , fieldType name ])) , ' end'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCompositeType >> numFields [
 	^ self size
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaCompositeType >> removeTypeHolders: aSet [
 	(aSet includes: self) ifTrue: [ ^self ].
 	aSet add: self.
@@ -174,32 +175,32 @@ ViennaCompositeType >> removeTypeHolders: aSet [
 		field at: 3 put: ((field at: 3) removeTypeHolders: aSet) ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaCompositeType >> setConstructorName: aString [
 	constructorName := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCompositeType >> shortName [
 	^ constructorName
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaCompositeType >> value: anObject [
 	^ self valueWithArguments: (Array with: anObject)
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaCompositeType >> value: anObject1 value: anObject2 [
 	^ self valueWithArguments: (Array with: anObject1 with: anObject2)
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaCompositeType >> value: anObject1 value: anObject2 value: anObject3 [
 	^ self valueWithArguments: (Array with: anObject1 with: anObject2 with: anObject3)
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaCompositeType >> value: anObject1 value: anObject2 value: anObject3 value: anObject4 [
 	^ self
 		valueWithArguments:
@@ -210,7 +211,7 @@ ViennaCompositeType >> value: anObject1 value: anObject2 value: anObject3 value:
 				with: anObject4)
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaCompositeType >> valueWithArguments: anArray [
 	| composite |
 	composite := ViennaComposite constructorName: constructorName withAll: anArray.

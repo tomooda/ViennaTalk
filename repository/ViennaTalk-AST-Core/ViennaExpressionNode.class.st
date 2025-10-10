@@ -36,28 +36,6 @@ ViennaExpressionNode >> isAssignee [
 	^ false
 ]
 
-{ #category : 'typechecking' }
-ViennaExpressionNode >> isPureExpression [
-
-	self allDescendantsSuchThat: #isViennaNameNode do: [ :name |
-			name resolve
-				ifNil: [ ^ false ]
-				ifNotNil: [ :defNode |
-				defNode isPureComponent ifFalse: [ ^ false ] ] ].
-	^ true
-]
-
-{ #category : 'typechecking' }
-ViennaExpressionNode >> isTransparentExpression [
-
-	self allDescendantsSuchThat: #isViennaNameNode do: [ :name |
-			name resolve
-				ifNil: [ ^ false ]
-				ifNotNil: [ :defNode |
-				defNode isTransparentComponent ifFalse: [ ^ false ] ] ].
-	^ true
-]
-
 { #category : 'testing' }
 ViennaExpressionNode >> isViennaExpressionNode [
 	^ true
@@ -79,6 +57,26 @@ ViennaExpressionNode >> maximalType: aViennaType [
 			  signal:
 				  'Type mismatch: expected ' , aViennaType printString
 				  , ' but actual ' , maximalType printString ]
+]
+
+{ #category : 'purity and transparency' }
+ViennaExpressionNode >> purityCheck [
+
+	self allDescendantsSuchThat: #isViennaNameNode do: [ :name |
+			name resolve ifNotNil: [ :defNode |
+				defNode isPureComponent ifFalse: [
+					ViennaPurityError signalOn: name ] ] ].
+	^ true
+]
+
+{ #category : 'purity and transparency' }
+ViennaExpressionNode >> transparencyCheck [
+
+	self allDescendantsSuchThat: #isViennaNameNode do: [ :name |
+			name resolve ifNotNil: [ :defNode |
+					defNode isTransparentComponent ifFalse: [
+						ViennaTransparencyError signalOn: name ] ] ].
+	^ true
 ]
 
 { #category : 'typechecking' }

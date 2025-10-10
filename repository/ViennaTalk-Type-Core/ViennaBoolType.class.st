@@ -1,41 +1,42 @@
 Class {
-	#name : #ViennaBoolType,
-	#superclass : #ViennaBasicType,
-	#category : #'ViennaTalk-Type-Core'
+	#name : 'ViennaBoolType',
+	#superclass : 'ViennaBasicType',
+	#category : 'ViennaTalk-Type-Core',
+	#package : 'ViennaTalk-Type-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaBoolType class >> precedence [
 	^ 6
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaBoolType >> = anObject [
 	^ self class = anObject class
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaBoolType >> basicDo: aBlock [
 	aBlock value: true.
 	aBlock value: false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaBoolType >> basicIncludes: anObject [
 	^ anObject = true or: [ anObject = false ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaBoolType >> basicIsEnumerable [
 	^ true
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaBoolType >> hash [
 	^ self class hash
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaBoolType >> name [
 	^ 'bool'
 ]

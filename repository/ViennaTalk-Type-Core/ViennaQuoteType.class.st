@@ -1,66 +1,67 @@
 Class {
-	#name : #ViennaQuoteType,
-	#superclass : #ViennaBasicType,
+	#name : 'ViennaQuoteType',
+	#superclass : 'ViennaBasicType',
 	#instVars : [
 		'symbol'
 	],
-	#category : #'ViennaTalk-Type-Core'
+	#category : 'ViennaTalk-Type-Core',
+	#package : 'ViennaTalk-Type-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaQuoteType class >> current [
 
 	^ self shouldNotImplement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaQuoteType class >> precedence [
 	^ 6
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaQuoteType class >> with: aSymbol [
 	^ self new
 		setSymbol: aSymbol;
 		yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaQuoteType >> = anObject [
 	^ self class = anObject class and: [ symbol == anObject symbol ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaQuoteType >> basicDo: aBlock [
 	aBlock value: symbol
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaQuoteType >> basicIncludes: anObject [
 	^ symbol == anObject
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaQuoteType >> basicIsEnumerable [
 	^ true
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaQuoteType >> hash [
 	^ symbol hash
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaQuoteType >> name [
 	^ '<', symbol asString, '>'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaQuoteType >> setSymbol: aSymbol [
 	symbol := aSymbol asSymbol
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaQuoteType >> symbol [
 	^ symbol
 ]

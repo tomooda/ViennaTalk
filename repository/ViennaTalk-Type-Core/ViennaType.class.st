@@ -1,60 +1,61 @@
 Class {
-	#name : #ViennaType,
-	#superclass : #Object,
+	#name : 'ViennaType',
+	#superclass : 'Object',
 	#instVars : [
 		'runtimeSet'
 	],
-	#category : #'ViennaTalk-Type-Core'
+	#category : 'ViennaTalk-Type-Core',
+	#package : 'ViennaTalk-Type-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaType class >> any [
 	^ ViennaAnyType current
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaType class >> bool [
 	^ ViennaBoolType current
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaType class >> char [
 	^ ViennaCharType current
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaType class >> compose: aString of: anArray [
 	^ ViennaCompositeType constructorName: aString withAll: anArray
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaType class >> inmap: aViennaType1 to: aViennaType2 [
 	^ ViennaInmapType with: aViennaType1 with: aViennaType2
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaType class >> int [
 
 	^ ViennaIntType current
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaType class >> map: aViennaType1 to: aViennaType2 [
 	^ ViennaMapType with: aViennaType1 with: aViennaType2
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaType class >> nat [
 
 	^ ViennaNatType current
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaType class >> nat1 [
 	^ ViennaNat1Type current
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaType class >> normalFormUnion: aCollectionOfViennaType [
 
 	^ aCollectionOfViennaType
@@ -62,7 +63,7 @@ ViennaType class >> normalFormUnion: aCollectionOfViennaType [
 		  into: [ :union :type | union + type ]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaType class >> normalFormUnion: aCollectionOfViennaType ifUnit: aBlock [
 
 	| union |
@@ -72,33 +73,33 @@ ViennaType class >> normalFormUnion: aCollectionOfViennaType ifUnit: aBlock [
 		  ifFalse: [ union ]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaType class >> operation: anArrayOfViennaType to: aViennaType [
 	^ ViennaOperationType withAll: anArrayOfViennaType with: aViennaType
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaType class >> option: aViennaType [
 	^ ViennaOptionType with: aViennaType
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaType class >> parametric: aString [
 
 	^ ViennaParametricType with: aString
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaType class >> partialFunction: anArrayOfViennaType to: aViennaType [
 	^ ViennaPartialFunctionType withAll: anArrayOfViennaType with: aViennaType
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaType class >> precedence [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaType class >> product: anArrayOfViennaType [
 
 	^ (anArrayOfViennaType anySatisfy: #isUnitType)
@@ -110,55 +111,55 @@ ViennaType class >> product: anArrayOfViennaType [
 					  ifFalse: [ ViennaProductType withAll: anArrayOfViennaType ] ] ]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaType class >> quote: aString [
 
 	^ ViennaQuoteType with: aString asSymbol
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaType class >> rat [
 	^ ViennaRatType current
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaType class >> real [
 
 	^ ViennaRealType current
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaType class >> seq1Of: aViennaType [
 	^ ViennaSeq1Type with: aViennaType
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaType class >> seqOf: aViennaType [
 	^ ViennaSeqType with: aViennaType
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaType class >> set1Of: aViennaType [
 	^ ViennaSet1Type with: aViennaType
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaType class >> setOf: aViennaType [
 	^ ViennaSetType with: aViennaType
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaType class >> token [
 
 	^ ViennaTokenType current
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaType class >> totalFunction: anArrayOfViennaType to: aViennaType [
 	^ ViennaTotalFunctionType withAll: anArrayOfViennaType with: aViennaType
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaType class >> union: anArrayOfViennaType [
 
 	^ anArrayOfViennaType ifEmpty: [ self unit ] ifNotEmpty: [
@@ -167,13 +168,13 @@ ViennaType class >> union: anArrayOfViennaType [
 			  ifFalse: [ ViennaUnionType withAll: anArrayOfViennaType ] ]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaType class >> unit [
 
 	^ ViennaUnitType current
 ]
 
-{ #category : #arithmetic }
+{ #category : 'arithmetic' }
 ViennaType >> & aViennaType [
 
 	^ ViennaType normalFormUnion: (Array streamContents: [ :stream |
@@ -184,7 +185,7 @@ ViennaType >> & aViennaType [
 						   ifFalse: [ type2 >= type1 ifTrue: [ stream nextPut: type1 ] ] ] ] ])
 ]
 
-{ #category : #arithmetic }
+{ #category : 'arithmetic' }
 ViennaType >> * aViennaType [
 
 	^ aViennaType isUnitType
@@ -192,7 +193,7 @@ ViennaType >> * aViennaType [
 		  ifFalse: [ ViennaProductType with: self with: aViennaType ]
 ]
 
-{ #category : #arithmetic }
+{ #category : 'arithmetic' }
 ViennaType >> + aViennaType [
 
 	^ (aViennaType isUnitType or: [ self >= aViennaType ])
@@ -206,7 +207,7 @@ ViennaType >> + aViennaType [
 						  ifFalse: [ self | aViennaType ] ] ]
 ]
 
-{ #category : #arithmetic }
+{ #category : 'arithmetic' }
 ViennaType >> +> aViennaType [
 
 	^ aViennaType isUnitType
@@ -217,7 +218,7 @@ ViennaType >> +> aViennaType [
 				  with: aViennaType ]
 ]
 
-{ #category : #arithmetic }
+{ #category : 'arithmetic' }
 ViennaType >> -> aViennaType [
 
 	^ aViennaType isUnitType
@@ -228,27 +229,27 @@ ViennaType >> -> aViennaType [
 				  with: aViennaType ]
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaType >> < aViennaType [
 	^ self ~= aViennaType and: [ aViennaType >= self ]
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaType >> <= aViennaType [
 	^ aViennaType >= self
 ]
 
-{ #category : #arithmetic }
+{ #category : 'arithmetic' }
 ViennaType >> ==> aViennaType [
 	^ ViennaOperationType withAll: (Array with: self) with: aViennaType
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaType >> > aViennaType [
 	^ self ~= aViennaType and: [ self >= aViennaType ]
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaType >> >= aViennaType [
 
 	^ self = aViennaType or: [
@@ -257,7 +258,7 @@ ViennaType >> >= aViennaType [
 				  self >= aViennaType basetype ] ] ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaType >> allSatisfy: aBlock [
 	self
 		do: [ :value | 
@@ -266,7 +267,7 @@ ViennaType >> allSatisfy: aBlock [
 	^ true
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaType >> anySatisfy: aBlock [
 	self
 		do: [ :value | 
@@ -275,32 +276,32 @@ ViennaType >> anySatisfy: aBlock [
 	^ false
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaType >> asTypeHolder [
 	^ ViennaTypeHolder on: self
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaType >> basicDo: aBlock [
 	^ self subclassResponsibility
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaType >> basicIncludes: anObject [
 	^ self subclassResponsibility
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaType >> basicIsEnumerable [
 	^ self subclassResponsibility
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaType >> collect: aBlock [
 	^ Array new: 4 streamContents: [ :stream | self do: [ :value | stream nextPut: (aBlock value: value) ] ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaType >> detect: aBlock [
 	self
 		do: [ :value | 
@@ -309,7 +310,7 @@ ViennaType >> detect: aBlock [
 	^ NotFound signal
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaType >> detect: aBlock ifNone: errorBlock [
 	self
 		do: [ :value | 
@@ -318,69 +319,69 @@ ViennaType >> detect: aBlock ifNone: errorBlock [
 	^ errorBlock value
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaType >> do: aBlock [
 	runtimeSet ifNotNil: [ runtimeSet do: aBlock ] ifNil: [ self basicDo: aBlock ]
 ]
 
-{ #category : #controling }
+{ #category : 'controling' }
 ViennaType >> ifNotUnit: aBlock [
 
 	^ aBlock cull: self
 ]
 
-{ #category : #controling }
+{ #category : 'controling' }
 ViennaType >> ifNotUnit: aBlock ifUnit: anotherBlock [
 
 	^ aBlock cull: self
 ]
 
-{ #category : #controling }
+{ #category : 'controling' }
 ViennaType >> ifUnit: aBlock [
 
 	
 ]
 
-{ #category : #controling }
+{ #category : 'controling' }
 ViennaType >> ifUnit: aBlock ifNotUnit: anotherBlock [
 
 	^ anotherBlock cull: self
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaType >> includes: anObject [
 	^ runtimeSet ifNotNil: [ runtimeSet includes: anObject ] ifNil: [ self basicIncludes: anObject ]
 ]
 
-{ #category : #arithmetic }
+{ #category : 'arithmetic' }
 ViennaType >> inmapTo: aViennaType [
 	^ ViennaInmapType with: self with: aViennaType
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaType >> instantiate: aDictionary [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #arithmetic }
+{ #category : 'arithmetic' }
 ViennaType >> inv: aBlock [
 	^ ViennaConstrainedType with: self with: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaType >> isAnyType [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaType >> isChoiceType [
 
 	^ self isOptionType or: [ self isUnionType ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaType >> isCompatibleWith: aViennaType [
 
 	^ aViennaType isAnyType or: [
@@ -389,170 +390,170 @@ ViennaType >> isCompatibleWith: aViennaType [
 				  and: [ aViennaType isCompatibleWith: self ] ] ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaType >> isCompositeType [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaType >> isConstrainedType [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaType >> isEnumerable [
 	^ runtimeSet notNil or: [ self basicIsEnumerable ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaType >> isFunctionType [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaType >> isInmapType [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaType >> isIntType [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaType >> isMapType [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaType >> isNat1Type [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaType >> isNatType [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaType >> isOperationType [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaType >> isOptionType [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaType >> isProductType [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaType >> isRealType [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaType >> isSeq1Type [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaType >> isSeqType [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaType >> isSet1Type [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaType >> isSetType [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaType >> isTotalFunctionType [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaType >> isTypeHolder [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaType >> isUnionType [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaType >> isUnitType [
 
 	^ false
 ]
 
-{ #category : #arithmetic }
+{ #category : 'arithmetic' }
 ViennaType >> mapTo: aViennaType [
 	^ ViennaMapType with: self with: aViennaType
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaType >> max [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaType >> max: aNumber [
 	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaType >> min [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaType >> min: aNumber [
 	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaType >> name [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaType >> nameInPrecedence: anInteger [
 	^ self precedence < anInteger
 		ifTrue: [ '(' , self shortName , ')' ]
 		ifFalse: [ self shortName ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaType >> notUnitType [
 
 	^ self isUnitType not
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaType >> onlyOneSatisfy: aBlock [
 	"Evaluate aBlock with the elements of the receiver.
 	If aBlock returns true for the only one element return true.
@@ -570,63 +571,63 @@ ViennaType >> onlyOneSatisfy: aBlock [
 	^ found
 ]
 
-{ #category : #arithmetic }
+{ #category : 'arithmetic' }
 ViennaType >> optional [
 	^ ViennaOptionType with: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaType >> possibleTypes [
 
 	^ Array streamContents: [ :stream |
 		  self possibleTypesDo: [ :type | stream nextPut: type ] ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaType >> possibleTypesDo: aBlock [
 
 	aBlock value: self
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaType >> possibleTypesSuchThat: conditionBlock do: aBlock [
 
 	self possibleTypesDo: [ :type |
 		(conditionBlock value: type) ifTrue: [ aBlock value: type ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaType >> precedence [
 	^ self class precedence
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 ViennaType >> printOn: aStream [
 	aStream nextPutAll: self name
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaType >> removeTypeHolders [
 	^ self removeTypeHolders: IdentitySet new
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaType >> removeTypeHolders: aSet [
 	aSet add: self.
 	^ self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaType >> runtimeSet [
 	^ runtimeSet
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaType >> runtimeSet: aCollection [
 	runtimeSet := aCollection
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaType >> select: aBlock [
 	^ Array
 		new: 4
@@ -637,32 +638,32 @@ ViennaType >> select: aBlock [
 						ifTrue: [ stream nextPut: value ] ] ]
 ]
 
-{ #category : #arithmetic }
+{ #category : 'arithmetic' }
 ViennaType >> seq [
 	^ ViennaSeqType with: self
 ]
 
-{ #category : #arithmetic }
+{ #category : 'arithmetic' }
 ViennaType >> seq1 [
 	^ ViennaSeq1Type with: self
 ]
 
-{ #category : #arithmetic }
+{ #category : 'arithmetic' }
 ViennaType >> set [
 	^ ViennaSetType with: self
 ]
 
-{ #category : #arithmetic }
+{ #category : 'arithmetic' }
 ViennaType >> set1 [
 	^ ViennaSet1Type with: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaType >> shortName [
 	^ self name
 ]
 
-{ #category : #arithmetic }
+{ #category : 'arithmetic' }
 ViennaType >> | aViennaType [
 	^ ViennaUnionType with: self with: aViennaType
 ]

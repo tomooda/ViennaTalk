@@ -1,25 +1,26 @@
 Class {
-	#name : #ViennaOptionType,
-	#superclass : #ViennaCompoundType,
+	#name : 'ViennaOptionType',
+	#superclass : 'ViennaCompoundType',
 	#instVars : [
 		'basetype'
 	],
-	#category : #'ViennaTalk-Type-Core'
+	#category : 'ViennaTalk-Type-Core',
+	#package : 'ViennaTalk-Type-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaOptionType class >> precedence [
 	^ 6
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaOptionType class >> with: aViennaType [
 	^ self new
 		setBasetype: aViennaType;
 		yourself
 ]
 
-{ #category : #arithmetic }
+{ #category : 'arithmetic' }
 ViennaOptionType >> & aViennaType [
 
 	^ aViennaType isAnyType
@@ -30,61 +31,61 @@ ViennaOptionType >> & aViennaType [
 				  ifFalse: [ basetype & aViennaType ] ]
 ]
 
-{ #category : #arithmetic }
+{ #category : 'arithmetic' }
 ViennaOptionType >> + aViennaType [
 
 	^ (self basetype + aViennaType) optional
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaOptionType >> = anObject [
 	^ self class = anObject class and: [ basetype = anObject basetype ]
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaOptionType >> >= aViennaType [
 	^ super >= aViennaType or: [ basetype >= aViennaType ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaOptionType >> basetype [
 	^ basetype
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaOptionType >> basicDo: aBlock [
 	basetype do: aBlock.
 	aBlock value: nil
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaOptionType >> basicIncludes: anObject [
 	^ anObject isNil or: [ basetype includes: anObject ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaOptionType >> basicIsEnumerable [
 	^ basetype isEnumerable
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaOptionType >> hash [
 	^ basetype hash bitXor: 16rffff
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaOptionType >> instantiate: aDictionary [
 
 	^ self class with: (self basetype instantiate: aDictionary)
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaOptionType >> isChoiceType [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaOptionType >> isCompatibleWith: aViennaType [
 
 	^ aViennaType isOptionType or: [
@@ -92,31 +93,31 @@ ViennaOptionType >> isCompatibleWith: aViennaType [
 			  super isCompatibleWith: aViennaType ] ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaOptionType >> isOptionType [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaOptionType >> name [
 
 	^ '[' , basetype name , ']'
 ]
 
-{ #category : #arithmetic }
+{ #category : 'arithmetic' }
 ViennaOptionType >> optional [
 	^ self
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaOptionType >> possibleTypesDo: aBlock [
 
 	self basetype possibleTypesDo: aBlock.
 	aBlock value: ViennaType unit optional
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 ViennaOptionType >> printOn: aStream [
 
 	basetype isUnitType
@@ -124,14 +125,14 @@ ViennaOptionType >> printOn: aStream [
 		ifFalse: [ super printOn: aStream ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaOptionType >> removeTypeHolders: aSet [
 	(aSet includes: self) ifTrue: [ ^self ].
 	aSet add: self.
 	basetype := basetype removeTypeHolders: aSet
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaOptionType >> setBasetype: aViennaType [
 	basetype := aViennaType
 ]

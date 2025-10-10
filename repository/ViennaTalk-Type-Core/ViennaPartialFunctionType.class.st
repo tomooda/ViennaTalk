@@ -1,26 +1,27 @@
 Class {
-	#name : #ViennaPartialFunctionType,
-	#superclass : #ViennaCompoundType,
+	#name : 'ViennaPartialFunctionType',
+	#superclass : 'ViennaCompoundType',
 	#instVars : [
 		'returntype',
 		'argtypes'
 	],
-	#category : #'ViennaTalk-Type-Core'
+	#category : 'ViennaTalk-Type-Core',
+	#package : 'ViennaTalk-Type-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaPartialFunctionType class >> precedence [
 	^ 4
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaPartialFunctionType class >> withAll: anArrayOfViennaType with: aViennaType [
 	^ self new
 		setArgtypes: anArrayOfViennaType returntype: aViennaType;
 		yourself
 ]
 
-{ #category : #arithmetic }
+{ #category : 'arithmetic' }
 ViennaPartialFunctionType >> & aViennaType [
 
 	aViennaType isAnyType ifTrue: [ ^ self ].
@@ -35,12 +36,12 @@ ViennaPartialFunctionType >> & aViennaType [
 	^ ViennaType unit
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaPartialFunctionType >> = anObject [
 	^ self class = anObject class and: [ argtypes = anObject argtypes and: [ returntype = anObject returntype ] ]
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaPartialFunctionType >> >= aViennaType [
 
 	^ super >= aViennaType or: [
@@ -52,38 +53,38 @@ ViennaPartialFunctionType >> >= aViennaType [
 					  returntype >= aViennaType returntype ] ] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaPartialFunctionType >> argtypes [
 	^ argtypes
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaPartialFunctionType >> asPartialFunctionType [
 
 	^ self
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaPartialFunctionType >> basicDo: aBlock [
 	^ self shouldNotImplement
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaPartialFunctionType >> basicIncludes: anObject [
 	^ anObject isFunction and: [ argtypes size = anObject numArgs ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaPartialFunctionType >> basicIsEnumerable [
 	^ false
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaPartialFunctionType >> hash [
 	^ argtypes hash bitXor: returntype hash
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaPartialFunctionType >> instantiate: aDictionary [
 
 	^ self class
@@ -92,7 +93,7 @@ ViennaPartialFunctionType >> instantiate: aDictionary [
 		  with: (self returntype instantiate: aDictionary)
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaPartialFunctionType >> isCompatibleWith: aViennaType [
 
 	^ (aViennaType isFunctionType and: [
@@ -104,13 +105,13 @@ ViennaPartialFunctionType >> isCompatibleWith: aViennaType [
 		  or: [ super isCompatibleWith: aViennaType ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaPartialFunctionType >> isFunctionType [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaPartialFunctionType >> name [
 
 	^ ('*' join:
@@ -121,7 +122,7 @@ ViennaPartialFunctionType >> name [
 	  , (returntype nameInPrecedence: self class precedence)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaPartialFunctionType >> removeTypeHolders: aSet [
 	(aSet includes: self) ifTrue: [ ^self ].
 	aSet add: self.
@@ -129,12 +130,12 @@ ViennaPartialFunctionType >> removeTypeHolders: aSet [
 	returntype := returntype removeTypeHolders: aSet 
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaPartialFunctionType >> returntype [
 	^ returntype
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaPartialFunctionType >> setArgtypes: anArrayOfViennaType returntype: aViennaType [
 	argtypes := anArrayOfViennaType.
 	returntype := aViennaType
