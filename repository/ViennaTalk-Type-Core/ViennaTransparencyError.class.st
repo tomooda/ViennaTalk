@@ -1,6 +1,6 @@
 Class {
 	#name : 'ViennaTransparencyError',
 	#superclass : 'ViennaSemanticError',
-	#category : 'ViennaTalk-AST-Core',
-	#package : 'ViennaTalk-AST-Core'
+	#category : 'ViennaTalk-Type-Core',
+	#package : 'ViennaTalk-Type-Core'
 }

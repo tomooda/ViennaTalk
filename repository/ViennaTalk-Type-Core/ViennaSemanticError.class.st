@@ -4,8 +4,8 @@ Class {
 	#instVars : [
 		'node'
 	],
-	#category : 'ViennaTalk-AST-Core',
-	#package : 'ViennaTalk-AST-Core'
+	#category : 'ViennaTalk-Type-Core',
+	#package : 'ViennaTalk-Type-Core'
 }
 
 { #category : 'signaling' }
