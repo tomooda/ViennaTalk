@@ -38,6 +38,15 @@ ViennaExecutionTraceCSVFormat >> open: aViennaExecutionTraceRecorder withTitle: 
 ]
 
 { #category : 'formatting' }
+ViennaExecutionTraceCSVFormat >> writeAssert: aString on: aStream [
+
+	aStream
+		nextPutAll: 't,';
+		nextPutAll: (self escape: aString);
+		cr
+]
+
+{ #category : 'formatting' }
 ViennaExecutionTraceCSVFormat >> writeCall: aString module: anotherString args: anArray on: aStream [
 
 	aStream
@@ -104,4 +113,13 @@ ViennaExecutionTraceCSVFormat >> writeStateDiffBlock: aBlock on: aStream [
 				nextPutAll: ':=';
 				nextPutAll: (self escape: varAndValue value viennaString) ].
 	aStream cr
+]
+
+{ #category : 'formatting' }
+ViennaExecutionTraceCSVFormat >> writeTimeLabel: aString on: aStream [
+
+	aStream
+		nextPutAll: 't,';
+		nextPutAll: (self escape: aString);
+		cr
 ]

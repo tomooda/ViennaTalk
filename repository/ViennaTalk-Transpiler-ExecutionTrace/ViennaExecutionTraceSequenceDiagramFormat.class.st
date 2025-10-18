@@ -43,6 +43,12 @@ ViennaExecutionTraceSequenceDiagramFormat >> root: aString [
 ]
 
 { #category : 'formatting' }
+ViennaExecutionTraceSequenceDiagramFormat >> writeAssert: aString on: aStream [
+
+	
+]
+
+{ #category : 'formatting' }
 ViennaExecutionTraceSequenceDiagramFormat >> writeCall: aString module: anotherString args: anArray on: aStream [
 
 	| caller callee |
@@ -97,6 +103,12 @@ ViennaExecutionTraceSequenceDiagramFormat >> writeReturn: aString module: anothe
 
 { #category : 'formatting' }
 ViennaExecutionTraceSequenceDiagramFormat >> writeStateDiffBlock: aDictionary on: aStream [
+
+	
+]
+
+{ #category : 'formatting' }
+ViennaExecutionTraceSequenceDiagramFormat >> writeTimeLabel: aString on: aStream [
 
 	
 ]

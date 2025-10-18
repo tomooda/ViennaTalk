@@ -13,6 +13,12 @@ ViennaExecutionTraceFormat >> open: aViennaExecutionTraceRecorder withTitle: aSt
 ]
 
 { #category : 'formatting' }
+ViennaExecutionTraceFormat >> writeAssert: aString on: aStream [
+
+	^ self subclassResponsibility
+]
+
+{ #category : 'formatting' }
 ViennaExecutionTraceFormat >> writeCall: aString module: anotherString args: anArray on: aStream [
 
 	^ self subclassResponsibility
@@ -38,6 +44,12 @@ ViennaExecutionTraceFormat >> writeReturn: aString module: anotherString value: 
 
 { #category : 'formatting' }
 ViennaExecutionTraceFormat >> writeStateDiffBlock: aBlock on: aStream [
+
+	^ self subclassResponsibility
+]
+
+{ #category : 'formatting' }
+ViennaExecutionTraceFormat >> writeTimeLabel: aString on: aStream [
 
 	^ self subclassResponsibility
 ]

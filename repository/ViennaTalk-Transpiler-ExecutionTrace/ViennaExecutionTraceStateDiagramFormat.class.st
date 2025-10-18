@@ -151,6 +151,12 @@ ViennaExecutionTraceStateDiagramFormat >> transitionFrom: preStateString to: pos
 ]
 
 { #category : 'formatting' }
+ViennaExecutionTraceStateDiagramFormat >> writeAssert: aString on: aStream [
+
+	
+]
+
+{ #category : 'formatting' }
 ViennaExecutionTraceStateDiagramFormat >> writeCall: aString module: anotherString args: anArray on: aStream [
 
 	operationStack addLast: anotherString , '`' , aString
@@ -219,6 +225,12 @@ ViennaExecutionTraceStateDiagramFormat >> writeStateNamesOn: aStream [
 				nextPutAll: '" as ';
 				nextPutAll: name;
 				cr ]
+]
+
+{ #category : 'formatting' }
+ViennaExecutionTraceStateDiagramFormat >> writeTimeLabel: aString on: aStream [
+
+	
 ]
 
 { #category : 'formatting' }
