@@ -6,6 +6,34 @@ Class {
 }
 
 { #category : 'tests' }
+ViennaExecutionTraceRootEventTest >> testInitialEvents [
+
+	| event |
+	event := ViennaExecutionTraceRootEvent
+		         initial: {
+				         (ViennaExecutionTraceAssignmentEvent
+					          module: 'Foo'
+					          assignments: { ('quuux' -> nil) }).
+				         (ViennaExecutionTraceAssignmentEvent
+					          module: 'Bar'
+					          assignments: {
+							          ('baz' -> #quuux).
+							          ('quuux' -> 1) }) }
+		         events: {
+				         (ViennaExecutionTraceAssignmentEvent
+					          module: 'Foo'
+					          assignments: { ('quuux' -> #quuux) }).
+				         (ViennaExecutionTraceAssignmentEvent
+					          module: 'Bar'
+					          assignments: { ('baz' -> 'quuux') }) }.
+	self assert: event poststate equals: {
+			('Foo' -> { ('quuux' -> #quuux) } asOrderedDictionary).
+			('Bar' -> {
+				 ('baz' -> 'quuux').
+				 ('quuux' -> 1) } asOrderedDictionary) } asOrderedDictionary
+]
+
+{ #category : 'tests' }
 ViennaExecutionTraceRootEventTest >> testModulesAndAssignmentsDo [
 
 	| event |

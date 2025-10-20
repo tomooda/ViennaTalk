@@ -65,6 +65,18 @@ ViennaExecutionTraceRootEvent >> initialModulesAndAssignmentsDo: aBlock [
 	initial do: [ :assign | assign modulesAndAssignmentsDo: aBlock ]
 ]
 
+{ #category : 'accessing' }
+ViennaExecutionTraceRootEvent >> initialState [
+
+	| initialState |
+	initialState := OrderedDictionary new.
+	self initialModulesAndAssignmentsDo: [ :mod :var :val |
+			(initialState at: mod ifAbsentPut: [ OrderedDictionary new ])
+				at: var
+				put: val ].
+	^ initialState
+]
+
 { #category : 'testing' }
 ViennaExecutionTraceRootEvent >> isRootEvent [
 
@@ -95,10 +107,19 @@ ViennaExecutionTraceRootEvent >> postCopy [
 ]
 
 { #category : 'private' }
+ViennaExecutionTraceRootEvent >> poststateFromPrestate: aDictionary [
+
+	^ events inject: self initialState into: [ :state :event |
+			  event prestate: state.
+			  event poststate ]
+]
+
+{ #category : 'private' }
 ViennaExecutionTraceRootEvent >> setInitial: anArrayOfViennaExecutionTraceAssignmentEvents events: anArrayOfViennaExecutionTraceEvents [
 
 	initial := anArrayOfViennaExecutionTraceAssignmentEvents.
-	events := anArrayOfViennaExecutionTraceEvents
+	events := anArrayOfViennaExecutionTraceEvents.
+	self prestate: OrderedDictionary new
 ]
 
 { #category : 'accessing' }

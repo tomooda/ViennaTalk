@@ -94,6 +94,20 @@ ViennaExecutionTraceAssignmentEvent >> postCopy [
 ]
 
 { #category : 'private' }
+ViennaExecutionTraceAssignmentEvent >> poststateFromPrestate: aDictionary [
+
+	| moduleState |
+	moduleState := aDictionary
+		               at: module
+		               ifPresent: [ :state | state copy ]
+		               ifAbsent: [ OrderedDictionary new ].
+	self assignmentsDo: [ :var :val | moduleState at: var put: val ].
+	^ aDictionary copy
+		  at: module put: moduleState;
+		  yourself
+]
+
+{ #category : 'private' }
 ViennaExecutionTraceAssignmentEvent >> setModule: aString assignments: anArrayOfAssociation [
 
 	module := aString.

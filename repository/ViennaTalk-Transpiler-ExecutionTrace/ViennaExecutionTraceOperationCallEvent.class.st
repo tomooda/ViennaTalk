@@ -85,6 +85,14 @@ ViennaExecutionTraceOperationCallEvent >> postCopy [
 ]
 
 { #category : 'private' }
+ViennaExecutionTraceOperationCallEvent >> poststateFromPrestate: aDictionary [
+
+	^ events inject: aDictionary into: [ :state :event |
+			  event prestate: state.
+			  event poststate ]
+]
+
+{ #category : 'private' }
 ViennaExecutionTraceOperationCallEvent >> setModule: aString operation: anotherString arguments: anArray events: anArrayOfViennaExecutionTraceEvent [
 
 	module := aString.

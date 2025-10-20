@@ -84,6 +84,12 @@ ViennaExecutionTraceReturnEvent >> operation: aString [
 	operation := aString
 ]
 
+{ #category : 'private' }
+ViennaExecutionTraceReturnEvent >> poststateFromPrestate: aDictionary [
+
+	^ aDictionary
+]
+
 { #category : 'accessing' }
 ViennaExecutionTraceReturnEvent >> returnValue [
 

@@ -2,7 +2,8 @@ Class {
 	#name : 'ViennaExecutionTraceEvent',
 	#superclass : 'Object',
 	#instVars : [
-		'module'
+		'module',
+		'poststate'
 	],
 	#category : 'ViennaTalk-Transpiler-ExecutionTrace-Events',
 	#package : 'ViennaTalk-Transpiler-ExecutionTrace',
@@ -126,6 +127,24 @@ ViennaExecutionTraceEvent >> modulesAndAssignmentsDo: aBlock [
 	self globalWrites keysAndValuesDo: [ :mod :local |
 			local keysAndValuesDo: [ :var :val |
 				aBlock value: mod value: var value: val ] ]
+]
+
+{ #category : 'accessing' }
+ViennaExecutionTraceEvent >> poststate [
+
+	^ poststate
+]
+
+{ #category : 'private' }
+ViennaExecutionTraceEvent >> poststateFromPrestate: aDictionary [
+
+	^ self subclassResponsibility
+]
+
+{ #category : 'accessing' }
+ViennaExecutionTraceEvent >> prestate: aDictionary [
+
+	poststate := self poststateFromPrestate: aDictionary
 ]
 
 { #category : 'accessing' }
