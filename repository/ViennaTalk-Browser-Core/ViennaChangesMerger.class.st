@@ -305,10 +305,12 @@ ViennaChangesMerger >> remoteChanges: anArrayOfViennaTopLevelDefinitionNodeChang
 ViennaChangesMerger >> remoteDefinition [
 
 	^ self baseDefinition ifNotNil: [ :base |
-		  (remoteChanges
-			   detect: [ :change |
-			   change from = base or: [ change to == base ] ]
-			   ifNone: [ base ]) ifNotNil: [ :change | change to ] ]
+			  (remoteChanges
+				   detect: [ :change |
+				   change from = base or: [ change to == base ] ]
+				   ifNone: [ nil ])
+				  ifNotNil: [ :change | change to ]
+				  ifNil: [ base ] ]
 ]
 
 { #category : 'updating' }
