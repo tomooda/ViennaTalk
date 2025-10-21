@@ -17,6 +17,12 @@ ViennaExecutionTraceAssignmentEvent class >> module: aString assignments: anArra
 		  yourself
 ]
 
+{ #category : 'comparing' }
+ViennaExecutionTraceAssignmentEvent >> = anObject [
+
+	^ super = anObject and: [ assignments = anObject assignments ]
+]
+
 { #category : 'enumerating' }
 ViennaExecutionTraceAssignmentEvent >> allAssignmentChildrenDo: aBlock [
 
@@ -67,6 +73,12 @@ ViennaExecutionTraceAssignmentEvent >> globalWrites [
 	^ { (module -> assignments asOrderedDictionary) } asOrderedDictionary
 ]
 
+{ #category : 'comparing' }
+ViennaExecutionTraceAssignmentEvent >> hash [
+
+	^ super hash bitXor: assignments hash
+]
+
 { #category : 'accessing' }
 ViennaExecutionTraceAssignmentEvent >> iconName [
 
@@ -77,6 +89,14 @@ ViennaExecutionTraceAssignmentEvent >> iconName [
 ViennaExecutionTraceAssignmentEvent >> isAssignmentEvent [
 
 	^ true
+]
+
+{ #category : 'comparing' }
+ViennaExecutionTraceAssignmentEvent >> isEquivalentTo: aViennaExecutionTraceEvent under: aViennaExecutionTraceEquivalence [
+
+	^ aViennaExecutionTraceEquivalence
+		  betweenAssignments: self
+		  and: aViennaExecutionTraceEvent
 ]
 
 { #category : 'enumerating' }

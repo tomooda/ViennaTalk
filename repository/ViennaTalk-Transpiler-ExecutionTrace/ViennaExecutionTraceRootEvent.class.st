@@ -22,6 +22,15 @@ ViennaExecutionTraceRootEvent class >> initial: anArrayOfViennaExecutionTraceAss
 		  yourself
 ]
 
+{ #category : 'comparing' }
+ViennaExecutionTraceRootEvent >> = anObject [
+
+	^ super = anObject and: [
+			  specification = anObject specification and: [
+					  source = anObject source and: [
+						  events = anObject events and: [ initial = anObject initial ] ] ] ]
+]
+
 { #category : 'formatting' }
 ViennaExecutionTraceRootEvent >> applyToFormat: aViennaExecutionRecordFormat on: aStream before: aBlock after: anotherBlock [
 
@@ -45,6 +54,13 @@ ViennaExecutionTraceRootEvent >> children [
 ViennaExecutionTraceRootEvent >> events [
 
 	^ events
+]
+
+{ #category : 'comparing' }
+ViennaExecutionTraceRootEvent >> hash [
+
+	^ (((super hash bitXor: specification hash) bitXor: source hash)
+		   bitXor: events hash) bitXor: initial hash
 ]
 
 { #category : 'accessing' }
@@ -75,6 +91,14 @@ ViennaExecutionTraceRootEvent >> initialState [
 				at: var
 				put: val ].
 	^ initialState
+]
+
+{ #category : 'comparing' }
+ViennaExecutionTraceRootEvent >> isEquivalentTo: aViennaExecutionTraceEvent under: aViennaExecutionTraceEquivalence [
+
+	^ aViennaExecutionTraceEquivalence
+		  betweenRoots: self
+		  and: aViennaExecutionTraceEvent
 ]
 
 { #category : 'testing' }

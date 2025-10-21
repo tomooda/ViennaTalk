@@ -22,6 +22,14 @@ ViennaExecutionTraceOperationCallEvent class >> module: aString operation: anoth
 		  yourself
 ]
 
+{ #category : 'comparing' }
+ViennaExecutionTraceOperationCallEvent >> = anObject [
+
+	^ super = anObject and: [
+			  operation = anObject operation and: [
+				  arguments = anObject arguments and: [ events = anObject events ] ] ]
+]
+
 { #category : 'formatting' }
 ViennaExecutionTraceOperationCallEvent >> applyToFormat: aViennaExecutionRecordFormat on: aStream before: aBlock after: anotherBlock [
 
@@ -58,10 +66,25 @@ ViennaExecutionTraceOperationCallEvent >> events [
 	^ events
 ]
 
+{ #category : 'comparing' }
+ViennaExecutionTraceOperationCallEvent >> hash [
+
+	^ ((super hash bitXor: operation hash) bitXor: arguments hash)
+		  bitXor: events hash
+]
+
 { #category : 'accessing' }
 ViennaExecutionTraceOperationCallEvent >> iconName [
 
 	^ #redo
+]
+
+{ #category : 'comparing' }
+ViennaExecutionTraceOperationCallEvent >> isEquivalentTo: aViennaExecutionTraceEvent under: aViennaExecutionTraceEquivalence [
+
+	^ aViennaExecutionTraceEquivalence
+		  betweenOperationCalls: self
+		  and: aViennaExecutionTraceEvent
 ]
 
 { #category : 'testing' }

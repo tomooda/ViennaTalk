@@ -18,6 +18,14 @@ ViennaExecutionTraceReturnEvent class >> module: aString operation: anotherStrin
 		  yourself
 ]
 
+{ #category : 'comparing' }
+ViennaExecutionTraceReturnEvent >> = anObject [
+
+	^ super = anObject and: [
+			  operation = anObject operation and: [
+				  returnValue = anObject returnValue ] ]
+]
+
 { #category : 'enumerating' }
 ViennaExecutionTraceReturnEvent >> allAssignmentChildrenDo: aBlock [
 
@@ -54,10 +62,24 @@ ViennaExecutionTraceReturnEvent >> globalWrites [
 	^ OrderedDictionary new
 ]
 
+{ #category : 'comparing' }
+ViennaExecutionTraceReturnEvent >> hash [
+
+	^ (super hash bitXor: operation hash) bitXor: returnValue hash
+]
+
 { #category : 'accessing' }
 ViennaExecutionTraceReturnEvent >> iconName [
 
 	^ #undo
+]
+
+{ #category : 'comparing' }
+ViennaExecutionTraceReturnEvent >> isEquivalentTo: aViennaExecutionTraceEvent under: aViennaExecutionTraceEquivalence [
+
+	^ aViennaExecutionTraceEquivalence
+		  betweenReturns: self
+		  and: aViennaExecutionTraceEvent
 ]
 
 { #category : 'testing' }

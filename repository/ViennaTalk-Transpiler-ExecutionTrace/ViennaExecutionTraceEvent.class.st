@@ -16,6 +16,12 @@ ViennaExecutionTraceEvent class >> isAbstract [
 	^ self = ViennaExecutionTraceEvent
 ]
 
+{ #category : 'comparing' }
+ViennaExecutionTraceEvent >> = anObject [
+
+	^ self class = anObject class and: [ module = anObject module ]
+]
+
 { #category : 'enumerating' }
 ViennaExecutionTraceEvent >> allAssignmentChildrenDo: aBlock [
 
@@ -85,6 +91,12 @@ ViennaExecutionTraceEvent >> globalWrites [
 	^ globalWrites
 ]
 
+{ #category : 'comparing' }
+ViennaExecutionTraceEvent >> hash [
+
+	^ self class hash bitXor: module hash
+]
+
 { #category : 'accessing' }
 ViennaExecutionTraceEvent >> iconName [
 
@@ -95,6 +107,12 @@ ViennaExecutionTraceEvent >> iconName [
 ViennaExecutionTraceEvent >> isAssignmentEvent [
 
 	^ false
+]
+
+{ #category : 'comparing' }
+ViennaExecutionTraceEvent >> isEquivalentTo: aViennaExecutionTraceEvent under: aViennaExecutionTraceEquivalence [
+
+	^ self subclassResponsibility
 ]
 
 { #category : 'testing' }
