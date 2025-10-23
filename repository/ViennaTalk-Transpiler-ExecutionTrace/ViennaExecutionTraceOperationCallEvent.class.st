@@ -25,9 +25,7 @@ ViennaExecutionTraceOperationCallEvent class >> module: aString operation: anoth
 { #category : 'comparing' }
 ViennaExecutionTraceOperationCallEvent >> = anObject [
 
-	^ super = anObject and: [
-			  operation = anObject operation and: [
-				  arguments = anObject arguments and: [ events = anObject events ] ] ]
+	^ (self shallowEquals: anObject) and: [ events = anObject events ]
 ]
 
 { #category : 'formatting' }
@@ -69,22 +67,13 @@ ViennaExecutionTraceOperationCallEvent >> events [
 { #category : 'comparing' }
 ViennaExecutionTraceOperationCallEvent >> hash [
 
-	^ ((super hash bitXor: operation hash) bitXor: arguments hash)
-		  bitXor: events hash
+	^ self shallowHash bitXor: events hash
 ]
 
 { #category : 'accessing' }
 ViennaExecutionTraceOperationCallEvent >> iconName [
 
 	^ #redo
-]
-
-{ #category : 'comparing' }
-ViennaExecutionTraceOperationCallEvent >> isEquivalentTo: aViennaExecutionTraceEvent under: aViennaExecutionTraceEquivalence [
-
-	^ aViennaExecutionTraceEquivalence
-		  betweenOperationCalls: self
-		  and: aViennaExecutionTraceEvent
 ]
 
 { #category : 'testing' }
@@ -122,6 +111,20 @@ ViennaExecutionTraceOperationCallEvent >> setModule: aString operation: anotherS
 	operation := anotherString.
 	arguments := anArray.
 	events := anArrayOfViennaExecutionTraceEvent
+]
+
+{ #category : 'comparing' }
+ViennaExecutionTraceOperationCallEvent >> shallowEquals: anObject [
+
+	^ (super shallowEquals: anObject) and: [
+			  operation = anObject operation and: [
+				  arguments = anObject arguments  ]]
+]
+
+{ #category : 'comparing' }
+ViennaExecutionTraceOperationCallEvent >> shallowHash [
+
+	^ (super shallowHash bitXor: operation hash) bitXor: arguments hash
 ]
 
 { #category : 'accessing' }

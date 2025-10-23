@@ -19,7 +19,7 @@ ViennaExecutionTraceEvent class >> isAbstract [
 { #category : 'comparing' }
 ViennaExecutionTraceEvent >> = anObject [
 
-	^ self class = anObject class and: [ module = anObject module ]
+	^ self shallowEquals: anObject
 ]
 
 { #category : 'enumerating' }
@@ -77,6 +77,13 @@ ViennaExecutionTraceEvent >> copyWithinModule [
 ]
 
 { #category : 'enumerating' }
+ViennaExecutionTraceEvent >> do: aBlock [
+
+	aBlock value: self.
+	self children do: [ :event | event do: aBlock ]
+]
+
+{ #category : 'enumerating' }
 ViennaExecutionTraceEvent >> globalWrites [
 
 	| globalWrites |
@@ -94,7 +101,7 @@ ViennaExecutionTraceEvent >> globalWrites [
 { #category : 'comparing' }
 ViennaExecutionTraceEvent >> hash [
 
-	^ self class hash bitXor: module hash
+	^ self shallowHash
 ]
 
 { #category : 'accessing' }
@@ -107,12 +114,6 @@ ViennaExecutionTraceEvent >> iconName [
 ViennaExecutionTraceEvent >> isAssignmentEvent [
 
 	^ false
-]
-
-{ #category : 'comparing' }
-ViennaExecutionTraceEvent >> isEquivalentTo: aViennaExecutionTraceEvent under: aViennaExecutionTraceEquivalence [
-
-	^ self subclassResponsibility
 ]
 
 { #category : 'testing' }
@@ -163,6 +164,18 @@ ViennaExecutionTraceEvent >> poststateFromPrestate: aDictionary [
 ViennaExecutionTraceEvent >> prestate: aDictionary [
 
 	poststate := self poststateFromPrestate: aDictionary
+]
+
+{ #category : 'comparing' }
+ViennaExecutionTraceEvent >> shallowEquals: anObject [
+
+	^ self class = anObject class and: [ module = anObject module ]
+]
+
+{ #category : 'comparing' }
+ViennaExecutionTraceEvent >> shallowHash [
+
+	^ self class hash bitXor: module hash
 ]
 
 { #category : 'accessing' }

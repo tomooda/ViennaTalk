@@ -18,14 +18,6 @@ ViennaExecutionTraceReturnEvent class >> module: aString operation: anotherStrin
 		  yourself
 ]
 
-{ #category : 'comparing' }
-ViennaExecutionTraceReturnEvent >> = anObject [
-
-	^ super = anObject and: [
-			  operation = anObject operation and: [
-				  returnValue = anObject returnValue ] ]
-]
-
 { #category : 'enumerating' }
 ViennaExecutionTraceReturnEvent >> allAssignmentChildrenDo: aBlock [
 
@@ -62,24 +54,10 @@ ViennaExecutionTraceReturnEvent >> globalWrites [
 	^ OrderedDictionary new
 ]
 
-{ #category : 'comparing' }
-ViennaExecutionTraceReturnEvent >> hash [
-
-	^ (super hash bitXor: operation hash) bitXor: returnValue hash
-]
-
 { #category : 'accessing' }
 ViennaExecutionTraceReturnEvent >> iconName [
 
 	^ #undo
-]
-
-{ #category : 'comparing' }
-ViennaExecutionTraceReturnEvent >> isEquivalentTo: aViennaExecutionTraceEvent under: aViennaExecutionTraceEquivalence [
-
-	^ aViennaExecutionTraceEquivalence
-		  betweenReturns: self
-		  and: aViennaExecutionTraceEvent
 ]
 
 { #category : 'testing' }
@@ -130,6 +108,20 @@ ViennaExecutionTraceReturnEvent >> setModule: aString operation: anotherString r
 	module := aString.
 	operation := anotherString.
 	returnValue := anObject
+]
+
+{ #category : 'comparing' }
+ViennaExecutionTraceReturnEvent >> shallowEquals: anObject [
+
+	^ (super shallowEquals: anObject) and: [
+			  operation = anObject operation and: [
+				  returnValue = anObject returnValue ] ]
+]
+
+{ #category : 'comparing' }
+ViennaExecutionTraceReturnEvent >> shallowHash [
+
+	^ (super shallowHash bitXor: operation hash) bitXor: returnValue hash
 ]
 
 { #category : 'accessing' }

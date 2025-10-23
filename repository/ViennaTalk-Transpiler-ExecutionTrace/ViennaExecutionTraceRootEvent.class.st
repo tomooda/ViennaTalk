@@ -25,10 +25,7 @@ ViennaExecutionTraceRootEvent class >> initial: anArrayOfViennaExecutionTraceAss
 { #category : 'comparing' }
 ViennaExecutionTraceRootEvent >> = anObject [
 
-	^ super = anObject and: [
-			  specification = anObject specification and: [
-					  source = anObject source and: [
-						  events = anObject events and: [ initial = anObject initial ] ] ] ]
+	^ (self shallowEquals: anObject) and: [ events = anObject events ]
 ]
 
 { #category : 'formatting' }
@@ -59,8 +56,7 @@ ViennaExecutionTraceRootEvent >> events [
 { #category : 'comparing' }
 ViennaExecutionTraceRootEvent >> hash [
 
-	^ (((super hash bitXor: specification hash) bitXor: source hash)
-		   bitXor: events hash) bitXor: initial hash
+	^ self shallowHash bitXor: events hash
 ]
 
 { #category : 'accessing' }
@@ -91,14 +87,6 @@ ViennaExecutionTraceRootEvent >> initialState [
 				at: var
 				put: val ].
 	^ initialState
-]
-
-{ #category : 'comparing' }
-ViennaExecutionTraceRootEvent >> isEquivalentTo: aViennaExecutionTraceEvent under: aViennaExecutionTraceEquivalence [
-
-	^ aViennaExecutionTraceEquivalence
-		  betweenRoots: self
-		  and: aViennaExecutionTraceEvent
 ]
 
 { #category : 'testing' }
@@ -144,6 +132,21 @@ ViennaExecutionTraceRootEvent >> setInitial: anArrayOfViennaExecutionTraceAssign
 	initial := anArrayOfViennaExecutionTraceAssignmentEvents.
 	events := anArrayOfViennaExecutionTraceEvents.
 	self prestate: OrderedDictionary new
+]
+
+{ #category : 'comparing' }
+ViennaExecutionTraceRootEvent >> shallowEquals: anObject [
+
+	^ (super shallowEquals: anObject) and: [
+			  specification = anObject specification and: [
+				  source = anObject source and: [ initial = anObject initial ] ] ]
+]
+
+{ #category : 'comparing' }
+ViennaExecutionTraceRootEvent >> shallowHash [
+
+	^ ((super shallowHash bitXor: specification hash) bitXor: source hash)
+		  bitXor: initial hash
 ]
 
 { #category : 'accessing' }
