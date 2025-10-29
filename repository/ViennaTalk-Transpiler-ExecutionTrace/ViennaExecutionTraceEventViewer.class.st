@@ -64,6 +64,18 @@ ViennaExecutionTraceEventViewer >> collapse [
 	eventTree selectPath: path
 ]
 
+{ #category : 'generating' }
+ViennaExecutionTraceEventViewer >> csvFrom: aViennaExecutionTraceEvent on: aStream [
+
+	| format |
+	format := ViennaExecutionTraceCSVFormat new.
+	self dryRunUntil: aViennaExecutionTraceEvent.
+	format initialState: transpiledSpecification state.
+	format writeHeaderOn: aStream.
+	aViennaExecutionTraceEvent applyToFormat: format on: aStream.
+	format writeFooterOn: aStream
+]
+
 { #category : 'layout' }
 ViennaExecutionTraceEventViewer >> defaultLayout [
 
@@ -450,7 +462,17 @@ ViennaExecutionTraceEventViewer >> roots: anArrayOfViennaExecutionTraceRootEvent
 { #category : 'operations' }
 ViennaExecutionTraceEventViewer >> saveCSV [
 
-	^ self inform: 'Not implemented yet'
+	(StSaveFilePresenter new
+		 filter: (StCustomExtensionsFilter extensions: #( 'csv' ));
+		 defaultFolder: FileLocator home;
+		 title: 'Save as CSV...';
+		 openModal;
+		 selectedEntry) ifNotNil: [ :ref |
+			ref writeStreamDo: [ :stream |
+					stream truncate.
+					self
+						csvFrom: (eventTree selectedItem ifNil: [ self roots first ])
+						on: (ZnNewLineWriterStream on: stream) forPlatformLineEnding ] ]
 ]
 
 { #category : 'operations' }

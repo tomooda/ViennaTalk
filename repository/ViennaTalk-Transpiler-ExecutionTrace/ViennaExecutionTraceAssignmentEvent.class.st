@@ -43,7 +43,7 @@ ViennaExecutionTraceAssignmentEvent >> applyToFormat: aViennaExecutionRecordForm
 
 	aBlock cull: self.
 	aViennaExecutionRecordFormat
-		writeStateDiffBlock: module -> assignments
+		writeStateDiffBlock: [ module -> assignments ]
 		on: aStream.
 	anotherBlock cull: self
 ]
