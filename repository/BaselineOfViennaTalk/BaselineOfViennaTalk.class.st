@@ -111,9 +111,7 @@ BaselineOfViennaTalk >> baseline: spec [
 					baseline: 'NeoJSON'
 					with: [ spec repository: 'github://svenvc/NeoJSON/repository' ];
 					baseline: 'PetitParser2'
-					with: [ spec repository: 'github://kursjan/petitparser2:master' ];
-					baseline: 'ZincHTTPComponents'
-					with: [ spec repository: 'github://svenvc/zinc/repository' ].
+					with: [ spec repository: 'github://kursjan/petitparser2:master' ].
 				spec
 					package: 'ViennaTalk-Application'
 					with: [ spec requires: #( 'Phleeter' ) ];
@@ -140,7 +138,7 @@ BaselineOfViennaTalk >> baseline: spec [
 									   'ViennaTalk-Transpiler-Core' 'ViennaTalk-Value-Core'
 									   'HiDeHo' ) ];
 					package: 'ViennaTalk-Engine-Core'
-					with: [ spec requires: #( 'NeoJSON' 'ZincHTTPComponents' ) ];
+					with: [ spec requires: #( 'NeoJSON' ) ];
 					for: #Unix do: [
 							spec
 								baseline: 'OSSubprocess'
@@ -210,8 +208,8 @@ BaselineOfViennaTalk >> baseline: spec [
 		spec requires: #( 'ViennaTalk-Type-Core' 'ViennaTalk-Value-Core' ) ];
 		package: 'ViennaTalk-VDMPad-Core' with: [
 			spec requires:
-				#( 'ViennaTalk-Engine-Core' 'NeoJSON' 'ZincHTTPComponents'
-				   'ViennaTalk-Html-Core' 'ViennaTalk-Parser-Core' ) ];
+				#( 'ViennaTalk-Engine-Core' 'NeoJSON' 'ViennaTalk-Html-Core'
+				   'ViennaTalk-Parser-Core' ) ];
 		package: 'ViennaTalk-Value-Core';
 		package: 'ViennaTalk-Value-Tests'
 		with: [ spec requires: #( 'ViennaTalk-Value-Core' ) ];
@@ -247,7 +245,8 @@ BaselineOfViennaTalk >> baseline: spec [
 		with:
 			#( 'ViennaTalk-Animation-Transpiler'
 			   'ViennaTalk-Engine-Transpiler' 'ViennaTalk-Transpiler-Core'
-			   'ViennaTalk-Transpiler-Debugger' 'ViennaTalk-Transpiler-ExecutionTrace'
+			   'ViennaTalk-Transpiler-Debugger'
+			   'ViennaTalk-Transpiler-ExecutionTrace'
 			   'ViennaTalk-Profiler-Core' );
 		group: 'VDMPad' with: #( 'ViennaTalk-VDMPad-Core' );
 		group: 'WeblyWalkThrough'
