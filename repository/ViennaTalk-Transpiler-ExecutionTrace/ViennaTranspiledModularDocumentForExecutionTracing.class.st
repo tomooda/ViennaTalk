@@ -148,6 +148,13 @@ ViennaTranspiledModularDocumentForExecutionTracing >> useCSVRecorder: aDictionar
 ]
 
 { #category : 'accessing' }
+ViennaTranspiledModularDocumentForExecutionTracing >> useEventRecorder: aDictionary [
+
+	^ _recorder := ViennaExecutionTraceEventRecorder initialState:
+		               aDictionary
+]
+
+{ #category : 'accessing' }
 ViennaTranspiledModularDocumentForExecutionTracing >> useSequenceDiagramRecorder: aString [
 
 	^ _recorder := ViennaExecutionTraceRecorder forSequenceDiagram:

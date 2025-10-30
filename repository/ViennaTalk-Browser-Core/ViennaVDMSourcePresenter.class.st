@@ -320,19 +320,19 @@ ViennaVDMSourcePresenter >> openTraceFrom: aString ifError: errorBlock [
 			| transpiledSpec |
 			transpiledSpec := ViennaTranspiledModularDocumentForExecutionTracing
 				                  fromAnimation: anim.
-			transpiledSpec useCSVRecorder: transpiledSpec state.
+			transpiledSpec useEventRecorder:
+				(transpiledSpec state associations collect: [ :assoc |
+					 assoc key -> assoc value asOrderedDictionary ])
+					asOrderedDictionary.
 			(transpiledSpec
 				 at: (node module ifNotNil: #identifier)
 				 ifAbsent: [ transpiledSpec ])
 				evaluateNode: node
 				ifError: [ ^ nil ].
-			(ViennaExecutionTraceEventCSVReader new
-				 inputStream: transpiledSpec _recorder output readStream;
-				 readLine)
-				specification: node document;
-				module: node module identifier;
-				source: aString;
-				openWithTitle: 'Execution Record from ' , aString ]
+			transpiledSpec _recorder
+				openWithSpecification: node document
+				source: aString
+				title: 'Execution Record from ' , aString ]
 ]
 
 { #category : 'api' }

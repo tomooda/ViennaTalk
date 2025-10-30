@@ -12,6 +12,16 @@ Class {
 }
 
 { #category : 'instance creation' }
+ViennaExecutionTraceOperationCallEvent class >> module: aString operation: anotherString arguments: anArray [
+
+	^ self
+		  module: aString
+		  operation: anotherString
+		  arguments: anArray
+		  events: Array new
+]
+
+{ #category : 'instance creation' }
 ViennaExecutionTraceOperationCallEvent class >> module: aString operation: anotherString arguments: anArray events: anArrayOfViennaExecutionTraceEvent [
 
 	^ self new
@@ -62,6 +72,12 @@ ViennaExecutionTraceOperationCallEvent >> children [
 ViennaExecutionTraceOperationCallEvent >> events [
 
 	^ events
+]
+
+{ #category : 'accessing' }
+ViennaExecutionTraceOperationCallEvent >> events: anArrayOfViennaExecutionTraceEvent [
+
+	events := anArrayOfViennaExecutionTraceEvent
 ]
 
 { #category : 'comparing' }

@@ -82,6 +82,16 @@ ViennaComposite >> asArray [
 	^ array
 ]
 
+{ #category : 'converting' }
+ViennaComposite >> asOrderedDictionary [
+
+	| dict |
+	dict := OrderedDictionary new: namedFields size.
+	self fieldNamesAndValuesDo: [ :var :val |
+		namedFields at: var put: val ].
+	^ dict
+]
+
 { #category : 'accessing' }
 ViennaComposite >> at: anIntegerOrString [
 	^ super

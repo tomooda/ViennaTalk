@@ -53,6 +53,13 @@ ViennaExecutionTraceRootEvent >> events [
 	^ events
 ]
 
+{ #category : 'accessing' }
+ViennaExecutionTraceRootEvent >> events: anArrayOfViennaExecutionTraceEvent [
+
+	events := anArrayOfViennaExecutionTraceEvent.
+	self prestate: OrderedDictionary new
+]
+
 { #category : 'comparing' }
 ViennaExecutionTraceRootEvent >> hash [
 
@@ -87,6 +94,28 @@ ViennaExecutionTraceRootEvent >> initialState [
 				at: var
 				put: val ].
 	^ initialState
+]
+
+{ #category : 'accessing' }
+ViennaExecutionTraceRootEvent >> initialState: aDictionary [
+
+	initial := aDictionary keys asArray collect: [ :moduleName |
+			           aDictionary
+				           at: moduleName
+				           ifPresent: [ :moduleStateDictionary |
+						           ViennaExecutionTraceAssignmentEvent
+							           module: moduleName
+							           assignments:
+							           moduleStateDictionary associations asArray ] ].
+	self prestate: OrderedDictionary new
+]
+
+{ #category : 'initialization' }
+ViennaExecutionTraceRootEvent >> initialize [
+
+	super initialize.
+	events := Array new.
+	initial := Array new
 ]
 
 { #category : 'testing' }
