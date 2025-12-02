@@ -28,10 +28,23 @@ ViennaExecutionTraceRootEvent >> = anObject [
 	^ (self shallowEquals: anObject) and: [ events = anObject events ]
 ]
 
+{ #category : 'evaluating' }
+ViennaExecutionTraceRootEvent >> applyAssignmentTo: aViennaTranspiledModularDocument [
+
+	initial do: [ :event |
+		event applyAssignmentTo: aViennaTranspiledModularDocument ]
+]
+
 { #category : 'formatting' }
 ViennaExecutionTraceRootEvent >> applyToFormat: aViennaExecutionRecordFormat on: aStream before: aBlock after: anotherBlock [
 
 	aBlock cull: self.
+	initial do: [ :event |
+			event
+				applyToFormat: aViennaExecutionRecordFormat
+				on: aStream
+				before: aBlock
+				after: anotherBlock ].
 	anotherBlock cull: self.
 	events do: [ :event |
 			event

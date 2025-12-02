@@ -87,8 +87,7 @@ ViennaComposite >> asOrderedDictionary [
 
 	| dict |
 	dict := OrderedDictionary new: namedFields size.
-	self fieldNamesAndValuesDo: [ :var :val |
-		namedFields at: var put: val ].
+	self fieldNamesAndValuesDo: [ :var :val | dict at: var put: val ].
 	^ dict
 ]
 
