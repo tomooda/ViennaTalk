@@ -210,7 +210,8 @@ ViennaExecutionTraceStateDiagramFormat >> writeStateDiffBlock: aBlock on: aStrea
 	transitions add: (self
 			 transitionFrom: preState
 			 to: postState
-			 operation: (showsOperationNames
+			 operation:
+				 ((showsOperationNames and: [ operationStack notEmpty ])
 					  ifTrue: [ operationStack last ]
 					  ifFalse: [ nil ]))
 ]
