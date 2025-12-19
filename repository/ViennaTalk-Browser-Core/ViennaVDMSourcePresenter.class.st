@@ -25,11 +25,9 @@ ViennaVDMSourcePresenter class >> buildCommandsGroupWith: presenter forRoot: aCm
 
 	{
 		ViennaEvaluateItCommand.
-		ViennaTypeItCommand.
 		ViennaExecuteItCommand.
-		ViennaTraceItCommand .
-		ViennaSequenceDiagramItCommand .
-		ViennaStateDiagramItCommand} do: [ :cmdClass |
+		ViennaTraceItCommand.
+		ViennaTypeItCommand } do: [ :cmdClass |
 		group register: (cmdClass forSpecContext: presenter) ].
 	aCmCommandsGroup register: group.
 	^ group
