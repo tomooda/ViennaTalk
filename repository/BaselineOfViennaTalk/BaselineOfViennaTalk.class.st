@@ -249,7 +249,7 @@ BaselineOfViennaTalk >> baseline: spec [
 			spec requires:
 				#( 'ViennaTalk-Animation-Core' 'ViennaTalk-Browser-Core'
 				   'ViennaTalk-Launcher-Core' 'ViennaTalk-Parser-Core'
-				   'ViennaTalk-Vlaue-Core' 'ViennaTalk-WeblyWalkThrough-Translators' ) ];
+				   'ViennaTalk-Value-Core' 'ViennaTalk-WeblyWalkThrough-Translators' ) ];
 		package: 'ViennaTalk-WeblyWalkThrough-Translators' with: [
 			spec requires: #( 'ViennaTalk-Parser-Core' 'ViennaTalk-Value-Core'
 				   'PetitParser2' 'NeoJSON' ) ];
