@@ -113,9 +113,8 @@ BaselineOfViennaTalk >> baseline: spec [
 					baseline: 'PetitParser2'
 					with: [ spec repository: 'github://kursjan/petitparser2:master' ].
 				spec
-					package: 'ViennaTalk-AST-Core' with: [
-							spec requires:
-									#( 'ViennaTalk-Transpiler-Core' 'ViennaTalk-Type-Core' ) ];
+					package: 'ViennaTalk-AST-Core'
+					with: [ spec requires: #( 'ViennaTalk-Type-Core' ) ];
 					package: 'ViennaTalk-AST-Tests' with: [
 							spec requires:
 									#( 'ViennaTalk-AST-Core' 'ViennaTalk-Parser-Core'
