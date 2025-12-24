@@ -177,9 +177,7 @@ BaselineOfViennaTalk >> baseline: spec [
 		spec requires: #( 'ViennaTalk-FRAM-Core' 'ViennaTalk-Parser-Core' ) ];
 		package: 'ViennaTalk-Html-Core'
 		with: [ spec requires: #( 'PetitParser2' ) ];
-		package: 'ViennaTalk-Launcher-Core' with: [
-		spec requires:
-			#( 'ViennaTalk-Browser-Core' 'ViennaTalk-VDMPad-Core' ) ];
+		package: 'ViennaTalk-Launcher-Core';
 		package: 'ViennaTalk-LivelyWalkThrough-Core' with: [
 			spec requires:
 				#( 'ViennaTalk-Animation-Core' 'ViennaTalk-Animation-Transpiler'
@@ -251,8 +249,7 @@ BaselineOfViennaTalk >> baseline: spec [
 				   'ViennaTalk-Value-Core' 'ViennaTalk-WeblyWalkThrough-Translators' ) ];
 		package: 'ViennaTalk-WeblyWalkThrough-Translators' with: [
 			spec requires: #( 'ViennaTalk-Parser-Core' 'ViennaTalk-Value-Core'
-				   'PetitParser2' 'NeoJSON' ) ];
-		yourself.
+				   'PetitParser2' 'NeoJSON' ) ].
 
 	spec
 		group: 'Application' with: #( 'ViennaTalk-Application' );
