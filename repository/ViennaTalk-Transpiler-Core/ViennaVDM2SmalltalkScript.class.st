@@ -1,8 +1,9 @@
 Class {
 	#name : 'ViennaVDM2SmalltalkScript',
 	#superclass : 'ViennaVDM2Smalltalk',
-	#category : 'ViennaTalk-Transpiler-Core',
-	#package : 'ViennaTalk-Transpiler-Core'
+	#category : 'ViennaTalk-Transpiler-Core-Transpiler',
+	#package : 'ViennaTalk-Transpiler-Core',
+	#tag : 'Transpiler'
 }
 
 { #category : 'utilities' }
@@ -155,7 +156,7 @@ ViennaVDM2SmalltalkScript >> translate: aString [
 { #category : 'utilities' }
 ViennaVDM2SmalltalkScript >> translate: aString ifError: aBlock [
 	| ast |
-	ast := ViennaVDMParser new parse: aString.
+	ast := ViennaVDMParser current parse: aString.
 	ast isPetit2Failure
 		ifTrue: [ ^ aBlock cull: ast ].
 	^ self generate: ast
@@ -164,7 +165,7 @@ ViennaVDM2SmalltalkScript >> translate: aString ifError: aBlock [
 { #category : 'utilities' }
 ViennaVDM2SmalltalkScript >> translateExplicitFunction: aString ifError: aBlock [
 	| ast |
-	ast := ViennaVDMParser new explicitFunctionDefinition end parse: aString.
+	ast := ViennaVDMParser current explicitFunctionDefinition end parse: aString.
 	ast isPetit2Failure
 		ifTrue: [ ^ aBlock cull: ast ].
 	^ self generate: ast
@@ -173,7 +174,7 @@ ViennaVDM2SmalltalkScript >> translateExplicitFunction: aString ifError: aBlock 
 { #category : 'utilities' }
 ViennaVDM2SmalltalkScript >> translateExplicitOperation: aString ifError: aBlock [
 	| ast |
-	ast := ViennaVDMParser new explicitOperationDefinition end parse: aString.
+	ast := ViennaVDMParser current explicitOperationDefinition end parse: aString.
 	ast isPetit2Failure
 		ifTrue: [ ^ aBlock cull: ast ].
 	^ self generate: ast
@@ -182,7 +183,7 @@ ViennaVDM2SmalltalkScript >> translateExplicitOperation: aString ifError: aBlock
 { #category : 'utilities' }
 ViennaVDM2SmalltalkScript >> translateExpression: aString ifError: aBlock [
 	| ast |
-	ast := ViennaVDMParser new expression end parse: aString.
+	ast := ViennaVDMParser current expression end parse: aString.
 	ast isPetit2Failure
 		ifTrue: [ ^ aBlock cull: ast ].
 	^ self generate: ast
@@ -191,7 +192,7 @@ ViennaVDM2SmalltalkScript >> translateExpression: aString ifError: aBlock [
 { #category : 'utilities' }
 ViennaVDM2SmalltalkScript >> translateStatement: aString ifError: aBlock [
 	| ast |
-	ast := ViennaVDMParser new statement end parse: aString.
+	ast := ViennaVDMParser current statement end parse: aString.
 	ast isPetit2Failure
 		ifTrue: [ ^ aBlock cull: ast ].
 	^ self generate: ast

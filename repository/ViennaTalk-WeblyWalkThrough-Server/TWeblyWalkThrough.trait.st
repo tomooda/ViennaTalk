@@ -1,14 +1,15 @@
 Trait {
-	#name : #TWeblyWalkThrough,
-	#category : #'ViennaTalk-WeblyWalkThrough-Server'
+	#name : 'TWeblyWalkThrough',
+	#category : 'ViennaTalk-WeblyWalkThrough-Server',
+	#package : 'ViennaTalk-WeblyWalkThrough-Server'
 }
 
-{ #category : #'request handling' }
+{ #category : 'request handling' }
 TWeblyWalkThrough >> apiCall: apiName in: moduleName withArguments: args [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'request handling' }
+{ #category : 'request handling' }
 TWeblyWalkThrough >> argsFrom: aZnRequest [
 	| args |
 	args := Array new.
@@ -31,7 +32,7 @@ TWeblyWalkThrough >> argsFrom: aZnRequest [
 	^ args
 ]
 
-{ #category : #'request handling' }
+{ #category : 'request handling' }
 TWeblyWalkThrough >> frontPage [
 	^ '<!DOCTYPE html>
 <html>
@@ -43,7 +44,7 @@ Webly Walk-Through is running.
 </body></html>' copy 
 ]
 
-{ #category : #'request handling' }
+{ #category : 'request handling' }
 TWeblyWalkThrough >> handleApi: aZnRequest [
 	| args path |
 	args := self argsFrom: aZnRequest.
@@ -55,7 +56,7 @@ TWeblyWalkThrough >> handleApi: aZnRequest [
 	^ self responseNotFound: aZnRequest uri
 ]
 
-{ #category : #'request handling' }
+{ #category : 'request handling' }
 TWeblyWalkThrough >> handleRequest: aZnRequest [
 	| path method |
 	aZnRequest uri isSlash
@@ -90,7 +91,7 @@ TWeblyWalkThrough >> handleRequest: aZnRequest [
 	^ self handleApi: aZnRequest
 ]
 
-{ #category : #responses }
+{ #category : 'responses' }
 TWeblyWalkThrough >> responseNotFound: aString [
 	| response |
 	response := ZnResponse notFound: aString.
@@ -101,7 +102,7 @@ TWeblyWalkThrough >> responseNotFound: aString [
 	^ response
 ]
 
-{ #category : #responses }
+{ #category : 'responses' }
 TWeblyWalkThrough >> responseOk: anZnEntity [
 	| response |
 	response := ZnResponse ok: anZnEntity.
@@ -112,7 +113,7 @@ TWeblyWalkThrough >> responseOk: anZnEntity [
 	^ response
 ]
 
-{ #category : #responses }
+{ #category : 'responses' }
 TWeblyWalkThrough >> responseServerError: aStrng [
 	| response |
 	response := ZnResponse serverError: aStrng.
@@ -123,17 +124,17 @@ TWeblyWalkThrough >> responseServerError: aStrng [
 	^ response
 ]
 
-{ #category : #translating }
+{ #category : 'translating' }
 TWeblyWalkThrough >> translateFromJson: aString [
 	^ self subclassResponsibility
 ]
 
-{ #category : #translating }
+{ #category : 'translating' }
 TWeblyWalkThrough >> translateToJson: anObject [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'request handling' }
+{ #category : 'request handling' }
 TWeblyWalkThrough >> value: aZnRequest [
 	^ self handleRequest: aZnRequest
 ]

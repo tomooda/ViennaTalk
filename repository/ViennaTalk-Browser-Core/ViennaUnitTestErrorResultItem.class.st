@@ -1,12 +1,9 @@
 Class {
 	#name : 'ViennaUnitTestErrorResultItem',
 	#superclass : 'ViennaUnitTestResultItem',
-	#instVars : [
-		'exception'
-	],
-	#category : 'ViennaTalk-Browser-Core-TestRunner',
+	#category : 'ViennaTalk-Browser-Core-Testing',
 	#package : 'ViennaTalk-Browser-Core',
-	#tag : 'TestRunner'
+	#tag : 'Testing'
 }
 
 { #category : 'accessing' }
@@ -15,51 +12,9 @@ ViennaUnitTestErrorResultItem class >> icon [
 	^ self errorIcon
 ]
 
-{ #category : 'menus' }
-ViennaUnitTestErrorResultItem >> buildContextMenu: aSpMenuPresenter for: aViennaRefactoringBrowser [
+{ #category : 'initialization' }
+ViennaUnitTestErrorResultItem >> initialize [
 
-	super
-		buildContextMenu: aSpMenuPresenter
-		for: aViennaRefactoringBrowser.
-	exception
-		ifNotNil: [
-			aSpMenuPresenter addGroup: [ :group |
-				group addItem: [ :item |
-					item
-						name: 'Debug';
-						action: [ exception debug ] ] ] ]
-		ifNil: [
-			aSpMenuPresenter addGroup: [ :group |
-				group addItem: [ :item |
-					item
-						name: 'Debug it with transpiler';
-						action: [ aViennaRefactoringBrowser debugTestResultItem: self ] ] ] ]
-]
-
-{ #category : 'accessing' }
-ViennaUnitTestErrorResultItem >> color [
-
-	^ self class errorIconColor
-]
-
-{ #category : 'accessing' }
-ViennaUnitTestErrorResultItem >> exception [
-
-	^ exception
-]
-
-{ #category : 'accessing' }
-ViennaUnitTestErrorResultItem >> exception: anExpcetion [
-
-	exception := anExpcetion freeze
-]
-
-{ #category : 'testing' }
-ViennaUnitTestErrorResultItem >> isError [
-	^ true
-]
-
-{ #category : 'accessing' }
-ViennaUnitTestErrorResultItem >> sortingOrder [
-	^ 0
+	super initialize.
+	result := #error
 ]

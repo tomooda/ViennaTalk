@@ -6,9 +6,9 @@ Class {
 		'sourceText',
 		'failureList'
 	],
-	#category : 'ViennaTalk-Browser-Core-TestRunner',
+	#category : 'ViennaTalk-Browser-Core-Testing',
 	#package : 'ViennaTalk-Browser-Core',
-	#tag : 'TestRunner'
+	#tag : 'Testing'
 }
 
 { #category : 'layout' }

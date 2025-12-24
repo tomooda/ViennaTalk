@@ -1,6 +1,6 @@
 Class {
-	#name : #WeblyWalkThrough,
-	#superclass : #ViennaAnimation,
+	#name : 'WeblyWalkThrough',
+	#superclass : 'ViennaAnimation',
 	#traits : 'TWeblyWalkThrough',
 	#classTraits : 'TWeblyWalkThrough classTrait',
 	#instVars : [
@@ -17,20 +17,21 @@ Class {
 		'Current',
 		'Server'
 	],
-	#category : #'ViennaTalk-WeblyWalkThrough-Server'
+	#category : 'ViennaTalk-WeblyWalkThrough-Server',
+	#package : 'ViennaTalk-WeblyWalkThrough-Server'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 WeblyWalkThrough class >> current [
 	^ Current ifNil: [ Current := self default ]
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 WeblyWalkThrough class >> defaultPort [
 	^ 8087
 ]
 
-{ #category : #servicing }
+{ #category : 'servicing' }
 WeblyWalkThrough class >> flushServer [
 	"WeblyWalkThrough flushServer"
 
@@ -41,19 +42,19 @@ WeblyWalkThrough class >> flushServer [
 			Server := nil ]
 ]
 
-{ #category : #servicing }
+{ #category : 'servicing' }
 WeblyWalkThrough class >> installHandler [
 	"WeblyWalkThrough installHandler"
 
 	self server delegate: self current
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 WeblyWalkThrough class >> isPublished [
 	^ self current isPublished
 ]
 
-{ #category : #servicing }
+{ #category : 'servicing' }
 WeblyWalkThrough class >> server [
 	^ Server
 		ifNil: [ 
@@ -62,18 +63,18 @@ WeblyWalkThrough class >> server [
 				yourself ]
 ]
 
-{ #category : #servicing }
+{ #category : 'servicing' }
 WeblyWalkThrough class >> startService [
 	self installHandler.
 	self server start
 ]
 
-{ #category : #servicing }
+{ #category : 'servicing' }
 WeblyWalkThrough class >> stopService [
 	self server stop
 ]
 
-{ #category : #'request handling' }
+{ #category : 'request handling' }
 WeblyWalkThrough >> apiCall: apiName in: moduleName withArguments: args [
 	| evalString result resultJson |
 	evalString := moduleName ifNil: [ apiName ] ifNotNil: [ moduleName , '`' , apiName ].
@@ -90,7 +91,7 @@ WeblyWalkThrough >> apiCall: apiName in: moduleName withArguments: args [
 				yourself)
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 WeblyWalkThrough >> copyForTest [
 	| animation |
 	animation := ViennaAnimation default.
@@ -100,12 +101,12 @@ WeblyWalkThrough >> copyForTest [
 	^ animation
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 WeblyWalkThrough >> defaultDisplayOperation [
 	^ 'display'
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 WeblyWalkThrough >> defaultFrontPage [
 	^ '<!DOCTYPE html>
 <html>
@@ -117,22 +118,22 @@ Webly Walk-Through is running.
 </body></html>' copy
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 WeblyWalkThrough >> defaultGuiModule [
 	^ ''
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 WeblyWalkThrough >> defaultHandleEventOperation [
 	^ 'handleEvent'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 WeblyWalkThrough >> disableDisplay [
 	self displayEnabled: false
 ]
 
-{ #category : #'request handling' }
+{ #category : 'request handling' }
 WeblyWalkThrough >> display [
 	| result xml |
 	result := self
@@ -146,17 +147,17 @@ WeblyWalkThrough >> display [
 				yourself)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 WeblyWalkThrough >> displayEnabled [
 	^ displayEnabled
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 WeblyWalkThrough >> displayEnabled: aBool [
 	displayEnabled := aBool = true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 WeblyWalkThrough >> displayExpression [
 	^ String
 		streamContents: [ :stream | 
@@ -170,22 +171,22 @@ WeblyWalkThrough >> displayExpression [
 				nextPutAll: '())' ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 WeblyWalkThrough >> displayOperation [
 	^ displayOperation ifNil: [ self defaultDisplayOperation ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 WeblyWalkThrough >> displayOperation: aString [
 	displayOperation := aString trim
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 WeblyWalkThrough >> enableDisplay [
 	self displayEnabled: true
 ]
 
-{ #category : #'request handling' }
+{ #category : 'request handling' }
 WeblyWalkThrough >> event: aDictionary [
 	| module operation type target evalString |
 	module := self guiModule.
@@ -228,39 +229,39 @@ WeblyWalkThrough >> event: aDictionary [
 	^ self display
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 WeblyWalkThrough >> frontPage [
 	^ self displayEnabled
 		ifTrue: [ self viennaVisualsPage ]
 		ifFalse: [ frontPage ifNil: [ frontPage := self defaultFrontPage ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 WeblyWalkThrough >> frontPage: aString [
 	frontPage := aString asString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 WeblyWalkThrough >> guiModule [
 	^ guiModule
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 WeblyWalkThrough >> guiModule: aString [
 	guiModule := aString trim
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 WeblyWalkThrough >> handleEventOperation [
 	^ handleEventOperation ifNil: [ self defaultHandleEventOperation ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 WeblyWalkThrough >> handleEventOperation: aString [
 	handleEventOperation := aString
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 WeblyWalkThrough >> initialize [
 	super initialize.
 	translator := WWTTranslator new.
@@ -270,12 +271,12 @@ WeblyWalkThrough >> initialize [
 	handleEventOperation := self defaultHandleEventOperation
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 WeblyWalkThrough >> isPublished [
 	^ self class server isRunning and: [ self class server delegate == self ]
 ]
 
-{ #category : #javascript }
+{ #category : 'javascript' }
 WeblyWalkThrough >> printDisplayFunctionsOn: aStream [
 	aStream nextPutAll: 'Webly.display = function () {'.
 	self displayEnabled
@@ -298,7 +299,7 @@ WeblyWalkThrough >> printDisplayFunctionsOn: aStream [
 				lf ]
 ]
 
-{ #category : #javascript }
+{ #category : 'javascript' }
 WeblyWalkThrough >> printDynamicWeblyFunctionsOn: aStream [
 	(globalNamesAndNumArgs collect: #first) asSet asSortedCollection
 		do: [ :mod | 
@@ -339,7 +340,7 @@ WeblyWalkThrough >> printDynamicWeblyFunctionsOn: aStream [
 				lf ]
 ]
 
-{ #category : #javascript }
+{ #category : 'javascript' }
 WeblyWalkThrough >> printEventFunctionsOn: aStream [
 	self displayEnabled
 		ifTrue: [ aStream
@@ -370,19 +371,19 @@ Webly.event = function(event, continuation) {
 ' withUnixLineEndings ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 WeblyWalkThrough >> specification: aString [
 	self updateGlobalNamesAndNumArgs: aString.
 	super specification: aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 WeblyWalkThrough >> specification: aString ifError: aBlock [
 	self updateGlobalNamesAndNumArgs: aString.
 	super specification: aString ifError: [ :msg | ^ aBlock cull: msg ]
 ]
 
-{ #category : #translating }
+{ #category : 'translating' }
 WeblyWalkThrough >> taggedElement2xml: aString [
 	| element |
 	element := self taggedElementDecoder parse: aString.
@@ -403,37 +404,37 @@ WeblyWalkThrough >> taggedElement2xml: aString [
 			stream nextPutAll: '</svg>' ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 WeblyWalkThrough >> taggedElementDecoder [
 	^ taggedElementDecoder
 		ifNil: [ taggedElementDecoder := ViennaVDMTaggedElementDecoder new ]
 ]
 
-{ #category : #translating }
+{ #category : 'translating' }
 WeblyWalkThrough >> translateFromJson: aString [
 	^ self translator jsonToVdmString: aString
 ]
 
-{ #category : #translating }
+{ #category : 'translating' }
 WeblyWalkThrough >> translateToJson: aString [
 	^ self translator vdmToJsonString: aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 WeblyWalkThrough >> translator [
 	^ translator
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 WeblyWalkThrough >> translator: aWWTTranslator [
 	translator := aWWTTranslator
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 WeblyWalkThrough >> updateGlobalNamesAndNumArgs: aString [
 
 	| ast |
-	ast := ViennaVDMParser new parse: aString.
+	ast := ViennaVDMParser current parse: aString.
 	(ast isPetit2Failure or: [ ast isEmpty ]) ifTrue: [
 		globalNamesAndNumArgs := #(  ).
 		^ self ].
@@ -462,7 +463,7 @@ WeblyWalkThrough >> updateGlobalNamesAndNumArgs: aString [
 								                         node fourth size } ] ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 WeblyWalkThrough >> viennaVisualsPage [
 	^ '<!DOCTYPE html>
 <html>
@@ -482,7 +483,7 @@ display.setAttribute("height", window.innerHeight-25);
 </body></html>' withUnixLineEndings
 ]
 
-{ #category : #javascript }
+{ #category : 'javascript' }
 WeblyWalkThrough >> webly_js [
 	^ String
 		streamContents: [ :stream | 

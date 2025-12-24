@@ -25,6 +25,14 @@ ViennaNameNode >> definition [
 ]
 
 { #category : 'testing' }
+ViennaNameNode >> designatesStateVariable [
+
+	^ self resolve
+		  ifNotNil: [ :def | def isViennaFieldNode ]
+		  ifNil: [ false ]
+]
+
+{ #category : 'testing' }
 ViennaNameNode >> isViennaNameNode [
 
 	^ true

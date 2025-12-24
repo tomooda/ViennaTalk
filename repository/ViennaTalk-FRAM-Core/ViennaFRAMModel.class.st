@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaFRAMModel,
-	#superclass : #FRAMModel,
-	#category : #'ViennaTalk-FRAM-Core'
+	#name : 'ViennaFRAMModel',
+	#superclass : 'FRAMModel',
+	#category : 'ViennaTalk-FRAM-Core',
+	#package : 'ViennaTalk-FRAM-Core'
 }
 
-{ #category : #examples }
+{ #category : 'examples' }
 ViennaFRAMModel class >> examplePedestrianCounter [
 
 	| model spec |
@@ -30,7 +31,7 @@ ViennaFRAMModel class >> examplePedestrianCounter [
 		newControlNamed: 'instructions';
 		newTimeNamed: 'observation hours';
 		newResourceNamed: 'current count'.
-	spec := ViennaVDMParser parse: '
+	spec := ViennaVDMParser current parse: '
 	state Count of
 	count : nat
 	init s == s = mk_Count(0)
@@ -53,7 +54,7 @@ ViennaFRAMModel class >> examplePedestrianCounter [
 	model openInExternalViewer
 ]
 
-{ #category : #examples }
+{ #category : 'examples' }
 ViennaFRAMModel class >> examplePedestrianTraffic [
 
 	| model |
@@ -77,7 +78,7 @@ ViennaFRAMModel class >> examplePedestrianTraffic [
 	model openInExternalViewer
 ]
 
-{ #category : #merging }
+{ #category : 'merging' }
 ViennaFRAMModel >> appendToSpec: aViennaNode [
 
 	self
@@ -86,7 +87,7 @@ ViennaFRAMModel >> appendToSpec: aViennaNode [
 		newAnnotationsDo: [ :annotation |  ]
 ]
 
-{ #category : #merging }
+{ #category : 'merging' }
 ViennaFRAMModel >> appendToSpec: aViennaNode newOperationsDo: functionBlock newAnnotationsDo: aspectBlock [
 
 	| parser |
@@ -119,7 +120,7 @@ ViennaFRAMModel >> appendToSpec: aViennaNode newOperationsDo: functionBlock newA
 						in: operationNode ] ] ] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaFRAMModel >> createOperationDefinitionNode: aString [
 
 	^ ViennaExplicitOperationDefinitionNode
@@ -134,7 +135,7 @@ ViennaFRAMModel >> createOperationDefinitionNode: aString [
 		  post: nil
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaFRAMModel >> ensureAnnotation: aString name: anotherString in: aViennaNode [
 
 	| parser |
@@ -149,7 +150,7 @@ ViennaFRAMModel >> ensureAnnotation: aString name: anotherString in: aViennaNode
 	aViennaNode addAnnotation: 'FRAM ' , aString , ' ' , anotherString
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaFRAMModel >> findOrCreateOperationNamed: operationName in: aViennaNode [
 
 	| opNode |
@@ -162,7 +163,7 @@ ViennaFRAMModel >> findOrCreateOperationNamed: operationName in: aViennaNode [
 	^ opNode
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaFRAMModel >> findOrCreateOperationNamed: operationName module: moduleName in: aViennaNode [
 
 	| moduleNode opNode |
@@ -179,7 +180,7 @@ ViennaFRAMModel >> findOrCreateOperationNamed: operationName module: moduleName 
 	^ opNode
 ]
 
-{ #category : #merging }
+{ #category : 'merging' }
 ViennaFRAMModel >> loadSpec: aViennaNode [
 
 	self
@@ -188,7 +189,7 @@ ViennaFRAMModel >> loadSpec: aViennaNode [
 		newAspectsDo: [ :a |  ]
 ]
 
-{ #category : #merging }
+{ #category : 'merging' }
 ViennaFRAMModel >> loadSpec: aViennaNode newFunctionsDo: functionBlock newAspectsDo: aspectBlock [
 
 	| parser |

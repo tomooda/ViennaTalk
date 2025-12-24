@@ -3,5 +3,5 @@ Extension { #name : 'ViennaImplicitOperationDefinitionNode' }
 { #category : '*ViennaTalk-Parser-Core' }
 ViennaImplicitOperationDefinitionNode >> parser [
 
-	^ ViennaVDMParser new operationDefinition end
+	^ ViennaVDMParser current accessOperationDefinition end
 ]

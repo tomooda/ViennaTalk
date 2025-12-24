@@ -1,6 +1,6 @@
 Class {
-	#name : #ViennaAnimation,
-	#superclass : #Model,
+	#name : 'ViennaAnimation',
+	#superclass : 'Model',
 	#instVars : [
 		'lock',
 		'engine',
@@ -10,17 +10,18 @@ Class {
 		'writer',
 		'usesExceptionForExit'
 	],
-	#category : #'ViennaTalk-Animation-Core'
+	#category : 'ViennaTalk-Animation-Core',
+	#package : 'ViennaTalk-Animation-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaAnimation class >> client [
 	^ self new
 		engine: ViennaClient default;
 		yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaAnimation class >> default [
 
 	Smalltalk
@@ -30,7 +31,7 @@ ViennaAnimation class >> default [
 	^ self interpreter
 ]
 
-{ #category : #examples }
+{ #category : 'examples' }
 ViennaAnimation class >> exampleFibonacci [
 	"ViennaAnimation exampleFibonacci"
 
@@ -50,7 +51,7 @@ operations
 	^ (Array streamContents: [ :stream | 10 timesRepeat: [ stream nextPut: (animation evaluate: 'next()') ] ]) inspect; yourself
 ]
 
-{ #category : #examples }
+{ #category : 'examples' }
 ViennaAnimation class >> exampleFibonacciLocal [
 	"ViennaAnimation exampleFibonacciLocal"
 
@@ -73,7 +74,7 @@ operations
 		yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaAnimation class >> interpreter [
 
 	^ self new
@@ -81,28 +82,28 @@ ViennaAnimation class >> interpreter [
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaAnimation class >> on: aViennaEngine [
 	^ self new
 		engine: aViennaEngine;
 		yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaAnimation class >> url: aStringOrUrl [
 	^ self new
 		engine: (ViennaClient on: aStringOrUrl);
 		yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaAnimation class >> vdmj [
 	^ self new
 		engine: ViennaVDMJ new;
 		yourself
 ]
 
-{ #category : #announcement }
+{ #category : 'announcement' }
 ViennaAnimation >> announceSpecificationChanged [
 
 	self announcer announce: (ViennaSpecificationChanged new
@@ -110,7 +111,7 @@ ViennaAnimation >> announceSpecificationChanged [
 			 yourself)
 ]
 
-{ #category : #announcement }
+{ #category : 'announcement' }
 ViennaAnimation >> announceStateChanged [
 
 	self announcer announce: (ViennaStateChanged new
@@ -118,24 +119,24 @@ ViennaAnimation >> announceStateChanged [
 			 yourself)
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaAnimation >> asInterpretedAnimation [
 	^ self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAnimation >> at: aString [
 	^ self
 		at: aString
 		ifAbsent: [ KeyNotFound signalFor: aString in: self ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAnimation >> at: aString ifAbsent: errorBlock [
 	^ self at: aString ifPresent: [ :value | value ] ifAbsent: errorBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAnimation >> at: aString ifAbsentPut: errorBlock [
 
 	^ self at: aString ifPresent: [ :value | value ] ifAbsent: [
@@ -143,22 +144,22 @@ ViennaAnimation >> at: aString ifAbsentPut: errorBlock [
 		  self announceStateChanged ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAnimation >> at: aString ifPresent: errorBlock [
 	^ self at: aString ifPresent: errorBlock ifAbsent: [  ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAnimation >> at: aString ifPresent: aBlock ifAbsent: errorBlock [
 	^ state at: aString ifPresent: [ :value | aBlock cull: (reader parseOn: value readStream) ] ifAbsent: errorBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAnimation >> at: aString put: anObject [
 	^ state at: aString put: (writer stringify: anObject)
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaAnimation >> basicPlainEvaluate: aString in: moduleName ifError: errorBlock [
 
 	Cursor wait showWhile: [
@@ -197,42 +198,42 @@ ViennaAnimation >> basicPlainEvaluate: aString in: moduleName ifError: errorBloc
 		^ result first ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaAnimation >> becomeInterpretedAnimation [
 	^ self
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 ViennaAnimation >> copyForTest [
 	^ self copy
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 ViennaAnimation >> defaultModule [
 	^ 'DEFAULT'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAnimation >> engine [
 	^ engine
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAnimation >> engine: aViennaEngine [
 	engine := aViennaEngine
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAnimation >> engineType [
 	^ #interpreter
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaAnimation >> evaluate: aString [
 	^ reader parseOn: (self plainEvaluate: aString) readStream
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaAnimation >> init [
 
 	lock critical: [
@@ -254,7 +255,7 @@ ViennaAnimation >> init [
 		self announceStateChanged ]
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 ViennaAnimation >> initialize [
 	super initialize.
 	lock := Semaphore forMutualExclusion.
@@ -264,30 +265,30 @@ ViennaAnimation >> initialize [
 	writer := ViennaWriter new
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaAnimation >> isTranspiledAnimation [
 
 	^ false
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaAnimation >> parseJson: aJsonString [
 	^ NeoJSONReader fromString: aJsonString
 ]
 
-{ #category : #'accessing-plain' }
+{ #category : 'accessing-plain' }
 ViennaAnimation >> plainAt: aString [
 	^ self
 		plainAt: aString
 		ifAbsent: [ KeyNotFound signalFor: aString in: self ]
 ]
 
-{ #category : #'accessing-plain' }
+{ #category : 'accessing-plain' }
 ViennaAnimation >> plainAt: aString ifAbsent: errorBlock [
 	^ self plainAt: aString ifPresent: [ :value | value ] ifAbsent: errorBlock
 ]
 
-{ #category : #'accessing-plain' }
+{ #category : 'accessing-plain' }
 ViennaAnimation >> plainAt: aString ifAbsentPut: errorBlock [
 
 	^ self plainAt: aString ifPresent: [ :value | value ] ifAbsent: [
@@ -295,12 +296,12 @@ ViennaAnimation >> plainAt: aString ifAbsentPut: errorBlock [
 		  self announceStateChanged ]
 ]
 
-{ #category : #'accessing-plain' }
+{ #category : 'accessing-plain' }
 ViennaAnimation >> plainAt: aString ifPresent: aBlock ifAbsent: errorBlock [
 	^ state at: aString ifPresent: [ :value | aBlock cull: value ] ifAbsent: errorBlock
 ]
 
-{ #category : #'accessing-plain' }
+{ #category : 'accessing-plain' }
 ViennaAnimation >> plainAt: aString put: anObject [
 
 	state at: aString put: anObject.
@@ -308,17 +309,17 @@ ViennaAnimation >> plainAt: aString put: anObject [
 	^ anObject
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaAnimation >> plainEvaluate: aString [
 	^ self plainEvaluate: aString ifError: [ :msg | Error signal: msg ]
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaAnimation >> plainEvaluate: aString ifError: errorBlock [
 	^ self plainEvaluate: aString in: self defaultModule ifError: errorBlock
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaAnimation >> plainEvaluate: aString in: moduleName ifError: errorBlock [
 
 	| result |
@@ -331,7 +332,7 @@ ViennaAnimation >> plainEvaluate: aString in: moduleName ifError: errorBlock [
 	^ result
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 ViennaAnimation >> plainExecute: aViennaNode in: moduleName ifError: errorBlock [
 
 	^ self
@@ -340,7 +341,7 @@ ViennaAnimation >> plainExecute: aViennaNode in: moduleName ifError: errorBlock 
 		  ifError: errorBlock
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 ViennaAnimation >> postCopy [
 	| oldSpec oldState |
 	super postCopy.
@@ -353,12 +354,12 @@ ViennaAnimation >> postCopy [
 	self state: oldState
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAnimation >> reader [
 	^ reader
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAnimation >> reader: aViennaReader [
 	reader := aViennaReader
 ]
@@ -378,12 +379,16 @@ ViennaAnimation >> runTestOperation: operation module: module [
 			ifFalse: [ Error signal: msg ] ]
 ]
 
+{ #category : 'evaluating' }
+ViennaAnimation >> runTrace: aString module: anotherString do: aBlock onError: errorBlock [
+]
+
 { #category : 'accessing' }
 ViennaAnimation >> specification [
 	^ specification
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAnimation >> specification: aString [
 
 	specification := aString.
@@ -391,7 +396,7 @@ ViennaAnimation >> specification: aString [
 	self announceSpecificationChanged
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAnimation >> specification: aStringOrViennaNode ifError: errorBlock [
 
 	| source |
@@ -418,31 +423,31 @@ ViennaAnimation >> specification: aStringOrViennaNode ifError: errorBlock [
 			self announceStateChanged ] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaAnimation >> state [
 	^ state copy
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAnimation >> state: aDictionary [
 
 	state := aDictionary copy.
 	self announceStateChanged
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaAnimation >> stringify: aJsonObject [
 	^ String streamContents: [ :stream |
 			(NeoJSONWriter on: stream) asciiOnly: true; nextPut: aJsonObject ]
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAnimation >> writer [
 	^ writer
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAnimation >> writer: aViennaWriter [
 	writer := aViennaWriter
 ]

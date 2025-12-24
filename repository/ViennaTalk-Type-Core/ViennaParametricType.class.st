@@ -1,24 +1,25 @@
 Class {
-	#name : #ViennaParametricType,
-	#superclass : #ViennaBasicType,
+	#name : 'ViennaParametricType',
+	#superclass : 'ViennaBasicType',
 	#instVars : [
 		'identifier'
 	],
-	#category : #'ViennaTalk-Type-Core'
+	#category : 'ViennaTalk-Type-Core',
+	#package : 'ViennaTalk-Type-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaParametricType class >> current [
 
 	^ self shouldNotImplement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaParametricType class >> precedence [
 	^ 6
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaParametricType class >> with: aString [
 
 	^ self new
@@ -26,54 +27,54 @@ ViennaParametricType class >> with: aString [
 		  yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaParametricType >> = anObject [
 
 	^ self class = anObject class and: [
 		  identifier = anObject identifier ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaParametricType >> basicDo: aBlock [
 	^ self shouldNotImplement
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaParametricType >> basicIncludes: anObject [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaParametricType >> basicIsEnumerable [
 	^ false
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaParametricType >> hash [
 
 	^ self class hash bitXor: identifier hash
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaParametricType >> identifier [
 
 	^ identifier
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaParametricType >> identifier: aString [
 
 	identifier := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaParametricType >> instantiate: aDictionary [
 
 	^ aDictionary at: self ifAbsent: [ self ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaParametricType >> name [
 	^ identifier
 ]

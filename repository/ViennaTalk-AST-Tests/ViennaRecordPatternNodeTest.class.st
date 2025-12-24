@@ -10,7 +10,7 @@ ViennaRecordPatternNodeTest >> testMaximalType [
 
 	| spec pattern r |
 	spec := 'types R:: x:real y:real' asViennaDocumentAst.
-	pattern := (ViennaVDMParser new pattern end parse: 'mk_R((2), a)')
+	pattern := (ViennaVDMParser current pattern end parse: 'mk_R((2), a)')
 		           parent: spec;
 		           yourself.
 	r := (spec resolveIdentifier: 'R') asMaximalViennaType.

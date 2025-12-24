@@ -51,6 +51,14 @@ ViennaDocumentNode >> hasScope [
 ]
 
 { #category : 'testing' }
+ViennaDocumentNode >> hasTests [
+
+	self testOperationsDo: [ :operation | ^ true ].
+	self namedTracesDo: [ :trace | ^ true ].
+	^ false
+]
+
+{ #category : 'testing' }
 ViennaDocumentNode >> isViennaDocumentNode [
 
 	^ true
@@ -60,4 +68,46 @@ ViennaDocumentNode >> isViennaDocumentNode [
 ViennaDocumentNode >> label [
 
 	^ 'Document'
+]
+
+{ #category : 'enumerating' }
+ViennaDocumentNode >> namedTracesDo: aBlock [
+
+	^ self subclassResponsibility
+]
+
+{ #category : 'purity and transparency' }
+ViennaDocumentNode >> purityCheck [
+
+	self toplevelDefinitionsDo: [ :toplevelDefinitionNode |
+		toplevelDefinitionNode purityCheck ]
+]
+
+{ #category : 'purity and transparency' }
+ViennaDocumentNode >> semanticCheck [
+
+	self
+		transparencyCheck;
+		purityCheck;
+		forgetTypecheck;
+		typecheck
+]
+
+{ #category : 'enumerating' }
+ViennaDocumentNode >> testOperationsDo: aBlock [
+
+	^ self subclassResponsibility
+]
+
+{ #category : 'enumerating' }
+ViennaDocumentNode >> toplevelDefinitionsDo: aBlock [
+
+	^ self subclassResponsibility
+]
+
+{ #category : 'purity and transparency' }
+ViennaDocumentNode >> transparencyCheck [
+
+	self toplevelDefinitionsDo: [ :toplevelDefinitionNode |
+		toplevelDefinitionNode transparencyCheck ]
 ]

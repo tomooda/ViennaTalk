@@ -34,6 +34,12 @@ ViennaVDMHighlighter >> access [
 ]
 
 { #category : 'parsers-keywords' }
+ViennaVDMHighlighter >> act [
+
+	^ self keyword: super act
+]
+
+{ #category : 'parsers-keywords' }
 ViennaVDMHighlighter >> all [
 	^ self keyword: super all
 ]
@@ -184,6 +190,12 @@ ViennaVDMHighlighter >> exports [
 { #category : 'parsers-keywords' }
 ViennaVDMHighlighter >> ext [
 	^ self keyword: super ext
+]
+
+{ #category : 'parsers-keywords' }
+ViennaVDMHighlighter >> fin [
+
+	^ self keyword: super fin
 ]
 
 { #category : 'parsers-keywords' }
@@ -399,6 +411,12 @@ ViennaVDMHighlighter >> return [
 ]
 
 { #category : 'parsers-keywords' }
+ViennaVDMHighlighter >> sharp [
+
+	^ self keyword: super sharp
+]
+
+{ #category : 'parsers-keywords' }
 ViennaVDMHighlighter >> skip [
 	^ self keyword: super skip
 ]
@@ -431,6 +449,12 @@ ViennaVDMHighlighter >> text: aText [
 { #category : 'parsers-keywords' }
 ViennaVDMHighlighter >> then [
 	^ self keyword: super then
+]
+
+{ #category : 'parsers-expressions' }
+ViennaVDMHighlighter >> timeExpression [
+
+	^ self keyword: super timeExpression
 ]
 
 { #category : 'parsers-keywords' }

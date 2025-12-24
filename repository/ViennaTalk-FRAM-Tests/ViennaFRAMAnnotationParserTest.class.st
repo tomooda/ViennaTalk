@@ -1,19 +1,20 @@
 Class {
-	#name : #ViennaFRAMAnnotationParserTest,
-	#superclass : #TestCase,
+	#name : 'ViennaFRAMAnnotationParserTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'parser'
 	],
-	#category : #'ViennaTalk-FRAM-Tests'
+	#category : 'ViennaTalk-FRAM-Tests',
+	#package : 'ViennaTalk-FRAM-Tests'
 }
 
-{ #category : #running }
+{ #category : 'running' }
 ViennaFRAMAnnotationParserTest >> setUp [
 
 	parser := ViennaFRAMAnnotationParser new
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaFRAMAnnotationParserTest >> testFramAnnotation [
 
 	self

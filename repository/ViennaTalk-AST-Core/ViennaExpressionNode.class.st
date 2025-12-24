@@ -31,6 +31,12 @@ ViennaExpressionNode >> boundIdentifiersDo: aBlock [
 ]
 
 { #category : 'testing' }
+ViennaExpressionNode >> isAssignee [
+
+	^ false
+]
+
+{ #category : 'testing' }
 ViennaExpressionNode >> isViennaExpressionNode [
 	^ true
 ]
@@ -51,6 +57,26 @@ ViennaExpressionNode >> maximalType: aViennaType [
 			  signal:
 				  'Type mismatch: expected ' , aViennaType printString
 				  , ' but actual ' , maximalType printString ]
+]
+
+{ #category : 'purity and transparency' }
+ViennaExpressionNode >> purityCheck [
+
+	self allDescendantsSuchThat: #isViennaNameNode do: [ :name |
+			name resolve ifNotNil: [ :defNode |
+				defNode isPureComponent ifFalse: [
+					ViennaPurityError signalOn: name ] ] ].
+	^ true
+]
+
+{ #category : 'purity and transparency' }
+ViennaExpressionNode >> transparencyCheck [
+
+	self allDescendantsSuchThat: #isViennaNameNode do: [ :name |
+			name resolve ifNotNil: [ :defNode |
+					defNode isTransparentComponent ifFalse: [
+						ViennaTransparencyError signalOn: name ] ] ].
+	^ true
 ]
 
 { #category : 'typechecking' }

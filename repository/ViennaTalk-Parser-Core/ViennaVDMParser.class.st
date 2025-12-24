@@ -77,6 +77,13 @@ ViennaVDMParser >> accessValueDefinition [
 		  yourself ]
 ]
 
+{ #category : 'parsers-expressions-basics' }
+ViennaVDMParser >> actExpression [
+
+	^ super actExpression
+	  ==> [ :namelist | ViennaActExpressionNode with: namelist ]
+]
+
 { #category : 'annotations' }
 ViennaVDMParser >> addAnnotation: aString [
 
@@ -346,6 +353,17 @@ ViennaVDMParser >> dom: arg [
 ViennaVDMParser >> dunion: arg [
 
 	^ ViennaDistributedSetUnionNode expression: arg
+]
+
+{ #category : 'parsers-statements' }
+ViennaVDMParser >> durationStatement [
+
+	^ super durationStatement =>> [ :start :end :array |
+	  (ViennaDurationStatementNode
+		   expression: array first
+		   statement: array second)
+		  start: start end: end;
+		  yourself ]
 ]
 
 { #category : 'parsers-expressions-operators' }
@@ -663,6 +681,13 @@ ViennaVDMParser >> fieldReference: stateDesig with: field [
 ViennaVDMParser >> fieldSelect: record with: field [
 
 	^ ViennaFieldSelectNode expression: record field: field
+]
+
+{ #category : 'parsers-expressions-basics' }
+ViennaVDMParser >> finExpression [
+
+	^ super finExpression
+	  ==> [ :namelist | ViennaFinExpressionNode with: namelist ]
 ]
 
 { #category : 'parsers-definitions' }
@@ -1721,6 +1746,13 @@ ViennaVDMParser >> quoteType [
 ]
 
 { #category : 'parsers-expressions-basics' }
+ViennaVDMParser >> rdExpression [
+
+	^ super rdExpression
+	  ==> [ :namelist | ViennaRdExpressionNode with: namelist ]
+]
+
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMParser >> recordConstructor [
 
 	^ super recordConstructor =>> [ :start :end :array |
@@ -2060,6 +2092,15 @@ ViennaVDMParser >> symbolicLiteral [
 
 	^ super symbolicLiteral flatten =>> [ :start :end :string |
 	  (ViennaSymbolicLiteralNode string: string trim)
+		  start: start end: end;
+		  yourself ]
+]
+
+{ #category : 'parsers-expressions-basics' }
+ViennaVDMParser >> timeExpression [
+
+	^ super timeExpression =>> [ :start :end :exp |
+	  ViennaTimeExpressionNode empty
 		  start: start end: end;
 		  yourself ]
 ]
@@ -2470,4 +2511,11 @@ ViennaVDMParser >> whileLoop [
 	  (ViennaWhileLoopNode expression: pair first statement: pair second)
 		  start: start end: end;
 		  yourself ]
+]
+
+{ #category : 'parsers-expressions-basics' }
+ViennaVDMParser >> wrExpression [
+
+	^ super wrExpression
+	  ==> [ :namelist | ViennaWrExpressionNode with: namelist ]
 ]

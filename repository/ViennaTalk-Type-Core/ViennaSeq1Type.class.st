@@ -1,32 +1,33 @@
 Class {
-	#name : #ViennaSeq1Type,
-	#superclass : #ViennaCompoundType,
+	#name : 'ViennaSeq1Type',
+	#superclass : 'ViennaCompoundType',
 	#instVars : [
 		'basetype'
 	],
-	#category : #'ViennaTalk-Type-Core'
+	#category : 'ViennaTalk-Type-Core',
+	#package : 'ViennaTalk-Type-Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaSeq1Type class >> of: aViennaType [
 	^ self new
 		setBasetype: aViennaType;
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSeq1Type class >> precedence [
 	^ 5
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaSeq1Type class >> with: aViennaType [
 	^ self new
 		setBasetype: aViennaType;
 		yourself
 ]
 
-{ #category : #arithmetic }
+{ #category : 'arithmetic' }
 ViennaSeq1Type >> & aViennaType [
 
 	^ aViennaType isAnyType
@@ -40,48 +41,48 @@ ViennaSeq1Type >> & aViennaType [
 			  btype ifNotUnit: [ :t | t seq1 ] ]
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaSeq1Type >> = anObject [
 	^ self class = anObject class and: [ basetype = anObject basetype ]
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaSeq1Type >> >= aViennaType [
 	^ super >= aViennaType or: [ aViennaType class = self class and: [ basetype >= aViennaType basetype ] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaSeq1Type >> basetype [
 	^ basetype
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaSeq1Type >> basicDo: aBlock [
 	^ self shouldNotImplement
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaSeq1Type >> basicIncludes: anObject [
 	^ anObject isSequence and: [ anObject notEmpty and: [ anObject allSatisfy: [ :value | basetype includes: value ] ] ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaSeq1Type >> basicIsEnumerable [
 	^ false
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaSeq1Type >> hash [
 	^ basetype hash bitXor: 16rffff
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSeq1Type >> instantiate: aDictionary [
 
 	^ self class with: (self basetype instantiate: aDictionary)
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaSeq1Type >> isCompatibleWith: aViennaType [
 
 	^ (aViennaType isSeqType and: [
@@ -89,31 +90,31 @@ ViennaSeq1Type >> isCompatibleWith: aViennaType [
 		  super isCompatibleWith: aViennaType ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaSeq1Type >> isSeq1Type [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaSeq1Type >> isSeqType [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaSeq1Type >> name [
 	^ 'seq1 of ' , (basetype nameInPrecedence: self class precedence)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaSeq1Type >> removeTypeHolders: aSet [
 	(aSet includes: self) ifTrue: [ ^self ].
 	aSet add: self.
 	basetype := basetype removeTypeHolders: aSet
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaSeq1Type >> setBasetype: aViennaType [
 	basetype := aViennaType
 ]

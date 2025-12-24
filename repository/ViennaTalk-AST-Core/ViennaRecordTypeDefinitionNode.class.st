@@ -39,6 +39,12 @@ ViennaRecordTypeDefinitionNode >> access: aViennaAccessNode [
 	self at: 1 put: aViennaAccessNode
 ]
 
+{ #category : 'accessing' }
+ViennaRecordTypeDefinitionNode >> addToModule: aViennaModuleNode [
+
+	^ aViennaModuleNode module addTypeDefinition: self copyFragment
+]
+
 { #category : 'accessing-definitions' }
 ViennaRecordTypeDefinitionNode >> asAccessDefinition [
 
@@ -200,10 +206,22 @@ ViennaRecordTypeDefinitionNode >> maximalType [
 	^ maximalType
 ]
 
+{ #category : 'purity and transparency' }
+ViennaRecordTypeDefinitionNode >> purityCheck [
+
+	
+]
+
 { #category : 'accessing-definitions' }
 ViennaRecordTypeDefinitionNode >> shortName [
 
 	^ self identifier
+]
+
+{ #category : 'purity and transparency' }
+ViennaRecordTypeDefinitionNode >> transparencyCheck [
+
+	self inv ifNotNil: #transparencyCheck
 ]
 
 { #category : 'accessing' }

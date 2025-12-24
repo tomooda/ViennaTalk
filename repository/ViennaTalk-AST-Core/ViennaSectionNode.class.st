@@ -24,14 +24,13 @@ ViennaSectionNode >> formatWith: aViennaAbstractFormatter [
 	^ aViennaAbstractFormatter
 		  indentString: (aViennaAbstractFormatter keyword: self sectionName)
 		  insertCr: (aViennaAbstractFormatter
-				   join:
-				   ';' ++ aViennaAbstractFormatter cr ++ aViennaAbstractFormatter cr
+				   join: ';' ++ aViennaAbstractFormatter cr
 				   withAll: (aViennaAbstractFormatter formatAll: self))
 			  ++ (self isEmpty
 					   ifTrue: [ aViennaAbstractFormatter empty ]
 					   ifFalse: [
-					   aViennaAbstractFormatter empty ++ ';'
-					   ++ aViennaAbstractFormatter cr ])
+						   aViennaAbstractFormatter empty ++ ';'
+						   ++ aViennaAbstractFormatter cr ])
 ]
 
 { #category : 'private' }
@@ -53,6 +52,12 @@ ViennaSectionNode >> maximalType [
 	^ ViennaType unit
 ]
 
+{ #category : 'purity and transparency' }
+ViennaSectionNode >> purityCheck [
+
+	self toplevelDefinitionsDo: #purityCheck
+]
+
 { #category : 'private' }
 ViennaSectionNode >> remove [
 
@@ -71,6 +76,15 @@ ViennaSectionNode >> sectionName [
 	^ self subclassResponsibility
 ]
 
+{ #category : 'purity and transparency' }
+ViennaSectionNode >> semanticCheck [
+
+	self
+		transparencyCheck;
+		purityCheck;
+		typecheck
+]
+
 { #category : 'accessing' }
 ViennaSectionNode >> shortName [
 
@@ -81,4 +95,10 @@ ViennaSectionNode >> shortName [
 ViennaSectionNode >> toplevelDefinitionsDo: aBlock [
 
 	self do: aBlock
+]
+
+{ #category : 'purity and transparency' }
+ViennaSectionNode >> transparencyCheck [
+
+	self toplevelDefinitionsDo: #transparencyCheck
 ]

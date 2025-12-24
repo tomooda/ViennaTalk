@@ -5,8 +5,9 @@ Class {
 		'subgenerators',
 		'index'
 	],
-	#category : 'ViennaTalk-Transpiler-Core',
-	#package : 'ViennaTalk-Transpiler-Core'
+	#category : 'ViennaTalk-Transpiler-Core-CombinatorialTesting',
+	#package : 'ViennaTalk-Transpiler-Core',
+	#tag : 'CombinatorialTesting'
 }
 
 { #category : 'instance creation' }

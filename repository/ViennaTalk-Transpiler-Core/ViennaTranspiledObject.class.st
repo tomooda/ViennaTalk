@@ -10,8 +10,9 @@ Class {
 		'specification',
 		'viennaEnv'
 	],
-	#category : 'ViennaTalk-Transpiler-Core',
-	#package : 'ViennaTalk-Transpiler-Core'
+	#category : 'ViennaTalk-Transpiler-Core-TranspiledObject',
+	#package : 'ViennaTalk-Transpiler-Core',
+	#tag : 'TranspiledObject'
 }
 
 { #category : 'specification' }
@@ -40,12 +41,22 @@ ViennaTranspiledObject class >> initialize [
 ]
 
 { #category : 'specification' }
+ViennaTranspiledObject class >> moduleName [
+
+	^ (specification notNil or: [ specification isViennaModuleNode ])
+		  ifTrue: [ specification identifier ]
+		  ifFalse: [ nil ]
+]
+
+{ #category : 'specification' }
 ViennaTranspiledObject class >> specification [
+
 	^ specification
 ]
 
 { #category : 'specification' }
 ViennaTranspiledObject class >> specification: aViennaNode [
+
 	specification := aViennaNode
 ]
 
@@ -77,7 +88,7 @@ ViennaTranspiledObject class >> specificationSourceAt: aSelector [
 { #category : 'transpiling' }
 ViennaTranspiledObject class >> transpileExpression: aString with: transpiler ifError: errorBlock [
 	| ast |
-	ast := ViennaVDMParser new expression end parse: aString.
+	ast := ViennaVDMParser current expression end parse: aString.
 	ast isPetit2Failure
 		ifTrue: [ ^ errorBlock cull: ast message ].
 	^ transpiler
@@ -95,7 +106,7 @@ ViennaTranspiledObject class >> transpileNode: aViennaNode with: transpiler ifEr
 { #category : 'transpiling' }
 ViennaTranspiledObject class >> transpileStatement: aString with: transpiler ifError: errorBlock [
 	| ast |
-	ast := ViennaVDMParser new statement end parse: aString.
+	ast := ViennaVDMParser current statement end parse: aString.
 	ast isPetit2Failure
 		ifTrue: [ ^ errorBlock cull: ast message ].
 	^ transpiler
@@ -123,6 +134,33 @@ ViennaTranspiledObject >> _document [
 ViennaTranspiledObject >> _document: aViennaTranspiledModularDocument [
 
 	_document := aViennaTranspiledModularDocument
+]
+
+{ #category : 'private' }
+ViennaTranspiledObject >> _state [
+
+	| binds |
+	binds := Dictionary new.
+	self class slots
+		select: [ :slot | slot isKindOf: ViennaStateVariableSlot ]
+		thenDo: [ :slot | binds at: slot name put: (slot read: self) ].
+	^ binds
+]
+
+{ #category : 'private' }
+ViennaTranspiledObject >> _state: aDictionary [
+
+	aDictionary keysAndValuesDo: [ :var :val |
+		self basicInstVarNamed: var put: val ]
+]
+
+{ #category : 'accessing' }
+ViennaTranspiledObject >> basicInstVarNamed: aString put: anObject [
+
+	^ self class
+		  slotNamed: aString
+		  ifFound: [ :slot | slot basicWrite: anObject to: self ]
+		  ifNone: [ InstanceVariableNotFound signalFor: aString asString ]
 ]
 
 { #category : 'evaluating' }
@@ -225,6 +263,14 @@ ViennaTranspiledObject >> inv [
 { #category : 'private' }
 ViennaTranspiledObject >> state [
 	^ (ViennaComposite constructorName: '')
+]
+
+{ #category : 'private' }
+ViennaTranspiledObject >> state: aViennaComposite [
+
+	aViennaComposite fieldNamesAndValuesDo: [ :var :val |
+		self basicInstVarNamed: var put: val ].
+	self inv
 ]
 
 { #category : 'printing' }

@@ -1,1 +1,1 @@
-Package { #name : #'ViennaTalk-WeblyWalkThrough-Server' }
+Package { #name : 'ViennaTalk-WeblyWalkThrough-Server' }

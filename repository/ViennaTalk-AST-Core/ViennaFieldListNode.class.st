@@ -37,6 +37,13 @@ ViennaFieldListNode >> freeIdentifiersExcept: aSet do: aBlock [
 ]
 
 { #category : 'testing' }
+ViennaFieldListNode >> isTransparentComponent [
+
+	^ self parent isNil or: [
+		  self parent isViennaStateDefinitionNode not ]
+]
+
+{ #category : 'testing' }
 ViennaFieldListNode >> isViennaFieldListNode [
 
 	^ true

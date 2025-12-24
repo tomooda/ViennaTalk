@@ -35,6 +35,12 @@ ViennaAbstractNodeChange >> , aViennaAbstractNodeChange [
 		  self class from: self from to: aViennaAbstractNodeChange to ]
 ]
 
+{ #category : 'operations' }
+ViennaAbstractNodeChange >> applyTo: aViennaDocumentNode [
+
+	^ self subclassResponsibility
+]
+
 { #category : 'enumerating' }
 ViennaAbstractNodeChange >> changedGlobalNamesDo: aBlock [
 
@@ -82,6 +88,15 @@ ViennaAbstractNodeChange >> printNames [
 ViennaAbstractNodeChange >> printNamesOn: aStream [
 
 	^ self subclassResponsibility
+]
+
+{ #category : 'printing' }
+ViennaAbstractNodeChange >> printOn: aStream [
+
+	self printSummaryOn: aStream.
+	aStream
+		space;
+		nextPutAll: (', ' join: (to ifNil: [ from ]) identifiers)
 ]
 
 { #category : 'printing' }

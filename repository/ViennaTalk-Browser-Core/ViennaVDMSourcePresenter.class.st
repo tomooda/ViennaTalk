@@ -4,7 +4,9 @@ Class {
 	#instVars : [
 		'animation',
 		'module',
-		'tracingSource'
+		'tracingSource',
+		'highlighter',
+		'highlighterProcess'
 	],
 	#category : 'ViennaTalk-Browser-Core-Spec2',
 	#package : 'ViennaTalk-Browser-Core',
@@ -23,8 +25,9 @@ ViennaVDMSourcePresenter class >> buildCommandsGroupWith: presenter forRoot: aCm
 
 	{
 		ViennaEvaluateItCommand.
-		ViennaTypeItCommand.
-		ViennaExecuteItCommand } do: [ :cmdClass |
+		ViennaExecuteItCommand.
+		ViennaTraceItCommand.
+		ViennaTypeItCommand } do: [ :cmdClass |
 		group register: (cmdClass forSpecContext: presenter) ].
 	aCmCommandsGroup register: group.
 	^ group
@@ -74,6 +77,39 @@ ViennaVDMSourcePresenter >> doExecuteIt [
 ]
 
 { #category : 'evaluating' }
+ViennaVDMSourcePresenter >> doSequenceDiagramIt [
+
+	self selectedTextOrLine trim ifNotEmpty: [ :string |
+			self openSequenceDiagramFrom: string ifError: [ :msg |
+					self
+						insertPopoverAfterCurrentSelection: (self newLabel label: msg)
+						style: 'error'.
+					^ nil ] ]
+]
+
+{ #category : 'evaluating' }
+ViennaVDMSourcePresenter >> doStateDiagramIt [
+
+	self selectedTextOrLine trim ifNotEmpty: [ :string |
+			self openStateDiagramFrom: string ifError: [ :msg |
+					self
+						insertPopoverAfterCurrentSelection: (self newLabel label: msg)
+						style: 'error'.
+					^ nil ] ]
+]
+
+{ #category : 'evaluating' }
+ViennaVDMSourcePresenter >> doTraceIt [
+
+	self selectedTextOrLine trim ifNotEmpty: [ :string |
+			self openTraceFrom: string ifError: [ :msg |
+					self
+						insertPopoverAfterCurrentSelection: (self newLabel label: msg)
+						style: 'error'.
+					^ nil ] ]
+]
+
+{ #category : 'evaluating' }
 ViennaVDMSourcePresenter >> doTypeIt [
 
 	| result |
@@ -108,13 +144,13 @@ ViennaVDMSourcePresenter >> doTypeIt [
 ViennaVDMSourcePresenter >> evaluateExpression: aString ifError: errorBlock [
 
 	| node |
-	node := ViennaVDMParser new expression parse: aString.
+	node := ViennaVDMParser current expression parse: aString.
 	node isPetit2Failure ifTrue: [ ^ errorBlock cull: node printString ].
 	node parent: module value.
 	[ node typecheck ]
 		on: ViennaTypeError
 		do: [ :ex | ^ errorBlock cull: ex messageText ].
-	^ (animation value ifNil: [ ViennaAnimation default ])
+	^ (animation value ifNil: [ ViennaTranspiledAnimation new ])
 		  plainExecute: node
 		  in: (node module ifNotNil: #identifier)
 		  ifError: errorBlock
@@ -124,7 +160,7 @@ ViennaVDMSourcePresenter >> evaluateExpression: aString ifError: errorBlock [
 ViennaVDMSourcePresenter >> evaluateStatement: aString ifError: errorBlock [
 
 	| node |
-	node := ViennaVDMParser new statement parse: aString.
+	node := ViennaVDMParser current statement parse: aString.
 	node isPetit2Failure ifTrue: [ ^ errorBlock cull: node printString ].
 	node parent: module value.
 	[ node typecheck ]
@@ -132,14 +168,65 @@ ViennaVDMSourcePresenter >> evaluateStatement: aString ifError: errorBlock [
 		do: [ :ex | ^ errorBlock cull: ex messageText ].
 	^ (animation value ifNil: [ ViennaTranspiledAnimation new ])
 		  plainExecute: node
-		  in: node module identifier
+		  in: (node module ifNotNil: #identifier)
 		  ifError: errorBlock
+]
+
+{ #category : 'api' }
+ViennaVDMSourcePresenter >> highlight [
+
+	self highlightWith: self highlighter
+]
+
+{ #category : 'api' }
+ViennaVDMSourcePresenter >> highlightWith: parser [
+
+	highlighterProcess ifNotNil: [
+		highlighterProcess terminate.
+		highlighterProcess := nil ].
+	highlighterProcess := [
+	                      | source context result |
+	                      source := self text asString asString copy.
+	                      self highlighter text: source asText.
+	                      context := ViennaPP2HighlightingContext new.
+	                      (result := parser
+		                                 parse: source
+		                                 withContext: context)
+		                      isPetit2Failure ifTrue: [
+		                      self highlighter text
+			                      makeColor: Color red
+			                      from:
+			                      (result furthestPosition - 1
+				                       min: source size
+				                       max: 1)
+			                      to: source size ].
+	                      source size = self highlighter text runs size
+		                      ifTrue: [
+			                      self withAdapterDo: [ :a |
+				                      a widgetDo: [ :w |
+					                      w text runs: self highlighter text runs.
+					                      w changed ] ] ].
+	                      highlighterProcess := nil ] forkAt:
+		                      Processor userBackgroundPriority
+]
+
+{ #category : 'accessing' }
+ViennaVDMSourcePresenter >> highlighter [
+
+	^ highlighter ifNil: [ highlighter := ViennaVDMHighlighter new ]
+]
+
+{ #category : 'accessing' }
+ViennaVDMSourcePresenter >> highlighter: aViennaVDMHighlighgter [
+
+	highlighter := aViennaVDMHighlighgter
 ]
 
 { #category : 'initialization' }
 ViennaVDMSourcePresenter >> initialize [
 
 	super initialize.
+	self font: ViennaLauncher font.
 	self
 		withoutSyntaxHighlight;
 		withoutSmartCharacters
@@ -155,6 +242,95 @@ ViennaVDMSourcePresenter >> module [
 ViennaVDMSourcePresenter >> module: aBlock [
 
 	module := aBlock
+]
+
+{ #category : 'evaluating' }
+ViennaVDMSourcePresenter >> openSequenceDiagramFrom: aString ifError: errorBlock [
+
+	| node |
+	node := ViennaVDMParser current statement
+	        / ViennaVDMParser current expression parse: aString.
+	node isPetit2Failure ifTrue: [ ^ errorBlock cull: node printString ].
+	node parent: module value.
+	[ node typecheck ]
+		on: ViennaTypeError
+		do: [ :ex | ^ errorBlock cull: ex messageText ].
+	animation value ifNotNil: [ :anim |
+			| transpiledSpec |
+			transpiledSpec := ViennaTranspiledModularDocumentForExecutionTracing
+				                  fromAnimation: anim.
+			transpiledSpec useSequenceDiagramRecorder: aString.
+			(transpiledSpec
+				 at: (node module ifNotNil: #identifier)
+				 ifAbsent: [ transpiledSpec ])
+				evaluateNode: node
+				ifError: [ ^ nil ].
+			transpiledSpec _recorder openWithTitle:
+				'Sequence Diagram from ' , aString ]
+]
+
+{ #category : 'evaluating' }
+ViennaVDMSourcePresenter >> openStateDiagramFrom: aString ifError: errorBlock [
+
+	| node |
+	node := ViennaVDMParser current statement
+	        / ViennaVDMParser current expression parse: aString.
+	node isPetit2Failure ifTrue: [ ^ errorBlock cull: node printString ].
+	node parent: module value.
+	[ node typecheck ]
+		on: ViennaTypeError
+		do: [ :ex | ^ errorBlock cull: ex messageText ].
+	animation value ifNotNil: [ :anim |
+			| specification transpiledSpec probeEditor |
+			specification := anim specification.
+			specification isString ifTrue: [
+				specification := specification asViennaDocumentAst ].
+			transpiledSpec := ViennaTranspiledModularDocumentForExecutionTracing
+				                  fromAnimation: anim.
+			probeEditor := ViennaStateProbeBrowser new specification:
+				               anim specification.
+			probeEditor openDialog okAction: [
+					| probes |
+					probes := probeEditor probesWithTranspiledSpecification:
+						          transpiledSpec.
+					transpiledSpec useStateDiagramRecorder: probes.
+					(transpiledSpec
+						 at: (node module ifNotNil: #identifier)
+						 ifAbsent: [ transpiledSpec ])
+						evaluateNode: node
+						ifError: [ ^ nil ].
+					transpiledSpec _recorder openWithTitle:
+						'State Diagram from ' , aString ] ]
+]
+
+{ #category : 'evaluating' }
+ViennaVDMSourcePresenter >> openTraceFrom: aString ifError: errorBlock [
+
+	| node |
+	node := ViennaVDMParser current statement
+	        / ViennaVDMParser current expression parse: aString.
+	node isPetit2Failure ifTrue: [ ^ errorBlock cull: node printString ].
+	node parent: module value.
+	[ node typecheck ]
+		on: ViennaTypeError
+		do: [ :ex | ^ errorBlock cull: ex messageText ].
+	animation value ifNotNil: [ :anim |
+			| transpiledSpec |
+			transpiledSpec := ViennaTranspiledModularDocumentForExecutionTracing
+				                  fromAnimation: anim.
+			transpiledSpec useEventRecorder:
+				(transpiledSpec state associations collect: [ :assoc |
+					 assoc key -> assoc value asOrderedDictionary ])
+					asOrderedDictionary.
+			(transpiledSpec
+				 at: (node module ifNotNil: #identifier)
+				 ifAbsent: [ transpiledSpec ])
+				evaluateNode: node
+				ifError: [ ^ nil ].
+			transpiledSpec _recorder
+				openWithSpecification: node document
+				source: aString
+				title: 'Execution Record from ' , aString ]
 ]
 
 { #category : 'api' }
@@ -176,7 +352,7 @@ ViennaVDMSourcePresenter >> tracingSource [
 ViennaVDMSourcePresenter >> typecheckExpression: aString ifError: errorBlock [
 
 	| node |
-	node := ViennaVDMParser new expression parse: aString.
+	node := ViennaVDMParser current expression parse: aString.
 	node isPetit2Failure ifTrue: [ ^ errorBlock cull: node printString ].
 	node parent: module value.
 	^ [ node typecheck printString ]

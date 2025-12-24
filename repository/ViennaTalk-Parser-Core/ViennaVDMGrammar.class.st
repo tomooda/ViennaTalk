@@ -64,14 +64,28 @@ Class {
 { #category : 'accessing - method dictionary' }
 ViennaVDMGrammar class >> addSelectorSilently: selector withMethod: compiledMethod [
 
-	current := nil.
+	self flushCurrent.
 	^ super addSelectorSilently: selector withMethod: compiledMethod
+]
+
+{ #category : 'accessing' }
+ViennaVDMGrammar class >> basicFlushCurrent [
+
+	current := nil
 ]
 
 { #category : 'accessing' }
 ViennaVDMGrammar class >> current [
 
 	^ current ifNil: [ current := self new ]
+]
+
+{ #category : 'accessing' }
+ViennaVDMGrammar class >> flushCurrent [
+
+	self basicFlushCurrent.
+	self allSubclassesDo: [ :class |
+		class isAbstract ifFalse: [ class basicFlushCurrent ] ]
 ]
 
 { #category : 'parsers-symbols' }
@@ -144,6 +158,18 @@ ViennaVDMGrammar >> accessValueDefinition [
 		   { 
 			   ({ pair first } reject: #isNil).
 			   pair second } ]) ==> #second
+]
+
+{ #category : 'parsers-symbols' }
+ViennaVDMGrammar >> act [
+
+	^ self reserved: 'act'
+]
+
+{ #category : 'parsers-expressions-basics' }
+ViennaVDMGrammar >> actExpression [
+
+	^ self sharp , self act , lparen , nameList , rparen ==> #fourth
 ]
 
 { #category : 'parsers-keywords' }
@@ -275,8 +301,8 @@ ViennaVDMGrammar >> atomicExpression [
 	  / self tokenConstructor / self recordModifier
 	  / self lambdaExpression / self resultExpression
 	  / self generalIsExpr / self undefinedExpression
-	  / self preconditionExpression / self oldName / name
-	  / symbolicLiteral
+	  / self timeExpression / self preconditionExpression
+	  / self historyExpression / self oldName / name / symbolicLiteral
 	  / (lparen , expression , rparen ==> [ :triple | triple second ])
 ]
 
@@ -687,6 +713,21 @@ ViennaVDMGrammar >> dunion: arg [
 	^ arg
 ]
 
+{ #category : 'parsers-keywords' }
+ViennaVDMGrammar >> duration [
+	^ self reserved: 'duration'
+]
+
+{ #category : 'parsers-statements' }
+ViennaVDMGrammar >> durationStatement [
+
+	^ self duration , lparen , expression , rparen , statement
+	  ==> [ :array |
+		  {
+			  array third.
+			  array fifth } ]
+]
+
 { #category : 'parsers-symbols' }
 ViennaVDMGrammar >> elems [
 	^ self reserved: 'elems'
@@ -1053,6 +1094,7 @@ ViennaVDMGrammar >> exports [
 
 { #category : 'parsers-expressions' }
 ViennaVDMGrammar >> expression [
+
 	^ connectiveExpression
 ]
 
@@ -1128,6 +1170,18 @@ ViennaVDMGrammar >> fieldReferenceArg [
 ViennaVDMGrammar >> fieldSelect: record with: field [
 	^ {record.
 	field}
+]
+
+{ #category : 'parsers-symbols' }
+ViennaVDMGrammar >> fin [
+
+	^ self reserved: 'fin'
+]
+
+{ #category : 'parsers-expressions-basics' }
+ViennaVDMGrammar >> finExpression [
+
+	^ self sharp , self fin , lparen , nameList , rparen ==> #fourth
 ]
 
 { #category : 'parsers-definitions' }
@@ -1278,6 +1332,14 @@ ViennaVDMGrammar >> hd [
 { #category : 'parsers-expressions-operators' }
 ViennaVDMGrammar >> hd: arg [
 	^ arg
+]
+
+{ #category : 'parsers-expressions-basics' }
+ViennaVDMGrammar >> historyExpression [
+
+	^ $# asPParser and
+	  , (self actExpression / self rdExpression / self wrExpression)
+	  ==> #second
 ]
 
 { #category : 'parsers-types' }
@@ -2392,6 +2454,12 @@ ViennaVDMGrammar >> rd [
 ]
 
 { #category : 'parsers-expressions-basics' }
+ViennaVDMGrammar >> rdExpression [
+
+	^ self sharp , self rd , lparen , nameList , rparen ==> #fourth
+]
+
+{ #category : 'parsers-expressions-basics' }
 ViennaVDMGrammar >> recordConstructor [
 
 	^ 'mk_' asPParser , (self type: name) , lparen , expressionList
@@ -2686,6 +2754,12 @@ ViennaVDMGrammar >> setUnionPattern [
 			(triple third)} ]
 ]
 
+{ #category : 'parsers-symbols' }
+ViennaVDMGrammar >> sharp [
+
+	^ comment trim star , '#' asPParser ==> #second
+]
+
 { #category : 'parsers-comments' }
 ViennaVDMGrammar >> singleLineAnnotation [
 
@@ -2778,7 +2852,7 @@ ViennaVDMGrammar >> stateFieldList [
 ViennaVDMGrammar >> statement [
 	^ self letStatement / self letBeStatement / self defStatement / self identityStatement / self blockStatement
 		/ self generalAssignStatement / self callStatement / self ifStatement / self casesStatement / self sequenceForLoop
-		/ self setForLoop / self indexForLoop / self whileLoop / self nondeterministicStatement / self returnStatement / self alwaysStatement / self exitStatement / self errorStatement / self trapStatement / self tixeStatement
+		/ self setForLoop / self indexForLoop / self whileLoop / self nondeterministicStatement / self returnStatement / self alwaysStatement / self exitStatement / self errorStatement / self trapStatement / self tixeStatement / self durationStatement
 ]
 
 { #category : 'parsers-keywords' }
@@ -2815,6 +2889,11 @@ ViennaVDMGrammar >> then [
 ]
 
 { #category : 'parsers-keywords' }
+ViennaVDMGrammar >> timeExpression [
+	^ self reserved: 'time'
+]
+
+{ #category : 'parsers-keywords' }
 ViennaVDMGrammar >> tixe [
 	^ self reserved: 'tixe'
 ]
@@ -2845,6 +2924,20 @@ ViennaVDMGrammar >> to [
 { #category : 'parsers-expressions-basics' }
 ViennaVDMGrammar >> tokenConstructor [
 	^ ((self reserved: 'mk_token' asPParser) , lparen , expression , rparen) ==> #third
+]
+
+{ #category : 'parsers-definitions' }
+ViennaVDMGrammar >> topLevelDefinition [
+
+	^ self accessTypeDefinition / self accessValueDefinition
+	  / self accessFunctionDefinition / self stateDefinition
+	  / self accessOperationDefinition
+]
+
+{ #category : 'parsers-definitions' }
+ViennaVDMGrammar >> topLevelDefinitionList [
+
+	^ (self topLevelDefinition separatedBy: semicolon) withoutSeparators
 ]
 
 { #category : 'parsers-types' }
@@ -3291,4 +3384,10 @@ ViennaVDMGrammar >> with [
 { #category : 'parsers-keywords' }
 ViennaVDMGrammar >> wr [
 	^ self reserved: 'wr'
+]
+
+{ #category : 'parsers-expressions-basics' }
+ViennaVDMGrammar >> wrExpression [
+
+	^ self sharp , self wr , lparen , nameList , rparen ==> #fourth
 ]

@@ -1,0 +1,30 @@
+Class {
+	#name : 'ViennaAddOneMutation',
+	#superclass : 'ViennaMutation',
+	#category : 'ViennaTalk-Mutation-Core',
+	#package : 'ViennaTalk-Mutation-Core'
+}
+
+{ #category : 'testing' }
+ViennaAddOneMutation >> canMutate: aViennaNode [
+
+	^ aViennaNode isViennaExpressionNode and: [
+		  aViennaNode isAssignee not and: [
+			  aViennaNode typecheck isRealType and: [
+				  (aViennaNode hasParentSuchThat: [ :node |
+					   node isViennaNamedTraceNode ]) not ] ] ]
+]
+
+{ #category : 'mutating' }
+ViennaAddOneMutation >> mutate: aViennaNode [
+
+	^ ViennaArithmeticPlusNode
+		  expression: aViennaNode
+		  expression: (ViennaSymbolicLiteralNode string: '1')
+]
+
+{ #category : 'accessing' }
+ViennaAddOneMutation >> name [
+
+	^ 'add-one'
+]

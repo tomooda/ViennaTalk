@@ -1,57 +1,58 @@
 Class {
-	#name : #ViennaAnyType,
-	#superclass : #ViennaBasicType,
-	#category : #'ViennaTalk-Type-Core'
+	#name : 'ViennaAnyType',
+	#superclass : 'ViennaBasicType',
+	#category : 'ViennaTalk-Type-Core',
+	#package : 'ViennaTalk-Type-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAnyType class >> precedence [
 	^ 6
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaAnyType >> = anObject [
 	^ self class = anObject class
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaAnyType >> >= anObject [
 	^ true
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaAnyType >> basicDo: aBlock [
 	^ self shouldNotImplement
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaAnyType >> basicIncludes: anObject [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaAnyType >> basicIsEnumerable [
 	^ false
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaAnyType >> hash [
 	^ self class hash
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaAnyType >> isAnyType [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaAnyType >> isCompatibleWith: aViennaType [
 
 	^ aViennaType isUnitType not
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAnyType >> name [
 	^ '?'
 ]

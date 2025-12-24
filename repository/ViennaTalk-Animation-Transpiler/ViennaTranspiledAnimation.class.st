@@ -19,7 +19,7 @@ Class {
 { #category : 'accessing' }
 ViennaTranspiledAnimation class >> useTranspilerByDefault [
 
-	^ UseTranspilerByDefault = true
+	^ UseTranspilerByDefault ~= false
 ]
 
 { #category : 'accessing' }
@@ -135,6 +135,29 @@ ViennaTranspiledAnimation >> at: aString put: anObject [
 	^ value
 ]
 
+{ #category : 'accessing' }
+ViennaTranspiledAnimation >> basicAt: aString put: anObject [
+
+	| separatorIndex target name |
+	separatorIndex := aString indexOf: $`.
+	separatorIndex = 0
+		ifTrue: [
+				target := object.
+				name := aString ]
+		ifFalse: [
+				| moduleName |
+				moduleName := aString copyFrom: 1 to: separatorIndex - 1.
+				target := moduleName = self defaultModule
+					          ifTrue: [ object ]
+					          ifFalse: [
+							          object
+								          at: (aString copyFrom: 1 to: separatorIndex - 1)
+								          ifAbsent: [ ^ nil ] ].
+				name := aString copyFrom: separatorIndex + 1 to: aString size ].
+	target basicInstVarNamed: name put: anObject.
+	^ anObject
+]
+
 { #category : 'private' }
 ViennaTranspiledAnimation >> becomeInterpretedAnimation [
 	| animation |
@@ -242,7 +265,7 @@ ViennaTranspiledAnimation >> init [
 ViennaTranspiledAnimation >> initialize [
 
 	super initialize.
-	parser := ViennaVDMParser new.
+	parser := ViennaVDMParser current.
 	reader := ViennaReader new.
 	writer := ViennaUnquoteWriter new.
 	self specification: String new ifError: [  ]
@@ -342,6 +365,77 @@ ViennaTranspiledAnimation >> postCopy [
 	self state: oldState
 ]
 
+{ #category : 'evaluating' }
+ViennaTranspiledAnimation >> runTestOperation: aString module: anotherString [
+
+	| moduleObject operationNode acts fins rds wrs |
+	moduleObject := object at: anotherString.
+	operationNode := moduleObject class specificationAt: aString asSymbol.
+	acts := Set new.
+	fins := Set new.
+	rds := Set new.
+	wrs := Set new.
+	operationNode
+		allDescendantsSuchThat: #isViennaHistoryExpressionNode
+		do: [ :node |
+			node isViennaActExpressionNode ifTrue: [
+				node nameList do: [ :name |
+					name asGlobalName ifNotNil: [ :globalName |
+						acts add: {
+								{
+									globalName moduleIdentifier asSymbol.
+									globalName identifier asSymbol }.
+								(object at: globalName moduleIdentifier).
+								(globalName identifier , ':') asSymbol } ] ] ].
+			node isViennaFinExpressionNode ifTrue: [
+				node nameList do: [ :name |
+					name asGlobalName ifNotNil: [ :globalName |
+						fins add: {
+								{
+									globalName moduleIdentifier asSymbol.
+									globalName identifier asSymbol }.
+								(object at: globalName moduleIdentifier).
+								(globalName identifier , ':') asSymbol } ] ] ].
+			node isViennaRdExpressionNode ifTrue: [
+				node nameList do: [ :name |
+					name asGlobalName ifNotNil: [ :globalName |
+						rds add: {
+								{
+									globalName moduleIdentifier asSymbol.
+									globalName identifier asSymbol }.
+								(object at: globalName moduleIdentifier).
+								globalName identifier asSymbol } ] ] ].
+			node isViennaWrExpressionNode ifTrue: [
+				node nameList do: [ :name |
+					name asGlobalName ifNotNil: [ :globalName |
+						wrs add: {
+								{
+									globalName moduleIdentifier asSymbol.
+									globalName identifier asSymbol }.
+								(object at: globalName moduleIdentifier).
+								globalName identifier asSymbol } ] ] ] ].
+	self init.
+	ViennaProfiler
+		act: acts asArray
+		fin: fins asArray
+		rd: rds asArray
+		wr: wrs asArray
+		do: [
+			[ (moduleObject perform: aString asSymbol) value ]
+				on: ViennaAssertionViolation
+				do: [ :ex |
+				ex resignalAs: (ViennaException expression: ex expression) ] ]
+]
+
+{ #category : 'evaluating' }
+ViennaTranspiledAnimation >> runTrace: aString module: anotherString do: aBlock onError: errorBlock [
+
+	(object at: anotherString)
+		perform: (aString , ':onError:') asSymbol
+		with: aBlock
+		with: errorBlock
+]
+
 { #category : 'accessing' }
 ViennaTranspiledAnimation >> specification [
 	^ specification ifNil: [ '' ]
@@ -402,6 +496,9 @@ ViennaTranspiledAnimation >> state [
 
 { #category : 'private' }
 ViennaTranspiledAnimation >> state: aDictionary [
-	object
-		viennaAtomic: [ aDictionary keysAndValuesDo: [ :var :val | [self at: var put: (reader parse: val)] on: Error do: [ :ex | ex resume ] ] ]
+
+	aDictionary keysAndValuesDo: [ :var :val |
+		self basicAt: var put: (reader parse: val) ].
+	object inv.
+	self announceStateChanged
 ]

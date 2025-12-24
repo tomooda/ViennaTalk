@@ -45,6 +45,14 @@ ViennaCallStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
 	self expressionList freeIdentifiersExcept: aSet do: aBlock
 ]
 
+{ #category : 'purity and transparency' }
+ViennaCallStatementNode >> isPureComponent [
+
+	^ self name resolve
+		  ifNotNil: [ :def | def isPureComponent ]
+		  ifNil: [ false ]
+]
+
 { #category : 'testing' }
 ViennaCallStatementNode >> isViennaCallStatementNode [
 

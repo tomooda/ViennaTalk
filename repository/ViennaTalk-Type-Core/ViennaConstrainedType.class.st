@@ -1,42 +1,43 @@
 Class {
-	#name : #ViennaConstrainedType,
-	#superclass : #ViennaCompoundType,
+	#name : 'ViennaConstrainedType',
+	#superclass : 'ViennaCompoundType',
 	#instVars : [
 		'basetype',
 		'invariant'
 	],
-	#category : #'ViennaTalk-Type-Core'
+	#category : 'ViennaTalk-Type-Core',
+	#package : 'ViennaTalk-Type-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaConstrainedType class >> precedence [
 	^ 0
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaConstrainedType class >> with: aViennaType with: aBlock [
 	^ self new
 		setBasetype: aViennaType invariant: aBlock;
 		yourself
 ]
 
-{ #category : #arithmetic }
+{ #category : 'arithmetic' }
 ViennaConstrainedType >> & aViennaType [
 
 	^ basetype & aViennaType ifNotUnit: [ :type | type inv: invariant ]
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaConstrainedType >> = anObject [
 	^ self class = anObject class and: [ basetype = anObject basetype and: [ invariant = anObject invariant ] ]
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaConstrainedType >> >= aViennaType [
 	^ false
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaConstrainedType >> applyTo: anArray [
 	| value |
 	value := basetype applyTo: anArray.
@@ -45,12 +46,12 @@ ViennaConstrainedType >> applyTo: anArray [
 		ifFalse: [ ViennaStateInvariantViolation signal ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaConstrainedType >> basetype [
 	^ basetype
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaConstrainedType >> basicDo: aBlock [
 	basetype
 		do: [ :v | 
@@ -58,22 +59,22 @@ ViennaConstrainedType >> basicDo: aBlock [
 				ifTrue: [ aBlock value: v ] ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaConstrainedType >> basicIncludes: anObject [
 	^ (basetype includes: anObject) and: [ invariant value: anObject ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaConstrainedType >> basicIsEnumerable [
 	^ basetype isEnumerable
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaConstrainedType >> hash [
 	^ basetype hash bitXor: invariant hash
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaConstrainedType >> instantiate: aDictionary [
 
 	^ self class
@@ -81,67 +82,67 @@ ViennaConstrainedType >> instantiate: aDictionary [
 		  with: self invariant
 ]
 
-{ #category : #arithmetic }
+{ #category : 'arithmetic' }
 ViennaConstrainedType >> inv: aBlock [
 	^ self class with: basetype with: [ :v | (invariant value: v) and: [ aBlock value: v ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaConstrainedType >> invariant [
 	^ invariant
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaConstrainedType >> isCompatibleWith: aViennaType [
 
 	^ basetype isCompatibleWith: aViennaType
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaConstrainedType >> isConstrainedType [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaConstrainedType >> isIntType [
 	^ basetype isIntType
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaConstrainedType >> isNat1Type [
 	^ basetype isNat1Type
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaConstrainedType >> isNatType [
 	^ basetype isNatType
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaConstrainedType >> isRealType [
 	^ basetype isRealType
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaConstrainedType >> name [
 	^ basetype name , ' inv ' , invariant printString
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaConstrainedType >> possibleTypesDo: aBlock [
 
 	self basetype possibleTypesDo: aBlock
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaConstrainedType >> removeTypeHolders: aSet [
 	(aSet includes: self) ifTrue: [ ^self ].
 	aSet add: self.
 	basetype := basetype removeTypeHolders: aSet
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaConstrainedType >> setBasetype: aViennaType invariant: aBlock [
 	basetype := aViennaType.
 	invariant := aBlock

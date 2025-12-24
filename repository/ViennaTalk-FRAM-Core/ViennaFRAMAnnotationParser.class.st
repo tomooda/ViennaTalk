@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaFRAMAnnotationParser,
-	#superclass : #PP2CompositeNode,
-	#category : #'ViennaTalk-FRAM-Core'
+	#name : 'ViennaFRAMAnnotationParser',
+	#superclass : 'PP2CompositeNode',
+	#category : 'ViennaTalk-FRAM-Core',
+	#package : 'ViennaTalk-FRAM-Core'
 }
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaFRAMAnnotationParser >> framAnnotation [
 
 	^ 'FRAM' asPParser , #blank asPParser plus
@@ -15,7 +16,7 @@ ViennaFRAMAnnotationParser >> framAnnotation [
 			  quad fourth trim } ]
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 ViennaFRAMAnnotationParser >> start [
 
 	^ self framAnnotation

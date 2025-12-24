@@ -12,7 +12,7 @@ Class {
 ViennaMapEnumerationPatternNodeTest >> testMaximalType [
 
 	| pattern |
-	pattern := ViennaVDMParser new pattern end parse:
+	pattern := ViennaVDMParser current pattern end parse:
 		           '{a |-> b, (1) |-> (''2'')}'.
 	self
 		assert: pattern typecheck
@@ -28,7 +28,7 @@ ViennaMapEnumerationPatternNodeTest >> testMaximalType [
 	self
 		assert: pattern first valuePattern typecheck
 		equals: ViennaType char optional.
-	pattern := ViennaVDMParser new pattern end parse: '{|->}'.
+	pattern := ViennaVDMParser current pattern end parse: '{|->}'.
 	self
 		assert: pattern typecheck
 		equals: (ViennaType unit mapTo: ViennaType unit)

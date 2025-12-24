@@ -99,6 +99,12 @@ ViennaFlatDocumentNode >> definitionOfLocalName: aString [
 	^ nil
 ]
 
+{ #category : 'accessing' }
+ViennaFlatDocumentNode >> ensureModuleNamed: aString [
+
+	
+]
+
 { #category : 'accessing-definitions' }
 ViennaFlatDocumentNode >> findResolverForIdentifier: aString [
 
@@ -151,6 +157,13 @@ ViennaFlatDocumentNode >> moduleOrFlatDocument [
 ]
 
 { #category : 'enumerating' }
+ViennaFlatDocumentNode >> namedTracesDo: aBlock [
+
+	self sectionsDo: [ :section |
+		section isViennaTracesDefinitionsNode ifTrue: [ section do: aBlock ] ]
+]
+
+{ #category : 'enumerating' }
 ViennaFlatDocumentNode >> sectionsDo: aBlock [
 
 	self do: aBlock
@@ -172,6 +185,15 @@ ViennaFlatDocumentNode >> stateDefinitionIfAbsentPut: errorBlock [
 		  def := errorBlock value.
 		  self add: def.
 		  def ]
+]
+
+{ #category : 'enumerating' }
+ViennaFlatDocumentNode >> testOperationsDo: aBlock [
+
+	self toplevelDefinitionsDo: [ :toplevel |
+		toplevel isOperationDefinition and: [
+			(toplevel identifier beginsWith: 'test') ifTrue: [
+				aBlock value: toplevel ] ] ]
 ]
 
 { #category : 'enumerating' }

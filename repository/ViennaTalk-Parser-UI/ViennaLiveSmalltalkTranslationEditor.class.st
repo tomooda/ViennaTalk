@@ -178,7 +178,7 @@ ViennaLiveSmalltalkTranslationEditor >> format: aString [
 { #category : 'VDM manipulations' }
 ViennaLiveSmalltalkTranslationEditor >> formatSelectionInCodeText [
 	| parser editor ast result |
-	parser := ViennaVDMParser new.
+	parser := ViennaVDMParser current.
 	editor := codeText widget widget textMorph editor.
 	editor lineSelectAndEmptyCheck: [ ^ '' ].
 	ast := parser expression end / parser statement end / parser type end
@@ -241,7 +241,7 @@ ViennaLiveSmalltalkTranslationEditor >> runtimeTypeCheck [
 { #category : 'evaluating' }
 ViennaLiveSmalltalkTranslationEditor >> translateIt [
 	| parser editor ast codeFromSelection |
-	parser := ViennaVDMParser new.
+	parser := ViennaVDMParser current.
 	editor := codeText adapter widget textMorph editor.
 	editor lineSelectAndEmptyCheck: [ ^ '' ].
 	ast := parser expression end / parser statement end / parser type end

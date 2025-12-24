@@ -1,25 +1,26 @@
 Class {
-	#name : #ViennaBasicType,
-	#superclass : #ViennaType,
+	#name : 'ViennaBasicType',
+	#superclass : 'ViennaType',
 	#classInstVars : [
 		'current'
 	],
-	#category : #'ViennaTalk-Type-Core'
+	#category : 'ViennaTalk-Type-Core',
+	#package : 'ViennaTalk-Type-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaBasicType class >> current [
 
 	^ current ifNil: [ current := self new ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaBasicType class >> isAbstract [
 
 	^ self = ViennaBasicType
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaBasicType >> instantiate: aDictionary [
 
 	^ self

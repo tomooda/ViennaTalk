@@ -15,6 +15,12 @@ ViennaFieldReferenceNode class >> stateDesignator: aViennaStateDesignatorNode fi
 		  yourself
 ]
 
+{ #category : 'testing' }
+ViennaFieldReferenceNode >> designatesStateVariable [
+
+	^ self stateDesignator designatesStateVariable
+]
+
 { #category : 'accessing' }
 ViennaFieldReferenceNode >> field [
 
@@ -43,6 +49,12 @@ ViennaFieldReferenceNode >> formatWith: aViennaAbstractFormatter [
 ViennaFieldReferenceNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self stateDesignator freeIdentifiersExcept: aSet do: aBlock
+]
+
+{ #category : 'accessing' }
+ViennaFieldReferenceNode >> identifier [
+
+	^ self stateDesignator identifier
 ]
 
 { #category : 'testing' }

@@ -1,27 +1,28 @@
 Class {
-	#name : #ViennaFRAMModelTest,
-	#superclass : #TestCase,
+	#name : 'ViennaFRAMModelTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'parser',
 		'model'
 	],
-	#category : #'ViennaTalk-FRAM-Tests'
+	#category : 'ViennaTalk-FRAM-Tests',
+	#package : 'ViennaTalk-FRAM-Tests'
 }
 
-{ #category : #running }
+{ #category : 'running' }
 ViennaFRAMModelTest >> setUp [
 
 	model := ViennaFRAMModel new
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaFRAMModelTest >> testLoadSpec [
 
 	| spec |
 	model
 		newFunctionNamed: 'find pedestrian';
 		newOutputOf: 'find pedestrian' named: 'new pedestrian'.
-	spec := ViennaVDMParser parse: 'operations
+	spec := ViennaVDMParser current parse: 'operations
 	--@FRAM OUTPUT current count
 	--@FRAM INPUT new pedestrian
 	inc : () ==> nat

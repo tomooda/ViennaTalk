@@ -84,6 +84,12 @@ ViennaFieldNode >> identifier: aString [
 ]
 
 { #category : 'testing' }
+ViennaFieldNode >> isTransparentComponent [
+
+	^ self parent isNil or: [ self parent isTransparentComponent ]
+]
+
+{ #category : 'testing' }
 ViennaFieldNode >> isViennaFieldNode [
 
 	^ true
