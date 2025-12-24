@@ -1,6 +1,11 @@
 Major releases of ViennaTalk (lastest top)
 ---
-
+* Codename Gdansk has been released (Dec 24, 2025)
+  - improved git repository support: You can merge the current working copy into the origin by resolving conflicts on top-level definitions.
+  - mutation testing: The system evaluates the testcases and combinatorial tests by mutating the original specification.
+  - full execution traceː The system records all assignment/call/return statements with actual values and visualize them as state diagrams and sequence diagrams.
+  - experimental profilersː The profiler catches all assignment to the variables and operation calls to help estimating the performance of implementation.
+  - misc improvementsː bugfixes on type checkers and etc.
 
 * Codename Milan has been released (Apr 2, 2025) 
   - new Launcher UI: Models menu for quick access to open your model directories under Documents/ViennaTalk/.
@@ -36,7 +41,6 @@ Major releases of ViennaTalk (lastest top)
   - FRAM collaboration support
     - Import operations from FRAM functions
     - Export operations to FRAM functions and aspects
-
 
 * Codename Boulder has been released. (Dec 31, 2021)
   - Refactoring browser based on AST manipulations is now experimentally available.
