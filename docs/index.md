@@ -37,13 +37,12 @@ Table of Major Components of ViennaTalk
 What's new in the latest release
 ---
 
-* Codename Milan has been released (Apr 2, 2025) 
-  - new Launcher UI: Models menu for quick access to open your model directories under Documents/ViennaTalk/.
-  - Hi-De-Ho integration: You can manage micro-versions to safely explore design choices.
-  - git repository support: You can clone a git repository to your local directory and push/pull/commit/merge.
-  - on-file syntax debugger: On-file syntax debugger opens when you tried to open a syntactically erroneous model on the Refactoring Browser.
-  - experimental native window support: In the settings dialog, you can turn-on ViennaTalk>>Appearances/use Native multi-windows checkbox to use separate windows.
-  - misc maintenance worksː Lively Walk-Through is now back in operational and minor improvements on GUIs have been done.
+* Codename Gdansk has been released (Dec 24, 2025)
+  - improved git repository support: You can merge the current working copy into the origin by resolving conflicts on top-level definitions.
+  - mutation testing: The system evaluates the testcases and combinatorial tests by mutating the original specification.
+  - full execution traceː The system records all assignment/call/return statements with actual values and visualize them as state diagrams and sequence diagrams.
+  - experimental profilersː The profiler catches all assignment to the variables and operation calls to help estimating the performance of implementation.
+  - misc improvementsː bugfixes on type checkers and etc.
 
 * [Past Releases](Releases.md)
 
