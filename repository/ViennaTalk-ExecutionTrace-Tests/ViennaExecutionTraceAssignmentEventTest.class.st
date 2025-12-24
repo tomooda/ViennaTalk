@@ -1,8 +1,8 @@
 Class {
 	#name : 'ViennaExecutionTraceAssignmentEventTest',
 	#superclass : 'TestCase',
-	#category : 'ViennaTalk-Transpiler-Tests',
-	#package : 'ViennaTalk-Transpiler-Tests'
+	#category : 'ViennaTalk-ExecutionTrace-Tests',
+	#package : 'ViennaTalk-ExecutionTrace-Tests'
 }
 
 { #category : 'tests' }

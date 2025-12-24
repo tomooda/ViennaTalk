@@ -4,8 +4,8 @@ Class {
 	#instVars : [
 		'reader'
 	],
-	#category : 'ViennaTalk-Transpiler-Tests',
-	#package : 'ViennaTalk-Transpiler-Tests'
+	#category : 'ViennaTalk-ExecutionTrace-Tests',
+	#package : 'ViennaTalk-ExecutionTrace-Tests'
 }
 
 { #category : 'running' }
