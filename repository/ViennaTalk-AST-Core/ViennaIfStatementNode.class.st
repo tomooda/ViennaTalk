@@ -77,7 +77,8 @@ ViennaIfStatementNode >> formatWith: aViennaAbstractFormatter [
 ViennaIfStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self conditionalStatementList freeIdentifiersExcept: aSet do: aBlock.
-	self statement freeIdentifiersExcept: aSet do: aBlock
+	self statement ifNotNil: [ :statement |
+		statement freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
 { #category : 'testing' }

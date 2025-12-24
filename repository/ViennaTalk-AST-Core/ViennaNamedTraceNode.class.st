@@ -15,6 +15,12 @@ ViennaNamedTraceNode class >> identifier: aString traceDefinitionList: aViennaTr
 		  yourself
 ]
 
+{ #category : 'accessing' }
+ViennaNamedTraceNode >> addToModule: aViennaModuleNode [
+
+	^ aViennaModuleNode module addNamedTrace: self copyFragment
+]
+
 { #category : 'private' }
 ViennaNamedTraceNode >> boundIdentifiersDo: aBlock [
 
@@ -48,6 +54,18 @@ ViennaNamedTraceNode >> identifier: aString [
 	self at: 1 put: aString
 ]
 
+{ #category : 'purity and transparency' }
+ViennaNamedTraceNode >> isPureComponent [
+
+	^ false
+]
+
+{ #category : 'purity and transparency' }
+ViennaNamedTraceNode >> isTransparentComponent [
+
+	^ false
+]
+
 { #category : 'testing' }
 ViennaNamedTraceNode >> isViennaExportableTopLevelDefinitionNode [
 
@@ -73,30 +91,10 @@ ViennaNamedTraceNode >> maximalType [
 	^ ViennaType unit
 ]
 
-{ #category : 'running' }
-ViennaNamedTraceNode >> run [
+{ #category : 'purity and transparency' }
+ViennaNamedTraceNode >> purityCheck [
 
-	((ViennaVDM2SmalltalkObject new generate: self document) at:
-		 self module identifier) perform: self identifier asSymbol
-]
-
-{ #category : 'running' }
-ViennaNamedTraceNode >> run: aBlock [
-
-	((ViennaVDM2SmalltalkObject new generate: self document) at:
-		 self module identifier)
-		perform: (self identifier , ':') asSymbol
-		with: aBlock
-]
-
-{ #category : 'running' }
-ViennaNamedTraceNode >> run: aBlock onError: handlerBlock [
-
-	((ViennaVDM2SmalltalkObject new generate: self document) at:
-		 self module identifier)
-		perform: (self identifier , ':onError:') asSymbol
-		with: aBlock
-		with: handlerBlock
+	
 ]
 
 { #category : 'accessing' }
@@ -109,4 +107,10 @@ ViennaNamedTraceNode >> traceDefinitionList [
 ViennaNamedTraceNode >> traceDefinitionList: aViennaTraceDefinitionListNode [
 
 	self at: 2 put: aViennaTraceDefinitionListNode
+]
+
+{ #category : 'purity and transparency' }
+ViennaNamedTraceNode >> transparencyCheck [
+
+	
 ]

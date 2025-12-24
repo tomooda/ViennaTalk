@@ -12,7 +12,7 @@ Class {
 { #category : 'running' }
 ViennaNodeTest >> setUp [
 
-	ast := ViennaVDMParser new parse: 'module A
+	ast := ViennaVDMParser current parse: 'module A
 imports from B types Ti renamed Ti operations opi: () ==> () renamed opi; opi2
 exports 
 	types T1; struct T2

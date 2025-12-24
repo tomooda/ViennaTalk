@@ -27,6 +27,12 @@ ViennaMultipleAssignStatementNode >> freeIdentifiersExcept: aSet do: aBlock [
 		assignmentStatement freeIdentifiersExcept: aSet do: aBlock ]
 ]
 
+{ #category : 'purity and transparency' }
+ViennaMultipleAssignStatementNode >> isPureComponent [
+
+	^ false
+]
+
 { #category : 'testing' }
 ViennaMultipleAssignStatementNode >> isViennaMultipleAssignStatementNode [
 

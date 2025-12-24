@@ -1,43 +1,44 @@
 Class {
-	#name : #ViennaCharType,
-	#superclass : #ViennaBasicType,
+	#name : 'ViennaCharType',
+	#superclass : 'ViennaBasicType',
 	#classVars : [
 		'Current'
 	],
-	#category : #'ViennaTalk-Type-Core'
+	#category : 'ViennaTalk-Type-Core',
+	#package : 'ViennaTalk-Type-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCharType class >> precedence [
 	^ 6
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaCharType >> = anObject [
 	^ self class = anObject class
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaCharType >> basicDo: aBlock [
 	^ self shouldNotImplement
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaCharType >> basicIncludes: anObject [
 	^ anObject isCharacter
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaCharType >> basicIsEnumerable [
 	^ false
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaCharType >> hash [
 	^ self class hash
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaCharType >> name [
 	^ 'char'
 ]

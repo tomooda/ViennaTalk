@@ -1,7 +1,7 @@
 Class {
-	#name : #ViennaTaggedElement,
-	#superclass : #Object,
-	#type : #variable,
+	#name : 'ViennaTaggedElement',
+	#superclass : 'Object',
+	#type : 'variable',
 	#instVars : [
 		'name',
 		'attributes',
@@ -10,10 +10,11 @@ Class {
 		'tokens',
 		'identifier'
 	],
-	#category : #'ViennaTalk-WeblyWalkThrough-Server'
+	#category : 'ViennaTalk-WeblyWalkThrough-Server',
+	#package : 'ViennaTalk-WeblyWalkThrough-Server'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaTaggedElement class >> name: aString attributes: aDictionary eventHandlers: anotherDictionary contents: anArray tokens: aSet identifier: anInteger [
 	^ self new
 		name: aString;
@@ -25,7 +26,7 @@ ViennaTaggedElement class >> name: aString attributes: aDictionary eventHandlers
 		yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaTaggedElement >> = anObject [
 	^ self class = anObject class
 		and: [ name = anObject name
@@ -35,69 +36,69 @@ ViennaTaggedElement >> = anObject [
 										and: [ tokens = anObject tokens and: [ identifier = anObject identifier ] ] ] ] ] ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 ViennaTaggedElement >> asXml [
 	^ self printXml
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTaggedElement >> attributes [
 	^ attributes
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTaggedElement >> attributes: aDictionary [
 	attributes := aDictionary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTaggedElement >> contents [
 	^ contents
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTaggedElement >> contents: anArrayOfViennaTaggedElementOrString [
 	contents := anArrayOfViennaTaggedElementOrString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTaggedElement >> eventHandlers [
 	^ eventHandlers
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTaggedElement >> eventHandlers: aDictionary [
 	eventHandlers := aDictionary
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaTaggedElement >> hash [
 	^ (((((self class hash bitXor: name hash) bitXor: attributes hash)
 		bitXor: eventHandlers hash) bitXor: contents hash)
 		bitXor: tokens hash) bitXor: identifier hash
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTaggedElement >> identifier [
 	^ identifier
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTaggedElement >> identifier: aString [
 	identifier := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTaggedElement >> name [
 	^ name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTaggedElement >> name: aString [
 	name := aString
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 ViennaTaggedElement >> neoJsonOn: neoJSONWriter [
 	(Dictionary new
 		at: 'TaggedElement'
@@ -114,12 +115,12 @@ ViennaTaggedElement >> neoJsonOn: neoJSONWriter [
 		yourself) neoJsonOn: neoJSONWriter
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 ViennaTaggedElement >> printXml [
 	^ String streamContents: [ :stream | self printXmlOn: stream ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 ViennaTaggedElement >> printXmlOn: aStream [
 	aStream
 		nextPut: $<;
@@ -166,12 +167,12 @@ ViennaTaggedElement >> printXmlOn: aStream [
 				nextPutAll: '>' ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTaggedElement >> tokens [
 	^ tokens
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaTaggedElement >> tokens: aSet [
 	tokens := aSet
 ]

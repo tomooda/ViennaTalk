@@ -278,6 +278,12 @@ ViennaModuleNode >> addImportDefinition: aViennaImportDefinitionNode [
 ]
 
 { #category : 'accessing-definitions' }
+ViennaModuleNode >> addNamedTrace: aViennaNode [
+
+	self moduleBody add: aViennaNode
+]
+
+{ #category : 'accessing-definitions' }
 ViennaModuleNode >> addOperationDefinition: aViennaNode [
 
 	(self moduleBody detect: #isViennaOperationDefinitionsNode ifNone: [
@@ -285,6 +291,14 @@ ViennaModuleNode >> addOperationDefinition: aViennaNode [
 		 section := ViennaOperationDefinitionsNode empty.
 		 self moduleBody add: section.
 		 section ]) add: aViennaNode
+]
+
+{ #category : 'accessing-definitions' }
+ViennaModuleNode >> addStateDefinition: aViennaNode [
+
+	(self moduleBody detect: #isViennaStateDefinitionNode ifNone: [ nil ])
+		ifNotNil: [ :node | self moduleBody replace: node with: aViennaNode ]
+		ifNil: [ self moduleBody add: aViennaNode ]
 ]
 
 { #category : 'accessing-definitions' }
@@ -421,9 +435,34 @@ ViennaModuleNode >> freeIdentifiersExcept: aSet do: aBlock [
 ]
 
 { #category : 'testing' }
+ViennaModuleNode >> hasNamedTrace [
+
+	self toplevelDefinitionsDo: [ :node |
+		node isViennaNamedTraceNode ifTrue: [ ^ true ] ].
+	^ false
+]
+
+{ #category : 'testing' }
 ViennaModuleNode >> hasScope [
 
 	^ true
+]
+
+{ #category : 'testing' }
+ViennaModuleNode >> hasTestTarget [
+
+	^ (self identifier endsWith: 'Test')
+		  ifTrue: [
+			  | targetModuleName |
+			  targetModuleName := self identifier
+				                      copyFrom: 1
+				                      to: self identifier size - 4.
+			  (self document moduleNamed: targetModuleName) notNil ]
+		  ifFalse: [
+			  | testModuleName |
+			  testModuleName := self identifier , 'Test'.
+			  (self document moduleNamed: testModuleName) notNil or: [
+				  self hasNamedTrace ] ]
 ]
 
 { #category : 'accessing' }
@@ -531,6 +570,13 @@ ViennaModuleNode >> isReferenced [
 ]
 
 { #category : 'testing' }
+ViennaModuleNode >> isTestModuleOrViennaUnit [
+
+	^ (self identifier endsWith: 'Test') or: [
+		  self identifier = 'UnitTesting' ]
+]
+
+{ #category : 'testing' }
 ViennaModuleNode >> isViennaModuleNode [
 
 	^ true
@@ -605,6 +651,19 @@ ViennaModuleNode >> moduleOrFlatDocument [
 	^ self
 ]
 
+{ #category : 'enumerating' }
+ViennaModuleNode >> namedTracesDo: aBlock [
+
+	self sectionsDo: [ :section |
+		section isViennaTracesDefinitionsNode ifTrue: [ section do: aBlock ] ]
+]
+
+{ #category : 'purity and transparency' }
+ViennaModuleNode >> purityCheck [
+
+	self toplevelDefinitionsDo: #purityCheck
+]
+
 { #category : 'accessing' }
 ViennaModuleNode >> sections [
 
@@ -615,6 +674,15 @@ ViennaModuleNode >> sections [
 ViennaModuleNode >> sectionsDo: aBlock [
 
 	self moduleBody sectionsDo: aBlock
+]
+
+{ #category : 'purity and transparency' }
+ViennaModuleNode >> semanticCheck [
+
+	self
+		transparencyCheck;
+		purityCheck;
+		typecheck
 ]
 
 { #category : 'testing' }
@@ -642,6 +710,34 @@ ViennaModuleNode >> stateDefinitionIfAbsentPut: errorBlock [
 ]
 
 { #category : 'enumerating' }
+ViennaModuleNode >> testOperationsDo: aBlock [
+
+	self toplevelDefinitionsDo: [ :toplevel |
+		toplevel isOperationDefinition and: [
+			(toplevel identifier beginsWith: 'test') ifTrue: [
+				aBlock value: toplevel ] ] ]
+]
+
+{ #category : 'accessing' }
+ViennaModuleNode >> testTargetModule [
+
+	^ (self identifier endsWith: 'Test')
+		  ifTrue: [
+			  | targetModuleName |
+			  targetModuleName := self identifier
+				                      copyFrom: 1
+				                      to: self identifier size - 4.
+			  self document moduleNamed: targetModuleName ]
+		  ifFalse: [
+			  | testModuleName |
+			  testModuleName := self identifier , 'Test'.
+			  ((self document moduleNamed: testModuleName) notNil or: [
+				   self hasNamedTrace ])
+				  ifTrue: [ self ]
+				  ifFalse: [ nil ] ]
+]
+
+{ #category : 'enumerating' }
 ViennaModuleNode >> toplevelDefinitionsDo: aBlock [
 
 	self moduleBody toplevelDefinitionsDo: aBlock
@@ -661,6 +757,12 @@ ViennaModuleNode >> toplevelIdentifiersDo: aBlock [
 		toplevelDefinition isViennaValueDefinitionNode
 			ifTrue: [ toplevelDefinition identifiers do: aBlock ]
 			ifFalse: [ aBlock value: toplevelDefinition identifier ] ]
+]
+
+{ #category : 'purity and transparency' }
+ViennaModuleNode >> transparencyCheck [
+
+	self toplevelDefinitionsDo: #transparencyCheck
 ]
 
 { #category : 'accessing' }

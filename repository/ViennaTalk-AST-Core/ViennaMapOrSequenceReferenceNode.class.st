@@ -27,6 +27,12 @@ ViennaMapOrSequenceReferenceNode >> argumentExpression: aViennaExpressionNode [
 	self at: 2 put: aViennaExpressionNode
 ]
 
+{ #category : 'testing' }
+ViennaMapOrSequenceReferenceNode >> designatesStateVariable [
+
+	^ self stateDesignator designatesStateVariable
+]
+
 { #category : 'pretty printing' }
 ViennaMapOrSequenceReferenceNode >> formatWith: aViennaAbstractFormatter [
 
@@ -47,6 +53,12 @@ ViennaMapOrSequenceReferenceNode >> freeIdentifiersExcept: aSet do: aBlock [
 
 	self stateDesignator freeIdentifiersExcept: aSet do: aBlock.
 	self argumentExpression freeIdentifiersExcept: aSet do: aBlock
+]
+
+{ #category : 'accessing' }
+ViennaMapOrSequenceReferenceNode >> identifier [
+
+	^ self stateDesignator identifier
 ]
 
 { #category : 'pretty printing' }

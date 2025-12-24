@@ -61,7 +61,8 @@ ViennaCommandLineHandler class >> generate [
 				(#CompanyName -> 'ViennaTalk project').
 				(#DeployPharoExpression -> 'ViennaCommandLineHandler deploy') }
 				asDictionary;
-		outputDirectory: FileLocator home / 'src' / 'ViennaTalk' / 'build';
+		outputDirectory: FileLocator home / 'src' / 'ViennaTalk'
+			/ ('build-' , BaselineOfViennaTalk codename uncapitalized);
 		targetPlatforms:
 			#( 'Darwin-arm64' 'Darwin-x86_64' 'Windows-x86_64' );
 		addExternalFile:
@@ -76,7 +77,8 @@ ViennaCommandLineHandler >> activate [
 
 	self
 		installMenu;
-		installQuitSession
+		installQuitSession.
+	ViennaLauncher reopen
 ]
 
 { #category : 'activation' }

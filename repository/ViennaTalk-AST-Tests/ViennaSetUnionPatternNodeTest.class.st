@@ -12,7 +12,7 @@ Class {
 ViennaSetUnionPatternNodeTest >> testMaximalType [
 
 	| pattern |
-	pattern := ViennaVDMParser new pattern end parse: '{1,2,3} union s'.
+	pattern := ViennaVDMParser current pattern end parse: '{1,2,3} union s'.
 	self assert: pattern typecheck equals: ViennaType any set1.
 	pattern maximalType: ViennaType real set.
 	self assert: pattern typecheck equals: ViennaType real set1.

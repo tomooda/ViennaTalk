@@ -383,6 +383,12 @@ ViennaNode >> end [
 	^ end
 ]
 
+{ #category : 'accessing' }
+ViennaNode >> ensureModuleNamed: aString [
+
+	^ self document ensureModuleNamed: aString
+]
+
 { #category : 'accessing-definitions' }
 ViennaNode >> findResolverForIdentifier: aString [
 
@@ -454,6 +460,13 @@ ViennaNode >> hasGlobalReferenceToModule: moduleIdentifier identifier: identifie
 				isViennaGlobalNameNode: moduleIdentifier
 				identifier: identifier ]
 		do: [ :node | ^ true ].
+	^ false
+]
+
+{ #category : 'testing' }
+ViennaNode >> hasParentSuchThat: aBlock [
+
+	self parentsDo: [ :node | (aBlock value: node) ifTrue: [ ^ true ] ].
 	^ false
 ]
 
@@ -540,6 +553,14 @@ ViennaNode >> includesParent: aViennaNode [
 	^ false
 ]
 
+{ #category : 'accessing' }
+ViennaNode >> indexOf: aViennaNode [
+
+	1 to: self size do: [ :index |
+	(self at: index) == aViennaNode ifTrue: [ ^ index ] ].
+	^ 0
+]
+
 { #category : 'enumerating' }
 ViennaNode >> inject: anObject into: aBlock [
 
@@ -596,6 +617,12 @@ ViennaNode >> isOperationNameNode [
 	^ false
 ]
 
+{ #category : 'purity and transparency' }
+ViennaNode >> isPureComponent [
+
+	^ true
+]
+
 { #category : 'testing' }
 ViennaNode >> isReferenced [
 
@@ -620,6 +647,12 @@ ViennaNode >> isRelocatable [
 ViennaNode >> isStateVariableNameNode [
 
 	^ false
+]
+
+{ #category : 'purity and transparency' }
+ViennaNode >> isTransparentComponent [
+
+	^ true
 ]
 
 { #category : 'testing' }
@@ -684,6 +717,12 @@ ViennaNode >> isViennaAccessTypeDefinitionNode [
 
 { #category : 'testing' }
 ViennaNode >> isViennaAccessValueDefinitionNode [
+
+	^ false
+]
+
+{ #category : 'testing' }
+ViennaNode >> isViennaActExpressionNode [
 
 	^ false
 ]
@@ -941,6 +980,12 @@ ViennaNode >> isViennaDocumentNode [
 ]
 
 { #category : 'testing' }
+ViennaNode >> isViennaDurationStatementNode [
+
+	^ false
+]
+
+{ #category : 'testing' }
 ViennaNode >> isViennaEqualDefinitionListNode [
 
 	^ false
@@ -1145,6 +1190,12 @@ ViennaNode >> isViennaFieldSelectNode [
 ]
 
 { #category : 'testing' }
+ViennaNode >> isViennaFinExpressionNode [
+
+	^ false
+]
+
+{ #category : 'testing' }
 ViennaNode >> isViennaFinitePowerSetNode [
 
 	^ false
@@ -1242,6 +1293,12 @@ ViennaNode >> isViennaGreaterThanNode [
 
 { #category : 'testing' }
 ViennaNode >> isViennaGreaterThanOrEqualNode [
+
+	^ false
+]
+
+{ #category : 'testing' }
+ViennaNode >> isViennaHistoryExpressionNode [
 
 	^ false
 ]
@@ -1906,6 +1963,12 @@ ViennaNode >> isViennaPatternTypePairListNode [
 ]
 
 { #category : 'testing' }
+ViennaNode >> isViennaPrePostFunctionDefinitionNode [
+
+	^ false
+]
+
+{ #category : 'testing' }
 ViennaNode >> isViennaPreconditionExpressionNode [
 
 	^ false
@@ -1931,6 +1994,12 @@ ViennaNode >> isViennaQuoteTypeNode [
 
 { #category : 'testing' }
 ViennaNode >> isViennaQuoteTypeNode: aString [
+
+	^ false
+]
+
+{ #category : 'testing' }
+ViennaNode >> isViennaRdExpressionNode [
 
 	^ false
 ]
@@ -2200,6 +2269,12 @@ ViennaNode >> isViennaSymbolicLiteralNode: aString [
 ]
 
 { #category : 'testing' }
+ViennaNode >> isViennaTimeExpressionNode [
+
+	^ false
+]
+
+{ #category : 'testing' }
 ViennaNode >> isViennaTixeStatementNode [
 
 	^ false
@@ -2463,6 +2538,12 @@ ViennaNode >> isViennaWhileLoopNode [
 	^ false
 ]
 
+{ #category : 'testing' }
+ViennaNode >> isViennaWrExpressionNode [
+
+	^ false
+]
+
 { #category : 'accessing' }
 ViennaNode >> label [
 
@@ -2693,6 +2774,15 @@ ViennaNode >> removeAnnotation: aString [
 		annotations := annotations copyWithout: aString.
 		annotations ifEmpty: [ annotations := nil ] ].
 	^ aString
+]
+
+{ #category : 'accessing' }
+ViennaNode >> replace: aViennaNode with: anotherViennaNode [
+
+	1 to: self size do: [ :index |
+		(self at: index) == aViennaNode ifTrue: [
+			self at: index put: anotherViennaNode.
+			^ self ] ]
 ]
 
 { #category : 'accessing-definitions' }

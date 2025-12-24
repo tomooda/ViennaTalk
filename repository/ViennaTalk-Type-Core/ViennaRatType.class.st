@@ -1,56 +1,57 @@
 Class {
-	#name : #ViennaRatType,
-	#superclass : #ViennaBasicType,
-	#category : #'ViennaTalk-Type-Core'
+	#name : 'ViennaRatType',
+	#superclass : 'ViennaBasicType',
+	#category : 'ViennaTalk-Type-Core',
+	#package : 'ViennaTalk-Type-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRatType class >> precedence [
 	^ 6
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaRatType >> = anObject [
 	^ self class = anObject class
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaRatType >> >= aViennaType [
 	^ super >= aViennaType or: [ aViennaType isRealType ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaRatType >> basicDo: aBlock [
 	^ self shouldNotImplement
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaRatType >> basicIncludes: anObject [
 	^ anObject isNumber
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaRatType >> basicIsEnumerable [
 	^ false
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaRatType >> hash [
 	^ self class hash
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaRatType >> isCompatibleWith: aViennaType [
 
 	^ aViennaType isRealType or: [ super isCompatibleWith: aViennaType ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaRatType >> isRealType [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaRatType >> name [
 	^ 'real'
 ]

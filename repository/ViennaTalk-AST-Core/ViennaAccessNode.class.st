@@ -33,6 +33,13 @@ ViennaAccessNode >> freeIdentifiersExcept: aSet do: aBlock [
 ]
 
 { #category : 'testing' }
+ViennaAccessNode >> includes: aString [
+
+	self do: [ :string | aString = string ifTrue: [ ^ true ] ].
+	^ false
+]
+
+{ #category : 'testing' }
 ViennaAccessNode >> isViennaAccessNode [
 
 	^ true

@@ -48,6 +48,12 @@ ViennaPrePostFunctionDefinitionNode >> freeIdentifiersExcept: aSet do: aBlock [
 	self body freeIdentifiersExcept: aSet do: aBlock
 ]
 
+{ #category : 'testing' }
+ViennaPrePostFunctionDefinitionNode >> isViennaPrePostFunctionDefinitionNode [
+
+	^ true
+]
+
 { #category : 'accessing' }
 ViennaPrePostFunctionDefinitionNode >> label [
 

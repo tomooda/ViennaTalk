@@ -12,12 +12,42 @@ ViennaTopLevelDefinitionNode class >> isAbstract [
 	^ self = ViennaTopLevelDefinitionNode
 ]
 
+{ #category : 'accessing' }
+ViennaTopLevelDefinitionNode >> addToModule: aViennaModuleNode [
+
+	^ self subclassResponsibility
+]
+
+{ #category : 'testing' }
+ViennaTopLevelDefinitionNode >> allGlobalNamesSatisfy: aBlock [
+
+	self globalNamesDo: [ :globalName |
+		(aBlock value: globalName) ifFalse: [ ^ false ] ].
+	^ true
+]
+
+{ #category : 'testing' }
+ViennaTopLevelDefinitionNode >> anyGlobalNamesSatisfy: aBlock [
+
+	self globalNamesDo: [ :globalName |
+		(aBlock value: globalName) ifTrue: [ ^ true ] ].
+	^ false
+]
+
+{ #category : 'accessing' }
+ViennaTopLevelDefinitionNode >> globalNames [
+
+	^ Array streamContents: [ :stream |
+		  self globalNamesDo: [ :globalName | stream nextPut: globalName ] ]
+]
+
 { #category : 'enumerating' }
 ViennaTopLevelDefinitionNode >> globalNamesDo: aBlock [
 
 	self identifiers do: [ :identifier |
 		aBlock value: ((ViennaGlobalNameNode
-				  moduleIdentifier: self module identifier
+				  moduleIdentifier:
+					  (self module ifNotNil: #identifier ifNil: [ 'DEFAULT' ])
 				  identifier: identifier)
 				 parent: self document;
 				 yourself) ]
@@ -45,4 +75,25 @@ ViennaTopLevelDefinitionNode >> isViennaExportableTopLevelDefinitionNode [
 ViennaTopLevelDefinitionNode >> isViennaTopLevelDefinitionNode [
 
 	^ true
+]
+
+{ #category : 'purity and transparency' }
+ViennaTopLevelDefinitionNode >> purityCheck [
+
+	^ self subclassResponsibility
+]
+
+{ #category : 'purity and transparency' }
+ViennaTopLevelDefinitionNode >> semanticCheck [
+
+	self
+		transparencyCheck;
+		purityCheck;
+		typecheck
+]
+
+{ #category : 'purity and transparency' }
+ViennaTopLevelDefinitionNode >> transparencyCheck [
+
+	^ self subclassResponsibility
 ]

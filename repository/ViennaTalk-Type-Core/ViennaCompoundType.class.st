@@ -1,10 +1,11 @@
 Class {
-	#name : #ViennaCompoundType,
-	#superclass : #ViennaType,
-	#category : #'ViennaTalk-Type-Core'
+	#name : 'ViennaCompoundType',
+	#superclass : 'ViennaType',
+	#category : 'ViennaTalk-Type-Core',
+	#package : 'ViennaTalk-Type-Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaCompoundType class >> isAbstract [
 
 	^ self = ViennaCompoundType

@@ -335,55 +335,16 @@ ViennaLauncher class >> worldMenuOn: aBuilder [
 				withSeparatorAfter ]
 ]
 
-{ #category : 'menu operations' }
-ViennaLauncher >> browseDirectory [
+{ #category : 'class access' }
+ViennaLauncher >> VDMPadClass [
 
-	(UIManager default
-		 chooseDirectory: 'Directory to open'
-		 from: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :dir |
-		ViennaRefactoringBrowser new
-			load: dir;
-			open ]
+	^ Smalltalk globals at: #VDMPad ifAbsent: [ nil ]
 ]
 
-{ #category : 'menu operations' }
-ViennaLauncher >> browseFile [
+{ #category : 'class access' }
+ViennaLauncher >> browserClass [
 
-	(UIManager default
-		 chooseExistingFileReference: 'Directory to open'
-		 extensions: #( 'vdmsl' )
-		 path: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :file |
-		ViennaRefactoringBrowser new
-			load: file;
-			open ]
-]
-
-{ #category : 'resources' }
-ViennaLauncher >> browseFileIcon [
-
-	| file search form |
-	file := Smalltalk ui iconNamed: #smallLeftFlush.
-	search := (Smalltalk ui iconNamed: #search) scaledToSize: 10 @ 10.
-	form := Form extent: 16 @ 16 depth: 32.
-	form getCanvas
-		fillColor: Color transparent;
-		drawImage: file at: 0 @ 0;
-		drawImage: search at: 6 @ 6.
-	^ form
-]
-
-{ #category : 'resources' }
-ViennaLauncher >> browseFolderIcon [
-
-	| folder search form |
-	folder := Smalltalk ui iconNamed: #folder.
-	search := (Smalltalk ui iconNamed: #search) scaledToSize: 10 @ 10.
-	form := Form extent: 16 @ 16 depth: 32.
-	form getCanvas
-		fillColor: Color transparent;
-		drawImage: folder at: 0 @ 0;
-		drawImage: search at: 6 @ 6.
-	^ form
+	^ Smalltalk globals at: #ViennaRefactoringBrowser ifAbsent: [ nil ]
 ]
 
 { #category : 'interface opening' }
@@ -419,15 +380,6 @@ ViennaLauncher >> defaultTitle [
 	^ 'ViennaTalk ', self codename
 ]
 
-{ #category : 'menus' }
-ViennaLauncher >> devMenu [
-
-	^ self newMenu
-		  title: 'Dev';
-		  addAllFromPragma: #ViennaDevMenu target: self;
-		  yourself
-]
-
 { #category : 'menu operations' }
 ViennaLauncher >> gitClone [
 
@@ -436,36 +388,36 @@ ViennaLauncher >> gitClone [
 		    initialAnswer: 'git@github.com:owner/repository'
 		    title: 'git clone') ifNil: [ ^ nil ] ifNotNil: #trim)
 		  ifNotEmpty: [ :urlString |
-			  | local repo |
-			  [
-			  | dirname |
-			  dirname := (self
-				              request: 'Directory name'
-				              initialAnswer:
-				              (urlString asZnUrl file copyUpToLast: $.)
-				              title: 'git clone') ifNil: [ ^ nil ] ifNotNil: #trim.
-			  dirname notEmpty and: [
-				  local := FileLocator viennaTalkDocumentDirectory / dirname.
-				  local exists not or: [
-					  self alert: dirname , ' already exists.'.
-					  false ] ] ] whileFalse.
-			  self
-				  informUser: 'Cloning repository from ' , urlString
-				  during: [
-					  repo := [
-					          IceRepositoryCreator new
-						          repository: nil;
-						          remote: (IceGitRemote url: urlString);
-						          location: local;
-						          createRepository ]
-						          on: Error
-						          do: [ :ex |
-							          self alert: 'git clone failed ' , ex messageText.
-							          ^ nil ] ].
-			  repo register.
-			  ViennaRefactoringBrowser new
-				  load: local;
-				  open ]
+				  | local repo |
+				  [
+					  | dirname |
+					  dirname := (self
+						              request: 'Directory name'
+						              initialAnswer:
+						              (urlString asZnUrl file copyUpToLast: $.)
+						              title: 'git clone')
+						             ifNil: [ ^ nil ]
+						             ifNotNil: #trim.
+					  dirname notEmpty and: [
+							  local := FileLocator viennaTalkDocumentDirectory / dirname.
+							  local exists not or: [
+									  self alert: dirname , ' already exists.'.
+									  false ] ] ] whileFalse.
+				  self
+					  informUser: 'Cloning repository from ' , urlString
+					  during: [
+							  repo := [
+								          IceRepositoryCreator new
+									          repository: nil;
+									          remote: (IceGitRemote url: urlString);
+									          location: local;
+									          createRepository ]
+								          on: Error
+								          do: [ :ex |
+										          self alert: 'git clone failed ' , ex messageText.
+										          ^ nil ] ].
+				  repo register.
+				  self openBrowserOn: local ]
 ]
 
 { #category : 'initialize-release' }
@@ -514,52 +466,55 @@ ViennaLauncher >> initializeWindow: aSpWindowPresenter [
 		aSpWindowPresenter resize: logoImage image extent + (4 @ 50) ]
 ]
 
-{ #category : 'menu operations' }
-ViennaLauncher >> loadHead [
-
-	BaselineOfViennaTalk updateFromOfficialRepository
-]
-
 { #category : 'menus' }
 ViennaLauncher >> modelMenu [
 
 	^ self newMenu
 		  title: 'Models';
 		  addGroup: [ :group |
-			  (FileLocator viennaTalkDocumentDirectory directories
-				   asSortedCollection: #basename ascending) do: [ :dir |
-					  (dir filesMatching: '*.vdmsl') ifNotEmpty: [
-							  group addItem: [ :item |
-									  item
-										  name: dir basename;
-										  iconName: #folder;
-										  action: [
-											  ViennaRefactoringBrowser new
-												  load: dir;
-												  open ] ] ] ].
-			  ((FileLocator viennaTalkDocumentDirectory filesMatching:
-				    '*.vdmsl') asSortedCollection: #basename ascending) do: [
-				  :file |
+				  (FileLocator viennaTalkDocumentDirectory directories
+					   asSortedCollection: #basename ascending) do: [ :dir |
+							  (dir filesMatching: '*.vdmsl') ifNotEmpty: [
+										  group addItem: [ :item |
+													  item
+														  name: dir basename;
+														  iconName: #folder;
+														  action: [ self openBrowserOn: dir ] ] ] ].
+				  ((FileLocator viennaTalkDocumentDirectory filesMatching:
+					    '*.vdmsl') asSortedCollection: #basename ascending) do: [
+						  :file |
+						  group addItem: [ :item |
+								  item
+									  name: file basename;
+									  iconName: #smallLeftFlush;
+									  action: [ self openBrowserOn: file ] ] ] ];
+		  addGroup: [ :group |
 				  group addItem: [ :item |
-					  item
-						  name: file basename;
-						  iconName: #smallLeftFlush;
-						  action: [
-							  ViennaRefactoringBrowser new
-								  load: file;
-								  open ] ] ] ];
+						  item
+							  name: 'Open a new model';
+							  icon: (Smalltalk ui iconNamed: #page);
+							  action: [ self openBrowser ] ] ];
 		  addGroup: [ :group |
-			  group addItem: [ :item |
-				  item
-					  name: 'Open a new model';
-					  icon: (Smalltalk ui iconNamed: #page);
-					  action: [ ViennaRefactoringBrowser new open ] ] ];
-		  addGroup: [ :group |
-			  group addItem: [ :item |
-				  item
-					  name: 'Clone a git repository';
-					  icon: (self iconNamed: #git);
-					  action: [ self gitClone ] ] ]
+				  group addItem: [ :item |
+						  item
+							  name: 'Clone a git repository';
+							  icon: (self iconNamed: #git);
+							  action: [ self gitClone ] ] ]
+]
+
+{ #category : 'menu operations' }
+ViennaLauncher >> openBrowser [
+
+	self browserClass ifNotNil: [ :browserClass | browserClass new open ]
+]
+
+{ #category : 'menu operations' }
+ViennaLauncher >> openBrowserOn: aFileReference [
+
+	self browserClass ifNotNil: [ :browserClass |
+			browserClass new
+				load: aFileReference;
+				open ]
 ]
 
 { #category : 'interface opening' }
@@ -607,8 +562,9 @@ ViennaLauncher >> systemMenu [
 { #category : 'menu operations' }
 ViennaLauncher >> toggleVDMPad [
 
-	VDMPad toggleStartStop.
-	vdmpadButton state: VDMPad isRunning
+	self VDMPadClass ifNotNil: [ :class |
+			class toggleStartStop.
+			vdmpadButton state: class isRunning ]
 ]
 
 { #category : 'menus' }

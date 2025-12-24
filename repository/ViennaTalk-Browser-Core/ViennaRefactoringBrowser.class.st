@@ -19,7 +19,6 @@ Class {
 		'stateTable',
 		'initStateButton',
 		'pendingSyntaxError',
-		'pendingTypeError',
 		'testProcess',
 		'highlighterProcess',
 		'dirty',
@@ -28,6 +27,8 @@ Class {
 		'epiLogList',
 		'epiLogDiffList',
 		'epiLogDiffText',
+		'epiLogCherrypickList',
+		'epiLogCherrypickText',
 		'epiLogSourceText',
 		'epiLogNotebook',
 		'sliceNodes',
@@ -58,8 +59,11 @@ Class {
 		'gitFetchButton',
 		'gitDiffList',
 		'gitDiffText',
+		'runMutationTestingButton',
+		'removeAllEpiLogButton',
 		'clearEpiLogCheckBox',
-		'removeAllEpiLogButton'
+		'epiLogCherrypickButton',
+		'pendingSemanticError'
 	],
 	#classVars : [
 		'GreenSignalIcon',
@@ -145,7 +149,7 @@ ViennaRefactoringBrowser class >> empty [
 { #category : 'examples' }
 ViennaRefactoringBrowser class >> exampleATC [
 
-	(ViennaRefactoringBrowser on: (ViennaVDMParser new parse:
+	(ViennaRefactoringBrowser on: (ViennaVDMParser current parse:
 			  'module ATC_TERMINLOGY -- Air-Traffic Control (ATC) System abstract model from the book "ProofinVDM."
 -- This is the top-level specification of the ATC subsystem,
 exports all
@@ -434,7 +438,7 @@ end ATC')) open
 ViennaRefactoringBrowser class >> exampleCounter [
 
 	(ViennaRefactoringBrowser on:
-		 (ViennaVDMParser new parse:
+		 (ViennaVDMParser current parse:
 			  'module Counter exports all definitions
 					types
      Display = seq of char inv display == elems display subset rng nat2char;
@@ -810,6 +814,23 @@ ViennaRefactoringBrowser >> addToNarrativeMenu [
 	^ nil
 ]
 
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> applyChange: change to: aViennaNode [
+
+	| from |
+	from := change from.
+	from document == aViennaNode document
+		ifTrue: [
+			aViennaNode allDescendantsDo: [ :node |
+				node == from ifTrue: [
+					node parent replace: node with: change to copyFragment ] ] ]
+		ifFalse: [
+			| moduleName |
+			moduleName := from module identifier.
+			change to addToModule:
+				(aViennaNode document moduleNamed: moduleName) ]
+]
+
 { #category : 'updating' }
 ViennaRefactoringBrowser >> artifactTimelineSelected [
 
@@ -843,6 +864,24 @@ ViennaRefactoringBrowser >> categoryListContextMenu [
 				name: 'inspect';
 				action: [ self category inspect ] ] ].
 	^ menu
+]
+
+{ #category : 'operations-epiLog' }
+ViennaRefactoringBrowser >> cherrypick [
+
+	epiLogCherrypickList selectedItems ifNotEmpty: [ :diffs |
+		| newDocument map |
+		newDocument := self specification copyWhole:
+			               (map := IdentityDictionary new).
+		diffs do: [ :diff |
+			(diff class
+				 from: (map at: diff from ifAbsent: [ diff from ])
+				 to: diff to) applyTo: newDocument ].
+		self
+			epiLogManualEdit: newDocument
+			comment:
+			'Cherrypick: ' , (', ' join: (diffs collect: #printString)).
+		self updateModuleList ]
 ]
 
 { #category : 'private' }
@@ -903,7 +942,7 @@ ViennaRefactoringBrowser >> createNewNarrativeDo: aBlock [
 			repeat ]
 ]
 
-{ #category : 'private-unit testing' }
+{ #category : 'operations-tests' }
 ViennaRefactoringBrowser >> debugTestResultItem: aViennaTestResultItem [
 
 	^ (ViennaTranspiledAnimation new
@@ -1095,6 +1134,17 @@ ViennaRefactoringBrowser >> epiLogChanges [
 ]
 
 { #category : 'accessing' }
+ViennaRefactoringBrowser >> epiLogCherrypickChanges [
+
+	^ epiLogList selectedItem
+		  ifNotNil: [ :epiLog |
+			  (ViennaNodeDiffSet
+				   from: self specification
+				   to: epiLog specification) condenseChanges ]
+		  ifNil: [ Array new ]
+]
+
+{ #category : 'accessing' }
 ViennaRefactoringBrowser >> epiLogEnumerator [
 
 	showsUserTimelineButton state = true ifTrue: [
@@ -1160,6 +1210,7 @@ ViennaRefactoringBrowser >> epiLogListSelectionChanged [
 	self
 		updateEpiLogSourceText;
 		updateEpiLogDiffList;
+		updateEpiLogCherrypickList;
 		updateEpiLogMatcherDropList;
 		updateEpiLogButtons
 ]
@@ -1430,6 +1481,18 @@ ViennaRefactoringBrowser >> gitCanCommitAndPush [
 ]
 
 { #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitCanMerge [
+
+	self icebergRepositoryDo: [ :repository |
+		^ self gitHasDirtyWorkingCopy not and: [
+			  (repository branch upstream includesCommit:
+				   repository branch commit) not and: [
+				  (repository branch includesCommit:
+					   repository branch upstream commit) not ] ] ].
+	^ false
+]
+
+{ #category : 'operations-git' }
 ViennaRefactoringBrowser >> gitCanPull [
 
 	self icebergRepositoryDo: [ :repository |
@@ -1473,8 +1536,10 @@ ViennaRefactoringBrowser >> gitCommit [
 			title: 'Commit Message';
 			okAction: [
 				self gitCommitWithMessage: text text.
-				self updateGitOutgoingCommitList.
-				self updateGitButtons ] ]
+				self
+					updateGitOutgoingCommitList;
+					updateGitDiffList;
+					updateGitButtons ] ]
 ]
 
 { #category : 'operations-git' }
@@ -1487,9 +1552,11 @@ ViennaRefactoringBrowser >> gitCommitAndPush [
 			okAction: [
 				self gitCommitWithMessage: text text.
 				self icebergRepositoryDo: #push.
-				self updateGitOutgoingCommitList.
-				self updateGitRemoteCommitList.
-				self updateGitButtons ] ]
+				self
+					updateGitOutgoingCommitList;
+					updateGitRemoteCommitList;
+					updateGitDiffList;
+					updateGitButtons ] ]
 ]
 
 { #category : 'operations-git' }
@@ -1542,6 +1609,57 @@ ViennaRefactoringBrowser >> gitLocalBranchIncludes: anIceCommit [
 	self icebergRepositoryDo: [ :repository |
 		^ repository branch includesCommit: anIceCommit ].
 	^ false
+]
+
+{ #category : 'operations-git' }
+ViennaRefactoringBrowser >> gitMerge [
+
+	self gitCanMerge ifTrue: [
+		self icebergRepositoryDo: [ :repository |
+			| localCommit remoteCommit baseCommit baseAst localChanges remoteChanges merger |
+			localCommit := repository branch commit.
+			remoteCommit := repository branch upstream commit.
+			baseCommit := localCommit commonAncestorWithCommit: remoteCommit.
+			baseCommit ifNil: [ ^nil ].
+			baseAst := (self sourceFrom: baseCommit fileSystem)
+				           asViennaDocumentAst.
+			localChanges := (ViennaNodeDiffSet
+				                 from: baseAst
+				                 to:
+				                 (self sourceFrom: localCommit fileSystem)
+					                 asViennaDocumentAst) condenseChanges select:
+				                #isViennaTopLevelDefinitionNodeChange.
+			remoteChanges := (ViennaNodeDiffSet
+				                  from: baseAst
+				                  to:
+				                  (self sourceFrom: remoteCommit fileSystem)
+					                  asViennaDocumentAst) condenseChanges select:
+				                 #isViennaTopLevelDefinitionNodeChange.
+			merger := ViennaChangesMerger
+				          remoteChanges: remoteChanges
+				          localChanges: localChanges.
+			merger asModalWindow
+				okAction: [
+					| mergedChanges mergedCommit |
+					mergedChanges := merger mergedChanges.
+					mergedChanges do: [ :change |
+							self applyChange: change to: baseAst ].
+					self
+						epiLogManualEdit: baseAst
+						comment: 'merge ' , localCommit id asString.
+					self updateModuleList.
+					mergedCommit := repository
+						                commitIndexWithMessage:
+							                'Merge ' , localCommit id asString
+						                andParents: {
+								                localCommit.
+								                remoteCommit }.
+					self
+						updateGitOutgoingCommitList;
+						updateGitRemoteCommitList;
+						updateGitDiffList;
+						updateGitButtons ];
+				open ] ]
 ]
 
 { #category : 'operations-git' }
@@ -1621,6 +1739,7 @@ ViennaRefactoringBrowser >> gitPush [
 		self
 			updateGitOutgoingCommitList;
 			updateGitRemoteCommitList;
+			updateGitDiffList;
 			updateGitButtons ]
 ]
 
@@ -1646,11 +1765,11 @@ ViennaRefactoringBrowser >> hasGit [
 ]
 
 { #category : 'testing' }
-ViennaRefactoringBrowser >> hasTypeError: aViennaNode [
+ViennaRefactoringBrowser >> hasSemanticError: aViennaNode [
 
-	^ pendingTypeError notNil and: [
+	^ pendingSemanticError notNil and: [
 		  | errorNode |
-		  errorNode := pendingTypeError node.
+		  errorNode := pendingSemanticError node.
 		  aViennaNode hasDescendantSuchThat: [ :node | errorNode == node ] ]
 ]
 
@@ -1670,9 +1789,9 @@ ViennaRefactoringBrowser >> highlightSourceText [
 		                                parse: source
 		                                withContext: context.
 	                      result isPetit2Failure
-		                      ifTrue: [ self notifySintaxError: result ]
+		                      ifTrue: [ self notifySyntaxError: result ]
 		                      ifFalse: [
-			                      self notifySintaxError: nil.
+			                      self notifySyntaxError: nil.
 			                      source size = highlighter text runs size
 				                      ifTrue: [
 					                      sourceText withAdapterDo: [ :a |
@@ -1695,10 +1814,10 @@ ViennaRefactoringBrowser >> highlightSourceText [
 					                      (copyMap at: old) == oldNode ifTrue: [
 						                      copyMap at: old put: newNode ] ].
 				                      [
-				                      newNode typecheck.
-				                      self notifyTypeError: nil ]
-					                      on: ViennaTypeError
-					                      do: [ :ex | self notifyTypeError: ex ] ] ].
+				                      newNode semanticCheck.
+				                      self notifySemanticError: nil ]
+					                      on: ViennaSemanticError
+					                      do: [ :ex | self notifySemanticError: ex ] ] ].
 	                      highlighterProcess := nil ] forkAt:
 		                      Processor userBackgroundPriority
 ]
@@ -2066,6 +2185,7 @@ ViennaRefactoringBrowser >> initializePresenters [
 		              sortingBlock: #identifier ascending;
 		              whenSelectionChangedDo: [
 			              self
+				              updateTestButtons;
 				              updateCategoryList;
 				              updateEpiLogMatcherDropList;
 				              updateEpiLogSourceText ];
@@ -2118,8 +2238,10 @@ ViennaRefactoringBrowser >> initializePresenters [
 			            yourself ];
 		            whenSelectedPageChangedDo: [
 			            notebook selectedPage ifNotNil: [ :page |
-				            page title = 'EpiLog' ifTrue: [ self updateEpiLogPage ].
-				            page title = 'Git' ifTrue: [ self updateGitPage ] ] ];
+				            page title = 'HiDeHo' ifTrue: [ self updateEpiLogPage ].
+				            page title = 'Git' ifTrue: [
+					            [ self updateGitPage ] forkAt:
+						            Processor userBackgroundPriority ] ] ];
 		            yourself.
 	self whenBuiltDo: [ :w |
 		| f |
@@ -2138,13 +2260,6 @@ ViennaRefactoringBrowser >> initializeSourcePagePresenters [
 		                      yourself.
 	talkbackLabel := self newLabel
 		                 label: '';
-		                 displayBackgroundColor: [
-			                 self pendingSyntaxError
-				                 ifNotNil: [ Color red lighter ]
-				                 ifNil: [
-					                 self pendingTypeError
-						                 ifNotNil: [ Color yellow lighter ]
-						                 ifNil: [ Color transparent ] ] ];
 		                 yourself.
 	sourceText := self newVDMSource
 		              animation: [ animation ];
@@ -2194,7 +2309,12 @@ ViennaRefactoringBrowser >> initializeSourcePagePresenters [
 		                   upper sortingOrder <= lower sortingOrder ];
 		                   contextMenu: [ self testResultTableContextMenu ];
 		                   whenSelectionChangedDo: [ self testResultChanged ];
-		                   yourself
+		                   yourself.
+	runMutationTestingButton := self newButton
+		                            label: 'Mutation testing';
+		                            icon: (self iconNamed: #exception);
+		                            action: [ self runMutationTesting ];
+		                            yourself
 ]
 
 { #category : 'initialization' }
@@ -2241,8 +2361,8 @@ ViennaRefactoringBrowser >> listBackgroundColorFor: aViennaNode [
 	aViennaNode ifNil: [ ^ Color transparent ].
 	(aViennaNode hasDescendantSuchThat: [ :node |
 		 sliceNodes includes: node ]) ifTrue: [ ^ self sliceColor ].
-	pendingTypeError ifNotNil: [
-		(pendingTypeError node includesParent: aViennaNode) ifTrue: [
+	pendingSemanticError ifNotNil: [
+		(pendingSemanticError node includesParent: aViennaNode) ifTrue: [
 			^ Color yellow ] ].
 	^ Color transparent
 ]
@@ -2259,7 +2379,7 @@ ViennaRefactoringBrowser >> loadFromDirectory [
 
 	(UIManager default
 		 chooseDirectory: 'Directory to open'
-		 from: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :dir |
+		 path: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :dir |
 		self load: dir ]
 ]
 
@@ -2409,7 +2529,7 @@ ViennaRefactoringBrowser >> modelChanged [
 		epiLog hasSpecificationChange ifTrue: [
 			self setDirty.
 			self save ].
-		self typecheck.
+		self semanticCheck.
 		animation ifNotNil: [
 			| state |
 			state := epiLog state.
@@ -2421,6 +2541,7 @@ ViennaRefactoringBrowser >> modelChanged [
 				on: Error
 				do: [ :ex | animation init ].
 			epiLog state: animation state ].
+		self updateTestButtons.
 		(epiLog hasSpecificationChange and: [ runsAllTests ]) ifTrue: [
 			self runAllTests ].
 		UIManager default inform:
@@ -2464,6 +2585,21 @@ ViennaRefactoringBrowser >> moduleListContextMenu [
 	^ menu
 ]
 
+{ #category : 'operations-tests' }
+ViennaRefactoringBrowser >> mutatedSpecificationsDo: aBlock [
+
+	self specification ifNotNil: [ :baseAst |
+		{
+			ViennaAddOneMutation new.
+			ViennaNegateMutation new } do: [ :mutation |
+			mutation
+				allMutationsTo: (self module testTargetModule
+						 ifNil: [ baseAst ]
+						 ifNotNil: [ :m | baseAst moduleNamed: m identifier ])
+				do: [ :mutatedAst |
+					aBlock value: baseAst value: mutation value: mutatedAst ] ] ]
+]
+
 { #category : 'updating' }
 ViennaRefactoringBrowser >> narrativeTimelineSelected [
 
@@ -2478,7 +2614,15 @@ ViennaRefactoringBrowser >> notifyAnimationError: aString [
 ]
 
 { #category : 'operations-source signal' }
-ViennaRefactoringBrowser >> notifySintaxError: aPP2Failure [
+ViennaRefactoringBrowser >> notifySemanticError: aViennaSemanticError [
+
+	pendingSemanticError := aViennaSemanticError.
+	self updateSourceSignalButton.
+	self updateSourceWithSemanticError
+]
+
+{ #category : 'operations-source signal' }
+ViennaRefactoringBrowser >> notifySyntaxError: aPP2Failure [
 
 	pendingSyntaxError := aPP2Failure.
 	self updateSourceSignalButton.
@@ -2493,14 +2637,6 @@ ViennaRefactoringBrowser >> notifySintaxError: aPP2Failure [
 			to: source size.
 		textWidget text runs: source runs.
 		textWidget changed ]
-]
-
-{ #category : 'operations-source signal' }
-ViennaRefactoringBrowser >> notifyTypeError: aViennaTypeError [
-
-	pendingTypeError := aViennaTypeError.
-	self updateSourceSignalButton.
-	self updateSourceWithTypeError
 ]
 
 { #category : 'private' }
@@ -2561,7 +2697,7 @@ ViennaRefactoringBrowser >> openInExternalWindow [
 ViennaRefactoringBrowser >> parser [
 
 	| parser |
-	parser := ViennaVDMParser new.
+	parser := ViennaVDMParser current.
 	^ parser tracesDefinitions end / parser namedTrace end
 	  / parser module end / parser typeDefinitions end
 	  / parser valueDefinitions end / parser functionDefinitions end
@@ -2576,15 +2712,15 @@ ViennaRefactoringBrowser >> parser [
 ]
 
 { #category : 'accessing' }
-ViennaRefactoringBrowser >> pendingSyntaxError [
+ViennaRefactoringBrowser >> pendingSemanticError [
 
-	^ pendingSyntaxError
+	^ pendingSemanticError
 ]
 
 { #category : 'accessing' }
-ViennaRefactoringBrowser >> pendingTypeError [
+ViennaRefactoringBrowser >> pendingSyntaxError [
 
-	^ pendingTypeError
+	^ pendingSyntaxError
 ]
 
 { #category : 'layouts' }
@@ -2618,7 +2754,7 @@ ViennaRefactoringBrowser >> playgroundSelection [
 		[ end < text size and: [ (text at: end + 1) ~= Character cr ] ]
 			whileTrue: [ end := end + 1 ].
 		playgroundText selectionInterval: (start to: end) ].
-	node := ViennaVDMParser new expression parse:
+	node := ViennaVDMParser current expression parse:
 		        (text copyFrom: start to: end).
 	^ node isPetit2Failure
 		  ifTrue: [ nil ]
@@ -2651,20 +2787,20 @@ ViennaRefactoringBrowser >> playgroundTextContextMenu [
 	| menu |
 	menu := self newMenu.
 	self playgroundSelection ifNotNil: [ :node |
-		menu addGroup: [ :group |
-			group
-				addItem: [ :item |
-					item
-						name: 'Evaluate it';
-						action: [ playgroundText doEvaluateIt ] ];
-				addItem: [ :item |
-					item
-						name: 'Type it';
-						action: [ playgroundText doTypeIt ] ];
-				addItem: [ :item |
-					item
-						name: 'Execute it';
-						action: [ playgroundText doExecuteIt ] ] ] ].
+			menu addGroup: [ :group |
+					group
+						addItem: [ :item |
+								item
+									name: 'Evaluate it';
+									action: [ playgroundText doEvaluateIt ] ];
+						addItem: [ :item |
+								item
+									name: 'Type it';
+									action: [ playgroundText doTypeIt ] ];
+						addItem: [ :item |
+								item
+									name: 'Execute it';
+									action: [ playgroundText doExecuteIt ] ] ] ].
 	^ menu
 ]
 
@@ -2753,122 +2889,49 @@ ViennaRefactoringBrowser >> runAllTests [
 	testProcess ifNotNil: [ testProcess terminate ].
 	testProcess := [
 	               | ast testAnimation |
-	               testResultTable items: #(  ).
 	               ast := self specification ifNil: [ ^ nil ].
 	               testAnimation := ViennaAnimation transpiler
 		                                specification: ast;
 		                                yourself.
-	               (ast at: 1) isViennaModuleNode ifTrue: [
-		               ast do: [ :moduleNode |
-			               | moduleName |
-			               moduleName := moduleNode identifier.
-			               (moduleName endsWith: 'Test')
-				               ifTrue: [
-					               moduleNode sectionsDo: [ :section |
-						               section isViennaOperationDefinitionsNode ifTrue: [
-							               section toplevelDefinitionsDo: [
-								               :operationDefinition |
-								               operationDefinition
-									               isViennaExplicitOperationDefinitionNode
-									               ifTrue: [
-										               | operationName |
-										               operationName := operationDefinition
-											                                identifier.
-										               (operationName size > 4 and: [
-											                (operationName copyFrom: 1 to: 4) = 'test' ])
-											               ifTrue: [
-												               testResultTable items:
-													               (testResultTable items copyWith: (self
-															                 runTestModule: moduleName
-															                 operation: operationName
-															                 animation: testAnimation)) ] ] ] ] ] ]
-				               ifFalse: [
-					               moduleNode sectionsDo: [ :section |
-						               section isViennaTracesDefinitionsNode ifTrue: [
-							               section do: [ :namedTraceNode |
-								               | item |
-								               item := ViennaCombinatorialTestResultItem on:
-									                       namedTraceNode.
-								               testResultTable items:
-									               (testResultTable items copyWith: item).
-								               item run.
-								               testResultTable refresh ] ] ] ] ] ].
+	               testResultTable items:
+		               (Array streamContents: [ :stream |
+			                ast testOperationsDo: [ :testOperation |
+				                | moduleName operationName |
+				                moduleName := testOperation module identifier.
+				                operationName := testOperation identifier.
+				                stream nextPut: (ViennaUnitTestResultItem
+						                 module: moduleName
+						                 operation: operationName
+						                 animation: testAnimation) ].
+			                ast namedTracesDo: [ :namedTrace |
+				                stream nextPut:
+					                (ViennaCombinatorialTestResultItem on: namedTrace) ] ]).
+	               testResultTable items do: [ :item |
+		               item run.
+		               testResultTable refresh ].
 	               testProcess := nil ] forkAt:
 		               Processor userBackgroundPriority
 ]
 
-{ #category : 'private-unit testing' }
-ViennaRefactoringBrowser >> runTestModule: module operation: operation animation: aViennaAnimation [
+{ #category : 'operations-tests' }
+ViennaRefactoringBrowser >> runMutationTesting [
 
-	| header result |
-	header := 'Runtime: Error 4129: Exit '.
-	aViennaAnimation state: Dictionary new.
-	[
-	[
-	aViennaAnimation
-		plainEvaluate: operation , '()'
-		in: module
-		ifError: [ :msg |
-			(msg size > header size and: [
-				 (msg copyFrom: 1 to: header size) = header ])
-				ifTrue: [
-					ViennaException expression:
-						(ViennaReader new parse:
-							 (msg copyFrom: header size + 1 to: msg size)) ]
-				ifFalse: [ Error signal: msg ] ] ]
-		on: ViennaException
-		do: [ :exception |
-			exception expression in: [ :expr |
-				(expr isViennaComposite and: [
-					 expr constructorName = 'AssertFailure' ]) ifTrue: [
-					result := ViennaUnitTestFailureResultItem
-						          module: module
-						          operation: operation
-						          message: 'assertion failed: ' , (expr at: 1) asString.
-					aViennaAnimation isTranspiledAnimation ifTrue: [
-						result exception: exception ].
-					result inform.
-					^ result ].
-				(expr isViennaComposite and: [
-					 expr constructorName = 'AssertEqualsFailure' ]) ifTrue: [
-					result := ViennaUnitTestFailureResultItem
-						          module: module
-						          operation: operation
-						          message:
-							          'assertion failed: ' , (expr at: 3) asString
-							          , ' expected: ' , (expr at: 2) viennaString
-							          , ' actual: ' , (expr at: 1) viennaString.
-					aViennaAnimation isTranspiledAnimation ifTrue: [
-						result exception: exception ].
-					result inform.
-					^ result ].
-				result := ViennaUnitTestErrorResultItem
-					          module: module
-					          operation: operation
-					          message: expr viennaString.
-				aViennaAnimation isTranspiledAnimation ifTrue: [
-					result exception: exception ].
-				result inform.
-				^ result ] ] ]
-		on: Error
-		do: [ :exception |
-			result := ViennaUnitTestErrorResultItem
-				          module: module
-				          operation: operation
-				          message: exception printString.
-			aViennaAnimation isTranspiledAnimation ifTrue: [
-				result exception: exception ].
-			result inform.
-			^ result ].
-	^ ViennaUnitTestSuccessResultItem
-		  module: module
-		  operation: operation
-		  message: 'OK'
-]
-
-{ #category : 'private-combinatorial testing' }
-ViennaRefactoringBrowser >> runTrace: aViennaNamedTraceNode interim: aBlock [
-	
+	testProcess ifNotNil: [ testProcess terminate ].
+	testProcess := [
+	               | resultViewer |
+	               resultViewer := ViennaMutationTestResultViewer new.
+	               self mutatedSpecificationsDo: [
+		               :baseAst
+		               :mutation
+		               :mutatedAst |
+		               resultViewer
+			               addMutation: mutation
+			               baseSpecification: baseAst
+			               mutatedSpecification: mutatedAst ].
+	               resultViewer open.
+	               resultViewer resultItems do: [ :resultItem |
+		               resultItem run.
+		               resultViewer refresh ] ] fork
 ]
 
 { #category : 'operations' }
@@ -2966,6 +3029,16 @@ ViennaRefactoringBrowser >> selectedTimelineChanged [
 		  updateEpiLogList
 ]
 
+{ #category : 'operations' }
+ViennaRefactoringBrowser >> semanticCheck [
+
+	[
+		self specification semanticCheck.
+		self notifySemanticError: nil ]
+		on: ViennaSemanticError
+		do: [ :ex | self notifySemanticError: ex ]
+]
+
 { #category : 'private' }
 ViennaRefactoringBrowser >> setDirty [
 
@@ -3046,7 +3119,11 @@ ViennaRefactoringBrowser >> sourcePageLayout [
 		  add: (SpBoxLayout newVertical
 				   add: (SpBoxLayout newHorizontal
 						    add: autoTestButton expand: false;
-						    add: runTestButton expand: false)
+						    add: runTestButton expand: false;
+						    add: (SpBoxLayout newHorizontal
+								     hAlignEnd;
+								     add: runMutationTestingButton expand: false);
+						    yourself)
 				   expand: false;
 				   add: testResultTable;
 				   yourself);
@@ -3082,7 +3159,7 @@ ViennaRefactoringBrowser >> sourceSelectionText [
 ViennaRefactoringBrowser >> sourceSignalButtonPressed [
 
 	pendingSyntaxError ifNotNil: [ pendingSyntaxError inspect ].
-	pendingTypeError ifNotNil: [ pendingTypeError inspect ]
+	pendingSemanticError ifNotNil: [ pendingSemanticError inspect ]
 ]
 
 { #category : 'menus' }
@@ -3117,7 +3194,7 @@ ViennaRefactoringBrowser >> specification [
 { #category : 'updating' }
 ViennaRefactoringBrowser >> testResultChanged [
 
-	self updateSourceWithTypeError
+	self updateSourceWithSemanticError
 ]
 
 { #category : 'menus' }
@@ -3130,29 +3207,11 @@ ViennaRefactoringBrowser >> testResultTableContextMenu [
 	^ menu
 ]
 
-{ #category : 'accessing' }
-ViennaRefactoringBrowser >> title [
-
-	^ 'Vienna Refactoring Browser'
-]
-
 { #category : 'operations-tests' }
 ViennaRefactoringBrowser >> toggleRunsAllTests [
 
 	autoTestButton state: (runsAllTests := runsAllTests not).
 	self runAllTests
-]
-
-{ #category : 'operations' }
-ViennaRefactoringBrowser >> typecheck [
-
-	[
-	self specification
-		forgetTypecheck;
-		typecheck.
-	self notifyTypeError: nil ]
-		on: ViennaTypeError
-		do: [ :ex | self notifyTypeError: ex ]
 ]
 
 { #category : 'updating' }
@@ -3203,6 +3262,28 @@ ViennaRefactoringBrowser >> updateEpiLogButtons [
 ]
 
 { #category : 'updating' }
+ViennaRefactoringBrowser >> updateEpiLogCherrypickList [
+
+	epiLogCherrypickList items: self epiLogCherrypickChanges.
+	self updateEpiLogCherrypickText
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> updateEpiLogCherrypickText [
+
+	epiLogCherrypickList selectedItem
+		ifNotNil: [ :diff |
+			| text |
+			text := diff sourceDiffText.
+			epiLogCherrypickText text: text string asString asText.
+			epiLogCherrypickText withAdapterDo: [ :a |
+				a widgetDo: [ :w |
+					w text runs: text runs.
+					w textArea compose ] ] ]
+		ifNil: [ epiLogCherrypickText text: '' ]
+]
+
+{ #category : 'updating' }
 ViennaRefactoringBrowser >> updateEpiLogDiffList [
 
 	epiLogDiffList items: self epiLogChanges.
@@ -3244,8 +3325,10 @@ ViennaRefactoringBrowser >> updateEpiLogList [
 			(items includes: selection)
 				ifTrue: [ epiLogList selectItem: selection ]
 				ifFalse: [ epiLogList unselectAll ] ].
-		self updateEpiLogButtons.
-		self updateEpiLogDiffList ]
+		self
+			updateEpiLogButtons;
+			updateEpiLogDiffList;
+			updateEpiLogCherrypickList ]
 ]
 
 { #category : 'updating' }
@@ -3268,7 +3351,7 @@ ViennaRefactoringBrowser >> updateEpiLogMatcherDropList [
 				 epiLogs ifNotEmpty: [
 					 stream nextPut: (ViennaEpiLogMatcher heads: epiLogs first).
 					 stream nextPut: (ViennaEpiLogMatcher branches: epiLogs first) ].
-				 stream nextPut: (ViennaEpiLogMatcher
+				 "stream nextPut: (ViennaEpiLogMatcher
 						  executionClosureFrom: self epiLog
 						  enumerator: self epiLogEnumerator
 						  at: (epiLogList selectedItem ifNil: [ self epiLog ])).
@@ -3279,10 +3362,7 @@ ViennaRefactoringBrowser >> updateEpiLogMatcherDropList [
 				 stream nextPut: (ViennaEpiLogMatcher
 						  syntacticClosureFrom: self epiLog
 						  enumerator: self epiLogEnumerator
-						  at: (epiLogList selectedItem ifNil: [ self epiLog ])).
-
-
-
+						  at: (epiLogList selectedItem ifNil: [ self epiLog ]))."
 				 moduleList selectedItem ifNotNil: [ :module |
 					 stream nextPut: (ViennaEpiLogMatcher module: module identifier) ].
 				 definitionList selectedItem ifNotNil: [ :definition |
@@ -3328,7 +3408,7 @@ ViennaRefactoringBrowser >> updateGitButtons [
 	gitCommitButton enabled: self gitCanCommit.
 	gitCommitMenuButton enabled: self gitCanCommitAndPush.
 	gitPushButton enabled: self gitCanPush.
-	gitMergeButton disable
+	gitMergeButton enabled: self gitCanMerge
 ]
 
 { #category : 'updating' }
@@ -3425,7 +3505,7 @@ ViennaRefactoringBrowser >> updateSource [
 	self definition
 		ifNotNil: [ :node |
 			sourceText text: (self getSource: node).
-			self updateSourceWithTypeError ]
+			self updateSourceWithSemanticError ]
 		ifNil: [ sourceText text: '' ]
 ]
 
@@ -3435,15 +3515,15 @@ ViennaRefactoringBrowser >> updateSourceSignalButton [
 	pendingSyntaxError ifNotNil: [
 		talkbackLabel label: pendingSyntaxError printString.
 		^ sourceSignalButton icon: self class redSignalIcon ].
-	pendingTypeError ifNotNil: [
-		talkbackLabel label: pendingTypeError printString.
+	pendingSemanticError ifNotNil: [
+		talkbackLabel label: pendingSemanticError printString.
 		^ sourceSignalButton icon: self class yellowSignalIcon ].
 	talkbackLabel label: ''.
 	^ sourceSignalButton icon: self class greenSignalIcon
 ]
 
 { #category : 'updating' }
-ViennaRefactoringBrowser >> updateSourceWithTypeError [
+ViennaRefactoringBrowser >> updateSourceWithSemanticError [
 
 	| text textWidget |
 	sourceText withAdapterDo: [ :a |
@@ -3457,7 +3537,7 @@ ViennaRefactoringBrowser >> updateSourceWithTypeError [
 	textWidget text string asString = text string asString ifTrue: [
 		textWidget text runs: text runs ].
 	textWidget textArea handleParagraphChange: [
-		(pendingTypeError ifNotNil: #node) ifNotNil: [ :node |
+		(pendingSemanticError ifNotNil: #node) ifNotNil: [ :node |
 			| from to |
 			(sourceText tracingSource intervalForSource: node) key ifNotEmpty: [
 				:interval |
@@ -3504,6 +3584,14 @@ ViennaRefactoringBrowser >> updateStateTableItems [
 ]
 
 { #category : 'updating' }
+ViennaRefactoringBrowser >> updateTestButtons [
+
+	runTestButton enabled: self specification hasTests.
+	runMutationTestingButton enabled:
+		(self module ifNotNil: [ :m | m hasTestTarget ] ifNil: [ false ])
+]
+
+{ #category : 'updating' }
 ViennaRefactoringBrowser >> userTimelineSelected [
 
 	showsArtifactTimelineButton state: false.
@@ -3520,4 +3608,10 @@ ViennaRefactoringBrowser >> windowIsClosing [
 	highlighterProcess ifNotNil: [
 		highlighterProcess terminate.
 		highlighterProcess := nil ]
+]
+
+{ #category : 'accessing' }
+ViennaRefactoringBrowser >> windowTitle [
+
+	^ 'Vienna Refactoring Browser'
 ]

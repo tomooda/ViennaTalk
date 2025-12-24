@@ -19,7 +19,20 @@ ViennaStatementNode >> boundIdentifiersDo: aBlock [
 ]
 
 { #category : 'testing' }
+ViennaStatementNode >> isTransparentComponent [
+
+	^ false
+]
+
+{ #category : 'testing' }
 ViennaStatementNode >> isViennaStatementNode [
 
 	^ true
+]
+
+{ #category : 'purity and transparency' }
+ViennaStatementNode >> purityCheck [
+
+	self allDescendantsDo: [ :node |
+		node isPureComponent ifFalse: [ ViennaPurityError signalOn: node ] ]
 ]

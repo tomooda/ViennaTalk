@@ -4,8 +4,9 @@ Class {
 	#instVars : [
 		'viennaEnv'
 	],
-	#category : 'ViennaTalk-Transpiler-Core',
-	#package : 'ViennaTalk-Transpiler-Core'
+	#category : 'ViennaTalk-Transpiler-Core-TranspiledObject',
+	#package : 'ViennaTalk-Transpiler-Core',
+	#tag : 'TranspiledObject'
 }
 
 { #category : 'instance creation' }
@@ -151,7 +152,11 @@ ViennaTranspiledModularDocument >> postCopy [
 { #category : 'accessing' }
 ViennaTranspiledModularDocument >> state [
 
-	^ self collect: [ :module | module state ]
+	| states |
+	states := Dictionary new: self size.
+	self keysAndValuesDo: [ :name :module |
+		states at: name put: module state ].
+	^ states
 ]
 
 { #category : 'accessing' }
@@ -164,7 +169,7 @@ ViennaTranspiledModularDocument >> state: aDictionary [
 { #category : 'transpiling' }
 ViennaTranspiledModularDocument >> transpileExpression: aString with: transpiler ifError: errorBlock [
 	| ast |
-	ast := ViennaVDMParser new expression end parse: aString.
+	ast := ViennaVDMParser current expression end parse: aString.
 	ast isPetit2Failure
 		ifTrue: [ ^ errorBlock cull: ast message ].
 	^ transpiler
@@ -183,7 +188,7 @@ ViennaTranspiledModularDocument >> transpileNode: aViennaNode with: transpiler i
 { #category : 'transpiling' }
 ViennaTranspiledModularDocument >> transpileStatement: aString with: transpiler ifError: errorBlock [
 	| ast |
-	ast := ViennaVDMParser new statement end parse: aString.
+	ast := ViennaVDMParser current statement end parse: aString.
 	ast isPetit2Failure
 		ifTrue: [ ^ errorBlock cull: ast message ].
 	^ transpiler

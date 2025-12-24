@@ -1,26 +1,27 @@
 Class {
-	#name : #ViennaInmapType,
-	#superclass : #ViennaCompoundType,
+	#name : 'ViennaInmapType',
+	#superclass : 'ViennaCompoundType',
 	#instVars : [
 		'keytype',
 		'valuetype'
 	],
-	#category : #'ViennaTalk-Type-Core'
+	#category : 'ViennaTalk-Type-Core',
+	#package : 'ViennaTalk-Type-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInmapType class >> precedence [
 	^ 4
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaInmapType class >> with: aViennaType1 with: aViennaType2 [
 	^ self new
 		setKeytype: aViennaType1 valuetype: aViennaType2;
 		yourself
 ]
 
-{ #category : #arithmetic }
+{ #category : 'arithmetic' }
 ViennaInmapType >> & aViennaType [
 
 	| ktype vtype |
@@ -48,18 +49,18 @@ ViennaInmapType >> & aViennaType [
 	^ ktype inmapTo: vtype
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaInmapType >> = anObject [
 	^ self class = anObject class and: [ keytype = anObject keytype and: [ valuetype = anObject valuetype ] ]
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaInmapType >> >= aViennaType [
 	^ super >= aViennaType
 		or: [ aViennaType class = self class and: [ keytype >= aViennaType keytype and: [ valuetype >= aViennaType valuetype ] ] ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaInmapType >> basicDo: aBlock [
 	| values |
 	values := Array
@@ -74,7 +75,7 @@ ViennaInmapType >> basicDo: aBlock [
 				ifTrue: [ aBlock value: dict ] ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaInmapType >> basicIncludes: anObject [
 	^ anObject isDictionary
 		and: [ 
@@ -82,17 +83,17 @@ ViennaInmapType >> basicIncludes: anObject [
 				and: [ (anObject values allSatisfy: [ :value | valuetype includes: value ]) and: [ anObject values asSet size = anObject size ] ] ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaInmapType >> basicIsEnumerable [
 	^ keytype isEnumerable and: [ valuetype isEnumerable ]
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaInmapType >> hash [
 	^ keytype hash bitXor: valuetype hash
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInmapType >> instantiate: aDictionary [
 
 	^ self class
@@ -100,7 +101,7 @@ ViennaInmapType >> instantiate: aDictionary [
 		  with: (self valuetype instantiate: aDictionary)
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaInmapType >> isCompatibleWith: aViennaType [
 
 	^ (aViennaType isMapType and: [
@@ -117,30 +118,30 @@ ViennaInmapType >> isCompatibleWith: aViennaType [
 		  or: [ super isCompatibleWith: aViennaType ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaInmapType >> isInmapType [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaInmapType >> isMapType [
 
 	^ true
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaInmapType >> keytype [
 	^ keytype
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaInmapType >> name [
 	^ 'inmap ' , (keytype nameInPrecedence: self class precedence) , ' to '
 		, (valuetype nameInPrecedence: self class precedence)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaInmapType >> removeTypeHolders: aSet [
 	(aSet includes: self) ifTrue: [ ^self ].
 	aSet add: self.
@@ -148,13 +149,13 @@ ViennaInmapType >> removeTypeHolders: aSet [
 	valuetype := valuetype removeTypeHolders: aSet
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaInmapType >> setKeytype: aViennaType1 valuetype: aViennaType2 [
 	keytype := aViennaType1.
 	valuetype := aViennaType2
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaInmapType >> valuetype [
 	^ valuetype
 ]

@@ -78,6 +78,15 @@ ViennaApplyNode >> ifAssociatesLeftDo: aBlock1 ifAssociatesRightDo: aBlock2 othe
 	^ aBlock1 value
 ]
 
+{ #category : 'purity and transparency' }
+ViennaApplyNode >> isPureComponent [
+
+	self expression isViennaNameNode ifTrue: [
+			self expression resolve ifNotNil: [ :defNode |
+				^ defNode isPureComponent ] ].
+	^ true
+]
+
 { #category : 'testing' }
 ViennaApplyNode >> isViennaApplyNode [
 

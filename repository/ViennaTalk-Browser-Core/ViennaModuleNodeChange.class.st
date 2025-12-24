@@ -6,6 +6,19 @@ Class {
 	#tag : 'Diff'
 }
 
+{ #category : 'operations' }
+ViennaModuleNodeChange >> applyTo: aViennaDocumentNode [
+
+	| oldNode |
+	oldNode := from ifNil: [
+		           aViennaDocumentNode ensureModuleNamed:
+			           to module identifier ].
+	oldNode document == aViennaDocumentNode ifFalse: [ ^ self ].
+	to
+		ifNotNil: [ oldNode parent replace: oldNode with: to copyFragment ]
+		ifNil: [ oldNode parent remove: oldNode ]
+]
+
 { #category : 'enumerating' }
 ViennaModuleNodeChange >> changedGlobalNamesDo: aBlock [
 

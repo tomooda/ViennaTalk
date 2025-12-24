@@ -9,7 +9,7 @@ Class {
 ViennaTuplePatternNodeTest >> testMaximalType [
 
 	| pattern |
-	pattern := ViennaVDMParser new pattern end parse: 'mk_(x, y, (1))'.
+	pattern := ViennaVDMParser current pattern end parse: 'mk_(x, y, (1))'.
 	self
 		assert: pattern typecheck
 		equals: ViennaType any * ViennaType any * ViennaType nat1.

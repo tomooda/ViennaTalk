@@ -34,6 +34,12 @@ ViennaStateDefinitionNode class >> identifier: aString fieldList: aViennaFieldLi
 		  yourself
 ]
 
+{ #category : 'accessing' }
+ViennaStateDefinitionNode >> addToModule: aViennaModuleNode [
+
+	^ aViennaModuleNode module addStateDefinition: self copyFragment
+]
+
 { #category : 'converting' }
 ViennaStateDefinitionNode >> asMaximalViennaType [
 
@@ -157,6 +163,18 @@ ViennaStateDefinitionNode >> inv: aViennaInvariantNode [
 	self at: 3 put: aViennaInvariantNode
 ]
 
+{ #category : 'purity and transparency' }
+ViennaStateDefinitionNode >> isPureComponent [
+
+	^ true
+]
+
+{ #category : 'purity and transparency' }
+ViennaStateDefinitionNode >> isTransparentComponent [
+
+	^ true
+]
+
 { #category : 'testing' }
 ViennaStateDefinitionNode >> isViennaExportableTopLevelDefinitionNode [
 
@@ -191,6 +209,12 @@ ViennaStateDefinitionNode >> maximalType [
 	^ maximalType
 ]
 
+{ #category : 'purity and transparency' }
+ViennaStateDefinitionNode >> purityCheck [
+
+
+]
+
 { #category : 'pretty printing' }
 ViennaStateDefinitionNode >> sectionName [
 
@@ -207,4 +231,11 @@ ViennaStateDefinitionNode >> shortName [
 ViennaStateDefinitionNode >> toplevelDefinitionsDo: aBlock [
 
 	
+]
+
+{ #category : 'purity and transparency' }
+ViennaStateDefinitionNode >> transparencyCheck [
+
+	self inv ifNotNil: #transparencyCheck.
+	self init ifNotNil: #transparencyCheck
 ]

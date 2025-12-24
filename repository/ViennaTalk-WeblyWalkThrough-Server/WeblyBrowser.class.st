@@ -1,6 +1,6 @@
 Class {
-	#name : #WeblyBrowser,
-	#superclass : #ViennaBrowser,
+	#name : 'WeblyBrowser',
+	#superclass : 'ViennaBrowser',
 	#instVars : [
 		'translationRuleSelection',
 		'portField',
@@ -12,10 +12,11 @@ Class {
 		'guiModuleField',
 		'handleEventOperationField'
 	],
-	#category : #'ViennaTalk-WeblyWalkThrough-Server'
+	#category : 'ViennaTalk-WeblyWalkThrough-Server',
+	#package : 'ViennaTalk-WeblyWalkThrough-Server'
 }
 
-{ #category : #menus }
+{ #category : 'menus' }
 WeblyBrowser class >> WeblyBrowserMenuOn: aBuilder [
 	<worldMenu>
 	(aBuilder item: #'Webly WalkThrough')
@@ -26,25 +27,25 @@ WeblyBrowser class >> WeblyBrowserMenuOn: aBuilder [
 		icon: nil
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 WeblyBrowser class >> defaultLabel [
 	^ 'Webly Walk-Through'
 ]
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 WeblyBrowser class >> initialize [
 	super initialize.
 	Smalltalk at: #ViennaLauncher ifPresent: [ :launcherClass | launcherClass reopen ]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 WeblyBrowser class >> open [
 	"WeblyBrowser open"
 
 	^ self openOn: WeblyWalkThrough current
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 WeblyBrowser class >> viennaToolsMenuOn: aBuilder [
 	<ViennaToolsMenu>
 	(aBuilder item: #'Webly WalkThrough')
@@ -54,13 +55,13 @@ WeblyBrowser class >> viennaToolsMenuOn: aBuilder [
 		icon: nil
 ]
 
-{ #category : #'frontpage pane' }
+{ #category : 'frontpage pane' }
 WeblyBrowser >> acceptFrontPage: aStringOrText [
 	animation frontPage: aStringOrText asString.
 	^ true
 ]
 
-{ #category : #'translation pane' }
+{ #category : 'translation pane' }
 WeblyBrowser >> acceptTranslationRule: aString [
 	| newTranslator |
 	newTranslator := WWTTranslationRuleParser new parse: aString asString.
@@ -70,12 +71,12 @@ WeblyBrowser >> acceptTranslationRule: aString [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 WeblyBrowser >> animationClassForType: aSymbol [
 	^ WeblyWalkThrough
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 WeblyBrowser >> build [
 	| pane frontPagePane |
 	pane := super build.
@@ -89,7 +90,7 @@ WeblyBrowser >> build [
 	^ pane
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 WeblyBrowser >> buildDisplayEnabled [
 	^ (CheckboxMorph
 		on: self
@@ -102,7 +103,7 @@ WeblyBrowser >> buildDisplayEnabled [
 		label: 'Enable ViennaVisuals'
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 WeblyBrowser >> buildDisplayOperationField [
 	^ displayOperationField := RubPluggableTextFieldMorph new
 		on: self
@@ -119,7 +120,7 @@ WeblyBrowser >> buildDisplayOperationField [
 		yourself
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 WeblyBrowser >> buildFrontPagePane [
 	^ frontPageText := (RubPluggableTextMorph
 		on: self
@@ -133,7 +134,7 @@ WeblyBrowser >> buildFrontPagePane [
 		yourself
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 WeblyBrowser >> buildGuiModuleField [
 	^ guiModuleField := RubPluggableTextFieldMorph new
 		on: self
@@ -150,7 +151,7 @@ WeblyBrowser >> buildGuiModuleField [
 		yourself
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 WeblyBrowser >> buildHandleEventOperationField [
 	^ handleEventOperationField := RubPluggableTextFieldMorph new
 		on: self
@@ -167,7 +168,7 @@ WeblyBrowser >> buildHandleEventOperationField [
 		yourself
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 WeblyBrowser >> buildPortField [
 	^ RubPluggableTextFieldMorph new
 		on: self
@@ -183,7 +184,7 @@ WeblyBrowser >> buildPortField [
 		yourself
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 WeblyBrowser >> buildPublishButton [
 	^ (PluggableButtonMorph
 		on: self
@@ -198,7 +199,7 @@ WeblyBrowser >> buildPublishButton [
 		yourself
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 WeblyBrowser >> buildTranslationRulePane [
 	^ translationRuleText := (RubPluggableTextMorph
 		on: self
@@ -212,7 +213,7 @@ WeblyBrowser >> buildTranslationRulePane [
 		yourself
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 WeblyBrowser >> buildVisualsPane [
 	^ Morph new
 		color: Color white;
@@ -263,7 +264,7 @@ WeblyBrowser >> buildVisualsPane [
 		yourself
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 WeblyBrowser >> buildWebApiPane [
 	^ Morph new
 		color: Color white;
@@ -289,33 +290,33 @@ WeblyBrowser >> buildWebApiPane [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 WeblyBrowser >> displayEnabled [ 
 	^ animation displayEnabled
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 WeblyBrowser >> displayEnabled: aBoolean [
 	animation displayEnabled: aBoolean.
 	self updateWidgets
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 WeblyBrowser >> displayOperation [
 	^ animation displayOperation
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 WeblyBrowser >> displayOperation: aString [
 	animation displayOperation: aString
 ]
 
-{ #category : #'frontpage pane' }
+{ #category : 'frontpage pane' }
 WeblyBrowser >> frontPage [
 	^ animation frontPage
 ]
 
-{ #category : #'frontpage pane menu' }
+{ #category : 'frontpage pane menu' }
 WeblyBrowser >> frontPagePaneMenu: aMenu shifted: aBoolean [
 	aMenu target: self.
 	aMenu
@@ -346,42 +347,42 @@ WeblyBrowser >> frontPagePaneMenu: aMenu shifted: aBoolean [
 	^ aMenu
 ]
 
-{ #category : #'frontpage pane' }
+{ #category : 'frontpage pane' }
 WeblyBrowser >> frontPageSelection [
 	^ frontPageSelection ifNil: [ frontPageSelection := 1 to: 0 ]
 ]
 
-{ #category : #'frontpage pane' }
+{ #category : 'frontpage pane' }
 WeblyBrowser >> frontPageSelection: anInterval [
 	frontPageSelection := anInterval
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 WeblyBrowser >> guiModule [
 	^ animation guiModule
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 WeblyBrowser >> guiModule: aString [
 	animation guiModule: aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 WeblyBrowser >> handleEventOperation [
 	^ animation handleEventOperation
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 WeblyBrowser >> handleEventOperation: aString [
 	animation handleEventOperation: aString
 ]
 
-{ #category : #'web api services' }
+{ #category : 'web api services' }
 WeblyBrowser >> isPublished [
 	^ animation isPublished
 ]
 
-{ #category : #'module list menu' }
+{ #category : 'module list menu' }
 WeblyBrowser >> loadSnapshotFromFile [
 	self
 		fileOpen: 'Open snapshot...'
@@ -404,36 +405,36 @@ WeblyBrowser >> loadSnapshotFromFile [
 				acceptTranslationRule: (json at: 'translation' ifAbsent: [ '' ]) ]
 ]
 
-{ #category : #'web api services' }
+{ #category : 'web api services' }
 WeblyBrowser >> port [
 	^ animation class server port
 ]
 
-{ #category : #'web api services' }
+{ #category : 'web api services' }
 WeblyBrowser >> port: anInteger [
 	animation class server port: anInteger.
 	self changed: #port.
 	^ true
 ]
 
-{ #category : #'web api services' }
+{ #category : 'web api services' }
 WeblyBrowser >> publishButtonLabel [
 	^ self isPublished
 		ifTrue: [ 'Stop' ]
 		ifFalse: [ 'Publish' ]
 ]
 
-{ #category : #'web api services' }
+{ #category : 'web api services' }
 WeblyBrowser >> publishButtonOffColor [
 	^ Color green muchDarker
 ]
 
-{ #category : #'web api services' }
+{ #category : 'web api services' }
 WeblyBrowser >> publishButtonOnColor [
 	^ Color green lighter
 ]
 
-{ #category : #'module list menu' }
+{ #category : 'module list menu' }
 WeblyBrowser >> saveSnapshotToFile [
 	| json |
 	json := Dictionary new.
@@ -449,7 +450,7 @@ WeblyBrowser >> saveSnapshotToFile [
 		do: [ :stream | (NeoJSONWriter on: stream) nextPut: json ]
 ]
 
-{ #category : #'web api services' }
+{ #category : 'web api services' }
 WeblyBrowser >> togglePublish [
 	self isPublished
 		ifTrue: [ 
@@ -465,7 +466,7 @@ WeblyBrowser >> togglePublish [
 	publishButton changed
 ]
 
-{ #category : #'translation pane menu' }
+{ #category : 'translation pane menu' }
 WeblyBrowser >> translationPaneMenu: aMenu shifted: aBoolean [
 	aMenu target: self.
 	aMenu
@@ -496,22 +497,22 @@ WeblyBrowser >> translationPaneMenu: aMenu shifted: aBoolean [
 	^ aMenu
 ]
 
-{ #category : #'translation pane' }
+{ #category : 'translation pane' }
 WeblyBrowser >> translationRule [
 	^ animation translator source
 ]
 
-{ #category : #'translation pane' }
+{ #category : 'translation pane' }
 WeblyBrowser >> translationRuleSelection [
 	^ translationRuleSelection ifNil: [ translationRuleSelection := 1 to: 0 ]
 ]
 
-{ #category : #'translation pane' }
+{ #category : 'translation pane' }
 WeblyBrowser >> translationRuleSelection: aSelection [
 	translationRuleSelection := aSelection
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 WeblyBrowser >> updateWidgets [
 	| visualsMode |
 	visualsMode := self displayEnabled.
@@ -547,12 +548,12 @@ WeblyBrowser >> updateWidgets [
 				ifFalse: [ Color lightGray ])
 ]
 
-{ #category : #'module list menu' }
+{ #category : 'module list menu' }
 WeblyBrowser >> useInterpreter [
 	self shouldNotImplement
 ]
 
-{ #category : #'module list menu' }
+{ #category : 'module list menu' }
 WeblyBrowser >> useTranspiler [
 	self shouldNotImplement
 ]

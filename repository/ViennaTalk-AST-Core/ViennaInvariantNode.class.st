@@ -86,3 +86,9 @@ ViennaInvariantNode >> pattern: aViennaPatternNode [
 
 	^ self invariantInitialFunction pattern: aViennaPatternNode
 ]
+
+{ #category : 'purity and transparency' }
+ViennaInvariantNode >> transparencyCheck [
+
+	self expression transparencyCheck
+]

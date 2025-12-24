@@ -9,7 +9,7 @@ Class {
 ViennaMapMunionPatternNodeTest >> testMaximalType [
 
 	| pattern |
-	pattern := ViennaVDMParser new pattern end parse:
+	pattern := ViennaVDMParser current pattern end parse:
 		           '{(1) |-> (''2'')} munion m'.
 	self
 		assert: pattern maximalType

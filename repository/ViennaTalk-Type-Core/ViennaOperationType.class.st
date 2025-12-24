@@ -1,26 +1,27 @@
 Class {
-	#name : #ViennaOperationType,
-	#superclass : #ViennaCompoundType,
+	#name : 'ViennaOperationType',
+	#superclass : 'ViennaCompoundType',
 	#instVars : [
 		'returntype',
 		'argtypes'
 	],
-	#category : #'ViennaTalk-Type-Core'
+	#category : 'ViennaTalk-Type-Core',
+	#package : 'ViennaTalk-Type-Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaOperationType class >> precedence [
 	^ 4
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ViennaOperationType class >> withAll: anArrayOfViennaType with: aViennaType [
 	^ self new
 		setArgtypes: anArrayOfViennaType returntype: aViennaType;
 		yourself
 ]
 
-{ #category : #arithmetic }
+{ #category : 'arithmetic' }
 ViennaOperationType >> & aViennaType [
 
 	(aViennaType isOperationType and: [
@@ -36,12 +37,12 @@ ViennaOperationType >> & aViennaType [
 	^ ViennaType unit
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaOperationType >> = anObject [
 	^ self class = anObject class and: [ argtypes = anObject argtypes and: [ returntype = anObject returntype ] ]
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaOperationType >> >= aViennaType [
 
 	^ super >= aViennaType or: [
@@ -52,33 +53,33 @@ ViennaOperationType >> >= aViennaType [
 					  returntype >= aViennaType returntype ] ] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaOperationType >> argtypes [
 	^ argtypes
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 ViennaOperationType >> basicDo: aBlock [
 	^ self shouldNotImplement
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaOperationType >> basicIncludes: anObject [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaOperationType >> basicIsEnumerable [
 	^ false
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ViennaOperationType >> hash [
 	^ argtypes hash bitXor: returntype hash
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaOperationType >> instantiate: aDictionary [
 
 	^ self class
@@ -87,7 +88,7 @@ ViennaOperationType >> instantiate: aDictionary [
 		  with: (self returntype instantiate: aDictionary)
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaOperationType >> isCompatibleWith: aViennaType [
 
 	^ (aViennaType isOperationType and: [
@@ -99,13 +100,13 @@ ViennaOperationType >> isCompatibleWith: aViennaType [
 		  or: [ super isCompatibleWith: aViennaType ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ViennaOperationType >> isOperationType [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaOperationType >> name [
 
 	^ ('*' join:
@@ -116,7 +117,7 @@ ViennaOperationType >> name [
 	  , (returntype nameInPrecedence: self class precedence)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaOperationType >> removeTypeHolders: aSet [
 	(aSet includes: self) ifTrue: [ ^self ].
 	aSet add: self.
@@ -124,12 +125,12 @@ ViennaOperationType >> removeTypeHolders: aSet [
 	returntype := returntype removeTypeHolders: aSet 
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaOperationType >> returntype [
 	^ returntype
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaOperationType >> setArgtypes: anArrayOfViennaType returntype: aViennaType [
 	argtypes := anArrayOfViennaType.
 	returntype := aViennaType

@@ -4,9 +4,16 @@ Class {
 	#instVars : [
 		'classes'
 	],
-	#category : 'ViennaTalk-Transpiler-Core',
-	#package : 'ViennaTalk-Transpiler-Core'
+	#category : 'ViennaTalk-Transpiler-Core-Transpiler',
+	#package : 'ViennaTalk-Transpiler-Core',
+	#tag : 'Transpiler'
 }
+
+{ #category : 'utilities' }
+ViennaVDM2SmalltalkClass >> afterMultipleAssignment: aViennaMultipleAssignmentStatementNode [
+
+	^ 'self inv'
+]
 
 { #category : 'utilities' }
 ViennaVDM2SmalltalkClass >> buildEnv: aViennaNode [
@@ -55,12 +62,6 @@ ViennaVDM2SmalltalkClass >> callStatement: aViennaNode env: aDictionary [
 ]
 
 { #category : 'utilities' }
-ViennaVDM2SmalltalkClass >> checkInvariant [
-
-	^ 'self inv.'
-]
-
-{ #category : 'utilities' }
 ViennaVDM2SmalltalkClass >> closureFromMethodSource: aString binds: binds [
 	| header |
 	header := ((aString readStream upTo: Character cr) trim readStream
@@ -99,19 +100,33 @@ ViennaVDM2SmalltalkClass >> createDocumentClassWithInstVars: anArrayOfString1 st
 	documentClassName := self requestClassName: '' for: 'Document'.
 	documentClassName ifNil: [ ^ nil ].
 	^ (ShiftClassInstaller make: [ :builder |
-			   builder
-				   name: documentClassName asSymbol;
-				   superclass: ViennaTranspiledObject;
-				   slots: (anArrayOfString1 asArray collect: [ :instVarName |
-							    InstanceVariableSlot named: instVarName asSymbol ])
-					   , (anArrayOfString2 asArray collect: [ :instVarName |
-								    (runtimeAssertionCheck = true
-									     ifTrue: [ ViennaStateSlot ]
-									     ifFalse: [ InstanceVariableSlot ]) named:
-										    instVarName asSymbol ]);
-				   package: 'Auto Generated from VDM' ])
+				   builder
+					   name: documentClassName asSymbol;
+					   superclass: self documentBaseClass;
+					   slots: (anArrayOfString1 asArray collect: [ :instVarName |
+								    InstanceVariableSlot named: instVarName asSymbol ])
+						   , (anArrayOfString2 asArray collect: [ :instVarName |
+									    self newStateVariableSlotNamed: instVarName ]);
+					   package: 'Auto Generated from VDM' ])
 		  specification: source;
 		  yourself
+]
+
+{ #category : 'utilities' }
+ViennaVDM2SmalltalkClass >> createFlatDocumentClassWithInstVars: anArrayOfString1 stateVars: anArrayOfString2 [
+
+	| documentClassName |
+	documentClassName := self requestClassName: '' for: 'Document'.
+	documentClassName ifNil: [ ^ nil ].
+	^ ShiftClassInstaller make: [ :builder |
+			  builder
+				  name: documentClassName asSymbol;
+				  superclass: self documentBaseClass;
+				  slots: (anArrayOfString1 asArray collect: [ :instVarName |
+							   InstanceVariableSlot named: instVarName asSymbol ])
+					  , (anArrayOfString2 asArray collect: [ :instVarName |
+								   self newStateVariableSlotNamed: instVarName ]);
+				  package: 'Auto Generated from VDM' ]
 ]
 
 { #category : 'utilities' }
@@ -127,22 +142,16 @@ ViennaVDM2SmalltalkClass >> createModuleClass: aString withInstVars: anArrayOfSt
 { #category : 'utilities' }
 ViennaVDM2SmalltalkClass >> createModuleClass: aString withInstVars: anArrayOfString1 stateVars: anArrayOfString2 env: aDictionary [
 
-	| className |
-	className := aString.
 	^ (ShiftClassInstaller make: [ :builder |
-			   builder
-				   name: className asSymbol;
-				   superclass: ViennaTranspiledObject;
-				   slots: (anArrayOfString1 asArray collect: [ :instVarName |
-							    InstanceVariableSlot named: instVarName asSymbol ])
-					   , (anArrayOfString2 asArray collect: [ :instVarName |
-								    (runtimeAssertionCheck = true
-									     ifTrue: [ ViennaStateSlot ]
-									     ifFalse: [ InstanceVariableSlot ]) named:
-										    instVarName asSymbol ]);
-				   category: 'Auto Generated from VDM' ])
+				   builder
+					   name: aString asSymbol;
+					   superclass: self moduleBaseClass;
+					   slots: (anArrayOfString1 asArray collect: [ :instVarName |
+								    InstanceVariableSlot named: instVarName asSymbol ])
+						   , (anArrayOfString2 asArray collect: [ :instVarName |
+									    self newStateVariableSlotNamed: instVarName ]);
+					   package: 'Auto Generated from VDM' ])
 		  viennaEnv: aDictionary;
-		  specification: source;
 		  yourself
 ]
 
@@ -241,118 +250,127 @@ ViennaVDM2SmalltalkClass >> defineMethodFromOperation: opName in: theClass proto
 	formalArgs := OrderedCollection new.
 	self
 		defineMethod: (self stringStreamContents: [ :stream |
-				 stream nextPutAll: opName.
-				 anArrayOfPatternNodeAndTypeSetNode isEmpty ifTrue: [
-					 stream nextPutAll: ': ' , varGenerator value ].
-				 isFirstArg := true.
-				 self
-					 fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode
-					 patternNodeAndSetOrTypeNodeAndBindTypesDo: [
-						 :patternNode
-						 :setNode
-						 :bindType |
-						 bindType = #identifier ifTrue: [
-							 argVars add: patternNode first.
-							 isFirstArg ifFalse: [ stream nextPutAll: ' _' ].
-							 formalArgs add: patternNode first -> setNode.
-							 stream
-								 nextPutAll: ':';
-								 nextPutAll: patternNode first ].
-						 bindType = #compound ifTrue: [
-							 | tmpVar |
-							 argVars addAll: patternNode uniqueBoundIdentifiers.
-							 tmpVar := varGenerator value.
-							 tmpVars add: tmpVar.
-							 formalArgs add: tmpVar -> setNode.
-							 matchPatternNodes add: patternNode.
-							 isFirstArg ifFalse: [ stream nextPutAll: ' _' ].
-							 stream
-								 nextPutAll: ':';
-								 nextPutAll: tmpVar ].
-						 isFirstArg := false ].
-				 tuplePattern := ViennaTuplePatternNode patternList:
-					                 (ViennaPatternListNode keepParentsWithAll:
-						                  matchPatternNodes).
-				 matchVars := tuplePattern uniqueBoundIdentifiers.
-				 stream cr.
-				 matchVars
-					 ifEmpty: [
-					 stream nextPutAll: '| _oldState ' , retVarName , ' |' ]
-					 ifNotEmpty: [
-						 stream nextPutAll: ' | _oldState ' , retVarName , ' '.
-						 matchVars do: [ :var |
-							 stream
-								 nextPutAll: var;
-								 nextPut: Character space ].
-						 stream
-							 nextPutAll: '| ';
-							 nextPutAll: (self
-									  binder: (self generate: tuplePattern env: aDictionary)
-									  with: '{' , (' . ' join: tmpVars) , '}'
-									  vars: matchVars);
-							 nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ].
-				 runtimeTypeCheck = true ifTrue: [
-					 formalArgs
-						 with: anArrayOfPatternNodeAndTypeSetNode
-						 do: [ :assoc :triple |
+					 stream nextPutAll: opName.
+					 anArrayOfPatternNodeAndTypeSetNode isEmpty ifTrue: [
+						 stream nextPutAll: ': ' , varGenerator value ].
+					 isFirstArg := true.
+					 self
+						 fromFlatBinds: anArrayOfPatternNodeAndTypeSetNode
+						 patternNodeAndSetOrTypeNodeAndBindTypesDo: [
+								 :patternNode
+								 :setNode
+								 :bindType |
+								 bindType = #identifier ifTrue: [
+										 argVars add: patternNode first.
+										 isFirstArg ifFalse: [ stream nextPutAll: ' _' ].
+										 formalArgs add: patternNode first -> setNode.
+										 stream
+											 nextPutAll: ':';
+											 nextPutAll: patternNode first ].
+								 bindType = #compound ifTrue: [
+										 | tmpVar |
+										 argVars addAll: patternNode uniqueBoundIdentifiers.
+										 tmpVar := varGenerator value.
+										 tmpVars add: tmpVar.
+										 formalArgs add: tmpVar -> setNode.
+										 matchPatternNodes add: patternNode.
+										 isFirstArg ifFalse: [ stream nextPutAll: ' _' ].
+										 stream
+											 nextPutAll: ':';
+											 nextPutAll: tmpVar ].
+								 isFirstArg := false ].
+					 tuplePattern := ViennaTuplePatternNode patternList:
+						                 (ViennaPatternListNode keepParentsWithAll:
+							                  matchPatternNodes).
+					 matchVars := tuplePattern uniqueBoundIdentifiers.
+					 stream cr.
+					 matchVars
+						 ifEmpty: [
+						 stream nextPutAll: '| _oldState ' , retVarName , ' |' ]
+						 ifNotEmpty: [
+								 stream nextPutAll: ' | _oldState ' , retVarName , ' '.
+								 matchVars do: [ :var |
+										 stream
+											 nextPutAll: var;
+											 nextPut: Character space ].
+								 stream
+									 nextPutAll: '| ';
+									 nextPutAll: (self
+											  binder: (self generate: tuplePattern env: aDictionary)
+											  with: '{' , (' . ' join: tmpVars) , '}'
+											  vars: matchVars);
+									 nextPutAll: ' ifFalse: [ViennaNoMatch signal].' ].
+					 runtimeTypeCheck = true ifTrue: [
+							 formalArgs
+								 with: anArrayOfPatternNodeAndTypeSetNode
+								 do: [ :assoc :triple |
+										 stream nextPutAll:
+											 ('((' , (self generate: assoc value env: aDictionary)
+											  , ') includes: ' , assoc key
+											  , ') ifFalse: [ViennaRuntimeTypeError signal].'
+												  asViennaTracingString: triple second) ] ].
+					 preString ifNotNil: [
+							 (preString isArray
+								  ifTrue: [ preString ]
+								  ifFalse: [ { preString } ]) do: [ :pre |
+									 stream nextPutAll:
+										 ('(' , pre
+										  , ') ifFalse: [ViennaPreconditionViolation signal].'
+											  asViennaTracingString:
+												  (pre asViennaTracingString sources
+													   ifNotEmpty: [ :sources | sources last value ]
+													   ifEmpty: [ aViennaNode ])) ] ].
+					 stream
+						 nextPutAll: '_oldState := self state. ';
+						 nextPutAll:
+							 (retVarName , ' := self _' , opName , ((' _: ' join: argVars)
+									   ifNotEmpty: [ :str | '_: ' , str ]
+									   ifEmpty: [ '' ]) , '.' asViennaTracingString: aViennaNode).
+					 (runtimeTypeCheck = true and: [
+						  typeNode isViennaUnitTypeNode not ]) ifTrue: [
 							 stream nextPutAll:
-								 ('((' , (self generate: assoc value env: aDictionary)
-								  , ') includes: ' , assoc key
+								 ('(' , (self generate: typeNode env: aDictionary)
+								  , ' includes: ' , retVarName
 								  , ') ifFalse: [ViennaRuntimeTypeError signal].'
-									  asViennaTracingString: triple second) ] ].
-				 preString ifNotNil: [
-					 (preString isArray
-						  ifTrue: [ preString ]
-						  ifFalse: [ { preString } ]) do: [ :pre |
-						 stream nextPutAll:
-							 ('(' , pre
-							  , ') ifFalse: [ViennaPreconditionViolation signal].'
-								  asViennaTracingString: (pre asViennaTracingString sources
-										   ifNotEmpty: [ :sources | sources last value ]
-										   ifEmpty: [ aViennaNode ])) ] ].
-				 stream
-					 nextPutAll: '_oldState := self state. ';
-					 nextPutAll:
-						 (retVarName , ' := self _' , opName , ((' _: ' join: argVars)
-								   ifNotEmpty: [ :str | '_: ' , str ]
-								   ifEmpty: [ '' ]) , '.' asViennaTracingString: aViennaNode).
-				 (runtimeTypeCheck = true and: [
-					  typeNode isViennaUnitTypeNode not ]) ifTrue: [
-					 stream nextPutAll:
-						 ('(' , (self generate: typeNode env: aDictionary)
-						  , ' includes: ' , retVarName
-						  , ') ifFalse: [ViennaRuntimeTypeError signal].'
-							  asViennaTracingString: typeNode) ].
-				 postString ifNotNil: [
-					 (postString isArray
-						  ifTrue: [ postString ]
-						  ifFalse: [ { postString } ]) do: [ :post |
-						 stream nextPutAll:
-							 ('(' , post
-							  , ') ifFalse: [ViennaPostconditionViolation signal].'
-								  asViennaTracingString: (post asViennaTracingString sources
-										   ifNotEmpty: [ :sources | sources last value ]
-										   ifEmpty: [ aViennaNode ])) ] ].
-				 stream nextPutAll: '^ ' , retVarName ])
+									  asViennaTracingString: typeNode) ].
+					 postString ifNotNil: [
+							 (postString isArray
+								  ifTrue: [ postString ]
+								  ifFalse: [ { postString } ]) do: [ :post |
+									 stream nextPutAll:
+										 ('(' , post
+										  , ') ifFalse: [ViennaPostconditionViolation signal].'
+											  asViennaTracingString:
+												  (post asViennaTracingString sources
+													   ifNotEmpty: [ :sources | sources last value ]
+													   ifEmpty: [ aViennaNode ])) ] ].
+					 stream nextPutAll: '^ ' , retVarName ])
 		in: theClass
 		protocol: protocolString
 		node: aViennaNode.
 	^ self
 		  defineMethod: ((self stringStreamContents: [ :stream |
-				    stream
-					    nextPut: $_;
-					    nextPutAll: opName.
-				    argVars do: [ :var |
 					    stream
-						    nextPutAll: '_: ';
-						    nextPutAll: var;
-						    nextPutAll: ' ' ].
-				    stream
-					    cr;
-					    nextPutAll: bodyString ]) asViennaTracingString: aViennaNode2)
+						    nextPut: $_;
+						    nextPutAll: opName.
+					    argVars do: [ :var |
+							    stream
+								    nextPutAll: '_: ';
+								    nextPutAll: var;
+								    nextPutAll: ' ' ].
+					    stream
+						    cr;
+						    nextPutAll: bodyString ]) asViennaTracingString:
+				   aViennaNode2)
 		  in: theClass
 		  protocol: protocolString
 		  node: aViennaNode2
+]
+
+{ #category : 'class access' }
+ViennaVDM2SmalltalkClass >> documentBaseClass [
+
+	^ ViennaTranspiledObject
 ]
 
 { #category : 'code generation-definitions' }
@@ -703,7 +721,7 @@ ViennaVDM2SmalltalkClass >> flatDocument: aViennaNode env: aDictionary [
 	instVars := aViennaNode uniqueBoundIdentifiers copyWithoutAll:
 		            stateVars.
 	newClass := self
-		            createDocumentClassWithInstVars: instVars
+		            createFlatDocumentClassWithInstVars: instVars
 		            stateVars: stateVars.
 	classes at: nil put: newClass.
 	aViennaNode do: [ :section |
@@ -1033,29 +1051,29 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 	importModuleNames := interfaceNode first
 		                     ifNil: [ Array new ]
 		                     ifNotNil: [ :importDefinitionListNode |
-			                     importDefinitionListNode collect: [
-				                     :importDefinitionNode |
-				                     importDefinitionNode first ] ].
+				                     importDefinitionListNode collect: [
+					                     :importDefinitionNode |
+					                     importDefinitionNode first ] ].
 	importClassNames := importModuleNames collect: [ :importModuleName |
 		                    env
-			                    at: importModuleName first
+			                    at: importModuleName
 			                    ifAbsent: [ importModuleName ] ].
 	stateVars := #(  ).
 	typeNames := Array new writeStream.
 	moduleBodyNode do: [ :section |
-		section isViennaStateDefinitionNode
-			ifTrue: [
-				| stateDefinition |
-				stateDefinition := section.
-				stateVars := stateDefinition fieldList collect: #identifier.
-				env
-					at: stateDefinition identifier
-					put: 'self ' , stateDefinition identifier ]
-			ifFalse: [
-				section uniqueBoundIdentifiersDo: [ :ident |
-					env at: ident put: 'self ' , ident ] ].
-		section isViennaTypeDefinitionsNode ifTrue: [
-			section do: [ :typeDef | typeNames nextPut: typeDef identifier ] ] ].
+			section isViennaStateDefinitionNode
+				ifTrue: [
+						| stateDefinition |
+						stateDefinition := section.
+						stateVars := stateDefinition fieldList collect: #identifier.
+						env
+							at: stateDefinition identifier
+							put: 'self ' , stateDefinition identifier ]
+				ifFalse: [
+						section uniqueBoundIdentifiersDo: [ :ident |
+							env at: ident put: 'self ' , ident ] ].
+			section isViennaTypeDefinitionsNode ifTrue: [
+				section do: [ :typeDef | typeNames nextPut: typeDef identifier ] ] ].
 	typeNames := typeNames contents.
 	instVars := moduleBodyNode uniqueBoundIdentifiers copyWithoutAll:
 		            stateVars.
@@ -1065,20 +1083,21 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 		            withInstVars: importClassNames , instVars
 		            stateVars: stateVars
 		            env: env.
+	newClass specification: aViennaNode.
 	classes at: moduleName put: newClass.
 	importModuleNames
 		with: importClassNames
 		do: [ :importModuleName :importClassName |
-			self
-				defineMethod:
-					importModuleName , ':' , 'a' , importClassName capitalized
-					, String cr , importModuleName , ' := ' , 'a'
-					, importClassName capitalized
-				in: newClass
-				protocol: 'imports'
-				node:
-				(interfaceNode first detect: [ :node |
-					 node first = importModuleName ]) ].
+				self
+					defineMethod:
+						importModuleName , ':' , 'a' , importModuleName capitalized
+						, String cr , importClassName , ' := ' , 'a'
+						, importModuleName capitalized
+					in: newClass
+					protocol: 'imports'
+					node:
+					(interfaceNode first detect: [ :node |
+						 node first = importModuleName ]) ].
 	moduleBodyNode do: [ :section | self generate: section env: env ].
 	self
 		defineInitTypeMethodForTypeNames: typeNames
@@ -1086,11 +1105,17 @@ ViennaVDM2SmalltalkClass >> module: aViennaNode env: aDictionary [
 		protocol: 'initialize-release'
 		node: nil.
 	(newClass includesSelector: #init) ifFalse: [
-		self
-			defineMethod: 'init'
-			in: newClass
-			protocol: 'state'
-			node: nil ]
+			self
+				defineMethod: 'init'
+				in: newClass
+				protocol: 'state'
+				node: nil ]
+]
+
+{ #category : 'class access' }
+ViennaVDM2SmalltalkClass >> moduleBaseClass [
+
+	^ ViennaTranspiledObject
 ]
 
 { #category : 'code generation-traces' }
@@ -1127,12 +1152,20 @@ ViennaVDM2SmalltalkClass >> namedTrace: aViennaNode env: aDictionary [
 		node: aViennaNode
 ]
 
+{ #category : 'instance creation' }
+ViennaVDM2SmalltalkClass >> newStateVariableSlotNamed: aString [
+
+	^ runtimeAssertionCheck
+		  ifTrue: [ ViennaStateVariableWithInvSlot named: aString asSymbol ]
+		  ifFalse: [ ViennaStateVariableSlot named: aString asSymbol ]
+]
+
 { #category : 'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> noCheckAssignment: aVarName be: aValString [
 
-	^ 'self class slotNamed: ' , aVarName storeString
+	^ '(self class slotNamed: ' , aVarName storeString
 	  , ' ifFound: [ :slot | slot basicWrite: (' , aValString
-	  , ') to: self]'
+	  , ') to: self] ifNone: [' , aVarName , ' := ' , aValString , '])'
 ]
 
 { #category : 'code generation-interfaces' }
@@ -1237,12 +1270,12 @@ ViennaVDM2SmalltalkClass >> stateDefinition: aViennaNode env: aDictionary [
 		at: 'inv_' , stateConstructor
 		put: 'self inv_' , stateConstructor.
 	hexa fourth ifNotNil: [
-		self
-			defineLazyMethodNamed: 'inv_' , stateConstructor
-			initializer: hexa fourth
-			in: theClass
-			protocol: 'state'
-			node: aViennaNode inv ].
+			self
+				defineLazyMethodNamed: 'inv_' , stateConstructor
+				initializer: hexa fourth
+				in: theClass
+				protocol: 'state'
+				node: aViennaNode inv ].
 	aDictionary
 		at: 'init_' , stateConstructor
 		put: 'self init_' , stateConstructor.
@@ -1256,40 +1289,41 @@ ViennaVDM2SmalltalkClass >> stateDefinition: aViennaNode env: aDictionary [
 		protocol: 'state'
 		node: aViennaNode.
 	(hexa fourth notNil or: [ runtimeTypeCheck = true ]) ifTrue: [
-		self
-			defineMethod: (self stringStreamContents: [ :stream |
-					 stream
-						 nextPutAll: 'inv';
-						 cr.
-					 hexa fourth ifNotNil: [
-						 | patternNode varGenerator |
-						 patternNode := aViennaNode inv invariantInitialFunction pattern.
-						 varGenerator := self varNameGenerator: 'func' uniqueIn: {  }.
-						 stream
-							 nextPutAll: (self
-									  closureFromFlatBinds:
-										  (Array with: (Array with: patternNode with: nil))
-									  body: ('. ' join:
-												   (aViennaNode inv expression asArrayOfConjuncts
-													    collect: [ :inv |
-														    '(' , (self generate: inv env: aDictionary)
-														    ,
-															    ') ifFalse: [ViennaStateInvariantViolation signal]'
-															    asViennaTracingString: inv ]))
-									  varGenerator: varGenerator
-									  env: aDictionary);
-							 nextPutAll: ' value: self state.';
-							 cr ].
-					 runtimeTypeCheck = true ifTrue: [
-						 aViennaNode fieldList do: [ :field |
-							 stream nextPutAll:
-								 ('((' , (self generate: field type env: aDictionary)
-								  , ') includes: (' , field identifier
-								  , ')) ifFalse: [ViennaRuntimeTypeError signal].'
-									  asViennaTracingString: field type) ] ] ])
-			in: theClass
-			protocol: 'state'
-			node: aViennaNode ].
+			self
+				defineMethod: (self stringStreamContents: [ :stream |
+							 stream
+								 nextPutAll: 'inv';
+								 cr.
+							 hexa fourth ifNotNil: [
+									 | patternNode varGenerator |
+									 patternNode := aViennaNode inv invariantInitialFunction
+										                pattern.
+									 varGenerator := self varNameGenerator: 'func' uniqueIn: {  }.
+									 stream
+										 nextPutAll: (self
+												  closureFromFlatBinds:
+													  (Array with: (Array with: patternNode with: nil))
+												  body: ('. ' join:
+															   (aViennaNode inv expression asArrayOfConjuncts
+																    collect: [ :inv |
+																		    '(' , (self generate: inv env: aDictionary)
+																		    ,
+																			    ') ifFalse: [ViennaStateInvariantViolation signal]'
+																			    asViennaTracingString: inv ]))
+												  varGenerator: varGenerator
+												  env: aDictionary);
+										 nextPutAll: ' value: self state.';
+										 cr ].
+							 runtimeTypeCheck = true ifTrue: [
+									 aViennaNode fieldList do: [ :field |
+											 stream nextPutAll:
+												 ('((' , (self generate: field type env: aDictionary)
+												  , ') includes: (' , field identifier
+												  , ')) ifFalse: [ViennaRuntimeTypeError signal].'
+													  asViennaTracingString: field type) ] ] ])
+				in: theClass
+				protocol: 'state'
+				node: aViennaNode ].
 	self
 		defineMethod: 'state' , String cr , '    ^' , hexa fifth
 		in: theClass

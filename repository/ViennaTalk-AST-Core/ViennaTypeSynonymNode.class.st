@@ -45,6 +45,12 @@ ViennaTypeSynonymNode >> access: aViennaAccessNode [
 	self at: 1 put: aViennaAccessNode
 ]
 
+{ #category : 'accessing' }
+ViennaTypeSynonymNode >> addToModule: aViennaModuleNode [
+
+	^ aViennaModuleNode module addTypeDefinition: self copyFragment
+]
+
 { #category : 'accessing-definitions' }
 ViennaTypeSynonymNode >> asAccessDefinition [
 
@@ -182,10 +188,22 @@ ViennaTypeSynonymNode >> maximalType [
 	^ maximalType
 ]
 
+{ #category : 'purity and transparency' }
+ViennaTypeSynonymNode >> purityCheck [
+
+	
+]
+
 { #category : 'accessing-definitions' }
 ViennaTypeSynonymNode >> shortName [
 
 	^ self identifier
+]
+
+{ #category : 'purity and transparency' }
+ViennaTypeSynonymNode >> transparencyCheck [
+
+	self inv ifNotNil: #transparencyCheck
 ]
 
 { #category : 'accessing' }

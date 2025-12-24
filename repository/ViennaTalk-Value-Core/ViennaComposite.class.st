@@ -82,6 +82,15 @@ ViennaComposite >> asArray [
 	^ array
 ]
 
+{ #category : 'converting' }
+ViennaComposite >> asOrderedDictionary [
+
+	| dict |
+	dict := OrderedDictionary new: namedFields size.
+	self fieldNamesAndValuesDo: [ :var :val | dict at: var put: val ].
+	^ dict
+]
+
 { #category : 'accessing' }
 ViennaComposite >> at: anIntegerOrString [
 	^ super
@@ -132,6 +141,13 @@ ViennaComposite >> equalityAbstractionFieldNameAt: anInteger put: aString [
 { #category : 'accessing-field types' }
 ViennaComposite >> fieldNameAt: anInteger put: aString [
 	namedFields at: aString put: anInteger
+]
+
+{ #category : 'enumerating' }
+ViennaComposite >> fieldNamesAndValuesDo: aBlock [
+
+	namedFields keysAndValuesDo: [ :name :index |
+		aBlock value: name value: (self basicAt: index) ]
 ]
 
 { #category : 'comparing' }

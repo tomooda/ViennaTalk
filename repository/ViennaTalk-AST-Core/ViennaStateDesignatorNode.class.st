@@ -13,9 +13,31 @@ ViennaStateDesignatorNode class >> isAbstract [
 ]
 
 { #category : 'testing' }
+ViennaStateDesignatorNode >> designatesStateVariable [
+
+	^ self subclassResponsibility
+]
+
+{ #category : 'accessing' }
+ViennaStateDesignatorNode >> identifier [
+
+	^ self subclassResponsibility
+]
+
+{ #category : 'testing' }
 ViennaStateDesignatorNode >> isAssignable [
 
 	^ self subclassResponsibility
+]
+
+{ #category : 'testing' }
+ViennaStateDesignatorNode >> isAssignee [
+
+	^ self isAssignable and: [
+		  (self parent isViennaAssignStatementNode and: [
+			   self parent stateDesignator == self ]) or: [
+			  self parent isViennaStateDesignatorNode and: [
+				  parent isAssignee and: [ self parent stateDesignator == self ] ] ] ]
 ]
 
 { #category : 'testing' }

@@ -1,1 +1,1 @@
-Package { #name : #'ViennaTalk-Animation-Core' }
+Package { #name : 'ViennaTalk-Animation-Core' }

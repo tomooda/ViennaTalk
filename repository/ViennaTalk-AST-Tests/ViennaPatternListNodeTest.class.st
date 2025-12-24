@@ -9,7 +9,7 @@ Class {
 ViennaPatternListNodeTest >> testMaximalType [
 
 	| p |
-	p := ViennaVDMParser new patternList end parse: 'mk_(x,y), xs^ys'.
+	p := ViennaVDMParser current patternList end parse: 'mk_(x,y), xs^ys'.
 	self
 		assert: p typecheck
 		equals: ViennaType any * ViennaType any | ViennaType any seq.

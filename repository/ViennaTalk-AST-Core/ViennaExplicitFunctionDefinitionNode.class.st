@@ -52,6 +52,12 @@ ViennaExplicitFunctionDefinitionNode >> access: aViennaAccessNode [
 ]
 
 { #category : 'accessing' }
+ViennaExplicitFunctionDefinitionNode >> addToModule: aViennaModuleNode [
+
+	^ aViennaModuleNode module addFunctionDefinition: self copyFragment
+]
+
+{ #category : 'accessing' }
 ViennaExplicitFunctionDefinitionNode >> argumentType [
 
 	^ self type argumentType
@@ -368,6 +374,12 @@ ViennaExplicitFunctionDefinitionNode >> preFunction: aViennaPrePostFunctionDefin
 	self at: 8 put: aViennaPrePostFunctionDefinition
 ]
 
+{ #category : 'purity and transparency' }
+ViennaExplicitFunctionDefinitionNode >> purityCheck [
+
+	
+]
+
 { #category : 'accessing' }
 ViennaExplicitFunctionDefinitionNode >> returnIdentifiers [
 
@@ -387,6 +399,15 @@ ViennaExplicitFunctionDefinitionNode >> returnType [
 ViennaExplicitFunctionDefinitionNode >> shortName [
 
 	^ self identifier
+]
+
+{ #category : 'purity and transparency' }
+ViennaExplicitFunctionDefinitionNode >> transparencyCheck [
+
+	self expression transparencyCheck.
+	self pre ifNotNil: #transparencyCheck.
+	self post ifNotNil: #transparencyCheck.
+	self measure ifNotNil: #transparencyCheck
 ]
 
 { #category : 'accessing' }
