@@ -6,8 +6,9 @@ Class {
 		'stepTime',
 		'stepping'
 	],
-	#category : 'ViennaTalk-LivelyWalkThrough-Core',
-	#package : 'ViennaTalk-LivelyWalkThrough-Core'
+	#category : 'ViennaTalk-LivelyWalkThrough-Core-Widgets',
+	#package : 'ViennaTalk-LivelyWalkThrough-Core',
+	#tag : 'Widgets'
 }
 
 { #category : 'json' }

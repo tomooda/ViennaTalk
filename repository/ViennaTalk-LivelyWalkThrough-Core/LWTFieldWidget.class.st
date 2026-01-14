@@ -8,8 +8,9 @@ Class {
 		'showsDiagram',
 		'type'
 	],
-	#category : 'ViennaTalk-LivelyWalkThrough-Core',
-	#package : 'ViennaTalk-LivelyWalkThrough-Core'
+	#category : 'ViennaTalk-LivelyWalkThrough-Core-Widgets',
+	#package : 'ViennaTalk-LivelyWalkThrough-Core',
+	#tag : 'Widgets'
 }
 
 { #category : 'menu declaration' }

@@ -4,8 +4,9 @@ Class {
 	#instVars : [
 		'states'
 	],
-	#category : 'ViennaTalk-LivelyWalkThrough-Core',
-	#package : 'ViennaTalk-LivelyWalkThrough-Core'
+	#category : 'ViennaTalk-LivelyWalkThrough-Core-Models',
+	#package : 'ViennaTalk-LivelyWalkThrough-Core',
+	#tag : 'Models'
 }
 
 { #category : 'instance creation' }

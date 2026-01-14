@@ -7,8 +7,9 @@ Class {
 		'codeSelection',
 		'selectedScriptSelector'
 	],
-	#category : 'ViennaTalk-LivelyWalkThrough-Core',
-	#package : 'ViennaTalk-LivelyWalkThrough-Core'
+	#category : 'ViennaTalk-LivelyWalkThrough-Core-UI',
+	#package : 'ViennaTalk-LivelyWalkThrough-Core',
+	#tag : 'UI'
 }
 
 { #category : 'instance creation' }

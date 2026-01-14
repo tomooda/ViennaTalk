@@ -5,8 +5,9 @@ Class {
 		'form',
 		'value'
 	],
-	#category : 'ViennaTalk-LivelyWalkThrough-Core',
-	#package : 'ViennaTalk-LivelyWalkThrough-Core'
+	#category : 'ViennaTalk-LivelyWalkThrough-Core-Widgets',
+	#package : 'ViennaTalk-LivelyWalkThrough-Core',
+	#tag : 'Widgets'
 }
 
 { #category : 'json' }
@@ -45,13 +46,15 @@ LWTImageWidget >> basename [
 
 { #category : 'operations' }
 LWTImageWidget >> changeImage [
+
 	(LivelyWalkThrough
-		fileOpen: 'Select an image file'
-		extensions: #('png' 'jpg' 'jpeg')
-		path: nil
-		preview: #image)
-		ifNotNil: [ :filename | 
-			[ form := Form fromFileNamed: filename fullName ]
+		 fileOpen: 'Select an image file'
+		 extensions: #( 'png' 'jpg' 'jpeg' )
+		 path: nil
+		 preview: #image) ifNotNil: [ :filename |
+			[
+				form := Form fromFileNamed: filename fullName.
+				self changed ]
 				on: Error
 				do: [ :ex |  ] ]
 ]
