@@ -8,8 +8,9 @@ Class {
 		'performer',
 		'compiledMethod'
 	],
-	#category : 'ViennaTalk-LivelyWalkThrough-Core',
-	#package : 'ViennaTalk-LivelyWalkThrough-Core'
+	#category : 'ViennaTalk-LivelyWalkThrough-Core-Models',
+	#package : 'ViennaTalk-LivelyWalkThrough-Core',
+	#tag : 'Models'
 }
 
 { #category : 'instance creation' }
@@ -58,21 +59,22 @@ LWTLivetalkScript >> name [
 
 { #category : 'private' }
 LWTLivetalkScript >> setWidgetName: nameString event: eventString performer: anObject source: sourceString ifFail: errorBlock [
+
 	(self class scriptCompilerClass new
-		compileToSmalltalk: sourceString
-		ifError: [ :msg :pos | ^ errorBlock cull: msg cull: pos ])
-		ifNotNil: [ :smalltalkSource | 
-			| compiler  |
-			widgetName := nameString.
-			event := eventString asSymbol.
-			performer := anObject.
-			compiler := OpalCompiler new
-				source: smalltalkSource;
-				class: performer class;
-				noPattern: true;
-				failBlock: [ ^ errorBlock value ].
-			compiledMethod := compiler compile.
-			source := sourceString ]
+		 compileToSmalltalk: sourceString
+		 ifError: [ :msg :pos | ^ errorBlock cull: msg cull: pos ])
+		ifNotNil: [ :smalltalkSource |
+				| compiler |
+				widgetName := nameString.
+				event := eventString asSymbol.
+				performer := anObject.
+				compiler := OpalCompiler new
+					            source: smalltalkSource;
+					            class: performer class;
+					            isScripting: true;
+					            failBlock: [ ^ errorBlock value ].
+				compiledMethod := compiler compile.
+				source := sourceString ]
 ]
 
 { #category : 'accessing' }

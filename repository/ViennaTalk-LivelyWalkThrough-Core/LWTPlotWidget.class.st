@@ -9,8 +9,9 @@ Class {
 		'lineWidth',
 		'dotRadius'
 	],
-	#category : 'ViennaTalk-LivelyWalkThrough-Core',
-	#package : 'ViennaTalk-LivelyWalkThrough-Core'
+	#category : 'ViennaTalk-LivelyWalkThrough-Core-Widgets',
+	#package : 'ViennaTalk-LivelyWalkThrough-Core',
+	#tag : 'Widgets'
 }
 
 { #category : 'json' }

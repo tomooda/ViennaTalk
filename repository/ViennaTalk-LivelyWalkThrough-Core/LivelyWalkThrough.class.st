@@ -7,8 +7,9 @@ Class {
 	#classVars : [
 		'Server'
 	],
-	#category : 'ViennaTalk-LivelyWalkThrough-Core',
-	#package : 'ViennaTalk-LivelyWalkThrough-Core'
+	#category : 'ViennaTalk-LivelyWalkThrough-Core-Models',
+	#package : 'ViennaTalk-LivelyWalkThrough-Core',
+	#tag : 'Models'
 }
 
 { #category : 'instance creation' }
@@ -20,18 +21,16 @@ LivelyWalkThrough class >> default [
 LivelyWalkThrough class >> fileOpen: title extensions: exts path: path preview: preview [
 	"LivelyWalkThrough fileOpen: 'title' extensions: #('png' 'jpg') path: nil preview: #image"
 
-	| ref ui fd |
-	ref := path isString ifTrue: [ (FileSystem disk pathFromString: path)  asFileReference ] ifFalse: [ path  ].
-	ui := UIManager default.
-	fd := FileDialogWindow basicNew
-		basicTheme: ui theme;
-		previewType: preview;
-		initialize;
-		title: title;
-		answerPathName.
-	exts ifNotNil: [ fd validExtensions: exts ].
-	path ifNotNil: [ fd selectPath: ref parent  ].
-	^ (ui openModal: fd) answer ifNotNil: [ :ans | ans asFileReference ]
+	| fileBrowser |
+	fileBrowser := StOpenFilePresenter new
+		               extensions: exts;
+		               yourself.
+	preview ifNotNil: [
+		fileBrowser previewer: StFileBrowserAdaptiveContentPreviewer new ].
+	(fileBrowser asModalWindow
+		 title: title;
+		 open) cancelled ifTrue: [ ^ nil ].
+	^ fileBrowser selectedEntry asFileReference
 ]
 
 { #category : 'class initialization' }
