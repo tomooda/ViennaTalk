@@ -76,9 +76,17 @@ ViennaCommandLineHandler class >> generate [
 ViennaCommandLineHandler >> activate [
 
 	self
+		installLocalDirectory;
 		installMenu;
 		installQuitSession.
 	ViennaLauncher reopen
+]
+
+{ #category : 'activation' }
+ViennaCommandLineHandler >> installLocalDirectory [
+
+	SystemResolver userLocalDirectory:
+		FileLocator viennaTalkDocumentDirectory
 ]
 
 { #category : 'activation' }
