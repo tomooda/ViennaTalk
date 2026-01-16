@@ -19,6 +19,20 @@ Class {
 	#package : 'ViennaTalk-Launcher-Core'
 }
 
+{ #category : 'user interface' }
+ViennaLauncher class >> about [
+
+	| logo |
+	logo := self viennaLogo.
+	logo asPresenter asModalWindow
+		title: 'ViennaTalk ' , BaselineOfViennaTalk codename;
+		withoutButtons;
+		closeOnBackdropClick: true;
+		initialExtent: logo extent + (20 @ 40);
+		centered;
+		open
+]
+
 { #category : 'settings' }
 ViennaLauncher class >> availableDateAndTimeFormats [
 
@@ -592,6 +606,10 @@ ViennaLauncher >> systemMenu [
 				  item
 					  name: 'Pharo Settings...';
 					  action: [ SettingBrowser open ] ];
+		  addItem: [ :item |
+				  item
+					  name: 'About...';
+					  action: [ self class about ] ];
 		  addItem: [ :item |
 				  item
 					  name: 'Quit';
