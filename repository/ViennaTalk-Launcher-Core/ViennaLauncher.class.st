@@ -11,6 +11,7 @@ Class {
 	#classVars : [
 		'Current',
 		'DateAndTimeFormat',
+		'Deployed',
 		'Font',
 		'MultiWindowMode'
 	],
@@ -66,6 +67,7 @@ ViennaLauncher class >> dateAndTimeFormat: aSymbol [
 { #category : 'class initialization' }
 ViennaLauncher class >> deploy [
 
+	Deployed := true.
 	self
 		font: TextStyle defaultFont;
 		setSingleWindowMode;
@@ -196,6 +198,12 @@ ViennaLauncher class >> installDesktopLogo [
 				backgroundImage fullName ]
 ]
 
+{ #category : 'accessing' }
+ViennaLauncher class >> isDeployed [
+
+	^ Deployed = true
+]
+
 { #category : 'settings' }
 ViennaLauncher class >> isMultiWindowMode [
 
@@ -265,7 +273,8 @@ ViennaLauncher class >> showSettingBrowser [
 { #category : 'class initialization' }
 ViennaLauncher class >> startUp [
 
-	Smalltalk isInteractiveGraphic ifTrue: [ self open ]
+	(Smalltalk isInteractiveGraphic and: [ self isDeployed not ])
+		ifTrue: [ self open ]
 ]
 
 { #category : 'resources' }
