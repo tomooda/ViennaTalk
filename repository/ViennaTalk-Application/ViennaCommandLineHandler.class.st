@@ -15,8 +15,9 @@ ViennaCommandLineHandler class >> commandName [
 ViennaCommandLineHandler class >> deploy [
 
 	GraphicFontSettings setFontsToStyleNamed: #small.
-	ViennaLauncher font: TextStyle defaultFont.
-	ViennaLauncher setSingleWindowMode.
+	PasteUpMorph shouldShowWorldMenu: false.
+	MenubarMorph showMenubar: false.
+	ViennaLauncher deploy.
 	Smalltalk cleanUp: true except: {  } confirming: false.
 	MCRepositoryGroup allSubInstancesDo: [ :group |
 		group repositories do: [ :repo | group removeRepository: repo ] ].

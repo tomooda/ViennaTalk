@@ -63,6 +63,16 @@ ViennaLauncher class >> dateAndTimeFormat: aSymbol [
 	DateAndTimeFormat := aSymbol asSymbol
 ]
 
+{ #category : 'class initialization' }
+ViennaLauncher class >> deploy [
+
+	self
+		font: TextStyle defaultFont;
+		setSingleWindowMode;
+		reopen.
+	self current deploy
+]
+
 { #category : 'settings' }
 ViennaLauncher class >> font [
 	^ Font ifNil: [ Font := StandardFonts codeFont ]
@@ -380,6 +390,27 @@ ViennaLauncher >> defaultTitle [
 	^ 'ViennaTalk ', self codename
 ]
 
+{ #category : 'initialize-release' }
+ViennaLauncher >> deploy [
+
+	openButton withAdapterDo: [ :a |
+			a widgetDo: [ :w |
+					w
+						openInWorld: self currentWorld;
+						position: 0 @ 0 ] ].
+	toolsButton withAdapterDo: [ :a |
+			a widgetDo: [ :w |
+					w
+						openInWorld: self currentWorld;
+						position: 100 @ 0 ] ].
+	systemButton withAdapterDo: [ :a |
+			a widgetDo: [ :w |
+					w
+						openInWorld: self currentWorld;
+						position: 200 @ 0 ] ].
+	self close
+]
+
 { #category : 'menu operations' }
 ViennaLauncher >> gitClone [
 
@@ -545,17 +576,17 @@ ViennaLauncher >> systemMenu [
 	^ self newMenu
 		  title: 'System';
 		  addItem: [ :item |
-			  item
-				  name: 'Settings...';
-				  action: [ self showSettingBrowser ] ];
+				  item
+					  name: 'Settings...';
+					  action: [ self showSettingBrowser ] ];
 		  addItem: [ :item |
-			  item
-				  name: 'Update to the head on github';
-				  action: [ BaselineOfViennaTalk updateFromOfficialRepository ] ];
+				  item
+					  name: 'Pharo Settings...';
+					  action: [ SettingBrowser open ] ];
 		  addItem: [ :item |
-			  item
-				  name: 'Quit';
-				  action: [ Smalltalk snapshot: false andQuit: true ] ];
+				  item
+					  name: 'Quit';
+					  action: [ Smalltalk snapshot: false andQuit: true ] ];
 		  yourself
 ]
 
