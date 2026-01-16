@@ -78,8 +78,7 @@ ViennaCommandLineHandler >> activate [
 	self
 		installLocalDirectory;
 		installMenu;
-		installQuitSession.
-	ViennaLauncher reopen
+		installQuitSession
 ]
 
 { #category : 'activation' }
