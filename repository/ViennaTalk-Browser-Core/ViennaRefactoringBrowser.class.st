@@ -2005,6 +2005,23 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 		                  yourself.
 	epiLogDiffText := self newText.
 	epiLogSourceText := self newVDMSource.
+	epiLogCherrypickList := self newTable
+		                        hideColumnHeaders;
+		                        beMultipleSelection;
+		                        beResizable;
+		                        addColumn:
+			                        (SpStringTableColumn evaluated:
+					                         #printSummary);
+		                        addColumn:
+			                        (SpStringTableColumn evaluated: #printNames);
+		                        whenSelectionChangedDo: [
+			                        self updateEpiLogCherrypickText ];
+		                        yourself.
+	epiLogCherrypickText := self newText.
+	epiLogCherrypickButton := self newButton
+		                          label: 'Cherrypick';
+		                          action: [ self cherrypick ];
+		                          yourself.
 	epiLogNotebook := self newNotebook
 		                  addPageTitle: 'Diff' provider: [
 			                  SpPresenter new
@@ -2015,6 +2032,16 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 				                  yourself ];
 		                  addPageTitle: 'Version Source'
 		                  provider: [ epiLogSourceText ];
+		                  addPageTitle: 'Cherrypick' provider: [
+		                  SpPresenter new
+			                  layout: (SpBoxLayout newVertical
+					                   add: (SpPanedLayout newVertical
+							                    positionOfSlider: 0.3;
+							                    add: epiLogCherrypickList;
+							                    add: epiLogCherrypickText);
+					                   add: epiLogCherrypickButton expand: false;
+					                   yourself);
+			                  yourself ];
 		                  yourself.
 	updateEpiLogButton := self newButton
 		                      icon: (self iconNamed: #refreshCircling);
