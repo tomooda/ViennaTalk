@@ -27,7 +27,9 @@ ViennaIntType >> basicDo: aBlock [
 
 { #category : 'testing' }
 ViennaIntType >> basicIncludes: anObject [
-	^ anObject isInteger
+
+	^ anObject isInteger or: [
+		  anObject isFloat and: [ (anObject truncateTo: 1.0) = anObject ] ]
 ]
 
 { #category : 'testing' }
