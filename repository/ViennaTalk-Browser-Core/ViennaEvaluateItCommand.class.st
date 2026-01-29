@@ -27,7 +27,7 @@ ViennaEvaluateItCommand class >> defaultName [
 { #category : 'defaults' }
 ViennaEvaluateItCommand class >> defaultShortcut [
 
-	^ $p command
+^ OSPlatform current defaultModifier + $p
 ]
 
 { #category : 'instance creation' }
