@@ -1199,9 +1199,9 @@ ViennaRefactoringBrowser >> epiLogEnumerator [
 ]
 
 { #category : 'operations-epiLog' }
-ViennaRefactoringBrowser >> epiLogEvaluation: aString [
+ViennaRefactoringBrowser >> epiLogEvaluation: aString state: aDictionary [
 
-	self epiLog: (self epiLog newEvaluation: aString)
+	self epiLog: (self epiLog newEvaluation: aString state: aDictionary)
 ]
 
 { #category : 'operations-epiLog' }
@@ -2205,7 +2205,9 @@ ViennaRefactoringBrowser >> initializePlaygroundPagePresenters [
 		                  module: [ self module ];
 		                  withoutLineNumbers;
 		                  whenEvaluatedDo: [ :expression |
-			                  self epiLogEvaluation: expression ];
+			                  self
+				                  epiLogEvaluation: expression
+				                  state: animation state ];
 		                  whenExecutedDo: [ :statement |
 			                  self
 				                  epiLogExecution: statement
@@ -2338,7 +2340,9 @@ ViennaRefactoringBrowser >> initializeSourcePagePresenters [
 		              whenTextChangedDo: [ self onTheFlyCheckSourceText ];
 		              whenSubmitDo: [ :text | self accept: text ];
 		              whenEvaluatedDo: [ :expression |
-			              self epiLogEvaluation: expression ];
+			              self
+				              epiLogEvaluation: expression
+				              state: animation state ];
 		              whenExecutedDo: [ :statement |
 			              self
 				              epiLogExecution: statement

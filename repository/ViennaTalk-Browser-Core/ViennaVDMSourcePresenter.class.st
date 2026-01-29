@@ -49,19 +49,19 @@ ViennaVDMSourcePresenter >> animation: aBlock [
 ViennaVDMSourcePresenter >> doEvaluateIt [
 
 	self selectedTextOrLine trim ifNotEmpty: [ :expression |
-		| result |
-		result := self
-			          evaluateExpression: self selectedTextOrLine
-			          ifError: [ :msg |
-				          self
-					          insertPopoverAfterCurrentSelection:
-					          (self newLabel label: msg)
-					          style: 'error'.
-				          ^ nil ].
-		self
-			insertPopoverAfterCurrentSelection: (self newLabel label: result)
-			style: 'print'.
-		self announcer announce: (ViennaEvaluated expression: expression) ]
+			| result |
+			result := self
+				          evaluateExpression: self selectedTextOrLine
+				          ifError: [ :msg |
+						          self
+							          insertPopoverAfterCurrentSelection:
+							          (self newLabel label: msg)
+							          style: 'error'.
+						          ^ nil ].
+			self
+				insertPopoverAfterCurrentSelection: (self newLabel label: result)
+				style: 'print'.
+			self announcer announce: (ViennaEvaluated expression: expression) ]
 ]
 
 { #category : 'evaluating' }
