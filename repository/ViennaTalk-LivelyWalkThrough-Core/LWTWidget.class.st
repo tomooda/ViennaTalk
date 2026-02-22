@@ -434,67 +434,110 @@ LWTWidget >> pointToJsonObject: aPoint [
 
 { #category : 'private' }
 LWTWidget >> resizeBottom: aMouseEvent [
+
 	| handle |
-	handle := HandleMorph new forEachPointDo: [ :newPoint | self bounds: (self topLeft corner: self right @ newPoint y) ].
+	handle := HandleMorph new forEachPointDo: [ :p |
+			          | newPoint |
+			          newPoint := handle owner position.
+			          handle position: newPoint.
+			          self bounds:
+				          (self topLeft corner: self right @ newPoint y) ].
 	aMouseEvent hand attachMorph: handle.
 	handle startStepping
 ]
 
 { #category : 'private' }
 LWTWidget >> resizeBottomLeft: aMouseEvent [
+
 	| handle |
-	handle := HandleMorph new
-		forEachPointDo: [ :newPoint | self bounds: (newPoint x @ self top corner: self right @ newPoint y) ].
+	handle := HandleMorph new forEachPointDo: [ :p |
+			          | newPoint |
+			          newPoint := handle owner position.
+			          handle position: newPoint.
+			          self bounds:
+				          (newPoint x @ self top corner: self right @ newPoint y) ].
 	aMouseEvent hand attachMorph: handle.
 	handle startStepping
 ]
 
 { #category : 'private' }
 LWTWidget >> resizeBottomRight: aMouseEvent [
+
 	| handle |
-	handle := HandleMorph new forEachPointDo: [ :newPoint | self bounds: (self topLeft corner: newPoint) ].
+	handle := HandleMorph new forEachPointDo: [ :p |
+			          | newPoint |
+			          newPoint := handle owner position.
+			          handle position: newPoint.
+			          self bounds: (self topLeft corner: newPoint) ].
 	aMouseEvent hand attachMorph: handle.
 	handle startStepping
 ]
 
 { #category : 'private' }
 LWTWidget >> resizeLeft: aMouseEvent [
+
 	| handle |
-	handle := HandleMorph new forEachPointDo: [ :newPoint | self bounds: (newPoint x @ self top corner: self bottomRight) ].
+	handle := HandleMorph new forEachPointDo: [ :p |
+			          | newPoint |
+			          newPoint := handle owner position.
+			          handle position: newPoint.
+			          self bounds:
+				          (newPoint x @ self top corner: self bottomRight) ].
 	aMouseEvent hand attachMorph: handle.
 	handle startStepping
 ]
 
 { #category : 'private' }
 LWTWidget >> resizeRight: aMouseEvent [
+
 	| handle |
-	handle := HandleMorph new forEachPointDo: [ :newPoint | self bounds: (self topLeft corner: newPoint x @ self bottom) ].
+	handle := HandleMorph new forEachPointDo: [ :p |
+			          | newPoint |
+			          newPoint := handle owner position.
+			          handle position: newPoint.
+			          self bounds:
+				          (self topLeft corner: newPoint x @ self bottom) ].
 	aMouseEvent hand attachMorph: handle.
 	handle startStepping
 ]
 
 { #category : 'private' }
 LWTWidget >> resizeTop: aMouseEvent [
+
 	| handle |
-	handle := HandleMorph new
-		forEachPointDo: [ :newPoint | self bounds: (self left @ newPoint y corner: self bottomRight) ].
+	handle := HandleMorph new forEachPointDo: [ :p |
+			          | newPoint |
+			          newPoint := handle owner position.
+			          handle position: newPoint.
+			          self bounds:
+				          (self left @ newPoint y corner: self bottomRight) ].
 	aMouseEvent hand attachMorph: handle.
 	handle startStepping
 ]
 
 { #category : 'private' }
 LWTWidget >> resizeTopLeft: aMouseEvent [
+
 	| handle |
-	handle := HandleMorph new forEachPointDo: [ :newPoint | self bounds: (newPoint corner: self bottomRight) ].
+	handle := HandleMorph new forEachPointDo: [ :p |
+			          | newPoint |
+			          newPoint := handle owner position.
+			          handle position: newPoint.
+			          self bounds: (newPoint corner: self bottomRight) ].
 	aMouseEvent hand attachMorph: handle.
 	handle startStepping
 ]
 
 { #category : 'private' }
 LWTWidget >> resizeTopRight: aMouseEvent [
+
 	| handle |
-	handle := HandleMorph new
-		forEachPointDo: [ :newPoint | self bounds: (self left @ newPoint y corner: newPoint x @ self bottom) ].
+	handle := HandleMorph new forEachPointDo: [ :p |
+			          | newPoint |
+			          newPoint := handle owner position.
+			          handle position: newPoint.
+			          self bounds:
+				          (self left @ newPoint y corner: newPoint x @ self bottom) ].
 	aMouseEvent hand attachMorph: handle.
 	handle startStepping
 ]
