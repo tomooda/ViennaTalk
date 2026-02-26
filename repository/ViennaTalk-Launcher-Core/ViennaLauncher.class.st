@@ -11,12 +11,27 @@ Class {
 	#classVars : [
 		'Current',
 		'DateAndTimeFormat',
+		'Deployed',
 		'Font',
 		'MultiWindowMode'
 	],
 	#category : 'ViennaTalk-Launcher-Core',
 	#package : 'ViennaTalk-Launcher-Core'
 }
+
+{ #category : 'user interface' }
+ViennaLauncher class >> about [
+
+	| logo |
+	logo := self viennaLogo.
+	logo asPresenter asModalWindow
+		title: 'ViennaTalk ' , BaselineOfViennaTalk codename;
+		withoutButtons;
+		closeOnBackdropClick: true;
+		initialExtent: logo extent + (20 @ 40);
+		centered;
+		open
+]
 
 { #category : 'settings' }
 ViennaLauncher class >> availableDateAndTimeFormats [
@@ -61,6 +76,17 @@ ViennaLauncher class >> dateAndTimeFormat [
 ViennaLauncher class >> dateAndTimeFormat: aSymbol [
 
 	DateAndTimeFormat := aSymbol asSymbol
+]
+
+{ #category : 'class initialization' }
+ViennaLauncher class >> deploy [
+
+	Deployed := true.
+	self
+		font: TextStyle defaultFont;
+		setSingleWindowMode;
+		reopen.
+	self current deploy
 ]
 
 { #category : 'settings' }
@@ -186,6 +212,12 @@ ViennaLauncher class >> installDesktopLogo [
 				backgroundImage fullName ]
 ]
 
+{ #category : 'accessing' }
+ViennaLauncher class >> isDeployed [
+
+	^ Deployed = true
+]
+
 { #category : 'settings' }
 ViennaLauncher class >> isMultiWindowMode [
 
@@ -255,7 +287,8 @@ ViennaLauncher class >> showSettingBrowser [
 { #category : 'class initialization' }
 ViennaLauncher class >> startUp [
 
-	Smalltalk isInteractiveGraphic ifTrue: [ self open ]
+	(Smalltalk isInteractiveGraphic and: [ self isDeployed not ])
+		ifTrue: [ self open ]
 ]
 
 { #category : 'resources' }
@@ -378,6 +411,27 @@ ViennaLauncher >> defaultLayout [
 { #category : 'accessing' }
 ViennaLauncher >> defaultTitle [
 	^ 'ViennaTalk ', self codename
+]
+
+{ #category : 'initialize-release' }
+ViennaLauncher >> deploy [
+
+	openButton withAdapterDo: [ :a |
+			a widgetDo: [ :w |
+					w
+						openInWorld: self currentWorld;
+						position: 0 @ 0 ] ].
+	toolsButton withAdapterDo: [ :a |
+			a widgetDo: [ :w |
+					w
+						openInWorld: self currentWorld;
+						position: 100 @ 0 ] ].
+	systemButton withAdapterDo: [ :a |
+			a widgetDo: [ :w |
+					w
+						openInWorld: self currentWorld;
+						position: 200 @ 0 ] ].
+	self close
 ]
 
 { #category : 'menu operations' }
@@ -545,17 +599,21 @@ ViennaLauncher >> systemMenu [
 	^ self newMenu
 		  title: 'System';
 		  addItem: [ :item |
-			  item
-				  name: 'Settings...';
-				  action: [ self showSettingBrowser ] ];
+				  item
+					  name: 'Settings...';
+					  action: [ self showSettingBrowser ] ];
 		  addItem: [ :item |
-			  item
-				  name: 'Update to the head on github';
-				  action: [ BaselineOfViennaTalk updateFromOfficialRepository ] ];
+				  item
+					  name: 'Pharo Settings...';
+					  action: [ SettingBrowser open ] ];
 		  addItem: [ :item |
-			  item
-				  name: 'Quit';
-				  action: [ Smalltalk snapshot: false andQuit: true ] ];
+				  item
+					  name: 'About...';
+					  action: [ self class about ] ];
+		  addItem: [ :item |
+				  item
+					  name: 'Quit';
+					  action: [ Smalltalk snapshot: false andQuit: true ] ];
 		  yourself
 ]
 

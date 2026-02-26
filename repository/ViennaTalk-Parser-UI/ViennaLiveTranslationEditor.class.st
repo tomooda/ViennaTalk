@@ -122,23 +122,21 @@ ViennaLiveTranslationEditor >> initializeWidgets [
 		autoAccept: true;
 		withoutEditionContextMenu;
 		contextMenu: [ self sourceTextMenu ];
-		bindKeyCombination: $f shift command
+		bindKeyCombination: OSPlatform current defaultModifier + $f shift
 		toAction: [ self formatSourceText ];
-		bindKeyCombination: $p command
-		toAction: [ self viennaItInSourceText ];
-		bindKeyCombination: $p control
+		bindKeyCombination: OSPlatform current defaultModifier + $p
 		toAction: [ self viennaItInSourceText ];
 		whenTextChangedDo: [
 			[ self translate ] forkAt: Processor userBackgroundPriority ];
 		whenBuiltDo: [
-			sourceText withAdapterDo: [ :a |
-					a widgetDo: [ :w | w font: ViennaLauncher font ] ] ].
+				sourceText withAdapterDo: [ :a |
+						a widgetDo: [ :w | w font: ViennaLauncher font ] ] ].
 	targetText := self newText.
 	targetText
 		help: 'Translation output';
 		whenBuiltDo: [
-			targetText withAdapterDo: [ :a |
-					a widgetDo: [ :w | w font: ViennaLauncher font ] ] ]
+				targetText withAdapterDo: [ :a |
+						a widgetDo: [ :w | w font: ViennaLauncher font ] ] ]
 ]
 
 { #category : 'initialize-release' }

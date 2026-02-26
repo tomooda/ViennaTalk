@@ -27,7 +27,7 @@ ViennaExecuteItCommand class >> defaultName [
 { #category : 'defaults' }
 ViennaExecuteItCommand class >> defaultShortcut [
 
-	^ $d command
+	^ OSPlatform current defaultModifier + $d
 ]
 
 { #category : 'instance creation' }

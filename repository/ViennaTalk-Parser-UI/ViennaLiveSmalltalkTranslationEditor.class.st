@@ -205,17 +205,15 @@ ViennaLiveSmalltalkTranslationEditor >> initializeWidgets [
 		autoAccept: true;
 		overridingContextMenu;
 		contextMenu: [ self codeTextMenu ];
-		bindKeyCombination: $f shift command
+		bindKeyCombination: OSPlatform current defaultModifier + $f shift
 		toAction: [ self formatSelectionInCodeText ];
-		bindKeyCombination: $p command
+		bindKeyCombination: OSPlatform current defaultModifier + $p
 		toAction: [ self viennaItInCodeText ];
-		bindKeyCombination: $p control
-		toAction: [ self viennaItInCodeText ];
-		bindKeyCombination: $t command toAction: [ self translateIt ];
-		bindKeyCombination: $t control toAction: [ self translateIt ];
+		bindKeyCombination: OSPlatform current defaultModifier + $t
+		toAction: [ self translateIt ];
 		whenBuiltDo: [
-			codeText withAdapterDo: [ :a |
-					a widgetDo: [ :widget | widget font: ViennaLauncher font ] ] ].
+				codeText withAdapterDo: [ :a |
+						a widgetDo: [ :widget | widget font: ViennaLauncher font ] ] ].
 	runtimeTypeCheck := self newCheckBox.
 	runtimeTypeCheck
 		label: 'runtime type check';

@@ -142,8 +142,7 @@ ViennaVDMJ class >> globalLock: aBlock [
 ViennaVDMJ class >> initialize [
 
 	super initialize.
-	Smalltalk addToStartUpList: self.
-	Smalltalk isInteractiveGraphic ifTrue: [ self install ]
+	Smalltalk addToStartUpList: self
 ]
 
 { #category : 'class initialization' }

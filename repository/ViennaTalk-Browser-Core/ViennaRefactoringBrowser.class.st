@@ -884,6 +884,50 @@ ViennaRefactoringBrowser >> cherrypick [
 		self updateModuleList ]
 ]
 
+{ #category : 'user interface' }
+ViennaRefactoringBrowser >> chooseDirectory: aString path: aFileReference [
+
+	| reference |
+	reference := nil.
+	StOpenDirectoryPresenter new
+		openFolder:
+			(aFileReference ifNil: [ FileLocator viennaTalkDocumentDirectory ]);
+		title: aString;
+		okAction: [ :directoryReference | reference := directoryReference ];
+		openModal.
+	^ reference
+]
+
+{ #category : 'user interface' }
+ViennaRefactoringBrowser >> chooseExistingFileReference: aString extensions: anArrayOfString path: aFileReference [
+
+	| reference |
+	reference := nil.
+	StOpenFilePresenter new
+		openFolder:
+			(aFileReference ifNil: [ FileLocator viennaTalkDocumentDirectory ]);
+		extensions: anArrayOfString;
+		title: aString;
+		okAction: [ :directoryReference | reference := directoryReference ];
+		openModal.
+	^ reference
+]
+
+{ #category : 'user interface' }
+ViennaRefactoringBrowser >> chooseForSaveFileReference: aString extensions: anArrayOfString path: aFileReference [
+
+	| reference |
+	reference := nil.
+	StSaveFilePresenter new
+		filter: (StCustomExtensionsFilter extensions: anArrayOfString);
+		defaultFolder:
+			(aFileReference ifNil: [ FileLocator viennaTalkDocumentDirectory ]);
+		title: aString;
+		okAction: [ :ref | reference := ref ];
+		openModal.
+	^ reference
+]
+
 { #category : 'private' }
 ViennaRefactoringBrowser >> clearDirty [
 
@@ -1155,9 +1199,9 @@ ViennaRefactoringBrowser >> epiLogEnumerator [
 ]
 
 { #category : 'operations-epiLog' }
-ViennaRefactoringBrowser >> epiLogEvaluation: aString [
+ViennaRefactoringBrowser >> epiLogEvaluation: aString state: aDictionary [
 
-	self epiLog: (self epiLog newEvaluation: aString)
+	self epiLog: (self epiLog newEvaluation: aString state: aDictionary)
 ]
 
 { #category : 'operations-epiLog' }
@@ -1961,6 +2005,23 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 		                  yourself.
 	epiLogDiffText := self newText.
 	epiLogSourceText := self newVDMSource.
+	epiLogCherrypickList := self newTable
+		                        hideColumnHeaders;
+		                        beMultipleSelection;
+		                        beResizable;
+		                        addColumn:
+			                        (SpStringTableColumn evaluated:
+					                         #printSummary);
+		                        addColumn:
+			                        (SpStringTableColumn evaluated: #printNames);
+		                        whenSelectionChangedDo: [
+			                        self updateEpiLogCherrypickText ];
+		                        yourself.
+	epiLogCherrypickText := self newText.
+	epiLogCherrypickButton := self newButton
+		                          label: 'Cherrypick';
+		                          action: [ self cherrypick ];
+		                          yourself.
 	epiLogNotebook := self newNotebook
 		                  addPageTitle: 'Diff' provider: [
 			                  SpPresenter new
@@ -1971,6 +2032,16 @@ ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 				                  yourself ];
 		                  addPageTitle: 'Version Source'
 		                  provider: [ epiLogSourceText ];
+		                  addPageTitle: 'Cherrypick' provider: [
+		                  SpPresenter new
+			                  layout: (SpBoxLayout newVertical
+					                   add: (SpPanedLayout newVertical
+							                    positionOfSlider: 0.3;
+							                    add: epiLogCherrypickList;
+							                    add: epiLogCherrypickText);
+					                   add: epiLogCherrypickButton expand: false;
+					                   yourself);
+			                  yourself ];
 		                  yourself.
 	updateEpiLogButton := self newButton
 		                      icon: (self iconNamed: #refreshCircling);
@@ -2134,7 +2205,9 @@ ViennaRefactoringBrowser >> initializePlaygroundPagePresenters [
 		                  module: [ self module ];
 		                  withoutLineNumbers;
 		                  whenEvaluatedDo: [ :expression |
-			                  self epiLogEvaluation: expression ];
+			                  self
+				                  epiLogEvaluation: expression
+				                  state: animation state ];
 		                  whenExecutedDo: [ :statement |
 			                  self
 				                  epiLogExecution: statement
@@ -2267,7 +2340,9 @@ ViennaRefactoringBrowser >> initializeSourcePagePresenters [
 		              whenTextChangedDo: [ self onTheFlyCheckSourceText ];
 		              whenSubmitDo: [ :text | self accept: text ];
 		              whenEvaluatedDo: [ :expression |
-			              self epiLogEvaluation: expression ];
+			              self
+				              epiLogEvaluation: expression
+				              state: animation state ];
 		              whenExecutedDo: [ :statement |
 			              self
 				              epiLogExecution: statement
@@ -2377,7 +2452,7 @@ ViennaRefactoringBrowser >> load: aFileReference [
 { #category : 'operations' }
 ViennaRefactoringBrowser >> loadFromDirectory [
 
-	(UIManager default
+	(self
 		 chooseDirectory: 'Directory to open'
 		 path: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :dir |
 		self load: dir ]
@@ -2386,7 +2461,7 @@ ViennaRefactoringBrowser >> loadFromDirectory [
 { #category : 'operations' }
 ViennaRefactoringBrowser >> loadFromFile [
 
-	(UIManager default
+	(self
 		 chooseExistingFileReference: 'File to open'
 		 extensions: #( 'vdmsl' )
 		 path: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :file |
@@ -2481,17 +2556,17 @@ ViennaRefactoringBrowser >> menuBar [
 ViennaRefactoringBrowser >> mergeAnnotationsIntoFRAM [
 
 	| fram |
-	(UIManager default
+	(self
 		 chooseExistingFileReference: 'Import directory'
 		 extensions: #( 'xfmv' )
-		 path: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :ref | 
+		 path: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :ref |
 		fram := ViennaFRAMModel fromFile: ref ].
 	fram ifNil: [ ^ nil ].
 	fram loadSpec: self specification.
-	(UIManager default
+	(self
 		 chooseForSaveFileReference: 'Export file'
 		 extensions: #( 'xfmv' )
-		 path: FileLocator home asFileReference) ifNotNil: [ :ref | 
+		 path: FileLocator home asFileReference) ifNotNil: [ :ref |
 		fram writeXMLFile: ref ]
 ]
 
@@ -2499,25 +2574,25 @@ ViennaRefactoringBrowser >> mergeAnnotationsIntoFRAM [
 ViennaRefactoringBrowser >> mergeOperationsFromFRAM [
 
 	| fram copyMap newAst |
-	(UIManager default
+	(self
 		 chooseExistingFileReference: 'Import directory'
 		 extensions: #( 'xfmv' )
 		 path: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :ref |
 		fram := ViennaFRAMModel fromFile: ref ].
 	^ fram ifNotNil: [
-		  | module category definition |
-		  module := self module.
-		  category := self category.
-		  definition := self definition.
-		  copyMap := IdentityDictionary new.
-		  newAst := self specification copyWhole: copyMap.
-		  fram appendToSpec: newAst.
-		  self epiLogMergeFRAM: newAst.
-		  moduleList selectItem: (copyMap at: module ifAbsent: [ nil ]).
-		  categoryList selectItem: (copyMap at: category ifAbsent: [ nil ]).
-		  definitionList selectItem:
-			  (copyMap at: definition ifAbsent: [ nil ]).
-		  newAst ]
+			  | module category definition |
+			  module := self module.
+			  category := self category.
+			  definition := self definition.
+			  copyMap := IdentityDictionary new.
+			  newAst := self specification copyWhole: copyMap.
+			  fram appendToSpec: newAst.
+			  self epiLogMergeFRAM: newAst.
+			  moduleList selectItem: (copyMap at: module ifAbsent: [ nil ]).
+			  categoryList selectItem: (copyMap at: category ifAbsent: [ nil ]).
+			  definitionList selectItem:
+				  (copyMap at: definition ifAbsent: [ nil ]).
+			  newAst ]
 ]
 
 { #category : 'accessing' }
@@ -2973,37 +3048,36 @@ ViennaRefactoringBrowser >> saveAs [
 { #category : 'operations' }
 ViennaRefactoringBrowser >> saveAsDirectory [
 
-	(UIManager default
+	(self
 		 chooseDirectory: 'Directory to save'
-		 from: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :dir |
-		(dir filesMatching: '*.vdmsl') do: [ :file | file ensureDeleteAll ].
-		self specification modulesDo: [ :moduleNode |
-			| file |
-			file := dir / moduleNode identifier withExtension: 'vdmsl'.
-			file
-				ensureDeleteAll;
-				writeStreamDo: [ :stream |
-					stream nextPutAll:
-							((ViennaVDMFormatter format: moduleNode) withLineEndings:
-									 OSPlatform current lineEnding) ] ].
-		UIManager default message: 'Save to ' , dir basename , '/.'.
-		self fileReference: dir.
-		self clearDirty ]
+		 path: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :dir |
+			(dir filesMatching: '*.vdmsl') do: [ :file | file ensureDeleteAll ].
+			self specification modulesDo: [ :moduleNode |
+					| file |
+					file := dir / moduleNode identifier withExtension: 'vdmsl'.
+					file
+						ensureDeleteAll;
+						writeStreamDo: [ :stream |
+								stream nextPutAll:
+										((ViennaVDMFormatter format: moduleNode) withLineEndings:
+												 OSPlatform current lineEnding) ] ].
+			UIManager default message: 'Save to ' , dir basename , '/.'.
+			self fileReference: dir.
+			self clearDirty ]
 ]
 
 { #category : 'operations' }
 ViennaRefactoringBrowser >> saveAsFile [
 
-	(UIManager default
+	(self
 		 chooseForSaveFileReference: 'File to save'
 		 extensions: #( 'vdmsl' )
-		 path: FileLocator viennaTalkDocumentDirectory asFileReference)
-		ifNotNil: [ :file |
+		 path: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :file |
 			file
 				ensureDeleteAll;
 				writeStreamDo: [ :stream |
-					stream nextPutAll:
-							(self source withLineEndings: OSPlatform current lineEnding) ].
+						stream nextPutAll:
+								(self source withLineEndings: OSPlatform current lineEnding) ].
 			UIManager default message: 'Save to ' , file basename , '.'.
 			self fileReference: file.
 			self clearDirty ]

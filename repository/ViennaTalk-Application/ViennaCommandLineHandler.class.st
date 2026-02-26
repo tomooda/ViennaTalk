@@ -15,8 +15,9 @@ ViennaCommandLineHandler class >> commandName [
 ViennaCommandLineHandler class >> deploy [
 
 	GraphicFontSettings setFontsToStyleNamed: #small.
-	ViennaLauncher font: TextStyle defaultFont.
-	ViennaLauncher setSingleWindowMode.
+	PasteUpMorph shouldShowWorldMenu: false.
+	MenubarMorph showMenubar: false.
+	ViennaLauncher deploy.
 	Smalltalk cleanUp: true except: {  } confirming: false.
 	MCRepositoryGroup allSubInstancesDo: [ :group |
 		group repositories do: [ :repo | group removeRepository: repo ] ].
@@ -24,7 +25,6 @@ ViennaCommandLineHandler class >> deploy [
 	IceCredentialStore current in: [ :store |
 		store allCredentials do: [ :each | each removeFrom: store ] ].
 	World closeAllWindowsDiscardingChanges.
-	ViennaLauncher reopen.
 	Deprecation
 		raiseWarning: false;
 		showWarning: false.
@@ -76,9 +76,16 @@ ViennaCommandLineHandler class >> generate [
 ViennaCommandLineHandler >> activate [
 
 	self
+		installLocalDirectory;
 		installMenu;
-		installQuitSession.
-	ViennaLauncher reopen
+		installQuitSession
+]
+
+{ #category : 'activation' }
+ViennaCommandLineHandler >> installLocalDirectory [
+
+	SystemResolver userLocalDirectory:
+		FileLocator viennaTalkDocumentDirectory
 ]
 
 { #category : 'activation' }

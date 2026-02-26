@@ -27,7 +27,7 @@ ViennaTypeItCommand class >> defaultName [
 { #category : 'defaults' }
 ViennaTypeItCommand class >> defaultShortcut [
 
-	^ $t command
+	^ OSPlatform current defaultModifier + $t
 ]
 
 { #category : 'instance creation' }

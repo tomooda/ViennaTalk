@@ -27,7 +27,10 @@ ViennaNatType >> basicDo: aBlock [
 
 { #category : 'testing' }
 ViennaNatType >> basicIncludes: anObject [
-	^ anObject isInteger and: [ anObject >= 0 ]
+
+	^ (anObject isInteger and: [ anObject >= 0 ]) or: [
+			  anObject isFloat and: [
+				  anObject >= 0.0 and: [ (anObject truncateTo: 1.0) = anObject ] ] ]
 ]
 
 { #category : 'testing' }

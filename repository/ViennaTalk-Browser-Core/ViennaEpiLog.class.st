@@ -306,9 +306,12 @@ ViennaEpiLog >> metadataName [
 ]
 
 { #category : 'instance creation' }
-ViennaEpiLog >> newEvaluation: aString [
+ViennaEpiLog >> newEvaluation: aString state: aDictionary [
 
-	^ ViennaEvaluationEpiLog after: self expression: aString
+	^ ViennaEvaluationEpiLog
+		  after: self
+		  expression: aString
+		  state: aDictionary
 ]
 
 { #category : 'instance creation' }
