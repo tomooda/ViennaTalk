@@ -336,6 +336,13 @@ LWTFieldWidget >> showsDiagram: aBoolean [
 	showsDiagram := aBoolean = true
 ]
 
+{ #category : 'private' }
+LWTFieldWidget >> showsName: aBoolean [
+
+	super showsName: aBoolean.
+	textMorph layoutFrame: self layoutFrameForTextPane
+]
+
 { #category : 'geometry' }
 LWTFieldWidget >> textExtent [
 	^ self width - 6 @ 50

@@ -41,12 +41,13 @@ LivelyWalkThrough class >> initialize [
 
 { #category : 'class initialization' }
 LivelyWalkThrough class >> installEventHandlers [
-	ExternalDropHandler
-		registerHandler:
-			(ExternalDropHandler
-				type: nil
-				extension: 'lwt'
-				action: [ :stream :pasteUp :event | LivelyWalkThrough openDefault director loadStream: stream ])
+
+	ExternalDropHandler registerHandler: (ExternalDropHandler
+			 type: nil
+			 extension: 'lwt'
+			 action: [ :file :pasteUp :event |
+					 file readStreamDo: [ :stream |
+						 LivelyWalkThrough openDefault director loadStream: stream ] ])
 ]
 
 { #category : 'instance creation' }
