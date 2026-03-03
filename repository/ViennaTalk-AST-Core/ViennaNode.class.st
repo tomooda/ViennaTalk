@@ -290,7 +290,8 @@ ViennaNode >> deepFindResolverForIdentifier: aString [
 { #category : 'accessing-definitions' }
 ViennaNode >> definitionOfGlobalName: shortName module: moduleName [
 
-	^ (self moduleNamed: moduleName) definitionOfLocalName: shortName
+	^ (self moduleNamed: moduleName) ifNotNil: [ :module |
+		  module definitionOfLocalName: shortName ]
 ]
 
 { #category : 'accessing-definitions' }

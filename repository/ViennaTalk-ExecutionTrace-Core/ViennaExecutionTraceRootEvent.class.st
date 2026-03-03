@@ -39,19 +39,13 @@ ViennaExecutionTraceRootEvent >> applyAssignmentTo: aViennaTranspiledModularDocu
 ViennaExecutionTraceRootEvent >> applyToFormat: aViennaExecutionRecordFormat on: aStream before: aBlock after: anotherBlock [
 
 	aBlock cull: self.
-	initial do: [ :event |
-			event
-				applyToFormat: aViennaExecutionRecordFormat
-				on: aStream
-				before: aBlock
-				after: anotherBlock ].
-	anotherBlock cull: self.
 	events do: [ :event |
 			event
 				applyToFormat: aViennaExecutionRecordFormat
 				on: aStream
 				before: aBlock
-				after: anotherBlock ]
+				after: anotherBlock ].
+	anotherBlock cull: self
 ]
 
 { #category : 'accessing' }
