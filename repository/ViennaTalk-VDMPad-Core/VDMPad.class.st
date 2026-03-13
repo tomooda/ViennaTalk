@@ -25,7 +25,8 @@ VDMPad class >> default [
 
 { #category : 'defaults' }
 VDMPad class >> defaultEngine [
-	^ ViennaVDMJ bank: 8
+
+	^ ViennaEngineForVDMPad new
 ]
 
 { #category : 'defaults' }
@@ -2273,59 +2274,57 @@ VDMPad >> epilogCss [
 
 { #category : 'request handling-api' }
 VDMPad >> eval: aZnRequest [
+
 	| needsPrestates vdm10 rtc params source module expression states quatro json response |
 	params := self getParamsFrom: aZnRequest.
 	needsPrestates := (params at: 'needsPrestates' ifAbsent: [ nil ])
-		notNil.
-	vdm10 := (params at: 'classic' ifAbsent: [  ]) isNil.
-	rtc := (params at: 'ignoreRuntimeChecking' ifAbsent: [  ]) isNil.
+		                  notNil.
+	vdm10 := (params at: 'classic' ifAbsent: [ ]) isNil.
+	rtc := (params at: 'ignoreRuntimeChecking' ifAbsent: [ ]) isNil.
 	source := (params at: 'source' ifAbsent: [ String new ]) trimmed.
 	module := params at: 'module' ifAbsent: [ 'DEFAULT' ].
 	states := Dictionary new.
-	params
-		keysAndValuesDo: [ :k :v | 
+	params keysAndValuesDo: [ :k :v |
 			| key value |
 			key := k.
 			value := v.
-			((key includes: $`) and: [ value trimmed notEmpty ])
-				ifTrue: [ (states
-						at: (key copyFrom: 1 to: (key indexOf: $`) - 1)
-						ifAbsentPut: [ Dictionary new ])
+			((key includes: $`) and: [ value trimmed notEmpty ]) ifTrue: [
+					(states
+						 at: (key copyFrom: 1 to: (key indexOf: $`) - 1)
+						 ifAbsentPut: [ Dictionary new ])
 						at: (key copyFrom: (key indexOf: $`) + 1 to: key size)
-						put:
-							((value copyReplaceAll: String cr with: ' ')
-								copyReplaceAll: String lf
-								with: ' ') ] ].
+						put: ((value copyReplaceAll: String cr with: ' ')
+								 copyReplaceAll: String lf
+								 with: ' ') ] ].
 	expression := ((params at: 'expression' ifAbsent: [ String new ])
-		copyReplaceAll: String cr
-		with: ' ') copyReplaceAll: String lf with: ' '.
+		               copyReplaceAll: String cr
+		               with: ' ') copyReplaceAll: String lf with: ' '.
 	quatro := self engine
-		evaluate: expression
-		specification: source
-		states: states
-		module: module
-		vdm10: vdm10
-		rtc: rtc.
+		          evaluate: expression
+		          specification: source
+		          states: states
+		          module: module
+		          vdm10: vdm10
+		          rtc: rtc.
 	json := Dictionary new.
 	json
 		at: 'source' put: source;
 		at: 'expression' put: expression;
 		at: 'value' put: (quatro first ifNil: [ String new ]);
 		at: 'message' put: quatro third.
-	quatro second
-		keysAndValuesDo: [ :moduleName :bindings | 
-			bindings
-				keysAndValuesDo: [ :varName :value | json at: moduleName , '`' , varName put: value ] ].
-	needsPrestates
-		ifTrue: [ | prestates |
+	quatro second keysAndValuesDo: [ :moduleName :bindings |
+			bindings keysAndValuesDo: [ :varName :value |
+				json at: moduleName , '`' , varName put: value ] ].
+	needsPrestates ifTrue: [
+			| prestates |
 			prestates := Dictionary new.
 			(quatro size >= 4
-				ifTrue: [ quatro fourth ]
-				ifFalse: [ quatro second ])
-				keysAndValuesDo: [ :moduleName :bindings | 
-					bindings
-						keysAndValuesDo:
-							[ :varName :value | prestates at: moduleName , '`' , varName put: value ] ].
+				 ifTrue: [ quatro fourth ]
+				 ifFalse: [ quatro second ]) keysAndValuesDo: [
+					:moduleName
+					:bindings |
+					bindings keysAndValuesDo: [ :varName :value |
+						prestates at: moduleName , '`' , varName put: value ] ].
 			json at: 'prestates' put: prestates ].
 	response := self responseJSON: json.
 	response headers
@@ -4401,45 +4400,46 @@ VDMPad >> id: aZnRequest [
 
 { #category : 'initialize-release' }
 VDMPad >> initialize [
+
 	super initialize.
-	engine := ViennaVDMJ bank: 16.
+	engine := ViennaEngineForVDMPad new.
 	handlerMap := Dictionary new
-		at: '/' put: #mainPage;
-		at: 'EpiLog' put: #epiLogPage;
-		at: 'epilog.css' put: #epilogCss;
-		at: 'foundation.css' put: #foundationCss;
-		at: 'favicon.ico' put: #vdmpadIcon;
-		at: 'about.html' put: #aboutPage;
-		at: 'VDMJcopyright.html' put: #vdmjCopyrightPage;
-		at: 'VDMPad.js' put: #VDMPad;
-		at: 'VDMPad-EpiLog.js' put: #VDMPadEpiLog;
-		at: 'codemirror-vdm.js' put: #codemirrorVDM;
-		at: 'tabIndent.js' put: #tabIndent;
-		at: 'fileSaver.js' put: #fileSaver;
-		at: 'blob.js' put: #blob;
-		at: 'highlight.js' put: #highlightJs;
-		at: 'codemirror' put: #fileService:;
-		at: 'eval' put: #eval:;
-		at: 'id' put: #id:;
-		at: 'test' put: #test:;
-		at: 'format' put: #format:;
-		at: 'vdm2html' put: #vdm2html:;
-		at: 'rootMenuOn.png' put: #rootMenuOn;
-		at: 'rootMenuOff.png' put: #rootMenuOff;
-		at: 'load.png' put: #loadIcon;
-		at: 'save.png' put: #saveIcon;
-		at: 'export.png' put: #exportIcon;
-		at: 'delete.png' put: #deleteIcon;
-		at: 'load.Spng' put: #loadSelectedIcon;
-		at: 'saveS.png' put: #saveSelectedIcon;
-		at: 'exportS.png' put: #exportSelectedIcon;
-		at: 'deleteS.png' put: #deleteSelectedIcon;
-		at: 'saveT.png' put: #saveTransparentIcon;
-		at: 'vdmj-3.0.1.jar' put: #binaryFileService:;
-		at: 'vdmj-3.1.1.jar' put: #binaryFileService:;
-		at: 'vdmj-3.2.0.jar' put: #binaryFileService:;
-		at: 'Json4VDMJ.jar' put: #binaryFileService:;
-		yourself
+		              at: '/' put: #mainPage;
+		              at: 'EpiLog' put: #epiLogPage;
+		              at: 'epilog.css' put: #epilogCss;
+		              at: 'foundation.css' put: #foundationCss;
+		              at: 'favicon.ico' put: #vdmpadIcon;
+		              at: 'about.html' put: #aboutPage;
+		              at: 'VDMJcopyright.html' put: #vdmjCopyrightPage;
+		              at: 'VDMPad.js' put: #VDMPad;
+		              at: 'VDMPad-EpiLog.js' put: #VDMPadEpiLog;
+		              at: 'codemirror-vdm.js' put: #codemirrorVDM;
+		              at: 'tabIndent.js' put: #tabIndent;
+		              at: 'fileSaver.js' put: #fileSaver;
+		              at: 'blob.js' put: #blob;
+		              at: 'highlight.js' put: #highlightJs;
+		              at: 'codemirror' put: #fileService:;
+		              at: 'eval' put: #eval:;
+		              at: 'id' put: #id:;
+		              at: 'test' put: #test:;
+		              at: 'format' put: #format:;
+		              at: 'vdm2html' put: #vdm2html:;
+		              at: 'rootMenuOn.png' put: #rootMenuOn;
+		              at: 'rootMenuOff.png' put: #rootMenuOff;
+		              at: 'load.png' put: #loadIcon;
+		              at: 'save.png' put: #saveIcon;
+		              at: 'export.png' put: #exportIcon;
+		              at: 'delete.png' put: #deleteIcon;
+		              at: 'load.Spng' put: #loadSelectedIcon;
+		              at: 'saveS.png' put: #saveSelectedIcon;
+		              at: 'exportS.png' put: #exportSelectedIcon;
+		              at: 'deleteS.png' put: #deleteSelectedIcon;
+		              at: 'saveT.png' put: #saveTransparentIcon;
+		              at: 'vdmj-3.0.1.jar' put: #binaryFileService:;
+		              at: 'vdmj-3.1.1.jar' put: #binaryFileService:;
+		              at: 'vdmj-3.2.0.jar' put: #binaryFileService:;
+		              at: 'Json4VDMJ.jar' put: #binaryFileService:;
+		              yourself
 ]
 
 { #category : 'request handling-image' }

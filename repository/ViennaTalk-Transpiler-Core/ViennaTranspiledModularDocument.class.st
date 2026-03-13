@@ -2,6 +2,7 @@ Class {
 	#name : 'ViennaTranspiledModularDocument',
 	#superclass : 'Dictionary',
 	#instVars : [
+		'_document',
 		'viennaEnv'
 	],
 	#category : 'ViennaTalk-Transpiler-Core-TranspiledObject',
@@ -55,16 +56,18 @@ ViennaTranspiledModularDocument >> evaluateExpression: aString ifError: errorBlo
 
 { #category : 'evaluating' }
 ViennaTranspiledModularDocument >> evaluateExpression: aString with: aViennaVDM2SmalltalkClass ifError: errorBlock [
-	| src |
-	src := self
-		transpileExpression: aString
-		with: aViennaVDM2SmalltalkClass
-		ifError: [ :msg | ^ errorBlock cull: msg ].
-	^ OpalCompiler new
-		source: src;
-		logged: false;
-		receiver: self;
-		evaluate
+
+	aString ifNotEmpty: [
+			| src |
+			src := self
+				       transpileExpression: aString
+				       with: aViennaVDM2SmalltalkClass
+				       ifError: [ :msg | ^ errorBlock cull: msg ].
+			^ OpalCompiler new
+				  source: src;
+				  logged: false;
+				  receiver: self;
+				  evaluate ]
 ]
 
 { #category : 'evaluating' }
@@ -129,8 +132,18 @@ ViennaTranspiledModularDocument >> init [
 
 { #category : 'initialize' }
 ViennaTranspiledModularDocument >> initialize [
+
 	super initialize.
-	viennaEnv := Dictionary new
+	viennaEnv := Dictionary new.
+	_document := self
+]
+
+{ #category : 'initialize' }
+ViennaTranspiledModularDocument >> initialize: anInteger [
+
+	super initialize: anInteger.
+	viennaEnv := Dictionary new.
+	_document := self
 ]
 
 { #category : 'private' }

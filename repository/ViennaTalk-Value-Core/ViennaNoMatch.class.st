@@ -1,6 +1,6 @@
 Class {
 	#name : 'ViennaNoMatch',
-	#superclass : 'Error',
+	#superclass : 'ViennaError',
 	#category : 'ViennaTalk-Value-Core',
 	#package : 'ViennaTalk-Value-Core'
 }

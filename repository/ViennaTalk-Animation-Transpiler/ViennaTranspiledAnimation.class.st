@@ -220,21 +220,20 @@ ViennaTranspiledAnimation >> evaluate: aString [
 ViennaTranspiledAnimation >> evaluate: aString in: moduleName ifError: errorBlock [
 
 	Cursor wait showWhile: [
-		| result |
-		result := (moduleName = self defaultModule
-			           ifTrue: [ object ]
-			           ifFalse: [
-				           object
-					           at: moduleName
-					           ifAbsent: [ ^ errorBlock value: 'unknown module name' ] ])
-			          evaluateExpression: aString
-			          with: transpiler
-			          ifError: [ :msg | ^ errorBlock cull: msg ].
-		self changed: #state.
-		self announceStateChanged.
-		^ result == object
-			  ifTrue: [ nil ]
-			  ifFalse: [ result ] ]
+			| result |
+			result := (moduleName = self defaultModule
+				           ifTrue: [ object ]
+				           ifFalse: [
+						           object
+							           at: moduleName
+							           ifAbsent: [
+							           ^ errorBlock value: 'unknown module name' ] ])
+				          evaluateExpression: aString
+				          with: transpiler
+				          ifError: [ :msg | ^ errorBlock cull: msg ].
+			self changed: #state.
+			self announceStateChanged.
+			^ result ]
 ]
 
 { #category : 'evaluating' }
@@ -450,18 +449,18 @@ ViennaTranspiledAnimation >> specification: aString [
 ViennaTranspiledAnimation >> specification: aString ifError: errorBlock [
 
 	| ast |
-	transpiler := ViennaVDM2SmalltalkObject new.
+	transpiler := self transpilerClass new.
 	ast := aString isViennaNode
 		       ifTrue: [ aString ]
 		       ifFalse: [
-			       aString
-				       ifNotEmpty: [
-					       | result |
-					       result := parser parse: aString.
-					       result isPetit2Failure ifTrue: [
-						       ^ errorBlock cull: result message ].
-					       result ]
-				       ifEmpty: [ ViennaModularDocumentNode empty ] ].
+				       aString
+					       ifNotEmpty: [
+							       | result |
+							       result := parser parse: aString.
+							       result isPetit2Failure ifTrue: [
+								       ^ errorBlock cull: result message ].
+							       result ]
+					       ifEmpty: [ ViennaModularDocumentNode empty ] ].
 	[ ast typecheck ]
 		on: ViennaTypeError
 		do: [ :typeError | ^ errorBlock cull: typeError messageText ].
@@ -501,4 +500,10 @@ ViennaTranspiledAnimation >> state: aDictionary [
 		self basicAt: var put: (reader parse: val) ].
 	object inv.
 	self announceStateChanged
+]
+
+{ #category : 'class access' }
+ViennaTranspiledAnimation >> transpilerClass [
+
+	^ ViennaVDM2SmalltalkObject
 ]

@@ -190,16 +190,18 @@ ViennaTranspiledObject >> evaluateExpression: aString ifError: errorBlock [
 
 { #category : 'evaluating' }
 ViennaTranspiledObject >> evaluateExpression: aString with: aViennaVDM2SmalltalkClass ifError: errorBlock [
-	| src |
-	src := self class
-		transpileExpression: aString
-		with: aViennaVDM2SmalltalkClass
-		ifError: [ :msg | ^ errorBlock cull: msg ].
-	^ OpalCompiler new
-		source: src;
-		logged: false;
-		receiver: self;
-		evaluate
+
+	aString ifNotEmpty: [
+			| src |
+			src := self class
+				       transpileExpression: aString
+				       with: aViennaVDM2SmalltalkClass
+				       ifError: [ :msg | ^ errorBlock cull: msg ].
+			^ OpalCompiler new
+				  source: src;
+				  logged: false;
+				  receiver: self;
+				  evaluate ]
 ]
 
 { #category : 'evaluating' }

@@ -80,7 +80,9 @@ ViennaTranspilerForExecutionTracing >> defineMethodFromOperation: opName in: the
 						 nextPutAll: '_document _recordOperationCall:';
 						 nextPutAll: opName storeString;
 						 nextPutAll: ' module: ';
-						 nextPutAll: aViennaNode module identifier storeString;
+						 nextPutAll:
+							 (aViennaNode module ifNotNil: #identifier ifNil: [ '' ])
+								 storeString;
 						 nextPutAll: ' args: {';
 						 nextPutAll: (' . ' join: (formalArgs collect: #key));
 						 nextPutAll: '}.';
