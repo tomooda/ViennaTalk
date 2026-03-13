@@ -214,44 +214,44 @@ ViennaUnitTestResultItem >> run [
 
 	self startRunning.
 	[
-	animation state: Dictionary new.
-	[
-	[ animation runTestOperation: operation module: module ]
-		on: ViennaException
-		do: [ :ex |
-			ex expression in: [ :expr |
-				(expr isViennaComposite and: [
-					 expr constructorName = 'AssertFailure' ]) ifTrue: [
-					self beFailure.
-					self message: 'assertion failed: ' , (expr at: 1) asString.
+		animation state: Dictionary new.
+		[
+			[ animation runTestOperation: operation module: module ]
+				on: ViennaException
+				do: [ :ex |
+						ex expression in: [ :expr |
+								(expr isViennaComposite and: [
+									 expr constructorName = 'AssertFailure' ]) ifTrue: [
+										self beFailure.
+										self message: 'assertion failed: ' , (expr at: 1) asString.
+										animation isTranspiledAnimation ifTrue: [
+											self exception: ex ].
+										self inform.
+										^ self ].
+								(expr isViennaComposite and: [
+									 expr constructorName = 'AssertEqualsFailure' ]) ifTrue: [
+										self beFailure.
+										self message:
+											'assertion failed: ' , (expr at: 3) asString
+											, ' expected: ' , (expr at: 2) viennaString , ' actual: '
+											, (expr at: 1) viennaString.
+										animation isTranspiledAnimation ifTrue: [
+											self exception: ex ].
+										self inform.
+										^ self ].
+								self beError.
+								self message: expr viennaString.
+								animation isTranspiledAnimation ifTrue: [ self exception: ex ].
+								self inform.
+								^ self ] ] ]
+			on: Error
+			do: [ :ex |
+					self beError.
+					self message: ex printString.
 					animation isTranspiledAnimation ifTrue: [ self exception: ex ].
 					self inform.
 					^ self ].
-				(expr isViennaComposite and: [
-					 expr constructorName = 'AssertEqualsFailure' ]) ifTrue: [
-					self beFailure.
-					self message:
-						'assertion failed: ' , (expr at: 3) asString , ' expected: '
-						, (expr at: 2) viennaString , ' actual: '
-						, (expr at: 1) viennaString.
-					animation isTranspiledAnimation ifTrue: [
-						self exception: exception ].
-					self inform.
-					^ self ].
-				self beError.
-				self message: expr viennaString.
-				animation isTranspiledAnimation ifTrue: [
-					self exception: exception ].
-				self inform.
-				^ self ] ] ]
-		on: Error
-		do: [ :ex |
-			self beError.
-			self message: ex printString.
-			animation isTranspiledAnimation ifTrue: [ self exception: ex ].
-			self inform.
-			^ self ].
-	self beSuccess ] ensure: [ self stopRunning ]
+		self beSuccess ] ensure: [ self stopRunning ]
 ]
 
 { #category : 'accessing' }
