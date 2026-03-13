@@ -177,6 +177,15 @@ LWTLivetalkBrowser >> doIt [
 		ifNotNil: #value
 ]
 
+{ #category : 'updating' }
+LWTLivetalkBrowser >> handleUpdate: anAnnouncement [
+
+	((anAnnouncement isKindOf: MorphChanged) and: [
+		 anAnnouncement selector = #scriptSelectors ]) ifTrue: [
+		self changed: #scriptList ].
+	^ super update: anAnnouncement
+]
+
 { #category : 'script list' }
 LWTLivetalkBrowser >> hasScriptSelected [
 	^ selectedScriptSelector notNil

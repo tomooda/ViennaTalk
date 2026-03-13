@@ -555,7 +555,8 @@ LWTWidget >> showsName [
 
 { #category : 'private' }
 LWTWidget >> showsName: aBoolean [
-	showsName := aBoolean = true
+	showsName := aBoolean = true.
+	self changed
 ]
 
 { #category : 'menus' }
