@@ -41,11 +41,6 @@ ViennaVDM2SmalltalkObject >> documentBaseClass [
 ]
 
 { #category : 'code generation-definitions' }
-ViennaVDM2SmalltalkObject >> flatDocument: aViennaNode env: aDictionary [
-	^ (super flatDocument: aViennaNode env: aDictionary) ifNotNil: [ :anonymousClass | anonymousClass new ]
-]
-
-{ #category : 'code generation-definitions' }
 ViennaVDM2SmalltalkObject >> modularDocument: aViennaNode env: aDictionary [
 
 	| objects |

@@ -703,51 +703,9 @@ ViennaVDM2SmalltalkClass >> extendedExplicitOperationDefinition: aViennaNode env
 { #category : 'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> flatDocument: aViennaNode env: aDictionary [
 
-	| env instVars stateVars typeNames newClass |
-	env := aDictionary copy.
-	stateVars := #(  ).
-	typeNames := Array new writeStream.
-	aViennaNode do: [ :section |
-		section isViennaStateDefinitionNode ifTrue: [
-			| stateDefinition |
-			stateDefinition := section.
-			stateVars := stateDefinition fieldList collect: #identifier.
-			env
-				at: stateDefinition first
-				put: 'self ' , stateDefinition identifier ].
-		section isViennaTypeDefinitionsNode ifTrue: [
-			section do: [ :typeDef | typeNames nextPut: typeDef identifier ] ] ].
-	typeNames := typeNames contents.
-	instVars := aViennaNode uniqueBoundIdentifiers copyWithoutAll:
-		            stateVars.
-	newClass := self
-		            createFlatDocumentClassWithInstVars: instVars
-		            stateVars: stateVars.
-	classes at: nil put: newClass.
-	aViennaNode do: [ :section |
-		section isViennaStateDefinitionNode ifFalse: [
-			section uniqueBoundIdentifiersDo: [ :ident |
-				env at: ident put: 'self ' , ident ] ] ].
-	self
-		defineMethod:
-		'initialize super initialize. self initTypes. self init'
-		in: newClass
-		protocol: 'initialize-release'
-		node: nil.
-	aViennaNode do: [ :section | self generate: section env: env ].
-	self
-		defineInitTypeMethodForTypeNames: typeNames
-		in: newClass
-		protocol: 'initialize-release'
-		node: nil.
-	(newClass includesSelector: #init) ifFalse: [
-		self
-			defineMethod: 'init'
-			in: newClass
-			protocol: 'state'
-			node: nil ].
-	newClass viennaEnv: env.
-	^ newClass
+	^ self
+		  modularDocument: aViennaNode asModularDocument
+		  env: aDictionary
 ]
 
 { #category : 'code generation-interfaces' }

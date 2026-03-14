@@ -81,7 +81,7 @@ ViennaTranspilerForExecutionTracing >> defineMethodFromOperation: opName in: the
 						 nextPutAll: opName storeString;
 						 nextPutAll: ' module: ';
 						 nextPutAll:
-							 (aViennaNode module ifNotNil: #identifier ifNil: [ '' ])
+							 (aViennaNode module ifNotNil: #identifier ifNil: [ 'DEFAULT' ])
 								 storeString;
 						 nextPutAll: ' args: {';
 						 nextPutAll: (' . ' join: (formalArgs collect: #key));
@@ -143,7 +143,9 @@ ViennaTranspilerForExecutionTracing >> defineMethodFromOperation: opName in: the
 						 nextPutAll: '_document _recordOperationReturn: ';
 						 nextPutAll: opName storeString;
 						 nextPutAll: ' module: ';
-						 nextPutAll: aViennaNode module identifier storeString;
+						 nextPutAll:
+							 (aViennaNode module ifNotNil: #identifier ifNil: [ 'DEFAULT' ])
+								 storeString;
 						 nextPutAll: ' value: ';
 						 nextPutAll: retVarName;
 						 nextPutAll: '.';

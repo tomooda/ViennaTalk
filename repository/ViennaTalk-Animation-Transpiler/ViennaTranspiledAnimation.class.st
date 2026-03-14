@@ -92,17 +92,18 @@ ViennaTranspiledAnimation >> at: aString ifPresent: aBlock [
 
 { #category : 'accessing' }
 ViennaTranspiledAnimation >> at: aString ifPresent: presentBlock ifAbsent: absentBlock [
+
 	| separatorIndex target name value |
 	separatorIndex := aString indexOf: $`.
 	separatorIndex = 0
-		ifTrue: [ target := object.
-			name := aString ]
-		ifFalse: [ | moduleName |
-			moduleName := aString copyFrom: 1 to: separatorIndex - 1.
-			target := moduleName = self defaultModule
-				ifTrue: [ object ]
-				ifFalse: [ object at: moduleName ifAbsent: [ ^ absentBlock value ] ].
-			name := aString copyFrom: separatorIndex + 1 to: aString size ].
+		ifTrue: [
+				target := object.
+				name := aString ]
+		ifFalse: [
+				| moduleName |
+				moduleName := aString copyFrom: 1 to: separatorIndex - 1.
+				target := object at: moduleName ifAbsent: [ ^ absentBlock value ].
+				name := aString copyFrom: separatorIndex + 1 to: aString size ].
 	[ value := target instVarNamed: name ]
 		on: Error
 		do: [ :ex | ^ absentBlock value ].
@@ -116,18 +117,15 @@ ViennaTranspiledAnimation >> at: aString put: anObject [
 	separatorIndex := aString indexOf: $`.
 	separatorIndex = 0
 		ifTrue: [
-			target := object.
-			name := aString ]
+				target := object.
+				name := aString ]
 		ifFalse: [
-			| moduleName |
-			moduleName := aString copyFrom: 1 to: separatorIndex - 1.
-			target := moduleName = self defaultModule
-				          ifTrue: [ object ]
-				          ifFalse: [
-					          object
-						          at: (aString copyFrom: 1 to: separatorIndex - 1)
-						          ifAbsent: [ ^ nil ] ].
-			name := aString copyFrom: separatorIndex + 1 to: aString size ].
+				| moduleName |
+				moduleName := aString copyFrom: 1 to: separatorIndex - 1.
+				target := object
+					          at: (aString copyFrom: 1 to: separatorIndex - 1)
+					          ifAbsent: [ ^ nil ].
+				name := aString copyFrom: separatorIndex + 1 to: aString size ].
 	[ value := target instVarNamed: name put: anObject ]
 		on: Error
 		do: [ :ex | ^ nil ].
@@ -221,13 +219,7 @@ ViennaTranspiledAnimation >> evaluate: aString in: moduleName ifError: errorBloc
 
 	Cursor wait showWhile: [
 			| result |
-			result := (moduleName = self defaultModule
-				           ifTrue: [ object ]
-				           ifFalse: [
-						           object
-							           at: moduleName
-							           ifAbsent: [
-							           ^ errorBlock value: 'unknown module name' ] ])
+			result := (object at: moduleName ifAbsent: [ object ])
 				          evaluateExpression: aString
 				          with: transpiler
 				          ifError: [ :msg | ^ errorBlock cull: msg ].
@@ -460,7 +452,7 @@ ViennaTranspiledAnimation >> specification: aString ifError: errorBlock [
 							       result isPetit2Failure ifTrue: [
 								       ^ errorBlock cull: result message ].
 							       result ]
-					       ifEmpty: [ ViennaModularDocumentNode empty ] ].
+					       ifEmpty: [ ViennaModularDocumentNode default ] ].
 	[ ast typecheck ]
 		on: ViennaTypeError
 		do: [ :typeError | ^ errorBlock cull: typeError messageText ].

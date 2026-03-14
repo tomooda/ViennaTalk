@@ -57,17 +57,25 @@ ViennaTranspiledModularDocument >> evaluateExpression: aString ifError: errorBlo
 { #category : 'evaluating' }
 ViennaTranspiledModularDocument >> evaluateExpression: aString with: aViennaVDM2SmalltalkClass ifError: errorBlock [
 
-	aString ifNotEmpty: [
-			| src |
-			src := self
-				       transpileExpression: aString
-				       with: aViennaVDM2SmalltalkClass
-				       ifError: [ :msg | ^ errorBlock cull: msg ].
-			^ OpalCompiler new
-				  source: src;
-				  logged: false;
-				  receiver: self;
-				  evaluate ]
+	^ self
+		  at: 'DEFAULT'
+		  ifPresent: [ :module |
+				  module
+					  evaluateExpression: aString
+					  with: aViennaVDM2SmalltalkClass
+					  ifError: errorBlock ]
+		  ifAbsent: [
+				  aString ifNotEmpty: [
+						  | src |
+						  src := self
+							         transpileExpression: aString
+							         with: aViennaVDM2SmalltalkClass
+							         ifError: [ :msg | ^ errorBlock cull: msg ].
+						  OpalCompiler new
+							  source: src;
+							  logged: false;
+							  receiver: self;
+							  evaluate ] ]
 ]
 
 { #category : 'evaluating' }
@@ -88,16 +96,24 @@ ViennaTranspiledModularDocument >> evaluateNode: aViennaNode ifError: errorBlock
 { #category : 'evaluating' }
 ViennaTranspiledModularDocument >> evaluateNode: aViennaNode with: aViennaVDM2SmalltalkClass ifError: errorBlock [
 
-	| src |
-	src := self
-		       transpileNode: aViennaNode
-		       with: aViennaVDM2SmalltalkClass
-		       ifError: [ :msg | ^ errorBlock cull: msg ].
-	^ OpalCompiler new
-		  source: src;
-		  logged: false;
-		  receiver: self;
-		  evaluate
+	^ self
+		  at: 'DEFAULT'
+		  ifPresent: [ :module |
+				  module
+					  evaluateNode: aViennaNode
+					  with: aViennaVDM2SmalltalkClass
+					  ifError: errorBlock ]
+		  ifAbsent: [
+				  | src |
+				  src := self
+					         transpileNode: aViennaNode
+					         with: aViennaVDM2SmalltalkClass
+					         ifError: [ :msg | ^ errorBlock cull: msg ].
+				  OpalCompiler new
+					  source: src;
+					  logged: false;
+					  receiver: self;
+					  evaluate ]
 ]
 
 { #category : 'evaluating' }
@@ -112,16 +128,25 @@ ViennaTranspiledModularDocument >> evaluateStatement: aString ifError: errorBloc
 
 { #category : 'evaluating' }
 ViennaTranspiledModularDocument >> evaluateStatement: aString with: aViennaVDM2SmalltalkClass ifError: errorBlock [
-	| src |
-	src := self
-		transpileStatement: aString
-		with: aViennaVDM2SmalltalkClass
-		ifError: [ :msg | ^ errorBlock cull: msg ].
-	^ OpalCompiler new
-		source: src;
-		logged: false;
-		receiver: self;
-		evaluate
+
+	^ self
+		  at: 'DEFAULT'
+		  ifPresent: [ :module |
+				  module
+					  evaluateStatement: aString
+					  with: aViennaVDM2SmalltalkClass
+					  ifError: errorBlock ]
+		  ifAbsent: [
+				  | src |
+				  src := self
+					         transpileStatement: aString
+					         with: aViennaVDM2SmalltalkClass
+					         ifError: [ :msg | ^ errorBlock cull: msg ].
+				  OpalCompiler new
+					  source: src;
+					  logged: false;
+					  receiver: self;
+					  evaluate ]
 ]
 
 { #category : 'private' }

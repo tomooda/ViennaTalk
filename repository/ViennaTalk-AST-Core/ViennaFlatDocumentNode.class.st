@@ -49,7 +49,7 @@ ViennaFlatDocumentNode >> addValueDefinition: aViennaNode [
 { #category : 'converting' }
 ViennaFlatDocumentNode >> asModularDocument [
 
-	^ ViennaModularDocumentNode withAll: (ViennaModuleNode
+	^ ViennaModularDocumentNode with: (ViennaModuleNode
 			   identifier: 'DEFAULT'
 			   moduleBody:
 			   (ViennaModuleBodyNode withAll: (self collect: #copyFragment)))
