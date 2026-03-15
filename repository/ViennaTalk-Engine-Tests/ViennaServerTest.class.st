@@ -1,18 +1,19 @@
 Class {
-	#name : #ViennaServerTest,
-	#superclass : #TestCase,
+	#name : 'ViennaServerTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'fixture'
 	],
-	#category : #'ViennaTalk-Engine-Tests'
+	#category : 'ViennaTalk-Engine-Tests',
+	#package : 'ViennaTalk-Engine-Tests'
 }
 
-{ #category : #running }
+{ #category : 'running' }
 ViennaServerTest >> setUp [
 	fixture := ViennaServer new
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaServerTest >> stateFromArray: anArray [
 	| state |
 	state := Dictionary new: anArray size.
@@ -25,7 +26,7 @@ ViennaServerTest >> stateFromArray: anArray [
 	^ state
 ]
 
-{ #category : #'tests-empty' }
+{ #category : 'tests-empty' }
 ViennaServerTest >> test0 [
 	self
 		testExpression: ''
@@ -35,7 +36,7 @@ ViennaServerTest >> test0 [
 		resultStates: Dictionary new
 ]
 
-{ #category : #'tests-empty' }
+{ #category : 'tests-empty' }
 ViennaServerTest >> testExpression [
 	self
 		testExpression: '1+2'
@@ -45,16 +46,14 @@ ViennaServerTest >> testExpression [
 		resultStates: Dictionary new
 ]
 
-{ #category : #private }
-ViennaServerTest >> testExpression: expression specification: specification states: states resultValue: resultValue resultStates: resultStates [ 
+{ #category : 'private' }
+ViennaServerTest >> testExpression: expression specification: specification states: states resultValue: resultValue resultStates: resultStates [
+
 	(fixture
-		evaluate: expression
-		specification: specification
-		states: states
-		vdm10: true
-		rtc: true)
-		in: [:triple | 
+		 evaluate: expression
+		 specification: specification
+		 states: states) in: [ :triple |
 			self assert: resultValue equals: triple first.
 			self assert: resultStates equals: triple second.
-			self assert: resultValue isNil equals: triple third notEmpty]
+			self assert: resultValue isNil equals: triple third notEmpty ]
 ]

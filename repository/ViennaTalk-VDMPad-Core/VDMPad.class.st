@@ -624,30 +624,12 @@ VDMPad >> VDMPadEpiLogSrc [
 { #category : 'request handling-javascript' }
 VDMPad >> VDMPadIDE [
 	^ 'VDMPad = {};
-VDMPad.vdmClassicEnabled = false;
-VDMPad.invExceptionsEnabled = false;
 VDMPad.visualEnabled = false;
-VDMPad.runtimeCheckingEnabled = true;
 VDMPad.unittestEnabled = false;
 VDMPad.unittestRunning = false;
 VDMPad.protoTestcase = null;
 VDMPad.testcases = [];
 VDMPad.currentSource = null;
-
-VDMPad.enableRuntimeChecking = function () {
-    if (localStorage) {
-        localStorage.setItem("Config`runtimeCheckingEnabled", "true");
-    }
-    VDMPad.runtimeCheckingEnabled = true;
-    VDMPad.loadFromLocalStorage();
-};
-VDMPad.disableRuntimeChecking = function () {
-    if (localStorage) {
-        localStorage.setItem("Config`runtimeCheckingEnabled", "false");
-    }
-    VDMPad.runtimeCheckingEnabled = false;
-    VDMPad.loadFromLocalStorage();
-};
 
 VDMPad.enableUnittest = function () {
     if (localStorage) {
@@ -682,39 +664,6 @@ VDMPad.disableVisual = function () {
         localStorage.setItem("Config`visualEnabled", "false");
     }
     VDMPad.visualEnabled = false;
-    VDMPad.loadFromLocalStorage();
-};
-
-VDMPad.enableInvExceptions = function () {
-    if (localStorage) {
-        localStorage.setItem("Config`invExceptionsEnabled", "true");
-    }
-    VDMPad.invExceptionsEnabled = true;
-    VDMPad.loadFromLocalStorage();
-};
-
-VDMPad.disableInvExceptions = function () {
-    if (localStorage) {
-        localStorage.setItem("Config`invExceptionsEnabled", "false");
-    }
-    VDMPad.invExceptionsEnabled = false;
-    VDMPad.loadFromLocalStorage();
-};
-
-
-VDMPad.enableVDMClassic = function () {
-    if (localStorage) {
-        localStorage.setItem("Config`vdmClassicEnabled", "true");
-    }
-    VDMPad.vdmClassicEnabled = true;
-    VDMPad.loadFromLocalStorage();
-};
-
-VDMPad.disableVDMClassic = function () {
-    if (localStorage) {
-        localStorage.setItem("Config`vdmClassicEnabled", "false");
-    }
-    VDMPad.vdmClassicEnabled = false;
     VDMPad.loadFromLocalStorage();
 };
 
@@ -819,15 +768,6 @@ VDMPad.runOneTestcase = function() {
             }
         };
         var queryOptions = "?";
-        if (VDMPad.vdmClassicEnabled) {
-            queryOptions += "classic=&";
-        }
-        if (VDMPad.invExceptionsEnabled) {
-            queryOptions += "exceptions=&";
-        }
-        if (!VDMPad.runtimeCheckingEnabled) {
-            queryOptions += "ignoreRuntimeChecking=&";
-        }
         req.open("POST", "/test"+queryOptions.substring(0,queryOptions.length-1));
         req.setRequestHeader("Content-Type", "application/json");
         req.send(JSON.stringify(testcase));
@@ -853,15 +793,6 @@ VDMPad.init = function () {
         }
     };
     var queryOptions = "?";
-    if (VDMPad.vdmClassicEnabled) {
-        queryOptions += "classic=&";
-    }
-    if (VDMPad.invExceptionsEnabled) {
-        queryOptions += "exceptions=&";
-    }
-    if (!VDMPad.runtimeCheckingEnabled) {
-        queryOptions += "ignoreRuntimeChecking=&";
-    }
     if (VDMPad.visualEnabled) {
         queryOptions += "visual=&";
     }
@@ -894,15 +825,6 @@ VDMPad.format = function () {
         }
     };
     var queryOptions = "?";
-    if (VDMPad.vdmClassicEnabled) {
-        queryOptions += "classic=&";
-    }
-    if (VDMPad.invExceptionsEnabled) {
-        queryOptions += "exceptions=&";
-    }
-    if (!VDMPad.runtimeCheckingEnabled) {
-        queryOptions += "ignoreRuntimeChecking=&";
-    }
     if (VDMPad.visualEnabled) {
         queryOptions += "visual=&";
     }
@@ -965,15 +887,6 @@ VDMPad.eval = function () {
         }
     };
     var queryOptions = "?";
-    if (VDMPad.vdmClassicEnabled) {
-        queryOptions += "classic=&";
-    }
-    if (VDMPad.invExceptionsEnabled) {
-        queryOptions += "exceptions=&";
-    }
-    if (!VDMPad.runtimeCheckingEnabled) {
-        queryOptions += "ignoreRuntimeChecking=&";
-    }
     if (VDMPad.visualEnabled) {
         queryOptions += "visual=&";
     }
@@ -1186,8 +1099,6 @@ VDMPad.remove = function (name) {
 
 VDMPad.loadFromLocalStorage = function () {
     if (localStorage) {
-        VDMPad.runtimeCheckingEnabled = localStorage.getItem("Config`runtimeCheckingEnabled") != "false";
-        VDMPad.invExceptionsEnabled = localStorage.getItem("Config`invExceptionsEnabled") == "true";
         VDMPad.unittestEnabled = localStorage.getItem("Config`unittestEnabled") == "true";
         VDMPad.visualEnabled = localStorage.getItem("Config`visualEnabled") == "true";
         if (localStorage.getItem("`lastSnapshot") == undefined) {
@@ -1461,35 +1372,6 @@ VDMPad.createConfigNode = function () {
 	visualNode.appendChild(visualCheckbox);
 	visualNode.appendChild(document.createTextNode("Visual Expressions"));
 	configNode.appendChild(visualNode);
-	var invExceptionsNode = document.createElement("div");
-	var invExceptionsCheckbox = document.createElement("input");
-	invExceptionsCheckbox.type = "checkbox";
-	invExceptionsCheckbox.style.PaddingRight = "10px";
-	invExceptionsCheckbox.checked = VDMPad.invExceptionsEnabled;
-	invExceptionsCheckbox.onclick = function () {if (this.checked) VDMPad.enableInvExceptions(); else VDMPad.disableInvExceptions();};
-	invExceptionsNode.appendChild(invExceptionsCheckbox);
-	invExceptionsNode.appendChild(document.createTextNode("Assertion errors as exceptions"));
-	configNode.appendChild(invExceptionsNode);
-	var vdmClassicNode = document.createElement("div");
-	var vdmClassicCheckbox = document.createElement("input");
-	vdmClassicCheckbox.type = "checkbox";
-	vdmClassicCheckbox.style.PaddingRight = "10px";
-	vdmClassicCheckbox.checked = VDMPad.vdmClassicEnabled;
-	vdmClassicCheckbox.onclick = function () {if (this.checked) VDMPad.enableVDMClassic(); else VDMPad.disableVDMClassic();};
-	vdmClassicNode.appendChild(vdmClassicCheckbox);
-	vdmClassicNode.appendChild(document.createTextNode("VDM classic"));
-	configNode.appendChild(vdmClassicNode);
-
-	var runtimeCheckingNode = document.createElement("div");
-	var runtimeCheckingCheckbox = document.createElement("input");
-	runtimeCheckingCheckbox.type = "checkbox";
-	runtimeCheckingCheckbox.style.PaddingRight = "10px";
-	runtimeCheckingCheckbox.checked = VDMPad.runtimeCheckingEnabled;
-	runtimeCheckingCheckbox.onclick = function () {if (this.checked) VDMPad.enableRuntimeChecking(); else VDMPad.disableRuntimeChecking();};
-	runtimeCheckingNode.appendChild(runtimeCheckingCheckbox);
-	runtimeCheckingNode.appendChild(document.createTextNode("runtime checking"));
-	configNode.appendChild(runtimeCheckingNode);
-
 	return configNode;
 };
 
@@ -1968,6 +1850,7 @@ VDMPad >> codemirrorVDM [
     "hd" : "operator",
     "if" : "keyword",
     "in" : "keyword",
+    "in set" : "keyword",
     "inds" : "operator",
     "inmap" : "builtin",
     "instance" : "keyword",
@@ -2303,9 +2186,7 @@ VDMPad >> eval: aZnRequest [
 		          evaluate: expression
 		          specification: source
 		          states: states
-		          module: module
-		          vdm10: vdm10
-		          rtc: rtc.
+		          module: module.
 	json := Dictionary new.
 	json
 		at: 'source' put: source;

@@ -1,24 +1,25 @@
 Class {
-	#name : #ViennaVDMJTest,
-	#superclass : #TestCase,
+	#name : 'ViennaVDMJTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'process'
 	],
-	#category : #'ViennaTalk-Engine-Tests'
+	#category : 'ViennaTalk-Engine-Tests',
+	#package : 'ViennaTalk-Engine-Tests'
 }
 
-{ #category : #running }
+{ #category : 'running' }
 ViennaVDMJTest >> setUp [
 	process := ViennaVDMJ new
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 ViennaVDMJTest >> shutDown [
 	process ifNotNil: [process close].
 	process := nil
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaVDMJTest >> stateFromArray: anArray [
 	| state |
 	state := Dictionary new: anArray size.
@@ -31,7 +32,7 @@ ViennaVDMJTest >> stateFromArray: anArray [
 	^ state
 ]
 
-{ #category : #'testing-empty' }
+{ #category : 'testing-empty' }
 ViennaVDMJTest >> test0 [
 	self
 		testExpression: ''
@@ -41,7 +42,7 @@ ViennaVDMJTest >> test0 [
 		resultStates: Dictionary new
 ]
 
-{ #category : #'testing-only expression' }
+{ #category : 'testing-only expression' }
 ViennaVDMJTest >> test1InvalidExpression [
 	self
 		testExpression: ' 1 +  '
@@ -51,7 +52,7 @@ ViennaVDMJTest >> test1InvalidExpression [
 		resultStates: Dictionary new
 ]
 
-{ #category : #'testing-only specification' }
+{ #category : 'testing-only specification' }
 ViennaVDMJTest >> test1InvalidSpecification [
 	self
 		testExpression: ''
@@ -61,7 +62,7 @@ ViennaVDMJTest >> test1InvalidSpecification [
 		resultStates: (Dictionary new)
 ]
 
-{ #category : #'testing-only states' }
+{ #category : 'testing-only states' }
 ViennaVDMJTest >> test1InvalidStates [
 	self
 		testExpression: ''
@@ -77,7 +78,7 @@ ViennaVDMJTest >> test1InvalidStates [
 		resultStates: Dictionary new
 ]
 
-{ #category : #'testing-only expression' }
+{ #category : 'testing-only expression' }
 ViennaVDMJTest >> test1TypeErrorExpression [
 	self
 		testExpression: ' 1 +  "2"'
@@ -87,7 +88,7 @@ ViennaVDMJTest >> test1TypeErrorExpression [
 		resultStates: Dictionary new
 ]
 
-{ #category : #'testing-only expression' }
+{ #category : 'testing-only expression' }
 ViennaVDMJTest >> test1ValidExpression [
 	self
 		testExpression: ' 1 + 2 '
@@ -97,7 +98,7 @@ ViennaVDMJTest >> test1ValidExpression [
 		resultStates: Dictionary new
 ]
 
-{ #category : #'testing-only specification' }
+{ #category : 'testing-only specification' }
 ViennaVDMJTest >> test1ValidSpecification [
 	self
 		testExpression: ''
@@ -107,7 +108,7 @@ ViennaVDMJTest >> test1ValidSpecification [
 		resultStates: (self stateFromArray: {'DEFAULT' -> {'count' -> '0'}})
 ]
 
-{ #category : #'testing-only states' }
+{ #category : 'testing-only states' }
 ViennaVDMJTest >> test1ValidStates [
 	self
 		testExpression: ''
@@ -117,7 +118,7 @@ ViennaVDMJTest >> test1ValidStates [
 		resultStates: Dictionary new
 ]
 
-{ #category : #'testing-expression and specification' }
+{ #category : 'testing-expression and specification' }
 ViennaVDMJTest >> test2InvalidExpressionAndInvalidSpecification [
 	self
 		testExpression: '1+'
@@ -127,7 +128,7 @@ ViennaVDMJTest >> test2InvalidExpressionAndInvalidSpecification [
 		resultStates: Dictionary new
 ]
 
-{ #category : #'testing-expression and state' }
+{ #category : 'testing-expression and state' }
 ViennaVDMJTest >> test2InvalidExpressionAndInvalidState [
 	self
 		testExpression: '1+'
@@ -137,7 +138,7 @@ ViennaVDMJTest >> test2InvalidExpressionAndInvalidState [
 		resultStates: (self stateFromArray: {'DEFAULT' -> {'count' -> 'frq'}})
 ]
 
-{ #category : #'testing-expression and specification' }
+{ #category : 'testing-expression and specification' }
 ViennaVDMJTest >> test2InvalidExpressionAndValidSpecification [
 	self
 		testExpression: '1+"2"'
@@ -147,7 +148,7 @@ ViennaVDMJTest >> test2InvalidExpressionAndValidSpecification [
 		resultStates: Dictionary new
 ]
 
-{ #category : #'testing-expression and state' }
+{ #category : 'testing-expression and state' }
 ViennaVDMJTest >> test2InvalidExpressionAndValidState [
 	self
 		testExpression: '1+'
@@ -157,7 +158,7 @@ ViennaVDMJTest >> test2InvalidExpressionAndValidState [
 		resultStates: (self stateFromArray: {'DEFAULT' -> {'count' -> '0'}})
 ]
 
-{ #category : #'testing-specification and state' }
+{ #category : 'testing-specification and state' }
 ViennaVDMJTest >> test2InvalidSpecificationAndInvalidState [
 	self
 		testExpression: ''
@@ -173,7 +174,7 @@ ViennaVDMJTest >> test2InvalidSpecificationAndInvalidState [
 		resultStates: (self stateFromArray: {'DEFAULT' -> {'frq' -> '441'}})
 ]
 
-{ #category : #'testing-specification and state' }
+{ #category : 'testing-specification and state' }
 ViennaVDMJTest >> test2InvalidSpecificationAndValidState [
 	self
 		testExpression: ''
@@ -189,7 +190,7 @@ ViennaVDMJTest >> test2InvalidSpecificationAndValidState [
 		resultStates: (self stateFromArray: {'DEFAULT' -> {'count' -> '441'}})
 ]
 
-{ #category : #'testing-expression and specification' }
+{ #category : 'testing-expression and specification' }
 ViennaVDMJTest >> test2ValidExpressionAndInvalidSpecification [
 	self
 		testExpression: '1+2'
@@ -199,7 +200,7 @@ ViennaVDMJTest >> test2ValidExpressionAndInvalidSpecification [
 		resultStates: Dictionary new
 ]
 
-{ #category : #'testing-expression and state' }
+{ #category : 'testing-expression and state' }
 ViennaVDMJTest >> test2ValidExpressionAndInvalidState [
 	self
 		testExpression: '1+2'
@@ -209,7 +210,7 @@ ViennaVDMJTest >> test2ValidExpressionAndInvalidState [
 		resultStates: Dictionary new
 ]
 
-{ #category : #'testing-expression and specification' }
+{ #category : 'testing-expression and specification' }
 ViennaVDMJTest >> test2ValidExpressionAndValidSpecification [
 	self
 		testExpression: '1+2'
@@ -219,7 +220,7 @@ ViennaVDMJTest >> test2ValidExpressionAndValidSpecification [
 		resultStates: (self stateFromArray: {'DEFAULT' -> {'count' -> '0'}})
 ]
 
-{ #category : #'testing-expression and state' }
+{ #category : 'testing-expression and state' }
 ViennaVDMJTest >> test2ValidExpressionAndValidState [
 	self
 		testExpression: '1+2'
@@ -229,7 +230,7 @@ ViennaVDMJTest >> test2ValidExpressionAndValidState [
 		resultStates: Dictionary new
 ]
 
-{ #category : #'testing-specification and state' }
+{ #category : 'testing-specification and state' }
 ViennaVDMJTest >> test2ValidSpecificationAndInvalidState [
 	self
 		testExpression: ''
@@ -245,7 +246,7 @@ ViennaVDMJTest >> test2ValidSpecificationAndInvalidState [
 		resultStates: (self stateFromArray: {'DEFAULT' -> {'count' -> '0'}})
 ]
 
-{ #category : #'testing-specification and state' }
+{ #category : 'testing-specification and state' }
 ViennaVDMJTest >> test2ValidSpecificationAndValidState [
 	self
 		testExpression: ''
@@ -261,7 +262,7 @@ ViennaVDMJTest >> test2ValidSpecificationAndValidState [
 		resultStates: (self stateFromArray: {'DEFAULT' -> {'count' -> '441'}})
 ]
 
-{ #category : #'testing-all' }
+{ #category : 'testing-all' }
 ViennaVDMJTest >> test3InvalidExpressionAndInvalidSpecificationAndInvalidState [
 	self
 		testExpression: ' inc ( 3 ) '
@@ -277,7 +278,7 @@ ViennaVDMJTest >> test3InvalidExpressionAndInvalidSpecificationAndInvalidState [
 		resultStates: (self stateFromArray: {'DEFAULT' -> {'count' -> '4+"41"'}})
 ]
 
-{ #category : #'testing-all' }
+{ #category : 'testing-all' }
 ViennaVDMJTest >> test3InvalidExpressionAndInvalidSpecificationAndValidState [
 	self
 		testExpression: ' inc ( 3 ) '
@@ -293,7 +294,7 @@ ViennaVDMJTest >> test3InvalidExpressionAndInvalidSpecificationAndValidState [
 		resultStates: (self stateFromArray: {'DEFAULT' -> {'count' -> '441'}})
 ]
 
-{ #category : #'testing-all' }
+{ #category : 'testing-all' }
 ViennaVDMJTest >> test3InvalidExpressionAndValidSpecificationAndInvalidState [
 	self
 		testExpression: ' inc ( 3 ) '
@@ -309,7 +310,7 @@ ViennaVDMJTest >> test3InvalidExpressionAndValidSpecificationAndInvalidState [
 		resultStates: (self stateFromArray: {'DEFAULT' -> {'count' -> '4+"41"'}})
 ]
 
-{ #category : #'testing-all' }
+{ #category : 'testing-all' }
 ViennaVDMJTest >> test3InvalidExpressionAndValidSpecificationAndValidState [
 	self
 		testExpression: ' inc ( 3 ) '
@@ -325,7 +326,7 @@ ViennaVDMJTest >> test3InvalidExpressionAndValidSpecificationAndValidState [
 		resultStates: (self stateFromArray: {'DEFAULT' -> {'count' -> '441'}})
 ]
 
-{ #category : #'testing-all' }
+{ #category : 'testing-all' }
 ViennaVDMJTest >> test3ValidExpressionAndInvalidSpecificationAndInvalidState [
 	self
 		testExpression: ' inc ( ) '
@@ -341,7 +342,7 @@ ViennaVDMJTest >> test3ValidExpressionAndInvalidSpecificationAndInvalidState [
 		resultStates: (self stateFromArray: {'DEFAULT' -> {'count' -> '4+"41"'}})
 ]
 
-{ #category : #'testing-all' }
+{ #category : 'testing-all' }
 ViennaVDMJTest >> test3ValidExpressionAndInvalidSpecificationAndValidState [
 	self
 		testExpression: ' inc ( ) '
@@ -357,7 +358,7 @@ ViennaVDMJTest >> test3ValidExpressionAndInvalidSpecificationAndValidState [
 		resultStates: (self stateFromArray: {'DEFAULT' -> {'count' -> '441'}})
 ]
 
-{ #category : #'testing-all' }
+{ #category : 'testing-all' }
 ViennaVDMJTest >> test3ValidExpressionAndValidSpecificationAndInvalidState [
 	self
 		testExpression: ' inc ( ) '
@@ -373,7 +374,7 @@ ViennaVDMJTest >> test3ValidExpressionAndValidSpecificationAndInvalidState [
 		resultStates: (self stateFromArray: {'DEFAULT' -> {'count' -> '4+"41"'}})
 ]
 
-{ #category : #'testing-all' }
+{ #category : 'testing-all' }
 ViennaVDMJTest >> test3ValidExpressionAndValidSpecificationAndValidState [
 	self
 		testExpression: ' inc ( ) '
@@ -389,21 +390,19 @@ ViennaVDMJTest >> test3ValidExpressionAndValidSpecificationAndValidState [
 		resultStates: (self stateFromArray: {'DEFAULT' -> {'count' -> '442'}})
 ]
 
-{ #category : #testing }
-ViennaVDMJTest >> testExpression: expression specification: specification states: states resultValue: resultValue resultStates: resultStates [ 
+{ #category : 'testing' }
+ViennaVDMJTest >> testExpression: expression specification: specification states: states resultValue: resultValue resultStates: resultStates [
+
 	(process
-		evaluate: expression
-		specification: specification
-		states: states
-		vdm10: true
-		rtc: true)
-		in: [:triple | 
+		 evaluate: expression
+		 specification: specification
+		 states: states) in: [ :triple |
 			self assert: resultValue equals: triple first.
 			self assert: resultStates equals: triple second.
-			self assert: resultValue isNil equals: triple third notEmpty]
+			self assert: resultValue isNil equals: triple third notEmpty ]
 ]
 
-{ #category : #'testing-only expression' }
+{ #category : 'testing-only expression' }
 ViennaVDMJTest >> testUTF8Strings [
 	self
 		testExpression: '"あいう"'

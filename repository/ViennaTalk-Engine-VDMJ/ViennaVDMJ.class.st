@@ -12,8 +12,8 @@ Class {
 		'RandomGenerator',
 		'Registry'
 	],
-	#category : 'ViennaTalk-Engine-Core',
-	#package : 'ViennaTalk-Engine-Core'
+	#category : 'ViennaTalk-Engine-VDMJ',
+	#package : 'ViennaTalk-Engine-VDMJ'
 }
 
 { #category : 'copyright notice' }
@@ -126,6 +126,18 @@ ViennaVDMJ class >> basicInstallJars [
   self jsonicPath binaryWriteStream
 		nextPutAll: self jsonicJar;
 		close
+]
+
+{ #category : 'defaults' }
+ViennaVDMJ class >> default [
+
+	^ self new
+]
+
+{ #category : 'accessing' }
+ViennaVDMJ class >> engineType [
+
+	^ #'VDMJ'
 ]
 
 { #category : 'locking' }
@@ -285,6 +297,12 @@ ViennaVDMJ class >> new [
 	^ super new
 ]
 
+{ #category : 'accessing' }
+ViennaVDMJ class >> priority [
+
+	^ 3
+]
+
 { #category : 'utilities' }
 ViennaVDMJ class >> proceed: aText title: aString [
 
@@ -372,14 +390,6 @@ ViennaVDMJ >> assign: aDictionary ifError: errorBlock [
 				ifError: errorBlock]
 ]
 
-{ #category : 'commands' }
-ViennaVDMJ >> classicIfError: errorBlock [ 
-	^ self
-		send: 'classic'
-		responseDo: [:unit | unit]
-		ifError: errorBlock
-]
-
 { #category : 'accessing' }
 ViennaVDMJ >> close [
 	process
@@ -412,22 +422,6 @@ ViennaVDMJ >> default: aString ifError: errorBlock [
 				ifFalse: [ errorBlock value ] ]
 ]
 
-{ #category : 'commands' }
-ViennaVDMJ >> disableRuntimeCheckingIfError: errorBlock [ 
-	^ self
-		send: '-rtc'
-		responseDo: [:unit | unit]
-		ifError: errorBlock
-]
-
-{ #category : 'commands' }
-ViennaVDMJ >> enableRuntimeCheckingIfError: errorBlock [ 
-	^ self
-		send: '+rtc'
-		responseDo: [:unit | unit]
-		ifError: errorBlock
-]
-
 { #category : 'private' }
 ViennaVDMJ >> ensureStartupProcess [
 
@@ -439,136 +433,108 @@ ViennaVDMJ >> ensureStartupProcess [
 ]
 
 { #category : 'evaluating' }
-ViennaVDMJ >> evaluate: expression specification: specification states: states module: moduleName vdm10: vdm10 rtc: rtc [
-	lock
-		critical: [ | errorMessage prestates value postState |
+ViennaVDMJ >> evaluate: expression specification: specification states: states module: moduleName [
+
+	lock critical: [
+			| errorMessage prestates value postState |
 			prestates := Dictionary new.
 			self ensureStartupProcess.
-			self
-				temporaryFileDo: [ :name :stream | 
+			self temporaryFileDo: [ :name :stream |
 					stream nextPutAll: specification.
 					stream close.
-					vdm10 = true
-						ifTrue: [ self
-								vdm10IfError: [ :msg | 
-									^ {nil.
-									states.
-									msg.
-									states} ] ]
-						ifFalse: [ self
-								classicIfError: [ :msg | 
-									^ {nil.
-									states.
-									msg.
-									states} ] ].
-					rtc = true
-						ifTrue: [ self
-								enableRuntimeCheckingIfError: [ :msg | 
-									^ {nil.
-									states.
-									msg.
-									states} ] ]
-						ifFalse: [ self
-								disableRuntimeCheckingIfError: [ :msg | 
-									^ {nil.
-									states.
-									msg.
-									states} ] ].
-					self
-						load: name
-						ifError: [ :msg | 
-							^ {nil.
-							states.
-							msg.
-							states} ] ].
+					self load: name ifError: [ :msg |
+							^ {
+								  nil.
+								  states.
+								  msg.
+								  states } ] ].
 			errorMessage := String new writeStream.
 			self
-				modulesDo: [ :module | 
-					states
-						at: module
-						ifPresent: [ :bindings | 
-							| initBindings |
-							self
-								default: module
-								ifError: [ :msg | 
-									^ {nil.
-									states.
-									msg.
-									states} ].
-							initBindings := Dictionary new.
-							self
-								statesDo: [ :var :val | 
-									initBindings at: var put: (bindings at: var ifAbsent: [ val ]).
-									(prestates at: module ifAbsentPut: [ Dictionary new ])
-										at: var
-										put: (bindings at: var ifAbsent: [ val ]) ]
-								ifError: [ :msg | 
-									^ {nil.
-									states.
-									msg.
-									states} ].
-							self
-								assign: initBindings
-								ifError: [ :msg | 
-									^ {nil.
-									states.
-									msg.
-									prestates} ] ] ]
-				ifError: [ :msg | 
-					^ {nil.
-					states.
-					msg.
-					prestates} ].
-			self
-				default: moduleName
-				ifError: [ :msg | 
-					^ {nil.
-					states.
-					msg.
-					prestates} ].
-			errorMessage contents
-				ifNotEmpty: [ :msg | 
-					^ {nil.
-					states.
-					msg.
-					prestates} ].
-			value := expression
-				ifEmpty: [ String new ]
-				ifNotEmpty: [ self
-						print: expression
-						ifError: [ :msg | 
-							^ {nil.
-							states.
-							msg.
-							prestates} ] ].
+				modulesDo: [ :module |
+						states at: module ifPresent: [ :bindings |
+								| initBindings |
+								self default: module ifError: [ :msg |
+										^ {
+											  nil.
+											  states.
+											  msg.
+											  states } ].
+								initBindings := Dictionary new.
+								self
+									statesDo: [ :var :val |
+											initBindings
+												at: var
+												put: (bindings at: var ifAbsent: [ val ]).
+											(prestates at: module ifAbsentPut: [ Dictionary new ])
+												at: var
+												put: (bindings at: var ifAbsent: [ val ]) ]
+									ifError: [ :msg |
+											^ {
+												  nil.
+												  states.
+												  msg.
+												  states } ].
+								self assign: initBindings ifError: [ :msg |
+										^ {
+											  nil.
+											  states.
+											  msg.
+											  prestates } ] ] ]
+				ifError: [ :msg |
+						^ {
+							  nil.
+							  states.
+							  msg.
+							  prestates } ].
+			self default: moduleName ifError: [ :msg |
+					^ {
+						  nil.
+						  states.
+						  msg.
+						  prestates } ].
+			errorMessage contents ifNotEmpty: [ :msg |
+					^ {
+						  nil.
+						  states.
+						  msg.
+						  prestates } ].
+			value := expression ifEmpty: [ String new ] ifNotEmpty: [
+					         self print: expression ifError: [ :msg |
+							         ^ {
+								           nil.
+								           states.
+								           msg.
+								           prestates } ] ].
 			postState := Dictionary new.
 			self
-				modulesDo: [ :module | 
-					| bindings |
-					postState at: module put: (bindings := Dictionary new).
-					self
-						default: module
-						ifError: [ :msg | 
-							^ {nil.
-							states.
-							msg.
-							prestates} ].
-					self
-						statesDo: [ :var :val | bindings at: var put: val ]
-						ifError: [ :msg | 
-							^ {nil.
-							states.
-							msg.
-							prestates} ] ]
-				ifError: [ :msg | 
-					^ {nil.
-					states.
-					msg.
-					prestates} ].
-			^ {value.
-			postState.
-			String new.
-			prestates} ]
+				modulesDo: [ :module |
+						| bindings |
+						postState at: module put: (bindings := Dictionary new).
+						self default: module ifError: [ :msg |
+								^ {
+									  nil.
+									  states.
+									  msg.
+									  prestates } ].
+						self
+							statesDo: [ :var :val | bindings at: var put: val ]
+							ifError: [ :msg |
+									^ {
+										  nil.
+										  states.
+										  msg.
+										  prestates } ] ]
+				ifError: [ :msg |
+						^ {
+							  nil.
+							  states.
+							  msg.
+							  prestates } ].
+			^ {
+				  value.
+				  postState.
+				  String new.
+				  prestates } ]
 ]
 
 { #category : 'finalizing' }
@@ -761,14 +727,6 @@ ViennaVDMJ >> temporaryFileDo: aBlock [
 { #category : 'registry' }
 ViennaVDMJ >> unregister [
 	self class unregister: self
-]
-
-{ #category : 'commands' }
-ViennaVDMJ >> vdm10IfError: errorBlock [ 
-	^ self
-		send: 'vdm10'
-		responseDo: [:unit | unit]
-		ifError: errorBlock
 ]
 
 { #category : 'accessing' }

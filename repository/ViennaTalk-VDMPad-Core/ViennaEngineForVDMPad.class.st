@@ -5,6 +5,18 @@ Class {
 	#package : 'ViennaTalk-VDMPad-Core'
 }
 
+{ #category : 'accessing' }
+ViennaEngineForVDMPad class >> engineType [
+
+	^ nil
+]
+
+{ #category : 'accessing' }
+ViennaEngineForVDMPad class >> priority [
+
+	^ -1
+]
+
 { #category : 'class access' }
 ViennaEngineForVDMPad >> animationClass [
 

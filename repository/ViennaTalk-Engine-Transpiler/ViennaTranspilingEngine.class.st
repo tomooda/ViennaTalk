@@ -5,6 +5,30 @@ Class {
 	#package : 'ViennaTalk-Engine-Transpiler'
 }
 
+{ #category : 'defaults' }
+ViennaTranspilingEngine class >> default [
+
+	^ self new
+]
+
+{ #category : 'accessing' }
+ViennaTranspilingEngine class >> engineType [
+
+	^ #Transpiler
+]
+
+{ #category : 'accessing' }
+ViennaTranspilingEngine class >> priority [
+
+	^ 10
+]
+
+{ #category : 'accessing' }
+ViennaTranspilingEngine >> animation [
+
+	^ self animationClass new
+]
+
 { #category : 'class access' }
 ViennaTranspilingEngine >> animationClass [
 
@@ -18,7 +42,7 @@ ViennaTranspilingEngine >> close [
 ]
 
 { #category : 'evaluating' }
-ViennaTranspilingEngine >> evaluate: expression specification: specification states: states module: module vdm10: vdm10 rtc: rtc [
+ViennaTranspilingEngine >> evaluate: expression specification: specification states: states module: module [
 
 	| animation preStates result postStates |
 	animation := self animationClass new.

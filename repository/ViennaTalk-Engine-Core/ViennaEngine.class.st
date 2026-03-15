@@ -2,7 +2,8 @@ Class {
 	#name : 'ViennaEngine',
 	#superclass : 'Object',
 	#classVars : [
-		'AlwaysUsesViennaServerAsDefault'
+		'AlwaysUsesViennaServerAsDefault',
+		'DefaultEngineType'
 	],
 	#category : 'ViennaTalk-Engine-Core',
 	#package : 'ViennaTalk-Engine-Core'
@@ -23,23 +24,66 @@ ViennaEngine class >> alwaysUsesViennaServerAsDefault: aBoolean [
 
 { #category : 'defaults' }
 ViennaEngine class >> default [
-	^ (self alwaysUsesViennaServerAsDefault
-		or: [ ViennaVDMJ isInstalled not ])
-		ifTrue: [ ViennaClient default ]
-		ifFalse: [ ViennaVDMJ new ]
+
+	^ (self forType: self defaultEngineType) ifNotNil: #default
+]
+
+{ #category : 'settings' }
+ViennaEngine class >> defaultEngineType [
+
+	^ DefaultEngineType ifNil: [ self engineTypes first ]
+]
+
+{ #category : 'settings' }
+ViennaEngine class >> defaultEngineType: aSymbol [
+
+	^ DefaultEngineType := aSymbol
+]
+
+{ #category : 'accessing' }
+ViennaEngine class >> engineType [
+
+	^ self subclassResponsibility
+]
+
+{ #category : 'defaults' }
+ViennaEngine class >> engineTypes [
+
+	^ ((self allSubclasses select: [ :class | class priority > 0 ])
+		   sorted: #priority descending) collect: #engineType
+]
+
+{ #category : 'accessing' }
+ViennaEngine class >> forType: aSymbol [
+
+	self allSubclassesDo: [ :class |
+		class engineType = aSymbol ifTrue: [ ^ class ] ]
+]
+
+{ #category : 'accessing' }
+ViennaEngine class >> priority [
+
+	^ self subclassResponsibility
 ]
 
 { #category : 'settings' }
 ViennaEngine class >> viennaSettingsOn: aBuilder [
+
 	<systemsettings>
-	(aBuilder setting: #viennaTalkAlwaysUseServer)
-		parent: #ViennaTalkServices;
+	(aBuilder pickOne: #defaultEngineType)
+		parent: #ViennaTalkEngine;
+		label: 'default engine';
+		domainValues: self engineTypes;
+		default: self defaultEngineType;
+		description: 'Select the default engine to run VDM-SL specs.';
 		target: self;
-		getSelector: #alwaysUsesViennaServerAsDefault;
-		setSelector: #alwaysUsesViennaServerAsDefault:;
-		description: 'If checked, "ViennaEngine default" always chooses the vienna server via HTTP even when a local VDMJ process is available.';
-		label: 'Always uses vienna Server via HTTP';
-		order: 0.5
+		order: 0.2
+]
+
+{ #category : 'accessing' }
+ViennaEngine >> animation [
+
+	^ ViennaAnimation on: self
 ]
 
 { #category : 'accessing' }
@@ -54,21 +98,6 @@ ViennaEngine >> evaluate: expression specification: spec states: states [
 
 { #category : 'evaluating' }
 ViennaEngine >> evaluate: expression specification: spec states: states module: module [
-	^ self evaluate: expression specification: spec states: states module: module vdm10: true rtc: true 
-]
 
-{ #category : 'evaluating' }
-ViennaEngine >> evaluate: expression specification: specification states: states module: module vdm10: vdm10 rtc: rtc [
 	^ self subclassResponsibility
-]
-
-{ #category : 'evaluating' }
-ViennaEngine >> evaluate: expression specification: specification states: states vdm10: vdm10 rtc: rtc [
-	^ self
-		evaluate: expression
-		specification: specification
-		states: states
-		module: 'DEFAULT'
-		vdm10: vdm10
-		rtc: rtc
 ]
