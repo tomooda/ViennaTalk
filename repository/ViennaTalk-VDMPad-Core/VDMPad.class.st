@@ -1782,10 +1782,8 @@ VDMPad >> codemirrorGlass [
 
 { #category : 'request handling-javascript' }
 VDMPad >> codemirrorVDM [
-	^ self
-		responseJS:
-			'CodeMirror.defineMode("vdm", function() {
 
+	^ self responseJS: 'CodeMirror.defineMode("vdm", function() {
   var words = {
     "<:" : "keyword",
     "<-:" : "keyword",
@@ -1849,8 +1847,9 @@ VDMPad >> codemirrorVDM [
     "functions" : "keyword",
     "hd" : "operator",
     "if" : "keyword",
-    "in" : "keyword",
     "in set" : "keyword",
+    "in setq" : "keyword",
+    "in" : "keyword",
     "inds" : "operator",
     "inmap" : "builtin",
     "instance" : "keyword",
@@ -1875,8 +1874,8 @@ VDMPad >> codemirrorVDM [
     "mu" : "keyword",
     "munion" : "builtin",
     "mutex" : "keyword",
-    "nat" : "builtin",
     "nat1" : "builtin",
+    "nat" : "builtin",
     "new" : "keyword",
     "nil" : "atom",
     "not" : "operator",
@@ -1906,9 +1905,14 @@ VDMPad >> codemirrorVDM [
     "samebaseclass" : "builtin",
     "sameclass" : "keyword",
     "self" : "atom",
-    "seq" : "builtin",
     "seq1" : "builtin",
+    "seq1 of" : "builtin",
+    "seq" : "builtin",
+    "seq of" : "builtin",
+    "set1" : "builtin",
+    "set1 of" : "builtin",
     "set" : "builtin",
+    "set of" : "builtin",
     "skip" : "keyword",
     "specified" : "keyword",
     "st" : "keyword",
@@ -1970,6 +1974,9 @@ VDMPad >> codemirrorVDM [
       }
       return "number";
     }
+	 if (ch === "<" && stream.match(/^[^ \t\W]+>/)) {
+        return "atom";
+    }
     if ( /[+\-*&%:=<>!?|]/.test(ch)) {
       stream.eatWhile( /[+\-*&%=<>!?|]/);
       var cur = stream.current();
@@ -1981,6 +1988,25 @@ VDMPad >> codemirrorVDM [
     }
     stream.eatWhile(/\w/);
     var cur = stream.current();
+    if (cur === "in") {
+      if (stream.match(/\s+seq/, false)) {
+        stream.eatSpace();
+        stream.match("seq");
+        cur = "in setq";
+      } else if (stream.match(/\s+set/, false)) {
+        stream.eatSpace();
+        stream.match("set");
+        cur = "in set";
+      }
+    }
+    if (cur === "set" || cur === "set1" || cur === "seq" || cur === "seq1") {
+      if (stream.match(/\s+of/, false)) {
+        stream.eatSpace();
+        stream.match("of");
+        cur = cur + " of";
+      }
+    }
+
     var cur3 = cur.substring(0, 3);
     var cur4 = cur.substring(0, 4);
     var cur5 = cur.substring(0, 5);

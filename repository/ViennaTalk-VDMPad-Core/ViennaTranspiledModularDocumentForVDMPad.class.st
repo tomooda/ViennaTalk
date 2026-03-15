@@ -22,6 +22,14 @@ ViennaTranspiledModularDocumentForVDMPad >> _max_steps: anInteger [
 ]
 
 { #category : 'private' }
+ViennaTranspiledModularDocumentForVDMPad >> _step [
+
+	_max_steps < (_steps := _steps + 1) ifTrue: [
+		ViennaNumStepsExceeded signal: self ].
+	Processor yield
+]
+
+{ #category : 'private' }
 ViennaTranspiledModularDocumentForVDMPad >> _step: anObject [
 
 	_max_steps < (_steps := _steps + 1) ifTrue: [

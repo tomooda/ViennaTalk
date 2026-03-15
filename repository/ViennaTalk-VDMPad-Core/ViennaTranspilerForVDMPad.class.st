@@ -92,7 +92,7 @@ ViennaTranspilerForVDMPad >> mapComprehension: aViennaNode env: aDictionary [
 			  | body |
 			  body := map , ' at: ' , keyExpr , ' put: ' , valueExpr.
 			  guard ifNotNil: [ body := guard , ' ifTrue: [' , body , ']' ].
-			  body := '_document _step: (' , body , ')'.
+			  body := '_document ifNotNil: #_step. ' , body.
 			  stream nextPutAll: '(['.
 			  setsAndVars do: [ :setAndVar |
 					  stream
@@ -131,7 +131,6 @@ ViennaTranspilerForVDMPad >> sequenceComprehension: aViennaNode env: aDictionary
 	bindNode first isViennaPatternIdentifierNode ifTrue: [
 			| var |
 			var := bindNode first first.
-			expr := '_document _step: ' , expr.
 			^ bindNode isViennaSeqBindNode
 				  ifTrue: [
 						  '(' , (self generate: setNode env: aDictionary) , (guard
@@ -159,9 +158,8 @@ ViennaTranspilerForVDMPad >> sequenceComprehension: aViennaNode env: aDictionary
 						  , ']) asOrderedCollection' ] ].
 	^ self stringStreamContents: [ :stream |
 			  | body |
-			  body := seq , ' add: ' , expr.
+			  body := '_document ifNotNil: #_step. ' , seq , ' add: ' , expr.
 			  guard ifNotNil: [ body := guard , ' ifTrue: [' , body , ']' ].
-			  body := '_document _step: (' , body , ')'.
 			  stream
 				  nextPutAll: '([ :' , set , ' | | ' , seq , ' | ' , seq
 					  , ' :=OrderedCollection new.';
@@ -248,9 +246,8 @@ ViennaTranspilerForVDMPad >> setComprehension: aViennaNode env: aDictionary [
 	setsAndVars := pair second.
 	^ self stringStreamContents: [ :stream |
 			  | body |
-			  body := set , ' add: ' , expr.
+			  body := '_document ifNotNil: #_step. ' , set , ' add: ' , expr.
 			  guard ifNotNil: [ body := guard , ' ifTrue: [' , body , ']' ].
-			  body := '_document _step: (' , body , ')'.
 			  stream nextPutAll: '(['.
 			  setsAndVars do: [ :setAndVar |
 					  stream
