@@ -7,9 +7,6 @@ SmalltalkCISpec {
       #platforms : [ #pharo ]
     }
   ],
-  #postLoading : [
-    'scripts/installJars.st'
-  ],
   #testing : {
   }  
 }
