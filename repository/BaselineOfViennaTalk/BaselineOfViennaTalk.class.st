@@ -111,15 +111,12 @@ BaselineOfViennaTalk >> baseline: spec [
 					baseline: 'NeoJSON'
 					with: [ spec repository: 'github://svenvc/NeoJSON/repository' ];
 					baseline: 'PetitParser2'
-					with: [ spec repository: 'github://kursjan/petitparser2:master' ];
-					for: #Unix do: [
-							spec
-								baseline: 'OSSubprocess'
-								with: [
-									spec repository:
-											'github://marianopeck/OSSubprocess/repository' ];
-								package: 'ViennaTalk-Engine-Core'
-								with: [ spec requires: #( 'OSSubprocess' ) ] ].
+					with: [ spec repository: 'github://kursjan/petitparser2:master' ].
+				spec for: #Unix do: [
+						spec
+							baseline: 'OSSubprocess'
+							with: [
+							spec repository: 'github://marianopeck/OSSubprocess/repository' ] ].
 
 				spec
 					package: 'ViennaTalk-AST-Core'
@@ -138,7 +135,6 @@ BaselineOfViennaTalk >> baseline: spec [
 					package: 'ViennaTalk-Animation-Transpiler' with: [
 							spec requires:
 									#( 'ViennaTalk-AST-Core' 'ViennaTalk-Animation-Core'
-									   'ViennaTalk-Engine-Transpiler'
 									   'ViennaTalk-Parser-Core' 'ViennaTalk-Profiler-Core'
 									   'ViennaTalk-Transpiler-Core' 'ViennaTalk-Type-Core'
 									   'ViennaTalk-Value-Core' ) ];
@@ -147,11 +143,11 @@ BaselineOfViennaTalk >> baseline: spec [
 					with: [ spec requires: #( 'ViennaTalk-Engine-Core' ) ];
 					package: 'ViennaTalk-Engine-Transpiler' with: [
 							spec requires:
-									#( 'ViennaTalk-Animation-Transpiler'
+									#( 'ViennaTalk-Engine-Core' 'ViennaTalk-Animation-Transpiler'
 									   'ViennaTalk-Engine-Core' ) ];
-					package: 'ViennaTalk-Engine-VDMJ'
-					with: [ spec requires: #( 'ViennaTalk-Engine-Core'
-							   'NeoJSON' ) ];
+					package: 'ViennaTalk-Engine-VDMJ' with: [
+							spec requires:
+									#( 'ViennaTalk-Engine-Core' 'OSSubprocess' 'NeoJSON' ) ];
 					package: 'ViennaTalk-Browser-Core' with: [
 							spec requires:
 									#( 'ViennaTalk-AST-Core' 'ViennaTalk-Animation-Core'
@@ -242,8 +238,8 @@ BaselineOfViennaTalk >> baseline: spec [
 		spec requires: #( 'ViennaTalk-Type-Core' 'ViennaTalk-Value-Core' ) ];
 		package: 'ViennaTalk-VDMPad-Core' with: [
 			spec requires:
-				#( 'ViennaTalk-Engine-Core' 'NeoJSON' 'ViennaTalk-Html-Core'
-				   'ViennaTalk-Parser-Core' ) ];
+				#( 'ViennaTalk-Animation-Transpiler'
+				   'NeoJSON' 'ViennaTalk-Html-Core' 'ViennaTalk-Parser-Core' ) ];
 		package: 'ViennaTalk-Value-Core';
 		package: 'ViennaTalk-Value-Tests'
 		with: [ spec requires: #( 'ViennaTalk-Value-Core' ) ];
@@ -283,7 +279,8 @@ BaselineOfViennaTalk >> baseline: spec [
 			   'Transpiler' 'ViennaFRAM' 'Application' );
 		group: 'full'
 		with:
-			#( 'default' 'ViennaTalk-Engine-VDMJ' 'ViennaTalk-Engine-Networking' 'ViennaTalk-Engine-Tests' );
+			#( 'default' 'ViennaTalk-Engine-VDMJ' 'ViennaTalk-Engine-Networking'
+			   'ViennaTalk-Engine-Tests' );
 		group: 'tests'
 		with: #( 'ViennaTalk-Value-Tests' 'ViennaTalk-Parser-Tests'
 			   'ViennaTalk-Type-Tests' 'ViennaTalk-Animation-Tests'
