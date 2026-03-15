@@ -2,25 +2,11 @@ Class {
 	#name : 'ViennaEngine',
 	#superclass : 'Object',
 	#classVars : [
-		'AlwaysUsesViennaServerAsDefault',
 		'DefaultEngineType'
 	],
 	#category : 'ViennaTalk-Engine-Core',
 	#package : 'ViennaTalk-Engine-Core'
 }
-
-{ #category : 'settings' }
-ViennaEngine class >> alwaysUsesViennaServerAsDefault [
-
-	^ ViennaVDMJ isSupportedEnvironment not or: [ 
-		  AlwaysUsesViennaServerAsDefault ifNil: [ 
-			  AlwaysUsesViennaServerAsDefault := false ] ]
-]
-
-{ #category : 'settings' }
-ViennaEngine class >> alwaysUsesViennaServerAsDefault: aBoolean [
-	^ AlwaysUsesViennaServerAsDefault := aBoolean = true
-]
 
 { #category : 'defaults' }
 ViennaEngine class >> default [
