@@ -238,7 +238,7 @@ BaselineOfViennaTalk >> baseline: spec [
 		spec requires: #( 'ViennaTalk-Type-Core' 'ViennaTalk-Value-Core' ) ];
 		package: 'ViennaTalk-VDMPad-Core' with: [
 			spec requires:
-				#( 'ViennaTalk-Animation-Transpiler'
+				#( 'ViennaTalk-Engine-Transpiler' 'ViennaTalk-Animation-Transpiler'
 				   'NeoJSON' 'ViennaTalk-Html-Core' 'ViennaTalk-Parser-Core' ) ];
 		package: 'ViennaTalk-Value-Core';
 		package: 'ViennaTalk-Value-Tests'
