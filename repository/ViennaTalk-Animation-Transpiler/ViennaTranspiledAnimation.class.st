@@ -296,10 +296,10 @@ ViennaTranspiledAnimation >> plainEvaluate: aString ifError: errorBlock [
 { #category : 'evaluating' }
 ViennaTranspiledAnimation >> plainEvaluate: aString in: moduleName ifError: errorBlock [
 
-	^ writer stringify: (self
+	^ (self
 			   evaluate: aString
 			   in: (moduleName ifNil: [ self defaultModule ])
-			   ifError: [ :msg | ^ errorBlock value: msg ])
+			   ifError: [ :msg | ^ errorBlock value: msg ]) viennaString
 ]
 
 { #category : 'evaluating' }
