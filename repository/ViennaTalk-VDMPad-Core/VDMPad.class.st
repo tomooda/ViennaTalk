@@ -2515,21 +2515,33 @@ VDMPad >> format: aZnRequest [
 		          copyReplaceAll: String lf
 		          with: String cr.
 	message := String new.
-	formattedSource := [ parser format: source width: 70 ]
+	formattedSource := [
+		                   | ast |
+		                   ast := parser parse: source.
+		                   ast isPetit2Failure
+			                   ifTrue: [
+					                   formattedSource := parser debug: source.
+					                   message := String streamContents: [ :stream |
+							                              stream nextPutAll:
+								                              'Syntax Error at line '.
+							                              (self
+								                               charPositionToPoint:
+								                               formattedSource
+									                               furthestPosition
+								                               in: source) in: [ :position |
+									                              stream
+										                              nextPutAll:
+											                              position y printString;
+										                              nextPut: $:;
+										                              nextPutAll:
+											                              position x printString ] ].
+					                   formattedSource := source ]
+			                   ifFalse: [
+					                   formattedSource := ViennaVDMFormatter new
+						                                      maxSizePerLine: 70;
+						                                      format: ast ] ]
 		                   on: Error
 		                   do: [ :ex | source ].
-	formattedSource isPetit2Failure ifTrue: [
-		formattedSource := parser debug: source.
-		message := String streamContents: [ :stream |
-			           stream nextPutAll: 'Syntax Error at line '.
-			           (self
-				            charPositionToPoint: formattedSource furthestPosition
-				            in: source) in: [ :position |
-				           stream
-					           nextPutAll: position y printString;
-					           nextPut: $:;
-					           nextPutAll: position x printString ] ].
-		formattedSource := source ].
 	json := params copy.
 	json
 		at: 'source'
