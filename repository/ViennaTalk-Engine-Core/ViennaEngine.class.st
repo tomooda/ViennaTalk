@@ -78,8 +78,13 @@ ViennaEngine >> close [
 ]
 
 { #category : 'evaluating' }
-ViennaEngine >> evaluate: expression specification: spec states: states [ 
-	^ self evaluate: expression specification: spec states: states vdm10: true rtc: true 
+ViennaEngine >> evaluate: expression specification: spec states: states [
+
+	^ self
+		  evaluate: expression
+		  specification: spec
+		  states: states
+		  module: 'DEFAULT'
 ]
 
 { #category : 'evaluating' }
