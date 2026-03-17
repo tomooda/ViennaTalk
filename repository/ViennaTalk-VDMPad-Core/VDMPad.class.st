@@ -647,28 +647,32 @@ const vdmMode = {
     token: (stream) => {
         if (stream.eatSpace()) return null;
         if (stream.match(/--.*/) || stream.match(/\/\/.*/)) return "comment";
-        const modifiers = /^(bool|char|inmap|int|map|nat1|nat|rat|real|seq1|seq|set1|set|token)\b/;
-        if (stream.match(modifiers)) return "modifier";
-        const keywords = /^(\#act|\#active|\#fin|\#req|\#waiting|abs|all|always|and|as|async|atomic|keyword|be|by|card|cases|class|comp|compose|conc|cycles|dcl|def|definitions|dinter|div|dlmodule|do|dom|dunion|duration|elems|else|elseif|end|error|errs|exists1|exists|exit|exports|ext|floor|for|forall|from|functions|hd|if|in set|in setq|in|inds|instance|inter|imports|init|inv|inverse|iota|is|isofbaseclass|isofclass|lambda|len|let|measure|merge|mod|module|mu|munion|mutex|new|not|of|old|operations|or|others|per|periodic|post|power|pre|private|protected|psubset|public|rd|rem|renamed|responsibility|return|reverse|rng|samebaseclass|sameclass|self|skip|specified|st|start|startlist|state|struct|subclass|subset|sync|system|then|thread|threadid|time|tixe|tl|to|traces|trap|types|union|uselib|values|variables|while|with|wr|yet|RESULT)\b/;
-        if (stream.match(keywords)) return "keyword";
-        const keywords2 = /^(\`|:=|==>|==|\|->|->|:)/;
-        if (stream.match(keywords2)) return "keyword";
-        const keywords3 = /^mk_|is_|init_|pre_|post_|inv_/;
-        if (stream.match(keywords3)) return "keyword";
-        if (stream.match(/=>|<=>|<>|<=|>=|<-|:|-|\+|\*|\/|=|\||&|\./)) return "operator";
-        if (stream.match(/"(\\.|[^"])*"/)) return "atom";
-        if (stream.match(/\d+(\.\d+)?/)) return "atom";
+        if (stream.match(/^(bool|char|inmap|int|map|nat1|nat|rat|real|seq1|seq|set1|set|token)\b/)) return "modifier";
+        if (stream.match(/^(\#act|\#active|\#fin|\#req|\#waiting|abs|all|always|and|as|async|atomic|keyword|be|by|card|cases|class|comp|compose|conc|cycles|dcl|def|definitions|dinter|div|dlmodule|do|dom|dunion|duration|elems|else|elseif|end|error|errs|exists1|exists|exit|exports|ext|floor|for|forall|from|functions|hd|if|in set|in setq|in|inds|instance|inter|imports|init|inv|inverse|iota|is|isofbaseclass|isofclass|lambda|len|let|measure|merge|mod|module|mu|munion|mutex|new|not|of|old|operations|or|others|per|periodic|post|power|pre|private|protected|psubset|public|rd|rem|renamed|responsibility|return|reverse|rng|samebaseclass|sameclass|self|skip|specified|st|start|startlist|state|struct|subclass|subset|sync|system|then|thread|threadid|time|tixe|tl|to|traces|trap|types|union|uselib|values|variables|while|with|wr|yet|RESULT)\b/)) return "keyword";
+        if (stream.match(/\^|=>|<=>|<>|<=|>=|<-|:->|:>|-|\+|\*|\/|=|\||&|\./)) return "operator";
+        if (stream.match(/^(\`|:=|==>|==|\|->|->|:)/)) return "keyword";
+        if (stream.match(/^(mk_|is_|init_|pre_|post_|inv_)/)) return "keyword";
+        if (stream.match(/^"(\\.|[^"])*"/)) return "atom";
+        if (stream.match(/^\d+(\.\d+)?/)) return "atom";
         if (stream.match(/^(false|nil|true|undefined)\b/)) return "atom";
         if (stream.match(/^(\{\}|\[\]|\{\|->\})\b/)) return "atom";
-        stream.next();
-        return "variableName";
+        var c = stream.next();
+        if (c && (c.codePointAt(0) < 0x100 ?
+                /[\p{Ll}\p{Lm}\p{Lo}\p{Lt}\p{Lu}$]/u:
+                /[^\p{Cc}\p{Zl}\p{Zp}\p{Zs}\p{Cs}\p{Cn}\p{Nd}\p{Pc}]/u).test(c)) {
+            stream.eatWhile((nextChar) => ((nextChar.codePointAt(0) < 0x0100 
+                ? /[\p{Ll}\p{Lm}\p{Lo}\p{Lt}\p{Lu}\p{Nd}$_'']/u 
+                : /[^\p{Cc}\p{Zl}\p{Zp}\p{Zs}\p{Cs}\p{Cn}]/u).test(nextChar)));
+            return "variableName"
+        };
+        return null;
     }
 };
 const vdmHighlightStyle = HighlightStyle.define([
     { tag: t.keyword, color: "#500", fontWeight: "bold" },
     { tag: t.operator, color: "#000"},
     { tag: t.modifier, color: "#488", fontWeight: "bold" },
-    { tag: t.variableName, color: "#444"},
+    { tag: t.variableName, color: "#448"},
     { tag: t.atom, color: "#880" },
     { tag: t.comment, color: "#888", fontStyle: "italic" },
 ]);
@@ -1180,37 +1184,28 @@ VDMPad.loadFromLocalStorage = function () {
 VDMPad.setupIdeNodes = function () {
     VDMPad.node = document.getElementById("all");
     VDMPad.mainNode = document.getElementById("main");
-const upperState = EditorState.create({
-    doc: "module Default\ndefinitions\n-- Source here\nend Default",
-    extensions: [
-        basicSetup,
-        StreamLanguage.define(vdmMode),
-        syntaxHighlighting(vdmHighlightStyle),
-        EditorView.theme({"&": { height: "400px" }, ".cm-scroller": { overflow: "auto" }})
-    ]
-});
-VDMPad.sourceView = new EditorView({
-    state: upperState,
-    parent: document.getElementById("source")
-});
-const lowerExtensions = [
-    StreamLanguage.define(vdmMode),
-    syntaxHighlighting(vdmHighlightStyle),
-    highlightActiveLine(),
-    drawSelection(),
-    history(),
-    keymap.of([...defaultKeymap, ...historyKeymap]),
-    EditorView.lineWrapping,
-    EditorView.theme({"&": { height: "150px" }, ".cm-scroller": { overflow: "auto" }})
-];
-const lowerState = EditorState.create({
-    doc: "",
-    extensions: lowerExtensions
-});
-VDMPad.expressionView = new EditorView({
-    state: lowerState,
-    parent: document.getElementById("expression")
-});
+    VDMPad.sourceView = new EditorView({
+        state: EditorState.create({
+            doc: "",
+            extensions: [
+                basicSetup,
+                StreamLanguage.define(vdmMode),
+                syntaxHighlighting(vdmHighlightStyle),
+                EditorView.theme({"&": { height: "400px", backgroundColor: "#ffffff"}, ".cm-scroller": { overflow: "auto" }})]}),
+        parent: document.getElementById("source")});
+    VDMPad.expressionView = new EditorView({
+        state: EditorState.create({
+            doc: "",
+            extensions: [
+              StreamLanguage.define(vdmMode),
+              syntaxHighlighting(vdmHighlightStyle),
+              highlightActiveLine(),
+              drawSelection(),
+              history(),
+              keymap.of([...defaultKeymap, ...historyKeymap]),
+              EditorView.lineWrapping,
+              EditorView.theme({"&": { height: "150px", backgroundColor: "#ffffff"}, ".cm-scroller": { overflow: "auto" }})]}),
+        parent: document.getElementById("expression")});
     VDMPad.stateNode = document.getElementById("states");
     VDMPad.valueNode = document.getElementById("value");
     VDMPad.valueVisualNode = document.getElementById("valueVisual");
@@ -1479,7 +1474,7 @@ VDMPad.createEpilogButtonNode = function () {
 VDMPad.createAboutNode = function () { 
 	var aboutNode = document.createElement("a");
    aboutNode.style.textDecoration = "none";
-   aboutNode.style.color = "#000";
+   aboutNode.style.color = "#404040";
 	aboutNode.style.paddingLeft = "8px";
 	aboutNode.style.paddingTop = "10px";
 	aboutNode.style.display = "block";
@@ -1500,26 +1495,14 @@ VDMPad >> aboutPage [
 </head>
 <body>
 <div id="all" style="padding-left:30px">
-<div style="padding-bottom: 20px; font-family: Helvetica, sans-serif; font-size:40px; font-weight: 100">about VDMPad</div> 
-author: Tomohiro Oda<br />
-copyright: Tomohiro Oda, Software Research Associates, Inc. and Kyushu University<br />
-license: the MIT license<br />
-<hr>
-<p>VDMPad is a component provided by <a href="https://github.com/tomooda/ViennaTalk-doc" target="ViennaTalk">ViennaTalk</a> built on <a href="http://pharo.org/" target="pharo">Pharo Smalltalk</a> and the following packages.
-<ul>
-<li><a target="modules" href="http://zn.stfx.eu/zn/index.html">ZincHTTPComponents</a></li>
-<li><a target="modules" href="http://source.lukas-renggli.ch/petit.html">PetitParser</a></li>
-<li><a target="modules" href="http://stfx.eu/neojson/">NeoJSON</a></li>
-</ul></p>
-<p>VDMPad contains JavaScript programs listed below.
-<ul>
-<li><a target="javascript" href="https://github.com/eligrey/Blob.js">Blob.js</a></li>
-<li><a target="javascript" href="https://github.com/eligrey/FileSaver.js">FileSaver.js</a></li>
-<li><a target="javascript" href="http://codemirror.net/">CodeMirror</a></li>
-</ul></p>
-The author(s) of VDMPad deeply appreciate creators and contributors of the above mentioned great pieces of software.
-<p>Part of the VDMPad project is supported by Grant-in-Aid for Scientific Research (S) 24220001 from the Japan Society for the Promotion of Science.</p>
-<hr><pre>Copyright (c) 2013-2026 Tomohiro Oda, Software Research Associates, Inc., and Kyushu University.
+<div style="padding-bottom: 20px; font-family: Helvetica, sans-serif; font-size:36px; font-weight: 400; color: #808080">VDMPad</div> 
+<table style="font-family: Helvetica, sans-serif; font-size:14px; font-weight: 100; color: 202020">
+<tr><td style="font-weight: bold">Author</td><td>Tomohiro Oda</td></tr>
+<tr><td style="font-weight: bold">Copyright</td><td>Tomohiro Oda, Software Research Associates, Inc. and Kyushu University</td></tr>
+<tr><td style="font-weight: bold">License</td><td>the MIT license</td></tr>
+</table>
+<pre>
+Copyright (c) 2013-2026 Tomohiro Oda, Software Research Associates, Inc., and Kyushu University.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -1538,6 +1521,11 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.</pre>
+<br />
+<div style="font-family: Helvetica, sans-serif; font-size:14px; font-weight: 100; color: 202020">
+  <div style="font-weight: bold">Acknowledgement</div>
+  Part of the VDMPad project is supported by Grant-in-Aid for Scientific Research (S) 24220001 from the Japan Society for the Promotion of Science.
+</div>
 </div>
 </body>
 </html>' withUnixLineEndings
@@ -2505,14 +2493,14 @@ VDMPad >> mainPage [
         <script src="/blob.js"></script>
         <script src="/fileSaver.js"></script>
         <style>
-            body { padding: 1.5rem; background-color: #ffffff; font-family: sans-serif; }
+            body { padding: 1.5rem; background-color: #fbfbfb; font-family: sans-serif; }
             .editor-container { 
                 max-width: 56rem; margin: 0 auto; 
                 background: white; border-radius: 0.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); 
             }
             .label { font-size: 0.875rem; font-weight: bold; color: #64748b; margin-bottom: 0.5rem; }
 
-            .editor-box { border: 1px solid #ddd; margin-bottom: 10px; border-radius: 4px; overflow: hidden; }
+            .editor-box { border: 1px solid #ddd; margin-bottom: 0px; border-radius: 4px; overflow: hidden; }
         </style>
     </meta>
 </head>
@@ -2526,10 +2514,10 @@ VDMPad >> mainPage [
   </div>
   <div id="main" style="float: left; width: 800px">
     <div id="title">
-      <div style="float: left; font-family: Helvetica, sans-serif; font-size:24px; font-weight: 100">
+      <div style="float: left; font-family: Helvetica, sans-serif; font-size:20px; font-weight: 400; color: #808080">
         VDMPad
       </div>
-      <div style="float: right; padding-left: 16px; padding-top:10px; font-family: Helvetica, sans-serif; font-size: 12px">
+      <div style="float: right; padding-left: 16px; padding-top:4px; font-family: Helvetica, sans-serif; font-size: 12px; color: #808080">
         powered by ViennaTalk
       </div>
     </div>
