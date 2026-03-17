@@ -2532,7 +2532,7 @@ VDMPad >> mainPage [
             title="Formats the source" 
             type="button" 
             value="Format" 
-            style="cursor: pointer; background-color: #f0f0f0; width: 150px; height: 30px">
+            style="cursor: pointer; background-color: #f8f8f8; width: 150px; height: 30px">
         </div>
         <div id="states" style="margin-top: 20px"></div>
         <div align=right>
@@ -2541,7 +2541,7 @@ VDMPad >> mainPage [
             title="Initializes the states" 
             type="button" 
             value="Initialize" 
-            style="cursor: pointer; background-color: #f0f0f0; width: 150px; height: 30px">
+            style="cursor: pointer; background-color: #f8f8f8; width: 150px; height: 30px">
         </div>
         <div id="workspace" align=right style="margin-top: 30px">
           <div style="border-width: 1px; border-style: solid; border-color: black" align=left>
@@ -2552,7 +2552,7 @@ VDMPad >> mainPage [
             title="Evaluates the expression selected in the above textbox" 
             type="button" 
             value="evaluate" 
-            style="cursor: pointer; background-color: #f0f0f0; width: 200px; height: 30px"><br>
+            style="cursor: pointer; background-color: #f8f8f8; width: 150px; height: 30px"><br>
           <input 
             id="addTestcaseButton" 
             title="Makes the previous evaluation as a testcase." 
