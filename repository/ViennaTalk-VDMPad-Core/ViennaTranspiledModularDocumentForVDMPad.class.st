@@ -53,7 +53,7 @@ ViennaTranspiledModularDocumentForVDMPad >> _steps: anInteger [
 { #category : 'defaults' }
 ViennaTranspiledModularDocumentForVDMPad >> defaultMaxSteps [
 
-	^ 10000
+	^ 100000
 ]
 
 { #category : 'initialize' }

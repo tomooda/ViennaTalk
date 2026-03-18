@@ -1233,6 +1233,7 @@ VDMPad.setupIdeNodes = function () {
 
 { #category : 'request handling-javascript' }
 VDMPad >> VDMPadMenu [
+
 	^ '
 VDMPad.fileItemsExpanded = false;
 VDMPad.currentFileItemNode = null;
@@ -1302,7 +1303,6 @@ VDMPad.expandFileItems = function () {
         VDMPad.fileItemsNode.appendChild(VDMPad.createSaveAsInputNode());
         VDMPad.fileItemsNode.appendChild(VDMPad.createConfigNode());
         VDMPad.fileItemsNode.appendChild(VDMPad.createEpilogButtonNode());
-        VDMPad.fileItemsNode.appendChild(VDMPad.createAboutNode());
     }
 };
 
@@ -1323,35 +1323,75 @@ VDMPad.createFileNode = function (name) {
     var saveNode = document.createElement("img");
     var exportNode = document.createElement("img");
     var deleteNode = document.createElement("img");
-    var defaultBackgroundColor = "white";
+    var defaultBackgroundColor = "#ffffff";
     if (VDMPad.currentSpec == name)
-        defaultBackgroundColor = "Gainsboro";
+        defaultBackgroundColor = "#e0e0e0";
     node.id = name;
-    node.style.width = "280px";
+    node.marginTop = "2px";
+    node.marginBottom = "2px";
     node.marginLeft = "10px";
-    node.style.color = "black";
-    node.style.padding = "10px 4px";
-
-    node.style.backgroundColor = defaultBackgroundColor;
-    node.defaultBackgroundColor = defaultBackgroundColor;
+    node.style.color = "0x404040";
+    labelNode.style.backgroundColor = defaultBackgroundColor;
     labelNode.style.width = "100%";
+    labelNode.style.paddingTop = "4px";
+    labelNode.style.paddingBottom = "4px";
+    labelNode.style.cursor = "pointer";
     labelNode.innerText = name;
     labelNode.textContent = name;
     node.appendChild(labelNode);
-    buttonsNode.style.float = "top";
-    buttonsNode.style.width = "60px";
+
     buttonsNode.style.marginLeft = "20px";
     loadNode.src = "/load.png";
-    loadNode.style.padding = "5px 5px";
+    loadNode.style.borderStyle = "solid";
+    loadNode.style.borderColor = "#c0c0c0";
+    loadNode.style.borderWidth = "1px";
+    loadNode.style.borderRadius = "6px";
+    loadNode.style.paddingTop = "1px";
+    loadNode.style.paddingBottom = "1px";
+    loadNode.style.paddingLeft = "4px";
+    loadNode.style.paddingRight = "4px";
+    loadNode.style.backgroundColor = "#ffffff";
+    loadNode.style.display = "inline";
+    loadNode.style.cursor = "pointer";
     buttonsNode.appendChild(loadNode);
     saveNode.src = "/save.png";
-    saveNode.style.padding = "5px 5px";
+    saveNode.style.borderStyle = "solid";
+    saveNode.style.borderColor = "#c0c0c0";
+    saveNode.style.borderWidth = "1px";
+    saveNode.style.borderRadius = "6px";
+    saveNode.style.paddingTop = "1px";
+    saveNode.style.paddingBottom = "1px";
+    saveNode.style.paddingLeft = "4px";
+    saveNode.style.paddingRight = "4px";
+    saveNode.style.backgroundColor = "#ffffff";
+    saveNode.style.display = "inline";
+    saveNode.style.cursor = "pointer";
     buttonsNode.appendChild(saveNode);
     exportNode.src = "/export.png";
-    exportNode.style.padding = "5px 5px";
+    exportNode.style.borderStyle = "solid";
+    exportNode.style.borderColor = "#c0c0c0";
+    exportNode.style.borderWidth = "1px";
+    exportNode.style.borderRadius = "6px";
+    exportNode.style.paddingTop = "1px";
+    exportNode.style.paddingBottom = "1px";
+    exportNode.style.paddingLeft = "4px";
+    exportNode.style.paddingRight = "4px";
+    exportNode.style.backgroundColor = "#ffffff";
+    exportNode.style.display = "inline";
+    exportNode.style.cursor = "pointer";
     buttonsNode.appendChild(exportNode);
     deleteNode.src = "/delete.png";
-    deleteNode.style.padding = "5px 5px";
+    deleteNode.style.borderStyle = "solid";
+    deleteNode.style.borderColor = "#c0c0c0";
+    deleteNode.style.borderWidth = "1px";
+    deleteNode.style.borderRadius = "6px";
+    deleteNode.style.paddingTop = "1px";
+    deleteNode.style.paddingBottom = "1px";
+    deleteNode.style.paddingLeft = "4px";
+    deleteNode.style.paddingRight = "4px";
+    deleteNode.style.backgroundColor = "#ffffff";
+    deleteNode.style.display = "inline";
+    deleteNode.style.cursor = "pointer";
     buttonsNode.appendChild(deleteNode);
     node.isOpen = false;
     node.onclick = function () {
@@ -1384,12 +1424,23 @@ VDMPad.createSaveAsInputNode = function () {
     var node = document.createElement("div");
     var inputNode = document.createElement("input");
     var saveNode = document.createElement("img");
-    
-    node.style.width = "280px";
-    node.style.height = "30px";
+    node.style.marginBottom = "12px";
+    node.style.display = "block";
     inputNode.style.width = "100%";
+    inputNode.style.display = "block";
     node.appendChild(inputNode);
-    saveNode.style.visibility = "collapse";
+    saveNode.style.visibility = "hidden";
+    saveNode.style.marginTop = "1px";
+    saveNode.style.borderStyle = "solid";
+    saveNode.style.borderColor = "#c0c0c0";
+    saveNode.style.borderWidth = "1px";
+    saveNode.style.borderRadius = "6px";
+    saveNode.style.paddingTop = "1px";
+    saveNode.style.paddingBottom = "1px";
+    saveNode.style.paddingLeft = "4px";
+    saveNode.style.paddingRight = "4px";
+    saveNode.style.backgroundColor = "#ffffff";
+    saveNode.style.display = "block";
     saveNode.src = "/save.png";
     node.appendChild(saveNode);
     inputNode.onkeyup = function () {
@@ -1400,9 +1451,11 @@ VDMPad.createSaveAsInputNode = function () {
     };
     saveNode.onmouseover = function () {
         saveNode.src = "/saveS.png";
+        saveNode.style.backgroundColor = "#808080";
     };
     saveNode.onmouseout = function () {
         saveNode.src = "/save.png";
+        saveNode.style.backgroundColor = "#ffffff";
     };
     saveNode.onclick = function () {
         VDMPad.saveAs(inputNode.value, false);
@@ -1440,12 +1493,14 @@ VDMPad.createConfigNode = function () {
 };
 
 VDMPad.createEpilogButtonNode = function () { 
-   var epilogNode = document.createElement("span");
+   var epilogNode = document.createElement("div");
    epilogNode.id = "EpiLogButton";
    epilogNode.style.paddingLeft = "20px";
    epilogNode.style.paddingRight = "20px";
-   epilogNode.style.paddingUp = "5px";
-   epilogNode.style.paddingDown = "5px";
+   epilogNode.style.paddingTop = "5px";
+   epilogNode.style.paddingBottom = "5px";
+   epilogNode.style.marginTop = "15px";
+   epilogNode.style.display = "inline-block";
    epilogNode.style.cursor = "pointer";
    epilogNode.innerText = "EpiLog";
    epilogNode.style.borderStyle = "solid";
@@ -1470,18 +1525,6 @@ VDMPad.createEpilogButtonNode = function () {
       epilogNode.turnOff();
    }
    return epilogNode;
-};
-VDMPad.createAboutNode = function () { 
-	var aboutNode = document.createElement("a");
-   aboutNode.style.textDecoration = "none";
-   aboutNode.style.color = "#404040";
-	aboutNode.style.paddingLeft = "8px";
-	aboutNode.style.paddingTop = "10px";
-	aboutNode.style.display = "block";
-   aboutNode.target = "aboutVDMPad";
-   aboutNode.href = "/about.html";
-   aboutNode.innerText = "about VDMPad...";
-   return aboutNode;
 };
 ' copyReplaceAll: String cr with: String crlf
 ]
@@ -2514,11 +2557,11 @@ VDMPad >> mainPage [
   </div>
   <div id="main" style="float: left; width: 800px">
     <div id="title">
-      <div style="float: left; font-family: Helvetica, sans-serif; font-size:20px; font-weight: 400; color: #808080">
+      <a href="/about.html" target="aboutVDMPad" style="float: left; font-family: Helvetica, sans-serif; font-size:20px; font-weight: 400; color: #808080; text-decoration: none">
         VDMPad
-      </div>
+      </a>
       <div style="float: right; padding-left: 16px; padding-top:4px; font-family: Helvetica, sans-serif; font-size: 12px; color: #808080">
-        powered by ViennaTalk
+        powered by <a href="https://viennatalk.org/" style="text-decoration: none; color: #808080" target="ViennaTalk">ViennaTalk</a>
       </div>
     </div>
     <div id="ide" style="width: 100%; float: right">
@@ -2532,7 +2575,7 @@ VDMPad >> mainPage [
             title="Formats the source" 
             type="button" 
             value="Format" 
-            style="cursor: pointer; background-color: #f8f8f8; width: 150px; height: 30px">
+            style="cursor: pointer; background-color: #f4f4f4; border: 1px solid #808080; box-shadow: none; outline: none; width: 150px; height: 30px">
         </div>
         <div id="states" style="margin-top: 20px"></div>
         <div align=right>
@@ -2541,7 +2584,7 @@ VDMPad >> mainPage [
             title="Initializes the states" 
             type="button" 
             value="Initialize" 
-            style="cursor: pointer; background-color: #f8f8f8; width: 150px; height: 30px">
+            style="cursor: pointer; background-color: #f4f4f4; border: 1px solid #808080; box-shadow: none; outline: none; width: 150px; height: 30px">
         </div>
         <div id="workspace" align=right style="margin-top: 30px">
           <div style="border-width: 1px; border-style: solid; border-color: black" align=left>
@@ -2552,13 +2595,13 @@ VDMPad >> mainPage [
             title="Evaluates the expression selected in the above textbox" 
             type="button" 
             value="evaluate" 
-            style="cursor: pointer; background-color: #e0e0ff; width: 150px; height: 30px"><br>
+            style="cursor: pointer; background-color: #e0e0ff; border: 1px solid #808080; box-shadow: none; outline: none; width: 150px; height: 30px"><br>
           <input 
             id="addTestcaseButton" 
             title="Makes the previous evaluation as a testcase." 
             type="button" 
             value="make it a testcase" 
-            style="visibility: hidden; cursor: pointer; background-color: #f0f0f0; width: 150px; height: 20px"><br>
+            style="visibility: hidden; cursor: pointer; background-color: #f0f0f0; border: 1px solid #808080; box-shadow: none; outline: none; width: 150px; height: 20px"><br>
           <textarea
             title="Displays the return value of the evaluation." 
             id="value" 
