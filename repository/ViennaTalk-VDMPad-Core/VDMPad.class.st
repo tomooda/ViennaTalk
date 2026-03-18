@@ -2595,7 +2595,7 @@ VDMPad >> mainPage [
             title="Evaluates the expression selected in the above textbox" 
             type="button" 
             value="evaluate" 
-            style="cursor: pointer; background-color: #e0e8ff; border: 1px solid #808080; box-shadow: none; outline: none; width: 150px; height: 30px"><br>
+            style="cursor: pointer; background-color: #b0b8ff; border: 1px solid #808080; box-shadow: none; outline: none; width: 150px; height: 30px"><br>
           <input 
             id="addTestcaseButton" 
             title="Makes the previous evaluation as a testcase." 
