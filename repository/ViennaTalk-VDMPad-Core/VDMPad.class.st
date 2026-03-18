@@ -671,7 +671,7 @@ const vdmMode = {
 const vdmHighlightStyle = HighlightStyle.define([
     { tag: t.keyword, color: "#500", fontWeight: "bold" },
     { tag: t.operator, color: "#000"},
-    { tag: t.modifier, color: "#488", fontWeight: "bold" },
+    { tag: t.modifier, color: "#0aa" },
     { tag: t.variableName, color: "#448"},
     { tag: t.atom, color: "#880" },
     { tag: t.comment, color: "#888", fontStyle: "italic" },
@@ -2595,7 +2595,7 @@ VDMPad >> mainPage [
             title="Evaluates the expression selected in the above textbox" 
             type="button" 
             value="evaluate" 
-            style="cursor: pointer; background-color: #b0b8ff; border: 1px solid #808080; box-shadow: none; outline: none; width: 150px; height: 30px"><br>
+            style="cursor: pointer; background-color: #d0d8ff; border: 1px solid #808080; box-shadow: none; outline: none; width: 150px; height: 30px"><br>
           <input 
             id="addTestcaseButton" 
             title="Makes the previous evaluation as a testcase." 
