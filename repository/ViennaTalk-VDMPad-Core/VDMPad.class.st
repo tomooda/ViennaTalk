@@ -1268,7 +1268,7 @@ VDMPad.updateFileItems = function () {
 
 VDMPad.expandFileItems = function () {
     if (!VDMPad.fileItemsNode.firstChild) {
-        VDMPad.node.style.width = "1400px";
+        VDMPad.node.style.width = "1100px";
         VDMPad.menuNode.style.width = "300px";
         var files = VDMPad.files();
         for (var i = 0; i < files.length; i++)
@@ -1284,7 +1284,7 @@ VDMPad.shrinkFileItems = function () {
         while (VDMPad.fileItemsNode.firstChild)
             VDMPad.fileItemsNode.removeChild(VDMPad.fileItemsNode.firstChild);
         VDMPad.menuNode.style.width = "50px";
-        VDMPad.node.style.width = "1000px";
+        VDMPad.node.style.width = "850px";
     }
 };
 
@@ -2521,7 +2521,7 @@ VDMPad >> mainPage [
     </meta>
 </head>
 <body>
-  <div id="all" style="width: 1000px">
+  <div id="all" style="width: 850px">
     <div id="menu" style="float: left; width: 50px">
       <div id="root_menu" style="margin-top: 40px" width: 100%>
         <img id="rootMenuIcon" src="/rootMenuOff.png" alt="root menu">
