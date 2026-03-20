@@ -204,6 +204,14 @@ ViennaTranspiledModularDocument >> state: aDictionary [
 		self at: moduleName ifPresent: [ :module | module state: state ] ]
 ]
 
+{ #category : 'enumerating' }
+ViennaTranspiledModularDocument >> statevariablesAndValuesDo: aBlock [
+
+	self keysAndValuesDo: [ :modname :mod |
+			mod _statevariablesAndValuesDo: [ :var :val |
+				aBlock value: modname , '`' , var value: val ] ]
+]
+
 { #category : 'transpiling' }
 ViennaTranspiledModularDocument >> transpileExpression: aString with: transpiler ifError: errorBlock [
 	| ast |

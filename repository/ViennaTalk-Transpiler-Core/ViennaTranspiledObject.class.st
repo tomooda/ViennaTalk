@@ -141,9 +141,8 @@ ViennaTranspiledObject >> _state [
 
 	| binds |
 	binds := Dictionary new.
-	self class slots
-		select: [ :slot | slot isKindOf: ViennaStateVariableSlot ]
-		thenDo: [ :slot | binds at: slot name put: (slot read: self) ].
+	self _statevariablesAndValuesDo: [ :var :val |
+		binds at: var put: val ].
 	^ binds
 ]
 
@@ -152,6 +151,14 @@ ViennaTranspiledObject >> _state: aDictionary [
 
 	aDictionary keysAndValuesDo: [ :var :val |
 		self basicInstVarNamed: var put: val ]
+]
+
+{ #category : 'private' }
+ViennaTranspiledObject >> _statevariablesAndValuesDo: aBlock [
+
+	self class slots
+		select: [ :slot | slot isKindOf: ViennaStateVariableSlot ]
+		thenDo: [ :slot | aBlock value: slot name value: (slot read: self) ]
 ]
 
 { #category : 'accessing' }

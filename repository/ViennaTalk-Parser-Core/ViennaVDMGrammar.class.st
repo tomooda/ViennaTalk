@@ -83,6 +83,7 @@ ViennaVDMGrammar class >> current [
 { #category : 'accessing' }
 ViennaVDMGrammar class >> flushCurrent [
 
+	<script>
 	self basicFlushCurrent.
 	self allSubclassesDo: [ :class |
 		class isAbstract ifFalse: [ class basicFlushCurrent ] ]
