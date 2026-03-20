@@ -600,10 +600,9 @@ VDMPad >> VDMPadIDE [
 
 	^ '
 import { EditorView, basicSetup } from "https://esm.sh/codemirror";
-import { EditorState } from "https://esm.sh/@codemirror/state";
+import { EditorState, StateField, StateEffect } from "https://esm.sh/@codemirror/state";
 import { defaultKeymap, history, historyKeymap } from "https://esm.sh/@codemirror/commands";
-import { keymap, drawSelection, highlightActiveLine } from "https://esm.sh/@codemirror/view";
-import { lineNumbers, highlightActiveLineGutter } from "https://esm.sh/@codemirror/view";
+import { keymap, drawSelection, highlightActiveLine, Decoration, lineNumbers, highlightActiveLineGutter } from "https://esm.sh/@codemirror/view";
 import { StreamLanguage, HighlightStyle, syntaxHighlighting } from "https://esm.sh/@codemirror/language";
 import { tags as t } from "https://esm.sh/@lezer/highlight";
 
@@ -613,6 +612,39 @@ EditorView.prototype.getValue = function() {
 EditorView.prototype.setValue = function(text) {
   this.dispatch({
     changes: { from: 0, to: this.state.doc.length, insert: text }
+  });
+};
+const vdmErrorEffect = StateEffect.define();
+const vdmErrorField = StateField.define({
+  create() { return Decoration.none; },
+  update(underlines, tr) {
+    underlines = underlines.map(tr.changes);
+    
+    for (let e of tr.effects) {
+      if (e.is(vdmErrorEffect)) {
+        underlines = Decoration.set([e.value]);
+      }
+    }
+    return underlines;
+  },
+  provide: f => EditorView.decorations.from(f)
+});
+EditorView.prototype.markError = function(pos) {
+  var from = pos;
+  var to = this.state.doc.length;
+  let word = this.state.wordAt(pos);
+  if (word) {
+    from = word.from;
+    to = word.to;
+  }
+  const deco = Decoration.mark({ class: "cm-vdm-error-underline" }).range(from, to);
+  this.dispatch({
+    effects: vdmErrorEffect.of(deco),
+  });
+};
+EditorView.prototype.clearErrors = function() {
+  this.dispatch({
+    effects: vdmErrorEffect.of(Decoration.none) 
   });
 };
 
@@ -966,6 +998,9 @@ VDMPad.loadJson = function(snapshotString) {
         VDMPad.EpiLog = result.EpiLog;
     VDMPad.testcases = result.testcases;
     VDMPad.sourceView.setValue(result.source);
+    if (result.position) { 
+        VDMPad.sourceView.markError(result.position);
+    }
     VDMPad.currentSource = result.source;
     VDMPad.expressionView.setValue(result.expression);
     VDMPad.valueNode.value = result.value;
@@ -1163,6 +1198,7 @@ VDMPad.setupIdeNodes = function () {
                 basicSetup,
                 StreamLanguage.define(vdmMode),
                 syntaxHighlighting(vdmHighlightStyle),
+                vdmErrorField,
                 EditorView.theme({"&": { height: "400px", backgroundColor: "#ffffff"}, ".cm-scroller": { overflow: "auto" }})]}),
         parent: document.getElementById("source")});
     VDMPad.expressionView = new EditorView({
@@ -1171,6 +1207,7 @@ VDMPad.setupIdeNodes = function () {
             extensions: [
               StreamLanguage.define(vdmMode),
               syntaxHighlighting(vdmHighlightStyle),
+              vdmErrorField,
               highlightActiveLine(),
               drawSelection(),
               history(),
@@ -1971,7 +2008,6 @@ VDMPad >> eval: aZnRequest [
 					   put:
 						   'Syntax error in the expression/statement at '
 						   , point y printString , ':' , point x printString , '.';
-					   at: 'position' put: position;
 					   yourself) ].
 	expressionNode := expressionNode ifNotNil: #returnValue.
 	prestates := params
@@ -2290,46 +2326,33 @@ VDMPad >> fileService: aZnRequest [
 { #category : 'request handling-api' }
 VDMPad >> format: aZnRequest [
 
-	| parser params source formattedSource message json |
-	parser := ViennaVDMParser current.
+	| parser params json source ast |
+	parser := ViennaVDMParser new.
 	params := self getParamsFrom: aZnRequest.
-	source := (params at: 'source' ifAbsent: [ String new ]) trimmed
-		          copyReplaceAll: String lf
-		          with: String cr.
-	message := String new.
-	formattedSource := [
-		                   | ast |
-		                   ast := parser parse: source.
-		                   ast isPetit2Failure
-			                   ifTrue: [
-					                   formattedSource := parser debug: source.
-					                   message := String streamContents: [ :stream |
-							                              stream nextPutAll:
-								                              'Syntax Error at line '.
-							                              (self
-								                               charPositionToPoint:
-								                               formattedSource
-									                               furthestPosition
-								                               in: source) in: [ :position |
-									                              stream
-										                              nextPutAll:
-											                              position y printString;
-										                              nextPut: $:;
-										                              nextPutAll:
-											                              position x printString ] ].
-					                   formattedSource := source ]
-			                   ifFalse: [
-					                   formattedSource := ViennaVDMFormatter new
-						                                      maxSizePerLine: 70;
-						                                      format: ast ] ]
-		                   on: Error
-		                   do: [ :ex | source ].
-	json := params copy.
-	json
-		at: 'source'
-		put: (formattedSource copyReplaceAll: String cr with: String lf);
-		at: 'message' put: message;
-		at: 'value' put: (params at: 'value' ifAbsent: [ String new ]).
+	json := params copy
+		        at: 'message' put: '';
+		        at: 'value' ifAbsentPut: [ String new ];
+		        yourself.
+	source := (params at: 'source' ifAbsent: [ String new ]) trim
+		          withInternalLineEndings.
+	ast := parser parse: source.
+	ast isPetit2Failure ifTrue: [
+			| context position point |
+			context := parser debug: source.
+			position := context furthestPosition.
+			point := self charPositionToPoint: position in: source.
+			json
+				at: 'message' put: (String streamContents: [ :stream |
+								 stream nextPutAll: 'Syntax Error at '.
+								 stream
+									 nextPutAll: point y printString;
+									 nextPut: $:;
+									 nextPutAll: point x printString ]);
+				at: 'position' put: position.
+			^ self responseJSON: json ].
+	json at: 'source' put: (ViennaVDMFormatter new
+			 maxSizePerLine: 70;
+			 format: ast) withUnixLineEndings.
 	^ self responseJSON: json
 ]
 
