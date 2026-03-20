@@ -1034,11 +1034,15 @@ VDMPad.loadJson = function(snapshotString) {
             moduleNode.style.marginLeft = "0px";
             moduleNode.style.border =  "dotted 1px black";
             moduleNode.style.margin =  "10px 10px 0px 0px";
+            moduleNode.style.fontFamily = "sans-serif";
+            moduleNode.style.fontSize = "16px";
             moduleNode.innerText = moduleName;
             moduleNode.textContent = moduleName;
         }
         var variableNode = document.createElement("div");
         variableNode.style.marginLeft = "40px";
+        variableNode.style.fontFamily = "sans-serif";
+        variableNode.style.fontSize = "16px";
         variableNode.innerText = variableName;
         variableNode.textContent = variableName;
         moduleNode.appendChild(variableNode);
@@ -1046,9 +1050,9 @@ VDMPad.loadJson = function(snapshotString) {
         valueNode.id = fullname;
         valueNode.setAttribute("name", fullname);
         valueNode.value = result[fullname];
-        valueNode.style.cssText="resize: vertical";
-        valueNode.setAttribute("cols", 60);
-        valueNode.setAttribute("rows", result[fullname].length / 60 + 1);
+        valueNode.style.cssText="resize: vertical; font-family: sans-serif; font-size: 16px";
+        valueNode.setAttribute("cols", 80);
+        valueNode.setAttribute("rows", result[fullname].length / 80 + 1);
         var valueDivNode = document.createElement("div");
         valueDivNode.style.cssText="float: right";
         valueDivNode.appendChild(valueNode);
@@ -1292,8 +1296,8 @@ VDMPad.updateFileItems = function () {
     if (VDMPad.fileItemsNode.firstChild) {
         while (VDMPad.fileItemsNode.firstChild)
             VDMPad.fileItemsNode.removeChild(VDMPad.fileItemsNode.firstChild);
-        VDMPad.node.style.width = "1000px";
-        VDMPad.menuNode.style.width = "200px";
+        VDMPad.node.style.width = "1200px";
+        VDMPad.menuNode.style.width = "300px";
         var files = VDMPad.files();
         for (var i = 0; i < files.length; i++)
             VDMPad.fileItemsNode.appendChild(VDMPad.createFileNode(files[i]));
@@ -1304,7 +1308,7 @@ VDMPad.updateFileItems = function () {
 
 VDMPad.expandFileItems = function () {
     if (!VDMPad.fileItemsNode.firstChild) {
-        VDMPad.node.style.width = "1100px";
+        VDMPad.node.style.width = "1300px";
         VDMPad.menuNode.style.width = "300px";
         var files = VDMPad.files();
         for (var i = 0; i < files.length; i++)
@@ -1320,7 +1324,7 @@ VDMPad.shrinkFileItems = function () {
         while (VDMPad.fileItemsNode.firstChild)
             VDMPad.fileItemsNode.removeChild(VDMPad.fileItemsNode.firstChild);
         VDMPad.menuNode.style.width = "50px";
-        VDMPad.node.style.width = "850px";
+        VDMPad.node.style.width = "1050px";
     }
 };
 
@@ -2351,7 +2355,7 @@ VDMPad >> format: aZnRequest [
 				at: 'position' put: position.
 			^ self responseJSON: json ].
 	json at: 'source' put: (ViennaVDMFormatter new
-			 maxSizePerLine: 70;
+			 maxSizePerLine: 60;
 			 format: ast) withUnixLineEndings.
 	^ self responseJSON: json
 ]
@@ -2590,10 +2594,14 @@ VDMPad >> mainPage [
         <script src="/blob.js"></script>
         <script src="/fileSaver.js"></script>
         <style>
-            body { padding: 1.5rem; background-color: #fbfbfb; font-family: sans-serif; }
+            body { padding: 1.5rem; background-color: #fbfbfb; font-family: sans-serif; font-size: 16px}
             .editor-container { 
                 max-width: 56rem; margin: 0 auto; 
                 background: white; border-radius: 0.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); 
+            }
+            .cm-editor {
+                font-family: sans-serif;
+                font-size: 16px;
             }
             .label { font-size: 0.875rem; font-weight: bold; color: #64748b; margin-bottom: 0.5rem; }
             .editor-box { border: 1px solid #ddd; margin-bottom: 0px; border-radius: 4px; overflow: hidden; }
@@ -2602,19 +2610,19 @@ VDMPad >> mainPage [
     </meta>
 </head>
 <body>
-  <div id="all" style="width: 850px">
+  <div id="all" style="width: 1050px">
     <div id="menu" style="float: left; width: 50px">
       <div id="root_menu" style="margin-top: 40px" width: 100%>
         <img id="rootMenuIcon" src="/rootMenuOff.png" alt="root menu">
       </div>
       <div id="file_items" style="width: 100%"></div>
   </div>
-  <div id="main" style="float: left; width: 800px">
+  <div id="main" style="float: left; width: 1000px">
     <div id="title">
       <a href="/about.html" target="aboutVDMPad" style="float: left; font-family: Helvetica, sans-serif; font-size:20px; font-weight: 400; color: #808080; text-decoration: none">
         VDMPad
       </a>
-      <div style="float: right; padding-left: 16px; padding-top:4px; font-family: Helvetica, sans-serif; font-size: 12px; color: #808080">
+      <div style="float: right; padding-left: 16px; padding-top:4px; font-family: Helvetica, sans-serif; font-size: 16px; color: #808080">
         powered by <a href="https://viennatalk.org/" style="text-decoration: none; color: #808080" target="ViennaTalk">ViennaTalk</a>
       </div>
     </div>
@@ -2631,7 +2639,7 @@ VDMPad >> mainPage [
             value="Format" 
             style="cursor: pointer; background-color: #f4f4f4; border: 1px solid #808080; box-shadow: none; outline: none; width: 150px; height: 30px">
         </div>
-        <div id="states" style="margin-top: 20px"></div>
+        <div id="states" style="margin-top: 20px; font-family: sans-serif; font-size: 12px"></div>
         <div align=right>
           <input 
             id="initButton"
