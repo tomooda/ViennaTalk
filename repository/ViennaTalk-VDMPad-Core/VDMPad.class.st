@@ -1047,8 +1047,8 @@ VDMPad.loadJson = function(snapshotString) {
         valueNode.setAttribute("name", fullname);
         valueNode.value = result[fullname];
         valueNode.style.cssText="resize: vertical; font-family: sans-serif";
-        valueNode.setAttribute("cols", 80);
-        valueNode.setAttribute("rows", result[fullname].length / 80 + 1);
+        valueNode.setAttribute("cols", 40);
+        valueNode.setAttribute("rows", result[fullname].length / 40 + 1);
         var valueDivNode = document.createElement("div");
         valueDivNode.style.cssText="float: right";
         valueDivNode.appendChild(valueNode);
