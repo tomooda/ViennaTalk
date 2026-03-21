@@ -35,6 +35,13 @@ ViennaTranspiledModularDocumentForExecutionTracing class >> transpilerClass [
 ]
 
 { #category : 'accessing' }
+ViennaTranspiledModularDocumentForExecutionTracing >> _defaultProbes [
+
+	^ Array streamContents: [ :stream |
+		  self valuesDo: [ :module | module _defaultProbesInto: stream ] ]
+]
+
+{ #category : 'accessing' }
 ViennaTranspiledModularDocumentForExecutionTracing >> _executionTrace [
 
 	^ _recorder output

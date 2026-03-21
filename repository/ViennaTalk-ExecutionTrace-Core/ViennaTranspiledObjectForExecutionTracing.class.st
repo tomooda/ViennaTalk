@@ -6,6 +6,27 @@ Class {
 	#tag : 'Transpiler'
 }
 
+{ #category : 'defaults' }
+ViennaTranspiledObjectForExecutionTracing >> _defaultProbes [
+
+	^ Array streamContents: [ :stream | self _defaultProbesInto: stream ]
+]
+
+{ #category : 'defaults' }
+ViennaTranspiledObjectForExecutionTracing >> _defaultProbesInto: aStream [
+
+	self class specification ifNotNil: [ :moduleNode |
+			moduleNode stateDefinition ifNotNil: [ :stateDefinition |
+					stateDefinition fieldsDo: [ :field |
+							| identifier |
+							identifier := field identifier.
+							(ViennaAbstractStateProbe
+								 name: identifier
+								 receiver: self
+								 source: identifier) ifCompiledDo: [ :probe |
+								aStream nextPut: probe ] ] ] ]
+]
+
 { #category : 'accessing' }
 ViennaTranspiledObjectForExecutionTracing >> _executionTrace [
 
