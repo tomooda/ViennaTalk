@@ -2617,8 +2617,13 @@ VDMPad >> mainPage [
       <a href="/about.html" target="aboutVDMPad" style="float: left; font-size:1.0rem; font-weight: 600; color: #808080; text-decoration: none">
         VDMPad
       </a>
-      <div style="float: right; padding-left: 16px; padding-top:4px; font-size: 0.7rem; color: #808080">
-        powered by <a href="https://viennatalk.org/" style="text-decoration: none; font-weight: 900; color: #808080" target="ViennaTalk">ViennaTalk</a>
+      <div style="float: right">
+        <span style="padding-top:0.15rem; font-size: 0.6rem; color: #404040">
+          powered by 
+        </span>
+        <a href="https://viennatalk.org/" style="text-decoration: none; font-size: 0.75rem; font-weight: 900; color: #808080" target="ViennaTalk">
+          ViennaTalk
+        </a>
       </div>
     </div>
     <div id="ide" style="width: 100%; float: right">
