@@ -198,7 +198,10 @@ VDMPad >> VDMPad [
 						nextPutAll: self VDMPadIDE;
 						nextPutAll: self VDMPadMenu;
 						nextPutAll: self VDMPadEpiLogSrc;
-						nextPutAll: 'VDMPad.setupIdeNodes(); VDMPad.setupMenuNodes(); VDMPad.loadFromLocalStorage();' ])
+						nextPutAll: '
+    VDMPad.setupIdeNodes();
+    VDMPad.setupMenuNodes();
+    VDMPad.loadFromStorage();' ])
 ]
 
 { #category : 'request handling-javascript' }
@@ -208,10 +211,11 @@ VDMPad >> VDMPadEpiLog [
 
 { #category : 'request handling-javascript' }
 VDMPad >> VDMPadEpiLogSrc [
+
 	^ '
       if (typeof(VDMPad) == "undefined") VDMPad = {};
-      if (localStorage)
-          VDMPad.EpiLog = JSON.parse(localStorage.getItem("`EpiLog")) || [];
+      if (VDMPad.storage)
+          VDMPad.EpiLog = JSON.parse(VDMPad.storage.getItem("`EpiLog")) || [];
 
       VDMPad.epilogOn = function () { 
           var areaNode = document.getElementById("EpiLogArea");
@@ -272,8 +276,8 @@ VDMPad >> VDMPadEpiLogSrc [
                   return lastScenario.push(run);
               lastPhase.scenarios.push([run]);
           })();
-          if (localStorage)
-              localStorage.setItem("`EpiLog", JSON.stringify(VDMPad.EpiLog));
+          if (VDMPad.storage)
+              VDMPad.storage.setItem("`EpiLog", JSON.stringify(VDMPad.EpiLog));
           VDMPad.epilogRender();
       };
 
@@ -592,7 +596,36 @@ VDMPad >> VDMPadEpiLogSrc [
         };
         req.send(JSON.stringify(json));
     };
-' copyReplaceAll: String cr with: String crlf
+' withUnixLineEndings
+]
+
+{ #category : 'request handling-javascript' }
+VDMPad >> VDMPadForVip: aString [
+
+	^ String streamContents: [ :stream |
+			  stream
+				  nextPutAll: '
+    window.VDMPad = {}';
+				  cr.
+			  aString
+				  ifNil: [
+						  stream
+							  nextPutAll: 'VDMPad.storage = localStorage;';
+							  cr ]
+				  ifNotNil: [
+						  stream
+							  nextPutAll: '
+    VDMPad._storage = new Map();
+    VDMPad.storage = {
+        getItem: (k) => VDMPad._storage.get(k) ?? null,
+        setItem: (k, v) => VDMPad._storage.set(k, v),
+        removeItem: (k) => VDMPad._storage.delete(k),
+        clear: () => VDMPad._storage.clear(),
+    };
+    VDMPad.vip = "';
+							  nextPutAll: aString;
+							  nextPutAll: '";
+' ] ]
 ]
 
 { #category : 'request handling-javascript' }
@@ -693,7 +726,6 @@ mermaid.initialize({
   sequenceNumberColor: "#333"
 });
 
-var VDMPad = {};
 VDMPad.visualEnabled = false;
 VDMPad.unittestEnabled = false;
 VDMPad.unittestRunning = false;
@@ -704,8 +736,8 @@ VDMPad.testcases = [];
 VDMPad.currentSource = null;
 
 VDMPad.enableUnittest = function () {
-    if (localStorage) {
-        localStorage.setItem("Config`unittestEnabled", "true");
+    if (VDMPad.storage) {
+        VDMPad.storage.setItem("Config`unittestEnabled", "true");
     }
     VDMPad.unittestEnabled = true;
     if (VDMPad.protoTestcase != null) {
@@ -714,8 +746,8 @@ VDMPad.enableUnittest = function () {
     VDMPad.startTests();
 };
 VDMPad.disableUnittest = function () {
-    if (localStorage) {
-        localStorage.setItem("Config`unittestEnabled", "false");
+    if (VDMPad.storage) {
+        VDMPad.storage.setItem("Config`unittestEnabled", "false");
     }
     VDMPad.unittestEnabled = false;
     VDMPad.disableMakeItATestcaseButton();
@@ -724,51 +756,51 @@ VDMPad.disableUnittest = function () {
 };
 
 VDMPad.enableVisual = function () {
-    if (localStorage) {
-        localStorage.setItem("Config`visualEnabled", "true");
+    if (VDMPad.storage) {
+        VDMPad.storage.setItem("Config`visualEnabled", "true");
     }
     VDMPad.visualEnabled = true;
-    VDMPad.loadFromLocalStorage();
+    VDMPad.loadFromStorage();
 };
 
 VDMPad.disableVisual = function () {
-    if (localStorage) {
-        localStorage.setItem("Config`visualEnabled", "false");
+    if (VDMPad.storage) {
+        VDMPad.storage.setItem("Config`visualEnabled", "false");
     }
     VDMPad.visualEnabled = false;
-    VDMPad.loadFromLocalStorage();
+    VDMPad.loadFromStorage();
 };
 
 VDMPad.enableSequenceDiagram = function () {
-    if (localStorage) {
-        localStorage.setItem("Config`sequenceDiagramEnabled", "true");
+    if (VDMPad.storage) {
+        VDMPad.storage.setItem("Config`sequenceDiagramEnabled", "true");
     }
     VDMPad.sequenceDiagramEnabled = true;
-    VDMPad.loadFromLocalStorage();
+    VDMPad.loadFromStorage();
 };
 
 VDMPad.disableSequenceDiagram = function () {
-    if (localStorage) {
-        localStorage.setItem("Config`sequenceDiagramEnabled", "false");
+    if (VDMPad.storage) {
+        VDMPad.storage.setItem("Config`sequenceDiagramEnabled", "false");
     }
     VDMPad.sequenceDiagramEnabled = false;
-    VDMPad.loadFromLocalStorage();
+    VDMPad.loadFromStorage();
 };
 
 VDMPad.enableStateDiagram = function () {
-    if (localStorage) {
-        localStorage.setItem("Config`stateDiagramEnabled", "true");
+    if (VDMPad.storage) {
+        VDMPad.storage.setItem("Config`stateDiagramEnabled", "true");
     }
     VDMPad.stateDiagramEnabled = true;
-    VDMPad.loadFromLocalStorage();
+    VDMPad.loadFromStorage();
 };
 
 VDMPad.disableStateDiagram = function () {
-    if (localStorage) {
-        localStorage.setItem("Config`stateDiagramEnabled", "false");
+    if (VDMPad.storage) {
+        VDMPad.storage.setItem("Config`stateDiagramEnabled", "false");
     }
     VDMPad.stateDiagramEnabled = false;
-    VDMPad.loadFromLocalStorage();
+    VDMPad.loadFromStorage();
 };
 
 VDMPad.enableMakeItATestcaseButton = function () {
@@ -782,10 +814,10 @@ VDMPad.addTestcase = function() {
     if (VDMPad.protoTestcase != null) {
         VDMPad.testcases.push(VDMPad.protoTestcase);
     }
-    if (localStorage) {
-        var snapshot = JSON.parse(localStorage.getItem("`lastSnapshot"));
+    if (VDMPad.storage) {
+        var snapshot = JSON.parse(VDMPad.storage.getItem("`lastSnapshot"));
         snapshot.testcases = VDMPad.testcases;
-        localStorage.setItem("`lastSnapshot", JSON.stringify(snapshot));
+        VDMPad.storage.setItem("`lastSnapshot", JSON.stringify(snapshot));
     }
     VDMPad.disableMakeItATestcaseButton();
     VDMPad.startTests();
@@ -859,10 +891,10 @@ VDMPad.runOneTestcase = function() {
                     var deleteTestcase = function () {
                         VDMPad.testcases = VDMPad.testcases.filter(function(n) {return n["id"] != id;});
                         okNode.parentNode.removeChild(okNode);
-                        if (localStorage) {
-                            var snapshot = JSON.parse(localStorage.getItem("`lastSnapshot"));
+                        if (VDMPad.storage) {
+                            var snapshot = JSON.parse(VDMPad.storage.getItem("`lastSnapshot"));
                             snapshot.testcases = VDMPad.testcases;
-                            localStorage.setItem("`lastSnapshot", JSON.stringify(snapshot));
+                            VDMPad.storage.setItem("`lastSnapshot", JSON.stringify(snapshot));
                         }
                     };
                     delNode.onclick= deleteTestcase;
@@ -1037,8 +1069,8 @@ VDMPad.loadJson = function(snapshotString) {
     if (!result.testcases) {
         result.testcases = [];
     }
-    if (localStorage)
-        localStorage.setItem("`lastSnapshot", JSON.stringify(result));
+    if (VDMPad.storage)
+        VDMPad.storage.setItem("`lastSnapshot", JSON.stringify(result));
     if ("EpiLog" in result) 
         VDMPad.EpiLog = result.EpiLog;
     VDMPad.testcases = result.testcases;
@@ -1144,11 +1176,11 @@ VDMPad.load = function (name) {
     VDMPad.unittestRunning = false;
     VDMPad.protoTestcase = null;
     VDMPad.testcases = [];
-    VDMPad.loadJson(localStorage.getItem(name));
+    VDMPad.loadJson(VDMPad.storage.getItem(name));
     if (name != "`lastSnapshot") {
         VDMPad.currentSpec = name;
-        if (localStorage)
-            localStorage.setItem("`currentSpec", name);
+        if (VDMPad.storage)
+            VDMPad.storage.setItem("`currentSpec", name);
         VDMPad.updateFileItems();
     }
 }
@@ -1171,19 +1203,48 @@ VDMPad.acceptDroppedFile = function (event) {
     return false;
 }
 
+if (VDMPad.vip) { 
+  const base64 = VDMPad.vip.replace(/-/g, "+").replace(/_/g, "/");
+  const binary = atob(base64);
+  const buffer = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    buffer[i] = binary.charCodeAt(i);
+  }
+  const stream = new Blob([buffer]).stream();
+  const decompressedStream = stream.pipeThrough(new DecompressionStream("deflate"));
+  const response = new Response(decompressedStream);
+  const json = await response.text();
+  VDMPad.storage.setItem("`lastSnapshot", json);
+};
+
+VDMPad.copyVipLink = async function() { 
+  try {
+    const snapshot = VDMPad.storage.getItem("`lastSnapshot");
+    const stream = new Blob([snapshot]).stream().pipeThrough(new CompressionStream("deflate"));
+    const compressedBuffer = await new Response(stream).arrayBuffer();
+    const vip = btoa(String.fromCharCode(...new Uint8Array(compressedBuffer)))
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+    await navigator.clipboard.writeText(window.location.origin+"/?vip="+vip);
+    return vip;
+  } catch (err) {
+  }
+};
+
 VDMPad.saveAs= function (name, export_flag) {
     var req = new XMLHttpRequest();
     req.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            if (localStorage) {
-                localStorage.setItem(name, this.responseText);
-                localStorage.setItem("`lastSnapshot", this.responseText);
-                localStorage.setItem("`currentSpec", name);
-                var files = JSON.parse(localStorage.getItem("`files"));
+            if (VDMPad.storage) {
+                VDMPad.storage.setItem(name, this.responseText);
+                VDMPad.storage.setItem("`lastSnapshot", this.responseText);
+                VDMPad.storage.setItem("`currentSpec", name);
+                var files = JSON.parse(VDMPad.storage.getItem("`files"));
                 if (files.indexOf(name) < 0) {
                     files.push(name);
                     files.sort();
-                    localStorage.setItem("`files", JSON.stringify(files));
+                    VDMPad.storage.setItem("`files", JSON.stringify(files));
                 }
             }
             if (export_flag) {
@@ -1216,21 +1277,21 @@ VDMPad.remove = function (name) {
     var index = files.indexOf(name);
     if (index >= 0) {
         files.splice(index, 1);
-        if (localStorage)
-            localStorage.setItem("`files", JSON.stringify(files));
+        if (VDMPad.storage)
+            VDMPad.storage.setItem("`files", JSON.stringify(files));
     }
-    if (localStorage)
-        localStorage.removeItem(name);
+    if (VDMPad.storage)
+        VDMPad.storage.removeItem(name);
     VDMPad.updateFileItems();
 };
 
-VDMPad.loadFromLocalStorage = function () {
-    if (localStorage) {
-        VDMPad.unittestEnabled = localStorage.getItem("Config`unittestEnabled") == "true";
-        VDMPad.visualEnabled = localStorage.getItem("Config`visualEnabled") == "true";
-        VDMPad.sequenceDiagramEnabled = localStorage.getItem("Config`sequenceDiagramEnabled") == "true";
-        VDMPad.stateDiagramEnabled = localStorage.getItem("Config`stateDiagramEnabled") == "true";
-        if (localStorage.getItem("`lastSnapshot") == undefined) {
+VDMPad.loadFromStorage = function () {
+    if (VDMPad.storage) {
+        VDMPad.unittestEnabled = VDMPad.storage.getItem("Config`unittestEnabled") == "true";
+        VDMPad.visualEnabled = VDMPad.storage.getItem("Config`visualEnabled") == "true";
+        VDMPad.sequenceDiagramEnabled = VDMPad.storage.getItem("Config`sequenceDiagramEnabled") == "true";
+        VDMPad.stateDiagramEnabled = VDMPad.storage.getItem("Config`stateDiagramEnabled") == "true";
+        if (!VDMPad.storage.getItem("`lastSnapshot")) {
             var counter = {};
             counter["source"] = "module Counter\nexports all\ndefinitions\nstate counter of\n\tcount : nat\n\tinit s == s = mk_counter(0)\nend\noperations\n\tstep : () ==> nat\n\tstep() == (count := count + 1; return count);\nend Counter\n";
             counter["Counter`count"] = "1002";
@@ -1238,16 +1299,16 @@ VDMPad.loadFromLocalStorage = function () {
             counter["value"] = "";
             counter["message"] = "";
             counter["testcases"] = [];
-            localStorage.setItem("example:Counter", JSON.stringify(counter));
-            localStorage.setItem("`files", JSON.stringify(["example:Counter"]));
-            localStorage.setItem("`lastSnapshot", localStorage.getItem("lastSnapshot"));
-            localStorage.removeItem("lastSnapshot");
+            VDMPad.storage.setItem("example:Counter", JSON.stringify(counter));
+            VDMPad.storage.setItem("`files", JSON.stringify(["example:Counter"]));
+            VDMPad.storage.setItem("`lastSnapshot", VDMPad.storage.getItem("lastSnapshot"));
+            VDMPad.storage.removeItem("lastSnapshot");
         }
         VDMPad.load("`lastSnapshot");
-        if (localStorage.getItem("`currentSpec") == undefined) {
-            localStorage.setItem("`currentSpec", "");
+        if (VDMPad.storage.getItem("`currentSpec") == undefined) {
+            VDMPad.storage.setItem("`currentSpec", "");
         }          
-        VDMPad.currentSpec = localStorage.getItem("`currentSpec");
+        VDMPad.currentSpec = VDMPad.storage.getItem("`currentSpec");
     }
 };
 
@@ -1349,18 +1410,20 @@ VDMPad.fileItemsExpanded = false;
 VDMPad.currentFileItemNode = null;
 
 VDMPad.files = function () {
-    if (localStorage) {
-        try {
-          return JSON.parse(localStorage.getItem("`files"));
-        } catch (e) { 
-          var files = [];
-          for (var i = 0; i < localStorage.length; i++) {
-            var file = localStorage.key(i);
-            if (file[0] != ''`'' && file.substr(0, 7) != "Config`") files.push(file);
-          }
-          localStorage.setItem("`files", JSON.stringify(files));
-          return files;
-        }
+    if (VDMPad.storage) {
+       var files = VDMPad.storage.getItem("`files");
+       if (files) {
+          try {
+              return JSON.parse(files);
+          } catch (e) { };
+      }
+      files = [];
+      for (var i = 0; i < VDMPad.storage.length; i++) {
+        var file = VDMPad.storage.key(i);
+        if (file[0] != ''`'' && file.substr(0, 7) != "Config`") files.push(file);
+      }
+      VDMPad.storage.setItem("`files", JSON.stringify(files));
+      return files;
    }
     return [];
 };
@@ -1411,6 +1474,7 @@ VDMPad.expandFileItems = function () {
         for (var i = 0; i < files.length; i++)
             VDMPad.fileItemsNode.appendChild(VDMPad.createFileNode(files[i]));
         VDMPad.fileItemsNode.appendChild(VDMPad.createSaveAsInputNode());
+        VDMPad.fileItemsNode.appendChild(VDMPad.createCopyVipLinkNode());
         VDMPad.fileItemsNode.appendChild(VDMPad.createConfigNode());
         VDMPad.fileItemsNode.appendChild(VDMPad.createEpilogButtonNode());
     }
@@ -1573,10 +1637,28 @@ VDMPad.createSaveAsInputNode = function () {
     return node;
 };
 
+VDMPad.createCopyVipLinkNode = function () {
+    var copyVipLinkButton = document.createElement("div");
+    copyVipLinkButton.style.display = "inline";
+    copyVipLinkButton.style.cursor = "pointer";
+    copyVipLinkButton.style.border = "1px solid #c0c0c0";
+    copyVipLinkButton.style.borderRadius = "4px";
+    copyVipLinkButton.style.color = "#404040";
+    copyVipLinkButton.style.paddingTop = "4px";
+    copyVipLinkButton.style.paddingbottom = "4px";
+    copyVipLinkButton.style.paddingLeft = "10px";
+    copyVipLinkButton.style.paddingRight = "10px";
+    copyVipLinkButton.style.marginBottom = "10px";
+    copyVipLinkButton.innerText = "copy link 🔗";
+    copyVipLinkButton.addEventListener("click", ()=>VDMPad.copyVipLink());
+    return copyVipLinkButton;
+};
+
 VDMPad.createConfigNode = function () {
 	var configNode = document.createElement("div");
 	configNode.style.border="1px solid lightgrey";
 	configNode.style.borderRadius = "5px";
+	configNode.style.marginTop = "10px";
 	configNode.style.paddingLeft = "10px";
 	configNode.style.width = "270px";
 	configNode.innerText = "Config";
@@ -1655,7 +1737,7 @@ VDMPad.createEpilogButtonNode = function () {
    }
    return epilogNode;
 };
-' copyReplaceAll: String cr with: String crlf
+' withUnixLineEndings
 ]
 
 { #category : 'request handling-html' }
@@ -2715,13 +2797,14 @@ VDMPad >> initialize [
 	super initialize.
 	engine := ViennaEngineForVDMPad new.
 	handlerMap := Dictionary new
-		              at: '/' put: #mainPage;
+		              at: '/' put: #mainPage:;
 		              at: 'EpiLog' put: #epiLogPage;
 		              at: 'epilog.css' put: #epilogCss;
 		              at: 'foundation.css' put: #foundationCss;
 		              at: 'favicon.ico' put: #vdmpadIcon;
 		              at: 'about.html' put: #aboutPage;
 		              at: 'VDMPad.js' put: #VDMPad;
+	                 at: 'VDMInstantPad.js' put: #VDMInstantPad;
 		              at: 'VDMPad-EpiLog.js' put: #VDMPadEpiLog;
 		              at: 'fileSaver.js' put: #fileSaver;
 		              at: 'blob.js' put: #blob;
@@ -2764,24 +2847,23 @@ VDMPad >> loadSelectedIcon [
 ]
 
 { #category : 'request handling-html' }
-VDMPad >> mainPage [
+VDMPad >> mainPage: aZnRequest [
 
-	^ self responseHtml:
-		  '<!DOCTYPE html><html>
+	^ self responseHtml: ('<!DOCTYPE html><html>
 <head>
     <title>VDMPad</title>
     <meta charset="utf-8">
         <link rel="stylesheet" href="epilog.css">
-        <script src="/blob.js"></script>
         <script src="/fileSaver.js"></script>
         <style>
-            body { padding: 1.5rem; background-color: #fbfbfb; font-family: Helvetica sans-serif}
+            body { padding: 1.5rem; background-color: #fbfbfb; font-family: Helvetica, sans-serif}
+            div { font-family: Helvetica, sans-serif}
             .editor-container { 
                 max-width: 56rem; margin: 0 auto; 
                 background: white; border-radius: 0.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); 
             }
             .cm-editor {
-                font-family: Helvetica sans-serif;
+                font-family: Helvetica, sans-serif;
             }
             .label { font-size: 0.875rem; font-weight: bold; color: #64748b; margin-bottom: 0.5rem; }
             .editor-box { border: 1px solid #ddd; margin-bottom: 0px; border-radius: 4px; overflow: hidden; }
@@ -2861,15 +2943,15 @@ VDMPad >> mainPage [
         <div title="Displays error messages"  id="message" style="white-space: pre-wrap"></div>
         <div style="display:none" id="sequenceDiagramSection">
           Sequence Diagram
-          <img id="copySequenceDiagramButton" style="float: right; cursor: pointer" src="/copy.png" />
-          <div title="Sequence Diagram" id="sequenceDiagram" style="background-color: #fefefe; border: 1px solid  #c0c0c0"; display: flex; justify-content: center;></div>
+          <img id="copySequenceDiagramButton" style="float: right; display: block; cursor: pointer" src="/copy.png" />
+          <div title="Sequence Diagram" id="sequenceDiagram" style="background-color: #fefefe; border: 1px solid  #c0c0c0"; display: block; justify-content: center;></div>
         </div>
         <div style="display:none" id="stateDiagramSection">
           <div>
             State Diagram
-            <img id="copyStateDiagramButton" style="float: right; cursor: pointer" src="/copy.png" /><br />
+            <img id="copyStateDiagramButton" style="float: right; display: block; cursor: pointer" src="/copy.png" /><br />
           </div>
-          <div title="State Diagram" id="stateDiagram" style="background-color: #fefefe; border: 1px solid #c0c0c0; display: flex; justify-content: center;"></div>
+          <div title="State Diagram" id="stateDiagram" style="background-color: #fefefe; border: 1px solid #c0c0c0; display: block; justify-content: center;"></div>
         </div>
         <hr>
         <div id="unittest"></div>
@@ -2877,10 +2959,12 @@ VDMPad >> mainPage [
     </div>
   </div>
   <div id="EpiLogArea" style="float:left; margin-left: 60px; width: 800px;"></div>
-
+  <script>' , (self VDMPadForVip:
+			    ((self getParamsFrom: aZnRequest) at: 'vip' ifAbsent: [ nil ]))
+		   , '</script>
   <script type="module" src="/VDMPad.js"></script>
 </body>
-</html>' withUnixLineEndings
+</html>') withUnixLineEndings
 ]
 
 { #category : 'private' }
