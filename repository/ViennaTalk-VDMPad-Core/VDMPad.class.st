@@ -218,6 +218,7 @@ VDMPad >> VDMPadEpiLogSrc [
           VDMPad.EpiLog = JSON.parse(VDMPad.storage.getItem("`EpiLog")) || [];
 
       VDMPad.epilogOn = function () { 
+          VDMPad.epilogEnabled = true;
           var areaNode = document.getElementById("EpiLogArea");
           if (areaNode) { 
               if (!areaNode.firstElementChild) {
@@ -236,18 +237,22 @@ VDMPad >> VDMPadEpiLogSrc [
                   VDMPad.epilogRender();
               }   
           }
-          var button = document.getElementById("EpiLogButton");
-          if (button) button.turnOn();
+          VDMPad.epilogButton.turnOn();
       };
       VDMPad.epilogOff = function () { 
+          VDMPad.epilogEnabled = false;
           var areaNode = document.getElementById("EpiLogArea");
           while (areaNode.firstElementChild)
               areaNode.firstElementChild.remove();
           VDMPad.epilogRender();
-          var button = document.getElementById("EpiLogButton");
-          if (button) button.turnOff();
+          VDMPad.epilogButton.turnOff();
       };
-
+      VDMPad.toggleEpilog = function () {
+          if (VDMPad.epilogEnabled)
+              VDMPad.epilogOff();
+          else
+              VDMPad.epilogOn();
+      };
       VDMPad.epilogEqualState = function (state1, state2) { 
           for (var key in state1)
               if (!(key in state2) || state1[key] != state2[key])
@@ -431,13 +436,9 @@ VDMPad >> VDMPadEpiLogSrc [
         var phases = VDMPad.EpiLog;
         for (var index = 0; index < phases.length; index++)
             here.appendChild(VDMPad.epilogPhaseNode([index]));
-        document.querySelectorAll("code.vdm").forEach(function(node) {
-            hljs.highlightBlock(node);
-        });
     };
 
     VDMPad.epilogSelectedNode = null;
-    
     VDMPad.epilogShowPhaseMenu = function (node) {
         VDMPad.epilogRetractMenu();
         var selectionNode = document.createElement("div");
@@ -740,6 +741,7 @@ VDMPad.enableUnittest = function () {
         VDMPad.storage.setItem("Config`unittestEnabled", "true");
     }
     VDMPad.unittestEnabled = true;
+    VDMPad.unittestCheckbox.checked = true;
     if (VDMPad.protoTestcase != null) {
         VDMPad.enableMakeItATestcaseButton();
     }
@@ -750,9 +752,16 @@ VDMPad.disableUnittest = function () {
         VDMPad.storage.setItem("Config`unittestEnabled", "false");
     }
     VDMPad.unittestEnabled = false;
+    VDMPad.unittestCheckbox.checked = false;
     VDMPad.disableMakeItATestcaseButton();
     while (VDMPad.unittestNode.firstChild)
         VDMPad.unittestNode.removeChild(VDMPad.unittestNode.firstChild);
+};
+VDMPad.toggleUnittest = function () {
+    if (VDMPad.unittestEnabled)
+        VDMPad.disableUnittest();
+    else
+        VDMPad.enableUnittest();
 };
 
 VDMPad.enableVisual = function () {
@@ -760,6 +769,7 @@ VDMPad.enableVisual = function () {
         VDMPad.storage.setItem("Config`visualEnabled", "true");
     }
     VDMPad.visualEnabled = true;
+    VDMPad.visualCheckbox.checked = true;
     VDMPad.loadFromStorage();
 };
 
@@ -768,7 +778,15 @@ VDMPad.disableVisual = function () {
         VDMPad.storage.setItem("Config`visualEnabled", "false");
     }
     VDMPad.visualEnabled = false;
+    VDMPad.visualCheckbox.checked = false;
     VDMPad.loadFromStorage();
+};
+
+VDMPad.toggleVisual = function () {
+    if (VDMPad.visualEnabled)
+        VDMPad.disableVisual();
+    else
+        VDMPad.enableVisual();
 };
 
 VDMPad.enableSequenceDiagram = function () {
@@ -776,6 +794,7 @@ VDMPad.enableSequenceDiagram = function () {
         VDMPad.storage.setItem("Config`sequenceDiagramEnabled", "true");
     }
     VDMPad.sequenceDiagramEnabled = true;
+    VDMPad.sequenceDiagramCheckbox.checked = true;
     VDMPad.loadFromStorage();
 };
 
@@ -784,7 +803,15 @@ VDMPad.disableSequenceDiagram = function () {
         VDMPad.storage.setItem("Config`sequenceDiagramEnabled", "false");
     }
     VDMPad.sequenceDiagramEnabled = false;
+    VDMPad.sequenceDiagramCheckbox.checked = false;
     VDMPad.loadFromStorage();
+};
+
+VDMPad.toggleSequenceDiagram = function () {
+    if (VDMPad.sequenceDiagramEnabled)
+        VDMPad.disableSequenceDiagram();
+    else
+        VDMPad.enableSequenceDiagram();
 };
 
 VDMPad.enableStateDiagram = function () {
@@ -792,6 +819,7 @@ VDMPad.enableStateDiagram = function () {
         VDMPad.storage.setItem("Config`stateDiagramEnabled", "true");
     }
     VDMPad.stateDiagramEnabled = true;
+    VDMPad.stateDiagramCheckbox.checked = true;
     VDMPad.loadFromStorage();
 };
 
@@ -800,7 +828,15 @@ VDMPad.disableStateDiagram = function () {
         VDMPad.storage.setItem("Config`stateDiagramEnabled", "false");
     }
     VDMPad.stateDiagramEnabled = false;
+    VDMPad.stateDiagramCheckbox.checked = false;
     VDMPad.loadFromStorage();
+};
+
+VDMPad.toggleStateDiagram = function () {
+    if (VDMPad.stateDiagramEnabled)
+        VDMPad.disableStateDiagram();
+    else
+        VDMPad.enableStateDiagram();
 };
 
 VDMPad.enableMakeItATestcaseButton = function () {
@@ -1217,19 +1253,41 @@ if (VDMPad.vip) {
   VDMPad.storage.setItem("`lastSnapshot", json);
 };
 
-VDMPad.copyVipLink = async function() { 
+VDMPad.vipLink = async function() { 
   try {
-    const snapshot = VDMPad.storage.getItem("`lastSnapshot");
-    const stream = new Blob([snapshot]).stream().pipeThrough(new CompressionStream("deflate"));
+    const snapshot = JSON.parse(VDMPad.storage.getItem("`lastSnapshot"));
+    snapshot.EpiLog = [];
+    const stream = new Blob([JSON.stringify(snapshot)]).stream().pipeThrough(new CompressionStream("deflate"));
     const compressedBuffer = await new Response(stream).arrayBuffer();
-    const vip = btoa(String.fromCharCode(...new Uint8Array(compressedBuffer)))
+    const vip = await btoa(String.fromCharCode(...new Uint8Array(compressedBuffer)))
       .replace(/\+/g, "-")
       .replace(/\//g, "_")
       .replace(/=+$/, "");
-    await navigator.clipboard.writeText(window.location.origin+"/?vip="+vip);
+    return window.location.origin+"/?vip="+vip;
+  } catch (err) {
+  }
+};
+
+VDMPad.copyVipLink = async function() { 
+  try {
+    const vip = await VDMPad.vipLink();
+    await navigator.clipboard.writeText(vip);
     return vip;
   } catch (err) {
   }
+};
+VDMPad.showVipQR = async function () {
+    const dialog = document.getElementById("vipQRDialog");
+    const qrcode = new QRCode(dialog, {
+        width: 512,
+        height: 512,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H // L, M, Q, H
+    });
+    qrcode.makeCode(await VDMPad.vipLink());
+    dialog.addEventListener("click", (e) => {dialog.close();});
+    dialog.showModal();
 };
 
 VDMPad.saveAs= function (name, export_flag) {
@@ -1287,10 +1345,10 @@ VDMPad.remove = function (name) {
 
 VDMPad.loadFromStorage = function () {
     if (VDMPad.storage) {
-        VDMPad.unittestEnabled = VDMPad.storage.getItem("Config`unittestEnabled") == "true";
-        VDMPad.visualEnabled = VDMPad.storage.getItem("Config`visualEnabled") == "true";
-        VDMPad.sequenceDiagramEnabled = VDMPad.storage.getItem("Config`sequenceDiagramEnabled") == "true";
-        VDMPad.stateDiagramEnabled = VDMPad.storage.getItem("Config`stateDiagramEnabled") == "true";
+        VDMPad.unittestCheckbox.checked = VDMPad.unittestEnabled = VDMPad.storage.getItem("Config`unittestEnabled") == "true";
+        VDMPad.visualCheckbox.checked = VDMPad.visualEnabled = VDMPad.storage.getItem("Config`visualEnabled") == "true";
+        VDMPad.sequenceDiagramCheckbox.checked = VDMPad.sequenceDiagramEnabled = VDMPad.storage.getItem("Config`sequenceDiagramEnabled") == "true";
+        VDMPad.stateDiagramCheckbox.checked = VDMPad.stateDiagramEnabled = VDMPad.storage.getItem("Config`stateDiagramEnabled") == "true";
         if (!VDMPad.storage.getItem("`lastSnapshot")) {
             var counter = {};
             counter["source"] = "module Counter\nexports all\ndefinitions\nstate counter of\n\tcount : nat\n\tinit s == s = mk_counter(0)\nend\noperations\n\tstep : () ==> nat\n\tstep() == (count := count + 1; return count);\nend Counter\n";
@@ -1345,6 +1403,26 @@ VDMPad.copyStateDiagram = async function () {
 };
 VDMPad.setupIdeNodes = function () {
     VDMPad.node = document.getElementById("all");
+    VDMPad.unittestCheckbox = document.getElementById("unittestCheckbox");
+    VDMPad.unittestCheckbox.addEventListener("click", ()=>VDMPad.toggleUnittest());
+    VDMPad.visualCheckbox = document.getElementById("visualCheckbox");
+    VDMPad.visualCheckbox.addEventListener("click", ()=>VDMPad.toggleVisual());
+    VDMPad.sequenceDiagramCheckbox = document.getElementById("sequenceDiagramCheckbox");
+    VDMPad.sequenceDiagramCheckbox.addEventListener("click", ()=>VDMPad.toggleSequenceDiagram());
+    VDMPad.stateDiagramCheckbox = document.getElementById("stateDiagramCheckbox");
+    VDMPad.stateDiagramCheckbox.addEventListener("click", ()=>VDMPad.toggleStateDiagram());
+    VDMPad.epilogButton = document.getElementById("epilogButton");
+    VDMPad.epilogButton.turnOn = function () {
+        VDMPad.epilogButton.style.color = "white";
+        VDMPad.epilogButton.style.backgroundColor = "black";
+        VDMPad.epilogButton.style.borderColor = "white";
+    };
+    VDMPad.epilogButton.turnOff = function () {
+        VDMPad.epilogButton.style.color = "black";
+        VDMPad.epilogButton.style.backgroundColor = "white";
+        VDMPad.epilogButton.style.borderColor = "black";
+    };
+    VDMPad.epilogButton.addEventListener("click", ()=>VDMPad.toggleEpilog());
     VDMPad.mainNode = document.getElementById("main");
     VDMPad.sourceView = new EditorView({
         state: EditorState.create({
@@ -1391,6 +1469,8 @@ VDMPad.setupIdeNodes = function () {
         event.preventDefault();
         event.dataTransfer.dropEffect = ''copy'';
     });
+    document.getElementById("copyVipButton").addEventListener("click", ()=>VDMPad.copyVipLink());
+    document.getElementById("showVipQRButton").addEventListener("click", ()=>VDMPad.showVipQR());
     document.getElementById("formatButton").addEventListener("click", () => {VDMPad.format();});
     document.getElementById("initButton").addEventListener("click", () => {VDMPad.init();});
     document.getElementById("evalButton").addEventListener("click", () => {VDMPad.eval();});
@@ -1433,7 +1513,7 @@ VDMPad.setupMenuNodes = function () {
     VDMPad.rootMenuNode = document.getElementById("root_menu");
     VDMPad.rootMenuIconNode = document.getElementById("rootMenuIcon");
     VDMPad.fileItemsNode = document.getElementById("file_items");
-    VDMPad.rootMenuNode.onmouseover = function () {
+    VDMPad.rootMenuIconNode.onmouseover = function () {
         VDMPad.expandFileItems();
     };
     VDMPad.mainNode.onmouseover = function () {
@@ -1441,7 +1521,7 @@ VDMPad.setupMenuNodes = function () {
         if (!VDMPad.fileItemsExpanded)
             VDMPad.shrinkFileItems();
     };
-    VDMPad.rootMenuNode.onclick = function () {
+    VDMPad.rootMenuIconNode.onclick = function () {
         if (VDMPad.fileItemsExpanded) {
             VDMPad.rootMenuIconNode.src = "/rootMenuOff.png";
             VDMPad.fileItemsExpanded = false;
@@ -1462,25 +1542,23 @@ VDMPad.updateFileItems = function () {
         for (var i = 0; i < files.length; i++)
             VDMPad.fileItemsNode.appendChild(VDMPad.createFileNode(files[i]));
         VDMPad.fileItemsNode.appendChild(VDMPad.createSaveAsInputNode());
-        VDMPad.fileItemsNode.appendChild(VDMPad.createConfigNode());
     }
 };
 
 VDMPad.expandFileItems = function () {
     if (!VDMPad.fileItemsNode.firstChild) {
+        VDMPad.rootMenuNode.style.display = "block";
         VDMPad.node.style.width = "1100px";
         VDMPad.menuNode.style.width = "300px";
         var files = VDMPad.files();
         for (var i = 0; i < files.length; i++)
             VDMPad.fileItemsNode.appendChild(VDMPad.createFileNode(files[i]));
         VDMPad.fileItemsNode.appendChild(VDMPad.createSaveAsInputNode());
-        VDMPad.fileItemsNode.appendChild(VDMPad.createCopyVipLinkNode());
-        VDMPad.fileItemsNode.appendChild(VDMPad.createConfigNode());
-        VDMPad.fileItemsNode.appendChild(VDMPad.createEpilogButtonNode());
     }
 };
 
 VDMPad.shrinkFileItems = function () {
+    VDMPad.rootMenuNode.style.display = "none";
     if (VDMPad.fileItemsNode.firstChild) {
         while (VDMPad.fileItemsNode.firstChild)
             VDMPad.fileItemsNode.removeChild(VDMPad.fileItemsNode.firstChild);
@@ -1598,23 +1676,12 @@ VDMPad.createSaveAsInputNode = function () {
     var node = document.createElement("div");
     var inputNode = document.createElement("input");
     var saveNode = document.createElement("img");
-    node.style.marginBottom = "12px";
-    node.style.display = "block";
+    
+    node.style.width = "280px";
+    node.style.height = "30px";
     inputNode.style.width = "100%";
-    inputNode.style.display = "block";
     node.appendChild(inputNode);
-    saveNode.style.visibility = "hidden";
-    saveNode.style.marginTop = "1px";
-    saveNode.style.borderStyle = "solid";
-    saveNode.style.borderColor = "#c0c0c0";
-    saveNode.style.borderWidth = "1px";
-    saveNode.style.borderRadius = "6px";
-    saveNode.style.paddingTop = "1px";
-    saveNode.style.paddingBottom = "1px";
-    saveNode.style.paddingLeft = "4px";
-    saveNode.style.paddingRight = "4px";
-    saveNode.style.backgroundColor = "#ffffff";
-    saveNode.style.display = "block";
+    saveNode.style.visibility = "collapse";
     saveNode.src = "/save.png";
     node.appendChild(saveNode);
     inputNode.onkeyup = function () {
@@ -1625,117 +1692,14 @@ VDMPad.createSaveAsInputNode = function () {
     };
     saveNode.onmouseover = function () {
         saveNode.src = "/saveS.png";
-        saveNode.style.backgroundColor = "#808080";
     };
     saveNode.onmouseout = function () {
         saveNode.src = "/save.png";
-        saveNode.style.backgroundColor = "#ffffff";
     };
     saveNode.onclick = function () {
         VDMPad.saveAs(inputNode.value, false);
     };
     return node;
-};
-
-VDMPad.createCopyVipLinkNode = function () {
-    var copyVipLinkButton = document.createElement("div");
-    copyVipLinkButton.style.display = "inline";
-    copyVipLinkButton.style.cursor = "pointer";
-    copyVipLinkButton.style.border = "1px solid #c0c0c0";
-    copyVipLinkButton.style.borderRadius = "4px";
-    copyVipLinkButton.style.color = "#404040";
-    copyVipLinkButton.style.paddingTop = "4px";
-    copyVipLinkButton.style.paddingbottom = "4px";
-    copyVipLinkButton.style.paddingLeft = "10px";
-    copyVipLinkButton.style.paddingRight = "10px";
-    copyVipLinkButton.style.marginBottom = "10px";
-    copyVipLinkButton.innerText = "copy link 🔗";
-    copyVipLinkButton.addEventListener("click", ()=>VDMPad.copyVipLink());
-    return copyVipLinkButton;
-};
-
-VDMPad.createConfigNode = function () {
-	var configNode = document.createElement("div");
-	configNode.style.border="1px solid lightgrey";
-	configNode.style.borderRadius = "5px";
-	configNode.style.marginTop = "10px";
-	configNode.style.paddingLeft = "10px";
-	configNode.style.width = "270px";
-	configNode.innerText = "Config";
-	configNode.textContent = "Config";
-	var unittestNode = document.createElement("div");
-	var unittestCheckbox = document.createElement("input");
-	unittestCheckbox.type = "checkbox";
-	unittestCheckbox.style.PaddingRight = "10px";
-	unittestCheckbox.checked = VDMPad.unittestEnabled;
-	unittestCheckbox.onclick = function () {if (this.checked) VDMPad.enableUnittest(); else VDMPad.disableUnittest();};
-	unittestNode.appendChild(unittestCheckbox);
-	unittestNode.appendChild(document.createTextNode("Unit Testing"));
-	configNode.appendChild(unittestNode);
-	var visualNode = document.createElement("div");
-	var visualCheckbox = document.createElement("input");
-	visualCheckbox.type = "checkbox";
-	visualCheckbox.style.PaddingRight = "10px";
-	visualCheckbox.checked = VDMPad.visualEnabled;
-	visualCheckbox.onclick = function () {if (this.checked) VDMPad.enableVisual(); else VDMPad.disableVisual();};
-	visualNode.appendChild(visualCheckbox);
-	visualNode.appendChild(document.createTextNode("Visual Expressions"));
-	configNode.appendChild(visualNode);
-
-	var sequenceDiagramNode = document.createElement("div");
-	var sequenceDiagramCheckbox = document.createElement("input");
-	sequenceDiagramCheckbox.type = "checkbox";
-	sequenceDiagramCheckbox.style.PaddingRight = "10px";
-	sequenceDiagramCheckbox.checked = VDMPad.sequenceDiagramEnabled;
-	sequenceDiagramCheckbox.onclick = function () {if (this.checked) VDMPad.enableSequenceDiagram(); else VDMPad.disableSequenceDiagram();};
-	sequenceDiagramNode.appendChild(sequenceDiagramCheckbox);
-	sequenceDiagramNode.appendChild(document.createTextNode("Sequence Diagram"));
-	configNode.appendChild(sequenceDiagramNode);
-	var stateDiagramNode = document.createElement("div");
-	var stateDiagramCheckbox = document.createElement("input");
-	stateDiagramCheckbox.type = "checkbox";
-	stateDiagramCheckbox.style.PaddingRight = "10px";
-	stateDiagramCheckbox.checked = VDMPad.stateDiagramEnabled;
-	stateDiagramCheckbox.onclick = function () {if (this.checked) VDMPad.enableStateDiagram(); else VDMPad.disableStateDiagram();};
-	stateDiagramNode.appendChild(stateDiagramCheckbox);
-	stateDiagramNode.appendChild(document.createTextNode("State Diagram"));
-	configNode.appendChild(stateDiagramNode);
-	return configNode;
-};
-
-VDMPad.createEpilogButtonNode = function () { 
-   var epilogNode = document.createElement("div");
-   epilogNode.id = "EpiLogButton";
-   epilogNode.style.paddingLeft = "20px";
-   epilogNode.style.paddingRight = "20px";
-   epilogNode.style.paddingTop = "5px";
-   epilogNode.style.paddingBottom = "5px";
-   epilogNode.style.marginTop = "15px";
-   epilogNode.style.display = "inline-block";
-   epilogNode.style.cursor = "pointer";
-   epilogNode.innerText = "EpiLog";
-   epilogNode.style.borderStyle = "solid";
-   epilogNode.style.borderWidth = "1px";
-   epilogNode.style.borderRadius = "6px";
-
-   epilogNode.turnOn = function () { 
-      epilogNode.style.color = "white";
-      epilogNode.style.backgroundColor = "black";
-      epilogNode.style.borderColor = "white";
-      epilogNode.onclick = VDMPad.epilogOff;
-   };
-   epilogNode.turnOff = function () { 
-      epilogNode.style.color = "black";
-      epilogNode.style.backgroundColor = "white";
-      epilogNode.style.borderColor = "black";
-      epilogNode.onclick = VDMPad.epilogOn;
-   };
-   if (document.getElementById("EpiLogArea").firstElementChild) { 
-      epilogNode.turnOn();
-   } else { 
-      epilogNode.turnOff();
-   }
-   return epilogNode;
 };
 ' withUnixLineEndings
 ]
@@ -2044,6 +2008,36 @@ form"
 		     43 26 249 22 140 124 11 70 190 5 52 200 201 116 183 128 102 165
 		     231 160 42 158 73 114 16 205 45 160 21 0 0 72 30 93 132 56 171
 		     44 233 0 0 0 0 73 69 78 68 174 66 96 130 ]
+]
+
+{ #category : 'request handling-image' }
+VDMPad >> copyLinkIcon [
+
+	^ self responsePNG:
+		  #[ 137 80 78 71 13 10 26 10 0 0 0 13 73 72 68 82 0 0 0 32 0 0 0 32
+		     8 6 0 0 0 115 122 122 244 0 0 0 88 73 68 65 84 120 94 229 149
+		     65 10 0 32 8 4 123 188 255 174 123 152 132 25 46 204 128 167
+		     216 117 145 202 193 135 15 31 62 59 102 54 189 122 209 94 233
+		     35 113 69 128 208 39 45 76 248 184 94 173 1 50 141 42 238 150
+		     123 240 101 188 7 15 126 0 126 0 157 87 192 255 136 36 118 129
+		     196 54 228 195 135 15 159 46 22 150 247 78 23 146 15 89 0 0 0 0
+		     0 73 69 78 68 174 66 96 130 ]
+]
+
+{ #category : 'request handling-image' }
+VDMPad >> copyQRIcon [
+
+	^ self responsePNG:
+		  #[ 137 80 78 71 13 10 26 10 0 0 0 13 73 72 68 82 0 0 0 32 0 0 0 32
+		     8 6 0 0 0 115 122 122 244 0 0 0 140 73 68 65 84 120 94 229 150
+		     193 14 192 32 8 67 57 242 255 63 236 142 91 182 37 182 153 93
+		     33 146 120 144 3 121 64 65 35 34 7 126 80 163 98 230 64 140 5 32
+		     98 22 2 120 43 209 29 224 188 95 75 253 244 19 49 155 1 176 45
+		     16 0 228 180 26 125 1 90 140 33 43 66 8 128 217 132 40 192 250
+		     237 250 135 113 217 125 245 87 4 40 96 234 172 167 194 179 3 236
+		     63 5 123 78 129 114 21 67 34 212 60 70 50 0 73 11 86 127 72 72
+		     17 182 3 48 183 64 42 66 59 128 125 10 108 0 206 15 228 1 208
+		     133 143 25 60 15 28 73 0 0 0 0 73 69 78 68 174 66 96 130 ]
 ]
 
 { #category : 'request handling-image' }
@@ -2804,7 +2798,7 @@ VDMPad >> initialize [
 		              at: 'favicon.ico' put: #vdmpadIcon;
 		              at: 'about.html' put: #aboutPage;
 		              at: 'VDMPad.js' put: #VDMPad;
-	                 at: 'VDMInstantPad.js' put: #VDMInstantPad;
+		              at: 'VDMInstantPad.js' put: #VDMInstantPad;
 		              at: 'VDMPad-EpiLog.js' put: #VDMPadEpiLog;
 		              at: 'fileSaver.js' put: #fileSaver;
 		              at: 'blob.js' put: #blob;
@@ -2825,11 +2819,27 @@ VDMPad >> initialize [
 		              at: 'deleteS.png' put: #deleteSelectedIcon;
 		              at: 'saveT.png' put: #saveTransparentIcon;
 		              at: 'copy.png' put: #copyIcon;
+		              at: 'copyLink.png' put: #copyLinkIcon;
+		              at: 'copyQR.png' put: #copyQRIcon;
 		              at: 'vdmj-3.0.1.jar' put: #binaryFileService:;
 		              at: 'vdmj-3.1.1.jar' put: #binaryFileService:;
 		              at: 'vdmj-3.2.0.jar' put: #binaryFileService:;
 		              at: 'Json4VDMJ.jar' put: #binaryFileService:;
 		              yourself
+]
+
+{ #category : 'request handling-image' }
+VDMPad >> linkIcon [
+
+	^ self responsePNG:
+		  #[ 137 80 78 71 13 10 26 10 0 0 0 13 73 72 68 82 0 0 0 32 0 0 0 32
+		     8 6 0 0 0 115 122 122 244 0 0 0 88 73 68 65 84 120 94 229 149
+		     65 10 0 32 8 4 123 188 255 174 123 152 132 25 46 204 128 167
+		     216 117 145 202 193 135 15 31 62 59 102 54 189 122 209 94 233
+		     35 113 69 128 208 39 45 76 248 184 94 173 1 50 141 42 238 150
+		     123 240 101 188 7 15 126 0 126 0 157 87 192 255 136 36 118 129
+		     196 54 228 195 135 15 159 46 22 150 247 78 23 146 15 89 0 0 0 0
+		     0 73 69 78 68 174 66 96 130 ]
 ]
 
 { #category : 'request handling-image' }
@@ -2854,6 +2864,7 @@ VDMPad >> mainPage: aZnRequest [
     <title>VDMPad</title>
     <meta charset="utf-8">
         <link rel="stylesheet" href="epilog.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
         <script src="/fileSaver.js"></script>
         <style>
             body { padding: 1.5rem; background-color: #fbfbfb; font-family: Helvetica, sans-serif}
@@ -2874,10 +2885,23 @@ VDMPad >> mainPage: aZnRequest [
 <body>
   <div id="all" style="width: 850px">
     <div id="menu" style="float: left; width: 50px">
-      <div id="root_menu" style="margin-top: 40px" width: 100%>
-        <img id="rootMenuIcon" src="/rootMenuOff.png" alt="root menu">
+    <img id="rootMenuIcon" src="/rootMenuOff.png" alt="root menu">
+    <div id="root_menu" style="display: none; margin-top: 40px" width: 100%>
+      <div id="file_items" style="margin-bottom: 20px; width: 100%;"></div>
+      <img id="copyVipButton" style="cursor: pointer;" src="/copyLink.png" />
+      <img id="showVipQRButton" style="cursor: pointer;" src="/copyQR.png" />
+      <dialog id="vipQRDialog"></dialog>
+      <div id="config" style="border: 1px solid #c0c0c0; border-radius: 5px; margin-top: 20px; margin-bottom: 20px; padding-left: 10px; width: 270px">
+          Config
+          <div><input id="unittestCheckbox" type="checkbox" style="padding-right: 10px" /><label>Unit testing</label></div>
+          <div><input id="visualCheckbox" type="checkbox" style="padding-right: 10px" /><label>Visual Expression</label></div>
+          <div><input id="sequenceDiagramCheckbox" type="checkbox" style="padding-right: 10px" /><label>Sequence Diagram</label></div>
+          <div><input id="stateDiagramCheckbox" type="checkbox" style="padding-right: 10px" /><label>State Diagram</label></div>
       </div>
-      <div id="file_items" style="width: 100%"></div>
+      <div id="epilogButton" style="padding-left: 20px; padding-right: 20px; padding-top: 5px; padding-bottom: 5px; margin-top: 15px; display: inline-block; border: 1px solid; border-radius: 6px;">
+          EpiLog
+      </div>
+    </div>
   </div>
   <div id="main" style="float: left; width: 800px">
     <div id="title">
