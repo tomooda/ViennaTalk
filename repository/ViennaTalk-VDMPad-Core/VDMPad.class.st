@@ -1278,6 +1278,8 @@ VDMPad.copyVipLink = async function() {
 };
 VDMPad.showVipQR = async function () {
     const dialog = document.getElementById("vipQRDialog");
+    while (dialog.firstChild)
+            dialog.removeChild(dialog.firstChild);
     const qrcode = new QRCode(dialog, {
         width: 512,
         height: 512,
