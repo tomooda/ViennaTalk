@@ -2191,10 +2191,14 @@ VDMPad >> eval: aZnRequest [
 	module := params
 		          at: 'module'
 		          ifPresent: [ :m |
-				          (documentNode moduleNamed: m) ifNil: [
-						          ^ self responseJSON: (json
-								             at: 'message' put: 'Unknown module: ' , m;
-								             yourself) ] ]
+				          m = 'DEFAULT'
+					          ifTrue: [ nil ]
+					          ifFalse: [
+							          (documentNode moduleNamed: m) ifNil: [
+									          ^ self responseJSON: (json
+											             at: 'message' put: 'Unknown module: ' , m;
+											             yourself) ].
+							          m ] ]
 		          ifAbsent: [ nil ].
 	transpiledSpec := ViennaTranspilerForVDMPad new generate:
 		                  documentNode.
