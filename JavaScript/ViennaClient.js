@@ -9,7 +9,7 @@ String.prototype.vienna_eval =
 	    }
 	    json[k] = v;
 	}
-	req.open("POST", "http://vdmpad.viennatalk.org/eval", false);
+	req.open("POST", "https://vdmpad.viennatalk.org/eval", false);
 	req.setRequestHeader("Content-type", "application/json");
 	req.send(JSON.stringify(json));
 	var result = JSON.parse(req.responseText);
