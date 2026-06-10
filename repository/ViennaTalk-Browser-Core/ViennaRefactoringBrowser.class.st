@@ -1502,6 +1502,22 @@ ViennaRefactoringBrowser >> generateSmalltalkClasses [
 			 generate: ast) ifNotNil: [ :class | class browse ] ]
 ]
 
+{ #category : 'operations' }
+ViennaRefactoringBrowser >> generateViennaDocSourceScript [
+
+	self specification ifNotNil: [ :specification |
+			(self
+				 chooseForSaveFileReference:
+				 'Generate ViennaDoc source script to...'
+				 extensions: #( 'js' )
+				 path: FileLocator viennaTalkDocumentDirectory) ifNotNil: [ :file |
+					file
+						ensureDelete;
+						writeStreamDo: [ :stream |
+								stream nextPutAll:
+										specification asViennaDocScript withPlatformLineEndings ] ] ]
+]
+
 { #category : 'private' }
 ViennaRefactoringBrowser >> getSource: aViennaNode [
 
@@ -2495,61 +2511,66 @@ ViennaRefactoringBrowser >> loadSource: aString [
 ViennaRefactoringBrowser >> menuBar [
 
 	^ self newMenuBar addGroup: [ :group |
-		  group
-			  addItem: [ :item |
-				  item
-					  name: 'File';
-					  subMenu: (self newMenu
-							   addGroup: [ :g |
-								   g
-									   addItem: [ :i |
-										   i
-											   name: 'Reload';
-											   action: [ self reload ];
-											   enabled: [ self hasFileReference ] ];
-									   addItem: [ :i |
-										   i
-											   name: 'Load from Directory...';
-											   action: [ self loadFromDirectory ] ];
-									   addItem: [ :i |
-										   i
-											   name: 'Load from File...';
-											   action: [ self loadFromFile ] ];
-									   addItem: [ :i |
-										   i
-											   name: 'Save';
-											   action: [ self save ];
-											   enabled: [ self hasFileReference ] ];
-									   addItem: [ :i |
-										   i
-											   name: 'Save As...';
-											   action: [ self saveAs ] ] ];
-							   addGroup: [ :g |
-								   g
-									   addItem: [ :i |
-										   i
-											   name: 'Merge annotations into FRAM...';
-											   action: [ self mergeAnnotationsIntoFRAM ] ];
-									   addItem: [ :i |
-										   i
-											   name: 'Merge operations from FRAM...';
-											   action: [ self mergeOperationsFromFRAM ] ] ]) ];
-			  addItem: [ :item |
-				  item
-					  name: 'Test';
-					  subMenu: (self newMenu addGroup: [ :g |
-								   g addItem: [ :i |
-										   i
-											   name: 'Run all tests';
-											   action: [ self runAllTests ] ] ]) ];
-			  addItem: [ :item |
-				  item
-					  name: 'Smalltalk';
-					  subMenu: (self newMenu addGroup: [ :g |
-								   g addItem: [ :i |
-										   i
-											   name: 'Generate Smalltalk classes';
-											   action: [ self generateSmalltalkClasses ] ] ]) ] ]
+			  group
+				  addItem: [ :item |
+						  item
+							  name: 'File';
+							  subMenu: (self newMenu
+									   addGroup: [ :g |
+											   g
+												   addItem: [ :i |
+														   i
+															   name: 'Reload';
+															   action: [ self reload ];
+															   enabled: [ self hasFileReference ] ];
+												   addItem: [ :i |
+														   i
+															   name: 'Load from Directory...';
+															   action: [ self loadFromDirectory ] ];
+												   addItem: [ :i |
+														   i
+															   name: 'Load from File...';
+															   action: [ self loadFromFile ] ];
+												   addItem: [ :i |
+														   i
+															   name: 'Save';
+															   action: [ self save ];
+															   enabled: [ self hasFileReference ] ];
+												   addItem: [ :i |
+														   i
+															   name: 'Save As...';
+															   action: [ self saveAs ] ] ];
+									   addGroup: [ :g |
+											   g addItem: [ :i |
+													   i
+														   name: 'Generate ViennaDoc source script...';
+														   action: [ self generateViennaDocSourceScript ] ] ];
+									   addGroup: [ :g |
+											   g
+												   addItem: [ :i |
+														   i
+															   name: 'Merge annotations into FRAM...';
+															   action: [ self mergeAnnotationsIntoFRAM ] ];
+												   addItem: [ :i |
+														   i
+															   name: 'Merge operations from FRAM...';
+															   action: [ self mergeOperationsFromFRAM ] ] ]) ];
+				  addItem: [ :item |
+						  item
+							  name: 'Test';
+							  subMenu: (self newMenu addGroup: [ :g |
+											   g addItem: [ :i |
+														   i
+															   name: 'Run all tests';
+															   action: [ self runAllTests ] ] ]) ];
+				  addItem: [ :item |
+						  item
+							  name: 'Smalltalk';
+							  subMenu: (self newMenu addGroup: [ :g |
+											   g addItem: [ :i |
+														   i
+															   name: 'Generate Smalltalk classes';
+															   action: [ self generateSmalltalkClasses ] ] ]) ] ]
 ]
 
 { #category : 'operations' }

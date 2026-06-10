@@ -1,6 +1,6 @@
 Class {
-	#name : #ViennaAbstractFormatter,
-	#superclass : #Object,
+	#name : 'ViennaAbstractFormatter',
+	#superclass : 'Object',
 	#instVars : [
 		'maxSizePerLine',
 		'indent'
@@ -8,25 +8,26 @@ Class {
 	#classVars : [
 		'DefaultMaxSizePerLine'
 	],
-	#category : #'ViennaTalk-Parser-Formatters'
+	#category : 'ViennaTalk-Parser-Formatters',
+	#package : 'ViennaTalk-Parser-Formatters'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAbstractFormatter class >> defaultMaxSizePerLine [
 	^ DefaultMaxSizePerLine ifNil: [ DefaultMaxSizePerLine := 65 ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAbstractFormatter class >> defaultMaxSizePerLine: anInteger [
 	DefaultMaxSizePerLine := anInteger asInteger
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 ViennaAbstractFormatter class >> format: aViennaNode [
 	^ self new format: aViennaNode
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 ViennaAbstractFormatter class >> formatSource: aString ifError: errorBlock [
 
 	| ast |
@@ -35,7 +36,7 @@ ViennaAbstractFormatter class >> formatSource: aString ifError: errorBlock [
 	^ self format: ast
 ]
 
-{ #category : #settings }
+{ #category : 'settings' }
 ViennaAbstractFormatter class >> viennaSettingsOn: aBuilder [
 	<systemsettings>
 	(aBuilder setting: #defaultFormatWidth)
@@ -48,122 +49,122 @@ ViennaAbstractFormatter class >> viennaSettingsOn: aBuilder [
 		order: 0.51
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> and [
 	^ 'and'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaAbstractFormatter >> anyNeedsIndent: anArrayOfString [
 	^ (anArrayOfString contains: [ :string | string includes: Character cr ])
 		or: [ (anArrayOfString inject: 0 into: [ :len :str | len + (self strlen: str) ]) > self maxSizePerLine ]
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> anyType [
 
 	^ self typeName: '?'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> arrow [
 	^ '->'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> bool [
 
 	^ self typeName: 'bool'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> concat [
 	^ '^'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> cr [
 
 	^ String cr
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 ViennaAbstractFormatter >> defaultIndent [
 	^ '    '
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 ViennaAbstractFormatter >> defaultMaxSizePerLine [
 	^ self class defaultMaxSizePerLine
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> dinter [
 	^ 'dinter'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> domainRestrictedBy [
 	^ '<-:'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> domainRestrictedTo [
 	^ '<:'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> dot [
 
 	^ self keyword: '&'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> dots [
 
 	^ self keyword: '...'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> dunion [
 	^ 'dunion'
 ]
 
-{ #category : #formatting }
+{ #category : 'formatting' }
 ViennaAbstractFormatter >> empty [
 
 	^ ''
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> equiv [
 	^ '<=>'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaAbstractFormatter >> escapeString: aString [
 	^ aString
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> exists [
 
 	^ self keyword: 'exists'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> exists1 [
 
 	^ self keyword: 'exists1'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> forall [
 
 	^ self keyword: 'forall'
 ]
 
-{ #category : #formatting }
+{ #category : 'formatting' }
 ViennaAbstractFormatter >> format: aViennaNode [
 
 	| string |
@@ -183,7 +184,7 @@ ViennaAbstractFormatter >> format: aViennaNode [
 	^ string
 ]
 
-{ #category : #formatting }
+{ #category : 'formatting' }
 ViennaAbstractFormatter >> formatAll: aViennaNodeOrArray [
 	| array |
 	array := Array new: aViennaNodeOrArray size.
@@ -191,12 +192,12 @@ ViennaAbstractFormatter >> formatAll: aViennaNodeOrArray [
 	^ array
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaAbstractFormatter >> formatEnumerate: anArrayOfString ifEmpty: aBlock [
 	^ self formatEnumerate: anArrayOfString separator: ',' ifEmpty: aBlock
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaAbstractFormatter >> formatEnumerate: anArrayOfString separator: aString ifEmpty: aBlock [
 	| lines |
 	anArrayOfString size = 0
@@ -230,59 +231,59 @@ ViennaAbstractFormatter >> formatEnumerate: anArrayOfString separator: aString i
 	^ self join: aString ++ String cr withAll: lines
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> greaterThanOrEqual [
 	^ '>='
 ]
 
-{ #category : #formatting }
+{ #category : 'formatting' }
 ViennaAbstractFormatter >> identifier: aString [
 
 	^ aString
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> imply [
 	^ '=>'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAbstractFormatter >> indent [
 	^ indent
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAbstractFormatter >> indent: aString [
 
 	indent := self empty ++ aString
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaAbstractFormatter >> indentAllStrings: anArrayOfString [
 	^ self
 		join: String cr ++ indent
 		withAll: (anArrayOfString collect: [ :string | self indentString: string ])
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaAbstractFormatter >> indentAllStrings: anArrayOfString withSeparator: separator [
 	^ self
 		join: separator ++ String cr ++ indent
 		withAll: (anArrayOfString collect: [ :string | self indentString: string ])
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaAbstractFormatter >> indentAllStrings: anArrayOfString withTerminator: terminator [
 	^ (self indentAllStrings: anArrayOfString withSeparator: terminator) ++ terminator
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaAbstractFormatter >> indentString: aString [
 
 	^ self join: self cr ++ indent withAll: aString lines
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaAbstractFormatter >> indentString: aString insertCr: anotherString [
 
 	^ anotherString ifEmpty: [ self empty ++ aString ] ifNotEmpty: [
@@ -290,7 +291,7 @@ ViennaAbstractFormatter >> indentString: aString insertCr: anotherString [
 		  ++ (self indentString: anotherString) ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaAbstractFormatter >> indentString: aString insertCrIfNeeded: anotherString [
 
 	^ anotherString ifEmpty: [ self empty ++ aString ] ifNotEmpty: [
@@ -301,7 +302,7 @@ ViennaAbstractFormatter >> indentString: aString insertCrIfNeeded: anotherString
 				   ifFalse: [ self space ++ anotherString ]) ]
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 ViennaAbstractFormatter >> initialize [
 
 	super initialize.
@@ -309,150 +310,150 @@ ViennaAbstractFormatter >> initialize [
 	indent := self empty ++ self defaultIndent
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> inmapInfix [
 	^ 'to'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> inmapPrefix [
 	^ 'inmap '
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> inseq [
 
 	^ self keyword: 'in seq'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> inset [
 
 	^ self keyword: 'in set'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> int [
 
 	^ self typeName: 'int'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> inter [
 	^ 'inter'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> inverse: aString [
 
 	^ 'inverse ' ++ aString
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> iota [
 
 	^ self keyword: 'iota'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> iterate [
 	^ '**'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaAbstractFormatter >> join: aString withAll: aCollectionOfString [
 
 	^ self empty ++ aString join: aCollectionOfString
 ]
 
-{ #category : #formatting }
+{ #category : 'formatting' }
 ViennaAbstractFormatter >> keyword: aString [
 
 	^ aString
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> lambda [
 
 	^ self keyword: 'lambda'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> lessThanOrEqual [
 	^ '<='
 ]
 
-{ #category : #formatting }
+{ #category : 'formatting' }
 ViennaAbstractFormatter >> literal: aString [
 
 	^ aString
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> mapInfix [
 	^ 'to'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> mapPrefix [
 	^ 'map '
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> maplet [
 	^ '|->'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAbstractFormatter >> maxSizePerLine [
 	^ maxSizePerLine
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ViennaAbstractFormatter >> maxSizePerLine: anInteger [
 	maxSizePerLine := anInteger
 ]
 
-{ #category : #formatting }
+{ #category : 'formatting' }
 ViennaAbstractFormatter >> moduleName: aString [
 
 	^ aString
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> mu [
 
 	^ self keyword: 'mu'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> mul [
 	^ ' *'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> munion [
 	^ 'munion'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> nat [
 
 	^ self typeName: 'nat'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> nat1 [
 
 	^ self typeName: 'nat1'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaAbstractFormatter >> needsIndent: aString [
 	^ (aString includes: Character cr) or: [ (self strlen: aString) > self maxSizePerLine ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaAbstractFormatter >> needsParen [
 
 	| childContext childNode childPrecedence parentContext parentNode parentPrecedence |
@@ -478,7 +479,7 @@ ViennaAbstractFormatter >> needsParen [
 		  otherwise: [ true ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaAbstractFormatter >> needsParen: aViennaNode [
 
 	| precedence parentPrecedence |
@@ -496,7 +497,7 @@ ViennaAbstractFormatter >> needsParen: aViennaNode [
 		  otherwise: [ true ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaAbstractFormatter >> newlineIndentAllStrings: anArrayOfString [
 	^ self
 		join: String new
@@ -505,13 +506,13 @@ ViennaAbstractFormatter >> newlineIndentAllStrings: anArrayOfString [
 				collect: [ :string | self newlineIndentString: string ])
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaAbstractFormatter >> newlineIndentString: aString [
 
 	^ self cr ++ indent ++ (self indentString: aString)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaAbstractFormatter >> noIndentString: aString insertCrIfNeeded: anotherString [
 	^ anotherString
 		ifEmpty: [ aString ]
@@ -523,55 +524,55 @@ ViennaAbstractFormatter >> noIndentString: aString insertCrIfNeeded: anotherStri
 						ifFalse: [ String space ]) ++ anotherString ]
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> not [
 	^ 'not'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> notEqual [
 	^ '<>'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> notInSet [
 
 	^ self keyword: 'not in set'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> oparrow [
 	^ '==>'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> or [
 	^ 'or'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> override [
 	^ '++'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> partialFunction [
 	^ '->'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> power [
 	^ 'power'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaAbstractFormatter >> print: argString1 infix: opString arg: argString2 [
 	^ (self needsIndent: argString1 ++ argString2)
 		ifTrue: [ argString1 ++ String cr ++ opString ++ String space ++ argString2 ]
 		ifFalse: [ argString1 ++ String space ++ opString ++ String space ++ argString2 ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaAbstractFormatter >> print: aString withChildren: anArrayOfString [
 	^ (self anyNeedsIndent: (anArrayOfString copyWith: aString))
 		ifTrue: [ aString ++ (self newlineIndentAllStrings: anArrayOfString) ]
@@ -579,84 +580,84 @@ ViennaAbstractFormatter >> print: aString withChildren: anArrayOfString [
 				++ (self join: String space withAll: anArrayOfString) ]
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> psubset [
 	^ 'psubset'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> rangeRestrictedBy [
 	^ ':->'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> rangeRestrictedTo [
 	^ ':>'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> real [
 
 	^ self typeName: 'real'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> seq1Postfix [
 	^ ''
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> seq1Prefix [
 	^ 'seq1 of '
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> seqPostfix [
 	^ ''
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> seqPrefix [
 	^ 'seq of '
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> set1Postfix [
 	^ ''
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> set1Prefix [
 	^ 'set1 of '
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> setDifference [
 	^ '\'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> setPostfix [
 	^ ''
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> setPrefix [
 	^ 'set of '
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> skip [
 
 	^ self keyword: 'skip'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> space [
 	^ ' '
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaAbstractFormatter >> strlen: aString [
 	^ aString
 		inject: 0
@@ -668,23 +669,23 @@ ViennaAbstractFormatter >> strlen: aString [
 						ifFalse: [ 2 ]) ]
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> subset [
 	^ 'subset'
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> totalFunction [
 	^ '+>'
 ]
 
-{ #category : #formatting }
+{ #category : 'formatting' }
 ViennaAbstractFormatter >> typeName: aString [
 
 	^ aString
 ]
 
-{ #category : #'symbol access' }
+{ #category : 'symbol access' }
 ViennaAbstractFormatter >> union [
 	^ 'union'
 ]

@@ -1,6 +1,6 @@
-Extension { #name : #ViennaNode }
+Extension { #name : 'ViennaNode' }
 
-{ #category : #'*ViennaTalk-Parser-Formatters' }
+{ #category : '*ViennaTalk-Parser-Formatters' }
 ViennaNode >> source [
 
 	^ ViennaVDMFormatter format: self
