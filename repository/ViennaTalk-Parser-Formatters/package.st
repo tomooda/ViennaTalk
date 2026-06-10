@@ -1,1 +1,1 @@
-Package { #name : #'ViennaTalk-Parser-Formatters' }
+Package { #name : 'ViennaTalk-Parser-Formatters' }
