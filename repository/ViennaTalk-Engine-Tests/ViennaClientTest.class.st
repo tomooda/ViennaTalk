@@ -1,18 +1,19 @@
 Class {
-	#name : #ViennaClientTest,
-	#superclass : #TestCase,
+	#name : 'ViennaClientTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'fixture'
 	],
-	#category : #'ViennaTalk-Engine-Tests'
+	#category : 'ViennaTalk-Engine-Tests',
+	#package : 'ViennaTalk-Engine-Tests'
 }
 
-{ #category : #running }
+{ #category : 'running' }
 ViennaClientTest >> setUp [
 	fixture := ViennaClient on: 'http://vdmpad.viennatalk.org/'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaClientTest >> stateFromArray: anArray [
 	| state |
 	state := Dictionary new: anArray size.
@@ -25,7 +26,7 @@ ViennaClientTest >> stateFromArray: anArray [
 	^ state
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaClientTest >> testBadSpec [
 	self
 		testExpression: ''
@@ -41,7 +42,7 @@ ViennaClientTest >> testBadSpec [
 		resultStates: (self stateFromArray: {'DEFAULT' -> {'count' -> '441'}})
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ViennaClientTest >> testExpression: expression specification: specification states: states resultValue: resultValue resultStates: resultStates [
 	(fixture
 		evaluate: expression
@@ -55,12 +56,12 @@ ViennaClientTest >> testExpression: expression specification: specification stat
 			self assert: resultValue isNil equals: triple third notEmpty ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaClientTest >> testOKSpec [
 	self
 		testExpression: ' inc ( ) '
 		specification: 'state counter of count : nat init s == s = mk_counter(0) end operations inc : () ==> nat inc() == (count := count + 1; return count);'
-		states: (self stateFromArray: {'DEFAULT' -> {'frq' -> '0'}})
+		states: (self stateFromArray: {'DEFAULT' -> {'count' -> '0'}})
 		resultValue: '1'
 		resultStates: (self stateFromArray: {'DEFAULT' -> {'count' -> '1'}}).
 	self
@@ -71,7 +72,7 @@ ViennaClientTest >> testOKSpec [
 		resultStates: (self stateFromArray: {'DEFAULT' -> {'count' -> '442'}})
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaClientTest >> testUTF8Strings [
 	self
 		testExpression: '"あいう"'

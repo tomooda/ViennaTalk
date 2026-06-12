@@ -1,13 +1,14 @@
 Class {
-	#name : #ViennaBankEngineTest,
-	#superclass : #TestCase,
+	#name : 'ViennaBankEngineTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'fixture'
 	],
-	#category : #'ViennaTalk-Engine-Tests'
+	#category : 'ViennaTalk-Engine-Tests',
+	#package : 'ViennaTalk-Engine-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 ViennaBankEngineTest >> test5times [
 	| bank |
 	bank := ViennaBankEngine new.
