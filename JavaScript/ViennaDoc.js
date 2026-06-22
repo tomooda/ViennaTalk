@@ -1,4 +1,31 @@
-ViennaDoc = {};
+const opaque = document.body.style.opacity;
+document.body.style.opacity = 0;
+
+const loadAsset = (type, url) => new Promise((resolve, reject) => {
+  if (type === 'script') {
+    const script = document.createElement('script');
+    script.src = url;
+    script.async = false;
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error(`Failed to load: ${url}`));
+    document.head.appendChild(script);
+  } else if (type === 'link') {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = url;
+    document.head.appendChild(link);
+    resolve();
+  }
+});
+
+
+await loadAsset('script', 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js');
+await loadAsset('link', 'https://viennatalk.org/ViennaDoc/ViennaDoc.css');
+await loadAsset('script', 'https://viennatalk.org/ViennaDoc/ViennaClient.js');
+
+document.body.style.opacity = 1;
+
+export const ViennaDoc = {};
 ViennaDoc.value_prefix = '\u261E ';
 ViennaDoc.source = "";
 ViennaDoc.states = {};
@@ -65,8 +92,8 @@ ViennaDoc.parseStates = function (str, module) {
     if (str) {
 	str.split(",").map(str=>str.trim()).forEach(function (bind) {
 	    if (bind) {
-		var pair = bind.split("=");
-		varname = pair[0].trim();
+		const pair = bind.split("=");
+		const varname = pair[0].trim();
 		if (pair.length > 1) {
 		    states[varname] = pair[1].trim();
 		} else {
@@ -79,15 +106,18 @@ ViennaDoc.parseStates = function (str, module) {
 }
 
 ViennaDoc.initializeViennaSourceNode = function(node) {
-    var src = node.getAttribute("src");
-    if (src != null) {
-	node.innerText = ViennaDoc.sources[src] || "";
-    } else {
-	node.innerText = ViennaDoc.source || "";
-    }
     var preNode = document.createElement("pre");
     node.parentNode.insertBefore(preNode, node.nextSibling);
     preNode.appendChild(node);
+    var src = node.getAttribute("src");
+    if (src != null) {
+	src = ViennaDoc.sources[src] || "";
+    } else {
+	src = ViennaDoc.source || "";
+    }
+    node.innerHTML = hljs.highlightAuto(src).value;
+    node.style.backgroundColor = "#eee";
+    node.style.display = "block";
 };
 
 ViennaDoc.initializeViennaEvalNode = function(node) {
@@ -192,12 +222,65 @@ document.addEventListener('DOMContentLoaded', (event) => {
 	    ViennaDoc.initializeViennaWatchNode(node);
 	if (vienna == "assert")
 	    ViennaDoc.initializeViennaAssertNode(node);
-	hljs.highlightBlock(node);
 	if(node.parentNode.tagName.toLowerCase() != "pre") {
-	    node.style.display = "inline";
+	    hljs.highlightElement(node);
+	    node.style.display = "block-inline";
 	    node.style.margin = "0 2px";
 	    node.style.padding = "1px 3px";
 	}
     });
     ViennaDoc.eval("nil");
+});
+
+hljs.registerLanguage('vdm', function(hljsApi) {
+  var VDM_KEYWORDS = {
+    keyword: 
+      'state compose  inv init pre post types values functions operations traces ' +
+      'to return definitions exports imports' +
+      ' module end pure ' +
+      'if then else elseif let in be st cases of lambda default ' +
+      'forall exists exists1 mu iota dcl',
+    literal: 
+      'true false nil',
+    type: 
+      'nat nat1 int rat real char bool map set seq of token',
+  };
+
+  return {
+    name: 'VDM',
+    aliases: ['vdmsl'],
+    keywords: VDM_KEYWORDS,
+    contains: [
+    {
+        className: 'comment',
+        begin: '--', end: '$'
+      },
+      {
+        className: 'comment',
+        begin: '/\\*', end: '\\*/'
+      },
+      {
+        className: 'string',
+        begin: '"', end: '"',
+        illegal: '\\n'
+      },
+      {
+        className: 'keyword',
+        begin: '(pre_|is_|mk_|inv_|post_)'
+      },
+      {
+        className: 'number',
+        begin: '\\b\\d+(\\.\\d+)?\\b'
+      },
+      {
+        className: 'symbol',
+        begin: '(\\==>|\\==|\\->|\\|\\->|\\=>|\\:\\=|\\:\\:|\\||\\+|\\-|\\*|\\/|\\=|\\#|<|>|<=|>=)'
+      },
+      {
+        className: 'variable',
+        begin: '\\b[a-zA-Z_][a-zA-Z0-9_]*\\b',
+        keywords: VDM_KEYWORDS
+      }
+    ]
+  };
 });

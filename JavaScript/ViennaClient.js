@@ -1,7 +1,7 @@
 String.prototype.vienna_eval =
-    function(expr, prestates={}) {
+    function(expr, prestates={}, module="DEFAULT") {
 	var req = new XMLHttpRequest();
-	var json = {"source": this, "expression": expr};
+	var json = {"source": this, "expression": expr, "module": module};
 	for (let k in prestates) {
 	    var v = prestates[k];
 	    if (k.indexOf('`') < 0) {
