@@ -37,12 +37,17 @@ Table of Major Components of ViennaTalk
 What's new in the latest release
 ---
 
-* Codename Gdansk has been released (Dec 24, 2025)
-  - improved git repository support: You can merge the current working copy into the origin by resolving conflicts on top-level definitions.
-  - mutation testing: The system evaluates the testcases and combinatorial tests by mutating the original specification.
-  - full execution traceː The system records all assignment/call/return statements with actual values and visualize them as state diagrams and sequence diagrams.
-  - experimental profilersː The profiler catches all assignment to the variables and operation calls to help estimating the performance of implementation.
-  - misc improvementsː bugfixes on type checkers and etc.
+* Codename Montpellier has been released (Jun 23, 2026)
+  - Improved VDMPad
+    - Modernized UI 
+    - VIP (VDM Instant Pad) link and QR code
+    - State diagrams and Sequence diagrams
+  - Updated ViennaClient 
+    - adopt async/await
+  - Updated ViennaDoc
+    - updated syntax highlighting
+    - adopt module system of ES
+  - misc fixes
 
 * [Past Releases](Releases.md)
 

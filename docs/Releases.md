@@ -1,5 +1,17 @@
 Major releases of ViennaTalk (lastest top)
 ---
+* Codename Montpellier has been released (Jun 23, 2026)
+  - Improved VDMPad
+    - Modernized UI
+    - VIP (VDM Instant Pad) link and QR code
+    - State diagrams and Sequence diagrams
+  - Updated ViennaClient
+    - adopt async/await
+  - Updated ViennaDoc
+    - updated syntax highlighting
+    - adopt module system of ES
+  - misc fixes
+
 * Codename Gdansk has been released (Dec 24, 2025)
   - improved git repository support: You can merge the current working copy into the origin by resolving conflicts on top-level definitions.
   - mutation testing: The system evaluates the testcases and combinatorial tests by mutating the original specification.
