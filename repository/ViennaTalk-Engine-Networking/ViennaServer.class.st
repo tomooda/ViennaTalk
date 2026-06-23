@@ -7,13 +7,19 @@ Class {
 	#classVars : [
 		'Server'
 	],
-	#category : 'ViennaTalk-Engine-Core',
-	#package : 'ViennaTalk-Engine-Core'
+	#category : 'ViennaTalk-Engine-Networking',
+	#package : 'ViennaTalk-Engine-Networking'
 }
 
 { #category : 'defaults' }
 ViennaServer class >> defaultPort [
 	^ 8801
+]
+
+{ #category : 'accessing' }
+ViennaServer class >> engineType [
+
+	^ nil
 ]
 
 { #category : 'servicing' }
@@ -63,6 +69,12 @@ ViennaServer class >> on: aViennaEngine [
 		yourself
 ]
 
+{ #category : 'accessing' }
+ViennaServer class >> priority [
+
+	^ -1
+]
+
 { #category : 'servicing' }
 ViennaServer class >> server [
 	^ Server
@@ -96,14 +108,13 @@ ViennaServer >> engine: aViennaEngine [
 ]
 
 { #category : 'evaluating' }
-ViennaServer >> evaluate: expression specification: specification states: states module: module vdm10: vdm10 rtc: rtc [
+ViennaServer >> evaluate: expression specification: specification states: states module: module [
+
 	^ self engine
-		evaluate: expression
-		specification: specification
-		states: states
-		module: module
-		vdm10: vdm10
-		rtc: rtc
+		  evaluate: expression
+		  specification: specification
+		  states: states
+		  module: module
 ]
 
 { #category : 'request handling' }

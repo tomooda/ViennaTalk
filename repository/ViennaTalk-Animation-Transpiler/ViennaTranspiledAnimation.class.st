@@ -22,26 +22,6 @@ ViennaTranspiledAnimation class >> useTranspilerByDefault [
 	^ UseTranspilerByDefault ~= false
 ]
 
-{ #category : 'accessing' }
-ViennaTranspiledAnimation class >> useTranspilerByDefault: aBoolean [
-
-	UseTranspilerByDefault := aBoolean = true
-]
-
-{ #category : 'settings' }
-ViennaTranspiledAnimation class >> viennaSettingsOn: aBuilder [
-
-	<systemsettings>
-	(aBuilder setting: #ViennaTalkUseTranspilerByDefault)
-		parent: #ViennaTalkCodeGenerator;
-		target: self;
-		getSelector: #useTranspilerByDefault;
-		setSelector: #useTranspilerByDefault:;
-		description: 'If checked, animation will use transpiler by default';
-		label: 'Use transpiler by default';
-		order: 0.4
-]
-
 { #category : 'announcement' }
 ViennaTranspiledAnimation >> announceSpecificationChanged [
 
@@ -92,17 +72,18 @@ ViennaTranspiledAnimation >> at: aString ifPresent: aBlock [
 
 { #category : 'accessing' }
 ViennaTranspiledAnimation >> at: aString ifPresent: presentBlock ifAbsent: absentBlock [
+
 	| separatorIndex target name value |
 	separatorIndex := aString indexOf: $`.
 	separatorIndex = 0
-		ifTrue: [ target := object.
-			name := aString ]
-		ifFalse: [ | moduleName |
-			moduleName := aString copyFrom: 1 to: separatorIndex - 1.
-			target := moduleName = self defaultModule
-				ifTrue: [ object ]
-				ifFalse: [ object at: moduleName ifAbsent: [ ^ absentBlock value ] ].
-			name := aString copyFrom: separatorIndex + 1 to: aString size ].
+		ifTrue: [
+				target := object.
+				name := aString ]
+		ifFalse: [
+				| moduleName |
+				moduleName := aString copyFrom: 1 to: separatorIndex - 1.
+				target := object at: moduleName ifAbsent: [ ^ absentBlock value ].
+				name := aString copyFrom: separatorIndex + 1 to: aString size ].
 	[ value := target instVarNamed: name ]
 		on: Error
 		do: [ :ex | ^ absentBlock value ].
@@ -116,18 +97,15 @@ ViennaTranspiledAnimation >> at: aString put: anObject [
 	separatorIndex := aString indexOf: $`.
 	separatorIndex = 0
 		ifTrue: [
-			target := object.
-			name := aString ]
+				target := object.
+				name := aString ]
 		ifFalse: [
-			| moduleName |
-			moduleName := aString copyFrom: 1 to: separatorIndex - 1.
-			target := moduleName = self defaultModule
-				          ifTrue: [ object ]
-				          ifFalse: [
-					          object
-						          at: (aString copyFrom: 1 to: separatorIndex - 1)
-						          ifAbsent: [ ^ nil ] ].
-			name := aString copyFrom: separatorIndex + 1 to: aString size ].
+				| moduleName |
+				moduleName := aString copyFrom: 1 to: separatorIndex - 1.
+				target := object
+					          at: (aString copyFrom: 1 to: separatorIndex - 1)
+					          ifAbsent: [ ^ nil ].
+				name := aString copyFrom: separatorIndex + 1 to: aString size ].
 	[ value := target instVarNamed: name put: anObject ]
 		on: Error
 		do: [ :ex | ^ nil ].
@@ -220,21 +198,14 @@ ViennaTranspiledAnimation >> evaluate: aString [
 ViennaTranspiledAnimation >> evaluate: aString in: moduleName ifError: errorBlock [
 
 	Cursor wait showWhile: [
-		| result |
-		result := (moduleName = self defaultModule
-			           ifTrue: [ object ]
-			           ifFalse: [
-				           object
-					           at: moduleName
-					           ifAbsent: [ ^ errorBlock value: 'unknown module name' ] ])
-			          evaluateExpression: aString
-			          with: transpiler
-			          ifError: [ :msg | ^ errorBlock cull: msg ].
-		self changed: #state.
-		self announceStateChanged.
-		^ result == object
-			  ifTrue: [ nil ]
-			  ifFalse: [ result ] ]
+			| result |
+			result := (object at: moduleName ifAbsent: [ object ])
+				          evaluateExpression: aString
+				          with: transpiler
+				          ifError: [ :msg | ^ errorBlock cull: msg ].
+			self changed: #state.
+			self announceStateChanged.
+			^ result ]
 ]
 
 { #category : 'evaluating' }
@@ -325,10 +296,10 @@ ViennaTranspiledAnimation >> plainEvaluate: aString ifError: errorBlock [
 { #category : 'evaluating' }
 ViennaTranspiledAnimation >> plainEvaluate: aString in: moduleName ifError: errorBlock [
 
-	^ writer stringify: (self
+	^ (self
 			   evaluate: aString
 			   in: (moduleName ifNil: [ self defaultModule ])
-			   ifError: [ :msg | ^ errorBlock value: msg ])
+			   ifError: [ :msg | ^ errorBlock value: msg ]) viennaString
 ]
 
 { #category : 'evaluating' }
@@ -450,18 +421,18 @@ ViennaTranspiledAnimation >> specification: aString [
 ViennaTranspiledAnimation >> specification: aString ifError: errorBlock [
 
 	| ast |
-	transpiler := ViennaVDM2SmalltalkObject new.
+	transpiler := self transpilerClass new.
 	ast := aString isViennaNode
 		       ifTrue: [ aString ]
 		       ifFalse: [
-			       aString
-				       ifNotEmpty: [
-					       | result |
-					       result := parser parse: aString.
-					       result isPetit2Failure ifTrue: [
-						       ^ errorBlock cull: result message ].
-					       result ]
-				       ifEmpty: [ ViennaModularDocumentNode empty ] ].
+				       aString
+					       ifNotEmpty: [
+							       | result |
+							       result := parser parse: aString.
+							       result isPetit2Failure ifTrue: [
+								       ^ errorBlock cull: result message ].
+							       result ]
+					       ifEmpty: [ ViennaModularDocumentNode default ] ].
 	[ ast typecheck ]
 		on: ViennaTypeError
 		do: [ :typeError | ^ errorBlock cull: typeError messageText ].
@@ -501,4 +472,10 @@ ViennaTranspiledAnimation >> state: aDictionary [
 		self basicAt: var put: (reader parse: val) ].
 	object inv.
 	self announceStateChanged
+]
+
+{ #category : 'class access' }
+ViennaTranspiledAnimation >> transpilerClass [
+
+	^ ViennaVDM2SmalltalkObject
 ]

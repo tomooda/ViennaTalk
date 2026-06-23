@@ -2,6 +2,7 @@ Class {
 	#name : 'ViennaTranspiledModularDocument',
 	#superclass : 'Dictionary',
 	#instVars : [
+		'_document',
 		'viennaEnv'
 	],
 	#category : 'ViennaTalk-Transpiler-Core-TranspiledObject',
@@ -55,16 +56,26 @@ ViennaTranspiledModularDocument >> evaluateExpression: aString ifError: errorBlo
 
 { #category : 'evaluating' }
 ViennaTranspiledModularDocument >> evaluateExpression: aString with: aViennaVDM2SmalltalkClass ifError: errorBlock [
-	| src |
-	src := self
-		transpileExpression: aString
-		with: aViennaVDM2SmalltalkClass
-		ifError: [ :msg | ^ errorBlock cull: msg ].
-	^ OpalCompiler new
-		source: src;
-		logged: false;
-		receiver: self;
-		evaluate
+
+	^ self
+		  at: 'DEFAULT'
+		  ifPresent: [ :module |
+				  module
+					  evaluateExpression: aString
+					  with: aViennaVDM2SmalltalkClass
+					  ifError: errorBlock ]
+		  ifAbsent: [
+				  aString ifNotEmpty: [
+						  | src |
+						  src := self
+							         transpileExpression: aString
+							         with: aViennaVDM2SmalltalkClass
+							         ifError: [ :msg | ^ errorBlock cull: msg ].
+						  OpalCompiler new
+							  source: src;
+							  logged: false;
+							  receiver: self;
+							  evaluate ] ]
 ]
 
 { #category : 'evaluating' }
@@ -85,16 +96,24 @@ ViennaTranspiledModularDocument >> evaluateNode: aViennaNode ifError: errorBlock
 { #category : 'evaluating' }
 ViennaTranspiledModularDocument >> evaluateNode: aViennaNode with: aViennaVDM2SmalltalkClass ifError: errorBlock [
 
-	| src |
-	src := self
-		       transpileNode: aViennaNode
-		       with: aViennaVDM2SmalltalkClass
-		       ifError: [ :msg | ^ errorBlock cull: msg ].
-	^ OpalCompiler new
-		  source: src;
-		  logged: false;
-		  receiver: self;
-		  evaluate
+	^ self
+		  at: 'DEFAULT'
+		  ifPresent: [ :module |
+				  module
+					  evaluateNode: aViennaNode
+					  with: aViennaVDM2SmalltalkClass
+					  ifError: errorBlock ]
+		  ifAbsent: [
+				  | src |
+				  src := self
+					         transpileNode: aViennaNode
+					         with: aViennaVDM2SmalltalkClass
+					         ifError: [ :msg | ^ errorBlock cull: msg ].
+				  OpalCompiler new
+					  source: src;
+					  logged: false;
+					  receiver: self;
+					  evaluate ]
 ]
 
 { #category : 'evaluating' }
@@ -109,16 +128,25 @@ ViennaTranspiledModularDocument >> evaluateStatement: aString ifError: errorBloc
 
 { #category : 'evaluating' }
 ViennaTranspiledModularDocument >> evaluateStatement: aString with: aViennaVDM2SmalltalkClass ifError: errorBlock [
-	| src |
-	src := self
-		transpileStatement: aString
-		with: aViennaVDM2SmalltalkClass
-		ifError: [ :msg | ^ errorBlock cull: msg ].
-	^ OpalCompiler new
-		source: src;
-		logged: false;
-		receiver: self;
-		evaluate
+
+	^ self
+		  at: 'DEFAULT'
+		  ifPresent: [ :module |
+				  module
+					  evaluateStatement: aString
+					  with: aViennaVDM2SmalltalkClass
+					  ifError: errorBlock ]
+		  ifAbsent: [
+				  | src |
+				  src := self
+					         transpileStatement: aString
+					         with: aViennaVDM2SmalltalkClass
+					         ifError: [ :msg | ^ errorBlock cull: msg ].
+				  OpalCompiler new
+					  source: src;
+					  logged: false;
+					  receiver: self;
+					  evaluate ]
 ]
 
 { #category : 'private' }
@@ -129,8 +157,18 @@ ViennaTranspiledModularDocument >> init [
 
 { #category : 'initialize' }
 ViennaTranspiledModularDocument >> initialize [
+
 	super initialize.
-	viennaEnv := Dictionary new
+	viennaEnv := Dictionary new.
+	_document := self
+]
+
+{ #category : 'initialize' }
+ViennaTranspiledModularDocument >> initialize: anInteger [
+
+	super initialize: anInteger.
+	viennaEnv := Dictionary new.
+	_document := self
 ]
 
 { #category : 'private' }
@@ -164,6 +202,14 @@ ViennaTranspiledModularDocument >> state: aDictionary [
 
 	aDictionary keysAndValuesDo: [ :moduleName :state |
 		self at: moduleName ifPresent: [ :module | module state: state ] ]
+]
+
+{ #category : 'enumerating' }
+ViennaTranspiledModularDocument >> statevariablesAndValuesDo: aBlock [
+
+	self keysAndValuesDo: [ :modname :mod |
+			mod _statevariablesAndValuesDo: [ :var :val |
+				aBlock value: modname , '`' , var value: val ] ]
 ]
 
 { #category : 'transpiling' }

@@ -24,11 +24,7 @@ ViennaAnimation class >> client [
 { #category : 'instance creation' }
 ViennaAnimation class >> default [
 
-	Smalltalk
-		at: #ViennaTranspiledAnimation
-		ifPresent: [ :class |
-		class useTranspilerByDefault ifTrue: [ ^ self transpiler ] ].
-	^ self interpreter
+	^ ViennaEngine default animation
 ]
 
 { #category : 'examples' }
@@ -51,55 +47,10 @@ operations
 	^ (Array streamContents: [ :stream | 10 timesRepeat: [ stream nextPut: (animation evaluate: 'next()') ] ]) inspect; yourself
 ]
 
-{ #category : 'examples' }
-ViennaAnimation class >> exampleFibonacciLocal [
-	"ViennaAnimation exampleFibonacciLocal"
-
-	| animation |
-	animation := ViennaAnimation vdmj.
-	animation
-		specification:
-			'
-state State of
-	n1 : nat
-	n2 : nat
-	init s == s = mk_State(0, 1)
-end
-operations
-	next : () ==> nat
-	next() == (dcl n : nat := n1 + n2; n1 := n2; n2 := n; return n);'.
-	^ (Array
-		streamContents: [ :stream | 10 timesRepeat: [ stream nextPut: (animation evaluate: 'next()') ] ])
-		inspect;
-		yourself
-]
-
-{ #category : 'instance creation' }
-ViennaAnimation class >> interpreter [
-
-	^ self new
-		  engine: ViennaEngine default;
-		  yourself
-]
-
 { #category : 'instance creation' }
 ViennaAnimation class >> on: aViennaEngine [
 	^ self new
 		engine: aViennaEngine;
-		yourself
-]
-
-{ #category : 'instance creation' }
-ViennaAnimation class >> url: aStringOrUrl [
-	^ self new
-		engine: (ViennaClient on: aStringOrUrl);
-		yourself
-]
-
-{ #category : 'instance creation' }
-ViennaAnimation class >> vdmj [
-	^ self new
-		engine: ViennaVDMJ new;
 		yourself
 ]
 

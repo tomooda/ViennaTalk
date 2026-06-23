@@ -51,7 +51,8 @@ ViennaExecutionTraceNullRecorder >> pauseRecording [
 { #category : 'recording' }
 ViennaExecutionTraceNullRecorder >> record: aBlock do: anotherBlock [
 
-	aBlock ensure: [ ^ anotherBlock cull: '' ]
+	aBlock value.
+	^ anotherBlock cull: ''
 ]
 
 { #category : 'recording' }

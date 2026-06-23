@@ -316,31 +316,32 @@ ViennaLauncher class >> viennaSettingsOn: aBuilder [
 	(aBuilder group: #ViennaTalk)
 		label: 'ViennaTalk';
 		with: [
-			(aBuilder group: #ViennaTalkAppearances)
-				label: 'Appearances';
-				with: [
-					(aBuilder setting: #multiWindowMode)
-						label: 'use Native multi-indows';
-						target: self;
-						description:
-							'Open OS windows if checked. Open in a Pharo window otherwise.';
-						order: 0.1 ];
-				with: [
-					(aBuilder setting: #font)
-						label: 'Font';
-						target: self;
-						description: 'The default font for VDM sources';
-						order: 0.2 ];
-				with: [
-					(aBuilder pickOne: #dateAndTimeFormat)
-						label: 'Date-Time format';
-						target: self;
-						default: #ago;
-						domainValues: self availableDateAndTimeFormats;
-						description: 'The format to print a calendar date and time';
-						order: 0.5 ].
-			(aBuilder group: #ViennaTalkCodeGenerator) label: 'Code Generator'.
-			(aBuilder group: #ViennaTalkServices) label: 'Services' ]
+				(aBuilder group: #ViennaTalkAppearances)
+					label: 'Appearances';
+					with: [
+							(aBuilder setting: #multiWindowMode)
+								label: 'use Native multi-indows';
+								target: self;
+								description:
+									'Open OS windows if checked. Open in a Pharo window otherwise.';
+								order: 0.1 ];
+					with: [
+							(aBuilder setting: #font)
+								label: 'Font';
+								target: self;
+								description: 'The default font for VDM sources';
+								order: 0.2 ];
+					with: [
+							(aBuilder pickOne: #dateAndTimeFormat)
+								label: 'Date-Time format';
+								target: self;
+								default: #ago;
+								domainValues: self availableDateAndTimeFormats;
+								description: 'The format to print a calendar date and time';
+								order: 0.5 ].
+				(aBuilder group: #ViennaTalkEngine) label: 'Engine'.
+				(aBuilder group: #ViennaTalkCodeGenerator) label: 'Code Generator'.
+				(aBuilder group: #ViennaTalkServices) label: 'Services' ]
 ]
 
 { #category : 'menu' }

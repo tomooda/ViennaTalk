@@ -1550,7 +1550,10 @@ ViennaVDMGrammarTest >> testSubsequence2 [
 
 { #category : 'tests-literals' }
 ViennaVDMGrammarTest >> testTextLiteral1 [
-	self assert: (grammar expression end parse: '"A\101\x41\u0041\""') equals: 'AAAA"'
+
+	self
+		assert: (grammar expression end parse: '"A\101\x41\u0041\""')
+		equals: 'AAAA"' asOrderedCollection
 ]
 
 { #category : 'tests-statements' }

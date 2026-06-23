@@ -284,6 +284,7 @@ ViennaExplicitOperationDefinitionNode >> maximalTypeOfPrePostDefinition: aVienna
 
 	self preFunction == aViennaPrePostDefinitionNode ifTrue: [
 		| argtypes |
+		maximalType ifNil: [ self maximalType ].
 		argtypes := maximalType argtypes.
 		(self module ifNil: [ self document ]) stateDefinition ifNotNil: [
 			:stateDef | argtypes := argtypes copyWith: stateDef typecheck ].

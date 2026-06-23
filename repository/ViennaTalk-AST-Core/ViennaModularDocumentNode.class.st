@@ -6,6 +6,12 @@ Class {
 	#package : 'ViennaTalk-AST-Core'
 }
 
+{ #category : 'accessing' }
+ViennaModularDocumentNode class >> default [
+
+	^ self with: (ViennaModuleNode identifier: 'DEFAULT')
+]
+
 { #category : 'accessing-definitions' }
 ViennaModularDocumentNode >> deepFindResolverForIdentifier: aString [
 

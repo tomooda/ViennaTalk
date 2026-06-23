@@ -6,9 +6,30 @@ Class {
 		'ringBufferIndex',
 		'lock'
 	],
-	#category : 'ViennaTalk-Engine-Core',
-	#package : 'ViennaTalk-Engine-Core'
+	#category : 'ViennaTalk-Engine-VDMJ',
+	#package : 'ViennaTalk-Engine-VDMJ'
 }
+
+{ #category : 'accessing' }
+ViennaBankEngine class >> engineType [
+
+	^ nil
+]
+
+{ #category : 'instance creation' }
+ViennaBankEngine class >> new: anInteger [
+
+	| bank |
+	bank := self new.
+	anInteger timesRepeat: [ bank add: ViennaVDMJ default ].
+	^ bank
+]
+
+{ #category : 'accessing' }
+ViennaBankEngine class >> priority [
+
+	^ -1
+]
 
 { #category : 'adding/removing' }
 ViennaBankEngine >> add: aViennaBankEngine [
@@ -26,7 +47,7 @@ ViennaBankEngine >> enginesDo: aBlock [
 ]
 
 { #category : 'evaluating' }
-ViennaBankEngine >> evaluate: expression specification: specification states: states module: module vdm10: vdm10 rtc: rtc [
+ViennaBankEngine >> evaluate: expression specification: specification states: states module: module [
 	| engine |
 	lock
 		critical: [ 
@@ -38,8 +59,6 @@ ViennaBankEngine >> evaluate: expression specification: specification states: st
 		specification: specification
 		states: states
 		module: module
-		vdm10: vdm10
-		rtc: rtc
 ]
 
 { #category : 'initialize-release' }

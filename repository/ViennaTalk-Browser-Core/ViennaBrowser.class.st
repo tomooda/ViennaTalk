@@ -1033,77 +1033,11 @@ ViennaBrowser >> generateViennaDocSourceScript [
 		fileSave: 'Generate ViennaDoc source script to...'
 		extensions: #( 'js' )
 		do: [ :stream |
-			| source ast sources walker |
-			source := animation specification.
-			ast := ViennaVDMParser current parse: source.
-			ast isPetit2Failure ifTrue: [ ^ self ].
-			sources := Dictionary new.
-			walker := [ :node :module |
-			          node isViennaNode ifTrue: [
-				          node isViennaModuleNode ifTrue: [
-					          sources
-						          at: node identifier
-						          put: (source copyFrom: node start to: node end) ].
-				          node isViennaStateDefinitionNode ifTrue: [
-					          sources
-						          at:
-						          (module ifNil: [ '' ] ifNotNil: [ module , '`' ])
-						          , node identifier
-						          put: (source copyFrom: node start to: node end) ].
-				          node isViennaExplicitOperationDefinitionNode ifTrue: [
-					          sources
-						          at:
-						          (module ifNil: [ '' ] ifNotNil: [ module , '`' ])
-						          , node identifier
-						          put: (source copyFrom: node start to: node end) ].
-				          node isViennaTypeSynonymNode ifTrue: [
-					          sources
-						          at:
-						          (module ifNil: [ '' ] ifNotNil: [ module , '`' ])
-						          , node identifier
-						          put: (source copyFrom: node start to: node end) ].
-				          node isViennaRecordTypeDefinitionNode ifTrue: [
-					          sources
-						          at:
-						          (module ifNil: [ '' ] ifNotNil: [ module , '`' ])
-						          , node identifier
-						          put: (source copyFrom: node start to: node end) ].
-				          node isViennaValueDefinitionNode ifTrue: [
-					          sources
-						          at: (module ifNil: [ '' ] ifNotNil: [ module , '`' ])
-							          , node pattern identifier
-						          put: (source copyFrom: node start to: node end) ].
-				          node isViennaExplicitFunctionDefinitionNode ifTrue: [
-					          sources
-						          at:
-						          (module ifNil: [ '' ] ifNotNil: [ module , '`' ])
-						          , node identifier
-						          put: (source copyFrom: node start to: node end) ].
-				          node do: [ :n |
-					          walker
-						          value: n
-						          value:
-						          (module ifNil: [
-							           node isViennaModuleNode ifTrue: [ node identifier ] ]) ] ] ].
-			walker value: ast value: nil.
-			stream nextPutAll: 'ViennaDoc.source='.
-			(NeoJSONWriter on: stream) nextPut: source withUnixLineEndings.
-			stream
-				nextPut: $;;
-				nextPut: Character lf;
-				nextPutAll: 'ViennaDoc.sources = {};';
-				nextPut: Character lf.
-			sources keysAndValuesDo: [ :name :src |
-				stream
-					nextPutAll: 'ViennaDoc.sources[';
-					nextPut: $';
-					nextPutAll: name;
-					nextPut: $';
-					nextPutAll: ']='.
-				(NeoJSONWriter on: stream) nextPut: src withUnixLineEndings.
-				stream
-					nextPut: $;;
-					nextPut: Character lf ] ]
+				| source ast |
+				source := animation specification.
+				ast := ViennaVDMParser current parse: source.
+				ast isPetit2Failure ifTrue: [ ^ self ].
+				stream nextPutAll: ast asViennaDocScript withPlatformLineEndings ]
 ]
 
 { #category : 'module list menu' }

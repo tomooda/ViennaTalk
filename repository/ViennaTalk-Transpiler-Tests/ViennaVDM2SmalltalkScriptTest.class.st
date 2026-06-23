@@ -1392,9 +1392,9 @@ ViennaVDM2SmalltalkScriptTest >> testMapOrSequenceReferenceEnv [
 	self assert: node first isViennaMapOrSequenceReferenceNode.
 	self
 		assert:
-			(self evaluate: '|x|x:={''key''->nil. 2 -> 2} asDictionary.'
+			(self evaluate: '|x|x:={''key'' asOrderedCollection ->nil. 2 -> 2} asDictionary.'
 				 , (ViennaVDM2SmalltalkScript new generate: node)
-				 , '. {x at: ''key''. x at: 2}')
+				 , '. {x at: ''key'' asOrderedCollection . x at: 2}')
 		equals: { 1. 2 }.
 	node := ViennaVDMParser current statement end parse: 'x(1) := 1'.
 	self deny: node isPetit2Failure.

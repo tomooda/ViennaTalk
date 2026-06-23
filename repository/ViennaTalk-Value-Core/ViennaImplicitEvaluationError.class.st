@@ -1,6 +1,6 @@
 Class {
 	#name : 'ViennaImplicitEvaluationError',
-	#superclass : 'Error',
+	#superclass : 'ViennaError',
 	#category : 'ViennaTalk-Value-Core',
 	#package : 'ViennaTalk-Value-Core'
 }

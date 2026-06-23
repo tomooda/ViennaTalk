@@ -1,6 +1,6 @@
 Class {
 	#name : 'ViennaRefactoringError',
-	#superclass : 'Error',
+	#superclass : 'ViennaError',
 	#instVars : [
 		'refactoring',
 		'node'

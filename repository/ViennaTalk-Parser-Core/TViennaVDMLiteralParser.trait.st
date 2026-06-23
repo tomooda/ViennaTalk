@@ -95,6 +95,6 @@ TViennaVDMLiteralParser >> symbolicLiteral [
 { #category : 'parsers-literals' }
 TViennaVDMLiteralParser >> textLiteral [
 	^ (($" asPParser
-		, ((self char / $' asPParser) starA ==> [ :chars | String withAll: chars ])
+		, ((self char / $' asPParser) starA ==> [ :chars | OrderedCollection withAll: chars ])
 		, $" asPParser) ==> #second) trim
 ]

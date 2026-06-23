@@ -8,7 +8,7 @@ Class {
 { #category : 'accessing' }
 BaselineOfViennaTalk class >> codename [
 
-	^ 'Gdansk'
+	^ 'Nowhere'
 ]
 
 { #category : 'utilities' }
@@ -112,6 +112,12 @@ BaselineOfViennaTalk >> baseline: spec [
 					with: [ spec repository: 'github://svenvc/NeoJSON/repository' ];
 					baseline: 'PetitParser2'
 					with: [ spec repository: 'github://kursjan/petitparser2:master' ].
+				spec for: #Unix do: [
+						spec
+							baseline: 'OSSubprocess'
+							with: [
+							spec repository: 'github://marianopeck/OSSubprocess/repository' ] ].
+
 				spec
 					package: 'ViennaTalk-AST-Core'
 					with: [ spec requires: #( 'ViennaTalk-Type-Core' ) ];
@@ -132,10 +138,16 @@ BaselineOfViennaTalk >> baseline: spec [
 									   'ViennaTalk-Parser-Core' 'ViennaTalk-Profiler-Core'
 									   'ViennaTalk-Transpiler-Core' 'ViennaTalk-Type-Core'
 									   'ViennaTalk-Value-Core' ) ];
+					package: 'ViennaTalk-Engine-Core' with: [ ];
+					package: 'ViennaTalk-Engine-Networking'
+					with: [ spec requires: #( 'ViennaTalk-Engine-Core' ) ];
 					package: 'ViennaTalk-Engine-Transpiler' with: [
 							spec requires:
-									#( 'ViennaTalk-Animation-Transpiler'
+									#( 'ViennaTalk-Engine-Core' 'ViennaTalk-Animation-Transpiler'
 									   'ViennaTalk-Engine-Core' ) ];
+					package: 'ViennaTalk-Engine-VDMJ' with: [
+							spec requires:
+									#( 'ViennaTalk-Engine-Core' 'OSSubprocess' 'NeoJSON' ) ];
 					package: 'ViennaTalk-Browser-Core' with: [
 							spec requires:
 									#( 'ViennaTalk-AST-Core' 'ViennaTalk-Animation-Core'
@@ -148,18 +160,7 @@ BaselineOfViennaTalk >> baseline: spec [
 									   'ViennaTalk-Refactoring-Core'
 									   'ViennaTalk-Slicing-Core' 'ViennaTalk-Transpiler-Core'
 									   'ViennaTalk-Type-Core' 'ViennaTalk-Value-Core'
-									   'HiDeHo' ) ];
-					package: 'ViennaTalk-Engine-Core'
-					with: [ spec requires: #( 'NeoJSON' ) ];
-					for: #Unix do: [
-							spec
-								baseline: 'OSSubprocess'
-								with: [
-									spec repository:
-											'github://marianopeck/OSSubprocess/repository' ];
-								package: 'ViennaTalk-Engine-Core'
-								with: [ spec requires: #( 'OSSubprocess' ) ] ];
-					for: #Windows do: [ spec package: 'ViennaTalk-Engine-Core' ] ];
+									   'HiDeHo' ) ] ];
 		package: 'ViennaTalk-Engine-Tests'
 		with: [ spec requires: #( 'ViennaTalk-Engine-Core' ) ];
 		package: 'ViennaTalk-ExecutionTrace-Core' with: [
@@ -237,8 +238,8 @@ BaselineOfViennaTalk >> baseline: spec [
 		spec requires: #( 'ViennaTalk-Type-Core' 'ViennaTalk-Value-Core' ) ];
 		package: 'ViennaTalk-VDMPad-Core' with: [
 			spec requires:
-				#( 'ViennaTalk-Engine-Core' 'NeoJSON' 'ViennaTalk-Html-Core'
-				   'ViennaTalk-Parser-Core' ) ];
+				#( 'ViennaTalk-Engine-Transpiler' 'ViennaTalk-Animation-Transpiler'
+				   'NeoJSON' 'ViennaTalk-Html-Core' 'ViennaTalk-Parser-Core' ) ];
 		package: 'ViennaTalk-Value-Core';
 		package: 'ViennaTalk-Value-Tests'
 		with: [ spec requires: #( 'ViennaTalk-Value-Core' ) ];
@@ -272,18 +273,20 @@ BaselineOfViennaTalk >> baseline: spec [
 			   'ViennaTalk-Parser-Formatters' 'ViennaTalk-Parser-Highlighters'
 			   'ViennaTalk-ExecutionTrace-Core'
 			   'ViennaTalk-Slicing-Core' 'ViennaTalk-Mutation-Core' );
-		group: 'default' with: #( 'full' );
-		group: 'full'
+		group: 'default'
 		with:
 			#( 'core' 'VDMPad' 'LivelyWalkThrough' 'tests' 'WeblyWalkThrough'
 			   'Transpiler' 'ViennaFRAM' 'Application' );
+		group: 'full'
+		with:
+			#( 'default' 'ViennaTalk-Engine-VDMJ' 'ViennaTalk-Engine-Networking'
+			   'ViennaTalk-Engine-Tests' );
 		group: 'tests'
-		with: #( 'ViennaTalk-Engine-Tests' 'ViennaTalk-Value-Tests'
-			   'ViennaTalk-Parser-Tests' 'ViennaTalk-Type-Tests'
-			   'ViennaTalk-Animation-Tests' 'ViennaTalk-Transpiler-Tests'
-			   'ViennaTalk-FRAM-Tests' 'ViennaTalk-Slicing-Tests'
-			   'ViennaTalk-Refactoring-Tests' 'ViennaTalk-AST-Tests'
-			   'ViennaTalk-ExecutionTrace-Tests'
+		with: #( 'ViennaTalk-Value-Tests' 'ViennaTalk-Parser-Tests'
+			   'ViennaTalk-Type-Tests' 'ViennaTalk-Animation-Tests'
+			   'ViennaTalk-Transpiler-Tests' 'ViennaTalk-FRAM-Tests'
+			   'ViennaTalk-Slicing-Tests' 'ViennaTalk-Refactoring-Tests'
+			   'ViennaTalk-AST-Tests' 'ViennaTalk-ExecutionTrace-Tests'
 			   'ViennaTalk-Profiler-Tests' 'ViennaTalk-Mutation-Tests' )
 ]
 

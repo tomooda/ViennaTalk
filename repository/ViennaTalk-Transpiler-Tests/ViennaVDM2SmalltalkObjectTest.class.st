@@ -38,10 +38,10 @@ ViennaVDM2SmalltalkObjectTest >> testExtendedExplicitFunctionPostcondition [
 
 { #category : 'tests-type checking' }
 ViennaVDM2SmalltalkObjectTest >> testExtendedExplicitOperation [
+
 	| obj |
 	obj := self
-		transpile:
-			'
+		       transpile: '
 	state State of 
 		count : int
 		init s == s = mk_State(10) 
@@ -49,12 +49,13 @@ ViennaVDM2SmalltalkObjectTest >> testExtendedExplicitOperation [
 	operations 
 	sub(x:nat) res:nat == (count := count - x; return count)
 	post count + x = count~ and count = res;'
-		runtimeTypeCheck: true
-		runtimeAssertionCheck: true.
+		       runtimeTypeCheck: true
+		       runtimeAssertionCheck: true.
 	self assert: (obj evaluateExpression: 'sub(9)') equals: 1.
-	self assert: (obj instVarNamed: 'count') equals: 1.
+	self assert: (obj evaluateExpression: 'count') equals: 1.
 	self
-		assert: (obj evaluateExpression: 'post_sub(1, mk_State(9), mk_State(10), 9)')
+		assert:
+		(obj evaluateExpression: 'post_sub(1, mk_State(9), mk_State(10), 9)')
 		equals: true
 ]
 

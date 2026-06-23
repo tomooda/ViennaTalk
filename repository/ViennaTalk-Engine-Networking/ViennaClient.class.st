@@ -7,8 +7,8 @@ Class {
 	#classVars : [
 		'DefaultUrl'
 	],
-	#category : 'ViennaTalk-Engine-Core',
-	#package : 'ViennaTalk-Engine-Core'
+	#category : 'ViennaTalk-Engine-Networking',
+	#package : 'ViennaTalk-Engine-Networking'
 }
 
 { #category : 'instance creation' }
@@ -36,6 +36,12 @@ ViennaClient class >> defaultUrlString: aString [
 	self defaultUrl: aString asZnUrl
 ]
 
+{ #category : 'accessing' }
+ViennaClient class >> engineType [
+
+	^ #Server
+]
+
 { #category : 'instance creation' }
 ViennaClient class >> localhost [
 	"ViennaClient localhost evaluate: '1+2' specification: '' states: Dictionary new"
@@ -50,11 +56,17 @@ ViennaClient class >> on: aUrlOfVDMPadServer [
 		yourself
 ]
 
+{ #category : 'accessing' }
+ViennaClient class >> priority [
+
+	^ 1
+]
+
 { #category : 'settings' }
 ViennaClient class >> viennaSettingsOn: aBuilder [
 	<systemsettings>
 	(aBuilder setting: #defaultViennaServerUrl)
-		parent: #ViennaTalkServices;
+		parent: #ViennaTalkEngine;
 		target: self;
 		getSelector: #defaultUrlString;
 		setSelector: #defaultUrlString:;
@@ -69,7 +81,7 @@ ViennaClient >> close [
 ]
 
 { #category : 'evaluating' }
-ViennaClient >> evaluate: expression specification: specification states: states module: moduleName vdm10: vdm10 rtc: rtc [
+ViennaClient >> evaluate: expression specification: specification states: states module: moduleName [
 	| json response |
 	json := Dictionary new.
 	states
@@ -79,10 +91,6 @@ ViennaClient >> evaluate: expression specification: specification states: states
 	json at: 'source' put: specification.
 	json at: 'expression' put: expression.
 	json at: 'module' put: moduleName.
-	vdm10 = false
-		ifTrue: [ json at: 'classic' put: String new ].
-	rtc = false
-		ifTrue: [ json at: 'ignoreRuntimeChecking' put: String new ].
 	http
 		entity:
 			(ZnEntity

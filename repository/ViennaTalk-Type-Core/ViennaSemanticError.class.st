@@ -1,6 +1,6 @@
 Class {
 	#name : 'ViennaSemanticError',
-	#superclass : 'Error',
+	#superclass : 'ViennaError',
 	#instVars : [
 		'node'
 	],
