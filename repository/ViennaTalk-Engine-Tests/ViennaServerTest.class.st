@@ -47,8 +47,7 @@ ViennaServerTest >> testExpression [
 ]
 
 { #category : 'private' }
-ViennaServerTest >> testExpression: expression specification: specification states: states resultValue: resultValue resultStates: resultStates [
-
+ViennaServerTest >> testExpression: expression specification: specification states: states resultValue: resultValue resultStates: resultStates [ 
 	(fixture
 		 evaluate: expression
 		 specification: specification

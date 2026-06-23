@@ -53,11 +53,6 @@ ViennaDocumentNode >> asViennaDocScript [
 								           node isViennaModuleNode ifTrue: [ node identifier ] ]) ] ] ].
 	walker value: self value: nil.
 	^ String streamContents: [ :stream |
-			  stream
-				  nextPutAll:
-					  'import { ViennaDoc } from ''https://viennatalk.org/ViennaDoc/ViennaDoc.js'';';
-				  cr;
-				  cr.
 			  stream nextPutAll: 'ViennaDoc.source='.
 			  (NeoJSONWriter on: stream) nextPut:
 				  self source withUnixLineEndings.
