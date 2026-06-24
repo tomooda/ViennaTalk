@@ -2,8 +2,9 @@
 ---
 
 @import "jekyll-theme-tactile";
-#inner {
-  max-width: 90%;
+.inner {
+  width: 90% !important;
+  max-width: 1080px !important;
 }
 a {
     font-weight: bold;
