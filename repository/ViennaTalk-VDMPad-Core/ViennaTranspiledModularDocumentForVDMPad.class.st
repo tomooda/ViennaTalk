@@ -56,6 +56,15 @@ ViennaTranspiledModularDocumentForVDMPad >> defaultMaxSteps [
 	^ 100000
 ]
 
+{ #category : 'evaluating' }
+ViennaTranspiledModularDocumentForVDMPad >> evaluateNode: aViennaNode ifError: errorBlock [
+
+	^ self
+		  evaluateNode: aViennaNode
+		  with: ViennaTranspilerForVDMPad new
+		  ifError: errorBlock
+]
+
 { #category : 'initialize' }
 ViennaTranspiledModularDocumentForVDMPad >> initialize [
 
