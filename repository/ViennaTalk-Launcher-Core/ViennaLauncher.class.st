@@ -231,6 +231,17 @@ ViennaLauncher class >> isSingleWindowMode [
 ]
 
 { #category : 'settings' }
+ViennaLauncher class >> loadSettings [
+
+	SettingBrowser new
+		changePackageSet:
+			(PackageOrganizer default packages select: [ :package |
+					 package name beginsWith: 'ViennaTalk-' ])
+			, { (PackageOrganizer default packageNamed: #'Network-Kernel') };
+		loadSettings
+]
+
+{ #category : 'settings' }
 ViennaLauncher class >> multiWindowMode [
 
 	^ MultiWindowMode = true
@@ -262,6 +273,17 @@ ViennaLauncher class >> reopen [
 ]
 
 { #category : 'settings' }
+ViennaLauncher class >> saveSettings [
+
+	SettingBrowser new
+		changePackageSet:
+			(PackageOrganizer default packages select: [ :package |
+					 package name beginsWith: 'ViennaTalk-' ])
+			, { (PackageOrganizer default packageNamed: #'Network-Kernel') };
+		saveSettings
+]
+
+{ #category : 'settings' }
 ViennaLauncher class >> setMultiWindowMode [
 
 	^ self multiWindowMode: true
@@ -286,7 +308,8 @@ ViennaLauncher class >> showSettingBrowser [
 
 { #category : 'class initialization' }
 ViennaLauncher class >> startUp [
-
+	FreeTypeFontProvider current updateFromSystem.
+	self loadSettings.
 	(Smalltalk isInteractiveGraphic and: [ self isDeployed not ])
 		ifTrue: [ self open ]
 ]
