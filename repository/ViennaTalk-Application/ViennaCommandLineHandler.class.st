@@ -13,21 +13,26 @@ ViennaCommandLineHandler class >> commandName [
 
 { #category : 'utilities' }
 ViennaCommandLineHandler class >> deploy [
+	"protocol: utilities"
 
 	GraphicFontSettings setFontsToStyleNamed: #small.
 	PasteUpMorph shouldShowWorldMenu: false.
 	MenubarMorph showMenubar: false.
 	ViennaLauncher deploy.
-	Smalltalk cleanUp: true except: {  }.
-	MCRepositoryGroup allSubInstancesDo: [ :group | group repositories do: [ :repo | group removeRepository: repo ] ].
+	Smalltalk cleanUp: true except: {  } confirming: false.
+	MCRepositoryGroup allSubInstancesDo: [ :group |
+		group repositories do: [ :repo | group removeRepository: repo ] ].
 	IceRepository registry removeAll.
-	IceCredentialStore current in: [ :store | store allCredentials do: [ :each | each removeFrom: store ] ].
+	IceCredentialStore current in: [ :store |
+		store allCredentials do: [ :each | each removeFrom: store ] ].
 	World closeAllWindowsDiscardingChanges.
 	Deprecation
 		raiseWarning: false;
 		showWarning: false.
-	NoSourcesManager beCurrent.
+	NoChangesLog install.
 	"NoPharoFilesOpener install."
+	SystemResolver flushUserLocalDirectory.
+	FFICompilerPlugin install.
 	Stdio useNullStreams.
 	MCCacheRepository uniqueInstance disable.
 	EpMonitor reset.
@@ -70,12 +75,13 @@ ViennaCommandLineHandler class >> generate [
 ]
 
 { #category : 'activation' }
-ViennaCommandLineHandler >> activateCommand [
+ViennaCommandLineHandler >> activate [
 
 	self
 		installLocalDirectory;
 		installMenu;
-		installQuitSession
+		installQuitSession.
+	ViennaLauncher loadSettings
 ]
 
 { #category : 'activation' }
