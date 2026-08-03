@@ -292,8 +292,9 @@ BaselineOfViennaTalk >> baseline: spec [
 
 { #category : 'accessing' }
 BaselineOfViennaTalk >> customProjectAttributes [
-	Smalltalk os isWindows
-		ifTrue: [ ^ #(#Windows) ].
-	(Smalltalk os isUnix or: [ Smalltalk os isMacOSX ])
-		ifTrue: [ ^ #(#Unix) ]
+
+	| os |
+	os := OSPlatform current.
+	os isWindows ifTrue: [ ^ #( #Windows ) ].
+	(os isUnix or: [ os isMacOSX ]) ifTrue: [ ^ #( #Unix ) ]
 ]
