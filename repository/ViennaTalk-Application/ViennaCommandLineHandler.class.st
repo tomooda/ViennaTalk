@@ -18,19 +18,16 @@ ViennaCommandLineHandler class >> deploy [
 	PasteUpMorph shouldShowWorldMenu: false.
 	MenubarMorph showMenubar: false.
 	ViennaLauncher deploy.
-	Smalltalk cleanUp: true except: {  } confirming: false.
-	MCRepositoryGroup allSubInstancesDo: [ :group |
-		group repositories do: [ :repo | group removeRepository: repo ] ].
+	Smalltalk cleanUp: true except: {  }.
+	MCRepositoryGroup allSubInstancesDo: [ :group | group repositories do: [ :repo | group removeRepository: repo ] ].
 	IceRepository registry removeAll.
-	IceCredentialStore current in: [ :store |
-		store allCredentials do: [ :each | each removeFrom: store ] ].
+	IceCredentialStore current in: [ :store | store allCredentials do: [ :each | each removeFrom: store ] ].
 	World closeAllWindowsDiscardingChanges.
 	Deprecation
 		raiseWarning: false;
 		showWarning: false.
-	NoChangesLog install.
+	NoSourcesManager beCurrent.
 	"NoPharoFilesOpener install."
-	FFICompilerPlugin install.
 	Stdio useNullStreams.
 	MCCacheRepository uniqueInstance disable.
 	EpMonitor reset.
@@ -73,7 +70,7 @@ ViennaCommandLineHandler class >> generate [
 ]
 
 { #category : 'activation' }
-ViennaCommandLineHandler >> activate [
+ViennaCommandLineHandler >> activateCommand [
 
 	self
 		installLocalDirectory;

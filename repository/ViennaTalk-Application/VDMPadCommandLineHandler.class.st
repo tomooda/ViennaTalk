@@ -12,7 +12,7 @@ VDMPadCommandLineHandler class >> commandName [
 ]
 
 { #category : 'activation' }
-VDMPadCommandLineHandler >> activate [
+VDMPadCommandLineHandler >> activateCommand [
 
 	Smalltalk at: #VDMPad ifPresent: [ :vdmpad | vdmpad startService ]
 ]
