@@ -91,25 +91,7 @@ ViennaCommandLineHandler >> installLocalDirectory [
 ViennaCommandLineHandler >> installMenu [
 
 	<script: 'ViennaCommandLineHandler new installMenu'>
-	OSWindowDriver current startUp: true.
-	OSPlatform current isMacOSX ifTrue: [
-		| main |
-		main := CocoaMenu new.
-		main
-			title: 'MainMenu';
-			add: ViennaLauncher current systemMenu asCocoaMenu;
-			add: (ViennaLauncher current toolsMenu addItem: [ :item |
-						 item
-							 name: 'Launcher';
-							 action: [ ViennaLauncher reopen ] ]) asCocoaMenu;
-			addSubmenu: 'Help' with: [ :m |
-			m
-				addItemWithTitle: 'ViennaTalk docs'
-				action: [
-					MicDocumentBrowserPresenter openDocument:
-						'github://tomooda/ViennaTalk:main/docs' ]
-				shortcut: '' ].
-		main setAsMainMenu ]
+	OSWindowDriver current startUp: true
 ]
 
 { #category : 'activation' }
