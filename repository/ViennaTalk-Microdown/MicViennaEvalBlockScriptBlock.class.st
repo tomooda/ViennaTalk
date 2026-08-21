@@ -9,7 +9,7 @@ For example,
  3+4
  ```
 ```
- is rendered as
+is rendered as
 ```vienna-eval
 3+4
 ```
@@ -28,6 +28,9 @@ is rendered as
 Class {
 	#name : 'MicViennaEvalBlockScriptBlock',
 	#superclass : 'MicScriptBlock',
+	#instVars : [
+		'presenter'
+	],
 	#category : 'ViennaTalk-Microdown',
 	#package : 'ViennaTalk-Microdown'
 }
@@ -51,7 +54,7 @@ MicViennaEvalBlockScriptBlock >> execute [
 	source := self body asString.
 	^ self receiver ifNotNil: [ :receiver | receiver evaluateExpression: source ifError: [ :message | message ] ] ifNil: [
 			  | src |
-			  src := ViennaVDM2SmalltalkClass new generate: source asViennaExpressionAst.
+			  src := ViennaVDM2SmalltalkObject new generate: source asViennaExpressionAst.
 			  OpalCompiler new
 				  source: src;
 				  logged: false;
@@ -68,5 +71,11 @@ MicViennaEvalBlockScriptBlock >> moduleName [
 { #category : 'accessing' }
 MicViennaEvalBlockScriptBlock >> receiver [
 
-	^ ViennaTranspiledSpecificationRequest signal ifNotNil: [ :document | document at: self moduleName ifAbsent: [ nil ] ]
+	^ presenter ifNotNil: #transpiledSpecification 
+]
+
+{ #category : 'private' }
+MicViennaEvalBlockScriptBlock >> retrievePresenter [
+
+	presenter := ViennaMicrodownPresenterRequest signal
 ]
