@@ -37,16 +37,30 @@ end Counter' asViennaDocumentAst.
 	transpiledSpec := ViennaVDM2SmalltalkObject new generate: spec.
 	presenter := ViennaMicrodownPresenter new
 		             transpiledSpecification: transpiledSpec;
-		             documentFromString: '# Example evaluatable expressions
+		             documentFromString: '# Example evaluatable documentation
+## Public Operations
+
 ```vienna-eval
 Counter`click()
 ```
-```vienna-eval
-Counter`show()
-```';
+In the Counter module,
+```vienna-eval|module=Counter
+show()
+```
+
+## The source
+```vienna-source|module=Counter
+```
+';
 		             yourself.
 	presenter open title: 'ViennaMicrodown'.
 	^ presenter
+]
+
+{ #category : 'composing' }
+ViennaMicrodownPresenter >> compose [
+
+	self withAdapterDo: [ :microdownAdapter | microdownAdapter compose ]
 ]
 
 { #category : 'accessing' }

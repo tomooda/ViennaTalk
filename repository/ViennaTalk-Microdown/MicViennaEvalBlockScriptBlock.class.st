@@ -1,7 +1,7 @@
 "
 I am a script block for evaluatable VDM-SL expressions.
 I will render the content as a VDM-SL expression with syntax highlighting.
-A green triangle is appended to mension that the expression is clickable to evaluate and print the resulting value.
+A 'run' label in gray background is appended to evaluate it and print the resulting value.
 
 For example,
 ```text
@@ -23,7 +23,6 @@ is rendered as
 ```vienna-eval
 {1 |-> ""1"", 2 |-> ""2"", 3 |-> ""3""} ++ {3 |-> ""three"", 4 |-> ""four"", 5 |-> ""five""}
 ```
-
 "
 Class {
 	#name : 'MicViennaEvalBlockScriptBlock',
@@ -71,11 +70,18 @@ MicViennaEvalBlockScriptBlock >> moduleName [
 { #category : 'accessing' }
 MicViennaEvalBlockScriptBlock >> receiver [
 
-	^ presenter ifNotNil: #transpiledSpecification 
+	^ self transpiledSpecification ifNotNil: [ :transpiledSpec |
+		  self moduleName ifNotNil: [ :moduleName | transpiledSpec at: moduleName ifAbsent: [ nil ] ] ifNil: [ transpiledSpec ] ]
 ]
 
 { #category : 'private' }
 MicViennaEvalBlockScriptBlock >> retrievePresenter [
 
 	presenter := ViennaMicrodownPresenterRequest signal
+]
+
+{ #category : 'accessing' }
+MicViennaEvalBlockScriptBlock >> transpiledSpecification [
+
+	^ presenter ifNotNil: #transpiledSpecification 
 ]

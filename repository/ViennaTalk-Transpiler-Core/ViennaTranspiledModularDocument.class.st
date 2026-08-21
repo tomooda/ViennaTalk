@@ -3,6 +3,7 @@ Class {
 	#superclass : 'Dictionary',
 	#instVars : [
 		'_document',
+		'specification',
 		'viennaEnv'
 	],
 	#category : 'ViennaTalk-Transpiler-Core-TranspiledObject',
@@ -19,6 +20,15 @@ ViennaTranspiledModularDocument class >> from: aDictionary [
 		doc at: key put: value.
 		value _document: doc ].
 	^ doc
+]
+
+{ #category : 'private' }
+ViennaTranspiledModularDocument >> _state [
+
+	| binds |
+	binds := Dictionary new.
+	self statevariablesAndValuesDo: [ :var :val | binds at: var put: val ].
+	^ binds
 ]
 
 { #category : 'private' }
@@ -185,6 +195,18 @@ ViennaTranspiledModularDocument >> postCopy [
 				keysDo: [ :key | 
 					(module respondsTo: (key , ':') asSymbol)
 						ifTrue: [ module perform: (key , ':') asSymbol with: (self at: key) ] ] ]
+]
+
+{ #category : 'accessing' }
+ViennaTranspiledModularDocument >> specification [
+
+	^ specification
+]
+
+{ #category : 'accessing' }
+ViennaTranspiledModularDocument >> specification: aViennaModularDocumentNode [
+
+	specification := aViennaModularDocumentNode
 ]
 
 { #category : 'accessing' }

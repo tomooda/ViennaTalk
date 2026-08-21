@@ -45,26 +45,23 @@ ViennaVDM2SmalltalkObject >> modularDocument: aViennaNode env: aDictionary [
 
 	| objects |
 	aViennaNode do: [ :node |
-			(Smalltalk globals includesKey: node identifier asSymbol) ifTrue: [
-				aDictionary at: node identifier put: '_' , node identifier ] ].
+		(Smalltalk globals includesKey: node identifier asSymbol) ifTrue: [ aDictionary at: node identifier put: '_' , node identifier ] ].
 	aViennaNode do: [ :node | self generate: node env: aDictionary ].
 	objects := classes collect: [ :moduleClass | moduleClass new ].
 	aViennaNode do: [ :moduleNode |
 			| moduleName moduleObject |
 			moduleName := moduleNode identifier.
 			moduleObject := objects at: moduleName.
-			moduleNode interface importDefinitionList ifNotNil: [
-					:importDefinitionListNode |
+			moduleNode interface importDefinitionList ifNotNil: [ :importDefinitionListNode |
 					importDefinitionListNode do: [ :importDefinitionNode |
 							| importedModuleName importedModuleObject |
 							importedModuleName := importDefinitionNode first.
 							importedModuleObject := objects at: importedModuleName.
-							moduleObject
-								perform: (importedModuleName , ':') asSymbol
-								with: importedModuleObject ] ] ].
+							moduleObject perform: (importedModuleName , ':') asSymbol with: importedModuleObject ] ] ].
 	objects valuesDo: [ :moduleObject | moduleObject initTypes ].
 	objects valuesDo: [ :moduleObject | moduleObject init ].
 	^ (self documentBaseClass from: objects)
+		  specification: aViennaNode;
 		  buildViennaEnv;
 		  yourself
 ]

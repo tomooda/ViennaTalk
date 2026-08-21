@@ -3,15 +3,17 @@ Extension { #name : 'MicRichTextComposer' }
 { #category : '*ViennaTalk-Microdown' }
 MicRichTextComposer >> visitViennaEvalScript: aScriptBlock [
 
-	| expression expressionText |
+	| expression expressionText buttonText |
 	aScriptBlock retrievePresenter.
 	expression := aScriptBlock body asString trim.
 	expressionText := expression asText.
 	ViennaVDMHighlighter new
 		text: expressionText;
 		parse: expression.
-	expressionText := (String value: 1) asText, expressionText , ((Form extent: 22 @ 22 depth: 32) mergeWith: (self iconNamed: #smallDoIt) at: 4 @ 8) asText.
-	expressionText addAttribute: (MicRichTextDoIt new
+	buttonText := ' run ' asText
+		              addAttribute: (TextBackgroundColor color: (Color gray: 0.8));
+		              yourself.
+	buttonText addAttribute: (MicRichTextDoIt new
 			 actOnClickBlock: [ :attr :event |
 					 | popoverPresenter |
 					 popoverPresenter := SpPopoverPresenter new presenter:
@@ -21,10 +23,22 @@ MicRichTextComposer >> visitViennaEvalScript: aScriptBlock [
 								  build;
 								  yourself).
 					 popoverPresenter bePositionRight.
-					 popoverPresenter popupPointingTo: (event hand position + (10 @ -10) extent: 1 @ 1).
+					 popoverPresenter popupPointingTo: (event hand position + (10 @ -20) extent: 1 @ 1).
 					 popoverPresenter takeKeyboardFocus ];
 			 yourself).
-	canvas << expressionText.
+	canvas << expressionText << ' ' asText << buttonText.
+	canvas
+		newLine;
+		newLine
+]
+
+{ #category : '*ViennaTalk-Microdown' }
+MicRichTextComposer >> visitViennaSourceScript: aScriptBlock [
+
+	| sourceText |
+	aScriptBlock retrievePresenter.
+	sourceText := aScriptBlock sourceText.
+	canvas << sourceText.
 	canvas
 		newLine;
 		newLine
