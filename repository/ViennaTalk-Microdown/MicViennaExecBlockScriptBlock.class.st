@@ -5,27 +5,23 @@ A 'run' label in gray background is appended to evaluate it and print the result
 
 For example,
 ```text
- ```vienna-eval
- 3+4
+ ```vienna-exec
+ (dcl sum : nat := 0;
+ for i = 0 to 10 do
+     sum := sum + i;
+ return sum)
  ```
 ```
 is rendered as
-```vienna-eval
-3+4
-```
-Also,
-```text
- ```vienna-eval
- {1 |-> ""1"", 2 |-> ""2"", 3 |-> ""3""} ++ {3 |-> ""three"", 4 |-> ""four"", 5 |-> ""five""}
- ```
-```
-is rendered as
-```vienna-eval
-{1 |-> ""1"", 2 |-> ""2"", 3 |-> ""3""} ++ {3 |-> ""three"", 4 |-> ""four"", 5 |-> ""five""}
+```vienna-exec
+ (dcl sum : nat := 0;
+ for i = 0 to 10 do
+     sum := sum + i;
+ return sum)
 ```
 "
 Class {
-	#name : 'MicViennaEvalBlockScriptBlock',
+	#name : 'MicViennaExecBlockScriptBlock',
 	#superclass : 'MicScriptBlock',
 	#instVars : [
 		'presenter'
@@ -35,25 +31,25 @@ Class {
 }
 
 { #category : 'accessing' }
-MicViennaEvalBlockScriptBlock class >> tag [
+MicViennaExecBlockScriptBlock class >> tag [
 
-	^ #'vienna-eval'
+	^ #'vienna-exec'
 ]
 
 { #category : 'visiting' }
-MicViennaEvalBlockScriptBlock >> accept: aVisitor [
+MicViennaExecBlockScriptBlock >> accept: aVisitor [
 
-	aVisitor visitViennaEvalBlockScript: self
+	aVisitor visitViennaExecBlockScript: self
 ]
 
 { #category : 'executing' }
-MicViennaEvalBlockScriptBlock >> execute [
+MicViennaExecBlockScriptBlock >> execute [
 
 	| source |
 	source := self body asString.
-	^ self receiver ifNotNil: [ :receiver | receiver evaluateExpression: source ifError: [ :message | message ] ] ifNil: [
+	^ self receiver ifNotNil: [ :receiver | receiver evaluateStatement: source ifError: [ :message | message ] ] ifNil: [
 			  | src |
-			  src := ViennaVDM2SmalltalkObject new generate: source asViennaExpressionAst.
+			  src := ViennaVDM2SmalltalkObject new generate: source asViennaStatementAst.
 			  OpalCompiler new
 				  source: src;
 				  logged: false;
@@ -62,26 +58,26 @@ MicViennaEvalBlockScriptBlock >> execute [
 ]
 
 { #category : 'accessing' }
-MicViennaEvalBlockScriptBlock >> moduleName [
+MicViennaExecBlockScriptBlock >> moduleName [
 
 	^ arguments at: #module ifAbsent: [ nil ]
 ]
 
 { #category : 'accessing' }
-MicViennaEvalBlockScriptBlock >> receiver [
+MicViennaExecBlockScriptBlock >> receiver [
 
 	^ self transpiledSpecification ifNotNil: [ :transpiledSpec |
 		  self moduleName ifNotNil: [ :moduleName | transpiledSpec at: moduleName ifAbsent: [ nil ] ] ifNil: [ transpiledSpec ] ]
 ]
 
 { #category : 'private' }
-MicViennaEvalBlockScriptBlock >> retrievePresenter [
+MicViennaExecBlockScriptBlock >> retrievePresenter [
 
 	presenter := ViennaMicrodownPresenterRequest signal
 ]
 
 { #category : 'accessing' }
-MicViennaEvalBlockScriptBlock >> transpiledSpecification [
+MicViennaExecBlockScriptBlock >> transpiledSpecification [
 
 	^ presenter ifNotNil: #transpiledSpecification 
 ]

@@ -572,9 +572,15 @@ ViennaVDMGrammar >> connectiveExpression [
 	^ precedence1
 ]
 
+{ #category : 'parsers-symbols' }
+ViennaVDMGrammar >> dcl [
+	^ self reserved: 'dcl'
+]
+
 { #category : 'parsers-statements' }
 ViennaVDMGrammar >> dclStatement [
-	^ ((self reserved: 'dcl') , (self assignmentDefinition separatedBy: comma) withoutSeparators , semicolon) ==> #second
+
+	^ self dcl , (self assignmentDefinition separatedBy: comma) withoutSeparators , semicolon ==> #second
 ]
 
 { #category : 'utilities' }

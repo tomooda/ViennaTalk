@@ -99,6 +99,11 @@ ViennaVDMHighlighter >> compose [
 	^ self keyword: super compose
 ]
 
+{ #category : 'parsers-keywords' }
+ViennaVDMHighlighter >> dcl [
+	^ self keyword: super dcl
+]
+
 { #category : 'utilities' }
 ViennaVDMHighlighter >> decl: aParser [
 	^ self highlight: aParser with: self declAttribute

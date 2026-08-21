@@ -43,7 +43,7 @@ MicViennaSourceBlockScriptBlock class >> tag [
 { #category : 'visiting' }
 MicViennaSourceBlockScriptBlock >> accept: aVisitor [
 
-	aVisitor visitViennaSourceScript: self
+	aVisitor visitViennaSourceBlockScript: self
 ]
 
 { #category : 'accessing' }
