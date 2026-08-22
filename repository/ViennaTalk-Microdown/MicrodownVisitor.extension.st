@@ -1,7 +1,7 @@
 Extension { #name : 'MicrodownVisitor' }
 
 { #category : '*ViennaTalk-Microdown' }
-MicrodownVisitor >> visitViennaEvalBlockScript: aSlide [
+MicrodownVisitor >> visitViennaEval: aSlide [
 
 	^ aSlide children collect: [ :each | self visit: each ]
 ]

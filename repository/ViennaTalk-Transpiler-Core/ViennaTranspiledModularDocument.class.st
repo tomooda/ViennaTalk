@@ -32,6 +32,12 @@ ViennaTranspiledModularDocument >> _state [
 ]
 
 { #category : 'private' }
+ViennaTranspiledModularDocument >> _viennaEnv [
+
+	^ viennaEnv
+]
+
+{ #category : 'private' }
 ViennaTranspiledModularDocument >> buildViennaEnv [
 	| env |
 	env := Dictionary new.

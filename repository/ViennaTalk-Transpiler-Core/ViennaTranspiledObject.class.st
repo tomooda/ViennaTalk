@@ -162,6 +162,12 @@ ViennaTranspiledObject >> _statevariablesAndValuesDo: aBlock [
 ]
 
 { #category : 'accessing' }
+ViennaTranspiledObject >> _viennaEnv [
+
+	^ self class viennaEnv
+]
+
+{ #category : 'accessing' }
 ViennaTranspiledObject >> basicInstVarNamed: aString put: anObject [
 
 	^ self class

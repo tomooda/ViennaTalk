@@ -1,7 +1,42 @@
 Extension { #name : 'MicRichTextComposer' }
 
 { #category : '*ViennaTalk-Microdown' }
-MicRichTextComposer >> visitViennaEvalBlockScript: aScriptBlock [
+MicRichTextComposer >> viennaWriteResult: aScriptBlock [
+
+	aScriptBlock resultString ifNotNil: [ :resultString |
+			| resultText |
+			resultText := (' ' , resultString , ' ') asText
+				              addAttribute: (TextBackgroundColor color: (Color gray: 0.9));
+				              addAttribute: (MicRichTextDoIt new
+						               actOnClickBlock: [
+								               aScriptBlock
+									               flushResultString;
+									               recompose ];
+						               yourself);
+				              yourself.
+			canvas << ' ' << resultText ].
+	aScriptBlock errorString ifNotNil: [ :errorString |
+			| errorText |
+			errorText := errorString asText
+				             addAttribute: (TextBackgroundColor color: Color red muchLighter);
+				             yourself.
+			canvas << ' ' << errorText ]
+]
+
+{ #category : '*ViennaTalk-Microdown' }
+MicRichTextComposer >> viennaWriteResultWithoutArrow: aScriptBlock [
+
+	aScriptBlock resultString ifNotNil: [ :resultString | canvas << resultString asText ].
+	aScriptBlock errorString ifNotNil: [ :errorString |
+			| errorText |
+			errorText := errorString asText
+				             addAttribute: (TextBackgroundColor color: Color red muchLighter);
+				             yourself.
+			canvas << errorText ]
+]
+
+{ #category : '*ViennaTalk-Microdown' }
+MicRichTextComposer >> visitViennaEval: aScriptBlock [
 
 	| expression expressionText buttonText |
 	aScriptBlock retrievePresenter.
@@ -12,65 +47,63 @@ MicRichTextComposer >> visitViennaEvalBlockScript: aScriptBlock [
 		parse: expression.
 	buttonText := ' run ' asText
 		              addAttribute: (TextBackgroundColor color: (Color gray: 0.8));
+		              addAttribute: (MicRichTextDoIt new
+				               actOnClickBlock: [
+						               aScriptBlock
+							               execute;
+							               recompose ];
+				               yourself);
 		              yourself.
-	buttonText addAttribute: (MicRichTextDoIt new
-			 actOnClickBlock: [ :attr :event |
-					 | popoverPresenter |
-					 popoverPresenter := SpPopoverPresenter new presenter:
-							                     (ViennaPopoverExpressionPresenter expression: aScriptBlock execute viennaString).
-					 popoverPresenter relativeTo: (SpPresenter new
-								  layout: SpBoxLayout new;
-								  build;
-								  yourself).
-					 popoverPresenter bePositionRight.
-					 popoverPresenter popupPointingTo: (event hand position + (10 @ -20) extent: 1 @ 1).
-					 popoverPresenter takeKeyboardFocus ];
-			 yourself).
 	canvas << expressionText << ' ' asText << buttonText.
+	self viennaWriteResult: aScriptBlock.
 	canvas
 		newLine;
 		newLine
 ]
 
 { #category : '*ViennaTalk-Microdown' }
-MicRichTextComposer >> visitViennaExecBlockScript: aScriptBlock [
+MicRichTextComposer >> visitViennaExec: aScriptBlock [
 
-	| expression expressionText buttonText |
+	| statement statementText buttonText |
 	aScriptBlock retrievePresenter.
-	expression := aScriptBlock body asString trim.
-	expressionText := expression asText.
+	statement := aScriptBlock body asString trim.
+	statementText := statement asText.
 	ViennaVDMHighlighter new
-		text: expressionText;
-		parse: expression.
+		text: statementText;
+		parse: statement.
 	buttonText := ' run ' asText
 		              addAttribute: (TextBackgroundColor color: (Color gray: 0.8));
+		              addAttribute: (MicRichTextDoIt new
+				               actOnClickBlock: [
+						               aScriptBlock
+							               execute;
+							               recompose ];
+				               yourself);
 		              yourself.
-	buttonText addAttribute: (MicRichTextDoIt new
-			 actOnClickBlock: [ :attr :event |
-					 | popoverPresenter |
-					 popoverPresenter := SpPopoverPresenter new presenter:
-							                     (ViennaPopoverExpressionPresenter expression: aScriptBlock execute viennaString).
-					 popoverPresenter relativeTo: (SpPresenter new
-								  layout: SpBoxLayout new;
-								  build;
-								  yourself).
-					 popoverPresenter bePositionRight.
-					 popoverPresenter popupPointingTo: (event hand position + (10 @ -20) extent: 1 @ 1).
-					 popoverPresenter takeKeyboardFocus ];
-			 yourself).
-	canvas << expressionText << ' ' asText << buttonText.
+	canvas << statementText << ' ' asText << buttonText.
+	self viennaWriteResult: aScriptBlock.
 	canvas
 		newLine;
 		newLine
 ]
 
 { #category : '*ViennaTalk-Microdown' }
-MicRichTextComposer >> visitViennaSourceBlockScript: aScriptBlock [
+MicRichTextComposer >> visitViennaSource: aScriptBlock [
 
-	| sourceText |
 	aScriptBlock retrievePresenter.
-	sourceText := aScriptBlock sourceText.
-	canvas << sourceText.
+	aScriptBlock execute.
+	self viennaWriteResultWithoutArrow: aScriptBlock.
+	canvas
+		newLine;
+		newLine
+]
+
+{ #category : '*ViennaTalk-Microdown' }
+MicRichTextComposer >> visitViennaWatch: aScriptBlock [
+
+	aScriptBlock retrievePresenter.
+	aScriptBlock execute.
+	self viennaWriteResult: aScriptBlock.
 	canvas
 		newLine;
 		newLine

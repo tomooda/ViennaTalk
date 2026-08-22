@@ -38,18 +38,42 @@ end Counter' asViennaDocumentAst.
 	presenter := ViennaMicrodownPresenter new
 		             transpiledSpecification: transpiledSpec;
 		             documentFromString: '# Example evaluatable documentation
-## Public Operations
 
-```vienna-eval
+## abstract
+This document explains a specification of a simple counter.
+The counter is specified in VDM-SL and is animatable.
+Click on any **run** button to understand what the counter does.
+Enjoy!
+
+## the Counter module
+```vienna-source|module=Counter
+```
+
+### description
+The **Counter** module specifies a counter. The module memorizes how many times the click operation has been called, and returns it via the show operation.
+Easy!
+
+### public operations
+
+#### click
+```vienna-source|module=Counter
+click
+```
+```vienna-exec
 Counter`click()
 ```
-In the Counter module,
-```vienna-eval|module=Counter
+
+#### show
+```vienna-source|module=Counter
+show
+```
+```vienna-eval|module=Counter&state=no
 show()
 ```
 
-## The source
-```vienna-source|module=Counter
+### internal state
+```vienna-watch|module=Counter
+count
 ```
 ';
 		             yourself.
@@ -58,9 +82,15 @@ show()
 ]
 
 { #category : 'composing' }
-ViennaMicrodownPresenter >> compose [
+ViennaMicrodownPresenter >> recompose [
 
-	self withAdapterDo: [ :microdownAdapter | microdownAdapter compose ]
+	self withAdapterDo: [ :microdownAdapter | microdownAdapter recompose ]
+]
+
+{ #category : 'initialization' }
+ViennaMicrodownPresenter >> setText: aText [
+
+	self withAdapterDo: [ :a | a widgetDo: [ :w | w textArea privateReplaceFrom: 1 to: w text size with: aText ] ]
 ]
 
 { #category : 'accessing' }

@@ -44,3 +44,35 @@ ViennaMorphicMicrodownAdapter >> interactionModel [
 
 	^ nil
 ]
+
+{ #category : 'composing' }
+ViennaMorphicMicrodownAdapter >> recompose [
+
+	self widgetDo: [ :w | self recomposeOn: w ]
+]
+
+{ #category : 'composing' }
+ViennaMorphicMicrodownAdapter >> recomposeOn: aWidget [
+
+	self presenter document ifNil: [ ^ self ].
+	self presenter setText: ([
+			 MicRichTextComposer new
+				 textStyler: self presenter textStyler;
+				 asRichText: self presenter document ]
+			 on: ViennaMicrodownPresenterRequest
+			 do: [ :ex | ex resume: self presenter ])
+]
+
+{ #category : 'presenter->morph' }
+ViennaMorphicMicrodownAdapter >> setText: aText to: aWidget [
+	"called by presenter to set text in morph"
+
+	scalingImageIndexes := (1 to: aText size)
+		select: [ :idx |
+			((aText at: idx) = Character home)
+			and: [ (aText attributeAt: idx ofKind: MicScalingTextAnchor) notNil ] ].
+
+	aWidget
+		setText: aText;
+		resetState
+]
