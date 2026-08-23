@@ -5,7 +5,7 @@ Class {
 	#name : 'ViennaMicrodownPresenter',
 	#superclass : 'MicrodownPresenter',
 	#instVars : [
-		'transpiledSpecification'
+		'animation'
 	],
 	#category : 'ViennaTalk-Microdown-Spec2',
 	#package : 'ViennaTalk-Microdown',
@@ -21,7 +21,7 @@ ViennaMicrodownPresenter class >> adapterName [
 { #category : 'examples' }
 ViennaMicrodownPresenter class >> example [
 
-	| spec transpiledSpec presenter |
+	| spec presenter |
 	spec := 'module Counter
 exports all
 definitions
@@ -34,10 +34,11 @@ click : () ==> ()
 click() == count := count + 1;
 show : () ==> nat
 show() == return count;
-end Counter' asViennaDocumentAst.
-	transpiledSpec := ViennaVDM2SmalltalkObject new generate: spec.
-	presenter := ViennaMicrodownPresenter new
-		             transpiledSpecification: transpiledSpec;
+end Counter'.
+	presenter := self new
+		             animation: (ViennaTranspiledAnimation new
+				              specification: spec;
+				              yourself);
 		             documentFromString: '# Example evaluatable documentation
 
 ## abstract
@@ -82,6 +83,12 @@ count
 	^ presenter
 ]
 
+{ #category : 'accessing' }
+ViennaMicrodownPresenter >> animation: aViennaTranspiledAnimation [
+
+	animation := aViennaTranspiledAnimation
+]
+
 { #category : 'composing' }
 ViennaMicrodownPresenter >> recompose [
 
@@ -97,11 +104,5 @@ ViennaMicrodownPresenter >> setText: aText [
 { #category : 'accessing' }
 ViennaMicrodownPresenter >> transpiledSpecification [
 
-	^ transpiledSpecification
-]
-
-{ #category : 'accessing' }
-ViennaMicrodownPresenter >> transpiledSpecification: anObject [
-
-	transpiledSpecification := anObject
+	^ animation transpiledSpecification
 ]

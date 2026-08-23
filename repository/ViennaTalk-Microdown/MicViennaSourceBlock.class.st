@@ -44,6 +44,12 @@ MicViennaSourceBlock >> accept: aVisitor [
 	aVisitor visitViennaSource: self
 ]
 
+{ #category : 'private' }
+MicViennaSourceBlock >> createVdmParser [
+
+	^ ViennaVDMParser new name optional
+]
+
 { #category : 'accessing' }
 MicViennaSourceBlock >> execute [
 
@@ -57,10 +63,4 @@ MicViennaSourceBlock >> execute [
 									                 parent: receiver;
 									                 resolve) highlightedSource ] ]
 				ifNil: [ resultString := receiver highlightedSource ] ]
-]
-
-{ #category : 'accessing' }
-MicViennaSourceBlock >> parser [
-
-	^ ViennaVDMParser new name optional
 ]

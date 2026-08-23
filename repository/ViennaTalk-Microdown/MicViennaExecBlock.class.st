@@ -40,8 +40,8 @@ MicViennaExecBlock >> accept: aVisitor [
 	aVisitor visitViennaExec: self
 ]
 
-{ #category : 'accessing' }
-MicViennaExecBlock >> parser [
+{ #category : 'private' }
+MicViennaExecBlock >> createVdmParser [
 
 	^ ViennaVDMParser new statement
 ]

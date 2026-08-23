@@ -44,8 +44,8 @@ MicViennaEvalBlock >> accept: aVisitor [
 	aVisitor visitViennaEval: self
 ]
 
-{ #category : 'accessing' }
-MicViennaEvalBlock >> parser [
+{ #category : 'private' }
+MicViennaEvalBlock >> createVdmParser [
 
 	^ ViennaVDMParser new expression
 ]

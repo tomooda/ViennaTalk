@@ -2,6 +2,7 @@ Class {
 	#name : 'MicViennaBlock',
 	#superclass : 'MicScriptBlock',
 	#instVars : [
+		'vdmParser',
 		'presenter',
 		'resultString',
 		'errorString'
@@ -27,12 +28,18 @@ MicViennaBlock class >> tag [
 MicViennaBlock >> bodyNode [
 
 	| bodyNode |
-	bodyNode := self parser parse: self body asString trim.
+	bodyNode := self vdmParser parse: self body asString trim.
 	^ bodyNode isPetit2Success
 		  ifTrue: [ bodyNode ]
 		  ifFalse: [
 				  self syntaxError.
 				  bodyNode ]
+]
+
+{ #category : 'private' }
+MicViennaBlock >> createVdmParser [
+
+	^ self subclassResponsibility
 ]
 
 { #category : 'accessing' }
@@ -71,12 +78,6 @@ MicViennaBlock >> noSpecificationError [
 
 	self errorString: 'Specification is not available'.
 	^ nil
-]
-
-{ #category : 'accessing' }
-MicViennaBlock >> parser [
-
-	^ self subclassResponsibility
 ]
 
 { #category : 'accessing' }
@@ -141,4 +142,10 @@ MicViennaBlock >> transpiledReceiver [
 MicViennaBlock >> transpiledSpecification [
 
 	^ presenter ifNotNil: #transpiledSpecification ifNil: [ self noSpecificationError ]
+]
+
+{ #category : 'accessing' }
+MicViennaBlock >> vdmParser [
+
+	^ vdmParser ifNil: [ vdmParser := self createVdmParser ]
 ]

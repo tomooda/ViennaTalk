@@ -44,16 +44,16 @@ MicViennaWatchBlock >> accept: aVisitor [
 	aVisitor visitViennaWatch: self
 ]
 
+{ #category : 'private' }
+MicViennaWatchBlock >> createVdmParser [
+
+	^ ViennaVDMParser new expression
+]
+
 { #category : 'defaults' }
 MicViennaWatchBlock >> defaultState [
 
 	^ #no
-]
-
-{ #category : 'accessing' }
-MicViennaWatchBlock >> parser [
-
-	^ ViennaVDMParser new expression
 ]
 
 { #category : 'accessing' }
