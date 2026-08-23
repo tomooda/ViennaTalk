@@ -27,8 +27,9 @@ is rendered as
 Class {
 	#name : 'MicViennaEvalBlock',
 	#superclass : 'MicViennaAnimationBlock',
-	#category : 'ViennaTalk-Microdown',
-	#package : 'ViennaTalk-Microdown'
+	#category : 'ViennaTalk-Microdown-Microdown',
+	#package : 'ViennaTalk-Microdown',
+	#tag : 'Microdown'
 }
 
 { #category : 'accessing' }

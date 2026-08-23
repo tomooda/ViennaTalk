@@ -143,6 +143,8 @@ BaselineOfViennaTalk >> baseline: spec [
 			spec requires:
 				#( 'ViennaTalk-Animation-Core' 'ViennaTalk-Animation-Transpiler' 'ViennaTalk-Browser-Core' 'ViennaTalk-Launcher-Core'
 				   'ViennaTalk-Value-Core' 'PetitParser2' ) ];
+		package: 'ViennaTalk-Microdown'
+		with: [ spec requires: #( 'ViennaTalk-Parser-Core' 'ViennaTalk-Parser-Highlighter' 'ViennaTalk-Transpiler-Core' ) ];
 		package: 'ViennaTalk-Mutation-Core' with: [ spec requires: #( 'ViennaTalk-AST-Core' 'ViennaTalk-Type-Core' ) ];
 		package: 'ViennaTalk-Mutation-Tests' with: [ spec requires: #( 'ViennaTalk-Mutation-Core' ) ];
 		package: 'ViennaTalk-Parser-Core' with: [ spec requires: #( 'ViennaTalk-AST-Core' 'ViennaTalk-Value-Core'

@@ -6,8 +6,9 @@ Class {
 		'resultString',
 		'errorString'
 	],
-	#category : 'ViennaTalk-Microdown',
-	#package : 'ViennaTalk-Microdown'
+	#category : 'ViennaTalk-Microdown-Microdown',
+	#package : 'ViennaTalk-Microdown',
+	#tag : 'Microdown'
 }
 
 { #category : 'testing' }

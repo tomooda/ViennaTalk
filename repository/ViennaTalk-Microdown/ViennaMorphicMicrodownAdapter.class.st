@@ -4,8 +4,9 @@ A morphic adapter for `MicrodownPresenter`
 Class {
 	#name : 'ViennaMorphicMicrodownAdapter',
 	#superclass : 'MicMorphicTextAdapter',
-	#category : 'ViennaTalk-Microdown',
-	#package : 'ViennaTalk-Microdown'
+	#category : 'ViennaTalk-Microdown-Spec2',
+	#package : 'ViennaTalk-Microdown',
+	#tag : 'Spec2'
 }
 
 { #category : 'factory' }

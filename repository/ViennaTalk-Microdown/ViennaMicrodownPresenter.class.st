@@ -7,8 +7,9 @@ Class {
 	#instVars : [
 		'transpiledSpecification'
 	],
-	#category : 'ViennaTalk-Microdown',
-	#package : 'ViennaTalk-Microdown'
+	#category : 'ViennaTalk-Microdown-Spec2',
+	#package : 'ViennaTalk-Microdown',
+	#tag : 'Spec2'
 }
 
 { #category : 'specs' }

@@ -20,8 +20,9 @@ If no handler is set, nil will be passed as the default.
 Class {
 	#name : 'ViennaMicrodownPresenterRequest',
 	#superclass : 'Exception',
-	#category : 'ViennaTalk-Microdown',
-	#package : 'ViennaTalk-Microdown'
+	#category : 'ViennaTalk-Microdown-Spec2',
+	#package : 'ViennaTalk-Microdown',
+	#tag : 'Spec2'
 }
 
 { #category : 'handling' }
