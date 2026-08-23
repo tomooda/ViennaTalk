@@ -7,7 +7,6 @@ Class {
 		'fileReference',
 		'animation',
 		'menuBar',
-		'notebook',
 		'moduleList',
 		'categoryList',
 		'definitionList',
@@ -63,7 +62,9 @@ Class {
 		'removeAllEpiLogButton',
 		'clearEpiLogCheckBox',
 		'epiLogCherrypickButton',
-		'pendingSemanticError'
+		'pendingSemanticError',
+		'vdmNotebook',
+		'notebook'
 	],
 	#classVars : [
 		'GreenSignalIcon',
@@ -1002,16 +1003,7 @@ ViennaRefactoringBrowser >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		  add: menuBar height: self class buttonHeight;
-		  add: (SpPanedLayout newVertical
-				   positionOfSlider: 0.3;
-				   add: (SpPanedLayout newHorizontal
-						    positionOfSlider: 0.4;
-						    add: moduleList;
-						    add: (SpPanedLayout newHorizontal
-								     positionOfSlider: 0.3;
-								     add: categoryList;
-								     add: definitionList));
-				   add: notebook);
+		  add: notebook;
 		  yourself
 ]
 
@@ -1901,8 +1893,8 @@ ViennaRefactoringBrowser >> icebergRepositoryDo: aBlock [
 { #category : 'updating' }
 ViennaRefactoringBrowser >> ifHiDeHoVisible: aBlock [
 
-	notebook ifNotNil: [
-		(notebook selectedPage ifNotNil: #title) = 'HiDeHo' ifTrue: aBlock ]
+	vdmNotebook ifNotNil: [
+		(vdmNotebook selectedPage ifNotNil: #title) = 'HiDeHo' ifTrue: aBlock ]
 ]
 
 { #category : 'operations' }
@@ -2263,80 +2255,27 @@ ViennaRefactoringBrowser >> initializePresenters [
 
 	super initializePresenters.
 	menuBar := self menuBar.
-	moduleList := self newList
-		              borderWidth: 1;
-		              borderColor: Color darkGray;
-		              beSingleSelection;
-		              contextMenu: [ self moduleListContextMenu ];
-		              displayBackgroundColor: [ :ast |
-			              self listBackgroundColorFor: ast ];
-		              display: [ :ast | ast ifNil: [ '-' ] ifNotNil: #first ];
-		              sortingBlock: #identifier ascending;
-		              whenSelectionChangedDo: [
-			              self
-				              updateTestButtons;
-				              updateCategoryList;
-				              updateEpiLogMatcherDropList;
-				              updateEpiLogSourceText ];
-		              yourself.
-	categoryList := self newList
-		                borderWidth: 1;
-		                borderColor: Color darkGray;
-		                beSingleSelection;
-		                contextMenu: [ self categoryListContextMenu ];
-		                displayBackgroundColor: [ :ast |
-			                self listBackgroundColorFor: ast ];
-		                display: [ :ast | self displayCategory: ast ];
-		                whenSelectionChangedDo: [ self updateDefinitionList ];
-		                yourself.
-	definitionList := self newList
-		                  borderWidth: 1;
-		                  borderColor: Color darkGray;
-		                  beSingleSelection;
-		                  displayBackgroundColor: [ :ast |
-			                  self listBackgroundColorFor: ast ];
-		                  contextMenu: [ self definitionListContextMenu ];
-		                  display: [ :ast |
-			                  ast
-				                  ifNotNil: [ self displayDefinition: ast ]
-				                  ifNil: [ '-' ] ];
-		                  whenSelectionChangedDo: [
-			                  self
-				                  updateSource;
-				                  updateEpiLogMatcherDropList ].
-	self initializeSourcePagePresenters.
-	self initializePlaygroundPagePresenters.
+	self initializeVdmPagePresenters.
 	self initializeEpiLogPagePresenters.
 	self initializeGitPagePresenters.
 	notebook := self newNotebook
-		            addPageTitle: 'Source' provider: [
-			            SpPresenter new
-				            layout: self sourcePageLayout;
-				            yourself ];
-		            addPageTitle: 'Playground' provider: [
-		            SpPresenter new
-			            layout: self playgroundPageLayout;
-			            yourself ];
+		            addPageTitle: 'VDM' provider: [
+				            SpPresenter new
+					            layout: self vdmPageLayout;
+					            yourself ];
 		            addPageTitle: 'HiDeHo' provider: [
-		            SpPresenter new
-			            layout: self epilogPageLayout;
-			            yourself ];
+				            SpPresenter new
+					            layout: self epilogPageLayout;
+					            yourself ];
 		            addPageTitle: 'Git' provider: [
-		            SpPresenter new
-			            layout: self gitPageLayout;
-			            yourself ];
+			            SpPresenter new
+				            layout: self gitPageLayout;
+				            yourself ];
 		            whenSelectedPageChangedDo: [
-			            notebook selectedPage ifNotNil: [ :page |
-				            page title = 'HiDeHo' ifTrue: [ self updateEpiLogPage ].
-				            page title = 'Git' ifTrue: [
-					            [ self updateGitPage ] forkAt:
-						            Processor userBackgroundPriority ] ] ];
-		            yourself.
-	self whenBuiltDo: [ :w |
-		| f |
-		f := ViennaLauncher font.
-		w widget allMorphsDo: [ :m |
-			(m respondsTo: #font:) ifTrue: [ m font: f ] ] ]
+				            vdmNotebook selectedPage ifNotNil: [ :page |
+						            page title = 'HiDeHo' ifTrue: [ self updateEpiLogPage ].
+						            page title = 'Git' ifTrue: [ [ self updateGitPage ] forkAt: Processor userBackgroundPriority ] ] ];
+		            yourself
 ]
 
 { #category : 'initialization' }
@@ -2406,6 +2345,64 @@ ViennaRefactoringBrowser >> initializeSourcePagePresenters [
 		                            icon: (self iconNamed: #exception);
 		                            action: [ self runMutationTesting ];
 		                            yourself
+]
+
+{ #category : 'initialization' }
+ViennaRefactoringBrowser >> initializeVdmPagePresenters [
+
+	moduleList := self newList
+		              borderWidth: 1;
+		              borderColor: Color darkGray;
+		              beSingleSelection;
+		              contextMenu: [ self moduleListContextMenu ];
+		              displayBackgroundColor: [ :ast | self listBackgroundColorFor: ast ];
+		              display: [ :ast | ast ifNil: [ '-' ] ifNotNil: #first ];
+		              sortingBlock: #identifier ascending;
+		              whenSelectionChangedDo: [
+				              self
+					              updateTestButtons;
+					              updateCategoryList;
+					              updateEpiLogMatcherDropList;
+					              updateEpiLogSourceText ];
+		              yourself.
+	categoryList := self newList
+		                borderWidth: 1;
+		                borderColor: Color darkGray;
+		                beSingleSelection;
+		                contextMenu: [ self categoryListContextMenu ];
+		                displayBackgroundColor: [ :ast | self listBackgroundColorFor: ast ];
+		                display: [ :ast | self displayCategory: ast ];
+		                whenSelectionChangedDo: [ self updateDefinitionList ];
+		                yourself.
+	definitionList := self newList
+		                  borderWidth: 1;
+		                  borderColor: Color darkGray;
+		                  beSingleSelection;
+		                  displayBackgroundColor: [ :ast | self listBackgroundColorFor: ast ];
+		                  contextMenu: [ self definitionListContextMenu ];
+		                  display: [ :ast | ast ifNotNil: [ self displayDefinition: ast ] ifNil: [ '-' ] ];
+		                  whenSelectionChangedDo: [
+				                  self
+					                  updateSource;
+					                  updateEpiLogMatcherDropList ].
+	self initializeSourcePagePresenters.
+	self initializePlaygroundPagePresenters.
+	self initializeEpiLogPagePresenters.
+	self initializeGitPagePresenters.
+	vdmNotebook := self newNotebook
+		               addPageTitle: 'Source' provider: [
+				               SpPresenter new
+					               layout: self sourcePageLayout;
+					               yourself ];
+		               addPageTitle: 'Playground' provider: [
+			               SpPresenter new
+				               layout: self playgroundPageLayout;
+				               yourself ];
+		               yourself.
+	self whenBuiltDo: [ :w |
+			| f |
+			f := ViennaLauncher font.
+			w widget allMorphsDo: [ :m | (m respondsTo: #font:) ifTrue: [ m font: f ] ] ]
 ]
 
 { #category : 'initialization' }
@@ -3692,6 +3689,21 @@ ViennaRefactoringBrowser >> userTimelineSelected [
 	showsArtifactTimelineButton state: false.
 	narrativeDropList resetSelection.
 	self selectedTimelineChanged
+]
+
+{ #category : 'layouts' }
+ViennaRefactoringBrowser >> vdmPageLayout [
+
+	^ SpPanedLayout newVertical
+		  positionOfSlider: 0.3;
+		  add: (SpPanedLayout newHorizontal
+				   positionOfSlider: 0.4;
+				   add: moduleList;
+				   add: (SpPanedLayout newHorizontal
+						    positionOfSlider: 0.3;
+						    add: categoryList;
+						    add: definitionList));
+		  add: vdmNotebook
 ]
 
 { #category : 'updating' }

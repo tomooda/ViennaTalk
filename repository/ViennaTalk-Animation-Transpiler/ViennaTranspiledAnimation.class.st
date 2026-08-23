@@ -474,6 +474,12 @@ ViennaTranspiledAnimation >> state: aDictionary [
 	self announceStateChanged
 ]
 
+{ #category : 'accessing' }
+ViennaTranspiledAnimation >> transpiledSpecification [
+
+	^ object
+]
+
 { #category : 'class access' }
 ViennaTranspiledAnimation >> transpilerClass [
 
