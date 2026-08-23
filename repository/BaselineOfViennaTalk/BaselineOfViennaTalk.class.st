@@ -144,7 +144,7 @@ BaselineOfViennaTalk >> baseline: spec [
 				#( 'ViennaTalk-Animation-Core' 'ViennaTalk-Animation-Transpiler' 'ViennaTalk-Browser-Core' 'ViennaTalk-Launcher-Core'
 				   'ViennaTalk-Value-Core' 'PetitParser2' ) ];
 		package: 'ViennaTalk-Microdown'
-		with: [ spec requires: #( 'ViennaTalk-Parser-Core' 'ViennaTalk-Parser-Highlighter' 'ViennaTalk-Transpiler-Core' ) ];
+		with: [ spec requires: #( 'ViennaTalk-Parser-Core' 'ViennaTalk-Parser-Highlighters' 'ViennaTalk-Transpiler-Core' ) ];
 		package: 'ViennaTalk-Mutation-Core' with: [ spec requires: #( 'ViennaTalk-AST-Core' 'ViennaTalk-Type-Core' ) ];
 		package: 'ViennaTalk-Mutation-Tests' with: [ spec requires: #( 'ViennaTalk-Mutation-Core' ) ];
 		package: 'ViennaTalk-Parser-Core' with: [ spec requires: #( 'ViennaTalk-AST-Core' 'ViennaTalk-Value-Core'
@@ -197,7 +197,7 @@ BaselineOfViennaTalk >> baseline: spec [
 		group: 'WeblyWalkThrough' with: #( 'ViennaTalk-WeblyWalkThrough-Server' );
 		group: 'core' with: #( 'ViennaTalk-Engine-Core' 'ViennaTalk-Parser-Core' 'ViennaTalk-Launcher-Core' 'ViennaTalk-Browser-Core'
 			   'ViennaTalk-Parser-Formatters' 'ViennaTalk-Parser-Highlighters' 'ViennaTalk-ExecutionTrace-Core'
-			   'ViennaTalk-Slicing-Core' 'ViennaTalk-Mutation-Core' );
+			   'ViennaTalk-Slicing-Core' 'ViennaTalk-Mutation-Core' 'ViennaTalk-Microdown');
 		group: 'default'
 		with: #( 'core' 'VDMPad' 'LivelyWalkThrough' 'tests' 'WeblyWalkThrough' 'Transpiler' 'ViennaFRAM' 'Application' );
 		group: 'full' with: #( 'default' 'ViennaTalk-Engine-VDMJ' 'ViennaTalk-Engine-Networking' 'ViennaTalk-Engine-Tests' );
