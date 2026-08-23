@@ -7,7 +7,8 @@ Class {
 		'parser',
 		'transpiler',
 		'reader',
-		'writer'
+		'writer',
+		'specificationNode'
 	],
 	#classVars : [
 		'UseTranspilerByDefault'
@@ -420,24 +421,36 @@ ViennaTranspiledAnimation >> specification: aString [
 { #category : 'accessing' }
 ViennaTranspiledAnimation >> specification: aString ifError: errorBlock [
 
-	| ast |
+	self
+		specificationNode: (aString isViennaNode
+				 ifTrue: [ aString ]
+				 ifFalse: [
+						 aString
+							 ifNotEmpty: [
+									 | result |
+									 result := parser parse: aString.
+									 result isPetit2Failure ifTrue: [ ^ errorBlock cull: result message ].
+									 result ]
+							 ifEmpty: [ ViennaModularDocumentNode default ] ])
+		ifError: errorBlock
+]
+
+{ #category : 'accessing' }
+ViennaTranspiledAnimation >> specificationNode [
+
+	^ specificationNode
+]
+
+{ #category : 'accessing' }
+ViennaTranspiledAnimation >> specificationNode: aViennaModularDocumentNode ifError: errorBlock [
+
 	transpiler := self transpilerClass new.
-	ast := aString isViennaNode
-		       ifTrue: [ aString ]
-		       ifFalse: [
-				       aString
-					       ifNotEmpty: [
-							       | result |
-							       result := parser parse: aString.
-							       result isPetit2Failure ifTrue: [
-								       ^ errorBlock cull: result message ].
-							       result ]
-					       ifEmpty: [ ViennaModularDocumentNode default ] ].
-	[ ast typecheck ]
+	specificationNode := aViennaModularDocumentNode.
+	[ specificationNode typecheck ]
 		on: ViennaTypeError
 		do: [ :typeError | ^ errorBlock cull: typeError messageText ].
-	object := transpiler generate: ast.
-	specification := aString.
+	object := transpiler generate: specificationNode.
+	specification := aViennaModularDocumentNode source.
 	self changed: #specification.
 	self announceSpecificationChanged.
 	self changed: #state.

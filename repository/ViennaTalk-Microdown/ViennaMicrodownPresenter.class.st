@@ -84,6 +84,12 @@ count
 ]
 
 { #category : 'accessing' }
+ViennaMicrodownPresenter >> animation [
+
+	^ animation
+]
+
+{ #category : 'accessing' }
 ViennaMicrodownPresenter >> animation: aViennaTranspiledAnimation [
 
 	animation := aViennaTranspiledAnimation
