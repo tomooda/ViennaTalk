@@ -5,7 +5,8 @@ Class {
 	#name : 'ViennaMicrodownPresenter',
 	#superclass : 'MicrodownPresenter',
 	#instVars : [
-		'animation'
+		'animation',
+		'highlighter'
 	],
 	#category : 'ViennaTalk-Microdown-Spec2',
 	#package : 'ViennaTalk-Microdown',
@@ -77,6 +78,8 @@ show()
 ```vienna-watch|module=Counter
 count
 ```
+
+Enjoy!
 ';
 		             yourself.
 	presenter open title: 'ViennaMicrodown'.
@@ -95,6 +98,33 @@ ViennaMicrodownPresenter >> animation: aViennaTranspiledAnimation [
 	animation := aViennaTranspiledAnimation
 ]
 
+{ #category : 'accessing' }
+ViennaMicrodownPresenter >> highlight: aString [
+
+	^ (highlighter ifNil: [ highlighter := ViennaVDMHighlighter new ])
+		  text: aString asText;
+		  parse: aString asString;
+		  text
+]
+
+{ #category : 'error messaging' }
+ViennaMicrodownPresenter >> noDefinitionError: aString [
+
+	^ 'No definition of ' , aString
+]
+
+{ #category : 'error messaging' }
+ViennaMicrodownPresenter >> noModuleError: aString [
+
+	^ 'No module named ' , aString
+]
+
+{ #category : 'error messaging' }
+ViennaMicrodownPresenter >> noSpecificationError [
+
+	^ 'Specification is not available'
+]
+
 { #category : 'composing' }
 ViennaMicrodownPresenter >> recompose [
 
@@ -108,7 +138,41 @@ ViennaMicrodownPresenter >> setText: aText [
 ]
 
 { #category : 'accessing' }
+ViennaMicrodownPresenter >> sourceAt: aViennaNameNode in: anotherString ifError: errorBlock [
+
+	^ (animation ifNotNil: #specificationNode)
+		  ifNotNil: [ :specificationNode |
+				  (anotherString isNil or: [ anotherString = animation defaultModule ])
+					  ifTrue: [
+							  aViennaNameNode
+								  ifNotNil: [
+										  aViennaNameNode parent: specificationNode.
+										  aViennaNameNode resolve
+											  ifNotNil: [ :node | self highlight: node source ]
+											  ifNil: [ errorBlock value: (self noDefinitionError: aViennaNameNode source) ] ]
+								  ifNil: [ self highlight: specificationNode source ] ]
+					  ifFalse: [
+							  (specificationNode moduleNamed: anotherString)
+								  ifNotNil: [ :moduleNode |
+										  aViennaNameNode
+											  ifNotNil: [
+													  aViennaNameNode parent: moduleNode.
+													  aViennaNameNode resolve
+														  ifNotNil: [ :node | self highlight: node source ]
+														  ifNil: [ errorBlock value: (self noDefinitionError: aViennaNameNode source) ] ]
+											  ifNil: [ self highlight: moduleNode source ] ]
+								  ifNil: [ errorBlock value: (self noModuleError: anotherString) ] ] ]
+		  ifNil: [ self noSpecificationError ]
+]
+
+{ #category : 'error messaging' }
+ViennaMicrodownPresenter >> syntaxError [
+
+	^ 'Syntax error in the body'
+]
+
+{ #category : 'accessing' }
 ViennaMicrodownPresenter >> transpiledSpecification [
 
-	^ animation transpiledSpecification
+	^ animation ifNotNil: #transpiledSpecification
 ]

@@ -67,13 +67,6 @@ MicViennaBlock >> moduleName [
 ]
 
 { #category : 'error messaging' }
-MicViennaBlock >> noModuleError: aString [
-
-	self errorString: 'No module named ' , aString.
-	^ nil
-]
-
-{ #category : 'error messaging' }
 MicViennaBlock >> noSpecificationError [
 
 	self errorString: 'Specification is not available'.
@@ -120,13 +113,6 @@ MicViennaBlock >> retrievePresenter [
 MicViennaBlock >> specification [
 
 	^ (presenter ifNotNil: #transpiledSpecification ifNil: [ self noSpecificationError ]) ifNotNil: #specification
-]
-
-{ #category : 'error messaging' }
-MicViennaBlock >> syntaxError [
-
-	self errorString: 'Syntax error in the body'.
-	^ nil
 ]
 
 { #category : 'accessing' }

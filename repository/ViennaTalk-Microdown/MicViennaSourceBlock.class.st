@@ -27,6 +27,9 @@ end Counter
 Class {
 	#name : 'MicViennaSourceBlock',
 	#superclass : 'MicViennaBlock',
+	#instVars : [
+		'highlighter'
+	],
 	#category : 'ViennaTalk-Microdown-Microdown',
 	#package : 'ViennaTalk-Microdown',
 	#tag : 'Microdown'
@@ -55,12 +58,8 @@ MicViennaSourceBlock >> execute [
 
 	resultString := nil.
 	errorString := nil.
-	self receiver ifNotNil: [ :receiver |
-			self bodyNode
-				ifNotNil: [ :bodyNode |
-						bodyNode isPetit2Success ifTrue: [
-								resultString := (bodyNode
-									                 parent: receiver;
-									                 resolve) highlightedSource ] ]
-				ifNil: [ resultString := receiver highlightedSource ] ]
+	presenter
+		ifNotNil: [
+		resultString := presenter sourceAt: self bodyNode in: self moduleName ifError: [ :message | self errorString: message ] ]
+		ifNil: [ self errorString: self noSpecificationError ]
 ]
