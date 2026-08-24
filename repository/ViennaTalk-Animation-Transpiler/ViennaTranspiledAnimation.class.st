@@ -94,7 +94,7 @@ ViennaTranspiledAnimation >> at: aString ifPresent: presentBlock ifAbsent: absen
 { #category : 'accessing' }
 ViennaTranspiledAnimation >> at: aString put: anObject [
 
-	| separatorIndex target name value |
+	| separatorIndex target name oldValue value |
 	separatorIndex := aString indexOf: $`.
 	separatorIndex = 0
 		ifTrue: [
@@ -103,14 +103,14 @@ ViennaTranspiledAnimation >> at: aString put: anObject [
 		ifFalse: [
 				| moduleName |
 				moduleName := aString copyFrom: 1 to: separatorIndex - 1.
-				target := object
-					          at: (aString copyFrom: 1 to: separatorIndex - 1)
-					          ifAbsent: [ ^ nil ].
+				target := object at: (aString copyFrom: 1 to: separatorIndex - 1) ifAbsent: [ ^ nil ].
 				name := aString copyFrom: separatorIndex + 1 to: aString size ].
-	[ value := target instVarNamed: name put: anObject ]
+	[
+		oldValue := target instVarNamed: name.
+		value := target instVarNamed: name put: anObject ]
 		on: Error
 		do: [ :ex | ^ nil ].
-	self announceStateChanged.
+	oldValue ~= value ifTrue: [ self announceStateChanged ].
 	^ value
 ]
 
@@ -158,22 +158,22 @@ ViennaTranspiledAnimation >> copyForTest [
 { #category : 'evaluating' }
 ViennaTranspiledAnimation >> debug: aString in: moduleName ifError: errorBlock [
 
+	| oldState |
+	oldState := self state.
 	Cursor wait showWhile: [
-		| result |
-		result := (moduleName = self defaultModule
-			           ifTrue: [ object ]
-			           ifFalse: [
-				           object
-					           at: moduleName
-					           ifAbsent: [ ^ errorBlock value: 'unknown module name' ] ])
-			          debugExpression: aString
-			          with: transpiler
-			          ifError: [ :msg | ^ errorBlock cull: msg ].
-		self changed: #state.
-		self announceStateChanged.
-		^ result == object
-			  ifTrue: [ nil ]
-			  ifFalse: [ result ] ]
+			| result |
+			result := (moduleName = self defaultModule
+				           ifTrue: [ object ]
+				           ifFalse: [ object at: moduleName ifAbsent: [ ^ errorBlock value: 'unknown module name' ] ])
+				          debugExpression: aString
+				          with: transpiler
+				          ifError: [ :msg | ^ errorBlock cull: msg ].
+			oldState ~= self state ifTrue: [
+					self changed: #state.
+					self announceStateChanged ].
+			^ result == object
+				  ifTrue: [ nil ]
+				  ifFalse: [ result ] ]
 ]
 
 { #category : 'private' }
@@ -196,36 +196,61 @@ ViennaTranspiledAnimation >> evaluate: aString [
 ]
 
 { #category : 'evaluating' }
-ViennaTranspiledAnimation >> evaluate: aString in: moduleName ifError: errorBlock [
+ViennaTranspiledAnimation >> evaluate: aString in: moduleName do: aBlock ifError: errorBlock [
 
 	Cursor wait showWhile: [
-			| result |
+			| oldState result state |
+			oldState := self state.
 			result := (object at: moduleName ifAbsent: [ object ])
 				          evaluateExpression: aString
 				          with: transpiler
 				          ifError: [ :msg | ^ errorBlock cull: msg ].
-			self changed: #state.
-			self announceStateChanged.
+			state := self state.
+			aBlock ifNotNil: [ result := aBlock cull: result cull: state ].
+			oldState ~= state ifTrue: [
+					self changed: #state.
+					self announceStateChanged ].
+			^ result ]
+]
+
+{ #category : 'evaluating' }
+ViennaTranspiledAnimation >> evaluate: aString in: moduleName ifError: errorBlock [
+
+	^ self
+		  evaluate: aString
+		  in: moduleName
+		  do: nil
+		  ifError: errorBlock
+]
+
+{ #category : 'evaluating' }
+ViennaTranspiledAnimation >> execute: aViennaNode in: moduleName do: aBlock ifError: errorBlock [
+
+	Cursor wait showWhile: [
+			| oldState result state |
+			oldState := self state.
+			result := (moduleName = self defaultModule
+				           ifTrue: [ object ]
+				           ifFalse: [ object at: moduleName ifAbsent: [ ^ errorBlock cull: 'unknown module name' ] ])
+				          evaluateNode: aViennaNode
+				          with: transpiler
+				          ifError: [ :msg | ^ errorBlock cull: msg ].
+			state := self state.
+			aBlock ifNotNil: [ result := aBlock cull: result cull: state ].
+			oldState ~= state ifTrue: [
+					self changed: #state.
+					self announceStateChanged ].
 			^ result ]
 ]
 
 { #category : 'evaluating' }
 ViennaTranspiledAnimation >> execute: aViennaNode in: moduleName ifError: errorBlock [
 
-	Cursor wait showWhile: [
-		| result |
-		result := (moduleName = self defaultModule
-			           ifTrue: [ object ]
-			           ifFalse: [
-				           object
-					           at: moduleName
-					           ifAbsent: [ ^ errorBlock cull: 'unknown module name' ] ])
-			          evaluateNode: aViennaNode
-			          with: transpiler
-			          ifError: [ :msg | ^ errorBlock cull: msg ].
-		self changed: #state.
-		self announceStateChanged.
-		^ result ]
+	^ self
+		  execute: aViennaNode
+		  in: moduleName
+		  do: nil
+		  ifError: errorBlock
 ]
 
 { #category : 'evaluating' }
@@ -444,6 +469,9 @@ ViennaTranspiledAnimation >> specificationNode [
 { #category : 'accessing' }
 ViennaTranspiledAnimation >> specificationNode: aViennaModularDocumentNode ifError: errorBlock [
 
+	| oldSpecificationNode oldState |
+	oldSpecificationNode := specificationNode.
+	oldState := self state.
 	transpiler := self transpilerClass new.
 	specificationNode := aViennaModularDocumentNode.
 	[ specificationNode typecheck ]
@@ -451,10 +479,11 @@ ViennaTranspiledAnimation >> specificationNode: aViennaModularDocumentNode ifErr
 		do: [ :typeError | ^ errorBlock cull: typeError messageText ].
 	object := transpiler generate: specificationNode.
 	specification := aViennaModularDocumentNode source.
-	self changed: #specification.
+	oldSpecificationNode ~= specificationNode ifTrue: [ self changed: #specification ].
 	self announceSpecificationChanged.
-	self changed: #state.
-	self announceStateChanged
+	oldState ~= self state ifTrue: [
+			self changed: #state.
+			self announceStateChanged ]
 ]
 
 { #category : 'private' }
@@ -481,10 +510,11 @@ ViennaTranspiledAnimation >> state [
 { #category : 'private' }
 ViennaTranspiledAnimation >> state: aDictionary [
 
-	aDictionary keysAndValuesDo: [ :var :val |
-		self basicAt: var put: (reader parse: val) ].
+	| oldState |
+	oldState := self state.
+	aDictionary keysAndValuesDo: [ :var :val | self basicAt: var put: (reader parse: val) ].
 	object inv.
-	self announceStateChanged
+	self state ~= self state ifTrue: [ self announceStateChanged ]
 ]
 
 { #category : 'accessing' }
