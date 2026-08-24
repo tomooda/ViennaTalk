@@ -1,10 +1,6 @@
 Class {
 	#name : 'MicViennaAnimationBlock',
 	#superclass : 'MicViennaBlock',
-	#instVars : [
-		'prestate',
-		'poststate'
-	],
 	#category : 'ViennaTalk-Microdown-Microdown',
 	#package : 'ViennaTalk-Microdown',
 	#tag : 'Microdown'
@@ -25,48 +21,17 @@ MicViennaAnimationBlock >> defaultState [
 { #category : 'executing' }
 MicViennaAnimationBlock >> execute [
 
-	| bodyNode receiver script result |
+	| bodyNode animation prestate |
 	resultString := nil.
 	errorString := nil.
-	bodyNode := self bodyNode ifNil: [ ^ errorString := 'Syntax error in the body' ].
-	receiver := self transpiledReceiver.
-	prestate := self ifShowNoState: [ nil ] otherwise: [ receiver _state ].
-	script := ViennaVDM2SmalltalkObject new generate: bodyNode env: (receiver ifNotNil: #_viennaEnv ifNil: [ Dictionary new ]).
-	result := [
-		          OpalCompiler new
-			          source: script;
-			          logged: false;
-			          receiver: receiver;
-			          evaluate ]
-		          on: Exception
-		          do: [ :ex | ^ errorString := ex messageText ].
-	poststate := self ifShowNoState: [ nil ] otherwise: [ receiver _state ].
-	self
-		ifShowDiffState: [
-				poststate ifNotNil: [
-						poststate keys do: [ :var |
-								prestate at: var ifPresent: [ :pre |
-										pre = (poststate at: var) ifTrue: [
-												prestate removeKey: var.
-												poststate removeKey: var ] ] ] ] ]
-		otherwise: [ ].
-	resultString := self
-		                ifShowNoState: [
-				                String streamContents: [ :stream |
-						                stream
-							                nextPutAll: self body asString trim;
-							                nextPutAll: ' → '.
-						                result viennaStringOn: stream ] ]
-		                otherwise: [
-				                String streamContents: [ :stream |
-						                self printState: prestate on: stream.
-						                stream
-							                space;
-							                nextPutAll: self body asString trim;
-							                nextPutAll: ' → '.
-						                result viennaStringOn: stream.
-						                stream space.
-						                self printState: poststate on: stream ] ]
+	bodyNode := self bodyNode ifNil: [ ^ self syntaxError ].
+	animation := self animation.
+	prestate := animation state.
+	animation
+		execute: bodyNode
+		in: self moduleName
+		do: [ :result :poststate | self resultString: result viennaString prestate: prestate poststate: poststate ]
+		ifError: [ :message | ^ self errorString: message ]
 ]
 
 { #category : 'controlling' }
@@ -109,9 +74,40 @@ MicViennaAnimationBlock >> printState: aDictionary on: aStream [
 						aStream
 							nextPutAll: assoc key;
 							nextPutAll: '=';
-							nextPutAll: assoc value viennaString ]
+							nextPutAll: assoc value ]
 				separatedBy: [ aStream nextPutAll: ', ' ].
 			aStream nextPutAll: '}' ]
+]
+
+{ #category : 'accessing' }
+MicViennaAnimationBlock >> resultString: aString prestate: aDictionary poststate: anotherDictionary [
+
+	self
+		ifShowDiffState: [
+				anotherDictionary ifNotNil: [
+						anotherDictionary keys do: [ :var |
+								aDictionary at: var ifPresent: [ :pre |
+										pre = (anotherDictionary at: var) ifTrue: [
+												aDictionary removeKey: var.
+												anotherDictionary removeKey: var ] ] ] ] ]
+		otherwise: [ ].
+	resultString := self
+		                ifShowNoState: [
+				                String streamContents: [ :stream |
+						                stream
+							                nextPutAll: self body asString trim;
+							                nextPutAll: ' → ';
+							                nextPutAll: aString ] ]
+		                otherwise: [
+				                String streamContents: [ :stream |
+						                self printState: aDictionary on: stream.
+						                stream
+							                space;
+							                nextPutAll: self body asString trim;
+							                nextPutAll: ' → ';
+							                nextPutAll: aString;
+							                space.
+						                self printState: anotherDictionary on: stream ] ]
 ]
 
 { #category : 'accessing' }

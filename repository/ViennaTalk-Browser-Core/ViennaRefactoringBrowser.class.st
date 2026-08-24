@@ -1910,10 +1910,8 @@ ViennaRefactoringBrowser >> initialize [
 
 	animation := ViennaAnimation default.
 	animation announcer
-		when: ViennaStateChanged do: [ self updateStateTable ] for: self;
-		when: ViennaSpecificationChanged
-		do: [ self updateStateTableItems ]
-		for: self.
+		when: ViennaAnimationStateChanged send: #updateStateTable to: self;
+		when: ViennaAnimationSpecificationChanged send: #updateStateTableItems to: self.
 	runsAllTests := false.
 	self epiLogVanilla.
 	dirty := false.

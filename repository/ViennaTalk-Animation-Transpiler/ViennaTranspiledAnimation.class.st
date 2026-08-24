@@ -24,9 +24,17 @@ ViennaTranspiledAnimation class >> useTranspilerByDefault [
 ]
 
 { #category : 'announcement' }
+ViennaTranspiledAnimation >> announceEvaluated [
+
+	self announcer announce: (ViennaAnimationEvaluated new
+			 animation: self;
+			 yourself)
+]
+
+{ #category : 'announcement' }
 ViennaTranspiledAnimation >> announceSpecificationChanged [
 
-	self announcer announce: (ViennaSpecificationChanged new
+	self announcer announce: (ViennaAnimationSpecificationChanged new
 			 animation: self;
 			 yourself)
 ]
@@ -34,7 +42,7 @@ ViennaTranspiledAnimation >> announceSpecificationChanged [
 { #category : 'announcement' }
 ViennaTranspiledAnimation >> announceStateChanged [
 
-	self announcer announce: (ViennaStateChanged new
+	self announcer announce: (ViennaAnimationStateChanged new
 			 animation: self;
 			 yourself)
 ]
@@ -171,6 +179,7 @@ ViennaTranspiledAnimation >> debug: aString in: moduleName ifError: errorBlock [
 			oldState ~= self state ifTrue: [
 					self changed: #state.
 					self announceStateChanged ].
+			self announceEvaluated.
 			^ result == object
 				  ifTrue: [ nil ]
 				  ifFalse: [ result ] ]
@@ -206,10 +215,11 @@ ViennaTranspiledAnimation >> evaluate: aString in: moduleName do: aBlock ifError
 				          with: transpiler
 				          ifError: [ :msg | ^ errorBlock cull: msg ].
 			state := self state.
-			aBlock ifNotNil: [ result := aBlock cull: result cull: state ].
-			oldState ~= state ifTrue: [
-					self changed: #state.
-					self announceStateChanged ].
+			[ aBlock ifNotNil: [ result := aBlock cull: result cull: state ] ] ensure: [
+					oldState ~= state ifTrue: [
+							self changed: #state.
+							self announceStateChanged ] ].
+			self announceEvaluated.
 			^ result ]
 ]
 
@@ -229,17 +239,18 @@ ViennaTranspiledAnimation >> execute: aViennaNode in: moduleName do: aBlock ifEr
 	Cursor wait showWhile: [
 			| oldState result state |
 			oldState := self state.
-			result := (moduleName = self defaultModule
+			result := ((moduleName isNil or: [ moduleName = self defaultModule ])
 				           ifTrue: [ object ]
 				           ifFalse: [ object at: moduleName ifAbsent: [ ^ errorBlock cull: 'unknown module name' ] ])
 				          evaluateNode: aViennaNode
 				          with: transpiler
 				          ifError: [ :msg | ^ errorBlock cull: msg ].
 			state := self state.
-			aBlock ifNotNil: [ result := aBlock cull: result cull: state ].
-			oldState ~= state ifTrue: [
-					self changed: #state.
-					self announceStateChanged ].
+			[ aBlock ifNotNil: [ result := aBlock cull: result cull: state ] ] ensure: [
+					oldState ~= state ifTrue: [
+							self changed: #state.
+							self announceStateChanged ] ].
+			self announceEvaluated.
 			^ result ]
 ]
 
@@ -360,6 +371,22 @@ ViennaTranspiledAnimation >> postCopy [
 	super postCopy.
 	object := object copy.
 	self state: oldState
+]
+
+{ #category : 'evaluating' }
+ViennaTranspiledAnimation >> resolve: aViennaNameNode in: moduleName ifError: errorBlock [
+
+	Cursor wait showWhile: [
+			| scope |
+			scope := (moduleName isNil or: [ moduleName = self defaultModule ])
+				         ifTrue: [ specificationNode ]
+				         ifFalse: [
+				         (specificationNode moduleNamed: moduleName) ifNil: [ ^ errorBlock cull: 'unknown module name ' , moduleName ] ].
+			^ aViennaNameNode
+				  ifNotNil: [
+						  aViennaNameNode parent: scope.
+						  aViennaNameNode resolve ifNil: [ errorBlock cull: 'unknown name ' , aViennaNameNode source ] ]
+				  ifNil: [ scope ] ]
 ]
 
 { #category : 'evaluating' }

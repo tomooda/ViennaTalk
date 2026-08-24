@@ -55,9 +55,17 @@ ViennaAnimation class >> on: aViennaEngine [
 ]
 
 { #category : 'announcement' }
+ViennaAnimation >> announceEvaluated [
+
+	self announcer announce: (ViennaAnimationEvaluated new
+			 animation: self;
+			 yourself)
+]
+
+{ #category : 'announcement' }
 ViennaAnimation >> announceSpecificationChanged [
 
-	self announcer announce: (ViennaSpecificationChanged new
+	self announcer announce: (ViennaAnimationSpecificationChanged new
 			 animation: self;
 			 yourself)
 ]
@@ -65,7 +73,7 @@ ViennaAnimation >> announceSpecificationChanged [
 { #category : 'announcement' }
 ViennaAnimation >> announceStateChanged [
 
-	self announcer announce: (ViennaStateChanged new
+	self announcer announce: (ViennaAnimationStateChanged new
 			 animation: self;
 			 yourself)
 ]
@@ -145,7 +153,7 @@ ViennaAnimation >> basicPlainEvaluate: aString in: moduleName ifError: errorBloc
 							 ifFalse: [ module , '`' , var ])
 					put: value ] ].
 		state := postState.
-		self announceStateChanged.
+		preState ~= postState ifTrue: [self announceStateChanged].
 		^ result first ]
 ]
 
@@ -342,9 +350,12 @@ ViennaAnimation >> specification [
 { #category : 'accessing' }
 ViennaAnimation >> specification: aString [
 
+	| oldSpecification |
+	oldSpecification := specification.
 	specification := aString.
-	self changed: #specification.
-	self announceSpecificationChanged
+	oldSpecification ~= specification ifTrue: [
+			self changed: #specification.
+			self announceSpecificationChanged ]
 ]
 
 { #category : 'accessing' }
@@ -355,23 +366,20 @@ ViennaAnimation >> specification: aStringOrViennaNode ifError: errorBlock [
 		          ifTrue: [ aStringOrViennaNode source ]
 		          ifFalse: [ aStringOrViennaNode asString ].
 	specification ~= source ifTrue: [
-		| oldState |
-		lock critical: [
-			| oldSpec |
-			oldSpec := specification.
-			oldState := state copy.
-			specification := source.
-			self
-				basicPlainEvaluate: 'nil'
-				in: self defaultModule
-				ifError: [ :msg |
-					specification := oldSpec.
-					^ errorBlock cull: msg ] ].
-		self changed: #specification.
-		self announceSpecificationChanged.
-		oldState ~= state ifTrue: [
-			self changed: #state.
-			self announceStateChanged ] ]
+			| oldState |
+			lock critical: [
+					| oldSpec |
+					oldSpec := specification.
+					oldState := state copy.
+					specification := source.
+					self basicPlainEvaluate: 'nil' in: self defaultModule ifError: [ :msg |
+							specification := oldSpec.
+							^ errorBlock cull: msg ].
+					self changed: #specification.
+					self announceSpecificationChanged.
+					oldState ~= state ifTrue: [
+							self changed: #state.
+							self announceStateChanged ] ] ]
 ]
 
 { #category : 'private' }

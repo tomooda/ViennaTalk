@@ -38,20 +38,13 @@ MicRichTextComposer >> viennaWriteResultWithoutArrow: aScriptBlock [
 { #category : '*ViennaTalk-Microdown' }
 MicRichTextComposer >> visitViennaEval: aScriptBlock [
 
-	| expression expressionText buttonText |
+	| expressionText buttonText |
 	aScriptBlock retrievePresenter.
-	expression := aScriptBlock body asString trim.
-	expressionText := expression asText.
-	ViennaVDMHighlighter new
-		text: expressionText;
-		parse: expression.
+	expressionText := aScriptBlock bodyText.
 	buttonText := ' run ' asText
 		              addAttribute: (TextBackgroundColor color: (Color gray: 0.8));
 		              addAttribute: (MicRichTextDoIt new
-				               actOnClickBlock: [
-						               aScriptBlock
-							               execute;
-							               recompose ];
+				               actOnClickBlock: [ aScriptBlock execute ];
 				               yourself);
 		              yourself.
 	canvas << expressionText << ' ' asText << buttonText.
@@ -64,20 +57,13 @@ MicRichTextComposer >> visitViennaEval: aScriptBlock [
 { #category : '*ViennaTalk-Microdown' }
 MicRichTextComposer >> visitViennaExec: aScriptBlock [
 
-	| statement statementText buttonText |
+	| statementText buttonText |
 	aScriptBlock retrievePresenter.
-	statement := aScriptBlock body asString trim.
-	statementText := statement asText.
-	ViennaVDMHighlighter new
-		text: statementText;
-		parse: statement.
+	statementText := aScriptBlock bodyText.
 	buttonText := ' run ' asText
 		              addAttribute: (TextBackgroundColor color: (Color gray: 0.8));
 		              addAttribute: (MicRichTextDoIt new
-				               actOnClickBlock: [
-						               aScriptBlock
-							               execute;
-							               recompose ];
+				               actOnClickBlock: [ aScriptBlock execute ];
 				               yourself);
 		              yourself.
 	canvas << statementText << ' ' asText << buttonText.

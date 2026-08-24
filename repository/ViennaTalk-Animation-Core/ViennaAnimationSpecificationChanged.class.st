@@ -1,5 +1,5 @@
 Class {
-	#name : 'ViennaStateChanged',
+	#name : 'ViennaAnimationSpecificationChanged',
 	#superclass : 'Announcement',
 	#instVars : [
 		'animation'
@@ -9,13 +9,13 @@ Class {
 }
 
 { #category : 'accessing' }
-ViennaStateChanged >> animation [
+ViennaAnimationSpecificationChanged >> animation [
 
 	^ animation
 ]
 
 { #category : 'accessing' }
-ViennaStateChanged >> animation: aViennaAnimation [
+ViennaAnimationSpecificationChanged >> animation: aViennaAnimation [
 
 	animation := aViennaAnimation
 ]

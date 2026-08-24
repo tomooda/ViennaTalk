@@ -26,7 +26,7 @@ is rendered as
 "
 Class {
 	#name : 'MicViennaWatchBlock',
-	#superclass : 'MicViennaAnimationBlock',
+	#superclass : 'MicViennaBlock',
 	#category : 'ViennaTalk-Microdown-Microdown',
 	#package : 'ViennaTalk-Microdown',
 	#tag : 'Microdown'
@@ -47,13 +47,37 @@ MicViennaWatchBlock >> accept: aVisitor [
 { #category : 'private' }
 MicViennaWatchBlock >> createVdmParser [
 
-	^ ViennaVDMParser new expression
+	^ ViennaVDMParser new name
 ]
 
 { #category : 'defaults' }
 MicViennaWatchBlock >> defaultState [
 
 	^ #no
+]
+
+{ #category : 'executing' }
+MicViennaWatchBlock >> execute [
+
+	| nameNode state |
+	resultString := nil.
+	errorString := nil.
+	nameNode := self bodyNode ifNil: [ ^ self syntaxError ].
+	state := self animation state.
+	^ nameNode isViennaGlobalNameNode
+		  ifTrue: [
+				  state
+					  at: nameNode source
+					  ifPresent: [ :value | self resultString: (self vdmHighlight: value) ]
+					  ifAbsent: [ self undefinedVariableError: nameNode source ] ]
+		  ifFalse: [
+				  self moduleName
+					  ifNotNil: [ :moduleName |
+							  state
+								  at: moduleName , '`' , nameNode identifier
+								  ifPresent: [ :value | self resultString: (self vdmHighlight: value) ]
+								  ifAbsent: [ self undefinedVariableError: nameNode source ] ]
+					  ifNil: [ self undefinedVariableError: nameNode source ] ]
 ]
 
 { #category : 'accessing' }

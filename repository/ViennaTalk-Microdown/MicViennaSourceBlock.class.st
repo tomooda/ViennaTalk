@@ -56,10 +56,9 @@ MicViennaSourceBlock >> createVdmParser [
 { #category : 'accessing' }
 MicViennaSourceBlock >> execute [
 
+	| node |
 	resultString := nil.
 	errorString := nil.
-	presenter
-		ifNotNil: [
-		resultString := presenter sourceAt: self bodyNode in: self moduleName ifError: [ :message | self errorString: message ] ]
-		ifNil: [ self errorString: self noSpecificationError ]
+	node := self animation resolve: self bodyNode in: self moduleName ifError: [ :message | ^ self errorString: message ].
+	resultString := self vdmHighlight: node source
 ]

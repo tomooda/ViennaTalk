@@ -3,6 +3,7 @@ Class {
 	#superclass : 'MicScriptBlock',
 	#instVars : [
 		'vdmParser',
+		'vdmHighlighter',
 		'presenter',
 		'resultString',
 		'errorString'
@@ -25,6 +26,12 @@ MicViennaBlock class >> tag [
 ]
 
 { #category : 'accessing' }
+MicViennaBlock >> animation [
+
+	^ presenter ifNotNil: #animation ifNil: [ ViennaTranspiledAnimation new ]
+]
+
+{ #category : 'accessing' }
 MicViennaBlock >> bodyNode [
 
 	| bodyNode |
@@ -34,6 +41,12 @@ MicViennaBlock >> bodyNode [
 		  ifFalse: [
 				  self syntaxError.
 				  bodyNode ]
+]
+
+{ #category : 'accessing' }
+MicViennaBlock >> bodyText [
+
+	^ (self body asString trim ifNotEmpty: [ :bodyString | self vdmHighlight: bodyString ]) asText
 ]
 
 { #category : 'private' }
@@ -67,22 +80,21 @@ MicViennaBlock >> moduleName [
 ]
 
 { #category : 'error messaging' }
-MicViennaBlock >> noSpecificationError [
+MicViennaBlock >> noDefinitionError: aString [
 
-	self errorString: 'Specification is not available'.
-	^ nil
+	^ self errorString: 'No definition of ' , aString
 ]
 
-{ #category : 'accessing' }
-MicViennaBlock >> receiver [
+{ #category : 'error messaging' }
+MicViennaBlock >> noModuleError: aString [
 
-	^ presenter ifNotNil: [
-			  self specification
-				  ifNotNil: [ :spec |
-						  self moduleName
-							  ifNotNil: [ :moduleName | (spec moduleNamed: moduleName) ifNil: [ self noModuleError: moduleName ] ]
-							  ifNil: [ spec ] ]
-				  ifNil: [ self noSpecificationError ] ]
+	^ self errorString: 'No module named ' , aString
+]
+
+{ #category : 'error messaging' }
+MicViennaBlock >> noSpecificationError [
+
+	^ self errorString: 'Specification is not available'
 ]
 
 { #category : 'private' }
@@ -98,9 +110,9 @@ MicViennaBlock >> resultString [
 ]
 
 { #category : 'accessing' }
-MicViennaBlock >> resultString: anObject [
+MicViennaBlock >> resultString: aString [
 
-	resultString := anObject
+	resultString := aString
 ]
 
 { #category : 'private' }
@@ -109,25 +121,25 @@ MicViennaBlock >> retrievePresenter [
 	presenter := ViennaMicrodownPresenterRequest signal
 ]
 
-{ #category : 'accessing' }
-MicViennaBlock >> specification [
+{ #category : 'error messaging' }
+MicViennaBlock >> syntaxError [
 
-	^ (presenter ifNotNil: #transpiledSpecification ifNil: [ self noSpecificationError ]) ifNotNil: #specification
+	^ self errorString: 'Syntax error in the body'
 ]
 
-{ #category : 'accessing' }
-MicViennaBlock >> transpiledReceiver [
+{ #category : 'error messaging' }
+MicViennaBlock >> undefinedVariableError: aString [
 
-	^ self transpiledSpecification ifNotNil: [ :transpiledSpec |
-			  self moduleName
-				  ifNotNil: [ :moduleName | transpiledSpec at: moduleName ifAbsent: [ self errorString: 'No module named ' , moduleName ] ]
-				  ifNil: [ transpiledSpec ] ]
+	^ self errorString: 'Undefined variable ' , aString
 ]
 
-{ #category : 'accessing' }
-MicViennaBlock >> transpiledSpecification [
+{ #category : 'private' }
+MicViennaBlock >> vdmHighlight: aString [
 
-	^ presenter ifNotNil: #transpiledSpecification ifNil: [ self noSpecificationError ]
+	^ (vdmHighlighter ifNil: [ vdmHighlighter := ViennaVDMHighlighter new ])
+		  text: aString asText;
+		  parse: aString asString;
+		  text
 ]
 
 { #category : 'accessing' }
