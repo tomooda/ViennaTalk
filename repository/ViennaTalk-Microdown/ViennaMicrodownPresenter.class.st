@@ -101,6 +101,19 @@ ViennaMicrodownPresenter >> animation: aViennaTranspiledAnimation [
 	animation announcer when: ViennaAnimationSpecificationChanged , ViennaAnimationEvaluated send: #recompose to: self
 ]
 
+{ #category : 'defaults' }
+ViennaMicrodownPresenter >> defaultTextStyler [
+
+	^ ViennaMicTextStyler new
+]
+
+{ #category : 'initialization' }
+ViennaMicrodownPresenter >> initialize [
+
+	super initialize.
+	self textStyler: self defaultTextStyler
+]
+
 { #category : 'composing' }
 ViennaMicrodownPresenter >> recompose [
 
