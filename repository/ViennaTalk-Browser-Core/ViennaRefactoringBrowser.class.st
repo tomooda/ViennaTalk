@@ -64,7 +64,11 @@ Class {
 		'epiLogCherrypickButton',
 		'pendingSemanticError',
 		'vdmNotebook',
-		'notebook'
+		'notebook',
+		'microdown',
+		'microdownSource',
+		'microdownFileList',
+		'microdownNotebook'
 	],
 	#classVars : [
 		'GreenSignalIcon',
@@ -1108,6 +1112,16 @@ ViennaRefactoringBrowser >> displayDefinition: aViennaNode [
 	^ '-'
 ]
 
+{ #category : 'layouts' }
+ViennaRefactoringBrowser >> documentationPageLayout [
+
+	^ SpPanedLayout newHorizontal
+		  positionOfSlider: 0.2;
+		  add: microdownFileList;
+		  add: microdownNotebook;
+		  yourself
+]
+
 { #category : 'operations-epiLog' }
 ViennaRefactoringBrowser >> editEpiLogComment [
 
@@ -1395,7 +1409,14 @@ ViennaRefactoringBrowser >> executeRefactoring: aViennaRefactoring [
 { #category : 'accessing' }
 ViennaRefactoringBrowser >> fileReference: aFileReference [
 
-	fileReference := aFileReference
+	fileReference := aFileReference.
+	self fileReferenceChanged
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> fileReferenceChanged [
+
+	self updateMicrodownFileList
 ]
 
 { #category : 'icons' }
@@ -1920,6 +1941,23 @@ ViennaRefactoringBrowser >> initialize [
 ]
 
 { #category : 'initialization' }
+ViennaRefactoringBrowser >> initializeDocumentationPagePresenters [
+
+	microdownFileList := self newTable
+		                     addColumn: (SpStringTableColumn title: 'file' evaluated: [ :ref | ref basename ]);
+		                     activateOnDoubleClick;
+		                     whenActivatedDo: [ microdownFileList unselectAll ];
+		                     whenSelectedItemChangedDo: [ self selectedDocumentChanged ];
+		                     yourself.
+	microdown := self newViennaMicrodown animation: animation.
+	microdownSource := self newText whenSubmitDo: [ :text | self microdownSourceAccepted ].
+	microdownNotebook := self newNotebook
+		                     addPageTitle: 'View' provider: [ microdown ];
+		                     addPageTitle: 'Source' provider: [ microdownSource ];
+		                     yourself
+]
+
+{ #category : 'initialization' }
 ViennaRefactoringBrowser >> initializeEpiLogPagePresenters [
 
 	showsUserTimelineButton := self newCheckBox
@@ -2254,6 +2292,7 @@ ViennaRefactoringBrowser >> initializePresenters [
 	super initializePresenters.
 	menuBar := self menuBar.
 	self initializeVdmPagePresenters.
+	self initializeDocumentationPagePresenters.
 	self initializeEpiLogPagePresenters.
 	self initializeGitPagePresenters.
 	notebook := self newNotebook
@@ -2261,10 +2300,14 @@ ViennaRefactoringBrowser >> initializePresenters [
 				            SpPresenter new
 					            layout: self vdmPageLayout;
 					            yourself ];
+		            addPageTitle: 'Documentation' provider: [
+			            SpPresenter new
+				            layout: self documentationPageLayout;
+				            yourself ];
 		            addPageTitle: 'HiDeHo' provider: [
-				            SpPresenter new
-					            layout: self epilogPageLayout;
-					            yourself ];
+			            SpPresenter new
+				            layout: self epilogPageLayout;
+				            yourself ];
 		            addPageTitle: 'Git' provider: [
 			            SpPresenter new
 				            layout: self gitPageLayout;
@@ -2611,6 +2654,29 @@ ViennaRefactoringBrowser >> mergeOperationsFromFRAM [
 			  newAst ]
 ]
 
+{ #category : 'updating-documentation' }
+ViennaRefactoringBrowser >> microdownSourceAccepted [
+
+	| ref |
+	ref := microdownFileList selectedItem ifNil: [
+			       (self request: 'New filename' initialAnswer: '.md' title: 'Save as') ifNotNil: [ :basename |
+				       fileReference / basename withExtension: 'md' ] ].
+	ref ifNotNil: [
+			ref writeStreamDo: [ :stream |
+					stream
+						truncate;
+						nextPutAll: microdownSource text asString withPlatformLineEndings ].
+			self updateMicrodownFileList.
+			microdownFileList selectItem: (microdownFileList items detect: [ :item | item fullPath = ref fullPath ] ifNone: [ nil ]) ].
+	self microdownSourceChanged
+]
+
+{ #category : 'updating-documentation' }
+ViennaRefactoringBrowser >> microdownSourceChanged [
+
+	microdown documentFromString: microdownSource text asString
+]
+
 { #category : 'accessing' }
 ViennaRefactoringBrowser >> modelChanged [
 
@@ -2697,6 +2763,12 @@ ViennaRefactoringBrowser >> narrativeTimelineSelected [
 	showsUserTimelineButton state: false.
 	showsArtifactTimelineButton state: false.
 	self selectedTimelineChanged
+]
+
+{ #category : 'instance creation' }
+ViennaRefactoringBrowser >> newViennaMicrodown [
+
+	^ self instantiate: ViennaMicrodownPresenter
 ]
 
 { #category : 'operations-source signal' }
@@ -2961,6 +3033,21 @@ ViennaRefactoringBrowser >> removeNarrative [
 			showsArtifactTimelineButton state: true ] ]
 ]
 
+{ #category : 'ui requests' }
+ViennaRefactoringBrowser >> request: request initialAnswer: initialAnwser title: title [
+
+	| answer |
+	answer := self application newRequest
+		          title: title;
+		          message: request;
+		          text: initialAnwser;
+		          openModal.
+
+	answer ifNil: [ SpCancelledInteractionError signal ].
+
+	^ answer
+]
+
 { #category : 'operations-epiLog' }
 ViennaRefactoringBrowser >> revertTo: aViennaEpiLog [
 
@@ -3097,6 +3184,12 @@ ViennaRefactoringBrowser >> saveAsFile [
 			UIManager default message: 'Save to ' , file basename , '.'.
 			self fileReference: file.
 			self clearDirty ]
+]
+
+{ #category : 'updating-documentation' }
+ViennaRefactoringBrowser >> selectedDocumentChanged [
+
+	self updateMicrodownSource
 ]
 
 { #category : 'updating' }
@@ -3548,6 +3641,22 @@ ViennaRefactoringBrowser >> updateGitRemoteCommitList [
 			 self icebergRepositoryDo: #fetch.
 			 self gitRemoteCommitsDo: [ :commit | stream nextPut: commit ] ]).
 	gitOutgoingCommitList refresh
+]
+
+{ #category : 'updating-documentation' }
+ViennaRefactoringBrowser >> updateMicrodownFileList [
+
+	microdownFileList items: ((fileReference notNil and: [ fileReference isDirectory ])
+			 ifTrue: [ (fileReference allChildrenMatching: '*.md') select: #isFile ]
+			 ifFalse: [ #(  ) ])
+]
+
+{ #category : 'updating-documentation' }
+ViennaRefactoringBrowser >> updateMicrodownSource [
+
+	microdownSource text:
+		((microdownFileList selectedItem ifNotNil: [ :ref | ref isFile ifTrue: [ ref contents withInternalLineEndings ] ]) ifNil: [ '' ]).
+	self microdownSourceChanged
 ]
 
 { #category : 'updating' }

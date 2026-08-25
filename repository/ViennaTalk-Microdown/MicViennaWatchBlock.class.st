@@ -68,14 +68,14 @@ MicViennaWatchBlock >> execute [
 		  ifTrue: [
 				  state
 					  at: nameNode source
-					  ifPresent: [ :value | self resultString: (self vdmHighlight: value) ]
+					  ifPresent: [ :value | self resultString: self body asText , ' → ' , (self vdmHighlight: value) ]
 					  ifAbsent: [ self undefinedVariableError: nameNode source ] ]
 		  ifFalse: [
 				  self moduleName
 					  ifNotNil: [ :moduleName |
 							  state
 								  at: moduleName , '`' , nameNode identifier
-								  ifPresent: [ :value | self resultString: (self vdmHighlight: value) ]
+								  ifPresent: [ :value | self resultString: self body asText , ' → ' , (self vdmHighlight: value) ]
 								  ifAbsent: [ self undefinedVariableError: nameNode source ] ]
 					  ifNil: [ self undefinedVariableError: nameNode source ] ]
 ]
