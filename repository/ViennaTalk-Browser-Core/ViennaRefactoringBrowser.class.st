@@ -2316,7 +2316,19 @@ ViennaRefactoringBrowser >> initializePresenters [
 				            vdmNotebook selectedPage ifNotNil: [ :page |
 						            page title = 'HiDeHo' ifTrue: [ self updateEpiLogPage ].
 						            page title = 'Git' ifTrue: [ [ self updateGitPage ] forkAt: Processor userBackgroundPriority ] ] ];
-		            yourself
+		            yourself.
+	self whenBuiltDo: [ :w |
+			| f |
+			f := ViennaLauncher font.
+			w widget allMorphsDo: [ :m | (m respondsTo: #font:) ifTrue: [ m font: f ] ].
+			menuBar withAdapterDo: [ :a |
+					a widgetDo: [ :w |
+							w fillsOwner: false.
+							w layoutProperties
+								listCentering: #topLeft;
+								minCellSize: 0;
+								maxCellSize: 1024;
+								hResizing: #spaceFill ] ] ]
 ]
 
 { #category : 'initialization' }
@@ -2439,11 +2451,7 @@ ViennaRefactoringBrowser >> initializeVdmPagePresenters [
 			               SpPresenter new
 				               layout: self playgroundPageLayout;
 				               yourself ];
-		               yourself.
-	self whenBuiltDo: [ :w |
-			| f |
-			f := ViennaLauncher font.
-			w widget allMorphsDo: [ :m | (m respondsTo: #font:) ifTrue: [ m font: f ] ] ]
+		               yourself
 ]
 
 { #category : 'initialization' }

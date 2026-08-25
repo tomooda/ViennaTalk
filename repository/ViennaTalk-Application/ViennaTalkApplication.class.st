@@ -8,7 +8,7 @@ Class {
 { #category : 'deploying' }
 ViennaTalkApplication class >> deploy [
 
-	GraphicFontSettings setFontsToStyleNamed: #small.
+	"GraphicFontSettings setFontsToStyleNamed: #small."
 	PasteUpMorph shouldShowWorldMenu: false.
 	MenubarMorph showMenubar: false.
 	ViennaLauncher deploy.
