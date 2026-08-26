@@ -68,7 +68,9 @@ Class {
 		'microdown',
 		'microdownSource',
 		'microdownFileList',
-		'microdownNotebook'
+		'microdownNotebook',
+		'addMicrodownButton',
+		'removeMicrodownButton'
 	],
 	#classVars : [
 		'GreenSignalIcon',
@@ -683,6 +685,18 @@ ViennaRefactoringBrowser >> accept: aStringOrText [
 	^ newNode
 ]
 
+{ #category : 'operations-documentation' }
+ViennaRefactoringBrowser >> addMicrodownDocument [
+
+	(self request: 'New filename' initialAnswer: '.md' title: 'Save as') ifNotNil: [ :basename |
+			| ref |
+			ref := fileReference / basename withExtension: 'md'.
+			ref exists ifFalse: [
+					ref ensureCreateFile.
+					self updateMicrodownFileList ].
+			microdownFileList selectItem: (microdownFileList items detect: [ :item | item fullPath = ref fullPath ] ifNone: [ nil ]) ]
+]
+
 { #category : 'menus' }
 ViennaRefactoringBrowser >> addRefactoringMenuGroupOn: aViennaNode to: aMenuPresenter with: aBlock [
 
@@ -957,7 +971,7 @@ ViennaRefactoringBrowser >> confirm: queryString label: titleString [
 
 	^ self application newConfirm
 		  title: titleString;
-		  label: queryString;
+		  message: queryString;
 		  openModal
 ]
 
@@ -1117,7 +1131,14 @@ ViennaRefactoringBrowser >> documentationPageLayout [
 
 	^ SpPanedLayout newHorizontal
 		  positionOfSlider: 0.2;
-		  add: microdownFileList;
+		  add: (SpBoxLayout newVertical
+				   add: microdownFileList;
+				   add: (SpBoxLayout newHorizontal
+						    add: addMicrodownButton expand: false;
+						    add: removeMicrodownButton expand: false;
+						    yourself)
+				   expand: false;
+				   yourself);
 		  add: microdownNotebook;
 		  yourself
 ]
@@ -1949,6 +1970,14 @@ ViennaRefactoringBrowser >> initializeDocumentationPagePresenters [
 		                     whenActivatedDo: [ microdownFileList unselectAll ];
 		                     whenSelectedItemChangedDo: [ self selectedDocumentChanged ];
 		                     yourself.
+	addMicrodownButton := self newButton
+		                      iconName: #add;
+		                      action: [ self addMicrodownDocument ];
+		                      yourself.
+	removeMicrodownButton := self newButton
+		                         iconName: #remove;
+		                         action: [ self removeMicrodownDocument ];
+		                         yourself.
 	microdown := self newViennaMicrodown animation: animation.
 	microdownSource := self newText whenSubmitDo: [ :text | self microdownSourceAccepted ].
 	microdownNotebook := self newNotebook
@@ -3027,6 +3056,16 @@ ViennaRefactoringBrowser >> removeEpiLogFromNarrative: aHiDeNarrative [
 			self updateEpiLogList ] ]
 ]
 
+{ #category : 'operations-documentation' }
+ViennaRefactoringBrowser >> removeMicrodownDocument [
+
+	microdownFileList selectedItem ifNotNil: [ :ref |
+			ref isFile ifTrue: [
+					(self confirm: 'Delete ' , ref basename , '?' label: 'Confirm to delete') = true ifTrue: [
+							ref delete.
+							self updateMicrodownFileList ] ] ]
+]
+
 { #category : 'operations-epiLog' }
 ViennaRefactoringBrowser >> removeNarrative [
 
@@ -3050,8 +3089,6 @@ ViennaRefactoringBrowser >> request: request initialAnswer: initialAnwser title:
 		          message: request;
 		          text: initialAnwser;
 		          openModal.
-
-	answer ifNil: [ SpCancelledInteractionError signal ].
 
 	^ answer
 ]
@@ -3197,6 +3234,7 @@ ViennaRefactoringBrowser >> saveAsFile [
 { #category : 'updating-documentation' }
 ViennaRefactoringBrowser >> selectedDocumentChanged [
 
+	self updateDocumentationButtons.
 	self updateMicrodownSource
 ]
 
@@ -3437,6 +3475,12 @@ ViennaRefactoringBrowser >> updateDefinitionList [
 		ifFalse: [ definitionList selectIndex: 1 ]
 ]
 
+{ #category : 'updating-documentation' }
+ViennaRefactoringBrowser >> updateDocumentationButtons [
+
+	removeMicrodownButton enabled: microdownFileList selectedItem notNil
+]
+
 { #category : 'updating' }
 ViennaRefactoringBrowser >> updateEpiLogButtons [
 
@@ -3655,7 +3699,7 @@ ViennaRefactoringBrowser >> updateGitRemoteCommitList [
 ViennaRefactoringBrowser >> updateMicrodownFileList [
 
 	microdownFileList items: ((fileReference notNil and: [ fileReference isDirectory ])
-			 ifTrue: [ (fileReference allChildrenMatching: '*.md') select: #isFile ]
+			 ifTrue: [ ((fileReference allChildrenMatching: '*.md') select: #isFile) sorted: #absolutePath ascending ]
 			 ifFalse: [ #(  ) ])
 ]
 
