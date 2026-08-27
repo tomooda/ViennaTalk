@@ -5,8 +5,9 @@ Class {
 	#name : 'ViennaMicrodownPresenter',
 	#superclass : 'MicrodownPresenter',
 	#instVars : [
-		'animation',
-		'highlighter'
+		'#source => ObservableSlot',
+		'#animation',
+		'#highlighter'
 	],
 	#category : 'ViennaTalk-Microdown-Spec2',
 	#package : 'ViennaTalk-Microdown',
@@ -124,4 +125,24 @@ ViennaMicrodownPresenter >> recompose [
 ViennaMicrodownPresenter >> setText: aText [
 
 	self withAdapterDo: [ :a | a widgetDo: [ :w | w textArea privateReplaceFrom: 1 to: w text size with: aText ] ]
+]
+
+{ #category : 'api' }
+ViennaMicrodownPresenter >> source [
+
+	^ source
+]
+
+{ #category : 'api' }
+ViennaMicrodownPresenter >> source: aString [
+
+	source ~= aString ifTrue: [
+			source := aString.
+			self documentFromString: aString ]
+]
+
+{ #category : 'api - events' }
+ViennaMicrodownPresenter >> whenSourceChangedDo: aBlock [
+
+	self property: #source whenChangedDo: aBlock
 ]

@@ -2711,7 +2711,7 @@ ViennaRefactoringBrowser >> microdownSourceAccepted [
 { #category : 'updating-documentation' }
 ViennaRefactoringBrowser >> microdownSourceChanged [
 
-	microdown documentFromString: microdownSource text asString
+	self updateMicrodown
 ]
 
 { #category : 'accessing' }
@@ -3693,6 +3693,18 @@ ViennaRefactoringBrowser >> updateGitRemoteCommitList [
 			 self icebergRepositoryDo: #fetch.
 			 self gitRemoteCommitsDo: [ :commit | stream nextPut: commit ] ]).
 	gitOutgoingCommitList refresh
+]
+
+{ #category : 'updating-documentation' }
+ViennaRefactoringBrowser >> updateMicrodown [
+
+	| source |
+	source := microdownSource text asString.
+	microdown source ~= source ifTrue: [
+			[
+				microdown
+					text: '' asText;
+					source: microdownSource text asString ] forkAt: Processor userBackgroundPriority ]
 ]
 
 { #category : 'updating-documentation' }
