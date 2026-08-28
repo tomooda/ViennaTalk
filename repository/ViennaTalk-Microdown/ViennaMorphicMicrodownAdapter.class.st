@@ -11,14 +11,15 @@ Class {
 
 { #category : 'factory' }
 ViennaMorphicMicrodownAdapter >> buildWidget [
-	| newWidget |
 
+	| newWidget |
 	newWidget := super buildWidget.
+	newWidget getBackgroundColorSelector: #color.
 
 	self composeOn: newWidget.
 	self presenter whenDocumentChangedDo: [ :aDocument | self compose ].
 	self presenter whenTextStylerChangedDo: [ :aStyler | self compose ].
-
+	self presenter whenColorChangedDo: [ :color | self setColor: color ].
 	^ newWidget
 ]
 
@@ -62,6 +63,12 @@ ViennaMorphicMicrodownAdapter >> recomposeOn: aWidget [
 				 asRichText: self presenter document ]
 			 on: ViennaMicrodownPresenterRequest
 			 do: [ :ex | ex resume: self presenter ])
+]
+
+{ #category : 'presenter->morph' }
+ViennaMorphicMicrodownAdapter >> setColor: aColor [
+
+	widget ifNotNil: [ widget backgroundColor: aColor ]
 ]
 
 { #category : 'presenter->morph' }

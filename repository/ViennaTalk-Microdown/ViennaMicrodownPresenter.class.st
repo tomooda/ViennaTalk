@@ -142,6 +142,12 @@ ViennaMicrodownPresenter >> source: aString [
 ]
 
 { #category : 'api - events' }
+ViennaMicrodownPresenter >> whenColorChangedDo: aBlock [
+
+	self property: #color whenChangedDo: aBlock
+]
+
+{ #category : 'api - events' }
 ViennaMicrodownPresenter >> whenSourceChangedDo: aBlock [
 
 	self property: #source whenChangedDo: aBlock

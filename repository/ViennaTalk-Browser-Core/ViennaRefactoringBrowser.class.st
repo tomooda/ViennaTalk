@@ -3704,7 +3704,9 @@ ViennaRefactoringBrowser >> updateMicrodown [
 			[
 				microdown
 					text: '' asText;
-					source: microdownSource text asString ] forkAt: Processor userBackgroundPriority ]
+					color: (Color gray: 0.95);
+					source: microdownSource text asString;
+					color: Color white ] forkAt: Processor userBackgroundPriority ]
 ]
 
 { #category : 'updating-documentation' }
