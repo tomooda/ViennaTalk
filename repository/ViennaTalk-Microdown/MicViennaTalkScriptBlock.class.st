@@ -40,8 +40,9 @@ end Counter
 Class {
 	#name : 'MicViennaTalkScriptBlock',
 	#superclass : 'MicScriptBlock',
-	#category : 'ViennaTalk-Parser-Highlighters',
-	#package : 'ViennaTalk-Parser-Highlighters'
+	#category : 'ViennaTalk-Microdown-Microdown',
+	#package : 'ViennaTalk-Microdown',
+	#tag : 'Microdown'
 }
 
 { #category : 'accessing' }

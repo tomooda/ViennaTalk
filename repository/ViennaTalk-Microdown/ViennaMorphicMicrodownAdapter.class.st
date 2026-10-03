@@ -9,18 +9,43 @@ Class {
 	#tag : 'Spec2'
 }
 
+{ #category : 'widget API' }
+ViennaMorphicMicrodownAdapter >> addExtraActionsTo: actionGroup [
+		
+	"override to add extra actions between user defined and edition"
+]
+
 { #category : 'factory' }
 ViennaMorphicMicrodownAdapter >> buildWidget [
 
 	| newWidget |
 	newWidget := super buildWidget.
-	newWidget getBackgroundColorSelector: #color.
+	newWidget
+		getBackgroundColorSelector: #color;
+		menuProvider: self selector: #codePaneMenu:shifted:.
 
 	self composeOn: newWidget.
 	self presenter whenDocumentChangedDo: [ :aDocument | self compose ].
 	self presenter whenTextStylerChangedDo: [ :aStyler | self compose ].
 	self presenter whenColorChangedDo: [ :color | self setColor: color ].
 	^ newWidget
+]
+
+{ #category : 'widget API' }
+ViennaMorphicMicrodownAdapter >> codePaneMenu: aMenu shifted: shifted [
+
+	| menuPresenter actionGroup |
+	actionGroup := SpActionGroup new beRoot.
+
+	self presenter internalActions ifNotNil: [ :group | actionGroup add: group beRoot ].
+	self addExtraActionsTo: actionGroup.
+	self presenter actions ifNotNil: [ :group | actionGroup add: group beRoot ].
+	"self presenter hasEditionContextMenu ifTrue: [ actionGroup add: self presenter editionCommandsGroup beRoot ]."
+
+	menuPresenter := self presenter newMenu.
+	menuPresenter fillWith: actionGroup.
+
+	^ SpBindings value: self model application adapterBindings during: [ menuPresenter value build ]
 ]
 
 { #category : 'composing' }

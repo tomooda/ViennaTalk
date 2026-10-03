@@ -83,6 +83,14 @@ count
 Enjoy!
 ';
 		             yourself.
+	presenter actions: (SpActionGroup new addActionWith: [ :anItem |
+				 anItem
+					 name: 'Reference';
+					 description: 'open the reference';
+					 actionEnabled: [ :context |
+							 presenter selectedReferences notEmpty or: [ true ] ];
+					 action: [ presenter selectedReferences inspect ] ]).
+
 	presenter open title: 'ViennaMicrodown'.
 	^ presenter
 ]
@@ -119,6 +127,17 @@ ViennaMicrodownPresenter >> initialize [
 ViennaMicrodownPresenter >> recompose [
 
 	self withAdapterDo: [ :microdownAdapter | microdownAdapter recompose ]
+]
+
+{ #category : 'api - selection' }
+ViennaMicrodownPresenter >> selectedReferences [
+
+	| selectedText references |
+	selectedText := self selectedText.
+	references := Set new.
+	1 to: selectedText size do: [ :index |
+	(selectedText attributeAt: index ofKind: ViennaMicReference) ifNotNil: [ :ref | references add: ref ] ].
+	^ references asArray
 ]
 
 { #category : 'initialization' }
