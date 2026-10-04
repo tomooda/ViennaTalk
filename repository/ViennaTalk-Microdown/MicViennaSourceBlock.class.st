@@ -60,5 +60,5 @@ MicViennaSourceBlock >> execute [
 	resultString := nil.
 	errorString := nil.
 	node := self animation resolve: self bodyNode in: self moduleName ifError: [ :message | ^ self errorString: message ].
-	resultString := self vdmHighlight: node source
+	resultString := node highlightedSource
 ]

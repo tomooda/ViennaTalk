@@ -82,28 +82,19 @@ ViennaStateDefinitionNode >> fieldsDo: aBlock [
 ViennaStateDefinitionNode >> formatWith: aViennaAbstractFormatter [
 
 	| identifier stateFieldList invariant initialisation |
-	identifier := aViennaAbstractFormatter format: self identifier.
+	identifier := self identifier.
 	stateFieldList := aViennaAbstractFormatter
 		                  join: aViennaAbstractFormatter cr
-		                  withAll:
-		                  (aViennaAbstractFormatter formatAll:
-			                   self fieldList).
+		                  withAll: (aViennaAbstractFormatter formatAll: self fieldList).
 	invariant := self inv
 		             ifNil: [ aViennaAbstractFormatter empty ]
-		             ifNotNil: [ :node |
-			             aViennaAbstractFormatter cr
-			             ++ (aViennaAbstractFormatter format: node) ].
+		             ifNotNil: [ :node | aViennaAbstractFormatter cr ++ (aViennaAbstractFormatter format: node) ].
 	initialisation := self init
 		                  ifNil: [ aViennaAbstractFormatter empty ]
-		                  ifNotNil: [ :node |
-			                  aViennaAbstractFormatter cr
-			                  ++ (aViennaAbstractFormatter format: node) ].
-	^ (aViennaAbstractFormatter keyword: 'state ')
-	  ++ (aViennaAbstractFormatter identifier: identifier)
-	  ++ (aViennaAbstractFormatter keyword: ' of') ++ String cr
-	  ++ aViennaAbstractFormatter indent
-	  ++ (aViennaAbstractFormatter indentString: stateFieldList)
-	  ++ invariant ++ initialisation ++ String cr
+		                  ifNotNil: [ :node | aViennaAbstractFormatter cr ++ (aViennaAbstractFormatter format: node) ].
+	^ (aViennaAbstractFormatter keyword: 'state ') ++ (aViennaAbstractFormatter identifier: identifier)
+	  ++ (aViennaAbstractFormatter keyword: ' of') ++ String cr ++ aViennaAbstractFormatter indent
+	  ++ (aViennaAbstractFormatter indentString: stateFieldList) ++ invariant ++ initialisation ++ String cr
 	  ++ (aViennaAbstractFormatter keyword: 'end')
 ]
 

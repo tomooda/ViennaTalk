@@ -1,6 +1,6 @@
 Class {
-	#name : 'ViennaMicTopLevelReference',
-	#superclass : 'ViennaMicReference',
+	#name : 'ViennaTopLevelReferenceTextAttribute',
+	#superclass : 'ViennaTextAttribute',
 	#instVars : [
 		'moduleName',
 		'identifier'
@@ -11,7 +11,7 @@ Class {
 }
 
 { #category : 'instance creation' }
-ViennaMicTopLevelReference class >> moduleName: aString identifier: anotherString [
+ViennaTopLevelReferenceTextAttribute class >> moduleName: aString identifier: anotherString [
 
 	^ self new
 		  moduleName: aString;
@@ -20,25 +20,25 @@ ViennaMicTopLevelReference class >> moduleName: aString identifier: anotherStrin
 ]
 
 { #category : 'accessing' }
-ViennaMicTopLevelReference >> identifier [
+ViennaTopLevelReferenceTextAttribute >> identifier [
 
 	^ identifier
 ]
 
 { #category : 'accessing' }
-ViennaMicTopLevelReference >> identifier: aString [
+ViennaTopLevelReferenceTextAttribute >> identifier: aString [
 
 	identifier := aString
 ]
 
 { #category : 'accessing' }
-ViennaMicTopLevelReference >> moduleName [
+ViennaTopLevelReferenceTextAttribute >> moduleName [
 
 	^ moduleName
 ]
 
 { #category : 'accessing' }
-ViennaMicTopLevelReference >> moduleName: aString [
+ViennaTopLevelReferenceTextAttribute >> moduleName: aString [
 
 	moduleName := aString
 ]

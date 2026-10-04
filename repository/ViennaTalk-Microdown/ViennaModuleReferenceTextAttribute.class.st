@@ -1,6 +1,6 @@
 Class {
-	#name : 'ViennaMicModuleReference',
-	#superclass : 'ViennaMicReference',
+	#name : 'ViennaModuleReferenceTextAttribute',
+	#superclass : 'ViennaTextAttribute',
 	#instVars : [
 		'moduleName'
 	],
@@ -10,7 +10,7 @@ Class {
 }
 
 { #category : 'instance creation' }
-ViennaMicModuleReference class >> moduleName: aString [
+ViennaModuleReferenceTextAttribute class >> moduleName: aString [
 
 	^ self new
 		  moduleName: aString;
@@ -18,13 +18,13 @@ ViennaMicModuleReference class >> moduleName: aString [
 ]
 
 { #category : 'accessing' }
-ViennaMicModuleReference >> moduleName [
+ViennaModuleReferenceTextAttribute >> moduleName [
 
 	^ moduleName
 ]
 
 { #category : 'accessing' }
-ViennaMicModuleReference >> moduleName: aString [
+ViennaModuleReferenceTextAttribute >> moduleName: aString [
 
 	moduleName := aString
 ]

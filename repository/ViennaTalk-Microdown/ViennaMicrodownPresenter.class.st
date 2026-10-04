@@ -86,10 +86,9 @@ Enjoy!
 	presenter actions: (SpActionGroup new addActionWith: [ :anItem |
 				 anItem
 					 name: 'Reference';
-					 description: 'open the reference';
-					 actionEnabled: [ :context |
-							 presenter selectedReferences notEmpty or: [ true ] ];
-					 action: [ presenter selectedReferences inspect ] ]).
+					 description: 'open the AST node';
+					 actionEnabled: [ :context | presenter selectedNode notNil or: [ true ] ];
+					 action: [ presenter selectedNode inspect ] ]).
 
 	presenter open title: 'ViennaMicrodown'.
 	^ presenter
@@ -130,14 +129,14 @@ ViennaMicrodownPresenter >> recompose [
 ]
 
 { #category : 'api - selection' }
-ViennaMicrodownPresenter >> selectedReferences [
+ViennaMicrodownPresenter >> selectedNode [
 
-	| selectedText references |
+	| selectedText attributes |
 	selectedText := self selectedText.
-	references := Set new.
+	attributes := ' ' asText.
 	1 to: selectedText size do: [ :index |
-	(selectedText attributeAt: index ofKind: ViennaMicReference) ifNotNil: [ :ref | references add: ref ] ].
-	^ references asArray
+	(selectedText attributeAt: index ofKind: ViennaASTTextAttribute) ifNotNil: [ :att | attributes addAttribute: att ] ].
+	^ attributes attributeAt: 1 ofKind: ViennaASTTextAttribute
 ]
 
 { #category : 'initialization' }
