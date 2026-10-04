@@ -6,12 +6,29 @@ Class {
 		'vdmHighlighter',
 		'presenter',
 		'resultString',
-		'errorString'
+		'errorString',
+		'bodyNode'
+	],
+	#classVars : [
+		'GeneralVDMParser'
 	],
 	#category : 'ViennaTalk-Microdown-Microdown',
 	#package : 'ViennaTalk-Microdown',
 	#tag : 'Microdown'
 }
+
+{ #category : 'accessing' }
+MicViennaBlock class >> generalVDMParser [
+
+	^ GeneralVDMParser ifNil: [
+			  | parser |
+			  parser := ViennaVDMParser new.
+			  GeneralVDMParser := parser document end / parser namedTrace end / parser importModuleSignature end
+			                      / parser accessTypeDefinition end / parser accessValueDefinition end / parser stateDefinition end
+			                      / parser accessFunctionDefinition end / parser accessOperationDefinition end / parser statement end
+			                      / parser expression end / parser type end / parser unitType end / parser importDefinition end
+			                      / parser typeImport end / parser valueImport end / parser functionImport end / parser operationImport ]
+]
 
 { #category : 'testing' }
 MicViennaBlock class >> isAbstract [
@@ -34,19 +51,26 @@ MicViennaBlock >> animation [
 { #category : 'accessing' }
 MicViennaBlock >> bodyNode [
 
-	| bodyNode |
-	bodyNode := self vdmParser parse: self body asString trim.
-	^ bodyNode isPetit2Success
-		  ifTrue: [ bodyNode ]
-		  ifFalse: [
-				  self syntaxError.
-				  bodyNode ]
+	^ bodyNode ifNil: [
+			  self body asString trim
+				  ifNotEmpty: [ :bodyString |
+						  bodyNode := self vdmParser parse: bodyString.
+						  bodyNode isPetit2Success
+							  ifTrue: [
+									  (self animation ifNotNil: #specificationNode) ifNotNil: [ :specificationNode |
+											  bodyNode parent:
+												  (self moduleName ifNil: [ specificationNode ] ifNotNil: [ :moduleName | specificationNode moduleNamed: moduleName ]) ].
+									  bodyNode ]
+							  ifFalse: [
+									  self syntaxError.
+									  bodyNode ] ]
+				  ifEmpty: [ nil ] ]
 ]
 
 { #category : 'accessing' }
 MicViennaBlock >> bodyText [
 
-	^ (self body asString trim ifNotEmpty: [ :bodyString | self vdmHighlight: bodyString ]) asText
+	^ self bodyNode highlightedSource
 ]
 
 { #category : 'private' }
@@ -71,6 +95,12 @@ MicViennaBlock >> errorString: aString [
 MicViennaBlock >> flushResultString [
 
 	resultString := nil
+]
+
+{ #category : 'accessing' }
+MicViennaBlock >> generalVDMParser [
+
+	^ self class generalVDMParser
 ]
 
 { #category : 'accessing' }
@@ -140,6 +170,16 @@ MicViennaBlock >> vdmHighlight: aString [
 		  text: aString asText;
 		  parse: aString asString;
 		  text
+]
+
+{ #category : 'private' }
+MicViennaBlock >> vdmHighlight: aString parent: aViennaNode [
+
+	| node |
+	node := self generalVDMParser parse: aString.
+	^ node isPetit2Success
+		  ifTrue: [ node highlightedSource ]
+		  ifFalse: [ aString asText ]
 ]
 
 { #category : 'accessing' }

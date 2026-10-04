@@ -4,7 +4,7 @@ Extension { #name : 'MicRichTextComposer' }
 MicRichTextComposer >> viennaWriteResult: aScriptBlock [
 
 	aScriptBlock resultString ifNotNil: [ :resultString |
-			^ (' ' , resultString , ' ') asText
+			^ (' ' asText , resultString , ' ') asText
 				  addAttribute: (TextBackgroundColor color: (Color gray: 0.9));
 				  addAttribute: (MicRichTextDoIt new
 						   actOnClickBlock: [

@@ -21,14 +21,14 @@ MicViennaAnimationBlock >> defaultState [
 { #category : 'executing' }
 MicViennaAnimationBlock >> execute [
 
-	| bodyNode animation prestate |
+	| animation prestate |
 	resultString := nil.
 	errorString := nil.
-	bodyNode := self bodyNode ifNil: [ ^ self syntaxError ].
+	self bodyNode ifNil: [ ^ self syntaxError ].
 	animation := self animation.
 	prestate := animation state.
 	animation
-		execute: bodyNode
+		execute: self bodyNode
 		in: self moduleName
 		do: [ :result :poststate | self resultString: result viennaString prestate: prestate poststate: poststate ]
 		ifError: [ :message | ^ self errorString: message ]
@@ -59,12 +59,6 @@ MicViennaAnimationBlock >> ifShowNoState: noShowBlock otherwise: aBlock [
 ]
 
 { #category : 'printing' }
-MicViennaAnimationBlock >> printState: aDictionary [
-
-	^ String streamContents: [ :stream | self printState: aDictionary on: stream ]
-]
-
-{ #category : 'printing' }
 MicViennaAnimationBlock >> printState: aDictionary on: aStream [
 
 	aDictionary ifNotNil: [
@@ -74,7 +68,7 @@ MicViennaAnimationBlock >> printState: aDictionary on: aStream [
 						aStream
 							nextPutAll: assoc key;
 							nextPutAll: '=';
-							nextPutAll: assoc value ]
+							nextPutAll: (self vdmHighlight: assoc value parent: self bodyNode parent) ]
 				separatedBy: [ aStream nextPutAll: ', ' ].
 			aStream nextPutAll: '}' ]
 ]
@@ -82,6 +76,8 @@ MicViennaAnimationBlock >> printState: aDictionary on: aStream [
 { #category : 'accessing' }
 MicViennaAnimationBlock >> resultString: aString prestate: aDictionary poststate: anotherDictionary [
 
+	| result |
+	result := self vdmHighlight: aString parent: self bodyNode parent.
 	self
 		ifShowDiffState: [
 				anotherDictionary ifNotNil: [
@@ -93,19 +89,19 @@ MicViennaAnimationBlock >> resultString: aString prestate: aDictionary poststate
 		otherwise: [ ].
 	resultString := self
 		                ifShowNoState: [
-				                String streamContents: [ :stream |
+				                Text streamContents: [ :stream |
 						                stream
-							                nextPutAll: self body asString trim;
+							                nextPutAll: self bodyText;
 							                nextPutAll: ' → ';
-							                nextPutAll: aString ] ]
+							                nextPutAll: result ] ]
 		                otherwise: [
-				                String streamContents: [ :stream |
+				                Text streamContents: [ :stream |
 						                self printState: aDictionary on: stream.
 						                stream
 							                space;
-							                nextPutAll: self body asString trim;
+							                nextPutAll: self bodyText;
 							                nextPutAll: ' → ';
-							                nextPutAll: aString;
+							                nextPutAll: result;
 							                space.
 						                self printState: anotherDictionary on: stream ] ]
 ]
