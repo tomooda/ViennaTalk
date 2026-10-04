@@ -60,6 +60,12 @@ ViennaVDMHighlighter >> arrow [
 ]
 
 { #category : 'parsers-keywords' }
+ViennaVDMHighlighter >> async [
+
+	^ self keyword: super async
+]
+
+{ #category : 'parsers-keywords' }
 ViennaVDMHighlighter >> best [
 	^ self keyword: super best
 ]
@@ -334,6 +340,12 @@ ViennaVDMHighlighter >> measure [
 	^ self keyword: super measure
 ]
 
+{ #category : 'parsers-keywords' }
+ViennaVDMHighlighter >> mk_ [
+
+	^ self keyword: super mk_
+]
+
 { #category : 'utilities' }
 ViennaVDMHighlighter >> module: aParser [
 	^ self highlight: aParser with: self moduleAttribute
@@ -396,6 +408,30 @@ ViennaVDMHighlighter >> pre [
 ]
 
 { #category : 'parsers-keywords' }
+ViennaVDMHighlighter >> private [
+
+	^ self keyword: super private
+]
+
+{ #category : 'parsers-keywords' }
+ViennaVDMHighlighter >> protected [
+
+	^ self keyword: super protected
+]
+
+{ #category : 'parsers-keywords' }
+ViennaVDMHighlighter >> public [
+
+	^ self keyword: super public
+]
+
+{ #category : 'parsers-keywords' }
+ViennaVDMHighlighter >> pure [
+
+	^ self keyword: super pure
+]
+
+{ #category : 'parsers-keywords' }
 ViennaVDMHighlighter >> rd [
 	^ self keyword: super rd
 ]
@@ -429,6 +465,12 @@ ViennaVDMHighlighter >> skip [
 { #category : 'parsers-keywords' }
 ViennaVDMHighlighter >> state [
 	^ self keyword: super state
+]
+
+{ #category : 'parsers-keywords' }
+ViennaVDMHighlighter >> static [
+
+	^ self keyword: super static
 ]
 
 { #category : 'parsers-keywords' }
@@ -470,6 +512,12 @@ ViennaVDMHighlighter >> tixe [
 { #category : 'parsers-keywords' }
 ViennaVDMHighlighter >> to [
 	^ self keyword: super to
+]
+
+{ #category : 'parsers-keywords' }
+ViennaVDMHighlighter >> token [
+
+	^ self type: super token
 ]
 
 { #category : 'parsers-keywords' }

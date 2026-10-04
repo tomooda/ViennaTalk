@@ -23,7 +23,7 @@ ViennaAccessNode >> formatWith: aViennaAbstractFormatter [
 
 	^ aViennaAbstractFormatter
 		  join: aViennaAbstractFormatter space
-		  withAll: (aViennaAbstractFormatter formatAll: self)
+		  withAll: (self collect: [ :string | aViennaAbstractFormatter keyword: string ])
 ]
 
 { #category : 'private' }

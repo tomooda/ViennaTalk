@@ -26,7 +26,7 @@ ViennaVDMHighlightingFormatter >> empty [
 { #category : 'formatting' }
 ViennaVDMHighlightingFormatter >> format: aViennaNode [
 
-	aViennaNode isString ifTrue: [ self identifier: aViennaNode ].
+	aViennaNode isString ifTrue: [ ^ self identifier: aViennaNode ].
 	^ (super format: aViennaNode) asText
 		  addAttribute: (ViennaASTTextAttribute node: aViennaNode);
 		  yourself

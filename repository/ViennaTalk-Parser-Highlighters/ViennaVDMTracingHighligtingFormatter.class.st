@@ -16,6 +16,6 @@ ViennaVDMTracingHighligtingFormatter >> format: aViennaNode [
 
 	| text |
 	text := (super format: aViennaNode) asText.
-	text string: (text string asViennaTracingString: aViennaNode).
+	aViennaNode isString ifFalse: [ text string: (text string asViennaTracingString: aViennaNode) ].
 	^ text
 ]

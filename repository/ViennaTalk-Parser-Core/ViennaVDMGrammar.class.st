@@ -101,7 +101,8 @@ ViennaVDMGrammar >> abs: arg [
 
 { #category : 'parsers-definitions' }
 ViennaVDMGrammar >> access [
-	^ (self reserved: 'public') / (self reserved: 'protected') / (self reserved: 'private')
+
+	^ self public / self protected / self private
 ]
 
 { #category : 'parsers-definitions' }
@@ -118,17 +119,15 @@ ViennaVDMGrammar >> accessFunctionDefinition [
 ViennaVDMGrammar >> accessOperationDefinition [
 
 	| pure async static |
-	pure := self reserved: 'pure'.
-	async := self reserved: 'async'.
-	static := self reserved: 'static'.
-	^ comment star
-	  , (pure optional , async optional , (static , access optional
-		    / (access optional , static optional ==> [ :pair | 
-			     { 
-				     pair second.
-				     pair first } ])) , self operationDefinition ==> [ :quatro | 
-		   { 
-			   ({ 
+	pure := self pure.
+	async := self async.
+	static := self static.
+	^ comment star , (pure optional , async optional , (static , access optional / (access optional , static optional ==> [ :pair |
+		     {
+			     pair second.
+			     pair first } ])) , self operationDefinition ==> [ :quatro |
+		   {
+			   ({
 				    quatro first.
 				    quatro second.
 				    quatro third first.
@@ -287,6 +286,12 @@ ViennaVDMGrammar >> assignmentDefinition [
 			{ident.
 			varType.
 			initialValue} ]
+]
+
+{ #category : 'parsers-keywords' }
+ViennaVDMGrammar >> async [
+
+	^ self reserved: 'async'
 ]
 
 { #category : 'parsers-expressions' }
@@ -1988,6 +1993,12 @@ ViennaVDMGrammar >> minusOp [
 	^ self operator: $-
 ]
 
+{ #category : 'parsers-keywords' }
+ViennaVDMGrammar >> mk_ [
+
+	^ 'mk_' asPParser
+]
+
 { #category : 'parsers-symbols' }
 ViennaVDMGrammar >> mod [
 	^ self reserved: 'mod'
@@ -2397,8 +2408,9 @@ ViennaVDMGrammar >> printOn: aStream [
 		nextPutAll: self class name
 ]
 
-{ #category : 'parsers-symbols' }
+{ #category : 'parsers-keywords' }
 ViennaVDMGrammar >> private [
+
 	^ self reserved: 'private'
 ]
 
@@ -2414,8 +2426,9 @@ ViennaVDMGrammar >> productType [
 						nextPutAll: triple third ] ]
 ]
 
-{ #category : 'parsers-symbols' }
+{ #category : 'parsers-keywords' }
 ViennaVDMGrammar >> protected [
+
 	^ self reserved: 'protected'
 ]
 
@@ -2430,9 +2443,16 @@ ViennaVDMGrammar >> psubset: arg1 and: arg2 [
 	arg2}
 ]
 
-{ #category : 'parsers-symbols' }
+{ #category : 'parsers-keywords' }
 ViennaVDMGrammar >> public [
+
 	^ self reserved: 'public'
+]
+
+{ #category : 'parsers-keywords' }
+ViennaVDMGrammar >> pure [
+
+	^ self reserved: 'pure'
 ]
 
 { #category : 'parsers-expressions-basics' }
@@ -2469,11 +2489,10 @@ ViennaVDMGrammar >> rdExpression [
 { #category : 'parsers-expressions-basics' }
 ViennaVDMGrammar >> recordConstructor [
 
-	^ 'mk_' asPParser , (self type: name) , lparen , expressionList
-	  , rparen ==> [ :array |
-	  {
-		  array second.
-		  array fourth } ]
+	^ self mk_ , (self type: name) , lparen , expressionList , rparen ==> [ :array |
+		  {
+			  array second.
+			  array fourth } ]
 ]
 
 { #category : 'parsers-expressions-basics' }
@@ -2863,6 +2882,12 @@ ViennaVDMGrammar >> statement [
 ]
 
 { #category : 'parsers-keywords' }
+ViennaVDMGrammar >> static [
+
+	^ self reserved: 'static'
+]
+
+{ #category : 'parsers-keywords' }
 ViennaVDMGrammar >> struct [
 	^ self reserved: 'struct'
 ]
@@ -2928,9 +2953,16 @@ ViennaVDMGrammar >> to [
 	^ self reserved: 'to'
 ]
 
+{ #category : 'parsers-keywords' }
+ViennaVDMGrammar >> token [
+
+	^ self reserved: 'token'
+]
+
 { #category : 'parsers-expressions-basics' }
 ViennaVDMGrammar >> tokenConstructor [
-	^ ((self reserved: 'mk_token' asPParser) , lparen , expression , rparen) ==> #third
+
+	^ self mk_ , self token , lparen , expression , rparen ==> #fourth
 ]
 
 { #category : 'parsers-definitions' }
@@ -3117,14 +3149,12 @@ ViennaVDMGrammar >> traps [
 
 { #category : 'parsers-expressions-basics' }
 ViennaVDMGrammar >> tupleConstructor [
-	^ ((self reserved: 'mk_') , lparen , expression , comma , (expression delimitedBy: comma) withoutSeparators , rparen)
-		==> [ :array | 
-			Array
-				new: array fifth size + 1
-				streamContents: [ :stream | 
-					stream
-						nextPut: array third;
-						nextPutAll: array fifth ] ]
+
+	^ self mk_ , lparen , expression , comma , (expression delimitedBy: comma) withoutSeparators , rparen ==> [ :array |
+		  Array new: array fifth size + 1 streamContents: [ :stream |
+				  stream
+					  nextPut: array third;
+					  nextPutAll: array fifth ] ]
 ]
 
 { #category : 'parsers-patterns' }
