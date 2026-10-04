@@ -87,7 +87,7 @@ Enjoy!
 				 anItem
 					 name: 'Reference';
 					 description: 'open the AST node';
-					 actionEnabled: [ :context | presenter selectedNode notNil or: [ true ] ];
+					 actionEnabled: [ :context | presenter selectedNode notNil ];
 					 action: [ presenter selectedNode inspect ] ]).
 
 	presenter open title: 'ViennaMicrodown'.
@@ -131,12 +131,14 @@ ViennaMicrodownPresenter >> recompose [
 { #category : 'api - selection' }
 ViennaMicrodownPresenter >> selectedNode [
 
-	| selectedText attributes |
-	selectedText := self selectedText.
-	attributes := ' ' asText.
-	1 to: selectedText size do: [ :index |
-	(selectedText attributeAt: index ofKind: ViennaASTTextAttribute) ifNotNil: [ :att | attributes addAttribute: att ] ].
-	^ attributes attributeAt: 1 ofKind: ViennaASTTextAttribute
+	self selectedText
+		ifNotEmpty: [ :selectedText |
+				| attributes |
+				attributes := ' ' asText.
+				1 to: selectedText size do: [ :index |
+				(selectedText attributeAt: index ofKind: ViennaASTTextAttribute) ifNotNil: [ :att | attributes addAttribute: att ] ].
+				^ (attributes attributeAt: 1 ofKind: ViennaASTTextAttribute) ifNotNil: #node ]
+		ifEmpty: [ ^ (text attributeAt: self selectionInterval first ofKind: ViennaASTTextAttribute) ifNotNil: #node ]
 ]
 
 { #category : 'initialization' }
