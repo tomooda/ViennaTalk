@@ -35,7 +35,7 @@ ViennaVDMHighlightingFormatter >> format: aViennaNode [
 { #category : 'formatting' }
 ViennaVDMHighlightingFormatter >> identifier: aString [
 
-	^ aString asText addAttribute: self identifierAttribute
+	^ (super identifier: aString) asText addAttribute: self identifierAttribute
 ]
 
 { #category : 'accessing' }
