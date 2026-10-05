@@ -5,7 +5,8 @@ Class {
 		'browser',
 		'globalNameList',
 		'source',
-		'targetName'
+		'targetName',
+		'target'
 	],
 	#category : 'ViennaTalk-Browser-Core-Browsers',
 	#package : 'ViennaTalk-Browser-Core',
@@ -22,6 +23,7 @@ ViennaReferenceListPresenter class >> isAbstract [
 ViennaReferenceListPresenter >> browser: aViennaRefactoringBrowser [
 
 	browser := aViennaRefactoringBrowser.
+	target := nil.
 	self updateGlobalNameList
 ]
 
@@ -39,13 +41,12 @@ ViennaReferenceListPresenter >> createGlobalNames [
 	^ Array streamContents: [ :stream |
 			  self target ifNotNil: [ :target |
 					  self specification ifNotNil: [ :specification |
-							  specification allDescendantsSuchThat: [ :node | node isViennaNameNode ] do: [ :node |
-									  (target == node resolve and: [ self check: node ]) ifTrue: [
-											  node topLevelDefinition ifNotNil: [ :def |
-													  def globalNamesDo: [ :globalName |
-															  last ~= globalName ifTrue: [
-																	  stream nextPut: globalName.
-																	  last := globalName ] ] ] ] ] ] ] ]
+							  specification allDescendantsSuchThat: [ :node | self check: node ] do: [ :node |
+									  node topLevelDefinition ifNotNil: [ :def |
+											  def globalNamesDo: [ :globalName |
+													  last ~= globalName ifTrue: [
+															  stream nextPut: globalName.
+															  last := globalName ] ] ] ] ] ] ]
 ]
 
 { #category : 'layout' }
@@ -88,7 +89,7 @@ ViennaReferenceListPresenter >> specification [
 { #category : 'accessing' }
 ViennaReferenceListPresenter >> target [
 
-	^ targetName ifNotNil: #resolve
+	^ target ifNil: [ target := targetName ifNotNil: #resolve ]
 ]
 
 { #category : 'accessing' }
@@ -101,6 +102,7 @@ ViennaReferenceListPresenter >> targetName [
 ViennaReferenceListPresenter >> targetName: aViennaGlobalName [
 
 	targetName := aViennaGlobalName.
+	target := nil.
 	self updateGlobalNameList
 ]
 

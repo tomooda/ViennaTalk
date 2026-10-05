@@ -747,6 +747,21 @@ ViennaRefactoringBrowser >> addReferenceMenuOn: aViennaNode to: aMenuPresenter w
 											self openWriterList: ((ViennaLocalNameNode identifier: nil)
 														 parent: aViennaNode module;
 														 yourself) ] ] ].
+			((aViennaNode isViennaNameNode and: [ aViennaNode isStateVariableNameNode not ]) or: [ aViennaNode isViennaTypeNameNode ])
+				ifTrue: [
+						group addItem: [ :item |
+								item
+									name: 'References to ' , aViennaNode source;
+									action: [ self openValueReferenceList: aViennaNode ] ] ].
+			(aViennaNode isValueDefinition or: [
+					 aViennaNode isFunctionDefinition or: [
+						 aViennaNode isOperationDefinition or: [ aViennaNode isViennaPatternNode or: [ aViennaNode isViennaTypeSynonymNode ] ] ] ])
+				ifTrue: [
+						group addItem: [ :item |
+								item
+									name: 'References to ' , aViennaNode identifier;
+									action: [ self openValueReferenceList: ((ViennaLocalNameNode identifier: aViennaNode identifier) parent: aViennaNode) ] ] ].
+
 			aBlock cull: group ]
 ]
 
@@ -2924,6 +2939,15 @@ ViennaRefactoringBrowser >> openInExternalWindow [
 ViennaRefactoringBrowser >> openReaderList: aViennaNameNode [
 
 	ViennaReaderListPresenter new
+		browser: self;
+		targetName: aViennaNameNode;
+		open
+]
+
+{ #category : 'operations-references' }
+ViennaRefactoringBrowser >> openValueReferenceList: aViennaNameNode [
+
+	ViennaValueReferenceListPresenter new
 		browser: self;
 		targetName: aViennaNameNode;
 		open
