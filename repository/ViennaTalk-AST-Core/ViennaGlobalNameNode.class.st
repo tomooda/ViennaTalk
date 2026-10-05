@@ -65,25 +65,6 @@ ViennaGlobalNameNode >> isExportedNameNode [
 ]
 
 { #category : 'testing' }
-ViennaGlobalNameNode >> isFunctionNameNode [
-
-	^ (self identifier beginsWith: 'pre_') or: [
-		  (self identifier beginsWith: 'post_') or: [
-			  (self identifier beginsWith: 'inv_') or: [
-				  self resolve
-					  ifNotNil: [ :def | def isFunctionDefinition ]
-					  ifNil: [ false ] ] ] ]
-]
-
-{ #category : 'testing' }
-ViennaGlobalNameNode >> isOperationNameNode [
-
-	^ self resolve
-		  ifNotNil: [ :def | def isOperationDefinition ]
-		  ifNil: [ false ]
-]
-
-{ #category : 'testing' }
 ViennaGlobalNameNode >> isTypeNameNode [
 
 	^ self resolve

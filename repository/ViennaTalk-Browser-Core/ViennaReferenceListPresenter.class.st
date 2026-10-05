@@ -3,9 +3,9 @@ Class {
 	#superclass : 'SpPresenter',
 	#instVars : [
 		'browser',
-		'target',
 		'globalNameList',
-		'source'
+		'source',
+		'targetName'
 	],
 	#category : 'ViennaTalk-Browser-Core-Browsers',
 	#package : 'ViennaTalk-Browser-Core',
@@ -25,12 +25,46 @@ ViennaReferenceListPresenter >> browser: aViennaRefactoringBrowser [
 	self updateGlobalNameList
 ]
 
+{ #category : 'testing' }
+ViennaReferenceListPresenter >> check: aViennaNode [
+
+	^ self subclassResponsibility
+]
+
+{ #category : 'private' }
+ViennaReferenceListPresenter >> createGlobalNames [
+
+	| last |
+	last := nil.
+	^ Array streamContents: [ :stream |
+			  self target ifNotNil: [ :target |
+					  self specification ifNotNil: [ :specification |
+							  specification allDescendantsSuchThat: [ :node | node isViennaNameNode ] do: [ :node |
+									  (target == node resolve and: [ self check: node ]) ifTrue: [
+											  node topLevelDefinition ifNotNil: [ :def |
+													  def globalNamesDo: [ :globalName |
+															  last ~= globalName ifTrue: [
+																	  stream nextPut: globalName.
+																	  last := globalName ] ] ] ] ] ] ] ]
+]
+
+{ #category : 'layout' }
+ViennaReferenceListPresenter >> defaultLayout [
+
+	<spec>
+	^ SpPanedLayout newHorizontal
+		  positionOfSlider: 0.3;
+		  add: globalNameList;
+		  add: source;
+		  yourself
+]
+
 { #category : 'initialization' }
 ViennaReferenceListPresenter >> initializePresenters [
 
 	super initializePresenters.
 	globalNameList := self newTable
-		                  addColumn: (SpStringTableColumn title: 'module' evaluated: #moduleName);
+		                  addColumn: (SpStringTableColumn title: 'module' evaluated: #moduleIdentifier);
 		                  addColumn: (SpStringTableColumn title: 'identifier' evaluated: #identifier);
 		                  whenSelectedItemChangedDo: [ self selectedGlobalNameChanged ];
 		                  yourself.
@@ -46,22 +80,34 @@ ViennaReferenceListPresenter >> selectedGlobalNameChanged [
 ]
 
 { #category : 'accessing' }
-ViennaReferenceListPresenter >> target [
+ViennaReferenceListPresenter >> specification [
 
-	^ target
+	^ browser ifNotNil: #specification
 ]
 
 { #category : 'accessing' }
-ViennaReferenceListPresenter >> target: aViennaGlobalName [
+ViennaReferenceListPresenter >> target [
 
-	target := aViennaGlobalName.
+	^ targetName ifNotNil: #resolve
+]
+
+{ #category : 'accessing' }
+ViennaReferenceListPresenter >> targetName [
+
+	^ targetName
+]
+
+{ #category : 'accessing' }
+ViennaReferenceListPresenter >> targetName: aViennaGlobalName [
+
+	targetName := aViennaGlobalName.
 	self updateGlobalNameList
 ]
 
 { #category : 'updating' }
 ViennaReferenceListPresenter >> updateGlobalNameList [
 
-	^ self subclassResponsibility
+	globalNameList items: self createGlobalNames
 ]
 
 { #category : 'updating' }
@@ -70,5 +116,5 @@ ViennaReferenceListPresenter >> updateSource [
 	globalNameList selectedItem ifNotNil: [ :globalName |
 			source
 				module: globalName moduleIdentifier;
-				text: (globalName resolveIn: browser specification) tracingSource ]
+				text: (globalName resolveIn: browser specification) tracingHighlightedSource ]
 ]

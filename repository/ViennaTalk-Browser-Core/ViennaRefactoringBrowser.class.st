@@ -710,6 +710,46 @@ ViennaRefactoringBrowser >> addRefactoringMenuGroupOn: aViennaNode to: aMenuPres
 		aBlock cull: group ]
 ]
 
+{ #category : 'menus' }
+ViennaRefactoringBrowser >> addReferenceMenuOn: aViennaNode to: aMenuPresenter with: aBlock [
+
+	aMenuPresenter addGroup: [ :group |
+			((aViennaNode isViennaLocalNameNode and: [ aViennaNode isStateVariableNameNode ]) or: [
+				 aViennaNode isViennaFieldNode and: [ aViennaNode isStateVariableDefinition ] ]) ifTrue: [
+					group
+						addItem: [ :item |
+								item
+									name: 'Read accesses to ' , aViennaNode identifier;
+									action: [
+											self openReaderList: ((ViennaLocalNameNode identifier: aViennaNode identifier)
+														 parent: aViennaNode module;
+														 yourself) ] ];
+						addItem: [ :item |
+								item
+									name: 'Write accesses to ' , aViennaNode identifier;
+									action: [
+											self openWriterList: ((ViennaLocalNameNode identifier: aViennaNode identifier)
+														 parent: aViennaNode module;
+														 yourself) ] ] ].
+			aViennaNode isViennaStateDefinitionNode ifTrue: [
+					group
+						addItem: [ :item |
+								item
+									name: 'Read accesses to state variables';
+									action: [
+											self openReaderList: ((ViennaLocalNameNode identifier: nil)
+														 parent: aViennaNode module;
+														 yourself) ] ];
+						addItem: [ :item |
+								item
+									name: 'Write accesses to state variables';
+									action: [
+											self openWriterList: ((ViennaLocalNameNode identifier: nil)
+														 parent: aViennaNode module;
+														 yourself) ] ] ].
+			aBlock cull: group ]
+]
+
 { #category : 'operations-slicing' }
 ViennaRefactoringBrowser >> addSlice: aViennaNode [
 
@@ -1042,35 +1082,34 @@ ViennaRefactoringBrowser >> definitionListContextMenu [
 	| menu |
 	menu := self newMenu.
 	self definitionBase ifNotNil: [ :definition |
-		menu addGroup: [ :group |
-			(ViennaRefactoring
-				 sortedInstancesOn: definition
-				 suchthat: #isForDefinitionList) do: [ :refactoring |
-				group addItem: [ :item |
-					item
-						name: refactoring name;
-						action: [ self executeRefactoring: refactoring ] ] ] ].
-		menu addGroup: [ :group |
-			definition isViennaExplicitOperationDefinitionNode ifTrue: [
-				group addItem: [ :item |
-					item
-						name: 'Add slice for ...';
-						subMenu: (self addSliceMenuOnOperation: definition) ] ].
-			definition isViennaStateDefinitionNode ifTrue: [
-				group addItem: [ :item |
-					item
-						name: 'Add slice for ...';
-						subMenu: (self addSliceMenuOnState: definition) ] ].
-			sliceNodes ifNotEmpty: [
-				group addItem: [ :item |
-					item
-						name: 'Clear slices';
-						action: [ self clearSlice ] ] ] ] ].
+			menu addGroup: [ :group |
+					(ViennaRefactoring sortedInstancesOn: definition suchthat: #isForDefinitionList) do: [ :refactoring |
+							group addItem: [ :item |
+									item
+										name: refactoring name;
+										action: [ self executeRefactoring: refactoring ] ] ] ].
+			self addReferenceMenuOn: definition to: menu with: [ :group |  ].
+			menu addGroup: [ :group |
+					definition isViennaExplicitOperationDefinitionNode ifTrue: [
+							group addItem: [ :item |
+									item
+										name: 'Add slice for ...';
+										subMenu: (self addSliceMenuOnOperation: definition) ] ].
+					definition isViennaStateDefinitionNode ifTrue: [
+							group addItem: [ :item |
+									item
+										name: 'Add slice for ...';
+										subMenu: (self addSliceMenuOnState: definition) ] ].
+					sliceNodes ifNotEmpty: [
+							group addItem: [ :item |
+									item
+										name: 'Clear slices';
+										action: [ self clearSlice ] ] ] ] ].
 	menu addGroup: [ :group |
-		menu addItem: [ :item |
-			item
-				name: 'inspect';
-				action: [ self definitionBase inspect ] ] ].
+			menu addItem: [ :item |
+					item
+						name: 'inspect';
+						action: [ self definitionBase inspect ] ] ].
 	^ menu
 ]
 
@@ -2881,6 +2920,24 @@ ViennaRefactoringBrowser >> openInExternalWindow [
 		layoutFrame: (0 @ 0 extent: 1 @ 1)
 ]
 
+{ #category : 'operations-references' }
+ViennaRefactoringBrowser >> openReaderList: aViennaNameNode [
+
+	ViennaReaderListPresenter new
+		browser: self;
+		targetName: aViennaNameNode;
+		open
+]
+
+{ #category : 'operations-references' }
+ViennaRefactoringBrowser >> openWriterList: aViennaNameNode [
+
+	ViennaWriterListPresenter new
+		browser: self;
+		targetName: aViennaNameNode;
+		open
+]
+
 { #category : 'private' }
 ViennaRefactoringBrowser >> parser [
 
@@ -3338,9 +3395,7 @@ ViennaRefactoringBrowser >> sourcePageLayout [
 				   add: (SpBoxLayout newHorizontal
 						    add: autoTestButton expand: false;
 						    add: runTestButton expand: false;
-						    add: (SpBoxLayout newHorizontal
-								     hAlignEnd;
-								     add: runMutationTestingButton expand: false);
+						    add: runMutationTestingButton expand: true;
 						    yourself)
 				   expand: false;
 				   add: testResultTable;
@@ -3387,19 +3442,19 @@ ViennaRefactoringBrowser >> sourceTextContextMenu [
 	menu := self newMenu.
 	node := self sourceSelection.
 	topLevelDefinition := node ifNotNil: [ node topLevelDefinition ].
-	node ifNotNil: [
-		self addRefactoringMenuGroupOn: node to: menu with: [ :group |  ] ].
+	node ifNotNil: [ self addRefactoringMenuGroupOn: node to: menu with: [ :group |  ] ].
+	self addReferenceMenuOn: node to: menu with: [ :group |  ].
 	menu addGroup: [ :group |
-		topLevelDefinition ifNotNil: [
-			group addItem: [ :item |
-				item
-					name: 'Add slice for selection';
-					action: [ self addSlice: node ] ] ].
-		sliceNodes notEmpty ifTrue: [
-			group addItem: [ :item |
-				item
-					name: 'Clear slices';
-					action: [ self clearSlice ] ] ] ].
+			topLevelDefinition ifNotNil: [
+					group addItem: [ :item |
+							item
+								name: 'Add slice for selection';
+								action: [ self addSlice: node ] ] ].
+			sliceNodes notEmpty ifTrue: [
+					group addItem: [ :item |
+							item
+								name: 'Clear slices';
+								action: [ self clearSlice ] ] ] ].
 	^ menu
 ]
 
