@@ -16,5 +16,5 @@ ViennaWriterListPresenter >> check: aViennaNode [
 ViennaWriterListPresenter >> initializeWindow: aSpWindowPresenter [
 
 	super initializeWindow: aSpWindowPresenter.
-	aSpWindowPresenter title: 'Writers on ' , (targetName ifNotNil: #source ifNil: '-')
+	aSpWindowPresenter title: 'Writers on ' , (target ifNotNil: #identifier ifNil: '-')
 ]

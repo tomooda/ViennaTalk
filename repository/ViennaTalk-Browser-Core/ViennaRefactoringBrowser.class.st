@@ -714,45 +714,33 @@ ViennaRefactoringBrowser >> addRefactoringMenuGroupOn: aViennaNode to: aMenuPres
 ViennaRefactoringBrowser >> addReferenceMenuOn: aViennaNode to: aMenuPresenter with: aBlock [
 
 	aMenuPresenter addGroup: [ :group |
-			((aViennaNode isViennaLocalNameNode and: [ aViennaNode isStateVariableNameNode ]) or: [
-				 aViennaNode isViennaFieldNode and: [ aViennaNode isStateVariableDefinition ] ]) ifTrue: [
+			(aViennaNode isViennaLocalNameNode and: [ aViennaNode isStateVariableNameNode ]) ifTrue: [
 					group
 						addItem: [ :item |
 								item
 									name: 'Read accesses to ' , aViennaNode identifier;
-									action: [
-											self openReaderList: ((ViennaLocalNameNode identifier: aViennaNode identifier)
-														 parent: aViennaNode module;
-														 yourself) ] ];
+									action: [ self openReaderList: aViennaNode resolve ] ];
 						addItem: [ :item |
 								item
 									name: 'Write accesses to ' , aViennaNode identifier;
-									action: [
-											self openWriterList: ((ViennaLocalNameNode identifier: aViennaNode identifier)
-														 parent: aViennaNode module;
-														 yourself) ] ] ].
-			aViennaNode isViennaStateDefinitionNode ifTrue: [
-					group
-						addItem: [ :item |
-								item
-									name: 'Read accesses to state variables';
-									action: [
-											self openReaderList: ((ViennaLocalNameNode identifier: nil)
-														 parent: aViennaNode module;
-														 yourself) ] ];
-						addItem: [ :item |
-								item
-									name: 'Write accesses to state variables';
-									action: [
-											self openWriterList: ((ViennaLocalNameNode identifier: nil)
-														 parent: aViennaNode module;
-														 yourself) ] ] ].
+									action: [ self openWriterList: aViennaNode resolve ] ] ].
+			(aViennaNode isViennaStateDefinitionNode or: [ aViennaNode isViennaFieldNode and: [ aViennaNode isStateVariableDefinition ] ])
+				ifTrue: [
+						group
+							addItem: [ :item |
+									item
+										name: 'Read accesses to state variables';
+										action: [ self openReaderList: aViennaNode ] ];
+							addItem: [ :item |
+									item
+										name: 'Write accesses to state variables';
+										action: [ self openWriterList: aViennaNode ] ] ].
 			((aViennaNode isViennaNameNode and: [ aViennaNode isStateVariableNameNode not ]) or: [ aViennaNode isViennaTypeNameNode ])
 				ifTrue: [
 						group addItem: [ :item |
 								item
 									name: 'References to ' , aViennaNode source;
-									action: [ self openValueReferenceList: aViennaNode ] ] ].
+									action: [ self openValueReferenceList: aViennaNode resolve ] ] ].
 			(aViennaNode isValueDefinition or: [
 					 aViennaNode isFunctionDefinition or: [
 						 aViennaNode isOperationDefinition or: [ aViennaNode isViennaPatternNode or: [ aViennaNode isViennaTypeSynonymNode ] ] ] ])
@@ -760,7 +748,7 @@ ViennaRefactoringBrowser >> addReferenceMenuOn: aViennaNode to: aMenuPresenter w
 						group addItem: [ :item |
 								item
 									name: 'References to ' , aViennaNode identifier;
-									action: [ self openValueReferenceList: ((ViennaLocalNameNode identifier: aViennaNode identifier) parent: aViennaNode) ] ] ].
+									action: [ self openValueReferenceList: aViennaNode ] ] ].
 
 			aBlock cull: group ]
 ]
@@ -2936,29 +2924,29 @@ ViennaRefactoringBrowser >> openInExternalWindow [
 ]
 
 { #category : 'operations-references' }
-ViennaRefactoringBrowser >> openReaderList: aViennaNameNode [
+ViennaRefactoringBrowser >> openReaderList: aViennaNode [
 
 	ViennaReaderListPresenter new
 		browser: self;
-		targetName: aViennaNameNode;
+		target: aViennaNode;
 		open
 ]
 
 { #category : 'operations-references' }
-ViennaRefactoringBrowser >> openValueReferenceList: aViennaNameNode [
+ViennaRefactoringBrowser >> openValueReferenceList: aViennaNode [
 
 	ViennaValueReferenceListPresenter new
 		browser: self;
-		targetName: aViennaNameNode;
+		target: aViennaNode;
 		open
 ]
 
 { #category : 'operations-references' }
-ViennaRefactoringBrowser >> openWriterList: aViennaNameNode [
+ViennaRefactoringBrowser >> openWriterList: aViennaNode [
 
 	ViennaWriterListPresenter new
 		browser: self;
-		targetName: aViennaNameNode;
+		target: aViennaNode;
 		open
 ]
 

@@ -5,7 +5,6 @@ Class {
 		'browser',
 		'globalNameList',
 		'source',
-		'targetName',
 		'target'
 	],
 	#category : 'ViennaTalk-Browser-Core-Browsers',
@@ -23,7 +22,6 @@ ViennaReferenceListPresenter class >> isAbstract [
 ViennaReferenceListPresenter >> browser: aViennaRefactoringBrowser [
 
 	browser := aViennaRefactoringBrowser.
-	target := nil.
 	self updateGlobalNameList
 ]
 
@@ -39,7 +37,7 @@ ViennaReferenceListPresenter >> createGlobalNames [
 	| last |
 	last := nil.
 	^ Array streamContents: [ :stream |
-			  self target ifNotNil: [ :target |
+			  target ifNotNil: [
 					  self specification ifNotNil: [ :specification |
 							  specification allDescendantsSuchThat: [ :node | self check: node ] do: [ :node |
 									  node topLevelDefinition ifNotNil: [ :def |
@@ -89,20 +87,13 @@ ViennaReferenceListPresenter >> specification [
 { #category : 'accessing' }
 ViennaReferenceListPresenter >> target [
 
-	^ target ifNil: [ target := targetName ifNotNil: #resolve ]
+	^ target
 ]
 
 { #category : 'accessing' }
-ViennaReferenceListPresenter >> targetName [
+ViennaReferenceListPresenter >> target: aViennaNode [
 
-	^ targetName
-]
-
-{ #category : 'accessing' }
-ViennaReferenceListPresenter >> targetName: aViennaGlobalName [
-
-	targetName := aViennaGlobalName.
-	target := nil.
+	target := aViennaNode.
 	self updateGlobalNameList
 ]
 
@@ -119,4 +110,19 @@ ViennaReferenceListPresenter >> updateSource [
 			source
 				module: globalName moduleIdentifier;
 				text: (globalName resolveIn: browser specification) tracingHighlightedSource ]
+]
+
+{ #category : 'updating' }
+ViennaReferenceListPresenter >> updateTarget [
+
+	target ifNotNil: [
+			self specification ifNotNil: [ :specification |
+					target document ifNotNil: [ :oldSpecification |
+							oldSpecification ~~ specification ifTrue: [
+									| newTarget |
+									newTarget := specification atPath: target path.
+									target := target = newTarget
+										          ifTrue: [ newTarget ]
+										          ifFalse: [ nil ] ] ] ] ].
+	self updateGlobalNameList
 ]

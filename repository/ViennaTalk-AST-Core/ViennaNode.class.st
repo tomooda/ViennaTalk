@@ -216,6 +216,19 @@ ViennaNode >> at: anInteger put: anObject [
 	^ super at: anInteger put: anObject
 ]
 
+{ #category : 'accessing' }
+ViennaNode >> atPath: anArrayOfInteger [
+
+	| stream node |
+	stream := anArrayOfInteger.
+	node := self.
+	[ stream atEnd ] whileFalse: [
+			| index |
+			index := stream next.
+			node := node at: index ifAbsent: [ ^ nil ] ].
+	^ node
+]
+
 { #category : 'accessing-definitions' }
 ViennaNode >> bindHolderNode [
 
@@ -2659,6 +2672,17 @@ ViennaNode >> parentsDo: aBlock [
 		whileTrue: [ 
 			aBlock value: node.
 			node := node parent ]
+]
+
+{ #category : 'accessing' }
+ViennaNode >> path [
+
+	^ (Array streamContents: [ :stream |
+			   | node |
+			   node := self.
+			   [ node parent notNil ] whileTrue: [
+					   stream nextPut: (node parent indexOf: node).
+					   node := node parent ] ]) reversed
 ]
 
 { #category : 'accessing' }

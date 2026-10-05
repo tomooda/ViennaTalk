@@ -18,11 +18,11 @@ ViennaStateVariableReferenceListPresenter >> createGlobalNames [
 	| last |
 	last := nil.
 	^ Array streamContents: [ :stream |
-			  targetName ifNotNil: [ :target |
+			  target ifNotNil: [
 					  self specification ifNotNil: [ :specification |
-							  targetName module ifNotNil: [ :module |
+							  target module ifNotNil: [ :module |
 									  module allDescendantsSuchThat: [ :node | node isViennaNameNode and: [ node isStateVariableNameNode ] ] do: [ :node |
-											  ((targetName identifier isNil or: [ targetName identifier = node identifier ]) and: [ self check: node ]) ifTrue: [
+											  ((target isViennaStateDefinitionNode or: [ target identifier = node identifier ]) and: [ self check: node ]) ifTrue: [
 													  node topLevelDefinition ifNotNil: [ :def |
 															  def globalNamesDo: [ :globalName |
 																	  last ~= globalName ifTrue: [

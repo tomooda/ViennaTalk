@@ -16,5 +16,5 @@ ViennaReaderListPresenter >> check: aViennaNode [
 ViennaReaderListPresenter >> initializeWindow: aSpWindowPresenter [
 
 	super initializeWindow: aSpWindowPresenter.
-	aSpWindowPresenter title: 'Readers on ' , (targetName ifNotNil: #source ifNil: '-')
+	aSpWindowPresenter title: 'Readers on ' , (target ifNotNil: #identifier ifNil: '-')
 ]
