@@ -2363,9 +2363,8 @@ ViennaRefactoringBrowser >> initializePresenters [
 { #category : 'initialization' }
 ViennaRefactoringBrowser >> initializeSourcePagePresenters [
 
-	sourceSignalButton := self newButton
-		                      color: Color transparent;
-		                      icon: self class greenSignalIcon;
+	sourceSignalButton := self newImage
+		                      image: self class greenSignalIcon;
 		                      action: [ self sourceSignalButtonPressed ];
 		                      yourself.
 	talkbackLabel := self newLabel
@@ -2376,14 +2375,8 @@ ViennaRefactoringBrowser >> initializeSourcePagePresenters [
 		              module: [ self module ];
 		              whenTextChangedDo: [ self onTheFlyCheckSourceText ];
 		              whenSubmitDo: [ :text | self accept: text ];
-		              whenEvaluatedDo: [ :expression |
-			              self
-				              epiLogEvaluation: expression
-				              state: animation state ];
-		              whenExecutedDo: [ :statement |
-			              self
-				              epiLogExecution: statement
-				              state: animation state ];
+		              whenEvaluatedDo: [ :expression | self epiLogEvaluation: expression state: animation state ];
+		              whenExecutedDo: [ :statement | self epiLogExecution: statement state: animation state ];
 		              contextMenu: [ self sourceTextContextMenu ];
 		              yourself.
 	autoTestButton := self newButton
@@ -2398,27 +2391,22 @@ ViennaRefactoringBrowser >> initializeSourcePagePresenters [
 		                 yourself.
 	testResultTable := self newTable
 		                   beResizable;
-		                   addColumn:
-			                   ((SpImageTableColumn evaluated: #icon)
+		                   addColumn: ((SpImageTableColumn evaluated: #icon)
 				                    title: '';
 				                    width: ViennaTestResultItem iconExtent x;
 				                    sortFunction: #sortingOrder ascending);
-		                   addColumn:
-			                   ((SpStringTableColumn evaluated: #module)
+		                   addColumn: ((SpStringTableColumn evaluated: #module)
 				                    title: 'module';
 				                    sortFunction: #module ascending);
-		                   addColumn:
-			                   ((SpStringTableColumn evaluated: #testName)
+		                   addColumn: ((SpStringTableColumn evaluated: #testName)
 				                    title: 'test';
 				                    sortFunction: #testName ascending);
-		                   addColumn:
-			                   ((SpStringTableColumn evaluated: #message)
+		                   addColumn: ((SpStringTableColumn evaluated: #message)
 				                    title: 'message';
 				                    sortFunction: #message ascending);
 		                   showColumnHeaders;
 		                   beResizable;
-		                   sortingBlock: [ :upper :lower |
-		                   upper sortingOrder <= lower sortingOrder ];
+		                   sortingBlock: [ :upper :lower | upper sortingOrder <= lower sortingOrder ];
 		                   contextMenu: [ self testResultTableContextMenu ];
 		                   whenSelectionChangedDo: [ self testResultChanged ];
 		                   yourself.
@@ -3340,6 +3328,7 @@ ViennaRefactoringBrowser >> sourcePageLayout [
 		  positionOfSlider: 0.6;
 		  add: (SpBoxLayout newVertical
 				   add: (SpBoxLayout newHorizontal
+						    vAlignCenter;
 						    add: sourceSignalButton width: 48;
 						    add: talkbackLabel;
 						    yourself)
@@ -3778,13 +3767,13 @@ ViennaRefactoringBrowser >> updateSource [
 ViennaRefactoringBrowser >> updateSourceSignalButton [
 
 	pendingSyntaxError ifNotNil: [
-		talkbackLabel label: pendingSyntaxError printString.
-		^ sourceSignalButton icon: self class redSignalIcon ].
+			talkbackLabel label: pendingSyntaxError printString.
+			^ sourceSignalButton image: self class redSignalIcon ].
 	pendingSemanticError ifNotNil: [
-		talkbackLabel label: pendingSemanticError printString.
-		^ sourceSignalButton icon: self class yellowSignalIcon ].
+			talkbackLabel label: pendingSemanticError printString.
+			^ sourceSignalButton image: self class yellowSignalIcon ].
 	talkbackLabel label: ''.
-	^ sourceSignalButton icon: self class greenSignalIcon
+	^ sourceSignalButton image: self class greenSignalIcon
 ]
 
 { #category : 'updating' }
