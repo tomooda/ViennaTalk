@@ -220,7 +220,7 @@ ViennaNode >> at: anInteger put: anObject [
 ViennaNode >> atPath: anArrayOfInteger [
 
 	| stream node |
-	stream := anArrayOfInteger.
+	stream := anArrayOfInteger readStream.
 	node := self.
 	[ stream atEnd ] whileFalse: [
 			| index |

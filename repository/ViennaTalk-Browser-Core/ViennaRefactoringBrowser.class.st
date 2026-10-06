@@ -741,9 +741,13 @@ ViennaRefactoringBrowser >> addReferenceMenuOn: aViennaNode to: aMenuPresenter w
 								item
 									name: 'References to ' , aViennaNode source;
 									action: [ self openValueReferenceList: aViennaNode resolve ] ] ].
+			aViennaNode isViennaPatternIdentifierNode ifTrue: [
+					group addItem: [ :item |
+							item
+								name: 'References to ' , aViennaNode identifier;
+								action: [ self openValueReferenceList: (aViennaNode resolveIdentifier: aViennaNode identifier) ] ] ].
 			(aViennaNode isValueDefinition or: [
-					 aViennaNode isFunctionDefinition or: [
-						 aViennaNode isOperationDefinition or: [ aViennaNode isViennaPatternNode or: [ aViennaNode isViennaTypeSynonymNode ] ] ] ])
+				 aViennaNode isFunctionDefinition or: [ aViennaNode isOperationDefinition or: [ aViennaNode isViennaTypeSynonymNode ] ] ])
 				ifTrue: [
 						group addItem: [ :item |
 								item
@@ -2387,6 +2391,7 @@ ViennaRefactoringBrowser >> initializePresenters [
 				            vdmNotebook selectedPage ifNotNil: [ :page |
 						            page title = 'HiDeHo' ifTrue: [ self updateEpiLogPage ].
 						            page title = 'Git' ifTrue: [ [ self updateGitPage ] forkAt: Processor userBackgroundPriority ] ] ];
+		            whenPageRemovedDo: [ :page | page activePresenter ifNotNil: #release ];
 		            yourself.
 	self whenBuiltDo: [ :w |
 			| f |
@@ -2510,6 +2515,7 @@ ViennaRefactoringBrowser >> initializeVdmPagePresenters [
 			               SpPresenter new
 				               layout: self playgroundPageLayout;
 				               yourself ];
+		               whenPageRemovedDo: [ :page | page activePresenter ifNotNil: #release ];
 		               yourself
 ]
 
@@ -2926,28 +2932,53 @@ ViennaRefactoringBrowser >> openInExternalWindow [
 { #category : 'operations-references' }
 ViennaRefactoringBrowser >> openReaderList: aViennaNode [
 
-	ViennaReaderListPresenter new
-		browser: self;
-		target: aViennaNode;
-		open
+	vdmNotebook
+		addPage: ((SpNotebookPage title: 'Readers on ' , (aViennaNode ifNotNil: #identifier ifNil: '-') provider: [
+						  ViennaReaderListPresenter new
+							  animation: animation;
+							  target: aViennaNode;
+							  yourself ])
+				 beCloseable;
+				 yourself);
+		selectPageIndex: vdmNotebook pages size
 ]
 
 { #category : 'operations-references' }
 ViennaRefactoringBrowser >> openValueReferenceList: aViennaNode [
 
-	ViennaValueReferenceListPresenter new
-		browser: self;
-		target: aViennaNode;
-		open
+	vdmNotebook
+		addPage: ((SpNotebookPage title: 'References to ' , (aViennaNode ifNotNil: #identifier ifNil: '-') provider: [
+						  ViennaValueReferenceListPresenter new
+							  animation: animation;
+							  target: aViennaNode;
+							  yourself ])
+				 beCloseable;
+				 yourself);
+		selectPageIndex: vdmNotebook pages size
 ]
 
 { #category : 'operations-references' }
 ViennaRefactoringBrowser >> openWriterList: aViennaNode [
 
-	ViennaWriterListPresenter new
-		browser: self;
-		target: aViennaNode;
-		open
+	vdmNotebook
+		addPage: ((SpNotebookPage
+				  title: 'Writers on ' , (aViennaNode
+							   ifNotNil: [ :def |
+									   (def respondsTo: #globalNames)
+										   ifTrue: [ ', ' join: (def globalNames collect: #source) ]
+										   ifFalse: [
+												   (def respondsTo: #identifier)
+													   ifTrue: [ def identifier ]
+													   ifFalse: [ '-' ] ] ]
+							   ifNil: [ '-' ])
+				  provider: [
+						  ViennaWriterListPresenter new
+							  animation: animation;
+							  target: aViennaNode;
+							  yourself ])
+				 beCloseable;
+				 yourself);
+		selectPageIndex: vdmNotebook pages size
 ]
 
 { #category : 'private' }

@@ -2,7 +2,7 @@ Class {
 	#name : 'ViennaReferenceListPresenter',
 	#superclass : 'SpPresenter',
 	#instVars : [
-		'browser',
+		'animation',
 		'globalNameList',
 		'source',
 		'target'
@@ -19,10 +19,18 @@ ViennaReferenceListPresenter class >> isAbstract [
 ]
 
 { #category : 'accessing' }
-ViennaReferenceListPresenter >> browser: aViennaRefactoringBrowser [
+ViennaReferenceListPresenter >> animation [
 
-	browser := aViennaRefactoringBrowser.
-	self updateGlobalNameList
+	^ animation
+]
+
+{ #category : 'accessing' }
+ViennaReferenceListPresenter >> animation: aViennaTranspiledAnimation [
+
+	self unsubscribe.
+	animation := aViennaTranspiledAnimation.
+	animation ifNotNil: [ animation announcer when: ViennaAnimationSpecificationChanged send: #specificationChanged to: self ].
+	self specificationChanged
 ]
 
 { #category : 'testing' }
@@ -68,8 +76,22 @@ ViennaReferenceListPresenter >> initializePresenters [
 		                  whenSelectedItemChangedDo: [ self selectedGlobalNameChanged ];
 		                  yourself.
 	source := self newVDMSource
-		          animation: [ browser animation ];
+		          animation: [ animation ];
 		          yourself
+]
+
+{ #category : 'initialization' }
+ViennaReferenceListPresenter >> initializeWindow: aSpWindowPresenter [
+
+	super initializeWindow: aSpWindowPresenter.
+	aSpWindowPresenter whenClosedDo: [ self unsubscribe ]
+]
+
+{ #category : 'initialization' }
+ViennaReferenceListPresenter >> release [
+
+	super release.
+	self unsubscribe
 ]
 
 { #category : 'updating' }
@@ -81,7 +103,13 @@ ViennaReferenceListPresenter >> selectedGlobalNameChanged [
 { #category : 'accessing' }
 ViennaReferenceListPresenter >> specification [
 
-	^ browser ifNotNil: #specification
+	^ animation ifNotNil: #specificationNode
+]
+
+{ #category : 'updating' }
+ViennaReferenceListPresenter >> specificationChanged [
+
+	^ self updateTarget
 ]
 
 { #category : 'accessing' }
@@ -97,19 +125,35 @@ ViennaReferenceListPresenter >> target: aViennaNode [
 	self updateGlobalNameList
 ]
 
+{ #category : 'initialization' }
+ViennaReferenceListPresenter >> unsubscribe [
+
+	animation ifNotNil: [ animation announcer unsubscribe: self ]
+]
+
 { #category : 'updating' }
 ViennaReferenceListPresenter >> updateGlobalNameList [
 
-	globalNameList items: self createGlobalNames
+	| selection items |
+	selection := globalNameList selectedItem.
+	globalNameList items: (items := self createGlobalNames).
+	(items detect: [ :item | item = selection ] ifNone: [ nil ])
+		ifNotNil: [ :newSelection | globalNameList selectItem: newSelection ]
+		ifNil: [ globalNameList unselectAll ]
 ]
 
 { #category : 'updating' }
 ViennaReferenceListPresenter >> updateSource [
 
-	globalNameList selectedItem ifNotNil: [ :globalName |
-			source
-				module: globalName moduleIdentifier;
-				text: (globalName resolveIn: browser specification) tracingHighlightedSource ]
+	globalNameList selectedItem
+		ifNotNil: [ :globalName |
+				source
+					module: globalName moduleIdentifier;
+					text: (globalName resolveIn: self specification) tracingHighlightedSource ]
+		ifNil: [
+				source
+					module: nil;
+					text: '' ]
 ]
 
 { #category : 'updating' }
