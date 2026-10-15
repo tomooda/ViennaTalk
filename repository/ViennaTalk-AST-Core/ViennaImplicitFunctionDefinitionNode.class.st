@@ -136,28 +136,20 @@ ViennaImplicitFunctionDefinitionNode >> formatWith: aViennaAbstractFormatter [
 
 	| identifier typeVariableList patternTypePairList identifierTypePairList pre post |
 	identifier := aViennaAbstractFormatter format: self identifier.
-	typeVariableList := aViennaAbstractFormatter format:
-		                    self typeVariableList.
-	patternTypePairList := aViennaAbstractFormatter format:
-		                       self patternTypePairList.
-	identifierTypePairList := aViennaAbstractFormatter format:
-		                          self identifierTypePairList.
+	typeVariableList := aViennaAbstractFormatter format: self typeVariableList.
+	patternTypePairList := aViennaAbstractFormatter format: self patternTypePairList.
+	identifierTypePairList := aViennaAbstractFormatter format: self identifierTypePairList.
 	pre := self pre
 		       ifNotNil: [
-			       aViennaAbstractFormatter cr
-			       ++ (aViennaAbstractFormatter keyword: 'pre ')
-			       ++ (aViennaAbstractFormatter format: self pre) ]
+		       aViennaAbstractFormatter cr ++ (aViennaAbstractFormatter keyword: 'pre ') ++ (aViennaAbstractFormatter format: self pre) ]
 		       ifNil: [ aViennaAbstractFormatter empty ].
 	post := self post
 		        ifNotNil: [
-			        aViennaAbstractFormatter cr
-			        ++ (aViennaAbstractFormatter keyword: 'post ')
-			        ++ (aViennaAbstractFormatter format: self post) ]
+		        aViennaAbstractFormatter cr ++ (aViennaAbstractFormatter keyword: 'post ')
+		        ++ (aViennaAbstractFormatter format: self post) ]
 		        ifNil: [ aViennaAbstractFormatter empty ].
-	^ identifier ++ (aViennaAbstractFormatter format: typeVariableList)
-	  ++ (aViennaAbstractFormatter format: patternTypePairList)
-	  ++ (aViennaAbstractFormatter format: identifierTypePairList) ++ pre
-	  ++ post
+	^ identifier ++ (aViennaAbstractFormatter format: typeVariableList) ++ (aViennaAbstractFormatter format: patternTypePairList)
+	  ++ ' ' ++ (aViennaAbstractFormatter format: identifierTypePairList) ++ pre ++ post
 ]
 
 { #category : 'private' }
