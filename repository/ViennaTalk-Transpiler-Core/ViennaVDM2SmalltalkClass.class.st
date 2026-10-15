@@ -772,12 +772,11 @@ ViennaVDM2SmalltalkClass >> implicitFunctionDefinition: aViennaNode env: aDictio
 { #category : 'code generation-definitions' }
 ViennaVDM2SmalltalkClass >> implicitOperationDefinition: aViennaNode env: aDictionary [
 
-	| opname patternTypePairListNode retVars retTypeNodes bodyNode body preNode postNode varGenerator binds theClass |
+	| opname patternTypePairListNode retVar retTypeNode bodyNode body preNode postNode varGenerator binds theClass |
 	opname := aViennaNode identifier.
 	patternTypePairListNode := aViennaNode patternTypePairList.
-	retVars := aViennaNode identifierTypePairList in: [ :list |
-		           (1 to: list size by: 2) collect: [ :index | (list at: index) identifier ] ].
-	retTypeNodes := aViennaNode identifierTypePairList in: [ :list | (2 to: list size by: 2) collect: [ :index | list at: index ] ].
+	retVar := aViennaNode identifierTypePairList ifEmpty: [ 'RESULT' ] ifNotEmpty: [ :node | node first identifier ].
+	retTypeNode := aViennaNode identifierTypePairList ifEmpty: [ ViennaUnitTypeNode new ] ifNotEmpty: [ :node | node second ].
 	bodyNode := aViennaNode.
 	body := 'ViennaImplicitEvaluationError signal: ' , (opname , ' is implicitly defined.') storeString.
 	preNode := aViennaNode pre.
@@ -796,21 +795,25 @@ ViennaVDM2SmalltalkClass >> implicitOperationDefinition: aViennaNode env: aDicti
 									         typeNode } ] ] ].
 	theClass := classes at: (aViennaNode module ifNotNil: #first).
 	self
-		defineMethod: ((self stringStreamContents: [ :stream |
-					  stream
-						  nextPut: $_;
-						  nextPutAll: opname.
-					  1 to: patternTypePairListNode size // 2 do: [ :i |
-							  stream nextPutAll: '_: arg'.
-							  i printOn: stream.
-							  stream nextPutAll: ' ' ].
-					  stream
-						  cr;
-						  nextPutAll: 'ViennaImplicitEvaluationError signal: ' , (opname , ' is implicitly defined.') storeString ])
-				 asViennaTracingString: aViennaNode)
+		defineMethodFromOperation: opname
 		in: theClass
 		protocol: 'operations'
-		node: aViennaNode.
+		fromFlatBinds: binds
+		body: body
+		pre: (preNode ifNotNil: [
+					 runtimeAssertionCheck = true
+						 ifTrue: [ preNode asArrayOfConjuncts collect: [ :pre | self generate: pre env: aDictionary ] ]
+						 ifFalse: [ nil ] ])
+		post: (postNode ifNotNil: [
+					 runtimeAssertionCheck = true
+						 ifTrue: [ postNode asArrayOfConjuncts collect: [ :post | self generate: post env: aDictionary ] ]
+						 ifFalse: [ nil ] ])
+		retVar: retVar
+		retType: retTypeNode
+		varGenerator: varGenerator
+		env: aDictionary
+		node: aViennaNode
+		bodyNode: bodyNode.
 	self
 		defineLazyMethodNamed: opname
 		initializer: opname , ' := ' , (self stringStreamContents: [ :stream |
@@ -873,10 +876,10 @@ ViennaVDM2SmalltalkClass >> implicitOperationDefinition: aViennaNode env: aDicti
 														  nil }.
 													  {
 														  (ViennaPatternIdentifierNode identifier: '_oldState').
-														  nil } } , ((1 to: retVars size) collect: [ :index |
+														  nil } } , ((1 to: aViennaNode identifierTypePairList size by: 2) collect: [ :index |
 															   {
-																   (retVars at: index).
-																   (retTypeNodes at: index) } ])
+																   (aViennaNode identifierTypePairList at: index).
+																   ((aViennaNode identifierTypePairList at: index) + 1) } ])
 										  body: (self generate: postNode env: env)
 										  varGenerator: varGenerator
 										  env: env) ])

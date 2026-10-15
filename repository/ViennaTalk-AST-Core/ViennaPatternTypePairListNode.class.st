@@ -6,6 +6,12 @@ Class {
 	#package : 'ViennaTalk-AST-Core'
 }
 
+{ #category : 'accessing' }
+ViennaPatternTypePairListNode >> arity [
+
+	^ (1 to: self size by: 2) inject: 0 into: [ :sum :index | sum + (self at: index) ]
+]
+
 { #category : 'private' }
 ViennaPatternTypePairListNode >> boundIdentifiersDo: aBlock [
 
