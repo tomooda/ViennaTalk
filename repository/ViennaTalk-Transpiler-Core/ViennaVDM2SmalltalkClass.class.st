@@ -879,7 +879,7 @@ ViennaVDM2SmalltalkClass >> implicitOperationDefinition: aViennaNode env: aDicti
 														  nil } } , ((1 to: aViennaNode identifierTypePairList size by: 2) collect: [ :index |
 															   {
 																   (aViennaNode identifierTypePairList at: index).
-																   ((aViennaNode identifierTypePairList at: index) + 1) } ])
+																   (aViennaNode identifierTypePairList at: index + 1) } ])
 										  body: (self generate: postNode env: env)
 										  varGenerator: varGenerator
 										  env: env) ])
