@@ -81,13 +81,14 @@ ViennaPatternTypePairListNode >> patternsDo: aBlock [
 { #category : 'accessing' }
 ViennaPatternTypePairListNode >> type [
 
-	^ (((2 to: self size by: 2) collect: [ :index |
-			    (self at: index) copyFragment ])
+	^ ((Array streamContents: [ :stream |
+			    1 to: self size by: 2 do: [ :index |
+				    (self at: index) size timesRepeat: [ stream nextPut: (self at: index + 1) copyFragment ] ] ])
 		   ifEmpty: [ ViennaUnitTypeNode new ]
 		   ifNotEmpty: [ :types |
-			   types size = 1
-				   ifTrue: [ types first ]
-				   ifFalse: [ ViennaProductTypeNode withAll: types ] ])
+				   types size = 1
+					   ifTrue: [ types first ]
+					   ifFalse: [ ViennaProductTypeNode withAll: types ] ])
 		  parent: parent;
 		  yourself
 ]

@@ -148,8 +148,7 @@ ViennaImplicitFunctionDefinitionNode >> formatWith: aViennaAbstractFormatter [
 		        aViennaAbstractFormatter cr ++ (aViennaAbstractFormatter keyword: 'post ')
 		        ++ (aViennaAbstractFormatter format: self post) ]
 		        ifNil: [ aViennaAbstractFormatter empty ].
-	^ identifier ++ (aViennaAbstractFormatter format: typeVariableList) ++ (aViennaAbstractFormatter format: patternTypePairList)
-	  ++ ' ' ++ (aViennaAbstractFormatter format: identifierTypePairList) ++ pre ++ post
+	^ identifier ++ typeVariableList ++ patternTypePairList ++ ' ' ++ identifierTypePairList ++ pre ++ post
 ]
 
 { #category : 'private' }
