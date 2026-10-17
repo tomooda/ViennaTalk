@@ -6,11 +6,11 @@ Class {
 }
 
 { #category : 'commandline' }
-VDMPadApplication class >> feed [
+VDMPadApplication class >> vdmpad [
 
 	<commandline>
-	^ (ClapCommandSpec id: #feed)
-		  description: 'A worker process for evaluation and execution of VDM-SL';
+	^ (ClapCommandSpec id: #VDMPad)
+		  description: 'Web IDE for VDM-SL';
 		  commandClass: self;
 		  addHelp;
 		  yourself

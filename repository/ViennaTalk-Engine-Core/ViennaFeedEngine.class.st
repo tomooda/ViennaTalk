@@ -92,15 +92,18 @@ ViennaFeedEngine >> poolDirectory: anObject [
 { #category : 'reading-writing' }
 ViennaFeedEngine >> request: aDictionary [
 
-	| id |
+	| id tmp |
 	[
-		[
-			id := UUID new asInteger asString.
-			poolDirectory / id.
-			id exists ] whileTrue.
-		([ id renameTo: (ViennaFeedApplication withRequestExtension: id) ]
+		id := poolDirectory / UUID new asInteger asString.
+		id exists ] whileTrue.
+
+	id ensureCreateFile.
+	tmp := ViennaFeedApplication withRequestExtension: id.
+	[
+		([ id renameTo: tmp ]
 			 on: FileExists
-			 do: [ :ex | ex return: nil ]) isNil ] whileTrue.
+			 do: [ :ex | ex return: nil ]) isNil ] whileTrue: [
+		tmp := ViennaFeedApplication withRequestExtension: poolDirectory / UUID new asInteger asString ].
 	id writeStreamDo: [ :stream | STONJSON put: aDictionary onStream: stream ].
 	^ id withoutExtension
 ]
@@ -114,6 +117,7 @@ ViennaFeedEngine >> response: aFileReference [
 	json := id readStreamDo: [ :stream | STONJSON fromStream: stream ].
 	id ensureDelete.
 	(ViennaFeedApplication withRequestExtension: id) ensureDelete.
+	(ViennaFeedApplication withInprogressExtension: id) ensureDelete.
 	^ json
 ]
 
