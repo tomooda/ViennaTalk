@@ -10,6 +10,18 @@ Class {
 }
 
 { #category : 'accessing' }
+ViennaFeedEngine class >> engineType [
+
+	^ #FEED
+]
+
+{ #category : 'accessing' }
+ViennaFeedEngine class >> priority [
+
+	^ 5
+]
+
+{ #category : 'accessing' }
 ViennaFeedEngine >> close [
 
 	poolDirectory ifNotNil: #ensureDeleteAll
