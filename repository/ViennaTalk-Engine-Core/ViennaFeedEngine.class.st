@@ -100,7 +100,7 @@ ViennaFeedEngine >> request: aDictionary [
 	id ensureCreateFile.
 	tmp := ViennaFeedApplication withRequestExtension: id.
 	[
-		([ id renameTo: tmp ]
+		([ id renameTo: tmp basename ]
 			 on: FileExists
 			 do: [ :ex | ex return: nil ]) isNil ] whileTrue: [
 		tmp := ViennaFeedApplication withRequestExtension: poolDirectory / UUID new asInteger asString ].

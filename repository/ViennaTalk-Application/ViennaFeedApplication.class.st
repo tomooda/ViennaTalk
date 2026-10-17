@@ -85,6 +85,12 @@ ViennaFeedApplication class >> withResponseExtension: aFileReference [
 ]
 
 { #category : 'defaults' }
+ViennaFeedApplication >> defaultEngine [
+
+	^ ViennaTranspilingEngine default
+]
+
+{ #category : 'defaults' }
 ViennaFeedApplication >> defaultPollingInterval [
 
 	^ 100
@@ -119,11 +125,18 @@ ViennaFeedApplication >> fetchRequest [
 										id := self poolDirectory / UUID new asInteger asString.
 										id exists ] whileTrue.
 									id ensureCreateFile ].
-							([ id renameTo: (self withInprogressExtension: ref) ]
+							([ id renameTo: (self withInprogressExtension: ref) basename ]
 								 on: FileExists
 								 do: [ :ex | ex return: nil ]) ifNotNil: [ ^ ref ] ] ].
 			id ifNotNil: [ id ensureDelete ] ].
 	^ nil
+]
+
+{ #category : 'initialization' }
+ViennaFeedApplication >> initialize [
+
+	super initialize.
+	engine := self defaultEngine
 ]
 
 { #category : 'execution' }
