@@ -97,6 +97,7 @@ BaselineOfViennaTalk >> baseline: spec [
 		for: #common do: [
 				spec blessing: #baseline.
 				spec
+					baseline: 'Fed' with: [ spec repository: 'github://tomooda/Fed/src' ];
 					baseline: 'HiDeHo' with: [ spec repository: 'github://tomooda/HiDeHo:main/src' ];
 					baseline: 'Micromaid' with: [ spec repository: 'github://tomooda/Micromaid:main/src' ];
 					baseline: 'FRAM' with: [ spec repository: 'github://tomooda/FRAM:main/src' ];
@@ -110,7 +111,7 @@ BaselineOfViennaTalk >> baseline: spec [
 					package: 'ViennaTalk-AST-Core' with: [ spec requires: #( 'ViennaTalk-Type-Core' ) ];
 					package: 'ViennaTalk-AST-Tests'
 					with: [ spec requires: #( 'ViennaTalk-AST-Core' 'ViennaTalk-Parser-Core' 'ViennaTalk-Type-Core' ) ];
-					package: 'ViennaTalk-Application';
+					package: 'ViennaTalk-Application' with: [ spec requires: #( 'Fed' ) ];
 					package: 'ViennaTalk-Animation-Core' with: [ spec requires: #( 'ViennaTalk-Engine-Core' 'ViennaTalk-Value-Core' ) ];
 					package: 'ViennaTalk-Animation-Tests' with: [ spec requires: #( 'ViennaTalk-Animation-Core' ) ];
 					package: 'ViennaTalk-Animation-Transpiler' with: [
@@ -197,7 +198,7 @@ BaselineOfViennaTalk >> baseline: spec [
 		group: 'WeblyWalkThrough' with: #( 'ViennaTalk-WeblyWalkThrough-Server' );
 		group: 'core' with: #( 'ViennaTalk-Engine-Core' 'ViennaTalk-Parser-Core' 'ViennaTalk-Launcher-Core' 'ViennaTalk-Browser-Core'
 			   'ViennaTalk-Parser-Formatters' 'ViennaTalk-Parser-Highlighters' 'ViennaTalk-ExecutionTrace-Core'
-			   'ViennaTalk-Slicing-Core' 'ViennaTalk-Mutation-Core' 'ViennaTalk-Microdown');
+			   'ViennaTalk-Slicing-Core' 'ViennaTalk-Mutation-Core' 'ViennaTalk-Microdown' );
 		group: 'default'
 		with: #( 'core' 'VDMPad' 'LivelyWalkThrough' 'tests' 'WeblyWalkThrough' 'Transpiler' 'ViennaFRAM' 'Application' );
 		group: 'full' with: #( 'default' 'ViennaTalk-Engine-VDMJ' 'ViennaTalk-Engine-Networking' 'ViennaTalk-Engine-Tests' );
