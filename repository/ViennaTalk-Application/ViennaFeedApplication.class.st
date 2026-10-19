@@ -22,6 +22,12 @@ ViennaFeedApplication class >> feed [
 	^ self commandSpec
 ]
 
+{ #category : 'accessing' }
+ViennaFeedApplication class >> poolDirectory [
+
+	^ FileLocator viennaTalkDirectory / 'FeedPool'
+]
+
 { #category : 'defaults' }
 ViennaFeedApplication >> defaultEngine [
 

@@ -2,7 +2,6 @@ Class {
 	#name : 'ViennaFeedEngine',
 	#superclass : 'ViennaEngine',
 	#instVars : [
-		'poolDirectory',
 		'pollingInterval'
 	],
 	#category : 'ViennaTalk-Engine-Core',
@@ -24,19 +23,13 @@ ViennaFeedEngine class >> priority [
 { #category : 'accessing' }
 ViennaFeedEngine >> close [
 
-	poolDirectory ifNotNil: #ensureDeleteAll
+	
 ]
 
 { #category : 'defaults' }
 ViennaFeedEngine >> defaultPollingInterval [
 
 	^ 100 milliSeconds
-]
-
-{ #category : 'defaults' }
-ViennaFeedEngine >> defaultPoolDirectory [
-
-	^ (FileLocator localDirectory / 'ViennaTalk' / 'FeedPool') ensureCreateDirectory
 ]
 
 { #category : 'evaluating' }
@@ -61,7 +54,6 @@ ViennaFeedEngine >> evaluate: expression specification: specification states: st
 ViennaFeedEngine >> initialize [
 
 	super initialize.
-	poolDirectory := self defaultPoolDirectory.
 	pollingInterval := self defaultPollingInterval
 ]
 
@@ -80,13 +72,7 @@ ViennaFeedEngine >> pollingInterval: anObject [
 { #category : 'accessing' }
 ViennaFeedEngine >> poolDirectory [
 
-	^ poolDirectory
-]
-
-{ #category : 'accessing' }
-ViennaFeedEngine >> poolDirectory: anObject [
-
-	poolDirectory := anObject
+	^ ViennaFeedApplication poolDirectory
 ]
 
 { #category : 'reading-writing' }
@@ -94,7 +80,7 @@ ViennaFeedEngine >> request: aDictionary [
 
 	| id tmp |
 	[
-		id := poolDirectory / UUID new asInteger asString.
+		id := self poolDirectory / UUID new asInteger asString.
 		id exists ] whileTrue.
 
 	id ensureCreateFile.
@@ -103,7 +89,7 @@ ViennaFeedEngine >> request: aDictionary [
 		([ id renameTo: tmp basename ]
 			 on: FileExists
 			 do: [ :ex | ex return: nil ]) isNil ] whileTrue: [
-		tmp := ViennaFeedApplication withRequestExtension: poolDirectory / UUID new asInteger asString ].
+		tmp := ViennaFeedApplication withRequestExtension: self poolDirectory / UUID new asInteger asString ].
 	id writeStreamDo: [ :stream | STONJSON put: aDictionary onStream: stream ].
 	^ id withoutExtension
 ]
