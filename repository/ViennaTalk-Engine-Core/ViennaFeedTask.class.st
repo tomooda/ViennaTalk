@@ -6,7 +6,7 @@ Class {
 }
 
 { #category : 'class access' }
-ViennaFeedTask class >> workerPoolClass [
+ViennaFeedTask class >> workerClass [
 
 	^ ViennaFeedWorkerPool
 ]

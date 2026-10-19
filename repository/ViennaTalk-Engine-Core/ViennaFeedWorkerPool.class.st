@@ -15,6 +15,12 @@ ViennaFeedWorkerPool class >> commandName [
 	^ 'feed'
 ]
 
+{ #category : 'accessing' }
+ViennaFeedWorkerPool class >> description [
+
+	^ 'A worker process for evaluation and execution of VDM-SL'
+]
+
 { #category : 'commandline' }
 ViennaFeedWorkerPool class >> feed [
 
