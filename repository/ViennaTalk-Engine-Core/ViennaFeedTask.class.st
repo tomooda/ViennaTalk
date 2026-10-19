@@ -1,6 +1,12 @@
 Class {
 	#name : 'ViennaFeedTask',
-	#superclass : 'FedPoolTask',
+	#superclass : 'FedJsonPoolTask',
 	#category : 'ViennaTalk-Engine-Core',
 	#package : 'ViennaTalk-Engine-Core'
 }
+
+{ #category : 'class access' }
+ViennaFeedTask class >> workerPoolClass [
+
+	^ ViennaFeedWorkerPool
+]

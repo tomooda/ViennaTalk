@@ -1,41 +1,41 @@
 Class {
-	#name : 'ViennaFeedApplication',
+	#name : 'ViennaFeedWorkerPool',
 	#superclass : 'FedJsonWorkerPool',
 	#instVars : [
 		'engine'
 	],
-	#category : 'ViennaTalk-Application',
-	#package : 'ViennaTalk-Application'
+	#category : 'ViennaTalk-Engine-Core',
+	#package : 'ViennaTalk-Engine-Core'
 }
 
 { #category : 'accessing' }
-ViennaFeedApplication class >> commandName [
+ViennaFeedWorkerPool class >> commandName [
 	"My subclasses may override this method to define its own command name."
 
 	^ 'feed'
 ]
 
 { #category : 'commandline' }
-ViennaFeedApplication class >> feed [
+ViennaFeedWorkerPool class >> feed [
 
 	<commandline>
 	^ self commandSpec
 ]
 
 { #category : 'accessing' }
-ViennaFeedApplication class >> poolDirectory [
+ViennaFeedWorkerPool class >> poolDirectory [
 
 	^ FileLocator viennaTalkDirectory / 'FeedPool'
 ]
 
 { #category : 'defaults' }
-ViennaFeedApplication >> defaultEngine [
+ViennaFeedWorkerPool >> defaultEngine [
 
 	^ ViennaTranspilingEngine default
 ]
 
 { #category : 'execution' }
-ViennaFeedApplication >> evaluate: aString specification: anotherString states: aDictionary module: yetAnotherString [
+ViennaFeedWorkerPool >> evaluate: aString specification: anotherString states: aDictionary module: yetAnotherString [
 
 	^ engine
 		  evaluate: aString
@@ -45,14 +45,14 @@ ViennaFeedApplication >> evaluate: aString specification: anotherString states: 
 ]
 
 { #category : 'initialization' }
-ViennaFeedApplication >> initialize [
+ViennaFeedWorkerPool >> initialize [
 
 	super initialize.
 	engine := self defaultEngine
 ]
 
 { #category : 'execution' }
-ViennaFeedApplication >> process: aRequestJson [
+ViennaFeedWorkerPool >> process: aRequestJson [
 
 	| source expression preStates module result responseJson |
 	source := aRequestJson at: 'source' ifAbsent: [ String new ].
