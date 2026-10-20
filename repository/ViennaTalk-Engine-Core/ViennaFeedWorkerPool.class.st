@@ -1,6 +1,8 @@
 Class {
 	#name : 'ViennaFeedWorkerPool',
-	#superclass : 'FedJsonWorkerPool',
+	#superclass : 'FedWorkerPool',
+	#traits : 'TFedJson',
+	#classTraits : 'TFedJson classTrait',
 	#instVars : [
 		'engine'
 	],

@@ -1,6 +1,8 @@
 Class {
 	#name : 'ViennaFeedTask',
-	#superclass : 'FedJsonPoolTask',
+	#superclass : 'FedPoolTask',
+	#traits : 'TFedJson',
+	#classTraits : 'TFedJson classTrait',
 	#category : 'ViennaTalk-Engine-Core',
 	#package : 'ViennaTalk-Engine-Core'
 }
