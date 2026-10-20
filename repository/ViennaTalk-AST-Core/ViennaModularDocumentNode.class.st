@@ -12,6 +12,12 @@ ViennaModularDocumentNode class >> default [
 	^ self with: (ViennaModuleNode identifier: 'DEFAULT')
 ]
 
+{ #category : 'converting' }
+ViennaModularDocumentNode >> asModularDocument [
+
+	^ self
+]
+
 { #category : 'accessing-definitions' }
 ViennaModularDocumentNode >> deepFindResolverForIdentifier: aString [
 
