@@ -1,8 +1,9 @@
 Class {
 	#name : 'ViennaEngineForVDMPad',
 	#superclass : 'ViennaTranspilingEngine',
-	#category : 'ViennaTalk-VDMPad-Core',
-	#package : 'ViennaTalk-VDMPad-Core'
+	#category : 'ViennaTalk-VDMPad-Core-Engine',
+	#package : 'ViennaTalk-VDMPad-Core',
+	#tag : 'Engine'
 }
 
 { #category : 'accessing' }

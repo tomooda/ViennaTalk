@@ -19,6 +19,7 @@ VDMPadApplication class >> vdmpad [
 { #category : 'execution' }
 VDMPadApplication >> execute [
 
-	Smalltalk at: #VDMPad ifPresent: [ :vdmpad | vdmpad startService ].
-	self context doNotObeyExits
+	Smalltalk at: #VDMPad ifPresent: [ :vdmpad |
+			vdmpad startService.
+			self context doNotObeyExits ]
 ]

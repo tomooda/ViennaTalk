@@ -9,8 +9,9 @@ Class {
 		'LocalOnly',
 		'Server'
 	],
-	#category : 'ViennaTalk-VDMPad-Core',
-	#package : 'ViennaTalk-VDMPad-Core'
+	#category : 'ViennaTalk-VDMPad-Core-Service',
+	#package : 'ViennaTalk-VDMPad-Core',
+	#tag : 'Service'
 }
 
 { #category : 'instance creation' }
@@ -21,7 +22,7 @@ VDMPad class >> default [
 { #category : 'defaults' }
 VDMPad class >> defaultEngine [
 
-	^ ViennaEngineForVDMPad new
+	^ ViennaFeedEngineForVDMPad new
 ]
 
 { #category : 'defaults' }
@@ -111,16 +112,24 @@ VDMPad class >> server [
 
 { #category : 'servicing' }
 VDMPad class >> startService [
+
 	<script: 'VDMPad startService'>
+	ViennaFeedWorkerPoolForVDMPad
+		registerShutdown;
+		close;
+		newWorkers: 8.
 	self installHandler
 ]
 
 { #category : 'servicing' }
 VDMPad class >> stopService [
-	Server
-		ifNotNil: [ 
+
+	Server ifNotNil: [
 			Server stop.
-			Server := nil ]
+			Server := nil.
+			ViennaFeedWorkerPoolForVDMPad
+				close;
+				unregisterShutdown ]
 ]
 
 { #category : 'servicing' }
@@ -2058,11 +2067,13 @@ VDMPad >> deleteSelectedIcon [
 
 { #category : 'accessing' }
 VDMPad >> engine [
+
 	^ engine
 ]
 
 { #category : 'accessing' }
 VDMPad >> engine: aViennaEngine [
+
 	engine := aViennaEngine
 ]
 
@@ -2163,25 +2174,18 @@ VDMPad >> eval: aZnRequest [
 		        yourself.
 	valueReader := ViennaReader new.
 	parser := ViennaVDMParser new.
-	documentSource := (params at: 'source' ifAbsent: [ String new ])
-		                  trimmed.
-	documentNode := parser document end
-		                parse: documentSource
-		                withContext: ViennaPP2HighlightingContext new.
+	documentSource := (params at: 'source' ifAbsent: [ String new ]) trimBoth.
+	documentNode := parser document end parse: documentSource withContext: ViennaPP2HighlightingContext new.
 	documentNode isPetit2Failure ifTrue: [
 			| position point |
 			position := documentNode furthestPosition.
 			point := self charPositionToPoint: position in: documentSource.
 			^ self responseJSON: (json
-					   at: 'message'
-					   put:
-						   'Syntax error in the specification at ' , point y printString
-						   , ':' , point x printString , '.';
+					   at: 'message' put: 'Syntax error in the specification at ' , point y printString , ':' , point x printString , '.';
 					   at: 'position' put: position;
 					   yourself) ].
 	documentNode := documentNode returnValue.
-	documentNode isViennaFlatDocumentNode ifTrue: [
-		documentNode := documentNode asModularDocument ].
+	documentNode isViennaFlatDocumentNode ifTrue: [ documentNode := documentNode asModularDocument ].
 	[ documentNode typecheck ]
 		on: ViennaTypeError
 		do: [ :typeError |
@@ -2200,82 +2204,55 @@ VDMPad >> eval: aZnRequest [
 											             yourself) ].
 							          m ] ]
 		          ifAbsent: [ nil ].
-	transpiledSpec := ViennaTranspilerForVDMPad new generate:
-		                  documentNode.
-	expressionSource := ((params
-		                      at: 'expression'
-		                      ifAbsent: [ String new ])
-		                     withInternalLineEndings
+	transpiledSpec := ViennaTranspilerForVDMPad new generate: documentNode.
+	expressionSource := ((params at: 'expression' ifAbsent: [ String new ]) withInternalLineEndings
 		                     copyReplaceAll: String cr
 		                     with: ' ') trim.
 	expressionNode := expressionSource
 		                  ifNotEmpty: [ :string |
-				                  parser statement / parser expression end
-					                  parse: string
-					                  withContext: ViennaPP2HighlightingContext new ]
+		                  parser statement / parser expression end parse: string withContext: ViennaPP2HighlightingContext new ]
 		                  ifEmpty: [ nil ].
 	expressionNode isPetit2Failure ifTrue: [
 			| position point |
 			position := expressionNode furthestPosition.
 			point := self charPositionToPoint: position in: expressionSource.
 			^ self responseJSON: (json
-					   at: 'message'
-					   put:
-						   'Syntax error in the expression/statement at '
-						   , point y printString , ':' , point x printString , '.';
+					   at: 'message' put: 'Syntax error in the expression/statement at ' , point y printString , ':' , point x printString , '.';
 					   yourself) ].
 	expressionNode := expressionNode ifNotNil: #returnValue.
-	prestates := params
-		             at: 'needsPrestates'
-		             ifPresent: [ Dictionary new ]
-		             ifAbsent: [ nil ].
+	prestates := params at: 'needsPrestates' ifPresent: [ Dictionary new ] ifAbsent: [ nil ].
 	params keysAndValuesDo: [ :key :value |
-			((key includes: $`) and: [ value trimmed notEmpty ]) ifTrue: [
+			((key includes: $`) and: [ value trimBoth notEmpty ]) ifTrue: [
 					| moduleName variableName valueString |
 					json removeKey: key.
 					moduleName := key copyFrom: 1 to: (key indexOf: $`) - 1.
 					variableName := key copyFrom: (key indexOf: $`) + 1 to: key size.
-					valueString := (value withInternalLineEndings
-						                copyReplaceAll: String cr
-						                with: ' ') trim.
-					transpiledSpec at: moduleName ifPresent: [ :transpiledModule |
-							transpiledModule
-								basicInstVarNamed: variableName
-								put: (valueReader parse: valueString) ].
-					prestates ifNotNil: [
-							(prestates at: moduleName ifAbsentPut: [ Dictionary new ])
-								at: variableName
-								put: valueString ] ] ].
+					valueString := (value withInternalLineEndings copyReplaceAll: String cr with: ' ') trim.
+					transpiledSpec
+						at: moduleName
+						ifPresent: [ :transpiledModule | transpiledModule basicInstVarNamed: variableName put: (valueReader parse: valueString) ].
+					prestates ifNotNil: [ (prestates at: moduleName ifAbsentPut: [ Dictionary new ]) at: variableName put: valueString ] ] ].
 	prestates ifNotNil: [ json at: 'prestates' put: prestates ].
 	expressionNode ifNotNil: [
 			| needsSequenceDiagram needsStateDiagram needsExecutionTrace |
 			needsSequenceDiagram := params includesKey: 'sequenceDiagram'.
 			needsStateDiagram := params includesKey: 'stateDiagram'.
-			needsExecutionTrace := needsSequenceDiagram or: [
-				                       needsStateDiagram ].
+			needsExecutionTrace := needsSequenceDiagram or: [ needsStateDiagram ].
 			needsExecutionTrace ifTrue: [
 					transpiledSpec useEventRecorder:
-						(transpiledSpec state associations collect: [ :assoc |
-							 assoc key -> assoc value asOrderedDictionary ])
-							asOrderedDictionary ].
+						(transpiledSpec state associations collect: [ :assoc | assoc key -> assoc value asOrderedDictionary ]) asOrderedDictionary ].
 			result := [
-				          (transpiledSpec at: module ifAbsent: [ transpiledSpec ])
-					          evaluateNode: expressionNode
-					          ifError: [ :msg |
-							          json at: 'message' put: 'Runtime error: ' , msg.
-							          self ] ]
+				          (transpiledSpec at: module ifAbsent: [ transpiledSpec ]) evaluateNode: expressionNode ifError: [ :msg |
+						          json at: 'message' put: 'Runtime error: ' , msg.
+						          self ] ]
 				          on: Exception
 				          do: [ :ex |
 						          json
 							          at: 'message'
-							          put: 'Runtime error: ' , ex class name
-								          ,
-									          ((ex signalContext specificationContext ifNotNil:
-										            #vdmPcNodes)
-										           ifNotNil: [ :nodes |
-												           String lf , (String lf , '↖' , String lf join:
-													            (nodes select: #notNil thenCollect: #source)) ]
-										           ifNil: [ '' ]).
+							          put: 'Runtime error: ' , ex class name , ((ex signalContext specificationContext ifNotNil: #vdmPcNodes)
+									           ifNotNil: [ :nodes |
+									           String lf , (String lf , '↖' , String lf join: (nodes select: #notNil thenCollect: #source)) ]
+									           ifNil: [ '' ]).
 						          ^ self responseJSON: json ].
 			needsExecutionTrace ifTrue: [
 					transpiledSpec _recorder output ifNotNil: [ :root |
@@ -2283,8 +2260,7 @@ VDMPad >> eval: aZnRequest [
 									| sequenceDiagram |
 									sequenceDiagram := String streamContents: [ :stream |
 											                   | format |
-											                   format := ViennaExecutionTraceSequenceDiagramFormat
-												                             new
+											                   format := ViennaExecutionTraceSequenceDiagramFormat new
 												                             root: expressionSource;
 												                             yourself.
 											                   format writeHeaderOn: stream.
@@ -2295,26 +2271,21 @@ VDMPad >> eval: aZnRequest [
 									| stateDiagram |
 									stateDiagram := String streamContents: [ :stream |
 											                | format |
-											                format := ViennaExecutionTraceStateDiagramFormat
-												                          new
-												                          probes:
-													                          transpiledSpec _defaultProbes;
+											                format := ViennaExecutionTraceStateDiagramFormat new
+												                          probes: transpiledSpec _defaultProbes;
 												                          showsProbeNames: true;
 												                          showsOperationNames: true;
 												                          yourself.
-											                root initial do: [ :event |
-												                event applyAssignmentTo: transpiledSpec ].
+											                root initial do: [ :event | event applyAssignmentTo: transpiledSpec ].
 											                format writeHeaderOn: stream.
 											                root
 												                applyToFormat: format
 												                on: stream
-												                before: [ :event |
-												                event applyAssignmentTo: transpiledSpec ]
+												                before: [ :event | event applyAssignmentTo: transpiledSpec ]
 												                after: [ :event |  ].
 											                format writeFooterOn: stream ].
 									json at: 'stateDiagram' put: stateDiagram ] ] ] ].
-	transpiledSpec statevariablesAndValuesDo: [ :var :val |
-		json at: var put: val viennaString ].
+	transpiledSpec statevariablesAndValuesDo: [ :var :val | json at: var put: val viennaString ].
 	result == self ifFalse: [ json at: 'value' put: result viennaString ].
 	^ self responseJSON: json
 ]
@@ -2795,7 +2766,7 @@ VDMPad >> id: aZnRequest [
 VDMPad >> initialize [
 
 	super initialize.
-	engine := ViennaEngineForVDMPad new.
+	engine := self class defaultEngine.
 	handlerMap := Dictionary new
 		              at: '/' put: #mainPage:;
 		              at: 'EpiLog' put: #epiLogPage;
