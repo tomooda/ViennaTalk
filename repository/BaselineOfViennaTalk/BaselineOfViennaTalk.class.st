@@ -97,7 +97,7 @@ BaselineOfViennaTalk >> baseline: spec [
 		for: #common do: [
 				spec blessing: #baseline.
 				spec
-					baseline: 'Fed' with: [ spec repository: 'github://tomooda/Fed/src' ];
+					baseline: 'Fed' with: [ spec repository: 'github://tomooda/Fed:main/src' ];
 					baseline: 'HiDeHo' with: [ spec repository: 'github://tomooda/HiDeHo:main/src' ];
 					baseline: 'Micromaid' with: [ spec repository: 'github://tomooda/Micromaid:main/src' ];
 					baseline: 'FRAM' with: [ spec repository: 'github://tomooda/FRAM:main/src' ];
