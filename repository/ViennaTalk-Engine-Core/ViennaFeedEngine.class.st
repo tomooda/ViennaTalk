@@ -23,7 +23,8 @@ ViennaFeedEngine class >> example [
 		          'module Counter exports all definitions state Counter of count : nat init s == s = mk_Counter(0) end operations click : () ==> nat click() == (count := count + 1; return count) end Counter'
 		          states: {  } asDictionary
 		          module: 'Counter'.
-	result inspect
+	result inspect.
+	ViennaFeedWorkerPool close
 ]
 
 { #category : 'accessing' }
