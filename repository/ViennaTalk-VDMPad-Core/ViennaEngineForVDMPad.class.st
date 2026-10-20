@@ -91,24 +91,20 @@ ViennaEngineForVDMPad >> evaluate: expression specification: specification state
 			needsExecutionTrace ifTrue: [
 					transpiledSpec useEventRecorder:
 						(transpiledSpec state associations collect: [ :assoc | assoc key -> assoc value asOrderedDictionary ]) asOrderedDictionary ].
-
-
-
-
-
 			result := [
-				          (transpiledSpec at: module ifAbsent: [ transpiledSpec ]) evaluateNode: expressionNode ifError: [ :msg |
-						          json at: 'message' put: 'Runtime error: ' , msg.
-						          self ] ]
+				          (transpiledSpec at: module ifAbsent: [ transpiledSpec ])
+					          evaluateNode: expressionNode
+					          ifError: [ :msg |
+					          ^ self message: 'Runtime error: ' , msg preStates: prestates postStates: (self statesFrom: transpiledSpec) ] ]
 				          on: Exception
 				          do: [ :ex |
-						          json
-							          at: 'message'
-							          put: 'Runtime error: ' , ex class name , ((ex signalContext specificationContext ifNotNil: #vdmPcNodes)
-									           ifNotNil: [ :nodes |
-									           String lf , (String lf , '↖' , String lf join: (nodes select: #notNil thenCollect: #source)) ]
-									           ifNil: [ '' ]).
-						          ^ self responseJSON: json ].
+						          ^ self
+							            message: 'Runtime error: ' , ex class name , ((ex signalContext specificationContext ifNotNil: #vdmPcNodes)
+									             ifNotNil: [ :nodes |
+									             String lf , (String lf , '↖' , String lf join: (nodes select: #notNil thenCollect: #source)) ]
+									             ifNil: [ '' ])
+							            preStates: prestates
+							            postStates: (self statesFrom: transpiledSpec) ].
 			needsExecutionTrace ifTrue: [
 					transpiledSpec _recorder output ifNotNil: [ :root |
 							needsSequenceDiagram ifTrue: [
@@ -121,7 +117,7 @@ ViennaEngineForVDMPad >> evaluate: expression specification: specification state
 											                   format writeHeaderOn: stream.
 											                   root applyToFormat: format on: stream.
 											                   format writeFooterOn: stream ].
-									json at: 'sequenceDiagram' put: sequenceDiagram ].
+									diagrams at: 'sequenceDiagram' put: sequenceDiagram ].
 							needsStateDiagram ifTrue: [
 									| stateDiagram |
 									stateDiagram := String streamContents: [ :stream |
@@ -139,10 +135,12 @@ ViennaEngineForVDMPad >> evaluate: expression specification: specification state
 												                before: [ :event | event applyAssignmentTo: transpiledSpec ]
 												                after: [ :event |  ].
 											                format writeFooterOn: stream ].
-									json at: 'stateDiagram' put: stateDiagram ] ] ] ].
-	transpiledSpec statevariablesAndValuesDo: [ :var :val | json at: var put: val viennaString ].
-	result == self ifFalse: [ json at: 'value' put: result viennaString ].
-	^ self responseJSON: json
+									diagrams at: 'stateDiagram' put: stateDiagram ] ] ] ].
+	^ self
+		  result: result viennaString
+		  preStates: prestates
+		  postStates: (self statesFrom: transpiledSpec)
+		  diagrams: diagrams
 ]
 
 { #category : 'utilities' }
@@ -187,6 +185,19 @@ ViennaEngineForVDMPad >> result: resultString preStates: prestatesDictionary pos
 		  message: nil
 		  preStates: prestatesDictionary
 		  diagrams: yetAnotherDictionary
+]
+
+{ #category : 'class access' }
+ViennaEngineForVDMPad >> statesFrom: transpiledSpec [
+
+	| states |
+	states := Dictionary new.
+	transpiledSpec keysAndValuesDo: [ :moduleName :transpiledModule |
+			| moduleStates |
+			moduleStates := Dictionary new.
+			states at: moduleName put: moduleStates.
+			transpiledModule _statevariablesAndValuesDo: [ :variableName :value | moduleStates at: variableName put: value viennaString ] ].
+	^ states
 ]
 
 { #category : 'class access' }
