@@ -117,7 +117,7 @@ BaselineOfViennaTalk >> baseline: spec [
 					package: 'ViennaTalk-Animation-Transpiler' with: [
 							spec requires: #( 'ViennaTalk-AST-Core' 'ViennaTalk-Animation-Core' 'ViennaTalk-Parser-Core' 'ViennaTalk-Profiler-Core'
 									   'ViennaTalk-Transpiler-Core' 'ViennaTalk-Type-Core' 'ViennaTalk-Value-Core' ) ];
-					package: 'ViennaTalk-Engine-Core' with: [ 'Fed' ];
+					package: 'ViennaTalk-Engine-Core' with: [ spec requires: #( 'Fed' ) ];
 					package: 'ViennaTalk-Engine-Networking' with: [ spec requires: #( 'ViennaTalk-Engine-Core' ) ];
 					package: 'ViennaTalk-Engine-Transpiler'
 					with: [ spec requires: #( 'ViennaTalk-Engine-Core' 'ViennaTalk-Animation-Transpiler' 'ViennaTalk-Engine-Core' ) ];
