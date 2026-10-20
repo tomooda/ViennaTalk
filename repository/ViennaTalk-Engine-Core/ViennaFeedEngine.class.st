@@ -11,6 +11,21 @@ ViennaFeedEngine class >> engineType [
 	^ #FEED
 ]
 
+{ #category : 'examples' }
+ViennaFeedEngine class >> example [
+
+	| result |
+	ViennaFeedWorkerPool close.
+	ViennaFeedWorkerPool newWorker.
+	result := ViennaFeedEngine new
+		          evaluate: 'click()'
+		          specification:
+		          'module Counter exports all definitions state Counter of count : nat init s == s = mk_Counter(0) end operations click : () ==> nat click() == (count := count + 1; return count) end Counter'
+		          states: {  } asDictionary
+		          module: 'Counter'.
+	result inspect
+]
+
 { #category : 'accessing' }
 ViennaFeedEngine class >> priority [
 
