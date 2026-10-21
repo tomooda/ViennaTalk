@@ -83,7 +83,7 @@ TViennaEngine >> documentNodeFrom: specification ifError: errorBlock [
 			^ errorBlock
 				  cull: 'Syntax error in the specification at ' , point y printString , ':' , point x printString , '.'
 				  cull: position ].
-	^ parseResult returnValue asModularDocument
+	^ parseResult returnValue
 ]
 
 { #category : 'evaluating' }
@@ -124,7 +124,7 @@ TViennaEngine >> evaluate: expression specification: specification states: state
 TViennaEngine >> evaluate: expression specification: specification states: states module: moduleOrNil diagrams: diagramNames [
 
 	| documentNode module expressionNode transpiledSpec prestates result |
-	documentNode := self documentNodeFrom: specification ifError: [ :msg | ^ self message: msg states: states ].
+	documentNode := (self documentNodeFrom: specification ifError: [ :msg | ^ self message: msg states: states ]) asModularDocument.
 	self typecheck: documentNode ifError: [ :msg | ^ self message: msg states: states ].
 	transpiledSpec := self transpilerClass new generate: documentNode.
 	prestates := self states: states to: transpiledSpec.
