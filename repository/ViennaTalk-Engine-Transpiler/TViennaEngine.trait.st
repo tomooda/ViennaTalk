@@ -80,7 +80,9 @@ TViennaEngine >> documentNodeFrom: specification ifError: errorBlock [
 			| position point |
 			position := parseResult furthestPosition.
 			point := self charPositionToPoint: position in: specification.
-			^ errorBlock value: 'Syntax error in the specification at ' , point y printString , ':' , point x printString , '.' ].
+			^ errorBlock
+				  cull: 'Syntax error in the specification at ' , point y printString , ':' , point x printString , '.'
+				  cull: position ].
 	^ parseResult returnValue asModularDocument
 ]
 

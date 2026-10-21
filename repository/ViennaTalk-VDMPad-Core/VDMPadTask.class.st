@@ -16,6 +16,22 @@ VDMPadTask class >> eval: aJsonObject [
 			   yourself)
 ]
 
+{ #category : 'request handling-api' }
+VDMPadTask class >> format: aJsonObject [
+
+	^ self value: (aJsonObject
+			   at: 'api' put: 'format';
+			   yourself)
+]
+
+{ #category : 'request handling-api' }
+VDMPadTask class >> test: aJsonObject [
+
+	^ self value: (aJsonObject
+			   at: 'api' put: 'test';
+			   yourself)
+]
+
 { #category : 'class access' }
 VDMPadTask class >> workerClass [
 

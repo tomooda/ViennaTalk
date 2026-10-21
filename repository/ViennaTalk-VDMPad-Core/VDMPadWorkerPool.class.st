@@ -98,10 +98,71 @@ VDMPadWorkerPool >> eval: requestJson [
 ]
 
 { #category : 'execution' }
+VDMPadWorkerPool >> format: requestJson [
+
+	| responseJson source ast |
+	responseJson := requestJson copy
+		        at: 'message' put: '';
+		        at: 'value' ifAbsentPut: [ String new ];
+		        yourself.
+	source := (requestJson at: 'source' ifAbsent: [ String new ]) trim withInternalLineEndings.
+	ast := self documentNodeFrom: source ifError: [ :msg :position |
+			       responseJson
+				       at: 'message' put: msg;
+				       at: 'position' put: position.
+			       ^ responseJson ].
+	responseJson at: 'source' put: (ViennaVDMFormatter new
+			 maxSizePerLine: 70;
+			 format: ast) withUnixLineEndings.
+	^ responseJson
+]
+
+{ #category : 'execution' }
 VDMPadWorkerPool >> process: requestJson [
 
-	requestJson at: 'api' ifPresent: [ :api | api = 'eval' ifTrue: [ ^ self eval: requestJson ] ].
+	requestJson at: 'api' ifPresent: [ :api |
+			api = 'eval' ifTrue: [ ^ self eval: requestJson ].
+			api = 'test' ifTrue: [ ^ self test: requestJson ].
+			api = 'format' ifTrue: [ ^ self format: requestJson ] ].
 	^ nil
+]
+
+{ #category : 'execution' }
+VDMPadWorkerPool >> test: json [
+
+	| source prestates expression expectedPoststates expectedValue states triple actualValue actualPoststates diff |
+	source := json at: 'source'.
+	prestates := json at: 'prestates' ifAbsent: [ Dictionary new ].
+	expression := ((json at: 'expression' ifAbsent: [ String new ]) copyReplaceAll: String cr with: ' ')
+		              copyReplaceAll: String lf
+		              with: ' '.
+	expectedValue := json at: 'value' ifAbsent: [ ].
+	expectedPoststates := json at: 'poststates' ifAbsent: [ ].
+	states := Dictionary new.
+	prestates keysAndValuesDo: [ :key :value |
+			((key includes: $`) and: [ value trim notEmpty ]) ifTrue: [
+					(states at: (key copyFrom: 1 to: (key indexOf: $`) - 1) ifAbsentPut: [ Dictionary new ])
+						at: (key copyFrom: (key indexOf: $`) + 1 to: key size)
+						put: ((value copyReplaceAll: String cr with: ' ') copyReplaceAll: String lf with: ' ') ].
+			prestates add: key -> value ].
+	triple := self
+		          evaluate: expression
+		          specification: source
+		          states: states
+		          module: 'DEFAULT'.
+	diff := Array new writeStream.
+	actualValue := triple first.
+	actualValue ifNil: [ diff nextPut: triple third ] ifNotNil: [
+			actualValue ~= expectedValue ifTrue: [ diff nextPut: 'RESUT=' , actualValue , ' (excepted ' , expectedValue , ')' ].
+			actualPoststates := Dictionary new.
+			triple second keysAndValuesDo: [ :moduleName :bindings |
+				bindings keysAndValuesDo: [ :var :val | actualPoststates at: moduleName , '`' , var put: val ] ].
+			expectedPoststates keysAndValuesDo: [ :key :value |
+					| actual |
+					actual := actualPoststates at: key ifAbsent: [ ].
+					actual ~= value ifTrue: [ diff nextPut: key , '=' , actual , ' (expected ' , value , ')' ] ] ].
+	diff := diff contents.
+	^ diff ifEmpty: [ true ] ifNotEmpty: [ diff ]
 ]
 
 { #category : 'class access' }
