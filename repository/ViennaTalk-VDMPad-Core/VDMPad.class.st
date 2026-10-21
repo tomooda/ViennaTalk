@@ -2,8 +2,7 @@ Class {
 	#name : 'VDMPad',
 	#superclass : 'Object',
 	#instVars : [
-		'handlerMap',
-		'engine'
+		'handlerMap'
 	],
 	#classVars : [
 		'LocalOnly',
@@ -17,12 +16,6 @@ Class {
 { #category : 'instance creation' }
 VDMPad class >> default [
 	^ self on: self defaultEngine
-]
-
-{ #category : 'defaults' }
-VDMPad class >> defaultEngine [
-
-	^ ViennaFeedEngineForVDMPad new
 ]
 
 { #category : 'defaults' }
@@ -114,7 +107,7 @@ VDMPad class >> server [
 VDMPad class >> startService [
 
 	<script: 'VDMPad startService'>
-	ViennaFeedWorkerPoolForVDMPad
+	VDMPadWorkerPool
 		registerShutdown;
 		close;
 		newWorkers: 8.
@@ -127,7 +120,7 @@ VDMPad class >> stopService [
 	Server ifNotNil: [
 			Server stop.
 			Server := nil.
-			ViennaFeedWorkerPoolForVDMPad
+			VDMPadWorkerPool
 				close;
 				unregisterShutdown ]
 ]
@@ -2065,18 +2058,6 @@ VDMPad >> deleteSelectedIcon [
 			#[137 80 78 71 13 10 26 10 0 0 0 13 73 72 68 82 0 0 0 45 0 0 0 18 8 6 0 0 0 207 54 87 226 0 0 1 86 73 68 65 84 120 94 229 149 45 147 131 48 16 134 251 195 35 48 8 76 4 6 129 64 196 84 96 42 206 32 16 21 152 8 4 2 131 192 68 196 84 68 32 48 239 133 143 155 194 53 144 116 238 122 115 29 102 88 147 121 119 247 73 246 131 147 231 121 120 55 59 29 31 250 29 161 9 189 160 81 28 44 248 35 232 49 97 7 160 235 244 215 163 87 18 85 153 35 9 201 235 160 253 20 87 158 35 38 63 129 94 38 12 66 176 15 14 161 42 92 40 121 9 244 168 23 37 162 95 131 30 141 32 206 36 20 103 8 190 206 8 69 90 84 16 189 174 72 175 208 94 83 80 178 17 99 71 235 5 12 92 233 202 66 77 213 85 165 221 199 13 90 159 199 5 164 204 230 18 6 96 165 128 40 231 64 58 193 153 11 200 44 6 121 136 177 175 53 191 180 221 199 13 154 230 247 192 65 130 90 183 203 217 55 95 106 21 195 162 53 66 59 248 60 255 210 225 52 172 221 56 172 11 83 83 226 85 12 139 214 8 237 224 243 124 79 235 105 175 69 133 212 119 24 68 139 214 8 237 224 99 221 30 209 184 61 218 197 246 24 122 78 66 14 195 49 235 200 160 139 232 120 169 199 158 222 214 78 144 103 180 171 118 112 240 217 222 211 221 125 79 127 95 119 36 68 154 213 144 183 126 214 53 224 57 51 64 239 107 167 120 62 146 162 193 109 181 61 108 62 199 255 141 31 31 250 248 208 255 194 62 1 14 231 128 21 29 21 99 104 0 0 0 0 73 69 78 68 174 66 96 130]
 ]
 
-{ #category : 'accessing' }
-VDMPad >> engine [
-
-	^ engine
-]
-
-{ #category : 'accessing' }
-VDMPad >> engine: aViennaEngine [
-
-	engine := aViennaEngine
-]
-
 { #category : 'request handling-html' }
 VDMPad >> epiLogPage [
 	^ self
@@ -2165,129 +2146,9 @@ VDMPad >> epilogCss [
 { #category : 'request handling-api' }
 VDMPad >> eval: aZnRequest [
 
-	| params valueReader parser documentSource documentNode module expressionSource expressionNode transpiledSpec prestates result json |
+	| params |
 	params := self getParamsFrom: aZnRequest.
-	json := params copy
-		        at: 'value' put: nil;
-		        at: 'message' put: '';
-		        removeKey: 'needsPrestates' ifAbsent: [ ];
-		        yourself.
-	valueReader := ViennaReader new.
-	parser := ViennaVDMParser new.
-	documentSource := (params at: 'source' ifAbsent: [ String new ]) trimBoth.
-	documentNode := parser document end parse: documentSource withContext: ViennaPP2HighlightingContext new.
-	documentNode isPetit2Failure ifTrue: [
-			| position point |
-			position := documentNode furthestPosition.
-			point := self charPositionToPoint: position in: documentSource.
-			^ self responseJSON: (json
-					   at: 'message' put: 'Syntax error in the specification at ' , point y printString , ':' , point x printString , '.';
-					   at: 'position' put: position;
-					   yourself) ].
-	documentNode := documentNode returnValue.
-	documentNode isViennaFlatDocumentNode ifTrue: [ documentNode := documentNode asModularDocument ].
-	[ documentNode typecheck ]
-		on: ViennaTypeError
-		do: [ :typeError |
-				^ self responseJSON: (json
-						   at: 'message' put: typeError messageText;
-						   yourself) ].
-	module := params
-		          at: 'module'
-		          ifPresent: [ :m |
-				          m = 'DEFAULT'
-					          ifTrue: [ nil ]
-					          ifFalse: [
-							          (documentNode moduleNamed: m) ifNil: [
-									          ^ self responseJSON: (json
-											             at: 'message' put: 'Unknown module: ' , m;
-											             yourself) ].
-							          m ] ]
-		          ifAbsent: [ nil ].
-	transpiledSpec := ViennaTranspilerForVDMPad new generate: documentNode.
-	expressionSource := ((params at: 'expression' ifAbsent: [ String new ]) withInternalLineEndings
-		                     copyReplaceAll: String cr
-		                     with: ' ') trim.
-	expressionNode := expressionSource
-		                  ifNotEmpty: [ :string |
-		                  parser statement / parser expression end parse: string withContext: ViennaPP2HighlightingContext new ]
-		                  ifEmpty: [ nil ].
-	expressionNode isPetit2Failure ifTrue: [
-			| position point |
-			position := expressionNode furthestPosition.
-			point := self charPositionToPoint: position in: expressionSource.
-			^ self responseJSON: (json
-					   at: 'message' put: 'Syntax error in the expression/statement at ' , point y printString , ':' , point x printString , '.';
-					   yourself) ].
-	expressionNode := expressionNode ifNotNil: #returnValue.
-	prestates := params at: 'needsPrestates' ifPresent: [ Dictionary new ] ifAbsent: [ nil ].
-	params keysAndValuesDo: [ :key :value |
-			((key includes: $`) and: [ value trimBoth notEmpty ]) ifTrue: [
-					| moduleName variableName valueString |
-					json removeKey: key.
-					moduleName := key copyFrom: 1 to: (key indexOf: $`) - 1.
-					variableName := key copyFrom: (key indexOf: $`) + 1 to: key size.
-					valueString := (value withInternalLineEndings copyReplaceAll: String cr with: ' ') trim.
-					transpiledSpec
-						at: moduleName
-						ifPresent: [ :transpiledModule | transpiledModule basicInstVarNamed: variableName put: (valueReader parse: valueString) ].
-					prestates ifNotNil: [ (prestates at: moduleName ifAbsentPut: [ Dictionary new ]) at: variableName put: valueString ] ] ].
-	prestates ifNotNil: [ json at: 'prestates' put: prestates ].
-	expressionNode ifNotNil: [
-			| needsSequenceDiagram needsStateDiagram needsExecutionTrace |
-			needsSequenceDiagram := params includesKey: 'sequenceDiagram'.
-			needsStateDiagram := params includesKey: 'stateDiagram'.
-			needsExecutionTrace := needsSequenceDiagram or: [ needsStateDiagram ].
-			needsExecutionTrace ifTrue: [
-					transpiledSpec useEventRecorder:
-						(transpiledSpec state associations collect: [ :assoc | assoc key -> assoc value asOrderedDictionary ]) asOrderedDictionary ].
-			result := [
-				          (transpiledSpec at: module ifAbsent: [ transpiledSpec ]) evaluateNode: expressionNode ifError: [ :msg |
-						          json at: 'message' put: 'Runtime error: ' , msg.
-						          self ] ]
-				          on: Exception
-				          do: [ :ex |
-						          json
-							          at: 'message'
-							          put: 'Runtime error: ' , ex class name , ((ex signalContext specificationContext ifNotNil: #vdmPcNodes)
-									           ifNotNil: [ :nodes |
-									           String lf , (String lf , '↖' , String lf join: (nodes select: #notNil thenCollect: #source)) ]
-									           ifNil: [ '' ]).
-						          ^ self responseJSON: json ].
-			needsExecutionTrace ifTrue: [
-					transpiledSpec _recorder output ifNotNil: [ :root |
-							needsSequenceDiagram ifTrue: [
-									| sequenceDiagram |
-									sequenceDiagram := String streamContents: [ :stream |
-											                   | format |
-											                   format := ViennaExecutionTraceSequenceDiagramFormat new
-												                             root: expressionSource;
-												                             yourself.
-											                   format writeHeaderOn: stream.
-											                   root applyToFormat: format on: stream.
-											                   format writeFooterOn: stream ].
-									json at: 'sequenceDiagram' put: sequenceDiagram ].
-							needsStateDiagram ifTrue: [
-									| stateDiagram |
-									stateDiagram := String streamContents: [ :stream |
-											                | format |
-											                format := ViennaExecutionTraceStateDiagramFormat new
-												                          probes: transpiledSpec _defaultProbes;
-												                          showsProbeNames: true;
-												                          showsOperationNames: true;
-												                          yourself.
-											                root initial do: [ :event | event applyAssignmentTo: transpiledSpec ].
-											                format writeHeaderOn: stream.
-											                root
-												                applyToFormat: format
-												                on: stream
-												                before: [ :event | event applyAssignmentTo: transpiledSpec ]
-												                after: [ :event |  ].
-											                format writeFooterOn: stream ].
-									json at: 'stateDiagram' put: stateDiagram ] ] ] ].
-	transpiledSpec statevariablesAndValuesDo: [ :var :val | json at: var put: val viennaString ].
-	result == self ifFalse: [ json at: 'value' put: result viennaString ].
-	^ self responseJSON: json
+	^ self responseJSON: (VDMPadTask eval: params)
 ]
 
 { #category : 'request handling-image' }
@@ -2766,7 +2627,6 @@ VDMPad >> id: aZnRequest [
 VDMPad >> initialize [
 
 	super initialize.
-	engine := self class defaultEngine.
 	handlerMap := Dictionary new
 		              at: '/' put: #mainPage:;
 		              at: 'EpiLog' put: #epiLogPage;
@@ -3057,6 +2917,12 @@ VDMPad >> saveTransparentIcon [
 	^ self
 		responsePNG:
 			#[137 80 78 71 13 10 26 10 0 0 0 13 73 72 68 82 0 0 0 34 0 0 0 18 8 6 0 0 0 62 61 12 111 0 0 0 6 98 75 71 68 0 255 0 255 0 255 160 189 167 147 0 0 0 9 112 72 89 115 0 0 11 19 0 0 11 19 1 0 154 156 24 0 0 0 7 116 73 77 69 7 221 8 27 23 15 58 141 225 78 134 0 0 2 51 73 68 65 84 72 199 237 149 47 116 218 64 28 199 127 157 25 117 201 84 144 116 42 184 48 21 100 112 212 21 23 230 50 199 28 56 38 193 129 163 174 200 108 42 76 81 87 234 136 3 7 83 105 93 152 74 166 46 83 159 137 48 254 236 181 117 219 235 222 235 189 247 19 119 239 238 247 253 115 247 125 119 2 200 115 24 175 228 153 140 23 34 79 18 73 151 95 232 156 191 163 168 191 65 215 223 82 174 189 103 24 254 248 55 143 8 200 43 9 105 91 101 60 127 77 2 103 160 36 94 133 220 172 50 118 123 254 98 237 39 209 37 142 217 100 154 240 48 112 50 163 231 86 41 25 58 154 118 134 229 246 185 137 243 189 209 213 57 150 119 189 21 128 128 146 69 183 138 221 93 230 189 212 154 160 219 192 50 116 52 163 76 189 61 97 165 142 113 246 64 42 164 107 21 177 188 33 254 116 201 42 254 195 137 36 36 8 66 162 4 96 195 180 93 193 244 174 137 1 162 49 117 235 195 94 132 10 233 218 85 122 139 12 72 229 166 85 193 106 109 193 213 26 223 171 96 247 150 168 7 137 128 168 104 198 168 221 196 49 139 20 228 148 146 211 193 127 228 106 212 170 143 109 117 152 43 128 59 252 139 10 110 176 1 16 53 239 96 59 253 28 56 185 198 53 27 248 241 222 1 181 248 132 109 247 89 28 184 242 232 157 169 100 137 223 170 80 170 143 137 0 80 18 77 251 184 118 25 67 211 209 180 83 10 165 143 91 34 72 236 55 176 220 9 49 41 243 118 5 103 176 206 21 71 151 56 218 41 154 166 31 151 185 63 251 36 145 92 245 16 199 218 30 136 39 184 102 141 222 60 101 231 200 97 179 120 194 133 213 192 95 205 104 89 53 70 191 157 140 39 184 86 131 32 230 201 71 191 143 239 230 150 241 231 91 214 155 159 121 92 179 123 102 126 32 113 169 42 70 65 68 84 38 105 38 162 105 5 145 236 59 179 113 32 235 236 32 126 70 85 154 230 90 70 189 190 204 138 23 82 55 95 111 215 157 19 175 26 203 96 240 85 214 169 32 34 146 165 247 132 225 55 82 145 179 7 227 59 106 157 99 151 138 185 117 70 25 199 27 238 146 1 169 204 7 13 76 77 199 48 107 180 122 29 108 235 216 222 120 218 164 36 58 245 171 187 99 245 234 142 160 215 220 245 54 204 26 222 96 118 144 50 228 228 229 211 123 33 242 191 16 249 5 21 100 218 229 151 74 60 187 0 0 0 0 73 69 78 68 174 66 96 130]
+]
+
+{ #category : 'accessing' }
+VDMPad >> supportedDiagramNames [
+
+	^ #( 'sequenceDiagram' 'stateDiagram' )
 ]
 
 { #category : 'request handling-api' }

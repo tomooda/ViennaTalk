@@ -5,9 +5,9 @@ Class {
 		'_steps',
 		'_max_steps'
 	],
-	#category : 'ViennaTalk-VDMPad-Core-Engine',
+	#category : 'ViennaTalk-VDMPad-Core-Transpiler',
 	#package : 'ViennaTalk-VDMPad-Core',
-	#tag : 'Engine'
+	#tag : 'Transpiler'
 }
 
 { #category : 'accessing' }

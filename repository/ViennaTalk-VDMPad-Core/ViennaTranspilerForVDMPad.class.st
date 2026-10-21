@@ -1,9 +1,9 @@
 Class {
 	#name : 'ViennaTranspilerForVDMPad',
 	#superclass : 'ViennaTranspilerForExecutionTracing',
-	#category : 'ViennaTalk-VDMPad-Core-Engine',
+	#category : 'ViennaTalk-VDMPad-Core-Transpiler',
 	#package : 'ViennaTalk-VDMPad-Core',
-	#tag : 'Engine'
+	#tag : 'Transpiler'
 }
 
 { #category : 'code generation-expressions' }

@@ -77,6 +77,14 @@ ViennaEngine >> close [
 	^ self subclassResponsibility
 ]
 
+{ #category : 'utilities' }
+ViennaEngine >> diagram: aString fromResult: anArray ifPresent: presentBlock ifAbsent: absentBlock [
+
+	^ anArray size >= 5
+		  ifTrue: [ anArray fifth at: aString ifPresent: presentBlock ifAbsent: absentBlock ]
+		  ifFalse: [ absentBlock value ]
+]
+
 { #category : 'evaluating' }
 ViennaEngine >> evaluate: expression specification: spec states: states [
 
@@ -91,4 +99,28 @@ ViennaEngine >> evaluate: expression specification: spec states: states [
 ViennaEngine >> evaluate: expression specification: spec states: states module: module [
 
 	^ self subclassResponsibility
+]
+
+{ #category : 'utilities' }
+ViennaEngine >> messageFromResult: anArray [
+
+	^ anArray third
+]
+
+{ #category : 'utilities' }
+ViennaEngine >> poststatesFromResult: anArray [
+
+	^ anArray second
+]
+
+{ #category : 'utilities' }
+ViennaEngine >> prestatesFromResult: anArray [
+
+	^ anArray fourth
+]
+
+{ #category : 'utilities' }
+ViennaEngine >> valueFromResult: anArray [
+
+	^ anArray first
 ]
