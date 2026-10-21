@@ -20,6 +20,18 @@ ViennaExecutionTraceSequenceDiagramFormat >> initialize [
 	aliases := Dictionary new
 ]
 
+{ #category : 'utilities' }
+ViennaExecutionTraceSequenceDiagramFormat >> mermaidEscape: aString [
+
+	| escapes |
+	escapes := {
+		           ($; -> '#59;').
+		           ($( -> '#40;').
+		           ($) -> '#41;') } asDictionary.
+	^ String streamContents: [ :stream |
+		  aString do: [ :char | escapes at: char ifPresent: [ :alt | stream nextPutAll: alt ] ifAbsent: [ stream nextPut: char ] ] ]
+]
+
 { #category : 'user interface' }
 ViennaExecutionTraceSequenceDiagramFormat >> open: aViennaExecutionTraceRecorder withTitle: aString [
 
@@ -52,8 +64,8 @@ ViennaExecutionTraceSequenceDiagramFormat >> writeAssert: aString on: aStream [
 ViennaExecutionTraceSequenceDiagramFormat >> writeCall: aString module: anotherString args: anArray on: aStream [
 
 	| caller callee |
-	caller := callStack last.
-	callee := anotherString , '`' , aString.
+	caller := self mermaidEscape: callStack last.
+	callee := self mermaidEscape: anotherString , '`' , aString.
 	aliases at: aString ifPresent: [ :name | callee := name ].
 	callStack addLast: callee.
 	aStream
@@ -63,9 +75,7 @@ ViennaExecutionTraceSequenceDiagramFormat >> writeCall: aString module: anotherS
 		nextPutAll: ' : ';
 		nextPutAll: callee;
 		nextPut: $(.
-	anArray
-		do: [ :obj | aStream nextPutAll: obj viennaString asHTMLString ]
-		separatedBy: [ aStream nextPutAll: ', ' ].
+	anArray do: [ :obj | aStream nextPutAll: obj viennaString asHTMLString ] separatedBy: [ aStream nextPutAll: ', ' ].
 	aStream
 		nextPutAll: ')';
 		cr
@@ -90,8 +100,8 @@ ViennaExecutionTraceSequenceDiagramFormat >> writeReturn: aString module: anothe
 
 	callStack size >= 2 ifTrue: [
 			| callee caller |
-			callee := callStack removeLast.
-			caller := callStack last.
+			callee := self mermaidEscape: callStack removeLast.
+			caller := self mermaidEscape: callStack last.
 			aStream
 				nextPutAll: callee;
 				nextPutAll: ' -->>- ';

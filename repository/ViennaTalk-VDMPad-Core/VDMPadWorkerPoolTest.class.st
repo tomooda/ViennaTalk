@@ -279,3 +279,26 @@ VDMPadWorkerPoolTest >> testNoSpecStateDiagram [
 				 ifAbsent: [ false ])
 		equals: true
 ]
+
+{ #category : 'tests' }
+VDMPadWorkerPoolTest >> testSequenceDiagram [
+
+	| result |
+	result := worker
+		          evaluate: '(Counter`click();Counter`show())'
+		          specification: self modularCounterSpec
+		          states: Dictionary new
+		          module: nil
+		          diagrams: #( 'sequenceDiagram' ).
+	self assert: (worker valueFromResult: result) equals: '1'.
+	self assert: (worker prestatesFromResult: result) equals: Dictionary new.
+	self assert: (worker poststatesFromResult: result) equals: { ('Counter' -> { ('count' -> '1') } asDictionary) } asDictionary.
+	self assert: (worker messageFromResult: result) equals: nil.
+	self
+		assert: (worker
+				 diagram: 'sequenceDiagram'
+				 fromResult: result
+				 ifPresent: [ true ]
+				 ifAbsent: [ false ])
+		equals: true
+]
