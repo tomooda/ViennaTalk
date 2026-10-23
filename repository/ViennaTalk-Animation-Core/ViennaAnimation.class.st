@@ -2,57 +2,20 @@ Class {
 	#name : 'ViennaAnimation',
 	#superclass : 'Model',
 	#instVars : [
-		'lock',
-		'engine',
 		'specification',
-		'state',
+		'object',
+		'parser',
+		'transpiler',
 		'reader',
 		'writer',
-		'usesExceptionForExit'
+		'specificationNode'
+	],
+	#classVars : [
+		'UseTranspilerByDefault'
 	],
 	#category : 'ViennaTalk-Animation-Core',
 	#package : 'ViennaTalk-Animation-Core'
 }
-
-{ #category : 'instance creation' }
-ViennaAnimation class >> client [
-	^ self new
-		engine: ViennaClient default;
-		yourself
-]
-
-{ #category : 'instance creation' }
-ViennaAnimation class >> default [
-
-	^ ViennaEngine default animation
-]
-
-{ #category : 'examples' }
-ViennaAnimation class >> exampleFibonacci [
-	"ViennaAnimation exampleFibonacci"
-
-	| animation |
-	animation := ViennaAnimation default.
-	animation
-		specification:
-			'
-state State of
-	n1 : nat
-	n2 : nat
-	init s == s = mk_State(0, 1)
-end
-operations
-	next : () ==> nat
-	next() == (dcl n : nat := n1 + n2; n1 := n2; n2 := n; return n);'.
-	^ (Array streamContents: [ :stream | 10 timesRepeat: [ stream nextPut: (animation evaluate: 'next()') ] ]) inspect; yourself
-]
-
-{ #category : 'instance creation' }
-ViennaAnimation class >> on: aViennaEngine [
-	^ self new
-		engine: aViennaEngine;
-		yourself
-]
 
 { #category : 'announcement' }
 ViennaAnimation >> announceEvaluated [
@@ -78,87 +41,91 @@ ViennaAnimation >> announceStateChanged [
 			 yourself)
 ]
 
-{ #category : 'converting' }
-ViennaAnimation >> asInterpretedAnimation [
-	^ self
-]
-
 { #category : 'accessing' }
 ViennaAnimation >> at: aString [
-	^ self
-		at: aString
-		ifAbsent: [ KeyNotFound signalFor: aString in: self ]
+
+	^ self at: aString ifPresent: #yourself ifAbsent: [  ]
 ]
 
 { #category : 'accessing' }
-ViennaAnimation >> at: aString ifAbsent: errorBlock [
-	^ self at: aString ifPresent: [ :value | value ] ifAbsent: errorBlock
+ViennaAnimation >> at: aString ifAbsent: aBlock [
+
+	^ self at: aString ifPresent: #yourself ifAbsent: aBlock
 ]
 
 { #category : 'accessing' }
-ViennaAnimation >> at: aString ifAbsentPut: errorBlock [
-
-	^ self at: aString ifPresent: [ :value | value ] ifAbsent: [
-		  state at: aString put: (writer stringify: errorBlock value).
-		  self announceStateChanged ]
+ViennaAnimation >> at: aString ifPresent: aBlock [
+	^ self at: aString ifPresent: aBlock ifAbsent: [  ]
 ]
 
 { #category : 'accessing' }
-ViennaAnimation >> at: aString ifPresent: errorBlock [
-	^ self at: aString ifPresent: errorBlock ifAbsent: [  ]
-]
+ViennaAnimation >> at: aString ifPresent: presentBlock ifAbsent: absentBlock [
 
-{ #category : 'accessing' }
-ViennaAnimation >> at: aString ifPresent: aBlock ifAbsent: errorBlock [
-	^ state at: aString ifPresent: [ :value | aBlock cull: (reader parseOn: value readStream) ] ifAbsent: errorBlock
+	| separatorIndex target name value |
+	separatorIndex := aString indexOf: $`.
+	separatorIndex = 0
+		ifTrue: [
+				target := object.
+				name := aString ]
+		ifFalse: [
+				| moduleName |
+				moduleName := aString copyFrom: 1 to: separatorIndex - 1.
+				target := object at: moduleName ifAbsent: [ ^ absentBlock value ].
+				name := aString copyFrom: separatorIndex + 1 to: aString size ].
+	[ value := target instVarNamed: name ]
+		on: Error
+		do: [ :ex | ^ absentBlock value ].
+	^ presentBlock value: value
 ]
 
 { #category : 'accessing' }
 ViennaAnimation >> at: aString put: anObject [
-	^ state at: aString put: (writer stringify: anObject)
+
+	| separatorIndex target name oldValue value |
+	separatorIndex := aString indexOf: $`.
+	separatorIndex = 0
+		ifTrue: [
+				target := object.
+				name := aString ]
+		ifFalse: [
+				| moduleName |
+				moduleName := aString copyFrom: 1 to: separatorIndex - 1.
+				target := object at: (aString copyFrom: 1 to: separatorIndex - 1) ifAbsent: [ ^ nil ].
+				name := aString copyFrom: separatorIndex + 1 to: aString size ].
+	[
+		oldValue := target instVarNamed: name.
+		value := target instVarNamed: name put: anObject ]
+		on: Error
+		do: [ :ex | ^ nil ].
+	oldValue ~= value ifTrue: [ self announceStateChanged ].
+	^ value
 ]
 
-{ #category : 'evaluating' }
-ViennaAnimation >> basicPlainEvaluate: aString in: moduleName ifError: errorBlock [
+{ #category : 'accessing' }
+ViennaAnimation >> basicAt: aString put: anObject [
 
-	Cursor wait showWhile: [
-		| preState result postState |
-		preState := Dictionary new.
-		state keysAndValuesDo: [ :key :value |
-			| module var |
-			(key includes: $`)
-				ifTrue: [
-					| index |
-					index := key indexOf: $`.
-					module := key copyFrom: 1 to: index - 1.
-					var := key copyFrom: index + 1 to: key size ]
-				ifFalse: [
-					module := self defaultModule.
-					var := key ].
-			(preState at: module ifAbsentPut: [ Dictionary new ])
-				at: var
-				put: value ].
-		result := engine
-			          evaluate: aString
-			          specification: self specification
-			          states: preState
-			          module: moduleName.
-		result third ifNotEmpty: [ :msg | ^ errorBlock value: msg ].
-		postState := Dictionary new.
-		result second keysAndValuesDo: [ :module :binds |
-			binds keysAndValuesDo: [ :var :value |
-				postState
-					at: (var = self defaultModule
-							 ifTrue: [ var ]
-							 ifFalse: [ module , '`' , var ])
-					put: value ] ].
-		state := postState.
-		preState ~= postState ifTrue: [self announceStateChanged].
-		^ result first ]
+	| separatorIndex target name |
+	separatorIndex := aString indexOf: $`.
+	separatorIndex = 0
+		ifTrue: [
+				target := object.
+				name := aString ]
+		ifFalse: [
+				| moduleName |
+				moduleName := aString copyFrom: 1 to: separatorIndex - 1.
+				target := moduleName = self defaultModule
+					          ifTrue: [ object ]
+					          ifFalse: [
+							          object
+								          at: (aString copyFrom: 1 to: separatorIndex - 1)
+								          ifAbsent: [ ^ nil ] ].
+				name := aString copyFrom: separatorIndex + 1 to: aString size ].
+	target basicInstVarNamed: name put: anObject.
+	^ anObject
 ]
 
 { #category : 'private' }
-ViennaAnimation >> becomeInterpretedAnimation [
+ViennaAnimation >> becomeTranspiledAnimation [
 	^ self
 ]
 
@@ -167,110 +134,166 @@ ViennaAnimation >> copyForTest [
 	^ self copy
 ]
 
-{ #category : 'defaults' }
+{ #category : 'evaluating' }
+ViennaAnimation >> debug: aString in: moduleName ifError: errorBlock [
+
+	| oldState |
+	oldState := self state.
+	Cursor wait showWhile: [
+			| result |
+			result := (moduleName = self defaultModule
+				           ifTrue: [ object ]
+				           ifFalse: [ object at: moduleName ifAbsent: [ ^ errorBlock value: 'unknown module name' ] ])
+				          debugExpression: aString
+				          with: transpiler
+				          ifError: [ :msg | ^ errorBlock cull: msg ].
+			oldState ~= self state ifTrue: [
+					self changed: #state.
+					self announceStateChanged ].
+			self announceEvaluated.
+			^ result == object
+				  ifTrue: [ nil ]
+				  ifFalse: [ result ] ]
+]
+
+{ #category : 'private' }
 ViennaAnimation >> defaultModule [
 	^ 'DEFAULT'
 ]
 
 { #category : 'accessing' }
-ViennaAnimation >> engine [
-	^ engine
-]
-
-{ #category : 'accessing' }
-ViennaAnimation >> engine: aViennaEngine [
-	engine := aViennaEngine
-]
-
-{ #category : 'accessing' }
 ViennaAnimation >> engineType [
-	^ #interpreter
+	^ #transpiler
 ]
 
 { #category : 'evaluating' }
 ViennaAnimation >> evaluate: aString [
-	^ reader parseOn: (self plainEvaluate: aString) readStream
+
+	^ self
+		  evaluate: aString
+		  in: self defaultModule
+		  ifError: [ :msg | self error: msg ]
+]
+
+{ #category : 'evaluating' }
+ViennaAnimation >> evaluate: aString in: moduleName do: aBlock ifError: errorBlock [
+
+	Cursor wait showWhile: [
+			| oldState result state |
+			oldState := self state.
+			result := (object at: moduleName ifAbsent: [ object ])
+				          evaluateExpression: aString
+				          with: transpiler
+				          ifError: [ :msg | ^ errorBlock cull: msg ].
+			state := self state.
+			[ aBlock ifNotNil: [ result := aBlock cull: result cull: state ] ] ensure: [
+					oldState ~= state ifTrue: [
+							self changed: #state.
+							self announceStateChanged ] ].
+			self announceEvaluated.
+			^ result ]
+]
+
+{ #category : 'evaluating' }
+ViennaAnimation >> evaluate: aString in: moduleName ifError: errorBlock [
+
+	^ self
+		  evaluate: aString
+		  in: moduleName
+		  do: nil
+		  ifError: errorBlock
+]
+
+{ #category : 'evaluating' }
+ViennaAnimation >> execute: aViennaNode in: moduleName do: aBlock ifError: errorBlock [
+
+	Cursor wait showWhile: [
+			| oldState result state |
+			oldState := self state.
+			result := ((moduleName isNil or: [ moduleName = self defaultModule ])
+				           ifTrue: [ object ]
+				           ifFalse: [ object at: moduleName ifAbsent: [ ^ errorBlock cull: 'unknown module name' ] ])
+				          evaluateNode: aViennaNode
+				          with: transpiler
+				          ifError: [ :msg | ^ errorBlock cull: msg ].
+			state := self state.
+			[ aBlock ifNotNil: [ result := aBlock cull: result cull: state ] ] ensure: [
+					oldState ~= state ifTrue: [
+							self changed: #state.
+							self announceStateChanged ] ].
+			self announceEvaluated.
+			^ result ]
+]
+
+{ #category : 'evaluating' }
+ViennaAnimation >> execute: aViennaNode in: moduleName ifError: errorBlock [
+
+	^ self
+		  execute: aViennaNode
+		  in: moduleName
+		  do: nil
+		  ifError: errorBlock
 ]
 
 { #category : 'evaluating' }
 ViennaAnimation >> init [
-
-	lock critical: [
-		| result postState |
-		result := engine
-			          evaluate: String new
-			          specification: self specification
-			          states: Dictionary new.
-		result third ifNotEmpty: [ :msg | ^ Error signal: msg ].
-		postState := Dictionary new.
-		result second keysAndValuesDo: [ :module :binds |
-			binds keysAndValuesDo: [ :var :value |
-				postState
-					at: (var = self defaultModule
-							 ifTrue: [ var ]
-							 ifFalse: [ module , '`' , var ])
-					put: value ] ].
-		state := postState.
-		self announceStateChanged ]
+	object init
 ]
 
 { #category : 'initialize-release' }
 ViennaAnimation >> initialize [
+
 	super initialize.
-	lock := Semaphore forMutualExclusion.
-	specification := String new.
-	state := Dictionary new.
+	parser := ViennaVDMParser current.
 	reader := ViennaReader new.
-	writer := ViennaWriter new
+	writer := ViennaUnquoteWriter new.
+	self specification: String new ifError: [  ]
 ]
 
 { #category : 'testing' }
 ViennaAnimation >> isTranspiledAnimation [
 
-	^ false
+	^ true
 ]
 
-{ #category : 'private' }
-ViennaAnimation >> parseJson: aJsonString [
-	^ NeoJSONReader fromString: aJsonString
-]
-
-{ #category : 'accessing-plain' }
+{ #category : 'accessing' }
 ViennaAnimation >> plainAt: aString [
+	^ self plainAt: aString ifPresent: [ :value | value ] ifAbsent: [  ]
+]
+
+{ #category : 'accessing' }
+ViennaAnimation >> plainAt: aString ifAbsent: absentBlock [
 	^ self
 		plainAt: aString
-		ifAbsent: [ KeyNotFound signalFor: aString in: self ]
+		ifPresent: [ :value | value ]
+		ifAbsent: absentBlock
 ]
 
-{ #category : 'accessing-plain' }
-ViennaAnimation >> plainAt: aString ifAbsent: errorBlock [
-	^ self plainAt: aString ifPresent: [ :value | value ] ifAbsent: errorBlock
+{ #category : 'accessing' }
+ViennaAnimation >> plainAt: aString ifPresent: presentBlock [
+	^ self
+		plainAt: aString
+		ifPresent: [ :value | presentBlock value: value viennaString ]
+		ifAbsent: [  ]
 ]
 
-{ #category : 'accessing-plain' }
-ViennaAnimation >> plainAt: aString ifAbsentPut: errorBlock [
-
-	^ self plainAt: aString ifPresent: [ :value | value ] ifAbsent: [
-		  state at: aString put: errorBlock value.
-		  self announceStateChanged ]
+{ #category : 'accessing' }
+ViennaAnimation >> plainAt: aString ifPresent: presentBlock ifAbsent: absentBlock [
+	^ self
+		at: aString
+		ifPresent: [ :value | presentBlock value: (writer stringify: value) ]
+		ifAbsent: absentBlock
 ]
 
-{ #category : 'accessing-plain' }
-ViennaAnimation >> plainAt: aString ifPresent: aBlock ifAbsent: errorBlock [
-	^ state at: aString ifPresent: [ :value | aBlock cull: value ] ifAbsent: errorBlock
-]
+{ #category : 'accessing' }
+ViennaAnimation >> plainAt: aString put: aVDMString [
 
-{ #category : 'accessing-plain' }
-ViennaAnimation >> plainAt: aString put: anObject [
-
-	state at: aString put: anObject.
-	self announceStateChanged.
-	^ anObject
+	^ self at: aString put: (reader parse: aVDMString)
 ]
 
 { #category : 'evaluating' }
 ViennaAnimation >> plainEvaluate: aString [
-	^ self plainEvaluate: aString ifError: [ :msg | Error signal: msg ]
+	^ self plainEvaluate: aString ifError: [ :msg | self error: msg ]
 ]
 
 { #category : 'evaluating' }
@@ -281,132 +304,225 @@ ViennaAnimation >> plainEvaluate: aString ifError: errorBlock [
 { #category : 'evaluating' }
 ViennaAnimation >> plainEvaluate: aString in: moduleName ifError: errorBlock [
 
-	| result |
-	lock critical: [
-		result := self
-			          basicPlainEvaluate: aString
-			          in: (moduleName ifNil: [ self defaultModule ])
-			          ifError: [ :msg | ^ errorBlock cull: msg ] ].
-	self changed: #state.
-	^ result
+	^ (self
+			   evaluate: aString
+			   in: (moduleName ifNil: [ self defaultModule ])
+			   ifError: [ :msg | ^ errorBlock value: msg ]) viennaString
+]
+
+{ #category : 'evaluating' }
+ViennaAnimation >> plainExecute: aViennaNode [
+
+	^ self plainExecute: aViennaNode ifError: [ :msg | self error: msg ]
+]
+
+{ #category : 'evaluating' }
+ViennaAnimation >> plainExecute: aViennaNode ifError: errorBlock [
+
+	^ self
+		  plainExecute: aViennaNode
+		  in: self defaultModule
+		  ifError: errorBlock
 ]
 
 { #category : 'evaluating' }
 ViennaAnimation >> plainExecute: aViennaNode in: moduleName ifError: errorBlock [
 
-	^ self
-		  plainEvaluate: aViennaNode source
-		  in: moduleName
-		  ifError: errorBlock
+	^ writer stringify: (self
+			   execute: aViennaNode
+			   in: (moduleName ifNil: [ self defaultModule ])
+			   ifError: [ :msg | ^ errorBlock value: msg ])
 ]
 
 { #category : 'copying' }
 ViennaAnimation >> postCopy [
-	| oldSpec oldState |
-	super postCopy.
-	oldSpec := self specification.
+	| oldState oldSpec |
 	oldState := self state.
-	announcer := nil.
-	dependents := nil.
-	self initialize.
-	self specification: oldSpec.
+	oldSpec := self specification.
+	super postCopy.
+	object := object copy.
 	self state: oldState
 ]
 
-{ #category : 'accessing' }
-ViennaAnimation >> reader [
-	^ reader
-]
+{ #category : 'evaluating' }
+ViennaAnimation >> resolve: aViennaNameNode in: moduleName ifError: errorBlock [
 
-{ #category : 'accessing' }
-ViennaAnimation >> reader: aViennaReader [
-	reader := aViennaReader
+	Cursor wait showWhile: [
+			| scope |
+			scope := (moduleName isNil or: [ moduleName = self defaultModule ])
+				         ifTrue: [ specificationNode ]
+				         ifFalse: [
+				         (specificationNode moduleNamed: moduleName) ifNil: [ ^ errorBlock cull: 'unknown module name ' , moduleName ] ].
+			^ aViennaNameNode
+				  ifNotNil: [
+						  aViennaNameNode parent: scope.
+						  aViennaNameNode resolve ifNil: [ errorBlock cull: 'unknown name ' , aViennaNameNode source ] ]
+				  ifNil: [ scope ] ]
 ]
 
 { #category : 'evaluating' }
-ViennaAnimation >> runTestOperation: operation module: module [
+ViennaAnimation >> runTestOperation: aString module: anotherString [
 
-	| header |
-	header := 'Runtime: Error 4129: Exit '.
-	self plainEvaluate: operation , '()' in: module ifError: [ :msg |
-		(msg size > header size and: [
-			 (msg copyFrom: 1 to: header size) = header ])
-			ifTrue: [
-				ViennaException signal:
-					(ViennaReader new parse:
-						 (msg copyFrom: header size + 1 to: msg size)) ]
-			ifFalse: [ Error signal: msg ] ]
+	| moduleObject operationNode acts fins rds wrs |
+	moduleObject := object at: anotherString.
+	operationNode := moduleObject class specificationAt: aString asSymbol.
+	acts := Set new.
+	fins := Set new.
+	rds := Set new.
+	wrs := Set new.
+	operationNode
+		allDescendantsSuchThat: #isViennaHistoryExpressionNode
+		do: [ :node |
+			node isViennaActExpressionNode ifTrue: [
+				node nameList do: [ :name |
+					name asGlobalName ifNotNil: [ :globalName |
+						acts add: {
+								{
+									globalName moduleIdentifier asSymbol.
+									globalName identifier asSymbol }.
+								(object at: globalName moduleIdentifier).
+								(globalName identifier , ':') asSymbol } ] ] ].
+			node isViennaFinExpressionNode ifTrue: [
+				node nameList do: [ :name |
+					name asGlobalName ifNotNil: [ :globalName |
+						fins add: {
+								{
+									globalName moduleIdentifier asSymbol.
+									globalName identifier asSymbol }.
+								(object at: globalName moduleIdentifier).
+								(globalName identifier , ':') asSymbol } ] ] ].
+			node isViennaRdExpressionNode ifTrue: [
+				node nameList do: [ :name |
+					name asGlobalName ifNotNil: [ :globalName |
+						rds add: {
+								{
+									globalName moduleIdentifier asSymbol.
+									globalName identifier asSymbol }.
+								(object at: globalName moduleIdentifier).
+								globalName identifier asSymbol } ] ] ].
+			node isViennaWrExpressionNode ifTrue: [
+				node nameList do: [ :name |
+					name asGlobalName ifNotNil: [ :globalName |
+						wrs add: {
+								{
+									globalName moduleIdentifier asSymbol.
+									globalName identifier asSymbol }.
+								(object at: globalName moduleIdentifier).
+								globalName identifier asSymbol } ] ] ] ].
+	self init.
+	ViennaProfiler
+		act: acts asArray
+		fin: fins asArray
+		rd: rds asArray
+		wr: wrs asArray
+		do: [
+			[ (moduleObject perform: aString asSymbol) value ]
+				on: ViennaAssertionViolation
+				do: [ :ex |
+				ex resignalAs: (ViennaException expression: ex expression) ] ]
 ]
 
 { #category : 'evaluating' }
 ViennaAnimation >> runTrace: aString module: anotherString do: aBlock onError: errorBlock [
+
+	(object at: anotherString)
+		perform: (aString , ':onError:') asSymbol
+		with: aBlock
+		with: errorBlock
 ]
 
 { #category : 'accessing' }
 ViennaAnimation >> specification [
-	^ specification
+	^ specification ifNil: [ '' ]
 ]
 
 { #category : 'accessing' }
 ViennaAnimation >> specification: aString [
-
-	| oldSpecification |
-	oldSpecification := specification.
-	specification := aString.
-	oldSpecification ~= specification ifTrue: [
-			self changed: #specification.
-			self announceSpecificationChanged ]
+	self specification: aString ifError: [ :msg | ]
 ]
 
 { #category : 'accessing' }
-ViennaAnimation >> specification: aStringOrViennaNode ifError: errorBlock [
+ViennaAnimation >> specification: aString ifError: errorBlock [
 
-	| source |
-	source := aStringOrViennaNode isViennaNode
-		          ifTrue: [ aStringOrViennaNode source ]
-		          ifFalse: [ aStringOrViennaNode asString ].
-	specification ~= source ifTrue: [
-			| oldState |
-			lock critical: [
-					| oldSpec |
-					oldSpec := specification.
-					oldState := state copy.
-					specification := source.
-					self basicPlainEvaluate: 'nil' in: self defaultModule ifError: [ :msg |
-							specification := oldSpec.
-							^ errorBlock cull: msg ].
-					self changed: #specification.
-					self announceSpecificationChanged.
-					oldState ~= state ifTrue: [
-							self changed: #state.
-							self announceStateChanged ] ] ]
+	self
+		specificationNode: (aString isViennaNode
+				 ifTrue: [ aString ]
+				 ifFalse: [
+						 aString
+							 ifNotEmpty: [
+									 | result |
+									 result := parser parse: aString.
+									 result isPetit2Failure ifTrue: [ ^ errorBlock cull: result message ].
+									 result asModularDocument ]
+							 ifEmpty: [ ViennaModularDocumentNode default ] ])
+		ifError: errorBlock
+]
+
+{ #category : 'accessing' }
+ViennaAnimation >> specificationNode [
+
+	^ specificationNode
+]
+
+{ #category : 'accessing' }
+ViennaAnimation >> specificationNode: aViennaModularDocumentNode ifError: errorBlock [
+
+	| oldSpecificationNode oldState |
+	oldSpecificationNode := specificationNode.
+	oldState := self state.
+	transpiler := self transpilerClass new.
+	specificationNode := aViennaModularDocumentNode.
+	[ specificationNode typecheck ]
+		on: ViennaTypeError
+		do: [ :typeError | ^ errorBlock cull: typeError messageText ].
+	object := transpiler generate: specificationNode.
+	specification := aViennaModularDocumentNode source.
+	oldSpecificationNode ~= specificationNode ifTrue: [ self changed: #specification ].
+	self announceSpecificationChanged.
+	oldState ~= self state ifTrue: [
+			self changed: #state.
+			self announceStateChanged ]
 ]
 
 { #category : 'private' }
 ViennaAnimation >> state [
-	^ state copy
-]
-
-{ #category : 'accessing' }
-ViennaAnimation >> state: aDictionary [
-
-	state := aDictionary copy.
-	self announceStateChanged
+	| state |
+	state := Dictionary new.
+	object
+		ifNotNil: [ object isDictionary
+				ifTrue: [ object
+						keysAndValuesDo: [ :moduleName :module | 
+							| moduleState |
+							moduleState := module state.
+							moduleState namedFields
+								keysAndValuesDo:
+									[ :varName :varIndex | state at: moduleName , '`' , varName put: (writer stringify: (moduleState at: varIndex)) ] ] ]
+				ifFalse: [ | moduleState |
+					moduleState := object state.
+					moduleState namedFields
+						keysAndValuesDo:
+							[ :varName :varIndex | state at: self defaultModule, '`', varName put: (writer stringify: (moduleState at: varIndex)) ] ] ].
+	^ state
 ]
 
 { #category : 'private' }
-ViennaAnimation >> stringify: aJsonObject [
-	^ String streamContents: [ :stream |
-			(NeoJSONWriter on: stream) asciiOnly: true; nextPut: aJsonObject ]
+ViennaAnimation >> state: aDictionary [
 
+	| oldState |
+	oldState := self state.
+	aDictionary keysAndValuesDo: [ :var :val | self basicAt: var put: (reader parse: val) ].
+	object inv.
+	self state ~= self state ifTrue: [ self announceStateChanged ]
 ]
 
 { #category : 'accessing' }
-ViennaAnimation >> writer [
-	^ writer
+ViennaAnimation >> transpiledSpecification [
+
+	^ object
 ]
 
-{ #category : 'accessing' }
-ViennaAnimation >> writer: aViennaWriter [
-	writer := aViennaWriter
+{ #category : 'class access' }
+ViennaAnimation >> transpilerClass [
+
+	^ ViennaVDM2SmalltalkObject
 ]

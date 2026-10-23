@@ -149,70 +149,42 @@ ViennaBrowser class >> moduleListMenu: aBuilder [
 
 	<contextMenu>
 	<viennaBrowserModuleListMenu>
-	(aBuilder item: #'load snapshot...' translated) selector:
-		#loadSnapshotFromFile.
-	(aBuilder item: #'new and load...' translated) selector:
-		#newAndLoadFromFile.
-	(aBuilder item: #'load and merge...' translated) selector:
-		#loadAndMergeFromFile.
-	(aBuilder item: #'save snapshot...' translated) selector:
-		#saveSnapshotToFile.
-	(aBuilder item: #'save all modules...' translated) selector:
-		#saveAllModulesToFile.
-	aBuilder model selectedModule ifNotNil: [ 
-		(aBuilder item: #'save the module...' translated) selector:
-			#saveAModuleToFile ].
+	(aBuilder item: #'load snapshot...' translated) selector: #loadSnapshotFromFile.
+	(aBuilder item: #'new and load...' translated) selector: #newAndLoadFromFile.
+	(aBuilder item: #'load and merge...' translated) selector: #loadAndMergeFromFile.
+	(aBuilder item: #'save snapshot...' translated) selector: #saveSnapshotToFile.
+	(aBuilder item: #'save all modules...' translated) selector: #saveAllModulesToFile.
+	aBuilder model selectedModule ifNotNil: [ (aBuilder item: #'save the module...' translated) selector: #saveAModuleToFile ].
 	aBuilder items last withSeparatorAfter.
-	(aBuilder item: #'generate ViennaDoc source script...' translated) 
-		selector: #generateViennaDocSourceScript.
+	(aBuilder item: #'generate ViennaDoc source script...' translated) selector: #generateViennaDocSourceScript.
 	aBuilder items last withSeparatorAfter.
-	(aBuilder model moduleList includes: 'UnitTesting') ifFalse: [ 
-		(aBuilder item: #'import UnitTesting module' translated) selector:
-			#importUnitTestingModule ].
-	(aBuilder model moduleList includes: 'ViennaDOM') ifFalse: [ 
-		(aBuilder item: #'import ViennaDOM module' translated) selector:
-			#importViennaDOMModule ].
+	(aBuilder model moduleList includes: 'UnitTesting') ifFalse: [
+		(aBuilder item: #'import UnitTesting module' translated) selector: #importUnitTestingModule ].
+	(aBuilder model moduleList includes: 'ViennaDOM') ifFalse: [
+		(aBuilder item: #'import ViennaDOM module' translated) selector: #importViennaDOMModule ].
 	aBuilder items last withSeparatorAfter.
 	(aBuilder item: #'remove module' translated)
 		selector: #removeModule;
 		withSeparatorAfter.
-	(aBuilder item: #'merge operations from FRAM...' translated) 
-		selector: #mergeOperationsFromFRAM.
+	(aBuilder item: #'merge operations from FRAM...' translated) selector: #mergeOperationsFromFRAM.
 	(aBuilder item: #'merge annotations into FRAM...' translated)
 		selector: #mergeAnnotationsIntoFRAM;
 		withSeparatorAfter.
-	(Smalltalk globals
-		 at: #WeblyWalkThrough
-		 ifPresent: [ :webly | aBuilder model animation class = webly ]
-		 ifAbsent: [ false ]) ifFalse: [ 
-		aBuilder model animation class = ViennaTranspiledAnimation
-			ifTrue: [ 
-				(aBuilder item: #'use interpreter' translated)
-					selector: #useInterpreter;
-					withSeparatorAfter ]
-			ifFalse: [ 
-				(aBuilder item: #'use transpiler' translated)
-					selector: #useTranspiler;
-					withSeparatorAfter ] ].
-	(aBuilder item:
-		 #'generate a Smalltalk script (single module)...' translated) 
-		selector: #generateSmalltalkScript.
-	(aBuilder item: #'generate classes (all modules)...' translated) 
-		selector: #generateSmalltalkClasses.
+	(aBuilder item: #'generate a Smalltalk script (single module)...' translated) selector: #generateSmalltalkScript.
+	(aBuilder item: #'generate classes (all modules)...' translated) selector: #generateSmalltalkClasses.
 	(aBuilder item: #'generate object (all modules)...' translated)
 		selector: #generateSmalltalkObject;
 		withSeparatorAfter.
-	(aBuilder item: #'run module test' translated) selector:
-		#runTestModule.
+	(aBuilder item: #'run module test' translated) selector: #runTestModule.
 	(aBuilder item: #'run tests' translated)
 		selector: #runAllTests;
 		withSeparatorAfter.
-	aBuilder model importerModules ifNotEmpty: [ :modules | 
-		(aBuilder item: #'imported by...' translated) with: [ 
-			modules do: [ :module | 
-				(aBuilder item: module asSymbol)
-					selector: #selectModuleNamed:;
-					arguments: (Array with: module asString) ] ] ]
+	aBuilder model importerModules ifNotEmpty: [ :modules |
+			(aBuilder item: #'imported by...' translated) with: [
+					modules do: [ :module |
+							(aBuilder item: module asSymbol)
+								selector: #selectModuleNamed:;
+								arguments: (Array with: module asString) ] ] ]
 ]
 
 { #category : 'instance creation' }
@@ -598,15 +570,6 @@ ViennaBrowser >> animation: aViennaAnimation [
 	animation ifNotNil: [ animation removeDependent: self ].
 	animation := aViennaAnimation.
 	aViennaAnimation addDependent: self
-]
-
-{ #category : 'accessing' }
-ViennaBrowser >> animationClassForType: aSymbol [
-	aSymbol = #transpiler
-		ifTrue: [ Smalltalk
-				at: #ViennaTranspiledAnimation
-				ifPresent: [ :class | ^ class ] ].
-	^ ViennaAnimation
 ]
 
 { #category : 'accessing' }
@@ -1111,23 +1074,18 @@ ViennaBrowser >> loadAndMergeFromFile [
 
 { #category : 'module list menu' }
 ViennaBrowser >> loadSnapshotFromFile [
-	self
-		fileOpen: 'Open snapshot...'
-		extensions: #('vdmim')
-		do: [ :stream | 
+
+	self fileOpen: 'Open snapshot...' extensions: #( 'vdmim' ) do: [ :stream |
 			| json |
 			json := (NeoJSONReader on: stream) next.
-			animation := (self
-				animationClassForType: (json at: 'engineType' ifAbsent: [ nil ]) asSymbol)
-				new.
-			[ animation
-				specification: (json at: 'specification' ifAbsent: [ '' ])
-				ifError: [ :msg | self error: msg ].
-			self selectModuleNamed: nil ]
+			animation := ViennaAnimation new.
+			[
+				animation specification: (json at: 'specification' ifAbsent: [ '' ]) ifError: [ :msg | self error: msg ].
+				self selectModuleNamed: nil ]
 				on: Error
-				do: [ :ex | 
-					codePane setText: (json at: 'specification').
-					codePane hasUnacceptedEdits: true ].
+				do: [ :ex |
+						codePane setText: (json at: 'specification').
+						codePane hasUnacceptedEdits: true ].
 			animation state: (json at: 'state' ifAbsent: [ Dictionary new ]).
 			self acceptWorkspace: (json at: 'workspace' ifAbsent: [ '' ]) ]
 ]
@@ -1484,16 +1442,13 @@ ViennaBrowser >> saveAllModulesToFile [
 
 { #category : 'module list menu' }
 ViennaBrowser >> saveSnapshotToFile [
+
 	| json |
 	json := Dictionary new.
-	json at: 'engineType' put: self animation engineType.
 	json at: 'specification' put: self animation specification.
 	json at: 'state' put: self animation state.
 	json at: 'workspace' put: self workspace.
-	self
-		fileSave: 'Save snapshot to...'
-		extensions: #('vdmim')
-		do: [ :stream | (NeoJSONWriter on: stream) nextPut: json ]
+	self fileSave: 'Save snapshot to...' extensions: #( 'vdmim' ) do: [ :stream | (NeoJSONWriter on: stream) nextPut: json ]
 ]
 
 { #category : 'field list' }
@@ -1623,16 +1578,6 @@ ViennaBrowser >> updateTestLabelIcon [
 	level = 3
 		ifTrue: [ testLabelIcon form: ViennaUnitTestErrorResultItem icon ].
 	testLabel changed
-]
-
-{ #category : 'module list menu' }
-ViennaBrowser >> useInterpreter [
-	self animation: self animation asInterpretedAnimation 
-]
-
-{ #category : 'module list menu' }
-ViennaBrowser >> useTranspiler [
-	self animation: self animation asTranspiledAnimation
 ]
 
 { #category : 'value pane' }

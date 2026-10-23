@@ -172,12 +172,6 @@ WeblyWalkThrough >> basicPlainEvaluate: aString in: moduleName ifError: errorBlo
 ]
 
 { #category : 'evaluating' }
-WeblyWalkThrough >> becomeInterpretedAnimation [
-
-	animation := animation becomeInterpretedAnimation
-]
-
-{ #category : 'evaluating' }
 WeblyWalkThrough >> becomeTranspiledAnimation [
 
 	animation := animation becomeTranspiledAnimation

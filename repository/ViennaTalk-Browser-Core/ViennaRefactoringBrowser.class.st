@@ -1055,7 +1055,7 @@ ViennaRefactoringBrowser >> createNewNarrativeDo: aBlock [
 { #category : 'operations-tests' }
 ViennaRefactoringBrowser >> debugTestResultItem: aViennaTestResultItem [
 
-	^ (ViennaTranspiledAnimation new
+	^ (ViennaAnimation new
 		   specification: self specification ifError: [ :msg | ^ nil ];
 		   yourself)
 		  debug: aViennaTestResultItem operation , '()'

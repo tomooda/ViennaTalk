@@ -10,7 +10,8 @@ Class {
 
 { #category : 'running' }
 ViennaAnimationTest >> setUp [
-	animation := ViennaAnimation default
+
+	animation := ViennaAnimation new
 ]
 
 { #category : 'tests' }
@@ -47,13 +48,4 @@ ViennaAnimationTest >> testEval1 [
 ViennaAnimationTest >> testEval2 [
 	animation specification: 'values one = 1;'.
 	self assert: (animation evaluate: 'one + 2') equals: 3.
-]
-
-{ #category : 'tests' }
-ViennaAnimationTest >> testSpecification [
-	| spec |
-	spec := 'values
-    one = 1;'.
-	animation specification: spec copy.
-	self assert: animation specification equals: spec.
 ]

@@ -45,7 +45,7 @@ MicViennaBlock class >> tag [
 { #category : 'accessing' }
 MicViennaBlock >> animation [
 
-	^ presenter ifNotNil: #animation ifNil: [ ViennaTranspiledAnimation new ]
+	^ presenter ifNotNil: #animation ifNil: [ ViennaAnimation new ]
 ]
 
 { #category : 'accessing' }

@@ -498,25 +498,8 @@ LWTDirector >> urlPrefix: aString [
 ]
 
 { #category : 'accessing' }
-LWTDirector >> useInterpreter [
-	self animation becomeInterpretedAnimation 
-]
-
-{ #category : 'accessing' }
 LWTDirector >> useTranspiler [
 	self animation becomeTranspiledAnimation 
-]
-
-{ #category : 'accessing' }
-LWTDirector >> usesTranspiler [
-	^ animation class == ViennaTranspiledAnimation 
-]
-
-{ #category : 'accessing' }
-LWTDirector >> usesTranspiler: aBoolean [
-	aBoolean = true
-		ifTrue: [ self useTranspiler ]
-		ifFalse: [ self useInterpreter ]
 ]
 
 { #category : 'request handling' }

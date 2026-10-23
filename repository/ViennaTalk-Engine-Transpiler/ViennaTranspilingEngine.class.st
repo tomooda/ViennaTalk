@@ -32,7 +32,7 @@ ViennaTranspilingEngine >> animation [
 { #category : 'class access' }
 ViennaTranspilingEngine >> animationClass [
 
-	^ ViennaTranspiledAnimation
+	^ ViennaAnimation
 ]
 
 { #category : 'accessing' }

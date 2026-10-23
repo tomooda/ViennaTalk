@@ -38,7 +38,7 @@ show : () ==> nat
 show() == return count;
 end Counter'.
 	presenter := self new
-		             animation: (ViennaTranspiledAnimation new
+		             animation: (ViennaAnimation new
 				              specification: spec;
 				              yourself);
 		             documentFromString: '# Example evaluatable documentation
