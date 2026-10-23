@@ -196,7 +196,7 @@ ViennaBrowser class >> on: aViennaAnimation [
 ViennaBrowser class >> open [
 	"ViennaBrowser open"
 
-	^ self openOn: ViennaAnimation default
+	^ self openOn: ViennaAnimation new
 ]
 
 { #category : 'instance creation' }
