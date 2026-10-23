@@ -482,7 +482,7 @@ ViennaTranspiledAnimation >> specification: aString ifError: errorBlock [
 									 | result |
 									 result := parser parse: aString.
 									 result isPetit2Failure ifTrue: [ ^ errorBlock cull: result message ].
-									 result ]
+									 result asModularDocument ]
 							 ifEmpty: [ ViennaModularDocumentNode default ] ])
 		ifError: errorBlock
 ]
