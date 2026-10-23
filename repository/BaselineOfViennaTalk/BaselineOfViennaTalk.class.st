@@ -104,18 +104,13 @@ BaselineOfViennaTalk >> baseline: spec [
 					baseline: 'NeoJSON' with: [ spec repository: 'github://svenvc/NeoJSON/repository' ];
 					baseline: 'PetitParser2' with: [ spec repository: 'github://kursjan/petitparser2:master' ].
 				spec
-					for: #Unix
-					do: [ spec baseline: 'OSSubprocess' with: [ spec repository: 'github://marianopeck/OSSubprocess/repository' ] ].
-
-				spec
 					package: 'ViennaTalk-AST-Core' with: [ spec requires: #( 'ViennaTalk-Type-Core' ) ];
 					package: 'ViennaTalk-AST-Tests'
 					with: [ spec requires: #( 'ViennaTalk-AST-Core' 'ViennaTalk-Parser-Core' 'ViennaTalk-Type-Core' ) ];
 					package: 'ViennaTalk-Application' with: [ spec requires: #(  ) ];
 					package: 'ViennaTalk-Animation-Core' with: [
-							spec requires:
-									#( spec requires: #( 'ViennaTalk-AST-Core' 'ViennaTalk-Parser-Core' 'ViennaTalk-Profiler-Core' 'ViennaTalk-Transpiler-Core'
-									      'ViennaTalk-Type-Core' 'ViennaTalk-Value-Core' ) ) ];
+							spec requires: #( 'ViennaTalk-AST-Core' 'ViennaTalk-Parser-Core' 'ViennaTalk-Profiler-Core' 'ViennaTalk-Transpiler-Core'
+									   'ViennaTalk-Type-Core' 'ViennaTalk-Value-Core' ) ];
 					package: 'ViennaTalk-Animation-Tests' with: [ spec requires: #( 'ViennaTalk-Animation-Core' ) ];
 					package: 'ViennaTalk-Engine-Core'
 					with: [ spec requires: #( 'Fed' 'ViennaTalk-Engine-Core' 'ViennaTalk-Animation-Core' 'ViennaTalk-Engine-Core' ) ];
