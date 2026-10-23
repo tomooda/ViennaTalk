@@ -1,6 +1,6 @@
 Class {
 	#name : 'ViennaFeedEngine',
-	#superclass : 'ViennaEngine',
+	#superclass : 'ViennaAbstractEngine',
 	#category : 'ViennaTalk-Engine-Core',
 	#package : 'ViennaTalk-Engine-Core'
 }

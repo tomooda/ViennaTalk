@@ -497,11 +497,6 @@ LWTDirector >> urlPrefix: aString [
 			self changed: #urlPrefix ]
 ]
 
-{ #category : 'accessing' }
-LWTDirector >> useTranspiler [
-	self animation becomeTranspiledAnimation 
-]
-
 { #category : 'request handling' }
 LWTDirector >> value: aZnRequest [
 	^ (aZnRequest uri segments ifNotNil: [ :segments | segments at: 2 ifAbsent: [  ] ])

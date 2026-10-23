@@ -117,10 +117,9 @@ BaselineOfViennaTalk >> baseline: spec [
 									#( spec requires: #( 'ViennaTalk-AST-Core' 'ViennaTalk-Parser-Core' 'ViennaTalk-Profiler-Core' 'ViennaTalk-Transpiler-Core'
 									      'ViennaTalk-Type-Core' 'ViennaTalk-Value-Core' ) ) ];
 					package: 'ViennaTalk-Animation-Tests' with: [ spec requires: #( 'ViennaTalk-Animation-Core' ) ];
-					package: 'ViennaTalk-Engine-Core' with: [ spec requires: #( 'Fed' ) ];
+					package: 'ViennaTalk-Engine-Core'
+					with: [ spec requires: #( 'Fed' 'ViennaTalk-Engine-Core' 'ViennaTalk-Animation-Core' 'ViennaTalk-Engine-Core' ) ];
 					package: 'ViennaTalk-Engine-Networking' with: [ spec requires: #( 'ViennaTalk-Engine-Core' ) ];
-					package: 'ViennaTalk-Engine-Transpiler'
-					with: [ spec requires: #( 'ViennaTalk-Engine-Core' 'ViennaTalk-Animation-Core' 'ViennaTalk-Engine-Core' ) ];
 					package: 'ViennaTalk-Engine-VDMJ' with: [ spec requires: #( 'ViennaTalk-Engine-Core' 'OSSubprocess' 'NeoJSON' ) ];
 					package: 'ViennaTalk-Browser-Core' with: [
 							spec requires:
@@ -174,7 +173,7 @@ BaselineOfViennaTalk >> baseline: spec [
 		package: 'ViennaTalk-Type-Core' with: [ spec requires: #( 'ViennaTalk-Value-Core' ) ];
 		package: 'ViennaTalk-Type-Tests' with: [ spec requires: #( 'ViennaTalk-Type-Core' 'ViennaTalk-Value-Core' ) ];
 		package: 'ViennaTalk-VDMPad-Core'
-		with: [ spec requires: #( 'ViennaTalk-Engine-Transpiler' 'NeoJSON' 'ViennaTalk-Html-Core' 'ViennaTalk-Parser-Core' ) ];
+		with: [ spec requires: #( 'ViennaTalk-Engine-Core' 'NeoJSON' 'ViennaTalk-Html-Core' 'ViennaTalk-Parser-Core' ) ];
 		package: 'ViennaTalk-Value-Core';
 		package: 'ViennaTalk-Value-Tests' with: [ spec requires: #( 'ViennaTalk-Value-Core' ) ];
 		package: 'ViennaTalk-WeblyWalkThrough-Server' with: [

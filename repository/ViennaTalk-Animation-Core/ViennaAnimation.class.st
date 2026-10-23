@@ -124,11 +124,6 @@ ViennaAnimation >> basicAt: aString put: anObject [
 	^ anObject
 ]
 
-{ #category : 'private' }
-ViennaAnimation >> becomeTranspiledAnimation [
-	^ self
-]
-
 { #category : 'converting' }
 ViennaAnimation >> copyForTest [
 	^ self copy

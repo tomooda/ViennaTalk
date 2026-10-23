@@ -171,12 +171,6 @@ WeblyWalkThrough >> basicPlainEvaluate: aString in: moduleName ifError: errorBlo
 		  ifError: errorBlock
 ]
 
-{ #category : 'evaluating' }
-WeblyWalkThrough >> becomeTranspiledAnimation [
-
-	animation := animation becomeTranspiledAnimation
-]
-
 { #category : 'converting' }
 WeblyWalkThrough >> copyForTest [
 

@@ -1996,7 +1996,7 @@ ViennaRefactoringBrowser >> initState [
 { #category : 'initialization' }
 ViennaRefactoringBrowser >> initialize [
 
-	animation := ViennaAnimation default.
+	animation := ViennaAnimation new.
 	animation announcer
 		when: ViennaAnimationStateChanged send: #updateStateTable to: self;
 		when: ViennaAnimationSpecificationChanged send: #updateStateTableItems to: self.
@@ -3199,29 +3199,23 @@ ViennaRefactoringBrowser >> runAllTests [
 
 	testProcess ifNotNil: [ testProcess terminate ].
 	testProcess := [
-	               | ast testAnimation |
-	               ast := self specification ifNil: [ ^ nil ].
-	               testAnimation := ViennaAnimation transpiler
-		                                specification: ast;
-		                                yourself.
-	               testResultTable items:
-		               (Array streamContents: [ :stream |
-			                ast testOperationsDo: [ :testOperation |
-				                | moduleName operationName |
-				                moduleName := testOperation module identifier.
-				                operationName := testOperation identifier.
-				                stream nextPut: (ViennaUnitTestResultItem
-						                 module: moduleName
-						                 operation: operationName
-						                 animation: testAnimation) ].
-			                ast namedTracesDo: [ :namedTrace |
-				                stream nextPut:
-					                (ViennaCombinatorialTestResultItem on: namedTrace) ] ]).
-	               testResultTable items do: [ :item |
-		               item run.
-		               testResultTable refresh ].
-	               testProcess := nil ] forkAt:
-		               Processor userBackgroundPriority
+		               | ast testAnimation |
+		               ast := self specification ifNil: [ ^ nil ].
+		               testAnimation := ViennaAnimation new
+			                                specification: ast;
+			                                yourself.
+		               testResultTable items: (Array streamContents: [ :stream |
+					                ast testOperationsDo: [ :testOperation |
+							                | moduleName operationName |
+							                moduleName := testOperation module identifier.
+							                operationName := testOperation identifier.
+							                stream nextPut:
+								                (ViennaUnitTestResultItem module: moduleName operation: operationName animation: testAnimation) ].
+					                ast namedTracesDo: [ :namedTrace | stream nextPut: (ViennaCombinatorialTestResultItem on: namedTrace) ] ]).
+		               testResultTable items do: [ :item |
+				               item run.
+				               testResultTable refresh ].
+		               testProcess := nil ] forkAt: Processor userBackgroundPriority
 ]
 
 { #category : 'operations-tests' }

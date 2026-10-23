@@ -39,7 +39,7 @@ ViennaFeedWorkerPool class >> poolDirectory [
 { #category : 'defaults' }
 ViennaFeedWorkerPool >> defaultEngine [
 
-	^ ViennaTranspilingEngine default
+	^ ViennaEngine default
 ]
 
 { #category : 'execution' }
