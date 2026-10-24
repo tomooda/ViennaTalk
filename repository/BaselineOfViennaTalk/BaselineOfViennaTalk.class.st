@@ -112,10 +112,8 @@ BaselineOfViennaTalk >> baseline: spec [
 							spec requires: #( 'ViennaTalk-AST-Core' 'ViennaTalk-Parser-Core' 'ViennaTalk-Profiler-Core' 'ViennaTalk-Transpiler-Core'
 									   'ViennaTalk-Type-Core' 'ViennaTalk-Value-Core' ) ];
 					package: 'ViennaTalk-Animation-Tests' with: [ spec requires: #( 'ViennaTalk-Animation-Core' ) ];
-					package: 'ViennaTalk-Engine-Core'
-					with: [ spec requires: #( 'Fed' 'ViennaTalk-Engine-Core' 'ViennaTalk-Animation-Core' 'ViennaTalk-Engine-Core' ) ];
+					package: 'ViennaTalk-Engine-Core' with: [ spec requires: #( 'Fed' ) ];
 					package: 'ViennaTalk-Engine-Networking' with: [ spec requires: #( 'ViennaTalk-Engine-Core' ) ];
-					package: 'ViennaTalk-Engine-VDMJ' with: [ spec requires: #( 'ViennaTalk-Engine-Core' 'OSSubprocess' 'NeoJSON' ) ];
 					package: 'ViennaTalk-Browser-Core' with: [
 							spec requires:
 									#( 'ViennaTalk-AST-Core' 'ViennaTalk-Animation-Core' 'ViennaTalk-ExecutionTrace-Core' 'ViennaTalk-FRAM-Core'
@@ -187,7 +185,7 @@ BaselineOfViennaTalk >> baseline: spec [
 			   'ViennaTalk-Parser-Formatters' 'ViennaTalk-Parser-Highlighters' 'ViennaTalk-ExecutionTrace-Core'
 			   'ViennaTalk-Slicing-Core' 'ViennaTalk-Mutation-Core' 'ViennaTalk-Microdown' );
 		group: 'default' with: #( 'core' 'VDMPad' 'LivelyWalkThrough' 'tests' 'WeblyWalkThrough' 'ViennaFRAM' 'Application' );
-		group: 'full' with: #( 'default' 'ViennaTalk-Engine-VDMJ' 'ViennaTalk-Engine-Networking' 'ViennaTalk-Engine-Tests' );
+		group: 'full' with: #( 'default' 'ViennaTalk-Engine-Networking' 'ViennaTalk-Engine-Tests' );
 		group: 'tests'
 		with: #( 'ViennaTalk-Value-Tests' 'ViennaTalk-Parser-Tests' 'ViennaTalk-Type-Tests' 'ViennaTalk-Animation-Tests'
 			   'ViennaTalk-Transpiler-Tests' 'ViennaTalk-FRAM-Tests' 'ViennaTalk-Slicing-Tests' 'ViennaTalk-Refactoring-Tests'
