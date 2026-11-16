@@ -1,6 +1,9 @@
 Class {
 	#name : 'BaselineOfViennaTalk',
 	#superclass : 'BaselineOf',
+	#instVars : [
+		'savedMaximumLineLengthMethod'
+	],
 	#category : 'BaselineOfViennaTalk',
 	#package : 'BaselineOfViennaTalk'
 }
@@ -96,6 +99,8 @@ BaselineOfViennaTalk >> baseline: spec [
 	spec
 		for: #common do: [
 				spec blessing: #baseline.
+				spec preLoadDoIt: #preLoad.
+				spec postLoadDoIt: #postLoad.
 				spec
 					baseline: 'Fed' with: [ spec repository: 'github://tomooda/Fed:main/src' ];
 					baseline: 'HiDeHo' with: [ spec repository: 'github://tomooda/HiDeHo:main/src' ];
@@ -199,4 +204,25 @@ BaselineOfViennaTalk >> customProjectAttributes [
 	os := OSPlatform current.
 	os isWindows ifTrue: [ ^ #( #Windows ) ].
 	(os isUnix or: [ os isMacOSX ]) ifTrue: [ ^ #( #Unix ) ]
+]
+
+{ #category : 'scripts' }
+BaselineOfViennaTalk >> postLoad [
+
+	savedMaximumLineLengthMethod ifNotNil: [ :method | ZnConstants class methodDictionary at: #maximumLineLength put: method ]
+]
+
+{ #category : 'scripts' }
+BaselineOfViennaTalk >> preLoad [
+	savedMaximumLineLengthMethod := ZnConstants class compiledMethodAt: #maximumLineLength ifAbsent: [ nil ].
+	ZnConstants class
+		compile: 'maximumLineLength
+	"Return the maximum line length to accept.
+	Used by ZnLineReader and thus for reading request/status lines as well as headers.
+	This helps to protect us from malicious content."
+
+	^ 8192 "4096*2"'
+		classified: 'resource limits'
+		withStamp: DateAndTime now
+		logSource: false
 ]
