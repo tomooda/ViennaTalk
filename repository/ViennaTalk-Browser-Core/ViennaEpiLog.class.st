@@ -228,6 +228,12 @@ ViennaEpiLog >> isAbstractModificationEpiLog [
 ]
 
 { #category : 'testing' }
+ViennaEpiLog >> isDiscourseModificationEpiLog [
+
+	^ false
+]
+
+{ #category : 'testing' }
 ViennaEpiLog >> isEvaluationEpiLog [
 
 	^ false
@@ -258,12 +264,6 @@ ViennaEpiLog >> isLoadingEpiLog [
 ]
 
 { #category : 'testing' }
-ViennaEpiLog >> isModificationEpiLog [
-
-	^ false
-]
-
-{ #category : 'testing' }
 ViennaEpiLog >> isPredEpiLog [
 
 	^ true
@@ -283,6 +283,12 @@ ViennaEpiLog >> isRevertionEpiLog [
 
 { #category : 'testing' }
 ViennaEpiLog >> isSemanticClosureMember [
+
+	^ false
+]
+
+{ #category : 'testing' }
+ViennaEpiLog >> isSpecificationModificationEpiLog [
 
 	^ false
 ]
@@ -364,7 +370,7 @@ ViennaEpiLog >> newModification: aViennaModularDocumentNode [
 { #category : 'instance creation' }
 ViennaEpiLog >> newModification: aViennaModularDocumentNode state: aDictionary [
 
-	^ ViennaModificationEpiLog
+	^ ViennaSpecificationModificationEpiLog
 		  after: self
 		  specification: aViennaModularDocumentNode
 		  state: aDictionary
