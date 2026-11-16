@@ -228,7 +228,7 @@ ViennaEpiLog >> isAbstractModificationEpiLog [
 ]
 
 { #category : 'testing' }
-ViennaEpiLog >> isDiscourseModificationEpiLog [
+ViennaEpiLog >> isDiscourseEpiLog [
 
 	^ false
 ]
@@ -309,6 +309,12 @@ ViennaEpiLog >> isVanillaEpiLog [
 ViennaEpiLog >> metadataName [
 
 	^ self class metadataName
+]
+
+{ #category : 'instance creation' }
+ViennaEpiLog >> newDiscourse: aString filename: anotherString [
+
+	^ ViennaDiscourseEpiLog after: self filename: anotherString content: aString
 ]
 
 { #category : 'instance creation' }

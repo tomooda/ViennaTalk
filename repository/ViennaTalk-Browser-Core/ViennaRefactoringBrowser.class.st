@@ -1261,6 +1261,12 @@ ViennaRefactoringBrowser >> epiLogCherrypickChanges [
 		  ifNil: [ Array new ]
 ]
 
+{ #category : 'operations-epiLog' }
+ViennaRefactoringBrowser >> epiLogDiscourse: aString filename: anotherString [
+
+	self epiLog: (self epiLog newDiscourse: aString filename: anotherString)
+]
+
 { #category : 'accessing' }
 ViennaRefactoringBrowser >> epiLogEnumerator [
 
@@ -1658,13 +1664,30 @@ ViennaRefactoringBrowser >> gitCanPush [
 { #category : 'operations-git' }
 ViennaRefactoringBrowser >> gitChanges [
 
-	self specification ifNotNil: [ :ast |
-		self icebergRepositoryDo: [ :repository |
-			^ (ViennaNodeDiffSet
-				   from: (self sourceFrom: repository branch commit fileSystem)
-						   asViennaDocumentAst
-				   to: ast) condenseChanges ] ].
-	^ {  }
+	^ Array streamContents: [ :stream |
+			  self specification ifNotNil: [ :ast |
+					  self icebergRepositoryDo: [ :repository |
+							  | repositoryFilesystem |
+							  repositoryFilesystem := repository branch commit fileSystem.
+							  stream nextPutAll:
+								  (ViennaNodeDiffSet from: (self sourceFrom: repositoryFilesystem) asViennaDocumentAst to: ast) condenseChanges.
+							  (fileReference filesMatching: '*.vdmsl') , (fileReference filesMatching: '*.md') do: [ :fileRef |
+									  | basename fileContents wcRef |
+									  basename := fileRef basename.
+									  fileContents := fileRef contents.
+									  wcRef := repositoryFilesystem / basename.
+									  wcRef exists
+										  ifTrue: [
+												  | wcContents |
+												  wcContents := wcRef contents.
+												  fileRef contents = wcRef contents ifFalse: [
+													  stream nextPut: (ViennaDiscourseChange filename: basename from: wcContents to: fileContents) ] ]
+										  ifFalse: [ stream nextPut: (ViennaDiscourseChange filename: basename from: nil to: fileRef contents) ] ].
+							  (repositoryFilesystem filesMatching: '*.vdmsl') , (repositoryFilesystem filesMatching: '*.md') do: [ :wcRef |
+									  | basename fileRef |
+									  basename := wcRef basename.
+									  fileRef := fileReference / basename.
+									  fileRef exists ifFalse: [ stream nextPut: (ViennaDiscourseChange filename: basename from: wcRef contents to: nil) ] ] ] ] ]
 ]
 
 { #category : 'operations-git' }
@@ -1733,13 +1756,16 @@ ViennaRefactoringBrowser >> gitFetch [
 ViennaRefactoringBrowser >> gitHasDirtyWorkingCopy [
 
 	self icebergRepositoryDo: [ :repository |
-		| headFileSystem |
-		headFileSystem := repository branch commit fileSystem.
-		(fileReference filesMatching: '*.vdmsl') do: [ :fileRef |
-			| wcRef |
-			wcRef := headFileSystem / fileRef basename.
-			(wcRef exists and: [ fileRef contents = wcRef contents ]) ifFalse: [
-				^ true ] ] ].
+			| headFileSystem |
+			headFileSystem := repository branch commit fileSystem.
+			(fileReference filesMatching: '*.vdmsl') , (fileReference filesMatching: '*.md') do: [ :fileRef |
+					| wcRef |
+					wcRef := headFileSystem / fileRef basename.
+					(wcRef exists and: [ fileRef contents = wcRef contents ]) ifFalse: [ ^ true ] ].
+			(headFileSystem filesMatching: '*.vdmsl') , (headFileSystem filesMatching: '*.md') do: [ :wcRef |
+					| fileRef |
+					fileRef := fileReference / wcRef basename.
+					fileRef exists ifFalse: [ ^ true ] ] ].
 	^ false
 ]
 
@@ -2008,7 +2034,7 @@ ViennaRefactoringBrowser >> initialize [
 ]
 
 { #category : 'initialization' }
-ViennaRefactoringBrowser >> initializeDocumentationPagePresenters [
+ViennaRefactoringBrowser >> initializeDiscoursePagePresenters [
 
 	microdownFileList := self newTable
 		                     addColumn: (SpStringTableColumn title: 'file' evaluated: [ :ref | ref basename ]);
@@ -2367,7 +2393,7 @@ ViennaRefactoringBrowser >> initializePresenters [
 	super initializePresenters.
 	menuBar := self menuBar.
 	self initializeVdmPagePresenters.
-	self initializeDocumentationPagePresenters.
+	self initializeDiscoursePagePresenters.
 	self initializeEpiLogPagePresenters.
 	self initializeGitPagePresenters.
 	notebook := self newNotebook
@@ -2375,7 +2401,7 @@ ViennaRefactoringBrowser >> initializePresenters [
 				            SpPresenter new
 					            layout: self vdmPageLayout;
 					            yourself ];
-		            addPageTitle: 'Documentation' provider: [
+		            addPageTitle: 'Discourse' provider: [
 			            SpPresenter new
 				            layout: self documentationPageLayout;
 				            yourself ];
@@ -2388,7 +2414,7 @@ ViennaRefactoringBrowser >> initializePresenters [
 				            layout: self gitPageLayout;
 				            yourself ];
 		            whenSelectedPageChangedDo: [
-				            vdmNotebook selectedPage ifNotNil: [ :page |
+				            notebook selectedPage ifNotNil: [ :page |
 						            page title = 'HiDeHo' ifTrue: [ self updateEpiLogPage ].
 						            page title = 'Git' ifTrue: [ [ self updateGitPage ] forkAt: Processor userBackgroundPriority ] ] ];
 		            whenPageRemovedDo: [ :page | page activePresenter ifNotNil: #release ];
@@ -2736,9 +2762,12 @@ ViennaRefactoringBrowser >> microdownSourceAccepted [
 				       fileReference / basename withExtension: 'md' ] ].
 	ref ifNotNil: [
 			ref writeStreamDo: [ :stream |
+					| content |
+					content := microdownSource text asString.
 					stream
 						truncate;
-						nextPutAll: microdownSource text asString withPlatformLineEndings ].
+						nextPutAll: content withPlatformLineEndings.
+					self epiLogDiscourse: content filename: ref basename ].
 			self updateMicrodownFileList.
 			microdownFileList selectItem: (microdownFileList items detect: [ :item | item fullPath = ref fullPath ] ifNone: [ nil ]) ].
 	self microdownSourceChanged
