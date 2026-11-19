@@ -128,7 +128,7 @@ ViennaDiscourseChange >> setFrom: aStringOrNil to: anotherStringOrNil [
 { #category : 'printing' }
 ViennaDiscourseChange >> sourceDiffText [
 
-	^ sourceDiffText ifNil: [ sourceDiffText := TextDiffBuilder buildDisplayPatchFrom: (from ifNil: [ '' ]) to: (to ifNil: [ '' ]) ]
+	^ sourceDiffText ifNil: [ sourceDiffText := ViennaTextDiffBuilder buildDisplayPatchFrom: (from ifNil: [ '' ]) to: (to ifNil: [ '' ]) ]
 ]
 
 { #category : 'accessing' }

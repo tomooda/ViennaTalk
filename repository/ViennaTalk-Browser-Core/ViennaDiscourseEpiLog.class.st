@@ -38,6 +38,40 @@ ViennaDiscourseEpiLog >> content: aString [
 ]
 
 { #category : 'accessing' }
+ViennaDiscourseEpiLog >> diffSetFromPred [
+
+	| diffSet epiLog |
+	diffSet := ViennaNodeDiffSet new.
+	epiLog := self.
+	[
+		epiLog := epiLog pred.
+		epiLog notNil ] whileTrue: [
+			epiLog modifiedDiscoursesDo: [ :f :c |
+					filename = f ifTrue: [
+							diffSet changes add: (ViennaDiscourseChange filename: filename from: c to: content).
+							^ diffSet ] ] ].
+	diffSet changes add: (ViennaDiscourseChange filename: filename from: nil to: content).
+	^ diffSet
+]
+
+{ #category : 'accessing' }
+ViennaDiscourseEpiLog >> diffSetFromPrev [
+
+	| diffSet epiLog |
+	diffSet := ViennaNodeDiffSet new.
+	epiLog := self.
+	[
+		epiLog := epiLog prev.
+		epiLog notNil ] whileTrue: [
+			epiLog modifiedDiscoursesDo: [ :f :c |
+					filename = f ifTrue: [
+							diffSet changes add: (ViennaDiscourseChange filename: filename from: c to: content).
+							^ diffSet ] ] ].
+	diffSet changes add: (ViennaDiscourseChange filename: filename from: nil to: content).
+	^ diffSet
+]
+
+{ #category : 'accessing' }
 ViennaDiscourseEpiLog >> filename [
 
 	^ filename
@@ -66,7 +100,7 @@ ViennaDiscourseEpiLog >> hideLoadContent [
 { #category : 'hideho-operations' }
 ViennaDiscourseEpiLog >> hideLoadContent: aFileReference [
 
-	aFileReference / 'Content.txt' ifExists: [ :ref | content := ref contents ]
+	aFileReference / 'content.txt' ifExists: [ :ref | content := ref contents ]
 ]
 
 { #category : 'hideho-operations' }
@@ -114,6 +148,12 @@ ViennaDiscourseEpiLog >> isDiscourseEpiLog [
 ViennaDiscourseEpiLog >> isRemovable [
 
 	^ true
+]
+
+{ #category : 'enumerating' }
+ViennaDiscourseEpiLog >> modifiedDiscoursesDo: aBlock [
+
+	aBlock cull: filename cull: content
 ]
 
 { #category : 'printing' }

@@ -1135,6 +1135,18 @@ ViennaRefactoringBrowser >> definitionsFromCategory: aViennaNode [
 		  ifFalse: [ Array new ]
 ]
 
+{ #category : 'operations-epiLog' }
+ViennaRefactoringBrowser >> diffToEpiLog: aViennaEpiLog [
+
+	| changes |
+	changes := (ViennaNodeDiffSet from: self specification to: aViennaEpiLog specification) condenseChanges.
+	aViennaEpiLog modifiedDiscoursesDo: [ :filename :content |
+			| current |
+			current := fileReference / filename ifExists: [ :ref | ref contents ] ifAbsent: [ nil ].
+			changes addLast: (ViennaDiscourseChange filename: filename from: current contents to: content) ].
+	^ changes
+]
+
 { #category : 'private' }
 ViennaRefactoringBrowser >> displayCategory: aViennaNode [
 
@@ -1253,12 +1265,7 @@ ViennaRefactoringBrowser >> epiLogChanges [
 { #category : 'accessing' }
 ViennaRefactoringBrowser >> epiLogCherrypickChanges [
 
-	^ epiLogList selectedItem
-		  ifNotNil: [ :epiLog |
-			  (ViennaNodeDiffSet
-				   from: self specification
-				   to: epiLog specification) condenseChanges ]
-		  ifNil: [ Array new ]
+	^ epiLogList selectedItem ifNotNil: [ :epiLog | self diffToEpiLog: epiLog ] ifNil: [ Array new ]
 ]
 
 { #category : 'operations-epiLog' }

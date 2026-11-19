@@ -607,7 +607,7 @@ ViennaLauncher >> request: request initialAnswer: initialAnwser title: title [
 
 	^ self application newRequest
 		  title: title;
-		  label: request;
+		  message: request;
 		  text: initialAnwser;
 		  openModal
 ]
