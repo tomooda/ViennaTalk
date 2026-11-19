@@ -7,6 +7,12 @@ Class {
 }
 
 { #category : 'operations' }
+ViennaTopLevelDefinitionNodeChange >> applyDiscourseTo: aFileReference [
+
+	
+]
+
+{ #category : 'operations' }
 ViennaTopLevelDefinitionNodeChange >> applyTo: aViennaDocumentNode [
 
 	(from isNil or: [ from document == aViennaDocumentNode ]) ifFalse: [
