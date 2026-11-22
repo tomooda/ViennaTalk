@@ -42,6 +42,12 @@ MicViennaBlock class >> tag [
 	^ nil
 ]
 
+{ #category : 'visiting' }
+MicViennaBlock >> accept: aVisitor [
+
+	^ self subclassResponsibility
+]
+
 { #category : 'accessing' }
 MicViennaBlock >> animation [
 
@@ -89,6 +95,12 @@ MicViennaBlock >> errorString [
 MicViennaBlock >> errorString: aString [
 
 	errorString := errorString ifNil: [ aString ] ifNotNil: [ errorString , ', ' , aString ]
+]
+
+{ #category : 'executing' }
+MicViennaBlock >> execute [
+
+	^ self subclassResponsibility
 ]
 
 { #category : 'executing' }

@@ -1,6 +1,10 @@
 Class {
 	#name : 'MicViennaAnimationBlock',
 	#superclass : 'MicViennaBlock',
+	#instVars : [
+		'diagrams',
+		'forms'
+	],
 	#category : 'ViennaTalk-Microdown-Microdown',
 	#package : 'ViennaTalk-Microdown',
 	#tag : 'Microdown'
@@ -18,20 +22,66 @@ MicViennaAnimationBlock >> defaultState [
 	^ #diff
 ]
 
+{ #category : 'accessing' }
+MicViennaAnimationBlock >> diagrams [
+
+	^ diagrams ifNil: [
+			  diagrams := Array streamContents: [ :stream |
+					              arguments
+						              at: #diagrams
+						              ifPresent: [ :string | stream nextPutAll: ((string substrings: ',') collect: #trim thenSelect: #notEmpty) ];
+						              at: #diagram
+						              ifPresent: [ :string | stream nextPutAll: ((string substrings: ',') collect: #trim thenSelect: #notEmpty) ] ] ]
+]
+
 { #category : 'executing' }
 MicViennaAnimationBlock >> execute [
 
-	| animation prestate |
+	| animation prestate transpiledSpecification oldRecorder executionTrace |
 	resultString := nil.
 	errorString := nil.
+	forms := nil.
 	self bodyNode ifNil: [ ^ self syntaxError ].
 	animation := self animation.
+	self diagrams ifNotEmpty: [ animation withExecutionTrace ].
 	prestate := animation state.
+	transpiledSpecification := animation transpiledSpecification.
+	oldRecorder := transpiledSpecification _recorder.
+	self diagrams ifNotEmpty: [
+			transpiledSpecification useEventRecorder:
+				(transpiledSpecification state associations collect: [ :assoc | assoc key -> assoc value asOrderedDictionary ])
+					asOrderedDictionary ].
 	animation
 		execute: self bodyNode
 		in: self moduleName
-		do: [ :result :poststate | self resultString: result viennaString prestate: prestate poststate: poststate ]
-		ifError: [ :message | ^ self errorString: message ]
+		do: [ :result :poststate |
+				self resultString: result viennaString prestate: prestate poststate: poststate.
+				executionTrace := transpiledSpecification _executionTrace.
+				forms := Array streamContents: [ :stream |
+						         self diagrams do: [ :diagramName |
+							         (self formFrom: executionTrace diagram: diagramName) ifNotNil: [ :form | stream nextPut: form ] ] ] ]
+		ifError: [ :message | ^ self errorString: message ].
+	transpiledSpecification _recorder: oldRecorder
+]
+
+{ #category : 'executing' }
+MicViennaAnimationBlock >> flushResultString [
+
+	forms := nil.
+	super flushResultString
+]
+
+{ #category : 'private' }
+MicViennaAnimationBlock >> formFrom: aViennaExecutionTraceEvent diagram: aString [
+
+	aString = 'sequence' ifTrue: [ ^ self sequenceDiagramFrom: aViennaExecutionTraceEvent ].
+	^ nil
+]
+
+{ #category : 'accessing' }
+MicViennaAnimationBlock >> forms [
+
+	^ forms
 ]
 
 { #category : 'controlling' }
@@ -104,6 +154,26 @@ MicViennaAnimationBlock >> resultString: aString prestate: aDictionary poststate
 							                nextPutAll: result;
 							                space.
 						                self printState: anotherDictionary on: stream ] ]
+]
+
+{ #category : 'private' }
+MicViennaAnimationBlock >> sequenceDiagramFrom: aViennaExecutionTraceEvent [
+
+	| format scriptSource diagram canvas  |
+	format := ViennaExecutionTraceSequenceDiagramFormat new
+		          root: 'caller';
+		          yourself.
+	scriptSource := String streamContents: [ :stream |
+			                format writeHeaderOn: stream.
+			                aViennaExecutionTraceEvent applyToFormat: format on: stream.
+			                format writeFooterOn: stream ].
+	diagram := MMSequenceDiagramParser new parse: scriptSource.
+	diagram isPetit2Failure ifTrue: [ ^ nil ].
+	canvas := diagram roassalBuilder build.
+	^ canvas
+		  extent: canvas encompassingRectangle extent + (20 @ 20);
+		  zoomToFit;
+		  asForm
 ]
 
 { #category : 'accessing' }

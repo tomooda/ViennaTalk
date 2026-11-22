@@ -1,6 +1,17 @@
 Extension { #name : 'MicRichTextComposer' }
 
 { #category : '*ViennaTalk-Microdown' }
+MicRichTextComposer >> viennaWriteDiagrams: aScriptBlock [
+
+	^ Text streamContents: [ :stream |
+			  aScriptBlock forms ifNotNil: [ :forms |
+					  forms do: [ :form |
+							  stream
+								  nextPutAll: String cr asText;
+								  nextPutAll: form asText ] ] ]
+]
+
+{ #category : '*ViennaTalk-Microdown' }
 MicRichTextComposer >> viennaWriteResult: aScriptBlock [
 
 	aScriptBlock resultString ifNotNil: [ :resultString |
@@ -32,6 +43,17 @@ MicRichTextComposer >> viennaWriteResultWithoutArrow: aScriptBlock [
 ]
 
 { #category : '*ViennaTalk-Microdown' }
+MicRichTextComposer >> visitViennaDiagram: aScriptBlock [
+
+	aScriptBlock retrievePresenter.
+	aScriptBlock execute.
+	canvas << (self viennaWriteResult: aScriptBlock).
+	canvas
+		newLine;
+		newLine
+]
+
+{ #category : '*ViennaTalk-Microdown' }
 MicRichTextComposer >> visitViennaEval: aScriptBlock [
 
 	| expressionText buttonText |
@@ -45,6 +67,7 @@ MicRichTextComposer >> visitViennaEval: aScriptBlock [
 		              yourself.
 	canvas << expressionText << ' ' asText << buttonText.
 	canvas << (self viennaWriteResult: aScriptBlock).
+	canvas << (self viennaWriteDiagrams: aScriptBlock).
 	canvas
 		newLine;
 		newLine
@@ -64,6 +87,7 @@ MicRichTextComposer >> visitViennaExec: aScriptBlock [
 		              yourself.
 	canvas << statementText << ' ' asText << buttonText.
 	canvas << (self viennaWriteResult: aScriptBlock).
+	canvas << (self viennaWriteDiagrams: aScriptBlock).
 	canvas
 		newLine;
 		newLine

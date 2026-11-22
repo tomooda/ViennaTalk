@@ -231,6 +231,28 @@ ViennaAnimation >> execute: aViennaNode in: moduleName ifError: errorBlock [
 ]
 
 { #category : 'evaluating' }
+ViennaAnimation >> execute: aViennaNode in: moduleName sequenceDiagramDo: aBlock ifError: errorBlock [
+
+	| oldState result state |
+	oldState := self state.
+	self withExecutionTrace.
+	object withSequenceDiagramRecorder: aViennaNode source do: [
+			result := ((moduleName isNil or: [ moduleName = self defaultModule ])
+				           ifTrue: [ object ]
+				           ifFalse: [ object at: moduleName ifAbsent: [ ^ errorBlock cull: 'unknown module name' ] ])
+				          evaluateNode: aViennaNode
+				          with: transpiler
+				          ifError: [ :msg | ^ errorBlock cull: msg ].
+			aBlock ifNotNil: [ aBlock value: object _executionTrace ] ].
+	state := self state.
+	oldState ~= state ifTrue: [
+			self changed: #state.
+			self announceStateChanged ].
+	self announceEvaluated.
+	^ result
+]
+
+{ #category : 'evaluating' }
 ViennaAnimation >> init [
 	object init
 ]
@@ -242,7 +264,8 @@ ViennaAnimation >> initialize [
 	parser := ViennaVDMParser current.
 	reader := ViennaReader new.
 	writer := ViennaUnquoteWriter new.
-	self specification: String new ifError: [  ]
+	transpiler := self transpilerClass new.
+	self specification: String new ifError: [ ]
 ]
 
 { #category : 'testing' }
@@ -336,6 +359,15 @@ ViennaAnimation >> postCopy [
 	oldSpec := self specification.
 	super postCopy.
 	object := object copy.
+	self state: oldState
+]
+
+{ #category : 'recompilation' }
+ViennaAnimation >> recompile [
+
+	| oldState |
+	oldState := self state.
+	object := transpiler generate: specificationNode.
 	self state: oldState
 ]
 
@@ -465,7 +497,6 @@ ViennaAnimation >> specificationNode: aViennaModularDocumentNode ifError: errorB
 	| oldSpecificationNode oldState |
 	oldSpecificationNode := specificationNode.
 	oldState := self state.
-	transpiler := self transpilerClass new.
 	specificationNode := aViennaModularDocumentNode.
 	[ specificationNode typecheck ]
 		on: ViennaTypeError
@@ -516,8 +547,42 @@ ViennaAnimation >> transpiledSpecification [
 	^ object
 ]
 
+{ #category : 'accessing' }
+ViennaAnimation >> transpiler [
+
+	^ transpiler
+]
+
+{ #category : 'accessing' }
+ViennaAnimation >> transpiler: aViennaTranspiler [
+
+	transpiler := aViennaTranspiler
+]
+
 { #category : 'class access' }
 ViennaAnimation >> transpilerClass [
 
 	^ ViennaVDM2SmalltalkObject
+]
+
+{ #category : 'class access' }
+ViennaAnimation >> transpilerWithExecutionTraceClass [
+
+	^ ViennaTranspilerForExecutionTracing
+]
+
+{ #category : 'enabling/disabling' }
+ViennaAnimation >> withExecutionTrace [
+
+	transpiler executiontTraceEnabled ifFalse: [
+			self transpiler: self transpilerWithExecutionTraceClass new.
+			self recompile ]
+]
+
+{ #category : 'enabling/disabling' }
+ViennaAnimation >> withoutExecutionTrace [
+
+	transpiler executiontTraceEnabled ifTrue: [
+			self transpiler: self transpilerClass new.
+			self recompile ]
 ]
