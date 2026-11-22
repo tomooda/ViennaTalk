@@ -936,18 +936,22 @@ ViennaRefactoringBrowser >> categoryListContextMenu [
 ViennaRefactoringBrowser >> cherrypick [
 
 	epiLogCherrypickList selectedItems ifNotEmpty: [ :diffs |
-		| newDocument map |
-		newDocument := self specification copyWhole:
-			               (map := IdentityDictionary new).
-		diffs do: [ :diff |
-			(diff class
-				 from: (map at: diff from ifAbsent: [ diff from ])
-				 to: diff to) applyTo: newDocument ].
-		self
-			epiLogManualEdit: newDocument
-			comment:
-			'Cherrypick: ' , (', ' join: (diffs collect: #printString)).
-		self updateModuleList ]
+			| sourceChanges discourseChanges newDocument map |
+			sourceChanges := OrderedCollection new: diffs size.
+			discourseChanges := OrderedCollection new: diffs size.
+			newDocument := self specification copyWhole: (map := IdentityDictionary new).
+			diffs do: [ :diff |
+					(diff copyWithFrom: (map at: diff from ifAbsent: [ diff from ]) to: diff to)
+						ifNodeChanges: [ :d |
+								d applyTo: newDocument.
+								sourceChanges add: d ];
+						ifDiscourseChanges: [ :d | discourseChanges add: d ] ].
+			sourceChanges ifNotEmpty: [
+				self epiLogManualEdit: newDocument comment: 'Cherrypick: ' , (', ' join: (sourceChanges collect: #printString)) ].
+			discourseChanges do: [ :diff |
+					diff applyDiscourseTo: fileReference.
+					self epiLogDiscourse: diff to filename: diff filename comment: 'Cherrypick' ].
+			self updateModuleList ]
 ]
 
 { #category : 'user interface' }
@@ -1272,6 +1276,14 @@ ViennaRefactoringBrowser >> epiLogCherrypickChanges [
 ViennaRefactoringBrowser >> epiLogDiscourse: aString filename: anotherString [
 
 	self epiLog: (self epiLog newDiscourse: aString filename: anotherString)
+]
+
+{ #category : 'operations-epiLog' }
+ViennaRefactoringBrowser >> epiLogDiscourse: aString filename: anotherString comment: commentString [
+
+	self epiLog: ((self epiLog newDiscourse: aString filename: anotherString)
+			 comment: commentString;
+			 yourself)
 ]
 
 { #category : 'accessing' }
@@ -2014,8 +2026,7 @@ ViennaRefactoringBrowser >> icebergRepositoryDo: aBlock [
 { #category : 'updating' }
 ViennaRefactoringBrowser >> ifHiDeHoVisible: aBlock [
 
-	vdmNotebook ifNotNil: [
-		(vdmNotebook selectedPage ifNotNil: #title) = 'HiDeHo' ifTrue: aBlock ]
+	notebook ifNotNil: [ (notebook selectedPage ifNotNil: #title) = 'HiDeHo' ifTrue: aBlock ]
 ]
 
 { #category : 'operations' }

@@ -37,6 +37,27 @@ ViennaDiscourseChange class >> from: aStringOrNil to: anotherStringOrNil [
 		  yourself
 ]
 
+{ #category : 'operations' }
+ViennaDiscourseChange >> applyDiscourseTo: aFileReference [
+
+	| ref |
+	filename ifNil: [ ^ self ].
+	ref := aFileReference / filename.
+	to ifNotNil: [ ref writeStreamDo: [ :stream | stream nextPutAll: to withPlatformLineEndings ] ] ifNil: [ ref ensureDelete ]
+]
+
+{ #category : 'operations' }
+ViennaDiscourseChange >> applyTo: aViennaModularDocumentNode [
+
+	
+]
+
+{ #category : 'copying' }
+ViennaDiscourseChange >> copyWithFrom: aViennaNode to: anotherViennaNode [
+
+	^ self class filename: filename from: aViennaNode to: anotherViennaNode
+]
+
 { #category : 'accessing' }
 ViennaDiscourseChange >> filename [
 
@@ -59,6 +80,22 @@ ViennaDiscourseChange >> flushSourceDiffText [
 ViennaDiscourseChange >> from [
 
 	^ from
+]
+
+{ #category : 'controlling' }
+ViennaDiscourseChange >> ifDiscourseChanges: aBlock [
+
+	self ifNotEmpty: aBlock
+]
+
+{ #category : 'controlling' }
+ViennaDiscourseChange >> ifNodeChanges: aBlock [
+]
+
+{ #category : 'controlling' }
+ViennaDiscourseChange >> ifNotEmpty: aBlock [
+
+	from = to ifFalse: [ aBlock cull: self ]
 ]
 
 { #category : 'testing' }
@@ -98,7 +135,7 @@ ViennaDiscourseChange >> printOn: aStream [
 	self printSummaryOn: aStream.
 	aStream
 		space;
-		nextPutAll: (', ' join: (to ifNil: [ from ]) identifiers)
+		nextPutAll: filename
 ]
 
 { #category : 'printing' }
