@@ -21,7 +21,7 @@ const loadAsset = (type, url) => new Promise((resolve, reject) => {
 // Assets are loaded asynchronously
 await loadAsset('script', 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js');
 await loadAsset('link', 'https://viennatalk.org/ViennaDoc/ViennaDoc.css');
-await loadAsset('script', './ViennaClient.js');
+await loadAsset('script', 'https://viennatalk.org/ViennaDoc/ViennaClient.js');
 
 document.body.style.opacity = 1;
 
