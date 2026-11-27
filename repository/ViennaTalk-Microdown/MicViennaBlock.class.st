@@ -49,6 +49,12 @@ MicViennaBlock >> accept: aVisitor [
 ]
 
 { #category : 'accessing' }
+MicViennaBlock >> anchor [
+
+	^ nil
+]
+
+{ #category : 'accessing' }
 MicViennaBlock >> animation [
 
 	^ presenter ifNotNil: #animation ifNil: [ ViennaAnimation new ]

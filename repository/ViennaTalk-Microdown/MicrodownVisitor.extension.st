@@ -3,29 +3,29 @@ Extension { #name : 'MicrodownVisitor' }
 { #category : '*ViennaTalk-Microdown' }
 MicrodownVisitor >> visitViennaEval: aMicViennaEvalBlock [
 
-	^ self visitScript: aMicViennaEvalBlock
+	^ self visitCode: aMicViennaEvalBlock
 ]
 
 { #category : '*ViennaTalk-Microdown' }
 MicrodownVisitor >> visitViennaExec: aMicViennaEvalBlock [
 
-	^ self visitScript: aMicViennaEvalBlock
+	^ self visitCode: aMicViennaEvalBlock
 ]
 
 { #category : '*ViennaTalk-Microdown' }
 MicrodownVisitor >> visitViennaSource: aMicViennaSourceBlock [
 
-	^ self visitScript: aMicViennaSourceBlock
+	^ self visitCode: aMicViennaSourceBlock
 ]
 
 { #category : '*ViennaTalk-Microdown' }
-MicrodownVisitor >> visitViennaTalkScript: aSlide [
+MicrodownVisitor >> visitViennaTalkScript: aMicViennaTalkScriptBlock [
 
-	^ aSlide children collect: [ :each | self visit: each ]
+	^ self visitCode: aMicViennaTalkScriptBlock
 ]
 
 { #category : '*ViennaTalk-Microdown' }
 MicrodownVisitor >> visitViennaWatch: aMicViennaWatchBlock [
 
-	^ self visitScript: aMicViennaWatchBlock
+	^ self visitCode: aMicViennaWatchBlock
 ]
