@@ -1,13 +1,31 @@
 Extension { #name : 'MicrodownVisitor' }
 
 { #category : '*ViennaTalk-Microdown' }
-MicrodownVisitor >> visitViennaEval: aSlide [
+MicrodownVisitor >> visitViennaEval: aMicViennaEvalBlock [
 
-	^ aSlide children collect: [ :each | self visit: each ]
+	^ self visitCode: aMicViennaEvalBlock
 ]
 
 { #category : '*ViennaTalk-Microdown' }
-MicrodownVisitor >> visitViennaTalkScript: aSlide [
+MicrodownVisitor >> visitViennaExec: aMicViennaEvalBlock [
 
-	^ aSlide children collect: [ :each | self visit: each ]
+	^ self visitCode: aMicViennaEvalBlock
+]
+
+{ #category : '*ViennaTalk-Microdown' }
+MicrodownVisitor >> visitViennaSource: aMicViennaSourceBlock [
+
+	^ self visitCode: aMicViennaSourceBlock
+]
+
+{ #category : '*ViennaTalk-Microdown' }
+MicrodownVisitor >> visitViennaTalkScript: aMicViennaTalkScriptBlock [
+
+	^ self visitCode: aMicViennaTalkScriptBlock
+]
+
+{ #category : '*ViennaTalk-Microdown' }
+MicrodownVisitor >> visitViennaWatch: aMicViennaWatchBlock [
+
+	^ self visitCode: aMicViennaWatchBlock
 ]

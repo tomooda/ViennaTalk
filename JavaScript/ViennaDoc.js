@@ -21,7 +21,7 @@ const loadAsset = (type, url) => new Promise((resolve, reject) => {
 // Assets are loaded asynchronously
 await loadAsset('script', 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js');
 await loadAsset('link', 'https://viennatalk.org/ViennaDoc/ViennaDoc.css');
-await loadAsset('script', './ViennaClient.js');
+await loadAsset('script', 'https://viennatalk.org/ViennaDoc/ViennaClient.js');
 
 document.body.style.opacity = 1;
 
@@ -70,7 +70,7 @@ ViennaDoc.evalShow = async function(node, expression, prestates, poststates, mod
         text += ` {${preStateStr}} ${expression} \u261E `;
     }
     
-    if (result.message === "") {
+    if (!result.message) {
         text += result.value;
         const postKeys = Object.keys(poststates);
         if (postKeys.length > 0) {
@@ -88,7 +88,7 @@ ViennaDoc.evalShow = async function(node, expression, prestates, poststates, mod
 ViennaDoc.valueShow = async function(node, expression, module = "DEFAULT") {
     const result = await ViennaDoc.eval(expression, {}, module);
     let text = "";
-    if (result.message === "") {
+    if (!result.message) {
         text = ` \u261E ${result.value}`;
     } else {
         text = " \u261E ERROR! ";
@@ -228,37 +228,51 @@ ViennaDoc.initializeViennaAssertNode = async function(node) {
     return true;
 };
 
-document.addEventListener('DOMContentLoaded', async (event) => {
-    ViennaDoc.watch = [];
-    
-    const nodes = Array.from(document.querySelectorAll('code.vdm'));
-    for (const node of nodes) {
-        const vienna = node.getAttribute("vienna");
-        if (vienna === "source") {
-            ViennaDoc.initializeViennaSourceNode(node);
+async function initializeViennaDoc() {
+    try {
+        ViennaDoc.watch = [];
+
+        const nodes = Array.from(document.querySelectorAll('code.vdm'));
+        for (const node of nodes) {
+            const vienna = node.getAttribute("vienna");
+            if (vienna === "source") {
+                ViennaDoc.initializeViennaSourceNode(node);
+            }
+            if (vienna === "eval") {
+                ViennaDoc.initializeViennaEvalNode(node);
+            }
+            if (vienna === "value") {
+                ViennaDoc.initializeViennaValueNode(node);
+            }
+            if (vienna === "watch") {
+                ViennaDoc.initializeViennaWatchNode(node);
+            }
+            if (vienna === "assert") {
+                await ViennaDoc.initializeViennaAssertNode(node);
+            }
+
+            if (node.parentNode && node.parentNode.tagName.toLowerCase() !== "pre") {
+                if (typeof hljs !== "undefined" && typeof hljs.highlightElement === "function") {
+                    hljs.highlightElement(node);
+                }
+                node.style.display = "inline-block";
+                node.style.margin = "0 2px";
+                node.style.padding = "1px 3px";
+            }
         }
-        if (vienna === "eval") {
-            ViennaDoc.initializeViennaEvalNode(node);
-        }
-        if (vienna === "value") {
-            ViennaDoc.initializeViennaValueNode(node);
-        }
-        if (vienna === "watch") {
-            ViennaDoc.initializeViennaWatchNode(node);
-        }
-        if (vienna === "assert") {
-            await ViennaDoc.initializeViennaAssertNode(node);
-        }
-        
-        if (node.parentNode.tagName.toLowerCase() !== "pre") {
-            hljs.highlightElement(node);
-            node.style.display = "inline-block";
-            node.style.margin = "0 2px";
-            node.style.padding = "1px 3px";
-        }
+        await ViennaDoc.eval("nil"); 
+    } catch (err) {
+        console.error("ViennaDoc initialization failed:", err);
     }
-    await ViennaDoc.eval("nil");
-});
+}
+
+ViennaDoc.init = function () {
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initializeViennaDoc, { once: true });
+    } else {
+        initializeViennaDoc();
+    }
+};
 
 hljs.registerLanguage('vdm', function(hljsApi) {
   const VDM_KEYWORDS = {

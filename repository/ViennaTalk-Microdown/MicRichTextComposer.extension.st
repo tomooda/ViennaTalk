@@ -1,6 +1,17 @@
 Extension { #name : 'MicRichTextComposer' }
 
 { #category : '*ViennaTalk-Microdown' }
+MicRichTextComposer >> viennaWriteDiagrams: aScriptBlock [
+
+	^ Text streamContents: [ :stream |
+			  aScriptBlock forms ifNotNil: [ :forms |
+					  forms do: [ :form |
+							  stream
+								  nextPutAll: String cr asText;
+								  nextPutAll: form asText ] ] ]
+]
+
+{ #category : '*ViennaTalk-Microdown' }
 MicRichTextComposer >> viennaWriteResult: aScriptBlock [
 
 	aScriptBlock resultString ifNotNil: [ :resultString |
@@ -32,59 +43,61 @@ MicRichTextComposer >> viennaWriteResultWithoutArrow: aScriptBlock [
 ]
 
 { #category : '*ViennaTalk-Microdown' }
-MicRichTextComposer >> visitViennaEval: aScriptBlock [
+MicRichTextComposer >> visitViennaEval: aMicViennaEvalBlock [
 
 	| expressionText buttonText |
-	aScriptBlock retrievePresenter.
-	expressionText := aScriptBlock bodyText.
+	aMicViennaEvalBlock retrievePresenter.
+	expressionText := aMicViennaEvalBlock bodyText.
 	buttonText := ' run ' asText
 		              addAttribute: (TextBackgroundColor color: (Color gray: 0.8));
 		              addAttribute: (MicRichTextDoIt new
-				               actOnClickBlock: [ aScriptBlock execute ];
+				               actOnClickBlock: [ aMicViennaEvalBlock execute ];
 				               yourself);
 		              yourself.
 	canvas << expressionText << ' ' asText << buttonText.
-	canvas << (self viennaWriteResult: aScriptBlock).
+	canvas << (self viennaWriteResult: aMicViennaEvalBlock).
+	canvas << (self viennaWriteDiagrams: aMicViennaEvalBlock).
 	canvas
 		newLine;
 		newLine
 ]
 
 { #category : '*ViennaTalk-Microdown' }
-MicRichTextComposer >> visitViennaExec: aScriptBlock [
+MicRichTextComposer >> visitViennaExec: aMicViennaExecBlock [
 
 	| statementText buttonText |
-	aScriptBlock retrievePresenter.
-	statementText := aScriptBlock bodyText.
+	aMicViennaExecBlock retrievePresenter.
+	statementText := aMicViennaExecBlock bodyText.
 	buttonText := ' run ' asText
 		              addAttribute: (TextBackgroundColor color: (Color gray: 0.8));
 		              addAttribute: (MicRichTextDoIt new
-				               actOnClickBlock: [ aScriptBlock execute ];
+				               actOnClickBlock: [ aMicViennaExecBlock execute ];
 				               yourself);
 		              yourself.
 	canvas << statementText << ' ' asText << buttonText.
-	canvas << (self viennaWriteResult: aScriptBlock).
+	canvas << (self viennaWriteResult: aMicViennaExecBlock).
+	canvas << (self viennaWriteDiagrams: aMicViennaExecBlock).
 	canvas
 		newLine;
 		newLine
 ]
 
 { #category : '*ViennaTalk-Microdown' }
-MicRichTextComposer >> visitViennaSource: aScriptBlock [
+MicRichTextComposer >> visitViennaSource: aMicViennaSourceBlock [
 
-	aScriptBlock retrievePresenter.
-	aScriptBlock execute.
-	canvas << (self viennaWriteResultWithoutArrow: aScriptBlock).
+	aMicViennaSourceBlock retrievePresenter.
+	aMicViennaSourceBlock execute.
+	canvas << (self viennaWriteResultWithoutArrow: aMicViennaSourceBlock).
 	canvas
 		newLine;
 		newLine
 ]
 
 { #category : '*ViennaTalk-Microdown' }
-MicRichTextComposer >> visitViennaTalkScript: aMicromaidScriptBlock [
+MicRichTextComposer >> visitViennaTalkScript: aMicViennaTalkScriptBlock [
 
 	| script resText |
-	script := aMicromaidScriptBlock body asString.
+	script := aMicViennaTalkScriptBlock body asString.
 	resText := script asText.
 	ViennaVDMHighlighter new
 		text: resText;
@@ -96,11 +109,11 @@ MicRichTextComposer >> visitViennaTalkScript: aMicromaidScriptBlock [
 ]
 
 { #category : '*ViennaTalk-Microdown' }
-MicRichTextComposer >> visitViennaWatch: aScriptBlock [
+MicRichTextComposer >> visitViennaWatch: aMicViennaWatchBlock [
 
-	aScriptBlock retrievePresenter.
-	aScriptBlock execute.
-	canvas << (self viennaWriteResult: aScriptBlock).
+	aMicViennaWatchBlock retrievePresenter.
+	aMicViennaWatchBlock execute.
+	canvas << (self viennaWriteResult: aMicViennaWatchBlock).
 	canvas
 		newLine;
 		newLine

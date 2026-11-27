@@ -228,6 +228,12 @@ ViennaEpiLog >> isAbstractModificationEpiLog [
 ]
 
 { #category : 'testing' }
+ViennaEpiLog >> isDiscourseEpiLog [
+
+	^ false
+]
+
+{ #category : 'testing' }
 ViennaEpiLog >> isEvaluationEpiLog [
 
 	^ false
@@ -258,12 +264,6 @@ ViennaEpiLog >> isLoadingEpiLog [
 ]
 
 { #category : 'testing' }
-ViennaEpiLog >> isModificationEpiLog [
-
-	^ false
-]
-
-{ #category : 'testing' }
 ViennaEpiLog >> isPredEpiLog [
 
 	^ true
@@ -288,6 +288,12 @@ ViennaEpiLog >> isSemanticClosureMember [
 ]
 
 { #category : 'testing' }
+ViennaEpiLog >> isSpecificationModificationEpiLog [
+
+	^ false
+]
+
+{ #category : 'testing' }
 ViennaEpiLog >> isSyntacticClosureMember [
 
 	^ false
@@ -303,6 +309,16 @@ ViennaEpiLog >> isVanillaEpiLog [
 ViennaEpiLog >> metadataName [
 
 	^ self class metadataName
+]
+
+{ #category : 'enumerating' }
+ViennaEpiLog >> modifiedDiscoursesDo: aBlock [
+]
+
+{ #category : 'instance creation' }
+ViennaEpiLog >> newDiscourse: aString filename: anotherString [
+
+	^ ViennaDiscourseEpiLog after: self filename: anotherString content: aString
 ]
 
 { #category : 'instance creation' }
@@ -364,7 +380,7 @@ ViennaEpiLog >> newModification: aViennaModularDocumentNode [
 { #category : 'instance creation' }
 ViennaEpiLog >> newModification: aViennaModularDocumentNode state: aDictionary [
 
-	^ ViennaModificationEpiLog
+	^ ViennaSpecificationModificationEpiLog
 		  after: self
 		  specification: aViennaModularDocumentNode
 		  state: aDictionary

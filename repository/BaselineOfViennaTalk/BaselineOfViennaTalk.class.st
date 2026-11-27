@@ -1,6 +1,9 @@
 Class {
 	#name : 'BaselineOfViennaTalk',
 	#superclass : 'BaselineOf',
+	#instVars : [
+		'savedMaximumLineLengthMethod'
+	],
 	#category : 'BaselineOfViennaTalk',
 	#package : 'BaselineOfViennaTalk'
 }
