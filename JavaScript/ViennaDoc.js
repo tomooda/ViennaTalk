@@ -21,7 +21,9 @@ const loadAsset = (type, url) => new Promise((resolve, reject) => {
 // Assets are loaded asynchronously
 await loadAsset('script', 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js');
 await loadAsset('link', 'https://viennatalk.org/ViennaDoc/ViennaDoc.css');
-await loadAsset('script', 'https://viennatalk.org/ViennaDoc/ViennaClient.js');
+//await loadAsset('script', 'https://viennatalk.org/ViennaDoc/ViennaClient.js');
+await loadAsset('script', './ViennaClient.js');
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
 
 document.body.style.opacity = 1;
 
@@ -38,13 +40,13 @@ String.prototype.vienna_globalName = function (module = "DEFAULT") {
     return `${module}\`${this}`;
 };
 
-ViennaDoc.eval = async function(expression, prestates = {}, module = "DEFAULT") {
+ViennaDoc.eval = async function(expression, prestates = {}, diagrams=[], module = "DEFAULT") {
     for (const [varname, val] of Object.entries(prestates)) {
         if (val) {
             ViennaDoc.states[varname.vienna_globalName(module)] = val;
         }
     }
-    const result = await ViennaDoc.source.vienna_eval(expression, ViennaDoc.states, module);
+    const result = await ViennaDoc.source.vienna_eval(expression, ViennaDoc.states, diagrams, module);
     ViennaDoc.states = result.poststates;
     
     ViennaDoc.watch.forEach((node) => {
@@ -58,8 +60,21 @@ ViennaDoc.eval = async function(expression, prestates = {}, module = "DEFAULT") 
     return result;
 };
 
-ViennaDoc.evalShow = async function(node, expression, prestates, poststates, module = "DEFAULT") {
-    const result = await ViennaDoc.eval(expression, prestates, module);
+ViennaDoc.renderMermaid = async function(node, script) {
+    node.removeAttribute("data-processed");
+    node.innerHTML = script;
+    try {
+	await mermaid.run({
+	    nodes: [node]
+	});
+    } catch (error) {
+	console.error("Mermaid rendering failed:", error);
+	node.innerText = "Diagram Error"; }
+};
+
+
+ViennaDoc.evalShow = async function(node, expression, prestates, poststates, diagrams=[], module = "DEFAULT") {
+    const result = await ViennaDoc.eval(expression, prestates, diagrams, module);
     let text = "";
     
     const preKeys = Object.keys(prestates);
@@ -83,10 +98,20 @@ ViennaDoc.evalShow = async function(node, expression, prestates, poststates, mod
         text += "ERROR! ";
     }
     node.innerText = text;
+    if (result.sequenceDiagram) {
+	const diagramNode = document.createElement("div");
+	ViennaDoc.renderMermaid(diagramNode, result.sequenceDiagram);
+	node.appendChild(diagramNode);
+    }
+    if (result.stateDiagram) {
+	const diagramNode = document.createElement("div");
+	ViennaDoc.renderMermaid(diagramNode, result.stateDiagram);
+	node.appendChild(diagramNode);
+    }
 };
 
 ViennaDoc.valueShow = async function(node, expression, module = "DEFAULT") {
-    const result = await ViennaDoc.eval(expression, {}, module);
+    const result = await ViennaDoc.eval(expression, {}, diagrams, [], module);
     let text = "";
     if (!result.message) {
         text = ` \u261E ${result.value}`;
@@ -96,7 +121,7 @@ ViennaDoc.valueShow = async function(node, expression, module = "DEFAULT") {
     node.innerText = text;
 };
 
-ViennaDoc.parseStates = function (str, module) {
+ViennaDoc.parseCommaEquals = function (str) {
     const states = {};
     if (str) {
         str.split(",")
@@ -108,6 +133,13 @@ ViennaDoc.parseStates = function (str, module) {
            });
     }
     return states;
+};
+ViennaDoc.parseCommas = function (str) {
+    var commas = [];
+    if (str) {
+        commas = str.split(",").map(s => s.trim());
+    }
+    return commas;
 };
 
 ViennaDoc.initializeViennaSourceNode = function(node) {
@@ -126,10 +158,10 @@ ViennaDoc.initializeViennaSourceNode = function(node) {
 ViennaDoc.initializeViennaEvalNode = function(node) {
     const expr = node.innerText;
     const module = node.getAttribute("module") || "DEFAULT";
-    const prestates = ViennaDoc.parseStates(node.getAttribute("prestates"), module);
-    const poststates = ViennaDoc.parseStates(node.getAttribute("poststates"), module);
+    const prestates = ViennaDoc.parseCommaEquals(node.getAttribute("prestates"));
+    const poststates = ViennaDoc.parseCommaEquals(node.getAttribute("poststates"));
+    const diagrams = ViennaDoc.parseCommas(node.getAttribute("diagrams"));
     const nextNode = node.nextSibling;
-    
     const buttonNode = document.createElement("input");
     const valueNode = document.createElement("code");
     
@@ -138,7 +170,7 @@ ViennaDoc.initializeViennaEvalNode = function(node) {
     buttonNode.value = "run";
     
     buttonNode.onclick = async () => {
-        await ViennaDoc.evalShow(valueNode, expr, prestates, poststates, module);
+        await ViennaDoc.evalShow(valueNode, expr, prestates, poststates, diagrams, module);
     };
     
     valueNode.className = "vdm";
@@ -188,7 +220,7 @@ ViennaDoc.initializeViennaAssertNode = async function(node) {
     const savedStates = { ...ViennaDoc.states };
     const expected = node.innerText;
     const module = node.getAttribute("module") || "DEFAULT";
-    const prestates = ViennaDoc.parseStates(node.getAttribute("prestates"), module);
+    const prestates = ViennaDoc.parseCommaEquals(node.getAttribute("prestates"));
     const expression = node.getAttribute("eval");
     
     if (!expression) {
@@ -199,7 +231,7 @@ ViennaDoc.initializeViennaAssertNode = async function(node) {
         return false;
     }
     
-    const result = await ViennaDoc.eval(expression, prestates, module);
+    const result = await ViennaDoc.eval(expression, prestates, [], module=module);
     ViennaDoc.states = savedStates;
     const actual = result.value;
     
