@@ -52,6 +52,7 @@ BaselineOfViennaTalk >> baseline: spec [
 				spec
 					baseline: 'Fed' with: [ spec repository: 'github://tomooda/Fed:main/src' ];
 					baseline: 'HiDeHo' with: [ spec repository: 'github://tomooda/HiDeHo:main/src' ];
+					baseline: 'Microdown' with: [ spec repository: 'github://pillar-markup/Microdown:dev/src' ];
 					baseline: 'Micromaid' with: [ spec repository: 'github://tomooda/Micromaid:main/src' ];
 					baseline: 'FRAM' with: [ spec repository: 'github://tomooda/FRAM:main/src' ];
 					baseline: 'NeoJSON' with: [ spec repository: 'github://svenvc/NeoJSON/repository' ];
@@ -88,7 +89,7 @@ BaselineOfViennaTalk >> baseline: spec [
 			spec requires: #( 'ViennaTalk-Animation-Core' 'ViennaTalk-Browser-Core' 'ViennaTalk-Launcher-Core' 'ViennaTalk-Value-Core'
 				   'PetitParser2' ) ];
 		package: 'ViennaTalk-Microdown'
-		with: [ spec requires: #( 'ViennaTalk-Parser-Core' 'ViennaTalk-Parser-Highlighters' 'ViennaTalk-Transpiler-Core' ) ];
+		with: [ spec requires: #( 'Microdown' 'ViennaTalk-Parser-Core' 'ViennaTalk-Parser-Highlighters' 'ViennaTalk-Transpiler-Core' ) ];
 		package: 'ViennaTalk-Mutation-Core' with: [ spec requires: #( 'ViennaTalk-AST-Core' 'ViennaTalk-Type-Core' ) ];
 		package: 'ViennaTalk-Mutation-Tests' with: [ spec requires: #( 'ViennaTalk-Mutation-Core' ) ];
 		package: 'ViennaTalk-Parser-Core' with: [ spec requires: #( 'ViennaTalk-AST-Core' 'ViennaTalk-Value-Core'
