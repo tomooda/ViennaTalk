@@ -228,7 +228,7 @@ ViennaEpiLog >> isAbstractModificationEpiLog [
 ]
 
 { #category : 'testing' }
-ViennaEpiLog >> isDiscourseEpiLog [
+ViennaEpiLog >> isDiscourseModificationEpiLog [
 
 	^ false
 ]

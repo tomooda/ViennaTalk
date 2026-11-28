@@ -21,8 +21,7 @@ const loadAsset = (type, url) => new Promise((resolve, reject) => {
 // Assets are loaded asynchronously
 await loadAsset('script', 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js');
 await loadAsset('link', 'https://viennatalk.org/ViennaDoc/ViennaDoc.css');
-//await loadAsset('script', 'https://viennatalk.org/ViennaDoc/ViennaClient.js');
-await loadAsset('script', './ViennaClient.js');
+await loadAsset('script', 'https://viennatalk.org/ViennaDoc/ViennaClient.js');
 import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
 
 document.body.style.opacity = 1;
