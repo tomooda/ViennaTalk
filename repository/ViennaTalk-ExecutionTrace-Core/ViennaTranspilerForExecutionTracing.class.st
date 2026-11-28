@@ -179,6 +179,12 @@ ViennaTranspilerForExecutionTracing >> documentBaseClass [
 	^ ViennaTranspiledModularDocumentForExecutionTracing
 ]
 
+{ #category : 'testing' }
+ViennaTranspilerForExecutionTracing >> executiontTraceEnabled [
+
+	^ true
+]
+
 { #category : 'class access' }
 ViennaTranspilerForExecutionTracing >> moduleBaseClass [
 

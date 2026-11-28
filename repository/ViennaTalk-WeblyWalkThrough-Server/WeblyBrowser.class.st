@@ -436,18 +436,15 @@ WeblyBrowser >> publishButtonOnColor [
 
 { #category : 'module list menu' }
 WeblyBrowser >> saveSnapshotToFile [
+
 	| json |
 	json := Dictionary new.
-	json at: 'engineType' put: self animation engineType.
 	json at: 'specification' put: self animation specification.
 	json at: 'state' put: self animation state.
 	json at: 'workspace' put: self workspace.
 	json at: 'translation' put: self translationRule.
 	json at: 'frontpage' put: self frontPage.
-	self
-		fileSave: 'Save snapshot to...'
-		extensions: #('webly')
-		do: [ :stream | (NeoJSONWriter on: stream) nextPut: json ]
+	self fileSave: 'Save snapshot to...' extensions: #( 'webly' ) do: [ :stream | (NeoJSONWriter on: stream) nextPut: json ]
 ]
 
 { #category : 'web api services' }

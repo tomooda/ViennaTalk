@@ -116,6 +116,12 @@ ViennaTranspiledModularDocumentForExecutionTracing >> evaluateStatement: aString
 		  do: [ value ]
 ]
 
+{ #category : 'accessing' }
+ViennaTranspiledModularDocumentForExecutionTracing >> flushRecorder [
+
+	_recorder := ViennaExecutionTraceNullRecorder new
+]
+
 { #category : 'initialize' }
 ViennaTranspiledModularDocumentForExecutionTracing >> initialize [
 
@@ -173,4 +179,22 @@ ViennaTranspiledModularDocumentForExecutionTracing >> useStateDiagramRecorder: a
 
 	^ _recorder := ViennaExecutionTraceRecorder forStateDiagram:
 		               aCollectionOfBlockClosure asArray
+]
+
+{ #category : 'accessing' }
+ViennaTranspiledModularDocumentForExecutionTracing >> withSequenceDiagramRecorder: aString do: aBlock [
+
+	| oldRecorder |
+	oldRecorder := _recorder.
+	_recorder := ViennaExecutionTraceRecorder forSequenceDiagram: aString.
+	^ [ aBlock cull: self cull: _recorder ] ensure: [ _recorder := oldRecorder ]
+]
+
+{ #category : 'accessing' }
+ViennaTranspiledModularDocumentForExecutionTracing >> withStateDiagramRecorder: aCollectionOfBlockClosure do: aBlock [
+
+	| oldRecorder |
+	oldRecorder := _recorder.
+	_recorder := ViennaExecutionTraceRecorder forStateDiagram: aCollectionOfBlockClosure asArray.
+	^ [ aBlock cull: self cull: _recorder] ensure: [ _recorder := oldRecorder ]
 ]

@@ -126,7 +126,8 @@ ViennaConstrainedType >> isRealType [
 
 { #category : 'accessing' }
 ViennaConstrainedType >> name [
-	^ basetype name , ' inv ' , invariant printString
+
+	^ basetype name , ' inv ' , invariant sourceNode sourceCode
 ]
 
 { #category : 'enumerating' }

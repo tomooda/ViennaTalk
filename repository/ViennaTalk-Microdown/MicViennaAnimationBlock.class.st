@@ -1,0 +1,199 @@
+Class {
+	#name : 'MicViennaAnimationBlock',
+	#superclass : 'MicViennaBlock',
+	#instVars : [
+		'diagrams',
+		'forms'
+	],
+	#category : 'ViennaTalk-Microdown-Microdown',
+	#package : 'ViennaTalk-Microdown',
+	#tag : 'Microdown'
+}
+
+{ #category : 'testing' }
+MicViennaAnimationBlock class >> isAbstract [
+
+	^ self == MicViennaAnimationBlock
+]
+
+{ #category : 'accessing' }
+MicViennaAnimationBlock >> diagrams [
+
+	^ diagrams ifNil: [
+			  diagrams := Array streamContents: [ :stream |
+					              arguments
+						              at: #diagrams
+						              ifPresent: [ :string | stream nextPutAll: ((string substrings: ',') collect: #trim thenSelect: #notEmpty) ];
+						              at: #diagram
+						              ifPresent: [ :string | stream nextPutAll: ((string substrings: ',') collect: #trim thenSelect: #notEmpty) ] ] ]
+]
+
+{ #category : 'executing' }
+MicViennaAnimationBlock >> execute [
+
+	| animation prestate transpiledSpecification oldRecorder |
+	resultString := nil.
+	errorString := nil.
+	forms := nil.
+	self bodyNode ifNil: [ ^ self syntaxError ].
+	animation := self animation.
+	self diagrams ifNotEmpty: [ animation withExecutionTrace ].
+	prestate := animation state.
+	transpiledSpecification := animation transpiledSpecification.
+	self diagrams ifNotEmpty: [
+			oldRecorder := transpiledSpecification _recorder.
+			transpiledSpecification useEventRecorder:
+				(transpiledSpecification state associations collect: [ :assoc | assoc key -> assoc value asOrderedDictionary ])
+					asOrderedDictionary ].
+	animation
+		execute: self bodyNode
+		in: self moduleName
+		do: [ :result :poststate |
+				self resultString: result viennaString prestate: prestate poststate: poststate.
+				forms := Array streamContents: [ :stream |
+						         self diagrams do: [ :diagramName |
+							         (self formFrom: transpiledSpecification diagram: diagramName) ifNotNil: [ :form | stream nextPut: form ] ] ] ]
+		ifError: [ :message | ^ self errorString: message ].
+	oldRecorder ifNotNil: [ transpiledSpecification _recorder: oldRecorder ]
+]
+
+{ #category : 'executing' }
+MicViennaAnimationBlock >> flushResultString [
+
+	forms := nil.
+	super flushResultString
+]
+
+{ #category : 'private' }
+MicViennaAnimationBlock >> formFrom: aViennaTranspiledModularDocument diagram: aString [
+
+	aString = 'sequence' ifTrue: [ ^ self sequenceDiagramFrom: aViennaTranspiledModularDocument ].
+	aString = 'state' ifTrue: [ ^ self stateDiagramFrom: aViennaTranspiledModularDocument ].
+	^ nil
+]
+
+{ #category : 'accessing' }
+MicViennaAnimationBlock >> forms [
+
+	^ forms
+]
+
+{ #category : 'accessing' }
+MicViennaAnimationBlock >> poststates [
+
+	^ arguments
+		  at: #poststates
+		  ifPresent: [ :string | (string substrings: ',') collect: #trim thenSelect: #notEmpty ]
+		  ifAbsent: [ nil ]
+]
+
+{ #category : 'accessing' }
+MicViennaAnimationBlock >> prestates [
+
+	^ arguments
+		  at: #prestates
+		  ifPresent: [ :string | (string substrings: ',') collect: #trim thenSelect: #notEmpty ]
+		  ifAbsent: [ nil ]
+]
+
+{ #category : 'printing' }
+MicViennaAnimationBlock >> printPoststate: aDictionary on: aStream [
+
+	self poststates ifNotNil: [ :vars |
+			aDictionary ifNotNil: [
+					| prefix |
+					prefix := self moduleName ifNil: [ '' ] ifNotNil: [ :moduleName | moduleName , '`' ].
+					aStream nextPutAll: '{'.
+					vars
+						do: [ :var |
+								aDictionary at: prefix , var ifPresent: [ :val |
+										aStream
+											nextPutAll: var;
+											nextPutAll: '=';
+											nextPutAll: (self vdmHighlight: val parent: self bodyNode parent) ] ]
+						separatedBy: [ aStream nextPutAll: ', ' ].
+					aStream nextPutAll: '}' ] ]
+]
+
+{ #category : 'printing' }
+MicViennaAnimationBlock >> printPrestate: aDictionary on: aStream [
+
+	self prestates ifNotNil: [ :vars |
+			aDictionary ifNotNil: [
+					| prefix |
+					prefix := self moduleName ifNil: [ '' ] ifNotNil: [ :moduleName | moduleName , '`' ].
+					aStream nextPutAll: '{'.
+					vars
+						do: [ :var |
+								aDictionary at: prefix , var ifPresent: [ :val |
+										aStream
+											nextPutAll: var;
+											nextPutAll: '=';
+											nextPutAll: (self vdmHighlight: val parent: self bodyNode parent) ] ]
+						separatedBy: [ aStream nextPutAll: ', ' ].
+					aStream nextPutAll: '}' ] ]
+]
+
+{ #category : 'accessing' }
+MicViennaAnimationBlock >> resultString: aString prestate: aDictionary poststate: anotherDictionary [
+
+	| result |
+	result := self vdmHighlight: aString parent: self bodyNode parent.
+	resultString := Text streamContents: [ :stream |
+			                self printPrestate: aDictionary on: stream.
+			                stream
+				                space;
+				                nextPutAll: self bodyText;
+				                nextPutAll: ' → ';
+				                nextPutAll: result;
+				                space.
+			                self printPoststate: anotherDictionary on: stream ]
+]
+
+{ #category : 'private' }
+MicViennaAnimationBlock >> sequenceDiagramFrom: aViennaTranspiledModularDocument [
+
+	| format scriptSource diagram canvas |
+	format := ViennaExecutionTraceSequenceDiagramFormat new
+		          root: 'caller';
+		          yourself.
+	scriptSource := String streamContents: [ :stream |
+			                format writeHeaderOn: stream.
+			                aViennaTranspiledModularDocument _executionTrace applyToFormat: format on: stream.
+			                format writeFooterOn: stream ].
+	diagram := MMSequenceDiagramParser new parse: scriptSource.
+	diagram isPetit2Failure ifTrue: [ ^ nil ].
+	canvas := diagram roassalBuilder build.
+	^ canvas
+		  extent: canvas encompassingRectangle extent + (20 @ 20);
+		  zoomToFit;
+		  asForm
+]
+
+{ #category : 'private' }
+MicViennaAnimationBlock >> stateDiagramFrom: aViennaTranspiledModularDocument [
+
+	| format executionTrace scriptSource diagram canvas |
+	format := ViennaExecutionTraceStateDiagramFormat new
+		          probes: aViennaTranspiledModularDocument _defaultProbes;
+		          showsProbeNames: true;
+		          showsOperationNames: true;
+		          yourself.
+	executionTrace := aViennaTranspiledModularDocument _executionTrace.
+	executionTrace initial do: [ :event | event applyAssignmentTo: aViennaTranspiledModularDocument ].
+	scriptSource := String streamContents: [ :stream |
+			                format writeHeaderOn: stream.
+			                executionTrace
+				                applyToFormat: format
+				                on: stream
+				                before: [ :event | event applyAssignmentTo: aViennaTranspiledModularDocument ]
+				                after: [ :event |  ].
+			                format writeFooterOn: stream ].
+	diagram := MMStateDiagramParser new parse: scriptSource.
+	diagram isPetit2Failure ifTrue: [ ^ nil ].
+	canvas := diagram roassalBuilder build.
+	^ canvas
+		  extent: canvas encompassingRectangle extent + (20 @ 20);
+		  zoomToFit;
+		  asForm
+]

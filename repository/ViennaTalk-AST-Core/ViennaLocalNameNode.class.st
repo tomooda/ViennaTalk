@@ -17,19 +17,14 @@ ViennaLocalNameNode class >> identifier: aString [
 { #category : 'converting' }
 ViennaLocalNameNode >> asGlobalName [
 
-	^ (self findResolverForIdentifier: self identifier) ifNotNil: [
-		  :resolver |
-		  resolver isViennaModuleNode ifTrue: [
-			  (resolver lookupIdentifier: self identifier) ifNotNil: [
-				  :localDefinition |
-				  localDefinition isViennaImportNode
-					  ifTrue: [ localDefinition asGlobalName ]
-					  ifFalse: [
-						  localDefinition isViennaExportableTopLevelDefinitionNode
-							  ifTrue: [
-								  ViennaGlobalNameNode
-									  moduleIdentifier: resolver identifier
-									  identifier: self identifier ] ] ] ] ]
+	^ (self findResolverForIdentifier: self identifier) ifNotNil: [ :resolver |
+			  resolver isViennaModuleNode ifTrue: [
+					  (resolver lookupIdentifier: self identifier) ifNotNil: [ :localDefinition |
+							  localDefinition isViennaImportNode
+								  ifTrue: [ localDefinition asGlobalName ]
+								  ifFalse: [
+										  localDefinition isViennaExportableTopLevelDefinitionNode ifTrue: [
+											  ViennaGlobalNameNode moduleIdentifier: resolver identifier identifier: self identifier ] ] ] ] ]
 ]
 
 { #category : 'accessing' }
@@ -85,26 +80,11 @@ ViennaLocalNameNode >> isExportedNameNode [
 ]
 
 { #category : 'testing' }
-ViennaLocalNameNode >> isFunctionNameNode [
-
-	^ (self identifier beginsWith: 'pre_') or: [
-		  (self identifier beginsWith: 'post_') or: [
-			  (self identifier beginsWith: 'inv_') or: [
-				  self resolve ifNotNil: #isFunctionDefinition ifNil: [ false ] ] ] ]
-]
-
-{ #category : 'testing' }
 ViennaLocalNameNode >> isLocalValueNameNode [
 
 	(self definitionOfLocalName: self identifier) ifNotNil: [ :defNode |
 		defNode bindHolderNode isViennaValueDefinitionNode ifTrue: [ ^ true ] ].
 	^ false
-]
-
-{ #category : 'testing' }
-ViennaLocalNameNode >> isOperationNameNode [
-
-	^ self resolve isOperationDefinition
 ]
 
 { #category : 'testing' }

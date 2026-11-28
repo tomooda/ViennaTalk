@@ -36,6 +36,12 @@ ViennaAbstractNodeChange >> , aViennaAbstractNodeChange [
 ]
 
 { #category : 'operations' }
+ViennaAbstractNodeChange >> applyDiscourseTo: aFileReference [
+
+	^ self subclassResponsibility
+]
+
+{ #category : 'operations' }
 ViennaAbstractNodeChange >> applyTo: aViennaDocumentNode [
 
 	^ self subclassResponsibility
@@ -45,6 +51,12 @@ ViennaAbstractNodeChange >> applyTo: aViennaDocumentNode [
 ViennaAbstractNodeChange >> changedGlobalNamesDo: aBlock [
 
 	^ self subclassResponsibility
+]
+
+{ #category : 'copying' }
+ViennaAbstractNodeChange >> copyWithFrom: aViennaNode to: anotherViennaNode [
+
+	^ self class from: aViennaNode to: anotherViennaNode
 ]
 
 { #category : 'private' }
@@ -57,6 +69,24 @@ ViennaAbstractNodeChange >> flushSourceDiffText [
 ViennaAbstractNodeChange >> from [
 
 	^ from
+]
+
+{ #category : 'controlling' }
+ViennaAbstractNodeChange >> ifDiscourseChanges: aBlock [
+
+	
+]
+
+{ #category : 'controlling' }
+ViennaAbstractNodeChange >> ifNodeChanges: aBlock [
+
+	self ifNotEmpty: aBlock
+]
+
+{ #category : 'controlling' }
+ViennaAbstractNodeChange >> ifNotEmpty: aBlock [
+
+	from = to ifFalse: [ aBlock cull: self ]
 ]
 
 { #category : 'testing' }

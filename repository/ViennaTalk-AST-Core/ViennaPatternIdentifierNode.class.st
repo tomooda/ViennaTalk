@@ -38,8 +38,7 @@ ViennaPatternIdentifierNode >> formatWith: aViennaAbstractFormatter [
 
 	^ self identifier
 		  ifNil: [ aViennaAbstractFormatter empty ++ '-' ]
-		  ifNotNil: [ :identifier |
-		  aViennaAbstractFormatter format: identifier ]
+		  ifNotNil: [ :identifier | aViennaAbstractFormatter identifier: identifier ]
 ]
 
 { #category : 'private' }

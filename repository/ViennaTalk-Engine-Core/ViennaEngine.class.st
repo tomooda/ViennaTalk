@@ -1,9 +1,8 @@
 Class {
 	#name : 'ViennaEngine',
-	#superclass : 'Object',
-	#classVars : [
-		'DefaultEngineType'
-	],
+	#superclass : 'ViennaAbstractEngine',
+	#traits : 'TViennaEngine',
+	#classTraits : 'TViennaEngine classTrait',
 	#category : 'ViennaTalk-Engine-Core',
 	#package : 'ViennaTalk-Engine-Core'
 }
@@ -11,84 +10,29 @@ Class {
 { #category : 'defaults' }
 ViennaEngine class >> default [
 
-	^ (self forType: self defaultEngineType) ifNotNil: #default
-]
-
-{ #category : 'settings' }
-ViennaEngine class >> defaultEngineType [
-
-	^ DefaultEngineType ifNil: [ self engineTypes first ]
-]
-
-{ #category : 'settings' }
-ViennaEngine class >> defaultEngineType: aSymbol [
-
-	^ DefaultEngineType := aSymbol
+	^ self new
 ]
 
 { #category : 'accessing' }
 ViennaEngine class >> engineType [
 
-	^ self subclassResponsibility
-]
-
-{ #category : 'defaults' }
-ViennaEngine class >> engineTypes [
-
-	^ ((self allSubclasses select: [ :class | class priority > 0 ])
-		   sorted: #priority descending) collect: #engineType
-]
-
-{ #category : 'accessing' }
-ViennaEngine class >> forType: aSymbol [
-
-	self allSubclassesDo: [ :class |
-		class engineType = aSymbol ifTrue: [ ^ class ] ]
+	^ #Transpiler
 ]
 
 { #category : 'accessing' }
 ViennaEngine class >> priority [
 
-	^ self subclassResponsibility
-]
-
-{ #category : 'settings' }
-ViennaEngine class >> viennaSettingsOn: aBuilder [
-
-	<systemsettings>
-	(aBuilder pickOne: #defaultEngineType)
-		parent: #ViennaTalkEngine;
-		label: 'default engine';
-		domainValues: self engineTypes;
-		default: self defaultEngineType;
-		description: 'Select the default engine to run VDM-SL specs.';
-		target: self;
-		order: 0.2
-]
-
-{ #category : 'accessing' }
-ViennaEngine >> animation [
-
-	^ ViennaAnimation on: self
+	^ 10
 ]
 
 { #category : 'accessing' }
 ViennaEngine >> close [
-	^ self subclassResponsibility
+
+	
 ]
 
-{ #category : 'evaluating' }
-ViennaEngine >> evaluate: expression specification: spec states: states [
+{ #category : 'class access' }
+ViennaEngine >> transpilerClass [
 
-	^ self
-		  evaluate: expression
-		  specification: spec
-		  states: states
-		  module: 'DEFAULT'
-]
-
-{ #category : 'evaluating' }
-ViennaEngine >> evaluate: expression specification: spec states: states module: module [
-
-	^ self subclassResponsibility
+	^ ViennaTranspilerForExecutionTracing
 ]

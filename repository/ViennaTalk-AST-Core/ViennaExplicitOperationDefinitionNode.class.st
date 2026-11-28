@@ -125,28 +125,25 @@ ViennaExplicitOperationDefinitionNode >> findResolverForIdentifier: aString [
 ViennaExplicitOperationDefinitionNode >> formatWith: aViennaAbstractFormatter [
 
 	| access identifier operationType parameters statement pre post |
-	access := (aViennaAbstractFormatter format: self access) trim
-		          ifNotEmpty: [ :string | string ++ ' ' ].
-	identifier := aViennaAbstractFormatter format: self identifier.
+	access := (aViennaAbstractFormatter format: self access) trim ifNotEmpty: [ :string | string ++ ' ' ].
+	identifier := aViennaAbstractFormatter identifier: self identifier.
 	operationType := aViennaAbstractFormatter format: self type.
 	parameters := aViennaAbstractFormatter format: self parameters.
 	statement := aViennaAbstractFormatter format: self statement.
 	pre := self pre
 		       ifNotNil: [ :node |
-			       aViennaAbstractFormatter cr ++ (aViennaAbstractFormatter
-				        indentString: (aViennaAbstractFormatter keyword: 'pre ')
-				        insertCrIfNeeded: (aViennaAbstractFormatter format: node)) ]
+				       aViennaAbstractFormatter cr ++ (aViennaAbstractFormatter
+					        indentString: (aViennaAbstractFormatter keyword: 'pre ')
+					        insertCrIfNeeded: (aViennaAbstractFormatter format: node)) ]
 		       ifNil: [ aViennaAbstractFormatter empty ].
 	post := self post
 		        ifNotNil: [ :node |
-			        aViennaAbstractFormatter cr ++ (aViennaAbstractFormatter
-				         indentString: (aViennaAbstractFormatter keyword: 'post ')
-				         insertCrIfNeeded: (aViennaAbstractFormatter format: node)) ]
+				        aViennaAbstractFormatter cr ++ (aViennaAbstractFormatter
+					         indentString: (aViennaAbstractFormatter keyword: 'post ')
+					         insertCrIfNeeded: (aViennaAbstractFormatter format: node)) ]
 		        ifNil: [ aViennaAbstractFormatter empty ].
 	^ access ++ identifier ++ ' : ' ++ operationType ++ String cr
-	  ++ (aViennaAbstractFormatter
-			   indentString: identifier ++ parameters ++ ' =='
-			   insertCrIfNeeded: statement) ++ pre ++ post
+	  ++ (aViennaAbstractFormatter indentString: identifier ++ parameters ++ ' ==' insertCrIfNeeded: statement) ++ pre ++ post
 ]
 
 { #category : 'private' }

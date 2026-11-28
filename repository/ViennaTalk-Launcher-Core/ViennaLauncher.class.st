@@ -424,11 +424,10 @@ ViennaLauncher >> defaultLayout [
 		  add: (SpBoxLayout newHorizontal
 				   add: #openButton expand: false;
 				   add: #toolsButton expand: false;
-				   addLast: #systemButton
-				   withConstraints: [ :constraints |
-					   constraints width: self class buttonHeight ];
+				   addLast: #systemButton;
 				   yourself)
 		  expand: false;
+		  spacing: 1;
 		  add: logoImage
 ]
 
@@ -607,7 +606,7 @@ ViennaLauncher >> request: request initialAnswer: initialAnwser title: title [
 
 	^ self application newRequest
 		  title: title;
-		  label: request;
+		  message: request;
 		  text: initialAnwser;
 		  openModal
 ]

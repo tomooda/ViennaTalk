@@ -150,7 +150,7 @@ ViennaVDMSourcePresenter >> evaluateExpression: aString ifError: errorBlock [
 	[ node typecheck ]
 		on: ViennaTypeError
 		do: [ :ex | ^ errorBlock cull: ex messageText ].
-	^ (animation value ifNil: [ ViennaTranspiledAnimation new ])
+	^ (animation value ifNil: [ ViennaAnimation new ])
 		  plainExecute: node
 		  in: (node module ifNotNil: #identifier)
 		  ifError: errorBlock
@@ -166,7 +166,7 @@ ViennaVDMSourcePresenter >> evaluateStatement: aString ifError: errorBlock [
 	[ node typecheck ]
 		on: ViennaTypeError
 		do: [ :ex | ^ errorBlock cull: ex messageText ].
-	^ (animation value ifNil: [ ViennaTranspiledAnimation new ])
+	^ (animation value ifNil: [ ViennaAnimation new ])
 		  plainExecute: node
 		  in: (node module ifNotNil: #identifier)
 		  ifError: errorBlock

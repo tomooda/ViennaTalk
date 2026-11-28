@@ -735,6 +735,12 @@ ViennaVDM2Smalltalk >> errorStatement: aViennaNode env: aDictionary [
 	^ 'ViennaError signal'
 ]
 
+{ #category : 'testing' }
+ViennaVDM2Smalltalk >> executiontTraceEnabled [
+
+	^ false
+]
+
 { #category : 'code generation-expressions' }
 ViennaVDM2Smalltalk >> exists1Expression: aViennaNode env: aDictionary [
 	| bindNode expr varGenerator |

@@ -5,8 +5,9 @@ Class {
 		'_steps',
 		'_max_steps'
 	],
-	#category : 'ViennaTalk-VDMPad-Core',
-	#package : 'ViennaTalk-VDMPad-Core'
+	#category : 'ViennaTalk-VDMPad-Core-Transpiler',
+	#package : 'ViennaTalk-VDMPad-Core',
+	#tag : 'Transpiler'
 }
 
 { #category : 'accessing' }
@@ -54,6 +55,15 @@ ViennaTranspiledModularDocumentForVDMPad >> _steps: anInteger [
 ViennaTranspiledModularDocumentForVDMPad >> defaultMaxSteps [
 
 	^ 100000
+]
+
+{ #category : 'evaluating' }
+ViennaTranspiledModularDocumentForVDMPad >> evaluateNode: aViennaNode ifError: errorBlock [
+
+	^ self
+		  evaluateNode: aViennaNode
+		  with: ViennaTranspilerForVDMPad new
+		  ifError: errorBlock
 ]
 
 { #category : 'initialize' }

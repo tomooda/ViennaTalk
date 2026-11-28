@@ -22,7 +22,8 @@ LWTVDMStateFrame >> isVDMStateFrame [
 
 { #category : 'interface opening' }
 LWTVDMStateFrame >> openBrowser [
-	^ ViennaBrowser open
+
+	
 ]
 
 { #category : 'printing' }

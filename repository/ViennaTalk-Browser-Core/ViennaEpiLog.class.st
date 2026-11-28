@@ -311,6 +311,16 @@ ViennaEpiLog >> metadataName [
 	^ self class metadataName
 ]
 
+{ #category : 'enumerating' }
+ViennaEpiLog >> modifiedDiscoursesDo: aBlock [
+]
+
+{ #category : 'instance creation' }
+ViennaEpiLog >> newDiscourse: aString filename: anotherString [
+
+	^ ViennaDiscourseEpiLog after: self filename: anotherString content: aString
+]
+
 { #category : 'instance creation' }
 ViennaEpiLog >> newEvaluation: aString state: aDictionary [
 

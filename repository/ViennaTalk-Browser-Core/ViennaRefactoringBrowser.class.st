@@ -7,7 +7,6 @@ Class {
 		'fileReference',
 		'animation',
 		'menuBar',
-		'notebook',
 		'moduleList',
 		'categoryList',
 		'definitionList',
@@ -63,7 +62,15 @@ Class {
 		'removeAllEpiLogButton',
 		'clearEpiLogCheckBox',
 		'epiLogCherrypickButton',
-		'pendingSemanticError'
+		'pendingSemanticError',
+		'vdmNotebook',
+		'notebook',
+		'microdown',
+		'microdownSource',
+		'microdownFileList',
+		'microdownNotebook',
+		'addMicrodownButton',
+		'removeMicrodownButton'
 	],
 	#classVars : [
 		'GreenSignalIcon',
@@ -678,6 +685,18 @@ ViennaRefactoringBrowser >> accept: aStringOrText [
 	^ newNode
 ]
 
+{ #category : 'operations-documentation' }
+ViennaRefactoringBrowser >> addMicrodownDocument [
+
+	(self request: 'New filename' initialAnswer: '.md' title: 'Save as') ifNotNil: [ :basename |
+			| ref |
+			ref := fileReference / basename withExtension: 'md'.
+			ref exists ifFalse: [
+					ref ensureCreateFile.
+					self updateMicrodownFileList ].
+			microdownFileList selectItem: (microdownFileList items detect: [ :item | item fullPath = ref fullPath ] ifNone: [ nil ]) ]
+]
+
 { #category : 'menus' }
 ViennaRefactoringBrowser >> addRefactoringMenuGroupOn: aViennaNode to: aMenuPresenter with: aBlock [
 
@@ -689,6 +708,53 @@ ViennaRefactoringBrowser >> addRefactoringMenuGroupOn: aViennaNode to: aMenuPres
 					name: refactoring name;
 					action: [ self executeRefactoring: refactoring ] ] ].
 		aBlock cull: group ]
+]
+
+{ #category : 'menus' }
+ViennaRefactoringBrowser >> addReferenceMenuOn: aViennaNode to: aMenuPresenter with: aBlock [
+
+	aMenuPresenter addGroup: [ :group |
+			(aViennaNode isViennaLocalNameNode and: [ aViennaNode isStateVariableNameNode ]) ifTrue: [
+					group
+						addItem: [ :item |
+								item
+									name: 'Read accesses to ' , aViennaNode identifier;
+									action: [ self openReaderList: aViennaNode resolve ] ];
+						addItem: [ :item |
+								item
+									name: 'Write accesses to ' , aViennaNode identifier;
+									action: [ self openWriterList: aViennaNode resolve ] ] ].
+			(aViennaNode isViennaStateDefinitionNode or: [ aViennaNode isViennaFieldNode and: [ aViennaNode isStateVariableDefinition ] ])
+				ifTrue: [
+						group
+							addItem: [ :item |
+									item
+										name: 'Read accesses to state variables';
+										action: [ self openReaderList: aViennaNode ] ];
+							addItem: [ :item |
+									item
+										name: 'Write accesses to state variables';
+										action: [ self openWriterList: aViennaNode ] ] ].
+			((aViennaNode isViennaNameNode and: [ aViennaNode isStateVariableNameNode not ]) or: [ aViennaNode isViennaTypeNameNode ])
+				ifTrue: [
+						group addItem: [ :item |
+								item
+									name: 'References to ' , aViennaNode source;
+									action: [ self openValueReferenceList: aViennaNode resolve ] ] ].
+			aViennaNode isViennaPatternIdentifierNode ifTrue: [
+					group addItem: [ :item |
+							item
+								name: 'References to ' , aViennaNode identifier;
+								action: [ self openValueReferenceList: (aViennaNode resolveIdentifier: aViennaNode identifier) ] ] ].
+			(aViennaNode isValueDefinition or: [
+				 aViennaNode isFunctionDefinition or: [ aViennaNode isOperationDefinition or: [ aViennaNode isViennaTypeSynonymNode ] ] ])
+				ifTrue: [
+						group addItem: [ :item |
+								item
+									name: 'References to ' , aViennaNode identifier;
+									action: [ self openValueReferenceList: aViennaNode ] ] ].
+
+			aBlock cull: group ]
 ]
 
 { #category : 'operations-slicing' }
@@ -870,18 +936,22 @@ ViennaRefactoringBrowser >> categoryListContextMenu [
 ViennaRefactoringBrowser >> cherrypick [
 
 	epiLogCherrypickList selectedItems ifNotEmpty: [ :diffs |
-		| newDocument map |
-		newDocument := self specification copyWhole:
-			               (map := IdentityDictionary new).
-		diffs do: [ :diff |
-			(diff class
-				 from: (map at: diff from ifAbsent: [ diff from ])
-				 to: diff to) applyTo: newDocument ].
-		self
-			epiLogManualEdit: newDocument
-			comment:
-			'Cherrypick: ' , (', ' join: (diffs collect: #printString)).
-		self updateModuleList ]
+			| sourceChanges discourseChanges newDocument map |
+			sourceChanges := OrderedCollection new: diffs size.
+			discourseChanges := OrderedCollection new: diffs size.
+			newDocument := self specification copyWhole: (map := IdentityDictionary new).
+			diffs do: [ :diff |
+					(diff copyWithFrom: (map at: diff from ifAbsent: [ diff from ]) to: diff to)
+						ifNodeChanges: [ :d |
+								d applyTo: newDocument.
+								sourceChanges add: d ];
+						ifDiscourseChanges: [ :d | discourseChanges add: d ] ].
+			sourceChanges ifNotEmpty: [
+				self epiLogManualEdit: newDocument comment: 'Cherrypick: ' , (', ' join: (sourceChanges collect: #printString)) ].
+			discourseChanges do: [ :diff |
+					diff applyDiscourseTo: fileReference.
+					self epiLogDiscourse: diff to filename: diff filename comment: 'Cherrypick' ].
+			self updateModuleList ]
 ]
 
 { #category : 'user interface' }
@@ -952,7 +1022,7 @@ ViennaRefactoringBrowser >> confirm: queryString label: titleString [
 
 	^ self application newConfirm
 		  title: titleString;
-		  label: queryString;
+		  message: queryString;
 		  openModal
 ]
 
@@ -989,7 +1059,7 @@ ViennaRefactoringBrowser >> createNewNarrativeDo: aBlock [
 { #category : 'operations-tests' }
 ViennaRefactoringBrowser >> debugTestResultItem: aViennaTestResultItem [
 
-	^ (ViennaTranspiledAnimation new
+	^ (ViennaAnimation new
 		   specification: self specification ifError: [ :msg | ^ nil ];
 		   yourself)
 		  debug: aViennaTestResultItem operation , '()'
@@ -1002,16 +1072,7 @@ ViennaRefactoringBrowser >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		  add: menuBar height: self class buttonHeight;
-		  add: (SpPanedLayout newVertical
-				   positionOfSlider: 0.3;
-				   add: (SpPanedLayout newHorizontal
-						    positionOfSlider: 0.4;
-						    add: moduleList;
-						    add: (SpPanedLayout newHorizontal
-								     positionOfSlider: 0.3;
-								     add: categoryList;
-								     add: definitionList));
-				   add: notebook);
+		  add: notebook;
 		  yourself
 ]
 
@@ -1032,35 +1093,34 @@ ViennaRefactoringBrowser >> definitionListContextMenu [
 	| menu |
 	menu := self newMenu.
 	self definitionBase ifNotNil: [ :definition |
-		menu addGroup: [ :group |
-			(ViennaRefactoring
-				 sortedInstancesOn: definition
-				 suchthat: #isForDefinitionList) do: [ :refactoring |
-				group addItem: [ :item |
-					item
-						name: refactoring name;
-						action: [ self executeRefactoring: refactoring ] ] ] ].
-		menu addGroup: [ :group |
-			definition isViennaExplicitOperationDefinitionNode ifTrue: [
-				group addItem: [ :item |
-					item
-						name: 'Add slice for ...';
-						subMenu: (self addSliceMenuOnOperation: definition) ] ].
-			definition isViennaStateDefinitionNode ifTrue: [
-				group addItem: [ :item |
-					item
-						name: 'Add slice for ...';
-						subMenu: (self addSliceMenuOnState: definition) ] ].
-			sliceNodes ifNotEmpty: [
-				group addItem: [ :item |
-					item
-						name: 'Clear slices';
-						action: [ self clearSlice ] ] ] ] ].
+			menu addGroup: [ :group |
+					(ViennaRefactoring sortedInstancesOn: definition suchthat: #isForDefinitionList) do: [ :refactoring |
+							group addItem: [ :item |
+									item
+										name: refactoring name;
+										action: [ self executeRefactoring: refactoring ] ] ] ].
+			self addReferenceMenuOn: definition to: menu with: [ :group |  ].
+			menu addGroup: [ :group |
+					definition isViennaExplicitOperationDefinitionNode ifTrue: [
+							group addItem: [ :item |
+									item
+										name: 'Add slice for ...';
+										subMenu: (self addSliceMenuOnOperation: definition) ] ].
+					definition isViennaStateDefinitionNode ifTrue: [
+							group addItem: [ :item |
+									item
+										name: 'Add slice for ...';
+										subMenu: (self addSliceMenuOnState: definition) ] ].
+					sliceNodes ifNotEmpty: [
+							group addItem: [ :item |
+									item
+										name: 'Clear slices';
+										action: [ self clearSlice ] ] ] ] ].
 	menu addGroup: [ :group |
-		menu addItem: [ :item |
-			item
-				name: 'inspect';
-				action: [ self definitionBase inspect ] ] ].
+			menu addItem: [ :item |
+					item
+						name: 'inspect';
+						action: [ self definitionBase inspect ] ] ].
 	^ menu
 ]
 
@@ -1077,6 +1137,18 @@ ViennaRefactoringBrowser >> definitionsFromCategory: aViennaNode [
 							  stream nextPut: node ] ] ]
 				  ifFalse: [ Array new ] ]
 		  ifFalse: [ Array new ]
+]
+
+{ #category : 'operations-epiLog' }
+ViennaRefactoringBrowser >> diffToEpiLog: aViennaEpiLog [
+
+	| changes |
+	changes := (ViennaNodeDiffSet from: self specification to: aViennaEpiLog specification) condenseChanges.
+	aViennaEpiLog modifiedDiscoursesDo: [ :filename :content |
+			| current |
+			current := fileReference / filename ifExists: [ :ref | ref contents ] ifAbsent: [ nil ].
+			changes addLast: (ViennaDiscourseChange filename: filename from: current contents to: content) ].
+	^ changes
 ]
 
 { #category : 'private' }
@@ -1114,6 +1186,23 @@ ViennaRefactoringBrowser >> displayDefinition: aViennaNode [
 				  ifNil: [ node module identifier , '`' , node identifier ] ].
 		node isViennaNamedTraceNode ifTrue: [ ^ node identifier ] ].
 	^ '-'
+]
+
+{ #category : 'layouts' }
+ViennaRefactoringBrowser >> documentationPageLayout [
+
+	^ SpPanedLayout newHorizontal
+		  positionOfSlider: 0.2;
+		  add: (SpBoxLayout newVertical
+				   add: microdownFileList;
+				   add: (SpBoxLayout newHorizontal
+						    add: addMicrodownButton expand: false;
+						    add: removeMicrodownButton expand: false;
+						    yourself)
+				   expand: false;
+				   yourself);
+		  add: microdownNotebook;
+		  yourself
 ]
 
 { #category : 'operations-epiLog' }
@@ -1180,12 +1269,21 @@ ViennaRefactoringBrowser >> epiLogChanges [
 { #category : 'accessing' }
 ViennaRefactoringBrowser >> epiLogCherrypickChanges [
 
-	^ epiLogList selectedItem
-		  ifNotNil: [ :epiLog |
-			  (ViennaNodeDiffSet
-				   from: self specification
-				   to: epiLog specification) condenseChanges ]
-		  ifNil: [ Array new ]
+	^ epiLogList selectedItem ifNotNil: [ :epiLog | self diffToEpiLog: epiLog ] ifNil: [ Array new ]
+]
+
+{ #category : 'operations-epiLog' }
+ViennaRefactoringBrowser >> epiLogDiscourse: aString filename: anotherString [
+
+	self epiLog: (self epiLog newDiscourse: aString filename: anotherString)
+]
+
+{ #category : 'operations-epiLog' }
+ViennaRefactoringBrowser >> epiLogDiscourse: aString filename: anotherString comment: commentString [
+
+	self epiLog: ((self epiLog newDiscourse: aString filename: anotherString)
+			 comment: commentString;
+			 yourself)
 ]
 
 { #category : 'accessing' }
@@ -1403,7 +1501,14 @@ ViennaRefactoringBrowser >> executeRefactoring: aViennaRefactoring [
 { #category : 'accessing' }
 ViennaRefactoringBrowser >> fileReference: aFileReference [
 
-	fileReference := aFileReference
+	fileReference := aFileReference.
+	self fileReferenceChanged
+]
+
+{ #category : 'updating' }
+ViennaRefactoringBrowser >> fileReferenceChanged [
+
+	self updateMicrodownFileList
 ]
 
 { #category : 'icons' }
@@ -1578,13 +1683,30 @@ ViennaRefactoringBrowser >> gitCanPush [
 { #category : 'operations-git' }
 ViennaRefactoringBrowser >> gitChanges [
 
-	self specification ifNotNil: [ :ast |
-		self icebergRepositoryDo: [ :repository |
-			^ (ViennaNodeDiffSet
-				   from: (self sourceFrom: repository branch commit fileSystem)
-						   asViennaDocumentAst
-				   to: ast) condenseChanges ] ].
-	^ {  }
+	^ Array streamContents: [ :stream |
+			  self specification ifNotNil: [ :ast |
+					  self icebergRepositoryDo: [ :repository |
+							  | repositoryFilesystem |
+							  repositoryFilesystem := repository branch commit fileSystem.
+							  stream nextPutAll:
+								  (ViennaNodeDiffSet from: (self sourceFrom: repositoryFilesystem) asViennaDocumentAst to: ast) condenseChanges.
+							  (fileReference filesMatching: '*.vdmsl') , (fileReference filesMatching: '*.md') do: [ :fileRef |
+									  | basename fileContents wcRef |
+									  basename := fileRef basename.
+									  fileContents := fileRef contents.
+									  wcRef := repositoryFilesystem / basename.
+									  wcRef exists
+										  ifTrue: [
+												  | wcContents |
+												  wcContents := wcRef contents.
+												  fileRef contents = wcRef contents ifFalse: [
+													  stream nextPut: (ViennaDiscourseChange filename: basename from: wcContents to: fileContents) ] ]
+										  ifFalse: [ stream nextPut: (ViennaDiscourseChange filename: basename from: nil to: fileRef contents) ] ].
+							  (repositoryFilesystem filesMatching: '*.vdmsl') , (repositoryFilesystem filesMatching: '*.md') do: [ :wcRef |
+									  | basename fileRef |
+									  basename := wcRef basename.
+									  fileRef := fileReference / basename.
+									  fileRef exists ifFalse: [ stream nextPut: (ViennaDiscourseChange filename: basename from: wcRef contents to: nil) ] ] ] ] ]
 ]
 
 { #category : 'operations-git' }
@@ -1653,13 +1775,16 @@ ViennaRefactoringBrowser >> gitFetch [
 ViennaRefactoringBrowser >> gitHasDirtyWorkingCopy [
 
 	self icebergRepositoryDo: [ :repository |
-		| headFileSystem |
-		headFileSystem := repository branch commit fileSystem.
-		(fileReference filesMatching: '*.vdmsl') do: [ :fileRef |
-			| wcRef |
-			wcRef := headFileSystem / fileRef basename.
-			(wcRef exists and: [ fileRef contents = wcRef contents ]) ifFalse: [
-				^ true ] ] ].
+			| headFileSystem |
+			headFileSystem := repository branch commit fileSystem.
+			(fileReference filesMatching: '*.vdmsl') , (fileReference filesMatching: '*.md') do: [ :fileRef |
+					| wcRef |
+					wcRef := headFileSystem / fileRef basename.
+					(wcRef exists and: [ fileRef contents = wcRef contents ]) ifFalse: [ ^ true ] ].
+			(headFileSystem filesMatching: '*.vdmsl') , (headFileSystem filesMatching: '*.md') do: [ :wcRef |
+					| fileRef |
+					fileRef := fileReference / wcRef basename.
+					fileRef exists ifFalse: [ ^ true ] ] ].
 	^ false
 ]
 
@@ -1901,8 +2026,7 @@ ViennaRefactoringBrowser >> icebergRepositoryDo: aBlock [
 { #category : 'updating' }
 ViennaRefactoringBrowser >> ifHiDeHoVisible: aBlock [
 
-	notebook ifNotNil: [
-		(notebook selectedPage ifNotNil: #title) = 'HiDeHo' ifTrue: aBlock ]
+	notebook ifNotNil: [ (notebook selectedPage ifNotNil: #title) = 'HiDeHo' ifTrue: aBlock ]
 ]
 
 { #category : 'operations' }
@@ -1916,17 +2040,40 @@ ViennaRefactoringBrowser >> initState [
 { #category : 'initialization' }
 ViennaRefactoringBrowser >> initialize [
 
-	animation := ViennaAnimation default.
+	animation := ViennaAnimation new.
 	animation announcer
-		when: ViennaStateChanged do: [ self updateStateTable ] for: self;
-		when: ViennaSpecificationChanged
-		do: [ self updateStateTableItems ]
-		for: self.
+		when: ViennaAnimationStateChanged send: #updateStateTable to: self;
+		when: ViennaAnimationSpecificationChanged send: #updateStateTableItems to: self.
 	runsAllTests := false.
 	self epiLogVanilla.
 	dirty := false.
 	sliceNodes := IdentitySet new.
 	super initialize
+]
+
+{ #category : 'initialization' }
+ViennaRefactoringBrowser >> initializeDiscoursePagePresenters [
+
+	microdownFileList := self newTable
+		                     addColumn: (SpStringTableColumn title: 'file' evaluated: [ :ref | ref basename ]);
+		                     activateOnDoubleClick;
+		                     whenActivatedDo: [ microdownFileList unselectAll ];
+		                     whenSelectedItemChangedDo: [ self selectedDocumentChanged ];
+		                     yourself.
+	addMicrodownButton := self newButton
+		                      iconName: #add;
+		                      action: [ self addMicrodownDocument ];
+		                      yourself.
+	removeMicrodownButton := self newButton
+		                         iconName: #remove;
+		                         action: [ self removeMicrodownDocument ];
+		                         yourself.
+	microdown := self newViennaMicrodown animation: animation.
+	microdownSource := self newText whenSubmitDo: [ :text | self microdownSourceAccepted ].
+	microdownNotebook := self newNotebook
+		                     addPageTitle: 'View' provider: [ microdown ];
+		                     addPageTitle: 'Source' provider: [ microdownSource ];
+		                     yourself
 ]
 
 { #category : 'initialization' }
@@ -2263,88 +2410,52 @@ ViennaRefactoringBrowser >> initializePresenters [
 
 	super initializePresenters.
 	menuBar := self menuBar.
-	moduleList := self newList
-		              borderWidth: 1;
-		              borderColor: Color darkGray;
-		              beSingleSelection;
-		              contextMenu: [ self moduleListContextMenu ];
-		              displayBackgroundColor: [ :ast |
-			              self listBackgroundColorFor: ast ];
-		              display: [ :ast | ast ifNil: [ '-' ] ifNotNil: #first ];
-		              sortingBlock: #identifier ascending;
-		              whenSelectionChangedDo: [
-			              self
-				              updateTestButtons;
-				              updateCategoryList;
-				              updateEpiLogMatcherDropList;
-				              updateEpiLogSourceText ];
-		              yourself.
-	categoryList := self newList
-		                borderWidth: 1;
-		                borderColor: Color darkGray;
-		                beSingleSelection;
-		                contextMenu: [ self categoryListContextMenu ];
-		                displayBackgroundColor: [ :ast |
-			                self listBackgroundColorFor: ast ];
-		                display: [ :ast | self displayCategory: ast ];
-		                whenSelectionChangedDo: [ self updateDefinitionList ];
-		                yourself.
-	definitionList := self newList
-		                  borderWidth: 1;
-		                  borderColor: Color darkGray;
-		                  beSingleSelection;
-		                  displayBackgroundColor: [ :ast |
-			                  self listBackgroundColorFor: ast ];
-		                  contextMenu: [ self definitionListContextMenu ];
-		                  display: [ :ast |
-			                  ast
-				                  ifNotNil: [ self displayDefinition: ast ]
-				                  ifNil: [ '-' ] ];
-		                  whenSelectionChangedDo: [
-			                  self
-				                  updateSource;
-				                  updateEpiLogMatcherDropList ].
-	self initializeSourcePagePresenters.
-	self initializePlaygroundPagePresenters.
+	self initializeVdmPagePresenters.
+	self initializeDiscoursePagePresenters.
 	self initializeEpiLogPagePresenters.
 	self initializeGitPagePresenters.
 	notebook := self newNotebook
-		            addPageTitle: 'Source' provider: [
+		            addPageTitle: 'VDM' provider: [
+				            SpPresenter new
+					            layout: self vdmPageLayout;
+					            yourself ];
+		            addPageTitle: 'Discourse' provider: [
 			            SpPresenter new
-				            layout: self sourcePageLayout;
+				            layout: self documentationPageLayout;
 				            yourself ];
-		            addPageTitle: 'Playground' provider: [
-		            SpPresenter new
-			            layout: self playgroundPageLayout;
-			            yourself ];
 		            addPageTitle: 'HiDeHo' provider: [
-		            SpPresenter new
-			            layout: self epilogPageLayout;
-			            yourself ];
+			            SpPresenter new
+				            layout: self epilogPageLayout;
+				            yourself ];
 		            addPageTitle: 'Git' provider: [
-		            SpPresenter new
-			            layout: self gitPageLayout;
-			            yourself ];
+			            SpPresenter new
+				            layout: self gitPageLayout;
+				            yourself ];
 		            whenSelectedPageChangedDo: [
-			            notebook selectedPage ifNotNil: [ :page |
-				            page title = 'HiDeHo' ifTrue: [ self updateEpiLogPage ].
-				            page title = 'Git' ifTrue: [
-					            [ self updateGitPage ] forkAt:
-						            Processor userBackgroundPriority ] ] ];
+				            notebook selectedPage ifNotNil: [ :page |
+						            page title = 'HiDeHo' ifTrue: [ self updateEpiLogPage ].
+						            page title = 'Git' ifTrue: [ [ self updateGitPage ] forkAt: Processor userBackgroundPriority ] ] ];
+		            whenPageRemovedDo: [ :page | page activePresenter ifNotNil: #release ];
 		            yourself.
 	self whenBuiltDo: [ :w |
-		| f |
-		f := ViennaLauncher font.
-		w widget allMorphsDo: [ :m |
-			(m respondsTo: #font:) ifTrue: [ m font: f ] ] ]
+			| f |
+			f := ViennaLauncher font.
+			w widget allMorphsDo: [ :m | (m respondsTo: #font:) ifTrue: [ m font: f ] ].
+			menuBar withAdapterDo: [ :a |
+					a widgetDo: [ :w |
+							w fillsOwner: false.
+							w layoutProperties
+								listCentering: #topLeft;
+								minCellSize: 0;
+								maxCellSize: 1024;
+								hResizing: #spaceFill ] ] ]
 ]
 
 { #category : 'initialization' }
 ViennaRefactoringBrowser >> initializeSourcePagePresenters [
 
-	sourceSignalButton := self newButton
-		                      color: Color transparent;
-		                      icon: self class greenSignalIcon;
+	sourceSignalButton := self newImage
+		                      image: self class greenSignalIcon;
 		                      action: [ self sourceSignalButtonPressed ];
 		                      yourself.
 	talkbackLabel := self newLabel
@@ -2355,14 +2466,8 @@ ViennaRefactoringBrowser >> initializeSourcePagePresenters [
 		              module: [ self module ];
 		              whenTextChangedDo: [ self onTheFlyCheckSourceText ];
 		              whenSubmitDo: [ :text | self accept: text ];
-		              whenEvaluatedDo: [ :expression |
-			              self
-				              epiLogEvaluation: expression
-				              state: animation state ];
-		              whenExecutedDo: [ :statement |
-			              self
-				              epiLogExecution: statement
-				              state: animation state ];
+		              whenEvaluatedDo: [ :expression | self epiLogEvaluation: expression state: animation state ];
+		              whenExecutedDo: [ :statement | self epiLogExecution: statement state: animation state ];
 		              contextMenu: [ self sourceTextContextMenu ];
 		              yourself.
 	autoTestButton := self newButton
@@ -2377,27 +2482,22 @@ ViennaRefactoringBrowser >> initializeSourcePagePresenters [
 		                 yourself.
 	testResultTable := self newTable
 		                   beResizable;
-		                   addColumn:
-			                   ((SpImageTableColumn evaluated: #icon)
+		                   addColumn: ((SpImageTableColumn evaluated: #icon)
 				                    title: '';
 				                    width: ViennaTestResultItem iconExtent x;
 				                    sortFunction: #sortingOrder ascending);
-		                   addColumn:
-			                   ((SpStringTableColumn evaluated: #module)
+		                   addColumn: ((SpStringTableColumn evaluated: #module)
 				                    title: 'module';
 				                    sortFunction: #module ascending);
-		                   addColumn:
-			                   ((SpStringTableColumn evaluated: #testName)
+		                   addColumn: ((SpStringTableColumn evaluated: #testName)
 				                    title: 'test';
 				                    sortFunction: #testName ascending);
-		                   addColumn:
-			                   ((SpStringTableColumn evaluated: #message)
+		                   addColumn: ((SpStringTableColumn evaluated: #message)
 				                    title: 'message';
 				                    sortFunction: #message ascending);
 		                   showColumnHeaders;
 		                   beResizable;
-		                   sortingBlock: [ :upper :lower |
-		                   upper sortingOrder <= lower sortingOrder ];
+		                   sortingBlock: [ :upper :lower | upper sortingOrder <= lower sortingOrder ];
 		                   contextMenu: [ self testResultTableContextMenu ];
 		                   whenSelectionChangedDo: [ self testResultChanged ];
 		                   yourself.
@@ -2406,6 +2506,61 @@ ViennaRefactoringBrowser >> initializeSourcePagePresenters [
 		                            icon: (self iconNamed: #exception);
 		                            action: [ self runMutationTesting ];
 		                            yourself
+]
+
+{ #category : 'initialization' }
+ViennaRefactoringBrowser >> initializeVdmPagePresenters [
+
+	moduleList := self newList
+		              borderWidth: 1;
+		              borderColor: Color darkGray;
+		              beSingleSelection;
+		              contextMenu: [ self moduleListContextMenu ];
+		              displayBackgroundColor: [ :ast | self listBackgroundColorFor: ast ];
+		              display: [ :ast | ast ifNil: [ '-' ] ifNotNil: #first ];
+		              sortingBlock: #identifier ascending;
+		              whenSelectionChangedDo: [
+				              self
+					              updateTestButtons;
+					              updateCategoryList;
+					              updateEpiLogMatcherDropList;
+					              updateEpiLogSourceText ];
+		              yourself.
+	categoryList := self newList
+		                borderWidth: 1;
+		                borderColor: Color darkGray;
+		                beSingleSelection;
+		                contextMenu: [ self categoryListContextMenu ];
+		                displayBackgroundColor: [ :ast | self listBackgroundColorFor: ast ];
+		                display: [ :ast | self displayCategory: ast ];
+		                whenSelectionChangedDo: [ self updateDefinitionList ];
+		                yourself.
+	definitionList := self newList
+		                  borderWidth: 1;
+		                  borderColor: Color darkGray;
+		                  beSingleSelection;
+		                  displayBackgroundColor: [ :ast | self listBackgroundColorFor: ast ];
+		                  contextMenu: [ self definitionListContextMenu ];
+		                  display: [ :ast | ast ifNotNil: [ self displayDefinition: ast ] ifNil: [ '-' ] ];
+		                  whenSelectionChangedDo: [
+				                  self
+					                  updateSource;
+					                  updateEpiLogMatcherDropList ].
+	self initializeSourcePagePresenters.
+	self initializePlaygroundPagePresenters.
+	self initializeEpiLogPagePresenters.
+	self initializeGitPagePresenters.
+	vdmNotebook := self newNotebook
+		               addPageTitle: 'Source' provider: [
+				               SpPresenter new
+					               layout: self sourcePageLayout;
+					               yourself ];
+		               addPageTitle: 'Playground' provider: [
+			               SpPresenter new
+				               layout: self playgroundPageLayout;
+				               yourself ];
+		               whenPageRemovedDo: [ :page | page activePresenter ifNotNil: #release ];
+		               yourself
 ]
 
 { #category : 'initialization' }
@@ -2616,6 +2771,32 @@ ViennaRefactoringBrowser >> mergeOperationsFromFRAM [
 			  newAst ]
 ]
 
+{ #category : 'updating-documentation' }
+ViennaRefactoringBrowser >> microdownSourceAccepted [
+
+	| ref |
+	ref := microdownFileList selectedItem ifNil: [
+			       (self request: 'New filename' initialAnswer: '.md' title: 'Save as') ifNotNil: [ :basename |
+				       fileReference / basename withExtension: 'md' ] ].
+	ref ifNotNil: [
+			ref writeStreamDo: [ :stream |
+					| content |
+					content := microdownSource text asString.
+					stream
+						truncate;
+						nextPutAll: content withPlatformLineEndings.
+					self epiLogDiscourse: content filename: ref basename ].
+			self updateMicrodownFileList.
+			microdownFileList selectItem: (microdownFileList items detect: [ :item | item fullPath = ref fullPath ] ifNone: [ nil ]) ].
+	self microdownSourceChanged
+]
+
+{ #category : 'updating-documentation' }
+ViennaRefactoringBrowser >> microdownSourceChanged [
+
+	self updateMicrodown
+]
+
 { #category : 'accessing' }
 ViennaRefactoringBrowser >> modelChanged [
 
@@ -2704,6 +2885,12 @@ ViennaRefactoringBrowser >> narrativeTimelineSelected [
 	self selectedTimelineChanged
 ]
 
+{ #category : 'instance creation' }
+ViennaRefactoringBrowser >> newViennaMicrodown [
+
+	^ self instantiate: ViennaMicrodownPresenter
+]
+
 { #category : 'operations-source signal' }
 ViennaRefactoringBrowser >> notifyAnimationError: aString [
 
@@ -2787,6 +2974,58 @@ ViennaRefactoringBrowser >> openInExternalWindow [
 	morph
 		openInExternalWindow;
 		layoutFrame: (0 @ 0 extent: 1 @ 1)
+]
+
+{ #category : 'operations-references' }
+ViennaRefactoringBrowser >> openReaderList: aViennaNode [
+
+	vdmNotebook
+		addPage: ((SpNotebookPage title: 'Readers on ' , (aViennaNode ifNotNil: #identifier ifNil: '-') provider: [
+						  ViennaReaderListPresenter new
+							  animation: animation;
+							  target: aViennaNode;
+							  yourself ])
+				 beCloseable;
+				 yourself);
+		selectPageIndex: vdmNotebook pages size
+]
+
+{ #category : 'operations-references' }
+ViennaRefactoringBrowser >> openValueReferenceList: aViennaNode [
+
+	vdmNotebook
+		addPage: ((SpNotebookPage title: 'References to ' , (aViennaNode ifNotNil: #identifier ifNil: '-') provider: [
+						  ViennaValueReferenceListPresenter new
+							  animation: animation;
+							  target: aViennaNode;
+							  yourself ])
+				 beCloseable;
+				 yourself);
+		selectPageIndex: vdmNotebook pages size
+]
+
+{ #category : 'operations-references' }
+ViennaRefactoringBrowser >> openWriterList: aViennaNode [
+
+	vdmNotebook
+		addPage: ((SpNotebookPage
+				  title: 'Writers on ' , (aViennaNode
+							   ifNotNil: [ :def |
+									   (def respondsTo: #globalNames)
+										   ifTrue: [ ', ' join: (def globalNames collect: #source) ]
+										   ifFalse: [
+												   (def respondsTo: #identifier)
+													   ifTrue: [ def identifier ]
+													   ifFalse: [ '-' ] ] ]
+							   ifNil: [ '-' ])
+				  provider: [
+						  ViennaWriterListPresenter new
+							  animation: animation;
+							  target: aViennaNode;
+							  yourself ])
+				 beCloseable;
+				 yourself);
+		selectPageIndex: vdmNotebook pages size
 ]
 
 { #category : 'private' }
@@ -2952,6 +3191,16 @@ ViennaRefactoringBrowser >> removeEpiLogFromNarrative: aHiDeNarrative [
 			self updateEpiLogList ] ]
 ]
 
+{ #category : 'operations-documentation' }
+ViennaRefactoringBrowser >> removeMicrodownDocument [
+
+	microdownFileList selectedItem ifNotNil: [ :ref |
+			ref isFile ifTrue: [
+					(self confirm: 'Delete ' , ref basename , '?' label: 'Confirm to delete') = true ifTrue: [
+							ref delete.
+							self updateMicrodownFileList ] ] ]
+]
+
 { #category : 'operations-epiLog' }
 ViennaRefactoringBrowser >> removeNarrative [
 
@@ -2964,6 +3213,19 @@ ViennaRefactoringBrowser >> removeNarrative [
 			narrative storage removeNarrative: narrative.
 			self updateNarrativeDropList: nil.
 			showsArtifactTimelineButton state: true ] ]
+]
+
+{ #category : 'ui requests' }
+ViennaRefactoringBrowser >> request: request initialAnswer: initialAnwser title: title [
+
+	| answer |
+	answer := self application newRequest
+		          title: title;
+		          message: request;
+		          text: initialAnwser;
+		          openModal.
+
+	^ answer
 ]
 
 { #category : 'operations-epiLog' }
@@ -2984,29 +3246,23 @@ ViennaRefactoringBrowser >> runAllTests [
 
 	testProcess ifNotNil: [ testProcess terminate ].
 	testProcess := [
-	               | ast testAnimation |
-	               ast := self specification ifNil: [ ^ nil ].
-	               testAnimation := ViennaAnimation transpiler
-		                                specification: ast;
-		                                yourself.
-	               testResultTable items:
-		               (Array streamContents: [ :stream |
-			                ast testOperationsDo: [ :testOperation |
-				                | moduleName operationName |
-				                moduleName := testOperation module identifier.
-				                operationName := testOperation identifier.
-				                stream nextPut: (ViennaUnitTestResultItem
-						                 module: moduleName
-						                 operation: operationName
-						                 animation: testAnimation) ].
-			                ast namedTracesDo: [ :namedTrace |
-				                stream nextPut:
-					                (ViennaCombinatorialTestResultItem on: namedTrace) ] ]).
-	               testResultTable items do: [ :item |
-		               item run.
-		               testResultTable refresh ].
-	               testProcess := nil ] forkAt:
-		               Processor userBackgroundPriority
+		               | ast testAnimation |
+		               ast := self specification ifNil: [ ^ nil ].
+		               testAnimation := ViennaAnimation new
+			                                specification: ast;
+			                                yourself.
+		               testResultTable items: (Array streamContents: [ :stream |
+					                ast testOperationsDo: [ :testOperation |
+							                | moduleName operationName |
+							                moduleName := testOperation module identifier.
+							                operationName := testOperation identifier.
+							                stream nextPut:
+								                (ViennaUnitTestResultItem module: moduleName operation: operationName animation: testAnimation) ].
+					                ast namedTracesDo: [ :namedTrace | stream nextPut: (ViennaCombinatorialTestResultItem on: namedTrace) ] ]).
+		               testResultTable items do: [ :item |
+				               item run.
+				               testResultTable refresh ].
+		               testProcess := nil ] forkAt: Processor userBackgroundPriority
 ]
 
 { #category : 'operations-tests' }
@@ -3102,6 +3358,13 @@ ViennaRefactoringBrowser >> saveAsFile [
 			UIManager default message: 'Save to ' , file basename , '.'.
 			self fileReference: file.
 			self clearDirty ]
+]
+
+{ #category : 'updating-documentation' }
+ViennaRefactoringBrowser >> selectedDocumentChanged [
+
+	self updateDocumentationButtons.
+	self updateMicrodownSource
 ]
 
 { #category : 'updating' }
@@ -3206,6 +3469,7 @@ ViennaRefactoringBrowser >> sourcePageLayout [
 		  positionOfSlider: 0.6;
 		  add: (SpBoxLayout newVertical
 				   add: (SpBoxLayout newHorizontal
+						    vAlignCenter;
 						    add: sourceSignalButton width: 48;
 						    add: talkbackLabel;
 						    yourself)
@@ -3215,9 +3479,7 @@ ViennaRefactoringBrowser >> sourcePageLayout [
 				   add: (SpBoxLayout newHorizontal
 						    add: autoTestButton expand: false;
 						    add: runTestButton expand: false;
-						    add: (SpBoxLayout newHorizontal
-								     hAlignEnd;
-								     add: runMutationTestingButton expand: false);
+						    add: runMutationTestingButton expand: true;
 						    yourself)
 				   expand: false;
 				   add: testResultTable;
@@ -3264,19 +3526,19 @@ ViennaRefactoringBrowser >> sourceTextContextMenu [
 	menu := self newMenu.
 	node := self sourceSelection.
 	topLevelDefinition := node ifNotNil: [ node topLevelDefinition ].
-	node ifNotNil: [
-		self addRefactoringMenuGroupOn: node to: menu with: [ :group |  ] ].
+	node ifNotNil: [ self addRefactoringMenuGroupOn: node to: menu with: [ :group |  ] ].
+	self addReferenceMenuOn: node to: menu with: [ :group |  ].
 	menu addGroup: [ :group |
-		topLevelDefinition ifNotNil: [
-			group addItem: [ :item |
-				item
-					name: 'Add slice for selection';
-					action: [ self addSlice: node ] ] ].
-		sliceNodes notEmpty ifTrue: [
-			group addItem: [ :item |
-				item
-					name: 'Clear slices';
-					action: [ self clearSlice ] ] ] ].
+			topLevelDefinition ifNotNil: [
+					group addItem: [ :item |
+							item
+								name: 'Add slice for selection';
+								action: [ self addSlice: node ] ] ].
+			sliceNodes notEmpty ifTrue: [
+					group addItem: [ :item |
+							item
+								name: 'Clear slices';
+								action: [ self clearSlice ] ] ] ].
 	^ menu
 ]
 
@@ -3339,6 +3601,12 @@ ViennaRefactoringBrowser >> updateDefinitionList [
 	(newItems includes: oldSelection)
 		ifTrue: [ definitionList selectItem: oldSelection ]
 		ifFalse: [ definitionList selectIndex: 1 ]
+]
+
+{ #category : 'updating-documentation' }
+ViennaRefactoringBrowser >> updateDocumentationButtons [
+
+	removeMicrodownButton enabled: microdownFileList selectedItem notNil
 ]
 
 { #category : 'updating' }
@@ -3555,6 +3823,36 @@ ViennaRefactoringBrowser >> updateGitRemoteCommitList [
 	gitOutgoingCommitList refresh
 ]
 
+{ #category : 'updating-documentation' }
+ViennaRefactoringBrowser >> updateMicrodown [
+
+	| source |
+	source := microdownSource text asString.
+	microdown source ~= source ifTrue: [
+			[
+				microdown
+					text: '' asText;
+					color: (Color gray: 0.95);
+					source: microdownSource text asString;
+					color: Color white ] forkAt: Processor userBackgroundPriority ]
+]
+
+{ #category : 'updating-documentation' }
+ViennaRefactoringBrowser >> updateMicrodownFileList [
+
+	microdownFileList items: ((fileReference notNil and: [ fileReference isDirectory ])
+			 ifTrue: [ ((fileReference allChildrenMatching: '*.md') select: #isFile) sorted: #absolutePath ascending ]
+			 ifFalse: [ #(  ) ])
+]
+
+{ #category : 'updating-documentation' }
+ViennaRefactoringBrowser >> updateMicrodownSource [
+
+	microdownSource text:
+		((microdownFileList selectedItem ifNotNil: [ :ref | ref isFile ifTrue: [ ref contents withInternalLineEndings ] ]) ifNil: [ '' ]).
+	self microdownSourceChanged
+]
+
 { #category : 'updating' }
 ViennaRefactoringBrowser >> updateModuleList [
 
@@ -3608,13 +3906,13 @@ ViennaRefactoringBrowser >> updateSource [
 ViennaRefactoringBrowser >> updateSourceSignalButton [
 
 	pendingSyntaxError ifNotNil: [
-		talkbackLabel label: pendingSyntaxError printString.
-		^ sourceSignalButton icon: self class redSignalIcon ].
+			talkbackLabel label: pendingSyntaxError printString.
+			^ sourceSignalButton image: self class redSignalIcon ].
 	pendingSemanticError ifNotNil: [
-		talkbackLabel label: pendingSemanticError printString.
-		^ sourceSignalButton icon: self class yellowSignalIcon ].
+			talkbackLabel label: pendingSemanticError printString.
+			^ sourceSignalButton image: self class yellowSignalIcon ].
 	talkbackLabel label: ''.
-	^ sourceSignalButton icon: self class greenSignalIcon
+	^ sourceSignalButton image: self class greenSignalIcon
 ]
 
 { #category : 'updating' }
@@ -3692,6 +3990,21 @@ ViennaRefactoringBrowser >> userTimelineSelected [
 	showsArtifactTimelineButton state: false.
 	narrativeDropList resetSelection.
 	self selectedTimelineChanged
+]
+
+{ #category : 'layouts' }
+ViennaRefactoringBrowser >> vdmPageLayout [
+
+	^ SpPanedLayout newVertical
+		  positionOfSlider: 0.3;
+		  add: (SpPanedLayout newHorizontal
+				   positionOfSlider: 0.4;
+				   add: moduleList;
+				   add: (SpPanedLayout newHorizontal
+						    positionOfSlider: 0.3;
+						    add: categoryList;
+						    add: definitionList));
+		  add: vdmNotebook
 ]
 
 { #category : 'updating' }
