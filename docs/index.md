@@ -40,6 +40,8 @@ What's new in the latest release
 * Codename Cagliari has been released (Nov 28, 2026)
   - based on Pharo 14
     - many improvements on the Pharo side!
+  - Powerful VDMPad server
+    - VDMPad server spawns and delegates animation to worker processes using the Fed framework.
   - Microdown integration and extension
     - Microdown is Pharo's variant of Markdown notation.
     - in a code block, you can specify `vienna-source`, `vienna-exec`, `vienna-eval` and `vienna-watch` to animate like ViennaDoc.
