@@ -1,4 +1,4 @@
-[![Pharo version](https://img.shields.io/badge/Pharo-12-87CEFA.svg)](https://pharo.org/download)
+[![Pharo version](https://img.shields.io/badge/Pharo-14-87CEFA.svg)](https://pharo.org/download)
 [![CI](https://github.com/tomooda/ViennaTalk/actions/workflows/test.yml/badge.svg)](https://github.com/tomooda/ViennaTalk/actions/workflows/test.yml)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/cormas/cormas/master/LICENSE)
 
@@ -11,7 +11,7 @@ ViennaTalk is a Smalltalk library to handle VDM-SL specifications.
 Downloads
 ---
 
-The latest release: [<kbd> <br> Montpellier <br> &nbsp; </kbd>](https://github.com/tomooda/ViennaTalk/releases/latest/)
+The latest release: [<kbd> <br> Cagliari <br> &nbsp; </kbd>](https://github.com/tomooda/ViennaTalk/releases/latest/)
    * macOS / AppleSilicon [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://viennatalk.org/builds/viennatalk/latest/ViennaTalk-Installer-Darwin-arm64.dmg)
    * macOS / Intel processor [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://viennatalk.org/builds/viennatalk/latest/ViennaTalk-Installer-Darwin-x86_64.dmg)
    * windows64 / Intel processor [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://viennatalk.org/builds/viennatalk/latest/ViennaTalk-Windows-x86_64.zip)
@@ -27,8 +27,8 @@ You can freely try VDMPad without any registration at [Public VDMPad server](htt
 
 Platform
 ---
-ViennaTalk works on [Pharo 12](http://pharo.org/) .
-MacOSX and Linux is supported. Windows platforms are partially supported; a local VDMJ process does not work on Widnows due to limitation of OSSubprocess's piping functions.
+ViennaTalk works on [Pharo 14](http://pharo.org/) .
+macOS, Windows 11 (64 bits) and Linux is supported.
 
 License
 ---
@@ -36,7 +36,7 @@ ViennaTalk is distributed under [the MIT license](https://github.com/tomooda/Vie
 
 Install
 ---
-You may either download a pre-built package from [Release page](https://github.com/tomooda/ViennaTalk-doc/releases), install viennatalk+pharo from command shell, or install from source code repository into [Pharo](http://pharo.org/).
+You may either download pre-built packages from [Release page](https://viennatalk.org/builds/viennatalk/latest), install viennatalk+pharo from command shell, or install from source code repository into [Pharo](http://pharo.org/).
 
 Source Repository
 ---

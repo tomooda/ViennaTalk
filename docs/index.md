@@ -1,4 +1,4 @@
-[![Pharo version](https://img.shields.io/badge/Pharo-11-87CEFA.svg)](https://pharo.org/download)
+[![Pharo version](https://img.shields.io/badge/Pharo-14-87CEFA.svg)](https://pharo.org/download)
 ![CI](https://github.com/tomooda/ViennaTalk/actions/workflows/test.yml/badge.svg)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/cormas/cormas/master/LICENSE)
 
@@ -37,16 +37,20 @@ Table of Major Components of ViennaTalk
 What's new in the latest release
 ---
 
-* Codename Montpellier has been released (Jun 23, 2026)
-  - Improved VDMPad
-    - Modernized UI 
-    - VIP (VDM Instant Pad) link and QR code
-    - State diagrams and Sequence diagrams
+* Codename Cagliari has been released (Nov 28, 2026)
+  - based on Pharo 14
+    - many improvements on the Pharo side!
+  - Powerful VDMPad server
+    - VDMPad server spawns and delegates animation to worker processes using the Fed framework.
+  - Microdown integration and extension
+    - Microdown is Pharo's variant of Markdown notation.
+    - in a code block, you can specify `vienna-source`, `vienna-exec`, `vienna-eval` and `vienna-watch` to animate like ViennaDoc.
+    - `.md` files are managed, edited, previewed, and versioned.
   - Updated ViennaClient 
-    - adopt async/await
+    - supports sequence diagram/state diagram generation
   - Updated ViennaDoc
-    - updated syntax highlighting
-    - adopt module system of ES
+    - diagram generation
+    - generation from Microdown extensions
   - misc fixes
 
 * [Past Releases](Releases.md)
