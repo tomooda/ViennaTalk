@@ -1,9 +1,6 @@
 Class {
 	#name : 'BaselineOfViennaTalk',
 	#superclass : 'BaselineOf',
-	#instVars : [
-		'savedMaximumLineLengthMethod'
-	],
 	#category : 'BaselineOfViennaTalk',
 	#package : 'BaselineOfViennaTalk'
 }
@@ -11,7 +8,7 @@ Class {
 { #category : 'accessing' }
 BaselineOfViennaTalk class >> codename [
 
-	^ 'Nowhere'
+	^ 'Cagliari'
 ]
 
 { #category : 'utilities' }
@@ -43,53 +40,6 @@ BaselineOfViennaTalk class >> ensureIcebergRepository [
 BaselineOfViennaTalk class >> isDev [
 
 	^ self codename = 'Nowhere'
-]
-
-{ #category : 'utilities' }
-BaselineOfViennaTalk class >> updateFromOfficialRepository [
-
-	<script: 'BaselineOfViennaTalk updateFromOfficialRepository'>
-	| repository branchName |
-	repository := self ensureIcebergRepository.
-	branchName := self isDev
-		              ifTrue: [ 'dev' ]
-		              ifFalse: [ 'main' ].
-	repository
-		branchNamed: branchName
-		ifPresent: [ :branch |
-			[
-			branch
-				setUpstreamIfMissing: (repository remoteNamed: 'origin');
-				pull ]
-				on: IceExperimentalFeature
-				do: [ :ex | ex resume ] ]
-		ifAbsent: [
-		(repository remoteBranchNamed: 'origin/' , branchName) checkout ].
-	[ (repository packageNamed: 'BaselineOfViennaTalk') reload ]
-		on: MCMergeOrLoadWarning
-		do: [ :ex | ex load ].
-	Cursor wait showWhile: [
-		| maxCount count |
-		maxCount := 5.
-		count := 0.
-		[
-		[
-		Metacello new
-			repository: 'gitlocal://' , (repository location / 'src') fullName;
-			baseline: 'ViennaTalk';
-			onConflictUseIncoming;
-			onWarningLog;
-			load ]
-			on: IceExperimentalFeature
-			do: [ :ex | ex resume ] ]
-			on: Error
-			do: [ :ex |
-				(count := count + 1) < maxCount
-					ifTrue: [
-						2 seconds wait.
-						ex retry ]
-					ifFalse: [ UIManager default alert: 'Failed to update' ] ] ].
-	Smalltalk snapshot: true andQuit: false
 ]
 
 { #category : 'baselines' }
