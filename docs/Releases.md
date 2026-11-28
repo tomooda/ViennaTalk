@@ -1,5 +1,19 @@
 Major releases of ViennaTalk (lastest top)
 ---
+* Codename Cagliari has been released (Nov 28, 2026)
+  - based on Pharo 14
+    - many improvements on the Pharo side!
+  - Microdown integration and extension
+    - Microdown is Pharo's variant of Markdown notation.
+    - in a code block, you can specify `vienna-source`, `vienna-exec`, `vienna-eval` and `vienna-watch` to animate like ViennaDoc.
+    - `.md` files are managed, edited, previewed, and versioned.
+  - Updated ViennaClient 
+    - supports sequence diagram/state diagram generation
+  - Updated ViennaDoc
+    - diagram generation
+    - generation from Microdown extensions
+  - misc fixes
+
 * Codename Montpellier has been released (Jun 23, 2026)
   - Improved VDMPad
     - Modernized UI
