@@ -230,7 +230,7 @@ ViennaDoc.initializeViennaAssertNode = async function(node) {
         return false;
     }
     
-    const result = await ViennaDoc.eval(expression, prestates, [], module=module);
+    const result = await ViennaDoc.eval(expression, prestates, [], module);
     ViennaDoc.states = savedStates;
     const actual = result.value;
     
