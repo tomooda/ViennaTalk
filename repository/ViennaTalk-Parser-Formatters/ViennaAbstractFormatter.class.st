@@ -239,7 +239,7 @@ ViennaAbstractFormatter >> greaterThanOrEqual [
 { #category : 'formatting' }
 ViennaAbstractFormatter >> identifier: aString [
 
-	^ aString
+	^ aString ifNil: [ '-' ]
 ]
 
 { #category : 'symbol access' }

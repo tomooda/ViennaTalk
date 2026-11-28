@@ -6,6 +6,12 @@ Class {
 	#package : 'ViennaTalk-AST-Core'
 }
 
+{ #category : 'accessing' }
+ViennaPatternTypePairListNode >> arity [
+
+	^ (1 to: self size by: 2) inject: 0 into: [ :sum :index | sum + (self at: index) ]
+]
+
 { #category : 'private' }
 ViennaPatternTypePairListNode >> boundIdentifiersDo: aBlock [
 
@@ -17,19 +23,14 @@ ViennaPatternTypePairListNode >> boundIdentifiersDo: aBlock [
 ViennaPatternTypePairListNode >> formatWith: aViennaAbstractFormatter [
 
 	| string |
-	string := aViennaAbstractFormatter empty.
+	string := aViennaAbstractFormatter empty ++ '('.
 	self ifNotEmpty: [
-		1 to: self size - 2 by: 2 do: [ :index |
-			string := string
-			          ++ (aViennaAbstractFormatter format: (self at: index))
-			          ++ ':'
-			          ++ (aViennaAbstractFormatter format: (self at: index + 1))
-			          ++ ', ' ].
-		string := string
-		          ++
-		          (aViennaAbstractFormatter format: (self at: self size - 1))
-		          ++ ':'
-		          ++ (aViennaAbstractFormatter format: (self at: self size)) ].
+			1 to: self size - 2 by: 2 do: [ :index |
+					string := string ++ (aViennaAbstractFormatter format: (self at: index)) ++ ':'
+					          ++ (aViennaAbstractFormatter format: (self at: index + 1)) ++ ', ' ].
+			string := string ++ (aViennaAbstractFormatter format: (self at: self size - 1)) ++ ':'
+			          ++ (aViennaAbstractFormatter format: (self at: self size)) ].
+	string := string ++ ')'.
 	^ string
 ]
 
@@ -86,13 +87,14 @@ ViennaPatternTypePairListNode >> patternsDo: aBlock [
 { #category : 'accessing' }
 ViennaPatternTypePairListNode >> type [
 
-	^ (((2 to: self size by: 2) collect: [ :index |
-			    (self at: index) copyFragment ])
+	^ ((Array streamContents: [ :stream |
+			    1 to: self size by: 2 do: [ :index |
+				    (self at: index) size timesRepeat: [ stream nextPut: (self at: index + 1) copyFragment ] ] ])
 		   ifEmpty: [ ViennaUnitTypeNode new ]
 		   ifNotEmpty: [ :types |
-			   types size = 1
-				   ifTrue: [ types first ]
-				   ifFalse: [ ViennaProductTypeNode withAll: types ] ])
+				   types size = 1
+					   ifTrue: [ types first ]
+					   ifFalse: [ ViennaProductTypeNode withAll: types ] ])
 		  parent: parent;
 		  yourself
 ]

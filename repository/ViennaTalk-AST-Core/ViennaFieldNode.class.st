@@ -84,6 +84,12 @@ ViennaFieldNode >> identifier: aString [
 ]
 
 { #category : 'testing' }
+ViennaFieldNode >> isStateVariableDefinition [
+
+	^ self parent notNil and: [ self parent parent notNil and: [ self parent parent isViennaStateDefinitionNode ] ]
+]
+
+{ #category : 'testing' }
 ViennaFieldNode >> isTransparentComponent [
 
 	^ self parent isNil or: [ self parent isTransparentComponent ]

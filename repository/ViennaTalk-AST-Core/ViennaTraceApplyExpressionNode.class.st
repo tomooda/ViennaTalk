@@ -29,7 +29,7 @@ ViennaTraceApplyExpressionNode >> callStatement: aViennaCallStatementNode [
 { #category : 'pretty printing' }
 ViennaTraceApplyExpressionNode >> formatWith: aViennaAbstractFormatter [
 
-	^ self callStatement formatWith: aViennaAbstractFormatter
+	^ aViennaAbstractFormatter format: self callStatement
 ]
 
 { #category : 'private' }

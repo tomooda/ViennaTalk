@@ -39,7 +39,7 @@ ViennaPrePostFunctionDefinitionNode >> boundIdentifiersDo: aBlock [
 { #category : 'pretty printing' }
 ViennaPrePostFunctionDefinitionNode >> formatWith: aViennaAbstractFormatter [
 
-	^ self body formatWith: aViennaAbstractFormatter
+	^ aViennaAbstractFormatter format: self body
 ]
 
 { #category : 'private' }

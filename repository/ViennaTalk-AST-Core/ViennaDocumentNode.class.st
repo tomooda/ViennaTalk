@@ -12,6 +12,12 @@ ViennaDocumentNode class >> isAbstract [
 	^ self = ViennaDocumentNode
 ]
 
+{ #category : 'converting' }
+ViennaDocumentNode >> asViennaDocumentAst [
+
+	^ self
+]
+
 { #category : 'private' }
 ViennaDocumentNode >> boundIdentifiersDo: aBlock [
 

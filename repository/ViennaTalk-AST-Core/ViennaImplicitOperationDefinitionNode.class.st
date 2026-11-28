@@ -144,39 +144,27 @@ ViennaImplicitOperationDefinitionNode >> findResolverForIdentifier: aString [
 ViennaImplicitOperationDefinitionNode >> formatWith: aViennaAbstractFormatter [
 
 	| access identifier patternTypePairList identifierTypePairList externals pre post exceptions |
-	access := (aViennaAbstractFormatter format: self access) trim
-		          ifNotEmpty: [ :string |
-		          string ++ aViennaAbstractFormatter space ].
+	access := (aViennaAbstractFormatter format: self access) trim ifNotEmpty: [ :string | string ++ aViennaAbstractFormatter space ].
 	identifier := aViennaAbstractFormatter format: self identifier.
-	patternTypePairList := aViennaAbstractFormatter format:
-		                       self patternTypePairList.
-	identifierTypePairList := aViennaAbstractFormatter format:
-		                          self identifierTypePairList.
+	patternTypePairList := aViennaAbstractFormatter format: self patternTypePairList.
+	identifierTypePairList := aViennaAbstractFormatter format: self identifierTypePairList.
 	externals := self externals
-		             ifNotNil: [
-			             aViennaAbstractFormatter cr
-			             ++ (aViennaAbstractFormatter format: self externals) ]
+		             ifNotNil: [ aViennaAbstractFormatter cr ++ (aViennaAbstractFormatter format: self externals) ]
 		             ifNil: [ aViennaAbstractFormatter empty ].
 	pre := self pre
 		       ifNotNil: [
-			       aViennaAbstractFormatter cr
-			       ++ (aViennaAbstractFormatter keyword: 'pre ')
-			       ++ (aViennaAbstractFormatter format: self pre) ]
+		       aViennaAbstractFormatter cr ++ (aViennaAbstractFormatter keyword: 'pre ') ++ (aViennaAbstractFormatter format: self pre) ]
 		       ifNil: [ aViennaAbstractFormatter empty ].
 	post := self post
 		        ifNotNil: [
-			        aViennaAbstractFormatter cr
-			        ++ (aViennaAbstractFormatter keyword: 'post ')
-			        ++ (aViennaAbstractFormatter format: self post) ]
+		        aViennaAbstractFormatter cr ++ (aViennaAbstractFormatter keyword: 'post ')
+		        ++ (aViennaAbstractFormatter format: self post) ]
 		        ifNil: [ aViennaAbstractFormatter empty ].
 	exceptions := self exceptions
-		              ifNotNil: [
-			              aViennaAbstractFormatter cr
-			              ++ (aViennaAbstractFormatter format: self exceptions) ]
+		              ifNotNil: [ aViennaAbstractFormatter cr ++ (aViennaAbstractFormatter format: self exceptions) ]
 		              ifNil: [ aViennaAbstractFormatter empty ].
-	^ aViennaAbstractFormatter empty ++ access ++ identifier
-	  ++ patternTypePairList ++ identifierTypePairList ++ externals ++ pre
-	  ++ post ++ exceptions
+	^ aViennaAbstractFormatter empty ++ access ++ identifier ++ patternTypePairList ++ ' ' ++ identifierTypePairList ++ externals
+	  ++ pre ++ post ++ exceptions
 ]
 
 { #category : 'private' }

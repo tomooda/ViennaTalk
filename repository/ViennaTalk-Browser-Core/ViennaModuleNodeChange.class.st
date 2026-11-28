@@ -7,6 +7,12 @@ Class {
 }
 
 { #category : 'operations' }
+ViennaModuleNodeChange >> applyDiscourseTo: aFileReference [
+
+	
+]
+
+{ #category : 'operations' }
 ViennaModuleNodeChange >> applyTo: aViennaDocumentNode [
 
 	| oldNode |

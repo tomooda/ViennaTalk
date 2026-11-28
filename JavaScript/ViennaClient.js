@@ -6,12 +6,16 @@
  * @param {string} [module="DEFAULT"]
  * @returns {Promise<Object>}
  */
-String.prototype.vienna_eval = async function(expr, prestates = {}, module = "DEFAULT") {
+String.prototype.vienna_eval = async function(expr, prestates = {}, diagrams = [], module = "DEFAULT") {
     const json = { source: this.toString(), expression: expr, module };
     
     for (const [k, v] of Object.entries(prestates)) {
         const key = k.includes('`') ? k : `DEFAULT\`${k}`;
         json[key] = v;
+    }
+    if (diagrams) {
+	if (diagrams.includes("sequence")) json.sequenceDiagram = "";
+	if (diagrams.includes("state")) json.stateDiagram = "";
     }
 
     try {
@@ -37,7 +41,6 @@ String.prototype.vienna_eval = async function(expr, prestates = {}, module = "DE
                 poststates[cleanKey] = v;
             }
         }
-
         result.prestates = prestates;
         result.poststates = poststates;
         return result;
@@ -72,11 +75,11 @@ class ViennaClient {
      * @param {Object} [prestates={}]
      * @returns {Promise<Object>}
      */
-    async eval(expression, source = "", prestates = {}) {
+    async eval(expression, source = "", prestates = {}, diagrams = []) {
         this.readyState = 1;
         this.onreadystatechange?.();
 
-        const json = { source, expression };
+        const json = { source, expression, diagrams};
         for (const [k, v] of Object.entries(prestates)) {
             const key = k.includes('`') ? k : `DEFAULT\`${k}`;
             json[key] = v;

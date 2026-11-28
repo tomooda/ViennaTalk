@@ -1,6 +1,14 @@
 Extension { #name : 'String' }
 
 { #category : '*ViennaTalk-Transpiler-Core' }
+String >> ++ aTextOrString [
+
+	^ aTextOrString isText
+		  ifTrue: [ self asText , aTextOrString ]
+		  ifFalse: [ self , aTextOrString ]
+]
+
+{ #category : '*ViennaTalk-Transpiler-Core' }
 String >> asViennaExpression [
 	^ OpalCompiler new
 		source: (ViennaVDM2SmalltalkScript new generate: self asViennaExpressionAst);
